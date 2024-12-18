@@ -1,0 +1,116 @@
+{
+    "elements": {
+        "Elements Fondamentaux": {
+            "Eau": "💧",
+            "Feu": "🔥",
+            "Terre": "🌱",
+            "Air": "💨"
+        },
+        "Matériaux élémentaire": {
+            "Brasier": "🔥🔥",
+            "Lave": "🌋",
+            "Fumée": "💨",
+            "Vapeur": "☁️",
+            "Montagne": "🏔️",
+            "Poussière": "🌫️",
+            "Boue": "🌧️",
+            "Vent": "🌬️",
+            "Brouillard": "🌁",
+            "Lac": "🏞️",
+            "Incendie": "🔥🔥🔥",
+            "Volcan": "🌋🌋",
+            "Explosion": "💥",
+            "Tempête": "⚡",
+            "Magma": "🌋🪨",
+            "Cendre": "🌪️",
+            "Geyser": "⛲",
+            "Tornade": "🌪️",
+            "Pluie Ardente": "🌧️🔥",
+            "Continent": "🗺️",
+            "Plateau": "⛰️",
+            "Fleuve": "🏞️",
+            "Tempête de Sable": "🌪️🏜️",
+            "Marécage": "🌿💧",
+            "Mer": "🏞️💦",
+            "Ouragan": "🌪️",
+            "Brise Marine": "🌊💨",
+            "Pluie": "🌧️",
+            "Océan": "🌊",
+            "Vie": "🌱🌱",
+            "Planète Terre": "🌌🌍"
+        },
+        "Phénomènes Naturels": {
+            "Blizzard": "❄️🌬️",
+            "Tempête de Poussière": "🌪️🌫️",
+            "Nuage de Poussière": "🌫️",
+            "Orage": "⚡🌧️",
+            "Raz-de-Marée": "🌊🌪️",
+            "Grêle": "❄️🌧️",
+            "Ouragan de Feu": "🔥🌪️",
+            "Tornade Polaire": "🌪️❄️",
+            "Arc-en-Ciel": "🌈",
+            "Éruption Volcanique": "🌋💥",
+            "Coulée de Boue": "🌧️🌍",
+            "Pluie de Cendres": "🌋🌫️",
+            "Désert Aride": "🏜️🔥",
+            "Vallée Fertile": "🌍💧🌱"
+        }
+    },
+    "rules": {
+
+
+
+        "Continent+Océan": "Planète Terre",
+        "Feu+Feu": "Brasier",
+        "Feu+Terre": "Lave",
+        "Feu+Air": "Fumée",
+        "Feu+Eau": "Vapeur",
+        "Terre+Terre": "Montagne",
+        "Terre+Air": "Poussière",
+        "Terre+Eau": "Boue",
+        "Air+Air": "Vent",
+        "Air+Eau": "Brouillard",
+        "Eau+Eau": "Lac",
+        "Feu+Feu+Feu": "Incendie",
+        "Feu+Feu+Terre": "Volcan",
+        "Feu+Feu+Air": "Explosion",
+        "Feu+Feu+Eau": "Tempête",
+        "Feu+Terre+Terre": "Magma",
+        "Feu+Terre+Air": "Cendre",
+        "Feu+Terre+Eau": "Geyser",
+        "Feu+Air+Air": "Tornade",
+        "Feu+Air+Eau": "Pluie Ardente",
+        "Terre+Terre+Terre": "Continent",
+        "Terre+Terre+Air": "Plateau",
+        "Terre+Terre+Eau": "Fleuve",
+        "Terre+Air+Air": "Tempête de Sable",
+        "Terre+Air+Eau": "Marécage",
+        "Terre+Eau+Eau": "Mer",
+        "Air+Air+Air": "Ouragan",
+        "Air+Air+Eau": "Brise Marine",
+        "Air+Eau+Eau": "Pluie",
+        "Eau+Eau+Eau": "Océan",
+        "Eau+Terre+Feu+Air": "Vie",
+
+
+
+
+        "Vent+Poussière": "Nuage de Poussière",
+        "Poussière+Air": "Tempête de Poussière",
+        "Pluie+Air": "Arc-en-Ciel",
+        "Vent+Froid": "Blizzard",
+        "Eau+Vent": "Raz-de-Marée",
+        "Lave+Vent": "Éruption Volcanique",
+        "Boue+Vent": "Coulée de Boue",
+        "Cendre+Pluie": "Pluie de Cendres",
+        "Feu+Ouragan": "Ouragan de Feu",
+        "Froid+Tornade": "Tornade Polaire",
+        "Pluie+Glace": "Grêle",
+        "Désert+Soleil": "Désert Aride"
+
+
+
+
+
+    }
+}
