@@ -8,7 +8,12 @@
     "lint": "vue-cli-service lint"
   },
   "dependencies": {
+    "@tsparticles/vue3": "^3.0.1",
+    "animejs": "^3.2.2",
     "core-js": "^3.8.3",
+    "gsap": "^3.12.5",
+    "og-create": "file:",
+    "tsparticles": "^3.7.1",
     "vue": "^3.2.13"
   },
   "devDependencies": {

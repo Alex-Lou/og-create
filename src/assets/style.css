@@ -7,13 +7,53 @@
 
 body {
     font-family: 'Poppins', sans-serif;
-    background: linear-gradient(135deg, #282c34, #3a3f47);
+    background: #1e1e1e;
+    transition: background-color 0.5s, color 0.5s;
     color: #fff;
     min-height: 100vh;
     justify-content: center;
     align-items: center;
 }
 
+
+/* Mode clair activé quand body.light-mode est présent */
+body.light-mode {
+    background: #f0f0f0; /* Fond clair pour le body */
+    color: #333;         /* Couleur du texte plus foncée */
+  }
+  
+  body.light-mode #game-container {
+    background: #f0f0f0; /* Fond clair pour le conteneur principal */
+    color: #333;          /* Couleur de texte adaptée */
+  }
+  
+  body.light-mode #inventory {
+    background: #ffffff;  /* Inventaire plus clair */
+    color: #000000;
+  }
+  
+  body.light-mode #animation-frame {
+    background: #89c8ef; /* Un bleu ciel clair pour remplacer le fond noir */
+  }
+  
+  body.light-mode #achievements-menu {
+    background: #e0e0e0;
+    color: #000;
+  }
+  
+  body.light-mode #achievements-content {
+    background: #f0f0f0;
+    color: #000;
+  }
+  
+  body.light-mode #crafted-popup {
+    background: rgba(255, 255, 255, 0.9);
+    color: #000;
+  }
+  
+  /* Ajoutez d’autres sélecteurs si vous en avez besoin pour rendre tout cohérent en mode clair. */
+
+  
 #game-container {
     background: #1e1e1e;
     border-radius: 15px;
@@ -25,13 +65,16 @@ body {
     animation: fadeIn 1s ease-in-out;
     display: flex;
     flex-direction: column;
+    color: #cfcfcf;
+    transition: background-color 0.5s, color 0.5s;
 }
 
 header h1 {
-    font-size: 2.5rem; /* Augmenté pour plus d'impact */
+    font-size: 2rem; /* Augmenté pour plus d'impact */
     text-align: center;
     letter-spacing: 2px;
-    padding-bottom: 20px;
+    padding-bottom: 10px;
+    padding-top: 10px;
     background: linear-gradient(90deg, #4dd0e1, #00acc1, #ff7f00, #ff0000);
     background-size: 400% 400%;
     -webkit-background-clip: text;
@@ -69,7 +112,9 @@ main {
     border-radius: 10px;
     box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.3);
     overflow-y: auto;
-    transition: flex 0.2s;
+    background: #2a2a2a; /* Fond sombre de l'inventaire */
+    color: #ffffff;
+    transition: background-color 0.5s, color 0.5s;
 }
 
 #inventory h2 {
@@ -113,7 +158,7 @@ main {
 /* Crafting Board Section */
 #crafting-board {
     flex: 2;
-    position: relative;
+    position: relative; /* Assure que les éléments absolus sont positionnés ici */
     background: #000; /* Fond noir profond */
     border-radius: 10px;
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
@@ -124,13 +169,15 @@ main {
 
 /* Arrière-plan ciel étoilé */
 #animation-frame {
-    position: absolute;
+    position: absolute; 
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
     background: #000;
     z-index: 0;
+    background: #000; /* Ciel sombre */
+    transition: background-color 0.5s;
 }
 
 #animation-frame::before {
@@ -153,34 +200,33 @@ main {
 
 /* Bouton Craft */
 #craft-button {
-    border: none;
+    position: absolute; /* Le bouton doit être placé en haut à gauche */
+    top: 10px;
+    left: 10px;
+    z-index: 100; /* S'assurer qu'il reste visible au-dessus des autres éléments */
+    background: linear-gradient(135deg, #4dd0e1, #00acc1);
     color: white;
     font-weight: bold;
     padding: 10px 20px;
-    font-size: 1rem;
-    right: 48%;
     border-radius: 8px;
+    font-size: 1rem;
     cursor: pointer;
-    position: relative;
-    overflow: hidden;
-    z-index: 1;
-    background: black;
     text-shadow: 0 0 5px rgba(255, 255, 255, 0.8);
+    transition: background-color 0.3s ease, transform 0.2s ease;
 }
 
-#craft-button::before {
-    content: "";
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 200%;
-    height: 200%;
-    background: linear-gradient(90deg, 
-       #2f2736, #2e1f1f
-    );
-    background-size: 400% 400%;
-    animation: rainbowCycle 60s infinite linear;
-    z-index: -1;
+/* Effet Hover */
+#craft-button:hover {
+    background: linear-gradient(135deg, #00acc1, #4dd0e1);
+    transform: scale(1.05);
+    box-shadow: 0 8px 15px rgba(0, 188, 212, 0.5);
+}
+
+/* Effet Actif (cliqué) */
+#craft-button:active {
+    transform: scale(0.95);
+    background: #008ba3;
+    box-shadow: 0 4px 10px rgba(0, 139, 163, 0.5);
 }
 
 @keyframes rainbowCycle {
@@ -354,13 +400,12 @@ footer p {
     top: 50%;
     right: 35%;
     transform: translate(-50%, -50%);
-    background: rgba(58, 55, 55, 0.9); /* Plus opaque */
+    background: rgba(31, 26, 26, 0.047); /* Plus opaque */
     color: #fff;
-    padding: 20px 30px;
+    padding: 5px 15px;
     border-radius: 15px; /* Coins arrondis */
     text-align: center;
     font-size: 1.5rem;
-    opacity: 0; /* Caché par défaut */
     visibility: hidden;
     z-index: 100;
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.6); /* Ombre plus prononcée */
@@ -385,8 +430,15 @@ footer p {
   }
   
   #crafted-popup.show {
-    animation: fadeInOut 1.5s ease-in-out;
+    animation: fadeInOut 2s ease-in-out;
   }
+
+  #crafted-popup img {
+    max-width: 100px;
+    max-height: 100px;
+    margin-bottom: 10px;
+  }
+  
 
 
 
@@ -404,15 +456,353 @@ footer p {
     height: 10px;
   }
   
+
   .progress-bar {
-    width: 100%;
+    width: 100px; /* Taille fixe pour la barre de progression */
     height: 10px;
     background: #444;
+    border-radius: 5px;
+    margin-left: 10px; /* Espacement entre le titre et la barre */
+    overflow: hidden;
+    position: relative;
+}
+  
+.progress-bar-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #4caf50, #8bc34a);
+    position: relative;
+    overflow: hidden;
   }
+  
+  .progress-bar-fill::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 0;
+    width: 10px;
+    height: 10px;
+    background: rgba(255, 255, 255, 0.8);
+    border-radius: 50%;
+    box-shadow: 0 0 10px rgba(255, 255, 255, 0.5), 0 0 20px rgba(255, 255, 255, 0.3);
+    animation: particleMove 1.5s infinite linear;
+  }
+  
+  @keyframes particleMove {
+    0% {
+      transform: translateX(0);
+      opacity: 1;
+    }
+    100% {
+      transform: translateX(100%);
+      opacity: 0;
+    }
+  }
+  
+  .category-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 5px 10px;
+    color: #4dd0e1;
+    font-weight: bold;
+}
+  
   
   .progress-bar-fill {
     height: 100%;
-    background: #4caf50; /* Couleur verte */
+    background: #4caf50;
     transition: width 0.3s ease;
   }
+
+  .category-title {
+    flex: 1; /* Permet au titre d'occuper l'espace disponible */
+    white-space: nowrap; /* Évite de couper le texte */
+    overflow: hidden;
+    text-overflow: ellipsis; /* Ajoute "..." si le texte est trop long */
+}
+
+
+
+
+
+
+
+
+/* Bouton Toggle Animé (Jour/Nuit) */
+#toggle-dark-mode {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    z-index: 100;
+    width: 60px;
+    height: 30px;
+    background: linear-gradient(135deg, #14282b, #21484d);
+    border: none;
+    border-radius: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 5px;
+    cursor: pointer;
+    box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.5);
+    transition: background-color 0.5s ease;
+}
+
+/* Lune/Soleil (indicateur animé) */
+#toggle-dark-mode .toggle-indicator {
+    position: absolute;
+    top: 50%;
+    left: 5px;
+    transform: translateY(-50%);
+    width: 20px;
+    height: 20px;
+    background: radial-gradient(circle, #f39c12 50%, #e67e22 100%);
+    border-radius: 50%;
+    transition: all 0.5s ease;
+    box-shadow: 0 0 10px rgba(255, 223, 100, 0.7);
+}
+
+/* Icône lune (pour mode nuit) */
+#toggle-dark-mode .toggle-indicator:before {
+    content: '';
+    position: absolute;
+    width: 12px;
+    height: 12px;
+    background: #2c3e50;
+    border-radius: 50%;
+    top: -4px;
+    right: -4px;
+    box-shadow: inset -2px 2px 4px rgba(0, 0, 0, 0.5);
+    opacity: 0;
+    transition: opacity 0.5s ease;
+}
+
+/* Mode Jour */
+body.light-mode #toggle-dark-mode {
+    background: linear-gradient(135deg, #87ceeb, #4682b4);
+}
+
+body.light-mode #toggle-dark-mode .toggle-indicator {
+    background: radial-gradient(circle, #f1c40f 50%, #f39c12 100%);
+    transform: translate(30px, -50%);
+    box-shadow: 0 0 10px rgba(255, 223, 100, 0.7);
+}
+
+body.light-mode #toggle-dark-mode .toggle-indicator:before {
+    opacity: 0; /* La lune disparaît */
+}
+
+/* Mode Nuit */
+body.dark-mode #toggle-dark-mode .toggle-indicator {
+    transform: translate(5px, -50%);
+    background: radial-gradient(circle, #2c3e50 50%, #1c2833 100%);
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.7);
+}
+
+body.dark-mode #toggle-dark-mode .toggle-indicator:before {
+    opacity: 1; /* La lune apparaît */
+}
+
+/* Transition fluide pour le body */
+body.transition-mode {
+    transition: background-color 0.5s ease, color 0.5s ease;
+}
+
+
+
+/* Menu déroulant des succès */
+#achievements-menu {
+    position: absolute;
+    bottom: .5%;
+    left: 0;
+    width: 20%;
+    background: #1e1e1e;
+    color: #fff;
+    display: flex;
+    padding: 10px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.5);
+    z-index: 200;
+}
+
+#achievements-menu:hover #achievements-content {
+    display: block;
+}
+
+#achievements-content {
+    display: none;
+    position: absolute;
+    bottom: 100%;
+    left: 0;
+    width: 100%;
+    background: #2a2a2a;
+    padding: 10px 0;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
+    border-radius: 0 0 10px 10px;
+    z-index: 150;
+}
+
+#achievements-content ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    text-align: center;
+}
+
+#achievements-content li {
+    padding: 10px;
+    color: #cfcfcf;
+    cursor: pointer;
+    transition: background 0.3s ease;
+}
+
+#achievements-content li:hover {
+    background: #444;
+}
+
+#achievements-content li.unlocked {
+    color: #4caf50;
+    font-weight: bold;
+}
+
+.achievement-icon {
+    width: 20px;
+    height: 20px;
+    margin-right: 10px;
+    vertical-align: middle;
+}
+
+/* Achievement Popup - Adapté pour AnimXYZ */
+#achievement-popup {
+    position: fixed;
+    top: 50%;
+    right: 15%;
+    transform: translate(-50%, -50%);
+    background: rgba(31, 26, 26, 0.9);
+    color: #fff;
+    padding: 15px 25px;
+    border-radius: 15px;
+    text-align: center;
+    z-index: 100;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.6);
+}
+
+#achievement-popup .popup-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+#achievement-popup img {
+    max-width: 80px;
+    max-height: 80px;
+    margin-bottom: 10px;
+    /* Les animations seront gérées par xyz-nested */
+}
+
+#achievement-popup .achievement-text {
+    text-align: center;
+    /* Les animations seront gérées par xyz-nested */
+}
+
+#achievement-popup h3 {
+    color: #4dd0e1;
+    font-size: 1.3rem;
+    margin-bottom: 5px;
+}
+
+#achievement-popup p {
+    font-size: 1rem;
+    color: #cfcfcf;
+}
+
+/* Ajout des classes spécifiques pour AnimXYZ */
+.xyz-in {
+    /* Permet à AnimXYZ de gérer les transitions */
+    will-change: transform;
+}
+
+.xyz-nested {
+    /* Permet à AnimXYZ de gérer les transitions des éléments imbriqués */
+    will-change: transform;
+}
+
+.close-button {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    color: #fff;
+    cursor: pointer;
+    z-index: 10;
+    transition: transform 0.2s ease, color 0.2s ease;
+  }
   
+  .close-button:hover {
+    transform: scale(1.2);
+    color: #ff5555;
+  }
+
+/* Conteneur des particules GSAP */
+/* On le rend plus grand que le popup pour permettre aux particules d'être autour */
+.gsap-particles-container {
+    position: absolute;
+    top: -10px;
+    left: 10px;
+    width: calc(100% + 100px);
+    height: calc(100% + 100px);
+    pointer-events: none;
+    overflow: hidden;
+    z-index: 999; 
+}
+
+/* Styles existants */
+.particle {
+  position: absolute;
+  width: 8px;
+  height: 8px;
+  pointer-events: none;
+  will-change: transform;
+}
+
+.particle-circle {
+  border-radius: 50%;
+}
+
+.particle-square {
+  border-radius: 2px;
+}
+
+.particle-triangle {
+  clip-path: polygon(50% 0%, 0% 100%, 100% 100%);
+}
+
+.particle-star {
+  clip-path: polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%);
+}
+
+.gsap-particles-container {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  overflow: hidden;
+  pointer-events: none;
+  z-index: 10;
+}
+
+/* Nouveau style pour le flash d'explosion */
+.explosion-flash {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 50px;
+  height: 50px;
+  background: radial-gradient(circle, rgba(255,255,255,0.8) 0%, rgba(255,255,255,0) 70%);
+  border-radius: 50%;
+  pointer-events: none;
+}
+
