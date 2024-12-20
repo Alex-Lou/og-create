@@ -27,7 +27,13 @@
         <ul id="items" ref="inventoryItems"></ul>
       </div>
 
-      <div id="resizer" @mousedown="startResizing"></div>
+      <BoardResizing
+        :initialInventoryWidth="initialInventoryWidth"
+        :mainContentWidth="$refs.inventory?.parentElement.offsetWidth || 0"
+        @resizeStart="onResizeStart"
+        @resizeUpdate="onResizeUpdate"
+        @resizeEnd="onResizeEnd"
+      />
 
       <div id="crafting-board" ref="craftingBoard">
         <div id="animation-frame" ref="animationFrame">
@@ -61,13 +67,9 @@
     <XyzTransition appear duration="auto" mode="out-in">
       <div v-if="newAchievement" id="achievement-popup" class="xyz-in"
         xyz="appear-front-5 fade flip-down-50% duration-5 ease-elastic-out-10">
-        <!-- Conteneur pour les particules GSAP -->
         <div ref="particleContainer" class="gsap-particles-container"></div>
-
         <div class="popup-content">
-          <!-- Bouton de fermeture -->
           <button class="close-button" @click="closeAchievementPopup">×</button>
-
           <img v-if="newAchievement?.image" :src="newAchievement.image" :alt="newAchievement.name" class="xyz-nested"
             xyz="fade small flip-down-50% duration-10 delay-2 ease-out-back" />
           <div class="achievement-text xyz-nested" xyz="fade up small-75% delay-3">
@@ -85,14 +87,18 @@
   </div>
 </template>
 
+
+
 <script>
 import DarkToggle from "./components/DarkToggle.vue";
+import BoardResizing from "./components/BoardResizing.vue";
 import './assets/style.css';
 import { gsap } from "gsap";
 
 export default {
   components: {
     DarkToggle,
+    BoardResizing,
   },
   data() {
     return {
@@ -102,13 +108,11 @@ export default {
       discoveredCategories: ["Elements Fondamentaux"],
       discoveredElements: ["Eau", "Feu", "Terre", "Air"],
       selected: [],
-      isResizing: false,
-      startX: 0,
       initialInventoryWidth: 0,
       isDarkMode: true,
       craftedElement: {
         name: "",
-        image: null
+        image: null,
       },
       achievements: [
         {
@@ -116,32 +120,38 @@ export default {
           description: "Découvrez 10 éléments.",
           unlocked: false,
           condition: () => this.discoveredElements.length >= 1,
-          image: require('@/assets/success/Apprenti Dieu.png')
+          image: require('@/assets/success/Apprenti Dieu.png'),
         },
         {
           name: "Maître Créateur",
           description: "Découvrez 20 éléments.",
           unlocked: false,
           condition: () => this.discoveredElements.length >= 20,
-          image: require('@/assets/success/Maître Créateur.png')
-        }
+          image: require('@/assets/success/Maître Créateur.png'),
+        },
       ],
-      newAchievement: null
-    }
-  },
-  watch: {
-    newAchievement(newVal) {
-      if (newVal) {
-        this.$nextTick(() => {
-          this.spawnParticles();
-        });
-      }
-    }
+      newAchievement: null,
+    };
   },
   methods: {
     updateDarkMode(newMode) {
       this.isDarkMode = newMode;
       document.body.classList.toggle("light-mode", !this.isDarkMode);
+    },
+    onResizeStart() {
+      this.initialInventoryWidth = this.$refs.inventory.offsetWidth;
+    },
+    onResizeUpdate(newWidth) {
+      const mainContentWidth = this.$refs.inventory.parentElement.offsetWidth;
+
+      const inventoryFlex = newWidth / mainContentWidth;
+      const craftingFlex = 1 - inventoryFlex;
+
+      this.$refs.inventory.style.flex = inventoryFlex;
+      this.$refs.craftingBoard.style.flex = craftingFlex;
+    },
+    onResizeEnd() {
+      // Actions nécessaires après le redimensionnement
     },
     closeAchievementPopup() {
       this.newAchievement = null;
@@ -321,40 +331,6 @@ export default {
         this.craftItem();
       }
     },
-    startResizing(event) {
-      this.isResizing = true;
-      this.startX = event.clientX;
-      this.initialInventoryWidth = this.$refs.inventory.offsetWidth;
-
-      document.addEventListener("mousemove", this.resize);
-      document.addEventListener("mouseup", this.stopResizing);
-    },
-    resize(event) {
-      if (!this.isResizing) return;
-
-      const deltaX = event.clientX - this.startX;
-      const inventoryNewWidth = this.initialInventoryWidth + deltaX;
-      const mainContentWidth = this.$refs.inventory.parentElement.offsetWidth;
-
-      const minInventoryWidth = 100;
-      const maxInventoryWidth = mainContentWidth - 200;
-
-      if (
-        inventoryNewWidth >= minInventoryWidth &&
-        inventoryNewWidth <= maxInventoryWidth
-      ) {
-        const inventoryFlex = inventoryNewWidth / mainContentWidth;
-        const craftingFlex = 1 - inventoryFlex;
-
-        this.$refs.inventory.style.flex = inventoryFlex;
-        this.$refs.craftingBoard.style.flex = craftingFlex;
-      }
-    },
-    stopResizing() {
-      this.isResizing = false;
-      document.removeEventListener("mousemove", this.resize);
-      document.removeEventListener("mouseup", this.stopResizing);
-    },
     spawnParticles() {
       const container = this.$refs.particleContainer;
       if (!container) return;
@@ -408,7 +384,7 @@ export default {
             ease: "power1.in"
           }, "-=0.2");
       }
-    }
+    },
   },
   mounted() {
     this.loadData();
@@ -416,7 +392,7 @@ export default {
   },
   beforeUnmount() {
     window.removeEventListener("keydown", this.handleKeyPress);
-  }
+  },
 };
 </script>
 
