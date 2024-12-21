@@ -1,0 +1,14 @@
+.inventory-wrapper,
+.crafting-board-wrapper {
+  display: flex;
+  flex: 1;
+  transition: none; /* Supprimer toute transition pour un suivi direct de la souris */
+}
+
+.resizer {
+    width: 10px;
+    cursor: ew-resize;
+    background-color: #888;
+    height: 100%;
+  }
+  

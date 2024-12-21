@@ -23,11 +23,7 @@
         />
       </div>
 
-      <!-- Resizer -->
-      <div
-        class="resizer"
-        @mousedown="startResizing"
-      ></div>
+      <GameSizer />
 
       <div ref="craftingBoard" class="crafting-board-wrapper">
         <CraftSystem
@@ -67,6 +63,7 @@ import CraftSystem from "./components/CraftSystem.vue";
 import CraftPopup from "./components/CraftPopup.vue";
 import GameAchievementsContent from "./components/GameAchievementsContent.vue";
 import DataLoading from "./components/DataLoading.vue";
+import GameSizer from "./components/GameSizer.vue";
 
 import './assets/style.css';
 
@@ -79,7 +76,8 @@ export default {
     CraftSystem,
     CraftPopup,
     GameAchievementsContent,
-    DataLoading
+    DataLoading,
+    GameSizer
   },
   data() {
     return {
@@ -95,46 +93,12 @@ export default {
       },
       achievements: [],
       newAchievement: null,
-      isResizing: false,
-      startX: 0,
-      initialInventoryWidth: 0,
     };
   },
   methods: {
     updateDarkMode(newMode) {
       this.isDarkMode = newMode;
       document.body.classList.toggle("light-mode", !this.isDarkMode);
-    },
-    startResizing(event) {
-      this.isResizing = true;
-      this.startX = event.clientX;
-      this.initialInventoryWidth = this.$refs.inventory.offsetWidth;
-
-      document.addEventListener("mousemove", this.resize);
-      document.addEventListener("mouseup", this.stopResizing);
-    },
-    resize(event) {
-      if (!this.isResizing) return;
-
-      const deltaX = event.clientX - this.startX;
-      const newInventoryWidth = this.initialInventoryWidth + deltaX;
-      const mainContentWidth = this.$refs.mainContent.offsetWidth;
-
-      const minInventoryWidth = 100; // Minimum width of the inventory
-      const maxInventoryWidth = mainContentWidth - 200; // Minimum width of the crafting board
-
-      if (newInventoryWidth >= minInventoryWidth && newInventoryWidth <= maxInventoryWidth) {
-        const inventoryFlex = newInventoryWidth / mainContentWidth;
-        const craftingFlex = 1 - inventoryFlex;
-
-        this.$refs.inventory.style.flex = inventoryFlex;
-        this.$refs.craftingBoard.style.flex = craftingFlex;
-      }
-    },
-    stopResizing() {
-      this.isResizing = false;
-      document.removeEventListener("mousemove", this.resize);
-      document.removeEventListener("mouseup", this.stopResizing);
     },
     handleDataLoaded(data) {
       this.elementEmojis = data.elementEmojis;
@@ -190,19 +154,3 @@ export default {
 };
 </script>
 
-<style scoped>
-/* Style du resizer */
-.resizer {
-  width: 10px;
-  cursor: ew-resize;
-  background-color: #888;
-  height: 100%;
-}
-
-.inventory-wrapper,
-.crafting-board-wrapper {
-  display: flex;
-  flex: 1;
-  transition: none; /* Supprimer toute transition pour un suivi direct de la souris */
-}
-</style>
