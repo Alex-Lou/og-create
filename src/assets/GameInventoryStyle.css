@@ -91,21 +91,21 @@
   
 
   .progress-bar {
-    width: 100px; /* Taille fixe pour la barre de progression */
+    flex-shrink: 0; /* Empêche la barre de progression de se réduire */
+    width: 150px; /* Largeur fixe */
     height: 10px;
     background: #444;
     border-radius: 5px;
-    margin-left: 10px; /* Espacement entre le titre et la barre */
     overflow: hidden;
     position: relative;
+    transition: width 0.3s ease; /* Animation douce si la largeur change */
 }
   
 .progress-bar-fill {
-    height: 100%;
-    background: linear-gradient(90deg, #4caf50, #8bc34a);
-    position: relative;
-    overflow: hidden;
-  }
+  height: 100%;
+  background: linear-gradient(90deg, #4caf50, #8bc34a);
+  transition: width 0.3s ease; /* Animation douce pour les changements de progression */
+}
   
   .progress-bar-fill::before {
     content: '';
@@ -132,12 +132,13 @@
   }
   
   .category-header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
+    display: flex; /* Active l'alignement horizontal */
+    align-items: center; /* Aligne verticalement le texte et la barre */
+    justify-content: space-between; /* Espace entre les éléments */
     padding: 5px 10px;
     color: #4dd0e1;
     font-weight: bold;
+    gap: 10px; /* Espace entre le titre et la barre de progression */
 }
   
   
@@ -148,8 +149,8 @@
   }
 
   .category-title {
-    flex: 1; /* Permet au titre d'occuper l'espace disponible */
-    white-space: nowrap; /* Évite de couper le texte */
-    overflow: hidden;
+    flex: 1; /* Permet au titre d'occuper tout l'espace disponible */
+    white-space: nowrap; /* Évite que le titre se divise en plusieurs lignes */
+    overflow: hidden; /* Coupe le texte trop long */
     text-overflow: ellipsis; /* Ajoute "..." si le texte est trop long */
 }
