@@ -1,6 +1,5 @@
 <template>
   <div :class="['game-container', { 'dark-mode': isDarkMode }]" id="game-container">
-
     <!-- Menu déroulant des succès -->
     <div id="achievements-menu">
       <p>Succès</p>
@@ -42,6 +41,8 @@
           </template>
         </div>
 
+        
+
         <div id="crafting">
           <h2>Creation Zone</h2>
           <div id="selection">
@@ -64,21 +65,11 @@
     </div>
 
     <!-- Popup pour les succès -->
-    <XyzTransition appear duration="auto" mode="out-in">
-      <div v-if="newAchievement" id="achievement-popup" class="xyz-in"
-        xyz="appear-front-5 fade flip-down-50% duration-5 ease-elastic-out-10">
-        <div ref="particleContainer" class="gsap-particles-container"></div>
-        <div class="popup-content">
-          <button class="close-button" @click="closeAchievementPopup">×</button>
-          <img v-if="newAchievement?.image" :src="newAchievement.image" :alt="newAchievement.name" class="xyz-nested"
-            xyz="fade small flip-down-50% duration-10 delay-2 ease-out-back" />
-          <div class="achievement-text xyz-nested" xyz="fade up small-75% delay-3">
-            <h3>{{ newAchievement?.name }}</h3>
-            <p>{{ newAchievement?.description }}</p>
-          </div>
-        </div>
-      </div>
-    </XyzTransition>
+    <GameAchievementsPopup
+      v-if="newAchievement"
+      :achievement="newAchievement"
+      @close="closeAchievementPopup"
+    />
 
     <!-- Pied de page -->
     <footer>
@@ -89,16 +80,18 @@
 
 
 
+
 <script>
 import DarkToggle from "./components/DarkToggle.vue";
 import BoardResizing from "./components/BoardResizing.vue";
+import GameAchievementsPopup from "./components/GameAchievementsPopup.vue";
 import './assets/style.css';
-import { gsap } from "gsap";
 
 export default {
   components: {
     DarkToggle,
     BoardResizing,
+    GameAchievementsPopup,
   },
   data() {
     return {
@@ -114,22 +107,7 @@ export default {
         name: "",
         image: null,
       },
-      achievements: [
-        {
-          name: "Apprenti Dieu",
-          description: "Découvrez 10 éléments.",
-          unlocked: false,
-          condition: () => this.discoveredElements.length >= 1,
-          image: require('@/assets/success/Apprenti Dieu.png'),
-        },
-        {
-          name: "Maître Créateur",
-          description: "Découvrez 20 éléments.",
-          unlocked: false,
-          condition: () => this.discoveredElements.length >= 20,
-          image: require('@/assets/success/Maître Créateur.png'),
-        },
-      ],
+      achievements: [], // Initialisation vide pour les succès
       newAchievement: null,
     };
   },
@@ -150,15 +128,31 @@ export default {
       this.$refs.inventory.style.flex = inventoryFlex;
       this.$refs.craftingBoard.style.flex = craftingFlex;
     },
-    onResizeEnd() {
-      // Actions nécessaires après le redimensionnement
+
+    
+    async loadAchievements() {
+      try {
+        const response = await fetch("/data/achievements.json"); // Charger les données JSON
+        const data = await response.json();
+
+        this.achievements = data.map((achievement) => ({
+          ...achievement,
+          image: require(`@/assets/success/${achievement.name}.png`), // Convertir le chemin en module
+          condition: new Function("return " + achievement.condition).bind(this),
+        }));
+      } catch (error) {
+        console.error("Erreur lors du chargement des succès :", error);
+      }
     },
-    closeAchievementPopup() {
-      this.newAchievement = null;
-    },
+
+
+
+
+
+
     async loadData() {
       try {
-        const response = await fetch("./data/elements_data.json");
+        const response = await fetch("/data/elements_data.json");
         const data = await response.json();
 
         this.elementEmojis = {};
@@ -182,6 +176,10 @@ export default {
         console.error("Erreur lors du chargement des données JSON :", error);
       }
     },
+
+
+
+    
     populateInventory() {
       const inventory = this.$refs.inventory;
       inventory.innerHTML = "";
@@ -198,14 +196,14 @@ export default {
         categoryDiv.className = "category";
 
         categoryDiv.innerHTML = `
-              <div class="category-header">
-                <span class="category-title">${category.replace(/_/g, " ")}</span>
-                <div class="progress-bar">
-                  <div class="progress-bar-fill" style="width: ${progress}%;"></div>
-                </div>
-              </div>
-              <div class="category-content" style="display: none;"></div>
-            `;
+          <div class="category-header">
+            <span class="category-title">${category.replace(/_/g, " ")}</span>
+            <div class="progress-bar">
+              <div class="progress-bar-fill" style="width: ${progress}%;"></div>
+            </div>
+          </div>
+          <div class="category-content" style="display: none;"></div>
+        `;
 
         const contentDiv = categoryDiv.querySelector(".category-content");
 
@@ -317,77 +315,22 @@ export default {
       this.achievements.forEach((achievement) => {
         if (!achievement.unlocked && achievement.condition()) {
           achievement.unlocked = true;
-          this.showAchievementPopup(achievement);
+          this.newAchievement = achievement;
         }
       });
     },
-    showAchievementPopup(achievement) {
-      if (achievement) {
-        this.newAchievement = achievement;
-      }
+    closeAchievementPopup() {
+      this.newAchievement = null;
     },
     handleKeyPress(event) {
       if (event.key === "Enter") {
         this.craftItem();
       }
     },
-    spawnParticles() {
-      const container = this.$refs.particleContainer;
-      if (!container) return;
-
-      container.innerHTML = '';
-
-      const shapes = ['circle', 'square', 'triangle', 'star'];
-      const colors = ['#FF8B8B', '#FFD93D', '#2DCDDF', '#FF6464', '#FFC436'];
-      const particleCount = 150;
-      const particles = [];
-
-      for (let i = 0; i < particleCount; i++) {
-        const particle = document.createElement('div');
-        particle.className = 'particle';
-
-        const shape = shapes[Math.floor(Math.random() * shapes.length)];
-        particle.classList.add(`particle-${shape}`);
-        particle.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
-
-        container.appendChild(particle);
-        particles.push(particle);
-
-        gsap.set(particle, {
-          x: "50%",
-          y: "50%",
-          scale: 0.1,
-          opacity: 1
-        });
-
-        const angle = Math.random() * Math.PI * 2;
-        const velocity = 120 + Math.random() * 180;
-        const rotationSpeed = (Math.random() - 0.5) * 720;
-
-        const tl = gsap.timeline();
-
-        tl.to(particle, {
-          duration: 0.8 + Math.random() * 0.4,
-          x: `+=${Math.cos(angle) * velocity}%`,
-          y: `+=${Math.sin(angle) * velocity}%`,
-          scale: 0.6 + Math.random() * 0.8,
-          rotation: rotationSpeed,
-          ease: "power2.out"
-        })
-          .to(particle, {
-            duration: 1 + Math.random() * 0.5,
-            y: "+=100",
-            x: `+=${(Math.random() - 0.5) * 50}`,
-            scale: 0.2,
-            opacity: 0,
-            rotation: `+=${rotationSpeed * 0.5}`,
-            ease: "power1.in"
-          }, "-=0.2");
-      }
-    },
   },
-  mounted() {
-    this.loadData();
+  async mounted() {
+    await this.loadAchievements();
+    await this.loadData();
     window.addEventListener("keydown", this.handleKeyPress);
   },
   beforeUnmount() {
