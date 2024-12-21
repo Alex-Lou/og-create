@@ -18,9 +18,10 @@
     </div>
 </template>
 
-
-
 <script>
+// Importer le fichier CSS depuis le dossier assets
+import '@/assets/GameInventoryStyle.css';
+
 export default {
     props: {
         categories: {
