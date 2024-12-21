@@ -21,10 +21,13 @@
 
     <!-- Contenu principal -->
     <main id="main-content">
-      <div id="inventory" ref="inventory">
-        <h2>Inventory</h2>
-        <ul id="items" ref="inventoryItems"></ul>
-      </div>
+      <GameInventory
+        :categories="categories"
+        :discoveredCategories="discoveredCategories"
+        :discoveredElements="discoveredElements"
+        :elementEmojis="elementEmojis"
+        @selectResource="selectResource"
+      />
 
       <BoardResizing
         :initialInventoryWidth="initialInventoryWidth"
@@ -41,12 +44,14 @@
           </template>
         </div>
 
-        
-
         <div id="crafting">
           <h2>Creation Zone</h2>
           <div id="selection">
-            <ul id="selected-resources" ref="selectedResources"></ul>
+            <ul id="selected-resources">
+              <li v-for="(resource, index) in selected" :key="index" @click="removeResource(index)">
+                {{ elementEmojis[resource] || '' }} {{ resource }}
+              </li>
+            </ul>
             <button id="craft-button" @click="craftItem">Craft</button>
           </div>
           <div id="crafted-result">
@@ -64,13 +69,13 @@
       </div>
     </div>
 
+    <!-- Popup pour succès -->
     <GameAchievementsPopup
-  v-if="newAchievement"
-  :achievement="newAchievement"
-  :achievements="achievements"
-  @close="closeAchievementPopup"
-/>
-
+      v-if="newAchievement"
+      :achievement="newAchievement"
+      :achievements="achievements"
+      @close="closeAchievementPopup"
+    />
 
     <!-- Pied de page -->
     <footer>
@@ -79,13 +84,11 @@
   </div>
 </template>
 
-
-
-
 <script>
 import DarkToggle from "./components/DarkToggle.vue";
 import BoardResizing from "./components/BoardResizing.vue";
 import GameAchievementsPopup from "./components/GameAchievementsPopup.vue";
+import GameInventory from "./components/GameInventory.vue";
 
 import './assets/style.css';
 
@@ -94,6 +97,7 @@ export default {
     DarkToggle,
     BoardResizing,
     GameAchievementsPopup,
+    GameInventory,
   },
   data() {
     return {
@@ -109,7 +113,7 @@ export default {
         name: "",
         image: null,
       },
-      achievements: [], // Initialisation vide pour les succès
+      achievements: [],
       newAchievement: null,
     };
   },
@@ -131,21 +135,22 @@ export default {
       this.$refs.craftingBoard.style.flex = craftingFlex;
     },
 
+
+    
     async loadAchievements() {
       try {
-        const response = await fetch("/data/achievements.json"); // Charger les données JSON
+        const response = await fetch("/data/achievements.json");
         const data = await response.json();
 
         this.achievements = data.map((achievement) => ({
           ...achievement,
-          image: require(`@/assets/success/${achievement.name}.png`), // Convertir le chemin en module
+          image: require(`@/assets/success/${achievement.name}.png`),
           condition: new Function("return " + achievement.condition).bind(this),
         }));
       } catch (error) {
         console.error("Erreur lors du chargement des succès :", error);
       }
     },
-
     async loadData() {
       try {
         const response = await fetch("/data/elements_data.json");
@@ -166,145 +171,62 @@ export default {
         Object.entries(data.rules).forEach(([key, value]) => {
           this.craftingRecipes[key.split("+").sort().join("+")] = value;
         });
-
-        this.populateInventory();
       } catch (error) {
         console.error("Erreur lors du chargement des données JSON :", error);
       }
     },
 
 
-    
-    populateInventory() {
-      const inventory = this.$refs.inventory;
-      inventory.innerHTML = "";
-
-      Object.entries(this.categories).forEach(([category, elements]) => {
-        if (!this.discoveredCategories.includes(category)) return;
-
-        const discoveredCount = elements.filter((resource) =>
-          this.discoveredElements.includes(resource)
-        ).length;
-        const progress = Math.floor((discoveredCount / elements.length) * 100);
-
-        const categoryDiv = document.createElement("div");
-        categoryDiv.className = "category";
-
-        categoryDiv.innerHTML = `
-          <div class="category-header">
-            <span class="category-title">${category.replace(/_/g, " ")}</span>
-            <div class="progress-bar">
-              <div class="progress-bar-fill" style="width: ${progress}%;"></div>
-            </div>
-          </div>
-          <div class="category-content" style="display: none;"></div>
-        `;
-
-        const contentDiv = categoryDiv.querySelector(".category-content");
-
-        elements.forEach((resource) => {
-          if (!this.discoveredElements.includes(resource)) return;
-
-          const item = document.createElement("div");
-          const emoji = this.elementEmojis[resource] || "";
-          item.className = "inventory-item";
-          item.innerHTML = `${emoji} ${resource}`;
-          item.addEventListener("click", () => this.selectResource(resource));
-          contentDiv.appendChild(item);
-        });
-
-        categoryDiv.addEventListener("mouseenter", () => {
-          contentDiv.style.display = "block";
-        });
-        categoryDiv.addEventListener("mouseleave", () => {
-          contentDiv.style.display = "none";
-        });
-
-        inventory.appendChild(categoryDiv);
-      });
-    },
     selectResource(resource) {
       if (this.selected.length < 4) {
         this.selected.push(resource.trim());
-        this.updateSelectedResources();
       } else {
         alert("You can only select up to 3 elements for crafting!");
       }
     },
-    updateSelectedResources() {
-      const selectedResources = this.$refs.selectedResources;
-      selectedResources.innerHTML = "";
-      this.selected.forEach((resource) => {
-        const emoji = this.elementEmojis[resource] || "";
-        const item = document.createElement("li");
-        item.innerHTML = `${emoji} ${resource}`;
-        item.addEventListener("click", () => {
-          this.selected.splice(this.selected.indexOf(resource), 1);
-          this.updateSelectedResources();
-        });
-        selectedResources.appendChild(item);
-      });
+
+
+    removeResource(index) {
+      this.selected.splice(index, 1);
     },
+
+
     craftItem() {
       if (this.selected.length >= 2) {
         const sortedSelected = this.selected.sort().join("+");
         const craftedItem = this.craftingRecipes[sortedSelected];
 
         if (craftedItem) {
-          this.playAnimation();
+          this.craftedElement = {
+            name: craftedItem,
+            image: require(`@/assets/creatures/${craftedItem}.png`),
+          };
           this.addToCategory(craftedItem);
           this.checkAchievements();
-
-          try {
-            const imagePath = require(`@/assets/creatures/${craftedItem}.png`);
-            this.showCraftedPopup(craftedItem, imagePath);
-          } catch (error) {
-            console.warn(`No image found for element: ${craftedItem}`);
-            this.showCraftedPopup(craftedItem, null);
-          }
-
-          this.$refs.craftedItemDisplay.textContent = `Dernière création: ${craftedItem}`;
+          this.showCraftedPopup();
         } else {
-          this.$refs.craftedItemDisplay.textContent = "Invalid combination.";
+          alert("Invalid combination.");
         }
 
         this.selected = [];
-        this.updateSelectedResources();
       } else {
         alert("Select at least 2 elements to craft!");
       }
     },
-    showCraftedPopup(elementName, imagePath) {
-      this.craftedElement = { name: elementName, image: imagePath };
 
-      const popup = this.$refs.craftedPopup;
-      popup.classList.add("show");
 
-      setTimeout(() => {
-        popup.classList.remove("show");
-        this.craftedElement = { name: "", image: null };
-      }, 2500);
-    },
-    playAnimation() {
-      const animationFrame = this.$refs.animationFrame;
-      animationFrame.classList.add("active");
-      setTimeout(() => animationFrame.classList.remove("active"), 1000);
-    },
     addToCategory(craftedItem) {
       const targetCategory = Object.keys(this.categories).find((category) =>
         this.categories[category].includes(craftedItem)
       );
 
-      if (targetCategory) {
+      if (targetCategory && !this.discoveredElements.includes(craftedItem)) {
+        this.discoveredElements.push(craftedItem);
+        // Ajouter la catégorie à discoveredCategories si elle n'existe pas déjà
         if (!this.discoveredCategories.includes(targetCategory)) {
           this.discoveredCategories.push(targetCategory);
         }
-        if (!this.discoveredElements.includes(craftedItem)) {
-          this.discoveredElements.push(craftedItem);
-        }
       }
-
-      this.populateInventory();
     },
     checkAchievements() {
       this.achievements.forEach((achievement) => {
@@ -317,6 +239,17 @@ export default {
     closeAchievementPopup() {
       this.newAchievement = null;
     },
+    showCraftedPopup() {
+      const popup = this.$refs.craftedPopup;
+      popup.classList.add("show");
+
+      setTimeout(() => {
+        popup.classList.remove("show");
+        this.craftedElement = { name: "", image: null }; // Réinitialisation de l'élément après fermeture
+      }, 2500); // Assure que le popup reste pendant 2.5 secondes
+    },
+
+    // Gestion de la touche "Entrée" pour valider le craft
     handleKeyPress(event) {
       if (event.key === "Enter") {
         this.craftItem();
@@ -326,9 +259,12 @@ export default {
   async mounted() {
     await this.loadAchievements();
     await this.loadData();
+    
+    // Ajout de l'écouteur pour la touche "Entrée"
     window.addEventListener("keydown", this.handleKeyPress);
   },
   beforeUnmount() {
+    // Nettoyage de l'écouteur d'événements pour éviter les fuites mémoire
     window.removeEventListener("keydown", this.handleKeyPress);
   },
 };
