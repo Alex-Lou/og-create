@@ -1,58 +1,74 @@
 <template>
-    <div v-if="achievement" id="achievement-popup" class="xyz-in"
-        xyz="appear-front-5 fade flip-down-50% duration-5 ease-elastic-out-10">
+    <div>
+      <!-- Menu déroulant des succès -->
+      <div id="achievements-menu">
+        <p>Succès</p>
+        <div id="achievements-content">
+          <ul>
+            <li
+              v-for="(achievement, index) in achievements"
+              :key="index"
+              :class="{ unlocked: achievement.unlocked }"
+            >
+              <img
+                v-if="achievement.image"
+                :src="achievement.image"
+                alt=""
+                class="achievement-icon"
+              />
+              {{ achievement.name }} - {{ achievement.description }}
+            </li>
+          </ul>
+        </div>
+      </div>
+  
+      <!-- Popup pour un succès spécifique -->
+      <div
+        v-if="achievement"
+        id="achievement-popup"
+        class="xyz-in"
+        xyz="appear-front-5 fade flip-down-50% duration-5 ease-elastic-out-10"
+      >
         <div ref="particleContainer" class="gsap-particles-container"></div>
         <div class="popup-content">
-            <button class="close-button" @click="closePopup">&times;</button>
-            <img v-if="achievement?.image" :src="achievement.image" :alt="achievement.name" class="xyz-nested"
-                xyz="fade small flip-down-50% duration-10 delay-2 ease-out-back" />
-            <div class="achievement-text xyz-nested" xyz="fade up small-75% delay-3">
-                <h3>{{ achievement?.name }}</h3>
-                <p>{{ achievement?.description }}</p>
-            </div>
+          <button class="close-button" @click="closePopup">&times;</button>
+          <img
+            v-if="achievement?.image"
+            :src="achievement.image"
+            :alt="achievement.name"
+            class="xyz-nested"
+            xyz="fade small flip-down-50% duration-10 delay-2 ease-out-back"
+          />
+          <div
+            class="achievement-text xyz-nested"
+            xyz="fade up small-75% delay-3"
+          >
+            <h3>{{ achievement?.name }}</h3>
+            <p>{{ achievement?.description }}</p>
+          </div>
         </div>
+      </div>
     </div>
-</template>
-
-
-
-<script>
-export default {
+  </template>
+  
+  <script>
+  export default {
     props: {
-        achievement: {
-            type: Object,
-            default: null,
-        },
+      achievement: {
+        type: Object,
+        default: null,
+      },
+      achievements: {
+        type: Array,
+        default: () => [],
+      },
     },
-    emits: ["close", "achievements-loaded"], // Ajout d'un événement pour signaler les succès chargés
-    data() {
-        return {
-            achievements: [], // Contiendra la liste des succès
-        };
-    },
+    emits: ["close"],
     methods: {
-        closePopup() {
-            this.$emit("close");
-        },
-        async loadAchievements() {
-            try {
-                const response = await fetch("/data/achievements.json");
-                const data = await response.json();
-
-                this.achievements = data.map((achievement) => ({
-                    ...achievement,
-                    image: require(`@/assets/success/${achievement.name}.png`),
-                    condition: new Function("return " + achievement.condition).bind(this),
-                }));
-
-                this.$emit("achievements-loaded", this.achievements); // Informer le parent que les succès sont chargés
-            } catch (error) {
-                console.error("Erreur lors du chargement des succès :", error);
-            }
-        },
+      closePopup() {
+        this.$emit("close");
+      },
     },
-    mounted() {
-        this.loadAchievements(); // Charger automatiquement les succès au montage
-    },
-};
-</script>
+  };
+  </script>
+  

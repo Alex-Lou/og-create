@@ -64,12 +64,13 @@
       </div>
     </div>
 
-    <!-- Popup pour les succès -->
     <GameAchievementsPopup
-      v-if="newAchievement"
-      :achievement="newAchievement"
-      @close="closeAchievementPopup"
-    />
+  v-if="newAchievement"
+  :achievement="newAchievement"
+  :achievements="achievements"
+  @close="closeAchievementPopup"
+/>
+
 
     <!-- Pied de page -->
     <footer>
@@ -85,6 +86,7 @@
 import DarkToggle from "./components/DarkToggle.vue";
 import BoardResizing from "./components/BoardResizing.vue";
 import GameAchievementsPopup from "./components/GameAchievementsPopup.vue";
+
 import './assets/style.css';
 
 export default {
@@ -129,7 +131,6 @@ export default {
       this.$refs.craftingBoard.style.flex = craftingFlex;
     },
 
-    
     async loadAchievements() {
       try {
         const response = await fetch("/data/achievements.json"); // Charger les données JSON
@@ -144,11 +145,6 @@ export default {
         console.error("Erreur lors du chargement des succès :", error);
       }
     },
-
-
-
-
-
 
     async loadData() {
       try {
@@ -176,7 +172,6 @@ export default {
         console.error("Erreur lors du chargement des données JSON :", error);
       }
     },
-
 
 
     
