@@ -12,31 +12,33 @@
       <DarkToggle :isDarkMode="isDarkMode" @update:darkMode="updateDarkMode" />
     </header>
 
-    <main id="main-content">
-      <GameInventory
-        :categories="categories"
-        :discoveredCategories="discoveredCategories"
-        :discoveredElements="discoveredElements"
-        :elementEmojis="elementEmojis"
-        @selectResource="handleResourceSelection"
-      />
+    <main id="main-content" ref="mainContent">
+      <div ref="inventory" class="inventory-wrapper">
+        <GameInventory
+          :categories="categories"
+          :discoveredCategories="discoveredCategories"
+          :discoveredElements="discoveredElements"
+          :elementEmojis="elementEmojis"
+          @selectResource="handleResourceSelection"
+        />
+      </div>
 
-      <BoardResizing
-        :initialInventoryWidth="initialInventoryWidth"
-        :mainContentWidth="$refs.inventory?.parentElement.offsetWidth || 0"
-        @resizeStart="onResizeStart"
-        @resizeUpdate="onResizeUpdate"
-        @resizeEnd="onResizeEnd"
-      />
+      <!-- Resizer -->
+      <div
+        class="resizer"
+        @mousedown="startResizing"
+      ></div>
 
-      <CraftSystem
-        :elementEmojis="elementEmojis"
-        :craftingRecipes="craftingRecipes"
-        :isDarkMode="isDarkMode"
-        @craft-success="handleCraftSuccess"
-        @show-alert="showAlert"
-        ref="craftSystem"
-      />
+      <div ref="craftingBoard" class="crafting-board-wrapper">
+        <CraftSystem
+          :elementEmojis="elementEmojis"
+          :craftingRecipes="craftingRecipes"
+          :isDarkMode="isDarkMode"
+          @craft-success="handleCraftSuccess"
+          @show-alert="showAlert"
+          ref="craftSystem"
+        />
+      </div>
     </main>
 
     <CraftPopup 
@@ -59,7 +61,6 @@
 
 <script>
 import DarkToggle from "./components/DarkToggle.vue";
-import BoardResizing from "./components/BoardResizing.vue";
 import GameAchievementsPopup from "./components/GameAchievementsPopup.vue";
 import GameInventory from "./components/GameInventory.vue";
 import CraftSystem from "./components/CraftSystem.vue";
@@ -73,7 +74,6 @@ export default {
   name: 'App',
   components: {
     DarkToggle,
-    BoardResizing,
     GameAchievementsPopup,
     GameInventory,
     CraftSystem,
@@ -88,7 +88,6 @@ export default {
       categories: {},
       discoveredCategories: ["Elements Fondamentaux"],
       discoveredElements: ["Eau", "Feu", "Terre", "Air"],
-      initialInventoryWidth: 0,
       isDarkMode: true,
       craftedElement: {
         name: "",
@@ -96,6 +95,9 @@ export default {
       },
       achievements: [],
       newAchievement: null,
+      isResizing: false,
+      startX: 0,
+      initialInventoryWidth: 0,
     };
   },
   methods: {
@@ -103,15 +105,36 @@ export default {
       this.isDarkMode = newMode;
       document.body.classList.toggle("light-mode", !this.isDarkMode);
     },
-    onResizeStart() {
+    startResizing(event) {
+      this.isResizing = true;
+      this.startX = event.clientX;
       this.initialInventoryWidth = this.$refs.inventory.offsetWidth;
+
+      document.addEventListener("mousemove", this.resize);
+      document.addEventListener("mouseup", this.stopResizing);
     },
-    onResizeUpdate(newWidth) {
-      const mainContentWidth = this.$refs.inventory.parentElement.offsetWidth;
-      const inventoryFlex = newWidth / mainContentWidth;
-      const craftingFlex = 1 - inventoryFlex;
-      this.$refs.inventory.style.flex = inventoryFlex;
-      this.$refs.craftingBoard.style.flex = craftingFlex;
+    resize(event) {
+      if (!this.isResizing) return;
+
+      const deltaX = event.clientX - this.startX;
+      const newInventoryWidth = this.initialInventoryWidth + deltaX;
+      const mainContentWidth = this.$refs.mainContent.offsetWidth;
+
+      const minInventoryWidth = 100; // Minimum width of the inventory
+      const maxInventoryWidth = mainContentWidth - 200; // Minimum width of the crafting board
+
+      if (newInventoryWidth >= minInventoryWidth && newInventoryWidth <= maxInventoryWidth) {
+        const inventoryFlex = newInventoryWidth / mainContentWidth;
+        const craftingFlex = 1 - inventoryFlex;
+
+        this.$refs.inventory.style.flex = inventoryFlex;
+        this.$refs.craftingBoard.style.flex = craftingFlex;
+      }
+    },
+    stopResizing() {
+      this.isResizing = false;
+      document.removeEventListener("mousemove", this.resize);
+      document.removeEventListener("mouseup", this.stopResizing);
     },
     handleDataLoaded(data) {
       this.elementEmojis = data.elementEmojis;
@@ -166,3 +189,20 @@ export default {
   }
 };
 </script>
+
+<style scoped>
+/* Style du resizer */
+.resizer {
+  width: 10px;
+  cursor: ew-resize;
+  background-color: #888;
+  height: 100%;
+}
+
+.inventory-wrapper,
+.crafting-board-wrapper {
+  display: flex;
+  flex: 1;
+  transition: none; /* Supprimer toute transition pour un suivi direct de la souris */
+}
+</style>

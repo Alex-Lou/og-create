@@ -86,13 +86,3 @@ footer p {
 
 
 
-
-#resizer {
-    width: 8px;
-    background: linear-gradient(to bottom, #666, #333);
-    cursor: ew-resize;
-}
-
-#resizer:hover {
-    background: linear-gradient(to bottom, #888, #555);
-}
