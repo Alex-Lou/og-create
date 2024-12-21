@@ -1,0 +1,122 @@
+/* Bouton Toggle Animé (Jour/Nuit) */
+#toggle-dark-mode {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    z-index: 100;
+    width: 60px;
+    height: 30px;
+    background: linear-gradient(135deg, #14282b, #21484d);
+    border: none;
+    border-radius: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 5px;
+    cursor: pointer;
+    box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.5);
+    transition: background-color 0.5s ease;
+}
+
+/* Lune/Soleil (indicateur animé) */
+#toggle-dark-mode .toggle-indicator {
+    position: absolute;
+    top: 50%;
+    left: 5px;
+    transform: translateY(-50%);
+    width: 20px;
+    height: 20px;
+    background: radial-gradient(circle, #f39c12 50%, #e67e22 100%);
+    border-radius: 50%;
+    transition: all 0.5s ease;
+    box-shadow: 0 0 10px rgba(255, 223, 100, 0.7);
+}
+
+/* Icône lune (pour mode nuit) */
+#toggle-dark-mode .toggle-indicator:before {
+    content: '';
+    position: absolute;
+    width: 12px;
+    height: 12px;
+    background: #2c3e50;
+    border-radius: 50%;
+    top: -4px;
+    right: -4px;
+    box-shadow: inset -2px 2px 4px rgba(0, 0, 0, 0.5);
+    opacity: 0;
+    transition: opacity 0.5s ease;
+}
+
+
+
+
+
+
+/* Mode Jour */
+body.light-mode #toggle-dark-mode {
+    background: linear-gradient(135deg, #87ceeb, #4682b4);
+}
+
+body.light-mode #toggle-dark-mode .toggle-indicator {
+    background: radial-gradient(circle, #f1c40f 50%, #f39c12 100%);
+    transform: translate(30px, -50%);
+    box-shadow: 0 0 10px rgba(255, 223, 100, 0.7);
+}
+
+body.light-mode #toggle-dark-mode .toggle-indicator:before {
+    opacity: 0; /* La lune disparaît */
+}
+
+/* Mode Nuit */
+body.dark-mode #toggle-dark-mode .toggle-indicator {
+    transform: translate(5px, -50%);
+    background: radial-gradient(circle, #2c3e50 50%, #1c2833 100%);
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.7);
+}
+
+body.dark-mode #toggle-dark-mode .toggle-indicator:before {
+    opacity: 1; /* La lune apparaît */
+}
+
+/* Transition fluide pour le body */
+body.transition-mode {
+    transition: background-color 0.5s ease, color 0.5s ease;
+}
+
+
+/* Mode clair activé quand body.light-mode est présent */
+body.light-mode {
+    background: #f0f0f0; /* Fond clair pour le body */
+    color: #333;         /* Couleur du texte plus foncée */
+  }
+  
+  body.light-mode #game-container {
+    background: #f0f0f0; /* Fond clair pour le conteneur principal */
+    color: #333;          /* Couleur de texte adaptée */
+  }
+  
+  body.light-mode #inventory {
+    background: #ffffff;  /* Inventaire plus clair */
+    color: #000000;
+  }
+  
+  body.light-mode #animation-frame {
+    background: #89c8ef; /* Un bleu ciel clair pour remplacer le fond noir */
+  }
+  
+  body.light-mode #achievements-menu {
+    background: #e0e0e0;
+    color: #000;
+  }
+  
+  body.light-mode #achievements-content {
+    background: #f0f0f0;
+    color: #000;
+  }
+  
+  body.light-mode #crafted-popup {
+    background: rgba(255, 255, 255, 0.9);
+    color: #000;
+  }
+  
+  

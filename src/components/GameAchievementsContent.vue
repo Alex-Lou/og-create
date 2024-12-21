@@ -29,3 +29,8 @@
     }
   }
   </script>
+  
+  <style scoped>
+  @import "@/assets/SuccessContentStyle.css"; /* Chemin vers ton fichier CSS */
+  </style>
+        

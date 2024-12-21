@@ -10,7 +10,7 @@
       "name": "Maître Créateur",
       "description": "Découvrez 20 éléments.",
       "unlocked": false,
-      "condition": "this.discoveredElements.length >= 20",
+      "condition": "this.discoveredElements.length >= 10",
       "image": "/assets/success/Maître Créateur.png"
     }
   ]

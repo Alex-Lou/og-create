@@ -1,0 +1,213 @@
+#crafted-popup {
+    position: fixed;
+    top: 50%;
+    right: 35%;
+    transform: translate(-50%, -50%);
+    background: rgba(31, 26, 26, 0.047); /* Plus opaque */
+    color: #fff;
+    padding: 5px 15px;
+    border-radius: 15px; /* Coins arrondis */
+    text-align: center;
+    font-size: 1.5rem;
+    visibility: hidden;
+    z-index: 100;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.6); /* Ombre plus prononcée */
+    animation: none;
+  }
+  
+  @keyframes fadeInOut {
+    0% {
+      opacity: 0;
+      visibility: visible;
+      transform: translate(-50%, -70%);
+    }
+    20%, 80% {
+      opacity: 1;
+      transform: translate(-50%, -50%);
+    }
+    100% {
+      opacity: 0;
+      visibility: hidden;
+      transform: translate(-50%, -30%);
+    }
+  }
+  
+  #crafted-popup.show {
+    animation: fadeInOut 2s ease-in-out;
+  }
+
+  #crafted-popup img {
+    max-width: 100px;
+    max-height: 100px;
+    margin-bottom: 10px;
+  }
+
+
+
+
+  /* Résultat du Craft */
+#crafted-result {
+    position: absolute;
+    bottom: 10px;
+    left: 10px;
+    font-size: 0.9rem;
+    color: #ffffff;
+    z-index: 2;
+    text-align: left;
+}
+
+#crafted-item {
+    color: #38bdf8;
+    font-size: 1rem;
+    opacity: 0;
+    animation: fadeInSlide 0.8s ease-out forwards;
+}
+
+@keyframes fadeInSlide {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+
+
+
+/* Inventory Section */
+#inventory {
+    flex: 1;
+    background: #2a2a2a;
+    padding: 10px;
+    border-radius: 10px;
+    box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.3);
+    overflow-y: auto;
+    background: #2a2a2a; /* Fond sombre de l'inventaire */
+    color: #ffffff;
+    transition: background-color 0.5s, color 0.5s;
+}
+
+#inventory h2 {
+    text-align: center;
+    color: #4dd0e1;
+    margin-bottom: 10px;
+}
+
+#items {
+    list-style: none;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+#items li {
+    background: linear-gradient(135deg, #4dd0e1, #00acc1);
+    color: #fff;
+    padding: 10px;
+    border-radius: 5px;
+    text-align: center;
+    cursor: pointer;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+#items li:hover {
+    transform: scale(1.1);
+    box-shadow: 0px 5px 15px rgba(0, 188, 212, 0.5);
+}
+
+/* Crafting Section */
+#crafting {
+    position: relative;
+    z-index: 2;
+    padding: 20px;
+    text-align: center;
+    height: 100%;
+}
+
+
+
+/* Crafting Board Section */
+#crafting-board {
+    flex: 2;
+    position: relative; /* Assure que les éléments absolus sont positionnés ici */
+    background: #000; /* Fond noir profond */
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
+    overflow: hidden;
+    overflow-y: auto;
+    transition: flex 0.2s;
+}
+
+
+/* Bouton Craft */
+#craft-button {
+    position: absolute; /* Le bouton doit être placé en haut à gauche */
+    top: 10px;
+    left: 10px;
+    z-index: 100; /* S'assurer qu'il reste visible au-dessus des autres éléments */
+    background: linear-gradient(135deg, #4dd0e1, #00acc1);
+    color: white;
+    font-weight: bold;
+    padding: 10px 20px;
+    border-radius: 8px;
+    font-size: 1rem;
+    cursor: pointer;
+    text-shadow: 0 0 5px rgba(255, 255, 255, 0.8);
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+/* Effet Hover */
+#craft-button:hover {
+    background: linear-gradient(135deg, #00acc1, #4dd0e1);
+    transform: scale(1.05);
+    box-shadow: 0 8px 15px rgba(0, 188, 212, 0.5);
+}
+
+/* Effet Actif (cliqué) */
+#craft-button:active {
+    transform: scale(0.95);
+    background: #008ba3;
+    box-shadow: 0 4px 10px rgba(0, 139, 163, 0.5);
+}
+
+@keyframes rainbowCycle {
+    0% { background-position: 0% 50%; }
+    100% { background-position: 100% 50%; }
+}
+
+/* Conteneur pour les éléments sélectionnés */
+#selection {
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* Centre les éléments horizontalement */
+    gap: 15px; /* Espacement entre la liste et le bouton */
+    margin-top: 20px;
+}
+
+#selected-resources {
+    list-style: none;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    justify-content: center;
+    padding: 10px;
+    min-height: 60px; /* Assure une zone constante même sans élément */
+    max-width: 300px;
+}
+
+/* Éléments sélectionnés */
+#selected-resources li {
+    background: #4b5ebe;
+    color: #fff;
+    padding: 8px 10px;
+    border-radius: 5px;
+    font-size: 0.9rem;
+    transition: transform 0.2s ease;
+    cursor: pointer;
+}
+
+#selected-resources li:hover {
+    transform: scale(1.05);
+}
