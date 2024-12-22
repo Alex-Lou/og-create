@@ -166,3 +166,18 @@ body.light-mode #crafted-popup {
   background-color: #aca5a5;
   color: #aca5a5;
 }
+
+
+body.light-mode #craft-button {
+  color: #21353e;
+  background-color: #381e1e;
+}
+body.light-mode #craft-button:hover {
+  color: #21353e;
+  background-color: #381e1e;
+}
+body.light-mode #craft-button:active {
+  color: #21353e;
+  background-color: #381e1e;
+}
+

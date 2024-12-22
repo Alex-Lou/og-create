@@ -83,7 +83,7 @@ header .dark-toggle {
 #main-content {
     display: flex;
     width: 100%;
-    height: calc(100vh - 80px); /* Ajuste la hauteur selon le header/footer */
+    height: calc(100vh); /* Ajuste la hauteur selon le header/footer */
 }
 
 /* Animation d'apparition du conteneur */
