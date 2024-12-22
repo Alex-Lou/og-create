@@ -1,8 +1,10 @@
 <template>
   <div>
     <!-- Menu déroulant des succès -->
-    <div id="achievements-menu">
-      <p>Succès</p>
+    <div 
+      id="achievements-menu" 
+      v-if="!achievement"
+    >
       <div id="achievements-content">
         <ul>
           <li

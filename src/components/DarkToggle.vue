@@ -1,37 +1,37 @@
-<template>
-  <button id="toggle-dark-mode" @click="toggleDarkMode">
-    <span class="toggle-indicator"></span>
-  </button>
-</template>
+  <template>
+    <button id="toggle-dark-mode" @click="toggleDarkMode">
+      <span class="toggle-indicator"></span>
+    </button>
+  </template>
 
-<script>
-export default {
-  props: {
-    isDarkMode: {
-      type: Boolean,
-      required: true,
+  <script>
+  export default {
+    props: {
+      isDarkMode: {
+        type: Boolean,
+        required: true,
+      },
     },
-  },
-  emits: ["update:darkMode"],
-  methods: {
-    toggleDarkMode() {
-  document.body.classList.add("transition-mode");
-  setTimeout(() => {
-    document.body.classList.remove("transition-mode");
-  }, 500);
+    emits: ["update:darkMode"],
+    methods: {
+      toggleDarkMode() {
+    document.body.classList.add("transition-mode");
+    setTimeout(() => {
+      document.body.classList.remove("transition-mode");
+    }, 500);
 
-  this.$emit("update:darkMode", !this.isDarkMode);
-  document.body.classList.toggle("light-mode", !this.isDarkMode);
-  document.body.classList.toggle("dark-mode", this.isDarkMode);
-},
+    this.$emit("update:darkMode", !this.isDarkMode);
+    document.body.classList.toggle("light-mode", !this.isDarkMode);
+    document.body.classList.toggle("dark-mode", this.isDarkMode);
   },
-  mounted() {
-    // Assurez-vous que la classe correcte est appliquée au chargement
-    document.body.classList.add(this.isDarkMode ? "dark-mode" : "light-mode");
-  },
-};
-</script>
+    },
+    mounted() {
+      // Assurez-vous que la classe correcte est appliquée au chargement
+      document.body.classList.add(this.isDarkMode ? "dark-mode" : "light-mode");
+    },
+  };
+  </script>
 
-<style scoped>
-@import "@/assets/ToggleDarkStyle.css"; /* Chemin vers ton fichier CSS */
-</style>
+  <style scoped>
+  @import "@/assets/ToggleDarkStyle.css"; /* Chemin vers ton fichier CSS */
+  </style>
