@@ -79,76 +79,76 @@ export default {
       }, 200);
     },
     createParticles() {
-  const container = this.$refs.particleContainer;
-  if (!container) return;
+      const container = this.$refs.particleContainer;
+      if (!container) return;
 
-  // Nettoyage des anciennes particules
-  this.cleanupParticles();
+      // Nettoyage des anciennes particules
+      this.cleanupParticles();
 
-  // Récupérer les dimensions réelles du conteneur
-  const rect = container.getBoundingClientRect();
-  const centerX = rect.width / 2;
-  const centerY = rect.height / 2;
+      // Récupérer les dimensions réelles du conteneur
+      const rect = container.getBoundingClientRect();
+      const centerX = rect.width / 2;
+      const centerY = rect.height / 2;
 
-  for (let i = 0; i < this.particleCount + 200; i++) { // Plus de particules
-    const particle = document.createElement('div');
-    particle.className = 'particle';
+      for (let i = 0; i < this.particleCount + 200; i++) { // Plus de particules
+        const particle = document.createElement('div');
+        particle.className = 'particle';
 
-    // Style initial des particules
-    Object.assign(particle.style, {
-      backgroundColor: this.colors[Math.floor(Math.random() * this.colors.length)],
-      position: 'absolute',
-      width: '6px', // Taille légèrement réduite pour plus de naturel
-      height: '6px',
-      borderRadius: '50%',
-      left: `${centerX}px`,
-      top: `${centerY}px`,
-      transform: 'translate(-100%, -100%)',
-      opacity: 1
-    });
+        // Style initial des particules
+        Object.assign(particle.style, {
+          backgroundColor: this.colors[Math.floor(Math.random() * this.colors.length)],
+          position: 'absolute',
+          width: '6px', // Taille légèrement réduite pour plus de naturel
+          height: '6px',
+          borderRadius: '50%',
+          left: `${centerX}px`,
+          top: `${centerY}px`,
+          transform: 'translate(-100%, -100%)',
+          opacity: 1
+        });
 
-    container.appendChild(particle);
-    this.particles.push(particle);
-  }
-},
-animateParticles() {
-  this.particles.forEach((particle) => {
-    const angle = Math.random() * Math.PI * 2; // Direction aléatoire
-    const initialDistance = 70 + Math.random() * 100; // Distance pour le jet initial
-    const arcHeight = 100 + Math.random() * 50; // Hauteur de l'arc
-    const duration = 1.5 + Math.random() * 0.5; // Durée totale de l'animation
-    const delay = Math.random() * 0.01; // Délais aléatoires pour décaler les particules
+        container.appendChild(particle);
+        this.particles.push(particle);
+      }
+    },
+    animateParticles() {
+      this.particles.forEach((particle) => {
+        const angle = Math.random() * Math.PI * 2; // Direction aléatoire
+        const initialDistance = 70 + Math.random() * 100; // Distance pour le jet initial
+        const arcHeight = 100 + Math.random() * 50; // Hauteur de l'arc
+        const duration = 1.5 + Math.random() * 0.5; // Durée totale de l'animation
+        const delay = Math.random() * 0.01; // Délais aléatoires pour décaler les particules
 
-    // Trajectoire parabolique
-    const startX = Math.cos(angle) * initialDistance; // Déplacement horizontal initial
-    const startY = Math.sin(angle) * initialDistance; // Déplacement vertical initial
+        // Trajectoire parabolique
+        const startX = Math.cos(angle) * initialDistance; // Déplacement horizontal initial
+        const startY = Math.sin(angle) * initialDistance; // Déplacement vertical initial
 
-    gsap.to(particle, {
-      duration: duration / 2, // Première moitié de l'animation (montée)
-      x: startX,
-      y: startY - arcHeight, // Montée jusqu'au sommet de l'arc
-      ease: "power1.out", // Accélération pour un mouvement naturel
-      delay: delay,
-      onComplete: () => {
-        // Descente parabolique
         gsap.to(particle, {
-          duration: duration / 2, // Deuxième moitié de l'animation (descente)
-          x: startX + (Math.random() - 0.5) * 80, // Légère dispersion horizontale
-          y: startY + 50 + Math.random() * 50, // Retombée vers le bas
-          scale: 0, // Réduction progressive
-          opacity: 0, // Disparition progressive
-          ease: "power2.in", // Décélération pour un effet de gravité
+          duration: duration / 2, // Première moitié de l'animation (montée)
+          x: startX,
+          y: startY - arcHeight, // Montée jusqu'au sommet de l'arc
+          ease: "power1.out", // Accélération pour un mouvement naturel
+          delay: delay,
           onComplete: () => {
-            // Suppression de la particule après animation
-            if (particle.parentNode) {
-              particle.parentNode.removeChild(particle);
-            }
+            // Descente parabolique
+            gsap.to(particle, {
+              duration: duration / 2, // Deuxième moitié de l'animation (descente)
+              x: startX + (Math.random() - 0.5) * 80, // Légère dispersion horizontale
+              y: startY + 50 + Math.random() * 100, // Retombée vers le bas
+              scale: 0, // Réduction progressive
+              opacity: 0, // Disparition progressive
+              ease: "power2.in", // Décélération pour un effet de gravité
+              onComplete: () => {
+                // Suppression de la particule après animation
+                if (particle.parentNode) {
+                  particle.parentNode.removeChild(particle);
+                }
+              }
+            });
           }
         });
-      }
-    });
-  });
-},
+      });
+    },
     cleanupParticles() {
       this.particles.forEach(particle => {
         if (particle && particle.parentNode) {
