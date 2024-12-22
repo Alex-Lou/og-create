@@ -1,3 +1,5 @@
+DarkToggle.vue: 
+
   <template>
     <button id="toggle-dark-mode" @click="toggleDarkMode">
       <span class="toggle-indicator"></span>

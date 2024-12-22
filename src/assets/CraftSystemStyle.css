@@ -57,7 +57,7 @@
 }
 
 #crafted-item {
-    color: #38bdf8;
+    color: #21353e;
     font-size: 1rem;
     opacity: 0;
     animation: fadeInSlide 0.8s ease-out forwards;
@@ -92,7 +92,7 @@
 
 #inventory h2 {
     text-align: center;
-    color: #4dd0e1;
+    color: #51cedf;
     margin-bottom: 10px;
 }
 
@@ -103,7 +103,7 @@
 }
 
 #items li {
-    background: linear-gradient(135deg, #4dd0e1, #00acc1);
+    background: linear-gradient(135deg, #1e5b63, #00acc1);
     color: #fff;
     padding: 10px;
     border-radius: 5px;
