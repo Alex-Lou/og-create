@@ -20,6 +20,10 @@
         <p id="crafted-item" ref="craftedItemDisplay"></p>
       </div>
     </div>
+    
+    <footer>
+      <p>Created with ❤️ by CybWolf.</p>
+    </footer>
   </div>
 </template>
 

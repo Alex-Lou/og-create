@@ -15,7 +15,6 @@ body {
     align-items: center;
 }
 
-  
 #game-container {
     background: #1e1e1e;
     border-radius: 15px;
@@ -30,18 +29,39 @@ body {
     transition: background-color 0.5s, color 0.5s;
 }
 
+/* Header */
+header {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start; /* Aligne tout à gauche */
+    padding: 10px 20px;
+}
+
+/* Logo */
+header .logo {
+    width: 40px;
+    height: 40px;
+    margin-right: 10px; /* Espacement entre le logo et le titre */
+}
+
+/* Titre */
 header h1 {
-    font-size: 2rem; /* Augmenté pour plus d'impact */
-    text-align: center;
+    font-size: 1.2rem; /* Taille ajustée pour plus de lisibilité */
+    text-align: left;
     letter-spacing: 2px;
-    padding-bottom: 10px;
-    padding-top: 10px;
     background: linear-gradient(90deg, #4dd0e1, #00acc1, #ff7f00, #ff0000);
     background-size: 400% 400%;
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent; /* Rendre le texte transparent */
     animation: gradientShift 6s ease-in-out infinite; /* Animation du dégradé */
     text-shadow: 0 0 10px rgba(255, 255, 255, 0.5), 0 0 20px rgba(255, 255, 255, 0.3);
+    display: inline-block;
+    margin-right: auto; /* Pousse le DarkToggle vers la droite */
+}
+
+/* Bouton DarkToggle */
+header .dark-toggle {
+    margin-left: auto; /* Aligne le DarkToggle à droite */
 }
 
 /* Animation pour déplacer le dégradé */
@@ -58,27 +78,21 @@ header h1 {
 }
 
 /* Footer */
-footer p {
-    text-align: center;
-    font-size: 0.7rem;
-    color: #aaa;
-    margin-top: 4px;
-}
-
 
 #main-content {
-  display: flex;
-  width: 100%;
-  height: calc(100vh - 80px); /* Ajuste la hauteur selon ton header/footer */
+    display: flex;
+    width: 100%;
+    height: calc(100vh - 80px); /* Ajuste la hauteur selon le header/footer */
 }
 
-
-
-
-
-
-
-
-
-
-
+/* Animation d'apparition du conteneur */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
