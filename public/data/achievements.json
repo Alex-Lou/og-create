@@ -1,17 +1,16 @@
 [
-    {
-      "name": "Apprenti Dieu",
-      "description": "Découvrez 10 éléments.",
-      "unlocked": false,
-      "condition": "this.discoveredElements.length >= 1",
-      "image": "/assets/success/Apprenti Dieu.png"
-    },
-    {
-      "name": "Maître Créateur",
-      "description": "Découvrez 20 éléments.",
-      "unlocked": false,
-      "condition": "this.discoveredElements.length >= 10",
-      "image": "/assets/success/Maître Créateur.png"
-    }
-  ]
-  
+  {
+    "name": "Apprenti Dieu",
+    "description": "Découvrez 1 élément.",
+    "unlocked": false,
+    "condition": "this.discoveredElements.length >= 1",
+    "image": "/assets/success/Apprenti Dieu.png"
+  },
+  {
+    "name": "Maître Créateur",
+    "description": "Découvrez 2 éléments.",
+    "unlocked": false,
+    "condition": "this.discoveredElements.length >= 2",
+    "image": "/assets/success/Maître Créateur.png"
+  }
+]

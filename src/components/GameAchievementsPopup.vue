@@ -30,7 +30,6 @@
 </template>
 
 <script>
-
 import { gsap } from 'gsap';
 
 export default {
@@ -163,6 +162,7 @@ export default {
   },
 };
 </script>
+
 <style scoped>
 @import "@/assets/SuccessPopupStyle.css";
 /* Chemin vers ton fichier CSS */

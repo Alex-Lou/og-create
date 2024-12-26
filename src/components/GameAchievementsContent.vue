@@ -1,18 +1,18 @@
 <template>
-  <div 
+  <div
     id="achievements-menu-container"
-    @mouseover="isHovered = true" 
+    @mouseover="isHovered = true"
     @mouseleave="isHovered = false"
   >
     <!-- Liste des succès, visible uniquement au survol -->
     <div id="achievements-content" v-if="isHovered && achievements.length > 0">
       <ul>
-        <li v-for="(achievement, index) in achievements" 
-            :key="index" 
+        <li v-for="(achievement, index) in achievements"
+            :key="index"
             :class="{ unlocked: achievement.unlocked }">
-          <img v-if="achievement.image" 
-               :src="achievement.image" 
-               alt="" 
+          <img v-if="achievement.image"
+               :src="achievement.image"
+               alt=""
                class="achievement-icon" />
           {{ achievement.name }} - {{ achievement.description }}
         </li>

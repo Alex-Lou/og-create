@@ -15,6 +15,7 @@
         <p id="crafted-item" ref="craftedItemDisplay"></p>
       </div>
     </div>
+    <button class="reset-crafting-button" @click="resetCraftingBoard">Reset Crafting</button>
     <footer>
       <p>Created with ❤️ by CybWolf.</p>
     </footer>
@@ -56,11 +57,15 @@ export default {
         this.$emit('show-alert', 'You can only select up to 3 elements for crafting!');
       }
     },
-
+    resetCraftingBoard() {
+      this.resetSelection();
+    },
+    resetSelection() {
+      this.selected = []; // Réinitialise la sélection
+    },
     removeResource(index) {
       this.selected.splice(index, 1);
     },
-
     craftItem() {
       if (this.selected.length >= 2) {
         const sortedSelected = this.selected.sort().join('+');
@@ -77,7 +82,6 @@ export default {
         this.$emit('show-alert', 'Select at least 2 elements to craft!');
       }
     },
-
     handleKeyPress(event) {
       if (event.key === 'Enter') {
         this.craftItem();
@@ -94,5 +98,6 @@ export default {
 </script>
 
 <style scoped>
-@import "@/assets/CraftSystemStyle.css"; /* Chemin vers ton fichier CSS */
+@import "@/assets/CraftSystemStyle.css";
+/* Chemin vers ton fichier CSS */
 </style>

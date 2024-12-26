@@ -97,3 +97,23 @@ header .dark-toggle {
         transform: translateY(0);
     }
 }
+
+.reset-crafting-button {
+    position: fixed;
+    bottom: 3px;
+    left: 1360px;
+    background-color: #ff5555;
+    color: white;
+    border: none;
+    z-index: 200;
+    border-radius: 5px;
+    padding: 10px 15px;
+    cursor: pointer;
+    font-size: 14px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+    transition: background-color 0.3s;
+  }
+  
+  .reset-crafting-button:hover {
+    background-color: #462222;
+  }

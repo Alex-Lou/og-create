@@ -9,14 +9,13 @@ import { ref, onMounted } from 'vue';
 
 export default {
   name: 'DataLoading',
-  emits: ['data-loaded', 'achievements-loaded'],
+  emits: ['data-loaded', 'achievements-loaded', 'achievement-unlocked'],
 
   setup(props, { emit }) {
     const error = ref(null);
     const achievements = ref([]);
-    const discoveredElements = ref(0); // Compteur des éléments découverts
+    const discoveredElements = ref(0);
 
-    // Charger les succès
     const loadAchievements = async () => {
       try {
         const response = await fetch("/data/achievements.json");
@@ -25,8 +24,8 @@ export default {
         achievements.value = data.map((achievement) => ({
           ...achievement,
           image: require(`@/assets/success/${achievement.name}.png`),
-          condition: new Function("return " + achievement.condition),
-          unlocked: false
+          unlocked: false,
+          order: achievement.name === "Apprenti Dieu" ? 1 : 2
         }));
 
         emit('achievements-loaded', achievements.value);
@@ -36,7 +35,6 @@ export default {
       }
     };
 
-    // Charger les données du jeu
     const loadGameData = async () => {
       try {
         const response = await fetch("/data/elements_data.json");
@@ -69,31 +67,29 @@ export default {
       }
     };
 
-    // Fonction pour réévaluer les succès à chaque création
-    const evaluateAchievements = () => {
-      achievements.value.forEach((achievement) => {
-        if (!achievement.unlocked) {
-          const conditionMet = achievement.condition();
+    const checkNextAchievement = () => {
+      const sortedAchievements = [...achievements.value]
+        .sort((a, b) => a.order - b.order)
+        .filter(a => !a.unlocked);
 
-          // On s'assure que le premier succès est validé avant de valider le second
-          if (achievement.name === "Apprenti Dieu" && discoveredElements.value >= 1 && conditionMet) {
-            achievement.unlocked = true;
-            console.log(`Succès débloqué: ${achievement.name}`);
-          } else if (achievement.name === "Maître Créateur" && discoveredElements.value >= 2 && conditionMet) {
-            // Validation du deuxième succès, mais seulement si le premier est déjà validé
-            if (achievements.value[0].unlocked) {
-              achievement.unlocked = true;
-              console.log(`Succès débloqué: ${achievement.name}`);
-            }
-          }
+      if (sortedAchievements.length > 0) {
+        const nextAchievement = sortedAchievements[0];
+        
+        if (
+          (nextAchievement.name === "Apprenti Dieu" && discoveredElements.value >= 1) ||
+          (nextAchievement.name === "Maître Créateur" && discoveredElements.value >= 2 && 
+           achievements.value.find(a => a.name === "Apprenti Dieu")?.unlocked)
+        ) {
+          nextAchievement.unlocked = true;
+          emit('achievement-unlocked', nextAchievement);
+          console.log(`Succès débloqué: ${nextAchievement.name}`);
         }
-      });
+      }
     };
 
-    // Logique de gestion de craft (création d'un élément)
     const handleCraft = () => {
-      discoveredElements.value++; // Incrémenter le nombre d'éléments découverts
-      evaluateAchievements(); // Réévaluer les succès après chaque création
+      discoveredElements.value++;
+      checkNextAchievement();
     };
 
     onMounted(async () => {

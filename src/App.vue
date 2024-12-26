@@ -1,10 +1,13 @@
+<!-- App.vue -->
 <template>
   <div :class="['game-container', { 'dark-mode': isDarkMode }]" id="game-container">
     <DataLoading
+      ref="dataLoading"
       @data-loaded="handleDataLoaded"
       @achievements-loaded="handleAchievementsLoaded"
+      @achievement-unlocked="handleAchievementUnlocked"
     />
-    
+
     <GameAchievementsContent :achievements="achievements" />
 
     <header>
@@ -38,7 +41,7 @@
       </div>
     </main>
 
-    <CraftPopup 
+    <CraftPopup
       :craftedElement="craftedElement"
       @reset-crafted-element="resetCraftedElement"
     />
@@ -49,7 +52,6 @@
       :achievements="achievements"
       @close="closeAchievementPopup"
     />
-
   </div>
 </template>
 
@@ -104,10 +106,7 @@ export default {
       this.craftingRecipes = data.craftingRecipes;
     },
     handleAchievementsLoaded(achievements) {
-      this.achievements = achievements.map(achievement => ({
-        ...achievement,
-        condition: achievement.condition.bind(this)
-      }));
+      this.achievements = achievements;
     },
     handleResourceSelection(resource) {
       this.$refs.craftSystem.selectResource(resource);
@@ -118,7 +117,7 @@ export default {
         image: require(`@/assets/creatures/${craftedItem}.png`),
       };
       this.addToCategory(craftedItem);
-      this.checkAchievements();
+      this.$refs.dataLoading.handleCraft();
     },
     addToCategory(craftedItem) {
       const targetCategory = Object.keys(this.categories).find((category) =>
@@ -131,13 +130,8 @@ export default {
         }
       }
     },
-    checkAchievements() {
-      this.achievements.forEach((achievement) => {
-        if (!achievement.unlocked && achievement.condition()) {
-          achievement.unlocked = true;
-          this.newAchievement = achievement;
-        }
-      });
+    handleAchievementUnlocked(achievement) {
+      this.newAchievement = achievement;
     },
     closeAchievementPopup() {
       this.newAchievement = null;
@@ -151,4 +145,3 @@ export default {
   }
 };
 </script>
-
