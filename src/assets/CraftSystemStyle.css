@@ -1,7 +1,7 @@
 /* Animation pour le texte "Creation Zone" */
 @keyframes lights {
   0% {
-    color: hsl(230, 10%, 80%);
+    color: hsl(230, 40%, 80%);
     text-shadow:
       0 0 1em hsla(320, 100%, 50%, 0.2),
       0 0 0.125em hsla(320, 100%, 60%, 0.3),
@@ -10,7 +10,7 @@
   }
 
   30% {
-    color: hsl(230, 30%, 40%);
+    color: hsl(230, 80%, 90%);
     text-shadow:
       0 0 1em hsla(320, 100%, 50%, 0.5),
       0 0 0.125em hsla(320, 100%, 60%, 0.5),
@@ -48,7 +48,7 @@
 
 /* Appliquer l'animation au texte "Creation Zone" */
 .animated-text {
-  font-size: 2rem;
+  font-size: 1.5rem;
   font-weight: 300;
   animation: lights 5s 750ms linear infinite;
 }
@@ -184,39 +184,8 @@
   z-index: 1;
 }
 
-/* Bouton Craft avec style btn-style2 */
-#craft-button {
-  position: absolute;
-  top: 20px;
-  left: 10px;
-  z-index: 100;
-  background: transparent;
-  border: 2px solid #dd7e2a;
-  color: #dd7e2a;
-  font-weight: bold;
-  padding: 10px 20px;
-  border-radius: 8px;
-  font-size: 1rem;
-  cursor: pointer;
-  text-shadow: none;
-  transition: all 0.3s ease, box-shadow 0.3s ease;
-  box-sizing: border-box;
-}
 
-#craft-button:hover {
-  box-shadow: 0 0 10px rgba(181, 201, 82, 0.8), /* Effet lumineux */
-              0 5px 15px rgba(181, 201, 82, 0.5); /* Ombre douce */
-  transform: translateY(-0.25em); /* Translation légère vers le haut */
-  border-color: #b5c952; /* Couleur au hover */
-  color: #b5c952;
-}
 
-/* Effet Actif (cliqué) */
-#craft-button:active {
-  transform: scale(0.95);
-  background: #008ba3;
-  box-shadow: 0 4px 10px rgba(0, 139, 163, 0.5);
-}
 
 /* Bouton Clean avec animation */
 .reset-crafting-button {

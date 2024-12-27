@@ -1,4 +1,5 @@
 <template>
+  <!-- Le reste du template reste inchangé -->
   <div id="crafting-board" ref="craftingBoard">
     <WaveAnimation />
     <div class="animation-container">
@@ -7,7 +8,12 @@
       <FireworkAnimation :delay="0.8" :offsetX="-200" />
     </div>
     <div id="crafting">
-      <h2 class="animated-text">Creation Zone</h2>
+      <div class="title-container">
+        <h2 class="animated-text">Creation Zone</h2>
+        <VoltageAnimation @click="craftItem">
+          Craft
+        </VoltageAnimation>
+      </div>
       <div id="selection">
         <ul id="selected-resources">
           <li
@@ -18,7 +24,6 @@
             {{ elementEmojis[resource] || '' }} {{ resource }}
           </li>
         </ul>
-        <button id="craft-button" @click="craftItem">Craft</button>
       </div>
       <div id="crafted-result">
         <p id="crafted-item" ref="craftedItemDisplay"></p>
@@ -40,12 +45,14 @@
 <script>
 import WaveAnimation from './WaveAnimation.vue';
 import FireworkAnimation from './FireWorkAnimation.vue';
+import VoltageAnimation from './VoltageAnimation.vue';
 
 export default {
   name: 'CraftSystem',
   components: {
     WaveAnimation,
     FireworkAnimation,
+    VoltageAnimation,
   },
   props: {
     elementEmojis: {
@@ -86,24 +93,29 @@ export default {
       this.selected.splice(index, 1);
     },
     craftItem() {
-      if (this.selected.length >= 2) {
-        const sortedSelected = this.selected.sort().join('+');
-        const craftedItem = this.craftingRecipes[sortedSelected];
-
-        if (craftedItem) {
-          this.isFireworkActive = true;
-          setTimeout(() => {
-            this.$emit('craft-success', craftedItem);
-            this.isFireworkActive = false;
-          }, 2);
-        } else {
-          this.$emit('show-alert', 'Invalid combination.');
-        }
-
-        this.selected = [];
-      } else {
+      // Vérifier d'abord si on a assez d'éléments
+      if (this.selected.length < 2) {
         this.$emit('show-alert', 'Select at least 2 elements to craft!');
+        return;
       }
+
+      // Ensuite, vérifier si la combinaison est valide
+      const sortedSelected = this.selected.sort().join('+');
+      const craftedItem = this.craftingRecipes[sortedSelected];
+
+      // Si la combinaison est invalide
+      if (!craftedItem) {
+        this.$emit('show-alert', 'Invalid combination.');
+        return;
+      }
+
+      // Si on arrive ici, on peut faire le craft
+      this.isFireworkActive = true;
+      setTimeout(() => {
+        this.$emit('craft-success', craftedItem);
+        this.isFireworkActive = false;
+        this.selected = [];  // Vider la sélection après un craft réussi
+      }, 2);
     },
     handleKeyPress(event) {
       if (event.key === 'Enter') {
