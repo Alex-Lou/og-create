@@ -2,15 +2,12 @@
   <div id="crafting-board" ref="craftingBoard">
     <WaveAnimation />
     <div class="animation-container">
-      <!-- Feu d'artifice central -->
       <FireworkAnimation />
-      <!-- Feu d'artifice à droite du premier -->
       <FireworkAnimation :delay="0.4" :offsetX="50" />
-      <!-- Feu d'artifice à gauche du premier -->
       <FireworkAnimation :delay="0.8" :offsetX="-200" />
     </div>
     <div id="crafting">
-      <h2>Creation Zone</h2>
+      <h2 class="animated-text">Creation Zone</h2>
       <div id="selection">
         <ul id="selected-resources">
           <li

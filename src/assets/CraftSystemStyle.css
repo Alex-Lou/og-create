@@ -1,3 +1,59 @@
+/* Animation pour le texte "Creation Zone" */
+@keyframes lights {
+  0% {
+    color: hsl(230, 10%, 80%);
+    text-shadow:
+      0 0 1em hsla(320, 100%, 50%, 0.2),
+      0 0 0.125em hsla(320, 100%, 60%, 0.3),
+      -1em -0.125em 0.5em hsla(40, 100%, 60%, 0),
+      1em 0.125em 0.5em hsla(200, 100%, 60%, 0);
+  }
+
+  30% {
+    color: hsl(230, 30%, 40%);
+    text-shadow:
+      0 0 1em hsla(320, 100%, 50%, 0.5),
+      0 0 0.125em hsla(320, 100%, 60%, 0.5),
+      -0.5em -0.125em 0.25em hsla(40, 100%, 60%, 0.2),
+      0.5em 0.125em 0.25em hsla(200, 100%, 60%, 0.4);
+  }
+
+  40% {
+    color: hsl(230, 100%, 95%);
+    text-shadow:
+      0 0 1em hsla(320, 100%, 50%, 0.5),
+      0 0 0.125em hsla(320, 100%, 90%, 0.5),
+      -0.25em -0.125em 0.125em hsla(40, 100%, 60%, 0.2),
+      0.25em 0.125em 0.125em hsla(200, 100%, 60%, 0.4);
+  }
+
+  70% {
+    color: hsl(230, 80%, 90%);
+    text-shadow:
+      0 0 1em hsla(320, 100%, 50%, 0.5),
+      0 0 0.125em hsla(320, 100%, 60%, 0.5),
+      0.5em -0.125em 0.25em hsla(40, 100%, 60%, 0.2),
+      -0.5em 0.125em 0.25em hsla(200, 100%, 60%, 0.4);
+  }
+
+  100% {
+    color: hsl(230, 40%, 80%);
+    text-shadow:
+      0 0 1em hsla(320, 100%, 50%, 0.2),
+      0 0 0.125em hsla(320, 100%, 60%, 0.3),
+      1em -0.125em 0.5em hsla(40, 100%, 60%, 0),
+      -1em 0.125em 0.5em hsla(200, 100%, 60%, 0);
+  }
+}
+
+/* Appliquer l'animation au texte "Creation Zone" */
+.animated-text {
+  font-size: 2rem;
+  font-weight: 300;
+  animation: lights 5s 750ms linear infinite;
+}
+
+/* Autres styles existants */
 #crafted-popup {
   position: fixed;
   top: 50%;
@@ -42,9 +98,6 @@
   margin-bottom: 10px;
 }
 
-
-
-
 /* Résultat du Craft */
 #crafted-result {
   position: absolute;
@@ -72,54 +125,6 @@
       opacity: 1;
       transform: translateY(0);
   }
-}
-
-
-
-
-/* Inventory Section */
-#inventory {
-  flex: 1;
-  background: #2a2a2a;
-  padding: 10px;
-  border-radius: 10px;
-  box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.3);
-  overflow-y: auto;
-  background: #2a2a2a; /* Fond sombre de l'inventaire */
-  color: #ffffff;
-  transition: background-color 0.5s, color 0.5s;
-}
-
-#inventory h2 {
-  text-align: center;
-  color: #51cedf;
-  margin-bottom: 10px;
-}
-
-#items {
-  list-style: none;
-  flex-wrap: wrap;
-  gap: 10px;
-}
-
-#items li {
-  background: linear-gradient(135deg, #1e5b63, #00acc1);
-  color: #fff;
-  padding: 10px;
-  border-radius: 5px;
-  text-align: center;
-  cursor: pointer;
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
-}
-
-#items li:hover {
-  transform: scale(1.1);
-  box-shadow: 0px 5px 15px rgba(0, 188, 212, 0.5);
-}
-
-@keyframes rainbowCycle {
-  0% { background-position: 0% 50%; }
-  100% { background-position: 100% 50%; }
 }
 
 /* Conteneur pour les éléments sélectionnés */
@@ -157,8 +162,6 @@
   transform: scale(1.05);
 }
 
-
-
 /* Crafting Section */
 #crafting {
   position: relative;
@@ -181,7 +184,6 @@
   z-index: 1;
 }
 
-
 /* Bouton Craft avec style btn-style2 */
 #craft-button {
   position: absolute;
@@ -201,7 +203,6 @@
   box-sizing: border-box;
 }
 
-
 #craft-button:hover {
   box-shadow: 0 0 10px rgba(181, 201, 82, 0.8), /* Effet lumineux */
               0 5px 15px rgba(181, 201, 82, 0.5); /* Ombre douce */
@@ -216,7 +217,6 @@
   background: #008ba3;
   box-shadow: 0 4px 10px rgba(0, 139, 163, 0.5);
 }
-
 
 /* Bouton Clean avec animation */
 .reset-crafting-button {
@@ -293,4 +293,3 @@
     transform: translate(0, -66.666%);
   }
 }
-
