@@ -3,26 +3,11 @@
     <WaveAnimation />
     <div class="animation-container">
       <!-- Feu d'artifice central -->
-      <div class="firework-container">
-        <div class="firework"></div>
-        <div class="explosion">
-          <div class="particle" v-for="n in 12" :key="n" :style="getParticleStyle(n)"></div>
-        </div>
-      </div>
-      <!-- Nouveau feu d'artifice à droite du premier -->
-      <div class="firework-container right-offset">
-        <div class="firework"></div>
-        <div class="explosion">
-          <div class="particle" v-for="n in 12" :key="n" :style="getParticleStyle(n)"></div>
-        </div>
-      </div>
-      <!-- Nouveau feu d'artifice à gauche du premier -->
-      <div class="firework-container left-offset">
-        <div class="firework"></div>
-        <div class="explosion">
-          <div class="particle" v-for="n in 12" :key="n" :style="getParticleStyle(n)"></div>
-        </div>
-      </div>
+      <FireworkAnimation />
+      <!-- Feu d'artifice à droite du premier -->
+      <FireworkAnimation :delay="0.4" :offsetX="50" />
+      <!-- Feu d'artifice à gauche du premier -->
+      <FireworkAnimation :delay="0.8" :offsetX="-200" />
     </div>
     <div id="crafting">
       <h2>Creation Zone</h2>
@@ -54,16 +39,16 @@
     </footer>
   </div>
 </template>
-  
-
 
 <script>
 import WaveAnimation from './WaveAnimation.vue';
+import FireworkAnimation from './FireWorkAnimation.vue';
 
 export default {
   name: 'CraftSystem',
   components: {
     WaveAnimation,
+    FireworkAnimation,
   },
   props: {
     elementEmojis: {
@@ -93,7 +78,6 @@ export default {
         this.$emit('show-alert', 'You can only select up to 3 elements for crafting!');
       }
     },
-    
     resetCraftingBoard() {
       this.resetSelection();
       this.isFireworkActive = false;
@@ -103,18 +87,6 @@ export default {
     },
     removeResource(index) {
       this.selected.splice(index, 1);
-    },
-    getParticleStyle(n) {
-      const angle = (n * 30) % 360; // 30 degrés entre chaque particule
-      const distance = 150; // Distance de dispersion
-      const x = Math.cos(angle * Math.PI / 180) * distance;
-      const y = Math.sin(angle * Math.PI / 180) * distance;
-      const hue = (n * 30) % 360; // Couleur HSL différente pour chaque particule
-      return {
-        '--x': `${x}px`,
-        '--y': `${y}px`,
-        '--hue': `${hue}`,
-      };
     },
     craftItem() {
       if (this.selected.length >= 2) {
