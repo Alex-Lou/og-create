@@ -1,77 +1,77 @@
 #crafted-popup {
-    position: fixed;
-    top: 50%;
-    right: 35%;
+  position: fixed;
+  top: 50%;
+  right: 35%;
+  transform: translate(-50%, -50%);
+  background: rgba(31, 26, 26, 0.047); /* Plus opaque */
+  color: #fff;
+  padding: 5px 15px;
+  border-radius: 15px; /* Coins arrondis */
+  text-align: center;
+  font-size: 1.5rem;
+  visibility: hidden;
+  z-index: 100;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.6); /* Ombre plus prononcée */
+  animation: none;
+}
+
+@keyframes fadeInOut {
+  0% {
+    opacity: 0;
+    visibility: visible;
+    transform: translate(-50%, -70%);
+  }
+  20%, 80% {
+    opacity: 1;
     transform: translate(-50%, -50%);
-    background: rgba(31, 26, 26, 0.047); /* Plus opaque */
-    color: #fff;
-    padding: 5px 15px;
-    border-radius: 15px; /* Coins arrondis */
-    text-align: center;
-    font-size: 1.5rem;
+  }
+  100% {
+    opacity: 0;
     visibility: hidden;
-    z-index: 100;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.6); /* Ombre plus prononcée */
-    animation: none;
+    transform: translate(-50%, -30%);
   }
-  
-  @keyframes fadeInOut {
-    0% {
-      opacity: 0;
-      visibility: visible;
-      transform: translate(-50%, -70%);
-    }
-    20%, 80% {
-      opacity: 1;
-      transform: translate(-50%, -50%);
-    }
-    100% {
-      opacity: 0;
-      visibility: hidden;
-      transform: translate(-50%, -30%);
-    }
-  }
-  
-  #crafted-popup.show {
-    animation: fadeInOut 2s ease-in-out;
-  }
+}
 
-  #crafted-popup img {
-    max-width: 100px;
-    max-height: 100px;
-    margin-bottom: 10px;
-  }
+#crafted-popup.show {
+  animation: fadeInOut 2s ease-in-out;
+}
+
+#crafted-popup img {
+  max-width: 100px;
+  max-height: 100px;
+  margin-bottom: 10px;
+}
 
 
 
 
-  /* Résultat du Craft */
+/* Résultat du Craft */
 #crafted-result {
-    position: absolute;
-    bottom: 10px;
-    left: 10px;
-    font-size: 0.9rem;
-    color: #ffffff;
-    z-index: 2;
-    text-align: left;
+  position: absolute;
+  bottom: 10px;
+  left: 10px;
+  font-size: 0.9rem;
+  color: #ffffff;
+  z-index: 2;
+  text-align: left;
 }
 
 #crafted-item {
-    color: #21353e;
-    font-size: 1rem;
-    opacity: 0;
-    animation: fadeInSlide 0.8s ease-out forwards;
+  color: #21353e;
+  font-size: 1rem;
+  opacity: 0;
+  animation: fadeInSlide 0.8s ease-out forwards;
 }
 
 @keyframes fadeInSlide {
-    from {
-        opacity: 0;
-        transform: translateY(10px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
+  from {
+      opacity: 0;
+      transform: translateY(10px);
+  }
+  to {
+      opacity: 1;
+      transform: translateY(0);
+  }
 }
 
 
@@ -79,135 +79,333 @@
 
 /* Inventory Section */
 #inventory {
-    flex: 1;
-    background: #2a2a2a;
-    padding: 10px;
-    border-radius: 10px;
-    box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.3);
-    overflow-y: auto;
-    background: #2a2a2a; /* Fond sombre de l'inventaire */
-    color: #ffffff;
-    transition: background-color 0.5s, color 0.5s;
+  flex: 1;
+  background: #2a2a2a;
+  padding: 10px;
+  border-radius: 10px;
+  box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.3);
+  overflow-y: auto;
+  background: #2a2a2a; /* Fond sombre de l'inventaire */
+  color: #ffffff;
+  transition: background-color 0.5s, color 0.5s;
 }
 
 #inventory h2 {
-    text-align: center;
-    color: #51cedf;
-    margin-bottom: 10px;
+  text-align: center;
+  color: #51cedf;
+  margin-bottom: 10px;
 }
 
 #items {
-    list-style: none;
-    flex-wrap: wrap;
-    gap: 10px;
+  list-style: none;
+  flex-wrap: wrap;
+  gap: 10px;
 }
 
 #items li {
-    background: linear-gradient(135deg, #1e5b63, #00acc1);
-    color: #fff;
-    padding: 10px;
-    border-radius: 5px;
-    text-align: center;
-    cursor: pointer;
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
+  background: linear-gradient(135deg, #1e5b63, #00acc1);
+  color: #fff;
+  padding: 10px;
+  border-radius: 5px;
+  text-align: center;
+  cursor: pointer;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
 #items li:hover {
-    transform: scale(1.1);
-    box-shadow: 0px 5px 15px rgba(0, 188, 212, 0.5);
-}
-
-/* Crafting Section */
-#crafting {
-    position: relative;
-    z-index: 2;
-    padding: 20px;
-    text-align: center;
-    height: 100%;
-}
-
-
-
-/* Crafting Board Section */
-#crafting-board {
-    flex: 2;
-    position: relative; /* Assure que les éléments absolus sont positionnés ici */
-    background: #000; /* Fond noir profond */
-    border-radius: 10px;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
-    overflow: hidden;
-    overflow-y: auto;
-    transition: flex 0.2s;
-}
-
-
-/* Bouton Craft */
-#craft-button {
-    position: absolute; /* Le bouton doit être placé en haut à gauche */
-    top: 10px;
-    left: 10px;
-    z-index: 100; /* S'assurer qu'il reste visible au-dessus des autres éléments */
-    background: linear-gradient(135deg, #4dd0e1, #00acc1);
-    color: white;
-    font-weight: bold;
-    padding: 5px 10px;
-    border-radius: 8px;
-    font-size: 1rem;
-    cursor: pointer;
-    text-shadow: 0 0 5px rgba(255, 255, 255, 0.8);
-    transition: background-color 0.3s ease, transform 0.2s ease;
-}
-
-/* Effet Hover */
-#craft-button:hover {
-    background: linear-gradient(135deg, #00acc1, #4dd0e1);
-    transform: scale(1.05);
-    box-shadow: 0 8px 15px rgba(0, 188, 212, 0.5);
-}
-
-/* Effet Actif (cliqué) */
-#craft-button:active {
-    transform: scale(0.95);
-    background: #008ba3;
-    box-shadow: 0 4px 10px rgba(0, 139, 163, 0.5);
+  transform: scale(1.1);
+  box-shadow: 0px 5px 15px rgba(0, 188, 212, 0.5);
 }
 
 @keyframes rainbowCycle {
-    0% { background-position: 0% 50%; }
-    100% { background-position: 100% 50%; }
+  0% { background-position: 0% 50%; }
+  100% { background-position: 100% 50%; }
 }
 
 /* Conteneur pour les éléments sélectionnés */
 #selection {
-    display: flex;
-    flex-direction: column;
-    align-items: center; /* Centre les éléments horizontalement */
-    gap: 15px; /* Espacement entre la liste et le bouton */
-    margin-top: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center; /* Centre les éléments horizontalement */
+  gap: 15px; /* Espacement entre la liste et le bouton */
+  margin-top: 20px;
 }
 
 #selected-resources {
-    list-style: none;
-    display: flex;
-    flex-wrap: wrap;
-    gap: 10px;
-    justify-content: center;
-    padding: 10px;
-    min-height: 60px; /* Assure une zone constante même sans élément */
-    max-width: 300px;
+  list-style: none;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  justify-content: center;
+  padding: 10px;
+  min-height: 60px; /* Assure une zone constante même sans élément */
+  max-width: 300px;
 }
 
 /* Éléments sélectionnés */
 #selected-resources li {
-    background: #4b5ebe;
-    color: #fff;
-    padding: 8px 10px;
-    border-radius: 5px;
-    font-size: 0.9rem;
-    transition: transform 0.2s ease;
-    cursor: pointer;
+  background: #4b5ebe;
+  color: #fff;
+  padding: 8px 10px;
+  border-radius: 5px;
+  font-size: 0.9rem;
+  transition: transform 0.2s ease;
+  cursor: pointer;
 }
 
 #selected-resources li:hover {
-    transform: scale(1.05);
+  transform: scale(1.05);
+}
+
+
+
+/* Crafting Section */
+#crafting {
+  position: relative;
+  z-index: 2;
+  padding: 20px;
+  text-align: center;
+  height: 100%;
+}
+
+/* Crafting Board Section */
+#crafting-board {
+  flex: 2;
+  position: relative;
+  background: #000;
+  border-radius: 10px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
+  overflow: hidden;
+  overflow-y: auto;
+  transition: flex 0.2s;
+  z-index: 1;
+}
+
+
+/* Bouton Craft avec style btn-style2 */
+#craft-button {
+  position: absolute;
+  top: 20px;
+  left: 10px;
+  z-index: 100;
+  background: transparent;
+  border: 2px solid #dd7e2a;
+  color: #dd7e2a;
+  font-weight: bold;
+  padding: 10px 20px;
+  border-radius: 8px;
+  font-size: 1rem;
+  cursor: pointer;
+  text-shadow: none;
+  transition: all 0.3s ease, box-shadow 0.3s ease;
+  box-sizing: border-box;
+}
+
+
+#craft-button:hover {
+  box-shadow: 0 0 10px rgba(181, 201, 82, 0.8), /* Effet lumineux */
+              0 5px 15px rgba(181, 201, 82, 0.5); /* Ombre douce */
+  transform: translateY(-0.25em); /* Translation légère vers le haut */
+  border-color: #b5c952; /* Couleur au hover */
+  color: #b5c952;
+}
+
+/* Effet Actif (cliqué) */
+#craft-button:active {
+  transform: scale(0.95);
+  background: #008ba3;
+  box-shadow: 0 4px 10px rgba(0, 139, 163, 0.5);
+}
+
+
+/* Bouton Clean avec animation */
+.reset-crafting-button {
+  position: fixed;
+  bottom: 50px;
+  left: 840px;
+  z-index: 200;
+  background: transparent;
+  border: 2px solid #dd7e2a;
+  color: #dd7e2a;
+  font-weight: bold;
+  padding: 10px 20px;
+  border-radius: 8px;
+  font-size: 1rem;
+  cursor: pointer;
+  text-shadow: none;
+  transition: all 0.3s ease, box-shadow 0.3s ease, transform 0.3s ease;
+  box-sizing: border-box;
+  overflow: hidden; /* Masque l'animation de remplissage au départ */
+  position: relative; /* Nécessaire pour l'animation avec ::before */
+}
+
+.reset-crafting-button::before {
+  content: '';
+  position: absolute;
+  top: 100%; /* Initialement en dehors du bouton */
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: #dd7e2a; /* Couleur de remplissage */
+  z-index: -1; /* Derrière le texte */
+  transition: top 0.3s ease; /* Animation fluide de remplissage */
+}
+
+.reset-crafting-button:hover::before {
+  top: 0; /* Remplit le bouton lors du survol */
+}
+
+.reset-crafting-button:hover {
+  box-shadow: 0 0 10px rgba(181, 201, 82, 0.8),
+              0 5px 15px rgba(181, 201, 82, 0.5); /* Effet lumineux */
+  transform: translateY(-0.25em); /* Translation légère */
+  color: #ffffff; /* Change la couleur du texte */
+}
+
+.reset-crafting-button:active {
+  transform: scale(0.95); /* Effet d'enfoncement */
+  background: #008ba3;
+  box-shadow: 0 4px 10px rgba(0, 139, 163, 0.5);
+}
+
+/* Bulles animées */
+.reset-crafting-button::after {
+  content: '';
+  pointer-events: none;
+  opacity: 0.6;
+  background:
+    radial-gradient(circle at 20% 35%, transparent 0, transparent 2px, #dd7e2a 3px, #dd7e2a 4px, transparent 4px),
+    radial-gradient(circle at 75% 44%, transparent 0, transparent 2px, #dd7e2a 3px, #dd7e2a 4px, transparent 4px),
+    radial-gradient(circle at 46% 52%, transparent 0, transparent 4px, #dd7e2a 5px, #dd7e2a 6px, transparent 6px);
+  width: 100%;
+  height: 300%;
+  top: 0;
+  left: 0;
+  position: absolute;
+  animation: bubbles 5s linear infinite both;
+}
+
+@keyframes bubbles {
+  from {
+    transform: translate();
+  }
+  to {
+    transform: translate(0, -66.666%);
+  }
+}
+
+
+/* Animation Container */
+.animation-container {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 2;
+  overflow: hidden;
+}
+
+.firework-container {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  animation: container-appear 2s ease-out forwards;
+}
+
+.firework {
+  position: absolute;
+  bottom: -10px;
+  left: 50%;
+  width: 6px;
+  height: 6px;
+  background: #ffeb3b;
+  border-radius: 50%;
+  box-shadow: 0 0 10px 2px rgba(255, 235, 59, 0.8);
+  animation: launch 1s ease-out forwards;
+}
+
+.explosion {
+  position: absolute;
+  top: 40%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.particle {
+  position: absolute;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: hsl(var(--hue), 100%, 60%);
+  box-shadow: 0 0 10px 2px hsla(var(--hue), 100%, 60%, 0.8);
+  opacity: 0;
+  animation: explode 0.8s ease-out forwards;
+  animation-delay: 1s;
+}
+
+/* Nouvelle classe pour le feu d'artifice décalé à droite */
+.right-offset .firework {
+  left: calc(50% + 50px);
+  animation-delay: 0.4s; /* Délai de 0.4s pour le lancement */
+}
+
+.right-offset .explosion {
+  left: calc(50% + 50px);
+}
+
+.right-offset .particle {
+  animation-delay: calc(1s + 0.4s); /* Délai de 0.4s pour l'explosion */
+}
+
+/* Nouvelle classe pour le feu d'artifice décalé à gauche */
+.left-offset .firework {
+  left: calc(50% - 200px);
+  animation-delay: 0.8s; /* Délai de 0.8s pour le lancement */
+}
+
+.left-offset .explosion {
+  left: calc(50% - 200px);
+}
+
+.left-offset .particle {
+  animation-delay: calc(1s + 0.8s); /* Délai de 0.8s pour l'explosion */
+}
+
+@keyframes container-appear {
+  0% {
+    opacity: 0;
+  }
+  50% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
+@keyframes launch {
+  0% {
+    transform: translateY(0) scale(1);
+    opacity: 1;
+  }
+  50% {
+    transform: translateY(-50vh) scale(0.8);
+    opacity: 0.8;
+  }
+  100% {
+    transform: translateY(-70vh) scale(0);
+    opacity: 0;
+  }
+}
+
+@keyframes explode {
+  0% {
+    transform: translate(0, 0) scale(1);
+    opacity: 1;
+  }
+  100% {
+    transform: translate(var(--x), var(--y)) scale(0);
+    opacity: 0;
+  }
 }

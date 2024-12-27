@@ -1,11 +1,38 @@
 <template>
   <div id="crafting-board" ref="craftingBoard">
     <WaveAnimation />
+    <div class="animation-container">
+      <!-- Feu d'artifice central -->
+      <div class="firework-container">
+        <div class="firework"></div>
+        <div class="explosion">
+          <div class="particle" v-for="n in 12" :key="n" :style="getParticleStyle(n)"></div>
+        </div>
+      </div>
+      <!-- Nouveau feu d'artifice à droite du premier -->
+      <div class="firework-container right-offset">
+        <div class="firework"></div>
+        <div class="explosion">
+          <div class="particle" v-for="n in 12" :key="n" :style="getParticleStyle(n)"></div>
+        </div>
+      </div>
+      <!-- Nouveau feu d'artifice à gauche du premier -->
+      <div class="firework-container left-offset">
+        <div class="firework"></div>
+        <div class="explosion">
+          <div class="particle" v-for="n in 12" :key="n" :style="getParticleStyle(n)"></div>
+        </div>
+      </div>
+    </div>
     <div id="crafting">
       <h2>Creation Zone</h2>
       <div id="selection">
         <ul id="selected-resources">
-          <li v-for="(resource, index) in selected" :key="index" @click="removeResource(index)">
+          <li
+            v-for="(resource, index) in selected"
+            :key="index"
+            @click="removeResource(index)"
+          >
             {{ elementEmojis[resource] || '' }} {{ resource }}
           </li>
         </ul>
@@ -15,12 +42,20 @@
         <p id="crafted-item" ref="craftedItemDisplay"></p>
       </div>
     </div>
-    <button class="reset-crafting-button" @click="resetCraftingBoard">Reset Crafting</button>
+    <button
+      class="reset-crafting-button"
+      style="--content: 'Clean';"
+      @click="resetCraftingBoard"
+    >
+      Clean
+    </button>
     <footer>
       <p>Created with ❤️ by CybWolf.</p>
     </footer>
   </div>
 </template>
+  
+
 
 <script>
 import WaveAnimation from './WaveAnimation.vue';
@@ -47,6 +82,7 @@ export default {
   data() {
     return {
       selected: [],
+      isFireworkActive: false,
     };
   },
   methods: {
@@ -57,14 +93,28 @@ export default {
         this.$emit('show-alert', 'You can only select up to 3 elements for crafting!');
       }
     },
+    
     resetCraftingBoard() {
       this.resetSelection();
+      this.isFireworkActive = false;
     },
     resetSelection() {
-      this.selected = []; // Réinitialise la sélection
+      this.selected = [];
     },
     removeResource(index) {
       this.selected.splice(index, 1);
+    },
+    getParticleStyle(n) {
+      const angle = (n * 30) % 360; // 30 degrés entre chaque particule
+      const distance = 150; // Distance de dispersion
+      const x = Math.cos(angle * Math.PI / 180) * distance;
+      const y = Math.sin(angle * Math.PI / 180) * distance;
+      const hue = (n * 30) % 360; // Couleur HSL différente pour chaque particule
+      return {
+        '--x': `${x}px`,
+        '--y': `${y}px`,
+        '--hue': `${hue}`,
+      };
     },
     craftItem() {
       if (this.selected.length >= 2) {
@@ -72,7 +122,11 @@ export default {
         const craftedItem = this.craftingRecipes[sortedSelected];
 
         if (craftedItem) {
-          this.$emit('craft-success', craftedItem);
+          this.isFireworkActive = true;
+          setTimeout(() => {
+            this.$emit('craft-success', craftedItem);
+            this.isFireworkActive = false;
+          }, 2);
         } else {
           this.$emit('show-alert', 'Invalid combination.');
         }
@@ -99,5 +153,4 @@ export default {
 
 <style scoped>
 @import "@/assets/CraftSystemStyle.css";
-/* Chemin vers ton fichier CSS */
 </style>
