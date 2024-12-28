@@ -1,11 +1,13 @@
 <template>
-  <!-- Le reste du template reste inchangé -->
   <div id="crafting-board" ref="craftingBoard">
     <WaveAnimation />
     <div class="animation-container">
-      <FireworkAnimation />
-      <FireworkAnimation :delay="0.4" :offsetX="50" />
-      <FireworkAnimation :delay="0.8" :offsetX="-200" />
+      <!-- Feux d'artifice conditionnels -->
+      <template v-if="isFireworkActive">
+        <FireworkAnimation />
+        <FireworkAnimation :delay="0.4" :offsetX="50" />
+        <FireworkAnimation :delay="0.8" :offsetX="-200" />
+      </template>
     </div>
     <div id="crafting">
       <div class="title-container">
@@ -111,11 +113,13 @@ export default {
 
       // Si on arrive ici, on peut faire le craft
       this.isFireworkActive = true;
+      
+      // Arrêter l'animation après 2 secondes
       setTimeout(() => {
         this.$emit('craft-success', craftedItem);
         this.isFireworkActive = false;
         this.selected = [];  // Vider la sélection après un craft réussi
-      }, 2);
+      }, 2000); // Changé de 2 à 2000 ms pour voir l'animation
     },
     handleKeyPress(event) {
       if (event.key === 'Enter') {
