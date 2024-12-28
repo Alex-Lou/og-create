@@ -78,6 +78,8 @@ export default {
     return {
       selected: [],
       discoveredCategories: new Set(),
+      alertShown: false, // Ajout du drapeau pour vérifier si l'alerte a déjà été émise
+      craftingInProgress: false, // Ajout du drapeau pour vérifier si le craft est en cours
     };
   },
   methods: {
@@ -90,6 +92,8 @@ export default {
     },
     resetCraftingBoard() {
       this.resetSelection();
+      this.alertShown = false; // Réinitialiser le drapeau lorsque la sélection est réinitialisée
+      this.craftingInProgress = false; // Réinitialiser le drapeau de craft en cours
     },
     resetSelection() {
       this.selected = [];
@@ -98,8 +102,18 @@ export default {
       this.selected.splice(index, 1);
     },
     craftItem() {
+      if (this.craftingInProgress) {
+        return; // Si le craft est en cours, ne rien faire
+      }
+
+      this.craftingInProgress = true; // Marquer le craft comme en cours
+
       if (this.selected.length < 2) {
-        this.$emit('show-alert', 'Select at least 2 elements to craft!');
+        if (!this.alertShown) {
+          this.$emit('show-alert', 'Select at least 2 elements to craft!');
+          this.alertShown = true; // Marquer l'alerte comme émise
+        }
+        this.craftingInProgress = false; // Réinitialiser le drapeau de craft en cours
         return;
       }
 
@@ -108,6 +122,7 @@ export default {
 
       if (!craftedItem) {
         this.$emit('show-alert', 'Invalid combination.');
+        this.craftingInProgress = false; // Réinitialiser le drapeau de craft en cours
         return;
       }
 
@@ -119,6 +134,8 @@ export default {
       setTimeout(() => {
         this.$emit('craft-success', craftedItem);
         this.selected = [];
+        this.alertShown = false; // Réinitialiser le drapeau après un craft réussi
+        this.craftingInProgress = false; // Réinitialiser le drapeau de craft en cours
       }, 1);
     },
     handleKeyPress(event) {
