@@ -186,7 +186,7 @@
   z-index: 1;
 }
 
-/* Ajouter des styles pour l'élément créé */
+/* Ajouter des styles pour l'élément draggable et droppable créé */
 .crafted-element {
   position: absolute;
   background: #4b5ebe;
