@@ -1,9 +1,9 @@
-    /* Conteneur principal */
-    #achievements-menu-container {
-        position: absolute;
-        bottom: 0.5%;
-        left: 0;
-    }
+/* Conteneur principal */
+#achievements-menu-container {
+    position: absolute;
+    bottom: 0.5%;
+    left: 0;
+}
 
 /* Menu déroulant des succès */
 #achievements-menu {

@@ -72,6 +72,16 @@
 }
 
 
+.particle {
+    position: absolute;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    pointer-events: none;
+    will-change: transform;
+    z-index: 1000;  /* Ajouté pour s'assurer que les particules sont visibles */
+}
+
 .gsap-particles-container {
     position: absolute;
     inset: 0;
@@ -79,11 +89,5 @@
     height: 100%;
     pointer-events: none;
     z-index: 10;
-    overflow: hidden;
-  }
-  
-  .particle {
-    position: absolute;
-    pointer-events: none;
-    will-change: transform;
-  }
+    overflow: visible;  /* Changé de hidden à visible */
+}

@@ -7,7 +7,7 @@
             "Air": "💨"
         },
         "Matériaux élémentaire": {
-            "Lac": "🌊",
+            
             "Océan": "🌊🌊",
             "Pluie": "🌧️",
             "Vague": "🌊💨",
@@ -39,6 +39,9 @@
             "Vie": "🌱🌱",
             "Lumière": "💡",
             "Temps": "⏳"
+        },
+        "Test": {
+            "Lac": "🌊"
         },
         "Phénomènes Naturels": {
             "Volcan": "🌋",
