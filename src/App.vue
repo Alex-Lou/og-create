@@ -1,4 +1,3 @@
-<!-- App.vue -->
 <template>
   <div :class="['game-container', { 'dark-mode': isDarkMode }]" id="game-container">
     <DataLoading
@@ -34,6 +33,7 @@
           :elementEmojis="elementEmojis"
           :craftingRecipes="craftingRecipes"
           :isDarkMode="isDarkMode"
+          :isFireworkActive="isFireworkActive"
           @craft-success="handleCraftSuccess"
           @show-alert="showAlert"
           ref="craftSystem"
@@ -51,6 +51,7 @@
       :achievement="newAchievement"
       :achievements="achievements"
       @close="closeAchievementPopup"
+      @achievement-popup-opened="handleAchievementPopupOpened"
     />
   </div>
 </template>
@@ -93,6 +94,7 @@ export default {
       },
       achievements: [],
       newAchievement: null,
+      isFireworkActive: false,
     };
   },
   methods: {
@@ -141,6 +143,12 @@ export default {
     },
     showAlert(message) {
       alert(message);
+    },
+    handleAchievementPopupOpened() {
+      this.isFireworkActive = true;
+      setTimeout(() => {
+        this.isFireworkActive = false;
+      }, 2000);
     }
   }
 };

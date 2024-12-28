@@ -69,11 +69,15 @@ export default {
       type: Boolean,
       required: true,
     },
+    isFireworkActive: {
+      type: Boolean,
+      required: true,
+    },
   },
   data() {
     return {
       selected: [],
-      isFireworkActive: false,
+      discoveredCategories: new Set(),
     };
   },
   methods: {
@@ -86,7 +90,6 @@ export default {
     },
     resetCraftingBoard() {
       this.resetSelection();
-      this.isFireworkActive = false;
     },
     resetSelection() {
       this.selected = [];
@@ -95,36 +98,41 @@ export default {
       this.selected.splice(index, 1);
     },
     craftItem() {
-      // Vérifier d'abord si on a assez d'éléments
       if (this.selected.length < 2) {
         this.$emit('show-alert', 'Select at least 2 elements to craft!');
         return;
       }
 
-      // Ensuite, vérifier si la combinaison est valide
       const sortedSelected = this.selected.sort().join('+');
       const craftedItem = this.craftingRecipes[sortedSelected];
 
-      // Si la combinaison est invalide
       if (!craftedItem) {
         this.$emit('show-alert', 'Invalid combination.');
         return;
       }
 
-      // Si on arrive ici, on peut faire le craft
-      this.isFireworkActive = true;
-      
-      // Arrêter l'animation après 2 secondes
+      const category = this.getCraftedItemCategory(craftedItem);
+      if (category && !this.discoveredCategories.has(category)) {
+        this.discoveredCategories.add(category);
+      }
+
       setTimeout(() => {
         this.$emit('craft-success', craftedItem);
-        this.isFireworkActive = false;
-        this.selected = [];  // Vider la sélection après un craft réussi
-      }, 2000); // Changé de 2 à 2000 ms pour voir l'animation
+        this.selected = [];
+      }, 1);
     },
     handleKeyPress(event) {
       if (event.key === 'Enter') {
         this.craftItem();
       }
+    },
+    getCraftedItemCategory(item) {
+      for (const key in this.craftingRecipes) {
+        if (this.craftingRecipes[key] === item) {
+          return key.split('+')[0];
+        }
+      }
+      return null;
     },
   },
   mounted() {

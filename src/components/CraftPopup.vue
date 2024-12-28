@@ -36,7 +36,6 @@ export default {
   },
   methods: {
       showPopup() {
-          console.log("Showing popup"); // Debug
           const popup = this.$refs.craftedPopup;
           popup.classList.add("show");
           
@@ -54,12 +53,10 @@ export default {
       
       animateParticles() {
           if (!this.$refs.particles) {
-              console.log("No particles found"); // Debug
               return;
           }
 
           const particles = this.$refs.particles;
-          console.log("Number of particles:", particles.length); // Debug
 
           particles.forEach((particle, index) => {
               console.log("Animating particle", index); // Debug
@@ -100,13 +97,11 @@ export default {
   watch: {
       'craftedElement.name'(newValue) {
           if (newValue) {
-              console.log("Crafted element changed:", newValue); // Debug
               this.showPopup();
           }
       }
   },
   mounted() {
-      console.log("Component mounted"); // Debug
   }
 };
 </script>
