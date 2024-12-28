@@ -196,12 +196,12 @@
   font-size: 0.9rem;
   transition: transform 0.2s ease;
   cursor: pointer;
+  z-index: 1;
 }
 
 .crafted-element:hover {
   transform: scale(1.05);
 }
-
 /* Bouton Clean avec animation */
 .reset-crafting-button {
   position: fixed;
