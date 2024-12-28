@@ -9,7 +9,7 @@
         <FireworkAnimation :delay="0.8" :offsetX="-200" />
       </template>
     </div>
-    <div id="crafting">
+    <div id="crafting" @dragover.prevent @drop="handleDrop">
       <div class="title-container">
         <h2 class="animated-text">Creation Zone</h2>
         <VoltageAnimation @click="craftItem">
@@ -22,6 +22,8 @@
             v-for="(resource, index) in selected"
             :key="index"
             @click="removeResource(index)"
+            draggable="true"
+            @dragstart="dragStart(resource)"
           >
             {{ elementEmojis[resource] || '' }} {{ resource }}
           </li>
@@ -29,6 +31,17 @@
       </div>
       <div id="crafted-result">
         <p id="crafted-item" ref="craftedItemDisplay"></p>
+      </div>
+      <div
+        v-if="craftedElement"
+        :style="{ top: craftedElementPosition.top + 'px', left: craftedElementPosition.left + 'px' }"
+        draggable="true"
+        @dragstart="dragStartCraftedElement"
+        @dragend="dragEndCraftedElement"
+        @click="removeCraftedElement"
+        class="crafted-element"
+      >
+        <p>{{ elementEmojis[craftedElement] || '' }} {{ craftedElement }}</p>
       </div>
     </div>
     <button
@@ -78,13 +91,15 @@ export default {
     return {
       selected: [],
       discoveredCategories: new Set(),
-      alertShown: false, // Ajout du drapeau pour vérifier si l'alerte a déjà été émise
-      craftingInProgress: false, // Ajout du drapeau pour vérifier si le craft est en cours
+      alertShown: false,
+      craftingInProgress: false,
+      craftedElement: null, // Ajout de l'état pour l'élément créé
+      craftedElementPosition: { top: 0, left: 0 }, // Position de l'élément créé
     };
   },
   methods: {
     selectResource(resource) {
-      if (this.selected.length < 4) {
+      if (this.selected.length < 4 && resource && this.elementEmojis[resource]) {
         this.selected.push(resource.trim());
       } else {
         this.$emit('show-alert', 'You can only select up to 3 elements for crafting!');
@@ -92,8 +107,10 @@ export default {
     },
     resetCraftingBoard() {
       this.resetSelection();
-      this.alertShown = false; // Réinitialiser le drapeau lorsque la sélection est réinitialisée
-      this.craftingInProgress = false; // Réinitialiser le drapeau de craft en cours
+      this.alertShown = false;
+      this.craftingInProgress = false;
+      this.craftedElement = null; // Réinitialiser l'élément créé
+      this.craftedElementPosition = { top: 0, left: 0 }; // Réinitialiser la position
     },
     resetSelection() {
       this.selected = [];
@@ -101,19 +118,23 @@ export default {
     removeResource(index) {
       this.selected.splice(index, 1);
     },
+    removeCraftedElement() {
+      this.craftedElement = null; // Réinitialiser l'élément créé
+      this.craftedElementPosition = { top: 0, left: 0 }; // Réinitialiser la position
+    },
     craftItem() {
       if (this.craftingInProgress) {
-        return; // Si le craft est en cours, ne rien faire
+        return;
       }
 
-      this.craftingInProgress = true; // Marquer le craft comme en cours
+      this.craftingInProgress = true;
 
       if (this.selected.length < 2) {
         if (!this.alertShown) {
           this.$emit('show-alert', 'Select at least 2 elements to craft!');
-          this.alertShown = true; // Marquer l'alerte comme émise
+          this.alertShown = true;
         }
-        this.craftingInProgress = false; // Réinitialiser le drapeau de craft en cours
+        this.craftingInProgress = false;
         return;
       }
 
@@ -122,7 +143,7 @@ export default {
 
       if (!craftedItem) {
         this.$emit('show-alert', 'Invalid combination.');
-        this.craftingInProgress = false; // Réinitialiser le drapeau de craft en cours
+        this.craftingInProgress = false;
         return;
       }
 
@@ -134,8 +155,10 @@ export default {
       setTimeout(() => {
         this.$emit('craft-success', craftedItem);
         this.selected = [];
-        this.alertShown = false; // Réinitialiser le drapeau après un craft réussi
-        this.craftingInProgress = false; // Réinitialiser le drapeau de craft en cours
+        this.alertShown = false;
+        this.craftingInProgress = false;
+        this.craftedElement = craftedItem; // Mettre à jour l'élément créé
+        this.craftedElementPosition = { top: 200, left: 50 }; // Position initiale
       }, 1);
     },
     handleKeyPress(event) {
@@ -151,6 +174,25 @@ export default {
       }
       return null;
     },
+    handleDrop(event) {
+      const element = event.dataTransfer.getData('text/plain');
+      if (element && this.elementEmojis[element] && !this.selected.includes(element) && element !== this.craftedElement) {
+        this.selectResource(element);
+      }
+    },
+    dragStart(resource) {
+      event.dataTransfer.setData('text/plain', resource);
+    },
+    dragStartCraftedElement(event) {
+      event.dataTransfer.setData('text/plain', this.craftedElement);
+      event.dataTransfer.effectAllowed = 'move';
+    },
+    dragEndCraftedElement(event) {
+      const craftingBoardRect = this.$refs.craftingBoard.getBoundingClientRect();
+      const x = event.clientX - craftingBoardRect.left;
+      const y = event.clientY - craftingBoardRect.top;
+      this.craftedElementPosition = { top: y, left: x };
+    }
   },
   mounted() {
     window.addEventListener('keydown', this.handleKeyPress);
@@ -163,4 +205,5 @@ export default {
 
 <style scoped>
 @import "@/assets/CraftSystemStyle.css";
+
 </style>

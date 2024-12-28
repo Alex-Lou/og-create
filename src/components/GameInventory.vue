@@ -10,8 +10,15 @@
         </div>
       </div>
       <div class="category-content">
-        <div v-for="element in category.elements" :key="element" class="inventory-item"
-          @click="$emit('selectResource', element)">
+        <div
+          v-for="element in category.elements"
+          :key="element"
+          class="inventory-item"
+          draggable="true"
+          @dragstart="startDrag($event, element)"
+          @dragend="endDrag"
+          @click="$emit('selectResource', element)"
+        >
           {{ elementEmojis[element] || '' }} {{ element }}
         </div>
       </div>
@@ -74,7 +81,6 @@ export default {
   },
   methods: {
     checkNewCompletedCategory(categories) {
-      // Vérifier si une catégorie vient d'être complétée
       const newlyCompleted = categories.find(category => {
         const wasCompleteBefore = this.previousCategoriesState[category.name]?.isComplete || false;
         return category.isComplete && !wasCompleteBefore;
@@ -84,7 +90,6 @@ export default {
         // this.triggerFireworks(); // Supprimé pour éviter le déclenchement de l'animation
       }
 
-      // Mettre à jour l'état précédent
       this.previousCategoriesState = categories.reduce((acc, category) => {
         acc[category.name] = {
           isComplete: category.isComplete
@@ -92,6 +97,14 @@ export default {
         return acc;
       }, {});
     },
+    startDrag(event, element) {
+      if (element) {
+        event.dataTransfer.setData('text/plain', element);
+      }
+    },
+    endDrag(event) {
+      event.dataTransfer.clearData();
+    }
   },
   created() {
     this.previousCategoriesState = this.filteredCategories.reduce((acc, category) => {
