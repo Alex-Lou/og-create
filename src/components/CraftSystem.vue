@@ -95,6 +95,7 @@ export default {
       craftedElements: [],
       draggingElementIndex: null,
       resourcePositions: [],
+      lastCraftedPosition: null, // Nouvelle propriété pour suivre la position du dernier élément créé
     };
   },
   methods: {
@@ -112,6 +113,7 @@ export default {
       this.craftingInProgress = false;
       this.craftedElements = [];
       this.resourcePositions = [];
+      this.lastCraftedPosition = null; // Réinitialiser la position du dernier élément créé
       this.$emit('board-reset');
     },
     resetSelection() {
@@ -123,6 +125,7 @@ export default {
     },
     removeCraftedElement(index) {
       this.craftedElements.splice(index, 1);
+      this.lastCraftedPosition = null; // Réinitialiser la position du dernier élément créé
     },
     craftItem() {
       if (this.craftingInProgress) return;
@@ -154,10 +157,23 @@ export default {
 
       setTimeout(() => {
         this.$emit('craft-success', craftedItem);
+
+        // Déterminer la position de la nouvelle création
+        let newPosition = { top: 400, left: 230 }; // Position initiale
+        if (this.lastCraftedPosition && !this.lastCraftedPosition.moved) {
+          newPosition = {
+            top: this.lastCraftedPosition.top,
+            left: this.lastCraftedPosition.left + 110,
+          };
+        }
+
         this.craftedElements.push({
           name: craftedItem,
-          position: { top: 500, left: 400 }, // Position initiale plus à droite
+          position: newPosition,
+          moved: false, // Nouvelle propriété pour suivre si l'élément a été déplacé
         });
+
+        this.lastCraftedPosition = newPosition; // Mettre à jour la position du dernier élément créé
         this.selected = [];
         this.resourcePositions = [];
         this.alertShown = false;
@@ -186,10 +202,8 @@ export default {
     handleDropOnCraftedElement(targetElementName, event, targetIndex) {
       event.preventDefault();
 
-      // Ne pas réagir si on dépose l'élément sur lui-même
       if (targetIndex === this.draggingElementIndex) return;
 
-      // Si on dépose un élément créé sur un autre élément créé
       if (this.draggingElementIndex !== null) {
         const draggedElement = this.craftedElements[this.draggingElementIndex];
         if (draggedElement) {
@@ -241,6 +255,9 @@ export default {
           top: Math.max(0, Math.min(600, y)),
           left: Math.max(0, Math.min(800, x)),
         };
+
+        // Marquer l'élément comme déplacé
+        this.craftedElements[index].moved = true;
       }
       this.draggingElementIndex = null;
     },
