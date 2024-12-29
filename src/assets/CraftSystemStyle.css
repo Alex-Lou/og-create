@@ -202,6 +202,11 @@
 .crafted-element:hover {
   transform: scale(1.05);
 }
+
+.draggable-resource {
+  cursor: grab;
+}
+
 /* Bouton Clean avec animation */
 .reset-crafting-button {
   position: fixed;

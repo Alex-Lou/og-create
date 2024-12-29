@@ -274,7 +274,5 @@ export default {
 <style scoped>
 @import '@/assets/CraftSystemStyle.css';
 
-.draggable-resource {
-  cursor: grab;
-}
+
 </style>
