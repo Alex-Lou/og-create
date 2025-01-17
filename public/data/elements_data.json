@@ -40,9 +40,6 @@
             "Lumière": "💡",
             "Temps": "⏳"
         },
-        "Test": {
-            "Lac": "🌊"
-        },
         "Phénomènes Naturels": {
             "Volcan": "🌋",
             "Orage": "⛈️",
@@ -74,6 +71,7 @@
         },
         "Formations Naturelles": {
             "Méandre": "🌊➰",
+            "Lac": "🌊",
             "Source Chaude": "♨️",
             "Cascade": "💧⬇️",
             "Rivière de Lave": "🌋💧➡️",
@@ -407,6 +405,8 @@
             "Cristal de Glace": "❄️💎"
         }
     },
+
+
     "rules": {
         "Eau+Feu+Terre+Eau": "Vie",
         "Océan+Continent": "Planète Terre",
@@ -582,6 +582,7 @@
         "Chair+Goût": "Langue",
         "Organe+Nourriture": "Estomac",
         "Chair+Air": "Nez",
+        "Chair+Langue": "Bouche",
         "Vie+Énergie+Corps": "Nourriture",
         "Peau+Soleil": "Vitamine D",
         "Os+Minérais": "Calcium",
@@ -820,11 +821,7 @@
         "Verre+Verre": "Mirroir",
         "Argile+Feu+Chaleur": "Tuile",
         "Sable+Eau+Calcaire": "Mortier",
-
-
-
-
-        "Outil": "Homme+Pierre+Bois",
+        "Homme+Pierre+Bois": "Outil",
         "Lame": "Homme+Pierre+Pression",
         "Marteau": "Homme+Outil+Métal",
         "Pioche": "Homme+Outil+Pierre",
@@ -838,7 +835,7 @@
         "Ciment": "Chaleur+Calcaire+Argile",
         "Fondation": "Homme+Béton+Pierre",
         "Mur": "Homme+Brique+Mortier",
-        "Maison": "Homme+Mur+Fondation+Bois",
+        "Maison": "Homme+Mur+Fondation",
         "Roue": "Homme+Outil+Bois+Pierre",
         "Chariot": "Homme+Roue+Bois",
         "Panier": "Homme+Fibre+Fibre",
@@ -878,6 +875,232 @@
         "Gant": "Homme+Tissu+Main",
         "Flûte": "Homme+Os+Outil+Air",
         "Tambour": "Homme+Bois+Cuir+Air",
-        "Cuir": "Homme+Peau+Outil"
+        "Cuir": "Homme+Peau+Outil",
+
+
+
+        "Montagne+Lave+Eau": "Gabbro",
+        "Granite+Pression": "Gneiss",
+        "Magma+Pression": "Pegmatite",
+        "Pierre+Sel": "Halite",
+        "Roche+Soufre": "Pyrite",
+
+        "Vent+Glace+Air": "Blizzard",
+        "Orage+Grêle": "Orage de Grêle",
+        "Nuage+Vent+Froid": "Nimbostratus",
+        "Brume+Océan": "Embruns",
+
+        "Lac+Volcan": "Lac Volcanique",
+        "Glacier+Lave": "Jökulhlaup",
+        "Désert+Glace": "Désert Polaire",
+        "Canyon+Glacier": "Canyon Glaciaire",
+
+        "Prairie+Marais": "Tourbière",
+        "Herbe+Sel": "Pré-Salé",
+        "Plante+Roche+Sel": "Halophyte",
+        "Mousse+Marais": "Sphaigne",
+
+        "Pluie+Terre": "Flaque",
+        "Fleur+Nuit": "Fleur de Lune",
+        "Neige+Arbre": "Arbre Givré",
+        "Sable+Soleil": "Mirage",
+        "Glace+Vent": "Givre",
+
+        "Nuit+Brume": "Brume Nocturne",
+        "Pluie+Forêt": "Pluie Forestière",
+        "Lune+Océan": "Marée",
+
+        "Feuille+Vent": "Tourbillon de Feuilles",
+        "Neige+Vent": "Poudrerie",
+        "Sable+Lune": "Sable Argenté",
+        "Eau+Lune": "Reflet Lunaire",
+        "Glace+Lumière+Cristal": "Cristal de Glace",
+
+        "Montagne+Eau+Glace": "Mont Enneigé",
+        "Plage+Palmier": "Plage Tropicale",
+        "Roche+Mousse": "Rocher Moussu",
+        "Eau+Pierre+Plante": "Source",
+
+        "Pluie+Chaleur": "Pluie d'Été",
+        "Vent+Feuille": "Brise d'Automne",
+        "Neige+Soleil": "Fonte",
+        "Nuage+Nuit": "Ciel Étoilé",
+
+        "Rosée+Herbe": "Prairie Humide",
+        "Soleil+Brume": "Halo Solaire",
+        "Vent+Fleur": "Parfum",
+        "Air+Prairie": "Brise Champêtre",
+        "Brume+Montagne": "Brume Matinale",
+        "Feuille+Automne": "Feuillage Doré",
+        "Pluie+Printemps": "Averse Printanière",
+        "Soleil+Été": "Canicule",
+        "Neige+Hiver": "Manteau Neigeux",
+
+
+
+        "Cellule+Eau": "Cytoplasme",
+        "Muscle+Oxygène": "Énergie Musculaire",
+        "Sang+Muscle": "Force Vitale",
+        "Cerveau+Vue": "Perception",
+        "Os+Muscle+Force": "Corps",
+        "Cerveau+Peur": "Danger",
+
+        "Cerveau+Mémoire": "Expérience",
+        "Corps+Agilité": "Réflexes",
+        "Vue+Cerveau": "Observation",
+        "Cerveau+Son": "Ouïe",
+
+        "Animal+Instinct": "Territoire",
+        "Animal+Peur": "Camouflage",
+        "Animal+Force": "Chasse",
+        "Animal+Nourriture": "Prédation",
+        "Animal+Intelligence": "Stratégie",
+
+        "Homme+Bouche": "Parler",
+        "Homme+Langage": "Communication",
+        "Homme+Mémoire": "Savoir",
+        "Homme+Observation": "Découverte",
+        "Homme+Pierre": "Artisan",
+        "Homme+Expérience": "Sagesse",
+
+        "Animal+Vue+Nuit": "Vision Nocturne",
+        "Animal+Ouïe": "Écholocation",
+        "Animal+Odorat": "Pistage",
+        "Corps+Température": "Thermorégulation",
+        "Corps+Eau": "Adaptation Aquatique",
+
+
+        "Homme+Territoire": "Village",
+        "Homme+Communication": "Société",
+        "Homme+Stratégie": "Organisation",
+        "Homme+Savoir": "Culture",
+        "Homme+Sagesse": "Philosophie",
+        "Homme+Organisation": "Loi",
+        "Écriture+Société": "Loi",
+        "Écriture+Nombre": "Calcul",
+        "Observation+Système": "Anthropologie",
+        "Corps+Système Immunitaire": "Maladie",
+        "Corps+Protection": "Système Immunitaire",
+        "Communication+Observation": "Réseau",
+        "Observation+Mesure": "Quantité",
+        "Danger+Vie": "Menace",
+        "Observation+Temps": "Planification",
+        "Structure+Équilibre": "Stabilité",
+
+
+        "Homme+Feu": "Maîtrise du Feu",
+        "Homme+Feu+Nourriture": "Cuisine",
+        "Homme+Eau+Bras": "Nage",
+        "Homme+Eau+Pierre": "Irrigation",
+        "Homme+Terre+Outil": "Agriculture",
+        "Homme+Force": "Construction",
+        "Homme+Animal": "Domestication",
+
+        "Homme+Observation+Temps": "Calendrier",
+        "Homme+Étoile+Étude": "Astronomie",
+        "Homme+Nature+Étude": "Sciences",
+        "Homme+Communication+Mémoire": "Écriture",
+        "Homme+Découverte": "Innovation",
+        "Homme+Écriture+Savoir": "Étude",
+        "Maison+Étude" : "École",
+        "Quantité+Observation": "Nombre",
+        "Écriture+Symbole": "Nombre",
+        "Observation+Réseau": "Système",
+        "Organisation+Structure": "Système",
+        "Observation+Quantité" : "Mesure",
+        "Réseau+Communication": "Connexion",
+        
+        "Organisation+Stabilité": "Structure",
+
+        "Artisan+Pierre": "Tailleur de Pierre",
+
+        "Artisan+Bois": "Menuiserie",
+        "Artisan+Métal": "Métallurgie",
+        "Artisan+Tissu": "Couture",
+        "Artisan+Argile": "Poterie",
+
+        "Homme+Plante": "Botanique",
+        "Homme+Animal+Etude": "Zoologie",
+        "Homme+Maladie": "Médecine",
+        "Homme+Calcul": "Mathématique",
+        "Homme+Minerais": "Minéralogie",
+
+        "Homme+Son+Art": "Musique",
+        "Homme+Couleur+Art": "Peinture",
+        "Homme+Pierre+Art": "Sculpture",
+        "Homme+Expression": "Sentiment",
+        "Homme+Expression+Musique": "Danse",
+        "Homme+Parler+Art": "Poésie",
+        "Homme+Papier+Art": "Dessin",
+        "Écriture+Art": "Symbole",
+
+        "Village+Village": "Ville",
+        "Ville+Organisation": "Cité",
+        "Cité+Commerce": "Économie",
+        "Ville+Protection+Mur": "Rempart",
+        "Cité+Loi": "Civilisation",
+        "Ville+Protection" : "Fortification",
+        "Fortification+Organisation": "Cité Fortifiée",
+        "Ville+Commerce": "Place du Marché",
+        "Fortification+Artillerie": "Bastion",
+        "Ville+Force": "Quartier Militaire",
+        "Ville+Économie": "Capitale",
+        "Ville+Réseau": "Métropole",
+        "Ville+Stratégie": "Centre Administratif",
+
+        "Fortification+Temps": "Citadelle",
+        "Ville+Art": "Quartier Culturel",
+        "Ville+Loi": "Palais de Justice",
+        "Fortification+Eau": "Douves",
+        "Ville+Technologie": "Sillicon Valley",
+        "Fortification+Énergie": "Poste de Défense",
+        "Ville+Éducation": "Centre Universitaire",
+        "Ville+Médecine": "Centre Hospitalier",
+        "Ville+Vent+Technologie+Écologie": "Éolienne",
+        "Ville+Organisation+Réseau+Communication": "Mégapole",
+        "Ville+Force+Stratégie": "Centre Militaire",
+        "Ville+Lumière": "Ville Lumineuse",
+        "Ville+Musique": "Quartier Musical",
+        "Ville+Nature": "Parc",
+        "Ville+Énergie": "Ville Durable",
+        "Ville+Eau": "Ville Fluviale",
+        "Nature+Organisation": "Écologie",
+        "Écologie+Technologie": "Énergie Verte",
+        "Écologie+Ville": "Ville Écologique",
+        "Écologie+Éducation": "Centre Écologique",
+        "Nature+Science": "Biodiversité",
+        "Ville+Temps": "Ville Historique",
+        "Fortification+Science": "Laboratoire de Défense",
+        "Ville+Transport": "Réseau Urbain",
+        "Ville+Agriculture": "Ferme",
+        "Ville+Innovation": "Ville moderne",
+        "Écologie+Économie": "Économie Verte",
+        "Énergie+Innovation": "Technologie Durable",
+        "Ville+Tourisme": "Destination Urbaine",
+
+        "Ville+Énergie+Écologie": "Ville Auto-Suffisante",
+        "Ville+Réseau+Technologie": "Ville Connectée",
+        "Ville+Innovation+Éducation": "Campus Technologique",
+        "Ville+Agriculture+Écologie": "Ferme Urbaine",
+        "Fortification+Innovation": "Fortification Moderne",
+        "Ville+Transport+Énergie": "Réseau Électrique",
+        "Ville+Art+Tourisme": "Quartier Historique",
+        "Ville+Loi+Organisation": "Police",
+        "Village+Police": "Police Municipale",
+        "Ville+Médecine+Énergie": "Hôpital Futuriste",
+        "Ville+Nature+Écologie": "Réserve Naturelle",
+        "Fortification+Écologie": "Fortification Verte",
+        "Ville+Économie+Organisation": "Centre Financier",
+        "Ville+Science+Organisation": "Centre de Recherche",
+        "Ville+Énergie+Transport": "Infrastructure Moderne",
+        "Ville+Éducation+Écologie": "Campus Vert",
+        "Ville+Temps+Innovation": "Ville du Futur",
+        "Ville+Lumière+Énergie": "Ville des Lumières",
+        "Ville des Lumières+Ville des Lumières": "Paris",
+        "Ville+Réseau+Communication": "Hub International",
+        "Ville+Tourisme+Économie": "Métropole Touristique",
+        "Roue+Énergie+Force": "Transport",
+        "Bois+Outil+Route": "Roue"
+
     }
 }
