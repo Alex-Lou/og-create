@@ -43,6 +43,7 @@
 
     <CraftPopup
       :craftedElement="craftedElement"
+      :elementEmojis="elementEmojis"
       @reset-crafted-element="resetCraftedElement"
     />
 
@@ -114,10 +115,17 @@ export default {
       this.$refs.craftSystem.selectResource(resource);
     },
     handleCraftSuccess(craftedItem) {
-      this.craftedElement = {
-        name: craftedItem,
-        image: require(`@/assets/creatures/${craftedItem}.png`),
-      };
+      try {
+        this.craftedElement = {
+          name: craftedItem,
+          image: require(`@/assets/creatures/${craftedItem}.png`),
+        };
+      } catch (error) {
+        this.craftedElement = {
+          name: craftedItem,
+          image: null,
+        };
+      }
       this.addToCategory(craftedItem);
       this.$refs.dataLoading.handleCraft();
     },
