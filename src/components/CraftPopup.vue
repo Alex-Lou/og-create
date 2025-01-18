@@ -114,30 +114,29 @@
   </script>
   
   <style scoped>
-.emoji-container {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 100px;
-  width: 100%;
-  margin: 0 auto;
-  flex-wrap: wrap;
-  gap: 5px;
-}
+    .emoji-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100px;
+    width: 100%;
+    margin: 0 auto;
+    flex-wrap: wrap;
+    gap: 5px;
+    }
 
-.emoji {
-  font-size: 32px; /* Taille réduite des emojis */
-  line-height: 1;
-  display: inline-block;
-  padding: 5px;
-}
+    .emoji {
+    font-size: 32px;
+    line-height: 1;
+    display: inline-block;
+    padding: 5px;
+    }
 
-/* Si besoin d'ajuster la taille du popup lui-même */
-#crafted-popup {
-  min-width: 200px; /* Assure une largeur minimum pour le popup */
-}
+    #crafted-popup {
+    min-width: 200px;
+    }
 
-.popup-content {
-  padding: 10px;
-}
+    .popup-content {
+    padding: 10px;
+    }
 </style>
