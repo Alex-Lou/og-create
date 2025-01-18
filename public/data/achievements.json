@@ -12,5 +12,27 @@
     "unlocked": false,
     "condition": "this.discoveredElements.length >= 2",
     "image": "/assets/success/Maître Créateur.png"
+  },
+  {
+    "name": "Explorateur Curieux",
+    "description": "Découvrez 50 éléments.",
+    "unlocked": false,
+    "condition": "this.discoveredElements.length >= 50",
+    "image": "/assets/success/Explorateur Curieux.png"
+  },
+  {
+    "name": "Visionnaire Divin",
+    "description": "Découvrez 100 éléments.",
+    "unlocked": false,
+    "condition": "this.discoveredElements.length >= 100",
+    "image": "/assets/success/Visionnaire Divin.png"
+  },
+  {
+    "name": "Dieu Omniscient",
+    "description": "Découvrez 1000 éléments.",
+    "unlocked": false,
+    "condition": "this.discoveredElements.length >= 1000",
+    "image": "/assets/success/Dieu Omniscient.png"
   }
+
 ]

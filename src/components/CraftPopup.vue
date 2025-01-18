@@ -113,30 +113,8 @@
   };
   </script>
   
-  <style scoped>
-    .emoji-container {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100px;
-    width: 100%;
-    margin: 0 auto;
-    flex-wrap: wrap;
-    gap: 5px;
-    }
+<style scoped>
+@import '@/assets/CraftPopup.css';
 
-    .emoji {
-    font-size: 32px;
-    line-height: 1;
-    display: inline-block;
-    padding: 5px;
-    }
 
-    #crafted-popup {
-    min-width: 200px;
-    }
-
-    .popup-content {
-    padding: 10px;
-    }
 </style>
