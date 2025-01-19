@@ -1,150 +1,30 @@
-/* Bouton Craft avec animation */
+/* Bouton Craft sans effet de voltage */
 .voltage-button {
-    position: relative;
-    display: inline-block; /* Pour que le bouton soit en ligne avec le texte */
-    right: 400px; /* Espacement entre le texte et le bouton */
-    top: -30px;
-  }
-  
-  .voltage-button button {
-    color: white;
-    background: #0D1127;
-    padding: 10px 20px; /* Restaure la taille initiale */
-    border-radius: 8px; /* Restaure la bordure initiale */
-    border: 2px solid #dd7e2a; /* Restaure la bordure initiale */
-    font-size: 1rem; /* Restaure la taille de la police initiale */
-    line-height: 1em;
-    letter-spacing: 0.075em;
-    transition: background 0.3s;
-    cursor: pointer;
-    position: relative; /* Assure que les éléments SVG et dots sont positionnés correctement */
-  }
-  
-  .voltage-button button:hover {
-    background: #0F1C53;
-    + svg, + svg + .dots {
-      opacity: 1;
-    }
-  }
-  
-  .voltage-button svg {
-    display: block;
-    position: absolute;
-    top: -0.75em;
-    left: -0.25em;
-    width: calc(100% + 0.6em);
-    height: calc(100% + .9em);
-    pointer-events: none;
-    opacity: 0;
-    transition: opacity 0.4s;
-    transition-delay: 0.1s;
-  }
-  
-  .voltage-button svg path {
-    stroke-dasharray: 100;
-    filter: url('#glow');
-  }
-  
-  .voltage-button svg path.line-1 {
-    stroke: #8d9df6;
-    stroke-dashoffset: 0;
-    animation: spark-1 3s linear infinite;
-  }
-  
-  .voltage-button svg path.line-2 {
-    stroke: #772070;
-    stroke-dashoffset: 500;
-    animation: spark-2 3s linear infinite;
-  }
-  
-  .voltage-button .dots {
-    opacity: 0;
-    transition: opacity 0.3s;
-    transition-delay: 0.4s;
-  }
-  
-  .voltage-button .dots .dot {
-    width: 1rem;
-    height: 1rem;
-    background: rgb(62, 36, 71);
-    border-radius: 100%;
-    position: absolute;
-    opacity: 0;
-  }
-  
-  .voltage-button .dots .dot-1 {
-    top: 0;
-    left: 20%;
-    animation: fly-up 3s linear infinite;
-  }
-  
-  .voltage-button .dots .dot-2 {
-    top: 0;
-    left: 55%;
-    animation: fly-up 3s linear infinite;
-    animation-delay: 0.5s;
-  }
-  
-  .voltage-button .dots .dot-3 {
-    top: 0;
-    left: 80%;
-    animation: fly-up 3s linear infinite;
-    animation-delay: 1s;
-  }
-  
-  .voltage-button .dots .dot-4 {
-    bottom: 0;
-    left: 30%;
-    animation: fly-down 3s linear infinite;
-    animation-delay: 2.5s;
-  }
-  
-  .voltage-button .dots .dot-5 {
-    bottom: 0;
-    left: 65%;
-    animation: fly-down 3s linear infinite;
-    animation-delay: 1.5s;
-  }
-  
-  @keyframes spark-1 {
-    to {
-      stroke-dashoffset: -1000;
-    }
-  }
-  
-  @keyframes spark-2 {
-    to {
-      stroke-dashoffset: -500;
-    }
-  }
-  
-  @keyframes fly-up {
-    0% {
-      opacity: 0;
-      transform: translateY(0) scale(0.2);
-    }
-    5% {
-      opacity: 1;
-      transform: translateY(-1.5rem) scale(0.4);
-    }
-    10%, 100% {
-      opacity: 0;
-      transform: translateY(-3rem) scale(0.2);
-    }
-  }
-  
-  @keyframes fly-down {
-    0% {
-      opacity: 0;
-      transform: translateY(0) scale(0.2);
-    }
-    5% {
-      opacity: 1;
-      transform: translateY(1.5rem) scale(0.4);
-    }
-    10%, 100% {
-      opacity: 0;
-      transform: translateY(3rem) scale(0.2);
-    }
-  }
-  
+  position: relative;
+  display: inline-block; /* Pour que le bouton soit en ligne avec le texte */
+  right: 400px; /* Espacement entre le texte et le bouton */
+  top: -30px;
+}
+
+.voltage-button button {
+  color: white;
+  background: #0D1127;
+  padding: 10px 20px; /* Taille du bouton */
+  border-radius: 8px; /* Bordures arrondies */
+  border: 2px solid #dd7e2a; /* Bordure */
+  font-size: 1rem; /* Taille du texte */
+  line-height: 1em;
+  letter-spacing: 0.075em;
+  transition: background 0.3s; /* Animation légère sur le fond */
+  cursor: pointer;
+  position: relative;
+}
+
+.voltage-button button:hover {
+  background: #0F1C53;
+  color: #ffffff; /* Change la couleur du texte au survol */
+}
+
+.voltage-button button:active {
+  transform: scale(0.95); /* Réduction légère au clic */
+}
