@@ -207,7 +207,7 @@
   cursor: grab;
 }
 
-/* Bouton Clean avec animation */
+/* Bouton Clear */
 .reset-crafting-button {
   position: fixed;
   bottom: 50px;
@@ -256,30 +256,3 @@
   background: #008ba3;
   box-shadow: 0 4px 10px rgba(0, 139, 163, 0.5);
 }
-
-/* Bulles animées */
-.reset-crafting-button::after {
-  content: '';
-  pointer-events: none;
-  opacity: 0.6;
-  background:
-    radial-gradient(circle at 20% 35%, transparent 0, transparent 2px, #dd7e2a 3px, #dd7e2a 4px, transparent 4px),
-    radial-gradient(circle at 75% 44%, transparent 0, transparent 2px, #dd7e2a 3px, #dd7e2a 4px, transparent 4px),
-    radial-gradient(circle at 46% 52%, transparent 0, transparent 4px, #dd7e2a 5px, #dd7e2a 6px, transparent 6px);
-  width: 100%;
-  height: 300%;
-  top: 0;
-  left: 0;
-  position: absolute;
-  animation: bubbles 5s linear infinite both;
-}
-
-@keyframes bubbles {
-  from {
-    transform: translate();
-  }
-  to {
-    transform: translate(0, -66.666%);
-  }
-}
-
