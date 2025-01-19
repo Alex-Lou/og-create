@@ -43,8 +43,8 @@ export default {
       const newInventoryWidth = this.initialInventoryWidth + deltaX;
       const mainContentWidth = this.$parent.$refs.mainContent.offsetWidth;
 
-      const minInventoryWidth = 100; // Minimum width of the inventory
-      const maxInventoryWidth = mainContentWidth - 200; // Minimum width of the crafting board
+      const minInventoryWidth = 40; // Minimum width of the inventory
+      const maxInventoryWidth = mainContentWidth - 900; // Minimum width of the crafting board
 
       if (newInventoryWidth >= minInventoryWidth && newInventoryWidth <= maxInventoryWidth) {
         const inventoryFlex = newInventoryWidth / mainContentWidth;
