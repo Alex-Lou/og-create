@@ -28,11 +28,14 @@
             "Sel": "⚪💧",
             "Limon": "💧🌱🏖️",
             "Soufre": "🟡🌋",
-            "Lumière": "💡"
+            "Lumière": "💡",
+            "Neige Fondue": "❄️💧",
+            "Suie": "🌱🔥💧"
         }
     },
 
     "rules": {
+
         "Nuage+Froid": "Pluie",
         "Eau+Vent": "Vague",
         "Eau+Gel": "Glace", 
@@ -58,11 +61,15 @@
         "Magma+Eau": "Lave",
         "Pierre+Eau": "Calcaire",
         "Arbre+Foudre": "Charbon",
-        "Terre+Temps+Pression": "Pétrole",
+        "Charbon+Temps+Pression": "Pétrole",
         "Océan+Soleil+Temps": "Sel",
         "Mer+Soleil+Temps": "Sel",
         "Rivière+Sable+Boue": "Limon",
         "Volcan+Gaz": "Soufre",
-        "Soleil+Atmosphère": "Lumière"
+        "Soleil+Atmosphère": "Lumière",
+        "Neige+Pluie": "Neige Fondue",
+        "Cendre+Pluie": "Suie",
+        "Glace+Chaleur": "Vapeur",
+        "Incendie+Froid": "Fumée"
     }
  }

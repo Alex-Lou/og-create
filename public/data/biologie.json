@@ -168,10 +168,22 @@
             "Bois Mort": "🪵💀",
             "Moisissure": "🍄⚫",
             "Compost": "🌱💀",
-            "Nectar": "🌺💧"
+            "Nectar": "🌺💧",
+            "Graine": "🌱",
+            "Herbe": "🌿",
+            "Fleur": "🌸",
+            "Arbre": "🌳",
+            "Arbuste": "🌱🌳",
+            "Spore": "🍄"
         }
     },
     "rules": {
+        "Terre+Vie": "Graine",
+        "Graine+Eau": "Herbe",
+        "Herbe+Lumière": "Fleur",
+        "Graine+Temps": "Arbre",
+        "Herbe+Temps": "Arbuste",
+        "Vie+Humidité": "Spore",
         "Cellule+ADN": "Noyau",
         "Noyau+Protéine": "ADN",
         "Invertébré Terrestre+Air": "Insecte",

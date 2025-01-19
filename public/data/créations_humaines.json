@@ -93,7 +93,14 @@
             "Gant": "🧤",
             "Flûte": "🎵",
             "Tambour": "🥁",
-            "Cuir": "🐄"
+            "Cuir": "🐄",
+            "Terre Cuite": "🧱",
+            "Craie": "🪨⚪",
+            "Chaux": "🪨💨",
+            "Tuf": "🪨🌋",
+            "Coke": "🪨🔥",
+            "Asphalte": "⚫🏗️",
+            "Bitume": "⚫🔥"
         },
         "nourriture": {
             "Fromage": "🧀"
@@ -172,7 +179,8 @@
             "Sagesse": "🦉",
             "Écholocation": "🦇📡",
             "Pistage": "🐾",
-            "Société": "👥"
+            "Société": "👥",
+            "Rumeur": "🗣️📢"
         },
         "mathématiques": {
             "Géométrie": "📐",
@@ -294,6 +302,17 @@
 
     },
     "rules": {
+        "Homme+Communication+Bouche+Oreille": "Rumeur",
+        "Pétrole+Chaleur+Vent": "Bitume",
+        "Argile+Chaleur": "Terre Cuite",
+        "Calcaire+Froid": "Craie",
+        "Calcaire+Brasier": "Chaux",
+        "Cendre+Incendie+Pression": "Tuf",
+        "Charbon+Brasier": "Coke",
+        "Bitume+Sable": "Asphalte",
+        "Ciment+Limon": "Béton",
+        "Terre Cuite+Brasier": "Brique",
+        "Calcaire+Argile+Chaleur": "Ciment",
         "Verre+Métal+Lumière": "Miroir",
         "Ligne+Angle+Égalité": "Carré",
         "Point+Point": "Ligne",
