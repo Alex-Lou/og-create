@@ -1,25 +1,44 @@
 <template>
   <div>
-    <!-- Menu déroulant des succès -->
+    <!-- Menu déroulant des succès (quand aucun 'achievement' n'est sélectionné) -->
     <div id="achievements-menu" v-if="!achievement">
       <div id="achievements-content">
         <ul>
-          <li v-for="(achievement, index) in achievements" :key="index" :class="{ unlocked: achievement.unlocked }">
-            <img v-if="achievement.image" :src="achievement.image" alt="" class="achievement-icon" />
-            {{ achievement.name }} - {{ achievement.description }}
+          <li
+            v-for="(ach, index) in achievements"
+            :key="index"
+            :class="{ unlocked: ach.unlocked }"
+          >
+            <img
+              v-if="ach.image"
+              :src="ach.image"
+              alt=""
+              class="achievement-icon"
+            />
+            {{ ach.name }} - {{ ach.description }}
           </li>
         </ul>
       </div>
     </div>
 
     <!-- Popup pour un succès spécifique -->
-    <div v-if="achievement" id="achievement-popup" class="xyz-in"
-      xyz="appear-front-5 fade flip-down-50% duration-5 ease-elastic-out-10">
+    <div
+      v-if="achievement"
+      ref="achievementPopup"
+      id="achievement-popup"
+      class="xyz-in"
+      xyz="appear-front-5 fade flip-down-50% duration-5 ease-elastic-out-10"
+    >
       <div ref="particleContainer" class="gsap-particles-container"></div>
       <div class="popup-content">
         <button class="close-button" @click="closePopup">&times;</button>
-        <img v-if="achievement?.image" :src="achievement.image" :alt="achievement.name" class="xyz-nested"
-          xyz="fade small flip-down-50% duration-10 delay-2 ease-out-back" />
+        <img
+          v-if="achievement?.image"
+          :src="achievement.image"
+          :alt="achievement.name"
+          class="xyz-nested"
+          xyz="fade small flip-down-50% duration-10 delay-2 ease-out-back"
+        />
         <div class="achievement-text xyz-nested" xyz="fade up small-75% delay-3">
           <h3>{{ achievement?.name }}</h3>
           <p>{{ achievement?.description }}</p>
@@ -49,29 +68,92 @@ export default {
       particles: [],
       colors: ['#FF6B6B', '#4ECDC4', '#45B7D1', '#96CEB4', '#FFEEAD', '#FFD93D'],
       particleCount: 30,
+      autoCloseTimer: null, // Pour stocker le setTimeout (20s)
     };
   },
   mounted() {
+    // Si un achievement est déjà présent au montage, on l’affiche + timer
     if (this.achievement) {
       this.initParticles();
       this.$emit("achievement-popup-opened");
+      this.startAutoCloseTimer();
     }
   },
   watch: {
-    achievement(newVal) {
+    // Surveille quand `achievement` change
+    achievement(newVal, oldVal) {
+      // Si on reçoit un nouvel achievement
       if (newVal) {
         this.$nextTick(() => {
           this.initParticles();
           this.$emit("achievement-popup-opened");
+          this.startAutoCloseTimer();
         });
+      } else if (!newVal && oldVal) {
+        // Si on perd l’achievement => on annule le timer
+        this.clearAutoCloseTimer();
       }
     },
   },
   methods: {
-    closePopup() {
-      this.cleanupParticles();
-      this.$emit("close");
+    //-------------------------------------------
+    // Lance un timer de 20 s pour la fermeture
+    //-------------------------------------------
+    startAutoCloseTimer() {
+      this.clearAutoCloseTimer(); // Annuler tout timer déjà en cours
+
+      this.autoCloseTimer = setTimeout(() => {
+        this.fadeOutAndClose(); // Fermeture animée
+      }, 20000);
     },
+
+    //-------------------------------------------
+    // Annule le timer si la popup se ferme avant
+    //-------------------------------------------
+    clearAutoCloseTimer() {
+      if (this.autoCloseTimer) {
+        clearTimeout(this.autoCloseTimer);
+        this.autoCloseTimer = null;
+      }
+    },
+
+    //-------------------------------------------
+    // Fermeture via le bouton "croix"
+    //-------------------------------------------
+    closePopup() {
+      this.clearAutoCloseTimer();
+      this.fadeOutAndClose();
+    },
+
+    //-------------------------------------------
+    // Animation de fade out GSAP, puis fermeture
+    //-------------------------------------------
+    fadeOutAndClose() {
+      const popupEl = this.$refs.achievementPopup;
+      if (!popupEl) {
+        // Si pour une raison quelconque l'élément n'est pas dispo
+        this.cleanupParticles();
+        this.$emit("close");
+        return;
+      }
+      // Animation de disparition
+      gsap.to(popupEl, {
+        opacity: 0,
+        duration: 0.6, // Durée de l’animation (en secondes)
+        onComplete: () => {
+          // À la fin de l’animation, on nettoie et on émet l’événement de fermeture
+          this.cleanupParticles();
+          this.$emit("close");
+
+          // Réinitialiser l'opacité pour la prochaine fois
+          gsap.set(popupEl, { opacity: 1 });
+        },
+      });
+    },
+
+    //-------------------------------------------
+    // Particules
+    //-------------------------------------------
     initParticles() {
       setTimeout(() => {
         this.createParticles();
@@ -153,6 +235,8 @@ export default {
     },
   },
   beforeUnmount() {
+    // Nettoyer le timer et les particules
+    this.clearAutoCloseTimer();
     this.cleanupParticles();
   },
 };
@@ -160,4 +244,6 @@ export default {
 
 <style scoped>
 @import "@/assets/SuccessPopupStyle.css";
+
+
 </style>
