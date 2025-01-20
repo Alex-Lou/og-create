@@ -3,6 +3,9 @@
       <div class="firework" :style="{ animationDelay: delay + 's' }"></div>
       <div class="explosion">
         <div class="particle-work" v-for="n in 12" :key="n" :style="getParticleStyle(n)"></div>
+        <div class="particle-work" v-for="n in 25" :key="n" :style="getParticleStyle(n)"></div>
+        <div class="particle-work" v-for="n in 28" :key="n" :style="getParticleStyle(n)"></div>
+        <div class="particle-work" v-for="n in 10" :key="n" :style="getParticleStyle(n)"></div>
       </div>
     </div>
   </template>

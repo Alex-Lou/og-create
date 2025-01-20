@@ -5,7 +5,10 @@
       <template v-if="isFireworkActive">
         <FireworkAnimation />
         <FireworkAnimation :delay="0.4" :offsetX="50" />
+        <FireworkAnimation :delay="0.9" :offsetX="250" />
         <FireworkAnimation :delay="0.8" :offsetX="-200" />
+        <FireworkAnimation :delay="0.9" :offsetX="-100" />
+        <FireworkAnimation :delay="1.0" :offsetX="-300" />
       </template>
     </div>
     <div id="crafting" @dragover.prevent @drop="handleDrop">
