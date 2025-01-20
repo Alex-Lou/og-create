@@ -189,10 +189,10 @@
 /* Ajouter des styles pour l'élément draggable et droppable créé */
 .crafted-element {
   position: absolute;
-  background: #4b5ebe;
+  background: #3d2893;
   color: #fff;
   padding: 8px 10px;
-  border-radius: 5px;
+  border-radius: 8px;
   font-size: 0.9rem;
   transition: transform 0.2s ease;
   cursor: pointer;
