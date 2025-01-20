@@ -34,13 +34,78 @@
     "condition": "this.discoveredElements.length >= 1000",
     "image": "/assets/success/Dieu Omniscient.png"
   },
-
   {
-    "name": "Découverte de la Vie",
-    "description": "Découvrez l'élément 'Vie'.",
+    "name": "Ville des lumières",
+    "description": "Découvrez l'élément Paris.",
+    "unlocked": false,
+    "condition": "this.discoveredElements.includes('Paris')",
+    "image": "/assets/success/Ville des lumières.png"
+  },
+  {
+    "name": "Pays du Soleil Levant",
+    "description": "Découvrez l'élément Japon.",
+    "unlocked": false,
+    "condition": "this.discoveredElements.includes('Japon')",
+    "image": "/assets/success/Pays du Soleil Levant.png"
+  },
+  {
+    "name": "Sous le Baobab",
+    "description": "Découvrez l'élément Afrique.",
+    "unlocked": false,
+    "condition": "this.discoveredElements.includes('Afrique')",
+    "image": "/assets/success/Sous le Baobab.png"
+  },
+  {
+    "name": "L'Éveil de la Vie",
+    "description": "Découvrez l'élément Vie.",
     "unlocked": false,
     "condition": "this.discoveredElements.includes('Vie')",
-    "image": "/assets/success/Vie.png"
+    "image": "/assets/success/L'Éveil de la Vie.png"
+  },
+  {
+    "name": "L'Esprit de la Rivière",
+    "description": "Découvrez l'élément Kappa.",
+    "unlocked": false,
+    "condition": "this.discoveredElements.includes('Kappa')",
+    "image": "/assets/success/L'Esprit de la Rivière.png"
+  },
+  {
+    "name": "Gardien des Pics Glacés",
+    "description": "Découvrez l'élément Dragon de Glace.",
+    "unlocked": false,
+    "condition": "this.discoveredElements.includes('Dragon de Glace')",
+    "image": "/assets/success/Gardien des Pics Glacés.png"
+  },
+  {
+    "name": "Magie en Arc-en-Ciel",
+    "description": "Découvrez l'élément Licorne.",
+    "unlocked": false,
+    "condition": "this.discoveredElements.includes('Licorne')",
+    "image": "/assets/success/Magie en Arc-en-Ciel.png"
+  },
+  {
+    "name": "Le Serpent à Plumes",
+    "description": "Découvrez l'élément Quetzalcoatl.",
+    "unlocked": false,
+    "condition": "this.discoveredElements.includes('Quetzalcoatl')",
+    "image": "/assets/success/Le Serpent à Plumes.png"
+  },
+  {
+    "name": "Le Souffle Infernal",
+    "description": "Découvrez l'élément Dragon de Feu.",
+    "unlocked": false,
+    "condition": "this.discoveredElements.includes('Dragon de Feu')",
+    "image": "/assets/success/Le Souffle Infernal.png"
+  },
+  {
+    "name": "Légende Émeraude",
+    "description": "Découvrez l'élément Dragon Classique.",
+    "unlocked": false,
+    "condition": "this.discoveredElements.includes('Dragon Classique')",
+    "image": "/assets/success/Légende Émeraude.png"
   }
+
+
+
 
 ]

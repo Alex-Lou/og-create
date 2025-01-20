@@ -95,14 +95,14 @@ export default {
       craftedElements: [],
       draggingElementIndex: null,
       resourcePositions: [],
-      lastCraftedPosition: null, // Nouvelle propriété pour suivre la position du dernier élément créé
+      lastCraftedPosition: null, // Pour suivre la position du dernier élément créé
     };
   },
   methods: {
     selectResource(resource) {
       if (this.selected.length < 4 && resource && this.elementEmojis[resource]) {
         this.selected.push(resource.trim());
-        this.resourcePositions.push(null); // Initial position is null
+        this.resourcePositions.push(null);
       } else {
         this.$emit('show-alert', 'You can only select up to 4 elements for crafting!');
       }
@@ -113,7 +113,7 @@ export default {
       this.craftingInProgress = false;
       this.craftedElements = [];
       this.resourcePositions = [];
-      this.lastCraftedPosition = null; // Réinitialiser la position du dernier élément créé
+      this.lastCraftedPosition = null; 
       this.$emit('board-reset');
     },
     resetSelection() {
@@ -125,7 +125,7 @@ export default {
     },
     removeCraftedElement(index) {
       this.craftedElements.splice(index, 1);
-      this.lastCraftedPosition = null; // Réinitialiser la position du dernier élément créé
+      this.lastCraftedPosition = null;
     },
     craftItem() {
       if (this.craftingInProgress) return;
@@ -158,8 +158,10 @@ export default {
       setTimeout(() => {
         this.$emit('craft-success', craftedItem);
 
-        // Déterminer la position de la nouvelle création
-        let newPosition = { top: 400, left: 230 }; // Position initiale
+        // Position initiale
+        let newPosition = { top: 400, left: 230 };
+        
+        // Si on a déjà une position précédente, on décale légèrement
         if (this.lastCraftedPosition && !this.lastCraftedPosition.moved) {
           newPosition = {
             top: this.lastCraftedPosition.top,
@@ -170,19 +172,25 @@ export default {
         this.craftedElements.push({
           name: craftedItem,
           position: newPosition,
-          moved: false, // Nouvelle propriété pour suivre si l'élément a été déplacé
+          moved: false, 
         });
 
-        this.lastCraftedPosition = newPosition; // Mettre à jour la position du dernier élément créé
+        this.lastCraftedPosition = newPosition; 
         this.selected = [];
         this.resourcePositions = [];
         this.alertShown = false;
         this.craftingInProgress = false;
       }, 1);
     },
+    // Ajout de la touche "r" pour clean
     handleKeyPress(event) {
+      // "Enter" pour crafter
       if (event.key === 'Enter') {
         this.craftItem();
+      }
+      // "r" pour reset
+      if (event.key === 'r') {
+        this.resetCraftingBoard();
       }
     },
     getCraftedItemCategory(item) {
@@ -244,7 +252,6 @@ export default {
       this.draggingElementIndex = null;
     },
     dragEndCraftedElement(event, index) {
-      // Vérifier si l'élément existe dans craftedElements
       if (this.craftedElements[index]) {
         const craftingBoardRect = this.$refs.craftingBoard.getBoundingClientRect();
         const x = event.clientX - craftingBoardRect.left;
@@ -255,7 +262,6 @@ export default {
           top: Math.max(0, Math.min(600, y)),
           left: Math.max(0, Math.min(800, x)),
         };
-
         // Marquer l'élément comme déplacé
         this.craftedElements[index].moved = true;
       }
@@ -273,6 +279,4 @@ export default {
 
 <style scoped>
 @import '@/assets/CraftSystemStyle.css';
-
-
 </style>
