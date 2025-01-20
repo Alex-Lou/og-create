@@ -33,6 +33,14 @@
     "unlocked": false,
     "condition": "this.discoveredElements.length >= 1000",
     "image": "/assets/success/Dieu Omniscient.png"
+  },
+
+  {
+    "name": "Découverte de la Vie",
+    "description": "Découvrez l'élément 'Vie'.",
+    "unlocked": false,
+    "condition": "this.discoveredElements.includes('Vie')",
+    "image": "/assets/success/Vie.png"
   }
 
 ]
