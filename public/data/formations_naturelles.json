@@ -152,8 +152,6 @@
             "Lac en ébullition": "🌊🔥",
             "Volcan": "🌋",
             "Océan": "🌊🌊",
-            "Terre+Feu+Feu": "Volcan",
-            "Eau+Eau+Eau": "Océan",
             "Smog": "💨🌫️",
             "Ciel Étoilé": "🌌☁️",
             "Rouille": "🟫",
@@ -199,6 +197,8 @@
         }
     },
     "rules": {
+        "Terre+Feu+Feu": "Volcan",
+        "Eau+Eau+Eau": "Océan",
         "Lumière+Énergie": "Blanc",
         "Obscurité+Lumière": "Gris",
         "Feu+Obscurité": "Noir",
