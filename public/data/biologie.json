@@ -175,12 +175,16 @@
             "Bourgeon": "🌱💚",
             "Écorce": "🌳🪵",
             "Champignon": "🍄",
-            "Mousse": "🌿💧"
+            "Mousse": "🌿💧",
+            "Nature": "🌿🌱",
+            "Élément": "🌿🔥"
 
             
         }
     },
     "rules": {
+        "Nature+Force+Énergie": "Élément",
+        "Vie+Animal+Plante" :"Nature",
         "Mammifère+Griffe+Agilité": "Félin",
         "Graine+Eau+Soleil": "Plante",
         "Arbre+Vent": "Feuille",

@@ -79,15 +79,6 @@
             "Paon": "🦚",
             "Colibri": "🐦"
         },
-        "Créatures Mythiques": {
-            "Kappa": "🐢👹",
-            "Dragon de Glace": "🐉❄️",
-            "Licorne": "🦄",
-            "Pégase": "🦄🕊️",
-            "Quetzalcoatl": "🐍🦅",
-            "Dragon de Feu": "🐉🔥",
-            "Dragon": "🐉"
-        },
         "Attributs animaux": {
             "Force": "💪",
             "Vitesse": "🏃",
@@ -134,7 +125,11 @@
             "Parasitisme": "🦠",
             "Métamorphose": "🐛➡️🦋",
             "Vision Nocturne": "👁️🌙",
-            "Thermorégulation": "🌡️"
+            "Thermorégulation": "🌡️",
+            "Repos": "💤",
+            "Harmonie": "🌿🌸",
+            "Calme": "🧘‍♂️"
+            
         },
         "Sens": {
             "Vue": "👀",
@@ -145,6 +140,11 @@
         }
     },
     "rules": {
+        "Équilibre+Repos": "Calme",
+        "Écosystème+Équilibre": "Harmonie",
+        "Vie+Nature+Équilibre": "Harmonie",
+        "Animal+Dormir": "Repos",
+        "Homme+Dormir": "Repos",
         "Invertébré Aquatique+Courant": "Méduse",
         "Invertébré Terrestre+Terre": "Ver",
         "Insecte+Lumière": "Luciole",
@@ -282,16 +282,6 @@
         "Oiseau+Rose+Eau": "Flamant Rose",
         "Oiseau+Plume+Parade": "Paon",
         "Oiseau+Nectar+Vol": "Colibri",
-
-
-        "Japon+Tortue+Rivière": "Kappa",
-        "Dragon+Glace+Vent": "Dragon de Glace",
-        "Dragon+Feu+Montagne": "Dragon de Feu",
-        "Serpent+Plume+Air": "Quetzalcoatl",
-        "Cheval+Aile+Nuage": "Pégase",
-        "Cheval+Corne+Magie": "Licorne",
-        "Reptile+Feu": "Dragon",
-
 
         "Cerveau+Son": "Ouïe",
         "Œil+Cerveau": "Vue",

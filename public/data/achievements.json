@@ -103,6 +103,20 @@
     "unlocked": false,
     "condition": "this.discoveredElements.includes('Dragon Classique')",
     "image": "/assets/success/Légende Émeraude.png"
+  },
+  {
+    "name": "Eurêka",
+    "description": "Découvrez l'élément Inspiration.",
+    "unlocked": false,
+    "condition": "this.discoveredElements.includes('Inspiration')",
+    "image": "/assets/success/Eurêka.png"
+  },
+  {
+    "name": "Roi Soleil",
+    "description": "Découvrez l'élément Louis XIV.",
+    "unlocked": false,
+    "condition": "this.discoveredElements.includes('Louis XIV')",
+    "image": "/assets/success/Roi Soleil.png"
   }
 
 
