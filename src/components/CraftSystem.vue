@@ -40,7 +40,7 @@
         :key="'crafted-' + elementIndex"
         :style="{ top: element.position.top + 'px', left: element.position.left + 'px' }"
         draggable="true"
-        @dragstart="dragStartCraftedElement(elementIndex)"
+        @dragstart="dragStartCraftedElement($event, elementIndex)"
         @dragend="dragEndCraftedElement($event, elementIndex)"
         @click="removeCraftedElement(elementIndex)"
         @dragover.prevent
@@ -98,7 +98,7 @@ export default {
       craftedElements: [],
       draggingElementIndex: null,
       resourcePositions: [],
-      lastCraftedPosition: null, // Pour suivre la position du dernier élément créé
+      lastCraftedPosition: null,
     };
   },
   methods: {
@@ -116,7 +116,7 @@ export default {
       this.craftingInProgress = false;
       this.craftedElements = [];
       this.resourcePositions = [];
-      this.lastCraftedPosition = null; 
+      this.lastCraftedPosition = null;
       this.$emit('board-reset');
     },
     resetSelection() {
@@ -132,7 +132,6 @@ export default {
     },
     craftItem() {
       if (this.craftingInProgress) return;
-
       this.craftingInProgress = true;
 
       if (this.selected.length < 2) {
@@ -160,38 +159,40 @@ export default {
 
       setTimeout(() => {
         this.$emit('craft-success', craftedItem);
-
-        // Position initiale
-        let newPosition = { top: 400, left: 230 };
         
-        // Si on a déjà une position précédente, on décale légèrement
+        let newPosition = { top: 300, left: 230 };
+        
         if (this.lastCraftedPosition && !this.lastCraftedPosition.moved) {
           newPosition = {
             top: this.lastCraftedPosition.top,
-            left: this.lastCraftedPosition.left + 110,
+            left: this.lastCraftedPosition.left + 200
           };
+          
+          if (newPosition.left > 800) {
+            newPosition = {
+              top: this.lastCraftedPosition.top + 100,
+              left: 230
+            };
+          }
         }
 
         this.craftedElements.push({
           name: craftedItem,
           position: newPosition,
-          moved: false, 
+          moved: false,
         });
 
-        this.lastCraftedPosition = newPosition; 
+        this.lastCraftedPosition = newPosition;
         this.selected = [];
         this.resourcePositions = [];
         this.alertShown = false;
         this.craftingInProgress = false;
       }, 1);
     },
-    // Ajout de la touche "r" pour clean
     handleKeyPress(event) {
-      // "Enter" pour crafter
       if (event.key === 'Enter') {
         this.craftItem();
       }
-      // "r" pour reset
       if (event.key === 'r') {
         this.resetCraftingBoard();
       }
@@ -206,28 +207,39 @@ export default {
     },
     handleDrop(event) {
       const element = event.dataTransfer.getData('text/plain');
-      if (element && this.elementEmojis[element] && !this.selected.includes(element)) {
-        this.selectResource(element);
+      if (element && this.elementEmojis[element]) {
+        // Si c'est un élément qui était déjà dans la liste
+        if (this.selected.includes(element)) {
+          // On le retire et on le remet à la fin avec une position statique
+          const index = this.selected.indexOf(element);
+          this.selected.splice(index, 1);
+          this.resourcePositions.splice(index, 1);
+          // On le rajoute à la fin
+          this.selectResource(element);
+        }
+        // Si c'est un nouvel élément (crafté ou de l'inventaire)
+        else if (!this.selected.includes(element)) {
+          this.selectResource(element);
+          if (this.draggingElementIndex !== null) {
+            this.removeCraftedElement(this.draggingElementIndex);
+          }
+        }
       }
+      this.draggingElementIndex = null;
     },
     handleDropOnCraftedElement(targetElementName, event, targetIndex) {
       event.preventDefault();
-
       if (targetIndex === this.draggingElementIndex) return;
 
       if (this.draggingElementIndex !== null) {
         const draggedElement = this.craftedElements[this.draggingElementIndex];
         if (draggedElement) {
-          // Simuler le craft avec les deux éléments
           this.selected = [draggedElement.name, targetElementName];
           this.craftItem();
-
-          // Supprimer les deux éléments d'origine après le craft
-          this.removeCraftedElement(this.draggingElementIndex);
-          this.removeCraftedElement(targetIndex);
+          this.removeCraftedElement(Math.max(this.draggingElementIndex, targetIndex));
+          this.removeCraftedElement(Math.min(this.draggingElementIndex, targetIndex));
         }
       } else {
-        // Comportement existant pour les éléments de la liste de sélection
         const element = event.dataTransfer.getData('text/plain');
         if (element && this.elementEmojis[element]) {
           this.selected = [element, targetElementName];
@@ -239,33 +251,47 @@ export default {
       event.dataTransfer.setData('text/plain', resource);
       this.draggingElementIndex = index;
     },
-    dragStartCraftedElement(index) {
+    dragStartCraftedElement(event, index) {
+      event.dataTransfer.setData('text/plain', this.craftedElements[index].name);
       this.draggingElementIndex = index;
-      event.dataTransfer.effectAllowed = 'move';
     },
     dragEnd(event, index) {
-      const craftingBoardRect = this.$refs.craftingBoard.getBoundingClientRect();
-      const x = event.clientX - craftingBoardRect.left;
-      const y = event.clientY - craftingBoardRect.top;
-
-      this.resourcePositions[index] = {
-        top: Math.max(0, Math.min(600, y)),
-        left: Math.max(0, Math.min(800, x)),
-      };
-      this.draggingElementIndex = null;
-    },
+  // Vérifie si on est dans la zone de sélection
+  const selectionZone = document.getElementById('selected-resources');
+  const selectionRect = selectionZone.getBoundingClientRect();
+  
+  // Si le drop est dans la zone de sélection
+  if (
+    event.clientX >= selectionRect.left &&
+    event.clientX <= selectionRect.right &&
+    event.clientY >= selectionRect.top &&
+    event.clientY <= selectionRect.bottom
+  ) {
+    // Force la position à null pour réinitialiser l'élément dans la liste
+    this.resourcePositions[index] = null;
+  } else {
+    // Comportement normal pour un drop en dehors de la zone
+    const craftingBoardRect = this.$refs.craftingBoard.getBoundingClientRect();
+    const x = event.clientX - craftingBoardRect.left;
+    const y = event.clientY - craftingBoardRect.top;
+    
+    this.resourcePositions[index] = {
+      top: Math.max(0, Math.min(600, y)),
+      left: Math.max(0, Math.min(800, x)),
+    };
+  }
+  this.draggingElementIndex = null;
+},
     dragEndCraftedElement(event, index) {
       if (this.craftedElements[index]) {
         const craftingBoardRect = this.$refs.craftingBoard.getBoundingClientRect();
         const x = event.clientX - craftingBoardRect.left;
         const y = event.clientY - craftingBoardRect.top;
 
-        // Mettre à jour la position de l'élément
         this.craftedElements[index].position = {
           top: Math.max(0, Math.min(600, y)),
           left: Math.max(0, Math.min(800, x)),
         };
-        // Marquer l'élément comme déplacé
         this.craftedElements[index].moved = true;
       }
       this.draggingElementIndex = null;

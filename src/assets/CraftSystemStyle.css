@@ -138,32 +138,24 @@
   height: 100%; /* Agrandir la zone de sélection */
 }
 
-#selected-resources {
-  list-style: none;
-  display: flex;
-  flex-wrap: wrap;
-  gap: 10px;
-  justify-content: center;
-  padding: 10px;
-  min-height: 60px; /* Assure une zone constante même sans élément */
-  max-width: 300px;
-}
-
-/* Éléments sélectionnés */
+/* Style spécifique pour les éléments sélectionnés */
 #selected-resources li {
-  background: #4b5ebe;
+  background: linear-gradient(145deg, #4b5ebe, #3f51b5);
   color: #fff;
-  padding: 8px 10px;
-  border-radius: 5px;
+  padding: 8px 15px;
+  border-radius: 12px;
   font-size: 0.9rem;
-  transition: transform 0.2s ease;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
   cursor: pointer;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
 }
 
 #selected-resources li:hover {
-  transform: scale(1.05);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(75, 94, 190, 0.3);
+  border-color: rgba(255, 255, 255, 0.2);
 }
-
 /* Crafting Section */
 #crafting {
   position: relative;
@@ -203,8 +195,24 @@
   transform: scale(1.05);
 }
 
+/* Styles des ressources draggables */
 .draggable-resource {
+  background: linear-gradient(145deg, #4b5ebe, #3f51b5);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+  padding: 8px 15px;
+  color: white;
+  font-weight: 500;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
   cursor: grab;
+  position: relative;
+}
+
+.draggable-resource:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(75, 94, 190, 0.3);
+  border-color: rgba(255, 255, 255, 0.2);
 }
 
 /* Bouton Clear */
