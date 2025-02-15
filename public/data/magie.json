@@ -70,7 +70,9 @@
         "Dragon de Glace": "🐉❄️",
         "Pégase": "🦄🕊️",
         "Quetzalcoatl": "🐍🦅",
-        "Dragon de Feu": "🐉🔥"
+        "Dragon de Feu": "🐉🔥",
+        "Sorcière": "🧙‍♀️🌿",
+        "Druide": "🧙‍♂️🌳"
       },
       "Rituels et Phénomènes Magiques": {
         "Cercle de Runes": "🔻✨",
@@ -90,7 +92,9 @@
       }
     },
     "rules": {
-        
+    "Magie+Forêt+Homme": "Druide",
+    "Magie+Femme+Plante": "Sorcière",
+    "Magie+Séduction+Femme": "Succube",
     "Eau+Mana": "Eau Magique",
     "Ombre+Ombre": "Ténèbres",
     "Énergie + Esprit": "Mana",

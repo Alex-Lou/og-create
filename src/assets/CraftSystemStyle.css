@@ -46,13 +46,76 @@
   }
 }
 
-/* Appliquer l'animation au texte "Creation Zone" */
+/* Effet de base du titre */
 .animated-text {
   font-size: 1.5rem;
   font-weight: 300;
   animation: lights 5s 750ms linear infinite;
+  position: relative;
+  transition: all 0.3s ease;
+  
 }
 
+/* Effet de survol principal */
+.animated-text:hover {
+  text-shadow: 
+    0 0 5px rgba(15, 15, 35, 0.6),
+    0 0 10px rgba(25, 25, 45, 0.6),
+    0 0 15px rgba(35, 35, 55, 0.6);
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(35, 35, 55, 0.2),
+    rgba(45, 45, 65, 0.2),
+    rgba(35, 35, 55, 0.2),
+    transparent
+  );
+  background-size: 200% 100%;
+  animation: gradientMove 3s ease infinite;
+}
+
+/* Animation du gradient */
+@keyframes gradientMove {
+  0% {
+    background-position: 200% 50%;
+  }
+  100% {
+    background-position: -200% 50%;
+  }
+}
+
+/* Effet de bordure brillante au survol */
+.animated-text::before,
+.animated-text::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(45, 45, 85, 0.8),
+    rgba(65, 65, 105, 0.8),
+    rgba(45, 45, 85, 0.8),
+    transparent
+  );
+  transform: scaleX(0);
+  transition: transform 0.3s ease;
+}
+
+.animated-text::before {
+  top: -3px;
+}
+
+.animated-text::after {
+  bottom: -3px;
+}
+
+.animated-text:hover::before,
+.animated-text:hover::after {
+  transform: scaleX(1);
+}
 /* Autres styles existants */
 #crafted-popup {
   position: fixed;
@@ -110,7 +173,7 @@
 }
 
 #crafted-item {
-  color: #21353e;
+  color: #21A1A4;
   font-size: 1rem;
   opacity: 0;
   animation: fadeInSlide 0.8s ease-out forwards;
@@ -140,15 +203,19 @@
 
 /* Style spécifique pour les éléments sélectionnés */
 #selected-resources li {
-  background: linear-gradient(145deg, #4b5ebe, #3f51b5);
+  background: linear-gradient(90deg, #1b2242, #2a2e41, #2b0d46);
+  background-size: 200% 100%;
+  animation: gradientFlow 10s ease infinite;
+  background-position: 0% 50%;
   color: #fff;
-  padding: 8px 15px;
-  border-radius: 12px;
-  font-size: 0.9rem;
+  padding: 10px 18px;
+  border-radius: 14px;
+  font-size: 1rem;
   transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
   cursor: pointer;
   border: 1px solid rgba(255, 255, 255, 0.1);
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  font-weight: 600;
 }
 
 #selected-resources li:hover {
@@ -156,6 +223,7 @@
   box-shadow: 0 4px 12px rgba(75, 94, 190, 0.3);
   border-color: rgba(255, 255, 255, 0.2);
 }
+
 /* Crafting Section */
 #crafting {
   position: relative;
@@ -170,7 +238,6 @@
   flex: 2;
   position: relative;
   background: #000;
-  border-radius: 10px;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
   overflow: hidden;
   overflow-y: auto;
@@ -178,17 +245,36 @@
   z-index: 1;
 }
 
+@keyframes gradientFlow {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
 /* Ajouter des styles pour l'élément draggable et droppable créé */
 .crafted-element {
   position: absolute;
-  background: #3d2893;
+  background: linear-gradient(90deg, #4b5ebe, #3f51b5, #be964b);
+  background-size: 200% 100%;
+  animation: gradientFlow 10s ease infinite;
+  background-position: 0% 50%;
   color: #fff;
-  padding: 8px 10px;
-  border-radius: 8px;
-  font-size: 0.9rem;
-  transition: transform 0.2s ease;
+  padding: 10px 18px;
+  border-radius: 14px;
+  font-size: 1rem;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
   cursor: pointer;
-  z-index: 1;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  list-style-type: disc;
+  display: list-item;
+  margin-left: 20px; /* Pour la puce */
 }
 
 .crafted-element:hover {
@@ -197,12 +283,16 @@
 
 /* Styles des ressources draggables */
 .draggable-resource {
-  background: linear-gradient(145deg, #4b5ebe, #3f51b5);
+  background: linear-gradient(90deg, #4b5ebe, #3f51b5, #be964b);
+  background-size: 200% 100%;
+  animation: gradientFlow 10s ease infinite;
+  background-position: 0% 50%;
   border: 1px solid rgba(255, 255, 255, 0.1);
-  border-radius: 12px;
-  padding: 8px 15px;
+  border-radius: 14px;
+  padding: 10px 18px;
   color: white;
-  font-weight: 500;
+  font-size: 1rem;
+  font-weight: 600;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
   transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
   cursor: grab;
@@ -222,8 +312,8 @@
   left: 840px;
   z-index: 200;
   background: transparent;
-  border: 2px solid #dd7e2a;
-  color: #dd7e2a;
+  border: 2px solid #21A1A4;
+  color: #21A1A4;
   font-weight: bold;
   padding: 10px 20px;
   border-radius: 8px;
@@ -263,4 +353,25 @@
   transform: scale(0.95); /* Effet d'enfoncement */
   background: #008ba3;
   box-shadow: 0 4px 10px rgba(0, 139, 163, 0.5);
+} 
+
+/* Ajoutez ceci à votre CSS */
+.draggable-resource[draggable="true"]:hover {
+  cursor: grab;
+}
+
+/* Style pour indiquer qu'un drop n'est pas possible */
+.crafted-element.no-drop {
+  cursor: not-allowed !important;
+  opacity: 0.6;
+}
+
+.draggable-resource.no-drop {
+  cursor: not-allowed !important;
+  opacity: 0.6;
+}
+.crafted-element.no-drop,
+.draggable-resource.no-drop {
+  cursor: not-allowed !important;
+  opacity: 0.6;
 }

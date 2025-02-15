@@ -49,13 +49,37 @@
         bottom: 50px; /* Positionne les succès au-dessus du menu */
         left: 0;
         width: 300px;
+        max-height: 300px; /* Hauteur maximale */
         background: #2a2a2a;
         padding: 10px;
         border-radius: 10px;
         box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
         z-index: 150;
         transition: opacity 0.3s ease-in-out;
+        overflow-y: auto; /* Ajoute une barre de défilement verticale */
+        scrollbar-width: thin; /* Pour Firefox */
+        scrollbar-color: #4dd0e1 #2a2a2a; /* Pour Firefox */
     }
+/* Personnalisation de la barre de défilement pour webkit (Chrome, Safari, nouveaux Edge) */
+#achievements-content::-webkit-scrollbar {
+    width: 8px; /* Largeur de la barre de défilement */
+}
+
+#achievements-content::-webkit-scrollbar-track {
+    background: #2a2a2a; /* Couleur de la piste */
+    border-radius: 10px;
+}
+
+#achievements-content::-webkit-scrollbar-thumb {
+    background-color: #4dd0e1; /* Couleur du pouce de la barre de défilement */
+    border-radius: 10px;
+    border: 2px solid #2a2a2a;
+}
+
+#achievements-content::-webkit-scrollbar-thumb:hover {
+    background-color: #4dd0e1aa; /* Légèrement plus clair au survol */
+}
+
 
     #achievements-content ul {
         list-style: none;

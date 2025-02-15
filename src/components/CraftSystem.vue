@@ -13,9 +13,9 @@
     </div>
     <div id="crafting" @dragover.prevent @drop="handleDrop">
       <div class="title-container">
-        <h2 class="animated-text">Creation Zone</h2>
-        <VoltageAnimation @click="craftItem">Craft</VoltageAnimation>
-      </div>
+  <CreationZoneTitle />
+  <CraftButton @click="craftItem" />
+</div>
       <div id="selection">
         <ul id="selected-resources">
           <li
@@ -25,6 +25,8 @@
             draggable="true"
             @dragstart="dragStart($event, resource, index)"
             @dragend="dragEnd($event, index)"
+            @dragover.prevent
+            @drop.stop="handleDropOnSelectedElement($event, resource, index)"
             :style="{ position: resourcePositions[index] ? 'absolute' : 'static', top: resourcePositions[index]?.top + 'px', left: resourcePositions[index]?.left + 'px' }"
             class="draggable-resource"
           >
@@ -50,9 +52,7 @@
         <p>{{ elementEmojis[element.name] || '' }} {{ element.name }}</p>
       </div>
     </div>
-    <button class="reset-crafting-button" style="--content: 'Clean';" @click="resetCraftingBoard">
-      Clean
-    </button>
+    <CleanButton @click="resetCraftingBoard" />
     <footer>
       <p>Created with ❤️ by CybWolf.</p>
     </footer>
@@ -62,14 +62,18 @@
 <script>
 import WaveAnimation from './WaveAnimation.vue';
 import FireworkAnimation from './FireWorkAnimation.vue';
-import VoltageAnimation from './VoltageAnimation.vue';
+import CraftButton from './CraftButton.vue';
+import CleanButton from './CleanButton.vue';
+import CreationZoneTitle from './CreationZoneTitle.vue';
 
 export default {
   name: 'CraftSystem',
   components: {
     WaveAnimation,
     FireworkAnimation,
-    VoltageAnimation,
+    CraftButton,
+    CleanButton,
+    CreationZoneTitle,
   },
   props: {
     elementEmojis: {
@@ -99,6 +103,8 @@ export default {
       draggingElementIndex: null,
       resourcePositions: [],
       lastCraftedPosition: null,
+      isDraggingSelected: false,
+      isDraggingCrafted: false,
     };
   },
   methods: {
@@ -117,6 +123,8 @@ export default {
       this.craftedElements = [];
       this.resourcePositions = [];
       this.lastCraftedPosition = null;
+      this.isDraggingSelected = false;
+      this.isDraggingCrafted = false;
       this.$emit('board-reset');
     },
     resetSelection() {
@@ -210,11 +218,9 @@ export default {
       if (element && this.elementEmojis[element]) {
         // Si c'est un élément qui était déjà dans la liste
         if (this.selected.includes(element)) {
-          // On le retire et on le remet à la fin avec une position statique
           const index = this.selected.indexOf(element);
           this.selected.splice(index, 1);
           this.resourcePositions.splice(index, 1);
-          // On le rajoute à la fin
           this.selectResource(element);
         }
         // Si c'est un nouvel élément (crafté ou de l'inventaire)
@@ -226,62 +232,134 @@ export default {
         }
       }
       this.draggingElementIndex = null;
+      this.isDraggingSelected = false;
+      this.isDraggingCrafted = false;
     },
-    handleDropOnCraftedElement(targetElementName, event, targetIndex) {
+    handleDropOnSelectedElement(event, targetResource, targetIndex) {
       event.preventDefault();
-      if (targetIndex === this.draggingElementIndex) return;
-
-      if (this.draggingElementIndex !== null) {
-        const draggedElement = this.craftedElements[this.draggingElementIndex];
-        if (draggedElement) {
-          this.selected = [draggedElement.name, targetElementName];
-          this.craftItem();
-          this.removeCraftedElement(Math.max(this.draggingElementIndex, targetIndex));
-          this.removeCraftedElement(Math.min(this.draggingElementIndex, targetIndex));
-        }
-      } else {
-        const element = event.dataTransfer.getData('text/plain');
-        if (element && this.elementEmojis[element]) {
-          this.selected = [element, targetElementName];
-          this.craftItem();
+      const draggedResource = event.dataTransfer.getData('text/plain');
+      
+      // Vérifie si l'élément draggé vient des éléments craftés
+      const isFromCraftedElements = this.craftedElements.some(el => el.name === draggedResource);
+      
+      // Si l'élément vient des craftedElements, on ignore le drop
+      if (isFromCraftedElements) {
+        return;
+      }
+      
+      // Si on ne drop pas le même élément sur lui-même
+      if (this.draggingElementIndex !== targetIndex) {
+        const elements = [draggedResource, targetResource].sort();
+        const combination = elements.join('+');
+        
+        const result = this.craftingRecipes[combination];
+        
+        if (result) {
+          this.removeResource(Math.max(this.draggingElementIndex, targetIndex));
+          this.removeResource(Math.min(this.draggingElementIndex, targetIndex));
+          
+          setTimeout(() => {
+            this.$emit('craft-success', result);
+            
+            let newPosition = { 
+              top: this.resourcePositions[targetIndex]?.top || 300,
+              left: this.resourcePositions[targetIndex]?.left || 230
+            };
+            
+            this.craftedElements.push({
+              name: result,
+              position: newPosition,
+              moved: false,
+            });
+          }, 1);
         }
       }
+      this.draggingElementIndex = null;
+      this.isDraggingSelected = false;
+      this.isDraggingCrafted = false;
+    },
+    handleDropOnCraftedElement(targetElement, event, targetIndex) {
+      event.preventDefault();
+      const draggedElement = event.dataTransfer.getData('text/plain');
+      
+      // Vérifie si l'élément draggé vient de la liste selected
+      const isFromSelected = this.selected.includes(draggedElement);
+      
+      // Si l'élément vient de selected, on ignore le drop
+      if (isFromSelected) {
+        return;
+      }
+      
+      // Logique existante pour la fusion des éléments craftés
+      const elements = [draggedElement, targetElement].sort();
+      const combination = elements.join('+');
+      
+      const result = this.craftingRecipes[combination];
+      
+      if (result) {
+        // Supprimer l'élément source
+        if (this.draggingElementIndex !== null) {
+          this.craftedElements.splice(this.draggingElementIndex, 1);
+        }
+        
+        // Supprimer l'élément cible
+        this.craftedElements.splice(targetIndex, 1);
+        
+        // Créer le nouvel élément
+        const dropPosition = {
+          top: event.offsetY,
+          left: event.offsetX,
+        };
+        
+        this.craftedElements.push({
+          name: result,
+          position: dropPosition,
+          moved: true,
+        });
+        
+        this.$emit('craft-success', result);
+      }
+      
+      this.draggingElementIndex = null;
+      this.isDraggingSelected = false;
+      this.isDraggingCrafted = false;
     },
     dragStart(event, resource, index) {
       event.dataTransfer.setData('text/plain', resource);
       this.draggingElementIndex = index;
+      this.isDraggingSelected = true;
     },
     dragStartCraftedElement(event, index) {
       event.dataTransfer.setData('text/plain', this.craftedElements[index].name);
       this.draggingElementIndex = index;
+      this.isDraggingCrafted = true;
     },
     dragEnd(event, index) {
-  // Vérifie si on est dans la zone de sélection
-  const selectionZone = document.getElementById('selected-resources');
-  const selectionRect = selectionZone.getBoundingClientRect();
-  
-  // Si le drop est dans la zone de sélection
-  if (
-    event.clientX >= selectionRect.left &&
-    event.clientX <= selectionRect.right &&
-    event.clientY >= selectionRect.top &&
-    event.clientY <= selectionRect.bottom
-  ) {
-    // Force la position à null pour réinitialiser l'élément dans la liste
-    this.resourcePositions[index] = null;
-  } else {
-    // Comportement normal pour un drop en dehors de la zone
-    const craftingBoardRect = this.$refs.craftingBoard.getBoundingClientRect();
-    const x = event.clientX - craftingBoardRect.left;
-    const y = event.clientY - craftingBoardRect.top;
-    
-    this.resourcePositions[index] = {
-      top: Math.max(0, Math.min(600, y)),
-      left: Math.max(0, Math.min(800, x)),
-    };
-  }
-  this.draggingElementIndex = null;
-},
+      const selectionZone = document.getElementById('selected-resources');
+      const selectionRect = selectionZone.getBoundingClientRect();
+      const margin = 50;
+
+      if (
+        event.clientX >= selectionRect.left - margin &&
+        event.clientX <= selectionRect.right + margin &&
+        event.clientY >= selectionRect.top - margin &&
+        event.clientY <= selectionRect.bottom + margin
+      ) {
+        this.resourcePositions[index] = null;
+      } else {
+        const craftingBoardRect = this.$refs.craftingBoard.getBoundingClientRect();
+        const x = event.clientX - craftingBoardRect.left;
+        const y = event.clientY - craftingBoardRect.top;
+        
+        this.resourcePositions[index] = {
+          top: Math.max(0, Math.min(600, y)),
+          left: Math.max(0, Math.min(800, x)),
+        };
+      }
+      this.draggingElementIndex = null;
+      this.isDraggingSelected = false;
+      this.isDraggingCrafted = false;
+    },
     dragEndCraftedElement(event, index) {
       if (this.craftedElements[index]) {
         const craftingBoardRect = this.$refs.craftingBoard.getBoundingClientRect();
@@ -295,17 +373,31 @@ export default {
         this.craftedElements[index].moved = true;
       }
       this.draggingElementIndex = null;
+      this.isDraggingSelected = false;
+      this.isDraggingCrafted = false;
     },
+    dragOver(event) {
+      const target = event.target.closest('.crafted-element');
+      if (target && this.isDraggingSelected) {
+        target.classList.add('no-drop');
+      }
+    },
+    dragLeave(event) {
+      const target = event.target.closest('.crafted-element');
+      if (target) {
+        target.classList.remove('no-drop');
+      }
+    }
   },
   mounted() {
     window.addEventListener('keydown', this.handleKeyPress);
   },
   beforeUnmount() {
     window.removeEventListener('keydown', this.handleKeyPress);
-  },
+  }
 };
 </script>
 
 <style scoped>
 @import '@/assets/CraftSystemStyle.css';
-</style>
+</style>  

@@ -117,6 +117,13 @@
     "unlocked": false,
     "condition": "this.discoveredElements.includes('Louis XIV')",
     "image": "/assets/success/Roi Soleil.png"
+  },
+  {
+    "name": "Merlin l'enchanteur",
+    "description": "Découvrez l'élément Druide.",
+    "unlocked": false,
+    "condition": "this.discoveredElements.includes('Druide')",
+    "image": "/assets/success/Merlin l'enchanteur.png"
   }
 
 

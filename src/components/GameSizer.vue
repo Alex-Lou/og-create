@@ -21,7 +21,7 @@ export default {
   mounted() {
     // Définit les proportions initiales des flexbox
     const mainContentWidth = this.$parent.$refs.mainContent.offsetWidth;
-    const initialInventoryWidth = mainContentWidth * 0.4; // 30% pour l'inventaire
+    const initialInventoryWidth = mainContentWidth * 0.3; // 30% pour l'inventaire
     const initialCraftingWidth = mainContentWidth * 0.7; // 70% pour le crafting
 
     this.$parent.$refs.inventory.style.flex = initialInventoryWidth / mainContentWidth;
@@ -44,7 +44,7 @@ export default {
       const mainContentWidth = this.$parent.$refs.mainContent.offsetWidth;
 
       const minInventoryWidth = 40; // Minimum width of the inventory
-      const maxInventoryWidth = mainContentWidth - 900; // Minimum width of the crafting board
+      const maxInventoryWidth = mainContentWidth - 300; // Minimum width of the crafting board
 
       if (newInventoryWidth >= minInventoryWidth && newInventoryWidth <= maxInventoryWidth) {
         const inventoryFlex = newInventoryWidth / mainContentWidth;

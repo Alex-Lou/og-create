@@ -91,15 +91,13 @@ export default {
     },
   },
   methods: {
-
     startAutoCloseTimer() {
       this.clearAutoCloseTimer();
 
       this.autoCloseTimer = setTimeout(() => {
         this.fadeOutAndClose();
-      }, 20000);
+      }, 5000); // 7 secondes
     },
-
 
     clearAutoCloseTimer() {
       if (this.autoCloseTimer) {
@@ -116,7 +114,6 @@ export default {
     fadeOutAndClose() {
       const popupEl = this.$refs.achievementPopup;
       if (!popupEl) {
-
         this.cleanupParticles();
         this.$emit("close");
         return;
@@ -127,12 +124,10 @@ export default {
         onComplete: () => {
           this.cleanupParticles();
           this.$emit("close");
-
           gsap.set(popupEl, { opacity: 1 });
         },
       });
     },
-
 
     initParticles() {
       setTimeout(() => {
@@ -140,6 +135,7 @@ export default {
         this.animateParticles();
       }, 20);
     },
+
     createParticles() {
       const container = this.$refs.particleContainer;
       if (!container) return;
@@ -170,6 +166,7 @@ export default {
         this.particles.push(particle);
       }
     },
+
     animateParticles() {
       this.particles.forEach((particle) => {
         const angle = Math.random() * Math.PI * 2;
@@ -205,6 +202,7 @@ export default {
         });
       });
     },
+
     cleanupParticles() {
       this.particles.forEach(particle => {
         if (particle && particle.parentNode) {

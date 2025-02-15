@@ -1,9 +1,22 @@
 /* Inventory Section */
+@font-face {
+  font-family: 'White Storm';
+  src: url('@/assets/White Storm.otf') format('opentype');
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'BenjaminFranklin';
+  src: url('@/assets/BenjaminFranklin.ttf') format('opentype');
+  font-weight: normal;
+  font-style: normal;
+}
+
 #inventory {
   flex: 1;
   background: #2a2a2a;
   padding: 10px;
-  border-radius: 10px;
   box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.3);
   overflow-y: auto;
   background: #2a2a2a; /* Fond sombre de l'inventaire */
@@ -13,8 +26,12 @@
 
 #inventory h2 {
   text-align: center;
-  color: #4dd0e1;
+  color: #2d96a4;
   margin-bottom: 10px;
+  font-family: 'BenjaminFranklin', sans-serif;
+  letter-spacing: 3px; /* Ajustez cette valeur selon votre préférence */
+  text-transform: uppercase;
+  font-size: 20px;
 }
 
 .category-header {
@@ -22,7 +39,9 @@
   align-items: center; /* Aligne verticalement le texte et la barre */
   justify-content: space-between; /* Espace entre les éléments */
   padding: 5px 10px;
-  color: #4dd0e1;
+  color: #2d96a4;
+  font-family: 'BenjaminFranklin', sans-serif;
+  letter-spacing: 2px;
   font-weight: bold;
   gap: 10px; /* Espace entre le titre et la barre de progression */
 }
@@ -40,7 +59,7 @@
   position: relative;
   cursor: pointer;
   font-weight: bold;
-  color: #4dd0e1;
+  color: #2d96a4;
   padding: 5px 10px;
   border-bottom: 1px solid #444;
   transition: background 0.3s ease;
@@ -70,12 +89,12 @@
   display: none;
   background: #2a2a2a;
   border-left: 3px solid #4dd0e1;
-  padding: 0px;
-  border-radius: 5px;
+  font-family: 'BenjaminFranklin', sans-serif;
+  letter-spacing: 2px;
 }
 
 .category-content .inventory-item {
-  color: #fff;
+  color: #c9c7c7;
   padding: 5px 10px;
   cursor: pointer;
   border-radius: 3px;

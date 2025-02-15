@@ -218,7 +218,12 @@
             "Révolution": "👥🔄",
             "Récolution Civile": "👥🔄",
             "Pays": "🧑‍🔬🌍",
-            "Domination": "👑"
+            "Domination": "👑",
+            "Abandon": "🚶🔘",
+            "Solitude": "🚶👥",
+            "Travail": "👨‍🔧",
+            "Persuasion": "🗣️💡",
+            "Ordre": "🔒"
                        
         },
         "mathématiques": {
@@ -346,6 +351,24 @@
 
     },
     "rules": {
+        "Autorité+Discipline": "Ordre",
+        "Savoir+Charme": "Persuasion",
+        "Contrôle+Abus de Pouvoir": "Totalitarisme",
+        "Pouvoir+Opression": "Exploitation",
+        "Travail+Injustice": "Exploitation",
+        "Agriculture+Outil": "Travail",
+        "Énergie+Discipline": "Travail",
+        "Amour+Injustice": "Rupture",
+        "Police+Loi": "Autorité",
+        "Esprit+Vide": "Coma",
+        "Amour+Vide": "Abandon",
+        "Homme+Amour+Vide": "Solitude",
+        "Influence+Force": "Domination",
+        "Influence+Stratégie": "Domination",
+        "Autorité+Peur": "Dictature",
+        "Esprit+Communication": "Influence",
+        "Pouvoir+Charme+Parole": "Influence",
+        "Homme+Justice+Colère": "Injustice",
         "Guerre+Contrôle": "Domination",
         "Ville+Societé+Justice+Maison": "Pays",
         "Révolution+Ville": "Récolution Civile",
