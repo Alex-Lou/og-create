@@ -62,6 +62,7 @@
 
 <script>
 import AuthService from '@/services/authService';
+import progressService from '@/services/progressService';
 import DarkToggle from "./components/DarkToggle.vue";
 import LoginIcon from "./components/LoginIcon.vue";
 import GameAchievementsPopup from "./components/GameAchievementsPopup.vue";
@@ -103,12 +104,115 @@ export default {
       isFireworkActive: false,
       isLoggedIn: false,
       currentUser: null,
+      categoryProgress: {} // Pour stocker la progression de chaque catégorie
     };
   },
   created() {
     this.checkAuth();
+    if (this.isLoggedIn) {
+      this.loadGameProgress();
+    }
   },
   methods: {
+    async loadGameProgress() {
+  if (!this.isLoggedIn) return;
+
+  try {
+    const progress = await progressService.loadGameProgress();
+    if (progress) {
+      // Gestion des éléments découverts
+      if (progress.discoveredElements) {
+        try {
+          // Si c'est une chaîne, on essaie de la parser
+          if (typeof progress.discoveredElements === 'string') {
+            const parsed = JSON.parse(progress.discoveredElements);
+            // Si c'est un tableau d'éléments avec des guillemets doubles supplémentaires
+            this.discoveredElements = Array.isArray(parsed) 
+              ? parsed.map(element => element.replace(/^"|"$/g, ''))
+              : ["Eau", "Feu", "Terre", "Air"];
+          } else {
+            this.discoveredElements = progress.discoveredElements;
+          }
+        } catch (e) {
+          console.error("Erreur parsing discoveredElements:", e);
+          this.discoveredElements = ["Eau", "Feu", "Terre", "Air"];
+        }
+      }
+
+      // Gestion des catégories découvertes
+      if (progress.discoveredCategories) {
+        try {
+          // Si c'est une chaîne, on essaie de la parser
+          if (typeof progress.discoveredCategories === 'string') {
+            const parsed = JSON.parse(progress.discoveredCategories);
+            this.discoveredCategories = Array.isArray(parsed)
+              ? parsed.map(cat => cat.replace(/^"|"$/g, ''))
+              : ["Elements Fondamentaux"];
+          } else if (Array.isArray(progress.discoveredCategories)) {
+            this.discoveredCategories = progress.discoveredCategories;
+          } else {
+            this.discoveredCategories = ["Elements Fondamentaux"];
+          }
+        } catch (e) {
+          console.error("Erreur parsing discoveredCategories:", e);
+          this.discoveredCategories = ["Elements Fondamentaux"];
+        }
+      }
+
+      // Gestion de la progression des catégories
+      if (progress.categoryProgress) {
+        try {
+          this.categoryProgress = typeof progress.categoryProgress === 'string'
+            ? JSON.parse(progress.categoryProgress)
+            : progress.categoryProgress;
+        } catch (e) {
+          console.error("Erreur parsing categoryProgress:", e);
+          this.categoryProgress = {};
+        }
+      }
+
+      this.updateCategoryProgress();
+    }
+  } catch (error) {
+    console.error("Erreur lors du chargement de la progression:", error);
+    // Valeurs par défaut en cas d'erreur
+    this.discoveredElements = ["Eau", "Feu", "Terre", "Air"];
+    this.discoveredCategories = ["Elements Fondamentaux"];
+    this.categoryProgress = {};
+  }
+},
+
+async saveGameProgress() {
+  if (!this.isLoggedIn) return;
+
+  try {
+    // S'assurer que les données sont dans le bon format
+    const progressData = {
+      discoveredElements: Array.isArray(this.discoveredElements) 
+        ? this.discoveredElements 
+        : ["Eau", "Feu", "Terre", "Air"],
+      discoveredCategories: Array.isArray(this.discoveredCategories)
+        ? this.discoveredCategories
+        : ["Elements Fondamentaux"],
+      categoryProgress: this.categoryProgress || {}
+    };
+
+    await progressService.saveGameProgress(progressData);
+  } catch (error) {
+    console.error("Erreur lors de la sauvegarde de la progression:", error);
+  }
+},
+
+    updateCategoryProgress() {
+      Object.keys(this.categories).forEach(category => {
+        const totalElements = this.categories[category].length;
+        const discoveredCount = this.categories[category].filter(element => 
+          this.discoveredElements.includes(element)
+        ).length;
+        this.categoryProgress[category] = (discoveredCount / totalElements) * 100;
+      });
+    },
+
     checkAuth() {
       const loggedInUser = AuthService.getCurrentUser();
       if (loggedInUser && loggedInUser.token) {
@@ -117,20 +221,22 @@ export default {
       } else {
         this.isLoggedIn = false;
         this.currentUser = null;
-        // Supprimer le token du localStorage si il est invalide
         localStorage.removeItem('user');
       }
     },
+
     updateDarkMode(newMode) {
       this.isDarkMode = newMode;
       document.body.classList.toggle("light-mode", !this.isDarkMode);
     },
+
     async handleLoginAttempt(credentials) {
       console.log('Tentative de connexion:', credentials);
       try {
         const response = await AuthService.login(credentials.email, credentials.password);
         this.isLoggedIn = true;
         this.currentUser = response;
+        await this.loadGameProgress(); // Charger la progression après connexion
         console.log('Connexion réussie:', response);
         this.showAlert(`Connexion réussie pour ${response.username}`);
       } catch (error) {
@@ -138,12 +244,14 @@ export default {
         this.showAlert(error.response?.data?.message || 'Erreur lors de la connexion');
       }
     },
+
     async handleRegisterAttempt(credentials) {
       console.log('Tentative d\'inscription:', credentials);
       try {
         const response = await AuthService.register(credentials.email, credentials.password);
         this.isLoggedIn = true;
         this.currentUser = response;
+        this.saveGameProgress(); // Sauvegarder la progression initiale
         console.log('Inscription réussie:', response);
         this.showAlert(`Inscription réussie pour ${response.username}`);
       } catch (error) {
@@ -151,28 +259,34 @@ export default {
         this.showAlert(error.response?.data?.message || 'Erreur lors de l\'inscription');
       }
     },
+
     handleLogout() {
       AuthService.logout();
       this.isLoggedIn = false;
       this.currentUser = null;
       this.showAlert('Déconnexion réussie');
-      // Recharger la page pour réinitialiser l'état
       window.location.reload();
     },
+
     handleDataLoaded(data) {
       this.elementEmojis = data.elementEmojis;
       this.categories = data.categories;
       this.craftingRecipes = data.craftingRecipes;
+      this.updateCategoryProgress();
     },
+
     handleAchievementsLoaded(achievements) {
       this.achievements = achievements;
     },
+
     handleAchievementUnlocked(achievement) {
       this.newAchievement = achievement;
     },
+
     handleResourceSelection(resource) {
       this.$refs.craftSystem.selectResource(resource);
     },
+
     handleCraftSuccess(craftedItem) {
       try {
         this.craftedElement = {
@@ -188,6 +302,7 @@ export default {
       this.addToCategory(craftedItem);
       this.$refs.dataLoading.handleCraft(craftedItem);
     },
+
     addToCategory(craftedItem) {
       const targetCategory = Object.keys(this.categories).find((category) =>
         this.categories[category].includes(craftedItem)
@@ -197,17 +312,23 @@ export default {
         if (!this.discoveredCategories.includes(targetCategory)) {
           this.discoveredCategories.push(targetCategory);
         }
+        this.updateCategoryProgress();
+        this.saveGameProgress(); // Sauvegarder après chaque découverte
       }
     },
+
     closeAchievementPopup() {
       this.newAchievement = null;
     },
+
     resetCraftedElement() {
       this.craftedElement = { name: "", image: null };
     },
+
     showAlert(message) {
       alert(message);
     },
+
     handleAchievementPopupOpened() {
       this.isFireworkActive = true;
       setTimeout(() => {

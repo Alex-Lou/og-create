@@ -14,7 +14,7 @@
       <ul>
         <li v-for="(achievement, index) in achievements"
             :key="index"
-            :class="{ unlocked: achievement.unlocked }">
+            :class="{ unlocked: isAchievementUnlocked(achievement.name) }">
           <img v-if="achievement.image"
                :src="achievement.image"
                alt=""
@@ -48,25 +48,13 @@ export default {
     return {
       isHovered: false,
       isListHovered: false,
+      savedAchievements: {},
       savedAchievementIds: []
     };
   },
   async created() {
     if (authService.isAuthenticated()) {
-      try {
-        const progress = await progressService.loadProgress();
-        if (progress && progress.achievements) {
-          this.savedAchievementIds = Object.keys(progress.achievements);
-          // Mettre à jour l'état des achievements en fonction des données sauvegardées
-          this.achievements.forEach(achievement => {
-            if (this.savedAchievementIds.includes(achievement.name)) {
-              achievement.unlocked = true;
-            }
-          });
-        }
-      } catch (error) {
-        console.error("Erreur lors du chargement des succès:", error);
-      }
+      await this.loadSavedAchievements();
     }
   },
   watch: {
@@ -76,7 +64,7 @@ export default {
       handler(newAchievements) {
         if (authService.isAuthenticated()) {
           newAchievements.forEach(achievement => {
-            if (achievement.unlocked && !this.savedAchievementIds.includes(achievement.name)) {
+            if (achievement.unlocked && !this.isAchievementUnlocked(achievement.name)) {
               this.saveAchievement(achievement);
             }
           });
@@ -85,6 +73,47 @@ export default {
     }
   },
   methods: {
+    async loadSavedAchievements() {
+      try {
+        const progress = await progressService.loadProgress();
+        if (progress && progress.achievements) {
+          // Ajout de logs de débogage
+          console.log('Achievements chargés:', progress.achievements);
+          
+          this.savedAchievements = progress.achievements;
+          this.savedAchievementIds = Object.keys(this.savedAchievements);
+          
+          // Mettre à jour l'état des achievements
+          this.achievements.forEach(achievement => {
+            achievement.unlocked = this.isAchievementUnlocked(achievement.name);
+          });
+        }
+      } catch (error) {
+        console.error("Erreur lors du chargement des succès:", error);
+      }
+    },
+
+    isAchievementUnlocked(achievementName) {
+      // Log de débogage
+      console.log('Vérification du succès:', achievementName);
+      console.log('Succès sauvegardés:', this.savedAchievements);
+
+      // Normalisation du nom pour gérer les variations
+      const normalizedName = achievementName.replace(/\s+/g, ' ').trim().toLowerCase();
+      
+      // Recherche du succès avec une correspondance insensible à la casse
+      const matchingKey = Object.keys(this.savedAchievements).find(
+        key => key.replace(/\s+/g, ' ').trim().toLowerCase() === normalizedName
+      );
+
+      const isUnlocked = matchingKey 
+        ? this.savedAchievements[matchingKey].unlocked 
+        : false;
+
+      console.log(`Succès "${achievementName}" débloqué:`, isUnlocked);
+      return isUnlocked;
+    },
+
     handleMouseLeave() {
       setTimeout(() => {
         if (!this.isListHovered) {
@@ -92,6 +121,7 @@ export default {
         }
       }, 100);
     },
+
     async saveAchievement(achievement) {
       if (!authService.isAuthenticated()) {
         console.log('Utilisateur non connecté, impossible de sauvegarder le succès');
@@ -106,7 +136,10 @@ export default {
         };
 
         await progressService.saveAchievement(achievementData);
-        this.savedAchievementIds.push(achievement.name);
+        this.savedAchievements[achievement.name] = achievementData;
+        if (!this.savedAchievementIds.includes(achievement.name)) {
+          this.savedAchievementIds.push(achievement.name);
+        }
         this.$emit('achievement-saved', achievement);
       } catch (error) {
         console.error("Erreur lors de l'enregistrement du succès :", error);

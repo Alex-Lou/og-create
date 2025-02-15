@@ -16,22 +16,46 @@ axiosInstance.interceptors.request.use(config => {
 });
 
 class ProgressService {
-  async saveAchievement(achievement) {
+  async saveGameProgress(progressData) {
     try {
-      const response = await axiosInstance.post('achievement', { achievement });
+      const response = await axiosInstance.post('save', {
+        discoveredElements: progressData.discoveredElements,
+        discoveredCategories: progressData.discoveredCategories,
+        categoryProgress: progressData.categoryProgress
+      });
       return response.data;
     } catch (error) {
-      console.error('Erreur dans saveAchievement:', error);
+      console.error('Erreur dans saveGameProgress:', error);
+      throw error;
+    }
+  }
+
+  async loadGameProgress() {
+    try {
+      const response = await axiosInstance.get('load');
+      return response.data;
+    } catch (error) {
+      console.error('Erreur dans loadGameProgress:', error);
       throw error;
     }
   }
 
   async loadProgress() {
     try {
-      const response = await axiosInstance.get('load');
+      const response = await this.loadGameProgress();
+      return response;
+    } catch (error) {
+      console.error('Erreur lors du chargement des progrès:', error);
+      throw error;
+    }
+  }
+
+  async saveAchievement(achievementData) {
+    try {
+      const response = await axiosInstance.post('save-achievement', achievementData);
       return response.data;
     } catch (error) {
-      console.error('Erreur dans loadProgress:', error);
+      console.error('Erreur lors de la sauvegarde du succès:', error);
       throw error;
     }
   }
