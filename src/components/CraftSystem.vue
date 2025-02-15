@@ -204,6 +204,10 @@ export default {
       if (event.key === 'r') {
         this.resetCraftingBoard();
       }
+      // Ajout de la touche 'c' pour nettoyer
+      if (event.key === 'c') {
+        this.resetCraftingBoard();
+      }
     },
     getCraftedItemCategory(item) {
       for (const key in this.craftingRecipes) {

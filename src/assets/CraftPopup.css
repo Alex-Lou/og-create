@@ -1,7 +1,4 @@
 .emoji-container {
-    display: flex;
-    justify-content: center;
-    align-items: center;
     height: 100px;
     width: 100%;
     margin: 0 auto;
@@ -17,9 +14,14 @@
 }
 
 #crafted-popup {
+    position: fixed;
+    top: 80%; /* Modifié de 50% à 65% pour descendre le popup */
+    left: 65%;
+    transform: translate(-50%, -50%);
     min-width: 200px;
+    z-index: 100;
 }
 
 .popup-content {
     padding: 10px;
-}
+}   

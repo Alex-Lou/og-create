@@ -1,17 +1,18 @@
 <template>
-    <div id="crafted-popup" ref="craftedPopup" :class="{ show: craftedElement.name }">
-      <div class="gsap-particles-container">
-        <div v-for="n in 20" :key="n" 
-             class="particle"
-             :style="{
-               backgroundColor: getRandomColor(),
-               width: '10px',
-               height: '10px'
-             }"
-             ref="particles">
-        </div>
+  <div id="crafted-popup" ref="craftedPopup" :class="{ show: craftedElement.name }">
+    <div class="gsap-particles-container">
+      <div v-for="n in 20" :key="n" 
+           class="particle"
+           :style="{
+             backgroundColor: getRandomColor(),
+             width: '10px',
+             height: '10px'
+           }"
+           ref="particles">
       </div>
-      <div class="popup-content">
+    </div>
+    <div class="popup-content">
+      <div class="image-container">
         <template v-if="craftedElement.image">
           <img :src="craftedElement.image" :alt="craftedElement.name" />
         </template>
@@ -20,10 +21,11 @@
             {{ elementEmojis[craftedElement.name] }}
           </div>
         </template>
-        <p>{{ craftedElement.name }}</p>
       </div>
+      <p>{{ craftedElement.name }}</p>
     </div>
-  </template>
+  </div>
+</template>
   
   <script>
   import gsap from 'gsap';
