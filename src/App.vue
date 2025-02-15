@@ -15,8 +15,10 @@
         <LoginIcon 
           :isDarkMode="isDarkMode" 
           :isLoggedIn="isLoggedIn"
+          :currentUser="currentUser"
           @login-attempt="handleLoginAttempt"
           @register-attempt="handleRegisterAttempt"
+          @logout="handleLogout"
         />
       </div>
     </header>
@@ -59,6 +61,7 @@
 </template>
 
 <script>
+import AuthService from '@/services/authService';
 import DarkToggle from "./components/DarkToggle.vue";
 import LoginIcon from "./components/LoginIcon.vue";
 import GameAchievementsPopup from "./components/GameAchievementsPopup.vue";
@@ -102,20 +105,59 @@ export default {
       currentUser: null,
     };
   },
+  created() {
+    this.checkAuth();
+  },
   methods: {
+    checkAuth() {
+      const loggedInUser = AuthService.getCurrentUser();
+      if (loggedInUser && loggedInUser.token) {
+        this.isLoggedIn = true;
+        this.currentUser = loggedInUser;
+      } else {
+        this.isLoggedIn = false;
+        this.currentUser = null;
+        // Supprimer le token du localStorage si il est invalide
+        localStorage.removeItem('user');
+      }
+    },
     updateDarkMode(newMode) {
       this.isDarkMode = newMode;
       document.body.classList.toggle("light-mode", !this.isDarkMode);
     },
-    handleLoginAttempt(credentials) {
+    async handleLoginAttempt(credentials) {
       console.log('Tentative de connexion:', credentials);
-      // Ici viendra l'appel à votre API de connexion
-      this.showAlert(`Tentative de connexion avec: ${credentials.email}`);
+      try {
+        const response = await AuthService.login(credentials.email, credentials.password);
+        this.isLoggedIn = true;
+        this.currentUser = response;
+        console.log('Connexion réussie:', response);
+        this.showAlert(`Connexion réussie pour ${response.username}`);
+      } catch (error) {
+        console.error('Erreur lors de la connexion', error);
+        this.showAlert(error.response?.data?.message || 'Erreur lors de la connexion');
+      }
     },
-    handleRegisterAttempt(credentials) {
+    async handleRegisterAttempt(credentials) {
       console.log('Tentative d\'inscription:', credentials);
-      // Ici viendra l'appel à votre API d'inscription
-      this.showAlert(`Tentative d'inscription avec: ${credentials.email}`);
+      try {
+        const response = await AuthService.register(credentials.email, credentials.password);
+        this.isLoggedIn = true;
+        this.currentUser = response;
+        console.log('Inscription réussie:', response);
+        this.showAlert(`Inscription réussie pour ${response.username}`);
+      } catch (error) {
+        console.error('Erreur lors de l\'inscription', error);
+        this.showAlert(error.response?.data?.message || 'Erreur lors de l\'inscription');
+      }
+    },
+    handleLogout() {
+      AuthService.logout();
+      this.isLoggedIn = false;
+      this.currentUser = null;
+      this.showAlert('Déconnexion réussie');
+      // Recharger la page pour réinitialiser l'état
+      window.location.reload();
     },
     handleDataLoaded(data) {
       this.elementEmojis = data.elementEmojis;

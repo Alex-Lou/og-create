@@ -16,37 +16,49 @@
   
       <!-- Dropdown Menu -->
       <div v-if="isOpen" class="login-dropdown">
-        <form @submit.prevent="handleSubmit">
+        <div v-if="!isLoggedIn" class="login-type-selector">
+          <button 
+            :class="['type-btn', { active: loginType === 'login' }]"
+            @click="loginType = 'login'"
+          >
+            Connexion
+          </button>
+          <button 
+            :class="['type-btn', { active: loginType === 'register' }]"
+            @click="loginType = 'register'"
+          >
+            Inscription
+          </button>
+        </div>
+  
+        <div v-else class="logged-in-section">
+          <p>Connecté en tant que : {{ currentUser.username }}</p>
+          <button @click="handleLogout" class="logout-btn">
+            Déconnexion
+          </button>
+        </div>
+  
+        <form v-if="!isLoggedIn" @submit.prevent="handleSubmit">
           <input 
             type="email" 
             v-model="email" 
             placeholder="Email"
             class="login-input"
+            required
           />
           <input 
             type="password" 
             v-model="password" 
             placeholder="Mot de passe"
             class="login-input"
+            required
+            minlength="8"
           />
-          <div class="login-type-selector">
-            <button 
-              type="button"
-              :class="['type-btn', { active: loginType === 'login' }]"
-              @click="loginType = 'login'"
-            >
-              Connexion
-            </button>
-            <button 
-              type="button"
-              :class="['type-btn', { active: loginType === 'register' }]"
-              @click="loginType = 'register'"
-            >
-              Inscription
-            </button>
+          <div v-if="errorMessage" class="error-message">
+            {{ errorMessage }}
           </div>
-          <button type="submit" class="submit-btn">
-            Confirmer
+          <button type="submit" class="submit-btn" :disabled="isLoading">
+            {{ isLoading ? 'Chargement...' : (loginType === 'login' ? 'Confirmer' : 'S\'inscrire') }}
           </button>
         </form>
       </div>
@@ -60,6 +72,14 @@
       isDarkMode: {
         type: Boolean,
         required: true
+      },
+      isLoggedIn: {
+        type: Boolean,
+        required: true
+      },
+      currentUser: {
+        type: Object,
+        default: () => ({})
       }
     },
     data() {
@@ -67,12 +87,20 @@
         isOpen: false,
         loginType: 'login',
         email: '',
-        password: ''
+        password: '',
+        errorMessage: '',
+        isLoading: false
       }
     },
     methods: {
       toggleDropdown() {
         this.isOpen = !this.isOpen;
+        this.resetForm();
+      },
+      resetForm() {
+        this.email = '';
+        this.password = '';
+        this.errorMessage = '';
       },
       handleSubmit() {
         const credentials = {
@@ -88,6 +116,10 @@
         
         this.email = '';
         this.password = '';
+        this.isOpen = false;
+      },
+      handleLogout() {
+        this.$emit('logout');
         this.isOpen = false;
       },
       handleClickOutside(e) {
@@ -181,4 +213,33 @@
   .submit-btn:hover {
     background: #1f7a85;
   }
+  
+  .error-message {
+    color: #ff4136;
+    margin-bottom: 10px;
+    text-align: center;
+  }
+  
+  .logged-in-section {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 15px;
+  }
+  
+  .logout-btn {
+    width: 100%;
+    padding: 8px;
+    background: #FF4136;
+    border: none;
+    border-radius: 4px;
+    color: white;
+    cursor: pointer;
+    transition: background 0.3s ease;
+  }
+  
+  .logout-btn:hover {
+    background: #d02f24;
+  }
   </style>
+  
