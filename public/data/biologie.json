@@ -87,7 +87,15 @@
             "Nageoire dorsale": "🐬",
             "Membrane": "🦇",
             "Virus": "🦠⚡",
-            "Mitochondrie": "🔋🧬"
+            "Mitochondrie": "🔋🧬",
+            "Mutagène": "🧬⚡",
+            "Catalyseur": "⚡🧪",
+            "Phagocytose": "🦠🍽️",
+            "Mitose": "🧬➗",
+            "Méiose": "🧬✂️",
+            "Osmose": "💧↔️",
+            "Photosynthèse": "🌱☀️"
+
         },
         "Anatomie": {
             "Muscle": "💪",
@@ -150,7 +158,11 @@
             "Vessie": "💧",
             "Graisse": "⚪",
             "Plasma": "🌊",
-            "Synovie": "💦"
+            "Synovie": "💦",
+            "Molécule": "⚛️",
+            "Particule": "🔴",
+            "Viande": "🍖"
+            
         },
         "formation animale": {
             "Nid": "🪺",
@@ -159,9 +171,9 @@
             "Soie": "🕸️",
             "Ruche": "🐝🏠",
             "Miel": "🍯",
-            "Piège": "🕸️🪰"
-
-            
+            "Piège": "🕸️🪰",
+            "Odeur": "👃",
+            "Nourriture": "🍲"  
         },
         "formation végétale": {
             "Résine": "🟡",
@@ -189,12 +201,34 @@
             "Champignon": "🍄",
             "Mousse": "🌿💧",
             "Nature": "🌿🌱",
-            "Élément": "🌿🔥"
+            "Élément": "🌿🔥",
+            "Fleur de Lune": "🌸🌙"
 
             
         }
     },
     "rules": {
+        "Fleur+Nuit": "Fleur de Lune",
+        "Animal+Muscle": "Chair",
+        "Animal+Chair": "Viande",
+        "Proie+Chair": "Viande",
+        "Chair+Nourriture": "Viande",
+        "Atome+Structure": "Molécule",
+        "Atome+Division": "Particule",
+        "Un+Deux": "Division",
+        "Cellule+Séparation": "Division",
+        "Tout+Partie": "Division",
+        "Air+Molécule": "Odeur",
+        "Nez+Particule": "Odeur",
+        "Odorat+Substance": "Odeur",
+        "Cellule+Digestion": "Phagocytose",
+        "Cellule+Division": "Mitose",
+        "ADN+Division+Reproduction": "Méiose",
+        "Eau+Membrane+Diffusion": "Osmose",
+        "Plante+Lumière+Énergie": "Photosynthèse",
+        "Enzyme+Vitesse": "Catalyseur",
+        "Enzyme+Énergie": "Catalyseur",
+        "ADN+Mutation+Catalyseur": "Mutagène",
         "Particule+Fondement": "Atome",
         "Matière+Essence": "Substance",
         "Génétique+Environnement": "Variabilité",

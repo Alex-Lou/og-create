@@ -96,13 +96,14 @@
             "Halite": "🪨⚪",
             "Pierre Sulfurée": "🪨🟡",
             "Gneiss": "🪨🔧",
-            "Pegmatite": "🪨🔥"
-
-
-            
+            "Pegmatite": "🪨🔥",
+            "Stalagmite": "💧🪨⬆️",
+            "Stalactite": "💧🪨⬇️"
         }
     },
     "rules": {
+        "Eau+Pierre+Temps": "Stalagmite",
+        "Pierre+Eau+Temps+Montagne": "Stalactite",
         "Montagne+Lave+Eau": "Gabbro",
         "Granite+Pression": "Gneiss",
         "Magma+Pression": "Pegmatite",
