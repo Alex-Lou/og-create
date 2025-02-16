@@ -37,6 +37,8 @@ class AuthService {
       if (response.data.token) {
         localStorage.setItem('user', JSON.stringify(response.data));
         this._initializeAuthHeader();
+        // Recharger la page après une connexion réussie
+        window.location.reload();
       }
       
       return response.data;
@@ -77,6 +79,8 @@ class AuthService {
       if (response.data.token) {
         localStorage.setItem('user', JSON.stringify(response.data));
         this._initializeAuthHeader();
+        // Recharger la page après une inscription réussie également
+        window.location.reload();
       }
       
       return response.data;
