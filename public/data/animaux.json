@@ -77,7 +77,17 @@
             "Vipère": "🐍",
             "Flamant Rose": "🦩",
             "Paon": "🦚",
-            "Colibri": "🐦"
+            "Colibri": "🐦",
+            "Aigle Royal": "🦅👑",
+            "Tigre": "🐯",
+            "Puma": "🐆",
+            "Chacal": "🐺",
+            "Scorpion Doré": "🦂✨",
+            "Faucon": "🦅",
+            "Guépard": "🐆",
+            "Serpent à Sonnette": "🐍🔔",
+            "Panthère Noire": "🐆🖤",
+            "Renard Roux": "🦊🍂"
         },
         "Attributs animaux": {
             "Force": "💪",
@@ -128,7 +138,13 @@
             "Thermorégulation": "🌡️",
             "Repos": "💤",
             "Harmonie": "🌿🌸",
-            "Calme": "🧘‍♂️"
+            "Calme": "🧘‍♂️",
+            "Précision": "🎯",
+            "Alerte": "🚨",
+            "Petit": "🐭",
+            "Essence": "🌿🌸",
+            "Orientation": "🧭"
+            
             
         },
         "Sens": {
@@ -140,6 +156,12 @@
         }
     },
     "rules": {
+        "Alignement+Force": "Orientation",
+        "Âme+Vie": "Essence",
+        "Micro+Dimension": "Petit",
+        "Mammifère+Astucieux+Automne": "Renard Roux",
+        "Félin+Nuit+Ombre": "Panthère Noire",
+        "Cerveau+Œil+Ouïe": "Alerte",
         "Équilibre+Repos": "Calme",
         "Écosystème+Équilibre": "Harmonie",
         "Vie+Nature+Équilibre": "Harmonie",
@@ -282,6 +304,15 @@
         "Oiseau+Rose+Eau": "Flamant Rose",
         "Oiseau+Plume+Parade": "Paon",
         "Oiseau+Nectar+Vol": "Colibri",
+        "Félin+Vitesse+Course": "Guépard",
+        "Reptile+Venin+Alerte": "Serpent à Sonnette",
+        
+        "Oiseau+Roi": "Aigle Royal",
+        "Félin+Jungle+Rugissement": "Tigre",
+        "Félin+Force+Agilité": "Puma",
+        "Désert+Félin": "Chacal",
+        "Sable+Venin": "Scorpion Doré",
+        "Air+Vitesse+Précision": "Faucon",
 
         "Cerveau+Son": "Ouïe",
         "Œil+Cerveau": "Vue",
@@ -336,7 +367,11 @@
         "Homme+Temps": "Patience",
         "Animal+Vue+Nuit": "Vision Nocturne",
         "Animal+Ouïe": "Écholocation",
-        "Corps+Température": "Thermorégulation"
+        "Corps+Température": "Thermorégulation",
+        "Système Nerveux+Muscle": "Vitesse",
+        "Cerveau+Œil": "Précision"
+
+
 
     }
 }

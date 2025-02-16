@@ -36,7 +36,16 @@
             "Fibre": "🦠🧵",
             "Vitamine D": "☀️🩹",
             "Calcium": "🦷🪨",
-            "Félin": "🐱"
+            "Félin": "🐱",
+            "Intrusion": "🔒🦠",
+            "Virus Mutant": "🦠🔒",
+            "Bactéries Extrêmophiles": "🦠🔥",
+            "Archée": "🦠⛰️",
+            "Plasmide": "🧬🌀",
+            "Variabilité": "🧬🔄",
+            "Substance": "🧬🔮",
+            "Atome": "🧬🔵"
+            
         },
         "végétaux": {
             "Corail": "🪸",
@@ -76,7 +85,9 @@
             "Dard": "🐝",
             "Ventouse": "🐙",
             "Nageoire dorsale": "🐬",
-            "Membrane": "🦇"
+            "Membrane": "🦇",
+            "Virus": "🦠⚡",
+            "Mitochondrie": "🔋🧬"
         },
         "Anatomie": {
             "Muscle": "💪",
@@ -149,6 +160,7 @@
             "Ruche": "🐝🏠",
             "Miel": "🍯",
             "Piège": "🕸️🪰"
+
             
         },
         "formation végétale": {
@@ -183,6 +195,11 @@
         }
     },
     "rules": {
+        "Particule+Fondement": "Atome",
+        "Matière+Essence": "Substance",
+        "Génétique+Environnement": "Variabilité",
+        "Extrême+Vie+ADN": "Archée",
+        "ADN+Mobilité": "Plasmide",
         "Nature+Force+Énergie": "Élément",
         "Vie+Animal+Plante" :"Nature",
         "Mammifère+Griffe+Agilité": "Félin",
@@ -364,6 +381,14 @@
         "Insecte+Venin+Pique": "Dard",
         "Tentacule+Pression": "Ventouse",
         "Poisson+Queue+Propulsion": "Nageoire dorsale",
-        "Peau+Aile+Fine": "Membrane"
+        "Peau+Aile+Fine": "Membrane",
+        "Cellule+Mutation+Intrusion": "Virus",
+        "Cellule+Énergie+ADN": "Mitochondrie",
+        "ADN+Temps": "Mutation",
+        "Cellule+Invasion": "Intrusion",
+        "Virus+Mutation+Chaleur": "Virus Mutant",
+        "Bactérie+Chaleur+Acidité": "Bactéries Extrêmophiles"
+        
+
     }
 }

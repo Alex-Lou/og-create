@@ -160,6 +160,10 @@
             "Sol Gelé": "❄️🌱🪨",
             "Sables Mouvants": "🏜️🌧️",
             "Fissure Tectonique": "🌍🔄",
+            "Automne": "🍁🍂",
+            "Ciel": "🌌",
+            "Environnement": "🌍",
+            "Matière": "🪨",
             
 
             "Japon": "🗾",
@@ -197,6 +201,10 @@
         }
     },
     "rules": {
+        "Atome+Énergie": "Matière",
+        "Terre+Ciel": "Environnement",
+        "Univers+Atmosphère": "Ciel",
+        "Feuille+Pluie+Temps" : "Automne",
         "Terre+Feu+Feu": "Volcan",
         "Eau+Eau+Eau": "Océan",
         "Lumière+Énergie": "Blanc",

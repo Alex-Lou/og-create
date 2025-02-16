@@ -223,7 +223,14 @@
             "Solitude": "🚶👥",
             "Travail": "👨‍🔧",
             "Persuasion": "🗣️💡",
-            "Ordre": "🔒"
+            "Ordre": "🔒",
+            "Invasion": "👥🚫",
+            "Ingéniosité": "🧠💡",
+            "Forme": "🔺",
+            "Finesse": "🧠🔍",
+            "Silhouette": "🔲"
+
+            
                        
         },
         "mathématiques": {
@@ -346,11 +353,41 @@
 
         },
         "technologies":{
-            "Radar": "📡"
+            "Radar": "📡",  
+            "Satellite": "🛰️",
+            "Impression 3D": "🖨️✨",
+            "Hologramme": "🌀✨",
+            "Transhumanisme": "🤖🧬",
+            "Cryptomonnaie": "₿🔐",
+            "Réseau 5G": "📶5G",
+            "Intelligence Artificielle": "🤖🧠",
+            "Nanotechnologie": "🔬⚛️",
+            "Réalité Virtuelle": "🕶️🌐",
+            "CyberSécurité": "🔐💻",
+            "Direction": "🔝"
+
+
         }
 
     },
     "rules": {
+        "Forme+Ombre": "Silhouette",
+        "Perception+Délicatesse": "Finesse",
+        "Énergie+Orientation": "Direction",
+        "Silhouette+Structure": "Forme",
+        "Découverte+Création": "Innovation",
+        "Cerveau+Innovation": "Ingéniosité",
+        "Mobile+Vitesse": "Réseau 5G",
+        "Ordinateur+Cerveau": "Intelligence Artificielle",
+        "Science+Minuscule": "Nanotechnologie",
+        "Ordinateur+Illusion": "Réalité Virtuelle",
+        "Internet+Protection": "CyberSécurité",
+        "Homme+Robot+ADN": "Transhumanisme",
+        "Mathématique+Technologie+Système": "Cryptomonnaie",
+        "Ordinateur+Espace": "Satellite",
+        "Machine+Création+Innovation": "Impression 3D",
+        "Lumière+Technologie+Art": "Hologramme",
+        "Guerre+Organisation": "Invasion",
         "Autorité+Discipline": "Ordre",
         "Savoir+Charme": "Persuasion",
         "Contrôle+Abus de Pouvoir": "Totalitarisme",
