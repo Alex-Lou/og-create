@@ -49,10 +49,12 @@ export default {
       isHovered: false,
       isListHovered: false,
       savedAchievements: {},
-      savedAchievementIds: []
+      savedAchievementIds: [],
+      localUnlockedAchievements: {}
     };
   },
   async created() {
+    // Charger les achievements sauvegardés si connecté
     if (authService.isAuthenticated()) {
       await this.loadSavedAchievements();
     }
@@ -63,9 +65,21 @@ export default {
       deep: true,
       handler(newAchievements) {
         if (authService.isAuthenticated()) {
+          // Logique pour utilisateurs connectés
           newAchievements.forEach(achievement => {
             if (achievement.unlocked && !this.isAchievementUnlocked(achievement.name)) {
               this.saveAchievement(achievement);
+            }
+          });
+        } else {
+          // Logique pour utilisateurs non connectés
+          newAchievements.forEach(achievement => {
+            if (achievement.unlocked) {
+              // Simplement ajouter en mémoire
+              this.localUnlockedAchievements[achievement.name] = {
+                unlocked: true,
+                unlockedAt: new Date().toISOString()
+              };
             }
           });
         }
@@ -77,9 +91,6 @@ export default {
       try {
         const progress = await progressService.loadProgress();
         if (progress && progress.achievements) {
-          // Ajout de logs de débogage
-          console.log('Achievements chargés:', progress.achievements);
-          
           this.savedAchievements = progress.achievements;
           this.savedAchievementIds = Object.keys(this.savedAchievements);
           
@@ -94,24 +105,26 @@ export default {
     },
 
     isAchievementUnlocked(achievementName) {
-      // Log de débogage
-      console.log('Vérification du succès:', achievementName);
-      console.log('Succès sauvegardés:', this.savedAchievements);
+      // Si connecté, vérifier dans les succès sauvegardés
+      if (authService.isAuthenticated()) {
+        const normalizedName = achievementName.replace(/\s+/g, ' ').trim().toLowerCase();
+        const matchingKey = Object.keys(this.savedAchievements).find(
+          key => key.replace(/\s+/g, ' ').trim().toLowerCase() === normalizedName
+        );
 
-      // Normalisation du nom pour gérer les variations
-      const normalizedName = achievementName.replace(/\s+/g, ' ').trim().toLowerCase();
-      
-      // Recherche du succès avec une correspondance insensible à la casse
-      const matchingKey = Object.keys(this.savedAchievements).find(
-        key => key.replace(/\s+/g, ' ').trim().toLowerCase() === normalizedName
-      );
+        return matchingKey 
+          ? this.savedAchievements[matchingKey].unlocked 
+          : false;
+      } 
+      // Si non connecté, vérifier dans les succès locaux
+      else {
+        const normalizedName = achievementName.replace(/\s+/g, ' ').trim().toLowerCase();
+        const matchingKey = Object.keys(this.localUnlockedAchievements).find(
+          key => key.replace(/\s+/g, ' ').trim().toLowerCase() === normalizedName
+        );
 
-      const isUnlocked = matchingKey 
-        ? this.savedAchievements[matchingKey].unlocked 
-        : false;
-
-      console.log(`Succès "${achievementName}" débloqué:`, isUnlocked);
-      return isUnlocked;
+        return matchingKey ? this.localUnlockedAchievements[matchingKey].unlocked : false;
+      }
     },
 
     handleMouseLeave() {
@@ -136,10 +149,17 @@ export default {
         };
 
         await progressService.saveAchievement(achievementData);
-        this.savedAchievements[achievement.name] = achievementData;
+        
+        // Mettre à jour directement savedAchievements
+        this.savedAchievements[achievement.name] = {
+          unlocked: true,
+          unlockedAt: achievementData.unlockedAt
+        };
+
         if (!this.savedAchievementIds.includes(achievement.name)) {
           this.savedAchievementIds.push(achievement.name);
         }
+        
         this.$emit('achievement-saved', achievement);
       } catch (error) {
         console.error("Erreur lors de l'enregistrement du succès :", error);

@@ -41,18 +41,32 @@ class ProgressService {
   }
 
   async loadProgress() {
-    try {
-      const response = await this.loadGameProgress();
-      return response;
-    } catch (error) {
-      console.error('Erreur lors du chargement des progrès:', error);
-      throw error;
-    }
+    return this.loadGameProgress();
   }
 
+  // Nouvelle méthode pour sauvegarder un achievement
   async saveAchievement(achievementData) {
     try {
-      const response = await axiosInstance.post('save-achievement', achievementData);
+      // Charger d'abord la progression existante
+      const progress = await this.loadProgress();
+      
+      // Créer une copie des achievements existants
+      const currentAchievements = progress.achievements || {};
+      
+      // Ajouter ou mettre à jour l'achievement
+      currentAchievements[achievementData.name] = {
+        unlocked: true,
+        unlockedAt: achievementData.unlockedAt || new Date().toISOString()
+      };
+
+      // Sauvegarder la progression mise à jour
+      const response = await axiosInstance.post('save', {
+        discoveredElements: progress.discoveredElements,
+        discoveredCategories: progress.discoveredCategories,
+        achievements: currentAchievements,
+        categoryProgress: progress.categoryProgress
+      });
+
       return response.data;
     } catch (error) {
       console.error('Erreur lors de la sauvegarde du succès:', error);
