@@ -31,10 +31,6 @@
             "Violet Foncé": "🟣🔹"
             
         },
-        "Pays": {
-            "Japon": "🗾",
-            "Afrique": "🌍"
-        },
         "Formations Massives": {
             "Himalaya": "🏔️🏔️❄️",            
             "Canyon": "🏜️🏞️",
@@ -67,7 +63,6 @@
             "Désert Polaire": "🏜️❄️",
             "Canyon Glaciaire": "🏔️🏜️",
             "Abysse": "🌊⚫"
-
         },
         "Formations Moyennes": {
             "Embruns": "🌊💨",
@@ -363,12 +358,8 @@
         "Éboulis": "🪨🏔️⬇️",
         "Thermocline": "🌊❄️🔥",
         "Reculée": "🏞️⬇️",
-
         "Océan+Continent": "Planète Terre",
-        "Chaleur+Savane+Lion": "Afrique",
-        "Île+Volcan+Cerisier+Crépuscule+Aube": "Japon",
         "Montagne+Montagne+Neige": "Himalaya",
         "Cheminée de Fée": "⛰️🎩"
-
     }
 }
