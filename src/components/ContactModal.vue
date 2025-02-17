@@ -23,6 +23,9 @@
                 <div v-if="errorMessage" class="error-message">
                     {{ errorMessage }}
                 </div>
+                <div v-if="successMessage" class="success-message">
+                    {{ successMessage }}
+                </div>
                 <button type="submit" class="submit-btn" :disabled="isLoading">
                     {{ isLoading ? 'Envoi...' : 'Envoyer' }}
                 </button>
@@ -32,6 +35,8 @@
 </template>
 
 <script>
+import axios from 'axios';
+
 export default {
     name: 'ContactModal',
     props: {
@@ -45,14 +50,37 @@ export default {
             email: '',
             message: '',
             errorMessage: '',
+            successMessage: '',
             isLoading: false
         }
     },
     methods: {
-        handleSubmit() {
-            // Ici viendra la logique d'envoi du message
-            console.log('Message envoyé:', { email: this.email, message: this.message })
-            this.$emit('close')
+        async handleSubmit() {
+            this.isLoading = true;
+            this.errorMessage = '';
+            this.successMessage = '';
+
+            try {
+                await axios.post('http://localhost:3000/api/contact/send', {
+                    email: this.email,
+                    message: this.message
+                });
+
+                this.successMessage = 'Message envoyé avec succès !';
+                this.email = '';
+                this.message = '';
+                
+                // Ferme le modal après 2 secondes
+                setTimeout(() => {
+                    this.$emit('close');
+                }, 2000);
+
+            } catch (error) {
+                this.errorMessage = 'Erreur lors de l\'envoi du message. Veuillez réessayer.';
+                console.error('Erreur:', error);
+            } finally {
+                this.isLoading = false;
+            }
         }
     }
 }
@@ -125,4 +153,12 @@ export default {
     margin-bottom: 10px;
     font-size: 14px;
 }
+
+.success-message {
+    color: #2ecc71;
+    margin-bottom: 10px;
+    font-size: 14px;
+    text-align: center;
+}
+
 </style>
