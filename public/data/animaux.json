@@ -1,6 +1,6 @@
 {
     "animaux": {
-        "animaux": {
+        "Animaux": {
             "Méduse": "🎐",
             "Ver": "🪱",
             "Luciole": "✨🍄",
@@ -99,7 +99,7 @@
             "Capybara": "🐹👑",
             "Nautile": "🐚🌀"
         },
-        "Attributs animaux": {
+        "Attributs Animaux": {
             "Force": "💪",
             "Vitesse": "🏃",
             "Agilité": "🦘",
@@ -114,8 +114,6 @@
             "Mémoire": "🧠✨",
             "Digestion": "🫃",
             "Instinct": "🧠⚡",
-            "Vibration": "〰️",
-            "Son": "🔊",
             "Équilibre": "⚖️",
             "Ruse": "🦊💭",
             "Hibernation": "🐻💤",
@@ -125,7 +123,6 @@
             "Territoire": "🏞️🐾",
             "Chasse": "🐯🏃",
             "Prédation": "🦁🍖",
-            "Stratégie": "🧠🎯",
             "Prédateur": "🐺🦊",
             "Hydratation": "💧",
             "Gout": "👅💧",
@@ -137,7 +134,6 @@
             "Migration": "🐦➡️",
             "Adaptation": "🧬✨",
             "Reproduction": "🫃",
-            "Socialisation": "👥",
             "Patience": "⏳",
             "Poison": "☠️",
             "Symbiose": "🤝",
@@ -157,9 +153,7 @@
             "Echolocalisation": "🦇📡",
             "Régénération": "🦎♻️",
             "Biomimétisme": "🦎🎭",
-            "Cryptage": "🦑🔐",
             "Coopération": "🐜🤝",
-            "Résistance": "🐻💪",
             "Flexibilité": "🐍〰️",
             "Coordination": "🐠🎯",
             "Apprentissage": "🐬📚",
@@ -179,8 +173,20 @@
             "Parade": "🦚💕",
             "Comportement": "🧠🔄",
             "Poursuite": "🏃🎯",
-            "Rytme": "🎶"
-            
+            "Rytme": "🎶",
+            "Intelligence": "🧠",
+            "Carnivore": "🍖",
+            "Écholocation": "🦇📡",
+            "Pistage": "🐾",
+            "Dextérité": "🎯",
+            "Habileté": "✨",
+            "Adaptation Aquatique": "🌊"
+        },
+        "Attributs Humains": {
+            "Résistance": "🐻💪",
+            "Cryptage": "🦑🔐",
+            "Socialisation": "👥",
+            "Stratégie": "🧠🎯"
         },
         "Sens": {
             "Vue": "👀",
@@ -191,6 +197,13 @@
         }
     },
     "rules": {
+        "Corps+Eau": "Adaptation Aquatique",
+        "Expérience+Pratique": "Habileté",
+        "Main+Précision": "Dextérité",
+        "Animal+Odorat": "Pistage",
+        "Course+Chasse": "Poursuite",
+        "Animal+Viande": "Carnivore",
+        "Force+Savoir": "Intelligence",
         "Temps+Musique": "Rythme",
         "Mouvement+Temps+Répétition": "Rythme",
         "Son+Cycle": "Rythme",
@@ -399,7 +412,6 @@
         "Oiseau+Nectar+Vol": "Colibri",
         "Félin+Vitesse+Course": "Guépard",
         "Reptile+Venin+Alerte": "Serpent à Sonnette",
-        
         "Oiseau+Roi": "Aigle Royal",
         "Félin+Jungle+Rugissement": "Tigre",
         "Félin+Force+Agilité": "Puma",
@@ -428,8 +440,6 @@
         "Estomac+Nourriture": "Digestion",
         "Animal+Eau": "Nage",
         "Cerveau+Vie+Danger": "Instinct",
-        "Force+Air": "Vibration",
-        "Air+Vibration": "Son",
         "Force+Cerveau": "Équilibre",
         "Animal+Feuille": "Camouflage",
         "Animal+Stratégie": "Ruse",
@@ -463,8 +473,5 @@
         "Corps+Température": "Thermorégulation",
         "Système Nerveux+Muscle": "Vitesse",
         "Cerveau+Œil": "Précision"
-
-
-
     }
 }

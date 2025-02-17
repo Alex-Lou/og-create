@@ -140,8 +140,8 @@
   <style scoped>
   .login-container {
     position: relative;
-    margin-right: 60px;
-    margin-bottom: 7px;
+    margin-right: -110px;
+    margin-bottom: 1px;
   }
   
   .login-icon {
@@ -178,7 +178,7 @@
     padding: 5px;
     background: transparent;
     border: 1px solid #444;
-    color: #cfcfcf;
+    color: #604c4c;
     border-radius: 4px;
     cursor: pointer;
     transition: all 0.3s ease;

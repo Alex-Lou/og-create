@@ -34,8 +34,8 @@ header {
     display: flex;
     align-items: center;
     justify-content: flex-start;
-    padding: 10px 20px;
     background-color: #2A2A2A;
+    padding: 0.5rem 1rem;
 }
 
 /* Header Controls Container */
@@ -43,9 +43,15 @@ header {
     display: flex;
     align-items: center;
     margin-left: auto;
-    gap: 15px; /* Espace entre les icônes */
+    padding-right: 4rem;
+    gap: 1rem; /* Au lieu de -25px, on met un écart positif */
 }
 
+
+.title-area {
+    display: flex;
+    align-items: center;
+  }
 /* Logo */
 header .logo {
     width: 40px;
