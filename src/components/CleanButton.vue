@@ -73,7 +73,6 @@ export default {
   box-shadow: none !important;
   -webkit-tap-highlight-color: transparent;
   -moz-tap-highlight-color: transparent;
-  tap-highlight-color: transparent;
   user-select: none;
   -webkit-user-select: none;
   -moz-user-select: none;
@@ -127,6 +126,5 @@ export default {
   box-shadow: none !important;
   -webkit-tap-highlight-color: transparent;
   -moz-tap-highlight-color: transparent;
-  tap-highlight-color: transparent;
 }
 </style>

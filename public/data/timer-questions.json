@@ -1,0 +1,19 @@
+{
+    "questions": [
+      {
+        "text": "Créez une source de lumière",
+        "validAnswers": ["Lampe", "Bougie", "Feu", "Soleil", "Éclair"],
+        "points": 10
+      },
+      {
+        "text": "Créez quelque chose qui vole",
+        "validAnswers": ["Oiseau", "Avion", "Papillon", "Chauve-souris"],
+        "points": 10
+      },
+      {
+        "text": "Créez un élément liquide",
+        "validAnswers": ["Lave", "Pétrole", "Mercure"],
+        "points": 10
+      }
+    ]
+  }

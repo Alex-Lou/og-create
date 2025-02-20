@@ -7,7 +7,7 @@
       @achievement-unlocked="handleAchievementUnlocked"
     />
     <GameAchievementsContent :achievements="achievements" />
-    <header>
+    <header style="position: relative;">
       <div class="title-area">
         <img src="@/assets/Svgs/Logo.png" alt="Logo" class="logo" />
         <h1>Origins Creation</h1>
@@ -27,6 +27,14 @@
           @open-contact="handleOpenContact"
         />
       </div>
+      <InfiniteModeButton />
+      <ExplorerModeButton />
+      <TimerModeButton 
+        ref="timerModeButton"
+        @timer-state-change="handleTimerStateChange"
+        @timer-complete="handleTimerComplete"
+        @show-question="showCurrentTimerQuestion"
+      />
     </header>
     <main id="main-content" ref="mainContent">
       <div ref="inventory" class="inventory-wrapper">
@@ -63,6 +71,26 @@
       @close="closeAchievementPopup"
       @achievement-popup-opened="handleAchievementPopupOpened"
     />
+
+    <!-- Modal de fin de timer -->
+    <div v-if="showTimerEndModal" class="timer-end-modal">
+      <div class="timer-end-content">
+        <h2>Temps écoulé !</h2>
+        <p>Vous avez découvert {{ timerModeDiscoveries }} éléments pendant la session.</p>
+        <div class="timer-end-stats">
+          <p>Éléments découverts : {{ discoveredElements.length - timerModeStartElements.length }}</p>
+          <p>Meilleur score : {{ bestTimerScore }}</p>
+        </div>
+        <button @click="handleTimerEndModalClose" class="timer-end-button">Nouvelle partie</button>
+      </div>
+    </div>
+
+    <!-- Composant des questions du timer -->
+    <TimerQuestions 
+      v-show="isTimerActive"
+      ref="timerQuestions"
+      @reset-timer="handleTimerReset"
+    />
   </div>
 </template>
 
@@ -79,6 +107,10 @@ import CraftPopup from './CraftPopup.vue';
 import GameAchievementsContent from './GameAchievementsContent.vue';
 import DataLoading from './DataLoading.vue';
 import GameSizer from './GameSizer.vue';
+import InfiniteModeButton from './InfiniteModeButton.vue';
+import ExplorerModeButton from './ExplorerModeButton.vue';
+import TimerModeButton from './TimerModeButton.vue';
+import TimerQuestions from './TimerQuestions.vue';
 import '@/assets/style.css';
 
 export default {
@@ -93,7 +125,11 @@ export default {
     CraftPopup,
     GameAchievementsContent,
     DataLoading,
-    GameSizer
+    GameSizer,
+    InfiniteModeButton,
+    ExplorerModeButton,
+    TimerModeButton,
+    TimerQuestions
   },
   data() {
     return {
@@ -113,7 +149,13 @@ export default {
       isLoggedIn: false,
       currentUser: null,
       categoryProgress: {},
-      showContactForm: false
+      showContactForm: false,
+      // Propriétés pour le mode timer
+      isTimerActive: false,
+      showTimerEndModal: false,
+      timerModeDiscoveries: 0,
+      timerModeStartElements: [],
+      bestTimerScore: localStorage.getItem('bestTimerScore') || 0
     };
   },
   created() {
@@ -123,6 +165,12 @@ export default {
     }
   },
   methods: {
+    showCurrentTimerQuestion() {
+      if (this.$refs.timerQuestions) {
+        this.$refs.timerQuestions.show();
+      }
+    },
+
     handleOpenContact() {
       this.showContactForm = true;
     },
@@ -236,13 +284,11 @@ export default {
     },
 
     async handleLoginAttempt(credentials) {
-      console.log('Tentative de connexion:', credentials);
       try {
         const response = await AuthService.login(credentials.email, credentials.password);
         this.isLoggedIn = true;
         this.currentUser = response;
         await this.loadGameProgress();
-        console.log('Connexion réussie:', response);
         this.showAlert(`Connexion réussie pour ${response.username}`);
       } catch (error) {
         console.error('Erreur lors de la connexion', error);
@@ -251,13 +297,11 @@ export default {
     },
 
     async handleRegisterAttempt(credentials) {
-      console.log('Tentative d\'inscription:', credentials);
       try {
         const response = await AuthService.register(credentials.email, credentials.password);
         this.isLoggedIn = true;
         this.currentUser = response;
         this.saveGameProgress();
-        console.log('Inscription réussie:', response);
         this.showAlert(`Inscription réussie pour ${response.username}`);
       } catch (error) {
         console.error('Erreur lors de l\'inscription', error);
@@ -293,20 +337,30 @@ export default {
     },
 
     handleCraftSuccess(craftedItem) {
-      try {
-        this.craftedElement = {
-          name: craftedItem,
-          image: require(`@/assets/creatures/${craftedItem}.png`),
-        };
-      } catch (error) {
-        this.craftedElement = {
-          name: craftedItem,
-          image: null,
-        };
-      }
-      this.addToCategory(craftedItem);
-      this.$refs.dataLoading.handleCraft(craftedItem);
-    },
+  try {
+    this.craftedElement = {
+      name: craftedItem,
+      image: require(`@/assets/creatures/${craftedItem}.png`),
+    };
+  } catch (error) {
+    this.craftedElement = {
+      name: craftedItem,
+      image: null,
+    };
+  }
+  
+  this.addToCategory(craftedItem);
+  this.$refs.dataLoading.handleCraft(craftedItem);
+
+  if (this.isTimerActive) {
+    const currentQuestion = this.$refs.timerQuestions.getCurrentQuestion();
+    if (currentQuestion && currentQuestion.validAnswers.includes(craftedItem)) {
+      // Réponse correcte
+      this.timerModeDiscoveries++;
+      this.$refs.timerQuestions.answerCorrect();
+    }
+  }
+},
 
     addToCategory(craftedItem) {
       const targetCategory = Object.keys(this.categories).find((category) =>
@@ -339,6 +393,35 @@ export default {
       setTimeout(() => {
         this.isFireworkActive = false;
       }, 2000);
+    },
+
+    // Méthodes pour le mode timer
+    handleTimerStateChange(isActive) {
+      this.isTimerActive = isActive;
+      if (isActive && this.$refs.timerQuestions) {
+        this.timerModeStartElements = [...this.discoveredElements];
+        this.timerModeDiscoveries = 0;
+        this.$refs.timerQuestions.show();
+      }
+    },
+
+    handleTimerComplete() {
+      const currentScore = this.discoveredElements.length - this.timerModeStartElements.length;
+      if (currentScore > this.bestTimerScore) {
+        this.bestTimerScore = currentScore;
+        localStorage.setItem('bestTimerScore', currentScore);
+      }
+      this.showTimerEndModal = true;
+    },
+
+    handleTimerEndModalClose() {
+      this.showTimerEndModal = false;
+      this.discoveredElements = [...this.timerModeStartElements];
+      this.updateCategoryProgress();
+    },
+
+    handleTimerReset() {
+      this.$refs.timerModeButton.resetTimer();
     }
   }
 };
@@ -346,4 +429,96 @@ export default {
 
 <style>
 @import '@/assets/style.css';
+
+  .timer-mode-active {
+    position: relative;
+  }
+
+  .timer-mode-active::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    border: 2px solid #2D96A4;
+    border-radius: 10px;
+    pointer-events: none;
+    animation: pulse 2s infinite;
+  }
+
+  @keyframes pulse {
+    0% {
+      box-shadow: 0 0 0 0 rgba(45, 150, 164, 0.4);
+    }
+    70% {
+      box-shadow: 0 0 0 10px rgba(45, 150, 164, 0);
+    }
+    100% {
+      box-shadow: 0 0 0 0 rgba(45, 150, 164, 0);
+    }
+  }
+
+  .timer-end-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.8);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+  }
+
+  .timer-end-content {
+    background-color: #1a1d24;
+    padding: 2rem;
+    border-radius: 15px;
+    border: 2px solid #304968;
+    text-align: center;
+    color: #2D96A4;
+    max-width: 400px;
+    width: 90%;
+  }
+
+  .timer-end-content h2 {
+    font-size: 24px;
+    margin-bottom: 1rem;
+    font-family: 'BenjaminFranklin', Arial;
+  }
+
+  .timer-end-stats {
+    margin: 1.5rem 0;
+    padding: 1rem;
+    background-color: rgba(48, 73, 104, 0.2);
+    border-radius: 8px;
+  }
+
+  .timer-end-stats p {
+    margin: 0.5rem 0;
+    font-size: 16px;
+  }
+
+  .timer-end-button {
+    background-color: #2D96A4;
+    color: white;
+    border: none;
+    padding: 0.8rem 1.5rem;
+    border-radius: 8px;
+    font-family: 'BenjaminFranklin', Arial;
+    font-size: 16px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+  }
+
+  .timer-end-button:hover {
+    background-color: #1a7c8a;
+    transform: scale(1.05);
+  }
+
+  .timer-end-button:active {
+    transform: scale(0.95);
+  }
 </style>
