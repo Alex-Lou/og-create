@@ -34,6 +34,7 @@
         @timer-state-change="handleTimerStateChange"
         @timer-complete="handleTimerComplete"
         @show-question="showCurrentTimerQuestion"
+        @force-stop="handleTimerForceStop"
       />
     </header>
     <main id="main-content" ref="mainContent">
@@ -43,6 +44,8 @@
           :discoveredCategories="discoveredCategories"
           :discoveredElements="discoveredElements"
           :elementEmojis="elementEmojis"
+          :isTimerMode="isTimerActive"
+          :timerQuestionElements="currentTimerElements"
           @selectResource="handleResourceSelection"
         />
       </div>
@@ -90,9 +93,11 @@
       v-show="isTimerActive"
       ref="timerQuestions"
       @reset-timer="handleTimerReset"
+      @set-initial-inventory="handleSetInitialInventory"
     />
   </div>
 </template>
+
 
 <script>
 import AuthService from '@/services/authService';
@@ -150,11 +155,11 @@ export default {
       currentUser: null,
       categoryProgress: {},
       showContactForm: false,
-      // Propriétés pour le mode timer
       isTimerActive: false,
       showTimerEndModal: false,
       timerModeDiscoveries: 0,
       timerModeStartElements: [],
+      currentTimerElements: [],
       bestTimerScore: localStorage.getItem('bestTimerScore') || 0
     };
   },
@@ -165,6 +170,34 @@ export default {
     }
   },
   methods: {
+    handleSetInitialInventory(elements) {
+  if (!this.isTimerActive) return;
+  
+  this.timerModeStartElements = [...this.discoveredElements];
+  this.discoveredElements = ["Eau", "Feu", "Terre", "Air"];
+  
+  if (Array.isArray(elements)) {
+    this.currentTimerElements = elements;
+    elements.forEach(element => {
+      if (!this.discoveredElements.includes(element)) {
+        this.discoveredElements.push(element);
+      }
+    });
+  }
+  
+  this.updateCategoryProgress();
+},
+
+    handleTimerForceStop() {
+      this.isTimerActive = false;
+      if (this.timerModeStartElements.length > 0) {
+        this.discoveredElements = [...this.timerModeStartElements];
+        this.updateCategoryProgress();
+      }
+      this.timerModeStartElements = [];
+      this.timerModeDiscoveries = 0;
+    },
+
     showCurrentTimerQuestion() {
       if (this.$refs.timerQuestions) {
         this.$refs.timerQuestions.show();
@@ -337,30 +370,29 @@ export default {
     },
 
     handleCraftSuccess(craftedItem) {
-  try {
-    this.craftedElement = {
-      name: craftedItem,
-      image: require(`@/assets/creatures/${craftedItem}.png`),
-    };
-  } catch (error) {
-    this.craftedElement = {
-      name: craftedItem,
-      image: null,
-    };
-  }
-  
-  this.addToCategory(craftedItem);
-  this.$refs.dataLoading.handleCraft(craftedItem);
+      try {
+        this.craftedElement = {
+          name: craftedItem,
+          image: require(`@/assets/creatures/${craftedItem}.png`),
+        };
+      } catch (error) {
+        this.craftedElement = {
+          name: craftedItem,
+          image: null,
+        };
+      }
+      
+      this.addToCategory(craftedItem);
+      this.$refs.dataLoading.handleCraft(craftedItem);
 
-  if (this.isTimerActive) {
-    const currentQuestion = this.$refs.timerQuestions.getCurrentQuestion();
-    if (currentQuestion && currentQuestion.validAnswers.includes(craftedItem)) {
-      // Réponse correcte
-      this.timerModeDiscoveries++;
-      this.$refs.timerQuestions.answerCorrect();
-    }
-  }
-},
+      if (this.isTimerActive) {
+        const currentQuestion = this.$refs.timerQuestions.getCurrentQuestion();
+        if (currentQuestion && currentQuestion.validAnswers.includes(craftedItem)) {
+          this.timerModeDiscoveries++;
+          this.$refs.timerQuestions.answerCorrect();
+        }
+      }
+    },
 
     addToCategory(craftedItem) {
       const targetCategory = Object.keys(this.categories).find((category) =>
@@ -395,13 +427,16 @@ export default {
       }, 2000);
     },
 
-    // Méthodes pour le mode timer
     handleTimerStateChange(isActive) {
       this.isTimerActive = isActive;
       if (isActive && this.$refs.timerQuestions) {
-        this.timerModeStartElements = [...this.discoveredElements];
         this.timerModeDiscoveries = 0;
         this.$refs.timerQuestions.show();
+      } else if (!isActive) {
+        if (this.timerModeStartElements.length > 0) {
+          this.discoveredElements = [...this.timerModeStartElements];
+          this.updateCategoryProgress();
+        }
       }
     },
 

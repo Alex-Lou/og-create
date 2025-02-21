@@ -47,6 +47,14 @@ export default {
       type: Object,
       required: true,
     },
+    isTimerMode: {
+      type: Boolean,
+      default: false
+    },
+    timerQuestionElements: {
+      type: Array,
+      default: () => []
+    }
   },
   data() {
     return {
@@ -56,6 +64,15 @@ export default {
   },
   computed: {
     filteredCategories() {
+      if (this.isTimerMode && this.timerQuestionElements.length > 0) {
+        return [{
+          name: 'Timer Elements',
+          progress: 100,
+          elements: this.timerQuestionElements,
+          isComplete: true
+        }];
+      }
+
       return Object.entries(this.categories)
         .map(([name, elements]) => {
           const filteredElements = Array.isArray(elements)
@@ -87,7 +104,7 @@ export default {
       });
 
       if (newlyCompleted) {
-        // this.triggerFireworks(); // Supprimé pour éviter le déclenchement de l'animation
+        console.log('Nouvelle catégorie complétée:', newlyCompleted);
       }
 
       this.previousCategoriesState = categories.reduce((acc, category) => {
