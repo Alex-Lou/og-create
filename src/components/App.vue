@@ -370,29 +370,92 @@ export default {
     },
 
     handleCraftSuccess(craftedItem) {
-      try {
-        this.craftedElement = {
-          name: craftedItem,
-          image: require(`@/assets/creatures/${craftedItem}.png`),
-        };
-      } catch (error) {
-        this.craftedElement = {
-          name: craftedItem,
-          image: null,
-        };
-      }
-      
-      this.addToCategory(craftedItem);
-      this.$refs.dataLoading.handleCraft(craftedItem);
+ console.error('DEBUG CRAFT SUCCESS:', {
+   craftedItem,
+   isTimerActive: this.isTimerActive,
+   currentTimerElements: this.currentTimerElements,
+   discoveredElements: this.discoveredElements
+ });
+ 
+ try {
+   this.craftedElement = {
+     name: craftedItem,
+     image: require(`@/assets/creatures/${craftedItem}.png`),
+   };
+ } catch (error) {
+   this.craftedElement = {
+     name: craftedItem,
+     image: null,
+   };
+ }
+ 
+ // Ajouter l'élément découvert
+ if (!this.discoveredElements.includes(craftedItem)) {
+   this.discoveredElements.push(craftedItem);
+   console.error('Élément ajouté:', craftedItem);
+ }
+ 
+ // Force l'ajout aux currentTimerElements
+ if (this.isTimerActive && !this.currentTimerElements.includes(craftedItem)) {
+   this.currentTimerElements.push(craftedItem);
+   console.error('Élément ajouté aux currentTimerElements:', craftedItem);
+ }
+ 
+ this.addToCategory(craftedItem);
+ this.$refs.dataLoading.handleCraft(craftedItem);
 
-      if (this.isTimerActive) {
-        const currentQuestion = this.$refs.timerQuestions.getCurrentQuestion();
-        if (currentQuestion && currentQuestion.validAnswers.includes(craftedItem)) {
-          this.timerModeDiscoveries++;
-          this.$refs.timerQuestions.answerCorrect();
-        }
-      }
-    },
+ if (this.isTimerActive) {
+   const currentQuestion = this.$refs.timerQuestions.getCurrentQuestion();
+   
+   if (currentQuestion) {
+     const allPossibleElements = [
+       ...(currentQuestion.initialElements.required || []),
+       ...(currentQuestion.initialElements.additional || []),
+       ...(currentQuestion.validAnswers || [])
+     ];
+
+     console.error('Tous les éléments possibles :', allPossibleElements);
+     console.error('Élément crafté :', craftedItem);
+
+     if (allPossibleElements.includes(craftedItem)) {
+       console.error('L\'élément est dans les éléments possibles');
+     }
+
+     const validationMode = currentQuestion.initialElements.validationMode || 'any';
+     const validAnswers = currentQuestion.validAnswers || [];
+
+     if (validationMode === 'any') {
+       const isValidAnswer = validAnswers.some(answer => 
+         this.discoveredElements.includes(answer)
+       );
+       
+       if (isValidAnswer) {
+         this.timerModeDiscoveries++;
+         this.$refs.timerQuestions.answerCorrect();
+       }
+     } else if (validationMode === 'multiple') {
+       const requiredCount = currentQuestion.initialElements.requiredCount || 1;
+       const discoveredValidAnswers = validAnswers.filter(answer => 
+         this.discoveredElements.includes(answer)
+       );
+       
+       if (discoveredValidAnswers.length >= requiredCount) {
+         this.timerModeDiscoveries++;
+         this.$refs.timerQuestions.answerCorrect();
+       }
+     } else {
+       const isAllAnswersFound = validAnswers.every(answer => 
+         this.discoveredElements.includes(answer)
+       );
+       
+       if (isAllAnswersFound) {
+         this.timerModeDiscoveries++;
+         this.$refs.timerQuestions.answerCorrect();
+       }
+     }
+   }
+ }
+},
 
     addToCategory(craftedItem) {
       const targetCategory = Object.keys(this.categories).find((category) =>

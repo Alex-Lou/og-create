@@ -26,10 +26,8 @@ export default {
         achievements.value = data.map((achievement) => {
           let requiredImage;
           try {
-            // Tenter de charger l'image .png correspondant au name exact
             requiredImage = require(`@/assets/success/${achievement.name}.png`);
           } catch (e) {
-
             console.warn("Impossible de require l'image pour le succès :", achievement.name, e);
             requiredImage = achievement.image || null;
           }
@@ -47,7 +45,6 @@ export default {
         console.error("Erreur lors du chargement des succès :", err);
       }
     };
-
 
     const loadGameData = async () => {
       try {
@@ -77,7 +74,16 @@ export default {
 
             const data = await response.json();
 
-            // Traitement des éléments et catégories
+            if (data.animaux) {
+              Object.entries(data.animaux).forEach(([category, categoryData]) => {
+                categories[category] = categories[category] || [];
+                Object.entries(categoryData).forEach(([name, emoji]) => {
+                  elementEmojis[name.trim()] = emoji;
+                  categories[category].push(name.trim());
+                });
+              });
+            }
+
             Object.entries(data.elements || {}).forEach(([category, elements]) => {
               categories[category] = categories[category] || [];
               Object.entries(elements).forEach(([name, emoji]) => {
@@ -86,7 +92,6 @@ export default {
               });
             });
 
-            // Traitement des règles
             if (data.rules) {
               Object.entries(data.rules).forEach(([key, value]) => {
                 craftingRecipes[key.split("+").sort().join("+")] = value;
@@ -99,7 +104,6 @@ export default {
           }
         }
 
-        // Émettre les données combinées
         emit('data-loaded', {
           elementEmojis,
           categories,
@@ -111,12 +115,10 @@ export default {
       }
     };
 
-
     function checkAchievements() {
       achievements.value.forEach((achievement) => {
         if (!achievement.unlocked) {
           let expression = achievement.condition;
-
 
           expression = expression.replace(/this\.discoveredElements/g, 'discoveredElements');
 
@@ -130,7 +132,6 @@ export default {
         }
       });
     }
-
 
     function handleCraft(newElement) {
       if (!discoveredElements.value.includes(newElement)) {

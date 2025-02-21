@@ -64,15 +64,57 @@ export default {
   },
   computed: {
     filteredCategories() {
-      if (this.isTimerMode && this.timerQuestionElements.length > 0) {
+      // Logs de debug conditionnés en développement
+      if (process.env.NODE_ENV !== 'production') {
+        console.error('DEBUG FILTERED CATEGORIES:', {
+          isTimerMode: this.isTimerMode,
+          timerQuestionElements: this.timerQuestionElements,
+          discoveredElements: this.discoveredElements,
+          currentTimerElements: this.currentTimerElements
+        });
+      }
+
+      if (this.isTimerMode) {
+        const currentQuestion = this.$parent.$refs.timerQuestions.getCurrentQuestion();
+        
+        const possibleElements = [
+          ...(this.timerQuestionElements || []),
+          ...(currentQuestion?.validAnswers || []),
+          ...(currentQuestion?.initialElements?.required || []),
+          ...(currentQuestion?.initialElements?.additional || [])
+        ];
+
+        if (process.env.NODE_ENV !== 'production') {
+          console.error('DEBUG POSSIBLE ELEMENTS:', possibleElements);
+        }
+
+        const timerElements = this.discoveredElements.filter(element => {
+          const isElementValid = possibleElements.some(possibleElement => 
+            element === possibleElement || 
+            (typeof possibleElement === 'string' && 
+             (element.includes(possibleElement) || possibleElement.includes(element)))
+          );
+
+          if (process.env.NODE_ENV !== 'production') {
+            console.error(`Checking element ${element}:`, isElementValid);
+          }
+
+          return isElementValid;
+        });
+
+        if (process.env.NODE_ENV !== 'production') {
+          console.error('DEBUG TIMER ELEMENTS:', timerElements);
+        }
+
         return [{
           name: 'Timer Elements',
           progress: 100,
-          elements: this.timerQuestionElements,
-          isComplete: true
+          elements: timerElements,
+          isComplete: timerElements.length === this.timerQuestionElements.length
         }];
       }
 
+      // Cas non timer mode
       return Object.entries(this.categories)
         .map(([name, elements]) => {
           const filteredElements = Array.isArray(elements)
@@ -104,7 +146,9 @@ export default {
       });
 
       if (newlyCompleted) {
-        console.log('Nouvelle catégorie complétée:', newlyCompleted);
+        if (process.env.NODE_ENV !== 'production') {
+          console.log('Nouvelle catégorie complétée:', newlyCompleted);
+        }
       }
 
       this.previousCategoriesState = categories.reduce((acc, category) => {
