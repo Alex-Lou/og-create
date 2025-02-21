@@ -9,13 +9,17 @@ import { ref, onMounted } from 'vue';
 
 export default {
   name: 'DataLoading',
+  props: {
+    isTimerMode: {
+      type: Boolean,
+      default: false
+    }
+  },
   emits: ['data-loaded', 'achievements-loaded', 'achievement-unlocked'],
 
   setup(props, { emit }) {
     const error = ref(null);
-
     const achievements = ref([]);
-
     const discoveredElements = ref([]);
 
     const loadAchievements = async () => {
@@ -116,12 +120,12 @@ export default {
     };
 
     function checkAchievements() {
+      if (props.isTimerMode) return;
+      
       achievements.value.forEach((achievement) => {
         if (!achievement.unlocked) {
           let expression = achievement.condition;
-
           expression = expression.replace(/this\.discoveredElements/g, 'discoveredElements');
-
           const conditionFn = new Function('discoveredElements', `return ${expression}`);
 
           if (conditionFn(discoveredElements.value)) {
@@ -134,10 +138,18 @@ export default {
     }
 
     function handleCraft(newElement) {
+      if (props.isTimerMode) {
+        // En mode Timer, on émet simplement l'événement de craft
+        // sans ajouter l'élément à discoveredElements qui sert pour les succès
+        emit('craft-success', newElement);
+        return;
+      }
+
+      // En mode normal, on ajoute l'élément et on vérifie les succès
       if (!discoveredElements.value.includes(newElement)) {
         discoveredElements.value.push(newElement);
+        checkAchievements();
       }
-      checkAchievements();
     }
 
     onMounted(async () => {

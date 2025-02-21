@@ -1,25 +1,52 @@
 <template>
   <div v-if="isVisible" class="questions-container">
     <div class="questions-box">
-      <p class="question-text">
-        {{ isTimeUp ? "Temps épuisé !" : currentQuestion.text }}
-      </p>
-      
-      <div v-if="currentQuestion.initialElements?.validationMode === 'multiple'" class="discovery-counter">
-        {{ discoveredValidAnswersCount }}/{{ currentQuestion.initialElements.requiredCount }}
+      <!-- Modal de sélection du niveau -->
+      <div v-if="!selectedLevel" class="level-selection">
+        <h2 class="level-title">Choisissez votre niveau</h2>
+        <div class="level-buttons">
+          <button 
+            v-for="level in ['Facile', 'Moyen', 'Difficile']" 
+            :key="level"
+            @click="selectLevel(level)"
+            class="level-button"
+          >
+            {{ level }}
+          </button>
+        </div>
       </div>
-      
-      <button 
-        class="next-question-button"
-        @click="handleButtonClick"
-      >
-        {{ isTimeUp ? "Ok" : "Compris !" }}
-      </button>
+
+      <!-- Affichage des questions -->
+      <div v-else>
+        <p class="question-text">
+          {{ isTimeUp ? "Temps épuisé !" : currentQuestion.text }}
+        </p>
+        
+        <div v-if="currentQuestion.initialElements?.validationMode === 'multiple'" class="discovery-counter">
+          {{ discoveredValidAnswersCount }}/{{ currentQuestion.initialElements.requiredCount }}
+        </div>
+        
+        <button 
+          class="next-question-button"
+          @click="handleButtonClick"
+        >
+          {{ isTimeUp ? "Ok" : "Compris !" }}
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Popup de succès -->
+  <div v-if="showSuccessPopup" class="success-popup">
+    <div class="success-content">
+      <p>Correct !</p>
     </div>
   </div>
 </template>
 
 <script>
+import '@/assets/TimerQuestionsStyle.css';
+
 export default {
   name: 'TimerQuestions',
   data() {
@@ -29,7 +56,10 @@ export default {
       isVisible: false,
       isTimeUp: false,
       recipesData: null,
-      currentScore: 0
+      currentScore: 0,
+      selectedLevel: null,
+      questionsData: null,
+      showSuccessPopup: false
     }
   },
   computed: {
@@ -39,10 +69,8 @@ export default {
         validAnswers: [],
         initialElements: {
           validationMode: 'any',
-          required: [
-            "Félin", "Chaleur", "Mammifère", "Griffe", 
-            "Agilité", "Force", "Rugissement", "Territoire"
-          ]
+          required: [],
+          additional: []
         }
       };
     },
@@ -55,7 +83,7 @@ export default {
     }
   },
   created() {
-    this.loadQuestions();
+    this.loadQuestionsData();
     this.loadRecipes();
   },
   methods: {
@@ -76,38 +104,44 @@ export default {
       }
     },
 
-    loadQuestions() {
-      fetch('/data/timer-questions.json')
-        .then(response => {
-          if (!response.ok) {
-            throw new Error(`HTTP error! status: ${response.status}`);
-          }
-          return response.json();
-        })
-        .then(data => {
-          if (process.env.NODE_ENV !== 'production') {
-            console.log("Questions chargées:", data);
-          }
-          this.questions = data.questions;
-          this.shuffleQuestions();
-        })
-        .catch(error => {
-          if (process.env.NODE_ENV !== 'production') {
-            console.error('Erreur lors du chargement des questions:', error);
-          }
-          this.questions = [{
-            text: "Créez le roi de la savane",
-            validAnswers: ["Lion"],
-            points: 10,
-            initialElements: {
-              validationMode: "any",
-              required: [
-                "Félin", "Chaleur", "Mammifère", "Griffe", 
-                "Agilité", "Force", "Territoire", "Rugissement"
-              ]
+    async loadQuestionsData() {
+      try {
+        const response = await fetch('/data/timer-questions.json');
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        this.questionsData = await response.json();
+      } catch (error) {
+        if (process.env.NODE_ENV !== 'production') {
+          console.error('Erreur lors du chargement des questions:', error);
+        }
+        this.questionsData = {
+          levels: {
+            "Facile": {
+              timer: 300,
+              questions: []
             }
-          }];
-        });
+          }
+        };
+      }
+    },
+
+    selectLevel(level) {
+      this.selectedLevel = level;
+      const levelData = this.questionsData.levels[level];
+      this.questions = levelData.questions;
+      this.shuffleQuestions();
+      this.$emit('level-selected', {
+        level,
+        timer: levelData.timer
+      });
+      this.show();
+    },
+
+    loadQuestionsAndReset() {
+      this.currentQuestionIndex = 0;
+      this.selectedLevel = null;
+      this.questions = [];
     },
 
     shuffleQuestions() {
@@ -121,15 +155,25 @@ export default {
       this.isVisible = true;
       this.isTimeUp = false;
       
-      const startingElements = this.currentQuestion.initialElements.required || [
-        "Félin", "Chaleur", "Mammifère", "Griffe", 
-        "Agilité", "Force", "Rugissement", "Territoire"
-      ];
+      if (!this.selectedLevel) return;
       
-      if (process.env.NODE_ENV !== 'production') {
-        console.log("Éléments à émettre:", startingElements);
+      if (!this.$parent.currentTimerElements.length) {
+        if (this.currentQuestion && this.currentQuestion.initialElements) {
+          const requiredElements = this.currentQuestion.initialElements.required || [];
+          const additionalElements = this.currentQuestion.initialElements.additional || [];
+          const startingElements = [...new Set([...requiredElements, ...additionalElements])];
+          
+          if (process.env.NODE_ENV !== 'production') {
+            console.log("Éléments initiaux à ajouter:", startingElements);
+          }
+          
+          this.$emit('set-initial-inventory', startingElements);
+        }
+      } else {
+        if (process.env.NODE_ENV !== 'production') {
+          console.log("Réaffichage de la question, conservation de l'inventaire actuel:", this.$parent.currentTimerElements);
+        }
       }
-      this.$emit('set-initial-inventory', startingElements);
     },
 
     hide() {
@@ -150,12 +194,19 @@ export default {
     },
 
     nextQuestion() {      
+      this.$parent.currentTimerElements = [];
+      this.$parent.discoveredElements = ["Eau", "Feu", "Terre", "Air"];
+
       if (this.currentQuestionIndex < this.questions.length - 1) {
         this.currentQuestionIndex++;
-        this.show();
+        setTimeout(() => {
+          this.show();
+        }, 100);
       } else {
         this.currentQuestionIndex = 0;
-        this.show();
+        setTimeout(() => {
+          this.show();
+        }, 100);
       }
     },
 
@@ -177,9 +228,13 @@ export default {
 
           this.currentScore += currentQuestion.points || 10;
           this.hide();
+          
+          // Afficher le popup de succès
+          this.showSuccessPopup = true;
           setTimeout(() => {
+            this.showSuccessPopup = false;
             this.nextQuestion();
-          }, 1000);
+          }, 1500);
         }
       } else if (validationMode === 'multiple') {
         const requiredCount = currentQuestion.initialElements.requiredCount || 1;
@@ -193,17 +248,20 @@ export default {
 
           this.currentScore += currentQuestion.points || 10;
           this.hide();
+          
+          // Afficher le popup de succès
+          this.showSuccessPopup = true;
           setTimeout(() => {
+            this.showSuccessPopup = false;
             this.nextQuestion();
-          }, 1000);
+          }, 1500);
         }
       }
     },
 
     resetQuestions() {
-      this.currentQuestionIndex = 0;
+      this.loadQuestionsAndReset();
       this.currentScore = 0;
-      this.shuffleQuestions();
     }
   }
 }
@@ -231,6 +289,40 @@ export default {
   width: 400px;
   text-align: center;
   box-shadow: 0 0 20px rgba(45, 150, 164, 0.3);
+}
+
+.level-title {
+  color: #2D96A4;
+  font-family: 'BenjaminFranklin', Arial;
+  font-size: 24px;
+  margin-bottom: 2rem;
+}
+
+.level-buttons {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.level-button {
+  background-color: #2D96A4;
+  color: white;
+  border: none;
+  padding: 1rem 2rem;
+  border-radius: 8px;
+  font-family: 'BenjaminFranklin', Arial;
+  font-size: 18px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.level-button:hover {
+  background-color: #1a7c8a;
+  transform: scale(1.05);
+}
+
+.level-button:active {
+  transform: scale(0.95);
 }
 
 .question-text {
@@ -267,5 +359,45 @@ export default {
 
 .next-question-button:active {
   transform: scale(0.95);
+}
+
+.success-popup {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 1100;
+}
+
+.success-content {
+  background-color: #1a1d24;
+  border: 2px solid #2D96A4;
+  border-radius: 15px;
+  padding: 2rem;
+  text-align: center;
+  animation: popIn 0.3s ease-out;
+}
+
+.success-content p {
+  color: #2D96A4;
+  font-family: 'BenjaminFranklin', Arial;
+  font-size: 24px;
+  margin: 0;
+}
+
+@keyframes popIn {
+  0% {
+    transform: scale(0.3);
+    opacity: 0;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
 }
 </style>

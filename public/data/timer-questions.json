@@ -1,33 +1,48 @@
 {
-  "questions": [
-    {
-      "text": "Créez le roi de la savane",
-      "validAnswers": ["Lion"],
-      "points": 10,
-      "initialElements": {
-        "validationMode": "any",
-        "required": ["Félin", "Chaleur", "Mammifère", "Griffe", "Agilité"],
-        "additional": ["Force", "Territoire", "Rugissement"],
-        "recipes": {
-          "Félin": "Mammifère+Griffe+Agilité",
-          "Lion": "Félin+Chaleur"
+  "levels": {
+    "Facile": {
+      "timer": 300,
+      "questions": [
+        {
+          "text": "Créez le roi de la savane",
+          "validAnswers": ["Lion"],
+          "points": 10,
+          "level": "Facile",
+          "initialElements": {
+            "validationMode": "any",
+            "required": ["Félin", "Chaleur", "Mammifère", "Griffe", "Agilité"],
+            "additional": ["Force", "Territoire", "Rugissement"],
+            "recipes": {
+              "Félin": "Mammifère+Griffe+Agilité",
+              "Lion": "Félin+Chaleur"
+            }
+          }
+        },
+        {
+          "text": "Créez un prédateur marin intelligent",
+          "validAnswers": ["Orque", "Dauphin"],
+          "points": 15,
+          "level": "Facile",
+          "initialElements": {
+            "validationMode": "multiple",
+            "requiredCount": 2,
+            "required": ["Mammifère", "Océan", "Intelligence", "Prédateur"],
+            "additional": ["Force", "Migration", "Communication"],
+            "recipes": {
+              "Orque": "Mammifère+Océan+Prédateur",
+              "Dauphin": "Mammifère+Intelligence+Océan"
+            }
+          }
         }
-      }
+      ]
     },
-    {
-      "text": "Créez un prédateur marin intelligent",
-      "validAnswers": ["Orque", "Dauphin"],
-      "points": 15,
-      "initialElements": {
-        "validationMode": "multiple",
-        "requiredCount": 2,
-        "required": ["Mammifère", "Océan", "Intelligence", "Prédateur"],
-        "additional": ["Force", "Migration", "Communication"],
-        "recipes": {
-          "Orque": "Mammifère+Océan+Prédateur",
-          "Dauphin": "Mammifère+Intelligence+Océan"
-        }
-      }
+    "Moyen": {
+      "timer": 240,
+      "questions": []
+    },
+    "Difficile": {
+      "timer": 180,
+      "questions": []
     }
-  ]
+  }
 }

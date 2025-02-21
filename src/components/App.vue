@@ -2,6 +2,7 @@
   <div :class="['game-container', { 'dark-mode': isDarkMode }]" id="game-container">
     <DataLoading
       ref="dataLoading"
+      :isTimerMode="isTimerActive"
       @data-loaded="handleDataLoaded"
       @achievements-loaded="handleAchievementsLoaded"
       @achievement-unlocked="handleAchievementUnlocked"
@@ -83,6 +84,7 @@
         <div class="timer-end-stats">
           <p>Éléments découverts : {{ discoveredElements.length - timerModeStartElements.length }}</p>
           <p>Meilleur score : {{ bestTimerScore }}</p>
+          <p>Niveau : {{ selectedTimerLevel }}</p>
         </div>
         <button @click="handleTimerEndModalClose" class="timer-end-button">Nouvelle partie</button>
       </div>
@@ -94,10 +96,10 @@
       ref="timerQuestions"
       @reset-timer="handleTimerReset"
       @set-initial-inventory="handleSetInitialInventory"
+      @level-selected="handleLevelSelected"
     />
   </div>
 </template>
-
 
 <script>
 import AuthService from '@/services/authService';
@@ -160,7 +162,8 @@ export default {
       timerModeDiscoveries: 0,
       timerModeStartElements: [],
       currentTimerElements: [],
-      bestTimerScore: localStorage.getItem('bestTimerScore') || 0
+      bestTimerScore: localStorage.getItem('bestTimerScore') || 0,
+      selectedTimerLevel: null
     };
   },
   created() {
@@ -170,32 +173,43 @@ export default {
     }
   },
   methods: {
-    handleSetInitialInventory(elements) {
-  if (!this.isTimerActive) return;
-  
-  this.timerModeStartElements = [...this.discoveredElements];
-  this.discoveredElements = ["Eau", "Feu", "Terre", "Air"];
-  
-  if (Array.isArray(elements)) {
-    this.currentTimerElements = elements;
-    elements.forEach(element => {
-      if (!this.discoveredElements.includes(element)) {
-        this.discoveredElements.push(element);
+    handleLevelSelected(levelData) {
+      this.selectedTimerLevel = levelData.level;
+      if (this.$refs.timerModeButton) {
+        this.$refs.timerModeButton.handleLevelSelected(levelData);
       }
-    });
-  }
-  
-  this.updateCategoryProgress();
-},
+    },
+
+    handleSetInitialInventory(elements) {
+      if (!this.isTimerActive) return;
+      
+      this.timerModeStartElements = [...this.discoveredElements];
+      this.discoveredElements = ["Eau", "Feu", "Terre", "Air"];
+      
+      if (Array.isArray(elements)) {
+        this.currentTimerElements = elements;
+        elements.forEach(element => {
+          if (!this.discoveredElements.includes(element)) {
+            this.discoveredElements.push(element);
+          }
+        });
+      }
+      
+      this.updateCategoryProgress();
+    },
 
     handleTimerForceStop() {
       this.isTimerActive = false;
+      this.selectedTimerLevel = null;
       if (this.timerModeStartElements.length > 0) {
         this.discoveredElements = [...this.timerModeStartElements];
         this.updateCategoryProgress();
       }
       this.timerModeStartElements = [];
       this.timerModeDiscoveries = 0;
+      if (this.$refs.timerQuestions) {
+        this.$refs.timerQuestions.resetQuestions();
+      }
     },
 
     showCurrentTimerQuestion() {
@@ -370,91 +384,97 @@ export default {
     },
 
     handleCraftSuccess(craftedItem) {
- console.error('DEBUG CRAFT SUCCESS:', {
-   craftedItem,
-   isTimerActive: this.isTimerActive,
-   currentTimerElements: this.currentTimerElements,
-   discoveredElements: this.discoveredElements
- });
+  console.error('DEBUG CRAFT SUCCESS:', {
+    craftedItem,
+    isTimerActive: this.isTimerActive,
+    currentTimerElements: this.currentTimerElements,
+    discoveredElements: this.discoveredElements
+  });
  
- try {
-   this.craftedElement = {
-     name: craftedItem,
-     image: require(`@/assets/creatures/${craftedItem}.png`),
-   };
- } catch (error) {
-   this.craftedElement = {
-     name: craftedItem,
-     image: null,
-   };
- }
+  try {
+    this.craftedElement = {
+      name: craftedItem,
+      image: require(`@/assets/creatures/${craftedItem}.png`),
+    };
+  } catch (error) {
+    this.craftedElement = {
+      name: craftedItem,
+      image: null,
+    };
+  }
  
- // Ajouter l'élément découvert
- if (!this.discoveredElements.includes(craftedItem)) {
-   this.discoveredElements.push(craftedItem);
-   console.error('Élément ajouté:', craftedItem);
- }
- 
- // Force l'ajout aux currentTimerElements
- if (this.isTimerActive && !this.currentTimerElements.includes(craftedItem)) {
-   this.currentTimerElements.push(craftedItem);
-   console.error('Élément ajouté aux currentTimerElements:', craftedItem);
- }
- 
- this.addToCategory(craftedItem);
- this.$refs.dataLoading.handleCraft(craftedItem);
+  // En mode Timer, on ajoute l'élément aux discoveredElements temporaires
+  // et aux currentTimerElements
+  if (this.isTimerActive) {
+    if (!this.discoveredElements.includes(craftedItem)) {
+      this.discoveredElements.push(craftedItem);
+      console.error('Élément ajouté aux discoveredElements:', craftedItem);
+    }
+    
+    if (!this.currentTimerElements.includes(craftedItem)) {
+      this.currentTimerElements.push(craftedItem);
+      console.error('Élément ajouté aux currentTimerElements:', craftedItem);
+    }
+  }
+  
+  // En mode normal, on gère les succès
+  if (!this.isTimerActive) {
+    this.addToCategory(craftedItem);
+    this.$refs.dataLoading.handleCraft(craftedItem);
+  }
 
- if (this.isTimerActive) {
-   const currentQuestion = this.$refs.timerQuestions.getCurrentQuestion();
-   
-   if (currentQuestion) {
-     const allPossibleElements = [
-       ...(currentQuestion.initialElements.required || []),
-       ...(currentQuestion.initialElements.additional || []),
-       ...(currentQuestion.validAnswers || [])
-     ];
+  // Gestion du mode Timer et vérification des réponses
+  if (this.isTimerActive) {
+    const currentQuestion = this.$refs.timerQuestions.getCurrentQuestion();
+    
+    if (currentQuestion) {
+      const allPossibleElements = [
+        ...(currentQuestion.initialElements.required || []),
+        ...(currentQuestion.initialElements.additional || []),
+        ...(currentQuestion.validAnswers || [])
+      ];
 
-     console.error('Tous les éléments possibles :', allPossibleElements);
-     console.error('Élément crafté :', craftedItem);
+      console.error('Tous les éléments possibles :', allPossibleElements);
+      console.error('Élément crafté :', craftedItem);
 
-     if (allPossibleElements.includes(craftedItem)) {
-       console.error('L\'élément est dans les éléments possibles');
-     }
+      if (allPossibleElements.includes(craftedItem)) {
+        console.error('L\'élément est dans les éléments possibles');
+      }
 
-     const validationMode = currentQuestion.initialElements.validationMode || 'any';
-     const validAnswers = currentQuestion.validAnswers || [];
+      const validationMode = currentQuestion.initialElements.validationMode || 'any';
+      const validAnswers = currentQuestion.validAnswers || [];
 
-     if (validationMode === 'any') {
-       const isValidAnswer = validAnswers.some(answer => 
-         this.discoveredElements.includes(answer)
-       );
-       
-       if (isValidAnswer) {
-         this.timerModeDiscoveries++;
-         this.$refs.timerQuestions.answerCorrect();
-       }
-     } else if (validationMode === 'multiple') {
-       const requiredCount = currentQuestion.initialElements.requiredCount || 1;
-       const discoveredValidAnswers = validAnswers.filter(answer => 
-         this.discoveredElements.includes(answer)
-       );
-       
-       if (discoveredValidAnswers.length >= requiredCount) {
-         this.timerModeDiscoveries++;
-         this.$refs.timerQuestions.answerCorrect();
-       }
-     } else {
-       const isAllAnswersFound = validAnswers.every(answer => 
-         this.discoveredElements.includes(answer)
-       );
-       
-       if (isAllAnswersFound) {
-         this.timerModeDiscoveries++;
-         this.$refs.timerQuestions.answerCorrect();
-       }
-     }
-   }
- }
+      if (validationMode === 'any') {
+        const isValidAnswer = validAnswers.some(answer => 
+          this.discoveredElements.includes(answer)
+        );
+        
+        if (isValidAnswer) {
+          this.timerModeDiscoveries++;
+          this.$refs.timerQuestions.answerCorrect();
+        }
+      } else if (validationMode === 'multiple') {
+        const requiredCount = currentQuestion.initialElements.requiredCount || 1;
+        const discoveredValidAnswers = validAnswers.filter(answer => 
+          this.discoveredElements.includes(answer)
+        );
+        
+        if (discoveredValidAnswers.length >= requiredCount) {
+          this.timerModeDiscoveries++;
+          this.$refs.timerQuestions.answerCorrect();
+        }
+      } else {
+        const isAllAnswersFound = validAnswers.every(answer => 
+          this.discoveredElements.includes(answer)
+        );
+        
+        if (isAllAnswersFound) {
+          this.timerModeDiscoveries++;
+          this.$refs.timerQuestions.answerCorrect();
+        }
+      }
+    }
+  }
 },
 
     addToCategory(craftedItem) {
@@ -492,13 +512,23 @@ export default {
 
     handleTimerStateChange(isActive) {
       this.isTimerActive = isActive;
+      
+      if (this.$refs.craftSystem) {
+        this.$refs.craftSystem.resetCraftingBoard();
+      }
+
       if (isActive && this.$refs.timerQuestions) {
         this.timerModeDiscoveries = 0;
+        this.selectedTimerLevel = null;
         this.$refs.timerQuestions.show();
       } else if (!isActive) {
         if (this.timerModeStartElements.length > 0) {
           this.discoveredElements = [...this.timerModeStartElements];
           this.updateCategoryProgress();
+        }
+        this.selectedTimerLevel = null;
+        if (this.$refs.timerQuestions) {
+          this.$refs.timerQuestions.resetQuestions();
         }
       }
     },
@@ -516,6 +546,10 @@ export default {
       this.showTimerEndModal = false;
       this.discoveredElements = [...this.timerModeStartElements];
       this.updateCategoryProgress();
+      this.selectedTimerLevel = null;
+      if (this.$refs.timerQuestions) {
+        this.$refs.timerQuestions.resetQuestions();
+      }
     },
 
     handleTimerReset() {

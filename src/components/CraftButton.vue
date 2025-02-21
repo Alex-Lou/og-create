@@ -53,7 +53,7 @@ export default {
   width: 170px;
   transition: all 0.3s ease;
   margin-top: -75px;
-  margin-left: -20px;
+  margin-left: -30px;
   filter: drop-shadow(0 0 2px rgba(48, 73, 104, 0.1));
 }
 

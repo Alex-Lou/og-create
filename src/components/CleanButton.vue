@@ -60,7 +60,7 @@ export default {
 .reset-crafting-button {
   position: absolute;
   bottom: -20px;
-  left: 850px;
+  left: 865px;
   background: none;
   border: none !important;
   cursor: pointer;
