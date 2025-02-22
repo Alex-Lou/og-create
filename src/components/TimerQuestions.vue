@@ -22,7 +22,7 @@
           {{ isTimeUp ? "Temps épuisé !" : currentQuestion.text }}
         </p>
         
-        <div v-if="currentQuestion.initialElements?.validationMode === 'multiple'" class="discovery-counter">
+        <div v-if="currentQuestion.initialElements?.validationMode === 'multiple' && currentQuestion.initialElements?.requiredCount" class="discovery-counter">
           {{ discoveredValidAnswersCount }}/{{ currentQuestion.initialElements.requiredCount }}
         </div>
         
@@ -59,7 +59,8 @@ export default {
       currentScore: 0,
       selectedLevel: null,
       questionsData: null,
-      showSuccessPopup: false
+      showSuccessPopup: false,
+      isLoading: false
     }
   },
   computed: {
@@ -126,16 +127,26 @@ export default {
       }
     },
 
-    selectLevel(level) {
-      this.selectedLevel = level;
-      const levelData = this.questionsData.levels[level];
-      this.questions = levelData.questions;
-      this.shuffleQuestions();
-      this.$emit('level-selected', {
-        level,
-        timer: levelData.timer
-      });
-      this.show();
+    async selectLevel(level) {
+      if (this.isLoading) return;
+      this.isLoading = true;
+
+      try {
+        this.selectedLevel = level;
+        const levelData = this.questionsData.levels[level];
+        this.questions = levelData.questions;
+        this.shuffleQuestions();
+        
+        this.$emit('level-selected', {
+          level,
+          timer: levelData.timer
+        });
+
+        await this.$nextTick();
+        await this.show();
+      } finally {
+        this.isLoading = false;
+      }
     },
 
     loadQuestionsAndReset() {
@@ -151,11 +162,13 @@ export default {
       }
     },
 
-    show() {
+    async show() {
       this.isVisible = true;
       this.isTimeUp = false;
       
       if (!this.selectedLevel) return;
+
+      await this.$nextTick();
       
       if (!this.$parent.currentTimerElements.length) {
         if (this.currentQuestion && this.currentQuestion.initialElements) {
@@ -168,6 +181,8 @@ export default {
           }
           
           this.$emit('set-initial-inventory', startingElements);
+          await this.$nextTick();
+          await new Promise(resolve => setTimeout(resolve, 50)); // Petit délai pour assurer la synchronisation
         }
       } else {
         if (process.env.NODE_ENV !== 'production') {
@@ -193,24 +208,28 @@ export default {
       this.isVisible = true;
     },
 
-    nextQuestion() {      
+    async nextQuestion() {      
+      // Réinitialiser l'inventaire du timer
       this.$parent.currentTimerElements = [];
       this.$parent.discoveredElements = ["Eau", "Feu", "Terre", "Air"];
 
+      // Réinitialiser la crafting zone via le composant CraftSystem du parent
+      if (this.$parent.$refs.craftSystem) {
+        this.$parent.$refs.craftSystem.resetCraftingBoard();
+      }
+
       if (this.currentQuestionIndex < this.questions.length - 1) {
         this.currentQuestionIndex++;
-        setTimeout(() => {
-          this.show();
-        }, 100);
+        await new Promise(resolve => setTimeout(resolve, 100));
+        await this.show();
       } else {
         this.currentQuestionIndex = 0;
-        setTimeout(() => {
-          this.show();
-        }, 100);
+        await new Promise(resolve => setTimeout(resolve, 100));
+        await this.show();
       }
     },
 
-    answerCorrect() {
+    async answerCorrect() {
       const currentQuestion = this.currentQuestion;
       const validationMode = currentQuestion.initialElements?.validationMode || 'any';
 
@@ -229,12 +248,11 @@ export default {
           this.currentScore += currentQuestion.points || 10;
           this.hide();
           
-          // Afficher le popup de succès
           this.showSuccessPopup = true;
-          setTimeout(() => {
-            this.showSuccessPopup = false;
-            this.nextQuestion();
-          }, 1500);
+          this.$emit('reset-craft-zone');
+          await new Promise(resolve => setTimeout(resolve, 1500));
+          this.showSuccessPopup = false;
+          await this.nextQuestion();
         }
       } else if (validationMode === 'multiple') {
         const requiredCount = currentQuestion.initialElements.requiredCount || 1;
@@ -249,12 +267,11 @@ export default {
           this.currentScore += currentQuestion.points || 10;
           this.hide();
           
-          // Afficher le popup de succès
           this.showSuccessPopup = true;
-          setTimeout(() => {
-            this.showSuccessPopup = false;
-            this.nextQuestion();
-          }, 1500);
+          this.$emit('reset-craft-zone');
+          await new Promise(resolve => setTimeout(resolve, 1500));
+          this.showSuccessPopup = false;
+          await this.nextQuestion();
         }
       }
     },

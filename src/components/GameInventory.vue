@@ -1,7 +1,11 @@
 <template>
   <div id="inventory">
     <h2>Inventory</h2>
-    <div v-for="(category, index) in filteredCategories" :key="index" class="category">
+    <div 
+      v-for="(category, index) in filteredCategories" 
+      :key="`category-${index}`"
+      class="category"
+    >
       <div class="category-header">
         <span class="category-title">{{ category.name }}</span>
         <div class="progress">
@@ -64,18 +68,16 @@ export default {
   },
   computed: {
     filteredCategories() {
-      // Logs de debug conditionnés en développement
       if (process.env.NODE_ENV !== 'production') {
         console.error('DEBUG FILTERED CATEGORIES:', {
           isTimerMode: this.isTimerMode,
           timerQuestionElements: this.timerQuestionElements,
-          discoveredElements: this.discoveredElements,
-          currentTimerElements: this.currentTimerElements
+          discoveredElements: this.discoveredElements
         });
       }
 
       if (this.isTimerMode) {
-        const currentQuestion = this.$parent.$refs.timerQuestions.getCurrentQuestion();
+        const currentQuestion = this.$parent.$refs.timerQuestions?.getCurrentQuestion();
         
         const possibleElements = [
           ...(this.timerQuestionElements || []),
@@ -89,28 +91,48 @@ export default {
         }
 
         const timerElements = this.discoveredElements.filter(element => {
-          const isElementValid = possibleElements.some(possibleElement => 
-            element === possibleElement || 
-            (typeof possibleElement === 'string' && 
-             (element.includes(possibleElement) || possibleElement.includes(element)))
-          );
+          const normalizedElement = this.normalizeString(element);
+          const isElementValid = possibleElements.some(possibleElement => {
+            const normalizedPossible = this.normalizeString(possibleElement);
+            return normalizedElement === normalizedPossible || 
+              (typeof normalizedPossible === 'string' && 
+               (normalizedElement.includes(normalizedPossible) || normalizedPossible.includes(normalizedElement)));
+          });
+
+          const elementWithEmoji = element in this.elementEmojis ? 
+            element : 
+            Object.keys(this.elementEmojis).find(key => 
+              this.normalizeString(key) === this.normalizeString(element)
+            );
 
           if (process.env.NODE_ENV !== 'production') {
-            console.error(`Checking element ${element}:`, isElementValid);
+            console.error(`Checking element ${element}:`, {
+              normalizedElement,
+              elementWithEmoji,
+              isElementValid
+            });
           }
 
           return isElementValid;
         });
 
+        // Transformer les éléments pour avoir les bons emojis
+        const elementsWithEmojis = timerElements.map(element => {
+          const elementKey = Object.keys(this.elementEmojis).find(key => 
+            this.normalizeString(key) === this.normalizeString(element)
+          ) || element;
+          return elementKey;
+        });
+
         if (process.env.NODE_ENV !== 'production') {
-          console.error('DEBUG TIMER ELEMENTS:', timerElements);
+          console.error('DEBUG TIMER ELEMENTS:', elementsWithEmojis);
         }
 
         return [{
           name: 'Timer Elements',
           progress: 100,
-          elements: timerElements,
-          isComplete: timerElements.length === this.timerQuestionElements.length
+          elements: elementsWithEmojis,
+          isComplete: elementsWithEmojis.length === this.timerQuestionElements.length
         }];
       }
 
@@ -130,15 +152,14 @@ export default {
         .filter((category) => this.discoveredCategories.includes(category.name));
     }
   },
-  watch: {
-    filteredCategories: {
-      handler(newCategories) {
-        this.checkNewCompletedCategory(newCategories);
-      },
-      deep: true
-    }
-  },
   methods: {
+    normalizeString(str) {
+      if (!str) return '';
+      return str.normalize("NFD")
+        .replace(/[\u0300-\u036f]/g, "")
+        .toLowerCase()
+        .trim();
+    },
     checkNewCompletedCategory(categories) {
       const newlyCompleted = categories.find(category => {
         const wasCompleteBefore = this.previousCategoriesState[category.name]?.isComplete || false;
@@ -165,6 +186,14 @@ export default {
     },
     endDrag(event) {
       event.dataTransfer.clearData();
+    }
+  },
+  watch: {
+    filteredCategories: {
+      handler(newCategories) {
+        this.checkNewCompletedCategory(newCategories);
+      },
+      deep: true
     }
   },
   created() {

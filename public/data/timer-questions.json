@@ -21,7 +21,7 @@
         {
           "text": "Créez un prédateur marin intelligent",
           "validAnswers": ["Orque", "Dauphin"],
-          "points": 15,
+          "points": 10,
           "level": "Facile",
           "initialElements": {
             "validationMode": "multiple",
@@ -38,7 +38,22 @@
     },
     "Moyen": {
       "timer": 240,
-      "questions": []
+      "questions": [
+        {
+          "text": "Créez un organisme complexe capable de vivre dans des environnements extrêmes",
+          "validAnswers": ["Archée"],
+          "points": 20,
+          "level": "Moyen",
+          "initialElements": {
+            "validationMode": "any",
+            "required": ["ADN", "Extrême", "Vie"],
+            "additional": ["Mutation", "Température", "Résistance"],
+            "recipes": {
+              "Archée": "Extrême+Vie+ADN"
+            }
+          }
+        }
+      ]
     },
     "Difficile": {
       "timer": 180,

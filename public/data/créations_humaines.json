@@ -383,7 +383,9 @@
             "Calendrier": "📆",
             "Astronomie": "🌌",
             "Science": "🔬",
-            "Histoire": "📖"
+            "Histoire": "📖",
+            "Extrême": "🌡️⚡",
+            "Température": "🌡️"
         },
         "Technologies":{
             "Radar": "📡",
@@ -559,6 +561,7 @@
 
     },
     "rules": {
+        "Mesure+Météo": "Température",
         "Travail+Machine": "Production",
         "Frontière+Ordre": "Limite",
         "Mur+Ordre": "Limite",
@@ -1040,7 +1043,12 @@
         "Écriture+Symbole": "Nombre",
         "Observation+Réseau": "Système",
         "Organisation+Structure": "Système",
-        "Observation+Quantité": "Mesure",
+        "Observation+Science": "Quantité",
+        "Quantité+Science": "Mesure",
+        "Observation+Nombre": "Mesure",
+        "Intelligence+Question": "Observation",
+        "Science+Curiosité": "Observation",
+        "Force+Limite": "Extrême",
         "Réseau+Communication": "Connexion",
         "Organisation+Stabilité": "Structure",
         "Artisan+Pierre": "Tailleur de Pierre",

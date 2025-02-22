@@ -93,7 +93,8 @@
             "Vitamine D": "☀️🩹",
             "Calcium": "🦷🪨",
             "Intrusion": "🔒🦠",
-            "Circulation": "🩸❤️"
+            "Circulation": "🩸❤️",
+            "Mobilité": "🦵🦵"
         },
 
         "Biologie Végétale": {
@@ -415,7 +416,5 @@
         "Cellule+Invasion": "Intrusion",
         "Virus+Mutation+Chaleur": "Virus Mutant",
         "Bactérie+Chaleur+Acidité": "Bactéries Extrêmophiles"
-        
-
     }
 }

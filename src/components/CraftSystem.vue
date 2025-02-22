@@ -109,13 +109,13 @@ export default {
   },
   methods: {
     selectResource(resource) {
-      if (this.selected.length < 4 && resource && this.elementEmojis[resource]) {
-        this.selected.push(resource.trim());
-        this.resourcePositions.push(null);
-      } else {
-        this.$emit('show-alert', 'You can only select up to 4 elements for crafting!');
-      }
-    },
+  if (this.selected.length < 4 && resource) {
+    this.selected.push(resource.trim());
+    this.resourcePositions.push(null);
+  } else {
+    this.$emit('show-alert', 'You can only select up to 4 elements for crafting!');
+  }
+},
     resetCraftingBoard() {
       this.resetSelection();
       this.alertShown = false;

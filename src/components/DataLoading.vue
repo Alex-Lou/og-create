@@ -51,73 +51,91 @@ export default {
     };
 
     const loadGameData = async () => {
+  try {
+    const jsonFiles = [
+      "/data/animaux.json",
+      "/data/biologie.json",
+      "/data/créations_humaines.json",
+      "/data/elements_data.json",
+      "/data/formations_naturelles.json",
+      "/data/geologie.json",
+      "/data/materiaux_elementaires.json",
+      "/data/phénomènes_naturels.json"
+    ];
+
+    const elementEmojis = {};
+    const categories = {};
+    const craftingRecipes = {};
+
+    for (const file of jsonFiles) {
       try {
-        const jsonFiles = [
-          "/data/animaux.json",
-          "/data/biologie.json",
-          "/data/créations_humaines.json",
-          "/data/elements_data.json",
-          "/data/formations_naturelles.json",
-          "/data/geologie.json",
-          "/data/materiaux_elementaires.json",
-          "/data/phénomènes_naturels.json"
-        ];
+        console.log(`Tentative de chargement : ${file}`);
+        const response = await fetch(file);
 
-        const elementEmojis = {};
-        const categories = {};
-        const craftingRecipes = {};
-
-        for (const file of jsonFiles) {
-          try {
-            console.log(`Tentative de chargement : ${file}`);
-            const response = await fetch(file);
-
-            if (!response.ok) {
-              throw new Error(`HTTP ${response.status}: ${response.statusText}`);
-            }
-
-            const data = await response.json();
-
-            if (data.animaux) {
-              Object.entries(data.animaux).forEach(([category, categoryData]) => {
-                categories[category] = categories[category] || [];
-                Object.entries(categoryData).forEach(([name, emoji]) => {
-                  elementEmojis[name.trim()] = emoji;
-                  categories[category].push(name.trim());
-                });
-              });
-            }
-
-            Object.entries(data.elements || {}).forEach(([category, elements]) => {
-              categories[category] = categories[category] || [];
-              Object.entries(elements).forEach(([name, emoji]) => {
-                elementEmojis[name.trim()] = emoji;
-                categories[category].push(name.trim());
-              });
-            });
-
-            if (data.rules) {
-              Object.entries(data.rules).forEach(([key, value]) => {
-                craftingRecipes[key.split("+").sort().join("+")] = value;
-              });
-            }
-
-            console.log(`Fichier chargé avec succès : ${file}`);
-          } catch (err) {
-            console.error(`Erreur lors du traitement du fichier ${file} :`, err);
-          }
+        if (!response.ok) {
+          throw new Error(`HTTP ${response.status}: ${response.statusText}`);
         }
 
-        emit('data-loaded', {
-          elementEmojis,
-          categories,
-          craftingRecipes
+        const data = await response.json();
+
+        // Traitement des données animaux
+        if (data.animaux) {
+          Object.entries(data.animaux).forEach(([category, categoryData]) => {
+            categories[category] = categories[category] || [];
+            Object.entries(categoryData).forEach(([name, emoji]) => {
+              elementEmojis[name.trim()] = emoji;
+              categories[category].push(name.trim());
+            });
+          });
+        }
+
+        // Traitement des données humains
+        if (data.humains) {
+          Object.entries(data.humains).forEach(([category, categoryData]) => {
+            categories[category] = categories[category] || [];
+            Object.entries(categoryData).forEach(([name, emoji]) => {
+              elementEmojis[name.trim()] = emoji;
+              categories[category].push(name.trim());
+            });
+          });
+        }
+
+        // Traitement des données elements
+        Object.entries(data.elements || {}).forEach(([category, elements]) => {
+          categories[category] = categories[category] || [];
+          Object.entries(elements).forEach(([name, emoji]) => {
+            elementEmojis[name.trim()] = emoji;
+            categories[category].push(name.trim());
+          });
         });
+
+        // Traitement des règles
+        if (data.rules) {
+          Object.entries(data.rules).forEach(([key, value]) => {
+            craftingRecipes[key.split("+").sort().join("+")] = value;
+          });
+        }
+
+        if (process.env.NODE_ENV !== 'production') {
+          console.log(`Fichier chargé avec succès : ${file}`);
+          console.log('ElementEmojis après chargement :', elementEmojis);
+          console.log('Categories après chargement :', categories);
+        }
       } catch (err) {
-        error.value = "Erreur lors du chargement des données depuis plusieurs fichiers";
-        console.error("Erreur globale :", err);
+        console.error(`Erreur lors du traitement du fichier ${file} :`, err);
       }
-    };
+    }
+
+    emit('data-loaded', {
+      elementEmojis,
+      categories,
+      craftingRecipes
+    });
+  } catch (err) {
+    error.value = "Erreur lors du chargement des données depuis plusieurs fichiers";
+    console.error("Erreur globale :", err);
+  }
+};
 
     function checkAchievements() {
       if (props.isTimerMode) return;

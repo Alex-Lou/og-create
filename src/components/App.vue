@@ -96,6 +96,7 @@
       ref="timerQuestions"
       @reset-timer="handleTimerReset"
       @set-initial-inventory="handleSetInitialInventory"
+      @reset-craft-zone="handleResetCraftZone"
       @level-selected="handleLevelSelected"
     />
   </div>
@@ -179,24 +180,37 @@ export default {
         this.$refs.timerModeButton.handleLevelSelected(levelData);
       }
     },
+    handleResetCraftZone() {
+  if (this.$refs.craftSystem) {
+    this.$refs.craftSystem.resetCraftingBoard();
+  }
+},
 
-    handleSetInitialInventory(elements) {
-      if (!this.isTimerActive) return;
-      
-      this.timerModeStartElements = [...this.discoveredElements];
-      this.discoveredElements = ["Eau", "Feu", "Terre", "Air"];
-      
-      if (Array.isArray(elements)) {
-        this.currentTimerElements = elements;
-        elements.forEach(element => {
-          if (!this.discoveredElements.includes(element)) {
-            this.discoveredElements.push(element);
-          }
-        });
+handleSetInitialInventory(elements) {
+  if (!this.isTimerActive) return;
+  
+  // S'assurer que le CraftSystem est propre
+  if (this.$refs.craftSystem) {
+    this.$refs.craftSystem.resetCraftingBoard();
+    this.$refs.craftSystem.selectedElements = [];
+  }
+  
+  this.timerModeStartElements = [...this.discoveredElements];
+  this.discoveredElements = ["Eau", "Feu", "Terre", "Air"];
+  
+  if (Array.isArray(elements)) {
+    // Utiliser un Set pour éliminer les doublons
+    this.currentTimerElements = [...new Set(elements)];
+    this.currentTimerElements.forEach(element => {
+      if (!this.discoveredElements.includes(element)) {
+        this.discoveredElements.push(element);
       }
-      
-      this.updateCategoryProgress();
-    },
+    });
+  }
+  
+  this.updateCategoryProgress();
+},
+
 
     handleTimerForceStop() {
       this.isTimerActive = false;
@@ -511,27 +525,32 @@ export default {
     },
 
     handleTimerStateChange(isActive) {
-      this.isTimerActive = isActive;
-      
-      if (this.$refs.craftSystem) {
-        this.$refs.craftSystem.resetCraftingBoard();
-      }
+  this.isTimerActive = isActive;
+  
+  // S'assurer que le CraftSystem est complètement réinitialisé
+  if (this.$refs.craftSystem) {
+    this.$refs.craftSystem.resetCraftingBoard();
+    // Forcer une réinitialisation complète
+    this.$refs.craftSystem.selectedElements = [];
+  }
 
-      if (isActive && this.$refs.timerQuestions) {
-        this.timerModeDiscoveries = 0;
-        this.selectedTimerLevel = null;
-        this.$refs.timerQuestions.show();
-      } else if (!isActive) {
-        if (this.timerModeStartElements.length > 0) {
-          this.discoveredElements = [...this.timerModeStartElements];
-          this.updateCategoryProgress();
-        }
-        this.selectedTimerLevel = null;
-        if (this.$refs.timerQuestions) {
-          this.$refs.timerQuestions.resetQuestions();
-        }
-      }
-    },
+  if (isActive && this.$refs.timerQuestions) {
+    this.timerModeDiscoveries = 0;
+    this.selectedTimerLevel = null;
+    this.currentTimerElements = [];
+    this.$refs.timerQuestions.show();
+  } else if (!isActive) {
+    if (this.timerModeStartElements.length > 0) {
+      this.discoveredElements = [...this.timerModeStartElements];
+      this.updateCategoryProgress();
+    }
+    this.currentTimerElements = [];
+    this.selectedTimerLevel = null;
+    if (this.$refs.timerQuestions) {
+      this.$refs.timerQuestions.resetQuestions();
+    }
+  }
+},
 
     handleTimerComplete() {
       const currentScore = this.discoveredElements.length - this.timerModeStartElements.length;
