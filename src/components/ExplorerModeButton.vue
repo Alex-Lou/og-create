@@ -62,7 +62,7 @@
     position: absolute;
     bottom: -15px;
     background: none;
-    left: 780px;
+    left: 900px;
     border: none !important;
     cursor: pointer;
     padding: 0;

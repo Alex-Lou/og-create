@@ -28,12 +28,13 @@
       </div>
     </div>
   </div>
-</template>
-
-<script>
-import '@/assets/GameInventoryStyle.css';
-
-export default {
+ </template>
+ 
+ <script>
+ /* eslint-disable no-unused-vars */
+ import '@/assets/GameInventoryStyle.css';
+ 
+ export default {
   props: {
     categories: {
       type: Object,
@@ -68,14 +69,6 @@ export default {
   },
   computed: {
     filteredCategories() {
-      if (process.env.NODE_ENV !== 'production') {
-        console.error('DEBUG FILTERED CATEGORIES:', {
-          isTimerMode: this.isTimerMode,
-          timerQuestionElements: this.timerQuestionElements,
-          discoveredElements: this.discoveredElements
-        });
-      }
-
       if (this.isTimerMode) {
         const currentQuestion = this.$parent.$refs.timerQuestions?.getCurrentQuestion();
         
@@ -85,11 +78,7 @@ export default {
           ...(currentQuestion?.initialElements?.required || []),
           ...(currentQuestion?.initialElements?.additional || [])
         ];
-
-        if (process.env.NODE_ENV !== 'production') {
-          console.error('DEBUG POSSIBLE ELEMENTS:', possibleElements);
-        }
-
+ 
         const timerElements = this.discoveredElements.filter(element => {
           const normalizedElement = this.normalizeString(element);
           const isElementValid = possibleElements.some(possibleElement => {
@@ -98,36 +87,17 @@ export default {
               (typeof normalizedPossible === 'string' && 
                (normalizedElement.includes(normalizedPossible) || normalizedPossible.includes(normalizedElement)));
           });
-
-          const elementWithEmoji = element in this.elementEmojis ? 
-            element : 
-            Object.keys(this.elementEmojis).find(key => 
-              this.normalizeString(key) === this.normalizeString(element)
-            );
-
-          if (process.env.NODE_ENV !== 'production') {
-            console.error(`Checking element ${element}:`, {
-              normalizedElement,
-              elementWithEmoji,
-              isElementValid
-            });
-          }
-
+ 
           return isElementValid;
         });
-
-        // Transformer les éléments pour avoir les bons emojis
+ 
         const elementsWithEmojis = timerElements.map(element => {
           const elementKey = Object.keys(this.elementEmojis).find(key => 
             this.normalizeString(key) === this.normalizeString(element)
           ) || element;
           return elementKey;
         });
-
-        if (process.env.NODE_ENV !== 'production') {
-          console.error('DEBUG TIMER ELEMENTS:', elementsWithEmojis);
-        }
-
+ 
         return [{
           name: 'Timer Elements',
           progress: 100,
@@ -135,8 +105,7 @@ export default {
           isComplete: elementsWithEmojis.length === this.timerQuestionElements.length
         }];
       }
-
-      // Cas non timer mode
+ 
       return Object.entries(this.categories)
         .map(([name, elements]) => {
           const filteredElements = Array.isArray(elements)
@@ -161,17 +130,6 @@ export default {
         .trim();
     },
     checkNewCompletedCategory(categories) {
-      const newlyCompleted = categories.find(category => {
-        const wasCompleteBefore = this.previousCategoriesState[category.name]?.isComplete || false;
-        return category.isComplete && !wasCompleteBefore;
-      });
-
-      if (newlyCompleted) {
-        if (process.env.NODE_ENV !== 'production') {
-          console.log('Nouvelle catégorie complétée:', newlyCompleted);
-        }
-      }
-
       this.previousCategoriesState = categories.reduce((acc, category) => {
         acc[category.name] = {
           isComplete: category.isComplete
@@ -204,5 +162,5 @@ export default {
       return acc;
     }, {});
   }
-};
-</script>
+ };
+ </script>

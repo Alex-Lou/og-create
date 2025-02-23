@@ -28,7 +28,7 @@
           @open-contact="handleOpenContact"
         />
       </div>
-      <InfiniteModeButton />
+      <InfiniteModeButton @switch-to-infinite="handleInfiniteModeActivation" :isTimerActive="isTimerActive" />
       <ExplorerModeButton />
       <TimerModeButton 
         ref="timerModeButton"
@@ -75,7 +75,7 @@
       @close="closeAchievementPopup"
       @achievement-popup-opened="handleAchievementPopupOpened"
     />
-
+ 
     <!-- Modal de fin de timer -->
     <div v-if="showTimerEndModal" class="timer-end-modal">
       <div class="timer-end-content">
@@ -89,7 +89,7 @@
         <button @click="handleTimerEndModalClose" class="timer-end-button">Nouvelle partie</button>
       </div>
     </div>
-
+ 
     <!-- Composant des questions du timer -->
     <TimerQuestions 
       v-show="isTimerActive"
@@ -100,7 +100,7 @@
       @level-selected="handleLevelSelected"
     />
   </div>
-</template>
+ </template>
 
 <script>
 import AuthService from '@/services/authService';
@@ -174,42 +174,77 @@ export default {
     }
   },
   methods: {
-    handleLevelSelected(levelData) {
-      this.selectedTimerLevel = levelData.level;
-      if (this.$refs.timerModeButton) {
-        this.$refs.timerModeButton.handleLevelSelected(levelData);
-      }
-    },
-    handleResetCraftZone() {
-  if (this.$refs.craftSystem) {
-    this.$refs.craftSystem.resetCraftingBoard();
+    handleInfiniteModeActivation() {
+  // Si le mode Timer est actif, on l'arrête
+  if (this.isTimerActive) {
+    // On désactive le mode Timer
+    this.isTimerActive = false;
+    
+    // Si la référence au TimerModeButton existe, on arrête le timer
+    if (this.$refs.timerModeButton) {
+      this.$refs.timerModeButton.stopTimer();
+    }
+    
+    // Réinitialiser les questions du timer
+    if (this.$refs.timerQuestions) {
+      this.$refs.timerQuestions.resetQuestions();
+    }
   }
-},
-
-handleSetInitialInventory(elements) {
-  if (!this.isTimerActive) return;
   
-  // S'assurer que le CraftSystem est propre
+  // Réinitialiser les éléments découverts aux 4 éléments de base
+  this.discoveredElements = ["Eau", "Feu", "Terre", "Air"];
+  this.discoveredCategories = ["Elements Fondamentaux"];
+  
+  // Mettre à jour la progression des catégories
+  this.updateCategoryProgress();
+  
+  // Réinitialiser le CraftSystem : la zone de craft et la sélection d'éléments
   if (this.$refs.craftSystem) {
     this.$refs.craftSystem.resetCraftingBoard();
     this.$refs.craftSystem.selectedElements = [];
   }
   
-  this.timerModeStartElements = [...this.discoveredElements];
-  this.discoveredElements = ["Eau", "Feu", "Terre", "Air"];
+  // Sauvegarder la progression après le changement de mode
+  this.saveGameProgress();
   
-  if (Array.isArray(elements)) {
-    // Utiliser un Set pour éliminer les doublons
-    this.currentTimerElements = [...new Set(elements)];
-    this.currentTimerElements.forEach(element => {
-      if (!this.discoveredElements.includes(element)) {
-        this.discoveredElements.push(element);
-      }
-    });
-  }
-  
-  this.updateCategoryProgress();
+  // Ici, vous pouvez également émettre un événement ou modifier un état global
+  // si vous avez besoin d'indiquer que le mode Infinite est désormais actif.
 },
+
+   handleLevelSelected(levelData) {
+     this.selectedTimerLevel = levelData.level;
+     if (this.$refs.timerModeButton) {
+       this.$refs.timerModeButton.handleLevelSelected(levelData);
+     }
+   },
+   handleResetCraftZone() {
+     if (this.$refs.craftSystem) {
+       this.$refs.craftSystem.resetCraftingBoard();
+     }
+   },
+
+   handleSetInitialInventory(elements) {
+     if (!this.isTimerActive) return;
+     
+     if (this.$refs.craftSystem) {
+       this.$refs.craftSystem.resetCraftingBoard();
+       this.$refs.craftSystem.selectedElements = [];
+     }
+     
+     this.timerModeStartElements = [...this.discoveredElements];
+     this.discoveredElements = ["Eau", "Feu", "Terre", "Air"];
+     
+     if (Array.isArray(elements)) {
+       this.currentTimerElements = [...new Set(elements)];
+       this.currentTimerElements.forEach(element => {
+         if (!this.discoveredElements.includes(element)) {
+           this.discoveredElements.push(element);
+         }
+       });
+     }
+     
+     this.updateCategoryProgress();
+   },
 
 
     handleTimerForceStop() {
@@ -447,9 +482,6 @@ handleSetInitialInventory(elements) {
         ...(currentQuestion.initialElements.additional || []),
         ...(currentQuestion.validAnswers || [])
       ];
-
-      console.error('Tous les éléments possibles :', allPossibleElements);
-      console.error('Élément crafté :', craftedItem);
 
       if (allPossibleElements.includes(craftedItem)) {
         console.error('L\'élément est dans les éléments possibles');

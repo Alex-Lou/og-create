@@ -1,54 +1,62 @@
 <template>
-  <div v-if="isVisible" class="questions-container">
-    <div class="questions-box">
-      <!-- Modal de sélection du niveau -->
-      <div v-if="!selectedLevel" class="level-selection">
-        <h2 class="level-title">Choisissez votre niveau</h2>
-        <div class="level-buttons">
+  <div>
+    <div v-if="isVisible" class="questions-container">
+      <div class="questions-box">
+        <!-- Modal de sélection du niveau -->
+        <div v-if="!selectedLevel" class="level-selection">
+          <h2 class="level-title">Choisissez votre niveau</h2>
+          <div class="level-buttons">
+            <button 
+              v-for="level in ['Facile', 'Moyen', 'Difficile']" 
+              :key="level"
+              @click="selectLevel(level)"
+              class="level-button"
+            >
+              {{ level }}
+            </button>
+          </div>
+        </div>
+ 
+        <!-- Affichage des questions -->
+        <div v-else>
+          <p class="question-text">
+            {{ isTimeUp ? "Temps épuisé !" : currentQuestion.text }}
+          </p>
+          
+          <div v-if="currentQuestion.initialElements?.validationMode === 'multiple' && currentQuestion.initialElements?.requiredCount" class="discovery-counter">
+            {{ discoveredValidAnswersCount }}/{{ currentQuestion.initialElements.requiredCount }}
+          </div>
+          
           <button 
-            v-for="level in ['Facile', 'Moyen', 'Difficile']" 
-            :key="level"
-            @click="selectLevel(level)"
-            class="level-button"
+            class="next-question-button"
+            @click="handleButtonClick"
           >
-            {{ level }}
+            {{ isTimeUp ? "Ok" : "Compris !" }}
           </button>
         </div>
       </div>
-
-      <!-- Affichage des questions -->
-      <div v-else>
-        <p class="question-text">
-          {{ isTimeUp ? "Temps épuisé !" : currentQuestion.text }}
-        </p>
-        
-        <div v-if="currentQuestion.initialElements?.validationMode === 'multiple' && currentQuestion.initialElements?.requiredCount" class="discovery-counter">
-          {{ discoveredValidAnswersCount }}/{{ currentQuestion.initialElements.requiredCount }}
-        </div>
-        
-        <button 
-          class="next-question-button"
-          @click="handleButtonClick"
-        >
-          {{ isTimeUp ? "Ok" : "Compris !" }}
-        </button>
+    </div>
+ 
+    <!-- Popup de succès -->
+    <div v-if="showSuccessPopup" class="success-popup">
+      <div class="success-content">
+        <p>Correct !</p>
       </div>
     </div>
   </div>
-
-  <!-- Popup de succès -->
-  <div v-if="showSuccessPopup" class="success-popup">
-    <div class="success-content">
-      <p>Correct !</p>
-    </div>
-  </div>
-</template>
-
-<script>
-import '@/assets/TimerQuestionsStyle.css';
-
-export default {
+ </template>
+ 
+ <script>
+ import '@/assets/TimerQuestionsStyle.css';
+ 
+ export default {
   name: 'TimerQuestions',
+  emits: [
+    'reset-timer', 
+    'set-initial-inventory', 
+    'reset-craft-zone', 
+    'level-selected'
+  ],
   data() {
     return {
       currentQuestionIndex: 0,
@@ -89,22 +97,16 @@ export default {
   },
   methods: {
     async loadRecipes() {
-      try {
-        const response = await fetch('/data/animaux.json');
-        if (!response.ok) {
-          throw new Error(`HTTP error! status: ${response.status}`);
-        }
-        this.recipesData = await response.json();
-        if (process.env.NODE_ENV !== 'production') {
-          console.log("Recettes chargées:", this.recipesData);
-        }
-      } catch (error) {
-        if (process.env.NODE_ENV !== 'production') {
-          console.error('Erreur lors du chargement des recettes:', error);
-        }
-      }
-    },
-
+ try {
+   const response = await fetch('/data/animaux.json');
+   if (!response.ok) {
+     throw new Error(`HTTP error! status: ${response.status}`);
+   }
+   this.recipesData = await response.json();
+ } catch (error) {
+   // Gestion silencieuse de l'erreur sans log en production
+ }
+},
     async loadQuestionsData() {
       try {
         const response = await fetch('/data/timer-questions.json');
@@ -126,11 +128,11 @@ export default {
         };
       }
     },
-
+ 
     async selectLevel(level) {
       if (this.isLoading) return;
       this.isLoading = true;
-
+ 
       try {
         this.selectedLevel = level;
         const levelData = this.questionsData.levels[level];
@@ -141,33 +143,33 @@ export default {
           level,
           timer: levelData.timer
         });
-
+ 
         await this.$nextTick();
         await this.show();
       } finally {
         this.isLoading = false;
       }
     },
-
+ 
     loadQuestionsAndReset() {
       this.currentQuestionIndex = 0;
       this.selectedLevel = null;
       this.questions = [];
     },
-
+ 
     shuffleQuestions() {
       for (let i = this.questions.length - 1; i > 0; i--) {
         const j = Math.floor(Math.random() * (i + 1));
         [this.questions[i], this.questions[j]] = [this.questions[j], this.questions[i]];
       }
     },
-
+ 
     async show() {
       this.isVisible = true;
       this.isTimeUp = false;
       
       if (!this.selectedLevel) return;
-
+ 
       await this.$nextTick();
       
       if (!this.$parent.currentTimerElements.length) {
@@ -190,34 +192,34 @@ export default {
         }
       }
     },
-
+ 
     hide() {
       this.isVisible = false;
     },
-
+ 
     handleButtonClick() {
       this.hide();
     },
-
+ 
     getCurrentQuestion() {
       return this.currentQuestion;
     },
-
+ 
     showTimeUp() {
       this.isTimeUp = true;
       this.isVisible = true;
     },
-
+ 
     async nextQuestion() {      
       // Réinitialiser l'inventaire du timer
       this.$parent.currentTimerElements = [];
       this.$parent.discoveredElements = ["Eau", "Feu", "Terre", "Air"];
-
+ 
       // Réinitialiser la crafting zone via le composant CraftSystem du parent
       if (this.$parent.$refs.craftSystem) {
         this.$parent.$refs.craftSystem.resetCraftingBoard();
       }
-
+ 
       if (this.currentQuestionIndex < this.questions.length - 1) {
         this.currentQuestionIndex++;
         await new Promise(resolve => setTimeout(resolve, 100));
@@ -228,11 +230,11 @@ export default {
         await this.show();
       }
     },
-
+ 
     async answerCorrect() {
       const currentQuestion = this.currentQuestion;
       const validationMode = currentQuestion.initialElements?.validationMode || 'any';
-
+ 
       if (validationMode === 'any') {
         const isValidAnswer = currentQuestion.validAnswers.some(answer => 
           this.$parent.discoveredElements.includes(answer)
@@ -244,7 +246,7 @@ export default {
               this.$parent.discoveredElements.push(element);
             }
           });
-
+ 
           this.currentScore += currentQuestion.points || 10;
           this.hide();
           
@@ -263,7 +265,7 @@ export default {
               this.$parent.discoveredElements.push(element);
             }
           });
-
+ 
           this.currentScore += currentQuestion.points || 10;
           this.hide();
           
@@ -275,14 +277,15 @@ export default {
         }
       }
     },
-
+ 
     resetQuestions() {
       this.loadQuestionsAndReset();
       this.currentScore = 0;
     }
   }
-}
-</script>
+ }
+ </script>
+ 
 
 <style scoped>
 .questions-container {
