@@ -9,35 +9,36 @@
     />
     <GameAchievementsContent :achievements="achievements" />
     <header style="position: relative;">
-      <div class="title-area">
-        <img src="@/assets/Svgs/Logo.png" alt="Logo" class="logo" />
-        <h1>Origins Creation</h1>
-      </div>
-      <div class="header-controls">
-        <DarkToggle :isDarkMode="isDarkMode" @update:darkMode="updateDarkMode" />
-        <LoginIcon 
-          :isDarkMode="isDarkMode" 
-          :isLoggedIn="isLoggedIn"
-          :currentUser="currentUser"
-          @login-attempt="handleLoginAttempt"
-          @register-attempt="handleRegisterAttempt"
-          @logout="handleLogout"
-        />
-        <ContactIcon 
-          :isDarkMode="isDarkMode"
-          @open-contact="handleOpenContact"
-        />
-      </div>
-      <InfiniteModeButton @switch-to-infinite="handleInfiniteModeActivation" :isTimerActive="isTimerActive" />
-      <ExplorerModeButton />
-      <TimerModeButton 
-        ref="timerModeButton"
-        @timer-state-change="handleTimerStateChange"
-        @timer-complete="handleTimerComplete"
-        @show-question="showCurrentTimerQuestion"
-        @force-stop="handleTimerForceStop"
-      />
-    </header>
+  <div class="title-area">
+    <img src="@/assets/Svgs/Logo.png" alt="Logo" class="logo" />
+    <h1>Origins Creation</h1>
+    <CoinCounter :coins="totalCoins" />
+  </div>
+  <div class="header-controls">
+    <DarkToggle :isDarkMode="isDarkMode" @update:darkMode="updateDarkMode" />
+    <LoginIcon 
+      :isDarkMode="isDarkMode" 
+      :isLoggedIn="isLoggedIn"
+      :currentUser="currentUser"
+      @login-attempt="handleLoginAttempt"
+      @register-attempt="handleRegisterAttempt"
+      @logout="handleLogout"
+    />
+    <ContactIcon 
+      :isDarkMode="isDarkMode"
+      @open-contact="handleOpenContact"
+    />
+  </div>
+  <InfiniteModeButton @switch-to-infinite="handleInfiniteModeActivation" :isTimerActive="isTimerActive" />
+  <ExplorerModeButton />
+  <TimerModeButton 
+    ref="timerModeButton"
+    @timer-state-change="handleTimerStateChange"
+    @timer-complete="handleTimerComplete"
+    @show-question="showCurrentTimerQuestion"
+    @force-stop="handleTimerForceStop"
+  />
+</header>
     <main id="main-content" ref="mainContent">
       <div ref="inventory" class="inventory-wrapper">
         <GameInventory
@@ -75,7 +76,7 @@
       @close="closeAchievementPopup"
       @achievement-popup-opened="handleAchievementPopupOpened"
     />
- 
+
     <!-- Modal de fin de timer -->
     <div v-if="showTimerEndModal" class="timer-end-modal">
       <div class="timer-end-content">
@@ -89,7 +90,7 @@
         <button @click="handleTimerEndModalClose" class="timer-end-button">Nouvelle partie</button>
       </div>
     </div>
- 
+
     <!-- Composant des questions du timer -->
     <TimerQuestions 
       v-show="isTimerActive"
@@ -98,9 +99,10 @@
       @set-initial-inventory="handleSetInitialInventory"
       @reset-craft-zone="handleResetCraftZone"
       @level-selected="handleLevelSelected"
+      @coins-earned="handleCoinsEarned"
     />
   </div>
- </template>
+</template>
 
 <script>
 import AuthService from '@/services/authService';
@@ -119,6 +121,7 @@ import InfiniteModeButton from './InfiniteModeButton.vue';
 import ExplorerModeButton from './ExplorerModeButton.vue';
 import TimerModeButton from './TimerModeButton.vue';
 import TimerQuestions from './TimerQuestions.vue';
+import CoinCounter from './CoinCounter.vue';
 import '@/assets/style.css';
 
 export default {
@@ -137,36 +140,57 @@ export default {
     InfiniteModeButton,
     ExplorerModeButton,
     TimerModeButton,
-    TimerQuestions
+    TimerQuestions,
+    CoinCounter
   },
   data() {
-    return {
-      elementEmojis: {},
-      craftingRecipes: {},
-      categories: {},
-      discoveredCategories: ["Elements Fondamentaux"],
-      discoveredElements: ["Eau", "Feu", "Terre", "Air"],
-      isDarkMode: true,
-      craftedElement: {
-        name: "",
-        image: null,
+  return {
+    elementEmojis: {},
+    craftingRecipes: {},
+    categories: {},
+    discoveredCategories: ["Elements Fondamentaux"],
+    discoveredElements: ["Eau", "Feu", "Terre", "Air"],
+    isDarkMode: true,
+    craftedElement: {
+      name: "",
+      image: null,
+    },
+    achievements: [],
+    newAchievement: null,
+    isFireworkActive: false,
+    isLoggedIn: false,
+    currentUser: null,
+    categoryProgress: {},
+    showContactForm: false,
+    isTimerActive: false,
+    showTimerEndModal: false,
+    timerModeDiscoveries: 0,
+    timerModeStartElements: [],
+    currentTimerElements: [],
+    bestTimerScore: localStorage.getItem('bestTimerScore') || 0,
+    selectedTimerLevel: null,
+    totalCoins: parseInt(localStorage.getItem('totalCoins')) || 0,
+    timerProgress: {
+      completedQuestions: {
+        Facile: {},
+        Moyen: {},
+        Difficile: {}
       },
-      achievements: [],
-      newAchievement: null,
-      isFireworkActive: false,
-      isLoggedIn: false,
-      currentUser: null,
-      categoryProgress: {},
-      showContactForm: false,
-      isTimerActive: false,
-      showTimerEndModal: false,
-      timerModeDiscoveries: 0,
-      timerModeStartElements: [],
-      currentTimerElements: [],
-      bestTimerScore: localStorage.getItem('bestTimerScore') || 0,
-      selectedTimerLevel: null
-    };
-  },
+      unlockedCategories: {
+        Facile: [],
+        Moyen: [],
+        Difficile: []
+      },
+      bestScores: {
+        Facile: 0,
+        Moyen: 0,
+        Difficile: 0
+      },
+      lastPlayedLevel: null,
+      lastPlayedCategory: null
+    }
+  };
+},
   created() {
     this.checkAuth();
     if (this.isLoggedIn) {
@@ -272,85 +296,110 @@ export default {
     },
 
     async loadGameProgress() {
-      if (!this.isLoggedIn) return;
+  if (!this.isLoggedIn) return;
 
-      try {
-        const progress = await progressService.loadGameProgress();
-        if (progress) {
-          if (progress.discoveredElements) {
-            try {
-              if (typeof progress.discoveredElements === 'string') {
-                const parsed = JSON.parse(progress.discoveredElements);
-                this.discoveredElements = Array.isArray(parsed) 
-                  ? parsed.map(element => element.replace(/^"|"$/g, ''))
-                  : ["Eau", "Feu", "Terre", "Air"];
-              } else {
-                this.discoveredElements = progress.discoveredElements;
-              }
-            } catch (e) {
-              console.error("Erreur parsing discoveredElements:", e);
-              this.discoveredElements = ["Eau", "Feu", "Terre", "Air"];
-            }
+  try {
+    const progress = await progressService.loadGameProgress();
+    if (progress) {
+      // Chargement des pièces
+      if (progress.coins !== undefined) {
+        this.totalCoins = parseInt(progress.coins);
+        localStorage.setItem('totalCoins', this.totalCoins.toString());
+      }
+
+      // Chargement des éléments découverts
+      if (progress.discoveredElements) {
+        try {
+          if (typeof progress.discoveredElements === 'string') {
+            const parsed = JSON.parse(progress.discoveredElements);
+            this.discoveredElements = Array.isArray(parsed) 
+              ? parsed.map(element => element.replace(/^"|"$/g, ''))
+              : ["Eau", "Feu", "Terre", "Air"];
+          } else {
+            this.discoveredElements = progress.discoveredElements;
           }
-
-          if (progress.discoveredCategories) {
-            try {
-              if (typeof progress.discoveredCategories === 'string') {
-                const parsed = JSON.parse(progress.discoveredCategories);
-                this.discoveredCategories = Array.isArray(parsed)
-                  ? parsed.map(cat => cat.replace(/^"|"$/g, ''))
-                  : ["Elements Fondamentaux"];
-              } else if (Array.isArray(progress.discoveredCategories)) {
-                this.discoveredCategories = progress.discoveredCategories;
-              } else {
-                this.discoveredCategories = ["Elements Fondamentaux"];
-              }
-            } catch (e) {
-              console.error("Erreur parsing discoveredCategories:", e);
-              this.discoveredCategories = ["Elements Fondamentaux"];
-            }
-          }
-
-          if (progress.categoryProgress) {
-            try {
-              this.categoryProgress = typeof progress.categoryProgress === 'string'
-                ? JSON.parse(progress.categoryProgress)
-                : progress.categoryProgress;
-            } catch (e) {
-              console.error("Erreur parsing categoryProgress:", e);
-              this.categoryProgress = {};
-            }
-          }
-
-          this.updateCategoryProgress();
+        } catch (e) {
+          console.error("Erreur parsing discoveredElements:", e);
+          this.discoveredElements = ["Eau", "Feu", "Terre", "Air"];
         }
-      } catch (error) {
-        console.error("Erreur lors du chargement de la progression:", error);
-        this.discoveredElements = ["Eau", "Feu", "Terre", "Air"];
-        this.discoveredCategories = ["Elements Fondamentaux"];
-        this.categoryProgress = {};
       }
-    },
 
-    async saveGameProgress() {
-      if (!this.isLoggedIn) return;
-
-      try {
-        const progressData = {
-          discoveredElements: Array.isArray(this.discoveredElements) 
-            ? this.discoveredElements 
-            : ["Eau", "Feu", "Terre", "Air"],
-          discoveredCategories: Array.isArray(this.discoveredCategories)
-            ? this.discoveredCategories
-            : ["Elements Fondamentaux"],
-          categoryProgress: this.categoryProgress || {}
-        };
-
-        await progressService.saveGameProgress(progressData);
-      } catch (error) {
-        console.error("Erreur lors de la sauvegarde de la progression:", error);
+      // Chargement des catégories découvertes
+      if (progress.discoveredCategories) {
+        try {
+          if (typeof progress.discoveredCategories === 'string') {
+            const parsed = JSON.parse(progress.discoveredCategories);
+            this.discoveredCategories = Array.isArray(parsed)
+              ? parsed.map(cat => cat.replace(/^"|"$/g, ''))
+              : ["Elements Fondamentaux"];
+          } else if (Array.isArray(progress.discoveredCategories)) {
+            this.discoveredCategories = progress.discoveredCategories;
+          } else {
+            this.discoveredCategories = ["Elements Fondamentaux"];
+          }
+        } catch (e) {
+          console.error("Erreur parsing discoveredCategories:", e);
+          this.discoveredCategories = ["Elements Fondamentaux"];
+        }
       }
-    },
+
+      // Chargement de la progression des catégories
+      if (progress.categoryProgress) {
+        try {
+          this.categoryProgress = typeof progress.categoryProgress === 'string'
+            ? JSON.parse(progress.categoryProgress)
+            : progress.categoryProgress;
+        } catch (e) {
+          console.error("Erreur parsing categoryProgress:", e);
+          this.categoryProgress = {};
+        }
+      }
+
+      // Chargement de la progression du timer
+      if (progress.timerProgress) {
+        this.timerProgress = progress.timerProgress;
+      }
+
+      // Mise à jour de la progression des catégories
+      this.updateCategoryProgress();
+    }
+  } catch (error) {
+    console.error("Erreur lors du chargement de la progression:", error);
+    // Réinitialisation des valeurs par défaut en cas d'erreur
+    this.discoveredElements = ["Eau", "Feu", "Terre", "Air"];
+    this.discoveredCategories = ["Elements Fondamentaux"];
+    this.categoryProgress = {};
+    this.totalCoins = 0; // Réinitialiser à 0 en cas d'erreur
+    localStorage.setItem('totalCoins', '0');
+    this.timerProgress = {
+      completedQuestions: { Facile: {}, Moyen: {}, Difficile: {} },
+      unlockedCategories: {},
+      bestScores: { Facile: 0, Moyen: 0, Difficile: 0 }
+    };
+  }
+},
+
+async saveGameProgress() {
+  if (!this.isLoggedIn) return;
+
+  try {
+    const progressData = {
+      discoveredElements: Array.isArray(this.discoveredElements) 
+        ? this.discoveredElements 
+        : ["Eau", "Feu", "Terre", "Air"],
+      discoveredCategories: Array.isArray(this.discoveredCategories)
+        ? this.discoveredCategories
+        : ["Elements Fondamentaux"],
+      categoryProgress: this.categoryProgress || {},
+      totalCoins: this.totalCoins,
+      timerProgress: this.timerProgress
+    };
+
+    await progressService.saveGameProgress(progressData);
+  } catch (error) {
+    console.error("Erreur lors de la sauvegarde de la progression:", error);
+  }
+},
 
     updateCategoryProgress() {
       Object.keys(this.categories).forEach(category => {
@@ -363,16 +412,20 @@ export default {
     },
 
     checkAuth() {
-      const loggedInUser = AuthService.getCurrentUser();
-      if (loggedInUser && loggedInUser.token) {
-        this.isLoggedIn = true;
-        this.currentUser = loggedInUser;
-      } else {
-        this.isLoggedIn = false;
-        this.currentUser = null;
-        localStorage.removeItem('user');
-      }
-    },
+  const loggedInUser = AuthService.getCurrentUser();
+  if (loggedInUser && loggedInUser.token) {
+    this.isLoggedIn = true;
+    this.currentUser = loggedInUser;
+  } else {
+    this.isLoggedIn = false;
+    this.currentUser = null;
+    localStorage.removeItem('user');
+    
+    // Réinitialiser les pièces à 0 si non connecté
+    this.totalCoins = 0;
+    localStorage.removeItem('totalCoins');
+  }
+},
 
     updateDarkMode(newMode) {
       this.isDarkMode = newMode;
@@ -384,7 +437,10 @@ export default {
         const response = await AuthService.login(credentials.email, credentials.password);
         this.isLoggedIn = true;
         this.currentUser = response;
+        
+        // Charger la progression APRES la connexion
         await this.loadGameProgress();
+        
         this.showAlert(`Connexion réussie pour ${response.username}`);
       } catch (error) {
         console.error('Erreur lors de la connexion', error);
@@ -584,12 +640,39 @@ export default {
   }
 },
 
-    handleTimerComplete() {
-      const currentScore = this.discoveredElements.length - this.timerModeStartElements.length;
-      if (currentScore > this.bestTimerScore) {
-        this.bestTimerScore = currentScore;
-        localStorage.setItem('bestTimerScore', currentScore);
+async handleCoinsEarned(amount) {
+      this.totalCoins += amount;
+      localStorage.setItem('totalCoins', this.totalCoins.toString());
+      
+      if (this.isLoggedIn) {
+        try {
+          await progressService.updateCoins(this.totalCoins);
+        } catch (error) {
+          console.error("Erreur lors de la mise à jour des pièces:", error);
+        }
       }
+    },
+
+    async handleTimerComplete() {
+      const currentScore = this.discoveredElements.length - this.timerModeStartElements.length;
+      
+      // Mise à jour du meilleur score pour le niveau actuel
+      if (this.selectedTimerLevel && currentScore > this.timerProgress.bestScores[this.selectedTimerLevel]) {
+        this.timerProgress.bestScores[this.selectedTimerLevel] = currentScore;
+        
+        // Bonus de pièces pour nouveau meilleur score
+        const bonus = currentScore * 5;
+        await this.handleCoinsEarned(bonus);
+        
+        if (this.isLoggedIn) {
+          try {
+            await progressService.updateTimerProgress(this.timerProgress);
+          } catch (error) {
+            console.error("Erreur lors de la mise à jour du meilleur score:", error);
+          }
+        }
+      }
+
       this.showTimerEndModal = true;
     },
 
@@ -602,6 +685,27 @@ export default {
         this.$refs.timerQuestions.resetQuestions();
       }
     },
+    async updateTimerProgress(categoryName, questionId) {
+  if (!this.selectedTimerLevel) return;
+  
+  // Mise à jour de la progression locale
+  if (!this.timerProgress.completedQuestions[this.selectedTimerLevel][categoryName]) {
+    this.timerProgress.completedQuestions[this.selectedTimerLevel][categoryName] = [];
+  }
+  
+  if (!this.timerProgress.completedQuestions[this.selectedTimerLevel][categoryName].includes(questionId)) {
+    this.timerProgress.completedQuestions[this.selectedTimerLevel][categoryName].push(questionId);
+  }
+
+  // Sauvegarde si connecté
+  if (this.isLoggedIn) {
+    try {
+      await progressService.updateTimerProgress(this.timerProgress);
+    } catch (error) {
+      console.error("Erreur lors de la mise à jour de la progression du timer:", error);
+    }
+  }
+},
 
     handleTimerReset() {
       this.$refs.timerModeButton.resetTimer();

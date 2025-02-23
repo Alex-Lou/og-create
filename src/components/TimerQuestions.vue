@@ -17,6 +17,25 @@
             </button>
           </div>
         </div>
+
+        <!-- Modal de sélection de la catégorie -->
+        <div v-else-if="!selectedCategory" class="category-selection">
+          <button @click="cancelCategorySelection" class="close-modal-btn">&times;</button>
+          <h2 class="level-title">Choisissez une catégorie</h2>
+          <div class="level-buttons">
+            <button 
+              v-for="(category, categoryName) in availableCategories" 
+              :key="categoryName"
+              @click="selectCategory(categoryName)"
+              class="level-button"
+            >
+              {{ categoryName }} 
+              <span class="questions-count">
+                {{ getCompletedQuestionsCount(categoryName) }}/{{ category.questions.length }}
+              </span>
+            </button>
+          </div>
+        </div>
  
         <!-- Affichage des questions -->
         <div v-else>
@@ -42,6 +61,7 @@
     <div v-if="showSuccessPopup" class="success-popup">
       <div class="success-content">
         <p>Correct !</p>
+        <p class="points-earned">+{{ currentQuestion.points || 10 }} pièces</p>
       </div>
     </div>
   </div>
@@ -49,6 +69,7 @@
  
 <script>
 import '@/assets/TimerQuestionsStyle.css';
+import progressService from '@/services/progressService';
  
 export default {
   name: 'TimerQuestions',
@@ -56,7 +77,8 @@ export default {
     'reset-timer', 
     'set-initial-inventory', 
     'reset-craft-zone', 
-    'level-selected'
+    'level-selected',
+    'coins-earned'
   ],
   data() {
     return {
@@ -67,12 +89,27 @@ export default {
       recipesData: null,
       currentScore: 0,
       selectedLevel: null,
+      selectedCategory: null,
       questionsData: null,
       showSuccessPopup: false,
-      isLoading: false
+      isLoading: false,
+      completedQuestions: {
+        Facile: {},
+        Moyen: {},
+        Difficile: {}
+      }
     }
   },
   computed: {
+    isLoggedIn() {
+      return this.$parent.isLoggedIn;
+    },
+    availableCategories() {
+      if (!this.selectedLevel || !this.questionsData?.levels[this.selectedLevel]?.categories) {
+        return {};
+      }
+      return this.questionsData.levels[this.selectedLevel].categories;
+    },
     currentQuestion() {
       return this.questions[this.currentQuestionIndex] || { 
         text: '',
@@ -92,14 +129,79 @@ export default {
       ).length;
     }
   },
-  created() {
-    this.loadQuestionsData();
-    this.loadRecipes();
+  async created() {
+    await this.loadQuestionsData();
+    await this.loadRecipes();
+    if (this.isLoggedIn) {
+      await this.loadProgress();
+    }
   },
   methods: {
+    async loadProgress() {
+      try {
+        console.log('Chargement de la progression...');
+        const progress = await progressService.loadGameProgress();
+        if (progress?.timerProgress?.completedQuestions) {
+          console.log('Progression chargée:', progress.timerProgress);
+          this.completedQuestions = {
+            Facile: progress.timerProgress.completedQuestions.Facile || {},
+            Moyen: progress.timerProgress.completedQuestions.Moyen || {},
+            Difficile: progress.timerProgress.completedQuestions.Difficile || {}
+          };
+        }
+      } catch (error) {
+        console.error('Erreur lors du chargement de la progression du timer:', error);
+      }
+    },
+
+    getCompletedQuestionsCount(categoryName) {
+      if (!this.selectedLevel || !this.completedQuestions[this.selectedLevel]) return 0;
+      const questionsForCategory = this.completedQuestions[this.selectedLevel][categoryName];
+      return Array.isArray(questionsForCategory) ? questionsForCategory.length : 0;
+    },
+
+    async saveProgress() {
+      if (!this.isLoggedIn) {
+        console.log('Utilisateur non connecté, pas de sauvegarde');
+        return;
+      }
+
+      try {
+        console.log('Sauvegarde de la progression timer...');
+        console.log('État actuel completedQuestions:', this.completedQuestions);
+
+        const timerProgress = {
+          completedQuestions: this.completedQuestions,
+          unlockedCategories: {
+            Facile: Object.keys(this.completedQuestions.Facile || {}),
+            Moyen: Object.keys(this.completedQuestions.Moyen || {}),
+            Difficile: Object.keys(this.completedQuestions.Difficile || {})
+          },
+          bestScores: {
+            Facile: this.currentScore,
+            Moyen: this.currentScore,
+            Difficile: this.currentScore
+          }
+        };
+
+        console.log('Tentative de sauvegarde avec:', timerProgress);
+        await progressService.updateTimerProgress(timerProgress);
+        console.log('Sauvegarde réussie');
+      } catch (error) {
+        console.error('Erreur lors de la sauvegarde de la progression:', error);
+      }
+    },
+
     cancelLevelSelection() {
       this.hide();
-      this.loadQuestionsAndReset(); // Réinitialise complètement l'état des questions
+      this.loadQuestionsAndReset();
+      this.$parent.$emit('force-stop');
+    },
+
+    cancelCategorySelection() {
+      this.selectedLevel = null;
+      this.selectedCategory = null;
+      this.questions = [];
       this.$parent.$emit('force-stop');
     },
 
@@ -130,7 +232,11 @@ export default {
           levels: {
             "Facile": {
               timer: 300,
-              questions: []
+              categories: {
+                "Règne Animal": {
+                  questions: []
+                }
+              }
             }
           }
         };
@@ -143,25 +249,59 @@ export default {
  
       try {
         this.selectedLevel = level;
-        const levelData = this.questionsData.levels[level];
-        this.questions = levelData.questions;
-        this.shuffleQuestions();
+        this.selectedCategory = null;
         
         this.$emit('level-selected', {
           level,
-          timer: levelData.timer
+          timer: this.questionsData.levels[level].timer
         });
  
         await this.$nextTick();
+      } finally {
+        this.isLoading = false;
+      }
+    },
+
+    async selectCategory(category) {
+      if (this.isLoading) return;
+      this.isLoading = true;
+ 
+      try {
+        this.selectedCategory = category;
+        this.questions = this.questionsData.levels[this.selectedLevel].categories[category].questions;
+        this.shuffleQuestions();
         await this.show();
       } finally {
         this.isLoading = false;
+      }
+    },
+
+    markQuestionAsCompleted(questionId) {
+      if (!this.selectedLevel || !this.selectedCategory) return;
+      
+      console.log('Marquage de la question comme complétée:', {
+        level: this.selectedLevel,
+        category: this.selectedCategory,
+        questionId
+      });
+
+      if (!this.completedQuestions[this.selectedLevel]) {
+        this.completedQuestions[this.selectedLevel] = {};
+      }
+      if (!this.completedQuestions[this.selectedLevel][this.selectedCategory]) {
+        this.completedQuestions[this.selectedLevel][this.selectedCategory] = [];
+      }
+      
+      if (!this.completedQuestions[this.selectedLevel][this.selectedCategory].includes(questionId)) {
+        this.completedQuestions[this.selectedLevel][this.selectedCategory].push(questionId);
+        this.saveProgress();
       }
     },
  
     loadQuestionsAndReset() {
       this.currentQuestionIndex = 0;
       this.selectedLevel = null;
+      this.selectedCategory = null;
       this.questions = [];
     },
  
@@ -176,7 +316,7 @@ export default {
       this.isVisible = true;
       this.isTimeUp = false;
       
-      if (!this.selectedLevel) return;
+      if (!this.selectedLevel || !this.selectedCategory) return;
  
       await this.$nextTick();
       
@@ -186,17 +326,9 @@ export default {
           const additionalElements = this.currentQuestion.initialElements.additional || [];
           const startingElements = [...new Set([...requiredElements, ...additionalElements])];
           
-          if (process.env.NODE_ENV !== 'production') {
-            console.log("Éléments initiaux à ajouter:", startingElements);
-          }
-          
           this.$emit('set-initial-inventory', startingElements);
           await this.$nextTick();
           await new Promise(resolve => setTimeout(resolve, 50));
-        }
-      } else {
-        if (process.env.NODE_ENV !== 'production') {
-          console.log("Réaffichage de la question, conservation de l'inventaire actuel:", this.$parent.currentTimerElements);
         }
       }
     },
@@ -240,7 +372,8 @@ export default {
     async answerCorrect() {
       const currentQuestion = this.currentQuestion;
       const validationMode = currentQuestion.initialElements?.validationMode || 'any';
- 
+      const points = currentQuestion.points || 10;
+
       if (validationMode === 'any') {
         const isValidAnswer = currentQuestion.validAnswers.some(answer => 
           this.$parent.discoveredElements.includes(answer)
@@ -253,7 +386,11 @@ export default {
             }
           });
  
-          this.currentScore += currentQuestion.points || 10;
+          this.currentScore += points;
+          this.$emit('coins-earned', points);
+          const questionId = currentQuestion.id || `${this.selectedCategory}_${this.currentQuestionIndex}`;
+          console.log('Question réussie, ID:', questionId);
+          this.markQuestionAsCompleted(questionId);
           this.hide();
           
           this.showSuccessPopup = true;
@@ -272,7 +409,11 @@ export default {
             }
           });
  
-          this.currentScore += currentQuestion.points || 10;
+          this.currentScore += points;
+          this.$emit('coins-earned', points);
+          const questionId = currentQuestion.id || `${this.selectedCategory}_${this.currentQuestionIndex}`;
+          console.log('Question réussie (multiple), ID:', questionId);
+          this.markQuestionAsCompleted(questionId);
           this.hide();
           
           this.showSuccessPopup = true;
@@ -316,7 +457,7 @@ export default {
   box-shadow: 0 0 20px rgba(45, 150, 164, 0.3);
 }
 
-.level-selection {
+.level-selection, .category-selection {
   position: relative;
 }
 
@@ -382,6 +523,11 @@ export default {
   transform: scale(0.95);
 }
 
+.questions-count {
+  margin-left: 8px;
+  opacity: 0.8;
+}
+
 .question-text {
   color: #2D96A4;
   font-family: 'BenjaminFranklin', Arial;
@@ -416,6 +562,19 @@ export default {
 
 .next-question-button:active {
   transform: scale(0.95);
+}
+
+.success-popup {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 1100;
 }
 
 .success-popup {
