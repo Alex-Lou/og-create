@@ -1,34 +1,30 @@
 <template>
-    <div class="contact-icon-container">
-      <button 
-        class="contact-icon-button"
-        @click="toggleModal"
-        :class="{ 'dark': isDarkMode }"
-      >
-        <svg 
-          xmlns="http://www.w3.org/2000/svg" 
-          width="24" 
-          height="24" 
-          viewBox="0 0 24 24" 
-          fill="none" 
-          :stroke="isDarkMode ? '#ffffff' : '#000000'"
-          stroke-width="2" 
-          stroke-linecap="round" 
-          stroke-linejoin="round"
-        >
-          <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
-          <polyline points="22,6 12,13 2,6"/>
-        </svg>
-      </button>
+  <div class="contact-icon-container">
+    <button 
+      class="contact-icon-button"
+      @click="toggleModal"
+      :class="{ 'dark': isDarkMode, 'clicked': isClicked }"
+      @mousedown="handleMouseDown"
+      @mouseup="handleMouseUp"
+      @mouseleave="handleMouseUp"
+    >
+      <div class="image-container">
+        <img 
+          src="@/assets/Svgs/enveloppe.png"
+          alt="Contact"
+          class="contact-image"
+        />
+      </div>
+    </button>
 
-      <ContactModal 
-        v-if="isModalOpen"
-        :isDarkMode="isDarkMode"
-        @close="isModalOpen = false"
-      />
-    </div>
+    <ContactModal 
+      v-if="isModalOpen"
+      :isDarkMode="isDarkMode"
+      @close="isModalOpen = false"
+    />
+  </div>
 </template>
-  
+
 <script>
 import ContactModal from './ContactModal.vue'
 
@@ -45,17 +41,24 @@ export default {
   },
   data() {
     return {
-      isModalOpen: false
+      isModalOpen: false,
+      isClicked: false
     }
   },
   methods: {
     toggleModal() {
       this.isModalOpen = !this.isModalOpen
+    },
+    handleMouseDown() {
+      this.isClicked = true;
+    },
+    handleMouseUp() {
+      this.isClicked = false;
     }
   }
 }
 </script>
-  
+
 <style scoped>
 .contact-icon-container {
   display: flex;
@@ -65,7 +68,7 @@ export default {
   margin-right: 40px;
   width: 50px;
 }
-  
+
 .contact-icon-button {
   background: none;
   border: none;
@@ -75,22 +78,51 @@ export default {
   align-items: center;
   justify-content: center;
   transition: all 0.3s ease;
-  margin-left: 30px;
+  margin-left: 5px;
+  padding: 0;
+  width: 40px;
+  height: 40px;
 }
-  
+
+.image-container {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
+
+.contact-image {
+  width: 85px;
+  height: 85px;
+  transition: all 0.15s ease;
+  object-fit: contain;
+}
+
 .contact-icon-button:hover {
   background-color: rgba(128, 128, 128, 0.2);
 }
-  
+
 .contact-icon-button.dark:hover {
   background-color: rgba(255, 255, 255, 0.1);
 }
-  
-.contact-icon-button svg {
-  transition: transform 0.3s ease;
-}
-  
-.contact-icon-button:hover svg {
+
+.contact-icon-button:hover .contact-image {
   transform: scale(1.1);
+}
+
+/* Nouveaux styles pour l'effet de clic */
+.contact-icon-button.clicked .contact-image {
+  transform: scale(0.9);
+  filter: brightness(0.9);
+}
+
+.contact-icon-button.clicked {
+  background-color: rgba(128, 128, 128, 0.3);
+}
+
+.contact-icon-button.dark.clicked {
+  background-color: rgba(255, 255, 255, 0.2);
 }
 </style>

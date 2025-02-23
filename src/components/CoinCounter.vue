@@ -1,7 +1,43 @@
 <template>
-    <div class="coin-counter">
-      <img src="@/assets/Svgs/coin.png" alt="Coins" class="coin-icon" />
-      <span class="coin-amount">{{ formattedCoins }}</span>
+    <div>
+      <div class="coin-counter" @click="openPurchaseModal">
+        <img src="@/assets/Svgs/coin.png" alt="Coins" class="coin-icon" />
+        <span class="coin-amount">{{ formattedCoins }}</span>
+      </div>
+  
+      <!-- Modal d'achat -->
+      <div v-if="showPurchaseModal" class="purchase-modal">
+        <div class="purchase-modal-content">
+          <button @click="closePurchaseModal" class="close-modal-btn">&times;</button>
+          <h2 class="modal-title">Acheter des pièces</h2>
+          
+          <div class="purchase-options">
+            <!-- Option 1 -->
+            <div class="purchase-option">
+              <img src="@/assets/Svgs/coin.png" alt="Coins" class="option-coin-icon" />
+              <span class="coin-quantity">100 pièces</span>
+              <span class="price">0.50€</span>
+              <button @click="handlePurchase(100, 0.50)" class="purchase-btn">Acheter</button>
+            </div>
+  
+            <!-- Option 2 -->
+            <div class="purchase-option">
+              <img src="@/assets/Svgs/coin.png" alt="Coins" class="option-coin-icon" />
+              <span class="coin-quantity">500 pièces</span>
+              <span class="price">2.00€</span>
+              <button @click="handlePurchase(500, 2.00)" class="purchase-btn">Acheter</button>
+            </div>
+  
+            <!-- Option 3 -->
+            <div class="purchase-option">
+              <img src="@/assets/Svgs/coin.png" alt="Coins" class="option-coin-icon" />
+              <span class="coin-quantity">1000 pièces</span>
+              <span class="price">4.50€</span>
+              <button @click="handlePurchase(1000, 4.50)" class="purchase-btn">Acheter</button>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   </template>
   
@@ -14,10 +50,26 @@
         default: 0
       }
     },
+    data() {
+      return {
+        showPurchaseModal: false
+      }
+    },
     computed: {
       formattedCoins() {
-        // Formatage des nombres avec des espaces pour les milliers
         return this.coins.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ");
+      }
+    },
+    methods: {
+      openPurchaseModal() {
+        this.showPurchaseModal = true;
+      },
+      closePurchaseModal() {
+        this.showPurchaseModal = false;
+      },
+      handlePurchase(coins, price) {
+        // À implémenter : logique de paiement
+        console.log(`Achat de ${coins} pièces pour ${price}€`);
       }
     }
   }
@@ -30,6 +82,7 @@
     gap: 8px;
     margin-left: 20px;
     margin-right: 20px;
+    cursor: pointer;
   }
   
   .coin-icon {
@@ -49,5 +102,126 @@
     font-size: 18px;
     font-weight: bold;
     text-shadow: 0 0 10px rgba(45, 150, 164, 0.3);
+  }
+  
+  /* Styles du modal */
+  .purchase-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 2000;
+  }
+  
+  .purchase-modal-content {
+    background-color: #1a1d24;
+    padding: 2rem;
+    border-radius: 15px;
+    border: 2px solid #304968;
+    text-align: center;
+    color: #2D96A4;
+    max-width: 500px;
+    width: 90%;
+    position: relative;
+  }
+  
+  .modal-title {
+    color: #2D96A4;
+    font-family: 'BenjaminFranklin', Arial;
+    font-size: 24px;
+    margin-bottom: 2rem;
+  }
+  
+  .purchase-options {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+  }
+  
+  .purchase-option {
+    display: grid;
+    grid-template-columns: auto 1fr auto auto;
+    align-items: center;
+    gap: 1rem;
+    padding: 1rem;
+    background-color: rgba(48, 73, 104, 0.1);
+    border-radius: 10px;
+    transition: all 0.3s ease;
+  }
+  
+  .purchase-option:hover {
+    background-color: rgba(48, 73, 104, 0.2);
+  }
+  
+  .option-coin-icon {
+    width: 32px;
+    height: 32px;
+  }
+  
+  .coin-quantity {
+    text-align: left;
+    font-family: 'BenjaminFranklin', Arial;
+    font-size: 18px;
+    color: #2D96A4;
+  }
+  
+  .price {
+    font-family: 'BenjaminFranklin', Arial;
+    font-size: 18px;
+    color: #b8d4f5;
+  }
+  
+  .purchase-btn {
+    background-color: #2D96A4;
+    color: white;
+    border: none;
+    padding: 0.5rem 1rem;
+    border-radius: 8px;
+    font-family: 'BenjaminFranklin', Arial;
+    font-size: 16px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+  }
+  
+  .purchase-btn:hover {
+    background-color: #1a7c8a;
+    transform: scale(1.05);
+  }
+  
+  .purchase-btn:active {
+    transform: scale(0.95);
+  }
+  
+  .close-modal-btn {
+    position: absolute;
+    top: -25px;
+    right: -25px;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    background-color: #304968;
+    border: none;
+    color: white;
+    font-size: 24px;
+    font-weight: bold;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+  }
+  
+  .close-modal-btn:hover {
+    background-color: #1a7c8a;
+    transform: scale(1.1);
+  }
+  
+  .close-modal-btn:active {
+    transform: scale(0.95);
   }
   </style>
