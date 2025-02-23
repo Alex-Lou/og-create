@@ -93,9 +93,12 @@
     },
     methods: {
         async handleTimerButtonClick() {
-            if (!this.isTimerActive) {
+            if (!this.isTimerActive || !this.selectedLevel) {
+                // Si le timer n'est pas actif OU qu'aucun niveau n'est sélectionné,
+                // on montre le modal de sélection
                 await this.startTimer();
             } else {
+                // Sinon, on montre le modal de confirmation d'arrêt
                 this.showStopConfirmModal = true;
             }
         },

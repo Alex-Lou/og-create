@@ -4,6 +4,7 @@
       <div class="questions-box">
         <!-- Modal de sélection du niveau -->
         <div v-if="!selectedLevel" class="level-selection">
+          <button @click="cancelLevelSelection" class="close-modal-btn">&times;</button>
           <h2 class="level-title">Choisissez votre niveau</h2>
           <div class="level-buttons">
             <button 
@@ -44,12 +45,12 @@
       </div>
     </div>
   </div>
- </template>
+</template>
  
- <script>
- import '@/assets/TimerQuestionsStyle.css';
+<script>
+import '@/assets/TimerQuestionsStyle.css';
  
- export default {
+export default {
   name: 'TimerQuestions',
   emits: [
     'reset-timer', 
@@ -96,17 +97,24 @@
     this.loadRecipes();
   },
   methods: {
+    cancelLevelSelection() {
+      this.hide();
+      this.loadQuestionsAndReset(); // Réinitialise complètement l'état des questions
+      this.$parent.$emit('force-stop');
+    },
+
     async loadRecipes() {
- try {
-   const response = await fetch('/data/animaux.json');
-   if (!response.ok) {
-     throw new Error(`HTTP error! status: ${response.status}`);
-   }
-   this.recipesData = await response.json();
- } catch (error) {
-   // Gestion silencieuse de l'erreur sans log en production
- }
-},
+      try {
+        const response = await fetch('/data/animaux.json');
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        this.recipesData = await response.json();
+      } catch (error) {
+        // Gestion silencieuse de l'erreur sans log en production
+      }
+    },
+
     async loadQuestionsData() {
       try {
         const response = await fetch('/data/timer-questions.json');
@@ -184,7 +192,7 @@
           
           this.$emit('set-initial-inventory', startingElements);
           await this.$nextTick();
-          await new Promise(resolve => setTimeout(resolve, 50)); // Petit délai pour assurer la synchronisation
+          await new Promise(resolve => setTimeout(resolve, 50));
         }
       } else {
         if (process.env.NODE_ENV !== 'production') {
@@ -211,11 +219,9 @@
     },
  
     async nextQuestion() {      
-      // Réinitialiser l'inventaire du timer
       this.$parent.currentTimerElements = [];
       this.$parent.discoveredElements = ["Eau", "Feu", "Terre", "Air"];
  
-      // Réinitialiser la crafting zone via le composant CraftSystem du parent
       if (this.$parent.$refs.craftSystem) {
         this.$parent.$refs.craftSystem.resetCraftingBoard();
       }
@@ -283,10 +289,9 @@
       this.currentScore = 0;
     }
   }
- }
- </script>
+}
+</script>
  
-
 <style scoped>
 .questions-container {
   position: fixed;
@@ -309,6 +314,38 @@
   width: 400px;
   text-align: center;
   box-shadow: 0 0 20px rgba(45, 150, 164, 0.3);
+}
+
+.level-selection {
+  position: relative;
+}
+
+.close-modal-btn {
+  position: absolute;
+  top: -25px;
+  right: -25px;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  background-color: #304968;
+  border: none;
+  color: white;
+  font-size: 24px;
+  font-weight: bold;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+}
+
+.close-modal-btn:hover {
+  background-color: #1a7c8a;
+  transform: scale(1.1);
+}
+
+.close-modal-btn:active {
+  transform: scale(0.95);
 }
 
 .level-title {
