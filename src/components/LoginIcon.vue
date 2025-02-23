@@ -30,10 +30,19 @@
       </div>
 
       <div v-else class="logged-in-section">
-        <p>Connecté en tant que : {{ currentUser.username }}</p>
-        <button @click="handleLogout" class="logout-btn">
-          Déconnexion
-        </button>
+        <p>Connecté en tant que: {{ currentUser.username }}</p>
+        <div class="logged-in-buttons">
+          <button 
+            @click="openCustomizeModal" 
+            class="customize-btn"
+            style="margin-bottom: 10px;"
+          >
+            Personnaliser
+          </button>
+          <button @click="handleLogout" class="logout-btn">
+            Déconnexion
+          </button>
+        </div>
       </div>
 
       <form v-if="!isLoggedIn" @submit.prevent="handleSubmit">
@@ -124,6 +133,10 @@ export default {
       if (!this.$el.contains(e.target)) {
         this.isOpen = false;
       }
+    },
+    openCustomizeModal() {
+      this.$emit('open-customize-modal');
+      this.isOpen = false;
     }
   },
   mounted() {
@@ -252,6 +265,27 @@ export default {
 .logged-in-section p {
   color: #cfcfcf;
   margin-bottom: 15px;
+}
+
+.logged-in-buttons {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+
+.customize-btn {
+  width: 100%;
+  padding: 8px;
+  background: #2D96A4;
+  border: none;
+  border-radius: 4px;
+  color: white;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+.customize-btn:hover {
+  background: #1f7a85;
 }
 
 .logout-btn {
