@@ -80,14 +80,14 @@
     display: flex;
     align-items: center;
     gap: 8px;
-    margin-left: 20px;
+    margin-left: 40px;
     margin-right: 20px;
     cursor: pointer;
   }
   
   .coin-icon {
-    width: 24px;
-    height: 24px;
+    width: 32px;
+    height: 32px;
     filter: drop-shadow(0 0 2px rgba(45, 150, 164, 0.3));
     transition: transform 0.3s ease;
   }

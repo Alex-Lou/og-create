@@ -19,7 +19,6 @@
   padding: 10px;
   box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.3);
   overflow-y: auto;
-  background: #2a2a2a; /* Fond sombre de l'inventaire */
   color: #ffffff;
   transition: background-color 0.5s, color 0.5s;
 }
@@ -29,32 +28,30 @@
   color: #2d96a4;
   margin-bottom: 10px;
   font-family: 'BenjaminFranklin', sans-serif;
-  letter-spacing: 3px; /* Ajustez cette valeur selon votre préférence */
+  letter-spacing: 3px;
   text-transform: uppercase;
   font-size: 20px;
 }
 
 .category-header {
-  display: flex; /* Active l'alignement horizontal */
-  align-items: center; /* Aligne verticalement le texte et la barre */
-  justify-content: space-between; /* Espace entre les éléments */
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
   padding: 5px 10px;
   color: #2d96a4;
   font-family: 'BenjaminFranklin', sans-serif;
   letter-spacing: 2px;
   font-weight: bold;
-  gap: 10px; /* Espace entre le titre et la barre de progression */
+  gap: 10px;
 }
 
 .category-title {
-  flex: 1; /* Permet au titre d'occuper tout l'espace disponible */
-  white-space: nowrap; /* Évite que le titre se divise en plusieurs lignes */
-  overflow: hidden; /* Coupe le texte trop long */
-  text-overflow: ellipsis; /* Ajoute "..." si le texte est trop long */
+  flex: 1;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
-
-/* Animation du texte déroulant */
 .category {
   position: relative;
   cursor: pointer;
@@ -84,7 +81,6 @@
   transition: transform 0.3s ease;
 }
 
-/* Contenu déroulant */
 .category-content {
   display: none;
   background: #2a2a2a;
@@ -111,7 +107,7 @@
 }
 
 #inventory, #crafting-board {
-  transition: none; /* Supprime la transition */
+  transition: none;
 }
 
 .progress {
@@ -120,7 +116,7 @@
   border-radius: 100px;
   align-items: center;
   position: relative;
-  padding: 0; /* Suppression du padding */
+  padding: 0;
   display: flex;
   height: 10px;
   width: 150px;
@@ -133,22 +129,13 @@
   height: 100%;
   width: 0;
   position: absolute;
-  transition: width 0.3s ease; /* Ajout d'une transition douce */
+  transition: width 0.3s ease;
 }
 
 .progress-value, .progress-bar-fill {
-  left: 0; /* S'assurer que les barres commencent bien à gauche */
+  left: 0;
   height: 100%;
-  border-radius: 100px; /* Garder les coins arrondis */
-}
-
-@keyframes load {
-  0% {
-    width: 0;
-  }
-  100% {
-    width: 68%;
-  }
+  border-radius: 100px;
 }
 
 .progress-bar-fill {
@@ -158,17 +145,82 @@
   position: absolute;
 }
 
-.progress-bar-fill::before {
+/* Existing CSS remains the same until the particle-related section */
+
+/* Modification pour les particules */
+.progress-bar-fill::before,
+.progress-bar-fill::after,
+.progress-bar-fill .particle {
   content: '';
   position: absolute;
   top: 50%;
   left: 0;
   width: 10px;
   height: 10px;
-  background: rgba(104, 128, 164, 0.8);
+  background: rgba(104, 128, 164, 0.5);
   border-radius: 50%;
-  box-shadow: 0 0 10px rgba(255, 255, 255, 0.5), 0 0 20px rgba(255, 255, 255, 0.3);
-  animation: particleMove 1.5s infinite linear;
+  box-shadow: 0 0 5px rgba(255, 255, 255, 0.3), 0 0 10px rgba(255, 255, 255, 0.1);
+  animation: particleMove 10s infinite linear;
+  opacity: 0;
+}
+
+/* Décalage vertical pour une boule sur deux */
+.progress-bar-fill::before {
+  left: 10%;
+  animation-delay: 0.2s;
+  opacity: 1;
+}
+
+.progress-bar-fill::after {
+  left: 20%;
+  animation-delay: 0.4s;
+  opacity: 1;
+  transform: translateY(-8px); /* Décalage de 2px vers le haut */
+}
+
+.progress-bar-fill .particle-20 { 
+  left: 30%; 
+  animation-delay: 0.6s; 
+  opacity: 1; 
+}
+
+.progress-bar-fill .particle-30 { 
+  left: 40%; 
+  animation-delay: 0.8s; 
+  opacity: 1;
+  transform: translateY(-5px); /* Décalage de 2px vers le haut */
+}
+
+.progress-bar-fill .particle-40 { 
+  left: 50%; 
+  animation-delay: 1s; 
+  opacity: 1; 
+}
+
+.progress-bar-fill .particle-50 { 
+  left: 60%; 
+  animation-delay: 1.2s; 
+  opacity: 1;
+  transform: translateY(-5px); /* Décalage de 2px vers le haut */
+}
+
+.progress-bar-fill .particle-60 { 
+  left: 70%; 
+  animation-delay: 1.4s; 
+  opacity: 1; 
+}
+
+.progress-bar-fill .particle-70 { 
+  left: 80%; 
+  animation-delay: 1.6s; 
+  opacity: 1;
+  transform: translateY(-5px); /* Décalage de 2px vers le haut */
+}
+
+.progress-bar-fill .particle-80 { 
+  left: 90%; 
+  animation-delay: 1.8s; 
+  opacity: 1; 
 }
 
 @keyframes particleMove {
@@ -181,4 +233,3 @@
     opacity: 0;
   }
 }
-

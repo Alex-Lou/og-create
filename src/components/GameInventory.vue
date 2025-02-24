@@ -10,7 +10,13 @@
         <span class="category-title">{{ category.name }}</span>
         <div class="progress">
           <div class="progress-value" :style="{ width: category.progress + '%' }"></div>
-          <div class="progress-bar-fill" :style="{ width: category.progress + '%' }"></div>
+          <div class="progress-bar-fill" :style="{ width: category.progress + '%' }">
+            <template v-for="n in Math.floor(category.progress / 10)" :key="`particle-group-${n}`">
+              <div 
+                :class="`particle particle-${n * 10}`"
+              ></div>
+            </template>
+          </div>
         </div>
       </div>
       <div class="category-content">
@@ -28,13 +34,13 @@
       </div>
     </div>
   </div>
- </template>
+</template>
  
- <script>
- /* eslint-disable no-unused-vars */
- import '@/assets/GameInventoryStyle.css';
+<script>
+/* eslint-disable no-unused-vars */
+import '@/assets/GameInventoryStyle.css';
  
- export default {
+export default {
   props: {
     categories: {
       type: Object,
@@ -162,5 +168,5 @@
       return acc;
     }, {});
   }
- };
- </script>
+};
+</script>
