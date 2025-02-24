@@ -7,7 +7,7 @@
       @achievements-loaded="handleAchievementsLoaded"
       @achievement-unlocked="handleAchievementUnlocked"
     />
-    <GameAchievementsContent :achievements="achievements" />
+    <GameAchievementsContent :achievements="achievements" @achievement-update="handleAchievementUpdate" />
     <header style="position: relative;">
       <div class="title-area">
         <img src="@/assets/Svgs/Logo.png" alt="Logo" class="logo" />
@@ -267,6 +267,38 @@ handleTimerStop() {
   }
 },
 
+async updateDiscoveredElements() {
+  if (!this.isLoggedIn) return;
+  
+  try {
+    console.log("Mise à jour des éléments découverts:", this.discoveredElements.length);
+    await progressService.updateDiscoveredElements(this.discoveredElements);
+  } catch (error) {
+    console.error("Erreur lors de la mise à jour des éléments découverts:", error);
+  }
+},
+
+async updateAchievements() {
+  if (!this.isLoggedIn || !this.achievements) return;
+  
+  try {
+    // Transformer les achievements en format adapté pour le backend
+    const achievementsData = {};
+    this.achievements.forEach(achievement => {
+      if (achievement.unlocked) {
+        achievementsData[achievement.name] = {
+          unlocked: true,
+          unlockedAt: achievement.unlockedAt || new Date().toISOString()
+        };
+      }
+    });
+    
+    await progressService.updateAchievements(achievementsData);
+  } catch (error) {
+    console.error("Erreur lors de la mise à jour des achievements:", error);
+  }
+},
+
 
     handleResetCraftZone() {
       if (this.$refs.craftSystem) {
@@ -317,88 +349,102 @@ handleTimerStop() {
       this.showContactForm = true;
     },
     async loadGameProgress() {
-      if (!this.isLoggedIn) return;
-  
-      try {
-        const progress = await progressService.loadGameProgress();
-        if (progress) {
-          // Chargement des pièces
-          if (progress.coins !== undefined) {
-            this.coins = parseInt(progress.coins);
-            localStorage.setItem('coins', this.coins.toString());
-          }
-  
-          // Chargement des éléments découverts
-          if (progress.discoveredElements) {
-            try {
-              if (typeof progress.discoveredElements === 'string') {
-                const parsed = JSON.parse(progress.discoveredElements);
-                this.discoveredElements = Array.isArray(parsed) 
-                  ? parsed.map(element => element.replace(/^"|"$/g, ''))
-                  : ["Eau", "Feu", "Terre", "Air"];
-              } else {
-                this.discoveredElements = progress.discoveredElements;
-              }
-            } catch (e) {
-              console.error("Erreur parsing discoveredElements:", e);
-              this.discoveredElements = ["Eau", "Feu", "Terre", "Air"];
-            }
-          }
-  
-          // Chargement des catégories découvertes
-          if (progress.discoveredCategories) {
-            try {
-              if (typeof progress.discoveredCategories === 'string') {
-                const parsed = JSON.parse(progress.discoveredCategories);
-                this.discoveredCategories = Array.isArray(parsed)
-                  ? parsed.map(cat => cat.replace(/^"|"$/g, ''))
-                  : ["Elements Fondamentaux"];
-              } else if (Array.isArray(progress.discoveredCategories)) {
-                this.discoveredCategories = progress.discoveredCategories;
-              } else {
-                this.discoveredCategories = ["Elements Fondamentaux"];
-              }
-            } catch (e) {
-              console.error("Erreur parsing discoveredCategories:", e);
-              this.discoveredCategories = ["Elements Fondamentaux"];
-            }
-          }
-  
-          // Chargement de la progression des catégories
-          if (progress.categoryProgress) {
-            try {
-              this.categoryProgress = typeof progress.categoryProgress === 'string'
-                ? JSON.parse(progress.categoryProgress)
-                : progress.categoryProgress;
-            } catch (e) {
-              console.error("Erreur parsing categoryProgress:", e);
-              this.categoryProgress = {};
-            }
-          }
-  
-          // Chargement de la progression du timer
-          if (progress.timerProgress) {
-            this.timerProgress = progress.timerProgress;
-          }
-  
-          // Mise à jour de la progression des catégories
-          this.updateCategoryProgress();
-        }
-      } catch (error) {
-        console.error("Erreur lors du chargement de la progression:", error);
-        // Réinitialisation des valeurs par défaut en cas d'erreur
-        this.discoveredElements = ["Eau", "Feu", "Terre", "Air"];
-        this.discoveredCategories = ["Elements Fondamentaux"];
-        this.categoryProgress = {};
-        this.coins = 0; // Réinitialiser à 0 en cas d'erreur
-        localStorage.setItem('coins', '0');
-        this.timerProgress = {
-          completedQuestions: { Facile: {}, Moyen: {}, Difficile: {} },
-          unlockedCategories: {},
-          bestScores: { Facile: 0, Moyen: 0, Difficile: 0 }
-        };
+  if (!this.isLoggedIn) return;
+
+  try {
+    const progress = await progressService.loadGameProgress();
+    if (progress) {
+      // Chargement des pièces
+      if (progress.coins !== undefined) {
+        this.coins = parseInt(progress.coins);
+        localStorage.setItem('coins', this.coins.toString());
       }
-    },
+
+      // Chargement des éléments découverts
+      if (progress.discoveredElements) {
+        try {
+          if (typeof progress.discoveredElements === 'string') {
+            const parsed = JSON.parse(progress.discoveredElements);
+            this.discoveredElements = Array.isArray(parsed) 
+              ? parsed.map(element => element.replace(/^"|"$/g, ''))
+              : ["Eau", "Feu", "Terre", "Air"];
+          } else {
+            this.discoveredElements = progress.discoveredElements;
+          }
+        } catch (e) {
+          console.error("Erreur parsing discoveredElements:", e);
+          this.discoveredElements = ["Eau", "Feu", "Terre", "Air"];
+        }
+      }
+
+      // Chargement des catégories découvertes
+      if (progress.discoveredCategories) {
+        try {
+          if (typeof progress.discoveredCategories === 'string') {
+            const parsed = JSON.parse(progress.discoveredCategories);
+            this.discoveredCategories = Array.isArray(parsed)
+              ? parsed.map(cat => cat.replace(/^"|"$/g, ''))
+              : ["Elements Fondamentaux"];
+          } else if (Array.isArray(progress.discoveredCategories)) {
+            this.discoveredCategories = progress.discoveredCategories;
+          } else {
+            this.discoveredCategories = ["Elements Fondamentaux"];
+          }
+        } catch (e) {
+          console.error("Erreur parsing discoveredCategories:", e);
+          this.discoveredCategories = ["Elements Fondamentaux"];
+        }
+      }
+
+      // Chargement de la progression des catégories
+      if (progress.categoryProgress) {
+        try {
+          this.categoryProgress = typeof progress.categoryProgress === 'string'
+            ? JSON.parse(progress.categoryProgress)
+            : progress.categoryProgress;
+        } catch (e) {
+          console.error("Erreur parsing categoryProgress:", e);
+          this.categoryProgress = {};
+        }
+      }
+
+      // Chargement de la progression du timer
+      if (progress.timerProgress) {
+        this.timerProgress = progress.timerProgress;
+      }
+
+      // Réparer les données de catégories basées sur les éléments découverts
+      // Cela garantit que les catégories sont correctement reflétées
+      if (this.categories && Object.keys(this.categories).length > 0) {
+        await this.repairGameData();
+      } else {
+        // Si les catégories ne sont pas encore chargées, on programme la réparation pour plus tard
+        console.log('Catégories non encore chargées, réparation programmée');
+        setTimeout(() => {
+          if (this.categories && Object.keys(this.categories).length > 0) {
+            this.repairGameData();
+          }
+        }, 2000);
+      }
+
+      // Mise à jour de la progression des catégories
+      this.updateCategoryProgress();
+    }
+  } catch (error) {
+    console.error("Erreur lors du chargement de la progression:", error);
+    // Réinitialisation des valeurs par défaut en cas d'erreur
+    this.discoveredElements = ["Eau", "Feu", "Terre", "Air"];
+    this.discoveredCategories = ["Elements Fondamentaux"];
+    this.categoryProgress = {};
+    this.coins = 0; // Réinitialiser à 0 en cas d'erreur
+    localStorage.setItem('coins', '0');
+    this.timerProgress = {
+      completedQuestions: { Facile: {}, Moyen: {}, Difficile: {} },
+      unlockedCategories: {},
+      bestScores: { Facile: 0, Moyen: 0, Difficile: 0 }
+    };
+  }
+},
     async saveGameProgress() {
       if (!this.isLoggedIn) return;
   
@@ -493,6 +539,7 @@ handleTimerStop() {
     },
     handleAchievementUnlocked(achievement) {
       this.newAchievement = achievement;
+      this.handleAchievementUpdate(achievement);
     },
     handleResourceSelection(resource) {
       this.$refs.craftSystem.selectResource(resource);
@@ -587,18 +634,85 @@ handleTimerStop() {
         }
       }
     },
-    addToCategory(craftedItem) {
-      const targetCategory = Object.keys(this.categories).find((category) =>
-        this.categories[category].includes(craftedItem)
-      );
-      if (targetCategory && !this.discoveredElements.includes(craftedItem)) {
-        this.discoveredElements.push(craftedItem);
-        if (!this.discoveredCategories.includes(targetCategory)) {
-          this.discoveredCategories.push(targetCategory);
+    // Remplacez la méthode addToCategory existante par celle-ci
+addToCategory(craftedItem) {
+  const targetCategory = Object.keys(this.categories).find((category) =>
+    this.categories[category].includes(craftedItem)
+  );
+  
+  if (targetCategory && !this.discoveredElements.includes(craftedItem)) {
+    // Ajouter l'élément aux éléments découverts
+    this.discoveredElements.push(craftedItem);
+    
+    // Vérifier et ajouter la catégorie si nécessaire
+    if (!this.discoveredCategories.includes(targetCategory)) {
+      console.log(`Ajout de la catégorie: ${targetCategory}`);
+      this.discoveredCategories.push(targetCategory);
+    }
+    
+    // Mettre à jour la progression des catégories
+    this.updateCategoryProgress();
+    
+    // Sauvegarder tout avec l'ajout d'un log détaillé
+    console.log('Sauvegarde après ajout de:', craftedItem);
+    console.log('Éléments découverts:', this.discoveredElements.length);
+    console.log('Catégories découvertes:', this.discoveredCategories);
+    
+    this.saveGameProgress();
+  }
+},
+
+// Ajoutez cette nouvelle méthode dans App.vue
+async repairGameData() {
+  if (!this.isLoggedIn) return;
+  
+  console.log('Début de la réparation des données...');
+  
+  // Recalculer les catégories découvertes basées sur les éléments découverts
+  const repairedCategories = ["Elements Fondamentaux"]; // Toujours inclure les éléments fondamentaux
+  
+  for (const element of this.discoveredElements) {
+    for (const category in this.categories) {
+      if (this.categories[category] && this.categories[category].includes(element)) {
+        if (!repairedCategories.includes(category)) {
+          console.log(`Catégorie manquante détectée: ${category} pour l'élément ${element}`);
+          repairedCategories.push(category);
         }
-        this.updateCategoryProgress();
-        this.saveGameProgress();
       }
+    }
+  }
+  
+  // Vérifier si des changements sont nécessaires
+  const currentCats = [...this.discoveredCategories].sort();
+  const repairedCats = [...repairedCategories].sort();
+  
+  if (JSON.stringify(currentCats) !== JSON.stringify(repairedCats)) {
+    console.log('Réparation des catégories nécessaire:');
+    console.log('Avant:', this.discoveredCategories);
+    console.log('Après:', repairedCategories);
+    
+    this.discoveredCategories = repairedCategories;
+    
+    // Sauvegarder les changements
+    await this.saveGameProgress();
+    console.log('Données réparées et sauvegardées avec succès');
+  } else {
+    console.log('Aucune réparation nécessaire, les données sont cohérentes');
+  }
+},
+
+    async handleAchievementUpdate(achievement) {
+      if (!this.isLoggedIn) return;
+      
+      // Mettre à jour localement
+      const existingIndex = this.achievements.findIndex(a => a.name === achievement.name);
+      if (existingIndex >= 0) {
+        this.achievements[existingIndex].unlocked = true;
+        this.achievements[existingIndex].unlockedAt = new Date().toISOString();
+      }
+      
+      // Sauvegarder dans la base de données
+      await this.updateAchievements();
     },
     closeAchievementPopup() {
       this.newAchievement = null;

@@ -16,36 +16,30 @@ axiosInstance.interceptors.request.use(config => {
 });
 
 class ProgressService {
-  async saveGameProgress(progressData) {
-    try {
-        console.log('saveGameProgress - Données reçues:', progressData);
-
-        const dataToSend = {
-            discoveredElements: progressData.discoveredElements,
-            discoveredCategories: progressData.discoveredCategories,
-            categoryProgress: progressData.categoryProgress,
-            achievements: progressData.achievements,
-            // Ne pas écraser les pièces si elles ne sont pas spécifiées
-            coins: progressData.coins !== undefined ? progressData.coins : undefined,
-            timerProgress: {
-                completedQuestions: progressData.timerProgress?.completedQuestions || {},
-                unlockedCategories: progressData.timerProgress?.unlockedCategories || {},
-                bestScores: progressData.timerProgress?.bestScores || {
-                    Facile: 0,
-                    Moyen: 0,
-                    Difficile: 0
-                }
-            }
-        };
-
-        console.log('Données formatées à envoyer:', dataToSend);
-
-        const response = await axiosInstance.post('save', dataToSend);
-        return response.data;
-    } catch (error) {
-        console.error('Erreur dans saveGameProgress:', error);
-        throw error;
-    }
+  // Remplacez la méthode saveGameProgress existante par celle-ci
+async saveGameProgress(progressData) {
+  try {
+    // D'abord, récupérer les données existantes
+    const existingProgress = await this.loadGameProgress();
+    
+    // Fusionner avec les nouvelles données, en préservant les existantes si non spécifiées
+    const dataToSend = {
+      discoveredElements: progressData.discoveredElements || existingProgress.discoveredElements,
+      discoveredCategories: progressData.discoveredCategories || existingProgress.discoveredCategories,
+      categoryProgress: progressData.categoryProgress || existingProgress.categoryProgress,
+      achievements: progressData.achievements || existingProgress.achievements,
+      coins: progressData.coins !== undefined ? progressData.coins : existingProgress.coins,
+      timerProgress: progressData.timerProgress || existingProgress.timerProgress
+    };
+    
+    console.log('Données fusionnées à envoyer:', dataToSend);
+    
+    const response = await axiosInstance.post('save', dataToSend);
+    return response.data;
+  } catch (error) {
+    console.error('Erreur dans saveGameProgress:', error);
+    throw error;
+  }
 }
 
   async loadGameProgress() {
@@ -119,6 +113,31 @@ class ProgressService {
         throw error;
     }
 }
+
+async updateDiscoveredElements(discoveredElements) {
+  try {
+    const response = await axiosInstance.post('update-discovered-elements', { 
+      discoveredElements: discoveredElements 
+    });
+    return response.data;
+  } catch (error) {
+    console.error('Erreur lors de la mise à jour des éléments découverts:', error);
+    throw error;
+  }
+}
+
+async updateAchievements(achievements) {
+  try {
+    const response = await axiosInstance.post('update-achievements', { 
+      achievements: achievements 
+    });
+    return response.data;
+  } catch (error) {
+    console.error('Erreur lors de la mise à jour des achievements:', error);
+    throw error;
+  }
+}
+
 
 
   async updateTimerProgress(timerProgress) {

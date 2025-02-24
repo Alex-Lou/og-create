@@ -56,7 +56,8 @@
             "Particule": "🔴",
             "Gène": "🧬",
             "Virus": "🦠⚡",
-            "Hormone": "💉"
+            "Hormone": "💉",
+            "Organisme": "🧬🔵"
         },
 
         "Taxonomie & Types d'Organismes Animaux": {
@@ -203,6 +204,8 @@
         }
     },
     "rules": {
+        "Cellule+Vie+Système": "Organisme",
+        "Cellule+Organisation": "Organisme",
         "Fleur+Nuit": "Fleur de Lune",
         "Animal+Muscle": "Chair",
         "Animal+Chair": "Viande",

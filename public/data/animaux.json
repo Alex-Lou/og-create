@@ -187,7 +187,8 @@
             "Comportement": "🧠🔄",
             "Coopération": "🐜🤝",
             "Groupe": "👥",
-            "Sauvage": "🐺🌲"
+            "Sauvage": "🐺🌲",
+            "Survie": "🌿🍖"
         },
         "Capacités de Vie/Cycles Naturels": {
             "Force Vitale": "✨❤️",
@@ -223,6 +224,8 @@
         
     },
     "rules": {
+        "Animal+Adaptation+Danger": "Survie",
+        "Vie+Résistance+Instinct": "Survie",
         "Corps+Eau": "Adaptation Aquatique",
         "Expérience+Pratique": "Habileté",
         "Main+Précision": "Dextérité",
