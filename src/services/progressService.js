@@ -26,7 +26,7 @@ class ProgressService {
             categoryProgress: progressData.categoryProgress,
             achievements: progressData.achievements,
             // Ne pas écraser les pièces si elles ne sont pas spécifiées
-            coins: progressData.totalCoins !== undefined ? progressData.totalCoins : undefined,
+            coins: progressData.coins !== undefined ? progressData.coins : undefined,
             timerProgress: {
                 completedQuestions: progressData.timerProgress?.completedQuestions || {},
                 unlockedCategories: progressData.timerProgress?.unlockedCategories || {},
@@ -90,7 +90,7 @@ class ProgressService {
         discoveredCategories: progress.discoveredCategories,
         achievements: currentAchievements,
         categoryProgress: progress.categoryProgress,
-        coins: progress.totalCoins,
+        coins: progress.coins,
         timerProgress: safeTimerProgress
       });
 

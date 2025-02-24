@@ -229,28 +229,37 @@ export default {
     },
 
     async handleContinue() {
-      const nextCategory = this.getNextUncompletedCategory();
-      this.showCompletionPopup = false;
-      
-      if (nextCategory) {
-        this.selectedCategory = nextCategory;
-        this.questions = this.questionsData.levels[this.selectedLevel].categories[nextCategory].questions;
-        this.currentQuestionIndex = 0;
-        this.shuffleQuestions();
-        await this.show();
-      }
-    },
+  const nextCategory = this.getNextUncompletedCategory();
+  this.showCompletionPopup = false;
+  
+  if (nextCategory) {
+    this.selectedCategory = nextCategory;
+    this.questions = this.questionsData.levels[this.selectedLevel].categories[nextCategory].questions;
+    this.currentQuestionIndex = 0;
+    this.shuffleQuestions();
+    
+    // Réinitialiser le timer et le redémarrer
+    this.$emit('reset-timer');
+    this.$emit('resume-timer');
+    
+    await this.show();
+  }
+},
 
-    handleCompletionClose() {
-      this.showCompletionPopup = false;
-      this.selectedCategory = null;
-      this.currentQuestionIndex = 0;
-      this.$parent.$emit('force-stop');
-      // Réinitialiser aussi le timer dans le bouton TimerMode
-      if (this.$parent.$refs.timerModeButton) {
-          this.$parent.$refs.timerModeButton.confirmStopTimer();
-      }
-    },
+handleCompletionClose() {
+  this.showCompletionPopup = false;
+  this.selectedCategory = null;
+  this.currentQuestionIndex = 0;
+  
+  // Déjà géré par force-stop, mais pour être sûr
+  this.$emit('stop-timer');
+  
+  this.$parent.$emit('force-stop');
+  // Réinitialiser aussi le timer dans le bouton TimerMode
+  if (this.$parent.$refs.timerModeButton) {
+    this.$parent.$refs.timerModeButton.confirmStopTimer();
+  }
+},
 
     cancelLevelSelection() {
       this.hide();
@@ -402,30 +411,33 @@ export default {
     },
  
     async nextQuestion() {      
-      this.$parent.currentTimerElements = [];
-      this.$parent.discoveredElements = ["Eau", "Feu", "Terre", "Air"];
+  this.$parent.currentTimerElements = [];
+  this.$parent.discoveredElements = ["Eau", "Feu", "Terre", "Air"];
 
-      if (this.$parent.$refs.craftSystem) {
-        this.$parent.$refs.craftSystem.resetCraftingBoard();
-      }
+  if (this.$parent.$refs.craftSystem) {
+    this.$parent.$refs.craftSystem.resetCraftingBoard();
+  }
 
-      if (this.currentQuestionIndex < this.questions.length - 1) {
-        this.currentQuestionIndex++;
-        await new Promise(resolve => setTimeout(resolve, 100));
-        await this.show();
-      } else {
-        // Catégorie terminée
-        this.showCompletionPopup = true;
-        this.completionMessage = `Félicitations ! Vous avez complété la catégorie ${this.selectedCategory}!`;
-        
-        const nextCategory = this.getNextUncompletedCategory();
-        this.completionSubMessage = nextCategory 
-          ? `Prochaine catégorie disponible : ${nextCategory}`
-          : 'Toutes les catégories sont complétées !';
+  if (this.currentQuestionIndex < this.questions.length - 1) {
+    this.currentQuestionIndex++;
+    await new Promise(resolve => setTimeout(resolve, 100));
+    await this.show();
+  } else {
+    // Catégorie terminée
+    this.showCompletionPopup = true;
+    this.completionMessage = `Félicitations ! Vous avez complété la catégorie ${this.selectedCategory}!`;
+    
+    const nextCategory = this.getNextUncompletedCategory();
+    this.completionSubMessage = nextCategory 
+      ? `Prochaine catégorie disponible : ${nextCategory}`
+      : 'Toutes les catégories sont complétées !';
 
-        await this.saveProgress();
-      }
-    },
+    // Émettre un événement pour mettre le timer en pause
+    this.$emit('pause-timer');
+
+    await this.saveProgress();
+  }
+},
  
     async answerCorrect() {
       const currentQuestion = this.currentQuestion;

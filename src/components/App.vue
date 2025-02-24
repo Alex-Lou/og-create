@@ -12,7 +12,7 @@
       <div class="title-area">
         <img src="@/assets/Svgs/Logo.png" alt="Logo" class="logo" />
         <h1>Origins Creation</h1>
-        <CoinCounter :coins="totalCoins" />
+        <CoinCounter :coins="coins" />
       </div>
       <div class="header-controls">
         <DarkToggle :isDarkMode="isDarkMode" @update:darkMode="updateDarkMode" />
@@ -93,6 +93,9 @@
       v-show="isTimerActive"
       ref="timerQuestions"
       @reset-timer="handleTimerReset"
+      @pause-timer="handleTimerPause"
+      @resume-timer="handleTimerResume"
+      @stop-timer="handleTimerStop"
       @set-initial-inventory="handleSetInitialInventory"
       @reset-craft-zone="handleResetCraftZone"
       @level-selected="handleLevelSelected"
@@ -173,7 +176,7 @@ export default {
       currentTimerElements: [],
       bestTimerScore: localStorage.getItem('bestTimerScore') || 0,
       selectedTimerLevel: null,
-      totalCoins: parseInt(localStorage.getItem('totalCoins')) || 0,
+      coins: parseInt(localStorage.getItem('coins')) || 0,
       timerProgress: {
         completedQuestions: {
           Facile: {},
@@ -245,6 +248,26 @@ export default {
         this.$refs.timerModeButton.handleLevelSelected(levelData);
       }
     },
+
+    handleTimerPause() {
+  if (this.$refs.timerModeButton) {
+    this.$refs.timerModeButton.pauseTimer();
+  }
+},
+
+handleTimerResume() {
+  if (this.$refs.timerModeButton) {
+    this.$refs.timerModeButton.resumeTimer();
+  }
+},
+
+handleTimerStop() {
+  if (this.$refs.timerModeButton) {
+    this.$refs.timerModeButton.stopTimer();
+  }
+},
+
+
     handleResetCraftZone() {
       if (this.$refs.craftSystem) {
         this.$refs.craftSystem.resetCraftingBoard();
@@ -301,8 +324,8 @@ export default {
         if (progress) {
           // Chargement des pièces
           if (progress.coins !== undefined) {
-            this.totalCoins = parseInt(progress.coins);
-            localStorage.setItem('totalCoins', this.totalCoins.toString());
+            this.coins = parseInt(progress.coins);
+            localStorage.setItem('coins', this.coins.toString());
           }
   
           // Chargement des éléments découverts
@@ -367,8 +390,8 @@ export default {
         this.discoveredElements = ["Eau", "Feu", "Terre", "Air"];
         this.discoveredCategories = ["Elements Fondamentaux"];
         this.categoryProgress = {};
-        this.totalCoins = 0; // Réinitialiser à 0 en cas d'erreur
-        localStorage.setItem('totalCoins', '0');
+        this.coins = 0; // Réinitialiser à 0 en cas d'erreur
+        localStorage.setItem('coins', '0');
         this.timerProgress = {
           completedQuestions: { Facile: {}, Moyen: {}, Difficile: {} },
           unlockedCategories: {},
@@ -388,7 +411,7 @@ export default {
             ? this.discoveredCategories
             : ["Elements Fondamentaux"],
           categoryProgress: this.categoryProgress || {},
-          totalCoins: this.totalCoins,
+          coins: this.coins,
           timerProgress: this.timerProgress
         };
   
@@ -417,8 +440,8 @@ export default {
         localStorage.removeItem('user');
         
         // Réinitialiser les pièces à 0 si non connecté
-        this.totalCoins = 0;
-        localStorage.removeItem('totalCoins');
+        this.coins = 0;
+        localStorage.removeItem('coins');
       }
     },
     updateDarkMode(newMode) {
@@ -620,12 +643,12 @@ export default {
       }
     },
     async handleCoinsEarned(amount) {
-      this.totalCoins += amount;
-      localStorage.setItem('totalCoins', this.totalCoins.toString());
+      this.coins += amount;
+      localStorage.setItem('coins', this.coins.toString());
       
       if (this.isLoggedIn) {
         try {
-          await progressService.updateCoins(this.totalCoins);
+          await progressService.updateCoins(this.coins);
         } catch (error) {
           console.error("Erreur lors de la mise à jour des pièces:", error);
         }

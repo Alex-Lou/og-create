@@ -103,11 +103,24 @@
             }
         },
         pauseTimer() {
-            clearInterval(this.timerInterval);
-            this.timerInterval = null;
-            // Garder isTimerActive à true pour maintenir l'affichage
-            this.timeRemaining = 300; // 5 minutes
-            // Pas de changement d'état du timer pour maintenir l'affichage
+            if (this.timerInterval) {
+                clearInterval(this.timerInterval);
+                this.timerInterval = null;
+            }
+            // Le timer reste actif mais l'intervalle est arrêté
+        },
+
+            resumeTimer() {
+            if (this.isTimerActive && !this.timerInterval) {
+                this.timerInterval = setInterval(() => {
+                if (this.timeRemaining > 0) {
+                    this.timeRemaining--;
+                } else {
+                    this.stopTimer();
+                    this.$emit('timer-complete');
+                }
+                }, 1000);
+            }
         },
         
         confirmStopTimer() {
