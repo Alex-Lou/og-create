@@ -2,7 +2,6 @@
   <div>
     <div v-if="isVisible" class="questions-container">
       <div class="questions-box">
-        <!-- Modal de sélection du niveau -->
         <div v-if="!selectedLevel" class="level-selection">
           <button @click="cancelLevelSelection" class="close-modal-btn">&times;</button>
           <h2 class="level-title">Choisissez votre niveau</h2>
@@ -18,7 +17,6 @@
           </div>
         </div>
 
-        <!-- Modal de sélection de la catégorie -->
         <div v-else-if="!selectedCategory" class="category-selection">
           <button @click="cancelCategorySelection" class="close-modal-btn">&times;</button>
           <h2 class="level-title">Choisissez une catégorie</h2>
@@ -27,17 +25,18 @@
               v-for="(category, categoryName) in availableCategories" 
               :key="categoryName"
               @click="selectCategory(categoryName)"
-              class="level-button"
+              :class="['level-button', {
+                'completed': isCategoryCompleted(categoryName)
+              }]"
             >
               {{ categoryName }} 
               <span class="questions-count">
-                {{ getCompletedQuestionsCount(categoryName) }}/{{ category.questions.length }}
+                {{ getCompletedQuestionsCount(categoryName) }}
               </span>
             </button>
           </div>
         </div>
  
-        <!-- Affichage des questions -->
         <div v-else>
           <p class="question-text">
             {{ isTimeUp ? "Temps épuisé !" : currentQuestion.text }}
@@ -57,11 +56,33 @@
       </div>
     </div>
  
-    <!-- Popup de succès -->
     <div v-if="showSuccessPopup" class="success-popup">
       <div class="success-content">
         <p>Correct !</p>
-        <p class="points-earned">+{{ currentQuestion.points || 10 }} pièces</p>
+        <p class="points-earned" v-if="isNewQuestion">+{{ currentQuestion.points || 10 }} pièces</p>
+        <p class="points-earned" v-else>Question déjà complétée</p>
+      </div>
+    </div>
+
+    <div v-if="showCompletionPopup" class="completion-popup">
+      <div class="completion-content">
+        <h3>{{ completionMessage }}</h3>
+        <p>{{ completionSubMessage }}</p>
+        <div class="completion-buttons">
+          <button 
+            v-if="getNextUncompletedCategory()"
+            @click="handleContinue" 
+            class="completion-button continue-button"
+          >
+            Continuer
+          </button>
+          <button 
+            @click="handleCompletionClose" 
+            class="completion-button ok-button"
+          >
+            OK
+          </button>
+        </div>
       </div>
     </div>
   </div>
@@ -92,7 +113,11 @@ export default {
       selectedCategory: null,
       questionsData: null,
       showSuccessPopup: false,
+      showCompletionPopup: false,
+      completionMessage: '',
+      completionSubMessage: '',
       isLoading: false,
+      isNewQuestion: true,
       completedQuestions: {
         Facile: {},
         Moyen: {},
@@ -127,6 +152,9 @@ export default {
       return this.currentQuestion.validAnswers.filter(answer => 
         this.$parent.discoveredElements.includes(answer)
       ).length;
+    },
+    remainingCategories() {
+      return Object.keys(this.availableCategories).filter(cat => !this.isCategoryCompleted(cat));
     }
   },
   async created() {
@@ -137,12 +165,20 @@ export default {
     }
   },
   methods: {
+    isCategoryCompleted(categoryName) {
+      if (!this.selectedLevel || !this.completedQuestions[this.selectedLevel]) return false;
+      
+      const questionsForCategory = this.completedQuestions[this.selectedLevel][categoryName];
+      if (!questionsForCategory) return false;
+
+      const totalQuestions = this.questionsData.levels[this.selectedLevel].categories[categoryName].questions.length;
+      return Array.isArray(questionsForCategory) && questionsForCategory.length >= totalQuestions;
+    },
+
     async loadProgress() {
       try {
-        console.log('Chargement de la progression...');
         const progress = await progressService.loadGameProgress();
         if (progress?.timerProgress?.completedQuestions) {
-          console.log('Progression chargée:', progress.timerProgress);
           this.completedQuestions = {
             Facile: progress.timerProgress.completedQuestions.Facile || {},
             Moyen: progress.timerProgress.completedQuestions.Moyen || {},
@@ -155,21 +191,19 @@ export default {
     },
 
     getCompletedQuestionsCount(categoryName) {
-      if (!this.selectedLevel || !this.completedQuestions[this.selectedLevel]) return 0;
+      if (!this.selectedLevel || !this.completedQuestions[this.selectedLevel]) return '0/0';
+      
       const questionsForCategory = this.completedQuestions[this.selectedLevel][categoryName];
-      return Array.isArray(questionsForCategory) ? questionsForCategory.length : 0;
+      const totalQuestions = this.questionsData.levels[this.selectedLevel].categories[categoryName].questions.length;
+      
+      const completedCount = Array.isArray(questionsForCategory) ? questionsForCategory.length : 0;
+      return `${completedCount}/${totalQuestions}`;
     },
 
     async saveProgress() {
-      if (!this.isLoggedIn) {
-        console.log('Utilisateur non connecté, pas de sauvegarde');
-        return;
-      }
+      if (!this.isLoggedIn) return;
 
       try {
-        console.log('Sauvegarde de la progression timer...');
-        console.log('État actuel completedQuestions:', this.completedQuestions);
-
         const timerProgress = {
           completedQuestions: this.completedQuestions,
           unlockedCategories: {
@@ -184,11 +218,37 @@ export default {
           }
         };
 
-        console.log('Tentative de sauvegarde avec:', timerProgress);
         await progressService.updateTimerProgress(timerProgress);
-        console.log('Sauvegarde réussie');
       } catch (error) {
         console.error('Erreur lors de la sauvegarde de la progression:', error);
+      }
+    },
+
+    getNextUncompletedCategory() {
+      return this.remainingCategories[0];
+    },
+
+    async handleContinue() {
+      const nextCategory = this.getNextUncompletedCategory();
+      this.showCompletionPopup = false;
+      
+      if (nextCategory) {
+        this.selectedCategory = nextCategory;
+        this.questions = this.questionsData.levels[this.selectedLevel].categories[nextCategory].questions;
+        this.currentQuestionIndex = 0;
+        this.shuffleQuestions();
+        await this.show();
+      }
+    },
+
+    handleCompletionClose() {
+      this.showCompletionPopup = false;
+      this.selectedCategory = null;
+      this.currentQuestionIndex = 0;
+      this.$parent.$emit('force-stop');
+      // Réinitialiser aussi le timer dans le bouton TimerMode
+      if (this.$parent.$refs.timerModeButton) {
+          this.$parent.$refs.timerModeButton.confirmStopTimer();
       }
     },
 
@@ -208,26 +268,19 @@ export default {
     async loadRecipes() {
       try {
         const response = await fetch('/data/animaux.json');
-        if (!response.ok) {
-          throw new Error(`HTTP error! status: ${response.status}`);
-        }
+        if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
         this.recipesData = await response.json();
       } catch (error) {
-        // Gestion silencieuse de l'erreur sans log en production
+        console.error('Erreur lors du chargement des recettes:', error);
       }
     },
 
     async loadQuestionsData() {
       try {
         const response = await fetch('/data/timer-questions.json');
-        if (!response.ok) {
-          throw new Error(`HTTP error! status: ${response.status}`);
-        }
+        if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
         this.questionsData = await response.json();
       } catch (error) {
-        if (process.env.NODE_ENV !== 'production') {
-          console.error('Erreur lors du chargement des questions:', error);
-        }
         this.questionsData = {
           levels: {
             "Facile": {
@@ -270,6 +323,7 @@ export default {
         this.selectedCategory = category;
         this.questions = this.questionsData.levels[this.selectedLevel].categories[category].questions;
         this.shuffleQuestions();
+        this.currentQuestionIndex = 0;
         await this.show();
       } finally {
         this.isLoading = false;
@@ -279,12 +333,6 @@ export default {
     markQuestionAsCompleted(questionId) {
       if (!this.selectedLevel || !this.selectedCategory) return;
       
-      console.log('Marquage de la question comme complétée:', {
-        level: this.selectedLevel,
-        category: this.selectedCategory,
-        questionId
-      });
-
       if (!this.completedQuestions[this.selectedLevel]) {
         this.completedQuestions[this.selectedLevel] = {};
       }
@@ -292,8 +340,11 @@ export default {
         this.completedQuestions[this.selectedLevel][this.selectedCategory] = [];
       }
       
-      if (!this.completedQuestions[this.selectedLevel][this.selectedCategory].includes(questionId)) {
-        this.completedQuestions[this.selectedLevel][this.selectedCategory].push(questionId);
+      const existingQuestions = this.completedQuestions[this.selectedLevel][this.selectedCategory];
+      this.isNewQuestion = !existingQuestions.includes(questionId);
+      
+      if (this.isNewQuestion) {
+        existingQuestions.push(questionId);
         this.saveProgress();
       }
     },
@@ -353,19 +404,26 @@ export default {
     async nextQuestion() {      
       this.$parent.currentTimerElements = [];
       this.$parent.discoveredElements = ["Eau", "Feu", "Terre", "Air"];
- 
+
       if (this.$parent.$refs.craftSystem) {
         this.$parent.$refs.craftSystem.resetCraftingBoard();
       }
- 
+
       if (this.currentQuestionIndex < this.questions.length - 1) {
         this.currentQuestionIndex++;
         await new Promise(resolve => setTimeout(resolve, 100));
         await this.show();
       } else {
-        this.currentQuestionIndex = 0;
-        await new Promise(resolve => setTimeout(resolve, 100));
-        await this.show();
+        // Catégorie terminée
+        this.showCompletionPopup = true;
+        this.completionMessage = `Félicitations ! Vous avez complété la catégorie ${this.selectedCategory}!`;
+        
+        const nextCategory = this.getNextUncompletedCategory();
+        this.completionSubMessage = nextCategory 
+          ? `Prochaine catégorie disponible : ${nextCategory}`
+          : 'Toutes les catégories sont complétées !';
+
+        await this.saveProgress();
       }
     },
  
@@ -373,6 +431,7 @@ export default {
       const currentQuestion = this.currentQuestion;
       const validationMode = currentQuestion.initialElements?.validationMode || 'any';
       const points = currentQuestion.points || 10;
+      const questionId = currentQuestion.id || `${this.selectedCategory}_${this.currentQuestionIndex}`;
 
       if (validationMode === 'any') {
         const isValidAnswer = currentQuestion.validAnswers.some(answer => 
@@ -385,12 +444,13 @@ export default {
               this.$parent.discoveredElements.push(element);
             }
           });
- 
-          this.currentScore += points;
-          this.$emit('coins-earned', points);
-          const questionId = currentQuestion.id || `${this.selectedCategory}_${this.currentQuestionIndex}`;
-          console.log('Question réussie, ID:', questionId);
+
           this.markQuestionAsCompleted(questionId);
+          if (this.isNewQuestion) {
+            this.currentScore += points;
+            this.$emit('coins-earned', points);
+          }
+
           this.hide();
           
           this.showSuccessPopup = true;
@@ -408,12 +468,13 @@ export default {
               this.$parent.discoveredElements.push(element);
             }
           });
- 
-          this.currentScore += points;
-          this.$emit('coins-earned', points);
-          const questionId = currentQuestion.id || `${this.selectedCategory}_${this.currentQuestionIndex}`;
-          console.log('Question réussie (multiple), ID:', questionId);
+
           this.markQuestionAsCompleted(questionId);
+          if (this.isNewQuestion) {
+            this.currentScore += points;
+            this.$emit('coins-earned', points);
+          }
+
           this.hide();
           
           this.showSuccessPopup = true;
@@ -424,7 +485,7 @@ export default {
         }
       }
     },
- 
+
     resetQuestions() {
       this.loadQuestionsAndReset();
       this.currentScore = 0;
@@ -432,4 +493,3 @@ export default {
   }
 }
 </script>
- 

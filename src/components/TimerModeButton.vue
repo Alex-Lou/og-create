@@ -102,6 +102,13 @@
                 this.showStopConfirmModal = true;
             }
         },
+        pauseTimer() {
+            clearInterval(this.timerInterval);
+            this.timerInterval = null;
+            // Garder isTimerActive à true pour maintenir l'affichage
+            this.timeRemaining = 300; // 5 minutes
+            // Pas de changement d'état du timer pour maintenir l'affichage
+        },
         
         confirmStopTimer() {
             this.stopTimer();

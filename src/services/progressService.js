@@ -18,39 +18,35 @@ axiosInstance.interceptors.request.use(config => {
 class ProgressService {
   async saveGameProgress(progressData) {
     try {
-      console.log('saveGameProgress - Données reçues:', progressData);
-      console.log('timerProgress à sauvegarder:', progressData.timerProgress);
+        console.log('saveGameProgress - Données reçues:', progressData);
 
-      // S'assurer que timerProgress a la bonne structure
-      const safeTimerProgress = {
-        completedQuestions: progressData.timerProgress?.completedQuestions || {},
-        unlockedCategories: progressData.timerProgress?.unlockedCategories || {},
-        bestScores: {
-          Facile: progressData.timerProgress?.bestScores?.Facile || 0,
-          Moyen: progressData.timerProgress?.bestScores?.Moyen || 0,
-          Difficile: progressData.timerProgress?.bestScores?.Difficile || 0
-        }
-      };
+        const dataToSend = {
+            discoveredElements: progressData.discoveredElements,
+            discoveredCategories: progressData.discoveredCategories,
+            categoryProgress: progressData.categoryProgress,
+            achievements: progressData.achievements,
+            // Ne pas écraser les pièces si elles ne sont pas spécifiées
+            coins: progressData.totalCoins !== undefined ? progressData.totalCoins : undefined,
+            timerProgress: {
+                completedQuestions: progressData.timerProgress?.completedQuestions || {},
+                unlockedCategories: progressData.timerProgress?.unlockedCategories || {},
+                bestScores: progressData.timerProgress?.bestScores || {
+                    Facile: 0,
+                    Moyen: 0,
+                    Difficile: 0
+                }
+            }
+        };
 
-      const dataToSend = {
-        discoveredElements: progressData.discoveredElements,
-        discoveredCategories: progressData.discoveredCategories,
-        categoryProgress: progressData.categoryProgress,
-        achievements: progressData.achievements,
-        coins: progressData.totalCoins,
-        timerProgress: safeTimerProgress
-      };
+        console.log('Données formatées à envoyer:', dataToSend);
 
-      console.log('Données formatées à envoyer:', dataToSend);
-
-      const response = await axiosInstance.post('save', dataToSend);
-      console.log('Réponse de sauvegarde:', response.data);
-      return response.data;
+        const response = await axiosInstance.post('save', dataToSend);
+        return response.data;
     } catch (error) {
-      console.error('Erreur détaillée dans saveGameProgress:', error.response || error);
-      throw error;
+        console.error('Erreur dans saveGameProgress:', error);
+        throw error;
     }
-  }
+}
 
   async loadGameProgress() {
     try {
@@ -107,14 +103,23 @@ class ProgressService {
 
   async updateCoins(coins) {
     try {
-      console.log('Mise à jour des pièces:', coins);
-      const response = await axiosInstance.post('update-coins', { coins });
-      return response.data;
+        console.log('Mise à jour des pièces:', coins);
+        // S'assurer que coins est un nombre
+        const coinsToSave = parseInt(coins);
+        
+        if (isNaN(coinsToSave)) {
+            throw new Error('Le montant des pièces doit être un nombre valide');
+        }
+
+        // Uniquement mettre à jour les pièces, pas la progression complète
+        const response = await axiosInstance.post('update-coins', { coins: coinsToSave });
+        return response.data;
     } catch (error) {
-      console.error('Erreur lors de la mise à jour des pièces:', error);
-      throw error;
+        console.error('Erreur lors de la mise à jour des pièces:', error);
+        throw error;
     }
-  }
+}
+
 
   async updateTimerProgress(timerProgress) {
     try {
