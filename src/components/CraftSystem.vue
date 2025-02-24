@@ -27,8 +27,8 @@
             @dragend="dragEnd($event, index)"
             @dragover.prevent
             @drop.stop="handleDropOnSelectedElement($event, resource, index)"
+            :class="['draggable-resource', { 'shake-animation': isShaking }]"
             :style="{ position: resourcePositions[index] ? 'absolute' : 'static', top: resourcePositions[index]?.top + 'px', left: resourcePositions[index]?.left + 'px' }"
-            class="draggable-resource"
           >
             {{ elementEmojis[resource] || '' }} {{ resource }}
           </li>
@@ -105,17 +105,18 @@ export default {
       lastCraftedPosition: null,
       isDraggingSelected: false,
       isDraggingCrafted: false,
+      isShaking: false,
     };
   },
   methods: {
     selectResource(resource) {
-  if (this.selected.length < 4 && resource) {
-    this.selected.push(resource.trim());
-    this.resourcePositions.push(null);
-  } else {
-    this.$emit('show-alert', 'You can only select up to 4 elements for crafting!');
-  }
-},
+      if (this.selected.length < 4 && resource) {
+        this.selected.push(resource.trim());
+        this.resourcePositions.push(null);
+      } else {
+        this.$emit('show-alert', 'You can only select up to 4 elements for crafting!');
+      }
+    },
     resetCraftingBoard() {
       this.resetSelection();
       this.alertShown = false;
@@ -125,6 +126,7 @@ export default {
       this.lastCraftedPosition = null;
       this.isDraggingSelected = false;
       this.isDraggingCrafted = false;
+      this.isShaking = false;
       this.$emit('board-reset');
     },
     resetSelection() {
@@ -155,7 +157,13 @@ export default {
       const craftedItem = this.craftingRecipes[sortedSelected];
 
       if (!craftedItem) {
-        this.$emit('show-alert', 'Invalid combination.');
+        const selectedElements = document.querySelectorAll('#selected-resources li');
+        selectedElements.forEach(el => {
+          el.classList.add('shake-animation');
+          setTimeout(() => {
+            el.classList.remove('shake-animation');
+          }, 500);
+        });
         this.craftingInProgress = false;
         return;
       }
@@ -204,7 +212,6 @@ export default {
       if (event.key === 'r') {
         this.resetCraftingBoard();
       }
-      // Ajout de la touche 'c' pour nettoyer
       if (event.key === 'c') {
         this.resetCraftingBoard();
       }
@@ -220,14 +227,12 @@ export default {
     handleDrop(event) {
       const element = event.dataTransfer.getData('text/plain');
       if (element && this.elementEmojis[element]) {
-        // Si c'est un élément qui était déjà dans la liste
         if (this.selected.includes(element)) {
           const index = this.selected.indexOf(element);
           this.selected.splice(index, 1);
           this.resourcePositions.splice(index, 1);
           this.selectResource(element);
         }
-        // Si c'est un nouvel élément (crafté ou de l'inventaire)
         else if (!this.selected.includes(element)) {
           this.selectResource(element);
           if (this.draggingElementIndex !== null) {
@@ -243,15 +248,12 @@ export default {
       event.preventDefault();
       const draggedResource = event.dataTransfer.getData('text/plain');
       
-      // Vérifie si l'élément draggé vient des éléments craftés
       const isFromCraftedElements = this.craftedElements.some(el => el.name === draggedResource);
       
-      // Si l'élément vient des craftedElements, on ignore le drop
       if (isFromCraftedElements) {
         return;
       }
       
-      // Si on ne drop pas le même élément sur lui-même
       if (this.draggingElementIndex !== targetIndex) {
         const elements = [draggedResource, targetResource].sort();
         const combination = elements.join('+');
@@ -276,6 +278,11 @@ export default {
               moved: false,
             });
           }, 1);
+        } else {
+          this.isShaking = true;
+          setTimeout(() => {
+            this.isShaking = false;
+          }, 400);
         }
       }
       this.draggingElementIndex = null;
@@ -286,30 +293,24 @@ export default {
       event.preventDefault();
       const draggedElement = event.dataTransfer.getData('text/plain');
       
-      // Vérifie si l'élément draggé vient de la liste selected
       const isFromSelected = this.selected.includes(draggedElement);
       
-      // Si l'élément vient de selected, on ignore le drop
       if (isFromSelected) {
         return;
       }
       
-      // Logique existante pour la fusion des éléments craftés
       const elements = [draggedElement, targetElement].sort();
       const combination = elements.join('+');
       
       const result = this.craftingRecipes[combination];
       
       if (result) {
-        // Supprimer l'élément source
         if (this.draggingElementIndex !== null) {
           this.craftedElements.splice(this.draggingElementIndex, 1);
         }
         
-        // Supprimer l'élément cible
         this.craftedElements.splice(targetIndex, 1);
         
-        // Créer le nouvel élément
         const dropPosition = {
           top: event.offsetY,
           left: event.offsetX,
@@ -322,6 +323,11 @@ export default {
         });
         
         this.$emit('craft-success', result);
+      } else {
+        this.isShaking = true;
+        setTimeout(() => {
+          this.isShaking = false;
+        }, 400);
       }
       
       this.draggingElementIndex = null;
