@@ -1,0 +1,172 @@
+.explorer-container {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    width: 100%;
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 20px;
+    color: white;
+  }
+  
+  .energy-info {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background-color: rgba(0, 0, 0, 0.7);
+    padding: 10px 15px;
+    border-radius: 8px;
+  }
+  
+  .energy-display {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 1.2rem;
+    font-weight: bold;
+  }
+  
+  .energy-icon {
+    color: yellow;
+  }
+  
+  .map-container {
+    position: relative;
+    width: 100%;
+    height: 0;
+    padding-bottom: 56.25%; /* Ratio 16:9 */
+    margin-bottom: 20px;
+  }
+  
+  .map-image {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    border-radius: 8px;
+  }
+  
+  .region-marker {
+    position: absolute;
+    width: 30px;
+    height: 30px;
+    transform: translate(-50%, -50%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    z-index: 10;
+    background: none;
+  }
+  
+  .region-marker svg {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    top: 0;
+    left: 0;
+  }
+  
+  
+  .region-marker.completed {
+    background-color: #9C27B0;
+  }
+  
+  .region-marker.locked {
+  
+    cursor: not-allowed;
+  }
+  
+  .region-name {
+    position: absolute;
+    top: -25px;
+    width: max-content;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: rgba(0, 0, 0, 0.7);
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-size: 0.8rem;
+    white-space: nowrap;
+    visibility: hidden;
+  }
+  
+  .region-marker:hover .region-name {
+    visibility: visible;
+  }
+  
+  .region-lock {
+    font-size: 1.2rem;
+  }
+  
+  .region-info {
+    background-color: rgba(0, 0, 0, 0.7);
+    padding: 15px;
+    border-radius: 8px;
+  }
+  
+  .region-info h3 {
+    margin-top: 0;
+    margin-bottom: 10px;
+  }
+  
+  .region-progress {
+    margin: 15px 0;
+  }
+  
+  .progress-bar {
+    width: 100%;
+    height: 10px;
+    background-color: #444;
+    border-radius: 5px;
+    overflow: hidden;
+    margin-top: 5px;
+  }
+  
+  .progress-fill {
+    height: 100%;
+    background-color: #4CAF50;
+    transition: width 0.3s ease;
+  }
+  
+  .region-actions {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin-top: 15px;
+  }
+  
+  .explore-btn {
+    padding: 8px 16px;
+    background-color: #2196F3;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+  
+  .explore-btn:hover {
+    background-color: #1976D2;
+  }
+  
+  .explore-btn:disabled {
+    background-color: #9E9E9E;
+    cursor: not-allowed;
+  }
+  
+  .back-btn {
+    padding: 10px 20px;
+    background-color: #f44336;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    align-self: center;
+    margin-top: 20px;
+  }
+  
+  .back-btn:hover {
+    background-color: #d32f2f;
+  }

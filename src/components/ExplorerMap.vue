@@ -74,11 +74,14 @@
       />
     </div>
   </template>
-
-
+  
+  
   <script>
+  import '@/assets/ExplorerMapStyle.css';
   import explorerService from '@/services/explorerService';
   import NpcDialog from './NpcDialog.vue';
+  // Dans Vue, @/ pointe vers le dossier src, mais public est accessible directement
+  import axios from 'axios'; // Assurez-vous d'avoir installé axios
   
   export default {
     name: 'ExplorerMap',
@@ -108,44 +111,8 @@
           dialog: [],
           actionText: 'Commencer à crafter'
         },
-        regionChallenges: {
-          // Définir les défis par région
-          // ID de région => dialogue et éléments à crafter
-          1: {
-            npcImage: 'npc1.png',
-            dialog: [
-              "Bienvenue dans la Forêt Primordiale, voyageur !",
-              "Notre forêt regorge de vie et d'énergie, mais elle est menacée par un déséquilibre mystérieux.",
-              "Pour restaurer l'harmonie, tu dois créer l'essence de la forêt en combinant les éléments fondamentaux.",
-              "Essaie de combiner l'Eau et la Terre pour former de la Boue, puis ajoute de l'Air pour créer de la Vie."
-            ],
-            requiredElements: ["Vie"],
-            actionText: "Relever le défi"
-          },
-          2: {
-            npcImage: 'npc1.png',
-            dialog: [
-              "Ah, tu as trouvé la Rivière Cristalline !",
-              "Ces eaux contiennent une énergie pure et régénératrice.",
-              "Si tu pouvais créer un cristal en combinant la Terre et l'Eau de manière spéciale, cela nous aiderait beaucoup.",
-              "Essaie de combiner différents éléments avec de l'Eau pour découvrir le secret."
-            ],
-            requiredElements: ["Cristal"],
-            actionText: "Accepter la mission"
-          },
-          3: {
-            npcImage: 'npc1.png',
-            dialog: [
-              "La Montagne Éternelle... peu de gens osent s'y aventurer.",
-              "Les anciens racontent qu'un métal rare se trouve à son sommet.",
-              "Pour le forger, tu devras combiner la Terre et le Feu d'une façon unique.",
-              "Es-tu prêt à découvrir ce minerai légendaire ?"
-            ],
-            requiredElements: ["Métal"],
-            actionText: "Commencer la forge"
-          }
-          // Ajoutez d'autres défis pour d'autres régions
-        }
+        // Utilisation du JSON importé pour les défis des régions
+        regionChallenges: {}
       };
     },
     methods: {
@@ -183,7 +150,7 @@
         try {
           this.loading = true;
           
-          // Charger en parallèle l'initialisation et les régions
+          // Charger en parallèle l'initialisation, les régions, et les défis
           const [initData, regionsData] = await Promise.all([
             explorerService.initExplorer(),
             explorerService.getRegions()
@@ -197,6 +164,9 @@
           // Mise à jour des régions
           this.regions = regionsData;
           
+          // Charger les défis depuis le fichier JSON
+          await this.loadRegionChallenges();
+          
           // Démarrer le timer pour le décompte d'énergie
           this.startEnergyTimer();
         } catch (error) {
@@ -204,6 +174,51 @@
         } finally {
           this.loading = false;
         }
+      },
+      
+      async loadRegionChallenges() {
+        try {
+          // Charger le fichier JSON depuis le dossier public
+          const response = await axios.get('/data/regionChallenges.json');
+          const regionChallengesData = response.data;
+          
+          // Convertir le tableau des régions du JSON en un objet avec l'ID comme clé
+          const challenges = {};
+          regionChallengesData.regions.forEach(region => {
+            challenges[region.id] = {
+              npcImage: region.npcImage,
+              dialog: region.dialog,
+              requiredElements: region.requiredElements,
+              actionText: region.actionText,
+              rewardCoins: region.rewardCoins,
+              rewardXp: region.rewardXp,
+              unlockHint: region.unlockHint
+            };
+          });
+          
+          this.regionChallenges = challenges;
+        } catch (error) {
+          console.error('Erreur lors du chargement des défis de régions:', error);
+          // Définir des défis par défaut en cas d'échec
+          this.setupDefaultChallenges();
+        }
+      },
+      
+      // Méthode de secours pour définir des défis par défaut
+      setupDefaultChallenges() {
+        this.regionChallenges = {
+          1: {
+            npcImage: 'npc1.png',
+            dialog: [
+              "Bienvenue dans la Forêt Primordiale, voyageur !",
+              "Notre forêt regorge de vie et d'énergie, mais elle est menacée par un déséquilibre mystérieux.",
+              "Pour restaurer l'harmonie, tu dois créer l'essence de la forêt en combinant les éléments fondamentaux."
+            ],
+            requiredElements: ["Vie"],
+            actionText: "Relever le défi"
+          },
+          // Ajoutez d'autres défis par défaut si nécessaire
+        };
       },
       
       startEnergyTimer() {
@@ -241,20 +256,20 @@
         if (this.regionChallenges[region.id]) {
             const challenge = this.regionChallenges[region.id];
             this.currentNpc = {
-            image: challenge.npcImage,
-            dialog: challenge.dialog,
-            actionText: challenge.actionText
+              image: challenge.npcImage,
+              dialog: challenge.dialog,
+              actionText: challenge.actionText
             };
         } else {
             // Dialogue par défaut si aucun défi spécifique n'est défini
             this.currentNpc = {
-            image: 'npc1.png',
-            dialog: [
+              image: 'npc1.png',
+              dialog: [
                 `Bienvenue dans ${region.name}, explorateur !`,
                 "Cette région est pleine de mystères à découvrir.",
                 "Essaie de combiner les éléments fondamentaux pour découvrir les secrets de cet endroit."
-            ],
-            actionText: "Commencer à crafter"
+              ],
+              actionText: "Commencer à crafter"
             };
         }
       },
@@ -320,179 +335,3 @@
     }
   }
   </script>
-  
-
-<style scoped>
-.explorer-container {
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-  width: 100%;
-  max-width: 1000px;
-  margin: 0 auto;
-  padding: 20px;
-  color: white;
-}
-
-.energy-info {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  background-color: rgba(0, 0, 0, 0.7);
-  padding: 10px 15px;
-  border-radius: 8px;
-}
-
-.energy-display {
-  display: flex;
-  align-items: center;
-  gap: 5px;
-  font-size: 1.2rem;
-  font-weight: bold;
-}
-
-.energy-icon {
-  color: yellow;
-}
-
-.map-container {
-  position: relative;
-  width: 100%;
-  height: 0;
-  padding-bottom: 56.25%; /* Ratio 16:9 */
-  margin-bottom: 20px;
-}
-
-.map-image {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  object-fit: contain;
-  border-radius: 8px;
-}
-
-.region-marker {
-  position: absolute;
-  width: 30px;
-  height: 30px;
-  transform: translate(-50%, -50%);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  z-index: 10;
-  background: none;
-}
-
-.region-marker svg {
-  width: 100%;
-  height: 100%;
-  position: absolute;
-  top: 0;
-  left: 0;
-}
-
-
-.region-marker.completed {
-  background-color: #9C27B0;
-}
-
-.region-marker.locked {
-
-  cursor: not-allowed;
-}
-
-.region-name {
-  position: absolute;
-  top: -25px;
-  width: max-content;
-  left: 50%;
-  transform: translateX(-50%);
-  background-color: rgba(0, 0, 0, 0.7);
-  padding: 2px 6px;
-  border-radius: 4px;
-  font-size: 0.8rem;
-  white-space: nowrap;
-  visibility: hidden;
-}
-
-.region-marker:hover .region-name {
-  visibility: visible;
-}
-
-.region-lock {
-  font-size: 1.2rem;
-}
-
-.region-info {
-  background-color: rgba(0, 0, 0, 0.7);
-  padding: 15px;
-  border-radius: 8px;
-}
-
-.region-info h3 {
-  margin-top: 0;
-  margin-bottom: 10px;
-}
-
-.region-progress {
-  margin: 15px 0;
-}
-
-.progress-bar {
-  width: 100%;
-  height: 10px;
-  background-color: #444;
-  border-radius: 5px;
-  overflow: hidden;
-  margin-top: 5px;
-}
-
-.progress-fill {
-  height: 100%;
-  background-color: #4CAF50;
-  transition: width 0.3s ease;
-}
-
-.region-actions {
-  display: flex;
-  justify-content: center;
-  gap: 10px;
-  margin-top: 15px;
-}
-
-.explore-btn {
-  padding: 8px 16px;
-  background-color: #2196F3;
-  color: white;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-}
-
-.explore-btn:hover {
-  background-color: #1976D2;
-}
-
-.explore-btn:disabled {
-  background-color: #9E9E9E;
-  cursor: not-allowed;
-}
-
-.back-btn {
-  padding: 10px 20px;
-  background-color: #f44336;
-  color: white;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-  align-self: center;
-  margin-top: 20px;
-}
-
-.back-btn:hover {
-  background-color: #d32f2f;
-}
-</style>
