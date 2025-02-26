@@ -147,6 +147,8 @@
 
 /* Existing CSS remains the same until the particle-related section */
 
+/* Existing CSS remains the same until the particle-related section */
+
 /* Modification pour les particules */
 .progress-bar-fill::before,
 .progress-bar-fill::after,
@@ -160,11 +162,11 @@
   background: rgba(104, 128, 164, 0.5);
   border-radius: 50%;
   box-shadow: 0 0 5px rgba(255, 255, 255, 0.3), 0 0 10px rgba(255, 255, 255, 0.1);
-  animation: particleMove 10s infinite linear;
+  animation: particleMove 3s infinite linear;
   opacity: 0;
 }
 
-/* Décalage vertical pour une boule sur deux */
+/* Génération dynamique des particules avec effet zigzag */
 .progress-bar-fill::before {
   left: 10%;
   animation-delay: 0.2s;
@@ -175,7 +177,7 @@
   left: 20%;
   animation-delay: 0.4s;
   opacity: 1;
-  transform: translateY(-8px); /* Décalage de 2px vers le haut */
+  transform: translateY(-3px); /* Légèrement plus haut */
 }
 
 .progress-bar-fill .particle-20 { 
@@ -188,7 +190,7 @@
   left: 40%; 
   animation-delay: 0.8s; 
   opacity: 1;
-  transform: translateY(-5px); /* Décalage de 2px vers le haut */
+  transform: translateY(-3px); /* Légèrement plus haut */
 }
 
 .progress-bar-fill .particle-40 { 
@@ -201,7 +203,7 @@
   left: 60%; 
   animation-delay: 1.2s; 
   opacity: 1;
-  transform: translateY(-5px); /* Décalage de 2px vers le haut */
+  transform: translateY(-3px); /* Légèrement plus haut */
 }
 
 .progress-bar-fill .particle-60 { 
@@ -214,7 +216,7 @@
   left: 80%; 
   animation-delay: 1.6s; 
   opacity: 1;
-  transform: translateY(-5px); /* Décalage de 2px vers le haut */
+  transform: translateY(-3px); /* Légèrement plus haut */
 }
 
 .progress-bar-fill .particle-80 { 
