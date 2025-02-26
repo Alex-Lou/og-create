@@ -3,6 +3,14 @@ const TerserPlugin = require('terser-webpack-plugin'); // Importation de TerserP
 
 module.exports = defineConfig({
   transpileDependencies: true,
+  devServer: {
+    proxy: {
+      '/api': {
+        target: 'http://localhost:3000', // Assure-toi que ton backend est bien sur ce port
+        changeOrigin: true
+      }
+    }
+  },
   // Ajout des feature flags
   chainWebpack: (config) => {
     config.plugin('define').tap((definitions) => {

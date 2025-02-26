@@ -258,6 +258,7 @@ header h1 {
     background: linear-gradient(90deg, #4dd0e1, #00acc1, #ff7f00, #ff0000);
     background-size: 400% 400%;
     -webkit-background-clip: text;
+    background-clip: text;
     -webkit-text-fill-color: transparent;
     animation: gradientShift 6s ease-in-out infinite;
     text-shadow: 0 0 10px rgba(255, 255, 255, 0.5), 0 0 20px rgba(255, 255, 255, 0.3);

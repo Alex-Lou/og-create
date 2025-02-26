@@ -1,0 +1,78 @@
+@font-face {
+    font-family: 'BenjaminFranklin';
+    src: url('@/assets/BenjaminFranklin.ttf') format('opentype');
+    font-weight: normal;
+    font-style: normal;
+  }
+  
+  /* Positionnement similaire au bouton Infinite, placé à côté du titre */
+  .explorer-mode-button {
+    position: absolute;
+    bottom: -15px;
+    background: none;
+    left: 900px;
+    border: none !important;
+    cursor: pointer;
+    padding: 0;
+    margin: 0;
+    width: 150px;
+    transition: all 0.3s ease;
+    filter: drop-shadow(0 0 2px rgba(48, 73, 104, 0.1));
+    outline: 0 !important;
+    box-shadow: none !important;
+    -webkit-tap-highlight-color: transparent;
+    -moz-tap-highlight-color: transparent;
+    user-select: none;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+  }
+  
+  .explorer-mode-button:focus,
+  .explorer-mode-button:active,
+  .explorer-mode-button:focus-visible {
+    outline: 0 !important;
+    border: none !important;
+    box-shadow: none !important;
+    background: none !important;
+  }
+  
+  .explorer-mode-button:hover {
+    transform: scale(1.05);
+    filter: drop-shadow(0 0 12px rgba(48, 73, 104, 0.7));
+  }
+  
+  .explorer-mode-button:hover .glow-border {
+    stroke-width: 3;
+    stroke: #5a7294;
+  }
+  
+  .explorer-mode-button:hover .glow-effect {
+    opacity: 0.5;
+  }
+  
+  .explorer-mode-button:hover .explorer-text {
+    fill: #b8d4f5;
+    transition: fill 0.3s ease;
+  }
+  
+  .explorer-mode-button:active {
+    transform: scale(0.95);
+    filter: drop-shadow(0 0 4px rgba(48, 73, 104, 0.3));
+  }
+  
+  .explorer-mode-button::before {
+    content: var(--content);
+    display: none;
+  }
+  
+  .explorer-text {
+    transition: fill 0.3s ease;
+  }
+  
+  *:focus {
+    outline: none !important;
+    box-shadow: none !important;
+    -webkit-tap-highlight-color: transparent;
+    -moz-tap-highlight-color: transparent;
+  }

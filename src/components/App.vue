@@ -32,17 +32,18 @@
           @open-contact="handleOpenContact"
         />
       </div>
-      <InfiniteModeButton @switch-to-infinite="handleInfiniteModeActivation" :isTimerActive="isTimerActive" />
-      <ExplorerModeButton />
+      <InfiniteModeButton @switch-to-infinite="handleInfiniteModeActivation" :isTimerActive="isTimerActive" :isExplorerActive="isExplorerActive" />
+      <ExplorerModeButton @click="activateExplorerMode" :isTimerActive="isTimerActive" :isExplorerActive="isExplorerActive" />
       <TimerModeButton 
         ref="timerModeButton"
         @timer-state-change="handleTimerStateChange"
         @timer-complete="handleTimerComplete"
         @show-question="showCurrentTimerQuestion"
         @force-stop="handleTimerForceStop"
+        :isExplorerActive="isExplorerActive"
       />
     </header>
-    <main id="main-content" ref="mainContent">
+    <main id="main-content" ref="mainContent" v-show="!isExplorerActive">
       <div ref="inventory" class="inventory-wrapper">
         <GameInventory
           :categories="categories"
@@ -68,6 +69,7 @@
       </div>
     </main>
     <CraftPopup
+      v-if="!isExplorerActive && craftedElement.name"
       :craftedElement="craftedElement"
       :elementEmojis="elementEmojis"
       @reset-crafted-element="resetCraftedElement"
@@ -92,7 +94,7 @@
       </div>
     </div>
     <TimerQuestions 
-      v-show="isTimerActive"
+      v-show="isTimerActive && !isExplorerActive"
       ref="timerQuestions"
       @reset-timer="handleTimerReset"
       @pause-timer="handleTimerPause"
@@ -111,6 +113,13 @@
       @close="handleCloseCustomizeModal" 
       @save="handleSaveCustomization"
       @coins-updated="handleCoinsUpdated" 
+    />
+    <ExplorerMap 
+      v-if="isExplorerActive"
+      :userCoins="coins"
+      @close="deactivateExplorerMode"
+      @coins-updated="handleCoinsUpdated"
+      @start-craft-challenge="handleStartCraftChallenge"
     />
   </div>
 </template>
@@ -134,6 +143,7 @@ import TimerModeButton from './TimerModeButton.vue';
 import TimerQuestions from './TimerQuestions.vue';
 import CoinCounter from './CoinCounter.vue';
 import CustomizeModal from './CustomizeModal.vue';
+import ExplorerMap from './ExplorerMap.vue';
 import '@/assets/style.css';
 
 export default {
@@ -154,7 +164,8 @@ export default {
     TimerModeButton,
     TimerQuestions,
     CoinCounter,
-    CustomizeModal
+    CustomizeModal,
+    ExplorerMap
   },
   data() {
     return {
@@ -169,6 +180,8 @@ export default {
         image: null,
       },
       achievements: [],
+      explorerEnergy: null,
+      explorerLastUpdate: null,
       newAchievement: null,
       isFireworkActive: false,
       isLoggedIn: false,
@@ -176,6 +189,9 @@ export default {
       categoryProgress: {},
       showContactForm: false,
       isTimerActive: false,
+      isExplorerActive: false,
+      isExplorerCraftMode: false,
+      currentExplorerChallenge: null,
       showTimerEndModal: false,
       timerModeDiscoveries: 0,
       timerModeStartElements: [],
@@ -233,12 +249,47 @@ export default {
       }
     },
 
+    async activateExplorerMode() {
+      try {
+        // Désactiver le mode Timer si actif
+        if (this.isTimerActive) {
+          this.isTimerActive = false;
+          if (this.$refs.timerModeButton) {
+            this.$refs.timerModeButton.stopTimer();
+          }
+          if (this.$refs.timerQuestions) {
+            this.$refs.timerQuestions.resetQuestions();
+          }
+        }
+        
+        // Activer le mode Explorer
+        this.isExplorerActive = true;
+        
+        // Réinitialiser la zone de craft (optionnel)
+        if (this.$refs.craftSystem) {
+          this.$refs.craftSystem.resetCraftingBoard();
+        }
+      } catch (error) {
+        console.error("Erreur lors de l'activation du mode Explorer :", error);
+      }
+    },
+
+    // Méthode pour désactiver le mode Explorer
+    deactivateExplorerMode() {
+      this.isExplorerActive = false;
+    },
+
     handleCoinsUpdated(newCoins) {
       this.coins = newCoins;
       // Sauvegarder en localStorage aussi
       localStorage.setItem('coins', newCoins.toString());
     },
     handleInfiniteModeActivation() {
+      // Désactiver le mode Explorer si actif
+      if (this.isExplorerActive) {
+        this.isExplorerActive = false;
+      }
+      
       if (this.isTimerActive) {
         this.isTimerActive = false;
         
@@ -573,92 +624,133 @@ export default {
     handleResourceSelection(resource) {
       this.$refs.craftSystem.selectResource(resource);
     },
-    handleCraftSuccess(craftedItem) {
-      console.error('DEBUG CRAFT SUCCESS:', {
-        craftedItem,
-        isTimerActive: this.isTimerActive,
-        currentTimerElements: this.currentTimerElements,
-        discoveredElements: this.discoveredElements
-      });
+
+    handleStartCraftChallenge(challengeData) {
+  // Stocker les données du défi
+  this.currentExplorerChallenge = challengeData;
+  
+  // Activer le mode craft tout en gardant le contexte Explorer
+  this.isExplorerActive = false;
+  this.isExplorerCraftMode = true;
+  
+  // Préparer l'interface de craft avec les éléments de base
+  if (this.$refs.craftSystem) {
+    this.$refs.craftSystem.resetCraftingBoard();
+    this.$refs.craftSystem.selectedElements = [];
+  }
+  
+  // Afficher un message d'instruction
+  this.showAlert(`Défi de craft: Créez ${challengeData.challenge.requiredElements.join(', ')} pour réussir le défi !`);
+},
+handleCraftSuccess(craftedItem) {
+  console.error('DEBUG CRAFT SUCCESS:', {
+    craftedItem,
+    isTimerActive: this.isTimerActive,
+    isExplorerCraftMode: this.isExplorerCraftMode,
+    currentTimerElements: this.currentTimerElements,
+    discoveredElements: this.discoveredElements
+  });
+  
+  try {
+    this.craftedElement = {
+      name: craftedItem,
+      image: require(`@/assets/creatures/${craftedItem}.png`),
+    };
+  } catch (error) {
+    this.craftedElement = {
+      name: craftedItem,
+      image: null,
+    };
+  }
+  
+  if (this.isTimerActive) {
+    if (!this.discoveredElements.includes(craftedItem)) {
+      this.discoveredElements.push(craftedItem);
+      console.error('Élément ajouté aux discoveredElements:', craftedItem);
+    }
+    
+    if (!this.currentTimerElements.includes(craftedItem)) {
+      this.currentTimerElements.push(craftedItem);
+      console.error('Élément ajouté aux currentTimerElements:', craftedItem);
+    }
+  }
+  
+  // Mode normal (ni Timer ni Explorer)
+  if (!this.isTimerActive && !this.isExplorerActive && !this.isExplorerCraftMode) {
+    this.addToCategory(craftedItem);
+    this.$refs.dataLoading.handleCraft(craftedItem);
+  }
+  
+  // Gestion du mode Explorer Craft
+  if (this.isExplorerCraftMode && this.currentExplorerChallenge) {
+    const requiredElements = this.currentExplorerChallenge.challenge.requiredElements || [];
+    
+    if (requiredElements.includes(craftedItem)) {
+      // Défi réussi !
+      this.showAlert(`Félicitations ! Vous avez créé ${craftedItem} et réussi le défi !`);
       
-      try {
-        this.craftedElement = {
-          name: craftedItem,
-          image: require(`@/assets/creatures/${craftedItem}.png`),
-        };
-      } catch (error) {
-        this.craftedElement = {
-          name: craftedItem,
-          image: null,
-        };
+      // Attribuer une récompense en pièces
+      this.handleCoinsEarned(50);
+      
+      // Revenir au mode Explorer
+      this.isExplorerCraftMode = false;
+      this.isExplorerActive = true;
+      
+      // Réinitialiser le défi actuel
+      this.currentExplorerChallenge = null;
+    }
+  }
+  
+  // Gestion du mode Timer
+  if (this.isTimerActive) {
+    const currentQuestion = this.$refs.timerQuestions.getCurrentQuestion();
+    
+    if (currentQuestion) {
+      const allPossibleElements = [
+        ...(currentQuestion.initialElements.required || []),
+        ...(currentQuestion.initialElements.additional || []),
+        ...(currentQuestion.validAnswers || [])
+      ];
+      
+      if (allPossibleElements.includes(craftedItem)) {
+        console.error('L\'élément est dans les éléments possibles');
       }
       
-      if (this.isTimerActive) {
-        if (!this.discoveredElements.includes(craftedItem)) {
-          this.discoveredElements.push(craftedItem);
-          console.error('Élément ajouté aux discoveredElements:', craftedItem);
-        }
+      const validationMode = currentQuestion.initialElements.validationMode || 'any';
+      const validAnswers = currentQuestion.validAnswers || [];
+      
+      if (validationMode === 'any') {
+        const isValidAnswer = validAnswers.some(answer => 
+          this.discoveredElements.includes(answer)
+        );
         
-        if (!this.currentTimerElements.includes(craftedItem)) {
-          this.currentTimerElements.push(craftedItem);
-          console.error('Élément ajouté aux currentTimerElements:', craftedItem);
+        if (isValidAnswer) {
+          this.timerModeDiscoveries++;
+          this.$refs.timerQuestions.answerCorrect();
         }
-      }
-      
-      if (!this.isTimerActive) {
-        this.addToCategory(craftedItem);
-        this.$refs.dataLoading.handleCraft(craftedItem);
-      }
-      
-      if (this.isTimerActive) {
-        const currentQuestion = this.$refs.timerQuestions.getCurrentQuestion();
+      } else if (validationMode === 'multiple') {
+        const requiredCount = currentQuestion.initialElements.requiredCount || 1;
+        const discoveredValidAnswers = validAnswers.filter(answer => 
+          this.discoveredElements.includes(answer)
+        );
         
-        if (currentQuestion) {
-          const allPossibleElements = [
-            ...(currentQuestion.initialElements.required || []),
-            ...(currentQuestion.initialElements.additional || []),
-            ...(currentQuestion.validAnswers || [])
-          ];
-          
-          if (allPossibleElements.includes(craftedItem)) {
-            console.error('L\'élément est dans les éléments possibles');
-          }
-          
-          const validationMode = currentQuestion.initialElements.validationMode || 'any';
-          const validAnswers = currentQuestion.validAnswers || [];
-          
-          if (validationMode === 'any') {
-            const isValidAnswer = validAnswers.some(answer => 
-              this.discoveredElements.includes(answer)
-            );
-            
-            if (isValidAnswer) {
-              this.timerModeDiscoveries++;
-              this.$refs.timerQuestions.answerCorrect();
-            }
-          } else if (validationMode === 'multiple') {
-            const requiredCount = currentQuestion.initialElements.requiredCount || 1;
-            const discoveredValidAnswers = validAnswers.filter(answer => 
-              this.discoveredElements.includes(answer)
-            );
-            
-            if (discoveredValidAnswers.length >= requiredCount) {
-              this.timerModeDiscoveries++;
-              this.$refs.timerQuestions.answerCorrect();
-            }
-          } else {
-            const isAllAnswersFound = validAnswers.every(answer => 
-              this.discoveredElements.includes(answer)
-            );
-            
-            if (isAllAnswersFound) {
-              this.timerModeDiscoveries++;
-              this.$refs.timerQuestions.answerCorrect();
-            }
-          }
+        if (discoveredValidAnswers.length >= requiredCount) {
+          this.timerModeDiscoveries++;
+          this.$refs.timerQuestions.answerCorrect();
+        }
+      } else {
+        const isAllAnswersFound = validAnswers.every(answer => 
+          this.discoveredElements.includes(answer)
+        );
+        
+        if (isAllAnswersFound) {
+          this.timerModeDiscoveries++;
+          this.$refs.timerQuestions.answerCorrect();
         }
       }
-    },
+    }
+  }
+},
     addToCategory(craftedItem) {
       const targetCategory = Object.keys(this.categories).find((category) =>
         this.categories[category].includes(craftedItem)
@@ -742,6 +834,11 @@ export default {
       }, 2000);
     },
     handleTimerStateChange(isActive) {
+      // Désactiver le mode Explorer si on active le mode Timer
+      if (isActive && this.isExplorerActive) {
+        this.isExplorerActive = false;
+      }
+      
       this.isTimerActive = isActive;
       
       if (this.$refs.craftSystem) {
@@ -856,7 +953,6 @@ export default {
   }
 };
 </script>
-
 
 <style>
 @import '@/assets/style.css';
