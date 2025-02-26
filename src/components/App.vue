@@ -107,8 +107,10 @@
       v-if="isCustomizeModalOpen" 
       :currentFrame="selectedFrame"
       :currentAvatar="selectedAvatar"
+      :userCoins="coins"
       @close="handleCloseCustomizeModal" 
-      @save="handleSaveCustomization" 
+      @save="handleSaveCustomization"
+      @coins-updated="handleCoinsUpdated" 
     />
   </div>
 </template>
@@ -229,6 +231,12 @@ export default {
         this.selectedFrame = 'basicCadre.png';
         this.selectedAvatar = 'coin.png';
       }
+    },
+
+    handleCoinsUpdated(newCoins) {
+      this.coins = newCoins;
+      // Sauvegarder en localStorage aussi
+      localStorage.setItem('coins', newCoins.toString());
     },
     handleInfiniteModeActivation() {
       if (this.isTimerActive) {
