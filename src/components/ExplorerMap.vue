@@ -41,7 +41,17 @@
             </text>
           </svg>
           <div class="region-name">{{ region.name }}</div>
-          <div class="region-lock" v-if="!isRegionUnlocked(region)">🔒</div>
+          <div class="region-lock" v-if="!isRegionUnlocked(region)">
+            <svg 
+              xmlns="http://www.w3.org/2000/svg" 
+              viewBox="0 0 24 24" 
+              width="24" 
+              height="24"
+              style="fill: #FF6B6B; stroke: #FF4757; stroke-width: 1.5;"
+            >
+              <path d="M12 2C8.692 2 6 4.692 6 8v2H4c-1.103 0-2 .897-2 2v8c0 1.103.897 2 2 2h16c1.103 0 2-.897 2-2v-8c0-1.103-.897-2-2-2h-2V8c0-3.308-2.692-6-6-6zm4 10H8V8c0-2.206 1.794-4 4-4s4 1.794 4 4v4zm-4-4c-1.103 0-2 .897-2 2v4h4V8c0-1.103-.897-2-2-2z"/>
+            </svg>
+          </div>
         </div>
       </div>
       
@@ -384,9 +394,6 @@
   left: 0;
 }
 
-.region-marker.visited {
-
-}
 
 .region-marker.completed {
   background-color: #9C27B0;
