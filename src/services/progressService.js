@@ -1,50 +1,47 @@
 // src/services/progressService.js
-import axios from 'axios';
+import { apiInstance } from './authService';
 
-const axiosInstance = axios.create({
-  baseURL: 'http://localhost:3000/api/progress/',
-  headers: { 'Content-Type': 'application/json' },
-});
-
-// Ajouter l'intercepteur pour le token
-axiosInstance.interceptors.request.use(config => {
-  const user = JSON.parse(localStorage.getItem('user'));
-  if (user && user.token) {
-    config.headers.Authorization = `Bearer ${user.token}`;
+// Créer une instance plus spécifique qui utilise l'apiInstance partagée
+// Cela nous permet de conserver le point de terminaison spécifique tout en bénéficiant des intercepteurs
+const progressInstance = {
+  async get(endpoint) {
+    return apiInstance.get(`/progress/${endpoint}`);
+  },
+  async post(endpoint, data) {
+    return apiInstance.post(`/progress/${endpoint}`, data);
   }
-  return config;
-});
+};
 
 class ProgressService {
   // Remplacez la méthode saveGameProgress existante par celle-ci
-async saveGameProgress(progressData) {
-  try {
-    // D'abord, récupérer les données existantes
-    const existingProgress = await this.loadGameProgress();
-    
-    // Fusionner avec les nouvelles données, en préservant les existantes si non spécifiées
-    const dataToSend = {
-      discoveredElements: progressData.discoveredElements || existingProgress.discoveredElements,
-      discoveredCategories: progressData.discoveredCategories || existingProgress.discoveredCategories,
-      categoryProgress: progressData.categoryProgress || existingProgress.categoryProgress,
-      achievements: progressData.achievements || existingProgress.achievements,
-      coins: progressData.coins !== undefined ? progressData.coins : existingProgress.coins,
-      timerProgress: progressData.timerProgress || existingProgress.timerProgress
-    };
-    
-    console.log('Données fusionnées à envoyer:', dataToSend);
-    
-    const response = await axiosInstance.post('save', dataToSend);
-    return response.data;
-  } catch (error) {
-    console.error('Erreur dans saveGameProgress:', error);
-    throw error;
+  async saveGameProgress(progressData) {
+    try {
+      // D'abord, récupérer les données existantes
+      const existingProgress = await this.loadGameProgress();
+      
+      // Fusionner avec les nouvelles données, en préservant les existantes si non spécifiées
+      const dataToSend = {
+        discoveredElements: progressData.discoveredElements || existingProgress.discoveredElements,
+        discoveredCategories: progressData.discoveredCategories || existingProgress.discoveredCategories,
+        categoryProgress: progressData.categoryProgress || existingProgress.categoryProgress,
+        achievements: progressData.achievements || existingProgress.achievements,
+        coins: progressData.coins !== undefined ? progressData.coins : existingProgress.coins,
+        timerProgress: progressData.timerProgress || existingProgress.timerProgress
+      };
+      
+      console.log('Données fusionnées à envoyer:', dataToSend);
+      
+      const response = await progressInstance.post('save', dataToSend);
+      return response.data;
+    } catch (error) {
+      console.error('Erreur dans saveGameProgress:', error);
+      throw error;
+    }
   }
-}
 
   async loadGameProgress() {
     try {
-      const response = await axiosInstance.get('load');
+      const response = await progressInstance.get('load');
       console.log('Données chargées:', response.data);
       return response.data;
     } catch (error) {
@@ -79,7 +76,7 @@ async saveGameProgress(progressData) {
         }
       };
 
-      const response = await axiosInstance.post('save', {
+      const response = await progressInstance.post('save', {
         discoveredElements: progress.discoveredElements,
         discoveredCategories: progress.discoveredCategories,
         achievements: currentAchievements,
@@ -97,48 +94,46 @@ async saveGameProgress(progressData) {
 
   async updateCoins(coins) {
     try {
-        console.log('Mise à jour des pièces:', coins);
-        // S'assurer que coins est un nombre
-        const coinsToSave = parseInt(coins);
-        
-        if (isNaN(coinsToSave)) {
-            throw new Error('Le montant des pièces doit être un nombre valide');
-        }
+      console.log('Mise à jour des pièces:', coins);
+      // S'assurer que coins est un nombre
+      const coinsToSave = parseInt(coins);
+      
+      if (isNaN(coinsToSave)) {
+        throw new Error('Le montant des pièces doit être un nombre valide');
+      }
 
-        // Uniquement mettre à jour les pièces, pas la progression complète
-        const response = await axiosInstance.post('update-coins', { coins: coinsToSave });
-        return response.data;
+      // Uniquement mettre à jour les pièces, pas la progression complète
+      const response = await progressInstance.post('update-coins', { coins: coinsToSave });
+      return response.data;
     } catch (error) {
-        console.error('Erreur lors de la mise à jour des pièces:', error);
-        throw error;
+      console.error('Erreur lors de la mise à jour des pièces:', error);
+      throw error;
     }
-}
-
-async updateDiscoveredElements(discoveredElements) {
-  try {
-    const response = await axiosInstance.post('update-discovered-elements', { 
-      discoveredElements: discoveredElements 
-    });
-    return response.data;
-  } catch (error) {
-    console.error('Erreur lors de la mise à jour des éléments découverts:', error);
-    throw error;
   }
-}
 
-async updateAchievements(achievements) {
-  try {
-    const response = await axiosInstance.post('update-achievements', { 
-      achievements: achievements 
-    });
-    return response.data;
-  } catch (error) {
-    console.error('Erreur lors de la mise à jour des achievements:', error);
-    throw error;
+  async updateDiscoveredElements(discoveredElements) {
+    try {
+      const response = await progressInstance.post('update-discovered-elements', { 
+        discoveredElements: discoveredElements 
+      });
+      return response.data;
+    } catch (error) {
+      console.error('Erreur lors de la mise à jour des éléments découverts:', error);
+      throw error;
+    }
   }
-}
 
-
+  async updateAchievements(achievements) {
+    try {
+      const response = await progressInstance.post('update-achievements', { 
+        achievements: achievements 
+      });
+      return response.data;
+    } catch (error) {
+      console.error('Erreur lors de la mise à jour des achievements:', error);
+      throw error;
+    }
+  }
 
   async updateTimerProgress(timerProgress) {
     try {
@@ -157,7 +152,7 @@ async updateAchievements(achievements) {
 
       console.log('Données formatées à envoyer:', safeTimerProgress);
 
-      const response = await axiosInstance.post('update-timer-progress', { 
+      const response = await progressInstance.post('update-timer-progress', { 
         timerProgress: safeTimerProgress 
       });
       console.log('Réponse de mise à jour:', response.data);

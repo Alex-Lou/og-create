@@ -8,16 +8,90 @@ const axiosInstance = axios.create({
   withCredentials: true
 });
 
+// Instance API partagée que d'autres services peuvent utiliser
+export const apiInstance = axios.create({
+  baseURL: 'http://localhost:3000/api/',
+  headers: {
+    'Content-Type': 'application/json'
+  },
+  withCredentials: true
+});
+
 class AuthService {
   _initializeAuthHeader() {
     const user = this.getCurrentUser();
     if (user && user.token) {
+      // Mettre à jour toutes les instances d'Axios
       axios.defaults.headers.common['Authorization'] = `Bearer ${user.token}`;
+      axiosInstance.defaults.headers.common['Authorization'] = `Bearer ${user.token}`;
+      apiInstance.defaults.headers.common['Authorization'] = `Bearer ${user.token}`;
     }
   }
 
   constructor() {
     this._initializeAuthHeader();
+    this._setupInterceptors();
+  }
+
+  // Configuration des intercepteurs pour gérer les tokens expirés
+  _setupInterceptors() {
+    apiInstance.interceptors.response.use(
+      response => response,
+      async error => {
+        const originalRequest = error.config;
+        
+        // Vérifier si l'erreur est due à un token expiré
+        if (error.response && 
+            error.response.status === 401 && 
+            !originalRequest._retry && 
+            error.response.data.message === 'Le token a expiré. Veuillez vous reconnecter.') {
+          
+          originalRequest._retry = true;
+          console.log('Token expiré, tentative de rafraîchissement...');
+          
+          try {
+            // Récupérer le token actuel
+            const user = this.getCurrentUser();
+            if (!user || !user.token) {
+              throw new Error('Pas de token disponible');
+            }
+            
+            // Appeler l'endpoint de rafraîchissement
+            const response = await axiosInstance.post('refresh-token', {
+              token: user.token
+            });
+            
+            // Stocker le nouveau token
+            const { token, userId, username } = response.data;
+            
+            // Mettre à jour les informations utilisateur
+            localStorage.setItem('user', JSON.stringify({
+              token,
+              userId,
+              username
+            }));
+            
+            // Mettre à jour les en-têtes pour toutes les instances
+            this._initializeAuthHeader();
+            
+            // Mettre à jour le header de la requête originale et la réessayer
+            originalRequest.headers['Authorization'] = `Bearer ${token}`;
+            return axios(originalRequest);
+          } catch (refreshError) {
+            console.error('Échec du rafraîchissement du token:', refreshError);
+            
+            // Si le rafraîchissement échoue, déconnecter l'utilisateur
+            this.logout();
+            
+            // Rediriger vers la page de connexion
+            window.location.href = '/login';
+            return Promise.reject(refreshError);
+          }
+        }
+        
+        return Promise.reject(error);
+      }
+    );
   }
 
   async login(email, password) {
@@ -104,9 +178,56 @@ class AuthService {
     }
   }
 
+  async refreshToken() {
+    try {
+      console.group('Tentative de rafraîchissement de token');
+      
+      const user = this.getCurrentUser();
+      if (!user || !user.token) {
+        throw new Error('Pas de token disponible pour le rafraîchissement');
+      }
+      
+      const response = await axiosInstance.post('refresh-token', {
+        token: user.token
+      });
+      
+      console.log('Réponse de rafraîchissement:', response.data);
+      console.groupEnd();
+      
+      if (response.data.token) {
+        // Mettre à jour le stockage local avec le nouveau token
+        localStorage.setItem('user', JSON.stringify({
+          token: response.data.token,
+          userId: response.data.userId,
+          username: response.data.username
+        }));
+        
+        // Réinitialiser les en-têtes d'autorisation
+        this._initializeAuthHeader();
+        return response.data;
+      }
+    } catch (error) {
+      console.group('Erreur de rafraîchissement de token');
+      console.error('Détails de l\'erreur:', error);
+      
+      if (error.response) {
+        console.error('Données de l\'erreur:', error.response.data);
+        console.error('Statut de l\'erreur:', error.response.status);
+      }
+      
+      console.groupEnd();
+      
+      // En cas d'échec du rafraîchissement, déconnecter l'utilisateur
+      this.logout();
+      throw error;
+    }
+  }
+
   logout() {
     localStorage.removeItem('user');
     delete axios.defaults.headers.common['Authorization'];
+    delete axiosInstance.defaults.headers.common['Authorization'];
+    delete apiInstance.defaults.headers.common['Authorization'];
   }
 
   getCurrentUser() {
