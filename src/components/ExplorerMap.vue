@@ -6,6 +6,10 @@
           <span class="energy-icon">⚡</span>
           <span class="energy-value">{{ energy }}/{{ maxEnergy }}</span>
         </div>
+              <!-- Bouton de retour -->
+      <button class="back-btn" @click="$emit('close')">
+        Retour au jeu principal
+      </button>
         <div class="energy-timer" v-if="nextEnergyIn > 0">
           Prochain point d'énergie dans {{ formatTime(nextEnergyIn) }}
         </div>
@@ -72,10 +76,7 @@
         </div>
       </div>
       
-      <!-- Bouton de retour -->
-      <button class="back-btn" @click="$emit('close')">
-        Retour au jeu principal
-      </button>
+
   
       <!-- Dialogue NPC -->
       <NpcDialog 
@@ -590,83 +591,3 @@
     }
   }
   </script>
-  
-  <style>
-  /* Ces styles seront ajoutés aux styles existants dans ExplorerMapStyle.css */
-  .victory-modal {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(0, 0, 0, 0.8);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    z-index: 1100;
-  }
-  
-  .victory-content {
-    background-color: #2c3e50;
-    padding: 30px;
-    border-radius: 15px;
-    text-align: center;
-    max-width: 500px;
-    border: 2px solid #f1c40f;
-    box-shadow: 0 0 30px rgba(241, 196, 15, 0.5);
-    color: #ecf0f1;
-  }
-  
-  .victory-content h2 {
-    color: #f1c40f;
-    font-size: 36px;
-    margin: 0 0 20px 0;
-    text-shadow: 0 0 10px rgba(241, 196, 15, 0.7);
-  }
-  
-  .rewards-container {
-    background-color: rgba(255, 255, 255, 0.1);
-    padding: 15px;
-    border-radius: 10px;
-    margin: 20px 0;
-  }
-  
-  .reward-item {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    margin: 10px 0;
-  }
-  
-  .reward-icon {
-    font-size: 24px;
-    margin-right: 10px;
-  }
-  
-  .reward-value {
-    font-size: 18px;
-    font-weight: bold;
-    color: #3498db;
-  }
-  
-  .unlock-message {
-    color: #2ecc71;
-    margin: 20px 0;
-    font-weight: bold;
-  }
-  
-  .continue-btn {
-    background-color: #3498db;
-    color: white;
-    border: none;
-    padding: 12px 25px;
-    border-radius: 5px;
-    font-size: 16px;
-    cursor: pointer;
-    transition: background-color 0.3s;
-  }
-  
-  .continue-btn:hover {
-    background-color: #2980b9;
-  }
-  </style>

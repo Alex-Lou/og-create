@@ -301,6 +301,9 @@
     padding: 20px;
     border-bottom: 2px solid #3498db;
     position: relative;
+    font-family: 'BenjaminFranklin', sans-serif;
+  letter-spacing: 2px;
+  font-weight: bold;
   }
   
   .npc-image-container {
@@ -327,11 +330,17 @@
   .challenge-objective h2 {
     margin: 0 0 10px 0;
     color: #ecf0f1;
+    font-family: 'BenjaminFranklin', sans-serif;
+  letter-spacing: 2px;
+  font-weight: bold;
   }
   
   .challenge-objective p {
     margin: 0;
     color: #bdc3c7;
+    font-family: 'BenjaminFranklin', sans-serif;
+  letter-spacing: 2px;
+  font-weight: bold;
   }
   
   .target-element {
@@ -344,11 +353,17 @@
     padding: 10px;
     background-color: rgba(243, 156, 18, 0.2);
     border-radius: 5px;
+    font-family: 'BenjaminFranklin', sans-serif;
+  letter-spacing: 2px;
+  font-weight: bold;
   }
   
   .hint-text {
     color: #f39c12;
     font-style: italic;
+    font-family: 'BenjaminFranklin', sans-serif;
+  letter-spacing: 2px;
+  font-weight: bold;
   }
   
   .hint-button {
@@ -359,6 +374,9 @@
     padding: 5px 0;
     margin-top: 5px;
     font-size: 14px;
+    font-family: 'BenjaminFranklin', sans-serif;
+  letter-spacing: 2px;
+  font-weight: bold;
   }
   
   .close-button {
@@ -374,6 +392,9 @@
     display: flex;
     flex: 1;
     overflow: hidden;
+    font-family: 'BenjaminFranklin', sans-serif;
+  letter-spacing: 2px;
+  font-weight: bold;
   }
   
   .elements-selection, .crafting-workspace, .crafted-elements {
@@ -382,6 +403,9 @@
     display: flex;
     flex-direction: column;
     overflow-y: auto;
+    font-family: 'BenjaminFranklin', sans-serif;
+  letter-spacing: 2px;
+  font-weight: bold;
   }
   
   .elements-selection {
@@ -403,6 +427,9 @@
     margin-bottom: 15px;
     color: #ecf0f1;
     text-align: center;
+    font-family: 'BenjaminFranklin', sans-serif;
+  letter-spacing: 2px;
+  font-weight: bold;
   }
   
   .elements-grid, .crafted-grid {
@@ -411,6 +438,9 @@
     gap: 15px;
     overflow-y: auto;
     padding: 10px;
+    font-family: 'BenjaminFranklin', sans-serif;
+  letter-spacing: 2px;
+  font-weight: bold;
   }
   
   .element-card, .selected-element, .crafted-element {
@@ -423,6 +453,9 @@
     cursor: pointer;
     transition: all 0.2s ease;
     position: relative;
+    font-family: 'BenjaminFranklin', sans-serif;
+  letter-spacing: 2px;
+  font-weight: bold;
   }
   
   .element-card:hover, .selected-element:hover, .crafted-element:hover {
@@ -456,11 +489,17 @@
     background-color: rgba(52, 152, 219, 0.1);
     border-radius: 10px;
     padding: 15px;
+    font-family: 'BenjaminFranklin', sans-serif;
+  letter-spacing: 2px;
+  font-weight: bold;
   }
   
   .selected-element {
     width: 100px;
     position: relative;
+    font-family: 'BenjaminFranklin', sans-serif;
+  letter-spacing: 2px;
+  font-weight: bold;
   }
   
   .craft-button, .reset-button, .complete-button {
@@ -469,6 +508,9 @@
     border-radius: 5px;
     cursor: pointer;
     font-weight: bold;
+    font-family: 'BenjaminFranklin', sans-serif;
+  letter-spacing: 2px;
+  font-weight: bold;
     margin-top: 15px;
     transition: background-color 0.3s ease;
   }
