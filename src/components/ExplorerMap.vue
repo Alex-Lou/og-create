@@ -110,7 +110,7 @@
       <div v-if="showVictoryModal" class="victory-modal">
         <div class="victory-content">
           <h2>Victoire !</h2>
-          <p>Félicitations, vous avez complété la région {{ selectedRegion.name }} !</p>
+          <p>Félicitations, vous avez complété la quête: {{ selectedRegion.name }} !</p>
           
           <div class="rewards-container">
             <h3>Récompenses obtenues :</h3>
@@ -143,7 +143,6 @@
   import explorerService from '@/services/explorerService';
   import NpcDialog from './NpcDialog.vue';
   import ExplorerCraftModal from './ExplorerCraftModal.vue';
-  // Dans Vue, @/ pointe vers le dossier src, mais public est accessible directement
   import axios from 'axios'; // Assurez-vous d'avoir installé axios
   
   export default {

@@ -59,13 +59,13 @@
       "name": "Caverne Mystique",
       "parent_region_id": 3,
       "is_default": false,
-      "npcImage": "npc2.png",
+      "npcImage": "npc1.png",
       "dialog": [
         "La Caverne Mystique recèle de secrets ancestraux.",
         "Seuls ceux qui ont prouvé leur valeur peuvent espérer en percer les mystères.",
         "Es-tu prêt à affronter l'inconnu et à découvrir ses secrets ?"
       ],
-      "requiredElements": ["Magie"],
+      "requiredElements": ["Boue"],
       "actionText": "Explorer la caverne",
       "rewardCoins": 125,
       "rewardXp": 250,

@@ -46,22 +46,30 @@ const explorerService = {
     }
   },
   
-
-  // Visiter une région (dépenser de l'énergie)
-async visitRegion(regionId, energyCost = 2) {
-  try {
-    console.log(`Tentative de visite de la région ${regionId} (coût: ${energyCost})`);
-    // Modifier cette ligne pour correspondre à la route backend '/visit/:regionId'
-    const response = await axios.post(`/api/explorer/visit/${regionId}`, {
-      energyCost: energyCost
-    });
-    console.log('Visite de région réussie, énergie restante:', response.data.energy);
-    return response.data;
-  } catch (error) {
-    console.error(`Erreur lors de la visite de la région ${regionId}:`, error);
-    throw new Error(error.response?.data?.message || 'Erreur lors de la visite de la région');
-  }
-},
+  // Visiter une région (dépenser de l'énergie) avec gestion des erreurs 429
+  async visitRegion(regionId, energyCost = 2, retryCount = 0) {
+    try {
+      console.log(`Tentative de visite de la région ${regionId} (coût: ${energyCost})`);
+      const response = await axios.post(`/api/explorer/visit/${regionId}`, {
+        energyCost: energyCost
+      });
+      console.log('Visite de région réussie, énergie restante:', response.data.energy);
+      return response.data;
+    } catch (error) {
+      // Vérifier si c'est une erreur 429 (trop de requêtes)
+      if (error.response && error.response.status === 429 && retryCount < 3) {
+        const waitTime = 1000 * (retryCount + 1); // Temps d'attente progressif
+        console.warn(`Trop de requêtes, nouvelle tentative dans ${waitTime/1000} secondes...`);
+        
+        // Attendre et réessayer
+        await new Promise(resolve => setTimeout(resolve, waitTime));
+        return this.visitRegion(regionId, energyCost, retryCount + 1);
+      }
+      
+      console.error(`Erreur lors de la visite de la région ${regionId}:`, error);
+      throw new Error(error.response?.data?.message || 'Erreur lors de la visite de la région');
+    }
+  },
   
   // Compléter une région (obtenir des récompenses)
 async completeRegion(regionId, rewards = {}) {

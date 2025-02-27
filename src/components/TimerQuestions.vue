@@ -56,29 +56,44 @@
       </div>
     </div>
  
-    <div v-if="showSuccessPopup" class="success-popup">
-      <div class="success-content">
-        <p>Correct !</p>
-        <p class="points-earned" v-if="isNewQuestion">+{{ currentQuestion.points || 10 }} pièces</p>
-        <p class="points-earned" v-else>Question déjà complétée</p>
+    <!-- Modal de succès style "victoire" -->
+    <div v-if="showSuccessPopup" class="victory-modal">
+      <div class="victory-content">
+        <h2>Correct !</h2>
+        
+        <div class="rewards-container">
+          <h3>Récompenses obtenues :</h3>
+          <div class="reward-item" v-if="isNewQuestion">
+            <span class="reward-icon">💰</span>
+            <span class="reward-value">{{ currentQuestion.points || 10 }} Pièces</span>
+          </div>
+          <div class="reward-item" v-else>
+            <span class="reward-icon">✨</span>
+            <span class="reward-value">Question déjà complétée</span>
+          </div>
+        </div>
+        
+        <button class="continue-btn" @click="closeSuccessPopup">Continuer</button>
       </div>
     </div>
 
-    <div v-if="showCompletionPopup" class="completion-popup">
-      <div class="completion-content">
-        <h3>{{ completionMessage }}</h3>
+    <!-- Modal de complétion style "victoire" -->
+    <div v-if="showCompletionPopup" class="victory-modal">
+      <div class="victory-content">
+        <h2>{{ completionMessage }}</h2>
         <p>{{ completionSubMessage }}</p>
+        
         <div class="completion-buttons">
           <button 
             v-if="getNextUncompletedCategory()"
             @click="handleContinue" 
-            class="completion-button continue-button"
+            class="continue-btn"
           >
             Continuer
           </button>
           <button 
             @click="handleCompletionClose" 
-            class="completion-button ok-button"
+            class="cancel-btn"
           >
             OK
           </button>
@@ -87,6 +102,7 @@
     </div>
   </div>
 </template>
+
  
 <script>
 import '@/assets/TimerQuestionsStyle.css';
@@ -229,37 +245,37 @@ export default {
     },
 
     async handleContinue() {
-  const nextCategory = this.getNextUncompletedCategory();
-  this.showCompletionPopup = false;
-  
-  if (nextCategory) {
-    this.selectedCategory = nextCategory;
-    this.questions = this.questionsData.levels[this.selectedLevel].categories[nextCategory].questions;
-    this.currentQuestionIndex = 0;
-    this.shuffleQuestions();
-    
-    // Réinitialiser le timer et le redémarrer
-    this.$emit('reset-timer');
-    this.$emit('resume-timer');
-    
-    await this.show();
-  }
-},
+      const nextCategory = this.getNextUncompletedCategory();
+      this.showCompletionPopup = false;
+      
+      if (nextCategory) {
+        this.selectedCategory = nextCategory;
+        this.questions = this.questionsData.levels[this.selectedLevel].categories[nextCategory].questions;
+        this.currentQuestionIndex = 0;
+        this.shuffleQuestions();
+        
+        // Réinitialiser le timer et le redémarrer
+        this.$emit('reset-timer');
+        this.$emit('resume-timer');
+        
+        await this.show();
+      }
+    },
 
-handleCompletionClose() {
-  this.showCompletionPopup = false;
-  this.selectedCategory = null;
-  this.currentQuestionIndex = 0;
-  
-  // Déjà géré par force-stop, mais pour être sûr
-  this.$emit('stop-timer');
-  
-  this.$parent.$emit('force-stop');
-  // Réinitialiser aussi le timer dans le bouton TimerMode
-  if (this.$parent.$refs.timerModeButton) {
-    this.$parent.$refs.timerModeButton.confirmStopTimer();
-  }
-},
+    handleCompletionClose() {
+      this.showCompletionPopup = false;
+      this.selectedCategory = null;
+      this.currentQuestionIndex = 0;
+      
+      // Déjà géré par force-stop, mais pour être sûr
+      this.$emit('stop-timer');
+      
+      this.$parent.$emit('force-stop');
+      // Réinitialiser aussi le timer dans le bouton TimerMode
+      if (this.$parent.$refs.timerModeButton) {
+        this.$parent.$refs.timerModeButton.confirmStopTimer();
+      }
+    },
 
     cancelLevelSelection() {
       this.hide();
@@ -411,33 +427,33 @@ handleCompletionClose() {
     },
  
     async nextQuestion() {      
-  this.$parent.currentTimerElements = [];
-  this.$parent.discoveredElements = ["Eau", "Feu", "Terre", "Air"];
+      this.$parent.currentTimerElements = [];
+      this.$parent.discoveredElements = ["Eau", "Feu", "Terre", "Air"];
 
-  if (this.$parent.$refs.craftSystem) {
-    this.$parent.$refs.craftSystem.resetCraftingBoard();
-  }
+      if (this.$parent.$refs.craftSystem) {
+        this.$parent.$refs.craftSystem.resetCraftingBoard();
+      }
 
-  if (this.currentQuestionIndex < this.questions.length - 1) {
-    this.currentQuestionIndex++;
-    await new Promise(resolve => setTimeout(resolve, 100));
-    await this.show();
-  } else {
-    // Catégorie terminée
-    this.showCompletionPopup = true;
-    this.completionMessage = `Félicitations ! Vous avez complété la catégorie ${this.selectedCategory}!`;
-    
-    const nextCategory = this.getNextUncompletedCategory();
-    this.completionSubMessage = nextCategory 
-      ? `Prochaine catégorie disponible : ${nextCategory}`
-      : 'Toutes les catégories sont complétées !';
+      if (this.currentQuestionIndex < this.questions.length - 1) {
+        this.currentQuestionIndex++;
+        await new Promise(resolve => setTimeout(resolve, 100));
+        await this.show();
+      } else {
+        // Catégorie terminée
+        this.showCompletionPopup = true;
+        this.completionMessage = `Félicitations ! Vous avez complété la catégorie ${this.selectedCategory}!`;
+        
+        const nextCategory = this.getNextUncompletedCategory();
+        this.completionSubMessage = nextCategory 
+          ? `Prochaine catégorie disponible : ${nextCategory}`
+          : 'Toutes les catégories sont complétées !';
 
-    // Émettre un événement pour mettre le timer en pause
-    this.$emit('pause-timer');
+        // Émettre un événement pour mettre le timer en pause
+        this.$emit('pause-timer');
 
-    await this.saveProgress();
-  }
-},
+        await this.saveProgress();
+      }
+    },
  
     async answerCorrect() {
       const currentQuestion = this.currentQuestion;
