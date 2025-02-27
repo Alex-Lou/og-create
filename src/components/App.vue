@@ -32,7 +32,11 @@
           @open-contact="handleOpenContact"
         />
       </div>
-      <InfiniteModeButton @switch-to-infinite="handleInfiniteModeActivation" :isTimerActive="isTimerActive" :isExplorerActive="isExplorerActive" />
+      <InfiniteModeButton 
+        @switch-to-infinite="handleInfiniteModeActivation" 
+        :isTimerActive="isTimerActive" 
+        :isExplorerActive="isExplorerActive" 
+      />
       <ExplorerModeButton @click="activateExplorerMode" :isTimerActive="isTimerActive" :isExplorerActive="isExplorerActive" />
       <TimerModeButton 
         ref="timerModeButton"
@@ -63,6 +67,7 @@
           :isDarkMode="isDarkMode"
           :isFireworkActive="isFireworkActive"
           @craft-success="handleCraftSuccess"
+          @save-discovered-element="saveDiscoveredElement"
           @show-alert="showAlert"
           ref="craftSystem"
         />
@@ -180,6 +185,7 @@ export default {
         image: null,
       },
       achievements: [],
+      saveInterval: null,
       explorerEnergy: null,
       explorerLastUpdate: null,
       newAchievement: null,
@@ -224,12 +230,14 @@ export default {
     };
   },
   created() {
-    this.checkAuth();
-    if (this.isLoggedIn) {
-      this.loadGameProgress();
-      this.loadSavedCustomization();
-    }
-  },
+  this.checkAuth();
+  if (this.isLoggedIn) {
+    this.loadGameProgress();
+    this.loadSavedCustomization();
+    // Démarrer la sauvegarde périodique
+    this.startPeriodicSave();
+  }
+},
   methods: {
     loadSavedCustomization() {
       if (this.isLoggedIn) {
@@ -248,6 +256,18 @@ export default {
         this.selectedAvatar = 'coin.png';
       }
     },
+
+    beforeUnmount() {
+  // Nettoyer l'intervalle de sauvegarde périodique
+  if (this.saveInterval) {
+    clearInterval(this.saveInterval);
+  }
+  
+  // Sauvegarde finale avant de quitter
+  if (this.isLoggedIn) {
+    this.saveGameProgress();
+  }
+},
 
     async activateExplorerMode() {
       try {
@@ -274,6 +294,48 @@ export default {
       }
     },
 
+    // Dans App.vue - méthode améliorée
+    saveDiscoveredElement(element) {
+  // Vérifier que l'élément n'est pas déjà dans la liste
+  if (!this.discoveredElements.includes(element)) {
+    console.log(`Sauvegarde immédiate de l'élément découvert: ${element}`);
+    
+    // Ajouter à la liste locale
+    this.discoveredElements.push(element);
+    
+    // Déterminer la catégorie de l'élément
+    const targetCategory = Object.keys(this.categories).find((category) =>
+      this.categories[category].includes(element)
+    );
+    
+    // Ajouter la catégorie si elle n'existe pas déjà
+    if (targetCategory && !this.discoveredCategories.includes(targetCategory)) {
+      console.log(`Ajout de la catégorie: ${targetCategory}`);
+      this.discoveredCategories.push(targetCategory);
+    }
+    
+    // Mettre à jour les statistiques de progression des catégories
+    this.updateCategoryProgress();
+    
+    // Sauvegarder également dans localStorage
+    localStorage.setItem('discoveredElements', JSON.stringify(this.discoveredElements));
+    localStorage.setItem('discoveredCategories', JSON.stringify(this.discoveredCategories));
+    
+    // Sauvegarder dans la base de données si connecté
+    if (this.isLoggedIn) {
+      progressService.updateDiscoveredElements(this.discoveredElements)
+        .then(() => {
+          console.log(`Élément ${element} sauvegardé avec succès`);
+          // Sauvegarder également les catégories
+          this.saveGameProgress();
+        })
+        .catch(error => {
+          console.error(`Erreur lors de la sauvegarde de l'élément ${element}:`, error);
+        });
+    }
+  }
+},
+
     // Méthode pour désactiver le mode Explorer
     deactivateExplorerMode() {
       this.isExplorerActive = false;
@@ -284,36 +346,103 @@ export default {
       // Sauvegarder en localStorage aussi
       localStorage.setItem('coins', newCoins.toString());
     },
-    handleInfiniteModeActivation() {
-      // Désactiver le mode Explorer si actif
-      if (this.isExplorerActive) {
-        this.isExplorerActive = false;
+    handleInfiniteModeActivation(options = {}) {
+  const forceReload = options.forceReload || false;
+  
+  // Désactiver le mode Explorer si actif
+  if (this.isExplorerActive) {
+    this.isExplorerActive = false;
+  }
+  
+  if (this.isTimerActive) {
+    this.isTimerActive = false;
+    
+    if (this.$refs.timerModeButton) {
+      this.$refs.timerModeButton.stopTimer();
+    }
+    
+    if (this.$refs.timerQuestions) {
+      this.$refs.timerQuestions.resetQuestions();
+    }
+  }
+  
+  // Réinitialiser complètement les données
+  this.discoveredElements = ["Eau", "Feu", "Terre", "Air"];
+  this.discoveredCategories = ["Elements Fondamentaux"];
+  
+  // Forcer un rechargement complet des données
+  if (forceReload && this.$refs.dataLoading) {
+    // Préparer les données existantes à préserver
+    const existingAchievementsData = {};
+    this.achievements.forEach(achievement => {
+      if (achievement.unlocked) {
+        existingAchievementsData[achievement.name] = {
+          unlocked: true,
+          unlockedAt: achievement.unlockedAt || new Date().toISOString()
+        };
       }
-      
-      if (this.isTimerActive) {
-        this.isTimerActive = false;
+    });
+
+    // Passer les données existantes pour préserver certains états
+    this.$refs.dataLoading.$props.existingData = {
+      achievements: existingAchievementsData,
+      categories: this.categories,
+      categoryProgress: this.categoryProgress
+    };
+
+    this.$nextTick(async () => {
+      try {
+        // Charger toutes les données
+        const loadedData = await this.$refs.dataLoading.loadAllData();
         
-        if (this.$refs.timerModeButton) {
-          this.$refs.timerModeButton.stopTimer();
+        // Mise à jour des données de base
+        this.elementEmojis = loadedData.elementEmojis || {};
+        this.categories = loadedData.categories || {};
+        this.craftingRecipes = loadedData.craftingRecipes || {};
+        
+        // Mettre à jour les achievements en préservant les états débloqués
+        this.achievements = loadedData.achievements.map(achievement => {
+          const savedAchievement = loadedData.achievements[achievement.name];
+          return {
+            ...achievement,
+            unlocked: savedAchievement ? savedAchievement.unlocked : false,
+            unlockedAt: savedAchievement?.unlockedAt
+          };
+        });
+        
+        // Conserver la progression des catégories
+        this.categoryProgress = loadedData.categoryProgress || {};
+        
+        // Mettre à jour la progression des catégories
+        this.updateCategoryProgress();
+        
+        // Sauvegarder immédiatement
+        await this.saveGameProgress();
+        
+        // Mettre à jour les achievements débloqués
+        const unlockedAchievements = this.achievements
+          .filter(a => a.unlocked)
+          .reduce((acc, achievement) => {
+            acc[achievement.name] = {
+              unlocked: true,
+              unlockedAt: achievement.unlockedAt || new Date().toISOString()
+            };
+            return acc;
+          }, {});
+        
+        // Forcer la mise à jour des achievements débloqués
+        if (Object.keys(unlockedAchievements).length > 0) {
+          await progressService.updateAchievements(unlockedAchievements);
         }
         
-        if (this.$refs.timerQuestions) {
-          this.$refs.timerQuestions.resetQuestions();
-        }
+        console.log('Rechargement complet en mode Infinite terminé');
+      } catch (error) {
+        console.error('Erreur lors du rechargement forcé:', error);
+        this.showAlert('Erreur de chargement. Veuillez réessayer.');
       }
-      
-      this.discoveredElements = ["Eau", "Feu", "Terre", "Air"];
-      this.discoveredCategories = ["Elements Fondamentaux"];
-      
-      this.updateCategoryProgress();
-      
-      if (this.$refs.craftSystem) {
-        this.$refs.craftSystem.resetCraftingBoard();
-        this.$refs.craftSystem.selectedElements = [];
-      }
-      
-      this.saveGameProgress();
-    },
+    });
+  }
+},
     handleLevelSelected(levelData) {
       this.selectedTimerLevel = levelData.level;
       if (this.$refs.timerModeButton) {
@@ -344,11 +473,47 @@ export default {
       
       try {
         console.log("Mise à jour des éléments découverts:", this.discoveredElements.length);
-        await progressService.updateDiscoveredElements(this.discoveredElements);
+        
+        // S'assurer que les éléments sont uniques
+        const uniqueElements = [...new Set(this.discoveredElements)];
+        
+        // Charger les éléments actuels de la base de données pour comparaison
+        const currentProgress = await progressService.loadGameProgress();
+        const currentElements = currentProgress.discoveredElements || [];
+        
+        // Fusionner avec les éléments existants
+        const mergedElements = [...new Set([...currentElements, ...uniqueElements])];
+        console.log(`Éléments: ${currentElements.length} en DB + ${uniqueElements.length} actuels = ${mergedElements.length} après fusion`);
+        
+        // Sauvegarder les éléments fusionnés
+        await progressService.updateDiscoveredElements(mergedElements);
+        
+        // Sauvegarder également les catégories
+        await this.saveGameProgress();
+        
+        return mergedElements;
       } catch (error) {
         console.error("Erreur lors de la mise à jour des éléments découverts:", error);
+        throw error;
       }
     },
+
+
+
+    startPeriodicSave() {
+  if (this.saveInterval) {
+    clearInterval(this.saveInterval);
+  }
+  
+  // Sauvegarder toutes les 2 minutes
+  this.saveInterval = setInterval(() => {
+    if (this.isLoggedIn) {
+      console.log("Sauvegarde périodique de la progression...");
+      
+      this.saveGameProgress();
+    }
+  }, 120000); // 2 minutes
+},
 
     async updateAchievements() {
       if (!this.isLoggedIn || !this.achievements) return;
@@ -418,11 +583,12 @@ export default {
     handleOpenContact() {
       this.showContactForm = true;
     },
-    async loadGameProgress() {
-      if (!this.isLoggedIn) return;
+    loadGameProgress() {
+  if (!this.isLoggedIn) return;
 
-      try {
-        const progress = await progressService.loadGameProgress();
+  try {
+    progressService.loadGameProgress()
+      .then(progress => {
         if (progress) {
           if (progress.coins !== undefined) {
             this.coins = parseInt(progress.coins);
@@ -439,6 +605,9 @@ export default {
               } else {
                 this.discoveredElements = progress.discoveredElements;
               }
+              
+              // Sauvegarder dans localStorage
+              localStorage.setItem('discoveredElements', JSON.stringify(this.discoveredElements));
             } catch (e) {
               console.error("Erreur parsing discoveredElements:", e);
               this.discoveredElements = ["Eau", "Feu", "Terre", "Air"];
@@ -457,6 +626,9 @@ export default {
               } else {
                 this.discoveredCategories = ["Elements Fondamentaux"];
               }
+              
+              // Sauvegarder dans localStorage
+              localStorage.setItem('discoveredCategories', JSON.stringify(this.discoveredCategories));
             } catch (e) {
               console.error("Erreur parsing discoveredCategories:", e);
               this.discoveredCategories = ["Elements Fondamentaux"];
@@ -490,7 +662,7 @@ export default {
           }
 
           if (this.categories && Object.keys(this.categories).length > 0) {
-            await this.repairGameData();
+            this.repairGameData();
           } else {
             console.log('Catégories non encore chargées, réparation programmée');
             setTimeout(() => {
@@ -502,13 +674,36 @@ export default {
 
           this.updateCategoryProgress();
         }
-      } catch (error) {
+      })
+      .catch(error => {
         console.error("Erreur lors du chargement de la progression:", error);
-        this.discoveredElements = ["Eau", "Feu", "Terre", "Air"];
-        this.discoveredCategories = ["Elements Fondamentaux"];
+        
+        // Récupérer depuis localStorage si possible
+        const localElements = localStorage.getItem('discoveredElements');
+        const localCategories = localStorage.getItem('discoveredCategories');
+        
+        if (localElements) {
+          try {
+            this.discoveredElements = JSON.parse(localElements);
+          } catch (e) {
+            this.discoveredElements = ["Eau", "Feu", "Terre", "Air"];
+          }
+        } else {
+          this.discoveredElements = ["Eau", "Feu", "Terre", "Air"];
+        }
+        
+        if (localCategories) {
+          try {
+            this.discoveredCategories = JSON.parse(localCategories);
+          } catch (e) {
+            this.discoveredCategories = ["Elements Fondamentaux"];
+          }
+        } else {
+          this.discoveredCategories = ["Elements Fondamentaux"];
+        }
+        
         this.categoryProgress = {};
-        this.coins = 0;
-        localStorage.setItem('coins', '0');
+        this.coins = parseInt(localStorage.getItem('coins')) || 0;
         this.timerProgress = {
           completedQuestions: { Facile: {}, Moyen: {}, Difficile: {} },
           unlockedCategories: {},
@@ -516,33 +711,56 @@ export default {
         };
         this.selectedFrame = 'basicCadre.png';
         this.selectedAvatar = 'coin.png';
+      });
+  } catch (error) {
+    console.error("Erreur lors du chargement de la progression:", error);
+    this.discoveredElements = ["Eau", "Feu", "Terre", "Air"];
+    this.discoveredCategories = ["Elements Fondamentaux"];
+    this.categoryProgress = {};
+    this.coins = 0;
+    localStorage.setItem('coins', '0');
+    this.timerProgress = {
+      completedQuestions: { Facile: {}, Moyen: {}, Difficile: {} },
+      unlockedCategories: {},
+      bestScores: { Facile: 0, Moyen: 0, Difficile: 0 }
+    };
+    this.selectedFrame = 'basicCadre.png';
+    this.selectedAvatar = 'coin.png';
+  }
+},
+
+
+saveGameProgress() {
+  if (!this.isLoggedIn) return;
+
+  try {
+    const progressData = {
+      discoveredElements: Array.isArray(this.discoveredElements) 
+        ? this.discoveredElements 
+        : ["Eau", "Feu", "Terre", "Air"],
+      discoveredCategories: Array.isArray(this.discoveredCategories)
+        ? this.discoveredCategories
+        : ["Elements Fondamentaux"],
+      categoryProgress: this.categoryProgress || {},
+      coins: this.coins,
+      timerProgress: this.timerProgress,
+      customization: {
+        frame: this.selectedFrame,
+        avatar: this.selectedAvatar
       }
-    },
-    async saveGameProgress() {
-      if (!this.isLoggedIn) return;
-  
-      try {
-        const progressData = {
-          discoveredElements: Array.isArray(this.discoveredElements) 
-            ? this.discoveredElements 
-            : ["Eau", "Feu", "Terre", "Air"],
-          discoveredCategories: Array.isArray(this.discoveredCategories)
-            ? this.discoveredCategories
-            : ["Elements Fondamentaux"],
-          categoryProgress: this.categoryProgress || {},
-          coins: this.coins,
-          timerProgress: this.timerProgress,
-          customization: {
-            frame: this.selectedFrame,
-            avatar: this.selectedAvatar
-          }
-        };
-  
-        await progressService.saveGameProgress(progressData);
-      } catch (error) {
-        console.error("Erreur lors de la sauvegarde de la progression:", error);
-      }
-    },
+    };
+
+    // Sauvegarder également dans localStorage pour récupération rapide
+    localStorage.setItem('discoveredElements', JSON.stringify(this.discoveredElements));
+    localStorage.setItem('discoveredCategories', JSON.stringify(this.discoveredCategories));
+
+    return progressService.saveGameProgress(progressData);
+  } catch (error) {
+    console.error("Erreur lors de la sauvegarde de la progression:", error);
+  }
+},
+
+
     updateCategoryProgress() {
       Object.keys(this.categories).forEach(category => {
         const totalElements = this.categories[category].length;
@@ -642,13 +860,15 @@ export default {
   // Afficher un message d'instruction
   this.showAlert(`Défi de craft: Créez ${challengeData.challenge.requiredElements.join(', ')} pour réussir le défi !`);
 },
+
+
 handleCraftSuccess(craftedItem) {
-  console.error('DEBUG CRAFT SUCCESS:', {
+  console.log('DEBUG CRAFT SUCCESS:', {
     craftedItem,
     isTimerActive: this.isTimerActive,
     isExplorerCraftMode: this.isExplorerCraftMode,
     currentTimerElements: this.currentTimerElements,
-    discoveredElements: this.discoveredElements
+    discoveredElements: this.discoveredElements.length
   });
   
   try {
@@ -663,46 +883,23 @@ handleCraftSuccess(craftedItem) {
     };
   }
   
-  if (this.isTimerActive) {
-    if (!this.discoveredElements.includes(craftedItem)) {
-      this.discoveredElements.push(craftedItem);
-      console.error('Élément ajouté aux discoveredElements:', craftedItem);
-    }
-    
-    if (!this.currentTimerElements.includes(craftedItem)) {
-      this.currentTimerElements.push(craftedItem);
-      console.error('Élément ajouté aux currentTimerElements:', craftedItem);
-    }
-  }
-  
   // Mode normal (ni Timer ni Explorer)
   if (!this.isTimerActive && !this.isExplorerActive && !this.isExplorerCraftMode) {
-    this.addToCategory(craftedItem);
+    // Sauvegarder l'élément découvert
+    this.saveDiscoveredElement(craftedItem);
     this.$refs.dataLoading.handleCraft(craftedItem);
-  }
-  
-  // Gestion du mode Explorer Craft
-  if (this.isExplorerCraftMode && this.currentExplorerChallenge) {
-    const requiredElements = this.currentExplorerChallenge.challenge.requiredElements || [];
-    
-    if (requiredElements.includes(craftedItem)) {
-      // Défi réussi !
-      this.showAlert(`Félicitations ! Vous avez créé ${craftedItem} et réussi le défi !`);
-      
-      // Attribuer une récompense en pièces
-      this.handleCoinsEarned(50);
-      
-      // Revenir au mode Explorer
-      this.isExplorerCraftMode = false;
-      this.isExplorerActive = true;
-      
-      // Réinitialiser le défi actuel
-      this.currentExplorerChallenge = null;
-    }
   }
   
   // Gestion du mode Timer
   if (this.isTimerActive) {
+    if (!this.discoveredElements.includes(craftedItem)) {
+      this.discoveredElements.push(craftedItem);
+    }
+    
+    if (!this.currentTimerElements.includes(craftedItem)) {
+      this.currentTimerElements.push(craftedItem);
+    }
+    
     const currentQuestion = this.$refs.timerQuestions.getCurrentQuestion();
     
     if (currentQuestion) {
@@ -713,7 +910,7 @@ handleCraftSuccess(craftedItem) {
       ];
       
       if (allPossibleElements.includes(craftedItem)) {
-        console.error('L\'élément est dans les éléments possibles');
+        console.log('L\'élément est dans les éléments possibles');
       }
       
       const validationMode = currentQuestion.initialElements.validationMode || 'any';
@@ -750,7 +947,32 @@ handleCraftSuccess(craftedItem) {
       }
     }
   }
+  
+  // Gestion du mode Explorer Craft
+  if (this.isExplorerCraftMode && this.currentExplorerChallenge) {
+    const requiredElements = this.currentExplorerChallenge.challenge.requiredElements || [];
+    
+    if (requiredElements.includes(craftedItem)) {
+      // Défi réussi !
+      this.showAlert(`Félicitations ! Vous avez créé ${craftedItem} et réussi le défi !`);
+      
+      // Attribuer une récompense en pièces
+      this.handleCoinsEarned(50);
+      
+      // Sauvegarder l'élément de façon permanente
+      this.saveDiscoveredElement(craftedItem);
+      
+      // Revenir au mode Explorer
+      this.isExplorerCraftMode = false;
+      this.isExplorerActive = true;
+      
+      // Réinitialiser le défi actuel
+      this.currentExplorerChallenge = null;
+    }
+  }
 },
+
+
     addToCategory(craftedItem) {
       const targetCategory = Object.keys(this.categories).find((category) =>
         this.categories[category].includes(craftedItem)

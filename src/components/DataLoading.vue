@@ -2,52 +2,65 @@
   <div v-if="error" class="error-message">
     {{ error }}
   </div>
- </template>
- 
- <script>
- import { ref, onMounted } from 'vue';
- 
- export default {
+</template>
+
+<script>
+import { ref, onMounted } from 'vue';
+
+export default {
   name: 'DataLoading',
   props: {
     isTimerMode: {
       type: Boolean,
       default: false
+    },
+    // Nouveau prop pour transmettre les données existantes
+    existingData: {
+      type: Object,
+      default: () => ({})
     }
   },
-  emits: ['data-loaded', 'achievements-loaded', 'achievement-unlocked'],
- 
+  emits: ['data-loaded', 'achievements-loaded', 'achievement-unlocked', 'force-reload'],
+
   setup(props, { emit }) {
     const error = ref(null);
     const achievements = ref([]);
     const discoveredElements = ref([]);
- 
+
     const loadAchievements = async () => {
       try {
+        console.time('Chargement des achievements');
         const response = await fetch("/data/achievements.json");
         const data = await response.json();
- 
-        achievements.value = data.map((achievement) => {
+
+        const processedAchievements = data.map((achievement) => {
+          console.log(`Traitement de l'achievement: ${achievement.name}`);
+          
           let requiredImage;
           try {
             requiredImage = require(`@/assets/success/${achievement.name}.png`);
           } catch (e) {
             requiredImage = achievement.image || null;
           }
- 
+
           return {
             ...achievement,
             image: requiredImage,
             unlocked: false
           };
         });
- 
-        emit('achievements-loaded', achievements.value);
+
+        console.timeEnd('Chargement des achievements');
+        
+        emit('achievements-loaded', processedAchievements);
+        return processedAchievements;
       } catch (err) {
+        console.error("Erreur de chargement des achievements:", err);
         error.value = "Erreur lors du chargement des succès";
+        throw err;
       }
     };
- 
+
     const loadGameData = async () => {
       try {
         const jsonFiles = [
@@ -60,52 +73,63 @@
           "/data/materiaux_elementaires.json",
           "/data/phénomènes_naturels.json"
         ];
- 
+
         const elementEmojis = {};
         const categories = {};
         const craftingRecipes = {};
- 
+
+        // Conserver les catégories existantes si présentes
+        if (props.existingData.categories) {
+          Object.assign(categories, props.existingData.categories);
+        }
+
         for (const file of jsonFiles) {
           try {
             const response = await fetch(file);
- 
+
             if (!response.ok) {
               throw new Error(`HTTP ${response.status}: ${response.statusText}`);
             }
- 
+
             const data = await response.json();
- 
+
             // Traitement des données animaux
             if (data.animaux) {
               Object.entries(data.animaux).forEach(([category, categoryData]) => {
                 categories[category] = categories[category] || [];
                 Object.entries(categoryData).forEach(([name, emoji]) => {
                   elementEmojis[name.trim()] = emoji;
-                  categories[category].push(name.trim());
+                  if (!categories[category].includes(name.trim())) {
+                    categories[category].push(name.trim());
+                  }
                 });
               });
             }
- 
+
             // Traitement des données humains
             if (data.humains) {
               Object.entries(data.humains).forEach(([category, categoryData]) => {
                 categories[category] = categories[category] || [];
                 Object.entries(categoryData).forEach(([name, emoji]) => {
                   elementEmojis[name.trim()] = emoji;
-                  categories[category].push(name.trim());
+                  if (!categories[category].includes(name.trim())) {
+                    categories[category].push(name.trim());
+                  }
                 });
               });
             }
- 
+
             // Traitement des données elements
             Object.entries(data.elements || {}).forEach(([category, elements]) => {
               categories[category] = categories[category] || [];
               Object.entries(elements).forEach(([name, emoji]) => {
                 elementEmojis[name.trim()] = emoji;
-                categories[category].push(name.trim());
+                if (!categories[category].includes(name.trim())) {
+                  categories[category].push(name.trim());
+                }
               });
             });
- 
+
             // Traitement des règles
             if (data.rules) {
               Object.entries(data.rules).forEach(([key, value]) => {
@@ -113,20 +137,52 @@
               });
             }
           } catch (err) {
-            // Ignorer les erreurs de chargement individuelles
+            console.warn(`Erreur lors du chargement du fichier ${file}:`, err);
           }
         }
- 
-        emit('data-loaded', {
+
+        const loadedData = {
           elementEmojis,
           categories,
           craftingRecipes
-        });
+        };
+
+        emit('data-loaded', loadedData);
+        return loadedData;
       } catch (err) {
         error.value = "Erreur lors du chargement des données depuis plusieurs fichiers";
+        throw err;
       }
     };
- 
+
+    // Nouvelle méthode pour rechargement forcé
+    const loadAllData = async () => {
+      try {
+        // Charger à la fois les données de jeu et les achievements
+        const [gameData, loadedAchievements] = await Promise.all([
+          loadGameData(), 
+          loadAchievements()
+        ]);
+
+        // Données complètes à recharger
+        const fullLoadedData = {
+          ...gameData,
+          achievements: loadedAchievements,
+          // Conserver les données existantes
+          ...props.existingData
+        };
+
+        // Émettre un événement de rechargement forcé
+        emit('force-reload', fullLoadedData);
+
+        return fullLoadedData;
+      } catch (err) {
+        console.error('Erreur lors du rechargement forcé:', err);
+        error.value = "Erreur lors du rechargement complet des données";
+        throw err;
+      }
+    };
+
     function checkAchievements() {
       if (props.isTimerMode) return;
       
@@ -135,7 +191,7 @@
           let expression = achievement.condition;
           expression = expression.replace(/this\.discoveredElements/g, 'discoveredElements');
           const conditionFn = new Function('discoveredElements', `return ${expression}`);
- 
+
           if (conditionFn(discoveredElements.value)) {
             achievement.unlocked = true;
             emit('achievement-unlocked', achievement);
@@ -143,29 +199,30 @@
         }
       });
     }
- 
+
     function handleCraft(newElement) {
       if (props.isTimerMode) {
         emit('craft-success', newElement);
         return;
       }
- 
+
       if (!discoveredElements.value.includes(newElement)) {
         discoveredElements.value.push(newElement);
         checkAchievements();
       }
     }
- 
+
     onMounted(async () => {
       await Promise.all([loadGameData(), loadAchievements()]);
     });
- 
+
     return {
       error,
       achievements,
       discoveredElements,
-      handleCraft
+      handleCraft,
+      loadAllData // Exposer la méthode pour un appel externe
     };
   }
- };
- </script>
+};
+</script>

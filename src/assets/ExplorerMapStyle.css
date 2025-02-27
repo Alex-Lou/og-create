@@ -1,172 +1,296 @@
 .explorer-container {
-    display: flex;
-    flex-direction: column;
-    gap: 20px;
-    width: 100%;
-    max-width: 1000px;
-    margin: 0 auto;
-    padding: 20px;
-    color: white;
-  }
-  
-  .energy-info {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    background-color: rgba(0, 0, 0, 0.7);
-    padding: 10px 15px;
-    border-radius: 8px;
-  }
-  
-  .energy-display {
-    display: flex;
-    align-items: center;
-    gap: 5px;
-    font-size: 1.2rem;
-    font-weight: bold;
-  }
-  
-  .energy-icon {
-    color: yellow;
-  }
-  
-  .map-container {
-    position: relative;
-    width: 100%;
-    height: 0;
-    padding-bottom: 56.25%; /* Ratio 16:9 */
-    margin-bottom: 20px;
-  }
-  
-  .map-image {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    object-fit: contain;
-    border-radius: 8px;
-  }
-  
-  .region-marker {
-    position: absolute;
-    width: 30px;
-    height: 30px;
-    transform: translate(-50%, -50%);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    z-index: 10;
-    background: none;
-  }
-  
-  .region-marker svg {
-    width: 100%;
-    height: 100%;
-    position: absolute;
-    top: 0;
-    left: 0;
-  }
-  
-  
-  .region-marker.completed {
-    background-color: #9C27B0;
-  }
-  
-  .region-marker.locked {
-  
-    cursor: not-allowed;
-  }
-  
-  .region-name {
-    position: absolute;
-    top: -25px;
-    width: max-content;
-    left: 50%;
-    transform: translateX(-50%);
-    background-color: rgba(0, 0, 0, 0.7);
-    padding: 2px 6px;
-    border-radius: 4px;
-    font-size: 0.8rem;
-    white-space: nowrap;
-    visibility: hidden;
-  }
-  
-  .region-marker:hover .region-name {
-    visibility: visible;
-  }
-  
-  .region-lock {
-    font-size: 1.2rem;
-  }
-  
-  .region-info {
-    background-color: rgba(0, 0, 0, 0.7);
-    padding: 15px;
-    border-radius: 8px;
-  }
-  
-  .region-info h3 {
-    margin-top: 0;
-    margin-bottom: 10px;
-  }
-  
-  .region-progress {
-    margin: 15px 0;
-  }
-  
-  .progress-bar {
-    width: 100%;
-    height: 10px;
-    background-color: #444;
-    border-radius: 5px;
-    overflow: hidden;
-    margin-top: 5px;
-  }
-  
-  .progress-fill {
-    height: 100%;
-    background-color: #4CAF50;
-    transition: width 0.3s ease;
-  }
-  
-  .region-actions {
-    display: flex;
-    justify-content: center;
-    gap: 10px;
-    margin-top: 15px;
-  }
-  
-  .explore-btn {
-    padding: 8px 16px;
-    background-color: #2196F3;
-    color: white;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-  }
-  
-  .explore-btn:hover {
-    background-color: #1976D2;
-  }
-  
-  .explore-btn:disabled {
-    background-color: #9E9E9E;
-    cursor: not-allowed;
-  }
-  
-  .back-btn {
-    padding: 10px 20px;
-    background-color: #f44336;
-    color: white;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-    align-self: center;
-    margin-top: 20px;
-  }
-  
-  .back-btn:hover {
-    background-color: #d32f2f;
-  }
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  width: 100%;
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 20px;
+  color: white;
+}
+
+.energy-info {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background-color: rgba(0, 0, 0, 0.7);
+  padding: 10px 15px;
+  border-radius: 8px;
+  position: relative;
+}
+
+.energy-display {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 1.2rem;
+  font-weight: bold;
+}
+
+.energy-icon {
+  color: yellow;
+}
+
+.energy-gained {
+  position: absolute;
+  top: -20px;
+  right: 10px;
+  background-color: #2ecc71;
+  color: white;
+  padding: 5px 10px;
+  border-radius: 5px;
+  font-weight: bold;
+  animation: float-up 1.5s forwards;
+  opacity: 0;
+}
+
+@keyframes float-up {
+  0% { transform: translateY(0); opacity: 0; }
+  10% { opacity: 1; }
+  80% { opacity: 1; }
+  100% { transform: translateY(-30px); opacity: 0; }
+}
+
+.map-container {
+  position: relative;
+  width: 100%;
+  height: 0;
+  padding-bottom: 56.25%; /* Ratio 16:9 */
+  margin-bottom: 20px;
+}
+
+.map-image {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  border-radius: 8px;
+}
+
+.region-marker {
+  position: absolute;
+  width: 30px;
+  height: 30px;
+  transform: translate(-50%, -50%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  z-index: 10;
+  background: none;
+  transition: all 0.3s ease;
+}
+
+.region-marker:hover {
+  transform: translate(-50%, -50%) scale(1.1);
+  z-index: 100;
+}
+
+.region-marker.locked:hover {
+  transform: translate(-50%, -50%);
+  filter: brightness(1.2);
+}
+
+.region-marker svg {
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+.region-marker.completed {
+  filter: none;
+  opacity: 1;
+}
+
+@keyframes completion-pulse {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.2); }
+  100% { transform: scale(1); }
+}
+
+.region-marker.completed svg {
+  animation: completion-pulse 1s ease;
+}
+
+.region-marker.locked {
+  cursor: not-allowed;
+}
+
+.region-name {
+  position: absolute;
+  top: -25px;
+  width: max-content;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: rgba(0, 0, 0, 0.7);
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-size: 0.8rem;
+  white-space: nowrap;
+  visibility: hidden;
+}
+
+.region-marker:hover .region-name {
+  visibility: visible;
+}
+
+.region-lock {
+  font-size: 1.2rem;
+}
+
+.region-info {
+  background-color: rgba(0, 0, 0, 0.7);
+  padding: 15px;
+  border-radius: 8px;
+}
+
+.region-info h3 {
+  margin-top: 0;
+  margin-bottom: 10px;
+}
+
+.region-progress {
+  margin: 15px 0;
+}
+
+.progress-bar {
+  width: 100%;
+  height: 10px;
+  background-color: #444;
+  border-radius: 5px;
+  overflow: hidden;
+  margin-top: 5px;
+}
+
+.progress-fill {
+  height: 100%;
+  background-color: #4CAF50;
+  transition: width 0.3s ease;
+}
+
+.region-actions {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin-top: 15px;
+}
+
+.explore-btn {
+  padding: 8px 16px;
+  background-color: #2196F3;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.explore-btn:hover {
+  background-color: #1976D2;
+}
+
+.explore-btn:disabled {
+  background-color: #9E9E9E;
+  cursor: not-allowed;
+}
+
+.back-btn {
+  padding: 10px 20px;
+  background-color: #f44336;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  align-self: center;
+  margin-top: 20px;
+}
+
+.back-btn:hover {
+  background-color: #d32f2f;
+}
+
+/* Styles pour la fenêtre de victoire */
+.victory-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.8);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1100;
+}
+
+.victory-content {
+  background-color: #2c3e50;
+  padding: 30px;
+  border-radius: 15px;
+  text-align: center;
+  max-width: 500px;
+  border: 2px solid #f1c40f;
+  box-shadow: 0 0 30px rgba(241, 196, 15, 0.5);
+  color: #ecf0f1;
+}
+
+.victory-content h2 {
+  color: #f1c40f;
+  font-size: 36px;
+  margin: 0 0 20px 0;
+  text-shadow: 0 0 10px rgba(241, 196, 15, 0.7);
+}
+
+.rewards-container {
+  background-color: rgba(255, 255, 255, 0.1);
+  padding: 15px;
+  border-radius: 10px;
+  margin: 20px 0;
+}
+
+.rewards-container h3 {
+  margin-top: 0;
+  color: #ecf0f1;
+}
+
+.reward-item {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 10px 0;
+}
+
+.reward-icon {
+  font-size: 24px;
+  margin-right: 10px;
+}
+
+.reward-value {
+  font-size: 18px;
+  font-weight: bold;
+  color: #3498db;
+}
+
+.unlock-message {
+  color: #2ecc71;
+  margin: 20px 0;
+  font-weight: bold;
+}
+
+.continue-btn {
+  background-color: #3498db;
+  color: white;
+  border: none;
+  padding: 12px 25px;
+  border-radius: 5px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.continue-btn:hover {
+  background-color: #2980b9;
+}

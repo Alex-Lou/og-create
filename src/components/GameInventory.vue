@@ -37,10 +37,11 @@
 </template>
  
 <script>
-/* eslint-disable no-unused-vars */
+import { ref, computed, watch, onMounted } from 'vue';
 import '@/assets/GameInventoryStyle.css';
  
 export default {
+  name: 'GameInventory',
   props: {
     categories: {
       type: Object,
@@ -67,28 +68,26 @@ export default {
       default: () => []
     }
   },
-  data() {
-    return {
-      lastCompletedCategory: null,
-      previousCategoriesState: {},
-    };
-  },
-  computed: {
-    filteredCategories() {
-      if (this.isTimerMode) {
-        const currentQuestion = this.$parent.$refs.timerQuestions?.getCurrentQuestion();
+  emits: ['selectResource', 'force-reload'],
+  setup(props, { emit }) {
+    const lastCompletedCategory = ref(null);
+    const previousCategoriesState = ref({});
+
+    const filteredCategories = computed(() => {
+      if (props.isTimerMode) {
+        const currentQuestion = props.$parent?.$refs?.timerQuestions?.getCurrentQuestion();
         
         const possibleElements = [
-          ...(this.timerQuestionElements || []),
+          ...(props.timerQuestionElements || []),
           ...(currentQuestion?.validAnswers || []),
           ...(currentQuestion?.initialElements?.required || []),
           ...(currentQuestion?.initialElements?.additional || [])
         ];
  
-        const timerElements = this.discoveredElements.filter(element => {
-          const normalizedElement = this.normalizeString(element);
+        const timerElements = props.discoveredElements.filter(element => {
+          const normalizedElement = normalizeString(element);
           const isElementValid = possibleElements.some(possibleElement => {
-            const normalizedPossible = this.normalizeString(possibleElement);
+            const normalizedPossible = normalizeString(possibleElement);
             return normalizedElement === normalizedPossible || 
               (typeof normalizedPossible === 'string' && 
                (normalizedElement.includes(normalizedPossible) || normalizedPossible.includes(normalizedElement)));
@@ -98,8 +97,8 @@ export default {
         });
  
         const elementsWithEmojis = timerElements.map(element => {
-          const elementKey = Object.keys(this.elementEmojis).find(key => 
-            this.normalizeString(key) === this.normalizeString(element)
+          const elementKey = Object.keys(props.elementEmojis).find(key => 
+            normalizeString(key) === normalizeString(element)
           ) || element;
           return elementKey;
         });
@@ -108,14 +107,14 @@ export default {
           name: 'Timer Elements',
           progress: 100,
           elements: elementsWithEmojis,
-          isComplete: elementsWithEmojis.length === this.timerQuestionElements.length
+          isComplete: elementsWithEmojis.length === props.timerQuestionElements.length
         }];
       }
  
-      return Object.entries(this.categories)
+      return Object.entries(props.categories)
         .map(([name, elements]) => {
           const filteredElements = Array.isArray(elements)
-            ? elements.filter((el) => this.discoveredElements.includes(el))
+            ? elements.filter((el) => props.discoveredElements.includes(el))
             : [];
           return {
             name: name.replace(/_/g, " "),
@@ -124,25 +123,56 @@ export default {
             isComplete: filteredElements.length === elements.length
           };
         })
-        .filter((category) => this.discoveredCategories.includes(category.name));
-    }
-  },
-  methods: {
-    normalizeString(str) {
+        .filter((category) => props.discoveredCategories.includes(category.name));
+    });
+
+    function normalizeString(str) {
       if (!str) return '';
       return str.normalize("NFD")
         .replace(/[\u0300-\u036f]/g, "")
         .toLowerCase()
         .trim();
-    },
-    checkNewCompletedCategory(categories) {
-      this.previousCategoriesState = categories.reduce((acc, category) => {
+    }
+
+    function checkNewCompletedCategory(categories) {
+      previousCategoriesState.value = categories.reduce((acc, category) => {
         acc[category.name] = {
           isComplete: category.isComplete
         };
         return acc;
       }, {});
-    },
+    }
+
+    // Méthode pour forcer un rechargement
+    function forceReload(data) {
+      // Si de nouvelles données sont fournies, les traiter
+      if (data) {
+        emit('force-reload', data);
+      }
+    }
+
+    onMounted(() => {
+      previousCategoriesState.value = filteredCategories.value.reduce((acc, category) => {
+        acc[category.name] = {
+          isComplete: category.isComplete
+        };
+        return acc;
+      }, {});
+    });
+
+    watch(filteredCategories, (newCategories) => {
+      checkNewCompletedCategory(newCategories);
+    }, { deep: true });
+
+    return {
+      filteredCategories,
+      lastCompletedCategory,
+      previousCategoriesState,
+      normalizeString,
+      forceReload
+    };
+  },
+  methods: {
     startDrag(event, element) {
       if (element) {
         event.dataTransfer.setData('text/plain', element);
@@ -151,22 +181,10 @@ export default {
     endDrag(event) {
       event.dataTransfer.clearData();
     }
-  },
-  watch: {
-    filteredCategories: {
-      handler(newCategories) {
-        this.checkNewCompletedCategory(newCategories);
-      },
-      deep: true
-    }
-  },
-  created() {
-    this.previousCategoriesState = this.filteredCategories.reduce((acc, category) => {
-      acc[category.name] = {
-        isComplete: category.isComplete
-      };
-      return acc;
-    }, {});
   }
 };
 </script>
+
+<style scoped>
+@import '@/assets/GameInventoryStyle.css';
+</style>

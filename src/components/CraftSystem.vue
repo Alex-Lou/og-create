@@ -13,9 +13,9 @@
     </div>
     <div id="crafting" @dragover.prevent @drop="handleDrop">
       <div class="title-container">
-  <CreationZoneTitle />
-  <CraftButton @click="craftItem" />
-</div>
+        <CreationZoneTitle />
+        <CraftButton @click="craftItem" />
+      </div>
       <div id="selection">
         <ul id="selected-resources">
           <li
@@ -106,6 +106,9 @@ export default {
       isDraggingSelected: false,
       isDraggingCrafted: false,
       isShaking: false,
+      // Ajout pour s'assurer que tous les éléments sont sauvegardés
+      lastCraftedItem: null,
+      pendingSaves: new Set(),
     };
   },
   methods: {
@@ -171,10 +174,20 @@ export default {
       const category = this.getCraftedItemCategory(craftedItem);
       if (category && !this.discoveredCategories.has(category)) {
         this.discoveredCategories.add(category);
+        // Informer le parent qu'une nouvelle catégorie a été découverte
+        this.$emit('category-discovered', category);
       }
 
+      // Stocker l'élément créé pour la sauvegarde
+      this.lastCraftedItem = craftedItem;
+      this.pendingSaves.add(craftedItem);
+
       setTimeout(() => {
+        // Signaler la découverte d'un nouvel élément au composant parent
         this.$emit('craft-success', craftedItem);
+        
+        // Enregistrer immédiatement le nouvel élément
+        this.saveDiscoveredElement(craftedItem);
         
         let newPosition = { top: 300, left: 230 };
         
@@ -204,6 +217,14 @@ export default {
         this.alertShown = false;
         this.craftingInProgress = false;
       }, 1);
+    },
+    // Nouvelle méthode pour sauvegarder les éléments découverts
+    saveDiscoveredElement(element) {
+      // Informer le parent qu'un élément doit être sauvegardé
+      this.$emit('save-discovered-element', element);
+      
+      // Retirer de la liste des éléments en attente
+      this.pendingSaves.delete(element);
     },
     handleKeyPress(event) {
       if (event.key === 'Enter') {
@@ -264,8 +285,16 @@ export default {
           this.removeResource(Math.max(this.draggingElementIndex, targetIndex));
           this.removeResource(Math.min(this.draggingElementIndex, targetIndex));
           
+          // Stocker pour sauvegarde
+          this.lastCraftedItem = result;
+          this.pendingSaves.add(result);
+          
           setTimeout(() => {
+            // Émettre un événement pour informer le parent
             this.$emit('craft-success', result);
+            
+            // Enregistrer immédiatement
+            this.saveDiscoveredElement(result);
             
             let newPosition = { 
               top: this.resourcePositions[targetIndex]?.top || 300,
@@ -322,7 +351,15 @@ export default {
           moved: true,
         });
         
+        // Stocker pour sauvegarde
+        this.lastCraftedItem = result;
+        this.pendingSaves.add(result);
+        
+        // Signaler au parent
         this.$emit('craft-success', result);
+        
+        // Enregistrer immédiatement
+        this.saveDiscoveredElement(result);
       } else {
         this.isShaking = true;
         setTimeout(() => {
@@ -401,13 +438,33 @@ export default {
   },
   mounted() {
     window.addEventListener('keydown', this.handleKeyPress);
+    
+    // S'assurer que tous les éléments en attente sont sauvegardés 
+    // avant de quitter la page
+    window.addEventListener('beforeunload', () => {
+      if (this.pendingSaves.size > 0) {
+        // Sauvegarder tous les éléments en attente
+        this.pendingSaves.forEach(element => {
+          this.saveDiscoveredElement(element);
+        });
+      }
+    });
   },
   beforeUnmount() {
     window.removeEventListener('keydown', this.handleKeyPress);
+    
+    // S'assurer que tous les éléments en attente sont sauvegardés 
+    // avant de démonter le composant
+    if (this.pendingSaves.size > 0) {
+      // Sauvegarder tous les éléments en attente
+      this.pendingSaves.forEach(element => {
+        this.saveDiscoveredElement(element);
+      });
+    }
   }
 };
 </script>
 
 <style scoped>
 @import '@/assets/CraftSystemStyle.css';
-</style>  
+</style>

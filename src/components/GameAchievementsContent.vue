@@ -70,6 +70,22 @@ export default {
       }
     },
 
+    handleForceReload(loadedData) {
+    // Synchroniser les achievements avec les données chargées
+    if (loadedData.achievements) {
+      this.processedAchievements = this.processedAchievements.map(achievement => {
+        const loadedAchievement = loadedData.achievements.find(
+          a => this.normalizeName(a.name) === this.normalizeName(achievement.name)
+        );
+        
+        return {
+          ...achievement,
+          unlocked: loadedAchievement ? loadedAchievement.unlocked : achievement.unlocked
+        };
+      });
+    }
+  },
+
     syncAchievementsState() {
       // Met à jour l'état de déblocage de tous les achievements
       this.achievements.forEach(achievement => {

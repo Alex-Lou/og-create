@@ -55,7 +55,10 @@
 export default {
   name: 'InfiniteModeButton',
   props: {
-    isTimerActive: Boolean
+    isTimerActive: {
+      type: Boolean,
+      default: false
+    }
   },
   data() {
     return {
@@ -67,12 +70,15 @@ export default {
       if (this.isTimerActive) {
         this.showStopConfirmModal = true;
       } else {
-        this.$emit('switch-to-infinite');
+        // Ajout d'un objet avec forceReload explicite
+        this.$emit('switch-to-infinite', { forceReload: true });
       }
     },
     confirmInfiniteMode() {
+      // Émettre force-stop pour arrêter le timer si actif
       this.$emit('force-stop');
-      this.$emit('switch-to-infinite');
+      // Émission avec forceReload
+      this.$emit('switch-to-infinite', { forceReload: true });
       this.showStopConfirmModal = false;
     },
     cancelInfiniteMode() {

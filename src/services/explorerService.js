@@ -32,14 +32,22 @@ class ExplorerService {
     }
   }
 
+  // Fonction simplifiée sans appel réseau
   async completeRegion(regionId) {
-    try {
-      const response = await apiInstance.post(`/explorer/complete/${regionId}`);
-      return response.data;
-    } catch (error) {
-      console.error(`Erreur lors de la complétion de la région ${regionId}:`, error);
-      throw error;
-    }
+    console.log(`Complétion de la région ${regionId} (simulée)`);
+    
+    const reponseSimulee = {
+      message: `Région ${regionId} complétée avec succès (simulation)`,
+      completed: true,
+      rewards: {
+        coins: 50,
+        xp: 100,
+        energy: 5
+      },
+      unlockedRegions: []
+    };
+    
+    return reponseSimulee;
   }
 
   async discoverElement(regionId, elementName) {
@@ -81,8 +89,6 @@ class ExplorerService {
       throw error;
     }
   }
-
-  // Autres méthodes à ajouter au fur et à mesure du développement
 }
 
 export default new ExplorerService();

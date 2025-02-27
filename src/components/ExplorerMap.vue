@@ -27,8 +27,9 @@
           :style="getRegionStyle(region)"
           @click="selectRegion(region)"
         >
+          <!-- SVG pour régions en cours (point d'interrogation) -->
           <svg 
-            v-if="region.visited && !region.completed"
+            v-if="isRegionUnlocked(region) && !region.completed"
             xmlns="http://www.w3.org/2000/svg" 
             viewBox="0 0 30 30" 
             width="30" 
@@ -40,7 +41,23 @@
               ?
             </text>
           </svg>
+          
+          <!-- SVG pour régions complétées (coche verte) -->
+          <svg 
+            v-if="region.completed"
+            xmlns="http://www.w3.org/2000/svg" 
+            viewBox="0 0 30 30" 
+            width="30" 
+            height="30" 
+            style="position: absolute; top: 0; left: 0;"
+          >
+            <circle cx="15" cy="15" r="14" fill="#2ecc71" stroke="#27ae60" stroke-width="2"/>
+            <path d="M9 15 L13 19 L21 11" stroke="white" stroke-width="3" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+          
           <div class="region-name">{{ region.name }}</div>
+          
+          <!-- SVG pour régions verrouillées (cadenas) -->
           <div class="region-lock" v-if="!isRegionUnlocked(region)">
             <svg 
               xmlns="http://www.w3.org/2000/svg" 
@@ -72,14 +89,60 @@
         @close="closeNpcDialog"
         @action="startCraftChallenge"
       />
+  
+      <!-- Modal de Craft pour le mode Explorer -->
+      <ExplorerCraftModal 
+        v-if="showCraftModal"
+        :isVisible="showCraftModal"
+        :region="selectedRegion"
+        :challenge="currentChallenge"
+        :craftingRecipes="$parent.craftingRecipes"
+        :elementEmojis="$parent.elementEmojis"
+        :discoveredElements="$parent.discoveredElements"
+        @close="closeCraftModal"
+        @craft-success="handleCraftSuccess"
+        @target-element-created="handleTargetElementCreated"
+        @challenge-completed="handleChallengeCompleted"
+        @show-alert="$emit('show-alert', $event)"
+      />
+  
+      <!-- Modal de Victoire -->
+      <div v-if="showVictoryModal" class="victory-modal">
+        <div class="victory-content">
+          <h2>Victoire !</h2>
+          <p>Félicitations, vous avez complété la région {{ selectedRegion.name }} !</p>
+          
+          <div class="rewards-container">
+            <h3>Récompenses obtenues :</h3>
+            <div class="reward-item" v-if="victoryRewards?.coins">
+              <span class="reward-icon">💰</span>
+              <span class="reward-value">{{ victoryRewards.coins }} Pièces</span>
+            </div>
+            <div class="reward-item" v-if="victoryRewards?.xp">
+              <span class="reward-icon">✨</span>
+              <span class="reward-value">{{ victoryRewards.xp }} XP</span>
+            </div>
+            <div class="reward-item" v-if="victoryRewards?.energy">
+              <span class="reward-icon">⚡</span>
+              <span class="reward-value">{{ victoryRewards.energy }} Énergie</span>
+            </div>
+          </div>
+          
+          <p class="unlock-message" v-if="hasUnlockedRegions">
+            Vous avez débloqué de nouvelles régions ! Partez les explorer !
+          </p>
+          
+          <button class="continue-btn" @click="closeVictoryModal">Continuer</button>
+        </div>
+      </div>
     </div>
   </template>
-  
   
   <script>
   import '@/assets/ExplorerMapStyle.css';
   import explorerService from '@/services/explorerService';
   import NpcDialog from './NpcDialog.vue';
+  import ExplorerCraftModal from './ExplorerCraftModal.vue';
   // Dans Vue, @/ pointe vers le dossier src, mais public est accessible directement
   import axios from 'axios'; // Assurez-vous d'avoir installé axios
   
@@ -87,6 +150,7 @@
     name: 'ExplorerMap',
     components: {
       NpcDialog,
+      ExplorerCraftModal,
     },
     props: {
       userCoins: {
@@ -112,8 +176,25 @@
           actionText: 'Commencer à crafter'
         },
         // Utilisation du JSON importé pour les défis des régions
-        regionChallenges: {}
+        regionChallenges: {},
+        
+        // Propriétés pour le modal de craft
+        showCraftModal: false,
+        currentChallenge: null,
+        
+        // Propriétés pour la modal de victoire
+        showVictoryModal: false,
+        victoryRewards: null
       };
+    },
+    computed: {
+      hasUnlockedRegions() {
+        return this.regions.some(region => 
+          !region.visited && 
+          !region.completed && 
+          this.isRegionUnlocked(region)
+        );
+      }
     },
     methods: {
       formatTime(minutes) {
@@ -123,13 +204,33 @@
       },
       
       isRegionUnlocked(region) {
-        // Une région est débloquée si elle est par défaut ou déjà visitée
-        if (region.is_default || region.visited) return true;
+        // Une région est débloquée si elle est par défaut ou déjà visitée/complétée
+        if (region.is_default || region.visited || region.completed) {
+          return true;
+        }
         
         // Sinon, il faut que sa région parente soit complétée
+        // ET qu'elle soit la prochaine dans la séquence
         if (region.parent_region_id) {
           const parentRegion = this.regions.find(r => r.id === region.parent_region_id);
-          return parentRegion && parentRegion.completed;
+          
+          if (parentRegion && parentRegion.completed) {
+            // Trouver toutes les régions enfants de ce parent qui ne sont pas encore visitées/complétées
+            const childRegions = this.regions.filter(r => 
+              r.parent_region_id === parentRegion.id && 
+              !r.visited && 
+              !r.completed
+            );
+            
+            // S'il y a des régions enfants
+            if (childRegions.length > 0) {
+              // Trier par ID pour avoir la première dans l'ordre
+              const sortedChildren = [...childRegions].sort((a, b) => a.id - b.id);
+              
+              // Ne débloquer que la première
+              return region.id === sortedChildren[0].id;
+            }
+          }
         }
         
         return false;
@@ -215,7 +316,8 @@
               "Pour restaurer l'harmonie, tu dois créer l'essence de la forêt en combinant les éléments fondamentaux."
             ],
             requiredElements: ["Vie"],
-            actionText: "Relever le défi"
+            actionText: "Relever le défi",
+            unlockHint: "Essayez de combiner l'Eau, la Terre et l'Air"
           },
           // Ajoutez d'autres défis par défaut si nécessaire
         };
@@ -245,8 +347,8 @@
       selectRegion(region) {
         // Ne permet pas de sélectionner une région verrouillée
         if (!this.isRegionUnlocked(region)) {
-            alert('Cette région est verrouillée. Complétez les régions précédentes pour la débloquer.');
-            return;
+          alert('Cette région est verrouillée. Complétez les régions précédentes pour la débloquer.');
+          return;
         }
         
         this.selectedRegion = region;
@@ -254,23 +356,23 @@
         
         // Configurer le NPC en fonction de la région
         if (this.regionChallenges[region.id]) {
-            const challenge = this.regionChallenges[region.id];
-            this.currentNpc = {
-              image: challenge.npcImage,
-              dialog: challenge.dialog,
-              actionText: challenge.actionText
-            };
+          const challenge = this.regionChallenges[region.id];
+          this.currentNpc = {
+            image: challenge.npcImage,
+            dialog: challenge.dialog,
+            actionText: challenge.actionText
+          };
         } else {
-            // Dialogue par défaut si aucun défi spécifique n'est défini
-            this.currentNpc = {
-              image: 'npc1.png',
-              dialog: [
-                `Bienvenue dans ${region.name}, explorateur !`,
-                "Cette région est pleine de mystères à découvrir.",
-                "Essaie de combiner les éléments fondamentaux pour découvrir les secrets de cet endroit."
-              ],
-              actionText: "Commencer à crafter"
-            };
+          // Dialogue par défaut si aucun défi spécifique n'est défini
+          this.currentNpc = {
+            image: 'npc1.png',
+            dialog: [
+              `Bienvenue dans ${region.name}, explorateur !`,
+              "Cette région est pleine de mystères à découvrir.",
+              "Essaie de combiner les éléments fondamentaux pour découvrir les secrets de cet endroit."
+            ],
+            actionText: "Commencer à crafter"
+          };
         }
       },
       
@@ -286,21 +388,146 @@
           // Mettre à jour l'énergie
           this.energy = result.energy;
           
-          // Émettre un événement pour démarrer le défi de craft dans cette région
-          this.$emit('start-craft-challenge', {
-            region: region,
-            challenge: this.regionChallenges[region.id] || {
-              requiredElements: [],
-              dialog: []
-            }
-          });
+          // Définir le défi actuel et ouvrir le modal
+          this.currentChallenge = this.regionChallenges[region.id] || {
+            requiredElements: [],
+            dialog: [],
+            unlockHint: "Essayez de combiner différents éléments pour découvrir le secret."
+          };
           
           // Fermer le dialogue NPC
           this.showNpcDialog = false;
+          
+          // Ouvrir le modal de craft
+          this.showCraftModal = true;
+          
         } catch (error) {
           console.error('Erreur lors du démarrage du défi:', error);
           alert(error.response?.data?.message || 'Une erreur est survenue lors du défi');
         }
+      },
+      
+      handleCraftSuccess(craftedItem) {
+        // Ajoute l'élément créé à la liste des éléments découverts
+        this.$emit('element-discovered', craftedItem);
+      },
+      
+      handleTargetElementCreated(element) {
+        // Notification ou effet spécial quand un élément cible est créé
+        console.log(`Élément cible créé: ${element}`);
+        // Vous pourriez ajouter un effet sonore ou visuel ici
+      },
+      
+      handleChallengeCompleted({ region }) {
+        // Fermer le modal de craft
+        this.showCraftModal = false;
+        
+        // Mettre à jour le statut de la région complétée
+        const regionData = this.regions.find(r => r.id === region.id);
+        if (regionData) {
+          // Marquer la région comme complétée
+          regionData.completed = true;
+          
+          // Mise à jour de l'énergie (ajout arbitraire)
+          this.energy = Math.min(this.energy + 5, this.maxEnergy);
+          
+          // Préparer les récompenses pour affichage
+          this.victoryRewards = {
+            coins: 50,
+            xp: 100,
+            energy: 5
+          };
+          
+          // IMPORTANT: Mettre à jour les régions enfants - ne débloquer que la première
+          
+          // 1. Trouver toutes les régions enfants
+          const childRegions = this.regions.filter(r => 
+            r.parent_region_id === regionData.id && 
+            !r.visited && 
+            !r.completed
+          );
+          
+          let unlockedRegion = null;
+          
+          // 2. S'il y a des régions enfants
+          if (childRegions.length > 0) {
+            console.log(`La région ${regionData.name} (${regionData.id}) a ${childRegions.length} enfants.`);
+            
+            // 3. Trier par ID pour avoir la prochaine région dans l'ordre
+            const sortedChildren = [...childRegions].sort((a, b) => a.id - b.id);
+            
+            // 4. Ne débloquer que la première région
+            const nextRegion = sortedChildren[0];
+            unlockedRegion = nextRegion;
+            
+            console.log(`Débloquage UNIQUEMENT de la région: ${nextRegion.name} (ID: ${nextRegion.id})`);
+            
+            // 5. Verrouiller toutes les régions qui ne sont pas complétées/visitées
+            this.regions.forEach(r => {
+              if (!r.completed && !r.visited) {
+                r.is_default = false;
+              }
+            });
+            
+            // 6. Débloquer spécifiquement la prochaine région
+            nextRegion.is_default = true;
+          }
+          
+          // 7. Mettre à jour le message de récompense
+          if (unlockedRegion) {
+            this.victoryRewards.unlockedRegions = [unlockedRegion.id];
+          }
+          
+          // 8. Afficher la fenêtre de victoire
+          this.showVictoryModal = true;
+          
+          // 9. Simuler l'appel à l'API
+          explorerService.completeRegion(regionData.id).catch(error => {
+            console.error(`Erreur non critique lors de la complétion de la région ${regionData.id}:`, error);
+          });
+        }
+      },
+
+      
+      async refreshRegions() {
+        try {
+          // Au lieu de remplacer complètement this.regions, mettre à jour seulement les propriétés importantes
+          const regionsData = await explorerService.getRegions();
+          
+          // Conserver les propriétés visuelles tout en mettant à jour l'état
+          this.regions = this.regions.map(existingRegion => {
+            const updatedRegion = regionsData.find(r => r.id === existingRegion.id);
+            if (updatedRegion) {
+              return {
+                ...existingRegion,
+                completed: updatedRegion.completed,
+                visited: updatedRegion.visited,
+                // Autres propriétés à mettre à jour si nécessaire
+              };
+            }
+            return existingRegion;
+          });
+        } catch (error) {
+          console.error('Erreur lors du rafraîchissement des régions:', error);
+        }
+      },
+      
+      closeCraftModal() {
+        this.showCraftModal = false;
+      },
+      
+      closeVictoryModal() {
+        this.showVictoryModal = false;
+        
+        // Astuce: forcer une mise à jour visuelle des régions
+        this.$nextTick(() => {
+          // Une légère modification pour forcer la mise à jour du DOM
+          const temp = [...this.regions];
+          this.regions = [];
+          this.$nextTick(() => {
+            this.regions = temp;
+          });
+        });
       },
       
       async buyEnergy() {
@@ -335,3 +562,83 @@
     }
   }
   </script>
+  
+  <style>
+  /* Ces styles seront ajoutés aux styles existants dans ExplorerMapStyle.css */
+  .victory-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.8);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1100;
+  }
+  
+  .victory-content {
+    background-color: #2c3e50;
+    padding: 30px;
+    border-radius: 15px;
+    text-align: center;
+    max-width: 500px;
+    border: 2px solid #f1c40f;
+    box-shadow: 0 0 30px rgba(241, 196, 15, 0.5);
+    color: #ecf0f1;
+  }
+  
+  .victory-content h2 {
+    color: #f1c40f;
+    font-size: 36px;
+    margin: 0 0 20px 0;
+    text-shadow: 0 0 10px rgba(241, 196, 15, 0.7);
+  }
+  
+  .rewards-container {
+    background-color: rgba(255, 255, 255, 0.1);
+    padding: 15px;
+    border-radius: 10px;
+    margin: 20px 0;
+  }
+  
+  .reward-item {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 10px 0;
+  }
+  
+  .reward-icon {
+    font-size: 24px;
+    margin-right: 10px;
+  }
+  
+  .reward-value {
+    font-size: 18px;
+    font-weight: bold;
+    color: #3498db;
+  }
+  
+  .unlock-message {
+    color: #2ecc71;
+    margin: 20px 0;
+    font-weight: bold;
+  }
+  
+  .continue-btn {
+    background-color: #3498db;
+    color: white;
+    border: none;
+    padding: 12px 25px;
+    border-radius: 5px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+  }
+  
+  .continue-btn:hover {
+    background-color: #2980b9;
+  }
+  </style>

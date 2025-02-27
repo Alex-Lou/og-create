@@ -1,5 +1,6 @@
 // src/services/progressService.js
 import { apiInstance } from './authService';
+import axios from 'axios';
 
 // Créer une instance plus spécifique qui utilise l'apiInstance partagée
 // Cela nous permet de conserver le point de terminaison spécifique tout en bénéficiant des intercepteurs
@@ -16,25 +17,107 @@ class ProgressService {
   // Remplacez la méthode saveGameProgress existante par celle-ci
   async saveGameProgress(progressData) {
     try {
-      // D'abord, récupérer les données existantes
-      const existingProgress = await this.loadGameProgress();
+      // Ajouter un log pour voir ce qu'on veut sauvegarder
+      console.log('Données de progression à sauvegarder:', JSON.stringify(progressData, null, 2));
       
-      // Fusionner avec les nouvelles données, en préservant les existantes si non spécifiées
+      // D'abord, récupérer les données existantes
+      const existingProgress = await this.loadGameProgress().catch(err => {
+        console.error('Erreur lors du chargement des données existantes:', err);
+        return {
+          discoveredElements: [],
+          discoveredCategories: [],
+          categoryProgress: {},
+          achievements: {},
+          coins: 0,
+          timerProgress: {
+            completedQuestions: {},
+            unlockedCategories: {},
+            bestScores: {
+              Facile: 0,
+              Moyen: 0,
+              Difficile: 0
+            }
+          }
+        };
+      });
+      
+      // S'assurer que les tableaux d'éléments sont bien des tableaux
+      const discoveredElements = Array.isArray(progressData.discoveredElements) 
+        ? [...new Set([...existingProgress.discoveredElements, ...progressData.discoveredElements])]
+        : existingProgress.discoveredElements;
+      
+      const discoveredCategories = Array.isArray(progressData.discoveredCategories)
+        ? [...new Set([...existingProgress.discoveredCategories, ...progressData.discoveredCategories])]
+        : existingProgress.discoveredCategories;
+      
+      // Fusionner avec les nouvelles données de manière plus robuste
       const dataToSend = {
-        discoveredElements: progressData.discoveredElements || existingProgress.discoveredElements,
-        discoveredCategories: progressData.discoveredCategories || existingProgress.discoveredCategories,
-        categoryProgress: progressData.categoryProgress || existingProgress.categoryProgress,
-        achievements: progressData.achievements || existingProgress.achievements,
+        // Pour les tableaux, on fait une union (sans doublons)
+        discoveredElements,
+        discoveredCategories,
+        
+        // Pour les objets, on fusionne récursivement
+        categoryProgress: {
+          ...existingProgress.categoryProgress,
+          ...(progressData.categoryProgress || {})
+        },
+        
+        // Pour les achievements, on s'assure de ne pas perdre ceux déjà acquis
+        achievements: {
+          ...existingProgress.achievements,
+          ...(progressData.achievements || {})
+        },
+        
+        // Pour les valeurs numériques, on prend la nouvelle valeur si définie
         coins: progressData.coins !== undefined ? progressData.coins : existingProgress.coins,
-        timerProgress: progressData.timerProgress || existingProgress.timerProgress
+        
+        // Pour les structures complexes, fusion récursive
+        timerProgress: {
+          completedQuestions: {
+            ...existingProgress.timerProgress?.completedQuestions,
+            ...(progressData.timerProgress?.completedQuestions || {})
+          },
+          unlockedCategories: {
+            ...existingProgress.timerProgress?.unlockedCategories,
+            ...(progressData.timerProgress?.unlockedCategories || {})
+          },
+          bestScores: {
+            Facile: Math.max(
+              existingProgress.timerProgress?.bestScores?.Facile || 0,
+              progressData.timerProgress?.bestScores?.Facile || 0
+            ),
+            Moyen: Math.max(
+              existingProgress.timerProgress?.bestScores?.Moyen || 0,
+              progressData.timerProgress?.bestScores?.Moyen || 0
+            ),
+            Difficile: Math.max(
+              existingProgress.timerProgress?.bestScores?.Difficile || 0,
+              progressData.timerProgress?.bestScores?.Difficile || 0
+            )
+          }
+        }
       };
       
-      console.log('Données fusionnées à envoyer:', dataToSend);
+      console.log('Données fusionnées prêtes à sauvegarder:', JSON.stringify(dataToSend, null, 2));
       
+      // Ajouter un timeout pour s'assurer que l'interface utilisateur se met à jour
       const response = await progressInstance.post('save', dataToSend);
+      
+      // En cas de succès, programmer une autre sauvegarde après quelques secondes
+      // pour s'assurer que les données sont bien enregistrées
+      setTimeout(() => {
+        progressInstance.post('update-discovered-elements', { 
+          discoveredElements: dataToSend.discoveredElements 
+        }).catch(err => console.error('Erreur dans la sauvegarde de secours des éléments:', err));
+        
+        progressInstance.post('update-achievements', { 
+          achievements: dataToSend.achievements 
+        }).catch(err => console.error('Erreur dans la sauvegarde de secours des achievements:', err));
+      }, 5000);
+      
       return response.data;
     } catch (error) {
-      console.error('Erreur dans saveGameProgress:', error);
+      console.error('Erreur critique dans saveGameProgress:', error);
       throw error;
     }
   }
@@ -113,9 +196,22 @@ class ProgressService {
 
   async updateDiscoveredElements(discoveredElements) {
     try {
+      // S'assurer que discoveredElements est un tableau
+      if (!Array.isArray(discoveredElements)) {
+        console.error('Elements découverts invalides:', discoveredElements);
+        return null;
+      }
+      
+      // S'assurer que nous envoyons une copie des données (éviter les mutations)
+      const elementsCopy = [...discoveredElements];
+      
+      console.log('Mise à jour des éléments découverts:', elementsCopy.length);
+      
       const response = await progressInstance.post('update-discovered-elements', { 
-        discoveredElements: discoveredElements 
+        discoveredElements: elementsCopy 
       });
+      
+      console.log('Réponse mise à jour éléments:', response.data);
       return response.data;
     } catch (error) {
       console.error('Erreur lors de la mise à jour des éléments découverts:', error);
@@ -123,14 +219,18 @@ class ProgressService {
     }
   }
 
-  async updateAchievements(achievements) {
+  async updateAchievements(achievementsData) {
+    if (!this.isLoggedIn) return;
+    
     try {
-      const response = await progressInstance.post('update-achievements', { 
-        achievements: achievements 
+      console.time('Mise à jour des achievements');
+      const response = await axios.post('/api/progress/update-achievements', { 
+        achievements: achievementsData 
       });
+      console.timeEnd('Mise à jour des achievements');
       return response.data;
     } catch (error) {
-      console.error('Erreur lors de la mise à jour des achievements:', error);
+      console.error("Erreur lors de la mise à jour des achievements:", error);
       throw error;
     }
   }

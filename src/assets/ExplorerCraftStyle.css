@@ -1,0 +1,207 @@
+/* ExplorerCraftStyle.css */
+
+/* Animation pour les éléments nouvellement créés */
+@keyframes popIn {
+    0% { transform: scale(0); opacity: 0; }
+    70% { transform: scale(1.1); opacity: 1; }
+    100% { transform: scale(1); opacity: 1; }
+  }
+  
+  .new-element {
+    animation: popIn 0.5s ease-out forwards;
+  }
+  
+  /* Animation pour la fusion des éléments */
+  @keyframes fusion {
+    0% { transform: scale(1); opacity: 1; }
+    50% { transform: scale(1.5); opacity: 0.7; }
+    100% { transform: scale(1); opacity: 1; }
+  }
+  
+  .fusion-animation {
+    animation: fusion 0.8s ease-out;
+  }
+  
+  /* Animation pour les éléments cibles trouvés */
+  @keyframes celebration {
+    0% { transform: scale(1); }
+    10% { transform: scale(1.1) rotate(-5deg); }
+    20% { transform: scale(1.1) rotate(5deg); }
+    30% { transform: scale(1.1) rotate(-5deg); }
+    40% { transform: scale(1.1) rotate(5deg); }
+    50% { transform: scale(1.1) rotate(-5deg); }
+    60% { transform: scale(1.1) rotate(5deg); }
+    70% { transform: scale(1.1) rotate(-5deg); }
+    80% { transform: scale(1.1) rotate(5deg); }
+    90% { transform: scale(1); }
+    100% { transform: scale(1); }
+  }
+  
+  .celebration-animation {
+    animation: celebration 1.5s;
+  }
+  
+  /* Styles pour les transitions entre modes */
+  .fade-enter-active, .fade-leave-active {
+    transition: opacity 0.5s;
+  }
+  .fade-enter, .fade-leave-to {
+    opacity: 0;
+  }
+  
+  /* Style pour le mode nuit/jour */
+  .dark-mode .explorer-craft-modal {
+    background-color: rgba(0, 0, 0, 0.9);
+  }
+  
+  .dark-mode .modal-content {
+    background-color: #1a1a2e;
+    border-color: #0f3460;
+  }
+  
+  .dark-mode .challenge-info {
+    background-color: #16213e;
+    border-color: #0f3460;
+  }
+  
+  .dark-mode .element-card, 
+  .dark-mode .selected-element, 
+  .dark-mode .crafted-element {
+    background-color: #16213e;
+  }
+  
+  .dark-mode .craft-button {
+    background-color: #0f3460;
+  }
+  
+  .dark-mode .elements-selection, 
+  .dark-mode .crafted-elements {
+    border-color: #0f3460;
+  }
+  
+  /* Styles adaptatifs pour les écrans mobiles */
+  @media (max-width: 992px) {
+    .craft-area {
+      flex-direction: column;
+    }
+    
+    .elements-selection, 
+    .crafting-workspace, 
+    .crafted-elements {
+      width: 100%;
+      max-height: 33vh;
+    }
+    
+    .elements-grid, 
+    .crafted-grid {
+      grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+    }
+    
+    .element-icon {
+      width: 40px;
+      height: 40px;
+    }
+    
+    .element-name {
+      font-size: 12px;
+    }
+  }
+  
+  /* Effet d'apparition pour les nouvelles combinaisons découvertes */
+  .new-discovery {
+    position: relative;
+  }
+  
+  .new-discovery::after {
+    content: 'Nouveau !';
+    position: absolute;
+    top: -10px;
+    right: -10px;
+    background-color: #e74c3c;
+    color: white;
+    padding: 3px 8px;
+    border-radius: 10px;
+    font-size: 12px;
+    transform: rotate(15deg);
+  }
+  
+  /* Styles pour les boutons d'aide */
+  .help-button {
+    position: absolute;
+    bottom: 15px;
+    right: 15px;
+    width: 40px;
+    height: 40px;
+    background-color: #3498db;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: white;
+    font-weight: bold;
+    cursor: pointer;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+    z-index: 5;
+  }
+  
+  .help-button:hover {
+    background-color: #2980b9;
+  }
+  
+  /* Styles pour le compteur d'énergie */
+  .energy-cost {
+    display: inline-block;
+    margin-left: 10px;
+    background-color: rgba(52, 152, 219, 0.2);
+    padding: 3px 8px;
+    border-radius: 10px;
+    color: #3498db;
+  }
+  
+  /* Styles pour le succès du défi */
+  .challenge-success {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.7);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    z-index: 10;
+  }
+  
+  .success-message {
+    color: white;
+    font-size: 32px;
+    margin-bottom: 20px;
+    text-align: center;
+  }
+  
+  .rewards-container {
+    background-color: #34495e;
+    padding: 20px;
+    border-radius: 10px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .reward-item {
+    display: flex;
+    align-items: center;
+    margin: 10px 0;
+  }
+  
+  .reward-icon {
+    font-size: 24px;
+    margin-right: 10px;
+  }
+  
+  .reward-value {
+    font-size: 20px;
+    font-weight: bold;
+    color: #f39c12;
+  }
