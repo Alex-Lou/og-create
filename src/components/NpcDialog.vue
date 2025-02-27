@@ -174,8 +174,8 @@ export default {
 .region-intro {
   padding: 15px;
   background-color: rgba(20, 20, 20, 0.8);
-  color: white;
-  font-size: 14px;
+  color: rgb(190, 190, 190);
+  font-size: 16px;
   font-family: 'BenjaminFranklin', sans-serif;
   letter-spacing: 2px;
 }
@@ -183,19 +183,19 @@ export default {
 .region-intro h3 {
   margin-top: 0;
   margin-bottom: 10px;
-  font-size: 14px;
+  font-size: 16px;
   font-family: 'BenjaminFranklin', sans-serif;
   letter-spacing: 2px;
 }
 
 .region-progress {
   margin-top: 10px;
-  margin-bottom: 10px; /* Ajout d'espacement entre la progress bar et les textes */
+  margin-bottom: 10px;
 }
 
 .progress-bar {
   width: 100%;
-  height: 10px;
+  height: 15px;
   background-color: #444;
   border-radius: 5px;
   overflow: hidden;
@@ -206,29 +206,29 @@ export default {
 
 .progress-fill {
   height: 100%;
-  background: linear-gradient(90deg, #2196F3, #64B5F6);
+  background: linear-gradient(90deg, #20394e, #425768);
   transition: width 0.3s ease;
   position: relative;
 }
 
-/* Particules flottantes sur la progress bar en #2196F3,
-   rendues plus opaques (moins transparentes) et avec quelques particules supplémentaires */
+/* Particules flottantes sur la progress bar en #2196F3
+   moins transparentes, plus visibles et avec encore plus de particules réparties le long de la barre */
 .progress-fill::before,
 .progress-fill::after,
 .progress-fill .particle {
   content: '';
   position: absolute;
   top: 50%;
-  left: 0;
   width: 10px;
   height: 10px;
-  background: rgba(33, 150, 243, 0.8); /* Opacité augmentée */
+  background: rgba(33, 149, 243, 1); /* Pleine opacité */
   border-radius: 50%;
-  box-shadow: 0 0 5px rgba(255, 255, 255, 0.5), 0 0 10px rgba(255, 255, 255, 0.3);
+  box-shadow: 0 0 5px rgba(255, 255, 255, 0.7), 0 0 10px rgba(255, 255, 255, 0.5);
   animation: particleMove 3s infinite linear;
   opacity: 1;
 }
 
+/* Définition des particules existantes */
 .progress-fill::before {
   left: 10%;
   animation-delay: 0.2s;
@@ -240,62 +240,92 @@ export default {
   transform: translateY(-3px);
 }
 
-/* Particules supplémentaires */
-.progress-fill .particle-10 {
+/* Particules supplémentaires pour une répartition plus dense */
+.progress-fill .particle-5 {
   left: 5%;
-  animation-delay: 0s;
-  opacity: 1;
+  animation-delay: 0.1s;
+}
+
+.progress-fill .particle-10 {
+  left: 10%;
+  animation-delay: 0.2s;
+}
+
+.progress-fill .particle-15 {
+  left: 15%;
+  animation-delay: 0.3s;
 }
 
 .progress-fill .particle-20 { 
-  left: 30%; 
-  animation-delay: 0.6s; 
-  opacity: 1; 
+  left: 20%; 
+  animation-delay: 0.4s; 
+}
+
+.progress-fill .particle-25 {
+  left: 25%;
+  animation-delay: 0.5s;
 }
 
 .progress-fill .particle-30 { 
-  left: 40%; 
-  animation-delay: 0.8s; 
-  opacity: 1;
-  transform: translateY(-3px);
+  left: 30%; 
+  animation-delay: 0.6s; 
+}
+
+.progress-fill .particle-35 {
+  left: 35%;
+  animation-delay: 0.7s;
 }
 
 .progress-fill .particle-40 { 
-  left: 50%; 
-  animation-delay: 1s; 
-  opacity: 1; 
+  left: 40%; 
+  animation-delay: 0.8s; 
+}
+
+.progress-fill .particle-45 {
+  left: 45%;
+  animation-delay: 0.9s;
 }
 
 .progress-fill .particle-50 { 
-  left: 60%; 
-  animation-delay: 1.2s; 
-  opacity: 1;
-  transform: translateY(-3px);
+  left: 50%; 
+  animation-delay: 1s; 
 }
 
-.progress-fill .particle-60 { 
-  left: 70%; 
-  animation-delay: 1.4s; 
-  opacity: 1; 
+.progress-fill .particle-55 {
+  left: 55%;
+  animation-delay: 1.1s;
 }
+
+
 
 .progress-fill .particle-70 { 
-  left: 80%; 
-  animation-delay: 1.6s; 
-  opacity: 1;
-  transform: translateY(-3px);
+  left: 70%; 
+  animation-delay: 1.4s; 
+}
+
+.progress-fill .particle-75 {
+  left: 75%;
+  animation-delay: 1.5s;
 }
 
 .progress-fill .particle-80 { 
-  left: 90%; 
-  animation-delay: 1.8s; 
-  opacity: 1; 
+  left: 80%; 
+  animation-delay: 1.6s; 
 }
 
-.progress-fill .particle-90 {
+.progress-fill .particle-85 {
+  left: 85%;
+  animation-delay: 1.7s;
+}
+
+.progress-fill .particle-90 { 
+  left: 90%; 
+  animation-delay: 1.8s; 
+}
+
+.progress-fill .particle-95 {
   left: 95%;
-  animation-delay: 2s;
-  opacity: 1;
+  animation-delay: 1.9s;
 }
 
 @keyframes particleMove {
