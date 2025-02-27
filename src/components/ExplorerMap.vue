@@ -418,75 +418,104 @@
         // Vous pourriez ajouter un effet sonore ou visuel ici
       },
       
+      // Modification de la méthode handleChallengeCompleted dans ExplorerMap.vue
+
       handleChallengeCompleted({ region }) {
-        // Fermer le modal de craft
-        this.showCraftModal = false;
-        
-        // Mettre à jour le statut de la région complétée
-        const regionData = this.regions.find(r => r.id === region.id);
-        if (regionData) {
-          // Marquer la région comme complétée
-          regionData.completed = true;
-          
-          // Mise à jour de l'énergie (ajout arbitraire)
-          this.energy = Math.min(this.energy + 5, this.maxEnergy);
-          
-          // Préparer les récompenses pour affichage
-          this.victoryRewards = {
-            coins: 50,
-            xp: 100,
-            energy: 5
-          };
-          
-          // IMPORTANT: Mettre à jour les régions enfants - ne débloquer que la première
-          
-          // 1. Trouver toutes les régions enfants
-          const childRegions = this.regions.filter(r => 
-            r.parent_region_id === regionData.id && 
-            !r.visited && 
-            !r.completed
-          );
-          
-          let unlockedRegion = null;
-          
-          // 2. S'il y a des régions enfants
-          if (childRegions.length > 0) {
-            console.log(`La région ${regionData.name} (${regionData.id}) a ${childRegions.length} enfants.`);
-            
-            // 3. Trier par ID pour avoir la prochaine région dans l'ordre
-            const sortedChildren = [...childRegions].sort((a, b) => a.id - b.id);
-            
-            // 4. Ne débloquer que la première région
-            const nextRegion = sortedChildren[0];
-            unlockedRegion = nextRegion;
-            
-            console.log(`Débloquage UNIQUEMENT de la région: ${nextRegion.name} (ID: ${nextRegion.id})`);
-            
-            // 5. Verrouiller toutes les régions qui ne sont pas complétées/visitées
-            this.regions.forEach(r => {
-              if (!r.completed && !r.visited) {
-                r.is_default = false;
-              }
-            });
-            
-            // 6. Débloquer spécifiquement la prochaine région
-            nextRegion.is_default = true;
-          }
-          
-          // 7. Mettre à jour le message de récompense
-          if (unlockedRegion) {
-            this.victoryRewards.unlockedRegions = [unlockedRegion.id];
-          }
-          
-          // 8. Afficher la fenêtre de victoire
-          this.showVictoryModal = true;
-          
-          // 9. Simuler l'appel à l'API
-          explorerService.completeRegion(regionData.id).catch(error => {
-            console.error(`Erreur non critique lors de la complétion de la région ${regionData.id}:`, error);
-          });
+  // Fermer le modal de craft
+  this.showCraftModal = false;
+  
+  // Mettre à jour le statut de la région complétée
+  const regionData = this.regions.find(r => r.id === region.id);
+  if (regionData) {
+    // Marquer la région comme complétée
+    regionData.completed = true;
+    
+    // Définir les récompenses
+    const rewardCoins = this.regionChallenges[region.id]?.rewardCoins || 50;
+    const rewardXp = this.regionChallenges[region.id]?.rewardXp || 100;
+    const rewardEnergy = 5;
+    
+    // Mise à jour de l'énergie locale (ajout de la récompense)
+    this.energy = Math.min(this.energy + rewardEnergy, this.maxEnergy);
+    
+    // Préparer les récompenses pour affichage
+    this.victoryRewards = {
+      coins: rewardCoins,
+      xp: rewardXp,
+      energy: rewardEnergy
+    };
+    
+    // Émettre l'événement de mise à jour des pièces vers le parent (App.vue)
+    this.$emit('coins-updated', this.userCoins + rewardCoins);
+    
+    // IMPORTANT: Mettre à jour les régions enfants - ne débloquer que la première
+    
+    // 1. Trouver toutes les régions enfants
+    const childRegions = this.regions.filter(r => 
+      r.parent_region_id === regionData.id && 
+      !r.visited && 
+      !r.completed
+    );
+    
+    let unlockedRegion = null;
+    
+    // 2. S'il y a des régions enfants
+    if (childRegions.length > 0) {
+      console.log(`La région ${regionData.name} (${regionData.id}) a ${childRegions.length} enfants.`);
+      
+      // 3. Trier par ID pour avoir la prochaine région dans l'ordre
+      const sortedChildren = [...childRegions].sort((a, b) => a.id - b.id);
+      
+      // 4. Ne débloquer que la première région
+      const nextRegion = sortedChildren[0];
+      unlockedRegion = nextRegion;
+      
+      console.log(`Débloquage UNIQUEMENT de la région: ${nextRegion.name} (ID: ${nextRegion.id})`);
+      
+      // 5. Verrouiller toutes les régions qui ne sont pas complétées/visitées
+      this.regions.forEach(r => {
+        if (!r.completed && !r.visited) {
+          r.is_default = false;
         }
-      },
+      });
+      
+      // 6. Débloquer spécifiquement la prochaine région
+      nextRegion.is_default = true;
+    }
+    
+    // 7. Mettre à jour le message de récompense
+    if (unlockedRegion) {
+      this.victoryRewards.unlockedRegions = [unlockedRegion.id];
+    }
+    
+    // 8. Afficher la fenêtre de victoire
+    this.showVictoryModal = true;
+    
+    // 9. Appeler le service avec TOUTES les récompenses
+    explorerService.completeRegion(regionData.id, {
+      coins: rewardCoins,
+      energy: rewardEnergy,
+      xp: rewardXp
+    }).then(response => {
+      console.log('Réponse du service pour complétion de région:', response);
+      
+      // Si tu veux utiliser les valeurs retournées par le backend pour mettre à jour l'interface
+      if (response && response.rewards) {
+        // Mise à jour des pièces si le backend retourne une valeur différente
+        if (response.rewards.coins !== undefined && response.rewards.coins !== this.userCoins + rewardCoins) {
+          this.$emit('coins-updated', response.rewards.coins);
+        }
+        
+        // Mise à jour de l'énergie si le backend retourne une valeur différente
+        if (response.rewards.energy !== undefined && response.rewards.energy !== this.energy) {
+          this.energy = response.rewards.energy;
+        }
+      }
+    }).catch(error => {
+      console.error(`Erreur lors de la complétion de la région ${regionData.id}:`, error);
+    });
+  }
+},
 
       
       async refreshRegions() {

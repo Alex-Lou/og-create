@@ -1,94 +1,137 @@
-// services/explorerService.js
-import { apiInstance } from './authService';
+// explorerService.js
+import axios from 'axios';
 
-class ExplorerService {
+const explorerService = {
+  // Initialiser le mode Explorer
   async initExplorer() {
     try {
-      const response = await apiInstance.get('/explorer/init');
+      const response = await axios.get('/api/progress/explorer/init');
+      console.log('Initialisation Explorer réussie:', response.data);
       return response.data;
     } catch (error) {
       console.error('Erreur lors de l\'initialisation du mode Explorer:', error);
-      throw error;
+      
+      // Valeurs par défaut en cas d'erreur
+      return {
+        energy: 10, 
+        max_energy: 20,
+        next_energy_in: 0
+      };
     }
-  }
-
+  },
+  
+  // Récupérer la liste des régions
   async getRegions() {
     try {
-      const response = await apiInstance.get('/explorer/regions');
+      const response = await axios.get('/api/explorer/regions');
+      console.log('Régions récupérées:', response.data.length);
       return response.data;
     } catch (error) {
       console.error('Erreur lors de la récupération des régions:', error);
-      throw error;
+      
+      // Retourner des régions par défaut en cas d'erreur
+      return [
+        {
+          id: 1,
+          name: "Forêt Primordiale",
+          description: "Une forêt ancienne pleine de secrets.",
+          position_x: 25,
+          position_y: 30,
+          is_default: true,
+          visited: false,
+          completed: false
+        },
+        // Ajoute d'autres régions par défaut si nécessaire
+      ];
     }
-  }
+  },
+  
 
-  async visitRegion(regionId) {
-    try {
-      const response = await apiInstance.post(`/explorer/visit/${regionId}`);
-      return response.data;
-    } catch (error) {
-      console.error(`Erreur lors de la visite de la région ${regionId}:`, error);
-      throw error;
-    }
+  // Visiter une région (dépenser de l'énergie)
+async visitRegion(regionId, energyCost = 2) {
+  try {
+    console.log(`Tentative de visite de la région ${regionId} (coût: ${energyCost})`);
+    // Modifier cette ligne pour correspondre à la route backend '/visit/:regionId'
+    const response = await axios.post(`/api/explorer/visit/${regionId}`, {
+      energyCost: energyCost
+    });
+    console.log('Visite de région réussie, énergie restante:', response.data.energy);
+    return response.data;
+  } catch (error) {
+    console.error(`Erreur lors de la visite de la région ${regionId}:`, error);
+    throw new Error(error.response?.data?.message || 'Erreur lors de la visite de la région');
   }
-
-  // Fonction simplifiée sans appel réseau
-  async completeRegion(regionId) {
-    console.log(`Complétion de la région ${regionId} (simulée)`);
+},
+  
+  // Compléter une région (obtenir des récompenses)
+async completeRegion(regionId, rewards = {}) {
+  try {
+    console.log(`Tentative de complétion de la région ${regionId} avec récompenses:`, rewards);
+    // Modifier cette ligne pour correspondre à la route backend '/complete/:regionId'
+    const response = await axios.post(`/api/explorer/complete/${regionId}`, {
+      coins: rewards.coins || 50,
+      energy: rewards.energy || 5,
+      xp: rewards.xp || 100
+    });
+    console.log('Complétion de région réussie, réponse:', response.data);
+    return response.data;
+  } catch (error) {
+    console.error(`Erreur lors de la complétion de la région ${regionId}:`, error);
     
-    const reponseSimulee = {
-      message: `Région ${regionId} complétée avec succès (simulation)`,
-      completed: true,
+    // Retourner une réponse simulée en cas d'erreur
+    const simulatedResponse = {
+      message: `Région ${regionId} complétée (simulation en cas d'erreur)`,
       rewards: {
-        coins: 50,
-        xp: 100,
-        energy: 5
-      },
-      unlockedRegions: []
+        coins: rewards.coins || 50,
+        energy: rewards.energy || 5,
+        xp: rewards.xp || 100
+      }
     };
-    
-    return reponseSimulee;
+    console.log('Utilisation d\'une réponse simulée:', simulatedResponse);
+    return simulatedResponse;
   }
-
-  async discoverElement(regionId, elementName) {
+},
+  
+  // Acheter de l'énergie avec des pièces
+  async buyEnergy(amount = 1, costPerEnergy = 10) {
     try {
-      const response = await apiInstance.post(`/explorer/discover/${regionId}/${elementName}`);
-      return response.data;
-    } catch (error) {
-      console.error(`Erreur lors de la découverte de l'élément ${elementName} dans la région ${regionId}:`, error);
-      throw error;
-    }
-  }
-
-  async buyEnergy(amount = 1) {
-    try {
-      const response = await apiInstance.post('/explorer/buy-energy', { amount });
+      console.log(`Tentative d'achat de ${amount} point(s) d'énergie pour ${amount * costPerEnergy} pièces`);
+      const response = await axios.post('/api/explorer/buy-energy', {
+        amount: amount,
+        costPerEnergy: costPerEnergy
+      });
+      console.log('Achat d\'énergie réussi, nouvelle énergie:', response.data.energy);
       return response.data;
     } catch (error) {
       console.error('Erreur lors de l\'achat d\'énergie:', error);
-      throw error;
+      throw new Error(error.response?.data?.message || 'Erreur lors de l\'achat d\'énergie');
     }
-  }
-
-  async getRegionDetails(regionId) {
+  },
+  
+  // Vérifier l'état actuel de l'énergie
+  async checkEnergy() {
     try {
-      const response = await apiInstance.get(`/explorer/regions/${regionId}`);
+      const response = await axios.get('/api/progress/explorer/energy');
+      console.log('Énergie actuelle:', response.data);
       return response.data;
     } catch (error) {
-      console.error(`Erreur lors de la récupération des détails de la région ${regionId}:`, error);
-      throw error;
+      console.error('Erreur lors de la vérification de l\'énergie:', error);
+      return { energy: 0, max_energy: 20 };
     }
-  }
-
-  async unlockRegion(regionId) {
+  },
+  
+  // Rafraîchir le statut des régions pour l'utilisateur actuel
+  async refreshRegionStatus() {
     try {
-      const response = await apiInstance.post(`/explorer/unlock/${regionId}`);
+      console.log('Rafraîchissement du statut des régions');
+      const response = await axios.get('/api/explorer/regions/status');
+      console.log('Statut des régions rafraîchi:', response.data);
       return response.data;
     } catch (error) {
-      console.error(`Erreur lors du déblocage de la région ${regionId}:`, error);
-      throw error;
+      console.error('Erreur lors du rafraîchissement du statut des régions:', error);
+      return [];
     }
   }
-}
+};
 
-export default new ExplorerService();
+export default explorerService;
