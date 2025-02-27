@@ -230,6 +230,25 @@
   background-color: #d32f2f;
 }
 
+/* Animation de levitation */
+@keyframes float {
+  0% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-5px);
+  }
+  100% {
+    transform: translateY(0);
+  }
+}
+
+/* Appliquer l'animation sur les SVG au survol de la région */
+.region-marker:hover svg {
+  animation: float 1s infinite ease-in-out;
+}
+
+
 /* Styles pour la fenêtre de victoire */
 .victory-modal {
   position: fixed;
