@@ -7,7 +7,11 @@
       @achievements-loaded="handleAchievementsLoaded"
       @achievement-unlocked="handleAchievementUnlocked"
     />
-    <GameAchievementsContent :achievements="achievements" @achievement-update="handleAchievementUpdate" />
+    <GameAchievementsContent 
+      :achievements="achievements" 
+      :forceReload="shouldForceReload" 
+      @achievements-loaded="handleAchievementsLoaded" 
+    />
     <header style="position: relative;">
       <div class="title-area">
         <img src="@/assets/Svgs/Logo.png" alt="Logo" class="logo" />
@@ -196,6 +200,7 @@ export default {
       showContactForm: false,
       isTimerActive: false,
       isExplorerActive: false,
+      shouldForceReload: false,
       isExplorerCraftMode: false,
       currentExplorerChallenge: null,
       showTimerEndModal: false,
@@ -263,11 +268,37 @@ export default {
     clearInterval(this.saveInterval);
   }
   
+  // Supprimer les écouteurs d'événements
+  window.removeEventListener('app-reloaded', this.handleAppReloaded);
+  window.removeEventListener('achievements-loaded', this.handleGlobalAchievementsLoaded);
+  
   // Sauvegarde finale avant de quitter
   if (this.isLoggedIn) {
     this.saveGameProgress();
   }
 },
+
+handleAppReloaded() {
+  console.log('Événement app-reloaded détecté dans App.vue');
+  
+  // Forcer le rechargement des achievements
+  this.shouldForceReload = true;
+  
+  // Réinitialiser après un délai
+  setTimeout(() => {
+    this.shouldForceReload = false;
+  }, 500);
+},
+
+handleGlobalAchievementsLoaded(event) {
+  console.log('Événement achievements-loaded reçu dans App.vue', event.detail);
+  
+  if (event.detail && event.detail.achievements) {
+    // Mettre à jour les achievements si nécessaire
+    this.achievements = event.detail.achievements;
+  }
+},
+
 
     async activateExplorerMode() {
       try {
@@ -349,78 +380,62 @@ export default {
     handleInfiniteModeActivation(options = {}) {
   const forceReload = options.forceReload || false;
   
-  // Désactiver le mode Explorer si actif
-  if (this.isExplorerActive) {
-    this.isExplorerActive = false;
-  }
-  
-  if (this.isTimerActive) {
-    this.isTimerActive = false;
-    
-    if (this.$refs.timerModeButton) {
-      this.$refs.timerModeButton.stopTimer();
-    }
-    
-    if (this.$refs.timerQuestions) {
-      this.$refs.timerQuestions.resetQuestions();
-    }
-  }
-  
-  // Réinitialiser complètement les données
+  // Réinitialisation des données
   this.discoveredElements = ["Eau", "Feu", "Terre", "Air"];
   this.discoveredCategories = ["Elements Fondamentaux"];
   
-  // Forcer un rechargement complet des données
+  // Définir shouldForceReload pour GameAchievementsContent
+  this.shouldForceReload = true;
+  
   if (forceReload && this.$refs.dataLoading) {
-    // Préparer les données existantes à préserver
-    const existingAchievementsData = {};
-    this.achievements.forEach(achievement => {
-      if (achievement.unlocked) {
-        existingAchievementsData[achievement.name] = {
-          unlocked: true,
-          unlockedAt: achievement.unlockedAt || new Date().toISOString()
-        };
-      }
-    });
-
-    // Passer les données existantes pour préserver certains états
-    this.$refs.dataLoading.$props.existingData = {
-      achievements: existingAchievementsData,
-      categories: this.categories,
-      categoryProgress: this.categoryProgress
-    };
-
     this.$nextTick(async () => {
       try {
-        // Charger toutes les données
+        console.log('🔄 Début du rechargement forcé');
+        
+        // Charger tous les achievements existants avant le rechargement
+        const existingUnlockedAchievements = this.achievements
+          .filter(a => a.unlocked)
+          .reduce((acc, achievement) => {
+            acc[achievement.name] = {
+              unlocked: true,
+              unlockedAt: achievement.unlockedAt || new Date().toISOString()
+            };
+            return acc;
+          }, {});
+
+        console.log('💾 Achievements existants à préserver:', 
+          Object.keys(existingUnlockedAchievements).length
+        );
+
+        // Forcer le chargement de toutes les données
         const loadedData = await this.$refs.dataLoading.loadAllData();
         
-        // Mise à jour des données de base
+        console.log('🔍 Données chargées:', {
+          achievements: loadedData.achievements?.length,
+          categories: Object.keys(loadedData.categories).length
+        });
+
+        // Mise à jour des données
         this.elementEmojis = loadedData.elementEmojis || {};
         this.categories = loadedData.categories || {};
         this.craftingRecipes = loadedData.craftingRecipes || {};
         
-        // Mettre à jour les achievements en préservant les états débloqués
+        // Synchronisation des achievements
         this.achievements = loadedData.achievements.map(achievement => {
-          const savedAchievement = loadedData.achievements[achievement.name];
+          const existingUnlocked = existingUnlockedAchievements[achievement.name];
+          
           return {
             ...achievement,
-            unlocked: savedAchievement ? savedAchievement.unlocked : false,
-            unlockedAt: savedAchievement?.unlockedAt
+            unlocked: existingUnlocked ? true : false,
+            unlockedAt: existingUnlocked?.unlockedAt
           };
         });
         
-        // Conserver la progression des catégories
-        this.categoryProgress = loadedData.categoryProgress || {};
-        
-        // Mettre à jour la progression des catégories
-        this.updateCategoryProgress();
-        
-        // Sauvegarder immédiatement
+        // Sauvegarde immédiate
         await this.saveGameProgress();
         
-        // Mettre à jour les achievements débloqués
-        const unlockedAchievements = this.achievements
+        // Mise à jour explicite des achievements
+        const achievementsToUpdate = this.achievements
           .filter(a => a.unlocked)
           .reduce((acc, achievement) => {
             acc[achievement.name] = {
@@ -430,15 +445,27 @@ export default {
             return acc;
           }, {});
         
-        // Forcer la mise à jour des achievements débloqués
-        if (Object.keys(unlockedAchievements).length > 0) {
-          await progressService.updateAchievements(unlockedAchievements);
-        }
+        console.log('🚀 Achievements à mettre à jour:', 
+          Object.keys(achievementsToUpdate).length
+        );
         
-        console.log('Rechargement complet en mode Infinite terminé');
+        // Mise à jour immédiate et parallèle
+        await Promise.all([
+          progressService.updateAchievements(achievementsToUpdate),
+          this.updateCategoryProgress()
+        ]);
+        
+        console.log('✅ Rechargement complet terminé');
+        
+        // Réinitialiser shouldForceReload après un délai
+        setTimeout(() => {
+          this.shouldForceReload = false;
+        }, 500);
+        
       } catch (error) {
-        console.error('Erreur lors du rechargement forcé:', error);
+        console.error('❌ Erreur de rechargement:', error);
         this.showAlert('Erreur de chargement. Veuillez réessayer.');
+        this.shouldForceReload = false;
       }
     });
   }
@@ -728,6 +755,9 @@ export default {
     this.selectedAvatar = 'coin.png';
   }
 },
+
+
+
 
 
 saveGameProgress() {

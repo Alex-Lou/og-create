@@ -70,19 +70,57 @@ export default {
       if (this.isTimerActive) {
         this.showStopConfirmModal = true;
       } else {
-        // Ajout d'un objet avec forceReload explicite
-        this.$emit('switch-to-infinite', { forceReload: true });
+        // Définir un paramètre dans l'URL pour indiquer le mode infini
+        this.setInfiniteMode();
       }
     },
     confirmInfiniteMode() {
       // Émettre force-stop pour arrêter le timer si actif
       this.$emit('force-stop');
-      // Émission avec forceReload
-      this.$emit('switch-to-infinite', { forceReload: true });
       this.showStopConfirmModal = false;
+      // Définir un paramètre dans l'URL pour indiquer le mode infini
+      this.setInfiniteMode();
     },
     cancelInfiniteMode() {
       this.showStopConfirmModal = false;
+    },
+    setInfiniteMode() {
+      // Stocker l'information dans localStorage pour persister entre les rechargements
+      localStorage.setItem('activateInfiniteMode', 'true');
+      
+      // Émettre l'événement avant le rechargement pour que le composant parent puisse
+      // terminer toute opération nécessaire avant le rechargement
+      this.$emit('switch-to-infinite', { forceReload: true });
+      
+      // Attendre un court délai pour permettre au composant parent de traiter l'événement
+      setTimeout(() => {
+        // Rechargement complet de la page avec un paramètre de requête pour forcer un rechargement complet
+        window.location.href = window.location.pathname + '?reload=' + new Date().getTime() + '&mode=infinite';
+      }, 100);
+    }
+  },
+  // Vérifier si nous venons d'un rechargement avec mode infini
+  mounted() {
+    // Si nous avons un indicateur dans localStorage, émettre l'événement après le montage
+    if (localStorage.getItem('activateInfiniteMode') === 'true') {
+      // Nettoyer l'indicateur
+      localStorage.removeItem('activateInfiniteMode');
+      // Émettre l'événement après que le composant soit monté
+      this.$nextTick(() => {
+        this.$emit('switch-to-infinite', { forceReload: false });
+        
+        // Informer les autres composants du rechargement
+        window.dispatchEvent(new CustomEvent('app-reloaded'));
+      });
+    }
+    
+    // Vérifier si nous venons d'un rechargement avec mode infini via l'URL
+    const urlParams = new URLSearchParams(window.location.search);
+    if (urlParams.has('mode') && urlParams.get('mode') === 'infinite') {
+      // Informer les autres composants du rechargement
+      this.$nextTick(() => {
+        window.dispatchEvent(new CustomEvent('app-reloaded'));
+      });
     }
   }
 };
