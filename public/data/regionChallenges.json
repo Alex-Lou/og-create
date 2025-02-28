@@ -6,6 +6,7 @@
       "parent_region_id": null,
       "is_default": true,
       "npcImage": "npc1.png",
+      "npcPosition": "left",
       "background": "forrest-bg.gif",
       "dialog": [
         "Bienvenue dans la Forêt Primordiale, voyageur !",
@@ -27,12 +28,38 @@
       "parent_region_id": 1,
       "is_default": false,
       "npcImage": "npc1.png",
+      "npcPosition": "left",
       "background": "forrest-bg.gif",
       "dialog": [
         "Ah, tu as trouvé la Rivière Cristalline !",
-        "Ces eaux contiennent une énergie pure et régénératrice.",
-        "Si tu pouvais créer un cristal en combinant la Terre et l'Eau de manière spéciale, cela nous aiderait beaucoup.",
-        "Essaie de combiner différents éléments avec de l'Eau pour découvrir le secret."
+        "Ces eaux contiennent une énergie pure et régénératrice."
+      ],
+      "interactions": [
+        {
+          "npcImage": "npc1.png",
+          "position": "right",
+          "text": "Voici notre rivière sacrée, voyageur. C'est ici que nous puisons notre magie élémentaire."
+        },
+        {
+          "npcImage": "npc2.png",
+          "position": "left",
+          "text": "Sage gardien! Les eaux de la rivière s'assombrissent chaque jour davantage. C'est une catastrophe!"
+        },
+        {
+          "npcImage": "npc1.png",
+          "position": "right",
+          "text": "Calme-toi, jeune apprenti. Nous avons de la chance, ce voyageur semble maîtriser l'art de la combinaison des éléments."
+        },
+        {
+          "npcImage": "npc2.png",
+          "position": "left",
+          "text": "Vraiment? Pouvez-vous nous aider? Notre rivière a besoin d'un cristal purificateur."
+        },
+        {
+          "npcImage": "npc1.png",
+          "position": "right",
+          "text": "Si tu pouvais créer un cristal en combinant la Terre et l'Eau de manière spéciale, cela nous aiderait beaucoup. Essaie de combiner différents éléments pour découvrir le secret."
+        }
       ],
       "requiredElements": ["Boue"],
       "availableElements": ["Eau", "Feu", "Terre", "Air", "Vie"],
@@ -48,6 +75,7 @@
       "parent_region_id": 2,
       "is_default": false,
       "npcImage": "npc1.png",
+      "npcPosition": "left",
       "background": "forrest-bg.gif",
       "dialog": [
         "La Montagne Eternelle... peu de gens osent s'y aventurer.",
@@ -69,6 +97,7 @@
       "parent_region_id": 3,
       "is_default": false,
       "npcImage": "npc1.png",
+      "npcPosition": "right",
       "background": "entree-grotte.png",
       "dialog": [
         "La Caverne Mystique recèle de secrets ancestraux.",
@@ -94,6 +123,7 @@
       "trigger_after_region": 4,
       "background": "interieur-grotte.png",
       "bossImage": "boss-1-anim.gif",
+      "bossPosition": "center",
       "maxHealth": 100,
       "dialog": [
         "Mortel! Comment osez vous tenter de vous emparer du joyeau de Ignasius avant moi ?!",

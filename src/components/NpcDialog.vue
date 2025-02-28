@@ -27,31 +27,57 @@
       </div>
 
       <div v-else class="npc-content">
-        <div class="npc-image-container">
-            <img :src="resolveNpcImage(npcImage)" alt="NPC" class="npc-image" />
-        </div>
-        <div class="dialog-content">
-          <div class="dialog-bubble">
-            <p v-if="dialogStep < dialogContent.length">{{ dialogContent[dialogStep] }}</p>
-            <div class="dialog-buttons">
-              <button 
-                v-if="dialogStep < dialogContent.length - 1" 
-                @click="nextStep" 
-                class="next-btn"
-              >
-                Suivant
-              </button>
-              <button 
-                v-else 
-                @click="handleAction" 
-                class="action-btn"
-                :disabled="!canStartChallenge"
-              >
-                {{ actionButtonText }} 
-                <span v-if="energyCost" class="energy-cost">⚡ {{ energyCost }}</span>
-              </button>
-              <button @click="closeDialog" class="close-btn">Fermer</button>
+        <!-- Mode interaction pour plusieurs NPC -->
+        <div v-if="isInteractionMode" class="interaction-container" :class="{'reverse-layout': currentInteraction.position === 'right'}">
+          <!-- Image du NPC qui parle actuellement -->
+          <div class="npc-image-container">
+            <img :src="resolveNpcImage(currentInteraction.npcImage)" alt="NPC" class="npc-image" />
+          </div>
+          
+          <!-- Contenu du dialogue -->
+          <div class="dialog-content">
+            <div class="dialog-bubble">
+              <div class="speaker-indicator">
+                {{ currentInteraction.position === 'left' ? 'Sage de la forêt:' : 'Apprenti de la rivière:' }}
+              </div>
+              <p>{{ currentInteraction.text }}</p>
             </div>
+          </div>
+        </div>
+        
+        <!-- Mode dialogue classique avec un seul NPC -->
+        <div v-else class="standard-dialog-container" :class="npcPosition === 'right' ? 'reverse-layout' : ''">
+          <div class="npc-image-container" :class="{ 'right-aligned': npcPosition === 'right' }">
+            <img :src="resolveNpcImage(npcImage)" alt="NPC" class="npc-image" />
+          </div>
+          <div class="dialog-content">
+            <div class="dialog-bubble">
+              <p v-if="dialogStep < dialogContent.length">{{ dialogContent[dialogStep] }}</p>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Boutons fixes positionnés dans le conteneur principal -->
+        <div class="dialog-buttons-container">
+          <div class="dialog-buttons-center">
+            <button 
+              v-if="(isInteractionMode && interactionStep < regionData.interactions.length - 1) || 
+                  (!isInteractionMode && dialogStep < dialogContent.length - 1)" 
+              @click="isInteractionMode ? nextInteractionStep() : nextStep()" 
+              class="next-btn"
+            >
+              Suivant
+            </button>
+            <button 
+              v-else 
+              @click="handleAction" 
+              class="action-btn"
+              :disabled="!canStartChallenge"
+            >
+              {{ actionButtonText }} 
+              <span v-if="energyCost" class="energy-cost">⚡ {{ energyCost }}</span>
+            </button>
+            <button @click="closeDialog" class="close-btn">Fermer</button>
           </div>
         </div>
       </div>
@@ -66,6 +92,10 @@ export default {
     npcImage: {
       type: String,
       default: 'npc1.png'
+    },
+    npcPosition: {
+      type: String,
+      default: 'left'
     },
     dialogContent: {
       type: Array,
@@ -91,17 +121,29 @@ export default {
   computed: {
     canStartChallenge() {
       return this.currentEnergy >= this.energyCost;
+    },
+    isInteractionMode() {
+      return this.regionData.interactions && this.regionData.interactions.length > 0;
+    },
+    currentInteraction() {
+      if (this.isInteractionMode && this.regionData.interactions) {
+        return this.regionData.interactions[this.interactionStep] || {};
+      }
+      return {};
     }
   },
   data() {
     return {
       dialogStep: 0,
+      interactionStep: 0,
       showIntro: true,
       hasExploredOnce: false
     };
   },
   methods: {
     resolveNpcImage(imageName) {
+      if (!imageName) return '';
+      
       if (imageName.startsWith('boss-')) {
         return require(`@/assets/explorer-boss/${imageName}`);
       } else {
@@ -111,14 +153,22 @@ export default {
     startExploring() {
       this.showIntro = false;
       this.hasExploredOnce = true;
+      this.dialogStep = 0;
+      this.interactionStep = 0;
     },
     nextStep() {
       if (this.dialogStep < this.dialogContent.length - 1) {
         this.dialogStep++;
       }
     },
+    nextInteractionStep() {
+      if (this.interactionStep < this.regionData.interactions.length - 1) {
+        this.interactionStep++;
+      }
+    },
     closeDialog() {
       this.dialogStep = 0;
+      this.interactionStep = 0;
       if (!this.hasExploredOnce) {
         this.showIntro = true;
       }
@@ -137,6 +187,7 @@ export default {
     this.showIntro = true;
     this.hasExploredOnce = false;
     this.dialogStep = 0;
+    this.interactionStep = 0;
   }
 };
 </script>
@@ -348,8 +399,31 @@ export default {
 
 .npc-content {
   display: flex;
+  flex-direction: column;
+  position: relative;
+  padding-bottom: 60px; /* Espace pour les boutons fixes */
 }
 
+.interaction-container, .standard-dialog-container {
+  display: flex;
+  padding: 15px;
+}
+
+.reverse-layout {
+  flex-direction: row-reverse;
+}
+
+.npc-image-container {
+  width: 30%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 10px;
+}
+
+.right-aligned {
+  justify-content: flex-end;
+}
 
 .npc-image {
   max-width: 80%;
@@ -360,17 +434,15 @@ export default {
 .dialog-content {
   width: 70%;
   padding-top: 20px;
+  padding-left: 10px;
+  padding-right: 10px;
 }
 
 .dialog-bubble {
   background-color: #2a2a2a;
   border-radius: 10px;
   padding: 15px;
-  position: relative;
-  min-height: 150px;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
+  min-height: 120px;
   font-size: 14px;
   font-family: 'BenjaminFranklin', sans-serif;
   letter-spacing: 2px;
@@ -379,21 +451,38 @@ export default {
 .dialog-bubble p {
   font-size: 1.1rem;
   line-height: 1.5;
-  margin-bottom: 20px;
   color: white;
   font-size: 14px;
   font-family: 'BenjaminFranklin', sans-serif;
   letter-spacing: 2px;
 }
 
-.dialog-buttons {
-  display: flex;
-  justify-content: flex-end;
-  gap: 10px;
-  margin-top: 20px;
+.speaker-indicator {
+  font-weight: bold;
+  margin-bottom: 10px;
+  color: #FFC107;
   font-size: 14px;
-  font-family: 'BenjaminFranklin', sans-serif;
-  letter-spacing: 2px;
+}
+
+/* Nouveau conteneur pour les boutons fixes complètement indépendant */
+.dialog-buttons-container {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 60px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: rgba(30, 30, 30, 0.8);
+  border-top: 1px solid #444;
+  padding: 5px 0;
+}
+
+.dialog-buttons-center {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
 }
 
 .next-btn, .action-btn, .close-btn, .explore-btn {
@@ -443,11 +532,23 @@ export default {
 }
 
 @media (max-width: 768px) {
-  .npc-content {
+  .interaction-container, .standard-dialog-container {
+    flex-direction: column;
+  }
+  .reverse-layout {
     flex-direction: column;
   }
   .npc-image-container, .dialog-content {
     width: 100%;
+  }
+  .right-aligned {
+    justify-content: center;
+  }
+  .npc-content {
+    padding-bottom: 70px; /* Plus d'espace sur mobile */
+  }
+  .dialog-buttons-container {
+    height: 70px;
   }
 }
 </style>
