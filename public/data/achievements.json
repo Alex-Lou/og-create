@@ -124,6 +124,13 @@
     "unlocked": false,
     "condition": "this.discoveredElements.includes('Druide')",
     "image": "/assets/success/Merlin l'enchanteur.png"
+  },
+  {
+    "name": "Gardien de la Grotte Mystique",
+    "description": "Vaincre le gardien de la grotte mystique.",
+    "unlocked": false,
+    "condition": "this.discoveredElements.includes('Druide')",
+    "image": "/assets/success/Merlin l'enchanteur.png"
   }
 
 

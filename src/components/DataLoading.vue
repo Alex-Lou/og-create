@@ -14,7 +14,6 @@ export default {
       type: Boolean,
       default: false
     },
-    // Nouveau prop pour transmettre les données existantes
     existingData: {
       type: Object,
       default: () => ({})
@@ -71,7 +70,8 @@ export default {
           "/data/formations_naturelles.json",
           "/data/geologie.json",
           "/data/materiaux_elementaires.json",
-          "/data/phénomènes_naturels.json"
+          "/data/phénomènes_naturels.json",
+          "/data/magie.json"  // Ajout du fichier magie
         ];
 
         const elementEmojis = {};
@@ -130,10 +130,20 @@ export default {
               });
             });
 
-            // Traitement des règles
+            // Traitement des règles avec support de l'ordre original et trié
             if (data.rules) {
               Object.entries(data.rules).forEach(([key, value]) => {
+                // Conserver la méthode actuelle pour compatibilité (éléments triés)
                 craftingRecipes[key.split("+").sort().join("+")] = value;
+                
+                // Ajouter une nouvelle clé qui préserve l'ordre original
+                craftingRecipes[key] = value;
+                
+                // Debug pour vérifier le chargement des recettes
+                console.log(`Chargement recette: 
+                  Clé originale: ${key}
+                  Clé triée: ${key.split("+").sort().join("+")}
+                  Valeur: ${value}`);
               });
             }
           } catch (err) {
@@ -221,7 +231,7 @@ export default {
       achievements,
       discoveredElements,
       handleCraft,
-      loadAllData // Exposer la méthode pour un appel externe
+      loadAllData
     };
   }
 };

@@ -110,11 +110,12 @@
   .boss-image {
     width: 100%;
     height: auto;
+    margin-top: -30px;
   }
   
   .boss-health-container {
     position: absolute;
-    top: -30px;
+    top: -40px;
     left: 50%;
     transform: translateX(-50%);
     width: 80%;

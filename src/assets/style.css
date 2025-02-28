@@ -1,3 +1,17 @@
+@font-face {
+  font-family: 'White Storm';
+  src: url('@/assets/White Storm.otf') format('opentype');
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'BenjaminFranklin';
+  src: url('@/assets/BenjaminFranklin.ttf') format('opentype');
+  font-weight: normal;
+  font-style: normal;
+}
+
 /* General Reset */
 * {
     margin: 0;
@@ -234,11 +248,6 @@ header {
   }
 
 
-
-
-
-
-
 .title-area {
     display: flex;
     align-items: center;
@@ -252,9 +261,7 @@ header .logo {
 
 /* Titre */
 header h1 {
-    font-size: 1.2rem;
     text-align: left;
-    letter-spacing: 2px;
     background: linear-gradient(90deg, #4dd0e1, #00acc1, #ff7f00, #ff0000);
     background-size: 400% 400%;
     -webkit-background-clip: text;
@@ -264,6 +271,9 @@ header h1 {
     text-shadow: 0 0 10px rgba(255, 255, 255, 0.5), 0 0 20px rgba(255, 255, 255, 0.3);
     display: inline-block;
     margin-right: auto;
+    font-size: 19px;
+    font-family: 'BenjaminFranklin', sans-serif;
+    letter-spacing: 2px;
 }
 
 /* Bouton DarkToggle */

@@ -297,35 +297,42 @@ export default {
         this.$emit('show-alert', 'Sélectionnez au moins 2 éléments pour la fusion!');
         return;
       }
-  
-      // Trier les éléments pour la recherche dans les recettes
-      const sortedSelected = [...this.selectedElements].sort().join('+');
-      console.log("Tentative de fusion:", sortedSelected);
-      
-      // Récupération des recettes spéciales
-      const specialRecipes = {
-        "Feu+Magie": "Feu Magique"
+
+      // Générer toutes les combinaisons possibles
+      const generateCombinations = (elements) => {
+        const combinations = [];
+        
+        // Générer toutes les permutations
+        const permute = (arr, m = []) => {
+          if (arr.length === 0) {
+            combinations.push(m.join('+'));
+          } else {
+            for (let i = 0; i < arr.length; i++) {
+              let curr = arr.slice();
+              let next = curr.splice(i, 1);
+              permute(curr.slice(), m.concat(next));
+            }
+          }
+        };
+        
+        permute(elements);
+        return combinations;
       };
+
+      // Générer toutes les permutations possibles
+      const permutations = generateCombinations(this.selectedElements);
       
-      // Recherche de la recette dans les recettes normales ou spéciales
-      let craftedItem = this.craftingRecipes[sortedSelected] || specialRecipes[sortedSelected];
-  
+      // Rechercher une correspondance dans les recettes
+      let craftedItem = null;
+      for (const permutation of permutations) {
+        if (this.craftingRecipes[permutation]) {
+          craftedItem = this.craftingRecipes[permutation];
+          break;
+        }
+      }
+
       if (!craftedItem) {
-        console.log("Échec: recette non trouvée pour", sortedSelected);
-        console.log("Éléments disponibles:", this.availableElements);
-        console.log("Éléments créés:", this.craftedElements);
-        
-        // Chercher des recettes similaires pour aider au débogage
-        const similarRecipes = Object.entries(this.craftingRecipes)
-          .filter(([ingredients]) => {
-            const elements = ingredients.split('+');
-            const selectedElements = sortedSelected.split('+');
-            // Chercher si au moins un élément est commun
-            return elements.some(e => selectedElements.includes(e));
-          })
-          .slice(0, 5); // Limiter à 5 recettes pour la lisibilité
-        
-        console.log("Recettes similaires qui pourraient aider:", similarRecipes);
+        console.log("Échec: recette non trouvée pour", this.selectedElements);
         
         // Animation d'échec
         this.isShaking = true;
@@ -334,28 +341,29 @@ export default {
         }, 500);
         return;
       }
-  
+
       console.log("Fusion réussie! Élément créé:", craftedItem);
       
       if (!this.craftedElements.includes(craftedItem)) {
         this.craftedElements.push(craftedItem);
       }
-  
+
       this.$emit('craft-success', craftedItem);
-  
-      // Si c'est un élément qui peut faire des dégâts au boss et que c'est un défi de boss
+
+      // Gestion du combat de boss si applicable
       if (this.isBossChallenge && this.$refs.bossFight) {
-        // Laisser le composant BossFight gérer les dégâts
         this.$refs.bossFight.applyDamage(craftedItem);
       }
-  
+
       if (this.isTargetElement(craftedItem)) {
         console.log(`Élément cible ${craftedItem} créé!`);
         this.$emit('target-element-created', craftedItem);
       }
-  
+
       this.selectedElements = [];
     },
+
+
     selectCraftedElement(element) {
       if (this.selectedElements.length < 4) {
         this.selectedElements.push(element);

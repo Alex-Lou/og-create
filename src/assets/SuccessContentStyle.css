@@ -1,3 +1,18 @@
+@font-face {
+    font-family: 'White Storm';
+    src: url('@/assets/White Storm.otf') format('opentype');
+    font-weight: normal;
+    font-style: normal;
+  }
+  
+  @font-face {
+    font-family: 'BenjaminFranklin';
+    src: url('@/assets/BenjaminFranklin.ttf') format('opentype');
+    font-weight: normal;
+    font-style: normal;
+  }
+  
+
 /* Conteneur principal */
 #achievements-menu-container {
     position: absolute;
@@ -90,12 +105,15 @@
 
     #achievements-content li {
         padding: 10px;
-        color: #cfcfcf;
+        color: #cecece;
         cursor: pointer;
         transition: background 0.3s ease;
         display: flex;
         align-items: center;
         word-wrap: break-word;
+        font-size: 14px;
+        font-family: 'BenjaminFranklin', sans-serif;
+        letter-spacing: 2px;
     }
 
     #achievements-content li:hover {

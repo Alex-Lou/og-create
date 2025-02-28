@@ -106,10 +106,10 @@
       "actionText": "Affronter le gardien",
       "damagePerElement": {
         "Feu Magique": 20,
-        "Métal": 30,
+        "Anneau de Pouvoir": 30,
         "Vie": 25
       },
-      "rewardCoins": 500,
+      "rewardCoins": 500, 
       "rewardXp": 1000,
       "unlockHint": "Le feu affecte sa carapace, tandis que le métal peut percer ses défenses"
     }
