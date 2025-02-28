@@ -99,7 +99,7 @@
             <div 
               v-for="(element, index) in craftedElements" 
               :key="index"
-              class="crafted-element"
+              class="crafted-element-explorer"
               draggable="true"
               @dragstart="startDragCrafted($event, element)"
               @click="selectCraftedElement(element)"
