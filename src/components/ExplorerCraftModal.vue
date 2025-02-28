@@ -42,16 +42,31 @@
               @click="selectElement(element)"
             >
               <div class="element-icon">
-                <span>{{ elementEmojis[element] || '🔮' }}</span>
+                <!-- Afficher les GIFs personnalisés pour les éléments définis dans elementsWithGifs -->
+                <div v-if="hasGif(element)" class="gif-container">
+                  <img :src="getElementGif(element)" class="element-gif" alt="element"/>
+                </div>
+                <span v-else>{{ elementEmojis[element] || '🔮' }}</span>
               </div>
               <div class="element-name">{{ element }}</div>
             </div>
           </div>
         </div>
 
-        <!-- Zone de craft avec l'image de fond -->
-        <div class="crafting-workspace" @dragover.prevent @drop="handleDrop">
+        <div class="crafting-workspace"
+          :style="{ backgroundImage: `url(${require(`@/assets/explorer-background/${challenge.background}`)})` }"
+          @dragover.prevent @drop="handleDrop">
           <h3>Zone de fusion</h3>
+          
+          <!-- Composant BossFight - uniquement affiché si c'est un défi de boss -->
+          <BossFight 
+            v-if="isBossChallenge" 
+            :boss="challenge" 
+            :craftedElements="craftedElements"
+            ref="bossFight"
+            @boss-defeated="handleBossDefeated"
+          />
+
           <div class="selected-elements">
             <div 
               v-for="(element, index) in selectedElements" 
@@ -63,12 +78,16 @@
               :class="{ 'shake-animation': isShaking && index < selectedElements.length }"
             >
               <div class="element-icon">
-                <span>{{ elementEmojis[element] || '🔮' }}</span>
+                <!-- Afficher les GIFs personnalisés pour les éléments définis dans elementsWithGifs -->
+                <div v-if="hasGif(element)" class="gif-container">
+                  <img :src="getElementGif(element)" class="element-gif" alt="element"/>
+                </div>
+                <span v-else>{{ elementEmojis[element] || '🔮' }}</span>
               </div>
               <div class="element-name">{{ element }}</div>
             </div>
           </div>
-          <button @click="craftElements" class="craft-button" :disabled="selectedElements.length < 2">
+          <button @click="craftElements" class="craft-button-explorer" :disabled="selectedElements.length < 2">
             Fusionner
           </button>
         </div>
@@ -86,7 +105,11 @@
               @click="selectCraftedElement(element)"
             >
               <div class="element-icon">
-                <span>{{ elementEmojis[element] || '🔮' }}</span>
+                <!-- Afficher les GIFs personnalisés pour les éléments définis dans elementsWithGifs -->
+                <div v-if="hasGif(element)" class="gif-container">
+                  <img :src="getElementGif(element)" class="element-gif" alt="element"/>
+                </div>
+                <span v-else>{{ elementEmojis[element] || '🔮' }}</span>
               </div>
               <div class="element-name">{{ element }}</div>
               <div class="glow-effect" v-if="isTargetElement(element)"></div>
@@ -113,8 +136,14 @@
 </template>
 
 <script>
+import BossFight from '@/components/BossFight.vue';
+import '@/assets/ExplorerCraftStyle.css';
+
 export default {
   name: 'ExplorerCraftModal',
+  components: {
+    BossFight
+  },
   props: {
     isVisible: {
       type: Boolean,
@@ -148,13 +177,17 @@ export default {
       craftedElements: [],
       draggingIndex: null,
       isShaking: false,
-      // Pour suivre les éléments déjà affichés
       hasBeenDisplayed: {}
     };
   },
   computed: {
     availableElements() {
-      // Donne accès aux éléments de base + ceux déjà découverts appropriés pour ce défi
+      // Si le challenge spécifie des éléments disponibles, utiliser ceux-là
+      if (this.challenge.availableElements && this.challenge.availableElements.length > 0) {
+        return this.challenge.availableElements;
+      }
+      
+      // Sinon, utiliser la logique précédente
       const baseElements = ['Eau', 'Feu', 'Terre', 'Air'];
       return [...new Set([...baseElements, ...this.discoveredElements.filter(e => 
         !this.challenge.requiredElements.includes(e)
@@ -165,9 +198,66 @@ export default {
       return this.challenge.requiredElements.every(element => 
         this.craftedElements.includes(element)
       );
+    },
+    isBossChallenge() {
+      // Vérifier s'il s'agit d'un défi de boss
+      return this.challenge.bossImage && this.challenge.maxHealth;
     }
   },
+  mounted() {
+    // Activer le débogage des recettes
+    this.debugRecipes();
+  },
   methods: {
+    // Méthode de débogage des recettes
+    debugRecipes() {
+      console.log("=== DEBUG RECETTES ===");
+      console.log("Éléments disponibles:", this.availableElements);
+      console.log("Éléments requis:", this.challenge.requiredElements);
+      console.log("Éléments de dégâts:", this.challenge.damagePerElement);
+      
+      // Afficher toutes les recettes disponibles
+      console.log("Toutes les recettes disponibles:", this.craftingRecipes);
+      
+      // Tester si on peut créer les éléments requis
+      this.challenge.requiredElements.forEach(element => {
+        console.log(`Recherche de recettes pour créer: ${element}`);
+        
+        // Chercher toutes les recettes qui produisent cet élément
+        const recipes = Object.entries(this.craftingRecipes)
+          .filter(([, result]) => result === element)
+          .map(([ingredients]) => ingredients);
+        
+        if (recipes.length > 0) {
+          console.log(`Recettes trouvées pour ${element}:`, recipes);
+          recipes.forEach(recipe => {
+            const recipeIngredients = recipe.split('+');
+            const availableIngredients = recipeIngredients.every(ing => 
+              this.availableElements.includes(ing) || this.craftedElements.includes(ing)
+            );
+            console.log(`La recette ${recipe} est ${availableIngredients ? 'possible' : 'impossible'} avec les éléments disponibles`);
+          });
+        } else {
+          console.log(`Aucune recette trouvée pour créer ${element}`);
+        }
+      });
+      
+      console.log("=== FIN DEBUG ===");
+    },
+    
+    // Vérifier si un élément a un GIF personnalisé
+    hasGif(element) {
+      return this.challenge.elementsWithGifs && 
+             this.challenge.elementsWithGifs.includes(element);
+    },
+    
+    // Obtenir le chemin du GIF pour un élément
+    getElementGif(element) {
+      // Convertir le nom de l'élément en minuscules pour correspondre au nom du fichier
+      const fileName = element.toLowerCase();
+      return require(`@/assets/gifs/${fileName}.gif`);
+    },
+    
     toggleHint() {
       this.showHint = !this.showHint;
     },
@@ -208,10 +298,35 @@ export default {
         return;
       }
   
+      // Trier les éléments pour la recherche dans les recettes
       const sortedSelected = [...this.selectedElements].sort().join('+');
-      const craftedItem = this.craftingRecipes[sortedSelected];
+      console.log("Tentative de fusion:", sortedSelected);
+      
+      // Récupération des recettes spéciales
+      const specialRecipes = {
+        "Feu+Magie": "Feu Magique"
+      };
+      
+      // Recherche de la recette dans les recettes normales ou spéciales
+      let craftedItem = this.craftingRecipes[sortedSelected] || specialRecipes[sortedSelected];
   
       if (!craftedItem) {
+        console.log("Échec: recette non trouvée pour", sortedSelected);
+        console.log("Éléments disponibles:", this.availableElements);
+        console.log("Éléments créés:", this.craftedElements);
+        
+        // Chercher des recettes similaires pour aider au débogage
+        const similarRecipes = Object.entries(this.craftingRecipes)
+          .filter(([ingredients]) => {
+            const elements = ingredients.split('+');
+            const selectedElements = sortedSelected.split('+');
+            // Chercher si au moins un élément est commun
+            return elements.some(e => selectedElements.includes(e));
+          })
+          .slice(0, 5); // Limiter à 5 recettes pour la lisibilité
+        
+        console.log("Recettes similaires qui pourraient aider:", similarRecipes);
+        
         // Animation d'échec
         this.isShaking = true;
         setTimeout(() => {
@@ -220,13 +335,22 @@ export default {
         return;
       }
   
+      console.log("Fusion réussie! Élément créé:", craftedItem);
+      
       if (!this.craftedElements.includes(craftedItem)) {
         this.craftedElements.push(craftedItem);
       }
   
       this.$emit('craft-success', craftedItem);
   
+      // Si c'est un élément qui peut faire des dégâts au boss et que c'est un défi de boss
+      if (this.isBossChallenge && this.$refs.bossFight) {
+        // Laisser le composant BossFight gérer les dégâts
+        this.$refs.bossFight.applyDamage(craftedItem);
+      }
+  
       if (this.isTargetElement(craftedItem)) {
+        console.log(`Élément cible ${craftedItem} créé!`);
         this.$emit('target-element-created', craftedItem);
       }
   
@@ -242,6 +366,11 @@ export default {
     resetCrafting() {
       this.selectedElements = [];
       this.craftedElements = [];
+      
+      // Réinitialiser aussi la santé du boss si c'est un défi de boss
+      if (this.isBossChallenge && this.$refs.bossFight) {
+        this.$refs.bossFight.resetBossHealth();
+      }
     },
     completeChallenge() {
       if (this.isChallengeSolved) {
@@ -250,353 +379,11 @@ export default {
     },
     isTargetElement(element) {
       return this.challenge.requiredElements.includes(element);
+    },
+    handleBossDefeated() {
+      console.log("Le boss a été vaincu dans ExplorerCraftModal!");
+      this.$emit('boss-defeated');
     }
   }
 };
 </script>
-
-<style scoped>
-.explorer-craft-modal {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background-color: rgba(0, 0, 0, 0.8);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  z-index: 1000;
-}
-
-.modal-content {
-  background-color: #2c3e50;
-  width: 90%;
-  max-width: 1200px;
-  height: 90%;
-  max-height: 800px;
-  border-radius: 15px;
-  display: flex;
-  flex-direction: column;
-  overflow: hidden;
-  box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
-  border: 2px solid #3498db;
-}
-
-.challenge-info {
-  display: flex;
-  background-color: #34495e;
-  padding: 20px;
-  border-bottom: 2px solid #3498db;
-  position: relative;
-  font-family: 'BenjaminFranklin', sans-serif;
-  letter-spacing: 2px;
-  font-weight: bold;
-}
-
-.npc-image-container {
-  width: 80px;
-  height: 80px;
-  border-radius: 50%;
-  overflow: hidden;
-  margin-right: 20px;
-  border: 2px solid #f39c12;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  background-color: #2c3e50;
-}
-
-.npc-placeholder {
-  font-size: 40px;
-}
-
-.challenge-objective {
-  flex: 1;
-}
-
-.challenge-objective h2 {
-  margin: 0 0 10px 0;
-  color: #ecf0f1;
-  font-family: 'BenjaminFranklin', sans-serif;
-  letter-spacing: 2px;
-  font-weight: bold;
-}
-
-.challenge-objective p {
-  margin: 0;
-  color: #bdc3c7;
-  font-family: 'BenjaminFranklin', sans-serif;
-  letter-spacing: 2px;
-  font-weight: bold;
-}
-
-.target-element {
-  font-weight: bold;
-  color: #f39c12;
-}
-
-.hint-container {
-  margin-top: 10px;
-  padding: 10px;
-  background-color: rgba(243, 156, 18, 0.2);
-  border-radius: 5px;
-  font-family: 'BenjaminFranklin', sans-serif;
-  letter-spacing: 2px;
-  font-weight: bold;
-}
-
-.hint-text {
-  color: #f39c12;
-  font-style: italic;
-  font-family: 'BenjaminFranklin', sans-serif;
-  letter-spacing: 2px;
-  font-weight: bold;
-}
-
-.hint-button {
-  background-color: transparent;
-  color: #3498db;
-  border: none;
-  cursor: pointer;
-  padding: 5px 0;
-  margin-top: 5px;
-  font-size: 14px;
-  font-family: 'BenjaminFranklin', sans-serif;
-  letter-spacing: 2px;
-  font-weight: bold;
-}
-
-.close-button {
-  position: absolute;
-  top: 15px;
-  right: 15px;
-  color: #ecf0f1;
-  font-size: 24px;
-  cursor: pointer;
-}
-
-.craft-area {
-  display: flex;
-  flex: 1;
-  overflow: hidden;
-  font-family: 'BenjaminFranklin', sans-serif;
-  letter-spacing: 2px;
-  font-weight: bold;
-}
-
-.elements-selection,
-.crafting-workspace,
-.crafted-elements {
-  flex: 1;
-  padding: 15px;
-  display: flex;
-  flex-direction: column;
-  overflow-y: auto;
-  font-family: 'BenjaminFranklin', sans-serif;
-  letter-spacing: 2px;
-  font-weight: bold;
-}
-
-.elements-selection {
-  background-color: #2c3e50;
-  border-right: 1px solid #3498db;
-}
-
-/* Zone de fusion avec le background gif */
-.crafting-workspace {
-  background-image: url('@/assets/explorer-background/forrest-bg.gif');
-  background-size: cover;
-  background-repeat: no-repeat;
-  position: relative;
-  /* On conserve l'espacement existant */
-  padding: 15px;
-}
-
-.crafted-elements {
-  background-color: #2c3e50;
-  border-left: 1px solid #3498db;
-}
-
-h3 {
-  margin-top: 0;
-  margin-bottom: 15px;
-  color: #ecf0f1;
-  text-align: center;
-  font-family: 'BenjaminFranklin', sans-serif;
-  letter-spacing: 2px;
-  font-weight: bold;
-}
-
-.elements-grid,
-.crafted-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
-  gap: 15px;
-  overflow-y: auto;
-  padding: 10px;
-  font-family: 'BenjaminFranklin', sans-serif;
-  letter-spacing: 2px;
-  font-weight: bold;
-}
-
-.element-card,
-.selected-element,
-.crafted-element {
-  background-color: #34495e;
-  border-radius: 10px;
-  padding: 10px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  cursor: pointer;
-  transition: all 0.2s ease;
-  position: relative;
-  font-family: 'BenjaminFranklin', sans-serif;
-  letter-spacing: 2px;
-  font-weight: bold;
-}
-
-.element-card:hover,
-.selected-element:hover,
-.crafted-element:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
-}
-
-.element-icon {
-  width: 60px;
-  height: 60px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  margin-bottom: 10px;
-  font-size: 30px;
-}
-
-.element-name {
-  color: #ecf0f1;
-  text-align: center;
-  font-size: 14px;
-  margin-top: -15px;
-}
-
-.selected-elements {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  min-height: 230px;
-  background-color: rgba(52, 152, 219, 0.1);
-  border-radius: 10px;
-  padding: 15px;
-  font-family: 'BenjaminFranklin', sans-serif;
-  letter-spacing: 2px;
-  font-weight: bold;
-}
-
-.selected-element {
-  width: 100px;
-  position: relative;
-  font-family: 'BenjaminFranklin', sans-serif;
-  letter-spacing: 2px;
-  font-weight: bold;
-  height: 70px;
-}
-
-
-.reset-button,
-.complete-button {
-  padding: 12px 25px;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-  font-weight: bold;
-  font-family: 'BenjaminFranklin', sans-serif;
-  letter-spacing: 2px;
-  margin-top: 15px;
-  transition: background-color 0.3s ease;
-}
-
-.craft-button {
-  background-color: #3498db;
-  color: white;
-  align-self: center;
-  border-radius: 5px;
-  font-weight: bold;
-  font-family: 'BenjaminFranklin', sans-serif;
-  letter-spacing: 2px;
-  cursor: pointer;
-  margin-top: 75px;
-  transition: background-color 0.3s ease;
-  padding: 4px 10px;
-  border: none;
-}
-
-.craft-button:hover {
-  background-color: #2980b9;
-}
-
-.craft-button:disabled {
-  background-color: #0952577b;
-  cursor: not-allowed;
-}
-
-.action-buttons {
-  display: flex;
-  justify-content: space-between;
-  padding: 20px;
-  background-color: #34495e;
-  border-top: 2px solid #3498db;
-}
-
-.reset-button {
-  background-color: #e74c3c;
-  color: white;
-}
-
-.reset-button:hover {
-  background-color: #c0392b;
-}
-
-.complete-button {
-  background-color: #2ecc71;
-  color: white;
-}
-
-.complete-button:hover {
-  background-color: #27ae60;
-}
-
-.complete-button:disabled {
-  background-color: #95a5a6;
-  cursor: not-allowed;
-}
-
-.shake-animation {
-  animation: shake 0.5s cubic-bezier(.36, .07, .19, .97) both;
-}
-
-@keyframes shake {
-  0%, 100% { transform: translateX(0); }
-  10%, 30%, 50%, 70%, 90% { transform: translateX(-5px); }
-  20%, 40%, 60%, 80% { transform: translateX(5px); }
-}
-
-.glow-effect {
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  border-radius: 10px;
-  box-shadow: 0 0 15px #f39c12, 0 0 25px #f39c12;
-  opacity: 0.7;
-  animation: glow 1.5s infinite alternate;
-  pointer-events: none;
-}
-
-@keyframes glow {
-  from { opacity: 0.5; }
-  to { opacity: 0.8; }
-}
-</style>

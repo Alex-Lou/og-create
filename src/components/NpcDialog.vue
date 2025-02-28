@@ -28,7 +28,7 @@
 
       <div v-else class="npc-content">
         <div class="npc-image-container">
-            <img :src="require(`@/assets/npcs/${npcImage}`)" alt="NPC" class="npc-image" />
+            <img :src="resolveNpcImage(npcImage)" alt="NPC" class="npc-image" />
         </div>
         <div class="dialog-content">
           <div class="dialog-bubble">
@@ -101,6 +101,13 @@ export default {
     };
   },
   methods: {
+    resolveNpcImage(imageName) {
+      if (imageName.startsWith('boss-')) {
+        return require(`@/assets/explorer-boss/${imageName}`);
+      } else {
+        return require(`@/assets/npcs/${imageName}`);
+      }
+    },
     startExploring() {
       this.showIntro = false;
       this.hasExploredOnce = true;
@@ -211,8 +218,6 @@ export default {
   position: relative;
 }
 
-/* Particules flottantes sur la progress bar en #2196F3
-   moins transparentes, plus visibles et avec encore plus de particules réparties le long de la barre */
 .progress-fill::before,
 .progress-fill::after,
 .progress-fill .particle {
@@ -221,14 +226,13 @@ export default {
   top: 50%;
   width: 10px;
   height: 10px;
-  background: rgba(33, 149, 243, 1); /* Pleine opacité */
+  background: rgba(33, 149, 243, 1);
   border-radius: 50%;
   box-shadow: 0 0 5px rgba(255, 255, 255, 0.7), 0 0 10px rgba(255, 255, 255, 0.5);
   animation: particleMove 3s infinite linear;
   opacity: 1;
 }
 
-/* Définition des particules existantes */
 .progress-fill::before {
   left: 10%;
   animation-delay: 0.2s;
@@ -240,7 +244,6 @@ export default {
   transform: translateY(-3px);
 }
 
-/* Particules supplémentaires pour une répartition plus dense */
 .progress-fill .particle-5 {
   left: 5%;
   animation-delay: 0.1s;
@@ -296,8 +299,6 @@ export default {
   animation-delay: 1.1s;
 }
 
-
-
 .progress-fill .particle-70 { 
   left: 70%; 
   animation-delay: 1.4s; 
@@ -349,23 +350,16 @@ export default {
   display: flex;
 }
 
-.npc-image-container {
-  width: 30%;
-  padding: 20px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
 
 .npc-image {
-  max-width: 100%;
-  max-height: 300px;
-  border-radius: 5px;
+  max-width: 80%;
+  max-height: 260px;
+  border-radius: 15px;
 }
 
 .dialog-content {
   width: 70%;
-  padding: 20px;
+  padding-top: 20px;
 }
 
 .dialog-bubble {

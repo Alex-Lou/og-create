@@ -49,6 +49,14 @@ const explorerService = {
   // Visiter une région (dépenser de l'énergie) avec gestion des erreurs 429
   async visitRegion(regionId, energyCost = 2, retryCount = 0) {
     try {
+      // Si c'est un ID de boss, pas besoin de faire une requête API
+      if (typeof regionId === 'string' && regionId.startsWith('boss-')) {
+        return {
+          energy: 10, // On ne dépense pas d'énergie pour les boss
+          message: "Combat de boss commencé"
+        };
+      }
+      
       console.log(`Tentative de visite de la région ${regionId} (coût: ${energyCost})`);
       const response = await axios.post(`/api/explorer/visit/${regionId}`, {
         energyCost: energyCost
@@ -72,33 +80,61 @@ const explorerService = {
   },
   
   // Compléter une région (obtenir des récompenses)
-async completeRegion(regionId, rewards = {}) {
-  try {
-    console.log(`Tentative de complétion de la région ${regionId} avec récompenses:`, rewards);
-    // Modifier cette ligne pour correspondre à la route backend '/complete/:regionId'
-    const response = await axios.post(`/api/explorer/complete/${regionId}`, {
-      coins: rewards.coins || 50,
-      energy: rewards.energy || 5,
-      xp: rewards.xp || 100
-    });
-    console.log('Complétion de région réussie, réponse:', response.data);
-    return response.data;
-  } catch (error) {
-    console.error(`Erreur lors de la complétion de la région ${regionId}:`, error);
-    
-    // Retourner une réponse simulée en cas d'erreur
-    const simulatedResponse = {
-      message: `Région ${regionId} complétée (simulation en cas d'erreur)`,
-      rewards: {
+  async completeRegion(regionId, rewards = {}) {
+    try {
+      console.log(`Tentative de complétion de la région ${regionId} avec récompenses:`, rewards);
+      // Modifier cette ligne pour correspondre à la route backend '/complete/:regionId'
+      const response = await axios.post(`/api/explorer/complete/${regionId}`, {
         coins: rewards.coins || 50,
         energy: rewards.energy || 5,
         xp: rewards.xp || 100
-      }
-    };
-    console.log('Utilisation d\'une réponse simulée:', simulatedResponse);
-    return simulatedResponse;
-  }
-},
+      });
+      console.log('Complétion de région réussie, réponse:', response.data);
+      return response.data;
+    } catch (error) {
+      console.error(`Erreur lors de la complétion de la région ${regionId}:`, error);
+      
+      // Retourner une réponse simulée en cas d'erreur
+      const simulatedResponse = {
+        message: `Région ${regionId} complétée (simulation en cas d'erreur)`,
+        rewards: {
+          coins: rewards.coins || 50,
+          energy: rewards.energy || 5,
+          xp: rewards.xp || 100
+        }
+      };
+      console.log('Utilisation d\'une réponse simulée:', simulatedResponse);
+      return simulatedResponse;
+    }
+  },
+  
+  // Compléter un boss (obtenir des récompenses)
+  async completeBoss(bossId, rewards = {}) {
+    try {
+      console.log(`Tentative de complétion du boss ${bossId} avec récompenses:`, rewards);
+      const response = await axios.post(`/api/explorer/complete-boss/${bossId}`, {
+        coins: rewards.coins || 500,
+        energy: rewards.energy || 10,
+        xp: rewards.xp || 1000
+      });
+      console.log('Complétion de boss réussie, réponse:', response.data);
+      return response.data;
+    } catch (error) {
+      console.error(`Erreur lors de la complétion du boss ${bossId}:`, error);
+      
+      // Retourner une réponse simulée en cas d'erreur
+      const simulatedResponse = {
+        message: `Boss ${bossId} vaincu (simulation en cas d'erreur)`,
+        rewards: {
+          coins: rewards.coins || 500,
+          energy: rewards.energy || 10,
+          xp: rewards.xp || 1000
+        }
+      };
+      console.log('Utilisation d\'une réponse simulée pour le boss:', simulatedResponse);
+      return simulatedResponse;
+    }
+  },
   
   // Acheter de l'énergie avec des pièces
   async buyEnergy(amount = 1, costPerEnergy = 10) {

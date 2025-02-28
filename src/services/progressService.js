@@ -1,6 +1,5 @@
 // src/services/progressService.js
 import { apiInstance } from './authService';
-import axios from 'axios';
 
 // Créer une instance plus spécifique qui utilise l'apiInstance partagée
 // Cela nous permet de conserver le point de terminaison spécifique tout en bénéficiant des intercepteurs
@@ -8,53 +7,127 @@ const progressInstance = {
   async get(endpoint) {
     return apiInstance.get(`/progress/${endpoint}`);
   },
-  async post(endpoint, data) {
-    return apiInstance.post(`/progress/${endpoint}`, data);
+  async post(endpoint, data, retryCount = 0) {
+    try {
+      return await apiInstance.post(`/progress/${endpoint}`, data);
+    } catch (error) {
+      // Gestion des erreurs 429 (Too Many Requests) avec retry
+      if (error.response && error.response.status === 429 && retryCount < 3) {
+        const waitTime = 1000 * Math.pow(2, retryCount); // Attente exponentielle: 1s, 2s, 4s
+        console.warn(`Trop de requêtes (${endpoint}), nouvelle tentative dans ${waitTime/1000}s...`);
+        
+        // Attendre avant de réessayer
+        await new Promise(resolve => setTimeout(resolve, waitTime));
+        return progressInstance.post(endpoint, data, retryCount + 1);
+      }
+      throw error;
+    }
   }
 };
 
+// Variable de verrouillage pour éviter les sauvegardes concurrentes
+let isSaving = false;
+// File d'attente pour les sauvegardes
+let saveQueue = [];
+// Variable pour suivre le dernier état connu des pièces
+let lastKnownCoins = null;
+
 class ProgressService {
-  // Remplacez la méthode saveGameProgress existante par celle-ci
-  async saveGameProgress(progressData) {
+  // Méthode utilitaire pour exécuter la file d'attente de sauvegarde
+  async processSaveQueue() {
+    if (isSaving || saveQueue.length === 0) return;
+    
+    isSaving = true;
+    
     try {
-      // Ajouter un log pour voir ce qu'on veut sauvegarder
-      console.log('Données de progression à sauvegarder:', JSON.stringify(progressData, null, 2));
+      // Fusionner toutes les données en attente de sauvegarde
+      const mergedData = saveQueue.reduce((acc, curr) => {
+        // Logique pour fusionner les données
+        // Priorité au dernier état pour les valeurs simples comme coins
+        if (curr.coins !== undefined) acc.coins = curr.coins;
+        
+        // Pour les tableaux, faire une union
+        if (curr.discoveredElements) {
+          acc.discoveredElements = [...new Set([...(acc.discoveredElements || []), ...curr.discoveredElements])];
+        }
+        if (curr.discoveredCategories) {
+          acc.discoveredCategories = [...new Set([...(acc.discoveredCategories || []), ...curr.discoveredCategories])];
+        }
+        
+        // Pour les objets, fusion en profondeur
+        if (curr.achievements) {
+          acc.achievements = { ...(acc.achievements || {}), ...curr.achievements };
+        }
+        if (curr.categoryProgress) {
+          acc.categoryProgress = { ...(acc.categoryProgress || {}), ...curr.categoryProgress };
+        }
+        if (curr.timerProgress) {
+          acc.timerProgress = {
+            completedQuestions: { ...(acc.timerProgress?.completedQuestions || {}), ...(curr.timerProgress.completedQuestions || {}) },
+            unlockedCategories: { ...(acc.timerProgress?.unlockedCategories || {}), ...(curr.timerProgress.unlockedCategories || {}) },
+            bestScores: {
+              Facile: Math.max(acc.timerProgress?.bestScores?.Facile || 0, curr.timerProgress?.bestScores?.Facile || 0),
+              Moyen: Math.max(acc.timerProgress?.bestScores?.Moyen || 0, curr.timerProgress?.bestScores?.Moyen || 0),
+              Difficile: Math.max(acc.timerProgress?.bestScores?.Difficile || 0, curr.timerProgress?.bestScores?.Difficile || 0)
+            }
+          };
+        }
+        
+        return acc;
+      }, {});
       
-      // D'abord, récupérer les données existantes
-      const existingProgress = await this.loadGameProgress().catch(err => {
-        console.error('Erreur lors du chargement des données existantes:', err);
-        return {
+      // Vider la file d'attente
+      saveQueue = [];
+      
+      // Sauvegarder les données fusionnées
+      await this.saveGameProgressDirectly(mergedData);
+      
+    } catch (error) {
+      console.error('Erreur lors du traitement de la file d\'attente de sauvegarde:', error);
+    } finally {
+      isSaving = false;
+      
+      // S'il y a de nouvelles données à sauvegarder, traiter la file d'attente à nouveau
+      if (saveQueue.length > 0) {
+        setTimeout(() => this.processSaveQueue(), 1000); // Petite pause avant de continuer
+      }
+    }
+  }
+  
+  // Méthode interne pour sauvegarder directement sans file d'attente
+  async saveGameProgressDirectly(progressData) {
+    try {
+      // D'abord, récupérer les données existantes si nécessaire
+      let existingProgress;
+      
+      try {
+        existingProgress = await this.loadGameProgress();
+      } catch (err) {
+        console.warn('Impossible de charger les données existantes, utilisation des valeurs par défaut');
+        existingProgress = {
           discoveredElements: [],
           discoveredCategories: [],
           categoryProgress: {},
           achievements: {},
-          coins: 0,
+          coins: lastKnownCoins !== null ? lastKnownCoins : 0,
           timerProgress: {
             completedQuestions: {},
             unlockedCategories: {},
-            bestScores: {
-              Facile: 0,
-              Moyen: 0,
-              Difficile: 0
-            }
+            bestScores: { Facile: 0, Moyen: 0, Difficile: 0 }
           }
         };
-      });
+      }
       
-      // S'assurer que les tableaux d'éléments sont bien des tableaux
-      const discoveredElements = Array.isArray(progressData.discoveredElements) 
-        ? [...new Set([...existingProgress.discoveredElements, ...progressData.discoveredElements])]
-        : existingProgress.discoveredElements;
-      
-      const discoveredCategories = Array.isArray(progressData.discoveredCategories)
-        ? [...new Set([...existingProgress.discoveredCategories, ...progressData.discoveredCategories])]
-        : existingProgress.discoveredCategories;
-      
-      // Fusionner avec les nouvelles données de manière plus robuste
+      // Fusionner avec les nouvelles données de manière robuste
       const dataToSend = {
         // Pour les tableaux, on fait une union (sans doublons)
-        discoveredElements,
-        discoveredCategories,
+        discoveredElements: Array.isArray(progressData.discoveredElements) 
+          ? [...new Set([...existingProgress.discoveredElements, ...progressData.discoveredElements])]
+          : existingProgress.discoveredElements,
+          
+        discoveredCategories: Array.isArray(progressData.discoveredCategories)
+          ? [...new Set([...existingProgress.discoveredCategories, ...progressData.discoveredCategories])]
+          : existingProgress.discoveredCategories,
         
         // Pour les objets, on fusionne récursivement
         categoryProgress: {
@@ -98,34 +171,42 @@ class ProgressService {
         }
       };
       
-      console.log('Données fusionnées prêtes à sauvegarder:', JSON.stringify(dataToSend, null, 2));
+      // Mettre à jour notre cache de pièces
+      if (dataToSend.coins !== undefined) {
+        lastKnownCoins = dataToSend.coins;
+      }
       
-      // Ajouter un timeout pour s'assurer que l'interface utilisateur se met à jour
       const response = await progressInstance.post('save', dataToSend);
-      
-      // En cas de succès, programmer une autre sauvegarde après quelques secondes
-      // pour s'assurer que les données sont bien enregistrées
-      setTimeout(() => {
-        progressInstance.post('update-discovered-elements', { 
-          discoveredElements: dataToSend.discoveredElements 
-        }).catch(err => console.error('Erreur dans la sauvegarde de secours des éléments:', err));
-        
-        progressInstance.post('update-achievements', { 
-          achievements: dataToSend.achievements 
-        }).catch(err => console.error('Erreur dans la sauvegarde de secours des achievements:', err));
-      }, 5000);
-      
       return response.data;
+      
     } catch (error) {
-      console.error('Erreur critique dans saveGameProgress:', error);
+      console.error('Erreur critique dans saveGameProgressDirectly:', error);
       throw error;
     }
+  }
+  
+  // Méthode publique pour sauvegarder avec file d'attente
+  async saveGameProgress(progressData) {
+    // Ajouter à la file d'attente
+    saveQueue.push(progressData);
+    
+    // Traiter la file d'attente
+    this.processSaveQueue();
+    
+    // Renvoyer une promesse qui se résout immédiatement
+    // L'opération de sauvegarde réelle se fera en arrière-plan
+    return Promise.resolve({ status: 'queued', message: 'La sauvegarde a été ajoutée à la file d\'attente' });
   }
 
   async loadGameProgress() {
     try {
       const response = await progressInstance.get('load');
-      console.log('Données chargées:', response.data);
+      
+      // Mettre à jour notre cache de pièces
+      if (response.data && response.data.coins !== undefined) {
+        lastKnownCoins = response.data.coins;
+      }
+      
       return response.data;
     } catch (error) {
       console.error('Erreur dans loadGameProgress:', error);
@@ -139,36 +220,15 @@ class ProgressService {
 
   async saveAchievement(achievementData) {
     try {
-      console.log('Sauvegarde achievement:', achievementData);
-      const progress = await this.loadProgress();
-      const currentAchievements = progress.achievements || {};
-      
-      currentAchievements[achievementData.name] = {
-        unlocked: true,
-        unlockedAt: achievementData.unlockedAt || new Date().toISOString()
-      };
-
-      // S'assurer que timerProgress existe et a la bonne structure
-      const safeTimerProgress = {
-        completedQuestions: progress.timerProgress?.completedQuestions || {},
-        unlockedCategories: progress.timerProgress?.unlockedCategories || {},
-        bestScores: {
-          Facile: progress.timerProgress?.bestScores?.Facile || 0,
-          Moyen: progress.timerProgress?.bestScores?.Moyen || 0,
-          Difficile: progress.timerProgress?.bestScores?.Difficile || 0
+      // Utiliser la file d'attente de sauvegarde
+      return this.saveGameProgress({
+        achievements: {
+          [achievementData.name]: {
+            unlocked: true,
+            unlockedAt: achievementData.unlockedAt || new Date().toISOString()
+          }
         }
-      };
-
-      const response = await progressInstance.post('save', {
-        discoveredElements: progress.discoveredElements,
-        discoveredCategories: progress.discoveredCategories,
-        achievements: currentAchievements,
-        categoryProgress: progress.categoryProgress,
-        coins: progress.coins,
-        timerProgress: safeTimerProgress
       });
-
-      return response.data;
     } catch (error) {
       console.error('Erreur lors de la sauvegarde du succès:', error);
       throw error;
@@ -177,20 +237,24 @@ class ProgressService {
 
   async updateCoins(coins) {
     try {
-      console.log('Mise à jour des pièces:', coins);
       // S'assurer que coins est un nombre
       const coinsToSave = parseInt(coins);
       
       if (isNaN(coinsToSave)) {
         throw new Error('Le montant des pièces doit être un nombre valide');
       }
-
-      // Uniquement mettre à jour les pièces, pas la progression complète
+      
+      // Mettre à jour notre cache de pièces
+      lastKnownCoins = coinsToSave;
+      
+      // Sauvegarde spécifique des pièces (prioritaire)
       const response = await progressInstance.post('update-coins', { coins: coinsToSave });
       return response.data;
     } catch (error) {
       console.error('Erreur lors de la mise à jour des pièces:', error);
-      throw error;
+      
+      // En cas d'erreur, on essaie via la file d'attente
+      return this.saveGameProgress({ coins: coins });
     }
   }
 
@@ -202,17 +266,8 @@ class ProgressService {
         return null;
       }
       
-      // S'assurer que nous envoyons une copie des données (éviter les mutations)
-      const elementsCopy = [...discoveredElements];
-      
-      console.log('Mise à jour des éléments découverts:', elementsCopy.length);
-      
-      const response = await progressInstance.post('update-discovered-elements', { 
-        discoveredElements: elementsCopy 
-      });
-      
-      console.log('Réponse mise à jour éléments:', response.data);
-      return response.data;
+      // Utiliser la file d'attente de sauvegarde
+      return this.saveGameProgress({ discoveredElements });
     } catch (error) {
       console.error('Erreur lors de la mise à jour des éléments découverts:', error);
       throw error;
@@ -220,15 +275,9 @@ class ProgressService {
   }
 
   async updateAchievements(achievementsData) {
-    if (!this.isLoggedIn) return;
-    
     try {
-      console.time('Mise à jour des achievements');
-      const response = await axios.post('/api/progress/update-achievements', { 
-        achievements: achievementsData 
-      });
-      console.timeEnd('Mise à jour des achievements');
-      return response.data;
+      // Utiliser la file d'attente de sauvegarde
+      return this.saveGameProgress({ achievements: achievementsData });
     } catch (error) {
       console.error("Erreur lors de la mise à jour des achievements:", error);
       throw error;
@@ -237,8 +286,6 @@ class ProgressService {
 
   async updateTimerProgress(timerProgress) {
     try {
-      console.log('Mise à jour timerProgress - Données reçues:', timerProgress);
-
       // S'assurer que la structure est correcte
       const safeTimerProgress = {
         completedQuestions: timerProgress?.completedQuestions || {},
@@ -249,18 +296,18 @@ class ProgressService {
           Difficile: timerProgress?.bestScores?.Difficile || 0
         }
       };
-
-      console.log('Données formatées à envoyer:', safeTimerProgress);
-
-      const response = await progressInstance.post('update-timer-progress', { 
-        timerProgress: safeTimerProgress 
-      });
-      console.log('Réponse de mise à jour:', response.data);
-      return response.data;
+      
+      // Utiliser la file d'attente de sauvegarde
+      return this.saveGameProgress({ timerProgress: safeTimerProgress });
     } catch (error) {
-      console.error('Erreur détaillée lors de la mise à jour de la progression du timer:', error.response || error);
+      console.error('Erreur lors de la mise à jour de la progression du timer:', error);
       throw error;
     }
+  }
+  
+  // Méthode pour récupérer le dernier nombre de pièces connu (cache local)
+  getLastKnownCoins() {
+    return lastKnownCoins;
   }
 }
 

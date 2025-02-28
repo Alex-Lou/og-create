@@ -145,6 +145,7 @@
       }
     },
     "rules": {
+      "Feu+Magie": "Feu Magique",
       "Rituel de Purification+Magie Céleste": "Rituel d'Ascension",
       "Cercle de Runes+Invocation": "Cercle d'Invocation",
       "Cercle de Protection+Exorcisme": "Rituel de Bannissement",

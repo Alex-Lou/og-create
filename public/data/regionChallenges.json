@@ -6,6 +6,7 @@
       "parent_region_id": null,
       "is_default": true,
       "npcImage": "npc1.png",
+      "background": "forrest-bg.gif",
       "dialog": [
         "Bienvenue dans la Forêt Primordiale, voyageur !",
         "Notre forêt regorge de vie et d'énergie, mais elle est menacée par un déséquilibre mystérieux.",
@@ -13,6 +14,8 @@
         "Essaie de combiner les 4 éléments fondamentaux pour créer la Vie."
       ],
       "requiredElements": ["Vie"],
+      "availableElements": ["Eau", "Feu", "Terre", "Air"],
+      "elementsWithGifs": ["Eau", "Feu", "Terre", "Air"],
       "actionText": "Relever le défi",
       "rewardCoins": 50,
       "rewardXp": 100,
@@ -24,6 +27,7 @@
       "parent_region_id": 1,
       "is_default": false,
       "npcImage": "npc1.png",
+      "background": "forrest-bg.gif",
       "dialog": [
         "Ah, tu as trouvé la Rivière Cristalline !",
         "Ces eaux contiennent une énergie pure et régénératrice.",
@@ -31,6 +35,8 @@
         "Essaie de combiner différents éléments avec de l'Eau pour découvrir le secret."
       ],
       "requiredElements": ["Boue"],
+      "availableElements": ["Eau", "Feu", "Terre", "Air", "Vie"],
+      "elementsWithGifs": ["Eau", "Feu", "Terre", "Air"],
       "actionText": "Accepter la mission",
       "rewardCoins": 75,
       "rewardXp": 150,
@@ -42,6 +48,7 @@
       "parent_region_id": 2,
       "is_default": false,
       "npcImage": "npc1.png",
+      "background": "forrest-bg.gif",
       "dialog": [
         "La Montagne Eternelle... peu de gens osent s'y aventurer.",
         "Les anciens racontent qu'un métal rare se trouve à son sommet.",
@@ -49,6 +56,8 @@
         "Es-tu prêt à découvrir ce minerai légendaire ?"
       ],
       "requiredElements": ["Boue"],
+      "availableElements": ["Eau", "Feu", "Terre", "Air", "Vie", "Boue"],
+      "elementsWithGifs": ["Eau", "Feu", "Terre", "Air"],
       "actionText": "Commencer la forge",
       "rewardCoins": 100,
       "rewardXp": 200,
@@ -60,16 +69,49 @@
       "parent_region_id": 3,
       "is_default": false,
       "npcImage": "npc1.png",
+      "background": "entree-grotte.png",
       "dialog": [
         "La Caverne Mystique recèle de secrets ancestraux.",
         "Seuls ceux qui ont prouvé leur valeur peuvent espérer en percer les mystères.",
         "Es-tu prêt à affronter l'inconnu et à découvrir ses secrets ?"
       ],
       "requiredElements": ["Boue"],
+      "availableElements": [
+        "Eau", "Feu", "Terre", "Air", "Magie", "Héros", "Orbe", "Pouvoir", "Anneau",
+        "Mana", "Vie", "Énergie", "Esprit"
+      ],
+      "elementsWithGifs": ["Eau", "Feu", "Terre", "Air"],
       "actionText": "Explorer la caverne",
       "rewardCoins": 125,
       "rewardXp": 250,
       "unlockHint": "Les ombres recèlent plus que ce que l'œil peut voir"
+    }
+  ],
+  "bosses": [
+    {
+      "id": 1,
+      "name": "Gardien des Ténèbres",
+      "trigger_after_region": 4,
+      "background": "interieur-grotte.png",
+      "bossImage": "boss-1-anim.gif",
+      "maxHealth": 100,
+      "dialog": [
+        "Mortel! Comment osez vous tenter de vous emparer du joyeau de Ignasius avant moi ?!",
+        "Vous avez osé pénétrer dans mon domaine...",
+        "Battez-vous ou périssez!"
+      ],
+      "requiredElements": ["Feu Magique", "Vie", "Anneau de Pouvoir"],
+      "availableElements": ["Eau", "Feu", "Terre", "Air", "Magie", "Héros", "Orbe", "Pouvoir", "Anneau"],
+      "elementsWithGifs": ["Eau", "Feu", "Terre", "Air"],
+      "actionText": "Affronter le gardien",
+      "damagePerElement": {
+        "Feu Magique": 20,
+        "Métal": 30,
+        "Vie": 25
+      },
+      "rewardCoins": 500,
+      "rewardXp": 1000,
+      "unlockHint": "Le feu affecte sa carapace, tandis que le métal peut percer ses défenses"
     }
   ]
 }
