@@ -1,10 +1,8 @@
 <template>
   <div class="explorer-craft-modal" v-if="isVisible">
     <div class="modal-content">
-      <!-- Zone supérieure avec l'objectif du défi -->
       <div class="challenge-info">
         <div class="npc-image-container">
-          <!-- Placeholder pour l'image du NPC si vous n'avez pas les assets -->
           <div class="npc-placeholder">🧙‍♂️</div>
         </div>
         <div class="challenge-objective">
@@ -27,9 +25,7 @@
         </div>
       </div>
 
-      <!-- Zone principale de craft -->
       <div class="craft-area">
-        <!-- Zone de sélection des éléments -->
         <div class="elements-selection">
           <h3>Éléments disponibles</h3>
           <div class="elements-grid">
@@ -42,7 +38,6 @@
               @click="selectElement(element)"
             >
               <div class="element-icon">
-                <!-- Afficher les GIFs personnalisés pour les éléments définis dans elementsWithGifs -->
                 <div v-if="hasGif(element)" class="gif-container">
                   <img :src="getElementGif(element)" class="element-gif" alt="element"/>
                 </div>
@@ -58,13 +53,13 @@
           @dragover.prevent @drop="handleDrop">
           <h3>Zone de fusion</h3>
           
-          <!-- Composant BossFight - uniquement affiché si c'est un défi de boss -->
           <BossFight 
             v-if="isBossChallenge" 
             :boss="challenge" 
             :craftedElements="craftedElements"
             ref="bossFight"
             @boss-defeated="handleBossDefeated"
+            @boss-counter-attack="handleBossCounterAttack"
           />
 
           <div class="selected-elements">
@@ -78,7 +73,6 @@
               :class="{ 'shake-animation': isShaking && index < selectedElements.length }"
             >
               <div class="element-icon">
-                <!-- Afficher les GIFs personnalisés pour les éléments définis dans elementsWithGifs -->
                 <div v-if="hasGif(element)" class="gif-container">
                   <img :src="getElementGif(element)" class="element-gif" alt="element"/>
                 </div>
@@ -92,7 +86,6 @@
           </button>
         </div>
 
-        <!-- Zone des éléments créés -->
         <div class="crafted-elements">
           <h3>Éléments créés</h3>
           <div class="crafted-grid">
@@ -105,7 +98,6 @@
               @click="selectCraftedElement(element)"
             >
               <div class="element-icon">
-                <!-- Afficher les GIFs personnalisés pour les éléments définis dans elementsWithGifs -->
                 <div v-if="hasGif(element)" class="gif-container">
                   <img :src="getElementGif(element)" class="element-gif" alt="element"/>
                 </div>
@@ -118,11 +110,27 @@
         </div>
       </div>
 
-      <!-- Zone inférieure avec les actions -->
       <div class="action-buttons">
         <button @click="resetCrafting" class="reset-button">
           Tout nettoyer
         </button>
+        
+        <div v-if="isBossChallenge" class="player-health-section">
+          <div class="player-health-bar">
+            <div 
+              class="player-health-fill" 
+              :style="{ 
+                width: `${(playerHealth / challenge.maxHealth) * 100}%`, 
+                backgroundColor: getHealthColor(playerHealth) 
+              }"
+            >
+              <span class="player-health-text">
+                {{ Math.ceil(playerHealth) }} / {{ challenge.maxHealth }}
+              </span>
+            </div>
+          </div>
+        </div>
+        
         <button 
           @click="completeChallenge" 
           class="complete-button"
@@ -177,53 +185,75 @@ export default {
       craftedElements: [],
       draggingIndex: null,
       isShaking: false,
-      hasBeenDisplayed: {}
+      isGameOver: false,
+      playerHealth: 0
     };
   },
   computed: {
     availableElements() {
-      // Si le challenge spécifie des éléments disponibles, utiliser ceux-là
       if (this.challenge.availableElements && this.challenge.availableElements.length > 0) {
         return this.challenge.availableElements;
       }
       
-      // Sinon, utiliser la logique précédente
       const baseElements = ['Eau', 'Feu', 'Terre', 'Air'];
       return [...new Set([...baseElements, ...this.discoveredElements.filter(e => 
         !this.challenge.requiredElements.includes(e)
       )])];
     },
     isChallengeSolved() {
-      // Vérifie si tous les éléments requis ont été créés
       return this.challenge.requiredElements.every(element => 
         this.craftedElements.includes(element)
       );
     },
     isBossChallenge() {
-      // Vérifier s'il s'agit d'un défi de boss
       return this.challenge.bossImage && this.challenge.maxHealth;
     }
   },
   mounted() {
-    // Activer le débogage des recettes
     this.debugRecipes();
+    this.initPlayerHealth();
   },
   methods: {
-    // Méthode de débogage des recettes
+    getHealthColor(health) {
+      const percentage = (health / this.challenge.maxHealth) * 100;
+      if (percentage > 66) return 'green';
+      if (percentage > 33) return 'orange';
+      return 'red';
+    },
+
+    initPlayerHealth() {
+      if (this.isBossChallenge) {
+        this.playerHealth = this.challenge.maxHealth;
+      }
+    },
+
+    handleBossCounterAttack(damage) {
+      this.playerHealth = Math.max(0, this.playerHealth - damage);
+      
+      const healthBar = this.$el.querySelector('.player-health-fill');
+      if (healthBar) {
+        healthBar.classList.add('shake-animation');
+        setTimeout(() => {
+          healthBar.classList.remove('shake-animation');
+        }, 500);
+      }
+      
+      if (this.playerHealth <= 0) {
+        this.handlePlayerDefeated();
+      }
+    },
+
     debugRecipes() {
       console.log("=== DEBUG RECETTES ===");
       console.log("Éléments disponibles:", this.availableElements);
       console.log("Éléments requis:", this.challenge.requiredElements);
       console.log("Éléments de dégâts:", this.challenge.damagePerElement);
       
-      // Afficher toutes les recettes disponibles
       console.log("Toutes les recettes disponibles:", this.craftingRecipes);
       
-      // Tester si on peut créer les éléments requis
       this.challenge.requiredElements.forEach(element => {
         console.log(`Recherche de recettes pour créer: ${element}`);
         
-        // Chercher toutes les recettes qui produisent cet élément
         const recipes = Object.entries(this.craftingRecipes)
           .filter(([, result]) => result === element)
           .map(([ingredients]) => ingredients);
@@ -245,15 +275,12 @@ export default {
       console.log("=== FIN DEBUG ===");
     },
     
-    // Vérifier si un élément a un GIF personnalisé
     hasGif(element) {
       return this.challenge.elementsWithGifs && 
              this.challenge.elementsWithGifs.includes(element);
     },
     
-    // Obtenir le chemin du GIF pour un élément
     getElementGif(element) {
-      // Convertir le nom de l'élément en minuscules pour correspondre au nom du fichier
       const fileName = element.toLowerCase();
       return require(`@/assets/gifs/${fileName}.gif`);
     },
@@ -261,9 +288,11 @@ export default {
     toggleHint() {
       this.showHint = !this.showHint;
     },
+    
     closeModal() {
       this.$emit('close');
     },
+    
     selectElement(element) {
       if (this.selectedElements.length < 4) {
         this.selectedElements.push(element);
@@ -271,19 +300,24 @@ export default {
         this.$emit('show-alert', 'Vous ne pouvez sélectionner que 4 éléments maximum !');
       }
     },
+    
     removeSelectedElement(index) {
       this.selectedElements.splice(index, 1);
     },
+    
     startDrag(event, element) {
       event.dataTransfer.setData('text/plain', element);
     },
+    
     startDragSelected(event, element, index) {
       event.dataTransfer.setData('text/plain', element);
       this.draggingIndex = index;
     },
+    
     startDragCrafted(event, element) {
       event.dataTransfer.setData('text/plain', element);
     },
+    
     handleDrop(event) {
       const element = event.dataTransfer.getData('text/plain');
       if (element) {
@@ -292,17 +326,18 @@ export default {
         }
       }
     },
+    
     craftElements() {
+      if (this.isGameOver) return;
+
       if (this.selectedElements.length < 2) {
         this.$emit('show-alert', 'Sélectionnez au moins 2 éléments pour la fusion!');
         return;
       }
 
-      // Générer toutes les combinaisons possibles
       const generateCombinations = (elements) => {
         const combinations = [];
         
-        // Générer toutes les permutations
         const permute = (arr, m = []) => {
           if (arr.length === 0) {
             combinations.push(m.join('+'));
@@ -319,10 +354,8 @@ export default {
         return combinations;
       };
 
-      // Générer toutes les permutations possibles
       const permutations = generateCombinations(this.selectedElements);
       
-      // Rechercher une correspondance dans les recettes
       let craftedItem = null;
       for (const permutation of permutations) {
         if (this.craftingRecipes[permutation]) {
@@ -332,9 +365,25 @@ export default {
       }
 
       if (!craftedItem) {
+        // Combinaison impossible
         console.log("Échec: recette non trouvée pour", this.selectedElements);
         
-        // Animation d'échec
+        if (this.isBossChallenge) {
+          this.playerHealth = Math.max(0, this.playerHealth - 10);
+          
+          const healthBar = this.$el.querySelector('.player-health-fill');
+          if (healthBar) {
+            healthBar.classList.add('shake-animation');
+            setTimeout(() => {
+              healthBar.classList.remove('shake-animation');
+            }, 500);
+          }
+          
+          if (this.playerHealth <= 0) {
+            this.handlePlayerDefeated();
+          }
+        }
+        
         this.isShaking = true;
         setTimeout(() => {
           this.isShaking = false;
@@ -350,9 +399,26 @@ export default {
 
       this.$emit('craft-success', craftedItem);
 
-      // Gestion du combat de boss si applicable
+      // Gestion des dégâts du boss
       if (this.isBossChallenge && this.$refs.bossFight) {
-        this.$refs.bossFight.applyDamage(craftedItem);
+        const bossCombatRules = this.challenge.bossCombatRules;
+        
+        // Vérifier si l'élément inflige des dégâts spécifiques
+        if (this.challenge.damagePerElement && this.challenge.damagePerElement[craftedItem]) {
+          const bossDamage = this.challenge.damagePerElement[craftedItem];
+          this.$refs.bossFight.applyDamage(craftedItem, bossDamage);
+        } else {
+          // Calculer les dégâts pour les autres éléments
+          let elementDamage = bossCombatRules.defaultElementDamage || 3;
+          
+          // Vérifier s'il existe des dégâts spécifiques pour cet élément
+          if (bossCombatRules.baseElementDamage && bossCombatRules.baseElementDamage[craftedItem]) {
+            elementDamage = bossCombatRules.baseElementDamage[craftedItem];
+          }
+
+          // Appliquer les dégâts et déclencher la contre-attaque
+          this.$refs.bossFight.applyDamageWithCounterAttack(craftedItem, elementDamage);
+        }
       }
 
       if (this.isTargetElement(craftedItem)) {
@@ -363,7 +429,6 @@ export default {
       this.selectedElements = [];
     },
 
-
     selectCraftedElement(element) {
       if (this.selectedElements.length < 4) {
         this.selectedElements.push(element);
@@ -371,27 +436,38 @@ export default {
         this.$emit('show-alert', 'Vous ne pouvez sélectionner que 4 éléments maximum !');
       }
     },
+    
     resetCrafting() {
-      this.selectedElements = [];
-      this.craftedElements = [];
-      
-      // Réinitialiser aussi la santé du boss si c'est un défi de boss
-      if (this.isBossChallenge && this.$refs.bossFight) {
-        this.$refs.bossFight.resetBossHealth();
+      if (!this.isGameOver) {
+        // Réinitialiser uniquement les éléments sélectionnés et créés
+        this.selectedElements = [];
+        this.craftedElements = [];
       }
     },
+        
     completeChallenge() {
       if (this.isChallengeSolved) {
         this.$emit('challenge-completed', { region: this.region });
       }
     },
+    
     isTargetElement(element) {
       return this.challenge.requiredElements.includes(element);
     },
+    
     handleBossDefeated() {
-      console.log("Le boss a été vaincu dans ExplorerCraftModal!");
-      this.$emit('boss-defeated');
+      this.isGameOver = true;
+      this.$emit('boss-defeated', { region: this.region });
+    },
+    
+    handlePlayerDefeated() {
+      this.isGameOver = true;
+      this.$emit('player-defeated', { region: this.region });
     }
   }
 };
 </script>
+
+<style scoped>
+@import '@/assets/ExplorerCraftStyle.css';
+</style>

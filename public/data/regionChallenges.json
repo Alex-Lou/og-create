@@ -100,14 +100,42 @@
         "Vous avez osé pénétrer dans mon domaine...",
         "Battez-vous ou périssez!"
       ],
-      "requiredElements": ["Feu Magique", "Vie", "Anneau de Pouvoir"],
-      "availableElements": ["Eau", "Feu", "Terre", "Air", "Magie", "Héros", "Orbe", "Pouvoir", "Anneau"],
+      "requiredElements": ["Feu Magique", "Vie", "Anneau de Pouvoir", "Brasier"],
+      "availableElements": ["Eau", "Feu", "Terre", "Air", "Magie", "Héros", "Orbe", "Pouvoir", "Anneau", "Baguette"],
       "elementsWithGifs": ["Eau", "Feu", "Terre", "Air"],
       "actionText": "Affronter le gardien",
       "damagePerElement": {
         "Feu Magique": 20,
         "Anneau de Pouvoir": 30,
-        "Vie": 25
+        "Vie": 25,
+        "Brasier": 15,
+        "Sort de Feu": 30
+      },
+      "bossCombatRules": {
+        "defaultElementDamage": 3,
+        "criticalElementMultiplier": 2,
+        "baseElementDamage": {
+          "Magie": 4,
+          "Héros": 3,
+          "Orbe": 2,
+          "Pouvoir": 4,
+          "Anneau": 3,
+          "Mana": 3,
+          "Énergie": 3,
+          "Esprit": 2
+        },
+        "bossCounterAttack": {
+          "baseDamage": 5,
+          "damageMultipliers": {
+            "weakElement": 0.5,
+            "neutralElement": 1,
+            "strongElement": 1.5
+          },
+          "elementTypes": {
+            "weakElements": ["Air", "Esprit"],
+            "strongElements": ["Feu", "Magie", "Pouvoir"]
+          }
+        }
       },
       "rewardCoins": 500, 
       "rewardXp": 1000,
