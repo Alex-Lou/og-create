@@ -446,36 +446,48 @@ export default {
     },
     
     async startCraftChallenge(region) {
-      try {
-        const isBoss = typeof region.id === 'string' && region.id.startsWith('boss-');
-        if (isBoss) {
-          const bossId = parseInt(region.id.split('-')[1]);
-          const bossData = this.bosses.find(b => b.id === bossId);
-          if (bossData) {
-            this.currentBoss = bossData;
-            this.currentChallenge = {
-              ...bossData,
-              bossImage: bossData.bossImage
-            };
-            this.showNpcDialog = false;
-            this.showCraftModal = true;
-          }
-        } else {
-          const result = await explorerService.visitRegion(region.id);
-          this.energy = result.energy;
-          this.currentChallenge = this.regionChallenges[region.id] || {
-            requiredElements: [],
-            dialog: [],
-            unlockHint: "Essayez de combiner différents éléments pour découvrir le secret."
-          };
-          this.showNpcDialog = false;
-          this.showCraftModal = true;
-        }
-      } catch (error) {
-        console.error('Erreur lors du démarrage du défi:', error);
-        alert(error.response?.data?.message || 'Une erreur est survenue lors du défi');
+  try {
+    // Cas spécial: si on clique directement sur la région du boss (région 5)
+    if (region.id === 5) {
+      // On simule le même comportement que lorsqu'on termine la région 4
+      const triggeredBoss = this.checkBossTrigger(4); // On utilise 4 car c'est la région qui trigger le boss
+      
+      if (triggeredBoss) {
+        this.currentBoss = triggeredBoss;
+        this.currentChallenge = triggeredBoss;
+        this.showNpcDialog = false;
+        this.showCraftModal = true;
+        return;
       }
-    },
+    }
+    
+    // Traitement normal pour les régions standards ou les boss explicites
+    const isBoss = typeof region.id === 'string' && region.id.startsWith('boss-');
+    if (isBoss) {
+      const bossId = parseInt(region.id.split('-')[1]);
+      const bossData = this.bosses.find(b => b.id === bossId);
+      if (bossData) {
+        this.currentBoss = bossData;
+        this.currentChallenge = bossData;
+        this.showNpcDialog = false;
+        this.showCraftModal = true;
+      }
+    } else {
+      const result = await explorerService.visitRegion(region.id);
+      this.energy = result.energy;
+      this.currentChallenge = this.regionChallenges[region.id] || {
+        requiredElements: [],
+        dialog: [],
+        unlockHint: "Essayez de combiner différents éléments pour découvrir le secret."
+      };
+      this.showNpcDialog = false;
+      this.showCraftModal = true;
+    }
+  } catch (error) {
+    console.error('Erreur lors du démarrage du défi:', error);
+    alert(error.response?.data?.message || 'Une erreur est survenue lors du défi');
+  }
+},
     
     handleCraftSuccess(craftedItem) {
       this.$emit('element-discovered', craftedItem);

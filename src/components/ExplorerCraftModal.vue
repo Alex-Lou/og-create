@@ -49,7 +49,7 @@
         </div>
 
         <div class="crafting-workspace"
-          :style="{ backgroundImage: `url(${require(`@/assets/explorer-background/${challenge.background}`)})` }"
+          :style="{ backgroundImage: challenge.background ? `url(${require(`@/assets/explorer-background/${challenge.background}`)})` : '' }"
           @dragover.prevent @drop="handleDrop">
           <h3>Zone de fusion</h3>
           
@@ -191,22 +191,22 @@ export default {
   },
   computed: {
     availableElements() {
-      if (this.challenge.availableElements && this.challenge.availableElements.length > 0) {
+      if (this.challenge && this.challenge.availableElements && this.challenge.availableElements.length > 0) {
         return this.challenge.availableElements;
       }
       
       const baseElements = ['Eau', 'Feu', 'Terre', 'Air'];
       return [...new Set([...baseElements, ...this.discoveredElements.filter(e => 
-        !this.challenge.requiredElements.includes(e)
+        !this.challenge.requiredElements?.includes(e)
       )])];
     },
     isChallengeSolved() {
-      return this.challenge.requiredElements.every(element => 
+      return this.challenge.requiredElements && this.challenge.requiredElements.every(element => 
         this.craftedElements.includes(element)
       );
     },
     isBossChallenge() {
-      return this.challenge.bossImage && this.challenge.maxHealth;
+      return this.challenge && this.challenge.bossImage && this.challenge.maxHealth;
     }
   },
   mounted() {
@@ -222,7 +222,7 @@ export default {
     },
 
     initPlayerHealth() {
-      if (this.isBossChallenge) {
+      if (this.isBossChallenge && this.challenge.maxHealth) {
         this.playerHealth = this.challenge.maxHealth;
       }
     },
@@ -251,26 +251,28 @@ export default {
       
       console.log("Toutes les recettes disponibles:", this.craftingRecipes);
       
-      this.challenge.requiredElements.forEach(element => {
-        console.log(`Recherche de recettes pour créer: ${element}`);
-        
-        const recipes = Object.entries(this.craftingRecipes)
-          .filter(([, result]) => result === element)
-          .map(([ingredients]) => ingredients);
-        
-        if (recipes.length > 0) {
-          console.log(`Recettes trouvées pour ${element}:`, recipes);
-          recipes.forEach(recipe => {
-            const recipeIngredients = recipe.split('+');
-            const availableIngredients = recipeIngredients.every(ing => 
-              this.availableElements.includes(ing) || this.craftedElements.includes(ing)
-            );
-            console.log(`La recette ${recipe} est ${availableIngredients ? 'possible' : 'impossible'} avec les éléments disponibles`);
-          });
-        } else {
-          console.log(`Aucune recette trouvée pour créer ${element}`);
-        }
-      });
+      if (this.challenge.requiredElements) {
+        this.challenge.requiredElements.forEach(element => {
+          console.log(`Recherche de recettes pour créer: ${element}`);
+          
+          const recipes = Object.entries(this.craftingRecipes)
+            .filter(([, result]) => result === element)
+            .map(([ingredients]) => ingredients);
+          
+          if (recipes.length > 0) {
+            console.log(`Recettes trouvées pour ${element}:`, recipes);
+            recipes.forEach(recipe => {
+              const recipeIngredients = recipe.split('+');
+              const availableIngredients = recipeIngredients.every(ing => 
+                this.availableElements.includes(ing) || this.craftedElements.includes(ing)
+              );
+              console.log(`La recette ${recipe} est ${availableIngredients ? 'possible' : 'impossible'} avec les éléments disponibles`);
+            });
+          } else {
+            console.log(`Aucune recette trouvée pour créer ${element}`);
+          }
+        });
+      }
       
       console.log("=== FIN DEBUG ===");
     },
@@ -281,8 +283,13 @@ export default {
     },
     
     getElementGif(element) {
-      const fileName = element.toLowerCase();
-      return require(`@/assets/gifs/${fileName}.gif`);
+      try {
+        const fileName = element.toLowerCase();
+        return require(`@/assets/gifs/${fileName}.gif`);
+      } catch (error) {
+        console.warn(`Gif non trouvé pour l'élément: ${element}`);
+        return '';
+      }
     },
     
     toggleHint() {
@@ -407,7 +414,7 @@ export default {
         if (this.challenge.damagePerElement && this.challenge.damagePerElement[craftedItem]) {
           const bossDamage = this.challenge.damagePerElement[craftedItem];
           this.$refs.bossFight.applyDamage(craftedItem, bossDamage);
-        } else {
+        } else if (bossCombatRules) {
           // Calculer les dégâts pour les autres éléments
           let elementDamage = bossCombatRules.defaultElementDamage || 3;
           
@@ -418,6 +425,9 @@ export default {
 
           // Appliquer les dégâts et déclencher la contre-attaque
           this.$refs.bossFight.applyDamageWithCounterAttack(craftedItem, elementDamage);
+        } else {
+          // Fallback si les règles de combat ne sont pas définies
+          this.$refs.bossFight.applyDamage(craftedItem, 3);
         }
       }
 
@@ -452,7 +462,7 @@ export default {
     },
     
     isTargetElement(element) {
-      return this.challenge.requiredElements.includes(element);
+      return this.challenge.requiredElements && this.challenge.requiredElements.includes(element);
     },
 
     checkBossVictory() {
