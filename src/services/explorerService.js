@@ -87,7 +87,9 @@ const explorerService = {
       const response = await axios.post(`/api/explorer/complete/${regionId}`, {
         coins: rewards.coins || 50,
         energy: rewards.energy || 5,
-        xp: rewards.xp || 100
+        xp: rewards.xp || 100,
+        hasBoss: rewards.hasBoss || false,
+        bossDefeated: rewards.bossDefeated || false
       });
       console.log('Complétion de région réussie, réponse:', response.data);
       return response.data;
@@ -112,11 +114,16 @@ const explorerService = {
   async completeBoss(bossId, rewards = {}) {
     try {
       console.log(`Tentative de complétion du boss ${bossId} avec récompenses:`, rewards);
-      const response = await axios.post(`/api/explorer/complete-boss/${bossId}`, {
+      
+      // Utiliser la route standard avec les paramètres boss
+      const response = await axios.post(`/api/explorer/complete/${rewards.regionId}`, {
         coins: rewards.coins || 500,
         energy: rewards.energy || 10,
-        xp: rewards.xp || 1000
+        xp: rewards.xp || 1000,
+        isBossVictory: true,  // Ce paramètre est crucial
+        bossId: bossId
       });
+      
       console.log('Complétion de boss réussie, réponse:', response.data);
       return response.data;
     } catch (error) {
@@ -129,7 +136,9 @@ const explorerService = {
           coins: rewards.coins || 500,
           energy: rewards.energy || 10,
           xp: rewards.xp || 1000
-        }
+        },
+        region_completed: rewards.regionId,
+        boss_defeated: true
       };
       console.log('Utilisation d\'une réponse simulée pour le boss:', simulatedResponse);
       return simulatedResponse;

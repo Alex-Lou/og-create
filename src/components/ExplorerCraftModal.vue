@@ -454,11 +454,34 @@ export default {
     isTargetElement(element) {
       return this.challenge.requiredElements.includes(element);
     },
-    
+
+    checkBossVictory() {
+      if (this.$refs.bossFight && this.$refs.bossFight.bossHealth <= 0) {
+        console.log("BOSS VAINCU! Émission de l'événement");
+        setTimeout(() => {
+          this.$emit('challenge-completed', { 
+            region: { 
+              id: this.challenge.trigger_after_region,
+              name: `Boss: ${this.challenge.name}`
+            }, 
+            isBoss: true
+          });
+        }, 500);
+      }
+    },
+
+        
     handleBossDefeated() {
       this.isGameOver = true;
-      this.$emit('boss-defeated', { region: this.region });
+      this.$emit('challenge-completed', { 
+        region: { 
+          id: this.challenge.trigger_after_region,
+          name: `Boss: ${this.challenge.name}`
+        },
+        isBoss: true
+      });
     },
+
     
     handlePlayerDefeated() {
       this.isGameOver = true;
