@@ -9,16 +9,15 @@
       <rect x="50" y="50" width="300" height="100" rx="20" fill="#1a1d24" />
       
       <!-- Bordure lumineuse -->
-      <rect x="55" y="55" width="290" height="90" rx="15" fill="none" stroke="#304968" stroke-width="2" class="glow-border"/>
+      <rect x="55" y="55" width="290" height="90" rx="15" fill="none" stroke="#D8D8D8" stroke-width="2" class="glow-border"/>
       
-      <!-- Texte CLEAN avec la nouvelle police -->
+      <!-- Texte CLEAN -->
       <text 
         x="200" 
         y="115" 
         font-family="BenjaminFranklin, Arial" 
         font-size="40" 
         font-weight="bold" 
-        fill="#D8D8D8" 
         text-anchor="middle"
         letter-spacing="6"
         class="clean-text"
@@ -68,7 +67,7 @@ export default {
   margin: 0;
   width: 170px;
   transition: all 0.3s ease;
-  filter: drop-shadow(0 0 2px rgba(48, 73, 104, 0.1));
+  filter: drop-shadow(0 0 2px rgba(52, 62, 72, 0.838));
   outline: 0 !important;
   box-shadow: none !important;
   -webkit-tap-highlight-color: transparent;
@@ -90,12 +89,12 @@ export default {
 
 .reset-crafting-button:hover {
   transform: scale(1.05);
-  filter: drop-shadow(0 0 12px rgba(48, 73, 104, 0.7));
+  filter: drop-shadow(0 0 12px rgba(52, 52, 52, 0.808));
 }
 
 .reset-crafting-button:hover .glow-border {
   stroke-width: 3;
-  stroke: #5a7294;
+  stroke: #323439;
 }
 
 .reset-crafting-button:hover .glow-effect {
@@ -109,15 +108,18 @@ export default {
 
 .reset-crafting-button:active {
   transform: scale(0.95);
-  filter: drop-shadow(0 0 4px rgba(48, 73, 104, 0.3));
+  filter: drop-shadow(0 0 4px rgba(52, 62, 72, 0.3));
 }
 
+/* Masquer le contenu défini via --content */
 .reset-crafting-button::before {
   content: var(--content);
   display: none;
 }
 
+/* Texte CLEAN en état normal en gris foncé similaire aux autres boutons */
 .clean-text {
+  fill: #dea17e;
   transition: fill 0.3s ease;
 }
 

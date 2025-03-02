@@ -24,7 +24,7 @@
 #achievements-menu {
     width: 35px;
     height: 40px;
-    background: #1e1e1e;
+    background: #050101;
     color: #fff;
     display: flex;
     align-items: center;
@@ -65,7 +65,7 @@
         left: 0;
         width: 300px;
         max-height: 300px; /* Hauteur maximale */
-        background: #2a2a2a;
+        background: #050101;
         padding: 10px;
         border-radius: 10px;
         box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
@@ -73,7 +73,7 @@
         transition: opacity 0.3s ease-in-out;
         overflow-y: auto; /* Ajoute une barre de défilement verticale */
         scrollbar-width: thin; /* Pour Firefox */
-        scrollbar-color: #4dd0e1 #2a2a2a; /* Pour Firefox */
+        scrollbar-color: #465356 #151515; /* Pour Firefox */
     }
 /* Personnalisation de la barre de défilement pour webkit (Chrome, Safari, nouveaux Edge) */
 #achievements-content::-webkit-scrollbar {

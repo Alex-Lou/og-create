@@ -19,7 +19,6 @@
           font-family="BenjaminFranklin, Arial" 
           font-size="40" 
           font-weight="bold" 
-          fill="#D8D8D8" 
           text-anchor="middle"
           letter-spacing="6"
           class="infinite-text"
@@ -70,54 +69,35 @@ export default {
       if (this.isTimerActive) {
         this.showStopConfirmModal = true;
       } else {
-        // Définir un paramètre dans l'URL pour indiquer le mode infini
         this.setInfiniteMode();
       }
     },
     confirmInfiniteMode() {
-      // Émettre force-stop pour arrêter le timer si actif
       this.$emit('force-stop');
       this.showStopConfirmModal = false;
-      // Définir un paramètre dans l'URL pour indiquer le mode infini
       this.setInfiniteMode();
     },
     cancelInfiniteMode() {
       this.showStopConfirmModal = false;
     },
     setInfiniteMode() {
-      // Stocker l'information dans localStorage pour persister entre les rechargements
       localStorage.setItem('activateInfiniteMode', 'true');
-      
-      // Émettre l'événement avant le rechargement pour que le composant parent puisse
-      // terminer toute opération nécessaire avant le rechargement
       this.$emit('switch-to-infinite', { forceReload: true });
-      
-      // Attendre un court délai pour permettre au composant parent de traiter l'événement
       setTimeout(() => {
-        // Rechargement complet de la page avec un paramètre de requête pour forcer un rechargement complet
         window.location.href = window.location.pathname + '?reload=' + new Date().getTime() + '&mode=infinite';
       }, 100);
     }
   },
-  // Vérifier si nous venons d'un rechargement avec mode infini
   mounted() {
-    // Si nous avons un indicateur dans localStorage, émettre l'événement après le montage
     if (localStorage.getItem('activateInfiniteMode') === 'true') {
-      // Nettoyer l'indicateur
       localStorage.removeItem('activateInfiniteMode');
-      // Émettre l'événement après que le composant soit monté
       this.$nextTick(() => {
         this.$emit('switch-to-infinite', { forceReload: false });
-        
-        // Informer les autres composants du rechargement
         window.dispatchEvent(new CustomEvent('app-reloaded'));
       });
     }
-    
-    // Vérifier si nous venons d'un rechargement avec mode infini via l'URL
     const urlParams = new URLSearchParams(window.location.search);
     if (urlParams.has('mode') && urlParams.get('mode') === 'infinite') {
-      // Informer les autres composants du rechargement
       this.$nextTick(() => {
         window.dispatchEvent(new CustomEvent('app-reloaded'));
       });
@@ -145,12 +125,12 @@ export default {
   margin: 0;
   width: 150px;
   transition: all 0.3s ease;
-  filter: drop-shadow(0 0 2px rgba(48, 73, 104, 0.1));
+  filter: drop-shadow(0 0 2px rgba(52, 62, 72, 0.838));
   outline: 0 !important;
   box-shadow: none !important;
   -webkit-tap-highlight-color: transparent;
   -moz-tap-highlight-color: transparent;
-  user-select: none;
+  user-select: none;  
   -webkit-user-select: none;
   -moz-user-select: none;
   -ms-user-select: none;
@@ -172,11 +152,16 @@ export default {
 
 .infinite-mode-button:hover .glow-border {
   stroke-width: 3;
-  stroke: #5a7294;
+  stroke: #323439;
 }
 
 .infinite-mode-button:hover .glow-effect {
   opacity: 0.5;
+}
+
+/* Texte en état normal en gris foncé */
+.infinite-text {
+  fill: #d6ccbe;
 }
 
 .infinite-mode-button:hover .infinite-text {
@@ -186,10 +171,9 @@ export default {
 
 .infinite-mode-button:active {
   transform: scale(0.95);
-  filter: drop-shadow(0 0 4px rgba(48, 73, 104, 0.3));
+  filter: drop-shadow(0 0 4px rgb(69, 84, 102));
 }
 
-/* Styles du modal harmonisés avec TimerModeButton */
 .stop-timer-modal {
   position: fixed;
   top: 0;

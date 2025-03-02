@@ -5,16 +5,15 @@
       <rect x="50" y="50" width="300" height="100" rx="20" fill="#1a1d24" />
       
       <!-- Bordure lumineuse -->
-      <rect x="55" y="55" width="290" height="90" rx="15" fill="none" stroke="#304968" stroke-width="2" class="glow-border"/>
+      <rect x="55" y="55" width="290" height="90" rx="15" fill="none" stroke="#D8D8D8" stroke-width="2" class="glow-border"/>
       
-      <!-- Texte CRAFT avec BenjaminFranklin -->
+      <!-- Texte CRAFT -->
       <text 
         x="200" 
         y="115" 
         font-family="BenjaminFranklin, Arial" 
         font-size="40" 
         font-weight="bold" 
-        fill="#D8D8D8"
         text-anchor="middle"
         letter-spacing="6"
         class="craft-text"
@@ -48,40 +47,60 @@ export default {
   font-style: normal;
 }
 
+/* Appliquer le même style que dans ExplorerModeButton, sans toucher à la position */
 .craft-button {
   cursor: pointer;
   width: 170px;
-  transition: all 0.3s ease;
   margin-top: -75px;
   margin-left: -30px;
-  filter: drop-shadow(0 0 2px rgba(48, 73, 104, 0.1));
+  background: none;
+  border: none !important;
+  transition: all 0.3s ease;
+  filter: drop-shadow(0 0 2px rgba(52, 62, 72, 0.838));
+  outline: 0 !important;
+  box-shadow: none !important;
+  -webkit-tap-highlight-color: transparent;
+  -moz-tap-highlight-color: transparent;
+  user-select: none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+}
+
+.craft-button:focus,
+.craft-button:active,
+.craft-button:focus-visible {
+  outline: 0 !important;
+  border: none !important;
+  box-shadow: none !important;
+  background: none !important;
 }
 
 .craft-button:hover {
   transform: scale(1.05);
-  filter: drop-shadow(0 0 8px rgba(48, 73, 104, 0.5));
+  filter: drop-shadow(0 0 12px rgba(52, 52, 52, 0.808));
 }
 
 .craft-button:hover .glow-border {
   stroke-width: 3;
-  stroke: #3a5a82;
+  stroke: #323439;
 }
 
 .craft-button:hover .glow-effect {
   opacity: 0.5;
 }
 
-.craft-button:hover .craft-text {
-  fill: #ebebeb; /* Couleur plus claire au survol */
+.craft-text {
+  fill: #d6ccbe !important;
   transition: fill 0.3s ease;
+}
+
+.craft-button:hover .craft-text {
+  fill: #b8d4f5 !important;
 }
 
 .craft-button:active {
   transform: scale(0.95);
-  filter: drop-shadow(0 0 4px rgba(48, 73, 104, 0.3));
-}
-
-.craft-text {
-  transition: fill 0.3s ease;
+  filter: drop-shadow(0 0 4px rgb(69, 84, 102));
 }
 </style>

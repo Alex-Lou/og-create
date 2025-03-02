@@ -6,7 +6,7 @@
 }
 
 .resizer {
-    width: 10px;
+    width: 5px;
     cursor: ew-resize;
     background-color: #1a1a1a;
     height: 100%;
