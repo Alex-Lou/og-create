@@ -1,13 +1,30 @@
 <template>
   <div id="crafting-board" ref="craftingBoard">
-    <!-- Conteneur de fumée identique à GameInventory -->
     <div class="smoke-container-crafting">
       <div class="smoke-crafting smoke1-crafting"></div>
       <div class="smoke-crafting smoke2-crafting"></div>
       <div class="smoke-crafting smoke-top-crafting"></div>
     </div>
+    <div class="star-field-crafting">
+      <div class="star"></div>
+      <div class="star"></div>
+      <div class="star"></div>
+      <div class="star"></div>
+      <div class="star"></div>
+      <div class="star"></div>
+      <div class="star"></div>
+      <div class="star"></div>
+      <div class="star"></div>
+      <div class="star"></div>
+      <div class="star"></div>
+      <div class="star"></div>
+      <div class="star"></div>
+      <div class="star"></div>
+      <div class="star"></div>
+    </div>
+    <div class="shooting-star"></div>
+    <div class="shooting-star-red"></div>
 
-    <!-- Partie d'animation Firework conservée -->
     <div class="animation-container">
       <template v-if="isFireworkActive">
         <FireworkAnimation />
@@ -18,7 +35,6 @@
         <FireworkAnimation :delay="1.0" :offsetX="-300" />
       </template>
     </div>
-    
     <div id="crafting" @dragover.prevent @drop="handleDrop">
       <div class="title-container">
         <CreationZoneTitle />
@@ -151,7 +167,6 @@ export default {
     craftItem() {
       if (this.craftingInProgress) return;
       this.craftingInProgress = true;
-
       if (this.selected.length < 2) {
         if (!this.alertShown) {
           this.$emit('show-alert', 'Select at least 2 elements to craft!');
@@ -160,10 +175,8 @@ export default {
         this.craftingInProgress = false;
         return;
       }
-
       const sortedSelected = this.selected.sort().join('+');
       const craftedItem = this.craftingRecipes[sortedSelected];
-
       if (!craftedItem) {
         const selectedElements = document.querySelectorAll('#selected-resources li');
         selectedElements.forEach(el => {
@@ -175,20 +188,16 @@ export default {
         this.craftingInProgress = false;
         return;
       }
-
       const category = this.getCraftedItemCategory(craftedItem);
       if (category && !this.discoveredCategories.has(category)) {
         this.discoveredCategories.add(category);
         this.$emit('category-discovered', category);
       }
-
       this.lastCraftedItem = craftedItem;
       this.pendingSaves.add(craftedItem);
-
       setTimeout(() => {
         this.$emit('craft-success', craftedItem);
         this.saveDiscoveredElement(craftedItem);
-        
         let newPosition = { top: 300, left: 230 };
         if (this.lastCraftedPosition && !this.lastCraftedPosition.moved) {
           newPosition = {
@@ -275,7 +284,7 @@ export default {
           setTimeout(() => {
             this.$emit('craft-success', result);
             this.saveDiscoveredElement(result);
-            let newPosition = { 
+            let newPosition = {
               top: this.resourcePositions[targetIndex]?.top || 300,
               left: this.resourcePositions[targetIndex]?.left || 230
             };
