@@ -68,9 +68,6 @@
         x="300" 
         y="100" 
         text-anchor="middle" 
-        font-family="BenjaminFranklin, Arial, sans-serif" 
-        font-size="80" 
-        font-weight="bold" 
         fill="url(#darkTitleGradient)"
         filter="url(#neonEffect)"
       >
@@ -102,8 +99,10 @@ export default {
   align-items: center;
   position: relative;
   left: 3%;
-  font-family: 'BenjaminFranklin', 'Arial', sans-serif;
-  letter-spacing: 3px;
+  font-family: 'BenjaminFranklin', sans-serif;
+  letter-spacing: 2px;
+  font-size: 65px;
+  font-weight: bold;
 }
 
 .creation-zone-title svg {
