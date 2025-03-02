@@ -20,60 +20,60 @@
       <img src="@/assets/maps/world-map.png" alt="Carte d'exploration" class="map-image" />
       
       <!-- Points représentant les régions -->
-      <div 
-        v-for="region in regions" 
-        :key="region.id"
-        :class="['region-marker', { 
-          'visited': region.visited, 
-          'completed': region.completed,
-          'locked': !isRegionUnlocked(region)
-        }]"
-        :style="getRegionStyle(region)"
-        @click="selectRegion(region)"
-      >
-        <!-- SVG pour régions en cours (point d'interrogation) -->
-        <svg 
-          v-if="isRegionUnlocked(region) && !region.completed"
-          xmlns="http://www.w3.org/2000/svg" 
-          viewBox="0 0 30 30" 
-          width="30" 
-          height="30" 
-          style="position: absolute; top: 0; left: 0;"
-        >
-          <circle cx="15" cy="15" r="14" fill="#FFD700" stroke="#B8860B" stroke-width="2"/>
-          <text x="15" y="22" text-anchor="middle" font-family="Arial, sans-serif" font-size="18" font-weight="bold" fill="#8B4513">
-            ?
-          </text>
-        </svg>
-        
-        <!-- SVG pour régions complétées (coche verte) -->
-        <svg 
-          v-if="region.completed"
-          xmlns="http://www.w3.org/2000/svg" 
-          viewBox="0 0 30 30" 
-          width="30" 
-          height="30" 
-          style="position: absolute; top: 0; left: 0;"
-        >
-          <circle cx="15" cy="15" r="14" fill="#2ecc71" stroke="#27ae60" stroke-width="2"/>
-          <path d="M9 15 L13 19 L21 11" stroke="white" stroke-width="3" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
-        </svg>
-        
-        <div class="region-name">{{ region.name }}</div>
-        
-        <!-- SVG pour régions verrouillées (cadenas) -->
-        <div class="region-lock" v-if="!isRegionUnlocked(region)">
-          <svg 
-            xmlns="http://www.w3.org/2000/svg" 
-            viewBox="0 0 24 24" 
-            width="24" 
-            height="24"
-            style="fill: #FF6B6B; stroke: #FF4757; stroke-width: 1.5;"
-          >
-            <path d="M12 2C8.692 2 6 4.692 6 8v2H4c-1.103 0-2 .897-2 2v8c0 1.103.897 2 2 2h16c1.103 0 2-.897 2-2v-8c0-1.103-.897-2-2-2h-2V8c0-3.308-2.692-6-6-6zm4 10H8V8c0-2.206 1.794-4 4-4s4 1.794 4 4v4zm-4-4c-1.103 0-2 .897-2 2v4h4V8c0-1.103-.897-2-2-2z"/>
-          </svg>
-        </div>
-      </div>
+<div 
+  v-for="region in regions" 
+  :key="region.id"
+  :class="['region-marker', { 
+    'visited': region.visited, 
+    'completed': region.completed,
+    'locked': !isRegionUnlocked(region)
+  }]"
+  :style="getRegionStyle(region)"
+  @click="selectRegion(region)"
+>
+  <!-- SVG pour régions en cours (point d'interrogation) -->
+  <svg 
+    v-if="isRegionUnlocked(region) && !region.completed"
+    xmlns="http://www.w3.org/2000/svg" 
+    viewBox="0 0 30 30" 
+    width="30" 
+    height="30" 
+    style="position: absolute; top: 0; left: 0;"
+  >
+    <circle cx="15" cy="15" r="14" fill="#FFD700" stroke="#B8860B" stroke-width="2"/>
+    <text x="15" y="22" text-anchor="middle" font-family="Arial, sans-serif" font-size="18" font-weight="bold" fill="#8B4513">
+      ?
+    </text>
+  </svg>
+  
+  <!-- SVG pour régions complétées (coche verte) -->
+  <svg 
+    v-if="region.completed"
+    xmlns="http://www.w3.org/2000/svg" 
+    viewBox="0 0 30 30" 
+    width="30" 
+    height="30" 
+    style="position: absolute; top: 0; left: 0;"
+  >
+    <circle cx="15" cy="15" r="14" fill="#2ecc71" stroke="#27ae60" stroke-width="2"/>
+    <path d="M9 15 L13 19 L21 11" stroke="white" stroke-width="3" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+  </svg>
+  
+  <div class="region-name">{{ region.name }}</div>
+  
+  <!-- SVG pour régions verrouillées (cadenas) -->
+  <div class="region-lock" v-if="!isRegionUnlocked(region)">
+    <svg 
+      xmlns="http://www.w3.org/2000/svg" 
+      viewBox="0 0 24 24" 
+      width="24" 
+      height="24"
+      style="fill: #FF6B6B; stroke: #FF4757; stroke-width: 1.5;"
+    >
+      <path d="M12 2C8.692 2 6 4.692 6 8v2H4c-1.103 0-2 .897-2 2v8c0 1.103.897 2 2 2h16c1.103 0 2-.897 2-2v-8c0-1.103-.897-2-2-2h-2V8c0-3.308-2.692-6-6-6zm4 10H8V8c0-2.206 1.794-4 4-4s4 1.794 4 4v4zm-4-4c-1.103 0-2 .897-2 2v4h4V8c0-1.103-.897-2-2-2z"/>
+    </svg>
+  </div>
+</div>
     </div>
     
     <!-- Dialogue NPC -->
@@ -457,6 +457,15 @@ export default {
         this.currentChallenge = triggeredBoss;
         this.showNpcDialog = false;
         this.showCraftModal = true;
+        
+        // Marquer la région du boss comme visitée
+        const bossRegion = this.regions.find(r => r.id === 5);
+        if (bossRegion && !bossRegion.visited) {
+          bossRegion.visited = true;
+          explorerService.visitRegion(bossRegion.id).catch(err => {
+            console.error("Erreur lors de la visite de la région du boss:", err);
+          });
+        }
         return;
       }
     }
@@ -574,58 +583,82 @@ export default {
     },
     
     handleBossVictory() {
-      if (!this.currentBoss) return;
-      const rewardCoins = this.currentBoss.rewardCoins || 500;
-      const rewardXp = this.currentBoss.rewardXp || 1000;
-      const rewardEnergy = 10;
-      const regionId = this.currentBoss.trigger_after_region;
-      console.log("Boss vaincu pour la région:", regionId);
-      this.energy = Math.min(this.energy + rewardEnergy, this.maxEnergy);
-      const associatedRegion = this.regions.find(r => r.id === regionId);
-      if (associatedRegion) {
-        associatedRegion.completed = true;
-        associatedRegion.progress = 100;
-        console.log("Région associée marquée complétée:", associatedRegion.name);
-      }
-      this.victoryRewards = {
-        coins: rewardCoins,
-        xp: rewardXp,
-        energy: rewardEnergy,
-        isBossReward: true
-      };
-      this.$emit('coins-updated', this.userCoins + rewardCoins);
-      this.showVictoryModal = true;
-      explorerService.completeBoss(this.currentBoss.id, {
-        coins: rewardCoins,
-        energy: rewardEnergy,
-        xp: rewardXp,
-        regionId: regionId
-      }).then(response => {
-        console.log('Boss vaincu - réponse du serveur:', response);
-        this.refreshRegions();
-      }).catch(error => {
-        console.error(`Erreur lors de l'enregistrement de la victoire du boss ${this.currentBoss.id}:`, error);
-      });
-    },
+  if (!this.currentBoss) return;
+  const rewardCoins = this.currentBoss.rewardCoins || 500;
+  const rewardXp = this.currentBoss.rewardXp || 1000;
+  const rewardEnergy = 10;
+  const regionId = this.currentBoss.trigger_after_region;
+  console.log("Boss vaincu pour la région:", regionId);
+  this.energy = Math.min(this.energy + rewardEnergy, this.maxEnergy);
+  
+  // Marquer la région associée comme complétée
+  const associatedRegion = this.regions.find(r => r.id === regionId);
+  if (associatedRegion) {
+    associatedRegion.completed = true;
+    associatedRegion.progress = 100;
+    console.log("Région associée marquée complétée:", associatedRegion.name);
+  }
+  
+  // Créer ou mettre à jour la région du boss
+  const bossRegionId = 5; // ID de la région du boss
+  const bossRegion = this.regions.find(r => r.id === bossRegionId);
+  if (bossRegion) {
+    bossRegion.completed = true;
+    bossRegion.visited = true;
+    bossRegion.progress = 100;
+    console.log("Région du boss marquée complétée:", bossRegion.name);
+  }
+  
+  this.victoryRewards = {
+    coins: rewardCoins,
+    xp: rewardXp,
+    energy: rewardEnergy,
+    isBossReward: true
+  };
+  this.$emit('coins-updated', this.userCoins + rewardCoins);
+  this.showVictoryModal = true;
+  explorerService.completeBoss(this.currentBoss.id, {
+    coins: rewardCoins,
+    energy: rewardEnergy,
+    xp: rewardXp,
+    regionId: regionId,
+    bossRegionId: bossRegionId // Ajouter l'ID de la région du boss
+  }).then(response => {
+    console.log('Boss vaincu - réponse du serveur:', response);
+    this.refreshRegions();
+  }).catch(error => {
+    console.error(`Erreur lors de l'enregistrement de la victoire du boss ${this.currentBoss.id}:`, error);
+  });
+},
     
-    async refreshRegions() {
-      try {
-        const regionsData = await explorerService.getRegions();
-        this.regions = this.regions.map(existingRegion => {
-          const updatedRegion = regionsData.find(r => r.id === existingRegion.id);
-          if (updatedRegion) {
-            return {
-              ...existingRegion,
-              completed: updatedRegion.completed,
-              visited: updatedRegion.visited,
-            };
-          }
-          return existingRegion;
-        });
-      } catch (error) {
-        console.error('Erreur lors du rafraîchissement des régions:', error);
+async refreshRegions() {
+  try {
+    const regionsData = await explorerService.getRegions();
+    this.regions = regionsData.map(updatedRegion => {
+      const existingRegion = this.regions.find(r => r.id === updatedRegion.id);
+      if (existingRegion) {
+        return {
+          ...existingRegion,
+          completed: updatedRegion.completed || existingRegion.completed,
+          visited: updatedRegion.visited || existingRegion.visited,
+          progress: updatedRegion.progress || existingRegion.progress || 0
+        };
       }
-    },
+      return updatedRegion;
+    });
+    
+    // Force la réinitialisation du rendu des régions
+    this.$nextTick(() => {
+      const temp = [...this.regions];
+      this.regions = [];
+      this.$nextTick(() => {
+        this.regions = temp;
+      });
+    });
+  } catch (error) {
+    console.error('Erreur lors du rafraîchissement des régions:', error);
+  }
+},
     
     closeCraftModal() {
       this.showCraftModal = false;

@@ -25,7 +25,25 @@ const explorerService = {
     try {
       const response = await axios.get('/api/explorer/regions');
       console.log('Régions récupérées:', response.data.length);
-      return response.data;
+      
+      // Vérifier si un boss a été vaincu
+      const bossStatus = localStorage.getItem('bosses_defeated');
+      const defeatedBosses = bossStatus ? JSON.parse(bossStatus) : {};
+      
+      // Mettre à jour les régions avec les informations des boss vaincus
+      const updatedRegions = response.data.map(region => {
+        // Si la région est celle du boss (ID 5) et qu'il a été vaincu
+        if (region.id === 5 && defeatedBosses[1]) { // Ici, 1 est l'ID du boss
+          return {
+            ...region,
+            completed: true,
+            visited: true
+          };
+        }
+        return region;
+      });
+      
+      return updatedRegions;
     } catch (error) {
       console.error('Erreur lors de la récupération des régions:', error);
       
@@ -121,13 +139,20 @@ const explorerService = {
         energy: rewards.energy || 10,
         xp: rewards.xp || 1000,
         isBossVictory: true,  // Ce paramètre est crucial
-        bossId: bossId
+        bossId: bossId,
+        bossRegionId: rewards.bossRegionId || 5 // Ajouter l'ID de la région du boss
       });
+      
+      // Stocker en localStorage que ce boss a été vaincu
+      this.saveBossDefeatedStatus(bossId);
       
       console.log('Complétion de boss réussie, réponse:', response.data);
       return response.data;
     } catch (error) {
       console.error(`Erreur lors de la complétion du boss ${bossId}:`, error);
+      
+      // Même en cas d'erreur, sauvegarder l'état vaincu du boss
+      this.saveBossDefeatedStatus(bossId);
       
       // Retourner une réponse simulée en cas d'erreur
       const simulatedResponse = {
@@ -142,6 +167,47 @@ const explorerService = {
       };
       console.log('Utilisation d\'une réponse simulée pour le boss:', simulatedResponse);
       return simulatedResponse;
+    }
+  },
+
+  // Sauvegarder le statut vaincu d'un boss
+  saveBossDefeatedStatus(bossId) {
+    try {
+      // Récupérer l'état actuel
+      const existingStatus = localStorage.getItem('bosses_defeated');
+      const defeatedBosses = existingStatus ? JSON.parse(existingStatus) : {};
+      
+      // Marquer ce boss comme vaincu
+      defeatedBosses[bossId] = true;
+      
+      // Sauvegarder
+      localStorage.setItem('bosses_defeated', JSON.stringify(defeatedBosses));
+      
+      // Compléter également explicitement la région du boss (ID 5)
+      this.completeRegion(5, {
+        coins: 0,  // Pas de récompenses supplémentaires
+        energy: 0,
+        xp: 0,
+        isBossRegion: true
+      }).catch(err => console.error("Erreur lors de la complétion de la région du boss:", err));
+      
+      console.log(`Boss ${bossId} marqué comme vaincu dans le localStorage`);
+    } catch (error) {
+      console.error("Erreur lors de la sauvegarde du statut du boss:", error);
+    }
+  },
+  
+  // Vérifier si un boss a été vaincu
+  isBossDefeated(bossId) {
+    try {
+      const defeatedBosses = localStorage.getItem('bosses_defeated');
+      if (!defeatedBosses) return false;
+      
+      const parsed = JSON.parse(defeatedBosses);
+      return !!parsed[bossId];
+    } catch (error) {
+      console.error("Erreur lors de la vérification du statut du boss:", error);
+      return false;
     }
   },
   
@@ -178,8 +244,22 @@ const explorerService = {
     try {
       console.log('Rafraîchissement du statut des régions');
       const response = await axios.get('/api/explorer/regions/status');
-      console.log('Statut des régions rafraîchi:', response.data);
-      return response.data;
+      
+      // Ajouter des informations sur les boss vaincus
+      const updatedStatus = response.data.map(region => {
+        // Si c'est la région du boss et qu'il a été vaincu
+        if (region.id === 5 && this.isBossDefeated(1)) { // 1 est l'ID du premier boss
+          return {
+            ...region,
+            completed: true,
+            visited: true
+          };
+        }
+        return region;
+      });
+      
+      console.log('Statut des régions rafraîchi:', updatedStatus);
+      return updatedStatus;
     } catch (error) {
       console.error('Erreur lors du rafraîchissement du statut des régions:', error);
       return [];
