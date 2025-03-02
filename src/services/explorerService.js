@@ -246,6 +246,19 @@ async syncRegions() {
     throw new Error('Impossible de synchroniser les régions');
   }
 },
+
+// Synchroniser les éléments découverts par les utilisateurs
+async syncDiscoveredElements() {
+  try {
+    console.log('Tentative de synchronisation des éléments découverts');
+    const response = await axios.post('/api/explorer/sync-discovered-elements');
+    console.log('Synchronisation des éléments découverts réussie:', response.data);
+    return response.data;
+  } catch (error) {
+    console.error('Erreur lors de la synchronisation des éléments découverts:', error);
+    throw new Error('Impossible de synchroniser les éléments découverts');
+  }
+},
   
   // Rafraîchir le statut des régions pour l'utilisateur actuel
   async refreshRegionStatus() {
