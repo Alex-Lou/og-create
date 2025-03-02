@@ -12,9 +12,13 @@
         </select>
       </div>
 
-      <!-- Middle: Close Button -->
-      <button class="back-btn-explorer" @click="$emit('close')">
+      <!-- Middle: Close Button with Tooltip -->
+      <button 
+        class="back-btn-explorer back-btn-explorer-tooltip" 
+        @click="showExitConfirmationModal = true"
+      >
         X
+        <span class="tooltip">Quitter le mode Explorer</span>
       </button>
 
       <!-- Right side: Energy Display and Timer -->
@@ -25,6 +29,31 @@
         <div class="energy-display">
           <span class="energy-icon">⚡</span>
           <span class="energy-value">{{ energy }}/{{ maxEnergy }}</span>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Modal de confirmation de sortie -->
+    <div 
+      v-if="showExitConfirmationModal" 
+      class="exit-confirmation-modal"
+    >
+      <div class="exit-confirmation-content">
+        <h2>Confirmer la sortie</h2>
+        <p>Êtes-vous sûr de vouloir quitter le mode Explorer ?</p>
+        <div class="exit-confirmation-actions">
+          <button 
+            class="exit-confirmation-btn exit-confirmation-btn-yes"
+            @click="confirmExit"
+          >
+            Oui
+          </button>
+          <button 
+            class="exit-confirmation-btn exit-confirmation-btn-no"
+            @click="showExitConfirmationModal = false"
+          >
+            Non
+          </button>
         </div>
       </div>
     </div>
@@ -251,6 +280,7 @@ export default {
       loading: true,
       currentMapId: 1,
       unlockedMaps: [1],
+      showExitConfirmationModal: false,
       
       // Propriétés pour le dialogue NPC
       showNpcDialog: false,
@@ -292,10 +322,18 @@ export default {
     }
   },
   methods: {
+    
     formatTime(minutes) {
       const hrs = Math.floor(minutes / 60);
       const mins = minutes % 60;
       return `${hrs > 0 ? hrs + 'h ' : ''}${mins}m`;
+    },
+
+    confirmExit() {
+      // Ferme le mode Explorer
+      this.$emit('close');
+      // Réinitialise la modal de confirmation
+      this.showExitConfirmationModal = false;
     },
     
     isRegionUnlocked(region) {
