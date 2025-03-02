@@ -2,19 +2,7 @@
   <div class="explorer-container">
     <!-- Affichage de l'énergie -->
     <div class="energy-info">
-      <div class="energy-display">
-        <span class="energy-icon">⚡</span>
-        <span class="energy-value">{{ energy }}/{{ maxEnergy }}</span>
-      </div>
-      <!-- Bouton de retour -->
-      <button class="back-btn" @click="$emit('close')">
-        Retour au jeu principal
-      </button>
-      <div class="energy-timer" v-if="nextEnergyIn > 0">
-        Prochain point d'énergie dans {{ formatTime(nextEnergyIn) }}
-      </div>
-      
-      <!-- Sélecteur de carte (visible seulement si plusieurs cartes sont débloquées) -->
+      <!-- Left side: Map Selector -->
       <div class="map-selector" v-if="unlockedMaps.length > 1">
         <span class="map-selector-label">Carte:</span>
         <select v-model="currentMapId" @change="changeMap" class="map-select">
@@ -22,6 +10,22 @@
             {{ getMapName(mapId) }}
           </option>
         </select>
+      </div>
+
+      <!-- Middle: Close Button -->
+      <button class="back-btn-explorer" @click="$emit('close')">
+        X
+      </button>
+
+      <!-- Right side: Energy Display and Timer -->
+      <div class="energy-timer-container">
+        <div class="energy-timer" v-if="nextEnergyIn > 0">
+          Recharge dans {{ formatTime(nextEnergyIn) }}
+        </div>
+        <div class="energy-display">
+          <span class="energy-icon">⚡</span>
+          <span class="energy-value">{{ energy }}/{{ maxEnergy }}</span>
+        </div>
       </div>
     </div>
     
@@ -36,7 +40,8 @@
         :class="['region-marker', { 
           'visited': region.visited, 
           'completed': region.completed,
-          'locked': !isRegionUnlocked(region)
+          'locked': !isRegionUnlocked(region),
+          'partially-completed': region.partiallyCompleted
         }]"
         :style="getRegionStyle(region)"
         @click="selectRegion(region)"

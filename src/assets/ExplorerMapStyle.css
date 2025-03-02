@@ -12,7 +12,6 @@
   font-style: normal;
 }
 
-
 .explorer-container {
   display: flex;
   flex-direction: column;
@@ -26,21 +25,40 @@
 .energy-info {
   display: flex;
   align-items: center;
+  justify-content: space-between;
   margin-top: 10px;
   margin-bottom: -5px;
-  justify-content: space-between;
   background-color: rgba(0, 0, 0, 0.7);
   border-radius: 8px;
   position: relative;
   height: 45px;
+  padding: 0 10px;
 }
 
-.energy-timer {
-  right: 50px;
+.map-selector {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.map-select, .map-selector-label {
   font-size: 14px;
   font-family: 'BenjaminFranklin', sans-serif;
   letter-spacing: 2px;
+  color: #aaa;
+}
 
+.map-select{
+  background-color: #1b1b1b;
+  border: none;
+  border-radius: 8px;
+}
+
+.energy-timer-container {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-right: 50px;
 }
 
 .energy-display {
@@ -48,11 +66,21 @@
   align-items: center;
   gap: 5px;
   font-size: 1.2rem;
+  font-family: 'BenjaminFranklin', sans-serif;
+  letter-spacing: 2px;
   font-weight: bold;
 }
 
 .energy-icon {
   color: yellow;
+  font-size: 1.2rem;
+}
+
+.energy-timer {
+  font-size: 14px;
+  font-family: 'BenjaminFranklin', sans-serif;
+  letter-spacing: 2px;
+  color: #aaa;
 }
 
 .energy-gained {
@@ -63,6 +91,8 @@
   color: white;
   padding: 5px 10px;
   border-radius: 5px;
+  font-family: 'BenjaminFranklin', sans-serif;
+  letter-spacing: 2px;
   font-weight: bold;
   animation: float-up 1.5s forwards;
   opacity: 0;
@@ -163,6 +193,25 @@
   visibility: visible;
 }
 
+.back-btn-explorer {
+  background: none;
+  margin-right: -1000px;
+  border: none;
+  color: rgb(97, 11, 11);
+  font-size: 20px;
+  cursor: pointer;
+  transition: text-shadow 0.3s ease;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'BenjaminFranklin', sans-serif;
+}
+
+.back-btn-explorer:hover {
+  text-shadow: 0 0 10px white, 0 0 15px white;
+}
+
 .region-lock {
   font-size: 1.2rem;
 }
@@ -176,6 +225,9 @@
 .region-info h3 {
   margin-top: 0;
   margin-bottom: 10px;
+  font-family: 'BenjaminFranklin', sans-serif;
+  letter-spacing: 2px;
+  font-weight: bold;
 }
 
 .region-progress {
@@ -236,7 +288,6 @@
   letter-spacing: 2px;
 }
 
-
 .back-btn:hover {
   background-color: #d32f2f;
 }
@@ -258,7 +309,6 @@
 .region-marker:hover svg {
   animation: float 1s infinite ease-in-out;
 }
-
 
 /* Styles pour la fenêtre de victoire */
 .victory-modal {
@@ -288,6 +338,8 @@
 .victory-content h2 {
   color: #f1c40f;
   font-size: 36px;
+  font-family: 'BenjaminFranklin', sans-serif;
+  font-weight: bold;
   margin: 0 0 20px 0;
   text-shadow: 0 0 10px rgba(241, 196, 15, 0.7);
 }
@@ -370,6 +422,8 @@
 .victory-content h2 {
   color: #f1c40f;
   font-size: 36px;
+  font-family: 'BenjaminFranklin', sans-serif;
+  font-weight: bold;
   margin: 0 0 20px 0;
   text-shadow: 0 0 10px rgba(241, 196, 15, 0.7);
 }
@@ -412,6 +466,8 @@
   padding: 12px 25px;
   border-radius: 5px;
   font-size: 16px;
+  font-family: 'BenjaminFranklin', sans-serif;
+  font-weight: bold;
   cursor: pointer;
   transition: background-color 0.3s;
 }
@@ -445,6 +501,12 @@
   background-color: rgba(35, 35, 45, 0.95);
   border: 2px solid #e74c3c;
   max-width: 500px;
+}
+
+.energy-value {
+  font-family: 'BenjaminFranklin', sans-serif;
+  letter-spacing: 2px;
+  font-weight: bold;
 }
 
 .boss-victory h2 {

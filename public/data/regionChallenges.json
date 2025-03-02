@@ -205,7 +205,7 @@
       "position_y": 25,
       "npcImage": "npc3.png",
       "npcPosition": "right",
-      "background": "desert-bg.png",
+      "background": "desert-bg.gif",
       "explorerMapBackground": "world-map2.png",
       "dialog": [
         "Bienvenue dans le Désert des Illusions, voyageur intrépide!",
@@ -240,7 +240,7 @@
           "text": "Voyageur, combine l'Eau avec le pouvoir du Feu et un fragment du Joyau d'Ignasius. L'Élixir de Vision te révélera le chemin à travers les mirages du désert."
         }
       ],
-      "requiredElements": ["Élixir de Vision"],
+      "requiredElements": ["Boue"],
       "availableElements": ["Eau", "Feu", "Terre", "Air", "Magie", "Joyau d'Ignasius", "Sable", "Lumière"],
       "elementsWithGifs": ["Eau", "Feu", "Terre", "Air", "Sable", "Lumière"],
       "actionText": "Préparer l'élixir",
