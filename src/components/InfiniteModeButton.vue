@@ -10,7 +10,7 @@
         <rect x="50" y="50" width="300" height="100" rx="20" fill="#1a1d24" />
         
         <!-- Bordure lumineuse -->
-        <rect x="55" y="55" width="290" height="90" rx="15" fill="none" stroke="#304968" stroke-width="2" class="glow-border"/>
+        <rect x="55" y="55" width="290" height="90" rx="15" fill="none" stroke="#D8D8D8" stroke-width="2" class="glow-border"/>
         
         <!-- Texte INFINITE -->
         <text 
@@ -167,7 +167,7 @@ export default {
 
 .infinite-mode-button:hover {
   transform: scale(1.05);
-  filter: drop-shadow(0 0 12px rgba(48, 73, 104, 0.7));
+  filter: drop-shadow(0 0 12px rgba(52, 52, 52, 0.808));
 }
 
 .infinite-mode-button:hover .glow-border {

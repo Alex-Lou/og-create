@@ -1,5 +1,33 @@
 <template>
-  <div id="inventory">
+  <div id="inventory" class="inventory-container">
+    <!-- Conteneur de fumée -->
+    <div class="smoke-container">
+      <!-- Fumée épaisse en bas à gauche -->
+      <div class="smoke smoke1"></div>
+      <div class="smoke smoke2"></div>
+      <!-- Nouvelle fumée moins épaisse, partant du haut à gauche -->
+      <div class="smoke smoke-top"></div>
+    </div>
+
+    <!-- Conteneur d'étoiles scintillantes -->
+    <div class="star-field">
+      <div class="star"></div>
+      <div class="star"></div>
+      <div class="star"></div>
+      <div class="star"></div>
+      <div class="star"></div>
+      <div class="star"></div>
+      <div class="star"></div>
+      <div class="star"></div>
+      <div class="star"></div>
+      <div class="star"></div>
+      <div class="star"></div>
+      <div class="star"></div>
+      <div class="star"></div>
+      <div class="star"></div>
+      <div class="star"></div>
+    </div>
+
     <h2>Inventory</h2>
     <div 
       v-for="(category, index) in filteredCategories" 
@@ -145,7 +173,6 @@ export default {
 
     // Méthode pour forcer un rechargement
     function forceReload(data) {
-      // Si de nouvelles données sont fournies, les traiter
       if (data) {
         emit('force-reload', data);
       }
@@ -188,3 +215,4 @@ export default {
 <style scoped>
 @import '@/assets/GameInventoryStyle.css';
 </style>
+

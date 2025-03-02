@@ -60,7 +60,19 @@
   animation: lights 5s 750ms linear infinite;
   position: relative;
   transition: all 0.3s ease;
-  
+}
+
+#crafting {
+  position: relative;
+  z-index: 1;
+  padding: 20px;
+  text-align: center;
+  height: 100%;
+  /* Ajout du background craft-bg.png */
+  background-image: url('~@/assets/craft-bg.png');
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center;
 }
 
 /* Effet de survol principal */
@@ -123,6 +135,7 @@
 .animated-text:hover::after {
   transform: scaleX(1);
 }
+
 /* Autres styles existants */
 #crafted-popup {
   position: fixed;
@@ -271,8 +284,8 @@
 /* Ajouter des styles pour l'élément draggable et droppable créé */
 .crafted-element {
   position: absolute;
-  background: linear-gradient(90deg, #ffffff, #d7d7d7, #676767);
-  background-size: 200% 100%;
+  background: linear-gradient(90deg, #1b2242, #2a2e41, #2b0d46);
+  background-size: 200% 100%; 
   animation: gradientFlow 10s ease infinite;
   background-position: 0% 50%;
   color: #fff;
@@ -281,10 +294,11 @@
   letter-spacing: 2px;
   border-radius: 14px;
   font-size: 1rem;
+  opacity: .8;
   transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
   cursor: pointer;
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  border: 1px solid rgba(255, 255, 255, 0.053);
+  box-shadow: 0 2px 8px #3C2B2B;
   list-style-type: disc;
   display: list-item;
   margin-left: 20px; /* Pour la puce */
@@ -296,14 +310,14 @@
 
 /* Styles des ressources draggables */
 .draggable-resource {
-  background: linear-gradient(90deg, #4b5ebe, #3f51b5, #be964b);
+  background: linear-gradient(90deg, #1b2242, #2a2e41, #2b0d46);
   background-size: 200% 100%;
   animation: gradientFlow 10s ease infinite;
   background-position: 0% 50%;
   border: 1px solid rgba(255, 255, 255, 0.1);
   border-radius: 14px;
   padding: 10px 18px;
-  color: white;
+  color: rgb(61, 61, 61);
   font-size: 1rem;
   font-weight: 600;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
@@ -402,3 +416,90 @@
 }
 
 
+/* Conteneur de fumée (placé devant le background) */
+.smoke-container-crafting {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  overflow: hidden;
+  z-index: 3;
+}
+
+/* Les règles de la fumée (identiques à GameInventory) */
+.smoke-crafting {
+  position: absolute;
+  filter: blur(30px);
+}
+
+.smoke-crafting.smoke1-crafting {
+  bottom: 0;
+  width: 400px;
+  height: 120px;
+  background: radial-gradient(
+    circle at 40% 40%, 
+    rgba(170, 180, 190, 0.116) 10%, 
+    rgba(200, 200, 200, 0.038) 30%, 
+    rgba(200, 200, 200, 0.033) 60%, 
+    rgba(170, 180, 190, 0.059) 90%
+  );
+  opacity: 0.9;
+  left: -500px;
+  animation: smokeBottomAnimation 50s linear infinite;
+  animation-delay: 13s;
+}
+
+.smoke-crafting.smoke2-crafting {
+  bottom: 0;
+  width: 400px;
+  height: 170px;
+  background: radial-gradient(
+    circle at 40% 40%, 
+    rgba(124, 118, 118, 0.038) 10%, 
+    rgba(200, 200, 200, 0.053) 30%, 
+    rgba(200, 200, 200, 0.059) 60%, 
+    rgba(200, 200, 200, 0.052) 90%
+  );
+  opacity: 0.9;
+  left: -800px;
+  animation: smokeBottomAnimation 50s linear infinite;
+  animation-delay: 43s; /* 25s d'offset original + 13s */
+}
+
+.smoke-crafting.smoke-top-crafting {
+  top: 0;
+  left: -300px;
+  width: 200px;
+  height: 100px;
+  background: radial-gradient(
+    circle at 50% 50%, 
+    rgba(90, 90, 90, 0.062) 15%, 
+    rgba(121, 117, 117, 0.055) 40%, 
+    rgba(200, 200, 200, 0.064) 70%, 
+    rgba(108, 108, 108, 0.041) 90%
+  );
+  opacity: 0.9;
+  filter: blur(20px);
+  animation: smokeTopAnimation 80s linear infinite;
+  animation-delay: 20s;
+}
+
+@keyframes smokeBottomAnimation {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(120vw);
+  }
+}
+
+@keyframes smokeTopAnimation {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(120vw);
+  }
+}

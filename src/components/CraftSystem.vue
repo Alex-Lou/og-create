@@ -1,6 +1,13 @@
 <template>
   <div id="crafting-board" ref="craftingBoard">
-    <WaveAnimation />
+    <!-- Conteneur de fumée identique à GameInventory -->
+    <div class="smoke-container-crafting">
+      <div class="smoke-crafting smoke1-crafting"></div>
+      <div class="smoke-crafting smoke2-crafting"></div>
+      <div class="smoke-crafting smoke-top-crafting"></div>
+    </div>
+
+    <!-- Partie d'animation Firework conservée -->
     <div class="animation-container">
       <template v-if="isFireworkActive">
         <FireworkAnimation />
@@ -11,6 +18,7 @@
         <FireworkAnimation :delay="1.0" :offsetX="-300" />
       </template>
     </div>
+    
     <div id="crafting" @dragover.prevent @drop="handleDrop">
       <div class="title-container">
         <CreationZoneTitle />
@@ -60,7 +68,6 @@
 </template>
 
 <script>
-import WaveAnimation from './WaveAnimation.vue';
 import FireworkAnimation from './FireWorkAnimation.vue';
 import CraftButton from './CraftButton.vue';
 import CleanButton from './CleanButton.vue';
@@ -69,7 +76,6 @@ import CreationZoneTitle from './CreationZoneTitle.vue';
 export default {
   name: 'CraftSystem',
   components: {
-    WaveAnimation,
     FireworkAnimation,
     CraftButton,
     CleanButton,
@@ -106,7 +112,6 @@ export default {
       isDraggingSelected: false,
       isDraggingCrafted: false,
       isShaking: false,
-      // Ajout pour s'assurer que tous les éléments sont sauvegardés
       lastCraftedItem: null,
       pendingSaves: new Set(),
     };
@@ -174,29 +179,22 @@ export default {
       const category = this.getCraftedItemCategory(craftedItem);
       if (category && !this.discoveredCategories.has(category)) {
         this.discoveredCategories.add(category);
-        // Informer le parent qu'une nouvelle catégorie a été découverte
         this.$emit('category-discovered', category);
       }
 
-      // Stocker l'élément créé pour la sauvegarde
       this.lastCraftedItem = craftedItem;
       this.pendingSaves.add(craftedItem);
 
       setTimeout(() => {
-        // Signaler la découverte d'un nouvel élément au composant parent
         this.$emit('craft-success', craftedItem);
-        
-        // Enregistrer immédiatement le nouvel élément
         this.saveDiscoveredElement(craftedItem);
         
         let newPosition = { top: 300, left: 230 };
-        
         if (this.lastCraftedPosition && !this.lastCraftedPosition.moved) {
           newPosition = {
             top: this.lastCraftedPosition.top,
             left: this.lastCraftedPosition.left + 200
           };
-          
           if (newPosition.left > 800) {
             newPosition = {
               top: this.lastCraftedPosition.top + 100,
@@ -204,13 +202,11 @@ export default {
             };
           }
         }
-
         this.craftedElements.push({
           name: craftedItem,
           position: newPosition,
           moved: false,
         });
-
         this.lastCraftedPosition = newPosition;
         this.selected = [];
         this.resourcePositions = [];
@@ -218,12 +214,8 @@ export default {
         this.craftingInProgress = false;
       }, 1);
     },
-    // Nouvelle méthode pour sauvegarder les éléments découverts
     saveDiscoveredElement(element) {
-      // Informer le parent qu'un élément doit être sauvegardé
       this.$emit('save-discovered-element', element);
-      
-      // Retirer de la liste des éléments en attente
       this.pendingSaves.delete(element);
     },
     handleKeyPress(event) {
@@ -253,8 +245,7 @@ export default {
           this.selected.splice(index, 1);
           this.resourcePositions.splice(index, 1);
           this.selectResource(element);
-        }
-        else if (!this.selected.includes(element)) {
+        } else if (!this.selected.includes(element)) {
           this.selectResource(element);
           if (this.draggingElementIndex !== null) {
             this.removeCraftedElement(this.draggingElementIndex);
@@ -268,39 +259,26 @@ export default {
     handleDropOnSelectedElement(event, targetResource, targetIndex) {
       event.preventDefault();
       const draggedResource = event.dataTransfer.getData('text/plain');
-      
       const isFromCraftedElements = this.craftedElements.some(el => el.name === draggedResource);
-      
       if (isFromCraftedElements) {
         return;
       }
-      
       if (this.draggingElementIndex !== targetIndex) {
         const elements = [draggedResource, targetResource].sort();
         const combination = elements.join('+');
-        
         const result = this.craftingRecipes[combination];
-        
         if (result) {
           this.removeResource(Math.max(this.draggingElementIndex, targetIndex));
           this.removeResource(Math.min(this.draggingElementIndex, targetIndex));
-          
-          // Stocker pour sauvegarde
           this.lastCraftedItem = result;
           this.pendingSaves.add(result);
-          
           setTimeout(() => {
-            // Émettre un événement pour informer le parent
             this.$emit('craft-success', result);
-            
-            // Enregistrer immédiatement
             this.saveDiscoveredElement(result);
-            
             let newPosition = { 
               top: this.resourcePositions[targetIndex]?.top || 300,
               left: this.resourcePositions[targetIndex]?.left || 230
             };
-            
             this.craftedElements.push({
               name: result,
               position: newPosition,
@@ -321,44 +299,30 @@ export default {
     handleDropOnCraftedElement(targetElement, event, targetIndex) {
       event.preventDefault();
       const draggedElement = event.dataTransfer.getData('text/plain');
-      
       const isFromSelected = this.selected.includes(draggedElement);
-      
       if (isFromSelected) {
         return;
       }
-      
       const elements = [draggedElement, targetElement].sort();
       const combination = elements.join('+');
-      
       const result = this.craftingRecipes[combination];
-      
       if (result) {
         if (this.draggingElementIndex !== null) {
           this.craftedElements.splice(this.draggingElementIndex, 1);
         }
-        
         this.craftedElements.splice(targetIndex, 1);
-        
         const dropPosition = {
           top: event.offsetY,
           left: event.offsetX,
         };
-        
         this.craftedElements.push({
           name: result,
           position: dropPosition,
           moved: true,
         });
-        
-        // Stocker pour sauvegarde
         this.lastCraftedItem = result;
         this.pendingSaves.add(result);
-        
-        // Signaler au parent
         this.$emit('craft-success', result);
-        
-        // Enregistrer immédiatement
         this.saveDiscoveredElement(result);
       } else {
         this.isShaking = true;
@@ -366,7 +330,6 @@ export default {
           this.isShaking = false;
         }, 400);
       }
-      
       this.draggingElementIndex = null;
       this.isDraggingSelected = false;
       this.isDraggingCrafted = false;
@@ -385,7 +348,6 @@ export default {
       const selectionZone = document.getElementById('selected-resources');
       const selectionRect = selectionZone.getBoundingClientRect();
       const margin = 50;
-
       if (
         event.clientX >= selectionRect.left - margin &&
         event.clientX <= selectionRect.right + margin &&
@@ -397,7 +359,6 @@ export default {
         const craftingBoardRect = this.$refs.craftingBoard.getBoundingClientRect();
         const x = event.clientX - craftingBoardRect.left;
         const y = event.clientY - craftingBoardRect.top;
-        
         this.resourcePositions[index] = {
           top: Math.max(0, Math.min(600, y)),
           left: Math.max(0, Math.min(800, x)),
@@ -412,7 +373,6 @@ export default {
         const craftingBoardRect = this.$refs.craftingBoard.getBoundingClientRect();
         const x = event.clientX - craftingBoardRect.left;
         const y = event.clientY - craftingBoardRect.top;
-
         this.craftedElements[index].position = {
           top: Math.max(0, Math.min(600, y)),
           left: Math.max(0, Math.min(800, x)),
@@ -438,12 +398,8 @@ export default {
   },
   mounted() {
     window.addEventListener('keydown', this.handleKeyPress);
-    
-    // S'assurer que tous les éléments en attente sont sauvegardés 
-    // avant de quitter la page
     window.addEventListener('beforeunload', () => {
       if (this.pendingSaves.size > 0) {
-        // Sauvegarder tous les éléments en attente
         this.pendingSaves.forEach(element => {
           this.saveDiscoveredElement(element);
         });
@@ -452,11 +408,7 @@ export default {
   },
   beforeUnmount() {
     window.removeEventListener('keydown', this.handleKeyPress);
-    
-    // S'assurer que tous les éléments en attente sont sauvegardés 
-    // avant de démonter le composant
     if (this.pendingSaves.size > 0) {
-      // Sauvegarder tous les éléments en attente
       this.pendingSaves.forEach(element => {
         this.saveDiscoveredElement(element);
       });

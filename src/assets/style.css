@@ -21,7 +21,7 @@
 
 body {
     font-family: 'Poppins', sans-serif;
-    background: #1e1e1e;
+    background: #050101;
     transition: background-color 0.5s, color 0.5s;
     color: #b7a8a8;
     min-height: 100vh;
@@ -30,7 +30,7 @@ body {
 }
 
 #game-container {
-    background-color: #1e1e1e;
+    background-color: #050101;
     border-radius: 15px;
     width: 100%;
     max-width: 1800px;
@@ -48,7 +48,7 @@ header {
     display: flex;
     align-items: center;
     justify-content: flex-start;
-    background-color: #000000;
+    background-color: #050101;
     padding: 0.5rem 1rem;
 }
 
