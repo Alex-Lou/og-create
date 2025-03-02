@@ -75,7 +75,7 @@
               :disabled="!canStartChallenge"
             >
               {{ actionButtonText }} 
-              <span v-if="energyCost" class="energy-cost">⚡ {{ energyCost }}</span>
+              <span v-if="energyCost > 0" class="energy-cost">⚡ {{ energyCost }}</span>
             </button>
             <button @click="closeDialog" class="close-btn">Fermer</button>
           </div>
@@ -120,6 +120,9 @@ export default {
   },
   computed: {
     canStartChallenge() {
+      // Si c'est un boss (energyCost est 0), on peut toujours commencer
+      if (this.energyCost === 0) return true;
+      // Sinon, vérifier si on a assez d'énergie
       return this.currentEnergy >= this.energyCost;
     },
     isInteractionMode() {

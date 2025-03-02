@@ -31,7 +31,7 @@
             "Aiguillon": "🪂"
         },
 
-        "Biologie Moléculaire & Cellulaire": {
+        "Moléculaire & Cellulaire": {
             "Noyau": "🧬🔵",
             "ADN": "🧬",
             "Cytoplasme": "🧬🟡",
@@ -60,7 +60,7 @@
             "Organisme": "🧬🔵"
         },
 
-        "Taxonomie & Types d'Organismes Animaux": {
+        "Types d'Organismes Animaux": {
             "Insecte": "🐛",
             "Poisson": "🐟",
             "Poisson Primitif": "🐟",

@@ -59,7 +59,7 @@
   display: flex;
   align-items: center;
   gap: 10px;
-  margin-left: 10px; /* Décalage vers la gauche */
+  margin-left: 10px; /* Léger décalage à gauche */
 }
 
 .energy-display {
@@ -82,7 +82,8 @@
   font-family: 'BenjaminFranklin', sans-serif;
   letter-spacing: 2px;
   color: #aaa;
-  min-width: 120px; /* Assurer un espace pour le texte */
+  min-width: 150px; /* Assurer suffisamment d'espace pour le texte */
+  white-space: nowrap; /* Empêcher le texte de se diviser */
 }
 
 .energy-gained {
@@ -197,8 +198,8 @@
 
 .back-btn-explorer {
   background: none;
-  border: none;
-  color: rgb(209, 0, 0);
+  border-radius: 180px;
+  color: rgb(255, 255, 255);
   font-size: 20px;
   cursor: pointer;
   transition: text-shadow 0.3s ease;
@@ -207,7 +208,8 @@
   align-items: center;
   justify-content: center;
   font-family: 'BenjaminFranklin', sans-serif;
-  margin-right: -1100px; /* Décalage vers la gauche */
+  margin-right: -1060px; /* Décalage vers la gauche */
+  margin-top: 3px;
 }
 
 .back-btn-explorer:hover {
@@ -225,8 +227,8 @@
   bottom: -150%;
   left: 50%;
   transform: translateX(-50%);
-  background-color: rgba(0, 0, 0, 0.8);
-  color: rgb(211, 211, 211);
+  background-color: rgba(113, 103, 103, 0.8);
+  color: rgb(18, 12, 12);
   text-align: center;
   border-radius: 6px;
   padding: 5px 10px;
@@ -260,7 +262,7 @@
   left: 0;
   width: 100%;
   height: 100%;
-  background-color: rgba(0, 0, 0, 0.5);
+  background-color: rgba(0, 0, 0, 0.8);
   display: flex;
   justify-content: center;
   align-items: center;
@@ -268,12 +270,28 @@
 }
 
 .exit-confirmation-content {
-  background-color: #2c3e50;
+  background-color: #100e0e; /* Couleur similaire aux modals de victoire */
   padding: 30px;
-  border-radius: 10px;
+  border-radius: 15px;
   text-align: center;
   max-width: 400px;
-  color: white;
+  border: 2px solid #dcb000; /* Bordure dorée comme dans les modals de victoire */
+  box-shadow: 0 0 30px rgba(241, 196, 15, 0.5); /* Effet de glow doré */
+  color: #ecf0f1; /* Couleur de texte claire */
+}
+
+.exit-confirmation-content h2 {
+  color: #e1e1e1; /* Couleur du titre dorée */
+  font-family: 'BenjaminFranklin', sans-serif;
+  font-size: 36px;
+  margin-bottom: 20px;
+  text-shadow: 0 0 10px rgba(241, 196, 15, 0.7); /* Effet de glow doré */
+}
+
+.exit-confirmation-content p {
+  font-family: 'BenjaminFranklin', sans-serif;
+  letter-spacing: 2px;
+  margin-bottom: 20px;
 }
 
 .exit-confirmation-actions {
@@ -284,31 +302,34 @@
 }
 
 .exit-confirmation-btn {
-  padding: 10px 20px;
+  padding: 12px 25px;
   border: none;
   border-radius: 5px;
   cursor: pointer;
   font-family: 'BenjaminFranklin', sans-serif;
   font-size: 16px;
-  transition: background-color 0.3s;
+  letter-spacing: 2px;
+  transition: all 0.3s ease;
 }
 
 .exit-confirmation-btn-yes {
-  background-color: #e74c3c;
+  background-color: #0c0c0c; /* Rouge vif pour le bouton "Oui" */
   color: white;
 }
 
 .exit-confirmation-btn-yes:hover {
-  background-color: #c0392b;
+  background-color: #050101;
+  transform: scale(1.05);
 }
 
 .exit-confirmation-btn-no {
-  background-color: #3498db;
+  background-color: #050101; /* Bleu pour le bouton "Non" */
   color: white;
 }
 
 .exit-confirmation-btn-no:hover {
-  background-color: #2980b9;
+  background-color: #0a202f;
+  transform: scale(1.05);
 }
 
 .back-btn-explorer:hover {

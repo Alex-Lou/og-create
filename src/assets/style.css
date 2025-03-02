@@ -21,7 +21,7 @@
 
 body {
     font-family: 'Poppins', sans-serif;
-    background: #050101;
+    background-color: #050101;
     transition: background-color 0.5s, color 0.5s;
     color: #b7a8a8;
     min-height: 100vh;

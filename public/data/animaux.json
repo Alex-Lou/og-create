@@ -125,7 +125,7 @@
             "Toucher": "👆",
             "Odorat": "👃"
         },
-        "Capacités Physiques & Physiologiques": {
+        "Physiques & Physiologiques": {
             "Force": "💪",
             "Vitesse": "🏃",
             "Agilité": "🦘",
@@ -152,7 +152,7 @@
             "Petit": "🐭",
             "Rugissement": "🦁🔊"
         },
-        "Capacités Sensorielles & Cognitives": {
+        "Sensorielles & Cognitives": {
             "Perception": "👁️💫",
             "Observation": "👀💭",
             "Pensée": "💭",
@@ -204,7 +204,7 @@
             "Nidification": "🐦🪺",
             "Essence": "🌿🌸"
         },
-        "Interactions & Relations avec l'Environnement": {
+        "Relations avec l'Environnement": {
             "Territoire": "🏞️🐾",
             "Protection": "🛡️",
             "Symbiose": "🤝",
@@ -216,7 +216,7 @@
             "Harmonie": "🌿🌸",
             "Communication": "📡"
         },
-        "Caractéristiques Esthétiques ou Spécifiques": {
+        "Esthétiques ou Spécifiques": {
             "Bioluminescence": "✨💫",
             "Biomimétisme": "🦎🎭",
             "Camouflage": "🦎🌿"
