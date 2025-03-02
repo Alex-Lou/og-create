@@ -97,11 +97,11 @@
   }
   
   .coin-amount {
-    color: #2D96A4;
+    color: #d8d8d8;
     font-family: 'BenjaminFranklin', Arial;
     font-size: 18px;
     font-weight: bold;
-    text-shadow: 0 0 10px rgba(45, 150, 164, 0.3);
+    text-shadow: 0 0 10px rgba(70, 91, 94, 0.975);
   }
   
   /* Styles du modal */

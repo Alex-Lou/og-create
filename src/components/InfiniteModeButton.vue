@@ -19,7 +19,7 @@
           font-family="BenjaminFranklin, Arial" 
           font-size="40" 
           font-weight="bold" 
-          fill="#2D96A4" 
+          fill="#D8D8D8" 
           text-anchor="middle"
           letter-spacing="6"
           class="infinite-text"

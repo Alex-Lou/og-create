@@ -48,7 +48,7 @@ header {
     display: flex;
     align-items: center;
     justify-content: flex-start;
-    background-color: #2A2A2A;
+    background-color: #000000;
     padding: 0.5rem 1rem;
 }
 
@@ -262,7 +262,7 @@ header .logo {
 /* Titre */
 header h1 {
     text-align: left;
-    background: linear-gradient(90deg, #4dd0e1, #00acc1, #ff7f00, #ff0000);
+    background: linear-gradient(90deg, #3d3d3d, #787d7d, #9a9a9a, #ffffff);
     background-size: 400% 400%;
     -webkit-background-clip: text;
     background-clip: text;

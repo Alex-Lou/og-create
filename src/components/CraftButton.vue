@@ -14,7 +14,7 @@
         font-family="BenjaminFranklin, Arial" 
         font-size="40" 
         font-weight="bold" 
-        fill="#2D96A4"
+        fill="#D8D8D8"
         text-anchor="middle"
         letter-spacing="6"
         class="craft-text"
@@ -72,7 +72,7 @@ export default {
 }
 
 .craft-button:hover .craft-text {
-  fill: #b8d4f5; /* Couleur plus claire au survol */
+  fill: #ebebeb; /* Couleur plus claire au survol */
   transition: fill 0.3s ease;
 }
 
