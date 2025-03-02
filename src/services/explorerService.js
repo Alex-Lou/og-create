@@ -129,46 +129,40 @@ const explorerService = {
   },
   
   // Compléter un boss (obtenir des récompenses)
-  async completeBoss(bossId, rewards = {}) {
-    try {
-      console.log(`Tentative de complétion du boss ${bossId} avec récompenses:`, rewards);
-      
-      // Utiliser la route standard avec les paramètres boss
-      const response = await axios.post(`/api/explorer/complete/${rewards.regionId}`, {
+async completeBoss(bossId, rewards = {}) {
+  try {
+    console.log(`Tentative de complétion du boss ${bossId} avec récompenses:`, rewards);
+    
+    // Utiliser la route standard avec les paramètres boss
+    const response = await axios.post(`/api/explorer/complete/${rewards.regionId}`, {
+      coins: rewards.coins || 500,
+      energy: rewards.energy || 10,
+      xp: rewards.xp || 1000,
+      isBossVictory: true,  // Ce paramètre est crucial
+      bossId: bossId,
+      bossRegionId: rewards.bossRegionId || 5  // ID de la région du boss
+    });
+    
+    console.log('Complétion de boss réussie, réponse:', response.data);
+    return response.data;
+  } catch (error) {
+    console.error(`Erreur lors de la complétion du boss ${bossId}:`, error);
+    
+    // Retourner une réponse simulée en cas d'erreur
+    const simulatedResponse = {
+      message: `Boss ${bossId} vaincu (simulation en cas d'erreur)`,
+      rewards: {
         coins: rewards.coins || 500,
         energy: rewards.energy || 10,
-        xp: rewards.xp || 1000,
-        isBossVictory: true,  // Ce paramètre est crucial
-        bossId: bossId,
-        bossRegionId: rewards.bossRegionId || 5 // Ajouter l'ID de la région du boss
-      });
-      
-      // Stocker en localStorage que ce boss a été vaincu
-      this.saveBossDefeatedStatus(bossId);
-      
-      console.log('Complétion de boss réussie, réponse:', response.data);
-      return response.data;
-    } catch (error) {
-      console.error(`Erreur lors de la complétion du boss ${bossId}:`, error);
-      
-      // Même en cas d'erreur, sauvegarder l'état vaincu du boss
-      this.saveBossDefeatedStatus(bossId);
-      
-      // Retourner une réponse simulée en cas d'erreur
-      const simulatedResponse = {
-        message: `Boss ${bossId} vaincu (simulation en cas d'erreur)`,
-        rewards: {
-          coins: rewards.coins || 500,
-          energy: rewards.energy || 10,
-          xp: rewards.xp || 1000
-        },
-        region_completed: rewards.regionId,
-        boss_defeated: true
-      };
-      console.log('Utilisation d\'une réponse simulée pour le boss:', simulatedResponse);
-      return simulatedResponse;
-    }
-  },
+        xp: rewards.xp || 1000
+      },
+      region_completed: rewards.regionId,
+      boss_defeated: true
+    };
+    console.log('Utilisation d\'une réponse simulée pour le boss:', simulatedResponse);
+    return simulatedResponse;
+  }
+},
 
   // Sauvegarder le statut vaincu d'un boss
   saveBossDefeatedStatus(bossId) {
