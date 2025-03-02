@@ -7,7 +7,13 @@ const explorerService = {
     try {
       const response = await axios.get('/api/progress/explorer/init');
       console.log('Initialisation Explorer réussie:', response.data);
-      return response.data;
+      
+      // Vérifier s'il y a des informations sur la map active
+      const currentMap = localStorage.getItem('current_map') || '1';
+      return {
+        ...response.data,
+        currentMap: parseInt(currentMap)
+      };
     } catch (error) {
       console.error('Erreur lors de l\'initialisation du mode Explorer:', error);
       
@@ -15,60 +21,96 @@ const explorerService = {
       return {
         energy: 10, 
         max_energy: 20,
-        next_energy_in: 0
+        next_energy_in: 0,
+        currentMap: 1
       };
     }
   },
   
-  // Récupérer la liste des régions
-  async getRegions() {
+  async getRegions(mapId = 1) {
     try {
+      // Toujours charger TOUTES les régions de la base de données
       const response = await axios.get('/api/explorer/regions');
-      console.log('Régions récupérées:', response.data.length);
+      console.log('Toutes les régions récupérées de la BDD:', response.data.length);
       
-      // Vérifier si un boss a été vaincu
-      const bossStatus = localStorage.getItem('bosses_defeated');
-      const defeatedBosses = bossStatus ? JSON.parse(bossStatus) : {};
+      // Puis filtrer localement selon la carte active
+      const filteredRegions = response.data.filter(region => {
+        if (mapId === 1) return region.id >= 1 && region.id <= 5;
+        if (mapId === 2) return region.id >= 6 && region.id <= 10;
+        return true;
+      });
       
-      // Mettre à jour les régions avec les informations des boss vaincus
-      const updatedRegions = response.data.map(region => {
-        // Si la région est un boss (ID 5 ou is_boss=true) et qu'il a été vaincu
-        if ((region.id === 5 || region.is_boss) && defeatedBosses[region.id]) {
+      console.log(`Régions filtrées pour carte ${mapId}:`, filteredRegions.length);
+      
+      // Assurer que les régions ont les bonnes propriétés explorerMapBackground
+      const regionsWithBackground = filteredRegions.map(region => {
+        // Enrichir les données avec explorerMapBackground et is_default si nécessaire
+        if (mapId === 1) {
           return {
             ...region,
-            completed: true,
-            visited: true
+            explorerMapBackground: "world-map.png",
+            is_default: region.id === 1 ? true : region.is_default
+          };
+        } else if (mapId === 2) {
+          return {
+            ...region,
+            explorerMapBackground: "world-map2.png",
+            is_default: region.id === 6 ? true : region.is_default
           };
         }
         return region;
       });
       
-      return updatedRegions;
-    } catch (error) {
-      console.error('Erreur lors de la récupération des régions:', error);
+      // Déboguer ce que nous avons obtenu
+      console.log(`Infos des régions pour carte ${mapId}:`, 
+        regionsWithBackground.map(r => ({ 
+          id: r.id, 
+          visited: r.visited, 
+          completed: r.completed,
+          is_default: r.is_default,
+          explorerMapBackground: r.explorerMapBackground
+        }))
+      );
       
-      // Retourner des régions par défaut en cas d'erreur
-      return [
-        {
-          id: 1,
-          name: "Forêt Primordiale",
-          description: "Une forêt ancienne pleine de secrets.",
-          position_x: 25,
-          position_y: 30,
-          is_default: true,
+      return regionsWithBackground;
+    } catch (error) {
+      console.error(`Erreur lors de la récupération des régions pour la carte ${mapId}:`, error);
+      
+      // Fallback sur le JSON si la requête API échoue
+      try {
+        const jsonResponse = await axios.get('/data/regionChallenges.json');
+        const allRegions = jsonResponse.data.regions;
+        
+        // Filtrer les régions du JSON selon la carte
+        const jsonFilteredRegions = allRegions.filter(region => {
+          if (mapId === 1) return region.id >= 1 && region.id <= 5;
+          if (mapId === 2) return region.id >= 6 && region.id <= 10;
+          return true;
+        });
+        
+        // Enrichir avec les propriétés manquantes
+        const processedRegions = jsonFilteredRegions.map(region => ({
+          ...region,
           visited: false,
-          completed: false
-        },
-        // Ajoute d'autres régions par défaut si nécessaire
-      ];
+          completed: false,
+          progress: 0,
+          explorerMapBackground: mapId === 1 ? "world-map.png" : "world-map2.png",
+          is_default: (mapId === 1 && region.id === 1) || (mapId === 2 && region.id === 6)
+        }));
+        
+        return processedRegions;
+      } catch (jsonError) {
+        console.error("Erreur lors du fallback sur JSON:", jsonError);
+        return [];
+      }
     }
   },
   
   // Visiter une région (dépenser de l'énergie) avec gestion des erreurs 429
   async visitRegion(regionId, energyCost = 2, retryCount = 0) {
     try {
-      // Vérifier si la région est un boss par son ID
-      const isBoss = typeof regionId === 'number' && regionId === 5;
+      // Vérifier si la région est un boss
+      const isBoss = typeof regionId === 'number' && (regionId === 5 || regionId === 10);
       
       // Si c'est un boss, on ne dépense pas d'énergie
       if (isBoss) {
@@ -137,8 +179,8 @@ const explorerService = {
     try {
       console.log(`Tentative de complétion du boss ${bossId} avec récompenses:`, rewards);
       
-      // Dans le nouveau format, le bossId est l'ID de la région (typiquement 5)
-      const bossRegionId = rewards.bossRegionId || 5;
+      // Dans le nouveau format, le bossId est l'ID de la région (typiquement 5 ou 10)
+      const bossRegionId = rewards.bossRegionId || bossId;
       
       // Utiliser la route standard avec les paramètres boss
       const response = await axios.post(`/api/explorer/complete/${bossRegionId}`, {
@@ -146,12 +188,17 @@ const explorerService = {
         energy: rewards.energy || 10,
         xp: rewards.xp || 1000,
         isBossVictory: true,  // Ce paramètre est crucial
-        isBossRegion: true,  // Indiquer que c'est une région de boss
-        bossDefeated: true   // Marquer le boss comme vaincu
+        isBossRegion: true,   // Indiquer que c'est une région de boss
+        bossDefeated: true    // Marquer le boss comme vaincu
       });
       
       // Sauvegarder le statut du boss vaincu dans le localStorage
       this.saveBossDefeatedStatus(bossRegionId);
+      
+      // Si c'est le boss de la première map (ID 5), activer la deuxième map
+      if (bossRegionId === 5) {
+        this.unlockNextMap(2);
+      }
       
       console.log('Complétion de boss réussie, réponse:', response.data);
       return response.data;
@@ -169,6 +216,12 @@ const explorerService = {
         region_completed: rewards.regionId,
         boss_defeated: true
       };
+      
+      // Si c'est le boss de la première map (ID 5), activer la deuxième map même en cas d'erreur
+      if (bossId === 5 || rewards.bossRegionId === 5) {
+        this.unlockNextMap(2);
+      }
+      
       console.log('Utilisation d\'une réponse simulée pour le boss:', simulatedResponse);
       return simulatedResponse;
     }
@@ -203,6 +256,73 @@ const explorerService = {
       return !!parsed[bossId];
     } catch (error) {
       console.error("Erreur lors de la vérification du statut du boss:", error);
+      return false;
+    }
+  },
+  
+  // Nouvelle fonction: Débloquer la carte suivante
+  unlockNextMap(mapId) {
+    try {
+      // Sauvegarder la map active
+      localStorage.setItem('current_map', mapId.toString());
+      
+      // Sauvegarder dans l'historique des maps débloquées
+      const unlockedMaps = localStorage.getItem('unlocked_maps');
+      const maps = unlockedMaps ? JSON.parse(unlockedMaps) : {};
+      
+      maps[mapId] = true;
+      localStorage.setItem('unlocked_maps', JSON.stringify(maps));
+      
+      console.log(`Map ${mapId} débloquée et activée`);
+      return true;
+    } catch (error) {
+      console.error("Erreur lors du déblocage de la map:", error);
+      return false;
+    }
+  },
+  
+  // Nouvelle fonction: Vérifier si une map est débloquée
+  isMapUnlocked(mapId) {
+    try {
+      // La première map est toujours débloquée
+      if (mapId === 1) return true;
+      
+      const unlockedMaps = localStorage.getItem('unlocked_maps');
+      if (!unlockedMaps) return false;
+      
+      const maps = JSON.parse(unlockedMaps);
+      return !!maps[mapId];
+    } catch (error) {
+      console.error("Erreur lors de la vérification du statut de la map:", error);
+      return mapId === 1; // La première map est toujours débloquée par défaut
+    }
+  },
+  
+  // Nouvelle fonction: Obtenir la map active
+  getCurrentMap() {
+    try {
+      const currentMap = localStorage.getItem('current_map');
+      return currentMap ? parseInt(currentMap) : 1;
+    } catch (error) {
+      console.error("Erreur lors de la récupération de la map active:", error);
+      return 1; // Par défaut, retourner la première map
+    }
+  },
+  
+  // Nouvelle fonction: Changer la map active
+  setCurrentMap(mapId) {
+    try {
+      // Vérifier d'abord si la map est débloquée
+      if (!this.isMapUnlocked(mapId)) {
+        console.warn(`Tentative de définir une map non débloquée: ${mapId}`);
+        return false;
+      }
+      
+      localStorage.setItem('current_map', mapId.toString());
+      console.log(`Map active changée pour: ${mapId}`);
+      return true;
+    } catch (error) {
+      console.error("Erreur lors du changement de map:", error);
       return false;
     }
   },
@@ -263,15 +383,23 @@ const explorerService = {
   },
   
   // Rafraîchir le statut des régions pour l'utilisateur actuel
-  async refreshRegionStatus() {
+  async refreshRegionStatus(mapId = null) {
     try {
       console.log('Rafraîchissement du statut des régions');
       const response = await axios.get('/api/explorer/regions/status');
       
+      // Si mapId est spécifié, ne retourner que les régions de cette map
+      const currentMapId = mapId || this.getCurrentMap();
+      const mapRegions = response.data.filter(region => {
+        if (currentMapId === 1) return region.id >= 1 && region.id <= 5;
+        if (currentMapId === 2) return region.id >= 6 && region.id <= 10;
+        return true; // Par défaut, montrer toutes les régions
+      });
+      
       // Ajouter des informations sur les boss vaincus
-      const updatedStatus = response.data.map(region => {
+      const updatedStatus = mapRegions.map(region => {
         // Si c'est la région du boss et qu'il a été vaincu
-        if ((region.id === 5 || region.is_boss) && this.isBossDefeated(region.id)) {
+        if (region.is_boss && this.isBossDefeated(region.id)) {
           return {
             ...region,
             completed: true,
