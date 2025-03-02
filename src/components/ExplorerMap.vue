@@ -330,40 +330,65 @@ export default {
   }
 },
     
-    async loadRegionChallenges() {
-      try {
-        const response = await axios.get('/data/regionChallenges.json');
-        const regionChallengesData = response.data;
-        const challenges = {};
-        regionChallengesData.regions.forEach(region => {
-          challenges[region.id] = {
-            npcImage: region.npcImage,
-            npcPosition: region.npcPosition || 'left',
-            dialog: region.dialog,
-            interactions: region.interactions || [],
-            requiredElements: region.requiredElements,
-            background: region.background || 'forrest-bg.gif',
-            availableElements: region.availableElements || [],
-            elementsWithGifs: region.elementsWithGifs || [],
-            actionText: region.actionText,
-            rewardCoins: region.rewardCoins,
-            rewardXp: region.rewardXp,
-            unlockHint: region.unlockHint,
-            // Possibilité d'ajouter d'autres propriétés, notamment pour les défis de boss
-            bossCombatRules: region.bossCombatRules || null,
-            maxHealth: region.maxHealth || null,
-            damagePerElement: region.damagePerElement || null
-          };
+async loadRegionChallenges() {
+  try {
+    const response = await axios.get('/data/regionChallenges.json');
+    const regionChallengesData = response.data;
+    const challenges = {};
+    
+    // Traiter toutes les régions (normales et boss) ensemble
+    regionChallengesData.regions.forEach(region => {
+      challenges[region.id] = {
+        npcImage: region.is_boss ? region.bossImage : region.npcImage,
+        npcPosition: region.npcPosition || 'left',
+        dialog: region.dialog,
+        interactions: region.interactions || [],
+        requiredElements: region.requiredElements,
+        background: region.background || 'forrest-bg.gif',
+        availableElements: region.availableElements || [],
+        elementsWithGifs: region.elementsWithGifs || [],
+        actionText: region.actionText,
+        rewardCoins: region.rewardCoins,
+        rewardXp: region.rewardXp,
+        unlockHint: region.unlockHint,
+        // Propriétés spécifiques au boss
+        is_boss: region.is_boss || false,
+        bossCombatRules: region.bossCombatRules || null,
+        maxHealth: region.maxHealth || null,
+        damagePerElement: region.damagePerElement || null,
+        bossImage: region.bossImage || null,
+        bossPosition: region.bossPosition || 'center',
+        trigger_after_region: region.trigger_after_region || null
+      };
+      
+      // Si c'est un boss, l'ajouter aussi à this.bosses pour la compatibilité avec le code existant
+      if (region.is_boss) {
+        if (!this.bosses) this.bosses = [];
+        this.bosses.push({
+          id: region.id,
+          name: region.name,
+          trigger_after_region: region.trigger_after_region,
+          bossImage: region.bossImage,
+          bossPosition: region.bossPosition,
+          dialog: region.dialog,
+          requiredElements: region.requiredElements,
+          availableElements: region.availableElements,
+          elementsWithGifs: region.elementsWithGifs,
+          actionText: region.actionText,
+          rewardCoins: region.rewardCoins,
+          rewardXp: region.rewardXp,
+          damagePerElement: region.damagePerElement,
+          bossCombatRules: region.bossCombatRules
         });
-        this.regionChallenges = challenges;
-        if (regionChallengesData.bosses && regionChallengesData.bosses.length > 0) {
-          this.bosses = regionChallengesData.bosses;
-        }
-      } catch (error) {
-        console.error('Erreur lors du chargement des défis de régions:', error);
-        this.setupDefaultChallenges();
       }
-    },
+    });
+    
+    this.regionChallenges = challenges;
+  } catch (error) {
+    console.error('Erreur lors du chargement des défis de régions:', error);
+    this.setupDefaultChallenges();
+  }
+},
     
     setupDefaultChallenges() {
       this.regionChallenges = {
@@ -446,9 +471,28 @@ export default {
     },
     
     checkBossTrigger(regionId) {
-      if (!this.bosses || this.bosses.length === 0) return null;
-      return this.bosses.find(boss => boss.trigger_after_region === regionId);
-    },
+  const bossRegion = this.regions.find(r => r.is_boss && r.trigger_after_region === regionId);
+  if (bossRegion) {
+    // Pour compatibilité avec le code existant, créer un objet "boss" à partir de la région
+    return {
+      id: bossRegion.id,
+      name: bossRegion.name,
+      trigger_after_region: bossRegion.trigger_after_region,
+      bossImage: bossRegion.bossImage || this.regionChallenges[bossRegion.id]?.bossImage,
+      bossPosition: bossRegion.bossPosition || this.regionChallenges[bossRegion.id]?.bossPosition || 'center',
+      dialog: bossRegion.dialog,
+      requiredElements: bossRegion.requiredElements,
+      availableElements: bossRegion.availableElements,
+      elementsWithGifs: bossRegion.elementsWithGifs,
+      actionText: bossRegion.actionText,
+      rewardCoins: bossRegion.rewardCoins,
+      rewardXp: bossRegion.rewardXp,
+      damagePerElement: this.regionChallenges[bossRegion.id]?.damagePerElement,
+      bossCombatRules: this.regionChallenges[bossRegion.id]?.bossCombatRules
+    };
+  }
+  return null;
+},
     
     closeNpcDialog() {
       this.showNpcDialog = false;
@@ -456,51 +500,51 @@ export default {
     
     async startCraftChallenge(region) {
   try {
-    // Cas spécial: si on clique directement sur la région du boss (région 5)
-    if (region.id === 5) {
-      // On simule le même comportement que lorsqu'on termine la région 4
-      const triggeredBoss = this.checkBossTrigger(4); // On utilise 4 car c'est la région qui trigger le boss
-      
-      if (triggeredBoss) {
-        this.currentBoss = triggeredBoss;
-        this.currentChallenge = triggeredBoss;
-        this.showNpcDialog = false;
-        this.showCraftModal = true;
-        
-        // Marquer la région du boss comme visitée
-        const bossRegion = this.regions.find(r => r.id === 5);
-        if (bossRegion && !bossRegion.visited) {
-          bossRegion.visited = true;
-          explorerService.visitRegion(bossRegion.id).catch(err => {
-            console.error("Erreur lors de la visite de la région du boss:", err);
-          });
-        }
-        return;
-      }
-    }
-    
-    // Traitement normal pour les régions standards ou les boss explicites
-    const isBoss = typeof region.id === 'string' && region.id.startsWith('boss-');
-    if (isBoss) {
-      const bossId = parseInt(region.id.split('-')[1]);
-      const bossData = this.bosses.find(b => b.id === bossId);
-      if (bossData) {
-        this.currentBoss = bossData;
-        this.currentChallenge = bossData;
-        this.showNpcDialog = false;
-        this.showCraftModal = true;
-      }
-    } else {
-      const result = await explorerService.visitRegion(region.id);
-      this.energy = result.energy;
-      this.currentChallenge = this.regionChallenges[region.id] || {
-        requiredElements: [],
-        dialog: [],
-        unlockHint: "Essayez de combiner différents éléments pour découvrir le secret."
+    // Cas spécial: si c'est une région marquée comme boss
+    if (region.is_boss || region.id === 5) {
+      // S'il s'agit directement du boss
+      this.currentBoss = {
+        id: region.id,
+        name: region.name,
+        bossImage: region.bossImage || this.regionChallenges[region.id]?.bossImage,
+        bossPosition: region.bossPosition || this.regionChallenges[region.id]?.bossPosition,
+        dialog: region.dialog,
+        requiredElements: region.requiredElements,
+        availableElements: region.availableElements,
+        elementsWithGifs: region.elementsWithGifs,
+        actionText: region.actionText,
+        rewardCoins: region.rewardCoins,
+        rewardXp: region.rewardXp,
+        damagePerElement: this.regionChallenges[region.id]?.damagePerElement,
+        bossCombatRules: this.regionChallenges[region.id]?.bossCombatRules
       };
+      this.currentChallenge = this.regionChallenges[region.id] || this.currentBoss;
       this.showNpcDialog = false;
       this.showCraftModal = true;
+      
+      // Marquer la région du boss comme visitée si elle ne l'est pas déjà
+      if (!region.visited) {
+        region.visited = true;
+        explorerService.visitRegion(region.id).catch(err => {
+          console.error("Erreur lors de la visite de la région du boss:", err);
+        });
+      }
+      return;
     }
+    
+    // Vérifier si cette région déclenche un boss
+    // const triggeredBoss = this.checkBossTrigger(region.id);
+    
+    // Traitement normal pour les régions standards
+    const result = await explorerService.visitRegion(region.id);
+    this.energy = result.energy;
+    this.currentChallenge = this.regionChallenges[region.id] || {
+      requiredElements: [],
+      dialog: [],
+      unlockHint: "Essayez de combiner différents éléments pour découvrir le secret."
+    };
+    this.showNpcDialog = false;
+    this.showCraftModal = true;
   } catch (error) {
     console.error('Erreur lors du démarrage du défi:', error);
     alert(error.response?.data?.message || 'Une erreur est survenue lors du défi');

@@ -32,8 +32,8 @@ const explorerService = {
       
       // Mettre à jour les régions avec les informations des boss vaincus
       const updatedRegions = response.data.map(region => {
-        // Si la région est celle du boss (ID 5) et qu'il a été vaincu
-        if (region.id === 5 && defeatedBosses[1]) { // Ici, 1 est l'ID du boss
+        // Si la région est un boss (ID 5 ou is_boss=true) et qu'il a été vaincu
+        if ((region.id === 5 || region.is_boss) && defeatedBosses[region.id]) {
           return {
             ...region,
             completed: true,
@@ -67,10 +67,13 @@ const explorerService = {
   // Visiter une région (dépenser de l'énergie) avec gestion des erreurs 429
   async visitRegion(regionId, energyCost = 2, retryCount = 0) {
     try {
-      // Si c'est un ID de boss, pas besoin de faire une requête API
-      if (typeof regionId === 'string' && regionId.startsWith('boss-')) {
+      // Vérifier si la région est un boss par son ID
+      const isBoss = typeof regionId === 'number' && regionId === 5;
+      
+      // Si c'est un boss, on ne dépense pas d'énergie
+      if (isBoss) {
         return {
-          energy: 10, // On ne dépense pas d'énergie pour les boss
+          energy: 10,
           message: "Combat de boss commencé"
         };
       }
@@ -107,7 +110,8 @@ const explorerService = {
         energy: rewards.energy || 5,
         xp: rewards.xp || 100,
         hasBoss: rewards.hasBoss || false,
-        bossDefeated: rewards.bossDefeated || false
+        bossDefeated: rewards.bossDefeated || false,
+        isBossRegion: rewards.isBossRegion || false
       });
       console.log('Complétion de région réussie, réponse:', response.data);
       return response.data;
@@ -129,40 +133,46 @@ const explorerService = {
   },
   
   // Compléter un boss (obtenir des récompenses)
-async completeBoss(bossId, rewards = {}) {
-  try {
-    console.log(`Tentative de complétion du boss ${bossId} avec récompenses:`, rewards);
-    
-    // Utiliser la route standard avec les paramètres boss
-    const response = await axios.post(`/api/explorer/complete/${rewards.regionId}`, {
-      coins: rewards.coins || 500,
-      energy: rewards.energy || 10,
-      xp: rewards.xp || 1000,
-      isBossVictory: true,  // Ce paramètre est crucial
-      bossId: bossId,
-      bossRegionId: rewards.bossRegionId || 5  // ID de la région du boss
-    });
-    
-    console.log('Complétion de boss réussie, réponse:', response.data);
-    return response.data;
-  } catch (error) {
-    console.error(`Erreur lors de la complétion du boss ${bossId}:`, error);
-    
-    // Retourner une réponse simulée en cas d'erreur
-    const simulatedResponse = {
-      message: `Boss ${bossId} vaincu (simulation en cas d'erreur)`,
-      rewards: {
+  async completeBoss(bossId, rewards = {}) {
+    try {
+      console.log(`Tentative de complétion du boss ${bossId} avec récompenses:`, rewards);
+      
+      // Dans le nouveau format, le bossId est l'ID de la région (typiquement 5)
+      const bossRegionId = rewards.bossRegionId || 5;
+      
+      // Utiliser la route standard avec les paramètres boss
+      const response = await axios.post(`/api/explorer/complete/${bossRegionId}`, {
         coins: rewards.coins || 500,
         energy: rewards.energy || 10,
-        xp: rewards.xp || 1000
-      },
-      region_completed: rewards.regionId,
-      boss_defeated: true
-    };
-    console.log('Utilisation d\'une réponse simulée pour le boss:', simulatedResponse);
-    return simulatedResponse;
-  }
-},
+        xp: rewards.xp || 1000,
+        isBossVictory: true,  // Ce paramètre est crucial
+        isBossRegion: true,  // Indiquer que c'est une région de boss
+        bossDefeated: true   // Marquer le boss comme vaincu
+      });
+      
+      // Sauvegarder le statut du boss vaincu dans le localStorage
+      this.saveBossDefeatedStatus(bossRegionId);
+      
+      console.log('Complétion de boss réussie, réponse:', response.data);
+      return response.data;
+    } catch (error) {
+      console.error(`Erreur lors de la complétion du boss ${bossId}:`, error);
+      
+      // Retourner une réponse simulée en cas d'erreur
+      const simulatedResponse = {
+        message: `Boss ${bossId} vaincu (simulation en cas d'erreur)`,
+        rewards: {
+          coins: rewards.coins || 500,
+          energy: rewards.energy || 10,
+          xp: rewards.xp || 1000
+        },
+        region_completed: rewards.regionId,
+        boss_defeated: true
+      };
+      console.log('Utilisation d\'une réponse simulée pour le boss:', simulatedResponse);
+      return simulatedResponse;
+    }
+  },
 
   // Sauvegarder le statut vaincu d'un boss
   saveBossDefeatedStatus(bossId) {
@@ -176,14 +186,6 @@ async completeBoss(bossId, rewards = {}) {
       
       // Sauvegarder
       localStorage.setItem('bosses_defeated', JSON.stringify(defeatedBosses));
-      
-      // Compléter également explicitement la région du boss (ID 5)
-      this.completeRegion(5, {
-        coins: 0,  // Pas de récompenses supplémentaires
-        energy: 0,
-        xp: 0,
-        isBossRegion: true
-      }).catch(err => console.error("Erreur lors de la complétion de la région du boss:", err));
       
       console.log(`Boss ${bossId} marqué comme vaincu dans le localStorage`);
     } catch (error) {
@@ -234,31 +236,31 @@ async completeBoss(bossId, rewards = {}) {
   },
 
   // Synchroniser les données des régions depuis le JSON vers la base de données
-async syncRegions() {
-  try {
-    console.log('Tentative de synchronisation des régions avec le JSON');
-    const response = await axios.post('/api/explorer/sync-regions');
-    console.log('Synchronisation des régions réussie:', response.data);
-    return response.data;
-  } catch (error) {
-    console.error('Erreur lors de la synchronisation des régions:', error);
-    // Rien à retourner en cas d'erreur, simplement logger l'erreur
-    throw new Error('Impossible de synchroniser les régions');
-  }
-},
+  async syncRegions() {
+    try {
+      console.log('Tentative de synchronisation des régions avec le JSON');
+      const response = await axios.post('/api/explorer/sync-regions');
+      console.log('Synchronisation des régions réussie:', response.data);
+      return response.data;
+    } catch (error) {
+      console.error('Erreur lors de la synchronisation des régions:', error);
+      // Rien à retourner en cas d'erreur, simplement logger l'erreur
+      throw new Error('Impossible de synchroniser les régions');
+    }
+  },
 
-// Synchroniser les éléments découverts par les utilisateurs
-async syncDiscoveredElements() {
-  try {
-    console.log('Tentative de synchronisation des éléments découverts');
-    const response = await axios.post('/api/explorer/sync-discovered-elements');
-    console.log('Synchronisation des éléments découverts réussie:', response.data);
-    return response.data;
-  } catch (error) {
-    console.error('Erreur lors de la synchronisation des éléments découverts:', error);
-    throw new Error('Impossible de synchroniser les éléments découverts');
-  }
-},
+  // Synchroniser les éléments découverts par les utilisateurs
+  async syncDiscoveredElements() {
+    try {
+      console.log('Tentative de synchronisation des éléments découverts');
+      const response = await axios.post('/api/explorer/sync-discovered-elements');
+      console.log('Synchronisation des éléments découverts réussie:', response.data);
+      return response.data;
+    } catch (error) {
+      console.error('Erreur lors de la synchronisation des éléments découverts:', error);
+      throw new Error('Impossible de synchroniser les éléments découverts');
+    }
+  },
   
   // Rafraîchir le statut des régions pour l'utilisateur actuel
   async refreshRegionStatus() {
@@ -269,7 +271,7 @@ async syncDiscoveredElements() {
       // Ajouter des informations sur les boss vaincus
       const updatedStatus = response.data.map(region => {
         // Si c'est la région du boss et qu'il a été vaincu
-        if (region.id === 5 && this.isBossDefeated(1)) { // 1 est l'ID du premier boss
+        if ((region.id === 5 || region.is_boss) && this.isBossDefeated(region.id)) {
           return {
             ...region,
             completed: true,
