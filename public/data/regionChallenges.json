@@ -136,7 +136,7 @@
       "actionText": "Affronter le gardien",
       "damagePerElement": {
         "Feu Magique": 20,
-        "Anneau de Pouvoir": 30,
+        "Anneau de Pouvoir": 50,
         "Vie": 25,
         "Brasier": 15,
         "Sort de Feu": 30

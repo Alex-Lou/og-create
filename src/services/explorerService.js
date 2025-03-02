@@ -232,6 +232,20 @@ async completeBoss(bossId, rewards = {}) {
       return { energy: 0, max_energy: 20 };
     }
   },
+
+  // Synchroniser les données des régions depuis le JSON vers la base de données
+async syncRegions() {
+  try {
+    console.log('Tentative de synchronisation des régions avec le JSON');
+    const response = await axios.post('/api/explorer/sync-regions');
+    console.log('Synchronisation des régions réussie:', response.data);
+    return response.data;
+  } catch (error) {
+    console.error('Erreur lors de la synchronisation des régions:', error);
+    // Rien à retourner en cas d'erreur, simplement logger l'erreur
+    throw new Error('Impossible de synchroniser les régions');
+  }
+},
   
   // Rafraîchir le statut des régions pour l'utilisateur actuel
   async refreshRegionStatus() {

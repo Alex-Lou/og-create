@@ -302,24 +302,33 @@ export default {
     },
     
     async loadExplorerData() {
-      try {
-        this.loading = true;
-        const [initData, regionsData] = await Promise.all([
-          explorerService.initExplorer(),
-          explorerService.getRegions()
-        ]);
-        this.energy = initData.energy;
-        this.maxEnergy = initData.max_energy || 20;
-        this.nextEnergyIn = initData.next_energy_in;
-        this.regions = regionsData;
-        await this.loadRegionChallenges();
-        this.startEnergyTimer();
-      } catch (error) {
-        console.error('Erreur lors du chargement des données Explorer:', error);
-      } finally {
-        this.loading = false;
-      }
-    },
+  try {
+    this.loading = true;
+    
+    // Essayer de synchroniser les données des régions avant tout
+    try {
+      await explorerService.syncRegions();
+      console.log('Synchronisation des régions effectuée');
+    } catch (syncError) {
+      console.warn('Synchronisation des régions échouée, utilisation des données existantes', syncError);
+    }
+    
+    const [initData, regionsData] = await Promise.all([
+      explorerService.initExplorer(),
+      explorerService.getRegions()
+    ]);
+    this.energy = initData.energy;
+    this.maxEnergy = initData.max_energy || 20;
+    this.nextEnergyIn = initData.next_energy_in;
+    this.regions = regionsData;
+    await this.loadRegionChallenges();
+    this.startEnergyTimer();
+  } catch (error) {
+    console.error('Erreur lors du chargement des données Explorer:', error);
+  } finally {
+    this.loading = false;
+  }
+},
     
     async loadRegionChallenges() {
       try {
