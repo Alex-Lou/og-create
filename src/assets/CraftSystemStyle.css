@@ -493,11 +493,12 @@
 
 .star-field-crafting .star {
   position: absolute;
-  width: 4px;
-  height: 4px;
+  width: .7px; /* Taille réduite */
+  height: .7px;
   border-radius: 50%;
   opacity: 0;
   animation: twinkle 3s infinite ease-in-out;
+  box-shadow: 0 0 4px 1px currentColor; /* Glow plus léger */
 }
 
 .star-field-crafting .star:nth-child(1) {
@@ -608,17 +609,18 @@
 @keyframes twinkle {
   0% {
     opacity: 0.3;
-    transform: scale(1);
+    transform: scale(.5);
   }
   50% {
     opacity: 1;
-    transform: scale(1.5);
+    transform: scale(.7); /* Moins d'agrandissement */
   }
   100% {
     opacity: 0.3;
-    transform: scale(1);
+    transform: scale(.5);
   }
 }
+
 
 
 .shooting-star {
