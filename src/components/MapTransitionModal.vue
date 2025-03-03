@@ -39,15 +39,15 @@
         <div class="rewards-grid">
           <div class="reward-item">
             <span class="reward-icon">{{ config.rewardIcons.coins }}</span>
-            <span class="reward-value">{{ rewards.coins }} {{ config.rewardText.coins }}</span>
+            <span class="reward-value">{{ safeRewards.coins }} {{ config.rewardText.coins }}</span>
           </div>
           <div class="reward-item">
             <span class="reward-icon">{{ config.rewardIcons.xp }}</span>
-            <span class="reward-value">{{ rewards.xp }} {{ config.rewardText.xp }}</span>
+            <span class="reward-value">{{ safeRewards.xp }} {{ config.rewardText.xp }}</span>
           </div>
           <div class="reward-item">
             <span class="reward-icon">{{ config.rewardIcons.energy }}</span>
-            <span class="reward-value">{{ rewards.energy }} {{ config.rewardText.energy }}</span>
+            <span class="reward-value">{{ safeRewards.energy }} {{ config.rewardText.energy }}</span>
           </div>
           <div class="reward-item">
             <span class="reward-icon">{{ config.rewardIcons.regionUnlocked }}</span>
@@ -65,6 +65,10 @@
 </template>
   
 <script>
+// Importations statiques des images de cartes pour éviter les erreurs
+import worldMap from '@/assets/maps/world-map.png';
+import worldMap2 from '@/assets/maps/world-map2.png';
+
 export default {
   name: 'MapTransitionModal',
   props: {
@@ -123,6 +127,10 @@ export default {
     }
   },
   computed: {
+    // S'assurer que les récompenses sont toujours valides, même si props.rewards est null
+    safeRewards() {
+      return this.rewards || { coins: 0, xp: 0, energy: 0 };
+    },
     effectiveBossName() {
       return this.bossName || 'Gardien des Ténèbres';
     },
@@ -130,15 +138,23 @@ export default {
       return this.config.narrativeTemplate.replace('{bossName}', this.effectiveBossName);
     },
     mapPreviewImage() {
-      // Utilise l'ID de map pour générer dynamiquement le chemin de l'image
+      // Utiliser une approche plus robuste pour le chargement des images
       const mapId = this.newMapId || 2; // Par défaut, map 2
+      
       try {
-        // Récupérer dynamiquement l'image de la map
-        return require(`@/assets/maps/world-map${mapId}.png`);
+        // Utiliser les imports statiques pour les cas connus
+        if (mapId === 1) {
+          return worldMap;
+        } else if (mapId === 2) {
+          return worldMap2;
+        } else {
+          // Pour les autres maps, tenter le require dynamique
+          return require(`@/assets/maps/world-map${mapId}.png`);
+        }
       } catch (e) {
         console.error(`Impossible de charger l'image pour la map ${mapId}:`, e);
-        // Image de fallback si celle demandée n'existe pas
-        return require('@/assets/maps/world-map.png');
+        // Fallback sur la première map
+        return worldMap;
       }
     },
     mapName() {
@@ -148,6 +164,7 @@ export default {
   },
   methods: {
     continueToNewMap() {
+      console.log("Émission de l'événement continue-to-new-map avec mapId:", this.newMapId);
       this.$emit('continue-to-new-map', this.newMapId);
     }
   }
