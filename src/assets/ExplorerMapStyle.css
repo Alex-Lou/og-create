@@ -216,6 +216,37 @@
   10%, 30%, 50%, 70%, 90% { transform: translateX(-5px); }
   20%, 40%, 60%, 80% { transform: translateX(5px); }
 }
+/* Style pour les régions de boss */
+.region-marker.boss-region {
+  z-index: 11; /* S'assurer que les boss sont au-dessus des autres régions */
+}
+
+/* Style pour l'icône de boss */
+.region-marker .boss-icon {
+  position: absolute;
+  top: -5px;
+  left: -5px;
+  width: 60px; /* Ajustez la taille selon vos besoins */
+  height: 60px;
+  z-index: 12;
+  filter: drop-shadow(0 0 3px rgba(0, 0, 0, 0.5)); /* Ombre légère pour mieux se démarquer */
+  transition: transform 0.2s ease-in-out;
+}
+
+/* Style pour la coche verte (SVG de région complétée) */
+.region-marker svg {
+  width: 80%;
+  height: 80%;
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 15; /* Plus élevé que l'icône du boss pour être au-dessus */
+}
+
+/* Animation au survol de l'icône de boss */
+.region-marker:hover .boss-icon {
+  transform: scale(1.9);
+}
 
 .shake-animation {
   animation: shake 0.5s cubic-bezier(.36,.07,.19,.97) both;
