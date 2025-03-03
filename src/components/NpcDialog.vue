@@ -1,72 +1,69 @@
 <template>
   <div class="npc-dialog-overlay" @click.self="closeDialog">
     <div class="npc-dialog-container">
+      <!-- Affichage de l'introduction de la région -->
       <div v-if="showIntro" class="region-intro">
-        <h3>{{ regionData.name }}</h3>
-        <p>{{ regionData.description || "Une région mystérieuse à explorer..." }}</p>
+        <h3>{{ regionData.name || 'Region inconnue' }}</h3>
+        <p>{{ regionData.description || defaultRegionDescription }}</p>
         
-        <div class="region-progress">
-          <div class="progress-label">Progression: {{ regionData.progress || 0 }}%</div>
+        <div class="region-progress" v-if="regionData.progress !== undefined">
+          <div class="progress-label">Progression: {{ regionData.progress }}%</div>
           <div class="progress-bar">
-            <div 
-              class="progress-fill" 
-              :style="{ width: `${regionData.progress || 0}%` }"
-            ></div>
+            <div class="progress-fill" :style="{ width: `${regionData.progress}%` }"></div>
           </div>
         </div>
 
         <div class="region-actions">
-          <button 
-            class="explore-btn" 
-            @click="startExploring"
-          >
-            Explorer
+          <button class="explore-btn" @click="startExploring">
+            {{ dynamicExploreButtonText }}
           </button>
-          <button @click="closeDialog" class="close-btn">Fermer</button>
+          <button @click="closeDialog" class="close-btn">
+            {{ dynamicCloseButtonText }}
+          </button>
         </div>
       </div>
 
+      <!-- Affichage du dialogue -->
       <div v-else class="npc-content">
-        <!-- Mode interaction pour plusieurs NPC -->
+        <!-- Mode interaction (plusieurs NPC) -->
         <div v-if="isInteractionMode" class="interaction-container" :class="{'reverse-layout': currentInteraction.position === 'right'}">
-          <!-- Image du NPC qui parle actuellement -->
           <div class="npc-image-container">
             <img :src="resolveNpcImage(currentInteraction.npcImage)" alt="NPC" class="npc-image" />
           </div>
-          
-          <!-- Contenu du dialogue -->
           <div class="dialog-content">
             <div class="dialog-bubble">
               <div class="speaker-indicator">
-                {{ currentInteraction.position === 'left' ? 'Sage de la forêt:' : 'Apprenti de la rivière:' }}
+                {{ getSpeakerIndicator(currentInteraction.position) }}
               </div>
               <p>{{ currentInteraction.text }}</p>
             </div>
           </div>
         </div>
         
-        <!-- Mode dialogue classique avec un seul NPC -->
-        <div v-else class="standard-dialog-container" :class="npcPosition === 'right' ? 'reverse-layout' : ''">
-          <div class="npc-image-container" :class="{ 'right-aligned': npcPosition === 'right' }">
-            <img :src="resolveNpcImage(npcImage)" alt="NPC" class="npc-image" />
+        <!-- Mode dialogue classique (un seul NPC) -->
+        <div v-else class="standard-dialog-container" :class="effectiveNpcPosition === 'right' ? 'reverse-layout' : ''">
+          <div class="npc-image-container" :class="{ 'right-aligned': effectiveNpcPosition === 'right' }">
+            <img :src="resolveNpcImage(effectiveNpcImage)" alt="NPC" class="npc-image" />
           </div>
           <div class="dialog-content">
             <div class="dialog-bubble">
-              <p v-if="dialogStep < dialogContent.length">{{ dialogContent[dialogStep] }}</p>
+              <p v-if="dialogStep < effectiveDialogContent.length">
+                {{ effectiveDialogContent[dialogStep] }}
+              </p>
             </div>
           </div>
         </div>
         
-        <!-- Boutons fixes positionnés dans le conteneur principal -->
+        <!-- Boutons de navigation et action -->
         <div class="dialog-buttons-container">
           <div class="dialog-buttons-center">
             <button 
-              v-if="(isInteractionMode && interactionStep < regionData.interactions.length - 1) || 
-                  (!isInteractionMode && dialogStep < dialogContent.length - 1)" 
-              @click="isInteractionMode ? nextInteractionStep() : nextStep()" 
+              v-if="(isInteractionMode && interactionStep < regionData.interactions.length - 1) ||
+                     (!isInteractionMode && dialogStep < effectiveDialogContent.length - 1)"
+              @click="isInteractionMode ? nextInteractionStep() : nextStep()"
               class="next-btn"
             >
-              Suivant
+              {{ dynamicNextButtonText }}
             </button>
             <button 
               v-else 
@@ -74,10 +71,14 @@
               class="action-btn"
               :disabled="!canStartChallenge"
             >
-              {{ actionButtonText }} 
-              <span v-if="energyCost > 0" class="energy-cost">⚡ {{ energyCost }}</span>
+              {{ effectiveActionButtonText }} 
+              <span v-if="effectiveEnergyCost > 0" class="energy-cost">
+                ⚡ {{ effectiveEnergyCost }}
+              </span>
             </button>
-            <button @click="closeDialog" class="close-btn">Fermer</button>
+            <button @click="closeDialog" class="close-btn">
+              {{ dynamicCloseButtonText }}
+            </button>
           </div>
         </div>
       </div>
@@ -89,50 +90,61 @@
 export default {
   name: 'NpcDialog',
   props: {
-    npcImage: {
-      type: String,
-      default: 'npc1.png'
-    },
-    npcPosition: {
-      type: String,
-      default: 'left'
-    },
-    dialogContent: {
-      type: Array,
-      default: () => ['Bonjour voyageur ! Bienvenue dans cette région.']
-    },
-    regionData: {
-      type: Object,
-      default: () => ({})
-    },
-    actionButtonText: {
-      type: String,
-      default: 'Commencer à crafter'
-    },
-    energyCost: {
-      type: Number,
-      default: 2
-    },
-    currentEnergy: {
-      type: Number,
-      default: 0
-    }
+    npcImage: { type: String, default: null },
+    npcPosition: { type: String, default: null },
+    dialogContent: { type: Array, default: () => [] },
+    regionData: { type: Object, default: () => ({}) },
+    actionButtonText: { type: String, default: null },
+    energyCost: { type: Number, default: null },
+    currentEnergy: { type: Number, default: 0 }
   },
   computed: {
+    // Ces computed renvoient d'abord les données de regionData, sinon les props,
+    // et enfin les valeurs par défaut dynamiques
+    effectiveNpcImage() {
+      return (this.regionData && this.regionData.npcImage) || this.npcImage || this.getDefaultNpcConfig().npcImage;
+    },
+    effectiveNpcPosition() {
+      return (this.regionData && this.regionData.npcPosition) || this.npcPosition || this.getDefaultNpcConfig().npcPosition;
+    },
+    effectiveDialogContent() {
+      return (this.regionData && this.regionData.dialog && this.regionData.dialog.length > 0)
+        ? this.regionData.dialog
+        : (this.dialogContent.length ? this.dialogContent : this.getDefaultNpcConfig().dialogContent);
+    },
+    effectiveActionButtonText() {
+      return (this.regionData && this.regionData.actionText) || this.actionButtonText || this.getDefaultNpcConfig().actionButtonText;
+    },
+    effectiveEnergyCost() {
+      return (this.regionData && this.regionData.energyCost !== undefined)
+        ? this.regionData.energyCost
+        : (this.energyCost !== null ? this.energyCost : this.getDefaultNpcConfig().energyCost);
+    },
     canStartChallenge() {
-      // Si c'est un boss (energyCost est 0), on peut toujours commencer
-      if (this.energyCost === 0) return true;
-      // Sinon, vérifier si on a assez d'énergie
-      return this.currentEnergy >= this.energyCost;
+      // Si le coût est 0, c'est un boss par exemple, et on peut toujours commencer
+      if (this.effectiveEnergyCost === 0) return true;
+      return this.currentEnergy >= this.effectiveEnergyCost;
     },
     isInteractionMode() {
       return this.regionData.interactions && this.regionData.interactions.length > 0;
     },
     currentInteraction() {
-      if (this.isInteractionMode && this.regionData.interactions) {
+      if (this.isInteractionMode) {
         return this.regionData.interactions[this.interactionStep] || {};
       }
       return {};
+    },
+    dynamicExploreButtonText() {
+      return this.regionData.exploreButtonText || 'Explorer';
+    },
+    dynamicCloseButtonText() {
+      return this.regionData.closeButtonText || 'Fermer';
+    },
+    dynamicNextButtonText() {
+      return this.regionData.nextButtonText || 'Suivant';
+    },
+    defaultRegionDescription() {
+      return this.regionData.defaultDescription || "Une région mystérieuse à explorer...";
     }
   },
   data() {
@@ -144,13 +156,31 @@ export default {
     };
   },
   methods: {
+    getDefaultNpcConfig() {
+      // Cette configuration pourrait être remplacée par un appel à un service de configuration
+      return {
+        npcImage: 'npc1.png',
+        npcPosition: 'left',
+        dialogContent: ['Bienvenue, explorateur ! Bienvenue dans cette région.'],
+        actionButtonText: 'Commencer à crafter',
+        energyCost: 2
+      };
+    },
     resolveNpcImage(imageName) {
       if (!imageName) return '';
-      
+      // Choix de dossier dynamique selon le préfixe de l'image
       if (imageName.startsWith('boss-')) {
         return require(`@/assets/explorer-boss/${imageName}`);
       } else {
         return require(`@/assets/npcs/${imageName}`);
+      }
+    },
+    getSpeakerIndicator(position) {
+      // On peut ici récupérer dynamiquement le nom du speaker depuis regionData ou un service de config
+      if (position === 'left') {
+        return this.regionData.leftSpeakerName || 'Sage de la forêt:';
+      } else {
+        return this.regionData.rightSpeakerName || 'Apprenti de la rivière:';
       }
     },
     startExploring() {
@@ -160,7 +190,7 @@ export default {
       this.interactionStep = 0;
     },
     nextStep() {
-      if (this.dialogStep < this.dialogContent.length - 1) {
+      if (this.dialogStep < this.effectiveDialogContent.length - 1) {
         this.dialogStep++;
       }
     },
@@ -182,7 +212,8 @@ export default {
         this.$emit('action', this.regionData);
         this.closeDialog();
       } else {
-        alert('Énergie insuffisante ! Attendez que votre énergie se régénère ou achetez-en plus.');
+        // Message d'erreur dynamique : peut être remplacé par un message provenant d'un service de config
+        alert(this.regionData.insufficientEnergyMessage || 'Énergie insuffisante ! Attendez que votre énergie se régénère ou achetez-en plus.');
       }
     }
   },

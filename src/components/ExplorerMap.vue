@@ -151,89 +151,97 @@
     />
 
     <!-- Modal de Victoire -->
-    <div v-if="showVictoryModal">
-      <!-- Modal pour victoire de boss -->
-      <div v-if="victoryRewards?.isBossReward" class="boss-victory-modal">
-        <div class="boss-victory">
-          <div class="boss-victory-header">
-            <!-- Image/Animation du boss vaincu avec chargement dynamique -->
-            <img
-              v-if="currentBoss"
-              :src="getBossDefeatedImage(currentBoss.id)"
-              alt="Boss vaincu"
-              class="boss-image"
-            />
-            <h2>Boss Vaincu !</h2>
-          </div>
-          
-          <!-- Message narratif -->
-          <p class="victory-message">
-            Félicitations ! Vous avez triomphé de <strong>{{ currentBoss ? currentBoss.name : 'le boss' }}</strong> après un combat épique.
-          </p>
-          
-          <!-- Récompenses obtenues -->
-          <div class="rewards-container">
-            <h3>Récompenses Obtenues :</h3>
-            <div class="reward-item" v-if="victoryRewards?.coins">
-              <span class="reward-icon">💰</span>
-              <span class="reward-value">{{ victoryRewards.coins }} Pièces</span>
-            </div>
-            <div class="reward-item" v-if="victoryRewards?.xp">
-              <span class="reward-icon">✨</span>
-              <span class="reward-value">{{ victoryRewards.xp }} XP</span>
-            </div>
-            <div class="reward-item" v-if="victoryRewards?.energy">
-              <span class="reward-icon">⚡</span>
-              <span class="reward-value">{{ victoryRewards.energy }} Énergie</span>
-            </div>
-            <div class="reward-item" v-if="victoryRewards?.bonus">
-              <span class="reward-icon">🎁</span>
-              <span class="reward-value">{{ victoryRewards.bonus }}</span>
-            </div>
-          </div>
-          
-          <!-- Message pour les nouvelles régions débloquées -->
-          <div class="next-steps" v-if="hasUnlockedRegions">
-            <p>
-              De nouvelles régions ont été débloquées ! Préparez-vous à explorer de nouveaux territoires et relever d'autres défis.
-            </p>
-          </div>
-          
-          <!-- Bouton pour continuer -->
-          <button class="continue-btn" @click="closeVictoryModal">Continuer</button>
+<div v-if="showVictoryModal">
+  <!-- Modal pour victoire de boss -->
+  <div v-if="victoryRewards?.isBossReward" class="boss-victory-modal">
+    <div class="boss-victory">
+      <div class="boss-victory-header">
+        <!-- Image/Animation du boss vaincu avec chargement dynamique -->
+        <img
+          v-if="currentBoss"
+          :src="getBossDefeatedImage(currentBoss.id)"
+          alt="Boss vaincu"
+          class="boss-image"
+        />
+        <h2>Boss Vaincu !</h2>
+      </div>
+      
+      <!-- Message narratif -->
+      <p class="victory-message">
+        Félicitations ! Vous avez triomphé de <strong>{{ currentBoss ? currentBoss.name : 'le boss' }}</strong> après un combat épique.
+      </p>
+      
+      <!-- Récompenses obtenues -->
+      <div class="rewards-container">
+        <h3>Récompenses Obtenues :</h3>
+        <div class="reward-item" v-if="victoryRewards?.coins">
+          <span class="reward-icon">💰</span>
+          <span class="reward-value">{{ victoryRewards.coins }} Pièces</span>
+        </div>
+        <div class="reward-item" v-if="victoryRewards?.xp">
+          <span class="reward-icon">✨</span>
+          <span class="reward-value">{{ victoryRewards.xp }} XP</span>
+        </div>
+        <div class="reward-item" v-if="victoryRewards?.energy">
+          <span class="reward-icon">⚡</span>
+          <span class="reward-value">{{ victoryRewards.energy }} Énergie</span>
+        </div>
+        <div class="reward-item" v-if="victoryRewards?.bonus">
+          <span class="reward-icon">🎁</span>
+          <span class="reward-value">{{ victoryRewards.bonus }}</span>
         </div>
       </div>
       
-      <!-- Modal pour victoire normale (régions non-boss) -->
-      <div v-else class="victory-modal">
-        <div class="victory-content">
-          <h2>Victoire !</h2>
-          <p>Félicitations, vous avez complété la quête: {{ selectedRegion.name }} !</p>
-          
-          <div class="rewards-container">
-            <h3>Récompenses obtenues :</h3>
-            <div class="reward-item" v-if="victoryRewards?.coins">
-              <span class="reward-icon">💰</span>
-              <span class="reward-value">{{ victoryRewards.coins }} Pièces</span>
-            </div>
-            <div class="reward-item" v-if="victoryRewards?.xp">
-              <span class="reward-icon">✨</span>
-              <span class="reward-value">{{ victoryRewards.xp }} XP</span>
-            </div>
-            <div class="reward-item" v-if="victoryRewards?.energy">
-              <span class="reward-icon">⚡</span>
-              <span class="reward-value">{{ victoryRewards.energy }} Énergie</span>
-            </div>
-          </div>
-          
-          <p class="unlock-message" v-if="hasUnlockedRegions">
-            Vous avez débloqué de nouvelles régions ! Partez les explorer !
-          </p>
-          
-          <button class="continue-btn" @click="closeVictoryModal">Continuer</button>
+      <!-- Message pour les nouvelles régions débloquées -->
+      <div class="next-steps" v-if="hasUnlockedRegions">
+        <p>
+          De nouvelles régions ont été débloquées ! Préparez-vous à explorer de nouveaux territoires et relever d'autres défis.
+        </p>
+      </div>
+      
+      <!-- Bouton pour continuer -->
+      <button class="continue-btn" @click="closeVictoryModal">Continuer</button>
+    </div>
+  </div>
+  
+  <!-- Modal pour victoire normale (régions non-boss) -->
+  <div v-else class="victory-modal">
+    <div class="victory-content">
+      <h2>Victoire !</h2>
+      
+      <!-- Affichage différent selon que la région a déjà été complétée ou non -->
+      <p v-if="victoryRewards?.alreadyCompleted">
+        Vous avez réussi le défi de {{ selectedRegion.name }} une nouvelle fois !
+        <br><span class="already-completed-message">Cette région avait déjà été complétée, aucune récompense n'a été attribuée.</span>
+      </p>
+      <p v-else>
+        Félicitations, vous avez complété la quête: {{ selectedRegion.name }} !
+      </p>
+      
+      <div class="rewards-container" v-if="!victoryRewards?.alreadyCompleted">
+        <h3>Récompenses obtenues :</h3>
+        <div class="reward-item" v-if="victoryRewards?.coins">
+          <span class="reward-icon">💰</span>
+          <span class="reward-value">{{ victoryRewards.coins }} Pièces</span>
+        </div>
+        <div class="reward-item" v-if="victoryRewards?.xp">
+          <span class="reward-icon">✨</span>
+          <span class="reward-value">{{ victoryRewards.xp }} XP</span>
+        </div>
+        <div class="reward-item" v-if="victoryRewards?.energy">
+          <span class="reward-icon">⚡</span>
+          <span class="reward-value">{{ victoryRewards.energy }} Énergie</span>
         </div>
       </div>
+      
+      <p class="unlock-message" v-if="hasUnlockedRegions && !victoryRewards?.alreadyCompleted">
+        Vous avez débloqué de nouvelles régions ! Partez les explorer !
+      </p>
+      
+      <button class="continue-btn" @click="closeVictoryModal">Continuer</button>
     </div>
+  </div>
+</div>
 
     <!-- Modal de transition entre cartes -->
     <MapTransitionModal
@@ -282,13 +290,13 @@ export default {
       unlockedMaps: [1],
       showExitConfirmationModal: false,
       
-      // Propriétés pour le dialogue NPC
+       // Propriétés pour le dialogue NPC (valeurs par défaut dynamiques)
       showNpcDialog: false,
       currentNpc: {
-        image: 'npc1.png',
-        position: 'left',
+        image: null,
+        position: null,
         dialog: [],
-        actionText: 'Commencer à crafter'
+        actionText: null
       },
       // Utilisation du JSON importé pour les défis des régions
       regionChallenges: {},
@@ -330,17 +338,14 @@ export default {
     },
 
     getCurrentEnergyCost() {
-  if (!this.selectedRegion || !this.selectedRegion.id) return 2; // Valeur par défaut
-  
-  // Vérifier si c'est un boss (qui ne coûte pas d'énergie)
-  if (this.selectedRegion.is_boss || this.selectedRegion.id === 5 || this.selectedRegion.id === 10) {
-    return 0;
-  }
-  
-  // Obtenir le coût d'énergie du challenge si disponible
-  const challenge = this.regionChallenges[this.selectedRegion.id];
-  return challenge?.energyCost || 2; // Utiliser 2 comme valeur par défaut si non spécifié
-},
+      if (!this.selectedRegion || !this.selectedRegion.id) return 2;
+      const challenge = this.regionChallenges[this.selectedRegion.id];
+      // Utiliser la valeur du challenge s’il existe, sinon celle de la région ou 2 par défaut
+      return (challenge && challenge.energyCost !== undefined)
+        ? challenge.energyCost
+        : (this.selectedRegion.energyCost || 2);
+    },
+
 
     confirmExit() {
       // Ferme le mode Explorer
@@ -423,24 +428,25 @@ export default {
     
     // Méthode pour charger les cartes débloquées
     loadUnlockedMaps() {
-      try {
-        // La première carte est toujours débloquée
-        const maps = [1];
-        
-        // Vérifier les autres cartes
-        for (let i = 2; i <= 3; i++) {
-          if (explorerService.isMapUnlocked(i)) {
-            maps.push(i);
-          }
-        }
-        
-        this.unlockedMaps = maps;
-        console.log('Cartes débloquées:', this.unlockedMaps);
-      } catch (error) {
-        console.error('Erreur lors du chargement des cartes débloquées:', error);
-        this.unlockedMaps = [1]; // Par défaut, seulement la première carte
-      }
-    },
+  try {
+    const unlockedMapsStr = localStorage.getItem('unlocked_maps');
+    let maps = [];
+    if (unlockedMapsStr) {
+      // On suppose que l'objet stocké ressemble à { "2": true, "3": true, ... }
+      const mapsObj = JSON.parse(unlockedMapsStr);
+      maps = Object.keys(mapsObj).map(Number).filter(id => mapsObj[id]);
+    }
+    // La première map est toujours débloquée
+    if (!maps.includes(1)) maps.push(1);
+    maps.sort((a, b) => a - b);
+    this.unlockedMaps = maps;
+    console.log('Cartes débloquées:', this.unlockedMaps);
+  } catch (error) {
+    console.error('Erreur lors du chargement des cartes débloquées:', error);
+    this.unlockedMaps = [1];
+  }
+},
+
     
     // Méthode pour charger les régions de la carte active
     async loadRegionsForCurrentMap() {
@@ -475,34 +481,37 @@ export default {
     },
     
     // Méthode pour obtenir l'image de la carte actuelle de manière dynamique
-getCurrentMapImage() {
-  console.log("Récupération de l'image de la carte", this.currentMapId);
-  console.log("Régions disponibles:", this.regions.length);
-  
+    getCurrentMapImage() {
   try {
-    // Si nous avons des régions pour cette carte
     if (this.regions.length > 0) {
-      // Trouver une région avec une explorerMapBackground définie
-      const regionWithBackground = this.regions.find(r => r.explorerMapBackground);
-      
-      if (regionWithBackground) {
-        console.log("Fond de carte trouvé:", regionWithBackground.explorerMapBackground);
-        return require(`@/assets/maps/${regionWithBackground.explorerMapBackground}`);
+      // Filtrer les régions appartenant à la map active
+      const regionsInCurrentMap = this.regions.filter(r => r.map_id === this.currentMapId);
+      if (regionsInCurrentMap.length > 0) {
+        // Prendre la première région qui possède une propriété explorerMapBackground
+        const regionWithBg = regionsInCurrentMap.find(r => r.explorerMapBackground);
+        if (regionWithBg && regionWithBg.explorerMapBackground) {
+          return require(`@/assets/maps/${regionWithBg.explorerMapBackground}`);
+        }
       }
-      
-      // Si aucune région n'a de background explicite, utiliser un nom par défaut basé sur l'ID de la carte
-      console.log("Utilisation du fond de carte par défaut pour l'ID:", this.currentMapId);
-      return require(`@/assets/maps/world-map${this.currentMapId}.png`);
-    } else {
-      // Si pas de régions, utiliser l'ID de carte pour déterminer l'image
-      console.log("Pas de régions, utilisation du fond de carte par défaut pour l'ID:", this.currentMapId);
-      return require(`@/assets/maps/world-map${this.currentMapId}.png`);
     }
+    // Si aucune région n’a fourni de background, utiliser une valeur par défaut dynamique
+    const defaultBg = this.getDefaultMapBackground(this.currentMapId);
+    return require(`@/assets/maps/${defaultBg}`);
   } catch (error) {
     console.error("Erreur lors du chargement de l'image de carte:", error);
     return require('@/assets/maps/world-map.png');
   }
 },
+getDefaultMapBackground(mapId) {
+  // Cette configuration pourrait provenir d'un fichier de config ou d'une API
+  const mapBackgrounds = {
+    1: 'world-map1.png',
+    2: 'world-map2.png',
+    3: 'world-map3.png'
+  };
+  return mapBackgrounds[mapId] || 'default-map.png';
+},
+
 
 // Méthode pour forcer le rechargement des régions
 async forceRegionsReload() {
@@ -559,20 +568,9 @@ async forceRegionsReload() {
     
     // Méthode utilitaire pour déterminer à quelle carte appartient une région
     getRegionMapId(region) {
-      if (!region) return 1;
-      
-      // Vérifier si la région a une propriété explorerMapBackground
-      if (region.explorerMapBackground) {
-        if (region.explorerMapBackground.includes('world-map2')) {
-          return 2;
-        } else {
-          return 1;
-        }
-      }
-      
-      // Sinon utiliser l'ID (≤ 5 = carte 1, > 5 = carte 2)
-      return region.id <= 5 ? 1 : 2;
-    },
+  return region.map_id || 1;
+},
+
     
     // Méthode pour obtenir l'image d'un boss vaincu de manière dynamique
     getBossDefeatedImage(bossId) {
@@ -662,29 +660,35 @@ async forceRegionsReload() {
 },
     
 setupDefaultChallenges() {
+  // Charge une configuration par défaut de challenge de façon dynamique
+  const defaultChallengeConfig = this.getDefaultChallengeConfig();
   this.regionChallenges = {
-    1: {
-      npcImage: 'npc1.png',
-      npcPosition: 'left',
-      dialog: [
-        "Bienvenue, explorateur !",
-        "Je crains que nous ayons rencontré un problème pour charger les défis.",
-        "Essaie de combiner les éléments fondamentaux pour avancer."
-      ],
-      requiredElements: ["Vie"],
-      availableElements: ["Eau", "Feu", "Terre", "Air"],
-      elementsWithGifs: ["Eau", "Feu", "Terre", "Air"],
-      background: null,
-      explorerMapBackground: "world-map.png",
-      actionText: "Commencer",
-      energyCost: 2,
-      energyReward: 5,
-      rewardCoins: 50,
-      rewardXp: 100,
-      unlockHint: "Essayez de combiner différents éléments"
-    }
+    1: defaultChallengeConfig
   };
 },
+getDefaultChallengeConfig() {
+  // Cette configuration pourrait être issue d'un fichier de config ou d'une API
+  return {
+    npcImage: 'npc1.png', // Ce chemin pourra être ajusté dynamiquement
+    npcPosition: 'left',
+    dialog: [
+      "Bienvenue, explorateur !",
+      "Un problème est survenu lors du chargement des défis. Veuillez réessayer."
+    ],
+    requiredElements: ["DefaultElement"],
+    availableElements: ["Element1", "Element2"],
+    elementsWithGifs: ["Element1", "Element2"],
+    background: null,
+    explorerMapBackground: this.getDefaultMapBackground(1),
+    actionText: "Commencer",
+    energyCost: 2,
+    energyReward: 5,
+    rewardCoins: 50,
+    rewardXp: 100,
+    unlockHint: "Essayez de combiner différents éléments"
+  };
+},
+
     
     startEnergyTimer() {
       if (this.energyTimer) {
@@ -774,7 +778,8 @@ setupDefaultChallenges() {
       this.showNpcDialog = false;
     },
     
-    async startCraftChallenge(region) {
+    // ExplorerMap.vue - dans la méthode startCraftChallenge
+async startCraftChallenge(region) {
   try {
     // Cas spécial: si c'est une région marquée comme boss
     if (region.is_boss || region.id === 5 || region.id === 10) {
@@ -803,11 +808,11 @@ setupDefaultChallenges() {
       // Marquer la région du boss comme visitée si elle ne l'est pas déjà
       if (!region.visited) {
         region.visited = true;
-        const energyCost = this.regionChallenges[region.id]?.energyCost || 2;
-console.log(`Région: ${region.id}, Coût d'énergie: ${energyCost}`);
-        explorerService.visitRegion(region.id).catch(err => {
+        try {
+          await explorerService.visitRegion(region.id);
+        } catch (err) {
           console.error("Erreur lors de la visite de la région du boss:", err);
-        });
+        }
       }
       return;
     }
@@ -817,12 +822,22 @@ console.log(`Région: ${region.id}, Coût d'énergie: ${energyCost}`);
     
     // Traitement normal pour les régions standards
     const result = await explorerService.visitRegion(region.id, energyCost);
+    
+    // Mettre à jour l'énergie (si la région est déjà complétée, aucun changement ne sera effectué)
     this.energy = result.energy;
+    
+    // Mettre à jour le challenge actuel
     this.currentChallenge = this.regionChallenges[region.id] || {
       requiredElements: [],
       dialog: [],
       unlockHint: "Essayez de combiner différents éléments pour découvrir le secret."
     };
+    
+    // Enregistrer si la région était déjà complétée (pour la gestion des récompenses)
+    if (result.alreadyCompleted) {
+      this.currentChallenge.alreadyCompleted = true;
+    }
+    
     this.showNpcDialog = false;
     this.showCraftModal = true;
   } catch (error) {
@@ -830,6 +845,7 @@ console.log(`Région: ${region.id}, Coût d'énergie: ${energyCost}`);
     alert(error.response?.data?.message || 'Une erreur est survenue lors du défi');
   }
 },
+
 
 handleCraftSuccess(craftedItem) {
   this.$emit('element-discovered', craftedItem);
@@ -839,19 +855,23 @@ handleTargetElementCreated(element) {
   console.log(`Élément cible créé: ${element}`);
 },
 
+// ExplorerMap.vue - dans la méthode handleChallengeCompleted
 handleChallengeCompleted({ region, isBoss }) {
   // Fermeture du modal de craft
   this.showCraftModal = false;
+  
   // Si le défi concernait un boss, déclencher la victoire du boss
   if (isBoss) {
     this.handleBossVictory();
     return;
   }
+  
   // Pour une région normale, mettre à jour son statut
   const regionData = this.regions.find(r => r.id === region.id);
   if (regionData) {
     const triggeredBoss = this.checkBossTrigger(region.id);
     const hasBoss = triggeredBoss !== null;
+    
     if (hasBoss) {
       regionData.visited = true;
       regionData.progress = 75;
@@ -859,17 +879,34 @@ handleChallengeCompleted({ region, isBoss }) {
       regionData.completed = true;
       regionData.progress = 100;
     }
-    const rewardCoins = this.regionChallenges[region.id]?.rewardCoins || 50;
-    const rewardXp = this.regionChallenges[region.id]?.rewardXp || 100;
-    const rewardEnergy = this.regionChallenges[region.id]?.energyReward || 5;
-    this.energy = Math.min(this.energy + rewardEnergy, this.maxEnergy);
+    
+    // Vérifier si la région était déjà complétée
+    const wasAlreadyCompleted = this.currentChallenge.alreadyCompleted;
+    
+    // Définir les récompenses, mais 0 si déjà complété
+    const rewardCoins = wasAlreadyCompleted ? 0 : (this.regionChallenges[region.id]?.rewardCoins || 50);
+    const rewardXp = wasAlreadyCompleted ? 0 : (this.regionChallenges[region.id]?.rewardXp || 100);
+    const rewardEnergy = wasAlreadyCompleted ? 0 : (this.regionChallenges[region.id]?.energyReward || 5);
+    
+    // Mettre à jour l'énergie seulement si la région n'était pas déjà complétée
+    if (!wasAlreadyCompleted) {
+      this.energy = Math.min(this.energy + rewardEnergy, this.maxEnergy);
+    }
+    
+    // Préparer les récompenses à afficher
     this.victoryRewards = {
       coins: rewardCoins,
       xp: rewardXp,
       energy: rewardEnergy,
-      hasBoss: hasBoss
+      hasBoss: hasBoss,
+      alreadyCompleted: wasAlreadyCompleted
     };
-    this.$emit('coins-updated', this.userCoins + rewardCoins);
+    
+    // Mettre à jour les pièces seulement si la région n'était pas déjà complétée
+    if (!wasAlreadyCompleted) {
+      this.$emit('coins-updated', this.userCoins + rewardCoins);
+    }
+    
     if (triggeredBoss) {
       this.currentBoss = triggeredBoss;
       this.showVictoryModal = true;
@@ -881,6 +918,7 @@ handleChallengeCompleted({ region, isBoss }) {
         !r.visited && 
         !r.completed
       );
+      
       let unlockedRegion = null;
       if (childRegions.length > 0) {
         const sortedChildren = [...childRegions].sort((a, b) => a.id - b.id);
@@ -888,11 +926,15 @@ handleChallengeCompleted({ region, isBoss }) {
         unlockedRegion = nextRegion;
         nextRegion.is_default = true;
       }
+      
       if (unlockedRegion) {
         this.victoryRewards.unlockedRegions.push(unlockedRegion.id);
       }
+      
       this.showVictoryModal = true;
     }
+    
+    // Appeler le service pour enregistrer la complétion de la région
     explorerService.completeRegion(regionData.id, {
       coins: rewardCoins,
       energy: rewardEnergy,
@@ -901,11 +943,14 @@ handleChallengeCompleted({ region, isBoss }) {
       bossDefeated: false
     }).then(response => {
       console.log('Réponse du service pour complétion de région:', response);
+      
+      // Si le serveur a retourné des récompenses, utiliser ces valeurs
       if (response && response.rewards) {
-        if (response.rewards.coins !== undefined && response.rewards.coins !== this.userCoins + rewardCoins) {
+        if (response.rewards.coins !== undefined && !wasAlreadyCompleted) {
           this.$emit('coins-updated', response.rewards.coins);
         }
-        if (response.rewards.energy !== undefined && response.rewards.energy !== this.energy) {
+        
+        if (response.rewards.energy !== undefined) {
           this.energy = response.rewards.energy;
         }
       }
@@ -915,6 +960,7 @@ handleChallengeCompleted({ region, isBoss }) {
   }
 },
 
+// 1. Modification de handleBossVictory() dans ExplorerMap.vue
 handleBossVictory() {
   if (!this.currentBoss) return;
   
@@ -928,6 +974,9 @@ handleBossVictory() {
   const bossId = this.currentBoss.id;
   
   console.log("Boss vaincu pour la région:", regionId);
+  console.log("ID du boss:", bossId);
+  console.log("Map actuelle:", this.currentMapId);
+  
   this.energy = Math.min(this.energy + rewardEnergy, this.maxEnergy);
   
   // Marquer la région associée comme complétée
@@ -958,17 +1007,39 @@ handleBossVictory() {
   // Mettre à jour les pièces de l'utilisateur
   this.$emit('coins-updated', this.userCoins + rewardCoins);
   
-  // Vérifier si c'est le boss de fin de la première map (ID 5)
-  // pour montrer la modale de transition de carte après
-  if (bossId === 5) {
-    // Enregistrer la transition de carte à montrer après
+  // Trouver toutes les maps disponibles (triées par ID)
+  const availableMaps = [...new Set(this.regions.map(r => r.map_id))].sort((a, b) => a - b);
+  console.log("Maps disponibles:", availableMaps);
+  
+  // Trouver l'index de la map actuelle et déterminer la map suivante
+  const currentMapIndex = availableMaps.indexOf(this.currentMapId);
+  const nextMapId = currentMapIndex < availableMaps.length - 1 ? availableMaps[currentMapIndex + 1] : null;
+  
+  console.log("Map actuelle index:", currentMapIndex);
+  console.log("Map suivante:", nextMapId);
+  
+  // Déterminer si ce boss est final pour cette map
+  // Un boss est considéré comme le boss final de sa map s'il a le plus grand ID parmi tous les boss de cette map
+  let isFinalBoss = false;
+  if (bossRegion) {
+    const bossesInCurrentMap = this.regions.filter(r => r.is_boss && r.map_id === bossRegion.map_id);
+    const maxBossId = Math.max(...bossesInCurrentMap.map(b => b.id));
+    isFinalBoss = bossId === maxBossId;
+    console.log("Boss final de sa map:", isFinalBoss);
+  }
+  
+  // Si c'est le boss final et qu'il y a une map suivante, préparer la transition
+  if (isFinalBoss && nextMapId) {
+    console.log(`Ce boss (${bossId}) est le boss final de la map ${this.currentMapId}, préparation de la transition vers map ${nextMapId}`);
     this.showTransitionAfterVictory = true;
+    this.nextMapToUnlock = nextMapId;
     this.mapTransitionRewards = {
       coins: rewardCoins,
       xp: rewardXp,
       energy: rewardEnergy
     };
   } else {
+    console.log("Pas de transition à préparer, soit ce n'est pas le boss final, soit il n'y a pas de map suivante");
     this.showTransitionAfterVictory = false;
   }
   
@@ -985,9 +1056,9 @@ handleBossVictory() {
   }).then(response => {
     console.log('Boss vaincu - réponse du serveur:', response);
     
-    // Si c'est le boss de la première map (ID 5), débloquer la deuxième map
-    if (bossId === 5) {
-      explorerService.unlockNextMap(2);
+    // Si c'est le boss final et qu'il y a une map suivante, déverrouiller cette map
+    if (isFinalBoss && nextMapId) {
+      explorerService.unlockNextMap(nextMapId);
       this.loadUnlockedMaps(); // Actualiser la liste des cartes débloquées
     }
     
@@ -996,6 +1067,7 @@ handleBossVictory() {
     console.error(`Erreur lors de l'enregistrement de la victoire du boss ${bossId}:`, error);
   });
 },
+
 
 async refreshRegions() {
   try {
@@ -1030,14 +1102,16 @@ closeCraftModal() {
   this.showCraftModal = false;
 },
 
+// 2. Modification de closeVictoryModal() dans ExplorerMap.vue
 closeVictoryModal() {
   const triggerBoss = this.victoryRewards?.triggerBoss;
   this.showVictoryModal = false;
   
-  // Si la victoire était sur le boss de la première map et qu'on a prévu une transition
-  if (this.showTransitionAfterVictory && this.lastDefeatedBoss && this.lastDefeatedBoss.id === 5) {
+  // Si la victoire était sur un boss qui débloque une nouvelle map et qu'on a prévu une transition
+  if (this.showTransitionAfterVictory && this.nextMapToUnlock) {
+    console.log(`Préparation de la transition vers la map ${this.nextMapToUnlock}`);
     // Afficher la modale de transition entre les cartes
-    this.currentMapId = 2;
+    this.currentMapId = this.nextMapToUnlock;
     this.showMapTransitionModal = true;
     this.showTransitionAfterVictory = false;
   } 
@@ -1069,10 +1143,10 @@ closeVictoryModal() {
   }
 },
 
-// Méthode appelée lorsque l'utilisateur continue vers la nouvelle carte
+
 async continueToNewMap() {
   this.showMapTransitionModal = false;
-  this.loading = true; // Activer l'indicateur de chargement
+  this.loading = true;
   
   try {
     console.log(`Transition vers la carte ${this.currentMapId}`);
@@ -1080,53 +1154,19 @@ async continueToNewMap() {
     // Mise à jour de la carte active
     explorerService.setCurrentMap(this.currentMapId);
     
-    // Vider les régions actuelles pour éviter les conflits
-    this.regions = [];
+    // Charger les régions via le service qui récupère les données de la base
+    const regionsData = await explorerService.getRegions(this.currentMapId);
     
-    // Attendre que le DOM soit mis à jour
-    await this.$nextTick();
-    
-    // Charger directement depuis le JSON pour s'assurer d'avoir toutes les régions
-    const response = await axios.get('/data/regionChallenges.json');
-    const allRegions = response.data.regions;
-    
-    // Filtrer les régions pour la carte active (2 dans ce cas)
-    const filteredRegions = allRegions.filter(r => {
-      if (this.currentMapId === 1) return r.id >= 1 && r.id <= 5;
-      if (this.currentMapId === 2) return r.id >= 6 && r.id <= 10;
-      return true;
-    });
-    
-    console.log(`Régions filtrées pour carte ${this.currentMapId}:`, filteredRegions.length);
-    
-    // Ajouter les propriétés nécessaires à chaque région
-    const processedRegions = filteredRegions.map(r => ({
-      ...r,
-      visited: r.id === (this.currentMapId === 1 ? 1 : 6), // Marquer la première région comme visitée
-      completed: false,
-      progress: 0,
-      is_default: (this.currentMapId === 1 && r.id === 1) || (this.currentMapId === 2 && r.id === 6),
-      explorerMapBackground: this.currentMapId === 1 ? "world-map.png" : "world-map2.png"
-    }));
+    console.log(`Régions chargées pour carte ${this.currentMapId}:`, regionsData.length);
     
     // Définir les régions
-    this.regions = processedRegions;
+    this.regions = regionsData;
     
     // Charger les défis des régions
     await this.loadRegionChallenges();
     
-    console.log(`${this.regions.length} régions chargées pour la carte ${this.currentMapId}`);
-    
-    // Imprimer les détails des régions pour débogage
-    this.regions.forEach(region => {
-      console.log(`Région: ${region.id} (${region.name}), Position: ${region.position_x},${region.position_y}, Default: ${region.is_default}`);
-    });
-    
-    // Forcer un rafraîchissement de l'affichage
-    const temp = [...this.regions];
-    this.regions = [];
-    await this.$nextTick();
-    this.regions = temp;
+    // Déboguer les régions
+    this.debugRegions();
     
     this.loading = false;
   } catch (error) {

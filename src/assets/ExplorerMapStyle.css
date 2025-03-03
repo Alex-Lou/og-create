@@ -196,6 +196,14 @@
   visibility: visible;
 }
 
+.already-completed-message {
+  color: #ff9900;
+  font-style: italic;
+  font-weight: bold;
+  display: block;
+  margin-top: 8px;
+}
+
 .back-btn-explorer {
   background: none;
   border-radius: 180px;
