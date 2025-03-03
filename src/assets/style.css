@@ -20,7 +20,9 @@
 }
 
 body {
-    font-family: 'Poppins', sans-serif;
+  font-family: 'BenjaminFranklin', sans-serif;
+  letter-spacing: 2px;
+  font-weight: bold;
     background-color: #050101;
     transition: background-color 0.5s, color 0.5s;
     color: #b7a8a8;

@@ -1,3 +1,18 @@
+/* Déclarations de polices */
+@font-face {
+  font-family: 'White Storm';
+  src: url('@/assets/White Storm.otf') format('opentype');
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'BenjaminFranklin';
+  src: url('@/assets/BenjaminFranklin.ttf') format('opentype');
+  font-weight: normal;
+  font-style: normal;
+}
+
 .modal-overlay {
   position: fixed;
   top: 0;
@@ -17,7 +32,11 @@
   border-radius: 8px;
   width: 90%;
   max-width: 500px;
-  color: white; /* Pour s'assurer que le texte est visible sur fond noir */
+  font-size: 1rem;
+  font-family: 'BenjaminFranklin', sans-serif;
+  letter-spacing: 2px;
+  font-weight: bold;
+  color: rgb(208, 208, 208); /* Pour s'assurer que le texte est visible sur fond noir */
   border: 1px solid #68787a; /* Couleur assortie au bouton de sauvegarde */
 
 }
@@ -26,14 +45,21 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
+  font-size: .9rem;
+  font-family: 'BenjaminFranklin', sans-serif;
+  letter-spacing: 2px;
+  font-weight: bold;
 }
 
 .close-btn {
   background: transparent;
   border: none;
   font-size: 1.5rem;
+  font-family: 'BenjaminFranklin', sans-serif;
+  letter-spacing: 2px;
+  font-weight: bold;
   cursor: pointer;
-  color: white; /* Pour s'assurer que le X est visible */
+  color: rgb(195, 195, 195); /* Pour s'assurer que le X est visible */
 }
 
 .modal-body {
@@ -77,6 +103,9 @@
   margin-top: 20px;
   margin-bottom: 10px;
   font-size: 1.2rem;
+  font-family: 'BenjaminFranklin', sans-serif;
+  letter-spacing: 2px;
+  font-weight: bold;
 }
 
 .frame-grid, .avatar-grid {
@@ -120,16 +149,20 @@
   border-radius: 4px;
   cursor: pointer;
   margin-left: 10px;
+  font-size: 1rem;
+  font-family: 'BenjaminFranklin', sans-serif;
+  letter-spacing: 2px;
+  font-weight: bold;
 }
 
 .save-btn {
   background: #2D96A4;
-  color: white;
+  color: rgb(203, 203, 203);
 }
 
 .cancel-btn {
   background: #FF4136;
-  color: white;
+  color: rgb(184, 184, 184);
 }
 
 /* Responsive pour les petits écrans */

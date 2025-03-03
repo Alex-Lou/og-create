@@ -108,6 +108,10 @@ export default {
     align-items: center;
     margin-bottom: 15px;
     color: #cfcfcf;
+    font-size: 1rem;
+  font-family: 'BenjaminFranklin', sans-serif;
+  letter-spacing: 2px;
+  font-weight: bold;
 }
 
 .close-btn {
@@ -126,11 +130,19 @@ export default {
     border-radius: 4px;
     background: #1e1e1e;
     color: #cfcfcf;
+    font-size: .8rem;
+  font-family: 'BenjaminFranklin', sans-serif;
+  letter-spacing: 2px;
+  font-weight: bold;
 }
 
 .contact-textarea {
     min-height: 100px;
     resize: vertical;
+    font-size: .8rem;
+  font-family: 'BenjaminFranklin', sans-serif;
+  letter-spacing: 2px;
+  font-weight: bold;
 }
 
 .submit-btn {
@@ -152,6 +164,10 @@ export default {
     color: #ff4136;
     margin-bottom: 10px;
     font-size: 14px;
+    font-size: .9rem;
+  font-family: 'BenjaminFranklin', sans-serif;
+  letter-spacing: 2px;
+  font-weight: bold;
 }
 
 .success-message {
@@ -159,6 +175,10 @@ export default {
     margin-bottom: 10px;
     font-size: 14px;
     text-align: center;
+    font-size: .9rem;
+  font-family: 'BenjaminFranklin', sans-serif;
+  letter-spacing: 2px;
+  font-weight: bold;
 }
 
 </style>
