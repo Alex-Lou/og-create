@@ -245,7 +245,7 @@
 
 /* Animation au survol de l'icône de boss */
 .region-marker:hover .boss-icon {
-  transform: scale(1.9);
+  transform: scale(1.3);
 }
 
 .shake-animation {
