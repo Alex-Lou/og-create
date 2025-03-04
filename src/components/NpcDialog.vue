@@ -72,7 +72,7 @@
               :disabled="!canStartChallenge"
             >
               {{ effectiveActionButtonText }} 
-              <span v-if="effectiveEnergyCost > 0" class="energy-cost">
+              <span v-if="showEnergyCost" class="energy-cost">
                 ⚡ {{ effectiveEnergyCost }}
               </span>
             </button>
@@ -116,13 +116,34 @@ export default {
       return (this.regionData && this.regionData.actionText) || this.actionButtonText || this.getDefaultNpcConfig().actionButtonText;
     },
     effectiveEnergyCost() {
-      return (this.regionData && this.regionData.energyCost !== undefined)
-        ? this.regionData.energyCost
-        : (this.energyCost !== null ? this.energyCost : this.getDefaultNpcConfig().energyCost);
+      // Priorité pour trouver le coût d'énergie:
+      // 1. Si c'est un boss (is_boss), alors coût = 0
+      if (this.regionData && this.regionData.is_boss) {
+        return 0;
+      }
+      
+      // 2. Si la région a un coût défini dans ses propriétés
+      if (this.regionData && this.regionData.energyCost !== undefined) {
+        return this.regionData.energyCost;
+      }
+      
+      // 3. Si un coût a été passé en prop
+      if (this.energyCost !== null) {
+        return this.energyCost;
+      }
+      
+      // 4. Valeur par défaut
+      return this.getDefaultNpcConfig().energyCost;
+    },
+    showEnergyCost() {
+      // Ne pas afficher le coût d'énergie pour les boss ou si c'est 0
+      return this.effectiveEnergyCost > 0;
     },
     canStartChallenge() {
-      // Si le coût est 0, c'est un boss par exemple, et on peut toujours commencer
+      // Si le coût est 0 (par exemple pour un boss), on peut toujours commencer
       if (this.effectiveEnergyCost === 0) return true;
+      
+      // Sinon, vérifier qu'on a assez d'énergie
       return this.currentEnergy >= this.effectiveEnergyCost;
     },
     isInteractionMode() {

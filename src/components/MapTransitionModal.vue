@@ -5,17 +5,18 @@
       <div class="transition-header">
         <div class="victory-animation">
           <div class="victory-effect">
-            <span class="victory-star">{{ config.victoryStarSymbol }}</span>
-            <span class="victory-text">{{ config.victoryText }}</span>
+            <span class="victory-star">⭐</span>
+            <span class="victory-text">VICTOIRE!</span>
           </div>
         </div>
-        <h1 class="transition-title">{{ config.transitionTitle }}</h1>
+        <h1 class="transition-title">Nouvelle Région Découverte!</h1>
       </div>
   
       <!-- Corps du message narratif -->
       <div class="transition-message">
         <p class="narrative">
-          {{ narrative }}
+          Félicitations, aventurier! Après avoir vaincu {{ effectiveBossName }}, un nouveau territoire s'ouvre à vous. 
+          Cette terre inexplorée regorge de mystères et de défis qui attendent votre expertise en alchimie élémentaire.
         </p>
           
         <!-- Affichage de la nouvelle carte -->
@@ -29,45 +30,43 @@
         </div>
           
         <p class="quest-teaser">
-          {{ config.questTeaser }}
+          De nouveaux alliés vous attendent, et de nouvelles combinaisons d'éléments seront nécessaires pour surmonter les obstacles sur votre chemin.
         </p>
       </div>
   
       <!-- Récompenses et bonus spéciaux -->
       <div class="special-rewards">
-        <h3>{{ config.specialRewardsTitle }}</h3>
+        <h3>Récompenses Spéciales</h3>
         <div class="rewards-grid">
           <div class="reward-item">
-            <span class="reward-icon">{{ config.rewardIcons.coins }}</span>
-            <span class="reward-value">{{ safeRewards.coins }} {{ config.rewardText.coins }}</span>
+            <span class="reward-icon">💰</span>
+            <span class="reward-value">{{ safeRewards.coins }} Pièces</span>
           </div>
           <div class="reward-item">
-            <span class="reward-icon">{{ config.rewardIcons.xp }}</span>
-            <span class="reward-value">{{ safeRewards.xp }} {{ config.rewardText.xp }}</span>
+            <span class="reward-icon">✨</span>
+            <span class="reward-value">{{ safeRewards.xp }} XP</span>
           </div>
           <div class="reward-item">
-            <span class="reward-icon">{{ config.rewardIcons.energy }}</span>
-            <span class="reward-value">{{ safeRewards.energy }} {{ config.rewardText.energy }}</span>
+            <span class="reward-icon">⚡</span>
+            <span class="reward-value">{{ safeRewards.energy }} Énergie</span>
           </div>
           <div class="reward-item">
-            <span class="reward-icon">{{ config.rewardIcons.regionUnlocked }}</span>
-            <span class="reward-value">{{ config.rewardText.regionUnlocked }}</span>
+            <span class="reward-icon">🗺️</span>
+            <span class="reward-value">Nouvelle région débloquée!</span>
           </div>
         </div>
       </div>
   
       <!-- Bouton pour continuer -->
       <button @click="continueToNewMap" class="continue-btn">
-        {{ config.continueButtonText }}
+        Explorer la nouvelle région
       </button>
     </div>
   </div>
 </template>
   
 <script>
-// Importations statiques des images de cartes pour éviter les erreurs
-import worldMap from '@/assets/maps/world-map.png';
-import worldMap2 from '@/assets/maps/world-map2.png';
+import explorerService from '@/services/explorerService';
 
 export default {
   name: 'MapTransitionModal',
@@ -91,88 +90,131 @@ export default {
     rewards: {
       type: Object,
       default: () => ({ coins: 0, xp: 0, energy: 0 })
-    },
-    // Possibilité de passer une configuration externe
-    config: {
-      type: Object,
-      default: () => ({
-        transitionTitle: 'Nouvelle Région Découverte!',
-        victoryText: 'VICTOIRE!',
-        victoryStarSymbol: '⭐',
-        narrativeTemplate: "Félicitations, aventurier! Après avoir vaincu le {bossName}, un nouveau territoire s'ouvre à vous. Cette terre inexplorée regorge de mystères et de défis qui attendent votre expertise en alchimie élémentaire.",
-        questTeaser: "De nouveaux alliés vous attendent, et de nouvelles combinaisons d'éléments seront nécessaires pour surmonter les obstacles sur votre chemin.",
-        specialRewardsTitle: 'Récompenses Spéciales',
-        rewardText: {
-          coins: 'Pièces',
-          xp: 'XP',
-          energy: 'Énergie',
-          regionUnlocked: 'Nouvelle région débloquée!'
-        },
-        rewardIcons: {
-          coins: '💰',
-          xp: '✨',
-          energy: '⚡',
-          regionUnlocked: '🗺️'
-        },
-        continueButtonText: 'Explorer la nouvelle région',
-        mapNames: {
-          1: 'Forêt Primordiale',
-          2: 'Désert des Illusions',
-          3: 'Royaume Céleste',
-          4: 'Terres Volcaniques',
-          5: 'Îles Flottantes',
-          // Autres maps futures
-        }
-      })
     }
+  },
+  data() {
+    return {
+      mapInfo: null,
+      isLoading: true
+    };
   },
   computed: {
     // S'assurer que les récompenses sont toujours valides, même si props.rewards est null
     safeRewards() {
       return this.rewards || { coins: 0, xp: 0, energy: 0 };
     },
+    
     effectiveBossName() {
-      return this.bossName || 'Gardien des Ténèbres';
+      return this.bossName || 'le Gardien des Ténèbres';
     },
-    narrative() {
-      return this.config.narrativeTemplate.replace('{bossName}', this.effectiveBossName);
-    },
+    
     mapPreviewImage() {
-      // Utiliser une approche plus robuste pour le chargement des images
       const mapId = this.newMapId || 2; // Par défaut, map 2
       
       try {
-        // Utiliser les imports statiques pour les cas connus
-        if (mapId === 1) {
-          return worldMap;
-        } else if (mapId === 2) {
-          return worldMap2;
-        } else {
-          // Pour les autres maps, tenter le require dynamique
-          return require(`@/assets/maps/world-map${mapId}.png`);
-        }
+        // Se baser sur la convention de nommage des images
+        return require(`@/assets/maps/world-map${mapId > 1 ? mapId : ''}.png`);
       } catch (e) {
         console.error(`Impossible de charger l'image pour la map ${mapId}:`, e);
         // Fallback sur la première map
-        return worldMap;
+        return require('@/assets/maps/world-map.png');
       }
     },
+    
     mapName() {
-      const mapId = this.newMapId || 2;
-      return (this.config.mapNames && this.config.mapNames[mapId]) || `Carte ${mapId}`;
+      // Première source : mapInfo chargé depuis le service
+      if (this.mapInfo && this.mapInfo.name) {
+        return this.mapInfo.name;
+      }
+      
+      // Deuxième source : explorer la liste des régions du parent
+      const regions = this.$parent?.regions || [];
+      if (regions.length > 0) {
+        // Chercher une région par défaut dans la carte cible
+        const defaultRegion = regions.find(r => r.is_default && r.map_id === this.newMapId);
+        if (defaultRegion) {
+          return defaultRegion.name;
+        }
+        
+        // Sinon, prendre la première région de la carte cible
+        const firstRegionInNewMap = regions.find(r => r.map_id === this.newMapId);
+        if (firstRegionInNewMap) {
+          return firstRegionInNewMap.name;
+        }
+      }
+      
+      // Fallback sur un nom générique basé sur le thème
+      const mapThemes = {
+        1: 'Forêt Primordiale',
+        2: 'Désert des Illusions',
+        3: 'Royaume Céleste',
+        4: 'Terres Volcaniques',
+        5: 'Îles Flottantes'
+      };
+      
+      return mapThemes[this.newMapId] || `Carte ${this.newMapId}`;
+    }
+  },
+  watch: {
+    isVisible(newValue) {
+      if (newValue) {
+        this.loadMapInfo();
+      }
+    },
+    newMapId(newValue) {
+      if (newValue && this.isVisible) {
+        this.loadMapInfo();
+      }
     }
   },
   methods: {
+    async loadMapInfo() {
+      if (!this.newMapId) return;
+      
+      this.isLoading = true;
+      
+      try {
+        // Tenter de charger les régions pour cette carte
+        const regions = await explorerService.getRegions(this.newMapId);
+        
+        if (regions && regions.length > 0) {
+          // Chercher une région par défaut
+          const defaultRegion = regions.find(r => r.is_default);
+          
+          // Ou prendre la première région
+          const firstRegion = regions[0];
+          
+          const selectedRegion = defaultRegion || firstRegion;
+          
+          if (selectedRegion) {
+            this.mapInfo = {
+              id: this.newMapId,
+              name: selectedRegion.name,
+              description: selectedRegion.description || `Explorez les mystères de ${selectedRegion.name}`
+            };
+          }
+        }
+      } catch (error) {
+        console.error(`Erreur lors du chargement des informations pour la carte ${this.newMapId}:`, error);
+      } finally {
+        this.isLoading = false;
+      }
+    },
+    
     continueToNewMap() {
       console.log("Émission de l'événement continue-to-new-map avec mapId:", this.newMapId);
       this.$emit('continue-to-new-map', this.newMapId);
+    }
+  },
+  created() {
+    if (this.isVisible && this.newMapId) {
+      this.loadMapInfo();
     }
   }
 };
 </script>
   
 <style scoped>
-/* Les styles restent inchangés */
 .map-transition-modal {
   position: fixed;
   top: 0;
