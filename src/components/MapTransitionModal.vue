@@ -95,6 +95,7 @@ export default {
   data() {
     return {
       mapInfo: null,
+      regionsCache: {},
       isLoading: true
     };
   },
@@ -105,19 +106,53 @@ export default {
     },
     
     effectiveBossName() {
-      return this.bossName || 'le Gardien des Ténèbres';
+      // Utiliser le boss passé en prop, ou chercher dans les données de la région actuelle
+      if (this.bossName) {
+        return this.bossName;
+      }
+      
+      // Chercher la région du boss dans les régions de la carte précédente
+      if (this.oldMapId && this.regionsCache[this.oldMapId]) {
+        const bossRegion = this.regionsCache[this.oldMapId].find(r => r.is_boss);
+        if (bossRegion) {
+          return bossRegion.name;
+        }
+      }
+      
+      // Si aucun nom de boss n'est trouvé, renvoyer une valeur générique basée sur la carte
+      const prevMapName = this.getMapNameById(this.oldMapId);
+      return `Gardien de ${prevMapName || 'ce territoire'}`;
     },
     
     mapPreviewImage() {
-      const mapId = this.newMapId || 2; // Par défaut, map 2
+      // Récupérer le mapId, ou utiliser la première carte disponible si aucune n'est spécifiée
+      const mapId = this.newMapId || this.getFirstAvailableMapId();
       
       try {
-        // Se baser sur la convention de nommage des images
+        // Récupérer d'abord l'image depuis les données de la région si disponible
+        const regions = this.regionsCache[mapId] || [];
+        const defaultRegion = regions.find(r => r.is_default) || regions[0];
+        
+        if (defaultRegion && defaultRegion.image_path) {
+          // Vérifier si l'image_path est une URL ou un chemin relatif
+          if (defaultRegion.image_path.startsWith('http')) {
+            return defaultRegion.image_path;
+          } else {
+            // Essayer de charger depuis les assets
+            return require(`@/assets/${defaultRegion.image_path}`);
+          }
+        }
+        
+        // Fallback sur la convention de nommage standard
         return require(`@/assets/maps/world-map${mapId > 1 ? mapId : ''}.png`);
       } catch (e) {
         console.error(`Impossible de charger l'image pour la map ${mapId}:`, e);
-        // Fallback sur la première map
-        return require('@/assets/maps/world-map.png');
+        // Dernière solution de secours
+        try {
+          return require('@/assets/maps/default-map.png');
+        } catch (e2) {
+          return require('@/assets/maps/world-map.png');
+        }
       }
     },
     
@@ -143,16 +178,24 @@ export default {
         }
       }
       
-      // Fallback sur un nom générique basé sur le thème
-      const mapThemes = {
-        1: 'Forêt Primordiale',
-        2: 'Désert des Illusions',
-        3: 'Royaume Céleste',
-        4: 'Terres Volcaniques',
-        5: 'Îles Flottantes'
-      };
+      // Troisième source : cache local des régions
+      if (this.regionsCache[this.newMapId]) {
+        const mapRegions = this.regionsCache[this.newMapId];
+        
+        // Chercher une région par défaut
+        const defaultRegion = mapRegions.find(r => r.is_default);
+        if (defaultRegion) {
+          return defaultRegion.name;
+        }
+        
+        // Sinon, prendre la première région
+        if (mapRegions.length > 0) {
+          return mapRegions[0].name;
+        }
+      }
       
-      return mapThemes[this.newMapId] || `Carte ${this.newMapId}`;
+      // Fallback générique sans hardcoding
+      return `Nouvelle région ${this.newMapId}`;
     }
   },
   watch: {
@@ -174,23 +217,41 @@ export default {
       this.isLoading = true;
       
       try {
-        // Tenter de charger les régions pour cette carte
-        const regions = await explorerService.getRegions(this.newMapId);
-        
-        if (regions && regions.length > 0) {
-          // Chercher une région par défaut
-          const defaultRegion = regions.find(r => r.is_default);
+        // Si les données sont déjà dans le cache, pas besoin de réinterroger l'API
+        if (!this.regionsCache[this.newMapId]) {
+          // Utiliser la route existante pour récupérer les régions de cette carte
+          const regions = await explorerService.getRegions(this.newMapId);
           
-          // Ou prendre la première région
-          const firstRegion = regions[0];
+          if (regions && regions.length > 0) {
+            // Mettre en cache les données pour une utilisation future
+            this.regionsCache[this.newMapId] = regions;
+            
+            // Chercher une région par défaut
+            const defaultRegion = regions.find(r => r.is_default);
+            
+            // Ou prendre la première région
+            const firstRegion = regions[0];
+            
+            const selectedRegion = defaultRegion || firstRegion;
+            
+            if (selectedRegion) {
+              this.mapInfo = {
+                id: this.newMapId,
+                name: selectedRegion.name,
+                description: selectedRegion.description || `Explorez les mystères de ${selectedRegion.name}`
+              };
+            }
+          }
+        } else {
+          // Utiliser les données du cache
+          const regions = this.regionsCache[this.newMapId];
+          const defaultRegion = regions.find(r => r.is_default) || regions[0];
           
-          const selectedRegion = defaultRegion || firstRegion;
-          
-          if (selectedRegion) {
+          if (defaultRegion) {
             this.mapInfo = {
               id: this.newMapId,
-              name: selectedRegion.name,
-              description: selectedRegion.description || `Explorez les mystères de ${selectedRegion.name}`
+              name: defaultRegion.name,
+              description: defaultRegion.description || `Explorez les mystères de ${defaultRegion.name}`
             };
           }
         }
@@ -201,12 +262,68 @@ export default {
       }
     },
     
+    // Préchargement de toutes les cartes disponibles
+    async preloadAllMaps() {
+      try {
+        // Utiliser la route existante pour récupérer toutes les régions (sans filtre de map_id)
+        const allRegions = await explorerService.getRegions();
+        
+        if (allRegions && allRegions.length > 0) {
+          // Organiser les régions par map_id
+          const mapGroups = {};
+          
+          allRegions.forEach(region => {
+            if (region.map_id) {
+              if (!mapGroups[region.map_id]) {
+                mapGroups[region.map_id] = [];
+              }
+              mapGroups[region.map_id].push(region);
+            }
+          });
+          
+          // Mettre à jour le cache
+          this.regionsCache = mapGroups;
+        }
+      } catch (error) {
+        console.error('Erreur lors du préchargement des cartes:', error);
+      }
+    },
+    
+    getFirstAvailableMapId() {
+      // Récupérer le premier mapId disponible dans le cache
+      const mapIds = Object.keys(this.regionsCache).map(Number).sort((a, b) => a - b);
+      return mapIds.length > 0 ? mapIds[0] : 1;
+    },
+    
+    getMapNameById(mapId) {
+      if (!mapId) return '';
+      
+      // Chercher dans le cache des régions
+      const regions = this.regionsCache[mapId] || [];
+      const defaultRegion = regions.find(r => r.is_default);
+      
+      if (defaultRegion) {
+        return defaultRegion.name;
+      }
+      
+      // Prendre la première région disponible
+      if (regions.length > 0) {
+        return regions[0].name;
+      }
+      
+      // Si aucune information n'est disponible
+      return `Région ${mapId}`;
+    },
+    
     continueToNewMap() {
       console.log("Émission de l'événement continue-to-new-map avec mapId:", this.newMapId);
       this.$emit('continue-to-new-map', this.newMapId);
     }
   },
-  created() {
+  async created() {
+    // Précharger toutes les cartes au démarrage du composant
+    await this.preloadAllMaps();
+    
     if (this.isVisible && this.newMapId) {
       this.loadMapInfo();
     }
