@@ -67,6 +67,7 @@
   
   .timer-text {
     transition: fill 0.3s ease;
+    fill: #d6ccbe;
   }
   
   .timer-display-group {
@@ -182,6 +183,3 @@
   .stop-timer-cancel-btn:active {
     transform: scale(0.95);
   }
-
-
-  
