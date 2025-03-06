@@ -67,6 +67,7 @@
 <script>
 import { ref, computed, watch, onMounted } from 'vue';
 import '@/assets/GameInventoryStyle.css';
+import gameDataService from '@/services/gameDataService';
  
 export default {
   name: 'GameInventory',
@@ -100,6 +101,7 @@ export default {
   setup(props, { emit }) {
     const lastCompletedCategory = ref(null);
     const previousCategoriesState = ref({});
+    const isLoading = ref(false);
 
     const filteredCategories = computed(() => {
       if (props.isTimerMode) {
@@ -178,7 +180,31 @@ export default {
       }
     }
 
+    // Chargement optimisé des emojis via le gameDataService
+    async function loadEmojisData() {
+      if (isLoading.value) return;
+      isLoading.value = true;
+      
+      try {
+        // Utiliser le service pour charger les données
+        const data = await gameDataService.loadFile('elements');
+        
+        // Émettre un événement avec les données
+        if (data && data.elements) {
+          // Les données sont déjà dans les props, pas besoin de les modifier ici
+        }
+        
+        isLoading.value = false;
+      } catch (error) {
+        console.error('Erreur lors du chargement des données d\'éléments:', error);
+        isLoading.value = false;
+      }
+    }
+
     onMounted(() => {
+      // Charger les données au montage du composant
+      loadEmojisData();
+      
       previousCategoriesState.value = filteredCategories.value.reduce((acc, category) => {
         acc[category.name] = {
           isComplete: category.isComplete
@@ -196,7 +222,8 @@ export default {
       lastCompletedCategory,
       previousCategoriesState,
       normalizeString,
-      forceReload
+      forceReload,
+      isLoading
     };
   },
   methods: {
@@ -215,4 +242,3 @@ export default {
 <style scoped>
 @import '@/assets/GameInventoryStyle.css';
 </style>
-

@@ -699,19 +699,19 @@ const explorerService = {
    * Synchronise les éléments découverts par les utilisateurs
    * (Fonction d'administration)
    */
-  async syncDiscoveredElements() {
+  async syncRequiredElements() {
     try {
-      // Utiliser le système de backoff pour la requête
+      // Notez que l'endpoint lui-même reste le même car nous n'avons pas modifié les routes Express
       const response = await this._executeWithBackoff(
         () => axios.post('/api/explorer/sync-discovered-elements'),
-        'sync_discovered_elements'
+        'sync_required_elements'
       );
       
-      console.log('Synchronisation des éléments découverts réussie:', response.data);
+      console.log('Synchronisation des éléments requis réussie:', response.data);
       return response.data;
     } catch (error) {
-      console.error('Erreur lors de la synchronisation des éléments découverts:', error);
-      throw new Error('Impossible de synchroniser les éléments découverts');
+      console.error('Erreur lors de la synchronisation des éléments requis:', error);
+      throw new Error('Impossible de synchroniser les éléments requis');
     }
   },
   
@@ -733,12 +733,16 @@ const explorerService = {
       // Invalider le cache de détails pour cette région
       delete this._regionDetailsCache.data[regionId];
       
-      return response.data;
+      // Mettre à jour cette partie - changer required_elements au lieu de discovered_elements
+      return {
+        ...response.data,
+        required_elements: response.data.required_elements // cette ligne remplace discovered_elements
+      };
     } catch (error) {
       console.error(`Erreur lors de la découverte de l'élément ${elementName}:`, error);
       throw new Error(error.response?.data?.message || `Erreur lors de la découverte de l'élément ${elementName}`);
     }
-  },
+  },  
   
   /**
    * Récupère les détails d'une région spécifique
