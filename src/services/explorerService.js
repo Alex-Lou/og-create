@@ -1,5 +1,6 @@
 // explorerService.js
-import axios from 'axios';
+import api from './api';
+
 
 /**
  * Service centralisant toutes les opérations liées au mode Explorer
@@ -104,30 +105,23 @@ const explorerService = {
    * Initialise le mode Explorer et récupère les données de base
    */
   async initExplorer() {
-    // Vérifier si les données en cache sont toujours valides
     const now = Date.now();
     if (this._initCache.data && (now - this._initCache.timestamp < this._initCache.validity)) {
       console.log('Utilisation des données d\'initialisation en cache');
       return {
         ...this._initCache.data,
-        currentMap: await this.getCurrentMap() // Toujours obtenir la carte active
+        currentMap: await this.getCurrentMap()
       };
     }
 
     try {
-      // Utiliser le système de backoff pour la requête
-      const response = await this._executeWithBackoff(
-        () => axios.get('/api/explorer/init'),
-        'init_explorer'
-      );
+      const response = await api.get('/explorer/init');
       
       console.log('Initialisation Explorer réussie:', response.data);
       
-      // Mettre en cache les données
       this._initCache.data = response.data;
       this._initCache.timestamp = now;
       
-      // Mettre à jour aussi le cache d'énergie
       this._energyCache.data = {
         energy: response.data.energy,
         max_energy: response.data.max_energy,
@@ -137,12 +131,11 @@ const explorerService = {
       
       return {
         ...response.data,
-        currentMap: await this.getCurrentMap() // Obtient la carte active
+        currentMap: await this.getCurrentMap()
       };
     } catch (error) {
       console.error('Erreur lors de l\'initialisation du mode Explorer:', error);
       
-      // Si on a des données en cache, même expirées, on les utilise en cas d'erreur
       if (this._initCache.data) {
         console.warn('Utilisation des données d\'initialisation en cache périmées suite à une erreur');
         return {
@@ -151,7 +144,6 @@ const explorerService = {
         };
       }
       
-      // Valeurs par défaut en dernier recours
       return {
         energy: 10, 
         max_energy: 20,
@@ -170,7 +162,6 @@ const explorerService = {
     const cacheKey = mapId ? `map_${mapId}` : 'all';
     const now = Date.now();
     
-    // Vérifier si les données en cache sont toujours valides et non forcées à rafraîchir
     if (!forceRefresh && 
         this._regionsCache.data[cacheKey] && 
         (now - this._regionsCache.timestamp[cacheKey] < this._regionsCache.validity)) {
@@ -179,36 +170,26 @@ const explorerService = {
     }
 
     try {
-      // Utiliser le système de backoff pour la requête
-      const url = mapId ? `/api/explorer/regions?mapId=${mapId}` : '/api/explorer/regions';
-      const response = await this._executeWithBackoff(
-        () => axios.get(url),
-        `get_regions_${cacheKey}`
-      );
+      const url = mapId ? `/explorer/regions?mapId=${mapId}` : '/explorer/regions';
+      const response = await api.get(url);
       
       console.log(`Régions récupérées (${mapId ? 'map ' + mapId : 'toutes'}):`, response.data.length);
       
-      // Ajoute le chemin d'accès au fond de carte pour chaque région
       const regions = response.data.map(region => ({
         ...region,
         explorerMapBackground: `world-map${region.map_id || '1'}.png`
       }));
       
-      // Mettre en cache les données
       this._regionsCache.data[cacheKey] = regions;
       this._regionsCache.timestamp[cacheKey] = now;
       
-      // Met à jour le cache des informations des boss
       this._updateBossCache(regions);
-      
-      // Met à jour le cache des informations des maps
       this._updateMapCache(regions);
       
       return regions;
     } catch (error) {
       console.error("Erreur lors de la récupération des régions:", error);
       
-      // Si on a des données en cache, même expirées, on les utilise en cas d'erreur
       if (this._regionsCache.data[cacheKey]) {
         console.warn(`Utilisation des régions en cache périmées pour ${cacheKey} suite à une erreur`);
         return this._regionsCache.data[cacheKey];
@@ -287,26 +268,18 @@ const explorerService = {
    */
   async visitRegion(regionId, energyCost = 2) {
     try {
-      // Récupérer les détails de la région (utilise le cache)
       const regionDetails = await this.getRegionDetails(regionId);
       const isBoss = regionDetails.is_boss || false;
       
-      // Pour les boss, on force le coût à 0
       const actualEnergyCost = isBoss ? 0 : energyCost;
       
-      // Utiliser le système de backoff pour la requête
-      const response = await this._executeWithBackoff(
-        () => axios.post(`/api/explorer/visit/${regionId}`, { energyCost: actualEnergyCost }),
-        `visit_region_${regionId}`
-      );
+      const response = await api.post(`/explorer/visit/${regionId}`, { energyCost: actualEnergyCost });
       
       console.log('Visite de région réussie:', response.data);
       
-      // Invalider les caches impactés
-      this._initCache.timestamp = 0; // Forcer le rafraîchissement du cache d'initialisation
-      this._energyCache.timestamp = 0; // Forcer le rafraîchissement du cache d'énergie
+      this._initCache.timestamp = 0;
+      this._energyCache.timestamp = 0;
       
-      // Mettre à jour les détails de la région dans le cache
       if (this._regionDetailsCache.data[regionId]) {
         this._regionDetailsCache.data[regionId] = {
           ...this._regionDetailsCache.data[regionId],
@@ -328,7 +301,6 @@ const explorerService = {
    */
   async completeRegion(regionId, rewards = {}) {
     try {
-      // S'assurer que toutes les propriétés de récompense sont définies
       const completeRewards = {
         coins: typeof rewards.coins !== 'undefined' ? rewards.coins : 50,
         energy: typeof rewards.energy !== 'undefined' ? rewards.energy : 5,
@@ -338,22 +310,15 @@ const explorerService = {
       
       console.log(`Complétion de la région ${regionId} avec récompenses:`, completeRewards);
       
-      // Utiliser le système de backoff pour la requête
-      const response = await this._executeWithBackoff(
-        () => axios.post(`/api/explorer/complete/${regionId}`, completeRewards),
-        `complete_region_${regionId}`
-      );
+      const response = await api.post(`/explorer/complete/${regionId}`, completeRewards);
       
       console.log('Complétion de région réussie:', response.data);
       
-      // Invalider les caches impactés
-      this._initCache.timestamp = 0; // Forcer le rafraîchissement du cache d'initialisation
-      this._energyCache.timestamp = 0; // Forcer le rafraîchissement du cache d'énergie
+      this._initCache.timestamp = 0;
+      this._energyCache.timestamp = 0;
       
-      // Invalider le cache de détails pour cette région
       delete this._regionDetailsCache.data[regionId];
       
-      // Invalider tous les caches de régions pour les forcer à se rafraîchir
       Object.keys(this._regionsCache.timestamp).forEach(key => {
         this._regionsCache.timestamp[key] = 0;
       });
@@ -372,17 +337,14 @@ const explorerService = {
    */
   async completeBoss(regionId, options = {}) {
     try {
-      // Vérifier directement si c'est un boss final sans stocker le résultat dans une variable inutilisée
       const isFinalBoss = await this._isRegionFinalBoss(regionId);
       
-      // Déterminer les récompenses par défaut en fonction du boss
       let defaultRewards = {
         coins: 500,
         energy: 10,
         xp: 1000
       };
       
-      // Si c'est un boss final, augmenter les récompenses
       if (isFinalBoss) {
         defaultRewards = {
           coins: 1000,
@@ -402,27 +364,19 @@ const explorerService = {
       
       console.log(`Complétion du boss ${regionId} avec options:`, completeOptions);
       
-      // Utiliser le système de backoff pour la requête
-      const response = await this._executeWithBackoff(
-        () => axios.post(`/api/explorer/complete/${regionId}`, completeOptions),
-        `complete_boss_${regionId}`
-      );
+      const response = await api.post(`/explorer/complete/${regionId}`, completeOptions);
       
       console.log('Boss vaincu:', response.data);
       
-      // Invalider les caches impactés
-      this._initCache.timestamp = 0; // Forcer le rafraîchissement du cache d'initialisation
-      this._energyCache.timestamp = 0; // Forcer le rafraîchissement du cache d'énergie
+      this._initCache.timestamp = 0;
+      this._energyCache.timestamp = 0;
       
-      // Invalider le cache de détails pour cette région
       delete this._regionDetailsCache.data[regionId];
       
-      // Invalider tous les caches de régions pour les forcer à se rafraîchir
       Object.keys(this._regionsCache.timestamp).forEach(key => {
         this._regionsCache.timestamp[key] = 0;
       });
       
-      // Si c'est un boss final, débloquer la carte suivante
       if (isFinalBoss && response.data.bossDefeated) {
         await this.refreshUnlockedMaps();
       }
@@ -602,17 +556,12 @@ const explorerService = {
    */
   async buyEnergy(amount = 1) {
     try {
-      // Utiliser le système de backoff pour la requête
-      const response = await this._executeWithBackoff(
-        () => axios.post('/api/explorer/buy-energy', { amount }),
-        'buy_energy'
-      );
+      const response = await api.post('/explorer/buy-energy', { amount });
       
       console.log('Achat d\'énergie réussi:', response.data);
       
-      // Invalider les caches impactés
-      this._initCache.timestamp = 0; // Forcer le rafraîchissement du cache d'initialisation
-      this._energyCache.timestamp = 0; // Forcer le rafraîchissement du cache d'énergie
+      this._initCache.timestamp = 0;
+      this._energyCache.timestamp = 0;
       
       return response.data;
     } catch (error) {
@@ -620,12 +569,8 @@ const explorerService = {
       throw new Error(error.response?.data?.message || 'Erreur lors de l\'achat d\'énergie');
     }
   },
-  
-  /**
-   * Vérifie l'énergie actuelle du joueur
-   */
+
   async checkEnergy() {
-    // Vérifier si les données en cache sont toujours valides
     const now = Date.now();
     if (this._energyCache.data && (now - this._energyCache.timestamp < this._energyCache.validity)) {
       console.log('Utilisation des données d\'énergie en cache');
@@ -633,11 +578,7 @@ const explorerService = {
     }
     
     try {
-      // Utiliser le système de backoff pour la requête
-      const response = await this._executeWithBackoff(
-        () => axios.get('/api/explorer/init'),
-        'check_energy'
-      );
+      const response = await api.get('/explorer/init');
       
       const energyData = {
         energy: response.data.energy,
@@ -645,11 +586,9 @@ const explorerService = {
         next_energy_in: response.data.next_energy_in
       };
       
-      // Mettre à jour le cache
       this._energyCache.data = energyData;
       this._energyCache.timestamp = now;
       
-      // Mettre à jour aussi le cache d'initialisation
       this._initCache.data = response.data;
       this._initCache.timestamp = now;
       
@@ -657,7 +596,6 @@ const explorerService = {
     } catch (error) {
       console.error('Erreur lors de la vérification de l\'énergie:', error);
       
-      // Si on a des données en cache, même expirées, on les utilise en cas d'erreur
       if (this._energyCache.data) {
         return this._energyCache.data;
       }
@@ -666,26 +604,22 @@ const explorerService = {
     }
   },
   
+  
+  
   /**
    * Synchronise les régions depuis le fichier JSON vers la base de données
    * (Fonction d'administration)
    */
   async syncRegions() {
     try {
-      // Utiliser le système de backoff pour la requête
-      const response = await this._executeWithBackoff(
-        () => axios.post('/api/explorer/sync-regions'),
-        'sync_regions'
-      );
+      const response = await api.post('/explorer/sync-regions');
       
       console.log('Synchronisation des régions réussie:', response.data);
       
-      // Invalider tous les caches de régions
       Object.keys(this._regionsCache.timestamp).forEach(key => {
         this._regionsCache.timestamp[key] = 0;
       });
       
-      // Forcer le rechargement des régions
       await this.getRegions(null, true);
       
       return response.data;
@@ -701,11 +635,7 @@ const explorerService = {
    */
   async syncRequiredElements() {
     try {
-      // Notez que l'endpoint lui-même reste le même car nous n'avons pas modifié les routes Express
-      const response = await this._executeWithBackoff(
-        () => axios.post('/api/explorer/sync-discovered-elements'),
-        'sync_required_elements'
-      );
+      const response = await api.post('/explorer/sync-discovered-elements');
       
       console.log('Synchronisation des éléments requis réussie:', response.data);
       return response.data;
@@ -722,34 +652,27 @@ const explorerService = {
    */
   async discoverElement(regionId, elementName) {
     try {
-      // Utiliser le système de backoff pour la requête
-      const response = await this._executeWithBackoff(
-        () => axios.post(`/api/explorer/discover/${regionId}/${elementName}`),
-        `discover_element_${regionId}_${elementName}`
-      );
+      const response = await api.post(`/explorer/discover/${regionId}/${elementName}`);
       
       console.log(`Élément ${elementName} découvert dans la région ${regionId}:`, response.data);
       
-      // Invalider le cache de détails pour cette région
       delete this._regionDetailsCache.data[regionId];
       
-      // Mettre à jour cette partie - changer required_elements au lieu de discovered_elements
       return {
         ...response.data,
-        required_elements: response.data.required_elements // cette ligne remplace discovered_elements
+        required_elements: response.data.required_elements
       };
     } catch (error) {
       console.error(`Erreur lors de la découverte de l'élément ${elementName}:`, error);
       throw new Error(error.response?.data?.message || `Erreur lors de la découverte de l'élément ${elementName}`);
     }
-  },  
+  },
   
   /**
    * Récupère les détails d'une région spécifique
    * @param {number} regionId - ID de la région
    */
   async getRegionDetails(regionId) {
-    // Vérifier si les données en cache sont toujours valides
     const now = Date.now();
     if (this._regionDetailsCache.data[regionId] && 
         (now - this._regionDetailsCache.timestamp[regionId] < this._regionDetailsCache.validity)) {
@@ -758,13 +681,8 @@ const explorerService = {
     }
     
     try {
-      // Utiliser le système de backoff pour la requête
-      const response = await this._executeWithBackoff(
-        () => axios.get(`/api/explorer/regions/${regionId}`),
-        `get_region_details_${regionId}`
-      );
+      const response = await api.get(`/explorer/regions/${regionId}`);
       
-      // Ajouter les détails au cache
       const regionDetails = {
         ...response.data,
         explorerMapBackground: `world-map${response.data.map_id || '1'}.png`

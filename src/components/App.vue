@@ -234,10 +234,10 @@ export default {
       selectedAvatar: 'coin.png'
     };
   },
-  created() {
+  async created() {
   this.checkAuth();
   if (this.isLoggedIn) {
-    this.loadGameProgress();
+    await this.loadGameProgress();
     this.loadSavedCustomization();
     // Démarrer la sauvegarde périodique
     this.startPeriodicSave();

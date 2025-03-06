@@ -1,5 +1,6 @@
 // services/gameDataService.js
-import api from './api'; // Assure-toi que ce fichier existe et exporte une instance axios configurée
+import api from './api';
+import AuthService from './authService'; // Importez le service d'authentification
 
 class GameDataService {
   constructor() {
@@ -8,11 +9,33 @@ class GameDataService {
   }
   
   /**
+   * Vérifie si l'utilisateur est authentifié
+   * @returns {boolean} - True si l'utilisateur est authentifié
+   */
+  isAuthenticated() {
+    // Vérifier si on est en état de déconnexion
+    if (window.isLoggedOut) {
+      return false;
+    }
+    
+    // Utiliser le service d'authentification
+    return AuthService && typeof AuthService.isAuthenticated === 'function' 
+      ? AuthService.isAuthenticated() 
+      : false;
+  }
+  
+  /**
    * Charge un fichier JSON depuis le serveur
    * @param {string} filename - Nom du fichier sans extension
    * @returns {Promise<Object>} - Le contenu du fichier JSON
    */
   async loadFile(filename) {
+    // Ne pas essayer de charger si l'utilisateur n'est pas authentifié
+    if (!this.isAuthenticated()) {
+      console.log(`Chargement de ${filename} ignoré - utilisateur non authentifié`);
+      return Promise.reject(new Error('Utilisateur non authentifié'));
+    }
+    
     // Si le fichier est déjà en cache, le retourner
     if (this.cache[filename]) {
       return this.cache[filename];
@@ -56,6 +79,12 @@ class GameDataService {
    * @returns {Promise<Object>} - Résultat de la combinaison
    */
   async checkCombination(elements) {
+    // Ne pas essayer si l'utilisateur n'est pas authentifié
+    if (!this.isAuthenticated()) {
+      console.log(`Vérification de combinaison ignorée - utilisateur non authentifié`);
+      return Promise.reject(new Error('Utilisateur non authentifié'));
+    }
+    
     try {
       const response = await api.post('/game-data/combine', { elements });
       return response.data;
@@ -70,6 +99,7 @@ class GameDataService {
    */
   clearCache() {
     this.cache = {};
+    this.loadingPromises = {}; // Annuler également toutes les promesses en cours
     console.log('Cache local vidé');
   }
 }

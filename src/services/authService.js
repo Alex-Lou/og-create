@@ -1,4 +1,6 @@
 import axios from 'axios';
+import gameDataService from './gameDataService';
+
 
 const axiosInstance = axios.create({
   baseURL: 'http://localhost:3000/api/auth/',
@@ -262,11 +264,19 @@ class AuthService {
     } catch (error) {
       console.warn('Erreur lors de la déconnexion:', error);
     } finally {
+      // Vider le cache des données du jeu avant de supprimer l'authentification
+      if (gameDataService && typeof gameDataService.clearCache === 'function') {
+        gameDataService.clearCache();
+      }
+      
       // Toujours nettoyer localement, même en cas d'erreur
       localStorage.removeItem('user');
       delete axios.defaults.headers.common['Authorization'];
       delete axiosInstance.defaults.headers.common['Authorization'];
       delete apiInstance.defaults.headers.common['Authorization'];
+  
+      // Indiquer au système que les données ne sont plus accessibles
+      window.isLoggedOut = true;
     }
   }
 
