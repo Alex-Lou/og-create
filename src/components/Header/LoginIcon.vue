@@ -73,7 +73,7 @@
 </template>
 
 <script>
-import '@/assets/LoginIconStyle.css';
+import '@/assets/ComponentsStyle/HeaderStyle/LoginIconStyle.css';
 export default {
   name: 'LoginIcon',
   props: {

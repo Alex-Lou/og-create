@@ -60,7 +60,7 @@
   </template>
   
   <script>
-  import '@/assets/TimerModeButtonStyle.css';
+  import '@/assets/ComponentsStyle/TimerStyle/TimerModeButtonStyle.css';
   
   export default {
     name: 'TimerModeButton',
@@ -178,8 +178,3 @@
     }
   };
   </script>
-  
-  <style scoped>
- 
-  </style>
-  

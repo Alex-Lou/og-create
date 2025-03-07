@@ -11,6 +11,7 @@
   </template>
   
   <script>
+  import "@/assets/ComponentsStyle/CraftStyle/FireWorkStyle.css";
   export default {
     name: 'FireworkAnimation',
     props: {
@@ -40,8 +41,4 @@
     },
   };
   </script>
-  
-  <style scoped>
-  @import "@/assets/FireWorkStyle.css";
-  </style>
   

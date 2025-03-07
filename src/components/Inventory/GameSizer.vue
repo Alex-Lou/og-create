@@ -7,7 +7,7 @@
   
   <script>
 
-import '@/assets/GameSizerStyle.css';
+import '@/assets/ComponentsStyle/InventoryStyle/GameSizerStyle.css';
 
 export default {
   name: 'GameSizer',

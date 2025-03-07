@@ -51,7 +51,7 @@
 </template>
 
 <script>
-import '@/assets/InfiniteModeButtonStyle.css';
+import '@/assets/ComponentsStyle/InfiniteStyle/InfiniteModeButtonStyle.css';
 export default {
   name: 'InfiniteModeButton',
   props: {

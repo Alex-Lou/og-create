@@ -88,6 +88,8 @@ import FireworkAnimation from './FireWorkAnimation.vue';
 import CraftButton from './CraftButton.vue';
 import CleanButton from './CleanButton.vue';
 import CreationZoneTitle from './CreationZoneTitle.vue';
+import '@/assets/ComponentsStyle/CraftStyle/CraftSystemStyle.css';
+
 
 export default {
   name: 'CraftSystem',
@@ -224,9 +226,12 @@ export default {
       }, 1);
     },
     saveDiscoveredElement(element) {
-      this.$emit('save-discovered-element', element);
-      this.pendingSaves.delete(element);
-    },
+  // Obtenir le mode de jeu actuel depuis les props ou utiliser 'infinite' par défaut
+  const gameMode = this.$parent?.gameMode || 'infinite';
+  
+  this.$emit('save-discovered-element', element, gameMode);
+  this.pendingSaves.delete(element);
+},
     handleKeyPress(event) {
       if (event.key === 'Enter') {
         this.craftItem();
@@ -425,7 +430,3 @@ export default {
   }
 };
 </script>
-
-<style scoped>
-@import '@/assets/CraftSystemStyle.css';
-</style>

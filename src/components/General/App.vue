@@ -136,24 +136,24 @@
 <script>
 import AuthService from '@/services/authService';
 import progressService from '@/services/progressService';
-import DarkToggle from './Header/DarkToggle.vue';
-import LoginIcon from './Header/LoginIcon.vue';
-import ContactIcon from './Header/ContactIcon.vue';
-import GameAchievementsPopup from './Achievements/GameAchievementsPopup.vue';
-import GameInventory from './Inventory/GameInventory.vue';
-import CraftSystem from './CraftSystem/CraftSystem.vue';
-import CraftPopup from './CraftSystem/CraftPopup.vue';
-import GameAchievementsContent from './Achievements/GameAchievementsContent.vue';
+import DarkToggle from '../Header/DarkToggle.vue';
+import LoginIcon from '../Header/LoginIcon.vue';
+import ContactIcon from '../Header/ContactIcon.vue';
+import GameAchievementsPopup from '../Achievements/GameAchievementsPopup.vue';
+import GameInventory from '../Inventory/GameInventory.vue';
+import CraftSystem from '../CraftSystem/CraftSystem.vue';
+import CraftPopup from '../CraftSystem/CraftPopup.vue';
+import GameAchievementsContent from '../Achievements/GameAchievementsContent.vue';
 import DataLoading from './DataLoading.vue';
-import GameSizer from './Inventory/GameSizer.vue';
-import InfiniteModeButton from './InfiniteMode/InfiniteModeButton.vue';
-import ExplorerModeButton from './Explorer/ExplorerModeButton.vue';
-import TimerModeButton from './TimerMode/TimerModeButton.vue';
-import TimerQuestions from './TimerMode/TimerQuestions.vue';
-import CoinCounter from './Header/CoinCounter.vue';
-import CustomizeModal from './Header/CustomizeModal.vue';
-import ExplorerMap from './Explorer/ExplorerMap.vue';
-import '@/assets/style.css';
+import GameSizer from '../Inventory/GameSizer.vue';
+import InfiniteModeButton from '../InfiniteMode/InfiniteModeButton.vue';
+import ExplorerModeButton from '../Explorer/ExplorerModeButton.vue';
+import TimerModeButton from '../TimerMode/TimerModeButton.vue';
+import TimerQuestions from '../TimerMode/TimerQuestions.vue';
+import CoinCounter from '../Header/CoinCounter.vue';
+import CustomizeModal from '../Header/CustomizeModal.vue';
+import ExplorerMap from '../Explorer/ExplorerMap.vue';
+import '@/assets/ComponentsStyle/GeneralStyle/style.css';
 
 export default {
   name: 'App',
@@ -325,11 +325,10 @@ handleGlobalAchievementsLoaded(event) {
       }
     },
 
-    // Dans App.vue - méthode améliorée
-    saveDiscoveredElement(element) {
+    saveDiscoveredElement(element, gameMode = 'infinite') {
   // Vérifier que l'élément n'est pas déjà dans la liste
   if (!this.discoveredElements.includes(element)) {
-    console.log(`Sauvegarde immédiate de l'élément découvert: ${element}`);
+    console.log(`Sauvegarde immédiate de l'élément découvert: ${element} (mode: ${gameMode})`);
     
     // Ajouter à la liste locale
     this.discoveredElements.push(element);
@@ -354,9 +353,9 @@ handleGlobalAchievementsLoaded(event) {
     
     // Sauvegarder dans la base de données si connecté
     if (this.isLoggedIn) {
-      progressService.updateDiscoveredElements(this.discoveredElements)
+      progressService.updateDiscoveredElements(this.discoveredElements, gameMode)
         .then(() => {
-          console.log(`Élément ${element} sauvegardé avec succès`);
+          console.log(`Élément ${element} sauvegardé avec succès (mode: ${gameMode})`);
           // Sauvegarder également les catégories
           this.saveGameProgress();
         })
@@ -1205,7 +1204,3 @@ handleCraftSuccess(craftedItem) {
   }
 };
 </script>
-
-<style>
-@import '@/assets/style.css';
-</style>

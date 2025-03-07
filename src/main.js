@@ -1,5 +1,5 @@
 import { createApp } from 'vue';
-import App from './components/App.vue';
+import App from './components/General/App.vue';
 import '@animxyz/core';
 
 const app = createApp(App);

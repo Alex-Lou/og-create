@@ -81,7 +81,7 @@
 </template>
 
 <script>
-import '@/assets/CustomizeModalStyle.css';
+import '@/assets/ComponentsStyle/HeaderStyle/CustomizeModalStyle.css';
 import customizationService from '@/services/customizationService';
 
 export default {

@@ -20,7 +20,7 @@
 
 <script>
 import explorerService from '@/services/explorerService';
-
+import '@/assets/ComponentsStyle/ExplorerStyle/EnergyDisplayExplorerStyle.css';
 export default {
   name: 'EnergyDisplayExplorer',
   props: {
@@ -120,46 +120,3 @@ export default {
 };
 </script>
   
-  <style scoped>
-
-    @font-face {
-    font-family: 'White Storm';
-    src: url('@/assets/fonts/White Storm.otf') format('opentype');
-    font-weight: normal;
-    font-style: normal;
-    }
-
-    @font-face {
-    font-family: 'BenjaminFranklin';
-    src: url('@/assets/fonts/BenjaminFranklin.ttf') format('opentype');
-    font-weight: normal;
-    font-style: normal;
-    }
-
-  .buy-energy-btn {
-    background-color: #4caf50;
-    border: none;
-    color: white;
-    margin-left: 5px;
-    padding: 2px 8px;
-    border-radius: 10px;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    transition: all 0.2s;
-    font-family: 'BenjaminFranklin', sans-serif;
-  letter-spacing: 2px;
-  font-weight: bold;
-  }
-  
-  .buy-energy-btn:hover:not(:disabled) {
-    background-color: #45a049;
-    transform: scale(1.05);
-  }
-  
-  .buy-energy-btn:disabled {
-    background-color: #cccccc;
-    cursor: not-allowed;
-    opacity: 0.7;
-  }
-  </style>

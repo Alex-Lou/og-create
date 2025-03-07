@@ -32,6 +32,7 @@
 <script>
 import progressService from '@/services/progressService';
 import authService from '@/services/authService';
+import "@/assets/ComponentsStyle/AchievementsStyle/SuccessContentStyle.css";
 
 export default {
   name: "GameAchievementsContent",
@@ -267,7 +268,3 @@ export default {
   }
 };
 </script>
-
-<style scoped>
-@import "@/assets/SuccessContentStyle.css";
-</style>

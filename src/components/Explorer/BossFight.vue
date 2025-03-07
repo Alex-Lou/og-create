@@ -18,6 +18,7 @@
 </template>
 
 <script>
+import '@/assets/ComponentsStyle/ExplorerStyle/BossFightStyle.css';
 export default {
   name: 'BossFight',
   props: {
@@ -114,6 +115,3 @@ export default {
   }
 };
 </script>
-<style scoped>
-@import '@/assets/BossFightStyle.css';
-</style>

@@ -39,7 +39,7 @@
 </template>
 
 <script>
-import '@/assets/ExplorerModeButtonStyle.css';
+import '@/assets/ComponentsStyle/ExplorerStyle/ExplorerModeButtonStyle.css';
 export default {
   name: 'ExplorerModeButton',
   methods: {

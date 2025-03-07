@@ -25,7 +25,7 @@
 
 .inventory-container {
   position: relative;
-  background-image: url('~@/assets/inventory-bg.png');
+  background-image: url('~@/assets/images/inventory-bg.png');
   background-repeat: repeat;
   background-size: cover;
   border-radius: 8px;

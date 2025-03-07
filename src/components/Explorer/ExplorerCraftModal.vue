@@ -145,7 +145,7 @@
 
 <script>
 import BossFight from '@/components/Explorer/BossFight.vue';
-import '@/assets/ExplorerCraftStyle.css';
+import '@/assets/ComponentsStyle/ExplorerStyle/ExplorerCraftStyle.css';
 
 export default {
   name: 'ExplorerCraftModal',
@@ -500,7 +500,3 @@ export default {
   }
 };
 </script>
-
-<style scoped>
-@import '@/assets/ExplorerCraftStyle.css';
-</style>

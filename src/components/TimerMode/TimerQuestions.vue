@@ -101,11 +101,11 @@
       </div>
     </div>
   </div>
-</template>
+</template> 
 
  
 <script>
-import '@/assets/TimerQuestionsStyle.css';
+import '@/assets/ComponentsStyle/TimerStyle/TimerQuestionsStyle.css';
 import progressService from '@/services/progressService';
  
 export default {

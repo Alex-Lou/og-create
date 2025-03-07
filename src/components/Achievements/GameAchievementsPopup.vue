@@ -49,6 +49,7 @@
 
 <script>
 import { gsap } from 'gsap';
+import "@/assets/ComponentsStyle/AchievementsStyle/SuccessPopupStyle.css";
 
 export default {
   props: {
@@ -218,9 +219,3 @@ export default {
   },
 };
 </script>
-
-<style scoped>
-@import "@/assets/SuccessPopupStyle.css";
-
-
-</style>

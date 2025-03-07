@@ -248,5 +248,5 @@ export default {
 </script>
 
 <style scoped>
-@import '@/assets/NpcDialogStyle.css';
+@import '@/assets/ComponentsStyle/ExplorerStyle/NpcDialogStyle.css';
 </style>

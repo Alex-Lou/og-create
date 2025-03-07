@@ -99,7 +99,7 @@
 </template>
 
 <script>
-import '@/assets/ExplorerMapStyle.css';
+import '@/assets/ComponentsStyle/ExplorerStyle/ExplorerMapStyle.css';
 import explorerService from '@/services/explorerService';
 import mapUtils from '@/utils/mapUtils';
 import NpcDialog from './NpcDialog.vue';

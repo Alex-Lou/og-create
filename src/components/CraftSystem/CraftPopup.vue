@@ -29,6 +29,7 @@
   
   <script>
   import gsap from 'gsap';
+  import '@/assets/ComponentsStyle/CraftStyle/CraftPopup.css';
   
   export default {
     name: 'CraftPopup',
@@ -114,9 +115,3 @@
     }
   };
   </script>
-  
-<style scoped>
-@import '@/assets/CraftPopup.css';
-
-
-</style>

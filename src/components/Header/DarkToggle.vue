@@ -7,6 +7,7 @@ DarkToggle.vue:
   </template>
 
   <script>
+  import "@/assets/ComponentsStyle/HeaderStyle/ToggleDarkStyle.css";
   export default {
     props: {
       isDarkMode: {
@@ -33,7 +34,3 @@ DarkToggle.vue:
     },
   };
   </script>
-
-  <style scoped>
-  @import "@/assets/ToggleDarkStyle.css"; /* Chemin vers ton fichier CSS */
-  </style>

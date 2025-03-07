@@ -66,7 +66,7 @@
  
 <script>
 import { ref, computed, watch, onMounted } from 'vue';
-import '@/assets/GameInventoryStyle.css';
+import '@/assets/ComponentsStyle/InventoryStyle/GameInventoryStyle.css';
 import gameDataService from '@/services/gameDataService';
  
 export default {
@@ -102,6 +102,8 @@ export default {
     const lastCompletedCategory = ref(null);
     const previousCategoriesState = ref({});
     const isLoading = ref(false);
+    const fundamentalElements = ["Eau", "Feu", "Terre", "Air"];
+    const fundamentalCategory = "Elements Fondamentaux";
 
     const filteredCategories = computed(() => {
       if (props.isTimerMode) {
@@ -141,19 +143,58 @@ export default {
         }];
       }
  
+      // Créer des copies des tableaux pour éviter de modifier les props
+      const localDiscoveredElements = [...props.discoveredElements];
+      const localDiscoveredCategories = [...props.discoveredCategories];
+      
+      // S'assurer que les fondamentaux sont présents dans les éléments découverts
+      let hasAddedElements = false;
+      fundamentalElements.forEach(element => {
+        if (!localDiscoveredElements.includes(element)) {
+          localDiscoveredElements.push(element);
+          hasAddedElements = true;
+          console.log(`Élément fondamental ajouté localement: ${element}`);
+        }
+      });
+      
+      // S'assurer que la catégorie fondamentale est présente
+      let hasAddedCategory = false;
+      if (!localDiscoveredCategories.includes(fundamentalCategory)) {
+        localDiscoveredCategories.push(fundamentalCategory);
+        hasAddedCategory = true;
+        console.log(`Catégorie fondamentale ajoutée localement: ${fundamentalCategory}`);
+      }
+      
+      // Si des éléments ont été ajoutés localement, assurons-nous qu'ils sont également sauvegardés
+      if (hasAddedElements || hasAddedCategory) {
+        console.log("Éléments ou catégories fondamentaux ajoutés, synchronisation avec le serveur...");
+        synchronizeFundamentals(localDiscoveredElements, localDiscoveredCategories);
+      }
+      
       return Object.entries(props.categories)
         .map(([name, elements]) => {
-          const filteredElements = Array.isArray(elements)
-            ? elements.filter((el) => props.discoveredElements.includes(el))
+          let filteredElements = Array.isArray(elements)
+            ? elements.filter((el) => localDiscoveredElements.includes(el))
             : [];
+          
+          // Cas spécial pour "Elements Fondamentaux"
+          if (name === "Elements Fondamentaux") {
+            // S'assurer que tous les éléments fondamentaux sont présents dans cette catégorie
+            fundamentalElements.forEach(element => {
+              if (!filteredElements.includes(element) && elements.includes(element)) {
+                filteredElements.push(element);
+              }
+            });
+          }
+          
           return {
             name: name.replace(/_/g, " "),
-            progress: (filteredElements.length / elements.length) * 100,
+            progress: elements.length > 0 ? (filteredElements.length / elements.length) * 100 : 0,
             elements: filteredElements,
             isComplete: filteredElements.length === elements.length
           };
         })
-        .filter((category) => props.discoveredCategories.includes(category.name));
+        .filter((category) => localDiscoveredCategories.includes(category.name));
     });
 
     function normalizeString(str) {
@@ -177,6 +218,34 @@ export default {
     function forceReload(data) {
       if (data) {
         emit('force-reload', data);
+      }
+    }
+
+    // Synchroniser les éléments et catégories fondamentaux avec le serveur
+    async function synchronizeFundamentals(elements, categories) {
+      try {
+        // Mise à jour des éléments découverts
+        const elementsResponse = await fetch('/api/progress/update-discovered-elements', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ discoveredElements: elements }),
+        });
+        
+        if (!elementsResponse.ok) {
+          console.error('Erreur lors de la synchronisation des éléments fondamentaux');
+        }
+        
+        // Le backend gère déjà la mise à jour des catégories découvertes, pas besoin de faire une requête séparée
+        
+        // Informer le composant parent des changements
+        emit('force-reload', { 
+          discoveredElements: elements,
+          discoveredCategories: categories
+        });
+      } catch (error) {
+        console.error('Erreur lors de la synchronisation avec le serveur:', error);
       }
     }
 
@@ -238,7 +307,3 @@ export default {
   }
 };
 </script>
-
-<style scoped>
-@import '@/assets/GameInventoryStyle.css';
-</style>

@@ -326,20 +326,16 @@ class ProgressService {
       throw error;
     }
   }
-  
-  // Méthode publique pour sauvegarder avec file d'attente
-  // Modifier la logique dans saveGameProgress pour être plus agressif sur le regroupement
+
 async saveGameProgress(progressData) {
   // Éviter d'ajouter des objets vides à la file d'attente
   if (!progressData || Object.keys(progressData).length === 0) {
     return Promise.resolve({ status: 'skipped', message: 'Aucune donnée à sauvegarder' });
   }
   
-  // Plutôt que d'attendre la limite de 50, toujours fusionner si possible
   if (saveQueue.length > 0) {
     const lastItem = saveQueue[saveQueue.length - 1];
     
-    // Fusionner avec le dernier élément
     if (progressData.coins !== undefined) lastItem.coins = progressData.coins;
     if (progressData.discoveredElements) {
       lastItem.discoveredElements = [...new Set([...(lastItem.discoveredElements || []), ...progressData.discoveredElements])];
@@ -507,15 +503,43 @@ async saveGameProgress(progressData) {
     }
   }
 
-  async updateDiscoveredElements(discoveredElements) {
+  async updateDiscoveredElements(discoveredElements, gameMode = 'infinite') {
     // S'assurer que discoveredElements est un tableau
     if (!Array.isArray(discoveredElements)) {
       console.error('Elements découverts invalides:', discoveredElements);
       return null;
     }
     
-    // Utiliser la file d'attente de sauvegarde
-    return this.saveGameProgress({ discoveredElements });
+    // Ajouter les éléments fondamentaux s'ils ne sont pas déjà inclus
+    const fundamentalElements = ["Eau", "Feu", "Terre", "Air"];
+    discoveredElements = [...new Set([...discoveredElements, ...fundamentalElements])];
+    
+    // En mode conservation ou pendant un cooldown, utiliser la file d'attente
+    if (conservativeMode || isInGlobalCooldown()) {
+      return this.saveGameProgress({ discoveredElements });
+    }
+    
+    try {
+      // Essayer d'utiliser l'API spécifique qui met à jour tous les modes
+      const response = await progressInstance.post('update-discovered-elements', { 
+        discoveredElements,
+        gameMode 
+      });
+      
+      // Invalider le cache
+      progressCache = null;
+      lastProgressLoad = 0;
+      
+      return response.data;
+    } catch (error) {
+      // En cas d'erreur 429, activer le cooldown global
+      if (error.response && error.response.status === 429) {
+        activateGlobalCooldown();
+      }
+      
+      // En cas d'erreur, fallback sur la méthode générale
+      return this.saveGameProgress({ discoveredElements });
+    }
   }
 
   async updateAchievements(achievementsData) {
