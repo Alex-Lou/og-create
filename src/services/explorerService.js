@@ -700,37 +700,48 @@ async refreshAfterPurchase() {
     }
   },
 
-    /**
-   * Abandonne un défi en cours
-   * @param {number} regionId - ID de la région où le défi est abandonné
-   * @param {number} energyCost - Coût en énergie du défi (pour vérification)
-   */
-    async abandonChallenge(regionId, energyCost = 0) {
-      try {
-        // Assurer que le coût d'énergie est positif et significatif
-        const actualEnergyCost = Math.max(2, energyCost);
+  async abandonChallenge(regionId, energyCost = 0) {
+    try {
+      // Assurer que le coût d'énergie est positif
+      const actualEnergyCost = Math.max(0, energyCost);
+      
+      console.log(`Abandon du défi pour la région ${regionId} avec un coût d'énergie de ${actualEnergyCost}`);
+      
+      // Appel à l'API pour abandonner le défi
+      const response = await api.post(`/explorer/abandon/${regionId}`, { 
+        energyCost: actualEnergyCost 
+      });
+      
+      console.log('Défi abandonné:', response.data);
+      
+      // IMPORTANT: Mettre à jour directement l'énergie dans le cache
+      if (response.data && response.data.energy !== undefined) {
+        this._energyCache.data = {
+          energy: response.data.energy,
+          max_energy: this._energyCache.data?.max_energy || 20,
+          next_energy_in: this._energyCache.data?.next_energy_in || 30
+        };
+        this._energyCache.timestamp = Date.now(); // Mettre à jour le timestamp
         
-        console.log(`Abandon du défi pour la région ${regionId} avec un coût d'énergie de ${actualEnergyCost}`);
-        
-        // Appel direct à l'API sans passer par _executeWithBackoff
-        const response = await api.post(`/explorer/abandon/${regionId}`, { 
-          energyCost: actualEnergyCost 
-        });
-        
-        console.log('Défi abandonné:', response.data);
-        
-        // Invalider les caches d'énergie
-        this._energyCache.data = null;
-        this._energyCache.timestamp = 0;
-        this._initCache.data = null;
-        this._initCache.timestamp = 0;
-        
-        return response.data;
-      } catch (error) {
-        console.error(`Erreur lors de l'abandon du défi dans la région ${regionId}:`, error);
-        return null;
+        // Si le cache init existe aussi, le mettre à jour
+        if (this._initCache.data) {
+          this._initCache.data.energy = response.data.energy;
+        }
       }
-    },
+      
+      // Forcer une actualisation globale lors du prochain contrôle
+      this._forceEnergyRefresh = true;
+      
+      return response.data;
+    } catch (error) {
+      console.error(`Erreur lors de l'abandon du défi dans la région ${regionId}:`, error);
+      
+      // En cas d'erreur, forcer un rechargement complet des données d'énergie
+      await this.checkEnergy();
+      
+      return null;
+    }
+  },
   
   /**
    * Synchronise les éléments découverts par les utilisateurs

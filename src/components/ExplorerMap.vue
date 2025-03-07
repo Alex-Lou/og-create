@@ -91,7 +91,7 @@
       :isVisible="showMapTransitionModal"
       :bossName="lastDefeatedBoss?.name || 'Gardien des Ténèbres'"
       :oldMapId="currentMapId - 1"
-      :newMapId="currentMapId"
+      :newMapId="nextMapToUnlock || currentMapId"
       :rewards="mapTransitionRewards"
       @continue-to-new-map="continueToNewMap"
     />
@@ -761,116 +761,135 @@ handleCraftSuccess(craftedItem) {
 
     // Gère la victoire contre un boss
     async handleBossVictory() {
-      if (!this.currentBoss) return;
+  if (!this.currentBoss) return;
+  
+  console.log("=== DÉBUT TRAITEMENT VICTOIRE DE BOSS ===");
+  
+  this.lastDefeatedBoss = { ...this.currentBoss };
+  const bossId = this.currentBoss.id;
+  
+  const isAlreadyDefeated = await explorerService.isBossDefeated(bossId);
+  
+  const rewardCoins = isAlreadyDefeated ? 0 : (this.currentBoss.rewardCoins || 500);
+  const rewardXp = isAlreadyDefeated ? 0 : (this.currentBoss.rewardXp || 1000);
+  const rewardEnergy = isAlreadyDefeated ? 0 : (this.regionChallenges[this.currentBoss.id]?.energyReward || 10);
+  const regionId = this.currentBoss.trigger_after_region;
+  
+  if (!isAlreadyDefeated) {
+    this.energy = Math.min(this.energy + rewardEnergy, this.maxEnergy);
+  }
+  
+  const associatedRegion = this.regions.find(r => r.id === regionId);
+  if (associatedRegion) {
+    associatedRegion.completed = true;
+    associatedRegion.progress = 100;
+  }
+  
+  const bossRegion = this.regions.find(r => r.id === bossId);
+  if (bossRegion) {
+    bossRegion.completed = true;
+    bossRegion.visited = true;
+    bossRegion.progress = 100;
+    bossRegion.boss_defeated = true; // Marquer le boss comme vaincu
+  }
+  
+  this.victoryRewards = {
+    coins: rewardCoins,
+    xp: rewardXp,
+    energy: rewardEnergy,
+    isBossReward: true,
+    alreadyDefeated: isAlreadyDefeated
+  };
+  
+  if (!isAlreadyDefeated) {
+    this.$emit('coins-updated', this.userCoins + rewardCoins);
+  }
+  
+  const nextMapId = this.currentMapId + 1;
+  
+  const isFinalBoss = await mapUtils.isFinalBoss(bossRegion, this.regions, this.currentMapId);
+  console.log(`Boss ${bossId} est-il final:`, isFinalBoss);
+  
+  // Réinitialiser ces variables avant de les définir
+  this.showTransitionAfterVictory = false;
+  this.nextMapToUnlock = null;
+  
+  if (isFinalBoss) {
+    try {
+      console.log("C'est un boss final, vérification si la map suivante existe...");
+      const mapExists = await explorerService.isMapUnlocked(nextMapId);
+      console.log(`Map ${nextMapId} existe:`, mapExists);
       
-      console.log("=== DÉBUT TRAITEMENT VICTOIRE DE BOSS ===");
-      
-      this.lastDefeatedBoss = { ...this.currentBoss };
-      const bossId = this.currentBoss.id;
-      
-      const isAlreadyDefeated = await explorerService.isBossDefeated(bossId);
-      
-      const rewardCoins = isAlreadyDefeated ? 0 : (this.currentBoss.rewardCoins || 500);
-      const rewardXp = isAlreadyDefeated ? 0 : (this.currentBoss.rewardXp || 1000);
-      const rewardEnergy = isAlreadyDefeated ? 0 : (this.regionChallenges[this.currentBoss.id]?.energyReward || 10);
-      const regionId = this.currentBoss.trigger_after_region;
-      
-      if (!isAlreadyDefeated) {
-        this.energy = Math.min(this.energy + rewardEnergy, this.maxEnergy);
-      }
-      
-      const associatedRegion = this.regions.find(r => r.id === regionId);
-      if (associatedRegion) {
-        associatedRegion.completed = true;
-        associatedRegion.progress = 100;
-      }
-      
-      const bossRegion = this.regions.find(r => r.id === bossId);
-      if (bossRegion) {
-        bossRegion.completed = true;
-        bossRegion.visited = true;
-        bossRegion.progress = 100;
-        bossRegion.boss_defeated = true; // Marquer le boss comme vaincu
-      }
-      
-      this.victoryRewards = {
-        coins: rewardCoins,
-        xp: rewardXp,
-        energy: rewardEnergy,
-        isBossReward: true,
-        alreadyDefeated: isAlreadyDefeated
-      };
-      
-      if (!isAlreadyDefeated) {
-        this.$emit('coins-updated', this.userCoins + rewardCoins);
-      }
-      
-      const nextMapId = this.currentMapId + 1;
-      
-      const isFinalBoss = await mapUtils.isFinalBoss(bossRegion, this.regions, this.currentMapId);
-      
-      if (isFinalBoss) {
-        try {
-          const mapExists = await explorerService.isMapUnlocked(nextMapId);
-          
-          if (mapExists) {
-            this.showTransitionAfterVictory = true;
-            this.nextMapToUnlock = nextMapId;
-            this.mapTransitionRewards = {
-              coins: rewardCoins,
-              xp: rewardXp,
-              energy: rewardEnergy
-            };
-          } else {
-            this.showTransitionAfterVictory = false;
-          }
-        } catch (e) {
-          console.error("Erreur lors de la vérification de la map suivante:", e);
-          this.showTransitionAfterVictory = true;
-          this.nextMapToUnlock = nextMapId;
-        }
+      if (mapExists) {
+        this.showTransitionAfterVictory = true;
+        this.nextMapToUnlock = nextMapId;
+        console.log(`Transition vers map ${nextMapId} activée`);
+        this.mapTransitionRewards = {
+          coins: rewardCoins,
+          xp: rewardXp,
+          energy: rewardEnergy
+        };
       } else {
         this.showTransitionAfterVictory = false;
+        console.log("Map suivante n'existe pas, pas de transition");
       }
+    } catch (e) {
+      console.error("Erreur lors de la vérification de la map suivante:", e);
+      // Forcer la transition même en cas d'erreur
+      this.showTransitionAfterVictory = true;
+      this.nextMapToUnlock = nextMapId;
+      console.log(`Transition forcée vers map ${nextMapId} en cas d'erreur`);
+    }
+  } else {
+    this.showTransitionAfterVictory = false;
+    console.log("Ce n'est pas un boss final, pas de transition");
+  }
+  
+  console.log("Paramètres de transition:", {
+    showTransitionAfterVictory: this.showTransitionAfterVictory,
+    nextMapToUnlock: this.nextMapToUnlock
+  });
+  
+  this.showVictoryModal = true;
+  
+  if (!isAlreadyDefeated) {
+    try {
+      const response = await explorerService.completeBoss(bossId, {
+        coins: rewardCoins,
+        energy: rewardEnergy,
+        xp: rewardXp,
+        regionId: regionId,
+        bossRegionId: bossId
+      });
       
-      this.showVictoryModal = true;
-      
-      if (!isAlreadyDefeated) {
-        try {
-          const response = await explorerService.completeBoss(bossId, {
-            coins: rewardCoins,
-            energy: rewardEnergy,
-            xp: rewardXp,
-            regionId: regionId,
-            bossRegionId: bossId
-          });
-          
-          // Si le serveur a retourné des récompenses, utiliser ces valeurs
-          if (response && response.rewards) {
-            if (response.rewards.coins !== undefined) {
-              this.$emit('coins-updated', response.rewards.coins);
-            }
-            
-            if (response.rewards.energy !== undefined) {
-              this.energy = response.rewards.energy;
-            }
-          }
-          await this.forceRegionsReload();
-          
-          if (isFinalBoss) {
-            setTimeout(async () => {
-              await explorerService.refreshUnlockedMaps();
-              await this.loadUnlockedMaps();
-            }, 500);
-          }
-          
-        } catch (error) {
-          console.error(`Erreur lors de l'enregistrement de la victoire du boss ${bossId}:`, error);
+      // Si le serveur a retourné des récompenses, utiliser ces valeurs
+      if (response && response.rewards) {
+        if (response.rewards.coins !== undefined) {
+          this.$emit('coins-updated', response.rewards.coins);
         }
-      } else {
-        await this.refreshRegions();
+        
+        if (response.rewards.energy !== undefined) {
+          this.energy = response.rewards.energy;
+        }
       }
-    },
+      await this.forceRegionsReload();
+      
+      if (isFinalBoss) {
+        setTimeout(async () => {
+          await explorerService.refreshUnlockedMaps();
+          await this.loadUnlockedMaps();
+        }, 500);
+      }
+      
+    } catch (error) {
+      console.error(`Erreur lors de l'enregistrement de la victoire du boss ${bossId}:`, error);
+    }
+  } else {
+    await this.refreshRegions();
+  }
+  
+  console.log("=== FIN TRAITEMENT VICTOIRE DE BOSS ===");
+},
 
     async forceUnlockedMapsRefresh() {      
       try {
@@ -912,31 +931,68 @@ handleCraftSuccess(craftedItem) {
       }
     },
 
-    // Ferme le modal de craft
     async closeCraftModal() {
-      // Vérifier si on est en train d'abandonner un défi qui coûte de l'énergie
-      if (this.currentRegionId && !this.selectedRegion?.is_boss && this.currentEnergyCost > 0) {
-        try {
-          // Rafraîchir l'énergie pour s'assurer que la valeur affichée est correcte
-          const energyData = await explorerService.checkEnergy();
-          this.energy = energyData.energy;
-          
-          // Émettre un événement pour mettre à jour le parent
-          this.$emit('energy-updated', this.energy);
-          
-          console.log(`Défi abandonné pour la région ${this.currentRegionId}. Énergie actuelle: ${this.energy}`);
-        } catch (error) {
-          console.error('Erreur lors de la fermeture du modal de craft:', error);
-        }
+  try {
+    // Vérifier si on est en train d'abandonner un défi qui coûte de l'énergie
+    if (this.currentRegionId && !this.selectedRegion?.is_boss && this.currentEnergyCost > 0) {
+      console.log(`Abandon du défi pour la région ${this.currentRegionId} avec coût ${this.currentEnergyCost}`);
+      
+      // 1. Appeler explicitement le service d'abandon
+      const abandonResult = await explorerService.abandonChallenge(
+        this.currentRegionId, 
+        this.currentEnergyCost
+      );
+      
+      if (abandonResult && abandonResult.energy !== undefined) {
+        console.log(`Énergie après abandon: ${abandonResult.energy}`);
+        
+        // 2. Mettre à jour l'énergie LOCALEMENT avec la valeur retournée
+        this.energy = abandonResult.energy;
+        
+        // 3. Notifier le parent
+        this.$emit('energy-updated', this.energy);
+        
+        // 4. Forcer un refresh visuel du compteur d'énergie
+        this.$nextTick(() => {
+          const tempEnergy = this.energy;
+          this.energy = -1; // Valeur temporaire différente pour forcer le rafraîchissement
+          setTimeout(() => {
+            this.energy = tempEnergy;
+          }, 50);
+        });
       }
       
-      // Réinitialiser les trackers de région et d'énergie
-      this.currentRegionId = null;
-      this.currentEnergyCost = 0;
-      
-      // Fermer le modal
-      this.showCraftModal = false;
-    },
+      // 5. Pour être absolument sûr, faire un second appel pour vérifier l'énergie
+      setTimeout(async () => {
+        const energyData = await explorerService.checkEnergy();
+        if (energyData && energyData.energy !== undefined && 
+            energyData.energy !== this.energy) {
+          console.log(`Correction d'énergie: ${this.energy} → ${energyData.energy}`);
+          this.energy = energyData.energy;
+          this.$emit('energy-updated', this.energy);
+        }
+      }, 500);
+    }
+  } catch (error) {
+    console.error('Erreur lors de la fermeture du modal de craft:', error);
+    
+    // En cas d'erreur, forcer une vérification complète de l'énergie
+    try {
+      const energyData = await explorerService.checkEnergy();
+      if (energyData) {
+        this.energy = energyData.energy;
+        this.$emit('energy-updated', this.energy);
+      }
+    } catch (refreshError) {
+      console.error('Erreur lors du rafraîchissement de l\'énergie:', refreshError);
+    }
+  } finally {
+    // Réinitialiser les trackers et fermer le modal
+    this.currentRegionId = null;
+    this.currentEnergyCost = 0;
+    this.showCraftModal = false;
+  }
+},
 
 
     // Gère la création d'un élément cible
@@ -946,39 +1002,58 @@ handleCraftSuccess(craftedItem) {
 
     // Ferme le modal de victoire
     closeVictoryModal() {
-      
-      // Fermer le modal de victoire
-      this.showVictoryModal = false;
-      
-      const triggerBoss = this.victoryRewards?.triggerBoss;
-      
-      if (this.showTransitionAfterVictory && this.nextMapToUnlock) {
-        console.log("Affichage du modal de transition vers map", this.nextMapToUnlock);
-        setTimeout(() => {
-          this.showMapTransitionModal = true;
-          this.showTransitionAfterVictory = false;
-        }, 300);
-      } 
-      // Gérer le déclenchement d'un boss normal
-      else if (triggerBoss && this.currentBoss) {
-        setTimeout(() => {
-          this.showNpcDialog = true;
-          this.selectedRegion = {
-            id: `boss-${this.currentBoss.id}`,
-            name: this.currentBoss.name
-          };
-          this.currentNpc = {
-            image: this.currentBoss.bossImage || 'boss-1-anim.gif',
-            position: this.currentBoss.bossPosition || 'center',
-            dialog: this.currentBoss.dialog,
-            actionText: this.currentBoss.actionText || "Affronter le boss"
-          };
-        }, 500);
-      } 
-      else {
-        this.refreshRegions();
-      }
-    },
+  console.log("=== DÉBUT FERMETURE MODAL DE VICTOIRE ===");
+  
+  // Capture des valeurs importantes avant fermeture
+  const isBossVictory = this.victoryRewards?.isBossReward;
+  const triggerBoss = this.victoryRewards?.triggerBoss;
+  const shouldTransition = this.showTransitionAfterVictory && this.nextMapToUnlock;
+  
+  console.log("État avant fermeture:", {
+    isBossVictory,
+    triggerBoss,
+    showTransitionAfterVictory: this.showTransitionAfterVictory,
+    nextMapToUnlock: this.nextMapToUnlock,
+    shouldTransition
+  });
+  
+  // Fermer le modal de victoire
+  this.showVictoryModal = false;
+  
+  // Gérer la transition vers la map suivante
+  if (shouldTransition) {
+    console.log(`Préparation de la transition vers map ${this.nextMapToUnlock}`);
+    setTimeout(() => {
+      console.log("Activation du modal de transition");
+      this.showMapTransitionModal = true;
+      this.showTransitionAfterVictory = false;
+    }, 300);
+  } 
+  // Gérer le déclenchement d'un boss normal
+  else if (triggerBoss && this.currentBoss) {
+    console.log("Préparation du dialogue pour le boss", this.currentBoss.id);
+    setTimeout(() => {
+      this.showNpcDialog = true;
+      this.selectedRegion = {
+        id: `boss-${this.currentBoss.id}`,
+        name: this.currentBoss.name
+      };
+      this.currentNpc = {
+        image: this.currentBoss.bossImage || 'boss-1-anim.gif',
+        position: this.currentBoss.bossPosition || 'center',
+        dialog: this.currentBoss.dialog,
+        actionText: this.currentBoss.actionText || "Affronter le boss"
+      };
+    }, 500);
+  } 
+  // Sinon, rafraîchir simplement les régions
+  else {
+    console.log("Rafraîchissement simple des régions");
+    this.refreshRegions();
+  }
+  
+  console.log("=== FIN FERMETURE MODAL DE VICTOIRE ===");
+},
 
     async refreshEnergy() {
       try {
