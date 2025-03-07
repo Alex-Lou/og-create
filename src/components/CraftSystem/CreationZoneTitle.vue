@@ -86,7 +86,7 @@ export default {
 <style scoped>
 @font-face {
   font-family: 'BenjaminFranklin';
-  src: url('@/assets/BenjaminFranklin.ttf') format('opentype');
+  src: url('@/assets/fonts/BenjaminFranklin.ttf') format('opentype');
   font-weight: normal;
   font-style: normal;
 }

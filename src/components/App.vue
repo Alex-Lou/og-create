@@ -136,22 +136,22 @@
 <script>
 import AuthService from '@/services/authService';
 import progressService from '@/services/progressService';
-import DarkToggle from './DarkToggle.vue';
-import LoginIcon from './LoginIcon.vue';
-import ContactIcon from './ContactIcon.vue';
-import GameAchievementsPopup from './GameAchievementsPopup.vue';
-import GameInventory from './GameInventory.vue';
-import CraftSystem from './CraftSystem.vue';
-import CraftPopup from './CraftPopup.vue';
-import GameAchievementsContent from './GameAchievementsContent.vue';
+import DarkToggle from './Header/DarkToggle.vue';
+import LoginIcon from './Header/LoginIcon.vue';
+import ContactIcon from './Header/ContactIcon.vue';
+import GameAchievementsPopup from './Achievements/GameAchievementsPopup.vue';
+import GameInventory from './Inventory/GameInventory.vue';
+import CraftSystem from './CraftSystem/CraftSystem.vue';
+import CraftPopup from './CraftSystem/CraftPopup.vue';
+import GameAchievementsContent from './Achievements/GameAchievementsContent.vue';
 import DataLoading from './DataLoading.vue';
-import GameSizer from './GameSizer.vue';
-import InfiniteModeButton from './InfiniteModeButton.vue';
+import GameSizer from './Inventory/GameSizer.vue';
+import InfiniteModeButton from './InfiniteMode/InfiniteModeButton.vue';
 import ExplorerModeButton from './Explorer/ExplorerModeButton.vue';
-import TimerModeButton from './TimerModeButton.vue';
-import TimerQuestions from './TimerQuestions.vue';
-import CoinCounter from './CoinCounter.vue';
-import CustomizeModal from './CustomizeModal.vue';
+import TimerModeButton from './TimerMode/TimerModeButton.vue';
+import TimerQuestions from './TimerMode/TimerQuestions.vue';
+import CoinCounter from './Header/CoinCounter.vue';
+import CustomizeModal from './Header/CustomizeModal.vue';
 import ExplorerMap from './Explorer/ExplorerMap.vue';
 import '@/assets/style.css';
 

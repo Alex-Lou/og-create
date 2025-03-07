@@ -1,14 +1,14 @@
 /* Inventory Section */
 @font-face {
   font-family: 'White Storm';
-  src: url('~@/assets/White Storm.otf') format('opentype');
+  src: url('~@/assets/fonts/White Storm.otf') format('opentype');
   font-weight: normal;
   font-style: normal;
 }
 
 @font-face {
   font-family: 'BenjaminFranklin';
-  src: url('~@/assets/BenjaminFranklin.ttf') format('opentype');
+  src: url('~@/assets/fonts/BenjaminFranklin.ttf') format('opentype');
   font-weight: normal;
   font-style: normal;
 }
