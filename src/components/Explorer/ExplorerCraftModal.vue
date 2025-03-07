@@ -144,7 +144,7 @@
 </template>
 
 <script>
-import BossFight from '@/components/BossFight.vue';
+import BossFight from '@/components/Explorer/BossFight.vue';
 import '@/assets/ExplorerCraftStyle.css';
 
 export default {

@@ -147,12 +147,12 @@ import GameAchievementsContent from './GameAchievementsContent.vue';
 import DataLoading from './DataLoading.vue';
 import GameSizer from './GameSizer.vue';
 import InfiniteModeButton from './InfiniteModeButton.vue';
-import ExplorerModeButton from './ExplorerModeButton.vue';
+import ExplorerModeButton from './Explorer/ExplorerModeButton.vue';
 import TimerModeButton from './TimerModeButton.vue';
 import TimerQuestions from './TimerQuestions.vue';
 import CoinCounter from './CoinCounter.vue';
 import CustomizeModal from './CustomizeModal.vue';
-import ExplorerMap from './ExplorerMap.vue';
+import ExplorerMap from './Explorer/ExplorerMap.vue';
 import '@/assets/style.css';
 
 export default {

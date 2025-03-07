@@ -73,63 +73,49 @@ export default {
     },
     
     async buyEnergy() {
-      // Vérifications pour éviter les achats inutiles
-      if (this.isProcessing) return;
-      if (this.energy >= this.maxEnergy) {
-        this.$emit('show-alert', `Votre énergie est déjà au maximum.`);
-        return;
-      }
-      if (this.userCoins < this.energyCost) {
-        this.$emit('show-alert', `Vous n'avez pas assez de pièces ! ${this.energyCost} pièces sont nécessaires pour acheter 1 point d'énergie.`);
-        return;
-      }
-      
-      // Debounce pour éviter les clics multiples
-      const now = Date.now();
-      if (now - this.lastTransactionTime < 350) {
-        console.log("Achat ignoré - trop rapproché du précédent");
-        return;
-      }
-      
-      this.lastTransactionTime = now;
-      this.isProcessing = true;
-      
-      try {
-        // Mettre à jour optimistiquement les valeurs locales
-        this.localEnergy += 1;
-        this.localCoins -= this.energyCost;
-        
-        // Appel au service
-        const result = await explorerService.buyEnergy(1);
-        
-        // Si l'achat est déjà en cours ou trop rapproché
-        if (result.alreadyInProgress || result.tooSoon) {
-          return; // Simplement ignorer
-        }
-        
-        // Mettre à jour avec les valeurs réelles retournées par le serveur
-        this.$emit('energy-updated', result.energy);
-        this.$emit('coins-updated', result.coins_remaining);
-        this.$emit('show-alert', `Vous avez acheté 1 point d'énergie pour ${this.energyCost} pièces.`);
-        
-        // Forcer un rafraîchissement complet des données
-        await explorerService.refreshAfterPurchase();
-      } catch (error) {
-        console.error('Erreur lors de l\'achat d\'énergie:', error);
-        
-        // Restaurer les valeurs initiales en cas d'erreur
-        this.localEnergy = this.energy;
-        this.localCoins = this.userCoins;
-        
-        // Afficher l'erreur
-        this.$emit('show-alert', error.response?.data?.message || 'Une erreur est survenue lors de l\'achat d\'énergie');
-      } finally {
-        // Autoriser un nouvel achat après un court délai
-        setTimeout(() => {
-          this.isProcessing = false;
-        }, 250);
-      }
+  // Éviter les clics multiples
+  if (this.isProcessing) return;
+  
+  // Debounce pour éviter les clics trop rapprochés
+  const now = Date.now();
+  if (now - this.lastTransactionTime < 350) {
+    console.log("Achat ignoré - trop rapproché du précédent");
+    return;
+  }
+  
+  this.lastTransactionTime = now;
+  this.isProcessing = true;
+  
+  try {
+    // Appel au service sans validation côté client
+    const result = await explorerService.buyEnergy(1);
+    
+    // Si l'achat est déjà en cours ou trop rapproché
+    if (result.alreadyInProgress || result.tooSoon) {
+      return; // Simplement ignorer
     }
+    
+    // Mettre à jour avec les valeurs retournées par le serveur
+    this.$emit('energy-updated', result.energy);
+    this.$emit('coins-updated', result.coins_remaining);
+    
+    // Afficher le message provenant du backend
+    this.$emit('show-alert', result.message || `Énergie achetée avec succès`);
+    
+    // Forcer un rafraîchissement complet des données
+    await explorerService.refreshAfterPurchase();
+  } catch (error) {
+    console.error('Erreur lors de l\'achat d\'énergie:', error);
+    
+    // Afficher le message d'erreur provenant du backend si disponible
+    this.$emit('show-alert', error.response?.data?.message || 'Une erreur est survenue lors de l\'achat d\'énergie');
+  } finally {
+    // Autoriser un nouvel achat après un court délai
+    setTimeout(() => {
+      this.isProcessing = false;
+    }, 250);
+  }
+}
   }
 };
 </script>

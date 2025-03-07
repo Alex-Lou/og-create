@@ -110,6 +110,7 @@ import EnergyDisplayExplorer from './EnergyDisplayExplorer.vue';
 import ExplorerVictoryModal from './ExplorerVictoryModal.vue';
 import MapSelector from './MapSelector.vue';
 import ExitConfirmationModal from './ExitConfirmationModal.vue';
+import notificationService from '@/services/notificationService';
 import axios from 'axios';
 
 export default {
@@ -198,7 +199,8 @@ export default {
     },
 
     showAlert(message) {
-      alert(message);
+      // alert(message); // Remplacer cette ligne
+      notificationService.info(message); // Utiliser votre service de notification
     },
     
     getCurrentMapImage() {

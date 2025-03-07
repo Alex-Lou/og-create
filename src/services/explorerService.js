@@ -554,8 +554,8 @@ const explorerService = {
  * Achète de l'énergie avec des pièces avec un verrouillage pour éviter les achats multiples accidentels
  * @param {number} amount - Quantité d'énergie à acheter
  */
-_isEnergyPurchaseInProgress: false, // Nouvelle propriété pour verrouiller les achats multiples
-_lastPurchaseTimestamp: 0, // Pour éviter les achats trop rapprochés
+_isEnergyPurchaseInProgress: false,
+_lastPurchaseTimestamp: 0,
 
 async buyEnergy(amount = 1) {
   // Éviter les achats multiples si une transaction est en cours
@@ -564,7 +564,7 @@ async buyEnergy(amount = 1) {
     return { alreadyInProgress: true };
   }
   
-  // Éviter les achats trop rapprochés (300ms minimum entre chaque achat)
+  // Éviter les achats trop rapprochés
   const now = Date.now();
   if (now - this._lastPurchaseTimestamp < 300) {
     console.warn('Achat trop rapproché du précédent, ignoré');
@@ -575,7 +575,7 @@ async buyEnergy(amount = 1) {
     this._isEnergyPurchaseInProgress = true;
     this._lastPurchaseTimestamp = now;
     
-    // Appel à l'API avec un identifiant de transaction côté client
+    // Appel à l'API
     const response = await api.post('/explorer/buy-energy', { 
       amount,
       client_timestamp: now
@@ -604,7 +604,7 @@ async buyEnergy(amount = 1) {
     console.error('Erreur lors de l\'achat d\'énergie:', error);
     throw error;
   } finally {
-    // Débloquer les achats après un court délai pour éviter les clics trop rapides
+    // Débloquer les achats après un court délai
     setTimeout(() => {
       this._isEnergyPurchaseInProgress = false;
     }, 200);
