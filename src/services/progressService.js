@@ -4,9 +4,9 @@ import AuthService from './authService';
 
 // Configuration pour le contrôle de débit
 const RATE_LIMIT = {
-  interval: 5000, // Intervalle minimal entre les requêtes en ms
-  maxRetries: 5,   // Nombre maximal de tentatives
-  initialBackoff: 2000 // Délai initial avant nouvelle tentative
+  interval: 10000, // 10 secondes entre les requêtes
+  maxRetries: 2,   // 2 tentatives maximum
+  initialBackoff: 10000 // 10 secondes avant nouvelle tentative
 };
 
 // Horodatage de la dernière requête
@@ -15,7 +15,7 @@ let lastRequestTime = 0;
 // Cache pour la progression
 let progressCache = null;
 let lastProgressLoad = 0;
-const CACHE_DURATION = 30000; // 30 secondes de validité du cache
+const CACHE_DURATION = 60000;
 
 // Verrouillage pour éviter les chargements simultanés
 let isLoading = false;
@@ -23,9 +23,13 @@ let pendingLoadRequests = [];
 
 // Variables pour contrôler la fréquence des sauvegardes
 let debounceTimer = null;
-const DEBOUNCE_DELAY = 5000; // 5 secondes entre les traitements de la file
+const DEBOUNCE_DELAY = 15000; // 15 secondes entre les traitements de la file
 let lastSaveTime = 0;
-const MIN_SAVE_INTERVAL = 10000; // 10 secondes minimum entre les sauvegardes
+const MIN_SAVE_INTERVAL = 30000; // 30 secondes au lieu de 10
+
+// Variable pour le cooldown global en cas d'erreur 429
+let globalCooldownUntil = 0;
+const GLOBAL_COOLDOWN_DURATION = 30000;
 
 // Fonction pour s'assurer que l'authentification est correctement configurée
 function ensureAuthentication() {
@@ -39,11 +43,28 @@ function ensureAuthentication() {
   return false;
 }
 
+// Vérifier si nous sommes en période de cooldown global
+function isInGlobalCooldown() {
+  return Date.now() < globalCooldownUntil;
+}
+
+// Activer le cooldown global
+function activateGlobalCooldown() {
+  globalCooldownUntil = Date.now() + GLOBAL_COOLDOWN_DURATION;
+  console.warn(`Cooldown global activé jusqu'à ${new Date(globalCooldownUntil).toLocaleTimeString()}`);
+}
+
 // Créer une instance plus spécifique qui utilise l'apiInstance partagée
 const progressInstance = {
   async get(endpoint) {
     // Vérifier l'authentification avant chaque requête
     ensureAuthentication();
+    
+    // Vérifier le cooldown global
+    if (isInGlobalCooldown()) {
+      console.warn(`Requête GET ${endpoint} bloquée par le cooldown global. Attente...`);
+      await new Promise(resolve => setTimeout(resolve, globalCooldownUntil - Date.now()));
+    }
     
     await enforceRateLimit();
     try {
@@ -63,7 +84,8 @@ const progressInstance = {
       }
       
       if (error.response && error.response.status === 429) {
-        console.warn(`Rate limit atteint pour GET ${endpoint}, attente avant nouvelle tentative...`);
+        console.warn(`Rate limit atteint pour GET ${endpoint}, activation du cooldown global...`);
+        activateGlobalCooldown();
         await new Promise(resolve => setTimeout(resolve, RATE_LIMIT.initialBackoff));
         return this.get(endpoint); // Réessayer avec récursion limitée
       }
@@ -79,6 +101,12 @@ const progressInstance = {
     
     // Vérifier l'authentification avant chaque requête
     ensureAuthentication();
+    
+    // Vérifier le cooldown global
+    if (isInGlobalCooldown()) {
+      console.warn(`Requête POST ${endpoint} bloquée par le cooldown global. Attente...`);
+      await new Promise(resolve => setTimeout(resolve, globalCooldownUntil - Date.now()));
+    }
     
     await enforceRateLimit();
     
@@ -101,6 +129,7 @@ const progressInstance = {
       }
       
       if (error.response && error.response.status === 429) {
+        activateGlobalCooldown();
         const waitTime = RATE_LIMIT.initialBackoff * Math.pow(2, retryCount);
         console.warn(`Trop de requêtes (${endpoint}), nouvelle tentative dans ${waitTime/1000}s...`);
         
@@ -143,13 +172,27 @@ class ProgressService {
   async processSaveQueue() {
     if (isSaving || saveQueue.length === 0) return;
     
+    // Vérifier si nous sommes en cooldown global
+    if (isInGlobalCooldown()) {
+      console.log(`Traitement de la file d'attente suspendu pendant le cooldown global`);
+      setTimeout(() => this.processSaveQueue(), globalCooldownUntil - Date.now() + 5000);
+      return;
+    }
+    
     // Vérifier si le dernier enregistrement était récent
     const now = Date.now();
     const timeSinceLastSave = now - lastSaveTime;
     
     if (timeSinceLastSave < MIN_SAVE_INTERVAL) {
       console.log(`Trop tôt pour sauvegarder (${timeSinceLastSave/1000}s), attente...`);
-      setTimeout(() => this.processSaveQueue(), MIN_SAVE_INTERVAL - timeSinceLastSave);
+      setTimeout(() => this.processSaveQueue(), MIN_SAVE_INTERVAL - timeSinceLastSave + 2000);
+      return;
+    }
+    
+    // Si peu de données et pas urgent, attendre davantage
+    if (saveQueue.length < 3 && !saveQueue.some(item => item.coins !== undefined)) {
+      // Si seulement des données non critiques, attendre plus longtemps
+      setTimeout(() => this.processSaveQueue(), MIN_SAVE_INTERVAL * 2);
       return;
     }
     
@@ -228,9 +271,20 @@ class ProgressService {
       // Augmenter le compteur d'erreurs
       consecutiveErrors++;
       
+      // Si on reçoit une erreur 429, activer le cooldown global
+      if (error.response && error.response.status === 429) {
+        activateGlobalCooldown();
+      }
+      
       // Remettre les éléments dans la file d'attente si l'erreur n'est pas liée à une limitation de débit
       if (!error.response || error.response.status !== 429) {
         saveQueue = [...saveQueue, ...currentQueue];
+      } else {
+        // En cas de 429, remettre les éléments en file d'attente mais avec un délai plus long
+        setTimeout(() => {
+          saveQueue = [...saveQueue, ...currentQueue];
+          this.processSaveQueue();
+        }, GLOBAL_COOLDOWN_DURATION);
       }
       
       // Si trop d'erreurs consécutives, passer en mode conservation
@@ -245,7 +299,7 @@ class ProgressService {
       // S'il y a de nouvelles données à sauvegarder, traiter la file d'attente à nouveau
       // mais avec un délai plus important en cas d'erreurs
       if (saveQueue.length > 0) {
-        const delay = conservativeMode ? 10000 : MIN_SAVE_INTERVAL;
+        const delay = conservativeMode ? 45000 : MIN_SAVE_INTERVAL;
         setTimeout(() => this.processSaveQueue(), delay);
       }
     }
@@ -274,57 +328,52 @@ class ProgressService {
   }
   
   // Méthode publique pour sauvegarder avec file d'attente
-  async saveGameProgress(progressData) {
-    // Ajouter un log pour identifier l'origine des appels
-    console.log('saveGameProgress appelé avec:', Object.keys(progressData || {}));
+  // Modifier la logique dans saveGameProgress pour être plus agressif sur le regroupement
+async saveGameProgress(progressData) {
+  // Éviter d'ajouter des objets vides à la file d'attente
+  if (!progressData || Object.keys(progressData).length === 0) {
+    return Promise.resolve({ status: 'skipped', message: 'Aucune donnée à sauvegarder' });
+  }
+  
+  // Plutôt que d'attendre la limite de 50, toujours fusionner si possible
+  if (saveQueue.length > 0) {
+    const lastItem = saveQueue[saveQueue.length - 1];
     
-    // Éviter d'ajouter des objets vides à la file d'attente
-    if (!progressData || Object.keys(progressData).length === 0) {
-      return Promise.resolve({ status: 'skipped', message: 'Aucune donnée à sauvegarder' });
+    // Fusionner avec le dernier élément
+    if (progressData.coins !== undefined) lastItem.coins = progressData.coins;
+    if (progressData.discoveredElements) {
+      lastItem.discoveredElements = [...new Set([...(lastItem.discoveredElements || []), ...progressData.discoveredElements])];
     }
+    // Fusionner les autres propriétés...
     
-    // Limiter la taille de la file d'attente pour éviter une surconsommation de mémoire
-    if (saveQueue.length > 50) {
-      console.warn("File d'attente trop grande, fusion forcée des données");
-      // Fusionner avec le dernier élément de la file d'attente
-      const lastItem = saveQueue[saveQueue.length - 1];
-      
-      // Même logique de fusion que dans processSaveQueue
-      if (progressData.coins !== undefined) lastItem.coins = progressData.coins;
-      if (progressData.discoveredElements) {
-        lastItem.discoveredElements = [...new Set([...(lastItem.discoveredElements || []), ...progressData.discoveredElements])];
-      }
-      // Continuer pour les autres propriétés
-      
-      // Déclencher le traitement de manière différée
-      if (debounceTimer) {
-        clearTimeout(debounceTimer);
-      }
-      debounceTimer = setTimeout(() => this.processSaveQueue(), DEBOUNCE_DELAY);
-      
-      return Promise.resolve({ status: 'merged', message: 'La sauvegarde a été fusionnée avec une existante' });
-    }
-    
-    // Ajouter à la file d'attente
-    saveQueue.push(progressData);
-    
-    // Annuler le timer existant s'il y en a un
+    // Unique débounce timer
     if (debounceTimer) {
       clearTimeout(debounceTimer);
     }
+    debounceTimer = setTimeout(() => this.processSaveQueue(), DEBOUNCE_DELAY);
     
-    // Créer un nouveau timer pour retarder le traitement
-    debounceTimer = setTimeout(() => {
-      this.processSaveQueue();
-    }, DEBOUNCE_DELAY);
-    
-    // Invalider le cache pour forcer un rechargement frais lors du prochain accès
+    return Promise.resolve({ status: 'merged', message: 'La sauvegarde a été fusionnée avec une existante' });
+  }
+  
+  // Sinon, ajouter à la file d'attente
+  saveQueue.push(progressData);
+  
+  // Débounce pour éviter les sauvegardes trop fréquentes
+  if (debounceTimer) {
+    clearTimeout(debounceTimer);
+  }
+  debounceTimer = setTimeout(() => {
+    this.processSaveQueue();
+  }, DEBOUNCE_DELAY);
+  
+  // Invalider le cache uniquement si nécessaire
+  if (progressData.coins !== undefined || progressData.discoveredElements) {
     progressCache = null;
     lastProgressLoad = 0;
-    
-    // Renvoyer une promesse qui se résout immédiatement
-    return Promise.resolve({ status: 'queued', message: 'La sauvegarde a été ajoutée à la file d\'attente' });
   }
+  
+  return Promise.resolve({ status: 'queued', message: 'La sauvegarde a été ajoutée à la file d\'attente' });
+}
 
   async loadGameProgress() {
     // Si nous avons des données en cache récentes, les utiliser
@@ -342,6 +391,16 @@ class ProgressService {
       return new Promise((resolve, reject) => {
         pendingLoadRequests.push({ resolve, reject });
       });
+    }
+    
+    // Vérifier si nous sommes en cooldown global
+    if (isInGlobalCooldown()) {
+      console.log('Demande de chargement pendant un cooldown global, utilisation du cache ou attente');
+      if (progressCache) {
+        return Promise.resolve({...progressCache});
+      }
+      // Si pas de cache, attendre la fin du cooldown
+      await new Promise(resolve => setTimeout(resolve, globalCooldownUntil - Date.now()));
     }
     
     // Verrouiller pour éviter les appels simultanés
@@ -367,6 +426,11 @@ class ProgressService {
       return {...response.data}; // Renvoyer une copie
     } catch (error) {
       console.error('Erreur dans loadGameProgress:', error);
+      
+      // Si on reçoit une erreur 429, activer le cooldown global
+      if (error.response && error.response.status === 429) {
+        activateGlobalCooldown();
+      }
       
       // Rejeter toutes les promesses en attente
       pendingLoadRequests.forEach(request => request.reject(error));
@@ -414,8 +478,8 @@ class ProgressService {
       // Mettre à jour notre cache de pièces
       lastKnownCoins = coinsToSave;
       
-      // En mode conservation, éviter les appels directs
-      if (conservativeMode) {
+      // En mode conservation ou pendant un cooldown, éviter les appels directs
+      if (conservativeMode || isInGlobalCooldown()) {
         return this.saveGameProgress({ coins: coinsToSave });
       }
       
@@ -429,6 +493,11 @@ class ProgressService {
         
         return response.data;
       } catch (error) {
+        // En cas d'erreur 429, activer le cooldown global
+        if (error.response && error.response.status === 429) {
+          activateGlobalCooldown();
+        }
+        
         // En cas d'erreur, on essaie via la file d'attente
         return this.saveGameProgress({ coins: coinsToSave });
       }
@@ -477,6 +546,12 @@ class ProgressService {
   
   // Méthode pour forcer le traitement de la file d'attente
   forceSaveQueueProcessing() {
+    // Ne pas forcer le traitement pendant un cooldown global
+    if (isInGlobalCooldown()) {
+      console.log('Impossible de forcer le traitement pendant un cooldown global');
+      return;
+    }
+    
     // Réinitialiser l'état
     isSaving = false;
     consecutiveErrors = 0;
@@ -499,8 +574,19 @@ class ProgressService {
         isLoading
       },
       lastSaveTime: lastSaveTime ? new Date(lastSaveTime).toISOString() : null,
-      timeSinceLastSave: lastSaveTime ? Math.round((Date.now() - lastSaveTime) / 1000) : null
+      timeSinceLastSave: lastSaveTime ? Math.round((Date.now() - lastSaveTime) / 1000) : null,
+      cooldownStatus: {
+        isActive: isInGlobalCooldown(),
+        remainingTime: isInGlobalCooldown() ? Math.round((globalCooldownUntil - Date.now()) / 1000) : 0,
+        expiresAt: isInGlobalCooldown() ? new Date(globalCooldownUntil).toISOString() : null
+      }
     };
+  }
+  
+  // Méthode pour réinitialiser le cooldown global (à utiliser avec précaution)
+  resetGlobalCooldown() {
+    globalCooldownUntil = 0;
+    console.log('Cooldown global réinitialisé');
   }
 }
 

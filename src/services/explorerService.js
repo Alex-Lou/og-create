@@ -550,35 +550,106 @@ const explorerService = {
     }
   },
   
-  /**
-   * Achète de l'énergie avec des pièces
-   * @param {number} amount - Quantité d'énergie à acheter
-   */
-  async buyEnergy(amount = 1) {
-    try {
-      const response = await api.post('/explorer/buy-energy', { amount });
-      
-      console.log('Achat d\'énergie réussi:', response.data);
-      
-      this._initCache.timestamp = 0;
-      this._energyCache.timestamp = 0;
-      
-      return response.data;
-    } catch (error) {
-      console.error('Erreur lors de l\'achat d\'énergie:', error);
-      throw new Error(error.response?.data?.message || 'Erreur lors de l\'achat d\'énergie');
+ /**
+ * Achète de l'énergie avec des pièces avec un verrouillage pour éviter les achats multiples accidentels
+ * @param {number} amount - Quantité d'énergie à acheter
+ */
+_isEnergyPurchaseInProgress: false, // Nouvelle propriété pour verrouiller les achats multiples
+_lastPurchaseTimestamp: 0, // Pour éviter les achats trop rapprochés
+
+async buyEnergy(amount = 1) {
+  // Éviter les achats multiples si une transaction est en cours
+  if (this._isEnergyPurchaseInProgress) {
+    console.warn('Achat d\'énergie en cours, veuillez patienter...');
+    return { alreadyInProgress: true };
+  }
+  
+  // Éviter les achats trop rapprochés (300ms minimum entre chaque achat)
+  const now = Date.now();
+  if (now - this._lastPurchaseTimestamp < 300) {
+    console.warn('Achat trop rapproché du précédent, ignoré');
+    return { tooSoon: true };
+  }
+  
+  try {
+    this._isEnergyPurchaseInProgress = true;
+    this._lastPurchaseTimestamp = now;
+    
+    // Appel à l'API avec un identifiant de transaction côté client
+    const response = await api.post('/explorer/buy-energy', { 
+      amount,
+      client_timestamp: now
+    });
+    
+    console.log('Achat d\'énergie réussi:', response.data);
+    
+    // Mise à jour directe des caches
+    this._energyCache.data = {
+      energy: response.data.energy,
+      max_energy: response.data.max_energy || this._energyCache.data?.max_energy || 20,
+      next_energy_in: 30 // Valeur par défaut
+    };
+    this._energyCache.timestamp = now;
+    
+    if (this._initCache.data) {
+      this._initCache.data.energy = response.data.energy;
+      this._initCache.data.max_energy = response.data.max_energy || this._initCache.data.max_energy;
     }
-  },
+    
+    // Forcer un rafraîchissement lors du prochain check
+    this._forceEnergyRefresh = true;
+    
+    return response.data;
+  } catch (error) {
+    console.error('Erreur lors de l\'achat d\'énergie:', error);
+    throw error;
+  } finally {
+    // Débloquer les achats après un court délai pour éviter les clics trop rapides
+    setTimeout(() => {
+      this._isEnergyPurchaseInProgress = false;
+    }, 200);
+  }
+},
+
+/**
+ * Rafraîchit toutes les données après un achat
+ */
+async refreshAfterPurchase() {
+  // Invalider complètement les caches
+  this._initCache.data = null;
+  this._initCache.timestamp = 0;
+  this._energyCache.data = null;
+  this._energyCache.timestamp = 0;
+  this._forceEnergyRefresh = true;
+  
+  // Forcer un rechargement des données
+  return await this.checkEnergy();
+},
 
   async checkEnergy() {
     const now = Date.now();
-    if (this._energyCache.data && (now - this._energyCache.timestamp < this._energyCache.validity)) {
+    
+    // Toujours éviter d'utiliser le cache après une opération d'achat ou d'abandon
+    if (this._energyCache.data && 
+        (now - this._energyCache.timestamp < this._energyCache.validity) && 
+        !this._forceEnergyRefresh) {
       console.log('Utilisation des données d\'énergie en cache');
       return this._energyCache.data;
     }
     
+    // Réinitialiser le flag de rafraîchissement forcé
+    this._forceEnergyRefresh = false;
+    
     try {
-      const response = await api.get('/explorer/init');
+      // Ajouter un petit délai aléatoire pour éviter les requêtes simultanées
+      await new Promise(resolve => setTimeout(resolve, Math.random() * 200));
+      
+      const response = await this._executeWithBackoff(
+        async () => await api.get('/explorer/init'),
+        'check-energy',
+        3,
+        1000
+      );
       
       const energyData = {
         energy: response.data.energy,
@@ -628,6 +699,38 @@ const explorerService = {
       throw new Error('Impossible de synchroniser les régions');
     }
   },
+
+    /**
+   * Abandonne un défi en cours
+   * @param {number} regionId - ID de la région où le défi est abandonné
+   * @param {number} energyCost - Coût en énergie du défi (pour vérification)
+   */
+    async abandonChallenge(regionId, energyCost = 0) {
+      try {
+        // Assurer que le coût d'énergie est positif et significatif
+        const actualEnergyCost = Math.max(2, energyCost);
+        
+        console.log(`Abandon du défi pour la région ${regionId} avec un coût d'énergie de ${actualEnergyCost}`);
+        
+        // Appel direct à l'API sans passer par _executeWithBackoff
+        const response = await api.post(`/explorer/abandon/${regionId}`, { 
+          energyCost: actualEnergyCost 
+        });
+        
+        console.log('Défi abandonné:', response.data);
+        
+        // Invalider les caches d'énergie
+        this._energyCache.data = null;
+        this._energyCache.timestamp = 0;
+        this._initCache.data = null;
+        this._initCache.timestamp = 0;
+        
+        return response.data;
+      } catch (error) {
+        console.error(`Erreur lors de l'abandon du défi dans la région ${regionId}:`, error);
+        return null;
+      }
+    },
   
   /**
    * Synchronise les éléments découverts par les utilisateurs
