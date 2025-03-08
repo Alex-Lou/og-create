@@ -190,6 +190,29 @@ export default {
       const totalQuestions = this.questionsData.levels[this.selectedLevel].categories[categoryName].questions.length;
       return Array.isArray(questionsForCategory) && questionsForCategory.length >= totalQuestions;
     },
+    loadRecipesFromQuestions() {
+  if (this.questionsData && this.selectedLevel && this.selectedCategory) {
+    const categoryQuestions = this.questionsData.levels[this.selectedLevel].categories[this.selectedCategory].questions;
+    
+    categoryQuestions.forEach(question => {
+      if (question.initialElements && question.initialElements.recipes) {
+        console.log('Recettes trouvées dans la question:', Object.keys(question.initialElements.recipes));
+        
+        // Ajouter les recettes au système principal
+        Object.entries(question.initialElements.recipes).forEach(([result, recipe]) => {
+          console.log(`Ajout de la recette Timer: ${recipe} => ${result}`);
+          
+          // Ajouter à craftingRecipes sous forme non triée
+          this.$parent.craftingRecipes[recipe] = result;
+          
+          // Et aussi ajouter sous forme triée pour compatibilité
+          const sortedRecipe = recipe.split('+').sort().join('+');
+          this.$parent.craftingRecipes[sortedRecipe] = result;
+        });
+      }
+    });
+  }
+},
 
     async loadProgress() {
       try {
@@ -341,19 +364,23 @@ export default {
     },
 
     async selectCategory(category) {
-      if (this.isLoading) return;
-      this.isLoading = true;
- 
-      try {
-        this.selectedCategory = category;
-        this.questions = this.questionsData.levels[this.selectedLevel].categories[category].questions;
-        this.shuffleQuestions();
-        this.currentQuestionIndex = 0;
-        await this.show();
-      } finally {
-        this.isLoading = false;
-      }
-    },
+  if (this.isLoading) return;
+  this.isLoading = true;
+
+  try {
+    this.selectedCategory = category;
+    this.questions = this.questionsData.levels[this.selectedLevel].categories[category].questions;
+    this.shuffleQuestions();
+    this.currentQuestionIndex = 0;
+    
+    // Ajouter cette ligne pour charger les recettes
+    this.loadRecipesFromQuestions();
+    
+    await this.show();
+  } finally {
+    this.isLoading = false;
+  }
+},
 
     markQuestionAsCompleted(questionId) {
       if (!this.selectedLevel || !this.selectedCategory) return;

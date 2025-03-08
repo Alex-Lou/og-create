@@ -341,43 +341,73 @@ handleGlobalAchievementsLoaded(event) {
     },
 
     saveDiscoveredElement(element, gameMode = 'infinite') {
-  // Vérifier que l'élément n'est pas déjà dans la liste
-  if (!this.discoveredElements.includes(element)) {
-    console.log(`Sauvegarde immédiate de l'élément découvert: ${element} (mode: ${gameMode})`);
-    
-    // Ajouter à la liste locale
-    this.discoveredElements.push(element);
-    
-    // Déterminer la catégorie de l'élément
-    const targetCategory = Object.keys(this.categories).find((category) =>
-      this.categories[category].includes(element)
-    );
-    
-    // Ajouter la catégorie si elle n'existe pas déjà
-    if (targetCategory && !this.discoveredCategories.includes(targetCategory)) {
-      console.log(`Ajout de la catégorie: ${targetCategory}`);
-      this.discoveredCategories.push(targetCategory);
+  // Vérifier que l'élément n'est pas déjà dans la liste spécifique au mode
+  let elementsList;
+  
+  if (gameMode === 'timer') {
+    // Pour le mode Timer, utiliser la liste timerElements
+    if (!this.currentTimerElements.includes(element)) {
+      console.log(`Sauvegarde de l'élément découvert en mode Timer: ${element}`);
+      this.currentTimerElements.push(element);
+      elementsList = this.currentTimerElements;
+    } else {
+      return; // Déjà dans la liste
     }
-    
-    // Mettre à jour les statistiques de progression des catégories
-    this.updateCategoryProgress();
-    
-    // Sauvegarder également dans localStorage
+  } else if (gameMode === 'explorer') {
+    // Pour le mode Explorer
+    if (!this.discoveredElements.includes(element)) {
+      console.log(`Sauvegarde de l'élément découvert en mode Explorer: ${element}`);
+      this.discoveredElements.push(element);
+      elementsList = this.discoveredElements;
+    } else {
+      return; // Déjà dans la liste
+    }
+  } else {
+    // Mode Infinite (par défaut)
+    if (!this.discoveredElements.includes(element)) {
+      console.log(`Sauvegarde de l'élément découvert en mode Infinite: ${element}`);
+      this.discoveredElements.push(element);
+      
+      // Déterminer la catégorie de l'élément
+      const targetCategory = Object.keys(this.categories).find((category) =>
+        this.categories[category].includes(element)
+      );
+      
+      // Ajouter la catégorie si elle n'existe pas déjà
+      if (targetCategory && !this.discoveredCategories.includes(targetCategory)) {
+        console.log(`Ajout de la catégorie: ${targetCategory}`);
+        this.discoveredCategories.push(targetCategory);
+      }
+      
+      // Mettre à jour les statistiques de progression des catégories
+      this.updateCategoryProgress();
+      
+      elementsList = this.discoveredElements;
+    } else {
+      return; // Déjà dans la liste
+    }
+  }
+  
+  // Sauvegarder dans localStorage uniquement en mode infinite
+  if (gameMode === 'infinite') {
     localStorage.setItem('discoveredElements', JSON.stringify(this.discoveredElements));
     localStorage.setItem('discoveredCategories', JSON.stringify(this.discoveredCategories));
-    
-    // Sauvegarder dans la base de données si connecté
-    if (this.isLoggedIn) {
-      progressService.updateDiscoveredElements(this.discoveredElements, gameMode)
-        .then(() => {
-          console.log(`Élément ${element} sauvegardé avec succès (mode: ${gameMode})`);
-          // Sauvegarder également les catégories
+  }
+  
+  // Sauvegarder dans la base de données si connecté, en utilisant la bonne API
+  if (this.isLoggedIn) {
+    progressService.updateDiscoveredElements(elementsList, gameMode)
+      .then(() => {
+        console.log(`Élément ${element} sauvegardé avec succès (mode: ${gameMode})`);
+        
+        // Sauvegarder également les catégories uniquement en mode infinite
+        if (gameMode === 'infinite') {
           this.saveGameProgress();
-        })
-        .catch(error => {
-          console.error(`Erreur lors de la sauvegarde de l'élément ${element}:`, error);
-        });
-    }
+        }
+      })
+      .catch(error => {
+        console.error(`Erreur lors de la sauvegarde de l'élément ${element}:`, error);
+      });
   }
 },
 
@@ -597,40 +627,78 @@ async updateAchievements() {
       }
     },
     handleSetInitialInventory(elements) {
-      if (!this.isTimerActive) return;
-      
-      if (this.$refs.craftSystem) {
-        this.$refs.craftSystem.resetCraftingBoard();
-        this.$refs.craftSystem.selectedElements = [];
+  if (!this.isTimerActive) return;
+  
+  if (this.$refs.craftSystem) {
+    this.$refs.craftSystem.resetCraftingBoard();
+    this.$refs.craftSystem.selectedElements = [];
+  }
+  
+  // Sauvegarder l'inventaire actuel avant de passer en mode Timer
+  this.timerModeStartElements = [...this.discoveredElements];
+  
+  // Réinitialiser à juste les éléments fondamentaux
+  this.discoveredElements = ["Eau", "Feu", "Terre", "Air"];
+  
+  if (Array.isArray(elements)) {
+    // Ajouter les éléments requis pour cette question à l'inventaire temporaire
+    this.currentTimerElements = [...new Set(elements)];
+    this.currentTimerElements.forEach(element => {
+      if (!this.discoveredElements.includes(element)) {
+        this.discoveredElements.push(element);
       }
-      
-      this.timerModeStartElements = [...this.discoveredElements];
-      this.discoveredElements = ["Eau", "Feu", "Terre", "Air"];
-      
-      if (Array.isArray(elements)) {
-        this.currentTimerElements = [...new Set(elements)];
-        this.currentTimerElements.forEach(element => {
-          if (!this.discoveredElements.includes(element)) {
-            this.discoveredElements.push(element);
-          }
-        });
-      }
-      
-      this.updateCategoryProgress();
-    },
-    handleTimerForceStop() {
-      this.isTimerActive = false;
-      this.selectedTimerLevel = null;
-      if (this.timerModeStartElements.length > 0) {
-        this.discoveredElements = [...this.timerModeStartElements];
-        this.updateCategoryProgress();
-      }
-      this.timerModeStartElements = [];
-      this.timerModeDiscoveries = 0;
-      if (this.$refs.timerQuestions) {
-        this.$refs.timerQuestions.resetQuestions();
-      }
-    },
+    });
+    
+    // Si l'utilisateur est connecté, sauvegarder les éléments dans timer_elements
+    // MAIS NE PAS les ajouter à infinite_elements ou discovered_elements
+    if (this.isLoggedIn) {
+      // Utiliser l'API de timerService au lieu de progressService
+      fetch('/api/timer/save-elements', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${AuthService.getCurrentUser()?.token}`
+        },
+        body: JSON.stringify({
+          elements: this.currentTimerElements
+        })
+      })
+      .then(response => {
+        if (response.ok) return response.json();
+        throw new Error('Erreur lors de la sauvegarde des éléments Timer');
+      })
+      .then(() => {
+        console.log('Éléments pour la question Timer sauvegardés');
+      })
+      .catch(error => {
+        console.error('Erreur:', error);
+      });
+    }
+  }
+  
+  this.updateCategoryProgress();
+},
+
+
+handleTimerForceStop() {
+  this.isTimerActive = false;
+  this.selectedTimerLevel = null;
+  
+  // Restaurer l'inventaire précédent
+  if (this.timerModeStartElements.length > 0) {
+    this.discoveredElements = [...this.timerModeStartElements];
+    this.updateCategoryProgress();
+  }
+  
+  this.timerModeStartElements = [];
+  this.timerModeDiscoveries = 0;
+  
+  if (this.$refs.timerQuestions) {
+    this.$refs.timerQuestions.resetQuestions();
+  }
+},
+
+
     showCurrentTimerQuestion() {
       if (this.$refs.timerQuestions) {
         this.$refs.timerQuestions.show();
@@ -936,115 +1004,144 @@ saveGameProgress() {
 
 
 handleCraftSuccess(craftedItem) {
-  console.log('DEBUG CRAFT SUCCESS:', {
-    craftedItem,
-    isTimerActive: this.isTimerActive,
-    isExplorerCraftMode: this.isExplorerCraftMode,
-    currentTimerElements: this.currentTimerElements,
-    discoveredElements: this.discoveredElements.length
-  });
-  
-  try {
-    this.craftedElement = {
-      name: craftedItem,
-      image: require(`@/assets/creatures/${craftedItem}.png`),
-    };
-  } catch (error) {
-    this.craftedElement = {
-      name: craftedItem,
-      image: null,
-    };
-  }
-  
-  // Mode normal (ni Timer ni Explorer)
-  if (!this.isTimerActive && !this.isExplorerActive && !this.isExplorerCraftMode) {
-    // Sauvegarder l'élément découvert
-    this.saveDiscoveredElement(craftedItem);
-    this.$refs.dataLoading.handleCraft(craftedItem);
-  }
-  
-  // Gestion du mode Timer
-  if (this.isTimerActive) {
-    if (!this.discoveredElements.includes(craftedItem)) {
-      this.discoveredElements.push(craftedItem);
-    }
-    
-    if (!this.currentTimerElements.includes(craftedItem)) {
-      this.currentTimerElements.push(craftedItem);
-    }
-    
-    const currentQuestion = this.$refs.timerQuestions.getCurrentQuestion();
-    
-    if (currentQuestion) {
-      const allPossibleElements = [
-        ...(currentQuestion.initialElements.required || []),
-        ...(currentQuestion.initialElements.additional || []),
-        ...(currentQuestion.validAnswers || [])
-      ];
-      
-      if (allPossibleElements.includes(craftedItem)) {
-        console.log('L\'élément est dans les éléments possibles');
-      }
-      
-      const validationMode = currentQuestion.initialElements.validationMode || 'any';
-      const validAnswers = currentQuestion.validAnswers || [];
-      
-      if (validationMode === 'any') {
-        const isValidAnswer = validAnswers.some(answer => 
-          this.discoveredElements.includes(answer)
-        );
-        
-        if (isValidAnswer) {
-          this.timerModeDiscoveries++;
-          this.$refs.timerQuestions.answerCorrect();
-        }
-      } else if (validationMode === 'multiple') {
-        const requiredCount = currentQuestion.initialElements.requiredCount || 1;
-        const discoveredValidAnswers = validAnswers.filter(answer => 
-          this.discoveredElements.includes(answer)
-        );
-        
-        if (discoveredValidAnswers.length >= requiredCount) {
-          this.timerModeDiscoveries++;
-          this.$refs.timerQuestions.answerCorrect();
-        }
-      } else {
-        const isAllAnswersFound = validAnswers.every(answer => 
-          this.discoveredElements.includes(answer)
-        );
-        
-        if (isAllAnswersFound) {
-          this.timerModeDiscoveries++;
-          this.$refs.timerQuestions.answerCorrect();
-        }
-      }
-    }
-  }
-  
-  // Gestion du mode Explorer Craft
-  if (this.isExplorerCraftMode && this.currentExplorerChallenge) {
-    const requiredElements = this.currentExplorerChallenge.challenge.requiredElements || [];
-    
-    if (requiredElements.includes(craftedItem)) {
-      // Défi réussi !
-      this.showAlert(`Félicitations ! Vous avez créé ${craftedItem} et réussi le défi !`);
-      
-      // Attribuer une récompense en pièces
-      this.handleCoinsEarned(50);
-      
-      // Sauvegarder l'élément de façon permanente
-      this.saveDiscoveredElement(craftedItem);
-      
-      // Revenir au mode Explorer
-      this.isExplorerCraftMode = false;
-      this.isExplorerActive = true;
-      
-      // Réinitialiser le défi actuel
-      this.currentExplorerChallenge = null;
-    }
-  }
+ console.log('DEBUG CRAFT SUCCESS:', {
+   craftedItem,
+   isTimerActive: this.isTimerActive,
+   isExplorerCraftMode: this.isExplorerCraftMode,
+   currentTimerElements: this.currentTimerElements,
+   discoveredElements: this.discoveredElements.length
+ });
+ 
+ try {
+   this.craftedElement = {
+     name: craftedItem,
+     image: require(`@/assets/creatures/${craftedItem}.png`),
+   };
+ } catch (error) {
+   this.craftedElement = {
+     name: craftedItem,
+     image: null,
+   };
+ }
+ 
+ // Mode normal (ni Timer ni Explorer)
+ if (!this.isTimerActive && !this.isExplorerActive && !this.isExplorerCraftMode) {
+   // Sauvegarder l'élément découvert
+   this.saveDiscoveredElement(craftedItem);
+   this.$refs.dataLoading.handleCraft(craftedItem);
+ }
+ 
+ // Gestion du mode Timer
+ if (this.isTimerActive) {
+   // Ajouter à l'inventaire local de la session Timer
+   if (!this.discoveredElements.includes(craftedItem)) {
+     this.discoveredElements.push(craftedItem);
+   }
+   
+   // Ajouter aux éléments du Timer créés par le joueur
+   if (!this.currentTimerElements.includes(craftedItem)) {
+     this.currentTimerElements.push(craftedItem);
+     
+     // Sauvegarder uniquement ce nouvel élément dans timer_elements
+     if (this.isLoggedIn) {
+       // Utiliser directement l'endpoint timer/save-elements
+       const timerServiceUrl = '/api/timer/save-elements';
+       fetch(timerServiceUrl, {
+         method: 'POST',
+         headers: {
+           'Content-Type': 'application/json',
+           'Authorization': `Bearer ${AuthService.getCurrentUser()?.token}`
+         },
+         body: JSON.stringify({
+           elements: [craftedItem] // Sauvegarder seulement l'élément créé
+         })
+       })
+       .then(response => {
+         if (!response.ok) {
+           throw new Error('Erreur lors de la sauvegarde de l\'élément Timer');
+         }
+         return response.json();
+       })
+       .then(() => {
+         console.log(`Élément Timer ${craftedItem} sauvegardé avec succès`);
+       })
+       .catch(error => {
+         console.error(`Erreur lors de la sauvegarde de l'élément Timer ${craftedItem}:`, error);
+       });
+     }
+   }
+   
+   const currentQuestion = this.$refs.timerQuestions.getCurrentQuestion();
+   
+   if (currentQuestion) {
+     const allPossibleElements = [
+       ...(currentQuestion.initialElements.required || []),
+       ...(currentQuestion.initialElements.additional || []),
+       ...(currentQuestion.validAnswers || [])
+     ];
+     
+     if (allPossibleElements.includes(craftedItem)) {
+       console.log('L\'élément est dans les éléments possibles');
+     }
+     
+     const validationMode = currentQuestion.initialElements.validationMode || 'any';
+     const validAnswers = currentQuestion.validAnswers || [];
+     
+     if (validationMode === 'any') {
+       const isValidAnswer = validAnswers.some(answer => 
+         this.discoveredElements.includes(answer)
+       );
+       
+       if (isValidAnswer) {
+         this.timerModeDiscoveries++;
+         this.$refs.timerQuestions.answerCorrect();
+       }
+     } else if (validationMode === 'multiple') {
+       const requiredCount = currentQuestion.initialElements.requiredCount || 1;
+       const discoveredValidAnswers = validAnswers.filter(answer => 
+         this.discoveredElements.includes(answer)
+       );
+       
+       if (discoveredValidAnswers.length >= requiredCount) {
+         this.timerModeDiscoveries++;
+         this.$refs.timerQuestions.answerCorrect();
+       }
+     } else {
+       const isAllAnswersFound = validAnswers.every(answer => 
+         this.discoveredElements.includes(answer)
+       );
+       
+       if (isAllAnswersFound) {
+         this.timerModeDiscoveries++;
+         this.$refs.timerQuestions.answerCorrect();
+       }
+     }
+   }
+ }
+ 
+ // Gestion du mode Explorer Craft
+ if (this.isExplorerCraftMode && this.currentExplorerChallenge) {
+   const requiredElements = this.currentExplorerChallenge.challenge.requiredElements || [];
+   
+   if (requiredElements.includes(craftedItem)) {
+     // Défi réussi !
+     this.showAlert(`Félicitations ! Vous avez créé ${craftedItem} et réussi le défi !`);
+     
+     // Attribuer une récompense en pièces
+     this.handleCoinsEarned(50);
+     
+     // Sauvegarder l'élément de façon permanente
+     this.saveDiscoveredElement(craftedItem);
+     
+     // Revenir au mode Explorer
+     this.isExplorerCraftMode = false;
+     this.isExplorerActive = true;
+     
+     // Réinitialiser le défi actuel
+     this.currentExplorerChallenge = null;
+   }
+ }
 },
-
 
     addToCategory(craftedItem) {
       const targetCategory = Object.keys(this.categories).find((category) =>
@@ -1171,25 +1268,31 @@ handleCraftSuccess(craftedItem) {
       }
     },
     async handleTimerComplete() {
-      const currentScore = this.discoveredElements.length - this.timerModeStartElements.length;
-      
-      if (this.selectedTimerLevel && currentScore > this.timerProgress.bestScores[this.selectedTimerLevel]) {
-        this.timerProgress.bestScores[this.selectedTimerLevel] = currentScore;
-        
-        const bonus = currentScore * 5;
-        await this.handleCoinsEarned(bonus);
-        
-        if (this.isLoggedIn) {
-          try {
-            await progressService.updateTimerProgress(this.timerProgress);
-          } catch (error) {
-            console.error("Erreur lors de la mise à jour du meilleur score:", error);
-          }
-        }
-      }
+  const currentScore = this.discoveredElements.length - this.timerModeStartElements.length;
   
-      this.showTimerEndModal = true;
-    },
+  if (this.selectedTimerLevel && currentScore > this.timerProgress.bestScores[this.selectedTimerLevel]) {
+    this.timerProgress.bestScores[this.selectedTimerLevel] = currentScore;
+    
+    const bonus = currentScore * 5;
+    await this.handleCoinsEarned(bonus);
+    
+    if (this.isLoggedIn) {
+      try {
+        await progressService.updateTimerProgress(this.timerProgress);
+      } catch (error) {
+        console.error("Erreur lors de la mise à jour du meilleur score:", error);
+      }
+    }
+  }
+
+  // Restaurer l'inventaire précédent (important!)
+  this.discoveredElements = [...this.timerModeStartElements];
+  this.updateCategoryProgress();
+  
+  this.showTimerEndModal = true;
+},
+
+
     handleTimerEndModalClose() {
       this.showTimerEndModal = false;
       this.discoveredElements = [...this.timerModeStartElements];
