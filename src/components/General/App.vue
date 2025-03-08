@@ -243,6 +243,28 @@ export default {
     this.startPeriodicSave();
   }
 },
+mounted() {
+  // Ajouter les écouteurs d'événements globaux
+  window.addEventListener('app-reloaded', this.handleAppReloaded);
+  window.addEventListener('achievements-loaded', this.handleGlobalAchievementsLoaded);
+  
+  // Exposer une méthode pour sauvegarder directement les achievements
+  window.saveAchievements = (achievementsData) => {
+    if (this.isLoggedIn && achievementsData) {
+      console.log("Sauvegarde globale d'achievements:", Object.keys(achievementsData));
+      progressService.updateAchievements(achievementsData)
+        .then(() => console.log("Sauvegarde directe des achievements réussie"))
+        .catch(err => console.error("Erreur de sauvegarde directe:", err));
+    }
+  };
+  
+  // Si des achievements sont déjà débloqués, les sauvegarder
+  if (this.isLoggedIn && this.achievements && this.achievements.length > 0) {
+    setTimeout(() => {
+      this.updateAchievements();
+    }, 1000);
+  }
+},
   methods: {
     loadSavedCustomization() {
       if (this.isLoggedIn) {
@@ -541,25 +563,40 @@ handleGlobalAchievementsLoaded(event) {
   }, 120000); // 2 minutes
 },
 
-    async updateAchievements() {
-      if (!this.isLoggedIn || !this.achievements) return;
-      
-      try {
-        const achievementsData = {};
-        this.achievements.forEach(achievement => {
-          if (achievement.unlocked) {
-            achievementsData[achievement.name] = {
-              unlocked: true,
-              unlockedAt: achievement.unlockedAt || new Date().toISOString()
-            };
-          }
-        });
-        
-        await progressService.updateAchievements(achievementsData);
-      } catch (error) {
-        console.error("Erreur lors de la mise à jour des achievements:", error);
+async updateAchievements() {
+  if (!this.achievements || !Array.isArray(this.achievements) || this.achievements.length === 0) {
+    console.log("Pas de mise à jour des achievements: pas d'achievements disponibles");
+    return;
+  }
+  
+  if (!AuthService.isAuthenticated()) {
+    console.log("Pas de mise à jour des achievements: utilisateur non connecté");
+    return;
+  }
+  
+  try {
+    const achievementsData = {};
+    this.achievements.forEach(achievement => {
+      if (achievement.unlocked) {
+        achievementsData[achievement.name] = {
+          unlocked: true,
+          unlockedAt: achievement.unlockedAt || new Date().toISOString()
+        };
       }
-    },
+    });
+    
+    console.log("Sauvegarde des achievements:", Object.keys(achievementsData).length, "achievements débloqués");
+    
+    if (Object.keys(achievementsData).length > 0) {
+      await progressService.updateAchievements(achievementsData);
+      console.log("Achievements sauvegardés avec succès");
+    } else {
+      console.log("Aucun achievement débloqué à sauvegarder");
+    }
+  } catch (error) {
+    console.error("Erreur lors de la mise à jour des achievements:", error);
+  }
+},
 
     handleResetCraftZone() {
       if (this.$refs.craftSystem) {
@@ -865,9 +902,33 @@ saveGameProgress() {
       this.achievements = achievements;
     },
     handleAchievementUnlocked(achievement) {
-      this.newAchievement = achievement;
-      this.handleAchievementUpdate(achievement);
-    },
+  console.log("Achievement débloqué reçu:", achievement.name);
+  this.newAchievement = achievement;
+  
+  // Mettre à jour les achievements au niveau global
+  const existingIndex = this.achievements.findIndex(a => a.name === achievement.name);
+  if (existingIndex >= 0) {
+    this.achievements[existingIndex].unlocked = true;
+    this.achievements[existingIndex].unlockedAt = new Date().toISOString();
+  } else {
+    console.warn("Achievement non trouvé dans la liste globale:", achievement.name);
+  }
+  
+  // Sauvegarder immédiatement
+  if (this.isLoggedIn) {
+    const achievementData = {
+      [achievement.name]: {
+        unlocked: true,
+        unlockedAt: achievement.unlockedAt || new Date().toISOString()
+      }
+    };
+    
+    console.log("Sauvegarde immédiate de l'achievement:", achievement.name);
+    progressService.updateAchievements(achievementData)
+      .then(() => console.log("Achievement sauvegardé avec succès"))
+      .catch(error => console.error("Erreur lors de la sauvegarde de l'achievement:", error));
+  }
+},
     handleResourceSelection(resource) {
       this.$refs.craftSystem.selectResource(resource);
     },

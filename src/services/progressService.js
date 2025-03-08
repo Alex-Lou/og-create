@@ -221,6 +221,15 @@ class ProgressService {
         if (curr.discoveredElements) {
           acc.discoveredElements = [...new Set([...(acc.discoveredElements || []), ...curr.discoveredElements])];
         }
+        if (curr.timerElements) {
+          acc.timerElements = [...new Set([...(acc.timerElements || []), ...curr.timerElements])];
+        }
+        if (curr.explorerElements) {
+          acc.explorerElements = [...new Set([...(acc.explorerElements || []), ...curr.explorerElements])];
+        }
+        if (curr.infiniteElements) {
+          acc.infiniteElements = [...new Set([...(acc.infiniteElements || []), ...curr.infiniteElements])];
+        }
         if (curr.discoveredCategories) {
           acc.discoveredCategories = [...new Set([...(acc.discoveredCategories || []), ...curr.discoveredCategories])];
         }
@@ -242,6 +251,9 @@ class ProgressService {
               Difficile: Math.max(acc.timerProgress?.bestScores?.Difficile || 0, curr.timerProgress?.bestScores?.Difficile || 0)
             }
           };
+        }
+        if (curr.customization) {
+          acc.customization = { ...(acc.customization || {}), ...curr.customization };
         }
         
         return acc;
@@ -327,49 +339,98 @@ class ProgressService {
     }
   }
 
-async saveGameProgress(progressData) {
-  // Éviter d'ajouter des objets vides à la file d'attente
-  if (!progressData || Object.keys(progressData).length === 0) {
-    return Promise.resolve({ status: 'skipped', message: 'Aucune donnée à sauvegarder' });
-  }
-  
-  if (saveQueue.length > 0) {
-    const lastItem = saveQueue[saveQueue.length - 1];
-    
-    if (progressData.coins !== undefined) lastItem.coins = progressData.coins;
-    if (progressData.discoveredElements) {
-      lastItem.discoveredElements = [...new Set([...(lastItem.discoveredElements || []), ...progressData.discoveredElements])];
+  async saveGameProgress(progressData) {
+    // Éviter d'ajouter des objets vides à la file d'attente
+    if (!progressData || Object.keys(progressData).length === 0) {
+      return Promise.resolve({ status: 'skipped', message: 'Aucune donnée à sauvegarder' });
     }
-    // Fusionner les autres propriétés...
     
-    // Unique débounce timer
+    // Si un gameMode est spécifié, organiser les données par mode
+    if (progressData.gameMode) {
+      const mode = progressData.gameMode;
+      delete progressData.gameMode; // Supprimer pour éviter la duplication
+      
+      if (mode === 'timer' && progressData.discoveredElements) {
+        progressData.timerElements = progressData.discoveredElements;
+      } else if (mode === 'explorer' && progressData.discoveredElements) {
+        progressData.explorerElements = progressData.discoveredElements;
+      } else if (mode === 'infinite' && progressData.discoveredElements) {
+        progressData.infiniteElements = progressData.discoveredElements;
+      }
+    }
+    
+    if (saveQueue.length > 0) {
+      const lastItem = saveQueue[saveQueue.length - 1];
+      
+      if (progressData.coins !== undefined) lastItem.coins = progressData.coins;
+      if (progressData.discoveredElements) {
+        lastItem.discoveredElements = [...new Set([...(lastItem.discoveredElements || []), ...progressData.discoveredElements])];
+      }
+      if (progressData.timerElements) {
+        lastItem.timerElements = [...new Set([...(lastItem.timerElements || []), ...progressData.timerElements])];
+      }
+      if (progressData.explorerElements) {
+        lastItem.explorerElements = [...new Set([...(lastItem.explorerElements || []), ...progressData.explorerElements])];
+      }
+      if (progressData.infiniteElements) {
+        lastItem.infiniteElements = [...new Set([...(lastItem.infiniteElements || []), ...progressData.infiniteElements])];
+      }
+      if (progressData.discoveredCategories) {
+        lastItem.discoveredCategories = [...new Set([...(lastItem.discoveredCategories || []), ...progressData.discoveredCategories])];
+      }
+      if (progressData.achievements) {
+        lastItem.achievements = { ...(lastItem.achievements || {}), ...progressData.achievements };
+      }
+      if (progressData.categoryProgress) {
+        lastItem.categoryProgress = { ...(lastItem.categoryProgress || {}), ...progressData.categoryProgress };
+      }
+      if (progressData.timerProgress) {
+        lastItem.timerProgress = {
+          completedQuestions: { ...(lastItem.timerProgress?.completedQuestions || {}), ...(progressData.timerProgress.completedQuestions || {}) },
+          unlockedCategories: { ...(lastItem.timerProgress?.unlockedCategories || {}), ...(progressData.timerProgress.unlockedCategories || {}) },
+          bestScores: {
+            Facile: Math.max(lastItem.timerProgress?.bestScores?.Facile || 0, progressData.timerProgress?.bestScores?.Facile || 0),
+            Moyen: Math.max(lastItem.timerProgress?.bestScores?.Moyen || 0, progressData.timerProgress?.bestScores?.Moyen || 0),
+            Difficile: Math.max(lastItem.timerProgress?.bestScores?.Difficile || 0, progressData.timerProgress?.bestScores?.Difficile || 0)
+          }
+        };
+      }
+      if (progressData.customization) {
+        lastItem.customization = { ...(lastItem.customization || {}), ...progressData.customization };
+      }
+      
+      // Unique débounce timer
+      if (debounceTimer) {
+        clearTimeout(debounceTimer);
+      }
+      debounceTimer = setTimeout(() => this.processSaveQueue(), DEBOUNCE_DELAY);
+      
+      return Promise.resolve({ status: 'merged', message: 'La sauvegarde a été fusionnée avec une existante' });
+    }
+    
+    // Sinon, ajouter à la file d'attente
+    saveQueue.push(progressData);
+    
+    // Débounce pour éviter les sauvegardes trop fréquentes
     if (debounceTimer) {
       clearTimeout(debounceTimer);
     }
-    debounceTimer = setTimeout(() => this.processSaveQueue(), DEBOUNCE_DELAY);
+    debounceTimer = setTimeout(() => {
+      this.processSaveQueue();
+    }, DEBOUNCE_DELAY);
     
-    return Promise.resolve({ status: 'merged', message: 'La sauvegarde a été fusionnée avec une existante' });
+    // Invalider le cache uniquement si nécessaire
+    if (progressData.coins !== undefined || 
+        progressData.discoveredElements || 
+        progressData.timerElements || 
+        progressData.explorerElements || 
+        progressData.infiniteElements) {
+      progressCache = null;
+      lastProgressLoad = 0;
+    }
+    
+    return Promise.resolve({ status: 'queued', message: 'La sauvegarde a été ajoutée à la file d\'attente' });
   }
-  
-  // Sinon, ajouter à la file d'attente
-  saveQueue.push(progressData);
-  
-  // Débounce pour éviter les sauvegardes trop fréquentes
-  if (debounceTimer) {
-    clearTimeout(debounceTimer);
-  }
-  debounceTimer = setTimeout(() => {
-    this.processSaveQueue();
-  }, DEBOUNCE_DELAY);
-  
-  // Invalider le cache uniquement si nécessaire
-  if (progressData.coins !== undefined || progressData.discoveredElements) {
-    progressCache = null;
-    lastProgressLoad = 0;
-  }
-  
-  return Promise.resolve({ status: 'queued', message: 'La sauvegarde a été ajoutée à la file d\'attente' });
-}
 
   async loadGameProgress() {
     // Si nous avons des données en cache récentes, les utiliser
@@ -510,13 +571,12 @@ async saveGameProgress(progressData) {
       return null;
     }
     
-    // Ajouter les éléments fondamentaux s'ils ne sont pas déjà inclus
-    const fundamentalElements = ["Eau", "Feu", "Terre", "Air"];
-    discoveredElements = [...new Set([...discoveredElements, ...fundamentalElements])];
-    
     // En mode conservation ou pendant un cooldown, utiliser la file d'attente
     if (conservativeMode || isInGlobalCooldown()) {
-      return this.saveGameProgress({ discoveredElements });
+      return this.saveGameProgress({ 
+        discoveredElements,
+        gameMode // Ajouter le mode pour que saveGameProgress puisse le traiter
+      });
     }
     
     try {
@@ -538,13 +598,37 @@ async saveGameProgress(progressData) {
       }
       
       // En cas d'erreur, fallback sur la méthode générale
-      return this.saveGameProgress({ discoveredElements });
+      return this.saveGameProgress({ 
+        discoveredElements,
+        gameMode 
+      });
     }
   }
 
-  async updateAchievements(achievementsData) {
-    // Utiliser la file d'attente de sauvegarde
-    return this.saveGameProgress({ achievements: achievementsData });
+  async updateAchievements() {
+    if (!this.isLoggedIn || !this.achievements) {
+      console.log("Pas de mise à jour des achievements: utilisateur non connecté ou pas d'achievements");
+      return;
+    }
+    
+    try {
+      const achievementsData = {};
+      this.achievements.forEach(achievement => {
+        if (achievement.unlocked) {
+          achievementsData[achievement.name] = {
+            unlocked: true,
+            unlockedAt: achievement.unlockedAt || new Date().toISOString()
+          };
+        }
+      });
+      
+      console.log("Sauvegarde des achievements:", Object.keys(achievementsData).length, "achievements débloqués");
+      
+      await this.updateAchievements(achievementsData);
+      console.log("Achievements sauvegardés avec succès");
+    } catch (error) {
+      console.error("Erreur lors de la mise à jour des achievements:", error);
+    }
   }
 
   async updateTimerProgress(timerProgress) {

@@ -5,7 +5,7 @@
 </template>
 
 <script>
-import { ref, onMounted } from 'vue';
+import { ref, onMounted, watch } from 'vue';
 
 export default {
   name: 'DataLoading',
@@ -51,6 +51,7 @@ export default {
 
         console.timeEnd('Chargement des achievements');
         
+        achievements.value = processedAchievements;
         emit('achievements-loaded', processedAchievements);
         return processedAchievements;
       } catch (err) {
@@ -193,22 +194,57 @@ export default {
       }
     };
 
-    function checkAchievements() {
-      if (props.isTimerMode) return;
-      
-      achievements.value.forEach((achievement) => {
-        if (!achievement.unlocked) {
-          let expression = achievement.condition;
-          expression = expression.replace(/this\.discoveredElements/g, 'discoveredElements');
-          const conditionFn = new Function('discoveredElements', `return ${expression}`);
+    function checkAchievements(elementsToCheck) {
+  if (props.isTimerMode) return;
+  
+  // Utiliser les éléments fournis ou les éléments découverts locaux
+  const elements = elementsToCheck || discoveredElements.value;
+  
+  if (!achievements.value || achievements.value.length === 0) {
+    console.warn("Tentative de vérification des achievements avant leur chargement");
+    return;
+  }
+  
+  console.log("Vérification des achievements avec", elements.length, "éléments découverts");
+  
+  let unlocked = [];
+  
+  achievements.value.forEach((achievement) => {
+    if (!achievement.unlocked) {
+      try {
+        let expression = achievement.condition;
+        expression = expression.replace(/this\.discoveredElements/g, 'elements');
+        const conditionFn = new Function('elements', `return ${expression}`);
 
-          if (conditionFn(discoveredElements.value)) {
-            achievement.unlocked = true;
-            emit('achievement-unlocked', achievement);
-          }
+        if (conditionFn(elements)) {
+          console.log(`Achievement débloqué: ${achievement.name}`);
+          achievement.unlocked = true;
+          achievement.unlockedAt = new Date().toISOString();
+          unlocked.push(achievement);
+          emit('achievement-unlocked', achievement);
         }
-      });
+      } catch (error) {
+        console.error(`Erreur lors de l'évaluation de la condition pour ${achievement.name}:`, error);
+      }
     }
+  });
+  
+  // Mettre à jour les achievements après vérification
+  emit('achievements-loaded', achievements.value);
+  
+  // Sauvegarder directement les achievements débloqués
+  if (unlocked.length > 0 && window.saveAchievements) {
+    const saveData = {};
+    unlocked.forEach(achievement => {
+      saveData[achievement.name] = {
+        unlocked: true,
+        unlockedAt: achievement.unlockedAt
+      };
+    });
+    console.log("Sauvegarde directe de", unlocked.length, "achievements");
+    window.saveAchievements(saveData);
+  }
+}
 
     function handleCraft(newElement) {
       if (props.isTimerMode) {
@@ -216,14 +252,54 @@ export default {
         return;
       }
 
+      // Mise à jour de notre copie locale des éléments découverts
       if (!discoveredElements.value.includes(newElement)) {
         discoveredElements.value.push(newElement);
-        checkAchievements();
+        
+        // Vérifier spécifiquement les achievements liés à cet élément
+        const specificAchievements = achievements.value.filter(achievement => 
+          !achievement.unlocked && 
+          achievement.condition.includes(`includes('${newElement}')`)
+        );
+        
+        if (specificAchievements.length > 0) {
+          console.log(`Vérification des achievements spécifiques pour: ${newElement}`);
+          specificAchievements.forEach(achievement => {
+            achievement.unlocked = true;
+            achievement.unlockedAt = new Date().toISOString();
+            emit('achievement-unlocked', achievement);
+          });
+        }
+        
+        // Vérifier tous les achievements
+        checkAchievements(discoveredElements.value);
       }
     }
 
+    // Observer les changements dans les éléments découverts
+    watch(() => props.existingData.discoveredElements, (newElements) => {
+      if (newElements && Array.isArray(newElements)) {
+        discoveredElements.value = [...newElements];
+        checkAchievements(discoveredElements.value);
+      }
+    }, { immediate: true });
+
     onMounted(async () => {
-      await Promise.all([loadGameData(), loadAchievements()]);
+      try {
+        await Promise.all([loadGameData(), loadAchievements()]);
+        
+        // Si des éléments découverts sont disponibles dans les props
+        if (props.existingData.discoveredElements && Array.isArray(props.existingData.discoveredElements)) {
+          discoveredElements.value = [...props.existingData.discoveredElements];
+          
+          // Vérifier les achievements après un court délai pour s'assurer que tout est chargé
+          setTimeout(() => {
+            checkAchievements(discoveredElements.value);
+          }, 500);
+        }
+      } catch (error) {
+        console.error("Erreur lors du chargement initial:", error);
+      }
     });
 
     return {
@@ -231,7 +307,8 @@ export default {
       achievements,
       discoveredElements,
       handleCraft,
-      loadAllData
+      loadAllData,
+      checkAchievements
     };
   }
 };
