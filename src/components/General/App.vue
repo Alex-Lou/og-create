@@ -257,13 +257,6 @@ mounted() {
         .catch(err => console.error("Erreur de sauvegarde directe:", err));
     }
   };
-  
-  // Si des achievements sont déjà débloqués, les sauvegarder
-  if (this.isLoggedIn && this.achievements && this.achievements.length > 0) {
-    setTimeout(() => {
-      this.updateAchievements();
-    }, 1000);
-  }
 },
   methods: {
     loadSavedCustomization() {
@@ -902,31 +895,21 @@ saveGameProgress() {
       this.achievements = achievements;
     },
     handleAchievementUnlocked(achievement) {
-  console.log("Achievement débloqué reçu:", achievement.name);
-  this.newAchievement = achievement;
+  console.log("Achievement débloqué reçu:", achievement.name, "avec image:", achievement.image);
   
-  // Mettre à jour les achievements au niveau global
+  // Créer une copie complète pour éviter les problèmes de référence
+  this.newAchievement = JSON.parse(JSON.stringify(achievement));
+  
+  // Sauvegarde dans achievements locaux
   const existingIndex = this.achievements.findIndex(a => a.name === achievement.name);
   if (existingIndex >= 0) {
     this.achievements[existingIndex].unlocked = true;
     this.achievements[existingIndex].unlockedAt = new Date().toISOString();
-  } else {
-    console.warn("Achievement non trouvé dans la liste globale:", achievement.name);
   }
   
-  // Sauvegarder immédiatement
+  // Sauvegarder immédiatement si connecté
   if (this.isLoggedIn) {
-    const achievementData = {
-      [achievement.name]: {
-        unlocked: true,
-        unlockedAt: achievement.unlockedAt || new Date().toISOString()
-      }
-    };
-    
-    console.log("Sauvegarde immédiate de l'achievement:", achievement.name);
-    progressService.updateAchievements(achievementData)
-      .then(() => console.log("Achievement sauvegardé avec succès"))
-      .catch(error => console.error("Erreur lors de la sauvegarde de l'achievement:", error));
+    this.handleAchievementUpdate(achievement);
   }
 },
     handleResourceSelection(resource) {

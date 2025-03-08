@@ -38,7 +38,9 @@ export default {
           let requiredImage;
           try {
             requiredImage = require(`@/assets/success/${achievement.name}.png`);
+            console.log(`Image chargée pour ${achievement.name}:`, requiredImage);
           } catch (e) {
+            console.error(`Erreur de chargement d'image pour ${achievement.name}:`, e.message);
             requiredImage = achievement.image || null;
           }
 
@@ -195,63 +197,65 @@ export default {
     };
 
     function checkAchievements(elementsToCheck) {
-  if (props.isTimerMode) return;
-  
-  // Utiliser les éléments fournis ou les éléments découverts locaux
-  const elements = elementsToCheck || discoveredElements.value;
-  
-  if (!achievements.value || achievements.value.length === 0) {
-    console.warn("Tentative de vérification des achievements avant leur chargement");
-    return;
-  }
-  
-  console.log("Vérification des achievements avec", elements.length, "éléments découverts");
-  
-  let unlocked = [];
-  
-  achievements.value.forEach((achievement) => {
-    if (!achievement.unlocked) {
-      try {
-        let expression = achievement.condition;
-        expression = expression.replace(/this\.discoveredElements/g, 'elements');
-        const conditionFn = new Function('elements', `return ${expression}`);
-
-        if (conditionFn(elements)) {
-          console.log(`Achievement débloqué: ${achievement.name}`);
-          achievement.unlocked = true;
-          achievement.unlockedAt = new Date().toISOString();
-          unlocked.push(achievement);
-          emit('achievement-unlocked', achievement);
+      if (props.isTimerMode) return;
+      
+      // Utiliser les éléments fournis ou les éléments découverts locaux
+      const elements = elementsToCheck || discoveredElements.value;
+      
+      if (!achievements.value || achievements.value.length === 0) {
+        console.warn("Tentative de vérification des achievements avant leur chargement");
+        return;
+      }
+      
+      console.log("Vérification des achievements avec", elements.length, "éléments découverts");
+      
+      let unlocked = [];
+      
+      achievements.value.forEach((achievement) => {
+        if (!achievement.unlocked) {
+          try {
+            let expression = achievement.condition;
+            expression = expression.replace(/this\.discoveredElements/g, 'elements');
+            const conditionFn = new Function('elements', `return ${expression}`);
+            
+            if (conditionFn(elements)) {
+              console.log(`Achievement débloqué: ${achievement.name}`);
+              achievement.unlocked = true;
+              achievement.unlockedAt = new Date().toISOString();
+              unlocked.push(achievement);
+              console.log(`Émission du achievement: ${achievement.name} avec image:`, achievement.image);
+              // Créer une copie complète pour éviter les problèmes de référence
+              emit('achievement-unlocked', JSON.parse(JSON.stringify(achievement)));
+            }
+          } catch (error) {
+            console.error(`Erreur lors de l'évaluation de la condition pour ${achievement.name}:`, error);
+          }
         }
-      } catch (error) {
-        console.error(`Erreur lors de l'évaluation de la condition pour ${achievement.name}:`, error);
+      });
+      
+      // Mettre à jour les achievements après vérification
+      emit('achievements-loaded', achievements.value);
+      
+      // Sauvegarder directement les achievements débloqués
+      if (unlocked.length > 0 && window.saveAchievements) {
+        const saveData = {};
+        unlocked.forEach(achievement => {
+          saveData[achievement.name] = {
+            unlocked: true,
+            unlockedAt: achievement.unlockedAt
+          };
+        });
+        console.log("Sauvegarde directe de", unlocked.length, "achievements");
+        window.saveAchievements(saveData);
       }
     }
-  });
-  
-  // Mettre à jour les achievements après vérification
-  emit('achievements-loaded', achievements.value);
-  
-  // Sauvegarder directement les achievements débloqués
-  if (unlocked.length > 0 && window.saveAchievements) {
-    const saveData = {};
-    unlocked.forEach(achievement => {
-      saveData[achievement.name] = {
-        unlocked: true,
-        unlockedAt: achievement.unlockedAt
-      };
-    });
-    console.log("Sauvegarde directe de", unlocked.length, "achievements");
-    window.saveAchievements(saveData);
-  }
-}
-
+    
     function handleCraft(newElement) {
       if (props.isTimerMode) {
         emit('craft-success', newElement);
         return;
       }
-
+      
       // Mise à jour de notre copie locale des éléments découverts
       if (!discoveredElements.value.includes(newElement)) {
         discoveredElements.value.push(newElement);
@@ -267,7 +271,9 @@ export default {
           specificAchievements.forEach(achievement => {
             achievement.unlocked = true;
             achievement.unlockedAt = new Date().toISOString();
-            emit('achievement-unlocked', achievement);
+            console.log(`Émission du achievement: ${achievement.name} avec image:`, achievement.image);
+            // Créer une copie complète pour éviter les problèmes de référence
+            emit('achievement-unlocked', JSON.parse(JSON.stringify(achievement)));
           });
         }
         

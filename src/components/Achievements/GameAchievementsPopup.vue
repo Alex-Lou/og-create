@@ -31,16 +31,17 @@
       <div ref="particleContainer" class="gsap-particles-container"></div>
       <div class="popup-content">
         <button class="close-button" @click="closePopup">&times;</button>
+        <pre style="display: none;">{{ JSON.stringify(achievement, null, 2) }}</pre>
         <img
-          v-if="achievement?.image"
+          v-if="achievement.image"
           :src="achievement.image"
           :alt="achievement.name"
           class="xyz-nested"
           xyz="fade small flip-down-50% duration-10 delay-2 ease-out-back"
         />
         <div class="achievement-text xyz-nested" xyz="fade up small-75% delay-3">
-          <h3>{{ achievement?.name }}</h3>
-          <p>{{ achievement?.description }}</p>
+          <h3>{{ achievement.name }}</h3>
+          <p>{{ achievement.description }}</p>
         </div>
       </div>
     </div>
@@ -73,6 +74,9 @@ export default {
   },
   mounted() {
     if (this.achievement) {
+      console.log("Popup monté pour achievement:", this.achievement.name);
+      console.log("Image de l'achievement:", this.achievement.image);
+      
       this.initParticles();
       this.$emit("achievement-popup-opened");
       this.startAutoCloseTimer();
@@ -81,6 +85,9 @@ export default {
   watch: {
     achievement(newVal, oldVal) {
       if (newVal) {
+        console.log("Nouvel achievement dans le popup:", newVal.name);
+        console.log("Image du nouvel achievement:", newVal.image);
+        
         this.$nextTick(() => {
           this.initParticles();
           this.$emit("achievement-popup-opened");
@@ -97,7 +104,7 @@ export default {
 
       this.autoCloseTimer = setTimeout(() => {
         this.fadeOutAndClose();
-      }, 5000); // 7 secondes
+      }, 5000); // 5 secondes
     },
 
     clearAutoCloseTimer() {
