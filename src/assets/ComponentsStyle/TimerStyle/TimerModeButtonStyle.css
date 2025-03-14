@@ -107,27 +107,30 @@
 }
 
 .help-button {
-  width: 30px;
-  height: 30px;
+  width: 40px;
+  height: 40px;
+  margin-top: 5px;
   border-radius: 50%;
-  background-color: #2D96A4;
-  border: 2px solid #304968;
-  color: white;
-  font-family: 'BenjaminFranklin', Arial;
-  font-size: 20px;
-  font-weight: bold;
-  cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 0;
+  cursor: pointer;
+  font-family: 'BenjaminFranklin', sans-serif;
+  font-size: 20px;
+  font-weight: bold;
+  color: #e5deff;
+  background: rgba(30, 20, 40, 0.3);
+  border: 1px solid rgba(138, 92, 173, 0.3);
   transition: all 0.3s ease;
-  box-shadow: 0 0 10px rgba(45, 150, 164, 0.3);
+  animation: borderGlow 4s infinite alternate;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
 }
 
 .help-button:hover {
-  background-color: #1a7c8a;
-  transform: scale(1.1);
+  background: rgba(138, 92, 173, 0.15);
+  border-color: rgba(138, 92, 173, 0.5);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
 }
 
 .help-button:active {
