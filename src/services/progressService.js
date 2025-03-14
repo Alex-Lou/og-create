@@ -542,7 +542,8 @@ class ProgressService {
       
       // Sauvegarde spécifique des pièces (prioritaire)
       try {
-        const response = await progressInstance.post('update-coins', { coins: coinsToSave });
+        // Modifier cette ligne pour utiliser le bon endpoint
+        const response = await progressInstance.post('coins/update', { coins: coinsToSave });
         
         // Invalider le cache
         progressCache = null;
@@ -643,8 +644,13 @@ class ProgressService {
       }
     };
     
-    // Utiliser la file d'attente de sauvegarde
-    return this.saveGameProgress({ timerProgress: safeTimerProgress });
+    console.log("updateTimerProgress - envoi de:", safeTimerProgress);
+    
+    // Utiliser la file d'attente de sauvegarde avec priorité élevée
+    return this.saveGameProgress({ 
+      timerProgress: safeTimerProgress,
+      priority: 'high'  // Ajouter cet indicateur si votre file d'attente gère les priorités
+    });
   }
   
   // Méthode pour récupérer le dernier nombre de pièces connu (cache local)

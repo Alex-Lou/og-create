@@ -904,10 +904,6 @@ handleTimerForceStop() {
   }
 },
 
-
-
-
-
 saveGameProgress() {
   if (!this.isLoggedIn) return;
 
@@ -1118,30 +1114,15 @@ handleCraftSuccess(craftedItem) {
         
         // Sauvegarder uniquement ce nouvel élément dans timer_elements
         if (this.isLoggedIn) {
-          // Utiliser directement l'endpoint timer/save-elements
-          const timerServiceUrl = '/api/timer/save-elements';
-          fetch(timerServiceUrl, {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-              'Authorization': `Bearer ${AuthService.getCurrentUser()?.token}`
-            },
-            body: JSON.stringify({
-              elements: [craftedItem] // Sauvegarder seulement l'élément créé
+          // Utiliser le service dédié au timer
+          const timerService = require('@/services/timerService').default;
+          timerService.saveTimerElements([craftedItem])
+            .then(() => {
+              console.log(`Élément Timer ${craftedItem} sauvegardé avec succès`);
             })
-          })
-          .then(response => {
-            if (!response.ok) {
-              throw new Error('Erreur lors de la sauvegarde de l\'élément Timer');
-            }
-            return response.json();
-          })
-          .then(() => {
-            console.log(`Élément Timer ${craftedItem} sauvegardé avec succès`);
-          })
-          .catch(error => {
-            console.error(`Erreur lors de la sauvegarde de l'élément Timer ${craftedItem}:`, error);
-          });
+            .catch(error => {
+              console.error(`Erreur lors de la sauvegarde de l'élément Timer ${craftedItem}:`, error);
+            });
         }
       }
     }

@@ -207,6 +207,7 @@
 <script>
 import '@/assets/ComponentsStyle/TimerStyle/TimerQuestionsStyle.css';
 import progressService from '@/services/progressService';
+import timerService from '@/services/timerService';
  
 export default {
   name: 'TimerQuestions',
@@ -234,6 +235,7 @@ export default {
       completionSubMessage: '',
       isLoading: false,
       isNewQuestion: true,
+      timerProgress: null,
       completedQuestions: {
         Facile: {},
         Moyen: {},
@@ -273,23 +275,38 @@ export default {
       return Object.keys(this.availableCategories).filter(cat => !this.isCategoryCompleted(cat));
     }
   },
-  async created() {
-    await this.loadQuestionsData();
-    await this.loadRecipes();
-    if (this.isLoggedIn) {
-      await this.loadProgress();
-    }
-  },
+  // Dans le composant TimerQuestions.vue, modifier la méthode created():
+async created() {
+  await this.loadQuestionsData();
+  await this.loadRecipes();
+  
+  // Chargement de la progression ici, que l'utilisateur soit connecté ou non
+  await this.loadProgress();
+  
+  // Log pour aider au débogage
+  console.log('TimerQuestions créé, progression chargée:', {
+    completedQuestions: this.completedQuestions
+  });
+},
   methods: {
     isCategoryCompleted(categoryName) {
-      if (!this.selectedLevel || !this.completedQuestions[this.selectedLevel]) return false;
-      
-      const questionsForCategory = this.completedQuestions[this.selectedLevel][categoryName];
-      if (!questionsForCategory) return false;
+  if (!this.selectedLevel || !this.completedQuestions[this.selectedLevel]) return false;
+  
+  // Si la catégorie est explicitement débloquée dans timerProgress
+  if (this.timerProgress && 
+      this.timerProgress.unlockedCategories && 
+      this.timerProgress.unlockedCategories[this.selectedLevel] &&
+      this.timerProgress.unlockedCategories[this.selectedLevel].includes(categoryName)) {
+    return true;
+  }
+  
+  // Sinon, vérifier les questions complétées
+  const questionsForCategory = this.completedQuestions[this.selectedLevel][categoryName];
+  if (!questionsForCategory) return false;
 
-      const totalQuestions = this.questionsData.levels[this.selectedLevel].categories[categoryName].questions.length;
-      return Array.isArray(questionsForCategory) && questionsForCategory.length >= totalQuestions;
-    },
+  const totalQuestions = this.questionsData.levels[this.selectedLevel].categories[categoryName].questions.length;
+  return Array.isArray(questionsForCategory) && questionsForCategory.length >= totalQuestions;
+},
     loadRecipesFromQuestions() {
   if (this.questionsData && this.selectedLevel && this.selectedCategory) {
     const categoryQuestions = this.questionsData.levels[this.selectedLevel].categories[this.selectedCategory].questions;
@@ -314,76 +331,191 @@ export default {
   }
 },
 
-    async loadProgress() {
-      try {
-        const progress = await progressService.loadGameProgress();
-        if (progress?.timerProgress?.completedQuestions) {
-          this.completedQuestions = {
-            Facile: progress.timerProgress.completedQuestions.Facile || {},
-            Moyen: progress.timerProgress.completedQuestions.Moyen || {},
-            Difficile: progress.timerProgress.completedQuestions.Difficile || {}
-          };
+// Modifier la méthode loadProgress dans TimerQuestions.vue
+async loadProgress() {
+  try {
+    console.log('Chargement de la progression du timer...');
+    
+    // Sauvegarder l'état actuel avant de charger de nouvelles données
+    const currentState = JSON.parse(JSON.stringify(this.completedQuestions));
+    
+    const progress = await timerService.loadTimerProgress();
+    console.log('Progression du timer chargée:', progress);
+    
+    // Vérifier si nous avons des données complètes et plus récentes
+    if (progress && progress.completedQuestions) {
+      // Comparer avec l'état précédent si nécessaire
+      console.log('État précédent:', currentState);
+      
+      // Fusion des données au lieu de remplacement
+      for (const level in progress.completedQuestions) {
+        if (!this.completedQuestions[level]) {
+          this.completedQuestions[level] = {};
         }
-      } catch (error) {
-        console.error('Erreur lors du chargement de la progression du timer:', error);
-      }
-    },
-
-    getCompletedQuestionsCount(categoryName) {
-      if (!this.selectedLevel || !this.completedQuestions[this.selectedLevel]) return '0/0';
-      
-      const questionsForCategory = this.completedQuestions[this.selectedLevel][categoryName];
-      const totalQuestions = this.questionsData.levels[this.selectedLevel].categories[categoryName].questions.length;
-      
-      const completedCount = Array.isArray(questionsForCategory) ? questionsForCategory.length : 0;
-      return `${completedCount}/${totalQuestions}`;
-    },
-
-    async saveProgress() {
-      if (!this.isLoggedIn) return;
-
-      try {
-        const timerProgress = {
-          completedQuestions: this.completedQuestions,
-          unlockedCategories: {
-            Facile: Object.keys(this.completedQuestions.Facile || {}),
-            Moyen: Object.keys(this.completedQuestions.Moyen || {}),
-            Difficile: Object.keys(this.completedQuestions.Difficile || {})
-          },
-          bestScores: {
-            Facile: this.currentScore,
-            Moyen: this.currentScore,
-            Difficile: this.currentScore
+        
+        for (const category in progress.completedQuestions[level]) {
+          const serverCount = Array.isArray(progress.completedQuestions[level][category]) 
+            ? progress.completedQuestions[level][category].length : 0;
+          
+          const localCount = Array.isArray(this.completedQuestions[level][category])
+            ? this.completedQuestions[level][category].length : 0;
+          
+          if (serverCount >= localCount) {
+            this.completedQuestions[level][category] = progress.completedQuestions[level][category];
+          } else {
+            console.log(`Données locales conservées pour ${level}/${category}: ${localCount} > ${serverCount}`);
           }
-        };
-
-        await progressService.updateTimerProgress(timerProgress);
-      } catch (error) {
-        console.error('Erreur lors de la sauvegarde de la progression:', error);
+        }
       }
-    },
-
-    getNextUncompletedCategory() {
-      return this.remainingCategories[0];
-    },
-
-    async handleContinue() {
-      const nextCategory = this.getNextUncompletedCategory();
-      this.showCompletionPopup = false;
       
-      if (nextCategory) {
-        this.selectedCategory = nextCategory;
-        this.questions = this.questionsData.levels[this.selectedLevel].categories[nextCategory].questions;
-        this.currentQuestionIndex = 0;
-        this.shuffleQuestions();
-        
-        // Réinitialiser le timer et le redémarrer
-        this.$emit('reset-timer');
-        this.$emit('resume-timer');
-        
-        await this.show();
+      // Stocker également la structure complète
+      this.timerProgress = progress;
+    }
+    
+    console.log('Questions complétées après fusion:', this.completedQuestions);
+  } catch (error) {
+    console.error('Erreur lors du chargement de la progression du timer:', error);
+  }
+},
+
+getCompletedQuestionsCount(categoryName) {
+  if (!this.selectedLevel || !this.completedQuestions[this.selectedLevel]) return '0/0';
+  
+  const questionsForCategory = this.completedQuestions[this.selectedLevel][categoryName];
+  const totalQuestions = this.questionsData.levels[this.selectedLevel].categories[categoryName].questions.length;
+  
+  let completedCount = Array.isArray(questionsForCategory) ? questionsForCategory.length : 0;
+  
+  // Si la catégorie est dans unlockedCategories, considérer qu'elle est complétée
+  if (completedCount === 0 && this.timerProgress && 
+      this.timerProgress.unlockedCategories && 
+      this.timerProgress.unlockedCategories[this.selectedLevel] &&
+      this.timerProgress.unlockedCategories[this.selectedLevel].includes(categoryName)) {
+    completedCount = totalQuestions;
+  }
+  
+  return `${completedCount}/${totalQuestions}`;
+},
+
+// Nouvelle méthode pour vérifier si une catégorie est débloquée
+isCategoryUnlocked(categoryName) {
+  return this.timerProgress && 
+         this.timerProgress.unlockedCategories && 
+         this.timerProgress.unlockedCategories[this.selectedLevel] && 
+         this.timerProgress.unlockedCategories[this.selectedLevel].includes(categoryName);
+},
+
+async saveProgress() {
+  if (!this.isLoggedIn) return;
+  try {
+    console.log("Sauvegarde de la progression...");
+    
+    // Si timerProgress n'est pas initialisé, créer une structure par défaut
+    if (!this.timerProgress) {
+      this.timerProgress = {
+        completedQuestions: this.completedQuestions,
+        unlockedCategories: {},
+        bestScores: {
+          Facile: 0,
+          Moyen: 0,
+          Difficile: 0
+        }
+      };
+    }
+    
+    // S'assurer que la structure des catégories débloquées est correcte
+    if (!this.timerProgress.unlockedCategories) {
+      this.timerProgress.unlockedCategories = {};
+    }
+    
+    // Pour chaque niveau, s'assurer que les catégories complétées sont bien dans unlockedCategories
+    for (const level in this.completedQuestions) {
+      if (!this.timerProgress.unlockedCategories[level]) {
+        this.timerProgress.unlockedCategories[level] = [];
       }
-    },
+      
+      for (const category in this.completedQuestions[level]) {
+        const questionsCompleted = this.completedQuestions[level][category] || [];
+        const totalQuestions = this.questionsData?.levels[level]?.categories[category]?.questions?.length || 0;
+        
+        if (questionsCompleted.length >= totalQuestions && 
+            !this.timerProgress.unlockedCategories[level].includes(category)) {
+          console.log(`Ajout de ${category} aux catégories débloquées pour ${level} pendant la sauvegarde`);
+          this.timerProgress.unlockedCategories[level].push(category);
+        }
+      }
+    }
+    
+    // Mettre à jour les scores
+    this.timerProgress.bestScores = {
+      Facile: Math.max(this.$parent?.timerProgress?.bestScores?.Facile || 0, this.currentScore),
+      Moyen: Math.max(this.$parent?.timerProgress?.bestScores?.Moyen || 0, this.currentScore),
+      Difficile: Math.max(this.$parent?.timerProgress?.bestScores?.Difficile || 0, this.currentScore)
+    };
+    
+    console.log("TimerProgress à sauvegarder:", JSON.stringify(this.timerProgress));
+    
+    // Utiliser d'abord le service timerService directement pour une mise à jour immédiate
+    await timerService.updateTimerProgress(this.timerProgress)
+      .then(response => {
+        console.log("Mise à jour directe de timerProgress réussie:", response);
+      })
+      .catch(async error => {
+        console.error("Erreur lors de la mise à jour directe:", error);
+        // En cas d'échec, essayer via progressService
+        await progressService.updateTimerProgress(this.timerProgress);
+      });
+    
+    // Mettre à jour la référence parent si elle existe
+    if (this.$parent && this.$parent.timerProgress) {
+      this.$parent.timerProgress = this.timerProgress;
+    }
+  } catch (error) {
+    console.error('Erreur lors de la sauvegarde de la progression:', error);
+  }
+},
+
+getNextUncompletedCategory() {
+  console.log("Recherche de la prochaine catégorie incomplète");
+  console.log("Catégories disponibles:", Object.keys(this.availableCategories));
+  console.log("Completed questions:", this.completedQuestions);
+  
+  let notCompleted = [];
+  
+  for (const category in this.availableCategories) {
+    if (!this.isCategoryCompleted(category)) {
+      console.log(`Catégorie ${category} n'est pas complétée`);
+      notCompleted.push(category);
+    } else {
+      console.log(`Catégorie ${category} est déjà complétée`);
+    }
+  }
+  
+  console.log("Catégories non complétées:", notCompleted);
+  
+  return notCompleted.length > 0 ? notCompleted[0] : null;
+},
+
+async handleContinue() {
+  this.showCompletionPopup = false;
+  
+  const nextCategory = this.getNextUncompletedCategory();
+  if (nextCategory) {
+    this.selectedCategory = nextCategory;
+    this.questions = this.questionsData.levels[this.selectedLevel].categories[nextCategory].questions;
+    this.currentQuestionIndex = 0;
+    this.shuffleQuestions();
+    
+    // Charger explicitement les recettes avant d'afficher la question
+    this.loadRecipesFromQuestions();
+    
+    // Réinitialiser le timer et le redémarrer
+    this.$emit('reset-timer');
+    this.$emit('resume-timer');
+    
+    await this.show();
+  }
+},
 
     handleCompletionClose() {
       this.showCompletionPopup = false;
@@ -445,23 +577,28 @@ export default {
     },
  
     async selectLevel(level) {
-      if (this.isLoading) return;
-      this.isLoading = true;
- 
-      try {
-        this.selectedLevel = level;
-        this.selectedCategory = null;
-        
-        this.$emit('level-selected', {
-          level,
-          timer: this.questionsData.levels[level].timer
-        });
- 
-        await this.$nextTick();
-      } finally {
-        this.isLoading = false;
-      }
-    },
+  if (this.isLoading) return;
+  this.isLoading = true;
+
+  try {
+    this.selectedLevel = level;
+    this.selectedCategory = null;
+    
+    // Charger la progression ici après avoir sélectionné le niveau
+    if (this.isLoggedIn) {
+      await this.loadProgress();
+    }
+    
+    this.$emit('level-selected', {
+      level,
+      timer: this.questionsData.levels[level].timer
+    });
+
+    await this.$nextTick();
+  } finally {
+    this.isLoading = false;
+  }
+},
 
     async selectCategory(category) {
   if (this.isLoading) return;
@@ -482,25 +619,82 @@ export default {
   }
 },
 
-    markQuestionAsCompleted(questionId) {
-      if (!this.selectedLevel || !this.selectedCategory) return;
-      
-      if (!this.completedQuestions[this.selectedLevel]) {
-        this.completedQuestions[this.selectedLevel] = {};
+markQuestionAsCompleted(questionId) {
+  if (!this.selectedLevel || !this.selectedCategory) return;
+  
+  console.log(`Marquage de la question ${questionId} comme complétée pour ${this.selectedLevel}/${this.selectedCategory}`);
+  
+  // S'assurer que la structure est correctement initialisée
+  if (!this.completedQuestions[this.selectedLevel]) {
+    this.completedQuestions[this.selectedLevel] = {};
+  }
+  if (!this.completedQuestions[this.selectedLevel][this.selectedCategory]) {
+    this.completedQuestions[this.selectedLevel][this.selectedCategory] = [];
+  }
+  
+  const existingQuestions = this.completedQuestions[this.selectedLevel][this.selectedCategory];
+  
+  // Vérifier si la question n'est pas déjà dans la liste
+  this.isNewQuestion = !existingQuestions.includes(questionId);
+  
+  if (this.isNewQuestion) {
+    console.log(`Ajout de ${questionId} à la liste des questions complétées`);
+    existingQuestions.push(questionId);
+    
+    // Vérifier si toutes les questions sont complétées
+    const totalQuestions = this.questionsData.levels[this.selectedLevel].categories[this.selectedCategory].questions.length;
+    
+    // Si toutes les questions sont complétées, ajouter la catégorie à unlockedCategories
+    if (existingQuestions.length >= totalQuestions) {
+      if (!this.timerProgress) {
+        this.timerProgress = {
+          completedQuestions: this.completedQuestions,
+          unlockedCategories: {
+            Facile: [],
+            Moyen: [],
+            Difficile: []
+          },
+          bestScores: {
+            Facile: 0,
+            Moyen: 0,
+            Difficile: 0
+          }
+        };
       }
-      if (!this.completedQuestions[this.selectedLevel][this.selectedCategory]) {
-        this.completedQuestions[this.selectedLevel][this.selectedCategory] = [];
+      
+      // S'assurer que la structure des catégories débloquées existe
+      if (!this.timerProgress.unlockedCategories) {
+        this.timerProgress.unlockedCategories = {};
       }
       
-      const existingQuestions = this.completedQuestions[this.selectedLevel][this.selectedCategory];
-      this.isNewQuestion = !existingQuestions.includes(questionId);
-      
-      if (this.isNewQuestion) {
-        existingQuestions.push(questionId);
-        this.saveProgress();
+      if (!this.timerProgress.unlockedCategories[this.selectedLevel]) {
+        this.timerProgress.unlockedCategories[this.selectedLevel] = [];
       }
-    },
- 
+      
+      // Ajouter la catégorie aux catégories débloquées si elle n'y est pas déjà
+      if (!this.timerProgress.unlockedCategories[this.selectedLevel].includes(this.selectedCategory)) {
+        console.log(`Ajout de ${this.selectedCategory} aux catégories débloquées pour ${this.selectedLevel}`);
+        this.timerProgress.unlockedCategories[this.selectedLevel].push(this.selectedCategory);
+        
+        // Appeler directement le service timerService pour s'assurer que la catégorie est débloquée
+        if (this.isLoggedIn) {
+          console.log("Appel direct à timerService pour débloquer la catégorie");
+          timerService.updateTimerProgress(this.timerProgress)
+            .then(response => {
+              console.log("Mise à jour des catégories débloquées réussie:", response);
+            })
+            .catch(error => {
+              console.error("Erreur lors de la mise à jour des catégories débloquées:", error);
+            });
+        }
+      }
+    }
+    
+    // Sauvegarder la progression générale
+    this.saveProgress();
+  }
+},
+
     loadQuestionsAndReset() {
       this.currentQuestionIndex = 0;
       this.selectedLevel = null;
@@ -553,34 +747,38 @@ export default {
       this.isVisible = true;
     },
  
-    async nextQuestion() {      
-      this.$parent.currentTimerElements = [];
-      this.$parent.discoveredElements = ["Eau", "Feu", "Terre", "Air"];
+    async nextQuestion() {
+  this.$parent.currentTimerElements = [];
+  this.$parent.discoveredElements = ["Eau", "Feu", "Terre", "Air"];
 
-      if (this.$parent.$refs.craftSystem) {
-        this.$parent.$refs.craftSystem.resetCraftingBoard();
-      }
+  if (this.$parent.$refs.craftSystem) {
+    this.$parent.$refs.craftSystem.resetCraftingBoard();
+  }
 
-      if (this.currentQuestionIndex < this.questions.length - 1) {
-        this.currentQuestionIndex++;
-        await new Promise(resolve => setTimeout(resolve, 100));
-        await this.show();
-      } else {
-        // Catégorie terminée
-        this.showCompletionPopup = true;
-        this.completionMessage = `Félicitations ! Vous avez complété la catégorie ${this.selectedCategory}!`;
-        
-        const nextCategory = this.getNextUncompletedCategory();
-        this.completionSubMessage = nextCategory 
-          ? `Prochaine catégorie disponible : ${nextCategory}`
-          : 'Toutes les catégories sont complétées !';
+  if (this.currentQuestionIndex < this.questions.length - 1) {
+    this.currentQuestionIndex++;
+    
+    // Charger les recettes pour la nouvelle question
+    this.loadRecipesFromQuestions();
+    
+    await new Promise(resolve => setTimeout(resolve, 100));
+    await this.show();
+  } else {
+    // Catégorie terminée
+    this.showCompletionPopup = true;
+    this.completionMessage = `Félicitations ! Vous avez complété la catégorie ${this.selectedCategory}!`;
+    
+    const nextCategory = this.getNextUncompletedCategory();
+    this.completionSubMessage = nextCategory 
+      ? `Prochaine catégorie disponible : ${nextCategory}`
+      : 'Toutes les catégories sont complétées !';
 
-        // Émettre un événement pour mettre le timer en pause
-        this.$emit('pause-timer');
+    // Émettre un événement pour mettre le timer en pause
+    this.$emit('pause-timer');
 
-        await this.saveProgress();
-      }
-    },
+    await this.saveProgress();
+  }
+},
  
     async answerCorrect() {
       const currentQuestion = this.currentQuestion;
