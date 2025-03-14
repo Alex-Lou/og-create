@@ -15,12 +15,13 @@
 
 #inventory {
   flex: 1;
-  background-color: #050101; /* Utilisation de background-color pour ne pas écraser l'image */
+  background-color: #050101;
   padding: 10px;
   box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.3);
   overflow-y: auto;
   color: #cacaca;
   transition: background-color 0.5s, color 0.5s;
+  position: relative;
 }
 
 .inventory-container {
@@ -28,9 +29,110 @@
   background-image: url('~@/assets/images/inventory-bg.png');
   background-repeat: repeat;
   background-size: cover;
-  border-radius: 8px;
-  padding: 15px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  border-radius: 12px;
+  padding: 25px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
+  overflow: hidden;
+}
+
+/* Cadre ornemental */
+.inventory-frame {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 5;
+  border: 1px solid rgba(138, 92, 173, 0.3);
+  border-radius: 12px;
+  box-shadow: 
+    inset 0 0 15px rgba(0, 0, 0, 0.5),
+    0 0 8px rgba(138, 92, 173, 0.2);
+}
+
+/* Coins ornementaux */
+.frame-corner {
+  position: absolute;
+  width: 40px;
+  height: 40px;
+  pointer-events: none;
+  z-index: 6;
+}
+
+.corner-tl {
+  top: 0;
+  left: 0;
+  border-top: 2px solid rgba(138, 92, 173, 0.7);
+  border-left: 2px solid rgba(138, 92, 173, 0.7);
+  border-top-left-radius: 10px;
+}
+
+.corner-tr {
+  top: 0;
+  right: 0;
+  border-top: 2px solid rgba(138, 92, 173, 0.7);
+  border-right: 2px solid rgba(138, 92, 173, 0.7);
+  border-top-right-radius: 10px;
+}
+
+.corner-bl {
+  bottom: 0;
+  left: 0;
+  border-bottom: 2px solid rgba(138, 92, 173, 0.7);
+  border-left: 2px solid rgba(138, 92, 173, 0.7);
+  border-bottom-left-radius: 10px;
+}
+
+.corner-br {
+  bottom: 0;
+  right: 0;
+  border-bottom: 2px solid rgba(138, 92, 173, 0.7);
+  border-right: 2px solid rgba(138, 92, 173, 0.7);
+  border-bottom-right-radius: 10px;
+}
+
+.corner-dot {
+  position: absolute;
+  width: 4px;
+  height: 4px;
+  background: rgba(138, 92, 173, 0.9);
+  border-radius: 50%;
+  filter: drop-shadow(0 0 3px rgba(138, 92, 173, 0.8));
+}
+
+.corner-tl .corner-dot { top: 8px; left: 8px; }
+.corner-tr .corner-dot { top: 8px; right: 8px; }
+.corner-bl .corner-dot { bottom: 8px; left: 8px; }
+.corner-br .corner-dot { bottom: 8px; right: 8px; }
+
+.frame-symbol {
+  position: absolute;
+  font-size: 8px;
+  color: rgba(138, 92, 173, 0.6);
+  filter: drop-shadow(0 0 2px rgba(138, 92, 173, 0.4));
+}
+
+.symbol-tl { top: 4px; left: 15px; }
+.symbol-tr { top: 4px; right: 15px; }
+.symbol-bl { bottom: 4px; left: 15px; }
+.symbol-br { bottom: 4px; right: 15px; }
+
+/* Ligne de séparation du titre */
+.title-separator {
+  position: absolute;
+  top: 50px;
+  left: 20px;
+  right: 20px;
+  height: 2px;
+  background: linear-gradient(90deg, 
+    rgba(138, 92, 173, 0), 
+    rgba(138, 92, 173, 0.5), 
+    rgba(138, 92, 173, 0.7), 
+    rgba(138, 92, 173, 0.5), 
+    rgba(138, 92, 173, 0)
+  );
+  z-index: 6;
 }
 
 /* Conteneur d'étoiles scintillantes */
@@ -41,18 +143,18 @@
   width: 100%;
   height: 100%;
   pointer-events: none;
-  z-index: 4; /* placé devant le background */
+  z-index: 4;
 }
 
-/* Nouveau style pour les étoiles (inspiré de Craft) */
+/* Style pour les étoiles */
 .star-field .star {
   position: absolute;
-  width: .7px; /* plus petites */
+  width: .7px;
   height:.7px;
   border-radius: 50%;
   opacity: 0;
   animation: twinkle 3s infinite ease-in-out;
-  box-shadow: 0 0 4px 1px currentColor; /* glow subtil reprenant la couleur */
+  box-shadow: 0 0 4px 1px currentColor;
 }
 
 /* Positionnement, délais et couleurs pour 15 étoiles */
@@ -179,23 +281,28 @@
 #inventory h2 {
   text-align: center;
   color: #ffffff;
-  margin-bottom: 10px;
+  margin-bottom: 15px;
   font-family: 'BenjaminFranklin', sans-serif;
   letter-spacing: 3px;
   text-transform: uppercase;
   font-size: 20px;
+  text-shadow: 0 0 10px rgba(138, 92, 173, 0.5);
+  position: relative;
+  z-index: 6;
 }
 
 .category-header {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 5px 10px;
+  padding: 8px 12px;
   color: #d5d5d5;
   font-family: 'BenjaminFranklin', sans-serif;
   letter-spacing: 2px;
   font-weight: bold;
   gap: 10px;
+  position: relative;
+  z-index: 6;
 }
 
 .category-title {
@@ -209,23 +316,33 @@
   position: relative;
   cursor: pointer;
   font-weight: bold;
-  color: #050101;
+  color: #e5deff;
   padding: 5px 10px;
-  border-bottom: 1px solid #444;
-  transition: background 0.3s ease;
+  margin-bottom: 8px;
   border-radius: 8px;
+  background: rgba(30, 20, 40, 0.3);
+  border: 1px solid rgba(138, 92, 173, 0.3);
+  transition: all 0.3s ease;
+  position: relative;
+  z-index: 6;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
 }
 
 .category:hover {
-  background: #1d1d1d;
+  background: rgba(138, 92, 173, 0.15);
+  border-color: rgba(138, 92, 173, 0.5);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
 }
 
-.category .fa-chevron-down {
-  transform: rotate(0deg);
+@keyframes borderGlow {
+  0% { border-color: rgba(138, 92, 173, 0.3); }
+  50% { border-color: rgba(138, 92, 173, 0.6); }
+  100% { border-color: rgba(138, 92, 173, 0.3); }
 }
 
-.category:hover .fa-chevron-down {
-  transform: rotate(180deg);
+.category {
+  animation: borderGlow 4s infinite alternate;
 }
 
 .category::after {
@@ -237,24 +354,32 @@
 
 .category-content {
   display: none;
-  background: #111111;
-  border-left: 3px solid #050101;
+  background: rgba(17, 17, 17, 0.8);
+  border-left: 3px solid rgba(138, 92, 173, 0.4);
   border-radius: 8px;
   font-family: 'BenjaminFranklin', sans-serif;
   letter-spacing: 2px;
+  margin-top: 5px;
+  box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.3);
 }
 
 .category-content .inventory-item {
   color: #c9c7c7;
-  padding: 5px 10px;
+  padding: 8px 12px;
   cursor: pointer;
-  border-radius: 3px;
-  transition: background 0.2s ease;
+  border-radius: 5px;
+  margin: 5px;
+  background: rgba(30, 20, 40, 0.4);
+  border: 1px solid rgba(138, 92, 173, 0.2);
+  transition: all 0.3s ease;
 }
 
 .category-content .inventory-item:hover {
-  background: #393939;
-  color: #110E12;
+  background: rgba(138, 92, 173, 0.2);
+  color: #ffffff;
+  transform: translateY(-2px);
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.3);
+  border-color: rgba(138, 92, 173, 0.5);
 }
 
 .category:hover .category-content {
@@ -266,7 +391,7 @@
 }
 
 .progress {
-  background: rgba(255, 255, 255, 0.1);
+  background: rgba(0, 0, 0, 0.3);
   justify-content: flex-start;
   border-radius: 100px;
   align-items: center;
@@ -275,12 +400,14 @@
   display: flex;
   height: 10px;
   width: 150px;
+  box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.5);
+  border: 1px solid rgba(138, 92, 173, 0.2);
 }
 
 .progress-value {
-  box-shadow: 0 10px 40px -10px #fff;
+  box-shadow: 0 0 15px rgba(138, 92, 173, 0.7);
   border-radius: 100px;
-  background: #1da1a8;
+  background: linear-gradient(90deg, #3B1C59, #8a5cad);
   height: 100%;
   width: 0;
   position: absolute;
@@ -295,7 +422,7 @@
 
 .progress-bar-fill {
   height: 100%;
-  background: linear-gradient(90deg, #a7a7a7, #434343);
+  background: linear-gradient(90deg, rgba(138, 92, 173, 0.3), rgba(59, 28, 89, 0.5));
   transition: width 0.3s ease;
   position: absolute;
 }
@@ -308,13 +435,14 @@
   position: absolute;
   top: 50%;
   left: 0;
-  width: 10px;
-  height: 10px;
-  background: rgba(104, 128, 164, 0.5);
+  width: 6px;
+  height: 6px;
+  background: rgba(177, 137, 213, 0.7);
   border-radius: 50%;
-  box-shadow: 0 0 5px rgba(255, 255, 255, 0.3), 0 0 10px rgba(255, 255, 255, 0.1);
+  box-shadow: 0 0 8px rgba(138, 92, 173, 0.8);
   animation: particleMove 3s infinite linear;
   opacity: 0;
+  transform: translateY(-50%);
 }
 
 .progress-bar-fill::before {
@@ -327,7 +455,6 @@
   left: 20%;
   animation-delay: 0.4s;
   opacity: 1;
-  transform: translateY(-3px);
 }
 
 .progress-bar-fill .particle-20 { 
@@ -340,7 +467,6 @@
   left: 40%; 
   animation-delay: 0.8s; 
   opacity: 1;
-  transform: translateY(-3px);
 }
 
 .progress-bar-fill .particle-40 { 
@@ -353,7 +479,6 @@
   left: 60%; 
   animation-delay: 1.2s; 
   opacity: 1;
-  transform: translateY(-3px);
 }
 
 .progress-bar-fill .particle-60 { 
@@ -366,7 +491,6 @@
   left: 80%; 
   animation-delay: 1.6s; 
   opacity: 1;
-  transform: translateY(-3px);
 }
 
 .progress-bar-fill .particle-80 { 
@@ -377,11 +501,11 @@
 
 @keyframes particleMove {
   0% {
-    transform: translateX(0);
+    transform: translate(0, -50%);
     opacity: 1;
   }
   100% {
-    transform: translateX(100%);
+    transform: translate(15px, -50%);
     opacity: 0;
   }
 }

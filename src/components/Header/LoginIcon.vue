@@ -74,6 +74,8 @@
 
 <script>
 import '@/assets/ComponentsStyle/HeaderStyle/LoginIconStyle.css';
+import AuthService from '@/services/authService';
+
 export default {
   name: 'LoginIcon',
   props: {
@@ -89,7 +91,6 @@ export default {
       type: Object,
       default: () => ({})
     },
-    // Nouvelles props pour la personnalisation
     selectedFrame: {
       type: String,
       default: 'basicCadre.png'
@@ -126,37 +127,79 @@ export default {
     }
   },
   methods: {
-    toggleDropdown() {
-      this.isOpen = !this.isOpen;
-      this.resetForm();
-    },
+    // Dans la méthode toggleDropdown de LoginIcon.vue
+toggleDropdown(event) {
+  console.log('toggleDropdown appelé', event);
+  // Empêcher la propagation pour éviter que le document.addEventListener déclenche handleClickOutside
+  if (event) {
+    event.stopPropagation();
+  }
+  this.isOpen = !this.isOpen;
+  console.log('isOpen est maintenant:', this.isOpen);
+  
+  // Ajouter le modal directement au body pour éviter les problèmes de z-index
+  if (this.isOpen) {
+    this.resetForm();
+    // Ajouter une classe au body pour indiquer que le dropdown est ouvert
+    document.body.classList.add('login-dropdown-open');
+  } else {
+    document.body.classList.remove('login-dropdown-open');
+  }
+},
     resetForm() {
       this.email = '';
       this.password = '';
       this.errorMessage = '';
     },
-    handleSubmit() {
-      const credentials = {
-        email: this.email,
-        password: this.password
-      };
+    async handleSubmit() {
+      console.log('handleSubmit appelé');
+      this.isLoading = true;
+      this.errorMessage = '';
       
-      if (this.loginType === 'login') {
-        this.$emit('login-attempt', credentials);
-      } else {
-        this.$emit('register-attempt', credentials);
+      try {
+        if (this.loginType === 'login') {
+          console.log('Tentative de connexion directe avec:', this.email);
+          // Connexion directe avec AuthService
+          const response = await AuthService.login(this.email, this.password);
+          console.log('Connexion réussie avec AuthService:', response);
+          
+          // Émettre également l'événement pour le parent
+          this.$emit('login-attempt', { email: this.email, password: this.password });
+          
+          // Fermer le modal
+          this.isOpen = false;
+        } else {
+          console.log('Tentative d\'inscription directe avec:', this.email);
+          // Inscription directe avec AuthService
+          const response = await AuthService.register(this.email, this.password);
+          console.log('Inscription réussie avec AuthService:', response);
+          
+          // Émettre également l'événement pour le parent
+          this.$emit('register-attempt', { email: this.email, password: this.password });
+          
+          // Fermer le modal
+          this.isOpen = false;
+        }
+      } catch (error) {
+        console.error('Erreur d\'authentification:', error);
+        this.errorMessage = error.response?.data?.message || 'Erreur d\'authentification';
+      } finally {
+        this.isLoading = false;
       }
-      
-      this.email = '';
-      this.password = '';
-      this.isOpen = false;
     },
     handleLogout() {
+      console.log('handleLogout appelé');
+      // Déconnecter directement
+      AuthService.logout();
+      // Émettre l'événement pour le parent
       this.$emit('logout');
+      // Fermer le dropdown
       this.isOpen = false;
     },
     handleClickOutside(e) {
-      if (!this.$el.contains(e.target)) {
+      // Ne pas déclencher si le clic est dans le composant
+      if (this.$el && !this.$el.contains(e.target) && this.isOpen) {
+        console.log('Clic en dehors du dropdown - fermeture');
         this.isOpen = false;
       }
     },
@@ -166,7 +209,11 @@ export default {
     }
   },
   mounted() {
-    document.addEventListener('click', this.handleClickOutside);
+    console.log('LoginIcon monté - isLoggedIn:', this.isLoggedIn);
+    // Utiliser setTimeout pour assurer que la référence à this reste correcte
+    setTimeout(() => {
+      document.addEventListener('click', this.handleClickOutside);
+    }, 100);
   },
   beforeUnmount() {
     document.removeEventListener('click', this.handleClickOutside);

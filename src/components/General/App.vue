@@ -13,44 +13,48 @@
       @achievements-loaded="handleAchievementsLoaded" 
     />
     <header style="position: relative;">
-      <div class="title-area">
-        <img src="@/assets/Svgs/Logo.png" alt="Logo" class="logo" />
-        <h1>Origins Creation</h1>
-        <CoinCounter :coins="coins" />
-      </div>
-      <div class="header-controls">
-        <DarkToggle :isDarkMode="isDarkMode" @update:darkMode="updateDarkMode" />
-        <LoginIcon 
-          :isDarkMode="isDarkMode" 
-          :isLoggedIn="isLoggedIn"
-          :currentUser="currentUser"
-          :selectedFrame="selectedFrame"
-          :selectedAvatar="selectedAvatar"
-          @login-attempt="handleLoginAttempt"
-          @register-attempt="handleRegisterAttempt"
-          @logout="handleLogout"
-          @open-customize-modal="handleOpenCustomizeModal"
-        />
-        <ContactIcon 
-          :isDarkMode="isDarkMode"
-          @open-contact="handleOpenContact"
-        />
-      </div>
-      <InfiniteModeButton 
-        @switch-to-infinite="handleInfiniteModeActivation" 
-        :isTimerActive="isTimerActive" 
-        :isExplorerActive="isExplorerActive" 
-      />
-      <ExplorerModeButton @click="activateExplorerMode" :isTimerActive="isTimerActive" :isExplorerActive="isExplorerActive" />
-      <TimerModeButton 
-        ref="timerModeButton"
-        @timer-state-change="handleTimerStateChange"
-        @timer-complete="handleTimerComplete"
-        @show-question="showCurrentTimerQuestion"
-        @force-stop="handleTimerForceStop"
-        :isExplorerActive="isExplorerActive"
-      />
-    </header>
+  <!-- Ajouts décoratifs minimaux qui ne perturbent pas la structure -->
+  <div class="header-decoration"></div>
+  
+  <!-- Structure originale préservée exactement comme avant -->
+  <div class="title-area">
+    <img src="@/assets/Svgs/Logo.png" alt="Logo" class="logo" />
+    <h1>Origins Creation</h1>
+    <CoinCounter :coins="coins" />
+  </div>
+  <div class="header-controls">
+    <DarkToggle :isDarkMode="isDarkMode" @update:darkMode="updateDarkMode" />
+    <LoginIcon 
+      :isDarkMode="isDarkMode" 
+      :isLoggedIn="isLoggedIn"
+      :currentUser="currentUser"
+      :selectedFrame="selectedFrame"
+      :selectedAvatar="selectedAvatar"
+      @login-attempt="handleLoginAttempt"
+      @register-attempt="handleRegisterAttempt"
+      @logout="handleLogout"
+      @open-customize-modal="handleOpenCustomizeModal"
+    />
+    <ContactIcon 
+      :isDarkMode="isDarkMode"
+      @open-contact="handleOpenContact"
+    />
+  </div>
+  <InfiniteModeButton 
+    @switch-to-infinite="handleInfiniteModeActivation" 
+    :isTimerActive="isTimerActive" 
+    :isExplorerActive="isExplorerActive" 
+  />
+  <ExplorerModeButton @click="activateExplorerMode" :isTimerActive="isTimerActive" :isExplorerActive="isExplorerActive" />
+  <TimerModeButton 
+    ref="timerModeButton"
+    @timer-state-change="handleTimerStateChange"
+    @timer-complete="handleTimerComplete"
+    @show-question="showCurrentTimerQuestion"
+    @force-stop="handleTimerForceStop"
+    :isExplorerActive="isExplorerActive"
+  />
+</header>
     <main id="main-content" ref="mainContent" v-show="!isExplorerActive">
       <div ref="inventory" class="inventory-wrapper">
         <GameInventory
@@ -897,24 +901,30 @@ saveGameProgress() {
         this.categoryProgress[category] = (discoveredCount / totalElements) * 100;
       });
     },
-    checkAuth() {
-      const loggedInUser = AuthService.getCurrentUser();
-      if (loggedInUser && loggedInUser.token) {
-        this.isLoggedIn = true;
-        this.currentUser = loggedInUser;
-        this.loadSavedCustomization();
-      } else {
-        this.isLoggedIn = false;
-        this.currentUser = null;
-        localStorage.removeItem('user');
-        
-        this.coins = 0;
-        localStorage.removeItem('coins');
-        
-        this.selectedFrame = 'basicCadre.png';
-        this.selectedAvatar = 'coin.png';
-      }
-    },
+    // Dans App.vue, méthode checkAuth()
+checkAuth() {
+  console.log('Vérification de l\'authentification');
+  const loggedInUser = AuthService.getCurrentUser();
+  console.log('loggedInUser:', loggedInUser);
+  
+  if (loggedInUser && loggedInUser.token) {
+    console.log('Utilisateur authentifié:', loggedInUser.username);
+    this.isLoggedIn = true;
+    this.currentUser = loggedInUser;
+    this.loadSavedCustomization();
+  } else {
+    console.log('Aucun utilisateur authentifié');
+    this.isLoggedIn = false;
+    this.currentUser = null;
+    localStorage.removeItem('user');
+    
+    this.coins = 0;
+    localStorage.removeItem('coins');
+    
+    this.selectedFrame = 'basicCadre.png';
+    this.selectedAvatar = 'coin.png';
+  }
+},
     updateDarkMode(newMode) {
       this.isDarkMode = newMode;
       document.body.classList.toggle("light-mode", !this.isDarkMode);
@@ -1004,143 +1014,153 @@ saveGameProgress() {
 
 
 handleCraftSuccess(craftedItem) {
- console.log('DEBUG CRAFT SUCCESS:', {
-   craftedItem,
-   isTimerActive: this.isTimerActive,
-   isExplorerCraftMode: this.isExplorerCraftMode,
-   currentTimerElements: this.currentTimerElements,
-   discoveredElements: this.discoveredElements.length
- });
- 
- try {
-   this.craftedElement = {
-     name: craftedItem,
-     image: require(`@/assets/creatures/${craftedItem}.png`),
-   };
- } catch (error) {
-   this.craftedElement = {
-     name: craftedItem,
-     image: null,
-   };
- }
- 
- // Mode normal (ni Timer ni Explorer)
- if (!this.isTimerActive && !this.isExplorerActive && !this.isExplorerCraftMode) {
-   // Sauvegarder l'élément découvert
-   this.saveDiscoveredElement(craftedItem);
-   this.$refs.dataLoading.handleCraft(craftedItem);
- }
- 
- // Gestion du mode Timer
- if (this.isTimerActive) {
-   // Ajouter à l'inventaire local de la session Timer
-   if (!this.discoveredElements.includes(craftedItem)) {
-     this.discoveredElements.push(craftedItem);
-   }
-   
-   // Ajouter aux éléments du Timer créés par le joueur
-   if (!this.currentTimerElements.includes(craftedItem)) {
-     this.currentTimerElements.push(craftedItem);
-     
-     // Sauvegarder uniquement ce nouvel élément dans timer_elements
-     if (this.isLoggedIn) {
-       // Utiliser directement l'endpoint timer/save-elements
-       const timerServiceUrl = '/api/timer/save-elements';
-       fetch(timerServiceUrl, {
-         method: 'POST',
-         headers: {
-           'Content-Type': 'application/json',
-           'Authorization': `Bearer ${AuthService.getCurrentUser()?.token}`
-         },
-         body: JSON.stringify({
-           elements: [craftedItem] // Sauvegarder seulement l'élément créé
-         })
-       })
-       .then(response => {
-         if (!response.ok) {
-           throw new Error('Erreur lors de la sauvegarde de l\'élément Timer');
-         }
-         return response.json();
-       })
-       .then(() => {
-         console.log(`Élément Timer ${craftedItem} sauvegardé avec succès`);
-       })
-       .catch(error => {
-         console.error(`Erreur lors de la sauvegarde de l'élément Timer ${craftedItem}:`, error);
-       });
-     }
-   }
-   
-   const currentQuestion = this.$refs.timerQuestions.getCurrentQuestion();
-   
-   if (currentQuestion) {
-     const allPossibleElements = [
-       ...(currentQuestion.initialElements.required || []),
-       ...(currentQuestion.initialElements.additional || []),
-       ...(currentQuestion.validAnswers || [])
-     ];
-     
-     if (allPossibleElements.includes(craftedItem)) {
-       console.log('L\'élément est dans les éléments possibles');
-     }
-     
-     const validationMode = currentQuestion.initialElements.validationMode || 'any';
-     const validAnswers = currentQuestion.validAnswers || [];
-     
-     if (validationMode === 'any') {
-       const isValidAnswer = validAnswers.some(answer => 
-         this.discoveredElements.includes(answer)
-       );
-       
-       if (isValidAnswer) {
-         this.timerModeDiscoveries++;
-         this.$refs.timerQuestions.answerCorrect();
-       }
-     } else if (validationMode === 'multiple') {
-       const requiredCount = currentQuestion.initialElements.requiredCount || 1;
-       const discoveredValidAnswers = validAnswers.filter(answer => 
-         this.discoveredElements.includes(answer)
-       );
-       
-       if (discoveredValidAnswers.length >= requiredCount) {
-         this.timerModeDiscoveries++;
-         this.$refs.timerQuestions.answerCorrect();
-       }
-     } else {
-       const isAllAnswersFound = validAnswers.every(answer => 
-         this.discoveredElements.includes(answer)
-       );
-       
-       if (isAllAnswersFound) {
-         this.timerModeDiscoveries++;
-         this.$refs.timerQuestions.answerCorrect();
-       }
-     }
-   }
- }
- 
- // Gestion du mode Explorer Craft
- if (this.isExplorerCraftMode && this.currentExplorerChallenge) {
-   const requiredElements = this.currentExplorerChallenge.challenge.requiredElements || [];
-   
-   if (requiredElements.includes(craftedItem)) {
-     // Défi réussi !
-     this.showAlert(`Félicitations ! Vous avez créé ${craftedItem} et réussi le défi !`);
-     
-     // Attribuer une récompense en pièces
-     this.handleCoinsEarned(50);
-     
-     // Sauvegarder l'élément de façon permanente
-     this.saveDiscoveredElement(craftedItem);
-     
-     // Revenir au mode Explorer
-     this.isExplorerCraftMode = false;
-     this.isExplorerActive = true;
-     
-     // Réinitialiser le défi actuel
-     this.currentExplorerChallenge = null;
-   }
- }
+  console.log('DEBUG CRAFT SUCCESS:', {
+    craftedItem,
+    isTimerActive: this.isTimerActive,
+    isExplorerCraftMode: this.isExplorerCraftMode,
+    currentTimerElements: this.currentTimerElements,
+    discoveredElements: this.discoveredElements.length
+  });
+  
+  try {
+    this.craftedElement = {
+      name: craftedItem,
+      image: require(`@/assets/creatures/${craftedItem}.png`),
+    };
+  } catch (error) {
+    this.craftedElement = {
+      name: craftedItem,
+      image: null,
+    };
+  }
+  
+  // Mode normal (ni Timer ni Explorer)
+  if (!this.isTimerActive && !this.isExplorerActive && !this.isExplorerCraftMode) {
+    // Sauvegarder l'élément découvert
+    this.saveDiscoveredElement(craftedItem);
+    this.$refs.dataLoading.handleCraft(craftedItem);
+  }
+  
+  // Gestion du mode Timer
+  if (this.isTimerActive) {
+    // Ajouter à l'inventaire local de la session Timer
+    if (!this.discoveredElements.includes(craftedItem)) {
+      this.discoveredElements.push(craftedItem);
+    }
+    
+    // Vérifier si l'élément fait partie des éléments initiaux de la question
+    const currentQuestion = this.$refs.timerQuestions.getCurrentQuestion();
+    const initialElements = [];
+    
+    if (currentQuestion && currentQuestion.initialElements) {
+      initialElements.push(...(currentQuestion.initialElements.required || []));
+      initialElements.push(...(currentQuestion.initialElements.additional || []));
+    }
+    
+    // Ne sauvegarder dans timer_elements QUE si ce n'est pas un élément initial
+    if (!initialElements.includes(craftedItem)) {
+      // Ajouter aux éléments créés par l'utilisateur
+      if (!this.currentTimerElements.includes(craftedItem)) {
+        this.currentTimerElements.push(craftedItem);
+        
+        // Sauvegarder uniquement ce nouvel élément dans timer_elements
+        if (this.isLoggedIn) {
+          // Utiliser directement l'endpoint timer/save-elements
+          const timerServiceUrl = '/api/timer/save-elements';
+          fetch(timerServiceUrl, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              'Authorization': `Bearer ${AuthService.getCurrentUser()?.token}`
+            },
+            body: JSON.stringify({
+              elements: [craftedItem] // Sauvegarder seulement l'élément créé
+            })
+          })
+          .then(response => {
+            if (!response.ok) {
+              throw new Error('Erreur lors de la sauvegarde de l\'élément Timer');
+            }
+            return response.json();
+          })
+          .then(() => {
+            console.log(`Élément Timer ${craftedItem} sauvegardé avec succès`);
+          })
+          .catch(error => {
+            console.error(`Erreur lors de la sauvegarde de l'élément Timer ${craftedItem}:`, error);
+          });
+        }
+      }
+    }
+    
+    if (currentQuestion) {
+      const allPossibleElements = [
+        ...(currentQuestion.initialElements.required || []),
+        ...(currentQuestion.initialElements.additional || []),
+        ...(currentQuestion.validAnswers || [])
+      ];
+      
+      if (allPossibleElements.includes(craftedItem)) {
+        console.log('L\'élément est dans les éléments possibles');
+      }
+      
+      const validationMode = currentQuestion.initialElements.validationMode || 'any';
+      const validAnswers = currentQuestion.validAnswers || [];
+      
+      if (validationMode === 'any') {
+        const isValidAnswer = validAnswers.some(answer => 
+          this.discoveredElements.includes(answer)
+        );
+        
+        if (isValidAnswer) {
+          this.timerModeDiscoveries++;
+          this.$refs.timerQuestions.answerCorrect();
+        }
+      } else if (validationMode === 'multiple') {
+        const requiredCount = currentQuestion.initialElements.requiredCount || 1;
+        const discoveredValidAnswers = validAnswers.filter(answer => 
+          this.discoveredElements.includes(answer)
+        );
+        
+        if (discoveredValidAnswers.length >= requiredCount) {
+          this.timerModeDiscoveries++;
+          this.$refs.timerQuestions.answerCorrect();
+        }
+      } else {
+        const isAllAnswersFound = validAnswers.every(answer => 
+          this.discoveredElements.includes(answer)
+        );
+        
+        if (isAllAnswersFound) {
+          this.timerModeDiscoveries++;
+          this.$refs.timerQuestions.answerCorrect();
+        }
+      }
+    }
+  }
+  
+  // Gestion du mode Explorer Craft
+  if (this.isExplorerCraftMode && this.currentExplorerChallenge) {
+    const requiredElements = this.currentExplorerChallenge.challenge.requiredElements || [];
+    
+    if (requiredElements.includes(craftedItem)) {
+      // Défi réussi !
+      this.showAlert(`Félicitations ! Vous avez créé ${craftedItem} et réussi le défi !`);
+      
+      // Attribuer une récompense en pièces
+      this.handleCoinsEarned(50);
+      
+      // Sauvegarder l'élément de façon permanente
+      this.saveDiscoveredElement(craftedItem);
+      
+      // Revenir au mode Explorer
+      this.isExplorerCraftMode = false;
+      this.isExplorerActive = true;
+      
+      // Réinitialiser le défi actuel
+      this.currentExplorerChallenge = null;
+    }
+  }
 },
 
     addToCategory(craftedItem) {

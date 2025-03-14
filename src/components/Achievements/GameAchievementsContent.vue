@@ -10,6 +10,23 @@
       @mouseenter="isListHovered = true"
       @mouseleave="isListHovered = false"
     >
+      <!-- Cadre décoratif pour le contenu -->
+      <div class="content-frame">
+        <div class="frame-corner corner-tl"><div class="corner-dot"></div></div>
+        <div class="frame-corner corner-tr"><div class="corner-dot"></div></div>
+        <div class="frame-corner corner-bl"><div class="corner-dot"></div></div>
+        <div class="frame-corner corner-br"><div class="corner-dot"></div></div>
+      </div>
+      
+      <!-- Effet d'étoiles -->
+      <div class="achievements-star-field">
+        <div class="star"></div>
+        <div class="star"></div>
+        <div class="star"></div>
+        <div class="star"></div>
+        <div class="star"></div>
+      </div>
+      
       <ul>
         <li v-for="(achievement, index) in processedAchievements"
             :key="index"
@@ -22,7 +39,16 @@
         </li>
       </ul>
     </div>
+    
     <div id="achievements-menu" :class="{ expanded: isHovered }">
+      <!-- Cadre décoratif pour le bouton -->
+      <div class="menu-frame">
+        <div class="frame-corner corner-tl"><div class="corner-dot"></div></div>
+        <div class="frame-corner corner-tr"><div class="corner-dot"></div></div>
+        <div class="frame-corner corner-bl"><div class="corner-dot"></div></div>
+        <div class="frame-corner corner-br"><div class="corner-dot"></div></div>
+      </div>
+      
       <img src="@/assets/Svgs/Trophy.png" alt="Trophy Icon" class="menu-icon" />
       <span v-if="isHovered">Succès</span>
     </div>

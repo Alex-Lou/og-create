@@ -14,22 +14,23 @@
 }
 
 .login-container {
-    position: relative;
-    margin-right: -110px;
-    margin-bottom: 1px;
-  }
+  position: relative;
+  margin-right: -110px;
+  margin-bottom: 1px;
+  z-index: 9999; /* S'assurer que le conteneur a un z-index élevé */
+}
   
-  .user-frame {
-    position: relative;
-    width: 40px;
-    height: 40px;
-    cursor: pointer;
-    transition: transform 0.3s ease;
-  }
+.user-frame {
+  position: relative;
+  width: 40px;
+  height: 40px;
+  cursor: pointer;
+  transition: transform 0.3s ease;
+}
   
-  .user-frame:hover {
-    transform: scale(1.1);
-  }
+.user-frame:hover {
+  transform: scale(1.1);
+}
   
   .frame-image {
     position: absolute;
@@ -53,22 +54,50 @@
   }
   
   .login-dropdown {
-    position: absolute;
-    top: 100%;
-    right: 0;
+    position: fixed; /* Changé de absolute à fixed pour éviter les problèmes avec les parents */
+    top: 60px; /* Positionnement ajusté */
+    right: 100px; /* Positionnement ajusté */
     margin-top: 10px;
     background: #1e1e1e;
     border: 1px solid #333;
     border-radius: 8px;
     padding: 15px;
     width: 250px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    z-index: 1000;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
+    z-index: 10000; /* Valeur très élevée pour être au-dessus de tout */
     font-size: 1rem;
     font-family: 'BenjaminFranklin', sans-serif;
     letter-spacing: 2px;
     font-weight: bold;
+}
+  @keyframes dropdownFadeIn {
+    from { opacity: 0; transform: translateY(-10px); }
+    to { opacity: 1; transform: translateY(0); }
   }
+
+  .login-dropdown {
+    animation: dropdownFadeIn 0.2s ease-out forwards;
+  }
+
+  
+  .login-dropdown::before {
+    content: '';
+    position: absolute;
+    top: -10px;
+    right: 20px;
+    width: 0;
+    height: 0;
+    border-left: 10px solid transparent;
+    border-right: 10px solid transparent;
+    border-bottom: 10px solid #1e1e1e;
+  }
+
+  .login-dropdown button,
+.login-dropdown input {
+  position: relative;
+  z-index: 10000;
+}
+
   
   .login-type-selector {
     display: flex;

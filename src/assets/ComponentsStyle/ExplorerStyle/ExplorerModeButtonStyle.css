@@ -1,80 +1,150 @@
 @font-face {
-    font-family: 'BenjaminFranklin';
-    src: url('@/assets/fonts/BenjaminFranklin.ttf') format('opentype');
-    font-weight: normal;
-    font-style: normal;
-  }
-  
-  /* Positionnement similaire au bouton Infinite, placé à côté du titre */
-  .explorer-mode-button {
-    position: absolute;
-    bottom: -15px;
-    background: none;
-    left: 900px;
-    border: none !important;
-    cursor: pointer;
-    padding: 0;
-    margin: 0;
-    width: 150px;
-    transition: all 0.3s ease;
-    filter: drop-shadow(0 0 2px rgba(48, 73, 104, 0.1));
-    outline: 0 !important;
-    box-shadow: none !important;
-    -webkit-tap-highlight-color: transparent;
-    -moz-tap-highlight-color: transparent;
-    user-select: none;
-    -webkit-user-select: none;
-    -moz-user-select: none;
-    -ms-user-select: none;
-  }
-  
-  .explorer-mode-button:focus,
-  .explorer-mode-button:active,
-  .explorer-mode-button:focus-visible {
-    outline: 0 !important;
-    border: none !important;
-    box-shadow: none !important;
-    background: none !important;
-  }
-  
-  .explorer-mode-button:hover {
-    transform: scale(1.05);
-    filter: drop-shadow(0 0 12px rgba(48, 73, 104, 0.7));
-  }
-  
-  .explorer-mode-button:hover .glow-border {
-    stroke-width: 3;
-    stroke: #5a7294;
-  }
-  
-  .explorer-mode-button:hover .glow-effect {
-    opacity: 0.5;
-  }
-  
-  .explorer-mode-button:hover .explorer-text {
-    fill: #b8d4f5;
-    transition: fill 0.3s ease;
-  }
-  
-  .explorer-mode-button:active {
-    transform: scale(0.95);
-    filter: drop-shadow(0 0 4px rgba(48, 73, 104, 0.3));
-  }
-  
-  .explorer-mode-button::before {
-    content: var(--content);
-    display: none;
-  }
-  
-  .explorer-text {
-    transition: fill 0.3s ease;
-    fill: #d6ccbe;
-  }
-  
-  *:focus {
-    outline: none !important;
-    box-shadow: none !important;
-    -webkit-tap-highlight-color: transparent;
-    -moz-tap-highlight-color: transparent;
-  }
+  font-family: 'BenjaminFranklin';
+  src: url('@/assets/fonts/BenjaminFranklin.ttf') format('opentype');
+  font-weight: normal;
+  font-style: normal;
+}
 
+/* Positionnement similaire au bouton Infinite, placé à côté du titre */
+.explorer-mode-button {
+  position: absolute;
+  bottom: -15px;
+  background: none;
+  left: 900px;
+  border: none !important;
+  cursor: pointer;
+  padding: 0;
+  margin: 0;
+  width: 150px;
+  transition: all 0.3s ease;
+  filter: drop-shadow(0 0 5px rgba(25, 16, 36, 0.5));
+  outline: 0 !important;
+  box-shadow: none !important;
+  -webkit-tap-highlight-color: transparent;
+  -moz-tap-highlight-color: transparent;
+  user-select: none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+}
+
+.explorer-mode-button:focus,
+.explorer-mode-button:active,
+.explorer-mode-button:focus-visible {
+  outline: 0 !important;
+  border: none !important;
+  box-shadow: none !important;
+  background: none !important;
+}
+
+.explorer-mode-button:hover {
+  transform: translateY(-2px) scale(1.03);
+  filter: drop-shadow(0 0 8px rgba(138, 92, 173, 0.3));
+}
+
+.glow-border {
+  transition: all 0.3s ease;
+}
+
+.explorer-mode-button:hover .glow-border {
+  stroke-width: 2.5;
+  stroke: url(#expBrdGradient);
+  filter: drop-shadow(0 0 3px rgba(138, 92, 173, 0.5));
+}
+
+/* Coins ornementaux animation */
+.corner-decoration {
+  transition: all 0.3s ease;
+}
+
+.explorer-mode-button:hover .corner-decoration {
+  stroke: rgba(138, 92, 173, 1);
+  stroke-width: 3;
+}
+
+/* Points lumineux aux coins */
+.corner-dot {
+  filter: drop-shadow(0 0 2px rgba(138, 92, 173, 0.7));
+  transition: all 0.3s ease;
+}
+
+.explorer-mode-button:hover .corner-dot {
+  r: 2.5;
+  filter: drop-shadow(0 0 4px rgba(138, 92, 173, 1));
+}
+
+/* Animation des particules étoiles */
+.star-particle {
+  opacity: 0;
+  animation: twinkle 3s infinite ease-in-out;
+}
+
+.star1 { animation-delay: 0.1s; }
+.star2 { animation-delay: 0.7s; }
+.star3 { animation-delay: 1.3s; }
+.star4 { animation-delay: 1.9s; }
+.star5 { animation-delay: 2.5s; }
+
+@keyframes twinkle {
+  0% {
+    opacity: 0.1;
+    r: 0.5;
+  }
+  50% {
+    opacity: 0.7;
+    r: 1;
+  }
+  100% {
+    opacity: 0.1;
+    r: 0.5;
+  }
+}
+
+/* Effet de fumée animation */
+.smoke-effect {
+  animation: smokeMove 8s infinite linear;
+  transform-origin: center;
+}
+
+@keyframes smokeMove {
+  0% {
+    opacity: 0.1;
+    transform: translateX(-10px);
+  }
+  50% {
+    opacity: 0.2;
+    transform: translateX(10px);
+  }
+  100% {
+    opacity: 0.1;
+    transform: translateX(-10px);
+  }
+}
+
+/* Texte en état normal */
+.explorer-text {
+  fill: #d6ccbe;
+  filter: url(#expTxtGlow);
+  transition: all 0.3s ease;
+}
+
+.explorer-mode-button:hover .explorer-text {
+  fill: #d8c5f0;
+  filter: drop-shadow(0 0 3px rgba(138, 92, 173, 0.8));
+}
+
+.explorer-mode-button:active {
+  transform: scale(0.97);
+}
+
+.explorer-mode-button::before {
+  content: var(--content);
+  display: none;
+}
+
+*:focus {
+  outline: none !important;
+  box-shadow: none !important;
+  -webkit-tap-highlight-color: transparent;
+  -moz-tap-highlight-color: transparent;
+}

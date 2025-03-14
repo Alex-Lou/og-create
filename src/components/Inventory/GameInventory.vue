@@ -1,5 +1,29 @@
 <template>
   <div id="inventory" class="inventory-container">
+    <!-- Structure du cadre ornemental -->
+    <div class="inventory-frame">
+      <!-- Coins ornementaux -->
+      <div class="frame-corner corner-tl">
+        <div class="corner-dot"></div>
+        <div class="frame-symbol symbol-tl">✧</div>
+      </div>
+      <div class="frame-corner corner-tr">
+        <div class="corner-dot"></div>
+        <div class="frame-symbol symbol-tr">✧</div>
+      </div>
+      <div class="frame-corner corner-bl">
+        <div class="corner-dot"></div>
+        <div class="frame-symbol symbol-bl">✧</div>
+      </div>
+      <div class="frame-corner corner-br">
+        <div class="corner-dot"></div>
+        <div class="frame-symbol symbol-br">✧</div>
+      </div>
+      
+      <!-- Ligne de séparation pour le titre -->
+      <div class="title-separator"></div>
+    </div>
+    
     <!-- Conteneur de fumée -->
     <div class="smoke-container">
       <!-- Fumée épaisse en bas à gauche -->

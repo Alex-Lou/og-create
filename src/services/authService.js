@@ -1,7 +1,6 @@
 import axios from 'axios';
 import gameDataService from './gameDataService';
 
-
 const axiosInstance = axios.create({
   baseURL: 'http://localhost:3000/api/auth/',
   headers: {
@@ -20,19 +19,28 @@ export const apiInstance = axios.create({
 });
 
 class AuthService {
+  constructor() {
+    // Initialiser les headers d'autorisation au démarrage
+    this._initializeAuthHeader();
+    // Configurer les intercepteurs pour la gestion des tokens expirés
+    this._setupInterceptors();
+  }
+
   _initializeAuthHeader() {
     const user = this.getCurrentUser();
     if (user && user.token) {
+      console.log('Initialisation des headers avec token:', user.token.substring(0, 10) + '...');
       // Mettre à jour toutes les instances d'Axios
       axios.defaults.headers.common['Authorization'] = `Bearer ${user.token}`;
       axiosInstance.defaults.headers.common['Authorization'] = `Bearer ${user.token}`;
       apiInstance.defaults.headers.common['Authorization'] = `Bearer ${user.token}`;
+    } else {
+      console.log('Pas de token disponible pour initialiser les headers');
+      // S'assurer que les headers sont nettoyés si aucun token n'est disponible
+      delete axios.defaults.headers.common['Authorization'];
+      delete axiosInstance.defaults.headers.common['Authorization'];
+      delete apiInstance.defaults.headers.common['Authorization'];
     }
-  }
-
-  constructor() {
-    this._initializeAuthHeader();
-    this._setupInterceptors();
   }
 
   // Configuration des intercepteurs pour gérer les tokens expirés
@@ -107,7 +115,7 @@ class AuthService {
   async login(email, password) {
     try {
       console.group('Tentative de connexion');
-      console.log('Données:', { email, password });
+      console.log('Données:', { email, password: '******' });
       
       const response = await axiosInstance.post('login', { 
         email, 
@@ -157,7 +165,7 @@ class AuthService {
   async register(email, password) {
     try {
       console.group('Tentative d\'inscription');
-      console.log('Données:', { email, password });
+      console.log('Données:', { email, password: '******' });
       
       const response = await axiosInstance.post('register', { 
         email, 
