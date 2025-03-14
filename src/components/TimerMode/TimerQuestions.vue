@@ -2,6 +2,50 @@
   <div>
     <div v-if="isVisible" class="questions-container">
       <div class="questions-box">
+        <!-- Cadre ornemental -->
+        <div class="question-frame">
+          <div class="frame-corner corner-tl">
+            <div class="corner-dot"></div>
+            <div class="frame-symbol symbol-tl">✧</div>
+          </div>
+          <div class="frame-corner corner-tr">
+            <div class="corner-dot"></div>
+            <div class="frame-symbol symbol-tr">✧</div>
+          </div>
+          <div class="frame-corner corner-bl">
+            <div class="corner-dot"></div>
+            <div class="frame-symbol symbol-bl">✧</div>
+          </div>
+          <div class="frame-corner corner-br">
+            <div class="corner-dot"></div>
+            <div class="frame-symbol symbol-br">✧</div>
+          </div>
+          
+          <!-- Ligne de séparation pour le titre -->
+          <div class="title-separator"></div>
+        </div>
+        
+        <!-- Effet de fumée -->
+        <div class="smoke-container">
+          <div class="smoke smoke1"></div>
+          <div class="smoke smoke2"></div>
+          <div class="smoke smoke-top"></div>
+        </div>
+        
+        <!-- Champ d'étoiles -->
+        <div class="star-field">
+          <div class="star"></div>
+          <div class="star"></div>
+          <div class="star"></div>
+          <div class="star"></div>
+          <div class="star"></div>
+          <div class="star"></div>
+          <div class="star"></div>
+          <div class="star"></div>
+          <div class="star"></div>
+          <div class="star"></div>
+        </div>
+        
         <div v-if="!selectedLevel" class="level-selection">
           <button @click="cancelLevelSelection" class="close-modal-btn">&times;</button>
           <h2 class="level-title">Choisissez votre niveau</h2>
@@ -16,7 +60,6 @@
             </button>
           </div>
         </div>
-
         <div v-else-if="!selectedCategory" class="category-selection">
           <button @click="cancelCategorySelection" class="close-modal-btn">&times;</button>
           <h2 class="level-title">Choisissez une catégorie</h2>
@@ -56,9 +99,38 @@
       </div>
     </div>
  
-    <!-- Modal de succès style "victoire" -->
+    <!-- Modal de succès style mystique -->
     <div v-if="showSuccessPopup" class="victory-modal">
       <div class="victory-content">
+        <!-- Cadre ornemental pour la victoire -->
+        <div class="victory-frame">
+          <div class="frame-corner corner-tl">
+            <div class="corner-dot"></div>
+            <div class="frame-symbol symbol-tl">✧</div>
+          </div>
+          <div class="frame-corner corner-tr">
+            <div class="corner-dot"></div>
+            <div class="frame-symbol symbol-tr">✧</div>
+          </div>
+          <div class="frame-corner corner-bl">
+            <div class="corner-dot"></div>
+            <div class="frame-symbol symbol-bl">✧</div>
+          </div>
+          <div class="frame-corner corner-br">
+            <div class="corner-dot"></div>
+            <div class="frame-symbol symbol-br">✧</div>
+          </div>
+        </div>
+        
+        <!-- Effets visuels -->
+        <div class="star-field-victory">
+          <div class="star"></div>
+          <div class="star"></div>
+          <div class="star"></div>
+          <div class="star"></div>
+          <div class="star"></div>
+        </div>
+        
         <h2>Correct !</h2>
         
         <div class="rewards-container">
@@ -76,10 +148,39 @@
         <button class="continue-btn" @click="closeSuccessPopup">Continuer</button>
       </div>
     </div>
-
-    <!-- Modal de complétion style "victoire" -->
+    
+    <!-- Modal de complétion style mystique -->
     <div v-if="showCompletionPopup" class="victory-modal">
       <div class="victory-content">
+        <!-- Cadre ornemental pour la complétion -->
+        <div class="victory-frame">
+          <div class="frame-corner corner-tl">
+            <div class="corner-dot"></div>
+            <div class="frame-symbol symbol-tl">✧</div>
+          </div>
+          <div class="frame-corner corner-tr">
+            <div class="corner-dot"></div>
+            <div class="frame-symbol symbol-tr">✧</div>
+          </div>
+          <div class="frame-corner corner-bl">
+            <div class="corner-dot"></div>
+            <div class="frame-symbol symbol-bl">✧</div>
+          </div>
+          <div class="frame-corner corner-br">
+            <div class="corner-dot"></div>
+            <div class="frame-symbol symbol-br">✧</div>
+          </div>
+        </div>
+        
+        <!-- Effets visuels -->
+        <div class="star-field-victory">
+          <div class="star"></div>
+          <div class="star"></div>
+          <div class="star"></div>
+          <div class="star"></div>
+          <div class="star"></div>
+        </div>
+        
         <h2>{{ completionMessage }}</h2>
         <p>{{ completionSubMessage }}</p>
         
@@ -101,8 +202,7 @@
       </div>
     </div>
   </div>
-</template> 
-
+</template>
  
 <script>
 import '@/assets/ComponentsStyle/TimerStyle/TimerQuestionsStyle.css';
