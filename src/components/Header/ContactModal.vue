@@ -22,9 +22,9 @@
   
       <!-- Contenu du modal -->
       <div class="contact-content">
+        <button @click="$emit('close')" class="close-modal-btn">&times;</button>
         <div class="contact-header">
           <h3>Contactez-nous</h3>
-          <button class="close-btn" @click="$emit('close')">&times;</button>
         </div>
   
         <form @submit.prevent="handleSubmit">
