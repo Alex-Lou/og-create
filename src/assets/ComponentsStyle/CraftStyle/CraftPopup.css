@@ -1,27 +1,146 @@
-.emoji-container {
-    height: 100px;
-    width: 100%;
-    margin: 0 auto;
-    flex-wrap: wrap;
-    gap: 5px;
-}
-
-.emoji {
-    font-size: 32px;
-    line-height: 1;
-    display: inline-block;
-    padding: 5px;
-}
-
-#crafted-popup {
+@font-face {
+    font-family: 'White Storm';
+    src: url('@/assets/fonts/White Storm.otf') format('opentype');
+    font-weight: normal;
+    font-style: normal;
+  }
+  @font-face {
+    font-family: 'BenjaminFranklin';
+    src: url('@/assets/fonts/BenjaminFranklin.ttf') format('opentype');
+    font-weight: normal;
+    font-style: normal;
+  }
+  
+  /* Positionnement général du popup */
+  #crafted-popup {
     position: fixed;
-    top: 80%; /* Modifié de 50% à 65% pour descendre le popup */
+    top: 80%; /* Position ajustée pour descendre le popup */
     left: 65%;
     transform: translate(-50%, -50%);
     min-width: 200px;
-    z-index: 100;
-}
-
-.popup-content {
-    padding: 10px;
-}   
+    z-index: 500; /* S'assurer que le popup est bien au-dessus */
+  }
+  
+  /* Cadre décoratif */
+  .crafted-popup-frame {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    border-radius: 8px;
+    border: 1px solid rgba(138, 92, 173, 0.3);
+    box-shadow: inset 0 0 15px rgba(0, 0, 0, 0.5),
+                0 0 8px rgba(138, 92, 173, 0.2);
+    animation: borderGlow 4s infinite alternate;
+    z-index: 1;
+  }
+  @keyframes borderGlow {
+    0% { border-color: rgba(138, 92, 173, 0.3); }
+    50% { border-color: rgba(138, 92, 173, 0.6); }
+    100% { border-color: rgba(138, 92, 173, 0.3); }
+  }
+  .frame-corner {
+    position: absolute;
+    width: 16px;
+    height: 16px;
+    pointer-events: none;
+    z-index: 2;
+  }
+  .corner-tl {
+    top: 0;
+    left: 0;
+    border-top: 1px solid rgba(138, 92, 173, 0.7);
+    border-left: 1px solid rgba(138, 92, 173, 0.7);
+    border-top-left-radius: 8px;
+  }
+  .corner-tr {
+    top: 0;
+    right: 0;
+    border-top: 1px solid rgba(138, 92, 173, 0.7);
+    border-right: 1px solid rgba(138, 92, 173, 0.7);
+    border-top-right-radius: 8px;
+  }
+  .corner-bl {
+    bottom: 0;
+    left: 0;
+    border-bottom: 1px solid rgba(138, 92, 173, 0.7);
+    border-left: 1px solid rgba(138, 92, 173, 0.7);
+    border-bottom-left-radius: 8px;
+  }
+  .corner-br {
+    bottom: 0;
+    right: 0;
+    border-bottom: 1px solid rgba(138, 92, 173, 0.7);
+    border-right: 1px solid rgba(138, 92, 173, 0.7);
+    border-bottom-right-radius: 8px;
+  }
+  .corner-dot {
+    position: absolute;
+    width: 4px;
+    height: 4px;
+    background: rgba(138, 92, 173, 0.9);
+    border-radius: 50%;
+    filter: drop-shadow(0 0 3px rgba(138, 92, 173, 0.8));
+  }
+  .corner-tl .corner-dot { top: 4px; left: 4px; }
+  .corner-tr .corner-dot { top: 4px; right: 4px; }
+  .corner-bl .corner-dot { bottom: 4px; left: 4px; }
+  .corner-br .corner-dot { bottom: 4px; right: 4px; }
+  .frame-symbol {
+    position: absolute;
+    font-size: 8px;
+    color: rgba(138, 92, 173, 0.6);
+    filter: drop-shadow(0 0 2px rgba(138, 92, 173, 0.4));
+  }
+  .symbol-tl { top: 2px; left: 6px; }
+  .symbol-tr { top: 2px; right: 6px; }
+  .symbol-bl { bottom: 2px; left: 6px; }
+  .symbol-br { bottom: 2px; right: 6px; }
+  
+  /* Animation des particules */
+  .gsap-particles-container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 3;
+  }
+  .particle {
+    position: absolute;
+    border-radius: 50%;
+    opacity: 0;
+    animation: particleFade 3s infinite ease-in-out;
+  }
+  @keyframes particleFade {
+    0% { opacity: 0.3; transform: scale(0.5); }
+    50% { opacity: 1; transform: scale(0.7); }
+    100% { opacity: 0.3; transform: scale(0.5); }
+  }
+  
+  /* Contenu du popup */
+  .popup-content {
+    position: relative;
+    z-index: 4;
+    padding: 15px;
+    background: rgba(30, 20, 40, 0.3);
+    border-radius: 8px;
+    text-align: center;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+  }
+  .popup-content .image-container {
+    margin-bottom: 10px;
+  }
+  .popup-content img {
+    max-width: 100%;
+    border-radius: 4px;
+  }
+  .popup-content p {
+    color: #e5deff;
+    font-family: 'BenjaminFranklin', sans-serif;
+    letter-spacing: 2px;
+    text-shadow: 0 0 10px rgba(138, 92, 173, 0.5);
+  }
