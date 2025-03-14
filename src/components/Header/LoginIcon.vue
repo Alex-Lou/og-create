@@ -14,60 +14,83 @@
     </div>
 
     <div v-if="isOpen" class="login-dropdown">
-      <div v-if="!isLoggedIn" class="login-type-selector">
-        <button 
-          :class="['type-btn', { active: loginType === 'login' }]"
-          @click="loginType = 'login'"
-        >
-          Connexion
-        </button>
-        <button 
-          :class="['type-btn', { active: loginType === 'register' }]"
-          @click="loginType = 'register'"
-        >
-          Inscription
-        </button>
+      <!-- Cadre décoratif interne (ne modifie pas la structure globale) -->
+      <div class="login-dropdown-frame">
+        <div class="frame-corner corner-tl">
+          <div class="corner-dot"></div>
+          <div class="frame-symbol symbol-tl">✧</div>
+        </div>
+        <div class="frame-corner corner-tr">
+          <div class="corner-dot"></div>
+          <div class="frame-symbol symbol-tr">✧</div>
+        </div>
+        <div class="frame-corner corner-bl">
+          <div class="corner-dot"></div>
+          <div class="frame-symbol symbol-bl">✧</div>
+        </div>
+        <div class="frame-corner corner-br">
+          <div class="corner-dot"></div>
+          <div class="frame-symbol symbol-br">✧</div>
+        </div>
       </div>
-
-      <div v-else class="logged-in-section">
-        <p>Connecté en tant que: {{ currentUser.username }}</p>
-        <div class="logged-in-buttons">
+      
+      <!-- Contenu du modal tel qu'initialement défini -->
+      <div class="login-content">
+        <div v-if="!isLoggedIn" class="login-type-selector">
           <button 
-            @click="openCustomizeModal" 
-            class="customize-btn"
-            style="margin-bottom: 10px;"
+            :class="['type-btn', { active: loginType === 'login' }]"
+            @click="loginType = 'login'"
           >
-            Personnaliser
+            Connexion
           </button>
-          <button @click="handleLogout" class="logout-btn">
-            Déconnexion
+          <button 
+            :class="['type-btn', { active: loginType === 'register' }]"
+            @click="loginType = 'register'"
+          >
+            Inscription
           </button>
         </div>
-      </div>
 
-      <form v-if="!isLoggedIn" @submit.prevent="handleSubmit">
-        <input 
-          type="email" 
-          v-model="email" 
-          placeholder="Email"
-          class="login-input"
-          required
-        />
-        <input 
-          type="password" 
-          v-model="password" 
-          placeholder="Mot de passe"
-          class="login-input"
-          required
-          minlength="8"
-        />
-        <div v-if="errorMessage" class="error-message">
-          {{ errorMessage }}
+        <div v-else class="logged-in-section">
+          <p>Connecté en tant que: {{ currentUser.username }}</p>
+          <div class="logged-in-buttons">
+            <button 
+              @click="openCustomizeModal" 
+              class="customize-btn"
+              style="margin-bottom: 10px;"
+            >
+              Personnaliser
+            </button>
+            <button @click="handleLogout" class="logout-btn">
+              Déconnexion
+            </button>
+          </div>
         </div>
-        <button type="submit" class="submit-btn" :disabled="isLoading">
-          {{ isLoading ? 'Chargement...' : (loginType === 'login' ? 'Confirmer' : 'S\'inscrire') }}
-        </button>
-      </form>
+
+        <form v-if="!isLoggedIn" @submit.prevent="handleSubmit">
+          <input 
+            type="email" 
+            v-model="email" 
+            placeholder="Email"
+            class="login-input"
+            required
+          />
+          <input 
+            type="password" 
+            v-model="password" 
+            placeholder="Mot de passe"
+            class="login-input"
+            required
+            minlength="8"
+          />
+          <div v-if="errorMessage" class="error-message">
+            {{ errorMessage }}
+          </div>
+          <button type="submit" class="submit-btn" :disabled="isLoading">
+            {{ isLoading ? 'Chargement...' : (loginType === 'login' ? 'Confirmer' : 'S\'inscrire') }}
+          </button>
+        </form>
+      </div>
     </div>
   </div>
 </template>
