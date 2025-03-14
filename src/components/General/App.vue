@@ -717,50 +717,87 @@ handleTimerForceStop() {
   try {
     progressService.loadGameProgress()
       .then(progress => {
+        console.log('DEBUG LOAD PROGRESS - Données reçues:', {
+          hasProgress: !!progress,
+          discoveredElementsType: typeof progress.discoveredElements,
+          discoveredElementsLength: progress.discoveredElements ? progress.discoveredElements.length : 0,
+          discoveredCategories: progress.discoveredCategories,
+          coins: progress.coins
+        });
+
         if (progress) {
           if (progress.coins !== undefined) {
             this.coins = parseInt(progress.coins);
             localStorage.setItem('coins', this.coins.toString());
+            console.log('DEBUG - Coins mis à jour:', this.coins);
           }
 
           if (progress.discoveredElements) {
             try {
+              let elementsToSet = [];
+              
               if (typeof progress.discoveredElements === 'string') {
+                console.log('DEBUG - Parsing des éléments depuis une chaîne');
                 const parsed = JSON.parse(progress.discoveredElements);
-                this.discoveredElements = Array.isArray(parsed) 
+                elementsToSet = Array.isArray(parsed) 
                   ? parsed.map(element => element.replace(/^"|"$/g, ''))
                   : ["Eau", "Feu", "Terre", "Air"];
+              } else if (Array.isArray(progress.discoveredElements)) {
+                console.log('DEBUG - Éléments déjà un tableau');
+                elementsToSet = progress.discoveredElements;
               } else {
-                this.discoveredElements = progress.discoveredElements;
+                console.warn('DEBUG - Format des éléments découverts invalide');
+                elementsToSet = ["Eau", "Feu", "Terre", "Air"];
               }
-              
-              // Sauvegarder dans localStorage
+
+              console.log('DEBUG - Éléments à définir:', {
+                elements: elementsToSet,
+                length: elementsToSet.length
+              });
+
+              this.discoveredElements = elementsToSet;
               localStorage.setItem('discoveredElements', JSON.stringify(this.discoveredElements));
             } catch (e) {
-              console.error("Erreur parsing discoveredElements:", e);
+              console.error("DEBUG - Erreur parsing discoveredElements:", e);
               this.discoveredElements = ["Eau", "Feu", "Terre", "Air"];
             }
+          } else {
+            console.warn('DEBUG - Aucun élément découvert dans la progression');
+            this.discoveredElements = ["Eau", "Feu", "Terre", "Air"];
           }
 
           if (progress.discoveredCategories) {
             try {
+              let categoriesToSet = [];
+              
               if (typeof progress.discoveredCategories === 'string') {
+                console.log('DEBUG - Parsing des catégories depuis une chaîne');
                 const parsed = JSON.parse(progress.discoveredCategories);
-                this.discoveredCategories = Array.isArray(parsed)
+                categoriesToSet = Array.isArray(parsed)
                   ? parsed.map(cat => cat.replace(/^"|"$/g, ''))
                   : ["Elements Fondamentaux"];
               } else if (Array.isArray(progress.discoveredCategories)) {
-                this.discoveredCategories = progress.discoveredCategories;
+                console.log('DEBUG - Catégories déjà un tableau');
+                categoriesToSet = progress.discoveredCategories;
               } else {
-                this.discoveredCategories = ["Elements Fondamentaux"];
+                console.warn('DEBUG - Format des catégories découvertes invalide');
+                categoriesToSet = ["Elements Fondamentaux"];
               }
-              
-              // Sauvegarder dans localStorage
+
+              console.log('DEBUG - Catégories à définir:', {
+                categories: categoriesToSet,
+                length: categoriesToSet.length
+              });
+
+              this.discoveredCategories = categoriesToSet;
               localStorage.setItem('discoveredCategories', JSON.stringify(this.discoveredCategories));
             } catch (e) {
-              console.error("Erreur parsing discoveredCategories:", e);
+              console.error("DEBUG - Erreur parsing discoveredCategories:", e);
               this.discoveredCategories = ["Elements Fondamentaux"];
             }
+          } else {
+            console.warn('DEBUG - Aucune catégorie découverte dans la progression');
+            this.discoveredCategories = ["Elements Fondamentaux"];
           }
 
           if (progress.categoryProgress) {
@@ -769,7 +806,7 @@ handleTimerForceStop() {
                 ? JSON.parse(progress.categoryProgress)
                 : progress.categoryProgress;
             } catch (e) {
-              console.error("Erreur parsing categoryProgress:", e);
+              console.error("DEBUG - Erreur parsing categoryProgress:", e);
               this.categoryProgress = {};
             }
           }
@@ -782,12 +819,16 @@ handleTimerForceStop() {
             this.selectedFrame = progress.customization.frame || 'basicCadre.png';
             this.selectedAvatar = progress.customization.avatar || 'coin.png';
             
-            // Sauvegarder dans localStorage
             localStorage.setItem('userCustomization', JSON.stringify({
               frame: this.selectedFrame,
               avatar: this.selectedAvatar
             }));
           }
+
+          console.log('DEBUG - État final:', {
+            discoveredElements: this.discoveredElements,
+            discoveredCategories: this.discoveredCategories
+          });
 
           if (this.categories && Object.keys(this.categories).length > 0) {
             this.repairGameData();
@@ -806,14 +847,19 @@ handleTimerForceStop() {
       .catch(error => {
         console.error("Erreur lors du chargement de la progression:", error);
         
-        // Récupérer depuis localStorage si possible
         const localElements = localStorage.getItem('discoveredElements');
         const localCategories = localStorage.getItem('discoveredCategories');
+        
+        console.log('DEBUG - Fallback sur localStorage:', {
+          localElements,
+          localCategories
+        });
         
         if (localElements) {
           try {
             this.discoveredElements = JSON.parse(localElements);
           } catch (e) {
+            console.error('DEBUG - Erreur parsing localStorage elements:', e);
             this.discoveredElements = ["Eau", "Feu", "Terre", "Air"];
           }
         } else {
@@ -824,12 +870,13 @@ handleTimerForceStop() {
           try {
             this.discoveredCategories = JSON.parse(localCategories);
           } catch (e) {
+            console.error('DEBUG - Erreur parsing localStorage categories:', e);
             this.discoveredCategories = ["Elements Fondamentaux"];
           }
         } else {
           this.discoveredCategories = ["Elements Fondamentaux"];
         }
-        
+
         this.categoryProgress = {};
         this.coins = parseInt(localStorage.getItem('coins')) || 0;
         this.timerProgress = {
