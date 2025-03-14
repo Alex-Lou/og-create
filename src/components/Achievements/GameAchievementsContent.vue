@@ -92,43 +92,59 @@ export default {
     
     // Écouter l'événement de rechargement global
     window.addEventListener('app-reloaded', this.handleAppReloaded);
+    
+    // Écouter l'événement de demande des achievements débloqués
+    window.addEventListener('get-unlocked-achievements', this.handleGetUnlockedAchievements);
   },
   beforeUnmount() {
     // Supprimer l'écouteur d'événements lors de la destruction du composant
     window.removeEventListener('app-reloaded', this.handleAppReloaded);
+    
+    // Supprimer l'écouteur de demande des achievements
+    window.removeEventListener('get-unlocked-achievements', this.handleGetUnlockedAchievements);
   },
   methods: {
     async loadSavedAchievements() {
-  this.isLoading = true;
-  try {
-    // Attendre un court délai pour s'assurer que d'autres composants sont prêts
-    await new Promise(resolve => setTimeout(resolve, 100));
-    
-    if (authService.isAuthenticated()) {
-      const progress = await progressService.loadProgress();
-      console.log("Achievements progress loaded:", progress);
-      
-      if (progress && progress.achievements) {
-        this.savedAchievements = progress.achievements;
+      this.isLoading = true;
+      try {
+        // Attendre un court délai pour s'assurer que d'autres composants sont prêts
+        await new Promise(resolve => setTimeout(resolve, 100));
+        
+        if (authService.isAuthenticated()) {
+          const progress = await progressService.loadProgress();
+          console.log("Achievements progress loaded:", progress);
+          
+          if (progress && progress.achievements) {
+            this.savedAchievements = progress.achievements;
+          }
+        }
+        
+        // Toujours synchroniser les états après le chargement
+        this.syncAchievementsState();
+      } catch (error) {
+        console.error("Erreur lors du chargement des succès:", error);
+      } finally {
+        this.isLoading = false;
+        
+        // Émettre un événement pour signaler que les achievements sont prêts
+        this.$emit('achievements-loaded', this.processedAchievements);
+        
+        // Dispatche un événement global pour informer les autres composants
+        window.dispatchEvent(new CustomEvent('achievements-loaded', {
+          detail: { achievements: this.processedAchievements }
+        }));
       }
-    }
-    
-    // Toujours synchroniser les états après le chargement
-    this.syncAchievementsState();
-  } catch (error) {
-    console.error("Erreur lors du chargement des succès:", error);
-  } finally {
-    this.isLoading = false;
-    
-    // Émettre un événement pour signaler que les achievements sont prêts
-    this.$emit('achievements-loaded', this.processedAchievements);
-    
-    // Dispatche un événement global pour informer les autres composants
-    window.dispatchEvent(new CustomEvent('achievements-loaded', {
-      detail: { achievements: this.processedAchievements }
-    }));
-  }
-},
+    },
+
+    handleGetUnlockedAchievements(event) {
+      // Récupérer tous les achievements marqués comme débloqués dans ce composant
+      const unlockedAchievements = this.processedAchievements.filter(a => a.unlocked);
+      
+      // Appeler le callback avec la liste
+      if (event.detail && typeof event.detail.callback === 'function') {
+        event.detail.callback(unlockedAchievements);
+      }
+    },
 
     handleAppReloaded() {
       console.log("App reloaded event detected in GameAchievementsContent");
@@ -213,45 +229,45 @@ export default {
     },
 
     async saveAchievement(achievement) {
-  console.log("Tentative de sauvegarde achievement:", achievement.name);
-  
-  if (!authService.isAuthenticated()) {
-    console.log("Sauvegarde locale car non authentifié");
-    // Sauvegarder localement si non authentifié
-    this.localUnlockedAchievements[achievement.name] = {
-      unlocked: true,
-      unlockedAt: new Date().toISOString()
-    };
-    return;
-  }
+      console.log("Tentative de sauvegarde achievement:", achievement.name);
+      
+      if (!authService.isAuthenticated()) {
+        console.log("Sauvegarde locale car non authentifié");
+        // Sauvegarder localement si non authentifié
+        this.localUnlockedAchievements[achievement.name] = {
+          unlocked: true,
+          unlockedAt: new Date().toISOString()
+        };
+        return;
+      }
 
-  try {
-    const achievementData = {
-      name: achievement.name,
-      unlocked: true,
-      unlockedAt: new Date().toISOString()
-    };
+      try {
+        const achievementData = {
+          name: achievement.name,
+          unlocked: true,
+          unlockedAt: new Date().toISOString()
+        };
 
-    console.log("Appel au service pour sauvegarder:", achievementData);
-    await progressService.saveAchievement(achievementData);
-    console.log("Achievement sauvegardé avec succès");
-    
-    this.savedAchievements[achievement.name] = achievementData;
-    
-    // Mettre à jour dans les processedAchievements
-    const index = this.processedAchievements.findIndex(a => 
-      this.normalizeName(a.name) === this.normalizeName(achievement.name)
-    );
-    
-    if (index !== -1) {
-      this.processedAchievements[index].unlocked = true;
+        console.log("Appel au service pour sauvegarder:", achievementData);
+        await progressService.saveAchievement(achievementData);
+        console.log("Achievement sauvegardé avec succès");
+        
+        this.savedAchievements[achievement.name] = achievementData;
+        
+        // Mettre à jour dans les processedAchievements
+        const index = this.processedAchievements.findIndex(a => 
+          this.normalizeName(a.name) === this.normalizeName(achievement.name)
+        );
+        
+        if (index !== -1) {
+          this.processedAchievements[index].unlocked = true;
+        }
+        
+        this.$emit('achievement-saved', achievement);
+      } catch (error) {
+        console.error("Error saving achievement:", error);
+      }
     }
-    
-    this.$emit('achievement-saved', achievement);
-  } catch (error) {
-    console.error("Error saving achievement:", error);
-  }
-}
   },
   watch: {
     achievements: {

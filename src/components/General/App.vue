@@ -1038,7 +1038,13 @@ handleCraftSuccess(craftedItem) {
   if (!this.isTimerActive && !this.isExplorerActive && !this.isExplorerCraftMode) {
     // Sauvegarder l'élément découvert
     this.saveDiscoveredElement(craftedItem);
-    this.$refs.dataLoading.handleCraft(craftedItem);
+    
+    // Vérifier si la référence dataLoading existe
+    if (this.$refs.dataLoading) {
+      // Passer false comme second paramètre pour éviter les popups redondants
+      // pour les éléments déjà découverts
+      this.$refs.dataLoading.handleCraft(craftedItem, false);
+    }
   }
   
   // Gestion du mode Timer
@@ -1160,6 +1166,33 @@ handleCraftSuccess(craftedItem) {
       // Réinitialiser le défi actuel
       this.currentExplorerChallenge = null;
     }
+  }
+},
+
+// Méthode auxiliaire pour obtenir l'image d'un élément
+getElementImage(elementName) {
+  try {
+    return require(`@/assets/elements/${elementName}.png`);
+  } catch (e) {
+    return null;
+  }
+},
+
+// Méthode pour sauvegarder la progression des succès
+saveAchievementsProgress() {
+  const achievementsData = {};
+  this.achievements.forEach(achievement => {
+    if (achievement.unlocked) {
+      achievementsData[achievement.name] = {
+        unlocked: true,
+        unlockedAt: achievement.unlockedAt || new Date().toISOString()
+      };
+    }
+  });
+  
+  if (Object.keys(achievementsData).length > 0) {
+    // Appel à votre service de sauvegarde des achievements
+    this.updateAchievements(achievementsData);
   }
 },
 
