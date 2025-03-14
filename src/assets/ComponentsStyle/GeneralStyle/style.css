@@ -247,10 +247,83 @@ header {
     transform: scale(0.95);
   }
 
+/* Zone du titre */
 .title-area {
-    display: flex;
-    align-items: center;
+  display: flex;
+  align-items: center;
+  position: relative;
+}
+
+/* Logo */
+.title-area .logo {
+  width: 40px;
+  height: 40px;
+  margin-right: 10px;
+  filter: drop-shadow(0 0 3px rgba(138, 92, 173, 0.3));
+  transition: transform 0.3s ease;
+}
+
+.title-area .logo:hover {
+  transform: scale(1.05);
+}
+
+/* Titre principal adapté */
+.title-area h1 {
+  text-align: left;
+  background: linear-gradient(90deg, #3B1C59, #8a5cad, #3B1C59, #8a5cad);
+  background-size: 400% 400%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: gradientShift 6s ease-in-out infinite;
+  text-shadow: 0 0 10px rgba(138, 92, 173, 0.7), 0 0 20px rgba(138, 92, 173, 0.5);
+  display: inline-block;
+  margin-right: auto;
+  font-size: 24px;
+  font-family: 'BenjaminFranklin', sans-serif;
+  letter-spacing: 2px;
+}
+
+/* Animation du dégradé */
+@keyframes gradientShift {
+  0% {
+    background-position: 0% 50%;
   }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+/* Personnalisation de la scrollbar globale */
+::-webkit-scrollbar {
+  width: 8px;               /* Largeur de la scrollbar */
+  height: 8px;              /* Hauteur pour scrollbar horizontale */
+}
+
+::-webkit-scrollbar-track {
+  background: rgba(20, 10, 30, 0.2);  /* Fond sombre semi-transparent */
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(138, 92, 173, 0.5);  /* Couleur violette assortie à votre thème */
+  border-radius: 4px;
+  transition: background 0.3s ease;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(138, 92, 173, 0.7);  /* Plus foncé au survol */
+}
+
+/* Pour Firefox */
+* {
+  scrollbar-color: rgba(138, 92, 173, 0.5) rgba(20, 10, 30, 0.2);
+  scrollbar-width: thin;
+}
+
 /* Logo */
 header .logo {
     width: 40px;
