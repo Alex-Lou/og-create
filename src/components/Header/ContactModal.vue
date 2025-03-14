@@ -1,38 +1,59 @@
 <template>
     <div class="contact-modal">
-        <div class="contact-content">
-            <div class="contact-header">
-                <h3>Contactez-nous</h3>
-                <button class="close-btn" @click="$emit('close')">&times;</button>
-            </div>
-
-            <form @submit.prevent="handleSubmit">
-                <input 
-                    type="email" 
-                    v-model="email" 
-                    placeholder="Votre email"
-                    class="contact-input"
-                    required
-                />
-                <textarea 
-                    v-model="message" 
-                    placeholder="Votre message"
-                    class="contact-input contact-textarea"
-                    required
-                ></textarea>
-                <div v-if="errorMessage" class="error-message">
-                    {{ errorMessage }}
-                </div>
-                <div v-if="successMessage" class="success-message">
-                    {{ successMessage }}
-                </div>
-                <button type="submit" class="submit-btn" :disabled="isLoading">
-                    {{ isLoading ? 'Envoi...' : 'Envoyer' }}
-                </button>
-            </form>
+      <!-- Cadre décoratif interne -->
+      <div class="contact-modal-frame">
+        <div class="frame-corner corner-tl">
+          <div class="corner-dot"></div>
+          <div class="frame-symbol symbol-tl">✧</div>
         </div>
+        <div class="frame-corner corner-tr">
+          <div class="corner-dot"></div>
+          <div class="frame-symbol symbol-tr">✧</div>
+        </div>
+        <div class="frame-corner corner-bl">
+          <div class="corner-dot"></div>
+          <div class="frame-symbol symbol-bl">✧</div>
+        </div>
+        <div class="frame-corner corner-br">
+          <div class="corner-dot"></div>
+          <div class="frame-symbol symbol-br">✧</div>
+        </div>
+      </div>
+  
+      <!-- Contenu du modal -->
+      <div class="contact-content">
+        <div class="contact-header">
+          <h3>Contactez-nous</h3>
+          <button class="close-btn" @click="$emit('close')">&times;</button>
+        </div>
+  
+        <form @submit.prevent="handleSubmit">
+          <input 
+            type="email" 
+            v-model="email" 
+            placeholder="Votre email"
+            class="contact-input"
+            required
+          />
+          <textarea 
+            v-model="message" 
+            placeholder="Votre message"
+            class="contact-input contact-textarea"
+            required
+          ></textarea>
+          <div v-if="errorMessage" class="error-message">
+            {{ errorMessage }}
+          </div>
+          <div v-if="successMessage" class="success-message">
+            {{ successMessage }}
+          </div>
+          <button type="submit" class="submit-btn" :disabled="isLoading">
+            {{ isLoading ? 'Envoi...' : 'Envoyer' }}
+          </button>
+        </form>
+      </div>
     </div>
-</template>
+  </template>
 
 <script>
 import '@/assets/ComponentsStyle/HeaderStyle/ContactModalStyle.css'
