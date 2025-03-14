@@ -61,7 +61,7 @@
   .menu-icon {
     width: 25px;
     height: 25px;
-    margin-right: 5px;
+    margin-right: 0px;
     position: relative;
     z-index: 2;
     filter: drop-shadow(0 0 3px rgba(138, 92, 173, 0.3));
