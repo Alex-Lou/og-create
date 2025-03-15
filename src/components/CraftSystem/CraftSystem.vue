@@ -55,6 +55,11 @@
             :style="{ position: resourcePositions[index] ? 'absolute' : 'static', top: resourcePositions[index]?.top + 'px', left: resourcePositions[index]?.left + 'px' }"
           >
             {{ elementEmojis[resource] || '' }} {{ resource }}
+            <span class="element-star">✧</span>
+            <div class="element-corner element-corner-tl"></div>
+            <div class="element-corner element-corner-tr"></div>
+            <div class="element-corner element-corner-bl"></div>
+            <div class="element-corner element-corner-br"></div>
           </li>
         </ul>
       </div>
@@ -74,6 +79,11 @@
         class="crafted-element"
       >
         <p>{{ elementEmojis[element.name] || '' }} {{ element.name }}</p>
+        <span class="element-star">✧</span>
+        <div class="element-corner element-corner-tl"></div>
+        <div class="element-corner element-corner-tr"></div>
+        <div class="element-corner element-corner-bl"></div>
+        <div class="element-corner element-corner-br"></div>
       </div>
     </div>
     <CleanButton @click="resetCraftingBoard" />
@@ -226,12 +236,12 @@ export default {
       }, 1);
     },
     saveDiscoveredElement(element) {
-  // Obtenir le mode de jeu actuel depuis les props ou utiliser 'infinite' par défaut
-  const gameMode = this.$parent?.gameMode || 'infinite';
-  
-  this.$emit('save-discovered-element', element, gameMode);
-  this.pendingSaves.delete(element);
-},
+      // Obtenir le mode de jeu actuel depuis les props ou utiliser 'infinite' par défaut
+      const gameMode = this.$parent?.gameMode || 'infinite';
+      
+      this.$emit('save-discovered-element', element, gameMode);
+      this.pendingSaves.delete(element);
+    },
     handleKeyPress(event) {
       if (event.key === 'Enter') {
         this.craftItem();

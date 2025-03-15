@@ -1,9 +1,42 @@
 <template>
   <div v-if="isVisible" class="map-transition-modal">
     <div class="transition-content">
+      <!-- Cadre décoratif avec coins ornementés -->
+      <div class="transition-frame">
+        <div class="frame-corner corner-tl">
+          <div class="corner-dot"></div>
+          <div class="frame-symbol symbol-tl">✧</div>
+        </div>
+        <div class="frame-corner corner-tr">
+          <div class="corner-dot"></div>
+          <div class="frame-symbol symbol-tr">✧</div>
+        </div>
+        <div class="frame-corner corner-bl">
+          <div class="corner-dot"></div>
+          <div class="frame-symbol symbol-bl">✧</div>
+        </div>
+        <div class="frame-corner corner-br">
+          <div class="corner-dot"></div>
+          <div class="frame-symbol symbol-br">✧</div>
+        </div>
+      </div>
+      
       <!-- En-tête avec animation de victoire -->
       <div class="transition-header">
         <div class="victory-animation">
+          <!-- Particules de célébration -->
+          <div class="victory-particles">
+            <div class="victory-particle" v-for="n in 8" :key="n"
+                :style="{
+                  '--x': `${Math.random() * 100 - 50}px`,
+                  '--y': `${Math.random() * 100 - 50}px`,
+                  '--dx': `${Math.random() * 150 - 75}px`,
+                  '--dy': `${Math.random() * 150 - 75}px`,
+                  'animation-delay': `${Math.random() * 3}s`
+                }">
+            </div>
+          </div>
+          
           <div class="victory-effect">
             <span class="victory-star">⭐</span>
             <span class="victory-text">VICTOIRE!</span>

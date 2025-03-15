@@ -22,12 +22,12 @@
     
     <!-- Animation de particules -->
     <div class="gsap-particles-container">
-      <div v-for="n in 20" :key="n" 
+      <div v-for="n in 30" :key="n" 
            class="particle"
            :style="{
              backgroundColor: getRandomColor(),
-             width: '10px',
-             height: '10px'
+             width: `${Math.random() * 6 + 4}px`,
+             height: `${Math.random() * 6 + 4}px`
            }"
            ref="particles">
       </div>
@@ -41,7 +41,7 @@
         </template>
         <template v-else-if="currentDisplayedElement">
           <div class="emoji-fallback">
-            {{ elementEmojis[currentDisplayedElement.name] }}
+            {{ elementEmojis[currentDisplayedElement.name] || '✨' }}
           </div>
         </template>
       </div>
@@ -133,44 +133,54 @@ export default {
     },
     
     animateParticles() {
-      if (!this.$refs.particles) {
-        return;
-      }
+    if (!this.$refs.particles) {
+      return;
+    }
+    
+    const particles = this.$refs.particles;
+    
+    particles.forEach((particle) => {
+      // Positionnement initial au centre
+      gsap.set(particle, {
+        top: '50%',
+        left: '50%',
+        xPercent: -50,
+        yPercent: -50,
+        scale: 0.1,
+        opacity: 0
+      });
       
-      const particles = this.$refs.particles;
-      
-      particles.forEach((particle) => { // Supprimé 'index' pour éviter l'avertissement ESLint
-        gsap.set(particle, {
-          top: '50%',
-          left: '50%',
-          xPercent: -50,
-          yPercent: -50,
-          scale: 0.5,
-          opacity: 1
-        });
-        
-        gsap.to(particle, {
-          duration: 1,
+      // Animation de sortie avec trajectoire plus intéressante
+      gsap.timeline()
+        .to(particle, {
+          duration: 0.3,
+          scale: Math.random() * 0.5 + 0.5,
+          opacity: 0.8,
+          ease: "power2.out"
+        })
+        .to(particle, {
+          duration: 1.5,
           xPercent: () => -50 + (Math.random() - 0.5) * 400,
           yPercent: () => -50 + (Math.random() - 0.5) * 400,
           scale: 0,
           opacity: 0,
-          ease: "power2.out"
-        });
-      });
-    },
-    
-    getRandomColor() {
-      const colors = [
-        '#FFD700',
-        '#FFA500',
-        '#FF6B6B', 
-        '#4DD0E1',
-        '#81C784'
-      ];
-      return colors[Math.floor(Math.random() * colors.length)];
-    }
+          ease: "power3.out",
+          rotation: () => Math.random() * 360
+        }, "-=0.1");
+    });
   },
+    
+  getRandomColor() {
+    const colors = [
+      'rgba(177, 136, 212, 0.8)',  // Violet clair
+      'rgba(138, 92, 173, 0.8)',   // Violet principal
+      'rgba(89, 48, 124, 0.8)',    // Violet foncé
+      'rgba(210, 170, 230, 0.8)',  // Lavande
+      'rgba(60, 30, 90, 0.8)'      // Indigo
+    ];
+    return colors[Math.floor(Math.random() * colors.length)];
+  }
+},
   watch: {
     'craftedElement.name'(newValue) {
       if (newValue) {

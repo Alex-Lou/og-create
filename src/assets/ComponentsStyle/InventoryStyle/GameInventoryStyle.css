@@ -390,12 +390,14 @@
   transition: none;
 }
 
+/* Animation des particules - version améliorée */
 .progress {
+  position: relative;
+  overflow: hidden;
   background: rgba(0, 0, 0, 0.3);
   justify-content: flex-start;
   border-radius: 100px;
   align-items: center;
-  position: relative;
   padding: 0;
   display: flex;
   height: 10px;
@@ -427,89 +429,107 @@
   position: absolute;
 }
 
-/* Modification pour les particules */
+/* Particules brillantes et harmonieuses */
 .progress-bar-fill::before,
 .progress-bar-fill::after,
 .progress-bar-fill .particle {
   content: '';
   position: absolute;
   top: 50%;
-  left: 0;
-  width: 6px;
-  height: 6px;
-  background: rgba(177, 137, 213, 0.7);
+  width: 5px;
+  height: 5px;
+  background: rgba(255, 255, 255, 0.85);
   border-radius: 50%;
-  box-shadow: 0 0 8px rgba(138, 92, 173, 0.8);
-  animation: particleMove 3s infinite linear;
-  opacity: 0;
+  box-shadow: 
+    0 0 6px 2px rgba(255, 255, 255, 0.7),
+    0 0 10px 4px rgba(138, 92, 173, 0.6);
+  animation: particlePulse 2s infinite ease-in-out;
   transform: translateY(-50%);
+  z-index: 10;
 }
 
-.progress-bar-fill::before {
-  left: 10%;
-  animation-delay: 0.2s;
-  opacity: 1;
+@keyframes particlePulse {
+  0% {
+    transform: translateY(-50%) scale(0.9);
+    opacity: 0.7;
+    box-shadow: 
+      0 0 5px 1px rgba(255, 255, 255, 0.6),
+      0 0 8px 2px rgba(138, 92, 173, 0.5);
+  }
+  50% {
+    transform: translateY(-50%) scale(1.1);
+    opacity: 1;
+    box-shadow: 
+      0 0 8px 3px rgba(255, 255, 255, 0.8),
+      0 0 12px 5px rgba(138, 92, 173, 0.7);
+  }
+  100% {
+    transform: translateY(-50%) scale(0.9);
+    opacity: 0.7;
+    box-shadow: 
+      0 0 5px 1px rgba(255, 255, 255, 0.6),
+      0 0 8px 2px rgba(138, 92, 173, 0.5);
+  }
 }
 
-.progress-bar-fill::after {
-  left: 20%;
-  animation-delay: 0.4s;
-  opacity: 1;
-}
-
-.progress-bar-fill .particle-20 { 
-  left: 30%; 
-  animation-delay: 0.6s; 
-  opacity: 1; 
-}
-
-.progress-bar-fill .particle-30 { 
-  left: 40%; 
-  animation-delay: 0.8s; 
-  opacity: 1;
-}
-
-.progress-bar-fill .particle-40 { 
-  left: 50%; 
-  animation-delay: 1s; 
-  opacity: 1; 
-}
-
-.progress-bar-fill .particle-50 { 
-  left: 60%; 
-  animation-delay: 1.2s; 
-  opacity: 1;
-}
-
-.progress-bar-fill .particle-60 { 
-  left: 70%; 
-  animation-delay: 1.4s; 
-  opacity: 1; 
-}
-
-.progress-bar-fill .particle-70 { 
-  left: 80%; 
-  animation-delay: 1.6s; 
-  opacity: 1;
-}
-
-.progress-bar-fill .particle-80 { 
-  left: 90%; 
-  animation-delay: 1.8s; 
-  opacity: 1; 
+@keyframes particleGlow {
+  0% { opacity: 0.4; box-shadow: 0 0 3px rgba(255, 255, 255, 0.3); }
+  100% { opacity: 0.8; box-shadow: 0 0 5px rgba(255, 255, 255, 0.6); }
 }
 
 @keyframes particleMove {
   0% {
-    transform: translate(0, -50%);
-    opacity: 1;
+    transform: translate(0, -50%) scale(0.8);
+  }
+  50% {
+    transform: translate(5px, -50%) scale(1);
   }
   100% {
-    transform: translate(15px, -50%);
+    transform: translate(10px, -50%) scale(0.8);
     opacity: 0;
   }
 }
 
+/* Positionnement uniforme et ordonné des particules */
+.progress-bar-fill::before {
+  left: 20%;
+  animation-delay: 0s;
+}
+
+.progress-bar-fill::after {
+  left: 40%;
+  animation-delay: 0.3s;
+}
+
+.progress-bar-fill .particle-20 { 
+  left: 60%; 
+  animation-delay: 0.6s; 
+}
+
+.progress-bar-fill .particle-30 { 
+  left: 80%; 
+  animation-delay: 0.9s; 
+}
+
+.progress-bar-fill .particle-40 { 
+  display: none; /* Limitons à 4 particules bien espacées pour plus d'harmonie */
+}
+
+.progress-bar-fill .particle-50 { 
+  display: none;
+}
+
+.progress-bar-fill .particle-60 { 
+  display: none;
+}
+
+.progress-bar-fill .particle-70 { 
+  display: none;
+}
+
+.progress-bar-fill .particle-80 { 
+  display: none;
+}
 /* Conteneur de fumée */
 .smoke-container {
   position: absolute;

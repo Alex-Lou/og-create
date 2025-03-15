@@ -5,7 +5,6 @@
   font-weight: normal;
   font-style: normal;
 }
-
 @font-face {
   font-family: 'BenjaminFranklin';
   src: url('@/assets/fonts/BenjaminFranklin.ttf') format('opentype');
@@ -13,6 +12,7 @@
   font-style: normal;
 }
 
+/* Overlay du modal */
 .modal-overlay {
   position: fixed;
   top: 0;
@@ -26,8 +26,10 @@
   z-index: 1001;
 }
 
+/* Conteneur du modal */
 .modal-container {
-  background: #000000;
+  position: relative;
+  background: radial-gradient(circle at top left, #1a1d24, #050101);
   padding: 20px;
   border-radius: 8px;
   width: 90%;
@@ -36,49 +38,155 @@
   font-family: 'BenjaminFranklin', sans-serif;
   letter-spacing: 2px;
   font-weight: bold;
-  color: rgb(208, 208, 208); /* Pour s'assurer que le texte est visible sur fond noir */
-  border: 1px solid #68787a; /* Couleur assortie au bouton de sauvegarde */
-
+  color: #e5deff;
+  border: 2px solid rgba(138, 92, 173, 0.3);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
+  overflow: hidden;
+  animation: modalEntrance 0.5s ease-out;
+}
+@keyframes modalEntrance {
+  from { opacity: 0; transform: scale(0.95); }
+  to { opacity: 1; transform: scale(1); }
 }
 
+/* Cadre décoratif interne */
+.customize-modal-frame {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  border-radius: 8px;
+  border: 1px solid rgba(138, 92, 173, 0.3);
+  box-shadow: inset 0 0 15px rgba(0,0,0,0.5), 0 0 8px rgba(138, 92, 173, 0.2);
+  animation: borderGlow 4s infinite alternate;
+  z-index: 1;
+}
+@keyframes borderGlow {
+  0% { border-color: rgba(138, 92, 173, 0.3); }
+  50% { border-color: rgba(138, 92, 173, 0.6); }
+  100% { border-color: rgba(138, 92, 173, 0.3); }
+}
+.frame-corner {
+  position: absolute;
+  width: 16px;
+  height: 16px;
+  pointer-events: none;
+  z-index: 2;
+}
+.corner-tl {
+  top: 0;
+  left: 0;
+  border-top: 1px solid rgba(138, 92, 173, 0.7);
+  border-left: 1px solid rgba(138, 92, 173, 0.7);
+  border-top-left-radius: 8px;
+}
+.corner-tr {
+  top: 0;
+  right: 0;
+  border-top: 1px solid rgba(138, 92, 173, 0.7);
+  border-right: 1px solid rgba(138, 92, 173, 0.7);
+  border-top-right-radius: 8px;
+}
+.corner-bl {
+  bottom: 0;
+  left: 0;
+  border-bottom: 1px solid rgba(138, 92, 173, 0.7);
+  border-left: 1px solid rgba(138, 92, 173, 0.7);
+  border-bottom-left-radius: 8px;
+}
+.corner-br {
+  bottom: 0;
+  right: 0;
+  border-bottom: 1px solid rgba(138, 92, 173, 0.7);
+  border-right: 1px solid rgba(138, 92, 173, 0.7);
+  border-bottom-right-radius: 8px;
+}
+.corner-dot {
+  position: absolute;
+  width: 4px;
+  height: 4px;
+  background: rgba(138, 92, 173, 0.9);
+  border-radius: 50%;
+  filter: drop-shadow(0 0 3px rgba(138, 92, 173, 0.8));
+}
+.corner-tl .corner-dot { top: 4px; left: 4px; }
+.corner-tr .corner-dot { top: 4px; right: 4px; }
+.corner-bl .corner-dot { bottom: 4px; left: 4px; }
+.corner-br .corner-dot { bottom: 4px; right: 4px; }
+.frame-symbol {
+  position: absolute;
+  font-size: 8px;
+  color: rgba(138, 92, 173, 0.6);
+  filter: drop-shadow(0 0 2px rgba(138, 92, 173, 0.4));
+}
+.symbol-tl { top: 2px; left: 6px; }
+.symbol-tr { top: 2px; right: 6px; }
+.symbol-bl { bottom: 2px; left: 6px; }
+.symbol-br { bottom: 2px; right: 6px; }
+
+/* En-tête du modal */
 .modal-header {
+  position: relative;
+  z-index: 2;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  font-size: .9rem;
-  font-family: 'BenjaminFranklin', sans-serif;
-  letter-spacing: 2px;
-  font-weight: bold;
+  font-size: 1rem;
+  margin-bottom: 10px;
+}
+.modal-header h2 {
+  font-size: 1.2rem;
 }
 
-.close-btn {
-  background: transparent;
+/* Bouton de fermeture identique au purchase-modal */
+.close-modal-btn {
+  position: absolute;
+  top: -20px;
+  right: -20px;
+  width: 35px;
+  height: 35px;
+  border-radius: 50%;
+  background-color: rgba(138, 92, 173, 0.7);
   border: none;
-  font-size: 1.5rem;
-  font-family: 'BenjaminFranklin', sans-serif;
-  letter-spacing: 2px;
+  color: #ffffff;
+  font-size: 24px;
   font-weight: bold;
   cursor: pointer;
-  color: rgb(195, 195, 195); /* Pour s'assurer que le X est visible */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+  box-shadow: 0 0 8px rgba(138, 92, 173, 0.8);
+  z-index: 20001;
+}
+.close-modal-btn:hover {
+  background-color: rgba(138, 92, 173, 0.9);
+  transform: scale(1.1);
+}
+.close-modal-btn:active {
+  transform: scale(0.95);
 }
 
+/* Corps du modal */
 .modal-body {
+  position: relative;
+  z-index: 2;
   margin-top: 10px;
 }
 
-/* Styles pour la section de prévisualisation */
+/* Prévisualisation */
 .preview-section {
-  margin-bottom: 20px;
   text-align: center;
+  margin-bottom: 20px;
 }
-
 .user-preview {
   position: relative;
   width: 120px;
   height: 120px;
   margin: 0 auto;
 }
-
 .frame-image-preview {
   position: absolute;
   top: 0;
@@ -87,7 +195,6 @@
   height: 100%;
   z-index: 1;
 }
-
 .user-image-preview {
   position: absolute;
   top: 50%;
@@ -98,23 +205,17 @@
   z-index: 0;
 }
 
-/* Styles pour les grilles de sélection */
+/* Section de sélection */
 .selection-section h3 {
-  margin-top: 20px;
-  margin-bottom: 10px;
+  margin: 20px 0 10px;
   font-size: 1.2rem;
-  font-family: 'BenjaminFranklin', sans-serif;
-  letter-spacing: 2px;
-  font-weight: bold;
 }
-
 .frame-grid, .avatar-grid {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   gap: 10px;
   margin-bottom: 20px;
 }
-
 .frame-item, .avatar-item {
   position: relative;
   border: 2px solid transparent;
@@ -122,26 +223,40 @@
   padding: 5px;
   cursor: pointer;
   transition: all 0.2s ease;
-  background-color: rgba(255, 255, 255, 0.1); /* Fond légèrement plus clair */
+  background-color: rgba(255, 255, 255, 0.1);
 }
-
 .frame-item.selected, .avatar-item.selected {
-  border-color: #2D96A4; /* Couleur assortie au bouton de sauvegarde */
-  background-color: rgba(45, 150, 164, 0.3); /* Fond teinté de la couleur du bouton */
+  border-color: #2D96A4;
+  background-color: rgba(45, 150, 164, 0.3);
 }
-
 .frame-item img, .avatar-item img {
   width: 100%;
-  height: auto;
   display: block;
 }
+.locked-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0,0,0,0.6);
+  color: #ffffff;
+  font-size: 0.8rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  border-radius: 8px;
+}
 
+/* Pied de page */
 .modal-footer {
   display: flex;
   justify-content: flex-end;
   margin-top: 20px;
+  position: relative;
+  z-index: 2;
 }
-
 .save-btn,
 .cancel-btn {
   padding: 8px 12px;
@@ -154,20 +269,88 @@
   letter-spacing: 2px;
   font-weight: bold;
 }
-
 .save-btn {
-  background: #2D96A4;
-  color: rgb(203, 203, 203);
+  background: linear-gradient(90deg, #3B1C59, #8a5cad);
+  color: #e5deff;
+  box-shadow: 0 0 8px rgba(138, 92, 173, 0.7);
+  transition: all 0.3s ease;
 }
-
+.save-btn:hover {
+  background: linear-gradient(90deg, #2C144B, #7a4dad);
+  transform: scale(1.05);
+}
+.save-btn:active {
+  transform: scale(0.95);
+}
 .cancel-btn {
   background: #FF4136;
-  color: rgb(184, 184, 184);
+  color: #e5deff;
+  transition: background 0.3s ease;
+}
+.cancel-btn:hover {
+  background: #d02f24;
 }
 
-/* Responsive pour les petits écrans */
-@media (max-width: 480px) {
-  .frame-grid, .avatar-grid {
-    grid-template-columns: repeat(2, 1fr);
-  }
+/* Messages */
+.error-message {
+  color: #ff4136;
+  margin-bottom: 10px;
+  text-align: center;
+  font-size: 1rem;
+  font-family: 'BenjaminFranklin', sans-serif;
+  letter-spacing: 2px;
+  font-weight: bold;
+}
+.logged-in-section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.logged-in-section p {
+  color: #e5deff;
+  margin-bottom: 15px;
+  font-size: 0.9rem;
+  font-family: 'BenjaminFranklin', sans-serif;
+  letter-spacing: 2px;
+  font-weight: bold;
+}
+.logged-in-buttons {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+.customize-btn {
+  width: 100%;
+  padding: 8px;
+  background: linear-gradient(90deg, #3B1C59, #8a5cad);
+  border: none;
+  border-radius: 4px;
+  color: white;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-size: 0.9rem;
+  font-family: 'BenjaminFranklin', sans-serif;
+  letter-spacing: 2px;
+  font-weight: bold;
+}
+.customize-btn:hover {
+  background: linear-gradient(90deg, #2C144B, #7a4dad);
+  transform: scale(1.05);
+}
+.logout-btn {
+  width: 100%;
+  padding: 8px;
+  background: #471a17;
+  border: none;
+  border-radius: 4px;
+  color: white;
+  cursor: pointer;
+  transition: background 0.3s ease;
+  font-size: 0.8rem;
+  font-family: 'BenjaminFranklin', sans-serif;
+  letter-spacing: 2px;
+  font-weight: bold;
+}
+.logout-btn:hover {
+  background: #d02f24;
 }

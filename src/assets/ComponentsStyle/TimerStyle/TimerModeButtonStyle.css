@@ -4,10 +4,10 @@
   font-weight: normal;
   font-style: normal;
 }
-
+  
 .timer-mode-button {
   position: absolute;
-  bottom: -15px;
+  bottom: -3px;
   left: 1020px;
   background: none;
   border: none !important;
@@ -16,12 +16,12 @@
   margin: 0;
   width: 150px;
   transition: all 0.3s ease;
-  filter: drop-shadow(0 0 2px rgba(48, 73, 104, 0.1));
+  filter: drop-shadow(0 0 5px rgba(25, 16, 36, 0.5));
   outline: 0 !important;
   box-shadow: none !important;
   -webkit-tap-highlight-color: transparent;
   -moz-tap-highlight-color: transparent;
-  user-select: none;
+  user-select: none;  
   -webkit-user-select: none;
   -moz-user-select: none;
   -ms-user-select: none;
@@ -37,39 +37,509 @@
 }
 
 .timer-mode-button:hover {
-  transform: scale(1.05);
-  filter: drop-shadow(0 0 12px rgba(138, 92, 173, 0.7));
+  transform: translateY(-3px) scale(1.05);
+  filter: drop-shadow(0 0 10px rgba(138, 92, 173, 0.4));
+}
+
+/* État actif du bouton */
+.timer-mode-button.active .glow-border {
+  stroke-width: 3;
+  stroke: rgba(178, 132, 213, 1);
+  filter: drop-shadow(0 0 8px rgba(138, 92, 173, 0.9));
+  animation: activeBorderPulse 2s infinite alternate;
+}
+
+@keyframes activeBorderPulse {
+  0% {
+    stroke-width: 2.5;
+    filter: drop-shadow(0 0 5px rgba(138, 92, 173, 0.7));
+  }
+  100% {
+    stroke-width: 3.5;
+    filter: drop-shadow(0 0 10px rgba(138, 92, 173, 1));
+  }
+}
+
+.timer-mode-button.active .timer-text {
+  fill: #e5d8f7;
+  filter: drop-shadow(0 0 5px rgba(138, 92, 173, 0.9));
+  animation: activeTextPulse 2s infinite alternate;
+}
+
+@keyframes activeTextPulse {
+  0% {
+    fill: #d8c5f0;
+    filter: drop-shadow(0 0 3px rgba(138, 92, 173, 0.7));
+  }
+  100% {
+    fill: #f0e5ff;
+    filter: drop-shadow(0 0 6px rgba(138, 92, 173, 1));
+  }
+}
+
+/* Bordure principale avec animation */
+.glow-border {
+  transition: all 0.3s ease;
+  animation: borderPulse 3s infinite alternate;
+}
+
+@keyframes borderPulse {
+  0% {
+    stroke-width: 2;
+    stroke: url(#timerBrdGradient);
+  }
+  50% {
+    stroke-width: 2.5;
+    stroke: url(#timerBrdGradient);
+  }
+  100% {
+    stroke-width: 2;
+    stroke: url(#timerBrdGradient);
+  }
 }
 
 .timer-mode-button:hover .glow-border {
   stroke-width: 3;
-  stroke: #8a5cad;
+  stroke: url(#timerBrdGradient);
+  filter: drop-shadow(0 0 5px rgba(138, 92, 173, 0.7));
+  animation: borderPulseHover 1.5s infinite alternate;
 }
 
-.timer-mode-button:hover .glow-effect {
+@keyframes borderPulseHover {
+  0% {
+    stroke-width: 2.5;
+    filter: drop-shadow(0 0 3px rgba(138, 92, 173, 0.6));
+  }
+  100% {
+    stroke-width: 3.5;
+    filter: drop-shadow(0 0 7px rgba(138, 92, 173, 0.9));
+  }
+}
+
+/* Bordure intérieure scintillante */
+.inner-border {
+  stroke-dasharray: 4, 6;
+  animation: dashOffset 20s linear infinite, borderGlow 4s infinite alternate;
+}
+
+@keyframes dashOffset {
+  0% {
+    stroke-dashoffset: 0;
+  }
+  100% {
+    stroke-dashoffset: 200;
+  }
+}
+
+@keyframes borderGlow {
+  0% { 
+    stroke: rgba(138, 92, 173, 0.3);
+    filter: drop-shadow(0 0 2px rgba(138, 92, 173, 0.1));
+  }
+  50% { 
+    stroke: rgba(138, 92, 173, 0.7);
+    filter: drop-shadow(0 0 3px rgba(138, 92, 173, 0.4));
+  }
+  100% { 
+    stroke: rgba(138, 92, 173, 0.3);
+    filter: drop-shadow(0 0 2px rgba(138, 92, 173, 0.1));
+  }
+}
+
+/* Animations des lignes de séparation */
+.separator-line {
   opacity: 0.5;
+  animation: separatorPulse 4s infinite alternate;
+}
+
+@keyframes separatorPulse {
+  0% {
+    opacity: 0.3;
+    stroke-width: 0.8;
+  }
+  100% {
+    opacity: 0.6;
+    stroke-width: 1.2;
+  }
+}
+
+/* Coins ornementaux animation */
+.corner-decoration {
+  transition: all 0.3s ease;
+  animation: cornerGlow 4s infinite alternate;
+}
+
+@keyframes cornerGlow {
+  0% {
+    stroke: rgba(138, 92, 173, 0.7);
+    stroke-width: 2;
+  }
+  100% {
+    stroke: rgba(138, 92, 173, 0.9);
+    stroke-width: 2.5;
+  }
+}
+
+.timer-mode-button:hover .corner-decoration {
+  stroke: rgba(138, 92, 173, 1);
+  stroke-width: 3;
+  filter: drop-shadow(0 0 3px rgba(138, 92, 173, 0.5));
+}
+
+/* Points lumineux aux coins avec délais différents */
+.corner-dot {
+  filter: drop-shadow(0 0 2px rgba(138, 92, 173, 0.7));
+  animation: dotPulse 3s infinite alternate;
+}
+
+.dot1 { animation-delay: 0s; }
+.dot2 { animation-delay: 0.7s; }
+.dot3 { animation-delay: 1.4s; }
+.dot4 { animation-delay: 2.1s; }
+
+@keyframes dotPulse {
+  0% {
+    r: 1.8;
+    filter: drop-shadow(0 0 2px rgba(138, 92, 173, 0.5));
+  }
+  100% {
+    r: 2.3;
+    filter: drop-shadow(0 0 4px rgba(138, 92, 173, 0.8));
+  }
+}
+
+.timer-mode-button:hover .corner-dot {
+  r: 2.8;
+  filter: drop-shadow(0 0 6px rgba(138, 92, 173, 1));
+  animation: dotPulseHover 1.5s infinite alternate;
+}
+
+@keyframes dotPulseHover {
+  0% {
+    r: 2.5;
+    filter: drop-shadow(0 0 4px rgba(138, 92, 173, 0.8));
+  }
+  100% {
+    r: 3;
+    filter: drop-shadow(0 0 7px rgba(138, 92, 173, 1));
+  }
+}
+
+/* Symboles mystiques scintillants dans les coins */
+.mystic-symbol {
+  animation: symbolGlow 4s infinite alternate;
+  filter: drop-shadow(0 0 2px rgba(138, 92, 173, 0.4));
+}
+
+.symbol1 { animation-delay: 0.2s; }
+.symbol2 { animation-delay: 1.2s; }
+.symbol3 { animation-delay: 2.2s; }
+.symbol4 { animation-delay: 3.2s; }
+
+@keyframes symbolGlow {
+  0% {
+    fill: rgba(138, 92, 173, 0.4);
+    filter: drop-shadow(0 0 1px rgba(138, 92, 173, 0.3));
+  }
+  100% {
+    fill: rgba(138, 92, 173, 0.7);
+    filter: drop-shadow(0 0 3px rgba(138, 92, 173, 0.5));
+  }
+}
+
+.timer-mode-button:hover .mystic-symbol {
+  fill: rgba(138, 92, 173, 0.9);
+  filter: drop-shadow(0 0 4px rgba(138, 92, 173, 0.7));
+}
+
+/* Animation des particules étoiles avec plus d'étoiles */
+.star-particle {
+  opacity: 0;
+  animation: twinkle 3s infinite ease-in-out;
+}
+
+.star1 { animation-delay: 0.1s; }
+.star2 { animation-delay: 0.7s; }
+.star3 { animation-delay: 1.3s; }
+.star4 { animation-delay: 1.9s; }
+.star5 { animation-delay: 2.5s; }
+.star6 { animation-delay: 0.4s; }
+.star7 { animation-delay: 1.0s; }
+.star8 { animation-delay: 1.6s; }
+.star9 { animation-delay: 2.2s; }
+
+@keyframes twinkle {
+  0% {
+    opacity: 0.1;
+    r: 0.5;
+    filter: drop-shadow(0 0 1px rgba(138, 92, 173, 0.3));
+  }
+  50% {
+    opacity: 0.8;
+    r: 1.2;
+    filter: drop-shadow(0 0 3px rgba(138, 92, 173, 0.6));
+  }
+  100% {
+    opacity: 0.1;
+    r: 0.5;
+    filter: drop-shadow(0 0 1px rgba(138, 92, 173, 0.3));
+  }
+}
+
+.timer-mode-button:hover .star-particle {
+  animation: twinkleHover 2s infinite ease-in-out;
+}
+
+@keyframes twinkleHover {
+  0% {
+    opacity: 0.2;
+    r: 0.7;
+    filter: drop-shadow(0 0 2px rgba(138, 92, 173, 0.4));
+  }
+  50% {
+    opacity: 1;
+    r: 1.5;
+    filter: drop-shadow(0 0 4px rgba(138, 92, 173, 0.8));
+  }
+  100% {
+    opacity: 0.2;
+    r: 0.7;
+    filter: drop-shadow(0 0 2px rgba(138, 92, 173, 0.4));
+  }
+}
+
+/* Effet de fumée animation améliorée */
+.smoke-effect {
+  animation: smokeMove 8s infinite linear;
+  transform-origin: center;
+}
+
+.smoke1 {
+  animation-delay: 0s;
+}
+
+.smoke2 {
+  animation-delay: 4s;
+  animation-direction: reverse;
+}
+
+@keyframes smokeMove {
+  0% {
+    opacity: 0.1;
+    transform: translateX(-15px);
+  }
+  50% {
+    opacity: 0.2;
+    transform: translateX(15px);
+  }
+  100% {
+    opacity: 0.1;
+    transform: translateX(-15px);
+  }
+}
+
+.timer-mode-button:hover .smoke-effect {
+  opacity: 0.3;
+  animation-duration: 6s;
+}
+
+/* Texte avec animation améliorée */
+.timer-text {
+  fill: #d6ccbe;
+  filter: url(#textGlow);
+  transition: all 0.3s ease;
+  animation: textPulse 4s infinite alternate;
+}
+
+@keyframes textPulse {
+  0% {
+    fill: #d6ccbe;
+    filter: drop-shadow(0 0 1px rgba(138, 92, 173, 0.3));
+  }
+  100% {
+    fill: #e1d7cc;
+    filter: drop-shadow(0 0 2px rgba(138, 92, 173, 0.5));
+  }
 }
 
 .timer-mode-button:hover .timer-text {
   fill: #d8c5f0;
-  transition: fill 0.3s ease;
+  filter: drop-shadow(0 0 4px rgba(138, 92, 173, 0.8));
+  animation: textPulseHover 2s infinite alternate;
+}
+
+@keyframes textPulseHover {
+  0% {
+    fill: #d8c5f0;
+    filter: drop-shadow(0 0 3px rgba(138, 92, 173, 0.7));
+  }
+  100% {
+    fill: #e5d8f7;
+    filter: drop-shadow(0 0 5px rgba(138, 92, 173, 1));
+  }
 }
 
 .timer-mode-button:active {
-  transform: scale(0.95);
-  filter: drop-shadow(0 0 4px rgba(138, 92, 173, 0.3));
+  transform: scale(0.96);
 }
 
-.timer-mode-button::before {
-  content: var(--content);
-  display: none;
+/* Structure du cadre ornemental */
+.button-frame {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 1;
 }
 
-.timer-text {
-  transition: fill 0.3s ease;
-  fill: #d6ccbe;
+.frame-corner {
+  position: absolute;
+  width: 15px;
+  height: 15px;
 }
 
+.corner-tl {
+  top: 5px;
+  left: 5px;
+}
+
+.corner-tr {
+  top: 5px;
+  right: 5px;
+}
+
+.corner-bl {
+  bottom: 5px;
+  left: 5px;
+}
+
+.corner-br {
+  bottom: 5px;
+  right: 5px;
+}
+
+.frame-symbol {
+  position: absolute;
+  font-size: 10px;
+  color: rgba(138, 92, 173, 0.6);
+  animation: symbolPulse 3s infinite alternate;
+}
+
+@keyframes symbolPulse {
+  0% {
+    opacity: 0.4;
+    transform: scale(0.9);
+    text-shadow: 0 0 1px rgba(138, 92, 173, 0.3);
+  }
+  100% {
+    opacity: 0.8;
+    transform: scale(1.1);
+    text-shadow: 0 0 3px rgba(138, 92, 173, 0.7);
+  }
+}
+
+.symbol-tl {
+  top: -2px;
+  left: -2px;
+}
+
+.symbol-tr {
+  top: -2px;
+  right: -2px;
+}
+
+.symbol-bl {
+  bottom: -2px;
+  left: -2px;
+}
+
+.symbol-br {
+  bottom: -2px;
+  right: -2px;
+}
+
+.title-separator {
+  position: absolute;
+  top: 35px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 70%;
+  height: 1px;
+  background: linear-gradient(to right, rgba(138, 92, 173, 0), rgba(138, 92, 173, 0.5), rgba(138, 92, 173, 0));
+  opacity: 0.3;
+}
+
+/* Aura du bouton */
+.timer-button-aura {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  border-radius: 40px;
+  box-shadow: 0 0 15px rgba(138, 92, 173, 0.1);
+  opacity: 0;
+  transition: all 0.5s ease;
+  pointer-events: none;
+}
+
+.timer-mode-button:hover .timer-button-aura {
+  opacity: 0.7;
+  box-shadow: 0 0 25px rgba(138, 92, 173, 0.3);
+}
+
+/* Champ d'étoiles */
+.star-field {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  overflow: hidden;
+  z-index: -1;
+}
+
+.star {
+  position: absolute;
+  background-color: rgba(138, 92, 173, 0.7);
+  border-radius: 50%;
+  width: 1px;
+  height: 1px;
+  opacity: 0;
+  animation: starTwinkle 4s infinite ease-in-out;
+}
+
+.star:nth-child(1) { top: 20%; left: 15%; animation-delay: 0s; }
+.star:nth-child(2) { top: 30%; left: 85%; animation-delay: 0.5s; }
+.star:nth-child(3) { top: 70%; left: 20%; animation-delay: 1s; }
+.star:nth-child(4) { top: 60%; left: 80%; animation-delay: 1.5s; }
+.star:nth-child(5) { top: 10%; left: 50%; animation-delay: 2s; }
+.star:nth-child(6) { top: 80%; left: 35%; animation-delay: 2.5s; }
+.star:nth-child(7) { top: 40%; left: 70%; animation-delay: 3s; }
+.star:nth-child(8) { top: 50%; left: 10%; animation-delay: 3.5s; }
+
+@keyframes starTwinkle {
+  0% {
+    opacity: 0;
+    transform: scale(0.8);
+    box-shadow: 0 0 0 rgba(138, 92, 173, 0);
+  }
+  50% {
+    opacity: 0.8;
+    transform: scale(2);
+    box-shadow: 0 0 4px rgba(138, 92, 173, 0.8);
+  }
+  100% {
+    opacity: 0;
+    transform: scale(0.8);
+    box-shadow: 0 0 0 rgba(138, 92, 173, 0);
+  }
+}
+
+/* Timer display amélioré */
 .timer-display-group {
   position: absolute;
   display: flex;
@@ -77,33 +547,40 @@
   gap: 10px;
   top: 5px;
   left: 1180px;
+  z-index: 10;
 }
 
 .timer-display {
-  background: rgba(30, 20, 40, 0.3);
+  background: rgba(30, 20, 40, 0.6);
   color: #e5deff;
   margin-top: 5px;
   padding: 8px 15px;
-  border-radius: 8px;
-  border: 1px solid rgba(138, 92, 173, 0.3);
+  border-radius: 15px;
+  border: 1px solid rgba(138, 92, 173, 0.5);
   font-family: 'BenjaminFranklin', sans-serif;
   letter-spacing: 2px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
   transition: all 0.3s ease;
-  animation: borderGlow 4s infinite alternate;
+  animation: timerBorderGlow 3s infinite alternate;
+  text-shadow: 0 0 5px rgba(138, 92, 173, 0.5);
 }
 
 .timer-display:hover {
-  background: rgba(138, 92, 173, 0.15);
-  border-color: rgba(138, 92, 173, 0.5);
-  transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  background: rgba(138, 92, 173, 0.25);
+  border-color: rgba(138, 92, 173, 0.7);
+  transform: translateY(-2px) scale(1.05);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4), 0 0 10px rgba(138, 92, 173, 0.4);
 }
 
-@keyframes borderGlow {
-  0% { border-color: rgba(138, 92, 173, 0.3); }
-  50% { border-color: rgba(138, 92, 173, 0.6); }
-  100% { border-color: rgba(138, 92, 173, 0.3); }
+@keyframes timerBorderGlow {
+  0% { 
+    border-color: rgba(138, 92, 173, 0.4);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3), 0 0 5px rgba(138, 92, 173, 0.1);
+  }
+  100% { 
+    border-color: rgba(178, 132, 213, 0.8);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3), 0 0 10px rgba(138, 92, 173, 0.5);
+  }
 }
 
 .help-button {
@@ -119,31 +596,26 @@
   font-size: 20px;
   font-weight: bold;
   color: #e5deff;
-  background: rgba(30, 20, 40, 0.3);
-  border: 1px solid rgba(138, 92, 173, 0.3);
+  background: rgba(30, 20, 40, 0.6);
+  border: 1px solid rgba(138, 92, 173, 0.5);
   transition: all 0.3s ease;
-  animation: borderGlow 4s infinite alternate;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+  animation: timerBorderGlow 3s infinite alternate;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+  text-shadow: 0 0 5px rgba(138, 92, 173, 0.5);
 }
 
 .help-button:hover {
-  background: rgba(138, 92, 173, 0.15);
-  border-color: rgba(138, 92, 173, 0.5);
-  transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  background: rgba(138, 92, 173, 0.25);
+  border-color: rgba(138, 92, 173, 0.7);
+  transform: translateY(-2px) scale(1.1);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4), 0 0 10px rgba(138, 92, 173, 0.4);
 }
 
 .help-button:active {
   transform: scale(0.95);
 }
 
-*:focus {
-  outline: none !important;
-  box-shadow: none !important;
-  -webkit-tap-highlight-color: transparent;
-  -moz-tap-highlight-color: transparent;
-}
-
+/* Modal de confirmation d'arrêt du timer amélioré */
 .stop-timer-modal {
   position: fixed;
   top: 0;
@@ -155,62 +627,129 @@
   justify-content: center;
   align-items: center;
   z-index: 2000;
+  backdrop-filter: blur(3px);
 }
 
 .stop-timer-modal-content {
-  background: rgba(30, 20, 40, 0.8);
-  border: 1px solid rgba(138, 92, 173, 0.3);
-  border-radius: 8px;
-  padding: 25px;
+  background-color: #1a1524;
+  padding: 2rem;
+  border-radius: 15px;
+  border: 2px solid rgba(138, 92, 173, 0.5);
+  text-align: center;
+  color: #d6ccbe;
   max-width: 400px;
   width: 90%;
-  text-align: center;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
-  animation: borderGlow 4s infinite alternate;
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.5), inset 0 0 15px rgba(0, 0, 0, 0.3);
+  position: relative;
+  overflow: hidden;
+  animation: modalBorderGlow 3s infinite alternate;
+}
+
+@keyframes modalBorderGlow {
+  0% { 
+    border-color: rgba(138, 92, 173, 0.5);
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.5), inset 0 0 15px rgba(0, 0, 0, 0.3), 0 0 10px rgba(138, 92, 173, 0.1);
+  }
+  100% { 
+    border-color: rgba(178, 132, 213, 0.8);
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.5), inset 0 0 15px rgba(0, 0, 0, 0.3), 0 0 20px rgba(138, 92, 173, 0.3);
+  }
+}
+
+/* Ajout d'étoiles scintillantes dans la modal */
+.stop-timer-modal-content::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-image: radial-gradient(circle, rgba(138, 92, 173, 0.05) 1px, transparent 1px);
+  background-size: 30px 30px;
+  pointer-events: none;
+  z-index: -1;
+}
+
+/* Coins de la modal améliorés */
+.stop-timer-modal-content::after {
+  content: '';
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  right: 10px;
+  bottom: 10px;
+  border: 1px solid rgba(138, 92, 173, 0.2);
+  border-radius: 10px;
+  pointer-events: none;
+  z-index: -1;
 }
 
 .stop-timer-modal-content p {
-  color: #e5deff;
   font-family: 'BenjaminFranklin', sans-serif;
-  letter-spacing: 2px;
-  margin-bottom: 20px;
+  color: #e5deff;
+  text-shadow: 0 0 5px rgba(138, 92, 173, 0.3);
+  letter-spacing: 1px;
 }
 
 .stop-timer-modal-buttons {
   display: flex;
   justify-content: center;
-  gap: 15px;
+  gap: 1.5rem;
+  margin-top: 1.8rem;
 }
 
 .stop-timer-confirm-btn, 
 .stop-timer-cancel-btn {
-  background: rgba(30, 20, 40, 0.3);
-  color: #e5deff;
-  border: 1px solid rgba(138, 92, 173, 0.3);
-  border-radius: 8px;
-  padding: 10px 20px;
-  font-family: 'BenjaminFranklin', sans-serif;
-  letter-spacing: 2px;
+  background: linear-gradient(to bottom, #3B1C59, #8a5cad);
+  color: white;
+  border: 1px solid rgba(138, 92, 173, 0.8);
+  padding: 0.8rem 1.5rem;
+  border-radius: 12px;
+  font-family: 'BenjaminFranklin', Arial;
+  font-size: 16px;
   cursor: pointer;
   transition: all 0.3s ease;
-  animation: borderGlow 4s infinite alternate;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+  position: relative;
+  overflow: hidden;
+  text-shadow: 0 0 5px rgba(138, 92, 173, 0.3);
+}
+
+/* Effet de particules sur les boutons de la modal */
+.stop-timer-confirm-btn::before, 
+.stop-timer-cancel-btn::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, 
+    rgba(255, 255, 255, 0), 
+    rgba(255, 255, 255, 0.2), 
+    rgba(255, 255, 255, 0)
+  );
+  animation: shimmer 4s infinite;
+}
+
+@keyframes shimmer {
+  0% {
+    left: -100%;
+  }
+  100% {
+    left: 100%;
+  }
 }
 
 .stop-timer-confirm-btn:hover, 
 .stop-timer-cancel-btn:hover {
-  background: rgba(138, 92, 173, 0.15);
-  border-color: rgba(138, 92, 173, 0.5);
-  transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  transform: translateY(-3px);
+  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.4);
+  background: linear-gradient(to bottom, #4d2b69, #9b6dbe);
 }
 
 .stop-timer-confirm-btn:active, 
 .stop-timer-cancel-btn:active {
-  transform: scale(0.95);
-}
-
-@keyframes borderGlow {
-  0% { border-color: rgba(138, 92, 173, 0.3); }
-  50% { border-color: rgba(138, 92, 173, 0.6); }
-  100% { border-color: rgba(138, 92, 173, 0.3); }
+  transform: translateY(1px);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
 }

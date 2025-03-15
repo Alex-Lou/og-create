@@ -14,11 +14,21 @@
   /* Positionnement général du popup */
   #crafted-popup {
     position: fixed;
-    top: 80%; /* Position ajustée pour descendre le popup */
+    top: 80%;
     left: 65%;
-    transform: translate(-50%, -50%);
-    min-width: 200px;
-    z-index: 500; /* S'assurer que le popup est bien au-dessus */
+    transform: translate(-50%, -50%) scale(0.2);
+    min-width: 220px;
+    z-index: 500;
+    opacity: 0;
+    pointer-events: none;
+    transition: transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275), 
+                opacity 0.5s ease;
+  }
+  
+  #crafted-popup.show {
+    transform: translate(-50%, -50%) scale(1);
+    opacity: 1;
+    pointer-events: all;
   }
   
   /* Cadre décoratif */
@@ -29,75 +39,97 @@
     width: 100%;
     height: 100%;
     pointer-events: none;
-    border-radius: 8px;
-    border: 1px solid rgba(138, 92, 173, 0.3);
-    box-shadow: inset 0 0 15px rgba(0, 0, 0, 0.5),
-                0 0 8px rgba(138, 92, 173, 0.2);
+    border-radius: 12px;
+    border: 1px solid rgba(138, 92, 173, 0.4);
+    box-shadow: inset 0 0 20px rgba(0, 0, 0, 0.6),
+                0 0 15px rgba(138, 92, 173, 0.3);
     animation: borderGlow 4s infinite alternate;
     z-index: 1;
   }
+  
   @keyframes borderGlow {
-    0% { border-color: rgba(138, 92, 173, 0.3); }
-    50% { border-color: rgba(138, 92, 173, 0.6); }
-    100% { border-color: rgba(138, 92, 173, 0.3); }
+    0% { border-color: rgba(138, 92, 173, 0.4); box-shadow: inset 0 0 20px rgba(0, 0, 0, 0.6), 0 0 15px rgba(138, 92, 173, 0.3); }
+    50% { border-color: rgba(138, 92, 173, 0.7); box-shadow: inset 0 0 20px rgba(0, 0, 0, 0.6), 0 0 20px rgba(138, 92, 173, 0.5); }
+    100% { border-color: rgba(138, 92, 173, 0.4); box-shadow: inset 0 0 20px rgba(0, 0, 0, 0.6), 0 0 15px rgba(138, 92, 173, 0.3); }
   }
+  
   .frame-corner {
     position: absolute;
-    width: 16px;
-    height: 16px;
+    width: 20px;
+    height: 20px;
     pointer-events: none;
     z-index: 2;
   }
+  
   .corner-tl {
     top: 0;
     left: 0;
-    border-top: 1px solid rgba(138, 92, 173, 0.7);
-    border-left: 1px solid rgba(138, 92, 173, 0.7);
-    border-top-left-radius: 8px;
+    border-top: 2px solid rgba(138, 92, 173, 0.7);
+    border-left: 2px solid rgba(138, 92, 173, 0.7);
+    border-top-left-radius: 12px;
   }
+  
   .corner-tr {
     top: 0;
     right: 0;
-    border-top: 1px solid rgba(138, 92, 173, 0.7);
-    border-right: 1px solid rgba(138, 92, 173, 0.7);
-    border-top-right-radius: 8px;
+    border-top: 2px solid rgba(138, 92, 173, 0.7);
+    border-right: 2px solid rgba(138, 92, 173, 0.7);
+    border-top-right-radius: 12px;
   }
+  
   .corner-bl {
     bottom: 0;
     left: 0;
-    border-bottom: 1px solid rgba(138, 92, 173, 0.7);
-    border-left: 1px solid rgba(138, 92, 173, 0.7);
-    border-bottom-left-radius: 8px;
+    border-bottom: 2px solid rgba(138, 92, 173, 0.7);
+    border-left: 2px solid rgba(138, 92, 173, 0.7);
+    border-bottom-left-radius: 12px;
   }
+  
   .corner-br {
     bottom: 0;
     right: 0;
-    border-bottom: 1px solid rgba(138, 92, 173, 0.7);
-    border-right: 1px solid rgba(138, 92, 173, 0.7);
-    border-bottom-right-radius: 8px;
+    border-bottom: 2px solid rgba(138, 92, 173, 0.7);
+    border-right: 2px solid rgba(138, 92, 173, 0.7);
+    border-bottom-right-radius: 12px;
   }
+  
   .corner-dot {
     position: absolute;
-    width: 4px;
-    height: 4px;
+    width: 5px;
+    height: 5px;
     background: rgba(138, 92, 173, 0.9);
     border-radius: 50%;
-    filter: drop-shadow(0 0 3px rgba(138, 92, 173, 0.8));
+    filter: drop-shadow(0 0 4px rgba(138, 92, 173, 0.8));
+    animation: dotPulse 2s infinite alternate;
   }
-  .corner-tl .corner-dot { top: 4px; left: 4px; }
-  .corner-tr .corner-dot { top: 4px; right: 4px; }
-  .corner-bl .corner-dot { bottom: 4px; left: 4px; }
-  .corner-br .corner-dot { bottom: 4px; right: 4px; }
+  
+  @keyframes dotPulse {
+    0% { transform: scale(1); filter: drop-shadow(0 0 4px rgba(138, 92, 173, 0.8)); }
+    100% { transform: scale(1.3); filter: drop-shadow(0 0 6px rgba(138, 92, 173, 1)); }
+  }
+  
+  .corner-tl .corner-dot { top: 5px; left: 5px; }
+  .corner-tr .corner-dot { top: 5px; right: 5px; }
+  .corner-bl .corner-dot { bottom: 5px; left: 5px; }
+  .corner-br .corner-dot { bottom: 5px; right: 5px; }
+  
   .frame-symbol {
     position: absolute;
-    font-size: 8px;
-    color: rgba(138, 92, 173, 0.6);
-    filter: drop-shadow(0 0 2px rgba(138, 92, 173, 0.4));
+    font-size: 10px;
+    color: rgba(138, 92, 173, 0.7);
+    filter: drop-shadow(0 0 3px rgba(138, 92, 173, 0.5));
+    animation: symbolGlow 3s infinite alternate;
   }
-  .symbol-tl { top: 2px; left: 6px; }
-  .symbol-tr { top: 2px; right: 6px; }
-  .symbol-bl { bottom: 2px; left: 6px; }
-  .symbol-br { bottom: 2px; right: 6px; }
+  
+  @keyframes symbolGlow {
+    0% { color: rgba(138, 92, 173, 0.7); filter: drop-shadow(0 0 3px rgba(138, 92, 173, 0.5)); }
+    100% { color: rgba(138, 92, 173, 1); filter: drop-shadow(0 0 5px rgba(138, 92, 173, 0.8)); }
+  }
+  
+  .symbol-tl { top: 3px; left: 8px; }
+  .symbol-tr { top: 3px; right: 8px; }
+  .symbol-bl { bottom: 3px; left: 8px; }
+  .symbol-br { bottom: 3px; right: 8px; }
   
   /* Animation des particules */
   .gsap-particles-container {
@@ -108,39 +140,93 @@
     height: 100%;
     pointer-events: none;
     z-index: 3;
+    overflow: visible;
   }
+  
   .particle {
     position: absolute;
     border-radius: 50%;
     opacity: 0;
-    animation: particleFade 3s infinite ease-in-out;
-  }
-  @keyframes particleFade {
-    0% { opacity: 0.3; transform: scale(0.5); }
-    50% { opacity: 1; transform: scale(0.7); }
-    100% { opacity: 0.3; transform: scale(0.5); }
+    box-shadow: 0 0 10px 2px currentColor;
+    filter: blur(1px);
   }
   
   /* Contenu du popup */
   .popup-content {
     position: relative;
     z-index: 4;
-    padding: 15px;
-    background: rgba(30, 20, 40, 0.3);
-    border-radius: 8px;
+    padding: 20px;
+    background: rgba(30, 20, 40, 0.7);
+    background-image: radial-gradient(circle at center, rgba(138, 92, 173, 0.2) 0%, transparent 70%);
+    border-radius: 12px;
     text-align: center;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+    box-shadow: inset 0 0 20px rgba(0, 0, 0, 0.4);
   }
+  
   .popup-content .image-container {
-    margin-bottom: 10px;
+    margin-bottom: 15px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 80px;
+    position: relative;
   }
+  
   .popup-content img {
     max-width: 100%;
-    border-radius: 4px;
+    max-height: 80px;
+    border-radius: 8px;
+    filter: drop-shadow(0 0 8px rgba(138, 92, 173, 0.6));
+    animation: imageFloat 3s ease-in-out infinite alternate;
   }
+  
+  @keyframes imageFloat {
+    0% { transform: translateY(0) rotate(0deg); }
+    100% { transform: translateY(-5px) rotate(2deg); }
+  }
+  
+  .emoji-fallback {
+    font-size: 40px;
+    animation: emojiFloat 3s ease-in-out infinite alternate;
+    filter: drop-shadow(0 0 8px rgba(138, 92, 173, 0.6));
+  }
+  
+  @keyframes emojiFloat {
+    0% { transform: translateY(0) scale(1); text-shadow: 0 0 8px rgba(138, 92, 173, 0.6); }
+    100% { transform: translateY(-5px) scale(1.1); text-shadow: 0 0 12px rgba(138, 92, 173, 0.8); }
+  }
+  
   .popup-content p {
     color: #e5deff;
     font-family: 'BenjaminFranklin', sans-serif;
+    font-size: 18px;
     letter-spacing: 2px;
-    text-shadow: 0 0 10px rgba(138, 92, 173, 0.5);
+    text-shadow: 0 0 10px rgba(138, 92, 173, 0.7);
+    margin: 5px 0 0;
+    animation: textPulse 2s infinite alternate;
+  }
+  
+  @keyframes textPulse {
+    0% { text-shadow: 0 0 10px rgba(138, 92, 173, 0.7); }
+    100% { text-shadow: 0 0 15px rgba(138, 92, 173, 1); }
+  }
+  
+  /* Aura mystique autour du popup */
+  .popup-content::before {
+    content: '';
+    position: absolute;
+    top: -10px;
+    left: -10px;
+    right: -10px;
+    bottom: -10px;
+    background: radial-gradient(ellipse at center, rgba(138, 92, 173, 0.3) 0%, transparent 70%);
+    border-radius: 20px;
+    z-index: -1;
+    opacity: 0;
+    animation: auraFade 2s forwards;
+  }
+  
+  @keyframes auraFade {
+    0% { opacity: 0; transform: scale(0.9); }
+    100% { opacity: 1; transform: scale(1); }
   }
