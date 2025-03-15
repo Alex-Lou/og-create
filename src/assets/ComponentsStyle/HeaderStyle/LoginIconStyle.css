@@ -12,11 +12,12 @@
   font-style: normal;
 }
 
+/* Container du header */
 .login-container {
   position: relative;
   margin-right: -110px;
   margin-bottom: 1px;
-  z-index: 9999; /* Garder un z-index élevé pour le header */
+  z-index: 9999;
 }
 
 .user-frame {
@@ -51,7 +52,7 @@
 
 /* ----------------- Modal (login-dropdown) ----------------- */
 .login-dropdown {
-  position: fixed; /* Permet de bien positionner le modal sans interférer avec d'autres systèmes */
+  position: fixed;
   top: 60px;
   right: 100px;
   margin-top: 10px;
@@ -61,13 +62,12 @@
   padding: 15px;
   width: 250px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
-  z-index: 10000; /* S'assurer que le modal reste au-dessus */
+  z-index: 10000;
   font-size: 1rem;
   font-family: 'BenjaminFranklin', sans-serif;
   letter-spacing: 2px;
   font-weight: bold;
   animation: dropdownFadeIn 0.2s ease-out forwards;
-  position: fixed;
 }
 @keyframes dropdownFadeIn {
   from { opacity: 0; transform: translateY(-10px); }
@@ -172,25 +172,26 @@
 .login-content {
   position: relative;
   z-index: 2;
+  margin-top: 10px;
 }
 .login-type-selector {
   display: flex;
   gap: 8px;
-  margin: 15px 0;
+  margin-bottom: 15px;
 }
 .type-btn {
   flex: 1;
   padding: 5px;
   background: transparent;
-  border: 1px solid #444;
-  color: #604c4c;
+  border: 1px solid rgba(138, 92, 173, 0.3);
+  color: #e5deff;
   border-radius: 4px;
   cursor: pointer;
   transition: all 0.3s ease;
 }
 .type-btn.active {
-  background: #333;
-  border-color: #666;
+  background: rgba(138, 92, 173, 0.15);
+  border-color: rgba(138, 92, 173, 0.5);
 }
 .login-input {
   width: 100%;
@@ -205,23 +206,32 @@
   letter-spacing: 2px;
   font-weight: bold;
 }
+
+/* Bouton de soumission adapté au style purchase‑modal */
 .submit-btn {
   width: 100%;
   padding: 8px;
-  background: #2D96A4;
+  background: linear-gradient(90deg, #3B1C59, #8a5cad);
   border: none;
-  border-radius: 4px;
+  border-radius: 8px;
   color: white;
   cursor: pointer;
-  transition: background 0.3s ease;
-  font-size: 0.8rem;
+  transition: all 0.3s ease;
+  font-size: 16px;
   font-family: 'BenjaminFranklin', sans-serif;
   letter-spacing: 2px;
   font-weight: bold;
+  box-shadow: 0 0 8px rgba(138, 92, 173, 0.7);
 }
 .submit-btn:hover {
-  background: #1f7a85;
+  background: linear-gradient(90deg, #2C144B, #7a4dad);
+  transform: scale(1.05);
 }
+.submit-btn:active {
+  transform: scale(0.95);
+}
+
+/* Messages */
 .error-message {
   color: #ff4136;
   margin-bottom: 10px;
@@ -252,19 +262,20 @@
 .customize-btn {
   width: 100%;
   padding: 8px;
-  background: #0a2529;
+  background: linear-gradient(90deg, #3B1C59, #8a5cad);
   border: none;
   border-radius: 4px;
   color: white;
   cursor: pointer;
-  transition: background 0.3s ease;
+  transition: all 0.3s ease;
   font-size: 0.9rem;
   font-family: 'BenjaminFranklin', sans-serif;
   letter-spacing: 2px;
   font-weight: bold;
 }
 .customize-btn:hover {
-  background: #1f7a85;
+  background: linear-gradient(90deg, #2C144B, #7a4dad);
+  transform: scale(1.05);
 }
 .logout-btn {
   width: 100%;

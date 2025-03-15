@@ -1,6 +1,26 @@
 <template>
   <div class="explorer-craft-modal" v-if="isVisible">
     <div class="modal-content">
+      <!-- Cadre décoratif interne -->
+      <div class="customize-modal-frame">
+        <div class="frame-corner corner-tl">
+          <div class="corner-dot"></div>
+          <div class="frame-symbol symbol-tl">✧</div>
+        </div>
+        <div class="frame-corner corner-tr">
+          <div class="corner-dot"></div>
+          <div class="frame-symbol symbol-tr">✧</div>
+        </div>
+        <div class="frame-corner corner-bl">
+          <div class="corner-dot"></div>
+          <div class="frame-symbol symbol-bl">✧</div>
+        </div>
+        <div class="frame-corner corner-br">
+          <div class="corner-dot"></div>
+          <div class="frame-symbol symbol-br">✧</div>
+        </div>
+      </div>
+
       <div class="challenge-info">
         <div class="npc-image-container">
           <div class="npc-placeholder">🧙‍♂️</div>
@@ -9,7 +29,11 @@
           <h2>{{ region.name }} - Défi</h2>
           <p>
             Objectif: Créer 
-            <span v-for="(element, idx) in challenge.requiredElements" :key="element" class="target-element">
+            <span
+              v-for="(element, idx) in challenge.requiredElements"
+              :key="element"
+              class="target-element"
+            >
               {{ idx > 0 ? ' et ' : '' }}{{ element }}
             </span>
           </p>
@@ -29,8 +53,8 @@
         <div class="elements-selection">
           <h3>Éléments disponibles</h3>
           <div class="elements-grid">
-            <div 
-              v-for="element in availableElements" 
+            <div
+              v-for="element in availableElements"
               :key="element"
               class="element-card"
               draggable="true"
@@ -39,7 +63,7 @@
             >
               <div class="element-icon">
                 <div v-if="hasGif(element)" class="gif-container">
-                  <img :src="getElementGif(element)" class="element-gif" alt="element"/>
+                  <img :src="getElementGif(element)" class="element-gif" alt="element" />
                 </div>
                 <span v-else>{{ elementEmojis[element] || '🔮' }}</span>
               </div>
@@ -48,14 +72,17 @@
           </div>
         </div>
 
-        <div class="crafting-workspace"
+        <div
+          class="crafting-workspace"
           :style="{ backgroundImage: challenge.background ? `url(${require(`@/assets/explorer-background/${challenge.background}`)})` : '' }"
-          @dragover.prevent @drop="handleDrop">
+          @dragover.prevent
+          @drop="handleDrop"
+        >
           <h3>Zone de fusion</h3>
-          
-          <BossFight 
-            v-if="isBossChallenge" 
-            :boss="challenge" 
+
+          <BossFight
+            v-if="isBossChallenge"
+            :boss="challenge"
             :craftedElements="craftedElements"
             ref="bossFight"
             @boss-defeated="handleBossDefeated"
@@ -63,8 +90,8 @@
           />
 
           <div class="selected-elements">
-            <div 
-              v-for="(element, index) in selectedElements" 
+            <div
+              v-for="(element, index) in selectedElements"
               :key="index"
               class="selected-element"
               draggable="true"
@@ -74,14 +101,18 @@
             >
               <div class="element-icon">
                 <div v-if="hasGif(element)" class="gif-container">
-                  <img :src="getElementGif(element)" class="element-gif" alt="element"/>
+                  <img :src="getElementGif(element)" class="element-gif" alt="element" />
                 </div>
                 <span v-else>{{ elementEmojis[element] || '🔮' }}</span>
               </div>
               <div class="element-name">{{ element }}</div>
             </div>
           </div>
-          <button @click="craftElements" class="craft-button-explorer" :disabled="selectedElements.length < 2">
+          <button
+            @click="craftElements"
+            class="craft-button-explorer"
+            :disabled="selectedElements.length < 2"
+          >
             Fusionner
           </button>
         </div>
@@ -89,8 +120,8 @@
         <div class="crafted-elements">
           <h3>Éléments créés</h3>
           <div class="crafted-grid">
-            <div 
-              v-for="(element, index) in craftedElements" 
+            <div
+              v-for="(element, index) in craftedElements"
               :key="index"
               class="crafted-element-explorer"
               draggable="true"
@@ -99,7 +130,7 @@
             >
               <div class="element-icon">
                 <div v-if="hasGif(element)" class="gif-container">
-                  <img :src="getElementGif(element)" class="element-gif" alt="element"/>
+                  <img :src="getElementGif(element)" class="element-gif" alt="element" />
                 </div>
                 <span v-else>{{ elementEmojis[element] || '🔮' }}</span>
               </div>
@@ -114,14 +145,14 @@
         <button @click="resetCrafting" class="reset-button">
           Tout nettoyer
         </button>
-        
+
         <div v-if="isBossChallenge" class="player-health-section">
           <div class="player-health-bar">
-            <div 
-              class="player-health-fill" 
-              :style="{ 
-                width: `${(playerHealth / challenge.maxHealth) * 100}%`, 
-                backgroundColor: getHealthColor(playerHealth) 
+            <div
+              class="player-health-fill"
+              :style="{
+                width: `${(playerHealth / challenge.maxHealth) * 100}%`,
+                backgroundColor: getHealthColor(playerHealth)
               }"
             >
               <span class="player-health-text">
@@ -130,9 +161,9 @@
             </div>
           </div>
         </div>
-        
-        <button 
-          @click="completeChallenge" 
+
+        <button
+          @click="completeChallenge"
           class="complete-button"
           :disabled="!isChallengeSolved"
         >

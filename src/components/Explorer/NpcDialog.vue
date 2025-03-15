@@ -1,6 +1,26 @@
 <template>
   <div class="npc-dialog-overlay" @click.self="closeDialog">
     <div class="npc-dialog-container">
+      <!-- Cadre décoratif avec coins ornementés -->
+      <div class="dialog-frame">
+        <div class="frame-corner corner-tl">
+          <div class="corner-dot"></div>
+          <div class="frame-symbol symbol-tl">✧</div>
+        </div>
+        <div class="frame-corner corner-tr">
+          <div class="corner-dot"></div>
+          <div class="frame-symbol symbol-tr">✧</div>
+        </div>
+        <div class="frame-corner corner-bl">
+          <div class="corner-dot"></div>
+          <div class="frame-symbol symbol-bl">✧</div>
+        </div>
+        <div class="frame-corner corner-br">
+          <div class="corner-dot"></div>
+          <div class="frame-symbol symbol-br">✧</div>
+        </div>
+      </div>
+      
       <!-- Affichage de l'introduction de la région -->
       <div v-if="showIntro" class="region-intro">
         <h3>{{ regionData.name || 'Region inconnue' }}</h3>
@@ -9,10 +29,28 @@
         <div class="region-progress" v-if="regionData.progress !== undefined">
           <div class="progress-label">Progression: {{ regionData.progress }}%</div>
           <div class="progress-bar">
-            <div class="progress-fill" :style="{ width: `${regionData.progress}%` }"></div>
+            <div class="progress-fill" :style="{ width: `${regionData.progress}%` }">
+              <!-- Particules animées dans la barre de progression -->
+              <div class="particle particle-5"></div>
+              <div class="particle particle-10"></div>
+              <div class="particle particle-15"></div>
+              <div class="particle particle-20"></div>
+              <div class="particle particle-25"></div>
+              <div class="particle particle-30"></div>
+              <div class="particle particle-35"></div>
+              <div class="particle particle-40"></div>
+              <div class="particle particle-45"></div>
+              <div class="particle particle-50"></div>
+              <div class="particle particle-55"></div>
+              <div class="particle particle-70"></div>
+              <div class="particle particle-75"></div>
+              <div class="particle particle-80"></div>
+              <div class="particle particle-85"></div>
+              <div class="particle particle-90"></div>
+              <div class="particle particle-95"></div>
+            </div>
           </div>
         </div>
-
         <div class="region-actions">
           <button class="explore-btn" @click="startExploring">
             {{ dynamicExploreButtonText }}
@@ -22,7 +60,7 @@
           </button>
         </div>
       </div>
-
+      
       <!-- Affichage du dialogue -->
       <div v-else class="npc-content">
         <!-- Mode interaction (plusieurs NPC) -->

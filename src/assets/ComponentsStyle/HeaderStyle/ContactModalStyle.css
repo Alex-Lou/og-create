@@ -22,7 +22,7 @@
   border-radius: 8px;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
   z-index: 20000;
-  overflow: visible; /* Changed from 'hidden' to 'visible' to allow the button to be seen outside */
+  overflow: visible; /* Permet d'afficher la croix en dehors si besoin */
 }
 
 /* Cadre décoratif interne */
@@ -122,11 +122,11 @@
   font-weight: bold;
 }
 
-/* Croix de fermeture repositionnée clairement à l'intérieur du modal */
+/* Croix de fermeture (bouton) adaptée du purchase-modal */
 .close-modal-btn {
   position: absolute;
-  top: 10px;            /* Placé en haut à l'intérieur du modal */
-  right: 10px;          /* Placé à droite à l'intérieur du modal */
+  top: 10px;
+  right: 10px;
   width: 30px;
   height: 30px;
   border-radius: 50%;
@@ -141,18 +141,17 @@
   justify-content: center;
   transition: all 0.3s ease;
   box-shadow: 0 0 8px rgba(138, 92, 173, 0.8);
-  z-index: 20001;       /* Assurez-vous qu'il est visible au-dessus de tout */
+  z-index: 20001;
 }
-
 .close-modal-btn:hover {
   background-color: rgba(138, 92, 173, 0.9);
   transform: scale(1.1);
 }
-
 .close-modal-btn:active {
   transform: scale(0.95);
 }
 
+/* Champs de saisie */
 .contact-input {
   width: 100%;
   padding: 8px;
@@ -166,7 +165,6 @@
   letter-spacing: 2px;
   font-weight: bold;
 }
-
 .contact-textarea {
   min-height: 100px;
   resize: vertical;
@@ -176,24 +174,31 @@
   font-weight: bold;
 }
 
+/* Bouton de soumission (adapté au style purchase-modal) */
 .submit-btn {
   width: 100%;
-  padding: 8px;
-  background: #00acc1;
+  padding: 0.5rem 1rem;
+  background: linear-gradient(90deg, #3B1C59, #8a5cad);
   border: none;
-  border-radius: 4px;
-  color: white;
+  border-radius: 8px;
+  color: #ffffff;
   cursor: pointer;
-  transition: background 0.3s ease;
-  font-size: 0.8rem;
+  transition: all 0.3s ease;
+  font-size: 16px;
   font-family: 'BenjaminFranklin', sans-serif;
   letter-spacing: 2px;
   font-weight: bold;
+  box-shadow: 0 0 8px rgba(138, 92, 173, 0.7);
 }
 .submit-btn:hover {
-  background: #4dd0e1;
+  background: linear-gradient(90deg, #2C144B, #7a4dad);
+  transform: scale(1.05);
+}
+.submit-btn:active {
+  transform: scale(0.95);
 }
 
+/* Messages */
 .error-message {
   color: #ff4136;
   margin-bottom: 10px;
@@ -202,7 +207,6 @@
   letter-spacing: 2px;
   font-weight: bold;
 }
-
 .success-message {
   color: #2ecc71;
   margin-bottom: 10px;

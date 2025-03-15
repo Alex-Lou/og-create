@@ -1,21 +1,43 @@
 <template>
   <div class="modal-overlay" @click.self="closeModal">
     <div class="modal-container">
+      <!-- Cadre décoratif interne -->
+      <div class="customize-modal-frame">
+        <div class="frame-corner corner-tl">
+          <div class="corner-dot"></div>
+          <div class="frame-symbol symbol-tl">✧</div>
+        </div>
+        <div class="frame-corner corner-tr">
+          <div class="corner-dot"></div>
+          <div class="frame-symbol symbol-tr">✧</div>
+        </div>
+        <div class="frame-corner corner-bl">
+          <div class="corner-dot"></div>
+          <div class="frame-symbol symbol-bl">✧</div>
+        </div>
+        <div class="frame-corner corner-br">
+          <div class="corner-dot"></div>
+          <div class="frame-symbol symbol-br">✧</div>
+        </div>
+      </div>
+
       <div class="modal-header">
         <h2>Personnaliser votre profil</h2>
-        <button @click="closeModal" class="close-btn">×</button>
+        <!-- Bouton de fermeture identique à celui du purchase‑modal -->
+        <button @click="closeModal" class="close-modal-btn">&times;</button>
       </div>
+
       <div class="modal-body">
         <div class="preview-section">
           <h3>Aperçu</h3>
           <div class="user-preview">
             <img 
-              :src="require(`@/assets/Svgs/${selectedFrame}`)" 
+              :src="require(`@/assets/Svgs/${selectedFrame || 'defaultFrame.png'}`)" 
               alt="Cadre" 
               class="frame-image-preview"
             />
             <img 
-              :src="require(`@/assets/Svgs/${selectedAvatar}`)" 
+              :src="require(`@/assets/Svgs/${selectedAvatar || 'defaultAvatar.png'}`)" 
               alt="Avatar" 
               class="user-image-preview"
             />
@@ -70,6 +92,7 @@
           {{ purchaseMessage }}
         </div>
       </div>
+
       <div class="modal-footer">
         <button class="save-btn" @click="save" :disabled="isSaving">
           {{ isSaving ? 'Sauvegarde...' : 'Enregistrer' }}
