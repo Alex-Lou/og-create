@@ -1,12 +1,30 @@
 <template>
   <div>
-    <!-- Compteur de pièces avec animation au survol -->
-    <div class="coin-counter" @click="openPurchaseModal">
-      <img src="@/assets/Svgs/coin.png" alt="Coins" class="coin-icon" />
-      <span class="coin-amount">{{ formattedCoins }}</span>
+    <!-- Compteur de pièces avec animation au survol et cadre SVG -->
+    <div class="coin-counter-container" @click="openPurchaseModal">
+      <div class="coin-counter">
+        <!-- Cadre SVG mystique pour le compteur de pièces -->
+        <svg class="coin-counter-frame" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 50" preserveAspectRatio="none">
+          <!-- Fond du compteur avec dégradé -->
+          <rect x="2" y="2" width="196" height="46" rx="8" fill="url(#coinBtnGradient)" />
+          
+          <!-- Bordure extérieure avec lueur -->
+          <rect x="2" y="2" width="196" height="46" rx="8" fill="none" stroke="url(#coinBrdGradient)" stroke-width="1.5" class="glow-border" />
+          
+          <!-- Bordure intérieure avec pulsation -->
+          <rect x="5" y="5" width="190" height="40" rx="6" fill="none" stroke="url(#coinInnerBrdGradient)" stroke-width="0.8" class="inner-border" />
+    
+        </svg>
+        
+        <!-- Contenu du compteur de pièces -->
+        <div class="coin-counter-content">
+          <img src="@/assets/Svgs/coin.png" alt="Coins" class="coin-icon" />
+          <span class="coin-amount">{{ formattedCoins }}</span>
+        </div>
+      </div>
     </div>
 
-    <!-- Modal d'achat des pièces -->
+    <!-- Modal d'achat des pièces (inchangé) -->
     <div v-if="showPurchaseModal" class="purchase-modal">
       <div class="purchase-modal-content">
         <button @click="closePurchaseModal" class="close-modal-btn">&times;</button>
