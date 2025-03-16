@@ -1,726 +1,755 @@
-@font-face {
-  font-family: 'BenjaminFranklin';
-  src: url('@/assets/fonts/BenjaminFranklin.ttf') format('opentype');
-  font-weight: normal;
-  font-style: normal;
-}
-
-/* Variables pour les couleurs principales - facilite la cohérence et les modifications */
-:root {
-  --main-purple: rgba(138, 92, 173, 0.7);
-  --light-purple: rgba(158, 112, 193, 0.6);
-  --text-color: #f0e0ff;
-  --bg-gradient: linear-gradient(135deg, rgba(30, 20, 45, 0.8), rgba(45, 30, 70, 0.8), rgba(35, 25, 55, 0.8));
-  --element-border: rgba(138, 92, 173, 0.3);
-  --element-shadow: 0 0 15px rgba(0, 0, 0, 0.2), 0 0 5px rgba(138, 92, 173, 0.1);
-  --hover-shadow: 0 5px 15px rgba(0, 0, 0, 0.3), 0 0 10px rgba(138, 92, 173, 0.3);
-}
-
-/* Animation pour le texte "Creation Zone" */
-@keyframes lights {
-  0% {
-    color: hsl(230, 40%, 80%);
-    text-shadow:
-      0 0 1em hsla(320, 100%, 50%, 0.2),
-      0 0 0.125em hsla(320, 100%, 60%, 0.3),
-      -1em -0.125em 0.5em hsla(40, 100%, 60%, 0),
-      1em 0.125em 0.5em hsla(200, 100%, 60%, 0);
+/* ===========================
+   CONFIGURATION & VARIABLES
+   =========================== */
+   @font-face {
+    font-family: 'BenjaminFranklin';
+    src: url('@/assets/fonts/BenjaminFranklin.ttf') format('opentype');
+    font-weight: normal;
+    font-style: normal;
   }
-  30% {
-    color: hsl(230, 80%, 90%);
-    text-shadow:
-      0 0 1em hsla(320, 100%, 50%, 0.5),
-      0 0 0.125em hsla(320, 100%, 60%, 0.5),
-      -0.5em -0.125em 0.25em hsla(40, 100%, 60%, 0.2),
-      0.5em 0.125em 0.25em hsla(200, 100%, 60%, 0.4);
+  
+  :root {
+    /* Couleurs principales */
+    --main-purple: rgba(138, 92, 173, 0.7);
+    --light-purple: rgba(158, 112, 193, 0.6);
+    --text-color: #f0e0ff;
+    --bg-dark: #050101;
+    
+    /* Gradients */
+    --bg-gradient: linear-gradient(135deg, rgba(30, 20, 45, 0.8), rgba(45, 30, 70, 0.8), rgba(35, 25, 55, 0.8));
+    
+    /* Effets */
+    --element-border: rgba(138, 92, 173, 0.3);
+    --element-shadow: 0 0 15px rgba(0, 0, 0, 0.2), 0 0 5px rgba(138, 92, 173, 0.1);
+    --hover-shadow: 0 5px 15px rgba(0, 0, 0, 0.3), 0 0 10px rgba(138, 92, 173, 0.3);
+    
+    /* Paramètres des animations */
+    --transition-fast: 0.2s ease;
+    --transition-medium: 0.3s ease;
+    --transition-slow: 0.5s ease;
+    --transition-smooth: 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
+    
+    /* Z-index */
+    --z-background: 1;
+    --z-smoke: 3;
+    --z-stars: 4;
+    --z-shooting-stars: 5;
+    --z-elements: 10;
+    --z-hover-elements: 25;
+    --z-dragging: 50;
+    --z-popup: 100;
+    --z-particles: 100;
+    --z-button: 200;
   }
-  40% {
-    color: hsl(230, 100%, 95%);
-    text-shadow:
-      0 0 1em hsla(320, 100%, 50%, 0.5),
-      0 0 0.125em hsla(320, 100%, 90%, 0.5),
-      -0.25em -0.125em 0.125em hsla(40, 100%, 60%, 0.2),
-      0.25em 0.125em 0.125em hsla(200, 100%, 60%, 0.4);
+  
+  /* ===========================
+     STRUCTURE DE BASE
+     =========================== */
+  #crafting-board {
+    flex: 2;
+    position: relative;
+    background: var(--bg-dark);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
+    overflow: hidden;
+    overflow-y: auto;
+    transition: flex var(--transition-fast);
+    z-index: var(--z-background);
   }
-  70% {
-    color: hsl(230, 80%, 90%);
-    text-shadow:
-      0 0 1em hsla(320, 100%, 50%, 0.5),
-      0 0 0.125em hsla(320, 100%, 60%, 0.5),
-      0.5em -0.125em 0.25em hsla(40, 100%, 60%, 0.2),
-      -0.5em 0.125em 0.25em hsla(200, 100%, 60%, 0.4);
+  
+  #crafting {
+    position: relative;
+    z-index: var(--z-background);
+    padding: 20px;
+    text-align: center;
+    height: 100%;
+    background-image: url('~@/assets/images/craft-bg.png');
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center;
   }
-  100% {
-    color: hsl(230, 40%, 80%);
-    text-shadow:
-      0 0 1em hsla(320, 100%, 50%, 0.2),
-      0 0 0.125em hsla(320, 100%, 60%, 0.3),
-      1em -0.125em 0.5em hsla(40, 100%, 60%, 0),
-      -1em 0.125em 0.5em hsla(200, 100%, 60%, 0);
-  }
-}
-
-.animated-text {
-  font-size: 1.5rem;
-  font-weight: 300;
-  animation: lights 5s 750ms linear infinite;
-  position: relative;
-  transition: all 0.3s ease;
-}
-
-#crafting {
-  position: relative;
-  z-index: 1;
-  padding: 20px;
-  text-align: center;
-  height: 100%;
-  background-image: url('~@/assets/images/craft-bg.png');
-  background-size: cover;
-  background-repeat: no-repeat;
-  background-position: center;
-}
-
-.animated-text:hover {
-  text-shadow: 
-    0 0 5px rgba(15, 15, 35, 0.6),
-    0 0 10px rgba(25, 25, 45, 0.6),
-    0 0 15px rgba(35, 35, 55, 0.6);
-  background: linear-gradient(
-    90deg,
-    transparent,
-    rgba(35, 35, 55, 0.2),
-    rgba(45, 45, 65, 0.2),
-    rgba(35, 35, 55, 0.2),
-    transparent
-  );
-  background-size: 200% 100%;
-  animation: gradientMove 3s ease infinite;
-}
-
-@keyframes gradientMove {
-  0% { background-position: 200% 50%; }
-  100% { background-position: -200% 50%; }
-}
-
-/* Effet de bordure brillante au survol - réduit */
-.animated-text::before,
-.animated-text::after {
-  content: '';
-  position: absolute;
-  left: 0;
-  right: 0;
-  height: 2px;
-  background: linear-gradient(
-    90deg,
-    transparent,
-    rgba(45, 45, 85, 0.8),
-    rgba(65, 65, 105, 0.8),
-    rgba(45, 45, 85, 0.8),
-    transparent
-  );
-  transform: scaleX(0);
-  transition: transform 0.3s ease;
-}
-
-.animated-text::before { top: -3px; }
-.animated-text::after { bottom: -3px; }
-
-.animated-text:hover::before,
-.animated-text:hover::after {
-  transform: scaleX(1);
-}
-
-/* Popup crafting - simplifié */
-#crafted-popup {
-  position: fixed;
-  top: 50%;
-  right: 35%;
-  transform: translate(-50%, -50%);
-  background: rgba(31, 26, 26, 0.047);
-  color: #fff;
-  padding: 5px 15px;
-  border-radius: 15px;
-  text-align: center;
-  font-size: 1.5rem;
-  visibility: hidden;
-  z-index: 100;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.6);
-  animation: none;
-}
-
-@keyframes fadeInOut {
-  0% {
-    opacity: 0;
-    visibility: visible;
-    transform: translate(-50%, -70%);
-  }
-  20%, 80% {
+  
+  #selection {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 15px;
+    margin-top: 20px;
+    width: 100%;
+    height: 100%;
+    background-color: transparent;
     opacity: 1;
-    transform: translate(-50%, -50%);
   }
-  100% {
+  
+  #selected-resources {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    padding: 0;
+    margin: 0;
+    list-style: none;
+    justify-content: center;
+  }
+  
+  #selected-resources li {
+    margin: 5px;
+  }
+  
+  #crafted-result {
+    position: absolute;
+    bottom: 10px;
+    left: 10px;
+    font-size: 0.9rem;
+    font-family: 'BenjaminFranklin', sans-serif;
+    color: #ffffff;
+    z-index: 2;
+    text-align: left;
+  }
+  
+  #crafted-item {
+    color: rgba(177, 136, 212, 1);
+    font-size: 1.1rem;
     opacity: 0;
-    visibility: hidden;
-    transform: translate(-50%, -30%);
-  }
-}
-
-#crafted-popup.show { animation: fadeInOut 2s ease-in-out; }
-#crafted-popup img { max-width: 100px; max-height: 100px; margin-bottom: 10px; }
-
-/* Zone de résultat crafting - simplifié */
-#crafted-result {
-  position: absolute;
-  bottom: 10px;
-  left: 10px;
-  font-size: 0.9rem;
-  font-family: 'BenjaminFranklin', sans-serif;
-  color: #ffffff;
-  z-index: 2;
-  text-align: left;
-}
-
-#crafted-item {
-  color: rgba(177, 136, 212, 1);
-  font-size: 1.1rem;
-  opacity: 0;
-  font-family: 'BenjaminFranklin', sans-serif;
-  animation: fadeInSlide 0.8s ease-out forwards;
-  text-shadow: 0 0 10px rgba(138, 92, 173, 0.7);
-  letter-spacing: 2px;
-}
-
-@keyframes fadeInSlide {
-  from {
-    opacity: 0;
-    transform: translateY(15px);
-    text-shadow: 0 0 15px rgba(138, 92, 173, 0.9);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
+    font-family: 'BenjaminFranklin', sans-serif;
+    animation: fadeInSlide 0.8s ease-out forwards;
     text-shadow: 0 0 10px rgba(138, 92, 173, 0.7);
+    letter-spacing: 2px;
   }
-}
-
-/* Zone de sélection */
-#selection {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 15px;
-  margin-top: 20px;
-  width: 100%;
-  height: 100%;
-  background-color: transparent;
-  opacity: 1;
-}
-
-/* Styles communs pour les éléments crafted et selected */
-.crafted-element,
-#selected-resources li {
-  position: relative;
-  background: var(--bg-gradient);
-  color: var(--text-color);
-  padding: 8px 15px;
-  font-family: 'BenjaminFranklin', sans-serif;
-  letter-spacing: 1px;
-  border-radius: 12px;
-  font-size: 0.9rem;
-  transition: all 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
-  cursor: pointer;
-  border: 1px solid var(--element-border);
-  box-shadow: var(--element-shadow);
-  font-weight: 600;
-  text-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
-  overflow: visible;
-  animation: elementPulse 7s infinite alternate;
-}
-
-@keyframes elementPulse {
-  0% {
-    border-color: var(--element-border);
+  
+  /* ===========================
+     ÉLÉMENTS DE CRAFTING
+     =========================== */
+  .crafted-element,
+  #selected-resources li {
+    position: relative;
+    background: var(--bg-gradient);
+    color: var(--text-color);
+    padding: 8px 15px;
+    font-family: 'BenjaminFranklin', sans-serif;
+    letter-spacing: 1px;
+    border-radius: 12px;
+    font-size: 0.9rem;
+    transition: all var(--transition-smooth);
+    cursor: pointer;
+    border: 1px solid var(--element-border);
     box-shadow: var(--element-shadow);
+    font-weight: 600;
+    text-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
+    overflow: visible;
+    animation: elementPulse 7s infinite alternate;
+    will-change: transform;
+    user-select: none;
   }
-  100% {
+  
+  .crafted-element {
+    position: absolute;
+    list-style-type: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: var(--z-elements);
+    animation: elementFloat 10s ease-in-out infinite, elementPulse 7s infinite alternate;
+  }
+  
+  .crafted-element p,
+  #selected-resources li {
+    margin: 0;
+    position: relative;
+    z-index: 2;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+  }
+  
+  .crafted-element p {
+    margin: 0;
+    position: relative;
+    z-index: 2;
+  }
+  
+  /* Éléments ornementaux - coins */
+  .element-corner {
+    position: absolute;
+    width: 8px;
+    height: 8px;
+    pointer-events: none;
+    z-index: 3;
+    transition: all var(--transition-medium);
+  }
+  
+  .element-corner-tl {
+    top: 0;
+    left: 0;
+    border-top: 1px solid var(--main-purple);
+    border-left: 1px solid var(--main-purple);
+    border-top-left-radius: 10px;
+    animation: cornerDrawTL 0.5s forwards;
+  }
+  
+  .element-corner-tr {
+    top: 0;
+    right: 0;
+    border-top: 1px solid var(--main-purple);
+    border-right: 1px solid var(--main-purple);
+    border-top-right-radius: 10px;
+    animation: cornerDrawTR 0.5s forwards;
+  }
+  
+  .element-corner-bl {
+    bottom: 0;
+    left: 0;
+    border-bottom: 1px solid var(--main-purple);
+    border-left: 1px solid var(--main-purple);
+    border-bottom-left-radius: 10px;
+    animation: cornerDrawBL 0.5s forwards;
+  }
+  
+  .element-corner-br {
+    bottom: 0;
+    right: 0;
+    border-bottom: 1px solid var(--main-purple);
+    border-right: 1px solid var(--main-purple);
+    border-bottom-right-radius: 10px;
+    animation: cornerDrawBR 0.5s forwards;
+  }
+  
+  /* Étoile décorative */
+  .element-star {
+    font-size: 0.8rem;
+    opacity: 0.8;
+    margin-left: 4px;
+    display: inline-block;
+  }
+  
+  /* ===========================
+     STYLES D'INTERACTION
+     =========================== */
+  
+  /* Effets au survol */
+  .crafted-element:hover,
+  #selected-resources li:hover {
+    box-shadow: var(--hover-shadow);
     border-color: var(--light-purple);
-    box-shadow: 0 0 18px rgba(0, 0, 0, 0.25), 0 0 8px var(--light-purple);
+    z-index: var(--z-hover-elements);
   }
-}
-
-.crafted-element {
-  position: absolute;
-  list-style-type: none;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 10;
-  animation: elementFloat 10s ease-in-out infinite;
-}
-
-@keyframes elementFloat {
-  0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(-3px); }
-}
-
-.crafted-element p,
-#selected-resources li {
-  margin: 0;
-  position: relative;
-  z-index: 2;
-  display: flex;
-  align-items: center;
-  gap: 5px;
-}
-
-.crafted-element p {
-  margin: 0;
-  position: relative;
-  z-index: 2;
-}
-
-/* Éléments ornementaux - optimisés */
-.element-corner {
-  position: absolute;
-  width: 8px;
-  height: 8px;
-  pointer-events: none;
-  z-index: 3;
-  transition: all 0.3s ease;
-}
-
-.element-corner-tl {
-  top: 0;
-  left: 0;
-  border-top: 1px solid var(--main-purple);
-  border-left: 1px solid var(--main-purple);
-  border-top-left-radius: 10px;
-  animation: cornerDrawTL 0.5s forwards;
-}
-
-.element-corner-tr {
-  top: 0;
-  right: 0;
-  border-top: 1px solid var(--main-purple);
-  border-right: 1px solid var(--main-purple);
-  border-top-right-radius: 10px;
-  animation: cornerDrawTR 0.5s forwards;
-}
-
-.element-corner-bl {
-  bottom: 0;
-  left: 0;
-  border-bottom: 1px solid var(--main-purple);
-  border-left: 1px solid var(--main-purple);
-  border-bottom-left-radius: 10px;
-  animation: cornerDrawBL 0.5s forwards;
-}
-
-.element-corner-br {
-  bottom: 0;
-  right: 0;
-  border-bottom: 1px solid var(--main-purple);
-  border-right: 1px solid var(--main-purple);
-  border-bottom-right-radius: 10px;
-  animation: cornerDrawBR 0.5s forwards;
-}
-
-
-
-/* Liste de ressources */
-#selected-resources {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 10px;
-  padding: 0;
-  margin: 0;
-  list-style: none;
-  justify-content: center;
-}
-
-#selected-resources li {
-  margin: 5px;
-}
-
-/* Effets au survol */
-.crafted-element:hover,
-#selected-resources li:hover {
-  box-shadow: var(--hover-shadow);
-  border-color: var(--light-purple);
-  z-index: 25;
-}
-
-/* Effet de lueur interne */
-.crafted-element::before,
-#selected-resources li::before {
-  content: '';
-  position: absolute;
-  top: -2px;
-  left: -2px;
-  right: -2px;
-  bottom: -2px;
-  background: transparent;
-  border-radius: 14px;
-  border: 1px solid transparent;
-  opacity: 0;
-  transition: opacity 0.3s ease;
-  pointer-events: none;
-}
-
-.crafted-element:hover::before,
-#selected-resources li:hover::before {
-  opacity: 1;
-  border-image: linear-gradient(45deg, var(--main-purple), var(--light-purple), rgba(138, 92, 173, 0)) 1;
-  animation: borderRotate 3s linear infinite;
-}
-
-@keyframes borderRotate {
-  from { border-image: linear-gradient(0deg, var(--main-purple), var(--light-purple), rgba(138, 92, 173, 0)) 1; }
-  to { border-image: linear-gradient(360deg, var(--main-purple), var(--light-purple), rgba(138, 92, 173, 0)) 1; }
-}
-
-.crafted-element p:hover,
-#selected-resources li:hover {
-  color: #ffffff;
-  text-shadow: 0 0 8px var(--light-purple);
-  letter-spacing: 1.2px;
-  transition: all 0.3s ease;
-}
-
-.crafted-element:hover img,
-#selected-resources li:hover img {
-  transform: scale(1.15);
-  filter: drop-shadow(0 0 3px var(--light-purple));
-  transition: all 0.3s ease;
-}
-
-.crafted-element:active,
-#selected-resources li:active {
-  transform: scale(0.97);
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3), 0 0 5px rgba(138, 92, 173, 0.2);
-  transition: all 0.1s ease;
-}
-
-/* Board et contexte */
-#crafting-board {
-  flex: 2;
-  position: relative;
-  background: #050101;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
-  overflow: hidden;
-  overflow-y: auto;
-  transition: flex 0.2s;
-  z-index: 1;
-}
-
-/* Style pour les ressources pendant le drag & drop */
-.draggable-resource {
-  color: #e5deff !important;
-  opacity: 1 !important;
-  cursor: grab;
-}
-
-.draggable-resource * {
-  color: #e5deff !important;
-  opacity: 1 !important;
-}
-
-.draggable-resource:active {
-  cursor: grabbing;
-  transform: scale(1.05);
-  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.6), 0 0 15px rgba(138, 92, 173, 0.5);
-}
-
-/* État éléments compatibles */
-.compatible-element {
-  animation: compatibilityPulse 1s infinite ease-in-out !important;
-  border-color: rgba(118, 255, 130, 0.6) !important;
-  box-shadow: 0 0 15px rgba(0, 0, 0, 0.4), 0 0 12px rgba(118, 255, 130, 0.4) !important;
-}
-
-@keyframes compatibilityPulse {
-  0% {
-    border-color: rgba(138, 92, 173, 0.5);
-    box-shadow: 0 0 15px rgba(0, 0, 0, 0.3), 0 0 8px rgba(138, 92, 173, 0.3);
+  
+  .crafted-element:hover::before,
+  #selected-resources li:hover::before {
+    opacity: 1;
+    border-image: linear-gradient(45deg, var(--main-purple), var(--light-purple), rgba(138, 92, 173, 0)) 1;
+    animation: borderRotate 3s linear infinite;
   }
-  50% {
-    border-color: rgba(158, 112, 193, 0.8);
-    box-shadow: 0 0 20px rgba(0, 0, 0, 0.3), 0 0 12px rgba(158, 112, 193, 0.6);
+  
+  .crafted-element p:hover,
+  #selected-resources li:hover {
+    color: #ffffff;
+    text-shadow: 0 0 8px var(--light-purple);
+    letter-spacing: 1.2px;
+    transition: all var(--transition-medium);
   }
-  100% {
-    border-color: rgba(138, 92, 173, 0.5);
-    box-shadow: 0 0 15px rgba(0, 0, 0, 0.3), 0 0 8px rgba(138, 92, 173, 0.3);
+  
+  .crafted-element:hover img,
+  #selected-resources li:hover img {
+    transform: scale(1.15);
+    filter: drop-shadow(0 0 3px var(--light-purple));
+    transition: all var(--transition-medium);
   }
-}
-
-/* Effet de secousse pour les éléments incompatibles */
-.shake-animation {
-  animation: shake 0.5s cubic-bezier(.36,.07,.19,.97) both !important;
-}
-
-@keyframes shake {
-  0%, 100% { transform: translateX(0); }
-  20% { transform: translateX(-8px); }
-  40% { transform: translateX(8px); }
-  60% { transform: translateX(-5px); }
-  80% { transform: translateX(5px); }
-}
-
-/* Élément "no-drop" */
-.crafted-element.no-drop,
-.draggable-resource.no-drop {
-  cursor: not-allowed !important;
-  opacity: 0.6;
-  border-color: rgba(255, 100, 100, 0.4);
-  box-shadow: 0 0 15px rgba(255, 0, 0, 0.2);
-}
-
-/* Bouton reset */
-.reset-crafting-button {
-  position: fixed;
-  bottom: 50px;
-  left: 840px;
-  z-index: 200;
-  background: transparent;
-  border: 2px solid #21A1A4;
-  color: #f4f4f4;
-  font-weight: bold;
-  padding: 10px 20px;
-  border-radius: 8px;
-  font-size: 1rem;
-  cursor: pointer;
-  text-shadow: none;
-  transition: all 0.3s ease, box-shadow 0.3s ease, transform 0.3s ease;
-  box-sizing: border-box;
-  overflow: hidden;
-  position: relative;
-}
-
-.reset-crafting-button::before {
-  content: '';
-  position: absolute;
-  top: 100%;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: #dd7e2a;
-  z-index: -1;
-  transition: top 0.3s ease;
-}
-
-.reset-crafting-button:hover::before { top: 0; }
-
-.reset-crafting-button:hover {
-  box-shadow: 0 0 10px rgba(181, 201, 82, 0.8),
-              0 5px 15px rgba(181, 201, 82, 0.5);
-  transform: translateY(-0.25em);
-  color: #ffffff;
-}
-
-.reset-crafting-button:active {
-  transform: scale(0.95);
-  background: #008ba3;
-  box-shadow: 0 4px 10px rgba(0, 139, 163, 0.5);
-}
-
-/* Particules et effets de création */
-.element-particles {
-  position: absolute;
-  width: 3px;
-  height: 3px;
-  background: var(--main-purple);
-  border-radius: 50%;
-  pointer-events: none;
-  z-index: 100;
-  opacity: 0;
-}
-
-/* Animation de création d'éléments */
-@keyframes newElementAppear {
-  0% {
+  
+  /* Effets au clic */
+  .crafted-element:active,
+  #selected-resources li:active {
+    transform: scale(0.97);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3), 0 0 5px rgba(138, 92, 173, 0.2);
+    transition: all 0.1s ease;
+  }
+  
+  /* Effet de lueur interne */
+  .crafted-element::before,
+  #selected-resources li::before {
+    content: '';
+    position: absolute;
+    top: -2px;
+    left: -2px;
+    right: -2px;
+    bottom: -2px;
+    background: transparent;
+    border-radius: 14px;
+    border: 1px solid transparent;
     opacity: 0;
-    transform: scale(0.5) translateY(20px);
-    filter: blur(5px);
+    transition: opacity var(--transition-medium);
+    pointer-events: none;
   }
-  70% {
-    opacity: 1;
-    transform: scale(1.05) translateY(-5px);
-    filter: blur(0);
+  
+  /* ===========================
+     STYLES DE DRAG & DROP
+     =========================== */
+  .draggable-resource {
+    color: #e5deff !important;
+    opacity: 1 !important;
+    cursor: grab;
   }
-  100% {
-    transform: scale(1) translateY(0);
-    opacity: 1;
+  
+  .draggable-resource * {
+    color: #e5deff !important;
+    opacity: 1 !important;
   }
-}
-
-.crafted-element-new {
-  animation: newElementAppear 0.6s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
-}
-
-/* Éléments décoratifs - fumée */
-.smoke-container-crafting {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  pointer-events: none;
-  overflow: hidden;
-  z-index: 3;
-}
-
-.smoke-crafting {
-  position: absolute;
-  filter: blur(30px);
-}
-
-.smoke-crafting.smoke1-crafting {
-  bottom: 0;
-  width: 400px;
-  height: 120px;
-  background: radial-gradient(
-    circle at 40% 40%, 
-    rgba(170, 180, 190, 0.116) 10%, 
-    rgba(200, 200, 200, 0.038) 30%, 
-    rgba(200, 200, 200, 0.033) 60%, 
-    rgba(170, 180, 190, 0.059) 90%
-  );
-  opacity: 0.9;
-  left: -500px;
-  animation: smokeBottomAnimation 50s linear infinite;
-  animation-delay: 13s;
-}
-
-.smoke-crafting.smoke2-crafting {
-  bottom: 0;
-  width: 400px;
-  height: 170px;
-  background: radial-gradient(
-    circle at 40% 40%, 
-    rgba(124, 118, 118, 0.038) 10%, 
-    rgba(200, 200, 200, 0.053) 30%, 
-    rgba(200, 200, 200, 0.059) 60%, 
-    rgba(200, 200, 200, 0.052) 90%
-  );
-  opacity: 0.9;
-  left: -800px;
-  animation: smokeBottomAnimation 50s linear infinite;
-  animation-delay: 43s;
-}
-
-.smoke-crafting.smoke-top-crafting {
-  top: 0;
-  left: -300px;
-  width: 200px;
-  height: 100px;
-  background: radial-gradient(
-    circle at 50% 50%, 
-    rgba(90, 90, 90, 0.062) 15%, 
-    rgba(121, 117, 117, 0.055) 40%, 
-    rgba(200, 200, 200, 0.064) 70%, 
-    rgba(108, 108, 108, 0.041) 90%
-  );
-  opacity: 0.9;
-  filter: blur(20px);
-  animation: smokeTopAnimation 80s linear infinite;
-  animation-delay: 20s;
-}
-
-@keyframes smokeBottomAnimation {
-  0% { transform: translateX(0); }
-  100% { transform: translateX(120vw); }
-}
-
-@keyframes smokeTopAnimation {
-  0% { transform: translateX(0); }
-  100% { transform: translateX(120vw); }
-}
-
-/* Étoiles */
-.star-field-crafting {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  pointer-events: none;
-  z-index: 4;
-}
-
-.star-field-crafting .star {
-  position: absolute;
-  width: .7px;
-  height: .7px;
-  border-radius: 50%;
-  opacity: 0;
-  animation: twinkle 3s infinite ease-in-out;
-  box-shadow: 0 0 4px 1px currentColor;
-}
-
-/* Définition des positions des étoiles individuelles */
-.star-field-crafting .star:nth-child(1) { top: 10%; left: 20%; animation-delay: 0s; background: #0a080a; }
-.star-field-crafting .star:nth-child(2) { top: 30%; left: 50%; animation-delay: 0.3s; background: #2E2C43; }
-.star-field-crafting .star:nth-child(3) { top: 70%; left: 30%; animation-delay: 0.6s; background: #0a080a; }
-.star-field-crafting .star:nth-child(4) { top: 20%; left: 80%; animation-delay: 0.9s; background: #0a080a; }
-.star-field-crafting .star:nth-child(5) { top: 80%; left: 60%; animation-delay: 1.2s; background: #0a080a; }
-.star-field-crafting .star:nth-child(6) { top: 15%; left: 40%; animation-delay: 0.1s; background: #0a080a; }
-.star-field-crafting .star:nth-child(7) { top: 50%; left: 10%; animation-delay: 0.4s; background: #0a080a; }
-.star-field-crafting .star:nth-child(8) { top: 60%; left: 70%; animation-delay: 0.7s; background: #0a080a; }
-.star-field-crafting .star:nth-child(9) { top: 40%; left: 85%; animation-delay: 1.0s; background: #0a080a; }
-.star-field-crafting .star:nth-child(10) { top: 90%; left: 15%; animation-delay: 1.3s; background: #110E12; }
-.star-field-crafting .star:nth-child(11) { top: 5%; left: 60%; animation-delay: 0.2s; background: #110E12; }
-.star-field-crafting .star:nth-child(12) { top: 35%; left: 30%; animation-delay: 0.5s; background: #110E12; }
-.star-field-crafting .star:nth-child(13) { top: 75%; left: 80%; animation-delay: 0.8s; background: #110E12; }
-.star-field-crafting .star:nth-child(14) { top: 25%; left: 10%; animation-delay: 1.1s; background: #2E2C43; }
-.star-field-crafting .star:nth-child(15) { top: 55%; left: 90%; animation-delay: 1.4s; background: #110E12; }
-
-@keyframes twinkle {
-  0% { opacity: 0.3; transform: scale(.5); }
-  50% { opacity: 1; transform: scale(.7); }
-  100% { opacity: 0.3; transform: scale(.5); }
-}
-
-/* Étoiles filantes */
-.shooting-star {
-  position: absolute;
-  width: 3px;
-  height: 3px;
-  background: #fff;
-  border-radius: 50%;
-  box-shadow: 0 0 10px 2px #fff;
-  z-index: 5;
-  animation: shootingStar 120s infinite ease-in-out;
-}
-
-@keyframes shootingStar {
-  0% { opacity: 0; }
-  1% { opacity: 1; top: 10%; left: 100%; }
-  2% { top: 5%; left: 75%; opacity: 1; }
-  3% { top: 0%; left: 50%; opacity: 1; transform: rotate(30deg); }
-  3.5% { top: 10%; left: 0%; opacity: 1; }
-  3.6%, 100% { opacity: 0; }
-}
-
-.shooting-star-red {
-  position: absolute;
-  width: 3px;
-  height: 3px;
-  background: #060506;
-  border-radius: 50%;
-  box-shadow: 0 0 10px 2px #ff5252;
-  z-index: 5;
-  animation: shootingStarRed 120s infinite ease-in-out;
-}
-
-@keyframes shootingStarRed {
-  0%, 25% { opacity: 0; }
-  25.1% { opacity: 1; top: 70%; left: 100%; }
-  26% { top: 72%; left: 60%; transform: rotate(10deg); }
-  27.5% { top: 80%; left: 0%; opacity: 1; }
-  27.6%, 100% { opacity: 0; }
-}
-
-/* Animation pour l'apparition des éléments craftés */
+  
+  .draggable-resource:active {
+    cursor: grabbing;
+    transform: scale(1.05);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.6), 0 0 15px rgba(138, 92, 173, 0.5);
+  }
+  
+  .dragging {
+    opacity: 0.7;
+    transform: scale(1.05);
+    z-index: 1000 !important;
+    cursor: grabbing !important;
+  }
+  
+  .crafted-element.dragging,
+  #selected-resources li.dragging {
+    animation: softWaveMotion 2s infinite ease-in-out;
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.3), 0 0 12px rgba(138, 92, 173, 0.4);
+    z-index: var(--z-dragging);
+    cursor: grabbing;
+  }
+  
+  .drop-animation {
+    animation: drop-effect 0.3s ease forwards;
+  }
+  
+  /* Élément incompatible */
+  .crafted-element.no-drop,
+  .draggable-resource.no-drop {
+    cursor: not-allowed !important;
+    opacity: 0.6;
+    border-color: rgba(255, 100, 100, 0.4);
+    box-shadow: 0 0 15px rgba(255, 0, 0, 0.2);
+  }
+  
+  /* Élément compatible */
+  .compatible-element {
+    animation: compatibilityPulse 1s infinite ease-in-out !important;
+    border-color: rgba(118, 255, 130, 0.6) !important;
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.4), 0 0 12px rgba(118, 255, 130, 0.4) !important;
+  }
+  
+  /* Animation de secousse */
+  .shake-animation {
+    animation: shake 0.5s cubic-bezier(.36,.07,.19,.97) both !important;
+  }
+  
+  /* ===========================
+     ÉLÉMENTS DÉCORATIFS (FOND)
+     =========================== */
+  
+  /* Container de fumée */
+  .smoke-container-crafting {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    overflow: hidden;
+    z-index: var(--z-smoke);
+  }
+  
+  .smoke-crafting {
+    position: absolute;
+    filter: blur(30px);
+  }
+  
+  .smoke-crafting.smoke1-crafting {
+    bottom: 0;
+    width: 400px;
+    height: 120px;
+    background: radial-gradient(
+      circle at 40% 40%, 
+      rgba(170, 180, 190, 0.116) 10%, 
+      rgba(200, 200, 200, 0.038) 30%, 
+      rgba(200, 200, 200, 0.033) 60%, 
+      rgba(170, 180, 190, 0.059) 90%
+    );
+    opacity: 0.9;
+    left: -500px;
+    animation: smokeBottomAnimation 50s linear infinite;
+    animation-delay: 13s;
+  }
+  
+  .smoke-crafting.smoke2-crafting {
+    bottom: 0;
+    width: 400px;
+    height: 170px;
+    background: radial-gradient(
+      circle at 40% 40%, 
+      rgba(124, 118, 118, 0.038) 10%, 
+      rgba(200, 200, 200, 0.053) 30%, 
+      rgba(200, 200, 200, 0.059) 60%, 
+      rgba(200, 200, 200, 0.052) 90%
+    );
+    opacity: 0.9;
+    left: -800px;
+    animation: smokeBottomAnimation 50s linear infinite;
+    animation-delay: 43s;
+  }
+  
+  .smoke-crafting.smoke-top-crafting {
+    top: 0;
+    left: -300px;
+    width: 200px;
+    height: 100px;
+    background: radial-gradient(
+      circle at 50% 50%, 
+      rgba(90, 90, 90, 0.062) 15%, 
+      rgba(121, 117, 117, 0.055) 40%, 
+      rgba(200, 200, 200, 0.064) 70%, 
+      rgba(108, 108, 108, 0.041) 90%
+    );
+    opacity: 0.9;
+    filter: blur(20px);
+    animation: smokeTopAnimation 80s linear infinite;
+    animation-delay: 20s;
+  }
+  
+  /* Champ d'étoiles */
+  .star-field-crafting {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: var(--z-stars);
+  }
+  
+  .star-field-crafting .star {
+    position: absolute;
+    width: .7px;
+    height: .7px;
+    border-radius: 50%;
+    opacity: 0;
+    animation: twinkle 3s infinite ease-in-out;
+    box-shadow: 0 0 4px 1px currentColor;
+  }
+  
+  /* Positions des étoiles */
+  .star-field-crafting .star:nth-child(1) { top: 10%; left: 20%; animation-delay: 0s; background: #0a080a; }
+  .star-field-crafting .star:nth-child(2) { top: 30%; left: 50%; animation-delay: 0.3s; background: #2E2C43; }
+  .star-field-crafting .star:nth-child(3) { top: 70%; left: 30%; animation-delay: 0.6s; background: #0a080a; }
+  .star-field-crafting .star:nth-child(4) { top: 20%; left: 80%; animation-delay: 0.9s; background: #0a080a; }
+  .star-field-crafting .star:nth-child(5) { top: 80%; left: 60%; animation-delay: 1.2s; background: #0a080a; }
+  .star-field-crafting .star:nth-child(6) { top: 15%; left: 40%; animation-delay: 0.1s; background: #0a080a; }
+  .star-field-crafting .star:nth-child(7) { top: 50%; left: 10%; animation-delay: 0.4s; background: #0a080a; }
+  .star-field-crafting .star:nth-child(8) { top: 60%; left: 70%; animation-delay: 0.7s; background: #0a080a; }
+  .star-field-crafting .star:nth-child(9) { top: 40%; left: 85%; animation-delay: 1.0s; background: #0a080a; }
+  .star-field-crafting .star:nth-child(10) { top: 90%; left: 15%; animation-delay: 1.3s; background: #110E12; }
+  .star-field-crafting .star:nth-child(11) { top: 5%; left: 60%; animation-delay: 0.2s; background: #110E12; }
+  .star-field-crafting .star:nth-child(12) { top: 35%; left: 30%; animation-delay: 0.5s; background: #110E12; }
+  .star-field-crafting .star:nth-child(13) { top: 75%; left: 80%; animation-delay: 0.8s; background: #110E12; }
+  .star-field-crafting .star:nth-child(14) { top: 25%; left: 10%; animation-delay: 1.1s; background: #2E2C43; }
+  .star-field-crafting .star:nth-child(15) { top: 55%; left: 90%; animation-delay: 1.4s; background: #110E12; }
+  
+  /* Étoiles filantes */
+  .shooting-star {
+    position: absolute;
+    width: 3px;
+    height: 3px;
+    background: #fff;
+    border-radius: 50%;
+    box-shadow: 0 0 10px 2px #fff;
+    z-index: var(--z-shooting-stars);
+    animation: shootingStar 120s infinite ease-in-out;
+  }
+  
+  .shooting-star-red {
+    position: absolute;
+    width: 3px;
+    height: 3px;
+    background: #060506;
+    border-radius: 50%;
+    box-shadow: 0 0 10px 2px #ff5252;
+    z-index: var(--z-shooting-stars);
+    animation: shootingStarRed 120s infinite ease-in-out;
+  }
+  
+  /* Particules */
+  .element-particles {
+    position: absolute;
+    width: 3px;
+    height: 3px;
+    background: var(--main-purple);
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: var(--z-particles);
+    opacity: 0;
+  }
+  
+  /* ===========================
+     COMPOSANTS SPÉCIFIQUES
+     =========================== */
+  
+  /* Texte animé */
+  .animated-text {
+    font-size: 1.5rem;
+    font-weight: 300;
+    animation: lights 5s 750ms linear infinite;
+    position: relative;
+    transition: all var(--transition-medium);
+  }
+  
+  .animated-text:hover {
+    text-shadow: 
+      0 0 5px rgba(15, 15, 35, 0.6),
+      0 0 10px rgba(25, 25, 45, 0.6),
+      0 0 15px rgba(35, 35, 55, 0.6);
+    background: linear-gradient(
+      90deg,
+      transparent,
+      rgba(35, 35, 55, 0.2),
+      rgba(45, 45, 65, 0.2),
+      rgba(35, 35, 55, 0.2),
+      transparent
+    );
+    background-size: 200% 100%;
+    animation: gradientMove 3s ease infinite;
+  }
+  
+  .animated-text::before,
+  .animated-text::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background: linear-gradient(
+      90deg,
+      transparent,
+      rgba(45, 45, 85, 0.8),
+      rgba(65, 65, 105, 0.8),
+      rgba(45, 45, 85, 0.8),
+      transparent
+    );
+    transform: scaleX(0);
+    transition: transform var(--transition-medium);
+  }
+  
+  .animated-text::before { top: -3px; }
+  .animated-text::after { bottom: -3px; }
+  
+  .animated-text:hover::before,
+  .animated-text:hover::after {
+    transform: scaleX(1);
+  }
+  
+  /* Popup de crafting */
+  #crafted-popup {
+    position: fixed;
+    top: 50%;
+    right: 35%;
+    transform: translate(-50%, -50%);
+    background: rgba(31, 26, 26, 0.047);
+    color: #fff;
+    padding: 5px 15px;
+    border-radius: 15px;
+    text-align: center;
+    font-size: 1.5rem;
+    visibility: hidden;
+    z-index: var(--z-popup);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.6);
+    animation: none;
+  }
+  
+  #crafted-popup.show { 
+    animation: fadeInOut 2s ease-in-out; 
+  }
+  
+  #crafted-popup img { 
+    max-width: 100px; 
+    max-height: 100px; 
+    margin-bottom: 10px; 
+  }
+  
+  /* Bouton reset */
+  .reset-crafting-button {
+    position: fixed;
+    bottom: 50px;
+    left: 840px;
+    z-index: var(--z-button);
+    background: transparent;
+    border: 2px solid #21A1A4;
+    color: #f4f4f4;
+    font-weight: bold;
+    padding: 10px 20px;
+    border-radius: 8px;
+    font-size: 1rem;
+    cursor: pointer;
+    text-shadow: none;
+    transition: all var(--transition-medium), 
+                box-shadow var(--transition-medium), 
+                transform var(--transition-medium);
+    box-sizing: border-box;
+    overflow: hidden;
+    position: relative;
+  }
+  
+  .reset-crafting-button::before {
+    content: '';
+    position: absolute;
+    top: 100%;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: #dd7e2a;
+    z-index: -1;
+    transition: top var(--transition-medium);
+  }
+  
+  .reset-crafting-button:hover::before { 
+    top: 0; 
+  }
+  
+  .reset-crafting-button:hover {
+    box-shadow: 0 0 10px rgba(181, 201, 82, 0.8),
+                0 5px 15px rgba(181, 201, 82, 0.5);
+    transform: translateY(-0.25em);
+    color: #ffffff;
+  }
+  
+  .reset-crafting-button:active {
+    transform: scale(0.95);
+    background: #008ba3;
+    box-shadow: 0 4px 10px rgba(0, 139, 163, 0.5);
+  }
+  
+  /* ===========================
+     DÉFINITIONS DES ANIMATIONS
+     =========================== */
+  
+  /* Animation du texte "Creation Zone" */
+  @keyframes lights {
+    0% {
+      color: hsl(230, 40%, 80%);
+      text-shadow:
+        0 0 1em hsla(320, 100%, 50%, 0.2),
+        0 0 0.125em hsla(320, 100%, 60%, 0.3),
+        -1em -0.125em 0.5em hsla(40, 100%, 60%, 0),
+        1em 0.125em 0.5em hsla(200, 100%, 60%, 0);
+    }
+    30% {
+      color: hsl(230, 80%, 90%);
+      text-shadow:
+        0 0 1em hsla(320, 100%, 50%, 0.5),
+        0 0 0.125em hsla(320, 100%, 60%, 0.5),
+        -0.5em -0.125em 0.25em hsla(40, 100%, 60%, 0.2),
+        0.5em 0.125em 0.25em hsla(200, 100%, 60%, 0.4);
+    }
+    40% {
+      color: hsl(230, 100%, 95%);
+      text-shadow:
+        0 0 1em hsla(320, 100%, 50%, 0.5),
+        0 0 0.125em hsla(320, 100%, 90%, 0.5),
+        -0.25em -0.125em 0.125em hsla(40, 100%, 60%, 0.2),
+        0.25em 0.125em 0.125em hsla(200, 100%, 60%, 0.4);
+    }
+    70% {
+      color: hsl(230, 80%, 90%);
+      text-shadow:
+        0 0 1em hsla(320, 100%, 50%, 0.5),
+        0 0 0.125em hsla(320, 100%, 60%, 0.5),
+        0.5em -0.125em 0.25em hsla(40, 100%, 60%, 0.2),
+        -0.5em 0.125em 0.25em hsla(200, 100%, 60%, 0.4);
+    }
+    100% {
+      color: hsl(230, 40%, 80%);
+      text-shadow:
+        0 0 1em hsla(320, 100%, 50%, 0.2),
+        0 0 0.125em hsla(320, 100%, 60%, 0.3),
+        1em -0.125em 0.5em hsla(40, 100%, 60%, 0),
+        -1em 0.125em 0.5em hsla(200, 100%, 60%, 0);
+    }
+  }
+  
+  /* Animation du gradient de texte */
+  @keyframes gradientMove {
+    0% { background-position: 200% 50%; }
+    100% { background-position: -200% 50%; }
+  }
+  
+  /* Animation de surgissement des éléments créés */
+  @keyframes fadeInSlide {
+    from {
+      opacity: 0;
+      transform: translateY(15px);
+      text-shadow: 0 0 15px rgba(138, 92, 173, 0.9);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+      text-shadow: 0 0 10px rgba(138, 92, 173, 0.7);
+    }
+  }
+  
+  /* Animation des bordures */
+  @keyframes borderRotate {
+    from { border-image: linear-gradient(0deg, var(--main-purple), var(--light-purple), rgba(138, 92, 173, 0)) 1; }
+    to { border-image: linear-gradient(360deg, var(--main-purple), var(--light-purple), rgba(138, 92, 173, 0)) 1; }
+  }
+  
+  /* Animation des effets pour les éléments */
+  @keyframes elementPulse {
+    0% {
+      border-color: var(--element-border);
+      box-shadow: var(--element-shadow);
+    }
+    100% {
+      border-color: var(--light-purple);
+      box-shadow: 0 0 18px rgba(0, 0, 0, 0.25), 0 0 8px var(--light-purple);
+    }
+  }
+  
+  @keyframes elementFloat {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-3px); }
+  }
+  
+  /* Animation des fumées */
+  @keyframes smokeBottomAnimation {
+    0% { transform: translateX(0); }
+    100% { transform: translateX(120vw); }
+  }
+  
+  @keyframes smokeTopAnimation {
+    0% { transform: translateX(0); }
+    100% { transform: translateX(120vw); }
+  }
+  
+  /* Animation des étoiles */
+  @keyframes twinkle {
+    0% { opacity: 0.3; transform: scale(.5); }
+    50% { opacity: 1; transform: scale(.7); }
+    100% { opacity: 0.3; transform: scale(.5); }
+  }
+  
+  /* Animation des étoiles filantes */
+  @keyframes shootingStar {
+    0% { opacity: 0; }
+    1% { opacity: 1; top: 10%; left: 100%; }
+    2% { top: 5%; left: 75%; opacity: 1; }
+    3% { top: 0%; left: 50%; opacity: 1; transform: rotate(30deg); }
+    3.5% { top: 10%; left: 0%; opacity: 1; }
+    3.6%, 100% { opacity: 0; }
+  }
+  
+  @keyframes shootingStarRed {
+    0%, 25% { opacity: 0; }
+    25.1% { opacity: 1; top: 70%; left: 100%; }
+    26% { top: 72%; left: 60%; transform: rotate(10deg); }
+    27.5% { top: 80%; left: 0%; opacity: 1; }
+    27.6%, 100% { opacity: 0; }
+  }
+  
+/* Animation d'apparition des éléments created */
 @keyframes craftedElementAppear {
   0% {
     opacity: 0;
@@ -746,19 +775,132 @@
   }
 }
 
-/* Style pour le mode dragging */
-.crafted-element.dragging,
-#selected-resources li.dragging {
-  animation: softWaveMotion 2s infinite ease-in-out;
-  box-shadow: 0 5px 20px rgba(0, 0, 0, 0.3), 0 0 12px rgba(138, 92, 173, 0.4);
-  z-index: 50;
-  cursor: grabbing;
+/* Animation nouvel élément créé */
+.crafted-element-new {
+  animation: newElementAppear 0.6s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
 }
 
-/* Élément étoile dans les items */
-.element-star {
-  font-size: 0.8rem;
-  opacity: 0.8;
-  margin-left: 4px;
-  display: inline-block;
+@keyframes newElementAppear {
+  0% {
+    opacity: 0;
+    transform: scale(0.5) translateY(20px);
+    filter: blur(5px);
+  }
+  70% {
+    opacity: 1;
+    transform: scale(1.05) translateY(-5px);
+    filter: blur(0);
+  }
+  100% {
+    transform: scale(1) translateY(0);
+    opacity: 1;
+  }
+}
+
+/* Animation popup */
+@keyframes fadeInOut {
+  0% {
+    opacity: 0;
+    visibility: visible;
+    transform: translate(-50%, -70%);
+  }
+  20%, 80% {
+    opacity: 1;
+    transform: translate(-50%, -50%);
+  }
+  100% {
+    opacity: 0;
+    visibility: hidden;
+    transform: translate(-50%, -30%);
+  }
+}
+
+/* Animation secousse */
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  20% { transform: translateX(-8px); }
+  40% { transform: translateX(8px); }
+  60% { transform: translateX(-5px); }
+  80% { transform: translateX(5px); }
+}
+
+/* Animation pour le bouton */
+@keyframes buttonShake {
+  0% { transform: translateX(0); }
+  20% { transform: translateX(-4px); }
+  40% { transform: translateX(4px); }
+  60% { transform: translateX(-2px); }
+  80% { transform: translateX(2px); }
+  100% { transform: translateX(0); }
+}
+
+/* Animation éléments compatibles */
+@keyframes compatibilityPulse {
+  0% {
+    border-color: rgba(138, 92, 173, 0.5);
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.3), 0 0 8px rgba(138, 92, 173, 0.3);
+  }
+  50% {
+    border-color: rgba(158, 112, 193, 0.8);
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.3), 0 0 12px rgba(158, 112, 193, 0.6);
+  }
+  100% {
+    border-color: rgba(138, 92, 173, 0.5);
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.3), 0 0 8px rgba(138, 92, 173, 0.3);
+  }
+}
+
+/* Animation drop */
+@keyframes drop-effect {
+  0% { transform: scale(1.1); }
+  100% { transform: scale(1); }
+}
+
+/* ===========================
+   OPTIMISATIONS PERFORMANCE
+   =========================== */
+
+/* Optimisations pour le drag & drop */
+.dragging-in-progress .smoke-crafting,
+.dragging-in-progress .star,
+.dragging-in-progress .shooting-star,
+.dragging-in-progress .shooting-star-red,
+.paused-animations {
+  animation-play-state: paused !important;
+}
+
+/* Optimisations will-change */
+.crafted-element, 
+#selected-resources li {
+  will-change: opacity, transform;
+  contain: style paint;
+}
+
+/* ===========================
+   MEDIA QUERIES & RESPONSIVITÉ
+   =========================== */
+
+/* Écrans plus petits */
+@media (max-width: 1200px) {
+  .reset-crafting-button {
+    left: auto;
+    right: 20px;
+  }
+}
+
+/* Écrans mobiles */
+@media (max-width: 768px) {
+  #crafting {
+    padding: 10px;
+  }
+  
+  .crafted-element,
+  #selected-resources li {
+    font-size: 0.8rem;
+    padding: 6px 12px;
+  }
+  
+  #crafted-result {
+    font-size: 0.8rem;
+  }
 }

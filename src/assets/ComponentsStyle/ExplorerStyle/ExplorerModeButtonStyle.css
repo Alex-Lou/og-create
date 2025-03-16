@@ -41,108 +41,11 @@
   filter: drop-shadow(0 0 10px rgba(138, 92, 173, 0.4));
 }
 
-/* Bordure principale avec animation */
-.glow-border {
-  transition: all 0.3s ease;
-  animation: borderPulse 3s infinite alternate;
-}
 
-@keyframes borderPulse {
-  0% {
-    stroke-width: 2;
-    stroke: url(#explorerBrdGradient);
-  }
-  50% {
-    stroke-width: 2.5;
-    stroke: url(#explorerBrdGradient);
-  }
-  100% {
-    stroke-width: 2;
-    stroke: url(#explorerBrdGradient);
-  }
-}
 
-.explorer-mode-button:hover .glow-border {
-  stroke-width: 3;
-  stroke: url(#explorerBrdGradient);
-  filter: drop-shadow(0 0 5px rgba(138, 92, 173, 0.7));
-  animation: borderPulseHover 1.5s infinite alternate;
-}
 
-@keyframes borderPulseHover {
-  0% {
-    stroke-width: 2.5;
-    filter: drop-shadow(0 0 3px rgba(138, 92, 173, 0.6));
-  }
-  100% {
-    stroke-width: 3.5;
-    filter: drop-shadow(0 0 7px rgba(138, 92, 173, 0.9));
-  }
-}
 
-/* Bordure intérieure scintillante */
-.inner-border {
-  stroke-dasharray: 4, 6;
-  animation: dashOffset 20s linear infinite, borderGlow 4s infinite alternate;
-}
 
-@keyframes dashOffset {
-  0% {
-    stroke-dashoffset: 0;
-  }
-  100% {
-    stroke-dashoffset: 200;
-  }
-}
-
-@keyframes borderGlow {
-  0% { 
-    stroke: rgba(138, 92, 173, 0.3);
-    filter: drop-shadow(0 0 2px rgba(138, 92, 173, 0.1));
-  }
-  50% { 
-    stroke: rgba(138, 92, 173, 0.7);
-    filter: drop-shadow(0 0 3px rgba(138, 92, 173, 0.4));
-  }
-  100% { 
-    stroke: rgba(138, 92, 173, 0.3);
-    filter: drop-shadow(0 0 2px rgba(138, 92, 173, 0.1));
-  }
-}
-
-/* Animations des lignes de séparation */
-.separator-line {
-  opacity: 0.5;
-  animation: separatorPulse 4s infinite alternate;
-}
-
-@keyframes separatorPulse {
-  0% {
-    opacity: 0.3;
-    stroke-width: 0.8;
-  }
-  100% {
-    opacity: 0.6;
-    stroke-width: 1.2;
-  }
-}
-
-/* Coins ornementaux animation */
-.corner-decoration {
-  transition: all 0.3s ease;
-  animation: cornerGlow 4s infinite alternate;
-}
-
-@keyframes cornerGlow {
-  0% {
-    stroke: rgba(138, 92, 173, 0.7);
-    stroke-width: 2;
-  }
-  100% {
-    stroke: rgba(138, 92, 173, 0.9);
-    stroke-width: 2.5;
-  }
-}
 
 .explorer-mode-button:hover .corner-decoration {
   stroke: rgba(138, 92, 173, 1);
@@ -150,44 +53,6 @@
   filter: drop-shadow(0 0 3px rgba(138, 92, 173, 0.5));
 }
 
-/* Points lumineux aux coins avec délais différents */
-.corner-dot {
-  filter: drop-shadow(0 0 2px rgba(138, 92, 173, 0.7));
-  animation: dotPulse 3s infinite alternate;
-}
-
-.dot1 { animation-delay: 0s; }
-.dot2 { animation-delay: 0.7s; }
-.dot3 { animation-delay: 1.4s; }
-.dot4 { animation-delay: 2.1s; }
-
-@keyframes dotPulse {
-  0% {
-    r: 1.8;
-    filter: drop-shadow(0 0 2px rgba(138, 92, 173, 0.5));
-  }
-  100% {
-    r: 2.3;
-    filter: drop-shadow(0 0 4px rgba(138, 92, 173, 0.8));
-  }
-}
-
-.explorer-mode-button:hover .corner-dot {
-  r: 2.8;
-  filter: drop-shadow(0 0 6px rgba(138, 92, 173, 1));
-  animation: dotPulseHover 1.5s infinite alternate;
-}
-
-@keyframes dotPulseHover {
-  0% {
-    r: 2.5;
-    filter: drop-shadow(0 0 4px rgba(138, 92, 173, 0.8));
-  }
-  100% {
-    r: 3;
-    filter: drop-shadow(0 0 7px rgba(138, 92, 173, 1));
-  }
-}
 
 /* Symboles mystiques scintillants dans les coins */
 .mystic-symbol {
@@ -195,60 +60,9 @@
   filter: drop-shadow(0 0 2px rgba(138, 92, 173, 0.4));
 }
 
-.symbol1 { animation-delay: 0.2s; }
-.symbol2 { animation-delay: 1.2s; }
-.symbol3 { animation-delay: 2.2s; }
-.symbol4 { animation-delay: 3.2s; }
 
-@keyframes symbolGlow {
-  0% {
-    fill: rgba(138, 92, 173, 0.4);
-    filter: drop-shadow(0 0 1px rgba(138, 92, 173, 0.3));
-  }
-  100% {
-    fill: rgba(138, 92, 173, 0.7);
-    filter: drop-shadow(0 0 3px rgba(138, 92, 173, 0.5));
-  }
-}
 
-.explorer-mode-button:hover .mystic-symbol {
-  fill: rgba(138, 92, 173, 0.9);
-  filter: drop-shadow(0 0 4px rgba(138, 92, 173, 0.7));
-}
 
-/* Animation des particules étoiles avec plus d'étoiles */
-.star-particle {
-  opacity: 0;
-  animation: twinkle 3s infinite ease-in-out;
-}
-
-.star1 { animation-delay: 0.1s; }
-.star2 { animation-delay: 0.7s; }
-.star3 { animation-delay: 1.3s; }
-.star4 { animation-delay: 1.9s; }
-.star5 { animation-delay: 2.5s; }
-.star6 { animation-delay: 0.4s; }
-.star7 { animation-delay: 1.0s; }
-.star8 { animation-delay: 1.6s; }
-.star9 { animation-delay: 2.2s; }
-
-@keyframes twinkle {
-  0% {
-    opacity: 0.1;
-    r: 0.5;
-    filter: drop-shadow(0 0 1px rgba(138, 92, 173, 0.3));
-  }
-  50% {
-    opacity: 0.8;
-    r: 1.2;
-    filter: drop-shadow(0 0 3px rgba(138, 92, 173, 0.6));
-  }
-  100% {
-    opacity: 0.1;
-    r: 0.5;
-    filter: drop-shadow(0 0 1px rgba(138, 92, 173, 0.3));
-  }
-}
 
 .explorer-mode-button:hover .star-particle {
   animation: twinkleHover 2s infinite ease-in-out;
