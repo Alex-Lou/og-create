@@ -110,7 +110,6 @@
       v-show="isTimerActive && !isExplorerActive"
       ref="timerQuestions"
       @reset-timer="handleTimerReset"
-      @show-level-selection="showLevelSelection"
       @pause-timer="handleTimerPause"
       @resume-timer="handleTimerResume"
       @stop-timer="handleTimerStop"
@@ -128,9 +127,8 @@
       @save="handleSaveCustomization"
       @coins-updated="handleCoinsUpdated" 
     />
-    <ExplorerMap
+    <ExplorerMap 
       v-if="isExplorerActive"
-      :active="isExplorerActive"
       :userCoins="coins"
       @close="deactivateExplorerMode"
       @coins-updated="handleCoinsUpdated"
@@ -250,21 +248,6 @@ export default {
   }
 },
 mounted() {
-  // CODE DE DÉBOGAGE - DÉTECTION DE [object Promise]
-  const originalAppendChild = Element.prototype.appendChild;
-  Element.prototype.appendChild = function(node) {
-    if (node && node.nodeType === Node.TEXT_NODE && 
-        node.textContent && node.textContent.includes('[object Promise]')) {
-      console.error("=== DÉTECTION DE [object Promise] ===");
-      console.error("Élément parent:", this);
-      console.error("Texte complet:", node.textContent);
-      console.error("Chemin DOM:", this.tagName + (this.id ? `#${this.id}` : '') + 
-                    (this.className ? `.${this.className.replace(/\s+/g, '.')}` : ''));
-      console.trace("Trace d'appel:");
-    }
-    return originalAppendChild.call(this, node);
-  };
-  
   // Ajouter les écouteurs d'événements globaux
   window.addEventListener('app-reloaded', this.handleAppReloaded);
   window.addEventListener('achievements-loaded', this.handleGlobalAchievementsLoaded);
@@ -278,61 +261,6 @@ mounted() {
         .catch(err => console.error("Erreur de sauvegarde directe:", err));
     }
   };
-  
-  // Correctif pour intercepter et supprimer les [object Promise] qui pourraient apparaître dans le DOM
-  const observer = new MutationObserver((mutations) => {
-    mutations.forEach((mutation) => {
-      if (mutation.type === 'childList' && mutation.addedNodes.length) {
-        Array.from(mutation.addedNodes).forEach(node => {
-          // Vérifier les nœuds de texte contenant [object Promise]
-          if (node.nodeType === Node.TEXT_NODE && node.textContent && 
-              node.textContent.includes('[object Promise]')) {
-            // Log avant suppression pour débogage
-            console.error("=== MUTATION: [object Promise] détecté et nettoyé ===");
-            console.error("Parent de la mutation:", mutation.target);
-            console.error("Texte problématique:", node.textContent);
-            // Supprimer ou vider le texte problématique
-            node.textContent = '';
-          }
-          
-          // Vérifier également les éléments HTML qui pourraient contenir du texte problématique
-          if (node.nodeType === Node.ELEMENT_NODE && node.innerHTML && 
-              node.innerHTML.includes('[object Promise]')) {
-            // Log avant nettoyage
-            console.error("=== ÉLÉMENT HTML contenant [object Promise] ===");
-            console.error("Élément:", node);
-            console.error("HTML avant nettoyage:", node.innerHTML);
-            // Nettoyer le contenu HTML des éléments
-            node.innerHTML = node.innerHTML.replace(/\[object Promise\]/g, '');
-          }
-        });
-      }
-      
-      // Vérifier aussi les attributs modifiés
-      if (mutation.type === 'attributes' && mutation.target && 
-          mutation.target.getAttribute && mutation.attributeName) {
-        const attrValue = mutation.target.getAttribute(mutation.attributeName);
-        if (attrValue && attrValue.includes('[object Promise]')) {
-          console.error("=== ATTRIBUT contenant [object Promise] ===");
-          console.error("Élément:", mutation.target);
-          console.error("Attribut:", mutation.attributeName);
-          console.error("Valeur:", attrValue);
-          mutation.target.setAttribute(mutation.attributeName, 
-                                     attrValue.replace(/\[object Promise\]/g, ''));
-        }
-      }
-    });
-  });
-  
-  // Observer le document entier pour toute modification du DOM
-  observer.observe(document.body, {
-    childList: true,
-    subtree: true,
-    attributes: true
-  });
-  
-  // Conserver une référence à l'observateur pour le nettoyage
-  this.promiseCleanupObserver = observer;
 },
   methods: {
     loadSavedCustomization() {
@@ -352,22 +280,16 @@ mounted() {
         this.selectedAvatar = 'coin.png';
       }
     },
-    showLevelSelection() {
-    // Cette méthode va réafficher le menu de sélection de difficulté
-    if (this.$refs.timerModeButton) {
-      this.$refs.timerModeButton.showLevelSelection();
-    }
-  },
 
-  beforeUnmount() {
-  // Nettoyer les écouteurs d'événements
+    beforeUnmount() {
+  // Nettoyer l'intervalle de sauvegarde périodique
+  if (this.saveInterval) {
+    clearInterval(this.saveInterval);
+  }
+  
+  // Supprimer les écouteurs d'événements
   window.removeEventListener('app-reloaded', this.handleAppReloaded);
   window.removeEventListener('achievements-loaded', this.handleGlobalAchievementsLoaded);
-  
-  // Nettoyer l'observateur
-  if (this.promiseCleanupObserver) {
-    this.promiseCleanupObserver.disconnect();
-  }
   
   // Sauvegarde finale avant de quitter
   if (this.isLoggedIn) {
@@ -376,6 +298,7 @@ mounted() {
 },
 
 handleAppReloaded() {
+  console.log('Événement app-reloaded détecté dans App.vue');
   
   // Forcer le rechargement des achievements
   this.shouldForceReload = true;
@@ -386,7 +309,9 @@ handleAppReloaded() {
   }, 500);
 },
 
-handleGlobalAchievementsLoaded(event) {  
+handleGlobalAchievementsLoaded(event) {
+  console.log('Événement achievements-loaded reçu dans App.vue', event.detail);
+  
   if (event.detail && event.detail.achievements) {
     // Mettre à jour les achievements si nécessaire
     this.achievements = event.detail.achievements;
@@ -426,6 +351,7 @@ handleGlobalAchievementsLoaded(event) {
   if (gameMode === 'timer') {
     // Pour le mode Timer, utiliser la liste timerElements
     if (!this.currentTimerElements.includes(element)) {
+      console.log(`Sauvegarde de l'élément découvert en mode Timer: ${element}`);
       this.currentTimerElements.push(element);
       elementsList = this.currentTimerElements;
     } else {
@@ -434,6 +360,7 @@ handleGlobalAchievementsLoaded(event) {
   } else if (gameMode === 'explorer') {
     // Pour le mode Explorer
     if (!this.discoveredElements.includes(element)) {
+      console.log(`Sauvegarde de l'élément découvert en mode Explorer: ${element}`);
       this.discoveredElements.push(element);
       elementsList = this.discoveredElements;
     } else {
@@ -442,6 +369,7 @@ handleGlobalAchievementsLoaded(event) {
   } else {
     // Mode Infinite (par défaut)
     if (!this.discoveredElements.includes(element)) {
+      console.log(`Sauvegarde de l'élément découvert en mode Infinite: ${element}`);
       this.discoveredElements.push(element);
       
       // Déterminer la catégorie de l'élément
@@ -510,6 +438,9 @@ handleGlobalAchievementsLoaded(event) {
   if (forceReload && this.$refs.dataLoading) {
     this.$nextTick(async () => {
       try {
+        console.log('🔄 Début du rechargement forcé');
+        
+        // Charger tous les achievements existants avant le rechargement
         const existingUnlockedAchievements = this.achievements
           .filter(a => a.unlocked)
           .reduce((acc, achievement) => {
@@ -520,17 +451,17 @@ handleGlobalAchievementsLoaded(event) {
             return acc;
           }, {});
 
-        // console.log('💾 Achievements existants à préserver:', 
-        //   Object.keys(existingUnlockedAchievements).length
-        // );
+        console.log('💾 Achievements existants à préserver:', 
+          Object.keys(existingUnlockedAchievements).length
+        );
 
         // Forcer le chargement de toutes les données
         const loadedData = await this.$refs.dataLoading.loadAllData();
         
-        // console.log('🔍 Données chargées:', {
-        //   achievements: loadedData.achievements?.length,
-        //   categories: Object.keys(loadedData.categories).length
-        // });
+        console.log('🔍 Données chargées:', {
+          achievements: loadedData.achievements?.length,
+          categories: Object.keys(loadedData.categories).length
+        });
 
         // Mise à jour des données
         this.elementEmojis = loadedData.elementEmojis || {};
@@ -562,9 +493,9 @@ handleGlobalAchievementsLoaded(event) {
             return acc;
           }, {});
         
-        // console.log('🚀 Achievements à mettre à jour:', 
-        //   Object.keys(achievementsToUpdate).length
-        // );
+        console.log('🚀 Achievements à mettre à jour:', 
+          Object.keys(achievementsToUpdate).length
+        );
         
         // Mise à jour immédiate et parallèle
         await Promise.all([
@@ -572,6 +503,7 @@ handleGlobalAchievementsLoaded(event) {
           this.updateCategoryProgress()
         ]);
         
+        console.log('✅ Rechargement complet terminé');
         
         // Réinitialiser shouldForceReload après un délai
         setTimeout(() => {
@@ -614,7 +546,9 @@ handleGlobalAchievementsLoaded(event) {
     async updateDiscoveredElements() {
       if (!this.isLoggedIn) return;
       
-      try {        
+      try {
+        console.log("Mise à jour des éléments découverts:", this.discoveredElements.length);
+        
         // S'assurer que les éléments sont uniques
         const uniqueElements = [...new Set(this.discoveredElements)];
         
@@ -624,6 +558,7 @@ handleGlobalAchievementsLoaded(event) {
         
         // Fusionner avec les éléments existants
         const mergedElements = [...new Set([...currentElements, ...uniqueElements])];
+        console.log(`Éléments: ${currentElements.length} en DB + ${uniqueElements.length} actuels = ${mergedElements.length} après fusion`);
         
         // Sauvegarder les éléments fusionnés
         await progressService.updateDiscoveredElements(mergedElements);
@@ -647,7 +582,9 @@ handleGlobalAchievementsLoaded(event) {
   
   // Sauvegarder toutes les 2 minutes
   this.saveInterval = setInterval(() => {
-    if (this.isLoggedIn) {      
+    if (this.isLoggedIn) {
+      console.log("Sauvegarde périodique de la progression...");
+      
       this.saveGameProgress();
     }
   }, 120000); // 2 minutes
@@ -655,10 +592,12 @@ handleGlobalAchievementsLoaded(event) {
 
 async updateAchievements() {
   if (!this.achievements || !Array.isArray(this.achievements) || this.achievements.length === 0) {
+    console.log("Pas de mise à jour des achievements: pas d'achievements disponibles");
     return;
   }
   
   if (!AuthService.isAuthenticated()) {
+    console.log("Pas de mise à jour des achievements: utilisateur non connecté");
     return;
   }
   
@@ -672,9 +611,12 @@ async updateAchievements() {
         };
       }
     });
-        
+    
+    console.log("Sauvegarde des achievements:", Object.keys(achievementsData).length, "achievements débloqués");
+    
     if (Object.keys(achievementsData).length > 0) {
       await progressService.updateAchievements(achievementsData);
+      console.log("Achievements sauvegardés avec succès");
     } else {
       console.log("Aucun achievement débloqué à sauvegarder");
     }
@@ -711,7 +653,8 @@ async updateAchievements() {
       }
     });
     
-
+    // Si l'utilisateur est connecté, sauvegarder les éléments dans timer_elements
+    // MAIS NE PAS les ajouter à infinite_elements ou discovered_elements
     if (this.isLoggedIn) {
       // Utiliser l'API de timerService au lieu de progressService
       fetch('/api/timer/save-elements', {
@@ -774,11 +717,19 @@ handleTimerForceStop() {
   try {
     progressService.loadGameProgress()
       .then(progress => {
+        console.log('DEBUG LOAD PROGRESS - Données reçues:', {
+          hasProgress: !!progress,
+          discoveredElementsType: typeof progress.discoveredElements,
+          discoveredElementsLength: progress.discoveredElements ? progress.discoveredElements.length : 0,
+          discoveredCategories: progress.discoveredCategories,
+          coins: progress.coins
+        });
 
         if (progress) {
           if (progress.coins !== undefined) {
             this.coins = parseInt(progress.coins);
             localStorage.setItem('coins', this.coins.toString());
+            console.log('DEBUG - Coins mis à jour:', this.coins);
           }
 
           if (progress.discoveredElements) {
@@ -786,16 +737,23 @@ handleTimerForceStop() {
               let elementsToSet = [];
               
               if (typeof progress.discoveredElements === 'string') {
+                console.log('DEBUG - Parsing des éléments depuis une chaîne');
                 const parsed = JSON.parse(progress.discoveredElements);
                 elementsToSet = Array.isArray(parsed) 
                   ? parsed.map(element => element.replace(/^"|"$/g, ''))
                   : ["Eau", "Feu", "Terre", "Air"];
               } else if (Array.isArray(progress.discoveredElements)) {
+                console.log('DEBUG - Éléments déjà un tableau');
                 elementsToSet = progress.discoveredElements;
               } else {
                 console.warn('DEBUG - Format des éléments découverts invalide');
                 elementsToSet = ["Eau", "Feu", "Terre", "Air"];
               }
+
+              console.log('DEBUG - Éléments à définir:', {
+                elements: elementsToSet,
+                length: elementsToSet.length
+              });
 
               this.discoveredElements = elementsToSet;
               localStorage.setItem('discoveredElements', JSON.stringify(this.discoveredElements));
@@ -813,16 +771,23 @@ handleTimerForceStop() {
               let categoriesToSet = [];
               
               if (typeof progress.discoveredCategories === 'string') {
+                console.log('DEBUG - Parsing des catégories depuis une chaîne');
                 const parsed = JSON.parse(progress.discoveredCategories);
                 categoriesToSet = Array.isArray(parsed)
                   ? parsed.map(cat => cat.replace(/^"|"$/g, ''))
                   : ["Elements Fondamentaux"];
               } else if (Array.isArray(progress.discoveredCategories)) {
+                console.log('DEBUG - Catégories déjà un tableau');
                 categoriesToSet = progress.discoveredCategories;
               } else {
                 console.warn('DEBUG - Format des catégories découvertes invalide');
                 categoriesToSet = ["Elements Fondamentaux"];
               }
+
+              console.log('DEBUG - Catégories à définir:', {
+                categories: categoriesToSet,
+                length: categoriesToSet.length
+              });
 
               this.discoveredCategories = categoriesToSet;
               localStorage.setItem('discoveredCategories', JSON.stringify(this.discoveredCategories));
@@ -860,9 +825,15 @@ handleTimerForceStop() {
             }));
           }
 
+          console.log('DEBUG - État final:', {
+            discoveredElements: this.discoveredElements,
+            discoveredCategories: this.discoveredCategories
+          });
+
           if (this.categories && Object.keys(this.categories).length > 0) {
             this.repairGameData();
           } else {
+            console.log('Catégories non encore chargées, réparation programmée');
             setTimeout(() => {
               if (this.categories && Object.keys(this.categories).length > 0) {
                 this.repairGameData();
@@ -975,13 +946,17 @@ saveGameProgress() {
     },
     // Dans App.vue, méthode checkAuth()
 checkAuth() {
+  console.log('Vérification de l\'authentification');
   const loggedInUser = AuthService.getCurrentUser();
+  console.log('loggedInUser:', loggedInUser);
   
   if (loggedInUser && loggedInUser.token) {
+    console.log('Utilisateur authentifié:', loggedInUser.username);
     this.isLoggedIn = true;
     this.currentUser = loggedInUser;
     this.loadSavedCustomization();
   } else {
+    console.log('Aucun utilisateur authentifié');
     this.isLoggedIn = false;
     this.currentUser = null;
     localStorage.removeItem('user');
@@ -1040,21 +1015,11 @@ checkAuth() {
     handleAchievementsLoaded(achievements) {
       this.achievements = achievements;
     },
-    handleAchievementUnlocked(achievement) {  
-  // Vérifier que l'achievement est un objet valide
-  if (!achievement || typeof achievement !== 'object' || achievement instanceof Promise) {
-    console.error("Format d'achievement invalide:", achievement);
-    return;
-  }
+    handleAchievementUnlocked(achievement) {
+  console.log("Achievement débloqué reçu:", achievement.name, "avec image:", achievement.image);
   
-  // Créer une copie sécurisée avec uniquement les propriétés nécessaires
-  this.newAchievement = {
-    name: achievement.name,
-    description: achievement.description,
-    image: achievement.image,
-    unlocked: true,
-    unlockedAt: achievement.unlockedAt || new Date().toISOString()
-  };
+  // Créer une copie complète pour éviter les problèmes de référence
+  this.newAchievement = JSON.parse(JSON.stringify(achievement));
   
   // Sauvegarde dans achievements locaux
   const existingIndex = this.achievements.findIndex(a => a.name === achievement.name);
@@ -1065,7 +1030,7 @@ checkAuth() {
   
   // Sauvegarder immédiatement si connecté
   if (this.isLoggedIn) {
-    this.handleAchievementUpdate(this.newAchievement);
+    this.handleAchievementUpdate(achievement);
   }
 },
     handleResourceSelection(resource) {
@@ -1092,6 +1057,13 @@ checkAuth() {
 
 
 handleCraftSuccess(craftedItem) {
+  console.log('DEBUG CRAFT SUCCESS:', {
+    craftedItem,
+    isTimerActive: this.isTimerActive,
+    isExplorerCraftMode: this.isExplorerCraftMode,
+    currentTimerElements: this.currentTimerElements,
+    discoveredElements: this.discoveredElements.length
+  });
   
   try {
     this.craftedElement = {
@@ -1267,12 +1239,18 @@ saveAchievementsProgress() {
         
         this.updateCategoryProgress();
         
+        console.log('Sauvegarde après ajout de:', craftedItem);
+        console.log('Éléments découverts:', this.discoveredElements.length);
+        console.log('Catégories découvertes:', this.discoveredCategories);
+        
         this.saveGameProgress();
       }
     },
     async repairGameData() {
       if (!this.isLoggedIn) return;
-            
+      
+      console.log('Début de la réparation des données...');
+      
       const repairedCategories = ["Elements Fondamentaux"];
       
       for (const element of this.discoveredElements) {
@@ -1290,6 +1268,9 @@ saveAchievementsProgress() {
       const repairedCats = [...repairedCategories].sort();
       
       if (JSON.stringify(currentCats) !== JSON.stringify(repairedCats)) {
+        console.log('Réparation des catégories nécessaire:');
+        console.log('Avant:', this.discoveredCategories);
+        console.log('Après:', repairedCategories);
         
         this.discoveredCategories = repairedCategories;
         
@@ -1431,6 +1412,7 @@ saveAchievementsProgress() {
       this.isCustomizeModalOpen = false;
     },
     handleSaveCustomization(customizationData) {
+      console.log("Personnalisation sauvegardée:", customizationData);
       this.selectedFrame = customizationData.frame;
       this.selectedAvatar = customizationData.avatar;
       

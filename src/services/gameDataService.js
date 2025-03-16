@@ -32,6 +32,7 @@ class GameDataService {
   async loadFile(filename) {
     // Ne pas essayer de charger si l'utilisateur n'est pas authentifié
     if (!this.isAuthenticated()) {
+      console.log(`Chargement de ${filename} ignoré - utilisateur non authentifié`);
       return Promise.reject(new Error('Utilisateur non authentifié'));
     }
     
@@ -44,7 +45,9 @@ class GameDataService {
     if (this.loadingPromises[filename]) {
       return this.loadingPromises[filename];
     }
-  
+    
+    // Sinon, charger le fichier
+    console.log(`Chargement du fichier ${filename}...`);
     
     try {
       // Créer une promesse pour ce chargement et la stocker
@@ -53,6 +56,7 @@ class GameDataService {
           // Une fois chargé, mettre en cache et supprimer la promesse
           this.cache[filename] = response.data;
           delete this.loadingPromises[filename];
+          console.log(`Fichier ${filename} chargé avec succès`);
           return response.data;
         })
         .catch(error => {
@@ -77,6 +81,7 @@ class GameDataService {
   async checkCombination(elements) {
     // Ne pas essayer si l'utilisateur n'est pas authentifié
     if (!this.isAuthenticated()) {
+      console.log(`Vérification de combinaison ignorée - utilisateur non authentifié`);
       return Promise.reject(new Error('Utilisateur non authentifié'));
     }
     
@@ -95,6 +100,7 @@ class GameDataService {
   clearCache() {
     this.cache = {};
     this.loadingPromises = {}; // Annuler également toutes les promesses en cours
+    console.log('Cache local vidé');
   }
 }
 

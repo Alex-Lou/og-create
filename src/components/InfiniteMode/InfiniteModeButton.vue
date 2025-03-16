@@ -31,13 +31,29 @@
       </div>
       
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 100">
-
-
+        <!-- Fond du bouton avec dégradé plus intense -->
+        <rect x="10" y="10" width="280" height="80" rx="35" fill="url(#infiniteBtnGradient)" />
+        
+        <!-- Bordure extérieure avec lueur améliorée -->
+        <rect x="14" y="14" width="272" height="72" rx="32" fill="none" stroke="url(#infiniteBrdGradient)" stroke-width="2" class="infinite-glow-border" />
+        
+        <!-- Couche de brillance subtile -->
+        <rect x="14" y="14" width="272" height="36" rx="32" fill="url(#infiniteShineGradient)" opacity="0.08" class="infinite-inner-shine" />
+        
+        <!-- Bordure intérieure avec pulsation -->
+        <rect x="20" y="20" width="260" height="60" rx="28" fill="none" stroke="url(#infiniteInnerBrdGradient)" stroke-width="1" class="infinite-inner-border" />
+        
+        <!-- Effet de brume énergétique -->
+        <rect x="35" y="30" width="230" height="40" rx="25" fill="url(#infiniteEnergyGradient)" opacity="0.15" class="infinite-energy-mist" />
+        
         <!-- Effet de particules/étoiles scintillantes -->
         <circle cx="40" cy="40" r="0.7" fill="#8a5cad" class="infinite-star-particle star1" />
         <circle cx="260" cy="30" r="0.7" fill="#8a5cad" class="infinite-star-particle star2" />
         <circle cx="60" cy="70" r="0.7" fill="#8a5cad" class="infinite-star-particle star3" />
         <circle cx="240" cy="60" r="0.7" fill="#8a5cad" class="infinite-star-particle star4" />
+        <circle cx="150" cy="20" r="0.7" fill="#8a5cad" class="infinite-star-particle star5" />
+        <circle cx="110" cy="40" r="0.7" fill="#8a5cad" class="infinite-star-particle star6" />
+        <circle cx="190" cy="45" r="0.7" fill="#8a5cad" class="infinite-star-particle star7" />
         
         <!-- Effet de fumée subtile -->
         <rect x="20" y="70" width="260" height="15" rx="7" fill="url(#infiniteSmkGradient)" opacity="0.3" class="infinite-smoke-effect" />

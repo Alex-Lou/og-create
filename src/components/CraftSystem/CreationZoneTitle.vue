@@ -26,11 +26,14 @@
       <!-- Coins ornementaux uniquement -->
       <path d="M65,25 L50,25 L50,40" fill="none" stroke="rgba(158, 109, 190, 0.8)" stroke-width="2.5" class="corner-decoration corner1" />
       <path d="M535,25 L550,25 L550,40" fill="none" stroke="rgba(158, 109, 190, 0.8)" stroke-width="2.5" class="corner-decoration corner2" />
-
+      <path d="M65,125 L50,125 L50,110" fill="none" stroke="rgba(158, 109, 190, 0.8)" stroke-width="2.5" class="corner-decoration corner3" />
+      <path d="M535,125 L550,125 L550,110" fill="none" stroke="rgba(158, 109, 190, 0.8)" stroke-width="2.5" class="corner-decoration corner4" />
+      
       <!-- Points lumineux aux coins -->
       <circle cx="50" cy="25" r="2.5" fill="rgba(158, 109, 190, 0.9)" class="corner-dot dot1" />
       <circle cx="550" cy="25" r="2.5" fill="rgba(158, 109, 190, 0.9)" class="corner-dot dot2" />
-
+      <circle cx="50" cy="125" r="2.5" fill="rgba(158, 109, 190, 0.9)" class="corner-dot dot3" />
+      <circle cx="550" cy="125" r="2.5" fill="rgba(158, 109, 190, 0.9)" class="corner-dot dot4" />
 
       <!-- Texte principal avec effet néon subtil -->
       <text 
@@ -91,7 +94,25 @@ export default {
   animation: drawCorner 4s infinite alternate;
 }
 
+.corner1 { animation-delay: 0s; }
+.corner2 { animation-delay: 0.5s; }
+.corner3 { animation-delay: 1s; }
+.corner4 { animation-delay: 1.5s; }
 
+@keyframes drawCorner {
+  0% {
+    stroke-dashoffset: 30;
+    stroke-width: 2;
+  }
+  50% {
+    stroke-dashoffset: 0;
+    stroke-width: 3;
+  }
+  100% {
+    stroke-dashoffset: 30;
+    stroke-width: 2;
+  }
+}
 
 /* Animation des points aux coins */
 .corner-dot {

@@ -150,35 +150,41 @@ export default {
     }
   },
   methods: {
-    toggleDropdown(event) {
-      // Empêcher la propagation pour éviter que le document.addEventListener déclenche handleClickOutside
-      if (event) {
-        event.stopPropagation();
-      }
-      this.isOpen = !this.isOpen;
-      
-      // Ajouter le modal directement au body pour éviter les problèmes de z-index
-      if (this.isOpen) {
-        this.resetForm();
-        // Ajouter une classe au body pour indiquer que le dropdown est ouvert
-        document.body.classList.add('login-dropdown-open');
-      } else {
-        document.body.classList.remove('login-dropdown-open');
-      }
-    },
+    // Dans la méthode toggleDropdown de LoginIcon.vue
+toggleDropdown(event) {
+  console.log('toggleDropdown appelé', event);
+  // Empêcher la propagation pour éviter que le document.addEventListener déclenche handleClickOutside
+  if (event) {
+    event.stopPropagation();
+  }
+  this.isOpen = !this.isOpen;
+  console.log('isOpen est maintenant:', this.isOpen);
+  
+  // Ajouter le modal directement au body pour éviter les problèmes de z-index
+  if (this.isOpen) {
+    this.resetForm();
+    // Ajouter une classe au body pour indiquer que le dropdown est ouvert
+    document.body.classList.add('login-dropdown-open');
+  } else {
+    document.body.classList.remove('login-dropdown-open');
+  }
+},
     resetForm() {
       this.email = '';
       this.password = '';
       this.errorMessage = '';
     },
     async handleSubmit() {
+      console.log('handleSubmit appelé');
       this.isLoading = true;
       this.errorMessage = '';
       
       try {
         if (this.loginType === 'login') {
+          console.log('Tentative de connexion directe avec:', this.email);
           // Connexion directe avec AuthService
-          await AuthService.login(this.email, this.password);
+          const response = await AuthService.login(this.email, this.password);
+          console.log('Connexion réussie avec AuthService:', response);
           
           // Émettre également l'événement pour le parent
           this.$emit('login-attempt', { email: this.email, password: this.password });
@@ -186,8 +192,10 @@ export default {
           // Fermer le modal
           this.isOpen = false;
         } else {
+          console.log('Tentative d\'inscription directe avec:', this.email);
           // Inscription directe avec AuthService
-          await AuthService.register(this.email, this.password);
+          const response = await AuthService.register(this.email, this.password);
+          console.log('Inscription réussie avec AuthService:', response);
           
           // Émettre également l'événement pour le parent
           this.$emit('register-attempt', { email: this.email, password: this.password });
@@ -203,6 +211,7 @@ export default {
       }
     },
     handleLogout() {
+      console.log('handleLogout appelé');
       // Déconnecter directement
       AuthService.logout();
       // Émettre l'événement pour le parent
@@ -213,6 +222,7 @@ export default {
     handleClickOutside(e) {
       // Ne pas déclencher si le clic est dans le composant
       if (this.$el && !this.$el.contains(e.target) && this.isOpen) {
+        console.log('Clic en dehors du dropdown - fermeture');
         this.isOpen = false;
       }
     },
@@ -222,6 +232,7 @@ export default {
     }
   },
   mounted() {
+    console.log('LoginIcon monté - isLoggedIn:', this.isLoggedIn);
     // Utiliser setTimeout pour assurer que la référence à this reste correcte
     setTimeout(() => {
       document.addEventListener('click', this.handleClickOutside);

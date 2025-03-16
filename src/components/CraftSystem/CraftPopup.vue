@@ -109,6 +109,7 @@ export default {
       
       // Animer les particules
       this.$nextTick(() => {
+        console.log("Animating particles");
         this.animateParticles();
       });
       
