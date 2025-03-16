@@ -166,10 +166,8 @@ export default {
   border-radius: 18px;
 }
 
-/* Cadre ornemental AJUSTÉ */
 .button-frame {
   position: absolute;
-  /* Ajuster les dimensions pour un cadre plus proche du bouton */
   top: 12px;
   left: 10px;
   width: calc(100% - 20px);
@@ -183,13 +181,13 @@ export default {
     0 0 8px rgba(138, 92, 173, 0.2);
 }
 
-/* Coins ornementaux ajustés */
 .frame-corner {
   position: absolute;
   width: 30px;
   height: 30px;
   pointer-events: none;
   z-index: 6;
+  transition: all 0.5s cubic-bezier(0.18, 0.89, 0.32, 1.28);
 }
 
 .corner-tl {
@@ -198,6 +196,9 @@ export default {
   border-top: 2px solid rgba(138, 92, 173, 0.7);
   border-left: 2px solid rgba(138, 92, 173, 0.7);
   border-top-left-radius: 18px;
+  opacity: 1;
+  transform: translate(0, 0) scale(1);
+  transition: transform 0.5s cubic-bezier(0.18, 0.89, 0.32, 1.28);
 }
 
 .corner-tr {
@@ -206,6 +207,9 @@ export default {
   border-top: 2px solid rgba(138, 92, 173, 0.7);
   border-right: 2px solid rgba(138, 92, 173, 0.7);
   border-top-right-radius: 18px;
+  opacity: 1;
+  transform: translate(0, 0) scale(1);
+  transition: transform 0.5s cubic-bezier(0.18, 0.89, 0.32, 1.28);
 }
 
 .corner-bl {
@@ -214,6 +218,9 @@ export default {
   border-bottom: 2px solid rgba(138, 92, 173, 0.7);
   border-left: 2px solid rgba(138, 92, 173, 0.7);
   border-bottom-left-radius: 18px;
+  opacity: 1;
+  transform: translate(0, 0) scale(1);
+  transition: transform 0.5s cubic-bezier(0.18, 0.89, 0.32, 1.28);
 }
 
 .corner-br {
@@ -222,6 +229,49 @@ export default {
   border-bottom: 2px solid rgba(138, 92, 173, 0.7);
   border-right: 2px solid rgba(138, 92, 173, 0.7);
   border-bottom-right-radius: 18px;
+  opacity: 1;
+  transform: translate(0, 0) scale(1);
+  transition: transform 0.5s cubic-bezier(0.18, 0.89, 0.32, 1.28);
+}
+
+.craft-button:not(:hover) .corner-tl {
+  transform-origin: top left;
+  transform: translate(-5px, -5px) scale(0.95);
+}
+
+.craft-button:not(:hover) .corner-tr {
+  transform-origin: top right;
+  transform: translate(5px, -5px) scale(0.95);
+}
+
+.craft-button:not(:hover) .corner-bl {
+  transform-origin: bottom left;
+  transform: translate(-5px, 5px) scale(0.95);
+}
+
+.craft-button:not(:hover) .corner-br {
+  transform-origin: bottom right;
+  transform: translate(5px, 5px) scale(0.95);
+}
+
+.craft-button:hover .corner-tl {
+  transform: translate(0, 0) scale(1);
+  transition-delay: 0s;
+}
+
+.craft-button:hover .corner-tr {
+  transform: translate(0, 0) scale(1);
+  transition-delay: 0.1s;
+}
+
+.craft-button:hover .corner-bl {
+  transform: translate(0, 0) scale(1);
+  transition-delay: 0.2s;
+}
+
+.craft-button:hover .corner-br {
+  transform: translate(0, 0) scale(1);
+  transition-delay: 0.3s;
 }
 
 .corner-dot {
@@ -231,9 +281,33 @@ export default {
   background: rgba(138, 92, 173, 0.9);
   border-radius: 50%;
   filter: drop-shadow(0 0 3px rgba(138, 92, 173, 0.8));
+  opacity: 0.8;
+  transform: scale(1);
+  transition: all 0.4s ease;
 }
 
-/* Ajustement des positions des dots */
+.craft-button:hover .corner-dot {
+  opacity: 1;
+  transform: scale(1.3);
+  filter: drop-shadow(0 0 5px rgba(178, 132, 213, 0.9));
+}
+
+.craft-button:hover .corner-tl .corner-dot {
+  transition-delay: 0.3s;
+}
+
+.craft-button:hover .corner-tr .corner-dot {
+  transition-delay: 0.4s;
+}
+
+.craft-button:hover .corner-bl .corner-dot {
+  transition-delay: 0.5s;
+}
+
+.craft-button:hover .corner-br .corner-dot {
+  transition-delay: 0.6s;
+}
+
 .corner-tl .corner-dot { top: 6px; left: 6px; }
 .corner-tr .corner-dot { top: 6px; right: 6px; }
 .corner-bl .corner-dot { bottom: 6px; left: 6px; }
@@ -244,23 +318,44 @@ export default {
   font-size: 8px;
   color: rgba(138, 92, 173, 0.6);
   filter: drop-shadow(0 0 2px rgba(138, 92, 173, 0.4));
+  transition: all 0.5s ease;
+  opacity: 0.8;
+  transform: scale(1);
 }
 
-/* Ajustement des positions des symboles */
+.craft-button:hover .frame-symbol {
+  opacity: 1;
+  transform: scale(1.2);
+  color: rgba(178, 132, 213, 0.9);
+  filter: drop-shadow(0 0 3px rgba(178, 132, 213, 0.8));
+}
+
+.craft-button:hover .symbol-tl {
+  transition-delay: 0.2s;
+}
+
+.craft-button:hover .symbol-tr {
+  transition-delay: 0.3s;
+}
+
+.craft-button:hover .symbol-bl {
+  transition-delay: 0.4s;
+}
+
+.craft-button:hover .symbol-br {
+  transition-delay: 0.5s;
+}
+
 .symbol-tl { top: 3px; left: 12px; }
 .symbol-tr { top: 3px; right: 12px; }
 .symbol-bl { bottom: 3px; left: 12px; }
 .symbol-br { bottom: 3px; right: 12px; }
 
-
-
-/* Ajustement du SVG pour le centrer au sein du cadre */
 .craft-button svg {
   transform: scale(0.95);
   margin-top: -10px;
 }
 
-/* Conteneur d'étoiles scintillantes */
 .star-field {
   position: absolute;
   top: 0;
@@ -271,7 +366,6 @@ export default {
   z-index: 4;
 }
 
-/* Style pour les étoiles */
 .star-field .star {
   position: absolute;
   width: .7px;
@@ -282,7 +376,6 @@ export default {
   box-shadow: 0 0 4px 1px currentColor;
 }
 
-/* Positionnement des étoiles */
 .star-field .star:nth-child(1) {
   top: 10%;
   left: 20%;
@@ -372,7 +465,6 @@ export default {
   transition: opacity 0.5s ease;
   animation: craftAuraPulse 3s infinite ease-in-out;
 }
-µ
 
 .craft-button:focus,
 .craft-button:active,
@@ -392,8 +484,6 @@ export default {
   transition: all 0.3s ease;
   animation: craftBorderPulse 4s infinite ease-in-out;
 }
-
-
 
 .craft-button:hover .craft-inner-border {
   opacity: 1;
@@ -522,5 +612,35 @@ export default {
 
 .craft-button:active .craft-text {
   fill: #d8c7ff !important;
+}
+
+@keyframes craftBorderPulse {
+  0% {
+    stroke-opacity: 0.6;
+    stroke-width: 2;
+  }
+  50% {
+    stroke-opacity: 0.8;
+    stroke-width: 2.5;
+  }
+  100% {
+    stroke-opacity: 0.6;
+    stroke-width: 2;
+  }
+}
+
+@keyframes craftAuraPulse {
+  0% {
+    opacity: 0.1;
+    transform: translate(-50%, -50%) scale(0.95);
+  }
+  50% {
+    opacity: 0.2;
+    transform: translate(-50%, -50%) scale(1.05);
+  }
+  100% {
+    opacity: 0.1;
+    transform: translate(-50%, -50%) scale(0.95);
+  }
 }
 </style>
