@@ -26,50 +26,22 @@
     <div class="shooting-star-red"></div>
 
     <div class="animation-container">
-      <component 
-        v-if="isFireworkActive && FireworkComponent"
-        :is="FireworkComponent" 
-      />
-      <component 
-        v-if="isFireworkActive && FireworkComponent" 
-        :is="FireworkComponent" 
-        :delay="0.4" 
-        :offsetX="50" 
-      />
-      <component 
-        v-if="isFireworkActive && FireworkComponent" 
-        :is="FireworkComponent" 
-        :delay="0.9" 
-        :offsetX="250" 
-      />
-      <component 
-        v-if="isFireworkActive && FireworkComponent" 
-        :is="FireworkComponent" 
-        :delay="0.8" 
-        :offsetX="-200" 
-      />
-      <component 
-        v-if="isFireworkActive && FireworkComponent" 
-        :is="FireworkComponent" 
-        :delay="0.9" 
-        :offsetX="-100" 
-      />
-      <component 
-        v-if="isFireworkActive && FireworkComponent" 
-        :is="FireworkComponent" 
-        :delay="1.0" 
-        :offsetX="-300" 
-      />
+      <template v-if="isFireworkActive">
+        <FireworkAnimation />
+        <FireworkAnimation :delay="0.4" :offsetX="50" />
+        <FireworkAnimation :delay="0.9" :offsetX="250" />
+        <FireworkAnimation :delay="0.8" :offsetX="-200" />
+        <FireworkAnimation :delay="0.9" :offsetX="-100" />
+        <FireworkAnimation :delay="1.0" :offsetX="-300" />
+      </template>
     </div>
     <div id="crafting" @dragover.prevent @drop="handleDrop">
       <div class="title-container">
         <CreationZoneTitle />
-        <div :class="{'shake-animation': isButtonShaking}">
-          <CraftButton ref="craftButton" @click="craftItem" />
-        </div>
+        <CraftButton @click="craftItem" />
       </div>
       <div id="selection">
-        <ul id="selected-resources" @drop.prevent="handleDropOnSelection">
+        <ul id="selected-resources">
           <li
             v-for="(resource, index) in selected"
             :key="index"
@@ -97,16 +69,14 @@
       <div
         v-for="(element, elementIndex) in craftedElements"
         :key="'crafted-' + elementIndex"
-        :style="{ position: 'absolute', top: element.position.top + 'px', left: element.position.left + 'px' }"
+        :style="{ top: element.position.top + 'px', left: element.position.left + 'px' }"
         draggable="true"
         @dragstart="dragStartCraftedElement($event, elementIndex)"
         @dragend="dragEndCraftedElement($event, elementIndex)"
         @click="removeCraftedElement(elementIndex)"
-        @dragover.prevent="debouncedDragOver"
-        @dragleave="dragLeave"
+        @dragover.prevent
         @drop.stop="handleDropOnCraftedElement(element.name, $event, elementIndex)"
         class="crafted-element"
-        :data-index="elementIndex"
       >
         <p>{{ elementEmojis[element.name] || '' }} {{ element.name }}</p>
         <span class="element-star">✧</span>
@@ -117,21 +87,24 @@
       </div>
     </div>
     <CleanButton @click="resetCraftingBoard" />
-    <footer v-once>
+    <footer>
       <p>Created with ❤️ by CybWolf.</p>
     </footer>
   </div>
 </template>
 
 <script>
+import FireworkAnimation from './FireWorkAnimation.vue';
 import CraftButton from './CraftButton.vue';
 import CleanButton from './CleanButton.vue';
 import CreationZoneTitle from './CreationZoneTitle.vue';
 import '@/assets/ComponentsStyle/CraftStyle/CraftSystemStyle.css';
 
+
 export default {
   name: 'CraftSystem',
   components: {
+    FireworkAnimation,
     CraftButton,
     CleanButton,
     CreationZoneTitle,
@@ -167,44 +140,17 @@ export default {
       isDraggingSelected: false,
       isDraggingCrafted: false,
       isShaking: false,
-      isButtonShaking: false,
       lastCraftedItem: null,
       pendingSaves: new Set(),
-      observer: null,
-      debouncedDragOver: null,
-      FireworkComponent: null,
     };
   },
-  computed: {
-    sortedSelected() {
-      return [...this.selected].sort().join('+');
-    }
-  },
-  created() {
-    this.debouncedDragOver = this.debounce(this.dragOver, 50);
-  },
   methods: {
-    debounce(fn, delay) {
-      let timeout;
-      return function(...args) {
-        clearTimeout(timeout);
-        timeout = setTimeout(() => fn.apply(this, args), delay);
-      };
-    },
-    getResourceTransform(index) {
-      if (!this.resourcePositions[index]) return '';
-      return `translate(${this.resourcePositions[index].left}px, ${this.resourcePositions[index].top}px)`;
-    },
-    getCraftedElementTransform(position) {
-      if (!position) return '';
-      return `translate(${position.left}px, ${position.top}px)`;
-    },
     selectResource(resource) {
       if (this.selected.length < 4 && resource) {
         this.selected.push(resource.trim());
         this.resourcePositions.push(null);
       } else {
-        this.shakeButton();
+        this.$emit('show-alert', 'You can only select up to 4 elements for crafting!');
       }
     },
     resetCraftingBoard() {
@@ -217,7 +163,6 @@ export default {
       this.isDraggingSelected = false;
       this.isDraggingCrafted = false;
       this.isShaking = false;
-      this.isButtonShaking = false;
       this.$emit('board-reset');
     },
     resetSelection() {
@@ -228,34 +173,22 @@ export default {
       this.resourcePositions.splice(index, 1);
     },
     removeCraftedElement(index) {
-      if (this.observer) {
-        const elements = document.querySelectorAll('.crafted-element');
-        if (index < elements.length) {
-          this.observer.unobserve(elements[index]);
-        }
-      }
-      
       this.craftedElements.splice(index, 1);
       this.lastCraftedPosition = null;
-    },
-    shakeButton() {
-      this.isButtonShaking = true;
-      setTimeout(() => {
-        this.isButtonShaking = false;
-      }, 500);
     },
     craftItem() {
       if (this.craftingInProgress) return;
       this.craftingInProgress = true;
-      
       if (this.selected.length < 2) {
-        this.shakeButton();
+        if (!this.alertShown) {
+          this.$emit('show-alert', 'Select at least 2 elements to craft!');
+          this.alertShown = true;
+        }
         this.craftingInProgress = false;
         return;
       }
-      
-      const craftedItem = this.craftingRecipes[this.sortedSelected];
-      
+      const sortedSelected = this.selected.sort().join('+');
+      const craftedItem = this.craftingRecipes[sortedSelected];
       if (!craftedItem) {
         const selectedElements = document.querySelectorAll('#selected-resources li');
         selectedElements.forEach(el => {
@@ -267,20 +200,16 @@ export default {
         this.craftingInProgress = false;
         return;
       }
-      
       const category = this.getCraftedItemCategory(craftedItem);
       if (category && !this.discoveredCategories.has(category)) {
         this.discoveredCategories.add(category);
         this.$emit('category-discovered', category);
       }
-      
       this.lastCraftedItem = craftedItem;
       this.pendingSaves.add(craftedItem);
-      
-      this.$nextTick(() => {
+      setTimeout(() => {
         this.$emit('craft-success', craftedItem);
         this.saveDiscoveredElement(craftedItem);
-        
         let newPosition = { top: 300, left: 230 };
         if (this.lastCraftedPosition && !this.lastCraftedPosition.moved) {
           newPosition = {
@@ -294,36 +223,22 @@ export default {
             };
           }
         }
-        
-        const newElement = {
+        this.craftedElements.push({
           name: craftedItem,
           position: newPosition,
           moved: false,
-        };
-        
-        this.craftedElements.push(newElement);
-        this.lastCraftedPosition = newPosition;
-        
-        this.$nextTick(() => {
-          if (this.observer) {
-            const elements = document.querySelectorAll('.crafted-element');
-            if (elements.length > 0) {
-              const newElementNode = elements[elements.length - 1];
-              if (newElementNode) {
-                this.observer.observe(newElementNode);
-              }
-            }
-          }
         });
-        
+        this.lastCraftedPosition = newPosition;
         this.selected = [];
         this.resourcePositions = [];
         this.alertShown = false;
         this.craftingInProgress = false;
-      });
+      }, 1);
     },
     saveDiscoveredElement(element) {
+      // Obtenir le mode de jeu actuel depuis les props ou utiliser 'infinite' par défaut
       const gameMode = this.$parent?.gameMode || 'infinite';
+      
       this.$emit('save-discovered-element', element, gameMode);
       this.pendingSaves.delete(element);
     },
@@ -331,7 +246,10 @@ export default {
       if (event.key === 'Enter') {
         this.craftItem();
       }
-      if (event.key === 'r' || event.key === 'c') {
+      if (event.key === 'r') {
+        this.resetCraftingBoard();
+      }
+      if (event.key === 'c') {
         this.resetCraftingBoard();
       }
     },
@@ -345,26 +263,7 @@ export default {
     },
     handleDrop(event) {
       const element = event.dataTransfer.getData('text/plain');
-      
-      if (this.isDraggingCrafted) {
-        const index = this.draggingElementIndex;
-        if (index !== null && this.craftedElements[index]) {
-          const craftingBoardRect = this.$refs.craftingBoard.getBoundingClientRect();
-          
-          const offsetX = this.craftedElements[index].dragOffset?.x || 0;
-          const offsetY = this.craftedElements[index].dragOffset?.y || 0;
-          
-          const x = event.clientX - craftingBoardRect.left - offsetX;
-          const y = event.clientY - craftingBoardRect.top - offsetY;
-          
-          this.craftedElements[index].position = {
-            top: Math.max(0, Math.min(600, y)),
-            left: Math.max(0, Math.min(800, x)),
-          };
-          this.craftedElements[index].moved = true;
-        }
-      } 
-      else if (element && this.elementEmojis[element]) {
+      if (element && this.elementEmojis[element]) {
         if (this.selected.includes(element)) {
           const index = this.selected.indexOf(element);
           this.selected.splice(index, 1);
@@ -372,67 +271,44 @@ export default {
           this.selectResource(element);
         } else if (!this.selected.includes(element)) {
           this.selectResource(element);
-          if (this.draggingElementIndex !== null && this.isDraggingCrafted) {
+          if (this.draggingElementIndex !== null) {
             this.removeCraftedElement(this.draggingElementIndex);
           }
         }
       }
-      
       this.draggingElementIndex = null;
       this.isDraggingSelected = false;
       this.isDraggingCrafted = false;
-      
-      document.body.classList.remove('dragging-in-progress');
     },
     handleDropOnSelectedElement(event, targetResource, targetIndex) {
       event.preventDefault();
       const draggedResource = event.dataTransfer.getData('text/plain');
       const isFromCraftedElements = this.craftedElements.some(el => el.name === draggedResource);
-      
       if (isFromCraftedElements) {
         return;
       }
-      
       if (this.draggingElementIndex !== targetIndex) {
         const elements = [draggedResource, targetResource].sort();
         const combination = elements.join('+');
         const result = this.craftingRecipes[combination];
-        
         if (result) {
           this.removeResource(Math.max(this.draggingElementIndex, targetIndex));
           this.removeResource(Math.min(this.draggingElementIndex, targetIndex));
           this.lastCraftedItem = result;
           this.pendingSaves.add(result);
-          
-          this.$nextTick(() => {
+          setTimeout(() => {
             this.$emit('craft-success', result);
             this.saveDiscoveredElement(result);
-            
             let newPosition = {
               top: this.resourcePositions[targetIndex]?.top || 300,
               left: this.resourcePositions[targetIndex]?.left || 230
             };
-            
-            const newElement = {
+            this.craftedElements.push({
               name: result,
               position: newPosition,
               moved: false,
-            };
-            
-            this.craftedElements.push(newElement);
-            
-            this.$nextTick(() => {
-              if (this.observer) {
-                const elements = document.querySelectorAll('.crafted-element');
-                if (elements.length > 0) {
-                  const newElementNode = elements[elements.length - 1];
-                  if (newElementNode) {
-                    this.observer.observe(newElementNode);
-                  }
-                }
-              }
             });
-          });
+          }, 1);
         } else {
           this.isShaking = true;
           setTimeout(() => {
@@ -440,171 +316,62 @@ export default {
           }, 400);
         }
       }
-      
       this.draggingElementIndex = null;
       this.isDraggingSelected = false;
       this.isDraggingCrafted = false;
-      
-      document.body.classList.remove('dragging-in-progress');
     },
     handleDropOnCraftedElement(targetElement, event, targetIndex) {
       event.preventDefault();
       const draggedElement = event.dataTransfer.getData('text/plain');
       const isFromSelected = this.selected.includes(draggedElement);
-      
       if (isFromSelected) {
         return;
       }
-      
       const elements = [draggedElement, targetElement].sort();
       const combination = elements.join('+');
       const result = this.craftingRecipes[combination];
-      
       if (result) {
         if (this.draggingElementIndex !== null) {
           this.craftedElements.splice(this.draggingElementIndex, 1);
         }
-        
         this.craftedElements.splice(targetIndex, 1);
-        
         const dropPosition = {
           top: event.offsetY,
           left: event.offsetX,
         };
-        
-        const newElement = {
+        this.craftedElements.push({
           name: result,
           position: dropPosition,
           moved: true,
-        };
-        
-        this.craftedElements.push(newElement);
+        });
         this.lastCraftedItem = result;
         this.pendingSaves.add(result);
-        
         this.$emit('craft-success', result);
         this.saveDiscoveredElement(result);
-        
-        this.$nextTick(() => {
-          if (this.observer) {
-            const elements = document.querySelectorAll('.crafted-element');
-            if (elements.length > 0) {
-              const newElementNode = elements[elements.length - 1];
-              if (newElementNode) {
-                this.observer.observe(newElementNode);
-              }
-            }
-          }
-        });
       } else {
         this.isShaking = true;
         setTimeout(() => {
           this.isShaking = false;
         }, 400);
       }
-      
       this.draggingElementIndex = null;
       this.isDraggingSelected = false;
       this.isDraggingCrafted = false;
-      
-      document.body.classList.remove('dragging-in-progress');
     },
     dragStart(event, resource, index) {
-      document.body.classList.add('dragging-in-progress');
-      
-      const element = event.target;
-      
-      const rect = element.getBoundingClientRect();
-      const ghostElement = element.cloneNode(true);
-      
-      ghostElement.style.opacity = '0.6';
-      ghostElement.style.position = 'absolute';
-      ghostElement.style.top = '0';
-      ghostElement.style.left = '0';
-      ghostElement.style.width = `${rect.width}px`;
-      ghostElement.style.height = `${rect.height}px`;
-      ghostElement.style.pointerEvents = 'none';
-      
-      document.body.appendChild(ghostElement);
-      
-      const offsetX = event.clientX - rect.left;
-      const offsetY = event.clientY - rect.top;
-      
-      event.dataTransfer.setDragImage(ghostElement, offsetX, offsetY);
-      
-      setTimeout(() => {
-        document.body.removeChild(ghostElement);
-      }, 0);
-      
-      if (!this.resourcePositions[index]) {
-        this.resourcePositions[index] = {};
-      }
-      this.resourcePositions[index].dragOffset = {
-        x: offsetX,
-        y: offsetY
-      };
-      
-      element.classList.add('dragging');
-      
       event.dataTransfer.setData('text/plain', resource);
-      event.dataTransfer.effectAllowed = 'move';
-      
       this.draggingElementIndex = index;
       this.isDraggingSelected = true;
     },
     dragStartCraftedElement(event, index) {
-      document.body.classList.add('dragging-in-progress');
-      
-      const element = event.target;
-      
-      const rect = element.getBoundingClientRect();
-      const ghostElement = element.cloneNode(true);
-      
-      ghostElement.style.opacity = '0.6';
-      ghostElement.style.position = 'absolute';
-      ghostElement.style.top = '0';
-      ghostElement.style.left = '0';
-      ghostElement.style.width = `${rect.width}px`;
-      ghostElement.style.height = `${rect.height}px`;
-      ghostElement.style.pointerEvents = 'none';
-      
-      document.body.appendChild(ghostElement);
-      
-      const offsetX = event.clientX - rect.left;
-      const offsetY = event.clientY - rect.top;
-      
-      event.dataTransfer.setDragImage(ghostElement, offsetX, offsetY);
-      
-      setTimeout(() => {
-        document.body.removeChild(ghostElement);
-      }, 0);
-      
-      this.craftedElements[index] = {
-        ...this.craftedElements[index],
-        dragOffset: {
-          x: offsetX,
-          y: offsetY
-        }
-      };
-      
       event.dataTransfer.setData('text/plain', this.craftedElements[index].name);
-      event.dataTransfer.effectAllowed = 'move';
-      
-      element.classList.add('dragging');
-      
       this.draggingElementIndex = index;
       this.isDraggingCrafted = true;
     },
     dragEnd(event, index) {
-      const draggedElement = event.target;
-      if (draggedElement && draggedElement.classList.contains('dragging')) {
-        draggedElement.classList.remove('dragging');
-      }
-      
       const selectionZone = document.getElementById('selected-resources');
       const selectionRect = selectionZone.getBoundingClientRect();
       const margin = 50;
-      
       if (
         event.clientX >= selectionRect.left - margin &&
         event.clientX <= selectionRect.right + margin &&
@@ -614,108 +381,31 @@ export default {
         this.resourcePositions[index] = null;
       } else {
         const craftingBoardRect = this.$refs.craftingBoard.getBoundingClientRect();
-        
-        const offsetX = this.resourcePositions[index]?.dragOffset?.x || 0;
-        const offsetY = this.resourcePositions[index]?.dragOffset?.y || 0;
-        
-        const x = event.clientX - craftingBoardRect.left - offsetX;
-        const y = event.clientY - craftingBoardRect.top - offsetY;
-        
+        const x = event.clientX - craftingBoardRect.left;
+        const y = event.clientY - craftingBoardRect.top;
         this.resourcePositions[index] = {
           top: Math.max(0, Math.min(600, y)),
           left: Math.max(0, Math.min(800, x)),
-          dragOffset: {
-            x: offsetX,
-            y: offsetY
-          }
         };
       }
-      
-      this.applyDropAnimation(index, true);
-      
       this.draggingElementIndex = null;
       this.isDraggingSelected = false;
       this.isDraggingCrafted = false;
-      
-      document.body.classList.remove('dragging-in-progress');
     },
     dragEndCraftedElement(event, index) {
-      const draggedElement = event.target;
-      if (draggedElement && draggedElement.classList.contains('dragging')) {
-        draggedElement.classList.remove('dragging');
-      }
-      
       if (this.craftedElements[index]) {
         const craftingBoardRect = this.$refs.craftingBoard.getBoundingClientRect();
-        
-        const offsetX = this.craftedElements[index].dragOffset?.x || 0;
-        const offsetY = this.craftedElements[index].dragOffset?.y || 0;
-        
-        const x = event.clientX - craftingBoardRect.left - offsetX;
-        const y = event.clientY - craftingBoardRect.top - offsetY;
-        
-        const selectionZone = document.getElementById('selected-resources');
-        const selectionRect = selectionZone?.getBoundingClientRect();
-        const margin = 50;
-        
-        const isInSelectionZone = selectionRect && 
-          event.clientX >= selectionRect.left - margin &&
-          event.clientX <= selectionRect.right + margin &&
-          event.clientY >= selectionRect.top - margin &&
-          event.clientY <= selectionRect.bottom + margin;
-        
-        if (!isInSelectionZone) {
-          this.craftedElements[index].position = {
-            top: Math.max(0, Math.min(600, y)),
-            left: Math.max(0, Math.min(800, x)),
-          };
-          this.craftedElements[index].moved = true;
-        }
-        
-        const newElement = { ...this.craftedElements[index] };
-        delete newElement.dragOffset;
-        this.craftedElements[index] = newElement;
+        const x = event.clientX - craftingBoardRect.left;
+        const y = event.clientY - craftingBoardRect.top;
+        this.craftedElements[index].position = {
+          top: Math.max(0, Math.min(600, y)),
+          left: Math.max(0, Math.min(800, x)),
+        };
+        this.craftedElements[index].moved = true;
       }
-      
-      this.applyDropAnimation(index);
-      
       this.draggingElementIndex = null;
       this.isDraggingSelected = false;
       this.isDraggingCrafted = false;
-      
-      document.body.classList.remove('dragging-in-progress');
-    },
-    handleDropOnSelection(event) {
-      if (this.isDraggingCrafted) {
-        event.preventDefault();
-        event.stopPropagation();
-        return false;
-      }
-    },
-    applyDropAnimation(index, isSelectedElement = false) {
-      this.$nextTick(() => {
-        let element;
-        
-        if (isSelectedElement) {
-          const selectedElements = document.querySelectorAll('#selected-resources li');
-          if (index < selectedElements.length) {
-            element = selectedElements[index];
-          }
-        } else {
-          const craftedElements = document.querySelectorAll('.crafted-element');
-          if (index < craftedElements.length) {
-            element = craftedElements[index];
-          }
-        }
-        
-        if (element) {
-          element.classList.add('drop-animation');
-          
-          setTimeout(() => {
-            element.classList.remove('drop-animation');
-          }, 300);
-        }
-      });
     },
     dragOver(event) {
       const target = event.target.closest('.crafted-element');
@@ -728,70 +418,10 @@ export default {
       if (target) {
         target.classList.remove('no-drop');
       }
-    },
-    setupIntersectionObserver() {
-      if ('IntersectionObserver' in window) {
-        const options = {
-          root: this.$refs.craftingBoard,
-          rootMargin: '100px',
-          threshold: 0.1
-        };
-        
-        this.observer = new IntersectionObserver((entries) => {
-          entries.forEach(entry => {
-            const index = entry.target.getAttribute('data-index');
-            if (index) {
-              if (entry.isIntersecting) {
-                entry.target.classList.remove('paused-animations');
-              } else {
-                entry.target.classList.add('paused-animations');
-              }
-            }
-          });
-        }, options);
-        
-        this.$nextTick(() => {
-          document.querySelectorAll('.crafted-element').forEach((el, idx) => {
-            el.setAttribute('data-index', idx);
-            this.observer.observe(el);
-          });
-        });
-      }
-    },
-    async loadFireworkComponent() {
-      try {
-        const module = await import('./FireWorkAnimation.vue');
-        this.FireworkComponent = module.default;
-      } catch (error) {
-        console.error("Failed to load FireworkAnimation component:", error);
-      }
     }
   },
-  async mounted() {
-    // Charger le composant FireworkAnimation
-    await this.loadFireworkComponent();
-    
+  mounted() {
     window.addEventListener('keydown', this.handleKeyPress);
-    
-    const style = document.createElement('style');
-    style.innerHTML = `
-      .dragging-in-progress .smoke-crafting,
-      .dragging-in-progress .star,
-      .dragging-in-progress .shooting-star,
-      .dragging-in-progress .shooting-star-red,
-      .paused-animations {
-        animation-play-state: paused !important;
-      }
-      
-      .crafted-element, #selected-resources li {
-        will-change: opacity;
-        contain: style paint;
-      }
-    `;
-    document.head.appendChild(style);
-    
-    this.setupIntersectionObserver();
-    
     window.addEventListener('beforeunload', () => {
       if (this.pendingSaves.size > 0) {
         this.pendingSaves.forEach(element => {
@@ -802,12 +432,6 @@ export default {
   },
   beforeUnmount() {
     window.removeEventListener('keydown', this.handleKeyPress);
-    
-    if (this.observer) {
-      this.observer.disconnect();
-      this.observer = null;
-    }
-    
     if (this.pendingSaves.size > 0) {
       this.pendingSaves.forEach(element => {
         this.saveDiscoveredElement(element);

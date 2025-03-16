@@ -31,13 +31,31 @@
       </div>
       
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 100">
-      
+        <!-- Fond du bouton avec dégradé plus intense -->
+        <rect x="10" y="10" width="280" height="80" rx="35" fill="url(#explorerBtnGradient)" />
+        
+        <!-- Bordure extérieure avec lueur améliorée -->
+        <rect x="14" y="14" width="272" height="72" rx="32" fill="none" stroke="url(#explorerBrdGradient)" stroke-width="2" class="glow-border" />
+        
+        <!-- Couche de brillance subtile -->
+        <rect x="14" y="14" width="272" height="36" rx="32" fill="url(#explorerShineGradient)" opacity="0.08" class="explorer-inner-shine" />
+        
+        <!-- Bordure intérieure avec pulsation -->
+        <rect x="20" y="20" width="260" height="60" rx="28" fill="none" stroke="url(#explorerInnerBrdGradient)" stroke-width="1" class="inner-border" />
+        
+        <!-- Effet de brume énergétique -->
+        <rect x="35" y="30" width="230" height="40" rx="25" fill="url(#explorerEnergyGradient)" opacity="0.15" class="explorer-energy-mist" />
+        
         <!-- Effet de particules/étoiles scintillantes -->
         <circle cx="40" cy="40" r="0.7" fill="#8a5cad" class="star-particle star1" />
         <circle cx="260" cy="30" r="0.7" fill="#8a5cad" class="star-particle star2" />
         <circle cx="60" cy="70" r="0.7" fill="#8a5cad" class="star-particle star3" />
         <circle cx="240" cy="60" r="0.7" fill="#8a5cad" class="star-particle star4" />
         <circle cx="150" cy="20" r="0.7" fill="#8a5cad" class="star-particle star5" />
+        <circle cx="110" cy="40" r="0.7" fill="#8a5cad" class="star-particle star6" />
+        <circle cx="190" cy="45" r="0.7" fill="#8a5cad" class="star-particle star7" />
+        <circle cx="85" cy="25" r="0.7" fill="#8a5cad" class="star-particle star8" />
+        <circle cx="220" cy="35" r="0.7" fill="#8a5cad" class="star-particle star9" />
         
         <!-- Effet de fumée subtile -->
         <rect x="20" y="70" width="260" height="15" rx="7" fill="url(#explorerSmkGradient)" opacity="0.3" class="smoke-effect smoke1" />

@@ -258,7 +258,9 @@ export default {
       !r.completed && 
       r.map_id === currentMapId
     );
-        
+    
+    console.log("Régions disponibles dans la nouvelle map:", availableRegions);
+    
     return availableRegions;
   },
 

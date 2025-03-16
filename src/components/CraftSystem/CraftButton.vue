@@ -27,7 +27,9 @@
     </div>
     
     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 200">
-   
+      <!-- Fond du bouton avec dégradé plus intense -->
+      <rect x="50" y="50" width="300" height="100" rx="18" fill="url(#craftBtnGradient)" />
+      
       <!-- Bordure extérieure avec lueur améliorée -->
       <rect x="54" y="54" width="292" height="92" rx="16" fill="none" stroke="url(#craftBrdGradient)" stroke-width="2" class="craft-glow-border" />
       
@@ -37,12 +39,17 @@
       <!-- Bordure intérieure avec pulsation -->
       <rect x="60" y="60" width="280" height="80" rx="12" fill="none" stroke="url(#craftInnerBrdGradient)" stroke-width="1" class="craft-inner-border" />
       
-
+      <!-- Effet de brume énergétique -->
+      <rect x="75" y="70" width="250" height="60" rx="12" fill="url(#craftEnergyGradient)" opacity="0.15" class="craft-energy-mist" />
+      
       <!-- Effet de particules/étoiles scintillantes -->
       <circle cx="80" cy="90" r="0.7" fill="#8a5cad" class="craft-star-particle craft-star1" />
       <circle cx="320" cy="70" r="0.7" fill="#8a5cad" class="craft-star-particle craft-star2" />
       <circle cx="100" cy="130" r="0.7" fill="#8a5cad" class="craft-star-particle craft-star3" />
-
+      <circle cx="300" cy="120" r="0.7" fill="#8a5cad" class="craft-star-particle craft-star4" />
+      <circle cx="200" cy="60" r="0.7" fill="#8a5cad" class="craft-star-particle craft-star5" />
+      <circle cx="150" cy="80" r="0.7" fill="#8a5cad" class="craft-star-particle craft-star6" />
+      <circle cx="250" cy="95" r="0.7" fill="#8a5cad" class="craft-star-particle craft-star7" />
       
       <!-- Effet de fumée subtile -->
       <rect x="60" y="130" width="280" height="15" rx="7" fill="url(#craftSmkGradient)" opacity="0.3" class="craft-smoke-effect" />
@@ -77,7 +84,12 @@
           <stop offset="100%" stop-color="rgba(178, 132, 213, 0.9)" />
         </linearGradient>
         
-
+        <!-- Dégradé pour la bordure intérieure -->
+        <linearGradient id="craftInnerBrdGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" stop-color="rgba(138, 92, 173, 0.1)" />
+          <stop offset="50%" stop-color="rgba(158, 112, 193, 0.3)" />
+          <stop offset="100%" stop-color="rgba(138, 92, 173, 0.1)" />
+        </linearGradient>
         
         <!-- Dégradé pour l'effet de brillance -->
         <linearGradient id="craftShineGradient" x1="0%" y1="0%" x2="0%" y2="100%">
@@ -92,7 +104,11 @@
           <stop offset="100%" stop-color="rgba(138, 92, 173, 0)" />
         </linearGradient>
         
-
+        <!-- Filtre pour l'effet de lueur du texte amélioré -->
+        <filter id="craftTxtGlow" x="-20%" y="-20%" width="140%" height="140%">
+          <feGaussianBlur in="SourceGraphic" stdDeviation="3" result="blur" />
+          <feComposite in="SourceGraphic" in2="blur" operator="over" />
+        </filter>
         
         <!-- Dégradé pour l'effet de fumée plus visible -->
         <linearGradient id="craftSmkGradient" x1="0%" y1="0%" x2="100%" y2="0%">
@@ -372,7 +388,25 @@ export default {
   transition: opacity 0.5s ease;
   animation: craftAuraPulse 3s infinite ease-in-out;
 }
-µ
+
+@keyframes craftAuraPulse {
+  0% {
+    opacity: 0.1;
+    transform: translate(-50%, -50%) scale(1);
+  }
+  50% {
+    opacity: 0.3;
+    transform: translate(-50%, -50%) scale(1.05);
+  }
+  100% {
+    opacity: 0.1;
+    transform: translate(-50%, -50%) scale(1);
+  }
+}
+
+.craft-button:hover .craft-button-aura {
+  opacity: 1;
+}
 
 .craft-button:focus,
 .craft-button:active,
@@ -393,7 +427,47 @@ export default {
   animation: craftBorderPulse 4s infinite ease-in-out;
 }
 
+@keyframes craftBorderPulse {
+  0% {
+    stroke-width: 2;
+    filter: drop-shadow(0 0 2px rgba(138, 92, 173, 0.3));
+  }
+  50% {
+    stroke-width: 2.5;
+    filter: drop-shadow(0 0 4px rgba(138, 92, 173, 0.5));
+  }
+  100% {
+    stroke-width: 2;
+    filter: drop-shadow(0 0 2px rgba(138, 92, 173, 0.3));
+  }
+}
 
+.craft-button:hover .craft-glow-border {
+  stroke-width: 3;
+  stroke: url(#craftBrdGradient);
+  filter: drop-shadow(0 0 5px rgba(158, 112, 193, 0.7));
+  animation: none;
+}
+
+.craft-inner-border {
+  transition: all 0.3s ease;
+  animation: craftInnerBorderPulse 3s infinite ease-in-out;
+}
+
+@keyframes craftInnerBorderPulse {
+  0% {
+    opacity: 0.3;
+    stroke-width: 1;
+  }
+  50% {
+    opacity: 0.7;
+    stroke-width: 1.2;
+  }
+  100% {
+    opacity: 0.3;
+    stroke-width: 1;
+  }
+}
 
 .craft-button:hover .craft-inner-border {
   opacity: 1;

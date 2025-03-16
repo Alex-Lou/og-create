@@ -31,23 +31,29 @@
     </div>
     
     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 200">
-
-      <!-- Bordure extérieure avec lueur améliorée -->
-      <rect x="54" y="54" width="292" height="92" rx="16" fill="none" stroke="url(#craftBrdGradient)" stroke-width="2" class="craft-glow-border" />
-            
-
+      <!-- Fond du bouton avec dégradé plus arrondi -->
+      <rect x="50" y="50" width="300" height="100" rx="30" fill="url(#cleanBtnGradient)" />
+      
+      <!-- Bordure extérieure avec lueur améliorée et plus arrondie -->
+      <rect x="54" y="54" width="292" height="92" rx="27" fill="none" stroke="url(#cleanBrdGradient)" stroke-width="2" class="clean-glow-border" />
+      
       <!-- Couche de brillance subtile -->
       <rect x="54" y="54" width="292" height="46" rx="27" fill="url(#cleanShineGradient)" opacity="0.08" class="clean-inner-shine" />
       
       <!-- Bordure intérieure avec pulsation -->
       <rect x="60" y="60" width="280" height="80" rx="24" fill="none" stroke="url(#cleanInnerBrdGradient)" stroke-width="1" class="clean-inner-border" />
       
-
+      <!-- Effet de brume énergétique -->
+      <rect x="75" y="70" width="250" height="60" rx="24" fill="url(#cleanEnergyGradient)" opacity="0.15" class="clean-energy-mist" />
+      
       <!-- Effet de particules/étoiles scintillantes -->
       <circle cx="80" cy="90" r="0.7" fill="#dea17e" class="clean-star-particle clean-star1" />
       <circle cx="320" cy="70" r="0.7" fill="#dea17e" class="clean-star-particle clean-star2" />
       <circle cx="100" cy="130" r="0.7" fill="#dea17e" class="clean-star-particle clean-star3" />
-
+      <circle cx="300" cy="120" r="0.7" fill="#dea17e" class="clean-star-particle clean-star4" />
+      <circle cx="200" cy="60" r="0.7" fill="#dea17e" class="clean-star-particle clean-star5" />
+      <circle cx="150" cy="80" r="0.7" fill="#dea17e" class="clean-star-particle clean-star6" />
+      <circle cx="250" cy="95" r="0.7" fill="#dea17e" class="clean-star-particle clean-star7" />
       
       <!-- Effet de fumée subtile -->
       <rect x="60" y="130" width="280" height="15" rx="7" fill="url(#cleanSmkGradient)" opacity="0.3" class="clean-smoke-effect" />
@@ -72,12 +78,14 @@
           <stop offset="25%" stop-color="#221512" />
           <stop offset="50%" stop-color="#1a110e" />
           <stop offset="75%" stop-color="#221512" />
+          <stop offset="100%" stop-color="#2d1d18" />
         </linearGradient>
         
         <!-- Dégradé pour la bordure avec couleurs plus vives -->
         <linearGradient id="cleanBrdGradient" x1="0%" y1="0%" x2="100%" y2="100%">
           <stop offset="0%" stop-color="rgba(222, 161, 126, 0.9)" />
           <stop offset="50%" stop-color="rgba(138, 92, 173, 0.6)" />
+          <stop offset="100%" stop-color="rgba(222, 161, 126, 0.9)" />
         </linearGradient>
         
         <!-- Dégradé pour la bordure intérieure -->
@@ -86,7 +94,12 @@
           <stop offset="50%" stop-color="rgba(202, 141, 106, 0.4)" />
           <stop offset="100%" stop-color="rgba(222, 161, 126, 0.2)" />
         </linearGradient>
-
+        
+        <!-- Dégradé pour l'effet de brillance -->
+        <linearGradient id="cleanShineGradient" x1="0%" y1="0%" x2="0%" y2="100%">
+          <stop offset="0%" stop-color="rgba(255, 255, 255, 0.2)" />
+          <stop offset="100%" stop-color="rgba(255, 255, 255, 0)" />
+        </linearGradient>
         
         <!-- Filtre pour l'effet de lueur du texte amélioré -->
         <filter id="cleanTxtGlow" x="-20%" y="-20%" width="140%" height="140%">
@@ -94,7 +107,19 @@
           <feComposite in="SourceGraphic" in2="blur" operator="over" />
         </filter>
         
-
+        <!-- Dégradé pour l'effet de fumée plus visible -->
+        <linearGradient id="cleanSmkGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+          <stop offset="0%" stop-color="rgba(138, 92, 173, 0)" />
+          <stop offset="50%" stop-color="rgba(222, 161, 126, 0.1)" />
+          <stop offset="100%" stop-color="rgba(138, 92, 173, 0)" />
+        </linearGradient>
+        
+        <!-- Dégradé pour l'effet de brume énergétique -->
+        <radialGradient id="cleanEnergyGradient" cx="50%" cy="50%" r="50%" fx="50%" fy="50%">
+          <stop offset="0%" stop-color="rgba(222, 161, 126, 0.2)" />
+          <stop offset="70%" stop-color="rgba(192, 131, 96, 0.08)" />
+          <stop offset="100%" stop-color="rgba(162, 101, 66, 0)" />
+        </radialGradient>
       </defs>
     </svg>
     

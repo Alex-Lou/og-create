@@ -51,6 +51,7 @@ function isInGlobalCooldown() {
 // Activer le cooldown global
 function activateGlobalCooldown() {
   globalCooldownUntil = Date.now() + GLOBAL_COOLDOWN_DURATION;
+  console.warn(`Cooldown global activé jusqu'à ${new Date(globalCooldownUntil).toLocaleTimeString()}`);
 }
 
 // Créer une instance plus spécifique qui utilise l'apiInstance partagée
@@ -61,6 +62,7 @@ const progressInstance = {
     
     // Vérifier le cooldown global
     if (isInGlobalCooldown()) {
+      console.warn(`Requête GET ${endpoint} bloquée par le cooldown global. Attente...`);
       await new Promise(resolve => setTimeout(resolve, globalCooldownUntil - Date.now()));
     }
     
@@ -71,16 +73,18 @@ const progressInstance = {
       // Si erreur d'authentification, essayer de rafraîchir le token
       if (error.response && error.response.status === 401) {
         try {
+          console.log("Tentative de rafraîchissement du token...");
           await AuthService.refreshToken();
           ensureAuthentication();
           return await apiInstance.get(`/progress/${endpoint}`);
         } catch (refreshError) {
-          console.error("Échec du rafraîchissement du token");
+          console.error("Échec du rafraîchissement du token:", refreshError);
           throw error; // Propager l'erreur originale
         }
       }
       
       if (error.response && error.response.status === 429) {
+        console.warn(`Rate limit atteint pour GET ${endpoint}, activation du cooldown global...`);
         activateGlobalCooldown();
         await new Promise(resolve => setTimeout(resolve, RATE_LIMIT.initialBackoff));
         return this.get(endpoint); // Réessayer avec récursion limitée
@@ -100,6 +104,7 @@ const progressInstance = {
     
     // Vérifier le cooldown global
     if (isInGlobalCooldown()) {
+      console.warn(`Requête POST ${endpoint} bloquée par le cooldown global. Attente...`);
       await new Promise(resolve => setTimeout(resolve, globalCooldownUntil - Date.now()));
     }
     
@@ -113,11 +118,12 @@ const progressInstance = {
       // Si erreur d'authentification, essayer de rafraîchir le token
       if (error.response && error.response.status === 401) {
         try {
+          console.log("Tentative de rafraîchissement du token...");
           await AuthService.refreshToken();
           ensureAuthentication();
           return await apiInstance.post(`/progress/${endpoint}`, data);
         } catch (refreshError) {
-          console.error("Échec du rafraîchissement du token");
+          console.error("Échec du rafraîchissement du token:", refreshError);
           throw error; // Propager l'erreur originale
         }
       }
@@ -125,6 +131,7 @@ const progressInstance = {
       if (error.response && error.response.status === 429) {
         activateGlobalCooldown();
         const waitTime = RATE_LIMIT.initialBackoff * Math.pow(2, retryCount);
+        console.warn(`Trop de requêtes (${endpoint}), nouvelle tentative dans ${waitTime/1000}s...`);
         
         // Attendre avant de réessayer
         await new Promise(resolve => setTimeout(resolve, waitTime));
@@ -142,6 +149,7 @@ async function enforceRateLimit() {
   
   if (elapsed < RATE_LIMIT.interval) {
     const waitTime = RATE_LIMIT.interval - elapsed;
+    console.log(`Limitation de débit: attente de ${waitTime}ms avant la prochaine requête`);
     await new Promise(resolve => setTimeout(resolve, waitTime));
   }
   
@@ -166,6 +174,7 @@ class ProgressService {
     
     // Vérifier si nous sommes en cooldown global
     if (isInGlobalCooldown()) {
+      console.log(`Traitement de la file d'attente suspendu pendant le cooldown global`);
       setTimeout(() => this.processSaveQueue(), globalCooldownUntil - Date.now() + 5000);
       return;
     }
@@ -175,6 +184,7 @@ class ProgressService {
     const timeSinceLastSave = now - lastSaveTime;
     
     if (timeSinceLastSave < MIN_SAVE_INTERVAL) {
+      console.log(`Trop tôt pour sauvegarder (${timeSinceLastSave/1000}s), attente...`);
       setTimeout(() => this.processSaveQueue(), MIN_SAVE_INTERVAL - timeSinceLastSave + 2000);
       return;
     }
@@ -188,6 +198,7 @@ class ProgressService {
     
     // Si nous sommes en mode conservation, limiter la fréquence de traitement
     if (conservativeMode) {
+      console.log("Mode économie de requêtes actif: regroupement des sauvegardes");
       // Si la file n'est pas assez grande, attendre d'avoir plus d'éléments
       if (saveQueue.length < 5) {
         return;
@@ -259,6 +270,7 @@ class ProgressService {
       
       // Si on était en mode conservation et tout va bien, on peut revenir en mode normal
       if (conservativeMode && consecutiveErrors === 0) {
+        console.log("Retour au mode normal de sauvegarde");
         conservativeMode = false;
       }
       
@@ -289,6 +301,7 @@ class ProgressService {
       
       // Si trop d'erreurs consécutives, passer en mode conservation
       if (consecutiveErrors >= 3) {
+        console.warn("Trop d'erreurs consécutives, passage en mode économie de requêtes");
         conservativeMode = true;
       }
       
@@ -423,11 +436,15 @@ class ProgressService {
     // Si nous avons des données en cache récentes, les utiliser
     const now = Date.now();
     if (progressCache && (now - lastProgressLoad < CACHE_DURATION)) {
+      console.log('Utilisation du cache pour loadGameProgress', { 
+        cacheAge: Math.round((now - lastProgressLoad) / 1000) + 's' 
+      });
       return Promise.resolve({...progressCache}); // Renvoyer une copie pour éviter les mutations
     }
     
     // Si un chargement est déjà en cours, mettre en file d'attente
     if (isLoading) {
+      console.log('Chargement déjà en cours, mise en file d\'attente');
       return new Promise((resolve, reject) => {
         pendingLoadRequests.push({ resolve, reject });
       });
@@ -435,6 +452,7 @@ class ProgressService {
     
     // Vérifier si nous sommes en cooldown global
     if (isInGlobalCooldown()) {
+      console.log('Demande de chargement pendant un cooldown global, utilisation du cache ou attente');
       if (progressCache) {
         return Promise.resolve({...progressCache});
       }
@@ -446,6 +464,7 @@ class ProgressService {
     isLoading = true;
     
     try {
+      console.log('Chargement des données depuis le serveur');
       const response = await progressInstance.get('load');
       
       // Mettre à jour le cache
@@ -489,6 +508,7 @@ class ProgressService {
   invalidateProgressCache() {
     progressCache = null;
     lastProgressLoad = 0;
+    console.log('Cache de progression invalidé');
   }
 
   async saveAchievement(achievementData) {
@@ -588,6 +608,7 @@ class ProgressService {
 
   async updateAchievements() {
     if (!this.isLoggedIn || !this.achievements) {
+      console.log("Pas de mise à jour des achievements: utilisateur non connecté ou pas d'achievements");
       return;
     }
     
@@ -602,7 +623,10 @@ class ProgressService {
         }
       });
       
+      console.log("Sauvegarde des achievements:", Object.keys(achievementsData).length, "achievements débloqués");
+      
       await this.updateAchievements(achievementsData);
+      console.log("Achievements sauvegardés avec succès");
     } catch (error) {
       console.error("Erreur lors de la mise à jour des achievements:", error);
     }
@@ -620,6 +644,8 @@ class ProgressService {
       }
     };
     
+    console.log("updateTimerProgress - envoi de:", safeTimerProgress);
+    
     // Utiliser la file d'attente de sauvegarde avec priorité élevée
     return this.saveGameProgress({ 
       timerProgress: safeTimerProgress,
@@ -636,6 +662,7 @@ class ProgressService {
   forceSaveQueueProcessing() {
     // Ne pas forcer le traitement pendant un cooldown global
     if (isInGlobalCooldown()) {
+      console.log('Impossible de forcer le traitement pendant un cooldown global');
       return;
     }
     
@@ -673,6 +700,7 @@ class ProgressService {
   // Méthode pour réinitialiser le cooldown global (à utiliser avec précaution)
   resetGlobalCooldown() {
     globalCooldownUntil = 0;
+    console.log('Cooldown global réinitialisé');
   }
 }
 
