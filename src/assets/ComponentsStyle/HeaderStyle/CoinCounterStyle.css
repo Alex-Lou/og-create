@@ -1,11 +1,3 @@
-/* Importation des polices utilisées dans l'univers GameInventory */
-@font-face {
-  font-family: 'White Storm';
-  src: url('~@/assets/fonts/White Storm.otf') format('opentype');
-  font-weight: normal;
-  font-style: normal;
-}
-
 @font-face {
   font-family: 'BenjaminFranklin';
   src: url('~@/assets/fonts/BenjaminFranklin.ttf') format('opentype');
@@ -16,26 +8,49 @@
 /* -------------------------- */
 /*     Compteur de pièces     */
 /* -------------------------- */
-.coin-counter {
-  display: flex;
-  align-items: center;
-  gap: 8px;
+.coin-counter-container {
+  position: relative;
   margin-left: 40px;
   margin-right: 20px;
   cursor: pointer;
-  padding: 5px 10px;
-  background: rgba(30, 20, 40, 0.3);
-  border: 1px solid rgba(138, 92, 173, 0.3);
-  border-radius: 8px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
-  transition: transform 0.3s ease, box-shadow 0.3s ease, background 0.3s ease;
+  transition: transform 0.3s ease;
 }
 
-.coin-counter:hover {
-  background: rgba(138, 92, 173, 0.15);
-  border-color: rgba(138, 92, 173, 0.5);
+.coin-counter-container:hover {
   transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+.coin-counter {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 5px 15px;
+  height: 42px;
+  width: fit-content;
+  z-index: 1;
+}
+
+.coin-counter-frame {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: -1;
+  filter: drop-shadow(0 2px 8px rgba(0, 0, 0, 0.2));
+  transition: filter 0.3s ease;
+}
+
+.coin-counter-container:hover .coin-counter-frame {
+  filter: drop-shadow(0 4px 12px rgba(0, 0, 0, 0.3));
+}
+
+.coin-counter-content {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  z-index: 2;
 }
 
 .coin-icon {
@@ -45,7 +60,7 @@
   transition: transform 0.3s ease;
 }
 
-.coin-counter:hover .coin-icon {
+.coin-counter-container:hover .coin-icon {
   transform: scale(1.1) rotate(15deg);
 }
 
@@ -56,6 +71,19 @@
   font-weight: bold;
   text-shadow: 0 0 10px rgba(138, 92, 173, 0.5);
 }
+
+/* Animations pour le cadre SVG - OPTIMISÉES */
+/* Bordure principale - statique avec hover actif seulement */
+.glow-border {
+  stroke-width: 1.5;
+  stroke: url(#coinBrdGradient);
+}
+
+.coin-counter-container:hover .glow-border {
+  stroke-width: 2.5;
+  animation: borderPulseHover 1.5s infinite alternate;
+}
+
 
 /* -------------------------- */
 /*         Modal d'achat      */
