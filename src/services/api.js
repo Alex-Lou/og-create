@@ -51,7 +51,6 @@ class ApiService {
         // Ajouter le token d'authentification à chaque requête
         const user = authService.getCurrentUser();
         if (user && user.token) {
-          console.log(`Ajout du token à la requête ${config.url}`, user.token.substring(0, 10) + '...');
           config.headers.Authorization = `Bearer ${user.token}`;
         } else {
           console.log(`Pas de token disponible pour la requête ${config.url}`);
@@ -89,7 +88,6 @@ class ApiService {
 
         // Gérer spécifiquement les erreurs 401
         if (error.response && error.response.status === 401) {
-          console.log('Erreur 401 interceptée:', error.response.data);
           // Tentative de rafraîchissement du token
           return this.handleUnauthorized(error);
         }

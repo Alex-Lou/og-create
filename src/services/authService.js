@@ -29,13 +29,11 @@ class AuthService {
   _initializeAuthHeader() {
     const user = this.getCurrentUser();
     if (user && user.token) {
-      console.log('Initialisation des headers avec token:', user.token.substring(0, 10) + '...');
       // Mettre à jour toutes les instances d'Axios
       axios.defaults.headers.common['Authorization'] = `Bearer ${user.token}`;
       axiosInstance.defaults.headers.common['Authorization'] = `Bearer ${user.token}`;
       apiInstance.defaults.headers.common['Authorization'] = `Bearer ${user.token}`;
     } else {
-      console.log('Pas de token disponible pour initialiser les headers');
       // S'assurer que les headers sont nettoyés si aucun token n'est disponible
       delete axios.defaults.headers.common['Authorization'];
       delete axiosInstance.defaults.headers.common['Authorization'];
@@ -58,7 +56,6 @@ class AuthService {
              error.response.data.message === 'Le token a expiré. Veuillez vous reconnecter.')) {
           
           originalRequest._retry = true;
-          console.log('Token expiré, tentative de rafraîchissement...');
           
           try {
             // Récupérer les tokens actuels
@@ -91,7 +88,7 @@ class AuthService {
             originalRequest.headers['Authorization'] = `Bearer ${token}`;
             return axios(originalRequest);
           } catch (refreshError) {
-            console.error('Échec du rafraîchissement du token:', refreshError);
+            console.error('Échec du rafraîchissement du token');
             
             // Si le rafraîchissement échoue, déconnecter l'utilisateur
             this.logout();
@@ -114,17 +111,10 @@ class AuthService {
 
   async login(email, password) {
     try {
-      console.group('Tentative de connexion');
-      console.log('Données:', { email, password: '******' });
-      
       const response = await axiosInstance.post('login', { 
         email, 
         password 
       });
-      
-      console.log('Réponse complète:', response);
-      console.log('Données de réponse:', response.data);
-      console.groupEnd();
       
       if (response.data.token) {
         // Stocker le token, le refresh token et la date d'expiration
@@ -143,20 +133,11 @@ class AuthService {
       
       return response.data;
     } catch (error) {
-      console.group('Erreur de connexion');
-      console.error('Détails de l\'erreur:', error);
-      
       if (error.response) {
-        console.error('Données de l\'erreur:', error.response.data);
-        console.error('Statut de l\'erreur:', error.response.status);
-        console.error('Headers de l\'erreur:', error.response.headers);
-      } else if (error.request) {
-        console.error('Requête sans réponse:', error.request);
+        console.error('Erreur de connexion:', error.response.status, error.response.data);
       } else {
-        console.error('Erreur de configuration:', error.message);
+        console.error('Erreur de connexion');
       }
-      
-      console.groupEnd();
       
       throw error;
     }
@@ -164,17 +145,10 @@ class AuthService {
 
   async register(email, password) {
     try {
-      console.group('Tentative d\'inscription');
-      console.log('Données:', { email, password: '******' });
-      
       const response = await axiosInstance.post('register', { 
         email, 
         password 
       });
-      
-      console.log('Réponse complète:', response);
-      console.log('Données de réponse:', response.data);
-      console.groupEnd();
       
       if (response.data.token) {
         // Stocker le token, le refresh token et la date d'expiration
@@ -193,20 +167,11 @@ class AuthService {
       
       return response.data;
     } catch (error) {
-      console.group('Erreur d\'inscription');
-      console.error('Détails de l\'erreur:', error);
-      
       if (error.response) {
-        console.error('Données de l\'erreur:', error.response.data);
-        console.error('Statut de l\'erreur:', error.response.status);
-        console.error('Headers de l\'erreur:', error.response.headers);
-      } else if (error.request) {
-        console.error('Requête sans réponse:', error.request);
+        console.error('Erreur d\'inscription:', error.response.status, error.response.data);
       } else {
-        console.error('Erreur de configuration:', error.message);
+        console.error('Erreur d\'inscription');
       }
-      
-      console.groupEnd();
       
       throw error;
     }
@@ -214,19 +179,14 @@ class AuthService {
 
   async refreshToken() {
     try {
-      console.group('Tentative de rafraîchissement de token');
-      
       const user = this.getCurrentUser();
       if (!user || !user.refreshToken) {
-        throw new Error('Pas de refresh token disponible pour le rafraîchissement');
+        throw new Error('Pas de refresh token disponible');
       }
       
       const response = await axiosInstance.post('refresh-token', {
         refreshToken: user.refreshToken
       });
-      
-      console.log('Réponse de rafraîchissement:', response.data);
-      console.groupEnd();
       
       if (response.data.token) {
         // Mettre à jour le stockage local avec le nouveau token
@@ -242,15 +202,7 @@ class AuthService {
         return response.data;
       }
     } catch (error) {
-      console.group('Erreur de rafraîchissement de token');
-      console.error('Détails de l\'erreur:', error);
-      
-      if (error.response) {
-        console.error('Données de l\'erreur:', error.response.data);
-        console.error('Statut de l\'erreur:', error.response.status);
-      }
-      
-      console.groupEnd();
+      console.error('Erreur de rafraîchissement du token');
       
       // En cas d'échec du rafraîchissement, déconnecter l'utilisateur
       this.logout();
@@ -267,10 +219,10 @@ class AuthService {
         await axiosInstance.post('logout', {
           refreshToken: user.refreshToken,
           userId: user.userId
-        }).catch(err => console.warn('Erreur lors de la déconnexion côté serveur:', err));
+        }).catch(() => console.warn('Erreur lors de la déconnexion côté serveur'));
       }
     } catch (error) {
-      console.warn('Erreur lors de la déconnexion:', error);
+      console.warn('Erreur lors de la déconnexion');
     } finally {
       // Vider le cache des données du jeu avant de supprimer l'authentification
       if (gameDataService && typeof gameDataService.clearCache === 'function') {
@@ -303,22 +255,16 @@ class AuthService {
     
     // Vérifier si le token est expiré
     if (user.expiresAt && Date.now() > user.expiresAt) {
-      console.log('Token expiré, tentative de rafraîchissement automatique');
-      
       // Tenter un rafraîchissement silencieux du token
-      this.refreshToken().catch(err => {
-        console.error('Échec du rafraîchissement automatique:', err);
+      this.refreshToken().catch(() => {
         this.logout();
-        return false;
       });
       
       // Considérer l'utilisateur comme non authentifié jusqu'à ce que le rafraîchissement réussisse
       return false;
     }
     
-    const isAuth = true;
-    console.log('Authentification vérifiée:', isAuth);
-    return isAuth;
+    return true;
   }
 
   // Fonction qui vérifie périodiquement si le token est sur le point d'expirer
@@ -338,12 +284,10 @@ class AuthService {
       const fiveMinutes = 5 * 60 * 1000;
       
       if (timeUntilExpiry < fiveMinutes && timeUntilExpiry > 0) {
-        console.log('Token bientôt expiré, rafraîchissement préventif');
         try {
           await this.refreshToken();
-          console.log('Rafraîchissement préventif réussi');
         } catch (error) {
-          console.error('Échec du rafraîchissement préventif:', error);
+          console.error('Échec du rafraîchissement préventif');
         }
       }
     }, 60000); // Vérifier chaque minute
