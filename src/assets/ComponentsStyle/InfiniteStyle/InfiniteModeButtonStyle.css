@@ -41,26 +41,7 @@
   filter: drop-shadow(0 0 10px rgba(138, 92, 173, 0.4));
 }
 
-/* Bordure principale avec animation */
-.glow-border {
-  transition: all 0.3s ease;
-  animation: borderPulse 3s infinite alternate;
-}
 
-@keyframes borderPulse {
-  0% {
-    stroke-width: 2;
-    stroke: url(#borderGradient);
-  }
-  50% {
-    stroke-width: 2.5;
-    stroke: url(#borderGradient);
-  }
-  100% {
-    stroke-width: 2;
-    stroke: url(#borderGradient);
-  }
-}
 
 .infinite-mode-button:hover .glow-border {
   stroke-width: 3;
