@@ -15,7 +15,6 @@ class TimerService {
   async loadTimerProgress() {
     try {
       const response = await apiInstance.get('/timer/load-progress');
-      console.log('Réponse API de /timer/load-progress:', response.data);
       
       // Construction explicite de l'objet pour s'assurer de la structure correcte
       const formattedResponse = {
@@ -28,7 +27,6 @@ class TimerService {
         }
       };
       
-      console.log('Réponse formatée:', formattedResponse);
       return formattedResponse;
     } catch (error) {
       console.error('Erreur lors du chargement de la progression du Timer:', error);
@@ -45,16 +43,13 @@ class TimerService {
       const response = await apiInstance.get('/timer/load-elements');
       return response.data.timerElements || [];
     } catch (error) {
-      console.error('Erreur lors du chargement des éléments du mode Timer:', error);
       return [];
     }
   }
 
   // Nouvelle méthode pour mettre à jour la progression du timer
   async updateTimerProgress(timerProgress) {
-    try {
-      console.log('Envoi de la mise à jour de la progression du timer:', timerProgress);
-      
+    try {      
       // S'assurer que l'objet a la structure correcte avant l'envoi
       const safeTimerProgress = {
         completedQuestions: timerProgress.completedQuestions || {},
@@ -70,7 +65,6 @@ class TimerService {
         timerProgress: safeTimerProgress
       });
       
-      console.log('Réponse de la mise à jour:', response.data);
       return response.data;
     } catch (error) {
       console.error('Erreur lors de la mise à jour de la progression du timer:', error);
@@ -101,7 +95,6 @@ class TimerService {
         // Enregistrer la mise à jour
         await this.updateTimerProgress(currentProgress);
         
-        console.log(`Catégorie ${categoryName} débloquée en difficulté ${difficulty}`);
         return true;
       }
       
