@@ -160,7 +160,7 @@ export default {
   -ms-user-select: none;
 }
 
-/* Cadre ornemental AJUSTÉ */
+/* Cadre ornemental */
 .button-frame {
   position: absolute;
   top: 13px;
@@ -176,13 +176,14 @@ export default {
     0 0 8px rgba(222, 161, 126, 0.2);
 }
 
-/* Coins ornementaux ajustés */
+/* Coins ornementaux avec animation */
 .frame-corner {
   position: absolute;
   width: 20px;
   height: 20px;
   pointer-events: none;
   z-index: 6;
+  transition: all 0.5s cubic-bezier(0.18, 0.89, 0.32, 1.28);
 }
 
 .corner-tl {
@@ -193,6 +194,7 @@ export default {
   border-top-left-radius: 30px;
   width: 18px;
   height: 18px;
+  transform-origin: top left;
 }
 
 .corner-tr {
@@ -203,6 +205,7 @@ export default {
   border-top-right-radius: 30px;
   width: 18px;
   height: 18px;
+  transform-origin: top right;
 }
 
 .corner-bl {
@@ -213,6 +216,7 @@ export default {
   border-bottom-left-radius: 30px;
   width: 18px;
   height: 18px;
+  transform-origin: bottom left;
 }
 
 .corner-br {
@@ -223,8 +227,48 @@ export default {
   border-bottom-right-radius: 30px;
   width: 18px;
   height: 18px;
+  transform-origin: bottom right;
 }
 
+/* Position légèrement décalée quand pas de survol */
+.reset-crafting-button:not(:hover) .corner-tl {
+  transform: translate(-5px, -5px) scale(0.95);
+}
+
+.reset-crafting-button:not(:hover) .corner-tr {
+  transform: translate(5px, -5px) scale(0.95);
+}
+
+.reset-crafting-button:not(:hover) .corner-bl {
+  transform: translate(-5px, 5px) scale(0.95);
+}
+
+.reset-crafting-button:not(:hover) .corner-br {
+  transform: translate(5px, 5px) scale(0.95);
+}
+
+/* Animation au survol - les coins se mettent en place */
+.reset-crafting-button:hover .corner-tl {
+  transform: translate(0, 0) scale(1);
+  transition-delay: 0s;
+}
+
+.reset-crafting-button:hover .corner-tr {
+  transform: translate(0, 0) scale(1);
+  transition-delay: 0.1s;
+}
+
+.reset-crafting-button:hover .corner-bl {
+  transform: translate(0, 0) scale(1);
+  transition-delay: 0.2s;
+}
+
+.reset-crafting-button:hover .corner-br {
+  transform: translate(0, 0) scale(1);
+  transition-delay: 0.3s;
+}
+
+/* Animation des points dans les coins */
 .corner-dot {
   position: absolute;
   width: 4px;
@@ -232,28 +276,78 @@ export default {
   background: rgba(222, 161, 126, 0.9);
   border-radius: 50%;
   filter: drop-shadow(0 0 3px rgba(222, 161, 126, 0.8));
+  opacity: 0.8;
+  transform: scale(1);
+  transition: all 0.4s ease;
 }
 
-/* Ajustement des positions des dots */
+.reset-crafting-button:hover .corner-dot {
+  opacity: 1;
+  transform: scale(1.3);
+  filter: drop-shadow(0 0 5px rgba(222, 161, 126, 0.9));
+}
+
+.reset-crafting-button:hover .corner-tl .corner-dot {
+  transition-delay: 0.3s;
+}
+
+.reset-crafting-button:hover .corner-tr .corner-dot {
+  transition-delay: 0.4s;
+}
+
+.reset-crafting-button:hover .corner-bl .corner-dot {
+  transition-delay: 0.5s;
+}
+
+.reset-crafting-button:hover .corner-br .corner-dot {
+  transition-delay: 0.6s;
+}
+
+/* Positions des points */
 .corner-tl .corner-dot { top: 5px; left: 5px; }
 .corner-tr .corner-dot { top: 5px; right: 5px; }
 .corner-bl .corner-dot { bottom: 5px; left: 5px; }
 .corner-br .corner-dot { bottom: 5px; right: 5px; }
 
+/* Animation des symboles */
 .frame-symbol {
   position: absolute;
   font-size: 8px;
   color: rgba(222, 161, 126, 0.6);
   filter: drop-shadow(0 0 2px rgba(222, 161, 126, 0.4));
+  opacity: 0.8;
+  transform: scale(1);
+  transition: all 0.5s ease;
 }
 
-/* Ajustement des positions des symboles */
+.reset-crafting-button:hover .frame-symbol {
+  opacity: 1;
+  transform: scale(1.2);
+  color: rgba(242, 181, 146, 0.9);
+  filter: drop-shadow(0 0 3px rgba(242, 181, 146, 0.8));
+}
+
+.reset-crafting-button:hover .symbol-tl {
+  transition-delay: 0.2s;
+}
+
+.reset-crafting-button:hover .symbol-tr {
+  transition-delay: 0.3s;
+}
+
+.reset-crafting-button:hover .symbol-bl {
+  transition-delay: 0.4s;
+}
+
+.reset-crafting-button:hover .symbol-br {
+  transition-delay: 0.5s;
+}
+
+/* Positions des symboles */
 .symbol-tl { top: 2px; left: 10px; }
 .symbol-tr { top: 2px; right: 10px; }
 .symbol-bl { bottom: 2px; left: 10px; }
 .symbol-br { bottom: 2px; right: 10px; }
-
-
 
 /* Ajustement du SVG pour le centrer au sein du cadre */
 .reset-crafting-button svg {
