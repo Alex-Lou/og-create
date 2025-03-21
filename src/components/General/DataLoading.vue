@@ -6,6 +6,7 @@
 
 <script>
 import { ref, onMounted, watch } from 'vue';
+import gameDataService from '@/services/gameDataService';
 
 export default {
   name: 'DataLoading',
@@ -30,8 +31,21 @@ export default {
 
     const loadAchievements = async () => {
       try {
-        const response = await fetch("/data/achievements.json");
-        const data = await response.json();
+        // Essayer d'abord via l'API
+        let data;
+        try {
+          data = await gameDataService.loadFile('achievements');
+        } catch (apiErr) {
+          console.log("API échouée, fallback sur fichier JSON local pour achievements");
+          // Fallback sur le fichier JSON local (qui est dans le dossier frontend)
+          const response = await fetch("/data/achievements.json");
+          
+          if (!response.ok) {
+            throw new Error(`Impossible de charger achievements.json: ${response.status}`);
+          }
+          
+          data = await response.json();
+        }
 
         const processedAchievements = data.map((achievement) => {
           let requiredImage;
@@ -56,22 +70,23 @@ export default {
       } catch (err) {
         console.error("Erreur de chargement des achievements:", err);
         error.value = "Erreur lors du chargement des succès";
-        throw err;
+        return [];
       }
     };
 
     const loadGameData = async () => {
       try {
-        const jsonFiles = [
-          "/data/animaux.json",
-          "/data/biologie.json",
-          "/data/créations_humaines.json",
-          "/data/elements_data.json",
-          "/data/formations_naturelles.json",
-          "/data/geologie.json",
-          "/data/materiaux_elementaires.json",
-          "/data/phénomènes_naturels.json",
-          "/data/magie.json"
+        // Liste des fichiers à charger
+        const filesToLoad = [
+          "animaux",
+          "biologie", 
+          "créations_humaines",
+          "elements_data",
+          "formations_naturelles",
+          "geologie",
+          "materiaux_elementaires",
+          "phénomènes_naturels",
+          "magie"
         ];
 
         const elementEmojis = {};
@@ -83,15 +98,39 @@ export default {
           Object.assign(categories, props.existingData.categories);
         }
 
-        for (const file of jsonFiles) {
+        // S'assurer que les éléments fondamentaux sont toujours présents
+        const fundamentalElements = ["Eau", "Feu", "Terre", "Air"];
+        categories["Elements Fondamentaux"] = categories["Elements Fondamentaux"] || [];
+        
+        fundamentalElements.forEach(element => {
+          if (!categories["Elements Fondamentaux"].includes(element)) {
+            categories["Elements Fondamentaux"].push(element);
+          }
+          
+          elementEmojis[element] = element === "Eau" ? "💧" : 
+                                   element === "Feu" ? "🔥" : 
+                                   element === "Terre" ? "🌎" : 
+                                   element === "Air" ? "💨" : "❓";
+        });
+
+        for (const filename of filesToLoad) {
           try {
-            const response = await fetch(file);
-
-            if (!response.ok) {
-              throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+            // Essayer d'abord via l'API
+            let data;
+            try {
+              data = await gameDataService.loadFile(filename);
+            } catch (apiErr) {
+              console.log(`API échouée, fallback sur fichier JSON local pour ${filename}`);
+              // Fallback sur le fichier JSON local
+              const response = await fetch(`/data/${filename}.json`);
+              
+              if (!response.ok) {
+                console.warn(`Fichier ${filename}.json non trouvé, ignoré`);
+                continue;
+              }
+              
+              data = await response.json();
             }
-
-            const data = await response.json();
 
             // Traitement des données animaux
             if (data.animaux) {
@@ -141,7 +180,7 @@ export default {
               });
             }
           } catch (err) {
-            console.warn(`Erreur lors du chargement du fichier ${file}:`, err);
+            console.warn(`Erreur lors du chargement des données ${filename}:`, err);
           }
         }
 
@@ -154,7 +193,7 @@ export default {
         emit('data-loaded', loadedData);
         return loadedData;
       } catch (err) {
-        error.value = "Erreur lors du chargement des données depuis plusieurs fichiers";
+        error.value = "Erreur lors du chargement des données depuis l'API";
         throw err;
       }
     };

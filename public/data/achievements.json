@@ -132,8 +132,4 @@
     "condition": "this.discoveredElements.includes('Druide')",
     "image": "/assets/success/Merlin l'enchanteur.png"
   }
-
-
-
-
 ]

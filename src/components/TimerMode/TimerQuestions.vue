@@ -208,6 +208,7 @@
 import '@/assets/ComponentsStyle/TimerStyle/TimerQuestionsStyle.css';
 import progressService from '@/services/progressService';
 import timerService from '@/services/timerService';
+import gameDataService from '@/services/gameDataService';
  
 export default {
   name: 'TimerQuestions',
@@ -472,44 +473,43 @@ export default {
         await this.show();
       }
     },
-   // Modification de la méthode handleCompletionClose pour revenir correctement à la sélection de niveau
-   handleCompletionClose() {
-  // Fermer le popup
-  this.showCompletionPopup = false;
-  
-  // Réinitialiser catégorie et index
-  this.selectedCategory = null;
-  this.currentQuestionIndex = 0;
-  
-  // Si toutes les catégories sont complétées
-  if (this.remainingCategories.length === 0) {
-    // Retourner au choix de niveau (premier palier) sans quitter le mode Timer
-    this.selectedLevel = null;
+    // Modification de la méthode handleCompletionClose pour revenir correctement à la sélection de niveau
+    handleCompletionClose() {
+      // Fermer le popup
+      this.showCompletionPopup = false;
     
-    // Réinitialiser le jeu
-    this.$parent.currentTimerElements = [];
-    this.$parent.discoveredElements = ["Eau", "Feu", "Terre", "Air"];
-    if (this.$parent.$refs.craftSystem) {
-      this.$parent.$refs.craftSystem.resetCraftingBoard();
-    }
+      // Réinitialiser catégorie et index
+      this.selectedCategory = null;
+      this.currentQuestionIndex = 0;
     
-    // NOUVEAU: Émettre un événement pour indiquer qu'on doit réafficher 
-    // le menu de sélection
-    this.$emit('show-level-selection');
-    
-    // Ne pas appeler force-stop ni confirmStopTimer
-  } else {
-    // Comportement normal pour les catégories non complétées
-    this.$parent.$emit('force-stop');
-    if (this.$parent.$refs.timerModeButton) {
-      this.$parent.$refs.timerModeButton.confirmStopTimer();
-    }
-  }
-},
-async closeSuccessPopup() {
-  this.showSuccessPopup = false;
-  await this.nextQuestion();
-},
+      // Si toutes les catégories sont complétées
+      if (this.remainingCategories.length === 0) {
+        // Retourner au choix de niveau (premier palier) sans quitter le mode Timer
+        this.selectedLevel = null;
+      
+        // Réinitialiser le jeu
+        this.$parent.currentTimerElements = [];
+        this.$parent.discoveredElements = ["Eau", "Feu", "Terre", "Air"];
+        if (this.$parent.$refs.craftSystem) {
+          this.$parent.$refs.craftSystem.resetCraftingBoard();
+        }
+      
+        // Émettre un événement pour indiquer qu'on doit réafficher le menu de sélection
+        this.$emit('show-level-selection');
+      
+        // Ne pas appeler force-stop ni confirmStopTimer
+      } else {
+        // Comportement normal pour les catégories non complétées
+        this.$parent.$emit('force-stop');
+        if (this.$parent.$refs.timerModeButton) {
+          this.$parent.$refs.timerModeButton.confirmStopTimer();
+        }
+      }
+    },
+    async closeSuccessPopup() {
+      this.showSuccessPopup = false;
+      await this.nextQuestion();
+    },
     cancelLevelSelection() {
       this.hide();
       this.loadQuestionsAndReset();
@@ -523,19 +523,45 @@ async closeSuccessPopup() {
     },
     async loadRecipes() {
       try {
-        const response = await fetch('/data/animaux.json');
-        if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
-        this.recipesData = await response.json();
+        // Essayer d'abord via l'API
+        try {
+          this.recipesData = await gameDataService.loadFile('animaux');
+        } catch (apiErr) {
+          console.log("API échouée, fallback sur fichier JSON local pour animaux");
+          // Fallback sur le fichier JSON local
+          const response = await fetch('/data/animaux.json');
+          
+          if (!response.ok) {
+            throw new Error(`Impossible de charger animaux.json: ${response.status}`);
+          }
+          
+          this.recipesData = await response.json();
+        }
       } catch (error) {
         console.error('Erreur lors du chargement des recettes:', error);
+        // Initialiser avec un objet vide en cas d'erreur
+        this.recipesData = { animaux: {} };
       }
     },
     async loadQuestionsData() {
       try {
-        const response = await fetch('/data/timer-questions.json');
-        if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
-        this.questionsData = await response.json();
+        // Essayer d'abord via l'API
+        try {
+          this.questionsData = await gameDataService.loadFile('timer-questions');
+        } catch (apiErr) {
+          console.log("API échouée, fallback sur fichier JSON local pour timer-questions");
+          // Fallback sur le fichier JSON local
+          const response = await fetch('/data/timer-questions.json');
+          
+          if (!response.ok) {
+            throw new Error(`Impossible de charger timer-questions.json: ${response.status}`);
+          }
+          
+          this.questionsData = await response.json();
+        }
       } catch (error) {
+        console.error('Erreur lors du chargement des questions:', error);
+        // Initialiser avec un objet minimal en cas d'erreur
         this.questionsData = {
           levels: {
             "Facile": {
@@ -736,59 +762,59 @@ async closeSuccessPopup() {
       }
     },
     async answerCorrect() {
-  const currentQuestion = this.currentQuestion;
-  const validationMode = currentQuestion.initialElements?.validationMode || 'any';
-  const points = currentQuestion.points || 10;
-  const questionId = currentQuestion.id || `${this.selectedCategory}_${this.currentQuestionIndex}`;
+      const currentQuestion = this.currentQuestion;
+      const validationMode = currentQuestion.initialElements?.validationMode || 'any';
+      const points = currentQuestion.points || 10;
+      const questionId = currentQuestion.id || `${this.selectedCategory}_${this.currentQuestionIndex}`;
 
-  if (validationMode === 'any') {
-    const isValidAnswer = currentQuestion.validAnswers.some(answer => 
-      this.$parent.discoveredElements.includes(answer)
-    );
-    
-    if (isValidAnswer) {
-      currentQuestion.initialElements.required.forEach(element => {
-        if (!this.$parent.discoveredElements.includes(element)) {
-          this.$parent.discoveredElements.push(element);
+      if (validationMode === 'any') {
+        const isValidAnswer = currentQuestion.validAnswers.some(answer => 
+          this.$parent.discoveredElements.includes(answer)
+        );
+        
+        if (isValidAnswer) {
+          currentQuestion.initialElements.required.forEach(element => {
+            if (!this.$parent.discoveredElements.includes(element)) {
+              this.$parent.discoveredElements.push(element);
+            }
+          });
+
+          this.markQuestionAsCompleted(questionId);
+          if (this.isNewQuestion) {
+            this.currentScore += points;
+            this.$emit('coins-earned', points);
+          }
+
+          this.hide();
+          
+          this.showSuccessPopup = true;
+          this.$emit('reset-craft-zone');
+          // L'utilisateur devra cliquer lui-même sur "Continuer"
         }
-      });
+      } else if (validationMode === 'multiple') {
+        const requiredCount = currentQuestion.initialElements.requiredCount || 1;
+        
+        if (this.discoveredValidAnswersCount >= requiredCount) {
+          currentQuestion.initialElements.required.forEach(element => {
+            if (!this.$parent.discoveredElements.includes(element)) {
+              this.$parent.discoveredElements.push(element);
+            }
+          });
 
-      this.markQuestionAsCompleted(questionId);
-      if (this.isNewQuestion) {
-        this.currentScore += points;
-        this.$emit('coins-earned', points);
-      }
+          this.markQuestionAsCompleted(questionId);
+          if (this.isNewQuestion) {
+            this.currentScore += points;
+            this.$emit('coins-earned', points);
+          }
 
-      this.hide();
-      
-      this.showSuccessPopup = true;
-      this.$emit('reset-craft-zone');
-      // L'utilisateur devra cliquer lui-même sur "Continuer"
-    }
-  } else if (validationMode === 'multiple') {
-    const requiredCount = currentQuestion.initialElements.requiredCount || 1;
-    
-    if (this.discoveredValidAnswersCount >= requiredCount) {
-      currentQuestion.initialElements.required.forEach(element => {
-        if (!this.$parent.discoveredElements.includes(element)) {
-          this.$parent.discoveredElements.push(element);
+          this.hide();
+          
+          this.showSuccessPopup = true;
+          this.$emit('reset-craft-zone');
+          // L'utilisateur devra cliquer lui-même sur "Continuer"
         }
-      });
-
-      this.markQuestionAsCompleted(questionId);
-      if (this.isNewQuestion) {
-        this.currentScore += points;
-        this.$emit('coins-earned', points);
       }
-
-      this.hide();
-      
-      this.showSuccessPopup = true;
-      this.$emit('reset-craft-zone');
-      // L'utilisateur devra cliquer lui-même sur "Continuer"
-    }
-  }
-},
+    },
     resetQuestions() {
       this.loadQuestionsAndReset();
       this.currentScore = 0;
