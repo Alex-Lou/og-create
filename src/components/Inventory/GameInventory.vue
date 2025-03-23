@@ -37,13 +37,24 @@
 
     <h2>Inventory</h2>
     
+    <!-- Log de débogage - visible uniquement en développement -->
+    <div v-if="props.isTimerMode" class="debug-info">
+      <p>Mode Timer actif</p>
+      <p>Catégories: {{ filteredCategories.length }}</p>
+      <p v-if="filteredCategories.length > 0">
+        Éléments dans Timer: {{ filteredCategories[0].elements.length }}
+      </p>
+      <button @click="refreshTimerElements" class="debug-button">Rafraîchir</button>
+    </div>
+    
     <!-- Catégories d'éléments -->
     <div 
       v-for="(category, index) in filteredCategories" 
       :key="`category-${index}`"
       class="category"
+      :class="{ 'timer-category': props.isTimerMode }"
     >
-      <div class="category-header">
+      <div class="category-header" @click="toggleCategory(index)">
         <span class="category-title">{{ category.name }}</span>
         <div class="progress">
           <div class="progress-value" :style="{ width: category.progress + '%' }"></div>
@@ -54,7 +65,20 @@
           </div>
         </div>
       </div>
-      <div class="category-content">
+      <div 
+        class="category-content"
+        :style="{ 
+          maxHeight: expandedCategories[index] || props.isTimerMode ? '1000px' : '0',
+          overflow: 'auto',
+          transition: 'max-height 0.5s ease-in-out'
+        }"
+      >
+        <div 
+          v-if="category.elements.length === 0" 
+          class="empty-category"
+        >
+          Aucun élément disponible
+        </div>
         <div
           v-for="element in category.elements"
           :key="`element-${element}`"
@@ -64,7 +88,7 @@
           @dragend="endDrag"
           @click="selectElement(element)"
         >
-          {{ elementEmojis[element] || '' }} {{ element }}
+          {{ getElementEmoji(element) }} {{ element }}
         </div>
       </div>
     </div>
@@ -75,6 +99,7 @@
 import { ref, computed, watch, onMounted } from 'vue';
 import '@/assets/ComponentsStyle/InventoryStyle/GameInventoryStyle.css';
 import gameDataService from '@/services/gameDataService';
+import gameService from '@/services/gameService';
  
 export default {
   name: 'GameInventory',
@@ -112,6 +137,13 @@ export default {
     const lastCompletedCategory = ref(null);
     const previousCategoriesState = ref({});
     const isLoading = ref(false);
+    const localElementEmojis = ref({...props.elementEmojis});
+    const expandedCategories = ref({});
+    
+    // Observer les changements des props elementEmojis
+    watch(() => props.elementEmojis, (newEmojis) => {
+      localElementEmojis.value = {...newEmojis};
+    }, { immediate: true });
     
     // Constantes
     const fundamentalElements = ["Eau", "Feu", "Terre", "Air"];
@@ -119,10 +151,19 @@ export default {
 
     // Computed properties
     const filteredCategories = computed(() => {
-      return props.isTimerMode 
+      const result = props.isTimerMode 
         ? getTimerModeCategories() 
         : getNormalModeCategories();
+      
+      
+      return result;
     });
+    
+    // Fonction pour basculer l'expansion d'une catégorie
+    function toggleCategory(index) {
+      console.log('Toggle catégorie', index);
+      expandedCategories.value[index] = !expandedCategories.value[index];
+    }
     
     // Fonctions utilitaires
     function normalizeString(str) {
@@ -133,45 +174,152 @@ export default {
         .trim();
     }
     
-    // Fonctions pour obtenir les catégories selon le mode
-    function getTimerModeCategories() {
-      const currentQuestion = props.$parent?.$refs?.timerQuestions?.getCurrentQuestion();
+    function getElementEmoji(elementName) {
+      // 1. Vérifier d'abord dans l'objet global window.timerElementEmojis
+      if (window.timerElementEmojis && window.timerElementEmojis[elementName]) {
+        return window.timerElementEmojis[elementName];
+      }
       
-      const possibleElements = [
-        ...(props.timerQuestionElements || []),
-        ...(currentQuestion?.validAnswers || []),
-        ...(currentQuestion?.initialElements?.required || []),
-        ...(currentQuestion?.initialElements?.additional || [])
-      ];
-
-      const timerElements = props.discoveredElements.filter(element => 
-        isElementValidForTimer(element, possibleElements)
-      );
-
-      const elementsWithEmojis = timerElements.map(element => {
-        const elementKey = Object.keys(props.elementEmojis).find(key => 
-          normalizeString(key) === normalizeString(element)
-        ) || element;
-        return elementKey;
-      });
-
-      return [{
-        name: 'Timer Elements',
-        progress: 100,
-        elements: elementsWithEmojis,
-        isComplete: elementsWithEmojis.length === props.timerQuestionElements.length
-      }];
+      // 2. Sinon, vérifier dans localElementEmojis
+      if (localElementEmojis.value && localElementEmojis.value[elementName]) {
+        return localElementEmojis.value[elementName];
+      }
+      
+      // 3. Vérifier dans props.elementEmojis
+      if (props.elementEmojis && props.elementEmojis[elementName]) {
+        return props.elementEmojis[elementName];
+      }
+      
+      // 4. Emojis de secours pour les éléments fondamentaux
+      const fallbackEmojis = {
+        "Eau": "💧",
+        "Feu": "🔥",
+        "Terre": "🌎",
+        "Air": "💨"
+      };
+      
+      return fallbackEmojis[elementName] || "❓";
     }
     
-    function isElementValidForTimer(element, possibleElements) {
-      const normalizedElement = normalizeString(element);
-      return possibleElements.some(possibleElement => {
-        const normalizedPossible = normalizeString(possibleElement);
-        return normalizedElement === normalizedPossible || 
-          (typeof normalizedPossible === 'string' && 
-           (normalizedElement.includes(normalizedPossible) || 
-           normalizedPossible.includes(normalizedElement)));
-      });
+    // Dans GameInventory.vue, modifiez la fonction getTimerModeCategories()
+
+    function getTimerModeCategories() {
+  console.log('Génération des catégories pour le mode Timer');
+  
+  // 1. Récupérer les éléments spécifiques à la question actuelle
+  const timerElements = Array.isArray(props.timerQuestionElements) ? [...props.timerQuestionElements] : [];
+  console.log('Éléments de la question actuelle du timer depuis props:', timerElements);
+  
+  // 2. Ajouter les éléments fondamentaux (toujours disponibles)
+  const fundamentalElements = ["Eau", "Feu", "Terre", "Air"];
+  fundamentalElements.forEach(element => {
+    if (!timerElements.includes(element)) {
+      timerElements.push(element);
+    }
+  });
+  
+  // 3. S'assurer que la catégorie Timer est développée par défaut
+  expandedCategories.value[0] = true;
+  
+  // 4. Si aucun élément n'est disponible au-delà des fondamentaux
+  if (timerElements.length <= fundamentalElements.length) {
+    // Lancer un chargement asynchrone des éléments du timer pour la question actuelle
+    loadTimerEmojis(window.currentQuestionId).then(elements => {
+      if (elements && elements.length > 0) {
+        console.log('Éléments du timer chargés de manière asynchrone:', elements.length);
+        // Mise à jour forcée pour rafraîchir l'affichage
+        setTimeout(() => {
+          emit('force-reload', { timerElementsLoaded: true });
+        }, 500);
+      }
+    });
+  }
+  
+  // 5. Utiliser les éléments de window.timerElements s'ils existent et sont plus nombreux
+  if (window.timerElements && window.timerElements.length > timerElements.length) {
+    console.log('Utilisation des éléments du timer depuis window.timerElements:', window.timerElements.length);
+    return [{
+      name: 'Timer Elements',
+      progress: 100,
+      elements: window.timerElements,
+      isComplete: false
+    }];
+  }
+  
+  console.log('Éléments filtrés pour le Timer:', timerElements);
+  
+  return [{
+    name: 'Timer Elements',
+    progress: 100,
+    elements: timerElements,
+    isComplete: false
+  }];
+}
+    
+async function loadTimerEmojis(currentQuestionId) {
+  try {
+    // Obtenir l'ID de la question actuelle si non fournie
+    if (!currentQuestionId && window.currentQuestionId) {
+      currentQuestionId = window.currentQuestionId;
+    }
+    
+    console.log('Chargement des éléments du timer pour la question:', currentQuestionId);
+    
+    // Utiliser gameService au lieu de faire un fetch direct
+    const timerElements = await gameService.loadTimerElements(currentQuestionId);
+    
+    // Les emojis et les éléments du timer sont déjà stockés par gameService.loadTimerElements
+    console.log('Éléments du timer après chargement:', timerElements?.length || 0);
+    
+    if (!window.timerElements && timerElements) {
+      window.timerElements = timerElements;
+    }
+    
+    return timerElements || [];
+  } catch (error) {
+    console.error('Erreur lors du chargement des emojis du Timer:', error);
+    return [];
+  }
+}
+    
+    // Initialisation des éléments du timer
+    async function initTimerElements() {
+      if (props.isTimerMode) {
+        console.log('Initialisation des éléments du timer');
+        
+        try {
+          // Charger les éléments du timer
+          const elements = await loadTimerEmojis();
+          
+          // Forcer une mise à jour des catégories filtrées
+          if (elements && elements.length > 0) {
+            console.log('Mise à jour des éléments du timer:', elements.length);
+            
+            // Mise à jour forcée pour rafraîchir l'affichage
+            setTimeout(() => {
+              // Forcer l'ouverture de la catégorie
+              expandedCategories.value[0] = true;
+              
+              // Forcer une mise à jour
+              emit('force-reload', { timerElementsLoaded: true });
+            }, 100);
+          }
+        } catch (error) {
+          console.error('Erreur lors de l\'initialisation des éléments du timer:', error);
+        }
+      }
+    }
+    
+    // Méthode pour rafraîchir manuellement les éléments du timer
+    function refreshTimerElements() {
+      console.log('Rafraîchissement manuel des éléments du timer');
+      
+      // Vider le cache
+      window.timerElements = [];
+      window.timerElementEmojisLoaded = false;
+      
+      // Réinitialiser les éléments
+      initTimerElements();
     }
     
     function getNormalModeCategories() {
@@ -309,9 +457,14 @@ export default {
     }
 
     // Lifecycle hooks
-    onMounted(() => {
+    onMounted(async () => {
       // Charger les données au montage du composant
-      loadEmojisData();
+      await loadEmojisData();
+      
+      // Initialiser les éléments du timer
+      if (props.isTimerMode) {
+        await initTimerElements();
+      }
       
       // Initialiser l'état des catégories
       previousCategoriesState.value = filteredCategories.value.reduce((acc, category) => {
@@ -326,6 +479,18 @@ export default {
     watch(filteredCategories, (newCategories) => {
       checkNewCompletedCategory(newCategories);
     }, { deep: true });
+    
+    // Observer les changements de mode
+    watch(() => props.isTimerMode, async (isTimerMode) => {
+      if (isTimerMode) {
+        // Réinitialiser et charger les éléments du timer
+        window.timerElementEmojisLoaded = false;
+        await initTimerElements();
+        
+        // S'assurer que la catégorie Timer est développée par défaut
+        expandedCategories.value[0] = true;
+      }
+    });
 
     return {
       filteredCategories,
@@ -333,7 +498,14 @@ export default {
       previousCategoriesState,
       normalizeString,
       forceReload,
-      isLoading
+      isLoading,
+      localElementEmojis,
+      getElementEmoji,
+      expandedCategories,
+      toggleCategory,
+      refreshTimerElements,
+      initTimerElements,
+      props
     };
   },
   

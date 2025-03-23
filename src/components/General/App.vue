@@ -1,12 +1,13 @@
 <template>
   <div :class="['game-container', { 'dark-mode': isDarkMode }]" id="game-container">
     <DataLoading
-      ref="dataLoading"
-      :isTimerMode="isTimerActive"
-      @data-loaded="handleDataLoaded"
-      @achievements-loaded="handleAchievementsLoaded"
-      @achievement-unlocked="handleAchievementUnlocked"
-    />
+  ref="dataLoading"
+  :isTimerMode="isTimerActive"
+  @data-loaded="handleDataLoaded"
+  @achievements-loaded="handleAchievementsLoaded"
+  @achievement-unlocked="handleAchievementUnlocked"
+  @timer-questions-loaded="handleTimerQuestionsLoaded"
+/>
     <GameAchievementsContent 
       :achievements="achievements" 
       :forceReload="shouldForceReload" 
@@ -359,6 +360,12 @@ mounted() {
     }
   },
 
+  handleTimerQuestionsLoaded(data) {
+  if (this.$refs.timerQuestions) {
+    this.$refs.timerQuestions.setQuestions(data);
+  }
+},
+
   beforeUnmount() {
   // Nettoyer les écouteurs d'événements
   window.removeEventListener('app-reloaded', this.handleAppReloaded);
@@ -520,17 +527,10 @@ handleGlobalAchievementsLoaded(event) {
             return acc;
           }, {});
 
-        // console.log('💾 Achievements existants à préserver:', 
-        //   Object.keys(existingUnlockedAchievements).length
-        // );
 
         // Forcer le chargement de toutes les données
         const loadedData = await this.$refs.dataLoading.loadAllData();
         
-        // console.log('🔍 Données chargées:', {
-        //   achievements: loadedData.achievements?.length,
-        //   categories: Object.keys(loadedData.categories).length
-        // });
 
         // Mise à jour des données
         this.elementEmojis = loadedData.elementEmojis || {};

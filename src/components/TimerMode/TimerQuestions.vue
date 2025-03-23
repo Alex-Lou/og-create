@@ -207,8 +207,7 @@
 <script>
 import '@/assets/ComponentsStyle/TimerStyle/TimerQuestionsStyle.css';
 import progressService from '@/services/progressService';
-import timerService from '@/services/timerService';
-import gameDataService from '@/services/gameDataService';
+import gameService from '@/services/gameService';
  
 export default {
   name: 'TimerQuestions',
@@ -249,7 +248,8 @@ export default {
       return this.$parent.isLoggedIn;
     },
     availableCategories() {
-      if (!this.selectedLevel || !this.questionsData?.levels[this.selectedLevel]?.categories) {
+      if (!this.selectedLevel || !this.questionsData || !this.questionsData.levels || !this.questionsData.levels[this.selectedLevel] || !this.questionsData.levels[this.selectedLevel].categories) {
+        console.warn(`Données de catégories non disponibles pour le niveau ${this.selectedLevel}:`, this.questionsData);
         return {};
       }
       return this.questionsData.levels[this.selectedLevel].categories;
@@ -323,7 +323,7 @@ export default {
     },
     async loadProgress() {
       try {
-        const progress = await timerService.loadTimerProgress();
+        const progress = await gameService.loadTimerProgress();
         
         // Vérifier si nous avons des données complètes et plus récentes
         if (progress && progress.completedQuestions) {
@@ -425,9 +425,9 @@ export default {
           Difficile: Math.max(this.$parent?.timerProgress?.bestScores?.Difficile || 0, this.currentScore)
         };
         
-        // Utiliser d'abord le service timerService directement pour une mise à jour immédiate
+        // Utiliser le service gameService pour une mise à jour
         try {
-          await timerService.updateTimerProgress(this.timerProgress);
+          await gameService.updateTimerProgress(this.timerProgress);
         } catch (error) {
           console.error("Erreur lors de la mise à jour directe:", error);
           // En cas d'échec, essayer via progressService
@@ -477,26 +477,27 @@ export default {
     handleCompletionClose() {
       // Fermer le popup
       this.showCompletionPopup = false;
-    
+      
       // Réinitialiser catégorie et index
       this.selectedCategory = null;
       this.currentQuestionIndex = 0;
-    
+      
       // Si toutes les catégories sont complétées
       if (this.remainingCategories.length === 0) {
         // Retourner au choix de niveau (premier palier) sans quitter le mode Timer
         this.selectedLevel = null;
-      
+        
         // Réinitialiser le jeu
         this.$parent.currentTimerElements = [];
         this.$parent.discoveredElements = ["Eau", "Feu", "Terre", "Air"];
         if (this.$parent.$refs.craftSystem) {
           this.$parent.$refs.craftSystem.resetCraftingBoard();
         }
-      
-        // Émettre un événement pour indiquer qu'on doit réafficher le menu de sélection
+        
+        // NOUVEAU: Émettre un événement pour indiquer qu'on doit réafficher 
+        // le menu de sélection
         this.$emit('show-level-selection');
-      
+        
         // Ne pas appeler force-stop ni confirmStopTimer
       } else {
         // Comportement normal pour les catégories non complétées
@@ -523,57 +524,170 @@ export default {
     },
     async loadRecipes() {
       try {
-        // Essayer d'abord via l'API
-        try {
-          this.recipesData = await gameDataService.loadFile('animaux');
-        } catch (apiErr) {
-          console.log("API échouée, fallback sur fichier JSON local pour animaux");
-          // Fallback sur le fichier JSON local
-          const response = await fetch('/data/animaux.json');
-          
-          if (!response.ok) {
-            throw new Error(`Impossible de charger animaux.json: ${response.status}`);
-          }
-          
-          this.recipesData = await response.json();
-        }
+        this.recipesData = await gameService.loadFile('animaux');
       } catch (error) {
         console.error('Erreur lors du chargement des recettes:', error);
-        // Initialiser avec un objet vide en cas d'erreur
-        this.recipesData = { animaux: {} };
       }
     },
     async loadQuestionsData() {
       try {
-        // Essayer d'abord via l'API
-        try {
-          this.questionsData = await gameDataService.loadFile('timer-questions');
-        } catch (apiErr) {
-          console.log("API échouée, fallback sur fichier JSON local pour timer-questions");
-          // Fallback sur le fichier JSON local
-          const response = await fetch('/data/timer-questions.json');
-          
-          if (!response.ok) {
-            throw new Error(`Impossible de charger timer-questions.json: ${response.status}`);
+        
+        // Essayer de charger depuis l'API
+        const data = await gameService.loadFile('timer-questions');
+        
+        // Vérifier si la structure attendue est présente
+        if (data && data.levels) {
+          // Si les emojis sont disponibles, les stocker dans la variable globale
+          if (data.allEmojis) {
+            if (window.timerElementEmojis === undefined) {
+              window.timerElementEmojis = {};
+            }
+            Object.assign(window.timerElementEmojis, data.allEmojis);
           }
           
-          this.questionsData = await response.json();
+          this.questionsData = data;
+          return this.questionsData;
+        } else {
+          console.warn("Structure incorrecte depuis l'API:", data);
+          
+          // Données par défaut en cas d'échec
+          this.questionsData = {
+            levels: {
+              "Facile": { 
+                timer: 300,
+                categories: { 
+                  "Règne Animal": { 
+                    questions: [
+                      {
+                        id: "default_easy_1",
+                        text: "Créez un animal marin",
+                        validAnswers: ["Poisson", "Baleine", "Dauphin"],
+                        points: 10,
+                        initialElements: {
+                          validationMode: "any",
+                          required: ["Eau", "Animal"],
+                          additional: []
+                        }
+                      }
+                    ] 
+                  } 
+                }
+              },
+              "Moyen": { 
+                timer: 240,
+                categories: { 
+                  "Règne Animal": { 
+                    questions: [
+                      {
+                        id: "default_medium_1",
+                        text: "Créez un mammifère volant",
+                        validAnswers: ["Chauve-souris"],
+                        points: 20,
+                        initialElements: {
+                          validationMode: "any",
+                          required: ["Animal", "Air"],
+                          additional: ["Aile"]
+                        }
+                      }
+                    ] 
+                  } 
+                }
+              },
+              "Difficile": { 
+                timer: 180,
+                categories: { 
+                  "Règne Animal": { 
+                    questions: [
+                      {
+                        id: "default_hard_1",
+                        text: "Créez un animal marin intelligent",
+                        validAnswers: ["Dauphin", "Baleine", "Pieuvre"],
+                        points: 30,
+                        initialElements: {
+                          validationMode: "any",
+                          required: ["Eau", "Animal", "Intelligence"],
+                          additional: []
+                        }
+                      }
+                    ] 
+                  } 
+                }
+              }
+            }
+          };
         }
+        
+        return this.questionsData;
       } catch (error) {
-        console.error('Erreur lors du chargement des questions:', error);
-        // Initialiser avec un objet minimal en cas d'erreur
+        console.error("Erreur lors du chargement des questions:", error);
+        
+        // Données par défaut en cas d'échec
         this.questionsData = {
           levels: {
-            "Facile": {
+            "Facile": { 
               timer: 300,
-              categories: {
-                "Règne Animal": {
-                  questions: []
-                }
+              categories: { 
+                "Règne Animal": { 
+                  questions: [
+                    {
+                      id: "default_easy_1",
+                      text: "Créez un animal marin",
+                      validAnswers: ["Poisson", "Baleine", "Dauphin"],
+                      points: 10,
+                      initialElements: {
+                        validationMode: "any",
+                        required: ["Eau", "Animal"],
+                        additional: []
+                      }
+                    }
+                  ] 
+                } 
+              }
+            },
+            "Moyen": { 
+              timer: 240,
+              categories: { 
+                "Règne Animal": { 
+                  questions: [
+                    {
+                      id: "default_medium_1",
+                      text: "Créez un mammifère volant",
+                      validAnswers: ["Chauve-souris"],
+                      points: 20,
+                      initialElements: {
+                        validationMode: "any",
+                        required: ["Animal", "Air"],
+                        additional: ["Aile"]
+                      }
+                    }
+                  ] 
+                } 
+              }
+            },
+            "Difficile": { 
+              timer: 180,
+              categories: { 
+                "Règne Animal": { 
+                  questions: [
+                    {
+                      id: "default_hard_1",
+                      text: "Créez un animal marin intelligent",
+                      validAnswers: ["Dauphin", "Baleine", "Pieuvre"],
+                      points: 30,
+                      initialElements: {
+                        validationMode: "any",
+                        required: ["Eau", "Animal", "Intelligence"],
+                        additional: []
+                      }
+                    }
+                  ] 
+                } 
               }
             }
           }
         };
+        
+        return this.questionsData;
       }
     },
     async selectLevel(level) {
@@ -581,6 +695,18 @@ export default {
       this.isLoading = true;
 
       try {
+        // Attendre que les données soient chargées avant de continuer
+        if (!this.questionsData || !this.questionsData.levels) {
+          console.log("Chargement des questions avant sélection du niveau");
+          await this.loadQuestionsData();
+        }
+        
+        // Vérifier que les données sont maintenant disponibles
+        if (!this.questionsData || !this.questionsData.levels || !this.questionsData.levels[level]) {
+          console.error(`Données de niveau ${level} non disponibles:`, this.questionsData);
+          throw new Error(`Données de niveau ${level} non disponibles`);
+        }
+
         this.selectedLevel = level;
         this.selectedCategory = null;
         
@@ -595,6 +721,9 @@ export default {
         });
 
         await this.$nextTick();
+      } catch (error) {
+        console.error("Erreur lors de la sélection du niveau:", error);
+        alert("Erreur lors du chargement des données. Veuillez réessayer.");
       } finally {
         this.isLoading = false;
       }
@@ -670,9 +799,9 @@ export default {
           if (!this.timerProgress.unlockedCategories[this.selectedLevel].includes(this.selectedCategory)) {
             this.timerProgress.unlockedCategories[this.selectedLevel].push(this.selectedCategory);
             
-            // Appeler directement le service timerService pour s'assurer que la catégorie est débloquée
+            // Appeler directement le service gameService pour s'assurer que la catégorie est débloquée
             if (this.isLoggedIn) {
-              timerService.updateTimerProgress(this.timerProgress)
+              gameService.updateTimerProgress(this.timerProgress)
                 .catch(error => {
                   console.error("Erreur lors de la mise à jour des catégories débloquées:", error);
                 });
@@ -697,25 +826,40 @@ export default {
       }
     },
     async show() {
-      this.isVisible = true;
-      this.isTimeUp = false;
+  this.isVisible = true;
+  this.isTimeUp = false;
+  
+  if (!this.selectedLevel || !this.selectedCategory) return;
+  
+  // Définir l'ID de la question actuelle dans window pour que GameInventory puisse y accéder
+  window.currentQuestionId = this.currentQuestion?.id || null;
+  console.log("ID de question défini:", window.currentQuestionId);
+  
+  await this.$nextTick();
+  
+  if (!this.$parent.currentTimerElements.length) {
+    if (this.currentQuestion && this.currentQuestion.initialElements) {
+      const requiredElements = this.currentQuestion.initialElements.required || [];
+      const additionalElements = this.currentQuestion.initialElements.additional || [];
+      const startingElements = [...new Set([...requiredElements, ...additionalElements])];
       
-      if (!this.selectedLevel || !this.selectedCategory) return;
- 
+      this.$emit('set-initial-inventory', startingElements);
+      
+      // Mise à jour manuelle de window.currentTimerElements pour le filtrage
+      window.currentTimerElements = startingElements;
+      
       await this.$nextTick();
-      
-      if (!this.$parent.currentTimerElements.length) {
-        if (this.currentQuestion && this.currentQuestion.initialElements) {
-          const requiredElements = this.currentQuestion.initialElements.required || [];
-          const additionalElements = this.currentQuestion.initialElements.additional || [];
-          const startingElements = [...new Set([...requiredElements, ...additionalElements])];
-          
-          this.$emit('set-initial-inventory', startingElements);
-          await this.$nextTick();
-          await new Promise(resolve => setTimeout(resolve, 50));
-        }
-      }
-    },
+      await new Promise(resolve => setTimeout(resolve, 50));
+    }
+  } else {
+    // Mise à jour manuelle de window.currentTimerElements pour le filtrage
+    if (this.currentQuestion && this.currentQuestion.initialElements) {
+      const requiredElements = this.currentQuestion.initialElements.required || [];
+      const additionalElements = this.currentQuestion.initialElements.additional || [];
+      window.currentTimerElements = [...new Set([...requiredElements, ...additionalElements])];
+    }
+  }
+},
     hide() {
       this.isVisible = false;
     },

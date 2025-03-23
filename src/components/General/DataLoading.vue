@@ -1,12 +1,22 @@
 <template>
-  <div v-if="error" class="error-message">
+  <!-- Complètement supprimer l'affichage des erreurs liées aux questions du Timer -->
+  <div v-if="error && !error.includes('timerQuestions')" class="error-message">
     {{ error }}
   </div>
 </template>
 
 <script>
-import { ref, onMounted, watch } from 'vue';
-import gameDataService from '@/services/gameDataService';
+import { ref, computed, onMounted, watch } from 'vue';
+import gameService from '@/services/gameService';
+
+// Constantes
+const FUNDAMENTAL_ELEMENTS = ["Eau", "Feu", "Terre", "Air"];
+const FUNDAMENTAL_EMOJIS = {
+  "Eau": "💧",
+  "Feu": "🔥",
+  "Terre": "🌎",
+  "Air": "💨"
+};
 
 export default {
   name: 'DataLoading',
@@ -20,24 +30,68 @@ export default {
       default: () => ({})
     }
   },
-  emits: ['data-loaded', 'achievements-loaded', 'achievement-unlocked', 'force-reload'],
+  emits: ['data-loaded', 'achievements-loaded', 'achievement-unlocked', 'force-reload', 'timer-questions-loaded', 'craft-success'],
 
   setup(props, { emit }) {
+    // États réactifs
     const error = ref(null);
     const achievements = ref([]);
     const discoveredElements = ref([]);
-    // Garder trace des achievements déjà affichés dans cette session
     const shownAchievements = ref(new Set());
+    const isLoading = ref({
+      gameData: false,
+      achievements: false,
+      timerQuestions: false
+    });
+    const previousMode = ref(props.isTimerMode);
 
+    // Fournir une liste de fichiers à charger
+    const filesToLoad = computed(() => [
+      "animaux",
+      "biologie", 
+      "créations_humaines",
+      "elements_data",
+      "formations_naturelles",
+      "geologie",
+      "materiaux_elementaires",
+      "phénomènes_naturels",
+      "magie"
+    ]);
+
+    // Surveiller les changements de mode pour gérer les erreurs
+    watch(() => props.isTimerMode, (newMode, oldMode) => {
+      previousMode.value = oldMode;
+      
+      // Si on passe du mode Timer au mode Infinite, réinitialiser les erreurs
+      if (oldMode === true && newMode === false && error.value && error.value.includes('timerQuestions')) {
+        error.value = null;
+      }
+    }, { immediate: true });
+
+    // Fonction utilitaire pour charger des ressources en toute sécurité
+    const loadSafely = async (loaderFn, loadingKey) => {
+      isLoading.value[loadingKey] = true;
+      try {
+        return await loaderFn();
+      } catch (err) {
+        console.error(`Erreur lors du chargement (${loadingKey}):`, err);
+        error.value = `Erreur lors du chargement (${loadingKey})`;
+        return null;
+      } finally {
+        isLoading.value[loadingKey] = false;
+      }
+    };
+
+    // Chargement des achievements
     const loadAchievements = async () => {
       try {
         // Essayer d'abord via l'API
         let data;
         try {
-          data = await gameDataService.loadFile('achievements');
+          data = await gameService.loadFile('achievements');
         } catch (apiErr) {
           console.log("API échouée, fallback sur fichier JSON local pour achievements");
-          // Fallback sur le fichier JSON local (qui est dans le dossier frontend)
+          // Fallback sur le fichier JSON local
           const response = await fetch("/data/achievements.json");
           
           if (!response.ok) {
@@ -47,6 +101,7 @@ export default {
           data = await response.json();
         }
 
+        // Traiter les achievements pour inclure les images
         const processedAchievements = data.map((achievement) => {
           let requiredImage;
           try {
@@ -74,22 +129,10 @@ export default {
       }
     };
 
+    // Chargement des données du jeu
     const loadGameData = async () => {
       try {
-        // Liste des fichiers à charger
-        const filesToLoad = [
-          "animaux",
-          "biologie", 
-          "créations_humaines",
-          "elements_data",
-          "formations_naturelles",
-          "geologie",
-          "materiaux_elementaires",
-          "phénomènes_naturels",
-          "magie"
-        ];
-
-        const elementEmojis = {};
+        const elementEmojis = { ...FUNDAMENTAL_EMOJIS };
         const categories = {};
         const craftingRecipes = {};
 
@@ -99,90 +142,36 @@ export default {
         }
 
         // S'assurer que les éléments fondamentaux sont toujours présents
-        const fundamentalElements = ["Eau", "Feu", "Terre", "Air"];
         categories["Elements Fondamentaux"] = categories["Elements Fondamentaux"] || [];
         
-        fundamentalElements.forEach(element => {
+        FUNDAMENTAL_ELEMENTS.forEach(element => {
           if (!categories["Elements Fondamentaux"].includes(element)) {
             categories["Elements Fondamentaux"].push(element);
           }
-          
-          elementEmojis[element] = element === "Eau" ? "💧" : 
-                                   element === "Feu" ? "🔥" : 
-                                   element === "Terre" ? "🌎" : 
-                                   element === "Air" ? "💨" : "❓";
         });
 
-        for (const filename of filesToLoad) {
+        // Charger tous les fichiers de données
+        const loadPromises = filesToLoad.value.map(async (filename) => {
           try {
-            // Essayer d'abord via l'API
             let data;
             try {
-              data = await gameDataService.loadFile(filename);
+              data = await gameService.loadFile(filename);
             } catch (apiErr) {
-              console.log(`API échouée, fallback sur fichier JSON local pour ${filename}`);
-              // Fallback sur le fichier JSON local
-              const response = await fetch(`/data/${filename}.json`);
-              
-              if (!response.ok) {
-                console.warn(`Fichier ${filename}.json non trouvé, ignoré`);
-                continue;
-              }
-              
-              data = await response.json();
+              console.warn(`Impossible de charger ${filename} via l'API`, apiErr);
+              return null;
             }
 
-            // Traitement des données animaux
-            if (data.animaux) {
-              Object.entries(data.animaux).forEach(([category, categoryData]) => {
-                categories[category] = categories[category] || [];
-                Object.entries(categoryData).forEach(([name, emoji]) => {
-                  elementEmojis[name.trim()] = emoji;
-                  if (!categories[category].includes(name.trim())) {
-                    categories[category].push(name.trim());
-                  }
-                });
-              });
-            }
-
-            // Traitement des données humains
-            if (data.humains) {
-              Object.entries(data.humains).forEach(([category, categoryData]) => {
-                categories[category] = categories[category] || [];
-                Object.entries(categoryData).forEach(([name, emoji]) => {
-                  elementEmojis[name.trim()] = emoji;
-                  if (!categories[category].includes(name.trim())) {
-                    categories[category].push(name.trim());
-                  }
-                });
-              });
-            }
-
-            // Traitement des données elements
-            Object.entries(data.elements || {}).forEach(([category, elements]) => {
-              categories[category] = categories[category] || [];
-              Object.entries(elements).forEach(([name, emoji]) => {
-                elementEmojis[name.trim()] = emoji;
-                if (!categories[category].includes(name.trim())) {
-                  categories[category].push(name.trim());
-                }
-              });
-            });
-
-            // Traitement des règles avec support de l'ordre original et trié
-            if (data.rules) {
-              Object.entries(data.rules).forEach(([key, value]) => {
-                // Conserver la méthode actuelle pour compatibilité (éléments triés)
-                craftingRecipes[key.split("+").sort().join("+")] = value;
-                
-                // Ajouter une nouvelle clé qui préserve l'ordre original
-                craftingRecipes[key] = value;
-              });
-            }
+            // Traiter les données
+            processFileData(data, elementEmojis, categories, craftingRecipes);
+            return data;
           } catch (err) {
             console.warn(`Erreur lors du chargement des données ${filename}:`, err);
+            return null;
           }
-        }
+        });
+
+        // Attendre que tous les fichiers soient chargés
+        await Promise.all(loadPromises);
 
         const loadedData = {
           elementEmojis,
@@ -198,26 +187,111 @@ export default {
       }
     };
 
-    // Nouvelle méthode pour rechargement forcé
-    const loadAllData = async () => {
-      try {
-        // Charger à la fois les données de jeu et les achievements
-        const [gameData, loadedAchievements] = await Promise.all([
-          loadGameData(), 
-          loadAchievements()
-        ]);
+    // Fonction utilitaire pour traiter les données d'un fichier
+    const processFileData = (data, elementEmojis, categories, craftingRecipes) => {
+      if (!data) return;
 
+      // Tableau des clés potentielles pour les emojis
+      const emojiSources = ['animaux', 'humains', 'elements', 'items'];
+
+      emojiSources.forEach(source => {
+        if (data[source]) {
+          Object.entries(data[source]).forEach(([category, categoryData]) => {
+            categories[category] = categories[category] || [];
+
+            // Support de différents formats de données d'emojis
+            Object.entries(categoryData).forEach(([name, emojiOrObject]) => {
+              const trimmedName = name.trim();
+              const emoji = typeof emojiOrObject === 'object' 
+                ? (emojiOrObject.emoji || emojiOrObject.icon || '❓')
+                : emojiOrObject;
+
+              elementEmojis[trimmedName] = emoji;
+
+              if (!categories[category].includes(trimmedName)) {
+                categories[category].push(trimmedName);
+              }
+            });
+          });
+        }
+      });
+
+      // Traitement des règles
+      if (data.rules) {
+        Object.entries(data.rules).forEach(([key, value]) => {
+          craftingRecipes[key.split("+").sort().join("+")] = value;
+          craftingRecipes[key] = value;
+        });
+      }
+    };
+
+    // Chargement des questions du Timer
+    const loadTimerQuestions = async () => {
+      // Ignorer complètement si on n'est pas en mode Timer
+      if (!props.isTimerMode) {
+        // Réinitialiser l'erreur en cas de changement de mode
+        if (error.value && error.value.includes('timerQuestions')) {
+          error.value = null;
+        }
+        return null;
+      }
+
+      try {
+        const data = await gameService.loadFile('timer-questions');
+        
+        if (!data || !data.levels) {
+          throw new Error('Format de données incorrect pour les questions du Timer');
+        }
+        
+        emit('timer-questions-loaded', data);
+        return data;
+      } catch (err) {
+        console.error('Erreur lors du chargement des questions du Timer:', err);
+        if (props.isTimerMode) {
+          error.value = "Erreur lors du chargement des questions du Timer";
+        }
+        throw err;
+      }
+    };
+
+    // Chargement de toutes les données
+    const loadAllData = async () => {
+      // Réinitialiser les erreurs avant de recharger
+      error.value = null;
+      
+      try {
+        // Charger les données de jeu et les achievements
+        const promises = [
+          loadSafely(loadGameData, 'gameData'),
+          loadSafely(loadAchievements, 'achievements')
+        ];
+        
+        // Ajouter le chargement des questions du Timer UNIQUEMENT si en mode Timer
+        if (props.isTimerMode) {
+          promises.push(loadSafely(loadTimerQuestions, 'timerQuestions'));
+        }
+        
+        const results = await Promise.all(promises);
+        
+        // Filtrer les valeurs null (erreurs)
+        const validResults = results.filter(r => r !== null);
+        
+        if (validResults.length === 0) {
+          throw new Error("Aucune donnée n'a pu être chargée");
+        }
+        
         // Données complètes à recharger
         const fullLoadedData = {
-          ...gameData,
-          achievements: loadedAchievements,
+          ...(validResults[0] || {}), // gameData
+          achievements: validResults[1] || [], // loadedAchievements
+          // Ajouter les questions du Timer si elles ont été chargées et si on est en mode Timer
+          ...(props.isTimerMode && validResults.length > 2 ? { timerQuestions: validResults[2] } : {}),
           // Conserver les données existantes
           ...props.existingData
         };
 
         // Émettre un événement de rechargement forcé
         emit('force-reload', fullLoadedData);
-
         return fullLoadedData;
       } catch (err) {
         console.error('Erreur lors du rechargement forcé:', err);
@@ -226,7 +300,8 @@ export default {
       }
     };
 
-    function checkAchievements(elementsToCheck) {
+    // Vérification des achievements
+    const checkAchievements = (elementsToCheck) => {
       if (props.isTimerMode) return;
       
       // Utiliser les éléments fournis ou les éléments découverts locaux
@@ -287,9 +362,10 @@ export default {
         });
         window.saveAchievements(saveData);
       }
-    }
+    };
     
-    function handleCraft(newElement) {
+    // Gestion d'un nouveau craft
+    const handleCraft = (newElement) => {
       if (props.isTimerMode) {
         emit('craft-success', newElement);
         return;
@@ -299,22 +375,27 @@ export default {
       if (!discoveredElements.value.includes(newElement)) {
         discoveredElements.value.push(newElement);
         
-        // Vérifier si des achievements sont affichés comme débloqués dans le menu
-        // Accéder à l'état global des achievements via un événement personnalisé
+        // Vérifier si des achievements sont débloqués
+        // Utiliser l'événement personnalisé comme dans le code original
         const achievementEvent = new CustomEvent('get-unlocked-achievements', {
-          detail: { callback: (unlockedAchievements) => {
-            // Utiliser cette liste pour filtrer les achievements à vérifier
-            const alreadyUnlockedNames = unlockedAchievements.map(a => a.name);
-            
-            // Vérifier spécifiquement les achievements liés à cet élément
-            // qui ne sont pas déjà débloqués dans le menu
-            const specificAchievements = achievements.value.filter(achievement => 
-              !achievement.unlocked && 
-              !alreadyUnlockedNames.includes(achievement.name) &&
-              achievement.condition.includes(`includes('${newElement}')`)
-            );
-            
-            if (specificAchievements.length > 0) {
+          detail: { 
+            callback: (unlockedAchievements) => {
+              if (!Array.isArray(unlockedAchievements)) {
+                console.warn("Format incorrect pour les achievements débloqués");
+                unlockedAchievements = [];
+              }
+              
+              // Récupérer les noms des achievements déjà débloqués
+              const alreadyUnlockedNames = unlockedAchievements.map(a => a.name);
+              
+              // Vérifier spécifiquement les achievements liés à cet élément
+              const specificAchievements = achievements.value.filter(achievement => 
+                !achievement.unlocked && 
+                !alreadyUnlockedNames.includes(achievement.name) &&
+                achievement.condition && 
+                achievement.condition.includes(`includes('${newElement}')`)
+              );
+              
               specificAchievements.forEach(achievement => {
                 achievement.unlocked = true;
                 achievement.unlockedAt = new Date().toISOString();
@@ -330,62 +411,66 @@ export default {
                 
                 emit('achievement-unlocked', safeAchievement);
               });
-            }
-            
-            // Vérifier tous les achievements (basés sur le nombre)
-            achievements.value.forEach((achievement) => {
-              // Ignorer les achievements déjà débloqués ou ceux dans la liste des débloqués
-              if (achievement.unlocked || alreadyUnlockedNames.includes(achievement.name)) {
-                return;
-              }
               
-              try {
-                let expression = achievement.condition;
-                expression = expression.replace(/this\.discoveredElements/g, 'discoveredElements.value');
-                
-                // Vérifier uniquement les achievements basés sur le nombre d'éléments
-                if (expression.includes('.length >=')) {
-                  const conditionFn = new Function('discoveredElements', `return ${expression}`);
-                  
-                  if (conditionFn({ value: discoveredElements.value })) {
-                    achievement.unlocked = true;
-                    achievement.unlockedAt = new Date().toISOString();
-                    
-                    // Créer une copie sécurisée de l'achievement
-                    const safeAchievement = {
-                      name: achievement.name,
-                      description: achievement.description,
-                      image: achievement.image,
-                      unlocked: true,
-                      unlockedAt: achievement.unlockedAt || new Date().toISOString()
-                    };
-                    
-                    emit('achievement-unlocked', safeAchievement);
-                  }
+              // Vérifier aussi les achievements basés sur le nombre d'éléments
+              achievements.value.forEach((achievement) => {
+                // Ignorer les achievements déjà débloqués ou ceux dans la liste des débloqués
+                if (achievement.unlocked || alreadyUnlockedNames.includes(achievement.name)) {
+                  return;
                 }
-              } catch (error) {
-                console.error(`Erreur lors de l'évaluation de la condition pour ${achievement.name}:`, error);
-              }
-            });
-          }}
+                
+                try {
+                  let expression = achievement.condition;
+                  expression = expression.replace(/this\.discoveredElements/g, 'discoveredElements.value');
+                  
+                  // Vérifier uniquement les achievements basés sur le nombre d'éléments
+                  if (expression.includes('.length >=')) {
+                    const conditionFn = new Function('discoveredElements', `return ${expression}`);
+                    
+                    if (conditionFn({ value: discoveredElements.value })) {
+                      achievement.unlocked = true;
+                      achievement.unlockedAt = new Date().toISOString();
+                      
+                      // Créer une copie sécurisée de l'achievement
+                      const safeAchievement = {
+                        name: achievement.name,
+                        description: achievement.description,
+                        image: achievement.image,
+                        unlocked: true,
+                        unlockedAt: achievement.unlockedAt || new Date().toISOString()
+                      };
+                      
+                      emit('achievement-unlocked', safeAchievement);
+                    }
+                  }
+                } catch (error) {
+                  console.error(`Erreur lors de l'évaluation de la condition pour ${achievement.name}:`, error);
+                }
+              });
+            }
+          }
         });
         
         // Déclencher l'événement pour obtenir les achievements débloqués
         window.dispatchEvent(achievementEvent);
       }
-    }
+    };
 
     // Observer les changements dans les éléments découverts
     watch(() => props.existingData.discoveredElements, (newElements) => {
       if (newElements && Array.isArray(newElements)) {
-        discoveredElements.value = [...newElements];
+        // Éviter les mises à jour inutiles
+        if (!discoveredElements.value.length || 
+            !discoveredElements.value.every(e => newElements.includes(e)) ||
+            discoveredElements.value.length !== newElements.length) {
+          discoveredElements.value = [...newElements];
+        }
       }
     }, { immediate: true });
 
     // Surveiller les changements dans l'état de déblocage des achievements
     watch(() => props.existingData.achievements, (newAchievements) => {
       if (newAchievements && Array.isArray(newAchievements)) {
-        // Marquer les achievements déjà débloqués
         newAchievements.forEach(achievement => {
           if (achievement.unlocked) {
             // Ajouter à la liste des achievements déjà affichés
@@ -405,12 +490,24 @@ export default {
       }
     }, { immediate: true });
 
+    // Initialisation au montage du composant
     onMounted(async () => {
       try {
         // Initialiser la liste des achievements déjà affichés
         shownAchievements.value = new Set();
         
-        await Promise.all([loadGameData(), loadAchievements()]);
+        // Réinitialiser les erreurs
+        error.value = null;
+        
+        await Promise.all([
+          loadSafely(loadGameData, 'gameData'),
+          loadSafely(loadAchievements, 'achievements')
+        ]);
+        
+        // Charger les questions du timer uniquement si on est en mode Timer
+        if (props.isTimerMode) {
+          await loadSafely(loadTimerQuestions, 'timerQuestions');
+        }
         
         // Si des éléments découverts sont disponibles dans les props
         if (props.existingData.discoveredElements && Array.isArray(props.existingData.discoveredElements)) {
@@ -421,7 +518,7 @@ export default {
         if (props.existingData.achievements && Array.isArray(props.existingData.achievements)) {
           props.existingData.achievements.forEach(achievement => {
             if (achievement.unlocked) {
-              // Ajouter à la liste des achievements déjà affichés pour éviter les popups redondants
+              // Ajouter à la liste des achievements déjà affichés
               shownAchievements.value.add(achievement.name);
               
               // Mettre à jour la liste locale
@@ -440,12 +537,31 @@ export default {
 
     return {
       error,
+      isLoading,
       achievements,
       discoveredElements,
       handleCraft,
       loadAllData,
-      checkAchievements
+      checkAchievements,
+      previousMode
     };
   }
 };
 </script>
+
+<style scoped>
+.error-message {
+  color: #f44336;
+  background-color: #ffebee;
+  padding: 8px 16px;
+  border-radius: 4px;
+  margin-bottom: 16px;
+  font-weight: bold;
+}
+
+.loading-indicator {
+  font-size: 0.9em;
+  color: #2196f3;
+  margin: 8px 0;
+}
+</style>
