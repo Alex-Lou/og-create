@@ -831,34 +831,82 @@ export default {
   
   if (!this.selectedLevel || !this.selectedCategory) return;
   
-  // Définir l'ID de la question actuelle dans window pour que GameInventory puisse y accéder
+  // Définir l'ID de la question actuelle
   window.currentQuestionId = this.currentQuestion?.id || null;
   console.log("ID de question défini:", window.currentQuestionId);
   
   await this.$nextTick();
   
-  if (!this.$parent.currentTimerElements.length) {
-    if (this.currentQuestion && this.currentQuestion.initialElements) {
-      const requiredElements = this.currentQuestion.initialElements.required || [];
-      const additionalElements = this.currentQuestion.initialElements.additional || [];
-      const startingElements = [...new Set([...requiredElements, ...additionalElements])];
-      
-      this.$emit('set-initial-inventory', startingElements);
-      
-      // Mise à jour manuelle de window.currentTimerElements pour le filtrage
-      window.currentTimerElements = startingElements;
-      
-      await this.$nextTick();
-      await new Promise(resolve => setTimeout(resolve, 50));
+  // Vérifier si la question existe et imprimer sa structure
+  if (this.currentQuestion) {
+    console.log("Structure de la question actuelle:", JSON.stringify(this.currentQuestion));
+    
+    // Initialiser les tableaux d'éléments
+    let requiredElements = [];
+    let additionalElements = [];
+    
+    // Corriger l'accès aux éléments requis et additionnels en tenant compte de la structure imbriquée
+    if (this.currentQuestion.initialElements) {
+      // Vérifier si la structure est double (initialElements.initialElements)
+      if (this.currentQuestion.initialElements.initialElements) {
+        requiredElements = this.currentQuestion.initialElements.initialElements.required || [];
+        additionalElements = this.currentQuestion.initialElements.initialElements.additional || [];
+      } else {
+        // Structure simple
+        requiredElements = this.currentQuestion.initialElements.required || [];
+        additionalElements = this.currentQuestion.initialElements.additional || [];
+      }
     }
-  } else {
-    // Mise à jour manuelle de window.currentTimerElements pour le filtrage
-    if (this.currentQuestion && this.currentQuestion.initialElements) {
-      const requiredElements = this.currentQuestion.initialElements.required || [];
-      const additionalElements = this.currentQuestion.initialElements.additional || [];
-      window.currentTimerElements = [...new Set([...requiredElements, ...additionalElements])];
-    }
+    
+    // Combiner et dédupliquer
+    const startingElements = [...new Set([...requiredElements, ...additionalElements])];
+    
+    console.log("Éléments requis:", requiredElements);
+    console.log("Éléments additionnels:", additionalElements);
+    console.log("Éléments de la question définis:", startingElements);
+    
+    // Mise à jour des variables globales et de l'inventaire
+    window.currentTimerElements = startingElements;
+    window.timerElements = startingElements;
+    
+    this.$emit('set-initial-inventory', startingElements);
+    
+    await this.$nextTick();
+    await new Promise(resolve => setTimeout(resolve, 50));
   }
+},
+
+debugQuestionData() {
+  console.log("--------- DEBUGGING QUESTION DATA ---------");
+  console.log("Question actuelle:", this.currentQuestion);
+  
+  if (this.currentQuestion && this.currentQuestion.initialElements) {
+    console.log("initialElements (type):", typeof this.currentQuestion.initialElements);
+    console.log("initialElements (contenu):", this.currentQuestion.initialElements);
+    
+    if (typeof this.currentQuestion.initialElements === 'string') {
+      try {
+        const parsed = JSON.parse(this.currentQuestion.initialElements);
+        console.log("initialElements (parsé):", parsed);
+      } catch (e) {
+        console.error("Erreur de parsing:", e);
+      }
+    }
+    
+    // Tenter d'accéder aux propriétés required et additional
+    const required = this.currentQuestion.initialElements.required || 
+                     (typeof this.currentQuestion.initialElements === 'string' ? 
+                      JSON.parse(this.currentQuestion.initialElements).required : []);
+                      
+    const additional = this.currentQuestion.initialElements.additional || 
+                       (typeof this.currentQuestion.initialElements === 'string' ? 
+                        JSON.parse(this.currentQuestion.initialElements).additional : []);
+    
+    console.log("Éléments requis:", required);
+    console.log("Éléments additionnels:", additional);
+  }
+  
+  console.log("----------------------------------------");
 },
     hide() {
       this.isVisible = false;
@@ -874,37 +922,38 @@ export default {
       this.isVisible = true;
     },
     async nextQuestion() {
-      this.$parent.currentTimerElements = [];
-      this.$parent.discoveredElements = ["Eau", "Feu", "Terre", "Air"];
+  // Réinitialiser les éléments pour la nouvelle question
+  this.$parent.currentTimerElements = [];
+  this.$parent.discoveredElements = []; // Vider complètement
 
-      if (this.$parent.$refs.craftSystem) {
-        this.$parent.$refs.craftSystem.resetCraftingBoard();
-      }
+  if (this.$parent.$refs.craftSystem) {
+    this.$parent.$refs.craftSystem.resetCraftingBoard();
+  }
 
-      if (this.currentQuestionIndex < this.questions.length - 1) {
-        this.currentQuestionIndex++;
-        
-        // Charger les recettes pour la nouvelle question
-        this.loadRecipesFromQuestions();
-        
-        await new Promise(resolve => setTimeout(resolve, 100));
-        await this.show();
-      } else {
-        // Catégorie terminée
-        this.showCompletionPopup = true;
-        this.completionMessage = `Félicitations ! Vous avez complété la catégorie ${this.selectedCategory}!`;
-        
-        const nextCategory = this.getNextUncompletedCategory();
-        this.completionSubMessage = nextCategory 
-          ? `Prochaine catégorie disponible : ${nextCategory}`
-          : 'Toutes les catégories sont complétées !';
+  if (this.currentQuestionIndex < this.questions.length - 1) {
+    this.currentQuestionIndex++;
+    
+    // Charger les recettes pour la nouvelle question
+    this.loadRecipesFromQuestions();
+    
+    await new Promise(resolve => setTimeout(resolve, 100));
+    await this.show();
+  } else {
+    // Catégorie terminée
+    this.showCompletionPopup = true;
+    this.completionMessage = `Félicitations ! Vous avez complété la catégorie ${this.selectedCategory}!`;
+    
+    const nextCategory = this.getNextUncompletedCategory();
+    this.completionSubMessage = nextCategory 
+      ? `Prochaine catégorie disponible : ${nextCategory}`
+      : 'Toutes les catégories sont complétées !';
 
-        // Émettre un événement pour mettre le timer en pause
-        this.$emit('pause-timer');
+    // Émettre un événement pour mettre le timer en pause
+    this.$emit('pause-timer');
 
-        await this.saveProgress();
-      }
-    },
+    await this.saveProgress();
+  }
+},
     async answerCorrect() {
       const currentQuestion = this.currentQuestion;
       const validationMode = currentQuestion.initialElements?.validationMode || 'any';

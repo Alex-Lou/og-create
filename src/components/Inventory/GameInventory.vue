@@ -206,47 +206,52 @@ export default {
     function getTimerModeCategories() {
   console.log('Génération des catégories pour le mode Timer');
   
-  // 1. Récupérer les éléments spécifiques à la question actuelle
-  const timerElements = Array.isArray(props.timerQuestionElements) ? [...props.timerQuestionElements] : [];
-  console.log('Éléments de la question actuelle du timer depuis props:', timerElements);
+  // 1. Tenter de récupérer les éléments de différentes sources
+  let timerElements = [];
   
-  // 2. Ajouter les éléments fondamentaux (toujours disponibles)
-  const fundamentalElements = ["Eau", "Feu", "Terre", "Air"];
-  fundamentalElements.forEach(element => {
-    if (!timerElements.includes(element)) {
-      timerElements.push(element);
+  if (window.currentTimerElements && Array.isArray(window.currentTimerElements) && window.currentTimerElements.length > 0) {
+    timerElements = [...window.currentTimerElements];
+    console.log('Éléments trouvés dans window.currentTimerElements:', timerElements);
+  } 
+  else if (Array.isArray(props.timerQuestionElements) && props.timerQuestionElements.length > 0) {
+    timerElements = [...props.timerQuestionElements];
+    console.log('Éléments trouvés dans props.timerQuestionElements:', timerElements);
+  }
+  else if (window.timerElements && Array.isArray(window.timerElements) && window.timerElements.length > 0) {
+    // IMPORTANT: Utiliser window.timerElements comme source de secours
+    timerElements = [...window.timerElements];
+    console.log('Éléments trouvés dans window.timerElements:', timerElements);
+  }
+  
+  // 2. Si on a toujours 0 éléments, ajouter au moins les fondamentaux
+  if (timerElements.length === 0) {
+    timerElements = ["Eau", "Feu", "Terre", "Air"];
+    console.log('Aucun élément trouvé, utilisation des éléments fondamentaux par défaut');
+    
+    // Essayer de charger depuis le serveur si on a un ID de question
+    if (window.currentQuestionId) {
+      console.log('Tentative de chargement pour la question:', window.currentQuestionId);
+      loadTimerEmojis(window.currentQuestionId).then(elements => {
+        if (elements && elements.length > 0) {
+          // Stocker pour les futurs rendus
+          window.currentTimerElements = elements;
+          window.timerElements = elements;
+          
+          console.log('Éléments chargés avec succès:', elements);
+          
+          // Forcer le rafraîchissement
+          setTimeout(() => {
+            emit('force-reload', { timerElementsLoaded: true });
+          }, 300);
+        }
+      });
     }
-  });
+  }
   
-  // 3. S'assurer que la catégorie Timer est développée par défaut
+  // 3. S'assurer que la catégorie est développée
   expandedCategories.value[0] = true;
   
-  // 4. Si aucun élément n'est disponible au-delà des fondamentaux
-  if (timerElements.length <= fundamentalElements.length) {
-    // Lancer un chargement asynchrone des éléments du timer pour la question actuelle
-    loadTimerEmojis(window.currentQuestionId).then(elements => {
-      if (elements && elements.length > 0) {
-        console.log('Éléments du timer chargés de manière asynchrone:', elements.length);
-        // Mise à jour forcée pour rafraîchir l'affichage
-        setTimeout(() => {
-          emit('force-reload', { timerElementsLoaded: true });
-        }, 500);
-      }
-    });
-  }
-  
-  // 5. Utiliser les éléments de window.timerElements s'ils existent et sont plus nombreux
-  if (window.timerElements && window.timerElements.length > timerElements.length) {
-    console.log('Utilisation des éléments du timer depuis window.timerElements:', window.timerElements.length);
-    return [{
-      name: 'Timer Elements',
-      progress: 100,
-      elements: window.timerElements,
-      isComplete: false
-    }];
-  }
-  
-  console.log('Éléments filtrés pour le Timer:', timerElements);
+  console.log('Éléments filtrés pour le Timer (final):', timerElements);
   
   return [{
     name: 'Timer Elements',
@@ -258,22 +263,26 @@ export default {
     
 async function loadTimerEmojis(currentQuestionId) {
   try {
-    // Obtenir l'ID de la question actuelle si non fournie
+    // Obtenir l'ID de la question actuelle si non fourni
     if (!currentQuestionId && window.currentQuestionId) {
       currentQuestionId = window.currentQuestionId;
     }
     
     console.log('Chargement des éléments du timer pour la question:', currentQuestionId);
     
-    // Utiliser gameService au lieu de faire un fetch direct
+    if (!currentQuestionId) {
+      console.warn('Aucun ID de question fourni pour loadTimerEmojis');
+      return [];
+    }
+    
+    // Utiliser gameService pour charger les éléments
     const timerElements = await gameService.loadTimerElements(currentQuestionId);
     
-    // Les emojis et les éléments du timer sont déjà stockés par gameService.loadTimerElements
-    console.log('Éléments du timer après chargement:', timerElements?.length || 0);
+    console.log('Éléments du timer après chargement:', timerElements);
     
-    if (!window.timerElements && timerElements) {
-      window.timerElements = timerElements;
-    }
+    // Stocker dans les deux variables globales pour compatibilité
+    window.currentTimerElements = timerElements || [];
+    window.timerElements = timerElements || [];
     
     return timerElements || [];
   } catch (error) {
