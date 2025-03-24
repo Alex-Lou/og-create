@@ -177,90 +177,66 @@
   </div>
 </template>
   
-  <script>
-  import '@/assets/ComponentsStyle/TimerStyle/TimerModeButtonStyle.css';
+<script>
+import '@/assets/ComponentsStyle/TimerStyle/TimerModeButtonStyle.css';
   
-  export default {
-    name: 'TimerModeButton',
-    data() {
-      return {
-        isTimerActive: false,
-        timeRemaining: 5 * 60,
-        timerInterval: null,
-        showStopConfirmModal: false,
-        selectedLevel: null,
-        defaultTimers: {
-          'Facile': 300,    // 5 minutes
-          'Moyen': 240,     // 4 minutes
-          'Difficile': 180  // 3 minutes
-        }
+export default {
+  name: 'TimerModeButton',
+  data() {
+    return {
+      isTimerActive: false,
+      timeRemaining: 5 * 60,
+      timerInterval: null,
+      showStopConfirmModal: false,
+      selectedLevel: null,
+      defaultTimers: {
+        'Facile': 300,    // 5 minutes
+        'Moyen': 240,     // 4 minutes
+        'Difficile': 180  // 3 minutes
       }
-    },
-    watch: {
-      isTimerActive: {
-        immediate: true,
-        handler(newVal) {
-          if (newVal) {
-            this.$nextTick(() => {
-              this.$emit('timer-state-change', true);
-            });
-          }
-        }
-      }
-    },
-    methods: {
-      async handleTimerButtonClick() {
-        if (!this.isTimerActive || !this.selectedLevel) {
-          await this.startTimer();
+    }
+  },
+  watch: {
+    isTimerActive: {
+      immediate: true,
+      handler(newVal) {
+        if (newVal) {
+          this.$nextTick(() => {
+            this.$emit('timer-state-change', true);
+          });
         } else {
-          this.showStopConfirmModal = true;
+          this.cleanupTimerData();
         }
-      },
-      pauseTimer() {
-        if (this.timerInterval) {
-          clearInterval(this.timerInterval);
-          this.timerInterval = null;
-        }
-      },
-      showLevelSelection() {
-  // Assurez-vous que le timer est actif mais que le niveau n'est pas sélectionné
-  this.isTimerActive = true;  
-  this.selectedLevel = null;
-  
-  // Forcer l'affichage du menu de sélection
-  this.$emit('show-question');
-},
-      resumeTimer() {
-        if (this.isTimerActive && !this.timerInterval) {
-          this.timerInterval = setInterval(() => {
-            if (this.timeRemaining > 0) {
-              this.timeRemaining--;
-            } else {
-              this.stopTimer();
-              this.$emit('timer-complete');
-            }
-          }, 1000);
-        }
-      },
-      confirmStopTimer() {
-        this.stopTimer();
-        this.showStopConfirmModal = false;
-        this.$emit('force-stop');
-        this.selectedLevel = null;
-      },
-      cancelStopTimer() {
-        this.showStopConfirmModal = false;
-      },
-      async handleLevelSelected({ level, timer }) {
-        this.selectedLevel = level;
-        this.timeRemaining = timer;
-        await this.startTimerWithTime(timer);
-      },
-      async startTimerWithTime(time) {
-        this.isTimerActive = true;
-        this.timeRemaining = time;
-        await this.$nextTick();
-        this.$emit('timer-state-change', true);
+      }
+    }
+  },
+  methods: {
+    async handleTimerButtonClick() {
+      if (!this.isTimerActive || !this.selectedLevel) {
+        await this.startTimer();
+      } else {
+        this.showStopConfirmModal = true;
+      }
+    },
+    pauseTimer() {
+      if (this.timerInterval) {
+        clearInterval(this.timerInterval);
+        this.timerInterval = null;
+      }
+    },
+    showLevelSelection() {
+      // Assurez-vous que le timer est actif mais que le niveau n'est pas sélectionné
+      this.isTimerActive = true;  
+      this.selectedLevel = null;
+      
+      // Nettoyer les données du timer précédent
+      this.cleanupTimerData();
+      
+      // Forcer l'affichage du menu de sélection
+      this.$emit('show-question');
+    },
+    resumeTimer() {
+      if (this.isTimerActive && !this.timerInterval) {
         this.timerInterval = setInterval(() => {
           if (this.timeRemaining > 0) {
             this.timeRemaining--;
@@ -269,38 +245,87 @@
             this.$emit('timer-complete');
           }
         }, 1000);
-      },
-      async startTimer() {
-        this.isTimerActive = true;
-        await this.$nextTick();
-        this.$emit('timer-state-change', true);
-      },
-      stopTimer() {
-        this.isTimerActive = false;
-        clearInterval(this.timerInterval);
-        this.timerInterval = null;
-        this.$emit('timer-state-change', false);
-        this.selectedLevel = null;
-      },
-      formatTime(seconds) {
-        const minutes = Math.floor(seconds / 60);
-        const remainingSeconds = seconds % 60;
-        return `${minutes}:${remainingSeconds.toString().padStart(2, '0')}`;
-      },
-      resetTimer() {
-        if (this.isTimerActive && this.selectedLevel) {
-          this.timeRemaining = this.defaultTimers[this.selectedLevel];
-        }
-      },
-      async showCurrentQuestion() {
-        await this.$nextTick();
-        this.$emit('show-question');
       }
     },
-    beforeUnmount() {
-      if (this.timerInterval) {
-        clearInterval(this.timerInterval);
+    cleanupTimerData() {
+      // Nettoyer les variables globales
+      window.currentTimerElements = [];
+      window.timerElements = [];
+      window.currentQuestionId = null;
+      
+      // Émettre un événement pour informer les autres composants
+      window.dispatchEvent(new CustomEvent('timer-stopped'));
+    },
+    confirmStopTimer() {
+      this.stopTimer();
+      this.showStopConfirmModal = false;
+      this.$emit('force-stop');
+      this.selectedLevel = null;
+    },
+    cancelStopTimer() {
+      this.showStopConfirmModal = false;
+    },
+    async handleLevelSelected({ level, timer }) {
+      // Nettoyer les données avant de changer de niveau
+      this.cleanupTimerData();
+      
+      this.selectedLevel = level;
+      this.timeRemaining = timer;
+      await this.startTimerWithTime(timer);
+    },
+    async startTimerWithTime(time) {
+      this.isTimerActive = true;
+      this.timeRemaining = time;
+      await this.$nextTick();
+      this.$emit('timer-state-change', true);
+      this.timerInterval = setInterval(() => {
+        if (this.timeRemaining > 0) {
+          this.timeRemaining--;
+        } else {
+          this.stopTimer();
+          this.$emit('timer-complete');
+        }
+      }, 1000);
+    },
+    async startTimer() {
+      // Nettoyer les données avant de démarrer un nouveau timer
+      this.cleanupTimerData();
+      
+      this.isTimerActive = true;
+      await this.$nextTick();
+      this.$emit('timer-state-change', true);
+    },
+    stopTimer() {
+      this.isTimerActive = false;
+      clearInterval(this.timerInterval);
+      this.timerInterval = null;
+      this.$emit('timer-state-change', false);
+      this.selectedLevel = null;
+      
+      // Nettoyer les données lors de l'arrêt du timer
+      this.cleanupTimerData();
+    },
+    formatTime(seconds) {
+      const minutes = Math.floor(seconds / 60);
+      const remainingSeconds = seconds % 60;
+      return `${minutes}:${remainingSeconds.toString().padStart(2, '0')}`;
+    },
+    resetTimer() {
+      if (this.isTimerActive && this.selectedLevel) {
+        this.timeRemaining = this.defaultTimers[this.selectedLevel];
       }
+    },
+    async showCurrentQuestion() {
+      await this.$nextTick();
+      this.$emit('show-question');
     }
-  };
-  </script>
+  },
+  beforeUnmount() {
+    if (this.timerInterval) {
+      clearInterval(this.timerInterval);
+    }
+    // S'assurer que les données sont nettoyées lors du démontage du composant
+    this.cleanupTimerData();
+  }
+};
+</script>

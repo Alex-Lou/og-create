@@ -282,8 +282,32 @@ export default {
     
     // Chargement de la progression ici, que l'utilisateur soit connecté ou non
     await this.loadProgress();
+    
+    // Écouter l'événement timer-stopped pour nettoyer les données
+    window.addEventListener('timer-stopped', this.cleanupTimerData);
+  },
+  beforeUnmount() {
+    // Supprimer l'écouteur d'événements
+    window.removeEventListener('timer-stopped', this.cleanupTimerData);
   },
   methods: {
+    cleanupTimerData() {
+      // Nettoyer toutes les variables globales
+      window.currentTimerElements = [];
+      window.timerElements = [];
+      window.currentQuestionId = null;
+      
+      // Réinitialiser les éléments dans le parent
+      if (this.$parent) {
+        this.$parent.currentTimerElements = [];
+        this.$parent.discoveredElements = [];
+      }
+      
+      // Réinitialiser les variables locales
+      this.currentQuestionIndex = 0;
+      
+      console.log("TimerQuestions: Nettoyage des données du timer effectué");
+    },
     isCategoryCompleted(categoryName) {
       if (!this.selectedLevel || !this.completedQuestions[this.selectedLevel]) return false;
       
@@ -314,6 +338,14 @@ export default {
               this.$parent.craftingRecipes[recipe] = result;
               
               // Et aussi ajouter sous forme triée pour compatibilité
+              const sortedRecipe = recipe.split('+').sort().join('+');
+              this.$parent.craftingRecipes[sortedRecipe] = result;
+            });
+          } else if (question.initialElements && question.initialElements.initialElements && question.initialElements.initialElements.recipes) {
+            // Gérer la structure imbriquée
+            Object.entries(question.initialElements.initialElements.recipes).forEach(([result, recipe]) => {
+              this.$parent.craftingRecipes[recipe] = result;
+              
               const sortedRecipe = recipe.split('+').sort().join('+');
               this.$parent.craftingRecipes[sortedRecipe] = result;
             });
@@ -458,6 +490,9 @@ export default {
       
       const nextCategory = this.getNextUncompletedCategory();
       if (nextCategory) {
+        // Nettoyer les données avant de passer à la prochaine catégorie
+        this.cleanupQuestionData();
+        
         this.selectedCategory = nextCategory;
         this.questions = this.questionsData.levels[this.selectedLevel].categories[nextCategory].questions;
         this.currentQuestionIndex = 0;
@@ -473,10 +508,29 @@ export default {
         await this.show();
       }
     },
+    cleanupQuestionData() {
+      // Nettoyer les variables pour la nouvelle question/catégorie
+      window.currentTimerElements = [];
+      window.timerElements = [];
+      
+      // Réinitialiser l'inventaire du parent
+      if (this.$parent) {
+        this.$parent.currentTimerElements = [];
+        this.$parent.discoveredElements = [];
+      }
+      
+      // Réinitialiser la zone de craft
+      if (this.$parent.$refs.craftSystem) {
+        this.$parent.$refs.craftSystem.resetCraftingBoard();
+      }
+    },
     // Modification de la méthode handleCompletionClose pour revenir correctement à la sélection de niveau
     handleCompletionClose() {
       // Fermer le popup
       this.showCompletionPopup = false;
+      
+      // Nettoyer les données
+      this.cleanupQuestionData();
       
       // Réinitialiser catégorie et index
       this.selectedCategory = null;
@@ -489,7 +543,7 @@ export default {
         
         // Réinitialiser le jeu
         this.$parent.currentTimerElements = [];
-        this.$parent.discoveredElements = ["Eau", "Feu", "Terre", "Air"];
+        this.$parent.discoveredElements = [];
         if (this.$parent.$refs.craftSystem) {
           this.$parent.$refs.craftSystem.resetCraftingBoard();
         }
@@ -512,11 +566,18 @@ export default {
       await this.nextQuestion();
     },
     cancelLevelSelection() {
+      // Nettoyer les données
+      this.cleanupQuestionData();
+      this.cleanupTimerData();
+      
       this.hide();
       this.loadQuestionsAndReset();
       this.$parent.$emit('force-stop');
     },
     cancelCategorySelection() {
+      // Nettoyer les données
+      this.cleanupQuestionData();
+      
       this.selectedLevel = null;
       this.selectedCategory = null;
       this.questions = [];
@@ -695,6 +756,9 @@ export default {
       this.isLoading = true;
 
       try {
+        // Nettoyer les données avant de changer de niveau
+        this.cleanupQuestionData();
+        
         // Attendre que les données soient chargées avant de continuer
         if (!this.questionsData || !this.questionsData.levels) {
           console.log("Chargement des questions avant sélection du niveau");
@@ -733,6 +797,9 @@ export default {
       this.isLoading = true;
 
       try {
+        // Nettoyer les données avant de changer de catégorie
+        this.cleanupQuestionData();
+        
         this.selectedCategory = category;
         this.questions = this.questionsData.levels[this.selectedLevel].categories[category].questions;
         this.shuffleQuestions();
@@ -826,88 +893,87 @@ export default {
       }
     },
     async show() {
-  this.isVisible = true;
-  this.isTimeUp = false;
-  
-  if (!this.selectedLevel || !this.selectedCategory) return;
-  
-  // Définir l'ID de la question actuelle
-  window.currentQuestionId = this.currentQuestion?.id || null;
-  console.log("ID de question défini:", window.currentQuestionId);
-  
-  await this.$nextTick();
-  
-  // Vérifier si la question existe et imprimer sa structure
-  if (this.currentQuestion) {
-    console.log("Structure de la question actuelle:", JSON.stringify(this.currentQuestion));
-    
-    // Initialiser les tableaux d'éléments
-    let requiredElements = [];
-    let additionalElements = [];
-    
-    // Corriger l'accès aux éléments requis et additionnels en tenant compte de la structure imbriquée
-    if (this.currentQuestion.initialElements) {
-      // Vérifier si la structure est double (initialElements.initialElements)
-      if (this.currentQuestion.initialElements.initialElements) {
-        requiredElements = this.currentQuestion.initialElements.initialElements.required || [];
-        additionalElements = this.currentQuestion.initialElements.initialElements.additional || [];
-      } else {
-        // Structure simple
-        requiredElements = this.currentQuestion.initialElements.required || [];
-        additionalElements = this.currentQuestion.initialElements.additional || [];
+      this.isVisible = true;
+      this.isTimeUp = false;
+      
+      if (!this.selectedLevel || !this.selectedCategory) return;
+      
+      // Définir l'ID de la question actuelle
+      window.currentQuestionId = this.currentQuestion?.id || null;
+      console.log("ID de question défini:", window.currentQuestionId);
+      
+      await this.$nextTick();
+      
+      // Vérifier si la question existe et imprimer sa structure
+      if (this.currentQuestion) {
+        console.log("Structure de la question actuelle:", JSON.stringify(this.currentQuestion));
+        
+        // Initialiser les tableaux d'éléments
+        let requiredElements = [];
+        let additionalElements = [];
+        
+        // Corriger l'accès aux éléments requis et additionnels en tenant compte de la structure imbriquée
+        if (this.currentQuestion.initialElements) {
+          // Vérifier si la structure est double (initialElements.initialElements)
+          if (this.currentQuestion.initialElements.initialElements) {
+            requiredElements = this.currentQuestion.initialElements.initialElements.required || [];
+            additionalElements = this.currentQuestion.initialElements.initialElements.additional || [];
+          } else {
+            // Structure simple
+            requiredElements = this.currentQuestion.initialElements.required || [];
+            additionalElements = this.currentQuestion.initialElements.additional || [];
+          }
+        }
+        
+        // Combiner et dédupliquer
+        const startingElements = [...new Set([...requiredElements, ...additionalElements])];
+        
+        console.log("Éléments requis:", requiredElements);
+        console.log("Éléments additionnels:", additionalElements);
+        console.log("Éléments de la question définis:", startingElements);
+        
+        // Mise à jour des variables globales et de l'inventaire
+        window.currentTimerElements = startingElements;
+        window.timerElements = startingElements;
+        
+        this.$emit('set-initial-inventory', startingElements);
+        
+        await this.$nextTick();
+        await new Promise(resolve => setTimeout(resolve, 50));
       }
-    }
-    
-    // Combiner et dédupliquer
-    const startingElements = [...new Set([...requiredElements, ...additionalElements])];
-    
-    console.log("Éléments requis:", requiredElements);
-    console.log("Éléments additionnels:", additionalElements);
-    console.log("Éléments de la question définis:", startingElements);
-    
-    // Mise à jour des variables globales et de l'inventaire
-    window.currentTimerElements = startingElements;
-    window.timerElements = startingElements;
-    
-    this.$emit('set-initial-inventory', startingElements);
-    
-    await this.$nextTick();
-    await new Promise(resolve => setTimeout(resolve, 50));
-  }
-},
-
-debugQuestionData() {
-  console.log("--------- DEBUGGING QUESTION DATA ---------");
-  console.log("Question actuelle:", this.currentQuestion);
-  
-  if (this.currentQuestion && this.currentQuestion.initialElements) {
-    console.log("initialElements (type):", typeof this.currentQuestion.initialElements);
-    console.log("initialElements (contenu):", this.currentQuestion.initialElements);
-    
-    if (typeof this.currentQuestion.initialElements === 'string') {
-      try {
-        const parsed = JSON.parse(this.currentQuestion.initialElements);
-        console.log("initialElements (parsé):", parsed);
-      } catch (e) {
-        console.error("Erreur de parsing:", e);
+    },
+    debugQuestionData() {
+      console.log("--------- DEBUGGING QUESTION DATA ---------");
+      console.log("Question actuelle:", this.currentQuestion);
+      
+      if (this.currentQuestion && this.currentQuestion.initialElements) {
+        console.log("initialElements (type):", typeof this.currentQuestion.initialElements);
+        console.log("initialElements (contenu):", this.currentQuestion.initialElements);
+        
+        if (typeof this.currentQuestion.initialElements === 'string') {
+          try {
+            const parsed = JSON.parse(this.currentQuestion.initialElements);
+            console.log("initialElements (parsé):", parsed);
+          } catch (e) {
+            console.error("Erreur de parsing:", e);
+          }
+        }
+        
+        // Tenter d'accéder aux propriétés required et additional
+        const required = this.currentQuestion.initialElements.required || 
+                         (typeof this.currentQuestion.initialElements === 'string' ? 
+                          JSON.parse(this.currentQuestion.initialElements).required : []);
+                          
+        const additional = this.currentQuestion.initialElements.additional || 
+                           (typeof this.currentQuestion.initialElements === 'string' ? 
+                            JSON.parse(this.currentQuestion.initialElements).additional : []);
+        
+        console.log("Éléments requis:", required);
+        console.log("Éléments additionnels:", additional);
       }
-    }
-    
-    // Tenter d'accéder aux propriétés required et additional
-    const required = this.currentQuestion.initialElements.required || 
-                     (typeof this.currentQuestion.initialElements === 'string' ? 
-                      JSON.parse(this.currentQuestion.initialElements).required : []);
-                      
-    const additional = this.currentQuestion.initialElements.additional || 
-                       (typeof this.currentQuestion.initialElements === 'string' ? 
-                        JSON.parse(this.currentQuestion.initialElements).additional : []);
-    
-    console.log("Éléments requis:", required);
-    console.log("Éléments additionnels:", additional);
-  }
-  
-  console.log("----------------------------------------");
-},
+      
+      console.log("----------------------------------------");
+    },
     hide() {
       this.isVisible = false;
     },
@@ -922,38 +988,33 @@ debugQuestionData() {
       this.isVisible = true;
     },
     async nextQuestion() {
-  // Réinitialiser les éléments pour la nouvelle question
-  this.$parent.currentTimerElements = [];
-  this.$parent.discoveredElements = []; // Vider complètement
+      // Réinitialiser les éléments pour la nouvelle question
+      this.cleanupQuestionData();
+      
+      if (this.currentQuestionIndex < this.questions.length - 1) {
+        this.currentQuestionIndex++;
+        
+        // Charger les recettes pour la nouvelle question
+        this.loadRecipesFromQuestions();
+        
+        await new Promise(resolve => setTimeout(resolve, 100));
+        await this.show();
+      } else {
+        // Catégorie terminée
+        this.showCompletionPopup = true;
+        this.completionMessage = `Félicitations ! Vous avez complété la catégorie ${this.selectedCategory}!`;
+        
+        const nextCategory = this.getNextUncompletedCategory();
+        this.completionSubMessage = nextCategory 
+          ? `Prochaine catégorie disponible : ${nextCategory}`
+          : 'Toutes les catégories sont complétées !';
 
-  if (this.$parent.$refs.craftSystem) {
-    this.$parent.$refs.craftSystem.resetCraftingBoard();
-  }
+        // Émettre un événement pour mettre le timer en pause
+        this.$emit('pause-timer');
 
-  if (this.currentQuestionIndex < this.questions.length - 1) {
-    this.currentQuestionIndex++;
-    
-    // Charger les recettes pour la nouvelle question
-    this.loadRecipesFromQuestions();
-    
-    await new Promise(resolve => setTimeout(resolve, 100));
-    await this.show();
-  } else {
-    // Catégorie terminée
-    this.showCompletionPopup = true;
-    this.completionMessage = `Félicitations ! Vous avez complété la catégorie ${this.selectedCategory}!`;
-    
-    const nextCategory = this.getNextUncompletedCategory();
-    this.completionSubMessage = nextCategory 
-      ? `Prochaine catégorie disponible : ${nextCategory}`
-      : 'Toutes les catégories sont complétées !';
-
-    // Émettre un événement pour mettre le timer en pause
-    this.$emit('pause-timer');
-
-    await this.saveProgress();
-  }
-},
+        await this.saveProgress();
+      }
+    },
     async answerCorrect() {
       const currentQuestion = this.currentQuestion;
       const validationMode = currentQuestion.initialElements?.validationMode || 'any';
@@ -966,7 +1027,15 @@ debugQuestionData() {
         );
         
         if (isValidAnswer) {
-          currentQuestion.initialElements.required.forEach(element => {
+          // Gérer la structure imbriquée pour required
+          let requiredElements = [];
+          if (currentQuestion.initialElements.initialElements && currentQuestion.initialElements.initialElements.required) {
+            requiredElements = currentQuestion.initialElements.initialElements.required;
+          } else if (currentQuestion.initialElements.required) {
+            requiredElements = currentQuestion.initialElements.required;
+          }
+          
+          requiredElements.forEach(element => {
             if (!this.$parent.discoveredElements.includes(element)) {
               this.$parent.discoveredElements.push(element);
             }
@@ -988,7 +1057,15 @@ debugQuestionData() {
         const requiredCount = currentQuestion.initialElements.requiredCount || 1;
         
         if (this.discoveredValidAnswersCount >= requiredCount) {
-          currentQuestion.initialElements.required.forEach(element => {
+          // Gérer la structure imbriquée pour required
+          let requiredElements = [];
+          if (currentQuestion.initialElements.initialElements && currentQuestion.initialElements.initialElements.required) {
+            requiredElements = currentQuestion.initialElements.initialElements.required;
+          } else if (currentQuestion.initialElements.required) {
+            requiredElements = currentQuestion.initialElements.required;
+          }
+          
+          requiredElements.forEach(element => {
             if (!this.$parent.discoveredElements.includes(element)) {
               this.$parent.discoveredElements.push(element);
             }
@@ -1011,6 +1088,9 @@ debugQuestionData() {
     resetQuestions() {
       this.loadQuestionsAndReset();
       this.currentScore = 0;
+      
+      // Nettoyer les données
+      this.cleanupTimerData();
     }
   }
 }
