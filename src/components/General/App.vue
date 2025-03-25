@@ -711,29 +711,38 @@ async updateAchievements() {
       }
     });
     
-
+    // Ajoutons un délai avant d'essayer de sauvegarder
     if (this.isLoggedIn) {
-      // Utiliser l'API de timerService au lieu de progressService
-      fetch('/api/timer/save-elements', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${AuthService.getCurrentUser()?.token}`
-        },
-        body: JSON.stringify({
-          elements: this.currentTimerElements
-        })
-      })
-      .then(response => {
-        if (response.ok) return response.json();
-        throw new Error('Erreur lors de la sauvegarde des éléments Timer');
-      })
-      .then(() => {
-        console.log('Éléments pour la question Timer sauvegardés');
-      })
-      .catch(error => {
-        console.error('Erreur:', error);
-      });
+      setTimeout(() => {
+        try {
+          fetch('/api/timer/save-elements', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              'Authorization': `Bearer ${AuthService.getCurrentUser()?.token}`
+            },
+            body: JSON.stringify({
+              elements: this.currentTimerElements
+            })
+          })
+          .then(response => {
+            if (response.ok) return response.json();
+            // Ne pas lancer d'erreur, simplement logger
+            console.warn('Avertissement: Impossible de sauvegarder les éléments Timer, continuez quand même');
+            return { success: false };
+          })
+          .then(data => {
+            if (data.success !== false) {
+              console.log('Éléments pour la question Timer sauvegardés');
+            }
+          })
+          .catch(error => {
+            console.warn('Erreur non bloquante lors de la sauvegarde des éléments:', error);
+          });
+        } catch (error) {
+          console.warn('Exception lors de la sauvegarde des éléments Timer, continuez quand même:', error);
+        }
+      }, 300);
     }
   }
   

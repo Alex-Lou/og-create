@@ -100,6 +100,7 @@ import { ref, computed, watch, onMounted, onUnmounted } from 'vue';
 import '@/assets/ComponentsStyle/InventoryStyle/GameInventoryStyle.css';
 import gameDataService from '@/services/gameDataService';
 import gameService from '@/services/gameService';
+import progressService from '@/services/progressService';
  
 export default {
   name: 'GameInventory',
@@ -174,31 +175,65 @@ export default {
     }
     
     function getElementEmoji(elementName) {
-      // 1. Vérifier d'abord dans l'objet global window.timerElementEmojis
-      if (window.timerElementEmojis && window.timerElementEmojis[elementName]) {
-        return window.timerElementEmojis[elementName];
-      }
-      
-      // 2. Sinon, vérifier dans localElementEmojis
-      if (localElementEmojis.value && localElementEmojis.value[elementName]) {
-        return localElementEmojis.value[elementName];
-      }
-      
-      // 3. Vérifier dans props.elementEmojis
-      if (props.elementEmojis && props.elementEmojis[elementName]) {
-        return props.elementEmojis[elementName];
-      }
-      
-      // 4. Emojis de secours pour les éléments fondamentaux
-      const fallbackEmojis = {
-        "Eau": "💧",
-        "Feu": "🔥",
-        "Terre": "🌎",
-        "Air": "💨"
-      };
-      
-      return fallbackEmojis[elementName] || "❓";
-    }
+  // Table d'émojis prédéfinie pour les éléments courants
+  const commonEmojis = {
+    // Éléments fondamentaux
+    "Eau": "💧",
+    "Feu": "🔥",
+    "Terre": "🌎",
+    "Air": "💨",
+    
+    // Éléments biologiques
+    "Cellule": "🧫",
+    "Division": "✂️",
+    "Cytoplasme": "🫧",
+    "Mitochondrie": "🔋",
+    "Chromosome X": "❌",
+    "ADN": "🧬",
+    "Enzyme": "💉",
+    "Mitose": "🔄",
+    "Cerveau": "🧠",
+    "Nerf": "🔌",
+    "Mémoire": "💭",
+    "Observation": "👁️",
+    "Intelligence": "🤔",
+    "Système Nerveux": "⚡",
+    
+    // Éléments géologiques
+    "Océan": "🌊",
+    "Montagne": "⛰️",
+    "Atmosphère": "🌫️",
+    "Vie": "🌱",
+    
+    // Autres éléments communs
+    "Température": "🌡️",
+    "Pression": "⚙️",
+    "Lumière": "💡",
+    "Énergie": "⚡",
+    "Temps": "⏱️",
+    "Plante": "🌿",
+    "Graine": "🌰",
+    "Feuille": "🍃",
+    "Arbre": "🌳"
+  };
+
+  // 1. Vérifier dans la table prédéfinie
+  if (commonEmojis[elementName]) {
+    return commonEmojis[elementName];
+  }
+  
+  // 2. Vérifier dans les props pour les éléments moins courants
+  if (localElementEmojis.value && localElementEmojis.value[elementName]) {
+    return localElementEmojis.value[elementName];
+  }
+  
+  if (props.elementEmojis && props.elementEmojis[elementName]) {
+    return props.elementEmojis[elementName];
+  }
+  
+  // Emoji par défaut si non trouvé
+  return "❓";
+}
     
     // Méthode pour réinitialiser complètement l'affichage des éléments
     function resetTimerElements() {
@@ -285,66 +320,76 @@ export default {
     
     // Fonction pour charger les éléments du timer
     async function loadTimerEmojis(currentQuestionId) {
-      try {
-        // Obtenir l'ID de la question actuelle si non fourni
-        if (!currentQuestionId && window.currentQuestionId) {
-          currentQuestionId = window.currentQuestionId;
-        }
-        
-        console.log('Chargement des éléments du timer pour la question:', currentQuestionId);
-        
-        if (!currentQuestionId) {
-          console.warn('Aucun ID de question fourni pour loadTimerEmojis');
-          return [];
-        }
-        
-        // Utiliser gameService pour charger les éléments
-        const timerElements = await gameService.loadTimerElements(currentQuestionId);
-        
-        console.log('Éléments du timer après chargement:', timerElements);
-        
-        // Stocker dans les variables globales pour compatibilité
-        if (timerElements && timerElements.length > 0) {
-          window.currentTimerElements = timerElements;
-          window.timerElements = timerElements;
-        }
-        
-        return timerElements || [];
-      } catch (error) {
-        console.error('Erreur lors du chargement des emojis du Timer:', error);
-        return [];
-      }
+  try {
+    if (!currentQuestionId && window.currentQuestionId) {
+      currentQuestionId = window.currentQuestionId;
     }
+    
+    console.log('Chargement des éléments du timer pour la question:', currentQuestionId);
+    
+    if (!currentQuestionId) {
+      console.warn('Aucun ID de question fourni pour loadTimerEmojis');
+      return [];
+    }
+    
+    // Utiliser gameService pour charger les éléments
+    const timerElements = await gameService.loadTimerElements(currentQuestionId);
+    
+    console.log('Éléments du timer après chargement:', timerElements);
+    
+    // Vérifier si window.timerElementEmojis existe et a des clés
+    if (!window.timerElementEmojis || Object.keys(window.timerElementEmojis).length === 0) {
+      // Explicitement initialiser ou réinitialiser window.timerElementEmojis
+      window.timerElementEmojis = {};
+      
+      // Récupérer les émojis depuis timerService
+      const emojis = gameService.timerService.elementEmojis;
+      console.log('Copie des émojis depuis timerService:', emojis);
+      
+      // Copier manuellement les émojis
+      if (emojis && typeof emojis === 'object') {
+        Object.assign(window.timerElementEmojis, emojis);
+      }
+      
+      console.log('Mise à jour manuelle de window.timerElementEmojis:', 
+        Object.keys(window.timerElementEmojis).length, 'émojis');
+    }
+    
+    return timerElements || [];
+  } catch (error) {
+    console.error('Erreur lors du chargement des emojis du Timer:', error);
+    return [];
+  }
+}
     
     // Initialisation des éléments du timer
     async function initTimerElements() {
-      if (props.isTimerMode) {
-        console.log('Initialisation des éléments du timer');
+  if (props.isTimerMode) {
+    console.log('Initialisation des éléments du timer');
+    
+    try {
+      // Réinitialiser et s'assurer que window.timerElementEmojis existe
+      if (!window.timerElementEmojis) {
+        window.timerElementEmojis = {};
+      }
+      
+      // Si on a un ID de question, charger ses éléments spécifiques
+      if (window.currentQuestionId) {
+        const elements = await loadTimerEmojis(window.currentQuestionId);
         
-        try {
-          // Si window.currentQuestionId existe, essayer de charger les éléments
-          if (window.currentQuestionId) {
-            const elements = await loadTimerEmojis(window.currentQuestionId);
-            
-            // Forcer une mise à jour des catégories filtrées
-            if (elements && elements.length > 0) {
-              console.log('Mise à jour des éléments du timer:', elements.length);
-              
-              // Mise à jour forcée pour rafraîchir l'affichage
-              setTimeout(() => {
-                // Forcer l'ouverture de la catégorie
-                expandedCategories.value[0] = true;
-                
-                // Forcer une mise à jour
-                emit('force-reload', { timerElementsLoaded: true });
-              }, 100);
-            }
-          }
-        } catch (error) {
-          console.error('Erreur lors de l\'initialisation des éléments du timer:', error);
+        // Forcer une mise à jour
+        if (elements && elements.length > 0) {
+          setTimeout(() => {
+            expandedCategories.value[0] = true;
+            emit('force-reload', { timerElementsLoaded: true });
+          }, 100);
         }
       }
+    } catch (error) {
+      console.error('Erreur lors de l\'initialisation des éléments du timer:', error);
     }
+  }
+}
     
     // Méthode pour rafraîchir manuellement les éléments du timer
     function refreshTimerElements() {
@@ -359,50 +404,62 @@ export default {
     
     // Fonction pour obtenir les catégories en mode normal
     function getNormalModeCategories() {
-      // Créer des copies des tableaux pour éviter de modifier les props
-      const localDiscoveredElements = [...props.discoveredElements];
-      const localDiscoveredCategories = [...props.discoveredCategories];
-      
-      // S'assurer que les éléments fondamentaux sont présents
-      const { hasAddedElements, hasAddedCategory } = ensureFundamentalElementsExist(
-        localDiscoveredElements, 
-        localDiscoveredCategories
-      );
-      
-      // Si des éléments ont été ajoutés localement, synchroniser avec le serveur
-      if (hasAddedElements || hasAddedCategory) {
-        console.log("Éléments ou catégories fondamentaux ajoutés, synchronisation avec le serveur...");
-        synchronizeFundamentals(localDiscoveredElements, localDiscoveredCategories);
-      }
-      
-      return Object.entries(props.categories)
-        .map(([name, elements]) => createCategoryObject(name, elements, localDiscoveredElements))
-        .filter(category => localDiscoveredCategories.includes(category.name));
-    }
+  // Si nous sommes en mode Timer, retourner un tableau vide 
+  // pour éviter toute synchronisation inutile
+  if (props.isTimerMode === true) {
+    console.log("Mode Timer actif, ignorer l'appel à getNormalModeCategories");
+    return [];
+  }
+  
+  // Créer des copies des tableaux pour éviter de modifier les props
+  const localDiscoveredElements = [...props.discoveredElements];
+  const localDiscoveredCategories = [...props.discoveredCategories];
+  
+  // S'assurer que les éléments fondamentaux sont présents
+  const { hasAddedElements, hasAddedCategory } = ensureFundamentalElementsExist(
+    localDiscoveredElements, 
+    localDiscoveredCategories
+  );
+  
+  // Si des éléments ont été ajoutés localement, synchroniser avec le serveur
+  if (hasAddedElements || hasAddedCategory) {
+    console.log("Éléments ou catégories fondamentaux ajoutés, synchronisation avec le serveur...");
+    synchronizeFundamentals(localDiscoveredElements, localDiscoveredCategories);
+  }
+  
+  return Object.entries(props.categories)
+    .map(([name, elements]) => createCategoryObject(name, elements, localDiscoveredElements))
+    .filter(category => localDiscoveredCategories.includes(category.name));
+}
     
     // Fonction utilitaire pour s'assurer que les éléments fondamentaux existent
     function ensureFundamentalElementsExist(elements, categories) {
-      let hasAddedElements = false;
-      let hasAddedCategory = false;
-      
-      // Assurer que les éléments fondamentaux sont présents
-      fundamentalElements.forEach(element => {
-        if (!elements.includes(element)) {
-          elements.push(element);
-          hasAddedElements = true;
-          console.log(`Élément fondamental ajouté localement: ${element}`);
-        }
-      });
-      
-      // Assurer que la catégorie fondamentale est présente
-      if (!categories.includes(fundamentalCategory)) {
-        categories.push(fundamentalCategory);
-        hasAddedCategory = true;
-        console.log(`Catégorie fondamentale ajoutée localement: ${fundamentalCategory}`);
-      }
-      
-      return { hasAddedElements, hasAddedCategory };
+  // Ne rien faire si on est en mode Timer
+  if (props.isTimerMode) {
+    return { hasAddedElements: false, hasAddedCategory: false };
+  }
+  
+  let hasAddedElements = false;
+  let hasAddedCategory = false;
+  
+  // Assurer que les éléments fondamentaux sont présents
+  fundamentalElements.forEach(element => {
+    if (!elements.includes(element)) {
+      elements.push(element);
+      hasAddedElements = true;
+      console.log(`Élément fondamental ajouté localement: ${element}`);
     }
+  });
+  
+  // Assurer que la catégorie fondamentale est présente
+  if (!categories.includes(fundamentalCategory)) {
+    categories.push(fundamentalCategory);
+    hasAddedCategory = true;
+    console.log(`Catégorie fondamentale ajoutée localement: ${fundamentalCategory}`);
+  }
+  
+  return { hasAddedElements, hasAddedCategory };
+}
     
     // Fonction utilitaire pour créer un objet de catégorie
     function createCategoryObject(name, elements, discoveredElements) {
@@ -456,31 +513,29 @@ export default {
       }
     }
 
-    // Synchroniser les éléments et catégories fondamentaux avec le serveur
-    async function synchronizeFundamentals(elements, categories) {
-      try {
-        // Mise à jour des éléments découverts
-        const elementsResponse = await fetch('/api/progress/update-discovered-elements', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({ discoveredElements: elements }),
-        });
-        
-        if (!elementsResponse.ok) {
-          console.error('Erreur lors de la synchronisation des éléments fondamentaux');
-        }
-        
-        // Informer le composant parent des changements
-        emit('force-reload', { 
-          discoveredElements: elements,
-          discoveredCategories: categories
-        });
-      } catch (error) {
-        console.error('Erreur lors de la synchronisation avec le serveur:', error);
-      }
-    }
+    // Modifiez la fonction synchronizeFundamentals dans GameInventory.vue:
+async function synchronizeFundamentals(elements, categories) {
+  console.log("synchronizeFundamentals appelé avec isTimerMode =", props.isTimerMode);
+
+  // Ne rien faire si on est en mode Timer
+  if (props.isTimerMode) {
+    console.log("Mode Timer actif, synchronisation des éléments fondamentaux ignorée");
+    return;
+  }
+  
+  try {
+    // Utilisez progressService au lieu de gameService
+    await progressService.updateDiscoveredElements(elements);
+    
+    // Informer le composant parent des changements
+    emit('force-reload', { 
+      discoveredElements: elements,
+      discoveredCategories: categories
+    });
+  } catch (error) {
+    console.error('Erreur lors de la synchronisation avec le serveur:', error);
+  }
+}
 
     // Chargement optimisé des emojis via le gameDataService
     async function loadEmojisData() {
