@@ -140,14 +140,31 @@ export default {
     },
     
     async fetchAchievementsFromService() {
-      if (authService.isAuthenticated()) {
-        const progress = await progressService.loadProgress();
-        
-        if (progress && progress.achievements) {
+  if (authService.isAuthenticated()) {
+    try {
+      const progress = await progressService.loadProgress();
+      
+      if (progress && progress.achievements) {
+        // Vérifier si les achievements sont sous forme de chaîne et les parser si nécessaire
+        if (typeof progress.achievements === 'string') {
+          try {
+            this.savedAchievements = JSON.parse(progress.achievements);
+          } catch (e) {
+            console.error("Erreur lors du parsing des achievements:", e);
+            this.savedAchievements = {};
+          }
+        } else {
           this.savedAchievements = progress.achievements;
         }
+        
+        console.log("Achievements chargés:", this.savedAchievements);
       }
-    },
+    } catch (error) {
+      console.error("Erreur lors du chargement des achievements:", error);
+      this.savedAchievements = {};
+    }
+  }
+},
     
     notifyAchievementsLoaded() {
       // Émettre un événement local
@@ -214,13 +231,19 @@ export default {
     },
     
     isAchievementUnlocked(achievementName) {
-      if (!authService.isAuthenticated()) {
-        return this.localUnlockedAchievements[achievementName]?.unlocked || false;
-      }
-
-      const key = this.getAchievementKey(achievementName);
-      return key ? this.savedAchievements[key].unlocked : false;
-    },
+  if (!authService.isAuthenticated()) {
+    return this.localUnlockedAchievements[achievementName]?.unlocked || false;
+  }
+  
+  // Vérifier si l'achievement existe directement dans savedAchievements
+  if (this.savedAchievements[achievementName] && this.savedAchievements[achievementName].unlocked) {
+    return true;
+  }
+  
+  // Essayer avec la méthode de normalisation si la recherche directe échoue
+  const key = this.getAchievementKey(achievementName);
+  return key ? this.savedAchievements[key].unlocked : false;
+},
     
     // Utilitaires et gestion de l'interface
     normalizeName(name) {
