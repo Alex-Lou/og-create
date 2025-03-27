@@ -1,10 +1,12 @@
 // src/utils/achievementChecker.js
+// Utilitaire pour vérifier les conditions de déblocage des achievements côté client
+// Utilisé à la fois directement et comme fallback par achievementsService
 
 /**
  * Vérifie les conditions de déblocage des succès
  * @param {Array} achievements - La liste des succès
  * @param {Array} discoveredElements - Les éléments découverts par le joueur
- * @returns {Array} - La liste des succès avec leur statut de déblocage mis à jour
+ * @returns {Object} - Résultat contenant les achievements mis à jour et les nouveaux débloqués
  */
 export function checkAchievements(achievements, discoveredElements) {
   if (!Array.isArray(achievements) || !Array.isArray(discoveredElements)) {
@@ -12,7 +14,7 @@ export function checkAchievements(achievements, discoveredElements) {
       achievements: Array.isArray(achievements), 
       discoveredElements: Array.isArray(discoveredElements) 
     });
-    return achievements;
+    return { achievements: achievements || [], newlyUnlocked: [] };
   }
 
   // Créer une copie pour éviter de modifier l'original
@@ -57,7 +59,7 @@ export function checkAchievements(achievements, discoveredElements) {
       // Si le succès vient d'être débloqué, l'ajouter à la liste
       if (achievement.unlocked === true) {
         achievement.unlockedAt = new Date().toISOString();
-        newlyUnlocked.push(achievement);
+        newlyUnlocked.push({...achievement});
       }
     } catch (error) {
       console.error(`Erreur lors de l'évaluation de la condition pour ${achievement.name}:`, error);
@@ -78,10 +80,11 @@ export function checkAchievements(achievements, discoveredElements) {
  * @returns {Object|null} - Le succès débloqué ou null
  */
 export function checkNewElementAchievement(achievements, discoveredElements, newElement) {
-  if (!Array.isArray(achievements) || !Array.isArray(discoveredElements)) {
+  if (!Array.isArray(achievements) || !Array.isArray(discoveredElements) || !newElement) {
     console.error('Données invalides pour la vérification des succès', { 
       achievements: Array.isArray(achievements), 
-      discoveredElements: Array.isArray(discoveredElements) 
+      discoveredElements: Array.isArray(discoveredElements),
+      newElement: Boolean(newElement)
     });
     return null;
   }
@@ -99,9 +102,11 @@ export function checkNewElementAchievement(achievements, discoveredElements, new
   });
   
   if (specificAchievement && specificAchievement.unlocked !== true) {
-    specificAchievement.unlocked = true;
-    specificAchievement.unlockedAt = new Date().toISOString();
-    return specificAchievement;
+    // Créer une copie pour éviter de modifier l'original
+    const result = {...specificAchievement};
+    result.unlocked = true;
+    result.unlockedAt = new Date().toISOString();
+    return result;
   }
   
   // Vérifier si le nouvel élément fait franchir un palier
@@ -122,9 +127,11 @@ export function checkNewElementAchievement(achievements, discoveredElements, new
   });
   
   if (countAchievement && countAchievement.unlocked !== true) {
-    countAchievement.unlocked = true;
-    countAchievement.unlockedAt = new Date().toISOString();
-    return countAchievement;
+    // Créer une copie pour éviter de modifier l'original
+    const result = {...countAchievement};
+    result.unlocked = true;
+    result.unlockedAt = new Date().toISOString();
+    return result;
   }
   
   return null;

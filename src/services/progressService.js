@@ -1,6 +1,7 @@
 // src/services/progressService.js
 import { apiInstance } from './authService';
 import AuthService from './authService';
+import achievementsService from './achievementsService';
 
 // Configuration pour le contrôle de débit
 const RATE_LIMIT = {
@@ -265,6 +266,14 @@ class ProgressService {
       // Mettre à jour l'horodatage de la dernière sauvegarde
       lastSaveTime = Date.now();
       
+      // Si des éléments ont été découverts, vérifier les achievements
+      if (mergedData.discoveredElements && mergedData.discoveredElements.length > 0) {
+        // Vérifier les achievements sans bloquer le processus de sauvegarde
+        achievementsService.checkAchievements(mergedData.discoveredElements).catch(error => {
+          console.error('Erreur lors de la vérification des achievements:', error);
+        });
+      }
+      
     } catch (error) {
       console.error('Erreur lors du traitement de la file d\'attente de sauvegarde:', error);
       
@@ -416,6 +425,21 @@ class ProgressService {
       lastProgressLoad = 0;
     }
     
+    // Si des éléments ont été découverts, vérifier si un nouvel achievement est débloqué
+    if (progressData.discoveredElements && progressData.discoveredElements.length > 0) {
+      const newElement = progressData.discoveredElements[progressData.discoveredElements.length - 1];
+      // Vérifier les achievements sans bloquer
+      this.loadGameProgress().then(progress => {
+        if (progress && progress.discoveredElements) {
+          achievementsService.checkNewElementAchievement(newElement, progress.discoveredElements).catch(error => {
+            console.error('Erreur lors de la vérification d\'un nouvel élément pour les achievements:', error);
+          });
+        }
+      }).catch(error => {
+        console.error('Erreur lors du chargement des données pour vérifier les achievements:', error);
+      });
+    }
+    
     return Promise.resolve({ status: 'queued', message: 'La sauvegarde a été ajoutée à la file d\'attente' });
   }
 
@@ -491,16 +515,39 @@ class ProgressService {
     lastProgressLoad = 0;
   }
 
+  // Méthode mise à jour pour utiliser le service d'achievements
   async saveAchievement(achievementData) {
-    // Utiliser la file d'attente de sauvegarde
-    return this.saveGameProgress({
-      achievements: {
-        [achievementData.name]: {
-          unlocked: true,
-          unlockedAt: achievementData.unlockedAt || new Date().toISOString()
+    try {
+      // Utiliser le nouveau service d'achievements pour débloquer un achievement
+      return await achievementsService.unlockAchievement(achievementData.name);
+    } catch (error) {
+      console.error('Erreur lors de la sauvegarde d\'un achievement:', error);
+      
+      // En cas d'erreur, fallback sur l'ancienne méthode
+      return this.saveGameProgress({
+        achievements: {
+          [achievementData.name]: {
+            unlocked: true,
+            unlockedAt: achievementData.unlockedAt || new Date().toISOString()
+          }
         }
-      }
-    });
+      });
+    }
+  }
+
+  // Méthode corrigée pour mettre à jour les achievements
+  async updateAchievements(achievementsData) {
+    try {
+      // Utiliser le nouveau service d'achievements
+      return await achievementsService.updateAchievements(achievementsData);
+    } catch (error) {
+      console.error('Erreur lors de la mise à jour des achievements:', error);
+      
+      // En cas d'erreur, fallback sur l'ancienne méthode
+      return this.saveGameProgress({
+        achievements: achievementsData
+      });
+    }
   }
 
   async updateCoins(coins) {
@@ -571,6 +618,11 @@ class ProgressService {
       progressCache = null;
       lastProgressLoad = 0;
       
+      // Vérifier les achievements après la mise à jour des éléments découverts
+      achievementsService.checkAchievements(discoveredElements).catch(error => {
+        console.error('Erreur lors de la vérification des achievements après mise à jour des éléments:', error);
+      });
+      
       return response.data;
     } catch (error) {
       // En cas d'erreur 429, activer le cooldown global
@@ -583,28 +635,6 @@ class ProgressService {
         discoveredElements,
         gameMode 
       });
-    }
-  }
-
-  async updateAchievements() {
-    if (!this.isLoggedIn || !this.achievements) {
-      return;
-    }
-    
-    try {
-      const achievementsData = {};
-      this.achievements.forEach(achievement => {
-        if (achievement.unlocked) {
-          achievementsData[achievement.name] = {
-            unlocked: true,
-            unlockedAt: achievement.unlockedAt || new Date().toISOString()
-          };
-        }
-      });
-      
-      await this.updateAchievements(achievementsData);
-    } catch (error) {
-      console.error("Erreur lors de la mise à jour des achievements:", error);
     }
   }
 

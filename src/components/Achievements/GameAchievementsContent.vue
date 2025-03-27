@@ -52,7 +52,7 @@
 </template>
 
 <script>
-import progressService from '@/services/progressService';
+import achievementsService from '@/services/achievementsService';
 import authService from '@/services/authService';
 import "@/assets/ComponentsStyle/AchievementsStyle/SuccessContentStyle.css";
 
@@ -74,7 +74,7 @@ export default {
     return {
       isHovered: false,
       isListHovered: false,
-      savedAchievements: {},
+      userAchievements: {},
       localUnlockedAchievements: {},
       processedAchievements: [],
       isLoading: true
@@ -84,7 +84,7 @@ export default {
   created() {
     // Initialiser les achievements
     this.processedAchievements = this.cloneAchievements(this.achievements);
-    this.loadSavedAchievements();
+    this.loadUserAchievements();
     
     // Configurer les listeners d'événements
     this.setupEventListeners();
@@ -112,14 +112,14 @@ export default {
       return JSON.parse(JSON.stringify(achievements));
     },
     
-    // Chargement des achievements sauvegardés
-    async loadSavedAchievements() {
+    // Chargement des achievements de l'utilisateur
+    async loadUserAchievements() {
       this.isLoading = true;
       
       try {
         // Délai court pour assurer la synchronisation
         await this.shortDelay(100);
-        await this.fetchAchievementsFromService();
+        await this.fetchUserAchievements();
         
         // Synchroniser l'état des achievements
         this.syncAchievementsState();
@@ -139,32 +139,18 @@ export default {
       return new Promise(resolve => setTimeout(resolve, ms));
     },
     
-    async fetchAchievementsFromService() {
-  if (authService.isAuthenticated()) {
-    try {
-      const progress = await progressService.loadProgress();
-      
-      if (progress && progress.achievements) {
-        // Vérifier si les achievements sont sous forme de chaîne et les parser si nécessaire
-        if (typeof progress.achievements === 'string') {
-          try {
-            this.savedAchievements = JSON.parse(progress.achievements);
-          } catch (e) {
-            console.error("Erreur lors du parsing des achievements:", e);
-            this.savedAchievements = {};
-          }
-        } else {
-          this.savedAchievements = progress.achievements;
+    async fetchUserAchievements() {
+      if (authService.isAuthenticated()) {
+        try {
+          // Utiliser le nouveau service d'achievements
+          this.userAchievements = await achievementsService.getUserAchievements();
+          console.log("Achievements chargés:", this.userAchievements);
+        } catch (error) {
+          console.error("Erreur lors du chargement des achievements:", error);
+          this.userAchievements = {};
         }
-        
-        console.log("Achievements chargés:", this.savedAchievements);
       }
-    } catch (error) {
-      console.error("Erreur lors du chargement des achievements:", error);
-      this.savedAchievements = {};
-    }
-  }
-},
+    },
     
     notifyAchievementsLoaded() {
       // Émettre un événement local
@@ -186,7 +172,7 @@ export default {
     },
     
     handleAppReloaded() {
-      setTimeout(() => this.loadSavedAchievements(), 200);
+      setTimeout(() => this.loadUserAchievements(), 200);
     },
     
     handleForceReload(loadedData) {
@@ -210,7 +196,7 @@ export default {
       });
       
       if (Object.keys(loadedData.achievements).length > 0) {
-        this.savedAchievements = loadedData.achievements;
+        this.userAchievements = loadedData.achievements;
       }
     },
     
@@ -225,25 +211,25 @@ export default {
     },
     
     getAchievementKey(name) {
-      return Object.keys(this.savedAchievements).find(key => 
+      return Object.keys(this.userAchievements).find(key => 
         this.normalizeName(key) === this.normalizeName(name)
       );
     },
     
     isAchievementUnlocked(achievementName) {
-  if (!authService.isAuthenticated()) {
-    return this.localUnlockedAchievements[achievementName]?.unlocked || false;
-  }
-  
-  // Vérifier si l'achievement existe directement dans savedAchievements
-  if (this.savedAchievements[achievementName] && this.savedAchievements[achievementName].unlocked) {
-    return true;
-  }
-  
-  // Essayer avec la méthode de normalisation si la recherche directe échoue
-  const key = this.getAchievementKey(achievementName);
-  return key ? this.savedAchievements[key].unlocked : false;
-},
+      if (!authService.isAuthenticated()) {
+        return this.localUnlockedAchievements[achievementName]?.unlocked || false;
+      }
+      
+      // Vérifier si l'achievement existe directement dans userAchievements
+      if (this.userAchievements[achievementName] && this.userAchievements[achievementName].unlocked) {
+        return true;
+      }
+      
+      // Essayer avec la méthode de normalisation si la recherche directe échoue
+      const key = this.getAchievementKey(achievementName);
+      return key ? this.userAchievements[key].unlocked : false;
+    },
     
     // Utilitaires et gestion de l'interface
     normalizeName(name) {
@@ -287,20 +273,23 @@ export default {
     },
     
     async saveAchievementToService(achievement) {
-      const achievementData = {
-        name: achievement.name,
-        unlocked: true,
-        unlockedAt: new Date().toISOString()
-      };
-
-      await progressService.saveAchievement(achievementData);
-      
-      this.savedAchievements[achievement.name] = achievementData;
-      
-      // Mise à jour dans les processedAchievements
-      this.updateProcessedAchievement(achievement.name);
-      
-      this.$emit('achievement-saved', achievement);
+      try {
+        // Utiliser le nouveau service d'achievements
+        await achievementsService.unlockAchievement(achievement.name);
+        
+        // Mettre à jour la version locale
+        this.userAchievements[achievement.name] = {
+          unlocked: true,
+          unlockedAt: new Date().toISOString()
+        };
+        
+        // Mise à jour dans les processedAchievements
+        this.updateProcessedAchievement(achievement.name);
+        
+        this.$emit('achievement-saved', achievement);
+      } catch (error) {
+        console.error("Erreur lors de la sauvegarde de l'achievement:", error);
+      }
     },
     
     updateProcessedAchievement(achievementName) {
@@ -345,12 +334,12 @@ export default {
       immediate: true,
       handler(newValue) {
         if (newValue) {
-          this.loadSavedAchievements();
+          this.loadUserAchievements();
         }
       }
     },
     
-    savedAchievements: {
+    userAchievements: {
       deep: true,
       handler() {
         this.syncAchievementsState();
