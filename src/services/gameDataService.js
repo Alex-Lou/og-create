@@ -1,5 +1,6 @@
 import api from './api';
 import AuthService from './authService';
+import achievementsService from './achievementsService';
 
 /**
  * Service pour l'accès aux données du jeu avec chargement optimisé
@@ -15,6 +16,7 @@ class GameDataService {
     };
     
     // Liste des fichiers à charger lors de l'initialisation
+    // Note: achievements retiré de la liste car géré par achievementsService
     this.requiredFiles = [
       'animaux', 
       'biologie', 
@@ -25,7 +27,6 @@ class GameDataService {
       'materiaux_elementaires', 
       'phénomènes_naturels', 
       'magie', 
-      'achievements', 
       'elements',
       'timer_questions'
     ];
@@ -54,9 +55,39 @@ class GameDataService {
       return Promise.reject(new Error('Utilisateur non authentifié'));
     }
 
+    try {
+      // Chargement en parallèle : fichiers standard et achievements
+      const [standardData, achievements] = await Promise.all([
+        this.loadStandardFiles(),
+        this.loadAchievements()
+      ]);
+
+      // Combiner les données
+      const allData = {
+        ...standardData,
+        achievements
+      };
+
+      return allData;
+    } catch (error) {
+      console.error('Erreur lors du chargement groupé des données:', error);
+      throw error;
+    }
+  }
+
+  /**
+   * Charge tous les fichiers standard (sauf achievements)
+   * @returns {Promise<Object>} - Données des fichiers standards
+   */
+  async loadStandardFiles() {
     // Vérifier si tous les fichiers sont déjà en cache
     if (this.requiredFiles.every(file => this.cache[file])) {
-      return this.cache;
+      // Créer un objet combiné avec tous les fichiers en cache
+      const cachedData = {};
+      this.requiredFiles.forEach(file => {
+        cachedData[file] = this.cache[file];
+      });
+      return cachedData;
     }
 
     try {
@@ -76,16 +107,47 @@ class GameDataService {
         const filename = this.requiredFiles[index];
         if (result.status === 'fulfilled' && result.value) {
           gameData[filename] = result.value;
+          // Mettre à jour le cache individuel
+          this.cache[filename] = result.value;
         }
       });
 
-      // Mettre à jour le cache complet
-      this.cache = { ...this.cache, ...gameData };
-
       return gameData;
     } catch (error) {
-      console.error('Erreur lors du chargement groupé des données:', error);
+      console.error('Erreur lors du chargement des fichiers standards:', error);
       throw error;
+    }
+  }
+
+  /**
+   * Charge les achievements via le service dédié
+   * @returns {Promise<Array>} - Liste des achievements
+   */
+  async loadAchievements() {
+    try {
+      // Utiliser le service dédié pour récupérer les achievements
+      const achievements = await achievementsService.getAllAchievements();
+      
+      // Mettre en cache
+      this.cache['achievements'] = achievements;
+      
+      return achievements;
+    } catch (error) {
+      console.error('Erreur lors du chargement des achievements:', error);
+      
+      // En cas d'erreur, essayer de récupérer depuis le cache
+      if (this.cache['achievements']) {
+        return this.cache['achievements'];
+      }
+      
+      // Si pas de cache, essayer de charger via l'ancienne méthode
+      try {
+        const data = await this.loadFile('achievements');
+        return data || [];
+      } catch (fallbackError) {
+        console.error('Échec complet du chargement des achievements:', fallbackError);
+        return []; // Renvoyer un tableau vide en dernier recours
+      }
     }
   }
 
@@ -95,6 +157,11 @@ class GameDataService {
    * @returns {Promise<Object>} - Données du fichier
    */
   async loadFile(filename) {
+    // Cas spécial pour les achievements
+    if (filename === 'achievements') {
+      return this.loadAchievements();
+    }
+
     // Vérifier l'authentification
     if (!this.isAuthenticated()) {
       return Promise.reject(new Error('Utilisateur non authentifié'));
@@ -176,6 +243,9 @@ class GameDataService {
   clearCache() {
     this.cache = {};
     this.loadingPromises = {};
+    
+    // Invalider également le cache des achievements
+    achievementsService.invalidateCache();
   }
 
   /**
@@ -186,6 +256,15 @@ class GameDataService {
   getCachedFile(filename) {
     // Utiliser le mapping si nécessaire
     const mappedFilename = this.filenameMapping[filename] || filename;
+    
+    // Cas spécial pour les achievements
+    if (mappedFilename === 'achievements') {
+      // Essayer de récupérer depuis le cache du service d'achievements
+      // Note: Ceci est une solution approximative car le service d'achievements 
+      // n'expose pas directement son cache de cette façon
+      return this.cache['achievements'] || null;
+    }
+    
     return this.cache[mappedFilename] || null;
   }
 }

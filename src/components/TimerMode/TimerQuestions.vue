@@ -983,6 +983,14 @@ export default {
     getCurrentQuestion() {
       return this.currentQuestion;
     },
+    setQuestions(questionsData) {
+  console.log("TimerQuestions: setQuestions appelé", questionsData);
+  if (questionsData && questionsData.levels) {
+    this.questionsData = questionsData;
+    return true;
+  }
+  return false;
+},
     showTimeUp() {
       this.isTimeUp = true;
       this.isVisible = true;

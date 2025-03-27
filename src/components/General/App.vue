@@ -143,6 +143,7 @@
 <script>
 import AuthService from '@/services/authService';
 import progressService from '@/services/progressService';
+import achievementsService from '@/services/achievementsService'; // Ajout du nouveau service
 import DarkToggle from '../Header/DarkToggle.vue';
 import LoginIcon from '../Header/LoginIcon.vue';
 import ContactIcon from '../Header/ContactIcon.vue';
@@ -274,7 +275,8 @@ mounted() {
   window.saveAchievements = (achievementsData) => {
     if (this.isLoggedIn && achievementsData) {
       console.log("Sauvegarde globale d'achievements:", Object.keys(achievementsData));
-      progressService.updateAchievements(achievementsData)
+      // Utiliser le nouveau service d'achievements
+      achievementsService.updateAchievements(achievementsData)
         .then(() => console.log("Sauvegarde directe des achievements réussie"))
         .catch(err => console.error("Erreur de sauvegarde directe:", err));
     }
@@ -487,6 +489,33 @@ handleGlobalAchievementsLoaded(event) {
         if (gameMode === 'infinite') {
           this.saveGameProgress();
         }
+        
+        // Vérifier si de nouveaux achievements sont débloqués par ce nouvel élément
+        if (gameMode === 'infinite') {
+          // Variable pour suivre les dernières vérifications d'achievements
+          if (!this._lastAchievementCheck) {
+            this._lastAchievementCheck = {};
+          }
+          
+          // Ne vérifier qu'une fois toutes les 5 secondes pour chaque élément
+          const now = Date.now();
+          if (!this._lastAchievementCheck[element] || 
+              now - this._lastAchievementCheck[element] > 5000) {
+            
+            this._lastAchievementCheck[element] = now;
+            
+            achievementsService.checkNewElementAchievement(element, this.discoveredElements)
+              .then(unlockedAchievement => {
+                if (unlockedAchievement) {
+                  // Traiter l'achievement débloqué
+                  this.handleAchievementUnlocked(unlockedAchievement);
+                }
+              })
+              .catch(error => {
+                console.error("Erreur lors de la vérification des nouveaux achievements:", error);
+              });
+          }
+        }
       })
       .catch(error => {
         console.error(`Erreur lors de la sauvegarde de l'élément ${element}:`, error);
@@ -517,16 +546,47 @@ handleGlobalAchievementsLoaded(event) {
   if (forceReload && this.$refs.dataLoading) {
     this.$nextTick(async () => {
       try {
-        const existingUnlockedAchievements = this.achievements
-          .filter(a => a.unlocked)
-          .reduce((acc, achievement) => {
-            acc[achievement.name] = {
-              unlocked: true,
-              unlockedAt: achievement.unlockedAt || new Date().toISOString()
-            };
-            return acc;
-          }, {});
-
+        // Récupérer les achievements débloqués directement depuis le service
+        let existingUnlockedAchievements = {};
+        if (this.isLoggedIn) {
+          try {
+            // Utiliser le nouveau service pour récupérer les achievements de l'utilisateur
+            const userAchievements = await achievementsService.getUserAchievements();
+            
+            // Filtrer pour ne garder que les débloqués
+            Object.keys(userAchievements).forEach(name => {
+              if (userAchievements[name] && userAchievements[name].unlocked) {
+                existingUnlockedAchievements[name] = {
+                  unlocked: true,
+                  unlockedAt: userAchievements[name].unlockedAt || new Date().toISOString()
+                };
+              }
+            });
+          } catch (error) {
+            console.error("Erreur lors de la récupération des achievements de l'utilisateur:", error);
+            // Fallback sur les achievements locaux
+            existingUnlockedAchievements = this.achievements
+              .filter(a => a.unlocked)
+              .reduce((acc, achievement) => {
+                acc[achievement.name] = {
+                  unlocked: true,
+                  unlockedAt: achievement.unlockedAt || new Date().toISOString()
+                };
+                return acc;
+              }, {});
+          }
+        } else {
+          // Si non connecté, utiliser les achievements locaux
+          existingUnlockedAchievements = this.achievements
+            .filter(a => a.unlocked)
+            .reduce((acc, achievement) => {
+              acc[achievement.name] = {
+                unlocked: true,
+                unlockedAt: achievement.unlockedAt || new Date().toISOString()
+              };
+              return acc;
+            }, {});
+        }
 
         // Forcer le chargement de toutes les données
         const loadedData = await this.$refs.dataLoading.loadAllData();
@@ -552,26 +612,12 @@ handleGlobalAchievementsLoaded(event) {
         await this.saveGameProgress();
         
         // Mise à jour explicite des achievements
-        const achievementsToUpdate = this.achievements
-          .filter(a => a.unlocked)
-          .reduce((acc, achievement) => {
-            acc[achievement.name] = {
-              unlocked: true,
-              unlockedAt: achievement.unlockedAt || new Date().toISOString()
-            };
-            return acc;
-          }, {});
+        if (this.isLoggedIn && Object.keys(existingUnlockedAchievements).length > 0) {
+          // Utiliser le nouveau service pour mettre à jour les achievements
+          await achievementsService.updateAchievements(existingUnlockedAchievements);
+        }
         
-        // console.log('🚀 Achievements à mettre à jour:', 
-        //   Object.keys(achievementsToUpdate).length
-        // );
-        
-        // Mise à jour immédiate et parallèle
-        await Promise.all([
-          progressService.updateAchievements(achievementsToUpdate),
-          this.updateCategoryProgress()
-        ]);
-        
+        await this.updateCategoryProgress();
         
         // Réinitialiser shouldForceReload après un délai
         setTimeout(() => {
@@ -645,12 +691,29 @@ handleGlobalAchievementsLoaded(event) {
     clearInterval(this.saveInterval);
   }
   
-  // Sauvegarder toutes les 2 minutes
+  // Augmenter l'intervalle à 10 minutes au lieu de 2
   this.saveInterval = setInterval(() => {
-    if (this.isLoggedIn) {      
-      this.saveGameProgress();
+    if (this.isLoggedIn) {
+      // Vérifier s'il y a des changements à sauvegarder
+      const currentGameState = JSON.stringify({
+        elements: this.discoveredElements,
+        categories: this.discoveredCategories,
+        coins: this.coins
+      });
+      
+      // Stocker l'état actuel pour comparaison future
+      const previousState = localStorage.getItem('previousGameState');
+      
+      // Ne sauvegarder que si l'état a changé
+      if (previousState !== currentGameState) {
+        console.log('Changements détectés, sauvegarde périodique...');
+        localStorage.setItem('previousGameState', currentGameState);
+        this.saveGameProgress();
+      } else {
+        console.log('Aucun changement, sauvegarde périodique ignorée.');
+      }
     }
-  }, 120000); // 2 minutes
+  }, 600000); // 10 minutes au lieu de 2
 },
 
 async updateAchievements() {
@@ -674,7 +737,8 @@ async updateAchievements() {
     });
         
     if (Object.keys(achievementsData).length > 0) {
-      await progressService.updateAchievements(achievementsData);
+      // Utiliser le nouveau service d'achievements
+      await achievementsService.updateAchievements(achievementsData);
     } else {
       console.log("Aucun achievement débloqué à sauvegarder");
     }
@@ -711,8 +775,8 @@ async updateAchievements() {
       }
     });
     
-    // Ajoutons un délai avant d'essayer de sauvegarder
-    if (this.isLoggedIn) {
+// Ajoutons un délai avant d'essayer de sauvegarder
+if (this.isLoggedIn) {
       setTimeout(() => {
         try {
           fetch('/api/timer/save-elements', {
@@ -778,11 +842,27 @@ handleTimerForceStop() {
       this.showContactForm = true;
     },
     loadGameProgress() {
-  if (!this.isLoggedIn) return;
+  if (!this.isLoggedIn) return Promise.resolve();
+
+  // Variables pour suivre les chargements
+  if (!this._lastLoadTimestamp) {
+    this._lastLoadTimestamp = 0;
+    this._progressCache = null;
+  }
+
+  // Eviter les chargements trop fréquents (pas plus d'une fois toutes les 30 secondes)
+  const now = Date.now();
+  if (this._progressCache && now - this._lastLoadTimestamp < 30000) {
+    console.log('Utilisation du cache pour loadGameProgress');
+    return Promise.resolve(this._progressCache);
+  }
 
   try {
-    progressService.loadGameProgress()
+    return progressService.loadGameProgress()
       .then(progress => {
+        // Mettre à jour le cache
+        this._lastLoadTimestamp = now;
+        this._progressCache = progress;
 
         if (progress) {
           if (progress.coins !== undefined) {
@@ -881,6 +961,8 @@ handleTimerForceStop() {
 
           this.updateCategoryProgress();
         }
+        
+        return progress;
       })
       .catch(error => {
         console.error("Erreur lors du chargement de la progression:", error);
@@ -924,6 +1006,8 @@ handleTimerForceStop() {
         };
         this.selectedFrame = 'basicCadre.png';
         this.selectedAvatar = 'coin.png';
+        
+        throw error;
       });
   } catch (error) {
     console.error("Erreur lors du chargement de la progression:", error);
@@ -939,11 +1023,26 @@ handleTimerForceStop() {
     };
     this.selectedFrame = 'basicCadre.png';
     this.selectedAvatar = 'coin.png';
+    
+    return Promise.reject(error);
   }
 },
 
 saveGameProgress() {
   if (!this.isLoggedIn) return;
+
+  // Variable pour suivre les dernières sauvegardes
+  if (!this._lastSaveTimestamp) {
+    this._lastSaveTimestamp = 0;
+    this._lastSaveData = null;
+  }
+
+  // Limiter la fréquence des sauvegardes (pas plus d'une fois toutes les 30 secondes)
+  const now = Date.now();
+  if (now - this._lastSaveTimestamp < 30000) {
+    console.log('Sauvegarde ignorée - trop fréquente');
+    return Promise.resolve();
+  }
 
   try {
     const progressData = {
@@ -962,13 +1061,26 @@ saveGameProgress() {
       }
     };
 
-    // Sauvegarder également dans localStorage pour récupération rapide
+    // Vérifier si les données ont changé depuis la dernière sauvegarde
+    const dataString = JSON.stringify(progressData);
+    if (this._lastSaveData === dataString) {
+      console.log('Sauvegarde ignorée - données identiques');
+      return Promise.resolve();
+    }
+
+    // Sauvegarder les données actuelles pour comparaison future
+    this._lastSaveData = dataString;
+    this._lastSaveTimestamp = now;
+
+    // Sauvegarder dans localStorage pour récupération rapide
     localStorage.setItem('discoveredElements', JSON.stringify(this.discoveredElements));
     localStorage.setItem('discoveredCategories', JSON.stringify(this.discoveredCategories));
 
+    // Sauvegarder dans la base de données
     return progressService.saveGameProgress(progressData);
   } catch (error) {
     console.error("Erreur lors de la sauvegarde de la progression:", error);
+    return Promise.reject(error);
   }
 },
 
@@ -1256,8 +1368,10 @@ saveAchievementsProgress() {
   });
   
   if (Object.keys(achievementsData).length > 0) {
-    // Appel à votre service de sauvegarde des achievements
-    this.updateAchievements(achievementsData);
+    // Utiliser le nouveau service d'achievements
+    achievementsService.updateAchievements(achievementsData)
+      .then(() => console.log("Sauvegarde des achievements réussie"))
+      .catch(error => console.error("Erreur lors de la sauvegarde des achievements:", error));
   }
 },
 
@@ -1317,7 +1431,16 @@ saveAchievementsProgress() {
         this.achievements[existingIndex].unlockedAt = new Date().toISOString();
       }
       
-      await this.updateAchievements();
+      // Utiliser le nouveau service d'achievements
+      try {
+        await achievementsService.unlockAchievement(achievement.name);
+        console.log(`Achievement ${achievement.name} débloqué et sauvegardé`);
+      } catch (error) {
+        console.error(`Erreur lors du déblocage de l'achievement ${achievement.name}:`, error);
+        
+        // Fallback sur l'ancienne méthode
+        await this.updateAchievements();
+      }
     },
     closeAchievementPopup() {
       this.newAchievement = null;
