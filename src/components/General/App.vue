@@ -180,9 +180,10 @@ export default {
   },
   data() {
     return {
-      elementEmojis: {},
+      // Éléments de base affichés tout de suite, avant la réponse du serveur
+      elementEmojis: { Eau: '💧', Feu: '🔥', Terre: '🌎', Air: '💨' },
       craftingRecipes: {},
-      categories: {},
+      categories: { [BASE_CATEGORY]: [...BASE_ELEMENTS] },
       discoveredCategories: [BASE_CATEGORY],
       discoveredElements: [...BASE_ELEMENTS],
       isDarkMode: true,
@@ -232,11 +233,12 @@ export default {
   },
   async created() {
   this.checkAuth();
+  // Le contenu du jeu est public : on joue sans compte (mode invité, sans sauvegarde)
+  const progress = this.isLoggedIn ? this.loadGameProgress().catch(() => {}) : null;
+  await Promise.all([this.loadGameContent(), progress]);
+  await this.loadAchievements();
   if (this.isLoggedIn) {
-    // Contenu du jeu et progression en parallèle
-    await Promise.all([this.loadGameContent(), this.loadGameProgress().catch(() => {})]);
     this.loadSavedCustomization();
-    await this.loadAchievements();
     // Démarrer la sauvegarde périodique
     this.startPeriodicSave();
   }
@@ -275,6 +277,11 @@ beforeUnmount() {
   },
 
     async activateExplorerMode() {
+      // L'Explorer (énergie, régions) est stocké côté serveur : compte requis
+      if (!this.isLoggedIn) {
+        this.showAlert('Connecte-toi pour jouer au mode Explorer.');
+        return;
+      }
       try {
         // Désactiver le mode Timer si actif
         if (this.isTimerActive) {

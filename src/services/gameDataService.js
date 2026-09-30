@@ -86,11 +86,7 @@ class GameDataService {
    * @returns {Promise<Object>} - Données du fichier
    */
   async loadFile(filename) {
-    // Vérifier l'authentification
-    if (!this.isAuthenticated()) {
-      return Promise.reject(new Error('Utilisateur non authentifié'));
-    }
-
+    // Contenu public : pas de session requise (mode invité)
     // Mapper le nom de fichier si nécessaire
     const mappedFilename = this.filenameMapping[filename] || filename;
 

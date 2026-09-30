@@ -38,7 +38,8 @@ http.interceptors.response.use(
   async error => {
     const request = error.config;
     const isAuthCall = request?.url?.includes('/auth/');
-    if (error.response?.status === 401 && request && !request._retry && !isAuthCall) {
+    // Sans session (invité), un 401 est simplement renvoyé à l'appelant
+    if (error.response?.status === 401 && request && !request._retry && !isAuthCall && getSession()?.token) {
       request._retry = true;
       try {
         await refreshSession();

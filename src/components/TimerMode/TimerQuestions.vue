@@ -278,11 +278,10 @@ export default {
     }
   },
   async created() {
-    // Les données du Timer exigent une session (la page est rechargée à la connexion)
-    if (!this.isLoggedIn) return;
+    // Questions et recettes sont publiques ; la progression Timer n'existe que pour un compte
     await this.loadQuestionsData();
     await this.loadRecipes();
-    await this.loadProgress();
+    if (this.isLoggedIn) await this.loadProgress();
   },
   methods: {
     cleanupTimerData() {
