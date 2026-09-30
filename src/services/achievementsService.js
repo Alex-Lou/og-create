@@ -1,5 +1,6 @@
 // src/services/achievementsService.js
 import http from './http';
+import { getSession } from './session';
 
 function achievementImage(name) {
   try {
@@ -10,11 +11,11 @@ function achievementImage(name) {
 }
 
 class AchievementsService {
-  // Liste complète des succès avec leur statut pour l'utilisateur courant
+  // Liste publique ; statut de déblocage seulement si connecté
   async loadAchievements() {
     const [all, user] = await Promise.all([
       http.get('/achievements'),
-      http.get('/achievements/user')
+      getSession()?.token ? http.get('/achievements/user') : Promise.resolve({ data: {} })
     ]);
     const unlockedByName = user.data || {};
     return (all.data || []).map(achievement => ({

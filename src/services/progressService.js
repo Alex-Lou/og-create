@@ -39,6 +39,8 @@ class ProgressService {
 
   // Met la progression en attente ; elle part SAVE_DELAY ms après le dernier appel
   saveGameProgress(progressData) {
+    // Invité : rien n'est sauvegardé
+    if (!getSession()?.token) return Promise.resolve();
     if (!progressData || Object.keys(progressData).length === 0) return Promise.resolve();
     pending = merge(pending, progressData);
     clearTimeout(saveTimer);
