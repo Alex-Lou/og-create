@@ -1,21 +1,14 @@
 <template>
   <div class="map-selector" v-if="showSelector">
-    <span class="map-selector-label">Carte:</span>
-    <div class="custom-select-container">
-      <select v-model="selectedMapId" @change="onMapChange" class="map-select">
+    <label class="g-mono" for="xp-map-select">Carte</label>
+    <div class="map-selector__field">
+      <select id="xp-map-select" v-model="selectedMapId" @change="onMapChange" class="map-selector__select">
         <option v-for="mapId in unlockedMaps" :key="mapId" :value="mapId">
           {{ getMapName(mapId) }}
         </option>
       </select>
-      <svg class="custom-select-arrow" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-        <path 
-          d="M7,10L12,15L17,10"
-          stroke="#9c6fc1" 
-          stroke-width="2" 
-          fill="none" 
-          stroke-linecap="round" 
-          stroke-linejoin="round"
-        />
+      <svg class="map-selector__chevron" width="14" height="14" viewBox="0 0 24 24" aria-hidden="true">
+        <path d="M6 9l6 6 6-6"></path>
       </svg>
     </div>
   </div>
@@ -23,7 +16,6 @@
 
 <script>
 import mapUtils from '@/utils/mapUtils';
-import '@/assets/ComponentsStyle/ExplorerStyle/MapSelectorStyle.css';
 
 export default {
   name: 'MapSelector',
@@ -68,3 +60,40 @@ export default {
   }
 };
 </script>
+
+<style scoped>
+.map-selector {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 200px;
+}
+.map-selector__field { position: relative; }
+.map-selector__select {
+  appearance: none;
+  width: 100%;
+  min-height: 44px;
+  padding: 0 28px 0 0;
+  border: 0;
+  border-bottom: 1px solid var(--oc-line-strong);
+  border-radius: 0;
+  background: none;
+  cursor: pointer;
+  font-family: var(--oc-font-display);
+  font-size: 18px;
+  letter-spacing: 0.04em;
+  color: var(--oc-text-strong);
+}
+.map-selector__select:focus { border-bottom-color: var(--oc-accent-line); }
+.map-selector__select option { background: var(--oc-surface-strong); color: var(--oc-text); }
+.map-selector__chevron {
+  position: absolute;
+  right: 4px;
+  top: 50%;
+  transform: translateY(-50%);
+  pointer-events: none;
+  fill: none;
+  stroke: var(--oc-gold);
+  stroke-width: 1.5;
+}
+</style>

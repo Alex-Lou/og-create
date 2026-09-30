@@ -1,6 +1,7 @@
 import api from './http';
 import AuthService from './authService';
 import { BASE_ELEMENTS, BASE_CATEGORY } from '@/utils/gameConstants';
+import { sortFamilies } from '@/utils/eras';
 
 // Fichiers de contenu (éléments, catégories, recettes) chargés au démarrage
 const GAME_FILES = [
@@ -41,7 +42,7 @@ function buildGameContent(files) {
     });
   });
 
-  return { elementEmojis, categories, craftingRecipes };
+  return { elementEmojis, categories: sortFamilies(categories), craftingRecipes };
 }
 
 /**

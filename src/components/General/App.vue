@@ -1,10 +1,9 @@
 <template>
   <div :class="['oc-app', { 'oc-app--multi': slotCount > 2 }]" id="game-container">
     <LivingBackground ref="background" :era="era" :population="population" :palette="palette" />
-    <GameAchievementsContent :achievements="achievements" />
 
     <div class="oc-app__shell">
-      <AppHeader :found="discoveredCount" :total="totalElements" :era="era" :eraName="eraName" :coins="coins">
+      <AppHeader :found="discoveredCount" :total="totalElements" :eraLabel="eraLabel" :coins="coins">
         <template #timer>
           <TimerModeButton
             ref="timerModeButton"
@@ -16,15 +15,20 @@
           />
         </template>
         <template #actions>
-          <ContactIcon :isDarkMode="true" @open-contact="handleOpenContact" />
-          <LoginIcon
-            :isDarkMode="true"
+          <button type="button" class="g-icon-btn" aria-label="Codex des succès" @click="showCodex = true">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" aria-hidden="true"><path d="M5 3h11l3 3v15H5z"></path><path d="M9 8h6M9 12h6M9 16h3"></path></svg>
+          </button>
+          <ContactIcon :isDarkMode="true" />
+          <AccountMenu
             :isLoggedIn="isLoggedIn"
             :currentUser="currentUser"
-            :selectedFrame="selectedFrame"
-            :selectedAvatar="selectedAvatar"
+            :shares="sigilShares"
+            :rings="rings"
+            :eraLabel="eraLabel"
+            @open-sceau="showSceau = true"
+            @open-cabinet="handleOpenCustomizeModal"
+            @open-codex="showCodex = true"
             @logout="handleLogout"
-            @open-customize-modal="handleOpenCustomizeModal"
           />
         </template>
         <template #modes>
@@ -65,17 +69,39 @@
       @close="closeAchievementPopup"
       @achievement-popup-opened="handleAchievementPopupOpened"
     />
-    <div v-if="showTimerEndModal" class="timer-end-modal">
-      <div class="timer-end-content">
-        <h2>Temps écoulé !</h2>
-        <p>Vous avez réussi {{ timerModeDiscoveries }} question(s) pendant la session.</p>
-        <div class="timer-end-stats">
-          <p>Meilleur score : {{ timerProgress.bestScores?.[selectedTimerLevel] || 0 }}</p>
-          <p>Niveau : {{ selectedTimerLevel }}</p>
-        </div>
-        <button @click="handleTimerEndModalClose" class="timer-end-button">Nouvelle partie</button>
+    <GModal
+      v-if="showTimerEndModal"
+      eyebrow="Le sablier est vide"
+      title="Temps écoulé"
+      align="center"
+      :width="480"
+      @close="handleTimerEndModalClose"
+    >
+      <div class="timer-end">
+        <div class="timer-end__stat"><span class="g-display timer-end__big">{{ timerModeDiscoveries }}</span><span class="g-mono">réussies</span></div>
+        <div class="timer-end__stat"><span class="g-display timer-end__big g-gold">{{ timerProgress.bestScores?.[selectedTimerLevel] || 0 }}</span><span class="g-mono">record</span></div>
       </div>
-    </div>
+      <p v-if="selectedTimerLevel" class="g-italic">Niveau {{ selectedTimerLevel }}</p>
+      <template #actions>
+        <button type="button" class="g-btn" @click="handleTimerEndModalClose">Retour au registre</button>
+      </template>
+    </GModal>
+    <CodexModal v-if="showCodex" :achievements="achievements" @close="showCodex = false" />
+    <SceauModal
+      v-if="showSceau"
+      :username="currentUser?.username || currentUser?.email || 'Alchimiste'"
+      :eraLabel="eraLabel"
+      :families="familyShares.filter(f => f.share > 0)"
+      :rings="rings"
+      :found="discoveredCount"
+      :total="totalElements"
+      :unlocked="unlockedAchievements"
+      :achievementsTotal="achievements.length"
+      :bestScores="timerProgress.bestScores || {}"
+      @close="showSceau = false"
+      @open-codex="showSceau = false; showCodex = true"
+      @logout="handleLogout"
+    />
     <TimerQuestions 
       v-show="isTimerActive && !isExplorerActive"
       ref="timerQuestions"
@@ -125,11 +151,15 @@ import { findNewlyUnlocked } from '@/utils/achievementChecker';
 import { BASE_ELEMENTS, BASE_CATEGORY } from '@/utils/gameConstants';
 import timerService from '@/services/timerService';
 import notificationService from '@/services/notificationService';
-import LoginIcon from '../Header/LoginIcon.vue';
 import ContactIcon from '../Header/ContactIcon.vue';
 import GameAchievementsPopup from '../Achievements/GameAchievementsPopup.vue';
 import GameInventory from '../Inventory/GameInventory.vue';
-import GameAchievementsContent from '../Achievements/GameAchievementsContent.vue';
+import CodexModal from '../Achievements/CodexModal.vue';
+import AccountMenu from '../Account/AccountMenu.vue';
+import SceauModal from '../Account/SceauModal.vue';
+import GModal from '../ui/GModal.vue';
+import { ringsFor } from '@/utils/sigil';
+import { roman } from '@/utils/roman';
 import TimerModeButton from '../TimerMode/TimerModeButton.vue';
 import TimerQuestions from '../TimerMode/TimerQuestions.vue';
 import CustomizeModal from '../Header/CustomizeModal.vue';
@@ -147,11 +177,13 @@ export default {
     ModeSwitcher,
     CraftZone,
     LivingBackground,
-    LoginIcon,
     ContactIcon,
     GameAchievementsPopup,
     GameInventory,
-    GameAchievementsContent,
+    CodexModal,
+    AccountMenu,
+    SceauModal,
+    GModal,
     TimerModeButton,
     TimerQuestions,
     CustomizeModal,
@@ -178,7 +210,8 @@ export default {
       isLoggedIn: false,
       currentUser: null,
       categoryProgress: {},
-      showContactForm: false,
+      showCodex: false,
+      showSceau: false,
       isTimerActive: false,
       isExplorerActive: false,
       showTimerEndModal: false,
@@ -242,8 +275,25 @@ computed: {
   era() {
     return stageOf(this.discoveredCount);
   },
-  eraName() {
-    return ERA_NAMES[this.era - 1];
+  eraLabel() {
+    return `Ère ${roman(this.era)} · ${ERA_NAMES[this.era - 1]}`;
+  },
+  // Part découverte de chaque famille, dans l'ordre du registre (sceau du joueur)
+  familyShares() {
+    const found = new Set(this.infiniteElements);
+    return Object.entries(this.categories).map(([name, elements]) => ({
+      name,
+      share: elements.length ? elements.filter(e => found.has(e)).length / elements.length : 0
+    }));
+  },
+  sigilShares() {
+    return this.familyShares.map(f => f.share);
+  },
+  unlockedAchievements() {
+    return this.achievements.filter(a => a.unlocked).length;
+  },
+  rings() {
+    return ringsFor(this.unlockedAchievements);
   },
   // Emplacements de fusion : 4 en Timer, sinon débloqués au fil des ères
   slotCount() {
@@ -520,9 +570,6 @@ handleTimerForceStop() {
       if (this.$refs.timerQuestions) {
         this.$refs.timerQuestions.show();
       }
-    },
-    handleOpenContact() {
-      this.showContactForm = true;
     },
     loadGameProgress() {
   if (!this.isLoggedIn) return Promise.resolve();
@@ -1110,7 +1157,7 @@ handleCraftSuccess(craftedItem) {
 </script>
 
 <style>
-/* Mise en page : PC en 2 colonnes (inventaire | zone), mobile en inventaire plein écran + dock */
+/* Mise en page : PC en 2 colonnes (registre | Athanor), mobile en registre plein écran + dock */
 .oc-app {
   position: relative;
   min-height: 100vh;
@@ -1133,65 +1180,22 @@ handleCraftSuccess(craftedItem) {
   .oc-app__main {
     display: grid;
     /* La liste prend la place disponible et grandit avec les découvertes ; la zone reste à droite */
-    grid-template-columns: minmax(0, 1fr) minmax(340px, 440px);
+    grid-template-columns: minmax(0, 1fr) 420px;
     gap: 28px;
     align-items: start;
   }
   /* La zone reste en vue pendant qu'on fait défiler l'inventaire */
-  .oc-app__craft { position: sticky; top: 16px; height: min(560px, calc(100vh - 32px)); display: flex; }
-  .oc-app__craft > * { flex: 1; }
+  .oc-app__craft { position: sticky; top: 16px; }
 }
 
-/* Chrono du Timer : pastille compacte dans l'en-tête */
-.oc-app .timer-container { position: static; margin: 0; }
-.oc-app .timer-display-group {
-  position: static;
-  transform: none;
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  margin: 0;
-}
-.oc-app .timer-display {
-  height: 38px;
-  padding: 0 12px;
-  display: flex;
-  align-items: center;
-  border-radius: var(--oc-radius-pill);
-  background: var(--oc-accent-soft);
-  border: 1px solid var(--oc-accent-line);
-  color: var(--oc-text-strong);
-  font: 600 14px var(--oc-font-body);
-  font-variant-numeric: tabular-nums;
-  box-shadow: none;
-}
-.oc-app .help-button {
-  width: 38px;
-  height: 38px;
-  border-radius: 50%;
-  border: 1px solid var(--oc-line);
-  background: var(--oc-panel);
-  color: var(--oc-text);
-  font: 600 15px var(--oc-font-body);
-  cursor: pointer;
-}
+/* Fin d'épreuve (fenêtre de l'App) */
+.timer-end { display: flex; gap: 48px; justify-content: center; }
+.timer-end__stat { display: flex; flex-direction: column; gap: 4px; align-items: center; }
+.timer-end__big { font-size: 56px; line-height: 1; }
 
-/* Icônes compte et contact : alignées dans l'en-tête (leurs anciennes marges les décalaient) */
-.oc-app .app-header__actions .login-container,
-.oc-app .app-header__actions .contact-icon-container { margin: 0; width: auto; height: auto; }
-
-/* Succès : bouton en bas à gauche, au-dessus du dock sur mobile */
-.oc-app #achievements-menu-container {
-  position: fixed;
-  z-index: 20;
-  left: 16px;
-  bottom: 16px;
-}
 @media (max-width: 859px) {
   /* Dock sur 2 lignes (3–4 emplacements) : plus haut, la liste garde assez de marge en bas */
   .oc-app--multi { --oc-dock-height: 160px; }
-  /* Au-dessus du dock, même quand il passe sur 2 lignes (3–4 emplacements) */
-  .oc-app #achievements-menu-container { bottom: calc(var(--oc-dock-height) + 16px + env(safe-area-inset-bottom)); }
 }
 </style>
 

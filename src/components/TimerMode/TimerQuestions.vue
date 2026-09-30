@@ -1,217 +1,145 @@
 <template>
   <div>
-    <div v-if="isVisible" class="questions-container">
-      <div class="questions-box">
-        <!-- Cadre ornemental -->
-        <div class="question-frame">
-          <div class="frame-corner corner-tl">
-            <div class="corner-dot"></div>
-            <div class="frame-symbol symbol-tl">✧</div>
-          </div>
-          <div class="frame-corner corner-tr">
-            <div class="corner-dot"></div>
-            <div class="frame-symbol symbol-tr">✧</div>
-          </div>
-          <div class="frame-corner corner-bl">
-            <div class="corner-dot"></div>
-            <div class="frame-symbol symbol-bl">✧</div>
-          </div>
-          <div class="frame-corner corner-br">
-            <div class="corner-dot"></div>
-            <div class="frame-symbol symbol-br">✧</div>
-          </div>
-          
-          <!-- Ligne de séparation pour le titre -->
-          <div class="title-separator"></div>
-        </div>
-        
-        <!-- Effet de fumée -->
-        <div class="smoke-container">
-          <div class="smoke smoke1"></div>
-          <div class="smoke smoke2"></div>
-          <div class="smoke smoke-top"></div>
-        </div>
-        
-        <!-- Champ d'étoiles -->
-        <div class="star-field">
-          <div class="star"></div>
-          <div class="star"></div>
-          <div class="star"></div>
-          <div class="star"></div>
-          <div class="star"></div>
-          <div class="star"></div>
-          <div class="star"></div>
-          <div class="star"></div>
-          <div class="star"></div>
-          <div class="star"></div>
-        </div>
-        
-        <div v-if="!selectedLevel" class="level-selection">
-          <button @click="cancelLevelSelection" class="close-modal-btn">&times;</button>
-          <h2 class="level-title">Choisissez votre niveau</h2>
-          <div class="level-buttons">
-            <button 
-              v-for="level in ['Facile', 'Moyen', 'Difficile']" 
-              :key="level"
-              @click="selectLevel(level)"
-              class="level-button"
-            >
-              {{ level }}
-            </button>
-          </div>
-        </div>
-        <div v-else-if="!selectedCategory" class="category-selection">
-          <button @click="cancelCategorySelection" class="close-modal-btn">&times;</button>
-          <h2 class="level-title">Choisissez une catégorie</h2>
-          <div class="level-buttons">
-            <button 
-              v-for="(category, categoryName) in availableCategories" 
-              :key="categoryName"
-              @click="selectCategory(categoryName)"
-              :class="['level-button', {
-                'completed': isCategoryCompleted(categoryName)
-              }]"
-            >
-              {{ categoryName }} 
-              <span class="questions-count">
-                {{ getCompletedQuestionsCount(categoryName) }}
-              </span>
-            </button>
-          </div>
-        </div>
- 
-        <div v-else>
-          <p class="question-text">
-            {{ isTimeUp ? "Temps épuisé !" : currentQuestion.text }}
-          </p>
-          
-          <div v-if="currentQuestion.initialElements?.validationMode === 'multiple' && currentQuestion.initialElements?.requiredCount" class="discovery-counter">
-            {{ discoveredValidAnswersCount }}/{{ currentQuestion.initialElements.requiredCount }}
-          </div>
-          
-          <button 
-            class="next-question-button"
-            @click="handleButtonClick"
+    <template v-if="isVisible">
+      <!-- Étape I : durée du sablier -->
+      <GModal
+        v-if="!selectedLevel"
+        key="level"
+        eyebrow="L’Épreuve · Étape I"
+        title="Choisis la durée du sablier"
+        @close="cancelLevelSelection"
+      >
+        <div class="tq-list">
+          <button
+            v-for="(level, index) in levels"
+            :key="level"
+            type="button"
+            class="tq-choice g-bevel"
+            :disabled="isLoading"
+            @click="selectLevel(level)"
           >
-            {{ isTimeUp ? "Ok" : "Compris !" }}
+            <svg class="tq-glass" width="30" height="48" viewBox="0 0 40 64" aria-hidden="true">
+              <path d="M4 2h32M4 62h32M8 2c0 16 12 20 12 30S8 46 8 62M32 2c0 16-12 20-12 30s12 14 12 30" fill="none" stroke="currentColor" stroke-opacity=".8"></path>
+              <path :d="levelSand[index]" fill="var(--oc-gold)" fill-opacity=".85"></path>
+            </svg>
+            <span class="tq-choice__body">
+              <span class="tq-choice__name">{{ level }}</span>
+              <span class="g-mono">{{ levelDetails(level) }}</span>
+            </span>
           </button>
         </div>
-      </div>
-    </div>
- 
-    <!-- Modal de succès style mystique -->
-    <div v-if="showSuccessPopup" class="victory-modal">
-      <div class="victory-content">
-        <!-- Cadre ornemental pour la victoire -->
-        <div class="victory-frame">
-          <div class="frame-corner corner-tl">
-            <div class="corner-dot"></div>
-            <div class="frame-symbol symbol-tl">✧</div>
-          </div>
-          <div class="frame-corner corner-tr">
-            <div class="corner-dot"></div>
-            <div class="frame-symbol symbol-tr">✧</div>
-          </div>
-          <div class="frame-corner corner-bl">
-            <div class="corner-dot"></div>
-            <div class="frame-symbol symbol-bl">✧</div>
-          </div>
-          <div class="frame-corner corner-br">
-            <div class="corner-dot"></div>
-            <div class="frame-symbol symbol-br">✧</div>
-          </div>
-        </div>
-        
-        <!-- Effets visuels -->
-        <div class="star-field-victory">
-          <div class="star"></div>
-          <div class="star"></div>
-          <div class="star"></div>
-          <div class="star"></div>
-          <div class="star"></div>
-        </div>
-        
-        <h2>Correct !</h2>
-        
-        <div class="rewards-container">
-          <h3>Récompenses obtenues :</h3>
-          <div class="reward-item" v-if="isNewQuestion">
-            <span class="reward-icon">💰</span>
-            <span class="reward-value">{{ currentQuestion.points || 10 }} Pièces</span>
-          </div>
-          <div class="reward-item" v-else>
-            <span class="reward-icon">✨</span>
-            <span class="reward-value">Question déjà complétée</span>
-          </div>
-        </div>
-        
-        <button class="continue-btn" @click="closeSuccessPopup">Continuer</button>
-      </div>
-    </div>
-    
-    <!-- Modal de complétion style mystique -->
-    <div v-if="showCompletionPopup" class="victory-modal">
-      <div class="victory-content">
-        <!-- Cadre ornemental pour la complétion -->
-        <div class="victory-frame">
-          <div class="frame-corner corner-tl">
-            <div class="corner-dot"></div>
-            <div class="frame-symbol symbol-tl">✧</div>
-          </div>
-          <div class="frame-corner corner-tr">
-            <div class="corner-dot"></div>
-            <div class="frame-symbol symbol-tr">✧</div>
-          </div>
-          <div class="frame-corner corner-bl">
-            <div class="corner-dot"></div>
-            <div class="frame-symbol symbol-bl">✧</div>
-          </div>
-          <div class="frame-corner corner-br">
-            <div class="corner-dot"></div>
-            <div class="frame-symbol symbol-br">✧</div>
-          </div>
-        </div>
-        
-        <!-- Effets visuels -->
-        <div class="star-field-victory">
-          <div class="star"></div>
-          <div class="star"></div>
-          <div class="star"></div>
-          <div class="star"></div>
-          <div class="star"></div>
-        </div>
-        
-        <h2>{{ completionMessage }}</h2>
-        <p>{{ completionSubMessage }}</p>
-        
-        <div class="completion-buttons">
-          <button 
-            v-if="getNextUncompletedCategory()"
-            @click="handleContinue" 
-            class="continue-btn"
+      </GModal>
+
+      <!-- Étape II : chapitre (catégorie) -->
+      <GModal
+        v-else-if="!selectedCategory"
+        key="category"
+        :eyebrow="`Étape II · ${selectedLevel}`"
+        title="Choisis le chapitre"
+        @close="cancelCategorySelection"
+      >
+        <div class="tq-list">
+          <button
+            v-for="(category, categoryName, index) in availableCategories"
+            :key="categoryName"
+            type="button"
+            :class="['tq-choice', 'g-bevel', { 'tq-choice--done': isCategoryCompleted(categoryName) }]"
+            :disabled="isLoading"
+            @click="selectCategory(categoryName)"
           >
-            Continuer
-          </button>
-          <button 
-            @click="handleCompletionClose" 
-            class="cancel-btn"
-          >
-            OK
+            <span class="tq-choice__num">{{ roman(index + 1) }}</span>
+            <span class="tq-choice__body">
+              <span class="tq-choice__label">{{ categoryName }}</span>
+              <span class="g-bar" aria-hidden="true"><span :style="{ width: `${categoryRatio(categoryName) * 100}%` }"></span></span>
+            </span>
+            <span class="g-mono tq-choice__count">{{ getCompletedQuestionsCount(categoryName) }}</span>
           </button>
         </div>
+        <p class="g-italic tq-hint">Achève chaque question d’un chapitre pour le sceller.</p>
+      </GModal>
+
+      <!-- Question en cours, ou sablier vide -->
+      <GModal
+        v-else
+        key="question"
+        :eyebrow="isTimeUp ? 'Le sablier est vide' : questionEyebrow"
+        :title="isTimeUp ? 'Temps écoulé' : currentQuestion.text"
+        :width="500"
+        @close="handleButtonClick"
+      >
+        <div
+          v-if="!isTimeUp && currentQuestion.initialElements?.validationMode === 'multiple' && currentQuestion.initialElements?.requiredCount"
+          class="tq-row"
+        >
+          <span class="g-mono">Réponses trouvées</span>
+          <span class="g-mono g-gold">{{ discoveredValidAnswersCount }} / {{ currentQuestion.initialElements.requiredCount }}</span>
+        </div>
+        <template #actions>
+          <button type="button" class="g-btn" @click="handleButtonClick">
+            {{ isTimeUp ? 'D’accord' : 'Compris' }}
+          </button>
+        </template>
+      </GModal>
+    </template>
+
+    <!-- Réussite d'une question -->
+    <GModal
+      v-if="showSuccessPopup"
+      title="Épreuve réussie"
+      eyebrow="Le sablier est en pause"
+      align="center"
+      :width="460"
+      @close="closeSuccessPopup"
+    >
+      <svg class="tq-seal" width="104" height="104" viewBox="0 0 120 120" aria-hidden="true">
+        <circle cx="60" cy="60" r="54" fill="none" stroke="currentColor" stroke-opacity=".5"></circle>
+        <circle cx="60" cy="60" r="46" fill="none" stroke="currentColor" stroke-opacity=".25" stroke-dasharray="2 5"></circle>
+        <path d="M40 62l14 14 28-32" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="square"></path>
+      </svg>
+      <hr class="g-rule tq-full" />
+      <div class="tq-row tq-full">
+        <span class="g-mono">Récompense</span>
+        <span v-if="isNewQuestion" class="tq-reward">+{{ currentQuestion.points || 10 }} écus</span>
+        <span v-else class="g-mono">Question déjà réussie</span>
       </div>
-    </div>
+      <template #actions>
+        <button type="button" class="g-btn" @click="closeSuccessPopup">Épreuve suivante</button>
+      </template>
+    </GModal>
+
+    <!-- Chapitre achevé -->
+    <GModal
+      v-if="showCompletionPopup"
+      title="Chapitre achevé"
+      :eyebrow="selectedCategory || 'L’Épreuve'"
+      align="center"
+      :width="500"
+      @close="handleCompletionClose"
+    >
+      <p class="g-italic tq-lead">{{ completionMessage }}</p>
+      <hr class="g-rule tq-full" />
+      <p class="g-mono">{{ completionSubMessage }}</p>
+      <template #actions>
+        <button type="button" class="g-btn g-btn--ghost" @click="handleCompletionClose">
+          {{ getNextUncompletedCategory() ? 'Quitter l’épreuve' : 'Choisir un sablier' }}
+        </button>
+        <button v-if="getNextUncompletedCategory()" type="button" class="g-btn" @click="handleContinue">
+          Chapitre suivant
+        </button>
+      </template>
+    </GModal>
   </div>
 </template>
- 
+
 <script>
-import '@/assets/ComponentsStyle/TimerStyle/TimerQuestionsStyle.css';
+import GModal from '@/components/ui/GModal.vue';
 import progressService from '@/services/progressService';
 import gameService from '@/services/gameService';
 import notificationService from '@/services/notificationService';
  
 export default {
   name: 'TimerQuestions',
+  components: { GModal },
   props: {
     isLoggedIn: { type: Boolean, default: false },
     // Inventaire courant (éléments de la question + créations)
@@ -244,7 +172,10 @@ export default {
         Facile: {},
         Moyen: {},
         Difficile: {}
-      }
+      },
+      levels: ['Facile', 'Moyen', 'Difficile'],
+      // Sable dessiné dans le sablier de chaque niveau (plein, à mi-course, presque vide)
+      levelSand: ['M13 22L20 30L27 22z', 'M15 30L20 24L25 30z', 'M15 38L20 30L25 38z']
     }
   },
   computed: {
@@ -273,6 +204,11 @@ export default {
         this.discoveredElements.includes(answer)
       ).length;
     },
+    // Repère de la question : rang dans le chapitre et nom du chapitre
+    questionEyebrow() {
+      const rank = `Épreuve ${this.currentQuestionIndex + 1} / ${this.questions.length}`;
+      return this.selectedCategory ? `${rank} · ${this.selectedCategory}` : rank;
+    },
     remainingCategories() {
       return Object.keys(this.availableCategories).filter(cat => !this.isCategoryCompleted(cat));
     }
@@ -284,6 +220,31 @@ export default {
     if (this.isLoggedIn) await this.loadProgress();
   },
   methods: {
+    // Durée du sablier et record du niveau, pour l'écran de choix
+    levelDetails(level) {
+      const seconds = this.questionsData?.levels?.[level]?.timer;
+      const parts = [];
+      if (seconds) parts.push(`${Math.round(seconds / 60)} minutes`);
+      const best = this.timerProgress?.bestScores?.[level];
+      if (best) parts.push(`record ${best}`);
+      return parts.join(' · ') || level;
+    },
+    // Avancement d'un chapitre entre 0 et 1, lu depuis le compteur « x/y »
+    categoryRatio(categoryName) {
+      const [done, total] = this.getCompletedQuestionsCount(categoryName).split('/').map(Number);
+      return total ? Math.min(1, done / total) : 0;
+    },
+    roman(n) {
+      const map = [[50, 'L'], [40, 'XL'], [10, 'X'], [9, 'IX'], [5, 'V'], [4, 'IV'], [1, 'I']];
+      let out = '';
+      for (const [value, sign] of map) {
+        while (n >= value) {
+          out += sign;
+          n -= value;
+        }
+      }
+      return out;
+    },
     cleanupTimerData() {
       // Réinitialiser les variables locales (l'inventaire est géré par App)
       this.currentQuestionIndex = 0;
@@ -947,12 +908,12 @@ export default {
       } else {
         // Catégorie terminée
         this.showCompletionPopup = true;
-        this.completionMessage = `Félicitations ! Vous avez complété la catégorie ${this.selectedCategory}!`;
+        this.completionMessage = `Tu as achevé le chapitre ${this.selectedCategory}.`;
         
         const nextCategory = this.getNextUncompletedCategory();
         this.completionSubMessage = nextCategory 
-          ? `Prochaine catégorie disponible : ${nextCategory}`
-          : 'Toutes les catégories sont complétées !';
+          ? `Chapitre suivant : ${nextCategory}`
+          : 'Tous les chapitres sont achevés';
 
         // Émettre un événement pour mettre le timer en pause
         this.$emit('pause-timer');
@@ -981,6 +942,10 @@ export default {
     },
     resetQuestions() {
       this.loadQuestionsAndReset();
+      // Les fenêtres sont téléportées dans body : le v-show du parent ne les masque plus
+      this.isVisible = false;
+      this.showSuccessPopup = false;
+      this.showCompletionPopup = false;
       this.currentScore = 0;
       
       // Nettoyer les données
@@ -989,3 +954,105 @@ export default {
   }
 }
 </script>
+
+<style scoped>
+.tq-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+/* Choix biseauté : niveau ou chapitre */
+.tq-choice {
+  appearance: none;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  width: 100%;
+  min-height: 64px;
+  padding: 14px 18px;
+  border: 0;
+  cursor: pointer;
+  text-align: left;
+  color: var(--oc-text);
+  background: transparent;
+  box-shadow: inset 0 0 0 1px var(--oc-line-strong);
+  transition: background var(--oc-fast), box-shadow var(--oc-fast);
+}
+.tq-choice:hover:not(:disabled),
+.tq-choice:focus-visible {
+  background: var(--oc-gold-soft);
+  box-shadow: inset 0 0 0 1px var(--oc-accent-line);
+}
+.tq-choice:focus-visible { outline: none; }
+.tq-choice:disabled { opacity: 0.5; cursor: progress; }
+
+.tq-glass {
+  flex-shrink: 0;
+  color: var(--oc-text);
+}
+.tq-choice__body {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.tq-choice__name {
+  font-family: var(--oc-font-display);
+  font-size: 24px;
+  line-height: 1.1;
+  color: var(--oc-text-strong);
+}
+.tq-choice__num {
+  min-width: 26px;
+  font-family: var(--oc-font-display);
+  font-size: 16px;
+  color: var(--oc-gold);
+}
+.tq-choice__label {
+  font-size: 18px;
+  line-height: 1.25;
+  color: var(--oc-text-strong);
+  overflow-wrap: anywhere;
+}
+.tq-choice__count { white-space: nowrap; }
+
+/* Chapitre scellé : barre et compteur à l'or */
+.tq-choice--done .g-bar > span { background: var(--oc-gold); }
+.tq-choice--done .tq-choice__count { color: var(--oc-gold); }
+
+.tq-hint {
+  margin: 0;
+  font-size: 16px;
+  color: var(--oc-text-faint);
+}
+
+.tq-row {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 16px;
+}
+.tq-full { align-self: stretch; }
+
+.tq-seal { color: var(--oc-gold); }
+.tq-reward {
+  font-family: var(--oc-font-mono);
+  font-size: 12px;
+  letter-spacing: 0.06em;
+  color: var(--oc-gold);
+}
+.tq-lead {
+  margin: 0;
+  font-size: 18px;
+  line-height: 1.5;
+  color: var(--oc-text);
+}
+
+@media (max-width: 859px) {
+  .tq-choice { gap: 12px; padding: 12px 14px; }
+  .tq-choice__name { font-size: 21px; }
+  .tq-choice__label { font-size: 17px; }
+}
+</style>

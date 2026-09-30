@@ -1,61 +1,77 @@
 <template>
   <section
     ref="zone"
-    :class="['craft-zone', { 'craft-zone--multi': slotCount > 2, 'craft-zone--over': dragOver }]"
-    aria-label="Zone de création"
+    :class="['athanor', 'g-panel', { 'athanor--multi': slotCount > 2, 'athanor--over': dragOver, 'is-merging': merging }]"
+    aria-label="Athanor"
     @dragenter.prevent="dragOver = true"
     @dragover.prevent
     @dragleave="onDragLeave"
     @drop.prevent="onDrop"
   >
-    <p class="craft-zone__hint" v-if="!picked.length && !result && !failMessage">
-      Choisis des éléments à fusionner
-    </p>
-    <!-- Échec : dit dans la zone elle-même, sans jamais couvrir le bouton Fusionner -->
+    <header class="athanor__head">
+      <h2 class="athanor__title">Athanor</h2>
+      <span class="g-mono">{{ picked.length ? picked.join(' + ') : `${slotCount} emplacements` }}</span>
+    </header>
+
+    <div :class="['athanor__circle', { 'is-failing': failing }]">
+      <svg class="athanor__ring" viewBox="0 0 360 360" aria-hidden="true">
+        <g fill="none" stroke="currentColor" stroke-linecap="round">
+          <circle cx="180" cy="180" r="170" stroke-opacity=".3"></circle>
+          <circle cx="180" cy="180" r="130" stroke-opacity=".45" stroke-dasharray="2 6"></circle>
+          <polygon :points="ringPolygon" stroke-opacity=".4"></polygon>
+          <circle cx="180" cy="180" r="54" stroke-opacity=".55"></circle>
+          <circle cx="180" cy="180" r="48" stroke-opacity=".22"></circle>
+        </g>
+        <circle cx="180" cy="180" r="3" fill="var(--oc-gold)"></circle>
+      </svg>
+
+      <button
+        v-for="(slot, index) in slots"
+        :key="index"
+        type="button"
+        :ref="el => setSlotRef(el, index)"
+        :class="['slot', { 'slot--filled': slot.name, 'slot--new': unlockedIndex === index }]"
+        :style="slot.style"
+        :aria-label="slot.name ? `Retirer ${slot.name}` : `Emplacement ${index + 1} libre`"
+        :disabled="!slot.name || merging"
+        @click="remove(index)"
+      >
+        <template v-if="slot.name">
+          <span class="slot__ink g-ink" aria-hidden="true">{{ emojiOf(slot.name) }}</span>
+          <span class="slot__name">{{ slot.name }}</span>
+        </template>
+        <span v-else class="g-mono slot__num">{{ slot.num }}</span>
+      </button>
+
+      <p class="athanor__center g-italic" aria-hidden="true">
+        {{ merging ? 'Transmutation…' : picked.length ? '' : 'Dépose ici' }}
+      </p>
+    </div>
+
+    <!-- Échec : dit dans l'Athanor, sans jamais couvrir le bouton -->
     <transition name="fail">
-      <p v-if="failMessage" class="craft-zone__fail" role="status">{{ failMessage }}</p>
+      <p v-if="failMessage" class="athanor__fail" role="status">{{ failMessage }}</p>
     </transition>
 
-    <div :class="['craft-zone__slots', { 'is-failing': failing }]">
-      <template v-for="(slot, index) in slots" :key="index">
-        <span v-if="index > 0" class="craft-zone__plus" :class="{ 'is-hidden': merging }" aria-hidden="true">+</span>
-        <button
-          type="button"
-          :ref="el => setSlotRef(el, index)"
-          :class="['slot', { 'slot--filled': slot.name, 'slot--new': unlockedIndex === index }]"
-          :style="slot.style"
-          :aria-label="slot.name ? `Retirer ${slot.name}` : `Emplacement ${index + 1} vide`"
-          :disabled="!slot.name || merging"
-          @click="remove(index)"
-        >
-          <template v-if="slot.name">
-            <span class="slot__emoji">{{ emojiOf(slot.name) }}</span>
-            <span class="slot__name">{{ slot.name }}</span>
-          </template>
-        </button>
-      </template>
-    </div>
-
-    <div class="craft-zone__actions">
-      <button type="button" class="btn-ghost" aria-label="Vider la zone" :disabled="!picked.length || merging" @click="clear">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 12a9 9 0 1 0 3-6.7"></path><path d="M3 4v5h5"></path></svg>
+    <div class="athanor__actions">
+      <button type="button" class="g-btn g-btn--ghost athanor__clear" aria-label="Vider l’Athanor" :disabled="!picked.length || merging" @click="clear">
+        Vider
       </button>
-      <button v-if="showFuseButton" type="button" class="btn-fuse" :disabled="picked.length < 2 || merging" @click="fuse">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l1.8 5.2L19 10l-5.2 1.8L12 17l-1.8-5.2L5 10l5.2-1.8z"></path><path d="M19 17l.7 2 2 .7-2 .7-.7 2-.7-2-2-.7 2-.7z"></path></svg>
-        <span>{{ merging ? 'Fusion…' : 'Fusionner' }}</span>
+      <button v-if="showFuseButton" type="button" class="g-btn athanor__fuse" :disabled="picked.length < 2 || merging" @click="fuse">
+        {{ merging ? 'Transmutation…' : 'Transmuer' }}
       </button>
     </div>
 
-    <!-- Révélation du résultat : dans la zone sur PC, plein écran sur mobile -->
+    <!-- Révélation : dans l'Athanor sur PC, plein écran sur mobile -->
     <transition name="reveal">
       <button v-if="result" type="button" class="reveal" aria-live="polite" @click="dismiss">
         <span class="reveal__halo" aria-hidden="true"></span>
         <span class="reveal__card">
+          <span class="g-mono g-gold">{{ result.isNew ? 'Nouvelle entrée au registre' : 'Déjà consigné' }}</span>
           <img v-if="result.image" class="reveal__image" :src="result.image" :alt="result.name" />
-          <span v-else class="reveal__emoji">{{ emojiOf(result.name) }}</span>
+          <span v-else class="reveal__ink g-ink--glow" aria-hidden="true">{{ emojiOf(result.name) }}</span>
           <span class="reveal__name">{{ result.name }}</span>
-          <span v-if="result.isNew" class="reveal__badge">Nouvelle découverte</span>
-          <span v-else class="reveal__known">Déjà dans ton inventaire</span>
+          <span class="g-italic reveal__origin">née de {{ result.from.join(' et ') }}</span>
         </span>
       </button>
     </transition>
@@ -68,6 +84,9 @@ import { findRecipe } from '@/utils/recipes';
 const MERGE_MS = 520;
 const REVEAL_MS = 1700;
 const FAIL_MS = 1800;
+// Rayon de l'anneau des emplacements, en px (cercle de 360 px)
+const RING_RADIUS = 130;
+const ROMAN = ['I', 'II', 'III', 'IV'];
 
 function creatureImage(name) {
   try {
@@ -77,7 +96,7 @@ function creatureImage(name) {
   }
 }
 
-// Zone de fusion : 2 à 4 emplacements, fusion automatique quand il n'y en a que 2
+// Athanor : 2 à 4 emplacements ; la transmutation part seule quand toutes les cases sont remplies
 export default {
   name: 'CraftZone',
   props: {
@@ -103,15 +122,20 @@ export default {
     showFuseButton() {
       return !this.autoFuse || this.slotCount > 2;
     },
+    // Emplacements posés sur l'anneau (PC) ; à la transmutation, chacun glisse vers le centre
     slots() {
-      const center = (this.slotCount - 1) / 2;
       return Array.from({ length: this.slotCount }, (_, i) => {
-        const name = this.picked[i] || null;
-        // Pendant la fusion, chaque élément glisse vers le centre et s'efface
-        const offset = (center - i) * 100;
-        const style = this.merging && name ? { transform: `translateX(${offset}%) scale(.6)`, opacity: 0 } : null;
-        return { name, style };
+        const a = -Math.PI / 2 + (i * 2 * Math.PI) / this.slotCount;
+        const x = Math.round(RING_RADIUS * Math.cos(a));
+        const y = Math.round(RING_RADIUS * Math.sin(a));
+        return { name: this.picked[i] || null, num: ROMAN[i], style: { '--x': `${x}px`, '--y': `${y}px` } };
       });
+    },
+    ringPolygon() {
+      return Array.from({ length: this.slotCount }, (_, i) => {
+        const a = -Math.PI / 2 + (i * 2 * Math.PI) / this.slotCount;
+        return `${(180 + 130 * Math.cos(a)).toFixed(1)},${(180 + 130 * Math.sin(a)).toFixed(1)}`;
+      }).join(' ');
     }
   },
   watch: {
@@ -191,7 +215,7 @@ export default {
       this.later(() => {
         this.merging = false;
         this.picked = [];
-        this.result = { name, isNew, image: creatureImage(name) };
+        this.result = { name, isNew, image: creatureImage(name), from: ingredients };
         this.$emit('craft-success', name);
         if (isNew) {
           const box = this.$refs.zone.getBoundingClientRect();
@@ -248,136 +272,78 @@ export default {
 </script>
 
 <style scoped>
-.craft-zone {
+.athanor {
   position: relative;
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
-  gap: 20px;
-  min-height: 260px;
-  padding: 24px 16px;
-  border-radius: var(--oc-radius-lg);
-  background: rgba(12, 9, 24, 0.55);
-  border: 1px solid var(--oc-line);
-  transition: border-color var(--oc-medium) var(--oc-ease-out), box-shadow var(--oc-medium) var(--oc-ease-out);
+  gap: 18px;
+  padding: 24px 24px 26px;
+  transition: box-shadow var(--oc-medium) var(--oc-ease-out);
 }
+.athanor--over { box-shadow: inset 0 0 0 1px var(--oc-accent-line), var(--oc-shadow-accent); }
+.athanor__head { align-self: stretch; display: flex; justify-content: space-between; align-items: baseline; gap: 12px; }
+.athanor__head .g-mono { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.athanor__title { margin: 0; font-family: var(--oc-font-display); font-weight: 400; font-size: 24px; color: var(--oc-text-strong); }
 
-.craft-zone--over {
-  border-color: var(--oc-accent-line);
-  box-shadow: 0 0 0 4px var(--oc-accent-soft);
-}
-
-.craft-zone__hint {
+.athanor__circle { position: relative; width: 360px; height: 360px; flex-shrink: 0; }
+.athanor__ring { position: absolute; inset: 0; width: 100%; height: 100%; color: var(--oc-text); animation: turn 120s linear infinite; }
+.athanor--over .athanor__ring, .is-merging .athanor__ring { color: var(--oc-gold); }
+.athanor__center {
+  position: absolute;
+  left: 50%;
+  top: 50%;
   margin: 0;
-  font-size: 13px;
-  color: var(--oc-text-faint);
+  transform: translate(-50%, -50%);
+  font-size: 15px;
+  pointer-events: none;
 }
 
-.craft-zone__slots {
+.slot {
+  appearance: none;
+  position: absolute;
+  left: calc(50% + var(--x));
+  top: calc(50% + var(--y));
+  width: 84px;
+  height: 84px;
+  margin: -42px 0 0 -42px;
+  padding: 4px;
+  border: 0;
+  border-radius: 50%;
+  background: transparent;
+  box-shadow: inset 0 0 0 1px var(--oc-line-strong);
+  color: var(--oc-text-faint);
   display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 12px;
+  gap: 2px;
+  cursor: default;
+  transition: transform var(--oc-slow) cubic-bezier(0.6, -0.2, 0.4, 1.2), opacity var(--oc-slow) ease, box-shadow var(--oc-fast), background var(--oc-fast);
 }
-
-.craft-zone__plus {
-  color: var(--oc-text-faint);
-  font-size: 20px;
-  transition: opacity var(--oc-medium);
-}
-.craft-zone__plus.is-hidden { opacity: 0; }
+.slot:disabled { opacity: 1; }
+.slot--filled { background: #100e0b; box-shadow: inset 0 0 0 1px rgba(233, 223, 200, 0.45); color: var(--oc-text); cursor: pointer; }
+.slot--filled:hover { box-shadow: inset 0 0 0 1px var(--oc-danger); }
+.slot--new { animation: unlock 1.4s var(--oc-ease-out); }
+.slot__ink { font-size: 30px; line-height: 1; }
+.slot__name { max-width: 100%; font-size: 12px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.slot__num { font-size: 9px; }
+.is-merging .slot--filled { transform: translate(calc(-1 * var(--x)), calc(-1 * var(--y))) scale(0.4); opacity: 0; }
 
 .is-failing { animation: shake 0.45s ease; }
-.craft-zone__fail {
+.athanor__fail {
   margin: 0;
   padding: 8px 14px;
-  border-radius: var(--oc-radius-sm);
-  background: rgba(252, 165, 165, 0.1);
+  background: rgba(217, 118, 94, 0.1);
+  box-shadow: inset 0 0 0 1px rgba(217, 118, 94, 0.35);
   color: var(--oc-danger);
-  font-size: 13px;
+  font-size: 15px;
   text-align: center;
 }
 .fail-enter-active, .fail-leave-active { transition: opacity var(--oc-medium) var(--oc-ease-out), transform var(--oc-medium) var(--oc-ease-out); }
 .fail-enter-from, .fail-leave-to { opacity: 0; transform: translateY(6px); }
 
-.slot {
-  appearance: none;
-  width: 108px;
-  height: 108px;
-  padding: 6px;
-  border-radius: 26px;
-  border: 1.5px dashed var(--oc-line-strong);
-  background: rgba(7, 6, 13, 0.35);
-  color: var(--oc-text);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 6px;
-  cursor: default;
-  transition: transform var(--oc-slow) cubic-bezier(0.6, -0.2, 0.4, 1.2), opacity var(--oc-slow) ease,
-    border-color var(--oc-fast), background var(--oc-fast);
-  animation: breathe 3.2s ease-in-out infinite;
-}
-.slot:disabled { opacity: 1; }
-.slot--filled {
-  border-style: solid;
-  border-color: rgba(196, 181, 253, 0.4);
-  background: rgba(30, 22, 54, 0.75);
-  cursor: pointer;
-  animation: none;
-}
-.slot--filled:hover { border-color: var(--oc-danger); }
-.slot--new { animation: unlock 1.4s var(--oc-ease-out); }
-.slot__emoji { font-size: 42px; line-height: 1; }
-.slot__name { font-size: 12px; font-weight: 500; max-width: 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-
-.craft-zone--multi .slot { width: 92px; height: 92px; }
-.craft-zone--multi .slot__emoji { font-size: 34px; }
-
-.craft-zone__actions {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
-
-.btn-ghost {
-  appearance: none;
-  width: 48px;
-  height: 48px;
-  border-radius: 14px;
-  border: 1px solid var(--oc-line-strong);
-  background: var(--oc-panel);
-  color: var(--oc-text-muted);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  transition: color var(--oc-fast), border-color var(--oc-fast);
-}
-.btn-ghost:hover:not(:disabled) { color: var(--oc-text); border-color: var(--oc-accent-line); }
-.btn-ghost:disabled { opacity: 0.4; cursor: default; }
-
-.btn-fuse {
-  appearance: none;
-  height: 48px;
-  padding: 0 26px;
-  border: 0;
-  border-radius: 14px;
-  background: linear-gradient(180deg, var(--oc-accent), var(--oc-accent-strong));
-  color: #fff;
-  font-size: 15px;
-  font-weight: 600;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  cursor: pointer;
-  box-shadow: var(--oc-shadow-accent);
-  transition: transform var(--oc-fast) var(--oc-ease-out), opacity var(--oc-fast);
-}
-.btn-fuse:active:not(:disabled) { transform: scale(0.97); }
-.btn-fuse:disabled { opacity: 0.35; box-shadow: none; cursor: default; }
+.athanor__actions { display: flex; gap: 12px; }
 
 /* Révélation */
 .reveal {
@@ -386,71 +352,40 @@ export default {
   inset: 0;
   z-index: 3;
   border: 0;
-  border-radius: inherit;
-  background: rgba(12, 9, 24, 0.9);
+  background: rgba(12, 10, 8, 0.94);
   display: flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
   overflow: hidden;
+  color: var(--oc-text);
 }
 .reveal__halo {
   position: absolute;
   left: 50%;
   top: 50%;
-  width: 280px;
-  height: 280px;
-  margin: -140px 0 0 -140px;
+  width: 300px;
+  height: 300px;
+  margin: -150px 0 0 -150px;
   border-radius: 50%;
-  background: radial-gradient(circle, rgba(250, 204, 21, 0.55) 0%, rgba(167, 139, 250, 0.35) 38%, rgba(167, 139, 250, 0) 70%);
-  animation: halo 1.1s var(--oc-ease-out) forwards;
+  background: radial-gradient(circle, rgba(224, 182, 84, 0.4) 0%, rgba(224, 182, 84, 0) 68%);
+  animation: halo 1.2s var(--oc-ease-out) forwards;
 }
-.reveal__card {
-  position: relative;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 10px;
-  animation: pop 0.6s var(--oc-ease-spring) both;
-}
-.reveal__image {
-  width: 132px;
-  height: 132px;
-  object-fit: contain;
-  filter: drop-shadow(0 10px 24px rgba(0, 0, 0, 0.5));
-}
-.reveal__emoji { font-size: 72px; line-height: 1; }
-.reveal__name {
-  font-family: var(--oc-font-display);
-  font-size: 26px;
-  font-weight: 700;
-  color: var(--oc-text-strong);
-}
-.reveal__badge {
-  padding: 4px 12px;
-  border-radius: var(--oc-radius-pill);
-  background: var(--oc-gold);
-  color: #3b2a05;
-  font-size: 12px;
-  font-weight: 600;
-  letter-spacing: 0.5px;
-}
-.reveal__known { font-size: 12px; color: var(--oc-text-muted); }
-
+.reveal__card { position: relative; display: flex; flex-direction: column; align-items: center; gap: 12px; text-align: center; animation: pop 0.6s var(--oc-ease-spring) both; }
+.reveal__image { width: 132px; height: 132px; object-fit: contain; filter: drop-shadow(0 10px 24px rgba(0, 0, 0, 0.5)); }
+.reveal__ink { font-size: 76px; line-height: 1; }
+.reveal__name { font-family: var(--oc-font-display); font-size: 40px; line-height: 1; color: var(--oc-text-strong); }
+.reveal__origin { font-size: 17px; }
 .reveal-enter-active, .reveal-leave-active { transition: opacity var(--oc-medium) var(--oc-ease-out); }
 .reveal-enter-from, .reveal-leave-to { opacity: 0; }
 
-@keyframes breathe {
-  0%, 100% { border-color: rgba(196, 181, 253, 0.22); }
-  50% { border-color: rgba(196, 181, 253, 0.42); }
-}
+@keyframes turn { to { transform: rotate(360deg); } }
 @keyframes unlock {
-  0% { transform: scale(0.4); opacity: 0; box-shadow: 0 0 0 0 rgba(250, 204, 21, 0.8); border-color: var(--oc-gold); }
+  0% { transform: scale(0.4); opacity: 0; box-shadow: inset 0 0 0 1px var(--oc-gold), 0 0 0 0 rgba(224, 182, 84, 0.8); }
   60% { transform: scale(1.08); opacity: 1; }
-  100% { transform: scale(1); box-shadow: 0 0 0 16px rgba(250, 204, 21, 0); }
+  100% { transform: scale(1); box-shadow: inset 0 0 0 1px var(--oc-line-strong), 0 0 0 16px rgba(224, 182, 84, 0); }
 }
 @keyframes shake {
-  0%, 100% { transform: translateX(0); }
   20% { transform: translateX(-8px); }
   40% { transform: translateX(8px); }
   60% { transform: translateX(-5px); }
@@ -459,58 +394,63 @@ export default {
 @keyframes halo {
   0% { transform: scale(0.2); opacity: 0; }
   40% { opacity: 1; }
-  100% { transform: scale(1.25); opacity: 0; }
+  100% { transform: scale(1.25); opacity: 0.6; }
 }
 @keyframes pop {
-  0% { transform: scale(0.3) translateY(10px); opacity: 0; }
+  0% { transform: scale(0.4) translateY(10px); opacity: 0; }
   100% { transform: none; opacity: 1; }
 }
 
-/* Mobile : dock fixé en bas, dans la zone du pouce ; révélation plein écran */
+/* Mobile : dock fixé en bas, emplacements en ligne ; révélation plein écran */
 @media (max-width: 859px) {
-  .craft-zone {
+  .athanor {
     position: fixed;
     left: 0;
     right: 0;
     bottom: 0;
     z-index: 20;
-    min-height: 0;
     flex-direction: row;
-    justify-content: space-between;
-    gap: 12px;
-    padding: 12px 16px calc(12px + env(safe-area-inset-bottom));
-    border-radius: 24px 24px 0 0;
-    border-bottom: 0;
-    /* Opaque : les cartes qui défilent dessous ne doivent pas transparaître */
-    background: #0e0b1a;
-    box-shadow: 0 -10px 30px rgba(0, 0, 0, 0.45);
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 10px 12px;
+    padding: 12px 16px calc(14px + env(safe-area-inset-bottom));
+    background: #0f0d0a;
+    box-shadow: 0 -1px 0 var(--oc-line-strong), 0 -18px 30px rgba(0, 0, 0, 0.6);
   }
-  .craft-zone__hint { display: none; }
-  .craft-zone__fail {
+  .athanor::before {
+    content: '';
+    position: absolute;
+    left: 50%;
+    top: -4px;
+    width: 8px;
+    height: 8px;
+    margin-left: -4px;
+    background: var(--oc-gold);
+    transform: rotate(45deg);
+  }
+  .athanor__head { display: none; }
+  .athanor__circle { width: auto; height: auto; flex: 1; display: flex; gap: 8px; }
+  .athanor__ring, .athanor__center { display: none; }
+  .slot { position: relative; left: auto; top: auto; margin: 0; width: 60px; height: 60px; flex-shrink: 0; }
+  .slot__ink { font-size: 24px; }
+  .slot__name { display: none; }
+  .is-merging .slot--filled { transform: scale(0.5); }
+  .athanor__actions { flex-shrink: 0; }
+  .athanor__clear { display: none; }
+  .athanor__fuse { min-height: 52px; padding: 0 18px; font-size: 16px; }
+  .athanor--multi .athanor__circle { flex-basis: 100%; justify-content: space-between; }
+  .athanor--multi .slot { width: 66px; height: 66px; }
+  .athanor--multi .athanor__actions, .athanor--multi .athanor__fuse { flex: 1; }
+  .athanor__fail {
     position: absolute;
     left: 16px;
     right: 16px;
-    bottom: calc(100% + 10px);
-    background: #1c1016;
-    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.45);
+    bottom: calc(100% + 12px);
+    background: #1a0f0b;
+    box-shadow: inset 0 0 0 1px rgba(217, 118, 94, 0.35), 0 8px 24px rgba(0, 0, 0, 0.5);
   }
-  .craft-zone__slots { gap: 8px; }
-  .craft-zone__plus { font-size: 16px; }
-  .slot { width: 64px; height: 64px; border-radius: 18px; gap: 2px; }
-  .slot__emoji { font-size: 26px; }
-  .slot__name { font-size: 10px; }
-  .craft-zone--multi { flex-direction: column; align-items: stretch; gap: 10px; }
-  .craft-zone--multi .craft-zone__slots { justify-content: space-between; }
-  .craft-zone--multi .slot { width: 68px; height: 68px; }
-  .craft-zone--multi .slot__emoji { font-size: 26px; }
-  .craft-zone--multi .btn-fuse { flex: 1; justify-content: center; }
-  .btn-fuse { padding: 0 18px; }
-  .reveal {
-    position: fixed;
-    z-index: 30;
-    border-radius: 0;
-    background: rgba(7, 6, 13, 0.72);
-  }
+  .reveal { position: fixed; z-index: 30; background: rgba(12, 10, 8, 0.9); }
+  .reveal__name { font-size: 48px; }
 }
 </style>
 
@@ -526,6 +466,6 @@ export default {
   justify-content: center;
   font-size: 30px;
   pointer-events: none;
-  filter: drop-shadow(0 0 10px rgba(167, 139, 250, 0.8));
+  filter: grayscale(1) sepia(0.55) contrast(1.35) brightness(1.08) drop-shadow(0 0 10px rgba(224, 182, 84, 0.7));
 }
 </style>
