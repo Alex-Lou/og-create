@@ -163,6 +163,7 @@
         </div>
 
         <button
+          v-if="!isBossChallenge"
           @click="completeChallenge"
           class="complete-button"
           :disabled="!isChallengeSolved"

@@ -169,7 +169,6 @@ export default {
       isShaking: false,
       isButtonShaking: false,
       lastCraftedItem: null,
-      pendingSaves: new Set(),
       observer: null,
       debouncedDragOver: null,
       FireworkComponent: null,
@@ -275,11 +274,9 @@ export default {
       }
       
       this.lastCraftedItem = craftedItem;
-      this.pendingSaves.add(craftedItem);
       
       this.$nextTick(() => {
         this.$emit('craft-success', craftedItem);
-        this.saveDiscoveredElement(craftedItem);
         
         let newPosition = { top: 300, left: 230 };
         if (this.lastCraftedPosition && !this.lastCraftedPosition.moved) {
@@ -322,12 +319,10 @@ export default {
         this.craftingInProgress = false;
       });
     },
-    saveDiscoveredElement(element) {
-      const gameMode = this.$parent?.gameMode || 'infinite';
-      this.$emit('save-discovered-element', element, gameMode);
-      this.pendingSaves.delete(element);
-    },
     handleKeyPress(event) {
+      // Pas de raccourci pendant la saisie, sur un bouton focus, ou avec modificateur
+      if (event.ctrlKey || event.metaKey || event.altKey) return;
+      if (event.target.closest?.('input, textarea, select, button, [contenteditable="true"]')) return;
       if (event.key === 'Enter') {
         this.craftItem();
       }
@@ -402,11 +397,9 @@ export default {
           this.removeResource(Math.max(this.draggingElementIndex, targetIndex));
           this.removeResource(Math.min(this.draggingElementIndex, targetIndex));
           this.lastCraftedItem = result;
-          this.pendingSaves.add(result);
           
           this.$nextTick(() => {
             this.$emit('craft-success', result);
-            this.saveDiscoveredElement(result);
             
             let newPosition = {
               top: this.resourcePositions[targetIndex]?.top || 300,
@@ -480,10 +473,8 @@ export default {
         
         this.craftedElements.push(newElement);
         this.lastCraftedItem = result;
-        this.pendingSaves.add(result);
         
         this.$emit('craft-success', result);
-        this.saveDiscoveredElement(result);
         
         this.$nextTick(() => {
           if (this.observer) {
@@ -791,14 +782,7 @@ export default {
     document.head.appendChild(style);
     
     this.setupIntersectionObserver();
-    
-    window.addEventListener('beforeunload', () => {
-      if (this.pendingSaves.size > 0) {
-        this.pendingSaves.forEach(element => {
-          this.saveDiscoveredElement(element);
-        });
-      }
-    });
+
   },
   beforeUnmount() {
     window.removeEventListener('keydown', this.handleKeyPress);
@@ -806,12 +790,6 @@ export default {
     if (this.observer) {
       this.observer.disconnect();
       this.observer = null;
-    }
-    
-    if (this.pendingSaves.size > 0) {
-      this.pendingSaves.forEach(element => {
-        this.saveDiscoveredElement(element);
-      });
     }
   }
 };

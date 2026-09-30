@@ -297,10 +297,9 @@ export default {
       window.timerElements = [];
       window.currentQuestionId = null;
       
-      // Réinitialiser les éléments dans le parent
+      // Réinitialiser les éléments Timer du parent (l'inventaire est restauré par App)
       if (this.$parent) {
         this.$parent.currentTimerElements = [];
-        this.$parent.discoveredElements = [];
       }
       
       // Réinitialiser les variables locales
@@ -555,7 +554,6 @@ export default {
         // Ne pas appeler force-stop ni confirmStopTimer
       } else {
         // Comportement normal pour les catégories non complétées
-        this.$parent.$emit('force-stop');
         if (this.$parent.$refs.timerModeButton) {
           this.$parent.$refs.timerModeButton.confirmStopTimer();
         }
@@ -572,7 +570,7 @@ export default {
       
       this.hide();
       this.loadQuestionsAndReset();
-      this.$parent.$emit('force-stop');
+      this.$emit('stop-timer');
     },
     cancelCategorySelection() {
       // Nettoyer les données
@@ -581,7 +579,7 @@ export default {
       this.selectedLevel = null;
       this.selectedCategory = null;
       this.questions = [];
-      this.$parent.$emit('force-stop');
+      this.$emit('stop-timer');
     },
     async loadRecipes() {
       try {
@@ -1007,6 +1005,7 @@ export default {
         
         await new Promise(resolve => setTimeout(resolve, 100));
         await this.show();
+        this.$emit('resume-timer');
       } else {
         // Catégorie terminée
         this.showCompletionPopup = true;
@@ -1023,75 +1022,33 @@ export default {
         await this.saveProgress();
       }
     },
+    // Appelée par App après validation de la réponse (modes 'any', 'multiple' et 'all')
     async answerCorrect() {
       const currentQuestion = this.currentQuestion;
-      const validationMode = currentQuestion.initialElements?.validationMode || 'any';
       const points = currentQuestion.points || 10;
       const questionId = currentQuestion.id || `${this.selectedCategory}_${this.currentQuestionIndex}`;
 
-      if (validationMode === 'any') {
-        const isValidAnswer = currentQuestion.validAnswers.some(answer => 
-          this.$parent.discoveredElements.includes(answer)
-        );
-        
-        if (isValidAnswer) {
-          // Gérer la structure imbriquée pour required
-          let requiredElements = [];
-          if (currentQuestion.initialElements.initialElements && currentQuestion.initialElements.initialElements.required) {
-            requiredElements = currentQuestion.initialElements.initialElements.required;
-          } else if (currentQuestion.initialElements.required) {
-            requiredElements = currentQuestion.initialElements.required;
-          }
-          
-          requiredElements.forEach(element => {
-            if (!this.$parent.discoveredElements.includes(element)) {
-              this.$parent.discoveredElements.push(element);
-            }
-          });
-
-          this.markQuestionAsCompleted(questionId);
-          if (this.isNewQuestion) {
-            this.currentScore += points;
-            this.$emit('coins-earned', points);
-          }
-
-          this.hide();
-          
-          this.showSuccessPopup = true;
-          this.$emit('reset-craft-zone');
-          // L'utilisateur devra cliquer lui-même sur "Continuer"
+      // Gérer la structure imbriquée pour required
+      const initial = currentQuestion.initialElements || {};
+      const requiredElements = initial.initialElements?.required || initial.required || [];
+      requiredElements.forEach(element => {
+        if (!this.$parent.discoveredElements.includes(element)) {
+          this.$parent.discoveredElements.push(element);
         }
-      } else if (validationMode === 'multiple') {
-        const requiredCount = currentQuestion.initialElements.requiredCount || 1;
-        
-        if (this.discoveredValidAnswersCount >= requiredCount) {
-          // Gérer la structure imbriquée pour required
-          let requiredElements = [];
-          if (currentQuestion.initialElements.initialElements && currentQuestion.initialElements.initialElements.required) {
-            requiredElements = currentQuestion.initialElements.initialElements.required;
-          } else if (currentQuestion.initialElements.required) {
-            requiredElements = currentQuestion.initialElements.required;
-          }
-          
-          requiredElements.forEach(element => {
-            if (!this.$parent.discoveredElements.includes(element)) {
-              this.$parent.discoveredElements.push(element);
-            }
-          });
+      });
 
-          this.markQuestionAsCompleted(questionId);
-          if (this.isNewQuestion) {
-            this.currentScore += points;
-            this.$emit('coins-earned', points);
-          }
-
-          this.hide();
-          
-          this.showSuccessPopup = true;
-          this.$emit('reset-craft-zone');
-          // L'utilisateur devra cliquer lui-même sur "Continuer"
-        }
+      this.markQuestionAsCompleted(questionId);
+      if (this.isNewQuestion) {
+        this.currentScore += points;
+        this.$emit('coins-earned', points);
       }
+
+      this.hide();
+      // Mettre le chrono en pause pendant le popup de réussite
+      this.$emit('pause-timer');
+      this.showSuccessPopup = true;
+      this.$emit('reset-craft-zone');
+      // L'utilisateur devra cliquer lui-même sur "Continuer"
     },
     resetQuestions() {
       this.loadQuestionsAndReset();

@@ -157,6 +157,7 @@
 import '@/assets/ComponentsStyle/ExplorerStyle/ExplorerModeButtonStyle.css';
 export default {
   name: 'ExplorerModeButton',
+  emits: ['click'],
   methods: {
     activateExplorerMode() {
       this.$emit('click');

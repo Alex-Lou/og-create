@@ -126,7 +126,8 @@
 
 <script>
 export default {
-  name: 'CraftButton'
+  name: 'CraftButton',
+  emits: ['click']
 }
 </script>
 

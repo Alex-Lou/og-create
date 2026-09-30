@@ -73,6 +73,7 @@
       @craft-success="handleCraftSuccess"
       @target-element-created="handleTargetElementCreated"
       @challenge-completed="handleChallengeCompleted"
+      @player-defeated="handlePlayerDefeated"
       @show-alert="$emit('show-alert', $event)"
     />
 
@@ -654,6 +655,11 @@ export default {
       this.$emit('element-discovered', craftedItem);
     },
 
+    handlePlayerDefeated() {
+      this.showCraftModal = false;
+      alert('Le boss vous a vaincu ! Reprenez des forces et retentez votre chance depuis la carte.');
+    },
+
     async handleChallengeCompleted({ region, isBoss }) {
       if (!this.active) return;
       
@@ -986,10 +992,8 @@ export default {
       else if (triggerBoss && this.currentBoss) {
         setTimeout(() => {
           this.showNpcDialog = true;
-          this.selectedRegion = {
-            id: `boss-${this.currentBoss.id}`,
-            name: this.currentBoss.name
-          };
+          // Région de boss complète (id numérique + is_boss) pour que startCraftChallenge prenne le chemin boss
+          this.selectedRegion = { ...this.currentBoss, is_boss: true };
           this.currentNpc = {
             image: this.currentBoss.bossImage || 'boss-1-anim.gif',
             position: this.currentBoss.bossPosition || 'center',

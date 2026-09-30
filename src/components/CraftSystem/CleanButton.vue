@@ -115,6 +115,7 @@
 <script>
 export default {
   name: 'CleanButton',
+  emits: ['click'],
   methods: {
     resetCraftingBoard() {
       this.$emit('click');
