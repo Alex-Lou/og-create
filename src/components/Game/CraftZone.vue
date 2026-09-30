@@ -462,7 +462,8 @@ export default {
     padding: 12px 16px calc(12px + env(safe-area-inset-bottom));
     border-radius: 24px 24px 0 0;
     border-bottom: 0;
-    background: var(--oc-surface-strong);
+    /* Opaque : les cartes qui défilent dessous ne doivent pas transparaître */
+    background: #0e0b1a;
     box-shadow: 0 -10px 30px rgba(0, 0, 0, 0.45);
   }
   .craft-zone__hint { display: none; }

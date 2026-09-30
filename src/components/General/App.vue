@@ -1,5 +1,5 @@
 <template>
-  <div class="oc-app" id="game-container">
+  <div :class="['oc-app', { 'oc-app--multi': slotCount > 2 }]" id="game-container">
     <LivingBackground ref="background" :era="era" :population="population" :palette="palette" />
     <GameAchievementsContent :achievements="achievements" />
 
@@ -1120,7 +1120,7 @@ handleCraftSuccess(craftedItem) {
 .oc-app__shell {
   position: relative;
   z-index: 1;
-  max-width: 1280px;
+  max-width: 1480px;
   margin: 0 auto;
   padding: 0 var(--oc-gutter) calc(var(--oc-dock-height) + 32px + env(safe-area-inset-bottom));
 }
@@ -1131,12 +1131,13 @@ handleCraftSuccess(craftedItem) {
   .oc-app__shell { padding-bottom: 32px; }
   .oc-app__main {
     display: grid;
-    grid-template-columns: minmax(320px, 420px) minmax(0, 1fr);
+    /* La liste prend la place disponible et grandit avec les découvertes ; la zone reste à droite */
+    grid-template-columns: minmax(0, 1fr) minmax(340px, 440px);
     gap: 28px;
     align-items: start;
   }
   /* La zone reste en vue pendant qu'on fait défiler l'inventaire */
-  .oc-app__craft { position: sticky; top: 16px; min-height: 560px; display: flex; }
+  .oc-app__craft { position: sticky; top: 16px; height: min(560px, calc(100vh - 32px)); display: flex; }
   .oc-app__craft > * { flex: 1; }
 }
 
@@ -1186,8 +1187,10 @@ handleCraftSuccess(craftedItem) {
   bottom: 16px;
 }
 @media (max-width: 859px) {
+  /* Dock sur 2 lignes (3–4 emplacements) : plus haut, la liste garde assez de marge en bas */
+  .oc-app--multi { --oc-dock-height: 160px; }
   /* Au-dessus du dock, même quand il passe sur 2 lignes (3–4 emplacements) */
-  .oc-app #achievements-menu-container { bottom: calc(var(--oc-dock-height) + 72px + env(safe-area-inset-bottom)); }
+  .oc-app #achievements-menu-container { bottom: calc(var(--oc-dock-height) + 16px + env(safe-area-inset-bottom)); }
 }
 </style>
 

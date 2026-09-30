@@ -4,9 +4,13 @@
       <label class="search">
         <span class="oc-sr-only">Rechercher un élément</span>
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"></circle><path d="M20 20l-3.5-3.5"></path></svg>
-        <input v-model="query" type="search" placeholder="Rechercher…" autocomplete="off" />
+        <input v-model="query" type="search" :placeholder="`Rechercher parmi ${discoveredElements.length} éléments…`" autocomplete="off" />
       </label>
       <div v-if="families.length > 1" class="chips" role="group" aria-label="Filtrer par famille">
+        <button type="button" class="chip chip--tool" :aria-label="allCollapsed ? 'Tout déplier' : 'Tout plier'" @click="toggleAll">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path v-if="allCollapsed" d="M7 10l5 5 5-5"></path><path v-else d="M7 14l5-5 5 5"></path></svg>
+          {{ allCollapsed ? 'Déplier' : 'Plier' }}
+        </button>
         <button type="button" :class="['chip', { 'chip--on': !family }]" :aria-pressed="!family" @click="family = null">Tout</button>
         <button
           v-for="f in families"
@@ -23,12 +27,18 @@
     </div>
 
     <section v-for="group in visibleGroups" :key="group.key" class="family" :style="{ '--c': group.rgb }">
-      <header class="family__head">
+      <button
+        type="button"
+        class="family__head"
+        :aria-expanded="isOpen(group.key)"
+        @click="toggle(group.key)"
+      >
+        <svg class="family__chevron" :class="{ 'is-closed': !isOpen(group.key) }" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 10l5 5 5-5"></path></svg>
         <h2 class="family__title">{{ group.label }}</h2>
         <span class="family__count">{{ group.found }} / {{ group.total }}</span>
         <span class="family__bar" aria-hidden="true"><span :style="{ width: group.progress + '%' }"></span></span>
-      </header>
-      <div class="grid">
+      </button>
+      <div v-show="isOpen(group.key)" class="grid">
         <button
           v-for="element in group.elements"
           :key="element"
@@ -54,6 +64,23 @@
 import { BASE_CATEGORY } from '@/utils/gameConstants';
 import { familyColor } from '@/utils/eras';
 
+// Familles pliées : simple confort d'affichage, mémorisé sur cet appareil
+const COLLAPSED_KEY = 'oc-collapsed-families';
+function readCollapsed() {
+  try {
+    return JSON.parse(localStorage.getItem(COLLAPSED_KEY)) || {};
+  } catch {
+    return {};
+  }
+}
+function saveCollapsed(value) {
+  try {
+    localStorage.setItem(COLLAPSED_KEY, JSON.stringify(value));
+  } catch {
+    // Stockage indisponible (navigation privée…) : le pliage reste valable pour la session
+  }
+}
+
 function normalize(text) {
   return String(text).normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase();
 }
@@ -71,7 +98,7 @@ export default {
   },
   emits: ['selectResource'],
   data() {
-    return { query: '', family: null };
+    return { query: '', family: null, collapsed: readCollapsed() };
   },
   computed: {
     groups() {
@@ -84,6 +111,9 @@ export default {
       return Object.entries(this.categories)
         .map(([name, elements]) => this.group(name, elements, elements.filter(e => discovered.has(e))))
         .filter(g => g.key === BASE_CATEGORY || g.found > 0);
+    },
+    allCollapsed() {
+      return this.groups.length > 0 && this.groups.every(g => this.collapsed[g.key]);
     },
     families() {
       return this.groups.map(({ key, label, rgb }) => ({ key, label, rgb }));
@@ -111,6 +141,19 @@ export default {
     }
   },
   methods: {
+    // Une recherche en cours affiche toujours les résultats, même dans une famille pliée
+    isOpen(key) {
+      return Boolean(this.query.trim()) || !this.collapsed[key];
+    },
+    toggle(key) {
+      this.collapsed = { ...this.collapsed, [key]: !this.collapsed[key] };
+      saveCollapsed(this.collapsed);
+    },
+    toggleAll() {
+      const collapse = !this.allCollapsed;
+      this.collapsed = Object.fromEntries(this.groups.map(g => [g.key, collapse]));
+      saveCollapsed(this.collapsed);
+    },
     group(name, all, found) {
       const color = familyColor(name);
       return {
@@ -210,14 +253,26 @@ export default {
 }
 .chip__dot { width: 8px; height: 8px; border-radius: 50%; background: rgb(var(--c)); }
 .chip--on { background: var(--oc-text); color: #140f24; border-color: var(--oc-text); }
+.chip--tool { color: var(--oc-text); }
 
 .family__head {
+  appearance: none;
+  width: 100%;
   display: grid;
-  grid-template-columns: 1fr auto;
-  align-items: baseline;
-  gap: 6px 12px;
-  margin-bottom: 10px;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  gap: 6px 10px;
+  margin: 0 0 10px;
+  padding: 4px 0;
+  border: 0;
+  background: none;
+  color: inherit;
+  text-align: left;
+  cursor: pointer;
 }
+.family__chevron { color: var(--oc-text-muted); transition: transform var(--oc-fast) var(--oc-ease-out); }
+.family__chevron.is-closed { transform: rotate(-90deg); }
+.family__head:hover .family__title { color: #fff; }
 .family__title {
   margin: 0;
   font-family: var(--oc-font-display);
@@ -228,7 +283,7 @@ export default {
 }
 .family__count { font-size: 12px; color: var(--oc-text-muted); font-variant-numeric: tabular-nums; }
 .family__bar {
-  grid-column: 1 / -1;
+  grid-column: 2 / -1;
   height: 3px;
   border-radius: 3px;
   background: rgba(255, 255, 255, 0.06);
@@ -287,6 +342,16 @@ export default {
   text-align: center;
   font-size: 13px;
   color: var(--oc-text-faint);
+}
+
+/* Mobile : cartes plus compactes, 4 par ligne sur la plupart des téléphones */
+@media (max-width: 859px) {
+  .inventory { gap: 12px; }
+  .grid { grid-template-columns: repeat(auto-fill, minmax(72px, 1fr)); gap: 8px; }
+  .card { min-height: 72px; padding: 8px 2px 6px; border-radius: 14px; gap: 4px; font-size: 11px; }
+  .card__emoji { font-size: 24px; }
+  .search { height: 40px; }
+  .chip { height: 32px; padding: 0 12px; font-size: 12px; }
 }
 
 @keyframes wiggle {
