@@ -8,9 +8,13 @@
     @dragleave="onDragLeave"
     @drop.prevent="onDrop"
   >
-    <p class="craft-zone__hint" v-if="!picked.length && !result">
+    <p class="craft-zone__hint" v-if="!picked.length && !result && !failMessage">
       Choisis des éléments à fusionner
     </p>
+    <!-- Échec : dit dans la zone elle-même, sans jamais couvrir le bouton Fusionner -->
+    <transition name="fail">
+      <p v-if="failMessage" class="craft-zone__fail" role="status">{{ failMessage }}</p>
+    </transition>
 
     <div :class="['craft-zone__slots', { 'is-failing': failing }]">
       <template v-for="(slot, index) in slots" :key="index">
@@ -63,6 +67,7 @@ import { findRecipe } from '@/utils/recipes';
 
 const MERGE_MS = 520;
 const REVEAL_MS = 1700;
+const FAIL_MS = 1800;
 
 function creatureImage(name) {
   try {
@@ -88,6 +93,7 @@ export default {
       picked: [],
       merging: false,
       failing: false,
+      failMessage: '',
       result: null,
       dragOver: false,
       unlockedIndex: -1
@@ -152,7 +158,8 @@ export default {
       const index = this.picked.length;
       this.picked.push(name);
       if (from) this.$nextTick(() => this.fly(name, from, this.slotEls[index]));
-      if (this.autoFuse && this.slotCount === 2 && this.picked.length === 2) this.later(() => this.fuse(), 300);
+      // Toutes les cases remplies : la fusion part seule ; le bouton sert aux combinaisons partielles (2/3, 3/4…)
+      if (this.autoFuse && this.picked.length === this.slotCount) this.later(() => this.fuse(), 300);
     },
     remove(index) {
       if (this.merging) return;
@@ -170,12 +177,13 @@ export default {
       const name = findRecipe(this.craftingRecipes, ingredients);
       if (!name) {
         this.failing = true;
+        this.failMessage = 'Rien ne se passe… Essaie une autre combinaison.';
         this.$emit('craft-fail', ingredients);
-        this.$emit('show-alert', 'Rien ne se passe… Essaie une autre combinaison.');
         this.later(() => {
           this.failing = false;
           this.picked = [];
         }, 700);
+        this.later(() => (this.failMessage = ''), FAIL_MS);
         return;
       }
       const isNew = !this.discoveredElements.includes(name);
@@ -281,6 +289,17 @@ export default {
 .craft-zone__plus.is-hidden { opacity: 0; }
 
 .is-failing { animation: shake 0.45s ease; }
+.craft-zone__fail {
+  margin: 0;
+  padding: 8px 14px;
+  border-radius: var(--oc-radius-sm);
+  background: rgba(252, 165, 165, 0.1);
+  color: var(--oc-danger);
+  font-size: 13px;
+  text-align: center;
+}
+.fail-enter-active, .fail-leave-active { transition: opacity var(--oc-medium) var(--oc-ease-out), transform var(--oc-medium) var(--oc-ease-out); }
+.fail-enter-from, .fail-leave-to { opacity: 0; transform: translateY(6px); }
 
 .slot {
   appearance: none;
@@ -467,6 +486,14 @@ export default {
     box-shadow: 0 -10px 30px rgba(0, 0, 0, 0.45);
   }
   .craft-zone__hint { display: none; }
+  .craft-zone__fail {
+    position: absolute;
+    left: 16px;
+    right: 16px;
+    bottom: calc(100% + 10px);
+    background: #1c1016;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.45);
+  }
   .craft-zone__slots { gap: 8px; }
   .craft-zone__plus { font-size: 16px; }
   .slot { width: 64px; height: 64px; border-radius: 18px; gap: 2px; }

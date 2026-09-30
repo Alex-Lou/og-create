@@ -1,5 +1,5 @@
-// Progression visuelle : une « ère » par famille d'éléments découverte.
-// Elle pilote le fond vivant et le nombre d'emplacements de fusion.
+// Progression : les familles découvertes débloquent les emplacements de fusion (eraOf),
+// le nombre de découvertes fait évoluer lentement le fond vivant (stageOf).
 
 export const ERA_NAMES = ['Poussière d’étoiles', 'Molécules', 'Réactions', 'Courants', 'Vie'];
 export const MAX_ERA = ERA_NAMES.length;
@@ -37,6 +37,18 @@ export function discoveredFamilies(categories, discoveredElements) {
 
 export function eraOf(familyCount) {
   return Math.max(1, Math.min(MAX_ERA, familyCount));
+}
+
+// Ère du fond vivant : suit le nombre de découvertes sur une échelle lente
+// (le jeu vise des milliers de recettes : chaque ère se mérite)
+const STAGE_THRESHOLDS = [0, 15, 60, 250, 1000];
+export function stageOf(discoveredCount) {
+  return STAGE_THRESHOLDS.filter(threshold => discoveredCount >= threshold).length;
+}
+
+// Population du fond : croissance logarithmique (vivante au début, jamais saturée)
+export function populationFor(discoveredCount) {
+  return Math.round(24 + 18 * Math.log(1 + discoveredCount / 6));
 }
 
 // 2 emplacements, un 3e à l'ère 3, un 4e à l'ère 4 (le jeu accepte jusqu'à 4 ingrédients)
