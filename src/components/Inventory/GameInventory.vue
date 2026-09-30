@@ -114,17 +114,20 @@ export default {
       if (this.isTimerMode) {
         return [{ name: 'Éléments du défi', progress: 100, elements: this.discoveredElements }];
       }
-      const visible = new Set([BASE_CATEGORY, ...this.discoveredCategories]);
+      // Une catégorie s'affiche dès qu'un de ses éléments est découvert
+      // (déduit des éléments : une liste de catégories sauvegardée incomplète ne cache plus rien)
+      const discovered = new Set(this.discoveredElements);
       return Object.entries(this.categories)
-        .filter(([name]) => visible.has(name))
         .map(([name, elements]) => {
-          const found = elements.filter(element => this.discoveredElements.includes(element));
+          const found = elements.filter(element => discovered.has(element));
           return {
+            key: name,
             name: name.replace(/_/g, ' '),
             progress: elements.length ? (found.length / elements.length) * 100 : 0,
             elements: found
           };
-        });
+        })
+        .filter(category => category.key === BASE_CATEGORY || category.elements.length > 0);
     }
   },
   methods: {
