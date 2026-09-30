@@ -1,47 +1,53 @@
-/* Tokens de design : seule source des couleurs, typographies, rayons et mouvements */
+/* Tokens de design « Grimoire nocturne » : seule source des couleurs, typographies, formes et mouvements.
+   Encre claire sur papier nuit, une seule lueur dorée réservée à ce qui est précieux. */
 :root {
-  /* Fond : nuit profonde */
-  --oc-bg: #07060d;
-  --oc-bg-glow-1: #24124a;
-  --oc-bg-glow-2: #10163c;
+  /* Papier nuit */
+  --oc-bg: #0c0a08;
+  --oc-bg-glow-1: rgba(224, 182, 84, 0.06);
+  --oc-bg-glow-2: rgba(111, 163, 146, 0.05);
 
-  /* Surfaces translucides (laissent voir le fond vivant) */
-  --oc-surface: rgba(20, 15, 36, 0.62);
-  --oc-surface-hover: rgba(40, 30, 70, 0.72);
-  --oc-surface-strong: rgba(12, 9, 24, 0.9);
-  --oc-panel: rgba(12, 9, 24, 0.5);
-  --oc-line: rgba(196, 181, 253, 0.14);
-  --oc-line-strong: rgba(196, 181, 253, 0.32);
+  /* Surfaces : à peine teintées, elles laissent voir le fond vivant */
+  --oc-surface: rgba(233, 223, 200, 0.035);
+  --oc-surface-hover: rgba(233, 223, 200, 0.07);
+  --oc-surface-strong: #14110d;
+  --oc-panel: rgba(20, 17, 13, 0.78);
+  --oc-line: rgba(233, 223, 200, 0.14);
+  --oc-line-strong: rgba(233, 223, 200, 0.32);
 
-  /* Texte */
-  --oc-text: #ece8f7;
-  --oc-text-strong: #f5f3ff;
-  --oc-text-muted: #a39bbd;
-  --oc-text-faint: #8d85a8;
+  /* Encre */
+  --oc-text: #e9dfc8;
+  --oc-text-strong: #f3ead4;
+  --oc-text-muted: #b3a68b;
+  --oc-text-faint: #8d8270;
 
-  /* Accents : violet (action) et or (découverte) */
-  --oc-accent: #8b5cf6;
-  --oc-accent-strong: #7c3aed;
-  --oc-accent-soft: rgba(139, 92, 246, 0.28);
-  --oc-accent-line: #a78bfa;
-  --oc-gold: #fde68a;
-  --oc-gold-strong: #facc15;
-  --oc-gold-soft: rgba(250, 204, 21, 0.12);
-  --oc-danger: #fca5a5;
+  /* Lueur (action, découverte) et encres secondaires */
+  --oc-accent: #e0b654;
+  --oc-accent-strong: #c99c3c;
+  --oc-accent-soft: rgba(224, 182, 84, 0.14);
+  --oc-accent-line: #e0b654;
+  --oc-on-accent: #0c0a08;
+  --oc-gold: #e0b654;
+  --oc-gold-strong: #f0d488;
+  --oc-gold-soft: rgba(224, 182, 84, 0.1);
+  --oc-verdigris: #6fa392;
+  --oc-danger: #d9765e;
 
   /* Typographie */
-  --oc-font-display: 'Cinzel', Georgia, serif;
-  --oc-font-body: 'Inter', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --oc-font-display: 'IM Fell English SC', Georgia, serif;
+  --oc-font-italic: 'IM Fell English', Georgia, serif;
+  --oc-font-body: 'Newsreader', Georgia, 'Times New Roman', serif;
+  --oc-font-mono: 'Martian Mono', ui-monospace, 'SFMono-Regular', monospace;
 
-  /* Formes */
-  --oc-radius-sm: 12px;
-  --oc-radius: 16px;
-  --oc-radius-lg: 24px;
-  --oc-radius-pill: 999px;
+  /* Formes : angles vifs et biseaux, pas d'arrondis mous */
+  --oc-radius-sm: 0;
+  --oc-radius: 0;
+  --oc-radius-lg: 0;
+  --oc-radius-pill: 0;
+  --oc-bevel: 10px;
 
   /* Profondeur */
-  --oc-shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
-  --oc-shadow-accent: 0 6px 20px rgba(124, 58, 237, 0.45);
+  --oc-shadow: 0 24px 60px rgba(0, 0, 0, 0.55);
+  --oc-shadow-accent: 0 0 24px rgba(224, 182, 84, 0.18);
 
   /* Mouvement : des courbes « organiques » plutôt que linéaires */
   --oc-ease-out: cubic-bezier(0.22, 1, 0.36, 1);

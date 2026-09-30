@@ -1,188 +1,50 @@
 <template>
-  <div class="timer-container">
-    <button 
+  <div class="sand">
+    <!-- Déclencheur autonome (masqué quand la barre de modes s'en charge) -->
+    <button
       v-if="showTrigger"
-      class="timer-mode-button" 
+      type="button"
+      :class="['g-btn', 'g-btn--small', { 'g-btn--ghost': !isTimerActive }]"
+      :aria-pressed="isTimerActive ? 'true' : 'false'"
       @click="handleTimerButtonClick"
-      :class="{ 'active': isTimerActive }"
     >
-      <div class="timer-button-aura"></div>
-      
-      <!-- Structure du cadre ornemental -->
-      <div class="button-frame">
-        <!-- Coins ornementaux -->
-        <div class="frame-corner corner-tl">
-          <div class="corner-dot"></div>
-          <div class="frame-symbol symbol-tl">✧</div>
-        </div>
-        <div class="frame-corner corner-tr">
-          <div class="corner-dot"></div>
-          <div class="frame-symbol symbol-tr">✧</div>
-        </div>
-        <div class="frame-corner corner-bl">
-          <div class="corner-dot"></div>
-          <div class="frame-symbol symbol-bl">✧</div>
-        </div>
-        <div class="frame-corner corner-br">
-          <div class="corner-dot"></div>
-          <div class="frame-symbol symbol-br">✧</div>
-        </div>
-        
-        <!-- Ligne de séparation pour le titre -->
-        <div class="title-separator"></div>
-      </div>
-      
-      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 100">
-     
-        <!-- Effet de particules/étoiles scintillantes -->
-        <circle cx="40" cy="40" r="0.7" fill="#8a5cad" class="star-particle star1" />
-        <circle cx="260" cy="30" r="0.7" fill="#8a5cad" class="star-particle star2" />
-        <circle cx="60" cy="70" r="0.7" fill="#8a5cad" class="star-particle star3" />
-        <circle cx="240" cy="60" r="0.7" fill="#8a5cad" class="star-particle star4" />
-        <circle cx="150" cy="20" r="0.7" fill="#8a5cad" class="star-particle star5" />
-        <circle cx="110" cy="40" r="0.7" fill="#8a5cad" class="star-particle star6" />
-        <circle cx="190" cy="45" r="0.7" fill="#8a5cad" class="star-particle star7" />
-        <circle cx="85" cy="25" r="0.7" fill="#8a5cad" class="star-particle star8" />
-        <circle cx="220" cy="35" r="0.7" fill="#8a5cad" class="star-particle star9" />
-        
-        <!-- Effet de fumée subtile -->
-        <rect x="20" y="70" width="260" height="15" rx="7" fill="url(#timerSmkGradient)" opacity="0.3" class="smoke-effect smoke1" />
-        <rect x="20" y="65" width="260" height="12" rx="6" fill="url(#timerSmkGradient)" opacity="0.2" class="smoke-effect smoke2" />
-        
-        <!-- Lignes séparatrices -->
-        <line x1="60" y1="50" x2="100" y2="50" stroke="url(#timerSeparatorGradient)" stroke-width="1" class="separator-line" />
-        <line x1="200" y1="50" x2="240" y2="50" stroke="url(#timerSeparatorGradient)" stroke-width="1" class="separator-line" />
-        
-        <!-- Symboles mystiques dans les coins -->
-        <text x="30" y="30" font-size="10" fill="rgba(138, 92, 173, 0.5)" class="mystic-symbol symbol1">✧</text>
-        <text x="270" y="30" font-size="10" fill="rgba(138, 92, 173, 0.5)" class="mystic-symbol symbol2">✧</text>
-        <text x="30" y="70" font-size="10" fill="rgba(138, 92, 173, 0.5)" class="mystic-symbol symbol3">✧</text>
-        <text x="270" y="70" font-size="10" fill="rgba(138, 92, 173, 0.5)" class="mystic-symbol symbol4">✧</text>
-        
-        <!-- Texte TIMER avec effet de lueur -->
-        <text 
-          x="150" 
-          y="58" 
-          font-family="BenjaminFranklin, Arial" 
-          font-size="30" 
-          font-weight="bold" 
-          text-anchor="middle"
-          letter-spacing="6"
-          class="timer-text"
-        >TIMER</text>
-        
-        <!-- Définitions de dégradés et filtres -->
-        <defs>
-          <!-- Dégradé principal du bouton avec plus de profondeur -->
-          <linearGradient id="timerBtnGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-            <stop offset="0%" stop-color="#2a1c38" />
-            <stop offset="25%" stop-color="#1d1428" />
-            <stop offset="50%" stop-color="#150f1f" />
-            <stop offset="75%" stop-color="#1d1428" />
-            <stop offset="100%" stop-color="#2a1c38" />
-          </linearGradient>
-          
-          <!-- Dégradé pour la bordure avec couleurs plus vives -->
-          <linearGradient id="timerBrdGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-            <stop offset="0%" stop-color="rgba(178, 132, 213, 0.9)" />
-            <stop offset="50%" stop-color="rgba(138, 92, 173, 0.6)" />
-            <stop offset="100%" stop-color="rgba(178, 132, 213, 0.9)" />
-          </linearGradient>
-          
-          <!-- Dégradé pour la bordure intérieure -->
-          <linearGradient id="timerInnerBrdGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-            <stop offset="0%" stop-color="rgba(138, 92, 173, 0.1)" />
-            <stop offset="50%" stop-color="rgba(158, 112, 193, 0.3)" />
-            <stop offset="100%" stop-color="rgba(138, 92, 173, 0.1)" />
-          </linearGradient>
-          
-          <!-- Dégradé pour l'effet de brillance -->
-          <linearGradient id="timerShineGradient" x1="0%" y1="0%" x2="0%" y2="100%">
-            <stop offset="0%" stop-color="rgba(255, 255, 255, 0.2)" />
-            <stop offset="100%" stop-color="rgba(255, 255, 255, 0)" />
-          </linearGradient>
-          
-          <!-- Dégradé pour la ligne séparatrice -->
-          <linearGradient id="timerSeparatorGradient" x1="0%" y1="0%" x2="100%" y2="0%">
-            <stop offset="0%" stop-color="rgba(138, 92, 173, 0)" />
-            <stop offset="50%" stop-color="rgba(158, 112, 193, 0.5)" />
-            <stop offset="100%" stop-color="rgba(138, 92, 173, 0)" />
-          </linearGradient>
-          
-          <!-- Filtre pour l'effet de lueur du texte amélioré -->
-          <filter id="timerTxtGlow" x="-20%" y="-20%" width="140%" height="140%">
-            <feGaussianBlur in="SourceGraphic" stdDeviation="3" result="blur" />
-            <feComposite in="SourceGraphic" in2="blur" operator="over" />
-          </filter>
-          
-          <!-- Dégradé pour l'effet de fumée plus visible -->
-          <linearGradient id="timerSmkGradient" x1="0%" y1="0%" x2="100%" y2="0%">
-            <stop offset="0%" stop-color="rgba(138, 92, 173, 0)" />
-            <stop offset="50%" stop-color="rgba(178, 132, 213, 0.1)" />
-            <stop offset="100%" stop-color="rgba(138, 92, 173, 0)" />
-          </linearGradient>
-          
-          <!-- Dégradé pour l'effet de brume énergétique -->
-          <radialGradient id="timerEnergyGradient" cx="50%" cy="50%" r="50%" fx="50%" fy="50%">
-            <stop offset="0%" stop-color="rgba(178, 132, 213, 0.15)" />
-            <stop offset="70%" stop-color="rgba(138, 92, 173, 0.05)" />
-            <stop offset="100%" stop-color="rgba(90, 60, 120, 0)" />
-          </radialGradient>
-          
-          <!-- Dégradé de bordure -->
-          <linearGradient id="borderGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-            <stop offset="0%" stop-color="rgba(178, 132, 213, 0.9)" />
-            <stop offset="50%" stop-color="rgba(138, 92, 173, 0.6)" />
-            <stop offset="100%" stop-color="rgba(178, 132, 213, 0.9)" />
-          </linearGradient>
-          
-          <!-- Filtre pour le texte -->
-          <filter id="textGlow" x="-20%" y="-20%" width="140%" height="140%">
-            <feGaussianBlur in="SourceGraphic" stdDeviation="3" result="blur" />
-            <feComposite in="SourceGraphic" in2="blur" operator="over" />
-          </filter>
-        </defs>
-      </svg>
-      
-      <!-- Conteneur d'étoiles scintillantes -->
-      <div class="star-field">
-        <div class="star"></div>
-        <div class="star"></div>
-        <div class="star"></div>
-        <div class="star"></div>
-        <div class="star"></div>
-        <div class="star"></div>
-        <div class="star"></div>
-        <div class="star"></div>
-      </div>
+      L’Épreuve
     </button>
-    
-    <!-- Timer display avec bouton d'aide -->
-    <div v-if="isTimerActive" class="timer-display-group">
-      <div class="timer-display" role="timer" aria-label="Temps restant">
-        {{ formatTime(timeRemaining) }}
-      </div>
-      <button class="help-button" aria-label="Revoir la question" @click="showCurrentQuestion">?</button>
+
+    <!-- Pastille du sablier dans l'en-tête : temps restant + relecture de la question -->
+    <div v-if="isTimerActive" :class="['sand__chip', 'g-bevel', { 'sand__chip--low': isLow }]">
+      <svg class="sand__glass" width="14" height="22" viewBox="0 0 40 64" aria-hidden="true">
+        <path d="M4 2h32M4 62h32M8 2c0 16 12 20 12 30S8 46 8 62M32 2c0 16-12 20-12 30s12 14 12 30" fill="none" stroke="currentColor" stroke-width="3" stroke-opacity=".8"></path>
+        <path :d="sandTop" fill="var(--oc-gold)"></path>
+        <path :d="sandBottom" fill="var(--oc-gold)" fill-opacity=".55"></path>
+      </svg>
+      <span class="sand__time" role="timer" aria-label="Temps restant">{{ formatTime(timeRemaining) }}</span>
+      <button type="button" class="g-icon-btn sand__help" aria-label="Revoir la question" title="Revoir la question" @click="showCurrentQuestion">?</button>
     </div>
-  
-    <!-- Modal de confirmation d'arrêt du timer -->
-    <div v-if="showStopConfirmModal" class="stop-timer-modal">
-      <div class="stop-timer-modal-content">
-        <p>La question en cours ne sera pas sauvegardée. Voulez-vous fermer ?</p>
-        <div class="stop-timer-modal-buttons">
-          <button @click="confirmStopTimer" class="stop-timer-confirm-btn">Oui</button>
-          <button @click="cancelStopTimer" class="stop-timer-cancel-btn">Non</button>
-        </div>
-      </div>
-    </div>
+
+    <!-- Confirmation avant de quitter l'Épreuve -->
+    <GModal
+      v-if="showStopConfirmModal"
+      eyebrow="L’Épreuve"
+      title="Briser le sablier ?"
+      :width="460"
+      @close="cancelStopTimer"
+    >
+      <p class="sand__text">La question en cours ne sera pas gardée. Tes épreuves déjà réussies le restent.</p>
+      <template #actions>
+        <button type="button" class="g-btn g-btn--ghost" @click="cancelStopTimer">Continuer</button>
+        <button type="button" class="g-btn g-btn--danger" @click="confirmStopTimer">Quitter</button>
+      </template>
+    </GModal>
   </div>
 </template>
-  
+
 <script>
-import '@/assets/ComponentsStyle/TimerStyle/TimerModeButtonStyle.css';
+import GModal from '@/components/ui/GModal.vue';
   
 export default {
   name: 'TimerModeButton',
+  components: { GModal },
   props: {
     // Faux : le bouton est porté par la barre de modes (ModeSwitcher), seuls le chrono et la confirmation restent ici
     showTrigger: { type: Boolean, default: true }
@@ -199,6 +61,28 @@ export default {
         'Moyen': 240,     // 4 minutes
         'Difficile': 180  // 3 minutes
       }
+    }
+  },
+  computed: {
+    // Part du temps restant (1 = sablier plein), pour le sable de la pastille
+    sandRatio() {
+      const total = this.defaultTimers[this.selectedLevel] || 300;
+      return Math.max(0, Math.min(1, this.timeRemaining / total));
+    },
+    // Sable du haut : triangle qui se vide vers le col (y = 30)
+    sandTop() {
+      const y = 30 - 10 * this.sandRatio;
+      const half = 1 + 5 * this.sandRatio;
+      return `M${20 - half} ${y}L20 30L${20 + half} ${y}z`;
+    },
+    // Sable du bas : tas qui monte depuis la base (y = 60)
+    sandBottom() {
+      const y = 60 - 20 * (1 - this.sandRatio);
+      return `M9 60L20 ${y}L31 60z`;
+    },
+    // Dernière demi-minute : le temps passe à l'encre d'alerte
+    isLow() {
+      return this.timeRemaining <= 30;
     }
   },
   watch: {
@@ -311,3 +195,58 @@ export default {
   }
 };
 </script>
+
+<style scoped>
+.sand {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* Pastille compacte : tient dans une rangée d'en-tête (44 px) */
+.sand__chip {
+  --oc-bevel: 6px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  height: 44px;
+  padding-left: 12px;
+  color: var(--oc-text);
+  background: var(--oc-surface);
+  box-shadow: inset 0 0 0 1px var(--oc-line-strong);
+}
+.sand__glass {
+  flex-shrink: 0;
+  color: var(--oc-text);
+}
+.sand__time {
+  min-width: 4ch;
+  font-family: var(--oc-font-mono);
+  font-size: 14px;
+  letter-spacing: 0.06em;
+  font-variant-numeric: tabular-nums;
+  color: var(--oc-text-strong);
+}
+.sand__chip--low .sand__time { color: var(--oc-danger); }
+
+/* Le « ? » partage la bordure de la pastille */
+.sand__help {
+  box-shadow: inset 1px 0 0 var(--oc-line-strong);
+  clip-path: none;
+  font-family: var(--oc-font-display);
+  font-size: 19px;
+  color: var(--oc-gold);
+}
+
+.sand__text {
+  margin: 0;
+  font-size: 18px;
+  line-height: 1.55;
+  color: var(--oc-text);
+}
+
+@media (max-width: 859px) {
+  .sand__chip { gap: 6px; padding-left: 10px; }
+  .sand__time { font-size: 13px; }
+}
+</style>

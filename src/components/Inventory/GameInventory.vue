@@ -1,68 +1,59 @@
 <template>
-  <div class="inventory">
-    <div class="inventory__tools">
-      <label class="search">
-        <span class="oc-sr-only">Rechercher un élément</span>
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"></circle><path d="M20 20l-3.5-3.5"></path></svg>
-        <input v-model="query" type="search" :placeholder="`Rechercher parmi ${discoveredElements.length} éléments…`" autocomplete="off" />
+  <div class="registry">
+    <div class="registry__tools">
+      <label class="registry__search">
+        <span class="oc-sr-only">Chercher dans le registre</span>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" aria-hidden="true"><circle cx="11" cy="11" r="6.5"></circle><path d="M16 16l4.5 4.5"></path></svg>
+        <input v-model="query" type="search" :placeholder="`Chercher parmi ${discoveredElements.length} entrées…`" autocomplete="off" />
       </label>
-      <div v-if="families.length > 1" class="chips" role="group" aria-label="Filtrer par famille">
-        <button type="button" class="chip chip--tool" :aria-label="allCollapsed ? 'Tout déplier' : 'Tout plier'" @click="toggleAll">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path v-if="allCollapsed" d="M7 10l5 5 5-5"></path><path v-else d="M7 14l5-5 5 5"></path></svg>
-          {{ allCollapsed ? 'Déplier' : 'Plier' }}
-        </button>
-        <button type="button" :class="['chip', { 'chip--on': !family }]" :aria-pressed="!family" @click="family = null">Tout</button>
+      <div v-if="families.length > 1" class="registry__index" role="group" aria-label="Familles">
+        <button type="button" class="registry__fold" @click="toggleAll">{{ allCollapsed ? 'Tout déplier' : 'Tout plier' }}</button>
+        <button type="button" :aria-pressed="!family" @click="family = null">Tout le registre</button>
         <button
           v-for="f in families"
           :key="f.key"
           type="button"
-          :class="['chip', { 'chip--on': family === f.key }]"
-          :style="{ '--c': f.rgb }"
           :aria-pressed="family === f.key"
           @click="family = family === f.key ? null : f.key"
         >
-          <span class="chip__dot" aria-hidden="true"></span>{{ f.label }}
+          <i>{{ f.num }}</i>{{ f.label }}
         </button>
       </div>
     </div>
 
-    <section v-for="group in visibleGroups" :key="group.key" class="family" :style="{ '--c': group.rgb }">
-      <button
-        type="button"
-        class="family__head"
-        :aria-expanded="isOpen(group.key)"
-        @click="toggle(group.key)"
-      >
-        <svg class="family__chevron" :class="{ 'is-closed': !isOpen(group.key) }" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 10l5 5 5-5"></path></svg>
+    <section v-for="group in visibleGroups" :key="group.key" class="family">
+      <button type="button" class="family__head" :aria-expanded="isOpen(group.key)" @click="toggle(group.key)">
+        <span class="family__num">{{ group.num }}</span>
         <h2 class="family__title">{{ group.label }}</h2>
-        <span class="family__count">{{ group.found }} / {{ group.total }}</span>
-        <span class="family__bar" aria-hidden="true"><span :style="{ width: group.progress + '%' }"></span></span>
+        <span class="family__dots" aria-hidden="true"></span>
+        <span :class="['family__count', { 'is-full': group.found === group.total }]">{{ pad(group.found) }} / {{ pad(group.total) }}</span>
       </button>
-      <div v-show="isOpen(group.key)" class="grid">
+      <div v-show="isOpen(group.key)" class="plates">
         <button
           v-for="element in group.elements"
           :key="element"
           type="button"
-          :class="['card', { 'card--fresh': element === freshElement }]"
+          :class="['plate', 'g-bevel', { 'plate--fresh': element === freshElement }]"
           draggable="true"
           @dragstart="startDrag($event, element)"
           @click="select($event, element)"
         >
-          <span class="card__emoji" aria-hidden="true">{{ getElementEmoji(element) }}</span>
-          <span class="card__name">{{ element }}</span>
+          <span class="plate__no">Pl. {{ pad(entryNumber[element]) }}</span>
+          <span :class="['plate__ink', element === freshElement ? 'g-ink--glow' : 'g-ink']" aria-hidden="true">{{ getElementEmoji(element) }}</span>
+          <span class="plate__name">{{ element }}</span>
         </button>
       </div>
     </section>
 
-    <p v-if="!visibleGroups.length" class="inventory__empty">
-      {{ query ? `Aucun élément ne correspond à « ${query} ».` : 'Aucun élément pour l’instant.' }}
+    <p v-if="!visibleGroups.length" class="g-italic registry__empty">
+      {{ query ? `Aucune entrée ne répond à « ${query} ».` : 'Le registre est encore vierge.' }}
     </p>
   </div>
 </template>
 
 <script>
 import { BASE_CATEGORY } from '@/utils/gameConstants';
-import { familyColor } from '@/utils/eras';
+import { roman } from '@/utils/roman';
 
 // Familles pliées : simple confort d'affichage, mémorisé sur cet appareil
 const COLLAPSED_KEY = 'oc-collapsed-families';
@@ -85,7 +76,7 @@ function normalize(text) {
   return String(text).normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase();
 }
 
-// Inventaire : éléments découverts, groupés par famille (aucun état métier ici)
+// Registre : éléments découverts, en planches groupées par famille (aucun état métier ici)
 export default {
   name: 'GameInventory',
   props: {
@@ -101,22 +92,26 @@ export default {
     return { query: '', family: null, collapsed: readCollapsed() };
   },
   computed: {
+    // Numéro d'entrée au registre : l'ordre de découverte
+    entryNumber() {
+      return Object.fromEntries(this.discoveredElements.map((name, i) => [name, i + 1]));
+    },
     groups() {
       // En Timer : l'inventaire de la question forme une seule famille
       if (this.isTimerMode) {
-        return [this.group('Éléments du défi', this.discoveredElements, this.discoveredElements)];
+        return [this.group('Éléments du défi', this.discoveredElements, this.discoveredElements, 0)];
       }
       // Une famille s'affiche dès qu'un de ses éléments est découvert
       const discovered = new Set(this.discoveredElements);
       return Object.entries(this.categories)
-        .map(([name, elements]) => this.group(name, elements, elements.filter(e => discovered.has(e))))
+        .map(([name, elements], i) => this.group(name, elements, elements.filter(e => discovered.has(e)), i))
         .filter(g => g.key === BASE_CATEGORY || g.found > 0);
     },
     allCollapsed() {
       return this.groups.length > 0 && this.groups.every(g => this.collapsed[g.key]);
     },
     families() {
-      return this.groups.map(({ key, label, rgb }) => ({ key, label, rgb }));
+      return this.groups.map(({ key, label, num }) => ({ key, label, num }));
     },
     visibleGroups() {
       const q = normalize(this.query.trim());
@@ -135,7 +130,7 @@ export default {
     freshElement(name) {
       if (!name) return;
       this.$nextTick(() => {
-        const el = this.$el.querySelector('.card--fresh');
+        const el = this.$el.querySelector('.plate--fresh');
         el?.scrollIntoView?.({ block: 'nearest', behavior: 'smooth' });
       });
     }
@@ -154,27 +149,28 @@ export default {
       this.collapsed = Object.fromEntries(this.groups.map(g => [g.key, collapse]));
       saveCollapsed(this.collapsed);
     },
-    group(name, all, found) {
-      const color = familyColor(name);
+    group(name, all, found, index) {
       return {
         key: name,
+        num: roman(index + 1),
         label: name.replace(/_/g, ' '),
-        rgb: color.join(', '),
         elements: found,
         found: found.length,
-        total: all.length,
-        progress: all.length ? (found.length / all.length) * 100 : 0
+        total: all.length
       };
     },
+    pad(n) {
+      return String(n ?? 0).padStart(2, '0');
+    },
     getElementEmoji(element) {
-      return this.elementEmojis[element] || '❓';
+      return this.elementEmojis[element] || '❔';
     },
     startDrag(event, element) {
       event.dataTransfer.setData('text/plain', element);
       event.dataTransfer.effectAllowed = 'copy';
     },
     select(event, element) {
-      // Le rectangle de la carte sert à animer l'élément jusqu'à la zone de création
+      // Le rectangle de la planche sert à animer l'élément jusqu'à l'Athanor
       this.$emit('selectResource', element, event.currentTarget.getBoundingClientRect());
     }
   }
@@ -182,194 +178,189 @@ export default {
 </script>
 
 <style scoped>
-.inventory {
+.registry {
   display: flex;
   flex-direction: column;
-  gap: 18px;
+  gap: 22px;
   min-width: 0;
 }
 
-.inventory__tools {
+.registry__tools {
   position: sticky;
   top: 0;
   z-index: 2;
   display: flex;
   flex-direction: column;
-  gap: 10px;
-  padding: 10px 0;
-  background: linear-gradient(180deg, rgba(7, 6, 13, 0.94) 75%, rgba(7, 6, 13, 0));
+  gap: 12px;
+  padding: 12px 0 10px;
+  background: linear-gradient(180deg, rgba(12, 10, 8, 0.96) 80%, rgba(12, 10, 8, 0));
 }
-
-.search {
+.registry__search {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 10px;
   height: 44px;
-  padding: 0 14px;
-  border-radius: 14px;
-  background: var(--oc-panel);
-  border: 1px solid var(--oc-line);
+  border-bottom: 1px solid var(--oc-line-strong);
   color: var(--oc-text-faint);
   transition: border-color var(--oc-fast);
 }
-.search:focus-within { border-color: var(--oc-accent-line); }
-.search input {
+.registry__search:focus-within { border-color: var(--oc-accent-line); }
+.registry__search input {
   flex: 1;
   min-width: 0;
   height: 100%;
   border: 0;
-  background: transparent;
-  color: var(--oc-text);
-  font: inherit;
-  font-size: 14px;
   outline: none;
+  background: transparent;
+  font-family: var(--oc-font-italic);
+  font-style: italic;
+  font-size: 17px;
+  color: var(--oc-text-strong);
 }
-.search input::placeholder { color: var(--oc-text-faint); }
+.registry__search input::placeholder { color: var(--oc-text-faint); }
 
-.chips {
+.registry__index {
   display: flex;
-  gap: 8px;
+  gap: 4px 18px;
   overflow-x: auto;
   scrollbar-width: none;
 }
-.chips::-webkit-scrollbar { display: none; }
-.chip {
-  --c: 196, 181, 253;
+.registry__index::-webkit-scrollbar { display: none; }
+.registry__index button {
   appearance: none;
   flex-shrink: 0;
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  height: 36px;
-  padding: 0 14px;
-  border-radius: var(--oc-radius-pill);
-  border: 1px solid var(--oc-line);
-  background: var(--oc-panel);
-  color: var(--oc-text-muted);
-  font-size: 13px;
-  font-weight: 500;
+  min-height: 36px;
+  padding: 0;
+  border: 0;
+  background: none;
   cursor: pointer;
-  transition: background var(--oc-fast), color var(--oc-fast), border-color var(--oc-fast);
+  display: flex;
+  align-items: baseline;
+  gap: 6px;
+  font-size: 14px;
+  color: var(--oc-text-muted);
+  white-space: nowrap;
 }
-.chip__dot { width: 8px; height: 8px; border-radius: 50%; background: rgb(var(--c)); }
-.chip--on { background: var(--oc-text); color: #140f24; border-color: var(--oc-text); }
-.chip--tool { color: var(--oc-text); }
+.registry__index button i {
+  font-family: var(--oc-font-mono);
+  font-style: normal;
+  font-size: 9px;
+  color: var(--oc-text-faint);
+}
+.registry__index button[aria-pressed='true'] {
+  color: var(--oc-text-strong);
+  text-decoration: underline;
+  text-decoration-color: var(--oc-gold);
+  text-underline-offset: 6px;
+}
+.registry__index .registry__fold {
+  font-family: var(--oc-font-mono);
+  font-size: 10px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--oc-text);
+}
 
 .family {
-  /* Voile léger derrière chaque famille : lisible même pliée, le fond vivant reste visible autour */
-  padding: 10px 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  /* Voile léger : lisible même pliée, le fond vivant reste visible autour */
+  padding: 8px 12px;
   margin: 0 -12px;
-  border-radius: var(--oc-radius);
-  background: rgba(7, 6, 13, 0.55);
+  background: rgba(12, 10, 8, 0.55);
 }
 .family__head {
   appearance: none;
   width: 100%;
-  display: grid;
-  grid-template-columns: auto 1fr auto;
-  align-items: center;
-  gap: 6px 10px;
-  margin: 0;
-  padding: 4px 0;
+  min-height: 40px;
+  padding: 0;
   border: 0;
   background: none;
-  color: inherit;
-  text-align: left;
   cursor: pointer;
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
+  text-align: left;
+  color: inherit;
 }
-.family__chevron { color: var(--oc-text-muted); transition: transform var(--oc-fast) var(--oc-ease-out); }
-.family__chevron.is-closed { transform: rotate(-90deg); }
-.family__head:hover .family__title { color: #fff; }
-.family__head[aria-expanded='true'] { margin-bottom: 10px; }
+.family__num { min-width: 24px; font-family: var(--oc-font-display); font-size: 15px; color: var(--oc-gold); }
 .family__title {
   margin: 0;
   font-family: var(--oc-font-display);
-  font-size: 15px;
-  font-weight: 600;
-  letter-spacing: 0.5px;
+  font-weight: 400;
+  font-size: 19px;
+  letter-spacing: 0.04em;
   color: var(--oc-text-strong);
-}
-.family__count { font-size: 12px; color: var(--oc-text-muted); font-variant-numeric: tabular-nums; }
-.family__bar {
-  grid-column: 2 / -1;
-  height: 3px;
-  border-radius: 3px;
-  background: rgba(255, 255, 255, 0.06);
+  white-space: nowrap;
   overflow: hidden;
+  text-overflow: ellipsis;
 }
-.family__bar span {
-  display: block;
-  height: 100%;
-  border-radius: inherit;
-  background: rgb(var(--c));
-  transition: width var(--oc-slow) var(--oc-ease-out);
-}
+.family__dots { flex: 1; min-width: 16px; border-bottom: 1px dotted var(--oc-line-strong); transform: translateY(-4px); }
+.family__count { font-family: var(--oc-font-mono); font-size: 11px; color: var(--oc-text-muted); }
+.family__count.is-full { color: var(--oc-gold); }
+.family__head[aria-expanded='false'] .family__title { color: var(--oc-text-muted); }
+.family__head:hover .family__title { color: var(--oc-gold-strong); }
 
-.grid {
+.plates {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(84px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(96px, 1fr));
   gap: 10px;
 }
-
-.card {
+.plate {
   appearance: none;
   position: relative;
-  min-height: 84px;
-  padding: 10px 4px 8px;
-  border-radius: 18px;
-  border: 1px solid rgba(var(--c), 0.16);
-  /* Halo coloré de la famille derrière l'emoji */
-  background: radial-gradient(90% 70% at 50% 30%, rgba(var(--c), 0.16), rgba(var(--c), 0) 70%), var(--oc-surface);
-  color: var(--oc-text);
+  min-height: 104px;
+  padding: 16px 6px 10px;
+  border: 0;
+  cursor: grab;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 6px;
-  font-size: 12px;
-  font-weight: 500;
-  cursor: pointer;
+  gap: 8px;
+  color: var(--oc-text);
+  background: linear-gradient(180deg, rgba(233, 223, 200, 0.05), rgba(233, 223, 200, 0.015));
+  box-shadow: inset 0 0 0 1px var(--oc-line);
   user-select: none;
   -webkit-user-select: none;
-  transition: transform var(--oc-fast) var(--oc-ease-out), background var(--oc-fast), border-color var(--oc-fast),
-    box-shadow var(--oc-fast);
+  transition: background var(--oc-fast), box-shadow var(--oc-fast), transform var(--oc-fast) var(--oc-ease-out);
 }
-.card:hover {
-  transform: translateY(-2px);
-  border-color: rgba(var(--c), 0.45);
-  box-shadow: 0 8px 22px rgba(var(--c), 0.12);
-}
-.card:hover .card__emoji { animation: wiggle 0.5s var(--oc-ease-spring); }
-.card:active { transform: scale(0.95); }
-.card__emoji { font-size: 30px; line-height: 1; }
-.card__name { max-width: 100%; padding: 0 4px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-.card--fresh { animation: fresh 1.6s var(--oc-ease-out); border-color: rgba(250, 204, 21, 0.6); }
-
-.inventory__empty {
-  margin: 24px 0;
-  text-align: center;
-  font-size: 13px;
+.plate:hover { background: var(--oc-surface-hover); box-shadow: inset 0 0 0 1px var(--oc-line-strong); }
+.plate:hover .plate__ink { animation: quiver 0.5s var(--oc-ease-spring); }
+.plate:active { transform: scale(0.96); }
+.plate__no {
+  position: absolute;
+  top: 6px;
+  right: 10px;
+  font-family: var(--oc-font-mono);
+  font-size: 8px;
+  letter-spacing: 0.06em;
   color: var(--oc-text-faint);
 }
+.plate__ink { font-size: 30px; line-height: 1; }
+.plate__name { max-width: 100%; padding: 0 4px; font-size: 14px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.plate--fresh { box-shadow: inset 0 0 0 1px rgba(224, 182, 84, 0.75), var(--oc-shadow-accent); animation: fresh 1.6s var(--oc-ease-out); }
+.plate--fresh .plate__no { color: var(--oc-gold); }
 
-/* Mobile : cartes plus compactes, 4 par ligne sur la plupart des téléphones */
-@media (max-width: 859px) {
-  .inventory { gap: 12px; }
-  .grid { grid-template-columns: repeat(auto-fill, minmax(72px, 1fr)); gap: 8px; }
-  .card { min-height: 72px; padding: 8px 2px 6px; border-radius: 14px; gap: 4px; font-size: 11px; }
-  .card__emoji { font-size: 24px; }
-  .search { height: 40px; }
-  .chip { height: 32px; padding: 0 12px; font-size: 12px; }
-}
+.registry__empty { margin: 24px 0; text-align: center; }
 
-@keyframes wiggle {
-  0%, 100% { transform: rotate(0) scale(1); }
-  35% { transform: rotate(-8deg) scale(1.12); }
-  70% { transform: rotate(6deg) scale(1.05); }
+@keyframes quiver {
+  35% { transform: rotate(-7deg) scale(1.1); }
+  70% { transform: rotate(5deg) scale(1.04); }
 }
 @keyframes fresh {
-  0% { box-shadow: 0 0 0 0 rgba(250, 204, 21, 0.7); transform: scale(0.85); }
-  40% { transform: scale(1.06); }
-  100% { box-shadow: 0 0 0 16px rgba(250, 204, 21, 0); transform: none; }
+  0% { transform: scale(0.88); }
+  40% { transform: scale(1.05); }
+  100% { transform: none; }
+}
+
+/* Mobile : planches compactes, 4 par ligne sur la plupart des téléphones */
+@media (max-width: 859px) {
+  .registry { gap: 14px; }
+  .plates { grid-template-columns: repeat(auto-fill, minmax(74px, 1fr)); gap: 8px; }
+  .plate { min-height: 82px; padding: 14px 2px 6px; gap: 5px; --oc-bevel: 8px; }
+  .plate__ink { font-size: 24px; }
+  .plate__name { font-size: 12px; }
 }
 </style>

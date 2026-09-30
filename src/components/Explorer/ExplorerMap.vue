@@ -1,51 +1,100 @@
 <template>
-  <div class="explorer-container">
-    <div class="energy-info">
-      <MapSelector
-        :current-map-id="currentMapId"
-        :unlocked-maps="unlockedMaps"
-        :regions="regions"
-        @map-change="handleMapChange"
-      />
+  <div class="xp">
+    <header class="xp__head">
+      <div class="xp__heading">
+        <span class="g-mono">Expédition · {{ exploredCount }} {{ exploredCount > 1 ? 'régions explorées' : 'région explorée' }} sur {{ regions.length }}</span>
+        <h1 class="g-title xp__title">Carte {{ toRoman(currentMapId) }} <span class="g-italic xp__title-sub">— {{ mapName }}</span></h1>
+      </div>
+      <div class="xp__tools">
+        <MapSelector
+          :current-map-id="currentMapId"
+          :unlocked-maps="unlockedMaps"
+          :regions="regions"
+          @map-change="handleMapChange"
+        />
+        <button type="button" class="g-btn g-btn--ghost g-btn--small xp__quit" @click="showExitConfirmationModal = true">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" aria-hidden="true"><path d="M14 4H5v16h9M10 12h10M16 8l4 4-4 4"></path></svg>
+          Quitter l'Expédition
+        </button>
+      </div>
+    </header>
+    <hr class="g-rule" />
 
-      <!-- Close Button with Tooltip -->
-      <button 
-        class="back-btn-explorer back-btn-explorer-tooltip" 
-        @click="showExitConfirmationModal = true"
-      >
-        X
-        <span class="tooltip">Quitter le mode Explorer</span>
-      </button>
-
-      <EnergyDisplayExplorer 
-        :energy="energy"
-        :maxEnergy="maxEnergy"
-        :nextEnergyIn="nextEnergyIn"
-        :userCoins="userCoins"
-        :showBuyButton="true"
-        :energyCost="10"
-        @energy-updated="handleEnergyUpdated"
-        @coins-updated="handleCoinsUpdated"
-        @show-alert="showAlert"
-      />
-    </div>
-    
     <ExitConfirmationModal
       :visible="showExitConfirmationModal"
       @confirm="confirmExit"
       @cancel="showExitConfirmationModal = false"
     />
 
-    <div class="map-container">
-      <img :src="getCurrentMapImage()" alt="Carte d'exploration" class="map-image" />
-      
-      <RegionMarker
-        v-for="region in regions"
-        :key="region.id"
-        :region="region"
-        :isUnlocked="isRegionUnlocked(region)"
-        @region-click="selectRegion(region)"
-      />
+    <div class="xp__body">
+      <!-- Carte : image de fond, runes des régions par-dessus -->
+      <section class="xp__map g-panel" aria-label="Carte">
+        <div class="xp__scroll">
+          <div class="xp__frame">
+            <img :src="getCurrentMapImage()" alt="" class="xp__img" />
+            <RegionMarker
+              v-for="region in regions"
+              :key="region.id"
+              :region="region"
+              :isUnlocked="isRegionUnlocked(region)"
+              @region-click="selectRegion(region)"
+            />
+            <span class="g-mono xp__legend">Carte {{ toRoman(currentMapId) }} — {{ mapName }}</span>
+            <div v-if="loading" class="xp__loading" role="status">
+              <span class="xp__spin" aria-hidden="true"></span>
+              <span class="g-mono">La carte se déplie…</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Carnet de route : souffle, régions, prochaine étape -->
+      <aside class="xp__log" aria-label="Carnet de route">
+        <h2 class="g-display xp__log-title">Carnet de route</h2>
+        <EnergyDisplayExplorer 
+          :energy="energy"
+          :maxEnergy="maxEnergy"
+          :nextEnergyIn="nextEnergyIn"
+          :userCoins="userCoins"
+          :showBuyButton="true"
+          :energyCost="10"
+          @energy-updated="handleEnergyUpdated"
+          @coins-updated="handleCoinsUpdated"
+          @show-alert="showAlert"
+        />
+        <hr class="g-rule" />
+        <ul v-if="sortedRegions.length" class="xp__regions">
+          <li v-for="region in sortedRegions" :key="region.id">
+            <button
+              type="button"
+              class="xp__region"
+              :class="`xp__region--${regionStatus(region).key}`"
+              @click="selectRegion(region)"
+            >
+              <span class="xp__region-name">{{ region.name }}</span>
+              <span class="g-mono xp__region-state">{{ regionStatus(region).label }}</span>
+            </button>
+          </li>
+        </ul>
+        <p v-else-if="!loading" class="g-italic xp__empty">Aucune région n'est encore tracée sur cette carte.</p>
+
+        <template v-if="nextRegion">
+          <hr class="g-rule" />
+          <figure v-if="nextRegionQuote" class="xp__quote">
+            <blockquote class="g-italic">« {{ nextRegionQuote }} »</blockquote>
+            <figcaption class="g-mono">{{ nextRegion.name }}</figcaption>
+          </figure>
+          <button
+            type="button"
+            class="g-btn xp__go"
+            :class="{ 'g-btn--danger': nextRegion.is_boss }"
+            @click="selectRegion(nextRegion)"
+          >
+            <template v-if="nextRegion.is_boss">Affronter le gardien</template>
+            <template v-else>Explorer · {{ nextRegionCost }} de souffle</template>
+          </button>
+        </template>
+      </aside>
     </div>
     
     <NpcDialog 
@@ -101,7 +150,6 @@
 </template>
 
 <script>
-import '@/assets/ComponentsStyle/ExplorerStyle/ExplorerMapStyle.css';
 import explorerService from '@/services/explorerService';
 import mapUtils from '@/utils/mapUtils';
 import NpcDialog from './NpcDialog.vue';
@@ -114,6 +162,7 @@ import MapSelector from './MapSelector.vue';
 import ExitConfirmationModal from './ExitConfirmationModal.vue';
 import notificationService from '@/services/notificationService';
 import axios from 'axios';
+import { roman as toRoman } from '@/utils/roman';
 
 export default {
   name: 'ExplorerMap',
@@ -194,6 +243,28 @@ export default {
         !region.completed && 
         this.isRegionUnlocked(region)
       );
+    },
+
+    // Carnet de route (affichage seul) : régions dans l'ordre, prochaine étape et sa parole
+    sortedRegions() {
+      return [...this.regions].sort((a, b) => a.id - b.id);
+    },
+    exploredCount() {
+      return this.regions.filter(r => r.completed).length;
+    },
+    mapName() {
+      return mapUtils.getMapName(this.currentMapId, this.regions);
+    },
+    nextRegion() {
+      return this.sortedRegions.find(r => !r.completed && this.isRegionUnlocked(r)) || null;
+    },
+    nextRegionCost() {
+      if (!this.nextRegion || this.nextRegion.is_boss) return 0;
+      return this.regionChallenges[this.nextRegion.id]?.energyCost || 2;
+    },
+    nextRegionQuote() {
+      const dialog = this.nextRegion && this.regionChallenges[this.nextRegion.id]?.dialog;
+      return Array.isArray(dialog) && dialog.length ? dialog[0] : '';
     }
   },
   watch: {
@@ -206,6 +277,17 @@ export default {
     }
   },
   methods: {
+    toRoman,
+
+    // État d'une région pour le Carnet de route
+    regionStatus(region) {
+      if (region.completed) return { key: 'done', label: 'explorée' };
+      const unlocked = this.isRegionUnlocked(region);
+      if (region.is_boss) return { key: 'boss', label: unlocked ? 'gardien' : 'gardien · scellée' };
+      if (unlocked) return { key: 'open', label: 'à parcourir' };
+      return { key: 'locked', label: 'scellée' };
+    },
+
     suspendActivity() {
       if (this.energyTimer) {
         clearInterval(this.energyTimer);
@@ -322,7 +404,7 @@ export default {
         this.dataLoaded = true;
       } catch (error) {
         console.error('Erreur lors du chargement des données Explorer:', error);
-        notificationService.error("Impossible de charger l'Explorer. Réessayez dans un instant.");
+        notificationService.error("Impossible d'ouvrir l'Expédition. Réessaie dans un instant.");
       } finally {
         this.loading = false;
       }
@@ -530,7 +612,7 @@ export default {
       if (!this.active) return;
       
       if (!this.isRegionUnlocked(region)) {
-        notificationService.warning('Cette région est verrouillée. Complétez les régions précédentes pour la débloquer.');
+        notificationService.warning('Cette région est scellée. Explore les régions précédentes pour l\'ouvrir.');
         return;
       }
       
@@ -570,7 +652,7 @@ export default {
           image: 'npc1.png',
           position: 'left',
           dialog: defaultDialog,
-          actionText: "Commencer à crafter"
+          actionText: "Accepter le défi"
         };
       }
     },
@@ -623,7 +705,7 @@ export default {
         const energyCost = this.regionChallenges[region.id]?.energyCost || 2;
         
         if (this.energy < energyCost) {
-          notificationService.warning(`Vous n'avez pas assez d'énergie pour explorer cette région (coût : ${energyCost} ⚡)`);
+          notificationService.warning(`Souffle insuffisant : il te faut ${energyCost} pour cette région.`);
           return;
         }
         
@@ -658,7 +740,7 @@ export default {
 
     handlePlayerDefeated() {
       this.showCraftModal = false;
-      notificationService.warning('Le boss vous a vaincu ! Reprenez des forces et retentez votre chance depuis la carte.', 5000);
+      notificationService.warning('Le gardien t\'a vaincu. Reprends des forces et retente ta chance depuis la carte.', 5000);
     },
 
     async handleChallengeCompleted({ region, isBoss }) {
@@ -999,7 +1081,7 @@ export default {
             image: this.currentBoss.bossImage || 'boss-1-anim.gif',
             position: this.currentBoss.bossPosition || 'center',
             dialog: this.currentBoss.dialog,
-            actionText: this.currentBoss.actionText || "Affronter le boss"
+            actionText: this.currentBoss.actionText || "Affronter le gardien"
           };
         }, 500);
       } 
@@ -1077,3 +1159,137 @@ export default {
   }
 };
 </script>
+<style scoped>
+.xp {
+  position: relative;
+  z-index: 1;
+  max-width: 1480px;
+  margin: 0 auto;
+  padding: 8px var(--oc-gutter) 32px;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+/* ---------- En-tête ---------- */
+.xp__head {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  flex-wrap: wrap;
+  gap: 16px 28px;
+}
+.xp__heading { display: flex; flex-direction: column; gap: 6px; min-width: 0; }
+.xp__title { font-size: 28px; }
+.xp__title-sub { font-size: 22px; }
+.xp__tools { display: flex; align-items: flex-end; flex-wrap: wrap; gap: 16px 20px; }
+.xp__quit { min-height: 44px; }
+
+/* ---------- Carte et carnet ---------- */
+.xp__body {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 380px;
+  gap: 36px;
+  align-items: start;
+}
+.xp__map { padding: 10px; }
+.xp__scroll { overflow: hidden; }
+/* Même cadre 16:9 que les positions de régions (en %) : l'image entière y est contenue */
+.xp__frame {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  background: #11100c;
+}
+.xp__img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  filter: sepia(0.35) saturate(0.7) brightness(0.78) contrast(1.05);
+}
+.xp__legend {
+  position: absolute;
+  left: 16px;
+  bottom: 14px;
+  color: var(--oc-text-muted);
+  text-shadow: 0 1px 6px var(--oc-bg);
+  pointer-events: none;
+}
+.xp__loading {
+  position: absolute;
+  inset: 0;
+  z-index: 20;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  background: rgba(12, 10, 8, 0.6);
+}
+/* Indicateur d'attente : un losange au trait qui tourne */
+.xp__spin {
+  width: 14px;
+  height: 14px;
+  border: 1px solid var(--oc-line-strong);
+  border-top-color: var(--oc-gold);
+  animation: xp-spin 0.9s linear infinite;
+}
+@keyframes xp-spin {
+  from { transform: rotate(45deg); }
+  to { transform: rotate(405deg); }
+}
+
+.xp__log { display: flex; flex-direction: column; gap: 20px; min-width: 0; }
+.xp__log-title { margin: 0; font-size: 26px; }
+.xp__regions { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; }
+.xp__region {
+  appearance: none;
+  width: 100%;
+  min-height: 44px;
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 12px;
+  padding: 10px 0;
+  border: 0;
+  background: none;
+  cursor: pointer;
+  text-align: left;
+  color: var(--oc-text-strong);
+  font-size: 17px;
+}
+.xp__region:hover .xp__region-name { text-decoration: underline; text-decoration-color: var(--oc-accent-line); text-underline-offset: 5px; }
+.xp__region-state { flex-shrink: 0; text-align: right; }
+.xp__region--done .xp__region-state { color: var(--oc-verdigris); }
+.xp__region--open .xp__region-state { color: var(--oc-gold); }
+.xp__region--boss .xp__region-state { color: var(--oc-danger); }
+.xp__region--locked { color: var(--oc-text-faint); }
+.xp__empty { margin: 0; font-size: 16px; }
+
+.xp__quote {
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 18px;
+  box-shadow: inset 0 0 0 1px var(--oc-line);
+}
+.xp__quote blockquote { margin: 0; font-size: 17px; line-height: 1.5; color: var(--oc-text); }
+.xp__go { align-self: flex-start; }
+
+/* ---------- Mobile : la carte se fait glisser, le carnet passe dessous ---------- */
+@media (max-width: 859px) {
+  .xp { padding-top: 0; gap: 14px; }
+  .xp__title { font-size: 24px; }
+  .xp__title-sub { font-size: 18px; }
+  .xp__tools { width: 100%; justify-content: space-between; }
+  .xp__body { grid-template-columns: minmax(0, 1fr); gap: 24px; }
+  .xp__map { padding: 6px; }
+  .xp__scroll { overflow-x: auto; overscroll-behavior-x: contain; }
+  .xp__frame { width: auto; min-width: 640px; }
+  .xp__log { padding: 16px; background: var(--oc-surface-strong); box-shadow: 0 -1px 0 var(--oc-line-strong); }
+  .xp__go { align-self: stretch; }
+}
+</style>

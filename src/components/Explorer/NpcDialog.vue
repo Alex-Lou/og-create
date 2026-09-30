@@ -1,134 +1,97 @@
 <template>
-  <div class="npc-dialog-overlay" @click.self="closeDialog">
-    <div class="npc-dialog-container">
-      <!-- Cadre décoratif avec coins ornementés -->
-      <div class="dialog-frame">
-        <div class="frame-corner corner-tl">
-          <div class="corner-dot"></div>
-          <div class="frame-symbol symbol-tl">✧</div>
+  <GModal
+    :width="showIntro ? 600 : 1040"
+    :eyebrow="showIntro ? 'Rencontre' : ''"
+    :title="showIntro ? (regionData.name || 'Région inconnue') : ''"
+    :label="regionData.name || 'Rencontre'"
+    @close="closeDialog"
+  >
+    <!-- Seuil de la région : description et progression -->
+    <div v-if="showIntro" class="npc-intro">
+      <p class="npc-intro__text">{{ regionData.description || defaultRegionDescription }}</p>
+      <div v-if="regionData.progress !== undefined" class="npc-progress">
+        <div class="npc-progress__row">
+          <span class="g-mono">Progression</span>
+          <span class="g-mono npc-progress__value">{{ regionData.progress }} %</span>
         </div>
-        <div class="frame-corner corner-tr">
-          <div class="corner-dot"></div>
-          <div class="frame-symbol symbol-tr">✧</div>
-        </div>
-        <div class="frame-corner corner-bl">
-          <div class="corner-dot"></div>
-          <div class="frame-symbol symbol-bl">✧</div>
-        </div>
-        <div class="frame-corner corner-br">
-          <div class="corner-dot"></div>
-          <div class="frame-symbol symbol-br">✧</div>
-        </div>
+        <div class="g-bar npc-progress__bar"><span :style="{ width: `${regionData.progress}%` }"></span></div>
       </div>
-      
-      <!-- Affichage de l'introduction de la région -->
-      <div v-if="showIntro" class="region-intro">
-        <h3>{{ regionData.name || 'Region inconnue' }}</h3>
-        <p>{{ regionData.description || defaultRegionDescription }}</p>
-        
-        <div class="region-progress" v-if="regionData.progress !== undefined">
-          <div class="progress-label">Progression: {{ regionData.progress }}%</div>
-          <div class="progress-bar">
-            <div class="progress-fill" :style="{ width: `${regionData.progress}%` }">
-              <!-- Particules animées dans la barre de progression -->
-              <div class="particle particle-5"></div>
-              <div class="particle particle-10"></div>
-              <div class="particle particle-15"></div>
-              <div class="particle particle-20"></div>
-              <div class="particle particle-25"></div>
-              <div class="particle particle-30"></div>
-              <div class="particle particle-35"></div>
-              <div class="particle particle-40"></div>
-              <div class="particle particle-45"></div>
-              <div class="particle particle-50"></div>
-              <div class="particle particle-55"></div>
-              <div class="particle particle-70"></div>
-              <div class="particle particle-75"></div>
-              <div class="particle particle-80"></div>
-              <div class="particle particle-85"></div>
-              <div class="particle particle-90"></div>
-              <div class="particle particle-95"></div>
-            </div>
-          </div>
-        </div>
-        <div class="region-actions">
-          <button class="explore-btn" @click="startExploring">
-            {{ dynamicExploreButtonText }}
-          </button>
-          <button @click="closeDialog" class="close-btn">
-            {{ dynamicCloseButtonText }}
-          </button>
-        </div>
+      <div class="npc-actions">
+        <button type="button" class="g-btn g-btn--ghost" @click="closeDialog">{{ dynamicCloseButtonText }}</button>
+        <button type="button" class="g-btn" @click="startExploring">{{ dynamicExploreButtonText }}</button>
       </div>
-      
-      <!-- Affichage du dialogue -->
-      <div v-else class="npc-content">
-        <!-- Mode interaction (plusieurs NPC) -->
-        <div v-if="isInteractionMode" class="interaction-container" :class="{'reverse-layout': currentInteraction.position === 'right'}">
-          <div class="npc-image-container">
-            <img :src="resolveNpcImage(currentInteraction.npcImage)" alt="NPC" class="npc-image" />
-          </div>
-          <div class="dialog-content">
-            <div class="dialog-bubble">
-              <div class="speaker-indicator">
-                {{ getSpeakerIndicator(currentInteraction.position) }}
-              </div>
-              <p>{{ currentInteraction.text }}</p>
-            </div>
-          </div>
+    </div>
+
+    <!-- Rencontre : portrait et paroles -->
+    <div v-else class="npc-scene" :class="{ 'npc-scene--reverse': speakerSide === 'right', 'npc-scene--boss': regionData.is_boss }">
+      <figure class="npc-portrait">
+        <div class="npc-portrait__frame">
+          <img
+            :src="resolveNpcImage(isInteractionMode ? currentInteraction.npcImage : effectiveNpcImage)"
+            :alt="speakerName || 'Personnage'"
+            class="npc-portrait__img"
+          />
         </div>
-        
-        <!-- Mode dialogue classique (un seul NPC) -->
-        <div v-else class="standard-dialog-container" :class="effectiveNpcPosition === 'right' ? 'reverse-layout' : ''">
-          <div class="npc-image-container" :class="{ 'right-aligned': effectiveNpcPosition === 'right' }">
-            <img :src="resolveNpcImage(effectiveNpcImage)" alt="NPC" class="npc-image" />
-          </div>
-          <div class="dialog-content">
-            <div class="dialog-bubble">
-              <p v-if="dialogStep < effectiveDialogContent.length">
-                {{ effectiveDialogContent[dialogStep] }}
-              </p>
-            </div>
-          </div>
+        <figcaption v-if="speakerName" class="g-display npc-portrait__name">{{ speakerName }}</figcaption>
+      </figure>
+
+      <div class="npc-words">
+        <span class="g-mono">
+          {{ regionData.name || 'Région inconnue' }}<template v-if="regionData.progress !== undefined"> · progression {{ regionData.progress }} %</template>
+        </span>
+        <div v-if="regionData.progress !== undefined" class="g-bar npc-progress__bar">
+          <span :style="{ width: `${regionData.progress}%` }"></span>
         </div>
-        
-        <!-- Boutons de navigation et action -->
-        <div class="dialog-buttons-container">
-          <div class="dialog-buttons-center">
-            <button 
+        <blockquote class="g-italic npc-words__quote" aria-live="polite">
+          <template v-if="isInteractionMode">« {{ currentInteraction.text }} »</template>
+          <template v-else-if="dialogStep < effectiveDialogContent.length">« {{ effectiveDialogContent[dialogStep] }} »</template>
+        </blockquote>
+
+        <div class="npc-words__foot">
+          <span class="g-mono">{{ stepLabel }}</span>
+          <div class="npc-actions">
+            <button type="button" class="g-btn g-btn--ghost" @click="closeDialog">{{ dynamicCloseButtonText }}</button>
+            <button
               v-if="(isInteractionMode && interactionStep < regionData.interactions.length - 1) ||
-                     (!isInteractionMode && dialogStep < effectiveDialogContent.length - 1)"
+                    (!isInteractionMode && dialogStep < effectiveDialogContent.length - 1)"
+              type="button"
+              class="g-btn"
               @click="isInteractionMode ? nextInteractionStep() : nextStep()"
-              class="next-btn"
             >
               {{ dynamicNextButtonText }}
             </button>
-            <button 
-              v-else 
-              @click="handleAction" 
-              class="action-btn"
-              :disabled="!canStartChallenge"
-            >
-              {{ effectiveActionButtonText }} 
-              <span v-if="showEnergyCost" class="energy-cost">
-                ⚡ {{ effectiveEnergyCost }}
+            <template v-else>
+              <span
+                v-if="showEnergyCost"
+                class="g-mono npc-cost"
+                :class="{ 'npc-cost--short': !canStartChallenge }"
+              >
+                {{ canStartChallenge ? `coûte ${effectiveEnergyCost} de souffle` : `souffle insuffisant · ${effectiveEnergyCost} requis` }}
               </span>
-            </button>
-            <button @click="closeDialog" class="close-btn">
-              {{ dynamicCloseButtonText }}
-            </button>
+              <button
+                type="button"
+                class="g-btn"
+                :class="{ 'g-btn--danger': regionData.is_boss }"
+                :disabled="!canStartChallenge"
+                @click="handleAction"
+              >
+                {{ effectiveActionButtonText }}
+              </button>
+            </template>
           </div>
         </div>
       </div>
     </div>
-  </div>
+  </GModal>
 </template>
 
 <script>
 import notificationService from '@/services/notificationService';
+import GModal from '@/components/ui/GModal.vue';
 
 export default {
   name: 'NpcDialog',
+  components: { GModal },
   props: {
     npcImage: { type: String, default: null },
     npcPosition: { type: String, default: null },
@@ -138,6 +101,7 @@ export default {
     energyCost: { type: Number, default: null },
     currentEnergy: { type: Number, default: 0 }
   },
+  emits: ['close', 'action'],
   computed: {
     // Ces computed renvoient d'abord les données de regionData, sinon les props,
     // et enfin les valeurs par défaut dynamiques
@@ -196,13 +160,28 @@ export default {
       return {};
     },
     dynamicExploreButtonText() {
-      return this.regionData.exploreButtonText || 'Explorer';
+      return this.regionData.exploreButtonText || 'Entrer dans la région';
     },
     dynamicCloseButtonText() {
       return this.regionData.closeButtonText || 'Fermer';
     },
     dynamicNextButtonText() {
       return this.regionData.nextButtonText || 'Suivant';
+    },
+    // Côté du portrait, nom affiché et étape en cours (affichage seul)
+    speakerSide() {
+      return this.isInteractionMode ? this.currentInteraction.position : this.effectiveNpcPosition;
+    },
+    speakerName() {
+      if (this.isInteractionMode) {
+        return this.getSpeakerIndicator(this.currentInteraction.position).replace(/\s*:\s*$/, '');
+      }
+      return this.regionData.npcName || (this.regionData.is_boss ? 'Le gardien' : '');
+    },
+    stepLabel() {
+      const total = this.isInteractionMode ? this.regionData.interactions.length : this.effectiveDialogContent.length;
+      const step = this.isInteractionMode ? this.interactionStep : this.dialogStep;
+      return `${Math.min(step + 1, total)} / ${total}`;
     },
     defaultRegionDescription() {
       return this.regionData.defaultDescription || "Une région mystérieuse à explorer...";
@@ -223,7 +202,7 @@ export default {
         npcImage: 'npc1.png',
         npcPosition: 'left',
         dialogContent: ['Bienvenue, explorateur ! Bienvenue dans cette région.'],
-        actionButtonText: 'Commencer à crafter',
+        actionButtonText: 'Accepter le défi',
         energyCost: 2
       };
     },
@@ -274,7 +253,7 @@ export default {
         this.closeDialog();
       } else {
         // Message d'erreur dynamique : peut être remplacé par un message provenant d'un service de config
-        notificationService.warning(this.regionData.insufficientEnergyMessage || 'Énergie insuffisante ! Attendez que votre énergie se régénère ou achetez-en plus.');
+        notificationService.warning(this.regionData.insufficientEnergyMessage || 'Souffle insuffisant : attends qu\'il revienne ou achètes-en dans le Carnet de route.');
       }
     }
   },
@@ -288,5 +267,84 @@ export default {
 </script>
 
 <style scoped>
-@import '@/assets/ComponentsStyle/ExplorerStyle/NpcDialogStyle.css';
+.npc-intro { display: flex; flex-direction: column; gap: 20px; }
+.npc-intro__text { margin: 0; font-size: 18px; line-height: 1.55; color: var(--oc-text); }
+
+.npc-progress { display: flex; flex-direction: column; gap: 8px; }
+.npc-progress__row { display: flex; justify-content: space-between; gap: 12px; }
+.npc-progress__value { color: var(--oc-verdigris); }
+.npc-progress__bar > span { background: var(--oc-verdigris); }
+
+.npc-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 12px 14px;
+}
+
+/* Portrait à gauche (ou à droite selon la position du personnage), paroles à côté */
+.npc-scene {
+  margin-top: 20px;
+  display: grid;
+  grid-template-columns: 240px minmax(0, 1fr);
+  gap: 36px;
+}
+.npc-scene--reverse { grid-template-columns: minmax(0, 1fr) 240px; }
+.npc-scene--reverse .npc-portrait { order: 2; }
+
+.npc-portrait {
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+}
+.npc-portrait__frame {
+  width: 100%;
+  height: 280px;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  overflow: hidden;
+  box-shadow: inset 0 0 0 1px var(--oc-line-strong);
+  background: repeating-linear-gradient(135deg, rgba(233, 223, 200, 0.04) 0 2px, transparent 2px 10px);
+}
+.npc-scene--boss .npc-portrait__frame {
+  box-shadow: inset 0 0 0 1px rgba(217, 118, 94, 0.45);
+  background: repeating-linear-gradient(135deg, rgba(217, 118, 94, 0.05) 0 2px, transparent 2px 10px);
+}
+.npc-portrait__img { max-width: 100%; max-height: 100%; object-fit: contain; }
+.npc-portrait__name { font-size: 20px; text-align: center; }
+
+.npc-words { display: flex; flex-direction: column; gap: 16px; min-width: 0; }
+.npc-words__quote {
+  margin: 8px 0 0;
+  font-size: 24px;
+  line-height: 1.5;
+  color: var(--oc-text-strong);
+}
+.npc-words__foot {
+  margin-top: auto;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+}
+.npc-cost { color: var(--oc-gold); }
+.npc-cost--short { color: var(--oc-danger); }
+
+@media (max-width: 859px) {
+  .npc-scene,
+  .npc-scene--reverse { grid-template-columns: minmax(0, 1fr); gap: 20px; }
+  .npc-scene--reverse .npc-portrait { order: 0; }
+  .npc-portrait { flex-direction: row; align-items: flex-end; }
+  .npc-portrait__frame { width: 120px; height: 140px; flex-shrink: 0; }
+  .npc-portrait__name { text-align: left; }
+  .npc-words__quote { font-size: 20px; }
+  .npc-actions { width: 100%; }
+  .npc-actions .g-btn { flex: 1; }
+  .npc-cost { width: 100%; text-align: right; }
+}
 </style>

@@ -1,34 +1,40 @@
 <template>
-    <div v-if="visible" class="exit-confirmation-modal">
-      <div class="exit-confirmation-content">
-        <h2>Confirmer la sortie</h2>
-        <p>Êtes-vous sûr de vouloir quitter le mode Explorer ?</p>
-        <div class="exit-confirmation-actions">
-          <button 
-            class="exit-confirmation-btn exit-confirmation-btn-yes"
-            @click="$emit('confirm')"
-          >
-            Oui
-          </button>
-          <button 
-            class="exit-confirmation-btn exit-confirmation-btn-no"
-            @click="$emit('cancel')"
-          >
-            Non
-          </button>
-        </div>
-      </div>
-    </div>
-  </template>
-  
-  <script>
-  export default {
-    name: 'ExitConfirmationModal',
-    props: {
-      visible: {
-        type: Boolean,
-        default: false
-      }
+  <GModal
+    v-if="visible"
+    eyebrow="L'Expédition"
+    title="Quitter l'Expédition ?"
+    :width="460"
+    @close="$emit('cancel')"
+  >
+    <p class="exit-confirm__text">Les régions déjà explorées restent inscrites au Carnet de route.</p>
+    <template #actions>
+      <button type="button" class="g-btn g-btn--ghost" @click="$emit('cancel')">Rester</button>
+      <button type="button" class="g-btn g-btn--danger" @click="$emit('confirm')">Quitter</button>
+    </template>
+  </GModal>
+</template>
+
+<script>
+import GModal from '@/components/ui/GModal.vue';
+
+export default {
+  name: 'ExitConfirmationModal',
+  components: { GModal },
+  props: {
+    visible: {
+      type: Boolean,
+      default: false
     }
-  };
-  </script>
+  },
+  emits: ['confirm', 'cancel']
+};
+</script>
+
+<style scoped>
+.exit-confirm__text {
+  margin: 0;
+  font-size: 18px;
+  line-height: 1.55;
+  color: var(--oc-text);
+}
+</style>

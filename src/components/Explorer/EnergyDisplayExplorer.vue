@@ -1,26 +1,32 @@
 <template>
-  <div class="energy-timer-container">
-    <div class="energy-timer" v-if="nextEnergyIn > 0">
-      Recharge dans {{ formatTime(nextEnergyIn) }}
+  <div class="souffle">
+    <div class="souffle__row">
+      <span class="g-mono">Souffle</span>
+      <span class="g-mono souffle__value">
+        {{ Math.max(0, energy) }} / {{ maxEnergy }}<template v-if="nextEnergyIn > 0"> · +1 dans {{ formatTime(nextEnergyIn) }}</template>
+      </span>
     </div>
-    <div class="energy-display">
-      <span class="energy-icon">⚡</span>
-      <span class="energy-value">{{ energy }}/{{ maxEnergy }}</span>
-      <button v-if="showBuyButton" @click="buyEnergy" class="buy-energy-btn" 
-              :disabled="userCoins < energyCost || isProcessing || energy >= maxEnergy">
-        <span v-if="isProcessing">
-          <!-- Ajouter ici un spinner ou autre indicateur de chargement -->
-          <i class="fa fa-spinner fa-spin"></i>
-        </span>
-        <span v-else>+1 ({{ energyCost }} 💰)</span>
-      </button>
+    <!-- Jauge en crans : un cran par point de souffle -->
+    <div class="souffle__crans" role="img" :aria-label="`Souffle : ${Math.max(0, energy)} sur ${maxEnergy}`">
+      <span v-for="n in maxEnergy" :key="n" :class="{ 'is-full': n <= energy }"></span>
     </div>
+    <button
+      v-if="showBuyButton"
+      type="button"
+      class="g-btn g-btn--ghost g-btn--small souffle__buy"
+      :disabled="userCoins < energyCost || isProcessing || energy >= maxEnergy"
+      :aria-busy="isProcessing ? 'true' : 'false'"
+      @click="buyEnergy"
+    >
+      <span v-if="isProcessing" class="souffle__spin" aria-hidden="true"></span>
+      <span v-if="isProcessing" class="oc-sr-only">Achat en cours</span>
+      <template v-else>Acheter +1 souffle <span class="g-mono souffle__price">{{ energyCost }} écus</span></template>
+    </button>
   </div>
 </template>
 
 <script>
 import explorerService from '@/services/explorerService';
-import '@/assets/ComponentsStyle/ExplorerStyle/EnergyDisplayExplorerStyle.css';
 export default {
   name: 'EnergyDisplayExplorer',
   props: {
@@ -119,4 +125,54 @@ export default {
   }
 };
 </script>
-  
+
+<style scoped>
+.souffle {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.souffle__row {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 12px;
+}
+.souffle__value { color: var(--oc-gold); text-align: right; }
+.souffle__crans {
+  display: flex;
+  gap: 4px;
+}
+.souffle__crans span {
+  flex: 1 1 0;
+  max-width: 6px;
+  height: 18px;
+  background: rgba(233, 223, 200, 0.14);
+}
+.souffle__crans span.is-full { background: var(--oc-gold); }
+.souffle__buy {
+  align-self: flex-start;
+  min-height: 44px;
+  gap: 12px;
+}
+.souffle__price { color: var(--oc-gold); }
+
+/* Indicateur d'attente : un losange au trait qui tourne */
+.souffle__spin {
+  width: 12px;
+  height: 12px;
+  border: 1px solid var(--oc-line-strong);
+  border-top-color: var(--oc-gold);
+  animation: souffle-spin 0.9s linear infinite;
+}
+@keyframes souffle-spin {
+  from { transform: rotate(45deg); }
+  to { transform: rotate(405deg); }
+}
+
+@media (max-width: 859px) {
+  .souffle__crans { gap: 3px; }
+  .souffle__crans span { max-width: none; height: 12px; }
+  .souffle__buy { align-self: stretch; }
+}
+</style>

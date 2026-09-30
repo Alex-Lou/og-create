@@ -8,22 +8,23 @@
       :aria-current="current === mode.id ? 'page' : null"
       @click="$emit('select', mode.id)"
     >
-      <span class="modes__icon" aria-hidden="true" v-html="mode.icon"></span>
-      <span>{{ mode.label }}</span>
+      <span class="g-mono modes__num">{{ mode.num }}</span>
+      <span class="modes__label">{{ mode.label }}</span>
+      <svg class="modes__ink" width="86" height="8" viewBox="0 0 86 8" aria-hidden="true">
+        <path d="M2 5 C 18 2, 34 7, 50 4 S 76 2, 84 5" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"></path>
+      </svg>
     </button>
-    <span class="modes__pill" :style="pillStyle" aria-hidden="true"></span>
   </nav>
 </template>
 
 <script>
-// Icônes statiques (constantes du code, jamais de contenu utilisateur)
 const MODES = [
-  { id: 'infinite', label: 'Infini', icon: '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M18.2 8.4c-1.8 0-3.2 1.5-6.2 3.6-3 2.1-4.4 3.6-6.2 3.6a3.6 3.6 0 0 1 0-7.2c1.8 0 3.2 1.5 6.2 3.6 3 2.1 4.4 3.6 6.2 3.6a3.6 3.6 0 0 0 0-7.2z"></path></svg>' },
-  { id: 'timer', label: 'Timer', icon: '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="13" r="8"></circle><path d="M12 9v4l2.5 2.5M9 2h6"></path></svg>' },
-  { id: 'explorer', label: 'Explorer', icon: '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"></circle><path d="M15.5 8.5l-2 5-5 2 2-5z"></path></svg>' }
+  { id: 'infinite', num: 'I', label: 'Infini' },
+  { id: 'timer', num: 'II', label: 'L’Épreuve' },
+  { id: 'explorer', num: 'III', label: 'Expédition' }
 ];
 
-// Barre segmentée des modes ; la pastille glisse sous le mode actif
+// Onglets des modes ; le mode actif est souligné d'un trait d'encre
 export default {
   name: 'ModeSwitcher',
   props: {
@@ -32,56 +33,49 @@ export default {
   emits: ['select'],
   data() {
     return { modes: MODES };
-  },
-  computed: {
-    pillStyle() {
-      const index = Math.max(0, this.modes.findIndex(m => m.id === this.current));
-      return { transform: `translateX(${index * 100}%)` };
-    }
   }
 };
 </script>
 
 <style scoped>
 .modes {
-  position: relative;
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  padding: 4px;
-  border-radius: var(--oc-radius);
-  background: var(--oc-panel);
-  border: 1px solid var(--oc-line);
+  display: flex;
+  justify-content: center;
+  gap: 36px;
 }
 .modes__item {
   appearance: none;
-  position: relative;
-  z-index: 1;
-  height: 40px;
+  min-height: 44px;
+  padding: 4px 0 0;
   border: 0;
-  border-radius: 12px;
-  background: transparent;
-  color: var(--oc-text-muted);
-  font-size: 13px;
-  font-weight: 600;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 6px;
+  background: none;
   cursor: pointer;
-  transition: color var(--oc-medium) var(--oc-ease-out);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  color: var(--oc-text-faint);
+  transition: color var(--oc-fast);
+}
+.modes__num { font-size: 9px; letter-spacing: 0.12em; }
+.modes__label {
+  font-family: var(--oc-font-display);
+  font-size: 18px;
+  letter-spacing: 0.06em;
+  white-space: nowrap;
+}
+.modes__ink {
+  color: var(--oc-gold);
+  stroke-dasharray: 90;
+  stroke-dashoffset: 90;
+  transition: stroke-dashoffset var(--oc-slow) var(--oc-ease-out);
 }
 .modes__item:hover { color: var(--oc-text); }
 .modes__item.is-on { color: var(--oc-text-strong); }
-.modes__icon { display: flex; }
-.modes__pill {
-  position: absolute;
-  top: 4px;
-  bottom: 4px;
-  left: 4px;
-  width: calc((100% - 8px) / 3);
-  border-radius: 12px;
-  background: var(--oc-accent-soft);
-  box-shadow: inset 0 0 0 1px rgba(167, 139, 250, 0.35);
-  transition: transform var(--oc-medium) var(--oc-ease-spring);
+.is-on .modes__ink { stroke-dashoffset: 0; }
+
+@media (max-width: 859px) {
+  .modes { justify-content: space-between; gap: 8px; }
+  .modes__label { font-size: 16px; }
 }
 </style>

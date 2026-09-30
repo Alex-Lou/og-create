@@ -1,110 +1,100 @@
 <template>
-    <div class="contact-modal">
-      <!-- Cadre décoratif interne -->
-      <div class="contact-modal-frame">
-        <div class="frame-corner corner-tl">
-          <div class="corner-dot"></div>
-          <div class="frame-symbol symbol-tl">✧</div>
-        </div>
-        <div class="frame-corner corner-tr">
-          <div class="corner-dot"></div>
-          <div class="frame-symbol symbol-tr">✧</div>
-        </div>
-        <div class="frame-corner corner-bl">
-          <div class="corner-dot"></div>
-          <div class="frame-symbol symbol-bl">✧</div>
-        </div>
-        <div class="frame-corner corner-br">
-          <div class="corner-dot"></div>
-          <div class="frame-symbol symbol-br">✧</div>
-        </div>
+  <GModal eyebrow="Correspondance" title="Écrire aux créateurs" :width="520" @close="$emit('close')">
+    <form class="contact__form" @submit.prevent="handleSubmit">
+      <div class="g-field">
+        <label for="contact-email">Ton email</label>
+        <input
+          id="contact-email"
+          v-model="email"
+          type="email"
+          autocomplete="email"
+          placeholder="toi@exemple.fr"
+          required
+        />
       </div>
-  
-      <!-- Contenu du modal -->
-      <div class="contact-content">
-        <button @click="$emit('close')" class="close-modal-btn">&times;</button>
-        <div class="contact-header">
-          <h3>Contactez-nous</h3>
-        </div>
-  
-        <form @submit.prevent="handleSubmit">
-          <input 
-            type="email" 
-            v-model="email" 
-            placeholder="Votre email"
-            class="contact-input"
-            required
-          />
-          <textarea 
-            v-model="message" 
-            placeholder="Votre message"
-            class="contact-input contact-textarea"
-            required
-          ></textarea>
-          <div v-if="errorMessage" class="error-message">
-            {{ errorMessage }}
-          </div>
-          <div v-if="successMessage" class="success-message">
-            {{ successMessage }}
-          </div>
-          <button type="submit" class="submit-btn" :disabled="isLoading">
-            {{ isLoading ? 'Envoi...' : 'Envoyer' }}
-          </button>
-        </form>
+      <div class="g-field">
+        <label for="contact-message">Ton message</label>
+        <textarea
+          id="contact-message"
+          v-model="message"
+          placeholder="Une idée, un bug, une recette qui manque…"
+          required
+        ></textarea>
       </div>
-    </div>
-  </template>
+      <p v-if="errorMessage" class="g-note g-note--error" role="alert">{{ errorMessage }}</p>
+      <p v-if="successMessage" class="g-note g-note--ok" role="status">{{ successMessage }}</p>
+      <div class="contact__actions">
+        <button type="submit" class="g-btn" :disabled="isLoading">
+          {{ isLoading ? 'Envoi…' : 'Envoyer' }}
+        </button>
+      </div>
+    </form>
+  </GModal>
+</template>
 
 <script>
-import '@/assets/ComponentsStyle/HeaderStyle/ContactModalStyle.css'
 import axios from 'axios';
 import { API_URL } from '@/config';
+import GModal from '@/components/ui/GModal.vue';
 
+// Formulaire de contact : envoi à l'API, puis fermeture 2 s après le succès
 export default {
-    name: 'ContactModal',
-    props: {
-        isDarkMode: {
-            type: Boolean,
-            default: false
-        }
-    },
-    data() {
-        return {
-            email: '',
-            message: '',
-            errorMessage: '',
-            successMessage: '',
-            isLoading: false
-        }
-    },
-    methods: {
-        async handleSubmit() {
-            this.isLoading = true;
-            this.errorMessage = '';
-            this.successMessage = '';
-
-            try {
-                await axios.post(`${API_URL}/contact/send`, {
-                    email: this.email,
-                    message: this.message
-                });
-
-                this.successMessage = 'Message envoyé avec succès !';
-                this.email = '';
-                this.message = '';
-                
-                // Ferme le modal après 2 secondes
-                setTimeout(() => {
-                    this.$emit('close');
-                }, 2000);
-
-            } catch (error) {
-                this.errorMessage = 'Erreur lors de l\'envoi du message. Veuillez réessayer.';
-                console.error('Erreur:', error);
-            } finally {
-                this.isLoading = false;
-            }
-        }
+  name: 'ContactModal',
+  components: { GModal },
+  props: {
+    isDarkMode: {
+      type: Boolean,
+      default: false
     }
-}
+  },
+  emits: ['close'],
+  data() {
+    return {
+      email: '',
+      message: '',
+      errorMessage: '',
+      successMessage: '',
+      isLoading: false,
+      closeTimer: null
+    };
+  },
+  beforeUnmount() {
+    clearTimeout(this.closeTimer);
+  },
+  methods: {
+    async handleSubmit() {
+      this.isLoading = true;
+      this.errorMessage = '';
+      this.successMessage = '';
+
+      try {
+        await axios.post(`${API_URL}/contact/send`, {
+          email: this.email,
+          message: this.message
+        });
+
+        this.successMessage = 'Message envoyé. Merci.';
+        this.email = '';
+        this.message = '';
+
+        this.closeTimer = setTimeout(() => {
+          this.$emit('close');
+        }, 2000);
+      } catch (error) {
+        this.errorMessage = 'Erreur lors de l’envoi du message. Veuillez réessayer.';
+        console.error('Erreur:', error);
+      } finally {
+        this.isLoading = false;
+      }
+    }
+  }
+};
 </script>
+
+<style scoped>
+.contact__form { display: flex; flex-direction: column; gap: 20px; }
+.contact__actions { display: flex; justify-content: flex-end; }
+@media (max-width: 520px) {
+  .contact__actions > .g-btn { flex: 1; }
+}
+</style>

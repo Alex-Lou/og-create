@@ -1,112 +1,48 @@
 <template>
-  <div v-if="isVisible" class="map-transition-modal">
-    <div class="transition-content">
-      <!-- Cadre décoratif avec coins ornementés -->
-      <div class="transition-frame">
-        <div class="frame-corner corner-tl">
-          <div class="corner-dot"></div>
-          <div class="frame-symbol symbol-tl">✧</div>
-        </div>
-        <div class="frame-corner corner-tr">
-          <div class="corner-dot"></div>
-          <div class="frame-symbol symbol-tr">✧</div>
-        </div>
-        <div class="frame-corner corner-bl">
-          <div class="corner-dot"></div>
-          <div class="frame-symbol symbol-bl">✧</div>
-        </div>
-        <div class="frame-corner corner-br">
-          <div class="corner-dot"></div>
-          <div class="frame-symbol symbol-br">✧</div>
-        </div>
-      </div>
-      
-      <!-- En-tête avec animation de victoire -->
-      <div class="transition-header">
-        <div class="victory-animation">
-          <!-- Particules de célébration -->
-          <div class="victory-particles">
-            <div class="victory-particle" v-for="n in 8" :key="n"
-                :style="{
-                  '--x': `${Math.random() * 100 - 50}px`,
-                  '--y': `${Math.random() * 100 - 50}px`,
-                  '--dx': `${Math.random() * 150 - 75}px`,
-                  '--dy': `${Math.random() * 150 - 75}px`,
-                  'animation-delay': `${Math.random() * 3}s`
-                }">
-            </div>
-          </div>
-          
-          <div class="victory-effect">
-            <span class="victory-star">⭐</span>
-            <span class="victory-text">VICTOIRE!</span>
-          </div>
-        </div>
-        <h1 class="transition-title">Nouvelle Région Découverte!</h1>
-      </div>
-  
-      <!-- Corps du message narratif -->
-      <div class="transition-message">
-        <p class="narrative">
-          Félicitations, aventurier! Après avoir vaincu {{ effectiveBossName }}, un nouveau territoire s'ouvre à vous. 
-          Cette terre inexplorée regorge de mystères et de défis qui attendent votre expertise en alchimie élémentaire.
-        </p>
-          
-        <!-- Affichage de la nouvelle carte -->
-        <div class="new-map-preview">
-          <img 
-            :src="mapPreviewImage" 
-            alt="Nouvelle carte" 
-            class="map-preview-img" 
-          />
-          <div class="map-name">{{ mapName }}</div>
-        </div>
-          
-        <p class="quest-teaser">
-          De nouveaux alliés vous attendent, et de nouvelles combinaisons d'éléments seront nécessaires pour surmonter les obstacles sur votre chemin.
-        </p>
-      </div>
-  
-      <!-- Récompenses et bonus spéciaux -->
-      <div class="special-rewards">
-        <h3>Récompenses Spéciales</h3>
-        <div class="rewards-grid">
-          <div class="reward-item">
-            <span class="reward-icon">💰</span>
-            <span class="reward-value">{{ safeRewards.coins }} Pièces</span>
-          </div>
-          <div class="reward-item">
-            <span class="reward-icon">✨</span>
-            <span class="reward-value">{{ safeRewards.xp }} XP</span>
-          </div>
-          <div class="reward-item">
-            <span class="reward-icon">⚡</span>
-            <span class="reward-value">{{ safeRewards.energy }} Énergie</span>
-          </div>
-          <div class="reward-item">
-            <span class="reward-icon">🗺️</span>
-            <span class="reward-value">Nouvelle région débloquée!</span>
-          </div>
-        </div>
-      </div>
-  
-      <!-- Bouton pour continuer -->
-      <button @click="continueToNewMap" class="continue-btn">
-        Explorer la nouvelle région
-      </button>
+  <GModal
+    v-if="isVisible"
+    :width="560"
+    align="center"
+    :dismissible="false"
+    label="Nouvelle carte"
+  >
+    <div class="xt">
+      <span class="g-mono g-gold">Gardien vaincu</span>
+      <h2 class="g-title xt__title">{{ mapName }} s'ouvre</h2>
+      <p class="g-italic xt__story">
+        {{ effectiveBossName }} est vaincu. Au-delà, une nouvelle carte se dessine : d'autres alliés,
+        d'autres alliages à découvrir.
+      </p>
+
+      <figure class="xt__preview">
+        <img :src="mapPreviewImage" :alt="`Aperçu de la carte ${toRoman(newMapId)}`" class="xt__img" />
+        <figcaption class="g-mono xt__caption">Carte {{ toRoman(newMapId) }} — {{ mapName }}</figcaption>
+        <span v-if="isLoading" class="xt__spin" aria-hidden="true"></span>
+      </figure>
+
+      <dl class="xt__rewards">
+        <div><dt class="g-mono">écus</dt><dd class="g-display g-gold">+{{ safeRewards.coins }}</dd></div>
+        <div><dt class="g-mono">savoir</dt><dd class="g-display">+{{ safeRewards.xp }}</dd></div>
+        <div><dt class="g-mono">souffle</dt><dd class="g-display">+{{ safeRewards.energy }}</dd></div>
+        <div><dt class="g-mono">carte ouverte</dt><dd class="g-display">{{ toRoman(newMapId) }}</dd></div>
+      </dl>
+
+      <button type="button" class="g-btn" @click="continueToNewMap">Explorer la nouvelle carte</button>
     </div>
-  </div>
+  </GModal>
 </template>
-  
+
 <script>
 // Seulement les images : un require(`@/assets/${…}`) embarquait aussi toutes les anciennes
 // feuilles CSS du dossier dans le build de production (elles écrasaient la nouvelle interface)
 const assetImages = require.context('@/assets', true, /\.(png|jpe?g|gif|webp|svg)$/);
 import explorerService from '@/services/explorerService';
-import '@/assets/ComponentsStyle/ExplorerStyle/MapTransitionModalStyle.css';
+import GModal from '@/components/ui/GModal.vue';
+import { roman as toRoman } from '@/utils/roman';
 
 export default {
   name: 'MapTransitionModal',
+  components: { GModal },
   props: {
     isVisible: {
       type: Boolean,
@@ -129,6 +65,7 @@ export default {
       default: () => ({ coins: 0, xp: 0, energy: 0 })
     }
   },
+  emits: ['continue-to-new-map'],
   data() {
     return {
       mapInfo: null,
@@ -248,6 +185,8 @@ export default {
     }
   },
   methods: {
+    toRoman,
+
     async loadMapInfo() {
       if (!this.newMapId) return;
       
@@ -367,3 +306,69 @@ export default {
   }
 };
 </script>
+
+<style scoped>
+.xt {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  text-align: center;
+}
+.xt__title { font-size: 38px; }
+.xt__story { margin: 0; font-size: 18px; line-height: 1.5; color: var(--oc-text); }
+.xt__preview {
+  position: relative;
+  margin: 0;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  max-height: 220px;
+  overflow: hidden;
+  box-shadow: inset 0 0 0 1px var(--oc-line-strong);
+  background: var(--oc-surface-strong);
+}
+.xt__img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  filter: sepia(0.35) saturate(0.75) brightness(0.8);
+}
+.xt__caption {
+  position: absolute;
+  left: 12px;
+  bottom: 10px;
+  color: var(--oc-text);
+  text-shadow: 0 1px 6px var(--oc-bg);
+}
+/* Indicateur d'attente pendant le chargement de la carte */
+.xt__spin {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  width: 12px;
+  height: 12px;
+  border: 1px solid var(--oc-line-strong);
+  border-top-color: var(--oc-gold);
+  animation: xt-spin 0.9s linear infinite;
+}
+@keyframes xt-spin {
+  from { transform: rotate(45deg); }
+  to { transform: rotate(405deg); }
+}
+.xt__rewards {
+  margin: 4px 0;
+  width: 100%;
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 12px;
+}
+.xt__rewards > div { display: flex; flex-direction: column-reverse; gap: 4px; }
+.xt__rewards dd { margin: 0; font-size: 26px; line-height: 1.1; }
+
+@media (max-width: 520px) {
+  .xt__title { font-size: 30px; }
+  .xt__rewards { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .xt .g-btn { align-self: stretch; }
+}
+</style>

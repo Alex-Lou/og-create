@@ -2,39 +2,38 @@
   <header class="app-header">
     <div class="app-header__brand">
       <h1 class="app-header__title">Origins</h1>
-      <p class="app-header__meta">
-        <span>{{ found }} / {{ total }} découverts</span>
-        <span aria-hidden="true"> · </span>
-        <span :key="eraName" class="app-header__era">Ère {{ era }} · {{ eraName }}</span>
+      <p class="g-mono app-header__meta">
+        <span :key="eraLabel" class="app-header__era">{{ eraLabel }}</span>
+        <span class="app-header__count"> — {{ found }} / {{ total }} consignés</span>
       </p>
-    </div>
-
-    <div class="app-header__actions">
-      <slot name="timer"></slot>
-      <div class="coins" :title="`${coins} pièces`">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"></circle><path d="M12 7v10M9.5 9.5h4a1.5 1.5 0 0 1 0 3h-3a1.5 1.5 0 0 0 0 3h4"></path></svg>
-        <span :key="coins" class="coins__value">{{ formattedCoins }}</span>
-        <span class="oc-sr-only">pièces</span>
-      </div>
-      <slot name="actions"></slot>
     </div>
 
     <div class="app-header__modes">
       <slot name="modes"></slot>
     </div>
+
+    <div class="app-header__actions">
+      <slot name="timer"></slot>
+      <span :class="['app-header__ecus', { 'is-busy': timerActive }]" :title="`${coins} écus`">
+        <span :key="coins" class="app-header__ecus-value">{{ formattedCoins }}</span>
+        <span class="g-mono">écus</span>
+      </span>
+      <slot name="actions"></slot>
+    </div>
   </header>
 </template>
 
 <script>
-// En-tête : titre, progression (découvertes, ère), pièces ; modes et compte passés en slots
+// En-tête : titre, ère et progression, écus ; modes, chrono et compte passés en slots
 export default {
   name: 'AppHeader',
   props: {
     found: { type: Number, default: 0 },
     total: { type: Number, default: 0 },
-    era: { type: Number, default: 1 },
-    eraName: { type: String, default: '' },
-    coins: { type: Number, default: 0 }
+    eraLabel: { type: String, default: '' },
+    coins: { type: Number, default: 0 },
+    // Épreuve en cours : sur mobile, le chrono prend la place des écus
+    timerActive: { type: Boolean, default: false }
   },
   computed: {
     formattedCoins() {
@@ -49,71 +48,54 @@ export default {
   position: relative;
   z-index: 10;
   display: grid;
-  grid-template-columns: minmax(0, 1fr) auto;
-  grid-template-areas: "brand actions" "modes modes";
+  grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+  grid-template-areas: "brand modes actions";
   align-items: center;
-  gap: 12px 16px;
-  padding: 18px 0 8px;
+  gap: 16px 24px;
+  padding: 24px 0 16px;
+  border-bottom: 1px solid var(--oc-line);
 }
-.app-header__brand { grid-area: brand; min-width: 0; }
+.app-header__brand { grid-area: brand; min-width: 0; display: flex; flex-direction: column; gap: 6px; }
 .app-header__title {
   margin: 0;
   font-family: var(--oc-font-display);
-  font-size: 26px;
-  font-weight: 700;
-  letter-spacing: 1.5px;
+  font-weight: 400;
+  font-size: 30px;
+  line-height: 1;
+  letter-spacing: 0.16em;
   color: var(--oc-text-strong);
 }
-.app-header__meta {
-  margin: 2px 0 0;
-  font-size: 12px;
-  color: var(--oc-text-muted);
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-/* Nouvelle ère : le libellé s'illumine */
+.app-header__meta { margin: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+/* Nouvelle ère : le libellé s'illumine un instant */
 .app-header__era { animation: era-glow 2.4s var(--oc-ease-out); }
-.app-header__actions {
-  grid-area: actions;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
 .app-header__modes { grid-area: modes; }
-
-.coins {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  height: 38px;
-  padding: 0 12px;
-  border-radius: var(--oc-radius-pill);
-  background: var(--oc-gold-soft);
-  border: 1px solid rgba(250, 204, 21, 0.3);
-  color: var(--oc-gold);
+.app-header__actions { grid-area: actions; display: flex; align-items: center; justify-content: flex-end; gap: 14px; }
+.app-header__ecus { display: flex; align-items: baseline; gap: 6px; }
+.app-header__ecus-value {
+  font-family: var(--oc-font-mono);
   font-size: 13px;
-  font-weight: 600;
-  font-variant-numeric: tabular-nums;
+  color: var(--oc-gold);
+  animation: coin-bump 0.5s var(--oc-ease-spring);
 }
-.coins__value { animation: coin-bump 0.5s var(--oc-ease-spring); }
 
 @keyframes era-glow {
-  0% { color: var(--oc-gold); text-shadow: 0 0 12px rgba(250, 204, 21, 0.8); }
+  0% { color: var(--oc-gold); text-shadow: 0 0 12px rgba(224, 182, 84, 0.8); }
   100% { color: inherit; text-shadow: none; }
 }
 @keyframes coin-bump {
-  0% { transform: scale(1); }
-  40% { transform: scale(1.25); color: #fff; }
-  100% { transform: scale(1); }
+  40% { transform: scale(1.25); }
 }
 
-/* PC : modes au centre de la ligne */
-@media (min-width: 860px) {
+/* Mobile : marque + actions, puis les modes sur leur propre ligne */
+@media (max-width: 859px) {
   .app-header {
-    grid-template-columns: minmax(0, 1fr) minmax(340px, 420px) minmax(0, 1fr);
-    grid-template-areas: "brand modes actions";
+    grid-template-columns: minmax(0, 1fr) auto;
+    grid-template-areas: "brand actions" "modes modes";
+    padding: 16px 0 10px;
   }
-  .app-header__actions { justify-content: flex-end; }
+  .app-header__title { font-size: 24px; }
+  .app-header__count { display: none; }
+  .app-header__actions { gap: 10px; }
+  .app-header__ecus.is-busy { display: none; }
 }
 </style>

@@ -16,7 +16,7 @@ export default class LivingBackground {
     this.reduced = reducedMotion;
     this.atoms = [];
     this.rings = [];
-    this.palette = [[196, 181, 253]];
+    this.palette = [[233, 223, 200]];
     this.era = 1;
     this.population = 40;
     this.intensity = [0, 0, 0, 0]; // ères 2 à 5, animées en douceur de 0 à 1
@@ -231,8 +231,8 @@ export default class LivingBackground {
       const progress = ring.t / (ring.big ? 70 : 30);
       if (progress >= 1) { rings.splice(i, 1); continue; }
       ctx.strokeStyle = ring.big
-        ? `rgba(250,204,21,${(0.5 * (1 - progress)).toFixed(3)})`
-        : `rgba(255,255,255,${(0.35 * (1 - progress)).toFixed(3)})`;
+        ? `rgba(224,182,84,${(0.5 * (1 - progress)).toFixed(3)})`
+        : `rgba(233,223,200,${(0.35 * (1 - progress)).toFixed(3)})`;
       ctx.lineWidth = ring.big ? 2 : 1;
       ctx.beginPath();
       ctx.arc(ring.x, ring.y, (ring.big ? 180 : 14) * progress + 4, 0, TAU);
