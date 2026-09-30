@@ -2,6 +2,8 @@ import { createApp } from 'vue';
 import { polyfill } from 'mobile-drag-drop';
 import { scrollBehaviourDragImageTranslateOverride } from 'mobile-drag-drop/scroll-behaviour';
 import 'mobile-drag-drop/default.css';
+import './styles/tokens.css';
+import './styles/base.css';
 import App from './components/General/App.vue';
 import '@animxyz/core';
 

@@ -1,0 +1,56 @@
+/* Tokens de design : seule source des couleurs, typographies, rayons et mouvements */
+:root {
+  /* Fond : nuit profonde */
+  --oc-bg: #07060d;
+  --oc-bg-glow-1: #24124a;
+  --oc-bg-glow-2: #10163c;
+
+  /* Surfaces translucides (laissent voir le fond vivant) */
+  --oc-surface: rgba(20, 15, 36, 0.62);
+  --oc-surface-hover: rgba(40, 30, 70, 0.72);
+  --oc-surface-strong: rgba(12, 9, 24, 0.9);
+  --oc-panel: rgba(12, 9, 24, 0.5);
+  --oc-line: rgba(196, 181, 253, 0.14);
+  --oc-line-strong: rgba(196, 181, 253, 0.32);
+
+  /* Texte */
+  --oc-text: #ece8f7;
+  --oc-text-strong: #f5f3ff;
+  --oc-text-muted: #a39bbd;
+  --oc-text-faint: #8d85a8;
+
+  /* Accents : violet (action) et or (découverte) */
+  --oc-accent: #8b5cf6;
+  --oc-accent-strong: #7c3aed;
+  --oc-accent-soft: rgba(139, 92, 246, 0.28);
+  --oc-accent-line: #a78bfa;
+  --oc-gold: #fde68a;
+  --oc-gold-strong: #facc15;
+  --oc-gold-soft: rgba(250, 204, 21, 0.12);
+  --oc-danger: #fca5a5;
+
+  /* Typographie */
+  --oc-font-display: 'Cinzel', Georgia, serif;
+  --oc-font-body: 'Inter', system-ui, -apple-system, 'Segoe UI', sans-serif;
+
+  /* Formes */
+  --oc-radius-sm: 12px;
+  --oc-radius: 16px;
+  --oc-radius-lg: 24px;
+  --oc-radius-pill: 999px;
+
+  /* Profondeur */
+  --oc-shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
+  --oc-shadow-accent: 0 6px 20px rgba(124, 58, 237, 0.45);
+
+  /* Mouvement : des courbes « organiques » plutôt que linéaires */
+  --oc-ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+  --oc-ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+  --oc-fast: 160ms;
+  --oc-medium: 320ms;
+  --oc-slow: 600ms;
+
+  /* Mise en page */
+  --oc-gutter: 20px;
+  --oc-dock-height: 104px;
+}
