@@ -66,13 +66,14 @@
       :isVisible="showCraftModal"
       :region="selectedRegion"
       :challenge="currentChallenge"
-      :craftingRecipes="$parent.craftingRecipes"
-      :elementEmojis="$parent.elementEmojis"
-      :discoveredElements="$parent.discoveredElements"
+      :craftingRecipes="craftingRecipes"
+      :elementEmojis="elementEmojis"
+      :discoveredElements="discoveredElements"
       @close="closeCraftModal"
       @craft-success="handleCraftSuccess"
       @target-element-created="handleTargetElementCreated"
       @challenge-completed="handleChallengeCompleted"
+      @player-defeated="handlePlayerDefeated"
       @show-alert="$emit('show-alert', $event)"
     />
 
@@ -134,7 +135,10 @@ export default {
     active: {
       type: Boolean,
       default: true
-    }
+    },
+    craftingRecipes: { type: Object, default: () => ({}) },
+    elementEmojis: { type: Object, default: () => ({}) },
+    discoveredElements: { type: Array, default: () => [] }
   },
   data() {
     return {
@@ -267,9 +271,10 @@ export default {
       if (this.currentRegionId && !this.selectedRegion?.is_boss && this.currentEnergyCost > 0) {
         try {
           const energyData = await explorerService.checkEnergy();
-          this.energy = energyData.energy;
-          
-          this.$emit('energy-updated', this.energy);
+          if (energyData) {
+            this.energy = energyData.energy;
+            this.$emit('energy-updated', this.energy);
+          }
         } catch (error) {
           console.error('Erreur lors du rafraîchissement de l\'énergie:', error);
         }
@@ -299,18 +304,14 @@ export default {
       try {
         this.loading = true;
         
-        try {
-          await explorerService.syncRegions();
-        } catch (syncError) {
-          console.warn('Synchronisation des régions échouée, utilisation des données existantes', syncError);
-        }
-        
         const initData = await explorerService.initExplorer();
         this.energy = initData.energy;
         this.maxEnergy = initData.max_energy || 20;
         this.nextEnergyIn = initData.next_energy_in;
         this.currentMapId = initData.currentMap || 1;
-        
+
+        // Cartes débloquées calculées depuis le serveur (et non depuis un localStorage périmé)
+        await explorerService.refreshUnlockedMaps();
         this.loadUnlockedMaps();
         
         await this.loadRegionsForCurrentMap();
@@ -321,6 +322,7 @@ export default {
         this.dataLoaded = true;
       } catch (error) {
         console.error('Erreur lors du chargement des données Explorer:', error);
+        notificationService.error("Impossible de charger l'Explorer. Réessayez dans un instant.");
       } finally {
         this.loading = false;
       }
@@ -528,7 +530,7 @@ export default {
       if (!this.active) return;
       
       if (!this.isRegionUnlocked(region)) {
-        alert('Cette région est verrouillée. Complétez les régions précédentes pour la débloquer.');
+        notificationService.warning('Cette région est verrouillée. Complétez les régions précédentes pour la débloquer.');
         return;
       }
       
@@ -621,7 +623,7 @@ export default {
         const energyCost = this.regionChallenges[region.id]?.energyCost || 2;
         
         if (this.energy < energyCost) {
-          alert(`Vous n'avez pas assez d'énergie pour explorer cette région (coût: ${energyCost} ⚡)`);
+          notificationService.warning(`Vous n'avez pas assez d'énergie pour explorer cette région (coût : ${energyCost} ⚡)`);
           return;
         }
         
@@ -646,12 +648,17 @@ export default {
         this.showCraftModal = true;
       } catch (error) {
         console.error('Erreur lors du démarrage du défi:', error);
-        alert(error.response?.data?.message || 'Une erreur est survenue lors du défi');
+        notificationService.error(error.response?.data?.message || 'Une erreur est survenue lors du défi');
       }
     },
 
     handleCraftSuccess(craftedItem) {
       this.$emit('element-discovered', craftedItem);
+    },
+
+    handlePlayerDefeated() {
+      this.showCraftModal = false;
+      notificationService.warning('Le boss vous a vaincu ! Reprenez des forces et retentez votre chance depuis la carte.', 5000);
     },
 
     async handleChallengeCompleted({ region, isBoss }) {
@@ -986,10 +993,8 @@ export default {
       else if (triggerBoss && this.currentBoss) {
         setTimeout(() => {
           this.showNpcDialog = true;
-          this.selectedRegion = {
-            id: `boss-${this.currentBoss.id}`,
-            name: this.currentBoss.name
-          };
+          // Région de boss complète (id numérique + is_boss) pour que startCraftChallenge prenne le chemin boss
+          this.selectedRegion = { ...this.currentBoss, is_boss: true };
           this.currentNpc = {
             image: this.currentBoss.bossImage || 'boss-1-anim.gif',
             position: this.currentBoss.bossPosition || 'center',

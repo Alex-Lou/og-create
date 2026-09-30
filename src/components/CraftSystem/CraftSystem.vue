@@ -61,7 +61,8 @@
         :offsetX="-300" 
       />
     </div>
-    <div id="crafting" @dragover.prevent @drop="handleDrop">
+    <!-- dragenter annulé : requis par la spec (et le polyfill tactile) pour accepter un dépôt -->
+    <div id="crafting" @dragenter.prevent @dragover.prevent @drop="handleDrop">
       <div class="title-container">
         <CreationZoneTitle />
         <div :class="{'shake-animation': isButtonShaking}">
@@ -128,6 +129,7 @@ import CraftButton from './CraftButton.vue';
 import CleanButton from './CleanButton.vue';
 import CreationZoneTitle from './CreationZoneTitle.vue';
 import '@/assets/ComponentsStyle/CraftStyle/CraftSystemStyle.css';
+import { findRecipe } from '@/utils/recipes';
 
 export default {
   name: 'CraftSystem',
@@ -169,16 +171,10 @@ export default {
       isShaking: false,
       isButtonShaking: false,
       lastCraftedItem: null,
-      pendingSaves: new Set(),
       observer: null,
       debouncedDragOver: null,
       FireworkComponent: null,
     };
-  },
-  computed: {
-    sortedSelected() {
-      return [...this.selected].sort().join('+');
-    }
   },
   created() {
     this.debouncedDragOver = this.debounce(this.dragOver, 50);
@@ -254,9 +250,10 @@ export default {
         return;
       }
       
-      const craftedItem = this.craftingRecipes[this.sortedSelected];
+      const craftedItem = findRecipe(this.craftingRecipes, this.selected);
       
       if (!craftedItem) {
+        this.$emit('show-alert', 'Rien ne se passe… Essayez une autre combinaison.');
         const selectedElements = document.querySelectorAll('#selected-resources li');
         selectedElements.forEach(el => {
           el.classList.add('shake-animation');
@@ -275,11 +272,9 @@ export default {
       }
       
       this.lastCraftedItem = craftedItem;
-      this.pendingSaves.add(craftedItem);
       
       this.$nextTick(() => {
         this.$emit('craft-success', craftedItem);
-        this.saveDiscoveredElement(craftedItem);
         
         let newPosition = { top: 300, left: 230 };
         if (this.lastCraftedPosition && !this.lastCraftedPosition.moved) {
@@ -287,13 +282,15 @@ export default {
             top: this.lastCraftedPosition.top,
             left: this.lastCraftedPosition.left + 200
           };
-          if (newPosition.left > 800) {
+          if (newPosition.left > this.boardSize().width - 120) {
             newPosition = {
               top: this.lastCraftedPosition.top + 100,
               left: 230
             };
           }
         }
+        // Rester visible quelle que soit la taille de la zone (mobile)
+        newPosition = this.clampToBoard(newPosition);
         
         const newElement = {
           name: craftedItem,
@@ -322,12 +319,22 @@ export default {
         this.craftingInProgress = false;
       });
     },
-    saveDiscoveredElement(element) {
-      const gameMode = this.$parent?.gameMode || 'infinite';
-      this.$emit('save-discovered-element', element, gameMode);
-      this.pendingSaves.delete(element);
+    boardSize() {
+      const board = this.$refs.craftingBoard;
+      return { width: board?.clientWidth || 1000, height: board?.clientHeight || 700 };
+    },
+    // Borne une position à la zone de création réelle (au lieu de 800x600 px codés en dur)
+    clampToBoard({ top, left }) {
+      const { width, height } = this.boardSize();
+      return {
+        top: Math.max(0, Math.min(height - 60, top)),
+        left: Math.max(0, Math.min(width - 120, left))
+      };
     },
     handleKeyPress(event) {
+      // Pas de raccourci pendant la saisie, sur un bouton focus, ou avec modificateur
+      if (event.ctrlKey || event.metaKey || event.altKey) return;
+      if (event.target.closest?.('input, textarea, select, button, [role="button"], [contenteditable="true"]')) return;
       if (event.key === 'Enter') {
         this.craftItem();
       }
@@ -358,8 +365,7 @@ export default {
           const y = event.clientY - craftingBoardRect.top - offsetY;
           
           this.craftedElements[index].position = {
-            top: Math.max(0, Math.min(600, y)),
-            left: Math.max(0, Math.min(800, x)),
+            ...this.clampToBoard({ top: y, left: x }),
           };
           this.craftedElements[index].moved = true;
         }
@@ -394,19 +400,15 @@ export default {
       }
       
       if (this.draggingElementIndex !== targetIndex) {
-        const elements = [draggedResource, targetResource].sort();
-        const combination = elements.join('+');
-        const result = this.craftingRecipes[combination];
+        const result = findRecipe(this.craftingRecipes, [draggedResource, targetResource]);
         
         if (result) {
           this.removeResource(Math.max(this.draggingElementIndex, targetIndex));
           this.removeResource(Math.min(this.draggingElementIndex, targetIndex));
           this.lastCraftedItem = result;
-          this.pendingSaves.add(result);
           
           this.$nextTick(() => {
             this.$emit('craft-success', result);
-            this.saveDiscoveredElement(result);
             
             let newPosition = {
               top: this.resourcePositions[targetIndex]?.top || 300,
@@ -456,22 +458,16 @@ export default {
         return;
       }
       
-      const elements = [draggedElement, targetElement].sort();
-      const combination = elements.join('+');
-      const result = this.craftingRecipes[combination];
+      const result = findRecipe(this.craftingRecipes, [draggedElement, targetElement]);
       
       if (result) {
-        if (this.draggingElementIndex !== null) {
-          this.craftedElements.splice(this.draggingElementIndex, 1);
-        }
-        
-        this.craftedElements.splice(targetIndex, 1);
-        
-        const dropPosition = {
-          top: event.offsetY,
-          left: event.offsetX,
-        };
-        
+        // Le résultat prend la place de la cible
+        const dropPosition = { ...this.craftedElements[targetIndex].position };
+
+        // Retirer la cible et l'élément glissé en une fois (deux splice successifs décalaient les index)
+        const consumed = new Set([targetIndex, this.draggingElementIndex]);
+        this.craftedElements = this.craftedElements.filter((_, index) => !consumed.has(index));
+
         const newElement = {
           name: result,
           position: dropPosition,
@@ -480,10 +476,8 @@ export default {
         
         this.craftedElements.push(newElement);
         this.lastCraftedItem = result;
-        this.pendingSaves.add(result);
         
         this.$emit('craft-success', result);
-        this.saveDiscoveredElement(result);
         
         this.$nextTick(() => {
           if (this.observer) {
@@ -622,8 +616,7 @@ export default {
         const y = event.clientY - craftingBoardRect.top - offsetY;
         
         this.resourcePositions[index] = {
-          top: Math.max(0, Math.min(600, y)),
-          left: Math.max(0, Math.min(800, x)),
+          ...this.clampToBoard({ top: y, left: x }),
           dragOffset: {
             x: offsetX,
             y: offsetY
@@ -666,8 +659,7 @@ export default {
         
         if (!isInSelectionZone) {
           this.craftedElements[index].position = {
-            top: Math.max(0, Math.min(600, y)),
-            left: Math.max(0, Math.min(800, x)),
+            ...this.clampToBoard({ top: y, left: x }),
           };
           this.craftedElements[index].moved = true;
         }
@@ -791,14 +783,7 @@ export default {
     document.head.appendChild(style);
     
     this.setupIntersectionObserver();
-    
-    window.addEventListener('beforeunload', () => {
-      if (this.pendingSaves.size > 0) {
-        this.pendingSaves.forEach(element => {
-          this.saveDiscoveredElement(element);
-        });
-      }
-    });
+
   },
   beforeUnmount() {
     window.removeEventListener('keydown', this.handleKeyPress);
@@ -806,12 +791,6 @@ export default {
     if (this.observer) {
       this.observer.disconnect();
       this.observer = null;
-    }
-    
-    if (this.pendingSaves.size > 0) {
-      this.pendingSaves.forEach(element => {
-        this.saveDiscoveredElement(element);
-      });
     }
   }
 };

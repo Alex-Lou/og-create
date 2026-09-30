@@ -1,5 +1,5 @@
 // src/services/timerService.js
-import { apiInstance } from './authService';
+import apiInstance from './http';
 import AuthService from './authService';
 
 class TimerService {
@@ -18,13 +18,7 @@ class TimerService {
    * @returns {boolean} - True si l'utilisateur est authentifié
    */
   isAuthenticated() {
-    if (window.isLoggedOut) {
-      return false;
-    }
-    
-    return AuthService && typeof AuthService.isAuthenticated === 'function' 
-      ? AuthService.isAuthenticated() 
-      : false;
+    return AuthService.isAuthenticated();
   }
   
   /**

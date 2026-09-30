@@ -125,6 +125,8 @@
 </template>
 
 <script>
+import notificationService from '@/services/notificationService';
+
 export default {
   name: 'NpcDialog',
   props: {
@@ -272,7 +274,7 @@ export default {
         this.closeDialog();
       } else {
         // Message d'erreur dynamique : peut être remplacé par un message provenant d'un service de config
-        alert(this.regionData.insufficientEnergyMessage || 'Énergie insuffisante ! Attendez que votre énergie se régénère ou achetez-en plus.');
+        notificationService.warning(this.regionData.insufficientEnergyMessage || 'Énergie insuffisante ! Attendez que votre énergie se régénère ou achetez-en plus.');
       }
     }
   },

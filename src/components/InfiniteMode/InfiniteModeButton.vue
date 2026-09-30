@@ -144,6 +144,7 @@
 import '@/assets/ComponentsStyle/InfiniteStyle/InfiniteModeButtonStyle.css';
 export default {
   name: 'InfiniteModeButton',
+  emits: ['switch-to-infinite'],
   props: {
     isTimerActive: {
       type: Boolean,
@@ -164,34 +165,15 @@ export default {
       }
     },
     confirmInfiniteMode() {
-      this.$emit('force-stop');
       this.showStopConfirmModal = false;
       this.setInfiniteMode();
     },
     cancelInfiniteMode() {
       this.showStopConfirmModal = false;
     },
+    // Retour au mode Infini : App arrête le Timer / l'Explorer et restaure l'inventaire, sans recharger la page
     setInfiniteMode() {
-      localStorage.setItem('activateInfiniteMode', 'true');
-      this.$emit('switch-to-infinite', { forceReload: true });
-      setTimeout(() => {
-        window.location.href = window.location.pathname + '?reload=' + new Date().getTime() + '&mode=infinite';
-      }, 100);
-    }
-  },
-  mounted() {
-    if (localStorage.getItem('activateInfiniteMode') === 'true') {
-      localStorage.removeItem('activateInfiniteMode');
-      this.$nextTick(() => {
-        this.$emit('switch-to-infinite', { forceReload: false });
-        window.dispatchEvent(new CustomEvent('app-reloaded'));
-      });
-    }
-    const urlParams = new URLSearchParams(window.location.search);
-    if (urlParams.has('mode') && urlParams.get('mode') === 'infinite') {
-      this.$nextTick(() => {
-        window.dispatchEvent(new CustomEvent('app-reloaded'));
-      });
+      this.$emit('switch-to-infinite');
     }
   }
 };

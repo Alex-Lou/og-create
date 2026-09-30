@@ -357,7 +357,9 @@ header .dark-toggle {
 #main-content {
     display: flex;
     width: 100%;
-    height: calc(100vh);
+    /* Occupe la hauteur restante sous le header (au lieu de 100vh qui débordait) */
+    flex: 1;
+    min-height: 0;
 }
 
 /* Animation du dégradé */
@@ -509,4 +511,111 @@ button.timer-mode-button:hover {
     linear-gradient(to top, rgba(138, 92, 173, 0.3) 2px, transparent 2px) 0 100%,
     linear-gradient(to left, rgba(138, 92, 173, 0.3) 2px, transparent 2px) 100% 100%,
     linear-gradient(to top, rgba(138, 92, 173, 0.3) 2px, transparent 2px) 100% 100%;
+}
+
+/* ===========================
+   MISE EN PAGE & ACCESSIBILITÉ
+   =========================== */
+#game-container {
+    height: 100dvh;
+    overflow: hidden;
+}
+
+.inventory-wrapper,
+.crafting-board-wrapper {
+    min-width: 0;
+    min-height: 0;
+}
+
+/* Boutons de mode regroupés dans le header (au lieu de positions absolues en px) */
+header {
+    gap: 12px;
+}
+
+.mode-buttons {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-left: auto;
+}
+
+.mode-buttons .infinite-mode-button,
+.mode-buttons .explorer-mode-button,
+.mode-buttons .timer-mode-button {
+    position: relative;
+    left: auto;
+    bottom: auto;
+}
+
+.mode-buttons .timer-container {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.mode-buttons .timer-display-group {
+    position: static;
+}
+
+/* Focus clavier visible sur les éléments interactifs */
+.inventory-item:focus-visible,
+button:focus-visible {
+    outline: 2px solid #b188d4;
+    outline-offset: 2px;
+}
+
+/* Mobile : inventaire au-dessus de la zone de création */
+@media (max-width: 768px) {
+    header {
+        flex-wrap: wrap;
+    }
+
+    .mode-buttons {
+        order: 3;
+        width: 100%;
+        justify-content: center;
+        margin-left: 0;
+    }
+
+    .mode-buttons .infinite-mode-button,
+    .mode-buttons .explorer-mode-button,
+    .mode-buttons .timer-mode-button {
+        width: 104px;
+    }
+
+    #main-content {
+        flex-direction: column;
+    }
+
+    .inventory-wrapper {
+        flex: 0 0 auto !important;
+        max-height: 38dvh;
+        overflow-y: auto;
+    }
+
+    .crafting-board-wrapper {
+        flex: 1 1 auto !important;
+    }
+
+    /* Le bouton CRAFT (fixe + marge négative sur desktop) reste dans la zone de création */
+    .crafting-board-wrapper .craft-button {
+        position: relative !important;
+        margin: 8px 0 0 8px !important;
+    }
+
+    .resizer {
+        display: none;
+    }
+}
+
+/* Respecter la préférence "réduire les animations" du système */
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+    }
 }

@@ -1,0 +1,46 @@
+# Blueprint Render : front statique + API Node (plan gratuit).
+# La base PostgreSQL est hébergée hors Render (Neon/Supabase) : voir DEPLOY.md.
+services:
+  - type: web
+    name: og-create
+    runtime: static
+    repo: https://github.com/Alex-Lou/og-create
+    branch: master
+    buildCommand: npm ci && npm run build
+    staticPublishPath: ./dist
+    envVars:
+      # URL publique de l'API, injectée au build. Ex. https://og-create-backend.onrender.com/api
+      - key: VUE_APP_API_URL
+        sync: false
+    routes:
+      - type: rewrite
+        source: /*
+        destination: /index.html
+
+  - type: web
+    name: og-create-backend
+    runtime: node
+    plan: free
+    repo: https://github.com/Alex-Lou/og-create-backend
+    branch: main
+    buildCommand: npm ci
+    startCommand: npm start
+    healthCheckPath: /api/health
+    envVars:
+      - key: NODE_ENV
+        value: production
+      # Chaîne de connexion Neon/Supabase, avec ?sslmode=require
+      - key: DATABASE_URL
+        sync: false
+      # URL publique du front (pas de "*" : le front envoie ses requêtes avec credentials)
+      - key: CORS_ORIGIN
+        sync: false
+      - key: JWT_SECRET
+        generateValue: true
+      - key: JWT_REFRESH_SECRET
+        generateValue: true
+      # Formulaire de contact (facultatif)
+      - key: EMAIL_USER
+        sync: false
+      - key: EMAIL_PASSWORD
+        sync: false

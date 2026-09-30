@@ -177,20 +177,14 @@ export default {
       
       try {
         if (this.loginType === 'login') {
-          // Connexion directe avec AuthService
+          // Connexion avec AuthService (la page est rechargée en cas de succès)
           await AuthService.login(this.email, this.password);
-          
-          // Émettre également l'événement pour le parent
-          this.$emit('login-attempt', { email: this.email, password: this.password });
           
           // Fermer le modal
           this.isOpen = false;
         } else {
-          // Inscription directe avec AuthService
+          // Inscription avec AuthService (la page est rechargée en cas de succès)
           await AuthService.register(this.email, this.password);
-          
-          // Émettre également l'événement pour le parent
-          this.$emit('register-attempt', { email: this.email, password: this.password });
           
           // Fermer le modal
           this.isOpen = false;
@@ -203,9 +197,7 @@ export default {
       }
     },
     handleLogout() {
-      // Déconnecter directement
-      AuthService.logout();
-      // Émettre l'événement pour le parent
+      // Le parent (App) gère la déconnexion
       this.$emit('logout');
       // Fermer le dropdown
       this.isOpen = false;
