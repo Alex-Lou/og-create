@@ -8,12 +8,11 @@
 
 ## 1. Base de données (Neon)
 
-1. Créer un projet sur neon.tech, copier la chaîne de connexion (elle contient `?sslmode=require`).
-2. Depuis un clone de `og-create-backend` (psql requis) :
-   ```bash
-   export DATABASE_URL="postgresql://…?sslmode=require"
-   npm run db:setup      # schéma + données de démo, rejouable
-   ```
+1. Créer un projet sur neon.tech (seul « Postgres database » activé), copier la chaîne de connexion
+   jusqu'à `?sslmode=require` (retirer `&channel_binding=require`).
+2. Rien d'autre : l'API applique schéma + contenu du jeu à chaque build Render (`npm run db:setup`,
+   idempotent, sans toucher aux comptes ni à la progression).
+   Manuellement si besoin (depuis `og-create-backend`) : `DATABASE_URL="…" npm run db:setup`.
 
 ## 2. Render (Blueprint)
 
