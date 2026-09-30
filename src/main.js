@@ -5,7 +5,6 @@ import 'mobile-drag-drop/default.css';
 import './styles/tokens.css';
 import './styles/base.css';
 import App from './components/General/App.vue';
-import '@animxyz/core';
 
 // Glisser-déposer au doigt (le drag HTML5 ne réagit pas au tactile sur la plupart des mobiles) :
 // maintenir ~200 ms pour saisir un élément ; un tap sélectionne toujours, un geste rapide fait défiler.

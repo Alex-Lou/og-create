@@ -2,7 +2,7 @@
 // le nombre de découvertes fait évoluer lentement le fond vivant (stageOf).
 
 export const ERA_NAMES = ['Poussière d’étoiles', 'Molécules', 'Réactions', 'Courants', 'Vie'];
-export const MAX_ERA = ERA_NAMES.length;
+const MAX_ERA = ERA_NAMES.length;
 
 // Encre de chaque famille (RGB) pour les particules du fond : os, lueur, vert-de-gris et nuances proches
 const BONE = [233, 223, 200];
@@ -43,10 +43,6 @@ export function familyColor(name) {
   let hash = 0;
   for (const char of String(name)) hash = (hash * 31 + char.charCodeAt(0)) | 0;
   return FALLBACK_COLORS[Math.abs(hash) % FALLBACK_COLORS.length];
-}
-
-export function rgba(color, alpha) {
-  return `rgba(${color[0]}, ${color[1]}, ${color[2]}, ${alpha})`;
 }
 
 // Familles contenant au moins un élément découvert
