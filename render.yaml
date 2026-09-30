@@ -22,7 +22,7 @@ services:
     runtime: node
     plan: free
     repo: https://github.com/Alex-Lou/og-create-backend
-    branch: master
+    branch: main
     buildCommand: npm ci
     startCommand: npm start
     healthCheckPath: /api/health
