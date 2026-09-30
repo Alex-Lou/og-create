@@ -2,7 +2,7 @@
 // Conditions de succès supportées (sans évaluation de code) :
 //   "this.discoveredElements.includes('Vie')"   -> l'élément est découvert
 //   "this.discoveredElements.length >= 20"      -> au moins N éléments découverts
-// Plusieurs clauses peuvent être combinées avec &&. Une condition non reconnue n'est jamais remplie.
+// Les clauses se combinent avec && et ||. Une condition non reconnue n'est jamais remplie.
 
 const INCLUDES = /includes\(\s*['"]([^'"]+)['"]\s*\)/;
 const LENGTH = /length\s*>=\s*(\d+)/;
@@ -17,7 +17,10 @@ function isClauseMet(clause, elements) {
 
 export function isConditionMet(condition, elements) {
   if (typeof condition !== 'string' || !Array.isArray(elements)) return false;
-  return condition.split('&&').every(clause => isClauseMet(clause, elements));
+  // "A && B || C" : au moins une alternative (||) dont toutes les clauses (&&) sont remplies
+  return condition.split('||').some(alternative =>
+    alternative.split('&&').every(clause => isClauseMet(clause, elements))
+  );
 }
 
 // Succès pas encore débloqués dont la condition est remplie

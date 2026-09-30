@@ -543,8 +543,13 @@ handleTimerForceStop() {
                 elementsToSet = [...BASE_ELEMENTS];
               }
 
-              this.discoveredElements = elementsToSet;
-              localStorage.setItem('discoveredElements', JSON.stringify(this.discoveredElements));
+              // Session Timer en cours : la progression chargée va dans l'inventaire mis de côté
+              if (this.timerSnapshot) {
+                this.timerSnapshot.elements = elementsToSet;
+              } else {
+                this.discoveredElements = elementsToSet;
+              }
+              localStorage.setItem('discoveredElements', JSON.stringify(elementsToSet));
             } catch (e) {
               console.error("DEBUG - Erreur parsing discoveredElements:", e);
               this.discoveredElements = [...BASE_ELEMENTS];
@@ -570,8 +575,12 @@ handleTimerForceStop() {
                 categoriesToSet = [BASE_CATEGORY];
               }
 
-              this.discoveredCategories = categoriesToSet;
-              localStorage.setItem('discoveredCategories', JSON.stringify(this.discoveredCategories));
+              if (this.timerSnapshot) {
+                this.timerSnapshot.categories = categoriesToSet;
+              } else {
+                this.discoveredCategories = categoriesToSet;
+              }
+              localStorage.setItem('discoveredCategories', JSON.stringify(categoriesToSet));
             } catch (e) {
               console.error("DEBUG - Erreur parsing discoveredCategories:", e);
               this.discoveredCategories = [BASE_CATEGORY];
@@ -722,6 +731,8 @@ saveGameProgress() {
 
 
     updateCategoryProgress() {
+      // Pendant une session Timer, la progression reflète l'inventaire Infini (recalculée à la sortie)
+      if (this.timerSnapshot) return;
       Object.keys(this.categories).forEach(category => {
         const totalElements = this.categories[category].length;
         const discoveredCount = this.categories[category].filter(element => 
@@ -755,15 +766,18 @@ checkAuth() {
       document.body.classList.toggle("light-mode", !this.isDarkMode);
     },
     async handleLogout() {
+      // Envoyer la progression en attente tant que la session est valide
+      await progressService.flush();
       await AuthService.logout();
       this.isLoggedIn = false;
       this.currentUser = null;
       window.location.reload();
     },
     handleDataLoaded(data) {
-      this.elementEmojis = data.elementEmojis;
+      // Fusion : conserve les emojis/recettes du Timer arrivés avant le contenu principal
+      this.elementEmojis = { ...this.elementEmojis, ...data.elementEmojis };
       this.categories = data.categories;
-      this.craftingRecipes = data.craftingRecipes;
+      this.craftingRecipes = { ...this.craftingRecipes, ...data.craftingRecipes };
       this.updateCategoryProgress();
     },
     async loadGameContent() {

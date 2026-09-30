@@ -319,7 +319,7 @@ export default {
     handleKeyPress(event) {
       // Pas de raccourci pendant la saisie, sur un bouton focus, ou avec modificateur
       if (event.ctrlKey || event.metaKey || event.altKey) return;
-      if (event.target.closest?.('input, textarea, select, button, [contenteditable="true"]')) return;
+      if (event.target.closest?.('input, textarea, select, button, [role="button"], [contenteditable="true"]')) return;
       if (event.key === 'Enter') {
         this.craftItem();
       }
