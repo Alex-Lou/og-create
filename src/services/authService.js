@@ -1,8 +1,9 @@
 import axios from 'axios';
 import gameDataService from './gameDataService';
+import { API_URL } from '@/config';
 
 const axiosInstance = axios.create({
-  baseURL: 'http://localhost:3000/api/auth/',
+  baseURL: `${API_URL}/auth/`,
   headers: {
     'Content-Type': 'application/json'
   },
@@ -11,7 +12,7 @@ const axiosInstance = axios.create({
 
 // Instance API partagée que d'autres services peuvent utiliser
 export const apiInstance = axios.create({
-  baseURL: 'http://localhost:3000/api/',
+  baseURL: `${API_URL}/`,
   headers: {
     'Content-Type': 'application/json'
   },

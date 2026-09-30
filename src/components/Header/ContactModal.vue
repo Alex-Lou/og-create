@@ -58,6 +58,7 @@
 <script>
 import '@/assets/ComponentsStyle/HeaderStyle/ContactModalStyle.css'
 import axios from 'axios';
+import { API_URL } from '@/config';
 
 export default {
     name: 'ContactModal',
@@ -83,7 +84,7 @@ export default {
             this.successMessage = '';
 
             try {
-                await axios.post('http://localhost:3000/api/contact/send', {
+                await axios.post(`${API_URL}/contact/send`, {
                     email: this.email,
                     message: this.message
                 });

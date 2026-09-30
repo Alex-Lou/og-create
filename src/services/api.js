@@ -1,6 +1,7 @@
 // services/api.js
 import axios from 'axios';
 import authService from './authService';
+import { API_URL } from '@/config';
 
 // Cache pour stocker les requêtes récentes
 const requestCache = new Map();
@@ -15,7 +16,7 @@ class ApiService {
   constructor() {
     // Créer une instance Axios avec configuration de base
     this.instance = axios.create({
-      baseURL: 'http://localhost:3000/api', 
+      baseURL: API_URL,
       headers: {
         'Content-Type': 'application/json'
       },

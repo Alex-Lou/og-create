@@ -140,6 +140,7 @@
 import AuthService from '@/services/authService';
 import progressService from '@/services/progressService';
 import achievementsService from '@/services/achievementsService'; // Ajout du nouveau service
+import timerService from '@/services/timerService';
 import DarkToggle from '../Header/DarkToggle.vue';
 import LoginIcon from '../Header/LoginIcon.vue';
 import ContactIcon from '../Header/ContactIcon.vue';
@@ -599,38 +600,10 @@ async updateAchievements() {
       }
     });
     
-// Ajoutons un délai avant d'essayer de sauvegarder
-if (this.isLoggedIn) {
-      setTimeout(() => {
-        try {
-          fetch('/api/timer/save-elements', {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-              'Authorization': `Bearer ${AuthService.getCurrentUser()?.token}`
-            },
-            body: JSON.stringify({
-              elements: this.currentTimerElements
-            })
-          })
-          .then(response => {
-            if (response.ok) return response.json();
-            // Ne pas lancer d'erreur, simplement logger
-            console.warn('Avertissement: Impossible de sauvegarder les éléments Timer, continuez quand même');
-            return { success: false };
-          })
-          .then(data => {
-            if (data.success !== false) {
-              console.log('Éléments pour la question Timer sauvegardés');
-            }
-          })
-          .catch(error => {
-            console.warn('Erreur non bloquante lors de la sauvegarde des éléments:', error);
-          });
-        } catch (error) {
-          console.warn('Exception lors de la sauvegarde des éléments Timer, continuez quand même:', error);
-        }
-      }, 300);
+    // Sauvegarde non bloquante des éléments de la question
+    if (this.isLoggedIn) {
+      timerService.saveTimerElements(this.currentTimerElements)
+        .catch(error => console.warn('Erreur non bloquante lors de la sauvegarde des éléments Timer:', error));
     }
   }
   
@@ -1057,7 +1030,6 @@ handleCraftSuccess(craftedItem) {
         // Sauvegarder uniquement ce nouvel élément dans timer_elements
         if (this.isLoggedIn) {
           // Utiliser le service dédié au timer
-          const timerService = require('@/services/timerService').default;
           timerService.saveTimerElements([craftedItem])
             .then(() => {
               console.log(`Élément Timer ${craftedItem} sauvegardé avec succès`);
