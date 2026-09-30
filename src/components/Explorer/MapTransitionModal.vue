@@ -99,6 +99,9 @@
 </template>
   
 <script>
+// Seulement les images : un require(`@/assets/${…}`) embarquait aussi toutes les anciennes
+// feuilles CSS du dossier dans le build de production (elles écrasaient la nouvelle interface)
+const assetImages = require.context('@/assets', true, /\.(png|jpe?g|gif|webp|svg)$/);
 import explorerService from '@/services/explorerService';
 import '@/assets/ComponentsStyle/ExplorerStyle/MapTransitionModalStyle.css';
 
@@ -173,7 +176,7 @@ export default {
             return defaultRegion.image_path;
           } else {
             // Essayer de charger depuis les assets
-            return require(`@/assets/${defaultRegion.image_path}`);
+            return assetImages(`./${defaultRegion.image_path}`);
           }
         }
         

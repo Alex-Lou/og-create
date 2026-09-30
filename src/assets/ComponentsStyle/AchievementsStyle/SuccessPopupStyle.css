@@ -1,15 +1,20 @@
 /* Achievement Popup - Adapté pour AnimXYZ */
 #achievement-popup {
     position: fixed;
-    top: 50%;
-    right: 15%;
-    transform: translate(-50%, -50%);
-    background: rgba(31, 26, 26, 0.9);
+    /* Centré à l'écran sans transform (l'animation AnimXYZ utilise transform) ;
+       avant : right 15% + translate, coupé à gauche sur mobile */
+    inset: 0;
+    margin: auto;
+    width: min(92vw, 380px);
+    height: fit-content;
+    box-sizing: border-box;
+    background: rgba(16, 12, 28, 0.97);
+    border: 1px solid rgba(196, 181, 253, 0.2);
     color: #fff;
     padding: 15px 25px;
     border-radius: 15px;
     text-align: center;
-    z-index: 100;
+    z-index: 1000;
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.6);
 }
 
