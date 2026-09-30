@@ -532,7 +532,7 @@ export default {
       if (!this.active) return;
       
       if (!this.isRegionUnlocked(region)) {
-        alert('Cette région est verrouillée. Complétez les régions précédentes pour la débloquer.');
+        notificationService.warning('Cette région est verrouillée. Complétez les régions précédentes pour la débloquer.');
         return;
       }
       
@@ -625,7 +625,7 @@ export default {
         const energyCost = this.regionChallenges[region.id]?.energyCost || 2;
         
         if (this.energy < energyCost) {
-          alert(`Vous n'avez pas assez d'énergie pour explorer cette région (coût: ${energyCost} ⚡)`);
+          notificationService.warning(`Vous n'avez pas assez d'énergie pour explorer cette région (coût : ${energyCost} ⚡)`);
           return;
         }
         
@@ -650,7 +650,7 @@ export default {
         this.showCraftModal = true;
       } catch (error) {
         console.error('Erreur lors du démarrage du défi:', error);
-        alert(error.response?.data?.message || 'Une erreur est survenue lors du défi');
+        notificationService.error(error.response?.data?.message || 'Une erreur est survenue lors du défi');
       }
     },
 
@@ -660,7 +660,7 @@ export default {
 
     handlePlayerDefeated() {
       this.showCraftModal = false;
-      alert('Le boss vous a vaincu ! Reprenez des forces et retentez votre chance depuis la carte.');
+      notificationService.warning('Le boss vous a vaincu ! Reprenez des forces et retentez votre chance depuis la carte.', 5000);
     },
 
     async handleChallengeCompleted({ region, isBoss }) {

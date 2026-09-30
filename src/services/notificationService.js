@@ -2,13 +2,26 @@
 import { createApp } from 'vue';
 import ToastNotification from '@/components/Explorer/ToastNotification.vue';
 
+// Messages actuellement affichés (évite d'empiler plusieurs fois le même)
+const visibleMessages = new Set();
+
 const notificationService = {
   show(options) {
     const { message, duration = 3000, type = 'info' } = options;
+    if (!message || visibleMessages.has(message)) return;
+    visibleMessages.add(message);
     
-    // Créer un élément pour contenir la notification
+    // Les notifications s'empilent dans un conteneur commun
+    let stack = document.querySelector('.toast-stack');
+    if (!stack) {
+      stack = document.createElement('div');
+      stack.className = 'toast-stack';
+      stack.setAttribute('role', 'status');
+      stack.setAttribute('aria-live', 'polite');
+      document.body.appendChild(stack);
+    }
     const mountPoint = document.createElement('div');
-    document.body.appendChild(mountPoint);
+    stack.appendChild(mountPoint);
     
     // Créer l'instance du composant
     const notificationApp = createApp(ToastNotification, {
@@ -17,9 +30,10 @@ const notificationService = {
       type,
       showClose: true,
       onClose: () => {
+        visibleMessages.delete(message);
         setTimeout(() => {
           notificationApp.unmount();
-          document.body.removeChild(mountPoint);
+          mountPoint.remove();
         }, 300); // Attendre la fin de l'animation
       }
     });

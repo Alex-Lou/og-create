@@ -208,6 +208,7 @@
 import '@/assets/ComponentsStyle/TimerStyle/TimerQuestionsStyle.css';
 import progressService from '@/services/progressService';
 import gameService from '@/services/gameService';
+import notificationService from '@/services/notificationService';
  
 export default {
   name: 'TimerQuestions',
@@ -731,7 +732,7 @@ export default {
         await this.$nextTick();
       } catch (error) {
         console.error("Erreur lors de la sélection du niveau:", error);
-        alert("Erreur lors du chargement des données. Veuillez réessayer.");
+        notificationService.error("Erreur lors du chargement des données. Veuillez réessayer.");
       } finally {
         this.isLoading = false;
       }

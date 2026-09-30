@@ -252,6 +252,7 @@ export default {
       const craftedItem = findRecipe(this.craftingRecipes, this.selected);
       
       if (!craftedItem) {
+        this.$emit('show-alert', 'Rien ne se passe… Essayez une autre combinaison.');
         const selectedElements = document.querySelectorAll('#selected-resources li');
         selectedElements.forEach(el => {
           el.classList.add('shake-animation');

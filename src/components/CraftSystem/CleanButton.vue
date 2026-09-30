@@ -141,8 +141,9 @@ export default {
 
 .reset-crafting-button {
   position: fixed;  /* Gardez cette ligne */
+  /* Ancré au coin bas-droit de l'écran, quelle que soit sa largeur */
   bottom: -10px;
-  left: 1300px;
+  right: 16px;
   background: none;
   border: none !important;
   cursor: pointer;

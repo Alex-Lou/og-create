@@ -22,13 +22,9 @@
     
     <!-- Animation de particules -->
     <div class="gsap-particles-container">
-      <div v-for="n in 30" :key="n" 
+      <div v-for="(style, n) in particleStyles" :key="n" 
            class="particle"
-           :style="{
-             backgroundColor: getRandomColor(),
-             width: `${Math.random() * 6 + 4}px`,
-             height: `${Math.random() * 6 + 4}px`
-           }"
+           :style="style"
            ref="particles">
       </div>
     </div>
@@ -46,6 +42,7 @@
         </template>
       </div>
       <p>{{ currentDisplayedElement ? currentDisplayedElement.name : '' }}</p>
+      <span v-if="currentDisplayedElement && currentDisplayedElement.isNew" class="new-badge">Nouveau !</span>
     </div>
   </div>
 </template>
@@ -56,15 +53,8 @@ import '@/assets/ComponentsStyle/CraftStyle/CraftPopup.css';
 
 export default {
   name: 'CraftPopup',
+  // Piloté par App via queueElement({ name, image, isNew }) : chaque craft s'affiche, même répété
   props: {
-    craftedElement: {
-      type: Object,
-      required: true,
-      default: () => ({
-        name: '',
-        image: null
-      })
-    },
     elementEmojis: {
       type: Object,
       required: true
@@ -75,7 +65,12 @@ export default {
       elementsQueue: [],       // File d'attente pour les éléments
       isPopupVisible: false,   // État contrôlé par le code plutôt que directement par craftedElement.name
       popupTimer: null,        // Référence au timer pour pouvoir l'annuler
-      currentDisplayedElement: null // Élément actuellement affiché
+      currentDisplayedElement: null, // Élément actuellement affiché
+      // Tirées une fois : les particules ne changent plus de couleur à chaque rendu
+      particleStyles: Array.from({ length: 30 }, () => {
+        const size = `${Math.random() * 6 + 4}px`;
+        return { backgroundColor: this.getRandomColor(), width: size, height: size };
+      })
     };
   },
   methods: {
@@ -115,7 +110,6 @@ export default {
       // Configurer le timer pour fermer le popup
       this.popupTimer = setTimeout(() => {
         this.isPopupVisible = false;
-        this.$emit('reset-crafted-element');
         
         // Après une courte pause pour l'animation de fermeture, vérifier s'il y a d'autres éléments
         setTimeout(() => {
@@ -123,12 +117,7 @@ export default {
             this.processQueue();
           }
         }, 300); // Délai pour l'animation de fermeture
-      }, 2500);
-    },
-    
-    showPopup() {
-      // Ajouter l'élément actuel à la file d'attente
-      this.queueElement(this.craftedElement);
+      }, 2000);
     },
     
     animateParticles() {
@@ -180,18 +169,8 @@ export default {
     return colors[Math.floor(Math.random() * colors.length)];
   }
 },
-  watch: {
-    'craftedElement.name'(newValue) {
-      if (newValue) {
-        this.showPopup();
-      }
-    }
-  },
-  mounted() {
-    // Vérifier si un élément est déjà présent au montage
-    if (this.craftedElement && this.craftedElement.name) {
-      this.showPopup();
-    }
+  beforeUnmount() {
+    clearTimeout(this.popupTimer);
   }
 };
 </script>

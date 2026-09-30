@@ -11,6 +11,22 @@
     <h1>Origins Creation</h1>
     <CoinCounter :coins="coins" />
   </div>
+  <nav class="mode-buttons" aria-label="Modes de jeu">
+    <InfiniteModeButton
+      @switch-to-infinite="handleInfiniteModeActivation"
+      :isTimerActive="isTimerActive"
+      :isExplorerActive="isExplorerActive"
+    />
+    <ExplorerModeButton @click="activateExplorerMode" :isTimerActive="isTimerActive" :isExplorerActive="isExplorerActive" />
+    <TimerModeButton
+      ref="timerModeButton"
+      @timer-state-change="handleTimerStateChange"
+      @timer-complete="handleTimerComplete"
+      @show-question="showCurrentTimerQuestion"
+      @force-stop="handleTimerForceStop"
+      :isExplorerActive="isExplorerActive"
+    />
+  </nav>
   <div class="header-controls">
     <DarkToggle :isDarkMode="isDarkMode" @update:darkMode="updateDarkMode" />
     <LoginIcon 
@@ -27,20 +43,6 @@
       @open-contact="handleOpenContact"
     />
   </div>
-  <InfiniteModeButton 
-    @switch-to-infinite="handleInfiniteModeActivation" 
-    :isTimerActive="isTimerActive" 
-    :isExplorerActive="isExplorerActive" 
-  />
-  <ExplorerModeButton @click="activateExplorerMode" :isTimerActive="isTimerActive" :isExplorerActive="isExplorerActive" />
-  <TimerModeButton 
-    ref="timerModeButton"
-    @timer-state-change="handleTimerStateChange"
-    @timer-complete="handleTimerComplete"
-    @show-question="showCurrentTimerQuestion"
-    @force-stop="handleTimerForceStop"
-    :isExplorerActive="isExplorerActive"
-  />
 </header>
     <main id="main-content" ref="mainContent" v-show="!isExplorerActive">
       <div ref="inventory" class="inventory-wrapper">
@@ -67,10 +69,9 @@
       </div>
     </main>
     <CraftPopup
-      v-if="!isExplorerActive && craftedElement.name"
-      :craftedElement="craftedElement"
+      v-show="!isExplorerActive"
+      ref="craftPopup"
       :elementEmojis="elementEmojis"
-      @reset-crafted-element="resetCraftedElement"
     />
     <GameAchievementsPopup
       v-if="achievementQueue.length"
@@ -138,6 +139,7 @@ import gameDataService from '@/services/gameDataService';
 import { findNewlyUnlocked } from '@/utils/achievementChecker';
 import { BASE_ELEMENTS, BASE_CATEGORY } from '@/utils/gameConstants';
 import timerService from '@/services/timerService';
+import notificationService from '@/services/notificationService';
 import DarkToggle from '../Header/DarkToggle.vue';
 import LoginIcon from '../Header/LoginIcon.vue';
 import ContactIcon from '../Header/ContactIcon.vue';
@@ -184,10 +186,6 @@ export default {
       discoveredCategories: [BASE_CATEGORY],
       discoveredElements: [...BASE_ELEMENTS],
       isDarkMode: true,
-      craftedElement: {
-        name: "",
-        image: null,
-      },
       achievements: [],
       saveInterval: null,
       explorerEnergy: null,
@@ -760,7 +758,6 @@ checkAuth() {
       await AuthService.logout();
       this.isLoggedIn = false;
       this.currentUser = null;
-      this.showAlert('Déconnexion réussie');
       window.location.reload();
     },
     handleDataLoaded(data) {
@@ -805,18 +802,15 @@ checkAuth() {
     },
 
 handleCraftSuccess(craftedItem) {
-  
+  let image = null;
   try {
-    this.craftedElement = {
-      name: craftedItem,
-      image: require(`@/assets/creatures/${craftedItem}.png`),
-    };
-  } catch (error) {
-    this.craftedElement = {
-      name: craftedItem,
-      image: null,
-    };
+    image = require(`@/assets/creatures/${craftedItem}.png`);
+  } catch {
+    // Pas d'illustration : le popup affiche l'emoji
   }
+  // "Nouveau !" seulement pour une vraie découverte (calculé avant l'ajout à l'inventaire)
+  const isNew = !this.discoveredElements.includes(craftedItem);
+  this.$refs.craftPopup?.queueElement({ name: craftedItem, image, isNew });
   
   // Mode normal (ni Timer ni Explorer)
   if (!this.isTimerActive && !this.isExplorerActive) {
@@ -939,11 +933,8 @@ handleCraftSuccess(craftedItem) {
     closeAchievementPopup() {
       this.achievementQueue.shift();
     },
-    resetCraftedElement() {
-      this.craftedElement = { name: "", image: null };
-    },
     showAlert(message) {
-      alert(message);
+      notificationService.info(message);
     },
     handleAchievementPopupOpened() {
       this.isFireworkActive = true;
