@@ -1,9 +1,9 @@
 <template>
-  <div :class="['oc-app', { 'oc-app--multi': slotCount > 2 }]" id="game-container">
+  <div :class="['oc-app', { 'oc-app--multi': slotCount > 2, 'oc-app--explorer': isExplorerActive }]" id="game-container">
     <LivingBackground ref="background" :era="era" :population="population" :palette="palette" />
 
     <div class="oc-app__shell">
-      <AppHeader :found="discoveredCount" :total="totalElements" :eraLabel="eraLabel" :coins="coins">
+      <AppHeader :found="discoveredCount" :total="totalElements" :eraLabel="eraLabel" :coins="coins" :timerActive="isTimerActive">
         <template #timer>
           <TimerModeButton
             ref="timerModeButton"
@@ -15,10 +15,13 @@
           />
         </template>
         <template #actions>
-          <button type="button" class="g-icon-btn" aria-label="Codex des succès" @click="showCodex = true">
+          <!-- Raccourcis PC ; sur mobile, ils sont dans le menu du sceau -->
+          <button type="button" class="g-icon-btn oc-desk-only" aria-label="Codex des succès" @click="showCodex = true">
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" aria-hidden="true"><path d="M5 3h11l3 3v15H5z"></path><path d="M9 8h6M9 12h6M9 16h3"></path></svg>
           </button>
-          <ContactIcon :isDarkMode="true" />
+          <button type="button" class="g-icon-btn oc-desk-only" aria-label="Écrire aux créateurs" @click="showContact = true">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" aria-hidden="true"><path d="M3 6h18v12H3z"></path><path d="M3 6l9 7 9-7"></path></svg>
+          </button>
           <AccountMenu
             :isLoggedIn="isLoggedIn"
             :currentUser="currentUser"
@@ -28,6 +31,7 @@
             @open-sceau="showSceau = true"
             @open-cabinet="handleOpenCustomizeModal"
             @open-codex="showCodex = true"
+            @open-contact="showContact = true"
             @logout="handleLogout"
           />
         </template>
@@ -86,6 +90,7 @@
         <button type="button" class="g-btn" @click="handleTimerEndModalClose">Retour au registre</button>
       </template>
     </GModal>
+    <ContactModal v-if="showContact" @close="showContact = false" />
     <CodexModal v-if="showCodex" :achievements="achievements" @close="showCodex = false" />
     <SceauModal
       v-if="showSceau"
@@ -138,6 +143,7 @@
       :discoveredElements="discoveredElements"
       @close="deactivateExplorerMode"
       @coins-updated="handleCoinsUpdated"
+      @show-alert="showAlert"
     />
   </div>
 </template>
@@ -151,7 +157,7 @@ import { findNewlyUnlocked } from '@/utils/achievementChecker';
 import { BASE_ELEMENTS, BASE_CATEGORY } from '@/utils/gameConstants';
 import timerService from '@/services/timerService';
 import notificationService from '@/services/notificationService';
-import ContactIcon from '../Header/ContactIcon.vue';
+import ContactModal from '../Header/ContactModal.vue';
 import GameAchievementsPopup from '../Achievements/GameAchievementsPopup.vue';
 import GameInventory from '../Inventory/GameInventory.vue';
 import CodexModal from '../Achievements/CodexModal.vue';
@@ -177,7 +183,7 @@ export default {
     ModeSwitcher,
     CraftZone,
     LivingBackground,
-    ContactIcon,
+    ContactModal,
     GameAchievementsPopup,
     GameInventory,
     CodexModal,
@@ -211,6 +217,7 @@ export default {
       currentUser: null,
       categoryProgress: {},
       showCodex: false,
+      showContact: false,
       showSceau: false,
       isTimerActive: false,
       isExplorerActive: false,
@@ -1193,7 +1200,11 @@ handleCraftSuccess(craftedItem) {
 .timer-end__stat { display: flex; flex-direction: column; gap: 4px; align-items: center; }
 .timer-end__big { font-size: 56px; line-height: 1; }
 
+/* Expédition : pas de dock de création, donc pas de marge réservée en bas */
+.oc-app--explorer .oc-app__shell { padding-bottom: 0; }
+
 @media (max-width: 859px) {
+  .oc-desk-only { display: none; }
   /* Dock sur 2 lignes (3–4 emplacements) : plus haut, la liste garde assez de marge en bas */
   .oc-app--multi { --oc-dock-height: 160px; }
 }

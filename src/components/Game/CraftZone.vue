@@ -71,7 +71,7 @@
           <img v-if="result.image" class="reveal__image" :src="result.image" :alt="result.name" />
           <span v-else class="reveal__ink g-ink--glow" aria-hidden="true">{{ emojiOf(result.name) }}</span>
           <span class="reveal__name">{{ result.name }}</span>
-          <span class="g-italic reveal__origin">née de {{ result.from.join(' et ') }}</span>
+          <span class="g-italic reveal__origin">{{ result.from.join(' + ') }}</span>
         </span>
       </button>
     </transition>

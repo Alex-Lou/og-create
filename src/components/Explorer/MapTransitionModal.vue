@@ -38,7 +38,7 @@
 const assetImages = require.context('@/assets', true, /\.(png|jpe?g|gif|webp|svg)$/);
 import explorerService from '@/services/explorerService';
 import GModal from '@/components/ui/GModal.vue';
-import { toRoman } from './explorerFormat';
+import { roman as toRoman } from '@/utils/roman';
 
 export default {
   name: 'MapTransitionModal',

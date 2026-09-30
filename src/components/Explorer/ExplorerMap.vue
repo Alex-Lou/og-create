@@ -162,7 +162,7 @@ import MapSelector from './MapSelector.vue';
 import ExitConfirmationModal from './ExitConfirmationModal.vue';
 import notificationService from '@/services/notificationService';
 import axios from 'axios';
-import { toRoman } from './explorerFormat';
+import { roman as toRoman } from '@/utils/roman';
 
 export default {
   name: 'ExplorerMap',

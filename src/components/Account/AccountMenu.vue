@@ -3,8 +3,8 @@
     <button
       type="button"
       class="account__trigger"
-      :aria-label="isLoggedIn ? 'Mon compte' : 'Se connecter'"
-      :aria-expanded="isLoggedIn ? String(open) : null"
+      :aria-label="isLoggedIn ? 'Mon compte' : 'Menu'"
+      :aria-expanded="String(open)"
       @click="toggle"
     >
       <GSigil :shares="shares" :rings="rings" :size="44" label="" />
@@ -15,16 +15,22 @@
         <div class="account__who">
           <GSigil :shares="shares" :rings="rings" :size="56" />
           <div class="account__id">
-            <span class="g-display account__name">{{ username }}</span>
+            <span class="g-display account__name">{{ isLoggedIn ? username : 'Invité' }}</span>
             <span class="g-mono">{{ eraLabel }}</span>
           </div>
         </div>
         <hr class="g-rule" />
-        <button type="button" class="account__link" @click="pick('open-sceau')">Mon sceau</button>
-        <button type="button" class="account__link" @click="pick('open-cabinet')">Le Cabinet</button>
+        <template v-if="isLoggedIn">
+          <button type="button" class="account__link" @click="pick('open-sceau')">Mon sceau</button>
+          <button type="button" class="account__link" @click="pick('open-cabinet')">Le Cabinet</button>
+        </template>
+        <button v-else type="button" class="account__link account__link--gold" @click="openSeuil">Se connecter · créer un compte</button>
         <button type="button" class="account__link" @click="pick('open-codex')">Codex des succès</button>
-        <hr class="g-rule" />
-        <button type="button" class="account__link account__link--quiet" @click="pick('logout')">Se déconnecter</button>
+        <button type="button" class="account__link" @click="pick('open-contact')">Écrire aux créateurs</button>
+        <template v-if="isLoggedIn">
+          <hr class="g-rule" />
+          <button type="button" class="account__link account__link--quiet" @click="pick('logout')">Se déconnecter</button>
+        </template>
       </nav>
     </transition>
 
@@ -36,7 +42,7 @@
 import GSigil from '@/components/ui/GSigil.vue';
 import SeuilModal from './SeuilModal.vue';
 
-// Sceau du joueur dans l'en-tête : ouvre le menu du compte, ou le Seuil pour un invité
+// Sceau du joueur dans l'en-tête : menu du compte (le Seuil pour se connecter en invité)
 export default {
   name: 'AccountMenu',
   components: { GSigil, SeuilModal },
@@ -47,7 +53,7 @@ export default {
     rings: { type: Number, default: 0 },
     eraLabel: { type: String, default: '' }
   },
-  emits: ['open-sceau', 'open-cabinet', 'open-codex', 'logout'],
+  emits: ['open-sceau', 'open-cabinet', 'open-codex', 'open-contact', 'logout'],
   data() {
     return { open: false, seuilOpen: false };
   },
@@ -72,11 +78,11 @@ export default {
   },
   methods: {
     toggle() {
-      if (!this.isLoggedIn) {
-        this.seuilOpen = true;
-        return;
-      }
       this.open = !this.open;
+    },
+    openSeuil() {
+      this.open = false;
+      this.seuilOpen = true;
     },
     pick(event) {
       this.open = false;
@@ -126,6 +132,7 @@ export default {
   color: var(--oc-text);
 }
 .account__link:hover { color: var(--oc-gold); }
+.account__link--gold { color: var(--oc-gold); }
 .account__link--quiet { font-family: var(--oc-font-italic); font-style: italic; color: var(--oc-text-muted); }
 .account-pop-enter-active, .account-pop-leave-active { transition: opacity var(--oc-fast), transform var(--oc-fast) var(--oc-ease-out); }
 .account-pop-enter-from, .account-pop-leave-to { opacity: 0; transform: translateY(-6px); }

@@ -14,7 +14,7 @@
 
     <div class="app-header__actions">
       <slot name="timer"></slot>
-      <span class="app-header__ecus" :title="`${coins} écus`">
+      <span :class="['app-header__ecus', { 'is-busy': timerActive }]" :title="`${coins} écus`">
         <span :key="coins" class="app-header__ecus-value">{{ formattedCoins }}</span>
         <span class="g-mono">écus</span>
       </span>
@@ -31,7 +31,9 @@ export default {
     found: { type: Number, default: 0 },
     total: { type: Number, default: 0 },
     eraLabel: { type: String, default: '' },
-    coins: { type: Number, default: 0 }
+    coins: { type: Number, default: 0 },
+    // Épreuve en cours : sur mobile, le chrono prend la place des écus
+    timerActive: { type: Boolean, default: false }
   },
   computed: {
     formattedCoins() {
@@ -94,5 +96,6 @@ export default {
   .app-header__title { font-size: 24px; }
   .app-header__count { display: none; }
   .app-header__actions { gap: 10px; }
+  .app-header__ecus.is-busy { display: none; }
 }
 </style>
