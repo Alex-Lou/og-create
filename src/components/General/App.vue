@@ -1,80 +1,65 @@
 <template>
-  <div :class="['game-container', { 'dark-mode': isDarkMode }]" id="game-container">
+  <div class="oc-app" id="game-container">
+    <LivingBackground ref="background" :era="era" :population="population" :palette="palette" />
     <GameAchievementsContent :achievements="achievements" />
-    <header style="position: relative;">
-  <!-- Ajouts décoratifs minimaux qui ne perturbent pas la structure -->
-  <div class="header-decoration"></div>
-  
-  <!-- Structure originale préservée exactement comme avant -->
-  <div class="title-area">
-    <img src="@/assets/Svgs/Logo.png" alt="Logo" class="logo" />
-    <h1>Origins Creation</h1>
-    <CoinCounter :coins="coins" />
-  </div>
-  <nav class="mode-buttons" aria-label="Modes de jeu">
-    <InfiniteModeButton
-      @switch-to-infinite="handleInfiniteModeActivation"
-      :isTimerActive="isTimerActive"
-      :isExplorerActive="isExplorerActive"
-    />
-    <ExplorerModeButton @click="activateExplorerMode" :isTimerActive="isTimerActive" :isExplorerActive="isExplorerActive" />
-    <TimerModeButton
-      ref="timerModeButton"
-      @timer-state-change="handleTimerStateChange"
-      @timer-complete="handleTimerComplete"
-      @show-question="showCurrentTimerQuestion"
-      @force-stop="handleTimerForceStop"
-      :isExplorerActive="isExplorerActive"
-    />
-  </nav>
-  <div class="header-controls">
-    <DarkToggle :isDarkMode="isDarkMode" @update:darkMode="updateDarkMode" />
-    <LoginIcon 
-      :isDarkMode="isDarkMode" 
-      :isLoggedIn="isLoggedIn"
-      :currentUser="currentUser"
-      :selectedFrame="selectedFrame"
-      :selectedAvatar="selectedAvatar"
-      @logout="handleLogout"
-      @open-customize-modal="handleOpenCustomizeModal"
-    />
-    <ContactIcon 
-      :isDarkMode="isDarkMode"
-      @open-contact="handleOpenContact"
-    />
-  </div>
-</header>
-    <main id="main-content" ref="mainContent" v-show="!isExplorerActive">
-      <div ref="inventory" class="inventory-wrapper">
-        <GameInventory
-          :categories="categories"
-          :discoveredCategories="discoveredCategories"
-          :discoveredElements="discoveredElements"
-          :elementEmojis="elementEmojis"
-          :isTimerMode="isTimerActive"
-          @selectResource="handleResourceSelection"
-        />
-      </div>
-      <GameSizer />
-      <div ref="craftingBoard" class="crafting-board-wrapper">
-        <CraftSystem
-          :elementEmojis="elementEmojis"
-          :craftingRecipes="craftingRecipes"
-          :isDarkMode="isDarkMode"
-          :isFireworkActive="isFireworkActive"
-          @craft-success="handleCraftSuccess"
-          @show-alert="showAlert"
-          ref="craftSystem"
-        />
-      </div>
-    </main>
-    <CraftPopup
-      v-show="!isExplorerActive"
-      ref="craftPopup"
-      :elementEmojis="elementEmojis"
-    />
+
+    <div class="oc-app__shell">
+      <AppHeader :found="discoveredCount" :total="totalElements" :era="era" :eraName="eraName" :coins="coins">
+        <template #timer>
+          <TimerModeButton
+            ref="timerModeButton"
+            :showTrigger="false"
+            @timer-state-change="handleTimerStateChange"
+            @timer-complete="handleTimerComplete"
+            @show-question="showCurrentTimerQuestion"
+            @force-stop="handleTimerForceStop"
+          />
+        </template>
+        <template #actions>
+          <ContactIcon :isDarkMode="true" @open-contact="handleOpenContact" />
+          <LoginIcon
+            :isDarkMode="true"
+            :isLoggedIn="isLoggedIn"
+            :currentUser="currentUser"
+            :selectedFrame="selectedFrame"
+            :selectedAvatar="selectedAvatar"
+            @logout="handleLogout"
+            @open-customize-modal="handleOpenCustomizeModal"
+          />
+        </template>
+        <template #modes>
+          <ModeSwitcher :current="currentMode" @select="handleModeSelect" />
+        </template>
+      </AppHeader>
+
+      <main id="main-content" ref="mainContent" class="oc-app__main" v-show="!isExplorerActive">
+        <div class="oc-app__inventory">
+          <GameInventory
+            :categories="categories"
+            :discoveredElements="discoveredElements"
+            :elementEmojis="elementEmojis"
+            :isTimerMode="isTimerActive"
+            :freshElement="freshElement"
+            @selectResource="handleResourceSelection"
+          />
+        </div>
+        <div class="oc-app__craft">
+          <CraftZone
+            ref="craftZone"
+            :slotCount="slotCount"
+            :craftingRecipes="craftingRecipes"
+            :elementEmojis="elementEmojis"
+            :discoveredElements="discoveredElements"
+            @craft-success="handleCraftSuccess"
+            @discovery="handleDiscovery"
+            @show-alert="showAlert"
+            @revealing="isRevealing = $event"
+          />
+        </div>
+      </main>
+    </div>
     <GameAchievementsPopup
-      v-if="achievementQueue.length"
+      v-if="achievementQueue.length && !isRevealing"
       :key="achievementQueue[0].name"
       :achievement="achievementQueue[0]"
       @close="closeAchievementPopup"
@@ -140,41 +125,35 @@ import { findNewlyUnlocked } from '@/utils/achievementChecker';
 import { BASE_ELEMENTS, BASE_CATEGORY } from '@/utils/gameConstants';
 import timerService from '@/services/timerService';
 import notificationService from '@/services/notificationService';
-import DarkToggle from '../Header/DarkToggle.vue';
 import LoginIcon from '../Header/LoginIcon.vue';
 import ContactIcon from '../Header/ContactIcon.vue';
 import GameAchievementsPopup from '../Achievements/GameAchievementsPopup.vue';
 import GameInventory from '../Inventory/GameInventory.vue';
-import CraftSystem from '../CraftSystem/CraftSystem.vue';
-import CraftPopup from '../CraftSystem/CraftPopup.vue';
 import GameAchievementsContent from '../Achievements/GameAchievementsContent.vue';
-import GameSizer from '../Inventory/GameSizer.vue';
-import InfiniteModeButton from '../InfiniteMode/InfiniteModeButton.vue';
-import ExplorerModeButton from '../Explorer/ExplorerModeButton.vue';
 import TimerModeButton from '../TimerMode/TimerModeButton.vue';
 import TimerQuestions from '../TimerMode/TimerQuestions.vue';
-import CoinCounter from '../Header/CoinCounter.vue';
 import CustomizeModal from '../Header/CustomizeModal.vue';
 import ExplorerMap from '../Explorer/ExplorerMap.vue';
-import '@/assets/ComponentsStyle/GeneralStyle/style.css';
+import AppHeader from '../Game/AppHeader.vue';
+import ModeSwitcher from '../Game/ModeSwitcher.vue';
+import CraftZone from '../Game/CraftZone.vue';
+import LivingBackground from '../Game/LivingBackground.vue';
+import { ERA_NAMES, familyColor, discoveredFamilies, eraOf, slotCountForEra } from '@/utils/eras';
 
 export default {
   name: 'App',
   components: {
-    DarkToggle,
+    AppHeader,
+    ModeSwitcher,
+    CraftZone,
+    LivingBackground,
     LoginIcon,
     ContactIcon,
     GameAchievementsPopup,
     GameInventory,
-    CraftSystem,
-    CraftPopup,
     GameAchievementsContent,
-    GameSizer,
-    InfiniteModeButton,
-    ExplorerModeButton,
     TimerModeButton,
     TimerQuestions,
-    CoinCounter,
     CustomizeModal,
     ExplorerMap
   },
@@ -186,14 +165,16 @@ export default {
       categories: { [BASE_CATEGORY]: [...BASE_ELEMENTS] },
       discoveredCategories: [BASE_CATEGORY],
       discoveredElements: [...BASE_ELEMENTS],
-      isDarkMode: true,
       achievements: [],
       saveInterval: null,
       explorerEnergy: null,
       explorerLastUpdate: null,
       // Succès débloqués en attente d'affichage (un popup à la fois)
       achievementQueue: [],
-      isFireworkActive: false,
+      // Dernière découverte, mise en valeur dans l'inventaire
+      freshElement: null,
+      // Révélation d'une création en cours : les popups de succès attendent
+      isRevealing: false,
       isLoggedIn: false,
       currentUser: null,
       categoryProgress: {},
@@ -237,10 +218,55 @@ export default {
   const progress = this.isLoggedIn ? this.loadGameProgress().catch(() => {}) : null;
   await Promise.all([this.loadGameContent(), progress]);
   await this.loadAchievements();
+  // Désormais, un changement d'ère vient d'une découverte (pas du chargement)
+  this.progressReady = true;
   if (this.isLoggedIn) {
     this.loadSavedCustomization();
     // Démarrer la sauvegarde périodique
     this.startPeriodicSave();
+  }
+},
+computed: {
+  currentMode() {
+    if (this.isExplorerActive) return 'explorer';
+    return this.isTimerActive ? 'timer' : 'infinite';
+  },
+  // La progression (ère, fond) suit toujours l'inventaire Infini, même pendant un Timer
+  infiniteElements() {
+    return this.timerSnapshot ? this.timerSnapshot.elements : this.discoveredElements;
+  },
+  families() {
+    return discoveredFamilies(this.categories, this.infiniteElements);
+  },
+  era() {
+    return eraOf(this.families.length);
+  },
+  eraName() {
+    return ERA_NAMES[this.era - 1];
+  },
+  // Emplacements de fusion : 4 en Timer, sinon débloqués au fil des ères
+  slotCount() {
+    return this.isTimerActive ? 4 : slotCountForEra(this.era);
+  },
+  totalElements() {
+    return new Set(Object.values(this.categories).flat()).size;
+  },
+  discoveredCount() {
+    return new Set(this.infiniteElements).size;
+  },
+  population() {
+    return 22 + 5 * this.discoveredCount;
+  },
+  palette() {
+    return this.families.map(familyColor);
+  }
+},
+watch: {
+  // Un emplacement de plus : on le dit (hors Timer, où il y en a toujours 4)
+  era(next, previous) {
+    if (this.progressReady && !this.timerSnapshot && slotCountForEra(next) > slotCountForEra(previous)) {
+      this.showAlert('Nouvel emplacement de fusion débloqué !');
+    }
   }
 },
 beforeUnmount() {
@@ -297,10 +323,7 @@ beforeUnmount() {
         // Activer le mode Explorer
         this.isExplorerActive = true;
         
-        // Réinitialiser la zone de craft (optionnel)
-        if (this.$refs.craftSystem) {
-          this.$refs.craftSystem.resetCraftingBoard();
-        }
+        this.resetCraftBoard();
       } catch (error) {
         console.error("Erreur lors de l'activation du mode Explorer :", error);
       }
@@ -450,17 +473,12 @@ beforeUnmount() {
 },
 
     handleResetCraftZone() {
-      if (this.$refs.craftSystem) {
-        this.$refs.craftSystem.resetCraftingBoard();
-      }
+      this.resetCraftBoard();
     },
     handleSetInitialInventory(elements) {
   if (!this.isTimerActive) return;
   
-  if (this.$refs.craftSystem) {
-    this.$refs.craftSystem.resetCraftingBoard();
-    this.$refs.craftSystem.selectedElements = [];
-  }
+  this.resetCraftBoard();
   
   // Réinitialiser à juste les éléments fondamentaux
   this.discoveredElements = [...BASE_ELEMENTS];
@@ -768,10 +786,6 @@ checkAuth() {
     this.selectedAvatar = 'coin.png';
   }
 },
-    updateDarkMode(newMode) {
-      this.isDarkMode = newMode;
-      document.body.classList.toggle("light-mode", !this.isDarkMode);
-    },
     async handleLogout() {
       // Envoyer la progression en attente tant que la session est valide
       await progressService.flush();
@@ -818,21 +832,30 @@ checkAuth() {
           .catch(error => console.error('Erreur lors de la sauvegarde des succès:', error));
       }
     },
-    handleResourceSelection(resource) {
-      this.$refs.craftSystem.selectResource(resource);
+    handleResourceSelection(resource, fromRect) {
+      this.$refs.craftZone?.add(resource, fromRect);
+    },
+    // Nouvelle découverte : le fond vivant réagit, la carte s'illumine dans l'inventaire
+    handleDiscovery({ name, x, y }) {
+      this.$refs.background?.burst(x, y);
+      this.freshElement = name;
+    },
+    handleModeSelect(mode) {
+      if (mode === this.currentMode) return;
+      if (mode === 'explorer') {
+        this.activateExplorerMode();
+      } else if (mode === 'timer') {
+        this.isExplorerActive = false;
+        this.$refs.timerModeButton?.startTimer();
+      } else if (this.isTimerActive) {
+        // Quitter le Timer perd la question en cours : on confirme d'abord
+        this.$refs.timerModeButton?.requestStop();
+      } else {
+        this.handleInfiniteModeActivation();
+      }
     },
 
 handleCraftSuccess(craftedItem) {
-  let image = null;
-  try {
-    image = require(`@/assets/creatures/${craftedItem}.png`);
-  } catch {
-    // Pas d'illustration : le popup affiche l'emoji
-  }
-  // "Nouveau !" seulement pour une vraie découverte (calculé avant l'ajout à l'inventaire)
-  const isNew = !this.discoveredElements.includes(craftedItem);
-  this.$refs.craftPopup?.queueElement({ name: craftedItem, image, isNew });
-  
   // Mode normal (ni Timer ni Explorer)
   if (!this.isTimerActive && !this.isExplorerActive) {
     // Sauvegarder l'élément découvert
@@ -957,11 +980,9 @@ handleCraftSuccess(craftedItem) {
     showAlert(message) {
       notificationService.info(message);
     },
+    // Succès débloqué : une gerbe de particules au centre de l'écran
     handleAchievementPopupOpened() {
-      this.isFireworkActive = true;
-      setTimeout(() => {
-        this.isFireworkActive = false;
-      }, 2000);
+      this.$refs.background?.burst(window.innerWidth / 2, window.innerHeight / 2);
     },
     handleTimerStateChange(isActive) {
       // Le bouton Timer peut émettre plusieurs fois "true" : on n'agit que sur les transitions
@@ -994,10 +1015,7 @@ handleCraftSuccess(craftedItem) {
       }
     },
     resetCraftBoard() {
-      if (this.$refs.craftSystem) {
-        this.$refs.craftSystem.resetCraftingBoard();
-        this.$refs.craftSystem.selectedElements = [];
-      }
+      this.$refs.craftZone?.clear();
     },
     // Met de côté l'inventaire Infini au début d'une session Timer
     enterTimerMode() {
@@ -1089,3 +1107,87 @@ handleCraftSuccess(craftedItem) {
   }
 };
 </script>
+
+<style>
+/* Mise en page : PC en 2 colonnes (inventaire | zone), mobile en inventaire plein écran + dock */
+.oc-app {
+  position: relative;
+  min-height: 100vh;
+  min-height: 100dvh;
+  color: var(--oc-text);
+  font-family: var(--oc-font-body);
+}
+.oc-app__shell {
+  position: relative;
+  z-index: 1;
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 0 var(--oc-gutter) calc(var(--oc-dock-height) + 32px + env(safe-area-inset-bottom));
+}
+.oc-app__main { display: block; }
+.oc-app__inventory { min-width: 0; }
+
+@media (min-width: 860px) {
+  .oc-app__shell { padding-bottom: 32px; }
+  .oc-app__main {
+    display: grid;
+    grid-template-columns: minmax(320px, 420px) minmax(0, 1fr);
+    gap: 28px;
+    align-items: start;
+  }
+  /* La zone reste en vue pendant qu'on fait défiler l'inventaire */
+  .oc-app__craft { position: sticky; top: 16px; min-height: 560px; display: flex; }
+  .oc-app__craft > * { flex: 1; }
+}
+
+/* Chrono du Timer : pastille compacte dans l'en-tête */
+.oc-app .timer-container { position: static; margin: 0; }
+.oc-app .timer-display-group {
+  position: static;
+  transform: none;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin: 0;
+}
+.oc-app .timer-display {
+  height: 38px;
+  padding: 0 12px;
+  display: flex;
+  align-items: center;
+  border-radius: var(--oc-radius-pill);
+  background: var(--oc-accent-soft);
+  border: 1px solid var(--oc-accent-line);
+  color: var(--oc-text-strong);
+  font: 600 14px var(--oc-font-body);
+  font-variant-numeric: tabular-nums;
+  box-shadow: none;
+}
+.oc-app .help-button {
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  border: 1px solid var(--oc-line);
+  background: var(--oc-panel);
+  color: var(--oc-text);
+  font: 600 15px var(--oc-font-body);
+  cursor: pointer;
+}
+
+/* Icônes compte et contact : alignées dans l'en-tête (leurs anciennes marges les décalaient) */
+.oc-app .app-header__actions .login-container,
+.oc-app .app-header__actions .contact-icon-container { margin: 0; width: auto; height: auto; }
+
+/* Succès : bouton en bas à gauche, au-dessus du dock sur mobile */
+.oc-app #achievements-menu-container {
+  position: fixed;
+  z-index: 20;
+  left: 16px;
+  bottom: 16px;
+}
+@media (max-width: 859px) {
+  /* Au-dessus du dock, même quand il passe sur 2 lignes (3–4 emplacements) */
+  .oc-app #achievements-menu-container { bottom: calc(var(--oc-dock-height) + 72px + env(safe-area-inset-bottom)); }
+}
+</style>
+

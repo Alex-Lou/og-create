@@ -1,6 +1,7 @@
 <template>
   <div class="timer-container">
     <button 
+      v-if="showTrigger"
       class="timer-mode-button" 
       @click="handleTimerButtonClick"
       :class="{ 'active': isTimerActive }"
@@ -158,10 +159,10 @@
     
     <!-- Timer display avec bouton d'aide -->
     <div v-if="isTimerActive" class="timer-display-group">
-      <div class="timer-display">
+      <div class="timer-display" role="timer" aria-label="Temps restant">
         {{ formatTime(timeRemaining) }}
       </div>
-      <button class="help-button" @click="showCurrentQuestion">?</button>
+      <button class="help-button" aria-label="Revoir la question" @click="showCurrentQuestion">?</button>
     </div>
   
     <!-- Modal de confirmation d'arrêt du timer -->
@@ -182,6 +183,10 @@ import '@/assets/ComponentsStyle/TimerStyle/TimerModeButtonStyle.css';
   
 export default {
   name: 'TimerModeButton',
+  props: {
+    // Faux : le bouton est porté par la barre de modes (ModeSwitcher), seuls le chrono et la confirmation restent ici
+    showTrigger: { type: Boolean, default: true }
+  },
   data() {
     return {
       isTimerActive: false,
@@ -252,6 +257,10 @@ export default {
       this.showStopConfirmModal = false;
       this.$emit('force-stop');
       this.selectedLevel = null;
+    },
+    // Demande de quitter le Timer depuis l'extérieur (barre de modes) : confirmation d'abord
+    requestStop() {
+      if (this.isTimerActive) this.showStopConfirmModal = true;
     },
     cancelStopTimer() {
       this.showStopConfirmModal = false;

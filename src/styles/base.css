@@ -1,0 +1,130 @@
+/* Base globale : chargée une fois dans main.js, après les tokens */
+@font-face {
+  /* Encore utilisée par les écrans Timer / Explorer / personnalisation (non refaits) */
+  font-family: 'BenjaminFranklin';
+  src: url('@/assets/fonts/BenjaminFranklin.ttf') format('truetype');
+  font-display: swap;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  background: var(--oc-bg);
+  color: var(--oc-text);
+  font-family: var(--oc-font-body);
+  -webkit-font-smoothing: antialiased;
+  -webkit-tap-highlight-color: transparent;
+}
+
+button {
+  font: inherit;
+  color: inherit;
+}
+
+:focus-visible {
+  outline: 2px solid var(--oc-accent-line);
+  outline-offset: 2px;
+}
+
+::selection {
+  background: var(--oc-accent-soft);
+}
+
+/* Barres de défilement discrètes */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(196, 181, 253, 0.25) transparent;
+}
+
+.oc-sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}
+
+/* Fin de partie Timer (modal d'App.vue) */
+.timer-end-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--oc-gutter);
+  background: rgba(7, 6, 13, 0.7);
+}
+
+.timer-end-content {
+  width: min(400px, 100%);
+  padding: 28px;
+  border-radius: var(--oc-radius-lg);
+  background: var(--oc-surface-strong);
+  border: 1px solid var(--oc-line-strong);
+  box-shadow: var(--oc-shadow);
+  text-align: center;
+  color: var(--oc-text);
+  animation: oc-rise var(--oc-medium) var(--oc-ease-out);
+}
+
+.timer-end-content h2 {
+  margin: 0 0 8px;
+  font-family: var(--oc-font-display);
+  color: var(--oc-text-strong);
+}
+
+.timer-end-stats {
+  margin: 16px 0 20px;
+  color: var(--oc-text-muted);
+}
+
+.timer-end-button {
+  height: 48px;
+  padding: 0 24px;
+  border: 0;
+  border-radius: 14px;
+  background: linear-gradient(180deg, var(--oc-accent), var(--oc-accent-strong));
+  color: #fff;
+  font-weight: 600;
+  cursor: pointer;
+  box-shadow: var(--oc-shadow-accent);
+}
+
+@keyframes oc-rise {
+  from { opacity: 0; transform: translateY(12px) scale(0.98); }
+  to { opacity: 1; transform: none; }
+}
+
+/* Respect de « réduire les animations » */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* Mobile : les notifications descendent du haut (le bas est occupé par le dock de création) */
+@media (max-width: 859px) {
+  .toast-stack {
+    top: calc(12px + env(safe-area-inset-top));
+    bottom: auto;
+    flex-direction: column;
+  }
+}
