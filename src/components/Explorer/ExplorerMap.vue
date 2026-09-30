@@ -271,9 +271,10 @@ export default {
       if (this.currentRegionId && !this.selectedRegion?.is_boss && this.currentEnergyCost > 0) {
         try {
           const energyData = await explorerService.checkEnergy();
-          this.energy = energyData.energy;
-          
-          this.$emit('energy-updated', this.energy);
+          if (energyData) {
+            this.energy = energyData.energy;
+            this.$emit('energy-updated', this.energy);
+          }
         } catch (error) {
           console.error('Erreur lors du rafraîchissement de l\'énergie:', error);
         }
@@ -303,18 +304,14 @@ export default {
       try {
         this.loading = true;
         
-        try {
-          await explorerService.syncRegions();
-        } catch (syncError) {
-          console.warn('Synchronisation des régions échouée, utilisation des données existantes', syncError);
-        }
-        
         const initData = await explorerService.initExplorer();
         this.energy = initData.energy;
         this.maxEnergy = initData.max_energy || 20;
         this.nextEnergyIn = initData.next_energy_in;
         this.currentMapId = initData.currentMap || 1;
-        
+
+        // Cartes débloquées calculées depuis le serveur (et non depuis un localStorage périmé)
+        await explorerService.refreshUnlockedMaps();
         this.loadUnlockedMaps();
         
         await this.loadRegionsForCurrentMap();
@@ -325,6 +322,7 @@ export default {
         this.dataLoaded = true;
       } catch (error) {
         console.error('Erreur lors du chargement des données Explorer:', error);
+        notificationService.error("Impossible de charger l'Explorer. Réessayez dans un instant.");
       } finally {
         this.loading = false;
       }

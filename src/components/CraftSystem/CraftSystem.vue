@@ -61,7 +61,8 @@
         :offsetX="-300" 
       />
     </div>
-    <div id="crafting" @dragover.prevent @drop="handleDrop">
+    <!-- dragenter annulé : requis par la spec (et le polyfill tactile) pour accepter un dépôt -->
+    <div id="crafting" @dragenter.prevent @dragover.prevent @drop="handleDrop">
       <div class="title-container">
         <CreationZoneTitle />
         <div :class="{'shake-animation': isButtonShaking}">
@@ -281,13 +282,15 @@ export default {
             top: this.lastCraftedPosition.top,
             left: this.lastCraftedPosition.left + 200
           };
-          if (newPosition.left > 800) {
+          if (newPosition.left > this.boardSize().width - 120) {
             newPosition = {
               top: this.lastCraftedPosition.top + 100,
               left: 230
             };
           }
         }
+        // Rester visible quelle que soit la taille de la zone (mobile)
+        newPosition = this.clampToBoard(newPosition);
         
         const newElement = {
           name: craftedItem,
@@ -315,6 +318,18 @@ export default {
         this.alertShown = false;
         this.craftingInProgress = false;
       });
+    },
+    boardSize() {
+      const board = this.$refs.craftingBoard;
+      return { width: board?.clientWidth || 1000, height: board?.clientHeight || 700 };
+    },
+    // Borne une position à la zone de création réelle (au lieu de 800x600 px codés en dur)
+    clampToBoard({ top, left }) {
+      const { width, height } = this.boardSize();
+      return {
+        top: Math.max(0, Math.min(height - 60, top)),
+        left: Math.max(0, Math.min(width - 120, left))
+      };
     },
     handleKeyPress(event) {
       // Pas de raccourci pendant la saisie, sur un bouton focus, ou avec modificateur
@@ -350,8 +365,7 @@ export default {
           const y = event.clientY - craftingBoardRect.top - offsetY;
           
           this.craftedElements[index].position = {
-            top: Math.max(0, Math.min(600, y)),
-            left: Math.max(0, Math.min(800, x)),
+            ...this.clampToBoard({ top: y, left: x }),
           };
           this.craftedElements[index].moved = true;
         }
@@ -447,17 +461,13 @@ export default {
       const result = findRecipe(this.craftingRecipes, [draggedElement, targetElement]);
       
       if (result) {
-        if (this.draggingElementIndex !== null) {
-          this.craftedElements.splice(this.draggingElementIndex, 1);
-        }
-        
-        this.craftedElements.splice(targetIndex, 1);
-        
-        const dropPosition = {
-          top: event.offsetY,
-          left: event.offsetX,
-        };
-        
+        // Le résultat prend la place de la cible
+        const dropPosition = { ...this.craftedElements[targetIndex].position };
+
+        // Retirer la cible et l'élément glissé en une fois (deux splice successifs décalaient les index)
+        const consumed = new Set([targetIndex, this.draggingElementIndex]);
+        this.craftedElements = this.craftedElements.filter((_, index) => !consumed.has(index));
+
         const newElement = {
           name: result,
           position: dropPosition,
@@ -606,8 +616,7 @@ export default {
         const y = event.clientY - craftingBoardRect.top - offsetY;
         
         this.resourcePositions[index] = {
-          top: Math.max(0, Math.min(600, y)),
-          left: Math.max(0, Math.min(800, x)),
+          ...this.clampToBoard({ top: y, left: x }),
           dragOffset: {
             x: offsetX,
             y: offsetY
@@ -650,8 +659,7 @@ export default {
         
         if (!isInSelectionZone) {
           this.craftedElements[index].position = {
-            top: Math.max(0, Math.min(600, y)),
-            left: Math.max(0, Math.min(800, x)),
+            ...this.clampToBoard({ top: y, left: x }),
           };
           this.craftedElements[index].moved = true;
         }

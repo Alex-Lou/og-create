@@ -278,10 +278,10 @@ export default {
     }
   },
   async created() {
+    // Les données du Timer exigent une session (la page est rechargée à la connexion)
+    if (!this.isLoggedIn) return;
     await this.loadQuestionsData();
     await this.loadRecipes();
-    
-    // Chargement de la progression ici, que l'utilisateur soit connecté ou non
     await this.loadProgress();
   },
   methods: {

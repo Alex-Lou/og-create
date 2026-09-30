@@ -75,6 +75,7 @@
         <div
           class="crafting-workspace"
           :style="{ backgroundImage: challenge.background ? `url(${require(`@/assets/explorer-background/${challenge.background}`)})` : '' }"
+          @dragenter.prevent
           @dragover.prevent
           @drop="handleDrop"
         >

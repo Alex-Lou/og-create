@@ -1,6 +1,18 @@
 import { createApp } from 'vue';
+import { polyfill } from 'mobile-drag-drop';
+import { scrollBehaviourDragImageTranslateOverride } from 'mobile-drag-drop/scroll-behaviour';
+import 'mobile-drag-drop/default.css';
 import App from './components/General/App.vue';
 import '@animxyz/core';
+
+// Glisser-déposer au doigt (le drag HTML5 ne réagit pas au tactile sur la plupart des mobiles) :
+// maintenir ~200 ms pour saisir un élément ; un tap sélectionne toujours, un geste rapide fait défiler.
+polyfill({
+  holdToDrag: 200,
+  dragImageTranslateOverride: scrollBehaviourDragImageTranslateOverride
+});
+// iOS : un écouteur non passif permet au polyfill de bloquer le défilement pendant un drag
+window.addEventListener('touchmove', () => {}, { passive: false });
 
 const app = createApp(App);
 

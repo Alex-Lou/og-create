@@ -12,6 +12,7 @@
     "axios": "^1.7.9",
     "core-js": "^3.8.3",
     "gsap": "^3.12.5",
+    "mobile-drag-drop": "2.2.0",
     "og-create": "file:",
     "vue": "^3.2.13"
   },
