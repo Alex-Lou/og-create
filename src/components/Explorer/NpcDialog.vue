@@ -285,6 +285,7 @@ export default {
 
 /* Portrait à gauche (ou à droite selon la position du personnage), paroles à côté */
 .npc-scene {
+  margin-top: 20px;
   display: grid;
   grid-template-columns: 240px minmax(0, 1fr);
   gap: 36px;
