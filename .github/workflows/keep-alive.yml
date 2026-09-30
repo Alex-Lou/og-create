@@ -1,0 +1,27 @@
+# Garde l'API Render (plan gratuit) éveillée en l'appelant toutes les 10 min.
+# Secours d'un pinger externe (cron-job.org...) : GitHub peut retarder les tâches planifiées
+# et les désactive après 60 jours sans activité sur le dépôt.
+# Réglage : Settings > Secrets and variables > Actions > Variables > API_HEALTH_URL
+#   ex. https://og-create-backend.onrender.com/api/health
+name: Keep API awake
+
+on:
+  schedule:
+    - cron: '*/10 * * * *'
+  workflow_dispatch:
+
+jobs:
+  ping:
+    runs-on: ubuntu-latest
+    timeout-minutes: 3
+    steps:
+      - name: Ping /api/health
+        env:
+          API_HEALTH_URL: ${{ vars.API_HEALTH_URL }}
+        run: |
+          if [ -z "$API_HEALTH_URL" ]; then
+            echo "Variable API_HEALTH_URL non définie : rien à faire."
+            exit 0
+          fi
+          # Un réveil à froid peut prendre ~1 min
+          curl --fail --silent --show-error --max-time 90 --retry 2 "$API_HEALTH_URL"

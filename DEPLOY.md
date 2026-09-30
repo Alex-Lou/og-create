@@ -32,6 +32,10 @@
 Faire pointer votre pinger habituel (UptimeRobot, cron-job.org…) sur `https://<api>.onrender.com/api/health`
 toutes les 10 min (< 15 min de mise en veille). Cet endpoint ne touche pas la base.
 
+En secours, le workflow GitHub `.github/workflows/keep-alive.yml` fait la même chose : définir la variable
+de dépôt `API_HEALTH_URL` (Settings → Secrets and variables → Actions → **Variables**) avec l'URL ci-dessus.
+GitHub peut retarder ces exécutions et les coupe après 60 jours sans activité sur le dépôt : le pinger externe reste le principal.
+
 ⚠️ Render offre **750 h d'instance gratuite par mois et par workspace**, partagées entre tous les
 services gratuits. Un service éveillé en continu en consomme ~720-744 h : avec d'autres apps déjà
 maintenues éveillées dans le même workspace, le quota sera dépassé et Render suspend **tous** les
