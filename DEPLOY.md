@@ -8,12 +8,11 @@
 
 ## 1. Base de données (Neon)
 
-1. Créer un projet sur neon.tech, copier la chaîne de connexion (elle contient `?sslmode=require`).
-2. Depuis un clone de `og-create-backend` (psql requis) :
-   ```bash
-   export DATABASE_URL="postgresql://…?sslmode=require"
-   npm run db:setup      # schéma + données de démo, rejouable
-   ```
+1. Créer un projet sur neon.tech (seul « Postgres database » activé), copier la chaîne de connexion
+   jusqu'à `?sslmode=require` (retirer `&channel_binding=require`).
+2. Rien d'autre : l'API applique schéma + contenu du jeu à chaque build Render (`npm run db:setup`,
+   idempotent, sans toucher aux comptes ni à la progression).
+   Manuellement si besoin (depuis `og-create-backend`) : `DATABASE_URL="…" npm run db:setup`.
 
 ## 2. Render (Blueprint)
 
@@ -31,6 +30,10 @@
 
 Faire pointer votre pinger habituel (UptimeRobot, cron-job.org…) sur `https://<api>.onrender.com/api/health`
 toutes les 10 min (< 15 min de mise en veille). Cet endpoint ne touche pas la base.
+
+En secours, le workflow GitHub `.github/workflows/keep-alive.yml` fait la même chose : définir la variable
+de dépôt `API_HEALTH_URL` (Settings → Secrets and variables → Actions → **Variables**) avec l'URL ci-dessus.
+GitHub peut retarder ces exécutions et les coupe après 60 jours sans activité sur le dépôt : le pinger externe reste le principal.
 
 ⚠️ Render offre **750 h d'instance gratuite par mois et par workspace**, partagées entre tous les
 services gratuits. Un service éveillé en continu en consomme ~720-744 h : avec d'autres apps déjà
