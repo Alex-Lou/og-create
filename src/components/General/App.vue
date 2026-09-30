@@ -821,19 +821,6 @@ handleTimerForceStop() {
 saveGameProgress() {
   if (!this.isLoggedIn) return;
 
-  // Variable pour suivre les dernières sauvegardes
-  if (!this._lastSaveTimestamp) {
-    this._lastSaveTimestamp = 0;
-    this._lastSaveData = null;
-  }
-
-  // Limiter la fréquence des sauvegardes (pas plus d'une fois toutes les 30 secondes)
-  const now = Date.now();
-  if (now - this._lastSaveTimestamp < 30000) {
-    console.log('Sauvegarde ignorée - trop fréquente');
-    return Promise.resolve();
-  }
-
   try {
     // En mode Timer, on sauvegarde l'inventaire Infini mis de côté, pas l'inventaire temporaire
     const elements = this.timerSnapshot ? this.timerSnapshot.elements : this.discoveredElements;
@@ -853,17 +840,6 @@ saveGameProgress() {
         avatar: this.selectedAvatar
       }
     };
-
-    // Vérifier si les données ont changé depuis la dernière sauvegarde
-    const dataString = JSON.stringify(progressData);
-    if (this._lastSaveData === dataString) {
-      console.log('Sauvegarde ignorée - données identiques');
-      return Promise.resolve();
-    }
-
-    // Sauvegarder les données actuelles pour comparaison future
-    this._lastSaveData = dataString;
-    this._lastSaveTimestamp = now;
 
     // Sauvegarder dans localStorage pour récupération rapide
     localStorage.setItem('discoveredElements', JSON.stringify(progressData.discoveredElements));

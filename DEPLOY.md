@@ -27,6 +27,16 @@
 3. Les URL exactes ne sont connues qu'après création : si elles diffèrent, corriger `CORS_ORIGIN`
    (redémarre l'API) et `VUE_APP_API_URL` (**relancer un build** du front : la variable est injectée au build).
 
+## Garder l'API éveillée
+
+Faire pointer votre pinger habituel (UptimeRobot, cron-job.org…) sur `https://<api>.onrender.com/api/health`
+toutes les 10 min (< 15 min de mise en veille). Cet endpoint ne touche pas la base.
+
+⚠️ Render offre **750 h d'instance gratuite par mois et par workspace**, partagées entre tous les
+services gratuits. Un service éveillé en continu en consomme ~720-744 h : avec d'autres apps déjà
+maintenues éveillées dans le même workspace, le quota sera dépassé et Render suspend **tous** les
+services gratuits jusqu'au mois suivant. Utiliser un workspace séparé ou ne pinger que sur des plages horaires.
+
 ## Vérifier
 
 - `https://<api>.onrender.com/api/health` → `{"status":"OK"}`

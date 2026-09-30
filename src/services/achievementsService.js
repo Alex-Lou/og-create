@@ -1,5 +1,5 @@
 // src/services/achievementsService.js
-import { apiInstance } from './authService';
+import apiInstance from './http';
 import AuthService from './authService';
 
 // Cache pour les achievements
@@ -28,18 +28,12 @@ let pendingRequests = {
  */
 class AchievementsService {
   /**
-   * Vérifie si l'utilisateur est authentifié et met à jour le header d'autorisation
+   * Vérifie si l'utilisateur est authentifié (le token est ajouté par le client HTTP)
    * @returns {boolean} - True si l'utilisateur est authentifié
    */
   ensureAuthentication() {
     // Vérifier si l'utilisateur est connecté et a un token valide
-    const currentUser = AuthService.getCurrentUser();
-    if (currentUser && currentUser.token) {
-      // Mettre à jour le header d'autorisation
-      apiInstance.defaults.headers.common['Authorization'] = `Bearer ${currentUser.token}`;
-      return true;
-    }
-    return false;
+    return AuthService.isAuthenticated();
   }
 
   /**

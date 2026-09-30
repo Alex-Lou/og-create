@@ -1,5 +1,5 @@
 // src/services/customizationService.js
-import { apiInstance } from './authService';
+import apiInstance from './http';
 
 // Créer une instance spécifique pour les appels d'API de personnalisation
 const customizationInstance = {

@@ -21,13 +21,7 @@
      * @returns {boolean} - True si l'utilisateur est authentifié
      */
     isAuthenticated() {
-        if (window.isLoggedOut) {
-        return false;
-        }
-        
-        return AuthService && typeof AuthService.isAuthenticated === 'function' 
-        ? AuthService.isAuthenticated() 
-        : false;
+      return AuthService.isAuthenticated();
     }
     
     // ----- MÉTHODES GÉNÉRALES (DÉLÉGUÉES À GAMEDATASERVICE) -----
