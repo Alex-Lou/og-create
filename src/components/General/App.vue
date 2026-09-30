@@ -50,7 +50,6 @@
           :discoveredElements="discoveredElements"
           :elementEmojis="elementEmojis"
           :isTimerMode="isTimerActive"
-          :timerQuestionElements="currentTimerElements"
           @selectResource="handleResourceSelection"
         />
       </div>
@@ -94,6 +93,8 @@
     <TimerQuestions 
       v-show="isTimerActive && !isExplorerActive"
       ref="timerQuestions"
+      :isLoggedIn="isLoggedIn"
+      :discoveredElements="discoveredElements"
       @reset-timer="handleTimerReset"
       @show-level-selection="showLevelSelection"
       @pause-timer="handleTimerPause"
@@ -103,6 +104,9 @@
       @reset-craft-zone="handleResetCraftZone"
       @level-selected="handleLevelSelected"
       @coins-earned="handleCoinsEarned"
+      @add-recipes="craftingRecipes = { ...craftingRecipes, ...$event }"
+      @add-emojis="elementEmojis = { ...$event, ...elementEmojis }"
+      @timer-progress-updated="timerProgress = $event"
     />
     <CustomizeModal 
       v-if="isCustomizeModalOpen" 
@@ -117,6 +121,9 @@
       v-if="isExplorerActive"
       :active="isExplorerActive"
       :userCoins="coins"
+      :craftingRecipes="craftingRecipes"
+      :elementEmojis="elementEmojis"
+      :discoveredElements="discoveredElements"
       @close="deactivateExplorerMode"
       @coins-updated="handleCoinsUpdated"
     />
@@ -129,6 +136,7 @@ import progressService from '@/services/progressService';
 import achievementsService from '@/services/achievementsService';
 import gameDataService from '@/services/gameDataService';
 import { findNewlyUnlocked } from '@/utils/achievementChecker';
+import { BASE_ELEMENTS, BASE_CATEGORY } from '@/utils/gameConstants';
 import timerService from '@/services/timerService';
 import DarkToggle from '../Header/DarkToggle.vue';
 import LoginIcon from '../Header/LoginIcon.vue';
@@ -173,8 +181,8 @@ export default {
       elementEmojis: {},
       craftingRecipes: {},
       categories: {},
-      discoveredCategories: ["Elements Fondamentaux"],
-      discoveredElements: ["Eau", "Feu", "Terre", "Air"],
+      discoveredCategories: [BASE_CATEGORY],
+      discoveredElements: [...BASE_ELEMENTS],
       isDarkMode: true,
       craftedElement: {
         name: "",
@@ -402,7 +410,7 @@ beforeUnmount() {
 
     handleTimerStop() {
       if (this.$refs.timerModeButton) {
-        this.$refs.timerModeButton.stopTimer();
+        this.$refs.timerModeButton.confirmStopTimer();
       }
     },
 
@@ -450,7 +458,7 @@ beforeUnmount() {
   }
   
   // Réinitialiser à juste les éléments fondamentaux
-  this.discoveredElements = ["Eau", "Feu", "Terre", "Air"];
+  this.discoveredElements = [...BASE_ELEMENTS];
   
   if (Array.isArray(elements)) {
     // Ajouter les éléments requis pour cette question à l'inventaire temporaire
@@ -529,23 +537,23 @@ handleTimerForceStop() {
                 const parsed = JSON.parse(progress.discoveredElements);
                 elementsToSet = Array.isArray(parsed) 
                   ? parsed.map(element => element.replace(/^"|"$/g, ''))
-                  : ["Eau", "Feu", "Terre", "Air"];
+                  : [...BASE_ELEMENTS];
               } else if (Array.isArray(progress.discoveredElements)) {
                 elementsToSet = progress.discoveredElements;
               } else {
                 console.warn('DEBUG - Format des éléments découverts invalide');
-                elementsToSet = ["Eau", "Feu", "Terre", "Air"];
+                elementsToSet = [...BASE_ELEMENTS];
               }
 
               this.discoveredElements = elementsToSet;
               localStorage.setItem('discoveredElements', JSON.stringify(this.discoveredElements));
             } catch (e) {
               console.error("DEBUG - Erreur parsing discoveredElements:", e);
-              this.discoveredElements = ["Eau", "Feu", "Terre", "Air"];
+              this.discoveredElements = [...BASE_ELEMENTS];
             }
           } else {
             console.warn('DEBUG - Aucun élément découvert dans la progression');
-            this.discoveredElements = ["Eau", "Feu", "Terre", "Air"];
+            this.discoveredElements = [...BASE_ELEMENTS];
           }
 
           if (progress.discoveredCategories) {
@@ -556,23 +564,23 @@ handleTimerForceStop() {
                 const parsed = JSON.parse(progress.discoveredCategories);
                 categoriesToSet = Array.isArray(parsed)
                   ? parsed.map(cat => cat.replace(/^"|"$/g, ''))
-                  : ["Elements Fondamentaux"];
+                  : [BASE_CATEGORY];
               } else if (Array.isArray(progress.discoveredCategories)) {
                 categoriesToSet = progress.discoveredCategories;
               } else {
                 console.warn('DEBUG - Format des catégories découvertes invalide');
-                categoriesToSet = ["Elements Fondamentaux"];
+                categoriesToSet = [BASE_CATEGORY];
               }
 
               this.discoveredCategories = categoriesToSet;
               localStorage.setItem('discoveredCategories', JSON.stringify(this.discoveredCategories));
             } catch (e) {
               console.error("DEBUG - Erreur parsing discoveredCategories:", e);
-              this.discoveredCategories = ["Elements Fondamentaux"];
+              this.discoveredCategories = [BASE_CATEGORY];
             }
           } else {
             console.warn('DEBUG - Aucune catégorie découverte dans la progression');
-            this.discoveredCategories = ["Elements Fondamentaux"];
+            this.discoveredCategories = [BASE_CATEGORY];
           }
 
           if (progress.categoryProgress) {
@@ -631,10 +639,10 @@ handleTimerForceStop() {
             this.discoveredElements = JSON.parse(localElements);
           } catch (e) {
             console.error('DEBUG - Erreur parsing localStorage elements:', e);
-            this.discoveredElements = ["Eau", "Feu", "Terre", "Air"];
+            this.discoveredElements = [...BASE_ELEMENTS];
           }
         } else {
-          this.discoveredElements = ["Eau", "Feu", "Terre", "Air"];
+          this.discoveredElements = [...BASE_ELEMENTS];
         }
         
         if (localCategories) {
@@ -642,10 +650,10 @@ handleTimerForceStop() {
             this.discoveredCategories = JSON.parse(localCategories);
           } catch (e) {
             console.error('DEBUG - Erreur parsing localStorage categories:', e);
-            this.discoveredCategories = ["Elements Fondamentaux"];
+            this.discoveredCategories = [BASE_CATEGORY];
           }
         } else {
-          this.discoveredCategories = ["Elements Fondamentaux"];
+          this.discoveredCategories = [BASE_CATEGORY];
         }
 
         this.categoryProgress = {};
@@ -662,8 +670,8 @@ handleTimerForceStop() {
       });
   } catch (error) {
     console.error("Erreur lors du chargement de la progression:", error);
-    this.discoveredElements = ["Eau", "Feu", "Terre", "Air"];
-    this.discoveredCategories = ["Elements Fondamentaux"];
+    this.discoveredElements = [...BASE_ELEMENTS];
+    this.discoveredCategories = [BASE_CATEGORY];
     this.categoryProgress = {};
     this.coins = 0;
     localStorage.setItem('coins', '0');
@@ -689,10 +697,10 @@ saveGameProgress() {
     const progressData = {
       discoveredElements: Array.isArray(elements) 
         ? elements 
-        : ["Eau", "Feu", "Terre", "Air"],
+        : [...BASE_ELEMENTS],
       discoveredCategories: Array.isArray(categories)
         ? categories
-        : ["Elements Fondamentaux"],
+        : [BASE_CATEGORY],
       categoryProgress: this.categoryProgress || {},
       coins: this.coins,
       timerProgress: this.timerProgress,
@@ -902,7 +910,7 @@ handleCraftSuccess(craftedItem) {
     async repairGameData() {
       if (!this.isLoggedIn) return;
             
-      const repairedCategories = ["Elements Fondamentaux"];
+      const repairedCategories = [BASE_CATEGORY];
       
       for (const element of this.discoveredElements) {
         for (const category in this.categories) {

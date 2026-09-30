@@ -128,6 +128,7 @@ import CraftButton from './CraftButton.vue';
 import CleanButton from './CleanButton.vue';
 import CreationZoneTitle from './CreationZoneTitle.vue';
 import '@/assets/ComponentsStyle/CraftStyle/CraftSystemStyle.css';
+import { findRecipe } from '@/utils/recipes';
 
 export default {
   name: 'CraftSystem',
@@ -173,11 +174,6 @@ export default {
       debouncedDragOver: null,
       FireworkComponent: null,
     };
-  },
-  computed: {
-    sortedSelected() {
-      return [...this.selected].sort().join('+');
-    }
   },
   created() {
     this.debouncedDragOver = this.debounce(this.dragOver, 50);
@@ -253,7 +249,7 @@ export default {
         return;
       }
       
-      const craftedItem = this.craftingRecipes[this.sortedSelected];
+      const craftedItem = findRecipe(this.craftingRecipes, this.selected);
       
       if (!craftedItem) {
         const selectedElements = document.querySelectorAll('#selected-resources li');
@@ -389,9 +385,7 @@ export default {
       }
       
       if (this.draggingElementIndex !== targetIndex) {
-        const elements = [draggedResource, targetResource].sort();
-        const combination = elements.join('+');
-        const result = this.craftingRecipes[combination];
+        const result = findRecipe(this.craftingRecipes, [draggedResource, targetResource]);
         
         if (result) {
           this.removeResource(Math.max(this.draggingElementIndex, targetIndex));
@@ -449,9 +443,7 @@ export default {
         return;
       }
       
-      const elements = [draggedElement, targetElement].sort();
-      const combination = elements.join('+');
-      const result = this.craftingRecipes[combination];
+      const result = findRecipe(this.craftingRecipes, [draggedElement, targetElement]);
       
       if (result) {
         if (this.draggingElementIndex !== null) {

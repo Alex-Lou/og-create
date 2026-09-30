@@ -211,12 +211,15 @@ import gameService from '@/services/gameService';
  
 export default {
   name: 'TimerQuestions',
+  props: {
+    isLoggedIn: { type: Boolean, default: false },
+    // Inventaire courant (éléments de la question + créations)
+    discoveredElements: { type: Array, default: () => [] }
+  },
   emits: [
-    'reset-timer', 
-    'set-initial-inventory', 
-    'reset-craft-zone', 
-    'level-selected',
-    'coins-earned'
+    'reset-timer', 'show-level-selection', 'pause-timer', 'resume-timer', 'stop-timer',
+    'set-initial-inventory', 'reset-craft-zone', 'level-selected', 'coins-earned',
+    'add-recipes', 'add-emojis', 'timer-progress-updated'
   ],
   data() {
     return {
@@ -244,9 +247,6 @@ export default {
     }
   },
   computed: {
-    isLoggedIn() {
-      return this.$parent.isLoggedIn;
-    },
     availableCategories() {
       if (!this.selectedLevel || !this.questionsData || !this.questionsData.levels || !this.questionsData.levels[this.selectedLevel] || !this.questionsData.levels[this.selectedLevel].categories) {
         console.warn(`Données de catégories non disponibles pour le niveau ${this.selectedLevel}:`, this.questionsData);
@@ -269,7 +269,7 @@ export default {
       if (!this.currentQuestion?.validAnswers) return 0;
       
       return this.currentQuestion.validAnswers.filter(answer => 
-        this.$parent.discoveredElements.includes(answer)
+        this.discoveredElements.includes(answer)
       ).length;
     },
     remainingCategories() {
@@ -282,27 +282,10 @@ export default {
     
     // Chargement de la progression ici, que l'utilisateur soit connecté ou non
     await this.loadProgress();
-    
-    // Écouter l'événement timer-stopped pour nettoyer les données
-    window.addEventListener('timer-stopped', this.cleanupTimerData);
-  },
-  beforeUnmount() {
-    // Supprimer l'écouteur d'événements
-    window.removeEventListener('timer-stopped', this.cleanupTimerData);
   },
   methods: {
     cleanupTimerData() {
-      // Nettoyer toutes les variables globales
-      window.currentTimerElements = [];
-      window.timerElements = [];
-      window.currentQuestionId = null;
-      
-      // Réinitialiser les éléments Timer du parent (l'inventaire est restauré par App)
-      if (this.$parent) {
-        this.$parent.currentTimerElements = [];
-      }
-      
-      // Réinitialiser les variables locales
+      // Réinitialiser les variables locales (l'inventaire est géré par App)
       this.currentQuestionIndex = 0;
       
       console.log("TimerQuestions: Nettoyage des données du timer effectué");
@@ -326,31 +309,20 @@ export default {
       return Array.isArray(questionsForCategory) && questionsForCategory.length >= totalQuestions;
     },
     loadRecipesFromQuestions() {
-      if (this.questionsData && this.selectedLevel && this.selectedCategory) {
-        const categoryQuestions = this.questionsData.levels[this.selectedLevel].categories[this.selectedCategory].questions;
-        
-        categoryQuestions.forEach(question => {
-          if (question.initialElements && question.initialElements.recipes) {
-            // Ajouter les recettes au système principal
-            Object.entries(question.initialElements.recipes).forEach(([result, recipe]) => {
-              // Ajouter à craftingRecipes sous forme non triée
-              this.$parent.craftingRecipes[recipe] = result;
-              
-              // Et aussi ajouter sous forme triée pour compatibilité
-              const sortedRecipe = recipe.split('+').sort().join('+');
-              this.$parent.craftingRecipes[sortedRecipe] = result;
-            });
-          } else if (question.initialElements && question.initialElements.initialElements && question.initialElements.initialElements.recipes) {
-            // Gérer la structure imbriquée
-            Object.entries(question.initialElements.initialElements.recipes).forEach(([result, recipe]) => {
-              this.$parent.craftingRecipes[recipe] = result;
-              
-              const sortedRecipe = recipe.split('+').sort().join('+');
-              this.$parent.craftingRecipes[sortedRecipe] = result;
-            });
-          }
+      if (!this.questionsData || !this.selectedLevel || !this.selectedCategory) return;
+      const categoryQuestions = this.questionsData.levels[this.selectedLevel].categories[this.selectedCategory].questions;
+      const recipes = {};
+      categoryQuestions.forEach(question => {
+        // Structure simple ou imbriquée (initialElements.initialElements)
+        const initial = question.initialElements?.recipes
+          ? question.initialElements
+          : question.initialElements?.initialElements;
+        Object.entries(initial?.recipes || {}).forEach(([result, recipe]) => {
+          recipes[recipe] = result;
+          recipes[recipe.split('+').sort().join('+')] = result;
         });
-      }
+      });
+      if (Object.keys(recipes).length) this.$emit('add-recipes', recipes);
     },
     async loadProgress() {
       try {
@@ -450,11 +422,12 @@ export default {
         }
         
         // Mettre à jour les scores
-        this.timerProgress.bestScores = {
-          Facile: Math.max(this.$parent?.timerProgress?.bestScores?.Facile || 0, this.currentScore),
-          Moyen: Math.max(this.$parent?.timerProgress?.bestScores?.Moyen || 0, this.currentScore),
-          Difficile: Math.max(this.$parent?.timerProgress?.bestScores?.Difficile || 0, this.currentScore)
-        };
+        // Meilleur score du niveau joué uniquement
+        const bestScores = { Facile: 0, Moyen: 0, Difficile: 0, ...this.timerProgress.bestScores };
+        if (this.selectedLevel) {
+          bestScores[this.selectedLevel] = Math.max(bestScores[this.selectedLevel] || 0, this.currentScore);
+        }
+        this.timerProgress.bestScores = bestScores;
         
         // Utiliser le service gameService pour une mise à jour
         try {
@@ -465,10 +438,7 @@ export default {
           await progressService.updateTimerProgress(this.timerProgress);
         }
         
-        // Mettre à jour la référence parent si elle existe
-        if (this.$parent && this.$parent.timerProgress) {
-          this.$parent.timerProgress = this.timerProgress;
-        }
+        this.$emit('timer-progress-updated', this.timerProgress);
       } catch (error) {
         console.error('Erreur lors de la sauvegarde de la progression:', error);
       }
@@ -508,20 +478,8 @@ export default {
       }
     },
     cleanupQuestionData() {
-      // Nettoyer les variables pour la nouvelle question/catégorie
-      window.currentTimerElements = [];
-      window.timerElements = [];
-      
-      // Réinitialiser l'inventaire du parent
-      if (this.$parent) {
-        this.$parent.currentTimerElements = [];
-        this.$parent.discoveredElements = [];
-      }
-      
-      // Réinitialiser la zone de craft
-      if (this.$parent.$refs.craftSystem) {
-        this.$parent.$refs.craftSystem.resetCraftingBoard();
-      }
+      // L'inventaire de la question suivante est posé par App (set-initial-inventory)
+      this.$emit('reset-craft-zone');
     },
     // Modification de la méthode handleCompletionClose pour revenir correctement à la sélection de niveau
     handleCompletionClose() {
@@ -540,13 +498,6 @@ export default {
         // Retourner au choix de niveau (premier palier) sans quitter le mode Timer
         this.selectedLevel = null;
         
-        // Réinitialiser le jeu
-        this.$parent.currentTimerElements = [];
-        this.$parent.discoveredElements = [];
-        if (this.$parent.$refs.craftSystem) {
-          this.$parent.$refs.craftSystem.resetCraftingBoard();
-        }
-        
         // NOUVEAU: Émettre un événement pour indiquer qu'on doit réafficher 
         // le menu de sélection
         this.$emit('show-level-selection');
@@ -554,9 +505,7 @@ export default {
         // Ne pas appeler force-stop ni confirmStopTimer
       } else {
         // Comportement normal pour les catégories non complétées
-        if (this.$parent.$refs.timerModeButton) {
-          this.$parent.$refs.timerModeButton.confirmStopTimer();
-        }
+        this.$emit('stop-timer');
       }
     },
     async closeSuccessPopup() {
@@ -596,12 +545,9 @@ export default {
         
         // Vérifier si la structure attendue est présente
         if (data && data.levels) {
-          // Si les emojis sont disponibles, les stocker dans la variable globale
+          // Emojis des éléments propres au Timer
           if (data.allEmojis) {
-            if (window.timerElementEmojis === undefined) {
-              window.timerElementEmojis = {};
-            }
-            Object.assign(window.timerElementEmojis, data.allEmojis);
+            this.$emit('add-emojis', data.allEmojis);
           }
           
           this.questionsData = data;
@@ -896,10 +842,6 @@ export default {
       
       if (!this.selectedLevel || !this.selectedCategory) return;
       
-      // Définir l'ID de la question actuelle
-      window.currentQuestionId = this.currentQuestion?.id || null;
-      console.log("ID de question défini:", window.currentQuestionId);
-      
       await this.$nextTick();
       
       // Vérifier si la question existe et imprimer sa structure
@@ -929,10 +871,6 @@ export default {
         console.log("Éléments requis:", requiredElements);
         console.log("Éléments additionnels:", additionalElements);
         console.log("Éléments de la question définis:", startingElements);
-        
-        // Mise à jour des variables globales et de l'inventaire
-        window.currentTimerElements = startingElements;
-        window.timerElements = startingElements;
         
         this.$emit('set-initial-inventory', startingElements);
         
@@ -1027,15 +965,6 @@ export default {
       const currentQuestion = this.currentQuestion;
       const points = currentQuestion.points || 10;
       const questionId = currentQuestion.id || `${this.selectedCategory}_${this.currentQuestionIndex}`;
-
-      // Gérer la structure imbriquée pour required
-      const initial = currentQuestion.initialElements || {};
-      const requiredElements = initial.initialElements?.required || initial.required || [];
-      requiredElements.forEach(element => {
-        if (!this.$parent.discoveredElements.includes(element)) {
-          this.$parent.discoveredElements.push(element);
-        }
-      });
 
       this.markQuestionAsCompleted(questionId);
       if (this.isNewQuestion) {

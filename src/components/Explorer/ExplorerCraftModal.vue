@@ -178,6 +178,7 @@
 <script>
 import BossFight from '@/components/Explorer/BossFight.vue';
 import '@/assets/ComponentsStyle/ExplorerStyle/ExplorerCraftStyle.css';
+import { findRecipe } from '@/utils/recipes';
 
 export default {
   name: 'ExplorerCraftModal',
@@ -374,34 +375,7 @@ export default {
         return;
       }
 
-      const generateCombinations = (elements) => {
-        const combinations = [];
-        
-        const permute = (arr, m = []) => {
-          if (arr.length === 0) {
-            combinations.push(m.join('+'));
-          } else {
-            for (let i = 0; i < arr.length; i++) {
-              let curr = arr.slice();
-              let next = curr.splice(i, 1);
-              permute(curr.slice(), m.concat(next));
-            }
-          }
-        };
-        
-        permute(elements);
-        return combinations;
-      };
-
-      const permutations = generateCombinations(this.selectedElements);
-      
-      let craftedItem = null;
-      for (const permutation of permutations) {
-        if (this.craftingRecipes[permutation]) {
-          craftedItem = this.craftingRecipes[permutation];
-          break;
-        }
-      }
+      const craftedItem = findRecipe(this.craftingRecipes, this.selectedElements);
 
       if (!craftedItem) {
         // Combinaison impossible
