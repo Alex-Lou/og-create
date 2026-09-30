@@ -1,6 +1,48 @@
 import api from './http';
 import AuthService from './authService';
-import achievementsService from './achievementsService';
+import { BASE_ELEMENTS, BASE_CATEGORY } from '@/utils/gameConstants';
+
+// Fichiers de contenu (éléments, catégories, recettes) chargés au démarrage
+const GAME_FILES = [
+  'animaux',
+  'biologie',
+  'créations_humaines',
+  'elements_data',
+  'formations_naturelles',
+  'geologie',
+  'materiaux_elementaires',
+  'phénomènes_naturels',
+  'magie'
+];
+
+const BASE_EMOJIS = { Eau: '💧', Feu: '🔥', Terre: '🌎', Air: '💨' };
+
+// Construit emojis, catégories et recettes à partir des fichiers chargés
+function buildGameContent(files) {
+  const elementEmojis = { ...BASE_EMOJIS };
+  const categories = { [BASE_CATEGORY]: [...BASE_ELEMENTS] };
+  const craftingRecipes = {};
+
+  files.filter(Boolean).forEach(data => {
+    ['animaux', 'humains', 'elements', 'items'].forEach(source => {
+      Object.entries(data[source] || {}).forEach(([category, entries]) => {
+        categories[category] = categories[category] || [];
+        Object.entries(entries).forEach(([rawName, value]) => {
+          const name = rawName.trim();
+          elementEmojis[name] = typeof value === 'object' ? (value.emoji || value.icon || '❓') : value;
+          if (!categories[category].includes(name)) categories[category].push(name);
+        });
+      });
+    });
+    Object.entries(data.rules || {}).forEach(([key, result]) => {
+      // Clé triée (utilisée pour la recherche) + clé d'origine
+      craftingRecipes[key.split('+').sort().join('+')] = result;
+      craftingRecipes[key] = result;
+    });
+  });
+
+  return { elementEmojis, categories, craftingRecipes };
+}
 
 /**
  * Service pour l'accès aux données du jeu avec chargement optimisé
@@ -14,22 +56,6 @@ class GameDataService {
     this.filenameMapping = {
       'timer_questions': 'timer-questions'
     };
-    
-    // Liste des fichiers à charger lors de l'initialisation
-    // Note: achievements retiré de la liste car géré par achievementsService
-    this.requiredFiles = [
-      'animaux', 
-      'biologie', 
-      'créations_humaines', 
-      'elements_data', 
-      'formations_naturelles', 
-      'geologie', 
-      'materiaux_elementaires', 
-      'phénomènes_naturels', 
-      'magie', 
-      'elements',
-      'timer_questions'
-    ];
   }
 
   /**
@@ -41,108 +67,17 @@ class GameDataService {
   }
 
   /**
-   * Charge tous les fichiers de données du jeu en parallèle
-   * @returns {Promise<Object>} - Données complètes du jeu
+   * Charge tout le contenu du jeu (un fichier manquant n'empêche pas les autres)
+   * @returns {Promise<{elementEmojis, categories, craftingRecipes}>}
    */
-  async loadAllGameData() {
-    if (!this.isAuthenticated()) {
-      return Promise.reject(new Error('Utilisateur non authentifié'));
-    }
-
-    try {
-      // Chargement en parallèle : fichiers standard et achievements
-      const [standardData, achievements] = await Promise.all([
-        this.loadStandardFiles(),
-        this.loadAchievements()
-      ]);
-
-      // Combiner les données
-      const allData = {
-        ...standardData,
-        achievements
-      };
-
-      return allData;
-    } catch (error) {
-      console.error('Erreur lors du chargement groupé des données:', error);
-      throw error;
-    }
-  }
-
-  /**
-   * Charge tous les fichiers standard (sauf achievements)
-   * @returns {Promise<Object>} - Données des fichiers standards
-   */
-  async loadStandardFiles() {
-    // Vérifier si tous les fichiers sont déjà en cache
-    if (this.requiredFiles.every(file => this.cache[file])) {
-      // Créer un objet combiné avec tous les fichiers en cache
-      const cachedData = {};
-      this.requiredFiles.forEach(file => {
-        cachedData[file] = this.cache[file];
-      });
-      return cachedData;
-    }
-
-    try {
-      // Charger tous les fichiers en parallèle avec gestion des erreurs
-      const loadPromises = this.requiredFiles.map(filename => 
-        this.loadFile(filename).catch(error => {
-          console.warn(`Chargement partiel de ${filename} échoué`, error);
-          return null; // Ne pas bloquer tout le chargement
-        })
-      );
-
-      const results = await Promise.allSettled(loadPromises);
-
-      // Construire un objet de résultats
-      const gameData = {};
-      results.forEach((result, index) => {
-        const filename = this.requiredFiles[index];
-        if (result.status === 'fulfilled' && result.value) {
-          gameData[filename] = result.value;
-          // Mettre à jour le cache individuel
-          this.cache[filename] = result.value;
-        }
-      });
-
-      return gameData;
-    } catch (error) {
-      console.error('Erreur lors du chargement des fichiers standards:', error);
-      throw error;
-    }
-  }
-
-  /**
-   * Charge les achievements via le service dédié
-   * @returns {Promise<Array>} - Liste des achievements
-   */
-  async loadAchievements() {
-    try {
-      // Utiliser le service dédié pour récupérer les achievements
-      const achievements = await achievementsService.getAllAchievements();
-      
-      // Mettre en cache
-      this.cache['achievements'] = achievements;
-      
-      return achievements;
-    } catch (error) {
-      console.error('Erreur lors du chargement des achievements:', error);
-      
-      // En cas d'erreur, essayer de récupérer depuis le cache
-      if (this.cache['achievements']) {
-        return this.cache['achievements'];
-      }
-      
-      // Si pas de cache, essayer de charger via l'ancienne méthode
-      try {
-        const data = await this.loadFile('achievements');
-        return data || [];
-      } catch (fallbackError) {
-        console.error('Échec complet du chargement des achievements:', fallbackError);
-        return []; // Renvoyer un tableau vide en dernier recours
-      }
-    }
+  async loadGameContent() {
+    const files = await Promise.all(GAME_FILES.map(file =>
+      this.loadFile(file).catch(error => {
+        console.warn(`Impossible de charger ${file}`, error);
+        return null;
+      })
+    ));
+    return buildGameContent(files);
   }
 
   /**
@@ -151,11 +86,6 @@ class GameDataService {
    * @returns {Promise<Object>} - Données du fichier
    */
   async loadFile(filename) {
-    // Cas spécial pour les achievements
-    if (filename === 'achievements') {
-      return this.loadAchievements();
-    }
-
     // Vérifier l'authentification
     if (!this.isAuthenticated()) {
       return Promise.reject(new Error('Utilisateur non authentifié'));
@@ -237,29 +167,6 @@ class GameDataService {
   clearCache() {
     this.cache = {};
     this.loadingPromises = {};
-    
-    // Invalider également le cache des achievements
-    achievementsService.invalidateCache();
-  }
-
-  /**
-   * Récupère un élément spécifique du cache
-   * @param {string} filename - Nom du fichier
-   * @returns {Object|null} - Données du fichier ou null
-   */
-  getCachedFile(filename) {
-    // Utiliser le mapping si nécessaire
-    const mappedFilename = this.filenameMapping[filename] || filename;
-    
-    // Cas spécial pour les achievements
-    if (mappedFilename === 'achievements') {
-      // Essayer de récupérer depuis le cache du service d'achievements
-      // Note: Ceci est une solution approximative car le service d'achievements 
-      // n'expose pas directement son cache de cette façon
-      return this.cache['achievements'] || null;
-    }
-    
-    return this.cache[mappedFilename] || null;
   }
 }
 

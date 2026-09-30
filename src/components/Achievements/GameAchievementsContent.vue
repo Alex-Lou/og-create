@@ -24,8 +24,8 @@
       </div>
       
       <ul>
-        <li v-for="(achievement, index) in processedAchievements"
-            :key="index"
+        <li v-for="achievement in achievements"
+            :key="achievement.name"
             :class="{ unlocked: achievement.unlocked }">
           <img v-if="achievement.image"
                :src="achievement.image"
@@ -52,298 +52,30 @@
 </template>
 
 <script>
-import achievementsService from '@/services/achievementsService';
-import authService from '@/services/authService';
 import "@/assets/ComponentsStyle/AchievementsStyle/SuccessContentStyle.css";
 
+// Liste des succès (affichage seul : App possède l'état et la vérification)
 export default {
   name: "GameAchievementsContent",
   props: {
     achievements: {
       type: Array,
-      required: true,
       default: () => []
-    },
-    forceReload: {
-      type: Boolean,
-      default: false
     }
   },
-  
   data() {
     return {
       isHovered: false,
-      isListHovered: false,
-      userAchievements: {},
-      localUnlockedAchievements: {},
-      processedAchievements: [],
-      isLoading: true
+      isListHovered: false
     };
   },
-  
-  created() {
-    // Initialiser les achievements
-    this.processedAchievements = this.cloneAchievements(this.achievements);
-    this.loadUserAchievements();
-    
-    // Configurer les listeners d'événements
-    this.setupEventListeners();
-  },
-  
-  beforeUnmount() {
-    // Nettoyer les listeners d'événements
-    this.cleanupEventListeners();
-  },
-  
   methods: {
-    // Initialisation et gestion des événements
-    setupEventListeners() {
-      window.addEventListener('app-reloaded', this.handleAppReloaded);
-      window.addEventListener('get-unlocked-achievements', this.handleGetUnlockedAchievements);
-    },
-    
-    cleanupEventListeners() {
-      window.removeEventListener('app-reloaded', this.handleAppReloaded);
-      window.removeEventListener('get-unlocked-achievements', this.handleGetUnlockedAchievements);
-    },
-    
-    // Clonage et gestion des achievements
-    cloneAchievements(achievements) {
-      return JSON.parse(JSON.stringify(achievements));
-    },
-    
-    // Chargement des achievements de l'utilisateur
-    async loadUserAchievements() {
-      this.isLoading = true;
-      
-      try {
-        // Délai court pour assurer la synchronisation
-        await this.shortDelay(100);
-        await this.fetchUserAchievements();
-        
-        // Synchroniser l'état des achievements
-        this.syncAchievementsState();
-        
-        // Notifier que les achievements sont chargés
-        this.notifyAchievementsLoaded();
-      } 
-      catch (error) {
-        console.error("Erreur lors du chargement des succès:", error);
-      } 
-      finally {
-        this.isLoading = false;
-      }
-    },
-    
-    async shortDelay(ms) {
-      return new Promise(resolve => setTimeout(resolve, ms));
-    },
-    
-    async fetchUserAchievements() {
-      if (authService.isAuthenticated()) {
-        try {
-          // Utiliser le nouveau service d'achievements
-          this.userAchievements = await achievementsService.getUserAchievements();
-          console.log("Achievements chargés:", this.userAchievements);
-        } catch (error) {
-          console.error("Erreur lors du chargement des achievements:", error);
-          this.userAchievements = {};
-        }
-      }
-    },
-    
-    notifyAchievementsLoaded() {
-      // Émettre un événement local
-      this.$emit('achievements-loaded', this.processedAchievements);
-      
-      // Dispatcher un événement global
-      window.dispatchEvent(new CustomEvent('achievements-loaded', {
-        detail: { achievements: this.processedAchievements }
-      }));
-    },
-    
-    // Gestion des événements globaux
-    handleGetUnlockedAchievements(event) {
-      const unlockedAchievements = this.processedAchievements.filter(a => a.unlocked);
-      
-      if (event.detail && typeof event.detail.callback === 'function') {
-        event.detail.callback(unlockedAchievements);
-      }
-    },
-    
-    handleAppReloaded() {
-      setTimeout(() => this.loadUserAchievements(), 200);
-    },
-    
-    handleForceReload(loadedData) {
-      if (loadedData && loadedData.achievements) {
-        this.updateAchievementsFromLoadedData(loadedData);
-      }
-      
-      this.$emit('achievements-updated', this.processedAchievements);
-    },
-    
-    updateAchievementsFromLoadedData(loadedData) {
-      this.processedAchievements = this.processedAchievements.map(achievement => {
-        const loadedAchievement = loadedData.achievements.find(
-          a => this.normalizeName(a.name) === this.normalizeName(achievement.name)
-        );
-        
-        return {
-          ...achievement,
-          unlocked: loadedAchievement ? loadedAchievement.unlocked : achievement.unlocked
-        };
-      });
-      
-      if (Object.keys(loadedData.achievements).length > 0) {
-        this.userAchievements = loadedData.achievements;
-      }
-    },
-    
-    // Synchronisation et vérification des états des achievements
-    syncAchievementsState() {
-      this.processedAchievements = this.achievements.map(achievement => {
-        return {
-          ...achievement,
-          unlocked: this.isAchievementUnlocked(achievement.name)
-        };
-      });
-    },
-    
-    getAchievementKey(name) {
-      return Object.keys(this.userAchievements).find(key => 
-        this.normalizeName(key) === this.normalizeName(name)
-      );
-    },
-    
-    isAchievementUnlocked(achievementName) {
-      if (!authService.isAuthenticated()) {
-        return this.localUnlockedAchievements[achievementName]?.unlocked || false;
-      }
-      
-      // Vérifier si l'achievement existe directement dans userAchievements
-      if (this.userAchievements[achievementName] && this.userAchievements[achievementName].unlocked) {
-        return true;
-      }
-      
-      // Essayer avec la méthode de normalisation si la recherche directe échoue
-      const key = this.getAchievementKey(achievementName);
-      return key ? this.userAchievements[key].unlocked : false;
-    },
-    
-    // Utilitaires et gestion de l'interface
-    normalizeName(name) {
-      if (!name) return '';
-      
-      return name
-        .toLowerCase()
-        .normalize("NFD")
-        .replace(/[\u0300-\u036f]/g, "") // Enlève les accents
-        .replace(/[^a-z0-9]+/g, "") // Garde uniquement les lettres et chiffres
-        .trim();
-    },
-    
     handleMouseLeave() {
       setTimeout(() => {
         if (!this.isListHovered) {
           this.isHovered = false;
         }
       }, 100);
-    },
-    
-    // Sauvegarde des achievements
-    async saveAchievement(achievement) {
-      if (!authService.isAuthenticated()) {
-        this.saveAchievementLocally(achievement);
-        return;
-      }
-      
-      try {
-        await this.saveAchievementToService(achievement);
-      } catch (error) {
-        console.error("Error saving achievement:", error);
-      }
-    },
-    
-    saveAchievementLocally(achievement) {
-      this.localUnlockedAchievements[achievement.name] = {
-        unlocked: true,
-        unlockedAt: new Date().toISOString()
-      };
-    },
-    
-    async saveAchievementToService(achievement) {
-      try {
-        // Utiliser le nouveau service d'achievements
-        await achievementsService.unlockAchievement(achievement.name);
-        
-        // Mettre à jour la version locale
-        this.userAchievements[achievement.name] = {
-          unlocked: true,
-          unlockedAt: new Date().toISOString()
-        };
-        
-        // Mise à jour dans les processedAchievements
-        this.updateProcessedAchievement(achievement.name);
-        
-        this.$emit('achievement-saved', achievement);
-      } catch (error) {
-        console.error("Erreur lors de la sauvegarde de l'achievement:", error);
-      }
-    },
-    
-    updateProcessedAchievement(achievementName) {
-      const index = this.processedAchievements.findIndex(a => 
-        this.normalizeName(a.name) === this.normalizeName(achievementName)
-      );
-      
-      if (index !== -1) {
-        this.processedAchievements[index].unlocked = true;
-      }
-    },
-    
-    // Traitement des nouveaux achievements débloqués
-    processNewUnlockedAchievements(achievements) {
-      achievements.forEach(achievement => {
-        if (achievement.unlocked) {
-          if (authService.isAuthenticated() && !this.isAchievementUnlocked(achievement.name)) {
-            this.saveAchievement(achievement);
-          } else if (!authService.isAuthenticated()) {
-            this.saveAchievementLocally(achievement);
-          }
-        }
-      });
-    }
-  },
-  
-  watch: {
-    achievements: {
-      immediate: true,
-      deep: true,
-      handler(newAchievements) {
-        // Mettre à jour les achievements traités
-        this.processedAchievements = this.cloneAchievements(newAchievements);
-        this.syncAchievementsState();
-        
-        // Traiter les nouveaux achievements débloqués
-        this.processNewUnlockedAchievements(newAchievements);
-      }
-    },
-    
-    forceReload: {
-      immediate: true,
-      handler(newValue) {
-        if (newValue) {
-          this.loadUserAchievements();
-        }
-      }
-    },
-    
-    userAchievements: {
-      deep: true,
-      handler() {
-        this.syncAchievementsState();
-      }
     }
   }
 };

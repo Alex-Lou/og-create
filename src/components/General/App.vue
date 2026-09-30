@@ -1,18 +1,6 @@
 <template>
   <div :class="['game-container', { 'dark-mode': isDarkMode }]" id="game-container">
-    <DataLoading
-  ref="dataLoading"
-  :isTimerMode="isTimerActive"
-  @data-loaded="handleDataLoaded"
-  @achievements-loaded="handleAchievementsLoaded"
-  @achievement-unlocked="handleAchievementUnlocked"
-  @timer-questions-loaded="handleTimerQuestionsLoaded"
-/>
-    <GameAchievementsContent 
-      :achievements="achievements" 
-      :forceReload="shouldForceReload" 
-      @achievements-loaded="handleAchievementsLoaded" 
-    />
+    <GameAchievementsContent :achievements="achievements" />
     <header style="position: relative;">
   <!-- Ajouts décoratifs minimaux qui ne perturbent pas la structure -->
   <div class="header-decoration"></div>
@@ -86,9 +74,9 @@
       @reset-crafted-element="resetCraftedElement"
     />
     <GameAchievementsPopup
-      v-if="newAchievement"
-      :achievement="newAchievement"
-      :achievements="achievements"
+      v-if="achievementQueue.length"
+      :key="achievementQueue[0].name"
+      :achievement="achievementQueue[0]"
       @close="closeAchievementPopup"
       @achievement-popup-opened="handleAchievementPopupOpened"
     />
@@ -131,7 +119,6 @@
       :userCoins="coins"
       @close="deactivateExplorerMode"
       @coins-updated="handleCoinsUpdated"
-      @start-craft-challenge="handleStartCraftChallenge"
     />
   </div>
 </template>
@@ -139,7 +126,9 @@
 <script>
 import AuthService from '@/services/authService';
 import progressService from '@/services/progressService';
-import achievementsService from '@/services/achievementsService'; // Ajout du nouveau service
+import achievementsService from '@/services/achievementsService';
+import gameDataService from '@/services/gameDataService';
+import { findNewlyUnlocked } from '@/utils/achievementChecker';
 import timerService from '@/services/timerService';
 import DarkToggle from '../Header/DarkToggle.vue';
 import LoginIcon from '../Header/LoginIcon.vue';
@@ -149,7 +138,6 @@ import GameInventory from '../Inventory/GameInventory.vue';
 import CraftSystem from '../CraftSystem/CraftSystem.vue';
 import CraftPopup from '../CraftSystem/CraftPopup.vue';
 import GameAchievementsContent from '../Achievements/GameAchievementsContent.vue';
-import DataLoading from './DataLoading.vue';
 import GameSizer from '../Inventory/GameSizer.vue';
 import InfiniteModeButton from '../InfiniteMode/InfiniteModeButton.vue';
 import ExplorerModeButton from '../Explorer/ExplorerModeButton.vue';
@@ -171,7 +159,6 @@ export default {
     CraftSystem,
     CraftPopup,
     GameAchievementsContent,
-    DataLoading,
     GameSizer,
     InfiniteModeButton,
     ExplorerModeButton,
@@ -197,7 +184,8 @@ export default {
       saveInterval: null,
       explorerEnergy: null,
       explorerLastUpdate: null,
-      newAchievement: null,
+      // Succès débloqués en attente d'affichage (un popup à la fois)
+      achievementQueue: [],
       isFireworkActive: false,
       isLoggedIn: false,
       currentUser: null,
@@ -205,9 +193,6 @@ export default {
       showContactForm: false,
       isTimerActive: false,
       isExplorerActive: false,
-      shouldForceReload: false,
-      isExplorerCraftMode: false,
-      currentExplorerChallenge: null,
       showTimerEndModal: false,
       timerModeDiscoveries: 0,
       // Inventaire Infini mis de côté pendant une session Timer (null hors Timer)
@@ -242,30 +227,16 @@ export default {
   async created() {
   this.checkAuth();
   if (this.isLoggedIn) {
-    await this.loadGameProgress();
+    // Contenu du jeu et progression en parallèle
+    await Promise.all([this.loadGameContent(), this.loadGameProgress().catch(() => {})]);
     this.loadSavedCustomization();
+    await this.loadAchievements();
     // Démarrer la sauvegarde périodique
     this.startPeriodicSave();
   }
 },
-mounted() {
-  // Ajouter les écouteurs d'événements globaux
-  window.addEventListener('app-reloaded', this.handleAppReloaded);
-  window.addEventListener('achievements-loaded', this.handleGlobalAchievementsLoaded);
-  
-  // Exposer une méthode pour sauvegarder directement les achievements
-  window.saveAchievements = (achievementsData) => {
-    if (this.isLoggedIn && achievementsData) {
-      achievementsService.updateAchievements(achievementsData)
-        .catch(err => console.error("Erreur de sauvegarde directe:", err));
-    }
-  };
-},
 beforeUnmount() {
-  window.removeEventListener('app-reloaded', this.handleAppReloaded);
-  window.removeEventListener('achievements-loaded', this.handleGlobalAchievementsLoaded);
   clearInterval(this.saveInterval);
-  delete window.saveAchievements;
   
   // Sauvegarde finale avant de quitter
   if (this.isLoggedIn) {
@@ -296,31 +267,6 @@ beforeUnmount() {
       this.$refs.timerModeButton.showLevelSelection();
     }
   },
-
-  handleTimerQuestionsLoaded(data) {
-  if (this.$refs.timerQuestions) {
-    this.$refs.timerQuestions.setQuestions(data);
-  }
-},
-
-handleAppReloaded() {
-  
-  // Forcer le rechargement des achievements
-  this.shouldForceReload = true;
-  
-  // Réinitialiser après un délai
-  setTimeout(() => {
-    this.shouldForceReload = false;
-  }, 500);
-},
-
-handleGlobalAchievementsLoaded(event) {  
-  if (event.detail && event.detail.achievements) {
-    // Mettre à jour les achievements si nécessaire
-    this.achievements = event.detail.achievements;
-  }
-},
-
 
     async activateExplorerMode() {
       try {
@@ -396,6 +342,7 @@ handleGlobalAchievementsLoaded(event) {
   if (gameMode === 'infinite') {
     localStorage.setItem('discoveredElements', JSON.stringify(this.discoveredElements));
     localStorage.setItem('discoveredCategories', JSON.stringify(this.discoveredCategories));
+    this.checkAchievements();
   }
   
   // Sauvegarder dans la base de données si connecté, en utilisant la bonne API
@@ -409,32 +356,6 @@ handleGlobalAchievementsLoaded(event) {
           this.saveGameProgress();
         }
         
-        // Vérifier si de nouveaux achievements sont débloqués par ce nouvel élément
-        if (gameMode === 'infinite') {
-          // Variable pour suivre les dernières vérifications d'achievements
-          if (!this._lastAchievementCheck) {
-            this._lastAchievementCheck = {};
-          }
-          
-          // Ne vérifier qu'une fois toutes les 5 secondes pour chaque élément
-          const now = Date.now();
-          if (!this._lastAchievementCheck[element] || 
-              now - this._lastAchievementCheck[element] > 5000) {
-            
-            this._lastAchievementCheck[element] = now;
-            
-            achievementsService.checkNewElementAchievement(element, this.discoveredElements)
-              .then(unlockedAchievement => {
-                if (unlockedAchievement) {
-                  // Traiter l'achievement débloqué
-                  this.handleAchievementUnlocked(unlockedAchievement);
-                }
-              })
-              .catch(error => {
-                console.error("Erreur lors de la vérification des nouveaux achievements:", error);
-              });
-          }
-        }
       })
       .catch(error => {
         console.error(`Erreur lors de la sauvegarde de l'élément ${element}:`, error);
@@ -485,35 +406,6 @@ handleGlobalAchievementsLoaded(event) {
       }
     },
 
-    async updateDiscoveredElements() {
-      if (!this.isLoggedIn) return;
-      
-      try {        
-        // S'assurer que les éléments sont uniques
-        const uniqueElements = [...new Set(this.discoveredElements)];
-        
-        // Charger les éléments actuels de la base de données pour comparaison
-        const currentProgress = await progressService.loadGameProgress();
-        const currentElements = currentProgress.discoveredElements || [];
-        
-        // Fusionner avec les éléments existants
-        const mergedElements = [...new Set([...currentElements, ...uniqueElements])];
-        
-        // Sauvegarder les éléments fusionnés
-        await progressService.updateDiscoveredElements(mergedElements);
-        
-        // Sauvegarder également les catégories
-        await this.saveGameProgress();
-        
-        return mergedElements;
-      } catch (error) {
-        console.error("Erreur lors de la mise à jour des éléments découverts:", error);
-        throw error;
-      }
-    },
-
-
-
     startPeriodicSave() {
   if (this.saveInterval) {
     clearInterval(this.saveInterval);
@@ -542,37 +434,6 @@ handleGlobalAchievementsLoaded(event) {
       }
     }
   }, 600000); // 10 minutes au lieu de 2
-},
-
-async updateAchievements() {
-  if (!this.achievements || !Array.isArray(this.achievements) || this.achievements.length === 0) {
-    return;
-  }
-  
-  if (!AuthService.isAuthenticated()) {
-    return;
-  }
-  
-  try {
-    const achievementsData = {};
-    this.achievements.forEach(achievement => {
-      if (achievement.unlocked) {
-        achievementsData[achievement.name] = {
-          unlocked: true,
-          unlockedAt: achievement.unlockedAt || new Date().toISOString()
-        };
-      }
-    });
-        
-    if (Object.keys(achievementsData).length > 0) {
-      // Utiliser le nouveau service d'achievements
-      await achievementsService.updateAchievements(achievementsData);
-    } else {
-      console.log("Aucun achievement débloqué à sauvegarder");
-    }
-  } catch (error) {
-    console.error("Erreur lors de la mise à jour des achievements:", error);
-  }
 },
 
     handleResetCraftZone() {
@@ -900,59 +761,40 @@ checkAuth() {
       this.craftingRecipes = data.craftingRecipes;
       this.updateCategoryProgress();
     },
-    handleAchievementsLoaded(achievements) {
-      this.achievements = achievements;
+    async loadGameContent() {
+      try {
+        this.handleDataLoaded(await gameDataService.loadGameContent());
+      } catch (error) {
+        console.error('Erreur lors du chargement du contenu du jeu:', error);
+      }
     },
-    handleAchievementUnlocked(achievement) {  
-  // Vérifier que l'achievement est un objet valide
-  if (!achievement || typeof achievement !== 'object' || achievement instanceof Promise) {
-    console.error("Format d'achievement invalide:", achievement);
-    return;
-  }
-  
-  // Créer une copie sécurisée avec uniquement les propriétés nécessaires
-  this.newAchievement = {
-    name: achievement.name,
-    description: achievement.description,
-    image: achievement.image,
-    unlocked: true,
-    unlockedAt: achievement.unlockedAt || new Date().toISOString()
-  };
-  
-  // Sauvegarde dans achievements locaux
-  const existingIndex = this.achievements.findIndex(a => a.name === achievement.name);
-  if (existingIndex >= 0) {
-    this.achievements[existingIndex].unlocked = true;
-    this.achievements[existingIndex].unlockedAt = new Date().toISOString();
-  }
-  
-  // Sauvegarder immédiatement si connecté
-  if (this.isLoggedIn) {
-    this.handleAchievementUpdate(this.newAchievement);
-  }
-},
+    async loadAchievements() {
+      try {
+        this.achievements = await achievementsService.loadAchievements();
+        // Rattrapage : succès déjà mérités mais jamais enregistrés
+        this.checkAchievements();
+      } catch (error) {
+        console.error('Erreur lors du chargement des succès:', error);
+      }
+    },
+    // Seul point de vérification des succès : après une découverte en mode Infini
+    checkAchievements() {
+      const unlocked = findNewlyUnlocked(this.achievements, this.discoveredElements);
+      if (!unlocked.length) return;
+      const unlockedAt = new Date().toISOString();
+      unlocked.forEach(achievement => {
+        achievement.unlocked = true;
+        achievement.unlockedAt = unlockedAt;
+      });
+      this.achievementQueue.push(...unlocked);
+      if (this.isLoggedIn) {
+        achievementsService.saveUnlocked(unlocked)
+          .catch(error => console.error('Erreur lors de la sauvegarde des succès:', error));
+      }
+    },
     handleResourceSelection(resource) {
       this.$refs.craftSystem.selectResource(resource);
     },
-
-    handleStartCraftChallenge(challengeData) {
-  // Stocker les données du défi
-  this.currentExplorerChallenge = challengeData;
-  
-  // Activer le mode craft tout en gardant le contexte Explorer
-  this.isExplorerActive = false;
-  this.isExplorerCraftMode = true;
-  
-  // Préparer l'interface de craft avec les éléments de base
-  if (this.$refs.craftSystem) {
-    this.$refs.craftSystem.resetCraftingBoard();
-    this.$refs.craftSystem.selectedElements = [];
-  }
-  
-  // Afficher un message d'instruction
-  this.showAlert(`Défi de craft: Créez ${challengeData.challenge.requiredElements.join(', ')} pour réussir le défi !`);
-},
-
 
 handleCraftSuccess(craftedItem) {
   
@@ -969,16 +811,9 @@ handleCraftSuccess(craftedItem) {
   }
   
   // Mode normal (ni Timer ni Explorer)
-  if (!this.isTimerActive && !this.isExplorerActive && !this.isExplorerCraftMode) {
+  if (!this.isTimerActive && !this.isExplorerActive) {
     // Sauvegarder l'élément découvert
     this.saveDiscoveredElement(craftedItem);
-    
-    // Vérifier si la référence dataLoading existe
-    if (this.$refs.dataLoading) {
-      // Passer false comme second paramètre pour éviter les popups redondants
-      // pour les éléments déjà découverts
-      this.$refs.dataLoading.handleCraft(craftedItem, false);
-    }
   }
   
   // Gestion du mode Timer
@@ -1062,78 +897,8 @@ handleCraftSuccess(craftedItem) {
       }
     }
   }
-  
-  // Gestion du mode Explorer Craft
-  if (this.isExplorerCraftMode && this.currentExplorerChallenge) {
-    const requiredElements = this.currentExplorerChallenge.challenge.requiredElements || [];
-    
-    if (requiredElements.includes(craftedItem)) {
-      // Défi réussi !
-      this.showAlert(`Félicitations ! Vous avez créé ${craftedItem} et réussi le défi !`);
-      
-      // Attribuer une récompense en pièces
-      this.handleCoinsEarned(50);
-      
-      // Sauvegarder l'élément de façon permanente
-      this.saveDiscoveredElement(craftedItem);
-      
-      // Revenir au mode Explorer
-      this.isExplorerCraftMode = false;
-      this.isExplorerActive = true;
-      
-      // Réinitialiser le défi actuel
-      this.currentExplorerChallenge = null;
-    }
-  }
 },
 
-// Méthode auxiliaire pour obtenir l'image d'un élément
-getElementImage(elementName) {
-  try {
-    return require(`@/assets/elements/${elementName}.png`);
-  } catch (e) {
-    return null;
-  }
-},
-
-// Méthode pour sauvegarder la progression des succès
-saveAchievementsProgress() {
-  const achievementsData = {};
-  this.achievements.forEach(achievement => {
-    if (achievement.unlocked) {
-      achievementsData[achievement.name] = {
-        unlocked: true,
-        unlockedAt: achievement.unlockedAt || new Date().toISOString()
-      };
-    }
-  });
-  
-  if (Object.keys(achievementsData).length > 0) {
-    // Utiliser le nouveau service d'achievements
-    achievementsService.updateAchievements(achievementsData)
-      .then(() => console.log("Sauvegarde des achievements réussie"))
-      .catch(error => console.error("Erreur lors de la sauvegarde des achievements:", error));
-  }
-},
-
-    addToCategory(craftedItem) {
-      const targetCategory = Object.keys(this.categories).find((category) =>
-        this.categories[category].includes(craftedItem)
-      );
-      
-      if (targetCategory && !this.discoveredElements.includes(craftedItem)) {
-        this.discoveredElements.push(craftedItem);
-        
-        if (!this.discoveredCategories.includes(targetCategory)) {
-          console.log(`Ajout de la catégorie: ${targetCategory}`);
-          this.discoveredCategories.push(targetCategory);
-        }
-        
-        this.updateCategoryProgress();
-        
-        this.saveGameProgress();
-      }
-    },
     async repairGameData() {
       if (!this.isLoggedIn) return;
             
@@ -1163,28 +928,8 @@ saveAchievementsProgress() {
         console.log('Aucune réparation nécessaire, les données sont cohérentes');
       }
     },
-    async handleAchievementUpdate(achievement) {
-      if (!this.isLoggedIn) return;
-      
-      const existingIndex = this.achievements.findIndex(a => a.name === achievement.name);
-      if (existingIndex >= 0) {
-        this.achievements[existingIndex].unlocked = true;
-        this.achievements[existingIndex].unlockedAt = new Date().toISOString();
-      }
-      
-      // Utiliser le nouveau service d'achievements
-      try {
-        await achievementsService.unlockAchievement(achievement.name);
-        console.log(`Achievement ${achievement.name} débloqué et sauvegardé`);
-      } catch (error) {
-        console.error(`Erreur lors du déblocage de l'achievement ${achievement.name}:`, error);
-        
-        // Fallback sur l'ancienne méthode
-        await this.updateAchievements();
-      }
-    },
     closeAchievementPopup() {
-      this.newAchievement = null;
+      this.achievementQueue.shift();
     },
     resetCraftedElement() {
       this.craftedElement = { name: "", image: null };
@@ -1293,25 +1038,6 @@ saveAchievementsProgress() {
       this.selectedTimerLevel = null;
       if (this.$refs.timerQuestions) {
         this.$refs.timerQuestions.resetQuestions();
-      }
-    },
-    async updateTimerProgress(categoryName, questionId) {
-      if (!this.selectedTimerLevel) return;
-      
-      if (!this.timerProgress.completedQuestions[this.selectedTimerLevel][categoryName]) {
-        this.timerProgress.completedQuestions[this.selectedTimerLevel][categoryName] = [];
-      }
-      
-      if (!this.timerProgress.completedQuestions[this.selectedTimerLevel][categoryName].includes(questionId)) {
-        this.timerProgress.completedQuestions[this.selectedTimerLevel][categoryName].push(questionId);
-      }
-  
-      if (this.isLoggedIn) {
-        try {
-          await progressService.updateTimerProgress(this.timerProgress);
-        } catch (error) {
-          console.error("Erreur lors de la mise à jour de la progression du timer:", error);
-        }
       }
     },
     handleTimerReset() {
