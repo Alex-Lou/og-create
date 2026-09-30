@@ -255,6 +255,13 @@ export default {
 .chip--on { background: var(--oc-text); color: #140f24; border-color: var(--oc-text); }
 .chip--tool { color: var(--oc-text); }
 
+.family {
+  /* Voile léger derrière chaque famille : lisible même pliée, le fond vivant reste visible autour */
+  padding: 10px 12px;
+  margin: 0 -12px;
+  border-radius: var(--oc-radius);
+  background: rgba(7, 6, 13, 0.55);
+}
 .family__head {
   appearance: none;
   width: 100%;
@@ -262,7 +269,7 @@ export default {
   grid-template-columns: auto 1fr auto;
   align-items: center;
   gap: 6px 10px;
-  margin: 0 0 10px;
+  margin: 0;
   padding: 4px 0;
   border: 0;
   background: none;
@@ -273,6 +280,7 @@ export default {
 .family__chevron { color: var(--oc-text-muted); transition: transform var(--oc-fast) var(--oc-ease-out); }
 .family__chevron.is-closed { transform: rotate(-90deg); }
 .family__head:hover .family__title { color: #fff; }
+.family__head[aria-expanded='true'] { margin-bottom: 10px; }
 .family__title {
   margin: 0;
   font-family: var(--oc-font-display);

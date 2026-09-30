@@ -55,5 +55,7 @@ export default {
   display: block;
   pointer-events: none;
   z-index: 0;
+  /* Présent mais discret : la liste et ses titres restent au premier plan */
+  opacity: 0.55;
 }
 </style>

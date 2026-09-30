@@ -138,7 +138,7 @@ import AppHeader from '../Game/AppHeader.vue';
 import ModeSwitcher from '../Game/ModeSwitcher.vue';
 import CraftZone from '../Game/CraftZone.vue';
 import LivingBackground from '../Game/LivingBackground.vue';
-import { ERA_NAMES, familyColor, discoveredFamilies, eraOf, slotCountForEra } from '@/utils/eras';
+import { ERA_NAMES, familyColor, discoveredFamilies, eraOf, slotCountForEra, stageOf, populationFor } from '@/utils/eras';
 
 export default {
   name: 'App',
@@ -238,15 +238,16 @@ computed: {
   families() {
     return discoveredFamilies(this.categories, this.infiniteElements);
   },
+  // Ère affichée et fond vivant : lente, au fil des découvertes
   era() {
-    return eraOf(this.families.length);
+    return stageOf(this.discoveredCount);
   },
   eraName() {
     return ERA_NAMES[this.era - 1];
   },
   // Emplacements de fusion : 4 en Timer, sinon débloqués au fil des ères
   slotCount() {
-    return this.isTimerActive ? 4 : slotCountForEra(this.era);
+    return this.isTimerActive ? 4 : slotCountForEra(eraOf(this.families.length));
   },
   totalElements() {
     return new Set(Object.values(this.categories).flat()).size;
@@ -255,7 +256,7 @@ computed: {
     return new Set(this.infiniteElements).size;
   },
   population() {
-    return 22 + 5 * this.discoveredCount;
+    return populationFor(this.discoveredCount);
   },
   palette() {
     return this.families.map(familyColor);
@@ -263,8 +264,8 @@ computed: {
 },
 watch: {
   // Un emplacement de plus : on le dit (hors Timer, où il y en a toujours 4)
-  era(next, previous) {
-    if (this.progressReady && !this.timerSnapshot && slotCountForEra(next) > slotCountForEra(previous)) {
+  slotCount(next, previous) {
+    if (this.progressReady && !this.timerSnapshot && !this.isTimerActive && next > previous) {
       this.showAlert('Nouvel emplacement de fusion débloqué !');
     }
   }
