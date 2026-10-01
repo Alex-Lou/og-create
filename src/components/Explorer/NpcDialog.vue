@@ -9,12 +9,12 @@
     <!-- Seuil de la région : description et progression -->
     <div v-if="showIntro" class="npc-intro">
       <p class="npc-intro__text">{{ regionData.description || defaultRegionDescription }}</p>
-      <div v-if="regionData.progress !== undefined" class="npc-progress">
+      <div v-if="progress !== null" class="npc-progress">
         <div class="npc-progress__row">
           <span class="g-mono">Progression</span>
-          <span class="g-mono npc-progress__value">{{ regionData.progress }} %</span>
+          <span class="g-mono npc-progress__value">{{ progress }} %</span>
         </div>
-        <div class="g-bar npc-progress__bar"><span :style="{ width: `${regionData.progress}%` }"></span></div>
+        <div class="g-bar npc-progress__bar"><span :style="{ width: `${progress}%` }"></span></div>
       </div>
       <div class="npc-actions">
         <button type="button" class="g-btn g-btn--ghost" @click="closeDialog">{{ dynamicCloseButtonText }}</button>
@@ -37,10 +37,10 @@
 
       <div class="npc-words">
         <span class="g-mono">
-          {{ regionData.name || 'Région inconnue' }}<template v-if="regionData.progress !== undefined"> · progression {{ regionData.progress }} %</template>
+          {{ regionData.name || 'Région inconnue' }}<template v-if="progress !== null"> · progression {{ progress }} %</template>
         </span>
-        <div v-if="regionData.progress !== undefined" class="g-bar npc-progress__bar">
-          <span :style="{ width: `${regionData.progress}%` }"></span>
+        <div v-if="progress !== null" class="g-bar npc-progress__bar">
+          <span :style="{ width: `${progress}%` }"></span>
         </div>
         <blockquote class="g-italic npc-words__quote" aria-live="polite">
           <template v-if="isInteractionMode">« {{ currentInteraction.text }} »</template>
@@ -103,6 +103,11 @@ export default {
   },
   emits: ['close', 'action'],
   computed: {
+    // Progression de la région (0–100), ou null quand le serveur n'en donne pas
+    progress() {
+      const value = Number(this.regionData?.progress);
+      return this.regionData?.progress == null || !Number.isFinite(value) ? null : Math.max(0, Math.min(100, Math.round(value)));
+    },
     // Ces computed renvoient d'abord les données de regionData, sinon les props,
     // et enfin les valeurs par défaut dynamiques
     effectiveNpcImage() {
