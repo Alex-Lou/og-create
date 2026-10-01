@@ -54,63 +54,18 @@ export default {
     }
   },
   methods: {
-    applyDamage(element, damage = 0) {
-      console.log(`Élément ${element} inflige ${damage} dégâts au boss`);
-      
-      this.bossHealth = Math.max(0, this.bossHealth - damage);
-      
+    // Vitalité du gardien après un coup : calculée par le serveur (services/expedition.js), seulement affichée ici
+    showBlow(health, damage = 0, announce = true) {
+      this.bossHealth = Math.max(0, health);
       if (damage > 0) {
         this.isBossShaking = true;
         setTimeout(() => {
           this.isBossShaking = false;
         }, 500);
       }
-      
-      if (this.bossHealth <= 0) {
+      if (announce && this.bossHealth <= 0) {
         this.$emit('boss-defeated');
       }
-    },
-
-    applyDamageWithCounterAttack(element, damage) {
-      // Récupérer les règles de combat du boss
-      const bossCombatRules = this.boss.bossCombatRules;
-      const counterAttackRules = bossCombatRules.bossCounterAttack;
-      
-      // Appliquer les dégâts au boss
-      this.bossHealth = Math.max(0, this.bossHealth - damage);
-      
-      if (damage > 0) {
-        this.isBossShaking = true;
-        setTimeout(() => {
-          this.isBossShaking = false;
-        }, 500);
-      }
-      
-      // Préparer la contre-attaque
-      let counterDamage = counterAttackRules.baseDamage;
-      
-      // Déterminer le type d'élément
-      const elementType = this.determineElementType(element, counterAttackRules);
-      
-      // Ajuster les dégâts en fonction du type d'élément
-      counterDamage *= counterAttackRules.damageMultipliers[elementType];
-      
-      // Infliger les dégâts au joueur
-      this.$emit('boss-counter-attack', Math.round(counterDamage));
-      
-      if (this.bossHealth <= 0) {
-        this.$emit('boss-defeated');
-      }
-    },
-
-    determineElementType(element, counterAttackRules) {
-      if (counterAttackRules.elementTypes.weakElements.includes(element)) {
-        return 'weakElement';
-      }
-      if (counterAttackRules.elementTypes.strongElements.includes(element)) {
-        return 'strongElement';
-      }
-      return 'neutralElement';
     },
 
     resetBossHealth() {
