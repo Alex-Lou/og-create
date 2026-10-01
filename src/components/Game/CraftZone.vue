@@ -1,7 +1,7 @@
 <template>
   <section
     ref="zone"
-    :class="['athanor', 'g-panel', { 'athanor--multi': slotCount > 2, 'athanor--over': dragOver, 'is-merging': merging }]"
+    :class="['athanor', 'g-panel', { 'athanor--quick': quick, 'athanor--multi': slotCount > 2, 'athanor--over': dragOver, 'is-merging': merging }]"
     aria-label="Athanor"
     @dragenter.prevent="dragOver = true"
     @dragover.prevent
@@ -83,8 +83,12 @@ import playService from '@/services/playService';
 import { HAPTIC, burst, fly, vibrate } from '@/utils/feedback';
 
 const MERGE_MS = 520;
+// Fusion à 2 : même geste, plus vif (voir .athanor--quick)
+const QUICK_MERGE_MS = 300;
 const REVEAL_MS = 1700;
 const FAIL_MS = 1800;
+// Durée du vol d'un élément jusqu'à son emplacement (utils/feedback.js) : l'animation attend qu'il soit posé
+const FLIGHT_MS = 380;
 // Rayon de l'anneau des emplacements, en px (cercle de 360 px)
 const RING_RADIUS = 130;
 const ROMAN = ['I', 'II', 'III', 'IV'];
@@ -122,6 +126,10 @@ export default {
     };
   },
   computed: {
+    // Deux emplacements : la fusion part dès le second élément, plus courte
+    quick() {
+      return this.slotCount === 2;
+    },
     showFuseButton() {
       return !this.autoFuse || this.slotCount > 2;
     },
@@ -157,6 +165,7 @@ export default {
   created() {
     this.timers = [];
     this.slotEls = []; // éléments DOM des emplacements (non réactif)
+    this.landsAt = 0; // fin du vol du dernier élément posé (performance.now)
   },
   mounted() {
     this.onKey = event => this.handleKey(event);
@@ -165,6 +174,7 @@ export default {
   beforeUnmount() {
     window.removeEventListener('keydown', this.onKey);
     this.timers.forEach(clearTimeout);
+    (this.failTimers || []).forEach(clearTimeout);
   },
   methods: {
     later(fn, ms) {
@@ -181,12 +191,16 @@ export default {
     add(name, from = null) {
       if (!name || this.merging || this.busy) return;
       if (this.result) this.dismiss();
+      // Un essai raté s'efface tout de suite si l'on enchaîne : le nouvel élément reste
+      if (this.failing) this.endFail();
+      else this.failMessage = '';
       if (this.picked.length >= this.slotCount) this.picked = [];
       const index = this.picked.length;
       this.picked.push(name);
+      this.landsAt = from ? performance.now() + FLIGHT_MS : 0;
       if (from) this.$nextTick(() => fly(this.emojiOf(name), from, this.slotEls[index]));
       // Toutes les cases remplies : la fusion part seule ; le bouton sert aux combinaisons partielles (2/3, 3/4…)
-      if (this.autoFuse && this.picked.length === this.slotCount) this.later(() => this.fuse(), 300);
+      if (this.autoFuse && this.picked.length === this.slotCount) this.later(() => this.fuse(), this.quick ? 0 : 300);
     },
     remove(index) {
       if (this.merging || this.busy) return;
@@ -202,16 +216,19 @@ export default {
     async fuse() {
       if (this.picked.length < 2 || this.merging || this.busy) return;
       const ingredients = [...this.picked];
+      // La demande part tout de suite ; l'Athanor reste fermé jusqu'à ce que l'élément ait fini son vol
       this.busy = true;
       let reply;
       try {
         reply = await playService.combine(this.mode, ingredients);
       } catch (error) {
+        await this.untilLanded();
+        this.busy = false;
         this.fail(error.response?.data?.message || 'L’Athanor ne répond pas, réessaie.');
         return;
-      } finally {
-        this.busy = false;
       }
+      await this.untilLanded();
+      this.busy = false;
       if (!reply.result) {
         this.$emit('craft-fail', ingredients);
         this.fail('Rien ne se passe… Essaie une autre combinaison.');
@@ -232,17 +249,29 @@ export default {
           this.$emit('discovery', { name, x: box.left + box.width / 2, y: box.top + box.height / 2 });
         }
         this.later(() => this.dismiss(), REVEAL_MS);
-      }, MERGE_MS);
+      }, this.quick ? QUICK_MERGE_MS : MERGE_MS);
+    },
+    untilLanded() {
+      const wait = this.landsAt - performance.now();
+      return wait > 0 ? new Promise(resolve => this.later(resolve, wait)) : Promise.resolve();
     },
     fail(message) {
       this.failing = true;
       this.failMessage = message;
       vibrate(HAPTIC.fail);
-      this.later(() => {
-        this.failing = false;
-        this.picked = [];
-      }, 700);
-      this.later(() => (this.failMessage = ''), FAIL_MS);
+      this.failTimers = [
+        setTimeout(() => {
+          this.failing = false;
+          this.picked = [];
+        }, this.quick ? 450 : 700),
+        setTimeout(() => (this.failMessage = ''), FAIL_MS)
+      ];
+    },
+    endFail() {
+      (this.failTimers || []).forEach(clearTimeout);
+      this.failing = false;
+      this.failMessage = '';
+      this.picked = [];
     },
     dismiss() {
       this.result = null;
@@ -327,6 +356,8 @@ export default {
 .slot__name { max-width: 100%; font-size: 12px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .slot__num { font-size: 9px; }
 .is-merging .slot--filled { transform: translate(calc(-1 * var(--x)), calc(-1 * var(--y))) scale(0.4); opacity: 0; }
+/* Fusion à 2 : le même glissement vers le centre, en moitié moins de temps */
+.athanor--quick .slot { transition-duration: 300ms, 300ms, var(--oc-fast), var(--oc-fast); }
 
 .is-failing { animation: shake 0.45s ease; }
 .athanor__fail {
