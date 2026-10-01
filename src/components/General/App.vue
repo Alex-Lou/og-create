@@ -192,6 +192,7 @@ import { findNewlyUnlocked } from '@/utils/achievementChecker';
 import { BASE_ELEMENTS, BASE_CATEGORY } from '@/utils/gameConstants';
 import timerService from '@/services/timerService';
 import customizationService from '@/services/customizationService';
+import coinsService from '@/services/coinsService';
 import notificationService from '@/services/notificationService';
 import ContactModal from '../Header/ContactModal.vue';
 import GameAchievementsPopup from '../Achievements/GameAchievementsPopup.vue';
@@ -1168,7 +1169,7 @@ handleCraftSuccess(craftedItem) {
       return family ? family.replace(/_/g, ' ') : '';
     },
     // Piste de l'Infini (payante) : un élément inconnu qu'une seule fusion suffit à créer, sans sa recette
-    useInfiniteHint() {
+    async useInfiniteHint() {
       const near = nearbyDiscoveries(this.craftingRecipes, this.discoveredElements);
       if (!near.length) {
         this.showAlert('Aucune piste : il te faut d’abord de nouveaux éléments.');
@@ -1178,27 +1179,36 @@ handleCraftSuccess(craftedItem) {
         this.showAlert(`Une piste coûte ${JOKER_PRICE} écus.`);
         return;
       }
-      this.handleCoinsEarned(-JOKER_PRICE);
+      if (!(await this.changeCoins(-JOKER_PRICE, () => coinsService.spend('piste')))) return;
       const name = near[Math.floor(Math.random() * near.length)];
       this.showAlert(`Une piste : « ${name} » n’est qu’à une fusion de toi.`);
     },
     // Joker de l'Épreuve : un offert s'il en reste, sinon payé en écus (le bouton est désactivé sans les moyens)
     useJoker(kind) {
       if (this.freeJokers > 0) this.freeJokers--;
-      else this.handleCoinsEarned(-JOKER_PRICE);
+      else this.changeCoins(-JOKER_PRICE, () => coinsService.spend('joker'));
       if (kind === 'time') this.$refs.timerModeButton?.addTime(JOKER_TIME);
     },
-    async handleCoinsEarned(amount) {
-      this.coins += amount;
-      localStorage.setItem('coins', this.coins.toString());
-      
-      if (this.isLoggedIn) {
-        try {
-          await progressService.updateCoins(this.coins);
-        } catch (error) {
-          console.error("Erreur lors de la mise à jour des pièces:", error);
-        }
+    // Écus : un compte suit le solde du serveur (grand livre, `request` renvoie le nouveau solde) ;
+    // un invité garde un solde local. Renvoie faux si le mouvement a été refusé.
+    async changeCoins(amount, request) {
+      if (!this.isLoggedIn) {
+        this.handleCoinsUpdated(Math.max(0, this.coins + amount));
+        return true;
       }
+      try {
+        this.handleCoinsUpdated(await request());
+        return true;
+      } catch (error) {
+        this.showAlert(error.response?.data?.message || 'Les écus n’ont pas pu être mis à jour.');
+        return false;
+      }
+    },
+    // Question de l'Épreuve réussie pour la première fois
+    handleCoinsEarned({ points, questionId }) {
+      // Questions de secours locales (sans identifiant serveur) : rien à réclamer pour un compte
+      if (this.isLoggedIn && !Number.isInteger(questionId)) return;
+      this.changeCoins(points, () => coinsService.claimTimerQuestion(questionId));
     },
     async handleTimerComplete() {
   const currentScore = this.timerModeDiscoveries;
@@ -1207,7 +1217,7 @@ handleCraftSuccess(craftedItem) {
     this.timerProgress.bestScores[this.selectedTimerLevel] = currentScore;
     
     const bonus = currentScore * 5;
-    await this.handleCoinsEarned(bonus);
+    await this.changeCoins(bonus, () => coinsService.claimTimerRecord(this.selectedTimerLevel, currentScore));
     
     if (this.isLoggedIn) {
       try {

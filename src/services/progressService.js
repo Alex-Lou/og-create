@@ -75,13 +75,6 @@ class ProgressService {
     pending = null;
   }
 
-  async updateCoins(coins) {
-    const value = parseInt(coins);
-    if (isNaN(value)) throw new Error('Le montant des pièces doit être un nombre valide');
-    const response = await http.post('/progress/coins/update', { coins: value });
-    return response.data;
-  }
-
   async updateDiscoveredElements(discoveredElements, gameMode = 'infinite') {
     if (!Array.isArray(discoveredElements)) return null;
     const response = await http.post('/progress/update-discovered-elements', { discoveredElements, gameMode });
