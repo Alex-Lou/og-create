@@ -133,6 +133,7 @@
 
 <script>
 import GModal from '@/components/ui/GModal.vue';
+import { sortFamilies } from '@/utils/eras';
 import progressService from '@/services/progressService';
 import gameService from '@/services/gameService';
 import notificationService from '@/services/notificationService';
@@ -184,7 +185,8 @@ export default {
         console.warn(`Données de catégories non disponibles pour le niveau ${this.selectedLevel}:`, this.questionsData);
         return {};
       }
-      return this.questionsData.levels[this.selectedLevel].categories;
+      // Chapitres dans l'ordre du registre (les anciens chapitres hors famille à la fin)
+      return sortFamilies(this.questionsData.levels[this.selectedLevel].categories);
     },
     currentQuestion() {
       return this.questions[this.currentQuestionIndex] || { 
