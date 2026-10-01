@@ -91,7 +91,16 @@
       :width="460"
       @close="closeSuccessPopup"
     >
-      <svg class="tq-seal" width="104" height="104" viewBox="0 0 120 120" aria-hidden="true">
+      <!-- Ce qui a été créé, et avec quoi -->
+      <div v-if="lastCreation" class="tq-creation">
+        <span class="tq-creation__ink g-ink--glow" aria-hidden="true">{{ lastCreation.emoji || '✨' }}</span>
+        <span class="tq-creation__name">{{ lastCreation.name }}</span>
+        <span v-if="lastCreation.ingredients.length" class="tq-creation__from">
+          <span class="g-mono">Créé avec</span>
+          <span class="g-italic">{{ lastCreation.ingredients.join(' + ') }}</span>
+        </span>
+      </div>
+      <svg v-else class="tq-seal" width="104" height="104" viewBox="0 0 120 120" aria-hidden="true">
         <circle cx="60" cy="60" r="54" fill="none" stroke="currentColor" stroke-opacity=".5"></circle>
         <circle cx="60" cy="60" r="46" fill="none" stroke="currentColor" stroke-opacity=".25" stroke-dasharray="2 5"></circle>
         <path d="M40 62l14 14 28-32" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="square"></path>
@@ -164,6 +173,8 @@ export default {
       selectedCategory: null,
       questionsData: null,
       showSuccessPopup: false,
+      // Création qui a résolu la question : { name, emoji, ingredients }
+      lastCreation: null,
       showCompletionPopup: false,
       completionMessage: '',
       completionSubMessage: '',
@@ -899,7 +910,8 @@ export default {
       }
     },
     // Appelée par App après validation de la réponse (modes 'any', 'multiple' et 'all')
-    async answerCorrect() {
+    async answerCorrect(creation = null) {
+      this.lastCreation = creation ? { ...creation, ingredients: creation.ingredients || [] } : null;
       const currentQuestion = this.currentQuestion;
       const points = currentQuestion.points || 10;
       const questionId = currentQuestion.id || `${this.selectedCategory}_${this.currentQuestionIndex}`;
@@ -1014,6 +1026,12 @@ export default {
 .tq-full { align-self: stretch; }
 
 .tq-seal { color: var(--oc-gold); }
+.tq-creation { display: flex; flex-direction: column; align-items: center; gap: 6px; text-align: center; }
+.tq-creation__ink { font-size: 72px; line-height: 1; animation: tq-rise 0.7s var(--oc-ease-spring) both; }
+.tq-creation__name { font-family: var(--oc-font-display); font-size: 30px; line-height: 1.15; color: var(--oc-gold); }
+.tq-creation__from { display: flex; flex-direction: column; align-items: center; gap: 2px; font-size: 18px; color: var(--oc-text-strong); }
+@keyframes tq-rise { from { opacity: 0; transform: translateY(8px) scale(0.85); } to { opacity: 1; transform: none; } }
+@media (prefers-reduced-motion: reduce) { .tq-creation__ink { animation: none; } }
 .tq-reward {
   font-family: var(--oc-font-mono);
   font-size: 12px;

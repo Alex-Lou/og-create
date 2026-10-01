@@ -241,7 +241,7 @@ export default {
         this.merging = false;
         this.picked = [];
         this.result = { name, isNew, image: creatureImage(name), from: ingredients };
-        this.$emit('craft-success', name);
+        this.$emit('craft-success', name, ingredients);
         vibrate(isNew ? HAPTIC.discovery : HAPTIC.success);
         if (isNew) this.$nextTick(() => burst(this.$refs.revealCard, { count: 26, spread: 170 }));
         if (isNew) {
