@@ -987,14 +987,15 @@ checkAuth() {
     async loadAchievements() {
       try {
         this.achievements = await achievementsService.loadAchievements();
-        // Rattrapage : succès déjà mérités mais jamais enregistrés
-        this.checkAchievements();
+        // Rattrapage : succès déjà mérités mais jamais enregistrés. Un invité n'a pas de succès enregistrés :
+        // ceux de son carnet ont déjà été montrés à leur découverte, on les coche sans les rejouer.
+        this.checkAchievements({ announce: this.isLoggedIn });
       } catch (error) {
         console.error('Erreur lors du chargement des succès:', error);
       }
     },
     // Seul point de vérification des succès : après une découverte en mode Infini
-    checkAchievements() {
+    checkAchievements({ announce = true } = {}) {
       const unlocked = findNewlyUnlocked(this.achievements, this.discoveredElements);
       if (!unlocked.length) return;
       const unlockedAt = new Date().toISOString();
@@ -1002,7 +1003,7 @@ checkAuth() {
         achievement.unlocked = true;
         achievement.unlockedAt = unlockedAt;
       });
-      this.achievementQueue.push(...unlocked);
+      if (announce) this.achievementQueue.push(...unlocked);
       if (this.isLoggedIn) {
         achievementsService.saveUnlocked(unlocked)
           .catch(error => console.error('Erreur lors de la sauvegarde des succès:', error));
