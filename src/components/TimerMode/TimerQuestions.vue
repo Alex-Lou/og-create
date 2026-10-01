@@ -149,7 +149,7 @@ export default {
   emits: [
     'reset-timer', 'show-level-selection', 'pause-timer', 'resume-timer', 'stop-timer',
     'set-initial-inventory', 'reset-craft-zone', 'level-selected', 'coins-earned',
-    'add-recipes', 'add-emojis', 'timer-progress-updated', 'question-changed'
+    'add-emojis', 'timer-progress-updated', 'question-changed'
   ],
   data() {
     return {
@@ -157,7 +157,6 @@ export default {
       questions: [], 
       isVisible: false,
       isTimeUp: false,
-      recipesData: null,
       currentScore: 0,
       selectedLevel: null,
       selectedCategory: null,
@@ -225,9 +224,8 @@ export default {
     }
   },
   async created() {
-    // Questions et recettes sont publiques ; la progression Timer n'existe que pour un compte
+    // Les questions sont publiques ; les recettes restent sur le serveur ; la progression Timer n'existe que pour un compte
     await this.loadQuestionsData();
-    await this.loadRecipes();
     if (this.isLoggedIn) await this.loadProgress();
   },
   methods: {
@@ -279,22 +277,6 @@ export default {
 
       const totalQuestions = this.questionsData.levels[this.selectedLevel].categories[categoryName].questions.length;
       return Array.isArray(questionsForCategory) && questionsForCategory.length >= totalQuestions;
-    },
-    loadRecipesFromQuestions() {
-      if (!this.questionsData || !this.selectedLevel || !this.selectedCategory) return;
-      const categoryQuestions = this.questionsData.levels[this.selectedLevel].categories[this.selectedCategory].questions;
-      const recipes = {};
-      categoryQuestions.forEach(question => {
-        // Structure simple ou imbriquée (initialElements.initialElements)
-        const initial = question.initialElements?.recipes
-          ? question.initialElements
-          : question.initialElements?.initialElements;
-        Object.entries(initial?.recipes || {}).forEach(([result, recipe]) => {
-          recipes[recipe] = result;
-          recipes[recipe.split('+').sort().join('+')] = result;
-        });
-      });
-      if (Object.keys(recipes).length) this.$emit('add-recipes', recipes);
     },
     async loadProgress() {
       try {
@@ -439,8 +421,6 @@ export default {
         this.currentQuestionIndex = 0;
         this.shuffleQuestions();
         
-        // Charger explicitement les recettes avant d'afficher la question
-        this.loadRecipesFromQuestions();
         
         // Réinitialiser le timer et le redémarrer
         this.$emit('reset-timer');
@@ -501,13 +481,6 @@ export default {
       this.selectedCategory = null;
       this.questions = [];
       this.$emit('stop-timer');
-    },
-    async loadRecipes() {
-      try {
-        this.recipesData = await gameService.loadFile('animaux');
-      } catch (error) {
-        console.error('Erreur lors du chargement des recettes:', error);
-      }
     },
     async loadQuestionsData() {
       try {
@@ -722,7 +695,6 @@ export default {
         this.currentQuestionIndex = 0;
         
         // Ajouter cette ligne pour charger les recettes
-        this.loadRecipesFromQuestions();
         
         await this.show();
       } finally {
@@ -844,7 +816,7 @@ export default {
         console.log("Éléments additionnels:", additionalElements);
         console.log("Éléments de la question définis:", startingElements);
         
-        this.$emit('set-initial-inventory', startingElements);
+        this.$emit('set-initial-inventory', startingElements, this.currentQuestion?.id);
         
         await this.$nextTick();
         await new Promise(resolve => setTimeout(resolve, 50));
@@ -911,7 +883,6 @@ export default {
         this.currentQuestionIndex++;
         
         // Charger les recettes pour la nouvelle question
-        this.loadRecipesFromQuestions();
         
         await new Promise(resolve => setTimeout(resolve, 100));
         await this.show();

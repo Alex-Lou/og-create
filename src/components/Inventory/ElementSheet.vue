@@ -5,8 +5,8 @@
     <div class="sheet__block">
       <span class="g-mono">Naît de</span>
       <p v-if="!origins.length" class="g-italic sheet__line">{{ isBase ? 'Élément premier : il ne naît de rien.' : 'Venu d’ailleurs : aucune recette connue ne le donne.' }}</p>
-      <p v-for="parts in origins.slice(0, MAX_ORIGINS)" :key="parts.join('+')" class="sheet__line">{{ parts.join(' + ') }}</p>
-      <p v-if="origins.length > MAX_ORIGINS" class="g-mono">et {{ origins.length - MAX_ORIGINS }} autre{{ origins.length - MAX_ORIGINS > 1 ? 's' : '' }} voie{{ origins.length - MAX_ORIGINS > 1 ? 's' : '' }}</p>
+      <p v-for="parts in origins" :key="parts.join('+')" class="sheet__line">{{ parts.join(' + ') }}</p>
+      <p v-if="more" class="g-mono">et {{ more }} autre{{ more > 1 ? 's' : '' }} voie{{ more > 1 ? 's' : '' }}</p>
     </div>
 
     <p :class="['g-italic', 'sheet__pending', { 'is-done': !pending }]">
@@ -31,15 +31,14 @@ export default {
     name: { type: String, required: true },
     emoji: { type: String, default: '✨' },
     family: { type: String, default: '' },
-    // Recettes à portée qui donnent l'élément (listes d'ingrédients)
+    // Recettes à portée qui donnent l'élément (listes d'ingrédients, 3 au plus : le serveur les choisit)
     origins: { type: Array, default: () => [] },
+    // Nombre d'autres recettes à portée, non montrées
+    more: { type: Number, default: 0 },
     // Recettes inexplorées qui l'utilisent
     pending: { type: Number, default: 0 }
   },
   emits: ['close', 'use'],
-  data() {
-    return { MAX_ORIGINS: 3 };
-  },
   computed: {
     isBase() {
       return BASE_ELEMENTS.includes(this.name);

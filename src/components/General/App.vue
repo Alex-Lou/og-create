@@ -47,6 +47,7 @@
         <div class="oc-app__inventory">
           <GameInventory
             :categories="categories"
+            :familyTotals="familyTotals"
             :discoveredElements="discoveredElements"
             :elementEmojis="elementEmojis"
             :isTimerMode="isTimerActive"
@@ -61,8 +62,7 @@
           <TimerBrief
             v-if="isTimerActive && timerQuestion?.text"
             :question="timerQuestion"
-            :inventory="discoveredElements"
-            :recipes="craftingRecipes"
+            :hint="timerHint"
             :coins="coins"
             :freeJokers="freeJokers"
             @joker="useJoker"
@@ -70,9 +70,9 @@
           <CraftZone
             ref="craftZone"
             :slotCount="slotCount"
-            :craftingRecipes="craftingRecipes"
+            :mode="currentMode"
             :elementEmojis="elementEmojis"
-            :discoveredElements="discoveredElements"
+            @learned="learnElement"
             @craft-success="handleCraftSuccess"
             @discovery="handleDiscovery"
             @show-alert="showAlert"
@@ -106,11 +106,12 @@
       </template>
     </GModal>
     <ElementSheet
-      v-if="inspected"
+      v-if="inspected && sheetOrigins"
       :name="inspected"
       :emoji="elementEmojis[inspected]"
       :family="familyOf(inspected)"
-      :origins="knownOrigins(craftingRecipes, discoveredElements, inspected)"
+      :origins="sheetOrigins.origins"
+      :more="sheetOrigins.more"
       :pending="unexplored[inspected] || 0"
       @close="inspected = null"
       @use="inspected = null; handleResourceSelection($event)"
@@ -153,7 +154,6 @@
       @reset-craft-zone="handleResetCraftZone"
       @level-selected="handleLevelSelected"
       @coins-earned="handleCoinsEarned"
-      @add-recipes="craftingRecipes = { ...craftingRecipes, ...$event }"
       @add-emojis="elementEmojis = { ...$event, ...elementEmojis }"
       @timer-progress-updated="timerProgress = $event"
       @question-changed="timerQuestion = $event"
@@ -173,7 +173,6 @@
       v-if="isExplorerActive"
       :active="isExplorerActive"
       :userCoins="coins"
-      :craftingRecipes="craftingRecipes"
       :elementEmojis="elementEmojis"
       :discoveredElements="discoveredElements"
       @close="deactivateExplorerMode"
@@ -187,7 +186,7 @@
 import AuthService from '@/services/authService';
 import progressService from '@/services/progressService';
 import achievementsService from '@/services/achievementsService';
-import gameDataService from '@/services/gameDataService';
+import playService from '@/services/playService';
 import { findNewlyUnlocked } from '@/utils/achievementChecker';
 import { BASE_ELEMENTS, BASE_CATEGORY } from '@/utils/gameConstants';
 import timerService from '@/services/timerService';
@@ -208,14 +207,14 @@ import TimerQuestions from '../TimerMode/TimerQuestions.vue';
 import TimerBrief from '../TimerMode/TimerBrief.vue';
 import ElementSheet from '../Inventory/ElementSheet.vue';
 import ResetPasswordModal from '../Account/ResetPasswordModal.vue';
-import { FREE_JOKERS, JOKER_PRICE, JOKER_TIME, knownOrigins, nearbyDiscoveries, unexploredUses } from '@/utils/hints';
+import { FREE_JOKERS, JOKER_TIME } from '@/utils/hints';
 import CustomizeModal from '../Header/CustomizeModal.vue';
 import ExplorerMap from '../Explorer/ExplorerMap.vue';
 import AppHeader from '../Game/AppHeader.vue';
 import ModeSwitcher from '../Game/ModeSwitcher.vue';
 import CraftZone from '../Game/CraftZone.vue';
 import LivingBackground from '../Game/LivingBackground.vue';
-import { ERA_NAMES, familyColor, discoveredFamilies, eraOf, slotCountForEra, stageOf, populationFor } from '@/utils/eras';
+import { ERA_NAMES, familyColor, discoveredFamilies, eraOf, slotCountForEra, sortFamilies, stageOf, populationFor } from '@/utils/eras';
 
 // Lit le jeton de réinitialisation dans l'adresse puis l'efface (historique, partage d'écran)
 function takeResetToken() {
@@ -253,8 +252,11 @@ export default {
     return {
       // Éléments de base affichés tout de suite, avant la réponse du serveur
       elementEmojis: { Eau: '💧', Feu: '🔥', Terre: '🌎', Air: '💨' },
-      craftingRecipes: {},
+      // Familles : éléments connus du joueur seulement ; leur taille vient du serveur (familyTotals)
       categories: { [BASE_CATEGORY]: [...BASE_ELEMENTS] },
+      familyTotals: {},
+      // Recettes encore inexplorées par élément du carnet (calculées par le serveur)
+      unexploredCounts: {},
       discoveredCategories: [BASE_CATEGORY],
       discoveredElements: [...BASE_ELEMENTS],
       achievements: [],
@@ -285,8 +287,13 @@ export default {
       // Épreuve : question affichée en consigne, jokers offerts restants
       timerQuestion: null,
       freeJokers: FREE_JOKERS,
-      // Élément dont la fiche est ouverte
+      // Indice de joker affiché ({ kind, text }), jusqu'à la prochaine découverte
+      timerHint: null,
+      // Épreuve lancée côté serveur (les jokers offerts ne se donnent qu'au lancement)
+      timerLaunched: false,
+      // Élément dont la fiche est ouverte, et ses recettes (chargées au serveur)
       inspected: null,
+      sheetOrigins: null,
       // Jeton du lien « mot de passe oublié » (?reset=…)
       resetToken: takeResetToken(),
       timerProgress: {
@@ -315,9 +322,9 @@ export default {
   },
   async created() {
   this.checkAuth();
-  // Le contenu du jeu est public : on joue sans compte (mode invité, sans sauvegarde)
+  // Sans compte, le serveur tient un carnet invité
   const progress = this.isLoggedIn ? this.loadGameProgress().catch(() => {}) : null;
-  await Promise.all([this.loadGameContent(), progress]);
+  await Promise.all([this.loadPlayState(), progress]);
   await this.loadAchievements();
   // Désormais, un changement d'ère vient d'une découverte (pas du chargement)
   this.progressReady = true;
@@ -345,7 +352,7 @@ computed: {
   },
   // Recettes encore inexplorées par élément découvert (Registre et fiches)
   unexplored() {
-    return this.isTimerActive ? {} : unexploredUses(this.craftingRecipes, this.discoveredElements);
+    return this.isTimerActive ? {} : this.unexploredCounts;
   },
   // Pièces du Cabinet portées sur le sceau
   worn() {
@@ -357,10 +364,10 @@ computed: {
   // Part découverte de chaque famille, dans l'ordre du registre (sceau du joueur)
   familyShares() {
     const found = new Set(this.infiniteElements);
-    return Object.entries(this.categories).map(([name, elements]) => ({
-      name,
-      share: elements.length ? elements.filter(e => found.has(e)).length / elements.length : 0
-    }));
+    return Object.entries(this.categories).map(([name, elements]) => {
+      const total = this.familyTotals[name] || elements.length;
+      return { name, share: total ? elements.filter(e => found.has(e)).length / total : 0 };
+    });
   },
   sigilShares() {
     return this.familyShares.map(f => f.share);
@@ -376,7 +383,8 @@ computed: {
     return this.isTimerActive ? 4 : slotCountForEra(eraOf(this.families.length));
   },
   totalElements() {
-    return new Set(Object.values(this.categories).flat()).size;
+    const totals = Object.values(this.familyTotals);
+    return totals.length ? totals.reduce((sum, n) => sum + n, 0) : new Set(Object.values(this.categories).flat()).size;
   },
   discoveredCount() {
     return new Set(this.infiniteElements).size;
@@ -394,7 +402,16 @@ watch: {
     this.$nextTick(this.trackOverlays);
   },
   timerQuestion() {
+    this.timerHint = null;
     this.$nextTick(this.trackOverlays);
+  },
+  // Fiche d'élément : ses recettes à portée viennent du serveur
+  inspected(name) {
+    this.sheetOrigins = null;
+    if (!name) return;
+    playService.origins(name)
+      .then(reply => { if (this.inspected === name) this.sheetOrigins = reply; })
+      .catch(() => { if (this.inspected === name) this.sheetOrigins = { origins: [], more: 0 }; });
   },
   // Un emplacement de plus : on le dit (hors Timer, où il y en a toujours 4)
   slotCount(next, previous) {
@@ -489,14 +506,11 @@ beforeUnmount() {
     },
 
     saveDiscoveredElement(element, gameMode = 'infinite') {
-  // Vérifier que l'élément n'est pas déjà dans la liste spécifique au mode
-  let elementsList;
-  
+  // Ignorer un élément déjà dans la liste spécifique au mode
   if (gameMode === 'timer') {
     // Pour le mode Timer, utiliser la liste timerElements
     if (!this.currentTimerElements.includes(element)) {
       this.currentTimerElements.push(element);
-      elementsList = this.currentTimerElements;
     } else {
       return; // Déjà dans la liste
     }
@@ -504,7 +518,6 @@ beforeUnmount() {
     // Pour le mode Explorer
     if (!this.discoveredElements.includes(element)) {
       this.discoveredElements.push(element);
-      elementsList = this.discoveredElements;
     } else {
       return; // Déjà dans la liste
     }
@@ -526,8 +539,6 @@ beforeUnmount() {
       
       // Mettre à jour les statistiques de progression des catégories
       this.updateCategoryProgress();
-      
-      elementsList = this.discoveredElements;
     } else {
       return; // Déjà dans la liste
     }
@@ -540,21 +551,9 @@ beforeUnmount() {
     this.checkAchievements();
   }
   
-  // Sauvegarder dans la base de données si connecté, en utilisant la bonne API
-  if (this.isLoggedIn) {
-    progressService.updateDiscoveredElements(elementsList, gameMode)
-      .then(() => {
-        console.log(`Élément ${element} sauvegardé avec succès (mode: ${gameMode})`);
-        
-        // Sauvegarder également les catégories uniquement en mode infinite
-        if (gameMode === 'infinite') {
-          this.saveGameProgress();
-        }
-        
-      })
-      .catch(error => {
-        console.error(`Erreur lors de la sauvegarde de l'élément ${element}:`, error);
-      });
+  // La découverte est déjà inscrite par le serveur (mélange réussi) ; reste l'avancement des familles
+  if (this.isLoggedIn && gameMode === 'infinite') {
+    this.saveGameProgress();
   }
 },
 
@@ -579,6 +578,7 @@ beforeUnmount() {
     handleLevelSelected(levelData) {
       this.selectedTimerLevel = levelData.level;
       this.freeJokers = FREE_JOKERS;
+      this.timerLaunched = false;
       if (this.$refs.timerModeButton) {
         this.$refs.timerModeButton.handleLevelSelected(levelData);
       }
@@ -635,8 +635,9 @@ beforeUnmount() {
     handleResetCraftZone() {
       this.resetCraftBoard();
     },
-    handleSetInitialInventory(elements) {
+    handleSetInitialInventory(elements, questionId) {
   if (!this.isTimerActive) return;
+  this.startTimerRun(questionId);
   
   this.resetCraftBoard();
   
@@ -916,7 +917,7 @@ saveGameProgress() {
       // Pendant une session Timer, la progression reflète l'inventaire Infini (recalculée à la sortie)
       if (this.timerSnapshot) return;
       Object.keys(this.categories).forEach(category => {
-        const totalElements = this.categories[category].length;
+        const totalElements = this.familyTotals[category] || this.categories[category].length;
         const discoveredCount = this.categories[category].filter(element => 
           this.discoveredElements.includes(element)
         ).length;
@@ -951,19 +952,37 @@ checkAuth() {
       this.currentUser = null;
       window.location.reload();
     },
-    handleDataLoaded(data) {
-      // Fusion : conserve les emojis/recettes du Timer arrivés avant le contenu principal
-      this.elementEmojis = { ...this.elementEmojis, ...data.elementEmojis };
-      this.categories = data.categories;
-      this.craftingRecipes = { ...this.craftingRecipes, ...data.craftingRecipes };
-      this.updateCategoryProgress();
-    },
-    async loadGameContent() {
+    // Carnet de l'Infini (compte ou invité) et ce qu'il faut pour l'afficher ; aucune recette
+    async loadPlayState() {
       try {
-        this.handleDataLoaded(await gameDataService.loadGameContent());
+        const state = await playService.state();
+        this.familyTotals = state.families;
+        const categories = Object.fromEntries(Object.keys(state.families).map(family => [family, []]));
+        this.applyKnown(state.known, categories);
+        this.categories = sortFamilies(categories);
+        this.unexploredCounts = state.unexplored;
+        if (this.timerSnapshot) this.timerSnapshot.elements = state.elements;
+        else this.discoveredElements = state.elements;
+        this.updateCategoryProgress();
       } catch (error) {
-        console.error('Erreur lors du chargement du contenu du jeu:', error);
+        console.error('Erreur lors du chargement du carnet:', error);
       }
+    },
+    // Emoji et famille d'éléments connus ({ nom: { emoji, family } })
+    applyKnown(known, categories = this.categories) {
+      const emojis = { ...this.elementEmojis };
+      Object.entries(known || {}).forEach(([name, { emoji, family }]) => {
+        emojis[name] = emoji;
+        if (!family) return;
+        if (!categories[family]) categories[family] = [];
+        if (!categories[family].includes(name)) categories[family].push(name);
+      });
+      this.elementEmojis = emojis;
+    },
+    // Résultat d'un mélange réussi, renvoyé par le serveur
+    learnElement({ result, emoji, family, unexplored }) {
+      this.applyKnown({ [result]: { emoji, family } });
+      if (unexplored) this.unexploredCounts = unexplored;
     },
     async loadAchievements() {
       try {
@@ -1024,6 +1043,7 @@ handleCraftSuccess(craftedItem) {
     // Ajouter à l'inventaire local de la session Timer
     if (!this.discoveredElements.includes(craftedItem)) {
       this.discoveredElements.push(craftedItem);
+      this.timerHint = null;
     }
     
     // Vérifier si l'élément fait partie des éléments initiaux de la question
@@ -1190,31 +1210,44 @@ handleCraftSuccess(craftedItem) {
       this.timerSnapshot = null;
       this.updateCategoryProgress();
     },
-    knownOrigins,
     familyOf(name) {
       const family = Object.keys(this.categories).find(key => this.categories[key].includes(name));
       return family ? family.replace(/_/g, ' ') : '';
     },
-    // Piste de l'Infini (payante) : un élément inconnu qu'une seule fusion suffit à créer, sans sa recette
+    // Piste de l'Infini (payante, compte requis) : le serveur choisit un élément inconnu à une seule fusion
     async useInfiniteHint() {
-      const near = nearbyDiscoveries(this.craftingRecipes, this.discoveredElements);
-      if (!near.length) {
-        this.showAlert('Aucune piste : il te faut d’abord de nouveaux éléments.');
-        return;
+      try {
+        const { name, coins } = await playService.hint();
+        this.handleCoinsUpdated(coins);
+        this.showAlert(`Une piste : « ${name} » n’est qu’à une fusion de toi.`);
+      } catch (error) {
+        this.showAlert(error.response?.data?.message || 'La piste n’a pas pu être achetée.');
       }
-      if (this.coins < JOKER_PRICE) {
-        this.showAlert(`Une piste coûte ${JOKER_PRICE} écus.`);
-        return;
-      }
-      if (!(await this.changeCoins(-JOKER_PRICE, () => coinsService.spend('piste')))) return;
-      const name = near[Math.floor(Math.random() * near.length)];
-      this.showAlert(`Une piste : « ${name} » n’est qu’à une fusion de toi.`);
     },
-    // Joker de l'Épreuve : un offert s'il en reste, sinon payé en écus (le bouton est désactivé sans les moyens)
-    useJoker(kind) {
-      if (this.freeJokers > 0) this.freeJokers--;
-      else this.changeCoins(-JOKER_PRICE, () => coinsService.spend('joker'));
-      if (kind === 'time') this.$refs.timerModeButton?.addTime(JOKER_TIME);
+    // Joker de l'Épreuve : le serveur compte les jokers offerts, débite les suivants et calcule l'indice
+    async useJoker(kind) {
+      try {
+        const reply = await playService.joker(kind);
+        this.freeJokers = reply.freeJokers;
+        if (reply.coins !== undefined) this.handleCoinsUpdated(reply.coins);
+        if (kind === 'time') this.$refs.timerModeButton?.addTime(JOKER_TIME);
+        else if (kind === 'step') this.timerHint = { kind, text: `Essaie ${reply.ingredients.join(' + ')}.` };
+        else this.timerHint = { kind, text: `Pense à ${reply.ingredient}…` };
+      } catch (error) {
+        this.showAlert(error.response?.data?.message || 'Le joker n’a pas pu être utilisé.');
+      }
+    },
+    // Question de l'Épreuve : le serveur pose les éléments en main (les mélanges y sont vérifiés)
+    async startTimerRun(questionId) {
+      if (!Number.isInteger(questionId)) return;
+      try {
+        const run = await playService.startRun('timer', { questionId, launch: !this.timerLaunched });
+        this.timerLaunched = true;
+        this.freeJokers = run.freeJokers;
+        this.applyKnown(run.known);
+      } catch (error) {
+        this.showAlert(error.response?.data?.message || 'L’épreuve n’a pas pu démarrer, réessaie.');
+      }
     },
     // Écus : un compte suit le solde du serveur (grand livre, `request` renvoie le nouveau solde) ;
     // un invité garde un solde local. Renvoie faux si le mouvement a été refusé.

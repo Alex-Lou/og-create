@@ -36,15 +36,6 @@
     }
     
     /**
-     * Vérifie une combinaison d'éléments
-     * @param {Array<string>} elements - Tableau des éléments à combiner
-     * @returns {Promise<Object>} - Résultat de la combinaison
-     */
-    async checkCombination(elements) {
-        return this.dataService.checkCombination(elements);
-    }
-    
-    /**
      * Vide le cache côté client
      */
     clearCache() {

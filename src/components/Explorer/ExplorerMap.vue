@@ -115,7 +115,6 @@
       :isVisible="showCraftModal"
       :region="selectedRegion"
       :challenge="currentChallenge"
-      :craftingRecipes="craftingRecipes"
       :elementEmojis="elementEmojis"
       :discoveredElements="discoveredElements"
       @close="closeCraftModal"
@@ -185,7 +184,6 @@ export default {
       type: Boolean,
       default: true
     },
-    craftingRecipes: { type: Object, default: () => ({}) },
     elementEmojis: { type: Object, default: () => ({}) },
     discoveredElements: { type: Array, default: () => [] }
   },

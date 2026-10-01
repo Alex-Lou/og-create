@@ -6,7 +6,7 @@
     </div>
 
     <transition name="brief-hint">
-      <p v-if="hint" :key="hint" class="g-italic brief__hint" role="status">{{ hint }}</p>
+      <p v-if="hint" :key="hint.text" class="g-italic brief__hint" role="status">{{ hint.text }}</p>
     </transition>
 
     <div class="brief__jokers" role="group" aria-label="Jokers">
@@ -28,58 +28,40 @@
 </template>
 
 <script>
-import { BASE_ELEMENTS } from '@/utils/gameConstants';
-import { JOKER_PRICE, JOKER_TIME, nextStep } from '@/utils/hints';
+import { JOKER_PRICE, JOKER_TIME } from '@/utils/hints';
 
 // Consigne toujours visible pendant l'Épreuve, et jokers : une étape, un ingrédient, du temps.
-// Le paiement (joker offert ou écus) est fait par le parent à l'événement « joker ».
+// Le serveur calcule l'indice et le paie ; le parent le reçoit à l'événement « joker » et le renvoie en `hint`.
 export default {
   name: 'TimerBrief',
   props: {
     question: { type: Object, required: true },
-    inventory: { type: Array, default: () => [] },
-    recipes: { type: Object, required: true },
+    // Indice affiché ({ kind, text }), effacé par le parent à la découverte suivante
+    hint: { type: Object, default: null },
     coins: { type: Number, default: 0 },
     freeJokers: { type: Number, default: 0 }
   },
   emits: ['joker'],
   data() {
-    return { price: JOKER_PRICE, revealed: null };
+    return { price: JOKER_PRICE };
   },
   computed: {
     canPay() {
       return this.freeJokers > 0 || this.coins >= JOKER_PRICE;
     },
-    step() {
-      return nextStep(this.recipes, this.inventory, this.question.validAnswers || []);
-    },
-    // Un indice payé reste affiché tant qu'il est utile (jusqu'à la fusion qu'il annonce)
-    hint() {
-      if (!this.revealed || !this.step || this.revealed.result !== this.step.result) return '';
-      if (this.revealed.kind === 'step') return `Essaie ${this.step.ingredients.join(' + ')}.`;
-      const parts = this.step.ingredients;
-      return `Pense à ${parts.find(p => !BASE_ELEMENTS.includes(p)) || parts[0]}…`;
-    },
     jokers() {
       // L'ingrédient peut être complété par l'étape entière, pas l'inverse
-      const shown = this.hint ? this.revealed.kind : null;
+      const shown = this.hint?.kind || null;
       return [
-        { kind: 'step', label: 'Une étape', short: 'Étape', title: 'Montre la prochaine fusion utile', ready: !!this.step && shown !== 'step' },
-        { kind: 'ingredient', label: 'Un ingrédient', short: 'Ingrédient', title: 'Montre un des éléments à combiner', ready: !!this.step && !shown },
+        { kind: 'step', label: 'Une étape', short: 'Étape', title: 'Montre la prochaine fusion utile', ready: shown !== 'step' },
+        { kind: 'ingredient', label: 'Un ingrédient', short: 'Ingrédient', title: 'Montre un des éléments à combiner', ready: !shown },
         { kind: 'time', label: `+${JOKER_TIME} s`, short: `+${JOKER_TIME} s`, title: `Ajoute ${JOKER_TIME} secondes au sablier`, ready: true }
       ];
     }
   },
-  watch: {
-    'question.text'() {
-      this.revealed = null;
-    }
-  },
   methods: {
     use(kind) {
-      if (!this.canPay) return;
-      if (kind !== 'time') this.revealed = { kind, result: this.step.result };
-      this.$emit('joker', kind);
+      if (this.canPay) this.$emit('joker', kind);
     }
   }
 };
@@ -94,12 +76,14 @@ export default {
   padding: 16px 20px;
   box-shadow: inset 0 0 0 1px var(--oc-accent-line);
 }
-.brief__goal { display: flex; flex-direction: column; gap: 4px; }
-.brief__text { margin: 0; font-family: var(--oc-font-display); font-size: 21px; line-height: 1.2; color: var(--oc-gold); }
-.brief__hint { margin: 0; font-size: 17px; color: var(--oc-text-strong); }
-.brief__jokers { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; }
+.brief__goal { display: flex; flex-direction: column; align-items: center; gap: 6px; text-align: center; }
+/* L'élément à faire naître : la pièce maîtresse du bandeau, au centre */
+.brief__text { margin: 0; font-family: var(--oc-font-display); font-size: 32px; line-height: 1.15; color: var(--oc-gold); text-shadow: 0 0 18px rgba(224, 180, 84, 0.25); }
+.brief__hint { margin: 0; font-size: 17px; text-align: center; color: var(--oc-text-strong); }
+/* Jokers à part, sous un filet, pour ne pas se mêler à la consigne */
+.brief__jokers { display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 8px; padding-top: 12px; border-top: 1px solid var(--oc-line); }
 .brief__joker { padding: 0 12px; }
-.brief__price { margin-left: auto; }
+.brief__price { flex-basis: 100%; text-align: center; }
 .brief__short { display: none; }
 .brief-hint-enter-active { transition: opacity var(--oc-medium) var(--oc-ease-out), transform var(--oc-medium) var(--oc-ease-out); }
 .brief-hint-enter-from { opacity: 0; transform: translateY(4px); }
@@ -120,12 +104,12 @@ export default {
     box-shadow: 0 -1px 0 var(--oc-accent-line);
   }
   .brief__goal > .g-mono { display: none; }
-  .brief__text { font-size: 17px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .brief__text { font-size: 24px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 100%; }
   .brief__hint { font-size: 15px; }
-  .brief__jokers { flex-wrap: nowrap; gap: 6px; }
+  .brief__jokers { flex-wrap: nowrap; gap: 6px; padding-top: 6px; }
   .brief__joker { min-height: 34px; padding: 0 10px; font-size: 14px; letter-spacing: 0.02em; }
   .brief__label { display: none; }
   .brief__short { display: inline; }
-  .brief__price { font-size: 9px; }
+  .brief__price { flex-basis: auto; font-size: 9px; }
 }
 </style>
