@@ -21,6 +21,15 @@ class AuthService {
     return response.data;
   }
 
+  // Mot de passe oublié : le serveur répond toujours la même chose, que l'adresse existe ou non
+  async forgotPassword(email) {
+    return (await http.post('/auth/forgot-password', { email })).data;
+  }
+
+  async resetPassword(token, password) {
+    return (await http.post('/auth/reset-password', { token, password })).data;
+  }
+
   refreshToken() {
     return refreshSession();
   }

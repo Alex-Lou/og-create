@@ -10,7 +10,7 @@
         <label for="seuil-email">Email</label>
         <input id="seuil-email" v-model.trim="email" type="email" autocomplete="email" required />
       </div>
-      <div class="g-field">
+      <div v-if="mode !== 'forgot'" class="g-field">
         <label for="seuil-password">Mot de passe · 8 caractères min.</label>
         <input
           id="seuil-password"
@@ -20,12 +20,15 @@
           :autocomplete="mode === 'login' ? 'current-password' : 'new-password'"
           required
         />
+        <button v-if="mode === 'login'" type="button" class="seuil__forgot" @click="mode = 'forgot'">Mot de passe oublié ?</button>
       </div>
+      <p v-if="mode === 'forgot' && !notice" class="g-italic seuil__lead">Un lien pour choisir un nouveau mot de passe te sera envoyé.</p>
+      <p v-if="notice" class="g-note g-note--ok" role="status">{{ notice }}</p>
       <p v-if="error" class="g-note g-note--error" role="alert">{{ error }}</p>
       <div class="seuil__actions">
         <button type="button" class="g-btn g-btn--ghost" @click="$emit('close')">Continuer en invité</button>
         <button type="submit" class="g-btn" :disabled="loading">
-          {{ loading ? 'Un instant…' : mode === 'login' ? 'Entrer' : 'Créer mon compte' }}
+          {{ loading ? 'Un instant…' : submitLabel }}
         </button>
       </div>
     </form>
@@ -42,11 +45,17 @@ export default {
   components: { GModal },
   emits: ['close'],
   data() {
-    return { mode: 'login', email: '', password: '', error: '', loading: false };
+    return { mode: 'login', email: '', password: '', error: '', notice: '', loading: false };
+  },
+  computed: {
+    submitLabel() {
+      return { login: 'Entrer', register: 'Créer mon compte', forgot: 'Recevoir le lien' }[this.mode];
+    }
   },
   watch: {
     mode() {
       this.error = '';
+      this.notice = '';
     }
   },
   methods: {
@@ -54,10 +63,11 @@ export default {
       this.loading = true;
       this.error = '';
       try {
-        if (this.mode === 'login') await AuthService.login(this.email, this.password);
+        if (this.mode === 'forgot') this.notice = (await AuthService.forgotPassword(this.email)).message;
+        else if (this.mode === 'login') await AuthService.login(this.email, this.password);
         else await AuthService.register(this.email, this.password);
       } catch (error) {
-        this.error = error.response?.data?.message || 'Email ou mot de passe incorrect.';
+        this.error = error.response?.data?.message || (this.mode === 'forgot' ? 'Le lien n’a pas pu être envoyé.' : 'Email ou mot de passe incorrect.');
       } finally {
         this.loading = false;
       }
@@ -69,6 +79,20 @@ export default {
 <style scoped>
 .seuil__lead { margin: -6px 0 0; font-size: 17px; }
 .seuil__form { display: flex; flex-direction: column; gap: 18px; }
+.seuil__forgot {
+  appearance: none;
+  align-self: flex-end;
+  min-height: 32px;
+  padding: 0;
+  border: 0;
+  background: none;
+  cursor: pointer;
+  font-family: var(--oc-font-italic);
+  font-style: italic;
+  font-size: 15px;
+  color: var(--oc-text-muted);
+}
+.seuil__forgot:hover { color: var(--oc-gold); }
 .seuil__actions { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 12px; margin-top: 6px; }
 @media (max-width: 520px) {
   .seuil__actions { flex-direction: column-reverse; }

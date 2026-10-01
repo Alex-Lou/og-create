@@ -149,7 +149,7 @@ export default {
   emits: [
     'reset-timer', 'show-level-selection', 'pause-timer', 'resume-timer', 'stop-timer',
     'set-initial-inventory', 'reset-craft-zone', 'level-selected', 'coins-earned',
-    'add-recipes', 'add-emojis', 'timer-progress-updated'
+    'add-recipes', 'add-emojis', 'timer-progress-updated', 'question-changed'
   ],
   data() {
     return {
@@ -213,6 +213,15 @@ export default {
     },
     remainingCategories() {
       return Object.keys(this.availableCategories).filter(cat => !this.isCategoryCompleted(cat));
+    }
+  },
+  watch: {
+    // La consigne reste affichée hors de la fenêtre (TimerBrief, dans App)
+    currentQuestion: {
+      immediate: true,
+      handler(question) {
+        this.$emit('question-changed', question);
+      }
     }
   },
   async created() {

@@ -280,3 +280,42 @@ select {
     flex-direction: column;
   }
 }
+
+/* Retours visuels ajoutés au body par utils/feedback.js (au-dessus des fenêtres) */
+.oc-comet {
+  position: fixed;
+  z-index: 1100;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 30px;
+  pointer-events: none;
+  filter: grayscale(1) sepia(0.55) contrast(1.35) brightness(1.08) drop-shadow(0 0 10px rgba(224, 182, 84, 0.7));
+}
+.oc-burst { position: fixed; z-index: 1100; width: 0; height: 0; pointer-events: none; }
+.oc-burst__ring {
+  position: absolute;
+  left: -90px;
+  top: -90px;
+  width: 180px;
+  height: 180px;
+  border-radius: 50%;
+  box-shadow: 0 0 0 1px var(--oc-burst-tone), 0 0 40px var(--oc-burst-glow);
+  opacity: 0;
+}
+.oc-burst__spark {
+  position: absolute;
+  left: -3px;
+  top: -3px;
+  width: 6px;
+  height: 6px;
+  transform: rotate(45deg);
+  background: var(--oc-burst-tone);
+  box-shadow: 0 0 10px var(--oc-burst-glow);
+  opacity: 0;
+}
+.oc-burst--gold { --oc-burst-tone: #e0b654; --oc-burst-glow: rgba(224, 182, 84, 0.8); }
+.oc-burst--danger { --oc-burst-tone: #d9765e; --oc-burst-glow: rgba(217, 118, 94, 0.7); }
+.oc-burst--verdigris { --oc-burst-tone: #6fa392; --oc-burst-glow: rgba(111, 163, 146, 0.7); }
