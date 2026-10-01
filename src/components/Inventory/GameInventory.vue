@@ -125,7 +125,9 @@ export default {
     },
     visibleGroups() {
       const q = normalize(this.query.trim());
-      const keep = e => (!q || normalize(e).includes(q)) && (!this.unfinishedOnly || this.unexplored[e] > 0);
+      // « À compléter » est un outil de l'Infini : il ne filtre jamais l'inventaire d'une épreuve
+      const unfinished = this.unfinishedOnly && !this.isTimerMode;
+      const keep = e => (!q || normalize(e).includes(q)) && (!unfinished || this.unexplored[e] > 0);
       return this.groups
         .filter(g => !this.family || g.key === this.family)
         .map(g => ({ ...g, elements: g.elements.filter(keep) }))
@@ -137,19 +139,26 @@ export default {
     families(list) {
       if (this.family && !list.some(f => f.key === this.family)) this.family = null;
     },
-    // La nouvelle découverte défile en vue, en douceur
+    // La nouvelle découverte défile en vue, en douceur. « nearest » ne tient pas compte des marges
+    // (scroll-margin) : une planche cachée derrière le dock ou la consigne serait jugée visible.
     freshElement(name) {
       if (!name) return;
       this.$nextTick(() => {
         const el = this.$el.querySelector('.plate--fresh');
-        el?.scrollIntoView?.({ block: 'nearest', behavior: 'smooth' });
+        if (!el?.scrollIntoView) return;
+        const box = el.getBoundingClientRect();
+        const style = getComputedStyle(el);
+        const visibleBottom = window.innerHeight - parseFloat(style.scrollMarginBottom || 0);
+        const visibleTop = parseFloat(style.scrollMarginTop || 0);
+        if (box.bottom > visibleBottom) el.scrollIntoView({ block: 'end', behavior: 'smooth' });
+        else if (box.top < visibleTop) el.scrollIntoView({ block: 'start', behavior: 'smooth' });
       });
     }
   },
   methods: {
     // Une recherche ou un filtre en cours affiche toujours les résultats, même dans une famille pliée
     isOpen(key) {
-      return Boolean(this.query.trim()) || this.unfinishedOnly || !this.collapsed[key];
+      return Boolean(this.query.trim()) || (this.unfinishedOnly && !this.isTimerMode) || !this.collapsed[key];
     },
     toggle(key) {
       this.collapsed = { ...this.collapsed, [key]: !this.collapsed[key] };
@@ -398,6 +407,8 @@ export default {
   .registry { gap: 14px; }
   .plates { grid-template-columns: repeat(auto-fill, minmax(74px, 1fr)); gap: 8px; }
   .plate { min-height: 82px; padding: 14px 2px 6px; gap: 5px; --oc-bevel: 8px; }
+  /* Une nouvelle découverte défile au-dessus des panneaux fixés en bas (dock, consigne) */
+  .plate { scroll-margin: 96px 0 calc(var(--oc-overlay, 120px) + 16px); }
   .plate__ink { font-size: 24px; }
   .plate__name { font-size: 12px; }
 }

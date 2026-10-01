@@ -18,6 +18,7 @@
           id="contact-message"
           v-model="message"
           placeholder="Une idée, un bug, une recette qui manque…"
+          maxlength="5000"
           required
         ></textarea>
       </div>
@@ -81,8 +82,8 @@ export default {
           this.$emit('close');
         }, 2000);
       } catch (error) {
-        this.errorMessage = 'Erreur lors de l’envoi du message. Veuillez réessayer.';
-        console.error('Erreur:', error);
+        // Raison donnée par le serveur (adresse invalide, message trop long, trop d'envois…)
+        this.errorMessage = error.response?.data?.message || 'Le message n’a pas pu partir. Réessaie dans un instant.';
       } finally {
         this.isLoading = false;
       }

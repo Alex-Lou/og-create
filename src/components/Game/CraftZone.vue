@@ -403,10 +403,10 @@ export default {
     bottom: 0;
     z-index: 20;
     flex-direction: row;
-    flex-wrap: wrap;
+    flex-wrap: nowrap;
     align-items: center;
-    gap: 10px 12px;
-    padding: 12px 16px calc(14px + env(safe-area-inset-bottom));
+    gap: 10px;
+    padding: 10px 16px calc(12px + env(safe-area-inset-bottom));
     background: #0f0d0a;
     box-shadow: 0 -1px 0 var(--oc-line-strong), 0 -18px 30px rgba(0, 0, 0, 0.6);
   }
@@ -422,18 +422,18 @@ export default {
     transform: rotate(45deg);
   }
   .athanor__head { display: none; }
-  .athanor__circle { width: auto; height: auto; flex: 1; display: flex; gap: 8px; }
+  .athanor__circle { width: auto; height: auto; flex: 0 1 auto; min-width: 0; display: flex; gap: 8px; }
   .athanor__ring, .athanor__center { display: none; }
   .slot { position: relative; left: auto; top: auto; margin: 0; width: 60px; height: 60px; flex-shrink: 0; }
   .slot__ink { font-size: 24px; }
   .slot__name { display: none; }
   .is-merging .slot--filled { transform: scale(0.5); }
-  .athanor__actions { flex-shrink: 0; }
+  /* Une seule ligne : emplacements puis bouton, qui prend la place restante */
+  .athanor__actions { flex: 1; min-width: 0; }
   .athanor__clear { display: none; }
-  .athanor__fuse { min-height: 52px; padding: 0 18px; font-size: 16px; }
-  .athanor--multi .athanor__circle { flex-basis: 100%; justify-content: space-between; }
-  .athanor--multi .slot { width: 66px; height: 66px; }
-  .athanor--multi .athanor__actions, .athanor--multi .athanor__fuse { flex: 1; }
+  .athanor__fuse { flex: 1; min-width: 0; min-height: 52px; padding: 0 12px; font-size: 16px; }
+  .athanor--multi .slot { width: 52px; height: 52px; }
+  .athanor--multi .slot__ink { font-size: 21px; }
   .athanor__fail {
     position: absolute;
     left: 16px;
