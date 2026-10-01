@@ -1038,7 +1038,7 @@ checkAuth() {
       }
     },
 
-handleCraftSuccess(craftedItem) {
+handleCraftSuccess(craftedItem, ingredients = []) {
   // Mode normal (ni Timer ni Explorer)
   if (!this.isTimerActive && !this.isExplorerActive) {
     // Sauvegarder l'élément découvert
@@ -1091,7 +1091,8 @@ handleCraftSuccess(craftedItem) {
       if (verdict.solved) {
         if (verdict.coins !== undefined) this.handleCoinsUpdated(verdict.coins);
         this.timerModeDiscoveries++;
-        this.$refs.timerQuestions.answerCorrect();
+        // La fenêtre de réussite montre la création et ses ingrédients
+        this.$refs.timerQuestions.answerCorrect({ name: craftedItem, emoji: this.elementEmojis[craftedItem], ingredients });
       }
     }
   }
