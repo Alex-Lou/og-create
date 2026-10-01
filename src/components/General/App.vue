@@ -189,6 +189,7 @@ import AuthService from '@/services/authService';
 import progressService from '@/services/progressService';
 import achievementsService from '@/services/achievementsService';
 import playService from '@/services/playService';
+import { readCarnet, writeCarnet, clearCarnet } from '@/utils/carnet';
 import { findNewlyUnlocked } from '@/utils/achievementChecker';
 import { BASE_ELEMENTS, BASE_CATEGORY } from '@/utils/gameConstants';
 import timerService from '@/services/timerService';
@@ -209,6 +210,9 @@ import TimerBrief from '../TimerMode/TimerBrief.vue';
 import ElementSheet from '../Inventory/ElementSheet.vue';
 import ResetPasswordModal from '../Account/ResetPasswordModal.vue';
 import { FREE_JOKERS, JOKER_TIME } from '@/utils/hints';
+
+// Retour sur l'application (PWA remise au premier plan) : carnet rechargé s'il date de plus de 30 s
+const STATE_RELOAD_AFTER_MS = 30000;
 import CustomizeModal from '../Header/CustomizeModal.vue';
 import ExplorerMap from '../Explorer/ExplorerMap.vue';
 import AppHeader from '../Game/AppHeader.vue';
@@ -260,6 +264,9 @@ export default {
       unexploredCounts: {},
       // Nombre d'éléments inconnus créables tout de suite (calculé par le serveur)
       reachableCount: null,
+      // Dernier chargement du carnet, et éléments appris pendant un chargement en cours
+      stateLoadedAt: 0,
+      learnedDuringLoad: null,
       discoveredCategories: [BASE_CATEGORY],
       discoveredElements: [...BASE_ELEMENTS],
       achievements: [],
@@ -328,6 +335,9 @@ export default {
   },
   async created() {
   this.checkAuth();
+  // Compte : le dernier carnet connu s'affiche tout de suite, le serveur le remplace dès qu'il répond
+  const cached = this.isLoggedIn && readCarnet(this.currentUser?.userId);
+  if (cached && cached.families && Object.keys(cached.families).length) this.applyPlayState(cached);
   // Sans compte, le serveur tient un carnet invité
   const progress = this.isLoggedIn ? this.loadGameProgress().catch(() => {}) : null;
   await Promise.all([this.loadPlayState(), progress]);
@@ -430,9 +440,11 @@ watch: {
 mounted() {
   this.overlays = new ResizeObserver(() => this.measureOverlays());
   this.trackOverlays();
+  document.addEventListener('visibilitychange', this.handleVisibility);
 },
 beforeUnmount() {
   this.overlays?.disconnect();
+  document.removeEventListener('visibilitychange', this.handleVisibility);
   clearInterval(this.saveInterval);
   
   // Sauvegarde finale avant de quitter
@@ -955,26 +967,69 @@ checkAuth() {
       // Envoyer la progression en attente tant que la session est valide
       await progressService.flush();
       await AuthService.logout();
+      clearCarnet();
       this.isLoggedIn = false;
       this.currentUser = null;
       window.location.reload();
     },
     // Carnet de l'Infini (compte ou invité) et ce qu'il faut pour l'afficher ; aucune recette
     async loadPlayState() {
+      // Un élément créé pendant le chargement peut manquer à la réponse : il est gardé
+      const learned = new Map();
+      this.learnedDuringLoad = learned;
+      this.stateLoadedAt = Date.now();
       try {
         const state = await playService.state();
-        this.familyTotals = state.families;
-        const categories = Object.fromEntries(Object.keys(state.families).map(family => [family, []]));
-        this.applyKnown(state.known, categories);
-        this.categories = sortFamilies(categories);
-        this.unexploredCounts = state.unexplored;
-        this.reachableCount = state.reachable ?? null;
-        if (this.timerSnapshot) this.timerSnapshot.elements = state.elements;
-        else this.discoveredElements = state.elements;
-        this.updateCategoryProgress();
+        this.applyPlayState({
+          ...state,
+          elements: [...new Set([...state.elements, ...learned.keys()])],
+          known: { ...state.known, ...Object.fromEntries(learned) }
+        });
+        this.stateLoadedAt = Date.now();
+        this.rememberCarnet();
       } catch (error) {
         console.error('Erreur lors du chargement du carnet:', error);
+      } finally {
+        if (this.learnedDuringLoad === learned) this.learnedDuringLoad = null;
       }
+    },
+    applyPlayState(state) {
+      this.familyTotals = state.families || {};
+      const categories = Object.fromEntries(Object.keys(this.familyTotals).map(family => [family, []]));
+      this.applyKnown(state.known, categories);
+      this.categories = sortFamilies(categories);
+      this.unexploredCounts = state.unexplored || {};
+      this.reachableCount = state.reachable ?? null;
+      if (this.timerSnapshot) this.timerSnapshot.elements = state.elements;
+      else this.discoveredElements = state.elements;
+      this.updateCategoryProgress();
+    },
+    // Copie du carnet sur l'appareil (compte seulement, hors Épreuve et Expédition)
+    rememberCarnet() {
+      if (!this.isLoggedIn || !this.currentUser || this.timerSnapshot || this.isTimerActive || this.isExplorerActive) return;
+      // Rien d'utile tant que le serveur n'a pas encore décrit les familles
+      if (!Object.keys(this.familyTotals).length) return;
+      const owned = new Set(this.discoveredElements);
+      const known = {};
+      Object.entries(this.categories).forEach(([family, names]) => names.forEach(name => {
+        if (owned.has(name)) known[name] = { emoji: this.elementEmojis[name], family };
+      }));
+      writeCarnet(this.currentUser.userId, {
+        elements: [...this.discoveredElements],
+        known,
+        families: this.familyTotals,
+        unexplored: this.unexploredCounts,
+        reachable: this.reachableCount
+      });
+    },
+    // Application mise de côté : copie à jour ; de retour au premier plan : carnet rechargé (autre appareil)
+    handleVisibility() {
+      if (document.visibilityState === 'hidden') {
+        this.rememberCarnet();
+        return;
+      }
+      if (!this.isLoggedIn || this.timerSnapshot || this.isTimerActive || this.isExplorerActive) return;
+      if (Date.now() - this.stateLoadedAt > STATE_RELOAD_AFTER_MS) this.loadPlayState();
     },
     // Emoji et famille d'éléments connus ({ nom: { emoji, family } })
     applyKnown(known, categories = this.categories) {
@@ -990,6 +1045,7 @@ checkAuth() {
     // Résultat d'un mélange réussi, renvoyé par le serveur
     learnElement({ result, emoji, family, unexplored, reachable, trial }) {
       this.applyKnown({ [result]: { emoji, family } });
+      if (!this.isTimerActive && !this.isExplorerActive) this.learnedDuringLoad?.set(result, { emoji, family });
       if (unexplored) this.unexploredCounts = unexplored;
       if (typeof reachable === 'number') this.reachableCount = reachable;
       // Épreuve : verdict lu juste après, à la révélation (handleCraftSuccess)
