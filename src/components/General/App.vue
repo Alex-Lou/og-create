@@ -28,6 +28,7 @@
             :currentUser="currentUser"
             :shares="sigilShares"
             :rings="rings"
+            :worn="worn"
             :eraLabel="eraLabel"
             :compact="isTimerActive"
             @open-sceau="showSceau = true"
@@ -128,6 +129,7 @@
       :eraLabel="eraLabel"
       :families="familyShares.filter(f => f.share > 0)"
       :rings="rings"
+      :worn="worn"
       :found="discoveredCount"
       :total="totalElements"
       :unlocked="unlockedAchievements"
@@ -161,6 +163,8 @@
       :currentFrame="selectedFrame"
       :currentAvatar="selectedAvatar"
       :userCoins="coins"
+      :shares="sigilShares"
+      :rings="rings"
       @close="handleCloseCustomizeModal" 
       @save="handleSaveCustomization"
       @coins-updated="handleCoinsUpdated" 
@@ -187,6 +191,7 @@ import gameDataService from '@/services/gameDataService';
 import { findNewlyUnlocked } from '@/utils/achievementChecker';
 import { BASE_ELEMENTS, BASE_CATEGORY } from '@/utils/gameConstants';
 import timerService from '@/services/timerService';
+import customizationService from '@/services/customizationService';
 import notificationService from '@/services/notificationService';
 import ContactModal from '../Header/ContactModal.vue';
 import GameAchievementsPopup from '../Achievements/GameAchievementsPopup.vue';
@@ -341,6 +346,10 @@ computed: {
   unexplored() {
     return this.isTimerActive ? {} : unexploredUses(this.craftingRecipes, this.discoveredElements);
   },
+  // Pièces du Cabinet portées sur le sceau
+  worn() {
+    return { frame: this.selectedFrame, emblem: this.selectedAvatar };
+  },
   eraLabel() {
     return `Ère ${roman(this.era)} · ${ERA_NAMES[this.era - 1]}`;
   },
@@ -407,6 +416,11 @@ beforeUnmount() {
             console.error("Erreur lors du chargement de la personnalisation:", error);
           }
         }
+        // Le Cabinet enregistre les pièces portées sur le serveur : elles suivent le compte d'un appareil à l'autre
+        customizationService.getUserSelections().then(({ selectedFrame, selectedAvatar } = {}) => {
+          if (selectedFrame) this.selectedFrame = selectedFrame;
+          if (selectedAvatar) this.selectedAvatar = selectedAvatar;
+        }).catch(() => {});
       } else {
         this.selectedFrame = 'basicCadre.png';
         this.selectedAvatar = 'coin.png';

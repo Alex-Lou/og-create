@@ -7,7 +7,7 @@
       :aria-expanded="String(open)"
       @click="toggle"
     >
-      <GSigil :shares="shares" :rings="rings" :size="38" label="" />
+      <GSigil :shares="shares" :rings="rings" :frame="worn.frame" :emblem="worn.emblem" :size="38" label="" />
       <span class="account__tag">
         <span class="account__tag-name">{{ isLoggedIn ? username : 'Se connecter' }}</span>
         <span v-if="isLoggedIn" class="g-mono account__tag-era">{{ eraLabel }}</span>
@@ -18,7 +18,7 @@
     <transition name="account-pop">
       <nav v-if="open" class="account__menu g-panel" aria-label="Compte">
         <div class="account__who">
-          <GSigil :shares="shares" :rings="rings" :size="56" />
+          <GSigil :shares="shares" :rings="rings" :frame="worn.frame" :emblem="worn.emblem" :size="56" />
           <div class="account__id">
             <span class="g-display account__name">{{ isLoggedIn ? username : 'Invité' }}</span>
             <span class="g-mono">{{ eraLabel }}</span>
@@ -56,6 +56,8 @@ export default {
     currentUser: { type: Object, default: null },
     shares: { type: Array, default: () => [] },
     rings: { type: Number, default: 0 },
+    // Pièces du Cabinet portées : { frame, emblem }
+    worn: { type: Object, default: () => ({}) },
     eraLabel: { type: String, default: '' },
     // Vrai pendant l'Épreuve : le sceau seul, pour laisser la place au sablier
     compact: { type: Boolean, default: false }
