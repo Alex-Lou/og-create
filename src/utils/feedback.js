@@ -1,6 +1,8 @@
 // Retours sensoriels partagés par les modes : vibration, comète vers un emplacement, gerbe d'étincelles.
 // Tout est décoratif : rien ne se passe si le navigateur ne sait pas faire ou si l'animation est réduite.
 
+import { glyphSrc } from './glyph';
+
 const reducedMotion = () => window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
 
 // Motifs de vibration (ms) : un toucher, une réussite, une découverte, un échec
@@ -25,7 +27,15 @@ export function fly(glyph, from, target) {
   const to = target.getBoundingClientRect();
   const ghost = document.createElement('div');
   ghost.className = 'oc-comet';
-  ghost.textContent = glyph;
+  const src = glyphSrc(glyph);
+  if (src) {
+    const img = document.createElement('img');
+    Object.assign(img, { src, alt: '' });
+    Object.assign(img.style, { width: '1em', height: '1em' });
+    ghost.appendChild(img);
+  } else {
+    ghost.textContent = glyph;
+  }
   Object.assign(ghost.style, { left: `${from.left + from.width / 2 - 20}px`, top: `${from.top + from.height / 2 - 20}px` });
   document.body.appendChild(ghost);
   const dx = to.left + to.width / 2 - (from.left + from.width / 2);
