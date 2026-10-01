@@ -89,6 +89,8 @@ export default {
   name: 'GameInventory',
   props: {
     categories: { type: Object, required: true },
+    // Taille de chaque famille (les éléments inconnus ne sont pas envoyés au navigateur)
+    familyTotals: { type: Object, default: () => ({}) },
     discoveredElements: { type: Array, required: true },
     elementEmojis: { type: Object, required: true },
     isTimerMode: { type: Boolean, default: false },
@@ -176,7 +178,7 @@ export default {
         label: name.replace(/_/g, ' '),
         elements: found,
         found: found.length,
-        total: all.length
+        total: this.familyTotals[name] || all.length
       };
     },
     pad(n) {

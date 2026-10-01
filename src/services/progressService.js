@@ -75,12 +75,6 @@ class ProgressService {
     pending = null;
   }
 
-  async updateDiscoveredElements(discoveredElements, gameMode = 'infinite') {
-    if (!Array.isArray(discoveredElements)) return null;
-    const response = await http.post('/progress/update-discovered-elements', { discoveredElements, gameMode });
-    return response.data;
-  }
-
   updateTimerProgress(timerProgress) {
     return this.saveGameProgress({
       timerProgress: {

@@ -50,7 +50,7 @@
             @click="pick(element, $event)"
           >
             <img v-if="hasGif(element)" :src="getElementGif(element)" class="xc-plate__gif" alt="" />
-            <span v-else class="xc-plate__ink g-ink" aria-hidden="true">{{ elementEmojis[element] || '🔮' }}</span>
+            <span v-else class="xc-plate__ink g-ink" aria-hidden="true">{{ emojis[element] || '🔮' }}</span>
             <span class="xc-plate__name">{{ element }}</span>
           </button>
         </div>
@@ -69,7 +69,7 @@
             @click="pick(element, $event)"
           >
             <img v-if="hasGif(element)" :src="getElementGif(element)" class="xc-plate__gif" alt="" />
-            <span v-else class="xc-plate__ink g-ink--glow" aria-hidden="true">{{ elementEmojis[element] || '🔮' }}</span>
+            <span v-else class="xc-plate__ink g-ink--glow" aria-hidden="true">{{ emojis[element] || '🔮' }}</span>
             <span class="xc-plate__name">{{ element }}</span>
           </button>
         </div>
@@ -116,7 +116,7 @@
               @click="removeSelectedElement(index)"
             >
               <img v-if="hasGif(selectedElements[index])" :src="getElementGif(selectedElements[index])" class="xc-slot__gif" alt="" />
-              <span v-else class="xc-slot__ink g-ink" aria-hidden="true">{{ elementEmojis[selectedElements[index]] || '🔮' }}</span>
+              <span v-else class="xc-slot__ink g-ink" aria-hidden="true">{{ emojis[selectedElements[index]] || '🔮' }}</span>
               <small class="xc-slot__name">{{ selectedElements[index] }}</small>
             </button>
             <span v-else class="xc-slot xc-slot--empty" :class="`xc-slot--${index}`" aria-hidden="true">
@@ -212,7 +212,7 @@
 <script>
 import BossFight from '@/components/Explorer/BossFight.vue';
 import GModal from '@/components/ui/GModal.vue';
-import { findRecipe } from '@/utils/recipes';
+import playService from '@/services/playService';
 import { HAPTIC, burst, fly, vibrate } from '@/utils/feedback';
 
 const MAX_SLOTS = 4;
@@ -233,10 +233,6 @@ export default {
       required: true
     },
     challenge: {
-      type: Object,
-      required: true
-    },
-    craftingRecipes: {
       type: Object,
       required: true
     },
@@ -261,10 +257,17 @@ export default {
       lastCrafted: null,
       glowing: false,
       isGameOver: false,
-      playerHealth: 0
+      playerHealth: 0,
+      // Emojis des éléments de la région et des créations, envoyés par le serveur
+      learnedEmojis: {},
+      // Mélange envoyé au serveur, réponse attendue
+      busy: false
     };
   },
   computed: {
+    emojis() {
+      return { ...this.elementEmojis, ...this.learnedEmojis };
+    },
     availableElements() {
       if (this.challenge && this.challenge.availableElements && this.challenge.availableElements.length > 0) {
         return this.challenge.availableElements;
@@ -285,8 +288,8 @@ export default {
     }
   },
   mounted() {
-    this.debugRecipes();
     this.initPlayerHealth();
+    this.startRun();
   },
   beforeUnmount() {
     clearTimeout(this.glowTimer);
@@ -321,40 +324,16 @@ export default {
       }
     },
 
-    debugRecipes() {
-      console.log("=== DEBUG RECETTES ===");
-      console.log("Éléments disponibles:", this.availableElements);
-      console.log("Éléments requis:", this.challenge.requiredElements);
-      console.log("Éléments de dégâts:", this.challenge.damagePerElement);
-      
-      console.log("Toutes les recettes disponibles:", this.craftingRecipes);
-      
-      if (this.challenge.requiredElements) {
-        this.challenge.requiredElements.forEach(element => {
-          console.log(`Recherche de recettes pour créer: ${element}`);
-          
-          const recipes = Object.entries(this.craftingRecipes)
-            .filter(([, result]) => result === element)
-            .map(([ingredients]) => ingredients);
-          
-          if (recipes.length > 0) {
-            console.log(`Recettes trouvées pour ${element}:`, recipes);
-            recipes.forEach(recipe => {
-              const recipeIngredients = recipe.split('+');
-              const availableIngredients = recipeIngredients.every(ing => 
-                this.availableElements.includes(ing) || this.craftedElements.includes(ing)
-              );
-              console.log(`La recette ${recipe} est ${availableIngredients ? 'possible' : 'impossible'} avec les éléments disponibles`);
-            });
-          } else {
-            console.log(`Aucune recette trouvée pour créer ${element}`);
-          }
-        });
+    // Le serveur pose les éléments de la région : les mélanges y sont vérifiés
+    async startRun() {
+      try {
+        const run = await playService.startRun('explorer', { regionId: this.region.id });
+        this.learnedEmojis = Object.fromEntries(Object.entries(run.known).map(([name, info]) => [name, info.emoji]));
+      } catch (error) {
+        this.$emit('show-alert', error.response?.data?.message || 'La région n’a pas pu s’ouvrir, réessaie.');
       }
-      
-      console.log("=== FIN DEBUG ===");
     },
-    
+
     hasGif(element) {
       return this.challenge.elementsWithGifs && 
              this.challenge.elementsWithGifs.includes(element);
@@ -388,7 +367,7 @@ export default {
       const index = this.selectedElements.length;
       this.selectedElements.push(element);
       vibrate(HAPTIC.tap);
-      this.$nextTick(() => fly(this.elementEmojis[element] || '🔮', from, this.$refs.circle?.querySelector(`.xc-slot--${index}`)));
+      this.$nextTick(() => fly(this.emojis[element] || '🔮', from, this.$refs.circle?.querySelector(`.xc-slot--${index}`)));
     },
     
     removeSelectedElement(index) {
@@ -417,15 +396,27 @@ export default {
       }
     },
     
-    craftElements() {
-      if (this.isGameOver) return;
+    async craftElements() {
+      if (this.isGameOver || this.busy) return;
 
       if (this.selectedElements.length < 2) {
         this.$emit('show-alert', 'Sélectionnez au moins 2 éléments pour la fusion!');
         return;
       }
 
-      const craftedItem = findRecipe(this.craftingRecipes, this.selectedElements);
+      // Seul le serveur connaît les recettes
+      let craftedItem;
+      this.busy = true;
+      try {
+        const reply = await playService.combine('explorer', this.selectedElements);
+        craftedItem = reply.result;
+        if (craftedItem) this.learnedEmojis = { ...this.learnedEmojis, [craftedItem]: reply.emoji };
+      } catch (error) {
+        this.$emit('show-alert', error.response?.data?.message || 'L’Athanor ne répond pas, réessaie.');
+        return;
+      } finally {
+        this.busy = false;
+      }
 
       if (!craftedItem) {
         // Combinaison impossible

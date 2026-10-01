@@ -57,7 +57,7 @@
       <button type="button" class="g-btn g-btn--ghost athanor__clear" aria-label="Vider l’Athanor" :disabled="!picked.length || merging" @click="clear">
         Vider
       </button>
-      <button v-if="showFuseButton" type="button" class="g-btn athanor__fuse" :disabled="picked.length < 2 || merging" @click="fuse">
+      <button v-if="showFuseButton" type="button" class="g-btn athanor__fuse" :disabled="picked.length < 2 || merging || busy" @click="fuse">
         {{ merging ? 'Transmutation…' : 'Transmuer' }}
       </button>
     </div>
@@ -79,7 +79,7 @@
 </template>
 
 <script>
-import { findRecipe } from '@/utils/recipes';
+import playService from '@/services/playService';
 import { HAPTIC, burst, fly, vibrate } from '@/utils/feedback';
 
 const MERGE_MS = 520;
@@ -102,15 +102,17 @@ export default {
   name: 'CraftZone',
   props: {
     slotCount: { type: Number, default: 2 },
-    craftingRecipes: { type: Object, required: true },
+    // Mode de jeu : le serveur juge le mélange avec les éléments en main dans ce mode
+    mode: { type: String, default: 'infinite' },
     elementEmojis: { type: Object, required: true },
-    discoveredElements: { type: Array, default: () => [] },
     autoFuse: { type: Boolean, default: true }
   },
-  emits: ['craft-success', 'craft-fail', 'discovery', 'show-alert', 'revealing'],
+  emits: ['craft-success', 'craft-fail', 'discovery', 'learned', 'show-alert', 'revealing'],
   data() {
     return {
       picked: [],
+      // Mélange envoyé au serveur, réponse attendue
+      busy: false,
       merging: false,
       failing: false,
       failMessage: '',
@@ -177,7 +179,7 @@ export default {
 
     // Ajoute un élément ; `from` = rectangle de la carte d'origine, pour l'animer jusqu'à son emplacement
     add(name, from = null) {
-      if (!name || this.merging) return;
+      if (!name || this.merging || this.busy) return;
       if (this.result) this.dismiss();
       if (this.picked.length >= this.slotCount) this.picked = [];
       const index = this.picked.length;
@@ -187,7 +189,7 @@ export default {
       if (this.autoFuse && this.picked.length === this.slotCount) this.later(() => this.fuse(), 300);
     },
     remove(index) {
-      if (this.merging) return;
+      if (this.merging || this.busy) return;
       this.picked.splice(index, 1);
     },
     clear() {
@@ -196,23 +198,27 @@ export default {
       this.result = null;
     },
 
-    fuse() {
-      if (this.picked.length < 2 || this.merging) return;
+    // Le serveur seul connaît les recettes : il répond par le résultat, ou rien
+    async fuse() {
+      if (this.picked.length < 2 || this.merging || this.busy) return;
       const ingredients = [...this.picked];
-      const name = findRecipe(this.craftingRecipes, ingredients);
-      if (!name) {
-        this.failing = true;
-        this.failMessage = 'Rien ne se passe… Essaie une autre combinaison.';
+      this.busy = true;
+      let reply;
+      try {
+        reply = await playService.combine(this.mode, ingredients);
+      } catch (error) {
+        this.fail(error.response?.data?.message || 'L’Athanor ne répond pas, réessaie.');
+        return;
+      } finally {
+        this.busy = false;
+      }
+      if (!reply.result) {
         this.$emit('craft-fail', ingredients);
-        vibrate(HAPTIC.fail);
-        this.later(() => {
-          this.failing = false;
-          this.picked = [];
-        }, 700);
-        this.later(() => (this.failMessage = ''), FAIL_MS);
+        this.fail('Rien ne se passe… Essaie une autre combinaison.');
         return;
       }
-      const isNew = !this.discoveredElements.includes(name);
+      const { result: name, isNew } = reply;
+      this.$emit('learned', reply);
       this.merging = true;
       this.later(() => {
         this.merging = false;
@@ -227,6 +233,16 @@ export default {
         }
         this.later(() => this.dismiss(), REVEAL_MS);
       }, MERGE_MS);
+    },
+    fail(message) {
+      this.failing = true;
+      this.failMessage = message;
+      vibrate(HAPTIC.fail);
+      this.later(() => {
+        this.failing = false;
+        this.picked = [];
+      }, 700);
+      this.later(() => (this.failMessage = ''), FAIL_MS);
     },
     dismiss() {
       this.result = null;

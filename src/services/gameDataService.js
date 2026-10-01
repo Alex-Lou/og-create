@@ -1,49 +1,5 @@
 import api from './http';
 import AuthService from './authService';
-import { BASE_ELEMENTS, BASE_CATEGORY } from '@/utils/gameConstants';
-import { sortFamilies } from '@/utils/eras';
-
-// Fichiers de contenu (éléments, catégories, recettes) chargés au démarrage
-const GAME_FILES = [
-  'animaux',
-  'biologie',
-  'créations_humaines',
-  'elements_data',
-  'formations_naturelles',
-  'geologie',
-  'materiaux_elementaires',
-  'phénomènes_naturels',
-  'magie'
-];
-
-const BASE_EMOJIS = { Eau: '💧', Feu: '🔥', Terre: '🌎', Air: '💨' };
-
-// Construit emojis, catégories et recettes à partir des fichiers chargés
-function buildGameContent(files) {
-  const elementEmojis = { ...BASE_EMOJIS };
-  const categories = { [BASE_CATEGORY]: [...BASE_ELEMENTS] };
-  const craftingRecipes = {};
-
-  files.filter(Boolean).forEach(data => {
-    ['animaux', 'humains', 'elements', 'items'].forEach(source => {
-      Object.entries(data[source] || {}).forEach(([category, entries]) => {
-        categories[category] = categories[category] || [];
-        Object.entries(entries).forEach(([rawName, value]) => {
-          const name = rawName.trim();
-          elementEmojis[name] = typeof value === 'object' ? (value.emoji || value.icon || '❓') : value;
-          if (!categories[category].includes(name)) categories[category].push(name);
-        });
-      });
-    });
-    Object.entries(data.rules || {}).forEach(([key, result]) => {
-      // Clé triée (utilisée pour la recherche) + clé d'origine
-      craftingRecipes[key.split('+').sort().join('+')] = result;
-      craftingRecipes[key] = result;
-    });
-  });
-
-  return { elementEmojis, categories: sortFamilies(categories), craftingRecipes };
-}
 
 /**
  * Service pour l'accès aux données du jeu avec chargement optimisé
@@ -65,20 +21,6 @@ class GameDataService {
    */
   isAuthenticated() {
     return AuthService.isAuthenticated();
-  }
-
-  /**
-   * Charge tout le contenu du jeu (un fichier manquant n'empêche pas les autres)
-   * @returns {Promise<{elementEmojis, categories, craftingRecipes}>}
-   */
-  async loadGameContent() {
-    const files = await Promise.all(GAME_FILES.map(file =>
-      this.loadFile(file).catch(error => {
-        console.warn(`Impossible de charger ${file}`, error);
-        return null;
-      })
-    ));
-    return buildGameContent(files);
   }
 
   /**
@@ -137,25 +79,6 @@ class GameDataService {
     this.loadingPromises[mappedFilename] = promise;
 
     return promise;
-  }
-
-  /**
-   * Vérifie une combinaison d'éléments
-   * @param {Array<string>} elements - Tableau des éléments à combiner
-   * @returns {Promise<Object>} - Résultat de la combinaison
-   */
-  async checkCombination(elements) {
-    if (!this.isAuthenticated()) {
-      return Promise.reject(new Error('Utilisateur non authentifié'));
-    }
-    
-    try {
-      const response = await api.post('/game-data/combine', { elements });
-      return response.data;
-    } catch (error) {
-      console.error('Erreur lors de la vérification de la combinaison:', error);
-      throw error;
-    }
   }
 
   /**

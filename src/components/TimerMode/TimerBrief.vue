@@ -6,7 +6,7 @@
     </div>
 
     <transition name="brief-hint">
-      <p v-if="hint" :key="hint" class="g-italic brief__hint" role="status">{{ hint }}</p>
+      <p v-if="hint" :key="hint.text" class="g-italic brief__hint" role="status">{{ hint.text }}</p>
     </transition>
 
     <div class="brief__jokers" role="group" aria-label="Jokers">
@@ -28,58 +28,40 @@
 </template>
 
 <script>
-import { BASE_ELEMENTS } from '@/utils/gameConstants';
-import { JOKER_PRICE, JOKER_TIME, nextStep } from '@/utils/hints';
+import { JOKER_PRICE, JOKER_TIME } from '@/utils/hints';
 
 // Consigne toujours visible pendant l'Épreuve, et jokers : une étape, un ingrédient, du temps.
-// Le paiement (joker offert ou écus) est fait par le parent à l'événement « joker ».
+// Le serveur calcule l'indice et le paie ; le parent le reçoit à l'événement « joker » et le renvoie en `hint`.
 export default {
   name: 'TimerBrief',
   props: {
     question: { type: Object, required: true },
-    inventory: { type: Array, default: () => [] },
-    recipes: { type: Object, required: true },
+    // Indice affiché ({ kind, text }), effacé par le parent à la découverte suivante
+    hint: { type: Object, default: null },
     coins: { type: Number, default: 0 },
     freeJokers: { type: Number, default: 0 }
   },
   emits: ['joker'],
   data() {
-    return { price: JOKER_PRICE, revealed: null };
+    return { price: JOKER_PRICE };
   },
   computed: {
     canPay() {
       return this.freeJokers > 0 || this.coins >= JOKER_PRICE;
     },
-    step() {
-      return nextStep(this.recipes, this.inventory, this.question.validAnswers || []);
-    },
-    // Un indice payé reste affiché tant qu'il est utile (jusqu'à la fusion qu'il annonce)
-    hint() {
-      if (!this.revealed || !this.step || this.revealed.result !== this.step.result) return '';
-      if (this.revealed.kind === 'step') return `Essaie ${this.step.ingredients.join(' + ')}.`;
-      const parts = this.step.ingredients;
-      return `Pense à ${parts.find(p => !BASE_ELEMENTS.includes(p)) || parts[0]}…`;
-    },
     jokers() {
       // L'ingrédient peut être complété par l'étape entière, pas l'inverse
-      const shown = this.hint ? this.revealed.kind : null;
+      const shown = this.hint?.kind || null;
       return [
-        { kind: 'step', label: 'Une étape', short: 'Étape', title: 'Montre la prochaine fusion utile', ready: !!this.step && shown !== 'step' },
-        { kind: 'ingredient', label: 'Un ingrédient', short: 'Ingrédient', title: 'Montre un des éléments à combiner', ready: !!this.step && !shown },
+        { kind: 'step', label: 'Une étape', short: 'Étape', title: 'Montre la prochaine fusion utile', ready: shown !== 'step' },
+        { kind: 'ingredient', label: 'Un ingrédient', short: 'Ingrédient', title: 'Montre un des éléments à combiner', ready: !shown },
         { kind: 'time', label: `+${JOKER_TIME} s`, short: `+${JOKER_TIME} s`, title: `Ajoute ${JOKER_TIME} secondes au sablier`, ready: true }
       ];
     }
   },
-  watch: {
-    'question.text'() {
-      this.revealed = null;
-    }
-  },
   methods: {
     use(kind) {
-      if (!this.canPay) return;
-      if (kind !== 'time') this.revealed = { kind, result: this.step.result };
-      this.$emit('joker', kind);
+      if (this.canPay) this.$emit('joker', kind);
     }
   }
 };
