@@ -76,12 +76,14 @@ export default {
   padding: 16px 20px;
   box-shadow: inset 0 0 0 1px var(--oc-accent-line);
 }
-.brief__goal { display: flex; flex-direction: column; gap: 4px; }
-.brief__text { margin: 0; font-family: var(--oc-font-display); font-size: 21px; line-height: 1.2; color: var(--oc-gold); }
-.brief__hint { margin: 0; font-size: 17px; color: var(--oc-text-strong); }
-.brief__jokers { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; }
+.brief__goal { display: flex; flex-direction: column; align-items: center; gap: 6px; text-align: center; }
+/* L'élément à faire naître : la pièce maîtresse du bandeau, au centre */
+.brief__text { margin: 0; font-family: var(--oc-font-display); font-size: 32px; line-height: 1.15; color: var(--oc-gold); text-shadow: 0 0 18px rgba(224, 180, 84, 0.25); }
+.brief__hint { margin: 0; font-size: 17px; text-align: center; color: var(--oc-text-strong); }
+/* Jokers à part, sous un filet, pour ne pas se mêler à la consigne */
+.brief__jokers { display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 8px; padding-top: 12px; border-top: 1px solid var(--oc-line); }
 .brief__joker { padding: 0 12px; }
-.brief__price { margin-left: auto; }
+.brief__price { flex-basis: 100%; text-align: center; }
 .brief__short { display: none; }
 .brief-hint-enter-active { transition: opacity var(--oc-medium) var(--oc-ease-out), transform var(--oc-medium) var(--oc-ease-out); }
 .brief-hint-enter-from { opacity: 0; transform: translateY(4px); }
@@ -102,12 +104,12 @@ export default {
     box-shadow: 0 -1px 0 var(--oc-accent-line);
   }
   .brief__goal > .g-mono { display: none; }
-  .brief__text { font-size: 17px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .brief__text { font-size: 24px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 100%; }
   .brief__hint { font-size: 15px; }
-  .brief__jokers { flex-wrap: nowrap; gap: 6px; }
+  .brief__jokers { flex-wrap: nowrap; gap: 6px; padding-top: 6px; }
   .brief__joker { min-height: 34px; padding: 0 10px; font-size: 14px; letter-spacing: 0.02em; }
   .brief__label { display: none; }
   .brief__short { display: inline; }
-  .brief__price { font-size: 9px; }
+  .brief__price { flex-basis: auto; font-size: 9px; }
 }
 </style>
