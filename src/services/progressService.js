@@ -1,6 +1,6 @@
 // src/services/progressService.js
 // Progression du joueur : chargement, et sauvegarde regroupée (debounce) avec envoi final à la fermeture.
-import http from './http';
+import http, { APP_HEADER } from './http';
 import { API_URL } from '@/config';
 import { getSession } from './session';
 
@@ -40,7 +40,7 @@ class ProgressService {
   // Met la progression en attente ; elle part SAVE_DELAY ms après le dernier appel
   saveGameProgress(progressData) {
     // Invité : rien n'est sauvegardé
-    if (!getSession()?.token) return Promise.resolve();
+    if (!getSession()) return Promise.resolve();
     if (!progressData || Object.keys(progressData).length === 0) return Promise.resolve();
     pending = merge(pending, progressData);
     clearTimeout(saveTimer);
@@ -64,12 +64,12 @@ class ProgressService {
 
   // Envoi de dernière chance quand l'onglet se ferme (keepalive survit au déchargement)
   flushOnExit() {
-    const token = getSession()?.token;
-    if (!pending || !token) return;
+    if (!pending || !getSession()) return;
     fetch(`${API_URL}/progress/save`, {
       method: 'POST',
       keepalive: true,
-      headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
+      credentials: 'same-origin',
+      headers: { 'Content-Type': 'application/json', ...APP_HEADER },
       body: JSON.stringify(pending)
     }).catch(() => {});
     pending = null;

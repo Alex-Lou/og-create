@@ -1,23 +1,20 @@
-// Session utilisateur persistée dans localStorage (clé 'user') : seule source de vérité du token.
+// Indice de session pour l'interface (clé 'user') : identifiant et pseudo seulement.
+// Les jetons vivent dans des cookies httpOnly que le JavaScript ne peut pas lire ; si la session
+// a expiré côté serveur, le client HTTP le découvre au premier 401 et efface cet indice.
 const KEY = 'user';
 
 export function getSession() {
   try {
-    return JSON.parse(localStorage.getItem(KEY)) || null;
+    const session = JSON.parse(localStorage.getItem(KEY));
+    return session?.userId ? session : null;
   } catch {
     return null;
   }
 }
 
-// Construit et enregistre la session à partir d'une réponse /auth (login, register, refresh)
-export function saveSession(data, refreshToken = data.refreshToken) {
-  const session = {
-    token: data.token,
-    refreshToken,
-    userId: data.userId,
-    username: data.username,
-    expiresAt: Date.now() + (data.expiresIn || 3600) * 1000
-  };
+// Enregistre l'indice à partir d'une réponse /auth (login, register, refresh)
+export function saveSession(data) {
+  const session = { userId: data.userId, username: data.username };
   localStorage.setItem(KEY, JSON.stringify(session));
   return session;
 }

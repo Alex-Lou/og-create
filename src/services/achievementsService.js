@@ -15,7 +15,7 @@ class AchievementsService {
   async loadAchievements() {
     const [all, user] = await Promise.all([
       http.get('/achievements'),
-      getSession()?.token ? http.get('/achievements/user') : Promise.resolve({ data: {} })
+      getSession() ? http.get('/achievements/user') : Promise.resolve({ data: {} })
     ]);
     const unlockedByName = user.data || {};
     return (all.data || []).map(achievement => ({
