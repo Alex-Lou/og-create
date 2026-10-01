@@ -50,7 +50,7 @@
             @click="pick(element, $event)"
           >
             <img v-if="hasGif(element)" :src="getElementGif(element)" class="xc-plate__gif" alt="" />
-            <span v-else class="xc-plate__ink g-ink" aria-hidden="true">{{ emojis[element] || '🔮' }}</span>
+            <span v-else class="xc-plate__ink g-ink" aria-hidden="true"><ElementGlyph :glyph="emojis[element] || '🔮'" /></span>
             <span class="xc-plate__name">{{ element }}</span>
           </button>
         </div>
@@ -69,7 +69,7 @@
             @click="pick(element, $event)"
           >
             <img v-if="hasGif(element)" :src="getElementGif(element)" class="xc-plate__gif" alt="" />
-            <span v-else class="xc-plate__ink g-ink--glow" aria-hidden="true">{{ emojis[element] || '🔮' }}</span>
+            <span v-else class="xc-plate__ink g-ink--glow" aria-hidden="true"><ElementGlyph :glyph="emojis[element] || '🔮'" /></span>
             <span class="xc-plate__name">{{ element }}</span>
           </button>
         </div>
@@ -116,7 +116,7 @@
               @click="removeSelectedElement(index)"
             >
               <img v-if="hasGif(selectedElements[index])" :src="getElementGif(selectedElements[index])" class="xc-slot__gif" alt="" />
-              <span v-else class="xc-slot__ink g-ink" aria-hidden="true">{{ emojis[selectedElements[index]] || '🔮' }}</span>
+              <span v-else class="xc-slot__ink g-ink" aria-hidden="true"><ElementGlyph :glyph="emojis[selectedElements[index]] || '🔮'" /></span>
               <small class="xc-slot__name">{{ selectedElements[index] }}</small>
             </button>
             <span v-else class="xc-slot xc-slot--empty" :class="`xc-slot--${index}`" aria-hidden="true">
@@ -213,6 +213,7 @@ import BossFight from '@/components/Explorer/BossFight.vue';
 import GModal from '@/components/ui/GModal.vue';
 import playService from '@/services/playService';
 import { HAPTIC, burst, fly, vibrate } from '@/utils/feedback';
+import ElementGlyph from '@/components/ui/ElementGlyph.vue';
 
 const MAX_SLOTS = 4;
 
@@ -220,6 +221,7 @@ export default {
   name: 'ExplorerCraftModal',
   components: {
     BossFight,
+    ElementGlyph,
     GModal
   },
   props: {

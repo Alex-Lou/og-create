@@ -47,7 +47,7 @@
           @contextmenu.prevent="!isTimerMode && $emit('inspect', element)"
         >
           <span class="plate__no">Pl. {{ pad(entryNumber[element]) }}</span>
-          <span :class="['plate__ink', element === freshElement ? 'g-ink--glow' : 'g-ink']" aria-hidden="true">{{ getElementEmoji(element) }}</span>
+          <span :class="['plate__ink', element === freshElement ? 'g-ink--glow' : 'g-ink']" aria-hidden="true"><ElementGlyph :glyph="getElementEmoji(element)" /></span>
           <span class="plate__name">{{ element }}</span>
         </button>
       </div>
@@ -63,6 +63,7 @@
 import { BASE_CATEGORY } from '@/utils/gameConstants';
 import { roman } from '@/utils/roman';
 import { JOKER_PRICE } from '@/utils/hints';
+import ElementGlyph from '@/components/ui/ElementGlyph.vue';
 
 // Familles pliées : simple confort d'affichage, mémorisé sur cet appareil
 const COLLAPSED_KEY = 'oc-collapsed-families';
@@ -88,6 +89,7 @@ function normalize(text) {
 // Registre : éléments découverts, en planches groupées par famille (aucun état métier ici)
 export default {
   name: 'GameInventory',
+  components: { ElementGlyph },
   props: {
     categories: { type: Object, required: true },
     // Taille de chaque famille (les éléments inconnus ne sont pas envoyés au navigateur)

@@ -1,6 +1,6 @@
 <template>
   <GModal :eyebrow="family" :title="name" align="center" :width="440" @close="$emit('close')">
-    <span class="sheet__ink g-ink--glow" aria-hidden="true">{{ emoji }}</span>
+    <span class="sheet__ink g-ink--glow" aria-hidden="true"><ElementGlyph :glyph="emoji" /></span>
 
     <div class="sheet__block">
       <span class="g-mono">Naît de</span>
@@ -22,11 +22,12 @@
 <script>
 import GModal from '@/components/ui/GModal.vue';
 import { BASE_ELEMENTS } from '@/utils/gameConstants';
+import ElementGlyph from '@/components/ui/ElementGlyph.vue';
 
 // Fiche d'un élément du registre : d'où il vient, ce qu'il cache encore
 export default {
   name: 'ElementSheet',
-  components: { GModal },
+  components: { ElementGlyph, GModal },
   props: {
     name: { type: String, required: true },
     emoji: { type: String, default: '✨' },

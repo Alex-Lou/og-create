@@ -37,7 +37,7 @@
         @click="remove(index)"
       >
         <template v-if="slot.name">
-          <span class="slot__ink g-ink" aria-hidden="true">{{ emojiOf(slot.name) }}</span>
+          <span class="slot__ink g-ink" aria-hidden="true"><ElementGlyph :glyph="emojiOf(slot.name)" /></span>
           <span class="slot__name">{{ slot.name }}</span>
         </template>
         <span v-else class="g-mono slot__num">{{ slot.num }}</span>
@@ -69,7 +69,7 @@
         <span ref="revealCard" :class="['reveal__card', { 'is-new': result.isNew }]">
           <span class="g-mono g-gold">{{ result.isNew ? 'Nouvelle entrée au registre' : 'Déjà consigné' }}</span>
           <img v-if="result.image" class="reveal__image" :src="result.image" :alt="result.name" />
-          <span v-else class="reveal__ink g-ink--glow" aria-hidden="true">{{ emojiOf(result.name) }}</span>
+          <span v-else class="reveal__ink g-ink--glow" aria-hidden="true"><ElementGlyph :glyph="emojiOf(result.name)" /></span>
           <span class="reveal__name">{{ result.name }}</span>
           <span class="g-italic reveal__origin">{{ result.from.join(' + ') }}</span>
         </span>
@@ -81,6 +81,7 @@
 <script>
 import playService from '@/services/playService';
 import { HAPTIC, burst, fly, vibrate } from '@/utils/feedback';
+import ElementGlyph from '@/components/ui/ElementGlyph.vue';
 
 const MERGE_MS = 520;
 // Fusion à 2 : même geste, plus vif (voir .athanor--quick)
@@ -104,6 +105,7 @@ function creatureImage(name) {
 // Athanor : 2 à 4 emplacements ; la transmutation part seule quand toutes les cases sont remplies
 export default {
   name: 'CraftZone',
+  components: { ElementGlyph },
   props: {
     slotCount: { type: Number, default: 2 },
     // Mode de jeu : le serveur juge le mélange avec les éléments en main dans ce mode

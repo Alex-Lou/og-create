@@ -93,7 +93,7 @@
     >
       <!-- Ce qui a été créé, et avec quoi -->
       <div v-if="lastCreation" class="tq-creation">
-        <span class="tq-creation__ink g-ink--glow" aria-hidden="true">{{ lastCreation.emoji || '✨' }}</span>
+        <span class="tq-creation__ink g-ink--glow" aria-hidden="true"><ElementGlyph :glyph="lastCreation.emoji || '✨'" /></span>
         <span class="tq-creation__name">{{ lastCreation.name }}</span>
         <span v-if="lastCreation.ingredients.length" class="tq-creation__from">
           <span class="g-mono">Créé avec</span>
@@ -146,10 +146,11 @@ import { sortFamilies } from '@/utils/eras';
 import progressService from '@/services/progressService';
 import gameService from '@/services/gameService';
 import notificationService from '@/services/notificationService';
+import ElementGlyph from '@/components/ui/ElementGlyph.vue';
  
 export default {
   name: 'TimerQuestions',
-  components: { GModal },
+  components: { ElementGlyph, GModal },
   props: {
     isLoggedIn: { type: Boolean, default: false },
     // Inventaire courant (éléments de la question + créations)
