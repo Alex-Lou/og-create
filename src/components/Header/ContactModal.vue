@@ -34,8 +34,7 @@
 </template>
 
 <script>
-import axios from 'axios';
-import { API_URL } from '@/config';
+import http from '@/services/http';
 import GModal from '@/components/ui/GModal.vue';
 
 // Formulaire de contact : envoi à l'API, puis fermeture 2 s après le succès
@@ -69,7 +68,7 @@ export default {
       this.successMessage = '';
 
       try {
-        await axios.post(`${API_URL}/contact/send`, {
+        await http.post('/contact/send', {
           email: this.email,
           message: this.message
         });

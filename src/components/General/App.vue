@@ -927,7 +927,7 @@ saveGameProgress() {
 checkAuth() {
   const loggedInUser = AuthService.getCurrentUser();
   
-  if (loggedInUser && loggedInUser.token) {
+  if (loggedInUser) {
     this.isLoggedIn = true;
     this.currentUser = loggedInUser;
     this.loadSavedCustomization();

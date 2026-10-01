@@ -5,8 +5,9 @@ module.exports = defineConfig({
   transpileDependencies: true,
   devServer: {
     proxy: {
+      // Même origine qu'en production (cookies de session SameSite=Strict) : /api est relayé au backend local
       '/api': {
-        target: 'http://localhost:3000', // Assure-toi que ton backend est bien sur ce port
+        target: 'http://localhost:3000',
         changeOrigin: true
       }
     }

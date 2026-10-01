@@ -13,7 +13,7 @@ class AuthService {
 
   async _authenticate(endpoint, email, password) {
     const response = await http.post(`/auth/${endpoint}`, { email, password });
-    if (response.data.token) {
+    if (response.data.userId) {
       saveSession(response.data);
       // Recharger la page pour repartir sur un état connecté propre
       window.location.reload();
@@ -35,12 +35,8 @@ class AuthService {
   }
 
   async logout() {
-    const session = getSession();
-    // Révoquer le refresh token côté serveur (best effort)
-    if (session?.refreshToken) {
-      await http.post('/auth/logout', { refreshToken: session.refreshToken, userId: session.userId })
-        .catch(() => console.warn('Erreur lors de la déconnexion côté serveur'));
-    }
+    // Révoque la session côté serveur et efface les cookies (best effort)
+    await http.post('/auth/logout').catch(() => {});
     gameDataService.clearCache?.();
     clearSession();
   }
@@ -49,9 +45,9 @@ class AuthService {
     return getSession();
   }
 
-  // Un token présent suffit : s'il a expiré, le client HTTP le rafraîchit au premier 401
+  // L'indice de session suffit : si la session a expiré, le client HTTP le découvre au premier 401
   isAuthenticated() {
-    return !!getSession()?.token;
+    return !!getSession();
   }
 }
 

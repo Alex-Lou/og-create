@@ -20,11 +20,15 @@
 2. Renseigner les variables demandées :
    - `DATABASE_URL` : la chaîne Neon.
    - `CORS_ORIGIN` : l'URL du front, ex. `https://og-create.onrender.com` (sans slash final, jamais `*`).
-   - `VUE_APP_API_URL` : l'URL de l'API + `/api`, ex. `https://og-create-backend.onrender.com/api`.
    - `EMAIL_USER` / `EMAIL_PASSWORD` : facultatifs (formulaire de contact).
-   - `JWT_SECRET` / `JWT_REFRESH_SECRET` sont générés par Render.
-3. Les URL exactes ne sont connues qu'après création : si elles diffèrent, corriger `CORS_ORIGIN`
-   (redémarre l'API) et `VUE_APP_API_URL` (**relancer un build** du front : la variable est injectée au build).
+   - `JWT_SECRET` est généré par Render (32 caractères au moins).
+3. **Le site relaie l'API** : la règle de réécriture `/api/*` → `https://<api>.onrender.com/api/*` (dans
+   `render.yaml`, avant la règle `/*`) fait que le navigateur ne parle qu'à l'adresse du site. Les sessions
+   reposent sur des cookies httpOnly `SameSite=Strict` : une API appelée depuis une autre adresse ne
+   recevrait pas ces cookies. Si le service du site n'est pas géré par le Blueprint, ajouter cette règle à
+   la main (Dashboard → site → **Redirects/Rewrites**, en première position) et mettre `VUE_APP_API_URL=/api`
+   (**relancer un build** : la variable est injectée au build).
+4. Si l'URL de l'API diffère, corriger la destination de la règle `/api/*`.
 
 ## Garder l'API éveillée
 
@@ -50,7 +54,6 @@ services gratuits jusqu'au mois suivant. Utiliser un workspace séparé ou ne pi
 ```bash
 # API (dans og-create-backend, avec son .env ou DATABASE_URL)
 npm run dev
-# Front (VUE_APP_API_URL vaut http://localhost:3000/api par défaut)
+# Front : /api est relayé à http://localhost:3000 par le serveur de développement (vue.config.js)
 npm run serve
 ```
-En local aussi, définir `CORS_ORIGIN=http://localhost:8080` côté API.
