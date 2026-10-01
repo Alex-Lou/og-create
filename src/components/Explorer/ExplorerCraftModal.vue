@@ -9,9 +9,9 @@
       <div class="xc-head__title">
         <span class="g-mono" :class="{ 'xc-danger': isBossChallenge }">{{ isBossChallenge ? 'Défi du gardien' : 'Défi de la région' }}</span>
         <h2 class="g-title">{{ region.name || 'Région inconnue' }}</h2>
-        <p v-if="challenge.requiredElements && challenge.requiredElements.length" class="g-italic xc-goal">
+        <p v-if="required.length" class="g-italic xc-goal">
           Objectif : créer
-          <template v-for="(element, idx) in challenge.requiredElements" :key="element">
+          <template v-for="(element, idx) in required" :key="element">
             {{ idx > 0 ? ' et ' : '' }}<b class="xc-goal__el" :class="{ 'is-done': craftedElements.includes(element) }">{{ element }}</b>
           </template>
         </p>
@@ -151,7 +151,6 @@
             :craftedElements="craftedElements"
             ref="bossFight"
             @boss-defeated="handleBossDefeated"
-            @boss-counter-attack="handleBossCounterAttack"
           />
           <div class="xc-life">
             <div class="xc-life__row">
@@ -180,7 +179,7 @@
           <span class="g-mono">Objectif</span>
           <ul class="xc-goals">
             <li
-              v-for="element in (challenge.requiredElements || [])"
+              v-for="element in required"
               :key="element"
               :class="{ 'is-done': craftedElements.includes(element), 'is-fresh': element === lastCrafted }"
             >
@@ -261,7 +260,11 @@ export default {
       // Emojis des éléments de la région et des créations, envoyés par le serveur
       learnedEmojis: {},
       // Mélange envoyé au serveur, réponse attendue
-      busy: false
+      busy: false,
+      // Défi de la région, envoyé par le serveur à l'entrée : éléments en main, à créer, animés
+      available: [],
+      required: [],
+      gifs: []
     };
   },
   computed: {
@@ -269,19 +272,10 @@ export default {
       return { ...this.elementEmojis, ...this.learnedEmojis };
     },
     availableElements() {
-      if (this.challenge && this.challenge.availableElements && this.challenge.availableElements.length > 0) {
-        return this.challenge.availableElements;
-      }
-      
-      const baseElements = ['Eau', 'Feu', 'Terre', 'Air'];
-      return [...new Set([...baseElements, ...this.discoveredElements.filter(e => 
-        !this.challenge.requiredElements?.includes(e)
-      )])];
+      return this.available;
     },
     isChallengeSolved() {
-      return this.challenge.requiredElements && this.challenge.requiredElements.every(element => 
-        this.craftedElements.includes(element)
-      );
+      return this.required.length > 0 && this.required.every(element => this.craftedElements.includes(element));
     },
     isBossChallenge() {
       return this.challenge && this.challenge.bossImage && this.challenge.maxHealth;
@@ -308,20 +302,19 @@ export default {
       }
     },
 
-    handleBossCounterAttack(damage) {
-      this.playerHealth = Math.max(0, this.playerHealth - damage);
-      
-      const healthBar = this.$refs.playerHealthFill;
-      if (healthBar) {
-        healthBar.classList.add('shake-animation');
-        setTimeout(() => {
-          healthBar.classList.remove('shake-animation');
-        }, 500);
+    // Coup porté et riposte, décidés par le serveur (services/expedition.js)
+    applyFight(fight) {
+      if (!fight) return;
+      this.$refs.bossFight?.showBlow(fight.bossHp, fight.damage, !fight.lost);
+      if (fight.playerHp < this.playerHealth) {
+        const healthBar = this.$refs.playerHealthFill;
+        if (healthBar) {
+          healthBar.classList.add('shake-animation');
+          setTimeout(() => healthBar.classList.remove('shake-animation'), 500);
+        }
       }
-      
-      if (this.playerHealth <= 0) {
-        this.handlePlayerDefeated();
-      }
+      this.playerHealth = fight.playerHp;
+      if (fight.lost) this.handlePlayerDefeated();
     },
 
     // Le serveur pose les éléments de la région : les mélanges y sont vérifiés
@@ -329,14 +322,20 @@ export default {
       try {
         const run = await playService.startRun('explorer', { regionId: this.region.id });
         this.learnedEmojis = Object.fromEntries(Object.entries(run.known).map(([name, info]) => [name, info.emoji]));
+        this.available = run.elements;
+        this.required = run.required || [];
+        this.gifs = run.elementsWithGifs || [];
+        if (run.boss) {
+          this.playerHealth = run.boss.playerHp;
+          this.$refs.bossFight?.showBlow(run.boss.bossHp, 0, false);
+        }
       } catch (error) {
         this.$emit('show-alert', error.response?.data?.message || 'La région n’a pas pu s’ouvrir, réessaie.');
       }
     },
 
     hasGif(element) {
-      return this.challenge.elementsWithGifs && 
-             this.challenge.elementsWithGifs.includes(element);
+      return this.gifs.includes(element);
     },
     
     getElementGif(element) {
@@ -406,10 +405,12 @@ export default {
 
       // Seul le serveur connaît les recettes
       let craftedItem;
+      let fight = null;
       this.busy = true;
       try {
         const reply = await playService.combine('explorer', this.selectedElements);
         craftedItem = reply.result;
+        fight = reply.fight;
         if (craftedItem) this.learnedEmojis = { ...this.learnedEmojis, [craftedItem]: reply.emoji };
       } catch (error) {
         this.$emit('show-alert', error.response?.data?.message || 'L’Athanor ne répond pas, réessaie.');
@@ -422,21 +423,7 @@ export default {
         // Combinaison impossible
         console.log("Échec: recette non trouvée pour", this.selectedElements);
         
-        if (this.isBossChallenge) {
-          this.playerHealth = Math.max(0, this.playerHealth - 10);
-          
-          const healthBar = this.$refs.playerHealthFill;
-          if (healthBar) {
-            healthBar.classList.add('shake-animation');
-            setTimeout(() => {
-              healthBar.classList.remove('shake-animation');
-            }, 500);
-          }
-          
-          if (this.playerHealth <= 0) {
-            this.handlePlayerDefeated();
-          }
-        }
+        this.applyFight(fight);
         
         this.isShaking = true;
         vibrate(HAPTIC.fail);
@@ -456,30 +443,8 @@ export default {
       this.$emit('craft-success', craftedItem);
       this.celebrate(craftedItem);
 
-      // Gestion des dégâts du boss
-      if (this.isBossChallenge && this.$refs.bossFight) {
-        const bossCombatRules = this.challenge.bossCombatRules;
-        
-        // Vérifier si l'élément inflige des dégâts spécifiques
-        if (this.challenge.damagePerElement && this.challenge.damagePerElement[craftedItem]) {
-          const bossDamage = this.challenge.damagePerElement[craftedItem];
-          this.$refs.bossFight.applyDamage(craftedItem, bossDamage);
-        } else if (bossCombatRules) {
-          // Calculer les dégâts pour les autres éléments
-          let elementDamage = bossCombatRules.defaultElementDamage || 3;
-          
-          // Vérifier s'il existe des dégâts spécifiques pour cet élément
-          if (bossCombatRules.baseElementDamage && bossCombatRules.baseElementDamage[craftedItem]) {
-            elementDamage = bossCombatRules.baseElementDamage[craftedItem];
-          }
-
-          // Appliquer les dégâts et déclencher la contre-attaque
-          this.$refs.bossFight.applyDamageWithCounterAttack(craftedItem, elementDamage);
-        } else {
-          // Fallback si les règles de combat ne sont pas définies
-          this.$refs.bossFight.applyDamage(craftedItem, 3);
-        }
-      }
+      // Combat : le serveur a porté le coup et calculé la riposte
+      this.applyFight(fight);
 
       if (this.isTargetElement(craftedItem)) {
         console.log(`Élément cible ${craftedItem} créé!`);
@@ -516,7 +481,7 @@ export default {
     },
     
     isTargetElement(element) {
-      return this.challenge.requiredElements && this.challenge.requiredElements.includes(element);
+      return this.required.includes(element);
     },
 
     checkBossVictory() {

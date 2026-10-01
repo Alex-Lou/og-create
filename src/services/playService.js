@@ -46,6 +46,10 @@ export default {
   joker(kind) {
     return asPlayer(() => http.post('/play/joker', { kind }));
   },
+  // Carte de l'Expédition : { regions } (dialogues, récompenses ; ni éléments ni règles de combat)
+  regions() {
+    return http.get('/play/regions').then(response => response.data);
+  },
   // Fin du sablier : { score, credited, coins? } (score compté par le serveur)
   finishTimer() {
     return asPlayer(() => http.post('/play/timer/finish'));

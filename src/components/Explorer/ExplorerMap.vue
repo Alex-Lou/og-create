@@ -160,7 +160,7 @@ import ExplorerVictoryModal from './ExplorerVictoryModal.vue';
 import MapSelector from './MapSelector.vue';
 import ExitConfirmationModal from './ExitConfirmationModal.vue';
 import notificationService from '@/services/notificationService';
-import axios from 'axios';
+import playService from '@/services/playService';
 import { roman as toRoman } from '@/utils/roman';
 
 export default {
@@ -519,8 +519,8 @@ export default {
       if (!this.active) return;
       
       try {
-        const response = await axios.get('/data/regionChallenges.json');
-        const regionChallengesData = response.data;
+        // Carte du serveur : sans les éléments ni les règles de combat (envoyés à l'entrée d'une région)
+        const regionChallengesData = await playService.regions();
         const challenges = {};
         
         regionChallengesData.regions.forEach(region => {
@@ -687,16 +687,17 @@ export default {
           };
           this.currentChallenge = this.regionChallenges[region.id] || this.currentBoss;
           this.showNpcDialog = false;
-          this.showCraftModal = true;
           
+          // La visite d'abord : le serveur n'ouvre le combat que dans une région visitée
           if (!region.visited) {
-            region.visited = true;
             try {
               await explorerService.visitRegion(region.id);
+              region.visited = true;
             } catch (err) {
               console.error("Erreur lors de la visite de la région du boss:", err);
             }
           }
+          this.showCraftModal = true;
           return;
         }
         
