@@ -9,6 +9,7 @@
   >
     <div :class="['seal', { 'seal--leaving': isLeaving }]">
       <img v-if="achievement.image" :src="achievement.image" alt="" class="seal__image" />
+      <GSeal v-else :size="88" />
       <h2 class="g-display g-gold seal__name">{{ achievement.name }}</h2>
       <hr class="g-rule seal__rule" />
       <p class="g-italic seal__description">{{ achievement.description }}</p>
@@ -26,6 +27,7 @@
 
 <script>
 import GModal from '@/components/ui/GModal.vue';
+import GSeal from '@/components/ui/GSeal.vue';
 
 const AUTO_CLOSE_DELAY = 5000;
 const FADE_DURATION = 320;
@@ -33,7 +35,7 @@ const FADE_DURATION = 320;
 // Annonce d'un succès débloqué : se referme seule après 5 s
 export default {
   name: 'GameAchievementsPopup',
-  components: { GModal },
+  components: { GModal, GSeal },
   props: {
     achievement: {
       type: Object,

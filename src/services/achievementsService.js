@@ -20,7 +20,8 @@ class AchievementsService {
     const unlockedByName = user.data || {};
     return (all.data || []).map(achievement => ({
       ...achievement,
-      image: achievementImage(achievement.name) || achievement.image || null,
+      // Illustration embarquée si elle existe ; sinon le Codex affiche le sceau gravé
+      image: achievementImage(achievement.name),
       unlocked: !!unlockedByName[achievement.name]?.unlocked,
       unlockedAt: unlockedByName[achievement.name]?.unlockedAt || null
     }));

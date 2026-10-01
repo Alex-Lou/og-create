@@ -4,6 +4,7 @@
     <ul class="codex__grid">
       <li v-for="achievement in sorted" :key="achievement.name" :class="['codex__cell', { 'is-open': achievement.unlocked }]">
         <img v-if="achievement.unlocked && achievement.image" :src="achievement.image" alt="" class="codex__img" />
+        <GSeal v-else-if="achievement.unlocked" />
         <svg v-else width="54" height="54" viewBox="0 0 54 54" aria-hidden="true" class="codex__glyph">
           <circle cx="27" cy="27" r="24" fill="none" stroke="currentColor" stroke-dasharray="2 5"></circle>
           <path d="M18 27h18" stroke="currentColor"></path>
@@ -19,6 +20,7 @@
 
 <script>
 import GModal from '@/components/ui/GModal.vue';
+import GSeal from '@/components/ui/GSeal.vue';
 
 // Écriture inconnue pour les succès encore scellés (même longueur que le vrai nom)
 const GLYPHS = '⟟⌇⍀⊑⏃⋏⟒⌰⍜⏁⎍⋔⟊⍙';
@@ -29,7 +31,7 @@ function veil(text) {
 // Codex des succès : obtenus d'abord, les scellés restent illisibles
 export default {
   name: 'CodexModal',
-  components: { GModal },
+  components: { GModal, GSeal },
   props: {
     achievements: { type: Array, default: () => [] }
   },
