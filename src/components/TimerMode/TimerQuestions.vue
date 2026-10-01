@@ -941,7 +941,7 @@ export default {
       this.markQuestionAsCompleted(questionId);
       if (this.isNewQuestion) {
         this.currentScore += points;
-        this.$emit('coins-earned', points);
+        this.$emit('coins-earned', { points, questionId });
       }
 
       this.hide();
