@@ -145,6 +145,7 @@
       ref="timerQuestions"
       :isLoggedIn="isLoggedIn"
       :discoveredElements="discoveredElements"
+      :answersFound="timerAnswersFound"
       @reset-timer="handleTimerReset"
       @show-level-selection="showLevelSelection"
       @pause-timer="handleTimerPause"
@@ -191,7 +192,6 @@ import { findNewlyUnlocked } from '@/utils/achievementChecker';
 import { BASE_ELEMENTS, BASE_CATEGORY } from '@/utils/gameConstants';
 import timerService from '@/services/timerService';
 import customizationService from '@/services/customizationService';
-import coinsService from '@/services/coinsService';
 import notificationService from '@/services/notificationService';
 import ContactModal from '../Header/ContactModal.vue';
 import GameAchievementsPopup from '../Achievements/GameAchievementsPopup.vue';
@@ -289,6 +289,9 @@ export default {
       freeJokers: FREE_JOKERS,
       // Indice de joker affiché ({ kind, text }), jusqu'à la prochaine découverte
       timerHint: null,
+      // Verdict du serveur sur le dernier mélange de l'Épreuve, et bonnes réponses réunies (« 2 / 3 »)
+      timerVerdict: null,
+      timerAnswersFound: 0,
       // Épreuve lancée côté serveur (les jokers offerts ne se donnent qu'au lancement)
       timerLaunched: false,
       // Élément dont la fiche est ouverte, et ses recettes (chargées au serveur)
@@ -403,6 +406,7 @@ watch: {
   },
   timerQuestion() {
     this.timerHint = null;
+    this.timerAnswersFound = 0;
     this.$nextTick(this.trackOverlays);
   },
   // Fiche d'élément : ses recettes à portée viennent du serveur
@@ -980,9 +984,11 @@ checkAuth() {
       this.elementEmojis = emojis;
     },
     // Résultat d'un mélange réussi, renvoyé par le serveur
-    learnElement({ result, emoji, family, unexplored }) {
+    learnElement({ result, emoji, family, unexplored, trial }) {
       this.applyKnown({ [result]: { emoji, family } });
       if (unexplored) this.unexploredCounts = unexplored;
+      // Épreuve : verdict lu juste après, à la révélation (handleCraftSuccess)
+      this.timerVerdict = trial || null;
     },
     async loadAchievements() {
       try {
@@ -1076,48 +1082,16 @@ handleCraftSuccess(craftedItem) {
       }
     }
     
-    if (currentQuestion) {
-      const allPossibleElements = [
-        ...(currentQuestion.initialElements.required || []),
-        ...(currentQuestion.initialElements.additional || []),
-        ...(currentQuestion.validAnswers || [])
-      ];
-      
-      if (allPossibleElements.includes(craftedItem)) {
-        console.log('L\'élément est dans les éléments possibles');
-      }
-      
-      const validationMode = currentQuestion.initialElements.validationMode || 'any';
-      const validAnswers = currentQuestion.validAnswers || [];
-      
-      if (validationMode === 'any') {
-        const isValidAnswer = validAnswers.some(answer => 
-          this.discoveredElements.includes(answer)
-        );
-        
-        if (isValidAnswer) {
-          this.timerModeDiscoveries++;
-          this.$refs.timerQuestions.answerCorrect();
-        }
-      } else if (validationMode === 'multiple') {
-        const requiredCount = currentQuestion.initialElements.requiredCount || 1;
-        const discoveredValidAnswers = validAnswers.filter(answer => 
-          this.discoveredElements.includes(answer)
-        );
-        
-        if (discoveredValidAnswers.length >= requiredCount) {
-          this.timerModeDiscoveries++;
-          this.$refs.timerQuestions.answerCorrect();
-        }
-      } else {
-        const isAllAnswersFound = validAnswers.every(answer => 
-          this.discoveredElements.includes(answer)
-        );
-        
-        if (isAllAnswersFound) {
-          this.timerModeDiscoveries++;
-          this.$refs.timerQuestions.answerCorrect();
-        }
+    // Le serveur seul connaît les réponses : il a jugé ce mélange (services/trial.js)
+    const verdict = this.timerVerdict;
+    this.timerVerdict = null;
+    if (verdict) {
+      this.timerAnswersFound = verdict.found || 0;
+      if (verdict.late) this.showAlert('Le sablier était déjà vide : cette réussite ne compte pas.');
+      if (verdict.solved) {
+        if (verdict.coins !== undefined) this.handleCoinsUpdated(verdict.coins);
+        this.timerModeDiscoveries++;
+        this.$refs.timerQuestions.answerCorrect();
       }
     }
   }
@@ -1250,35 +1224,24 @@ handleCraftSuccess(craftedItem) {
         this.showAlert(error.response?.data?.message || 'L’épreuve n’a pas pu démarrer, réessaie.');
       }
     },
-    // Écus : un compte suit le solde du serveur (grand livre, `request` renvoie le nouveau solde) ;
-    // un invité garde un solde local. Renvoie faux si le mouvement a été refusé.
-    async changeCoins(amount, request) {
-      if (!this.isLoggedIn) {
-        this.handleCoinsUpdated(Math.max(0, this.coins + amount));
-        return true;
-      }
-      try {
-        this.handleCoinsUpdated(await request());
-        return true;
-      } catch (error) {
-        this.showAlert(error.response?.data?.message || 'Les écus n’ont pas pu être mis à jour.');
-        return false;
-      }
-    },
-    // Question de l'Épreuve réussie pour la première fois
-    handleCoinsEarned({ points, questionId }) {
-      // Questions de secours locales (sans identifiant serveur) : rien à réclamer pour un compte
-      if (this.isLoggedIn && !Number.isInteger(questionId)) return;
-      this.changeCoins(points, () => coinsService.claimTimerQuestion(questionId));
+    // Un compte est payé par le serveur au moment de la réussite (verdict) ; un invité garde un solde local
+    handleCoinsEarned({ points }) {
+      if (!this.isLoggedIn) this.handleCoinsUpdated(this.coins + points);
     },
     async handleTimerComplete() {
-  const currentScore = this.timerModeDiscoveries;
-  
+  // Score compté par le serveur ; il verse le bonus si le record du niveau monte (compte)
+  let end = null;
+  try {
+    end = await playService.finishTimer();
+  } catch (error) {
+    console.error('Fin d’épreuve non enregistrée:', error);
+  }
+  const currentScore = end ? end.score : this.timerModeDiscoveries;
+  if (end?.coins !== undefined) this.handleCoinsUpdated(end.coins);
+
   if (this.selectedTimerLevel && currentScore > this.timerProgress.bestScores[this.selectedTimerLevel]) {
+    if (!this.isLoggedIn) this.handleCoinsUpdated(this.coins + currentScore * 5);
     this.timerProgress.bestScores[this.selectedTimerLevel] = currentScore;
-    
-    const bonus = currentScore * 5;
-    await this.changeCoins(bonus, () => coinsService.claimTimerRecord(this.selectedTimerLevel, currentScore));
     
     if (this.isLoggedIn) {
       try {

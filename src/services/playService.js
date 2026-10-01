@@ -45,5 +45,9 @@ export default {
   // Joker de l'Épreuve : { freeJokers, coins?, ingredients? | ingredient? }
   joker(kind) {
     return asPlayer(() => http.post('/play/joker', { kind }));
+  },
+  // Fin du sablier : { score, credited, coins? } (score compté par le serveur)
+  finishTimer() {
+    return asPlayer(() => http.post('/play/timer/finish'));
   }
 };
