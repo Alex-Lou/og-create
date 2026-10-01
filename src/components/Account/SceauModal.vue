@@ -16,7 +16,7 @@
         </ul>
       </section>
       <div class="sceau__center">
-        <GSigil :shares="families.map(f => f.share)" :rings="rings" :size="sigilSize" />
+        <GSigil :shares="families.map(f => f.share)" :rings="rings" :frame="worn.frame" :emblem="worn.emblem" :size="sigilSize" />
         <p class="g-italic sceau__hint">Chaque découverte le redessine. Aucun joueur n’a le même.</p>
       </div>
       <section class="sceau__side" aria-label="Accomplissements">
@@ -48,6 +48,8 @@ export default {
     // [{ name, share }] : familles entamées, dans l'ordre du registre
     families: { type: Array, default: () => [] },
     rings: { type: Number, default: 0 },
+    // Pièces du Cabinet portées : { frame, emblem }
+    worn: { type: Object, default: () => ({}) },
     found: { type: Number, default: 0 },
     total: { type: Number, default: 0 },
     unlocked: { type: Number, default: 0 },

@@ -50,7 +50,9 @@ export default {
   },
   mounted() {
     this.previousFocus = document.activeElement;
-    const first = this.$refs.dialog.querySelector('input, textarea, select, button:not(.g-modal__close), a[href]');
+    // Premier contrôle visible (un contrôle masqué, propre au mobile par exemple, ne peut pas recevoir le focus)
+    const first = [...this.$refs.dialog.querySelectorAll('input, textarea, select, button:not(.g-modal__close), a[href]')]
+      .find(el => el.offsetParent !== null);
     (first || this.$refs.dialog).focus({ preventScroll: true });
   },
   beforeUnmount() {
