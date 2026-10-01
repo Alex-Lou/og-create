@@ -1,5 +1,5 @@
 <template>
-  <div :class="['oc-app', { 'oc-app--multi': slotCount > 2, 'oc-app--explorer': isExplorerActive, 'oc-app--trial': isTimerActive && timerQuestion?.text }]" id="game-container">
+  <div :class="['oc-app', { 'oc-app--explorer': isExplorerActive }]" id="game-container">
     <LivingBackground ref="background" :era="era" :population="population" :palette="palette" />
 
     <div class="oc-app__shell">
@@ -389,6 +389,13 @@ computed: {
   }
 },
 watch: {
+  // Les panneaux fixés en bas changent avec le mode : on remesure la place à leur réserver
+  isTimerActive() {
+    this.$nextTick(this.trackOverlays);
+  },
+  timerQuestion() {
+    this.$nextTick(this.trackOverlays);
+  },
   // Un emplacement de plus : on le dit (hors Timer, où il y en a toujours 4)
   slotCount(next, previous) {
     if (this.progressReady && !this.timerSnapshot && !this.isTimerActive && next > previous) {
@@ -396,7 +403,12 @@ watch: {
     }
   }
 },
+mounted() {
+  this.overlays = new ResizeObserver(() => this.measureOverlays());
+  this.trackOverlays();
+},
 beforeUnmount() {
+  this.overlays?.disconnect();
   clearInterval(this.saveInterval);
   
   // Sauvegarde finale avant de quitter
@@ -405,6 +417,21 @@ beforeUnmount() {
   }
 },
   methods: {
+    // Mobile : hauteur réelle du dock et de la consigne, réservée sous la liste (et pour le défilement)
+    trackOverlays() {
+      this.overlays?.disconnect();
+      this.$el.querySelectorAll('.athanor, .brief').forEach(el => this.overlays.observe(el));
+      this.measureOverlays();
+    },
+    measureOverlays() {
+      // Seuls les panneaux réellement fixés (mobile) prennent de la place sur la liste
+      const height = selector => {
+        const el = this.$el.querySelector(selector);
+        return el && getComputedStyle(el).position === 'fixed' ? el.offsetHeight : 0;
+      };
+      this.$el.style.setProperty('--oc-dock-h', `${height('.athanor')}px`);
+      this.$el.style.setProperty('--oc-overlay', `${height('.athanor') + height('.brief')}px`);
+    },
     loadSavedCustomization() {
       if (this.isLoggedIn) {
         const savedCustomization = localStorage.getItem('userCustomization');
@@ -1287,7 +1314,8 @@ handleCraftSuccess(craftedItem) {
   z-index: 1;
   max-width: 1480px;
   margin: 0 auto;
-  padding: 0 var(--oc-gutter) calc(var(--oc-dock-height) + 32px + env(safe-area-inset-bottom));
+  /* Mobile : la place des panneaux fixés en bas, mesurée (repli : hauteur nominale du dock) */
+  padding: 0 var(--oc-gutter) calc(var(--oc-overlay, var(--oc-dock-height)) + 24px);
 }
 .oc-app__main { display: block; }
 .oc-app__inventory { min-width: 0; }
@@ -1315,10 +1343,6 @@ handleCraftSuccess(craftedItem) {
 
 @media (max-width: 859px) {
   .oc-desk-only { display: none; }
-  /* Dock sur 2 lignes (3–4 emplacements) : plus haut, la liste garde assez de marge en bas */
-  .oc-app--multi { --oc-dock-height: 160px; }
-  /* Épreuve : le bandeau de consigne s'ajoute au-dessus du dock */
-  .oc-app--trial .oc-app__shell { padding-bottom: calc(var(--oc-dock-height) + 130px + env(safe-area-inset-bottom)); }
 }
 </style>
 

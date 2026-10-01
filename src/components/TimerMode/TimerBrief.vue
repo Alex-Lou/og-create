@@ -17,9 +17,10 @@
         class="g-btn g-btn--ghost g-btn--small brief__joker"
         :disabled="!canPay || !joker.ready"
         :title="joker.title"
+        :aria-label="joker.label"
         @click="use(joker.kind)"
       >
-        {{ joker.label }}
+        <span class="brief__label">{{ joker.label }}</span><span class="brief__short">{{ joker.short }}</span>
       </button>
       <span class="g-mono brief__price">{{ freeJokers ? `${freeJokers} offert${freeJokers > 1 ? 's' : ''}` : `${price} écus` }}</span>
     </div>
@@ -63,9 +64,9 @@ export default {
       // L'ingrédient peut être complété par l'étape entière, pas l'inverse
       const shown = this.hint ? this.revealed.kind : null;
       return [
-        { kind: 'step', label: 'Une étape', title: 'Montre la prochaine fusion utile', ready: !!this.step && shown !== 'step' },
-        { kind: 'ingredient', label: 'Un ingrédient', title: 'Montre un des éléments à combiner', ready: !!this.step && !shown },
-        { kind: 'time', label: `+${JOKER_TIME} s`, title: `Ajoute ${JOKER_TIME} secondes au sablier`, ready: true }
+        { kind: 'step', label: 'Une étape', short: 'Étape', title: 'Montre la prochaine fusion utile', ready: !!this.step && shown !== 'step' },
+        { kind: 'ingredient', label: 'Un ingrédient', short: 'Ingrédient', title: 'Montre un des éléments à combiner', ready: !!this.step && !shown },
+        { kind: 'time', label: `+${JOKER_TIME} s`, short: `+${JOKER_TIME} s`, title: `Ajoute ${JOKER_TIME} secondes au sablier`, ready: true }
       ];
     }
   },
@@ -99,6 +100,7 @@ export default {
 .brief__jokers { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; }
 .brief__joker { padding: 0 12px; }
 .brief__price { margin-left: auto; }
+.brief__short { display: none; }
 .brief-hint-enter-active { transition: opacity var(--oc-medium) var(--oc-ease-out), transform var(--oc-medium) var(--oc-ease-out); }
 .brief-hint-enter-from { opacity: 0; transform: translateY(4px); }
 
@@ -108,18 +110,22 @@ export default {
     position: fixed;
     left: 0;
     right: 0;
-    bottom: calc(var(--oc-dock-height) + env(safe-area-inset-bottom));
+    /* Posée sur le dock, à sa hauteur mesurée (repli : hauteur nominale) */
+    bottom: var(--oc-dock-h, calc(var(--oc-dock-height) + env(safe-area-inset-bottom)));
     z-index: 19;
     margin: 0;
-    gap: 8px;
-    padding: 10px 16px;
+    gap: 6px;
+    padding: 8px 16px;
     background: #12100c;
     box-shadow: 0 -1px 0 var(--oc-accent-line);
   }
-  .brief__goal { flex-direction: row; align-items: baseline; gap: 10px; }
+  .brief__goal > .g-mono { display: none; }
   .brief__text { font-size: 17px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
   .brief__hint { font-size: 15px; }
-  .brief__jokers { flex-wrap: nowrap; }
-  .brief__joker { min-height: 36px; padding: 0 10px; font-size: 14px; }
+  .brief__jokers { flex-wrap: nowrap; gap: 6px; }
+  .brief__joker { min-height: 34px; padding: 0 10px; font-size: 14px; letter-spacing: 0.02em; }
+  .brief__label { display: none; }
+  .brief__short { display: inline; }
+  .brief__price { font-size: 9px; }
 }
 </style>
