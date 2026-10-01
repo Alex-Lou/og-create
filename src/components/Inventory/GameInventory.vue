@@ -12,6 +12,7 @@
         <button type="button" :aria-pressed="unfinishedOnly" title="Entrées qui donnent encore des éléments inconnus" @click="unfinishedOnly = !unfinishedOnly">À compléter</button>
         <button type="button" class="registry__clue" @click="$emit('hint')">Une piste <i>{{ hintPrice }} écus</i></button>
       </div>
+      <p v-if="!isTimerMode && reachable !== null" class="registry__reach" aria-live="polite">{{ reachText }}</p>
       <div v-if="families.length > 1" class="registry__index" role="group" aria-label="Familles">
         <button type="button" class="registry__fold" @click="toggleAll">{{ allCollapsed ? 'Tout déplier' : 'Tout plier' }}</button>
         <button type="button" :aria-pressed="!family" @click="family = null">Tout le registre</button>
@@ -97,13 +98,21 @@ export default {
     // Dernière découverte, mise en valeur
     freshElement: { type: String, default: null },
     // Nombre de recettes encore inexplorées par élément (filtre « À compléter »)
-    unexplored: { type: Object, default: () => ({}) }
+    unexplored: { type: Object, default: () => ({}) },
+    // Nombre d'éléments inconnus créables tout de suite (null : inconnu ou hors Infini)
+    reachable: { type: Number, default: null }
   },
   emits: ['selectResource', 'inspect', 'hint'],
   data() {
     return { query: '', family: null, collapsed: readCollapsed(), inspecting: false, unfinishedOnly: false, hintPrice: JOKER_PRICE };
   },
   computed: {
+    reachText() {
+      if (this.reachable === 0) return 'Registre complet : plus rien à découvrir.';
+      return this.reachable === 1
+        ? '1 élément nouveau à portée de mélange'
+        : `${this.reachable} éléments nouveaux à portée de mélange`;
+    },
     // Numéro d'entrée au registre : l'ordre de découverte
     entryNumber() {
       return Object.fromEntries(this.discoveredElements.map((name, i) => [name, i + 1]));
@@ -266,6 +275,13 @@ export default {
 .registry__aids button[aria-pressed='true'] { color: var(--oc-gold); background: var(--oc-gold-soft); box-shadow: inset 0 0 0 1px var(--oc-accent-line); }
 .registry__aids i { font-family: var(--oc-font-mono); font-style: normal; font-size: 9px; color: var(--oc-gold); }
 .registry__clue { margin-left: auto; }
+.registry__reach {
+  margin: 0;
+  font-family: var(--oc-font-italic);
+  font-style: italic;
+  font-size: 15px;
+  color: var(--oc-text-faint);
+}
 .plate--inspect { cursor: help; }
 .plate--inspect .plate__no { color: var(--oc-gold); }
 .registry__index {

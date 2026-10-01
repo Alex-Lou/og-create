@@ -53,6 +53,7 @@
             :isTimerMode="isTimerActive"
             :freshElement="freshElement"
             :unexplored="unexplored"
+            :reachable="isTimerActive ? null : reachableCount"
             @selectResource="handleResourceSelection"
             @inspect="inspected = $event"
             @hint="useInfiniteHint"
@@ -257,6 +258,8 @@ export default {
       familyTotals: {},
       // Recettes encore inexplorées par élément du carnet (calculées par le serveur)
       unexploredCounts: {},
+      // Nombre d'éléments inconnus créables tout de suite (calculé par le serveur)
+      reachableCount: null,
       discoveredCategories: [BASE_CATEGORY],
       discoveredElements: [...BASE_ELEMENTS],
       achievements: [],
@@ -965,6 +968,7 @@ checkAuth() {
         this.applyKnown(state.known, categories);
         this.categories = sortFamilies(categories);
         this.unexploredCounts = state.unexplored;
+        this.reachableCount = state.reachable ?? null;
         if (this.timerSnapshot) this.timerSnapshot.elements = state.elements;
         else this.discoveredElements = state.elements;
         this.updateCategoryProgress();
@@ -984,9 +988,10 @@ checkAuth() {
       this.elementEmojis = emojis;
     },
     // Résultat d'un mélange réussi, renvoyé par le serveur
-    learnElement({ result, emoji, family, unexplored, trial }) {
+    learnElement({ result, emoji, family, unexplored, reachable, trial }) {
       this.applyKnown({ [result]: { emoji, family } });
       if (unexplored) this.unexploredCounts = unexplored;
+      if (typeof reachable === 'number') this.reachableCount = reachable;
       // Épreuve : verdict lu juste après, à la révélation (handleCraftSuccess)
       this.timerVerdict = trial || null;
     },
