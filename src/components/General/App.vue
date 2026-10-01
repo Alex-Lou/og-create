@@ -1,5 +1,5 @@
 <template>
-  <div :class="['oc-app', { 'oc-app--multi': slotCount > 2, 'oc-app--explorer': isExplorerActive }]" id="game-container">
+  <div :class="['oc-app', { 'oc-app--multi': slotCount > 2, 'oc-app--explorer': isExplorerActive, 'oc-app--trial': isTimerActive && timerQuestion?.text }]" id="game-container">
     <LivingBackground ref="background" :era="era" :population="population" :palette="palette" />
 
     <div class="oc-app__shell">
@@ -23,11 +23,13 @@
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" aria-hidden="true"><path d="M3 6h18v12H3z"></path><path d="M3 6l9 7 9-7"></path></svg>
           </button>
           <AccountMenu
+            ref="accountMenu"
             :isLoggedIn="isLoggedIn"
             :currentUser="currentUser"
             :shares="sigilShares"
             :rings="rings"
             :eraLabel="eraLabel"
+            :compact="isTimerActive"
             @open-sceau="showSceau = true"
             @open-cabinet="handleOpenCustomizeModal"
             @open-codex="showCodex = true"
@@ -48,10 +50,22 @@
             :elementEmojis="elementEmojis"
             :isTimerMode="isTimerActive"
             :freshElement="freshElement"
+            :unexplored="unexplored"
             @selectResource="handleResourceSelection"
+            @inspect="inspected = $event"
+            @hint="useInfiniteHint"
           />
         </div>
         <div class="oc-app__craft">
+          <TimerBrief
+            v-if="isTimerActive && timerQuestion?.text"
+            :question="timerQuestion"
+            :inventory="discoveredElements"
+            :recipes="craftingRecipes"
+            :coins="coins"
+            :freeJokers="freeJokers"
+            @joker="useJoker"
+          />
           <CraftZone
             ref="craftZone"
             :slotCount="slotCount"
@@ -90,6 +104,22 @@
         <button type="button" class="g-btn" @click="handleTimerEndModalClose">Retour au registre</button>
       </template>
     </GModal>
+    <ElementSheet
+      v-if="inspected"
+      :name="inspected"
+      :emoji="elementEmojis[inspected]"
+      :family="familyOf(inspected)"
+      :origins="knownOrigins(craftingRecipes, discoveredElements, inspected)"
+      :pending="unexplored[inspected] || 0"
+      @close="inspected = null"
+      @use="inspected = null; handleResourceSelection($event)"
+    />
+    <ResetPasswordModal
+      v-if="resetToken"
+      :token="resetToken"
+      @close="resetToken = null"
+      @login="resetToken = null; $refs.accountMenu.openSeuil()"
+    />
     <ContactModal v-if="showContact" @close="showContact = false" />
     <CodexModal v-if="showCodex" :achievements="achievements" @close="showCodex = false" />
     <SceauModal
@@ -124,6 +154,7 @@
       @add-recipes="craftingRecipes = { ...craftingRecipes, ...$event }"
       @add-emojis="elementEmojis = { ...$event, ...elementEmojis }"
       @timer-progress-updated="timerProgress = $event"
+      @question-changed="timerQuestion = $event"
     />
     <CustomizeModal 
       v-if="isCustomizeModalOpen" 
@@ -168,6 +199,10 @@ import { ringsFor } from '@/utils/sigil';
 import { roman } from '@/utils/roman';
 import TimerModeButton from '../TimerMode/TimerModeButton.vue';
 import TimerQuestions from '../TimerMode/TimerQuestions.vue';
+import TimerBrief from '../TimerMode/TimerBrief.vue';
+import ElementSheet from '../Inventory/ElementSheet.vue';
+import ResetPasswordModal from '../Account/ResetPasswordModal.vue';
+import { FREE_JOKERS, JOKER_PRICE, JOKER_TIME, knownOrigins, nearbyDiscoveries, unexploredUses } from '@/utils/hints';
 import CustomizeModal from '../Header/CustomizeModal.vue';
 import ExplorerMap from '../Explorer/ExplorerMap.vue';
 import AppHeader from '../Game/AppHeader.vue';
@@ -175,6 +210,16 @@ import ModeSwitcher from '../Game/ModeSwitcher.vue';
 import CraftZone from '../Game/CraftZone.vue';
 import LivingBackground from '../Game/LivingBackground.vue';
 import { ERA_NAMES, familyColor, discoveredFamilies, eraOf, slotCountForEra, stageOf, populationFor } from '@/utils/eras';
+
+// Lit le jeton de réinitialisation dans l'adresse puis l'efface (historique, partage d'écran)
+function takeResetToken() {
+  const url = new URL(window.location.href);
+  const token = url.searchParams.get('reset');
+  if (!token) return null;
+  url.searchParams.delete('reset');
+  window.history.replaceState(null, '', url.pathname + url.search + url.hash);
+  return /^[a-f0-9]{64}$/.test(token) ? token : null;
+}
 
 export default {
   name: 'App',
@@ -192,6 +237,9 @@ export default {
     GModal,
     TimerModeButton,
     TimerQuestions,
+    TimerBrief,
+    ElementSheet,
+    ResetPasswordModal,
     CustomizeModal,
     ExplorerMap
   },
@@ -228,6 +276,13 @@ export default {
       currentTimerElements: [],
       selectedTimerLevel: null,
       coins: parseInt(localStorage.getItem('coins')) || 0,
+      // Épreuve : question affichée en consigne, jokers offerts restants
+      timerQuestion: null,
+      freeJokers: FREE_JOKERS,
+      // Élément dont la fiche est ouverte
+      inspected: null,
+      // Jeton du lien « mot de passe oublié » (?reset=…)
+      resetToken: takeResetToken(),
       timerProgress: {
         completedQuestions: {
           Facile: {},
@@ -281,6 +336,10 @@ computed: {
   // Ère affichée et fond vivant : lente, au fil des découvertes
   era() {
     return stageOf(this.discoveredCount);
+  },
+  // Recettes encore inexplorées par élément découvert (Registre et fiches)
+  unexplored() {
+    return this.isTimerActive ? {} : unexploredUses(this.craftingRecipes, this.discoveredElements);
   },
   eraLabel() {
     return `Ère ${roman(this.era)} · ${ERA_NAMES[this.era - 1]}`;
@@ -477,6 +536,7 @@ beforeUnmount() {
     },
     handleLevelSelected(levelData) {
       this.selectedTimerLevel = levelData.level;
+      this.freeJokers = FREE_JOKERS;
       if (this.$refs.timerModeButton) {
         this.$refs.timerModeButton.handleLevelSelected(levelData);
       }
@@ -1088,6 +1148,32 @@ handleCraftSuccess(craftedItem) {
       this.timerSnapshot = null;
       this.updateCategoryProgress();
     },
+    knownOrigins,
+    familyOf(name) {
+      const family = Object.keys(this.categories).find(key => this.categories[key].includes(name));
+      return family ? family.replace(/_/g, ' ') : '';
+    },
+    // Piste de l'Infini (payante) : un élément inconnu qu'une seule fusion suffit à créer, sans sa recette
+    useInfiniteHint() {
+      const near = nearbyDiscoveries(this.craftingRecipes, this.discoveredElements);
+      if (!near.length) {
+        this.showAlert('Aucune piste : il te faut d’abord de nouveaux éléments.');
+        return;
+      }
+      if (this.coins < JOKER_PRICE) {
+        this.showAlert(`Une piste coûte ${JOKER_PRICE} écus.`);
+        return;
+      }
+      this.handleCoinsEarned(-JOKER_PRICE);
+      const name = near[Math.floor(Math.random() * near.length)];
+      this.showAlert(`Une piste : « ${name} » n’est qu’à une fusion de toi.`);
+    },
+    // Joker de l'Épreuve : un offert s'il en reste, sinon payé en écus (le bouton est désactivé sans les moyens)
+    useJoker(kind) {
+      if (this.freeJokers > 0) this.freeJokers--;
+      else this.handleCoinsEarned(-JOKER_PRICE);
+      if (kind === 'time') this.$refs.timerModeButton?.addTime(JOKER_TIME);
+    },
     async handleCoinsEarned(amount) {
       this.coins += amount;
       localStorage.setItem('coins', this.coins.toString());
@@ -1207,6 +1293,8 @@ handleCraftSuccess(craftedItem) {
   .oc-desk-only { display: none; }
   /* Dock sur 2 lignes (3–4 emplacements) : plus haut, la liste garde assez de marge en bas */
   .oc-app--multi { --oc-dock-height: 160px; }
+  /* Épreuve : le bandeau de consigne s'ajoute au-dessus du dock */
+  .oc-app--trial .oc-app__shell { padding-bottom: calc(var(--oc-dock-height) + 130px + env(safe-area-inset-bottom)); }
 }
 </style>
 

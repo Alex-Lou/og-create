@@ -6,6 +6,12 @@
         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" aria-hidden="true"><circle cx="11" cy="11" r="6.5"></circle><path d="M16 16l4.5 4.5"></path></svg>
         <input v-model="query" type="search" :placeholder="`Chercher parmi ${discoveredElements.length} entrées…`" autocomplete="off" />
       </label>
+      <!-- Outils de l'Infini : fiches, entrées à compléter, piste payante -->
+      <div v-if="!isTimerMode" class="registry__aids" role="group" aria-label="Aides">
+        <button type="button" :aria-pressed="inspecting" title="Toucher une planche ouvre sa fiche" @click="inspecting = !inspecting">Fiches</button>
+        <button type="button" :aria-pressed="unfinishedOnly" title="Entrées qui donnent encore des éléments inconnus" @click="unfinishedOnly = !unfinishedOnly">À compléter</button>
+        <button type="button" class="registry__clue" @click="$emit('hint')">Une piste <i>{{ hintPrice }} écus</i></button>
+      </div>
       <div v-if="families.length > 1" class="registry__index" role="group" aria-label="Familles">
         <button type="button" class="registry__fold" @click="toggleAll">{{ allCollapsed ? 'Tout déplier' : 'Tout plier' }}</button>
         <button type="button" :aria-pressed="!family" @click="family = null">Tout le registre</button>
@@ -33,10 +39,11 @@
           v-for="element in group.elements"
           :key="element"
           type="button"
-          :class="['plate', 'g-bevel', { 'plate--fresh': element === freshElement }]"
+          :class="['plate', 'g-bevel', { 'plate--fresh': element === freshElement, 'plate--inspect': inspecting }]"
           draggable="true"
           @dragstart="startDrag($event, element)"
           @click="select($event, element)"
+          @contextmenu.prevent="!isTimerMode && $emit('inspect', element)"
         >
           <span class="plate__no">Pl. {{ pad(entryNumber[element]) }}</span>
           <span :class="['plate__ink', element === freshElement ? 'g-ink--glow' : 'g-ink']" aria-hidden="true">{{ getElementEmoji(element) }}</span>
@@ -46,7 +53,7 @@
     </section>
 
     <p v-if="!visibleGroups.length" class="g-italic registry__empty">
-      {{ query ? `Aucune entrée ne répond à « ${query} ».` : 'Le registre est encore vierge.' }}
+      {{ query ? `Aucune entrée ne répond à « ${query} ».` : unfinishedOnly ? 'Tout ce que tu possèdes a livré ses secrets.' : 'Le registre est encore vierge.' }}
     </p>
   </div>
 </template>
@@ -54,6 +61,7 @@
 <script>
 import { BASE_CATEGORY } from '@/utils/gameConstants';
 import { roman } from '@/utils/roman';
+import { JOKER_PRICE } from '@/utils/hints';
 
 // Familles pliées : simple confort d'affichage, mémorisé sur cet appareil
 const COLLAPSED_KEY = 'oc-collapsed-families';
@@ -85,11 +93,13 @@ export default {
     elementEmojis: { type: Object, required: true },
     isTimerMode: { type: Boolean, default: false },
     // Dernière découverte, mise en valeur
-    freshElement: { type: String, default: null }
+    freshElement: { type: String, default: null },
+    // Nombre de recettes encore inexplorées par élément (filtre « À compléter »)
+    unexplored: { type: Object, default: () => ({}) }
   },
-  emits: ['selectResource'],
+  emits: ['selectResource', 'inspect', 'hint'],
   data() {
-    return { query: '', family: null, collapsed: readCollapsed() };
+    return { query: '', family: null, collapsed: readCollapsed(), inspecting: false, unfinishedOnly: false, hintPrice: JOKER_PRICE };
   },
   computed: {
     // Numéro d'entrée au registre : l'ordre de découverte
@@ -115,9 +125,10 @@ export default {
     },
     visibleGroups() {
       const q = normalize(this.query.trim());
+      const keep = e => (!q || normalize(e).includes(q)) && (!this.unfinishedOnly || this.unexplored[e] > 0);
       return this.groups
         .filter(g => !this.family || g.key === this.family)
-        .map(g => ({ ...g, elements: q ? g.elements.filter(e => normalize(e).includes(q)) : g.elements }))
+        .map(g => ({ ...g, elements: g.elements.filter(keep) }))
         .filter(g => g.elements.length);
     }
   },
@@ -136,9 +147,9 @@ export default {
     }
   },
   methods: {
-    // Une recherche en cours affiche toujours les résultats, même dans une famille pliée
+    // Une recherche ou un filtre en cours affiche toujours les résultats, même dans une famille pliée
     isOpen(key) {
-      return Boolean(this.query.trim()) || !this.collapsed[key];
+      return Boolean(this.query.trim()) || this.unfinishedOnly || !this.collapsed[key];
     },
     toggle(key) {
       this.collapsed = { ...this.collapsed, [key]: !this.collapsed[key] };
@@ -170,6 +181,10 @@ export default {
       event.dataTransfer.effectAllowed = 'copy';
     },
     select(event, element) {
+      if (this.inspecting && !this.isTimerMode) {
+        this.$emit('inspect', element);
+        return;
+      }
       // Le rectangle de la planche sert à animer l'élément jusqu'à l'Athanor
       this.$emit('selectResource', element, event.currentTarget.getBoundingClientRect());
     }
@@ -219,6 +234,29 @@ export default {
 }
 .registry__search input::placeholder { color: var(--oc-text-faint); }
 
+.registry__aids { display: flex; flex-wrap: wrap; gap: 8px; }
+.registry__aids button {
+  appearance: none;
+  min-height: 34px;
+  padding: 0 12px;
+  border: 0;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+  line-height: 1;
+  color: var(--oc-text-muted);
+  background: none;
+  box-shadow: inset 0 0 0 1px var(--oc-line);
+  transition: color var(--oc-fast), box-shadow var(--oc-fast), background var(--oc-fast);
+}
+.registry__aids button:hover { color: var(--oc-text-strong); box-shadow: inset 0 0 0 1px var(--oc-line-strong); }
+.registry__aids button[aria-pressed='true'] { color: var(--oc-gold); background: var(--oc-gold-soft); box-shadow: inset 0 0 0 1px var(--oc-accent-line); }
+.registry__aids i { font-family: var(--oc-font-mono); font-style: normal; font-size: 9px; color: var(--oc-gold); }
+.registry__clue { margin-left: auto; }
+.plate--inspect { cursor: help; }
+.plate--inspect .plate__no { color: var(--oc-gold); }
 .registry__index {
   display: flex;
   gap: 4px 18px;

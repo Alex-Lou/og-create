@@ -178,6 +178,10 @@ export default {
       const remainingSeconds = seconds % 60;
       return `${minutes}:${remainingSeconds.toString().padStart(2, '0')}`;
     },
+    // Joker : du sable en plus pour la question en cours
+    addTime(seconds) {
+      if (this.isTimerActive) this.timeRemaining += seconds;
+    },
     resetTimer() {
       if (this.isTimerActive && this.selectedLevel) {
         this.timeRemaining = this.defaultTimers[this.selectedLevel];

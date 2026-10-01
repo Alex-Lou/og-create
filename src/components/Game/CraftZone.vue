@@ -66,7 +66,7 @@
     <transition name="reveal">
       <button v-if="result" type="button" class="reveal" aria-live="polite" @click="dismiss">
         <span class="reveal__halo" aria-hidden="true"></span>
-        <span class="reveal__card">
+        <span ref="revealCard" :class="['reveal__card', { 'is-new': result.isNew }]">
           <span class="g-mono g-gold">{{ result.isNew ? 'Nouvelle entrée au registre' : 'Déjà consigné' }}</span>
           <img v-if="result.image" class="reveal__image" :src="result.image" :alt="result.name" />
           <span v-else class="reveal__ink g-ink--glow" aria-hidden="true">{{ emojiOf(result.name) }}</span>
@@ -80,6 +80,7 @@
 
 <script>
 import { findRecipe } from '@/utils/recipes';
+import { HAPTIC, burst, fly, vibrate } from '@/utils/feedback';
 
 const MERGE_MS = 520;
 const REVEAL_MS = 1700;
@@ -181,7 +182,7 @@ export default {
       if (this.picked.length >= this.slotCount) this.picked = [];
       const index = this.picked.length;
       this.picked.push(name);
-      if (from) this.$nextTick(() => this.fly(name, from, this.slotEls[index]));
+      if (from) this.$nextTick(() => fly(this.emojiOf(name), from, this.slotEls[index]));
       // Toutes les cases remplies : la fusion part seule ; le bouton sert aux combinaisons partielles (2/3, 3/4…)
       if (this.autoFuse && this.picked.length === this.slotCount) this.later(() => this.fuse(), 300);
     },
@@ -203,6 +204,7 @@ export default {
         this.failing = true;
         this.failMessage = 'Rien ne se passe… Essaie une autre combinaison.';
         this.$emit('craft-fail', ingredients);
+        vibrate(HAPTIC.fail);
         this.later(() => {
           this.failing = false;
           this.picked = [];
@@ -217,6 +219,8 @@ export default {
         this.picked = [];
         this.result = { name, isNew, image: creatureImage(name), from: ingredients };
         this.$emit('craft-success', name);
+        vibrate(isNew ? HAPTIC.discovery : HAPTIC.success);
+        if (isNew) this.$nextTick(() => burst(this.$refs.revealCard, { count: 26, spread: 170 }));
         if (isNew) {
           const box = this.$refs.zone.getBoundingClientRect();
           this.$emit('discovery', { name, x: box.left + box.width / 2, y: box.top + box.height / 2 });
@@ -244,28 +248,6 @@ export default {
       if (event.key === 'Enter') this.fuse();
       else if (event.key === 'Escape') this.clear();
       else if (event.key === 'Backspace' && this.picked.length) this.remove(this.picked.length - 1);
-    },
-
-    // Petite « comète » de la carte vers l'emplacement
-    fly(name, from, target) {
-      if (!target || !target.animate || window.matchMedia?.('(prefers-reduced-motion: reduce)').matches) return;
-      const to = target.getBoundingClientRect();
-      const ghost = document.createElement('div');
-      ghost.className = 'craft-ghost';
-      ghost.textContent = this.emojiOf(name);
-      Object.assign(ghost.style, { left: `${from.left + from.width / 2 - 20}px`, top: `${from.top + from.height / 2 - 20}px` });
-      document.body.appendChild(ghost);
-      const dx = to.left + to.width / 2 - (from.left + from.width / 2);
-      const dy = to.top + to.height / 2 - (from.top + from.height / 2);
-      const animation = ghost.animate(
-        [
-          { transform: 'translate(0, 0) scale(1)', opacity: 1 },
-          { transform: `translate(${dx * 0.5}px, ${dy * 0.5 - 40}px) scale(1.25)`, opacity: 1, offset: 0.5 },
-          { transform: `translate(${dx}px, ${dy}px) scale(.8)`, opacity: 0.2 }
-        ],
-        { duration: 420, easing: 'cubic-bezier(0.22, 1, 0.36, 1)' }
-      );
-      animation.onfinish = () => ghost.remove();
     }
   }
 };
@@ -376,6 +358,9 @@ export default {
 .reveal__ink { font-size: 76px; line-height: 1; }
 .reveal__name { font-family: var(--oc-font-display); font-size: 40px; line-height: 1; color: var(--oc-text-strong); }
 .reveal__origin { font-size: 17px; }
+/* Première découverte : le nom s'embrase un instant */
+.reveal__card.is-new .reveal__name { animation: kindle 1.6s var(--oc-ease-out); }
+.reveal__card.is-new .reveal__ink, .reveal__card.is-new .reveal__image { animation: rise 0.9s var(--oc-ease-spring) both; }
 .reveal-enter-active, .reveal-leave-active { transition: opacity var(--oc-medium) var(--oc-ease-out); }
 .reveal-enter-from, .reveal-leave-to { opacity: 0; }
 
@@ -395,6 +380,14 @@ export default {
   0% { transform: scale(0.2); opacity: 0; }
   40% { opacity: 1; }
   100% { transform: scale(1.25); opacity: 0.6; }
+}
+@keyframes kindle {
+  0% { color: var(--oc-gold); text-shadow: 0 0 28px rgba(224, 182, 84, 0.95); }
+  100% { color: var(--oc-text-strong); text-shadow: 0 0 0 rgba(224, 182, 84, 0); }
+}
+@keyframes rise {
+  0% { transform: translateY(18px) scale(0.6); filter: brightness(2.2); }
+  100% { transform: none; filter: none; }
 }
 @keyframes pop {
   0% { transform: scale(0.4) translateY(10px); opacity: 0; }
@@ -454,18 +447,3 @@ export default {
 }
 </style>
 
-<style>
-/* Comète animée (ajoutée au body, hors du composant) */
-.craft-ghost {
-  position: fixed;
-  z-index: 50;
-  width: 40px;
-  height: 40px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 30px;
-  pointer-events: none;
-  filter: grayscale(1) sepia(0.55) contrast(1.35) brightness(1.08) drop-shadow(0 0 10px rgba(224, 182, 84, 0.7));
-}
-</style>

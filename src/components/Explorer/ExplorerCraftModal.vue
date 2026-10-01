@@ -47,7 +47,7 @@
             draggable="true"
             :aria-label="`Poser ${element} dans l'Athanor`"
             @dragstart="startDrag($event, element)"
-            @click="selectElement(element)"
+            @click="pick(element, $event)"
           >
             <img v-if="hasGif(element)" :src="getElementGif(element)" class="xc-plate__gif" alt="" />
             <span v-else class="xc-plate__ink g-ink" aria-hidden="true">{{ elementEmojis[element] || '🔮' }}</span>
@@ -62,11 +62,11 @@
             :key="index"
             type="button"
             class="xc-plate xc-plate--new"
-            :class="{ 'xc-plate--target': isTargetElement(element) }"
+            :class="{ 'xc-plate--target': isTargetElement(element), 'is-fresh': element === lastCrafted }"
             draggable="true"
             :aria-label="`Poser ${element} dans l'Athanor`"
             @dragstart="startDragCrafted($event, element)"
-            @click="selectCraftedElement(element)"
+            @click="pick(element, $event)"
           >
             <img v-if="hasGif(element)" :src="getElementGif(element)" class="xc-plate__gif" alt="" />
             <span v-else class="xc-plate__ink g-ink--glow" aria-hidden="true">{{ elementEmojis[element] || '🔮' }}</span>
@@ -78,7 +78,7 @@
 
       <!-- Athanor : 2 à 4 emplacements, on y dépose ou on y glisse les éléments -->
       <section
-        class="xc-athanor g-panel"
+        :class="['xc-athanor', 'g-panel', { 'is-glowing': glowing, 'is-failing': isShaking }]"
         aria-label="Athanor"
         @dragenter.prevent
         @dragover.prevent
@@ -91,7 +91,7 @@
           aria-hidden="true"
         ></div>
         <span class="g-display xc-athanor__title">Athanor</span>
-        <div class="xc-circle">
+        <div ref="circle" class="xc-circle">
           <svg class="xc-circle__art" viewBox="0 0 340 340" aria-hidden="true">
             <g fill="none" stroke="currentColor" stroke-linecap="round">
               <circle cx="170" cy="170" r="162" stroke-opacity=".35" />
@@ -125,8 +125,10 @@
           </template>
 
           <div class="xc-circle__core" aria-live="polite">
+            <span v-if="lastCrafted && !selectedElements.length" :key="lastCrafted" class="xc-circle__result">{{ lastCrafted }}</span>
             <span v-if="selectedElements.length" class="g-italic xc-circle__recipe">{{ selectedElements.join(' + ') }}</span>
             <span v-if="isShaking" class="g-mono xc-danger">rien ne se passe</span>
+            <span v-else-if="lastCrafted && !selectedElements.length" class="g-mono g-gold">créé</span>
             <span v-else-if="selectedElements.length >= 2" class="g-mono g-gold">prêt</span>
             <span v-else class="g-mono">2 à 4 éléments</span>
           </div>
@@ -180,7 +182,7 @@
             <li
               v-for="element in (challenge.requiredElements || [])"
               :key="element"
-              :class="{ 'is-done': craftedElements.includes(element) }"
+              :class="{ 'is-done': craftedElements.includes(element), 'is-fresh': element === lastCrafted }"
             >
               <svg width="22" height="22" viewBox="0 0 34 34" aria-hidden="true">
                 <circle cx="17" cy="17" r="15" />
@@ -211,6 +213,9 @@
 import BossFight from '@/components/Explorer/BossFight.vue';
 import GModal from '@/components/ui/GModal.vue';
 import { findRecipe } from '@/utils/recipes';
+import { HAPTIC, burst, fly, vibrate } from '@/utils/feedback';
+
+const MAX_SLOTS = 4;
 
 export default {
   name: 'ExplorerCraftModal',
@@ -252,6 +257,9 @@ export default {
       craftedElements: [],
       draggingIndex: null,
       isShaking: false,
+      // Dernière création : affichée au cœur de l'Athanor et mise en avant dans la liste
+      lastCrafted: null,
+      glowing: false,
       isGameOver: false,
       playerHealth: 0
     };
@@ -279,6 +287,9 @@ export default {
   mounted() {
     this.debugRecipes();
     this.initPlayerHealth();
+  },
+  beforeUnmount() {
+    clearTimeout(this.glowTimer);
   },
   methods: {
     getHealthColor(health) {
@@ -367,12 +378,17 @@ export default {
       this.$emit('close');
     },
     
-    selectElement(element) {
-      if (this.selectedElements.length < 4) {
-        this.selectedElements.push(element);
-      } else {
-        this.$emit('show-alert', 'Vous ne pouvez sélectionner que 4 éléments maximum !');
+    // Pose un élément dans l'Athanor ; la comète part de la carte cliquée
+    pick(element, event) {
+      if (this.selectedElements.length >= MAX_SLOTS) {
+        this.$emit('show-alert', `L'Athanor ne prend que ${MAX_SLOTS} éléments.`);
+        return;
       }
+      const from = event?.currentTarget?.getBoundingClientRect();
+      const index = this.selectedElements.length;
+      this.selectedElements.push(element);
+      vibrate(HAPTIC.tap);
+      this.$nextTick(() => fly(this.elementEmojis[element] || '🔮', from, this.$refs.circle?.querySelector(`.xc-slot--${index}`)));
     },
     
     removeSelectedElement(index) {
@@ -395,7 +411,7 @@ export default {
     handleDrop(event) {
       const element = event.dataTransfer.getData('text/plain');
       if (element) {
-        if (!this.selectedElements.includes(element) && this.selectedElements.length < 4) {
+        if (!this.selectedElements.includes(element) && this.selectedElements.length < MAX_SLOTS) {
           this.selectedElements.push(element);
         }
       }
@@ -432,6 +448,8 @@ export default {
         }
         
         this.isShaking = true;
+        vibrate(HAPTIC.fail);
+        burst(this.$refs.circle, { count: 10, spread: 70, tone: 'danger' });
         setTimeout(() => {
           this.isShaking = false;
         }, 500);
@@ -445,6 +463,7 @@ export default {
       }
 
       this.$emit('craft-success', craftedItem);
+      this.celebrate(craftedItem);
 
       // Gestion des dégâts du boss
       if (this.isBossChallenge && this.$refs.bossFight) {
@@ -479,19 +498,23 @@ export default {
       this.selectedElements = [];
     },
 
-    selectCraftedElement(element) {
-      if (this.selectedElements.length < 4) {
-        this.selectedElements.push(element);
-      } else {
-        this.$emit('show-alert', 'Vous ne pouvez sélectionner que 4 éléments maximum !');
-      }
+    // Création réussie : éclat au cœur de l'Athanor, plus fort pour un élément de l'objectif
+    celebrate(element) {
+      const isTarget = this.isTargetElement(element);
+      this.lastCrafted = element;
+      this.glowing = true;
+      clearTimeout(this.glowTimer);
+      this.glowTimer = setTimeout(() => (this.glowing = false), 900);
+      vibrate(isTarget ? HAPTIC.discovery : HAPTIC.success);
+      burst(this.$refs.circle, isTarget ? { count: 30, spread: 190 } : { count: 16, spread: 110, tone: 'verdigris' });
     },
-    
+
     resetCrafting() {
       if (!this.isGameOver) {
         // Réinitialiser uniquement les éléments sélectionnés et créés
         this.selectedElements = [];
         this.craftedElements = [];
+        this.lastCrafted = null;
       }
     },
         
@@ -607,8 +630,11 @@ export default {
 .xc-plate--target { box-shadow: inset 0 0 0 1px var(--oc-accent-line), var(--oc-shadow-accent); }
 .xc-plate--target .xc-plate__name { color: var(--oc-gold); }
 
-/* ---------- Athanor ---------- */
+/* ---------- Athanor : reste à l'écran pendant qu'on fait défiler les éléments ---------- */
 .xc-athanor {
+  position: sticky;
+  top: 0;
+  z-index: 2;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -627,6 +653,22 @@ export default {
 }
 .xc-athanor__title { position: relative; align-self: flex-start; font-size: 22px; }
 .xc-athanor__go { position: relative; }
+.xc-athanor { transition: box-shadow var(--oc-medium) var(--oc-ease-out); }
+.xc-athanor.is-glowing { box-shadow: inset 0 0 0 1px var(--oc-accent-line), 0 0 60px rgba(224, 182, 84, 0.28); }
+.xc-athanor.is-glowing .xc-circle { color: var(--oc-gold); }
+.xc-athanor.is-failing .xc-circle { color: var(--oc-danger); }
+.xc-circle { transition: color var(--oc-medium); }
+.xc-circle__result {
+  font-family: var(--oc-font-display);
+  font-size: 20px;
+  line-height: 1.1;
+  color: var(--oc-text-strong);
+  overflow-wrap: anywhere;
+  animation: xc-kindle 1.4s var(--oc-ease-out);
+}
+/* Nouvelle création : la carte s'illumine, l'objectif coché pulse */
+.xc-plate.is-fresh { animation: xc-fresh 1.2s var(--oc-ease-out); }
+.xc-goals li.is-fresh svg { animation: xc-tick 0.9s var(--oc-ease-spring); }
 .xc-circle {
   position: relative;
   width: min(320px, 100%);
@@ -712,6 +754,22 @@ button.xc-slot:hover { box-shadow: inset 0 0 0 1px var(--oc-accent-line); }
 .xc-goals__name { flex: 1; font-size: 17px; color: var(--oc-text-strong); }
 .xc-goals li .g-mono { color: inherit; }
 
+@keyframes xc-kindle {
+  0% { opacity: 0; transform: scale(0.6); color: var(--oc-gold); text-shadow: 0 0 24px rgba(224, 182, 84, 0.95); }
+  35% { opacity: 1; transform: scale(1.08); }
+  100% { transform: none; text-shadow: none; }
+}
+@keyframes xc-fresh {
+  0% { background: rgba(224, 182, 84, 0.35); transform: scale(0.85); }
+  50% { transform: scale(1.04); }
+  100% { transform: none; }
+}
+@keyframes xc-tick {
+  0% { transform: scale(0.4); }
+  60% { transform: scale(1.35); }
+  100% { transform: none; }
+}
+
 /* Combinaison ratée, coup reçu */
 .shake-animation { animation: xc-shake 0.5s var(--oc-ease-out); }
 @keyframes xc-shake {
@@ -734,8 +792,30 @@ button.xc-slot:hover { box-shadow: inset 0 0 0 1px var(--oc-accent-line); }
   .xc-tool { flex: 1; padding: 0 10px; }
   .xc-plates { grid-template-columns: repeat(auto-fill, minmax(78px, 1fr)); }
   .xc-plate { min-height: 84px; }
-  .xc-athanor { padding: 18px 12px; }
-  .xc-athanor__go,
   .xc-side__go { align-self: stretch; }
+
+  /* L'Athanor devient un dock collé au bas de la fenêtre : chaque clic se voit tout de suite */
+  .xc-athanor {
+    top: auto;
+    /* Colle au bord de la fenêtre : annule son padding (34/32/28, puis 30/20/22 sous 520 px) */
+    bottom: -28px;
+    margin: 0 -32px -28px;
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 10px;
+    padding: 12px 16px 14px;
+    background: #0f0d0a;
+    box-shadow: 0 -1px 0 var(--oc-line-strong), 0 -18px 30px rgba(0, 0, 0, 0.6);
+  }
+  .xc-athanor.is-glowing { box-shadow: 0 -1px 0 var(--oc-gold), 0 -18px 40px rgba(224, 182, 84, 0.3); }
+  .xc-athanor__title, .xc-circle__art, .xc-athanor__bg { display: none; }
+  .xc-circle { width: 100%; aspect-ratio: auto; display: flex; gap: 8px; }
+  .xc-slot { position: relative; left: auto; top: auto; transform: none; width: 56px; height: 56px; flex-shrink: 0; }
+  .xc-slot__name { display: none; }
+  .xc-circle__core { position: static; transform: none; width: auto; flex: 1; min-width: 0; align-items: flex-start; justify-content: center; text-align: left; }
+  .xc-athanor__go { flex: 1; min-height: 48px; }
+}
+@media (max-width: 520px) {
+  .xc-athanor { bottom: -22px; margin: 0 -20px -22px; }
 }
 </style>
