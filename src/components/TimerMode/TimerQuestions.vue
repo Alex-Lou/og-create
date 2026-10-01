@@ -72,7 +72,7 @@
           class="tq-row"
         >
           <span class="g-mono">Réponses trouvées</span>
-          <span class="g-mono g-gold">{{ discoveredValidAnswersCount }} / {{ currentQuestion.initialElements.requiredCount }}</span>
+          <span class="g-mono g-gold">{{ answersFound }} / {{ currentQuestion.initialElements.requiredCount }}</span>
         </div>
         <template #actions>
           <button type="button" class="g-btn" @click="handleButtonClick">
@@ -144,7 +144,9 @@ export default {
   props: {
     isLoggedIn: { type: Boolean, default: false },
     // Inventaire courant (éléments de la question + créations)
-    discoveredElements: { type: Array, default: () => [] }
+    discoveredElements: { type: Array, default: () => [] },
+    // Bonnes réponses réunies, comptées par le serveur (les réponses ne sont pas envoyées au navigateur)
+    answersFound: { type: Number, default: 0 }
   },
   emits: [
     'reset-timer', 'show-level-selection', 'pause-timer', 'resume-timer', 'stop-timer',
@@ -197,13 +199,6 @@ export default {
           additional: []
         }
       };
-    },
-    discoveredValidAnswersCount() {
-      if (!this.currentQuestion?.validAnswers) return 0;
-      
-      return this.currentQuestion.validAnswers.filter(answer => 
-        this.discoveredElements.includes(answer)
-      ).length;
     },
     // Repère de la question : rang dans le chapitre et nom du chapitre
     questionEyebrow() {
