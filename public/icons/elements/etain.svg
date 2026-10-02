@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+<g stroke="#3e4654" stroke-width="2.2" stroke-linejoin="round"><path d="M14 22h36l10 10H4z" fill="#c4ccd6"/><path d="M4 32h56l-4 18H8z" fill="#9aa4b2"/></g>
+<path d="M16 25h30" stroke="#e4e8ee" stroke-width="2" stroke-linecap="round"/>
+<text x="32" y="47" font-family="sans-serif" font-weight="bold" font-size="15" text-anchor="middle" fill="#4e5868">Sn</text>
+</svg>

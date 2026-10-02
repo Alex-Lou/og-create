@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+<path d="M20 61l4-34h16l4 34z" fill="#e2cfa0" stroke="#7a6438" stroke-width="2.2" stroke-linejoin="round"/>
+<path d="M23 40h18M22 50h20M30 30v10M36 40v10M28 50v11" stroke="#b09a6a" stroke-width="1.5"/><path d="M29 61v-7a3 3 0 0 1 6 0v7z" fill="#6a4218"/>
+<path d="M21 28l11-14 11 14z" fill="#8a5a2a" stroke="#4a2e14" stroke-width="2.2" stroke-linejoin="round"/>
+<g fill="#f4ead0" stroke="#4a2e14" stroke-width="1.5" stroke-linejoin="round"><g transform="translate(32 22) rotate(45)"><path d="M0-2V-27" stroke-width="2.5"/><path d="M0-27h6V-8H0zM0-20.5h6M0-14h6M3-27V-8"/></g><g transform="translate(32 22) rotate(135)"><path d="M0-2V-27" stroke-width="2.5"/><path d="M0-27h6V-8H0zM0-20.5h6M0-14h6M3-27V-8"/></g><g transform="translate(32 22) rotate(225)"><path d="M0-2V-27" stroke-width="2.5"/><path d="M0-27h6V-8H0zM0-20.5h6M0-14h6M3-27V-8"/></g><g transform="translate(32 22) rotate(315)"><path d="M0-2V-27" stroke-width="2.5"/><path d="M0-27h6V-8H0zM0-20.5h6M0-14h6M3-27V-8"/></g></g>
+<circle cx="32" cy="22" r="3" fill="#4a2e14"/>
+</svg>
