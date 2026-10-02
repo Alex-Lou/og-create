@@ -23,7 +23,7 @@
     </g>
     <!-- Gravures du Cabinet : le cadre autour, l'emblème au cœur -->
     <path v-for="(stroke, i) in frameArt" :key="`f${i}`" v-bind="attrs(stroke)"></path>
-    <g :transform="scaleAround(EMBLEM_SCALE)">
+    <g :transform="scaleAround(bare ? BARE_EMBLEM_SCALE : EMBLEM_SCALE)">
       <path v-for="(stroke, i) in emblemArt" :key="`e${i}`" v-bind="attrs(stroke)"></path>
     </g>
   </svg>
@@ -31,7 +31,7 @@
 
 <script>
 import { sigilPaths } from '@/utils/sigil';
-import { BODY_SCALE, DEFAULT_EMBLEM, DEFAULT_FRAME, EMBLEM_ART, EMBLEM_SCALE, FRAME_ART } from '@/utils/cabinet';
+import { BARE_EMBLEM_SCALE, BODY_SCALE, DEFAULT_EMBLEM, DEFAULT_FRAME, EMBLEM_ART, EMBLEM_SCALE, FRAME_ART } from '@/utils/cabinet';
 
 // En dessous de cette taille (px), les traits gardent leur épaisseur à l'écran au lieu de fondre
 const SMALL = 64;
@@ -53,7 +53,7 @@ export default {
     bare: { type: Boolean, default: false }
   },
   data() {
-    return { BODY_SCALE, EMBLEM_SCALE, SMALL };
+    return { BARE_EMBLEM_SCALE, BODY_SCALE, EMBLEM_SCALE, SMALL };
   },
   computed: {
     paths() {

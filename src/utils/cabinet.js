@@ -216,5 +216,7 @@ export const EMBLEM_ART = {
 
 export const BODY_SCALE = 0.84;
 export const EMBLEM_SCALE = 1.25;
+// Vignette du Cabinet (emblème seul) : l'emblème remplit le cercle au lieu d'en occuper le cœur
+export const BARE_EMBLEM_SCALE = 3.6;
 export const DEFAULT_FRAME = 'basicCadre.png';
 export const DEFAULT_EMBLEM = 'coin.png';
