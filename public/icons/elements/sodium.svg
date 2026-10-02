@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+<g stroke="#4a525c" stroke-width="2" stroke-linejoin="round">
+<path d="M8 22L22 10h32l-9.3 8-10.7 4z" fill="#e4e8ee"/><path d="M8 22h26l6 6v28H8z" fill="#b8c0ca"/><path d="M44.7 18L54 10v32L40 56V28z" fill="#8e98a4"/>
+<path d="M34 22l10.7-4L40 28z" fill="#ffffff"/></g>
+<path d="M12 50l6-6" stroke="#e8edf2" stroke-width="2" stroke-linecap="round"/>
+<text x="24" y="45" font-family="sans-serif" font-weight="bold" font-size="16" text-anchor="middle" fill="#2a3a5a">Na</text>
+</svg>

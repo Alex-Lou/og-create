@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+<circle cx="21" cy="34" r="15" fill="#d8382e" stroke="#741410" stroke-width="2.5"/>
+<circle cx="43" cy="34" r="15" fill="#e8483a" stroke="#741410" stroke-width="2.5"/>
+<ellipse cx="15" cy="26" rx="4.5" ry="2.5" transform="rotate(-35 15 26)" fill="#f48a7e"/><ellipse cx="37" cy="26" rx="4.5" ry="2.5" transform="rotate(-35 37 26)" fill="#f8a094"/>
+<g font-family="sans-serif" font-weight="bold" font-size="17" text-anchor="middle" fill="#fff"><text x="21" y="40">O</text><text x="43" y="40">O</text></g>
+</svg>
