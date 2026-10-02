@@ -1,8 +1,11 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
-<g fill="#7ac142" stroke="#3f6b1c" stroke-width="1.5"><circle cx="5" cy="54" r="3.5"/><circle cx="11" cy="54" r="3.5"/><circle cx="17" cy="54" r="3.5"/><circle cx="23" cy="52" r="4"/></g><circle cx="24" cy="51" r="1" fill="#1a2a0a"/>
-<path d="M26 44c2-6 5-8 8-8" stroke="#8a8f96" stroke-width="2" fill="none" stroke-linecap="round"/><path d="M31 33l4 3-4 3" stroke="#8a8f96" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
-<path d="M28 16v4" stroke="#6a4a2a" stroke-width="2"/><path d="M28 20c4 0 5 5 4 10s-2 8-4 8-3-3-4-8 0-10 4-10z" fill="#b8a050" stroke="#6a5a20" stroke-width="2" stroke-linejoin="round"/>
-<path d="M33 18c3-6 7-8 10-8" stroke="#8a8f96" stroke-width="2" fill="none" stroke-linecap="round"/>
-<path d="M50 30c-6-10-14-10-12-2 1 4 6 5 12 6-6 2-10 5-8 9 3 5 8 0 8-8 0 8 5 13 8 8 2-4-2-7-8-9 6-1 11-2 12-6 2-8-6-8-12 2z" fill="#f28a1a" stroke="#7a3a08" stroke-width="2" stroke-linejoin="round"/>
-<path d="M50 28v12" stroke="#2a1a0a" stroke-width="2.5" stroke-linecap="round"/>
+<g fill="#f28a1a" stroke="#6a2e06" stroke-width="2.2" stroke-linejoin="round">
+<path d="M31 24C25 8 8 2 4 9c-3 7 5 17 27 17zM33 24C39 8 56 2 60 9c3 7-5 17-27 17z"/>
+<path d="M31 27c-10 0-17 4-15 11 2 6 9 4 15-7zM33 27c10 0 17 4 15 11-2 6-9 4-15-7z"/></g>
+<g fill="#fff"><circle cx="9" cy="10" r="1.6"/><circle cx="55" cy="10" r="1.6"/><circle cx="19" cy="36" r="1.4"/><circle cx="45" cy="36" r="1.4"/></g>
+<path d="M32 14v26" stroke="#2a1a0a" stroke-width="4" stroke-linecap="round"/>
+<path d="M31 14c-2-4-4-6-7-7M33 14c2-4 4-6 7-7" stroke="#2a1a0a" stroke-width="1.8" fill="none" stroke-linecap="round"/>
+<path d="M22 38l3-4 3 4 4-5 4 5 3-4 3 4c1 11-4 21-10 23-6-2-11-12-10-23z" fill="#5cb83a" stroke="#235a12" stroke-width="2.2" stroke-linejoin="round"/>
+<path d="M27 46c1 6 3 9 5 10" stroke="#9ade6a" stroke-width="2" fill="none" stroke-linecap="round"/>
+<g fill="#f2c230"><circle cx="35" cy="44" r="1.4"/><circle cx="38" cy="49" r="1.2"/></g>
 </svg>
