@@ -73,6 +73,7 @@
             :slotCount="slotCount"
             :mode="currentMode"
             :elementEmojis="elementEmojis"
+            :failText="currentMode === 'infinite' ? infiniteFailLine : null"
             @learned="learnElement"
             @craft-success="handleCraftSuccess"
             @discovery="handleDiscovery"
@@ -190,6 +191,7 @@ import progressService from '@/services/progressService';
 import achievementsService from '@/services/achievementsService';
 import playService from '@/services/playService';
 import { readCarnet, writeCarnet, clearCarnet } from '@/utils/carnet';
+import { failLine } from '@/utils/failLine';
 import { findNewlyUnlocked } from '@/utils/achievementChecker';
 import { BASE_ELEMENTS, BASE_CATEGORY } from '@/utils/gameConstants';
 import timerService from '@/services/timerService';
@@ -1246,6 +1248,10 @@ handleCraftSuccess(craftedItem, ingredients = []) {
       this.discoveredCategories = this.timerSnapshot.categories;
       this.timerSnapshot = null;
       this.updateCategoryProgress();
+    },
+    // Mélange raté en Infini : une image selon les familles, et l'ingrédient qui cache encore des mélanges
+    infiniteFailLine(ingredients) {
+      return failLine(ingredients, { familyOf: this.familyOf, unexplored: this.unexploredCounts });
     },
     familyOf(name) {
       const family = Object.keys(this.categories).find(key => this.categories[key].includes(name));
