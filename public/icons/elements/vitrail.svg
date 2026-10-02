@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+<clipPath id="vitrail-c"><path d="M13 61V28C13 16 21 8 32 3c11 5 19 13 19 25v33z"/></clipPath>
+<g clip-path="url(#vitrail-c)"><path d="M0 0h32v44H0z" fill="#2f6fd0"/><path d="M32 0h32v44H32z" fill="#d6332a"/><path d="M0 44h32v20H0z" fill="#3aa04a"/><path d="M32 44h32v20H32z" fill="#f2c230"/></g>
+<circle cx="32" cy="25" r="10" fill="#f2c230"/><circle cx="32" cy="25" r="4" fill="#d6332a"/>
+<g fill="none" stroke="#1a1a1a" stroke-width="2.5" stroke-linejoin="round">
+<circle cx="32" cy="25" r="10"/><circle cx="32" cy="25" r="4"/>
+<path d="M32 15v6M32 29v6M22 25h6M36 25h6M25 18l4 4M39 18l-4 4M25 32l4-4M39 32l-4-4M32 35v26M13 44h38M13 52h38M22 44v17M42 44v17M13 30h9M42 30h9"/>
+<path d="M13 61V28C13 16 21 8 32 3c11 5 19 13 19 25v33z" stroke="#2a2420" stroke-width="3"/>
+</g>
+</svg>
