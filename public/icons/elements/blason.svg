@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+<clipPath id="blason-c"><path d="M13 27h38v13c0 12-8 18-19 22-11-4-19-10-19-22z"/></clipPath>
+<g clip-path="url(#blason-c)"><path d="M0 0h32v64H0z" fill="#d6332a"/><path d="M32 0h32v64H32z" fill="#f2c230"/><path d="M10 26l40 34" stroke="#2a5aa8" stroke-width="7"/></g>
+<path d="M13 27h38v13c0 12-8 18-19 22-11-4-19-10-19-22z" fill="none" stroke="#4a2a12" stroke-width="2.5" stroke-linejoin="round"/>
+<path d="M33 13c-1-6 4-11 12-10-4 2-6 5-6 8 4-2 9-1 11 2-5 0-9 1-12 2z" fill="#d6332a" stroke="#6b1f1a" stroke-width="1.5" stroke-linejoin="round"/>
+<path d="M24 26c0-9 3-14 8-14s8 5 8 14z" fill="#b9c0c8" stroke="#464c54" stroke-width="2" stroke-linejoin="round"/>
+<path d="M27 19h10M27 22h10" stroke="#22262b" stroke-width="1.8"/>
+</svg>
