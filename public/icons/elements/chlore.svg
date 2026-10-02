@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+<path d="M42 20c-6-4 0-10 6-8s6-6 2-9" fill="none" stroke="#3a5a10" stroke-width="7" stroke-linecap="round"/><path d="M42 20c-6-4 0-10 6-8s6-6 2-9" fill="none" stroke="#9ad04a" stroke-width="4" stroke-linecap="round"/>
+<circle cx="28" cy="38" r="21" fill="#bcd43a" stroke="#56701a" stroke-width="2.5"/><path d="M14 30a16 16 0 0 1 10-9" stroke="#e8f29a" stroke-width="3" fill="none" stroke-linecap="round"/>
+<text x="28" y="46" font-family="sans-serif" font-weight="bold" font-size="22" text-anchor="middle" fill="#fff" stroke="#4a6410" stroke-width="1.6" paint-order="stroke">Cl</text>
+</svg>
