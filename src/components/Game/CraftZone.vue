@@ -111,7 +111,9 @@ export default {
     // Mode de jeu : le serveur juge le mélange avec les éléments en main dans ce mode
     mode: { type: String, default: 'infinite' },
     elementEmojis: { type: Object, required: true },
-    autoFuse: { type: Boolean, default: true }
+    autoFuse: { type: Boolean, default: true },
+    // Phrase d'un mélange raté (Infini) ; sans elle, la phrase par défaut
+    failText: { type: Function, default: null }
   },
   emits: ['craft-success', 'craft-fail', 'discovery', 'learned', 'show-alert', 'revealing'],
   data() {
@@ -233,7 +235,7 @@ export default {
       this.busy = false;
       if (!reply.result) {
         this.$emit('craft-fail', ingredients);
-        this.fail('Rien ne se passe… Essaie une autre combinaison.');
+        this.fail(this.failText ? this.failText(ingredients) : 'Rien ne se passe… Essaie une autre combinaison.');
         return;
       }
       const { result: name, isNew } = reply;
@@ -266,7 +268,8 @@ export default {
           this.failing = false;
           this.picked = [];
         }, this.quick ? 450 : 700),
-        setTimeout(() => (this.failMessage = ''), FAIL_MS)
+        // Une phrase plus longue reste affichée le temps d'être lue
+        setTimeout(() => (this.failMessage = ''), Math.max(FAIL_MS, message.length * 45))
       ];
     },
     endFail() {
