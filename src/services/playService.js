@@ -34,6 +34,14 @@ export default {
   startRun(mode, details) {
     return asPlayer(() => http.post('/play/run', { mode, ...details }));
   },
+  // Le Livre : { stars, chapters: [{ id, name, families, need, open, total, found, far, pages }] }
+  book() {
+    return asPlayer(() => http.get('/play/book'));
+  },
+  // Encre du Livre (compte requis, payée en écus) : { page, ingredient, coins }
+  ink(page) {
+    return asPlayer(() => http.post('/play/ink', { page }));
+  },
   // { origins: [[ingrédients]], more }
   origins(name) {
     return asPlayer(() => http.get('/play/origins', { params: { name } }));
