@@ -44,6 +44,7 @@
         :hover="hover === name && drag?.name !== name"
         :dragging="drag?.name === name && drag.moved"
         :pulse="pulses[name] || null"
+        :lit="lit.has(name)"
         @down="starDown"
         @key="pick"
       />
@@ -54,14 +55,51 @@
       </template>
     </div>
 
-    <div class="sky__hud">
-      <p class="sky__msg g-italic" aria-live="polite">{{ message }}</p>
-      <div class="sky__tools">
-        <button type="button" class="g-btn sky__all" @pointerdown.stop @click="showAll">Tout le ciel</button>
-        <button type="button" class="sky__zoom" aria-label="Éloigner" @pointerdown.stop @click="zoomBy(1 / 1.6)">−</button>
-        <button type="button" class="sky__zoom" aria-label="Rapprocher" @pointerdown.stop @click="zoomBy(1.6)">+</button>
-        <button type="button" class="sky__clue" @pointerdown.stop @click="$emit('hint')">Piste <i>{{ hintPrice }}</i></button>
+    <!-- Vue de loin : chaque constellation est un nuage à la taille du pouce ; un tap plonge dedans -->
+    <transition name="clouds">
+      <div v-if="far" class="sky__clouds" @pointerdown.stop @wheel.stop>
+        <button
+          v-for="f in constellations"
+          :key="`nuage-${f.key}`"
+          type="button"
+          class="sky__cloud"
+          :style="{ '--c': f.color }"
+          @click="enterFamily(f)"
+        >
+          <span class="sky__cloud-inks" aria-hidden="true">
+            <span v-for="name in f.found.slice(0, 3)" :key="name" class="g-ink"><ElementGlyph :glyph="elementEmojis[name] || '✨'" /></span>
+          </span>
+          <span class="sky__cloud-name">{{ f.short }}</span>
+          <span class="sky__cloud-count">{{ f.found.length }} / {{ f.total }}</span>
+        </button>
       </div>
+    </transition>
+
+    <p v-show="!searching" :key="msgKey" class="sky__msg g-italic" aria-live="polite">{{ message }}</p>
+
+    <!-- Recherche : les étoiles qui répondent s'allument, le ciel vole vers la première -->
+    <form v-if="searching" class="sky__search" @pointerdown.stop @submit.prevent="goFirst">
+      <label class="sky__field">
+        <span class="oc-sr-only">Chercher une étoile</span>
+        <input ref="searchInput" v-model="query" type="text" placeholder="Nom d’un élément…" autocomplete="off" enterkeyhint="go" @keydown.esc="closeSearch" />
+      </label>
+      <button type="button" class="sky__close" aria-label="Fermer la recherche" @click="closeSearch">×</button>
+      <div v-if="query.trim()" class="sky__results">
+        <button v-for="name in results" :key="name" type="button" class="sky__result" @click="goTo(name)">
+          <span class="g-ink" aria-hidden="true"><ElementGlyph :glyph="elementEmojis[name] || '✨'" /></span>{{ name }}
+        </button>
+        <span v-if="!results.length" class="g-italic sky__none">Aucune étoile ne porte ce nom.</span>
+      </div>
+    </form>
+
+    <div class="sky__tools">
+      <button type="button" class="g-btn sky__all" @pointerdown.stop @click="showAll">Constellations</button>
+      <button type="button" class="sky__zoom" :aria-pressed="searching" aria-label="Chercher une étoile" @pointerdown.stop @click="openSearch">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><circle cx="11" cy="11" r="6.5"></circle><path d="M16 16l4.5 4.5"></path></svg>
+      </button>
+      <button type="button" class="sky__zoom" aria-label="Éloigner" @pointerdown.stop @click="zoomBy(1 / 1.6)">−</button>
+      <button type="button" class="sky__zoom" aria-label="Rapprocher" @pointerdown.stop @click="zoomBy(1.6)">+</button>
+      <button type="button" class="sky__clue" @pointerdown.stop @click="$emit('hint')">Piste <i>{{ hintPrice }}</i></button>
     </div>
   </section>
 </template>
@@ -69,6 +107,8 @@
 <script>
 import SkyStar from './SkyStar.vue';
 import SkyLines from './SkyLines.vue';
+import ElementGlyph from '@/components/ui/ElementGlyph.vue';
+import { search } from '@/utils/search';
 import { columnsFor, layoutSky, nearestStar, shortName } from '@/utils/sky';
 import { familyColor } from '@/utils/eras';
 import { JOKER_PRICE } from '@/utils/hints';
@@ -93,7 +133,13 @@ function savePlaces(places) {
 }
 
 const MAX_ZOOM = 1.7;
-const HUD = 118; // bas du ciel occupé par le message et les boutons
+const HUD = 62; // bas du ciel occupé par la rangée de boutons
+// Sur un écran étroit, le dézoom s'arrête là où une étoile reste lisible et touchable (≈ 45 px) :
+// en dessous, on passe à l'écran des nuages
+const MIN_ZOOM_TOUCH = 0.7;
+const NARROW = 700;
+// Zoom de départ quand on plonge d'un nuage vers sa constellation (le ciel « s'approche »)
+const DIVE_FROM = 0.3;
 const LONG_PRESS_MS = 520;
 const SPARKS = Array.from({ length: 12 }, (_, i) => {
   const a = (i * Math.PI) / 6 + 0.2;
@@ -113,7 +159,7 @@ const rgb = ([r, g, b]) => `rgb(${r}, ${g}, ${b})`;
 // Il ne connaît aucune recette : il désigne des éléments à l'Athanor, qui interroge le serveur.
 export default {
   name: 'SkyView',
-  components: { SkyStar, SkyLines },
+  components: { SkyStar, SkyLines, ElementGlyph },
   props: {
     categories: { type: Object, required: true },
     familyTotals: { type: Object, default: () => ({}) },
@@ -139,7 +185,13 @@ export default {
       // Forme de la zone du ciel (largeur / hauteur utile), pour disposer les constellations
       aspect: 0.7,
       hintPrice: JOKER_PRICE,
-      dust: DUST
+      dust: DUST,
+      // Vue lointaine (nuages) ; recherche ouverte ; étoiles allumées par la recherche
+      far: false,
+      msgKey: 0,
+      searching: false,
+      query: '',
+      lit: new Set()
     };
   },
   computed: {
@@ -176,6 +228,9 @@ export default {
         };
       });
     },
+    results() {
+      return search(this.stars, this.query).slice(0, 8);
+    },
     tether() {
       const d = this.drag;
       if (!d || !d.moved) return null;
@@ -208,6 +263,14 @@ export default {
       this.pulse(value.name, 'echo');
       this.reveal(value.name, false);
       this.message = `${value.name}, déjà dans ton ciel`;
+    },
+    // Pendant la frappe, les étoiles qui répondent s'allument (goTo garde ensuite la seule choisie)
+    query(q) {
+      if (this.searching) this.lit = new Set(q.trim() ? this.results : []);
+    },
+    // Chaque nouveau message réapparaît, puis s'efface de lui-même
+    message() {
+      this.msgKey += 1;
     },
     lastFail(value) {
       if (!value) return;
@@ -272,9 +335,17 @@ export default {
       if (this.touched) this.apply(this.view, false);
       else this.showStars(false);
     },
+    narrow() {
+      return (this.size?.w || 390) < NARROW;
+    },
+    // Le dézoom s'arrête là où les étoiles restent lisibles ; plus loin, c'est l'écran des nuages
     minZoom() {
       const { w, h } = this.size || { w: 390, h: 600 };
-      return Math.min(w / this.sky.width, (h - HUD) / this.sky.height) * 0.95;
+      const fit = Math.min(w / this.sky.width, (h - HUD) / this.sky.height) * 0.95;
+      return this.narrow() ? MIN_ZOOM_TOUCH : Math.max(fit, 0.5);
+    },
+    starZoom() {
+      return this.minZoom();
     },
     clamp(v) {
       const { w, h } = this.size || { w: 390, h: 600 };
@@ -296,7 +367,6 @@ export default {
       world.style.setProperty('--inv', (1 / s).toFixed(4));
       world.style.setProperty('--inv-line', (1 / Math.max(s, 0.45)).toFixed(4));
       world.style.setProperty('--names', s >= 0.42 ? '1' : '0');
-      this.$refs.sky.classList.toggle('sky--far', s < 0.42);
       const dust = this.$refs.dust;
       if (dust) {
         dust.style.transition = world.style.transition;
@@ -312,6 +382,8 @@ export default {
     },
     zoomBy(factor) {
       this.touched = true;
+      // Dézoomer en butée ouvre les nuages
+      if (factor < 1 && this.view.s <= this.minZoom() * 1.01) return this.showAll();
       const { w, h } = this.size;
       this.zoomAt(w / 2, (h - HUD) / 2, this.view.s * factor, true);
     },
@@ -320,32 +392,73 @@ export default {
       const ns = Math.max(this.minZoom(), Math.min(MAX_ZOOM, s));
       this.apply({ s: ns, tx: w / 2 - x * ns, ty: (h - HUD) / 2 - y * ns }, true);
     },
+    // Plonger dans une constellation : elle remplit l'écran si elle le peut, sinon on y navigue au doigt
     focusFamily(f) {
       this.touched = true;
-      this.focusOn(f.cx, f.cy, Math.min(1, ((this.size.h - HUD) * 0.8) / (2 * f.spread + 160)));
+      this.focusOn(f.cx, f.cy, Math.max(this.starZoom(), Math.min(1, ((this.size.h - HUD) * 0.8) / (2 * f.spread + 160))));
     },
-    showAll(animate = true) {
-      const { w, h } = this.size || { w: 390, h: 600 };
-      const s = this.minZoom();
-      this.apply({ s, tx: (w - this.sky.width * s) / 2, ty: (h - HUD - this.sky.height * s) / 2 }, animate);
+    // Tap sur un nuage : les nuages s'effacent et le ciel s'approche de la constellation, étoiles lisibles
+    enterFamily(f) {
+      this.far = false;
+      this.touched = true;
+      const { w, h } = this.size;
+      this.apply({ s: DIVE_FROM, tx: w / 2 - f.cx * DIVE_FROM, ty: (h - HUD) / 2 - f.cy * DIVE_FROM }, false);
+      requestAnimationFrame(() => this.focusFamily(f));
+    },
+    openSearch() {
+      this.searching = true;
+      this.$nextTick(() => this.$refs.searchInput?.focus());
+    },
+    closeSearch() {
+      this.searching = false;
+      this.query = '';
+    },
+    // Résultat touché : le ciel vole vers l'étoile, qui reste allumée ; un tap sur elle la pose dans l'Athanor
+    goTo(name) {
+      const p = this.positions[name];
+      if (!p) return;
+      this.touched = true;
+      this.far = false;
+      this.lit = new Set([name]);
+      this.searching = false;
+      this.query = '';
+      this.focusOn(p.x, p.y, Math.max(this.view.s, 0.9));
+      this.pulse(name, 'echo');
+      this.message = `${name} brille : touche-la pour la poser dans l’Athanor`;
+    },
+    goFirst() {
+      if (this.results[0]) this.goTo(this.results[0]);
+    },
+    // Vue de loin : l'écran des nuages
+    showAll() {
+      this.closeSearch();
+      this.far = true;
     },
     // Ouverture : cadrer les étoiles déjà allumées (les places vides ne doivent pas tout écraser)
     showStars(animate = false) {
       const pts = this.stars.map(n => this.positions[n]).filter(Boolean);
-      if (!pts.length || !this.size) return this.showAll(animate);
+      if (!pts.length || !this.size) return this.showAll();
       const pad = 110;
       const x0 = Math.min(...pts.map(p => p.x)) - pad;
       const x1 = Math.max(...pts.map(p => p.x)) + pad;
       const y0 = Math.min(...pts.map(p => p.y)) - pad - 40;
       const y1 = Math.max(...pts.map(p => p.y)) + pad;
       const { w, h } = this.size;
-      const s = Math.min(1, w / (x1 - x0), (h - HUD) / (y1 - y0));
-      this.apply({ s, tx: w / 2 - ((x0 + x1) / 2) * s, ty: (h - HUD) / 2 - ((y0 + y1) / 2) * s }, animate);
+      // Peu d'étoiles : on les montre de près ; beaucoup : on ouvre sur les nuages
+      const fit = Math.min(1, w / (x1 - x0), (h - HUD) / (y1 - y0));
+      if (fit < this.starZoom()) return this.showAll();
+      this.apply({ s: fit, tx: w / 2 - ((x0 + x1) / 2) * fit, ty: (h - HUD) / 2 - ((y0 + y1) / 2) * fit }, animate);
     },
     // Montre une étoile si elle est hors de vue (ou de trop loin pour être lue)
     reveal(name, closer) {
       const p = this.positions[name];
       if (!p) return;
+      if (this.far) {
+        // Une étoile naît pendant qu'on survole les nuages : on plonge sur elle
+        this.far = false;
+        this.touched = true;
+        return this.focusOn(p.x, p.y, Math.max(this.view.s, 0.9));
+      }
       const { s, tx, ty } = this.view;
       const sx = tx + p.x * s;
       const sy = ty + p.y * s;
@@ -408,6 +521,8 @@ export default {
         const mid = { x: (a.x + b.x) / 2, y: (a.y + b.y) / 2 };
         const wx = (this.pinch.mid.x - v0.tx) / v0.s;
         const wy = (this.pinch.mid.y - v0.ty) / v0.s;
+        // Pincer nettement sous la butée : au relâcher, on ressort vers les nuages
+        this.pinch.below = s < this.minZoom() * 0.75;
         const ns = Math.max(this.minZoom() * 0.9, Math.min(MAX_ZOOM, s));
         return this.apply({ s: ns, tx: mid.x - wx * ns, ty: mid.y - wy * ns }, false);
       }
@@ -453,7 +568,10 @@ export default {
       this.pointers.delete(e.pointerId);
       clearTimeout(this.pressTimer);
       if (this.pinch) {
-        if (this.pointers.size < 2) this.pinch = null;
+        if (this.pointers.size < 2) {
+          if (this.pinch.below) this.showAll();
+          this.pinch = null;
+        }
         return;
       }
       const d = this.drag;
@@ -507,7 +625,9 @@ export default {
       this.touched = true;
       this.stopInertia();
       const p = this.local(e);
-      this.zoomAt(p.x, p.y, this.view.s * Math.exp(-e.deltaY * 0.0016), false);
+      const s = this.view.s * Math.exp(-e.deltaY * 0.0016);
+      if (s < this.minZoom() * 0.75) return this.showAll();
+      this.zoomAt(p.x, p.y, s, false);
     },
     cancelDrag() {
       const d = this.drag;
@@ -519,6 +639,7 @@ export default {
 
     // ——— Jeu ———
     pick(name, rect = null) {
+      if (this.lit.has(name)) this.lit = new Set();
       vibrate(HAPTIC.tap);
       this.pulse(name, 'echo');
       this.$emit('select', name, rect);
@@ -567,6 +688,7 @@ export default {
 .sky {
   position: relative;
   height: 600px;
+  margin: 12px 0 16px;
   overflow: hidden;
   touch-action: none;
   user-select: none;
@@ -599,10 +721,6 @@ export default {
   transform: translate(-50%, -100%);
 }
 .sky__short { display: none; }
-/* Vue lointaine : nom court, toujours lisible à l'écran */
-.sky--far .sky__full { display: none; }
-.sky--far .sky__short { display: inline; }
-.sky--far .sky__family { font-size: max(var(--fmax, 60px), calc(12px * var(--inv, 1))); }
 .sky__family i { font-family: var(--oc-font-mono); font-style: normal; font-size: 0.66em; color: var(--oc-text-muted); }
 .sky__wave {
   position: absolute;
@@ -624,31 +742,129 @@ export default {
   animation: spark 0.85s cubic-bezier(0.1, 0.7, 0.3, 1);
 }
 
-.sky__hud {
+/* Le message flotte au-dessus des boutons, puis s'efface de lui-même : il ne prend pas de place au jeu */
+.sky__msg {
+  position: absolute;
+  left: 12px;
+  right: 12px;
+  bottom: 70px;
+  margin: 0;
+  padding: 6px 10px;
+  text-align: center;
+  font-size: 15px;
+  line-height: 1.3;
+  color: var(--oc-text-muted);
+  background: rgba(7, 6, 10, 0.78);
+  pointer-events: none;
+  animation: msg 6s ease-in forwards;
+}
+@keyframes msg { 0%, 75% { opacity: 1; } 100% { opacity: 0; } }
+.sky__tools {
   position: absolute;
   left: 0;
   right: 0;
   bottom: 0;
   display: flex;
-  flex-direction: column;
-  gap: 10px;
-  padding: 18px 14px 14px;
-  background: linear-gradient(rgba(7, 6, 10, 0), #07060a 40%);
-  pointer-events: none;
+  gap: 6px;
+  padding: 8px;
+  background: linear-gradient(rgba(7, 6, 10, 0), #07060a 55%);
 }
-.sky__msg {
-  margin: 0;
-  min-height: 40px;
+/* Nuages : la vue de loin. Des disques à la taille du pouce, posés sur le ciel */
+.sky__clouds {
+  position: absolute;
+  inset: 0 0 62px;
+  overflow-y: auto;
+  padding: 26px 14px 84px;
   display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-content: flex-start;
+  gap: 26px 22px;
+  background: rgba(7, 6, 10, 0.55);
+  touch-action: pan-y;
+}
+.sky__cloud {
+  appearance: none;
+  flex: none;
+  width: 98px;
+  height: 98px;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
-  text-align: center;
-  font-size: 16px;
-  line-height: 1.3;
-  color: var(--oc-text-muted);
+  gap: 3px;
+  color: var(--oc-text-strong);
+  background: radial-gradient(circle, color-mix(in srgb, var(--c) 36%, transparent) 0%, color-mix(in srgb, var(--c) 14%, transparent) 60%, transparent 72%);
+  box-shadow: inset 0 0 0 1.5px color-mix(in srgb, var(--c) 55%, transparent), 0 0 30px color-mix(in srgb, var(--c) 30%, transparent);
+  transition: transform 0.15s;
+  -webkit-tap-highlight-color: transparent;
 }
-.sky__tools { display: flex; gap: 8px; pointer-events: auto; }
-.sky__all { flex: 1; min-width: 0; min-height: 46px; padding: 0 12px; font-size: 16px; white-space: nowrap; }
+.sky__cloud:active { transform: scale(0.94); }
+.sky__cloud:focus-visible { outline: 2px solid var(--oc-gold); outline-offset: 3px; }
+.sky__cloud-inks { display: flex; gap: 3px; font-size: 17px; line-height: 1; filter: drop-shadow(0 0 3px #07060a); }
+.sky__cloud-name { max-width: 96px; font-family: var(--oc-font-display); font-size: 13px; letter-spacing: 0.04em; color: var(--c); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.sky__cloud-count { font-family: var(--oc-font-mono); font-size: 9px; color: var(--oc-text-muted); }
+@media (min-width: 700px) {
+  .sky__cloud { width: 136px; height: 136px; }
+  .sky__cloud-inks { font-size: 22px; }
+  .sky__cloud-name { max-width: 126px; font-size: 15px; }
+}
+.clouds-enter-active, .clouds-leave-active { transition: opacity 0.3s, transform 0.3s; }
+.clouds-enter-from { opacity: 0; transform: scale(1.08); }
+.clouds-leave-to { opacity: 0; transform: scale(0.92); }
+
+
+/* Recherche */
+.sky__search {
+  position: absolute;
+  left: 8px;
+  right: 8px;
+  bottom: 62px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  padding: 10px;
+  background: rgba(19, 17, 27, 0.96);
+  box-shadow: inset 0 0 0 1px var(--oc-accent-line), 0 12px 30px rgba(0, 0, 0, 0.6);
+}
+.sky__field { flex: 1; min-width: 0; display: flex; }
+.sky__field input {
+  flex: 1;
+  min-width: 0;
+  height: 44px;
+  padding: 0 10px;
+  border: 0;
+  outline: none;
+  font-family: var(--oc-font-italic);
+  font-style: italic;
+  font-size: 18px;
+  color: var(--oc-text-strong);
+  background: transparent;
+  border-bottom: 1px solid var(--oc-accent-line);
+}
+.sky__close { appearance: none; width: 44px; height: 44px; border: 0; cursor: pointer; font-size: 24px; color: var(--oc-text-muted); background: none; }
+.sky__results { flex-basis: 100%; display: flex; flex-wrap: wrap; gap: 6px; }
+.sky__result {
+  appearance: none;
+  min-height: 40px;
+  padding: 0 12px 0 8px;
+  border: 0;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 14px;
+  color: var(--oc-text-strong);
+  background: rgba(233, 223, 200, 0.05);
+  box-shadow: inset 0 0 0 1px var(--oc-line-strong);
+}
+.sky__result .g-ink { font-size: 20px; line-height: 1; }
+.sky__none { font-size: 14px; color: var(--oc-text-muted); }
+.sky__all { flex: 1; min-width: 0; min-height: 46px; padding: 0 10px; font-size: 15px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .sky__zoom,
 .sky__clue {
   appearance: none;

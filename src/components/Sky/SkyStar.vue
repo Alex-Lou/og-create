@@ -1,7 +1,7 @@
 <template>
   <button
     type="button"
-    :class="['star', { 'star--hover': hover, 'star--drag': dragging, 'star--picked': picked }]"
+    :class="['star', { 'star--hover': hover, 'star--drag': dragging, 'star--picked': picked, 'star--lit': lit }]"
     :style="{ transform, '--c': color }"
     :aria-label="name"
     @pointerdown="$emit('down', $event, name)"
@@ -31,6 +31,8 @@ export default {
     hover: { type: Boolean, default: false },
     dragging: { type: Boolean, default: false },
     picked: { type: Boolean, default: false },
+    // Allumée par la recherche
+    lit: { type: Boolean, default: false },
     // { kind: 'born' | 'echo' | 'shake', n } : animation à rejouer
     pulse: { type: Object, default: null }
   },
@@ -91,7 +93,9 @@ export default {
 }
 .star__ink { font-size: 30px; line-height: 1; }
 .star--hover .star__body { box-shadow: 0 0 0 3px var(--oc-gold-strong), 0 0 48px var(--oc-gold-strong); }
-.star--picked .star__body { animation: picked 1.3s infinite; }
+.star--picked .star__body,
+.star--lit .star__body { animation: picked 1.3s infinite; }
+.star--lit { z-index: 4; }
 .star__body--born { animation: born 0.95s cubic-bezier(0.2, 0.8, 0.2, 1); }
 .star__body--echo { animation: echo 0.6s ease-out; }
 .star__body--shake { animation: shake 0.45s ease-out; }

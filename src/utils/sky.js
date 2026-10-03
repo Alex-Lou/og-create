@@ -2,10 +2,10 @@
 // Calcul pur et déterministe : la même collection donne toujours le même ciel.
 
 // Écart entre étoiles voisines (spirale de Vogel : r = STEP·√i) et marge autour d'une constellation
-const STEP = 66;
+const STEP = 92;
 const GOLDEN = 2.39996;
-const PAD = 130;
-const ROW_GAP = 150;
+const PAD = 150;
+const ROW_GAP = 180;
 
 // Rayon occupé par une constellation de `total` étoiles
 export function spreadOf(total) {
