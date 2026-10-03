@@ -43,11 +43,21 @@
         </template>
       </AppHeader>
 
-      <main id="main-content" ref="mainContent" class="oc-app__main">
+      <main id="main-content" ref="mainContent" :class="['oc-app__main', { 'oc-app__main--world': isWorldActive }]">
         <div class="oc-app__inventory">
+          <!-- Le Monde : l'île du joueur -->
+          <WorldView
+            v-if="isWorldActive"
+            :discoveredElements="discoveredElements"
+            :elementEmojis="elementEmojis"
+            :isLoggedIn="isLoggedIn"
+            @coins-updated="handleCoinsUpdated"
+            @show-alert="showAlert"
+            @login="$refs.accountMenu?.openSeuil()"
+          />
           <!-- Mode principal : le Livre ; l'Épreuve garde son inventaire -->
           <BookView
-            v-if="!isTimerActive"
+            v-else-if="!isTimerActive"
             :discoveredElements="discoveredElements"
             :elementEmojis="elementEmojis"
             :isLoggedIn="isLoggedIn"
@@ -74,7 +84,7 @@
             @hint="useInfiniteHint"
           />
         </div>
-        <div class="oc-app__craft">
+        <div v-show="!isWorldActive" class="oc-app__craft">
           <TimerBrief
             v-if="isTimerActive && timerQuestion?.text"
             :question="timerQuestion"
@@ -225,6 +235,7 @@ import AppHeader from '../Game/AppHeader.vue';
 import ModeSwitcher from '../Game/ModeSwitcher.vue';
 import CraftZone from '../Game/CraftZone.vue';
 import BookView from '../Book/BookView.vue';
+import WorldView from '../World/WorldView.vue';
 import LivingBackground from '../Game/LivingBackground.vue';
 import { ERA_NAMES, familyColor, discoveredFamilies, eraOf, slotCountForEra, sortFamilies, stageOf, populationFor } from '@/utils/eras';
 
@@ -245,6 +256,7 @@ export default {
     ModeSwitcher,
     CraftZone,
     BookView,
+    WorldView,
     LivingBackground,
     ContactModal,
     GameAchievementsPopup,
@@ -291,6 +303,8 @@ export default {
       showContact: false,
       showSceau: false,
       isTimerActive: false,
+      // Le Monde (île du joueur) affiché à la place du Livre et de l'Athanor
+      isWorldActive: false,
       showTimerEndModal: false,
       timerModeDiscoveries: 0,
       // Inventaire Infini mis de côté pendant une session Timer (null hors Timer)
@@ -356,6 +370,7 @@ export default {
 },
 computed: {
   currentMode() {
+    if (this.isWorldActive) return 'world';
     return this.isTimerActive ? 'timer' : 'infinite';
   },
   // La progression (ère, fond) suit toujours l'inventaire Infini, même pendant un Timer
@@ -1049,6 +1064,16 @@ checkAuth() {
     },
     handleModeSelect(mode) {
       if (mode === this.currentMode) return;
+      if (mode === 'world') {
+        // L'Épreuve en cours se termine d'abord (elle a son propre inventaire)
+        if (this.isTimerActive) {
+          this.showAlert('Termine ou quitte l’Épreuve avant d’aller sur ton île.');
+          return;
+        }
+        this.isWorldActive = true;
+        return;
+      }
+      this.isWorldActive = false;
       if (mode === 'timer') {
         this.$refs.timerModeButton?.startTimer();
       } else if (this.isTimerActive) {
@@ -1336,6 +1361,7 @@ handleCraftSuccess(craftedItem, ingredients = []) {
   padding: 0 var(--oc-gutter) calc(var(--oc-overlay, var(--oc-dock-height)) + 24px);
 }
 .oc-app__main { display: block; }
+.oc-app__main--world { display: block !important; max-width: 760px; margin: 0 auto; }
 .oc-app__inventory { min-width: 0; }
 @media (min-width: 860px) {
   .oc-app__shell { padding-bottom: 32px; }
