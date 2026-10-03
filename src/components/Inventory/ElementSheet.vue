@@ -14,6 +14,9 @@
     </p>
 
     <template #actions>
+      <button type="button" class="g-btn g-btn--ghost" :aria-pressed="pinned" :disabled="!pinned && full" @click="pin">
+        {{ pinned ? 'Retirer de « Sous la main »' : full ? 'Sous la main est plein' : 'Garder sous la main' }}
+      </button>
       <button type="button" class="g-btn" @click="$emit('use', name)">Poser dans l’Athanor</button>
     </template>
   </GModal>
@@ -23,6 +26,7 @@
 import GModal from '@/components/ui/GModal.vue';
 import { BASE_ELEMENTS } from '@/utils/gameConstants';
 import ElementGlyph from '@/components/ui/ElementGlyph.vue';
+import { handy, PIN_MAX, isPinned, togglePin } from '@/utils/handy';
 
 // Fiche d'un élément du registre : d'où il vient, ce qu'il cache encore
 export default {
@@ -43,6 +47,17 @@ export default {
   computed: {
     isBase() {
       return BASE_ELEMENTS.includes(this.name);
+    },
+    pinned() {
+      return handy.pins.includes(this.name);
+    },
+    full() {
+      return handy.pins.length >= PIN_MAX;
+    }
+  },
+  methods: {
+    pin() {
+      if (isPinned(this.name) || !this.full) togglePin(this.name);
     }
   }
 };
