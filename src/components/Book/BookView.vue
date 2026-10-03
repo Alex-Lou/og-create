@@ -164,6 +164,16 @@ export default {
     pageHint() {
       return this.pageClue ? this.pageClue.revealed : null;
     },
+    // Ingrédients proposés pour la page : le plateau du serveur (bons ingrédients et leurres), sinon ses familles
+    pageList() {
+      if (!this.pageClue) return [];
+      if (this.pageClue.tray) {
+        const owned = new Set(this.discoveredElements);
+        return this.pageClue.tray.filter(name => owned.has(name));
+      }
+      const wanted = new Set(this.pageClue.families);
+      return [...this.discoveredElements].reverse().filter(name => wanted.has(this.familyOf[name]));
+    },
     activeFilter() {
       if (this.filter !== 'auto') return this.filter;
       return this.pageClue ? 'page' : 'all';
@@ -176,10 +186,7 @@ export default {
         if (family) counts[family] = (counts[family] || 0) + 1;
       });
       const pills = [];
-      if (this.pageClue) {
-        const wanted = new Set(this.pageClue.families);
-        pills.push({ id: 'page', label: '✦ Pour cette page', count: owned.filter(n => wanted.has(this.familyOf[n])).length });
-      }
+      if (this.pageClue) pills.push({ id: 'page', label: '✦ Pour cette page', count: this.pageList.length });
       pills.push({ id: 'all', label: 'Tout', count: owned.length });
       Object.keys(this.categories).forEach(family => {
         if (counts[family]) pills.push({ id: family, label: family === 'Elements Fondamentaux' ? 'Éléments premiers' : family, count: counts[family] });
@@ -192,9 +199,8 @@ export default {
       const active = this.activeFilter;
       if (active === 'all') return newestFirst;
       if (active === 'page' && this.pageClue) {
-        const wanted = new Set(this.pageClue.families);
-        const list = newestFirst.filter(name => wanted.has(this.familyOf[name]));
-        // L'ingrédient révélé par l'Encre passe en tête
+        const list = this.pageList;
+        // L'ingrédient révélé (encre ou offert) passe en tête
         const hint = this.pageClue.revealed;
         return hint && list.includes(hint) ? [hint, ...list.filter(n => n !== hint)] : list;
       }
@@ -256,16 +262,19 @@ export default {
         for (const page of chapter.pages) {
           models.push(page.status === 'found'
             ? { type: 'found', key: page.id, chapter, page }
-            : this.reachModel(chapter, page, data.freeInkAfter));
+            : this.reachModel(chapter, page));
         }
-        if (chapter.far) models.push({ type: 'far', key: `far-${chapter.id}`, chapter, count: chapter.far });
+        if (chapter.far || chapter.sealed) models.push({ type: 'far', key: `far-${chapter.id}`, chapter, count: chapter.far, waiting: chapter.sealed || 0 });
       }
       return models;
     },
-    reachModel(chapter, page, need) {
+    reachModel(chapter, page) {
       const aim = this.aims[page.id] || null;
+      const need = page.freeInkAfter;
       const freeInk = Boolean(aim && aim.freeInk) || (need > 0 && page.misses >= need);
-      return { type: 'reach', key: page.id, chapter, page, revealed: this.revealed[page.id] || null, aim, freeInk };
+      // Premiers chapitres : l'ingrédient est offert par le serveur, sans encre
+      const revealed = page.given || this.revealed[page.id] || null;
+      return { type: 'reach', key: page.id, chapter, page, revealed, aim, freeInk };
     },
     // Verdict d'un mélange visé sur cette page (transmis par l'Athanor)
     onAim(aim) {
@@ -289,7 +298,6 @@ export default {
         emojiOf: name => this.elementEmojis[name],
         onReady: () => this.scheduleRepaint(),
         inkPrice: INK_PRICE,
-        freeInkAfter: this.bookData ? this.bookData.freeInkAfter : 0,
         stars: this.stars,
         familiesOf: id => families[id] || []
       };
@@ -354,7 +362,7 @@ export default {
           this.spots = hotspots;
           this.pageLabel = label;
           this.pageClue = model && model.type === 'reach'
-            ? { families: [...new Set(model.page.clue)], revealed: model.revealed || null }
+            ? { families: [...new Set(model.page.clue)], tray: model.page.tray || null, revealed: model.revealed || null }
             : null;
           // L'Athanor vise cette page : ses mélanges y reçoivent un verdict
           const aimed = model && model.type === 'reach' ? model.key : null;
