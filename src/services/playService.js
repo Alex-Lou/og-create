@@ -43,7 +43,7 @@ export default {
   ink(page) {
     return asPlayer(() => http.post('/play/ink', { page }));
   },
-  // Le Monde (compte requis) : { size, rate, capHours, pending, tiles: [{ x, y, element, emoji, family }] }
+  // Le Monde (compte requis) : { size, sites, stock, charges, harvest, rate, capHours, pending, tiles: [{ x, y, element, emoji, family }] }
   world() {
     return http.get('/play/world').then(response => response.data);
   },
@@ -56,6 +56,17 @@ export default {
   // { gained, coins, world }
   worldCollect() {
     return http.post('/play/world/collect').then(response => response.data);
+  },
+  // { built, world }
+  worldBuild(site) {
+    return http.post('/play/world/build', { site }).then(response => response.data);
+  },
+  // Récolte : { id, seed, kinds, maxMoves, boosts } puis { gains, world } une fois les coups rejoués par le serveur
+  harvestStart() {
+    return http.post('/play/world/harvest/start').then(response => response.data);
+  },
+  harvestFinish(run, moves) {
+    return http.post('/play/world/harvest/finish', { run, moves }).then(response => response.data);
   },
   // { origins: [[ingrédients]], more }
   origins(name) {
