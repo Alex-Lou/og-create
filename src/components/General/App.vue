@@ -58,6 +58,7 @@
           <!-- Mode principal : le Livre ; l'Épreuve garde son inventaire -->
           <BookView
             v-else-if="!isTimerActive"
+            ref="book"
             :discoveredElements="discoveredElements"
             :elementEmojis="elementEmojis"
             :isLoggedIn="isLoggedIn"
@@ -67,6 +68,7 @@
             @select="handleResourceSelection"
             @coins-updated="handleCoinsUpdated"
             @show-alert="showAlert"
+            @aim="bookAim = $event"
           />
           <GameInventory
             v-else
@@ -99,6 +101,8 @@
             :mode="currentMode"
             :elementEmojis="elementEmojis"
             :failText="currentMode === 'infinite' ? infiniteFailLine : null"
+            :aimPage="currentMode === 'infinite' ? bookAim : null"
+            @aimed="$refs.book?.onAim($event)"
             @learned="learnElement"
             @craft-success="handleCraftSuccess"
             @discovery="handleDiscovery"
@@ -294,6 +298,8 @@ export default {
       achievementQueue: [],
       // Dernière découverte, mise en valeur dans l'inventaire
       freshElement: null,
+      // Page à portée ouverte dans le Livre (visée par l'Athanor)
+      bookAim: null,
       // Révélation d'une création en cours : les popups de succès attendent
       isRevealing: false,
       isLoggedIn: false,

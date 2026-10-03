@@ -27,8 +27,9 @@ export default {
     return asPlayer(() => http.get('/play/state'));
   },
   // { result: null } ou { result, emoji, family, isNew, unexplored? }
-  combine(mode, ingredients) {
-    return asPlayer(() => http.post('/play/combine', { mode, ingredients }));
+  // page : page du Livre visée (facultatif) ; la réponse dit alors combien d'ingrédients sont justes
+  combine(mode, ingredients, page = null) {
+    return asPlayer(() => http.post('/play/combine', page ? { mode, ingredients, page } : { mode, ingredients }));
   },
   // Début d'une question de l'Épreuve ({ questionId, launch })
   startRun(mode, details) {
