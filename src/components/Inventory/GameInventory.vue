@@ -1,152 +1,84 @@
 <template>
   <div class="registry">
+    <!-- Une seule ligne d'outils : la recherche sous les yeux, la piste à côté -->
     <div class="registry__tools">
       <label class="registry__search">
-        <span class="oc-sr-only">Chercher dans le registre</span>
+        <span class="oc-sr-only">Chercher un élément ou une famille</span>
         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" aria-hidden="true"><circle cx="11" cy="11" r="6.5"></circle><path d="M16 16l4.5 4.5"></path></svg>
         <input
           ref="search"
           v-model="query"
           type="search"
-          :placeholder="`Chercher parmi ${discoveredElements.length} entrées…`"
+          :placeholder="`Chercher parmi ${discoveredElements.length} éléments…`"
           autocomplete="off"
           enterkeyhint="go"
           @keydown.enter.prevent="onSearchEnter"
           @keydown.esc="query = ''"
         />
       </label>
-      <!-- Outils de l'Infini : fiches, entrées à compléter, piste payante -->
-      <div v-if="!isTimerMode" class="registry__aids" role="group" aria-label="Aides">
-        <button type="button" :aria-pressed="inspecting" title="Toucher une planche ouvre sa fiche" @click="inspecting = !inspecting">Fiches</button>
-        <button type="button" :aria-pressed="unfinishedOnly" title="Entrées qui donnent encore des éléments inconnus" @click="unfinishedOnly = !unfinishedOnly">À compléter</button>
-        <button type="button" class="registry__clue" @click="$emit('hint')">Une piste <i>{{ hintPrice }} écus</i></button>
-      </div>
-      <div v-if="!isTimerMode" class="registry__sort" role="group" aria-label="Classer le registre">
-        <span class="g-mono">Classer</span>
-        <button v-for="s in sorts" :key="s.key" type="button" :aria-pressed="sort === s.key" @click="setSort(s.key)">{{ s.label }}</button>
-      </div>
-      <p v-if="!isTimerMode && reachable !== null" class="registry__reach" aria-live="polite">{{ reachText }}</p>
-      <div v-if="families.length > 1" class="registry__index" role="group" aria-label="Familles">
-        <button type="button" class="registry__fold" @click="toggleAll">{{ allCollapsed ? 'Tout déplier' : 'Tout plier' }}</button>
-        <button type="button" :aria-pressed="!family" @click="family = null">Tout le registre</button>
-        <button
-          v-for="f in families"
-          :key="f.key"
-          type="button"
-          :aria-pressed="family === f.key"
-          @click="family = family === f.key ? null : f.key"
-        >
-          <i>{{ f.num }}</i>{{ f.label }}
-        </button>
-      </div>
+      <button v-if="!isTimerMode" type="button" class="registry__clue" @click="$emit('hint')">Piste <i>{{ hintPrice }}</i></button>
     </div>
 
     <!-- Sous la main : épinglés d'abord, puis les derniers éléments posés -->
-    <section v-if="handyElements.length" class="family family--handy" aria-label="Sous la main">
-      <div class="family__head family__head--static">
-        <span class="family__num">✦</span>
-        <h2 class="family__title">Sous la main</h2>
-        <span class="family__dots" aria-hidden="true"></span>
-      </div>
+    <section v-if="handyElements.length" class="shelf shelf--handy" aria-label="Sous la main">
+      <h2 class="shelf__title">Sous la main</h2>
       <div class="plates plates--row">
         <button
           v-for="element in handyElements"
           :key="element"
-          type="button"
-          :class="['plate', 'g-bevel', { 'plate--inspect': inspecting }]"
-          draggable="true"
-          @dragstart="startDrag($event, element)"
-          @click="select($event, element)"
-          @contextmenu.prevent="$emit('inspect', element)"
+          v-bind="plateProps(element)"
         >
-          <span v-if="pinned.has(element)" class="plate__no plate__pin" aria-label="épinglé">★</span>
+          <span v-if="pinned.has(element)" class="plate__pin" aria-hidden="true">★</span>
           <span class="plate__ink g-ink" aria-hidden="true"><ElementGlyph :glyph="getElementEmoji(element)" /></span>
-          <span class="plate__name">{{ element }}</span>
+          <span :class="['plate__name', { 'plate__name--long': isLong(element) }]">{{ element }}</span>
         </button>
       </div>
     </section>
 
-    <p v-if="query.trim() && family" class="registry__scope g-mono">
-      dans : {{ familyLabel }}
-      <button type="button" aria-label="Chercher dans tout le registre" @click="family = null">✕</button>
-    </p>
-
-    <section v-for="group in visibleGroups" :key="group.key" class="family">
-      <div v-if="group.flat" class="family__head family__head--static">
-        <span class="family__num">{{ group.num }}</span>
-        <h2 class="family__title">{{ group.label }}</h2>
-        <span class="family__dots" aria-hidden="true"></span>
-        <span class="family__count">{{ group.found }}</span>
+    <section v-for="shelf in shelves" :key="shelf.key" :class="['shelf', { 'shelf--spent': shelf.spent }]">
+      <div class="shelf__head">
+        <h2 class="shelf__title">{{ shelf.label }}</h2>
+        <span class="shelf__note">{{ shelf.note }}</span>
       </div>
-      <button v-else type="button" class="family__head" :aria-expanded="isOpen(group.key)" @click="toggle(group.key)">
-        <span class="family__num">{{ group.num }}</span>
-        <h2 class="family__title">{{ group.label }}</h2>
-        <span class="family__dots" aria-hidden="true"></span>
-        <span :class="['family__count', { 'is-full': group.found === group.total }]">{{ pad(group.found) }} / {{ pad(group.total) }}</span>
-      </button>
-      <div v-show="group.flat || isOpen(group.key)" class="plates">
+      <div class="plates">
         <button
-          v-for="element in group.elements"
+          v-for="element in shelf.elements"
           :key="element"
-          type="button"
-          :class="['plate', 'g-bevel', { 'plate--fresh': element === freshElement, 'plate--inspect': inspecting }]"
-          draggable="true"
-          @dragstart="startDrag($event, element)"
-          @click="select($event, element)"
-          @contextmenu.prevent="!isTimerMode && $emit('inspect', element)"
+          v-bind="plateProps(element)"
         >
-          <span class="plate__no">Pl. {{ pad(entryNumber[element]) }}</span>
+          <span class="plate__dot" :style="{ background: dotColor(element) }" aria-hidden="true"></span>
+          <span v-if="!isTimerMode && unexplored[element] > 0" class="plate__left" aria-hidden="true">{{ unexplored[element] > 9 ? '9+' : unexplored[element] }}</span>
           <span :class="['plate__ink', element === freshElement ? 'g-ink--glow' : 'g-ink']" aria-hidden="true"><ElementGlyph :glyph="getElementEmoji(element)" /></span>
-          <span class="plate__name">{{ element }}</span>
+          <span :class="['plate__name', { 'plate__name--long': isLong(element) }]">{{ element }}</span>
         </button>
       </div>
     </section>
 
-    <p v-if="!visibleGroups.length" class="g-italic registry__empty">
-      {{ query ? `Aucune entrée ne répond à « ${query} ».` : unfinishedOnly ? 'Tout ce que tu possèdes a livré ses secrets.' : 'Le registre est encore vierge.' }}
+    <p v-if="!shelves.length" class="g-italic registry__empty">
+      {{ query ? `Aucun élément ne répond à « ${query} ».` : 'Le registre est encore vierge.' }}
       <button v-if="suggestion" type="button" class="registry__suggest" @click="query = suggestion">Vouliez-vous dire « {{ suggestion }} » ?</button>
     </p>
   </div>
 </template>
 
 <script>
-import { BASE_CATEGORY } from '@/utils/gameConstants';
-import { roman } from '@/utils/roman';
 import { JOKER_PRICE } from '@/utils/hints';
+import { familyColor } from '@/utils/eras';
 import ElementGlyph from '@/components/ui/ElementGlyph.vue';
 import { search, suggest } from '@/utils/search';
 import { handy, markUsed } from '@/utils/handy';
+import { familyIndex, familyMatches, orderRegistry } from '@/utils/registry';
 
-// Familles pliées : simple confort d'affichage, mémorisé sur cet appareil
-const COLLAPSED_KEY = 'oc-collapsed-families';
-function readCollapsed() {
-  try {
-    return JSON.parse(localStorage.getItem(COLLAPSED_KEY)) || {};
-  } catch {
-    return {};
-  }
-}
-function saveCollapsed(value) {
-  try {
-    localStorage.setItem(COLLAPSED_KEY, JSON.stringify(value));
-  } catch {
-    // Stockage indisponible (navigation privée…) : le pliage reste valable pour la session
-  }
-}
+// Appui long sur une planche : sa fiche s'ouvre (le toucher simple la pose dans l'Athanor)
+const LONG_PRESS_MS = 480;
+const PRESS_SLOP = 10;
 
-// Classement du registre (Familles, Récentes découvertes, A-Z), mémorisé sur cet appareil
-const SORT_KEY = 'oc-registry-sort';
-const SORTS = [
-  { key: 'families', label: 'Familles' },
-  { key: 'recent', label: 'Récentes' },
-  { key: 'alpha', label: 'A-Z' }
-];
-function readSort() {
+// Glisser une planche vers l'Athanor : seulement à la souris (au doigt, le glisser gênerait le défilement)
+function finePointer() {
   try {
-    const value = localStorage.getItem(SORT_KEY);
-    return SORTS.some(s => s.key === value) ? value : 'families';
+    return window.matchMedia('(pointer: fine)').matches;
   } catch {
-    return 'families';
+    return false;
   }
 }
 
@@ -157,7 +89,8 @@ function typingElsewhere(event) {
   return Boolean(document.querySelector('[aria-modal="true"]'));
 }
 
-// Registre : éléments découverts, en planches groupées par famille (aucun état métier ici)
+// Registre : une seule liste. D'abord ce qui peut encore donner, le plus récent en tête ; les épuisés à la fin.
+// Aucun état métier ici : les compteurs « encore à découvrir » viennent du serveur.
 export default {
   name: 'GameInventory',
   components: { ElementGlyph },
@@ -170,7 +103,7 @@ export default {
     isTimerMode: { type: Boolean, default: false },
     // Dernière découverte, mise en valeur
     freshElement: { type: String, default: null },
-    // Nombre de recettes encore inexplorées par élément (filtre « À compléter »)
+    // Nombre de découvertes encore possibles avec chaque élément (calculé par le serveur)
     unexplored: { type: Object, default: () => ({}) },
     // Nombre d'éléments inconnus créables tout de suite (null : inconnu ou hors Infini)
     reachable: { type: Number, default: null }
@@ -179,79 +112,46 @@ export default {
   data() {
     return {
       query: '',
-      family: null,
-      collapsed: readCollapsed(),
-      inspecting: false,
-      unfinishedOnly: false,
       hintPrice: JOKER_PRICE,
-      sort: readSort(),
-      sorts: SORTS
+      canDrag: finePointer()
     };
   },
   computed: {
-    reachText() {
-      if (this.reachable === 0) return 'Registre complet : plus rien à découvrir.';
-      return this.reachable === 1
-        ? '1 élément nouveau à portée de mélange'
-        : `${this.reachable} éléments nouveaux à portée de mélange`;
+    familyOf() {
+      return familyIndex(this.categories);
     },
-    // Numéro d'entrée au registre : l'ordre de découverte
-    entryNumber() {
-      return Object.fromEntries(this.discoveredElements.map((name, i) => [name, i + 1]));
-    },
-    groups() {
-      // En Timer : l'inventaire de la question forme une seule famille
-      if (this.isTimerMode) {
-        return [this.group('Éléments du défi', this.discoveredElements, this.discoveredElements, 0)];
-      }
-      // Une famille s'affiche dès qu'un de ses éléments est découvert
-      const discovered = new Set(this.discoveredElements);
-      return Object.entries(this.categories)
-        .map(([name, elements], i) => this.group(name, elements, elements.filter(e => discovered.has(e)), i))
-        .filter(g => g.key === BASE_CATEGORY || g.found > 0);
-    },
-    allCollapsed() {
-      return this.groups.length > 0 && this.groups.every(g => this.collapsed[g.key]);
-    },
-    families() {
-      return this.groups.map(({ key, label, num }) => ({ key, label, num }));
-    },
-    familyLabel() {
-      return this.families.find(f => f.key === this.family)?.label || '';
-    },
-    // Éléments retenus par la famille choisie et « À compléter », dans l'ordre des familles
-    pool() {
-      // « À compléter » est un outil de l'Infini : il ne filtre jamais l'inventaire d'une épreuve
-      const unfinished = this.unfinishedOnly && !this.isTimerMode;
-      return this.groups
-        .filter(g => !this.family || g.key === this.family)
-        .flatMap(g => g.elements)
-        .filter(e => !unfinished || this.unexplored[e] > 0);
-    },
-    // Recherche : une seule liste, du plus pertinent au moins pertinent
+    // Recherche : les noms d'abord, puis les éléments d'une famille dont on tape le nom
     results() {
-      return this.query.trim() ? search(this.pool, this.query) : [];
+      if (!this.query.trim()) return [];
+      const byName = search(this.discoveredElements, this.query);
+      const seen = new Set(byName);
+      const byFamily = this.isTimerMode ? [] : familyMatches(this.categories, this.discoveredElements, this.query).filter(n => !seen.has(n));
+      return [...byName, ...byFamily];
     },
     suggestion() {
       if (!this.query.trim() || this.results.length) return null;
-      return suggest(this.pool, this.query);
+      return suggest(this.discoveredElements, this.query);
     },
-    visibleGroups() {
+    reachNote() {
+      if (this.reachable === null) return '';
+      if (this.reachable === 0) return 'plus rien à découvrir';
+      return `${this.reachable} découverte${this.reachable > 1 ? 's' : ''} à portée`;
+    },
+    shelves() {
       if (this.query.trim()) {
-        return this.results.length ? [this.flatGroup('Résultats', this.results)] : [];
+        return this.results.length ? [{ key: 'results', label: 'Résultats', note: String(this.results.length), elements: this.results }] : [];
       }
-      if (this.sort === 'recent' && !this.isTimerMode) {
-        const order = this.entryNumber;
-        return [this.flatGroup('Récentes découvertes', [...this.pool].sort((a, b) => order[b] - order[a]))];
+      // Épreuve : l'inventaire du défi, tel quel
+      if (this.isTimerMode) {
+        return this.discoveredElements.length
+          ? [{ key: 'trial', label: 'Éléments du défi', note: String(this.discoveredElements.length), elements: this.discoveredElements }]
+          : [];
       }
-      if (this.sort === 'alpha' && !this.isTimerMode) {
-        return [this.flatGroup('De A à Z', [...this.pool].sort((a, b) => a.localeCompare(b, 'fr')))];
-      }
-      const kept = new Set(this.pool);
-      return this.groups
-        .filter(g => !this.family || g.key === this.family)
-        .map(g => ({ ...g, elements: g.elements.filter(e => kept.has(e)) }))
-        .filter(g => g.elements.length);
+      const { fertile, spent } = orderRegistry(this.discoveredElements, this.unexplored);
+      const list = [];
+      if (fertile.length) list.push({ key: 'fertile', label: 'À explorer', note: this.reachNote, elements: fertile });
+      if (spent.length) list.push({ key: 'spent', label: 'Épuisés', note: 'ne donnent plus rien de nouveau', elements: spent, spent: true });
+      return list;
     },
     pinned() {
       return new Set(handy.pins);
@@ -273,18 +173,15 @@ export default {
   },
   beforeUnmount() {
     window.removeEventListener('keydown', this.onKey);
+    clearTimeout(this.press?.timer);
   },
   watch: {
-    // Un filtre qui n'existe plus (sortie du Timer…) est oublié
-    families(list) {
-      if (this.family && !list.some(f => f.key === this.family)) this.family = null;
-    },
     // La nouvelle découverte défile en vue, en douceur. « nearest » ne tient pas compte des marges
     // (scroll-margin) : une planche cachée derrière le dock ou la consigne serait jugée visible.
     freshElement(name) {
       if (!name) return;
       this.$nextTick(() => {
-        const el = this.$el.querySelector('.plate--fresh');
+        const el = this.$el.querySelector('.shelf:not(.shelf--handy) .plate--fresh');
         if (!el?.scrollIntoView) return;
         const box = el.getBoundingClientRect();
         const style = getComputedStyle(el);
@@ -296,30 +193,61 @@ export default {
     }
   },
   methods: {
-    // Une recherche ou un filtre en cours affiche toujours les résultats, même dans une famille pliée
-    isOpen(key) {
-      return Boolean(this.query.trim()) || (this.unfinishedOnly && !this.isTimerMode) || !this.collapsed[key];
+    // Attributs communs d'une planche : toucher = Athanor, appui long ou clic droit = fiche, glisser à la souris
+    plateProps(element) {
+      const left = this.unexplored[element] || 0;
+      return {
+        type: 'button',
+        class: ['plate', 'g-bevel', { 'plate--fresh': element === this.freshElement }],
+        'aria-label': this.isTimerMode || !left ? element : `${element}, encore ${left} découverte${left > 1 ? 's' : ''}`,
+        draggable: this.canDrag ? 'true' : 'false',
+        onDragstart: event => this.startDrag(event, element),
+        onPointerdown: event => this.pressStart(event, element),
+        onPointermove: this.pressMove,
+        onPointerup: this.pressEnd,
+        onPointercancel: this.pressEnd,
+        onPointerleave: this.pressEnd,
+        onClick: event => this.select(event, element),
+        // Clic droit, ou appui long natif d'Android : la fiche, une seule fois
+        onContextmenu: event => {
+          event.preventDefault();
+          if (this.isTimerMode || this.press?.fired) return;
+          clearTimeout(this.press?.timer);
+          this.press = { fired: true };
+          this.$emit('inspect', element);
+        }
+      };
     },
-    toggle(key) {
-      this.collapsed = { ...this.collapsed, [key]: !this.collapsed[key] };
-      saveCollapsed(this.collapsed);
+    pressStart(event, element) {
+      clearTimeout(this.press?.timer);
+      this.press = null;
+      if (this.isTimerMode || event.button > 0) return;
+      const press = { x: event.clientX, y: event.clientY, fired: false };
+      press.timer = setTimeout(() => {
+        press.fired = true;
+        navigator.vibrate?.(12);
+        this.$emit('inspect', element);
+      }, LONG_PRESS_MS);
+      this.press = press;
     },
-    toggleAll() {
-      const collapse = !this.allCollapsed;
-      this.collapsed = Object.fromEntries(this.groups.map(g => [g.key, collapse]));
-      saveCollapsed(this.collapsed);
-    },
-    // Liste à plat (recherche, classement par date ou A-Z) : une seule section, sans pliage
-    flatGroup(label, elements) {
-      return { key: `flat:${label}`, num: '§', label, elements, found: elements.length, flat: true };
-    },
-    setSort(key) {
-      this.sort = key;
-      try {
-        localStorage.setItem(SORT_KEY, key);
-      } catch {
-        // Stockage indisponible : le classement reste valable pour la session
+    // Le doigt qui bouge fait défiler la liste : ce n'est plus un appui long
+    pressMove(event) {
+      const press = this.press;
+      if (press && !press.fired && Math.hypot(event.clientX - press.x, event.clientY - press.y) > PRESS_SLOP) {
+        clearTimeout(press.timer);
+        this.press = null;
       }
+    },
+    pressEnd() {
+      clearTimeout(this.press?.timer);
+    },
+    // Un mot de 11 lettres ou plus ne tient pas sur une planche de téléphone : un cran plus petit
+    isLong(element) {
+      return element.split(/[\s'’-]+/).some(word => word.length >= 11);
+    },
+    dotColor(element) {
+      const [r, g, b] = familyColor(this.familyOf[element]);
+      return `rgb(${r}, ${g}, ${b})`;
     },
     // Entrée dans la recherche : le premier résultat part dans l'Athanor ; recherche vide = fusionner
     onSearchEnter() {
@@ -329,23 +257,10 @@ export default {
       }
       const first = this.results[0];
       if (!first) return;
-      const plate = this.$el.querySelector('.family:not(.family--handy) .plate');
+      const plate = this.$el.querySelector('.shelf:not(.shelf--handy) .plate');
       if (!this.isTimerMode) markUsed(first);
       this.$emit('selectResource', first, plate?.getBoundingClientRect() || null);
       this.query = '';
-    },
-    group(name, all, found, index) {
-      return {
-        key: name,
-        num: roman(index + 1),
-        label: name.replace(/_/g, ' '),
-        elements: found,
-        found: found.length,
-        total: this.familyTotals[name] || all.length
-      };
-    },
-    pad(n) {
-      return String(n ?? 0).padStart(2, '0');
     },
     getElementEmoji(element) {
       return this.elementEmojis[element] || '❔';
@@ -356,8 +271,9 @@ export default {
       event.dataTransfer.effectAllowed = 'copy';
     },
     select(event, element) {
-      if (this.inspecting && !this.isTimerMode) {
-        this.$emit('inspect', element);
+      // L'appui long a déjà ouvert la fiche : le relâcher ne pose rien dans l'Athanor
+      if (this.press?.fired) {
+        this.press = null;
         return;
       }
       if (!this.isTimerMode) markUsed(element);
@@ -372,21 +288,24 @@ export default {
 .registry {
   display: flex;
   flex-direction: column;
-  gap: 22px;
+  gap: 18px;
   min-width: 0;
 }
 
+/* Outils : une seule ligne, collée en haut pendant le défilement */
 .registry__tools {
   position: sticky;
   top: 0;
   z-index: 2;
   display: flex;
-  flex-direction: column;
-  gap: 12px;
-  padding: 12px 0 10px;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 0 8px;
   background: linear-gradient(180deg, rgba(12, 10, 8, 0.96) 80%, rgba(12, 10, 8, 0));
 }
 .registry__search {
+  flex: 1;
+  min-width: 0;
   display: flex;
   align-items: center;
   gap: 10px;
@@ -409,167 +328,118 @@ export default {
   color: var(--oc-text-strong);
 }
 .registry__search input::placeholder { color: var(--oc-text-faint); }
-
-.registry__aids { display: flex; flex-wrap: wrap; gap: 8px; }
-.registry__aids button {
+.registry__clue {
   appearance: none;
-  min-height: 34px;
-  padding: 0 12px;
+  flex-shrink: 0;
+  min-height: 44px;
+  padding: 0 14px;
   border: 0;
   cursor: pointer;
   display: flex;
   align-items: center;
   gap: 8px;
-  font-size: 14px;
-  line-height: 1;
-  color: var(--oc-text-muted);
+  font-size: 15px;
+  color: var(--oc-text);
   background: none;
   box-shadow: inset 0 0 0 1px var(--oc-line);
-  transition: color var(--oc-fast), box-shadow var(--oc-fast), background var(--oc-fast);
+  transition: color var(--oc-fast), box-shadow var(--oc-fast);
 }
-.registry__aids button:hover { color: var(--oc-text-strong); box-shadow: inset 0 0 0 1px var(--oc-line-strong); }
-.registry__aids button[aria-pressed='true'] { color: var(--oc-gold); background: var(--oc-gold-soft); box-shadow: inset 0 0 0 1px var(--oc-accent-line); }
-.registry__aids i { font-family: var(--oc-font-mono); font-style: normal; font-size: 9px; color: var(--oc-gold); }
-.registry__clue { margin-left: auto; }
-.registry__reach {
-  margin: 0;
-  font-family: var(--oc-font-italic);
-  font-style: italic;
-  font-size: 15px;
-  color: var(--oc-text-faint);
-}
-.plate--inspect { cursor: help; }
-.plate--inspect .plate__no { color: var(--oc-gold); }
-.registry__index {
-  display: flex;
-  gap: 4px 18px;
-  overflow-x: auto;
-  scrollbar-width: none;
-}
-.registry__index::-webkit-scrollbar { display: none; }
-.registry__index button {
-  appearance: none;
-  flex-shrink: 0;
-  min-height: 36px;
-  padding: 0;
-  border: 0;
-  background: none;
-  cursor: pointer;
-  display: flex;
-  align-items: baseline;
-  gap: 6px;
-  font-size: 14px;
-  color: var(--oc-text-muted);
-  white-space: nowrap;
-}
-.registry__index button i {
-  font-family: var(--oc-font-mono);
-  font-style: normal;
-  font-size: 9px;
-  color: var(--oc-text-faint);
-}
-.registry__index button[aria-pressed='true'] {
-  color: var(--oc-text-strong);
-  text-decoration: underline;
-  text-decoration-color: var(--oc-gold);
-  text-underline-offset: 6px;
-}
-.registry__index .registry__fold {
-  font-family: var(--oc-font-mono);
-  font-size: 10px;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  color: var(--oc-text);
-}
+.registry__clue:hover { color: var(--oc-text-strong); box-shadow: inset 0 0 0 1px var(--oc-line-strong); }
+.registry__clue i { font-family: var(--oc-font-mono); font-style: normal; font-size: 10px; color: var(--oc-gold); }
 
-.family {
+/* Étagères : « Sous la main », « À explorer », « Épuisés » */
+.shelf {
   display: flex;
   flex-direction: column;
-  gap: 12px;
-  /* Voile léger : lisible même pliée, le fond vivant reste visible autour */
-  padding: 8px 12px;
+  gap: 10px;
+  /* Voile léger : lisible, le fond vivant reste visible autour */
+  padding: 8px 12px 12px;
   margin: 0 -12px;
   background: rgba(12, 10, 8, 0.55);
 }
-.family__head {
-  appearance: none;
-  width: 100%;
-  min-height: 40px;
-  padding: 0;
-  border: 0;
-  background: none;
-  cursor: pointer;
-  display: flex;
-  align-items: baseline;
-  gap: 12px;
-  text-align: left;
-  color: inherit;
-}
-.family__num { min-width: 24px; font-family: var(--oc-font-display); font-size: 15px; color: var(--oc-gold); }
-.family__title {
+.shelf__head { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; }
+.shelf__title {
   margin: 0;
   font-family: var(--oc-font-display);
   font-weight: 400;
-  font-size: 19px;
+  font-size: 17px;
   letter-spacing: 0.04em;
   color: var(--oc-text-strong);
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
 }
-.family__dots { flex: 1; min-width: 16px; border-bottom: 1px dotted var(--oc-line-strong); transform: translateY(-4px); }
-.family__count { font-family: var(--oc-font-mono); font-size: 11px; color: var(--oc-text-muted); }
-.family__count.is-full { color: var(--oc-gold); }
-.family__head[aria-expanded='false'] .family__title { color: var(--oc-text-muted); }
-.family__head:hover .family__title { color: var(--oc-gold-strong); }
+.shelf__note { font-family: var(--oc-font-mono); font-size: 10px; letter-spacing: 0.04em; color: var(--oc-text-muted); text-align: right; }
+.shelf--handy { background: rgba(12, 10, 8, 0.72); box-shadow: inset 0 0 0 1px var(--oc-accent-line); }
+.shelf--handy .shelf__title { font-size: 14px; color: var(--oc-gold); }
+/* Épuisés : encore utilisables, mais en retrait */
+.shelf--spent .shelf__title { color: var(--oc-text-muted); }
+.shelf--spent .plate { opacity: 0.5; }
+.shelf--spent .plate:hover, .shelf--spent .plate:focus-visible { opacity: 1; }
 
 .plates {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(96px, 1fr));
-  gap: 10px;
+  grid-template-columns: repeat(auto-fill, minmax(88px, 1fr));
+  gap: 8px;
 }
 .plate {
   appearance: none;
   position: relative;
-  min-height: 104px;
-  padding: 16px 6px 10px;
+  min-height: 92px;
+  padding: 14px 4px 8px;
   border: 0;
-  cursor: grab;
+  cursor: pointer;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 8px;
+  gap: 6px;
   color: var(--oc-text);
   background: linear-gradient(180deg, rgba(233, 223, 200, 0.05), rgba(233, 223, 200, 0.015));
   box-shadow: inset 0 0 0 1px var(--oc-line);
   user-select: none;
   -webkit-user-select: none;
-  transition: background var(--oc-fast), box-shadow var(--oc-fast), transform var(--oc-fast) var(--oc-ease-out);
+  -webkit-touch-callout: none;
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+  transition: background var(--oc-fast), box-shadow var(--oc-fast), transform var(--oc-fast) var(--oc-ease-out), opacity var(--oc-fast);
 }
+.plate[draggable='true'] { cursor: grab; }
 .plate:hover { background: var(--oc-surface-hover); box-shadow: inset 0 0 0 1px var(--oc-line-strong); }
 .plate:hover .plate__ink { animation: quiver 0.5s var(--oc-ease-spring); }
-.plate:active { transform: scale(0.96); }
-.plate__no {
+.plate:active { transform: scale(0.95); }
+/* Point de famille, en haut à gauche ; découvertes restantes, en haut à droite */
+.plate__dot { position: absolute; top: 7px; left: 7px; width: 6px; height: 6px; border-radius: 50%; opacity: 0.85; }
+.plate__left, .plate__pin {
   position: absolute;
-  top: 6px;
-  right: 10px;
+  top: 4px;
+  right: 6px;
   font-family: var(--oc-font-mono);
-  font-size: 8px;
-  letter-spacing: 0.06em;
-  color: var(--oc-text-faint);
+  font-size: 10px;
+  line-height: 1;
+  color: var(--oc-gold);
 }
-.plate__ink { font-size: 30px; line-height: 1; }
-.plate__name { max-width: 100%; padding: 0 4px; font-size: 14px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.plate__ink { font-size: 28px; line-height: 1; }
+.plate__name {
+  max-width: 100%;
+  padding: 0 2px;
+  font-size: 13px;
+  line-height: 1.15;
+  text-align: center;
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  /* Noms longs : césure française aux bonnes syllabes, jamais au milieu d'une lettre isolée */
+  hyphens: auto;
+  -webkit-hyphens: auto;
+  overflow-wrap: break-word;
+}
 .plate--fresh { box-shadow: inset 0 0 0 1px rgba(224, 182, 84, 0.75), var(--oc-shadow-accent); animation: fresh 1.6s var(--oc-ease-out); }
-.plate--fresh .plate__no { color: var(--oc-gold); }
 
 .registry__empty { margin: 24px 0; text-align: center; }
 .registry__suggest {
   appearance: none;
   display: block;
   margin: 10px auto 0;
-  min-height: 36px;
+  min-height: 44px;
   padding: 0 14px;
   border: 0;
   cursor: pointer;
@@ -579,39 +449,9 @@ export default {
   box-shadow: inset 0 0 0 1px var(--oc-accent-line);
 }
 
-.registry__sort { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
-.registry__sort .g-mono { font-size: 10px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--oc-text-faint); }
-.registry__sort button {
-  appearance: none;
-  min-height: 32px;
-  padding: 0 10px;
-  border: 0;
-  cursor: pointer;
-  font-size: 13px;
-  color: var(--oc-text-muted);
-  background: none;
-  box-shadow: inset 0 0 0 1px var(--oc-line);
-}
-.registry__sort button[aria-pressed='true'] { color: var(--oc-gold); background: var(--oc-gold-soft); box-shadow: inset 0 0 0 1px var(--oc-accent-line); }
-
-.registry__scope { display: flex; align-items: center; gap: 8px; margin: -8px 0 0; font-size: 11px; color: var(--oc-text-muted); }
-.registry__scope button {
-  appearance: none;
-  min-width: 32px;
-  min-height: 32px;
-  border: 0;
-  cursor: pointer;
-  color: var(--oc-text);
-  background: none;
-  box-shadow: inset 0 0 0 1px var(--oc-line);
-}
-
-.family__head--static { cursor: default; }
-.family--handy { background: rgba(12, 10, 8, 0.72); box-shadow: inset 0 0 0 1px var(--oc-accent-line); }
 /* Sous la main : une seule rangée qui défile de côté, jamais plus haute */
-.plates--row { display: flex; gap: 10px; overflow-x: auto; scrollbar-width: thin; padding-bottom: 4px; }
-.plates--row .plate { flex: 0 0 96px; }
-.plate__pin { color: var(--oc-gold); font-size: 11px; }
+.plates--row { display: flex; gap: 8px; overflow-x: auto; scrollbar-width: thin; padding-bottom: 4px; }
+.plates--row .plate { flex: 0 0 88px; }
 
 @keyframes quiver {
   35% { transform: rotate(-7deg) scale(1.1); }
@@ -622,16 +462,20 @@ export default {
   40% { transform: scale(1.05); }
   100% { transform: none; }
 }
+@media (prefers-reduced-motion: reduce) {
+  .plate:hover .plate__ink, .plate--fresh { animation: none; }
+}
 
-/* Mobile : planches compactes, 4 par ligne sur la plupart des téléphones */
+/* Mobile : 5 planches par ligne sur la plupart des téléphones, cibles de 60 px et plus */
 @media (max-width: 859px) {
-  .registry { gap: 14px; }
-  .plates { grid-template-columns: repeat(auto-fill, minmax(74px, 1fr)); gap: 8px; }
-  .plate { min-height: 82px; padding: 14px 2px 6px; gap: 5px; --oc-bevel: 8px; }
+  .registry { gap: 12px; }
+  .plates { grid-template-columns: repeat(auto-fill, minmax(60px, 1fr)); gap: 6px; }
+  .plate { min-height: 72px; padding: 12px 2px 5px; gap: 4px; --oc-bevel: 7px; }
   /* Une nouvelle découverte défile au-dessus des panneaux fixés en bas (dock, consigne) */
-  .plate { scroll-margin: 96px 0 calc(var(--oc-overlay, 120px) + 16px); }
-  .plate__ink { font-size: 24px; }
-  .plate__name { font-size: 12px; }
-  .plates--row .plate { flex-basis: 74px; }
+  .plate { scroll-margin: 70px 0 calc(var(--oc-overlay, 120px) + 16px); }
+  .plate__ink { font-size: 23px; }
+  .plate__name { font-size: 11px; }
+  .plate__name--long { font-size: 9.5px; letter-spacing: -0.01em; }
+  .plates--row .plate { flex-basis: 64px; }
 }
 </style>
