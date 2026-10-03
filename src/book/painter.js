@@ -327,6 +327,7 @@ function paintFound(ctx, u, model, i, assets) {
 
 function paintReach(ctx, u, model, i, assets) {
   const { chapter, page, revealed, aim, freeInk } = model;
+  const given = Boolean(page.given);
   const style = CHAPTER_STYLE[chapter.id];
   frame(ctx, u, style.ink);
   header(ctx, u, chapter, style, 0);
@@ -357,7 +358,7 @@ function paintReach(ctx, u, model, i, assets) {
   const parts = page.clue.map((family, k) => (k === 0 && revealed ? { name: revealed, emoji: assets.emojiOf(revealed) } : null));
   recipeRow(ctx, u, parts, null, style.ink, assets.onReady);
   // Verdict du dernier essai visé (ou essais ratés), rétréci pour tenir sur une ligne
-  const note = aimNote(aim, page.misses, assets.freeInkAfter);
+  const note = aimNote(aim, page.misses, page.freeInkAfter);
   if (note) {
     let size = 3.4;
     do {
@@ -379,16 +380,17 @@ function paintReach(ctx, u, model, i, assets) {
   ctx.fillStyle = revealed ? '#BDAA94' : '#FFFDF8';
   ctx.textAlign = 'center';
   ctx.textBaseline = 'middle';
-  ctx.fillText(revealed ? 'Encre utilisée' : freeInk ? '✒︎ Encre offerte' : `✒︎ Encre · ${assets.inkPrice} écus`, 52 * u, 119.7 * u);
+  const done = given ? 'Ingrédient offert' : 'Encre utilisée';
+  ctx.fillText(revealed ? done : freeInk ? '✒︎ Encre offerte' : `✒︎ Encre · ${assets.inkPrice} écus`, 52 * u, 119.7 * u);
   ctx.textBaseline = 'alphabetic';
   if (!revealed) hotspots.push({ id: 'ink', x: 28, y: 115.5, w: 48, h: 8, action: 'ink', data: page.id, label: freeInk ? 'Encre offerte : révéler un ingrédient' : `Encre : révéler un ingrédient pour ${assets.inkPrice} écus` });
   folio(ctx, u, i);
   const start = page.first ? `, commence par ${page.first}` : '';
-  return { hotspots, label: `Page à trouver : ${familyName(page.family)}, ${page.letters} lettres${start}. ${clueText(page.clue, page.groups)}${note ? ` ${note}.` : ''}${revealed ? ` Un ingrédient : ${revealed}.` : ''}` };
+  return { hotspots, label: `Page à trouver : ${familyName(page.family)}, ${page.letters} lettres${start}. ${clueText(page.clue, page.groups)}${note ? ` ${note}.` : ''}${revealed ? ` ${given ? 'Ingrédient offert' : 'Un ingrédient'} : ${revealed}.` : ''}` };
 }
 
 function paintFar(ctx, u, model, i) {
-  const { chapter, count } = model;
+  const { chapter, count, waiting = 0 } = model;
   const style = CHAPTER_STYLE[chapter.id];
   frame(ctx, u, style.ink);
   header(ctx, u, chapter, style, null);
@@ -397,13 +399,23 @@ function paintFar(ctx, u, model, i) {
   setFont(ctx, u, 7.6, 600, TITLE, false);
   ctx.fillStyle = '#4A3426';
   ctx.textAlign = 'center';
-  ctx.fillText(`${count} page${count > 1 ? 's' : ''} lointaine${count > 1 ? 's' : ''}`, 52 * u, 67 * u);
+  const far = `${count} page${count > 1 ? 's' : ''} lointaine${count > 1 ? 's' : ''}`;
+  // Pages à portée pas encore ouvertes : elles viennent une à une, les plus simples d'abord
+  const queued = `${waiting} page${waiting > 1 ? 's' : ''} en attente`;
+  ctx.fillText(waiting ? queued : far, 52 * u, 67 * u);
   setFont(ctx, u, 4.3, 400, TITLE, true);
   ctx.fillStyle = '#8A7262';
-  wrap(ctx, 'Il te manque encore des ingrédients pour les tenter. Chaque découverte en rapproche quelques-unes.', 72 * u)
-    .forEach((line, k) => ctx.fillText(line, 52 * u, (76 + k * 5.8) * u));
+  const text = waiting
+    ? 'Elles s’ouvrent une à une : chaque page trouvée dans ce chapitre en ouvre une autre.'
+    : 'Il te manque encore des ingrédients pour les tenter. Chaque découverte en rapproche quelques-unes.';
+  const lines = wrap(ctx, text, 72 * u);
+  lines.forEach((line, k) => ctx.fillText(line, 52 * u, (76 + k * 5.8) * u));
+  if (waiting && count) {
+    setFont(ctx, u, 3.4, 800, TEXT, false);
+    ctx.fillText(`Et ${far} au-delà.`, 52 * u, (80 + lines.length * 5.8) * u);
+  }
   folio(ctx, u, i);
-  return { hotspots: [], label: `${count} pages encore lointaines dans ce chapitre.` };
+  return { hotspots: [], label: waiting ? `${queued} dans ce chapitre${count ? `, et ${far}` : ''}.` : `${far} dans ce chapitre.` };
 }
 
 function paintChapter(ctx, u, model, i, assets) {
