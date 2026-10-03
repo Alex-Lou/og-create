@@ -52,6 +52,7 @@
             :elementEmojis="elementEmojis"
             :isLoggedIn="isLoggedIn"
             :freshElement="freshElement"
+            :categories="categories"
             :revealing="isRevealing"
             @select="handleResourceSelection"
             @coins-updated="handleCoinsUpdated"
