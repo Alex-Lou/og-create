@@ -45,7 +45,27 @@
 
       <main id="main-content" ref="mainContent" class="oc-app__main" v-show="!isExplorerActive">
         <div class="oc-app__inventory">
+          <!-- Infini : deux façons de choisir ses éléments, le Ciel ou le Grimoire (choix mémorisé sur l'appareil) -->
+          <div v-if="!isTimerActive" class="oc-view" role="group" aria-label="Vue du registre">
+            <button type="button" :aria-pressed="skyView" @click="setSkyView(true)">Ciel</button>
+            <button type="button" :aria-pressed="!skyView" @click="setSkyView(false)">Grimoire</button>
+          </div>
+          <SkyView
+            v-if="skyView && !isTimerActive"
+            :categories="categories"
+            :familyTotals="familyTotals"
+            :discoveredElements="discoveredElements"
+            :elementEmojis="elementEmojis"
+            :freshElement="freshElement"
+            :lastSuccess="skySuccess"
+            :lastFail="skyFail"
+            @select="handleResourceSelection"
+            @pair="handleSkyPair"
+            @inspect="inspected = $event"
+            @hint="useInfiniteHint"
+          />
           <GameInventory
+            v-else
             :categories="categories"
             :familyTotals="familyTotals"
             :discoveredElements="discoveredElements"
@@ -55,6 +75,7 @@
             :unexplored="unexplored"
             :reachable="isTimerActive ? null : reachableCount"
             @selectResource="handleResourceSelection"
+            @fuse="$refs.craftZone?.fuse()"
             @inspect="inspected = $event"
             @hint="useInfiniteHint"
           />
@@ -74,8 +95,9 @@
             :mode="currentMode"
             :elementEmojis="elementEmojis"
             :failText="currentMode === 'infinite' ? infiniteFailLine : null"
-            @learned="learnElement"
-            @craft-success="handleCraftSuccess"
+            @learned="lastLearnedNew = !!$event.isNew; learnElement($event)"
+            @craft-success="onCraftSuccess"
+            @craft-fail="skyFail = { ingredients: $event, n: (skyFail?.n || 0) + 1 }"
             @discovery="handleDiscovery"
             @show-alert="showAlert"
             @revealing="isRevealing = $event"
@@ -210,8 +232,19 @@ import TimerModeButton from '../TimerMode/TimerModeButton.vue';
 import TimerQuestions from '../TimerMode/TimerQuestions.vue';
 import TimerBrief from '../TimerMode/TimerBrief.vue';
 import ElementSheet from '../Inventory/ElementSheet.vue';
+import SkyView from '../Sky/SkyView.vue';
 import ResetPasswordModal from '../Account/ResetPasswordModal.vue';
 import { FREE_JOKERS, JOKER_TIME } from '@/utils/hints';
+
+// Vue du registre choisie sur cet appareil
+const VIEW_KEY = 'oc-view';
+function readSkyView() {
+  try {
+    return localStorage.getItem(VIEW_KEY) !== 'grimoire';
+  } catch {
+    return true;
+  }
+}
 
 // Retour sur l'application (PWA remise au premier plan) : carnet rechargé s'il date de plus de 30 s
 const STATE_RELOAD_AFTER_MS = 30000;
@@ -251,12 +284,19 @@ export default {
     TimerQuestions,
     TimerBrief,
     ElementSheet,
+    SkyView,
     ResetPasswordModal,
     CustomizeModal,
     ExplorerMap
   },
   data() {
     return {
+      // Vue du registre en Infini : le Ciel (par défaut) ou le Grimoire
+      skyView: readSkyView(),
+      // Derniers mélanges, pour que le Ciel réagisse (étoile qui pulse, étoiles qui tremblent)
+      skySuccess: null,
+      skyFail: null,
+      lastLearnedNew: false,
       // Éléments de base affichés tout de suite, avant la réponse du serveur
       elementEmojis: { Eau: '💧', Feu: '🔥', Terre: '🌎', Air: '💨' },
       // Familles : éléments connus du joueur seulement ; leur taille vient du serveur (familyTotals)
@@ -1081,6 +1121,29 @@ checkAuth() {
     handleResourceSelection(resource, fromRect) {
       this.$refs.craftZone?.add(resource, fromRect);
     },
+    // Ciel : une étoile lâchée sur une autre envoie la paire à l'Athanor, qui interroge le serveur
+    handleSkyPair(first, second, fromRect) {
+      const zone = this.$refs.craftZone;
+      if (!zone) return;
+      zone.clear();
+      zone.add(first, fromRect);
+      zone.add(second);
+      // Plus de deux emplacements : la fusion ne part pas seule, on la lance avec la paire
+      if (this.slotCount > 2) this.$nextTick(() => zone.fuse());
+    },
+    onCraftSuccess(name, ingredients) {
+      this.handleCraftSuccess(name, ingredients);
+      this.skySuccess = { name, isNew: this.lastLearnedNew, n: (this.skySuccess?.n || 0) + 1 };
+    },
+    setSkyView(on) {
+      this.skyView = on;
+      try {
+        localStorage.setItem(VIEW_KEY, on ? 'ciel' : 'grimoire');
+      } catch {
+        // Stockage indisponible : le choix reste valable pour la session
+      }
+      this.$nextTick(this.trackOverlays);
+    },
     // Nouvelle découverte : le fond vivant réagit, la carte s'illumine dans l'inventaire
     handleDiscovery({ name, x, y }) {
       this.$refs.background?.burst(x, y);
@@ -1384,6 +1447,21 @@ handleCraftSuccess(craftedItem, ingredients = []) {
 }
 .oc-app__main { display: block; }
 .oc-app__inventory { min-width: 0; }
+.oc-view { display: flex; gap: 6px; margin: 4px 0 10px; }
+.oc-view button {
+  appearance: none;
+  min-height: 36px;
+  padding: 0 14px;
+  border: 0;
+  cursor: pointer;
+  font-family: var(--oc-font-display);
+  font-size: 15px;
+  letter-spacing: 0.06em;
+  color: var(--oc-text-muted);
+  background: none;
+  box-shadow: inset 0 0 0 1px var(--oc-line);
+}
+.oc-view button[aria-pressed='true'] { color: var(--oc-gold); background: var(--oc-gold-soft); box-shadow: inset 0 0 0 1px var(--oc-accent-line); }
 
 @media (min-width: 860px) {
   .oc-app__shell { padding-bottom: 32px; }
