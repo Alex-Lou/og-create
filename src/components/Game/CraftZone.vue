@@ -82,6 +82,7 @@
 import playService from '@/services/playService';
 import { HAPTIC, burst, fly, vibrate } from '@/utils/feedback';
 import ElementGlyph from '@/components/ui/ElementGlyph.vue';
+import { aimMessage } from '@/book/aim';
 
 const MERGE_MS = 520;
 // Fusion à 2 : même geste, plus vif (voir .athanor--quick)
@@ -113,9 +114,11 @@ export default {
     elementEmojis: { type: Object, required: true },
     autoFuse: { type: Boolean, default: true },
     // Phrase d'un mélange raté (Infini) ; sans elle, la phrase par défaut
-    failText: { type: Function, default: null }
+    failText: { type: Function, default: null },
+    // Page du Livre visée : le serveur dit combien d'ingrédients du mélange sont justes
+    aimPage: { type: String, default: null }
   },
-  emits: ['craft-success', 'craft-fail', 'discovery', 'learned', 'show-alert', 'revealing'],
+  emits: ['craft-success', 'craft-fail', 'discovery', 'learned', 'show-alert', 'revealing', 'aimed'],
   data() {
     return {
       picked: [],
@@ -224,7 +227,7 @@ export default {
       this.busy = true;
       let reply;
       try {
-        reply = await playService.combine(this.mode, ingredients);
+        reply = await playService.combine(this.mode, ingredients, this.aimPage);
       } catch (error) {
         await this.untilLanded();
         this.busy = false;
@@ -233,9 +236,11 @@ export default {
       }
       await this.untilLanded();
       this.busy = false;
+      const aim = reply.aim ? { ...reply.aim, tried: ingredients } : null;
+      if (aim) this.$emit('aimed', aim);
       if (!reply.result) {
         this.$emit('craft-fail', ingredients);
-        this.fail(this.failText ? this.failText(ingredients) : 'Rien ne se passe… Essaie une autre combinaison.');
+        this.fail(aim ? aimMessage(aim) : this.failText ? this.failText(ingredients) : 'Rien ne se passe… Essaie une autre combinaison.');
         return;
       }
       const { result: name, isNew } = reply;

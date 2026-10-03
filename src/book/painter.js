@@ -1,6 +1,7 @@
 // Peinture des pages du Livre en Canvas 2D : une seule source pour la page au repos et la page qui tourne.
 // Coordonnées en unités u = largeur / 100 ; la page fait 100 × 133,3 u.
 // Chaque peinture renvoie { hotspots, label } : zones interactives (en u) et texte pour les lecteurs d'écran.
+import { aimNote } from './aim';
 import { glyphSrc } from '@/utils/glyph';
 import { roman } from '@/utils/roman';
 
@@ -32,12 +33,24 @@ const FAMILY_WORDS = {
   'Technologie': 'une technologie',
   'Légendes': 'une légende'
 };
-export function clueText(clue) {
-  const words = clue.map((family, i) => {
-    const word = FAMILY_WORDS[family] || 'un élément';
-    return clue.indexOf(family) < i ? word.replace(/^(un|une) /, '$1 autre ') : word;
+const TIMES = ['', '', 'deux', 'trois', 'quatre'];
+// groups : même numéro = même ingrédient (Eau + Eau → [0, 0]) ; sans eux, chaque ingrédient compte à part
+export function clueText(clue, groups) {
+  const ids = groups && groups.length === clue.length ? groups : clue.map((_, i) => i);
+  const parts = [];
+  ids.forEach((id, i) => {
+    const part = parts.find(p => p.id === id);
+    if (part) part.count++;
+    else parts.push({ id, family: clue[i], count: 1 });
   });
-  if (words.length <= 1) return `Naît ${words[0] || 'd’un mélange'}.`;
+  const words = parts.map((part, k) => {
+    const word = FAMILY_WORDS[part.family] || 'un élément';
+    if (part.count > 1) return `${TIMES[part.count]} fois ${word.replace(/^un /, 'le même ').replace(/^une /, 'la même ')}`;
+    // « un autre » : un ingrédient différent d'une famille déjà nommée
+    return parts.findIndex(p => p.family === part.family) < k ? word.replace(/^(un|une) /, '$1 autre ') : word;
+  });
+  if (clue.length <= 1) return `Naît ${words[0] || 'd’un mélange'}.`;
+  if (words.length === 1) return `Mêle ${words[0]}.`;
   return `Mêle ${words.slice(0, -1).join(', ')} et ${words[words.length - 1]}.`;
 }
 const familyName = family => (family === 'Elements Fondamentaux' ? 'Éléments fondamentaux' : family);
@@ -313,7 +326,7 @@ function paintFound(ctx, u, model, i, assets) {
 }
 
 function paintReach(ctx, u, model, i, assets) {
-  const { chapter, page, revealed } = model;
+  const { chapter, page, revealed, aim, freeInk } = model;
   const style = CHAPTER_STYLE[chapter.id];
   frame(ctx, u, style.ink);
   header(ctx, u, chapter, style, 0);
@@ -322,8 +335,17 @@ function paintReach(ctx, u, model, i, assets) {
   setFont(ctx, u, 7, 600, TITLE, false, 0.22);
   ctx.fillStyle = '#BDAA94';
   ctx.textAlign = 'center';
-  const blanks = '_'.repeat(Math.min(page.letters, 14));
+  const length = Math.min(page.letters, 14);
+  // Première lettre donnée, le reste en blancs : « L__ »
+  const blanks = page.first ? `${page.first}${'_'.repeat(Math.max(0, length - 1))}` : '_'.repeat(length);
   ctx.fillText(blanks, 52 * u, 66 * u);
+  if (page.first) {
+    const left = 52 * u - ctx.measureText(blanks).width / 2;
+    ctx.textAlign = 'left';
+    ctx.fillStyle = style.ink;
+    ctx.fillText(page.first, left, 66 * u);
+    ctx.textAlign = 'center';
+  }
   if ('letterSpacing' in ctx) ctx.letterSpacing = '0px';
   setFont(ctx, u, 3.2, 900, TEXT, false, 0.1);
   ctx.fillStyle = style.ink;
@@ -331,13 +353,25 @@ function paintReach(ctx, u, model, i, assets) {
   if ('letterSpacing' in ctx) ctx.letterSpacing = '0px';
   setFont(ctx, u, 4.3, 400, TITLE, true);
   ctx.fillStyle = '#8A7262';
-  wrap(ctx, `« ${clueText(page.clue)} »`, 74 * u).slice(0, 2).forEach((line, k) => ctx.fillText(line, 52 * u, (80.5 + k * 5.6) * u));
+  wrap(ctx, `«\u00a0${clueText(page.clue, page.groups)}\u00a0»`, 74 * u).slice(0, 2).forEach((line, k) => ctx.fillText(line, 52 * u, (80.5 + k * 5.6) * u));
   const parts = page.clue.map((family, k) => (k === 0 && revealed ? { name: revealed, emoji: assets.emojiOf(revealed) } : null));
   recipeRow(ctx, u, parts, null, style.ink, assets.onReady);
+  // Verdict du dernier essai visé (ou essais ratés), rétréci pour tenir sur une ligne
+  const note = aimNote(aim, page.misses, assets.freeInkAfter);
+  if (note) {
+    let size = 3.4;
+    do {
+      setFont(ctx, u, size, 800, TEXT, false);
+      size -= 0.2;
+    } while (size > 2.4 && ctx.measureText(note).width > 80 * u);
+    ctx.fillStyle = aim && aim.right ? style.ink : '#8A7262';
+    ctx.textAlign = 'center';
+    ctx.fillText(note, 52 * u, 110.8 * u);
+  }
   const hotspots = [{ ...spot, pulse: true }];
   ctx.save();
   rr(ctx, 28 * u, 115.5 * u, 48 * u, 8 * u, 4 * u);
-  ctx.fillStyle = revealed ? '#F1E7D2' : '#4A3426';
+  ctx.fillStyle = revealed ? '#F1E7D2' : freeInk ? '#B7862F' : '#4A3426';
   if (!revealed) { ctx.shadowColor = 'rgba(0, 0, 0, .18)'; ctx.shadowOffsetY = 0.5 * u; }
   ctx.fill();
   ctx.restore();
@@ -345,11 +379,12 @@ function paintReach(ctx, u, model, i, assets) {
   ctx.fillStyle = revealed ? '#BDAA94' : '#FFFDF8';
   ctx.textAlign = 'center';
   ctx.textBaseline = 'middle';
-  ctx.fillText(revealed ? 'Encre utilisée' : `✒︎ Encre · ${assets.inkPrice} écus`, 52 * u, 119.7 * u);
+  ctx.fillText(revealed ? 'Encre utilisée' : freeInk ? '✒︎ Encre offerte' : `✒︎ Encre · ${assets.inkPrice} écus`, 52 * u, 119.7 * u);
   ctx.textBaseline = 'alphabetic';
-  if (!revealed) hotspots.push({ id: 'ink', x: 28, y: 115.5, w: 48, h: 8, action: 'ink', data: page.id, label: `Encre : révéler un ingrédient pour ${assets.inkPrice} écus` });
+  if (!revealed) hotspots.push({ id: 'ink', x: 28, y: 115.5, w: 48, h: 8, action: 'ink', data: page.id, label: freeInk ? 'Encre offerte : révéler un ingrédient' : `Encre : révéler un ingrédient pour ${assets.inkPrice} écus` });
   folio(ctx, u, i);
-  return { hotspots, label: `Page à trouver : ${familyName(page.family)}, ${page.letters} lettres. ${clueText(page.clue)}${revealed ? ` Un ingrédient : ${revealed}.` : ''}` };
+  const start = page.first ? `, commence par ${page.first}` : '';
+  return { hotspots, label: `Page à trouver : ${familyName(page.family)}, ${page.letters} lettres${start}. ${clueText(page.clue, page.groups)}${note ? ` ${note}.` : ''}${revealed ? ` Un ingrédient : ${revealed}.` : ''}` };
 }
 
 function paintFar(ctx, u, model, i) {

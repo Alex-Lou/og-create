@@ -124,7 +124,7 @@ export default {
     // Révélation en cours dans l'Athanor : les effets du Livre attendent qu'elle se ferme
     revealing: { type: Boolean, default: false }
   },
-  emits: ['select', 'coins-updated', 'show-alert'],
+  emits: ['select', 'coins-updated', 'show-alert', 'aim'],
   data() {
     return {
       spots: [],
@@ -216,6 +216,9 @@ export default {
     this.models = [{ type: 'toc', key: 'toc', chapters: [], chapterIndex: {} }];
     this.bookData = null;
     this.revealed = readStore(INK_KEY, {});
+    // Dernier verdict de chaque page visée : { tried, right, of, misses, need, freeInk }
+    this.aims = {};
+    this.aimedKey = null;
     this.pendingEffects = [];
     this.ribbonEls = {};
     this.repaintRaf = 0;
@@ -225,6 +228,7 @@ export default {
     await this.load();
   },
   beforeUnmount() {
+    if (this.aimedKey) this.$emit('aim', null);
     clearTimeout(this.reloadTimer);
     cancelAnimationFrame(this.repaintRaf);
     if (this.engine) this.engine.destroy();
@@ -252,11 +256,32 @@ export default {
         for (const page of chapter.pages) {
           models.push(page.status === 'found'
             ? { type: 'found', key: page.id, chapter, page }
-            : { type: 'reach', key: page.id, chapter, page, revealed: this.revealed[page.id] || null });
+            : this.reachModel(chapter, page, data.freeInkAfter));
         }
         if (chapter.far) models.push({ type: 'far', key: `far-${chapter.id}`, chapter, count: chapter.far });
       }
       return models;
+    },
+    reachModel(chapter, page, need) {
+      const aim = this.aims[page.id] || null;
+      const freeInk = Boolean(aim && aim.freeInk) || (need > 0 && page.misses >= need);
+      return { type: 'reach', key: page.id, chapter, page, revealed: this.revealed[page.id] || null, aim, freeInk };
+    },
+    // Verdict d'un mélange visé sur cette page (transmis par l'Athanor)
+    onAim(aim) {
+      if (!this.bookData) return;
+      const wasFree = this.models.find(m => m.key === aim.page)?.freeInk;
+      this.aims = { ...this.aims, [aim.page]: aim };
+      this.models = this.buildModels(this.bookData);
+      if (this.engine) this.engine.refresh();
+      if (aim.freeInk && !wasFree) {
+        const slot = this.engine && this.engine.rectOf('ink');
+        if (slot) {
+          ring(center(slot), slot.width * 0.8);
+          burst(center(slot), 14, 44);
+        }
+        buzz([10, 30, 10]);
+      }
     },
     assets() {
       const families = Object.fromEntries((this.bookData ? this.bookData.chapters : []).map(c => [c.id, c.families || []]));
@@ -264,6 +289,7 @@ export default {
         emojiOf: name => this.elementEmojis[name],
         onReady: () => this.scheduleRepaint(),
         inkPrice: INK_PRICE,
+        freeInkAfter: this.bookData ? this.bookData.freeInkAfter : 0,
         stars: this.stars,
         familiesOf: id => families[id] || []
       };
@@ -330,6 +356,12 @@ export default {
           this.pageClue = model && model.type === 'reach'
             ? { families: [...new Set(model.page.clue)], revealed: model.revealed || null }
             : null;
+          // L'Athanor vise cette page : ses mélanges y reçoivent un verdict
+          const aimed = model && model.type === 'reach' ? model.key : null;
+          if (aimed !== this.aimedKey) {
+            this.aimedKey = aimed;
+            this.$emit('aim', aimed);
+          }
         }
       });
     },
