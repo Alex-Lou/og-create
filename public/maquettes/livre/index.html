@@ -1,0 +1,2102 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#EADFC9">
+<title>Le Livre</title>
+<!--
+  Maquette du Livre (tranche jouable du GDD) : front seul, données factices tirées des vraies recettes.
+  Pages peintes en Canvas 2D, tournées en WebGL (vraie courbure) ; repli en fondu sans WebGL.
+  ?debug affiche le banc de mesure (images/s, nœuds, textures, 200 tours, démontage).
+-->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400..700;1,9..144,400..600&family=Nunito:wght@600;700;800;900&display=swap" rel="stylesheet">
+<style>
+:root {
+  --desk: #EADFC9;
+  --desk-deep: #D9C8A8;
+  --paper: #FBF6EA;
+  --paper-edge: #E8DCC2;
+  --ink: #4A3426;
+  --ink-soft: #8A7262;
+  --ink-faint: #BDAA94;
+  --gold: #E3A93B;
+  --white: #FFFDF8;
+  --radius: 20px;
+  --shadow-soft: 0 1px 2px rgba(74, 52, 38, .10), 0 10px 28px rgba(74, 52, 38, .12);
+  --font-title: 'Fraunces', Georgia, serif;
+  --font-text: 'Nunito', system-ui, sans-serif;
+  --spring: cubic-bezier(.3, 1.5, .55, 1);
+}
+* { box-sizing: border-box; }
+html, body { margin: 0; height: 100%; }
+body {
+  background: radial-gradient(120% 85% at 50% 0%, #F5EDDF 0%, var(--desk) 55%, var(--desk-deep) 100%);
+  color: var(--ink);
+  font-family: var(--font-text);
+  overflow: hidden;
+  -webkit-tap-highlight-color: transparent;
+  -webkit-font-smoothing: antialiased;
+  user-select: none;
+  -webkit-user-select: none;
+}
+button { font: inherit; color: inherit; }
+img { display: block; }
+.sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+
+/* ---------- Ambiance : lumière qui respire, poussière dorée ---------- */
+.dust { position: fixed; inset: 0; pointer-events: none; z-index: 0; overflow: hidden; }
+.dust i {
+  position: absolute; width: var(--s); height: var(--s); border-radius: 50%;
+  background: radial-gradient(circle, rgba(255, 230, 160, .95), rgba(255, 210, 120, 0) 70%);
+  animation: mote var(--d) ease-in-out var(--delay) infinite;
+  opacity: 0;
+}
+@keyframes mote {
+  0% { transform: translate(0, 0); opacity: 0; }
+  20% { opacity: .9; }
+  80% { opacity: .7; }
+  100% { transform: translate(var(--dx), -120px); opacity: 0; }
+}
+
+/* ---------- Cadre de l'application ---------- */
+.app {
+  position: relative; z-index: 1;
+  height: 100dvh;
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr) auto auto;
+  grid-template-columns: minmax(0, 1fr);
+  max-width: 560px;
+  margin: 0 auto;
+  padding-top: env(safe-area-inset-top);
+}
+.top { display: flex; align-items: center; justify-content: space-between; gap: 10px; padding: 12px 16px 4px; }
+.top__eyebrow { display: block; font-size: 11px; font-weight: 900; letter-spacing: .14em; text-transform: uppercase; color: var(--ink-soft); }
+.top__name { display: block; font-family: var(--font-title); font-weight: 600; font-size: 21px; line-height: 1.12; }
+.top__res { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: 6px; max-width: 60%; }
+.pill {
+  display: inline-flex; align-items: center; gap: 4px;
+  min-height: 28px; padding: 2px 10px 2px 5px;
+  border-radius: 999px;
+  background: rgba(255, 253, 248, .78);
+  box-shadow: inset 0 0 0 1px rgba(74, 52, 38, .08), 0 2px 0 rgba(74, 52, 38, .06);
+  font-size: 13px; font-weight: 900; font-variant-numeric: tabular-nums;
+}
+.pill img { width: 20px; height: 20px; }
+.pill--star { background: #FFF1CC; color: #8F5F0A; }
+.pill.is-bump { animation: bump .5s var(--spring); }
+
+/* ---------- La scène du livre ---------- */
+.stage { position: relative; min-height: 0; container-type: size; }
+.glow {
+  position: absolute; inset: -10% -20%;
+  background: radial-gradient(45% 40% at 50% 48%, rgba(255, 236, 190, .85), rgba(255, 236, 190, 0) 70%);
+  animation: breathe 6s ease-in-out infinite;
+  pointer-events: none;
+}
+@keyframes breathe { 0%, 100% { opacity: .55; transform: scale(1); } 50% { opacity: .95; transform: scale(1.04); } }
+.rig { position: absolute; inset: 0; transform-style: preserve-3d; will-change: transform; }
+.book-wrap {
+  position: absolute; left: 18px; top: 50%;
+  width: min(calc(100cqw - 54px), calc((100cqh - 20px) * .75));
+  aspect-ratio: 3 / 4;
+  transform: translateY(-50%);
+  margin-left: calc((100cqw - 54px - min(calc(100cqw - 54px), calc((100cqh - 20px) * .75))) / 2);
+}
+/* Tranche des pages en dessous et ombre du livre (statiques, sous le canvas) */
+.book-wrap::before, .book-wrap::after {
+  content: ''; position: absolute; inset: 0;
+  border-radius: 6px var(--radius) var(--radius) 6px;
+}
+.book-wrap::before { transform: translate(7px, 7px); background: #D8C8A8; box-shadow: 0 18px 40px rgba(74, 52, 38, .28), 0 4px 10px rgba(74, 52, 38, .12); }
+.book-wrap::after { transform: translate(3.5px, 3.5px); background: repeating-linear-gradient(180deg, #EFE5D0 0 2px, #E3D6BC 2px 3px); }
+canvas.gl { position: absolute; inset: 0; width: 100%; height: 100%; z-index: 2; pointer-events: none; }
+.hot { position: absolute; z-index: 3; touch-action: pan-y; border-radius: 6px var(--radius) var(--radius) 6px; outline: none; }
+.hot.is-turning > * { visibility: hidden; }
+.hot button {
+  position: absolute; border: 0; padding: 0; margin: 0;
+  background: transparent; border-radius: 14px; cursor: pointer;
+}
+.hot button:focus-visible { outline: 3px solid rgba(227, 169, 59, .9); outline-offset: 2px; }
+.hot .pulse {
+  position: absolute; border-radius: 50%; pointer-events: none;
+  box-shadow: 0 0 0 0 rgba(227, 169, 59, .55);
+  animation: aura 2.4s ease-out infinite;
+}
+@keyframes aura { 0% { box-shadow: 0 0 0 0 rgba(227, 169, 59, .5); } 70%, 100% { box-shadow: 0 0 0 22px rgba(227, 169, 59, 0); } }
+.hot .hint {
+  position: absolute; right: 8%; top: 66%; width: 54px; height: 54px; border-radius: 50%;
+  background: radial-gradient(circle, rgba(255, 255, 255, .95) 30%, rgba(255, 255, 255, .35) 60%, rgba(255, 255, 255, 0) 72%);
+  box-shadow: 0 6px 18px rgba(74, 52, 38, .25);
+  pointer-events: none;
+  animation: swipe 2.2s cubic-bezier(.5, 0, .3, 1) infinite;
+}
+@keyframes swipe {
+  0% { transform: translateX(0) scale(.8); opacity: 0; }
+  15% { transform: translateX(0) scale(1); opacity: 1; }
+  70% { transform: translateX(-150%) scale(1); opacity: 1; }
+  100% { transform: translateX(-190%) scale(.8); opacity: 0; }
+}
+
+/* ---------- Marque-pages ---------- */
+.ribbons { position: absolute; top: 9%; right: -32px; display: flex; flex-direction: column; gap: 8px; z-index: 1; }
+.ribbon {
+  position: relative;
+  width: 40px; min-height: 46px; padding: 0 0 0 12px;
+  border: 0; border-radius: 0 13px 13px 0;
+  background: var(--rc); color: var(--ri);
+  font-family: var(--font-title); font-weight: 700; font-size: 15px;
+  box-shadow: 0 3px 8px rgba(74, 52, 38, .18), inset 0 -3px 0 rgba(0, 0, 0, .08);
+  transform: translateX(-9px);
+  transition: transform .35s var(--spring);
+  cursor: pointer;
+}
+.ribbon.is-on { transform: translateX(0); }
+.ribbon.is-sealed { background: #E4D8C1; color: var(--ink-faint); }
+.ribbon.is-ping { animation: ping .8s var(--spring) 2; }
+
+/* ---------- Paillasse ---------- */
+.lab {
+  position: relative; z-index: 2;
+  margin: 0 12px;
+  padding: 10px 12px 8px;
+  border-radius: 22px 22px 16px 16px;
+  background: rgba(255, 253, 248, .8);
+  box-shadow: var(--shadow-soft);
+}
+.tray { display: flex; align-items: center; justify-content: center; gap: 10px; }
+.tray.is-shake { animation: shake .45s ease; }
+.slot {
+  position: relative;
+  width: 58px; height: 58px;
+  display: grid; place-items: center;
+  border-radius: 19px;
+  border: 2px dashed var(--ink-faint);
+  background: transparent; padding: 9px;
+  cursor: pointer;
+}
+.slot img { width: 100%; height: 100%; }
+.slot.is-full { border: 0; background: var(--white); box-shadow: 0 3px 0 rgba(74, 52, 38, .1), inset 0 0 0 1.5px rgba(74, 52, 38, .08); animation: pop .35s var(--spring); }
+.tray__op { font-family: var(--font-title); font-size: 24px; color: var(--ink-faint); }
+.cauldron { position: relative; width: 70px; height: 64px; margin-left: 4px; }
+.cauldron img { width: 100%; height: 100%; }
+.cauldron.is-brewing { animation: wobble .5s ease-in-out 2; }
+.cauldron .bubble {
+  position: absolute; left: 50%; top: 22%; width: 9px; height: 9px; border-radius: 50%;
+  background: radial-gradient(circle at 35% 35%, #F4FFE2, #9EDB78);
+  opacity: 0;
+}
+.cauldron.is-brewing .bubble { animation: bubble .7s ease-out infinite; }
+.cauldron .bubble:nth-child(2) { margin-left: -14px; animation-delay: .15s !important; }
+.cauldron .bubble:nth-child(3) { margin-left: 8px; animation-delay: .3s !important; width: 7px; height: 7px; }
+@keyframes bubble { 0% { transform: translateY(6px) scale(.4); opacity: 0; } 30% { opacity: 1; } 100% { transform: translateY(-26px) scale(1.1); opacity: 0; } }
+.shelf {
+  display: flex; gap: 8px;
+  margin-top: 8px; padding: 2px 2px 4px;
+  overflow-x: auto; overscroll-behavior-x: contain;
+  scrollbar-width: none;
+}
+.shelf::-webkit-scrollbar { display: none; }
+.chip {
+  flex: none;
+  display: flex; flex-direction: column; align-items: center; gap: 2px;
+  width: 60px; min-height: 62px; padding: 6px 2px 4px;
+  border: 0; border-radius: 17px;
+  background: var(--white);
+  box-shadow: 0 3px 0 rgba(74, 52, 38, .08);
+  cursor: pointer;
+  transition: transform .15s ease;
+}
+.chip:active { transform: scale(.92); }
+.chip img { width: 32px; height: 32px; }
+.chip span { font-size: 10.5px; font-weight: 800; color: var(--ink-soft); max-width: 56px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.chip.is-new { animation: pop .55s var(--spring); box-shadow: 0 0 0 2.5px var(--gold), 0 3px 0 rgba(74, 52, 38, .08); }
+.lab.is-busy .chip, .lab.is-busy .slot { pointer-events: none; }
+
+/* ---------- Onglets ---------- */
+.tabs { display: grid; grid-template-columns: repeat(4, 1fr); padding: 6px 8px calc(6px + env(safe-area-inset-bottom)); position: relative; z-index: 2; }
+.tab {
+  display: flex; flex-direction: column; align-items: center; gap: 2px;
+  min-height: 52px; border: 0; background: none;
+  font-size: 11px; font-weight: 900; color: var(--ink-faint);
+  cursor: pointer;
+}
+.tab svg { width: 24px; height: 24px; }
+.tab.is-on { color: var(--ink); }
+
+/* ---------- Effets ---------- */
+.fx { position: fixed; inset: 0; pointer-events: none; z-index: 20; overflow: hidden; }
+.fx > * { position: absolute; left: 0; top: 0; will-change: transform, opacity; }
+.fx .spark { width: 9px; height: 9px; border-radius: 50%; background: radial-gradient(circle, #FFF7D6 20%, #F2B640 70%); }
+.fx .spark.is-white { background: radial-gradient(circle, #fff 30%, rgba(255, 255, 255, .2) 80%); }
+.fx .ring { border-radius: 50%; border: 4px solid rgba(255, 214, 120, .95); box-shadow: 0 0 24px rgba(255, 214, 120, .8); }
+.fx .flash { border-radius: 50%; background: radial-gradient(circle, rgba(255, 252, 230, 1), rgba(255, 220, 140, .6) 40%, rgba(255, 220, 140, 0) 70%); }
+.fx .puff { border-radius: 50%; background: radial-gradient(circle at 40% 35%, #F1EEEA, #B9B2AB); }
+.toast {
+  position: fixed; left: 50%; top: calc(66px + env(safe-area-inset-top));
+  max-width: min(92vw, 420px);
+  padding: 11px 18px;
+  border-radius: 18px;
+  background: var(--ink); color: var(--white);
+  font-weight: 800; font-size: 14px; text-align: center;
+  box-shadow: 0 10px 28px rgba(74, 52, 38, .3);
+  transform: translate(-50%, -14px) scale(.96); opacity: 0;
+  transition: transform .35s var(--spring), opacity .25s ease;
+  pointer-events: none; z-index: 30;
+}
+.toast.is-on { transform: translate(-50%, 0) scale(1); opacity: 1; }
+
+/* ---------- Cinématique d'ouverture de chapitre ---------- */
+.unlock {
+  position: fixed; inset: 0; z-index: 40;
+  display: grid; place-items: center; align-content: center; gap: 18px;
+  background: radial-gradient(circle at 50% 42%, rgba(58, 38, 24, .82), rgba(24, 16, 10, .94));
+  -webkit-backdrop-filter: blur(6px);
+  backdrop-filter: blur(6px);
+  color: var(--white); text-align: center;
+  opacity: 0;
+}
+.unlock__rays {
+  position: absolute; left: 50%; top: 42%; width: 140vmax; height: 140vmax;
+  margin: -70vmax 0 0 -70vmax;
+  background: repeating-conic-gradient(from 0deg, rgba(255, 220, 150, .16) 0 9deg, rgba(255, 220, 150, 0) 9deg 22deg);
+  -webkit-mask: radial-gradient(circle, #000 0, transparent 45%);
+  mask: radial-gradient(circle, #000 0, transparent 45%);
+  animation: spin 14s linear infinite;
+  opacity: 0;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+.unlock__seal { position: relative; width: 150px; height: 150px; }
+.unlock__seal img { position: absolute; inset: 0; width: 100%; height: 100%; opacity: 0; }
+.unlock__eyebrow { font-size: 12px; font-weight: 900; letter-spacing: .2em; text-transform: uppercase; color: #FFE2A6; opacity: 0; }
+.unlock__name { font-family: var(--font-title); font-weight: 700; font-size: 34px; line-height: 1.05; opacity: 0; }
+.unlock__go {
+  margin-top: 6px; min-height: 48px; padding: 12px 26px;
+  border: 0; border-radius: 999px;
+  background: #FFE2A6; color: var(--ink);
+  font-weight: 900; font-size: 16px;
+  box-shadow: 0 6px 0 #C9933A;
+  cursor: pointer; opacity: 0;
+}
+
+/* ---------- Banc de mesure (?debug) ---------- */
+.hud { position: fixed; left: 8px; bottom: 8px; z-index: 50; padding: 8px 10px; border-radius: 12px; background: rgba(30, 22, 16, .88); color: #F6EEDD; font: 600 11px/1.5 ui-monospace, monospace; }
+.hud button { margin: 4px 4px 0 0; padding: 4px 8px; border: 0; border-radius: 8px; background: #F6EEDD; color: #2A1E16; font: inherit; cursor: pointer; }
+
+@keyframes pop { 0% { transform: scale(.55); } 100% { transform: scale(1); } }
+@keyframes bump { 0% { transform: scale(1); } 40% { transform: scale(1.22); } 100% { transform: scale(1); } }
+@keyframes shake { 0%, 100% { transform: translateX(0); } 20% { transform: translateX(-9px); } 45% { transform: translateX(8px); } 70% { transform: translateX(-5px); } }
+@keyframes ping { 0%, 100% { transform: translateX(0); } 50% { transform: translateX(7px); } }
+@keyframes wobble { 0%, 100% { transform: rotate(0) scale(1); } 25% { transform: rotate(-4deg) scale(1.04, .97); } 75% { transform: rotate(4deg) scale(.97, 1.04); } }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: 1ms !important; animation-iteration-count: 1 !important; transition-duration: 1ms !important; }
+  .dust, .glow { display: none; }
+}
+</style>
+</head>
+<body>
+<div class="dust" id="dust" aria-hidden="true"></div>
+<div class="app">
+  <header class="top">
+    <div>
+      <span class="top__eyebrow" id="eyebrow">Sommaire</span>
+      <span class="top__name" id="chapName">Le Livre d’Origins</span>
+    </div>
+    <div class="top__res" id="res"></div>
+  </header>
+
+  <main class="stage" id="stage">
+    <div class="glow" aria-hidden="true"></div>
+    <div class="rig" id="rig">
+      <div class="book-wrap" id="wrap">
+        <nav class="ribbons" id="ribbons" aria-label="Chapitres"></nav>
+      </div>
+      <div class="hot" id="hot" role="region" aria-roledescription="page de livre" tabindex="0"></div>
+    </div>
+    <p class="sr-only" id="pageText" aria-live="polite"></p>
+  </main>
+
+  <section class="lab" id="lab" aria-label="Paillasse">
+    <div class="tray" id="tray">
+      <button type="button" class="slot" data-slot="0" aria-label="Case 1, vide"></button>
+      <span class="tray__op" aria-hidden="true">+</span>
+      <button type="button" class="slot" data-slot="1" aria-label="Case 2, vide"></button>
+      <div class="cauldron" id="cauldron" aria-hidden="true"><i class="bubble"></i><i class="bubble"></i><i class="bubble"></i></div>
+    </div>
+    <div class="shelf" id="shelf" aria-label="Éléments connus"></div>
+  </section>
+
+  <nav class="tabs" aria-label="Navigation">
+    <button type="button" class="tab is-on" data-tab="livre"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5.5C4 4.7 4.7 4 5.5 4H11v16H5.5c-.8 0-1.5-.7-1.5-1.5z"/><path d="M20 5.5c0-.8-.7-1.5-1.5-1.5H13v16h5.5c.8 0 1.5-.7 1.5-1.5z"/></svg>Livre</button>
+    <button type="button" class="tab" data-tab="monde"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l8 4.5-8 4.5-8-4.5z"/><path d="M4 7.5V16l8 4.5 8-4.5V7.5"/><path d="M12 12v8.5"/></svg>Monde</button>
+    <button type="button" class="tab" data-tab="ateliers"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M9 3h6"/><path d="M10 3v6l-5 9a2 2 0 0 0 1.8 3h10.4a2 2 0 0 0 1.8-3l-5-9V3"/><path d="M7.5 15h9"/></svg>Ateliers</button>
+    <button type="button" class="tab" data-tab="boutique"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M5 8h14l-1 12H6z"/><path d="M9 8V6a3 3 0 0 1 6 0v2"/></svg>Boutique</button>
+  </nav>
+</div>
+<div class="fx" id="fx" aria-hidden="true"></div>
+<div class="toast" id="toast" role="status"></div>
+
+<script>
+'use strict';
+
+/* =====================================================================
+   1. Art : les éléments de la tranche jouable, dans un seul style
+   (contour brun arrondi, aplats doux, un reflet), plus les pièces d'interface
+   ===================================================================== */
+const O = '#3B2A20';
+const ol = (w = 3) => `stroke="${O}" stroke-width="${w}" stroke-linejoin="round" stroke-linecap="round"`;
+// Trait épais à contour : le contour d'abord, la couleur par-dessus
+const tube = (d, color, w = 4) => `<path d="${d}" fill="none" ${ol(w + 3.4)}/><path d="${d}" fill="none" stroke="${color}" stroke-width="${w}" stroke-linecap="round" stroke-linejoin="round"/>`;
+// Nuage réduit de 8 % : son bord droit dépassait du cadre de 64
+const cloud = (fill, shade) => `<g transform="matrix(.92 0 0 .92 1.5 2.5)"><path d="M13 45a10 10 0 0 1 0-20 14 14 0 0 1 26-6 11 11 0 0 1 18 8 9 9 0 0 1-2 18Z" fill="${fill}" ${ol()}/><path d="M13 45h42a9 9 0 0 0 4.5-6c-10 5-33 6-46.5 6Z" fill="${shade}"/><ellipse cx="22" cy="31" rx="5" ry="3" fill="#fff" opacity=".55"/></g>`;
+const drop = (x, y) => `<path d="M${x} ${y}c-2 3-4 5-4 7a4 4 0 0 0 8 0c0-2-2-4-4-7Z" fill="#5BB8F0" ${ol(2.2)}/>`;
+
+const ART = {
+  'Eau': `<path d="M32 5C27 14 13 27 13 40a19 19 0 0 0 38 0C51 27 37 14 32 5Z" fill="#5BB8F0" ${ol()}/><path d="M45 37c0 8-5 14-13 15 10 2 17-5 17-13 0-6-3-12-7-17 2 5 3 10 3 15Z" fill="#3D96D6"/><ellipse cx="24" cy="36" rx="4" ry="7.5" fill="#fff" opacity=".75" transform="rotate(20 24 36)"/><circle cx="26.5" cy="48.5" r="2.2" fill="#fff" opacity=".6"/>`,
+  'Feu': `<path d="M33 4c3 10 15 16 17 30 2 12-6 25-18 25S12 49 14 37c1-7 5-11 8-14 0 5 2 8 5 9-2-10 2-20 6-28Z" fill="#FF8A3D" ${ol()}/><path d="M33 27c3 6 9 10 9 18 0 6-4 10-10 10s-10-4-9-10c0-4 3-7 5-8 0 3 1 5 3 6-1-6 0-11 2-16Z" fill="#FFD25A"/><path d="M32 43c2 2 4 4 4 7a4 4 0 0 1-8 0c0-3 2-5 4-7Z" fill="#FFF4C2"/><ellipse cx="21" cy="38" rx="2.5" ry="5" fill="#fff" opacity=".45" transform="rotate(15 21 38)"/>`,
+  'Terre': `<path d="M6 52c3-14 13-22 26-22s23 8 26 22Z" fill="#B07A44" ${ol()}/><path d="M10 51c4-6 12-8 22-8s18 2 22 8Z" fill="#8E5D30"/><circle cx="20" cy="47" r="2" fill="#D4A26A"/><circle cx="41" cy="45" r="2.6" fill="#D4A26A"/><circle cx="31" cy="48.5" r="1.6" fill="#D4A26A"/>${tube('M32 31c0-6 0-10 1-14', '#5DAE3E', 2.6)}<path d="M33 19c4-8 13-9 16-7-2 7-9 10-16 7Z" fill="#7CCB52" ${ol(2.6)}/><path d="M32 22c-3-6-10-8-13-6 2 6 7 8 13 6Z" fill="#6CC04A" ${ol(2.6)}/><path d="M14 40c4-5 9-7 14-7" stroke="#D4A26A" stroke-width="2.4" fill="none" stroke-linecap="round" opacity=".8"/>`,
+  'Air': `${tube('M8 25h27a7 7 0 1 0-7-7', '#CDEBF7')}${tube('M8 36h36a7 7 0 1 1-7 7', '#CDEBF7')}${tube('M13 47h17', '#CDEBF7')}<circle cx="50" cy="22" r="3" fill="#fff" ${ol(2)}/><circle cx="54" cy="50" r="2.2" fill="#fff" ${ol(1.8)}/>`,
+  'Vapeur': `<ellipse cx="32" cy="55" rx="18" ry="4.5" fill="#8ED0F5" ${ol(2.6)}/>${tube('M20 50c-5-6 5-10 0-17s5-11 0-18', '#F3F7FB', 4.2)}${tube('M32 51c-5-7 5-11 0-18s5-11 0-19', '#F3F7FB', 4.2)}${tube('M44 50c-5-6 5-10 0-17s5-11 0-18', '#F3F7FB', 4.2)}`,
+  'Pluie': `${cloud('#F4F7FB', '#D6E1EC')}${drop(20, 49)}${drop(33, 52)}${drop(46, 49)}`,
+  'Boue': `<path d="M8 45c0-8 10-12 18-11 6-6 18-6 22 1 7 0 10 6 8 11-2 6-12 8-24 8S8 53 8 45Z" fill="#8A5A32" ${ol()}/><path d="M16 42c4-4 12-5 18-3" stroke="#B07A44" stroke-width="3" fill="none" stroke-linecap="round"/><circle cx="40" cy="44" r="4" fill="#A8744A" ${ol(2)}/><circle cx="38.6" cy="42.6" r="1.2" fill="#fff" opacity=".7"/><circle cx="24" cy="48" r="2.6" fill="#A8744A" ${ol(1.8)}/><path d="M22 26c-1-3 1-6 4-6s3 4 0 6Z" fill="#8A5A32" ${ol(2)}/><path d="M42 23c0-3 3-4 5-3s1 5-2 5Z" fill="#8A5A32" ${ol(2)}/>`,
+  'Fumée': `<circle cx="24" cy="46" r="11" fill="#BDB7B1" ${ol()}/><circle cx="39" cy="43" r="10" fill="#C9C3BD" ${ol()}/><circle cx="31" cy="30" r="9" fill="#D3CEC9" ${ol()}/><circle cx="39" cy="17" r="6.5" fill="#DEDAD6" ${ol()}/><circle cx="20" cy="42" r="3.5" fill="#fff" opacity=".45"/><circle cx="28" cy="27" r="2.6" fill="#fff" opacity=".5"/>`,
+  'Lave': `<path d="M6 41c2-9 12-14 22-13 6-6 18-5 22 3 6 2 9 8 7 13-3 7-14 9-26 9S4 50 6 41Z" fill="#E8501E" ${ol()}/><path d="M14 42c3-5 10-7 16-6 4-4 12-3 15 2" stroke="#FFB23D" stroke-width="4" fill="none" stroke-linecap="round"/><path d="M12 47l5-2 4 3-3 3h-5ZM28 47l6-1 3 3-4 3-5-2ZM43 44l5 1 1 4-5 1Z" fill="#4A2A1E"/><circle cx="46" cy="33" r="4" fill="#FFD25A" ${ol(2)}/><circle cx="44.8" cy="31.8" r="1.3" fill="#FFF6C9"/><path d="M24 20c-3-3 2-5-1-8M32 18c2-3-1-5 1-8" stroke="#A39C96" stroke-width="2.6" fill="none" stroke-linecap="round"/>`,
+  'Poussière': `<path d="M10 41c0-9 8-14 16-13 3-7 14-9 20-3 7-1 12 5 11 11 4 3 2 10-4 10H16c-4 0-6-2-6-5Z" fill="#E7D8B8" ${ol()}/><path d="M18 40c4-4 12-4 16 0s12 2 14-2" stroke="#C9B48A" stroke-width="2.6" fill="none" stroke-linecap="round"/><circle cx="14" cy="22" r="2.4" fill="#C9B48A"/><circle cx="52" cy="20" r="1.8" fill="#C9B48A"/><circle cx="8" cy="32" r="1.4" fill="#C9B48A"/><circle cx="58" cy="30" r="2.2" fill="#C9B48A"/><circle cx="28" cy="35" r="1.6" fill="#B59D70"/><circle cx="40" cy="44" r="1.8" fill="#B59D70"/>`,
+  'Énergie': `<path d="M37 4L14 36h14l-6 24 26-34H33l4-22Z" fill="#FFD23F" ${ol()}/><path d="M33 26h15L27 55l4-17h-5Z" fill="#F4B427" opacity=".75"/><path d="M33 10l-12 18" stroke="#FFF2B0" stroke-width="2.6" stroke-linecap="round"/><path d="M52 10l1.5 4 4 1.5-4 1.5-1.5 4-1.5-4-4-1.5 4-1.5Z" fill="#FFE680" ${ol(1.6)}/><path d="M12 48l1.2 3 3 1.2-3 1.2-1.2 3-1.2-3-3-1.2 3-1.2Z" fill="#FFE680" ${ol(1.4)}/>`,
+  'Nuage': `${cloud('#FFFFFF', '#DCE6F0')}<circle cx="44" cy="27" r="2.5" fill="#fff" opacity=".8"/>`,
+  'Vent': `${tube('M6 23h31a8 8 0 1 0-8-8', '#9CD8EC', 4.4)}${tube('M6 34h42a8 8 0 1 1-8 8', '#9CD8EC', 4.4)}${tube('M10 45h20', '#9CD8EC', 4.4)}<path d="M46 52c4-6 11-7 13-5-2 6-8 8-13 5Z" fill="#7CCB52" ${ol(2.2)}/><path d="M48 51l7-3" stroke="${O}" stroke-width="1.4" stroke-linecap="round"/>`,
+  'Éclair': `${cloud('#79849A', '#5E687C')}<path d="M35 40l-9 12h7l-4 10 14-16h-7l4-6Z" fill="#FFD23F" ${ol(2.4)}/>`,
+  'Pierre': `<path d="M10 46c-2-10 4-20 14-23 6-6 18-6 24 2 8 3 11 12 8 20-2 6-8 8-14 8H20c-6 0-9-3-10-7Z" fill="#A3A8B0" ${ol()}/><path d="M12 47c2 4 5 6 9 6h21c6 0 11-2 13-7-12 4-30 4-43 1Z" fill="#858B95"/><path d="M24 23l6 12 14-6M30 35l-3 16M44 29l8 12" stroke="#7E848E" stroke-width="2.2" fill="none" stroke-linecap="round"/><path d="M17 31c2-3 5-5 8-6" stroke="#fff" stroke-width="2.6" fill="none" stroke-linecap="round" opacity=".7"/>`,
+  'Sable': `<path d="M4 54c8-2 14-22 28-24 14 2 20 22 28 24Z" fill="#F2CC6A" ${ol()}/><path d="M32 30c6 4 12 18 16 24h11c-8-2-13-21-27-24Z" fill="#DDAE4C"/><path d="M13 48c4-2 8-2 12 0M20 41c3-1.5 6-1.5 9 0" stroke="#DDAE4C" stroke-width="2.2" fill="none" stroke-linecap="round"/><circle cx="36" cy="44" r="1.4" fill="#B9893A"/><circle cx="42" cy="50" r="1.4" fill="#B9893A"/><circle cx="26" cy="51" r="1.2" fill="#B9893A"/><circle cx="48" cy="16" r="6" fill="#FFD25A" ${ol(2.4)}/>`,
+  'Verre': `<path d="M26 6h12v10c0 3 8 6 8 16v20c0 4-3 7-7 7H25c-4 0-7-3-7-7V32c0-10 8-13 8-16Z" fill="#C9EFEB" ${ol()}/><path d="M19 44h26v8c0 3-2 6-6 6H25c-4 0-6-3-6-6Z" fill="#9AD8D2" opacity=".75"/><path d="M26 6h12v6H26z" fill="#C8955C" ${ol(2.4)}/><path d="M24 33v15" stroke="#fff" stroke-width="3.2" stroke-linecap="round"/><path d="M40 36v7" stroke="#fff" stroke-width="2.2" stroke-linecap="round" opacity=".8"/>`,
+  'Métal': `<path d="M4 57l4-12h22l4 12Z" fill="#B9C1CB" ${ol(2.6)}/><path d="M8 45l3-4h16l3 4Z" fill="#E6EAEE" ${ol(2.6)}/><path d="M30 57l4-12h22l4 12Z" fill="#B9C1CB" ${ol(2.6)}/><path d="M34 45l3-4h16l3 4Z" fill="#E6EAEE" ${ol(2.6)}/><path d="M17 41l4-12h22l4 12Z" fill="#C7CED7" ${ol(2.6)}/><path d="M21 29l3-4h16l3 4Z" fill="#F1F4F7" ${ol(2.6)}/><path d="M12 55l5-7M38 55l5-7M25 39l5-7" stroke="#fff" stroke-width="2.6" stroke-linecap="round"/><path d="M52 8l1.5 4.5L58 14l-4.5 1.5L52 20l-1.5-4.5L46 14l4.5-1.5z" fill="#fff" ${ol(1.6)}/>`,
+  'Lumière': `${tube('M50 32h9M44.7 44.7l6.4 6.4M32 50v9M19.3 44.7l-6.4 6.4M14 32H5M19.3 19.3l-6.4-6.4M32 14V5M44.7 19.3l6.4-6.4', '#FFB833', 3.4)}<circle cx="32" cy="32" r="13" fill="#FFD23F" ${ol()}/><circle cx="32" cy="32" r="8" fill="#FFE57A"/><ellipse cx="27" cy="27" rx="3.5" ry="2.2" fill="#fff" opacity=".7" transform="rotate(-30 27 27)"/>`,
+  'Vague': `<path d="M4 56c4-18 16-32 32-32 12 0 22 8 22 18 0 3-1 5-3 6-2-6-8-9-14-8 5 3 6 9 3 14-6-8-18-6-24 2-4 1-9 1-16 0Z" fill="#4FA9E6" ${ol()}/><path d="M36 24c12 0 22 8 22 18 0 3-1 5-3 6-2-6-8-9-14-8" stroke="#EAF7FF" stroke-width="4" fill="none" stroke-linecap="round"/><circle cx="50" cy="52" r="2.4" fill="#fff" ${ol(1.6)}/><circle cx="56" cy="44" r="1.6" fill="#fff"/><path d="M12 50c5-10 12-17 20-19" stroke="#8ACCF5" stroke-width="2.4" fill="none" stroke-linecap="round"/>`,
+  'Brouillard': `${tube('M12 19h32', '#DDE4EC', 4.4)}${tube('M20 30h34', '#D2DAE4', 4.4)}${tube('M9 41h38', '#DDE4EC', 4.4)}${tube('M18 52h26', '#D2DAE4', 4.4)}`,
+  'Orage': `${cloud('#6B7486', '#525B6C')}${drop(18, 48)}${drop(46, 48)}<path d="M33 40l-8 12h7l-4 10 13-15h-7l4-7Z" fill="#FFD23F" ${ol(2.4)}/>`,
+  // Interface
+  cauldron: `<ellipse cx="32" cy="60" rx="20" ry="3" fill="#000" opacity=".12"/><path d="M14 52l-3 6M50 52l3 6" ${ol(3.4)}/><path d="M10 28h44l-3 20c-1 7-8 11-19 11S14 55 13 48Z" fill="#4A4A55" ${ol()}/><path d="M17 34c0 7 2 12 7 15" stroke="#7E7E8C" stroke-width="2.6" fill="none" stroke-linecap="round"/><ellipse cx="32" cy="27" rx="22" ry="5" fill="#9EDB78" ${ol()}/><ellipse cx="27" cy="26" rx="8" ry="1.8" fill="#E6FFD0" opacity=".8"/><path d="M8 27a24 6 0 0 0 48 0" fill="none" stroke="#5E5E6A" stroke-width="3"/>`,
+  coin: `<circle cx="32" cy="32" r="26" fill="#F5C344" ${ol(3.4)}/><circle cx="32" cy="32" r="19" fill="#E9AE2E"/><path d="M32 19l3.8 7.7 8.5 1.2-6.1 6 1.4 8.4-7.6-4-7.6 4 1.4-8.4-6.1-6 8.5-1.2Z" fill="#FFE07A" ${ol(2)}/><path d="M17 22a18 18 0 0 1 10-7" stroke="#fff" stroke-width="3" stroke-linecap="round" fill="none" opacity=".7"/>`,
+  star: `<path d="M32 5l8 16.5 18 2.6-13 12.7 3.1 17.9L32 46.3l-16.1 8.4L19 36.8 6 24.1l18-2.6Z" fill="#FFCF4A" ${ol(3.4)}/><path d="M22 24l7-1 3-6" stroke="#fff" stroke-width="2.6" fill="none" stroke-linecap="round" opacity=".8"/>`
+};
+// width/height explicites : sans eux, un SVG dessiné dans un canvas prend 300 × 150 et se déforme
+const svgOf = body => `<svg xmlns="http://www.w3.org/2000/svg" width="256" height="256" viewBox="0 0 64 64">${body}</svg>`;
+const URL_OF = {};
+for (const [name, body] of Object.entries(ART)) URL_OF[name] = `data:image/svg+xml;charset=utf-8,${encodeURIComponent(svgOf(body))}`;
+const imgTag = (name, alt = '') => `<img src="${URL_OF[name]}" alt="${alt}" draggable="false">`;
+
+// Sceau de cire (deux moitiés pour la cinématique)
+function sealSvg(color, roman, half) {
+  const clip = half === 'left' ? '<clipPath id="h"><path d="M0 0h33l-4 18 6 14-5 14 4 18H0z"/></clipPath>' : '<clipPath id="h"><path d="M33 0h31v64H34l-4-18 5-14-6-14z"/></clipPath>';
+  const bumps = Array.from({ length: 14 }, (_, i) => {
+    const a = (i / 14) * Math.PI * 2;
+    return `<circle cx="${(32 + Math.cos(a) * 25).toFixed(1)}" cy="${(32 + Math.sin(a) * 25).toFixed(1)}" r="5"/>`;
+  }).join('');
+  return `data:image/svg+xml;charset=utf-8,${encodeURIComponent(`<svg xmlns="http://www.w3.org/2000/svg" width="256" height="256" viewBox="0 0 64 64"><defs>${clip}</defs><g clip-path="url(#h)"><g fill="${color}" stroke="${O}" stroke-width="2">${bumps}</g><circle cx="32" cy="32" r="25" fill="${color}"/><circle cx="32" cy="32" r="18" fill="none" stroke="rgba(0,0,0,.25)" stroke-width="2.5"/><text x="32" y="39" text-anchor="middle" font-family="Georgia,serif" font-weight="700" font-size="20" fill="rgba(255,255,255,.85)">${roman}</text><path d="M20 18a16 16 0 0 1 12-5" stroke="#fff" stroke-width="2.6" fill="none" stroke-linecap="round" opacity=".55"/></g></svg>`)}`;
+}
+
+/* =====================================================================
+   2. Données factices : vraies recettes à deux ingrédients de db/content/
+   ===================================================================== */
+const ESSENCE = { 'Eau': 'eau', 'Feu': 'feu', 'Terre': 'terre', 'Air': 'air', 'Vapeur': 'eau', 'Pluie': 'eau', 'Boue': 'terre', 'Fumée': 'air', 'Lave': 'feu', 'Poussière': 'terre', 'Énergie': 'feu', 'Nuage': 'air', 'Vent': 'air', 'Éclair': 'feu', 'Pierre': 'terre', 'Sable': 'terre', 'Verre': 'feu', 'Métal': 'feu', 'Lumière': 'feu', 'Vague': 'eau', 'Brouillard': 'air', 'Orage': 'air' };
+const ESS = { eau: ['Eau', 'Eau'], feu: ['Feu', 'Feu'], terre: ['Terre', 'Terre'], air: ['Air', 'Air'] };
+
+const RECIPES = {
+  'Vapeur': ['Eau+Feu', 'Feu+Pluie'], 'Pluie': ['Air+Eau', 'Eau+Nuage', 'Nuage+Nuage'], 'Boue': ['Eau+Terre'],
+  'Fumée': ['Air+Feu'], 'Lave': ['Feu+Terre'], 'Poussière': ['Air+Terre'], 'Énergie': ['Feu+Vapeur'],
+  'Nuage': ['Air+Vapeur', 'Poussière+Vapeur', 'Vapeur+Vapeur', 'Vapeur+Vent', 'Air+Brouillard'],
+  'Vent': ['Air+Air', 'Air+Énergie'], 'Éclair': ['Nuage+Énergie'],
+  'Pierre': ['Air+Lave', 'Eau+Lave'], 'Sable': ['Air+Pierre'], 'Verre': ['Feu+Sable', 'Sable+Éclair'],
+  'Métal': ['Feu+Pierre'], 'Lumière': ['Feu+Éclair'], 'Vague': ['Eau+Vent', 'Eau+Énergie'],
+  'Brouillard': ['Nuage+Terre'], 'Orage': ['Nuage+Éclair', 'Pluie+Éclair']
+};
+const RIDDLES = {
+  'Vapeur': 'L’eau a eu trop chaud : la voilà qui s’envole en soupirant.',
+  'Pluie': 'Le ciel a trop bu, il rend tout goutte à goutte.',
+  'Boue': 'Ce que devient la terre quand elle prend un bain.',
+  'Fumée': 'Le feu respire, et l’air garde son souffle gris.',
+  'Lave': 'La terre fond quand la flamme l’embrasse.',
+  'Poussière': 'Un peu de terre que l’air a appris à porter.',
+  'Énergie': 'Une vapeur qu’on chauffe encore finit par crépiter.',
+  'Nuage': 'Une vapeur qui a pris de la hauteur.',
+  'Vent': 'L’air qui se met en marche.',
+  'Éclair': 'Trop d’énergie dans un nuage, et il la jette au sol.',
+  'Pierre': 'La lave a refroidi : elle ne bougera plus.',
+  'Sable': 'La pierre, après mille ans de vent.',
+  'Verre': 'Du sable passé au feu, qui laisse passer le jour.',
+  'Métal': 'Ce que la pierre cache, la flamme le révèle.',
+  'Lumière': 'Un éclair qui prend le temps de rester.',
+  'Vague': 'L’eau que le vent pousse vers la plage.',
+  'Brouillard': 'Un nuage qui a voulu toucher terre.',
+  'Orage': 'Le nuage gronde, l’éclair lui répond.'
+};
+const CHAPTERS = [
+  { id: 'I', name: 'Les Premiers Souffles', color: '#CFE6F5', ink: '#2F6286', wax: '#5B8DB8', need: 0,
+    text: 'Où l’on apprend ce que l’eau, le feu, la terre et l’air se disent quand on les rapproche.',
+    pages: ['Vapeur', 'Pluie', 'Boue', 'Fumée', 'Lave', 'Poussière', 'Énergie', 'Nuage', 'Vent', 'Éclair'] },
+  { id: 'II', name: 'La Matière', color: '#F2DDB0', ink: '#86591C', wax: '#B8792F', need: 5,
+    text: 'Où la matière refroidit, durcit, brille et finit par prendre forme.',
+    pages: ['Pierre', 'Sable', 'Verre', 'Métal', 'Lumière', 'Vague', 'Brouillard', 'Orage'] }
+];
+const FAILS = ['Ça frémit… puis plus rien.', 'Le mélange boude. Essaie un autre ingrédient.', 'Une petite fumée, pas de vignette.', 'L’encre hésite. Pas encore.'];
+const INK_COST = 15;
+
+const keyOf = (a, b) => [a, b].sort().join('+');
+const MIX = new Map();
+const INGREDIENTS = new Set();
+for (const [result, list] of Object.entries(RECIPES)) {
+  RECIPES[result] = list.map(recipe => keyOf(...recipe.split('+')));
+  for (const recipe of RECIPES[result]) {
+    MIX.set(recipe, result);
+    recipe.split('+').forEach(name => INGREDIENTS.add(name));
+  }
+}
+
+/* =====================================================================
+   3. État (dans le jeu réel, le serveur fait foi)
+   ===================================================================== */
+const state = {
+  known: new Set(['Eau', 'Feu', 'Terre', 'Air']),
+  order: ['Eau', 'Feu', 'Terre', 'Air'],
+  variants: new Map(),
+  used: new Set(),
+  revealed: new Map(),
+  ess: { eau: 30, feu: 30, terre: 30, air: 30 },
+  coins: 0,
+  shownCoins: 0,
+  unlocked: new Set(['I']),
+  slots: [null, null],
+  fresh: null
+};
+
+let pages = [];
+function buildPages() {
+  pages = [{ type: 'toc' }];
+  for (const chapter of CHAPTERS) {
+    pages.push({ type: 'chapter', chapter });
+    if (state.unlocked.has(chapter.id)) chapter.pages.forEach(name => pages.push({ type: 'recipe', chapter, name }));
+  }
+}
+const chapterPageIndex = id => pages.findIndex(page => page.type === 'chapter' && page.chapter.id === id);
+const pageIndexOf = name => pages.findIndex(page => page.name === name);
+const chapterOf = name => CHAPTERS.find(chapter => chapter.pages.includes(name));
+function statusOf(name) {
+  if (state.known.has(name)) return 'found';
+  return RECIPES[name].some(recipe => recipe.split('+').every(part => state.known.has(part))) ? 'reach' : 'far';
+}
+// 1 : inscrite · +1 : servie (ou jamais ingrédient) · +1 : toutes les variantes
+function starsOf(name) {
+  if (!state.known.has(name)) return 0;
+  const served = state.used.has(name) || !INGREDIENTS.has(name);
+  const found = state.variants.get(name);
+  return 1 + (served ? 1 : 0) + (found && found.size === RECIPES[name].length ? 1 : 0);
+}
+const totalStars = () => CHAPTERS.reduce((sum, c) => sum + c.pages.reduce((s, name) => s + starsOf(name), 0), 0);
+const foundIn = chapter => chapter.pages.filter(name => state.known.has(name)).length;
+function roman(n) {
+  let out = '';
+  for (const [value, letters] of [[10, 'x'], [9, 'ix'], [5, 'v'], [4, 'iv'], [1, 'i']]) while (n >= value) { out += letters; n -= value; }
+  return out;
+}
+
+/* =====================================================================
+   4. Peinture des pages en Canvas 2D (une seule source pour le repos et le tour)
+   Coordonnées en unités u = largeur / 100 ; la page fait 100 × 133,3 u.
+   ===================================================================== */
+const ICON_IMG = {};
+function loadIcons() {
+  return Promise.all(Object.keys(ART).map(name => new Promise(resolve => {
+    const img = new Image();
+    img.onload = img.onerror = () => resolve();
+    img.src = URL_OF[name];
+    ICON_IMG[name] = img;
+  })));
+}
+const silhouettes = new Map();
+function silhouette(name, px) {
+  const key = `${name}@${px}`;
+  if (silhouettes.has(key)) return silhouettes.get(key);
+  const c = document.createElement('canvas');
+  c.width = c.height = px;
+  const g = c.getContext('2d');
+  g.drawImage(ICON_IMG[name], 0, 0, px, px);
+  g.globalCompositeOperation = 'source-in';
+  g.fillStyle = 'rgba(74, 52, 38, .2)';
+  g.fillRect(0, 0, px, px);
+  silhouettes.set(key, c);
+  return c;
+}
+let noiseTile = null;
+function noise() {
+  if (noiseTile) return noiseTile;
+  noiseTile = document.createElement('canvas');
+  noiseTile.width = noiseTile.height = 128;
+  const g = noiseTile.getContext('2d');
+  const img = g.createImageData(128, 128);
+  for (let i = 0; i < img.data.length; i += 4) {
+    const v = 110 + Math.random() * 70;
+    img.data[i] = v; img.data[i + 1] = v * .9; img.data[i + 2] = v * .76; img.data[i + 3] = Math.random() * 16;
+  }
+  g.putImageData(img, 0, 0);
+  return noiseTile;
+}
+function rr(ctx, x, y, w, h, r) {
+  ctx.beginPath();
+  ctx.moveTo(x + r, y);
+  ctx.arcTo(x + w, y, x + w, y + h, r);
+  ctx.arcTo(x + w, y + h, x, y + h, r);
+  ctx.arcTo(x, y + h, x, y, r);
+  ctx.arcTo(x, y, x + w, y, r);
+  ctx.closePath();
+}
+function starPath(ctx, cx, cy, r) {
+  ctx.beginPath();
+  for (let i = 0; i < 10; i++) {
+    const a = -Math.PI / 2 + (i * Math.PI) / 5;
+    const rad = i % 2 ? r * .46 : r;
+    ctx[i ? 'lineTo' : 'moveTo'](cx + Math.cos(a) * rad, cy + Math.sin(a) * rad);
+  }
+  ctx.closePath();
+}
+function setFont(ctx, u, size, weight, family, italic, spacing) {
+  ctx.font = `${italic ? 'italic ' : ''}${weight} ${size * u}px ${family}`;
+  if ('letterSpacing' in ctx) ctx.letterSpacing = `${(spacing || 0) * size * u}px`;
+}
+const TITLE = "Fraunces, Georgia, serif";
+const TEXT = "Nunito, 'Trebuchet MS', sans-serif";
+function wrap(ctx, text, max) {
+  const words = text.split(' ');
+  const lines = [];
+  let line = '';
+  for (const word of words) {
+    const next = line ? `${line} ${word}` : word;
+    if (ctx.measureText(next).width > max && line) { lines.push(line); line = word; } else line = next;
+  }
+  if (line) lines.push(line);
+  return lines;
+}
+function alpha(hex, a) {
+  const n = parseInt(hex.slice(1), 16);
+  return `rgba(${n >> 16}, ${(n >> 8) & 255}, ${n & 255}, ${a})`;
+}
+
+function paperBase(ctx, w, h, u) {
+  ctx.fillStyle = '#FBF6EA';
+  ctx.fillRect(0, 0, w, h);
+  let g = ctx.createRadialGradient(w * .7, h * .18, 0, w * .7, h * .18, w);
+  g.addColorStop(0, 'rgba(255, 255, 255, .6)');
+  g.addColorStop(1, 'rgba(255, 255, 255, 0)');
+  ctx.fillStyle = g;
+  ctx.fillRect(0, 0, w, h);
+  ctx.fillStyle = ctx.createPattern(noise(), 'repeat');
+  ctx.fillRect(0, 0, w, h);
+  g = ctx.createRadialGradient(w / 2, h / 2, w * .5, w / 2, h / 2, w);
+  g.addColorStop(0, 'rgba(130, 95, 60, 0)');
+  g.addColorStop(1, 'rgba(130, 95, 60, .12)');
+  ctx.fillStyle = g;
+  ctx.fillRect(0, 0, w, h);
+  g = ctx.createLinearGradient(0, 0, 10 * u, 0);
+  g.addColorStop(0, 'rgba(74, 52, 38, .24)');
+  g.addColorStop(1, 'rgba(74, 52, 38, 0)');
+  ctx.fillStyle = g;
+  ctx.fillRect(0, 0, 10 * u, h);
+}
+function frame(ctx, u, ink) {
+  rr(ctx, 7 * u, 3.4 * u, 89.5 * u, 126.5 * u, 3 * u);
+  ctx.strokeStyle = alpha(ink || '#4A3426', .22);
+  ctx.lineWidth = .45 * u;
+  ctx.stroke();
+}
+function folio(ctx, u, i) {
+  setFont(ctx, u, 3.6, 500, TITLE, true);
+  ctx.fillStyle = '#8A7262';
+  ctx.textAlign = 'center';
+  ctx.fillText(roman(i), 52 * u, 127 * u);
+}
+function pill(ctx, u, cx, cy, w, h, fill, text, color, size) {
+  rr(ctx, (cx - w / 2) * u, (cy - h / 2) * u, w * u, h * u, (h / 2) * u);
+  ctx.fillStyle = fill;
+  ctx.fill();
+  setFont(ctx, u, size || 3.6, 800, TEXT, false);
+  ctx.fillStyle = color;
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'middle';
+  ctx.fillText(text, cx * u, (cy + .2) * u);
+  ctx.textBaseline = 'alphabetic';
+}
+function iconBox(ctx, u, name, cx, top, known, ink) {
+  const s = 13;
+  ctx.save();
+  rr(ctx, (cx - s / 2) * u, top * u, s * u, s * u, 3.6 * u);
+  if (known) {
+    ctx.shadowColor = 'rgba(74, 52, 38, .16)';
+    ctx.shadowBlur = 1.6 * u;
+    ctx.shadowOffsetY = .6 * u;
+    ctx.fillStyle = '#FFFDF8';
+    ctx.fill();
+    ctx.shadowColor = 'transparent';
+    ctx.strokeStyle = alpha(ink, .28);
+    ctx.lineWidth = .4 * u;
+    ctx.stroke();
+    ctx.drawImage(ICON_IMG[name], (cx - 4.9) * u, (top + 1.6) * u, 9.8 * u, 9.8 * u);
+    setFont(ctx, u, 3, 800, TEXT, false);
+    ctx.fillStyle = '#8A7262';
+    ctx.textAlign = 'center';
+    ctx.fillText(name, cx * u, (top + s + 4.2) * u);
+  } else {
+    ctx.setLineDash([1.4 * u, 1.1 * u]);
+    ctx.strokeStyle = '#BDAA94';
+    ctx.lineWidth = .4 * u;
+    ctx.stroke();
+    ctx.setLineDash([]);
+    setFont(ctx, u, 6.4, 700, TITLE, false);
+    ctx.fillStyle = '#BDAA94';
+    ctx.textAlign = 'center';
+    ctx.fillText('?', cx * u, (top + 9) * u);
+  }
+  ctx.restore();
+}
+
+function paintRecipe(ctx, w, h, u, page, i) {
+  const { chapter, name } = page;
+  const status = statusOf(name);
+  const stars = starsOf(name);
+  const found = state.variants.get(name) || new Set();
+  const hotspots = [];
+  frame(ctx, u, chapter.ink);
+  // En-tête
+  setFont(ctx, u, 3.3, 900, TEXT, false, .12);
+  ctx.fillStyle = chapter.ink;
+  ctx.textAlign = 'left';
+  ctx.fillText(`${chapter.id} · ${chapter.name}`.toUpperCase(), 13 * u, 11 * u);
+  if ('letterSpacing' in ctx) ctx.letterSpacing = '0px';
+  for (let k = 0; k < 3; k++) {
+    starPath(ctx, (80 + k * 5.4) * u, 9.9 * u, 2.3 * u);
+    ctx.fillStyle = k < stars ? '#E3A93B' : 'rgba(189, 170, 148, .55)';
+    ctx.fill();
+  }
+  // Vignette
+  const vx = 52, vy = 36, vr = 19;
+  ctx.save();
+  ctx.beginPath();
+  ctx.arc(vx * u, vy * u, (vr + 1.6) * u, 0, Math.PI * 2);
+  ctx.shadowColor = 'rgba(74, 52, 38, .2)';
+  ctx.shadowBlur = 3.4 * u;
+  ctx.shadowOffsetY = 1.4 * u;
+  ctx.fillStyle = '#FFFDF8';
+  ctx.fill();
+  ctx.restore();
+  ctx.save();
+  ctx.beginPath();
+  ctx.arc(vx * u, vy * u, vr * u, 0, Math.PI * 2);
+  ctx.clip();
+  if (status === 'far') {
+    ctx.fillStyle = '#F1E7D2';
+    ctx.fillRect((vx - vr) * u, (vy - vr) * u, vr * 2 * u, vr * 2 * u);
+    ctx.strokeStyle = 'rgba(189, 170, 148, .45)';
+    ctx.lineWidth = 1.2 * u;
+    for (let k = -vr * 2; k < vr * 2; k += 4) {
+      ctx.beginPath();
+      ctx.moveTo((vx + k) * u, (vy - vr) * u);
+      ctx.lineTo((vx + k + vr * 2) * u, (vy + vr) * u);
+      ctx.stroke();
+    }
+  } else {
+    const g = ctx.createRadialGradient((vx - 6) * u, (vy - 8) * u, 0, vx * u, vy * u, vr * u);
+    g.addColorStop(0, '#FFFFFF');
+    g.addColorStop(1, chapter.color);
+    ctx.fillStyle = g;
+    ctx.fillRect((vx - vr) * u, (vy - vr) * u, vr * 2 * u, vr * 2 * u);
+  }
+  ctx.restore();
+  const iconPx = Math.round(24 * u);
+  if (status === 'found') ctx.drawImage(ICON_IMG[name], (vx - 12) * u, (vy - 12) * u, 24 * u, 24 * u);
+  else if (status === 'reach') ctx.drawImage(silhouette(name, iconPx), (vx - 12) * u, (vy - 12) * u, 24 * u, 24 * u);
+  else {
+    setFont(ctx, u, 16, 700, TITLE, false);
+    ctx.fillStyle = '#BDAA94';
+    ctx.textAlign = 'center';
+    ctx.fillText('?', vx * u, (vy + 5.6) * u);
+  }
+  if (status === 'found') {
+    ctx.save();
+    ctx.translate(66 * u, 52 * u);
+    ctx.rotate(-.14);
+    pill(ctx, u, 0, 0, 22, 6, chapter.ink, 'INSCRITE', '#FFFDF8', 3);
+    ctx.restore();
+  }
+  hotspots.push({ id: 'vignette', x: vx - vr, y: vy - vr, w: vr * 2, h: vr * 2, pulse: status === 'reach' });
+  // Titre
+  ctx.textAlign = 'center';
+  if (status === 'found') {
+    setFont(ctx, u, 8.6, 600, TITLE, false);
+    ctx.fillStyle = '#4A3426';
+    ctx.fillText(name, 52 * u, 67 * u);
+  } else {
+    setFont(ctx, u, 7, 600, TITLE, false, .22);
+    ctx.fillStyle = '#BDAA94';
+    ctx.fillText(status === 'reach' ? [...name].map(() => '_').join('') : '? ? ?', 52 * u, 66 * u);
+    if ('letterSpacing' in ctx) ctx.letterSpacing = '0px';
+  }
+  // Devinette
+  setFont(ctx, u, 4.3, 400, TITLE, true);
+  ctx.fillStyle = '#8A7262';
+  const riddle = status === 'far' ? 'Un ingrédient te manque encore pour la tenter.' : `« ${RIDDLES[name]} »`;
+  wrap(ctx, riddle, 72 * u).slice(0, 3).forEach((line, k) => ctx.fillText(line, 52 * u, (75 + k * 5.8) * u));
+  // Recette
+  let a = null, b = null;
+  if (status === 'found') [a, b] = (found.values().next().value || RECIPES[name][0]).split('+');
+  else a = state.revealed.get(name) || null;
+  iconBox(ctx, u, a, 30, 89, Boolean(a), chapter.ink);
+  iconBox(ctx, u, b, 52, 89, Boolean(b), chapter.ink);
+  iconBox(ctx, u, name, 74, 89, status === 'found', chapter.ink);
+  setFont(ctx, u, 5.6, 400, TITLE, false);
+  ctx.fillStyle = '#BDAA94';
+  ctx.textAlign = 'center';
+  ctx.fillText('+', 41 * u, 97.6 * u);
+  ctx.fillText('=', 63 * u, 97.6 * u);
+  // Variantes
+  const variants = RECIPES[name];
+  setFont(ctx, u, 3.2, 800, TEXT, false);
+  ctx.fillStyle = '#8A7262';
+  const label = 'Variantes';
+  const lw = ctx.measureText(label).width / u;
+  const total = lw + 1.4 + variants.length * 3;
+  let x = 52 - total / 2;
+  ctx.textAlign = 'left';
+  ctx.fillText(label, x * u, 112.4 * u);
+  x += lw + 2.4;
+  for (const recipe of variants) {
+    ctx.beginPath();
+    ctx.arc(x * u, 111.3 * u, 1 * u, 0, Math.PI * 2);
+    ctx.lineWidth = .35 * u;
+    ctx.strokeStyle = chapter.ink;
+    if (found.has(recipe)) { ctx.fillStyle = chapter.ink; ctx.fill(); }
+    ctx.stroke();
+    x += 3;
+  }
+  // Aide
+  if (status === 'reach') {
+    const used = state.revealed.has(name);
+    const ess = ESSENCE[name];
+    ctx.save();
+    rr(ctx, 30 * u, 115.5 * u, 44 * u, 8 * u, 4 * u);
+    ctx.fillStyle = used ? '#F1E7D2' : '#4A3426';
+    if (!used) { ctx.shadowColor = 'rgba(0, 0, 0, .18)'; ctx.shadowOffsetY = .5 * u; }
+    ctx.fill();
+    ctx.restore();
+    setFont(ctx, u, 3.5, 900, TEXT, false);
+    ctx.fillStyle = used ? '#BDAA94' : '#FFFDF8';
+    ctx.textBaseline = 'middle';
+    if (used) {
+      ctx.textAlign = 'center';
+      ctx.fillText('Encre utilisée', 52 * u, 119.7 * u);
+    } else {
+      ctx.textAlign = 'right';
+      ctx.fillText(`✒︎ Encre · ${INK_COST}`, 63 * u, 119.7 * u);
+      ctx.drawImage(ICON_IMG[ESS[ess][0]], 64.4 * u, 116.9 * u, 5.6 * u, 5.6 * u);
+    }
+    ctx.textBaseline = 'alphabetic';
+    if (!used) hotspots.push({ id: 'ink', x: 30, y: 115.5, w: 44, h: 8, action: 'ink', data: name, label: `Encre : révéler un ingrédient pour ${INK_COST} essences` });
+  }
+  folio(ctx, u, i);
+  const text = status === 'found'
+    ? `${name}, inscrite, ${stars} étoile${stars > 1 ? 's' : ''} sur 3. ${RIDDLES[name]}`
+    : status === 'reach' ? `Page ${roman(i)} : élément à trouver, ${name.length} lettres. ${RIDDLES[name]}` : `Page ${roman(i)} : lointaine.`;
+  return { hotspots, label: text };
+}
+
+function paintChapter(ctx, w, h, u, page, i) {
+  const { chapter } = page;
+  const open = state.unlocked.has(chapter.id);
+  frame(ctx, u, chapter.ink);
+  ctx.save();
+  ctx.beginPath();
+  ctx.arc(52 * u, 34 * u, 16.4 * u, 0, Math.PI * 2);
+  ctx.shadowColor = 'rgba(74, 52, 38, .18)';
+  ctx.shadowBlur = 3 * u;
+  ctx.shadowOffsetY = 1.2 * u;
+  ctx.fillStyle = '#FFFDF8';
+  ctx.fill();
+  ctx.restore();
+  ctx.beginPath();
+  ctx.arc(52 * u, 34 * u, 15 * u, 0, Math.PI * 2);
+  ctx.fillStyle = open ? chapter.color : '#EFE6D3';
+  ctx.fill();
+  setFont(ctx, u, 13, 700, TITLE, false);
+  ctx.fillStyle = open ? chapter.ink : '#BDAA94';
+  ctx.textAlign = 'center';
+  ctx.fillText(chapter.id, 52 * u, 38.6 * u);
+  setFont(ctx, u, 3.3, 900, TEXT, false, .16);
+  ctx.fillStyle = chapter.ink;
+  ctx.fillText(`CHAPITRE ${chapter.id}`, 52 * u, 59 * u);
+  if ('letterSpacing' in ctx) ctx.letterSpacing = '0px';
+  setFont(ctx, u, 8.6, 700, TITLE, false);
+  ctx.fillStyle = '#4A3426';
+  const nameLines = wrap(ctx, chapter.name, 78 * u);
+  nameLines.forEach((line, k) => ctx.fillText(line, 52 * u, (69 + k * 9) * u));
+  setFont(ctx, u, 4.3, 400, TITLE, true);
+  ctx.fillStyle = '#8A7262';
+  const top = 69 + nameLines.length * 9;
+  wrap(ctx, chapter.text, 72 * u).forEach((line, k) => ctx.fillText(line, 52 * u, (top + k * 5.8) * u));
+  if (open) {
+    const stars = chapter.pages.reduce((s, n) => s + starsOf(n), 0);
+    pill(ctx, u, 37, 108, 26, 8, alpha(chapter.color, .9), `${foundIn(chapter)} / ${chapter.pages.length} pages`, '#4A3426', 3.4);
+    pill(ctx, u, 67, 108, 26, 8, alpha(chapter.color, .9), `★ ${stars} / ${chapter.pages.length * 3}`, '#4A3426', 3.4);
+  } else {
+    pill(ctx, u, 52, 108, 52, 8.4, '#EFE6D3', `Scellé · encore ${Math.max(0, chapter.need - totalStars())} ★`, '#8A7262', 3.6);
+  }
+  folio(ctx, u, i);
+  return { hotspots: [], label: `Chapitre ${chapter.id}, ${chapter.name}. ${open ? `${foundIn(chapter)} pages inscrites sur ${chapter.pages.length}.` : 'Scellé.'}` };
+}
+
+function paintToc(ctx, w, h, u) {
+  frame(ctx, u);
+  const hotspots = [];
+  setFont(ctx, u, 11, 700, TITLE, false);
+  ctx.fillStyle = '#4A3426';
+  ctx.textAlign = 'center';
+  ctx.fillText('Le Livre', 52 * u, 24 * u);
+  setFont(ctx, u, 4.4, 400, TITLE, true);
+  ctx.fillStyle = '#8A7262';
+  ctx.fillText('Grimoire d’alchimie d’Origins', 52 * u, 32 * u);
+  CHAPTERS.forEach((chapter, k) => {
+    const open = state.unlocked.has(chapter.id);
+    const y = 42 + k * 16;
+    rr(ctx, 13 * u, y * u, 78 * u, 13 * u, 3.6 * u);
+    ctx.fillStyle = open ? alpha(chapter.color, .75) : '#F1E7D2';
+    ctx.fill();
+    ctx.beginPath();
+    ctx.arc(20.5 * u, (y + 6.5) * u, 4.4 * u, 0, Math.PI * 2);
+    ctx.fillStyle = '#FFFDF8';
+    ctx.fill();
+    setFont(ctx, u, 4.2, 700, TITLE, false);
+    ctx.fillStyle = open ? chapter.ink : '#BDAA94';
+    ctx.textAlign = 'center';
+    ctx.fillText(chapter.id, 20.5 * u, (y + 8) * u);
+    setFont(ctx, u, 3.9, 900, TEXT, false);
+    ctx.fillStyle = open ? '#4A3426' : '#8A7262';
+    ctx.textAlign = 'left';
+    ctx.fillText(chapter.name, 28 * u, (y + 5.6) * u);
+    rr(ctx, 28 * u, (y + 7.6) * u, 46 * u, 1.6 * u, .8 * u);
+    ctx.fillStyle = 'rgba(255, 253, 248, .9)';
+    ctx.fill();
+    if (open && foundIn(chapter)) {
+      rr(ctx, 28 * u, (y + 7.6) * u, Math.max(1.6, 46 * foundIn(chapter) / chapter.pages.length) * u, 1.6 * u, .8 * u);
+      ctx.fillStyle = chapter.ink;
+      ctx.fill();
+    }
+    setFont(ctx, u, 3.4, 900, TEXT, false);
+    ctx.textAlign = 'right';
+    ctx.fillStyle = open ? '#4A3426' : '#8A7262';
+    ctx.fillText(open ? `${foundIn(chapter)}/${chapter.pages.length}` : `${chapter.need} ★`, 88 * u, (y + 8) * u);
+    hotspots.push({ id: `toc-${chapter.id}`, x: 13, y, w: 78, h: 13, action: 'goto', data: chapterPageIndex(chapter.id), label: `Chapitre ${chapter.id}, ${chapter.name}${open ? '' : ', scellé'}` });
+  });
+  ctx.save();
+  rr(ctx, 29 * u, 82 * u, 46 * u, 9.4 * u, 4.7 * u);
+  ctx.shadowColor = 'rgba(0, 0, 0, .2)';
+  ctx.shadowOffsetY = .7 * u;
+  ctx.fillStyle = '#4A3426';
+  ctx.fill();
+  ctx.restore();
+  setFont(ctx, u, 4, 900, TEXT, false);
+  ctx.fillStyle = '#FFFDF8';
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'middle';
+  ctx.fillText('Ouvrir le livre', 52 * u, 86.9 * u);
+  ctx.textBaseline = 'alphabetic';
+  hotspots.push({ id: 'open', x: 29, y: 82, w: 46, h: 9.4, action: 'goto', data: 1, label: 'Ouvrir le livre' });
+  setFont(ctx, u, 3.5, 700, TEXT, false);
+  ctx.fillStyle = '#8A7262';
+  ctx.fillText('Glisse la page du doigt, ou touche son bord.', 52 * u, 122 * u);
+  return { hotspots, label: `Sommaire. ${CHAPTERS.map(c => `Chapitre ${c.id}, ${c.name}`).join('. ')}.` };
+}
+
+function paintPage(index, ctx, w, h) {
+  const u = w / 100;
+  ctx.save();
+  ctx.clearRect(0, 0, w, h);
+  paperBase(ctx, w, h, u);
+  const page = pages[index];
+  const result = page.type === 'toc' ? paintToc(ctx, w, h, u) : page.type === 'chapter' ? paintChapter(ctx, w, h, u, page, index) : paintRecipe(ctx, w, h, u, page, index);
+  ctx.restore();
+  return result;
+}
+
+/* =====================================================================
+   5. Moteur du livre : WebGL, vraie courbure de page
+   - le maillage de la feuille s'enroule sur un cylindre qui suit le doigt ;
+   - lumière, reflet sur le pli, ombre portée et transparence du papier dans les shaders ;
+   - rendu seulement pendant un tour (rien ne tourne au repos) ;
+   - pages voisines préparées à l'avance ; perte de contexte gérée ;
+   - repli en fondu sans WebGL ou avec « réduire les animations » ;
+   - destroy() retire écouteurs, boucles, textures, tampons et programme.
+   ===================================================================== */
+const VERT = `
+attribute vec2 aUV;
+uniform vec2 uPage, uOrigin, uCanvas, uL, uDir;
+uniform float uR, uCurl, uDepth;
+varying vec2 vUV;
+varying vec3 vN;
+varying float vD;
+void main() {
+  vec2 p = aUV * uPage;
+  vec3 pos = vec3(p, 0.0);
+  vec3 n = vec3(0.0, 0.0, 1.0);
+  float d = dot(p - uL, uDir);
+  if (uCurl > 0.5 && d > 0.0) {
+    vec2 base = p - uDir * d;
+    float half_ = 3.14159265 * uR;
+    if (d < half_) {
+      float a = d / uR;
+      pos.xy = base + uDir * (uR * sin(a));
+      pos.z = uR * (1.0 - cos(a));
+      n = vec3(-uDir * sin(a), cos(a));
+    } else {
+      pos.xy = base - uDir * (d - half_);
+      pos.z = 2.0 * uR;
+      n = vec3(0.0, 0.0, -1.0);
+    }
+  }
+  vUV = aUV;
+  vN = n;
+  vD = d;
+  vec2 c = uCanvas * 0.5;
+  vec2 world = uOrigin + pos.xy;
+  vec2 sp = c + (world - c) * (uDepth / (uDepth - pos.z));
+  gl_Position = vec4(sp.x / uCanvas.x * 2.0 - 1.0, 1.0 - sp.y / uCanvas.y * 2.0, -pos.z / (4.0 * uR + 1.0), 1.0);
+}`;
+const FRAG = `
+#ifdef GL_FRAGMENT_PRECISION_HIGH
+precision highp float;
+#else
+precision mediump float;
+#endif
+uniform sampler2D uFront, uBack;
+uniform vec2 uPageF;
+uniform float uMode, uCurlF, uRF, uCorner, uAlpha;
+varying vec2 vUV;
+varying vec3 vN;
+varying float vD;
+void main() {
+  vec2 p = vUV * uPageF;
+  float rc = p.x > uPageF.x * 0.5 ? uCorner : uCorner * 0.3;
+  vec2 inner = clamp(p, vec2(rc), uPageF - vec2(rc));
+  float mask = clamp(0.5 - (length(p - inner) - rc), 0.0, 1.0);
+  if (mask <= 0.0) discard;
+  vec3 col;
+  if (uMode > 0.5) {
+    col = texture2D(uFront, vUV).rgb;
+    if (uCurlF > 0.5 && vD > 0.0) col *= 1.0 - 0.5 * exp(-max(vD - uRF * 0.6, 0.0) / (uRF * 2.2));
+  } else {
+    vec3 n = normalize(vN);
+    bool front = n.z >= 0.0;
+    vec3 nv = front ? n : -n;
+    vec3 base;
+    if (front) base = texture2D(uFront, vUV).rgb;
+    else {
+      vec3 paper = texture2D(uBack, vUV).rgb;
+      base = mix(paper, paper * texture2D(uFront, vUV).rgb, 0.12);
+    }
+    vec3 L = normalize(vec3(-0.35, -0.55, 1.0));
+    float diff = clamp(dot(nv, L) / L.z, 0.0, 1.0);
+    float shade = mix(0.58, 1.0, diff);
+    vec3 H = normalize(L + vec3(0.0, 0.0, 1.0));
+    float spec = pow(max(dot(nv, H), 0.0), 42.0) * 0.2 * uCurlF * step(0.0, vD);
+    float ao = 1.0;
+    if (uCurlF > 0.5 && vD < 0.0) ao = 1.0 - 0.3 * exp(vD / (uRF * 1.3));
+    col = base * shade * ao + spec;
+  }
+  float a = mask * uAlpha;
+  gl_FragColor = vec4(col * a, a);
+}`;
+
+function createBook(opts) {
+  const { stage, rig, wrap, hot, count, paint, onChange, onRest } = opts;
+  const ac = new AbortController();
+  const on = (target, type, fn, extra) => target.addEventListener(type, fn, { ...extra, signal: ac.signal });
+  const canvas = document.createElement('canvas');
+  canvas.className = 'gl';
+  rig.insertBefore(canvas, hot);
+  const reduce = window.matchMedia('(prefers-reduced-motion: reduce)');
+  const COLS = 44, ROWS = 30, POOL = 4;
+
+  let gl = null, ctx2d = null, prog = null, buf = null, ibuf = null, backTex = null, indexCount = 0;
+  const loc = {};
+  let dpr = 1, cw = 0, ch = 0;
+  const page = { x: 0, y: 0, w: 0, h: 0 }; // en px CSS, relatif au canvas
+  let index = opts.start || 0, version = 0, locked = false;
+  const pool = [];
+  // Tour en cours : P0 = point saisi (bord droit), F = doigt (en px de texture)
+  let phase = 'idle', dir = 0, target = 0, turning = false, fade = 1;
+  const P0 = { x: 0, y: 0 }, F = { x: 0, y: 0 }, F0 = { x: 0, y: 0 }, Fend = { x: 0, y: 0 };
+  let raf = 0, anim = null, pointer = null, suppressClick = false, prefetchTimer = 0, layoutRaf = 0;
+  let sx = 0, sy = 0, xPrev = 0, tPrev = 0, xLast = 0, yLast = 0, tLast = 0;
+
+  const W = () => page.w * dpr;
+  const H = () => page.h * dpr;
+
+  function compile(type, src) {
+    const s = gl.createShader(type);
+    gl.shaderSource(s, src);
+    gl.compileShader(s);
+    if (!gl.getShaderParameter(s, gl.COMPILE_STATUS)) throw new Error(gl.getShaderInfoLog(s));
+    return s;
+  }
+  function makeTexture() {
+    const t = gl.createTexture();
+    gl.bindTexture(gl.TEXTURE_2D, t);
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
+    return t;
+  }
+  function initGL() {
+    gl = null;
+    if (!opts.forceFallback) {
+      try { gl = canvas.getContext('webgl', { alpha: true, premultipliedAlpha: true, antialias: true, depth: true }); } catch { gl = null; }
+    }
+    if (!gl) {
+      ctx2d = canvas.getContext('2d');
+      return;
+    }
+    try {
+      prog = gl.createProgram();
+      const vs = compile(gl.VERTEX_SHADER, VERT);
+      const fs = compile(gl.FRAGMENT_SHADER, FRAG);
+      gl.attachShader(prog, vs);
+      gl.attachShader(prog, fs);
+      gl.linkProgram(prog);
+      gl.deleteShader(vs);
+      gl.deleteShader(fs);
+      if (!gl.getProgramParameter(prog, gl.LINK_STATUS)) throw new Error(gl.getProgramInfoLog(prog));
+    } catch (error) {
+      console.warn('WebGL indisponible, repli en fondu', error);
+      gl = null;
+      ctx2d = canvas.getContext('2d');
+      return;
+    }
+    gl.useProgram(prog);
+    for (const name of ['uPage', 'uOrigin', 'uCanvas', 'uL', 'uDir', 'uR', 'uCurl', 'uDepth', 'uFront', 'uBack', 'uMode', 'uCorner', 'uAlpha', 'uPageF', 'uCurlF', 'uRF']) loc[name] = gl.getUniformLocation(prog, name);
+    loc.aUV = gl.getAttribLocation(prog, 'aUV');
+    // Grille de la feuille
+    const verts = new Float32Array((COLS + 1) * (ROWS + 1) * 2);
+    let k = 0;
+    for (let r = 0; r <= ROWS; r++) for (let c = 0; c <= COLS; c++) { verts[k++] = c / COLS; verts[k++] = r / ROWS; }
+    const idx = new Uint16Array(COLS * ROWS * 6);
+    k = 0;
+    for (let r = 0; r < ROWS; r++) for (let c = 0; c < COLS; c++) {
+      const a = r * (COLS + 1) + c, b = a + 1, d = a + COLS + 1, e = d + 1;
+      idx[k++] = a; idx[k++] = d; idx[k++] = b; idx[k++] = b; idx[k++] = d; idx[k++] = e;
+    }
+    indexCount = idx.length;
+    buf = gl.createBuffer();
+    gl.bindBuffer(gl.ARRAY_BUFFER, buf);
+    gl.bufferData(gl.ARRAY_BUFFER, verts, gl.STATIC_DRAW);
+    ibuf = gl.createBuffer();
+    gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, ibuf);
+    gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, idx, gl.STATIC_DRAW);
+    gl.enableVertexAttribArray(loc.aUV);
+    gl.vertexAttribPointer(loc.aUV, 2, gl.FLOAT, false, 0, 0);
+    gl.enable(gl.BLEND);
+    gl.blendFunc(gl.ONE, gl.ONE_MINUS_SRC_ALPHA);
+    gl.depthFunc(gl.LESS);
+    // Verso : papier un peu plus sombre, même grain
+    const back = document.createElement('canvas');
+    back.width = 256;
+    back.height = 342;
+    const b2 = back.getContext('2d');
+    b2.fillStyle = '#F1E7D2';
+    b2.fillRect(0, 0, 256, 342);
+    b2.fillStyle = b2.createPattern(noise(), 'repeat');
+    b2.fillRect(0, 0, 256, 342);
+    backTex = makeTexture();
+    gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, back);
+    for (const entry of pool) entry.tex = makeTexture();
+  }
+  function releaseGL() {
+    if (!gl) return;
+    for (const entry of pool) if (entry.tex) gl.deleteTexture(entry.tex);
+    if (backTex) gl.deleteTexture(backTex);
+    if (buf) gl.deleteBuffer(buf);
+    if (ibuf) gl.deleteBuffer(ibuf);
+    if (prog) gl.deleteProgram(prog);
+    for (const entry of pool) entry.tex = null;
+    backTex = buf = ibuf = prog = null;
+  }
+
+  for (let i = 0; i < POOL; i++) {
+    const c = document.createElement('canvas');
+    pool.push({ canvas: c, ctx: c.getContext('2d'), tex: null, index: -1, version: -1, hotspots: [], label: '' });
+  }
+
+  function layout() {
+    layoutRaf = 0;
+    const rect = stage.getBoundingClientRect();
+    const book = wrap.getBoundingClientRect();
+    const rigRect = rig.getBoundingClientRect();
+    dpr = Math.min(window.devicePixelRatio || 1, 2);
+    cw = Math.round(rect.width * dpr);
+    ch = Math.round(rect.height * dpr);
+    canvas.width = cw;
+    canvas.height = ch;
+    page.x = book.left - rigRect.left;
+    page.y = book.top - rigRect.top;
+    page.w = book.width;
+    page.h = book.height;
+    Object.assign(hot.style, { left: `${page.x}px`, top: `${page.y}px`, width: `${page.w}px`, height: `${page.h}px` });
+    for (const entry of pool) {
+      entry.canvas.width = Math.round(W());
+      entry.canvas.height = Math.round(H());
+      entry.index = -1;
+    }
+    version++;
+    if (anim) finishNow();
+    draw();
+    rest();
+  }
+
+  function victim() {
+    let best = null, distance = -1;
+    for (const entry of pool) {
+      if (entry.index === index || (turning && entry.index === target)) continue;
+      const d = entry.index < 0 ? 1e9 : Math.abs(entry.index - index);
+      if (d > distance) { distance = d; best = entry; }
+    }
+    return best || pool[0];
+  }
+  function entry(i) {
+    let e = pool.find(p => p.index === i);
+    if (e && e.version === version) return e;
+    if (!e) e = victim();
+    e.index = i;
+    e.version = version;
+    const result = paint(i, e.ctx, e.canvas.width, e.canvas.height);
+    e.hotspots = result.hotspots;
+    e.label = result.label;
+    if (gl && e.tex) {
+      gl.bindTexture(gl.TEXTURE_2D, e.tex);
+      gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, e.canvas);
+    }
+    return e;
+  }
+
+  function curl() {
+    const w = W();
+    const dx = P0.x - F.x, dy = P0.y - F.y;
+    const length = Math.hypot(dx, dy);
+    const progress = Math.min(1, Math.max(0, dx / (P0.x - Fend.x)));
+    let angle = length > 1 ? Math.atan2(dy, dx) : 0;
+    if (dx <= 0) angle = 0;
+    const tilt = .55 * (1 - progress);
+    angle = Math.max(-tilt, Math.min(tilt, angle));
+    return { lx: (P0.x + F.x) / 2, ly: (P0.y + F.y) / 2, ux: Math.cos(angle), uy: Math.sin(angle), r: w * (.1 - .04 * progress), progress };
+  }
+
+  function drawSheet(e, mode, c, a) {
+    gl.activeTexture(gl.TEXTURE0);
+    gl.bindTexture(gl.TEXTURE_2D, e.tex);
+    gl.uniform1i(loc.uFront, 0);
+    gl.activeTexture(gl.TEXTURE1);
+    gl.bindTexture(gl.TEXTURE_2D, backTex);
+    gl.uniform1i(loc.uBack, 1);
+    gl.uniform1f(loc.uMode, mode);
+    gl.uniform1f(loc.uAlpha, a);
+    const r = c ? c.r : W() * .1;
+    // La page de dessous reste à plat (uCurl, sommets) mais reçoit l'ombre du pli (uCurlF, pixels)
+    gl.uniform1f(loc.uCurl, c && mode === 0 ? 1 : 0);
+    gl.uniform1f(loc.uCurlF, c ? 1 : 0);
+    gl.uniform1f(loc.uR, r);
+    gl.uniform1f(loc.uRF, r);
+    if (c) {
+      gl.uniform2f(loc.uL, c.lx, c.ly);
+      gl.uniform2f(loc.uDir, c.ux, c.uy);
+    }
+    gl.drawElements(gl.TRIANGLES, indexCount, gl.UNSIGNED_SHORT, 0);
+  }
+
+  function draw() {
+    if (!cw || !page.w) return;
+    if (!gl) return draw2d();
+    if (gl.isContextLost()) return;
+    gl.viewport(0, 0, cw, ch);
+    gl.clearColor(0, 0, 0, 0);
+    gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
+    gl.useProgram(prog);
+    gl.uniform2f(loc.uPage, W(), H());
+    gl.uniform2f(loc.uPageF, W(), H());
+    gl.uniform2f(loc.uOrigin, page.x * dpr, page.y * dpr);
+    gl.uniform2f(loc.uCanvas, cw, ch);
+    gl.uniform1f(loc.uDepth, H() * 2.6);
+    gl.uniform1f(loc.uCorner, 20 * dpr);
+    if (turning && phase !== 'fade') {
+      const c = curl();
+      const under = entry(dir > 0 ? target : index);
+      const front = entry(dir > 0 ? index : target);
+      gl.disable(gl.DEPTH_TEST);
+      drawSheet(under, 1, c, 1);
+      gl.clear(gl.DEPTH_BUFFER_BIT);
+      gl.enable(gl.DEPTH_TEST);
+      drawSheet(front, 0, c, 1);
+      gl.disable(gl.DEPTH_TEST);
+    } else if (phase === 'fade') {
+      drawSheet(entry(target), 0, null, 1);
+      drawSheet(entry(index), 0, null, fade);
+    } else {
+      drawSheet(entry(index), 0, null, 1);
+    }
+  }
+  function draw2d() {
+    ctx2d.clearRect(0, 0, cw, ch);
+    const x = page.x * dpr, y = page.y * dpr;
+    // Coins arrondis comme en WebGL : petit côté reliure, grand côté tranche
+    const big = 20 * dpr, small = 6 * dpr, w = W(), h = H();
+    ctx2d.save();
+    ctx2d.beginPath();
+    ctx2d.moveTo(x + small, y);
+    ctx2d.arcTo(x + w, y, x + w, y + h, big);
+    ctx2d.arcTo(x + w, y + h, x, y + h, big);
+    ctx2d.arcTo(x, y + h, x, y, small);
+    ctx2d.arcTo(x, y, x + w, y, small);
+    ctx2d.clip();
+    if (phase === 'fade') {
+      ctx2d.drawImage(entry(target).canvas, x, y);
+      ctx2d.globalAlpha = fade;
+    }
+    ctx2d.drawImage(entry(index).canvas, x, y);
+    ctx2d.restore();
+  }
+
+  // Fin de tour, ou état de repos après un changement : couche interactive et voisines
+  function rest() {
+    if (turning || phase !== 'idle') return;
+    const e = entry(index);
+    hot.classList.remove('is-turning');
+    if (onRest) onRest(index, e.hotspots, e.label);
+    clearTimeout(prefetchTimer);
+    prefetchTimer = setTimeout(() => {
+      if (turning) return;
+      if (index + 1 < count()) entry(index + 1);
+      if (index > 0) entry(index - 1);
+    }, 80);
+  }
+
+  function begin(d, tgt, y) {
+    dir = d;
+    target = tgt;
+    turning = true;
+    hot.classList.add('is-turning');
+    const w = W(), h = H();
+    P0.x = w;
+    P0.y = Math.min(h * .92, Math.max(h * .08, y));
+    Fend.x = 2 * (-(Math.PI * .06 + .035) * w) - P0.x;
+    Fend.y = P0.y;
+    const start = d > 0 ? P0 : Fend;
+    F.x = F0.x = start.x;
+    F.y = F0.y = start.y;
+  }
+  function end(commit) {
+    turning = false;
+    phase = 'idle';
+    if (commit) index = target;
+    draw();
+    if (commit && onChange) onChange(index);
+    rest();
+  }
+
+  const easeOut = t => 1 - Math.pow(1 - t, 3);
+  const easeBack = t => { const s = 1.4; return 1 + (s + 1) * Math.pow(t - 1, 3) + s * Math.pow(t - 1, 2); };
+  function animateTo(tx, ty, duration, ease, lift, done) {
+    const fx = F.x, fy = F.y, t0 = performance.now();
+    anim = { tx, ty, done };
+    const step = now => {
+      const t = Math.min(1, (now - t0) / duration);
+      const e = ease(t);
+      F.x = fx + (tx - fx) * e;
+      F.y = fy + (ty - fy) * e - lift * Math.sin(Math.PI * t);
+      draw();
+      if (t < 1) raf = requestAnimationFrame(step);
+      else {
+        raf = 0;
+        const finish = anim.done;
+        anim = null;
+        finish();
+      }
+    };
+    raf = requestAnimationFrame(step);
+  }
+  function finishNow() {
+    if (!anim) return;
+    cancelAnimationFrame(raf);
+    raf = 0;
+    F.x = anim.tx;
+    F.y = anim.ty;
+    const finish = anim.done;
+    anim = null;
+    finish();
+  }
+  function settle(commit, speed, resolve) {
+    phase = 'anim';
+    const goal = commit === (dir > 0) ? Fend : P0;
+    const distance = Math.abs(goal.x - F.x);
+    const duration = Math.max(170, Math.min(620, (distance / (P0.x - Fend.x)) * 720)) * speed;
+    animateTo(goal.x, goal.y, duration, commit ? easeOut : easeBack, 0, () => {
+      end(commit);
+      if (resolve) resolve(commit);
+    });
+  }
+
+  function go(tgt, speed = 1) {
+    if (anim) finishNow();
+    if (locked || phase !== 'idle' || tgt < 0 || tgt >= count() || tgt === index) return Promise.resolve(false);
+    return new Promise(resolve => {
+      if (reduce.matches || !gl) {
+        // Fondu
+        target = tgt;
+        phase = 'fade';
+        turning = true;
+        hot.classList.add('is-turning');
+        const t0 = performance.now();
+        anim = {
+          tx: 0, ty: 0, done: () => {
+            fade = 1;
+            end(true);
+            resolve(true);
+          }
+        };
+        const step = now => {
+          fade = 1 - Math.min(1, (now - t0) / (190 * speed));
+          draw();
+          if (fade > 0) raf = requestAnimationFrame(step);
+          else { raf = 0; const finish = anim.done; anim = null; finish(); }
+        };
+        raf = requestAnimationFrame(step);
+        return;
+      }
+      const d = tgt > index ? 1 : -1;
+      begin(d, tgt, H() * .62);
+      phase = 'anim';
+      const goal = d > 0 ? Fend : P0;
+      animateTo(goal.x, goal.y, 560 * speed, easeOut, d > 0 ? H() * .07 : -H() * .04, () => {
+        end(true);
+        resolve(true);
+      });
+    });
+  }
+
+  function tap(event) {
+    if (event.target.closest('button')) return;
+    const rect = hot.getBoundingClientRect();
+    const x = (event.clientX - rect.left) / rect.width;
+    if (x > .66) go(index + 1);
+    else if (x < .34) go(index - 1);
+  }
+
+  on(hot, 'pointerdown', event => {
+    if (event.button !== 0 || pointer !== null || locked) return;
+    if (anim) finishNow();
+    if (phase !== 'idle') return;
+    suppressClick = false;
+    pointer = event.pointerId;
+    sx = xPrev = xLast = event.clientX;
+    sy = yLast = event.clientY;
+    tPrev = tLast = event.timeStamp;
+    phase = 'press';
+  });
+  on(hot, 'pointermove', event => {
+    if (event.pointerId !== pointer) return;
+    if (phase === 'press') {
+      const dx = event.clientX - sx, dy = event.clientY - sy;
+      if (Math.abs(dx) > 9 && Math.abs(dx) > Math.abs(dy) * 1.15) {
+        const d = dx < 0 ? 1 : -1;
+        const tgt = index + d;
+        suppressClick = true;
+        if (tgt < 0 || tgt >= count()) { phase = 'blocked'; return; }
+        if (reduce.matches || !gl) { phase = 'swipe'; dir = d; return; }
+        hot.setPointerCapture(pointer);
+        const rect = hot.getBoundingClientRect();
+        begin(d, tgt, ((event.clientY - rect.top) / rect.height) * H());
+        sx = event.clientX;
+        sy = event.clientY;
+        phase = 'drag';
+      } else if (Math.abs(dy) > 12) {
+        phase = 'blocked';
+      }
+      return;
+    }
+    if (phase === 'drag') {
+      xPrev = xLast;
+      tPrev = tLast;
+      xLast = event.clientX;
+      yLast = event.clientY;
+      tLast = event.timeStamp;
+      if (!raf) raf = requestAnimationFrame(frameDrag);
+    }
+  });
+  function frameDrag() {
+    raf = 0;
+    if (phase !== 'drag') return;
+    const gain = (P0.x - Fend.x) / (1.45 * W());
+    F.x = Math.min(P0.x, Math.max(Fend.x, F0.x + (xLast - sx) * dpr * gain));
+    F.y = F0.y + (yLast - sy) * dpr * .5;
+    draw();
+  }
+  const release = event => {
+    if (event.pointerId !== pointer) return;
+    pointer = null;
+    if (phase === 'drag') {
+      if (raf) cancelAnimationFrame(raf);
+      raf = 0;
+      frameDrag();
+      const dt = tLast - tPrev;
+      const velocity = dt > 0 && event.timeStamp - tLast < 100 ? (xLast - xPrev) / dt : 0;
+      const flick = dir > 0 ? -velocity : velocity;
+      const progress = dir > 0 ? curl().progress : 1 - curl().progress;
+      const commit = event.type === 'pointerup' && (flick > .45 || (flick > -.45 && progress > .3));
+      settle(commit, 1, null);
+    } else if (phase === 'swipe') {
+      phase = 'idle';
+      go(index + dir);
+    } else if (phase === 'press') {
+      phase = 'idle';
+      if (event.type === 'pointerup') tap(event);
+    } else if (phase !== 'anim' && phase !== 'fade') {
+      phase = 'idle';
+    }
+  };
+  on(hot, 'pointerup', release);
+  on(hot, 'pointercancel', release);
+  on(hot, 'click', event => {
+    if (!suppressClick) return;
+    suppressClick = false;
+    event.stopPropagation();
+    event.preventDefault();
+  }, { capture: true });
+  on(hot, 'keydown', event => {
+    if (event.key === 'ArrowRight') go(index + 1);
+    else if (event.key === 'ArrowLeft') go(index - 1);
+  });
+  on(canvas, 'webglcontextlost', event => {
+    event.preventDefault();
+    if (anim) finishNow();
+    cancelAnimationFrame(raf);
+    raf = 0;
+  });
+  on(canvas, 'webglcontextrestored', () => {
+    initGL();
+    version++;
+    draw();
+  });
+  const observer = new ResizeObserver(() => {
+    if (!layoutRaf) layoutRaf = requestAnimationFrame(layout);
+  });
+  observer.observe(stage);
+
+  initGL();
+  layout();
+
+  return {
+    go,
+    get index() { return index; },
+    get busy() { return phase !== 'idle'; },
+    get webgl() { return Boolean(gl); },
+    lock(value) { locked = value; },
+    // Le contenu a changé : repeindre et réafficher (pendant un tour, la fin s'en charge)
+    refresh() {
+      version++;
+      if (!turning) { draw(); rest(); }
+    },
+    // Rectangle écran d'une zone de la page visible (pour les effets)
+    rectOf(id) {
+      const e = pool.find(p => p.index === index);
+      const spot = e && e.hotspots.find(s => s.id === id);
+      const rect = hot.getBoundingClientRect();
+      if (!spot) return null;
+      const k = rect.width / 100;
+      return { left: rect.left + spot.x * k, top: rect.top + spot.y * k, width: spot.w * k, height: spot.h * k };
+    },
+    textures() { return gl ? pool.filter(e => e.tex).length + (backTex ? 1 : 0) : 0; },
+    // Banc de mesure : fige une courbure pour une capture
+    peek(progress, tilt = 0) {
+      if (!gl || phase !== 'idle' || index + 1 >= count()) return;
+      begin(1, index + 1, H() * .7);
+      phase = 'peek';
+      F.x = P0.x + (Fend.x - P0.x) * progress;
+      F.y = P0.y + tilt * H();
+      draw();
+    },
+    unpeek() {
+      if (phase !== 'peek') return;
+      F.x = P0.x;
+      end(false);
+    },
+    destroy() {
+      ac.abort();
+      observer.disconnect();
+      cancelAnimationFrame(raf);
+      cancelAnimationFrame(layoutRaf);
+      clearTimeout(prefetchTimer);
+      raf = layoutRaf = 0;
+      anim = null;
+      releaseGL();
+      if (gl) {
+        const lose = gl.getExtension('WEBGL_lose_context');
+        if (lose) lose.loseContext();
+      }
+      gl = null;
+      for (const e of pool) { e.canvas.width = e.canvas.height = 0; }
+      pool.length = 0;
+      canvas.remove();
+      hot.classList.remove('is-turning');
+    }
+  };
+}
+
+/* =====================================================================
+   6. Effets : vols, étincelles, pièces, fumée, vibrations, cinématique
+   Tous les éléments créés sont retirés à la fin de leur animation.
+   ===================================================================== */
+const $ = id => document.getElementById(id);
+const fxLayer = $('fx');
+const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+function buzz(pattern) {
+  try {
+    if (navigator.vibrate && (!navigator.userActivation || navigator.userActivation.hasBeenActive)) navigator.vibrate(pattern);
+  } catch { /* vibration refusée */ }
+}
+const center = r => ({ x: r.left + r.width / 2, y: r.top + r.height / 2 });
+function spawn(className, html = '') {
+  const el = document.createElement('div');
+  el.className = className;
+  el.innerHTML = html;
+  fxLayer.appendChild(el);
+  return el;
+}
+function play(el, keyframes, options) {
+  // fill « both » : pendant un délai, l'élément est déjà à sa position de départ
+  const animation = el.animate(keyframes, { fill: 'both', ...options });
+  return new Promise(resolve => {
+    animation.onfinish = () => { el.remove(); resolve(); };
+    animation.oncancel = () => { el.remove(); resolve(); };
+  });
+}
+// Une icône vole d'un rectangle à l'autre en arc
+function flyIcon(name, from, to, { duration = 700, arc = -120, scaleFrom = .6, rotate = -10, delay = 0 } = {}) {
+  const size = to.width;
+  const el = spawn('', imgTag(name));
+  el.style.width = el.style.height = `${size}px`;
+  el.firstChild.style.width = el.firstChild.style.height = '100%';
+  const a = center(from), b = center(to);
+  const x0 = a.x - size / 2, y0 = a.y - size / 2, x1 = b.x - size / 2, y1 = b.y - size / 2;
+  const xm = (x0 + x1) / 2, ym = Math.min(y0, y1) + arc;
+  const s0 = (from.width / size) * scaleFrom;
+  if (reduceMotion.matches) duration = 1;
+  return play(el, [
+    { transform: `translate(${x0}px, ${y0}px) scale(${s0}) rotate(0deg)`, opacity: .2 },
+    { transform: `translate(${xm}px, ${ym}px) scale(${(s0 + 1.15) / 2}) rotate(${rotate}deg)`, opacity: 1, offset: .5 },
+    { transform: `translate(${x1}px, ${y1}px) scale(1.12) rotate(${rotate / 3}deg)`, opacity: 1, offset: .85 },
+    { transform: `translate(${x1}px, ${y1}px) scale(1) rotate(0deg)`, opacity: 1 }
+  ], { duration, delay, easing: 'cubic-bezier(.35, .1, .3, 1)' });
+}
+function sink(el, to, delay) {
+  const from = el.getBoundingClientRect();
+  const clone = spawn('', el.innerHTML);
+  clone.style.width = `${from.width}px`;
+  clone.style.height = `${from.height}px`;
+  clone.firstChild.style.width = clone.firstChild.style.height = '100%';
+  const b = center(to);
+  return play(clone, [
+    { transform: `translate(${from.left}px, ${from.top}px) scale(1)`, opacity: 1 },
+    { transform: `translate(${(from.left + b.x) / 2 - from.width / 2}px, ${Math.min(from.top, b.y) - 50}px) scale(.8) rotate(25deg)`, opacity: 1, offset: .55 },
+    { transform: `translate(${b.x - from.width / 2}px, ${b.y - from.height / 2}px) scale(.25) rotate(60deg)`, opacity: 0 }
+  ], { duration: reduceMotion.matches ? 1 : 460, delay, easing: 'cubic-bezier(.4, 0, .6, 1)' });
+}
+function burst(at, count = 18, spread = 90) {
+  if (reduceMotion.matches) return;
+  for (let i = 0; i < count; i++) {
+    const angle = (i / count) * Math.PI * 2 + Math.random() * .4;
+    const dist = spread * (.55 + Math.random() * .6);
+    const el = spawn(`spark${i % 3 === 0 ? ' is-white' : ''}`);
+    const s = .6 + Math.random() * .9;
+    play(el, [
+      { transform: `translate(${at.x - 4}px, ${at.y - 4}px) scale(${s})`, opacity: 1 },
+      { transform: `translate(${at.x - 4 + Math.cos(angle) * dist}px, ${at.y - 4 + Math.sin(angle) * dist + 20}px) scale(0)`, opacity: 0 }
+    ], { duration: 650 + Math.random() * 350, easing: 'cubic-bezier(.15, .7, .3, 1)' });
+  }
+}
+function ring(at, size) {
+  if (reduceMotion.matches) return;
+  const el = spawn('ring');
+  el.style.width = el.style.height = `${size}px`;
+  play(el, [
+    { transform: `translate(${at.x - size / 2}px, ${at.y - size / 2}px) scale(.5)`, opacity: 1 },
+    { transform: `translate(${at.x - size / 2}px, ${at.y - size / 2}px) scale(1.7)`, opacity: 0 }
+  ], { duration: 700, easing: 'cubic-bezier(.2, .7, .3, 1)' });
+}
+function flash(at, size) {
+  if (reduceMotion.matches) return;
+  const el = spawn('flash');
+  el.style.width = el.style.height = `${size}px`;
+  play(el, [
+    { transform: `translate(${at.x - size / 2}px, ${at.y - size / 2}px) scale(.3)`, opacity: 0 },
+    { transform: `translate(${at.x - size / 2}px, ${at.y - size / 2}px) scale(1)`, opacity: 1, offset: .35 },
+    { transform: `translate(${at.x - size / 2}px, ${at.y - size / 2}px) scale(1.4)`, opacity: 0 }
+  ], { duration: 520, easing: 'ease-out' });
+}
+function smoke(at) {
+  if (reduceMotion.matches) return;
+  for (let i = 0; i < 7; i++) {
+    const el = spawn('puff');
+    const s = 16 + Math.random() * 18;
+    el.style.width = el.style.height = `${s}px`;
+    const dx = (Math.random() - .5) * 60;
+    play(el, [
+      { transform: `translate(${at.x - s / 2}px, ${at.y - s / 2}px) scale(.3)`, opacity: .9 },
+      { transform: `translate(${at.x - s / 2 + dx}px, ${at.y - s / 2 - 70 - Math.random() * 40}px) scale(1.6)`, opacity: 0 }
+    ], { duration: 900 + Math.random() * 300, delay: i * 40, easing: 'cubic-bezier(.2, .6, .4, 1)' });
+  }
+}
+function coinsTo(from, to, amount, onEach) {
+  const n = Math.min(6, Math.max(2, Math.round(amount / 3)));
+  const a = center(from), b = center(to);
+  const flights = [];
+  for (let i = 0; i < n; i++) {
+    const el = spawn('', imgTag('coin'));
+    el.style.width = el.style.height = '22px';
+    el.firstChild.style.width = el.firstChild.style.height = '100%';
+    const spread = (i - (n - 1) / 2) * 16;
+    flights.push(play(el, [
+      { transform: `translate(${a.x - 11 + spread}px, ${a.y - 11}px) scale(.4)`, opacity: 0 },
+      { transform: `translate(${a.x - 11 + spread * 2.2}px, ${a.y - 60}px) scale(1.1)`, opacity: 1, offset: .3 },
+      { transform: `translate(${b.x - 11}px, ${b.y - 11}px) scale(.7)`, opacity: 1 }
+    ], { duration: reduceMotion.matches ? 1 : 720, delay: i * 70, easing: 'cubic-bezier(.45, 0, .3, 1)' }).then(() => onEach(i, n)));
+  }
+  return Promise.all(flights);
+}
+const wait = ms => new Promise(resolve => setTimeout(resolve, reduceMotion.matches ? 0 : ms));
+
+function unlockCinematic(chapter) {
+  return new Promise(resolve => {
+    const overlay = document.createElement('div');
+    overlay.className = 'unlock';
+    overlay.setAttribute('role', 'dialog');
+    overlay.setAttribute('aria-label', `Chapitre ${chapter.id} ouvert`);
+    overlay.innerHTML = `<div class="unlock__rays"></div>
+      <div class="unlock__seal"><img alt="" src="${sealSvg(chapter.wax, chapter.id, 'left')}"><img alt="" src="${sealSvg(chapter.wax, chapter.id, 'right')}"></div>
+      <div class="unlock__eyebrow">Chapitre ${chapter.id} ouvert</div>
+      <div class="unlock__name">${chapter.name}</div>
+      <button type="button" class="unlock__go">Ouvrir le chapitre</button>`;
+    document.body.appendChild(overlay);
+    const [left, right] = overlay.querySelectorAll('.unlock__seal img');
+    const fast = reduceMotion.matches ? .01 : 1;
+    const opts = (duration, delay = 0, easing = 'ease-out') => ({ duration: duration * fast, delay: delay * fast, easing, fill: 'forwards' });
+    const anims = [
+      overlay.animate([{ opacity: 0 }, { opacity: 1 }], opts(300)),
+      overlay.querySelector('.unlock__rays').animate([{ opacity: 0 }, { opacity: 1 }], opts(600, 900)),
+      ...[left, right].map(el => el.animate([{ transform: 'scale(2.2) rotate(-12deg)', opacity: 0 }, { transform: 'scale(1) rotate(0deg)', opacity: 1, offset: .6 }, { transform: 'scale(1.06)', offset: .8 }, { transform: 'scale(1)', opacity: 1 }], opts(600, 100, 'cubic-bezier(.3, 1.4, .5, 1)'))),
+      ...[left, right].map(el => el.animate([{ transform: 'translateX(0)' }, { transform: 'translateX(-4px) rotate(-3deg)' }, { transform: 'translateX(4px) rotate(3deg)' }, { transform: 'translateX(0)' }], { ...opts(260, 700), iterations: 2 })),
+      left.animate([{ transform: 'translate(0, 0) rotate(0)', opacity: 1 }, { transform: 'translate(-70px, 60px) rotate(-35deg)', opacity: 0 }], opts(650, 1250, 'cubic-bezier(.5, 0, .7, .4)')),
+      right.animate([{ transform: 'translate(0, 0) rotate(0)', opacity: 1 }, { transform: 'translate(70px, 50px) rotate(30deg)', opacity: 0 }], opts(650, 1250, 'cubic-bezier(.5, 0, .7, .4)')),
+      overlay.querySelector('.unlock__eyebrow').animate([{ opacity: 0, transform: 'translateY(10px)' }, { opacity: 1, transform: 'none' }], opts(400, 1350)),
+      overlay.querySelector('.unlock__name').animate([{ opacity: 0, transform: 'translateY(14px) scale(.96)' }, { opacity: 1, transform: 'none' }], opts(500, 1450, 'cubic-bezier(.3, 1.3, .5, 1)')),
+      overlay.querySelector('.unlock__go').animate([{ opacity: 0, transform: 'translateY(10px)' }, { opacity: 1, transform: 'none' }], opts(400, 1700))
+    ];
+    const timer = setTimeout(() => {
+      buzz([20, 60, 20, 60, 40]);
+      const seal = overlay.querySelector('.unlock__seal').getBoundingClientRect();
+      burst(center(seal), 26, 140);
+      ring(center(seal), 160);
+    }, 1250 * fast);
+    overlay.querySelector('.unlock__go').addEventListener('click', () => {
+      clearTimeout(timer);
+      const out = overlay.animate([{ opacity: 1 }, { opacity: 0 }], { duration: 250 * fast, fill: 'forwards' });
+      out.onfinish = () => {
+        anims.forEach(a => a.cancel());
+        overlay.remove();
+        resolve();
+      };
+    }, { once: true });
+  });
+}
+
+/* =====================================================================
+   7. Interface autour du livre
+   ===================================================================== */
+let book = null;
+let toastTimer = 0;
+let busy = false;
+let hinted = false;
+try { hinted = localStorage.getItem('oc_livre_hint') === '1'; } catch { /* stockage bloqué */ }
+
+function toast(message) {
+  const el = $('toast');
+  el.textContent = message;
+  el.classList.add('is-on');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => el.classList.remove('is-on'), 2400);
+}
+function replay(el, className) {
+  if (!el) return;
+  el.classList.remove(className);
+  void el.offsetWidth;
+  el.classList.add(className);
+}
+
+function renderHeader() {
+  const page = pages[book ? book.index : 0];
+  $('eyebrow').textContent = page.type === 'toc' ? 'Sommaire' : `Chapitre ${page.chapter.id}`;
+  $('chapName').textContent = page.type === 'toc' ? 'Le Livre d’Origins' : page.chapter.name;
+  $('res').innerHTML = `<span class="pill pill--star" id="starPill">${imgTag('star')}${totalStars()}</span><span class="pill" id="coinPill">${imgTag('coin')}<b id="coinCount">${state.shownCoins}</b></span>`
+    + Object.entries(state.ess).map(([key, value]) => `<span class="pill" id="ess-${key}" title="Essence ${ESS[key][1]}">${imgTag(ESS[key][0])}${value}</span>`).join('');
+}
+function renderRibbons() {
+  const at = book ? book.index : 0;
+  const current = pages[at].chapter;
+  const items = [`<button type="button" class="ribbon${at === 0 ? ' is-on' : ''}" style="--rc:#FFFDF8;--ri:#4A3426" data-goto="0" aria-label="Sommaire">◆</button>`];
+  for (const chapter of CHAPTERS) {
+    const open = state.unlocked.has(chapter.id);
+    const isOn = current && current.id === chapter.id;
+    items.push(`<button type="button" class="ribbon${isOn ? ' is-on' : ''}${open ? '' : ' is-sealed'}" style="--rc:${chapter.color};--ri:${chapter.ink}" data-goto="${chapterPageIndex(chapter.id)}" data-ribbon="${chapter.id}" aria-label="Chapitre ${chapter.id}">${chapter.id}</button>`);
+  }
+  $('ribbons').innerHTML = items.join('');
+}
+function renderShelf() {
+  $('shelf').innerHTML = state.order.map(name => `<button type="button" class="chip${name === state.fresh ? ' is-new' : ''}" data-el="${name}" aria-label="${name}">${imgTag(name)}<span>${name}</span></button>`).join('');
+}
+function renderSlots() {
+  document.querySelectorAll('.slot').forEach((slot, i) => {
+    const name = state.slots[i];
+    slot.classList.toggle('is-full', Boolean(name));
+    slot.innerHTML = name ? imgTag(name) : '';
+    slot.setAttribute('aria-label', name ? `Case ${i + 1} : ${name}, toucher pour retirer` : `Case ${i + 1}, vide`);
+  });
+}
+// Couche interactive de la page au repos : vrais boutons posés sur la peinture
+function renderHotspots(index, hotspots, label) {
+  const hot = $('hot');
+  hot.innerHTML = hotspots.map(spot => {
+    const style = `left:${spot.x}%;top:${spot.y * .75}%;width:${spot.w}%;height:${spot.h * .75}%`;
+    if (spot.pulse) return `<div class="pulse" style="${style}"></div>`;
+    if (!spot.action) return '';
+    return `<button type="button" style="${style}" data-action="${spot.action}" data-value="${spot.data}" aria-label="${spot.label}"></button>`;
+  }).join('') + (!hinted && index <= 1 ? '<div class="hint"></div>' : '');
+  hot.setAttribute('aria-label', label);
+  $('pageText').textContent = label;
+}
+
+function addToSlot(name) {
+  if (busy) return;
+  const free = state.slots.indexOf(null);
+  if (free === -1) return;
+  state.slots[free] = name;
+  renderSlots();
+  buzz(6);
+  if (!state.slots.includes(null)) brew();
+}
+
+// Applique une découverte à l'état ; les effets viennent ensuite
+function discover(result, key, a, b) {
+  const isNew = !state.known.has(result);
+  const found = state.variants.get(result) || new Set();
+  const newVariant = !found.has(key);
+  const starsBefore = totalStars();
+  let coins = 0;
+  found.add(key);
+  state.variants.set(result, found);
+  state.used.add(a);
+  state.used.add(b);
+  if (isNew) {
+    state.known.add(result);
+    state.order.push(result);
+    state.fresh = result;
+    coins += 5;
+  } else if (newVariant && found.size === RECIPES[result].length) {
+    state.ess[ESSENCE[result]] += 5;
+    coins += 10;
+  }
+  state.coins += coins;
+  let opened = null;
+  for (const chapter of CHAPTERS) {
+    if (!state.unlocked.has(chapter.id) && totalStars() >= chapter.need) {
+      state.unlocked.add(chapter.id);
+      opened = chapter;
+    }
+  }
+  if (opened) buildPages();
+  return { isNew, newVariant, found, coins, opened, starGain: totalStars() - starsBefore };
+}
+
+async function brew() {
+  busy = true;
+  book.lock(true);
+  $('lab').classList.add('is-busy');
+  const [a, b] = state.slots;
+  const key = keyOf(a, b);
+  const result = MIX.get(key);
+  const cauldron = $('cauldron');
+  const cauldronRect = cauldron.getBoundingClientRect();
+  const mouth = { left: cauldronRect.left + cauldronRect.width * .3, top: cauldronRect.top + cauldronRect.height * .25, width: cauldronRect.width * .4, height: cauldronRect.height * .2 };
+  // 1. Les ingrédients plongent dans le chaudron
+  const slots = [...document.querySelectorAll('.slot')];
+  const dives = slots.map((slot, i) => sink(slot, mouth, i * 90));
+  state.slots = [null, null];
+  setTimeout(renderSlots, 30);
+  await Promise.all(dives);
+  cauldron.classList.add('is-brewing');
+  buzz(10);
+  await wait(560);
+  cauldron.classList.remove('is-brewing');
+
+  if (!result) {
+    smoke(center(mouth));
+    replay($('tray'), 'is-shake');
+    buzz(35);
+    toast(FAILS[Math.floor(Math.random() * FAILS.length)]);
+    await wait(300);
+  } else {
+    const here = pages[book.index];
+    const onThisPage = here.type === 'recipe' && here.name === result;
+    const outcome = discover(result, key, a, b);
+    flash(center(mouth), 130);
+    burst(center(mouth), 12, 60);
+    // 2. La vignette jaillit vers sa page, ou vers son marque-page
+    const chapter = chapterOf(result);
+    let target = onThisPage ? book.rectOf('vignette') : null;
+    if (!target) {
+      const ribbon = $('ribbons').querySelector(`[data-ribbon="${chapter.id}"]`) || $('ribbons');
+      const r = ribbon.getBoundingClientRect();
+      target = { left: r.left + r.width / 2 - 22, top: r.top + r.height / 2 - 22, width: 44, height: 44 };
+    } else {
+      // l'icône peinte occupe 24 u sur 38 u de vignette
+      const k = 24 / 38;
+      target = { left: target.left + target.width * (1 - k) / 2, top: target.top + target.height * (1 - k) / 2, width: target.width * k, height: target.height * k };
+    }
+    await flyIcon(result, mouth, target, { duration: onThisPage ? 820 : 700, arc: onThisPage ? -140 : -90, scaleFrom: .5 });
+    // 3. Atterrissage : la page se repeint avec la vignette collée
+    book.refresh();
+    renderShelf();
+    renderRibbons();
+    const landing = center(target);
+    if (outcome.isNew && onThisPage) {
+      ring(landing, target.width * 1.9);
+      burst(landing, 22, target.width * 1.4);
+      buzz([12, 40, 18]);
+      toast(`Inscrite : ${result} ★`);
+    } else if (outcome.isNew) {
+      replay($('ribbons').querySelector(`[data-ribbon="${chapter.id}"]`), 'is-ping');
+      burst(landing, 10, 40);
+      buzz([12, 30, 12]);
+      toast(state.unlocked.has(chapter.id) ? `Nouvelle vignette : ${result} · chapitre ${chapter.id}, page ${roman(pageIndexOf(result))}` : `${result} mise de côté pour le chapitre ${chapter.id}`);
+    } else if (outcome.newVariant) {
+      burst(landing, 10, 40);
+      toast(`Nouvelle variante : ${result} (${outcome.found.size}/${RECIPES[result].length})`);
+    } else {
+      toast(`Déjà inscrite : ${result}`);
+    }
+    renderHeader();
+    if (outcome.starGain > 0) replay($('starPill'), 'is-bump');
+    if (outcome.coins > 0) {
+      const start = state.shownCoins;
+      await coinsTo(target, $('coinPill').getBoundingClientRect(), outcome.coins, (i, n) => {
+        state.shownCoins = Math.round(start + (outcome.coins * (i + 1)) / n);
+        const count = $('coinCount');
+        if (count) count.textContent = state.shownCoins;
+        replay($('coinPill'), 'is-bump');
+      });
+      state.shownCoins = state.coins;
+    }
+    if (outcome.opened) {
+      await wait(250);
+      await unlockCinematic(outcome.opened);
+      renderRibbons();
+      book.lock(false);
+      await book.go(chapterPageIndex(outcome.opened.id));
+    }
+  }
+  $('lab').classList.remove('is-busy');
+  book.lock(false);
+  busy = false;
+}
+
+function useInk(name) {
+  const ess = ESSENCE[name];
+  if (state.ess[ess] < INK_COST) {
+    toast(`Pas assez d’essence de ${ESS[ess][1]} : les Ateliers en donneront.`);
+    buzz(35);
+    return;
+  }
+  const recipe = RECIPES[name].find(r => r.split('+').every(part => state.known.has(part)));
+  const pillRect = $(`ess-${ess}`).getBoundingClientRect();
+  state.ess[ess] -= INK_COST;
+  state.revealed.set(name, recipe.split('+')[0]);
+  renderHeader();
+  replay($(`ess-${ess}`), 'is-bump');
+  const box = book.rectOf('vignette');
+  if (box) {
+    // une goutte d'encre glisse de la réserve vers la case révélée
+    const k = box.width / 38;
+    const slot = { left: box.left + (30 - 52 + 19 - 4.9) * k, top: box.top + (89 + 1.6 - 17) * k, width: 9.8 * k, height: 9.8 * k };
+    flyIcon(ESS[ess][0], pillRect, slot, { duration: 600, arc: -60, scaleFrom: 1 }).then(() => {
+      book.refresh();
+      burst(center(slot), 10, 34);
+    });
+  } else book.refresh();
+  buzz(10);
+}
+
+document.addEventListener('click', event => {
+  const goto = event.target.closest('[data-goto]');
+  if (goto) { book.go(Number(goto.dataset.goto)); return; }
+  const action = event.target.closest('[data-action]');
+  if (action) {
+    if (action.dataset.action === 'goto') book.go(Number(action.dataset.value));
+    if (action.dataset.action === 'ink') useInk(action.dataset.value);
+    return;
+  }
+  const chip = event.target.closest('[data-el]');
+  if (chip) { addToSlot(chip.dataset.el); return; }
+  const slot = event.target.closest('[data-slot]');
+  if (slot && !busy) {
+    state.slots[Number(slot.dataset.slot)] = null;
+    renderSlots();
+    return;
+  }
+  const tab = event.target.closest('[data-tab]');
+  if (tab && tab.dataset.tab !== 'livre') {
+    const names = { monde: 'le Monde arrive au jalon 2', ateliers: 'les Ateliers arrivent au jalon 2', boutique: 'la Boutique arrive au jalon 4' };
+    toast(`Bientôt : ${names[tab.dataset.tab]}.`);
+  }
+});
+
+/* =====================================================================
+   8. Ambiance : poussière dorée et légère parallaxe (inclinaison ou souris)
+   ===================================================================== */
+const dust = $('dust');
+if (!reduceMotion.matches) {
+  dust.innerHTML = Array.from({ length: 16 }, () => {
+    const s = 3 + Math.random() * 5;
+    return `<i style="left:${Math.random() * 100}%;top:${30 + Math.random() * 70}%;--s:${s}px;--d:${7 + Math.random() * 7}s;--delay:${-Math.random() * 10}s;--dx:${(Math.random() - .5) * 80}px"></i>`;
+  }).join('');
+}
+const tilt = { x: 0, y: 0, tx: 0, ty: 0, raf: 0 };
+function tiltStep() {
+  tilt.raf = 0;
+  tilt.x += (tilt.tx - tilt.x) * .1;
+  tilt.y += (tilt.ty - tilt.y) * .1;
+  $('rig').style.transform = `perspective(1400px) rotateX(${tilt.y.toFixed(2)}deg) rotateY(${tilt.x.toFixed(2)}deg)`;
+  dust.style.transform = `translate(${(-tilt.x * 5).toFixed(1)}px, ${(tilt.y * 5).toFixed(1)}px)`;
+  if (Math.abs(tilt.tx - tilt.x) > .01 || Math.abs(tilt.ty - tilt.y) > .01) tilt.raf = requestAnimationFrame(tiltStep);
+}
+function setTilt(x, y) {
+  if (reduceMotion.matches || (book && book.busy)) return;
+  tilt.tx = Math.max(-2.5, Math.min(2.5, x));
+  tilt.ty = Math.max(-2, Math.min(2, y));
+  if (!tilt.raf) tilt.raf = requestAnimationFrame(tiltStep);
+}
+window.addEventListener('deviceorientation', event => {
+  if (event.gamma == null) return;
+  setTilt(event.gamma / 12, -(event.beta - 45) / 15);
+});
+window.addEventListener('pointermove', event => {
+  if (event.pointerType !== 'mouse') return;
+  setTilt((event.clientX / innerWidth - .5) * 4, -(event.clientY / innerHeight - .5) * 3);
+});
+// iOS demande la permission d'utiliser l'inclinaison, après un geste
+window.addEventListener('pointerdown', () => {
+  const D = window.DeviceOrientationEvent;
+  if (D && typeof D.requestPermission === 'function') D.requestPermission().catch(() => {});
+}, { once: true });
+
+/* =====================================================================
+   9. Démarrage
+   ===================================================================== */
+function mountBook(start) {
+  book = createBook({
+    stage: $('stage'), rig: $('rig'), wrap: $('wrap'), hot: $('hot'),
+    start,
+    forceFallback: new URLSearchParams(location.search).has('nogl'),
+    count: () => pages.length,
+    paint: paintPage,
+    onChange: () => {
+      if (!hinted) {
+        hinted = true;
+        try { localStorage.setItem('oc_livre_hint', '1'); } catch { /* stockage bloqué */ }
+      }
+      buzz(8);
+      renderHeader();
+      renderRibbons();
+    },
+    onRest: renderHotspots
+  });
+}
+
+async function start() {
+  buildPages();
+  const fonts = document.fonts ? Promise.race([
+    Promise.all(['600 20px Fraunces', 'italic 400 20px Fraunces', '800 20px Nunito', '900 20px Nunito'].map(f => document.fonts.load(f))),
+    new Promise(resolve => setTimeout(resolve, 1800))
+  ]).catch(() => {}) : Promise.resolve();
+  await Promise.all([loadIcons(), fonts]);
+  mountBook(0);
+  renderHeader();
+  renderRibbons();
+  renderShelf();
+  renderSlots();
+  $('cauldron').insertAdjacentHTML('afterbegin', imgTag('cauldron'));
+  // Polices arrivées plus tard : on repeint
+  if (document.fonts) document.fonts.addEventListener('loadingdone', () => book && book.refresh());
+  if (new URLSearchParams(location.search).has('debug')) debugBench();
+  window.__ready = true;
+}
+
+/* =====================================================================
+   10. Banc de mesure (?debug)
+   ===================================================================== */
+function debugBench() {
+  const hud = document.createElement('div');
+  hud.className = 'hud';
+  hud.innerHTML = '<div id="hudText">…</div><button type="button" id="hudStress">200 tours</button><button type="button" id="hudRemount">Démonter / remonter</button>';
+  document.body.appendChild(hud);
+  let frames = 0, worst = 0, last = performance.now(), windowStart = last, turns = 0;
+  const tick = now => {
+    frames++;
+    worst = Math.max(worst, now - last);
+    last = now;
+    if (now - windowStart >= 1000) {
+      const heap = performance.memory ? `${(performance.memory.usedJSHeapSize / 1048576).toFixed(1)} Mo` : 'n/d';
+      $('hudText').textContent = `${frames} i/s · pire ${worst.toFixed(0)} ms · nœuds ${document.getElementsByTagName('*').length} · tas ${heap} · textures ${book.textures()} · ${book.webgl ? 'WebGL' : 'repli'} · tours ${turns}`;
+      frames = 0;
+      worst = 0;
+      windowStart = now;
+    }
+    requestAnimationFrame(tick);
+  };
+  requestAnimationFrame(tick);
+  window.__stress = async (n = 200, speed = .3) => {
+    let forward = true;
+    for (let i = 0; i < n; i++) {
+      if (book.index >= pages.length - 1) forward = false;
+      if (book.index <= 0) forward = true;
+      await book.go(book.index + (forward ? 1 : -1), speed);
+      turns++;
+    }
+  };
+  window.__remount = () => {
+    const at = book.index;
+    book.destroy();
+    mountBook(at);
+  };
+  window.__book = () => book;
+  window.__state = state;
+  $('hudStress').addEventListener('click', () => window.__stress());
+  $('hudRemount').addEventListener('click', () => window.__remount());
+}
+
+start();
+</script>
+</body>
+</html>

@@ -1,6 +1,6 @@
 // services/notificationService.js
 import { createApp } from 'vue';
-import ToastNotification from '@/components/Explorer/ToastNotification.vue';
+import ToastNotification from '@/components/ui/ToastNotification.vue';
 
 // Messages actuellement affichés (évite d'empiler plusieurs fois le même)
 const visibleMessages = new Set();

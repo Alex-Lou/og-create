@@ -20,8 +20,7 @@
 <script>
 const MODES = [
   { id: 'infinite', num: 'I', label: 'Infini' },
-  { id: 'timer', num: 'II', label: 'L’Épreuve' },
-  { id: 'explorer', num: 'III', label: 'Expédition' }
+  { id: 'timer', num: 'II', label: 'L’Épreuve' }
 ];
 
 // Onglets des modes ; le mode actif est souligné d'un trait d'encre
