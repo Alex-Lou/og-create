@@ -1,5 +1,5 @@
 <template>
-  <div :class="['oc-app', { 'oc-app--explorer': isExplorerActive }]" id="game-container">
+  <div class="oc-app" id="game-container">
     <LivingBackground ref="background" :era="era" :population="population" :palette="palette" />
 
     <div class="oc-app__shell">
@@ -43,7 +43,7 @@
         </template>
       </AppHeader>
 
-      <main id="main-content" ref="mainContent" class="oc-app__main" v-show="!isExplorerActive">
+      <main id="main-content" ref="mainContent" class="oc-app__main">
         <div class="oc-app__inventory">
           <GameInventory
             :categories="categories"
@@ -144,7 +144,7 @@
       @logout="handleLogout"
     />
     <TimerQuestions 
-      v-show="isTimerActive && !isExplorerActive"
+      v-show="isTimerActive"
       ref="timerQuestions"
       :isLoggedIn="isLoggedIn"
       :discoveredElements="discoveredElements"
@@ -172,16 +172,6 @@
       @close="handleCloseCustomizeModal" 
       @save="handleSaveCustomization"
       @coins-updated="handleCoinsUpdated" 
-    />
-    <ExplorerMap
-      v-if="isExplorerActive"
-      :active="isExplorerActive"
-      :userCoins="coins"
-      :elementEmojis="elementEmojis"
-      :discoveredElements="discoveredElements"
-      @close="deactivateExplorerMode"
-      @coins-updated="handleCoinsUpdated"
-      @show-alert="showAlert"
     />
   </div>
 </template>
@@ -217,7 +207,6 @@ import { FREE_JOKERS, JOKER_TIME } from '@/utils/hints';
 // Retour sur l'application (PWA remise au premier plan) : carnet rechargé s'il date de plus de 30 s
 const STATE_RELOAD_AFTER_MS = 30000;
 import CustomizeModal from '../Header/CustomizeModal.vue';
-import ExplorerMap from '../Explorer/ExplorerMap.vue';
 import AppHeader from '../Game/AppHeader.vue';
 import ModeSwitcher from '../Game/ModeSwitcher.vue';
 import CraftZone from '../Game/CraftZone.vue';
@@ -253,8 +242,7 @@ export default {
     TimerBrief,
     ElementSheet,
     ResetPasswordModal,
-    CustomizeModal,
-    ExplorerMap
+    CustomizeModal
   },
   data() {
     return {
@@ -274,8 +262,6 @@ export default {
       discoveredElements: [...BASE_ELEMENTS],
       achievements: [],
       saveInterval: null,
-      explorerEnergy: null,
-      explorerLastUpdate: null,
       // Succès débloqués en attente d'affichage (un popup à la fois)
       achievementQueue: [],
       // Dernière découverte, mise en valeur dans l'inventaire
@@ -289,7 +275,6 @@ export default {
       showContact: false,
       showSceau: false,
       isTimerActive: false,
-      isExplorerActive: false,
       showTimerEndModal: false,
       timerModeDiscoveries: 0,
       // Inventaire Infini mis de côté pendant une session Timer (null hors Timer)
@@ -355,7 +340,6 @@ export default {
 },
 computed: {
   currentMode() {
-    if (this.isExplorerActive) return 'explorer';
     return this.isTimerActive ? 'timer' : 'infinite';
   },
   // La progression (ère, fond) suit toujours l'inventaire Infini, même pendant un Timer
@@ -500,46 +484,12 @@ beforeUnmount() {
     }
   },
 
-    async activateExplorerMode() {
-      // L'Explorer (énergie, régions) est stocké côté serveur : compte requis
-      if (!this.isLoggedIn) {
-        this.showAlert('Connecte-toi pour jouer au mode Explorer.');
-        return;
-      }
-      try {
-        // Désactiver le mode Timer si actif
-        if (this.isTimerActive) {
-          this.isTimerActive = false;
-          if (this.$refs.timerModeButton) {
-            this.$refs.timerModeButton.stopTimer();
-          }
-          if (this.$refs.timerQuestions) {
-            this.$refs.timerQuestions.resetQuestions();
-          }
-        }
-        
-        // Activer le mode Explorer
-        this.isExplorerActive = true;
-        
-        this.resetCraftBoard();
-      } catch (error) {
-        console.error("Erreur lors de l'activation du mode Explorer :", error);
-      }
-    },
-
     saveDiscoveredElement(element, gameMode = 'infinite') {
   // Ignorer un élément déjà dans la liste spécifique au mode
   if (gameMode === 'timer') {
     // Pour le mode Timer, utiliser la liste timerElements
     if (!this.currentTimerElements.includes(element)) {
       this.currentTimerElements.push(element);
-    } else {
-      return; // Déjà dans la liste
-    }
-  } else if (gameMode === 'explorer') {
-    // Pour le mode Explorer
-    if (!this.discoveredElements.includes(element)) {
-      this.discoveredElements.push(element);
     } else {
       return; // Déjà dans la liste
     }
@@ -579,11 +529,6 @@ beforeUnmount() {
   }
 },
 
-    // Méthode pour désactiver le mode Explorer
-    deactivateExplorerMode() {
-      this.isExplorerActive = false;
-    },
-
     handleCoinsUpdated(newCoins) {
       this.coins = newCoins;
       // Sauvegarder en localStorage aussi
@@ -594,7 +539,6 @@ beforeUnmount() {
       if (this.isTimerActive && this.$refs.timerModeButton) {
         this.$refs.timerModeButton.confirmStopTimer();
       }
-      this.isExplorerActive = false;
       this.resetCraftBoard();
     },
     handleLevelSelected(levelData) {
@@ -1007,9 +951,9 @@ checkAuth() {
       else this.discoveredElements = state.elements;
       this.updateCategoryProgress();
     },
-    // Copie du carnet sur l'appareil (compte seulement, hors Épreuve et Expédition)
+    // Copie du carnet sur l'appareil (compte seulement, hors Épreuve)
     rememberCarnet() {
-      if (!this.isLoggedIn || !this.currentUser || this.timerSnapshot || this.isTimerActive || this.isExplorerActive) return;
+      if (!this.isLoggedIn || !this.currentUser || this.timerSnapshot || this.isTimerActive) return;
       // Rien d'utile tant que le serveur n'a pas encore décrit les familles
       if (!Object.keys(this.familyTotals).length) return;
       const owned = new Set(this.discoveredElements);
@@ -1031,7 +975,7 @@ checkAuth() {
         this.rememberCarnet();
         return;
       }
-      if (!this.isLoggedIn || this.timerSnapshot || this.isTimerActive || this.isExplorerActive) return;
+      if (!this.isLoggedIn || this.timerSnapshot || this.isTimerActive) return;
       if (Date.now() - this.stateLoadedAt > STATE_RELOAD_AFTER_MS) this.loadPlayState();
     },
     // Emoji et famille d'éléments connus ({ nom: { emoji, family } })
@@ -1048,7 +992,7 @@ checkAuth() {
     // Résultat d'un mélange réussi, renvoyé par le serveur
     learnElement({ result, emoji, family, unexplored, reachable, trial }) {
       this.applyKnown({ [result]: { emoji, family } });
-      if (!this.isTimerActive && !this.isExplorerActive) this.learnedDuringLoad?.set(result, { emoji, family });
+      if (!this.isTimerActive) this.learnedDuringLoad?.set(result, { emoji, family });
       if (unexplored) this.unexploredCounts = unexplored;
       if (typeof reachable === 'number') this.reachableCount = reachable;
       // Épreuve : verdict lu juste après, à la révélation (handleCraftSuccess)
@@ -1089,10 +1033,7 @@ checkAuth() {
     },
     handleModeSelect(mode) {
       if (mode === this.currentMode) return;
-      if (mode === 'explorer') {
-        this.activateExplorerMode();
-      } else if (mode === 'timer') {
-        this.isExplorerActive = false;
+      if (mode === 'timer') {
         this.$refs.timerModeButton?.startTimer();
       } else if (this.isTimerActive) {
         // Quitter le Timer perd la question en cours : on confirme d'abord
@@ -1103,8 +1044,8 @@ checkAuth() {
     },
 
 handleCraftSuccess(craftedItem, ingredients = []) {
-  // Mode normal (ni Timer ni Explorer)
-  if (!this.isTimerActive && !this.isExplorerActive) {
+  // Mode normal (hors Timer)
+  if (!this.isTimerActive) {
     // Sauvegarder l'élément découvert
     this.saveDiscoveredElement(craftedItem);
   }
@@ -1204,11 +1145,6 @@ handleCraftSuccess(craftedItem, ingredients = []) {
     handleTimerStateChange(isActive) {
       // Le bouton Timer peut émettre plusieurs fois "true" : on n'agit que sur les transitions
       const wasActive = this.isTimerActive;
-      
-      // Désactiver le mode Explorer si on active le mode Timer
-      if (isActive && this.isExplorerActive) {
-        this.isExplorerActive = false;
-      }
       
       this.isTimerActive = isActive;
   
@@ -1402,9 +1338,6 @@ handleCraftSuccess(craftedItem, ingredients = []) {
 .timer-end { display: flex; gap: 48px; justify-content: center; }
 .timer-end__stat { display: flex; flex-direction: column; gap: 4px; align-items: center; }
 .timer-end__big { font-size: 56px; line-height: 1; }
-
-/* Expédition : pas de dock de création, donc pas de marge réservée en bas */
-.oc-app--explorer .oc-app__shell { padding-bottom: 0; }
 
 @media (max-width: 859px) {
   .oc-desk-only { display: none; }

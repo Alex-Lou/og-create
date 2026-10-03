@@ -30,7 +30,7 @@ export default {
   combine(mode, ingredients) {
     return asPlayer(() => http.post('/play/combine', { mode, ingredients }));
   },
-  // Début d'une question de l'Épreuve ({ questionId, launch }) ou d'une région ({ regionId })
+  // Début d'une question de l'Épreuve ({ questionId, launch })
   startRun(mode, details) {
     return asPlayer(() => http.post('/play/run', { mode, ...details }));
   },
@@ -45,10 +45,6 @@ export default {
   // Joker de l'Épreuve : { freeJokers, coins?, ingredients? | ingredient? }
   joker(kind) {
     return asPlayer(() => http.post('/play/joker', { kind }));
-  },
-  // Carte de l'Expédition : { regions } (dialogues, récompenses ; ni éléments ni règles de combat)
-  regions() {
-    return http.get('/play/regions').then(response => response.data);
   },
   // Fin du sablier : { score, credited, coins? } (score compté par le serveur)
   finishTimer() {
