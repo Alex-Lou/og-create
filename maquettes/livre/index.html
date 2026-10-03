@@ -1,0 +1,1216 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#EADFC9">
+<title>Le Livre</title>
+<!--
+  Maquette du Livre (jalon 0 du GDD) : front seul, données factices tirées des vraies recettes.
+  Ouvrir ce fichier dans un navigateur, de préférence en vue mobile. ?debug affiche le banc de mesure.
+  Le moteur de page (createBook) ne dépend de rien d'autre ici : il deviendra le composable usePageFlip.
+-->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght,SOFT@9..144,400..700,0..100&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root {
+  --desk: #EADFC9;
+  --desk-deep: #DCCDB0;
+  --paper: #FBF6EA;
+  --paper-back: #F1E7D2;
+  --paper-edge: #E8DCC2;
+  --ink: #4A3426;
+  --ink-soft: #8A7262;
+  --ink-faint: #BDAA94;
+  --gold: #D9A441;
+  --white: #FFFDF8;
+  --radius: 20px;
+  --shadow-soft: 0 1px 2px rgba(74, 52, 38, .10), 0 8px 24px rgba(74, 52, 38, .10);
+  --font-title: 'Fraunces', Georgia, serif;
+  --font-text: 'Nunito', system-ui, sans-serif;
+}
+* { box-sizing: border-box; }
+html, body { margin: 0; height: 100%; }
+body {
+  background: radial-gradient(120% 80% at 50% 0%, #F3EADB 0%, var(--desk) 55%, var(--desk-deep) 100%);
+  color: var(--ink);
+  font-family: var(--font-text);
+  overflow: hidden;
+  -webkit-tap-highlight-color: transparent;
+  -webkit-font-smoothing: antialiased;
+}
+button { font: inherit; color: inherit; }
+.svg-icon svg, .vig__icon svg, .ing__icon svg, .chip__icon svg { width: 100%; height: 100%; display: block; }
+
+/* ---------- Cadre de l'application ---------- */
+.app {
+  height: 100dvh;
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr) auto auto;
+  grid-template-columns: minmax(0, 1fr);
+  max-width: 560px;
+  margin: 0 auto;
+  padding-top: env(safe-area-inset-top);
+}
+.top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 12px 16px 6px;
+}
+.top__eyebrow { display: block; font-size: 11px; font-weight: 800; letter-spacing: .12em; text-transform: uppercase; color: var(--ink-soft); }
+.top__name { display: block; font-family: var(--font-title); font-variation-settings: 'SOFT' 100; font-weight: 600; font-size: 20px; line-height: 1.15; }
+.top__res { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: 6px; max-width: 58%; }
+.pill {
+  display: inline-flex; align-items: center; gap: 4px;
+  min-height: 26px; padding: 2px 9px;
+  border-radius: 999px;
+  background: rgba(255, 253, 248, .7);
+  box-shadow: inset 0 0 0 1px rgba(74, 52, 38, .08);
+  font-size: 13px; font-weight: 800; font-variant-numeric: tabular-nums;
+}
+.pill--star { color: #9A6A10; background: #FFF1CC; }
+.pill.is-bump { animation: bump .45s cubic-bezier(.3, 1.5, .6, 1); }
+
+.stage {
+  min-height: 0;
+  display: grid;
+  place-items: center;
+  padding: 8px 34px 10px 18px;
+  overflow: hidden;
+  container-type: size;
+}
+/* Le plus grand livre 3:4 qui tient dans la scène */
+.book-wrap { position: relative; width: min(100cqw, 75cqh); aspect-ratio: 3 / 4; }
+
+/* ---------- Le livre ---------- */
+.book {
+  position: absolute; inset: 0;
+  perspective: 1700px;
+  perspective-origin: 0% 50%;
+  touch-action: pan-y;
+  user-select: none;
+  -webkit-user-select: none;
+}
+/* Tranche des pages en dessous (statique) */
+.book::before, .book::after {
+  content: ''; position: absolute; inset: 0;
+  border-radius: 6px var(--radius) var(--radius) 6px;
+  background: var(--paper-edge);
+}
+.book::before { transform: translate(6px, 6px); background: #DED0B3; box-shadow: 0 10px 28px rgba(74, 52, 38, .22); }
+.book::after { transform: translate(3px, 3px); }
+.leaf {
+  position: absolute; inset: 0; z-index: 1;
+  border-radius: 6px var(--radius) var(--radius) 6px;
+}
+.leaf--current { z-index: 2; }
+.leaf--turning { z-index: 3; transform-origin: 0 50%; transform-style: preserve-3d; }
+.leaf.is-off { visibility: hidden; }
+.face {
+  position: absolute; inset: 0;
+  border-radius: inherit;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  overflow: hidden;
+}
+.face--back {
+  transform: rotateY(180deg);
+  background:
+    repeating-linear-gradient(180deg, transparent 0 27px, rgba(74, 52, 38, .035) 27px 28px),
+    var(--paper-back);
+  border-radius: var(--radius) 6px 6px var(--radius);
+}
+.gloss, .shade { position: absolute; inset: 0; pointer-events: none; opacity: 0; border-radius: inherit; }
+.gloss { background: linear-gradient(90deg, rgba(58, 38, 22, .42), rgba(58, 38, 22, .12)); }
+.gloss--back { background: linear-gradient(270deg, rgba(58, 38, 22, .40), rgba(58, 38, 22, .08)); }
+.shade { background: linear-gradient(90deg, rgba(58, 38, 22, .38) 0%, rgba(58, 38, 22, 0) 60%); }
+
+/* ---------- Une page ---------- */
+.page {
+  position: absolute; inset: 0;
+  border-radius: inherit;
+  overflow: hidden;
+  contain: strict;
+  container-type: size;
+  background:
+    radial-gradient(90% 60% at 70% 20%, rgba(255, 255, 255, .55), transparent 70%),
+    var(--paper);
+}
+/* Creux de la reliure */
+.page::before {
+  content: ''; position: absolute; top: 0; bottom: 0; left: 0; width: 9%;
+  background: linear-gradient(90deg, rgba(74, 52, 38, .16), rgba(74, 52, 38, 0));
+  pointer-events: none;
+}
+.pg {
+  position: absolute; inset: 0;
+  display: flex; flex-direction: column; align-items: center;
+  padding: 6cqh 7cqw 4cqh 11cqw;
+  text-align: center;
+}
+.pg::after {
+  content: ''; position: absolute; inset: 2.6cqh 3cqw 2.6cqh 7cqw;
+  border: 1.5px solid color-mix(in srgb, var(--ci, var(--ink)) 22%, transparent);
+  border-radius: 1.2cqh 3cqh 3cqh 1.2cqh;
+  pointer-events: none;
+}
+.pg__head {
+  width: 100%;
+  display: flex; justify-content: space-between; align-items: center;
+  font-size: 3.4cqw; font-weight: 800; letter-spacing: .1em; text-transform: uppercase;
+  color: var(--ci, var(--ink-soft));
+}
+.pg__stars { letter-spacing: .05em; font-size: 4.4cqw; }
+.pg__stars .off { color: var(--ink-faint); opacity: .55; }
+.pg__stars .on { color: var(--gold); }
+.pg__folio {
+  margin-top: auto;
+  font-family: var(--font-title); font-style: italic;
+  font-size: 3.6cqw; color: var(--ink-soft);
+}
+
+/* Vignette */
+.vig {
+  position: relative;
+  margin-top: 4cqh;
+  width: min(44cqw, 30cqh); aspect-ratio: 1;
+  border-radius: 50%;
+  display: grid; place-items: center;
+  background: radial-gradient(circle at 35% 30%, #fff, var(--c, #eee) 75%);
+  box-shadow: 0 0 0 1.2cqw var(--white), 0 1.2cqh 3cqh rgba(74, 52, 38, .16);
+}
+.vig__icon { width: 58%; height: 58%; display: grid; place-items: center; font-size: min(26cqw, 17cqh); line-height: 1; }
+.vig.reach .vig__icon { filter: brightness(0); opacity: .2; }
+.vig.far { background: repeating-linear-gradient(45deg, var(--paper-back) 0 8px, var(--paper) 8px 16px); }
+.vig__q { font-family: var(--font-title); font-weight: 700; font-size: min(22cqw, 14cqh); color: var(--ink-faint); }
+.vig__stamp {
+  position: absolute; right: -6%; bottom: 4%;
+  padding: .6cqh 2.4cqw;
+  border-radius: 999px;
+  background: var(--ci, var(--ink)); color: var(--white);
+  font-size: 3cqw; font-weight: 800; letter-spacing: .08em; text-transform: uppercase;
+  transform: rotate(-8deg);
+}
+.vig.is-stuck { animation: stick .7s cubic-bezier(.3, 1.4, .5, 1) both; }
+
+.pg__title {
+  margin: 3.4cqh 0 0;
+  font-family: var(--font-title); font-variation-settings: 'SOFT' 100, 'opsz' 72;
+  font-weight: 600; font-size: 8.4cqw; line-height: 1.1;
+}
+.pg__title.is-blank { letter-spacing: .18em; color: var(--ink-faint); }
+.pg__riddle {
+  margin: 1.6cqh 2cqw 0;
+  font-family: var(--font-title); font-style: italic;
+  font-size: 4.4cqw; line-height: 1.35; color: var(--ink-soft);
+}
+.rec { display: flex; align-items: center; justify-content: center; gap: 2.4cqw; margin-top: 3.4cqh; }
+.ing { display: flex; flex-direction: column; align-items: center; gap: .6cqh; width: 16cqw; }
+.ing__icon {
+  width: 13cqw; height: 13cqw;
+  display: grid; place-items: center;
+  border-radius: 3.4cqw;
+  background: var(--white);
+  box-shadow: inset 0 0 0 1.5px color-mix(in srgb, var(--ci, var(--ink)) 25%, transparent);
+  font-size: 7.4cqw; line-height: 1;
+  padding: 2cqw;
+}
+.ing__icon.is-unknown { font-family: var(--font-title); font-weight: 700; color: var(--ink-faint); background: transparent; border: 1.5px dashed var(--ink-faint); box-shadow: none; }
+.ing small { font-size: 3cqw; font-weight: 700; color: var(--ink-soft); white-space: nowrap; }
+.op { font-family: var(--font-title); font-size: 6cqw; color: var(--ink-faint); padding-bottom: 3cqh; }
+.pg__variants { margin-top: 1.4cqh; font-size: 3.3cqw; font-weight: 700; color: var(--ink-soft); }
+.pg__variants i { display: inline-block; width: 1.9cqw; height: 1.9cqw; margin-left: 1cqw; border-radius: 50%; border: 1.5px solid var(--ci, var(--ink)); vertical-align: middle; }
+.pg__variants i.on { background: var(--ci, var(--ink)); }
+.ink {
+  margin-top: 2.4cqh;
+  min-height: 44px;
+  padding: 1cqh 4.6cqw;
+  border: 0; border-radius: 999px;
+  background: var(--ink); color: var(--white);
+  font-weight: 800; font-size: 3.8cqw;
+  box-shadow: 0 .5cqh 0 rgba(0, 0, 0, .15);
+  cursor: pointer;
+}
+.ink:disabled { background: var(--paper-back); color: var(--ink-faint); box-shadow: none; cursor: default; }
+
+/* Sommaire */
+.toc__title { margin: 5cqh 0 0; font-family: var(--font-title); font-variation-settings: 'SOFT' 100, 'opsz' 96; font-weight: 700; font-size: 10cqw; line-height: 1; }
+.toc__sub { margin: 1.2cqh 0 5cqh; font-family: var(--font-title); font-style: italic; font-size: 4.4cqw; color: var(--ink-soft); }
+.toc__list { width: 100%; display: flex; flex-direction: column; gap: 2cqh; }
+.toc__row {
+  display: flex; align-items: center; gap: 3cqw;
+  width: 100%; min-height: 44px;
+  padding: 1.6cqh 3cqw;
+  border: 0; border-radius: 3.6cqw;
+  background: color-mix(in srgb, var(--c) 45%, var(--white));
+  text-align: left; cursor: pointer;
+}
+.toc__row[data-sealed] { background: var(--paper-back); color: var(--ink-soft); }
+.toc__num {
+  flex: none; width: 9cqw; height: 9cqw; border-radius: 50%;
+  display: grid; place-items: center;
+  background: var(--white); color: var(--ci);
+  font-family: var(--font-title); font-weight: 700; font-size: 4.4cqw;
+}
+.toc__body { flex: 1; min-width: 0; }
+.toc__name { display: block; font-weight: 800; font-size: 4cqw; }
+.toc__bar { display: block; height: 1cqh; margin-top: .8cqh; border-radius: 99px; background: rgba(255, 253, 248, .8); overflow: hidden; }
+.toc__bar i { display: block; height: 100%; background: var(--ci); border-radius: inherit; }
+.toc__meta { font-size: 3.4cqw; font-weight: 800; white-space: nowrap; }
+.toc__tip { margin-top: auto; margin-bottom: 1.4cqh; font-size: 3.4cqw; color: var(--ink-soft); }
+.toc__go {
+  margin-top: 4cqh; min-height: 44px; padding: 1.2cqh 6cqw;
+  border: 0; border-radius: 999px; background: var(--ink); color: var(--white);
+  font-weight: 800; font-size: 4cqw; cursor: pointer;
+}
+
+/* Page de chapitre */
+.chap__num {
+  margin-top: 9cqh;
+  width: 30cqw; height: 30cqw; border-radius: 50%;
+  display: grid; place-items: center;
+  background: var(--c); color: var(--ci);
+  font-family: var(--font-title); font-variation-settings: 'SOFT' 100; font-weight: 700; font-size: 14cqw;
+  box-shadow: 0 0 0 1.4cqw var(--white), 0 1.2cqh 3cqh rgba(74, 52, 38, .14);
+}
+.chap__eyebrow { margin-top: 5cqh; font-size: 3.4cqw; font-weight: 800; letter-spacing: .14em; text-transform: uppercase; color: var(--ci); }
+.chap__name { margin: 1cqh 0 0; font-family: var(--font-title); font-variation-settings: 'SOFT' 100, 'opsz' 96; font-weight: 700; font-size: 9cqw; line-height: 1.05; }
+.chap__text { margin: 2.4cqh 4cqw 0; font-family: var(--font-title); font-style: italic; font-size: 4.4cqw; line-height: 1.4; color: var(--ink-soft); }
+.chap__stats { display: flex; gap: 3cqw; margin-top: 4cqh; }
+.chap__stat { padding: 1.2cqh 3.6cqw; border-radius: 3cqw; background: color-mix(in srgb, var(--c) 40%, var(--white)); font-size: 3.6cqw; font-weight: 800; }
+.chap__seal {
+  margin-top: 4cqh; padding: 1.6cqh 5cqw;
+  border-radius: 999px; background: var(--paper-back);
+  font-size: 3.8cqw; font-weight: 800; color: var(--ink-soft);
+}
+
+/* ---------- Marque-pages ---------- */
+.ribbons {
+  position: absolute; top: 9%; right: -30px;
+  display: flex; flex-direction: column; gap: 8px;
+  z-index: 0;
+}
+.ribbon {
+  width: 38px; min-height: 44px;
+  padding: 0 0 0 12px;
+  border: 0; border-radius: 0 12px 12px 0;
+  background: var(--rc);
+  color: var(--ri);
+  font-family: var(--font-title); font-weight: 700; font-size: 14px;
+  text-align: center;
+  box-shadow: 0 2px 6px rgba(74, 52, 38, .15);
+  transform: translateX(-8px);
+  transition: transform .2s ease;
+  cursor: pointer;
+}
+.ribbon.is-on { transform: translateX(0); }
+.ribbon.is-sealed { background: #E4D8C1; color: var(--ink-faint); }
+.ribbon.is-ping { animation: ping .9s ease 2; }
+
+/* ---------- Paillasse ---------- */
+.lab {
+  margin: 0 12px;
+  padding: 10px 12px 8px;
+  border-radius: var(--radius) var(--radius) 14px 14px;
+  background: rgba(255, 253, 248, .72);
+  box-shadow: var(--shadow-soft);
+}
+.tray { display: flex; align-items: center; justify-content: center; gap: 10px; }
+.tray.is-shake { animation: shake .4s ease; }
+.slot {
+  width: 56px; height: 56px;
+  display: grid; place-items: center;
+  border-radius: 18px;
+  border: 2px dashed var(--ink-faint);
+  background: transparent;
+  font-size: 28px; line-height: 1;
+  padding: 9px;
+  cursor: pointer;
+}
+.slot.is-full { border: 0; background: var(--white); box-shadow: 0 2px 0 rgba(74, 52, 38, .1), inset 0 0 0 1.5px rgba(74, 52, 38, .08); animation: pop .3s cubic-bezier(.3, 1.6, .6, 1); }
+.tray__op { font-family: var(--font-title); font-size: 24px; color: var(--ink-faint); }
+.tray__label { font-size: 11px; font-weight: 800; letter-spacing: .12em; text-transform: uppercase; color: var(--ink-soft); margin-right: 4px; }
+.shelf {
+  display: flex; gap: 8px;
+  margin-top: 8px; padding: 2px 2px 4px;
+  overflow-x: auto; overscroll-behavior-x: contain;
+  scrollbar-width: none;
+}
+.shelf::-webkit-scrollbar { display: none; }
+.chip {
+  flex: none;
+  display: flex; flex-direction: column; align-items: center; gap: 2px;
+  width: 58px; min-height: 58px; padding: 6px 2px 4px;
+  border: 0; border-radius: 16px;
+  background: var(--white);
+  box-shadow: 0 2px 0 rgba(74, 52, 38, .08);
+  cursor: pointer;
+}
+.chip__icon { width: 28px; height: 28px; display: grid; place-items: center; font-size: 24px; line-height: 1; }
+.chip__name { font-size: 10.5px; font-weight: 700; color: var(--ink-soft); max-width: 54px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.chip.is-new { animation: pop .5s cubic-bezier(.3, 1.6, .6, 1); box-shadow: 0 0 0 2px var(--gold); }
+
+/* ---------- Onglets ---------- */
+.tabs {
+  display: grid; grid-template-columns: repeat(4, 1fr);
+  padding: 6px 8px calc(6px + env(safe-area-inset-bottom));
+}
+.tab {
+  display: flex; flex-direction: column; align-items: center; gap: 2px;
+  min-height: 52px; border: 0; background: none;
+  font-size: 11px; font-weight: 800; color: var(--ink-faint);
+  cursor: pointer;
+}
+.tab svg { width: 24px; height: 24px; }
+.tab.is-on { color: var(--ink); }
+
+/* ---------- Toast et poussière ---------- */
+.toast {
+  position: fixed; left: 50%; top: calc(64px + env(safe-area-inset-top));
+  max-width: min(92vw, 420px);
+  padding: 10px 16px;
+  border-radius: 16px;
+  background: var(--ink); color: var(--white);
+  font-weight: 700; font-size: 14px; text-align: center;
+  box-shadow: 0 8px 24px rgba(74, 52, 38, .25);
+  transform: translate(-50%, -12px); opacity: 0;
+  transition: transform .25s ease, opacity .25s ease;
+  pointer-events: none; z-index: 20;
+}
+.toast.is-on { transform: translate(-50%, 0); opacity: 1; }
+.dust { position: absolute; left: 50%; top: 30%; width: 0; height: 0; pointer-events: none; z-index: 4; }
+.dust i {
+  position: absolute; width: 8px; height: 8px; border-radius: 50%;
+  background: var(--gold);
+  animation: dust .9s cubic-bezier(.2, .7, .3, 1) forwards;
+}
+
+/* ---------- Banc de mesure (?debug) ---------- */
+.hud {
+  position: fixed; left: 8px; bottom: 8px; z-index: 30;
+  padding: 8px 10px; border-radius: 12px;
+  background: rgba(30, 22, 16, .86); color: #F6EEDD;
+  font: 600 11px/1.5 ui-monospace, monospace;
+}
+.hud button { margin: 4px 4px 0 0; padding: 4px 8px; border: 0; border-radius: 8px; background: #F6EEDD; color: #2A1E16; font: inherit; cursor: pointer; }
+
+@keyframes stick { 0% { transform: scale(1.35) rotate(-10deg); opacity: 0; } 60% { transform: scale(.94) rotate(-1deg); opacity: 1; } 100% { transform: scale(1) rotate(-3deg); } }
+@keyframes dust { from { transform: translate(0, 0) scale(1); opacity: 1; } to { transform: translate(var(--dx), var(--dy)) scale(.2); opacity: 0; } }
+@keyframes pop { 0% { transform: scale(.6); } 100% { transform: scale(1); } }
+@keyframes bump { 0% { transform: scale(1); } 40% { transform: scale(1.18); } 100% { transform: scale(1); } }
+@keyframes shake { 0%, 100% { transform: translateX(0); } 25% { transform: translateX(-8px); } 50% { transform: translateX(7px); } 75% { transform: translateX(-4px); } }
+@keyframes ping { 0%, 100% { transform: translateX(0); } 50% { transform: translateX(6px); } }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: 1ms !important; transition-duration: 1ms !important; }
+}
+</style>
+</head>
+<body>
+<div class="app">
+  <header class="top">
+    <div>
+      <span class="top__eyebrow" id="eyebrow">Sommaire</span>
+      <span class="top__name" id="chapName">Le Livre d’Origins</span>
+    </div>
+    <div class="top__res" id="res"></div>
+  </header>
+
+  <main class="stage">
+    <div class="book-wrap">
+      <nav class="ribbons" id="ribbons" aria-label="Chapitres"></nav>
+      <div class="book" id="book" aria-live="polite">
+        <div class="leaf leaf--under is-off"><div class="page"></div><div class="shade"></div></div>
+        <div class="leaf leaf--current"><div class="page"></div></div>
+        <div class="leaf leaf--turning is-off">
+          <div class="face face--front"><div class="page"></div><div class="gloss"></div></div>
+          <div class="face face--back"><div class="gloss gloss--back"></div></div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <section class="lab" aria-label="Paillasse">
+    <div class="tray" id="tray">
+      <span class="tray__label">Paillasse</span>
+      <button type="button" class="slot" data-slot="0" aria-label="Case 1"></button>
+      <span class="tray__op">+</span>
+      <button type="button" class="slot" data-slot="1" aria-label="Case 2"></button>
+    </div>
+    <div class="shelf" id="shelf" aria-label="Éléments connus"></div>
+  </section>
+
+  <nav class="tabs" aria-label="Navigation">
+    <button type="button" class="tab is-on" data-tab="livre"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5.5C4 4.7 4.7 4 5.5 4H11v16H5.5c-.8 0-1.5-.7-1.5-1.5z"/><path d="M20 5.5c0-.8-.7-1.5-1.5-1.5H13v16h5.5c.8 0 1.5-.7 1.5-1.5z"/></svg>Livre</button>
+    <button type="button" class="tab" data-tab="monde"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 17c3-2 6-2 9 0s6 2 9 0"/><path d="M8 14V9l4-4 4 4v5"/><path d="M11 14v-3h2v3"/></svg>Monde</button>
+    <button type="button" class="tab" data-tab="ateliers"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 3h6"/><path d="M10 3v6l-5 9a2 2 0 0 0 1.8 3h10.4a2 2 0 0 0 1.8-3l-5-9V3"/><path d="M7.5 15h9"/></svg>Ateliers</button>
+    <button type="button" class="tab" data-tab="boutique"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 8h14l-1 12H6z"/><path d="M9 8V6a3 3 0 0 1 6 0v2"/></svg>Boutique</button>
+  </nav>
+</div>
+<div class="toast" id="toast" role="status"></div>
+
+<script>
+'use strict';
+
+/* =====================================================================
+   Moteur de page — createBook(root, options)
+   Règles (GDD, « Direction artistique et animation des pages ») :
+   - seuls transform et opacity sont animés ;
+   - trois feuilles dans le DOM, recyclées : on change leur contenu, jamais leur nombre ;
+   - une seule mesure par geste (au pointerdown), les mouvements regroupés dans un requestAnimationFrame ;
+   - un AbortController porte tous les écouteurs : destroy() les retire d'un coup ;
+   - les animations Web (WAAPI) sont annulées à la fin, pour ne pas garder d'effet « fill » en mémoire.
+   ===================================================================== */
+function createBook(root, options) {
+  const { count, render, onChange } = options;
+  const ac = new AbortController();
+  const on = (target, type, fn, extra) => target.addEventListener(type, fn, { ...extra, signal: ac.signal });
+
+  const current = root.querySelector('.leaf--current');
+  const under = root.querySelector('.leaf--under');
+  const turning = root.querySelector('.leaf--turning');
+  const curPage = current.querySelector('.page');
+  const underPage = under.querySelector('.page');
+  const frontPage = turning.querySelector('.face--front .page');
+  const frontGloss = turning.querySelector('.face--front .gloss');
+  const backGloss = turning.querySelector('.face--back .gloss');
+  const shade = under.querySelector('.shade');
+  const reduce = window.matchMedia('(prefers-reduced-motion: reduce)');
+
+  // phase : idle | press | drag | swipe | blocked | anim
+  let index = options.start || 0, phase = 'idle', dir = 0, target = 0, q = 0;
+  let width = 0, left = 0, x0 = 0, y0 = 0, xPrev = 0, tPrev = 0, xLast = 0, tLast = 0;
+  let pointer = null, raf = 0, anims = [], pending = null, suppressClick = false;
+
+  render(curPage, index);
+
+  // q = part de la feuille tournée vers la gauche : 0 = à plat sur le livre, 1 = retournée
+  const rotation = v => `rotateY(${(-180 * v).toFixed(2)}deg)`;
+  const frontShade = v => Math.min(1, v * 2);
+  const backShade = v => 1 - v;
+  const underShade = v => 1 - v;
+
+  function paint(v) {
+    q = v;
+    turning.style.transform = rotation(v);
+    frontGloss.style.opacity = frontShade(v);
+    backGloss.style.opacity = backShade(v);
+    shade.style.opacity = underShade(v);
+  }
+
+  // Remplit les feuilles pour aller de index vers tgt, dans le sens d (1 = suivante, -1 = précédente)
+  function prepare(d, tgt) {
+    dir = d;
+    target = tgt;
+    if (d > 0) {
+      render(frontPage, index);
+      render(underPage, tgt);
+      paint(0);
+    } else {
+      render(frontPage, tgt);
+      render(underPage, index);
+      paint(1);
+    }
+    turning.style.willChange = 'transform';
+    under.classList.remove('is-off');
+    turning.classList.remove('is-off');
+    current.classList.add('is-off');
+  }
+
+  function frame() {
+    raf = 0;
+    if (phase !== 'drag') return;
+    const dx = (xLast - x0) / width;
+    const v = dir > 0 ? -dx : 1 - dx;
+    paint(v < 0 ? 0 : v > 1 ? 1 : v);
+  }
+
+  function settle(commit, speed, resolve) {
+    const end = commit === (dir > 0) ? 1 : 0;
+    const duration = Math.max(140, Math.min(480, Math.abs(end - q) * 520)) * speed;
+    const easing = commit ? 'cubic-bezier(.22, .7, .28, 1)' : 'cubic-bezier(.3, 1.35, .6, 1)';
+    const timing = { duration, easing, fill: 'forwards' };
+    phase = 'anim';
+    anims = [
+      turning.animate([{ transform: rotation(q) }, { transform: rotation(end) }], timing),
+      frontGloss.animate([{ opacity: frontShade(q) }, { opacity: frontShade(end) }], timing),
+      backGloss.animate([{ opacity: backShade(q) }, { opacity: backShade(end) }], timing),
+      shade.animate([{ opacity: underShade(q) }, { opacity: underShade(end) }], timing)
+    ];
+    pending = () => {
+      pending = null;
+      paint(end);
+      stopAnims();
+      if (commit) {
+        index = target;
+        render(curPage, index);
+      }
+      current.classList.remove('is-off');
+      under.classList.add('is-off');
+      turning.classList.add('is-off');
+      turning.style.willChange = '';
+      phase = 'idle';
+      dir = 0;
+      if (commit && onChange) onChange(index);
+      if (resolve) resolve(commit);
+    };
+    anims[0].onfinish = pending;
+  }
+
+  // Mouvement réduit : simple fondu, pas de rotation
+  function fade(tgt, resolve) {
+    phase = 'anim';
+    target = tgt;
+    render(underPage, tgt);
+    shade.style.opacity = 0;
+    under.classList.remove('is-off');
+    anims = [current.animate([{ opacity: 1 }, { opacity: 0 }], { duration: 160, easing: 'ease-out', fill: 'forwards' })];
+    pending = () => {
+      pending = null;
+      stopAnims();
+      index = tgt;
+      render(curPage, index);
+      under.classList.add('is-off');
+      phase = 'idle';
+      if (onChange) onChange(index);
+      if (resolve) resolve(true);
+    };
+    anims[0].onfinish = pending;
+  }
+
+  function stopAnims() {
+    for (const anim of anims) {
+      anim.onfinish = null;
+      anim.cancel();
+    }
+    anims = [];
+  }
+
+  // Termine tout de suite une animation en cours (geste ou toucher rapide pendant un tour)
+  function finishNow() {
+    if (pending) pending();
+  }
+
+  function go(tgt, speed = 1) {
+    if (phase === 'anim') finishNow();
+    if (phase !== 'idle' || tgt < 0 || tgt >= count() || tgt === index) return Promise.resolve(false);
+    return new Promise(resolve => {
+      if (reduce.matches) fade(tgt, resolve);
+      else {
+        prepare(tgt > index ? 1 : -1, tgt);
+        settle(true, speed, resolve);
+      }
+    });
+  }
+
+  function tap(event) {
+    if (event.target.closest('button, a, [data-action]')) return;
+    const x = event.clientX - left;
+    if (x > width * 0.66) go(index + 1);
+    else if (x < width * 0.34) go(index - 1);
+  }
+
+  on(root, 'pointerdown', event => {
+    if (event.button !== 0 || pointer !== null) return;
+    if (phase === 'anim') finishNow();
+    if (phase !== 'idle') return;
+    suppressClick = false;
+    const rect = root.getBoundingClientRect();
+    width = rect.width;
+    left = rect.left;
+    pointer = event.pointerId;
+    x0 = xPrev = xLast = event.clientX;
+    y0 = event.clientY;
+    tPrev = tLast = event.timeStamp;
+    phase = 'press';
+  });
+
+  on(root, 'pointermove', event => {
+    if (event.pointerId !== pointer) return;
+    if (phase === 'press') {
+      const dx = event.clientX - x0;
+      const dy = event.clientY - y0;
+      if (Math.abs(dx) > 10 && Math.abs(dx) > Math.abs(dy) * 1.2) {
+        const d = dx < 0 ? 1 : -1;
+        const tgt = index + d;
+        suppressClick = true;
+        if (tgt < 0 || tgt >= count()) {
+          phase = 'blocked';
+          return;
+        }
+        if (reduce.matches) {
+          phase = 'swipe';
+          dir = d;
+          return;
+        }
+        root.setPointerCapture(pointer);
+        x0 = xPrev = xLast = event.clientX;
+        prepare(d, tgt);
+        phase = 'drag';
+      } else if (Math.abs(dy) > 12) {
+        phase = 'blocked';
+      }
+      return;
+    }
+    if (phase === 'drag') {
+      xPrev = xLast;
+      tPrev = tLast;
+      xLast = event.clientX;
+      tLast = event.timeStamp;
+      if (!raf) raf = requestAnimationFrame(frame);
+    }
+  });
+
+  const release = event => {
+    if (event.pointerId !== pointer) return;
+    pointer = null;
+    if (phase === 'drag') {
+      if (raf) cancelAnimationFrame(raf);
+      frame();
+      const dt = tLast - tPrev;
+      const velocity = dt > 0 && event.timeStamp - tLast < 100 ? (xLast - xPrev) / dt : 0;
+      const flick = dir > 0 ? -velocity : velocity;
+      const progress = dir > 0 ? q : 1 - q;
+      const commit = event.type === 'pointerup' && (flick > 0.45 || (flick > -0.45 && progress > 0.4));
+      settle(commit, 1, null);
+    } else if (phase === 'swipe') {
+      phase = 'idle';
+      go(index + dir);
+    } else if (phase === 'press') {
+      phase = 'idle';
+      if (event.type === 'pointerup') tap(event);
+    } else if (phase !== 'anim') {
+      phase = 'idle';
+    }
+  };
+  on(root, 'pointerup', release);
+  on(root, 'pointercancel', release);
+  // Après un glissé, le clic qui suit n'active pas un bouton de la page
+  on(root, 'click', event => {
+    if (!suppressClick) return;
+    suppressClick = false;
+    event.stopPropagation();
+    event.preventDefault();
+  }, { capture: true });
+  on(window, 'keydown', event => {
+    if (event.key === 'ArrowRight') go(index + 1);
+    else if (event.key === 'ArrowLeft') go(index - 1);
+  });
+
+  return {
+    go,
+    get index() { return index; },
+    get busy() { return phase !== 'idle'; },
+    // Redessine la page visible (après une découverte) ; pendant un tour, le prochain rendu s'en charge
+    refresh() {
+      if (phase === 'idle') render(curPage, index);
+    },
+    destroy() {
+      ac.abort();
+      if (raf) cancelAnimationFrame(raf);
+      raf = 0;
+      pending = null;
+      stopAnims();
+    }
+  };
+}
+
+/* =====================================================================
+   Données factices : vraies recettes à deux ingrédients de db/content/
+   ===================================================================== */
+const SVG = {
+  vapeur: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"><g fill="none" stroke-linecap="round"><path d="M16 58c-6-8 6-12 0-20s6-12 0-20c-2-4 0-8 2-10M32 60c-6-8 6-12 0-20s6-12 0-20c-2-4 0-10 3-14M48 58c-6-8 6-12 0-20s6-12 0-20c-2-4 0-8 2-10" stroke="#7a8490" stroke-width="8"/><path d="M16 58c-6-8 6-12 0-20s6-12 0-20c-2-4 0-8 2-10M32 60c-6-8 6-12 0-20s6-12 0-20c-2-4 0-10 3-14M48 58c-6-8 6-12 0-20s6-12 0-20c-2-4 0-8 2-10" stroke="#fafcff" stroke-width="4"/></g></svg>`,
+  lave: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"><path d="M2 59h60" stroke="#5a4a3e" stroke-width="3" stroke-linecap="round"/><path d="M20 15c-4-4 3-6-1-9s2-5 0-6M29 18c4-3-2-6 2-9" stroke="#9a9a98" stroke-width="3" fill="none" stroke-linecap="round"/><path d="M-3 19c11-4 23-1 31 3 10 2 22 6 26 16 4 10-2 18-12 18-4 4-12 4-16 0-8 0-17-2-29-2z" fill="#f06a14" stroke="#7a2006" stroke-width="2.5" stroke-linejoin="round"/><path d="M14 24l1 8-2 3 1 8M26 30l2 7-2 6M3 32h10l4 1M17 47l7-3" stroke="#ffd34d" stroke-width="1.6" fill="none" stroke-linecap="round" stroke-linejoin="round"/><ellipse cx="44" cy="44" rx="9" ry="8" fill="#ffb52a"/><ellipse cx="45" cy="44" rx="5" ry="4" fill="#ffe680"/><g fill="#2a1e1a"><path d="M3 22l8-3 5 4-2 7-8 1-3-3z"/><path d="M18 22l8 1 3 5-5 5-7-3z"/><path d="M31 26l7 1 1 6-7 1z"/><path d="M3 35l7-1 4 6-4 6-7-1z"/><path d="M16 35l7 2 2 7-6 4-6-4z"/><path d="M27 38l7 0 2 6-6 4-4-4z"/><path d="M3 49l7-1 4 5H3z"/><path d="M16 51l7-2 3 4-9 1z"/></g><circle cx="58" cy="54" r="3.8" fill="#ffc22a" stroke="#a83a08" stroke-width="2"/><circle cx="57" cy="53" r="1.2" fill="#fff4b0"/></svg>`,
+  poussiere: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"><g fill="#b8a88a" opacity=".22"><circle cx="20" cy="38" r="13"/><circle cx="36" cy="28" r="15"/><circle cx="50" cy="36" r="10"/></g><g fill="#d4c6a4"><circle cx="29" cy="35" r="2.2"/><circle cx="15" cy="45" r="2.2"/><circle cx="55" cy="31" r="2.2"/><circle cx="14" cy="35" r="2.2"/><circle cx="38" cy="22" r="1.4"/><circle cx="23" cy="45" r="1.4"/><circle cx="49" cy="44" r="1.0"/><circle cx="46" cy="34" r="1.0"/><circle cx="34" cy="33" r="1.0"/><circle cx="35" cy="29" r="1.0"/><circle cx="25" cy="24" r="1.4"/><circle cx="27" cy="30" r="1.0"/><circle cx="60" cy="30" r="0.9"/></g><g fill="#b8a684"><circle cx="41" cy="37" r="1.4"/><circle cx="53" cy="36" r="2.2"/><circle cx="48" cy="22" r="1.0"/><circle cx="12" cy="41" r="1.0"/><circle cx="47" cy="28" r="2.2"/><circle cx="45" cy="41" r="1.8"/><circle cx="24" cy="40" r="1.0"/><circle cx="53" cy="42" r="2.2"/><circle cx="33" cy="40" r="2.8"/><circle cx="8" cy="36" r="1.0"/><circle cx="18" cy="41" r="1.0"/><circle cx="8" cy="52" r="1.1"/></g><g fill="#a8977a"><circle cx="22" cy="36" r="1.4"/><circle cx="36" cy="15" r="1.0"/><circle cx="21" cy="49" r="1.4"/><circle cx="27" cy="21" r="1.0"/><circle cx="58" cy="40" r="1.4"/><circle cx="32" cy="28" r="1.0"/><circle cx="30" cy="16" r="2.2"/><circle cx="16" cy="28" r="1.4"/><circle cx="19" cy="34" r="1.4"/><circle cx="39" cy="19" r="1.0"/><circle cx="37" cy="34" r="1.0"/><circle cx="17" cy="50" r="1.0"/></g><g fill="#e4dac0"><circle cx="41" cy="28" r="2.8"/><circle cx="33" cy="21" r="2.2"/><circle cx="12" cy="30" r="1.8"/><circle cx="23" cy="29" r="1.8"/><circle cx="43" cy="18" r="1.8"/><circle cx="28" cy="26" r="1.0"/><circle cx="29" cy="45" r="1.8"/><circle cx="56" cy="24" r="1.2"/><circle cx="4" cy="46" r="0.9"/></g></svg>`,
+  sable: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"><path d="M4 56c8-1 14-24 28-26 14 2 20 25 28 26z" fill="#f2cc6a" stroke="#9a7228" stroke-width="2.4" stroke-linejoin="round"/><path d="M32 30c6 4 12 18 17 26h11c-8-1-14-24-28-26z" fill="#dcae4a"/><path d="M4 56c8-1 14-24 28-26 14 2 20 25 28 26z" fill="none" stroke="#9a7228" stroke-width="2.4" stroke-linejoin="round"/><g fill="#a87a2a"><circle cx="24" cy="44" r="1.3"/><circle cx="30" cy="38" r="1.3"/><circle cx="36" cy="46" r="1.3"/><circle cx="18" cy="51" r="1.3"/><circle cx="42" cy="40" r="1.1"/><circle cx="29" cy="51" r="1.3"/><circle cx="46" cy="50" r="1.3"/></g><g fill="#e8b84a" stroke="#9a7228" stroke-width=".8"><circle cx="42" cy="24" r="1.6"/><circle cx="49" cy="20" r="1.3"/><circle cx="55" cy="23" r="1.1"/><circle cx="39" cy="18" r="1.1"/></g><path d="M6 22c8-4 16-2 24-6 6-3 12-4 18-2M14 30c6-2 10 0 14-2" stroke="#9aa4ac" stroke-width="2.4" fill="none" stroke-linecap="round"/></svg>`,
+  metal: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"><g stroke="#3e444c" stroke-width="2.2" stroke-linejoin="round"><path d="M3 58l4-12h22l4 12z" fill="#aab2bc"/><path d="M7 46l3-4h17l2 4z" fill="#e6eaee"/><path d="M31 58l4-12h22l4 12z" fill="#aab2bc"/><path d="M35 46l3-4h17l2 4z" fill="#e6eaee"/><path d="M17 42l4-12h22l4 12z" fill="#aab2bc"/><path d="M21 30l3-4h17l2 4z" fill="#e6eaee"/></g><path d="M12 56l6-8M40 56l6-8M26 40l6-8" stroke="#fff" stroke-width="3" stroke-linecap="round"/><path d="M19 56l2-3M47 56l2-3M33 40l2-3" stroke="#fff" stroke-width="2" stroke-linecap="round"/><path d="M50 10l1.5 4.5L56 16l-4.5 1.5L50 22l-1.5-4.5L44 16l4.5-1.5z" fill="#fff" stroke="#8a929c" stroke-width="1.2" stroke-linejoin="round"/></svg>`,
+  verre: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"><path d="M48 6l6 4 2 48-6-4z" fill="#8ac8a8" stroke="#3a7a6a" stroke-width="2" stroke-linejoin="round"/><path d="M10 12l38-6 2 48-38 6z" fill="#d4f2ec" fill-opacity=".7" stroke="#3a7a6a" stroke-width="2.4" stroke-linejoin="round"/><path d="M18 30l14-16M20 44l22-26M28 48l8-9" stroke="#fff" stroke-width="3" stroke-linecap="round"/></svg>`
+};
+
+// Élément : icône (emoji ou svg:<nom>) et essence associée
+const EL = {
+  'Eau': ['💧', 'eau'], 'Feu': ['🔥', 'feu'], 'Terre': ['🌱', 'terre'], 'Air': ['💨', 'air'],
+  'Vapeur': ['svg:vapeur', 'eau'], 'Pluie': ['🌧️', 'eau'], 'Boue': ['🟤', 'terre'], 'Fumée': ['🌫️', 'air'],
+  'Lave': ['svg:lave', 'feu'], 'Poussière': ['svg:poussiere', 'terre'], 'Énergie': ['⚡', 'feu'], 'Nuage': ['☁️', 'air'],
+  'Vent': ['🌬️', 'air'], 'Éclair': ['🌩️', 'feu'],
+  'Pierre': ['🪨', 'terre'], 'Sable': ['svg:sable', 'terre'], 'Verre': ['svg:verre', 'feu'], 'Métal': ['svg:metal', 'feu'],
+  'Lumière': ['☀️', 'feu'], 'Vague': ['🏄', 'eau'], 'Brouillard': ['🌁', 'air'], 'Orage': ['⛈️', 'air']
+};
+const ESS = { eau: ['💧', 'Eau'], feu: ['🔥', 'Feu'], terre: ['🌱', 'Terre'], air: ['💨', 'Air'] };
+
+const RECIPES = {
+  'Vapeur': ['Eau+Feu', 'Feu+Pluie'], 'Pluie': ['Air+Eau', 'Eau+Nuage', 'Nuage+Nuage'], 'Boue': ['Eau+Terre'],
+  'Fumée': ['Air+Feu'], 'Lave': ['Feu+Terre'], 'Poussière': ['Air+Terre'], 'Énergie': ['Feu+Vapeur'],
+  'Nuage': ['Air+Vapeur', 'Poussière+Vapeur', 'Vapeur+Vapeur', 'Vapeur+Vent', 'Air+Brouillard'],
+  'Vent': ['Air+Air', 'Air+Énergie'], 'Éclair': ['Nuage+Énergie'],
+  'Pierre': ['Air+Lave', 'Eau+Lave'], 'Sable': ['Air+Pierre'], 'Verre': ['Feu+Sable', 'Sable+Éclair'],
+  'Métal': ['Feu+Pierre'], 'Lumière': ['Feu+Éclair'], 'Vague': ['Eau+Vent', 'Eau+Énergie'],
+  'Brouillard': ['Nuage+Terre'], 'Orage': ['Nuage+Éclair', 'Pluie+Éclair']
+};
+
+const RIDDLES = {
+  'Vapeur': 'L’eau a eu trop chaud : la voilà qui s’envole en soupirant.',
+  'Pluie': 'Le ciel a trop bu, il rend tout goutte à goutte.',
+  'Boue': 'Ce que devient la terre quand elle prend un bain.',
+  'Fumée': 'Le feu respire, et l’air garde son souffle gris.',
+  'Lave': 'La terre fond quand la flamme l’embrasse.',
+  'Poussière': 'Un peu de terre que l’air a appris à porter.',
+  'Énergie': 'Une vapeur qu’on chauffe encore finit par crépiter.',
+  'Nuage': 'Une vapeur qui a pris de la hauteur.',
+  'Vent': 'L’air qui se met en marche.',
+  'Éclair': 'Trop d’énergie dans un nuage, et il la jette au sol.',
+  'Pierre': 'La lave a refroidi : elle ne bougera plus.',
+  'Sable': 'La pierre, après mille ans de vent.',
+  'Verre': 'Du sable passé au feu, qui laisse passer le jour.',
+  'Métal': 'Ce que la pierre cache, la flamme le révèle.',
+  'Lumière': 'Un éclair qui prend le temps de rester.',
+  'Vague': 'L’eau que le vent pousse vers la plage.',
+  'Brouillard': 'Un nuage qui a voulu toucher terre.',
+  'Orage': 'Le nuage gronde, l’éclair lui répond.'
+};
+
+const CHAPTERS = [
+  { id: 'I', name: 'Les Premiers Souffles', color: '#CFE6F5', ink: '#2F6286', need: 0,
+    text: 'Où l’on apprend ce que l’eau, le feu, la terre et l’air se disent quand on les rapproche.',
+    pages: ['Vapeur', 'Pluie', 'Boue', 'Fumée', 'Lave', 'Poussière', 'Énergie', 'Nuage', 'Vent', 'Éclair'] },
+  { id: 'II', name: 'La Matière', color: '#F2DDB0', ink: '#86591C', need: 5,
+    text: 'Où la matière refroidit, durcit, brille et finit par prendre forme.',
+    pages: ['Pierre', 'Sable', 'Verre', 'Métal', 'Lumière', 'Vague', 'Brouillard', 'Orage'] }
+];
+
+const FAILS = [
+  'Ça frémit… puis plus rien.',
+  'Le mélange boude. Essaie un autre ingrédient.',
+  'Une petite fumée, pas de vignette.',
+  'L’encre hésite. Pas encore.'
+];
+
+const INK_COST = 15;
+const keyOf = (a, b) => [a, b].sort().join('+');
+const MIX = new Map();
+const INGREDIENTS = new Set();
+for (const [result, list] of Object.entries(RECIPES)) {
+  RECIPES[result] = list.map(recipe => keyOf(...recipe.split('+')));
+  for (const recipe of RECIPES[result]) {
+    MIX.set(recipe, result);
+    recipe.split('+').forEach(name => INGREDIENTS.add(name));
+  }
+}
+
+/* =====================================================================
+   État de la maquette (dans le jeu réel, le serveur fait foi)
+   ===================================================================== */
+const state = {
+  known: new Set(['Eau', 'Feu', 'Terre', 'Air']),
+  order: ['Eau', 'Feu', 'Terre', 'Air'],
+  variants: new Map(),
+  used: new Set(),
+  revealed: new Map(),
+  ess: { eau: 30, feu: 30, terre: 30, air: 30 },
+  coins: 0,
+  unlocked: new Set(['I']),
+  slots: [null, null],
+  fresh: null
+};
+
+let pages = [];
+function buildPages() {
+  pages = [{ type: 'toc' }];
+  for (const chapter of CHAPTERS) {
+    pages.push({ type: 'chapter', chapter });
+    if (state.unlocked.has(chapter.id)) chapter.pages.forEach(name => pages.push({ type: 'recipe', chapter, name }));
+  }
+}
+const chapterPageIndex = id => pages.findIndex(page => page.type === 'chapter' && page.chapter.id === id);
+const pageIndexOf = name => pages.findIndex(page => page.name === name);
+const chapterOf = name => CHAPTERS.find(chapter => chapter.pages.includes(name));
+
+function statusOf(name) {
+  if (state.known.has(name)) return 'found';
+  const reachable = RECIPES[name].some(recipe => recipe.split('+').every(part => state.known.has(part)));
+  return reachable ? 'reach' : 'far';
+}
+
+// 1 : inscrite · +1 : servie (ou jamais ingrédient) · +1 : toutes les variantes
+function starsOf(name) {
+  if (!state.known.has(name)) return 0;
+  const served = state.used.has(name) || !INGREDIENTS.has(name);
+  const found = state.variants.get(name);
+  const all = found && found.size === RECIPES[name].length;
+  return 1 + (served ? 1 : 0) + (all ? 1 : 0);
+}
+const totalStars = () => CHAPTERS.reduce((sum, chapter) => sum + chapter.pages.reduce((s, name) => s + starsOf(name), 0), 0);
+const foundIn = chapter => chapter.pages.filter(name => state.known.has(name)).length;
+
+/* =====================================================================
+   Rendu des pages (chaînes HTML, données internes uniquement)
+   ===================================================================== */
+function icon(name) {
+  const value = EL[name][0];
+  return value.startsWith('svg:') ? SVG[value.slice(4)] : value;
+}
+function roman(n) {
+  const table = [[10, 'x'], [9, 'ix'], [5, 'v'], [4, 'iv'], [1, 'i']];
+  let out = '';
+  for (const [value, letters] of table) while (n >= value) { out += letters; n -= value; }
+  return out;
+}
+const starRow = count => [1, 2, 3].map(i => `<span class="${i <= count ? 'on' : 'off'}">★</span>`).join('');
+const vars = chapter => `--c:${chapter.color};--ci:${chapter.ink}`;
+
+function ingredient(name, known) {
+  if (!known) return `<span class="ing"><span class="ing__icon is-unknown">?</span><small>&nbsp;</small></span>`;
+  return `<span class="ing"><span class="ing__icon">${icon(name)}</span><small>${name}</small></span>`;
+}
+
+function recipePage(page, i) {
+  const { chapter, name } = page;
+  const status = statusOf(name);
+  const stars = starsOf(name);
+  const found = state.variants.get(name) || new Set();
+  let row;
+  if (status === 'found') {
+    const [a, b] = (found.values().next().value || RECIPES[name][0]).split('+');
+    row = `${ingredient(a, true)}<span class="op">+</span>${ingredient(b, true)}`;
+  } else {
+    const hint = state.revealed.get(name);
+    row = `${ingredient(hint, Boolean(hint))}<span class="op">+</span>${ingredient(null, false)}`;
+  }
+  const title = status === 'found'
+    ? `<h2 class="pg__title">${name}</h2>`
+    : status === 'reach'
+      ? `<h2 class="pg__title is-blank" aria-label="Élément à trouver, ${name.length} lettres">${[...name].map(() => '_').join('')}</h2>`
+      : `<h2 class="pg__title is-blank">? ? ?</h2>`;
+  const riddle = status === 'far' ? 'Un ingrédient te manque encore pour la tenter.' : `« ${RIDDLES[name]} »`;
+  const dots = RECIPES[name].map(recipe => `<i class="${found.has(recipe) ? 'on' : ''}"></i>`).join('');
+  const ess = EL[name][1];
+  let action = '';
+  if (status === 'reach') {
+    action = state.revealed.has(name)
+      ? `<button type="button" class="ink" disabled>Encre utilisée</button>`
+      : `<button type="button" class="ink" data-action="ink" data-name="${name}">✒︎ Encre · ${INK_COST} ${ESS[ess][0]}</button>`;
+  }
+  return `<div class="pg" style="${vars(chapter)}">
+    <header class="pg__head"><span>${chapter.id} · ${chapter.name}</span><span class="pg__stars" aria-label="${stars} étoiles sur 3">${starRow(stars)}</span></header>
+    <div class="vig ${status}"><div class="vig__icon">${status === 'far' ? '<span class="vig__q">?</span>' : icon(name)}</div>${status === 'found' ? '<span class="vig__stamp">Inscrite</span>' : ''}</div>
+    ${title}
+    <p class="pg__riddle">${riddle}</p>
+    <div class="rec">${row}<span class="op">=</span>${ingredient(name, status === 'found')}</div>
+    <div class="pg__variants">Variantes${dots}</div>
+    ${action}
+    <footer class="pg__folio">${roman(i)}</footer>
+  </div>`;
+}
+
+function chapterPage(page, i) {
+  const { chapter } = page;
+  const open = state.unlocked.has(chapter.id);
+  const stars = chapter.pages.reduce((s, name) => s + starsOf(name), 0);
+  const body = open
+    ? `<div class="chap__stats"><span class="chap__stat">${foundIn(chapter)} / ${chapter.pages.length} pages</span><span class="chap__stat">★ ${stars} / ${chapter.pages.length * 3}</span></div>`
+    : `<div class="chap__seal">🔒 Scellé · encore ${Math.max(0, chapter.need - totalStars())} ★</div>`;
+  return `<div class="pg" style="${vars(chapter)}">
+    <div class="chap__num">${chapter.id}</div>
+    <div class="chap__eyebrow">Chapitre ${chapter.id}</div>
+    <h2 class="chap__name">${chapter.name}</h2>
+    <p class="chap__text">${chapter.text}</p>
+    ${body}
+    <footer class="pg__folio">${roman(i)}</footer>
+  </div>`;
+}
+
+function tocPage() {
+  const rows = CHAPTERS.map(chapter => {
+    const open = state.unlocked.has(chapter.id);
+    const pct = Math.round((foundIn(chapter) / chapter.pages.length) * 100);
+    return `<button type="button" class="toc__row" style="${vars(chapter)}" data-goto="${chapterPageIndex(chapter.id)}" ${open ? '' : 'data-sealed'}>
+      <span class="toc__num">${chapter.id}</span>
+      <span class="toc__body"><span class="toc__name">${chapter.name}</span><span class="toc__bar"><i style="width:${open ? pct : 0}%"></i></span></span>
+      <span class="toc__meta">${open ? `${foundIn(chapter)}/${chapter.pages.length}` : `🔒 ${chapter.need} ★`}</span>
+    </button>`;
+  }).join('');
+  return `<div class="pg">
+    <h1 class="toc__title">Le Livre</h1>
+    <p class="toc__sub">Grimoire d’alchimie d’Origins</p>
+    <div class="toc__list">${rows}</div>
+    <button type="button" class="toc__go" data-goto="1">Ouvrir le livre</button>
+    <p class="toc__tip">Glisse la page du doigt, ou touche son bord.</p>
+  </div>`;
+}
+
+function renderPage(el, i) {
+  const page = pages[i];
+  el.innerHTML = page.type === 'toc' ? tocPage() : page.type === 'chapter' ? chapterPage(page, i) : recipePage(page, i);
+}
+
+/* =====================================================================
+   Interface autour du livre
+   ===================================================================== */
+const $ = id => document.getElementById(id);
+const bookRoot = $('book');
+const ui = new AbortController();
+const listen = (target, type, fn) => target.addEventListener(type, fn, { signal: ui.signal });
+let book = null;
+let toastTimer = 0;
+let mixTimer = 0;
+
+function toast(message) {
+  const el = $('toast');
+  el.textContent = message;
+  el.classList.add('is-on');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => el.classList.remove('is-on'), 2300);
+}
+
+// Relance une animation CSS de classe sur un élément déjà présent
+function replay(el, className) {
+  el.classList.remove(className);
+  void el.offsetWidth;
+  el.classList.add(className);
+}
+
+function renderHeader() {
+  const page = pages[book ? book.index : 0];
+  $('eyebrow').textContent = page.type === 'toc' ? 'Sommaire' : `Chapitre ${page.chapter.id}`;
+  $('chapName').textContent = page.type === 'toc' ? 'Le Livre d’Origins' : page.chapter.name;
+  $('res').innerHTML = `<span class="pill pill--star" id="starPill">★ ${totalStars()}</span><span class="pill">🪙 ${state.coins}</span>`
+    + Object.entries(state.ess).map(([key, value]) => `<span class="pill" title="Essence ${ESS[key][1]}">${ESS[key][0]} ${value}</span>`).join('');
+}
+
+function renderRibbons() {
+  const at = book ? book.index : 0;
+  const currentChapter = pages[at].chapter;
+  const items = [`<button type="button" class="ribbon${at === 0 ? ' is-on' : ''}" style="--rc:#FFFDF8;--ri:#4A3426" data-goto="0" aria-label="Sommaire">◆</button>`];
+  for (const chapter of CHAPTERS) {
+    const open = state.unlocked.has(chapter.id);
+    const on = currentChapter && currentChapter.id === chapter.id;
+    items.push(`<button type="button" class="ribbon${on ? ' is-on' : ''}${open ? '' : ' is-sealed'}" style="--rc:${chapter.color};--ri:${chapter.ink}" data-goto="${chapterPageIndex(chapter.id)}" data-ribbon="${chapter.id}" aria-label="Chapitre ${chapter.id}">${chapter.id}</button>`);
+  }
+  $('ribbons').innerHTML = items.join('');
+}
+
+function renderShelf() {
+  $('shelf').innerHTML = state.order.map(name => `<button type="button" class="chip${name === state.fresh ? ' is-new' : ''}" data-el="${name}">
+    <span class="chip__icon">${icon(name)}</span><span class="chip__name">${name}</span></button>`).join('');
+}
+
+function renderSlots() {
+  document.querySelectorAll('.slot').forEach((slot, i) => {
+    const name = state.slots[i];
+    slot.classList.toggle('is-full', Boolean(name));
+    slot.innerHTML = name ? icon(name) : '';
+    slot.setAttribute('aria-label', name ? `Case ${i + 1} : ${name}, toucher pour retirer` : `Case ${i + 1}, vide`);
+  });
+}
+
+function dust() {
+  const host = bookRoot.querySelector('.leaf--current');
+  const cloud = document.createElement('div');
+  cloud.className = 'dust';
+  for (let i = 0; i < 12; i++) {
+    const angle = (i / 12) * Math.PI * 2;
+    const dot = document.createElement('i');
+    dot.style.setProperty('--dx', `${Math.cos(angle) * 90}px`);
+    dot.style.setProperty('--dy', `${Math.sin(angle) * 90 - 20}px`);
+    dot.style.animationDelay = `${(i % 3) * 40}ms`;
+    cloud.appendChild(dot);
+  }
+  cloud.lastChild.addEventListener('animationend', () => cloud.remove(), { once: true });
+  host.appendChild(cloud);
+}
+
+function addToSlot(name) {
+  const free = state.slots.indexOf(null);
+  if (free === -1) return;
+  state.slots[free] = name;
+  renderSlots();
+  if (!state.slots.includes(null)) {
+    clearTimeout(mixTimer);
+    mixTimer = setTimeout(mix, 280);
+  }
+}
+
+function mix() {
+  const [a, b] = state.slots;
+  const key = keyOf(a, b);
+  const result = MIX.get(key);
+  if (!result) {
+    replay($('tray'), 'is-shake');
+    toast(FAILS[Math.floor(Math.random() * FAILS.length)]);
+  } else {
+    discover(result, key, a, b);
+  }
+  state.slots = [null, null];
+  setTimeout(renderSlots, 160);
+}
+
+function discover(result, key, a, b) {
+  const isNew = !state.known.has(result);
+  const found = state.variants.get(result) || new Set();
+  const newVariant = !found.has(key);
+  const starsBefore = totalStars();
+  found.add(key);
+  state.variants.set(result, found);
+  state.used.add(a);
+  state.used.add(b);
+  if (isNew) {
+    state.known.add(result);
+    state.order.push(result);
+    state.coins += 5;
+    state.fresh = result;
+  } else if (newVariant && found.size === RECIPES[result].length) {
+    state.ess[EL[result][1]] += 5;
+    state.coins += 10;
+  }
+
+  // Ouverture des chapitres au seuil d'étoiles
+  let opened = null;
+  for (const chapter of CHAPTERS) {
+    if (!state.unlocked.has(chapter.id) && totalStars() >= chapter.need) {
+      state.unlocked.add(chapter.id);
+      opened = chapter;
+    }
+  }
+  if (opened) buildPages();
+
+  const chapter = chapterOf(result);
+  const here = pages[book.index];
+  const onThisPage = here.type === 'recipe' && here.name === result;
+  book.refresh();
+  renderShelf();
+  renderRibbons();
+  renderHeader();
+  if (totalStars() > starsBefore) replay($('starPill'), 'is-bump');
+
+  if (opened) {
+    toast(`Chapitre ${opened.id} ouvert : ${opened.name} !`);
+    const ribbon = $('ribbons').querySelector(`[data-ribbon="${opened.id}"]`);
+    if (ribbon) replay(ribbon, 'is-ping');
+  } else if (isNew && onThisPage) {
+    const vig = bookRoot.querySelector('.leaf--current .vig');
+    if (vig) vig.classList.add('is-stuck');
+    dust();
+    toast(`Inscrite : ${result} ★`);
+  } else if (isNew) {
+    if (!state.unlocked.has(chapter.id)) toast(`${result} mise de côté pour le chapitre ${chapter.id}`);
+    else {
+      toast(`Nouvelle vignette : ${result} · chapitre ${chapter.id}, page ${roman(pageIndexOf(result))}`);
+      const ribbon = $('ribbons').querySelector(`[data-ribbon="${chapter.id}"]`);
+      if (ribbon) replay(ribbon, 'is-ping');
+    }
+  } else if (newVariant) {
+    toast(`Nouvelle variante : ${result} (${found.size}/${RECIPES[result].length})`);
+  } else {
+    toast(`Déjà inscrite : ${result}`);
+  }
+}
+
+function useInk(name) {
+  const ess = EL[name][1];
+  if (state.ess[ess] < INK_COST) {
+    toast(`Pas assez d’essence de ${ESS[ess][1]} : les Ateliers en donneront.`);
+    return;
+  }
+  const recipe = RECIPES[name].find(r => r.split('+').every(part => state.known.has(part)));
+  state.ess[ess] -= INK_COST;
+  state.revealed.set(name, recipe.split('+')[0]);
+  book.refresh();
+  renderHeader();
+}
+
+listen(document, 'click', event => {
+  const goto = event.target.closest('[data-goto]');
+  if (goto) {
+    book.go(Number(goto.dataset.goto));
+    return;
+  }
+  const chip = event.target.closest('[data-el]');
+  if (chip) {
+    addToSlot(chip.dataset.el);
+    return;
+  }
+  const slot = event.target.closest('[data-slot]');
+  if (slot) {
+    clearTimeout(mixTimer);
+    state.slots[Number(slot.dataset.slot)] = null;
+    renderSlots();
+    return;
+  }
+  const ink = event.target.closest('[data-action="ink"]');
+  if (ink) {
+    useInk(ink.dataset.name);
+    return;
+  }
+  const tab = event.target.closest('[data-tab]');
+  if (tab && tab.dataset.tab !== 'livre') {
+    const names = { monde: 'le Monde arrive au jalon 2', ateliers: 'les Ateliers arrivent au jalon 2', boutique: 'la Boutique arrive au jalon 4' };
+    toast(`Bientôt : ${names[tab.dataset.tab]}.`);
+  }
+});
+
+function mountBook(start) {
+  book = createBook(bookRoot, {
+    start,
+    count: () => pages.length,
+    render: renderPage,
+    onChange: () => {
+      renderHeader();
+      renderRibbons();
+    }
+  });
+}
+
+buildPages();
+mountBook(0);
+renderHeader();
+renderRibbons();
+renderShelf();
+renderSlots();
+
+/* =====================================================================
+   Banc de mesure (?debug) : images par seconde, nœuds, tas, 200 tours
+   ===================================================================== */
+if (new URLSearchParams(location.search).has('debug')) {
+  const hud = document.createElement('div');
+  hud.className = 'hud';
+  hud.innerHTML = '<div id="hudText">…</div><button type="button" id="hudStress">200 tours</button><button type="button" id="hudRemount">Démonter / remonter</button>';
+  document.body.appendChild(hud);
+  let frames = 0, worst = 0, last = performance.now(), windowStart = last, turns = 0;
+  const tick = now => {
+    frames++;
+    worst = Math.max(worst, now - last);
+    last = now;
+    if (now - windowStart >= 1000) {
+      const heap = performance.memory ? `${(performance.memory.usedJSHeapSize / 1048576).toFixed(1)} Mo` : 'n/d';
+      $('hudText').textContent = `${frames} i/s · pire ${worst.toFixed(0)} ms · nœuds ${document.getElementsByTagName('*').length} · tas ${heap} · tours ${turns}`;
+      frames = 0;
+      worst = 0;
+      windowStart = now;
+    }
+    requestAnimationFrame(tick);
+  };
+  requestAnimationFrame(tick);
+  window.__stress = async (n = 200, speed = 0.35) => {
+    let forward = true;
+    for (let i = 0; i < n; i++) {
+      if (book.index >= pages.length - 1) forward = false;
+      if (book.index <= 0) forward = true;
+      await book.go(book.index + (forward ? 1 : -1), speed);
+      turns++;
+    }
+  };
+  window.__remount = () => {
+    const at = book.index;
+    book.destroy();
+    mountBook(at);
+  };
+  window.__book = () => book;
+  $('hudStress').addEventListener('click', () => window.__stress());
+  $('hudRemount').addEventListener('click', () => window.__remount());
+}
+</script>
+</body>
+</html>
