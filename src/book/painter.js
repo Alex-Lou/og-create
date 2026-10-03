@@ -61,7 +61,8 @@ function drawing(src, onReady) {
     .catch(() => {});
   return entry;
 }
-function glyph(ctx, emoji, cx, cy, size, onReady, alpha = 1) {
+// Dessine le glyphe d'un élément (emoji ou dessin du jeu) centré en (cx, cy) ; aussi utilisé par le Monde
+export function glyph(ctx, emoji, cx, cy, size, onReady, alpha = 1) {
   const src = glyphSrc(emoji);
   ctx.save();
   ctx.globalAlpha = alpha;

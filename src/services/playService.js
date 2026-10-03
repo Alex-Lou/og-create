@@ -42,6 +42,20 @@ export default {
   ink(page) {
     return asPlayer(() => http.post('/play/ink', { page }));
   },
+  // Le Monde (compte requis) : { size, rate, capHours, pending, tiles: [{ x, y, element, emoji, family }] }
+  world() {
+    return http.get('/play/world').then(response => response.data);
+  },
+  worldPlace(element, x, y) {
+    return http.post('/play/world/place', { element, x, y }).then(response => response.data);
+  },
+  worldRemove(x, y) {
+    return http.post('/play/world/remove', { x, y }).then(response => response.data);
+  },
+  // { gained, coins, world }
+  worldCollect() {
+    return http.post('/play/world/collect').then(response => response.data);
+  },
   // { origins: [[ingrédients]], more }
   origins(name) {
     return asPlayer(() => http.get('/play/origins', { params: { name } }));
