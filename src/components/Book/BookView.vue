@@ -55,19 +55,31 @@
         aria-label="Chercher un élément"
       />
     </div>
+    <!-- Filtres : les familles demandées par la page ouverte d'abord, puis toutes les familles -->
+    <div v-if="!query.trim()" class="book-view__filters" role="tablist" aria-label="Familles">
+      <button
+        v-for="pill in filters"
+        :key="pill.id"
+        type="button"
+        role="tab"
+        :aria-selected="activeFilter === pill.id"
+        :class="['book-view__filter', { 'is-on': activeFilter === pill.id, 'is-page': pill.id === 'page' }]"
+        @click="filter = pill.id"
+      >{{ pill.label }} <span class="book-view__filter-count">{{ pill.count }}</span></button>
+    </div>
     <div class="book-view__shelf" aria-label="Éléments connus">
       <button
         v-for="name in shelf"
         :key="name"
         type="button"
-        :class="['book-view__chip', { 'is-new': name === freshElement }]"
+        :class="['book-view__chip', { 'is-new': name === freshElement, 'is-hint': name === pageHint }]"
         :aria-label="`Mettre ${name} dans l’Athanor`"
         @click="$emit('select', name, $event.currentTarget.getBoundingClientRect())"
       >
         <span class="book-view__chip-glyph" aria-hidden="true"><ElementGlyph :glyph="elementEmojis[name]" /></span>
         <span class="book-view__chip-name">{{ name }}</span>
       </button>
-      <p v-if="!shelf.length" class="book-view__empty">Aucun élément ne ressemble à « {{ query }} ».</p>
+      <p v-if="!shelf.length" class="book-view__empty">{{ query.trim() ? `Aucun élément ne ressemble à « ${query} ».` : 'Aucun élément dans cette famille.' }}</p>
     </div>
   </section>
 </template>
@@ -107,6 +119,8 @@ export default {
     elementEmojis: { type: Object, required: true },
     isLoggedIn: { type: Boolean, default: false },
     freshElement: { type: String, default: null },
+    // Familles des éléments connus ({ famille: [noms] }, dans l'ordre du registre)
+    categories: { type: Object, default: () => ({}) },
     // Révélation en cours dans l'Athanor : les effets du Livre attendent qu'elle se ferme
     revealing: { type: Boolean, default: false }
   },
@@ -119,6 +133,10 @@ export default {
       currentKey: 'toc',
       chapterState: [],
       query: '',
+      // Filtre de l'étagère : « auto » suit la page (familles de l'indice), sinon « all » ou une famille
+      filter: 'auto',
+      // Page à portée ouverte : familles de ses ingrédients et ingrédient révélé par l'Encre
+      pageClue: null,
       showHint: !readStore(HINT_KEY, false),
       loadError: false
     };
@@ -138,9 +156,49 @@ export default {
         }))
       ];
     },
+    familyOf() {
+      const map = {};
+      for (const [family, names] of Object.entries(this.categories)) names.forEach(name => { map[name] = family; });
+      return map;
+    },
+    pageHint() {
+      return this.pageClue ? this.pageClue.revealed : null;
+    },
+    activeFilter() {
+      if (this.filter !== 'auto') return this.filter;
+      return this.pageClue ? 'page' : 'all';
+    },
+    filters() {
+      const owned = this.discoveredElements;
+      const counts = {};
+      owned.forEach(name => {
+        const family = this.familyOf[name];
+        if (family) counts[family] = (counts[family] || 0) + 1;
+      });
+      const pills = [];
+      if (this.pageClue) {
+        const wanted = new Set(this.pageClue.families);
+        pills.push({ id: 'page', label: '✦ Pour cette page', count: owned.filter(n => wanted.has(this.familyOf[n])).length });
+      }
+      pills.push({ id: 'all', label: 'Tout', count: owned.length });
+      Object.keys(this.categories).forEach(family => {
+        if (counts[family]) pills.push({ id: family, label: family === 'Elements Fondamentaux' ? 'Éléments premiers' : family, count: counts[family] });
+      });
+      return pills;
+    },
     shelf() {
       const newestFirst = [...this.discoveredElements].reverse();
-      return this.query.trim() ? search(newestFirst, this.query) : newestFirst;
+      if (this.query.trim()) return search(newestFirst, this.query);
+      const active = this.activeFilter;
+      if (active === 'all') return newestFirst;
+      if (active === 'page' && this.pageClue) {
+        const wanted = new Set(this.pageClue.families);
+        const list = newestFirst.filter(name => wanted.has(this.familyOf[name]));
+        // L'ingrédient révélé par l'Encre passe en tête
+        const hint = this.pageClue.revealed;
+        return hint && list.includes(hint) ? [hint, ...list.filter(n => n !== hint)] : list;
+      }
+      return newestFirst.filter(name => this.familyOf[name] === active);
     }
   },
   watch: {
@@ -262,9 +320,16 @@ export default {
           buzz(8);
         },
         onRest: (index, hotspots, label) => {
-          this.currentKey = this.models[index]?.key || 'toc';
+          const model = this.models[index];
+          const key = model?.key || 'toc';
+          // Nouvelle page : l'étagère revient au filtre automatique
+          if (key !== this.currentKey) this.filter = 'auto';
+          this.currentKey = key;
           this.spots = hotspots;
           this.pageLabel = label;
+          this.pageClue = model && model.type === 'reach'
+            ? { families: [...new Set(model.page.clue)], revealed: model.revealed || null }
+            : null;
         }
       });
     },
@@ -327,6 +392,7 @@ export default {
         this.$emit('coins-updated', coins);
         this.models = this.buildModels(this.bookData);
         this.engine.refresh();
+        this.filter = 'page';
         if (slot) burst(center(slot), 12, 40);
         buzz(10);
       } catch (error) {
@@ -423,8 +489,29 @@ export default {
   background: rgba(233, 223, 200, .06); color: var(--oc-text);
   font: inherit; font-size: 14px;
 }
+.book-view__filters {
+  display: flex; gap: 6px;
+  margin-top: 8px; padding: 2px;
+  overflow-x: auto; overscroll-behavior-x: contain;
+  scrollbar-width: none;
+}
+.book-view__filters::-webkit-scrollbar { display: none; }
+.book-view__filter {
+  flex: none;
+  min-height: 34px; padding: 4px 12px;
+  border: 1px solid rgba(233, 223, 200, .18); border-radius: 999px;
+  background: rgba(233, 223, 200, .05); color: var(--oc-text-faint);
+  font-family: Nunito, system-ui, sans-serif; font-size: 13px; font-weight: 800;
+  cursor: pointer;
+  transition: background .2s ease, color .2s ease, border-color .2s ease;
+}
+.book-view__filter.is-on { background: var(--book-paper); border-color: var(--book-paper); color: var(--book-ink); }
+.book-view__filter.is-page:not(.is-on) { border-color: rgba(224, 182, 84, .6); color: var(--oc-gold); }
+.book-view__filter-count { opacity: .6; font-weight: 700; margin-left: 2px; }
+/* Deux rangées qui défilent ensemble : deux fois plus d'éléments sous les yeux */
 .book-view__shelf {
-  display: flex; gap: 8px;
+  display: grid; grid-auto-flow: column; grid-template-rows: repeat(2, auto); grid-auto-columns: 64px;
+  gap: 8px;
   margin-top: 8px; padding: 2px 2px 6px;
   overflow-x: auto; overscroll-behavior-x: contain;
   scrollbar-width: none;
@@ -443,9 +530,10 @@ export default {
 .book-view__chip:active { transform: scale(.92); }
 .book-view__chip-glyph { font-size: 26px; line-height: 1; }
 .book-view__chip-name { font-size: 10.5px; font-weight: 700; max-width: 60px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-family: Nunito, system-ui, sans-serif; color: #8A7262; }
+.book-view__chip.is-hint { box-shadow: 0 0 0 3px var(--oc-gold), 0 0 16px rgba(224, 182, 84, .6), 0 3px 0 rgba(0, 0, 0, .35); }
 .book-view__chip.is-new { box-shadow: 0 0 0 2.5px var(--oc-gold), 0 3px 0 rgba(0, 0, 0, .35); animation: book-pop .55s cubic-bezier(.3, 1.5, .55, 1); }
 @keyframes book-pop { 0% { transform: scale(.55); } 100% { transform: scale(1); } }
-.book-view__empty { margin: 8px 0; color: var(--oc-text-faint); font-style: italic; }
+.book-view__empty { grid-row: 1 / -1; width: max-content; margin: 8px 0; color: var(--oc-text-faint); font-style: italic; }
 
 @media (prefers-reduced-motion: reduce) {
   .book-view__pulse, .book-view__hint, .book-view__ribbon.is-ping, .book-view__chip.is-new { animation: none; }
