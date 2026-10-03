@@ -1462,6 +1462,10 @@ handleCraftSuccess(craftedItem, ingredients = []) {
   box-shadow: inset 0 0 0 1px var(--oc-line);
 }
 .oc-view button[aria-pressed='true'] { color: var(--oc-gold); background: var(--oc-gold-soft); box-shadow: inset 0 0 0 1px var(--oc-accent-line); }
+@media (max-width: 859px) {
+  .oc-view { margin: 0 0 10px; }
+  .oc-view button { min-height: 30px; padding: 0 10px; font-size: 13px; }
+}
 
 @media (min-width: 860px) {
   .oc-app__shell { padding-bottom: 32px; }

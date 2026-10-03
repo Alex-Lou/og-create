@@ -26,7 +26,7 @@ describe('ciel du registre', () => {
     const pts = Array.from({ length: 150 }, (_, i) => starOffset(i));
     let min = Infinity;
     for (let i = 0; i < pts.length; i++) for (let j = i + 1; j < pts.length; j++) min = Math.min(min, Math.hypot(pts[i].x - pts[j].x, pts[i].y - pts[j].y));
-    expect(min).toBeGreaterThan(64);
+    expect(min).toBeGreaterThan(84);
   });
   it('les constellations ne se chevauchent pas', () => {
     const sky = layoutSky(fams);
