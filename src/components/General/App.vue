@@ -45,7 +45,20 @@
 
       <main id="main-content" ref="mainContent" class="oc-app__main">
         <div class="oc-app__inventory">
+          <!-- Mode principal : le Livre ; l'Épreuve garde son inventaire -->
+          <BookView
+            v-if="!isTimerActive"
+            :discoveredElements="discoveredElements"
+            :elementEmojis="elementEmojis"
+            :isLoggedIn="isLoggedIn"
+            :freshElement="freshElement"
+            :revealing="isRevealing"
+            @select="handleResourceSelection"
+            @coins-updated="handleCoinsUpdated"
+            @show-alert="showAlert"
+          />
           <GameInventory
+            v-else
             :categories="categories"
             :familyTotals="familyTotals"
             :discoveredElements="discoveredElements"
@@ -210,6 +223,7 @@ import CustomizeModal from '../Header/CustomizeModal.vue';
 import AppHeader from '../Game/AppHeader.vue';
 import ModeSwitcher from '../Game/ModeSwitcher.vue';
 import CraftZone from '../Game/CraftZone.vue';
+import BookView from '../Book/BookView.vue';
 import LivingBackground from '../Game/LivingBackground.vue';
 import { ERA_NAMES, familyColor, discoveredFamilies, eraOf, slotCountForEra, sortFamilies, stageOf, populationFor } from '@/utils/eras';
 
@@ -229,6 +243,7 @@ export default {
     AppHeader,
     ModeSwitcher,
     CraftZone,
+    BookView,
     LivingBackground,
     ContactModal,
     GameAchievementsPopup,

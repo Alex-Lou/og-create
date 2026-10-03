@@ -19,7 +19,7 @@
 
 <script>
 const MODES = [
-  { id: 'infinite', num: 'I', label: 'Infini' },
+  { id: 'infinite', num: 'I', label: 'Le Livre' },
   { id: 'timer', num: 'II', label: 'L’Épreuve' }
 ];
 
