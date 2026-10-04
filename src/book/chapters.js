@@ -26,3 +26,6 @@ const FAMILY_CHAPTER = Object.fromEntries(
 // Chapitre d'une famille (I par défaut, pour une famille inconnue)
 export const chapterOfFamily = family => FAMILY_CHAPTER[family] || 'I';
 export const styleOfFamily = family => CHAPTER_STYLE[chapterOfFamily(family)];
+
+// Nom du grimoire (titre du sommaire et de l'en-tête du Livre)
+export const BOOK_TITLE = 'Codex Mundi';

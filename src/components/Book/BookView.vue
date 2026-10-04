@@ -1,28 +1,25 @@
 <template>
-  <section class="book-view" aria-label="Le Livre">
+  <section class="book-view" :aria-label="BOOK_TITLE">
     <header class="book-view__head">
-      <div>
-        <span class="book-view__eyebrow">{{ currentChapter ? `Chapitre ${currentChapter.id}` : 'Sommaire' }}</span>
-        <span class="book-view__title">{{ currentChapter ? currentChapter.name : 'Le Livre' }}</span>
-      </div>
+      <!-- Puce de chapitre : ouvre la feuille des 7 chapitres -->
+      <button
+        ref="chapterChip"
+        type="button"
+        class="book-view__chapter"
+        :style="chipStyle"
+        :aria-label="currentChapter ? `Chapitre ${currentChapter.id}, ${currentChapter.name} : changer de chapitre` : `${BOOK_TITLE} : choisir un chapitre`"
+        @click="showChapters = true"
+      >
+        <span class="book-view__chapter-seal" aria-hidden="true">{{ currentChapter ? currentChapter.id : '◆' }}</span>
+        <span class="book-view__chapter-name">{{ currentChapter ? currentChapter.name : BOOK_TITLE }}</span>
+        <span class="book-view__chevron" aria-hidden="true">▾</span>
+      </button>
       <button type="button" class="book-view__stars" :aria-label="`${stars} découvertes : revenir au sommaire`" @click="goTo(0)">★ {{ stars }}</button>
     </header>
 
     <div ref="stage" class="book-view__stage">
       <div ref="rig" class="book-view__rig">
         <div ref="wrap" class="book-view__wrap">
-          <nav class="book-view__ribbons" aria-label="Chapitres">
-            <button
-              v-for="ribbon in ribbons"
-              :key="ribbon.key"
-              type="button"
-              :ref="el => setRibbonRef(el, ribbon.key)"
-              :class="['book-view__ribbon', { 'is-on': ribbon.on, 'is-sealed': ribbon.sealed }]"
-              :style="{ '--rc': ribbon.color, '--ri': ribbon.ink }"
-              :aria-label="ribbon.label"
-              @click="goTo(ribbon.index)"
-            >{{ ribbon.text }}</button>
-          </nav>
         </div>
         <div ref="hot" class="book-view__hot" role="region" aria-roledescription="page de livre" tabindex="0" :aria-label="pageLabel">
           <template v-for="spot in spots" :key="spot.id">
@@ -96,6 +93,16 @@
       <p v-if="!shelf.length" class="book-view__empty">{{ query.trim() ? `Aucun élément ne ressemble à « ${query} ».` : 'Aucun élément dans cette famille.' }}</p>
     </div>
 
+    <ChapterSheet
+      v-if="showChapters"
+      :title="BOOK_TITLE"
+      :chapters="chapterState"
+      :current="currentChapter ? currentChapter.id : null"
+      :stars="stars"
+      @go="index => { showChapters = false; goTo(index); }"
+      @close="showChapters = false"
+    />
+
     <HangmanSheet
       v-if="guess"
       :page="guess.page"
@@ -119,6 +126,8 @@ import { messageOf } from '@/utils/errors';
 import playService from '@/services/playService';
 import ElementTile from '@/components/ui/ElementTile.vue';
 import HangmanSheet from './HangmanSheet.vue';
+import ChapterSheet from './ChapterSheet.vue';
+import { BOOK_TITLE } from '@/book/chapters';
 import { search } from '@/utils/search';
 import { familyIndex } from '@/utils/eras';
 import * as storage from '@/utils/storage';
@@ -138,7 +147,7 @@ const HINT_KEY = 'oc_livre_hint';
 // interactive (spots), l'en-tête et l'étagère passent par Vue.
 export default {
   name: 'BookView',
-  components: { ElementTile, HangmanSheet },
+  components: { ElementTile, HangmanSheet, ChapterSheet },
   props: {
     discoveredElements: { type: Array, required: true },
     elementEmojis: { type: Object, required: true },
@@ -161,7 +170,9 @@ export default {
       guess: null,
       guessBusy: false,
       RETRY_PRICE,
-      pageLabel: 'Le Livre',
+      BOOK_TITLE,
+      showChapters: false,
+      pageLabel: BOOK_TITLE,
       stars: 0,
       currentKey: 'toc',
       chapterState: [],
@@ -181,15 +192,10 @@ export default {
       const id = this.currentKey === 'toc' ? null : this.chapterOfKey(this.currentKey);
       return id ? this.chapterState.find(c => c.id === id) || null : null;
     },
-    ribbons() {
-      const on = this.currentChapter ? this.currentChapter.id : null;
-      return [
-        { key: 'toc', text: '◆', label: 'Sommaire', index: 0, color: '#FFFDF8', ink: '#4A3426', on: !on, sealed: false },
-        ...this.chapterState.map(c => ({
-          key: c.id, text: c.id, label: `Chapitre ${c.id}${c.open ? '' : ', scellé'}`, index: c.index,
-          color: CHAPTER_STYLE[c.id].color, ink: CHAPTER_STYLE[c.id].ink, on: on === c.id, sealed: !c.open
-        }))
-      ];
+    // Couleurs de la puce : celles du chapitre ouvert, vélin au sommaire
+    chipStyle() {
+      const style = this.currentChapter ? CHAPTER_STYLE[this.currentChapter.id] : null;
+      return style ? { '--rc': style.color, '--ri': style.ink } : { '--rc': '#FFFDF8', '--ri': '#4A3426' };
     },
     familyOf() {
       return familyIndex(this.categories);
@@ -269,7 +275,6 @@ export default {
     this.aims = {};
     this.aimedKey = null;
     this.pendingEffects = [];
-    this.ribbonEls = {};
     this.repaintRaf = 0;
     this.reloadTimer = 0;
     // Le Livre peut quitter l'écran pendant un chargement (changement d'onglet) : la réponse est alors ignorée
@@ -295,10 +300,6 @@ export default {
     },
     toggleFilters() {
       this.showFilters = !this.showFilters;
-    },
-    setRibbonRef(el, key) {
-      if (el) this.ribbonEls[key] = el;
-      else delete this.ribbonEls[key];
     },
     spotStyle(spot) {
       return { left: `${spot.x}%`, top: `${spot.y * 0.75}%`, width: `${spot.w}%`, height: `${spot.h * 0.75}%` };
@@ -383,7 +384,10 @@ export default {
       this.bookData = data;
       this.stars = data.stars;
       this.models = this.buildModels(data);
-      this.chapterState = data.chapters.map(c => ({ id: c.id, name: c.name, open: c.open, index: this.models.findIndex(m => m.key === `ch-${c.id}`) }));
+      this.chapterState = data.chapters.map(c => ({
+        id: c.id, name: c.name, open: c.open, found: c.found, total: c.total, need: c.need,
+        index: this.models.findIndex(m => m.key === `ch-${c.id}`)
+      }));
       if (!this.engine) {
         this.mountEngine();
         return;
@@ -455,12 +459,13 @@ export default {
           }
           vibrate([12, 40, 18]);
         } else if (effect.kind === 'inscribed') {
-          const ribbon = this.ribbonEls[effect.chapter];
-          if (ribbon) {
-            ribbon.classList.remove('is-ping');
-            void ribbon.offsetWidth;
-            ribbon.classList.add('is-ping');
-            burst(center(ribbon.getBoundingClientRect()), 10, 36);
+          // Page inscrite ailleurs : la puce de chapitre salue la découverte
+          const chip = this.$refs.chapterChip;
+          if (chip) {
+            chip.classList.remove('is-ping');
+            void chip.offsetWidth;
+            chip.classList.add('is-ping');
+            burst(center(chip.getBoundingClientRect()), 10, 36);
           }
         } else if (effect.kind === 'opened') {
           await unlockCinematic({ id: effect.chapter, name: effect.name }, CHAPTER_STYLE[effect.chapter].wax);
@@ -572,8 +577,25 @@ export default {
   display: flex; align-items: flex-end; justify-content: space-between; gap: 12px;
   padding: 4px 2px 10px;
 }
-.book-view__eyebrow { display: block; font-family: var(--oc-font-mono); font-weight: 800; font-size: 11px; letter-spacing: .14em; text-transform: uppercase; color: var(--oc-on-bg-faint); }
-.book-view__title { display: block; font-family: var(--oc-font-display); font-weight: 700; font-size: 24px; line-height: 1.1; color: var(--oc-on-bg); }
+.book-view__chapter {
+  appearance: none; border: 0; cursor: pointer;
+  min-width: 0; min-height: 44px; padding: 4px 14px 4px 5px;
+  display: inline-flex; align-items: center; gap: 10px;
+  border-radius: 999px;
+  background: var(--rc); color: var(--ri);
+  box-shadow: inset 0 0 0 1px rgba(74, 52, 38, .12), 0 3px 0 rgba(74, 52, 38, .18);
+  touch-action: manipulation; -webkit-tap-highlight-color: transparent;
+  transition: transform var(--oc-fast) var(--oc-ease-out);
+}
+.book-view__chapter:active { transform: translateY(2px); }
+.book-view__chapter:focus-visible { outline: 3px solid var(--oc-gold); outline-offset: 2px; }
+.book-view__chapter.is-ping { animation: book-ping .8s cubic-bezier(.3, 1.5, .55, 1) 2; }
+.book-view__chapter-seal {
+  flex: none; width: 34px; height: 34px; display: grid; place-items: center;
+  border-radius: 50%; background: #FFFDF8; color: var(--ri);
+  font-family: var(--oc-font-display); font-weight: 700; font-size: 14px;
+}
+.book-view__chapter-name { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-family: var(--oc-font-display); font-weight: 700; font-size: 20px; line-height: 1.1; }
 .book-view__stars {
   appearance: none; border: 0; cursor: pointer;
   flex: none; min-height: 32px; padding: 4px 12px; border-radius: 999px;
@@ -582,14 +604,14 @@ export default {
   font-family: var(--oc-font-mono); font-size: 14px; font-weight: 900;
 }
 .book-view__stage {
-  --book-w: max(220px, min(calc(100cqw - 56px), calc((100dvh - 420px) * .75), 460px));
+  --book-w: max(220px, min(calc(100cqw - 18px), calc((100dvh - 420px) * .75), 460px));
   position: relative;
   height: calc(var(--book-w) * 4 / 3 + 24px);
 }
 .book-view__rig { position: absolute; inset: 0; }
 .book-view__wrap {
   position: absolute; top: 8px;
-  left: calc((100% - var(--book-w) - 38px) / 2);
+  left: calc((100% - var(--book-w) - 7px) / 2);
   width: var(--book-w);
   aspect-ratio: 3 / 4;
 }
@@ -621,21 +643,7 @@ export default {
   70% { transform: translateX(-150%) scale(1); opacity: 1; }
   100% { transform: translateX(-190%) scale(.8); opacity: 0; }
 }
-.book-view__ribbons { position: absolute; top: 6%; right: -34px; display: flex; flex-direction: column; gap: 5px; z-index: 1; }
-.book-view__ribbon {
-  width: 40px; min-height: 40px; padding: 0 0 0 11px;
-  border: 0; border-radius: 0 12px 12px 0;
-  background: var(--rc); color: var(--ri);
-  font-family: var(--font-display); font-weight: 700; font-size: 13px;
-  box-shadow: 0 3px 8px rgba(0, 0, 0, .35), inset 0 -3px 0 rgba(0, 0, 0, .08);
-  transform: translateX(-9px);
-  transition: transform .35s cubic-bezier(.3, 1.5, .55, 1);
-  cursor: pointer;
-}
-.book-view__ribbon.is-on { transform: translateX(0); }
-.book-view__ribbon.is-sealed { background: #8F8270; color: #D8CCB6; }
-.book-view__ribbon.is-ping { animation: book-ping .8s cubic-bezier(.3, 1.5, .55, 1) 2; }
-@keyframes book-ping { 0%, 100% { transform: translateX(0); } 50% { transform: translateX(7px); } }
+@keyframes book-ping { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-4px); } }
 .book-view__error { position: absolute; inset: 30% 10% auto; text-align: center; color: var(--oc-on-bg); z-index: 4; }
 .book-view__retry { margin-left: 8px; }
 
@@ -694,7 +702,7 @@ export default {
 .book-view__empty { grid-column: 1 / -1; margin: 8px 0; color: var(--oc-on-bg-faint); font-style: italic; }
 
 @media (prefers-reduced-motion: reduce) {
-  .book-view__pulse, .book-view__hint, .book-view__ribbon.is-ping { animation: none; }
+  .book-view__pulse, .book-view__hint, .book-view__chapter.is-ping { animation: none; }
 }
 </style>
 
