@@ -3,6 +3,7 @@
 </template>
 
 <script>
+import { reducedMotion } from '@/utils/fx';
 import LivingBackground from '@/utils/livingBackground';
 
 // Fond vivant plein écran, piloté par la progression (ère, population, couleurs)
@@ -19,8 +20,7 @@ export default {
     palette: 'configure'
   },
   mounted() {
-    const reducedMotion = window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
-    this.engine = new LivingBackground(this.$refs.canvas, { reducedMotion });
+    this.engine = new LivingBackground(this.$refs.canvas, { reducedMotion: reducedMotion() });
     this.configure();
     this.engine.start();
     this.onResize = () => this.engine.resize();

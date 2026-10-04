@@ -34,6 +34,7 @@
 </template>
 
 <script>
+import { messageOf } from '@/utils/errors';
 import http from '@/services/http';
 import GModal from '@/components/ui/GModal.vue';
 
@@ -41,12 +42,6 @@ import GModal from '@/components/ui/GModal.vue';
 export default {
   name: 'ContactModal',
   components: { GModal },
-  props: {
-    isDarkMode: {
-      type: Boolean,
-      default: false
-    }
-  },
   emits: ['close'],
   data() {
     return {
@@ -82,7 +77,7 @@ export default {
         }, 2000);
       } catch (error) {
         // Raison donnée par le serveur (adresse invalide, message trop long, trop d'envois…)
-        this.errorMessage = error.response?.data?.message || 'Le message n’a pas pu partir. Réessaie dans un instant.';
+        this.errorMessage = messageOf(error, 'Le message n’a pas pu partir. Réessaie dans un instant.');
       } finally {
         this.isLoading = false;
       }

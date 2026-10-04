@@ -1,6 +1,5 @@
-import http, { refreshSession } from './http';
+import http from './http';
 import { getSession, saveSession, clearSession } from './session';
-import gameDataService from './gameDataService';
 
 class AuthService {
   async login(email, password) {
@@ -30,14 +29,9 @@ class AuthService {
     return (await http.post('/auth/reset-password', { token, password })).data;
   }
 
-  refreshToken() {
-    return refreshSession();
-  }
-
   async logout() {
     // Révoque la session côté serveur et efface les cookies (best effort)
     await http.post('/auth/logout').catch(() => {});
-    gameDataService.clearCache?.();
     clearSession();
   }
 

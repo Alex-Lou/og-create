@@ -15,14 +15,6 @@
       <p class="g-italic seal__description">{{ achievement.description }}</p>
     </div>
   </GModal>
-
-  <!-- Liste simple quand aucun succès n'est à annoncer -->
-  <ul v-else-if="achievements.length" class="seal-list">
-    <li v-for="(ach, index) in achievements" :key="ach.id || index" :class="{ 'is-unlocked': ach.unlocked }">
-      <img v-if="ach.image" :src="ach.image" alt="" class="seal-list__icon" loading="lazy" />
-      <span>{{ ach.name }} — {{ ach.description }}</span>
-    </li>
-  </ul>
 </template>
 
 <script>
@@ -40,10 +32,6 @@ export default {
     achievement: {
       type: Object,
       default: null
-    },
-    achievements: {
-      type: Array,
-      default: () => []
     }
   },
   emits: ['close', 'achievement-popup-opened'],
@@ -129,18 +117,6 @@ export default {
 .seal__rule { width: 140px; }
 .seal__description { margin: 0; font-size: 18px; }
 
-.seal-list {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-  margin: 0;
-  padding: 0;
-  list-style: none;
-  color: var(--oc-text-faint);
-}
-.seal-list li { display: flex; align-items: center; gap: 10px; }
-.seal-list li.is-unlocked { color: var(--oc-text); }
-.seal-list__icon { width: 28px; height: 28px; object-fit: contain; }
 </style>
 
 <style>

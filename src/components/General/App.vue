@@ -7,7 +7,6 @@
         <template #timer>
           <TimerModeButton
             ref="timerModeButton"
-            :showTrigger="false"
             @timer-state-change="handleTimerStateChange"
             @timer-complete="handleTimerComplete"
             @show-question="showCurrentTimerQuestion"
@@ -32,7 +31,7 @@
             :eraLabel="eraLabel"
             :compact="isTimerActive"
             @open-sceau="showSceau = true"
-            @open-cabinet="handleOpenCustomizeModal"
+            @open-cabinet="isCustomizeModalOpen = true"
             @open-codex="showCodex = true"
             @open-contact="showContact = true"
             @logout="handleLogout"
@@ -70,20 +69,14 @@
             @show-alert="showAlert"
             @aim="bookAim = $event"
           />
-          <GameInventory
+          <TrialInventory
             v-else
             :categories="categories"
-            :familyTotals="familyTotals"
             :discoveredElements="discoveredElements"
             :elementEmojis="elementEmojis"
-            :isTimerMode="isTimerActive"
             :freshElement="freshElement"
-            :unexplored="unexplored"
-            :reachable="isTimerActive ? null : reachableCount"
             @selectResource="handleResourceSelection"
             @fuse="$refs.craftZone?.fuse()"
-            @inspect="inspected = $event"
-            @hint="useInfiniteHint"
           />
         </div>
         <div v-show="!isWorldActive" class="oc-app__craft">
@@ -136,17 +129,6 @@
         <button type="button" class="g-btn" @click="handleTimerEndModalClose">Retour au registre</button>
       </template>
     </GModal>
-    <ElementSheet
-      v-if="inspected && sheetOrigins"
-      :name="inspected"
-      :emoji="elementEmojis[inspected]"
-      :family="familyOf(inspected)"
-      :origins="sheetOrigins.origins"
-      :more="sheetOrigins.more"
-      :pending="unexplored[inspected] || 0"
-      @close="inspected = null"
-      @use="inspected = null; handleResourceSelection($event)"
-    />
     <ResetPasswordModal
       v-if="resetToken"
       :token="resetToken"
@@ -171,11 +153,10 @@
       @open-codex="showSceau = false; showCodex = true"
       @logout="handleLogout"
     />
-    <TimerQuestions 
+    <TimerQuestions
       v-show="isTimerActive"
       ref="timerQuestions"
       :isLoggedIn="isLoggedIn"
-      :discoveredElements="discoveredElements"
       :answersFound="timerAnswersFound"
       @reset-timer="handleTimerReset"
       @show-level-selection="showLevelSelection"
@@ -183,23 +164,22 @@
       @resume-timer="handleTimerResume"
       @stop-timer="handleTimerStop"
       @set-initial-inventory="handleSetInitialInventory"
-      @reset-craft-zone="handleResetCraftZone"
+      @reset-craft-zone="resetCraftBoard"
       @level-selected="handleLevelSelected"
       @coins-earned="handleCoinsEarned"
-      @add-emojis="elementEmojis = { ...$event, ...elementEmojis }"
-      @timer-progress-updated="timerProgress = $event"
+      @timer-progress-updated="handleTimerProgress"
       @question-changed="timerQuestion = $event"
     />
-    <CustomizeModal 
-      v-if="isCustomizeModalOpen" 
+    <CustomizeModal
+      v-if="isCustomizeModalOpen"
       :currentFrame="selectedFrame"
       :currentAvatar="selectedAvatar"
       :userCoins="coins"
       :shares="sigilShares"
       :rings="rings"
-      @close="handleCloseCustomizeModal" 
+      @close="isCustomizeModalOpen = false"
       @save="handleSaveCustomization"
-      @coins-updated="handleCoinsUpdated" 
+      @coins-updated="handleCoinsUpdated"
     />
   </div>
 </template>
@@ -207,41 +187,47 @@
 <script>
 import AuthService from '@/services/authService';
 import progressService from '@/services/progressService';
+import trialService from '@/services/trialService';
 import achievementsService from '@/services/achievementsService';
 import playService from '@/services/playService';
+import customizationService from '@/services/customizationService';
+import notificationService from '@/services/notificationService';
+import * as storage from '@/utils/storage';
+import { messageOf } from '@/utils/errors';
 import { readCarnet, writeCarnet, clearCarnet } from '@/utils/carnet';
 import { failLine } from '@/utils/failLine';
 import { findNewlyUnlocked } from '@/utils/achievementChecker';
 import { BASE_ELEMENTS, BASE_CATEGORY } from '@/utils/gameConstants';
-import timerService from '@/services/timerService';
-import customizationService from '@/services/customizationService';
-import notificationService from '@/services/notificationService';
-import ContactModal from '../Header/ContactModal.vue';
-import GameAchievementsPopup from '../Achievements/GameAchievementsPopup.vue';
-import GameInventory from '../Inventory/GameInventory.vue';
-import CodexModal from '../Achievements/CodexModal.vue';
-import AccountMenu from '../Account/AccountMenu.vue';
-import SceauModal from '../Account/SceauModal.vue';
-import GModal from '../ui/GModal.vue';
+import { DEFAULT_FRAME, DEFAULT_EMBLEM } from '@/utils/cabinet';
+import { FREE_JOKERS, JOKER_TIME } from '@/utils/hints';
 import { ringsFor } from '@/utils/sigil';
 import { roman } from '@/utils/roman';
-import TimerModeButton from '../TimerMode/TimerModeButton.vue';
-import TimerQuestions from '../TimerMode/TimerQuestions.vue';
-import TimerBrief from '../TimerMode/TimerBrief.vue';
-import ElementSheet from '../Inventory/ElementSheet.vue';
-import ResetPasswordModal from '../Account/ResetPasswordModal.vue';
-import { FREE_JOKERS, JOKER_TIME } from '@/utils/hints';
-
-// Retour sur l'application (PWA remise au premier plan) : carnet rechargé s'il date de plus de 30 s
-const STATE_RELOAD_AFTER_MS = 30000;
-import CustomizeModal from '../Header/CustomizeModal.vue';
+import { emptyProgress } from '@/utils/trialProgress';
+import { ERA_NAMES, familyColor, familyIndex, discoveredFamilies, eraOf, slotCountForEra, sortFamilies, stageOf, populationFor } from '@/utils/eras';
 import AppHeader from '../Game/AppHeader.vue';
 import ModeSwitcher from '../Game/ModeSwitcher.vue';
 import CraftZone from '../Game/CraftZone.vue';
+import LivingBackground from '../Game/LivingBackground.vue';
 import BookView from '../Book/BookView.vue';
 import WorldView from '../World/WorldView.vue';
-import LivingBackground from '../Game/LivingBackground.vue';
-import { ERA_NAMES, familyColor, discoveredFamilies, eraOf, slotCountForEra, sortFamilies, stageOf, populationFor } from '@/utils/eras';
+import AccountMenu from '../Account/AccountMenu.vue';
+import SceauModal from '../Account/SceauModal.vue';
+import ResetPasswordModal from '../Account/ResetPasswordModal.vue';
+import ContactModal from '../Header/ContactModal.vue';
+import CustomizeModal from '../Header/CustomizeModal.vue';
+import CodexModal from '../Achievements/CodexModal.vue';
+import GameAchievementsPopup from '../Achievements/GameAchievementsPopup.vue';
+import TimerModeButton from '../TimerMode/TimerModeButton.vue';
+import TimerQuestions from '../TimerMode/TimerQuestions.vue';
+import TimerBrief from '../TimerMode/TimerBrief.vue';
+import TrialInventory from '../TimerMode/TrialInventory.vue';
+import GModal from '../ui/GModal.vue';
+
+// Retour sur l'application (PWA remise au premier plan) : carnet rechargé s'il date de plus de 30 s
+const STATE_RELOAD_AFTER_MS = 30000;
+// Copies sur l'appareil pour un affichage immédiat (le serveur reste la référence)
+const COINS_KEY = 'coins';
+const CUSTOMIZATION_KEY = 'userCustomization';
 
 // Lit le jeton de réinitialisation dans l'adresse puis l'efface (historique, partage d'écran)
 function takeResetToken() {
@@ -259,25 +245,28 @@ export default {
     AppHeader,
     ModeSwitcher,
     CraftZone,
+    LivingBackground,
     BookView,
     WorldView,
-    LivingBackground,
-    ContactModal,
-    GameAchievementsPopup,
-    GameInventory,
-    CodexModal,
     AccountMenu,
     SceauModal,
-    GModal,
+    ResetPasswordModal,
+    ContactModal,
+    CustomizeModal,
+    CodexModal,
+    GameAchievementsPopup,
     TimerModeButton,
     TimerQuestions,
     TimerBrief,
-    ElementSheet,
-    ResetPasswordModal,
-    CustomizeModal
+    TrialInventory,
+    GModal
   },
   data() {
+    const user = AuthService.getCurrentUser();
+    const worn = (user && storage.load(CUSTOMIZATION_KEY)) || {};
     return {
+      isLoggedIn: !!user,
+      currentUser: user,
       // Éléments de base affichés tout de suite, avant la réponse du serveur
       elementEmojis: { Eau: '💧', Feu: '🔥', Terre: '🌎', Air: '💨' },
       // Familles : éléments connus du joueur seulement ; leur taille vient du serveur (familyTotals)
@@ -285,15 +274,13 @@ export default {
       familyTotals: {},
       // Recettes encore inexplorées par élément du carnet (calculées par le serveur)
       unexploredCounts: {},
-      // Nombre d'éléments inconnus créables tout de suite (calculé par le serveur)
-      reachableCount: null,
+      discoveredElements: [...BASE_ELEMENTS],
       // Dernier chargement du carnet, et éléments appris pendant un chargement en cours
       stateLoadedAt: 0,
       learnedDuringLoad: null,
-      discoveredCategories: [BASE_CATEGORY],
-      discoveredElements: [...BASE_ELEMENTS],
+      // Écus : gardés par le serveur pour un compte ; un invité n'a qu'un solde de session
+      coins: user ? storage.load(COINS_KEY, 0) : 0,
       achievements: [],
-      saveInterval: null,
       // Succès débloqués en attente d'affichage (un popup à la fois)
       achievementQueue: [],
       // Dernière découverte, mise en valeur dans l'inventaire
@@ -302,23 +289,22 @@ export default {
       bookAim: null,
       // Révélation d'une création en cours : les popups de succès attendent
       isRevealing: false,
-      isLoggedIn: false,
-      currentUser: null,
-      categoryProgress: {},
+      // Une ère franchie pendant le jeu (pas au chargement) annonce son nouvel emplacement
+      progressReady: false,
       showCodex: false,
       showContact: false,
       showSceau: false,
-      isTimerActive: false,
+      isCustomizeModalOpen: false,
       // Le Monde (île du joueur) affiché à la place du Livre et de l'Athanor
       isWorldActive: false,
-      showTimerEndModal: false,
-      timerModeDiscoveries: 0,
-      // Inventaire Infini mis de côté pendant une session Timer (null hors Timer)
+      // L'Épreuve : inventaire du défi, l'inventaire Infini étant mis de côté (null hors Épreuve)
+      isTimerActive: false,
       timerSnapshot: null,
-      currentTimerElements: [],
       selectedTimerLevel: null,
-      coins: parseInt(localStorage.getItem('coins')) || 0,
-      // Épreuve : question affichée en consigne, jokers offerts restants
+      timerModeDiscoveries: 0,
+      showTimerEndModal: false,
+      timerProgress: emptyProgress(),
+      // Question affichée en consigne, jokers offerts restants
       timerQuestion: null,
       freeJokers: FREE_JOKERS,
       // Indice de joker affiché ({ kind, text }), jusqu'à la prochaine découverte
@@ -328,154 +314,109 @@ export default {
       timerAnswersFound: 0,
       // Épreuve lancée côté serveur (les jokers offerts ne se donnent qu'au lancement)
       timerLaunched: false,
-      // Élément dont la fiche est ouverte, et ses recettes (chargées au serveur)
-      inspected: null,
-      sheetOrigins: null,
       // Jeton du lien « mot de passe oublié » (?reset=…)
       resetToken: takeResetToken(),
-      timerProgress: {
-        completedQuestions: {
-          Facile: {},
-          Moyen: {},
-          Difficile: {}
-        },
-        unlockedCategories: {
-          Facile: [],
-          Moyen: [],
-          Difficile: []
-        },
-        bestScores: {
-          Facile: 0,
-          Moyen: 0,
-          Difficile: 0
-        },
-        lastPlayedLevel: null,
-        lastPlayedCategory: null
-      },
-      isCustomizeModalOpen: false,
-      selectedFrame: 'basicCadre.png',
-      selectedAvatar: 'coin.png'
+      selectedFrame: worn.frame || DEFAULT_FRAME,
+      selectedAvatar: worn.avatar || DEFAULT_EMBLEM
     };
   },
   async created() {
-  this.checkAuth();
-  // Compte : le dernier carnet connu s'affiche tout de suite, le serveur le remplace dès qu'il répond
-  const cached = this.isLoggedIn && readCarnet(this.currentUser?.userId);
-  if (cached && cached.families && Object.keys(cached.families).length) this.applyPlayState(cached);
-  // Sans compte, le serveur tient un carnet invité
-  const progress = this.isLoggedIn ? this.loadGameProgress().catch(() => {}) : null;
-  await Promise.all([this.loadPlayState(), progress]);
-  await this.loadAchievements();
-  // Désormais, un changement d'ère vient d'une découverte (pas du chargement)
-  this.progressReady = true;
-  if (this.isLoggedIn) {
-    this.loadSavedCustomization();
-    // Démarrer la sauvegarde périodique
-    this.startPeriodicSave();
-  }
-},
-computed: {
-  currentMode() {
-    if (this.isWorldActive) return 'world';
-    return this.isTimerActive ? 'timer' : 'infinite';
+    if (!this.isLoggedIn) storage.remove(COINS_KEY);
+    // Compte : le dernier carnet connu s'affiche tout de suite, le serveur le remplace dès qu'il répond
+    const cached = this.isLoggedIn && readCarnet(this.currentUser?.userId);
+    if (cached && cached.families && Object.keys(cached.families).length) this.applyPlayState(cached);
+    // Sans compte, le serveur tient un carnet invité
+    await Promise.all([this.loadPlayState(), this.isLoggedIn ? this.loadAccount() : null]);
+    await this.loadAchievements();
+    this.progressReady = true;
   },
-  // La progression (ère, fond) suit toujours l'inventaire Infini, même pendant un Timer
-  infiniteElements() {
-    return this.timerSnapshot ? this.timerSnapshot.elements : this.discoveredElements;
-  },
-  families() {
-    return discoveredFamilies(this.categories, this.infiniteElements);
-  },
-  // Ère affichée et fond vivant : lente, au fil des découvertes
-  era() {
-    return stageOf(this.discoveredCount);
-  },
-  // Recettes encore inexplorées par élément découvert (Registre et fiches)
-  unexplored() {
-    return this.isTimerActive ? {} : this.unexploredCounts;
-  },
-  // Pièces du Cabinet portées sur le sceau
-  worn() {
-    return { frame: this.selectedFrame, emblem: this.selectedAvatar };
-  },
-  eraLabel() {
-    return `Ère ${roman(this.era)} · ${ERA_NAMES[this.era - 1]}`;
-  },
-  // Part découverte de chaque famille, dans l'ordre du registre (sceau du joueur)
-  familyShares() {
-    const found = new Set(this.infiniteElements);
-    return Object.entries(this.categories).map(([name, elements]) => {
-      const total = this.familyTotals[name] || elements.length;
-      return { name, share: total ? elements.filter(e => found.has(e)).length / total : 0 };
-    });
-  },
-  sigilShares() {
-    return this.familyShares.map(f => f.share);
-  },
-  unlockedAchievements() {
-    return this.achievements.filter(a => a.unlocked).length;
-  },
-  rings() {
-    return ringsFor(this.unlockedAchievements);
-  },
-  // Emplacements de fusion : 4 en Timer, sinon débloqués au fil des ères
-  slotCount() {
-    return this.isTimerActive ? 4 : slotCountForEra(eraOf(this.families.length));
-  },
-  totalElements() {
-    const totals = Object.values(this.familyTotals);
-    return totals.length ? totals.reduce((sum, n) => sum + n, 0) : new Set(Object.values(this.categories).flat()).size;
-  },
-  discoveredCount() {
-    return new Set(this.infiniteElements).size;
-  },
-  population() {
-    return populationFor(this.discoveredCount);
-  },
-  palette() {
-    return this.families.map(familyColor);
-  }
-},
-watch: {
-  // Les panneaux fixés en bas changent avec le mode : on remesure la place à leur réserver
-  isTimerActive() {
-    this.$nextTick(this.trackOverlays);
-  },
-  timerQuestion() {
-    this.timerHint = null;
-    this.timerAnswersFound = 0;
-    this.$nextTick(this.trackOverlays);
-  },
-  // Fiche d'élément : ses recettes à portée viennent du serveur
-  inspected(name) {
-    this.sheetOrigins = null;
-    if (!name) return;
-    playService.origins(name)
-      .then(reply => { if (this.inspected === name) this.sheetOrigins = reply; })
-      .catch(() => { if (this.inspected === name) this.sheetOrigins = { origins: [], more: 0 }; });
-  },
-  // Un emplacement de plus : on le dit (hors Timer, où il y en a toujours 4)
-  slotCount(next, previous) {
-    if (this.progressReady && !this.timerSnapshot && !this.isTimerActive && next > previous) {
-      this.showAlert('Nouvel emplacement de fusion débloqué !');
+  computed: {
+    currentMode() {
+      if (this.isWorldActive) return 'world';
+      return this.isTimerActive ? 'timer' : 'infinite';
+    },
+    // La progression (ère, fond) suit toujours l'inventaire Infini, même pendant l'Épreuve
+    infiniteElements() {
+      return this.timerSnapshot || this.discoveredElements;
+    },
+    families() {
+      return discoveredFamilies(this.categories, this.infiniteElements);
+    },
+    // Ère affichée et fond vivant : lente, au fil des découvertes
+    era() {
+      return stageOf(this.discoveredCount);
+    },
+    eraLabel() {
+      return `Ère ${roman(this.era)} · ${ERA_NAMES[this.era - 1]}`;
+    },
+    // Pièces du Cabinet portées sur le sceau
+    worn() {
+      return { frame: this.selectedFrame, emblem: this.selectedAvatar };
+    },
+    // Part découverte de chaque famille, dans l'ordre du registre (sceau du joueur)
+    familyShares() {
+      const found = new Set(this.infiniteElements);
+      return Object.entries(this.categories).map(([name, elements]) => {
+        const total = this.familyTotals[name] || elements.length;
+        return { name, share: total ? elements.filter(e => found.has(e)).length / total : 0 };
+      });
+    },
+    sigilShares() {
+      return this.familyShares.map(f => f.share);
+    },
+    unlockedAchievements() {
+      return this.achievements.filter(a => a.unlocked).length;
+    },
+    rings() {
+      return ringsFor(this.unlockedAchievements);
+    },
+    // Emplacements de fusion : 4 dans l'Épreuve, sinon débloqués au fil des ères
+    slotCount() {
+      return this.isTimerActive ? 4 : slotCountForEra(eraOf(this.families.length));
+    },
+    totalElements() {
+      const totals = Object.values(this.familyTotals);
+      return totals.length ? totals.reduce((sum, n) => sum + n, 0) : new Set(Object.values(this.categories).flat()).size;
+    },
+    discoveredCount() {
+      return new Set(this.infiniteElements).size;
+    },
+    population() {
+      return populationFor(this.discoveredCount);
+    },
+    palette() {
+      return this.families.map(familyColor);
+    },
+    familyOf() {
+      return familyIndex(this.categories);
     }
-  }
-},
-mounted() {
-  this.overlays = new ResizeObserver(() => this.measureOverlays());
-  this.trackOverlays();
-  document.addEventListener('visibilitychange', this.handleVisibility);
-},
-beforeUnmount() {
-  this.overlays?.disconnect();
-  document.removeEventListener('visibilitychange', this.handleVisibility);
-  clearInterval(this.saveInterval);
-  
-  // Sauvegarde finale avant de quitter
-  if (this.isLoggedIn) {
-    this.saveGameProgress();
-  }
-},
+  },
+  watch: {
+    // Les panneaux fixés en bas changent avec le mode : on remesure la place à leur réserver
+    isTimerActive() {
+      this.$nextTick(this.trackOverlays);
+    },
+    timerQuestion() {
+      this.timerHint = null;
+      this.timerAnswersFound = 0;
+      this.$nextTick(this.trackOverlays);
+    },
+    // Un emplacement de plus : on le dit (hors Épreuve, où il y en a toujours 4)
+    slotCount(next, previous) {
+      if (this.progressReady && !this.timerSnapshot && !this.isTimerActive && next > previous) {
+        this.showAlert('Nouvel emplacement de fusion débloqué !');
+      }
+    }
+  },
+  mounted() {
+    this.overlays = new ResizeObserver(() => this.measureOverlays());
+    this.trackOverlays();
+    document.addEventListener('visibilitychange', this.handleVisibility);
+  },
+  beforeUnmount() {
+    this.overlays?.disconnect();
+    document.removeEventListener('visibilitychange', this.handleVisibility);
+  },
   methods: {
     // Mobile : hauteur réelle du dock et de la consigne, réservée sous la liste (et pour le défilement)
     trackOverlays() {
@@ -492,471 +433,44 @@ beforeUnmount() {
       this.$el.style.setProperty('--oc-dock-h', `${height('.athanor')}px`);
       this.$el.style.setProperty('--oc-overlay', `${height('.athanor') + height('.brief')}px`);
     },
-    loadSavedCustomization() {
-      if (this.isLoggedIn) {
-        const savedCustomization = localStorage.getItem('userCustomization');
-        if (savedCustomization) {
-          try {
-            const customization = JSON.parse(savedCustomization);
-            this.selectedFrame = customization.frame || 'basicCadre.png';
-            this.selectedAvatar = customization.avatar || 'coin.png';
-          } catch (error) {
-            console.error("Erreur lors du chargement de la personnalisation:", error);
-          }
-        }
-        // Le Cabinet enregistre les pièces portées sur le serveur : elles suivent le compte d'un appareil à l'autre
-        customizationService.getUserSelections().then(({ selectedFrame, selectedAvatar } = {}) => {
-          if (selectedFrame) this.selectedFrame = selectedFrame;
-          if (selectedAvatar) this.selectedAvatar = selectedAvatar;
-        }).catch(() => {});
-      } else {
-        this.selectedFrame = 'basicCadre.png';
-        this.selectedAvatar = 'coin.png';
-      }
-    },
-    showLevelSelection() {
-    // Cette méthode va réafficher le menu de sélection de difficulté
-    if (this.$refs.timerModeButton) {
-      this.$refs.timerModeButton.showLevelSelection();
-    }
-  },
-
-    saveDiscoveredElement(element, gameMode = 'infinite') {
-  // Ignorer un élément déjà dans la liste spécifique au mode
-  if (gameMode === 'timer') {
-    // Pour le mode Timer, utiliser la liste timerElements
-    if (!this.currentTimerElements.includes(element)) {
-      this.currentTimerElements.push(element);
-    } else {
-      return; // Déjà dans la liste
-    }
-  } else {
-    // Mode Infinite (par défaut)
-    if (!this.discoveredElements.includes(element)) {
-      this.discoveredElements.push(element);
-      
-      // Déterminer la catégorie de l'élément
-      const targetCategory = Object.keys(this.categories).find((category) =>
-        this.categories[category].includes(element)
-      );
-      
-      // Ajouter la catégorie si elle n'existe pas déjà
-      if (targetCategory && !this.discoveredCategories.includes(targetCategory)) {
-        console.log(`Ajout de la catégorie: ${targetCategory}`);
-        this.discoveredCategories.push(targetCategory);
-      }
-      
-      // Mettre à jour les statistiques de progression des catégories
-      this.updateCategoryProgress();
-    } else {
-      return; // Déjà dans la liste
-    }
-  }
-  
-  // Sauvegarder dans localStorage uniquement en mode infinite
-  if (gameMode === 'infinite') {
-    localStorage.setItem('discoveredElements', JSON.stringify(this.discoveredElements));
-    localStorage.setItem('discoveredCategories', JSON.stringify(this.discoveredCategories));
-    this.checkAchievements();
-  }
-  
-  // La découverte est déjà inscrite par le serveur (mélange réussi) ; reste l'avancement des familles
-  if (this.isLoggedIn && gameMode === 'infinite') {
-    this.saveGameProgress();
-  }
-},
-
-    handleCoinsUpdated(newCoins) {
-      this.coins = newCoins;
-      // Sauvegarder en localStorage aussi
-      localStorage.setItem('coins', newCoins.toString());
-    },
-    handleInfiniteModeActivation() {
-      // Arrêter le Timer : handleTimerStateChange(false) restaure l'inventaire Infini
-      if (this.isTimerActive && this.$refs.timerModeButton) {
-        this.$refs.timerModeButton.confirmStopTimer();
-      }
-      this.resetCraftBoard();
-    },
-    handleLevelSelected(levelData) {
-      this.selectedTimerLevel = levelData.level;
-      this.freeJokers = FREE_JOKERS;
-      this.timerLaunched = false;
-      if (this.$refs.timerModeButton) {
-        this.$refs.timerModeButton.handleLevelSelected(levelData);
-      }
+    showAlert(message) {
+      notificationService.info(message);
     },
 
-    handleTimerPause() {
-      if (this.$refs.timerModeButton) {
-        this.$refs.timerModeButton.pauseTimer();
+    // ----- Compte -----
+    // Écus, records de l'Épreuve et pièces portées (le Cabinet les garde sur le serveur, d'un appareil à l'autre)
+    async loadAccount() {
+      const [progress, selections] = await Promise.all([
+        progressService.load().catch(() => null),
+        customizationService.getUserSelections()
+      ]);
+      if (progress) {
+        this.handleCoinsUpdated(progress.coins);
+        this.timerProgress = { ...emptyProgress(), ...progress.timerProgress };
       }
+      if (selections?.selectedFrame) this.selectedFrame = selections.selectedFrame;
+      if (selections?.selectedAvatar) this.selectedAvatar = selections.selectedAvatar;
+      storage.save(CUSTOMIZATION_KEY, { frame: this.selectedFrame, avatar: this.selectedAvatar });
     },
-
-    handleTimerResume() {
-      if (this.$refs.timerModeButton) {
-        this.$refs.timerModeButton.resumeTimer();
-      }
+    handleCoinsUpdated(coins) {
+      this.coins = coins;
+      if (this.isLoggedIn) storage.save(COINS_KEY, coins);
     },
-
-    handleTimerStop() {
-      if (this.$refs.timerModeButton) {
-        this.$refs.timerModeButton.confirmStopTimer();
-      }
+    handleSaveCustomization({ frame, avatar }) {
+      this.selectedFrame = frame;
+      this.selectedAvatar = avatar;
+      storage.save(CUSTOMIZATION_KEY, { frame, avatar });
+      this.isCustomizeModalOpen = false;
     },
-
-    startPeriodicSave() {
-  if (this.saveInterval) {
-    clearInterval(this.saveInterval);
-  }
-  
-  // Augmenter l'intervalle à 10 minutes au lieu de 2
-  this.saveInterval = setInterval(() => {
-    if (this.isLoggedIn) {
-      // Vérifier s'il y a des changements à sauvegarder
-      const currentGameState = JSON.stringify({
-        elements: this.discoveredElements,
-        categories: this.discoveredCategories,
-        coins: this.coins
-      });
-      
-      // Stocker l'état actuel pour comparaison future
-      const previousState = localStorage.getItem('previousGameState');
-      
-      // Ne sauvegarder que si l'état a changé
-      if (previousState !== currentGameState) {
-        console.log('Changements détectés, sauvegarde périodique...');
-        localStorage.setItem('previousGameState', currentGameState);
-        this.saveGameProgress();
-      } else {
-        console.log('Aucun changement, sauvegarde périodique ignorée.');
-      }
-    }
-  }, 600000); // 10 minutes au lieu de 2
-},
-
-    handleResetCraftZone() {
-      this.resetCraftBoard();
-    },
-    handleSetInitialInventory(elements, questionId) {
-  if (!this.isTimerActive) return;
-  this.startTimerRun(questionId);
-  
-  this.resetCraftBoard();
-  
-  // Réinitialiser à juste les éléments fondamentaux
-  this.discoveredElements = [...BASE_ELEMENTS];
-  
-  if (Array.isArray(elements)) {
-    // Ajouter les éléments requis pour cette question à l'inventaire temporaire
-    this.currentTimerElements = [...new Set(elements)];
-    this.currentTimerElements.forEach(element => {
-      if (!this.discoveredElements.includes(element)) {
-        this.discoveredElements.push(element);
-      }
-    });
-    
-    // Sauvegarde non bloquante des éléments de la question
-    if (this.isLoggedIn) {
-      timerService.saveTimerElements(this.currentTimerElements)
-        .catch(error => console.warn('Erreur non bloquante lors de la sauvegarde des éléments Timer:', error));
-    }
-  }
-  
-  this.updateCategoryProgress();
-},
-
-
-handleTimerForceStop() {
-  this.isTimerActive = false;
-  this.selectedTimerLevel = null;
-  this.exitTimerMode();
-  this.timerModeDiscoveries = 0;
-  
-  if (this.$refs.timerQuestions) {
-    this.$refs.timerQuestions.resetQuestions();
-  }
-},
-
-
-    showCurrentTimerQuestion() {
-      if (this.$refs.timerQuestions) {
-        this.$refs.timerQuestions.show();
-      }
-    },
-    loadGameProgress() {
-  if (!this.isLoggedIn) return Promise.resolve();
-
-  // Variables pour suivre les chargements
-  if (!this._lastLoadTimestamp) {
-    this._lastLoadTimestamp = 0;
-    this._progressCache = null;
-  }
-
-  // Eviter les chargements trop fréquents (pas plus d'une fois toutes les 30 secondes)
-  const now = Date.now();
-  if (this._progressCache && now - this._lastLoadTimestamp < 30000) {
-    console.log('Utilisation du cache pour loadGameProgress');
-    return Promise.resolve(this._progressCache);
-  }
-
-  try {
-    return progressService.loadGameProgress()
-      .then(progress => {
-        // Mettre à jour le cache
-        this._lastLoadTimestamp = now;
-        this._progressCache = progress;
-
-        if (progress) {
-          if (progress.coins !== undefined) {
-            this.coins = parseInt(progress.coins);
-            localStorage.setItem('coins', this.coins.toString());
-          }
-
-          if (progress.discoveredElements) {
-            try {
-              let elementsToSet = [];
-              
-              if (typeof progress.discoveredElements === 'string') {
-                const parsed = JSON.parse(progress.discoveredElements);
-                elementsToSet = Array.isArray(parsed) 
-                  ? parsed.map(element => element.replace(/^"|"$/g, ''))
-                  : [...BASE_ELEMENTS];
-              } else if (Array.isArray(progress.discoveredElements)) {
-                elementsToSet = progress.discoveredElements;
-              } else {
-                console.warn('DEBUG - Format des éléments découverts invalide');
-                elementsToSet = [...BASE_ELEMENTS];
-              }
-
-              // Session Timer en cours : la progression chargée va dans l'inventaire mis de côté
-              if (this.timerSnapshot) {
-                this.timerSnapshot.elements = elementsToSet;
-              } else {
-                this.discoveredElements = elementsToSet;
-              }
-              localStorage.setItem('discoveredElements', JSON.stringify(elementsToSet));
-            } catch (e) {
-              console.error("DEBUG - Erreur parsing discoveredElements:", e);
-              this.discoveredElements = [...BASE_ELEMENTS];
-            }
-          } else {
-            console.warn('DEBUG - Aucun élément découvert dans la progression');
-            this.discoveredElements = [...BASE_ELEMENTS];
-          }
-
-          if (progress.discoveredCategories) {
-            try {
-              let categoriesToSet = [];
-              
-              if (typeof progress.discoveredCategories === 'string') {
-                const parsed = JSON.parse(progress.discoveredCategories);
-                categoriesToSet = Array.isArray(parsed)
-                  ? parsed.map(cat => cat.replace(/^"|"$/g, ''))
-                  : [BASE_CATEGORY];
-              } else if (Array.isArray(progress.discoveredCategories)) {
-                categoriesToSet = progress.discoveredCategories;
-              } else {
-                console.warn('DEBUG - Format des catégories découvertes invalide');
-                categoriesToSet = [BASE_CATEGORY];
-              }
-
-              if (this.timerSnapshot) {
-                this.timerSnapshot.categories = categoriesToSet;
-              } else {
-                this.discoveredCategories = categoriesToSet;
-              }
-              localStorage.setItem('discoveredCategories', JSON.stringify(categoriesToSet));
-            } catch (e) {
-              console.error("DEBUG - Erreur parsing discoveredCategories:", e);
-              this.discoveredCategories = [BASE_CATEGORY];
-            }
-          } else {
-            console.warn('DEBUG - Aucune catégorie découverte dans la progression');
-            this.discoveredCategories = [BASE_CATEGORY];
-          }
-
-          if (progress.categoryProgress) {
-            try {
-              this.categoryProgress = typeof progress.categoryProgress === 'string'
-                ? JSON.parse(progress.categoryProgress)
-                : progress.categoryProgress;
-            } catch (e) {
-              console.error("DEBUG - Erreur parsing categoryProgress:", e);
-              this.categoryProgress = {};
-            }
-          }
-
-          if (progress.timerProgress) {
-            this.timerProgress = progress.timerProgress;
-          }
-
-          if (progress.customization) {
-            this.selectedFrame = progress.customization.frame || 'basicCadre.png';
-            this.selectedAvatar = progress.customization.avatar || 'coin.png';
-            
-            localStorage.setItem('userCustomization', JSON.stringify({
-              frame: this.selectedFrame,
-              avatar: this.selectedAvatar
-            }));
-          }
-
-          if (this.categories && Object.keys(this.categories).length > 0) {
-            this.repairGameData();
-          } else {
-            setTimeout(() => {
-              if (this.categories && Object.keys(this.categories).length > 0) {
-                this.repairGameData();
-              }
-            }, 2000);
-          }
-
-          this.updateCategoryProgress();
-        }
-        
-        return progress;
-      })
-      .catch(error => {
-        console.error("Erreur lors du chargement de la progression:", error);
-        
-        const localElements = localStorage.getItem('discoveredElements');
-        const localCategories = localStorage.getItem('discoveredCategories');
-        
-        console.log('DEBUG - Fallback sur localStorage:', {
-          localElements,
-          localCategories
-        });
-        
-        if (localElements) {
-          try {
-            this.discoveredElements = JSON.parse(localElements);
-          } catch (e) {
-            console.error('DEBUG - Erreur parsing localStorage elements:', e);
-            this.discoveredElements = [...BASE_ELEMENTS];
-          }
-        } else {
-          this.discoveredElements = [...BASE_ELEMENTS];
-        }
-        
-        if (localCategories) {
-          try {
-            this.discoveredCategories = JSON.parse(localCategories);
-          } catch (e) {
-            console.error('DEBUG - Erreur parsing localStorage categories:', e);
-            this.discoveredCategories = [BASE_CATEGORY];
-          }
-        } else {
-          this.discoveredCategories = [BASE_CATEGORY];
-        }
-
-        this.categoryProgress = {};
-        this.coins = parseInt(localStorage.getItem('coins')) || 0;
-        this.timerProgress = {
-          completedQuestions: { Facile: {}, Moyen: {}, Difficile: {} },
-          unlockedCategories: {},
-          bestScores: { Facile: 0, Moyen: 0, Difficile: 0 }
-        };
-        this.selectedFrame = 'basicCadre.png';
-        this.selectedAvatar = 'coin.png';
-        
-        throw error;
-      });
-  } catch (error) {
-    console.error("Erreur lors du chargement de la progression:", error);
-    this.discoveredElements = [...BASE_ELEMENTS];
-    this.discoveredCategories = [BASE_CATEGORY];
-    this.categoryProgress = {};
-    this.coins = 0;
-    localStorage.setItem('coins', '0');
-    this.timerProgress = {
-      completedQuestions: { Facile: {}, Moyen: {}, Difficile: {} },
-      unlockedCategories: {},
-      bestScores: { Facile: 0, Moyen: 0, Difficile: 0 }
-    };
-    this.selectedFrame = 'basicCadre.png';
-    this.selectedAvatar = 'coin.png';
-    
-    return Promise.reject(error);
-  }
-},
-
-saveGameProgress() {
-  if (!this.isLoggedIn) return;
-
-  try {
-    // En mode Timer, on sauvegarde l'inventaire Infini mis de côté, pas l'inventaire temporaire
-    const elements = this.timerSnapshot ? this.timerSnapshot.elements : this.discoveredElements;
-    const categories = this.timerSnapshot ? this.timerSnapshot.categories : this.discoveredCategories;
-    const progressData = {
-      discoveredElements: Array.isArray(elements) 
-        ? elements 
-        : [...BASE_ELEMENTS],
-      discoveredCategories: Array.isArray(categories)
-        ? categories
-        : [BASE_CATEGORY],
-      categoryProgress: this.categoryProgress || {},
-      coins: this.coins,
-      timerProgress: this.timerProgress,
-      customization: {
-        frame: this.selectedFrame,
-        avatar: this.selectedAvatar
-      }
-    };
-
-    // Sauvegarder dans localStorage pour récupération rapide
-    localStorage.setItem('discoveredElements', JSON.stringify(progressData.discoveredElements));
-    localStorage.setItem('discoveredCategories', JSON.stringify(progressData.discoveredCategories));
-
-    // Sauvegarder dans la base de données
-    return progressService.saveGameProgress(progressData);
-  } catch (error) {
-    console.error("Erreur lors de la sauvegarde de la progression:", error);
-    return Promise.reject(error);
-  }
-},
-
-
-    updateCategoryProgress() {
-      // Pendant une session Timer, la progression reflète l'inventaire Infini (recalculée à la sortie)
-      if (this.timerSnapshot) return;
-      Object.keys(this.categories).forEach(category => {
-        const totalElements = this.familyTotals[category] || this.categories[category].length;
-        const discoveredCount = this.categories[category].filter(element => 
-          this.discoveredElements.includes(element)
-        ).length;
-        this.categoryProgress[category] = (discoveredCount / totalElements) * 100;
-      });
-    },
-    // Dans App.vue, méthode checkAuth()
-checkAuth() {
-  const loggedInUser = AuthService.getCurrentUser();
-  
-  if (loggedInUser) {
-    this.isLoggedIn = true;
-    this.currentUser = loggedInUser;
-    this.loadSavedCustomization();
-  } else {
-    this.isLoggedIn = false;
-    this.currentUser = null;
-    localStorage.removeItem('user');
-    
-    this.coins = 0;
-    localStorage.removeItem('coins');
-    
-    this.selectedFrame = 'basicCadre.png';
-    this.selectedAvatar = 'coin.png';
-  }
-},
     async handleLogout() {
-      // Envoyer la progression en attente tant que la session est valide
-      await progressService.flush();
       await AuthService.logout();
       clearCarnet();
-      this.isLoggedIn = false;
-      this.currentUser = null;
+      storage.remove(COINS_KEY);
+      storage.remove(CUSTOMIZATION_KEY);
       window.location.reload();
     },
-    // Carnet de l'Infini (compte ou invité) et ce qu'il faut pour l'afficher ; aucune recette
+
+    // ----- Carnet de l'Infini (compte ou invité) : ce qu'il faut pour l'afficher, aucune recette -----
     async loadPlayState() {
       // Un élément créé pendant le chargement peut manquer à la réponse : il est gardé
       const learned = new Map();
@@ -983,10 +497,8 @@ checkAuth() {
       this.applyKnown(state.known, categories);
       this.categories = sortFamilies(categories);
       this.unexploredCounts = state.unexplored || {};
-      this.reachableCount = state.reachable ?? null;
-      if (this.timerSnapshot) this.timerSnapshot.elements = state.elements;
+      if (this.timerSnapshot) this.timerSnapshot = state.elements;
       else this.discoveredElements = state.elements;
-      this.updateCategoryProgress();
     },
     // Copie du carnet sur l'appareil (compte seulement, hors Épreuve)
     rememberCarnet() {
@@ -1002,8 +514,7 @@ checkAuth() {
         elements: [...this.discoveredElements],
         known,
         families: this.familyTotals,
-        unexplored: this.unexploredCounts,
-        reachable: this.reachableCount
+        unexplored: this.unexploredCounts
       });
     },
     // Application mise de côté : copie à jour ; de retour au premier plan : carnet rechargé (autre appareil)
@@ -1027,14 +538,15 @@ checkAuth() {
       this.elementEmojis = emojis;
     },
     // Résultat d'un mélange réussi, renvoyé par le serveur
-    learnElement({ result, emoji, family, unexplored, reachable, trial }) {
+    learnElement({ result, emoji, family, unexplored, trial }) {
       this.applyKnown({ [result]: { emoji, family } });
       if (!this.isTimerActive) this.learnedDuringLoad?.set(result, { emoji, family });
       if (unexplored) this.unexploredCounts = unexplored;
-      if (typeof reachable === 'number') this.reachableCount = reachable;
       // Épreuve : verdict lu juste après, à la révélation (handleCraftSuccess)
       this.timerVerdict = trial || null;
     },
+
+    // ----- Succès -----
     async loadAchievements() {
       try {
         this.achievements = await achievementsService.loadAchievements();
@@ -1060,6 +572,15 @@ checkAuth() {
           .catch(error => console.error('Erreur lors de la sauvegarde des succès:', error));
       }
     },
+    closeAchievementPopup() {
+      this.achievementQueue.shift();
+    },
+    // Succès débloqué : une gerbe de particules au centre de l'écran
+    handleAchievementPopupOpened() {
+      this.$refs.background?.burst(window.innerWidth / 2, window.innerHeight / 2);
+    },
+
+    // ----- Athanor -----
     handleResourceSelection(resource, fromRect) {
       this.$refs.craftZone?.add(resource, fromRect);
     },
@@ -1068,6 +589,35 @@ checkAuth() {
       this.$refs.background?.burst(x, y);
       this.freshElement = name;
     },
+    handleCraftSuccess(craftedItem, ingredients = []) {
+      if (!this.discoveredElements.includes(craftedItem)) {
+        this.discoveredElements.push(craftedItem);
+        if (this.isTimerActive) this.timerHint = null;
+        else this.checkAchievements();
+      }
+      if (!this.isTimerActive) return;
+      // Le serveur seul connaît les réponses : il a jugé ce mélange (services/trial.js)
+      const verdict = this.timerVerdict;
+      this.timerVerdict = null;
+      if (!verdict) return;
+      this.timerAnswersFound = verdict.found || 0;
+      if (verdict.late) this.showAlert('Le sablier était déjà vide : cette réussite ne compte pas.');
+      if (verdict.solved) {
+        if (verdict.coins !== undefined) this.handleCoinsUpdated(verdict.coins);
+        this.timerModeDiscoveries++;
+        // La fenêtre de réussite montre la création et ses ingrédients
+        this.$refs.timerQuestions.answerCorrect({ name: craftedItem, emoji: this.elementEmojis[craftedItem], ingredients });
+      }
+    },
+    // Mélange raté en Infini : une image selon les familles, et l'ingrédient qui cache encore des mélanges
+    infiniteFailLine(ingredients) {
+      return failLine(ingredients, { familyOf: name => (this.familyOf[name] || '').replace(/_/g, ' '), unexplored: this.unexploredCounts });
+    },
+    resetCraftBoard() {
+      this.$refs.craftZone?.clear();
+    },
+
+    // ----- Modes -----
     handleModeSelect(mode) {
       if (mode === this.currentMode) return;
       if (mode === 'world') {
@@ -1083,175 +633,91 @@ checkAuth() {
       if (mode === 'timer') {
         this.$refs.timerModeButton?.startTimer();
       } else if (this.isTimerActive) {
-        // Quitter le Timer perd la question en cours : on confirme d'abord
+        // Quitter l'Épreuve perd la question en cours : on confirme d'abord
         this.$refs.timerModeButton?.requestStop();
       } else {
-        this.handleInfiniteModeActivation();
+        this.resetCraftBoard();
       }
     },
 
-handleCraftSuccess(craftedItem, ingredients = []) {
-  // Mode normal (hors Timer)
-  if (!this.isTimerActive) {
-    // Sauvegarder l'élément découvert
-    this.saveDiscoveredElement(craftedItem);
-  }
-  
-  // Gestion du mode Timer
-  if (this.isTimerActive) {
-    // Ajouter à l'inventaire local de la session Timer
-    if (!this.discoveredElements.includes(craftedItem)) {
-      this.discoveredElements.push(craftedItem);
-      this.timerHint = null;
-    }
-    
-    // Vérifier si l'élément fait partie des éléments initiaux de la question
-    const currentQuestion = this.$refs.timerQuestions.getCurrentQuestion();
-    const initialElements = [];
-    
-    if (currentQuestion && currentQuestion.initialElements) {
-      initialElements.push(...(currentQuestion.initialElements.required || []));
-      initialElements.push(...(currentQuestion.initialElements.additional || []));
-    }
-    
-    // Ne sauvegarder dans timer_elements QUE si ce n'est pas un élément initial
-    if (!initialElements.includes(craftedItem)) {
-      // Ajouter aux éléments créés par l'utilisateur
-      if (!this.currentTimerElements.includes(craftedItem)) {
-        this.currentTimerElements.push(craftedItem);
-        
-        // Sauvegarder uniquement ce nouvel élément dans timer_elements
-        if (this.isLoggedIn) {
-          // Utiliser le service dédié au timer
-          timerService.saveTimerElements([craftedItem])
-            .then(() => {
-              console.log(`Élément Timer ${craftedItem} sauvegardé avec succès`);
-            })
-            .catch(error => {
-              console.error(`Erreur lors de la sauvegarde de l'élément Timer ${craftedItem}:`, error);
-            });
-        }
-      }
-    }
-    
-    // Le serveur seul connaît les réponses : il a jugé ce mélange (services/trial.js)
-    const verdict = this.timerVerdict;
-    this.timerVerdict = null;
-    if (verdict) {
-      this.timerAnswersFound = verdict.found || 0;
-      if (verdict.late) this.showAlert('Le sablier était déjà vide : cette réussite ne compte pas.');
-      if (verdict.solved) {
-        if (verdict.coins !== undefined) this.handleCoinsUpdated(verdict.coins);
-        this.timerModeDiscoveries++;
-        // La fenêtre de réussite montre la création et ses ingrédients
-        this.$refs.timerQuestions.answerCorrect({ name: craftedItem, emoji: this.elementEmojis[craftedItem], ingredients });
-      }
-    }
-  }
-},
-
-    async repairGameData() {
-      if (!this.isLoggedIn) return;
-            
-      const repairedCategories = [BASE_CATEGORY];
-      
-      for (const element of this.discoveredElements) {
-        for (const category in this.categories) {
-          if (this.categories[category] && this.categories[category].includes(element)) {
-            if (!repairedCategories.includes(category)) {
-              console.log(`Catégorie manquante détectée: ${category} pour l'élément ${element}`);
-              repairedCategories.push(category);
-            }
-          }
-        }
-      }
-      
-      const currentCats = [...this.discoveredCategories].sort();
-      const repairedCats = [...repairedCategories].sort();
-      
-      if (JSON.stringify(currentCats) !== JSON.stringify(repairedCats)) {
-        
-        this.discoveredCategories = repairedCategories;
-        
-        await this.saveGameProgress();
-        console.log('Données réparées et sauvegardées avec succès');
-      } else {
-        console.log('Aucune réparation nécessaire, les données sont cohérentes');
-      }
-    },
-    closeAchievementPopup() {
-      this.achievementQueue.shift();
-    },
-    showAlert(message) {
-      notificationService.info(message);
-    },
-    // Succès débloqué : une gerbe de particules au centre de l'écran
-    handleAchievementPopupOpened() {
-      this.$refs.background?.burst(window.innerWidth / 2, window.innerHeight / 2);
-    },
+    // ----- L'Épreuve : le sablier (TimerModeButton) et les questions (TimerQuestions) passent par ici -----
     handleTimerStateChange(isActive) {
-      // Le bouton Timer peut émettre plusieurs fois "true" : on n'agit que sur les transitions
+      // Le sablier peut émettre plusieurs fois « actif » : on n'agit que sur les transitions
       const wasActive = this.isTimerActive;
-      
       this.isTimerActive = isActive;
-  
       if (isActive && !wasActive) {
         this.resetCraftBoard();
         this.enterTimerMode();
         this.timerModeDiscoveries = 0;
         this.selectedTimerLevel = null;
-        this.currentTimerElements = [];
-        if (this.$refs.timerQuestions) {
-          this.$refs.timerQuestions.show();
-        }
+        this.$refs.timerQuestions?.show();
       } else if (!isActive) {
         this.resetCraftBoard();
-        // selectedTimerLevel est conservé pour le modal de fin (handleTimerComplete)
+        // selectedTimerLevel est conservé pour la fenêtre de fin (handleTimerComplete)
         this.exitTimerMode();
-        this.currentTimerElements = [];
-        if (this.$refs.timerQuestions) {
-          this.$refs.timerQuestions.resetQuestions();
-        }
+        this.$refs.timerQuestions?.resetQuestions();
       }
     },
-    resetCraftBoard() {
-      this.$refs.craftZone?.clear();
-    },
-    // Met de côté l'inventaire Infini au début d'une session Timer
+    // Met de côté l'inventaire Infini au début de l'Épreuve
     enterTimerMode() {
-      if (this.timerSnapshot) return;
-      this.timerSnapshot = {
-        elements: [...this.discoveredElements],
-        categories: [...this.discoveredCategories]
-      };
+      if (!this.timerSnapshot) this.timerSnapshot = [...this.discoveredElements];
     },
-    // Restaure l'inventaire Infini à la fin d'une session Timer
+    // Restaure l'inventaire Infini à la fin de l'Épreuve
     exitTimerMode() {
       if (!this.timerSnapshot) return;
-      this.discoveredElements = this.timerSnapshot.elements;
-      this.discoveredCategories = this.timerSnapshot.categories;
+      this.discoveredElements = this.timerSnapshot;
       this.timerSnapshot = null;
-      this.updateCategoryProgress();
     },
-    // Mélange raté en Infini : une image selon les familles, et l'ingrédient qui cache encore des mélanges
-    infiniteFailLine(ingredients) {
-      return failLine(ingredients, { familyOf: this.familyOf, unexplored: this.unexploredCounts });
+    showLevelSelection() {
+      this.$refs.timerModeButton?.showLevelSelection();
     },
-    familyOf(name) {
-      const family = Object.keys(this.categories).find(key => this.categories[key].includes(name));
-      return family ? family.replace(/_/g, ' ') : '';
+    showCurrentTimerQuestion() {
+      this.$refs.timerQuestions?.show();
     },
-    // Piste de l'Infini (payante, compte requis) : le serveur choisit un élément inconnu à une seule fusion
-    async useInfiniteHint() {
+    handleLevelSelected(levelData) {
+      this.selectedTimerLevel = levelData.level;
+      this.freeJokers = FREE_JOKERS;
+      this.timerLaunched = false;
+      this.$refs.timerModeButton?.handleLevelSelected(levelData);
+    },
+    handleTimerPause() {
+      this.$refs.timerModeButton?.pauseTimer();
+    },
+    handleTimerResume() {
+      this.$refs.timerModeButton?.resumeTimer();
+    },
+    handleTimerStop() {
+      this.$refs.timerModeButton?.confirmStopTimer();
+    },
+    handleTimerReset() {
+      this.$refs.timerModeButton?.resetTimer();
+    },
+    handleTimerForceStop() {
+      this.isTimerActive = false;
+      this.selectedTimerLevel = null;
+      this.exitTimerMode();
+      this.timerModeDiscoveries = 0;
+      this.$refs.timerQuestions?.resetQuestions();
+    },
+    // Éléments de départ d'une question : le serveur les pose aussi en main (les mélanges y sont vérifiés)
+    handleSetInitialInventory(elements, questionId) {
+      if (!this.isTimerActive) return;
+      this.startTimerRun(questionId);
+      this.resetCraftBoard();
+      this.discoveredElements = [...new Set([...BASE_ELEMENTS, ...(Array.isArray(elements) ? elements : [])])];
+    },
+    async startTimerRun(questionId) {
+      if (!Number.isInteger(questionId)) return;
       try {
-        const { name, coins } = await playService.hint();
-        this.handleCoinsUpdated(coins);
-        this.showAlert(`Une piste : « ${name} » n’est qu’à une fusion de toi.`);
+        const run = await playService.startRun('timer', { questionId, launch: !this.timerLaunched });
+        this.timerLaunched = true;
+        this.freeJokers = run.freeJokers;
+        this.applyKnown(run.known);
       } catch (error) {
-        this.showAlert(error.response?.data?.message || 'La piste n’a pas pu être achetée.');
+        this.showAlert(messageOf(error, 'L’épreuve n’a pas pu démarrer, réessaie.'));
       }
     },
-    // Joker de l'Épreuve : le serveur compte les jokers offerts, débite les suivants et calcule l'indice
+    // Joker : le serveur compte les jokers offerts, débite les suivants et calcule l'indice
     async useJoker(kind) {
       try {
         const reply = await playService.joker(kind);
@@ -1261,89 +727,45 @@ handleCraftSuccess(craftedItem, ingredients = []) {
         else if (kind === 'step') this.timerHint = { kind, text: `Essaie ${reply.ingredients.join(' + ')}.` };
         else this.timerHint = { kind, text: `Pense à ${reply.ingredient}…` };
       } catch (error) {
-        this.showAlert(error.response?.data?.message || 'Le joker n’a pas pu être utilisé.');
+        this.showAlert(messageOf(error, 'Le joker n’a pas pu être utilisé.'));
       }
     },
-    // Question de l'Épreuve : le serveur pose les éléments en main (les mélanges y sont vérifiés)
-    async startTimerRun(questionId) {
-      if (!Number.isInteger(questionId)) return;
-      try {
-        const run = await playService.startRun('timer', { questionId, launch: !this.timerLaunched });
-        this.timerLaunched = true;
-        this.freeJokers = run.freeJokers;
-        this.applyKnown(run.known);
-      } catch (error) {
-        this.showAlert(error.response?.data?.message || 'L’épreuve n’a pas pu démarrer, réessaie.');
-      }
-    },
-    // Un compte est payé par le serveur au moment de la réussite (verdict) ; un invité garde un solde local
+    // Un compte est payé par le serveur au moment de la réussite (verdict) ; un invité garde un solde de session
     handleCoinsEarned({ points }) {
       if (!this.isLoggedIn) this.handleCoinsUpdated(this.coins + points);
     },
+    // Fin du sablier : score compté par le serveur, qui verse le bonus si le record du niveau monte (compte)
     async handleTimerComplete() {
-  // Score compté par le serveur ; il verse le bonus si le record du niveau monte (compte)
-  let end = null;
-  try {
-    end = await playService.finishTimer();
-  } catch (error) {
-    console.error('Fin d’épreuve non enregistrée:', error);
-  }
-  const currentScore = end ? end.score : this.timerModeDiscoveries;
-  if (end?.coins !== undefined) this.handleCoinsUpdated(end.coins);
-
-  if (this.selectedTimerLevel && currentScore > this.timerProgress.bestScores[this.selectedTimerLevel]) {
-    if (!this.isLoggedIn) this.handleCoinsUpdated(this.coins + currentScore * 5);
-    this.timerProgress.bestScores[this.selectedTimerLevel] = currentScore;
-    
-    if (this.isLoggedIn) {
+      let end = null;
       try {
-        await progressService.updateTimerProgress(this.timerProgress);
+        end = await playService.finishTimer();
       } catch (error) {
-        console.error("Erreur lors de la mise à jour du meilleur score:", error);
+        console.error('Fin d’épreuve non enregistrée:', error);
       }
-    }
-  }
-
-  // Restaurer l'inventaire précédent (important!)
-  this.exitTimerMode();
-  
-  this.showTimerEndModal = true;
-},
-
-
+      const score = end ? end.score : this.timerModeDiscoveries;
+      if (end?.coins !== undefined) this.handleCoinsUpdated(end.coins);
+      const level = this.selectedTimerLevel;
+      if (level && score > (this.timerProgress.bestScores?.[level] || 0)) {
+        if (!this.isLoggedIn) this.handleCoinsUpdated(this.coins + score * 5);
+        this.timerProgress = { ...this.timerProgress, bestScores: { ...this.timerProgress.bestScores, [level]: score } };
+        trialService.saveProgress({ bestScores: { [level]: score } })
+          .then(saved => { if (saved) this.timerProgress = saved; })
+          .catch(error => console.error('Record non enregistré:', error));
+      }
+      this.exitTimerMode();
+      this.showTimerEndModal = true;
+    },
+    // Questions et chapitres réussis (TimerQuestions) ; les records restent les meilleurs connus ici
+    handleTimerProgress(progress) {
+      const best = { ...this.timerProgress.bestScores };
+      Object.entries(progress.bestScores || {}).forEach(([level, score]) => { best[level] = Math.max(best[level] || 0, score || 0); });
+      this.timerProgress = { ...progress, bestScores: best };
+    },
     handleTimerEndModalClose() {
       this.showTimerEndModal = false;
       this.exitTimerMode();
       this.selectedTimerLevel = null;
-      if (this.$refs.timerQuestions) {
-        this.$refs.timerQuestions.resetQuestions();
-      }
-    },
-    handleTimerReset() {
-      this.$refs.timerModeButton.resetTimer();
-    },
-    handleOpenCustomizeModal() {
-      this.isCustomizeModalOpen = true;
-    },
-    handleCloseCustomizeModal() {
-      this.isCustomizeModalOpen = false;
-    },
-    handleSaveCustomization(customizationData) {
-      this.selectedFrame = customizationData.frame;
-      this.selectedAvatar = customizationData.avatar;
-      
-      // Sauvegarder dans localStorage
-      localStorage.setItem('userCustomization', JSON.stringify({
-        frame: this.selectedFrame,
-        avatar: this.selectedAvatar
-      }));
-      
-      // Si l'utilisateur est connecté, sauvegarder dans la base de données
-      if (this.isLoggedIn) {
-        this.saveGameProgress();
-      }
-      
-      this.isCustomizeModalOpen = false;
+      this.$refs.timerQuestions?.resetQuestions();
     }
   }
 };

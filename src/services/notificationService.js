@@ -1,4 +1,4 @@
-// services/notificationService.js
+// Bulles d'information empilées en bas de l'écran (une seule fois le même message à la fois)
 import { createApp } from 'vue';
 import ToastNotification from '@/components/ui/ToastNotification.vue';
 
@@ -42,16 +42,8 @@ const notificationService = {
     notificationApp.mount(mountPoint);
   },
   
-  success(message, duration) {
-    this.show({ message, duration, type: 'success' });
-  },
-  
   error(message, duration) {
     this.show({ message, duration, type: 'error' });
-  },
-  
-  warning(message, duration) {
-    this.show({ message, duration, type: 'warning' });
   },
   
   info(message, duration) {

@@ -1,16 +1,5 @@
 <template>
   <div class="sand">
-    <!-- Déclencheur autonome (masqué quand la barre de modes s'en charge) -->
-    <button
-      v-if="showTrigger"
-      type="button"
-      :class="['g-btn', 'g-btn--small', { 'g-btn--ghost': !isTimerActive }]"
-      :aria-pressed="isTimerActive ? 'true' : 'false'"
-      @click="handleTimerButtonClick"
-    >
-      L’Épreuve
-    </button>
-
     <!-- Pastille du sablier dans l'en-tête : temps restant + relecture de la question -->
     <div v-if="isTimerActive" :class="['sand__chip', 'g-bevel', { 'sand__chip--low': isLow }]">
       <svg class="sand__glass" width="14" height="22" viewBox="0 0 40 64" aria-hidden="true">
@@ -45,10 +34,6 @@ import GModal from '@/components/ui/GModal.vue';
 export default {
   name: 'TimerModeButton',
   components: { GModal },
-  props: {
-    // Faux : le bouton est porté par la barre de modes (ModeSwitcher), seuls le chrono et la confirmation restent ici
-    showTrigger: { type: Boolean, default: true }
-  },
   data() {
     return {
       isTimerActive: false,
@@ -56,18 +41,14 @@ export default {
       timerInterval: null,
       showStopConfirmModal: false,
       selectedLevel: null,
-      defaultTimers: {
-        'Facile': 300,    // 5 minutes
-        'Moyen': 240,     // 4 minutes
-        'Difficile': 180  // 3 minutes
-      }
-    }
+      // Durée du sablier du niveau choisi (fixée par le serveur avec les questions)
+      levelTime: 5 * 60
+    };
   },
   computed: {
     // Part du temps restant (1 = sablier plein), pour le sable de la pastille
     sandRatio() {
-      const total = this.defaultTimers[this.selectedLevel] || 300;
-      return Math.max(0, Math.min(1, this.timeRemaining / total));
+      return Math.max(0, Math.min(1, this.timeRemaining / this.levelTime));
     },
     // Sable du haut : triangle qui se vide vers le col (y = 30)
     sandTop() {
@@ -98,13 +79,6 @@ export default {
     }
   },
   methods: {
-    async handleTimerButtonClick() {
-      if (!this.isTimerActive || !this.selectedLevel) {
-        await this.startTimer();
-      } else {
-        this.showStopConfirmModal = true;
-      }
-    },
     pauseTimer() {
       if (this.timerInterval) {
         clearInterval(this.timerInterval);
@@ -112,11 +86,9 @@ export default {
       }
     },
     showLevelSelection() {
-      // Assurez-vous que le timer est actif mais que le niveau n'est pas sélectionné
+      // Retour au choix du sablier sans quitter l'Épreuve
       this.isTimerActive = true;  
       this.selectedLevel = null;
-      
-      // Forcer l'affichage du menu de sélection
       this.$emit('show-question');
     },
     resumeTimer() {
@@ -151,6 +123,7 @@ export default {
     },
     async handleLevelSelected({ level, timer }) {
       this.selectedLevel = level;
+      this.levelTime = timer;
       this.timeRemaining = timer;
       await this.startTimerWithTime(timer);
     },
@@ -183,9 +156,7 @@ export default {
       if (this.isTimerActive) this.timeRemaining += seconds;
     },
     resetTimer() {
-      if (this.isTimerActive && this.selectedLevel) {
-        this.timeRemaining = this.defaultTimers[this.selectedLevel];
-      }
+      if (this.isTimerActive && this.selectedLevel) this.timeRemaining = this.levelTime;
     },
     async showCurrentQuestion() {
       await this.$nextTick();

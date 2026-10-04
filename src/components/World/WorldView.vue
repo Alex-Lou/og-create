@@ -29,7 +29,7 @@
       <div v-if="state" class="world__hud">
         <ul class="world__stock" aria-label="Réserves">
           <li v-for="r in RESOURCES" :key="r.id" class="world__res" :title="r.label">
-            <span aria-hidden="true">{{ r.glyph }}</span><strong>{{ state.stock[r.id] }}</strong><span class="world__sr">{{ r.label }}</span>
+            <span aria-hidden="true">{{ r.glyph }}</span><strong>{{ state.stock[r.id] }}</strong><span class="oc-sr-only">{{ r.label }}</span>
           </li>
         </ul>
         <button type="button" class="world__play" :disabled="busy || !state.charges.count" @click="startHarvest">
@@ -157,21 +157,21 @@
 </template>
 
 <script>
+import { messageOf } from '@/utils/errors';
 import playService from '@/services/playService';
 import ElementGlyph from '@/components/ui/ElementGlyph.vue';
 import HarvestGame from './HarvestGame.vue';
 import { search } from '@/utils/search';
 import { glyph } from '@/book/painter';
-import { burst, ring, buzz, center } from '@/book/fx';
+import { burst, ring, vibrate, center, reducedMotion } from '@/utils/fx';
+import * as storage from '@/utils/storage';
+import { GLYPH, LABEL, RESOURCES } from '@/game/resources';
 
 const FRAME_MS = 33; // ~30 images/s : l'île respire, sans user la batterie
 const TW = 64; // largeur d'une case à l'échelle 1 (unités du monde)
 const TH = TW / 2;
 const DEPTH = 30;
 const MAX_SCALE = 1.8;
-const GLYPH = { stone: '🪨', wood: '🪵', water: '💧', food: '🍎' };
-const LABEL = { stone: 'pierre', wood: 'bois', water: 'eau', food: 'nourriture' };
-const RESOURCES = Object.keys(GLYPH).map(id => ({ id, glyph: GLYPH[id], label: LABEL[id] }));
 // Allure des bâtiments construits, par niveau
 const LOOK = { foyer: ['🔥', '🛖', '🏠'], carriere: ['⛏️'], bosquet: ['🌳'], puits: ['🪣'], potager: ['🥕'], atelier: ['🛠️'], ponton: ['⛵'] };
 const SEEN_KEY = 'oc_world_seen';
@@ -264,7 +264,7 @@ export default {
       if (charges && charges.nextIn !== null && this.clock - this.loadedAt > charges.nextIn + 2000 && !this.busy && !this.run) this.load();
     }, 20000);
     try {
-      this.firstVisit = !localStorage.getItem(SEEN_KEY);
+      this.firstVisit = !storage.load(SEEN_KEY);
     } catch {
       this.firstVisit = false;
     }
@@ -279,7 +279,7 @@ export default {
   },
   methods: {
     reduced() {
-      return window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      return reducedMotion();
     },
     async load() {
       try {
@@ -688,13 +688,13 @@ export default {
       }
       if (hit.site) {
         this.site = hit.site;
-        buzz(6);
+        vibrate(6);
       } else if (hit.tile) {
         const c = this.world(hit.tile.x, hit.tile.y);
         const sp = this.toScreen(c.x, c.y);
         this.menuPos = { x: Math.max(80, Math.min(this.geo.width - 80, sp.x)), y: Math.max(8, sp.y - TW * this.cam.s * 1.05) };
         this.selected = hit.tile;
-        buzz(6);
+        vibrate(6);
       } else {
         this.query = '';
         this.picking = hit.cell;
@@ -705,7 +705,7 @@ export default {
       if (!this.firstVisit) return;
       this.firstVisit = false;
       try {
-        localStorage.setItem(SEEN_KEY, '1');
+        storage.save(SEEN_KEY, 1);
       } catch {
         /* stockage indisponible : le conseil reviendra, sans gravité */
       }
@@ -728,11 +728,11 @@ export default {
           const at = center(this.screenRectOf(site.x + 0.5, site.y + 0.5));
           ring(at, 120);
           burst(at, 26, 90);
-          buzz([14, 40, 20]);
+          vibrate([14, 40, 20]);
         });
         this.$emit('show-alert', `Nouveau sur ton île : ${built}\u00a0!`);
       } catch (error) {
-        this.$emit('show-alert', error.response?.data?.message || 'Le chantier n’a pas pu être bâti.');
+        this.$emit('show-alert', messageOf(error, 'Le chantier n’a pas pu être bâti.'));
       } finally {
         this.busy = false;
       }
@@ -746,7 +746,7 @@ export default {
         this.run = await playService.harvestStart();
         this.syncLoop();
       } catch (error) {
-        this.$emit('show-alert', error.response?.data?.message || 'La Récolte n’a pas pu commencer.');
+        this.$emit('show-alert', messageOf(error, 'La Récolte n’a pas pu commencer.'));
         this.load();
       } finally {
         this.busy = false;
@@ -758,9 +758,9 @@ export default {
         const { gains, world } = await playService.harvestFinish(this.run.id, moves);
         this.runResult = gains;
         this.apply(world);
-        buzz([12, 40, 18]);
+        vibrate([12, 40, 18]);
       } catch (error) {
-        this.runError = error.response?.data?.message || 'Le serveur n’a pas pu peser ta récolte.';
+        this.runError = messageOf(error, 'Le serveur n’a pas pu peser ta récolte.');
         this.load();
       } finally {
         this.sending = false;
@@ -778,11 +778,11 @@ export default {
         this.apply(await playService.worldPlace(name, x, y));
         this.$nextTick(() => {
           burst(center(this.screenRectOf(x, y)), 14, 50);
-          buzz([10, 30, 10]);
+          vibrate([10, 30, 10]);
         });
       } catch (error) {
         this.pops.delete(name);
-        this.$emit('show-alert', error.response?.data?.message || 'L’objet n’a pas pu être posé.');
+        this.$emit('show-alert', messageOf(error, 'L’objet n’a pas pu être posé.'));
       } finally {
         this.busy = false;
       }
@@ -799,7 +799,7 @@ export default {
       try {
         this.apply(await playService.worldRemove(tile.x, tile.y));
       } catch (error) {
-        this.$emit('show-alert', error.response?.data?.message || 'L’objet n’a pas pu être retiré.');
+        this.$emit('show-alert', messageOf(error, 'L’objet n’a pas pu être retiré.'));
       } finally {
         this.busy = false;
       }
@@ -815,11 +815,11 @@ export default {
           const at = center(button.getBoundingClientRect());
           ring(at, 90);
           burst(at, 20, 70);
-          buzz([12, 40, 18]);
+          vibrate([12, 40, 18]);
           this.$emit('show-alert', `+${gained} écu${gained > 1 ? 's' : ''} récoltés sur ton île.`);
         }
       } catch (error) {
-        this.$emit('show-alert', error.response?.data?.message || 'La récolte d’écus n’a pas pu se faire.');
+        this.$emit('show-alert', messageOf(error, 'La récolte d’écus n’a pas pu se faire.'));
       } finally {
         this.busy = false;
       }
@@ -854,7 +854,6 @@ export default {
   font-family: Nunito, system-ui, sans-serif; font-size: 17px;
 }
 .world__res strong { font-size: 15px; font-weight: 900; font-variant-numeric: tabular-nums; }
-.world__sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
 .world__play {
   flex: none; display: flex; flex-direction: column; align-items: center; justify-content: center;
   min-width: 108px; padding: 4px 12px; border: 0; border-radius: 16px;

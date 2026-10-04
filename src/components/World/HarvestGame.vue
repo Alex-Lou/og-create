@@ -13,10 +13,10 @@
 
       <!-- Gains de la partie : estimés pendant le jeu, ceux du serveur à la fin -->
       <ul class="harvest__tally" aria-label="Gains">
-        <li v-for="r in RESOURCE_LIST" :key="r.id" :class="['harvest__res', { 'is-boost': run.boosts[r.id] }]">
+        <li v-for="r in RESOURCES" :key="r.id" :class="['harvest__res', { 'is-boost': run.boosts[r.id] }]">
           <span aria-hidden="true">{{ r.glyph }}</span>
           <strong>{{ shown[r.id] }}</strong>
-          <span class="harvest__sr">{{ r.label }}</span>
+          <span class="oc-sr-only">{{ r.label }}</span>
           <em v-if="run.boosts[r.id]" class="harvest__boost">×2</em>
         </li>
       </ul>
@@ -61,15 +61,9 @@
 
 <script>
 import { SIZE, MIN_CHAIN, create, play, gainOf } from '@/game/harvest';
-import { buzz } from '@/book/fx';
+import { vibrate } from '@/utils/fx';
+import { GLYPH, RESOURCES } from '@/game/resources';
 
-const GLYPH = { stone: '🪨', wood: '🪵', water: '💧', food: '🍎', fish: '🐟' };
-const RESOURCE_LIST = [
-  { id: 'stone', glyph: '🪨', label: 'pierre' },
-  { id: 'wood', glyph: '🪵', label: 'bois' },
-  { id: 'water', glyph: '💧', label: 'eau' },
-  { id: 'food', glyph: '🍎', label: 'nourriture' }
-];
 const GONE_MS = 170;
 
 // Récolte : le plateau vient de la graine du serveur ; les coups joués lui sont renvoyés à la fin,
@@ -85,7 +79,7 @@ export default {
   emits: ['finish', 'close'],
   data() {
     return {
-      SIZE, MIN_CHAIN, GLYPH, RESOURCE_LIST,
+      SIZE, MIN_CHAIN, GLYPH, RESOURCES,
       tiles: [],
       path: [],
       gone: new Set(),
@@ -157,7 +151,7 @@ export default {
       this.pointer = event.pointerId;
       this.$refs.board.setPointerCapture(event.pointerId);
       this.path = [cell];
-      buzz(5);
+      vibrate(5);
     },
     onMove(event) {
       if (this.pointer !== event.pointerId || !this.path.length) return;
@@ -177,7 +171,7 @@ export default {
       const touching = Math.max(Math.abs(last[0] - x), Math.abs(last[1] - y)) === 1;
       if (sameKind && touching && !this.picked.has(y * SIZE + x)) {
         this.path.push([x, y]);
-        buzz(this.path.length >= MIN_CHAIN ? 8 : 5);
+        vibrate(this.path.length >= MIN_CHAIN ? 8 : 5);
       }
     },
     onUp(event) {
@@ -199,7 +193,7 @@ export default {
       this.gone = new Set(path.map(([x, y]) => y * SIZE + x));
       this.path = [];
       this.animating = true;
-      buzz(path.length >= 5 ? [14, 30, 14] : 12);
+      vibrate(path.length >= 5 ? [14, 30, 14] : 12);
       this.timer = setTimeout(() => {
         const removed = this.gone;
         const fresh = new Set();
@@ -270,7 +264,6 @@ export default {
 .harvest__res strong { font-size: 16px; font-weight: 900; font-variant-numeric: tabular-nums; }
 .harvest__res.is-boost { box-shadow: inset 0 0 0 2px #E7B648; }
 .harvest__boost { position: absolute; top: -7px; right: -4px; padding: 0 5px; border-radius: 8px; background: #E7B648; color: #4A3426; font-size: 10px; font-style: normal; font-weight: 900; }
-.harvest__sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
 .harvest__hint { min-height: 22px; margin-bottom: 8px; text-align: center; font-size: 14px; font-weight: 800; color: #8A5A1C; }
 
 .harvest__board {

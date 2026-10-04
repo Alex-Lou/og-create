@@ -73,3 +73,10 @@ export function slotCountForEra(era) {
   if (era >= 3) return 3;
   return 2;
 }
+
+// Famille de chaque élément connu : { nom: famille }
+export function familyIndex(categories) {
+  const index = {};
+  for (const [family, names] of Object.entries(categories)) for (const name of names) index[name] = family;
+  return index;
+}
