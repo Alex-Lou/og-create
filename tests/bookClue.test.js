@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { clueText } from '../src/book/painter';
+import { clueText, familyHints } from '../src/book/painter';
 import { aimNote, aimMessage } from '../src/book/aim';
 
 // Indice d'une page à portée : les familles des ingrédients, jamais l'élément
@@ -41,5 +41,14 @@ describe('aim', () => {
     expect(aimMessage(aim)).toBe('Pas cette page : 1 ingrédient juste sur 2. Encore 2 essais et l’encre est offerte.');
     expect(aimMessage({ ...aim, right: 2, misses: 3, freeInk: true })).toBe('Pas cette page : 2 ingrédients justes sur 2. L’encre de la page est offerte.');
     expect(aimMessage({ ...aim, misses: null })).toBe('Pas cette page : 1 ingrédient juste sur 2.');
+  });
+});
+
+describe('familyHints', () => {
+  it('un mot par case, « le même » pour un ingrédient déjà compté', () => {
+    expect(familyHints(['Elements Fondamentaux', 'Matériaux'], [0, 1])).toEqual(['premier', 'matériau']);
+    expect(familyHints(['Flore', 'Flore', 'Cosmos'], [0, 0, 1])).toEqual(['plante', 'le même', 'astre']);
+    expect(familyHints(['Flore', 'Flore'], [0, 1])).toEqual(['plante', 'plante']);
+    expect(familyHints(['Inconnue', 'Flore'])).toEqual(['élément', 'plante']);
   });
 });
