@@ -1,12 +1,12 @@
-// Carrière, paliers III à VII : Galerie, Puits de mine, Mine de cristal, Mine à vapeur, Mine des Géants.
+// Carrière, paliers III à VII : Mine, Galerie, Puits de mine, Mine de cristal, Cité minière.
 // Places laissées libres pour la boutique : voie de la galerie le long de u ≈ −0.35 (× 1.5 dès le palier IV, le
 // wagonnet des Rails y roule), butoir au bout, lanterne à gauche, pioche et wagonnet devant.
 import { ROCKS, BUILDING_BOX, pebble, crystals } from '../palette';
 import { UPGRADES } from '../buildings2';
 import { sprite } from '../iso';
 import {
-  big, bigShadow, P, box, face, cylinder, f2, ln, poly, dot, ell, OUT, STONE, WOOD, WOOD_DARK, BRICK, IRON, GOLD, DARK_STONE,
-  archLeft, barrel, crate, lampPost, courseLeft, courseRight
+  big, bigShadow, P, box, face, gable, f2, ln, dot, ell, OUT, STONE, PLASTER, WOOD, WOOD_DARK, BRICK, IRON, GOLD, DARK_STONE,
+  archLeft, barrel, crate, lampPost
 } from './kit';
 
 const inner = s => s.svg.replace(/^<svg[^>]*>/, '').replace(/<\/svg>$/, '');
@@ -39,17 +39,22 @@ function cart(u, v, k = 1) {
     + `<circle cx="${f2(P(u + 0.11 * k, v + 0.08 * k, 3)[0])}" cy="${f2(P(u + 0.11 * k, v + 0.08 * k, 3)[1])}" r="2.6" fill="#2A2724"/>`;
 }
 
-/* ---------- Palier III : Galerie ---------- */
-// La Mine gagne une entrée de pierre en arc, un puits d'aération sur la roche, un tas de minerai et des lampions
+// Puits d'aération sur le dessus de la roche (dessus à la hauteur z) : chevalet de bois et sa roue
+function ventShaft(u, v, z) {
+  const [vx, vy] = P(u, v, z);
+  return box(u - 0.1, v - 0.08, u + 0.1, v + 0.08, z, z + 6, WOOD_DARK)
+    + ln([vx - 7, vy - 2], [vx, vy - 22], WOOD.right, 1.8) + ln([vx + 7, vy - 2], [vx, vy - 22], WOOD.right, 1.8)
+    + `<circle cx="${f2(vx)}" cy="${f2(vy - 20)}" r="4.6" fill="none" stroke="${WOOD_DARK.right}" stroke-width="1.4"/>` + dot(vx, vy - 20, 1.2, WOOD_DARK.right);
+}
+
+/* ---------- Palier III : Mine ---------- */
+// La roche s'ouvre sur une galerie boisée (buildings2.js), coiffée d'un petit chevalement de bois ; entrée de pierre
+// en arc, lampions, tas de minerai
 function gallery(skin) {
   const rock = rockOf(skin);
-  const [vx, vy] = P(0.12, -0.6, 44);
   return sprite(
     inner(UPGRADES.carriere(skin))
-    // Puits d'aération sur le dessus de la roche : chevalet et roue
-    + box(0.02, -0.68, 0.22, -0.52, 44, 50, WOOD_DARK)
-    + ln([vx - 7, vy - 2], [vx, vy - 22], WOOD.right, 1.8) + ln([vx + 7, vy - 2], [vx, vy - 22], WOOD.right, 1.8)
-    + `<circle cx="${f2(vx)}" cy="${f2(vy - 20)}" r="4.6" fill="none" stroke="${WOOD_DARK.right}" stroke-width="1.4"/>` + dot(vx, vy - 20, 1.2, WOOD_DARK.right)
+    + ventShaft(0.12, -0.6, 44)
     // Entrée de pierre en arc autour de la galerie, clé de voûte
     + archLeft(-0.35, 0.26, -0.18, 0, 30, rock.left, ` stroke="${OUT}" stroke-width="0.8"`)
     + archLeft(-0.35, 0.19, -0.175, 0, 25, '#241E1A')
@@ -100,15 +105,31 @@ function headframe(u, v, h, color = WOOD, iron = false) {
   return out + ln([tx - 5, ty - 1], [bx - 2, by - 2], '#3D3A36', 0.6) + ln([tx + 5, ty - 3], [bx + 2, by - 3], '#3D3A36', 0.6);
 }
 
-/* ---------- Palier IV : Puits de mine ---------- */
+/* ---------- Palier IV : Galerie ---------- */
+// Le carreau s'agrandit : une seconde galerie s'ouvre dans la falaise, sa voie mène au tas de minerai ; étais de bois
+// empilés sur le gradin, puits d'aération sur la falaise, réverbère
+function galleries(skin) {
+  return big(
+    minesite(skin)
+    + archLeft(0.12, 0.2, -0.3, 0, 26, WOOD_DARK.left, ` stroke="${OUT}" stroke-width="0.8"`)
+    + archLeft(0.12, 0.15, -0.295, 0, 22, '#1F1A17')
+    + track(0.12, -0.3, 0.36, 1.2) + cart(0.12, 0.08, 1.1)
+    + ventShaft(-0.95, -0.95, 62)
+    + [0, 1, 2].map(k => box(0.7, -0.2 + k * 0.1, 1.3, -0.14 + k * 0.1, 30 + (k === 1 ? 4 : 0), 34 + (k === 1 ? 4 : 0), WOOD)).join('')
+    + lampPost(-0.12, 0.02, 30)
+  );
+}
+
+/* ---------- Palier V : Puits de mine ---------- */
+// Cabane du treuil, puis le chevalement de fer au-dessus du puits
 function shaftMine(skin) {
   return big(
     minesite(skin)
-    // Cabane du treuil, puis le chevalement au-dessus du puits
     + box(0.95, 0.2, 1.38, 0.62, 0, 22, WOOD) + face([[0.95, 0.62, 0], [1.38, 0.62, 0], [1.38, 0.62, 22], [0.95, 0.62, 22]], WOOD.left)
     + face([[1.08, 0.62, 0], [1.22, 0.62, 0], [1.22, 0.62, 14], [1.08, 0.62, 14]], '#3A2A1E')
-    + face([[0.91, 0.16, 22], [1.42, 0.16, 22], [1.42, 0.41, 30], [0.91, 0.41, 30]], '#8E6A4A') + face([[0.91, 0.41, 30], [1.42, 0.41, 30], [1.42, 0.66, 22], [0.91, 0.66, 22]], '#A8805C')
-    + headframe(0.5, 0.15, 74)
+    + face([[0.91, 0.16, 22], [1.42, 0.16, 22], [1.42, 0.41, 30], [0.91, 0.41, 30]], '#5C6880') + face([[0.91, 0.41, 30], [1.42, 0.41, 30], [1.42, 0.66, 22], [0.91, 0.66, 22]], '#7D8AA0')
+    + ventShaft(-0.95, -0.95, 62)
+    + headframe(0.5, 0.15, 78, IRON, true)
     + barrel(1.25, 0.82, 'pm-b1') + crate(0.92, 0.85, 0.11, 9)
   );
 }
@@ -128,53 +149,54 @@ function crystalMine(skin) {
   );
 }
 
-/* ---------- Palier VI : Mine à vapeur ---------- */
-function steamMine(skin) {
-  const [cx, cy] = P(1.12, -0.05, 86);
+/* ---------- Palier VII : Cité minière ---------- */
+// Maisonnette de mineur : murs, toit à deux pans, porte, fenêtre, cheminée ; posée à z (sur un gradin)
+function cottage(u0, v0, u1, v1, z, roof, wall = PLASTER) {
+  const h = 16;
+  const um = (u0 + u1) / 2;
+  return box(u0, v0, u1, v1, z, z + h, wall)
+    + face([[um - 0.06, v1, z], [um + 0.04, v1, z], [um + 0.04, v1, z + 10], [um - 0.06, v1, z + 10]], '#7A4E2C')
+    + face([[u1, (v0 + v1) / 2 - 0.05, z + 6], [u1, (v0 + v1) / 2 + 0.05, z + 6], [u1, (v0 + v1) / 2 + 0.05, z + 12], [u1, (v0 + v1) / 2 - 0.05, z + 12]], '#FFE6A3')
+    + box(u0 + 0.06, v0 + 0.04, u0 + 0.13, v0 + 0.11, z + h, z + h + 14, BRICK)
+    + gable(u0, v0, u1, v1, z + h, 11, { front: roof.front, back: roof.back, gable: wall.right }, 0.05);
+}
+// Clocher des mineurs sur la falaise : tour carrée, abat-sons, cloche, toit pointu
+function belfry(u, v, z, roof) {
+  const [bx, by] = P(u + 0.1, v + 0.1, z + 30);
+  return box(u - 0.1, v - 0.1, u + 0.1, v + 0.1, z, z + 34, STONE)
+    + face([[u - 0.05, v + 0.1, z + 24], [u + 0.05, v + 0.1, z + 24], [u + 0.05, v + 0.1, z + 32], [u - 0.05, v + 0.1, z + 32]], '#2E2620')
+    + dot(bx - 4, by + 1, 2.2, GOLD.left)
+    + face([[u - 0.13, v - 0.13, z + 34], [u + 0.13, v - 0.13, z + 34], [u, v, z + 54]], roof.back)
+    + face([[u - 0.13, v + 0.13, z + 34], [u + 0.13, v + 0.13, z + 34], [u, v, z + 54]], roof.front)
+    + face([[u + 0.13, v - 0.13, z + 34], [u + 0.13, v + 0.13, z + 34], [u, v, z + 54]], roof.back);
+}
+const MINER_ROOF = { front: '#E06E52', back: '#B9503B' };
+const MINER_ROOF_2 = { front: '#7D8AA0', back: '#5C6880' };
+function miningTown(skin) {
   return big(
     minesite(skin)
-    // Salle des machines en briques, haute cheminée ronde, chevalement d'acier
-    + box(0.62, -0.25, 1.4, 0.62, 0, 34, BRICK) + courseLeft(0.62, 1.4, 0.62, 0, 34, 6, 'rgba(90,40,25,.3)') + courseRight(1.4, -0.25, 0.62, 0, 34, 6, 'rgba(70,30,20,.3)')
-    + [0.72, 0.98, 1.22].map(u => archLeft(u + 0.06, 0.06, 0.62, 10, 18, '#FFE6A3', ' stroke="#FFFFFF" stroke-width="0.8"')).join('')
-    + face([[0.58, -0.29, 34], [1.44, -0.29, 34], [1.44, 0.17, 44], [0.58, 0.17, 44]], '#6C7480') + face([[0.58, 0.17, 44], [1.44, 0.17, 44], [1.44, 0.66, 34], [0.58, 0.66, 34]], '#8A93A0')
-    + cylinder(1.12, -0.05, 34, 86, 0.1, { top: '#5E3A2A', left: BRICK.left, right: BRICK.right }, 'sm-chim')
-    + `<ellipse cx="${f2(cx)}" cy="${f2(cy)}" rx="4.6" ry="2.3" fill="#2A1E18"/>`
-    + headframe(0.3, 0.2, 80, null, true)
-    + barrel(0.4, 0.9, 'sm-b1') + barrel(0.62, 0.95, 'sm-b2')
-  );
-}
-
-/* ---------- Palier VII : Mine des Géants ---------- */
-function giantMine(skin) {
-  const rock = rockOf(skin);
-  // Porte colossale taillée dans la falaise : visage de géant, colonnes, torches, pioche de géant appuyée
-  const [ex1, ey1] = P(-0.75, -0.3, 66);
-  const [ex2, ey2] = P(-0.31, -0.3, 66);
-  const [nx, ny] = P(-0.53, -0.3, 56);
-  return big(
-    minesite(skin, { giant: true })
-    + box(-1.45, -1.45, 1.4, -0.3, 62, 80, rock)
-    + archLeft(-0.53, 0.42, -0.3, 0, 50, rock.right, ` stroke="${OUT}" stroke-width="0.9"`)
-    + archLeft(-0.53, 0.34, -0.295, 0, 44, '#1A1512')
-    + [-1.02, -0.04].map(u => box(u - 0.07, -0.37, u + 0.07, -0.23, 0, 58, rock) + box(u - 0.09, -0.39, u + 0.09, -0.21, 58, 62, rock)).join('')
-    // Visage : sourcils, yeux qui luisent, nez, barbe de pierre
-    + `<path d="M${f2(ex1 - 9)},${f2(ey1 - 6)} q9,-6 18,1 M${f2(ex2 - 9)},${f2(ey2 - 5)} q9,-7 18,0" stroke="${rock.right}" stroke-width="3" fill="none" stroke-linecap="round"/>`
-    + ell(ex1, ey1, 6, 3.4, '#1A1512') + ell(ex2, ey2, 6, 3.4, '#1A1512') + dot(ex1, ey1, 2, '#FFB347') + dot(ex2, ey2, 2, '#FFB347')
-    + poly([[nx, ny - 9], [nx + 5, ny + 3], [nx - 5, ny + 4]], rock.right)
-    + `<path d="M${f2(nx - 22)},${f2(ny + 18)} q22,22 44,-3" stroke="${rock.right}" stroke-width="2.4" fill="none"/>`
-    // Pioche de géant contre la falaise, veines d'or
-    + ln(P(0.75, -0.25, 0), P(0.45, -0.3, 70), WOOD_DARK.right, 5) + ln(P(0.76, -0.25, 0), P(0.46, -0.3, 70), WOOD.top, 1.4)
-    + `<path d="M${f2(P(0.2, -0.3, 64)[0])},${f2(P(0.2, -0.3, 64)[1])} Q${f2(P(0.45, -0.3, 80)[0])},${f2(P(0.45, -0.3, 80)[1])} ${f2(P(0.82, -0.3, 66)[0])},${f2(P(0.82, -0.3, 66)[1])}" stroke="${IRON.left}" stroke-width="6" fill="none" stroke-linecap="round"/>`
-    + [[1.4, -1.0, 50], [1.4, -0.6, 26], [-1.3, -0.3, 30], [0.2, -0.3, 22]].map(([u, v, z]) => { const [x, y] = P(u, v, z); return `<path d="M${f2(x - 6)},${f2(y)} l4,-3 l3,2 l5,-4" stroke="${GOLD.left}" stroke-width="1.6" fill="none"/>`; }).join('')
-    + lampPost(-1.15, 0.05, 28) + lampPost(0.1, 0.05, 28)
-    + oreHeap(0.55, 0.45, 1.6)
+    // Sur la falaise : le clocher et deux maisons
+    + cottage(-1.35, -1.38, -1.0, -1.05, 62, MINER_ROOF_2)
+    + belfry(-0.72, -1.15, 62, MINER_ROOF)
+    + cottage(-0.4, -1.4, -0.05, -1.08, 62, MINER_ROOF)
+    // Sur le gradin, une maison ; devant, deux autres en rang
+    + cottage(0.8, -0.24, 1.32, 0.08, 30, MINER_ROOF)
+    + headframe(0.45, 0.12, 72, IRON, true)
+    + cottage(0.72, 0.32, 1.06, 0.66, 0, MINER_ROOF_2)
+    + cottage(1.1, 0.32, 1.42, 0.66, 0, MINER_ROOF)
+    + [[1.4, -0.9, 34, 1], [-0.05, -0.3, 30, 0.9]].map(([u, v, z, k]) => crystals(u, v, z, k)).join('')
+    + lampPost(-0.12, 0.02, 30) + lampPost(0.55, 0.85, 26)
   );
 }
 
 export const CARRIERE_TIERS = [
   { make: gallery, lights: [[0.04, -0.23, 34, 18], [-0.35, -0.16, 26, 20]] },
+  { make: galleries, lights: [[-0.53, -0.3, 18, 24], [0.12, -0.3, 12, 16], [-0.12, 0.02, 31, 16]] },
   { make: shaftMine, lights: [[-0.53, -0.3, 18, 24], [1.15, 0.62, 10, 14]] },
   { make: crystalMine, lights: [[-0.53, -0.3, 18, 24], [-1.1, -0.3, 26, 16], [-0.05, -0.3, 34, 14], [1.4, -0.9, 40, 16], [0.12, 0.62, 8, 16], [-1.0, 0.3, 8, 14]] },
-  { make: steamMine, lights: [[-0.53, -0.3, 18, 24], [0.78, 0.62, 18, 14], [1.04, 0.62, 18, 14], [1.28, 0.62, 18, 14]], smoke: [[1.12, -0.05, 88]] },
-  { make: giantMine, lights: [[-0.75, -0.3, 66, 12], [-0.31, -0.3, 66, 12], [-1.15, 0.05, 31, 16], [0.1, 0.05, 31, 16], [-0.53, -0.3, 20, 30]] }
+  {
+    make: miningTown,
+    lights: [[-0.53, -0.3, 18, 24], [-0.12, 0.02, 31, 16], [0.55, 0.85, 27, 16], [1.06, 0.49, 9, 12], [1.42, 0.49, 9, 12], [1.32, -0.08, 39, 12], [-1.0, -1.22, 71, 10], [-0.05, -1.24, 71, 10]],
+    smoke: [[0.89, -0.17, 62], [0.81, 0.39, 32], [1.19, 0.39, 32]]
+  }
 ];

@@ -15,7 +15,7 @@ const DARK_STONE = { top: '#B9B2A2', left: '#968E7C', right: '#736B5B' };
 const line = (a, b, color, width = 1.2, extra = '') => `<line x1="${a[0]}" y1="${a[1]}" x2="${b[0]}" y2="${b[1]}" stroke="${color}" stroke-width="${width}" stroke-linecap="round"${extra}/>`;
 
 // Dôme (demi-sphère) de rayon r cases posé à z : silhouette, dégradé de lumière, éclat
-function dome(u, v, z, r, colors, id) {
+export function dome(u, v, z, r, colors, id) {
   const [x, y] = P(u, v, z);
   const rx = r * TW * Math.SQRT1_2;
   const ry = rx * 0.5;

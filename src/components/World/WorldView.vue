@@ -1761,7 +1761,7 @@ export default {
     shopGroups(site) {
       return SHOP_GROUPS.map(([kind, label]) => ({ kind, label, items: site.shop.filter(item => item.kind === kind) })).filter(group => group.items.length);
     },
-    // Niveau auquel montrer un article ou un skin : celui du bâtiment, ou celui qu'il demande (le Foyer se voit dès la Cabane)
+    // Niveau auquel montrer un article ou un skin : celui du bâtiment, ou celui qu'il demande (le toit du Foyer se voit dès l’Abri)
     previewLevel(site, item) {
       const level = Math.max(site.level, item.minLevel, 1);
       return site.id === 'foyer' && item.kind === 'skin' ? Math.max(level, 2) : level;
@@ -1772,7 +1772,7 @@ export default {
       return spriteUrl(`thumb-${item.id}-${level}`, () => itemThumb(item.id, level));
     },
     itemNote(site, item) {
-      if (item.kind === 'skin' && site.id === 'foyer' && site.level < 2) return 'Se voit dès la Cabane.';
+      if (item.kind === 'skin' && site.id === 'foyer' && site.level < 2) return 'Se voit dès l’Abri.';
       return item.effect;
     },
     // Raison pour laquelle un article ne s'achète pas encore (texte du bouton), ou ''

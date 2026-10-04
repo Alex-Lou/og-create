@@ -109,7 +109,7 @@ describe('les eaux où vivent les animaux', () => {
 });
 
 describe('la mer grandit avec l’île', () => {
-  it('dauphins avec la Crique, baleine avec le Hameau, méduses avec l’Îlot du Phare', () => {
+  it('dauphins avec la Crique, baleine avec le Hameau, méduses avec l’Îlot aux Mouettes', () => {
     expect(seaGuests(new Set(['coeur']))).toEqual({ dolphins: false, whale: false, jellies: false });
     expect(seaGuests(new Set(['coeur', 'crique']))).toMatchObject({ dolphins: true, whale: false });
     expect(seaGuests(new Set(['crique', 'hameau', 'phare']))).toEqual({ dolphins: true, whale: true, jellies: true });

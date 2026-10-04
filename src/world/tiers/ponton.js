@@ -69,44 +69,22 @@ function shipyard() {
 }
 
 /* ---------- Grand port (paliers IV à VII) ---------- */
-const LIGHTHOUSE = { u: -1.12, v: -1.12, h: 92 };
-function lighthouse(top = '#FFE08A') {
-  const { u, v, h } = LIGHTHOUSE;
-  const stripes = [0, 1, 2, 3].map(k => {
-    const z0 = 8 + k * 20;
-    const [x0, y0] = P(u, v, z0);
-    const [x1, y1] = P(u, v, z0 + 10);
-    const r0 = 0.3 - (z0 / h) * 0.1;
-    const r1 = 0.3 - ((z0 + 10) / h) * 0.1;
-    return `<path d="M${f2(x0 - r0 * 45.25)},${f2(y0)} A${f2(r0 * 45.25)},${f2(r0 * 22.6)} 0 0 0 ${f2(x0 + r0 * 45.25)},${f2(y0)} L${f2(x1 + r1 * 45.25)},${f2(y1)} A${f2(r1 * 45.25)},${f2(r1 * 22.6)} 0 0 1 ${f2(x1 - r1 * 45.25)},${f2(y1)} Z" fill="#E2463A" opacity=".92"/>`;
-  }).join('');
-  const [bx, by] = P(u, v, 0);
-  const [tx, ty] = P(u, v, h);
-  return box(u - 0.36, v - 0.36, u + 0.36, v + 0.36, 0, 8, STONE) + courseRight(u + 0.36, v - 0.36, v + 0.36, 0, 8, 2)
-    + `<defs><linearGradient id="lh-g" x1="0" x2="1"><stop offset="0" stop-color="#FFFFFF"/><stop offset="1" stop-color="#C9C3B6"/></linearGradient></defs>`
-    + `<path d="M${f2(bx - 13.6)},${f2(by - 8)} L${f2(tx - 9)},${f2(ty)} L${f2(tx + 9)},${f2(ty)} L${f2(bx + 13.6)},${f2(by - 8)} A13.6,6.8 0 0 1 ${f2(bx - 13.6)},${f2(by - 8)} Z" fill="url(#lh-g)" stroke="${OUT}" stroke-width="0.8"/>`
-    + stripes
-    + cylinder(u, v, h, h + 3, 0.28, { top: '#3D3A36', left: '#55504A', right: '#3D3A36' }, 'lh-gal')
-    + `<rect x="${f2(tx - 6)}" y="${f2(ty - 15)}" width="12" height="12" fill="${top}" stroke="#3D3A36" stroke-width="1.2"/>`
-    + ln([tx - 2, ty - 15], [tx - 2, ty - 3], '#3D3A36', 0.8) + ln([tx + 2, ty - 15], [tx + 2, ty - 3], '#3D3A36', 0.8)
-    + `<path d="M${f2(tx - 8)},${f2(ty - 15)} L${f2(tx)},${f2(ty - 24)} L${f2(tx + 8)},${f2(ty - 15)} Z" fill="#E2463A" stroke="${OUT}" stroke-width="0.7"/>` + dot(tx, ty - 25, 1.6, GOLD.left);
+// Feu de jetée au bout de la digue : socle de pierre, mât, lanterne vitrée (couleur lamp) et petit chapeau rouge
+const JETTY = { u: -1.12, v: -1.12, h: 40 };
+function jettyLight(lamp = '#FFE08A') {
+  const { u, v, h } = JETTY;
+  const [tx, ty] = P(u, v, h + 14);
+  return box(u - 0.2, v - 0.2, u + 0.2, v + 0.2, 0, 8, STONE) + courseRight(u + 0.2, v - 0.2, v + 0.2, 0, 8, 2)
+    + box(u - 0.035, v - 0.035, u + 0.035, v + 0.035, 8, h, { top: '#55504A', left: '#55504A', right: '#3D3A36' })
+    + box(u - 0.09, v - 0.09, u + 0.09, v + 0.09, h, h + 12, { top: '#3D3A36', left: lamp, right: '#E9BF4E' })
+    + ln(P(u, v + 0.09, h), P(u, v + 0.09, h + 12), '#3D3A36', 0.8)
+    + `<path d="M${f2(tx - 7)},${f2(ty + 2)} L${f2(tx)},${f2(ty - 8)} L${f2(tx + 7)},${f2(ty + 2)} Z" fill="#E2463A" stroke="${OUT}" stroke-width="0.7"/>` + dot(tx, ty - 9, 1.4, GOLD.left);
 }
-// Faisceau du phare qui tourne (8 images) : un cône de lumière pâle qui balaie la mer
-const beam = color => f => sprite((() => {
-  const { u, v, h } = LIGHTHOUSE;
-  const [tx, ty] = P(u, v, h);
-  const a = (f / 8) * Math.PI * 2;
-  const len = 70;
-  const dx = Math.cos(a) * len;
-  const dy = Math.sin(a) * len * 0.45;
-  const spread = 10;
-  return `<path d="M${f2(tx)},${f2(ty - 9)} L${f2(tx + dx - Math.sin(a) * spread)},${f2(ty - 9 + dy + Math.cos(a) * spread * 0.45)} L${f2(tx + dx + Math.sin(a) * spread)},${f2(ty - 9 + dy - Math.cos(a) * spread * 0.45)} Z" fill="${color}" opacity="${f2(0.16 + 0.1 * Math.max(0, Math.cos(a - 0.8)))}"/>`;
-})(), { x: -150, y: -175, w: 170, h: 110 });
 // Caisse posée sur l'appontement
 const deckCrate = (u, v, s = 0.08) => box(u - s, v - s, u + s, v + s, 10, 10 + s * 100, { top: '#E0B47A', left: '#C99359', right: '#A06F3C' });
 function port(extra = '', lamp = '#FFE08A', under = '') {
   return big(
-    harbor(1.5, lighthouse(lamp) + under)
+    harbor(1.5, jettyLight(lamp) + under)
     + bollard(0.3, 0.33) + bollard(-0.6, 0.33) + ropeCoil(0.0, -0.2) + ropeCoil(-0.95, 0.15)
     + deckCrate(-0.4, -0.22) + deckCrate(-0.28, -0.26, 0.06)
     + extra
@@ -182,8 +160,8 @@ const tentacles = f => sprite((() => {
 
 export const PONTON_TIERS = [
   { make: shipyard, boat: [0.05, 0.5], lights: [[0.82, 0.14, 37, 16]] },
-  { make: grandPort, boat: [0.08, 0.75], lights: [[-1.12, -1.12, 101, 26], [1.24, 0.22, 41, 16]], anims: [{ key: 'beam', n: 8, fps: 4, frame: beam('#FFF6C8') }] },
-  { make: market, boat: [0.08, 0.75], lights: [[-1.12, -1.12, 101, 26], [1.24, 0.22, 41, 16], [-0.75, 0.2, 30, 18]], anims: [{ key: 'beam', n: 8, fps: 4, frame: beam('#FFF6C8') }] },
-  { make: steamPort, boat: [0.08, 0.75], lights: [[-1.12, -1.12, 101, 26], [1.24, 0.22, 41, 16], [-0.25, -0.74, 10, 18]], smoke: [[-0.1, -0.82, 40]], anims: [{ key: 'beam', n: 8, fps: 4, frame: beam('#FFF6C8') }] },
-  { make: krakenPort, boat: [0.08, 0.75], lights: [[-1.12, -1.12, 101, 30], [1.24, 0.22, 41, 16], [0.95, -0.12, 22, 16], [-0.6, 0.95, 4, 16]], anims: [{ key: 'beam', n: 8, fps: 4, frame: beam('#B8FFC8') }, { key: 'kraken', n: 6, fps: 5, frame: tentacles }] }
+  { make: grandPort, boat: [0.08, 0.75], lights: [[-1.12, -1.12, 46, 20], [1.24, 0.22, 41, 16]] },
+  { make: market, boat: [0.08, 0.75], lights: [[-1.12, -1.12, 46, 20], [1.24, 0.22, 41, 16], [-0.75, 0.2, 30, 18]] },
+  { make: steamPort, boat: [0.08, 0.75], lights: [[-1.12, -1.12, 46, 20], [1.24, 0.22, 41, 16], [-0.25, -0.74, 10, 18]], smoke: [[-0.1, -0.82, 40]] },
+  { make: krakenPort, boat: [0.08, 0.75], lights: [[-1.12, -1.12, 46, 22], [1.24, 0.22, 41, 16], [0.95, -0.12, 22, 16], [-0.6, 0.95, 4, 16]], anims: [{ key: 'kraken', n: 6, fps: 5, frame: tentacles }] }
 ];
