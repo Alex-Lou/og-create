@@ -5,7 +5,7 @@
         <span class="book-view__eyebrow">{{ currentChapter ? `Chapitre ${currentChapter.id}` : 'Sommaire' }}</span>
         <span class="book-view__title">{{ currentChapter ? currentChapter.name : 'Le Livre' }}</span>
       </div>
-      <span class="book-view__stars" :aria-label="`${stars} découvertes`">★ {{ stars }}</span>
+      <button type="button" class="book-view__stars" :aria-label="`${stars} découvertes : revenir au sommaire`" @click="goTo(0)">★ {{ stars }}</button>
     </header>
 
     <div ref="stage" class="book-view__stage">
@@ -486,7 +486,8 @@ export default {
 .book-view__eyebrow { display: block; font-family: var(--oc-font-mono); font-weight: 800; font-size: 11px; letter-spacing: .14em; text-transform: uppercase; color: var(--oc-on-bg-faint); }
 .book-view__title { display: block; font-family: var(--oc-font-display); font-weight: 700; font-size: 24px; line-height: 1.1; color: var(--oc-on-bg); }
 .book-view__stars {
-  flex: none; padding: 4px 12px; border-radius: 999px;
+  appearance: none; border: 0; cursor: pointer;
+  flex: none; min-height: 32px; padding: 4px 12px; border-radius: 999px;
   background: var(--vellum-50); color: var(--oc-gold);
   box-shadow: inset 0 0 0 1px var(--oc-line), 0 2px 0 var(--vellum-400);
   font-family: var(--oc-font-mono); font-size: 14px; font-weight: 900;

@@ -3,7 +3,7 @@
     <LivingBackground ref="background" :era="era" :population="population" :palette="palette" />
 
     <div class="oc-app__shell">
-      <AppHeader :found="discoveredCount" :total="totalElements" :era="era" :eraName="eraName" :coins="coins" :timerActive="isTimerActive">
+      <AppHeader :found="discoveredCount" :total="totalElements" :era="era" :eraName="eraName" :coins="coins" :timerActive="isTimerActive" @open-sceau="handleModeSelect('sceau')" @open-shop="openShop">
         <template #timer>
           <TimerModeButton
             ref="timerModeButton"
@@ -416,6 +416,11 @@ export default {
       };
       this.$el.style.setProperty('--oc-dock-h', `${height('.athanor')}px`);
       this.$el.style.setProperty('--oc-overlay', `${height('.athanor') + height('.brief')}px`);
+    },
+    // Les écus du bandeau : le Cabinet pour un compte, le Sceau (et son invitation à créer un compte) pour un invité
+    openShop() {
+      if (this.isLoggedIn) this.isCustomizeModalOpen = true;
+      else this.handleModeSelect('sceau');
     },
     showAlert(message) {
       notificationService.info(message);
