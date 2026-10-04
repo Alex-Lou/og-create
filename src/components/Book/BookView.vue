@@ -81,17 +81,18 @@
       >{{ pill.label }} <span class="book-view__filter-count">{{ pill.count }}</span></button>
     </div>
     <div class="book-view__shelf" aria-label="Éléments connus">
-      <button
+      <ElementTile
         v-for="name in shelf"
         :key="name"
-        type="button"
-        :class="['book-view__chip', { 'is-new': name === freshElement, 'is-hint': name === pageHint }]"
-        :aria-label="`Mettre ${name} dans l’Athanor`"
+        :name="name"
+        :glyph="elementEmojis[name]"
+        :family="familyOf[name]"
+        :is-new="name === freshElement"
+        :ink="name === pageHint"
+        :fertile="unexplored[name] || 0"
+        :slot-index="picked.indexOf(name)"
         @click="$emit('select', name, $event.currentTarget.getBoundingClientRect())"
-      >
-        <span class="book-view__chip-glyph" aria-hidden="true"><ElementGlyph :glyph="elementEmojis[name]" /></span>
-        <span :class="['book-view__chip-name', lengthClass(name)]">{{ name }}</span>
-      </button>
+      />
       <p v-if="!shelf.length" class="book-view__empty">{{ query.trim() ? `Aucun élément ne ressemble à « ${query} ».` : 'Aucun élément dans cette famille.' }}</p>
     </div>
 
@@ -116,7 +117,7 @@
 <script>
 import { messageOf } from '@/utils/errors';
 import playService from '@/services/playService';
-import ElementGlyph from '@/components/ui/ElementGlyph.vue';
+import ElementTile from '@/components/ui/ElementTile.vue';
 import HangmanSheet from './HangmanSheet.vue';
 import { search } from '@/utils/search';
 import { familyIndex } from '@/utils/eras';
@@ -137,7 +138,7 @@ const HINT_KEY = 'oc_livre_hint';
 // interactive (spots), l'en-tête et l'étagère passent par Vue.
 export default {
   name: 'BookView',
-  components: { ElementGlyph, HangmanSheet },
+  components: { ElementTile, HangmanSheet },
   props: {
     discoveredElements: { type: Array, required: true },
     elementEmojis: { type: Object, required: true },
@@ -145,6 +146,10 @@ export default {
     freshElement: { type: String, default: null },
     // Familles des éléments connus ({ famille: [noms] }, dans l'ordre du registre)
     categories: { type: Object, default: () => ({}) },
+    // Mélanges encore inexplorés par élément ({ nom: nombre }, du serveur) ; absent = tout exploré
+    unexplored: { type: Object, default: () => ({}) },
+    // Éléments posés dans l'Athanor, dans l'ordre des emplacements
+    picked: { type: Array, default: () => [] },
     // Révélation en cours dans l'Athanor : les effets du Livre attendent qu'elle se ferme
     revealing: { type: Boolean, default: false }
   },
@@ -216,6 +221,8 @@ export default {
       const pills = [];
       if (this.pageClue) pills.push({ id: 'page', label: '✦ Pour cette page', count: this.pageList.length });
       pills.push({ id: 'all', label: 'Tout', count: owned.length });
+      const fertile = owned.filter(name => this.unexplored[name] > 0).length;
+      if (fertile) pills.push({ id: 'fertile', label: '🌱 Fertiles', count: fertile });
       Object.keys(this.categories).forEach(family => {
         if (counts[family]) pills.push({ id: family, label: family === 'Elements Fondamentaux' ? 'Éléments premiers' : family, count: counts[family] });
       });
@@ -230,6 +237,10 @@ export default {
       if (this.query.trim()) return search(newestFirst, this.query);
       const active = this.activeFilter;
       if (active === 'all') return newestFirst;
+      // Les plus prometteurs d'abord : ceux qui entrent dans le plus de mélanges inexplorés
+      if (active === 'fertile') {
+        return newestFirst.filter(name => this.unexplored[name] > 0).sort((a, b) => this.unexplored[b] - this.unexplored[a]);
+      }
       if (active === 'page' && this.pageClue) {
         const list = this.pageList;
         // L'ingrédient révélé (encre ou offert) passe en tête
@@ -284,12 +295,6 @@ export default {
     },
     toggleFilters() {
       this.showFilters = !this.showFilters;
-    },
-    // Un long mot ne tient pas sur une tuile de téléphone : un ou deux crans plus petit (jamais coupé)
-    lengthClass(name) {
-      const longest = Math.max(...name.split(/[\s'’-]+/).map(word => word.length));
-      if (longest >= 12) return 'is-xlong';
-      return longest >= 9 ? 'is-long' : '';
     },
     setRibbonRef(el, key) {
       if (el) this.ribbonEls[key] = el;
@@ -686,32 +691,10 @@ export default {
   gap: 8px;
   margin-top: 10px; padding: 2px 2px 6px;
 }
-.book-view__chip {
-  display: flex; flex-direction: column; align-items: center; justify-content: flex-start; gap: 3px;
-  min-width: 0; min-height: 70px; padding: 8px 3px 6px;
-  border: 0; border-radius: 16px;
-  background: linear-gradient(180deg, var(--vellum-50), var(--vellum-100)); color: var(--book-ink);
-  box-shadow: inset 0 0 0 1px var(--oc-line), var(--edge-paper), var(--shadow-1);
-  cursor: pointer;
-  transition: transform .15s ease;
-}
-.book-view__chip:active { transform: translateY(2px) scale(.96); }
-.book-view__chip-glyph { font-size: 26px; line-height: 1; }
-.book-view__chip-name {
-  max-width: 100%; overflow: hidden;
-  display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical;
-  font-family: var(--font-ui); font-size: 10.5px; font-weight: 800; line-height: 1.15; text-align: center; color: var(--ink-700);
-  hyphens: auto; -webkit-hyphens: auto;
-}
-.book-view__chip-name.is-long { font-size: 9px; letter-spacing: -0.02em; }
-.book-view__chip-name.is-xlong { font-size: 7.5px; letter-spacing: -0.03em; }
-.book-view__chip.is-hint { box-shadow: inset 0 0 0 2px var(--gold-400), 0 0 16px rgba(239, 193, 99, .6), var(--edge-paper); }
-.book-view__chip.is-new { box-shadow: inset 0 0 0 2px var(--gold-400), var(--edge-paper), var(--shadow-1); animation: book-pop .55s cubic-bezier(.3, 1.5, .55, 1); }
-@keyframes book-pop { 0% { transform: scale(.55); } 100% { transform: scale(1); } }
 .book-view__empty { grid-column: 1 / -1; margin: 8px 0; color: var(--oc-on-bg-faint); font-style: italic; }
 
 @media (prefers-reduced-motion: reduce) {
-  .book-view__pulse, .book-view__hint, .book-view__ribbon.is-ping, .book-view__chip.is-new { animation: none; }
+  .book-view__pulse, .book-view__hint, .book-view__ribbon.is-ping { animation: none; }
 }
 </style>
 

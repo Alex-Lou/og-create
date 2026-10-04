@@ -119,7 +119,7 @@ export default {
     // Page du Livre visée : le serveur dit combien d'ingrédients du mélange sont justes
     aimPage: { type: String, default: null }
   },
-  emits: ['craft-success', 'discovery', 'learned', 'show-alert', 'revealing', 'aimed'],
+  emits: ['craft-success', 'discovery', 'learned', 'show-alert', 'revealing', 'aimed', 'picked'],
   data() {
     return {
       picked: [],
@@ -162,6 +162,13 @@ export default {
     // Le parent peut différer ses propres popups pendant la révélation
     result(value, previous) {
       if (!value !== !previous) this.$emit('revealing', !!value);
+    },
+    // Les tuiles de l'étagère montrent quel élément occupe quel emplacement
+    picked: {
+      handler(list) {
+        this.$emit('picked', [...list]);
+      },
+      deep: true
     },
     slotCount(count, previous) {
       if (this.picked.length > count) this.picked = this.picked.slice(0, count);
