@@ -529,6 +529,69 @@ function paintFar(ctx, u, model, i) {
   return { hotspots: [], label: waiting ? `${queued} dans ce chapitre${count ? `, et ${far}` : ''}.` : `${far} dans ce chapitre.` };
 }
 
+// Table d'un chapitre : 15 pages par feuille (à trouver d'abord, puis inscrites), chacune mène à sa page
+const INDEX_COLS = 3;
+function paintIndex(ctx, u, model, i, assets) {
+  const { chapter, entries, part, parts } = model;
+  const style = CHAPTER_STYLE[chapter.id];
+  frame(ctx, u, style.ink);
+  header(ctx, u, chapter, style, null);
+  setFont(ctx, u, 3.2, 900, TEXT, false, 0.12);
+  ctx.fillStyle = '#8A7262';
+  ctx.textAlign = 'right';
+  ctx.fillText(parts > 1 ? `TABLE ${part}/${parts}` : 'TABLE', 91 * u, 11 * u);
+  if ('letterSpacing' in ctx) ctx.letterSpacing = '0px';
+  const hotspots = [];
+  const cellW = 80 / INDEX_COLS;
+  entries.forEach((entry, k) => {
+    const x = 12 + (k % INDEX_COLS) * cellW;
+    const y = 17 + Math.floor(k / INDEX_COLS) * 21;
+    const cx = x + cellW / 2;
+    const found = entry.page.status === 'found';
+    rr(ctx, (x + 1) * u, y * u, (cellW - 2) * u, 19.5 * u, 3 * u);
+    ctx.fillStyle = found ? alpha(style.color, 0.6) : '#FFFDF8';
+    ctx.fill();
+    ctx.strokeStyle = found ? alpha(style.ink, 0.15) : alpha(style.ink, 0.45);
+    ctx.lineWidth = 0.35 * u;
+    ctx.stroke();
+    ctx.beginPath();
+    ctx.arc(cx * u, (y + 7.6) * u, 5.4 * u, 0, Math.PI * 2);
+    ctx.fillStyle = '#FFFDF8';
+    ctx.fill();
+    if (found) {
+      glyph(ctx, entry.page.emoji, cx * u, (y + 7.6) * u, 7.2 * u, assets.onReady);
+    } else {
+      setFont(ctx, u, 6, 700, TITLE, false);
+      ctx.fillStyle = style.ink;
+      ctx.textAlign = 'center';
+      ctx.fillText('?', cx * u, (y + 9.8) * u);
+    }
+    // Nom inscrit, ou lettres trouvées d'une page à portée (« S _ _ e »)
+    const text = found ? entry.page.name : maskText(entry.page);
+    let size = found ? 3.1 : 3.3;
+    do {
+      setFont(ctx, u, size, found ? 800 : 700, found ? TEXT : TITLE, false);
+      size -= 0.15;
+    } while (size > 2 && ctx.measureText(text).width > (cellW - 4) * u);
+    ctx.fillStyle = found ? '#4A3426' : style.ink;
+    ctx.textAlign = 'center';
+    ctx.fillText(text, cx * u, (y + 17) * u);
+    hotspots.push({
+      id: `idx-${entry.key}`, x: x + 1, y, w: cellW - 2, h: 19.5, action: 'goto', data: entry.index,
+      label: found ? `${entry.page.name}, inscrite` : `Page à trouver, ${entry.page.letters} lettres`
+    });
+  });
+  folio(ctx, u, i);
+  const reach = entries.filter(e => e.page.status !== 'found').length;
+  return { hotspots, label: `Table du chapitre ${chapter.id}${parts > 1 ? `, feuille ${part} sur ${parts}` : ''} : ${reach} page${reach > 1 ? 's' : ''} à trouver, ${entries.length - reach} inscrite${entries.length - reach > 1 ? 's' : ''}.` };
+}
+// Masque d'une page à portée : lettres trouvées, blancs ailleurs
+function maskText(page) {
+  const mask = page.hangman ? page.hangman.mask : [...Array(page.letters)].map((_, k) => (k === 0 && page.first ? page.first : null));
+  // Espace fine au-delà de 6 lettres : le mot tient sur sa case
+  return mask.map(char => (char === ' ' ? '·' : char || '_')).join(mask.length > 6 ? '\u2009' : ' ');
+}
+
 function paintChapter(ctx, u, model, i, assets) {
   const { chapter } = model;
   const style = CHAPTER_STYLE[chapter.id];
@@ -632,7 +695,7 @@ export function paintPage(model, index, ctx, w, h, assets) {
   ctx.save();
   ctx.clearRect(0, 0, w, h);
   paperBase(ctx, w, h, u);
-  const painters = { toc: paintToc, chapter: paintChapter, found: paintFound, reach: paintReach, far: paintFar };
+  const painters = { toc: paintToc, chapter: paintChapter, index: paintIndex, found: paintFound, reach: paintReach, far: paintFar };
   const result = painters[model.type](ctx, u, model, index, assets);
   ctx.restore();
   return result;

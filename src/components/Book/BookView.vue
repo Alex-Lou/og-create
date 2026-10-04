@@ -8,7 +8,7 @@
         class="book-view__chapter"
         :style="chipStyle"
         :aria-label="currentChapter ? `Chapitre ${currentChapter.id}, ${currentChapter.name} : changer de chapitre` : `${BOOK_TITLE} : choisir un chapitre`"
-        @click="showChapters = true"
+        @click="openChapters"
       >
         <span class="book-view__chapter-seal" aria-hidden="true">{{ currentChapter ? currentChapter.id : '◆' }}</span>
         <span class="book-view__chapter-name">{{ currentChapter ? currentChapter.name : BOOK_TITLE }}</span>
@@ -97,7 +97,9 @@
       v-if="showChapters"
       :title="BOOK_TITLE"
       :chapters="chapterState"
+      :pages="sheetPages"
       :current="currentChapter ? currentChapter.id : null"
+      :current-key="currentKey"
       :stars="stars"
       @go="index => { showChapters = false; goTo(index); }"
       @close="showChapters = false"
@@ -139,6 +141,8 @@ import { unlockCinematic } from '@/book/fx';
 const INK_PRICE = 50;
 // Rejouer un pendu perdu sans attendre le lendemain (le serveur fixe le prix : services/bookLetters.js)
 const RETRY_PRICE = 20;
+// Pages par feuille de table de chapitre (grille 3 × 5)
+const INDEX_SIZE = 15;
 const INK_KEY = 'oc_book_ink';
 const HINT_KEY = 'oc_livre_hint';
 
@@ -172,6 +176,8 @@ export default {
       RETRY_PRICE,
       BOOK_TITLE,
       showChapters: false,
+      // Pages de chaque chapitre pour la feuille, figées à son ouverture
+      sheetPages: {},
       pageLabel: BOOK_TITLE,
       stars: 0,
       currentKey: 'toc',
@@ -315,6 +321,13 @@ export default {
         chapterIndex[chapter.id] = models.length;
         models.push({ type: 'chapter', key: `ch-${chapter.id}`, chapter });
         if (!chapter.open) continue;
+        // Table du chapitre, sur autant de feuilles qu'il faut : pages à trouver d'abord, puis inscrites
+        const listed = [...chapter.pages.filter(p => p.status !== 'found'), ...chapter.pages.filter(p => p.status === 'found')];
+        const parts = Math.ceil(listed.length / INDEX_SIZE);
+        for (let part = 0; part < parts; part++) {
+          const entries = listed.slice(part * INDEX_SIZE, (part + 1) * INDEX_SIZE).map(page => ({ key: page.id, page, index: -1 }));
+          models.push({ type: 'index', key: `idx-${chapter.id}-${part + 1}`, chapter, entries, part: part + 1, parts });
+        }
         for (const page of chapter.pages) {
           models.push(page.status === 'found'
             ? { type: 'found', key: page.id, chapter, page }
@@ -322,6 +335,11 @@ export default {
         }
         if (chapter.far || chapter.sealed) models.push({ type: 'far', key: `far-${chapter.id}`, chapter, count: chapter.far, waiting: chapter.sealed || 0 });
       }
+      // Chaque case d'une table connaît la page où elle mène
+      const at = new Map(models.map((model, index) => [model.key, index]));
+      models.forEach(model => {
+        if (model.type === 'index') model.entries.forEach(entry => { entry.index = at.get(entry.key) ?? -1; });
+      });
       return models;
     },
     reachModel(chapter, page) {
@@ -473,6 +491,14 @@ export default {
           if (this.engine && index > 0) await this.engine.go(index);
         }
       }
+    },
+    openChapters() {
+      const pages = {};
+      this.models.forEach(model => {
+        if (model.type === 'index') pages[model.chapter.id] = [...(pages[model.chapter.id] || []), ...model.entries];
+      });
+      this.sheetPages = pages;
+      this.showChapters = true;
     },
     goTo(index) {
       if (this.engine && index >= 0) this.engine.go(index);
