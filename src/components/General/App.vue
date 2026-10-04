@@ -43,6 +43,7 @@
             :discoveredElements="discoveredElements"
             :elementEmojis="elementEmojis"
             :isLoggedIn="isLoggedIn"
+            :categories="categories"
             @coins-updated="handleCoinsUpdated"
             @show-alert="showAlert"
             @login="showSeuil = true"
@@ -71,6 +72,7 @@
             :discoveredElements="discoveredElements"
             :elementEmojis="elementEmojis"
             :freshElement="freshElement"
+            :picked="athanorPicked"
             @selectResource="handleResourceSelection"
             @fuse="$refs.craftZone?.fuse()"
           />
