@@ -72,3 +72,106 @@ export function roundTree(u, v, scale = 1, colors = LEAVES) {
     + foliage(x, y - 34 * s, 12 * s, colors);
 }
 
+
+// Toits et matières alternatifs (skins de la boutique des ateliers)
+export const BLUE_ROOF = { front: '#6FA3D9', back: '#4C7FB5' };
+export const SLATE_ROOF = { front: '#7D8AA0', back: '#5C6880' };
+export const WHITE_STONE = { top: '#FFFFFF', left: '#F4F0E8', right: '#D6CFC2' };
+export const WHITE_WOOD = { top: '#FFFFFF', left: '#F3EFE6', right: '#CFC8BA' };
+export const ROCKS = {
+  'roche-ocre': { top: '#F2CD95', left: '#D9A464', right: '#B07A3F' },
+  'roche-granit': { top: '#D3CBD1', left: '#A99FA8', right: '#7F7584' },
+  'roche-cristal': STONE
+};
+export const FOLIAGE = {
+  printemps: { light: '#D9F2A6', mid: '#A7DB78', dark: '#6FAE4C' },
+  automne: { light: '#FFD27A', mid: '#F2994A', dark: '#C8622A' },
+  givre: { light: '#FFFFFF', mid: '#D8E8F3', dark: '#A6C1D6' }
+};
+export const SAILS = { 'voile-rouge': ['#E2574C', '#B13A31'], 'voile-bleue': ['#6FA3D9', '#4C7FB5'], 'voile-rayee': ['stripes', '#E2574C'] };
+// Toit d'un bâtiment selon son skin (foyer : rouge, bleu, chaume)
+export function roofOf(skin, fallback) {
+  if (skin === 'toit-rouge' || skin === 'toit-rouge-foyer') return { front: '#E06E52', back: '#B9503B' };
+  if (skin === 'toit-bleu' || skin === 'toit-bleu-foyer') return BLUE_ROOF;
+  if (skin === 'toit-chaume' || skin === 'toit-chaume-foyer') return { front: '#EBC46F', back: '#C99A45' };
+  if (skin === 'toit-ardoise') return SLATE_ROOF;
+  return fallback;
+}
+// Fleurs (printemps) ou neige (givre) posées sur un houppier en (x, y) de rayon r
+export function seasonDots(skin, x, y, r) {
+  if (skin === 'printemps') {
+    return [[-0.5, -0.3], [0.3, -0.5], [0.55, 0.1], [-0.1, 0.2], [-0.6, 0.3]].map(([dx, dy]) => `<circle cx="${x + dx * r}" cy="${y + dy * r}" r="${r * 0.13}" fill="#F7A8C8"/><circle cx="${x + dx * r}" cy="${y + dy * r}" r="${r * 0.05}" fill="#FFE07A"/>`).join('');
+  }
+  if (skin === 'givre') return `<path d="M${x - r * 0.8},${y - r * 0.35} Q${x},${y - r * 1.25} ${x + r * 0.8},${y - r * 0.35} Q${x},${y - r * 0.7} ${x - r * 0.8},${y - r * 0.35} Z" fill="#FFFFFF" opacity=".95"/>`;
+  return '';
+}
+// Éclats de cristal (skin « veines de cristal ») sur une roche en (u, v, z)
+export function crystals(u, v, z, s = 1) {
+  const [x, y] = P(u, v, z);
+  return `<path d="M${x - 4 * s},${y} L${x - 2 * s},${y - 9 * s} L${x},${y} Z" fill="#B9A0F0"/><path d="M${x - 2 * s},${y - 9 * s} L${x},${y} L${x - 0.5 * s},${y - 1 * s} Z" fill="#8E73E0"/>`
+    + `<path d="M${x},${y} L${x + 3 * s},${y - 12 * s} L${x + 6 * s},${y} Z" fill="#9FD3F2"/><path d="M${x + 3 * s},${y - 12 * s} L${x + 6 * s},${y} L${x + 4 * s},${y} Z" fill="#6FAED9"/>`;
+}
+// Texture du pan avant d'un toit à deux pans (même géométrie que gable) selon le skin porté :
+// tuiles rondes (rouge), ardoises décalées (bleu, ardoise), brins de chaume. Sans skin : rien (toit d'origine).
+const ROOF_KIND = {
+  'toit-rouge': 'tiles', 'toit-bleu': 'slate', 'toit-bleu-foyer': 'slate', 'toit-ardoise': 'slate',
+  'toit-chaume': 'thatch', 'toit-chaume-foyer': 'thatch'
+};
+export function roofTexture(skin, u0, v0, u1, v1, z, h, o = 0.08) {
+  const kind = ROOF_KIND[skin];
+  if (!kind) return '';
+  const vm = (v0 + v1) / 2;
+  const a = u0 - o;
+  const b = u1 + o;
+  const ve = v1 + o;
+  // Point du pan : u le long du faîtage, k de 0 (faîtage) à 1 (égout)
+  const at = (u, k) => P(u, vm + (ve - vm) * k, z + h * (1 - k)).map(n => Math.round(n * 100) / 100).join(',');
+  const rows = [0.2, 0.4, 0.6, 0.8, 1];
+  let out = '';
+  if (kind === 'tiles') {
+    const n = Math.max(4, Math.round((b - a) / 0.12));
+    const du = (b - a) / n;
+    for (const k of rows) {
+      let d = `M${at(a, k)}`;
+      for (let i = 0; i < n; i++) d += ` Q${at(a + (i + 0.5) * du, k + 0.09)} ${at(a + (i + 1) * du, k)}`;
+      out += `<path d="${d}" fill="none" stroke="rgba(110,35,20,.45)" stroke-width="0.9"/>`
+        + `<polyline points="${at(a, k - 0.06)} ${at(b, k - 0.06)}" stroke="rgba(255,220,200,.25)" stroke-width="0.7"/>`;
+    }
+  } else if (kind === 'slate') {
+    const du = 0.15;
+    rows.forEach((k, r) => {
+      out += `<polyline points="${at(a, k)} ${at(b, k)}" stroke="rgba(25,35,55,.4)" stroke-width="0.8"/>`;
+      for (let u = a + (r % 2 ? du / 2 : du); u < b - 0.02; u += du) out += `<polyline points="${at(u, k - 0.2)} ${at(u, k)}" stroke="rgba(25,35,55,.3)" stroke-width="0.6"/>`;
+      out += `<polyline points="${at(a, k - 0.17)} ${at(b, k - 0.17)}" stroke="rgba(255,255,255,.18)" stroke-width="0.6"/>`;
+    });
+  } else {
+    // Chaume : brins serrés, un peu irréguliers, et frange épaisse à l'égout
+    for (let k = 0.12; k <= 1.01; k += 0.13) {
+      for (let u = a + 0.02; u < b - 0.02; u += 0.055) {
+        const j = Math.sin(u * 91 + k * 37) * 0.012;
+        out += `<polyline points="${at(u + j, k - 0.11)} ${at(u + j + 0.012, k)}" stroke="rgba(150,105,40,.5)" stroke-width="0.6"/>`;
+      }
+    }
+    out += `<polyline points="${at(a, 1.02)} ${at(b, 1.02)}" stroke="#A97B32" stroke-width="2" stroke-dasharray="1.6 1.4"/>`;
+  }
+  return out;
+}
+// Assises de pierre sur la face avant d'un cylindre (puits, bassin) : joints horizontaux et verticaux décalés
+export function stoneCourses(u, v, z0, z1, r, n = 2, color = 'rgba(120,110,95,.4)') {
+  const [x, y] = P(u, v, 0);
+  const rx = r * 45.25;
+  const ry = r * 22.63;
+  const f = k => Math.round(k * 100) / 100;
+  let out = '';
+  for (let i = 0; i <= n; i++) {
+    const z = z0 + ((z1 - z0) * i) / (n + 1);
+    if (i > 0) out += `<path d="M${f(x - rx)},${f(y - z)} A${f(rx)},${f(ry)} 0 0 0 ${f(x + rx)},${f(y - z)}" fill="none" stroke="${color}" stroke-width="0.7"/>`;
+    const top = z0 + ((z1 - z0) * (i + 1)) / (n + 1);
+    for (let a = i % 2 ? 0.35 : 0.7; a < Math.PI - 0.2; a += 0.7) {
+      const px = x + rx * Math.cos(a);
+      const py = y + ry * Math.sin(a);
+      out += `<line x1="${f(px)}" y1="${f(py - z)}" x2="${f(px)}" y2="${f(py - top)}" stroke="${color}" stroke-width="0.6"/>`;
+    }
+  }
+  return out;
+}

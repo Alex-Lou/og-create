@@ -100,6 +100,7 @@
               <button type="button" role="tab" :aria-selected="String(siteTab === 'evolution')" :class="['world__tab', { 'is-on': siteTab === 'evolution' }]" @click="siteTab = 'evolution'">
                 Évolution<span v-if="canBuild(site)" class="world__tab-dot" aria-label="prête"></span>
               </button>
+              <button v-if="site.shop && site.shop.length" type="button" role="tab" :aria-selected="String(siteTab === 'shop')" :class="['world__tab', { 'is-on': siteTab === 'shop' }]" @click="siteTab = 'shop'">Boutique</button>
             </div>
 
             <div v-if="siteTab === 'overview'" class="world__panel">
@@ -108,7 +109,11 @@
               <div v-if="site.produce && site.level" class="world__prod">
                 <div class="world__prod-row">
                   <span>Par heure</span>
-                  <strong>+{{ state.rates.produce * site.level }} {{ GLYPH[site.produce] }} · +{{ state.rates.coins * site.level }} écus</strong>
+                  <strong>+{{ num(perHourOf(site).amount) }} {{ GLYPH[site.produce] }} · +{{ num(perHourOf(site).coins) }} écus</strong>
+                </div>
+                <div v-if="site.bonus" class="world__prod-row">
+                  <span>Bonus de la boutique</span>
+                  <strong>+{{ site.bonus }} % de production</strong>
                 </div>
                 <div class="world__prod-row">
                   <span>Réserve</span>
@@ -123,6 +128,47 @@
               <div v-else-if="!site.level" class="world__sheet-actions">
                 <button type="button" class="world__btn" @click="siteTab = 'evolution'">Voir ce qu’il faut pour bâtir</button>
               </div>
+            </div>
+
+            <!-- Boutique : outils et objets (effets), skins (apparence) ; achat en deux touchers -->
+            <div v-else-if="siteTab === 'shop'" class="world__panel">
+              <p v-if="!site.level" class="world__site-effect">Bâtis d’abord ce bâtiment pour ouvrir sa boutique.</p>
+              <p v-else-if="site.produce" class="world__shop-note">
+                Bonus de production : <strong>+{{ site.bonus || 0 }} %</strong> <span>(jusqu’à +100 %)</span>
+              </p>
+              <section v-for="group in shopGroups(site)" :key="group.kind" class="world__shop-group" :aria-label="group.label">
+                <h3 class="world__shop-title">{{ group.label }}</h3>
+                <ul class="world__cards">
+                  <li
+                    v-for="item in group.items"
+                    :key="item.id"
+                    :class="['world__card', { 'is-owned': item.owned, 'is-worn': site.skin === item.id, 'is-locked': site.level < item.minLevel }]"
+                  >
+                    <span class="world__card-art">
+                      <img :src="itemArt(site, item)" alt="" />
+                      <span v-if="site.skin === item.id" class="world__card-badge">Porté</span>
+                      <span v-else-if="item.owned && item.kind !== 'skin'" class="world__card-badge">✓</span>
+                    </span>
+                    <span class="world__card-name">{{ item.name }}</span>
+                    <span class="world__card-effect">{{ itemNote(site, item) }}</span>
+                    <button
+                      v-if="!item.owned"
+                      type="button"
+                      :class="['world__card-btn', { 'is-confirm': confirming === item.id }]"
+                      :disabled="busy || !canBuy(site, item)"
+                      :aria-label="buyLabel(site, item)"
+                      @click="buyItem(site, item, $event)"
+                    >
+                      <template v-if="confirming === item.id">Confirmer · {{ item.price }}<span class="world__coin world__coin--small" aria-hidden="true"></span></template>
+                      <template v-else-if="lockOf(site, item)">{{ lockOf(site, item) }}</template>
+                      <template v-else>{{ item.price }}<span class="world__coin world__coin--small" aria-hidden="true"></span></template>
+                    </button>
+                    <button v-else-if="item.kind === 'skin' && site.skin !== item.id" type="button" class="world__card-btn world__card-btn--quiet" :disabled="busy" @click="wearSkin(site, item.id)">Porter</button>
+                    <button v-else-if="item.kind === 'skin'" type="button" class="world__card-btn world__card-btn--quiet" :disabled="busy" @click="wearSkin(site, '')">Ôter</button>
+                    <span v-else class="world__card-owned">Sur ton île</span>
+                  </li>
+                </ul>
+              </section>
             </div>
 
             <ol v-else class="world__steps">
@@ -239,7 +285,8 @@ import { burst, ring, vibrate, center, reducedMotion } from '@/utils/fx';
 import * as storage from '@/utils/storage';
 import { GLYPH, LABEL, RESOURCES } from '@/game/resources';
 import { BUILDINGS, NATURE, LIGHTS, SMOKE, flameFrames, boatSprite } from '@/world/sprites';
-import { UPGRADES } from '@/world/buildings2';
+import { UPGRADES, fountainFrames } from '@/world/buildings2';
+import { itemLayers, itemLight, itemThumb } from '@/world/shopSprites';
 import { NATURE2, CRITTERS, PLINTH, SIGN } from '@/world/nature';
 import { drawSprite, spriteUrl } from '@/world/spriteCache';
 import { chapterOfFamily } from '@/book/chapters';
@@ -259,6 +306,13 @@ const UNVEIL_MS = 1600;
 // Un toucher reste un toucher tant que le doigt bouge de moins de 14 px (au-delà : on fait glisser la carte)
 const TAP_SLOP = 14;
 const FLAMES = flameFrames();
+const FOUNTAIN = fountainFrames();
+// Skins du Puits qui coiffent la Fontaine d'un kiosque : son toit cache les jets d'eau
+const KIOSK_SKINS = new Set(['toit-bleu', 'toit-chaume']);
+// Boutique d'un atelier : rubriques dans l'ordre de la fiche
+const SHOP_GROUPS = [['outil', 'Outils'], ['objet', 'Objets'], ['skin', 'Skins']];
+// Achat en deux touchers : le second doit venir dans les 4 s
+const CONFIRM_MS = 4000;
 // Ce qui plie au vent, et de combien
 const SWAY = { bosquet: 0.03, tree: 0.04, palm: 0.05, bush: 0.03, tuft: 0.09, flowers: 0.06, birch: 0.05, apple: 0.03, autumn: 0.035, reeds: 0.08 };
 // Tous les décors naturels (planches 1 et 2), et ce qui pousse où, avec sa fréquence cumulée
@@ -267,6 +321,16 @@ const BEACH_MIX = [['palm', 0.1], ['mossy', 0.15], ['shells', 0.2], ['driftwood'
 const GRASS_MIX = [['tuft', 0.1], ['flowers', 0.16], ['bush', 0.185], ['mushrooms', 0.205], ['stump', 0.22], ['birch', 0.235], ['apple', 0.245], ['autumn', 0.255], ['reeds', 0.265], ['lily', 0.275], ['log', 0.285]];
 // Chaque chantier a ses niveaux : ceux de la planche 1, puis le niveau 2 (prêt pour quand le serveur l'ouvrira)
 const LOOKS = Object.fromEntries(Object.entries(BUILDINGS).map(([id, list]) => [id, UPGRADES[id] ? [...list, UPGRADES[id]] : list]));
+// Dessin d'un bâtiment à un niveau, avec son skin ; withBoat : le voilier du Ponton (voile comprise) dans la même image
+function lookOf(siteId, level, skin, withBoat = false) {
+  const looks = LOOKS[siteId] || [BUILDINGS.chantier[2]];
+  const draw = looks[Math.min(level, looks.length) - 1];
+  if (!withBoat || siteId !== 'ponton') return () => draw(skin || undefined);
+  return () => {
+    const building = draw(skin || undefined);
+    return { box: building.box, svg: building.svg.replace('</svg>', boatSprite(skin || undefined).svg.replace(/^<svg[^>]*>/, '')) };
+  };
+}
 
 // Le Monde : l'île du joueur en isométrique (Canvas 2D), avec une caméra qu'on fait glisser et zoomer.
 // L'état vient du serveur (chantiers, réserves, parties, décorations) ; le dessin, la caméra et la boucle
@@ -279,7 +343,9 @@ export default {
     elementEmojis: { type: Object, required: true },
     isLoggedIn: { type: Boolean, default: false },
     // Familles des éléments connus ({ famille: [noms] }) : teinte des tuiles
-    categories: { type: Object, default: () => ({}) }
+    categories: { type: Object, default: () => ({}) },
+    // Solde d'écus (en-tête) : grise les articles hors de portée ; le serveur reste seul juge
+    coins: { type: Number, default: null }
   },
   emits: ['coins-updated', 'show-alert', 'login'],
   data() {
@@ -297,6 +363,8 @@ export default {
       siteTab: 'overview',
       // Quartier dont la fiche d'achat est ouverte
       zone: null,
+      // Article de la boutique en attente du second toucher (confirmation d'achat)
+      confirming: null,
       query: '',
       menuPos: { x: 0, y: 0 },
       run: null,
@@ -342,6 +410,13 @@ export default {
   watch: {
     isLoggedIn() {
       this.load();
+    },
+    // Changer de fiche ou d'onglet annule un achat en attente de confirmation
+    'site.id'() {
+      this.confirming = null;
+    },
+    siteTab() {
+      this.confirming = null;
     }
   },
   created() {
@@ -388,6 +463,7 @@ export default {
   },
   beforeUnmount() {
     this.gone = true;
+    clearTimeout(this.confirmTimer);
     if (this.ac) this.ac.abort();
     if (this.observer) this.observer.disconnect();
     clearInterval(this.tick);
@@ -848,13 +924,14 @@ export default {
         return;
       }
       const level = Math.min(site.level, looks.length);
-      const key = `${site.id}-${level}`;
-      const make = looks[level - 1];
+      const skin = site.skin || '';
+      const key = `${site.id}-${level}-${skin}`;
+      const make = lookOf(site.id, level, skin);
       if (k < 1) {
         // 1. L'ancien état tremble dans la poussière ; 2. le nouveau bâtiment s'élève depuis le sol ; 3. petit rebond
         const before = raise.from ? Math.min(raise.from, looks.length) : 0;
-        const beforeKey = before ? `${site.id}-${before}` : 'chantier-2';
-        const beforeMake = before ? looks[before - 1] : BUILDINGS.chantier[2];
+        const beforeKey = before ? `${site.id}-${before}-${skin}` : 'chantier-2';
+        const beforeMake = before ? lookOf(site.id, before, skin) : BUILDINGS.chantier[2];
         if (k < 0.35) {
           const shake = Math.sin(now / 28) * 1.6 * (1 - k / 0.35);
           drawSprite(ctx, beforeKey, beforeMake, c.x + shake, c.y, repaint);
@@ -875,8 +952,14 @@ export default {
         this.dust(ctx, c.x, c.y + 6, k);
         return;
       }
+      // Articles de la boutique : ceux de derrière avant le bâtiment, les autres après lui
+      this.drawItems(ctx, site, c, t, repaint, true);
       this.swayed(ctx, key, make, c.x, c.y, (SWAY[site.id] || 0) * this.windAt(t, site.x + site.y), repaint);
-      // Parties vivantes : flamme du feu de camp, voilier bercé au Ponton
+      // Parties vivantes : flamme du feu de camp, jets de la Fontaine, voilier bercé au Ponton
+      if (site.id === 'puits' && level === 2 && !KIOSK_SKINS.has(skin)) {
+        const frame = Math.floor(t * 6) % FOUNTAIN.length;
+        drawSprite(ctx, `fountain-${frame}`, () => FOUNTAIN[frame], c.x, c.y, repaint);
+      }
       if (site.id === 'foyer' && level === 1) {
         const frame = Math.floor(t * 9) % FLAMES.length;
         drawSprite(ctx, `flame-${frame}`, () => FLAMES[frame], c.x, c.y, repaint);
@@ -886,8 +969,18 @@ export default {
         ctx.save();
         ctx.translate(c.x + bx, c.y + by + Math.sin(t * 1.4) * 1.6);
         ctx.rotate(Math.sin(t * 1.1) * 0.035);
-        drawSprite(ctx, 'boat', boatSprite, -bx, -by, repaint);
+        drawSprite(ctx, `boat-${skin}`, () => boatSprite(skin || undefined), -bx, -by, repaint);
         ctx.restore();
+      }
+      this.drawItems(ctx, site, c, t, repaint, false);
+    },
+    // Articles possédés d'un bâtiment (outils et objets, pas les skins), dessinés et animés autour de lui
+    drawItems(ctx, site, c, t, repaint, back) {
+      for (const item of site.shop || []) {
+        if (!item.owned || item.kind === 'skin') continue;
+        for (const layer of itemLayers(item.id, site.level, t)) {
+          if (layer.back === back) drawSprite(ctx, layer.key, layer.make, c.x + layer.offset[0], c.y + layer.offset[1], repaint);
+        }
       }
     },
     drawProp(ctx, prop, t, repaint, now) {
@@ -1047,9 +1140,9 @@ export default {
       ctx.save();
       ctx.globalCompositeOperation = 'lighter';
       for (const site of this.state.sites) {
-        const sets = site.level && LIGHTS[site.id];
-        const lights = sets && sets[Math.min(site.level, sets.length) - 1];
-        if (!lights || this.raises.has(site.id)) continue;
+        if (!site.level || this.raises.has(site.id)) continue;
+        const sets = LIGHTS[site.id];
+        const lights = sets ? sets[Math.min(site.level, sets.length) - 1] || [] : [];
         const c = this.world(site.x + 0.5, site.y + 0.5);
         const fire = site.id === 'foyer' && site.level === 1;
         lights.forEach(([u, v, z, r], i) => {
@@ -1057,6 +1150,12 @@ export default {
           const flicker = fire ? 0.85 + 0.15 * Math.sin(t * 13 + i) * Math.sin(t * 7.3) : 0.95 + 0.05 * Math.sin(t * 2 + i);
           glow(ctx, c.x + lx, c.y + ly, r, (fire ? Math.max(0.3, lit) : lit) * flicker);
         });
+        for (const item of site.shop || []) {
+          const light = item.owned && itemLight(item.id, site.level);
+          if (!light) continue;
+          const [lx, ly] = P(light[0], light[1], light[2]);
+          glow(ctx, c.x + lx, c.y + ly, light[3], lit * (0.9 + 0.1 * Math.sin(t * 3 + light[0])));
+        }
       }
       if (phase.night > 0.35) {
         const strength = (phase.night - 0.35) / 0.65;
@@ -1244,9 +1343,46 @@ export default {
     // Vignette d'un bâtiment (son dessin actuel) pour sa fiche
     artOf(site) {
       if (!site.level) return spriteUrl(`chantier-${this.stageOf(site)}`, BUILDINGS.chantier[this.stageOf(site)]);
-      const looks = LOOKS[site.id] || [BUILDINGS.chantier[2]];
-      const level = Math.min(site.level, looks.length);
-      return spriteUrl(`${site.id}-${level}`, looks[level - 1]);
+      return spriteUrl(`art-${site.id}-${site.level}-${site.skin || ''}`, lookOf(site.id, site.level, site.skin, true));
+    },
+    /* ---------- Boutique d'un atelier ---------- */
+    shopGroups(site) {
+      return SHOP_GROUPS.map(([kind, label]) => ({ kind, label, items: site.shop.filter(item => item.kind === kind) })).filter(group => group.items.length);
+    },
+    // Niveau auquel montrer un article ou un skin : celui du bâtiment, ou celui qu'il demande (le Foyer se voit dès la Cabane)
+    previewLevel(site, item) {
+      const level = Math.max(site.level, item.minLevel, 1);
+      return site.id === 'foyer' && item.kind === 'skin' ? Math.max(level, 2) : level;
+    },
+    itemArt(site, item) {
+      const level = this.previewLevel(site, item);
+      if (item.kind === 'skin') return spriteUrl(`art-${site.id}-${level}-${item.id}`, lookOf(site.id, level, item.id, true));
+      return spriteUrl(`thumb-${item.id}-${level}`, () => itemThumb(item.id, level));
+    },
+    itemNote(site, item) {
+      if (item.kind === 'skin' && site.id === 'foyer' && site.level < 2) return 'Se voit dès la Cabane.';
+      return item.effect;
+    },
+    // Raison pour laquelle un article ne s'achète pas encore (texte du bouton), ou ''
+    lockOf(site, item) {
+      if (!site.level) return 'Bâtis d’abord';
+      if (site.level < item.minLevel) return `Niveau ${item.minLevel} requis`;
+      if (this.coins !== null && this.coins < item.price) return `Il manque ${item.price - this.coins}`;
+      return '';
+    },
+    canBuy(site, item) {
+      return !item.owned && !this.lockOf(site, item);
+    },
+    buyLabel(site, item) {
+      const lock = this.lockOf(site, item);
+      if (lock) return `${item.name} : ${lock}`;
+      return this.confirming === item.id ? `Confirmer l’achat de ${item.name} pour ${item.price} écus` : `Acheter ${item.name} pour ${item.price} écus`;
+    },
+    perHourOf(site) {
+      return site.perHour || { amount: this.state.rates.produce * site.level, coins: this.state.rates.coins * site.level };
+    },
+    num(n) {
+      return Number(n).toLocaleString('fr-FR', { maximumFractionDigits: 1 });
     },
     zoneName(id) {
       return this.state.map.zones.find(z => z.id === id)?.name || '';
@@ -1413,6 +1549,47 @@ export default {
       } finally {
         this.busy = false;
       }
+    },
+    // Achat d'un article : un premier toucher demande confirmation, le second achète
+    async buyItem(site, item, event) {
+      if (this.confirming !== item.id) {
+        this.confirming = item.id;
+        clearTimeout(this.confirmTimer);
+        this.confirmTimer = setTimeout(() => { this.confirming = null; }, CONFIRM_MS);
+        vibrate(6);
+        return;
+      }
+      clearTimeout(this.confirmTimer);
+      this.confirming = null;
+      const from = event && event.currentTarget ? center(event.currentTarget.getBoundingClientRect()) : null;
+      this.busy = true;
+      try {
+        const { bought, coins, world } = await playService.worldItem(item.id);
+        this.apply(world);
+        this.$emit('coins-updated', coins);
+        if (from) {
+          ring(from, 80);
+          burst(from, 18, 60);
+        }
+        vibrate([12, 40, 18]);
+        this.$emit('show-alert', item.kind === 'skin' ? `Skin porté : ${bought}\u00a0!` : `Nouveau sur ton île : ${bought}\u00a0!`);
+      } catch (error) {
+        this.$emit('show-alert', messageOf(error, 'L’achat n’a pas pu se faire.'));
+      } finally {
+        this.busy = false;
+      }
+    },
+    // Skin porté par un bâtiment ('' : apparence d'origine)
+    async wearSkin(site, skin) {
+      this.busy = true;
+      try {
+        this.apply(await playService.worldSkin(site.id, skin));
+        vibrate(8);
+      } catch (error) {
+        this.$emit('show-alert', messageOf(error, 'Le skin n’a pas pu être changé.'));
+      } finally {
+        this.busy = false;
+      }
     }
   }
 };
@@ -1533,6 +1710,41 @@ export default {
 .world__step-name { font-family: var(--font-display); font-weight: 700; font-size: 18px; }
 .world__step-effect { color: var(--ink-500); font-size: 13px; font-weight: 700; }
 .world__step.is-later { opacity: .62; }
+/* Boutique : rubriques, cartes en deux colonnes (vignette, nom, effet, bouton d'achat en deux touchers) */
+.world__shop-note { margin: 0; padding: 8px 12px; border-radius: 12px; background: var(--gold-200); font-weight: 800; font-size: 14px; }
+.world__shop-note span { color: var(--ink-500); font-weight: 700; font-size: 12px; }
+.world__shop-group { display: flex; flex-direction: column; gap: 8px; }
+.world__shop-title { margin: 4px 2px 0; font-family: var(--font-display); font-size: 17px; font-weight: 700; }
+.world__cards { margin: 0; padding: 0; list-style: none; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }
+.world__card {
+  display: flex; flex-direction: column; gap: 4px; min-width: 0;
+  padding: 8px; border-radius: 16px; background: var(--vellum-50);
+  box-shadow: inset 0 0 0 1px rgba(74, 52, 38, .1);
+}
+.world__card.is-worn { box-shadow: inset 0 0 0 2px var(--gold-500); }
+.world__card.is-locked .world__card-art img { filter: grayscale(.7) opacity(.6); }
+.world__card-art {
+  position: relative; display: grid; place-items: center; height: 78px; border-radius: 12px;
+  background: radial-gradient(circle at 50% 72%, #CFE8B8, var(--vellum-200) 72%);
+}
+.world__card-art img { max-width: 92%; max-height: 74px; object-fit: contain; }
+.world__card-badge {
+  position: absolute; top: 6px; right: 6px; padding: 1px 7px; border-radius: 999px;
+  background: #4E8A3A; color: #FFFFFF; font-size: 11px; font-weight: 900;
+}
+.world__card-name { font-weight: 900; font-size: 14px; line-height: 1.2; }
+.world__card-effect { flex: 1; color: var(--ink-500); font-size: 12px; font-weight: 700; line-height: 1.3; }
+.world__card-btn {
+  display: inline-flex; align-items: center; justify-content: center; gap: 5px;
+  min-height: 40px; padding: 6px 10px; border: 0; border-radius: 999px;
+  background: var(--ink-900); color: var(--vellum-50);
+  font-family: var(--font-ui); font-weight: 900; font-size: 14px; cursor: pointer; touch-action: manipulation;
+}
+.world__card-btn:disabled { background: var(--vellum-300); color: var(--ink-500); cursor: default; font-size: 12px; }
+.world__card-btn.is-confirm { background: var(--gold-400); color: var(--ink-900); box-shadow: 0 3px 0 var(--gold-600); }
+.world__card-btn--quiet { background: var(--vellum-200); color: var(--ink-900); }
+.world__card-owned { display: grid; place-items: center; min-height: 40px; color: #4E8A3A; font-size: 13px; font-weight: 900; }
+.world__coin--small { width: 13px; height: 13px; }
 .world__pick-note { margin: 0 0 8px; color: var(--ink-500); font-size: 13px; }
 .world__needs { margin: 0; padding: 0; list-style: none; display: grid; gap: 6px; }
 .world__need { display: flex; align-items: center; gap: 10px; min-height: 44px; padding: 6px 12px; border-radius: 12px; background: var(--vellum-50); box-shadow: inset 0 0 0 1px rgba(74, 52, 38, .08); }
