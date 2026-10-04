@@ -1,53 +1,38 @@
-// Ambiance de l'île : heure du jour, fond de la mer, nuages, nuit (voile, lumières, lucioles). La vie de la mer
-// (reflets, vagues, animaux, mouettes) est dans sea.js.
+// Ambiance de l'île : fond de la mer, nuages, teinte de l'heure, temps qu'il fait (soleil bas, brume, pluie, éclairs,
+// arc-en-ciel), lumières et lucioles. Le ciel lui-même (soleil, météo, couleurs minute par minute) est dans sky.js ;
+// la vie de la mer (reflets, vagues, animaux, mouettes) dans sea.js.
 // Tout est déterministe en fonction du temps : pas d'état, rien à nettoyer.
+import { skyAt, sunTimes, WEATHERS } from './sky';
 
-const lerp = (a, b, k) => a + (b - a) * k;
-const smooth = k => k * k * (3 - 2 * k);
-const ramp = (h, a, b) => smooth(Math.min(1, Math.max(0, (h - a) / (b - a))));
+// Ciel de l'île à une date (voir sky.js) : moment, nuit, chaleur, lumières, teinte, mer, nuages, soleil, météo
+export const phaseAt = (date = new Date(), forced = {}) => skyAt(date, forced);
 
-// Moment de la journée sur l'heure locale : nuit (0 → 1), crépuscule ou aube (teinte chaude 0 → 1), nom affiché
-export function phaseAt(date = new Date()) {
-  const h = date.getHours() + date.getMinutes() / 60;
-  // Nuit pleine de 21 h 30 à 5 h, transitions douces à l'aube et au crépuscule
-  const night = h < 12 ? 1 - ramp(h, 5, 7) : ramp(h, 19.5, 21.5);
-  const warm = Math.max(1 - Math.abs(h - 19.6) / 1.6, 1 - Math.abs(h - 6.4) / 1.2, 0);
-  let id = 'day';
-  if (h >= 5 && h < 8) id = 'dawn';
-  else if (h >= 18 && h < 21) id = 'dusk';
-  else if (h >= 21 || h < 5) id = 'night';
-  return { id, night, warm: smooth(warm), ...PHASES[id] };
-}
-export const PHASES = {
-  dawn: { label: 'Aube', glyph: '🌅' },
-  day: { label: 'Jour', glyph: '☀️' },
-  dusk: { label: 'Crépuscule', glyph: '🌸' },
-  night: { label: 'Nuit', glyph: '🌙' }
-};
-// Moment imposé (essais) : ?heure=nuit|aube|jour|crepuscule
+// Moment ou temps imposés (essais) : ?heure=nuit|aube|matin|jour|couchant|crepuscule et ?meteo=clair|voile|brume|pluie|orage
 export function forcedPhase() {
-  const wanted = new URLSearchParams(window.location.search).get('heure');
-  const hours = { aube: 6.3, jour: 12, crepuscule: 19.4, nuit: 23 };
-  if (!wanted || !(wanted in hours)) return null;
+  const query = new URLSearchParams(window.location.search);
+  const wanted = query.get('heure');
+  const weather = query.get('meteo');
   const d = new Date();
-  d.setHours(Math.floor(hours[wanted]), Math.round((hours[wanted] % 1) * 60), 0, 0);
-  return d;
+  const { rise, set, noon } = sunTimes(d);
+  const hours = { aube: rise - 0.2, matin: rise + 0.6, jour: noon, couchant: set - 0.15, crepuscule: set + 0.45, nuit: 23.5 };
+  const date = wanted in hours ? new Date(d.getFullYear(), d.getMonth(), d.getDate(), 0, Math.round(hours[wanted] * 60)) : null;
+  const forced = weather in WEATHERS ? weather : null;
+  return date || forced ? { date, weather: forced } : null;
 }
 
-// Fond de la mer (écran) : dégradé selon l'heure ; les reflets sont accrochés au monde (sea.js)
+// Fond de la mer (écran) : dégradé selon le ciel (reflets dorés ou roses au lever et au couchant) ; les reflets
+// sont accrochés au monde (sea.js)
 export function drawSea(ctx, w, h, t, phase) {
-  const top = mix('#6CC0E6', '#1D3557', phase.night);
-  const bottom = mix('#3E8DBF', '#13263F', phase.night);
   const g = ctx.createLinearGradient(0, 0, 0, h);
-  // Au crépuscule et à l'aube, le ciel rose se reflète en haut de la mer
-  g.addColorStop(0, phase.warm > 0 ? mix(top, '#E9A6C0', phase.warm * 0.45) : top);
-  g.addColorStop(1, bottom);
+  g.addColorStop(0, phase.sea[0]);
+  g.addColorStop(1, phase.sea[1]);
   ctx.fillStyle = g;
   ctx.fillRect(0, 0, w, h);
-  // La nuit, des étoiles se reflètent dans l'eau
-  if (phase.night > 0.2) {
+  // La nuit, des étoiles se reflètent dans l'eau (pas sous un ciel couvert)
+  const stars = (phase.night - 0.2) * (1 - phase.weather.cover);
+  if (stars > 0) {
     for (let k = 0; k < 40; k++) {
-      const a = (phase.night - 0.2) * (0.5 + 0.5 * Math.sin(t * 2 + k * 3.1));
+      const a = stars * (0.5 + 0.5 * Math.sin(t * 2 + k * 3.1));
       ctx.fillStyle = `rgba(255,248,220,${(a * 0.7).toFixed(3)})`;
       ctx.fillRect(hash(k, 21) * w, hash(k, 29) * h, 1.6, 1.6);
     }
@@ -56,10 +41,14 @@ export function drawSea(ctx, w, h, t, phase) {
 
 // Nuages (monde) : ils traversent l'île avec le vent, haut dans le ciel, et leur ombre glisse sur la mer et le relief.
 // bounds : rectangle du monde de l'île ; de près (échelle s de la caméra), ils s'effacent pour laisser voir l'île
+// Les cinq premiers passent par tous les temps ; les suivants arrivent avec un ciel couvert
 const CLOUDS = [
   { x: 0.08, y: 0.18, s: 2.2, v: 9 }, { x: 0.52, y: 0.38, s: 1.7, v: 12 }, { x: 0.3, y: 0.64, s: 2.6, v: 7 },
-  { x: 0.78, y: 0.82, s: 1.9, v: 10 }, { x: 0.64, y: 0.06, s: 1.6, v: 8 }
+  { x: 0.78, y: 0.82, s: 1.9, v: 10 }, { x: 0.64, y: 0.06, s: 1.6, v: 8 },
+  { x: 0.2, y: 0.45, s: 2.4, v: 8 }, { x: 0.9, y: 0.3, s: 2.1, v: 11 }, { x: 0.45, y: 0.9, s: 2.3, v: 9 },
+  { x: 0.7, y: 0.55, s: 2.6, v: 7 }, { x: 0.02, y: 0.75, s: 2, v: 10 }, { x: 0.38, y: 0.12, s: 2.2, v: 12 }
 ];
+const cloudsOf = phase => CLOUDS.slice(0, 5 + Math.round(phase.weather.cover * 6));
 const CLOUD_ALT = 170;
 function cloudAt(c, bounds, t) {
   const span = bounds.w + 600;
@@ -75,10 +64,12 @@ function blob(ctx, x, y, s) {
   ctx.fill();
 }
 export function drawCloudShadows(ctx, bounds, t, phase) {
-  if (phase.night > 0.6) return;
-  ctx.fillStyle = `rgba(30,50,40,${(0.08 * (1 - phase.night)).toFixed(3)})`;
+  // Sous un ciel couvert la lumière est diffuse : les ombres s'effacent
+  const shade = 0.08 * (1 - phase.night) * (1 - phase.weather.cover * 0.7);
+  if (shade < 0.01) return;
+  ctx.fillStyle = `rgba(30,50,40,${shade.toFixed(3)})`;
   // Ombres projetées vers le bas, à côté de leur nuage (le soleil est haut)
-  for (const c of CLOUDS) {
+  for (const c of cloudsOf(phase)) {
     const p = cloudAt(c, bounds, t);
     blob(ctx, p.x + 40, p.y, c.s * 1.2);
   }
@@ -86,25 +77,101 @@ export function drawCloudShadows(ctx, bounds, t, phase) {
 export function drawClouds(ctx, bounds, t, phase, s) {
   const fade = Math.min(1, Math.max(0, (1.1 - s) / 0.5));
   if (fade <= 0) return;
-  const tone = mix('#FFFFFF', '#8E9AC0', phase.night);
-  ctx.fillStyle = mixWarm(tone, phase.warm * 0.6);
-  ctx.globalAlpha = (0.78 - phase.night * 0.42) * fade;
-  for (const c of CLOUDS) {
+  ctx.fillStyle = phase.cloud;
+  ctx.globalAlpha = (0.78 - phase.night * 0.42) * (0.75 + phase.weather.cover * 0.25) * fade;
+  for (const c of cloudsOf(phase)) {
     const p = cloudAt(c, bounds, t);
     blob(ctx, p.x, p.y - CLOUD_ALT, c.s);
   }
   ctx.globalAlpha = 1;
 }
 
-// Voile de la nuit et teinte du crépuscule, en multiplication sur toute la scène
+// Lumière de l'heure (aube grise ou dorée, midi blanc, couchant orange, crépuscule rosé, nuit bleue), en
+// multiplication sur toute la scène
 export function drawTint(ctx, w, h, phase) {
-  const night = mix('#FFFFFF', '#4A5A9C', phase.night * 0.9);
-  const color = mixWarm(night, phase.warm * 0.45);
-  if (color === '#ffffff') return;
+  if (phase.tint === '#ffffff') return;
   ctx.save();
   ctx.globalCompositeOperation = 'multiply';
-  ctx.fillStyle = color;
+  ctx.fillStyle = phase.tint;
   ctx.fillRect(0, 0, w, h);
+  ctx.restore();
+}
+
+// Temps qu'il fait, par-dessus la scène (écran) : lumière rasante du soleil bas, brume du matin, arc-en-ciel après la
+// pluie, pluie, éclairs d'orage
+export function drawWeather(ctx, w, h, t, phase) {
+  const { weather, sun } = phase;
+  ctx.save();
+  // Soleil bas : une grande lueur chaude venue du côté du soleil (de la droite le matin, de la gauche le soir)
+  const low = sun.up > 0 ? Math.pow(1 - sun.up, 1.6) * (1 - weather.cover) : 0;
+  if (low > 0.02) {
+    const x = w * (0.95 - 0.9 * sun.progress);
+    const r = Math.max(w, h) * 0.95;
+    const g = ctx.createRadialGradient(x, -h * 0.05, 0, x, -h * 0.05, r);
+    const color = sun.progress < 0.5 ? '255,214,150' : '255,158,112';
+    g.addColorStop(0, `rgba(${color},${(0.32 * low).toFixed(3)})`);
+    g.addColorStop(0.55, `rgba(${color},${(0.1 * low).toFixed(3)})`);
+    g.addColorStop(1, `rgba(${color},0)`);
+    ctx.globalCompositeOperation = 'screen';
+    ctx.fillStyle = g;
+    ctx.fillRect(0, 0, w, h);
+    ctx.globalCompositeOperation = 'source-over';
+  }
+  // Brume : un voile laiteux et des bancs clairs qui dérivent lentement
+  if (weather.mist > 0.02) {
+    ctx.fillStyle = `rgba(236,239,243,${(0.3 * weather.mist).toFixed(3)})`;
+    ctx.fillRect(0, 0, w, h);
+    for (let k = 0; k < 4; k++) {
+      const y = h * (0.2 + k * 0.22) + Math.sin(t * 0.07 + k) * 12;
+      const x = ((t * (6 + k * 2) + hash(k, 61) * w) % (w * 1.6)) - w * 0.3;
+      const g = ctx.createRadialGradient(x, y, 0, x, y, w * 0.45);
+      g.addColorStop(0, `rgba(244,246,249,${(0.32 * weather.mist).toFixed(3)})`);
+      g.addColorStop(1, 'rgba(244,246,249,0)');
+      ctx.fillStyle = g;
+      ctx.fillRect(x - w * 0.45, y - w * 0.45, w * 0.9, w * 0.9);
+    }
+  }
+  // Arc-en-ciel, à l'opposé du soleil, juste après une averse
+  if (weather.rainbow > 0.02 && sun.up > 0) {
+    const cx = w * (0.15 + 0.7 * sun.progress);
+    const r = h * 0.85;
+    ['#E2463A', '#F08A3A', '#F2C04B', '#7EC45B', '#5AAED7', '#5C6FC2', '#9C6FD0'].forEach((c, i) => {
+      ctx.strokeStyle = c;
+      ctx.globalAlpha = 0.2 * weather.rainbow;
+      ctx.lineWidth = 7;
+      ctx.beginPath();
+      ctx.arc(cx, h * 1.02, r - i * 7, Math.PI, Math.PI * 2);
+      ctx.stroke();
+    });
+    ctx.globalAlpha = 1;
+  }
+  // Pluie : traits fins qui tombent en biais (un seul tracé)
+  if (weather.rain > 0.02) {
+    const count = Math.round(220 * weather.rain);
+    ctx.strokeStyle = phase.night > 0.5 ? 'rgba(205,218,242,.42)' : 'rgba(168,186,212,.6)';
+    ctx.lineWidth = 1.15;
+    ctx.beginPath();
+    for (let k = 0; k < count; k++) {
+      const speed = 0.9 + hash(k, 3) * 0.5;
+      const y = (((hash(k, 2) + t * speed) % 1) * (h + 40)) - 20;
+      const x = ((hash(k, 1) * (w + 60) + t * 40 + y * 0.25) % (w + 60)) - 30;
+      const len = 9 + hash(k, 4) * 8;
+      ctx.moveTo(x, y);
+      ctx.lineTo(x - len * 0.25, y - len);
+    }
+    ctx.stroke();
+  }
+  // Orage : un éclair de temps en temps (double clignement), toute la scène blanchit un instant
+  if (weather.storm > 0.5) {
+    const period = 9.7;
+    const cycle = Math.floor(t / period);
+    const into = t - cycle * period;
+    if (hash(cycle, 71) > 0.35 && into < 0.45) {
+      const flash = into < 0.12 ? 1 - into / 0.12 : into > 0.22 && into < 0.45 ? 0.7 * (1 - (into - 0.22) / 0.23) : 0;
+      ctx.fillStyle = `rgba(240,244,255,${(0.42 * flash * weather.storm).toFixed(3)})`;
+      ctx.fillRect(0, 0, w, h);
+    }
+  }
   ctx.restore();
 }
 
@@ -133,22 +200,8 @@ export function fireflies(t, n, count = 16) {
   });
 }
 
-/* ---------- Couleurs et hasard déterministe ---------- */
+/* ---------- Hasard déterministe ---------- */
 export function hash(a, b) {
   const s = Math.sin(a * 127.1 + b * 311.7) * 43758.5453;
   return s - Math.floor(s);
-}
-function rgb(hex) {
-  const n = parseInt(hex.slice(1), 16);
-  return [(n >> 16) & 255, (n >> 8) & 255, n & 255];
-}
-function mix(a, b, k) {
-  const [r1, g1, b1] = rgb(a);
-  const [r2, g2, b2] = rgb(b);
-  const c = [lerp(r1, r2, k), lerp(g1, g2, k), lerp(b1, b2, k)].map(v => Math.round(v).toString(16).padStart(2, '0'));
-  return `#${c.join('')}`;
-}
-// Teinte dorée du soir et du matin
-function mixWarm(hex, k) {
-  return k > 0 ? mix(hex, '#FFB27A', k * 0.5) : hex;
 }

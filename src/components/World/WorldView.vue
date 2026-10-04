@@ -2,7 +2,7 @@
   <section class="world" aria-label="Le Monde">
     <header class="world__head">
       <div>
-        <span class="world__eyebrow">Ton île<span v-if="state" class="world__phase" :title="`Sur ton île, c’est le moment : ${phaseLabel}`"> · {{ phaseGlyph }} {{ phaseLabel }}</span></span>
+        <span class="world__eyebrow">Ton île<IslandClock v-if="state && skyClock" v-bind="skyClock" :warping="warping" @warp="toggleWarp" /></span>
         <span class="world__title">Le Monde</span>
       </div>
       <!-- Écus produits par l'île, à récolter (le solde reste dans l'en-tête) -->
@@ -346,6 +346,7 @@ import BrumeWisp from '@/components/ui/BrumeWisp.vue';
 import { familyIndex } from '@/utils/eras';
 import HarvestGame from './HarvestGame.vue';
 import ShopItemSheet from './ShopItemSheet.vue';
+import IslandClock from './IslandClock.vue';
 import { search } from '@/utils/search';
 import { glyph, clearDrawings } from '@/book/painter';
 import { burst, ring, vibrate, center, reducedMotion } from '@/utils/fx';
@@ -371,9 +372,13 @@ import longpress, { HOLD_MS } from '@/directives/longpress';
 import { chapterOfFamily } from '@/book/chapters';
 import { roman } from '@/utils/roman';
 import { P } from '@/world/iso';
-import { phaseAt, forcedPhase, drawSea, drawCloudShadows, drawClouds, drawTint, glow, fireflies, hash } from '@/world/scene';
+import { phaseAt, forcedPhase, drawSea, drawCloudShadows, drawClouds, drawTint, drawWeather, glow, fireflies, hash } from '@/world/scene';
+import { clockText } from '@/world/sky';
 
 const FRAME_MS = 33; // ~30 images/s : l'île respire, sans user la batterie
+// Journée en accéléré (toucher sur l'horloge) : 24 h de l'île en 30 s
+const WARP_MS = 30000;
+const DAY_MS = 86400000;
 const TW = 64; // largeur d'une case à l'échelle 1 (unités du monde)
 const TH = TW / 2;
 const DEPTH = 30;
@@ -414,7 +419,7 @@ let lastView = null;
 // d'animation sont non réactifs et s'arrêtent quand l'onglet est caché ou le composant démonté.
 export default {
   name: 'WorldView',
-  components: { ElementGlyph, ElementTile, HarvestGame, ShopItemSheet, BrumeWisp },
+  components: { ElementGlyph, ElementTile, HarvestGame, ShopItemSheet, BrumeWisp, IslandClock },
   directives: { longpress },
   props: {
     discoveredElements: { type: Array, required: true },
@@ -452,8 +457,9 @@ export default {
       runResult: null,
       runError: '',
       clock: Date.now(),
-      phaseLabel: '',
-      phaseGlyph: '',
+      // Horloge de l'en-tête (heure, moment, temps, soleil) ; journée en accéléré
+      skyClock: null,
+      warping: false,
       // Fiche de Brume (quête active) ouverte
       questOpen: false
     };
@@ -542,7 +548,11 @@ export default {
     this.ferry = null;
     this.holdTimer = 0;
     this.moreRaf = 0;
+    // Heure ou temps imposés (essais), journée jouée en accéléré, ciel de la dernière image
     this.forced = forcedPhase();
+    this.warp = null;
+    this.phase = null;
+    this.clockAt = 0;
     this.ac = null;
     this.observer = null;
     this.loadedAt = Date.now();
@@ -553,6 +563,11 @@ export default {
   async mounted() {
     this.ac = new AbortController();
     document.addEventListener('visibilitychange', () => this.syncLoop(), { signal: this.ac.signal });
+    // Écran qui change de hauteur (rotation, barre du navigateur) : l'île reprend toute la place
+    window.addEventListener('resize', () => {
+      this.setup();
+      this.draw(performance.now());
+    }, { signal: this.ac.signal });
     this.syncPhase();
     this.tick = setInterval(() => {
       this.clock = Date.now();
@@ -653,10 +668,48 @@ export default {
         this.syncLoop();
       });
     },
+    // Date du ciel : imposée (essais), jouée en accéléré (horloge), ou l'heure réelle
+    skyDate(now = performance.now()) {
+      if (this.forced && this.forced.date) return this.forced.date;
+      if (this.warp) {
+        const elapsed = now - this.warp.start;
+        if (elapsed < WARP_MS) return new Date(this.warp.from + elapsed * (DAY_MS / WARP_MS));
+        this.warp = null;
+        this.warping = false;
+      }
+      return new Date();
+    },
+    skyAt(date) {
+      return phaseAt(date, { weather: this.forced ? this.forced.weather : null });
+    },
+    // Horloge de l'en-tête : remise à jour quand la minute, le moment ou le temps changent (10 fois par seconde au plus
+    // pendant l'accéléré)
+    syncClock(phase, date, now) {
+      const time = clockText(date);
+      const clock = this.skyClock;
+      if (clock && clock.time === time && clock.label === phase.label && clock.weather === phase.weather.kind) return;
+      if (this.warp && now - this.clockAt < 100) return;
+      this.clockAt = now;
+      const night = phase.sun.up <= 0;
+      const progress = night ? ((phase.hour - phase.set + 24) % 24) / (24 - (phase.set - phase.rise)) : phase.sun.progress;
+      this.skyClock = { time, label: phase.label, weather: phase.weather.kind, weatherLabel: phase.weather.label, progress, night };
+    },
     syncPhase() {
-      const phase = phaseAt(this.forced || new Date());
-      this.phaseLabel = phase.label;
-      this.phaseGlyph = phase.glyph;
+      const now = performance.now();
+      const date = this.skyDate(now);
+      this.syncClock(this.skyAt(date), date, now);
+    },
+    // Toucher sur l'horloge : la journée entière défile en 30 s, puis l'île revient à l'heure ; un autre toucher l'arrête
+    toggleWarp() {
+      if (this.warp || this.reduced()) {
+        this.warp = null;
+        this.warping = false;
+      } else {
+        this.warp = { start: performance.now(), from: Date.now() };
+        this.warping = true;
+      }
+      this.syncLoop();
+      this.draw(performance.now());
     },
     // Décor naturel, fixe pour une île donnée, selon le sol : arbres des forêts, arbres isolés, rochers, touffes des
     // dunes ; roseaux et nénuphars au bord de l'eau douce ; palmiers et coquillages sur le sable, touffes et fleurs
@@ -823,7 +876,10 @@ export default {
         this.observer.observe(stage);
       }
       const width = stage.clientWidth;
-      const height = Math.round(Math.min(Math.max(width * 1.1, 360), window.innerHeight * 0.62, 640));
+      // Hauteur : tout l'écran sous l'en-tête de l'île, jusqu'à la barre d'onglets (fixe), sans place perdue
+      const bar = document.querySelector('.tabbar');
+      const top = stage.getBoundingClientRect().top + window.scrollY;
+      const height = Math.round(Math.max(360, Math.min(window.innerHeight - top - (bar ? bar.offsetHeight : 64) - 12, 1100)));
       const dpr = Math.min(window.devicePixelRatio || 1, 2);
       canvas.width = Math.round(width * dpr);
       canvas.height = Math.round(height * dpr);
@@ -927,7 +983,10 @@ export default {
       const { width, height, dpr, n } = this.geo;
       const { s } = this.cam;
       const t = this.reduced() ? 0 : now / 1000;
-      const phase = phaseAt(this.forced || new Date());
+      const date = this.skyDate(now);
+      const phase = this.skyAt(date);
+      this.phase = phase;
+      this.syncClock(phase, date, now);
       // Mer, selon l'heure
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
       drawSea(ctx, width, height, t, phase);
@@ -940,7 +999,8 @@ export default {
       const view = { x: tl.x, y: tl.y, w: br.x - tl.x, h: br.y - tl.y };
       // Sous le sol : reflets, vagues qui arrivent derrière l'île, bancs de poissons, puis les eaux peu profondes par-dessus
       // (la terre les recouvre)
-      drawSparkles(ctx, view, t, phase.night, s);
+      // Reflets du soleil sur l'eau : pas la nuit, ni sous un ciel couvert
+      drawSparkles(ctx, view, t, Math.max(phase.night, phase.weather.cover * 0.85), s);
       drawWaves(ctx, this.live.back, view, t, false);
       drawSchools(ctx, schoolFish(this.sea.schools, t), view, phase.night);
       drawShallows(ctx, this.sea.shallow, view, phase.night);
@@ -1073,6 +1133,7 @@ export default {
       drawClouds(ctx, this.terrain.bounds, t, phase, s);
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
       drawTint(ctx, width, height, phase);
+      drawWeather(ctx, width, height, t, phase);
       ctx.setTransform(worldTransform);
       this.drawLights(ctx, t, phase);
       // La nuit, le plancton s'allume dans l'écume et les méduses luisent
@@ -1287,20 +1348,26 @@ export default {
     // Poules autour du Foyer, papillons et abeilles sur les fleurs (le jour), grenouille aux nénuphars, poisson près de la côte.
     critters(t) {
       if (!this.state) return [];
-      const phase = phaseAt(this.forced || new Date());
+      const phase = this.phase || this.skyAt(this.skyDate());
+      const rain = phase.weather.rain;
       const out = [];
       const foyer = this.state.sites.find(s => s.id === 'foyer');
       if (foyer) {
+        // Poules : elles picorent autour du Foyer ; la nuit elles dorment serrées contre lui, sous la pluie elles s'abritent
+        const asleep = phase.night > 0.6;
+        const huddle = asleep || rain > 0.5;
         for (let k = 0; k < 2; k++) {
-          const a = t * 0.22 + k * 2.4;
+          const a = huddle ? k * 2.4 + 0.6 : t * 0.22 + k * 2.4;
           const r = foyer.w / 2;
-          const x = foyer.x + r + Math.cos(a) * (r + 0.55) + Math.sin(t * 0.9 + k) * 0.08;
-          const y = foyer.y + r + Math.sin(a * 1.3) * (r + 0.35);
-          const pecking = Math.sin(t * 0.7 + k * 3) > 0.55;
+          const reach = huddle ? r * 0.6 + 0.3 : r + 0.55;
+          const x = foyer.x + r + Math.cos(a) * reach + (huddle ? 0 : Math.sin(t * 0.9 + k) * 0.08);
+          const y = foyer.y + r + Math.sin(a * 1.3) * (huddle ? reach : r + 0.35);
+          const pecking = !asleep && Math.sin(t * 0.7 + k * 3) > 0.55;
           out.push({ kind: 'chicken', x, y, z: 0, frame: pecking && Math.sin(t * 9) > 0 ? 1 : 0, flip: Math.sin(a) > 0 });
         }
       }
-      if (phase.night < 0.5) {
+      // Papillons et abeilles : de jour, par temps sec
+      if (phase.night < 0.5 && rain < 0.2) {
         const flowers = this.props.filter(p => p.kind === 'flowers' || p.kind === 'bush').slice(0, 4);
         flowers.forEach((p, k) => {
           const a = t * (0.6 + k * 0.1) + k;
@@ -1309,7 +1376,8 @@ export default {
         });
       }
       const pond = this.props.find(p => p.kind === 'lily' || p.kind === 'reeds');
-      if (pond) out.push({ kind: 'frog', x: pond.x + 0.12, y: pond.y + 0.1, z: 0, frame: (t % 4) < 0.35 ? 1 : 0, flip: false });
+      // La grenouille saute plus souvent sous la pluie
+      if (pond) out.push({ kind: 'frog', x: pond.x + 0.12, y: pond.y + 0.1, z: 0, frame: (t % (rain > 0.5 ? 1.6 : 4)) < 0.35 ? 1 : 0, flip: false });
       // Poisson : un saut toutes les 7 s, à un endroit différent du rivage (sardine, daurade) ; le poisson volant plane
       // vers le large
       const cycle = Math.floor(t / 7);
@@ -1582,8 +1650,12 @@ export default {
         ...spread(colony, 2, 3).map((c, k) => ({ id: `${c.x},${c.y}`, x: c.x, y: c.y, count: 2 + (k % 2) }))
       ];
     },
-    // Fumée des cheminées : bouffées qui montent, grossissent, s'effacent et partent avec le vent
+    // Fumée des cheminées : bouffées qui montent, grossissent, s'effacent et partent avec le vent ; plus dense aux heures
+    // des repas (on cuisine), plus courte sous la pluie
     drawSmoke(ctx, t, phase) {
+      const meal = Math.max(...[7.5, 12.5, 19.5].map(h => 1 - Math.abs(phase.hour - h) / 1.2), 0);
+      const thick = 0.55 + 0.45 * meal;
+      const rise = 46 * (1 - phase.weather.rain * 0.35);
       for (const site of this.state.sites) {
         if (!site.level || this.raises.has(site.id)) continue;
         const c = this.centerOf(site);
@@ -1592,9 +1664,9 @@ export default {
           for (let i = 0; i < 4; i++) {
             const k = (t * 0.32 + i / 4 + j * 0.13) % 1;
             const x = c.x + sx + k * 16 + this.windAt(t, i + j) * 4 * k;
-            const y = c.y + sy - k * 46;
+            const y = c.y + sy - k * rise;
             const tone = phase.night > 0.5 ? '170,175,200' : '236,232,224';
-            ctx.fillStyle = `rgba(${tone},${(0.5 * (1 - k)).toFixed(3)})`;
+            ctx.fillStyle = `rgba(${tone},${(0.5 * thick * (1 - k)).toFixed(3)})`;
             ctx.beginPath();
             ctx.arc(x, y, 3.5 + k * 9, 0, Math.PI * 2);
             ctx.fill();
@@ -1602,9 +1674,12 @@ export default {
         });
       }
     },
-    // Lumières : fenêtres et feux s'allument au crépuscule ; lucioles la nuit
+    // Lumières : fenêtres et feux s'allument une à une quand la scène s'assombrit (soir, nuit, gros temps) ; lucioles
+    // la nuit, par temps sec
     drawLights(ctx, t, phase) {
-      const lit = Math.min(1, phase.night * 1.1 + phase.warm * 0.45);
+      const lit = phase.lit;
+      // Chaque fenêtre a son seuil : les lumières s'allument l'une après l'autre
+      const litFor = key => Math.min(1, Math.max(0, (lit - hash(key, 17) * 0.4) / 0.3));
       ctx.save();
       ctx.globalCompositeOperation = 'lighter';
       for (const site of this.state.sites) {
@@ -1616,7 +1691,7 @@ export default {
         lights.forEach(([u, v, z, r], i) => {
           const [lx, ly] = P(u, v, z);
           const flicker = fire ? 0.85 + 0.15 * Math.sin(t * 13 + i) * Math.sin(t * 7.3) : 0.95 + 0.05 * Math.sin(t * 2 + i);
-          glow(ctx, c.x + lx, c.y + ly, r, (fire ? Math.max(0.3, lit) : lit) * flicker);
+          glow(ctx, c.x + lx, c.y + ly, r, (fire ? Math.max(0.3, lit) : litFor(site.x * 7 + site.y + i)) * flicker);
         });
         for (const item of site.shop || []) {
           const light = item.owned && itemLight(item.id, site.level);
@@ -1638,8 +1713,8 @@ export default {
         const c = worldOf(this.ferry.x, this.ferry.y, this.ferry.z);
         glow(ctx, c.x + (this.ferry.flip ? 19 : -19), c.y - 18, 16, lit);
       }
-      if (phase.night > 0.35) {
-        const strength = (phase.night - 0.35) / 0.65;
+      if (phase.night > 0.35 && phase.weather.rain < 0.3) {
+        const strength = ((phase.night - 0.35) / 0.65) * (1 - phase.weather.rain / 0.3);
         for (const fly of fireflies(t, this.state.size)) {
           const p = this.ground(fly.x, fly.y);
           glow(ctx, p.x, p.y - fly.z, 9, strength * fly.a, '255,236,140');
