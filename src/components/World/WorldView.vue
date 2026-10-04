@@ -129,8 +129,8 @@
               </div>
             </div>
 
-            <!-- Boutique : outils et objets (effets), skins (apparence) ; un toucher achète (annulable 4 s), un appui long
-                 montre la fiche de l'article -->
+            <!-- Boutique : outils et objets (effets), skins (apparence), rangés par palier ; un toucher sur le prix achète
+                 (annulable 4 s), un toucher sur le dessin ou un appui long sur le prix ouvre la fiche de l'article -->
             <div v-else-if="siteTab === 'shop'" class="world__panel">
               <p v-if="!site.level" class="world__site-effect">Bâtis d’abord ce bâtiment pour ouvrir sa boutique.</p>
               <p v-else-if="site.produce" class="world__shop-note">
@@ -142,14 +142,17 @@
                   <li
                     v-for="item in group.items"
                     :key="item.id"
-                    :class="['world__card', { 'is-owned': item.owned, 'is-worn': site.skin === item.id, 'is-locked': site.level < item.minLevel }]"
+                    :class="['world__card', { 'is-owned': item.owned, 'is-worn': site.skin === item.id, 'is-locked': !item.owned && site.level < item.minLevel }]"
                   >
-                    <span class="world__card-art">
-                      <img :src="itemArt(site, item)" alt="" />
-                      <span v-if="site.skin === item.id" class="world__card-badge">Porté</span>
-                      <span v-else-if="item.owned && item.kind !== 'skin'" class="world__card-badge">✓</span>
-                    </span>
-                    <span class="world__card-name">{{ item.name }}</span>
+                    <button type="button" class="world__card-open" :aria-label="`Fiche : ${item.name}`" @click="describeItem(site, item)">
+                      <span class="world__card-art">
+                        <img :src="itemArt(site, item)" alt="" />
+                        <span class="world__card-palier" :aria-label="`Palier ${roman(item.minLevel)}`">{{ roman(item.minLevel) }}</span>
+                        <span v-if="site.skin === item.id" class="world__card-badge">Porté</span>
+                        <span v-else-if="item.owned && item.kind !== 'skin'" class="world__card-badge">✓</span>
+                      </span>
+                      <span class="world__card-name">{{ item.name }}</span>
+                    </button>
                     <span class="world__card-effect">{{ itemNote(site, item) }}</span>
                     <button
                       v-if="!item.owned"
@@ -307,6 +310,20 @@
       </transition>
     </teleport>
 
+    <ShopItemSheet
+      v-if="sheetItem"
+      :site="site"
+      :item="sheetItem"
+      :art="itemArt(site, sheetItem)"
+      :lock="lockOf(site, sheetItem)"
+      :busy="busy"
+      :max-moves="state.harvest.maxMoves"
+      :max-charges="state.charges.max"
+      @buy="buyFromSheet"
+      @wear="skin => wearSkin(site, skin)"
+      @close="sheetId = null"
+    />
+
     <HarvestGame
       v-if="run"
       :run="run"
@@ -327,6 +344,7 @@ import ElementTile from '@/components/ui/ElementTile.vue';
 import BrumeWisp from '@/components/ui/BrumeWisp.vue';
 import { familyIndex } from '@/utils/eras';
 import HarvestGame from './HarvestGame.vue';
+import ShopItemSheet from './ShopItemSheet.vue';
 import { search } from '@/utils/search';
 import { glyph, clearDrawings } from '@/book/painter';
 import { burst, ring, vibrate, center, reducedMotion } from '@/utils/fx';
@@ -348,6 +366,7 @@ import { drawBrume, floatOf, BRUME_ALT, BRUME_REACH } from '@/world/brume';
 import { guide } from '@/game/guide';
 import longpress, { HOLD_MS } from '@/directives/longpress';
 import { chapterOfFamily } from '@/book/chapters';
+import { roman } from '@/utils/roman';
 import { P } from '@/world/iso';
 import { phaseAt, forcedPhase, drawSea, drawCloudShadows, drawClouds, drawTint, glow, fireflies, hash } from '@/world/scene';
 
@@ -390,7 +409,7 @@ let lastView = null;
 // d'animation sont non réactifs et s'arrêtent quand l'onglet est caché ou le composant démonté.
 export default {
   name: 'WorldView',
-  components: { ElementGlyph, ElementTile, HarvestGame, BrumeWisp },
+  components: { ElementGlyph, ElementTile, HarvestGame, ShopItemSheet, BrumeWisp },
   directives: { longpress },
   props: {
     discoveredElements: { type: Array, required: true },
@@ -419,6 +438,8 @@ export default {
       zone: null,
       // Dernier achat de la boutique, encore annulable : { id, name }
       undoable: null,
+      // Article de la boutique dont la fiche est ouverte (id, dans la boutique du bâtiment ouvert)
+      sheetId: null,
       query: '',
       menuPos: { x: 0, y: 0 },
       run: null,
@@ -433,6 +454,9 @@ export default {
     };
   },
   computed: {
+    sheetItem() {
+      return this.site && this.sheetId ? this.site.shop.find(item => item.id === this.sheetId) || null : null;
+    },
     // Quête active de Brume (null : toutes faites)
     quest() {
       return this.state && this.state.brume ? this.state.brume.quest : null;
@@ -1593,7 +1617,7 @@ export default {
           const light = item.owned && itemLight(item.id, site.level);
           if (!light) continue;
           const [lx, ly] = P(light[0], light[1], light[2]);
-          glow(ctx, c.x + lx, c.y + ly, light[3], lit * (0.9 + 0.1 * Math.sin(t * 3 + light[0])));
+          glow(ctx, c.x + lx, c.y + ly, light[3], lit * (0.9 + 0.1 * Math.sin(t * 3 + light[0])), light[4]);
         }
       }
       // Lanternes du pont de l'Îlot aux Mouettes, lanterne de la barque du passeur
@@ -1819,8 +1843,11 @@ export default {
       return spriteUrl(`art-${site.id}-${site.level}-${site.skin || ''}`, artMake(site.id, site.level, site.skin));
     },
     /* ---------- Boutique d'un atelier ---------- */
+    roman,
+    // Rubriques de la boutique ; dans chacune, les articles du premier palier au dernier
     shopGroups(site) {
-      return SHOP_GROUPS.map(([kind, label]) => ({ kind, label, items: site.shop.filter(item => item.kind === kind) })).filter(group => group.items.length);
+      const byPalier = (a, b) => a.minLevel - b.minLevel || a.price - b.price;
+      return SHOP_GROUPS.map(([kind, label]) => ({ kind, label, items: site.shop.filter(item => item.kind === kind).sort(byPalier) })).filter(group => group.items.length);
     },
     // Niveau auquel montrer un article ou un skin : celui du bâtiment, ou celui qu'il demande (le toit du Foyer se voit dès l’Abri)
     previewLevel(site, item) {
@@ -1839,7 +1866,7 @@ export default {
     // Raison pour laquelle un article ne s'achète pas encore (texte du bouton), ou ''
     lockOf(site, item) {
       if (!site.level) return 'Bâtis d’abord';
-      if (site.level < item.minLevel) return `Niveau ${item.minLevel} requis`;
+      if (site.level < item.minLevel) return `Palier ${roman(item.minLevel)}`;
       if (this.coins !== null && this.coins < item.price) return `Il manque ${item.price - this.coins}`;
       return '';
     },
@@ -2063,10 +2090,16 @@ export default {
         this.busy = false;
       }
     },
-    // Appui long sur un article : sa fiche (nom, effet, prix)
+    // Fiche d'un article (toucher sur son dessin, appui long sur son prix)
     describeItem(site, item) {
       vibrate(10);
-      this.$emit('show-alert', `${item.name} : ${this.itemNote(site, item)} · ${item.price} écus`);
+      this.sheetId = item.id;
+    },
+    // Achat depuis la fiche : elle se ferme, l'achat reste annulable depuis la boutique
+    buyFromSheet(event) {
+      const item = this.sheetItem;
+      this.sheetId = null;
+      if (item) this.buyItem(this.site, item, event);
     },
     // Skin porté par un bâtiment ('' : apparence d'origine)
     async wearSkin(site, skin) {
@@ -2212,11 +2245,20 @@ export default {
 }
 .world__card.is-worn { box-shadow: inset 0 0 0 2px var(--gold-500); }
 .world__card.is-locked .world__card-art img { filter: grayscale(.7) opacity(.6); }
+.world__card-open {
+  appearance: none; display: flex; flex-direction: column; gap: 4px; padding: 0; border: 0; background: none;
+  color: inherit; font: inherit; text-align: left; cursor: pointer; touch-action: manipulation;
+}
+.world__card-palier {
+  position: absolute; top: 6px; left: 6px; min-width: 24px; padding: 1px 6px; border-radius: 999px;
+  background: var(--ink-900); color: var(--gold-300); font-family: var(--font-display); font-weight: 700; font-size: 12px; text-align: center;
+}
+.world__card.is-locked .world__card-palier { background: var(--vellum-300); color: var(--ink-700); }
 .world__card-art {
   position: relative; display: grid; place-items: center; height: 78px; border-radius: 12px;
   background: radial-gradient(circle at 50% 72%, #CFE8B8, var(--vellum-200) 72%);
 }
-.world__card-art img { max-width: 92%; max-height: 74px; object-fit: contain; }
+.world__card-art img { position: absolute; inset: 0; width: 100%; height: 100%; padding: 6px 10px; box-sizing: border-box; object-fit: contain; }
 .world__card-badge {
   position: absolute; top: 6px; right: 6px; padding: 1px 7px; border-radius: 999px;
   background: #4E8A3A; color: #FFFFFF; font-size: 11px; font-weight: 900;

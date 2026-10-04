@@ -65,10 +65,16 @@ describe('sprites', () => {
 
 // Articles de la boutique vendus par le serveur (outils et objets ; les skins changent le dessin du bâtiment)
 const SHOP_ITEMS = {
-  potager: ['pelle', 'arrosoir', 'poulailler', 'ruche'], carriere: ['pioche', 'wagonnet', 'lanterne-mine', 'rails'],
-  bosquet: ['hache', 'scie', 'nichoir', 'charrette'], puits: ['seau-cuivre', 'poulie', 'abreuvoir', 'pompe'],
-  ponton: ['canne', 'filet', 'casier', 'barque'], atelier: ['etabli', 'enclume', 'soufflet'], foyer: ['cuisine', 'lit', 'chat', 'chien']
+  potager: ['pelle', 'arrosoir', 'poulailler', 'ruche', 'brouette', 'epouvantail', 'citrouille'],
+  carriere: ['pioche', 'wagonnet', 'lanterne-mine', 'rails', 'casque', 'geode', 'golem'],
+  bosquet: ['hache', 'scie', 'nichoir', 'charrette', 'passe-partout', 'ecureuil', 'cerf'],
+  puits: ['seau-cuivre', 'poulie', 'abreuvoir', 'pompe', 'sourcier', 'canards', 'naiade'],
+  ponton: ['canne', 'filet', 'casier', 'barque', 'harpon', 'pelican', 'sirene'],
+  atelier: ['etabli', 'enclume', 'soufflet', 'marteau-pilon', 'automate', 'athanor'],
+  foyer: ['cuisine', 'lit', 'chat', 'chien', 'sablier', 'hibou', 'grimoire']
 };
+// Articles des paliers V à VII (les trois derniers de chaque boutique) : ils ne se montrent qu'aux grandes emprises (3 × 3)
+const LATE_ITEMS = Object.values(SHOP_ITEMS).flatMap(ids => ids.slice(-3));
 const SKINS = {
   foyer: [1, ['toit-rouge', 'toit-bleu-foyer', 'toit-chaume-foyer']], carriere: [0, ['roche-ocre', 'roche-granit', 'roche-cristal']],
   bosquet: [0, ['printemps', 'automne', 'givre']], puits: [0, ['toit-bleu', 'toit-chaume', 'pierre-blanche']],
@@ -80,7 +86,8 @@ describe('boutique des ateliers', () => {
     const ids = Object.values(SHOP_ITEMS).flat();
     expect(Object.keys(SHOP_SPRITES).sort()).toEqual([...ids].sort());
     for (const id of ids) {
-      for (const level of [1, 2, 3]) {
+      for (const level of LATE_ITEMS.includes(id) ? [5, 6, 7] : [1, 2, 3, 4, 7]) {
+        const reach = level >= 4 ? 112 : 80;
         const layers = itemLayers(id, level, 0);
         expect(layers.length).toBeGreaterThan(0);
         for (const layer of layers) {
@@ -89,8 +96,8 @@ describe('boutique des ateliers', () => {
           expect(svg).not.toMatch(/NaN|undefined/);
           // Cadre serré (mémoire) et dans l'emprise du bâtiment
           expect(frame.w * frame.h).toBeLessThanOrEqual(70 * 70);
-          expect(frame.x).toBeGreaterThanOrEqual(-80);
-          expect(frame.x + frame.w).toBeLessThanOrEqual(80);
+          expect(frame.x).toBeGreaterThanOrEqual(-reach);
+          expect(frame.x + frame.w).toBeLessThanOrEqual(reach);
         }
         expect(itemThumb(id, level).svg).not.toMatch(/NaN|undefined/);
       }
@@ -104,11 +111,31 @@ describe('boutique des ateliers', () => {
     expect(new Set(wagon).size).toBeGreaterThan(1);
     expect(itemLayers('barque', 2, 0)[0].back).toBe(true);
   });
-  it('la lanterne, le four et la pièce rougie éclairent la nuit', () => {
-    expect(itemLight('lanterne-mine', 1)).toHaveLength(4);
-    expect(itemLight('cuisine', 2)).toHaveLength(4);
-    expect(itemLight('enclume', 2)).toHaveLength(4);
+  it('la lanterne, le four et la pièce rougie éclairent la nuit, d’une lueur chaude', () => {
+    for (const [id, level] of [['lanterne-mine', 1], ['cuisine', 2], ['enclume', 2]]) {
+      const light = itemLight(id, level);
+      expect(light.slice(0, 4).every(Number.isFinite)).toBe(true);
+      expect(light[4]).toBeUndefined();
+    }
     expect(itemLight('pelle', 1)).toBeNull();
+  });
+  it('les pièces enchantées des paliers VI et VII luisent la nuit, chacune de sa couleur, dans l’emprise 3 × 3', () => {
+    for (const id of ['citrouille', 'geode', 'golem', 'cerf', 'naiade', 'sirene', 'athanor', 'grimoire']) {
+      const [u, v, z, r, color] = itemLight(id, 7);
+      expect(Math.max(Math.abs(u), Math.abs(v))).toBeLessThan(1.5);
+      expect(z).toBeGreaterThan(0);
+      expect(r).toBeGreaterThan(0);
+      if (color !== undefined) expect(color).toMatch(/^\d{1,3},\d{1,3},\d{1,3}$/);
+    }
+    expect(itemLight('golem', 7)[4]).toBe('120,230,255');
+  });
+  it('les nouveaux objets vivent : le grimoire flotte, le marteau-pilon frappe, la cane fait le tour de sa mare', () => {
+    const book = [0, 1, 2].map(t => itemLayers('grimoire', 7, t)[1].offset[1]);
+    expect(new Set(book).size).toBe(3);
+    const hammer = [0, 0.5].map(t => itemLayers('marteau-pilon', 5, t)[0].make().svg);
+    expect(hammer[0]).not.toBe(hammer[1]);
+    const ducks = [0, 2, 4].map(t => itemLayers('canards', 6, t)[0].key);
+    expect(new Set(ducks).size).toBe(3);
   });
   it('chaque skin change le dessin du bâtiment, au niveau 1 comme au niveau 2', () => {
     for (const [site, [first, skins]] of Object.entries(SKINS)) {
