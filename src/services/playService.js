@@ -62,9 +62,13 @@ export default {
   worldRemove(x, y) {
     return http.post('/play/world/remove', { x, y }).then(response => response.data);
   },
-  // { gained, coins, world }
+  // { gained, stock, coins, world }
   worldCollect() {
     return http.post('/play/world/collect').then(response => response.data);
+  },
+  // Quartier de l'île : { bought, coins, world }
+  worldZone(zone) {
+    return http.post('/play/world/zone', { zone }).then(response => response.data);
   },
   // { built, world }
   worldBuild(site) {
