@@ -30,7 +30,7 @@
       <div v-if="state" class="world__hud">
         <ul class="world__stock" aria-label="Réserves">
           <li v-for="r in RESOURCES" :key="r.id" class="world__res" :title="r.label">
-            <span aria-hidden="true">{{ r.glyph }}</span><strong>{{ state.stock[r.id] }}</strong><span class="oc-sr-only">{{ r.label }}</span>
+            <span aria-hidden="true"><ElementGlyph :glyph="r.glyph" /></span><strong>{{ state.stock[r.id] }}</strong><span class="oc-sr-only">{{ r.label }}</span>
           </li>
         </ul>
         <button type="button" class="world__play" :disabled="busy || !state.charges.count" @click="startHarvest">
@@ -136,7 +136,7 @@
               <div v-if="site.produce && site.level" class="world__prod">
                 <div class="world__prod-row">
                   <span>Par heure</span>
-                  <strong>+{{ num(perHourOf(site).amount) }} {{ GLYPH[site.produce] }} · +{{ num(perHourOf(site).coins) }} écus</strong>
+                  <strong>+{{ num(perHourOf(site).amount) }} <ElementGlyph :glyph="GLYPH[site.produce]" /> · +{{ num(perHourOf(site).coins) }} écus</strong>
                 </div>
                 <div v-if="site.bonus" class="world__prod-row">
                   <span>Bonus de la boutique</span>
@@ -148,7 +148,7 @@
                 </div>
                 <div class="world__prod-row is-pending">
                   <span>À récolter</span>
-                  <strong>+{{ site.pending ? site.pending[site.produce] : 0 }} {{ GLYPH[site.produce] }} · +{{ site.pending ? site.pending.coins : 0 }} écus</strong>
+                  <strong>+{{ site.pending ? site.pending[site.produce] : 0 }} <ElementGlyph :glyph="GLYPH[site.produce]" /> · +{{ site.pending ? site.pending.coins : 0 }} écus</strong>
                 </div>
                 <button type="button" class="world__btn" :disabled="busy || !state.pending" @click="collect">Récolter l’île</button>
               </div>
@@ -217,21 +217,21 @@
                   <span class="world__step-effect">{{ step.effect }}</span>
                   <ul v-if="stepState(site, i) !== 'done'" class="world__needs">
                     <li v-if="step.chapter" :class="['world__need', step.chapterOpen ? 'is-ok' : 'is-missing']">
-                      <span class="world__need-glyph" aria-hidden="true">📖</span>
+                      <span class="world__need-glyph" aria-hidden="true"><ElementGlyph glyph="ui:book" /></span>
                       <span>Chapitre <strong>{{ step.chapter }}</strong> du Livre</span>
                       <em>{{ step.chapterOpen ? 'ouvert' : 'encore scellé' }}</em>
                     </li>
                     <li v-if="step.plan" :class="['world__need', step.planOwned ? 'is-ok' : 'is-missing']">
-                      <span class="world__need-glyph" aria-hidden="true"><ElementGlyph :glyph="step.planEmoji || '📜'" /></span>
+                      <span class="world__need-glyph" aria-hidden="true"><ElementGlyph :glyph="step.planEmoji || 'ui:plan'" /></span>
                       <span>Plan : <strong>{{ step.plan }}</strong></span>
                       <em>{{ step.planOwned ? 'trouvé' : 'à découvrir dans le Livre' }}</em>
                     </li>
                     <li v-for="(n, r) in step.cost" :key="r" :class="['world__need', state.stock[r] >= n ? 'is-ok' : 'is-missing']">
-                      <span class="world__need-glyph" aria-hidden="true">{{ GLYPH[r] }}</span>
+                      <span class="world__need-glyph" aria-hidden="true"><ElementGlyph :glyph="GLYPH[r]" /></span>
                       <span><strong>{{ state.stock[r] }}</strong> / {{ n }} {{ LABEL[r] }}</span>
                     </li>
                     <li v-if="step.coins" :class="['world__need', coinsOk(step.coins) ? 'is-ok' : 'is-missing']">
-                      <span class="world__need-glyph" aria-hidden="true">🪙</span>
+                      <span class="world__need-glyph" aria-hidden="true"><ElementGlyph glyph="ui:coin" /></span>
                       <span><strong>{{ step.coins }}</strong> écus</span>
                       <em v-if="!coinsOk(step.coins)">il en manque {{ step.coins - coins }}</em>
                     </li>
@@ -287,7 +287,7 @@
         <div v-if="zone" class="world__sheet-backdrop" @click.self="zone = null">
           <div class="world__sheet" role="dialog" :aria-label="zone.name">
             <div class="world__sheet-head">
-              <span class="world__sheet-title">🗺️ {{ zone.name }}</span>
+              <span class="world__sheet-title"><ElementGlyph glyph="ui:map" /> {{ zone.name }}</span>
               <button type="button" class="world__link" @click="zone = null">Fermer</button>
             </div>
             <p class="world__site-effect">
@@ -295,12 +295,12 @@
             </p>
             <ul class="world__needs">
               <li v-if="zone.chapter" :class="['world__need', zone.open ? 'is-ok' : 'is-missing']">
-                <span class="world__need-glyph" aria-hidden="true">📖</span>
+                <span class="world__need-glyph" aria-hidden="true"><ElementGlyph glyph="ui:book" /></span>
                 <span>Chapitre <strong>{{ zone.chapter }}</strong> du Livre</span>
                 <em>{{ zone.open ? 'ouvert' : 'encore scellé' }}</em>
               </li>
               <li class="world__need">
-                <span class="world__need-glyph" aria-hidden="true">🪙</span>
+                <span class="world__need-glyph" aria-hidden="true"><ElementGlyph glyph="ui:coin" /></span>
                 <span><strong>{{ zone.price }}</strong> écus</span>
               </li>
             </ul>
@@ -1277,7 +1277,7 @@ export default {
       // Les noms des lieux passent par-dessus tout : aucune décoration ne les cache
       if (this.cam.s >= 0.55) this.state.sites.filter(site => !site.locked).forEach(site => this.drawLabel(ctx, site));
       // Bulles de production à toucher, au-dessus de tout
-      this.drawBubbles(ctx, t);
+      this.drawBubbles(ctx, t, repaint);
     },
     // Ce qui se tient derrière une case plus haute : cette case est repeinte par-dessus (le relief cache le pied)
     occlude(ctx, x, y) {
@@ -1442,7 +1442,7 @@ export default {
       }
     },
     // Bulles de production au-dessus des bâtiments : ressource et écus à récolter, d'un toucher
-    drawBubbles(ctx, t) {
+    drawBubbles(ctx, t, repaint) {
       this.bubbles = [];
       for (const site of this.state.sites) {
         const made = site.pending;
@@ -1473,10 +1473,9 @@ export default {
         ctx.lineTo(x, y + h / 2 + 6 * k);
         ctx.lineTo(x + 5 * k, y + h / 2 - 1);
         ctx.fill();
-        ctx.font = `${13 * k}px system-ui, sans-serif`;
+        glyph(ctx, GLYPH[site.produce] || 'ui:spark', x - 11 * k, y + 0.5, 14 * k, repaint);
         ctx.textAlign = 'center';
         ctx.textBaseline = 'middle';
-        ctx.fillText(GLYPH[site.produce] || '✨', x - 11 * k, y + 0.5);
         ctx.font = `900 ${11 * k}px Nunito, system-ui, sans-serif`;
         ctx.fillStyle = '#4A3426';
         ctx.fillText(`+${amount}`, x + 9 * k, y + 0.5);
@@ -2427,7 +2426,7 @@ export default {
         const { gained, stock, coins, world } = await playService.worldCollect();
         this.apply(world);
         this.$emit('coins-updated', coins);
-        const goods = Object.entries(stock || {}).filter(([, n]) => n > 0).map(([r, n]) => `+${n} ${GLYPH[r]}`);
+        const goods = Object.entries(stock || {}).filter(([, n]) => n > 0).map(([r, n]) => `+${n} ${LABEL[r]}`);
         if (gained > 0 || goods.length) {
           if (from) {
             ring(from, 90);

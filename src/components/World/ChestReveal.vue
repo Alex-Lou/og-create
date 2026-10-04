@@ -26,7 +26,10 @@
       </div>
       <div class="chest__prize" role="status">
         <img v-if="art" :src="art" alt="" class="chest__art" />
-        <span v-else-if="chest.prize.kind === 'coins'" class="chest__coin" aria-hidden="true"></span>
+        <span v-else-if="chest.prize.kind === 'coins'" class="chest__icons" aria-hidden="true"><ElementGlyph glyph="ui:coin" /></span>
+        <span v-else-if="chest.prize.kind === 'stock'" class="chest__icons" aria-hidden="true">
+          <ElementGlyph v-for="s in stock" :key="s.label" :glyph="s.glyph" />
+        </span>
         <strong class="chest__name">{{ text }}</strong>
         <span v-if="kindText" class="chest__kind">{{ kindText }}</span>
       </div>
@@ -40,13 +43,14 @@
 
 <script>
 import GModal from '@/components/ui/GModal.vue';
-import { RARITY, prizeText, sourceText } from '@/world/chest';
+import ElementGlyph from '@/components/ui/ElementGlyph.vue';
+import { RARITY, prizeText, sourceText, stockOf } from '@/world/chest';
 
 // Ouverture d'un coffre : il tremble, s'ouvre dans la couleur de sa rareté, puis montre son lot (aperçu du bâtiment
 // pour une teinte ou une pièce rare). Le lot est déjà acquis : la fenêtre ne fait que le montrer.
 export default {
   name: 'ChestReveal',
-  components: { GModal },
+  components: { GModal, ElementGlyph },
   props: {
     chest: { type: Object, required: true },
     // Série du coffre du jour (titre), mot de la bouteille, aperçu du bâtiment paré
@@ -66,6 +70,9 @@ export default {
     },
     text() {
       return prizeText(this.chest.prize);
+    },
+    stock() {
+      return stockOf(this.chest.prize);
     },
     kindText() {
       const { kind } = this.chest.prize;
@@ -100,10 +107,7 @@ export default {
 }
 .chest__prize { display: grid; justify-items: center; gap: 4px; animation: chest-prize .4s 1s cubic-bezier(.3, 1.5, .5, 1) both; }
 .chest__art { width: 120px; height: 120px; object-fit: contain; filter: drop-shadow(0 6px 10px rgba(0, 0, 0, .25)); }
-.chest__coin {
-  width: 44px; height: 44px; border-radius: 50%;
-  background: radial-gradient(circle at 35% 30%, #FFE9A0, #E9B949 55%, #B8862A); box-shadow: inset 0 0 0 3px rgba(138, 98, 26, .5);
-}
+.chest__icons { display: flex; gap: 6px; font-size: 44px; line-height: 1; }
 .chest__name { font-size: 20px; font-weight: 900; color: var(--ink-900); }
 .chest__kind { font-size: 13px; font-weight: 700; color: var(--ink-500); }
 @keyframes chest-shake {

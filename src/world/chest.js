@@ -10,12 +10,17 @@ export const RARITY = {
   legendaire: { label: 'Légendaire', color: '#F2C04B' }
 };
 
-// Ce que contient un coffre, en une ligne : « 25 écus », « 🪵 20 bois · 💧 30 eau », « Teinte Craie », « Papillons »
+// Ce que contient un coffre, en une ligne : « 25 écus », « 20 bois · 30 eau », « Teinte Craie », « Papillons »
 export function prizeText(prize) {
   if (prize.kind === 'coins') return `${prize.amount} écus`;
-  if (prize.kind === 'stock') return Object.entries(prize.stock).map(([r, n]) => `${GLYPH[r]} ${n} ${LABEL[r]}`).join(' · ');
+  if (prize.kind === 'stock') return stockOf(prize).map(s => `${s.n} ${s.label}`).join(' · ');
   if (prize.kind === 'tint') return `Teinte ${prize.name}`;
   return prize.name;
+}
+
+// Ressources d'un lot, avec leur icône : [{ glyph, n, label }]
+export function stockOf(prize) {
+  return Object.entries(prize.stock || {}).map(([r, n]) => ({ glyph: GLYPH[r], n, label: LABEL[r] }));
 }
 
 // D'où vient un coffre (titre de l'ouverture)

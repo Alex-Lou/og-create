@@ -25,7 +25,10 @@
             <span class="chapters__name">{{ chapter.name }}</span>
             <span v-if="chapter.open" class="chapters__bar" aria-hidden="true"><span :style="{ width: `${percent(chapter)}%` }"></span></span>
           </span>
-          <span class="chapters__meta">{{ chapter.open ? `${chapter.found}/${chapter.total}` : `🔒 ${chapter.need}` }}</span>
+          <span class="chapters__meta">
+            <template v-if="chapter.open">{{ chapter.found }}/{{ chapter.total }}</template>
+            <template v-else><ElementGlyph glyph="ui:lock" /> {{ chapter.need }}</template>
+          </span>
           <span v-if="chapter.open" class="chapters__go" aria-hidden="true">›</span>
         </button>
       </li>

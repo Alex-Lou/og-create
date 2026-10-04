@@ -201,7 +201,7 @@ export default {
       this.slotEls[index] = el;
     },
     emojiOf(name) {
-      return this.elementEmojis[name] || '✨';
+      return this.elementEmojis[name] || 'ui:spark';
     },
 
     // Ajoute un élément ; `from` = rectangle de la carte d'origine, pour l'animer jusqu'à son emplacement
