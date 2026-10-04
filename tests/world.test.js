@@ -1,6 +1,7 @@
 import { describe, it, expect } from 'vitest';
 import { P, TW, TH, box, boulder, mixHex } from '@/world/iso';
 import { phaseAt } from '@/world/scene';
+import { sunTimes, weatherAt, clockText } from '@/world/sky';
 import { BUILDINGS, NATURE } from '@/world/sprites';
 import { FUTURE, UPGRADES, fountainFrames, orbSprite } from '@/world/buildings2';
 import { NATURE2, CRITTERS, PLINTH } from '@/world/nature';
@@ -290,17 +291,81 @@ describe('pièces rares (accessoire animé à tous les paliers)', () => {
 });
 
 describe('heure de l’île', () => {
-  it('suit l’heure locale : aube, jour, crépuscule, nuit', () => {
-    expect(at(6).id).toBe('dawn');
-    expect(at(12).id).toBe('day');
-    expect(at(19).id).toBe('dusk');
-    expect(at(23).id).toBe('night');
-    expect(at(2).id).toBe('night');
+  const day = new Date(2026, 9, 4);
+  const { rise, set, noon } = sunTimes(day);
+  const clear = h => phaseAt(new Date(2026, 9, 4, 0, Math.round(h * 60)), { weather: 'clair' });
+  it('le soleil se lève et se couche selon la date (France) : journées longues l’été, courtes l’hiver', () => {
+    expect(rise).toBeLessThan(noon);
+    expect(set).toBeGreaterThan(noon);
+    expect(set - rise).toBeGreaterThan(10.8);
+    expect(set - rise).toBeLessThan(11.6);
+    const june = sunTimes(new Date(2026, 5, 21));
+    const december = sunTimes(new Date(2026, 11, 21));
+    expect(june.set - june.rise).toBeGreaterThan(15.5);
+    expect(december.set - december.rise).toBeLessThan(8.8);
   });
-  it('la nuit monte doucement : nulle le jour, pleine à minuit', () => {
-    expect(at(12).night).toBe(0);
+  it('la journée passe par tous ses moments : nuit, aube, matin, midi, après-midi, couchant, crépuscule', () => {
+    expect(at(2).id).toBe('night');
+    expect(clear(rise - 0.3).id).toBe('dawn');
+    expect(clear(rise + 1).id).toBe('morning');
+    expect(clear(noon).id).toBe('noon');
+    expect(clear(set - 2).id).toBe('afternoon');
+    expect(clear(set - 0.1).id).toBe('sunset');
+    expect(clear(set + 0.6).id).toBe('dusk');
+    expect(at(23, 30).id).toBe('night');
+    expect(clear(set - 0.1).label).toBe('Couchant');
+  });
+  it('la lumière change doucement : midi blanc, couchant orangé, crépuscule rosé, nuit bleue ; les lumières suivent', () => {
+    const noonSky = clear(noon);
+    expect(noonSky.tint).toBe('#ffffff');
+    expect(noonSky.night).toBe(0);
+    expect(noonSky.lit).toBe(0);
+    const sunset = clear(set - 0.1).tint;
+    const [r, g, b] = [1, 3, 5].map(i => parseInt(sunset.slice(i, i + 2), 16));
+    expect(r).toBeGreaterThan(g);
+    expect(g).toBeGreaterThan(b);
+    const dusk = clear(set + 0.4).tint;
+    expect(parseInt(dusk.slice(5, 7), 16)).toBeGreaterThan(parseInt(dusk.slice(3, 5), 16));
     expect(at(0).night).toBe(1);
-    expect(at(20, 30).night).toBeGreaterThan(0);
-    expect(at(20, 30).night).toBeLessThan(1);
+    expect(at(0).lit).toBe(1);
+    // Minute après minute, pas de saut de couleur
+    for (let h = 0; h < 24; h += 1 / 30) {
+      const a = clear(h).tint;
+      const b = clear(h + 1 / 60).tint;
+      [1, 3, 5].forEach(i => expect(Math.abs(parseInt(a.slice(i, i + 2), 16) - parseInt(b.slice(i, i + 2), 16))).toBeLessThan(12));
+    }
+  });
+  it('la météo de l’île : même temps pour une même date, quelques jours de pluie, des transitions douces', () => {
+    const date = new Date(2026, 9, 4, 15, 0);
+    expect(weatherAt(date)).toEqual(weatherAt(new Date(date)));
+    const kinds = {};
+    for (let d = 0; d < 365; d++) {
+      const w = weatherAt(new Date(2026, 0, 1 + d, 15, 0));
+      kinds[w.kind] = (kinds[w.kind] || 0) + 1;
+    }
+    expect(kinds.clair).toBeGreaterThan(90);
+    expect(kinds.pluie).toBeGreaterThan(15);
+    expect(kinds.orage || 0).toBeLessThan(40);
+    for (let m = 0; m < 24 * 60; m += 3) {
+      const a = weatherAt(new Date(2026, 9, 4, 0, m));
+      const b = weatherAt(new Date(2026, 9, 4, 0, m + 1));
+      expect(Math.abs(a.cover - b.cover)).toBeLessThan(0.06);
+      expect(Math.abs(a.rain - b.rain)).toBeLessThan(0.06);
+    }
+    // La brume ne tient que le matin ; un temps imposé reste imposé
+    expect(weatherAt(new Date(2026, 9, 4, 0, Math.round((rise + 0.8) * 60)), 'brume').mist).toBeGreaterThan(0.9);
+    expect(weatherAt(new Date(2026, 9, 4, 17, 0), 'brume').mist).toBe(0);
+    expect(weatherAt(date, 'orage')).toMatchObject({ kind: 'orage', rain: 1, storm: 1 });
+  });
+  it('un ciel couvert grisaille la lumière et allume les fenêtres plus tôt', () => {
+    const grey = phaseAt(new Date(2026, 9, 4, 0, Math.round(noon * 60)), { weather: 'orage' });
+    expect(grey.tint).not.toBe('#ffffff');
+    expect(grey.lit).toBeGreaterThan(0.2);
+    expect(grey.weather.label).toBe('Orage');
+    expect(grey.warm).toBeLessThan(0.1);
+  });
+  it('l’horloge affiche l’heure sur deux chiffres', () => {
+    expect(clockText(new Date(2026, 9, 4, 7, 5))).toBe('07:05');
+    expect(clockText(new Date(2026, 9, 4, 19, 42))).toBe('19:42');
   });
 });
