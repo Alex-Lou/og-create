@@ -94,6 +94,21 @@
       </button>
       <p v-if="!shelf.length" class="book-view__empty">{{ query.trim() ? `Aucun élément ne ressemble à « ${query} ».` : 'Aucun élément dans cette famille.' }}</p>
     </div>
+
+    <HangmanSheet
+      v-if="guess"
+      :page="guess.page"
+      :chapter="guess.chapter"
+      :color="guess.style.color"
+      :ink="guess.style.ink"
+      :is-logged-in="isLoggedIn"
+      :busy="guessBusy"
+      :retry-price="RETRY_PRICE"
+      @guess="onGuess"
+      @retry="onRetry"
+      @craft="onCraft"
+      @close="guess = null"
+    />
   </section>
 </template>
 
@@ -101,15 +116,18 @@
 import { messageOf } from '@/utils/errors';
 import playService from '@/services/playService';
 import ElementGlyph from '@/components/ui/ElementGlyph.vue';
+import HangmanSheet from './HangmanSheet.vue';
 import { search } from '@/utils/search';
 import { familyIndex } from '@/utils/eras';
 import * as storage from '@/utils/storage';
 import { createBook } from '@/book/curlBook';
 import { paintPage, CHAPTER_STYLE } from '@/book/painter';
-import { burst, ring, vibrate, center } from '@/utils/fx';
+import { burst, ring, vibrate, center, HAPTIC } from '@/utils/fx';
 import { unlockCinematic } from '@/book/fx';
 
 const INK_PRICE = 50;
+// Rejouer un pendu perdu sans attendre le lendemain (le serveur fixe le prix : services/bookLetters.js)
+const RETRY_PRICE = 20;
 const INK_KEY = 'oc_book_ink';
 const HINT_KEY = 'oc_livre_hint';
 
@@ -118,7 +136,7 @@ const HINT_KEY = 'oc_livre_hint';
 // interactive (spots), l'en-tête et l'étagère passent par Vue.
 export default {
   name: 'BookView',
-  components: { ElementGlyph },
+  components: { ElementGlyph, HangmanSheet },
   props: {
     discoveredElements: { type: Array, required: true },
     elementEmojis: { type: Object, required: true },
@@ -133,6 +151,10 @@ export default {
   data() {
     return {
       spots: [],
+      // Pendu ouvert : { page, chapter, style } ; une lettre envoyée attend le verdict du serveur
+      guess: null,
+      guessBusy: false,
+      RETRY_PRICE,
       pageLabel: 'Le Livre',
       stars: 0,
       currentKey: 'toc',
@@ -449,6 +471,10 @@ export default {
         this.goTo(Number(spot.data));
         return;
       }
+      if (spot.action === 'guess') {
+        this.openGuess(spot.data);
+        return;
+      }
       if (spot.action !== 'ink') return;
       if (!this.isLoggedIn) {
         this.$emit('show-alert', 'L’Encre demande un compte : tes écus y sont gardés.');
@@ -468,6 +494,63 @@ export default {
       } catch (error) {
         this.$emit('show-alert', messageOf(error, 'L’Encre n’a pas pu être utilisée.'));
       }
+    },
+
+    // ----- Pendu -----
+    openGuess(id) {
+      const model = this.models.find(m => m.type === 'reach' && m.key === id);
+      if (!model || !model.page.hangman) return;
+      this.guess = { page: { ...model.page }, chapter: { id: model.chapter.id, name: model.chapter.name }, style: CHAPTER_STYLE[model.chapter.id] };
+    },
+    // Nouvel état d'un pendu (réponse du serveur) : la page peinte et la feuille ouverte suivent
+    applyHangman(id, hangman) {
+      const page = this.bookData && this.bookData.chapters.flatMap(c => c.pages).find(p => p.id === id);
+      if (!page) return;
+      page.hangman = hangman;
+      this.models = this.buildModels(this.bookData);
+      if (this.engine) this.engine.refresh();
+      if (this.guess && this.guess.page.id === id) this.guess = { ...this.guess, page: { ...page } };
+    },
+    async onGuess(letter) {
+      if (!this.guess || this.guessBusy) return;
+      const id = this.guess.page.id;
+      const before = this.guess.page.hangman;
+      this.guessBusy = true;
+      try {
+        const { hangman } = await playService.letter(id, letter);
+        this.applyHangman(id, hangman);
+        if (hangman.name && !before.name) {
+          vibrate(HAPTIC.discovery);
+          burst({ x: window.innerWidth / 2, y: window.innerHeight * 0.3 }, 22, 150);
+        } else {
+          vibrate(hangman.misses > before.misses ? HAPTIC.fail : HAPTIC.tap);
+        }
+      } catch (error) {
+        // Partie perdue entre-temps : le serveur renvoie l'état à montrer
+        if (error.response?.data?.hangman) this.applyHangman(id, error.response.data.hangman);
+        else this.$emit('show-alert', messageOf(error, 'Cette lettre n’a pas pu être jouée.'));
+      } finally {
+        this.guessBusy = false;
+      }
+    },
+    async onRetry() {
+      if (!this.guess || this.guessBusy) return;
+      const id = this.guess.page.id;
+      this.guessBusy = true;
+      try {
+        const { hangman, coins } = await playService.retryLetters(id);
+        this.applyHangman(id, hangman);
+        this.$emit('coins-updated', coins);
+      } catch (error) {
+        this.$emit('show-alert', messageOf(error, 'Impossible de rejouer pour l’instant.'));
+      } finally {
+        this.guessBusy = false;
+      }
+    },
+    // Nom trouvé : place au mélange, l'étagère montre les éléments de la page
+    onCraft() {
+      this.guess = null;
+      this.filter = 'page';
     }
   }
 };
