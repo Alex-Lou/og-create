@@ -152,7 +152,7 @@ import { familyIndex } from '@/utils/eras';
 import * as storage from '@/utils/storage';
 import { createBook } from '@/book/curlBook';
 import { sideOf } from '@/book/spread';
-import { paintPage, paintEndpaper, CHAPTER_STYLE } from '@/book/painter';
+import { paintPage, paintEndpaper, clearDrawings, CHAPTER_STYLE } from '@/book/painter';
 import { burst, ring, vibrate, center, reducedMotion, HAPTIC } from '@/utils/fx';
 import { unlockCinematic } from '@/book/fx';
 
@@ -169,6 +169,8 @@ const SPREAD_MIN_WIDTH = 700;
 const SPREAD_MIN_HEIGHT = 600;
 // L'ouverture du grimoire ne se joue qu'une fois par visite
 let openedOnce = false;
+// Page où l'on était en quittant le Livre : on la retrouve au retour (la mémoire, elle, est libérée)
+let lastKey = null;
 
 // Le Livre : chapitres et pages du joueur (calculés par le serveur), tournés au doigt en WebGL.
 // Le moteur et les pages peintes ne sont pas réactifs (propriétés d'instance) : seule la couche
@@ -347,6 +349,8 @@ export default {
   },
   beforeUnmount() {
     this.gone = true;
+    lastKey = this.currentKey;
+    clearDrawings();
     if (this.sizeObserver) this.sizeObserver.disconnect();
     if (this.aimedKey) this.$emit('aim', null);
     clearTimeout(this.reloadTimer);
@@ -469,7 +473,8 @@ export default {
         index: this.models.findIndex(m => m.key === `ch-${c.id}`)
       }));
       if (!this.engine) {
-        this.mountEngine();
+        // Retour sur le Livre : la page qu'on lisait (si elle existe encore)
+        this.mountEngine(Math.max(0, lastKey ? this.models.findIndex(m => m.key === lastKey) : 0));
         return;
       }
       // La page courante est retrouvée par son identifiant (des pages peuvent s'insérer avant elle)

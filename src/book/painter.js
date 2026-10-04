@@ -93,6 +93,10 @@ function drawing(src, onReady) {
     .catch(() => {});
   return entry;
 }
+// Sortie du Livre ou de l'île : les dessins chargés sont libérés (ils se rechargeront au besoin)
+export function clearDrawings() {
+  drawings.clear();
+}
 // Dessine le glyphe d'un élément (emoji ou dessin du jeu) centré en (cx, cy) ; aussi utilisé par le Monde
 export function glyph(ctx, emoji, cx, cy, size, onReady, alpha = 1) {
   const src = glyphSrc(emoji);
