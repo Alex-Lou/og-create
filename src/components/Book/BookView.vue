@@ -103,6 +103,7 @@
         :ink="name === pageHint"
         :fertile="unexplored[name] || 0"
         :slot-index="picked.indexOf(name)"
+        v-longpress="event => openInfo(name, event)"
         @click="$emit('select', name, $event.currentTarget.getBoundingClientRect())"
       />
       <p v-if="!shelf.length" class="book-view__empty">{{ query.trim() ? `Aucun élément ne ressemble à « ${query} ».` : 'Aucun élément dans cette famille.' }}</p>
@@ -135,6 +136,19 @@
       @retry="onRetry"
       @close="guess = null"
     />
+    <!-- Fiche d'un élément (appui long sur sa tuile) : famille, chapitre, mélanges qu'il cache encore -->
+    <GModal v-if="info" :eyebrow="info.family || 'Élément'" :title="info.name" align="center" :width="420" @close="info = null">
+      <div class="book-view__info">
+        <span class="book-view__info-glyph"><ElementGlyph :glyph="elementEmojis[info.name] || '❔'" /></span>
+        <p>Chapitre {{ info.chapter }} du Livre</p>
+        <p v-if="info.fertile > 0">Il cache encore <strong>{{ info.fertile }}</strong> mélange{{ info.fertile > 1 ? 's' : '' }} inédit{{ info.fertile > 1 ? 's' : '' }}.</p>
+        <p v-else>Tous ses mélanges sont découverts.</p>
+        <p v-if="info.name === pageHint">L’Encre l’a révélé pour la page ouverte.</p>
+      </div>
+      <template #actions>
+        <button type="button" class="book-view__info-btn" @click="selectInfo">Dans l’Athanor</button>
+      </template>
+    </GModal>
   </section>
 </template>
 
@@ -145,7 +159,7 @@ import ElementTile from '@/components/ui/ElementTile.vue';
 import HangmanSheet from './HangmanSheet.vue';
 import ChapterSheet from './ChapterSheet.vue';
 import GrimoireBinding from './GrimoireBinding.vue';
-import { BOOK_TITLE } from '@/book/chapters';
+import { BOOK_TITLE, chapterOfFamily } from '@/book/chapters';
 import { search } from '@/utils/search';
 import { familyIndex } from '@/utils/eras';
 import * as storage from '@/utils/storage';
@@ -155,6 +169,9 @@ import { paintPage, paintEndpaper, clearDrawings, CHAPTER_STYLE } from '@/book/p
 import { burst, ring, vibrate, center, reducedMotion, HAPTIC } from '@/utils/fx';
 import { unlockCinematic } from '@/book/fx';
 import { guide } from '@/game/guide';
+import GModal from '@/components/ui/GModal.vue';
+import ElementGlyph from '@/components/ui/ElementGlyph.vue';
+import longpress from '@/directives/longpress';
 
 const INK_PRICE = 50;
 // Rejouer un pendu perdu sans attendre le lendemain (le serveur fixe le prix : services/bookLetters.js)
@@ -176,7 +193,8 @@ let lastKey = null;
 // interactive (spots), l'en-tête et l'étagère passent par Vue.
 export default {
   name: 'BookView',
-  components: { ElementTile, HangmanSheet, ChapterSheet, GrimoireBinding },
+  components: { ElementTile, HangmanSheet, ChapterSheet, GrimoireBinding, GModal, ElementGlyph },
+  directives: { longpress },
   props: {
     discoveredElements: { type: Array, required: true },
     elementEmojis: { type: Object, required: true },
@@ -220,6 +238,8 @@ export default {
       // Grimoire : une page à la fois (téléphone), ouverture en cours, pages prêtes, avancée (tranches), éclat des
       // sigles, page visée sur la double page
       single: false,
+      // Fiche d'un élément ouverte par un appui long : { name, family, chapter, fertile, rect }
+      info: null,
       opening: false,
       engineReady: false,
       leaf: 0,
@@ -480,6 +500,18 @@ export default {
       if (index !== this.engine.index) this.engine.jump(index);
       else this.engine.refresh();
       if (previous) this.queueEffects(previous, data, previousKey);
+    },
+    // Appui long sur une tuile : la fiche de l'élément (le toucher, lui, l'envoie dans l'Athanor)
+    openInfo(name, event) {
+      const family = this.familyOf[name] || '';
+      const tile = event.target && event.target.closest ? event.target.closest('.tile') : null;
+      this.info = { name, family: family.replace(/_/g, ' '), chapter: chapterOfFamily(family), fertile: this.unexplored[name] || 0, rect: tile ? tile.getBoundingClientRect() : null };
+      vibrate(10);
+    },
+    selectInfo() {
+      const { name, rect } = this.info;
+      this.info = null;
+      this.$emit('select', name, rect);
     },
     wantsSingle() {
       return !(this.$el.clientWidth >= SPREAD_MIN_WIDTH && window.innerHeight >= SPREAD_MIN_HEIGHT);
@@ -841,6 +873,14 @@ export default {
   display: grid; grid-template-columns: repeat(auto-fill, minmax(62px, 1fr));
   gap: 8px;
   margin-top: 10px; padding: 2px 2px 6px;
+}
+/* Fiche d'un élément */
+.book-view__info { text-align: center; }
+.book-view__info p { margin: 6px 0; }
+.book-view__info-glyph { display: inline-grid; place-items: center; width: 72px; height: 72px; margin-bottom: 6px; border-radius: 50%; background: var(--vellum-200); font-size: 40px; }
+.book-view__info-btn {
+  appearance: none; border: 0; cursor: pointer; min-height: 44px; padding: 8px 22px; border-radius: 999px;
+  background: var(--ink-900); color: var(--vellum-50); font-family: var(--font-ui); font-weight: 900; font-size: 15px;
 }
 .book-view__empty { grid-column: 1 / -1; margin: 8px 0; color: var(--oc-on-bg-faint); font-style: italic; }
 

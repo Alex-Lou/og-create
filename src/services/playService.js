@@ -74,6 +74,10 @@ export default {
   worldItem(item) {
     return http.post('/play/world/item', { item }).then(response => response.data);
   },
+  // Annuler un achat juste après : { undone, coins, world }
+  worldItemUndo(item) {
+    return http.post('/play/world/item/undo', { item }).then(response => response.data);
+  },
   // Skin porté par un bâtiment (vide : apparence d'origine) : vue de l'île
   worldSkin(site, skin) {
     return http.post('/play/world/skin', { site, skin }).then(response => response.data);

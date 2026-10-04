@@ -64,7 +64,7 @@
           <button type="button" class="world__link" @click="moving = null">Annuler</button>
         </p>
 
-        <!-- Décoration touchée : déplacer ou retirer -->
+        <!-- Appui long sur une décoration : déplacer ou retirer -->
         <div v-if="selected && !moving" class="world__menu" :style="menuStyle" role="dialog" :aria-label="`${selected.element}`">
           <span class="world__menu-name">{{ selected.element }}</span>
           <button type="button" class="world__menu-btn" @click="startMove">Déplacer</button>
@@ -129,7 +129,8 @@
               </div>
             </div>
 
-            <!-- Boutique : outils et objets (effets), skins (apparence) ; achat en deux touchers -->
+            <!-- Boutique : outils et objets (effets), skins (apparence) ; un toucher achète (annulable 4 s), un appui long
+                 montre la fiche de l'article -->
             <div v-else-if="siteTab === 'shop'" class="world__panel">
               <p v-if="!site.level" class="world__site-effect">Bâtis d’abord ce bâtiment pour ouvrir sa boutique.</p>
               <p v-else-if="site.produce" class="world__shop-note">
@@ -152,14 +153,14 @@
                     <span class="world__card-effect">{{ itemNote(site, item) }}</span>
                     <button
                       v-if="!item.owned"
+                      v-longpress="() => describeItem(site, item)"
                       type="button"
-                      :class="['world__card-btn', { 'is-confirm': confirming === item.id }]"
+                      class="world__card-btn"
                       :disabled="busy || !canBuy(site, item)"
                       :aria-label="buyLabel(site, item)"
                       @click="buyItem(site, item, $event)"
                     >
-                      <template v-if="confirming === item.id">Confirmer · {{ item.price }}<span class="world__coin world__coin--small" aria-hidden="true"></span></template>
-                      <template v-else-if="lockOf(site, item)">{{ lockOf(site, item) }}</template>
+                      <template v-if="lockOf(site, item)">{{ lockOf(site, item) }}</template>
                       <template v-else>{{ item.price }}<span class="world__coin world__coin--small" aria-hidden="true"></span></template>
                     </button>
                     <button v-else-if="item.kind === 'skin' && site.skin !== item.id" type="button" class="world__card-btn world__card-btn--quiet" :disabled="busy" @click="wearSkin(site, item.id)">Porter</button>
@@ -168,6 +169,12 @@
                   </li>
                 </ul>
               </section>
+              <transition name="world-undo">
+                <div v-if="undoable" class="world__undo" role="status">
+                  <span>{{ undoable.name }} : acheté</span>
+                  <button type="button" class="world__undo-btn" :disabled="busy" @click="undoItem">Annuler</button>
+                </div>
+              </transition>
             </div>
 
             <ol v-else class="world__steps">
@@ -337,6 +344,7 @@ import {
 import { SEA_SPRITES, FISH_SPECIES } from '@/world/seaSprites';
 import { drawBrume, floatOf, BRUME_ALT, BRUME_REACH } from '@/world/brume';
 import { guide } from '@/game/guide';
+import longpress, { HOLD_MS } from '@/directives/longpress';
 import { chapterOfFamily } from '@/book/chapters';
 import { P } from '@/world/iso';
 import { phaseAt, forcedPhase, drawSea, drawCloudShadows, drawClouds, drawTint, glow, fireflies, hash } from '@/world/scene';
@@ -359,8 +367,8 @@ const UNVEIL_MS = 1600;
 const TAP_SLOP = 14;
 // Boutique d'un atelier : rubriques dans l'ordre de la fiche
 const SHOP_GROUPS = [['outil', 'Outils'], ['objet', 'Objets'], ['skin', 'Skins']];
-// Achat en deux touchers : le second doit venir dans les 4 s
-const CONFIRM_MS = 4000;
+// Achat en un toucher : « Annuler » reste proposé 4 s (le serveur accepte l'annulation un peu plus longtemps)
+const UNDO_MS = 4000;
 // Ce qui plie au vent, et de combien
 const SWAY = { tree: 0.04, palm: 0.05, bush: 0.03, tuft: 0.09, flowers: 0.06, birch: 0.05, apple: 0.03, autumn: 0.035, reeds: 0.08 };
 // Tous les décors naturels (planches 1 et 2), et ce qui pousse où, avec sa fréquence cumulée
@@ -381,6 +389,7 @@ let lastView = null;
 export default {
   name: 'WorldView',
   components: { ElementGlyph, ElementTile, HarvestGame, BrumeWisp },
+  directives: { longpress },
   props: {
     discoveredElements: { type: Array, required: true },
     elementEmojis: { type: Object, required: true },
@@ -406,8 +415,8 @@ export default {
       siteTab: 'overview',
       // Quartier dont la fiche d'achat est ouverte
       zone: null,
-      // Article de la boutique en attente du second toucher (confirmation d'achat)
-      confirming: null,
+      // Dernier achat de la boutique, encore annulable : { id, name }
+      undoable: null,
       query: '',
       menuPos: { x: 0, y: 0 },
       run: null,
@@ -459,12 +468,12 @@ export default {
     isLoggedIn() {
       this.load();
     },
-    // Changer de fiche ou d'onglet annule un achat en attente de confirmation
+    // Changer de fiche ou d'onglet retire le bandeau d'annulation
     'site.id'() {
-      this.confirming = null;
+      this.undoable = null;
     },
     siteTab() {
-      this.confirming = null;
+      this.undoable = null;
     }
   },
   created() {
@@ -497,8 +506,9 @@ export default {
     this.passages = {};
     this.scared = new Map();
     this.seaHits = [];
-    // Brume dans la dernière image (pour le toucher)
+    // Brume dans la dernière image (pour le toucher) ; appui long en cours sur l'île
     this.brumeHit = null;
+    this.holdTimer = 0;
     this.moreRaf = 0;
     this.forced = forcedPhase();
     this.ac = null;
@@ -522,7 +532,8 @@ export default {
   },
   beforeUnmount() {
     this.gone = true;
-    clearTimeout(this.confirmTimer);
+    clearTimeout(this.undoTimer);
+    clearTimeout(this.holdTimer);
     if (this.ac) this.ac.abort();
     if (this.observer) this.observer.disconnect();
     clearInterval(this.tick);
@@ -1423,6 +1434,17 @@ export default {
       this.clampCam();
       this.draw(performance.now());
     },
+    // Un toucher sur Brume : réclamer si la récompense attend, sinon mener vers l'objectif ou lancer la Récolte ; sans
+    // action possible, sa fiche (l'appui long l'ouvre toujours)
+    questAct() {
+      const quest = this.quest;
+      if (quest && quest.done) this.claimQuest();
+      else if (quest && quest.target) {
+        this.showQuestTarget();
+        this.$emit('show-alert', `Brume : ${quest.label}.`);
+      } else if (quest && quest.kind === 'runs' && this.state.charges.count) this.questHarvest();
+      else this.questOpen = true;
+    },
     // La quête demande une Récolte : la fiche se ferme, la Récolte commence
     questHarvest() {
       this.questOpen = false;
@@ -1578,8 +1600,23 @@ export default {
       if (!this.state) return;
       this.$refs.canvas.setPointerCapture(event.pointerId);
       this.pointers.set(event.pointerId, this.point(event));
-      if (this.pointers.size === 1) this.gesture = { start: this.point(event), moved: 0, at: performance.now() };
-      else this.gesture = { pinch: this.pinchOf(), moved: Infinity };
+      clearTimeout(this.holdTimer);
+      if (this.pointers.size === 1) {
+        this.gesture = { start: this.point(event), moved: 0, at: performance.now() };
+        this.holdTimer = setTimeout(() => this.onHold(), HOLD_MS);
+      } else this.gesture = { pinch: this.pinchOf(), moved: Infinity };
+    },
+    // Appui long sans bouger : la fiche de Brume, le menu d'une décoration ; ailleurs, le toucher garde son action
+    onHold() {
+      const gesture = this.gesture;
+      if (!gesture || !gesture.start || gesture.moved > TAP_SLOP || this.moving || this.busy) return;
+      const hit = this.hitAt(gesture.start.x, gesture.start.y);
+      if (hit && hit.brume) this.questOpen = true;
+      else if (hit && hit.tile) this.openTileMenu(hit.tile);
+      else return;
+      gesture.held = true;
+      vibrate(12);
+      this.draw(performance.now());
     },
     pinchOf() {
       const [a, b] = [...this.pointers.values()];
@@ -1603,6 +1640,7 @@ export default {
       }
       this.gesture.moved = Math.max(this.gesture.moved, Math.hypot(p.x - this.gesture.start.x, p.y - this.gesture.start.y));
       if (this.gesture.moved > TAP_SLOP) {
+        clearTimeout(this.holdTimer);
         this.selected = null;
         this.cam.x -= (p.x - prev.x) / this.cam.s;
         this.cam.y -= (p.y - prev.y) / this.cam.s;
@@ -1611,10 +1649,12 @@ export default {
       }
     },
     onCancel(event) {
+      clearTimeout(this.holdTimer);
       this.pointers.delete(event.pointerId);
       if (!this.pointers.size) this.gesture = null;
     },
     onUp(event) {
+      clearTimeout(this.holdTimer);
       const gesture = this.gesture;
       const p = this.point(event);
       this.pointers.delete(event.pointerId);
@@ -1625,7 +1665,7 @@ export default {
         return;
       }
       this.gesture = null;
-      if (!gesture || gesture.moved > TAP_SLOP || this.busy) return;
+      if (!gesture || gesture.held || gesture.moved > TAP_SLOP || this.busy) return;
       this.tap(p.x, p.y);
     },
     onWheel(event) {
@@ -1681,7 +1721,7 @@ export default {
         this.collect(this.canvasPoint(sp.x, sp.y));
         vibrate(8);
       } else if (hit.brume) {
-        this.questOpen = true;
+        this.questAct();
         vibrate(6);
       } else if (hit.animal) {
         this.scare(hit.animal);
@@ -1698,10 +1738,8 @@ export default {
         }
         vibrate(6);
       } else if (hit.tile) {
-        const c = this.ground(hit.tile.x, hit.tile.y);
-        const sp = this.toScreen(c.x, c.y);
-        this.menuPos = { x: Math.max(80, Math.min(this.geo.width - 80, sp.x)), y: Math.max(8, sp.y - TW * this.cam.s * 1.05) };
-        this.selected = hit.tile;
+        // Un toucher soulève la décoration : un toucher sur une case libre la pose (appui long : son menu)
+        this.moving = hit.tile.element;
         vibrate(6);
       } else {
         this.query = '';
@@ -1750,7 +1788,7 @@ export default {
     buyLabel(site, item) {
       const lock = this.lockOf(site, item);
       if (lock) return `${item.name} : ${lock}`;
-      return this.confirming === item.id ? `Confirmer l’achat de ${item.name} pour ${item.price} écus` : `Acheter ${item.name} pour ${item.price} écus`;
+      return `Acheter ${item.name} pour ${item.price} écus (appui long : sa fiche)`;
     },
     perHourOf(site) {
       return site.perHour || { amount: this.state.rates.produce * site.level, coins: this.state.rates.coins * site.level };
@@ -1851,6 +1889,13 @@ export default {
         this.busy = false;
       }
     },
+    // Menu d'une décoration (appui long) : déplacer, retirer
+    openTileMenu(tile) {
+      const c = this.ground(tile.x, tile.y);
+      const sp = this.toScreen(c.x, c.y);
+      this.menuPos = { x: Math.max(80, Math.min(this.geo.width - 80, sp.x)), y: Math.max(8, sp.y - TW * this.cam.s * 1.05) };
+      this.selected = tile;
+    },
     startMove() {
       this.moving = this.selected.element;
       this.selected = null;
@@ -1916,17 +1961,8 @@ export default {
         this.busy = false;
       }
     },
-    // Achat d'un article : un premier toucher demande confirmation, le second achète
+    // Achat d'un article en un toucher ; « Annuler » reste proposé UNDO_MS
     async buyItem(site, item, event) {
-      if (this.confirming !== item.id) {
-        this.confirming = item.id;
-        clearTimeout(this.confirmTimer);
-        this.confirmTimer = setTimeout(() => { this.confirming = null; }, CONFIRM_MS);
-        vibrate(6);
-        return;
-      }
-      clearTimeout(this.confirmTimer);
-      this.confirming = null;
       const from = event && event.currentTarget ? center(event.currentTarget.getBoundingClientRect()) : null;
       this.busy = true;
       try {
@@ -1939,11 +1975,37 @@ export default {
         }
         vibrate([12, 40, 18]);
         this.$emit('show-alert', item.kind === 'skin' ? `Skin porté : ${bought}\u00a0!` : `Nouveau sur ton île : ${bought}\u00a0!`);
+        clearTimeout(this.undoTimer);
+        this.undoable = { id: item.id, name: bought };
+        this.undoTimer = setTimeout(() => { this.undoable = null; }, UNDO_MS);
       } catch (error) {
         this.$emit('show-alert', messageOf(error, 'L’achat n’a pas pu se faire.'));
       } finally {
         this.busy = false;
       }
+    },
+    // « Annuler » juste après un achat : l'article est rendu, ses écus remboursés par le serveur
+    async undoItem() {
+      const item = this.undoable;
+      if (!item || this.busy) return;
+      clearTimeout(this.undoTimer);
+      this.undoable = null;
+      this.busy = true;
+      try {
+        const { undone, coins, world } = await playService.worldItemUndo(item.id);
+        this.apply(world);
+        this.$emit('coins-updated', coins);
+        this.$emit('show-alert', `Achat annulé : ${undone}.`);
+      } catch (error) {
+        this.$emit('show-alert', messageOf(error, 'L’achat n’a pas pu être annulé.'));
+      } finally {
+        this.busy = false;
+      }
+    },
+    // Appui long sur un article : sa fiche (nom, effet, prix)
+    describeItem(site, item) {
+      vibrate(10);
+      this.$emit('show-alert', `${item.name} : ${this.itemNote(site, item)} · ${item.price} écus`);
     },
     // Skin porté par un bâtiment ('' : apparence d'origine)
     async wearSkin(site, skin) {
@@ -2107,7 +2169,16 @@ export default {
   font-family: var(--font-ui); font-weight: 900; font-size: 14px; cursor: pointer; touch-action: manipulation;
 }
 .world__card-btn:disabled { background: var(--vellum-300); color: var(--ink-500); cursor: default; font-size: 12px; }
-.world__card-btn.is-confirm { background: var(--gold-400); color: var(--ink-900); box-shadow: 0 3px 0 var(--gold-600); }
+/* Bandeau d'annulation d'un achat (4 s) */
+.world__undo {
+  position: sticky; bottom: 0; margin-top: 10px; padding: 8px 8px 8px 14px; border-radius: 999px;
+  display: flex; align-items: center; justify-content: space-between; gap: 10px;
+  background: var(--ink-900); color: var(--vellum-50); font-weight: 800;
+  box-shadow: 0 6px 18px rgba(40, 28, 18, .3);
+}
+.world__undo-btn { appearance: none; border: 0; cursor: pointer; min-height: 34px; padding: 4px 14px; border-radius: 999px; background: var(--gold-400); color: var(--ink-900); font-weight: 900; }
+.world-undo-enter-active, .world-undo-leave-active { transition: opacity .2s ease, transform .2s ease; }
+.world-undo-enter-from, .world-undo-leave-to { opacity: 0; transform: translateY(8px); }
 .world__card-btn--quiet { background: var(--vellum-200); color: var(--ink-900); }
 .world__card-owned { display: grid; place-items: center; min-height: 40px; color: #4E8A3A; font-size: 13px; font-weight: 900; }
 .world__coin--small { width: 13px; height: 13px; }
