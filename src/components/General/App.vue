@@ -56,6 +56,8 @@
             :isLoggedIn="isLoggedIn"
             :freshElement="freshElement"
             :categories="categories"
+            :unexplored="unexploredCounts"
+            :picked="athanorPicked"
             :revealing="isRevealing"
             @select="handleResourceSelection"
             @coins-updated="handleCoinsUpdated"
@@ -95,6 +97,7 @@
             @discovery="handleDiscovery"
             @show-alert="showAlert"
             @revealing="isRevealing = $event"
+            @picked="athanorPicked = $event"
           />
         </div>
       </main>
@@ -254,6 +257,8 @@ export default {
       familyTotals: {},
       // Recettes encore inexplorées par élément du carnet (calculées par le serveur)
       unexploredCounts: {},
+      // Éléments posés dans l'Athanor, dans l'ordre des emplacements
+      athanorPicked: [],
       discoveredElements: [...BASE_ELEMENTS],
       // Dernier chargement du carnet, et éléments appris pendant un chargement en cours
       stateLoadedAt: 0,

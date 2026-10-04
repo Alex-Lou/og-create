@@ -5,16 +5,10 @@ import { aimNote } from './aim';
 import { glyphSrc } from '@/utils/glyph';
 import { roman } from '@/utils/roman';
 import { shownPatches, PATCHES } from './patchwork';
+import { CHAPTER_STYLE } from './chapters';
 
-export const CHAPTER_STYLE = {
-  I: { color: '#CFE6F5', ink: '#2F6286', wax: '#5B8DB8' },
-  II: { color: '#F2DDB0', ink: '#86591C', wax: '#B8792F' },
-  III: { color: '#DCD3F2', ink: '#5A4A8C', wax: '#7D6BB5' },
-  IV: { color: '#D3E8C8', ink: '#3E6B2E', wax: '#5E9446' },
-  V: { color: '#F6D5C3', ink: '#9A4B2A', wax: '#C46E45' },
-  VI: { color: '#D2DCE4', ink: '#3E5568', wax: '#62788C' },
-  VII: { color: '#F1D3D8', ink: '#8C3D52', wax: '#B5637A' }
-};
+// Les pages des chapitres suivent leurs couleurs (book/chapters.js)
+export { CHAPTER_STYLE };
 
 // Familles des ingrédients d'une page à portée, dites en mots (jamais l'élément lui-même)
 const FAMILY_WORDS = {
