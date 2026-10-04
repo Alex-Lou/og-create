@@ -26,8 +26,20 @@ const cellAbove = h => TH / 2 + Math.max(0, h) * HS + 8;
 const CELL_ABOVE_MAX = TH / 2 + 3 * HS + 8;
 const CELL_BELOW = TH / 2 - SEA_Z * HS + 8;
 
-// Lecture des calques du serveur (state.map) : relief, sol, quartier
-export function islandOf(map, n) {
+// Île flottante (lot 5e) : sous sa surface, une croûte de terre (CRUST paliers), puis un dessous rocheux en pointes,
+// plus profond vers le centre (de UNDER_MIN à UNDER_MAX paliers) ; la mer passe dessous
+export const CRUST = 0.5;
+const UNDER_MIN = 0.8;
+const UNDER_MAX = 2.1;
+// Profondeur du dessous rocheux (en paliers, sous la croûte) en un point (en cases) de l'île flottante
+export function underAt(float, x, y) {
+  const k = 1 - Math.min(1, Math.hypot(x - float.cx, y - float.cy) / float.r);
+  return UNDER_MIN + (UNDER_MAX - UNDER_MIN) * k;
+}
+
+// Lecture des calques du serveur (state.map) : relief, sol, quartier ; floating : index du quartier qui flotte
+// au-dessus de la mer (-1 : aucun)
+export function islandOf(map, n, floating = -1) {
   const ground = (x, y) => (x < 0 || y < 0 || x >= n || y >= n ? '~' : map.ground[y][x]);
   const height = (x, y) => {
     const c = x < 0 || y < 0 || x >= n || y >= n ? ' ' : map.height[y][x];
@@ -38,6 +50,13 @@ export function islandOf(map, n) {
     return c === '.' ? -1 : parseInt(c, 36);
   };
   const land = (x, y) => { const g = ground(x, y); return g !== '~' && g !== 'b'; };
+  const floats = (x, y) => floating >= 0 && zone(x, y) === floating;
+  // L'île flottante : ses cases, son centre et son rayon (en cases) ; null s'il n'y en a pas
+  const cells = [];
+  if (floating >= 0) for (let y = 0; y < n; y++) for (let x = 0; x < n; x++) if (floats(x, y)) cells.push({ x, y });
+  const cx = cells.reduce((sum, c) => sum + c.x, 0) / (cells.length || 1);
+  const cy = cells.reduce((sum, c) => sum + c.y, 0) / (cells.length || 1);
+  const float = cells.length ? { cells, cx, cy, r: Math.max(...cells.map(c => Math.hypot(c.x - cx, c.y - cy))) + 0.75 } : null;
   // Hauteur de la surface (en paliers) : l'eau douce est un peu sous ses rives ; la mer (et le pont qui la
   // traverse) au niveau de la mer
   const surface = (x, y) => {
@@ -45,13 +64,14 @@ export function islandOf(map, n) {
     if (g === '~' || g === 'b') return SEA_Z;
     return g === 'w' ? height(x, y) - 0.25 : height(x, y);
   };
-  // Distance de la mer à la terre (en cases, 0 sur terre, SEA_FAR au large), jusqu'à SEA_PAD cases hors de la carte
+  // Distance de la mer à la terre posée sur l'eau (en cases, 0 sur terre, SEA_FAR au large ; l'île flottante n'en
+  // fait pas partie), jusqu'à SEA_PAD cases hors de la carte
   const P = SEA_PAD + 3, m = n + 2 * P;
   const dist = new Uint8Array(m * m).fill(SEA_FAR);
   const queue = [];
   for (let y = -P; y < n + P; y++) {
     for (let x = -P; x < n + P; x++) {
-      if (land(x, y)) { dist[(y + P) * m + x + P] = 0; queue.push(x, y); }
+      if (land(x, y) && !floats(x, y)) { dist[(y + P) * m + x + P] = 0; queue.push(x, y); }
     }
   }
   for (let k = 0; k < queue.length; k += 2) {
@@ -67,7 +87,7 @@ export function islandOf(map, n) {
     }
   }
   const depth = (x, y) => (x < -P || y < -P || x >= n + P || y >= n + P ? SEA_FAR : dist[(y + P) * m + x + P]);
-  return { n, ground, height, zone, land, surface, depth };
+  return { n, ground, height, zone, land, floats, float, surface, depth };
 }
 
 // Centre d'une case (ou d'un point fractionnaire) à une hauteur donnée (en paliers)
@@ -147,6 +167,40 @@ function face(ctx, x0, y0, x1, y1, drop, kind, side, grassy) {
   }
 }
 
+// Face avant d'une case de l'île flottante, côté mer : la croûte de terre, puis la roche suspendue jusqu'à un bord
+// en pointes (profondeur aux coins ca, cb : continue d'une case à l'autre). Renvoie le contour complet (voile de brume)
+const JAG = [0, 0.2, 0.55, 0.25, 0];
+function hangingFace(ctx, M, x0, y0, x1, y1, ca, cb, side, grassy, seed) {
+  const crust = CRUST * HS;
+  face(ctx, x0, y0, x1, y1, crust, 'earth', side, grassy);
+  const dA = (CRUST + underAt(M.float, ...ca)) * HS, dB = (CRUST + underAt(M.float, ...cb)) * HS;
+  const bottom = JAG.map((jag, k) => {
+    const t = k / (JAG.length - 1);
+    return [x0 + (x1 - x0) * t, y0 + (y1 - y0) * t + dA + (dB - dA) * t + jag * HS * (0.7 + rnd(seed, side, k) * 0.9)];
+  });
+  ctx.beginPath();
+  ctx.moveTo(x0, y0 + crust);
+  ctx.lineTo(x1, y1 + crust);
+  for (let k = bottom.length - 1; k >= 0; k--) ctx.lineTo(...bottom[k]);
+  ctx.closePath();
+  ctx.fillStyle = FACES.rock[side];
+  ctx.fill();
+  // Ombre qui s'épaissit vers les pointes, une fissure
+  const shade = ctx.createLinearGradient(0, Math.min(y0, y1) + crust, 0, Math.max(y0 + dA, y1 + dB) + HS * 0.6);
+  shade.addColorStop(0, 'rgba(30, 24, 18, 0)');
+  shade.addColorStop(1, 'rgba(30, 24, 18, .38)');
+  ctx.fillStyle = shade;
+  ctx.fill();
+  ctx.strokeStyle = 'rgba(40, 32, 25, .3)';
+  ctx.lineWidth = 1;
+  const k = 0.3 + rnd(seed, side, 9) * 0.4;
+  ctx.beginPath();
+  ctx.moveTo(x0 + (x1 - x0) * k, y0 + (y1 - y0) * k + crust + 2);
+  ctx.lineTo(x0 + (x1 - x0) * (k + 0.06), y0 + (y1 - y0) * k + crust + (dA + dB) * 0.3);
+  ctx.stroke();
+  return [[x0, y0], [x1, y1], ...bottom.reverse()];
+}
+
 function diamond(ctx, cx, cy, w = TW, h = TH) {
   ctx.beginPath();
   ctx.moveTo(cx, cy - h / 2);
@@ -156,7 +210,12 @@ function diamond(ctx, cx, cy, w = TW, h = TH) {
   ctx.closePath();
 }
 
-// Pont de planches sur la mer (vers l'îlot du Phare), posé au ras de la terre
+// Lanterne d'un bout du pont : case de pont (x, y), terre en (x + dx, y + dy) ; au bord de la case, côté avant
+export const bridgeLamp = (x, y, dx, dy) => ({ x: x + dx * 0.42 + Math.abs(dy) * 0.32, y: y + dy * 0.42 + Math.abs(dx) * 0.32, z: 0.15 });
+const LAMP_H = 24;
+
+// Pont de planches sur la mer (vers l'Îlot aux Mouettes), posé au ras de la terre : piles, tablier, rambardes de corde
+// sur poteaux des deux côtés, une lanterne à chaque bout (sa lueur de nuit : WorldView)
 function seaBridge(ctx, M, x, y) {
   const c = worldOf(x, y, 0.15);
   ctx.fillStyle = '#6B4A2A';
@@ -175,7 +234,39 @@ function seaBridge(ctx, M, x, y) {
     ctx.lineTo(c.x + k * 6 + 9, c.y + k * 3 + 4.5 - (k * 0.2));
     ctx.stroke();
   }
+  const alongX = 'b'.includes(M.ground(x - 1, y)) || 'b'.includes(M.ground(x + 1, y)) || M.land(x - 1, y) || M.land(x + 1, y);
+  const post = (u, v, h) => {
+    const p = worldOf(u, v, 0.15);
+    ctx.fillStyle = '#5C3F24';
+    ctx.fillRect(p.x - 1.2, p.y - h, 2.4, h);
+    return { x: p.x, y: p.y - h };
+  };
+  // Rambarde : de l'arrière (-1) puis de l'avant (+1), corde qui pend un peu entre deux poteaux
+  for (const side of [-1, 1]) {
+    const a = alongX ? post(x - 0.5, y + side * 0.32, 12) : post(x + side * 0.32, y - 0.5, 12);
+    const b = alongX ? post(x + 0.5, y + side * 0.32, 12) : post(x + side * 0.32, y + 0.5, 12);
+    ctx.strokeStyle = '#D9C08A';
+    ctx.lineWidth = 1.2;
+    ctx.beginPath();
+    ctx.moveTo(a.x, a.y + 1);
+    ctx.quadraticCurveTo((a.x + b.x) / 2, (a.y + b.y) / 2 + 4, b.x, b.y + 1);
+    ctx.stroke();
+  }
+  for (const [dx, dy] of alongX ? [[-1, 0], [1, 0]] : [[0, -1], [0, 1]]) {
+    if (!M.land(x + dx, y + dy)) continue;
+    const lamp = bridgeLamp(x, y, dx, dy);
+    const top = post(lamp.x, lamp.y, LAMP_H);
+    ctx.fillStyle = '#3D3A36';
+    ctx.fillRect(top.x - 3.4, top.y - 8, 6.8, 2);
+    ctx.fillStyle = '#FFE08A';
+    ctx.fillRect(top.x - 2.6, top.y - 6, 5.2, 6);
+    ctx.strokeStyle = '#3D3A36';
+    ctx.lineWidth = 0.8;
+    ctx.strokeRect(top.x - 2.6, top.y - 6, 5.2, 6);
+  }
 }
+// Lueur d'une lanterne du pont (unités du monde), pour l'éclairage de nuit
+export const lampGlowOf = lamp => { const p = worldOf(lamp.x, lamp.y, lamp.z); return { x: p.x, y: p.y - LAMP_H - 3 }; };
 
 // Une case : faces avant puis dessus, détails du sol, voile de brume (quartier à acheter)
 export function drawCell(ctx, M, x, y, veil = 0) {
@@ -195,8 +286,13 @@ export function drawCell(ctx, M, x, y, veil = 0) {
     return h >= 2 && !grassy ? 'rock' : 'earth';
   };
   const zl = M.surface(x, y + 1), zr = M.surface(x + 1, y);
-  if (zl < top) face(ctx, c.x - TW / 2, c.y, c.x, c.y + TH / 2, (top - zl) * HS, kindOf(x, y + 1), 0, grassy);
-  if (zr < top) face(ctx, c.x, c.y + TH / 2, c.x + TW / 2, c.y, (top - zr) * HS, kindOf(x + 1, y), 1, grassy);
+  // Île flottante : côté mer, la face est suspendue (croûte et roche en pointes) ; son contour sert au voile
+  const hangL = M.floats(x, y) && !M.land(x, y + 1), hangR = M.floats(x, y) && !M.land(x + 1, y);
+  let outlineL = null, outlineR = null;
+  if (hangL) outlineL = hangingFace(ctx, M, c.x - TW / 2, c.y, c.x, c.y + TH / 2, [x - 0.5, y + 0.5], [x + 0.5, y + 0.5], 0, grassy, x * 61 + y);
+  else if (zl < top) face(ctx, c.x - TW / 2, c.y, c.x, c.y + TH / 2, (top - zl) * HS, kindOf(x, y + 1), 0, grassy);
+  if (hangR) outlineR = hangingFace(ctx, M, c.x, c.y + TH / 2, c.x + TW / 2, c.y, [x + 0.5, y + 0.5], [x + 0.5, y - 0.5], 1, grassy, x * 61 + y);
+  else if (zr < top) face(ctx, c.x, c.y + TH / 2, c.x + TW / 2, c.y, (top - zr) * HS, kindOf(x + 1, y), 1, grassy);
   diamond(ctx, c.x, c.y);
   ctx.fillStyle = topColor(g, h, odd);
   ctx.fill();
@@ -265,8 +361,11 @@ export function drawCell(ctx, M, x, y, veil = 0) {
     ctx.fillStyle = `rgba(236, 238, 242, ${veil.toFixed(3)})`;
     diamond(ctx, c.x, c.y, TW + 1, TH + 1);
     ctx.fill();
-    if (zl < top) { ctx.beginPath(); ctx.moveTo(c.x - TW / 2, c.y); ctx.lineTo(c.x, c.y + TH / 2); ctx.lineTo(c.x, c.y + TH / 2 + (top - zl) * HS); ctx.lineTo(c.x - TW / 2, c.y + (top - zl) * HS); ctx.closePath(); ctx.fill(); }
-    if (zr < top) { ctx.beginPath(); ctx.moveTo(c.x, c.y + TH / 2); ctx.lineTo(c.x + TW / 2, c.y); ctx.lineTo(c.x + TW / 2, c.y + (top - zr) * HS); ctx.lineTo(c.x, c.y + TH / 2 + (top - zr) * HS); ctx.closePath(); ctx.fill(); }
+    const outline = pts => { ctx.beginPath(); ctx.moveTo(...pts[0]); pts.slice(1).forEach(p => ctx.lineTo(...p)); ctx.closePath(); ctx.fill(); };
+    if (outlineL) outline(outlineL);
+    else if (zl < top) outline([[c.x - TW / 2, c.y], [c.x, c.y + TH / 2], [c.x, c.y + TH / 2 + (top - zl) * HS], [c.x - TW / 2, c.y + (top - zl) * HS]]);
+    if (outlineR) outline(outlineR);
+    else if (zr < top) outline([[c.x, c.y + TH / 2], [c.x + TW / 2, c.y], [c.x + TW / 2, c.y + (top - zr) * HS], [c.x, c.y + TH / 2 + (top - zr) * HS]]);
   }
 }
 
@@ -467,7 +566,8 @@ export function cellsBox(M, cells) {
 }
 
 // Ce qui bouge sur le sol, précalculé une fois par île : cases d'eau douce, faces de cascade, bords de mer devant
-// (shore : la mer en +y, côté 0, ou en +x, côté 1) et derrière (back : la mer en −y, côté 0, ou en −x, côté 1)
+// (shore : la mer en +y, côté 0, ou en +x, côté 1) et derrière (back : la mer en −y, côté 0, ou en −x, côté 1) ;
+// rien autour de l'île flottante
 export function liveOf(M) {
   const water = [], falls = [], shore = [], back = [];
   for (let y = 0; y < M.n; y++) {
@@ -481,7 +581,7 @@ export function liveOf(M) {
           if ((ng === 'w' || ng === 'k') && M.surface(x + dx, y + dy) < top - 0.5) falls.push({ x, y, side, drop: (top - M.surface(x + dx, y + dy)) * HS });
         }
       }
-      if (M.land(x, y)) {
+      if (M.land(x, y) && !M.floats(x, y)) {
         for (const [dx, dy, side] of [[0, 1, 0], [1, 0, 1]]) if (M.ground(x + dx, y + dy) === '~') shore.push({ x, y, side });
         for (const [dx, dy, side] of [[0, -1, 0], [-1, 0, 1]]) if (M.ground(x + dx, y + dy) === '~') back.push({ x, y, side });
       }

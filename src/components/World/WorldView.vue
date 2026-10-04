@@ -336,7 +336,9 @@ import { lookAt, boatOffset, artMake } from '@/world/looks';
 import { itemLayers, itemLight, itemThumb } from '@/world/shopSprites';
 import { NATURE2, CRITTERS, PLINTH, SIGN } from '@/world/nature';
 import { drawSprite, spriteUrl, clearSprites } from '@/world/spriteCache';
-import { islandOf, liveOf, drawLive, drawCell, TerrainCache, HS, SEA_Z } from '@/world/terrain';
+import { islandOf, liveOf, drawLive, drawCell, TerrainCache, HS, SEA_Z, worldOf, lampGlowOf } from '@/world/terrain';
+import { FLOATING_ZONE, COLONY_ZONE, isletsOf, ferryPose, drawFloatBelow, drawSpring } from '@/world/islets';
+import { ISLET_SPRITES, ISLET_NATURE } from '@/world/isletSprites';
 import {
   seaOf, seaGuests, spread, nearestOpen, drawShallows, drawSparkles, drawWaves, drawPlankton, schoolFish, drawSchools, podAt, whaleAt, drawRings,
   drawSpout, jelliesAt, drawJellies, circling, crossing, drawGullShadow, drawFlyingGull, DOLPHIN_EVERY, DOLPHIN_FOR, WHALE_EVERY, WHALE_FOR
@@ -372,7 +374,7 @@ const UNDO_MS = 4000;
 // Ce qui plie au vent, et de combien
 const SWAY = { tree: 0.04, palm: 0.05, bush: 0.03, tuft: 0.09, flowers: 0.06, birch: 0.05, apple: 0.03, autumn: 0.035, reeds: 0.08 };
 // Tous les décors naturels (planches 1 et 2), et ce qui pousse où, avec sa fréquence cumulée
-const ALL_NATURE = { ...NATURE, ...NATURE2 };
+const ALL_NATURE = { ...NATURE, ...NATURE2, ...ISLET_NATURE };
 const BEACH_MIX = [['palm', 0.1], ['mossy', 0.15], ['shells', 0.2], ['driftwood', 0.23]];
 const ROCK_MIX = [['rock', 0.3], ['rocks', 0.55], ['crag', 0.72], ['mossy', 1]];
 const GRASS_MIX = [['tuft', 0.1], ['flowers', 0.16], ['bush', 0.185], ['mushrooms', 0.205], ['stump', 0.22], ['birch', 0.235], ['apple', 0.245], ['autumn', 0.255], ['log', 0.265]];
@@ -506,8 +508,9 @@ export default {
     this.passages = {};
     this.scared = new Map();
     this.seaHits = [];
-    // Brume dans la dernière image (pour le toucher) ; appui long en cours sur l'île
+    // Brume dans la dernière image (pour le toucher) ; appui long en cours sur l'île ; barque du passeur
     this.brumeHit = null;
+    this.ferry = null;
     this.holdTimer = 0;
     this.moreRaf = 0;
     this.forced = forcedPhase();
@@ -582,10 +585,12 @@ export default {
         });
       }
       // Calques du sol ; la brume est peinte dans les carrés du sol : un quartier acheté fait refaire les siens
-      const M = islandOf(state.map, state.size);
+      const M = islandOf(state.map, state.size, state.map.zones.findIndex(z => z.id === FLOATING_ZONE));
       if (!this.terrain) this.terrain = new TerrainCache(M, (x, y) => this.veilAt(x, y));
       this.M = M;
       this.live = liveOf(M);
+      // Îlots des chapitres VI et VII : île flottante, colonie de mouettes, barque du passeur, lanternes du pont
+      this.islets = isletsOf(M, (x, y) => (state.map.zones[M.zone(x, y)] || {}).id);
       if (!this.sea) this.sea = seaOf(M);
       this.zoneTiles = new Map();
       for (let y = 0; y < state.size; y++) {
@@ -659,7 +664,15 @@ export default {
           }
         }
       }
+      // Îlot aux Mouettes acheté : les nids de la colonie, sur l'herbe libre
+      if (this.owns(state, COLONY_ZONE)) {
+        const free = this.islets.colony.filter(c => M.ground(c.x, c.y) === 'g' && !taken.has(c.y * n + c.x) && !props.some(p => p.x === c.x && p.y === c.y));
+        spread(free, 2, 3).forEach(c => add('nest', c.x, c.y, 0.08, -0.06));
+      }
       return props;
+    },
+    owns(state, zoneId) {
+      return Boolean(state.map.zones.find(z => z.id === zoneId && z.owned));
     },
     /* ---------- Carte : terre, plage, quartiers ---------- */
     // Case de terre (calques du serveur : sol, relief, quartier)
@@ -902,10 +915,12 @@ export default {
       drawWaves(ctx, this.live.back, view, t, false);
       drawSchools(ctx, schoolFish(this.sea.schools, t), view, phase.night);
       drawShallows(ctx, this.sea.shallow, view, phase.night);
+      drawFloatBelow(ctx, this.islets.float, view, t, phase.night);
       // Sol en relief, en carrés gardés en images (les nouveaux dans un budget de 8 ms) ; puis l'eau douce qui bouge,
       // les vagues et l'écume devant l'île, les ronds dans l'eau des dauphins et de la baleine
       const missing = this.terrain.draw(ctx, view, s * dpr, 8);
       drawLive(ctx, this.M, this.live, view, t);
+      if (this.owns(this.state, FLOATING_ZONE)) drawSpring(ctx, this.islets.spring, view, t);
       drawWaves(ctx, this.live.shore, view, t, true);
       const life = this.seaLife(t, view, phase);
       drawRings(ctx, life.rings);
@@ -1000,6 +1015,7 @@ export default {
         ...this.props.filter(prop => seenAt(prop.wx, prop.wy)).map(prop => ({ depth: prop.depth, prop })),
         ...[...this.critters(t), ...life.standing].filter(critter => seen(critter.x, critter.y))
           .map(critter => ({ depth: critter.depth ?? critter.x + critter.y, critter })),
+        ...this.ferryItems(t),
         ...this.state.map.zones.filter(zone => !zone.owned).map(zone => ({ zone, at: this.signPlaceOf(zone) }))
           .filter(sign => sign.at && seen(sign.at.x, sign.at.y)).map(sign => ({ depth: sign.at.x + sign.at.y, sign }))
       ].sort((p, q) => p.depth - q.depth);
@@ -1014,6 +1030,7 @@ export default {
           this.drawProp(ctx, item.prop, t, repaint, now);
           this.occlude(ctx, item.prop.x, item.prop.y);
         } else if (item.sign) this.drawSign(ctx, item.sign, t, repaint);
+        else if (item.ferry) this.drawFerry(ctx, item.ferry, repaint);
         else {
           this.drawCritter(ctx, item.critter, repaint);
           if (!SEA_KINDS.has(item.critter.kind)) this.occlude(ctx, Math.round(item.critter.x), Math.round(item.critter.y));
@@ -1308,6 +1325,29 @@ export default {
       drawSprite(ctx, key, make, 0, 0, repaint);
       ctx.restore();
     },
+    // Barque du passeur et son ponton (Îlot aux Mouettes à soi) : elle fait la navette une fois l'île flottante à soi
+    ferryItems(t) {
+      const route = this.islets.route;
+      this.ferry = null;
+      if (!route || !this.owns(this.state, COLONY_ZONE)) return [];
+      const pose = ferryPose(route, t, this.owns(this.state, FLOATING_ZONE));
+      this.ferry = pose;
+      return [
+        { depth: route.dock.x + route.dock.y - 0.05, ferry: { landing: true, ...route.dock } },
+        { depth: pose.x + pose.y, ferry: { ...pose, frame: pose.moving ? Math.floor(t * 2) % 2 : 0 } }
+      ];
+    },
+    drawFerry(ctx, item, repaint) {
+      const c = worldOf(item.x, item.y, item.z);
+      ctx.save();
+      ctx.translate(c.x, c.y);
+      if (item.landing) drawSprite(ctx, 'islet-landing', ISLET_SPRITES.landing, 0, 0, repaint);
+      else {
+        if (item.flip) ctx.scale(-1, 1);
+        drawSprite(ctx, `islet-ferry-${item.frame}`, ISLET_SPRITES.ferry[item.frame], 0, 0, repaint);
+      }
+      ctx.restore();
+    },
     critterSprite(c) {
       if (c.kind === 'fish') return [`fish-${c.species}-${c.frame}`, SEA_SPRITES.fish[c.species][c.frame]];
       if (c.kind === 'dolphin') return [`dolphin-${c.frame}`, SEA_SPRITES.dolphin[c.frame]];
@@ -1365,6 +1405,11 @@ export default {
         const home = harbor ? this.centerOf(harbor) : greve && greve.anchor ? this.ground(greve.anchor.x, greve.anchor.y) : null;
         if (home) out.gulls.push(...circling(home.x, home.y, t, 1));
         out.gulls.push(...crossing(this.terrain.bounds, t));
+        const colony = this.islets.colony;
+        if (colony.length && this.owns(this.state, COLONY_ZONE)) {
+          const c = this.ground(colony.reduce((sum, p) => sum + p.x, 0) / colony.length, colony.reduce((sum, p) => sum + p.y, 0) / colony.length);
+          out.gulls.push(...circling(c.x, c.y, t, 3, 5));
+        }
       }
       // Mouettes posées : on peut les toucher ; celles qu'on vient d'effrayer s'envolent vers le large
       for (const perch of this.perches) {
@@ -1499,7 +1544,14 @@ export default {
           if ([[1, 0], [0, 1]].some(([dx, dy]) => M.ground(x + dx, y + dy) === '~')) cells.push({ x, y });
         }
       }
-      return spread(cells, 5, 3).map((c, k) => ({ id: `${c.x},${c.y}`, x: c.x, y: c.y, count: 1 + (k % 2) }));
+      // La colonie de l'Îlot aux Mouettes : trois groupes plus nombreux au bord de l'îlot
+      const colony = owned.has(COLONY_ZONE)
+        ? this.islets.colony.filter(c => !busy.has(`${c.x},${c.y}`) && [[1, 0], [0, 1], [-1, 0], [0, -1]].some(([dx, dy]) => !M.land(c.x + dx, c.y + dy)))
+        : [];
+      return [
+        ...spread(cells, 5, 3).map((c, k) => ({ id: `${c.x},${c.y}`, x: c.x, y: c.y, count: 1 + (k % 2) })),
+        ...spread(colony, 2, 3).map((c, k) => ({ id: `${c.x},${c.y}`, x: c.x, y: c.y, count: 2 + (k % 2) }))
+      ];
     },
     // Fumée des cheminées : bouffées qui montent, grossissent, s'effacent et partent avec le vent
     drawSmoke(ctx, t, phase) {
@@ -1543,6 +1595,15 @@ export default {
           const [lx, ly] = P(light[0], light[1], light[2]);
           glow(ctx, c.x + lx, c.y + ly, light[3], lit * (0.9 + 0.1 * Math.sin(t * 3 + light[0])));
         }
+      }
+      // Lanternes du pont de l'Îlot aux Mouettes, lanterne de la barque du passeur
+      for (const lamp of this.islets.lamps) {
+        const p = lampGlowOf(lamp);
+        glow(ctx, p.x, p.y, 16, lit * (0.92 + 0.08 * Math.sin(t * 2 + lamp.x)));
+      }
+      if (this.ferry) {
+        const c = worldOf(this.ferry.x, this.ferry.y, this.ferry.z);
+        glow(ctx, c.x + (this.ferry.flip ? 19 : -19), c.y - 18, 16, lit);
       }
       if (phase.night > 0.35) {
         const strength = (phase.night - 0.35) / 0.65;
