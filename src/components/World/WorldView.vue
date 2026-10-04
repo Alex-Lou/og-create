@@ -219,7 +219,7 @@
         <div v-if="questOpen && state && state.brume" class="world__sheet-backdrop" @click.self="questOpen = false">
           <div class="world__sheet" role="dialog" aria-label="Brume, l’esprit de la brume">
             <div class="world__sheet-head">
-              <span class="world__sheet-title">✨ Brume</span>
+              <span class="world__sheet-title world__brume-title"><BrumeWisp :size="30" :ready="Boolean(quest && quest.done)" /> Brume</span>
               <button type="button" class="world__link" @click="questOpen = false">Fermer</button>
             </div>
             <template v-if="quest">
@@ -236,6 +236,9 @@
               <div class="world__sheet-actions">
                 <button v-if="quest.done" type="button" class="world__btn" :disabled="busy" @click="claimQuest">Réclamer · {{ quest.coins }} écus</button>
                 <button v-else-if="quest.target" type="button" class="world__btn" @click="showQuestTarget">Montrer</button>
+                <button v-else-if="quest.kind === 'runs'" type="button" class="world__btn" :disabled="busy || !state.charges.count" @click="questHarvest">
+                  {{ state.charges.count ? 'Lancer une Récolte' : `Récolte : ${chargesText}` }}
+                </button>
               </div>
             </template>
             <p v-else class="world__brume-say">« {{ state.brume.rested }} »</p>
@@ -315,6 +318,7 @@ import { messageOf } from '@/utils/errors';
 import playService from '@/services/playService';
 import ElementGlyph from '@/components/ui/ElementGlyph.vue';
 import ElementTile from '@/components/ui/ElementTile.vue';
+import BrumeWisp from '@/components/ui/BrumeWisp.vue';
 import { familyIndex } from '@/utils/eras';
 import HarvestGame from './HarvestGame.vue';
 import { search } from '@/utils/search';
@@ -378,7 +382,7 @@ let lastView = null;
 // d'animation sont non réactifs et s'arrêtent quand l'onglet est caché ou le composant démonté.
 export default {
   name: 'WorldView',
-  components: { ElementGlyph, ElementTile, HarvestGame },
+  components: { ElementGlyph, ElementTile, HarvestGame, BrumeWisp },
   props: {
     discoveredElements: { type: Array, required: true },
     elementEmojis: { type: Object, required: true },
@@ -1426,6 +1430,11 @@ export default {
       this.clampCam();
       this.draw(performance.now());
     },
+    // La quête demande une Récolte : la fiche se ferme, la Récolte commence
+    questHarvest() {
+      this.questOpen = false;
+      this.startHarvest();
+    },
     // Récompense de la quête active : versée par le serveur ; la fiche reste ouverte sur la quête suivante
     async claimQuest() {
       if (!this.quest || this.busy) return;
@@ -2123,6 +2132,7 @@ export default {
 .world__needs { margin: 0; padding: 0; list-style: none; display: grid; gap: 6px; }
 /* Fiche de Brume : sa réplique, puis l'objectif, son avancée et la récompense */
 .world__quest-eyebrow { color: var(--ink-500); margin-bottom: 6px; }
+.world__brume-title { display: inline-flex; align-items: center; gap: 8px; }
 .world__brume-say { margin: 0 0 12px; font-family: var(--font-display); font-style: italic; font-size: 17px; line-height: 1.4; }
 .world__quest { display: grid; grid-template-columns: 1fr auto; gap: 6px 10px; padding: 10px 12px; border-radius: 14px; background: var(--vellum-200); }
 .world__quest-label { font-weight: 900; }
