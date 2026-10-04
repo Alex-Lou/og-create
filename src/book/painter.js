@@ -347,7 +347,8 @@ function iconBox(ctx, u, name, emoji, cx, top, ink, onReady, maxLabel = 12, hint
 // Positions des cases (ingrédients puis résultat) selon le nombre d'ingrédients : 2, 3 ou 4
 const ROW_XS = { 2: [30, 52, 74], 3: [24, 41, 58, 79], 4: [17, 33, 49, 65, 85] };
 // hints : un mot sous chaque case vide d'ingrédient (familles), ou null
-function recipeRow(ctx, u, parts, result, ink, onReady, hints = null) {
+// seal : { wax, ready } pour peindre le « = » en sceau de l'Athanor ; renvoie le centre du sceau (en u)
+function recipeRow(ctx, u, parts, result, ink, onReady, hints = null, seal = null) {
   const xs = ROW_XS[Math.min(4, Math.max(2, parts.length))];
   // Quatre ingrédients : cases plus serrées, noms plus courts
   const maxLabel = parts.length > 3 ? 9 : 12;
@@ -356,9 +357,35 @@ function recipeRow(ctx, u, parts, result, ink, onReady, hints = null) {
   setFont(ctx, u, 5.6, 400, TITLE, false);
   ctx.fillStyle = '#BDAA94';
   ctx.textAlign = 'center';
-  for (let k = 0; k < xs.length - 1; k++) {
-    ctx.fillText(k === xs.length - 2 ? '=' : '+', ((xs[k] + xs[k + 1]) / 2) * u, 97.6 * u);
+  for (let k = 0; k < xs.length - 2; k++) {
+    ctx.fillText('+', ((xs[k] + xs[k + 1]) / 2) * u, 97.6 * u);
   }
+  const sx = (xs[xs.length - 2] + xs[xs.length - 1]) / 2;
+  if (!seal) {
+    ctx.fillText('=', sx * u, 97.6 * u);
+    return null;
+  }
+  // Sceau de cire : pâle tant qu'il manque un ingrédient, à la couleur du chapitre quand on peut sceller
+  ctx.save();
+  if (seal.ready) {
+    ctx.beginPath();
+    ctx.arc(sx * u, 95.5 * u, 4.6 * u, 0, Math.PI * 2);
+    ctx.fillStyle = alpha(seal.wax, 0.22);
+    ctx.fill();
+    ctx.shadowColor = 'rgba(74, 52, 38, .3)';
+    ctx.shadowBlur = 1.2 * u;
+    ctx.shadowOffsetY = 0.5 * u;
+  }
+  ctx.beginPath();
+  ctx.arc(sx * u, 95.5 * u, 3.5 * u, 0, Math.PI * 2);
+  ctx.fillStyle = seal.ready ? seal.wax : '#E6DCC8';
+  ctx.fill();
+  ctx.restore();
+  setFont(ctx, u, 5, 700, TITLE, false);
+  ctx.fillStyle = seal.ready ? '#FFFDF8' : '#BDAA94';
+  ctx.textAlign = 'center';
+  ctx.fillText('=', sx * u, 97.3 * u);
+  return sx;
 }
 
 /* ---------- Pages ---------- */
@@ -447,10 +474,16 @@ function paintReach(ctx, u, model, i, assets) {
   if ('letterSpacing' in ctx) ctx.letterSpacing = '0px';
   // L'énigme de l'élément d'abord (sans énigme : les familles en toutes lettres)
   paintQuote(ctx, u, page.riddle || clueText(page.clue, page.groups));
-  const parts = page.clue.map((family, k) => (k === 0 && revealed ? { name: revealed, emoji: assets.emojiOf(revealed) } : null));
+  // L'équation suit l'Athanor : les éléments posés s'y inscrivent ; sinon l'ingrédient révélé par l'Encre
+  const picked = assets.picked || [];
+  const parts = page.clue.map((family, k) => {
+    if (picked.length) return picked[k] ? { name: picked[k], emoji: assets.emojiOf(picked[k]) } : null;
+    return k === 0 && revealed ? { name: revealed, emoji: assets.emojiOf(revealed) } : null;
+  });
   // Après un premier essai sur la page, la famille de chaque ingrédient apparaît sous sa case
   const hints = page.riddle && tried ? familyHints(page.clue, page.groups) : null;
-  recipeRow(ctx, u, parts, null, style.ink, assets.onReady, hints);
+  const ready = picked.length >= 2;
+  const sealX = recipeRow(ctx, u, parts, null, style.ink, assets.onReady, hints, { wax: style.wax, ready });
   // Verdict du dernier essai visé (ou essais ratés), rétréci pour tenir sur une ligne
   const note = aimNote(aim, page.misses, page.freeInkAfter);
   if (note) {
@@ -494,6 +527,8 @@ function paintReach(ctx, u, model, i, assets) {
   }
   button(inkX, inkW, revealed ? '#F1E7D2' : freeInk ? '#B7862F' : '#4A3426', revealed ? 'Encre utilisée' : freeInk ? '✒︎ Encre offerte' : `✒︎ Encre · ${assets.inkPrice} écus`, revealed ? '#BDAA94' : '#FFFDF8', !revealed);
   if (!revealed) hotspots.push({ id: 'ink', x: inkX, y: 115.5, w: inkW, h: 8, action: 'ink', data: page.id, label: freeInk ? 'Encre offerte : révéler un ingrédient' : `Encre : révéler un ingrédient pour ${assets.inkPrice} écus` });
+  // Le sceau mélange ce qui est posé dans l'Athanor (comme « Transmuer »)
+  if (ready && sealX !== null) hotspots.push({ id: 'seal', x: sealX - 6, y: 89, w: 12, h: 13, action: 'seal', data: page.id, label: `Sceller le mélange : ${picked.join(' et ')}` });
   folio(ctx, u, i);
   const start = page.first ? `, commence par ${page.first}` : '';
   const clue = page.riddle ? `Énigme : ${page.riddle}${hints ? ` ${clueText(page.clue, page.groups)}` : ''}` : clueText(page.clue, page.groups);

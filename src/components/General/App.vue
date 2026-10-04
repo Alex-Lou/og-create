@@ -65,6 +65,7 @@
             @show-alert="showAlert"
             @aim="bookAim = $event"
             @inscribed="handleInscribed"
+            @seal="$refs.craftZone?.fuse()"
           />
           <TrialInventory
             v-else

@@ -166,7 +166,7 @@ export default {
     // Révélation en cours dans l'Athanor : les effets du Livre attendent qu'elle se ferme
     revealing: { type: Boolean, default: false }
   },
-  emits: ['select', 'coins-updated', 'show-alert', 'aim', 'inscribed'],
+  emits: ['select', 'coins-updated', 'show-alert', 'aim', 'inscribed', 'seal'],
   data() {
     return {
       spots: [],
@@ -266,6 +266,10 @@ export default {
     'discoveredElements.length'() {
       clearTimeout(this.reloadTimer);
       this.reloadTimer = setTimeout(() => this.load(), 120);
+    },
+    // L'équation d'une page à portée suit l'Athanor
+    picked() {
+      if (this.engine && this.models[this.engine.index]?.type === 'reach') this.engine.refresh();
     },
     revealing(now) {
       if (!now) this.flushEffects();
@@ -374,6 +378,7 @@ export default {
         onReady: () => this.scheduleRepaint(),
         inkPrice: INK_PRICE,
         stars: this.stars,
+        picked: this.picked,
         familiesOf: id => families[id] || []
       };
     },
@@ -510,6 +515,11 @@ export default {
       }
       if (spot.action === 'guess') {
         this.openGuess(spot.data);
+        return;
+      }
+      if (spot.action === 'seal') {
+        vibrate(HAPTIC.tap);
+        this.$emit('seal');
         return;
       }
       if (spot.action !== 'ink') return;
