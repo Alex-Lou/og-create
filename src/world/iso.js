@@ -81,6 +81,42 @@ export function cylinder(u, v, z0, z1, r, colors, id, edge = EDGE) {
     + `<ellipse cx="${fmt(x0)}" cy="${fmt(y1)}" rx="${fmt(rx)}" ry="${fmt(ry)}" fill="${colors.top}"${edge}/>`;
 }
 
+// Rocher à facettes : une base irrégulière de 8 sommets autour de (u, v) (rayons ru × rv en cases), une épaule à mi-
+// hauteur à peine plus étroite, un sommet plus petit et reculé à la hauteur h (px). Seules les facettes tournées vers
+// le joueur sont tracées, teintées selon leur orientation (côté +v : couleur gauche, côté +u : couleur droite), plus
+// claires en haut, puis le dessus. seed : la forme ; jag de 0 à 1 : l'irrégularité ; peak de 0 à 1 : la largeur du
+// sommet (petit : une aiguille)
+export function boulder(u, v, ru, rv, h, colors, seed = 0, jag = 0.25, peak = 0.6, edge = EDGE) {
+  const n = 8;
+  const rnd = k => { const x = Math.sin(seed * 91.7 + k * 47.3) * 43758.5453; return x - Math.floor(x); };
+  const ring = (scale, back, z) => Array.from({ length: n }, (_, k) => {
+    const a = (k / n) * Math.PI * 2 + rnd(k) * 0.45;
+    const r = (1 - jag * rnd(k + 10)) * scale;
+    return [u + Math.cos(a) * ru * r - ru * back, v + Math.sin(a) * rv * r - rv * back, z * (0.85 + 0.3 * rnd(k + 20 + z))];
+  });
+  const rings = [ring(1, 0, 0), ring(0.5 + peak * 0.45, 0.04, h * 0.55), ring(peak, 0.1, h)];
+  let out = '';
+  for (let level = 0; level < 2; level++) {
+    const lo = rings[level], hi = rings[level + 1];
+    for (let k = 0; k < n; k++) {
+      const j = (k + 1) % n;
+      const nu = (lo[k][0] + lo[j][0]) / 2 - u, nv = (lo[k][1] + lo[j][1]) / 2 - v;
+      if (nu + nv <= 0) continue;
+      const w = Math.min(1, Math.max(0, 0.5 + (0.7 * (nu - nv)) / Math.hypot(nu, nv)));
+      const side = mixHex(colors.left, colors.right, w);
+      out += face([lo[k], lo[j], hi[j], hi[k]], level ? mixHex(side, colors.top, 0.35) : side, edge);
+    }
+  }
+  return out + face(rings[2], colors.top, edge);
+}
+
+// Mélange de deux couleurs #RRGGBB (k de 0 à 1)
+export function mixHex(a, b, k) {
+  const ca = parseInt(a.slice(1), 16), cb = parseInt(b.slice(1), 16);
+  const ch = s => Math.round(((ca >> s) & 255) * (1 - k) + ((cb >> s) & 255) * k);
+  return `#${((ch(16) << 16) | (ch(8) << 8) | ch(0)).toString(16).padStart(6, '0')}`;
+}
+
 // Ombre portée douce au sol, vers le bas à droite (opposée à la lumière)
 export function shadow(u, v, r, opacity = 0.22) {
   return disc(u + 0.12, v + 0.02, 0, r, `rgba(40,55,20,${opacity})`);
