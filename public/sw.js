@@ -2,7 +2,8 @@
 // - Pages : réseau d'abord (toujours la dernière version en ligne), copie en cache pour le hors-ligne.
 // - Fichiers du build (js, css, images, icônes) : cache d'abord ; leurs noms changent à chaque version.
 // - Le reste (API, polices externes) n'est jamais intercepté.
-const CACHE = 'origins-v1';
+// Changer de nom vide l'ancien cache (icônes et fichiers à nom fixe)
+const CACHE = 'origins-v2';
 const STATIC_PREFIXES = ['/js/', '/css/', '/img/', '/fonts/', '/icons/'];
 
 self.addEventListener('install', () => self.skipWaiting());
