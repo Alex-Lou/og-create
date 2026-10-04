@@ -290,7 +290,7 @@ import ElementTile from '@/components/ui/ElementTile.vue';
 import { familyIndex } from '@/utils/eras';
 import HarvestGame from './HarvestGame.vue';
 import { search } from '@/utils/search';
-import { glyph } from '@/book/painter';
+import { glyph, clearDrawings } from '@/book/painter';
 import { burst, ring, vibrate, center, reducedMotion } from '@/utils/fx';
 import * as storage from '@/utils/storage';
 import { GLYPH, LABEL, RESOURCES } from '@/game/resources';
@@ -298,7 +298,8 @@ import { BUILDINGS, NATURE, boatSprite } from '@/world/sprites';
 import { lookAt, boatOffset, artMake } from '@/world/looks';
 import { itemLayers, itemLight, itemThumb } from '@/world/shopSprites';
 import { NATURE2, CRITTERS, PLINTH, SIGN } from '@/world/nature';
-import { drawSprite, spriteUrl } from '@/world/spriteCache';
+import { drawSprite, spriteUrl, clearSprites } from '@/world/spriteCache';
+import { islandOf, liveOf, drawLive, drawCell, TerrainCache, HS, SEA_Z } from '@/world/terrain';
 import { chapterOfFamily } from '@/book/chapters';
 import { P } from '@/world/iso';
 import { phaseAt, forcedPhase, drawSea, drawCloudShadows, drawClouds, drawBirds, drawTint, glow, fireflies, hash } from '@/world/scene';
@@ -324,7 +325,13 @@ const SWAY = { tree: 0.04, palm: 0.05, bush: 0.03, tuft: 0.09, flowers: 0.06, bi
 // Tous les décors naturels (planches 1 et 2), et ce qui pousse où, avec sa fréquence cumulée
 const ALL_NATURE = { ...NATURE, ...NATURE2 };
 const BEACH_MIX = [['palm', 0.1], ['mossy', 0.15], ['shells', 0.2], ['driftwood', 0.23]];
-const GRASS_MIX = [['tuft', 0.1], ['flowers', 0.16], ['bush', 0.185], ['mushrooms', 0.205], ['stump', 0.22], ['birch', 0.235], ['apple', 0.245], ['autumn', 0.255], ['reeds', 0.265], ['lily', 0.275], ['log', 0.285]];
+const GRASS_MIX = [['tuft', 0.1], ['flowers', 0.16], ['bush', 0.185], ['mushrooms', 0.205], ['stump', 0.22], ['birch', 0.235], ['apple', 0.245], ['autumn', 0.255], ['log', 0.265]];
+// Forêt : deux arbres par case (sapins en hauteur) ; au bord de l'eau douce, roseaux et nénuphars
+const FOREST_LOW = ['tree', 'birch', 'pine', 'autumn'];
+const FOREST_HIGH = ['pine', 'pine', 'tree'];
+// Vue de l'île gardée d'une visite à l'autre de l'onglet (caméra, fiche ouverte) : la mémoire est libérée à la
+// sortie, la progression reste
+let lastView = null;
 
 // Le Monde : l'île du joueur en isométrique (Canvas 2D), avec une caméra qu'on fait glisser et zoomer.
 // L'état vient du serveur (chantiers, réserves, parties, décorations) ; le dessin, la caméra et la boucle
@@ -430,6 +437,13 @@ export default {
     this.bubbles = [];
     this.signs = [];
     this.shore = [];
+    // Sol en relief : calques lus (M), blocs d'images (terrain), eau animée (live), cases de chaque quartier
+    this.M = null;
+    this.terrain = null;
+    this.live = null;
+    this.zoneTiles = new Map();
+    this.mistKey = '';
+    this.moreRaf = 0;
     this.forced = forcedPhase();
     this.ac = null;
     this.observer = null;
@@ -462,7 +476,16 @@ export default {
     if (this.observer) this.observer.disconnect();
     clearInterval(this.tick);
     cancelAnimationFrame(this.raf);
-    this.raf = 0;
+    cancelAnimationFrame(this.moreRaf);
+    this.raf = this.moreRaf = 0;
+    // Sortie de l'île : la vue est gardée pour le retour, la mémoire libérée (sol en blocs, images, décor)
+    if (this.cam) lastView = { cam: { ...this.cam }, site: this.site ? this.site.id : null, siteTab: this.siteTab };
+    if (this.terrain) this.terrain.clear();
+    this.terrain = null;
+    this.props = [];
+    this.live = null;
+    clearSprites();
+    clearDrawings();
   },
   methods: {
     reduced() {
@@ -495,6 +518,28 @@ export default {
           if (from !== undefined && site.level > from) this.raises.set(site.id, { at: performance.now(), from });
         });
       }
+      // Calques du sol ; la brume est peinte dans les blocs : un quartier acheté les fait refaire
+      const M = islandOf(state.map, state.size);
+      const mistKey = state.map.zones.filter(z => z.owned).map(z => z.id).join();
+      if (!this.terrain || mistKey !== this.mistKey) {
+        if (this.terrain) this.terrain.clear();
+        this.terrain = new TerrainCache(M, (x, y) => this.veilAt(x, y));
+        this.mistKey = mistKey;
+      }
+      this.M = M;
+      this.live = liveOf(M);
+      this.zoneTiles = new Map();
+      for (let y = 0; y < state.size; y++) {
+        for (let x = 0; x < state.size; x++) {
+          const zone = state.map.zones[M.zone(x, y)];
+          if (zone) this.zoneTiles.set(zone.id, [...(this.zoneTiles.get(zone.id) || []), [x, y]]);
+        }
+      }
+      // Retour sur l'île : la fiche qui était ouverte se rouvre
+      if (!this.state && lastView && lastView.site) {
+        this.site = state.sites.find(s => s.id === lastView.site) || null;
+        this.siteTab = lastView.siteTab || 'overview';
+      }
       this.props = this.natureOf(state);
       this.shore = this.shoreOf(state);
       this.state = state;
@@ -512,39 +557,65 @@ export default {
       this.phaseLabel = phase.label;
       this.phaseGlyph = phase.glyph;
     },
-    // Décor naturel, fixe pour une île donnée : palmiers et rochers sur la plage, touffes et fleurs dans l'herbe.
-    // Seulement sur les cases libres : une décoration posée le remplace, et il ne gêne aucun toucher.
+    // Décor naturel, fixe pour une île donnée, selon le sol : arbres des forêts, arbres isolés, rochers, touffes des
+    // dunes ; roseaux et nénuphars au bord de l'eau douce ; palmiers et coquillages sur le sable, touffes et fleurs
+    // dans l'herbe libre. Une décoration posée le remplace, et il ne gêne aucun toucher.
     natureOf(state) {
       const n = state.size;
+      const M = this.M;
       const taken = new Set(state.tiles.map(t => t.y * n + t.x));
       state.sites.forEach(site => {
         for (let dy = 0; dy < site.h; dy++) for (let dx = 0; dx < site.w; dx++) taken.add((site.y + dy) * n + site.x + dx);
       });
       const props = [];
+      const add = (kind, x, y, dx = 0, dy = 0) => {
+        const c = this.world(x + dx, y + dy);
+        props.push({ kind, x, y, dx, dy, depth: x + y + (dx + dy) * 0.5, wx: c.x, wy: c.y - this.liftAt(x, y) });
+      };
+      const wet = (x, y) => [[1, 0], [-1, 0], [0, 1], [0, -1]].some(([a, b]) => M.ground(x + a, y + b) === 'w');
       for (let y = 0; y < n; y++) {
         for (let x = 0; x < n; x++) {
-          if (taken.has(y * n + x) || !this.landAt(x, y, state)) continue;
-          const beach = this.isBeach(x, y, state);
+          if (taken.has(y * n + x)) continue;
+          const g = M.ground(x, y);
           const roll = hash(x, y);
-          let kind;
-          kind = ((beach ? BEACH_MIX : GRASS_MIX).find(([, upTo]) => roll < upTo) || [null])[0];
-          if (kind) props.push({ kind, x, y, depth: x + y });
+          if (g === 'f') {
+            const kinds = M.height(x, y) >= 2 ? FOREST_HIGH : FOREST_LOW;
+            add(kinds[Math.floor(roll * kinds.length)], x, y, -0.2, -0.16);
+            add(kinds[Math.floor(hash(y, x) * kinds.length)], x, y, 0.18, 0.22);
+          } else if (g === 't') add(roll < 0.55 ? 'tree' : roll < 0.8 ? 'apple' : 'birch', x, y);
+          else if (g === 'r') add(roll < 0.6 ? 'rock' : 'mossy', x, y);
+          else if (g === 'd') add('tuft', x, y);
+          else if ((g === 'g' || g === 'm') && wet(x, y) && roll < 0.45) add(roll < 0.3 ? 'reeds' : 'lily', x, y);
+          else if (g === 's' || g === 'g' || g === 'm') {
+            const kind = ((g === 's' ? BEACH_MIX : GRASS_MIX).find(([, upTo]) => roll < upTo) || [null])[0];
+            if (kind) add(kind, x, y);
+          }
         }
       }
       return props;
     },
     /* ---------- Carte : terre, plage, quartiers ---------- */
-    // Case de terre (la grille vient du serveur : '.' = mer, sinon l'index du quartier)
-    landAt(x, y, state = this.state) {
-      const c = state.map.grid[y]?.[x];
-      return c !== undefined && c !== '.';
+    // Case de terre (calques du serveur : sol, relief, quartier)
+    landAt(x, y) {
+      return Boolean(this.M) && this.M.land(x, y);
     },
-    isBeach(x, y, state = this.state) {
-      return [[1, 0], [-1, 0], [0, 1], [0, -1]].some(([dx, dy]) => !this.landAt(x + dx, y + dy, state));
+    zoneAt(x, y) {
+      return this.M && this.state ? this.state.map.zones[this.M.zone(x, y)] || null : null;
     },
-    zoneAt(x, y, state = this.state) {
-      const c = state.map.grid[y]?.[x];
-      return c === undefined || c === '.' ? null : state.map.zones[Number(c)] || null;
+    // Voile de brume d'une case (quartier à acheter), peint dans les blocs du sol
+    veilAt(x, y) {
+      const zone = this.state && this.state.map.zones[this.M.zone(x, y)];
+      return zone && !zone.owned ? 0.62 : 0;
+    },
+    // Hauteur (unités du monde) du sol d'une case : ce qui s'y tient debout est remonté d'autant
+    liftAt(x, y) {
+      return this.M ? Math.max(0, this.M.surface(Math.round(x), Math.round(y))) * HS : 0;
+    },
+    // Point du monde au sol d'une case (ou d'un point fractionnaire), relief compris
+    ground(x, y) {
+      const c = this.world(x, y);
+      c.y -= this.liftAt(x, y);
+      return c;
     },
     lockedAt(x, y) {
       const zone = this.zoneAt(x, y);
@@ -563,29 +634,19 @@ export default {
       }
       return 1 - k;
     },
-    // Cases de mer au bord de la terre : le poisson saute là
+    // Cases de mer au bord de la terre (devant elle) : le poisson saute là
     shoreOf(state) {
       const out = [];
       for (let y = 0; y < state.size; y++) {
         for (let x = 0; x < state.size; x++) {
-          if (!this.landAt(x, y, state) && [[1, 0], [0, 1]].some(([dx, dy]) => this.landAt(x - dx, y - dy, state))) out.push({ x, y });
+          if (this.M.ground(x, y) === '~' && [[1, 0], [0, 1]].some(([dx, dy]) => this.landAt(x - dx, y - dy))) out.push({ x, y });
         }
       }
       return out;
     },
-    // Place du panneau d'un quartier : la case de terre libre du quartier la plus proche de son centre
+    // Place du panneau d'un quartier : choisie par le serveur (sol libre, au bord d'un chemin, près du centre)
     signPlaceOf(zone) {
-      const { size, sites } = this.state;
-      const inSite = (x, y) => sites.some(st => this.covers(st, x, y));
-      let best = null;
-      for (let y = 0; y < size; y++) {
-        for (let x = 0; x < size; x++) {
-          if (this.zoneAt(x, y)?.id !== zone.id || inSite(x, y) || this.isBeach(x, y)) continue;
-          const d = Math.abs(x - zone.anchor.x) + Math.abs(y - zone.anchor.y);
-          if (!best || d < best.d) best = { x, y, d };
-        }
-      }
-      return best;
+      return zone.anchor || null;
     },
     decoPriceOf(name) {
       const prices = this.state && this.state.decoPrices;
@@ -659,9 +720,10 @@ export default {
       canvas.height = Math.round(height * dpr);
       canvas.style.height = `${height}px`;
       const n = this.state.size;
-      const fit = Math.min(width / (n * TW + TW), height / (n * TH + DEPTH + TW * 1.6));
+      const fit = Math.min(width / (n * TW + TW), height / (n * TH + DEPTH + 3 * HS + TW * 1.6));
       this.geo = { width, height, dpr, n, minScale: Math.min(fit, 1) };
-      // Première vue : le Foyer au centre, à taille confortable pour le pouce
+      // Première vue : celle qu'on avait en quittant l'île, sinon le Foyer au centre, à taille confortable pour le pouce
+      if (!this.cam && lastView) this.cam = { ...lastView.cam };
       if (!this.cam) {
         const foyer = this.state.sites.find(s => s.id === 'foyer');
         const c = foyer ? this.centerOf(foyer) : this.world(n / 2, n / 2);
@@ -681,14 +743,26 @@ export default {
       const { s, x, y } = this.cam;
       return { x: (px - this.geo.width / 2) / s + x, y: (py - this.geo.height / 2) / s + y };
     },
+    // Case sous un point de l'écran : la plus en avant dont le dessus (relevé par le relief) contient le point ;
+    // à défaut, la case à plat (la mer)
     tileAt(px, py) {
       const w = this.toWorld(px, py);
       const a = w.x / (TW / 2);
       const b = w.y / (TH / 2);
-      const x = Math.round((a + b) / 2);
-      const y = Math.round((b - a) / 2);
+      const x0 = Math.round((a + b) / 2);
+      const y0 = Math.round((b - a) / 2);
       const n = this.state.size;
-      return x >= 0 && y >= 0 && x < n && y < n ? { x, y } : null;
+      let best = null;
+      for (let y = y0 - 1; y <= y0 + 5; y++) {
+        for (let x = x0 - 1; x <= x0 + 5; x++) {
+          if (!this.landAt(x, y)) continue;
+          const c = this.ground(x, y);
+          if (Math.abs(w.x - c.x) / (TW / 2) + Math.abs(w.y - c.y) / (TH / 2) > 1) continue;
+          if (!best || x + y > best.x + best.y) best = { x, y };
+        }
+      }
+      if (best) return best;
+      return x0 >= 0 && y0 >= 0 && x0 < n && y0 < n ? { x: x0, y: y0 } : null;
     },
     clampCam() {
       const n = this.state.size;
@@ -761,70 +835,52 @@ export default {
         ctx.ellipse(mid.x, mid.y + DEPTH, (n * TW) * (0.46 + ripple * 0.3), (n * TH) * (0.5 + ripple * 0.3), 0, 0, Math.PI * 2);
         ctx.stroke();
       }
-      // Sol, case par case du plus loin au plus proche : falaise là où la terre touche la mer (face gauche vers +y,
-      // face droite vers +x), écume à son pied, puis la case (plage en bordure, herbe, terre battue des chantiers)
+      // Monde visible : seuls les blocs de sol et ce qui s'y tient, à l'écran, sont dessinés
+      const tl = this.toWorld(0, 0);
+      const br = this.toWorld(width, height);
+      const view = { x: tl.x, y: tl.y, w: br.x - tl.x, h: br.y - tl.y };
+      // Sol en relief, par blocs (deux nouveaux au plus par image) ; puis l'eau qui bouge et l'écume
+      const missing = this.terrain.draw(ctx, view, s * dpr, 2);
+      drawLive(ctx, this.M, this.live, view, t);
+      // Sol des chantiers : terre battue (bâti) ou chantier ; cases libres pendant un déplacement ; case choisie
       const plots = new Map();
       for (const site of this.state.sites) {
         for (let dy = 0; dy < site.h; dy++) for (let dx = 0; dx < site.w; dx++) plots.set((site.y + dy) * n + site.x + dx, site);
       }
-      const occupied = new Set(this.state.tiles.map(tile => tile.y * n + tile.x));
-      const foam = 0.32 + 0.22 * Math.sin(t * 1.6);
-      const cliff = (x0, y0, x1, y1, color) => {
-        ctx.beginPath();
-        ctx.moveTo(x0, y0);
-        ctx.lineTo(x1, y1);
-        ctx.lineTo(x1, y1 + DEPTH);
-        ctx.lineTo(x0, y0 + DEPTH);
-        ctx.closePath();
-        ctx.fillStyle = color;
+      for (const [k, plot] of plots) {
+        const x = k % n, y = Math.floor(k / n);
+        const c = this.ground(x, y);
+        const shade = (x + y) % 2;
+        this.diamond(ctx, c.x, c.y, TW, TH);
+        ctx.fillStyle = plot.level ? (shade ? '#D9C49A' : '#E0CCA4') : (shade ? '#B89468' : '#C09C70');
         ctx.fill();
-        // Strate plus sombre en bas de falaise, puis l'écume qui lèche le pied
-        ctx.fillStyle = 'rgba(60, 35, 15, .18)';
-        ctx.beginPath();
-        ctx.moveTo(x0, y0 + DEPTH * 0.62);
-        ctx.lineTo(x1, y1 + DEPTH * 0.62);
-        ctx.lineTo(x1, y1 + DEPTH);
-        ctx.lineTo(x0, y0 + DEPTH);
-        ctx.closePath();
-        ctx.fill();
-        ctx.strokeStyle = `rgba(255, 255, 255, ${foam.toFixed(3)})`;
-        ctx.lineWidth = 2.6;
-        ctx.lineCap = 'round';
-        ctx.beginPath();
-        ctx.moveTo(x0, y0 + DEPTH + 1.5 + Math.sin(t * 2 + x0 * 0.05) * 1.2);
-        ctx.lineTo(x1, y1 + DEPTH + 1.5 + Math.sin(t * 2 + x1 * 0.05) * 1.2);
+        ctx.strokeStyle = 'rgba(255, 255, 255, .16)';
+        ctx.lineWidth = 1 / s;
         ctx.stroke();
-      };
-      for (let d = 0; d <= 2 * (n - 1); d++) {
-        for (let x = Math.max(0, d - n + 1); x <= Math.min(d, n - 1); x++) {
-          const y = d - x;
-          if (!this.landAt(x, y)) continue;
-          const c = this.world(x, y);
-          const shade = (x + y) % 2;
-          if (!this.landAt(x, y + 1)) cliff(c.x - TW / 2, c.y, c.x, c.y + TH / 2, shade ? '#9C6A3A' : '#A87444');
-          if (!this.landAt(x + 1, y)) cliff(c.x, c.y + TH / 2, c.x + TW / 2, c.y, shade ? '#7E5229' : '#875A2F');
-          const plot = plots.get(y * n + x);
-          this.diamond(ctx, c.x, c.y, TW, TH);
-          if (plot) ctx.fillStyle = plot.level ? (shade ? '#D9C49A' : '#E0CCA4') : (shade ? '#B89468' : '#C09C70');
-          else if (this.isBeach(x, y)) ctx.fillStyle = shade ? '#EBD49B' : '#F0DBA6';
-          else ctx.fillStyle = shade ? '#93CE70' : '#9ED67B';
-          ctx.fill();
-          ctx.strokeStyle = 'rgba(255, 255, 255, .16)';
-          ctx.lineWidth = 1 / s;
-          ctx.stroke();
-          if (this.moving && !plot && !occupied.has(y * n + x) && !this.lockedAt(x, y)) {
-            ctx.setLineDash([4 / s, 3 / s]);
-            ctx.strokeStyle = 'rgba(255, 250, 220, .9)';
-            ctx.lineWidth = 1.5 / s;
-            ctx.stroke();
-            ctx.setLineDash([]);
-          }
-          if ((this.selected && this.selected.x === x && this.selected.y === y) || (this.picking && this.picking.x === x && this.picking.y === y)) {
-            ctx.strokeStyle = '#F2C04B';
-            ctx.lineWidth = 2.5 / s;
+      }
+      if (this.moving) {
+        const occupied = new Set(this.state.tiles.map(tile => tile.y * n + tile.x));
+        ctx.setLineDash([4 / s, 3 / s]);
+        ctx.strokeStyle = 'rgba(255, 250, 220, .9)';
+        ctx.lineWidth = 1.5 / s;
+        for (let y = 0; y < n; y++) {
+          for (let x = 0; x < n; x++) {
+            if (plots.has(y * n + x) || occupied.has(y * n + x) || !'gsm'.includes(this.M.ground(x, y)) || this.lockedAt(x, y)) continue;
+            const c = this.ground(x, y);
+            if (c.x < view.x - TW || c.x > view.x + view.w + TW || c.y < view.y - TW || c.y > view.y + view.h + TW) continue;
+            this.diamond(ctx, c.x, c.y, TW, TH);
             ctx.stroke();
           }
         }
+        ctx.setLineDash([]);
+      }
+      for (const cell of [this.selected, this.picking]) {
+        if (!cell) continue;
+        const c = this.ground(cell.x, cell.y);
+        this.diamond(ctx, c.x, c.y, TW, TH);
+        ctx.strokeStyle = '#F2C04B';
+        ctx.lineWidth = 2.5 / s;
+        ctx.stroke();
       }
       // Contour des chantiers : pointillés à bâtir, doré quand tout est prêt
       for (const site of this.state.sites) {
@@ -845,16 +901,23 @@ export default {
           ctx.stroke();
         }
       }
-      // Brume au sol sur les quartiers à acheter (et celui qu'on vient d'acheter, qui s'éclaircit)
-      for (let y = 0; y < n; y++) {
-        for (let x = 0; x < n; x++) {
-          const mist = this.mistOf(this.zoneAt(x, y), now);
-          if (!mist) continue;
-          const c = this.world(x, y);
+      // Brume qui se lève sur le quartier qu'on vient d'acheter (la brume des autres est peinte dans le sol)
+      for (const id of [...this.unveils.keys()]) {
+        const mist = this.mistOf(this.state.map.zones.find(z => z.id === id), now);
+        if (!mist) continue;
+        ctx.fillStyle = `rgba(236, 238, 242, ${(0.62 * mist).toFixed(3)})`;
+        for (const [x, y] of this.zoneTiles.get(id) || []) {
+          const c = this.ground(x, y);
           this.diamond(ctx, c.x, c.y, TW + 1, TH + 1);
-          ctx.fillStyle = `rgba(236, 238, 242, ${(0.62 * mist).toFixed(3)})`;
           ctx.fill();
         }
+      }
+      // Blocs de sol encore à préparer : une image de plus, même sans boucle d'animation
+      if (missing && !this.raf && !this.moreRaf) {
+        this.moreRaf = requestAnimationFrame(() => {
+          this.moreRaf = 0;
+          this.draw(performance.now());
+        });
       }
       const worldTransform = ctx.getTransform();
       // Ombres des nuages qui glissent sur l'île (écran)
@@ -862,22 +925,32 @@ export default {
       drawCloudShadows(ctx, width, height, t, phase);
       ctx.setTransform(worldTransform);
       // Ce qui se tient debout (bâtiments, décorations, nature), du plus loin au plus proche
+      // (seulement ce qui est à l'écran ; un grand sprite dépasse vers le haut de son pied)
+      const seenAt = (wx, wy) => wx > view.x - TW * 2.5 && wx < view.x + view.w + TW * 2.5 && wy > view.y - TW * 0.6 && wy < view.y + view.h + TW * 3.2;
+      const seen = (x, y) => { const c = this.ground(x, y); return seenAt(c.x, c.y); };
       const standing = [
         ...this.state.sites.map(site => ({ depth: site.x + site.y + site.w, site })),
-        ...this.state.tiles.map(tile => ({ depth: tile.x + tile.y, tile })),
-        ...this.props.map(prop => ({ depth: prop.depth, prop })),
-        ...this.critters(t).map(critter => ({ depth: critter.x + critter.y, critter })),
+        ...this.state.tiles.filter(tile => seen(tile.x, tile.y)).map(tile => ({ depth: tile.x + tile.y, tile })),
+        ...this.props.filter(prop => seenAt(prop.wx, prop.wy)).map(prop => ({ depth: prop.depth, prop })),
+        ...this.critters(t).filter(critter => seen(critter.x, critter.y)).map(critter => ({ depth: critter.x + critter.y, critter })),
         ...this.state.map.zones.filter(zone => !zone.owned).map(zone => ({ zone, at: this.signPlaceOf(zone) }))
-          .filter(sign => sign.at).map(sign => ({ depth: sign.at.x + sign.at.y, sign }))
+          .filter(sign => sign.at && seen(sign.at.x, sign.at.y)).map(sign => ({ depth: sign.at.x + sign.at.y, sign }))
       ].sort((p, q) => p.depth - q.depth);
       this.signs = [];
       const repaint = () => this.draw(performance.now());
       for (const item of standing) {
         if (item.site) this.drawSite(ctx, item.site, t, now, repaint);
-        else if (item.tile) this.drawTile(ctx, item.tile, now, t, repaint);
-        else if (item.prop) this.drawProp(ctx, item.prop, t, repaint, now);
-        else if (item.sign) this.drawSign(ctx, item.sign, t, repaint);
-        else this.drawCritter(ctx, item.critter, repaint);
+        else if (item.tile) {
+          this.drawTile(ctx, item.tile, now, t, repaint);
+          this.occlude(ctx, item.tile.x, item.tile.y);
+        } else if (item.prop) {
+          this.drawProp(ctx, item.prop, t, repaint, now);
+          this.occlude(ctx, item.prop.x, item.prop.y);
+        } else if (item.sign) this.drawSign(ctx, item.sign, t, repaint);
+        else {
+          this.drawCritter(ctx, item.critter, repaint);
+          if (item.critter.kind !== 'fish') this.occlude(ctx, Math.round(item.critter.x), Math.round(item.critter.y));
+        }
       }
       // Volutes de brume qui dérivent au-dessus des quartiers à acheter
       this.drawWisps(ctx, t, now);
@@ -893,6 +966,15 @@ export default {
       if (this.cam.s >= 0.55) this.state.sites.filter(site => !site.locked).forEach(site => this.drawLabel(ctx, site));
       // Bulles de production à toucher, au-dessus de tout
       this.drawBubbles(ctx, t);
+    },
+    // Ce qui se tient derrière une case plus haute : cette case est repeinte par-dessus (le relief cache le pied)
+    occlude(ctx, x, y) {
+      const M = this.M;
+      const h = M.surface(x, y);
+      for (const [dx, dy] of [[1, 0], [0, 1], [1, 1]]) {
+        const nx = x + dx, ny = y + dy;
+        if (M.land(nx, ny) && M.surface(nx, ny) > h + 0.01) drawCell(ctx, M, nx, ny, this.veilAt(nx, ny));
+      }
     },
     drawSite(ctx, site, t, now, repaint) {
       // Sous la brume : à peine visible, comme une promesse
@@ -973,9 +1055,11 @@ export default {
       }
       this.drawItems(ctx, site, c, t, repaint, false);
     },
-    // Centre de l'emprise d'un bâtiment (2 × 2 ou 3 × 3 cases) dans le monde
+    // Centre de l'emprise d'un bâtiment (2 × 2 ou 3 × 3 cases) dans le monde, à la hauteur de son sol (plat)
     centerOf(site) {
-      return this.world(site.x + (site.w - 1) / 2, site.y + (site.h - 1) / 2);
+      const c = this.world(site.x + (site.w - 1) / 2, site.y + (site.h - 1) / 2);
+      c.y -= this.liftAt(site.x, site.y);
+      return c;
     },
     covers(site, x, y) {
       return x >= site.x && x < site.x + site.w && y >= site.y && y < site.y + site.h;
@@ -990,7 +1074,7 @@ export default {
       }
     },
     drawProp(ctx, prop, t, repaint, now) {
-      const c = this.world(prop.x, prop.y);
+      const c = { x: prop.wx, y: prop.wy };
       const mist = this.mistOf(this.zoneAt(prop.x, prop.y), now);
       if (mist) {
         ctx.save();
@@ -1001,7 +1085,7 @@ export default {
     },
     // Panneau d'un quartier à acheter : prix, ou chapitre du Livre encore fermé ; il se balance un peu
     drawSign(ctx, { zone, at }, t, repaint) {
-      const c = this.world(at.x, at.y);
+      const c = this.ground(at.x, at.y);
       ctx.save();
       ctx.translate(c.x, c.y);
       ctx.rotate(Math.sin(t * 1.3 + at.x) * 0.02);
@@ -1024,6 +1108,7 @@ export default {
           const ax = zone.anchor.x + Math.sin(t * 0.13 + k * 1.9 + zone.anchor.y) * 1.6;
           const ay = zone.anchor.y + Math.cos(t * 0.11 + k * 2.3 + zone.anchor.x) * 1.6;
           const c = this.world(ax, ay);
+          c.y -= this.liftAt(zone.anchor.x, zone.anchor.y);
           const g = ctx.createRadialGradient(c.x, c.y - 14, 0, c.x, c.y - 14, TW * 1.3);
           g.addColorStop(0, `rgba(248, 249, 252, ${(0.42 * mist).toFixed(3)})`);
           g.addColorStop(1, 'rgba(248, 249, 252, 0)');
@@ -1114,7 +1199,9 @@ export default {
       return out;
     },
     drawCritter(ctx, critter, repaint) {
-      const c = this.world(critter.x, critter.y);
+      // Le poisson saute au niveau de la mer ; les autres vivent sur le sol de leur case
+      const c = critter.kind === 'fish' ? this.world(critter.x, critter.y) : this.ground(critter.x, critter.y);
+      if (critter.kind === 'fish') c.y -= SEA_Z * HS;
       ctx.save();
       ctx.translate(c.x, c.y - critter.z);
       if (critter.flip) ctx.scale(-1, 1);
@@ -1167,7 +1254,7 @@ export default {
       if (phase.night > 0.35) {
         const strength = (phase.night - 0.35) / 0.65;
         for (const fly of fireflies(t, this.state.size)) {
-          const p = this.world(fly.x, fly.y);
+          const p = this.ground(fly.x, fly.y);
           glow(ctx, p.x, p.y - fly.z, 9, strength * fly.a, '255,236,140');
           ctx.fillStyle = `rgba(255,250,200,${(strength * fly.a).toFixed(3)})`;
           ctx.fillRect(p.x - 1, p.y - fly.z - 1, 2, 2);
@@ -1195,7 +1282,7 @@ export default {
       ctx.textBaseline = 'alphabetic';
     },
     drawTile(ctx, tile, now, t, repaint) {
-      const c = this.world(tile.x, tile.y);
+      const c = this.ground(tile.x, tile.y);
       const started = this.pops.get(tile.element);
       let scale = 1;
       if (started) {
@@ -1286,7 +1373,7 @@ export default {
       // Zones de toucher généreuses : tout le volume dessiné du bâtiment, pas seulement sa base
       const candidates = [
         ...this.state.sites.map(site => ({ site, depth: site.x + site.y + site.w, c: this.centerOf(site), r: TW * 0.49 * site.w, h: TW * 0.875 * site.w, below: TH * 0.525 * site.w })),
-        ...this.state.tiles.map(tile => ({ tile, depth: tile.x + tile.y, c: this.world(tile.x, tile.y), r: TW * 0.4, h: TW * 0.95 }))
+        ...this.state.tiles.map(tile => ({ tile, depth: tile.x + tile.y, c: this.ground(tile.x, tile.y), r: TW * 0.4, h: TW * 0.95 }))
       ].sort((p, q) => q.depth - p.depth);
       const hit = candidates.find(o => Math.abs(w.x - o.c.x) < o.r && w.y > o.c.y - o.h && w.y < o.c.y + (o.site ? o.below : TH * 0.3));
       if (hit) return hit;
@@ -1331,7 +1418,7 @@ export default {
         }
         vibrate(6);
       } else if (hit.tile) {
-        const c = this.world(hit.tile.x, hit.tile.y);
+        const c = this.ground(hit.tile.x, hit.tile.y);
         const sp = this.toScreen(c.x, c.y);
         this.menuPos = { x: Math.max(80, Math.min(this.geo.width - 80, sp.x)), y: Math.max(8, sp.y - TW * this.cam.s * 1.05) };
         this.selected = hit.tile;
@@ -1413,7 +1500,7 @@ export default {
     },
     screenRectOf(x, y) {
       const rect = this.$refs.canvas.getBoundingClientRect();
-      const c = this.world(x, y);
+      const c = this.ground(x, y);
       const sp = this.toScreen(c.x, c.y);
       return { left: rect.left + sp.x - 30, top: rect.top + sp.y - 40, width: 60, height: 60 };
     },
