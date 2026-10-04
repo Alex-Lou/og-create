@@ -1,7 +1,7 @@
 // Le sol de la grande île en relief (Canvas 2D, unités du monde) : chaque case a un sol (herbe, sable, prairie,
 // forêt, roche, chemin, eau…) et une hauteur de 0 à 3 ; ses faces avant (vers +x et +y) descendent jusqu'au voisin,
-// ou jusqu'à la mer. Le sol est préparé par blocs de 8 × 8 cases, gardés en images (TerrainCache) : seuls les blocs
-// visibles sont dessinés, deux nouveaux au plus par image (le reste vient d'une vue d'ensemble basse résolution).
+// ou jusqu'à la mer. Le sol est préparé en carrés alignés sur l'écran, gardés en images (TerrainCache) : seuls les
+// carrés visibles sont dessinés, les nouveaux préparés dans un budget de temps par image.
 // L'eau (reflets, cascades) et l'écume sont animées par-dessus, case par case visible.
 
 export const TW = 64;
@@ -9,11 +9,18 @@ export const TH = TW / 2;
 // Hauteur d'un palier de relief, et niveau de la mer (en paliers, sous la terre la plus basse)
 export const HS = 22;
 export const SEA_Z = -1.36;
-const CHUNK = 8;
-// Blocs gardés en images au plus (les plus anciens partent d'abord) ; résolution maximale d'un bloc
-const MAX_CHUNKS = 12;
+// Carrés du sol : côté en pixels, marge qui recouvre les voisins, nombre gardé en images (hors de ceux à l'écran,
+// toujours gardés), résolution maximale ; vue d'ensemble de toute l'île
+const TILE_PX = 512;
+const PAD_PX = 2;
+const MAX_TILES = 24;
 const MAX_RES = 2;
-const OVERVIEW_RES = 0.3;
+const OVERVIEW_RES = 0.25;
+// Ce qu'une case peut couvrir au-dessus de son centre (relief, détails) et au-dessous (faces jusqu'à la mer, piles
+// du pont), en unités du monde
+const cellAbove = h => TH / 2 + Math.max(0, h) * HS + 8;
+const CELL_ABOVE_MAX = TH / 2 + 3 * HS + 8;
+const CELL_BELOW = TH / 2 - SEA_Z * HS + 8;
 
 // Lecture des calques du serveur (state.map) : relief, sol, quartier
 export function islandOf(map, n) {
@@ -223,119 +230,200 @@ export function drawCell(ctx, M, x, y, veil = 0) {
   }
 }
 
-// Sol de l'île en blocs gardés en images. veilOf(x, y) : voile de brume d'une case (0 si son quartier est à soi)
+// Sol de l'île en carrés gardés en images, alignés sur l'écran (aucun chevauchement) : un carré fait TILE_PX pixels
+// de côté, quelle que soit la résolution, et couvre donc TILE_PX / res unités du monde. Les carrés à l'écran ne
+// sont jamais jetés ; au-delà de MAX_TILES, les plus anciens hors de l'écran partent d'abord. Vue de toute l'île :
+// une seule image basse résolution (la vue d'ensemble), qui sert aussi en attendant un carré pas encore prêt.
+// veilOf(x, y) : voile de brume d'une case (0 si son quartier est à soi)
 export class TerrainCache {
   constructor(M, veilOf) {
     this.M = M;
     this.veilOf = veilOf;
-    this.chunks = new Map();
+    this.tiles = new Map();
     this.overview = null;
-    this.span = Math.ceil(M.n / CHUNK);
+    const n = M.n;
+    // Rectangle du monde où il y a du sol (au-delà, la mer)
+    this.bounds = { x: (-n * TW) / 2 - TW, y: -CELL_ABOVE_MAX, w: n * TW + 2 * TW, h: n * TH + CELL_ABOVE_MAX + CELL_BELOW };
   }
 
-  // Rectangle du monde couvert par un bloc (cases du bloc, faces et relief compris)
-  box(cx, cy) {
-    const x0 = cx * CHUNK, y0 = cy * CHUNK, x1 = x0 + CHUNK - 1, y1 = y0 + CHUNK - 1;
-    return {
-      x: ((x0 - y1) * TW) / 2 - TW / 2 - 2,
-      y: ((x0 + y0) * TH) / 2 - TH / 2 - 3 * HS - 4,
-      w: ((x1 - x0 + y1 - y0) * TW) / 2 + TW + 4,
-      h: ((x1 + y1 - x0 - y0) * TH) / 2 + TH + (3 - SEA_Z) * HS + HS * 1.6 + 8
-    };
-  }
-
-  paint(ctx, x0, y0, x1, y1) {
-    const M = this.M;
-    for (let d = x0 + y0; d <= x1 + y1; d++) {
-      for (let x = Math.max(x0, d - y1); x <= Math.min(x1, d - y0); x++) drawCell(ctx, M, x, d - x, this.veilOf(x, d - x));
+  // Peint les cases qui touchent un rectangle du monde, dans l'ordre du relief (diagonale après diagonale, de gauche
+  // à droite) ; le canvas ou la découpe coupe ce qui dépasse. Renvoie le nombre de cases peintes
+  paint(ctx, r) {
+    const M = this.M, n = M.n;
+    // Centre d'une case : ((x - y) · TW/2, (x + y) · TH/2) ; d = x + y, u = x - y
+    // (cases qui touchent le rectangle sur plus qu'un bord)
+    const umin = Math.floor(((r.x - TW / 2 - 2) * 2) / TW) + 1, umax = Math.ceil(((r.x + r.w + TW / 2 + 2) * 2) / TW) - 1;
+    const dmin = Math.max(0, Math.floor(((r.y - CELL_BELOW) * 2) / TH) + 1), dmax = Math.min(2 * n - 2, Math.ceil(((r.y + r.h + CELL_ABOVE_MAX) * 2) / TH) - 1);
+    let count = 0;
+    for (let d = dmin; d <= dmax; d++) {
+      const xa = Math.max(0, d - n + 1, Math.ceil((d + umin) / 2)), xb = Math.min(n - 1, d, Math.floor((d + umax) / 2));
+      for (let x = xa; x <= xb; x++) {
+        const y = d - x;
+        if (!M.land(x, y) && M.ground(x, y) !== 'b') continue;
+        if ((d * TH) / 2 - cellAbove(M.height(x, y)) >= r.y + r.h || (d * TH) / 2 + CELL_BELOW <= r.y) continue;
+        drawCell(ctx, M, x, y, this.veilOf(x, y));
+        count++;
+      }
     }
+    return count;
   }
 
-  render(cx, cy, res) {
-    const b = this.box(cx, cy);
+  // Un carré : sa case de la grille à cette résolution, avec une marge de PAD_PX pixels qui recouvre ses voisins
+  // (aucune couture entre deux carrés). Un carré de pleine mer ne garde pas d'image
+  render(tx, ty, res) {
+    const size = TILE_PX / res, pad = PAD_PX / res;
+    const r = { x: tx * size - pad, y: ty * size - pad, w: size + 2 * pad, h: size + 2 * pad };
     const canvas = document.createElement('canvas');
-    canvas.width = Math.ceil(b.w * res);
-    canvas.height = Math.ceil(b.h * res);
+    canvas.width = canvas.height = TILE_PX + 2 * PAD_PX;
     const ctx = canvas.getContext('2d');
-    ctx.setTransform(res, 0, 0, res, -b.x * res, -b.y * res);
-    const n = this.M.n;
-    this.paint(ctx, cx * CHUNK, cy * CHUNK, Math.min(n - 1, cx * CHUNK + CHUNK - 1), Math.min(n - 1, cy * CHUNK + CHUNK - 1));
-    return { canvas, b, res };
+    ctx.setTransform(res, 0, 0, res, -r.x * res, -r.y * res);
+    if (this.paint(ctx, r)) return { canvas, r };
+    canvas.width = canvas.height = 0;
+    return { canvas: null, r };
   }
 
-  // Vue d'ensemble de toute l'île en basse résolution : ce qu'on montre d'un bloc pas encore prêt
+  // Toute l'île en basse résolution
   overviewOf() {
     if (this.overview) return this.overview;
-    const n = this.M.n;
-    const b = { x: (-n * TW) / 2 - TW, y: -TH - 3 * HS - 4 };
-    b.w = n * TW + 2 * TW;
-    b.h = n * TH + TH * 2 + (3 - SEA_Z) * HS + HS * 2 + 8;
+    const b = this.bounds;
     const canvas = document.createElement('canvas');
     canvas.width = Math.ceil(b.w * OVERVIEW_RES);
     canvas.height = Math.ceil(b.h * OVERVIEW_RES);
     const ctx = canvas.getContext('2d');
     ctx.setTransform(OVERVIEW_RES, 0, 0, OVERVIEW_RES, -b.x * OVERVIEW_RES, -b.y * OVERVIEW_RES);
-    this.paint(ctx, 0, 0, n - 1, n - 1);
-    this.overview = { canvas, b };
+    this.paint(ctx, b);
+    this.overview = { canvas, ctx };
     return this.overview;
   }
 
-  // Dessine les blocs visibles (view : rectangle du monde) ; renvoie le nombre de blocs encore à préparer
-  draw(ctx, view, scale, budget = 2) {
-    const res = Math.min(MAX_RES, Math.pow(2, Math.ceil(Math.log2(Math.max(0.25, scale)))));
-    const list = [];
-    for (let cy = 0; cy < this.span; cy++) {
-      for (let cx = 0; cx < this.span; cx++) {
-        const b = this.box(cx, cy);
-        if (b.x > view.x + view.w || b.x + b.w < view.x || b.y > view.y + view.h || b.y + b.h < view.y) continue;
-        list.push({ cx, cy, b });
-      }
+  // Dessine le sol visible (view : rectangle du monde, scale : pixels par unité du monde). Les carrés manquants sont
+  // préparés tant qu'il reste du temps (budget en ms, au moins un par image ; tous d'un coup à l'arrivée sur l'île),
+  // puis, tout étant prêt, un voisin de l'écran d'avance. Renvoie le nombre de carrés encore à préparer
+  draw(ctx, view, scale, budget = 8) {
+    const res = resOf(scale);
+    const b = this.bounds;
+    if (res <= OVERVIEW_RES) {
+      ctx.drawImage(this.overviewOf().canvas, b.x, b.y, b.w, b.h);
+      return 0;
     }
-    list.sort((p, q) => p.cx + p.cy - (q.cx + q.cy) || p.cx - q.cx);
-    let missing = 0;
-    for (const { cx, cy, b } of list) {
-      const key = `${cx},${cy},${res}`;
-      let chunk = this.chunks.get(key);
-      if (!chunk && budget > 0) {
-        chunk = this.render(cx, cy, res);
-        budget--;
-      }
-      if (chunk) {
-        // Le plus récemment utilisé passe en dernier : les plus anciens partent d'abord
-        this.chunks.delete(key);
-        this.chunks.set(key, chunk);
-        ctx.drawImage(chunk.canvas, b.x, b.y, b.w, b.h);
-      } else {
-        missing++;
-        // Une autre résolution déjà prête, sinon la vue d'ensemble
-        const other = [...this.chunks.entries()].find(([k]) => k.startsWith(`${cx},${cy},`));
-        if (other) ctx.drawImage(other[1].canvas, b.x, b.y, b.w, b.h);
-        else {
-          const o = this.overviewOf();
-          ctx.drawImage(o.canvas, (b.x - o.b.x) * OVERVIEW_RES, (b.y - o.b.y) * OVERVIEW_RES, b.w * OVERVIEW_RES, b.h * OVERVIEW_RES, b.x, b.y, b.w, b.h);
+    const size = TILE_PX / res;
+    const x0 = Math.floor(Math.max(view.x, b.x) / size), x1 = Math.floor(Math.min(view.x + view.w, b.x + b.w) / size);
+    const y0 = Math.floor(Math.max(view.y, b.y) / size), y1 = Math.floor(Math.min(view.y + view.h, b.y + b.h) / size);
+    const start = performance.now();
+    const all = !this.tiles.size;
+    const seen = new Set();
+    let rendered = 0, missing = 0;
+    for (let ty = y0; ty <= y1; ty++) {
+      for (let tx = x0; tx <= x1; tx++) {
+        const key = `${res}:${tx},${ty}`;
+        seen.add(key);
+        let tile = this.tiles.get(key);
+        if ((!tile || tile.stale) && (all || !rendered || performance.now() - start < budget)) {
+          if (tile && tile.canvas) tile.canvas.width = tile.canvas.height = 0;
+          tile = this.render(tx, ty, res);
+          rendered++;
+        }
+        if (tile) {
+          // Le plus récemment vu passe en dernier : les plus anciens partent d'abord
+          this.tiles.delete(key);
+          this.tiles.set(key, tile);
+          if (tile.stale) missing++;
+          if (tile.canvas) ctx.drawImage(tile.canvas, tile.r.x, tile.r.y, tile.r.w, tile.r.h);
+        } else {
+          missing++;
+          this.stand(ctx, { x: tx * size, y: ty * size, w: size, h: size });
         }
       }
     }
-    while (this.chunks.size > MAX_CHUNKS) {
-      const [oldest, chunk] = this.chunks.entries().next().value;
-      chunk.canvas.width = chunk.canvas.height = 0;
-      this.chunks.delete(oldest);
+    if (!missing && this.tiles.size < MAX_TILES && performance.now() - start < budget) this.ahead(res, x0 - 1, y0 - 1, x1 + 1, y1 + 1);
+    for (const [key, tile] of this.tiles) {
+      if (this.tiles.size <= MAX_TILES) break;
+      if (seen.has(key)) continue;
+      if (tile.canvas) tile.canvas.width = tile.canvas.height = 0;
+      this.tiles.delete(key);
     }
     return missing;
   }
 
-  // Brume changée (quartier acheté) : tout est à refaire
-  invalidate() {
-    this.clear();
+  // Un carré pas encore prêt autour de l'écran (sur l'île), préparé d'avance
+  ahead(res, x0, y0, x1, y1) {
+    const size = TILE_PX / res, b = this.bounds;
+    for (let ty = y0; ty <= y1; ty++) {
+      for (let tx = x0; tx <= x1; tx++) {
+        const key = `${res}:${tx},${ty}`;
+        if (this.tiles.has(key) || (tx + 1) * size < b.x || tx * size > b.x + b.w || (ty + 1) * size < b.y || ty * size > b.y + b.h) continue;
+        this.tiles.set(key, this.render(tx, ty, res));
+        return;
+      }
+    }
+  }
+
+  // En attendant un carré : la vue d'ensemble si elle existe déjà (vue de toute l'île), puis les carrés d'une autre
+  // résolution qui le recouvrent (découpés à sa place)
+  stand(ctx, r) {
+    const b = this.bounds;
+    if (this.overview) {
+      const k = OVERVIEW_RES;
+      ctx.drawImage(this.overview.canvas, (r.x - b.x) * k, (r.y - b.y) * k, r.w * k, r.h * k, r.x, r.y, r.w, r.h);
+    }
+    ctx.save();
+    ctx.beginPath();
+    ctx.rect(r.x, r.y, r.w, r.h);
+    ctx.clip();
+    for (const tile of this.tiles.values()) {
+      const t = tile.r;
+      if (tile.canvas && t.x < r.x + r.w && t.x + t.w > r.x && t.y < r.y + r.h && t.y + t.h > r.y) ctx.drawImage(tile.canvas, t.x, t.y, t.w, t.h);
+    }
+    ctx.restore();
+  }
+
+  // La brume de ces cases a changé (quartier acheté) : leurs carrés sont refaits au fil des images (l'ancien reste
+  // affiché d'ici là), la vue d'ensemble est repeinte à leur place
+  invalidate(cells) {
+    if (!cells.length) return;
+    const r = cellsBox(this.M, cells);
+    for (const tile of this.tiles.values()) {
+      const t = tile.r;
+      if (t.x < r.x + r.w && t.x + t.w > r.x && t.y < r.y + r.h && t.y + t.h > r.y) tile.stale = true;
+    }
+    if (this.overview) {
+      const { ctx } = this.overview;
+      ctx.save();
+      ctx.beginPath();
+      ctx.rect(r.x, r.y, r.w, r.h);
+      ctx.clip();
+      ctx.clearRect(r.x, r.y, r.w, r.h);
+      this.paint(ctx, r);
+      ctx.restore();
+    }
   }
 
   // Libère toutes les images (sortie de l'île)
   clear() {
-    for (const chunk of this.chunks.values()) chunk.canvas.width = chunk.canvas.height = 0;
-    this.chunks.clear();
+    for (const tile of this.tiles.values()) if (tile.canvas) tile.canvas.width = tile.canvas.height = 0;
+    this.tiles.clear();
     if (this.overview) this.overview.canvas.width = this.overview.canvas.height = 0;
     this.overview = null;
   }
+}
+
+// Résolution des images du sol pour une échelle d'affichage : par paliers de √2 (une image n'est jamais agrandie,
+// et pas plus de 1,41 fois réduite), entre la vue d'ensemble et MAX_RES
+export function resOf(scale) {
+  return Math.min(MAX_RES, 2 ** (Math.ceil(2 * Math.log2(Math.max(OVERVIEW_RES, scale))) / 2));
+}
+
+// Rectangle du monde que couvrent des cases ([x, y]), relief et faces compris
+export function cellsBox(M, cells) {
+  let x0 = Infinity, y0 = Infinity, x1 = -Infinity, y1 = -Infinity;
+  for (const [x, y] of cells) {
+    const c = worldOf(x, y, 0);
+    x0 = Math.min(x0, c.x - TW / 2 - 2);
+    x1 = Math.max(x1, c.x + TW / 2 + 2);
+    y0 = Math.min(y0, c.y - cellAbove(M.height(x, y)));
+    y1 = Math.max(y1, c.y + CELL_BELOW);
+  }
+  return { x: x0, y: y0, w: x1 - x0, h: y1 - y0 };
 }
 
 // Ce qui bouge sur le sol, précalculé une fois par île : cases d'eau douce, faces de cascade, bords de mer

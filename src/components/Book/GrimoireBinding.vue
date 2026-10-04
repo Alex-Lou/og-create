@@ -82,7 +82,7 @@ function shade(hex, k) {
 export default {
   name: 'GrimoireBinding',
   props: {
-    // Téléphone : la double page lue de près, reliure plus fine
+    // Téléphone : une seule page, reliure plus fine, dos à gauche
     compact: { type: Boolean, default: false },
     // Chapitre de la page visée (null : sommaire), et état des sept chapitres ({ id, open })
     chapter: { type: String, default: null },
@@ -185,7 +185,7 @@ export default {
       const canvas = this.$refs.endpaper;
       const rect = this.$el.getBoundingClientRect();
       const dpr = Math.min(window.devicePixelRatio || 1, 2);
-      const w = rect.width / 2;
+      const w = this.compact ? rect.width : rect.width / 2;
       canvas.width = Math.round(w * dpr);
       canvas.height = Math.round(rect.height * dpr);
       paintEndpaper(canvas.getContext('2d'), canvas.width, canvas.height, 'left', true);
@@ -341,7 +341,7 @@ export default {
 }
 /* Signet de soie : sort du pli en bas et ondule */
 .grim__ribbon { position: absolute; z-index: 1; left: calc(50% + 12px); top: calc(100% - 3px); width: 13px; height: 42px; color: var(--silk); transform-origin: 50% 0; transition: color .6s ease; animation: grim-sway 4.6s ease-in-out infinite; filter: drop-shadow(1px 2px 1px rgba(0, 0, 0, .4)); }
-.grim.is-compact .grim__ribbon { width: 11px; height: 36px; left: calc(50% + 10px); }
+.grim.is-compact .grim__ribbon { width: 11px; height: 36px; left: 10px; }
 .grim__ribbon svg { display: block; width: 100%; height: 100%; }
 .grim__ribbon path { fill: currentColor; }
 .grim__ribbon .grim__ribbon-sheen { fill: none; stroke: rgba(255, 255, 255, .35); stroke-width: 1.4; }
@@ -416,6 +416,17 @@ export default {
 .grim__endpaper { position: absolute; z-index: 2; left: calc(var(--m) + var(--smax)); top: var(--m); width: calc(100% - var(--m) - var(--smax)); height: calc(100% - 2 * var(--m) - var(--sb)); border-radius: var(--r) 6px 6px var(--r); }
 .grim__strap--inside { left: -38px; }
 .grim.is-compact .grim__strap--inside { left: -30px; }
+
+/* Téléphone, une seule page : le plat droit sous la page, le dos en mince bande à gauche (sans coins ni lanière),
+   le pli, les tranchefiles et le signet au bord gauche ; la couverture couvre la page et s'ouvre vers la gauche */
+.grim.is-compact .grim__board--right, .grim.is-compact .grim__block--right, .grim.is-compact .grim__cover { left: 0; }
+.grim.is-compact .grim__board--left { right: 100%; border-radius: 10px 2px 2px 10px; }
+.grim.is-compact.is-closed .grim__board--left { visibility: visible; }
+.grim.is-compact .grim__board--left .grim__tool, .grim.is-compact > .grim__corner.grim__left, .grim.is-compact .grim__block--left, .grim.is-compact > .grim__strap { display: none; }
+.grim.is-compact .grim__fold { left: -2px; }
+.grim.is-compact .grim__headband { left: -6px; }
+.grim.is-compact .grim__runes { left: 9%; }
+.grim.is-compact .grim__shade { inset: 0; border-radius: 6px var(--r) var(--r) 6px; }
 
 @keyframes grim-flicker {
   0% { opacity: .85; } 9% { opacity: 1; } 17% { opacity: .78; } 26% { opacity: .95; } 41% { opacity: .82; }

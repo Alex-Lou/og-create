@@ -437,12 +437,12 @@ export default {
     this.bubbles = [];
     this.signs = [];
     this.shore = [];
-    // Sol en relief : calques lus (M), blocs d'images (terrain), eau animée (live), cases de chaque quartier
+    // Sol en relief : calques lus (M), carrés d'images (terrain), eau animée (live), cases de chaque quartier
     this.M = null;
     this.terrain = null;
     this.live = null;
     this.zoneTiles = new Map();
-    this.mistKey = '';
+    this.mistKey = null;
     this.moreRaf = 0;
     this.forced = forcedPhase();
     this.ac = null;
@@ -478,7 +478,7 @@ export default {
     cancelAnimationFrame(this.raf);
     cancelAnimationFrame(this.moreRaf);
     this.raf = this.moreRaf = 0;
-    // Sortie de l'île : la vue est gardée pour le retour, la mémoire libérée (sol en blocs, images, décor)
+    // Sortie de l'île : la vue est gardée pour le retour, la mémoire libérée (sol en carrés, images, décor)
     if (this.cam) lastView = { cam: { ...this.cam }, site: this.site ? this.site.id : null, siteTab: this.siteTab };
     if (this.terrain) this.terrain.clear();
     this.terrain = null;
@@ -518,14 +518,9 @@ export default {
           if (from !== undefined && site.level > from) this.raises.set(site.id, { at: performance.now(), from });
         });
       }
-      // Calques du sol ; la brume est peinte dans les blocs : un quartier acheté les fait refaire
+      // Calques du sol ; la brume est peinte dans les carrés du sol : un quartier acheté fait refaire les siens
       const M = islandOf(state.map, state.size);
-      const mistKey = state.map.zones.filter(z => z.owned).map(z => z.id).join();
-      if (!this.terrain || mistKey !== this.mistKey) {
-        if (this.terrain) this.terrain.clear();
-        this.terrain = new TerrainCache(M, (x, y) => this.veilAt(x, y));
-        this.mistKey = mistKey;
-      }
+      if (!this.terrain) this.terrain = new TerrainCache(M, (x, y) => this.veilAt(x, y));
       this.M = M;
       this.live = liveOf(M);
       this.zoneTiles = new Map();
@@ -543,6 +538,13 @@ export default {
       this.props = this.natureOf(state);
       this.shore = this.shoreOf(state);
       this.state = state;
+      const mistKey = state.map.zones.filter(z => z.owned).map(z => z.id).join();
+      if (this.mistKey !== null && mistKey !== this.mistKey) {
+        const before = new Set(this.mistKey.split(',')), after = new Set(mistKey.split(','));
+        const changed = [...new Set([...before, ...after])].filter(id => before.has(id) !== after.has(id));
+        this.terrain.invalidate(changed.flatMap(id => this.zoneTiles.get(id) || []));
+      }
+      this.mistKey = mistKey;
       this.loadedAt = Date.now();
       this.clock = this.loadedAt;
       if (this.site) this.site = state.sites.find(s => s.id === this.site.id) || null;
@@ -602,7 +604,7 @@ export default {
     zoneAt(x, y) {
       return this.M && this.state ? this.state.map.zones[this.M.zone(x, y)] || null : null;
     },
-    // Voile de brume d'une case (quartier à acheter), peint dans les blocs du sol
+    // Voile de brume d'une case (quartier à acheter), peint dans les carrés du sol
     veilAt(x, y) {
       const zone = this.state && this.state.map.zones[this.M.zone(x, y)];
       return zone && !zone.owned ? 0.62 : 0;
@@ -835,12 +837,12 @@ export default {
         ctx.ellipse(mid.x, mid.y + DEPTH, (n * TW) * (0.46 + ripple * 0.3), (n * TH) * (0.5 + ripple * 0.3), 0, 0, Math.PI * 2);
         ctx.stroke();
       }
-      // Monde visible : seuls les blocs de sol et ce qui s'y tient, à l'écran, sont dessinés
+      // Monde visible : seuls les carrés de sol et ce qui s'y tient, à l'écran, sont dessinés
       const tl = this.toWorld(0, 0);
       const br = this.toWorld(width, height);
       const view = { x: tl.x, y: tl.y, w: br.x - tl.x, h: br.y - tl.y };
-      // Sol en relief, par blocs (deux nouveaux au plus par image) ; puis l'eau qui bouge et l'écume
-      const missing = this.terrain.draw(ctx, view, s * dpr, 2);
+      // Sol en relief, en carrés gardés en images (les nouveaux dans un budget de 8 ms) ; puis l'eau qui bouge et l'écume
+      const missing = this.terrain.draw(ctx, view, s * dpr, 8);
       drawLive(ctx, this.M, this.live, view, t);
       // Sol des chantiers : terre battue (bâti) ou chantier ; cases libres pendant un déplacement ; case choisie
       const plots = new Map();
@@ -912,7 +914,7 @@ export default {
           ctx.fill();
         }
       }
-      // Blocs de sol encore à préparer : une image de plus, même sans boucle d'animation
+      // Carrés de sol encore à préparer : une image de plus, même sans boucle d'animation
       if (missing && !this.raf && !this.moreRaf) {
         this.moreRaf = requestAnimationFrame(() => {
           this.moreRaf = 0;

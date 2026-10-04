@@ -1,4 +1,4 @@
-// Images des sprites SVG de l'île, rendues une fois puis gardées : le canvas les redessine sans recalcul.
+// Images des sprites SVG de l'île, rendues une fois dans un canvas puis gardées : l'île les recopie sans recalcul.
 // Rendu à 4 fois la taille du monde : net jusqu'au zoom maximal sur écran haute densité.
 // Chargées par paquets (LOADS à la fois, les autres attendent leur tour) ; clearSprites() vide tout à la sortie de l'île.
 const RES = 4;
@@ -18,13 +18,24 @@ function pump() {
       pump();
     };
     img.onload = () => {
-      job.entry.img = img;
+      job.entry.img = bitmapOf(img);
       done();
       if (job.onReady) job.onReady();
     };
     img.onerror = done;
     img.src = job.src;
   }
+}
+
+// Une image SVG redessinée telle quelle est souvent recalculée par le navigateur à chaque dessin (surtout penchée ou
+// réduite) : elle est peinte une fois dans un canvas, que le dessin de l'île recopie ensuite
+function bitmapOf(img) {
+  const canvas = document.createElement('canvas');
+  canvas.width = img.naturalWidth || img.width;
+  canvas.height = img.naturalHeight || img.height;
+  if (!canvas.width || !canvas.height) return img;
+  canvas.getContext('2d').drawImage(img, 0, 0, canvas.width, canvas.height);
+  return canvas;
 }
 
 // Image prête d'un sprite { svg, box }, ou null pendant le chargement (onReady redessine l'île)
@@ -43,6 +54,7 @@ export function imageOf(key, make, onReady) {
 
 // Sortie de l'île : les images sont libérées (elles se rechargeront au retour)
 export function clearSprites() {
+  for (const entry of cache.values()) if (entry.img && entry.img.getContext) entry.img.width = entry.img.height = 0;
   cache.clear();
   queue.length = 0;
 }

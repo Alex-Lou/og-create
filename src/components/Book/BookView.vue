@@ -21,11 +21,11 @@
       <button type="button" class="book-view__stars" :aria-label="`${stars} découvertes : revenir au sommaire`" @click="goTo(0)">★ {{ stars }}</button>
     </header>
 
-    <div ref="stage" :class="['book-view__stage', zoom ? 'is-zoom' : 'is-spread', { 'is-opening': opening }]" :style="{ '--cam': cam === 'left' ? 0 : 1 }">
+    <div ref="stage" :class="['book-view__stage', single ? 'is-single' : 'is-spread', { 'is-opening': opening }]">
       <div ref="rig" class="book-view__rig">
         <div ref="wrap" class="book-view__wrap">
           <GrimoireBinding
-            :compact="zoom"
+            :compact="single"
             :chapter="currentChapter ? currentChapter.id : null"
             :chapters="chapterState"
             :progress="leaf"
@@ -219,10 +219,9 @@ export default {
       pageClue: null,
       showHint: !storage.load(HINT_KEY, false),
       loadError: false,
-      // Grimoire : vue rapprochée (téléphone) et page qu'elle montre (caméra), ouverture en cours, pages prêtes,
-      // avancée (tranches), éclat des sigles, page visée sur la double page
-      zoom: false,
-      cam: 'right',
+      // Grimoire : une page à la fois (téléphone), ouverture en cours, pages prêtes, avancée (tranches), éclat des
+      // sigles, page visée sur la double page
+      single: false,
       opening: false,
       engineReady: false,
       leaf: 0,
@@ -342,7 +341,7 @@ export default {
     this.sizeObserver = null;
   },
   async mounted() {
-    this.zoom = this.wantsZoom();
+    this.single = this.wantsSingle();
     this.sizeObserver = new ResizeObserver(() => this.checkMode());
     this.sizeObserver.observe(this.$el);
     await this.load();
@@ -484,22 +483,22 @@ export default {
       else this.engine.refresh();
       if (previous) this.queueEffects(previous, data, previousKey);
     },
-    wantsZoom() {
+    wantsSingle() {
       return !(this.$el.clientWidth >= SPREAD_MIN_WIDTH && window.innerHeight >= SPREAD_MIN_HEIGHT);
     },
-    // Passage vue rapprochée ↔ deux pages : le moteur est refait, sur la même page
+    // Passage une page ↔ deux pages : le moteur est refait, sur la même page
     checkMode() {
-      const want = this.wantsZoom();
-      if (want === this.zoom) return;
+      const want = this.wantsSingle();
+      if (want === this.single) return;
       if (!this.engine) {
-        this.zoom = want;
+        this.single = want;
         return;
       }
       const at = this.engine.index;
       this.engine.destroy();
       this.engine = null;
       this.opening = false;
-      this.zoom = want;
+      this.single = want;
       this.$nextTick(() => {
         if (!this.gone && !this.engine) this.mountEngine(at);
       });
@@ -516,8 +515,7 @@ export default {
         wrap: this.$refs.wrap,
         hot: this.$refs.hot,
         start,
-        spread: true,
-        zoom: this.zoom,
+        spread: !this.single,
         count: () => this.models.length,
         // Hors du Livre (−1, count), les gardes marbrées ; une page de gauche se peint côté gauche (reliure à droite)
         paint: (index, ctx, w, h, side) => (index < 0 || index >= this.models.length
@@ -528,8 +526,6 @@ export default {
           const reach = i => this.models[i]?.type === 'reach';
           return reach(right) && !reach(left) ? 'right' : 'left';
         },
-        // De près, la caméra suit le tour vers la page d'arrivée
-        onTurn: page => { this.cam = sideOf(page); },
         onChange: () => {
           if (this.showHint) {
             this.showHint = false;
@@ -546,8 +542,7 @@ export default {
           this.spots = hotspots;
           this.pageLabel = label;
           this.leaf = this.models.length > 1 ? index / (this.models.length - 1) : 0;
-          this.cam = sideOf(index);
-          this.aimSide = !this.zoom && model && model.type === 'reach' ? sideOf(index) : null;
+          this.aimSide = !this.single && model && model.type === 'reach' ? sideOf(index) : null;
           this.pageClue = model && model.type === 'reach'
             ? { families: [...new Set(model.page.clue)], tray: model.page.tray || null, revealed: model.revealed || null }
             : null;
@@ -770,23 +765,19 @@ export default {
   width: calc(2 * var(--book-w));
   aspect-ratio: 3 / 2;
 }
-/* Téléphone : la double page lue de près. Le gréement porte les deux pages et leur reliure (--edge de chaque côté) ;
-   la caméra le fait glisser pour centrer la page lue (--cam : 0 gauche, 1 droite) ; la scène coupe le reste, et le
-   bord de la page voisine dépasse un peu */
-.book-view__stage.is-zoom {
+/* Téléphone : une page à la fois, reliure à gauche (dos ~19 px à gauche, plat et fermoir ~26 px à droite) ; la
+   scène coupe la couverture quand elle s'ouvre vers la gauche */
+.book-view__stage.is-single {
   --book-w: max(220px, min(calc(100cqw - 60px), calc((100dvh - 446px) * .75), 460px));
-  --edge: 56px;
   height: calc(var(--book-w) * 4 / 3 + 48px);
-  overflow: hidden;
   overflow-x: clip; overflow-y: visible;
 }
-.book-view__stage.is-zoom .book-view__rig {
-  right: auto;
-  width: calc(2 * var(--book-w) + 2 * var(--edge));
-  transform: translateX(calc(50cqw - var(--edge) - var(--book-w) * (var(--cam) + .5)));
-  transition: transform .6s cubic-bezier(.45, .05, .25, 1);
+.book-view__stage.is-single .book-view__wrap {
+  top: 14px;
+  left: calc((100% - var(--book-w)) / 2 - 3px);
+  width: var(--book-w);
+  aspect-ratio: 3 / 4;
 }
-.book-view__stage.is-zoom .book-view__wrap { top: 14px; left: var(--edge); }
 /* Couches : reliure 1, pages 2, aura 3, zones interactives 4, couverture de l'ouverture 6 */
 .book-view__rig :deep(canvas.gl) { position: absolute; inset: 0; width: 100%; height: 100%; z-index: 2; pointer-events: none; }
 .book-view__hot { position: absolute; z-index: 4; touch-action: pan-y; border-radius: var(--book-radius); outline: none; }
@@ -872,7 +863,6 @@ export default {
 
 @media (prefers-reduced-motion: reduce) {
   .book-view__pulse, .book-view__hint, .book-view__chapter.is-ping { animation: none; }
-  .book-view__stage.is-zoom .book-view__rig { transition: none; }
 }
 </style>
 
