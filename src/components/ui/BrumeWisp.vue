@@ -1,7 +1,7 @@
 <template>
   <!-- Brume, le feu follet guide, en SVG (fiches, Livre) : le même que sur l'île (world/brume.js), flamme qui vacille
        et deux yeux qui clignent -->
-  <svg :class="['wisp', { 'is-ready': ready }]" :width="size" :height="Math.round(size * 1.25)" viewBox="-14 -26 28 35" aria-hidden="true">
+  <svg :class="['wisp', { 'is-ready': ready, 'is-waking': waking }]" :width="size" :height="Math.round(size * 1.25)" viewBox="-14 -26 28 35" aria-hidden="true">
     <defs>
       <radialGradient :id="`${uid}-body`" gradientUnits="userSpaceOnUse" cx="0" cy="-2.4" r="17.6" fx="0" fy="1.6">
         <stop offset="0" :stop-color="tone.core" />
@@ -36,7 +36,9 @@ export default {
     // Largeur en px (la hauteur suit)
     size: { type: Number, default: 32 },
     // Récompense à réclamer : le feu follet devient doré
-    ready: { type: Boolean, default: false }
+    ready: { type: Boolean, default: false },
+    // Naissance (BrumeGuide) : les yeux restent fermés, puis s'ouvrent
+    waking: { type: Boolean, default: false }
   },
   data() {
     count += 1;
@@ -60,6 +62,8 @@ export default {
   60% { transform: skewX(5deg) scaleY(.97); }
 }
 @keyframes wisp-blink { 0%, 96% { transform: scaleY(1); } 97% { transform: scaleY(.2); } }
+.wisp.is-waking .wisp__eyes ellipse { animation: wisp-wake 2.4s ease-out both, wisp-blink 4s steps(1, end) 2.4s infinite; }
+@keyframes wisp-wake { 0%, 82% { transform: scaleY(0); } 100% { transform: scaleY(1); } }
 @media (prefers-reduced-motion: reduce) {
   .wisp__flame, .wisp__eyes ellipse { animation: none; }
 }

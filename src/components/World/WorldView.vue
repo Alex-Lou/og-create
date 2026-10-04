@@ -63,7 +63,6 @@
           Touche une case libre pour y poser {{ moving }}.
           <button type="button" class="world__link" @click="moving = null">Annuler</button>
         </p>
-        <p v-else-if="state && firstVisit" class="world__banner">Touche un bâtiment pour sa fiche, un panneau pour agrandir l’île, une case d’herbe pour décorer.</p>
 
         <!-- Décoration touchée : déplacer ou retirer -->
         <div v-if="selected && !moving" class="world__menu" :style="menuStyle" role="dialog" :aria-label="`${selected.element}`">
@@ -324,7 +323,6 @@ import HarvestGame from './HarvestGame.vue';
 import { search } from '@/utils/search';
 import { glyph, clearDrawings } from '@/book/painter';
 import { burst, ring, vibrate, center, reducedMotion } from '@/utils/fx';
-import * as storage from '@/utils/storage';
 import { GLYPH, LABEL, RESOURCES } from '@/game/resources';
 import { BUILDINGS, NATURE, boatSprite } from '@/world/sprites';
 import { lookAt, boatOffset, artMake } from '@/world/looks';
@@ -338,6 +336,7 @@ import {
 } from '@/world/sea';
 import { SEA_SPRITES, FISH_SPECIES } from '@/world/seaSprites';
 import { drawBrume, floatOf, BRUME_ALT, BRUME_REACH } from '@/world/brume';
+import { guide } from '@/game/guide';
 import { chapterOfFamily } from '@/book/chapters';
 import { P } from '@/world/iso';
 import { phaseAt, forcedPhase, drawSea, drawCloudShadows, drawClouds, drawTint, glow, fireflies, hash } from '@/world/scene';
@@ -347,7 +346,6 @@ const TW = 64; // largeur d'une case à l'échelle 1 (unités du monde)
 const TH = TW / 2;
 const DEPTH = 30;
 const MAX_SCALE = 1.8;
-const SEEN_KEY = 'oc_world_seen';
 // Ce qui vit à la surface de la mer (posé au niveau de l'eau, jamais caché par la terre : eau libre)
 const SEA_KINDS = new Set(['fish', 'dolphin', 'whale', 'fluke', 'spout']);
 // Mouettes posées effrayées : envol (s), puis retour
@@ -416,7 +414,6 @@ export default {
       sending: false,
       runResult: null,
       runError: '',
-      firstVisit: false,
       clock: Date.now(),
       phaseLabel: '',
       phaseGlyph: '',
@@ -521,11 +518,6 @@ export default {
       const charges = this.state && this.state.charges;
       if (charges && charges.nextIn !== null && this.clock - this.loadedAt > charges.nextIn + 2000 && !this.busy && !this.run) this.load();
     }, 20000);
-    try {
-      this.firstVisit = !storage.load(SEEN_KEY);
-    } catch {
-      this.firstVisit = false;
-    }
     await this.load();
   },
   beforeUnmount() {
@@ -557,6 +549,7 @@ export default {
         this.apply(state);
         this.guest = false;
         this.loadError = false;
+        guide.tip('island');
       } catch (error) {
         if (this.gone) return;
         if ([401, 402].includes(error.response?.status)) {
@@ -1666,7 +1659,6 @@ export default {
       return this.lockedAt(tile.x, tile.y) ? { zone: this.zoneAt(tile.x, tile.y) } : { cell: tile };
     },
     tap(px, py) {
-      this.markSeen();
       const hit = this.hitAt(px, py);
       if (this.moving) {
         const cell = hit && hit.cell;
@@ -1776,15 +1768,6 @@ export default {
     stepState(site, i) {
       if (i < site.level) return 'done';
       return i === site.level ? 'next' : 'later';
-    },
-    markSeen() {
-      if (!this.firstVisit) return;
-      this.firstVisit = false;
-      try {
-        storage.save(SEEN_KEY, 1);
-      } catch {
-        /* stockage indisponible : le conseil reviendra, sans gravité */
-      }
     },
     screenRectOf(x, y) {
       const rect = this.$refs.canvas.getBoundingClientRect();

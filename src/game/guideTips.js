@@ -1,0 +1,24 @@
+// Ce que dit Brume, le feu follet guide, aux moments clés du jeu (une seule fois chacun) : son arrivée et le Livre,
+// la première page à portée, le premier mélange raté sur une page visée, chaque chapitre qui s'ouvre, la première
+// visite de l'île. Les quêtes accomplies (questTip) ont leur propre réplique.
+export const TIPS = {
+  welcome: 'Je suis Brume, un souffle de la brume qui couvre ton île. Ce grimoire est le Codex : chaque élément que tu crées s’y inscrit. Glisse une page du doigt, ou touche son bord, pour le feuilleter.',
+  reach: 'Cette page est à ta portée : son élément peut naître de ce que tu connais déjà. Lis l’indice, puis dépose les bons éléments dans l’Athanor.',
+  fail: 'Pas encore… Les familles notées sur la page te mettent sur la voie. L’Encre révèle un ingrédient, et tu peux deviner le nom lettre par lettre.',
+  island: 'Voici ton île, encore noyée de brume. Je t’y attendais : touche-moi, je te dirai par où commencer.',
+  'chapter-II': 'La Matière s’ouvre : ce qui se pétrit, se fond, se forge. Sur l’île, La Colline peut sortir de la brume.',
+  'chapter-III': 'Ciel et Terre : lève les yeux vers les astres. Les Jardins, le Faubourg et les Hauteurs t’attendent.',
+  'chapter-IV': 'Le Vivant s’éveille. La Crique et la Grande Forêt peuvent renaître.',
+  'chapter-V': 'Le Foyer : là où l’on invente et bâtit. Le Hameau sort de la brume.',
+  'chapter-VI': 'Les Âges tournent leurs pages. L’Îlot du Phare se laisse enfin approcher.',
+  'chapter-VII': 'Les Légendes… Il ne reste qu’un voile. Lève-le, et l’île sera entière.'
+};
+
+// Quête accomplie hors de l'île (dans le Livre) : Brume invite à venir réclamer la récompense
+export function questTip(quest) {
+  return {
+    id: `quest-${quest.id}`,
+    text: `« ${quest.label} » : c’est fait ! Viens sur l’île, je t’y attends avec ${quest.coins} écus.`,
+    action: { label: 'Aller sur l’île', mode: 'world' }
+  };
+}
