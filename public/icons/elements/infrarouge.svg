@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+<g fill="none" stroke-linecap="round"><path d="M4 18c6-6 12-6 18 0s12 6 18 0 12-6 18 0" stroke="#e2483a" stroke-width="4"/>
+<path d="M4 32c6-6 12-6 18 0s12 6 18 0 12-6 18 0" stroke="#f26a3a" stroke-width="4"/><path d="M4 46c6-6 12-6 18 0s12 6 18 0 12-6 18 0" stroke="#a82a2a" stroke-width="4"/></g>
+<text x="52" y="60" font-family="sans-serif" font-size="9" font-weight="800" fill="#8a1e16" text-anchor="middle">IR</text>
+</svg>
