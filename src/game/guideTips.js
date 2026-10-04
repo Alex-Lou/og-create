@@ -10,7 +10,7 @@ export const TIPS = {
   'chapter-III': 'Ciel et Terre : lève les yeux vers les astres. Les Jardins, le Faubourg et les Hauteurs t’attendent.',
   'chapter-IV': 'Le Vivant s’éveille. La Crique et la Grande Forêt peuvent renaître.',
   'chapter-V': 'Le Foyer : là où l’on invente et bâtit. Le Hameau sort de la brume.',
-  'chapter-VI': 'Les Âges tournent leurs pages. L’Îlot du Phare se laisse enfin approcher.',
+  'chapter-VI': 'Les Âges tournent leurs pages. L’Îlot aux Mouettes se laisse enfin approcher.',
   'chapter-VII': 'Les Légendes… Il ne reste qu’un voile. Lève-le, et l’île sera entière.'
 };
 

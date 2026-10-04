@@ -1,11 +1,12 @@
 // Registre des bâtiments palier par palier : dessin (avec son skin), lumières de nuit, fumées, parties animées,
-// voilier du Ponton, souplesse au vent. Paliers I-II (et Maison du Foyer) : sprites.js et buildings2.js ;
+// voilier du Ponton, souplesse au vent. Paliers I-II (et Cabane du Foyer) : sprites.js et buildings2.js ;
 // paliers suivants : tiers/. Chaque entrée : { make(skin), lights, smoke, anims, boat, sway }.
-import { BUILDINGS, LIGHTS, SMOKE, flameFrames, boatSprite } from './sprites';
+import { BUILDINGS, LIGHTS, SMOKE, SHELTER_FIRE, flameFrames, boatSprite } from './sprites';
 import { UPGRADES, fountainFrames } from './buildings2';
 import { TIERS } from './tiers';
 
 const FLAMES = flameFrames();
+const SHELTER_FLAMES = flameFrames(SHELTER_FIRE[0], SHELTER_FIRE[1], 0.75);
 const FOUNTAIN = fountainFrames();
 // Skins du Puits qui coiffent la Fontaine d'un kiosque : son toit cache les jets d'eau
 const KIOSK_SKINS = new Set(['toit-bleu', 'toit-chaume']);
@@ -14,10 +15,10 @@ const BOAT_AT = [0.05, 0.5];
 const FIRST = {
   foyer: [
     { make: BUILDINGS.foyer[0], lights: LIGHTS.foyer[0], smoke: [SMOKE.foyer[0]], fire: true, anims: [{ key: 'flame', n: FLAMES.length, fps: 9, frame: f => FLAMES[f] }] },
-    { make: BUILDINGS.foyer[1], lights: LIGHTS.foyer[1] },
+    { make: BUILDINGS.foyer[1], lights: LIGHTS.foyer[1], smoke: [SMOKE.foyer[1]], fire: true, anims: [{ key: 'flame', n: SHELTER_FLAMES.length, fps: 9, frame: f => SHELTER_FLAMES[f] }] },
     { make: BUILDINGS.foyer[2], lights: LIGHTS.foyer[2], smoke: [SMOKE.foyer[2]] }
   ],
-  carriere: [{ make: BUILDINGS.carriere[0] }, { make: UPGRADES.carriere, lights: [[0.04, -0.23, 34, 18]] }],
+  carriere: [{ make: BUILDINGS.carriere[0] }, { make: BUILDINGS.carriere[1] }],
   bosquet: [{ make: BUILDINGS.bosquet[0], sway: 0.03 }, { make: UPGRADES.bosquet, sway: 0.03 }],
   puits: [
     { make: BUILDINGS.puits[0] },

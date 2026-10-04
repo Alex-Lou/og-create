@@ -4,90 +4,162 @@
 // Les parties animées (flamme, fumée, eau, voile) sont des sprites à part, peints image par image par l'île.
 import { P, TW, TH, face, box, gable, pyramid, disc, cylinder, shadow, foliage, sprite, boulder, EDGE } from './iso';
 import {
-  WOOD, WOOD_DARK, STONE, WALL, BRICK, SOIL, ROOF_RED, THATCH, LEAVES, PINE, INK, BUILDING_BOX, PROP_BOX,
-  pebble, doorLeft, windowLeft, windowRight, planksLeft, planksRight, roundTree,
+  WOOD, WOOD_DARK, STONE, BRICK, SOIL, ROOF_RED, THATCH, LEAVES, PINE, INK, BUILDING_BOX, PROP_BOX,
+  pebble, doorLeft, windowRight, planksLeft, planksRight, roundTree,
   WHITE_STONE, WHITE_WOOD, ROCKS, FOLIAGE, SAILS, roofOf, roofTexture, stoneCourses, seasonDots, crystals
 } from './palette';
 
+const f2 = n => Math.round(n * 100) / 100;
+const ln = (a, b, color, w = 1.2) => `<line x1="${f2(a[0])}" y1="${f2(a[1])}" x2="${f2(b[0])}" y2="${f2(b[1])}" stroke="${color}" stroke-width="${w}" stroke-linecap="round"/>`;
+const ell = (x, y, rx, ry, fill) => `<ellipse cx="${f2(x)}" cy="${f2(y)}" rx="${rx}" ry="${ry}" fill="${fill}"/>`;
+
 /* ---------- Bâtiments ---------- */
-// Foyer, niveau 1 : feu de camp dans un cercle de pierres, une bûche pour s'asseoir (la flamme est animée à part)
-function campfire() {
+// Cercle de pierres d'un feu de camp autour de (u, v), braises et bûches croisées (la flamme est animée à part) ; s : taille
+function fireRing(u, v, s = 1) {
   let stones = '';
   // Pierres de l'arrière d'abord : l'ordre de peinture fait l'occlusion
   const ring = Array.from({ length: 9 }, (_, k) => {
     const a = (k / 9) * Math.PI * 2;
-    return { u: Math.cos(a) * 0.36, v: Math.sin(a) * 0.36 };
+    return { u: u + Math.cos(a) * 0.36 * s, v: v + Math.sin(a) * 0.36 * s };
   }).sort((p, q) => p.u + p.v - (q.u + q.v));
-  ring.forEach(p => { stones += pebble(p.u, p.v, 5.2); });
-  const logs = box(-0.24, -0.04, 0.24, 0.04, 0, 5, WOOD_DARK) + box(-0.04, -0.24, 0.04, 0.24, 0, 5, WOOD);
-  const embers = disc(0, 0, 0.5, 0.2, '#5C3A24') + disc(0, 0, 1, 0.12, '#F28A3A', ' opacity=".85"');
-  const seat = shadow(0.62, -0.5, 0.3, 0.18) + box(0.42, -0.6, 0.82, -0.44, 0, 7, WOOD);
-  const stump = shadow(-0.55, 0.55, 0.2, 0.18) + cylinder(-0.55, 0.55, 0, 9, 0.14, { top: '#E7C08A', left: WOOD.left, right: WOOD.right }, 'stumpg');
-  return sprite(shadow(0, 0, 0.6, 0.16) + seat + stones + embers + logs + stump, BUILDING_BOX);
+  ring.forEach(p => { stones += pebble(p.u, p.v, 5.2 * s); });
+  const logs = box(u - 0.24 * s, v - 0.04 * s, u + 0.24 * s, v + 0.04 * s, 0, 5 * s, WOOD_DARK) + box(u - 0.04 * s, v - 0.24 * s, u + 0.04 * s, v + 0.24 * s, 0, 5 * s, WOOD);
+  const embers = disc(u, v, 0.5, 0.2 * s, '#5C3A24') + disc(u, v, 1, 0.12 * s, '#F28A3A', ' opacity=".85"');
+  return stones + embers + logs;
 }
 
-// Foyer, niveau 2 : cabane de planches, toit de chaume
+// Foyer, niveau 1 : feu de camp dans un cercle de pierres, une bûche pour s'asseoir (la flamme est animée à part)
+function campfire() {
+  const seat = shadow(0.62, -0.5, 0.3, 0.18) + box(0.42, -0.6, 0.82, -0.44, 0, 7, WOOD);
+  const stump = shadow(-0.55, 0.55, 0.2, 0.18) + cylinder(-0.55, 0.55, 0, 9, 0.14, { top: '#E7C08A', left: WOOD.left, right: WOOD.right }, 'stumpg');
+  return sprite(shadow(0, 0, 0.6, 0.16) + seat + fireRing(0, 0) + stump, BUILDING_BOX);
+}
+
+// Foyer, niveau 2 : l'Abri. Perches croisées en A, couvertes de branchages (de toile teinte, selon le skin), pignon
+// ouvert sur une couche de fourrures ; le feu de camp brûle devant (flamme animée à part, en SHELTER_FIRE)
+export const SHELTER_FIRE = [0.5, 0.36];
+const BRUSH = { front: '#B5A16A', back: '#8A7446' };
+function shelter(skin) {
+  const u0 = -0.72, u1 = 0.24, v0 = -0.86, v1 = -0.04, z = 1, h = 36, o = 0.1;
+  const vm = (v0 + v1) / 2;
+  const a = u0 - o, b = u1 + o;
+  const roof = roofOf(skin, BRUSH);
+  // Perches croisées au bout d'un pignon (elles dépassent du faîtage)
+  const poles = u => ln(P(u, v0 - o - 0.04, z - 1), P(u, vm + 0.14, z + h + 9), WOOD_DARK.right, 1.8) + ln(P(u, v1 + o + 0.04, z - 1), P(u, vm - 0.14, z + h + 9), WOOD_DARK.right, 1.8);
+  // Branchages d'origine : brins feuillus sur le pan avant
+  const at = (u, k) => P(u, vm + (v1 + o - vm) * k, z + h * (1 - k));
+  let brush = '';
+  if (!skin) {
+    for (let k = 0.16; k < 1; k += 0.2) {
+      for (let u = a + 0.04; u < b - 0.04; u += 0.1) {
+        const j = Math.sin(u * 53 + k * 29) * 0.03;
+        brush += ln(at(u + j, k - 0.12), at(u + j + 0.05, k + 0.06), k > 0.5 ? '#6E7F3E' : '#7E6A3C', 1.1);
+      }
+    }
+  }
+  const [fx, fy] = P(u1 - 0.18, vm + 0.02, 1);
+  return sprite(
+    shadow(-0.1, -0.3, 1.0, 0.18) + disc(0.05, 0.1, 0, 0.75, 'rgba(150,120,80,.18)')
+    + poles(a)
+    + face([[a, v0 - o, z], [b, v0 - o, z], [b, vm, z + h], [a, vm, z + h]], roof.back, EDGE)
+    // Pignon ouvert : l'intérieur dans l'ombre, la couche de fourrures, un ballot
+    + face([[u1, v0, z], [u1, v1, z], [u1, vm, z + h]], '#3B2A1C', EDGE)
+    + ell(fx, fy, 11, 4.2, '#C9A27A') + ell(fx - 2, fy - 1, 7, 2.6, '#E3C9A4')
+    + ell(fx + 6, fy - 4, 4, 3, '#8C5A3C')
+    + face([[a, vm, z + h], [b, vm, z + h], [b, v1 + o, z], [a, v1 + o, z]], roof.front, EDGE)
+    + brush
+    + ln(P(a - 0.06, vm, z + h + 1), P(b + 0.06, vm, z + h + 1), WOOD_DARK.left, 2.2)
+    + poles(b)
+    // Bûche pour s'asseoir
+    + shadow(-0.4, 0.42, 0.2, 0.16) + box(-0.58, 0.36, -0.24, 0.48, 0, 6, WOOD)
+    + shadow(SHELTER_FIRE[0], SHELTER_FIRE[1], 0.34, 0.14) + fireRing(SHELTER_FIRE[0], SHELTER_FIRE[1], 0.62),
+    BUILDING_BOX
+  );
+}
+
+// Foyer, niveau 3 : la Cabane. Cabane de planches, toit de chaume, cheminée de pierre, bois rangé le long du mur
+export const CABIN_CHIMNEY = [0.3, -0.27];
 function hut(skin) {
   const u0 = -0.55, u1 = 0.55, v0 = -0.45, v1 = 0.45, h = 26;
   const roof = roofOf(skin, THATCH);
   const thatch = !skin;
+  const [cu, cv] = CABIN_CHIMNEY;
+  const logs = Array.from({ length: 7 }, (_, k) => {
+    const [x, y] = P(-0.5 + (k % 4) * 0.08 + (k >= 4 ? 0.04 : 0), v1 + 0.08, 3 + (k >= 4 ? 5 : 0));
+    return `<circle cx="${x}" cy="${y}" r="2.8" fill="${WOOD.top}" stroke="${WOOD_DARK.right}" stroke-width="0.8"/>`;
+  }).join('');
   return sprite(
     shadow(0, 0, 0.95)
     + box(u0, v0, u1, v1, 0, h, WOOD)
     + planksLeft(u0, u1, v1, 0, h) + planksRight(u1, v0, v1, 0, h)
     + doorLeft(-0.12, 0.16, v1, 17)
     + windowRight(u1, -0.22, 0.08, 10, 18)
+    // Cheminée de pierre derrière le faîtage (le toit en cache le bas)
+    + box(cu - 0.09, cv - 0.09, cu + 0.09, cv + 0.09, h, h + 34, STONE)
     + gable(u0, v0, u1, v1, h, 24, { front: roof.front, back: roof.back, gable: WOOD.right }, 0.12)
     + roofTexture(skin, u0, v0, u1, v1, h, 24, 0.12)
     // Mèches de chaume sur le bord du pan avant (toit d'origine)
-    + (thatch ? `<polyline points="${[P(-0.67, 0.57, h), P(0.67, 0.57, h)].map(p => p.join(',')).join(' ')}" stroke="#B88A3A" stroke-width="1.6" stroke-dasharray="2 3"/>` : ''),
+    + (thatch ? `<polyline points="${[P(-0.67, 0.57, h), P(0.67, 0.57, h)].map(p => p.join(',')).join(' ')}" stroke="#B88A3A" stroke-width="1.6" stroke-dasharray="2 3"/>` : '')
+    // Bois rangé contre le mur avant, à gauche de la porte
+    + box(-0.56, v1 + 0.02, -0.2, v1 + 0.14, 0, 1.5, WOOD_DARK) + logs,
     BUILDING_BOX
   );
 }
 
-// Foyer, niveau 3 : maison crème sur soubassement de pierre, toit de tuiles, cheminée
-function house(skin) {
-  const u0 = -0.72, u1 = 0.62, v0 = -0.5, v1 = 0.5, h = 34;
-  const roof = roofOf(skin, ROOF_RED);
+// Carrière, niveau 1 : la Fissure. Un pan de roche fendu de haut en bas, une lueur au fond de la fente, des éclats
+// tombés au pied, une pioche plantée et un piquet à ruban qui marque l'endroit
+function fissure(skin) {
+  const rock = ROCKS[skin] || STONE;
+  const crack = [[-0.3, 0], [-0.22, 0], [-0.25, 9], [-0.19, 17], [-0.24, 26], [-0.2, 33], [-0.23, 40], [-0.27, 40], [-0.26, 33], [-0.3, 25], [-0.26, 16], [-0.32, 8]];
+  const glint = (u, z, c) => { const [x, y] = P(u, -0.2, z); return `<path d="M${f2(x)},${f2(y - 2)} l1.2,2 l-1.2,2 l-1.2,-2 Z" fill="${c}"/>`; };
+  const [px, py] = P(-0.58, 0.18, 0);
+  const [sx, sy] = P(0.5, 0.32, 0);
   return sprite(
-    shadow(0, 0, 1.15)
-    + box(u0 - 0.04, v0 - 0.04, u1 + 0.04, v1 + 0.04, 0, 5, STONE)
-    + box(u0, v0, u1, v1, 5, h, WALL)
-    + doorLeft(-0.2, 0.08, v1, 22, '#8C4B32')
-    + windowLeft(-0.6, -0.34, v1, 13, 24)
-    + windowLeft(0.24, 0.5, v1, 13, 24)
-    + windowRight(u1, -0.3, 0.1, 13, 24)
-    // Cheminée derrière le faîtage
-    + box(0.18, -0.36, 0.36, -0.18, h, h + 30, BRICK)
-    + gable(u0, v0, u1, v1, h, 28, { front: roof.front, back: roof.back, gable: WALL.right }, 0.1)
-    + roofTexture(skin, u0, v0, u1, v1, h, 28, 0.1)
-    // Rangs de tuiles sur le pan avant (toit d'origine)
-    + (skin ? '' : [0.3, 0.6].map(k => `<polyline points="${[P(-0.82, k * 0.6 + 0.0, h + 28 * (1 - k)), P(0.72, k * 0.6, h + 28 * (1 - k))].map(p => p.join(',')).join(' ')}" stroke="rgba(120,40,25,.35)" stroke-width="1"/>`).join('')),
+    shadow(0, -0.2, 1.1, 0.18)
+    + box(-0.95, -0.9, 0.6, -0.2, 0, 40, rock)
+    + box(0.3, -0.2, 0.82, 0.12, 0, 16, rock)
+    // La fente : sur la face avant, puis le long du dessus vers l'arrière
+    + face(crack.map(([u, z]) => [u, -0.2, z]), '#1F1A17')
+    + glint(-0.25, 12, '#F2C04B') + glint(-0.23, 24, skin === 'roche-cristal' ? '#B9A0F0' : '#FFE9A8')
+    + `<polyline points="${[P(-0.25, -0.2, 40), P(-0.21, -0.4, 40), P(-0.27, -0.6, 40), P(-0.22, -0.9, 40)].map(q => q.map(f2).join(',')).join(' ')}" stroke="#1F1A17" stroke-width="2" fill="none" stroke-linejoin="round"/>`
+    + `<polyline points="${[P(-0.95, -0.2, 28), P(-0.6, -0.2, 32), P(-0.34, -0.2, 27)].map(q => q.map(f2).join(',')).join(' ')}" stroke="rgba(90,80,65,.4)" stroke-width="1" fill="none"/>`
+    + (skin === 'roche-cristal' ? crystals(-0.6, -0.55, 40, 1.1) + crystals(0.3, -0.6, 40) + crystals(0.6, -0.05, 16, 0.8) : '')
+    // Éclats tombés au pied de la fente
+    + pebble(-0.3, 0.02, 3.4, rock) + pebble(-0.14, 0.1, 2.6, rock) + pebble(-0.42, 0.12, 2.2, rock) + pebble(-0.06, -0.04, 2, rock)
+    // Pioche plantée, piquet à ruban
+    + ln([px, py], [px + 6, py - 20], WOOD.right, 2.4)
+    + `<path d="M${f2(px - 5)},${f2(py - 16)} Q${f2(px + 5)},${f2(py - 25)} ${f2(px + 16)},${f2(py - 18)}" stroke="#7C8A96" stroke-width="2.6" fill="none" stroke-linecap="round"/>`
+    + shadow(0.5, 0.32, 0.08, 0.2) + ln([sx, sy], [sx, sy - 22], WOOD_DARK.left, 1.8)
+    + `<path d="M${f2(sx)},${f2(sy - 21)} q5,1 9,-2 q-3,3 -1,6 q-4,-2 -8,-1 Z" fill="#E2574C"/>`,
     BUILDING_BOX
   );
 }
 
-// Carrière : affleurement rocheux taillé en gradins, blocs extraits, pioche et wagonnet
+// Carrière, niveau 2 : affleurement rocheux taillé en gradins, blocs extraits, pioche ; une voie (u ≈ −0.35) mène du
+// front de taille au wagonnet (les Rails de la boutique la prolongent)
 function quarry(skin) {
   const rockColor = ROCKS[skin] || STONE;
   const rock = (u0, v0, u1, v1, h) => box(u0, v0, u1, v1, 0, h, rockColor);
   const pick = `<line x1="${P(0.55, 0.3, 0)[0]}" y1="${P(0.55, 0.3, 0)[1]}" x2="${P(0.55, 0.3, 22)[0] - 4}" y2="${P(0.55, 0.3, 22)[1]}" stroke="${WOOD.right}" stroke-width="2.4" stroke-linecap="round"/>`
     + `<path d="M${P(0.55, 0.3, 22)[0] - 13},${P(0.55, 0.3, 22)[1] + 3} Q${P(0.55, 0.3, 22)[0] - 4},${P(0.55, 0.3, 22)[1] - 5} ${P(0.55, 0.3, 22)[0] + 6},${P(0.55, 0.3, 22)[1] + 3}" stroke="#7C8A96" stroke-width="2.6" fill="none" stroke-linecap="round"/>`;
-  const cart = shadow(-0.45, 0.6, 0.3, 0.2)
-    + box(-0.65, 0.42, -0.25, 0.72, 4, 14, WOOD_DARK)
-    + disc(-0.6, 0.72, 4, 0.07, '#3D3A36') + disc(-0.3, 0.72, 4, 0.07, '#3D3A36')
-    + pebble(-0.5, 0.52, 3.6) + pebble(-0.4, 0.6, 3.2);
+  let rails = '';
+  for (let k = 0; k < 6; k++) rails += box(-0.5, -0.12 + k * 0.17 - 0.02, -0.2, -0.12 + k * 0.17 + 0.02, 0, 1.5, WOOD_DARK);
+  rails += ln(P(-0.45, -0.18, 1.5), P(-0.45, 0.8, 1.5), '#7C8894') + ln(P(-0.25, -0.18, 1.5), P(-0.25, 0.8, 1.5), '#7C8894');
+  const cart = shadow(-0.35, 0.6, 0.26, 0.2)
+    + box(-0.5, 0.45, -0.2, 0.72, 2, 12, WOOD_DARK)
+    + disc(-0.47, 0.72, 3, 0.07, '#3D3A36') + disc(-0.23, 0.72, 3, 0.07, '#3D3A36')
+    + pebble(-0.4, 0.55, 3.6, rockColor) + pebble(-0.3, 0.62, 3.2, rockColor);
   return sprite(
     shadow(0, 0, 1.15, 0.18)
     + rock(-0.9, -0.9, 0.2, -0.2, 40)
     + rock(0.2, -0.9, 0.85, -0.35, 28)
-    + rock(-0.9, -0.2, -0.3, 0.3, 22)
+    + rock(-0.9, -0.2, -0.55, 0.25, 22)
     + rock(-0.1, -0.2, 0.4, 0.2, 12)
     // Veines dans la roche
     + `<polyline points="${[P(-0.9, -0.2, 30), P(-0.4, -0.2, 34), P(0.2, -0.2, 26)].map(p => p.join(',')).join(' ')}" stroke="rgba(90,80,65,.4)" stroke-width="1" fill="none"/>`
     + box(0.45, -0.1, 0.75, 0.15, 0, 9, rockColor) + box(0.5, 0.18, 0.78, 0.42, 0, 7, rockColor)
-    + (skin === 'roche-cristal' ? crystals(-0.35, -0.55, 40, 1.1) + crystals(0.5, -0.62, 28) + crystals(-0.6, 0.05, 22, 0.8) : '')
-    + cart + pick,
+    + (skin === 'roche-cristal' ? crystals(-0.35, -0.55, 40, 1.1) + crystals(0.5, -0.62, 28) + crystals(-0.75, 0.05, 22, 0.8) : '')
+    + rails + cart + pick,
     BUILDING_BOX
   );
 }
@@ -322,18 +394,18 @@ function tuftProp() {
 }
 
 /* ---------- Parties animées ---------- */
-// Flamme du foyer : 3 images ; ancrée au centre du feu de camp
-export function flameFrames() {
-  const [x, y] = P(0, 0, 4);
+// Flamme d'un feu de camp : 3 images ; ancrée au centre du feu, en (u, v) (le feu de camp : au centre de l'emprise), s : taille
+export function flameFrames(u = 0, v = 0, s = 1) {
+  const [x, y] = P(u, v, 4);
   const shapes = [
     [[0, -22], [7, -6], [0, 0], [-7, -6]],
     [[2, -24], [7, -7], [0, 0], [-6, -5]],
     [[-2, -21], [6, -5], [0, 0], [-7, -7]]
-  ];
+  ].map(shape => shape.map(([dx, dy]) => [dx * s, dy * s]));
   return shapes.map(([tip, r, base, l]) => sprite(
-    `<path d="M${x + base[0]},${y + base[1]} C${x + r[0] + 3},${y + r[1]} ${x + tip[0] + 2},${y + tip[1] + 8} ${x + tip[0]},${y + tip[1]} C${x + tip[0] - 2},${y + tip[1] + 8} ${x + l[0] - 3},${y + l[1]} ${x + base[0]},${y + base[1]} Z" fill="#F7A23B"/>`
-    + `<path d="M${x},${y} C${x + 4},${y - 4} ${x + tip[0] * 0.5 + 1},${y + tip[1] * 0.5 + 4} ${x + tip[0] * 0.5},${y + tip[1] * 0.55} C${x + tip[0] * 0.5 - 1},${y + tip[1] * 0.5 + 4} ${x - 4},${y - 4} ${x},${y} Z" fill="#FFE07A"/>`,
-    { x: -20, y: -40, w: 40, h: 44 }
+    `<path d="M${x + base[0]},${y + base[1]} C${x + r[0] + 3 * s},${y + r[1]} ${x + tip[0] + 2 * s},${y + tip[1] + 8 * s} ${x + tip[0]},${y + tip[1]} C${x + tip[0] - 2 * s},${y + tip[1] + 8 * s} ${x + l[0] - 3 * s},${y + l[1]} ${x + base[0]},${y + base[1]} Z" fill="#F7A23B"/>`
+    + `<path d="M${x},${y} C${x + 4 * s},${y - 4 * s} ${x + tip[0] * 0.5 + 1 * s},${y + tip[1] * 0.5 + 4 * s} ${x + tip[0] * 0.5},${y + tip[1] * 0.55} C${x + tip[0] * 0.5 - 1 * s},${y + tip[1] * 0.5 + 4 * s} ${x - 4 * s},${y - 4 * s} ${x},${y} Z" fill="#FFE07A"/>`,
+    { x: x - 20, y: y - 36, w: 40, h: 44 }
   ));
 }
 // Voilier amarré au Ponton (bercé par l'île) ; ancré au centre de l'emprise
@@ -354,8 +426,8 @@ export function boatSprite(skin) {
 }
 
 export const BUILDINGS = {
-  foyer: [campfire, hut, house],
-  carriere: [quarry],
+  foyer: [campfire, shelter, hut],
+  carriere: [fissure, quarry],
   bosquet: [grove],
   puits: [well],
   potager: [garden],
@@ -368,11 +440,11 @@ export { TW, TH };
 
 // Lumières de nuit par bâtiment et niveau : [u, v, z, rayon en px] (fenêtres, feu, bouche du four)
 export const LIGHTS = {
-  foyer: [[[0, 0, 10, 54]], [[0.55, -0.07, 14, 22]], [[-0.47, 0.5, 18, 22], [0.37, 0.5, 18, 22], [0.62, -0.1, 18, 22], [-0.06, 0.5, 12, 18]]],
+  foyer: [[[0, 0, 10, 54]], [[SHELTER_FIRE[0], SHELTER_FIRE[1], 8, 40]], [[0.55, -0.07, 14, 22]]],
   atelier: [[[0.85, -0.05, 6, 30]]],
 };
 // Fumée : [u, v, z] du haut des cheminées, par bâtiment et niveau
 export const SMOKE = {
-  foyer: [[0, 0, 24], null, [0.27, -0.27, 64]],
+  foyer: [[0, 0, 24], [SHELTER_FIRE[0], SHELTER_FIRE[1], 18], [CABIN_CHIMNEY[0], CABIN_CHIMNEY[1], 62]],
   atelier: [[0.55, -0.05, 44]]
 };
