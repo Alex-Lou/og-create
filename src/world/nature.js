@@ -145,6 +145,17 @@ function fish(f) {
     + `<g transform="translate(0 ${y}) rotate(${a})"><path d="M-6,0 Q0,-4 6,0 Q0,4 -6,0 Z" fill="#7FA9C9"/><path d="M-6,0 l-4,-3 l0,6 Z" fill="#5E86A6"/><circle cx="3.4" cy="-0.6" r="0.8" fill="#1E2A36"/></g>`, CRITTER_BOX);
 }
 
+// Panneau d'un quartier à acheter : poteau, planche, cadenas (le prix est écrit par l'île)
+function zoneSign() {
+  const [x, y] = P(0, 0, 0);
+  return sprite(shadow(0, 0, 0.22, 0.2) + box(-0.03, -0.03, 0.03, 0.03, 0, 26, WOOD_DARK)
+    + `<rect x="${x - 17}" y="${y - 40}" width="34" height="17" rx="3" fill="${WOOD.top}" stroke="#7A4E2C" stroke-width="1.2"/>`
+    + `<line x1="${x - 13}" y1="${y - 34}" x2="${x + 13}" y2="${y - 34}" stroke="rgba(122,78,44,.3)" stroke-width="0.8"/>`
+    + `<rect x="${x - 4.5}" y="${y - 50}" width="9" height="8" rx="1.6" fill="#E9BF4E" stroke="#8A6A22" stroke-width="0.8"/>`
+    + `<path d="M${x - 2.8},${y - 50} v-3 a2.8,2.8 0 0 1 5.6,0 v3" fill="none" stroke="#8A6A22" stroke-width="1.2"/>`, PROP_BOX);
+}
+
+export const SIGN = zoneSign;
 export const NATURE2 = { birch, apple: appleTree, autumn: autumnTree, stump, log, mushrooms, reeds, lily: lilyPond, shells, driftwood, mossy: mossyRocks, lantern: lanternPost, bench };
 export const PLINTH = plinth;
 export const CRITTERS = {

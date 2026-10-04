@@ -2,10 +2,9 @@
   <section class="world" aria-label="Le Monde">
     <header class="world__head">
       <div>
-        <span class="world__eyebrow">Ton île</span>
+        <span class="world__eyebrow">Ton île<span v-if="state" class="world__phase" :title="`Sur ton île, c’est le moment : ${phaseLabel}`"> · {{ phaseGlyph }} {{ phaseLabel }}</span></span>
         <span class="world__title">Le Monde</span>
       </div>
-      <span v-if="state" class="world__phase" :title="`Sur ton île, c’est le moment : ${phaseLabel}`">{{ phaseGlyph }} {{ phaseLabel }}</span>
       <!-- Écus produits par l'île, à récolter (le solde reste dans l'en-tête) -->
       <button
         v-if="state && state.pending > 0"
@@ -64,7 +63,7 @@
           Touche une case libre pour y poser {{ moving }}.
           <button type="button" class="world__link" @click="moving = null">Annuler</button>
         </p>
-        <p v-else-if="state && firstVisit" class="world__banner">Touche un chantier pour le bâtir, une case d’herbe pour décorer.</p>
+        <p v-else-if="state && firstVisit" class="world__banner">Touche un bâtiment pour sa fiche, un panneau pour agrandir l’île, une case d’herbe pour décorer.</p>
 
         <!-- Décoration touchée : déplacer ou retirer -->
         <div v-if="selected && !moving" class="world__menu" :style="menuStyle" role="dialog" :aria-label="`${selected.element}`">
@@ -75,74 +74,145 @@
       </div>
 
       <p v-if="state" class="world__note">
-        Bâtis tes chantiers avec les plans du Livre et les ressources de la Récolte. Tes décorations produisent {{ state.rate }} écu par heure.
+        Tes bâtiments produisent ressources et écus, la Récolte aussi. Les décorations s’achètent pour embellir l’île.
       </p>
     </template>
 
-    <!-- Fiche d'un chantier -->
-    <transition name="world-sheet">
-      <div v-if="site" class="world__sheet-backdrop" @click.self="site = null">
-        <div class="world__sheet" role="dialog" :aria-label="site.name">
-          <div class="world__sheet-head">
-            <span class="world__sheet-title">
-              <span aria-hidden="true">{{ lookOf(site) }}</span> {{ site.name }}
-              <small v-if="site.maxLevel > 1 && site.level">niv. {{ site.level }}/{{ site.maxLevel }}</small>
-            </span>
-            <button type="button" class="world__link" @click="site = null">Fermer</button>
-          </div>
-          <p v-if="site.effect" class="world__site-effect">{{ site.effect }}</p>
-          <template v-if="site.next">
-            <p class="world__site-step">{{ site.level ? `Prochaine étape : ${site.next.name}` : 'À bâtir' }}</p>
-            <ul class="world__needs">
-              <li v-if="site.next.plan" :class="['world__need', site.next.planOwned ? 'is-ok' : 'is-missing']">
-                <span class="world__need-glyph" aria-hidden="true"><ElementGlyph :glyph="site.next.planEmoji || '📜'" /></span>
-                <span>Plan : <strong>{{ site.next.plan }}</strong></span>
-                <em>{{ site.next.planOwned ? 'trouvé' : 'à découvrir dans le Livre' }}</em>
-              </li>
-              <li v-for="(n, r) in site.next.cost" :key="r" :class="['world__need', state.stock[r] >= n ? 'is-ok' : 'is-missing']">
-                <span class="world__need-glyph" aria-hidden="true">{{ GLYPH[r] }}</span>
-                <span><strong>{{ state.stock[r] }}</strong> / {{ n }} {{ LABEL[r] }}</span>
-              </li>
-            </ul>
-            <p class="world__site-next">{{ site.next.effect }}</p>
-            <div class="world__sheet-actions">
-              <button type="button" class="world__btn" :disabled="!canBuild(site) || busy" @click="build(site)">
-                {{ site.level ? `Bâtir : ${site.next.name}` : 'Bâtir' }}
-              </button>
-              <button v-if="!affordable(site) && state.charges.count" type="button" class="world__btn world__btn--quiet" :disabled="busy" @click="startHarvest">
-                Jouer une Récolte
+    <!-- Fiches de l'île : rendues dans le document (au-dessus de la barre d'onglets) -->
+    <teleport to="body">
+      <!-- Fiche d'un bâtiment : aperçu (production, récolte) et évolution (tous les paliers) -->
+      <transition name="world-sheet">
+        <div v-if="site" class="world__sheet-backdrop" @click.self="site = null">
+          <div class="world__sheet world__sheet--site" role="dialog" :aria-label="site.name">
+            <div class="world__site-head">
+              <img class="world__site-art" :src="artOf(site)" alt="" />
+              <div class="world__site-id">
+                <span class="world__eyebrow">{{ zoneName(site.zone) }}</span>
+                <span class="world__sheet-title">{{ site.level ? site.name : `${site.name} · à bâtir` }}</span>
+                <span class="world__pips" :aria-label="`Niveau ${site.level} sur ${site.maxLevel}`">
+                  <span v-for="k in site.maxLevel" :key="k" :class="['world__pip', { 'is-on': k <= site.level }]"></span>
+                </span>
+              </div>
+              <button type="button" class="world__link" @click="site = null">Fermer</button>
+            </div>
+            <div class="world__tabs" role="tablist">
+              <button type="button" role="tab" :aria-selected="String(siteTab === 'overview')" :class="['world__tab', { 'is-on': siteTab === 'overview' }]" @click="siteTab = 'overview'">Aperçu</button>
+              <button type="button" role="tab" :aria-selected="String(siteTab === 'evolution')" :class="['world__tab', { 'is-on': siteTab === 'evolution' }]" @click="siteTab = 'evolution'">
+                Évolution<span v-if="canBuild(site)" class="world__tab-dot" aria-label="prête"></span>
               </button>
             </div>
-          </template>
-          <p v-else class="world__site-step">Chantier achevé.</p>
-        </div>
-      </div>
-    </transition>
 
-    <!-- Choix de la décoration à poser -->
-    <transition name="world-sheet">
-      <div v-if="picking" class="world__sheet-backdrop" @click.self="picking = null">
-        <div class="world__sheet" role="dialog" aria-label="Choisir une décoration">
-          <div class="world__sheet-head">
-            <span class="world__sheet-title">Décorer</span>
-            <button type="button" class="world__link" @click="picking = null">Fermer</button>
-          </div>
-          <input v-model="query" class="world__search" type="search" :placeholder="`Chercher parmi ${available.length}…`" aria-label="Chercher un élément" />
-          <div class="world__grid">
-            <ElementTile
-              v-for="name in pickList"
-              :key="name"
-              :name="name"
-              :glyph="elementEmojis[name]"
-              :family="familyOf[name]"
-              :aria-label="`Poser ${name}`"
-              @click="place(name, picking.x, picking.y)"
-            />
-            <p v-if="!pickList.length" class="world__empty">{{ available.length ? 'Aucun élément ne ressemble à cette recherche.' : 'Toutes tes découvertes sont déjà sur l’île.' }}</p>
+            <div v-if="siteTab === 'overview'" class="world__panel">
+              <p v-if="site.effect" class="world__site-effect">{{ site.effect }}</p>
+              <p v-else class="world__site-effect">{{ site.levels[0].effect }}</p>
+              <div v-if="site.produce && site.level" class="world__prod">
+                <div class="world__prod-row">
+                  <span>Par heure</span>
+                  <strong>+{{ state.rates.produce * site.level }} {{ GLYPH[site.produce] }} · +{{ state.rates.coins * site.level }} écus</strong>
+                </div>
+                <div class="world__prod-row">
+                  <span>Réserve</span>
+                  <strong>{{ state.capHours }} h de production au plus</strong>
+                </div>
+                <div class="world__prod-row is-pending">
+                  <span>À récolter</span>
+                  <strong>+{{ site.pending ? site.pending[site.produce] : 0 }} {{ GLYPH[site.produce] }} · +{{ site.pending ? site.pending.coins : 0 }} écus</strong>
+                </div>
+                <button type="button" class="world__btn" :disabled="busy || !state.pending" @click="collect">Récolter l’île</button>
+              </div>
+              <div v-else-if="!site.level" class="world__sheet-actions">
+                <button type="button" class="world__btn" @click="siteTab = 'evolution'">Voir ce qu’il faut pour bâtir</button>
+              </div>
+            </div>
+
+            <ol v-else class="world__steps">
+              <li v-for="(step, i) in site.levels" :key="step.name" :class="['world__step', `is-${stepState(site, i)}`]">
+                <span class="world__step-mark" aria-hidden="true">{{ stepState(site, i) === 'done' ? '✓' : i + 1 }}</span>
+                <div class="world__step-body">
+                  <span class="world__step-name">{{ step.name }}</span>
+                  <span class="world__step-effect">{{ step.effect }}</span>
+                  <ul v-if="stepState(site, i) !== 'done'" class="world__needs">
+                    <li v-if="step.plan" :class="['world__need', step.planOwned ? 'is-ok' : 'is-missing']">
+                      <span class="world__need-glyph" aria-hidden="true"><ElementGlyph :glyph="step.planEmoji || '📜'" /></span>
+                      <span>Plan : <strong>{{ step.plan }}</strong></span>
+                      <em>{{ step.planOwned ? 'trouvé' : 'à découvrir dans le Livre' }}</em>
+                    </li>
+                    <li v-for="(n, r) in step.cost" :key="r" :class="['world__need', state.stock[r] >= n ? 'is-ok' : 'is-missing']">
+                      <span class="world__need-glyph" aria-hidden="true">{{ GLYPH[r] }}</span>
+                      <span><strong>{{ state.stock[r] }}</strong> / {{ n }} {{ LABEL[r] }}</span>
+                    </li>
+                  </ul>
+                  <div v-if="stepState(site, i) === 'next'" class="world__sheet-actions">
+                    <button type="button" class="world__btn" :disabled="!canBuild(site) || busy" @click="build(site)">
+                      {{ site.level ? `Faire évoluer : ${step.name}` : `Bâtir : ${step.name}` }}
+                    </button>
+                    <button v-if="!affordable(site) && state.charges.count" type="button" class="world__btn world__btn--quiet" :disabled="busy" @click="startHarvest">
+                      Jouer une Récolte
+                    </button>
+                  </div>
+                </div>
+              </li>
+            </ol>
           </div>
         </div>
-      </div>
-    </transition>
+      </transition>
+
+      <!-- Quartier à acheter : prix en écus et chapitre du Livre -->
+      <transition name="world-sheet">
+        <div v-if="zone" class="world__sheet-backdrop" @click.self="zone = null">
+          <div class="world__sheet" role="dialog" :aria-label="zone.name">
+            <div class="world__sheet-head">
+              <span class="world__sheet-title">🗺️ {{ zone.name }}</span>
+              <button type="button" class="world__link" @click="zone = null">Fermer</button>
+            </div>
+            <p class="world__site-effect">
+              Agrandis ton île<template v-if="sitesIn(zone).length"> : ce quartier abrite {{ sitesIn(zone).join(', ') }}</template>, et de la place pour décorer.
+            </p>
+            <ul class="world__needs">
+              <li v-if="zone.chapter" :class="['world__need', zone.open ? 'is-ok' : 'is-missing']">
+                <span class="world__need-glyph" aria-hidden="true">📖</span>
+                <span>Chapitre <strong>{{ zone.chapter }}</strong> du Livre</span>
+                <em>{{ zone.open ? 'ouvert' : 'encore scellé' }}</em>
+              </li>
+              <li class="world__need">
+                <span class="world__need-glyph" aria-hidden="true">🪙</span>
+                <span><strong>{{ zone.price }}</strong> écus</span>
+              </li>
+            </ul>
+            <div class="world__sheet-actions">
+              <button type="button" class="world__btn" :disabled="!zone.open || busy" @click="buyZone(zone)">Acheter · {{ zone.price }} écus</button>
+            </div>
+          </div>
+        </div>
+      </transition>
+
+      <!-- Choix de la décoration à poser -->
+      <transition name="world-sheet">
+        <div v-if="picking" class="world__sheet-backdrop" @click.self="picking = null">
+          <div class="world__sheet" role="dialog" aria-label="Choisir une décoration">
+            <div class="world__sheet-head">
+              <span class="world__sheet-title">Décorer</span>
+              <button type="button" class="world__link" @click="picking = null">Fermer</button>
+            </div>
+            <p class="world__pick-note">Une décoration s’achète une fois ; son prix dépend du chapitre de l’élément. La déplacer ensuite est gratuit.</p>
+            <input v-model="query" class="world__search" type="search" :placeholder="`Chercher parmi ${available.length}…`" aria-label="Chercher un élément" />
+            <div class="world__grid">
+              <ElementTile
+                v-for="name in pickList"
+                :key="name"
+                :name="name"
+                :glyph="elementEmojis[name]"
+                :family="familyOf[name]"
+                :price="decoPriceOf(name)"
+                :aria-label="`Poser ${name}${decoPriceOf(name) ? ` pour ${decoPriceOf(name)} écus` : ''}`"
+                @click="place(name, picking.x, picking.y)"
+              />
+              <p v-if="!pickList.length" class="world__empty">{{ available.length ? 'Aucun élément ne ressemble à cette recherche.' : 'Toutes tes découvertes sont déjà sur l’île.' }}</p>
+            </div>
+          </div>
+        </div>
+      </transition>
+    </teleport>
 
     <HarvestGame
       v-if="run"
@@ -170,8 +240,9 @@ import * as storage from '@/utils/storage';
 import { GLYPH, LABEL, RESOURCES } from '@/game/resources';
 import { BUILDINGS, NATURE, LIGHTS, SMOKE, flameFrames, boatSprite } from '@/world/sprites';
 import { UPGRADES } from '@/world/buildings2';
-import { NATURE2, CRITTERS, PLINTH } from '@/world/nature';
-import { drawSprite } from '@/world/spriteCache';
+import { NATURE2, CRITTERS, PLINTH, SIGN } from '@/world/nature';
+import { drawSprite, spriteUrl } from '@/world/spriteCache';
+import { chapterOfFamily } from '@/book/chapters';
 import { P } from '@/world/iso';
 import { phaseAt, forcedPhase, drawSea, drawCloudShadows, drawClouds, drawBirds, drawTint, glow, fireflies, hash } from '@/world/scene';
 
@@ -180,11 +251,13 @@ const TW = 64; // largeur d'une case à l'échelle 1 (unités du monde)
 const TH = TW / 2;
 const DEPTH = 30;
 const MAX_SCALE = 1.8;
-// Allure des bâtiments construits, par niveau
-const LOOK = { foyer: ['🔥', '🛖', '🏠'], carriere: ['⛏️'], bosquet: ['🌳'], puits: ['🪣'], potager: ['🥕'], atelier: ['🛠️'], ponton: ['⛵'] };
 const SEEN_KEY = 'oc_world_seen';
 // Construction ou amélioration : le chantier tremble dans la poussière, puis le bâtiment s'élève (ms)
 const RAISE_MS = 2400;
+// Achat d'un quartier : la brume se dissipe (ms)
+const UNVEIL_MS = 1600;
+// Un toucher reste un toucher tant que le doigt bouge de moins de 14 px (au-delà : on fait glisser la carte)
+const TAP_SLOP = 14;
 const FLAMES = flameFrames();
 // Ce qui plie au vent, et de combien
 const SWAY = { bosquet: 0.03, tree: 0.04, palm: 0.05, bush: 0.03, tuft: 0.09, flowers: 0.06, birch: 0.05, apple: 0.03, autumn: 0.035, reeds: 0.08 };
@@ -220,6 +293,10 @@ export default {
       selected: null,
       moving: null,
       site: null,
+      // Onglet de la fiche d'un bâtiment : aperçu ou évolution
+      siteTab: 'overview',
+      // Quartier dont la fiche d'achat est ouverte
+      zone: null,
       query: '',
       menuPos: { x: 0, y: 0 },
       run: null,
@@ -279,6 +356,11 @@ export default {
     // Bâtiments en train de s'élever : id → { at, from } ; décor naturel des cases libres
     this.raises = new Map();
     this.props = [];
+    // Quartiers qui viennent d'être achetés (brume qui se dissipe), bulles de production et panneaux dessinés (pour le toucher)
+    this.unveils = new Map();
+    this.bubbles = [];
+    this.signs = [];
+    this.shore = [];
     this.forced = forcedPhase();
     this.ac = null;
     this.observer = null;
@@ -344,6 +426,7 @@ export default {
         });
       }
       this.props = this.natureOf(state);
+      this.shore = this.shoreOf(state);
       this.state = state;
       this.loadedAt = Date.now();
       this.clock = this.loadedAt;
@@ -353,10 +436,6 @@ export default {
         this.draw(performance.now());
         this.syncLoop();
       });
-    },
-    lookOf(site) {
-      const looks = LOOK[site.id] || ['🏗️'];
-      return site.level ? looks[Math.min(site.level, looks.length) - 1] : '🚧';
     },
     syncPhase() {
       const phase = phaseAt(this.forced || new Date());
@@ -374,8 +453,8 @@ export default {
       const props = [];
       for (let y = 0; y < n; y++) {
         for (let x = 0; x < n; x++) {
-          if (taken.has(y * n + x)) continue;
-          const beach = x === 0 || y === 0 || x === n - 1 || y === n - 1;
+          if (taken.has(y * n + x) || !this.landAt(x, y, state)) continue;
+          const beach = this.isBeach(x, y, state);
           const roll = hash(x, y);
           let kind;
           kind = ((beach ? BEACH_MIX : GRASS_MIX).find(([, upTo]) => roll < upTo) || [null])[0];
@@ -383,6 +462,64 @@ export default {
         }
       }
       return props;
+    },
+    /* ---------- Carte : terre, plage, quartiers ---------- */
+    // Case de terre (la grille vient du serveur : '.' = mer, sinon l'index du quartier)
+    landAt(x, y, state = this.state) {
+      const c = state.map.grid[y]?.[x];
+      return c !== undefined && c !== '.';
+    },
+    isBeach(x, y, state = this.state) {
+      return [[1, 0], [-1, 0], [0, 1], [0, -1]].some(([dx, dy]) => !this.landAt(x + dx, y + dy, state));
+    },
+    zoneAt(x, y, state = this.state) {
+      const c = state.map.grid[y]?.[x];
+      return c === undefined || c === '.' ? null : state.map.zones[Number(c)] || null;
+    },
+    lockedAt(x, y) {
+      const zone = this.zoneAt(x, y);
+      return Boolean(zone && !zone.owned);
+    },
+    // Opacité de la brume d'un quartier : pleine s'il est à acheter, qui s'efface juste après l'achat
+    mistOf(zone, now) {
+      if (!zone) return 0;
+      if (!zone.owned) return 1;
+      const start = this.unveils.get(zone.id);
+      if (start === undefined) return 0;
+      const k = (now - start) / UNVEIL_MS;
+      if (k >= 1) {
+        this.unveils.delete(zone.id);
+        return 0;
+      }
+      return 1 - k;
+    },
+    // Cases de mer au bord de la terre : le poisson saute là
+    shoreOf(state) {
+      const out = [];
+      for (let y = 0; y < state.size; y++) {
+        for (let x = 0; x < state.size; x++) {
+          if (!this.landAt(x, y, state) && [[1, 0], [0, 1]].some(([dx, dy]) => this.landAt(x - dx, y - dy, state))) out.push({ x, y });
+        }
+      }
+      return out;
+    },
+    // Place du panneau d'un quartier : la case de terre libre du quartier la plus proche de son centre
+    signPlaceOf(zone) {
+      const { size, sites } = this.state;
+      const inSite = (x, y) => sites.some(st => x >= st.x && x < st.x + 2 && y >= st.y && y < st.y + 2);
+      let best = null;
+      for (let y = 0; y < size; y++) {
+        for (let x = 0; x < size; x++) {
+          if (this.zoneAt(x, y)?.id !== zone.id || inSite(x, y) || this.isBeach(x, y)) continue;
+          const d = Math.abs(x - zone.anchor.x) + Math.abs(y - zone.anchor.y);
+          if (!best || d < best.d) best = { x, y, d };
+        }
+      }
+      return best;
+    },
+    decoPriceOf(name) {
+      const prices = this.state && this.state.decoPrices;
+      return prices ? prices[chapterOfFamily(this.familyOf[name])] ?? null : null;
     },
     // Chantier : 0 = plan à trouver, 1 = plan trouvé, 2 = tout est prêt
     stageOf(site) {
@@ -541,28 +678,22 @@ export default {
       const mid = this.world(n / 2 - 0.5, n / 2 - 0.5);
       // Ronds dans l'eau autour de l'île
       for (let k = 0; k < 3; k++) {
-        const phase = (t * 0.12 + k / 3) % 1;
-        ctx.strokeStyle = `rgba(255, 255, 255, ${0.28 * (1 - phase)})`;
+        const ripple = (t * 0.12 + k / 3) % 1;
+        ctx.strokeStyle = `rgba(255, 255, 255, ${0.22 * (1 - ripple)})`;
         ctx.lineWidth = 2 / s;
         ctx.beginPath();
-        ctx.ellipse(mid.x, mid.y + DEPTH, (n * TW) * (0.58 + phase * 0.3), (n * TH) * (0.62 + phase * 0.3), 0, 0, Math.PI * 2);
+        ctx.ellipse(mid.x, mid.y + DEPTH, (n * TW) * (0.46 + ripple * 0.3), (n * TH) * (0.5 + ripple * 0.3), 0, 0, Math.PI * 2);
         ctx.stroke();
       }
-      // Écume au pied des falaises : une frange claire qui respire
-      const foam = 0.35 + 0.25 * Math.sin(t * 1.6);
-      ctx.strokeStyle = `rgba(255, 255, 255, ${foam.toFixed(3)})`;
-      ctx.lineWidth = 3;
-      ctx.lineJoin = 'round';
-      ctx.beginPath();
-      const west = this.world(-0.5, n - 0.5);
-      const south = this.world(n - 0.5, n - 0.5);
-      const east = this.world(n - 0.5, -0.5);
-      ctx.moveTo(west.x, west.y + DEPTH + 2 + Math.sin(t * 2) * 1.5);
-      ctx.lineTo(south.x, south.y + DEPTH + 2 + Math.sin(t * 2 + 1) * 1.5);
-      ctx.lineTo(east.x, east.y + DEPTH + 2 + Math.sin(t * 2 + 2) * 1.5);
-      ctx.stroke();
-      // Falaises (faces avant)
-      const side = (x0, y0, x1, y1, color) => {
+      // Sol, case par case du plus loin au plus proche : falaise là où la terre touche la mer (face gauche vers +y,
+      // face droite vers +x), écume à son pied, puis la case (plage en bordure, herbe, terre battue des chantiers)
+      const plots = new Map();
+      for (const site of this.state.sites) {
+        for (let dy = 0; dy < 2; dy++) for (let dx = 0; dx < 2; dx++) plots.set((site.y + dy) * n + site.x + dx, site);
+      }
+      const occupied = new Set(this.state.tiles.map(tile => tile.y * n + tile.x));
+      const foam = 0.32 + 0.22 * Math.sin(t * 1.6);
+      const cliff = (x0, y0, x1, y1, color) => {
         ctx.beginPath();
         ctx.moveTo(x0, y0);
         ctx.lineTo(x1, y1);
@@ -571,33 +702,41 @@ export default {
         ctx.closePath();
         ctx.fillStyle = color;
         ctx.fill();
+        // Strate plus sombre en bas de falaise, puis l'écume qui lèche le pied
+        ctx.fillStyle = 'rgba(60, 35, 15, .18)';
+        ctx.beginPath();
+        ctx.moveTo(x0, y0 + DEPTH * 0.62);
+        ctx.lineTo(x1, y1 + DEPTH * 0.62);
+        ctx.lineTo(x1, y1 + DEPTH);
+        ctx.lineTo(x0, y0 + DEPTH);
+        ctx.closePath();
+        ctx.fill();
+        ctx.strokeStyle = `rgba(255, 255, 255, ${foam.toFixed(3)})`;
+        ctx.lineWidth = 2.6;
+        ctx.lineCap = 'round';
+        ctx.beginPath();
+        ctx.moveTo(x0, y0 + DEPTH + 1.5 + Math.sin(t * 2 + x0 * 0.05) * 1.2);
+        ctx.lineTo(x1, y1 + DEPTH + 1.5 + Math.sin(t * 2 + x1 * 0.05) * 1.2);
+        ctx.stroke();
       };
-      for (let i = 0; i < n; i++) {
-        const left = this.world(i, n - 1);
-        side(left.x - TW / 2, left.y, left.x, left.y + TH / 2, i % 2 ? '#9C6A3A' : '#A87444');
-        const right = this.world(n - 1, i);
-        side(right.x, right.y + TH / 2, right.x + TW / 2, right.y, i % 2 ? '#7E5229' : '#875A2F');
-      }
-      // Sol : plage sur le pourtour, herbe ailleurs, terre battue sous les chantiers
-      const plots = new Map();
-      for (const site of this.state.sites) {
-        for (let dy = 0; dy < 2; dy++) for (let dx = 0; dx < 2; dx++) plots.set((site.y + dy) * n + site.x + dx, site);
-      }
-      const occupied = new Set(this.state.tiles.map(tile => tile.y * n + tile.x));
-      for (let y = 0; y < n; y++) {
-        for (let x = 0; x < n; x++) {
+      for (let d = 0; d <= 2 * (n - 1); d++) {
+        for (let x = Math.max(0, d - n + 1); x <= Math.min(d, n - 1); x++) {
+          const y = d - x;
+          if (!this.landAt(x, y)) continue;
           const c = this.world(x, y);
+          const shade = (x + y) % 2;
+          if (!this.landAt(x, y + 1)) cliff(c.x - TW / 2, c.y, c.x, c.y + TH / 2, shade ? '#9C6A3A' : '#A87444');
+          if (!this.landAt(x + 1, y)) cliff(c.x, c.y + TH / 2, c.x + TW / 2, c.y, shade ? '#7E5229' : '#875A2F');
           const plot = plots.get(y * n + x);
-          const beach = x === 0 || y === 0 || x === n - 1 || y === n - 1;
           this.diamond(ctx, c.x, c.y, TW, TH);
-          if (plot) ctx.fillStyle = plot.level ? ((x + y) % 2 ? '#D9C49A' : '#E0CCA4') : ((x + y) % 2 ? '#B89468' : '#C09C70');
-          else if (beach) ctx.fillStyle = (x + y) % 2 ? '#EBD49B' : '#F0DBA6';
-          else ctx.fillStyle = (x + y) % 2 ? '#93CE70' : '#9ED67B';
+          if (plot) ctx.fillStyle = plot.level ? (shade ? '#D9C49A' : '#E0CCA4') : (shade ? '#B89468' : '#C09C70');
+          else if (this.isBeach(x, y)) ctx.fillStyle = shade ? '#EBD49B' : '#F0DBA6';
+          else ctx.fillStyle = shade ? '#93CE70' : '#9ED67B';
           ctx.fill();
           ctx.strokeStyle = 'rgba(255, 255, 255, .16)';
           ctx.lineWidth = 1 / s;
           ctx.stroke();
-          if (this.moving && !plot && !occupied.has(y * n + x)) {
+          if (this.moving && !plot && !occupied.has(y * n + x) && !this.lockedAt(x, y)) {
             ctx.setLineDash([4 / s, 3 / s]);
             ctx.strokeStyle = 'rgba(255, 250, 220, .9)';
             ctx.lineWidth = 1.5 / s;
@@ -613,6 +752,7 @@ export default {
       }
       // Contour des chantiers : pointillés à bâtir, doré quand tout est prêt
       for (const site of this.state.sites) {
+        if (site.locked) continue;
         const c = this.world(site.x + 0.5, site.y + 0.5);
         this.diamond(ctx, c.x, c.y, TW * 2, TH * 2);
         const ready = this.canBuild(site);
@@ -629,6 +769,17 @@ export default {
           ctx.stroke();
         }
       }
+      // Brume au sol sur les quartiers à acheter (et celui qu'on vient d'acheter, qui s'éclaircit)
+      for (let y = 0; y < n; y++) {
+        for (let x = 0; x < n; x++) {
+          const mist = this.mistOf(this.zoneAt(x, y), now);
+          if (!mist) continue;
+          const c = this.world(x, y);
+          this.diamond(ctx, c.x, c.y, TW + 1, TH + 1);
+          ctx.fillStyle = `rgba(236, 238, 242, ${(0.62 * mist).toFixed(3)})`;
+          ctx.fill();
+        }
+      }
       const worldTransform = ctx.getTransform();
       // Ombres des nuages qui glissent sur l'île (écran)
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
@@ -639,15 +790,21 @@ export default {
         ...this.state.sites.map(site => ({ depth: site.x + site.y + 2, site })),
         ...this.state.tiles.map(tile => ({ depth: tile.x + tile.y, tile })),
         ...this.props.map(prop => ({ depth: prop.depth, prop })),
-        ...this.critters(t).map(critter => ({ depth: critter.x + critter.y, critter }))
+        ...this.critters(t).map(critter => ({ depth: critter.x + critter.y, critter })),
+        ...this.state.map.zones.filter(zone => !zone.owned).map(zone => ({ zone, at: this.signPlaceOf(zone) }))
+          .filter(sign => sign.at).map(sign => ({ depth: sign.at.x + sign.at.y, sign }))
       ].sort((p, q) => p.depth - q.depth);
+      this.signs = [];
       const repaint = () => this.draw(performance.now());
       for (const item of standing) {
         if (item.site) this.drawSite(ctx, item.site, t, now, repaint);
         else if (item.tile) this.drawTile(ctx, item.tile, now, t, repaint);
-        else if (item.prop) this.drawProp(ctx, item.prop, t, repaint);
+        else if (item.prop) this.drawProp(ctx, item.prop, t, repaint, now);
+        else if (item.sign) this.drawSign(ctx, item.sign, t, repaint);
         else this.drawCritter(ctx, item.critter, repaint);
       }
+      // Volutes de brume qui dérivent au-dessus des quartiers à acheter
+      this.drawWisps(ctx, t, now);
       this.drawSmoke(ctx, t, phase);
       // Ciel : nuages et mouettes (écran), puis la teinte de l'heure sur toute la scène
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
@@ -657,9 +814,23 @@ export default {
       ctx.setTransform(worldTransform);
       this.drawLights(ctx, t, phase);
       // Les noms des lieux passent par-dessus tout : aucune décoration ne les cache
-      if (this.cam.s >= 0.55) this.state.sites.forEach(site => this.drawLabel(ctx, site));
+      if (this.cam.s >= 0.55) this.state.sites.filter(site => !site.locked).forEach(site => this.drawLabel(ctx, site));
+      // Bulles de production à toucher, au-dessus de tout
+      this.drawBubbles(ctx, t);
     },
     drawSite(ctx, site, t, now, repaint) {
+      // Sous la brume : à peine visible, comme une promesse
+      const mist = this.mistOf(this.zoneAt(site.x, site.y), now);
+      if (mist) {
+        ctx.save();
+        ctx.globalAlpha = 1 - 0.55 * mist;
+        this.paintSite(ctx, site, t, now, repaint);
+        ctx.restore();
+        return;
+      }
+      this.paintSite(ctx, site, t, now, repaint);
+    },
+    paintSite(ctx, site, t, now, repaint) {
       const c = this.world(site.x + 0.5, site.y + 0.5);
       const looks = LOOKS[site.id] || [BUILDINGS.chantier[2]];
       const raise = this.raises.get(site.id);
@@ -669,11 +840,11 @@ export default {
         // Chantier, dans sa phase ; tout prêt, un peu de poussière de temps en temps
         const stage = this.stageOf(site);
         drawSprite(ctx, `chantier-${stage}`, BUILDINGS.chantier[stage], c.x, c.y, repaint);
-        if (stage === 2) {
+        if (stage === 2 && !site.locked) {
           const puff = (t * 0.5) % 1;
           if (puff < 0.4) this.dust(ctx, c.x, c.y + 6, puff / 0.4, 3);
         }
-        if (site.next && site.next.planEmoji) glyph(ctx, site.next.planEmoji, c.x, c.y - TW * 1.02 + Math.sin(t * 2) * 2, TW * 0.46, repaint, site.next.planOwned ? 0.95 : 0.4);
+        if (!site.locked && site.next && site.next.planEmoji) glyph(ctx, site.next.planEmoji, c.x, c.y - TW * 1.02 + Math.sin(t * 2) * 2, TW * 0.46, repaint, site.next.planOwned ? 0.95 : 0.4);
         return;
       }
       const level = Math.min(site.level, looks.length);
@@ -719,9 +890,93 @@ export default {
         ctx.restore();
       }
     },
-    drawProp(ctx, prop, t, repaint) {
+    drawProp(ctx, prop, t, repaint, now) {
       const c = this.world(prop.x, prop.y);
+      const mist = this.mistOf(this.zoneAt(prop.x, prop.y), now);
+      if (mist) {
+        ctx.save();
+        ctx.globalAlpha = 1 - 0.5 * mist;
+      }
       this.swayed(ctx, `nature-${prop.kind}`, ALL_NATURE[prop.kind], c.x, c.y, (SWAY[prop.kind] || 0) * this.windAt(t, prop.x * 0.7 + prop.y), repaint);
+      if (mist) ctx.restore();
+    },
+    // Panneau d'un quartier à acheter : prix, ou chapitre du Livre encore fermé ; il se balance un peu
+    drawSign(ctx, { zone, at }, t, repaint) {
+      const c = this.world(at.x, at.y);
+      ctx.save();
+      ctx.translate(c.x, c.y);
+      ctx.rotate(Math.sin(t * 1.3 + at.x) * 0.02);
+      drawSprite(ctx, 'sign', SIGN, 0, 0, repaint);
+      ctx.font = '900 7.5px Nunito, system-ui, sans-serif';
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      ctx.fillStyle = '#4A3426';
+      ctx.fillText(zone.open ? `${zone.price} écus` : `Chap. ${zone.chapter}`, 0, -31.5);
+      ctx.textBaseline = 'alphabetic';
+      ctx.restore();
+      this.signs.push({ zone, x: c.x, y: c.y - 30, r: 26 });
+    },
+    // Volutes de brume (monde) : ellipses claires qui dérivent lentement sur les quartiers à acheter
+    drawWisps(ctx, t, now) {
+      for (const zone of this.state.map.zones) {
+        const mist = this.mistOf(zone, now);
+        if (!mist || !zone.anchor) continue;
+        for (let k = 0; k < 4; k++) {
+          const ax = zone.anchor.x + Math.sin(t * 0.13 + k * 1.9 + zone.anchor.y) * 1.6;
+          const ay = zone.anchor.y + Math.cos(t * 0.11 + k * 2.3 + zone.anchor.x) * 1.6;
+          const c = this.world(ax, ay);
+          const g = ctx.createRadialGradient(c.x, c.y - 14, 0, c.x, c.y - 14, TW * 1.3);
+          g.addColorStop(0, `rgba(248, 249, 252, ${(0.42 * mist).toFixed(3)})`);
+          g.addColorStop(1, 'rgba(248, 249, 252, 0)');
+          ctx.fillStyle = g;
+          ctx.beginPath();
+          ctx.ellipse(c.x, c.y - 14, TW * 1.3, TH * 1.1, 0, 0, Math.PI * 2);
+          ctx.fill();
+        }
+      }
+    },
+    // Bulles de production au-dessus des bâtiments : ressource et écus à récolter, d'un toucher
+    drawBubbles(ctx, t) {
+      this.bubbles = [];
+      for (const site of this.state.sites) {
+        const made = site.pending;
+        if (!made || site.locked || this.raises.has(site.id)) continue;
+        const amount = made[site.produce] || 0;
+        if (!amount && !made.coins) continue;
+        const c = this.world(site.x + 0.5, site.y + 0.5);
+        const k = 1 / Math.min(1, this.cam.s);
+        const bob = Math.sin(t * 2.2 + site.x) * 2.5;
+        const x = c.x;
+        const y = c.y - TW * 1.55 + bob;
+        const w = 46 * k;
+        const h = 22 * k;
+        ctx.save();
+        ctx.shadowColor = 'rgba(60, 40, 25, .3)';
+        ctx.shadowBlur = 6 * k;
+        ctx.shadowOffsetY = 2 * k;
+        ctx.fillStyle = '#FFFDF8';
+        ctx.beginPath();
+        if (ctx.roundRect) ctx.roundRect(x - w / 2, y - h / 2, w, h, h / 2);
+        else ctx.rect(x - w / 2, y - h / 2, w, h);
+        ctx.fill();
+        ctx.restore();
+        // Pointe vers le bâtiment
+        ctx.fillStyle = '#FFFDF8';
+        ctx.beginPath();
+        ctx.moveTo(x - 5 * k, y + h / 2 - 1);
+        ctx.lineTo(x, y + h / 2 + 6 * k);
+        ctx.lineTo(x + 5 * k, y + h / 2 - 1);
+        ctx.fill();
+        ctx.font = `${13 * k}px system-ui, sans-serif`;
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        ctx.fillText(GLYPH[site.produce] || '✨', x - 11 * k, y + 0.5);
+        ctx.font = `900 ${11 * k}px Nunito, system-ui, sans-serif`;
+        ctx.fillStyle = '#4A3426';
+        ctx.fillText(`+${amount}`, x + 9 * k, y + 0.5);
+        ctx.textBaseline = 'alphabetic';
+        this.bubbles.push({ site, x, y, w, h });
+      }
     },
     // Petite vie de l'île, déterministe dans le temps : où est chaque animal, dans quelle image, de quel côté il regarde.
     // Poules autour du Foyer, papillons et abeilles sur les fleurs (le jour), grenouille aux nénuphars, poisson près de la côte.
@@ -752,11 +1007,9 @@ export default {
       // Poisson : un saut toutes les 7 s, à un endroit différent du rivage
       const cycle = Math.floor(t / 7);
       const into = (t % 7) / 7;
-      if (into < 0.12) {
-        const n = this.state.size;
-        const side = hash(cycle, 1) < 0.5;
-        const along = 1 + hash(cycle, 2) * (n - 2);
-        out.push({ kind: 'fish', x: side ? n + 0.6 : along, y: side ? along : n + 0.6, z: 0, frame: into < 0.06 ? 0 : 1, flip: hash(cycle, 3) < 0.5 });
+      if (into < 0.12 && this.shore.length) {
+        const spot = this.shore[Math.floor(hash(cycle, 2) * this.shore.length)];
+        out.push({ kind: 'fish', x: spot.x + 0.2, y: spot.y + 0.2, z: 0, frame: into < 0.06 ? 0 : 1, flip: hash(cycle, 3) < 0.5 });
       }
       return out;
     },
@@ -885,7 +1138,7 @@ export default {
         return;
       }
       this.gesture.moved = Math.max(this.gesture.moved, Math.hypot(p.x - this.gesture.start.x, p.y - this.gesture.start.y));
-      if (this.gesture.moved > 8) {
+      if (this.gesture.moved > TAP_SLOP) {
         this.selected = null;
         this.cam.x -= (p.x - prev.x) / this.cam.s;
         this.cam.y -= (p.y - prev.y) / this.cam.s;
@@ -908,7 +1161,7 @@ export default {
         return;
       }
       this.gesture = null;
-      if (!gesture || gesture.moved > 8 || this.busy) return;
+      if (!gesture || gesture.moved > TAP_SLOP || this.busy) return;
       this.tap(p.x, p.y);
     },
     onWheel(event) {
@@ -917,18 +1170,25 @@ export default {
       this.zoomAt(p.x, p.y, event.deltaY < 0 ? 1.12 : 0.89);
     },
     // Ce qui est sous le doigt : bâtiment, décoration, puis case
+    // Ce qui est sous le doigt : bulle de production, panneau de quartier, bâtiment, décoration, puis case
     hitAt(px, py) {
       const w = this.toWorld(px, py);
+      const bubble = this.bubbles.find(b => Math.abs(w.x - b.x) < b.w / 2 + 6 && Math.abs(w.y - b.y) < b.h / 2 + 8);
+      if (bubble) return { bubble };
+      const sign = this.signs.find(sg => Math.hypot(w.x - sg.x, (w.y - sg.y) * 1.2) < sg.r);
+      if (sign) return { zone: sign.zone };
+      // Zones de toucher généreuses : tout le volume dessiné du bâtiment, pas seulement sa base
       const candidates = [
-        ...this.state.sites.map(site => ({ site, depth: site.x + site.y + 2, c: this.world(site.x + 0.5, site.y + 0.5), r: TW * 0.75, h: TW * 1.1 })),
-        ...this.state.tiles.map(tile => ({ tile, depth: tile.x + tile.y, c: this.world(tile.x, tile.y), r: TW * 0.36, h: TW * 0.85 }))
+        ...this.state.sites.map(site => ({ site, depth: site.x + site.y + 2, c: this.world(site.x + 0.5, site.y + 0.5), r: TW * 0.98, h: TW * 1.75 })),
+        ...this.state.tiles.map(tile => ({ tile, depth: tile.x + tile.y, c: this.world(tile.x, tile.y), r: TW * 0.4, h: TW * 0.95 }))
       ].sort((p, q) => q.depth - p.depth);
-      const hit = candidates.find(o => Math.abs(w.x - o.c.x) < o.r && w.y > o.c.y - o.h && w.y < o.c.y + TH * (o.site ? 1 : 0.2));
+      const hit = candidates.find(o => Math.abs(w.x - o.c.x) < o.r && w.y > o.c.y - o.h && w.y < o.c.y + TH * (o.site ? 1.05 : 0.3));
       if (hit) return hit;
       const tile = this.tileAt(px, py);
-      if (!tile) return null;
+      if (!tile || !this.landAt(tile.x, tile.y)) return null;
       const site = this.state.sites.find(s => tile.x >= s.x && tile.x < s.x + 2 && tile.y >= s.y && tile.y < s.y + 2);
-      return site ? { site } : { cell: tile };
+      if (site) return { site };
+      return this.lockedAt(tile.x, tile.y) ? { zone: this.zoneAt(tile.x, tile.y) } : { cell: tile };
     },
     tap(px, py) {
       this.markSeen();
@@ -936,7 +1196,7 @@ export default {
       if (this.moving) {
         const cell = hit && hit.cell;
         if (!cell) {
-          this.$emit('show-alert', 'Choisis une case d’herbe libre.');
+          this.$emit('show-alert', hit && hit.zone ? 'Achète d’abord ce quartier pour y décorer.' : 'Choisis une case d’herbe libre.');
           return;
         }
         const name = this.moving;
@@ -949,8 +1209,20 @@ export default {
         this.draw(performance.now());
         return;
       }
-      if (hit.site) {
-        this.site = hit.site;
+      if (hit.bubble) {
+        const sp = this.toScreen(hit.bubble.x, hit.bubble.y);
+        this.collect(this.canvasPoint(sp.x, sp.y));
+        vibrate(8);
+      } else if (hit.zone) {
+        this.zone = hit.zone;
+        vibrate(6);
+      } else if (hit.site) {
+        if (hit.site.locked) {
+          this.zone = this.zoneAt(hit.site.x, hit.site.y);
+        } else {
+          this.site = hit.site;
+          this.siteTab = hit.site.level ? 'overview' : 'evolution';
+        }
         vibrate(6);
       } else if (hit.tile) {
         const c = this.world(hit.tile.x, hit.tile.y);
@@ -963,6 +1235,29 @@ export default {
         this.picking = hit.cell;
       }
       this.draw(performance.now());
+    },
+    // Point de l'écran (page) d'un point du canvas
+    canvasPoint(x, y) {
+      const rect = this.$refs.canvas.getBoundingClientRect();
+      return { x: rect.left + x, y: rect.top + y };
+    },
+    // Vignette d'un bâtiment (son dessin actuel) pour sa fiche
+    artOf(site) {
+      if (!site.level) return spriteUrl(`chantier-${this.stageOf(site)}`, BUILDINGS.chantier[this.stageOf(site)]);
+      const looks = LOOKS[site.id] || [BUILDINGS.chantier[2]];
+      const level = Math.min(site.level, looks.length);
+      return spriteUrl(`${site.id}-${level}`, looks[level - 1]);
+    },
+    zoneName(id) {
+      return this.state.map.zones.find(z => z.id === id)?.name || '';
+    },
+    sitesIn(zone) {
+      return this.state.sites.filter(s => s.zone === zone.id).map(s => s.name);
+    },
+    // Palier i (0 = premier niveau) d'un bâtiment : atteint, prochain ou à venir
+    stepState(site, i) {
+      if (i < site.level) return 'done';
+      return i === site.level ? 'next' : 'later';
     },
     markSeen() {
       if (!this.firstVisit) return;
@@ -1018,9 +1313,10 @@ export default {
     async finishHarvest(moves) {
       this.sending = true;
       try {
-        const { gains, world } = await playService.harvestFinish(this.run.id, moves);
+        const { gains, coins, world } = await playService.harvestFinish(this.run.id, moves);
         this.runResult = gains;
         this.apply(world);
+        if (coins !== undefined) this.$emit('coins-updated', coins);
         vibrate([12, 40, 18]);
       } catch (error) {
         this.runError = messageOf(error, 'Le serveur n’a pas pu peser ta récolte.');
@@ -1038,7 +1334,10 @@ export default {
       this.busy = true;
       try {
         this.pops.set(name, performance.now());
-        this.apply(await playService.worldPlace(name, x, y));
+        const world = await playService.worldPlace(name, x, y);
+        this.apply(world);
+        // Une nouvelle décoration s'achète : le solde suit (absent pour un simple déplacement)
+        if (world.coins !== undefined) this.$emit('coins-updated', world.coins);
         this.$nextTick(() => {
           burst(center(this.screenRectOf(x, y)), 14, 50);
           vibrate([10, 30, 10]);
@@ -1067,22 +1366,50 @@ export default {
         this.busy = false;
       }
     },
-    async collect(event) {
-      const button = event.currentTarget;
+    // Récolte de la production des bâtiments ; at = point de l'écran d'où partent les éclats
+    async collect(at = null) {
+      if (this.busy) return;
+      const from = at && at.currentTarget ? center(at.currentTarget.getBoundingClientRect()) : at;
       this.busy = true;
       try {
-        const { gained, coins, world } = await playService.worldCollect();
+        const { gained, stock, coins, world } = await playService.worldCollect();
         this.apply(world);
         this.$emit('coins-updated', coins);
-        if (gained > 0) {
-          const at = center(button.getBoundingClientRect());
-          ring(at, 90);
-          burst(at, 20, 70);
+        const goods = Object.entries(stock || {}).filter(([, n]) => n > 0).map(([r, n]) => `+${n} ${GLYPH[r]}`);
+        if (gained > 0 || goods.length) {
+          if (from) {
+            ring(from, 90);
+            burst(from, 20, 70);
+          }
           vibrate([12, 40, 18]);
-          this.$emit('show-alert', `+${gained} écu${gained > 1 ? 's' : ''} récoltés sur ton île.`);
+          this.$emit('show-alert', `Récolte de l’île : ${[...goods, ...(gained ? [`+${gained} écu${gained > 1 ? 's' : ''}`] : [])].join(' · ')}`);
         }
       } catch (error) {
-        this.$emit('show-alert', messageOf(error, 'La récolte d’écus n’a pas pu se faire.'));
+        this.$emit('show-alert', messageOf(error, 'La récolte n’a pas pu se faire.'));
+      } finally {
+        this.busy = false;
+      }
+    },
+    // Achat d'un quartier : la brume se dissipe, le panneau éclate
+    async buyZone(zone) {
+      this.busy = true;
+      try {
+        const sign = this.signs.find(sg => sg.zone.id === zone.id);
+        const { bought, coins, world } = await playService.worldZone(zone.id);
+        this.unveils.set(zone.id, performance.now());
+        this.zone = null;
+        this.apply(world);
+        this.$emit('coins-updated', coins);
+        if (sign) {
+          const sp = this.toScreen(sign.x, sign.y);
+          const at = this.canvasPoint(sp.x, sp.y);
+          ring(at, 140);
+          burst(at, 30, 110);
+        }
+        vibrate([14, 40, 20]);
+        this.$emit('show-alert', `Nouveau quartier : ${bought}\u00a0!`);
+      } catch (error) {
+        this.$emit('show-alert', messageOf(error, 'Le quartier n’a pas pu être acheté.'));
       } finally {
         this.busy = false;
       }
@@ -1095,13 +1422,6 @@ export default {
 .world { position: relative; }
 .world__head { display: flex; align-items: flex-end; justify-content: space-between; gap: 12px; padding: 4px 2px 8px; }
 .world__eyebrow { display: block; font-family: var(--oc-font-mono); font-weight: 800; font-size: 11px; letter-spacing: .14em; text-transform: uppercase; color: var(--oc-on-bg-faint); }
-.world__phase {
-  margin-left: auto; flex: none; min-height: 32px; padding: 4px 12px;
-  display: inline-flex; align-items: center; gap: 6px;
-  border-radius: 999px; background: var(--vellum-50); color: var(--ink-700);
-  box-shadow: inset 0 0 0 1px var(--oc-line), 0 2px 0 var(--vellum-400);
-  font-family: var(--font-ui); font-weight: 800; font-size: 13px;
-}
 .world__title { display: block; font-family: var(--oc-font-display); font-weight: 700; font-size: 24px; line-height: 1.1; color: var(--oc-on-bg); }
 .world__coins {
   flex: none; display: inline-flex; align-items: center; gap: 7px;
@@ -1185,8 +1505,35 @@ export default {
 .world__sheet-title small { font-family: var(--font-ui); font-size: 12px; font-weight: 800; color: var(--ink-500); margin-left: 4px; }
 .world__sheet .world__link { color: #8A5A1C; }
 .world__site-effect { margin: 0 0 10px; padding: 8px 12px; border-radius: 12px; background: var(--vellum-200); font-weight: 700; }
-.world__site-step { margin: 6px 0 8px; font-weight: 900; font-size: 15px; }
-.world__site-next { margin: 8px 0 12px; color: var(--ink-500); font-style: italic; }
+/* Fiche d'un bâtiment : vignette, quartier, niveau en pastilles, onglets */
+.world__site-head { display: flex; align-items: center; gap: 12px; margin-bottom: 10px; }
+.world__site-art { width: 76px; height: 84px; flex: none; object-fit: contain; object-position: center bottom; border-radius: 16px; background: radial-gradient(circle at 50% 70%, #CFE8B8, var(--vellum-200) 70%); }
+.world__site-id { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 2px; }
+.world__site-id .world__eyebrow { color: var(--ink-500); }
+.world__pips { display: flex; gap: 5px; margin-top: 4px; }
+.world__pip { width: 16px; height: 6px; border-radius: 3px; background: var(--vellum-300); }
+.world__pip.is-on { background: linear-gradient(90deg, var(--gold-400), var(--gold-600)); }
+.world__tabs { display: flex; gap: 6px; padding: 4px; margin-bottom: 12px; border-radius: 999px; background: var(--vellum-200); }
+.world__tab { flex: 1; min-height: 40px; border: 0; border-radius: 999px; background: transparent; color: var(--ink-700); font-family: var(--font-ui); font-weight: 900; font-size: 14px; cursor: pointer; position: relative; touch-action: manipulation; }
+.world__tab.is-on { background: var(--vellum-50); color: var(--ink-900); box-shadow: 0 2px 0 var(--vellum-400); }
+.world__tab-dot { position: absolute; top: 8px; right: 14px; width: 8px; height: 8px; border-radius: 50%; background: var(--gold-500); box-shadow: 0 0 0 2px var(--vellum-50); }
+.world__panel { display: flex; flex-direction: column; gap: 10px; }
+.world__prod { display: grid; gap: 6px; }
+.world__prod-row { display: flex; justify-content: space-between; align-items: center; gap: 10px; min-height: 40px; padding: 6px 12px; border-radius: 12px; background: var(--vellum-50); box-shadow: inset 0 0 0 1px rgba(74, 52, 38, .08); font-size: 14px; }
+.world__prod-row span { color: var(--ink-500); font-weight: 800; }
+.world__prod-row.is-pending { background: var(--gold-200); }
+/* Évolution : paliers en frise verticale (atteint, prochain, à venir) */
+.world__steps { margin: 0; padding: 0; list-style: none; display: flex; flex-direction: column; gap: 10px; }
+.world__step { display: flex; gap: 12px; position: relative; }
+.world__step:not(:last-child)::after { content: ''; position: absolute; left: 15px; top: 34px; bottom: -10px; width: 2px; background: var(--vellum-300); }
+.world__step-mark { flex: none; width: 32px; height: 32px; display: grid; place-items: center; border-radius: 50%; background: var(--vellum-300); color: var(--ink-700); font-weight: 900; z-index: 1; }
+.world__step.is-done .world__step-mark { background: #8FCB6B; color: #FFFFFF; }
+.world__step.is-next .world__step-mark { background: linear-gradient(180deg, var(--gold-300), var(--gold-500)); color: var(--ink-900); box-shadow: 0 0 0 3px var(--gold-200); }
+.world__step-body { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 6px; padding-bottom: 4px; }
+.world__step-name { font-family: var(--font-display); font-weight: 700; font-size: 18px; }
+.world__step-effect { color: var(--ink-500); font-size: 13px; font-weight: 700; }
+.world__step.is-later { opacity: .62; }
+.world__pick-note { margin: 0 0 8px; color: var(--ink-500); font-size: 13px; }
 .world__needs { margin: 0; padding: 0; list-style: none; display: grid; gap: 6px; }
 .world__need { display: flex; align-items: center; gap: 10px; min-height: 44px; padding: 6px 12px; border-radius: 12px; background: var(--vellum-50); box-shadow: inset 0 0 0 1px rgba(74, 52, 38, .08); }
 .world__need em { margin-left: auto; font-size: 12px; font-weight: 800; font-style: normal; }
@@ -1195,7 +1542,7 @@ export default {
 .world__need-glyph { width: 28px; font-size: 22px; text-align: center; }
 .world__sheet-actions { display: flex; flex-wrap: wrap; gap: 8px; }
 .world__search { width: 100%; padding: 8px 12px; border-radius: 12px; border: 1px solid var(--vellum-300); background: var(--vellum-50); color: var(--ink-900); font: inherit; font-size: 15px; }
-.world__grid { margin-top: 10px; overflow-y: auto; display: grid; grid-template-columns: repeat(auto-fill, minmax(70px, 1fr)); gap: 8px; padding-bottom: 6px; }
+.world__grid { margin-top: 10px; overflow-y: auto; display: grid; grid-template-columns: repeat(auto-fill, minmax(70px, 1fr)); gap: 14px 8px; padding: 8px 2px 10px; }
 .world__empty { grid-column: 1 / -1; color: var(--ink-500); font-style: italic; text-align: center; }
 .world-sheet-enter-active, .world-sheet-leave-active { transition: opacity .25s ease; }
 .world-sheet-enter-active .world__sheet, .world-sheet-leave-active .world__sheet { transition: transform .3s cubic-bezier(.3, 1.2, .5, 1); }

@@ -29,3 +29,10 @@ export function drawSprite(ctx, key, make, x, y, onReady) {
   ctx.drawImage(entry.img, x + box.x, y + box.y, box.w, box.h);
   return true;
 }
+
+// Adresse d'image d'un sprite, pour l'afficher hors du canvas (vignette d'une fiche)
+const urls = new Map();
+export function spriteUrl(key, make) {
+  if (!urls.has(key)) urls.set(key, `data:image/svg+xml;charset=utf-8,${encodeURIComponent(make().svg)}`);
+  return urls.get(key);
+}
