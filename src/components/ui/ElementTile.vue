@@ -2,7 +2,7 @@
   <button
     type="button"
     :class="['tile', state, { 'tile--compact': compact }]"
-    :style="{ '--tc': tint.color, '--ti': tint.ink }"
+    :style="{ '--tc': tint.color, '--ti': card.ink, '--card': card.card, '--card-edge': card.edge }"
     :aria-label="label"
   >
     <span class="tile__corner" aria-hidden="true"></span>
@@ -17,11 +17,11 @@
 
 <script>
 import ElementGlyph from '@/components/ui/ElementGlyph.vue';
-import { styleOfFamily } from '@/book/chapters';
+import { styleOfFamily, tintOfFamily } from '@/book/chapters';
 import { roman } from '@/utils/roman';
 
-// La tuile d'élément, la même partout (Livre, Épreuve, Île) : carton de vélin, médaillon teinté par le chapitre
-// de sa famille, nom sur deux lignes. Une seule chose brille à la fois : Athanor > Encre > Nouveau.
+// La tuile d'élément, la même partout (Livre, Épreuve, Île) : carton teinté par sa famille, médaillon teinté par
+// le chapitre de sa famille, nom sur deux lignes. Une seule chose brille à la fois : Athanor > Encre > Nouveau.
 export default {
   name: 'ElementTile',
   components: { ElementGlyph },
@@ -45,6 +45,9 @@ export default {
   computed: {
     tint() {
       return styleOfFamily(this.family);
+    },
+    card() {
+      return tintOfFamily(this.family);
     },
     numeral() {
       return roman(this.slotIndex + 1);
@@ -100,8 +103,8 @@ export default {
   padding: 7px 3px 6px;
   border: 0;
   border-radius: 14px;
-  background: linear-gradient(180deg, var(--vellum-50), var(--vellum-100));
-  box-shadow: inset 0 0 0 1px var(--oc-line), 0 3px 0 var(--vellum-400), var(--shadow-1);
+  background: linear-gradient(180deg, rgba(255, 255, 255, .6), rgba(255, 255, 255, 0) 62%), var(--card);
+  box-shadow: inset 0 0 0 1px var(--oc-line), 0 3px 0 var(--card-edge), var(--shadow-1);
   color: var(--ink-700);
   cursor: pointer;
   -webkit-tap-highlight-color: transparent;
@@ -109,7 +112,7 @@ export default {
   touch-action: manipulation;
   transition: transform var(--oc-fast) var(--oc-ease-out), box-shadow var(--oc-fast);
 }
-.tile:active { transform: translateY(2px) scale(0.96); box-shadow: inset 0 0 0 1px var(--oc-line), 0 1px 0 var(--vellum-400); }
+.tile:active { transform: translateY(2px) scale(0.96); box-shadow: inset 0 0 0 1px var(--oc-line), 0 1px 0 var(--card-edge); }
 .tile:focus-visible { outline: 2px solid var(--gold-500); outline-offset: 2px; }
 
 /* Coin de famille : un losange à l'encre du chapitre */
@@ -122,6 +125,8 @@ export default {
   place-items: center;
   border-radius: 50%;
   background: radial-gradient(circle at 38% 32%, #fff 0 18%, var(--tc) 100%);
+  /* Liseré clair : le médaillon se détache du carton teinté */
+  box-shadow: 0 0 0 1.5px rgba(255, 255, 255, .8), 0 1px 2px rgba(74, 52, 38, .12);
   font-size: 27px;
   line-height: 1;
 }
@@ -201,7 +206,7 @@ export default {
 .tile.is-spent .tile__medal { filter: saturate(0.35); opacity: 0.75; }
 /* Dans l'Athanor : contour en pointillés et chiffre de l'emplacement ; la tuile reste pleine,
    car un même élément peut occuper plusieurs emplacements (Eau + Eau) */
-.tile.is-slot { box-shadow: 0 3px 0 var(--vellum-400), var(--shadow-1); outline: 2px dashed var(--ti); outline-offset: -2px; }
+.tile.is-slot { box-shadow: 0 3px 0 var(--card-edge), var(--shadow-1); outline: 2px dashed var(--ti); outline-offset: -2px; }
 .tile__slot {
   position: absolute;
   top: -6px;

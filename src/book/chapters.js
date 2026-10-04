@@ -10,7 +10,7 @@ export const CHAPTER_STYLE = {
   VII: { color: '#F1D3D8', ink: '#8C3D52', wax: '#B5637A' }
 };
 
-const CHAPTER_FAMILIES = {
+export const CHAPTER_FAMILIES = {
   I: ['Elements Fondamentaux', 'Phénomènes Naturels'],
   II: ['Matériaux', 'Chimie', 'Physique'],
   III: ['Cosmos', 'Formations Naturelles'],
@@ -26,6 +26,28 @@ const FAMILY_CHAPTER = Object.fromEntries(
 // Chapitre d'une famille (I par défaut, pour une famille inconnue)
 export const chapterOfFamily = family => FAMILY_CHAPTER[family] || 'I';
 export const styleOfFamily = family => CHAPTER_STYLE[chapterOfFamily(family)];
+
+// Teinte de chaque famille, dans la couleur de son chapitre : fond des tuiles d'élément et des cases inscrites du
+// Livre (card), liseré du bas de la tuile (edge) et encre du losange (ink). Varie les cases sans perdre le chapitre.
+export const FAMILY_TINT = {
+  'Elements Fondamentaux': { card: '#DCEAF6', edge: '#A9C3D8', ink: '#2F6286' },
+  'Phénomènes Naturels': { card: '#D3ECEE', edge: '#9DC6CA', ink: '#2A6C76' },
+  'Matériaux': { card: '#F0DFBA', edge: '#CDB585', ink: '#86591C' },
+  'Chimie': { card: '#F6D9BF', edge: '#D6AF8C', ink: '#9A5420' },
+  'Physique': { card: '#ECE2B4', edge: '#C9BC82', ink: '#75621E' },
+  'Cosmos': { card: '#E0D8F4', edge: '#B5AAD6', ink: '#5A4A8C' },
+  'Formations Naturelles': { card: '#E8DCE8', edge: '#C4B1C5', ink: '#6B4C78' },
+  'Flore': { card: '#D9ECCB', edge: '#A9C798', ink: '#3E6B2E' },
+  'Biologie': { card: '#CFEADB', edge: '#98C6AD', ink: '#2D6A50' },
+  'Vie et Créatures': { card: '#E3E7C2', edge: '#BCC28E', ink: '#566526' },
+  'Corps et Esprit': { card: '#F7DAD0', edge: '#D9AE9F', ink: '#9A4B3A' },
+  'Créations Humaines': { card: '#F3D7BF', edge: '#D4AD8C', ink: '#91502A' },
+  'Histoire': { card: '#E4DCCD', edge: '#BFB39C', ink: '#5E5240' },
+  'Technologie': { card: '#D4DFE8', edge: '#A3B5C4', ink: '#3E5568' },
+  'Légendes': { card: '#F2D6DC', edge: '#D3A9B3', ink: '#8C3D52' }
+};
+// Famille inconnue : le vélin des tuiles, à l'encre de son chapitre
+export const tintOfFamily = family => FAMILY_TINT[family] || { card: '#FBF5E8', edge: '#E3D3B5', ink: styleOfFamily(family).ink };
 
 // Nom du grimoire (titre du sommaire et de l'en-tête du Livre)
 export const BOOK_TITLE = 'Codex Mundi';

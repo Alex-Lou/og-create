@@ -21,9 +21,21 @@
       <button type="button" class="book-view__stars" :aria-label="`${stars} découvertes : revenir au sommaire`" @click="goTo(0)">★ {{ stars }}</button>
     </header>
 
-    <div ref="stage" class="book-view__stage">
+    <div ref="stage" :class="['book-view__stage', zoom ? 'is-zoom' : 'is-spread', { 'is-opening': opening }]" :style="{ '--cam': cam === 'left' ? 0 : 1 }">
       <div ref="rig" class="book-view__rig">
         <div ref="wrap" class="book-view__wrap">
+          <GrimoireBinding
+            :compact="zoom"
+            :chapter="currentChapter ? currentChapter.id : null"
+            :chapters="chapterState"
+            :progress="leaf"
+            :flash="runeFlash"
+            :aim="aimSide"
+            :opening="opening"
+            :ready="engineReady"
+            :title="BOOK_TITLE"
+            @opened="onOpened"
+          />
         </div>
         <div ref="hot" class="book-view__hot" role="region" aria-roledescription="page de livre" tabindex="0" :aria-label="pageLabel">
           <template v-for="spot in spots" :key="spot.id">
@@ -133,13 +145,15 @@ import playService from '@/services/playService';
 import ElementTile from '@/components/ui/ElementTile.vue';
 import HangmanSheet from './HangmanSheet.vue';
 import ChapterSheet from './ChapterSheet.vue';
+import GrimoireBinding from './GrimoireBinding.vue';
 import { BOOK_TITLE } from '@/book/chapters';
 import { search } from '@/utils/search';
 import { familyIndex } from '@/utils/eras';
 import * as storage from '@/utils/storage';
 import { createBook } from '@/book/curlBook';
-import { paintPage, CHAPTER_STYLE } from '@/book/painter';
-import { burst, ring, vibrate, center, HAPTIC } from '@/utils/fx';
+import { sideOf } from '@/book/spread';
+import { paintPage, paintEndpaper, CHAPTER_STYLE } from '@/book/painter';
+import { burst, ring, vibrate, center, reducedMotion, HAPTIC } from '@/utils/fx';
 import { unlockCinematic } from '@/book/fx';
 
 const INK_PRICE = 50;
@@ -149,13 +163,19 @@ const RETRY_PRICE = 20;
 const INDEX_SIZE = 15;
 const INK_KEY = 'oc_book_ink';
 const HINT_KEY = 'oc_livre_hint';
+// Les deux pages côte à côte dès que le Livre a la place (largeur du composant, hauteur de la fenêtre) ;
+// sinon (téléphone) la double page lue de près, une page à la fois
+const SPREAD_MIN_WIDTH = 700;
+const SPREAD_MIN_HEIGHT = 600;
+// L'ouverture du grimoire ne se joue qu'une fois par visite
+let openedOnce = false;
 
 // Le Livre : chapitres et pages du joueur (calculés par le serveur), tournés au doigt en WebGL.
 // Le moteur et les pages peintes ne sont pas réactifs (propriétés d'instance) : seule la couche
 // interactive (spots), l'en-tête et l'étagère passent par Vue.
 export default {
   name: 'BookView',
-  components: { ElementTile, HangmanSheet, ChapterSheet },
+  components: { ElementTile, HangmanSheet, ChapterSheet, GrimoireBinding },
   props: {
     discoveredElements: { type: Array, required: true },
     elementEmojis: { type: Object, required: true },
@@ -196,7 +216,16 @@ export default {
       // Page à portée ouverte : familles de ses ingrédients et ingrédient révélé par l'Encre
       pageClue: null,
       showHint: !storage.load(HINT_KEY, false),
-      loadError: false
+      loadError: false,
+      // Grimoire : vue rapprochée (téléphone) et page qu'elle montre (caméra), ouverture en cours, pages prêtes,
+      // avancée (tranches), éclat des sigles, page visée sur la double page
+      zoom: false,
+      cam: 'right',
+      opening: false,
+      engineReady: false,
+      leaf: 0,
+      runeFlash: 0,
+      aimSide: null
     };
   },
   computed: {
@@ -306,12 +335,19 @@ export default {
     this.reloadTimer = 0;
     // Le Livre peut quitter l'écran pendant un chargement (changement d'onglet) : la réponse est alors ignorée
     this.gone = false;
+    this.opening = !openedOnce && !reducedMotion();
+    openedOnce = true;
+    this.sizeObserver = null;
   },
   async mounted() {
+    this.zoom = this.wantsZoom();
+    this.sizeObserver = new ResizeObserver(() => this.checkMode());
+    this.sizeObserver.observe(this.$el);
     await this.load();
   },
   beforeUnmount() {
     this.gone = true;
+    if (this.sizeObserver) this.sizeObserver.disconnect();
     if (this.aimedKey) this.$emit('aim', null);
     clearTimeout(this.reloadTimer);
     cancelAnimationFrame(this.repaintRaf);
@@ -417,6 +453,8 @@ export default {
         if (this.gone) return;
         console.error('Erreur lors du chargement du Livre:', error);
         this.loadError = !this.bookData;
+        // Rien à ouvrir : le grimoire ne reste pas fermé sur l'erreur
+        if (this.loadError) this.opening = false;
         return;
       }
       if (this.gone) return;
@@ -441,15 +479,52 @@ export default {
       else this.engine.refresh();
       if (previous) this.queueEffects(previous, data, previousKey);
     },
-    mountEngine() {
+    wantsZoom() {
+      return !(this.$el.clientWidth >= SPREAD_MIN_WIDTH && window.innerHeight >= SPREAD_MIN_HEIGHT);
+    },
+    // Passage vue rapprochée ↔ deux pages : le moteur est refait, sur la même page
+    checkMode() {
+      const want = this.wantsZoom();
+      if (want === this.zoom) return;
+      if (!this.engine) {
+        this.zoom = want;
+        return;
+      }
+      const at = this.engine.index;
+      this.engine.destroy();
+      this.engine = null;
+      this.opening = false;
+      this.zoom = want;
+      this.$nextTick(() => {
+        if (!this.gone && !this.engine) this.mountEngine(at);
+      });
+    },
+    // La couverture s'est posée : la page de gauche (la garde) apparaît
+    onOpened() {
+      this.opening = false;
+      if (this.engine) this.engine.setClosed(false);
+    },
+    mountEngine(start = 0) {
       this.engine = createBook({
         stage: this.$refs.stage,
         rig: this.$refs.rig,
         wrap: this.$refs.wrap,
         hot: this.$refs.hot,
-        start: 0,
+        start,
+        spread: true,
+        zoom: this.zoom,
         count: () => this.models.length,
-        paint: (index, ctx, w, h) => paintPage(this.models[index], index, ctx, w, h, this.assets()),
+        // Hors du Livre (−1, count), les gardes marbrées ; une page de gauche se peint côté gauche (reliure à droite)
+        paint: (index, ctx, w, h, side) => (index < 0 || index >= this.models.length
+          ? paintEndpaper(ctx, w, h, side, index < 0)
+          : paintPage(this.models[index], index, ctx, w, h, this.assets(), side)),
+        // Double page : la page visée par défaut, celle de gauche, sauf si seule la droite attend un mélange
+        pickSide: ({ left, right }) => {
+          const reach = i => this.models[i]?.type === 'reach';
+          return reach(right) && !reach(left) ? 'right' : 'left';
+        },
+        // De près, la caméra suit le tour vers la page d'arrivée
+        onTurn: page => { this.cam = sideOf(page); },
         onChange: () => {
           if (this.showHint) {
             this.showHint = false;
@@ -465,6 +540,9 @@ export default {
           this.currentKey = key;
           this.spots = hotspots;
           this.pageLabel = label;
+          this.leaf = this.models.length > 1 ? index / (this.models.length - 1) : 0;
+          this.cam = sideOf(index);
+          this.aimSide = !this.zoom && model && model.type === 'reach' ? sideOf(index) : null;
           this.pageClue = model && model.type === 'reach'
             ? { families: [...new Set(model.page.clue)], tray: model.page.tray || null, revealed: model.revealed || null }
             : null;
@@ -476,6 +554,8 @@ export default {
           }
         }
       });
+      if (this.opening) this.engine.setClosed(true);
+      this.engineReady = true;
     },
     // Ce qui a changé depuis le dernier chargement : page inscrite, chapitre ouvert
     queueEffects(previous, data, previousKey) {
@@ -493,6 +573,7 @@ export default {
     async flushEffects() {
       const effects = this.pendingEffects.splice(0);
       for (const effect of effects) {
+        if (effect.kind === 'inscribed-here' || effect.kind === 'inscribed') this.runeFlash++;
         if (effect.kind === 'inscribed-here') {
           const rect = this.engine && this.engine.rectOf('vignette');
           if (rect) {
@@ -670,27 +751,43 @@ export default {
 }
 .book-view__summary:active { transform: translateY(2px); box-shadow: inset 0 0 0 1px var(--oc-line); }
 .book-view__summary:focus-visible { outline: 3px solid var(--oc-gold); outline-offset: 2px; }
-.book-view__stage {
-  --book-w: max(220px, min(calc(100cqw - 18px), calc((100dvh - 420px) * .75), 460px));
-  position: relative;
-  height: calc(var(--book-w) * 4 / 3 + 24px);
+.book-view__stage { position: relative; }
+/* Deux pages côte à côte : la reliure prend ~97 px en largeur (lanière à gauche, fermoir à droite), ~60 px en hauteur */
+.book-view__stage.is-spread {
+  --book-w: max(240px, min(calc((100cqw - 120px) / 2), calc((100dvh - 430px) * .75), 440px));
+  height: calc(var(--book-w) * 4 / 3 + 60px);
 }
 .book-view__rig { position: absolute; inset: 0; }
+/* La double page (le canvas du moteur s'y cale) ; la reliure s'étend autour, centrée avec elle */
 .book-view__wrap {
-  position: absolute; top: 8px;
-  left: calc((100% - var(--book-w) - 7px) / 2);
-  width: var(--book-w);
-  aspect-ratio: 3 / 4;
+  position: absolute; top: 20px;
+  left: calc((100% - 2 * var(--book-w)) / 2 + 14px);
+  width: calc(2 * var(--book-w));
+  aspect-ratio: 3 / 2;
 }
-/* Tranche des pages en dessous et ombre du livre (statiques, sous le canvas) */
-.book-view__wrap::before, .book-view__wrap::after {
-  content: ''; position: absolute; inset: 0;
-  border-radius: 6px var(--book-radius) var(--book-radius) 6px;
+/* Téléphone : la double page lue de près. Le gréement porte les deux pages et leur reliure (--edge de chaque côté) ;
+   la caméra le fait glisser pour centrer la page lue (--cam : 0 gauche, 1 droite) ; la scène coupe le reste, et le
+   bord de la page voisine dépasse un peu */
+.book-view__stage.is-zoom {
+  --book-w: max(220px, min(calc(100cqw - 60px), calc((100dvh - 446px) * .75), 460px));
+  --edge: 56px;
+  height: calc(var(--book-w) * 4 / 3 + 48px);
+  overflow: hidden;
+  overflow-x: clip; overflow-y: visible;
 }
-.book-view__wrap::before { transform: translate(7px, 7px); background: #CDBB98; box-shadow: 0 22px 46px rgba(0, 0, 0, .55), 0 4px 12px rgba(0, 0, 0, .35); }
-.book-view__wrap::after { transform: translate(3.5px, 3.5px); background: repeating-linear-gradient(180deg, var(--vellum-200) 0 2px, var(--vellum-300) 2px 3px); }
+.book-view__stage.is-zoom .book-view__rig {
+  right: auto;
+  width: calc(2 * var(--book-w) + 2 * var(--edge));
+  transform: translateX(calc(50cqw - var(--edge) - var(--book-w) * (var(--cam) + .5)));
+  transition: transform .6s cubic-bezier(.45, .05, .25, 1);
+}
+.book-view__stage.is-zoom .book-view__wrap { top: 14px; left: var(--edge); }
+/* Couches : reliure 1, pages 2, aura 3, zones interactives 4, couverture de l'ouverture 6 */
 .book-view__rig :deep(canvas.gl) { position: absolute; inset: 0; width: 100%; height: 100%; z-index: 2; pointer-events: none; }
-.book-view__hot { position: absolute; z-index: 3; touch-action: pan-y; border-radius: 6px var(--book-radius) var(--book-radius) 6px; outline: none; }
+.book-view__hot { position: absolute; z-index: 4; touch-action: pan-y; border-radius: var(--book-radius); outline: none; }
+.book-view__stage.is-opening .book-view__hot { pointer-events: none; }
+/* Pendant un tour, le liseré de la page visée s'efface */
+.book-view__rig:has(.book-view__hot.is-turning) :deep(.grim__aim) { opacity: 0; }
 .book-view__hot:focus-visible { box-shadow: 0 0 0 3px var(--oc-gold); }
 .book-view__hot.is-turning > * { visibility: hidden; }
 .book-view__spot { position: absolute; border: 0; padding: 0; background: transparent; border-radius: 14px; cursor: pointer; }
@@ -770,6 +867,7 @@ export default {
 
 @media (prefers-reduced-motion: reduce) {
   .book-view__pulse, .book-view__hint, .book-view__chapter.is-ping { animation: none; }
+  .book-view__stage.is-zoom .book-view__rig { transition: none; }
 }
 </style>
 
