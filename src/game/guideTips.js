@@ -5,7 +5,7 @@ export const TIPS = {
   welcome: 'Je suis Brume, un souffle de la brume qui couvre ton île. Ce grimoire est le Codex : chaque élément que tu crées s’y inscrit. Glisse une page du doigt, ou touche son bord, pour le feuilleter.',
   reach: 'Cette page est à ta portée : son élément peut naître de ce que tu connais déjà. Lis l’indice, puis dépose les bons éléments dans l’Athanor.',
   fail: 'Pas encore… Les familles notées sur la page te mettent sur la voie. L’Encre révèle un ingrédient, et tu peux deviner le nom lettre par lettre.',
-  island: 'Voici ton île, encore noyée de brume. Je t’y attendais : touche-moi, je te dirai par où commencer.',
+  island: 'Voici ton île, encore noyée de brume. Je t’y attendais : touche-moi, je te mènerai à ta prochaine tâche ; garde le doigt appuyé sur moi pour lire ma quête.',
   'chapter-II': 'La Matière s’ouvre : ce qui se pétrit, se fond, se forge. Sur l’île, La Colline peut sortir de la brume.',
   'chapter-III': 'Ciel et Terre : lève les yeux vers les astres. Les Jardins, le Faubourg et les Hauteurs t’attendent.',
   'chapter-IV': 'Le Vivant s’éveille. La Crique et la Grande Forêt peuvent renaître.',
