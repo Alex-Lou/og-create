@@ -43,9 +43,10 @@ export default {
   ink(page) {
     return asPlayer(() => http.post('/play/ink', { page }));
   },
-  // Pendu d'une page : une lettre jugée par le serveur → { page, hangman }
-  letter(page, letter) {
-    return asPlayer(() => http.post('/play/letter', { page, letter }));
+  // Pendu d'une page : une lettre posée dans une case, jugée par le serveur
+  // → { page, verdict: 'hit'|'elsewhere'|'miss', hangman, inscribed? } (inscribed : élément ajouté au carnet)
+  letter(page, position, letter) {
+    return asPlayer(() => http.post('/play/letter', { page, position, letter }));
   },
   // Rejouer un pendu perdu contre des écus (compte) → { page, coins, hangman }
   retryLetters(page) {

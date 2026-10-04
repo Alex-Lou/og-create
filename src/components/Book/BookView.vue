@@ -104,9 +104,10 @@
       :is-logged-in="isLoggedIn"
       :busy="guessBusy"
       :retry-price="RETRY_PRICE"
+      :verdict="guess.verdict"
+      :inscribed="guess.inscribed"
       @guess="onGuess"
       @retry="onRetry"
-      @craft="onCraft"
       @close="guess = null"
     />
   </section>
@@ -147,11 +148,11 @@ export default {
     // Révélation en cours dans l'Athanor : les effets du Livre attendent qu'elle se ferme
     revealing: { type: Boolean, default: false }
   },
-  emits: ['select', 'coins-updated', 'show-alert', 'aim'],
+  emits: ['select', 'coins-updated', 'show-alert', 'aim', 'inscribed'],
   data() {
     return {
       spots: [],
-      // Pendu ouvert : { page, chapter, style } ; une lettre envoyée attend le verdict du serveur
+      // Pendu ouvert : { page, chapter, style, verdict, inscribed } ; une lettre envoyée attend le verdict du serveur
       guess: null,
       guessBusy: false,
       RETRY_PRICE,
@@ -500,7 +501,7 @@ export default {
     openGuess(id) {
       const model = this.models.find(m => m.type === 'reach' && m.key === id);
       if (!model || !model.page.hangman) return;
-      this.guess = { page: { ...model.page }, chapter: { id: model.chapter.id, name: model.chapter.name }, style: CHAPTER_STYLE[model.chapter.id] };
+      this.guess = { page: { ...model.page }, chapter: { id: model.chapter.id, name: model.chapter.name }, style: CHAPTER_STYLE[model.chapter.id], verdict: null, inscribed: '' };
     },
     // Nouvel état d'un pendu (réponse du serveur) : la page peinte et la feuille ouverte suivent
     applyHangman(id, hangman) {
@@ -511,19 +512,22 @@ export default {
       if (this.engine) this.engine.refresh();
       if (this.guess && this.guess.page.id === id) this.guess = { ...this.guess, page: { ...page } };
     },
-    async onGuess(letter) {
+    // Une lettre posée dans une case ; mot complet : le serveur inscrit l'élément (comme un mélange)
+    async onGuess({ position, letter }) {
       if (!this.guess || this.guessBusy) return;
       const id = this.guess.page.id;
-      const before = this.guess.page.hangman;
       this.guessBusy = true;
       try {
-        const { hangman } = await playService.letter(id, letter);
+        const { hangman, verdict, inscribed } = await playService.letter(id, position, letter);
         this.applyHangman(id, hangman);
-        if (hangman.name && !before.name) {
+        if (this.guess && this.guess.page.id === id) this.guess = { ...this.guess, verdict: { position, letter, verdict } };
+        if (inscribed) {
+          if (this.guess && this.guess.page.id === id) this.guess = { ...this.guess, inscribed: inscribed.result };
           vibrate(HAPTIC.discovery);
           burst({ x: window.innerWidth / 2, y: window.innerHeight * 0.3 }, 22, 150);
+          this.$emit('inscribed', inscribed);
         } else {
-          vibrate(hangman.misses > before.misses ? HAPTIC.fail : HAPTIC.tap);
+          vibrate(verdict === 'miss' ? HAPTIC.fail : HAPTIC.tap);
         }
       } catch (error) {
         // Partie perdue entre-temps : le serveur renvoie l'état à montrer
@@ -546,11 +550,6 @@ export default {
       } finally {
         this.guessBusy = false;
       }
-    },
-    // Nom trouvé : place au mélange, l'étagère montre les éléments de la page
-    onCraft() {
-      this.guess = null;
-      this.filter = 'page';
     }
   }
 };
