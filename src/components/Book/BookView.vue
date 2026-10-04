@@ -299,8 +299,7 @@ export default {
       const aim = this.aims[page.id] || null;
       const need = page.freeInkAfter;
       const freeInk = Boolean(aim && aim.freeInk) || (need > 0 && page.misses >= need);
-      // Premiers chapitres : l'ingrédient est offert par le serveur, sans encre
-      const revealed = page.given || this.revealed[page.id] || null;
+      const revealed = this.revealed[page.id] || null;
       return { type: 'reach', key: page.id, chapter, page, revealed, aim, freeInk };
     },
     // Verdict d'un mélange visé sur cette page (transmis par l'Athanor)
