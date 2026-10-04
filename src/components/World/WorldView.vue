@@ -371,6 +371,7 @@ import ShopItemSheet from './ShopItemSheet.vue';
 import IslandClock from './IslandClock.vue';
 import GModal from '@/components/ui/GModal.vue';
 import { guideOf, guideKind } from '@/world/itemGuide';
+import { villageOf } from '@/world/village';
 import { search } from '@/utils/search';
 import { glyph, clearDrawings } from '@/book/painter';
 import { burst, ring, vibrate, center, reducedMotion } from '@/utils/fx';
@@ -630,6 +631,9 @@ export default {
     // Ce qu'on peut toucher dans la dernière image : bêtes sur l'île, articles posés ; ronds dans l'eau ; bulle d'info
     this.landHits = [];
     this.itemHits = [];
+    // Vie ambiante (village.js) et lanternes des habitants dans la dernière image
+    this.village = null;
+    this.villageLights = [];
     this.ripples = [];
     this.tipTimer = 0;
     this.ac = null;
@@ -731,6 +735,11 @@ export default {
       this.props = this.natureOf(state);
       this.perches = this.perchesOf(state);
       this.shore = this.shoreOf(state);
+      // Habitants et bêtes : ils vivent dans les quartiers à soi, autour des bâtiments bâtis
+      this.village = villageOf({
+        n: state.size, M, sites: state.sites, tiles: state.tiles, props: this.props,
+        owned: new Set(state.map.zones.map((z, i) => (z.owned ? i : -1)).filter(i => i >= 0))
+      });
       this.state = state;
       const mistKey = state.map.zones.filter(z => z.owned).map(z => z.id).join();
       if (this.mistKey !== null && mistKey !== this.mistKey) {
@@ -1515,6 +1524,15 @@ export default {
           out.push({ kind: 'gull', x: perch.x + i * 0.32 - 0.1, y: perch.y + 0.1 - i * 0.18, z: 0, frame: Math.sin(t * 0.7 + i * 2 + perch.x) > 0.75 ? 1 : 0, flip: (i + Math.floor(t / 9 + perch.y)) % 2 === 1 });
         }
       }
+      // Habitants et bêtes du village (on peut les toucher)
+      const life = this.village ? this.village.at(t, phase, this.scared) : { list: [], lights: [] };
+      for (const who of life.list) {
+        out.push(who);
+        const c = this.ground(who.x, who.y);
+        const person = who.kind === 'villager';
+        hits.push({ key: who.id, kind: person ? 'villager' : who.species, who, x: c.x, y: c.y - who.z - (person ? 16 : 6), r: person ? 15 : 12 });
+      }
+      this.villageLights = life.lights;
       this.landHits = hits;
       return out;
     },
@@ -1563,6 +1581,7 @@ export default {
       ctx.restore();
     },
     critterSprite(c) {
+      if (c.sprite) return c.sprite;
       if (c.kind === 'fish') return [`fish-${c.species}-${c.frame}`, SEA_SPRITES.fish[c.species][c.frame]];
       if (c.kind === 'dolphin') return [`dolphin-${c.frame}`, SEA_SPRITES.dolphin[c.frame]];
       if (c.kind === 'whale') return ['whale-back', SEA_SPRITES.whaleBack];
@@ -1824,6 +1843,11 @@ export default {
           glow(ctx, c.x + x, c.y + y, r, lit * strength * (0.9 + 0.1 * Math.sin(t * 3 + x)), color);
         }
       }
+      // Lanternes des habitants qui rentrent le soir
+      for (const l of this.villageLights) {
+        const p = this.ground(l.x, l.y);
+        glow(ctx, p.x + l.dx, p.y + l.dy, 14, lit * (0.9 + 0.1 * Math.sin(t * 5 + l.x)), '255,214,130');
+      }
       // Lanternes du pont de l'Îlot aux Mouettes, lanterne de la barque du passeur
       for (const lamp of this.islets.lamps) {
         const p = lampGlowOf(lamp);
@@ -2029,8 +2053,12 @@ export default {
         this.questAct();
         vibrate(6);
       } else if (hit.animal) {
-        if (this.reduced()) this.showTip(px, py, this.tipOf(hit, { x: px, y: py }));
-        else this.scare(hit.animal);
+        // Un habitant parle, une bête de la ferme répond ; les bêtes sauvages s'enfuient
+        const said = this.village && hit.animal.who ? this.village.say(hit.animal.who, this.phase || this.skyAt(this.skyDate())) : null;
+        if (said) this.showTip(px, py, said);
+        if (this.reduced()) {
+          if (!said) this.showTip(px, py, this.tipOf(hit, { x: px, y: py }));
+        } else this.scare(hit.animal);
         return;
       } else if (hit.item) {
         // Un article posé sautille et dit son nom (appui long : sa fiche et son mode d'emploi)
@@ -2075,6 +2103,7 @@ export default {
     tipOf(hit, point) {
       if (!hit) return { title: 'La mer', text: 'Dauphins, baleine et méduses passent au large.', hint: 'Toucher : des ronds dans l’eau' };
       if (hit.animal) {
+        if (hit.animal.who && this.village) return this.village.describe(hit.animal.who);
         const [title, text] = ANIMALS[hit.animal.kind] || ['Une bête', ''];
         return { title, text, hint: 'Toucher : la faire réagir' };
       }
