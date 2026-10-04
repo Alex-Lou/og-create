@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+<g stroke="#a87a1a" stroke-width="2" stroke-linecap="round" fill="none"><path d="M32 62V20M22 62c0-12 2-24 4-34M42 62c0-12-2-24-4-34"/></g>
+<g fill="#f2c04b" stroke="#a87a1a" stroke-width="1.6"><ellipse cx="28" cy="18" rx="3" ry="5" transform="rotate(-30 28 18)"/><ellipse cx="36" cy="18" rx="3" ry="5" transform="rotate(30 36 18)"/><ellipse cx="28" cy="27" rx="3" ry="5" transform="rotate(-30 28 27)"/><ellipse cx="36" cy="27" rx="3" ry="5" transform="rotate(30 36 27)"/><ellipse cx="32" cy="10" rx="3" ry="5"/>
+<ellipse cx="22" cy="26" rx="2.6" ry="4.4" transform="rotate(-30 22 26)"/><ellipse cx="28" cy="34" rx="2.6" ry="4.4" transform="rotate(30 28 34)"/><ellipse cx="42" cy="26" rx="2.6" ry="4.4" transform="rotate(30 42 26)"/><ellipse cx="36" cy="34" rx="2.6" ry="4.4" transform="rotate(-30 36 34)"/></g>
+<path d="M32 4V0M22 20l-2-4M42 20l2-4" stroke="#c8a040" stroke-width="1.2"/>
+</svg>
