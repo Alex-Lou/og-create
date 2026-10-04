@@ -10,8 +10,8 @@ import { CHAPTER_STYLE } from './chapters';
 // Les pages des chapitres suivent leurs couleurs (book/chapters.js)
 export { CHAPTER_STYLE };
 
-// Familles des ingrédients d'une page à portée, dites en mots (jamais l'élément lui-même)
-const FAMILY_WORDS = {
+// Familles dites en mots : ingrédients d'une page à portée, et type de l'élément dans le pendu
+export const FAMILY_WORDS = {
   'Elements Fondamentaux': 'un élément premier',
   'Matériaux': 'un matériau',
   'Chimie': 'une substance chimique',

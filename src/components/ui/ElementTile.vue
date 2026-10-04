@@ -102,6 +102,8 @@ export default {
   color: var(--ink-700);
   cursor: pointer;
   -webkit-tap-highlight-color: transparent;
+  -webkit-touch-callout: none;
+  touch-action: manipulation;
   transition: transform var(--oc-fast) var(--oc-ease-out), box-shadow var(--oc-fast);
 }
 .tile:active { transform: translateY(2px) scale(0.96); box-shadow: inset 0 0 0 1px var(--oc-line), 0 1px 0 var(--vellum-400); }

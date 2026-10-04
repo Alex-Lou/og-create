@@ -128,17 +128,15 @@
           </div>
           <input v-model="query" class="world__search" type="search" :placeholder="`Chercher parmi ${available.length}…`" aria-label="Chercher un élément" />
           <div class="world__grid">
-            <button
+            <ElementTile
               v-for="name in pickList"
               :key="name"
-              type="button"
-              class="world__chip"
+              :name="name"
+              :glyph="elementEmojis[name]"
+              :family="familyOf[name]"
               :aria-label="`Poser ${name}`"
               @click="place(name, picking.x, picking.y)"
-            >
-              <span class="world__chip-glyph" aria-hidden="true"><ElementGlyph :glyph="elementEmojis[name]" /></span>
-              <span class="world__chip-name">{{ name }}</span>
-            </button>
+            />
             <p v-if="!pickList.length" class="world__empty">{{ available.length ? 'Aucun élément ne ressemble à cette recherche.' : 'Toutes tes découvertes sont déjà sur l’île.' }}</p>
           </div>
         </div>
@@ -161,6 +159,8 @@
 import { messageOf } from '@/utils/errors';
 import playService from '@/services/playService';
 import ElementGlyph from '@/components/ui/ElementGlyph.vue';
+import ElementTile from '@/components/ui/ElementTile.vue';
+import { familyIndex } from '@/utils/eras';
 import HarvestGame from './HarvestGame.vue';
 import { search } from '@/utils/search';
 import { glyph } from '@/book/painter';
@@ -182,11 +182,13 @@ const SEEN_KEY = 'oc_world_seen';
 // d'animation sont non réactifs et s'arrêtent quand l'onglet est caché ou le composant démonté.
 export default {
   name: 'WorldView',
-  components: { ElementGlyph, HarvestGame },
+  components: { ElementGlyph, ElementTile, HarvestGame },
   props: {
     discoveredElements: { type: Array, required: true },
     elementEmojis: { type: Object, required: true },
-    isLoggedIn: { type: Boolean, default: false }
+    isLoggedIn: { type: Boolean, default: false },
+    // Familles des éléments connus ({ famille: [noms] }) : teinte des tuiles
+    categories: { type: Object, default: () => ({}) }
   },
   emits: ['coins-updated', 'show-alert', 'login'],
   data() {
@@ -211,6 +213,9 @@ export default {
     };
   },
   computed: {
+    familyOf() {
+      return familyIndex(this.categories);
+    },
     placedNames() {
       return new Set(this.state ? this.state.tiles.map(t => t.element) : []);
     },
@@ -935,10 +940,6 @@ export default {
 .world__sheet-actions { display: flex; flex-wrap: wrap; gap: 8px; }
 .world__search { width: 100%; padding: 8px 12px; border-radius: 12px; border: 1px solid var(--vellum-300); background: var(--vellum-50); color: var(--ink-900); font: inherit; font-size: 15px; }
 .world__grid { margin-top: 10px; overflow-y: auto; display: grid; grid-template-columns: repeat(auto-fill, minmax(70px, 1fr)); gap: 8px; padding-bottom: 6px; }
-.world__chip { display: flex; flex-direction: column; align-items: center; gap: 3px; min-height: 72px; padding: 8px 3px 6px; border: 0; border-radius: 16px; background: var(--vellum-50); box-shadow: 0 3px 0 rgba(74, 52, 38, .12), inset 0 0 0 1px rgba(74, 52, 38, .06); cursor: pointer; }
-.world__chip:active { transform: scale(.94); }
-.world__chip-glyph { font-size: 28px; line-height: 1; }
-.world__chip-name { font-size: 11px; font-weight: 800; color: var(--ink-500); max-width: 66px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .world__empty { grid-column: 1 / -1; color: var(--ink-500); font-style: italic; text-align: center; }
 .world-sheet-enter-active, .world-sheet-leave-active { transition: opacity .25s ease; }
 .world-sheet-enter-active .world__sheet, .world-sheet-leave-active .world__sheet { transition: transform .3s cubic-bezier(.3, 1.2, .5, 1); }
