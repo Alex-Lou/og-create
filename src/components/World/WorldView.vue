@@ -40,6 +40,8 @@
       </div>
 
       <div ref="stage" class="world__stage">
+        <!-- Les gestes passent par les pointeurs ; touchend annulé : pas de clic fantôme après un toucher au doigt (il
+             tomberait sur le fond de la fiche qui vient de s'ouvrir et la refermerait aussitôt) -->
         <canvas
           ref="canvas"
           class="world__canvas"
@@ -49,6 +51,7 @@
           @pointermove="onMove"
           @pointerup="onUp"
           @pointercancel="onCancel"
+          @touchend.prevent
           @wheel.prevent="onWheel"
         ></canvas>
         <div v-if="state" class="world__zoom">
