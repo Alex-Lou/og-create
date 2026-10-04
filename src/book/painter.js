@@ -5,7 +5,7 @@ import { aimNote } from './aim';
 import { glyphSrc } from '@/utils/glyph';
 import { roman } from '@/utils/roman';
 import { shownPatches, PATCHES } from './patchwork';
-import { CHAPTER_STYLE } from './chapters';
+import { CHAPTER_STYLE, BOOK_TITLE } from './chapters';
 
 // Les pages des chapitres suivent leurs couleurs (book/chapters.js)
 export { CHAPTER_STYLE };
@@ -583,7 +583,7 @@ function paintToc(ctx, u, model, index, assets) {
   setFont(ctx, u, 10, 700, TITLE, false);
   ctx.fillStyle = '#4A3426';
   ctx.textAlign = 'center';
-  ctx.fillText('Le Livre', 52 * u, 20 * u);
+  ctx.fillText(BOOK_TITLE, 52 * u, 20 * u);
   setFont(ctx, u, 4.2, 400, TITLE, true);
   ctx.fillStyle = '#8A7262';
   ctx.fillText(`Grimoire d’alchimie · ${assets.stars} découverte${assets.stars > 1 ? 's' : ''}`, 52 * u, 27.5 * u);
@@ -623,7 +623,7 @@ function paintToc(ctx, u, model, index, assets) {
   ctx.fillStyle = '#8A7262';
   ctx.textAlign = 'center';
   ctx.fillText('Glisse la page du doigt, ou touche son bord.', 52 * u, 125 * u);
-  return { hotspots, label: `Sommaire du Livre. ${model.chapters.map(c => `Chapitre ${c.id}, ${c.name}`).join('. ')}.` };
+  return { hotspots, label: `Sommaire du ${BOOK_TITLE}. ${model.chapters.map(c => `Chapitre ${c.id}, ${c.name}`).join('. ')}.` };
 }
 
 // model : { type: 'toc' | 'chapter' | 'found' | 'reach' | 'far', … } ; assets : { emojiOf, onReady, inkPrice, stars, familiesOf }
