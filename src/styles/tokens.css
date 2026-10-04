@@ -37,6 +37,9 @@
   /* Fond : le bureau clair, une lumière douce venue d'en haut */
   --bg: #ede0c4;
   --bg-hi: #f8efdc;
+  /* Texte posé directement sur le fond (hors papier) */
+  --oc-on-bg: var(--ink-900);
+  --oc-on-bg-faint: var(--ink-500);
 
   /* Typographie : deux familles. Fraunces (titres, noms, indices), Nunito (interface, compteurs) */
   --font-display: 'Fraunces', 'Iowan Old Style', Georgia, serif;
@@ -99,4 +102,23 @@
   /* Mise en page */
   --oc-gutter: 20px;
   --oc-dock-height: 104px;
+  /* Barre d'onglets en bas (mobile) et rail à gauche (PC) */
+  --oc-tabbar-h: calc(64px + env(safe-area-inset-bottom));
+  --oc-rail-w: 88px;
+}
+
+/* Veillée : le thème sombre du téléphone. Le bureau devient du noyer sous une lampe ;
+   le papier perd un peu d'éclat mais reste du papier, le cuir ne change pas. */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: var(--walnut-900);
+    --bg-hi: #5a3f2c;
+    --vellum-50: #f6eedb;
+    --vellum-100: #f0e6cf;
+    --vellum-200: #e8dcc0;
+    --vellum-300: #dccaa6;
+    --vellum-400: #b89f78;
+    --oc-on-bg: var(--gold-200);
+    --oc-on-bg-faint: rgba(251, 235, 192, 0.62);
+  }
 }
