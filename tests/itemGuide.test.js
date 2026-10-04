@@ -30,6 +30,8 @@ describe('mode d’emploi des articles de la boutique', () => {
     expect(guideOf(items[0], site).where).toBe('Posé à côté de « Potager », sur ton île.');
     expect(guideOf(items[2], site).how).toMatch(/Récolte/);
     expect(guideOf(items[7], site).where).toMatch(/tous ses paliers/);
-    expect(guideOf(items[8], site).how).toMatch(/butins/);
+    expect(guideOf(items[8], site).how).toMatch(/coffre légendaire/);
+    // Pièce rare offerte par un chapitre : le guide le dit
+    expect(guideOf({ ...items[8], chapter: 'IV' }, site).how).toMatch(/chapitre IV du Livre/);
   });
 });

@@ -26,7 +26,7 @@
       </section>
     </div>
     <template #actions>
-      <span v-if="!item.owned && item.rare" class="item-sheet__lock">À trouver dans les butins</span>
+      <span v-if="!item.owned && item.rare" class="item-sheet__lock">{{ item.chapter ? `Offerte par le chapitre ${item.chapter}` : 'Dans les coffres légendaires' }}</span>
       <template v-else-if="!item.owned">
         <span v-if="lock && reached" class="item-sheet__lock">{{ lock }}</span>
         <button type="button" class="g-btn" :disabled="busy || Boolean(lock)" @click="$emit('buy', $event)">
