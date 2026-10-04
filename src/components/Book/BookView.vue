@@ -14,6 +14,10 @@
         <span class="book-view__chapter-name">{{ currentChapter ? currentChapter.name : BOOK_TITLE }}</span>
         <span class="book-view__chevron" aria-hidden="true">▾</span>
       </button>
+      <!-- Retour direct à la table du chapitre (sa première feuille), puis au sommaire du Livre -->
+      <button v-if="summaryJump" type="button" class="book-view__summary" :aria-label="summaryJump.label" :title="summaryJump.label" @click="goTo(summaryJump.index)">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" aria-hidden="true"><path d="M8 6h12M8 12h12M8 18h12"></path><circle cx="3.5" cy="6" r="1.3" fill="currentColor" stroke="none"></circle><circle cx="3.5" cy="12" r="1.3" fill="currentColor" stroke="none"></circle><circle cx="3.5" cy="18" r="1.3" fill="currentColor" stroke="none"></circle></svg>
+      </button>
       <button type="button" class="book-view__stars" :aria-label="`${stars} découvertes : revenir au sommaire`" @click="goTo(0)">★ {{ stars }}</button>
     </header>
 
@@ -181,6 +185,8 @@ export default {
       pageLabel: BOOK_TITLE,
       stars: 0,
       currentKey: 'toc',
+      // Les pages (non réactives) changent à chaque chargement : ce compteur fait suivre ce qui en dépend
+      modelsVersion: 0,
       chapterState: [],
       query: '',
       // Filtre de l'étagère : « auto » suit la page (familles de l'indice), sinon « all » ou une famille
@@ -197,6 +203,17 @@ export default {
     currentChapter() {
       const id = this.currentKey === 'toc' ? null : this.chapterOfKey(this.currentKey);
       return id ? this.chapterState.find(c => c.id === id) || null : null;
+    },
+    // Bouton « Sommaire » : dans un chapitre, la première feuille de sa table ; depuis cette feuille (ou la page
+    // de titre du chapitre), le sommaire du Livre ; rien au sommaire même
+    summaryJump() {
+      if (this.modelsVersion < 0) return null;
+      const key = this.currentKey;
+      if (key === 'toc') return null;
+      const id = this.chapterOfKey(key);
+      const first = id ? this.models.findIndex(m => m.key === `idx-${id}-1`) : -1;
+      if (first > 0 && key !== `idx-${id}-1` && key !== `ch-${id}`) return { index: first, label: `Revenir à la table du chapitre ${id}` };
+      return { index: 0, label: 'Revenir au sommaire du Livre' };
     },
     // Couleurs de la puce : celles du chapitre ouvert, vélin au sommaire
     chipStyle() {
@@ -361,6 +378,7 @@ export default {
       const wasFree = this.models.find(m => m.key === aim.page)?.freeInk;
       this.aims = { ...this.aims, [aim.page]: aim };
       this.models = this.buildModels(this.bookData);
+      this.modelsVersion++;
       if (this.engine) this.engine.refresh();
       if (aim.freeInk && !wasFree) {
         const slot = this.engine && this.engine.rectOf('ink');
@@ -407,6 +425,7 @@ export default {
       this.bookData = data;
       this.stars = data.stars;
       this.models = this.buildModels(data);
+      this.modelsVersion++;
       this.chapterState = data.chapters.map(c => ({
         id: c.id, name: c.name, open: c.open, found: c.found, total: c.total, need: c.need,
         index: this.models.findIndex(m => m.key === `ch-${c.id}`)
@@ -534,6 +553,7 @@ export default {
         storage.save(INK_KEY, this.revealed);
         this.$emit('coins-updated', coins);
         this.models = this.buildModels(this.bookData);
+        this.modelsVersion++;
         this.engine.refresh();
         this.filter = 'page';
         if (slot) burst(center(slot), 12, 40);
@@ -555,6 +575,7 @@ export default {
       if (!page) return;
       page.hangman = hangman;
       this.models = this.buildModels(this.bookData);
+      this.modelsVersion++;
       if (this.engine) this.engine.refresh();
       if (this.guess && this.guess.page.id === id) this.guess = { ...this.guess, page: { ...page } };
     },
@@ -639,6 +660,16 @@ export default {
   box-shadow: inset 0 0 0 1px var(--oc-line), 0 2px 0 var(--vellum-400);
   font-family: var(--oc-font-mono); font-size: 14px; font-weight: 900;
 }
+.book-view__summary {
+  appearance: none; border: 0; cursor: pointer;
+  flex: none; width: 40px; height: 40px; border-radius: 50%;
+  display: grid; place-items: center; margin-left: auto;
+  background: var(--vellum-50); color: var(--ink-900);
+  box-shadow: inset 0 0 0 1px var(--oc-line), 0 2px 0 var(--vellum-400);
+  touch-action: manipulation; -webkit-tap-highlight-color: transparent;
+}
+.book-view__summary:active { transform: translateY(2px); box-shadow: inset 0 0 0 1px var(--oc-line); }
+.book-view__summary:focus-visible { outline: 3px solid var(--oc-gold); outline-offset: 2px; }
 .book-view__stage {
   --book-w: max(220px, min(calc(100cqw - 18px), calc((100dvh - 420px) * .75), 460px));
   position: relative;
