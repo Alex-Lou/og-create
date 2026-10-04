@@ -45,26 +45,39 @@
       </p>
     </div>
 
+    <!-- Une seule ligne : le titre et un seul bouton ; recherche et filtres se déplient ensemble au toucher -->
     <div class="book-view__shelf-head">
       <span class="book-view__shelf-title">Tes éléments</span>
+      <button
+        type="button"
+        :class="['book-view__tool', { 'is-on': showFilters, 'is-page': !query.trim() && activeFilter === 'page' }]"
+        :aria-expanded="String(showFilters)"
+        aria-label="Chercher et filtrer les éléments"
+        @click="toggleFilters"
+      >
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="6.5"></circle><path d="M16 16l4.5 4.5"></path></svg>
+        <span class="book-view__tool-label">{{ query.trim() ? `« ${query.trim()} »` : activeLabel }}</span>
+        <span class="book-view__chevron" aria-hidden="true">▾</span>
+      </button>
+    </div>
+    <div v-if="showFilters" class="book-view__filters" aria-label="Chercher et filtrer">
       <input
+        ref="search"
         v-model="query"
         class="book-view__search"
         type="search"
         :placeholder="`Chercher parmi ${discoveredElements.length}…`"
         aria-label="Chercher un élément"
+        @keydown.enter="showFilters = false"
+        @keydown.esc="showFilters = false"
       />
-    </div>
-    <!-- Filtres : les familles demandées par la page ouverte d'abord, puis toutes les familles -->
-    <div v-if="!query.trim()" class="book-view__filters" role="tablist" aria-label="Familles">
       <button
         v-for="pill in filters"
         :key="pill.id"
         type="button"
-        role="tab"
-        :aria-selected="activeFilter === pill.id"
-        :class="['book-view__filter', { 'is-on': activeFilter === pill.id, 'is-page': pill.id === 'page' }]"
-        @click="filter = pill.id"
+        :aria-pressed="!query.trim() && activeFilter === pill.id"
+        :class="['book-view__filter', { 'is-on': !query.trim() && activeFilter === pill.id, 'is-page': pill.id === 'page' }]"
+        @click="pickFilter(pill.id)"
       >{{ pill.label }} <span class="book-view__filter-count">{{ pill.count }}</span></button>
     </div>
     <div class="book-view__shelf" aria-label="Éléments connus">
@@ -77,7 +90,7 @@
         @click="$emit('select', name, $event.currentTarget.getBoundingClientRect())"
       >
         <span class="book-view__chip-glyph" aria-hidden="true"><ElementGlyph :glyph="elementEmojis[name]" /></span>
-        <span class="book-view__chip-name">{{ name }}</span>
+        <span :class="['book-view__chip-name', lengthClass(name)]">{{ name }}</span>
       </button>
       <p v-if="!shelf.length" class="book-view__empty">{{ query.trim() ? `Aucun élément ne ressemble à « ${query} ».` : 'Aucun élément dans cette famille.' }}</p>
     </div>
@@ -127,6 +140,8 @@ export default {
       query: '',
       // Filtre de l'étagère : « auto » suit la page (familles de l'indice), sinon « all » ou une famille
       filter: 'auto',
+      // Recherche et filtres, repliés par défaut sous la ligne « Tes éléments »
+      showFilters: false,
       // Page à portée ouverte : familles de ses ingrédients et ingrédient révélé par l'Encre
       pageClue: null,
       showHint: !storage.load(HINT_KEY, false),
@@ -183,6 +198,10 @@ export default {
       });
       return pills;
     },
+    // Libellé du bouton des filtres : le filtre en cours
+    activeLabel() {
+      return this.filters.find(pill => pill.id === this.activeFilter)?.label || 'Tout';
+    },
     shelf() {
       const newestFirst = [...this.discoveredElements].reverse();
       if (this.query.trim()) return search(newestFirst, this.query);
@@ -219,11 +238,14 @@ export default {
     this.ribbonEls = {};
     this.repaintRaf = 0;
     this.reloadTimer = 0;
+    // Le Livre peut quitter l'écran pendant un chargement (changement d'onglet) : la réponse est alors ignorée
+    this.gone = false;
   },
   async mounted() {
     await this.load();
   },
   beforeUnmount() {
+    this.gone = true;
     if (this.aimedKey) this.$emit('aim', null);
     clearTimeout(this.reloadTimer);
     cancelAnimationFrame(this.repaintRaf);
@@ -231,6 +253,21 @@ export default {
     this.engine = null;
   },
   methods: {
+    // Choisir un filtre efface la recherche et replie le panneau
+    pickFilter(id) {
+      this.filter = id;
+      this.query = '';
+      this.showFilters = false;
+    },
+    toggleFilters() {
+      this.showFilters = !this.showFilters;
+    },
+    // Un long mot ne tient pas sur une tuile de téléphone : un ou deux crans plus petit (jamais coupé)
+    lengthClass(name) {
+      const longest = Math.max(...name.split(/[\s'’-]+/).map(word => word.length));
+      if (longest >= 12) return 'is-xlong';
+      return longest >= 9 ? 'is-long' : '';
+    },
     setRibbonRef(el, key) {
       if (el) this.ribbonEls[key] = el;
       else delete this.ribbonEls[key];
@@ -306,10 +343,12 @@ export default {
         data = await playService.book();
         this.loadError = false;
       } catch (error) {
+        if (this.gone) return;
         console.error('Erreur lors du chargement du Livre:', error);
         this.loadError = !this.bookData;
         return;
       }
+      if (this.gone) return;
       const previous = this.bookData;
       const previousKey = this.engine ? this.models[this.engine.index]?.key : 'toc';
       this.bookData = data;
@@ -445,12 +484,13 @@ export default {
   display: flex; align-items: flex-end; justify-content: space-between; gap: 12px;
   padding: 4px 2px 10px;
 }
-.book-view__eyebrow { display: block; font-family: var(--oc-font-mono); font-weight: 800; font-size: 11px; letter-spacing: .14em; text-transform: uppercase; color: var(--oc-text-faint); }
-.book-view__title { display: block; font-family: var(--oc-font-display); font-weight: 700; font-size: 24px; line-height: 1.1; color: var(--oc-text); }
+.book-view__eyebrow { display: block; font-family: var(--oc-font-mono); font-weight: 800; font-size: 11px; letter-spacing: .14em; text-transform: uppercase; color: var(--oc-on-bg-faint); }
+.book-view__title { display: block; font-family: var(--oc-font-display); font-weight: 700; font-size: 24px; line-height: 1.1; color: var(--oc-on-bg); }
 .book-view__stars {
   flex: none; padding: 4px 12px; border-radius: 999px;
-  background: rgba(224, 182, 84, .14); color: var(--oc-gold);
-  font-family: var(--oc-font-mono); font-size: 14px; font-weight: 600;
+  background: var(--vellum-50); color: var(--oc-gold);
+  box-shadow: inset 0 0 0 1px var(--oc-line), 0 2px 0 var(--vellum-400);
+  font-family: var(--oc-font-mono); font-size: 14px; font-weight: 900;
 }
 .book-view__stage {
   --book-w: max(220px, min(calc(100cqw - 56px), calc((100dvh - 420px) * .75), 460px));
@@ -507,63 +547,84 @@ export default {
 .book-view__ribbon.is-sealed { background: #8F8270; color: #D8CCB6; }
 .book-view__ribbon.is-ping { animation: book-ping .8s cubic-bezier(.3, 1.5, .55, 1) 2; }
 @keyframes book-ping { 0%, 100% { transform: translateX(0); } 50% { transform: translateX(7px); } }
-.book-view__error { position: absolute; inset: 30% 10% auto; text-align: center; color: var(--oc-text); z-index: 4; }
+.book-view__error { position: absolute; inset: 30% 10% auto; text-align: center; color: var(--oc-on-bg); z-index: 4; }
 .book-view__retry { margin-left: 8px; }
 
 .book-view__shelf-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-top: 10px; }
-.book-view__shelf-title { font-family: var(--oc-font-mono); font-size: 11px; letter-spacing: .14em; text-transform: uppercase; color: var(--oc-text-faint); }
+.book-view__shelf-title { font-family: var(--oc-font-mono); font-weight: 800; font-size: 11px; letter-spacing: .14em; text-transform: uppercase; color: var(--oc-on-bg-faint); }
 .book-view__search {
-  min-width: 0; flex: 1; max-width: 220px;
-  padding: 6px 10px; border-radius: 10px;
-  border: 1px solid var(--oc-line, rgba(233, 223, 200, .2));
-  background: rgba(233, 223, 200, .06); color: var(--oc-text);
-  font: inherit; font-size: 14px;
+  flex: 1 1 100%; min-width: 0; margin-bottom: 4px;
+  padding: 8px 14px; border-radius: 999px;
+  border: 0;
+  background: var(--vellum-50); color: var(--ink-900);
+  box-shadow: inset 0 0 0 1px var(--oc-line-strong);
+  font: inherit; font-size: 14px; font-weight: 700;
 }
+/* Panneau des filtres, déplié sous la ligne du titre */
 .book-view__filters {
-  display: flex; gap: 6px;
-  margin-top: 8px; padding: 2px;
-  overflow-x: auto; overscroll-behavior-x: contain;
-  scrollbar-width: none;
+  display: flex; flex-wrap: wrap; gap: 6px;
+  margin-top: 8px; padding: 10px;
+  border-radius: var(--r-md);
+  background: var(--vellum-100);
+  box-shadow: inset 0 0 0 1px var(--oc-line), var(--shadow-1);
+  animation: book-unfold .2s var(--oc-ease-out);
 }
-.book-view__filters::-webkit-scrollbar { display: none; }
+@keyframes book-unfold { from { opacity: 0; transform: translateY(-4px); } }
+.book-view__tool {
+  flex: 0 1 auto; min-width: 0; max-width: 62%; height: 40px; padding: 0 12px;
+  display: inline-flex; align-items: center; justify-content: center; gap: 4px;
+  border: 0; border-radius: 999px; cursor: pointer;
+  background: var(--vellum-50); color: var(--ink-700);
+  box-shadow: inset 0 0 0 1px var(--oc-line), 0 2px 0 var(--vellum-400);
+  font-family: var(--font-ui); font-size: 13px; font-weight: 800;
+}
+.book-view__tool-label { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.book-view__tool.is-page { color: var(--oc-gold); box-shadow: inset 0 0 0 2px var(--gold-300), 0 2px 0 var(--vellum-400); }
+.book-view__tool.is-on { background: var(--gold-200); box-shadow: inset 0 0 0 1px var(--oc-accent-line), 0 2px 0 var(--gold-600); }
+.book-view__chevron { display: inline-block; margin-left: 2px; font-size: 11px; transition: transform .2s ease; }
+.book-view__tool[aria-expanded='true'] .book-view__chevron { transform: rotate(180deg); }
 .book-view__filter {
   flex: none;
   min-height: 34px; padding: 4px 12px;
-  border: 1px solid rgba(233, 223, 200, .18); border-radius: 999px;
-  background: rgba(233, 223, 200, .05); color: var(--oc-text-faint);
+  border: 0; border-radius: 999px;
+  background: var(--vellum-50); color: var(--ink-700);
+  box-shadow: inset 0 0 0 1px var(--oc-line), 0 2px 0 var(--vellum-400);
   font-family: var(--font-ui); font-size: 13px; font-weight: 800;
   cursor: pointer;
   transition: background .2s ease, color .2s ease, border-color .2s ease;
 }
-.book-view__filter.is-on { background: var(--book-paper); border-color: var(--book-paper); color: var(--book-ink); }
-.book-view__filter.is-page:not(.is-on) { border-color: rgba(224, 182, 84, .6); color: var(--oc-gold); }
+.book-view__filter.is-on { background: linear-gradient(180deg, var(--gold-300), var(--gold-500)); color: var(--ink-900); box-shadow: inset 0 1px 0 rgba(255, 255, 255, .6), 0 2px 0 var(--gold-600); }
+.book-view__filter.is-page:not(.is-on) { color: var(--oc-gold); box-shadow: inset 0 0 0 2px var(--gold-300), 0 2px 0 var(--vellum-400); }
 .book-view__filter-count { opacity: .6; font-weight: 700; margin-left: 2px; }
-/* Deux rangées qui défilent ensemble : deux fois plus d'éléments sous les yeux */
+/* Grille verticale qui remplit exactement la largeur : aucune tuile coupée au bord */
 .book-view__shelf {
-  display: grid; grid-auto-flow: column; grid-template-rows: repeat(2, auto); grid-auto-columns: 64px;
+  display: grid; grid-template-columns: repeat(auto-fill, minmax(62px, 1fr));
   gap: 8px;
-  margin-top: 8px; padding: 2px 2px 6px;
-  overflow-x: auto; overscroll-behavior-x: contain;
-  scrollbar-width: none;
+  margin-top: 10px; padding: 2px 2px 6px;
 }
-.book-view__shelf::-webkit-scrollbar { display: none; }
 .book-view__chip {
-  flex: none;
-  display: flex; flex-direction: column; align-items: center; gap: 2px;
-  width: 64px; min-height: 64px; padding: 7px 3px 5px;
+  display: flex; flex-direction: column; align-items: center; justify-content: flex-start; gap: 3px;
+  min-width: 0; min-height: 70px; padding: 8px 3px 6px;
   border: 0; border-radius: 16px;
-  background: var(--book-paper); color: var(--book-ink);
-  box-shadow: 0 3px 0 rgba(0, 0, 0, .35);
+  background: linear-gradient(180deg, var(--vellum-50), var(--vellum-100)); color: var(--book-ink);
+  box-shadow: inset 0 0 0 1px var(--oc-line), var(--edge-paper), var(--shadow-1);
   cursor: pointer;
   transition: transform .15s ease;
 }
-.book-view__chip:active { transform: scale(.92); }
+.book-view__chip:active { transform: translateY(2px) scale(.96); }
 .book-view__chip-glyph { font-size: 26px; line-height: 1; }
-.book-view__chip-name { font-size: 10.5px; font-weight: 700; max-width: 60px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-family: var(--font-ui); color: var(--ink-500); }
-.book-view__chip.is-hint { box-shadow: 0 0 0 3px var(--oc-gold), 0 0 16px rgba(224, 182, 84, .6), 0 3px 0 rgba(0, 0, 0, .35); }
-.book-view__chip.is-new { box-shadow: 0 0 0 2.5px var(--oc-gold), 0 3px 0 rgba(0, 0, 0, .35); animation: book-pop .55s cubic-bezier(.3, 1.5, .55, 1); }
+.book-view__chip-name {
+  max-width: 100%; overflow: hidden;
+  display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical;
+  font-family: var(--font-ui); font-size: 10.5px; font-weight: 800; line-height: 1.15; text-align: center; color: var(--ink-700);
+  hyphens: auto; -webkit-hyphens: auto;
+}
+.book-view__chip-name.is-long { font-size: 9px; letter-spacing: -0.02em; }
+.book-view__chip-name.is-xlong { font-size: 7.5px; letter-spacing: -0.03em; }
+.book-view__chip.is-hint { box-shadow: inset 0 0 0 2px var(--gold-400), 0 0 16px rgba(239, 193, 99, .6), var(--edge-paper); }
+.book-view__chip.is-new { box-shadow: inset 0 0 0 2px var(--gold-400), var(--edge-paper), var(--shadow-1); animation: book-pop .55s cubic-bezier(.3, 1.5, .55, 1); }
 @keyframes book-pop { 0% { transform: scale(.55); } 100% { transform: scale(1); } }
-.book-view__empty { grid-row: 1 / -1; width: max-content; margin: 8px 0; color: var(--oc-text-faint); font-style: italic; }
+.book-view__empty { grid-column: 1 / -1; margin: 8px 0; color: var(--oc-on-bg-faint); font-style: italic; }
 
 @media (prefers-reduced-motion: reduce) {
   .book-view__pulse, .book-view__hint, .book-view__ribbon.is-ping, .book-view__chip.is-new { animation: none; }

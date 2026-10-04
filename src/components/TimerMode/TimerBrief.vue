@@ -98,7 +98,7 @@ export default {
     left: 0;
     right: 0;
     /* Posée sur le dock, à sa hauteur mesurée (repli : hauteur nominale) */
-    bottom: var(--oc-dock-h, calc(var(--oc-dock-height) + env(safe-area-inset-bottom)));
+    bottom: calc(var(--oc-dock-h, var(--oc-dock-height)) + var(--oc-tabbar-h));
     z-index: 19;
     margin: 0;
     gap: 6px;

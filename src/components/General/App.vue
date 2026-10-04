@@ -3,7 +3,7 @@
     <LivingBackground ref="background" :era="era" :population="population" :palette="palette" />
 
     <div class="oc-app__shell">
-      <AppHeader :found="discoveredCount" :total="totalElements" :eraLabel="eraLabel" :coins="coins" :timerActive="isTimerActive">
+      <AppHeader :found="discoveredCount" :total="totalElements" :era="era" :eraName="eraName" :coins="coins" :timerActive="isTimerActive">
         <template #timer>
           <TimerModeButton
             ref="timerModeButton"
@@ -13,46 +13,39 @@
             @force-stop="handleTimerForceStop"
           />
         </template>
-        <template #actions>
-          <!-- Raccourcis PC ; sur mobile, ils sont dans le menu du sceau -->
-          <button type="button" class="g-icon-btn oc-desk-only" aria-label="Codex des succès" @click="showCodex = true">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" aria-hidden="true"><path d="M5 3h11l3 3v15H5z"></path><path d="M9 8h6M9 12h6M9 16h3"></path></svg>
-          </button>
-          <button type="button" class="g-icon-btn oc-desk-only" aria-label="Écrire aux créateurs" @click="showContact = true">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" aria-hidden="true"><path d="M3 6h18v12H3z"></path><path d="M3 6l9 7 9-7"></path></svg>
-          </button>
-          <AccountMenu
-            ref="accountMenu"
+      </AppHeader>
+
+      <main id="main-content" ref="mainContent" :class="['oc-app__main', { 'oc-app__main--world': isWorldActive || isSceauActive }]">
+        <div class="oc-app__inventory">
+          <!-- Le Sceau : le joueur et son compte -->
+          <SceauView
+            v-if="isSceauActive"
             :isLoggedIn="isLoggedIn"
-            :currentUser="currentUser"
-            :shares="sigilShares"
+            :username="currentUser?.username || currentUser?.email || 'Alchimiste'"
+            :eraLabel="eraLabel"
+            :families="familyShares.filter(f => f.share > 0)"
             :rings="rings"
             :worn="worn"
-            :eraLabel="eraLabel"
-            :compact="isTimerActive"
-            @open-sceau="showSceau = true"
+            :found="discoveredCount"
+            :total="totalElements"
+            :unlocked="unlockedAchievements"
+            :achievementsTotal="achievements.length"
+            :bestScores="timerProgress.bestScores || {}"
             @open-cabinet="isCustomizeModalOpen = true"
             @open-codex="showCodex = true"
             @open-contact="showContact = true"
+            @login="showSeuil = true"
             @logout="handleLogout"
           />
-        </template>
-        <template #modes>
-          <ModeSwitcher :current="currentMode" @select="handleModeSelect" />
-        </template>
-      </AppHeader>
-
-      <main id="main-content" ref="mainContent" :class="['oc-app__main', { 'oc-app__main--world': isWorldActive }]">
-        <div class="oc-app__inventory">
           <!-- Le Monde : l'île du joueur -->
           <WorldView
-            v-if="isWorldActive"
+            v-else-if="isWorldActive"
             :discoveredElements="discoveredElements"
             :elementEmojis="elementEmojis"
             :isLoggedIn="isLoggedIn"
             @coins-updated="handleCoinsUpdated"
             @show-alert="showAlert"
-            @login="$refs.accountMenu?.openSeuil()"
+            @login="showSeuil = true"
           />
           <!-- Mode principal : le Livre ; l'Épreuve garde son inventaire -->
           <BookView
@@ -79,7 +72,7 @@
             @fuse="$refs.craftZone?.fuse()"
           />
         </div>
-        <div v-show="!isWorldActive" class="oc-app__craft">
+        <div v-show="!isWorldActive && !isSceauActive" class="oc-app__craft">
           <TimerBrief
             v-if="isTimerActive && timerQuestion?.text"
             :question="timerQuestion"
@@ -105,6 +98,7 @@
         </div>
       </main>
     </div>
+    <TabBar :current="currentMode" :dots="isLoggedIn ? [] : ['sceau']" @select="handleModeSelect" />
     <GameAchievementsPopup
       v-if="achievementQueue.length && !isRevealing"
       :key="achievementQueue[0].name"
@@ -133,26 +127,11 @@
       v-if="resetToken"
       :token="resetToken"
       @close="resetToken = null"
-      @login="resetToken = null; $refs.accountMenu.openSeuil()"
+      @login="resetToken = null; showSeuil = true"
     />
     <ContactModal v-if="showContact" @close="showContact = false" />
     <CodexModal v-if="showCodex" :achievements="achievements" @close="showCodex = false" />
-    <SceauModal
-      v-if="showSceau"
-      :username="currentUser?.username || currentUser?.email || 'Alchimiste'"
-      :eraLabel="eraLabel"
-      :families="familyShares.filter(f => f.share > 0)"
-      :rings="rings"
-      :worn="worn"
-      :found="discoveredCount"
-      :total="totalElements"
-      :unlocked="unlockedAchievements"
-      :achievementsTotal="achievements.length"
-      :bestScores="timerProgress.bestScores || {}"
-      @close="showSceau = false"
-      @open-codex="showSceau = false; showCodex = true"
-      @logout="handleLogout"
-    />
+    <SeuilModal v-if="showSeuil" @close="showSeuil = false" />
     <TimerQuestions
       v-show="isTimerActive"
       ref="timerQuestions"
@@ -205,13 +184,12 @@ import { roman } from '@/utils/roman';
 import { emptyProgress } from '@/utils/trialProgress';
 import { ERA_NAMES, familyColor, familyIndex, discoveredFamilies, eraOf, slotCountForEra, sortFamilies, stageOf, populationFor } from '@/utils/eras';
 import AppHeader from '../Game/AppHeader.vue';
-import ModeSwitcher from '../Game/ModeSwitcher.vue';
 import CraftZone from '../Game/CraftZone.vue';
 import LivingBackground from '../Game/LivingBackground.vue';
 import BookView from '../Book/BookView.vue';
 import WorldView from '../World/WorldView.vue';
-import AccountMenu from '../Account/AccountMenu.vue';
-import SceauModal from '../Account/SceauModal.vue';
+import SceauView from '../Account/SceauView.vue';
+import SeuilModal from '../Account/SeuilModal.vue';
 import ResetPasswordModal from '../Account/ResetPasswordModal.vue';
 import ContactModal from '../Header/ContactModal.vue';
 import CustomizeModal from '../Header/CustomizeModal.vue';
@@ -222,6 +200,7 @@ import TimerQuestions from '../TimerMode/TimerQuestions.vue';
 import TimerBrief from '../TimerMode/TimerBrief.vue';
 import TrialInventory from '../TimerMode/TrialInventory.vue';
 import GModal from '../ui/GModal.vue';
+import TabBar from '../ui/TabBar.vue';
 
 // Retour sur l'application (PWA remise au premier plan) : carnet rechargé s'il date de plus de 30 s
 const STATE_RELOAD_AFTER_MS = 30000;
@@ -243,13 +222,12 @@ export default {
   name: 'App',
   components: {
     AppHeader,
-    ModeSwitcher,
     CraftZone,
     LivingBackground,
     BookView,
     WorldView,
-    AccountMenu,
-    SceauModal,
+    SceauView,
+    SeuilModal,
     ResetPasswordModal,
     ContactModal,
     CustomizeModal,
@@ -259,7 +237,8 @@ export default {
     TimerQuestions,
     TimerBrief,
     TrialInventory,
-    GModal
+    GModal,
+    TabBar
   },
   data() {
     const user = AuthService.getCurrentUser();
@@ -293,10 +272,11 @@ export default {
       progressReady: false,
       showCodex: false,
       showContact: false,
-      showSceau: false,
+      showSeuil: false,
       isCustomizeModalOpen: false,
-      // Le Monde (île du joueur) affiché à la place du Livre et de l'Athanor
+      // Le Monde (île du joueur) et le Sceau (le joueur, son compte) remplacent le Livre et l'Athanor
       isWorldActive: false,
+      isSceauActive: false,
       // L'Épreuve : inventaire du défi, l'inventaire Infini étant mis de côté (null hors Épreuve)
       isTimerActive: false,
       timerSnapshot: null,
@@ -332,6 +312,7 @@ export default {
   },
   computed: {
     currentMode() {
+      if (this.isSceauActive) return 'sceau';
       if (this.isWorldActive) return 'world';
       return this.isTimerActive ? 'timer' : 'infinite';
     },
@@ -346,8 +327,11 @@ export default {
     era() {
       return stageOf(this.discoveredCount);
     },
+    eraName() {
+      return ERA_NAMES[this.era - 1];
+    },
     eraLabel() {
-      return `Ère ${roman(this.era)} · ${ERA_NAMES[this.era - 1]}`;
+      return `Ère ${roman(this.era)} · ${this.eraName}`;
     },
     // Pièces du Cabinet portées sur le sceau
     worn() {
@@ -620,16 +604,18 @@ export default {
     // ----- Modes -----
     handleModeSelect(mode) {
       if (mode === this.currentMode) return;
-      if (mode === 'world') {
+      if (mode === 'world' || mode === 'sceau') {
         // L'Épreuve en cours se termine d'abord (elle a son propre inventaire)
         if (this.isTimerActive) {
-          this.showAlert('Termine ou quitte l’Épreuve avant d’aller sur ton île.');
+          this.showAlert(mode === 'world' ? 'Termine ou quitte l’Épreuve avant d’aller sur ton île.' : 'Termine ou quitte l’Épreuve avant d’ouvrir ton sceau.');
           return;
         }
-        this.isWorldActive = true;
+        this.isWorldActive = mode === 'world';
+        this.isSceauActive = mode === 'sceau';
         return;
       }
       this.isWorldActive = false;
+      this.isSceauActive = false;
       if (mode === 'timer') {
         this.$refs.timerModeButton?.startTimer();
       } else if (this.isTimerActive) {
@@ -785,14 +771,17 @@ export default {
   z-index: 1;
   max-width: 1480px;
   margin: 0 auto;
-  /* Mobile : la place des panneaux fixés en bas, mesurée (repli : hauteur nominale du dock) */
-  padding: 0 var(--oc-gutter) calc(var(--oc-overlay, var(--oc-dock-height)) + 24px);
+  /* Mobile : la place des panneaux fixés en bas (dock et consigne mesurés, puis la barre d'onglets) */
+  padding: 0 var(--oc-gutter) calc(var(--oc-overlay, var(--oc-dock-height)) + var(--oc-tabbar-h) + 24px);
 }
+/* Le Monde et le Sceau n'ont pas de dock : seule la barre d'onglets prend de la place */
+.oc-app__shell:has(.oc-app__main--world) { padding-bottom: calc(var(--oc-tabbar-h) + 24px); }
 .oc-app__main { display: block; }
 .oc-app__main--world { display: block !important; max-width: 760px; margin: 0 auto; }
 .oc-app__inventory { min-width: 0; }
 @media (min-width: 860px) {
-  .oc-app__shell { padding-bottom: 32px; }
+  /* PC : le rail d'onglets à gauche */
+  .oc-app__shell, .oc-app__shell:has(.oc-app__main--world) { padding: 0 28px 32px calc(var(--oc-rail-w) + 28px); }
   .oc-app__main {
     display: grid;
     /* La liste prend la place disponible et grandit avec les découvertes ; la zone reste à droite */
@@ -808,9 +797,5 @@ export default {
 .timer-end { display: flex; gap: 48px; justify-content: center; }
 .timer-end__stat { display: flex; flex-direction: column; gap: 4px; align-items: center; }
 .timer-end__big { font-size: 56px; line-height: 1; }
-
-@media (max-width: 859px) {
-  .oc-desk-only { display: none; }
-}
 </style>
 

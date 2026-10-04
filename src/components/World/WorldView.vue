@@ -255,6 +255,8 @@ export default {
     this.observer = null;
     this.loadedAt = Date.now();
     this.tick = 0;
+    // L'île peut quitter l'écran pendant un chargement (changement d'onglet) : la réponse est alors ignorée
+    this.gone = false;
   },
   async mounted() {
     this.ac = new AbortController();
@@ -272,6 +274,7 @@ export default {
     await this.load();
   },
   beforeUnmount() {
+    this.gone = true;
     if (this.ac) this.ac.abort();
     if (this.observer) this.observer.disconnect();
     clearInterval(this.tick);
@@ -284,10 +287,13 @@ export default {
     },
     async load() {
       try {
-        this.apply(await playService.world());
+        const state = await playService.world();
+        if (this.gone) return;
+        this.apply(state);
         this.guest = false;
         this.loadError = false;
       } catch (error) {
+        if (this.gone) return;
         if ([401, 402].includes(error.response?.status)) {
           this.guest = true;
           this.state = null;
@@ -834,8 +840,8 @@ export default {
 <style scoped>
 .world { position: relative; }
 .world__head { display: flex; align-items: flex-end; justify-content: space-between; gap: 12px; padding: 4px 2px 8px; }
-.world__eyebrow { display: block; font-family: var(--oc-font-mono); font-weight: 800; font-size: 11px; letter-spacing: .14em; text-transform: uppercase; color: var(--oc-text-faint); }
-.world__title { display: block; font-family: var(--oc-font-display); font-weight: 700; font-size: 24px; line-height: 1.1; color: var(--oc-text); }
+.world__eyebrow { display: block; font-family: var(--oc-font-mono); font-weight: 800; font-size: 11px; letter-spacing: .14em; text-transform: uppercase; color: var(--oc-on-bg-faint); }
+.world__title { display: block; font-family: var(--oc-font-display); font-weight: 700; font-size: 24px; line-height: 1.1; color: var(--oc-on-bg); }
 .world__coins {
   flex: none; display: inline-flex; align-items: center; gap: 7px;
   min-height: 38px; padding: 6px 14px;
@@ -897,7 +903,7 @@ export default {
 .world__menu-name { font-weight: 900; font-size: 13px; padding: 0 4px; white-space: nowrap; }
 .world__menu-btn { min-height: 34px; padding: 4px 12px; border: 0; border-radius: 999px; background: var(--ink-900); color: var(--vellum-50); font: inherit; font-weight: 800; font-size: 13px; cursor: pointer; }
 .world__menu-btn--quiet { background: var(--vellum-200); color: var(--ink-500); }
-.world__note { margin: 8px 2px 0; color: var(--oc-text-faint); font-size: 13px; font-style: italic; }
+.world__note { margin: 8px 2px 0; color: var(--oc-on-bg-faint); font-size: 13px; font-style: italic; }
 .world__guest { padding: 28px 20px; border-radius: 22px; background: var(--vellum-100); color: var(--ink-900); text-align: center; font-family: var(--font-ui); }
 .world__guest-title { margin: 0; font-family: var(--font-display); font-size: 26px; font-weight: 700; }
 .world__guest-text { margin: 10px 0 18px; color: var(--ink-500); }

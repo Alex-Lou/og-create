@@ -487,13 +487,13 @@ export default {
     position: fixed;
     left: 0;
     right: 0;
-    bottom: 0;
+    bottom: var(--oc-tabbar-h);
     z-index: 20;
     flex-direction: row;
     flex-wrap: nowrap;
     align-items: center;
     gap: 10px;
-    padding: 12px 16px calc(12px + env(safe-area-inset-bottom));
+    padding: 12px 16px 12px;
     border-radius: var(--r-lg) var(--r-lg) 0 0;
     background: linear-gradient(180deg, var(--vellum-50), var(--vellum-100));
     box-shadow: 0 -1px 0 var(--oc-line), 0 -10px 28px rgba(52, 36, 26, 0.16);
