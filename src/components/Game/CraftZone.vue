@@ -48,7 +48,7 @@
       </p>
     </div>
 
-    <!-- Échec : dit dans l'Athanor, sans jamais couvrir le bouton -->
+    <!-- Échec : dit dans l'Athanor sur PC ; sur mobile, en haut de l'écran, hors de la zone de jeu -->
     <transition name="fail">
       <p v-if="failMessage" class="athanor__fail" role="status">{{ failMessage }}</p>
     </transition>
@@ -91,6 +91,7 @@ const MERGE_MS = 520;
 const QUICK_MERGE_MS = 300;
 const REVEAL_MS = 1700;
 const FAIL_MS = 1800;
+const FAIL_MAX_MS = 3200;
 // Durée du vol d'un élément jusqu'à son emplacement (utils/fx.js) : l'animation attend qu'il soit posé
 const FLIGHT_MS = 380;
 // Rayon de l'anneau des emplacements, en px (cercle de 360 px)
@@ -277,8 +278,8 @@ export default {
           this.failing = false;
           this.picked = [];
         }, this.quick ? 450 : 700),
-        // Une phrase plus longue reste affichée le temps d'être lue
-        setTimeout(() => (this.failMessage = ''), Math.max(FAIL_MS, message.length * 45))
+        // Une phrase plus longue reste affichée le temps d'être lue, sans s'éterniser
+        setTimeout(() => (this.failMessage = ''), Math.min(FAIL_MAX_MS, Math.max(FAIL_MS, message.length * 40)))
       ];
     },
     endFail() {
@@ -523,13 +524,16 @@ export default {
   .athanor__fuse { flex: 1; min-width: 0; min-height: 52px; padding: 0 12px; font-size: 16px; }
   .athanor--multi .slot { width: 52px; height: 52px; }
   .athanor--multi .slot__ink { font-size: 21px; }
+  /* En haut de l'écran, au-dessus de tout, sans jamais intercepter un toucher */
   .athanor__fail {
-    position: absolute;
+    position: fixed;
     left: 16px;
     right: 16px;
-    bottom: calc(100% + 12px);
+    top: calc(env(safe-area-inset-top) + 12px);
+    pointer-events: none;
     box-shadow: inset 0 0 0 1px rgba(192, 72, 58, 0.35), var(--shadow-2);
   }
+  .fail-enter-from, .fail-leave-to { transform: translateY(-8px); }
   .reveal { position: fixed; z-index: 30; border-radius: 0; }
   .reveal__name { font-size: 48px; }
 }

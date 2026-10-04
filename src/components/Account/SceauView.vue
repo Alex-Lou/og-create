@@ -26,7 +26,6 @@
       <button type="button" class="sceau__row" @click="$emit('open-contact')">
         <span class="sceau__row-title">Écrire aux créateurs</span><span class="sceau__row-note">Une idée, un souci : on lit tout</span>
       </button>
-      <button v-if="isLoggedIn" type="button" class="sceau__logout" @click="$emit('logout')">Se déconnecter</button>
     </nav>
 
     <section class="sceau__branches g-panel" aria-label="Branches du sceau">
@@ -42,6 +41,9 @@
         </li>
       </ul>
     </section>
+
+    <!-- Tout en bas, loin des gestes courants -->
+    <button v-if="isLoggedIn" type="button" class="sceau__logout" @click="$emit('logout')">Se déconnecter</button>
   </section>
 </template>
 
