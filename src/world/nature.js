@@ -137,14 +137,6 @@ function frog(f) {
     + `<circle cx="-3" cy="${-9.4 + hop}" r="1" fill="#2A2420"/><circle cx="3" cy="${-9.4 + hop}" r="1" fill="#2A2420"/>`
     + `<path d="M-2,${-5 + hop} q2,1.5 4,0" stroke="#3E7A32" stroke-width="0.8" fill="none"/>`, CRITTER_BOX);
 }
-function fish(f) {
-  // Le poisson saute hors de l'eau (f = 0 en l'air, f = 1 qui replonge), éclaboussure au pied
-  const y = f === 0 ? -14 : -6;
-  const a = f === 0 ? -25 : 35;
-  return sprite(`<ellipse cx="0" cy="0" rx="7" ry="2.4" fill="none" stroke="rgba(255,255,255,.8)" stroke-width="1"/>`
-    + `<g transform="translate(0 ${y}) rotate(${a})"><path d="M-6,0 Q0,-4 6,0 Q0,4 -6,0 Z" fill="#7FA9C9"/><path d="M-6,0 l-4,-3 l0,6 Z" fill="#5E86A6"/><circle cx="3.4" cy="-0.6" r="0.8" fill="#1E2A36"/></g>`, CRITTER_BOX);
-}
-
 // Panneau d'un quartier à acheter : poteau, planche, cadenas (le prix est écrit par l'île)
 function zoneSign() {
   const [x, y] = P(0, 0, 0);
@@ -162,6 +154,5 @@ export const CRITTERS = {
   chicken: [0, 1].map(f => () => chicken(f)),
   butterfly: [0, 1].map(f => () => butterfly(f)),
   bee: [0, 1].map(f => () => bee(f)),
-  frog: [0, 1].map(f => () => frog(f)),
-  fish: [0, 1].map(f => () => fish(f))
+  frog: [0, 1].map(f => () => frog(f))
 };

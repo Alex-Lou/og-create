@@ -2,7 +2,7 @@
 // forêt, roche, chemin, eau…) et une hauteur de 0 à 3 ; ses faces avant (vers +x et +y) descendent jusqu'au voisin,
 // ou jusqu'à la mer. Le sol est préparé en carrés alignés sur l'écran, gardés en images (TerrainCache) : seuls les
 // carrés visibles sont dessinés, les nouveaux préparés dans un budget de temps par image.
-// L'eau (reflets, cascades) et l'écume sont animées par-dessus, case par case visible.
+// L'eau douce (reflets, cascades) est animée par-dessus, case par case visible ; la mer vit dans sea.js.
 
 export const TW = 64;
 export const TH = TW / 2;
@@ -16,6 +16,10 @@ const PAD_PX = 2;
 const MAX_TILES = 24;
 const MAX_RES = 2;
 const OVERVIEW_RES = 0.25;
+// Mer : bande d'eaux peu profondes (en cases depuis la terre), aussi un peu hors de la carte ; « au large »
+export const SHALLOW = 3;
+export const SEA_PAD = 3;
+export const SEA_FAR = 9;
 // Ce qu'une case peut couvrir au-dessus de son centre (relief, détails) et au-dessous (faces jusqu'à la mer, piles
 // du pont), en unités du monde
 const cellAbove = h => TH / 2 + Math.max(0, h) * HS + 8;
@@ -41,7 +45,29 @@ export function islandOf(map, n) {
     if (g === '~' || g === 'b') return SEA_Z;
     return g === 'w' ? height(x, y) - 0.25 : height(x, y);
   };
-  return { n, ground, height, zone, land, surface };
+  // Distance de la mer à la terre (en cases, 0 sur terre, SEA_FAR au large), jusqu'à SEA_PAD cases hors de la carte
+  const P = SEA_PAD + 3, m = n + 2 * P;
+  const dist = new Uint8Array(m * m).fill(SEA_FAR);
+  const queue = [];
+  for (let y = -P; y < n + P; y++) {
+    for (let x = -P; x < n + P; x++) {
+      if (land(x, y)) { dist[(y + P) * m + x + P] = 0; queue.push(x, y); }
+    }
+  }
+  for (let k = 0; k < queue.length; k += 2) {
+    const x = queue[k], y = queue[k + 1], d = dist[(y + P) * m + x + P];
+    if (d + 1 >= SEA_FAR) continue;
+    for (let dy = -1; dy <= 1; dy++) {
+      for (let dx = -1; dx <= 1; dx++) {
+        const nx = x + dx, ny = y + dy;
+        if (nx < -P || ny < -P || nx >= n + P || ny >= n + P) continue;
+        const i = (ny + P) * m + nx + P;
+        if (dist[i] > d + 1) { dist[i] = d + 1; queue.push(nx, ny); }
+      }
+    }
+  }
+  const depth = (x, y) => (x < -P || y < -P || x >= n + P || y >= n + P ? SEA_FAR : dist[(y + P) * m + x + P]);
+  return { n, ground, height, zone, land, surface, depth };
 }
 
 // Centre d'une case (ou d'un point fractionnaire) à une hauteur donnée (en paliers)
@@ -426,9 +452,10 @@ export function cellsBox(M, cells) {
   return { x: x0, y: y0, w: x1 - x0, h: y1 - y0 };
 }
 
-// Ce qui bouge sur le sol, précalculé une fois par île : cases d'eau douce, faces de cascade, bords de mer
+// Ce qui bouge sur le sol, précalculé une fois par île : cases d'eau douce, faces de cascade, bords de mer devant
+// (shore : la mer en +y, côté 0, ou en +x, côté 1) et derrière (back : la mer en −y, côté 0, ou en −x, côté 1)
 export function liveOf(M) {
-  const water = [], falls = [], shore = [];
+  const water = [], falls = [], shore = [], back = [];
   for (let y = 0; y < M.n; y++) {
     for (let x = 0; x < M.n; x++) {
       const g = M.ground(x, y);
@@ -442,13 +469,14 @@ export function liveOf(M) {
       }
       if (M.land(x, y)) {
         for (const [dx, dy, side] of [[0, 1, 0], [1, 0, 1]]) if (M.ground(x + dx, y + dy) === '~') shore.push({ x, y, side });
+        for (const [dx, dy, side] of [[0, -1, 0], [-1, 0, 1]]) if (M.ground(x + dx, y + dy) === '~') back.push({ x, y, side });
       }
     }
   }
-  return { water, falls, shore };
+  return { water, falls, shore, back };
 }
 
-// Animation de l'eau sur les cases visibles : reflets qui glissent, cascades qui tombent, écume au pied des falaises
+// Animation de l'eau douce sur les cases visibles : reflets qui glissent, cascades qui tombent (la mer : sea.js)
 export function drawLive(ctx, M, live, view, t) {
   const seen = c => c.x > view.x - TW && c.x < view.x + view.w + TW && c.y > view.y - TW * 2 && c.y < view.y + view.h + TW;
   ctx.lineCap = 'round';
@@ -490,18 +518,6 @@ export function drawLive(ctx, M, live, view, t) {
     ctx.beginPath();
     ctx.ellipse(fx, fy, 11, 4.5, 0, 0, Math.PI * 2);
     ctx.fill();
-  }
-  const foam = 0.32 + 0.22 * Math.sin(t * 1.6);
-  ctx.strokeStyle = `rgba(255, 255, 255, ${foam.toFixed(3)})`;
-  ctx.lineWidth = 2.6;
-  for (const s of live.shore) {
-    const c = worldOf(s.x, s.y, SEA_Z);
-    if (!seen(c)) continue;
-    const [x0, y0, x1, y1] = s.side ? [c.x, c.y + TH / 2, c.x + TW / 2, c.y] : [c.x - TW / 2, c.y, c.x, c.y + TH / 2];
-    ctx.beginPath();
-    ctx.moveTo(x0, y0 + 1.5 + Math.sin(t * 2 + x0 * 0.05) * 1.2);
-    ctx.lineTo(x1, y1 + 1.5 + Math.sin(t * 2 + x1 * 0.05) * 1.2);
-    ctx.stroke();
   }
 }
 
