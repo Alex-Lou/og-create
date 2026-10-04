@@ -356,7 +356,7 @@ export default {
   border: 0;
   cursor: pointer;
   color: var(--oc-text);
-  background: linear-gradient(180deg, rgba(233, 223, 200, 0.045), rgba(233, 223, 200, 0.012));
+  background: linear-gradient(180deg, var(--vellum-50), var(--vellum-100));
   box-shadow: inset 0 0 0 1px var(--oc-line);
   transition: box-shadow var(--oc-fast), background var(--oc-fast);
 }

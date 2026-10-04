@@ -11,7 +11,7 @@
               <span>{{ family.name }}</span>
               <span class="g-bar"><span :style="{ width: `${Math.round(family.share * 100)}%`, background: family.share >= 1 ? 'var(--oc-gold)' : null }"></span></span>
             </span>
-            <span class="g-mono">{{ Math.round(family.share * 100) }} %</span>
+            <span class="g-mono sceau__share">{{ Math.round(family.share * 100) }}&nbsp;%</span>
           </li>
         </ul>
       </section>
@@ -72,6 +72,7 @@ export default {
 </script>
 
 <style scoped>
+.sceau__share { white-space: nowrap; text-align: right; }
 .sceau {
   display: grid;
   grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);

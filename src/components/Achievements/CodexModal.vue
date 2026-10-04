@@ -70,7 +70,7 @@ export default {
 }
 .codex__cell.is-open {
   background: var(--oc-gold-soft);
-  box-shadow: inset 0 0 0 1px rgba(224, 182, 84, 0.35);
+  box-shadow: inset 0 0 0 2px var(--gold-300);
   color: var(--oc-text);
 }
 .codex__img { width: 54px; height: 54px; object-fit: cover; }

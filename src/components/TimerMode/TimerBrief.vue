@@ -2,7 +2,7 @@
   <aside class="brief g-panel" aria-label="Consigne de l'épreuve">
     <div class="brief__goal">
       <span class="g-mono">Consigne</span>
-      <p class="brief__text">{{ question.text }}</p>
+      <p class="brief__text">{{ frenchSpaces(question.text) }}</p>
     </div>
 
     <transition name="brief-hint">
@@ -28,6 +28,7 @@
 </template>
 
 <script>
+import { frenchSpaces } from '@/utils/typo';
 import { JOKER_PRICE, JOKER_TIME } from '@/utils/hints';
 
 // Consigne toujours visible pendant l'Épreuve, et jokers : une étape, un ingrédient, du temps.
@@ -60,6 +61,7 @@ export default {
     }
   },
   methods: {
+    frenchSpaces,
     use(kind) {
       if (this.canPay) this.$emit('joker', kind);
     }
@@ -74,11 +76,12 @@ export default {
   gap: 12px;
   margin-bottom: 16px;
   padding: 16px 20px;
-  box-shadow: inset 0 0 0 1px var(--oc-accent-line);
+  border-radius: var(--r-lg);
+  box-shadow: inset 0 0 0 2px var(--gold-300), var(--shadow-2);
 }
 .brief__goal { display: flex; flex-direction: column; align-items: center; gap: 6px; text-align: center; }
 /* L'élément à faire naître : la pièce maîtresse du bandeau, au centre */
-.brief__text { margin: 0; font-family: var(--oc-font-display); font-size: 32px; line-height: 1.15; color: var(--oc-gold); text-shadow: 0 0 18px rgba(224, 180, 84, 0.25); }
+.brief__text { margin: 0; font-family: var(--oc-font-display); font-weight: 700; font-size: 32px; line-height: 1.15; color: var(--ink-900); }
 .brief__hint { margin: 0; font-size: 17px; text-align: center; color: var(--oc-text-strong); }
 /* Jokers à part, sous un filet, pour ne pas se mêler à la consigne */
 .brief__jokers { display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 8px; padding-top: 12px; border-top: 1px solid var(--oc-line); }
@@ -100,8 +103,9 @@ export default {
     margin: 0;
     gap: 6px;
     padding: 8px 16px;
-    background: #12100c;
-    box-shadow: 0 -1px 0 var(--oc-accent-line);
+    border-radius: var(--r-lg) var(--r-lg) 0 0;
+    background: var(--vellum-50);
+    box-shadow: 0 -1px 0 var(--oc-line), 0 -8px 20px rgba(52, 36, 26, 0.1);
   }
   .brief__goal > .g-mono { display: none; }
   .brief__text { font-size: 24px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 100%; }

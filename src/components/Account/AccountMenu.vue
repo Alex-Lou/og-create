@@ -112,14 +112,15 @@ export default {
   min-height: 48px;
   padding: 4px 14px 4px 6px;
   border: 0;
+  border-radius: var(--r-pill);
   cursor: pointer;
   text-align: left;
   color: var(--oc-text);
-  background: rgba(233, 223, 200, 0.04);
-  box-shadow: inset 0 0 0 1px var(--oc-line);
+  background: var(--vellum-50);
+  box-shadow: inset 0 0 0 1px var(--oc-line), 0 2px 0 var(--vellum-400);
   transition: background var(--oc-fast), box-shadow var(--oc-fast);
 }
-.account__trigger:hover, .account__trigger.is-open { background: var(--oc-gold-soft); box-shadow: inset 0 0 0 1px var(--oc-accent-line); }
+.account__trigger:hover, .account__trigger.is-open { background: var(--gold-200); box-shadow: inset 0 0 0 1px var(--oc-accent-line), 0 2px 0 var(--gold-600); }
 .account__trigger .g-sigil { flex-shrink: 0; transition: transform var(--oc-slow) var(--oc-ease-out); }
 .account__trigger:hover .g-sigil { transform: rotate(-12deg); }
 .account__tag { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
@@ -144,7 +145,7 @@ export default {
   flex-direction: column;
   gap: 12px;
   padding: 20px;
-  --oc-panel: #14110d;
+  border-radius: var(--r-lg);
   box-shadow: inset 0 0 0 1px var(--oc-line), var(--oc-shadow);
 }
 .account__who { display: flex; align-items: center; gap: 14px; }
@@ -158,7 +159,8 @@ export default {
   background: none;
   cursor: pointer;
   text-align: left;
-  font-size: 18px;
+  font-size: 16px;
+  font-weight: 800;
   color: var(--oc-text);
 }
 .account__link:hover { color: var(--oc-gold); }
@@ -173,11 +175,11 @@ export default {
     position: absolute;
     top: 3px;
     right: 3px;
-    width: 8px;
-    height: 8px;
-    background: var(--oc-gold);
-    transform: rotate(45deg);
-    box-shadow: 0 0 8px rgba(224, 182, 84, 0.8);
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: var(--wax-500);
+    box-shadow: 0 0 0 2px var(--vellum-50);
   }
 }
 .account-pop-enter-active, .account-pop-leave-active { transition: opacity var(--oc-fast), transform var(--oc-fast) var(--oc-ease-out); }

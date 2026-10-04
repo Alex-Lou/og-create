@@ -437,20 +437,20 @@ export default {
 /* Le Livre : papier crème posé sur le bureau sombre du jeu */
 .book-view {
   container-type: inline-size;
-  --book-ink: #4A3426;
-  --book-paper: #FBF6EA;
+  --book-ink: var(--ink-900);
+  --book-paper: var(--vellum-100);
   --book-radius: 20px;
 }
 .book-view__head {
   display: flex; align-items: flex-end; justify-content: space-between; gap: 12px;
   padding: 4px 2px 10px;
 }
-.book-view__eyebrow { display: block; font-family: var(--oc-font-mono, monospace); font-size: 11px; letter-spacing: .14em; text-transform: uppercase; color: var(--oc-text-faint); }
-.book-view__title { display: block; font-family: var(--oc-font-display); font-size: 22px; line-height: 1.1; color: var(--oc-text); }
+.book-view__eyebrow { display: block; font-family: var(--oc-font-mono); font-weight: 800; font-size: 11px; letter-spacing: .14em; text-transform: uppercase; color: var(--oc-text-faint); }
+.book-view__title { display: block; font-family: var(--oc-font-display); font-weight: 700; font-size: 24px; line-height: 1.1; color: var(--oc-text); }
 .book-view__stars {
   flex: none; padding: 4px 12px; border-radius: 999px;
   background: rgba(224, 182, 84, .14); color: var(--oc-gold);
-  font-family: var(--oc-font-mono, monospace); font-size: 14px; font-weight: 600;
+  font-family: var(--oc-font-mono); font-size: 14px; font-weight: 600;
 }
 .book-view__stage {
   --book-w: max(220px, min(calc(100cqw - 56px), calc((100dvh - 420px) * .75), 460px));
@@ -470,7 +470,7 @@ export default {
   border-radius: 6px var(--book-radius) var(--book-radius) 6px;
 }
 .book-view__wrap::before { transform: translate(7px, 7px); background: #CDBB98; box-shadow: 0 22px 46px rgba(0, 0, 0, .55), 0 4px 12px rgba(0, 0, 0, .35); }
-.book-view__wrap::after { transform: translate(3.5px, 3.5px); background: repeating-linear-gradient(180deg, #EFE5D0 0 2px, #E3D6BC 2px 3px); }
+.book-view__wrap::after { transform: translate(3.5px, 3.5px); background: repeating-linear-gradient(180deg, var(--vellum-200) 0 2px, var(--vellum-300) 2px 3px); }
 .book-view__rig :deep(canvas.gl) { position: absolute; inset: 0; width: 100%; height: 100%; z-index: 2; pointer-events: none; }
 .book-view__hot { position: absolute; z-index: 3; touch-action: pan-y; border-radius: 6px var(--book-radius) var(--book-radius) 6px; outline: none; }
 .book-view__hot:focus-visible { box-shadow: 0 0 0 3px var(--oc-gold); }
@@ -497,7 +497,7 @@ export default {
   width: 40px; min-height: 40px; padding: 0 0 0 11px;
   border: 0; border-radius: 0 12px 12px 0;
   background: var(--rc); color: var(--ri);
-  font-family: Fraunces, Georgia, serif; font-weight: 700; font-size: 13px;
+  font-family: var(--font-display); font-weight: 700; font-size: 13px;
   box-shadow: 0 3px 8px rgba(0, 0, 0, .35), inset 0 -3px 0 rgba(0, 0, 0, .08);
   transform: translateX(-9px);
   transition: transform .35s cubic-bezier(.3, 1.5, .55, 1);
@@ -511,7 +511,7 @@ export default {
 .book-view__retry { margin-left: 8px; }
 
 .book-view__shelf-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-top: 10px; }
-.book-view__shelf-title { font-family: var(--oc-font-mono, monospace); font-size: 11px; letter-spacing: .14em; text-transform: uppercase; color: var(--oc-text-faint); }
+.book-view__shelf-title { font-family: var(--oc-font-mono); font-size: 11px; letter-spacing: .14em; text-transform: uppercase; color: var(--oc-text-faint); }
 .book-view__search {
   min-width: 0; flex: 1; max-width: 220px;
   padding: 6px 10px; border-radius: 10px;
@@ -531,7 +531,7 @@ export default {
   min-height: 34px; padding: 4px 12px;
   border: 1px solid rgba(233, 223, 200, .18); border-radius: 999px;
   background: rgba(233, 223, 200, .05); color: var(--oc-text-faint);
-  font-family: Nunito, system-ui, sans-serif; font-size: 13px; font-weight: 800;
+  font-family: var(--font-ui); font-size: 13px; font-weight: 800;
   cursor: pointer;
   transition: background .2s ease, color .2s ease, border-color .2s ease;
 }
@@ -559,7 +559,7 @@ export default {
 }
 .book-view__chip:active { transform: scale(.92); }
 .book-view__chip-glyph { font-size: 26px; line-height: 1; }
-.book-view__chip-name { font-size: 10.5px; font-weight: 700; max-width: 60px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-family: Nunito, system-ui, sans-serif; color: #8A7262; }
+.book-view__chip-name { font-size: 10.5px; font-weight: 700; max-width: 60px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-family: var(--font-ui); color: var(--ink-500); }
 .book-view__chip.is-hint { box-shadow: 0 0 0 3px var(--oc-gold), 0 0 16px rgba(224, 182, 84, .6), 0 3px 0 rgba(0, 0, 0, .35); }
 .book-view__chip.is-new { box-shadow: 0 0 0 2.5px var(--oc-gold), 0 3px 0 rgba(0, 0, 0, .35); animation: book-pop .55s cubic-bezier(.3, 1.5, .55, 1); }
 @keyframes book-pop { 0% { transform: scale(.55); } 100% { transform: scale(1); } }
@@ -578,7 +578,7 @@ export default {
   background: radial-gradient(circle at 50% 42%, rgba(58, 38, 24, .82), rgba(24, 16, 10, .94));
   -webkit-backdrop-filter: blur(6px);
   backdrop-filter: blur(6px);
-  color: #FFFDF8; text-align: center;
+  color: var(--vellum-50); text-align: center;
   opacity: 0;
 }
 .book-unlock__rays {
@@ -593,13 +593,13 @@ export default {
 @keyframes book-spin { to { transform: rotate(360deg); } }
 .book-unlock__seal { position: relative; width: 150px; height: 150px; }
 .book-unlock__seal img { position: absolute; inset: 0; width: 100%; height: 100%; opacity: 0; }
-.book-unlock__eyebrow { font-size: 12px; font-weight: 900; letter-spacing: .2em; text-transform: uppercase; color: #FFE2A6; opacity: 0; font-family: Nunito, system-ui, sans-serif; }
-.book-unlock__name { font-family: Fraunces, Georgia, serif; font-weight: 700; font-size: 34px; line-height: 1.05; opacity: 0; }
+.book-unlock__eyebrow { font-size: 12px; font-weight: 900; letter-spacing: .2em; text-transform: uppercase; color: #FFE2A6; opacity: 0; font-family: var(--font-ui); }
+.book-unlock__name { font-family: var(--font-display); font-weight: 700; font-size: 34px; line-height: 1.05; opacity: 0; }
 .book-unlock__go {
   margin-top: 6px; min-height: 48px; padding: 12px 26px;
   border: 0; border-radius: 999px;
-  background: #FFE2A6; color: #4A3426;
-  font-family: Nunito, system-ui, sans-serif; font-weight: 900; font-size: 16px;
+  background: #FFE2A6; color: var(--ink-900);
+  font-family: var(--font-ui); font-weight: 900; font-size: 16px;
   box-shadow: 0 6px 0 #C9933A;
   cursor: pointer; opacity: 0;
 }

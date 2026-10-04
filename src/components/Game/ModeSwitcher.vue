@@ -60,8 +60,8 @@ export default {
 .modes__num { font-size: 9px; letter-spacing: 0.12em; }
 .modes__label {
   font-family: var(--oc-font-display);
+  font-weight: 600;
   font-size: 18px;
-  letter-spacing: 0.06em;
   white-space: nowrap;
 }
 .modes__ink {

@@ -8,6 +8,8 @@
 
 const TAU = Math.PI * 2;
 const LINK_DISTANCE = 90;
+// Sur le vélin, chaque famille s'écrit à l'encre : sa couleur assombrie, posée en « multiply »
+const ink = c => c.map(v => Math.round(v * 0.62));
 
 export default class LivingBackground {
   constructor(canvas, { reducedMotion = false } = {}) {
@@ -156,7 +158,7 @@ export default class LivingBackground {
         // Liaisons (ère 2) : lignes lumineuses et ressort vers une distance d'équilibre
         if (bond > 0.01 && d < LINK_DISTANCE) {
           const alpha = (1 - d / LINK_DISTANCE) * 0.32 * bond * Math.min(a.alpha, b.alpha);
-          const c = a.color;
+          const c = ink(a.color);
           ctx.strokeStyle = `rgba(${c[0]},${c[1]},${c[2]},${alpha.toFixed(3)})`;
           ctx.beginPath();
           ctx.moveTo(a.x, a.y);
@@ -201,14 +203,14 @@ export default class LivingBackground {
 
   draw(life) {
     const { ctx, atoms } = this;
-    ctx.globalCompositeOperation = 'lighter';
+    ctx.globalCompositeOperation = 'multiply';
     atoms.forEach((a, i) => {
-      const c = a.color;
+      const c = ink(a.color);
       const base = `rgba(${c[0]},${c[1]},${c[2]},`;
       const twinkle = 0.65 + 0.35 * Math.sin(a.age * 0.05 + i);
-      ctx.fillStyle = base + (0.07 * a.alpha).toFixed(3) + ')';
+      ctx.fillStyle = base + (0.08 * a.alpha).toFixed(3) + ')';
       ctx.beginPath(); ctx.arc(a.x, a.y, a.r * 4.5, 0, TAU); ctx.fill();
-      ctx.fillStyle = base + (0.85 * a.alpha * twinkle).toFixed(3) + ')';
+      ctx.fillStyle = base + (0.5 * a.alpha * twinkle).toFixed(3) + ')';
       ctx.beginPath(); ctx.arc(a.x, a.y, a.r, 0, TAU); ctx.fill();
       // Cellules (ère 5) : une membrane qui respire autour des gros atomes
       if (life > 0.01 && a.r > 1.7) {
@@ -231,8 +233,8 @@ export default class LivingBackground {
       const progress = ring.t / (ring.big ? 70 : 30);
       if (progress >= 1) { rings.splice(i, 1); continue; }
       ctx.strokeStyle = ring.big
-        ? `rgba(224,182,84,${(0.5 * (1 - progress)).toFixed(3)})`
-        : `rgba(233,223,200,${(0.35 * (1 - progress)).toFixed(3)})`;
+        ? `rgba(185,131,42,${(0.55 * (1 - progress)).toFixed(3)})`
+        : `rgba(133,112,95,${(0.4 * (1 - progress)).toFixed(3)})`;
       ctx.lineWidth = ring.big ? 2 : 1;
       ctx.beginPath();
       ctx.arc(ring.x, ring.y, (ring.big ? 180 : 14) * progress + 4, 0, TAU);

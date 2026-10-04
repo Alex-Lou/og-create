@@ -106,7 +106,7 @@ export default {
   width: 96px;
   height: 96px;
   object-fit: contain;
-  filter: drop-shadow(0 0 18px rgba(224, 182, 84, 0.45));
+  filter: drop-shadow(0 0 18px rgba(239, 193, 99, 0.55));
 }
 .seal__name {
   margin: 0;

@@ -1,53 +1,93 @@
-/* Tokens de design « Grimoire nocturne » : seule source des couleurs, typographies, formes et mouvements.
-   Encre claire sur papier nuit, une seule lueur dorée réservée à ce qui est précieux. */
+/* Jetons de design « Vélin & Veillée » : seule source des couleurs, typographies, formes et mouvements.
+   Le contenu est en papier (vélin), le jeu en matière (cuir, or, noyer), l'encre est sépia. */
 :root {
-  /* Papier nuit */
-  --oc-bg: #0c0a08;
-  --oc-bg-glow-1: rgba(224, 182, 84, 0.06);
-  --oc-bg-glow-2: rgba(111, 163, 146, 0.05);
+  /* Vélin (papier) */
+  --vellum-50: #fffcf5;
+  --vellum-100: #fbf5e8;
+  --vellum-200: #f4ead5;
+  --vellum-300: #e8d8b8;
+  --vellum-400: #d6c09a;
+  /* Encre sépia */
+  --ink-900: #34241a;
+  --ink-700: #574131;
+  --ink-500: #85705f;
+  --ink-300: #b9a691;
+  /* Cuir (chrome du jeu) */
+  --leather-500: #a34a36;
+  --leather-600: #8a3b2c;
+  --leather-700: #6e2e22;
+  --leather-800: #4f2119;
+  /* Noyer (bureau du soir, plateaux de mini-jeux) */
+  --walnut-700: #4a3427;
+  --walnut-800: #33241b;
+  --walnut-900: #221812;
+  /* Feuille d'or (précieux, action principale) */
+  --gold-200: #fbebc0;
+  --gold-300: #f7dc93;
+  --gold-400: #efc163;
+  --gold-500: #e0a93a;
+  --gold-600: #b9832a;
+  --gold-700: #8c5e18;
+  /* Encres secondaires */
+  --verdigris-500: #4f9a86;
+  --verdigris-100: #dcefe8;
+  --wax-500: #c0483a;
+  --wax-700: #8e2f25;
 
-  /* Surfaces : à peine teintées, elles laissent voir le fond vivant */
-  --oc-surface: rgba(233, 223, 200, 0.035);
-  --oc-surface-hover: rgba(233, 223, 200, 0.07);
-  --oc-surface-strong: #14110d;
-  --oc-panel: rgba(20, 17, 13, 0.78);
-  --oc-line: rgba(233, 223, 200, 0.14);
-  --oc-line-strong: rgba(233, 223, 200, 0.32);
+  /* Fond : le bureau clair, une lumière douce venue d'en haut */
+  --bg: #ede0c4;
+  --bg-hi: #f8efdc;
 
-  /* Encre */
-  --oc-text: #e9dfc8;
-  --oc-text-strong: #f3ead4;
-  --oc-text-muted: #b3a68b;
-  --oc-text-faint: #8d8270;
+  /* Typographie : deux familles. Fraunces (titres, noms, indices), Nunito (interface, compteurs) */
+  --font-display: 'Fraunces', 'Iowan Old Style', Georgia, serif;
+  --font-ui: 'Nunito', ui-rounded, 'SF Pro Rounded', system-ui, sans-serif;
 
-  /* Lueur (action, découverte) et encres secondaires */
-  --oc-accent: #e0b654;
-  --oc-accent-strong: #c99c3c;
-  --oc-accent-soft: rgba(224, 182, 84, 0.14);
-  --oc-accent-line: #e0b654;
-  --oc-on-accent: #0c0a08;
-  --oc-gold: #e0b654;
-  --oc-gold-strong: #f0d488;
-  --oc-gold-soft: rgba(224, 182, 84, 0.1);
-  --oc-verdigris: #6fa392;
-  --oc-danger: #d9765e;
+  /* Formes et ombres « papier » : épaisseur (tranche) et portée */
+  --r-xs: 8px;
+  --r-sm: 12px;
+  --r-md: 16px;
+  --r-lg: 22px;
+  --r-pill: 999px;
+  --edge-paper: 0 3px 0 var(--vellum-400);
+  --shadow-1: 0 1px 2px rgba(52, 36, 26, 0.12), 0 4px 10px rgba(52, 36, 26, 0.08);
+  --shadow-2: 0 2px 4px rgba(52, 36, 26, 0.12), 0 12px 28px rgba(52, 36, 26, 0.16);
+  --shadow-3: 0 8px 16px rgba(52, 36, 26, 0.18), 0 28px 60px rgba(52, 36, 26, 0.22);
 
-  /* Typographie */
-  --oc-font-display: 'IM Fell English SC', Georgia, serif;
-  --oc-font-italic: 'IM Fell English', Georgia, serif;
-  --oc-font-body: 'Newsreader', Georgia, 'Times New Roman', serif;
-  --oc-font-mono: 'Martian Mono', ui-monospace, 'SFMono-Regular', monospace;
+  /* Rôles utilisés par les composants (noms historiques « oc »), branchés sur la palette */
+  --oc-bg: var(--bg);
+  --oc-surface: var(--vellum-50);
+  --oc-surface-hover: var(--vellum-200);
+  --oc-surface-strong: var(--vellum-100);
+  --oc-panel: var(--vellum-50);
+  --oc-line: rgba(87, 65, 49, 0.16);
+  --oc-line-strong: rgba(87, 65, 49, 0.32);
 
-  /* Formes : angles vifs et biseaux, pas d'arrondis mous */
-  --oc-radius-sm: 0;
-  --oc-radius: 0;
-  --oc-radius-lg: 0;
-  --oc-radius-pill: 0;
-  --oc-bevel: 10px;
+  --oc-text: var(--ink-900);
+  --oc-text-strong: var(--ink-900);
+  --oc-text-muted: var(--ink-700);
+  --oc-text-faint: var(--ink-500);
 
-  /* Profondeur */
-  --oc-shadow: 0 24px 60px rgba(0, 0, 0, 0.55);
-  --oc-shadow-accent: 0 0 24px rgba(224, 182, 84, 0.18);
+  --oc-accent: var(--gold-400);
+  --oc-accent-soft: rgba(224, 169, 58, 0.18);
+  --oc-accent-line: var(--gold-600);
+  --oc-on-accent: var(--ink-900);
+  /* L'or en texte sur papier : assez foncé pour se lire */
+  --oc-gold: var(--gold-700);
+  --oc-gold-strong: var(--gold-300);
+  --oc-gold-soft: rgba(224, 169, 58, 0.16);
+  --oc-verdigris: var(--verdigris-500);
+  --oc-danger: var(--wax-500);
+
+  --oc-font-display: var(--font-display);
+  --oc-font-italic: var(--font-display);
+  --oc-font-body: var(--font-ui);
+  --oc-font-mono: var(--font-ui);
+
+  --oc-radius: var(--r-md);
+  --oc-bevel: 0px;
+
+  --oc-shadow: var(--shadow-3);
+  --oc-shadow-accent: 0 0 0 2px var(--gold-300), 0 6px 18px rgba(224, 169, 58, 0.35);
 
   /* Mouvement : des courbes « organiques » plutôt que linéaires */
   --oc-ease-out: cubic-bezier(0.22, 1, 0.36, 1);

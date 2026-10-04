@@ -37,7 +37,7 @@
         @click="remove(index)"
       >
         <template v-if="slot.name">
-          <span class="slot__ink g-ink" aria-hidden="true"><ElementGlyph :glyph="emojiOf(slot.name)" /></span>
+          <span class="slot__ink" aria-hidden="true"><ElementGlyph :glyph="emojiOf(slot.name)" /></span>
           <span class="slot__name">{{ slot.name }}</span>
         </template>
         <span v-else class="g-mono slot__num">{{ slot.num }}</span>
@@ -325,7 +325,7 @@ export default {
 .athanor--over { box-shadow: inset 0 0 0 1px var(--oc-accent-line), var(--oc-shadow-accent); }
 .athanor__head { align-self: stretch; display: flex; justify-content: space-between; align-items: baseline; gap: 12px; }
 .athanor__head .g-mono { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-.athanor__title { margin: 0; font-family: var(--oc-font-display); font-weight: 400; font-size: 24px; color: var(--oc-text-strong); }
+.athanor__title { margin: 0; font-family: var(--oc-font-display); font-weight: 600; font-size: 24px; color: var(--oc-text-strong); }
 
 .athanor__circle { position: relative; width: 360px; height: 360px; flex-shrink: 0; }
 .athanor__ring { position: absolute; inset: 0; width: 100%; height: 100%; color: var(--oc-text); animation: turn 120s linear infinite; }
@@ -351,8 +351,10 @@ export default {
   padding: 4px;
   border: 0;
   border-radius: 50%;
-  background: transparent;
-  box-shadow: inset 0 0 0 1px var(--oc-line-strong);
+  background: rgba(255, 252, 245, 0.6);
+  box-shadow: inset 0 0 0 2px var(--oc-line);
+  outline: 2px dashed var(--oc-line-strong);
+  outline-offset: -8px;
   color: var(--oc-text-faint);
   display: flex;
   flex-direction: column;
@@ -363,12 +365,18 @@ export default {
   transition: transform var(--oc-slow) cubic-bezier(0.6, -0.2, 0.4, 1.2), opacity var(--oc-slow) ease, box-shadow var(--oc-fast), background var(--oc-fast);
 }
 .slot:disabled { opacity: 1; }
-.slot--filled { background: #100e0b; box-shadow: inset 0 0 0 1px rgba(233, 223, 200, 0.45); color: var(--oc-text); cursor: pointer; }
-.slot--filled:hover { box-shadow: inset 0 0 0 1px var(--oc-danger); }
+.slot--filled {
+  background: linear-gradient(180deg, var(--vellum-50), var(--vellum-100));
+  box-shadow: inset 0 0 0 1px var(--oc-line), var(--edge-paper), var(--shadow-1);
+  outline: 0;
+  color: var(--oc-text);
+  cursor: pointer;
+}
+.slot--filled:hover { box-shadow: inset 0 0 0 2px var(--wax-500), var(--edge-paper); }
 .slot--new { animation: unlock 1.4s var(--oc-ease-out); }
 .slot__ink { font-size: 30px; line-height: 1; }
-.slot__name { max-width: 100%; font-size: 12px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-.slot__num { font-size: 9px; }
+.slot__name { max-width: 100%; font-weight: 800; font-size: 11px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.slot__num { font-family: var(--oc-font-display); font-size: 15px; font-weight: 600; letter-spacing: 0; color: var(--ink-300); }
 .is-merging .slot--filled { transform: translate(calc(-1 * var(--x)), calc(-1 * var(--y))) scale(0.4); opacity: 0; }
 /* Fusion à 2 : le même glissement vers le centre, en moitié moins de temps */
 .athanor--quick .slot { transition-duration: 300ms, 300ms, var(--oc-fast), var(--oc-fast); }
@@ -376,10 +384,13 @@ export default {
 .is-failing { animation: shake 0.45s ease; }
 .athanor__fail {
   margin: 0;
-  padding: 8px 14px;
-  background: rgba(217, 118, 94, 0.1);
-  box-shadow: inset 0 0 0 1px rgba(217, 118, 94, 0.35);
-  color: var(--oc-danger);
+  padding: 10px 16px;
+  border-radius: var(--r-md);
+  background: var(--vellum-50);
+  box-shadow: inset 0 0 0 1px rgba(192, 72, 58, 0.35), var(--shadow-1);
+  color: var(--wax-700);
+  font-family: var(--oc-font-display);
+  font-style: italic;
   font-size: 15px;
   text-align: center;
 }
@@ -395,7 +406,8 @@ export default {
   inset: 0;
   z-index: 3;
   border: 0;
-  background: rgba(12, 10, 8, 0.94);
+  border-radius: inherit;
+  background: radial-gradient(circle at 50% 45%, rgba(74, 52, 39, 0.82), rgba(34, 24, 18, 0.92));
   display: flex;
   align-items: center;
   justify-content: center;
@@ -411,14 +423,28 @@ export default {
   height: 300px;
   margin: -150px 0 0 -150px;
   border-radius: 50%;
-  background: radial-gradient(circle, rgba(224, 182, 84, 0.4) 0%, rgba(224, 182, 84, 0) 68%);
+  background: radial-gradient(circle, rgba(247, 220, 147, 0.55) 0%, rgba(247, 220, 147, 0) 68%);
   animation: halo 1.2s var(--oc-ease-out) forwards;
 }
-.reveal__card { position: relative; display: flex; flex-direction: column; align-items: center; gap: 12px; text-align: center; animation: pop 0.6s var(--oc-ease-spring) both; }
-.reveal__image { width: 132px; height: 132px; object-fit: contain; filter: drop-shadow(0 10px 24px rgba(0, 0, 0, 0.5)); }
+/* Carte de vélin à double filet d'or */
+.reveal__card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  min-width: 240px;
+  padding: 26px 30px 24px;
+  border-radius: var(--r-lg);
+  text-align: center;
+  background: linear-gradient(180deg, var(--vellum-50), var(--vellum-100));
+  box-shadow: inset 0 0 0 2px var(--gold-400), inset 0 0 0 6px var(--vellum-50), inset 0 0 0 7px var(--gold-300), var(--shadow-3);
+  animation: pop 0.6s var(--oc-ease-spring) both;
+}
+.reveal__image { width: 132px; height: 132px; object-fit: contain; filter: drop-shadow(0 8px 16px rgba(52, 36, 26, 0.3)); }
 .reveal__ink { font-size: 76px; line-height: 1; }
-.reveal__name { font-family: var(--oc-font-display); font-size: 40px; line-height: 1; color: var(--oc-text-strong); }
-.reveal__origin { font-size: 17px; }
+.reveal__name { font-family: var(--oc-font-display); font-weight: 700; font-size: 34px; line-height: 1.05; color: var(--oc-text-strong); }
+.reveal__origin { font-size: 16px; }
 /* Première découverte : le nom s'embrase un instant */
 .reveal__card.is-new .reveal__name { animation: kindle 1.6s var(--oc-ease-out); }
 .reveal__card.is-new .reveal__ink, .reveal__card.is-new .reveal__image { animation: rise 0.9s var(--oc-ease-spring) both; }
@@ -427,9 +453,9 @@ export default {
 
 @keyframes turn { to { transform: rotate(360deg); } }
 @keyframes unlock {
-  0% { transform: scale(0.4); opacity: 0; box-shadow: inset 0 0 0 1px var(--oc-gold), 0 0 0 0 rgba(224, 182, 84, 0.8); }
+  0% { transform: scale(0.4); opacity: 0; box-shadow: inset 0 0 0 2px var(--gold-500), 0 0 0 0 rgba(239, 193, 99, 0.8); }
   60% { transform: scale(1.08); opacity: 1; }
-  100% { transform: scale(1); box-shadow: inset 0 0 0 1px var(--oc-line-strong), 0 0 0 16px rgba(224, 182, 84, 0); }
+  100% { transform: scale(1); box-shadow: inset 0 0 0 2px var(--oc-line), 0 0 0 16px rgba(239, 193, 99, 0); }
 }
 @keyframes shake {
   20% { transform: translateX(-8px); }
@@ -443,11 +469,11 @@ export default {
   100% { transform: scale(1.25); opacity: 0.6; }
 }
 @keyframes kindle {
-  0% { color: var(--oc-gold); text-shadow: 0 0 28px rgba(224, 182, 84, 0.95); }
-  100% { color: var(--oc-text-strong); text-shadow: 0 0 0 rgba(224, 182, 84, 0); }
+  0% { color: var(--gold-600); text-shadow: 0 0 22px rgba(239, 193, 99, 0.9); }
+  100% { color: var(--oc-text-strong); text-shadow: 0 0 0 rgba(239, 193, 99, 0); }
 }
 @keyframes rise {
-  0% { transform: translateY(18px) scale(0.6); filter: brightness(2.2); }
+  0% { transform: translateY(18px) scale(0.6); filter: brightness(1.6); }
   100% { transform: none; filter: none; }
 }
 @keyframes pop {
@@ -467,20 +493,22 @@ export default {
     flex-wrap: nowrap;
     align-items: center;
     gap: 10px;
-    padding: 10px 16px calc(12px + env(safe-area-inset-bottom));
-    background: #0f0d0a;
-    box-shadow: 0 -1px 0 var(--oc-line-strong), 0 -18px 30px rgba(0, 0, 0, 0.6);
+    padding: 12px 16px calc(12px + env(safe-area-inset-bottom));
+    border-radius: var(--r-lg) var(--r-lg) 0 0;
+    background: linear-gradient(180deg, var(--vellum-50), var(--vellum-100));
+    box-shadow: 0 -1px 0 var(--oc-line), 0 -10px 28px rgba(52, 36, 26, 0.16);
   }
+  /* Poignée de la feuille */
   .athanor::before {
     content: '';
     position: absolute;
     left: 50%;
-    top: -4px;
-    width: 8px;
-    height: 8px;
-    margin-left: -4px;
-    background: var(--oc-gold);
-    transform: rotate(45deg);
+    top: 5px;
+    width: 40px;
+    height: 4px;
+    margin-left: -20px;
+    border-radius: 2px;
+    background: var(--vellum-400);
   }
   .athanor__head { display: none; }
   .athanor__circle { width: auto; height: auto; flex: 0 1 auto; min-width: 0; display: flex; gap: 8px; }
@@ -500,10 +528,9 @@ export default {
     left: 16px;
     right: 16px;
     bottom: calc(100% + 12px);
-    background: #1a0f0b;
-    box-shadow: inset 0 0 0 1px rgba(217, 118, 94, 0.35), 0 8px 24px rgba(0, 0, 0, 0.5);
+    box-shadow: inset 0 0 0 1px rgba(192, 72, 58, 0.35), var(--shadow-2);
   }
-  .reveal { position: fixed; z-index: 30; background: rgba(12, 10, 8, 0.9); }
+  .reveal { position: fixed; z-index: 30; border-radius: 0; }
   .reveal__name { font-size: 48px; }
 }
 </style>
