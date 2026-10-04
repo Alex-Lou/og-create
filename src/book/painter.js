@@ -33,6 +33,29 @@ const FAMILY_WORDS = {
   'Technologie': 'une technologie',
   'Légendes': 'une légende'
 };
+// Les mêmes, en un mot, sous les cases vides d'une page (après un premier essai)
+const FAMILY_SHORT = {
+  'Elements Fondamentaux': 'premier',
+  'Matériaux': 'matériau',
+  'Chimie': 'chimie',
+  'Physique': 'physique',
+  'Phénomènes Naturels': 'phénomène',
+  'Cosmos': 'astre',
+  'Formations Naturelles': 'paysage',
+  'Flore': 'plante',
+  'Biologie': 'vivant',
+  'Vie et Créatures': 'créature',
+  'Corps et Esprit': 'corps, esprit',
+  'Créations Humaines': 'création',
+  'Histoire': 'histoire',
+  'Technologie': 'technique',
+  'Légendes': 'légende'
+};
+// Mot de chaque case : la famille, ou « le même » pour un ingrédient déjà compté (groups identiques)
+export function familyHints(clue, groups) {
+  const ids = groups && groups.length === clue.length ? groups : clue.map((_, i) => i);
+  return clue.map((family, i) => (ids.indexOf(ids[i]) < i ? 'le même' : FAMILY_SHORT[family] || 'élément'));
+}
 const TIMES = ['', '', 'deux', 'trois', 'quatre'];
 // groups : même numéro = même ingrédient (Eau + Eau → [0, 0]) ; sans eux, chaque ingrédient compte à part
 export function clueText(clue, groups) {
@@ -243,7 +266,7 @@ function bigQuestion(ctx, u, color) {
   ctx.textAlign = 'center';
   ctx.fillText('?', 52 * u, 41.6 * u);
 }
-function iconBox(ctx, u, name, emoji, cx, top, ink, onReady, maxLabel = 12) {
+function iconBox(ctx, u, name, emoji, cx, top, ink, onReady, maxLabel = 12, hint = null) {
   const s = 13;
   ctx.save();
   rr(ctx, (cx - s / 2) * u, top * u, s * u, s * u, 3.6 * u);
@@ -273,16 +296,22 @@ function iconBox(ctx, u, name, emoji, cx, top, ink, onReady, maxLabel = 12) {
     ctx.fillStyle = '#BDAA94';
     ctx.textAlign = 'center';
     ctx.fillText('?', cx * u, (top + 9) * u);
+    if (hint) {
+      setFont(ctx, u, 2.9, 400, TITLE, true);
+      ctx.fillStyle = alpha(ink, 0.85);
+      ctx.fillText(hint, cx * u, (top + s + 4.2) * u);
+    }
   }
   ctx.restore();
 }
 // Positions des cases (ingrédients puis résultat) selon le nombre d'ingrédients : 2, 3 ou 4
 const ROW_XS = { 2: [30, 52, 74], 3: [24, 41, 58, 79], 4: [17, 33, 49, 65, 85] };
-function recipeRow(ctx, u, parts, result, ink, onReady) {
+// hints : un mot sous chaque case vide d'ingrédient (familles), ou null
+function recipeRow(ctx, u, parts, result, ink, onReady, hints = null) {
   const xs = ROW_XS[Math.min(4, Math.max(2, parts.length))];
   // Quatre ingrédients : cases plus serrées, noms plus courts
   const maxLabel = parts.length > 3 ? 9 : 12;
-  parts.slice(0, 4).forEach((part, k) => iconBox(ctx, u, part && part.name, part && part.emoji, xs[k], 89, ink, onReady, maxLabel));
+  parts.slice(0, 4).forEach((part, k) => iconBox(ctx, u, part && part.name, part && part.emoji, xs[k], 89, ink, onReady, maxLabel, hints && hints[k]));
   iconBox(ctx, u, result && result.name, result && result.emoji, xs[xs.length - 1], 89, ink, onReady, maxLabel);
   setFont(ctx, u, 5.6, 400, TITLE, false);
   ctx.fillStyle = '#BDAA94';
@@ -327,7 +356,7 @@ function paintFound(ctx, u, model, i, assets) {
 }
 
 function paintReach(ctx, u, model, i, assets) {
-  const { chapter, page, revealed, aim, freeInk } = model;
+  const { chapter, page, revealed, aim, freeInk, tried } = model;
   const style = CHAPTER_STYLE[chapter.id];
   frame(ctx, u, style.ink);
   header(ctx, u, chapter, style, 0);
@@ -352,11 +381,21 @@ function paintReach(ctx, u, model, i, assets) {
   ctx.fillStyle = style.ink;
   ctx.fillText(`${familyName(page.family).toUpperCase()} · ${page.letters} LETTRES`, 52 * u, 73.5 * u);
   if ('letterSpacing' in ctx) ctx.letterSpacing = '0px';
-  setFont(ctx, u, 4.3, 400, TITLE, true);
+  // L'énigme de l'élément d'abord (sans énigme : les familles en toutes lettres), rétrécie pour tenir sur deux lignes
+  const quote = `«\u00a0${page.riddle || clueText(page.clue, page.groups)}\u00a0»`;
+  let quoteSize = 4.3;
+  let quoteLines;
+  do {
+    setFont(ctx, u, quoteSize, 400, TITLE, true);
+    quoteLines = wrap(ctx, quote, 76 * u);
+    quoteSize -= 0.2;
+  } while (quoteLines.length > 2 && quoteSize > 3.3);
   ctx.fillStyle = '#8A7262';
-  wrap(ctx, `«\u00a0${clueText(page.clue, page.groups)}\u00a0»`, 74 * u).slice(0, 2).forEach((line, k) => ctx.fillText(line, 52 * u, (80.5 + k * 5.6) * u));
+  quoteLines.slice(0, 2).forEach((line, k) => ctx.fillText(line, 52 * u, (80.5 + k * 5.4) * u));
   const parts = page.clue.map((family, k) => (k === 0 && revealed ? { name: revealed, emoji: assets.emojiOf(revealed) } : null));
-  recipeRow(ctx, u, parts, null, style.ink, assets.onReady);
+  // Après un premier essai sur la page, la famille de chaque ingrédient apparaît sous sa case
+  const hints = page.riddle && tried ? familyHints(page.clue, page.groups) : null;
+  recipeRow(ctx, u, parts, null, style.ink, assets.onReady, hints);
   // Verdict du dernier essai visé (ou essais ratés), rétréci pour tenir sur une ligne
   const note = aimNote(aim, page.misses, page.freeInkAfter);
   if (note) {
@@ -385,7 +424,8 @@ function paintReach(ctx, u, model, i, assets) {
   if (!revealed) hotspots.push({ id: 'ink', x: 28, y: 115.5, w: 48, h: 8, action: 'ink', data: page.id, label: freeInk ? 'Encre offerte : révéler un ingrédient' : `Encre : révéler un ingrédient pour ${assets.inkPrice} écus` });
   folio(ctx, u, i);
   const start = page.first ? `, commence par ${page.first}` : '';
-  return { hotspots, label: `Page à trouver : ${familyName(page.family)}, ${page.letters} lettres${start}. ${clueText(page.clue, page.groups)}${note ? ` ${note}.` : ''}${revealed ? ` Un ingrédient : ${revealed}.` : ''}` };
+  const clue = page.riddle ? `Énigme : ${page.riddle}${hints ? ` ${clueText(page.clue, page.groups)}` : ''}` : clueText(page.clue, page.groups);
+  return { hotspots, label: `Page à trouver : ${familyName(page.family)}, ${page.letters} lettres${start}. ${clue}${note ? ` ${note}.` : ''}${revealed ? ` Un ingrédient : ${revealed}.` : ''}` };
 }
 
 function paintFar(ctx, u, model, i) {
@@ -449,7 +489,9 @@ function paintChapter(ctx, u, model, i, assets) {
   setFont(ctx, u, 4.1, 400, TITLE, true);
   ctx.fillStyle = '#8A7262';
   const top = 69 + lines.length * 9;
-  wrap(ctx, assets.familiesOf(chapter.id).map(familyName).join(' · '), 76 * u).forEach((line, k) => ctx.fillText(line, 52 * u, (top + k * 5.6) * u));
+  // La phrase du chapitre (à défaut, ses familles)
+  const verse = chapter.verse ? `«\u00a0${chapter.verse}\u00a0»` : assets.familiesOf(chapter.id).map(familyName).join(' · ');
+  wrap(ctx, verse, 76 * u).slice(0, 3).forEach((line, k) => ctx.fillText(line, 52 * u, (top + k * 5.6) * u));
   if (chapter.open) {
     pill(ctx, u, 52, 106, 50, 8.4, alpha(style.color, 0.95), `${chapter.found} / ${chapter.total} pages inscrites`, '#4A3426', 3.4);
     const reach = chapter.pages.filter(p => p.status === 'reach').length;
@@ -460,7 +502,7 @@ function paintChapter(ctx, u, model, i, assets) {
     pill(ctx, u, 52, 106, 56, 8.4, '#EFE6D3', `Scellé · encore ${Math.max(0, chapter.need - assets.stars)} découvertes`, '#8A7262', 3.4);
   }
   folio(ctx, u, i);
-  return { hotspots: [], label: `Chapitre ${chapter.id}, ${chapter.name}. ${chapter.open ? `${chapter.found} pages inscrites sur ${chapter.total}.` : `Scellé : encore ${Math.max(0, chapter.need - assets.stars)} découvertes.`}` };
+  return { hotspots: [], label: `Chapitre ${chapter.id}, ${chapter.name}.${chapter.verse ? ` ${chapter.verse}` : ''} ${chapter.open ? `${chapter.found} pages inscrites sur ${chapter.total}.` : `Scellé : encore ${Math.max(0, chapter.need - assets.stars)} découvertes.`}` };
 }
 
 function paintToc(ctx, u, model, index, assets) {

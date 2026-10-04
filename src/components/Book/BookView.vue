@@ -300,7 +300,9 @@ export default {
       const need = page.freeInkAfter;
       const freeInk = Boolean(aim && aim.freeInk) || (need > 0 && page.misses >= need);
       const revealed = this.revealed[page.id] || null;
-      return { type: 'reach', key: page.id, chapter, page, revealed, aim, freeInk };
+      // Un premier essai sur la page (compté par le serveur, ou fait pendant la session) dévoile les familles
+      const tried = Boolean(aim) || page.misses > 0;
+      return { type: 'reach', key: page.id, chapter, page, revealed, aim, freeInk, tried };
     },
     // Verdict d'un mélange visé sur cette page (transmis par l'Athanor)
     onAim(aim) {
