@@ -1,7 +1,7 @@
 // Kit commun des paliers III à VII : cadre des grandes emprises, petits volumes récurrents (tour, toit conique,
-// créneaux, drapeau, cheminée, haie, chemin dallé, lanterne) sur la même géométrie et la même lumière que le reste.
+// cheminée, chemin dallé, lanterne) sur la même géométrie et la même lumière que le reste.
 import { P, box, face, gable, disc, cylinder, sprite, EDGE } from '../iso';
-import { WOOD, WOOD_DARK, STONE, BRICK, roofTexture } from '../palette';
+import { WOOD, WOOD_DARK, STONE, BRICK } from '../palette';
 
 // Cadre d'un bâtiment de 3 × 3 cases (losange de ±96 px en largeur), assez haut pour un château
 export const BIG_BOX = { x: -112, y: -200, w: 224, h: 264 };
@@ -48,39 +48,9 @@ export function tower(u, v, r, z0, z1, { stone = STONE, roof = { light: '#86B6E6
     + cone(u, v, z1, r * 1.18, roofH, roof, `${id}-roof`)
     + ln([x, y - roofH], [x, y - roofH - 7], '#7A5A3A', 1.2) + dot(x, y - roofH - 8, 1.8, GOLD.left);
 }
-// Créneaux sur l'arête avant d'un mur de [u0, u1] (face gauche, à v) ou [v0, v1] (face droite, à u), à la hauteur z
-export function crenelsLeft(u0, u1, v, z, colors = STONE, step = 0.14) {
-  let out = '';
-  for (let u = u0; u < u1 - step / 2; u += step * 2) out += box(u, v - 0.06, Math.min(u + step, u1), v, z, z + 5, colors);
-  return out;
-}
-export function crenelsRight(v0, v1, u, z, colors = STONE, step = 0.14) {
-  let out = '';
-  for (let v = v0; v < v1 - step / 2; v += step * 2) out += box(u - 0.06, v, u, Math.min(v + step, v1), z, z + 5, colors);
-  return out;
-}
-// Fanion sur un mât : wave (−1..1) fait onduler la toile
-export function flag(u, v, z, color = '#E2574C', wave = 0, h = 18) {
-  const [x, y] = P(u, v, z);
-  const w = 11;
-  const t = y - h;
-  return ln([x, y], [x, t - 1], '#5E3A22', 1.2) + dot(x, t - 1.5, 1.2, GOLD.left)
-    + `<path d="M${f2(x)},${f2(t)} Q${f2(x + w * 0.5)},${f2(t - 2 + wave * 2)} ${f2(x + w)},${f2(t + 1 + wave)} L${f2(x + w * 0.85)},${f2(t + 4 + wave)} L${f2(x + w)},${f2(t + 7 + wave)} Q${f2(x + w * 0.5)},${f2(t + 5 + wave * 2)} ${f2(x)},${f2(t + 6)} Z" fill="${color}" stroke="rgba(60,30,20,.35)" stroke-width="0.6"/>`;
-}
 // Cheminée de briques posée à (u, v), du toit z0 jusqu'à z1
 export function chimney(u, v, z0, z1, s = 0.08, colors = BRICK) {
   return box(u - s, v - s, u + s, v + s, z0, z1, colors) + box(u - s - 0.02, v - s - 0.02, u + s + 0.02, v + s + 0.02, z1, z1 + 2.5, DARK_STONE);
-}
-// Haie taillée de (u0, v) à (u1, v) (le long de u), hauteur h
-export function hedgeU(u0, u1, v, h = 8, d = 0.08) {
-  return box(u0, v - d, u1, v + d, 0, h, { top: '#8FCB6B', left: '#6DB04F', right: '#4E8A3A' })
-    + Array.from({ length: Math.max(2, Math.round((u1 - u0) / 0.12)) }, (_, k) => {
-      const [x, y] = P(u0 + (k + 0.5) * ((u1 - u0) / Math.max(2, Math.round((u1 - u0) / 0.12))), v + d, h * 0.6);
-      return dot(x, y, 1.1, '#A8DA84');
-    }).join('');
-}
-export function hedgeV(v0, v1, u, h = 8, d = 0.08) {
-  return box(u - d, v0, u + d, v1, 0, h, { top: '#8FCB6B', left: '#6DB04F', right: '#4E8A3A' });
 }
 // Chemin dallé posé au sol, du point a au point b (en cases), largeur w
 export function pavedPath(a, b, w = 0.22) {
@@ -197,21 +167,6 @@ export function archLeft(uc, w, vf, z0, h, fill = '#3A2A1E', extra = '') {
   return face(pts, fill, extra);
 }
 export { P, box, face, gable, disc, cylinder, EDGE, WOOD, WOOD_DARK, STONE, BRICK };
-// Toit en croupe (quatre pans, faîtage le long de u) au-dessus de [u0, u1] × [v0, v1], posé à z, haut de h
-export function hip(u0, v0, u1, v1, z, h, colors, o = 0.08, edge = EDGE) {
-  const vm = (v0 + v1) / 2;
-  const d = Math.min((v1 - v0) / 2, (u1 - u0) / 2);
-  const a = [u0 - o, v0 - o, z];
-  const b = [u1 + o, v0 - o, z];
-  const c = [u1 + o, v1 + o, z];
-  const e = [u0 - o, v1 + o, z];
-  const r0 = [u0 + d, vm, z + h];
-  const r1 = [u1 - d, vm, z + h];
-  return face([a, b, r1, r0], colors.back, edge)
-    + face([e, a, r0], colors.back, edge)
-    + face([b, c, r1], colors.side || colors.back, edge)
-    + face([e, r0, r1, c], colors.front, edge);
-}
 // Lucarne sur le pan avant d'un toit à deux pans (faîtage le long de u, pan de vm à ve, de zr à ze) :
 // fenêtre verticale centrée en u, à la fraction k du pan, avec son petit toit
 export function dormer(u, w, vm, ve, zr, ze, k, roof) {
@@ -223,25 +178,6 @@ export function dormer(u, w, vm, ve, zr, ze, k, roof) {
     + face([[u + w, v, z0], [u + w, v - 0.12, z0 + 4], [u + w, v - 0.12, z0 + h], [u + w, v, z0 + h]], PLASTER.right, EDGE)
     + face([[u - w - 0.03, v + 0.02, z0 + h], [u, v + 0.02, z0 + h + 7], [u, v - 0.14, z0 + h + 7], [u - w - 0.03, v - 0.14, z0 + h]], roof.back, EDGE)
     + face([[u + w + 0.03, v + 0.02, z0 + h], [u, v + 0.02, z0 + h + 7], [u, v - 0.14, z0 + h + 7], [u + w + 0.03, v - 0.14, z0 + h]], roof.front, EDGE);
-}
-// Jardinière fleurie sous une fenêtre de la face gauche
-export function flowerBox(ua, ub, vf, z) {
-  let out = box(ua, vf, ub, vf + 0.05, z - 3, z, { top: '#7A4E2C', left: '#8B5631', right: '#6A3F22' });
-  for (let u = ua + 0.03; u < ub; u += 0.05) {
-    const [x, y] = P(u, vf + 0.03, z + 1.5);
-    out += dot(x, y, 1.5, '#6DB04F') + dot(x + 0.6, y - 1, 1, ['#E2574C', '#F7A8C8', '#FFD45E'][((Math.round(u * 40) % 3) + 3) % 3]);
-  }
-  return out;
-}
-
-// Texture de skin sur le pan avant d'un toit en croupe : la texture du pan à deux pans, découpée au trapèze avant
-export function hipTexture(skin, u0, v0, u1, v1, z, h, o, id) {
-  const texture = roofTexture(skin, u0, v0, u1, v1, z, h, o);
-  if (!texture) return '';
-  const vm = (v0 + v1) / 2;
-  const d = Math.min((v1 - v0) / 2, (u1 - u0) / 2);
-  const pts = [[u0 - o, v1 + o, z], [u0 + d, vm, z + h], [u1 - d, vm, z + h], [u1 + o, v1 + o, z]].map(p => xy(P(...p))).join(' ');
-  return `<defs><clipPath id="${id}"><polygon points="${pts}"/></clipPath></defs><g clip-path="url(#${id})">${texture}</g>`;
 }
 // Ombre douce au sol d'un grand bâtiment (3 × 3), décalée à l'opposé de la lumière
 export const bigShadow = (rx = 82, ry = 38) => `<ellipse cx="8" cy="${f2(P(0, 0, 0)[1] + 6)}" rx="${rx}" ry="${ry}" fill="rgba(40,55,20,.12)"/>`;
