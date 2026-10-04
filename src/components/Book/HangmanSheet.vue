@@ -16,12 +16,12 @@
           <button
             v-else
             type="button"
-            :class="['hang__cell', { 'is-on': char, 'is-picked': !char && k === selected && playing, 'is-shake': k === shaken }]"
+            :class="['hang__cell', { 'is-on': char, 'is-pending': !char && pending && pending.position === k, 'is-picked': !char && k === selected && playing && !pending, 'is-shake': k === shaken }]"
             :disabled="Boolean(char) || !playing"
             :aria-label="char ? `Case ${k + 1} : ${char}` : `Case ${k + 1}, vide`"
             :aria-pressed="!char && k === selected"
-            @click="selected = k"
-          >{{ char }}</button>
+            @click="pick(k)"
+          >{{ char || (pending && pending.position === k ? pending.letter : '') }}</button>
         </template>
       </p>
       <p class="hang__say" aria-live="polite">{{ say }}</p>
@@ -48,8 +48,8 @@
             v-for="letter in row"
             :key="letter"
             type="button"
-            :class="['hang__key', keyState(letter)]"
-            :disabled="busy || selected < 0 || absent.has(letter)"
+            :class="['hang__key', keyState(letter), { 'is-sending': pending && pending.letter === letter }]"
+            :disabled="selected < 0 || absent.has(letter)"
             :aria-label="`Lettre ${letter}`"
             @click="put(letter)"
           >{{ letter }}</button>
@@ -89,7 +89,8 @@ export default {
   },
   emits: ['guess', 'retry', 'close'],
   data() {
-    return { ROWS, selected: -1, shaken: -1 };
+    // pending : lettre posée, affichée tout de suite en attendant le verdict du serveur (le réseau peut être lent)
+    return { ROWS, selected: -1, shaken: -1, pending: null };
   },
   computed: {
     hm() {
@@ -140,12 +141,19 @@ export default {
     // Après chaque verdict : la case suivante encore vide est choisie ; une lettre mal placée fait trembler sa case
     'hm.mask': {
       handler() {
+        this.pending = null;
         if (this.selected < 0 || this.hm.mask[this.selected]) this.selectNext();
       },
       immediate: true
     },
+    // Réponse reçue (ou échec réseau) : la lettre en attente laisse place à l'état du serveur
+    busy(now) {
+      if (!now) this.pending = null;
+    },
     verdict(next) {
-      if (next && next.verdict === 'elsewhere') {
+      this.pending = null;
+      // La lettre posée repart : mal placée ou absente du mot
+      if (next && next.verdict !== 'hit') {
         this.shaken = next.position;
         setTimeout(() => (this.shaken = -1), 450);
       }
@@ -157,8 +165,12 @@ export default {
       const order = [...this.hm.mask.keys()].map(i => (from + i) % this.hm.mask.length);
       this.selected = order.find(k => !this.hm.mask[k]) ?? -1;
     },
+    pick(k) {
+      if (!this.pending) this.selected = k;
+    },
     put(letter) {
-      if (this.busy || this.selected < 0 || !this.playing || this.absent.has(letter)) return;
+      if (this.busy || this.pending || this.selected < 0 || !this.playing || this.absent.has(letter)) return;
+      this.pending = { position: this.selected, letter };
       this.$emit('guess', { position: this.selected, letter });
     },
     // Lettre absente : barrée ; posée quelque part : verte ; dans le mot mais pas encore posée : ambre
@@ -175,7 +187,7 @@ export default {
         const n = this.hm.mask.length;
         for (let k = 1; k < n; k++) {
           const next = (this.selected + step * k + n) % n;
-          if (!this.hm.mask[next]) { this.selected = next; break; }
+          if (!this.hm.mask[next]) { this.pick(next); break; }
         }
         event.preventDefault();
         return;
@@ -236,11 +248,13 @@ export default {
   font-size: 24px;
   color: var(--hi);
 }
-.hang__cell { appearance: none; padding: 0; background: none; border-top: 0; border-left: 0; border-right: 0; cursor: pointer; }
+.hang__cell { appearance: none; touch-action: manipulation; padding: 0; background: none; border-top: 0; border-left: 0; border-right: 0; cursor: pointer; }
 .hang__cell:disabled { cursor: default; opacity: 1; }
 .hang__cell.is-on { border-bottom-color: var(--hi); animation: land 0.35s var(--oc-ease-spring); }
 /* Case choisie : c'est là que la prochaine lettre ira */
 .hang__cell.is-picked { border-radius: 6px 6px 0 0; border-bottom-color: var(--gold-500); background: var(--gold-200); box-shadow: 0 0 0 2px var(--gold-300); }
+/* Lettre posée, en attente du verdict : déjà là, encore pâle */
+.hang__cell.is-pending { border-radius: 6px 6px 0 0; border-bottom-color: var(--gold-500); background: var(--gold-200); opacity: 0.6; animation: land 0.18s var(--oc-ease-out); }
 .hang__cell.is-shake { animation: shake 0.45s ease; }
 .hang__cell.is-gap { min-width: 10px; border: 0; }
 .hang__cell.is-mark { min-width: 10px; border: 0; color: var(--ink-500); animation: none; }
@@ -263,6 +277,7 @@ export default {
 .hang__row { display: flex; justify-content: center; gap: 5px; width: 100%; }
 .hang__key {
   appearance: none;
+  touch-action: manipulation;
   flex: 0 1 34px;
   min-width: 0;
   height: 44px;
@@ -279,6 +294,7 @@ export default {
 }
 .hang__key:active:not(:disabled) { transform: translateY(2px); box-shadow: inset 0 0 0 1px var(--oc-line); }
 .hang__key:disabled { cursor: default; }
+.hang__key.is-sending { background: var(--gold-200); box-shadow: inset 0 0 0 2px var(--gold-500); }
 .hang__key.is-hit { background: var(--verdigris-100); color: var(--verdigris-500); box-shadow: inset 0 0 0 1px var(--verdigris-500); }
 .hang__key.is-elsewhere { background: var(--gold-200); color: var(--gold-700); box-shadow: inset 0 0 0 1px var(--gold-500); }
 .hang__key.is-miss { background: transparent; color: var(--ink-300); box-shadow: inset 0 0 0 1px var(--oc-line); text-decoration: line-through; }
