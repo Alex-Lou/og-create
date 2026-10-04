@@ -107,6 +107,7 @@
       </main>
     </div>
     <TabBar :current="currentMode" :dots="isLoggedIn ? [] : ['sceau']" @select="handleModeSelect" />
+    <BrumeGuide @go="handleModeSelect" />
     <GameAchievementsPopup
       v-if="achievementQueue.length && !isRevealing"
       :key="achievementQueue[0].name"
@@ -209,6 +210,9 @@ import TimerBrief from '../TimerMode/TimerBrief.vue';
 import TrialInventory from '../TimerMode/TrialInventory.vue';
 import GModal from '../ui/GModal.vue';
 import TabBar from '../ui/TabBar.vue';
+import BrumeGuide from '../Game/BrumeGuide.vue';
+import { guide } from '@/game/guide';
+import { questTip } from '@/game/guideTips';
 
 // Retour sur l'application (PWA remise au premier plan) : carnet rechargé s'il date de plus de 30 s
 const STATE_RELOAD_AFTER_MS = 30000;
@@ -246,7 +250,8 @@ export default {
     TimerBrief,
     TrialInventory,
     GModal,
-    TabBar
+    TabBar,
+    BrumeGuide
   },
   data() {
     const user = AuthService.getCurrentUser();
@@ -571,6 +576,16 @@ export default {
           .catch(error => console.error('Erreur lors de la sauvegarde des succès:', error));
       }
     },
+    // Brume apporte la quête : une quête de découvertes accomplie dans le Livre est annoncée (comptes seulement)
+    async checkQuest() {
+      if (!this.isLoggedIn) return;
+      try {
+        const { quest } = await playService.brume();
+        if (quest && quest.done && quest.kind === 'stars') guide.say(questTip(quest));
+      } catch {
+        // Le guide n'est qu'un confort : la quête reste visible sur l'île
+      }
+    },
     closeAchievementPopup() {
       this.achievementQueue.shift();
     },
@@ -599,7 +614,10 @@ export default {
       if (!this.discoveredElements.includes(craftedItem)) {
         this.discoveredElements.push(craftedItem);
         if (this.isTimerActive) this.timerHint = null;
-        else this.checkAchievements();
+        else {
+          this.checkAchievements();
+          this.checkQuest();
+        }
       }
       if (!this.isTimerActive) return;
       // Le serveur seul connaît les réponses : il a jugé ce mélange (services/trial.js)

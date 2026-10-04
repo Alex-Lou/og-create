@@ -82,6 +82,10 @@ export default {
   worldBuild(site) {
     return http.post('/play/world/build', { site }).then(response => response.data);
   },
+  // Brume seule (quête active), pour le Livre : { quest, done, total, rested }
+  brume() {
+    return http.get('/play/world/brume').then(response => response.data);
+  },
   // Quête de Brume : récompense de la quête active, { gained, coins, world }
   worldQuest(id) {
     return http.post('/play/world/quest', { id }).then(response => response.data);

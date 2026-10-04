@@ -49,7 +49,6 @@
               @click="onSpot(spot)"
             ></button>
           </template>
-          <div v-if="showHint" class="book-view__hint" aria-hidden="true"></div>
         </div>
       </div>
       <p v-if="loadError" class="book-view__error" role="alert">
@@ -155,6 +154,7 @@ import { sideOf } from '@/book/spread';
 import { paintPage, paintEndpaper, clearDrawings, CHAPTER_STYLE } from '@/book/painter';
 import { burst, ring, vibrate, center, reducedMotion, HAPTIC } from '@/utils/fx';
 import { unlockCinematic } from '@/book/fx';
+import { guide } from '@/game/guide';
 
 const INK_PRICE = 50;
 // Rejouer un pendu perdu sans attendre le lendemain (le serveur fixe le prix : services/bookLetters.js)
@@ -162,7 +162,6 @@ const RETRY_PRICE = 20;
 // Pages par feuille de table de chapitre (grille 3 × 5)
 const INDEX_SIZE = 15;
 const INK_KEY = 'oc_book_ink';
-const HINT_KEY = 'oc_livre_hint';
 // Les deux pages côte à côte dès que le Livre a la place (largeur du composant, hauteur de la fenêtre) ;
 // sinon (téléphone) la double page lue de près, une page à la fois
 const SPREAD_MIN_WIDTH = 700;
@@ -217,7 +216,6 @@ export default {
       showFilters: false,
       // Page à portée ouverte : familles de ses ingrédients et ingrédient révélé par l'Encre
       pageClue: null,
-      showHint: !storage.load(HINT_KEY, false),
       loadError: false,
       // Grimoire : une page à la fois (téléphone), ouverture en cours, pages prêtes, avancée (tranches), éclat des
       // sigles, page visée sur la double page
@@ -507,6 +505,7 @@ export default {
     onOpened() {
       this.opening = false;
       if (this.engine) this.engine.setClosed(false);
+      guide.tip('welcome');
     },
     mountEngine(start = 0) {
       this.engine = createBook({
@@ -526,13 +525,7 @@ export default {
           const reach = i => this.models[i]?.type === 'reach';
           return reach(right) && !reach(left) ? 'right' : 'left';
         },
-        onChange: () => {
-          if (this.showHint) {
-            this.showHint = false;
-            storage.save(HINT_KEY, true);
-          }
-          vibrate(8);
-        },
+        onChange: () => vibrate(8),
         onRest: (index, hotspots, label) => {
           const model = this.models[index];
           const key = model?.key || 'toc';
@@ -548,6 +541,7 @@ export default {
             : null;
           // L'Athanor vise cette page : ses mélanges y reçoivent un verdict
           const aimed = model && model.type === 'reach' ? model.key : null;
+          if (aimed) guide.tip('reach');
           if (aimed !== this.aimedKey) {
             this.aimedKey = aimed;
             this.$emit('aim', aimed);
@@ -555,6 +549,7 @@ export default {
         }
       });
       if (this.opening) this.engine.setClosed(true);
+      else guide.tip('welcome');
       this.engineReady = true;
     },
     // Ce qui a changé depuis le dernier chargement : page inscrite, chapitre ouvert
@@ -592,6 +587,7 @@ export default {
           }
         } else if (effect.kind === 'opened') {
           await unlockCinematic({ id: effect.chapter, name: effect.name }, CHAPTER_STYLE[effect.chapter].wax);
+          guide.tip(`chapter-${effect.chapter}`);
           const index = this.chapterState.find(c => c.id === effect.chapter)?.index;
           if (this.engine && index > 0) await this.engine.go(index);
         }
@@ -790,19 +786,6 @@ export default {
 .book-view__spot:focus-visible { outline: 3px solid rgba(227, 169, 59, .9); outline-offset: 2px; }
 .book-view__pulse { position: absolute; border-radius: 50%; pointer-events: none; animation: book-aura 2.4s ease-out infinite; }
 @keyframes book-aura { 0% { box-shadow: 0 0 0 0 rgba(227, 169, 59, .5); } 70%, 100% { box-shadow: 0 0 0 22px rgba(227, 169, 59, 0); } }
-.book-view__hint {
-  position: absolute; right: 8%; top: 66%; width: 54px; height: 54px; border-radius: 50%;
-  background: radial-gradient(circle, rgba(255, 255, 255, .95) 30%, rgba(255, 255, 255, .35) 60%, rgba(255, 255, 255, 0) 72%);
-  box-shadow: 0 6px 18px rgba(74, 52, 38, .25);
-  pointer-events: none;
-  animation: book-swipe 2.2s cubic-bezier(.5, 0, .3, 1) infinite;
-}
-@keyframes book-swipe {
-  0% { transform: translateX(0) scale(.8); opacity: 0; }
-  15% { transform: translateX(0) scale(1); opacity: 1; }
-  70% { transform: translateX(-150%) scale(1); opacity: 1; }
-  100% { transform: translateX(-190%) scale(.8); opacity: 0; }
-}
 @keyframes book-ping { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-4px); } }
 .book-view__error { position: absolute; inset: 30% 10% auto; text-align: center; color: var(--oc-on-bg); z-index: 4; }
 .book-view__retry { margin-left: 8px; }
@@ -862,7 +845,7 @@ export default {
 .book-view__empty { grid-column: 1 / -1; margin: 8px 0; color: var(--oc-on-bg-faint); font-style: italic; }
 
 @media (prefers-reduced-motion: reduce) {
-  .book-view__pulse, .book-view__hint, .book-view__chapter.is-ping { animation: none; }
+  .book-view__pulse, .book-view__chapter.is-ping { animation: none; }
 }
 </style>
 

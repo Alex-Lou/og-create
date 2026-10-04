@@ -84,6 +84,7 @@ import playService from '@/services/playService';
 import { HAPTIC, burst, center, fly, ring, vibrate } from '@/utils/fx';
 import ElementGlyph from '@/components/ui/ElementGlyph.vue';
 import { aimMessage } from '@/book/aim';
+import { guide } from '@/game/guide';
 import { roman } from '@/utils/roman';
 
 const MERGE_MS = 520;
@@ -249,6 +250,7 @@ export default {
       if (aim) this.$emit('aimed', aim);
       if (!reply.result) {
         this.fail(aim ? aimMessage(aim) : this.failText ? this.failText(ingredients) : 'Rien ne se passe… Essaie une autre combinaison.');
+        if (aim) guide.tip('fail');
         return;
       }
       const { result: name, isNew } = reply;
