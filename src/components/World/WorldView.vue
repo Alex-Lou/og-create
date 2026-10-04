@@ -64,6 +64,15 @@
           <button type="button" class="world__link" @click="moving = null">Annuler</button>
         </p>
 
+        <!-- Appui long ailleurs : une bulle dit ce que c'est et ce que fait un toucher -->
+        <transition name="world-tip">
+          <div v-if="tip" :class="['world__tip', { 'is-below': tip.below }]" role="status" :style="{ left: `${tip.x}px`, top: `${tip.y}px` }">
+            <strong class="world__tip-title">{{ tip.title }}</strong>
+            <span v-if="tip.text" class="world__tip-text">{{ tip.text }}</span>
+            <span v-if="tip.hint" class="world__tip-hint">{{ tip.hint }}</span>
+          </div>
+        </transition>
+
         <!-- Appui long sur une décoration : déplacer ou retirer -->
         <div v-if="selected && !moving" class="world__menu" :style="menuStyle" role="dialog" :aria-label="`${selected.element}`">
           <span class="world__menu-name">{{ selected.element }}</span>
@@ -159,8 +168,8 @@
                       v-if="!item.owned"
                       v-longpress="() => describeItem(site, item)"
                       type="button"
-                      class="world__card-btn"
-                      :disabled="busy || !canBuy(site, item)"
+                      :class="['world__card-btn', { 'is-off': !canBuy(site, item) }]"
+                      :disabled="busy"
                       :aria-label="buyLabel(site, item)"
                       @click="buyItem(site, item, $event)"
                     >
@@ -313,17 +322,30 @@
 
     <ShopItemSheet
       v-if="sheetItem"
-      :site="site"
+      :site="sheetSite"
       :item="sheetItem"
-      :art="itemArt(site, sheetItem)"
-      :lock="lockOf(site, sheetItem)"
+      :art="itemArt(sheetSite, sheetItem)"
+      :lock="lockOf(sheetSite, sheetItem)"
       :busy="busy"
       :max-moves="state.harvest.maxMoves"
       :max-charges="state.charges.max"
       @buy="buyFromSheet"
-      @wear="skin => wearSkin(site, skin)"
-      @close="sheetId = null"
+      @wear="skin => wearSkin(sheetSite, skin)"
+      @close="sheet = null"
     />
+
+    <!-- Premier achat d'une sorte d'article : son mode d'emploi, et de quoi aller le voir sur l'île -->
+    <GModal v-if="guideItem" eyebrow="Mode d’emploi" :title="guideItem.name" :width="400" @close="closeGuide">
+      <dl class="world__guide">
+        <div><dt>Où</dt><dd>{{ guideText.where }}</dd></div>
+        <div><dt>Comment</dt><dd>{{ guideText.how }}</dd></div>
+        <div><dt>Pourquoi</dt><dd>{{ guideText.why }}</dd></div>
+      </dl>
+      <template #actions>
+        <button type="button" class="g-btn g-btn--ghost" @click="closeGuide">Compris</button>
+        <button type="button" class="g-btn" @click="showGuideOnIsland">Voir sur l’île</button>
+      </template>
+    </GModal>
 
     <HarvestGame
       v-if="run"
@@ -347,6 +369,8 @@ import { familyIndex } from '@/utils/eras';
 import HarvestGame from './HarvestGame.vue';
 import ShopItemSheet from './ShopItemSheet.vue';
 import IslandClock from './IslandClock.vue';
+import GModal from '@/components/ui/GModal.vue';
+import { guideOf, guideKind } from '@/world/itemGuide';
 import { search } from '@/utils/search';
 import { glyph, clearDrawings } from '@/book/painter';
 import { burst, ring, vibrate, center, reducedMotion } from '@/utils/fx';
@@ -357,7 +381,7 @@ import { itemLayers, itemLight, itemThumb } from '@/world/shopSprites';
 import { rareLights } from '@/world/rareSprites';
 import { tintOf } from '@/world/tints';
 import { NATURE2, CRITTERS, PLINTH, SIGN } from '@/world/nature';
-import { drawSprite, spriteUrl, clearSprites } from '@/world/spriteCache';
+import { drawSprite, imageOf, spriteUrl, clearSprites } from '@/world/spriteCache';
 import { islandOf, liveOf, drawLive, drawCell, TerrainCache, HS, SEA_Z, worldOf, lampGlowOf } from '@/world/terrain';
 import { FLOATING_ZONE, COLONY_ZONE, isletsOf, ferryPose, drawFloatBelow, drawSpring } from '@/world/islets';
 import { ISLET_SPRITES, ISLET_NATURE } from '@/world/isletSprites';
@@ -376,6 +400,40 @@ import { phaseAt, forcedPhase, drawSea, drawCloudShadows, drawClouds, drawTint, 
 import { clockText } from '@/world/sky';
 
 const FRAME_MS = 33; // ~30 images/s : l'île respire, sans user la batterie
+// Bulle d'info de l'appui long : durée d'affichage ; noms du décor naturel et des bêtes, pour elle
+const TIP_MS = 3600;
+const NATURE_NAMES = {
+  tree: 'Arbre', pine: 'Pin', palm: 'Palmier', bush: 'Buisson', rock: 'Rocher', rocks: 'Rochers', crag: 'Rocher escarpé', flowers: 'Fleurs',
+  tuft: 'Touffe d’herbe', birch: 'Bouleau', apple: 'Pommier', autumn: 'Arbre d’automne', stump: 'Souche', log: 'Rondin', mushrooms: 'Champignons',
+  reeds: 'Roseaux', lily: 'Nénuphars', shells: 'Coquillages', driftwood: 'Bois flotté', mossy: 'Rochers moussus', lantern: 'Lanterne', bench: 'Banc',
+  nest: 'Nid de mouettes'
+};
+const ANIMALS = {
+  chicken: ['Poule', 'Elle picore autour du Foyer et dort contre lui la nuit.'],
+  butterfly: ['Papillon', 'Il butine les fleurs par beau temps.'],
+  bee: ['Abeille', 'Elle butine les fleurs par beau temps.'],
+  frog: ['Grenouille', 'Elle saute plus souvent quand il pleut.'],
+  pod: ['Dauphins', 'Ils passent au large de temps en temps.'],
+  whale: ['Baleine', 'Elle souffle quand on la touche.'],
+  perch: ['Mouettes', 'Elles s’envolent puis reviennent sur la plage.']
+};
+// Sortes d'articles dont le mode d'emploi a déjà été montré (une fois par sorte, sur cet appareil)
+const GUIDES_KEY = 'oc_item_guides';
+function guidesSeen() {
+  try {
+    return JSON.parse(localStorage.getItem(GUIDES_KEY) || '[]');
+  } catch (error) {
+    return [];
+  }
+}
+const guideSeen = kind => guidesSeen().includes(kind);
+function markGuideSeen(kind) {
+  try {
+    localStorage.setItem(GUIDES_KEY, JSON.stringify([...new Set([...guidesSeen(), kind])]));
+  } catch (error) {
+    // Stockage indisponible : le mode d'emploi reviendra au prochain achat
+  }
+}
 // Journée en accéléré (toucher sur l'horloge) : 24 h de l'île en 30 s
 const WARP_MS = 30000;
 const DAY_MS = 86400000;
@@ -419,7 +477,7 @@ let lastView = null;
 // d'animation sont non réactifs et s'arrêtent quand l'onglet est caché ou le composant démonté.
 export default {
   name: 'WorldView',
-  components: { ElementGlyph, ElementTile, HarvestGame, ShopItemSheet, BrumeWisp, IslandClock },
+  components: { ElementGlyph, ElementTile, HarvestGame, ShopItemSheet, BrumeWisp, IslandClock, GModal },
   directives: { longpress },
   props: {
     discoveredElements: { type: Array, required: true },
@@ -449,7 +507,11 @@ export default {
       // Dernier achat de la boutique, encore annulable : { id, name }
       undoable: null,
       // Article de la boutique dont la fiche est ouverte (id, dans la boutique du bâtiment ouvert)
-      sheetId: null,
+      // Fiche d'un article ouverte : { siteId, itemId } ; mode d'emploi après un premier achat (même forme)
+      sheet: null,
+      guide: null,
+      // Bulle d'info de l'appui long : { x, y, below, title, text, hint }
+      tip: null,
       query: '',
       menuPos: { x: 0, y: 0 },
       run: null,
@@ -465,8 +527,20 @@ export default {
     };
   },
   computed: {
+    sheetSite() {
+      return this.sheet && this.state ? this.state.sites.find(s => s.id === this.sheet.siteId) || null : null;
+    },
     sheetItem() {
-      return this.site && this.sheetId ? this.site.shop.find(item => item.id === this.sheetId) || null : null;
+      return this.sheetSite ? this.sheetSite.shop.find(item => item.id === this.sheet.itemId) || null : null;
+    },
+    guideSite() {
+      return this.guide && this.state ? this.state.sites.find(s => s.id === this.guide.siteId) || null : null;
+    },
+    guideItem() {
+      return this.guideSite ? this.guideSite.shop.find(item => item.id === this.guide.itemId) || null : null;
+    },
+    guideText() {
+      return guideOf(this.guideItem, this.guideSite);
     },
     // Quête active de Brume (null : toutes faites)
     quest() {
@@ -553,6 +627,11 @@ export default {
     this.warp = null;
     this.phase = null;
     this.clockAt = 0;
+    // Ce qu'on peut toucher dans la dernière image : bêtes sur l'île, articles posés ; ronds dans l'eau ; bulle d'info
+    this.landHits = [];
+    this.itemHits = [];
+    this.ripples = [];
+    this.tipTimer = 0;
     this.ac = null;
     this.observer = null;
     this.loadedAt = Date.now();
@@ -581,6 +660,7 @@ export default {
     this.gone = true;
     clearTimeout(this.undoTimer);
     clearTimeout(this.holdTimer);
+    clearTimeout(this.tipTimer);
     if (this.ac) this.ac.abort();
     if (this.observer) this.observer.disconnect();
     clearInterval(this.tick);
@@ -986,6 +1066,7 @@ export default {
       const date = this.skyDate(now);
       const phase = this.skyAt(date);
       this.phase = phase;
+      this.itemHits = [];
       this.syncClock(phase, date, now);
       // Mer, selon l'heure
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
@@ -1250,8 +1331,18 @@ export default {
     drawItems(ctx, site, c, t, repaint, back) {
       for (const item of site.shop || []) {
         if (!item.owned || (item.kind === 'skin' && site.skin !== item.id)) continue;
+        // Toucher : l'article sautille (0,5 s)
+        const tapped = this.scared.get(`item:${site.id}:${item.id}`);
+        const hop = tapped && t - tapped.at < 0.5 ? Math.sin(((t - tapped.at) / 0.5) * Math.PI) * 6 : 0;
         for (const layer of itemLayers(item.id, site.level, t)) {
-          if (layer.back === back) drawSprite(ctx, layer.key, layer.make, c.x + layer.offset[0], c.y + layer.offset[1], repaint);
+          if (layer.back !== back) continue;
+          const [x, y] = [c.x + layer.offset[0], c.y + layer.offset[1] - hop];
+          drawSprite(ctx, layer.key, layer.make, x, y, repaint);
+          // Zone de toucher : le cadre de l'image (les pièces rares font partie du bâtiment)
+          if (item.kind !== 'skin') {
+            const { box } = imageOf(layer.key, layer.make, repaint);
+            this.itemHits.push({ item, site, x: x + box.x + box.w / 2, y: y + box.y + box.h / 2, r: Math.max(10, Math.min(box.w, box.h) * 0.5) });
+          }
         }
       }
     },
@@ -1351,6 +1442,16 @@ export default {
       const phase = this.phase || this.skyAt(this.skyDate());
       const rain = phase.weather.rain;
       const out = [];
+      const hits = [];
+      // Réaction au toucher : k de 0 à 1 pendant span secondes, null sinon
+      const fright = (key, span) => {
+        const was = this.scared.get(key);
+        return was && t - was.at < span ? (t - was.at) / span : null;
+      };
+      const touchable = (key, kind, x, y, z) => {
+        const c = this.ground(x, y);
+        hits.push({ key, kind, x: c.x, y: c.y - z - 6, r: 13 });
+      };
       const foyer = this.state.sites.find(s => s.id === 'foyer');
       if (foyer) {
         // Poules : elles picorent autour du Foyer ; la nuit elles dorment serrées contre lui, sous la pluie elles s'abritent
@@ -1363,7 +1464,10 @@ export default {
           const x = foyer.x + r + Math.cos(a) * reach + (huddle ? 0 : Math.sin(t * 0.9 + k) * 0.08);
           const y = foyer.y + r + Math.sin(a * 1.3) * (huddle ? reach : r + 0.35);
           const pecking = !asleep && Math.sin(t * 0.7 + k * 3) > 0.55;
-          out.push({ kind: 'chicken', x, y, z: 0, frame: pecking && Math.sin(t * 9) > 0 ? 1 : 0, flip: Math.sin(a) > 0 });
+          const jump = fright(`hen:${k}`, 0.7);
+          const z = jump === null ? 0 : Math.sin(jump * Math.PI) * 10;
+          out.push({ kind: 'chicken', x, y, z, frame: jump !== null || (pecking && Math.sin(t * 9) > 0) ? 1 : 0, flip: Math.sin(a) > 0 });
+          touchable(`hen:${k}`, 'chicken', x, y, z);
         }
       }
       // Papillons et abeilles : de jour, par temps sec
@@ -1372,12 +1476,24 @@ export default {
         flowers.forEach((p, k) => {
           const a = t * (0.6 + k * 0.1) + k;
           const kind = k % 2 ? 'bee' : 'butterfly';
-          out.push({ kind, x: p.x + Math.cos(a) * 0.35, y: p.y + Math.sin(a * 1.4) * 0.3, z: 6 + Math.sin(t * 2 + k) * 3, frame: Math.floor(t * (kind === 'bee' ? 20 : 8) + k) % 2, flip: Math.cos(a) < 0 });
+          // Touché : il file vers le haut et revient au bout de 1,5 s
+          const away = fright(`fly:${k}`, 1.5);
+          const lift = away === null ? 0 : Math.sin(away * Math.PI);
+          const x = p.x + Math.cos(a) * 0.35 + lift * 0.8;
+          const y = p.y + Math.sin(a * 1.4) * 0.3 - lift * 0.4;
+          const z = 6 + Math.sin(t * 2 + k) * 3 + lift * 30;
+          out.push({ kind, x, y, z, frame: Math.floor(t * (kind === 'bee' ? 20 : 8) + k) % 2, flip: Math.cos(a) < 0 });
+          touchable(`fly:${k}`, kind, x, y, z);
         });
       }
       const pond = this.props.find(p => p.kind === 'lily' || p.kind === 'reeds');
       // La grenouille saute plus souvent sous la pluie
-      if (pond) out.push({ kind: 'frog', x: pond.x + 0.12, y: pond.y + 0.1, z: 0, frame: (t % (rain > 0.5 ? 1.6 : 4)) < 0.35 ? 1 : 0, flip: false });
+      if (pond) {
+        const leap = fright('frog', 0.6);
+        const z = leap === null ? 0 : Math.sin(leap * Math.PI) * 8;
+        out.push({ kind: 'frog', x: pond.x + 0.12, y: pond.y + 0.1, z, frame: leap !== null || (t % (rain > 0.5 ? 1.6 : 4)) < 0.35 ? 1 : 0, flip: false });
+        touchable('frog', 'frog', pond.x + 0.12, pond.y + 0.1, z);
+      }
       // Poisson : un saut toutes les 7 s, à un endroit différent du rivage (sardine, daurade) ; le poisson volant plane
       // vers le large
       const cycle = Math.floor(t / 7);
@@ -1399,6 +1515,7 @@ export default {
           out.push({ kind: 'gull', x: perch.x + i * 0.32 - 0.1, y: perch.y + 0.1 - i * 0.18, z: 0, frame: Math.sin(t * 0.7 + i * 2 + perch.x) > 0.75 ? 1 : 0, flip: (i + Math.floor(t / 9 + perch.y)) % 2 === 1 });
         }
       }
+      this.landHits = hits;
       return out;
     },
     drawCritter(ctx, critter, repaint) {
@@ -1519,6 +1636,9 @@ export default {
           for (let i = 0; i < perch.count; i++) out.gulls.push({ wx: c.x + (60 + i * 14) * k, wy: c.y + i * 4 - 20 * k, alt: 6 + 90 * k * k, flip: false, phase: i });
         }
       }
+      // Ronds dans l'eau là où le doigt a touché la mer (1,2 s)
+      this.ripples = this.ripples.filter(r => t - r.at < 1.2);
+      this.ripples.forEach(r => out.rings.push({ x: r.x, y: r.y, k: (t - r.at) / 1.2 }));
       this.seaHits = hits;
       return out;
     },
@@ -1767,6 +1887,7 @@ export default {
     },
     onDown(event) {
       if (!this.state) return;
+      this.hideTip();
       this.$refs.canvas.setPointerCapture(event.pointerId);
       this.pointers.set(event.pointerId, this.point(event));
       clearTimeout(this.holdTimer);
@@ -1775,14 +1896,16 @@ export default {
         this.holdTimer = setTimeout(() => this.onHold(), HOLD_MS);
       } else this.gesture = { pinch: this.pinchOf(), moved: Infinity };
     },
-    // Appui long sans bouger : la fiche de Brume, le menu d'une décoration ; ailleurs, le toucher garde son action
+    // Appui long sans bouger : une autre réaction que le toucher. La fiche de Brume, le menu d'une décoration, la fiche
+    // d'un article posé ; partout ailleurs, une bulle dit ce que c'est et ce que fait un toucher
     onHold() {
       const gesture = this.gesture;
       if (!gesture || !gesture.start || gesture.moved > TAP_SLOP || this.moving || this.busy) return;
       const hit = this.hitAt(gesture.start.x, gesture.start.y);
       if (hit && hit.brume) this.questOpen = true;
       else if (hit && hit.tile) this.openTileMenu(hit.tile);
-      else return;
+      else if (hit && hit.item) this.describeItem(hit.site, hit.item);
+      else this.showTip(gesture.start.x, gesture.start.y, this.tipOf(hit, gesture.start));
       gesture.held = true;
       vibrate(12);
       this.draw(performance.now());
@@ -1852,8 +1975,14 @@ export default {
       const sign = this.signs.find(sg => Math.hypot(w.x - sg.x, (w.y - sg.y) * 1.2) < sg.r);
       if (sign) return { zone: sign.zone };
       // Animaux de la mer et mouettes posées : un toucher les fait réagir
-      const animal = this.seaHits.find(h => Math.hypot(w.x - h.x, w.y - h.y) < h.r);
+      const animal = [...this.seaHits, ...this.landHits].find(h => Math.hypot(w.x - h.x, w.y - h.y) < h.r);
       if (animal) return { animal };
+      // Articles posés près des bâtiments (le plus proche du doigt)
+      const items = this.itemHits.filter(h => Math.hypot(w.x - h.x, w.y - h.y) < h.r);
+      if (items.length) {
+        const near = items.reduce((a, b) => (Math.hypot(w.x - a.x, w.y - a.y) <= Math.hypot(w.x - b.x, w.y - b.y) ? a : b));
+        return { item: near.item, site: near.site };
+      }
       // Zones de toucher généreuses : tout le volume dessiné du bâtiment, pas seulement sa base
       const candidates = [
         ...this.state.sites.map(site => ({ site, depth: site.x + site.y + site.w, c: this.centerOf(site), r: TW * 0.49 * site.w, h: TW * 0.875 * site.w, below: TH * 0.525 * site.w })),
@@ -1882,6 +2011,13 @@ export default {
       }
       this.selected = null;
       if (!hit) {
+        // La mer : des ronds dans l'eau là où le doigt touche (en mouvement réduit, la bulle d'info)
+        if (this.reduced()) this.showTip(px, py, this.tipOf(null, { x: px, y: py }));
+        else {
+          const w = this.toWorld(px, py);
+          this.ripples.push({ ...this.cellAt(w.x, w.y), at: performance.now() / 1000 });
+          vibrate(4);
+        }
         this.draw(performance.now());
         return;
       }
@@ -1893,8 +2029,14 @@ export default {
         this.questAct();
         vibrate(6);
       } else if (hit.animal) {
-        this.scare(hit.animal);
+        if (this.reduced()) this.showTip(px, py, this.tipOf(hit, { x: px, y: py }));
+        else this.scare(hit.animal);
         return;
+      } else if (hit.item) {
+        // Un article posé sautille et dit son nom (appui long : sa fiche et son mode d'emploi)
+        this.scared.set(`item:${hit.site.id}:${hit.item.id}`, { at: performance.now() / 1000 });
+        this.showTip(px, py, { title: hit.item.name, text: hit.item.effect, hint: 'Appui long : sa fiche' });
+        vibrate(6);
       } else if (hit.zone) {
         this.zone = hit.zone;
         vibrate(6);
@@ -1915,6 +2057,49 @@ export default {
         this.picking = hit.cell;
       }
       this.draw(performance.now());
+    },
+    // Bulle d'info au-dessus du doigt (en dessous près du haut), qui s'efface seule
+    showTip(px, py, info) {
+      if (!info || !this.geo) return;
+      clearTimeout(this.tipTimer);
+      const below = py < 110;
+      this.tip = { ...info, x: Math.max(96, Math.min(this.geo.width - 96, px)), y: below ? py + 18 : py - 16, below };
+      this.tipTimer = setTimeout(() => { this.tip = null; }, TIP_MS);
+    },
+    hideTip() {
+      if (!this.tip) return;
+      clearTimeout(this.tipTimer);
+      this.tip = null;
+    },
+    // Ce que dit la bulle pour ce qui est sous le doigt (null : la mer)
+    tipOf(hit, point) {
+      if (!hit) return { title: 'La mer', text: 'Dauphins, baleine et méduses passent au large.', hint: 'Toucher : des ronds dans l’eau' };
+      if (hit.animal) {
+        const [title, text] = ANIMALS[hit.animal.kind] || ['Une bête', ''];
+        return { title, text, hint: 'Toucher : la faire réagir' };
+      }
+      if (hit.bubble) {
+        const made = Object.entries(hit.bubble.site ? hit.bubble.site.pending || {} : {}).filter(([, n]) => n > 0).map(([k, n]) => `${Math.floor(n)} ${k === 'coins' ? 'écus' : LABEL[k] || k}`);
+        return { title: 'Production prête', text: made.join(', ') || 'Ressources et écus à encaisser.', hint: 'Toucher : encaisser' };
+      }
+      if (hit.zone) {
+        const zone = hit.zone;
+        return { title: zone.name, text: zone.owned ? 'Quartier à toi.' : zone.open ? `Quartier à acheter : ${zone.price} écus.` : `S’ouvre avec le chapitre ${zone.chapter} du Livre.`, hint: 'Toucher : voir le quartier' };
+      }
+      if (hit.site) {
+        const site = hit.site;
+        if (site.locked) return { title: site.name, text: 'Dans un quartier encore fermé.', hint: 'Toucher : voir le quartier' };
+        if (!site.level) return { title: `${site.name} · à bâtir`, text: site.next && site.next.effect ? site.next.effect : '', hint: 'Toucher : ce qu’il faut pour bâtir' };
+        const per = site.perHour;
+        const text = per ? `Palier ${roman(site.level)} · ${per.amount} ${LABEL[site.produce] || ''} et ${per.coins} écus par heure` : `Palier ${roman(site.level)}${site.effect ? ` · ${site.effect}` : ''}`;
+        return { title: site.name, text, hint: 'Toucher : sa fiche et sa boutique' };
+      }
+      // Case de l'île : son décor naturel, ou de l'herbe libre
+      const cell = hit.cell || this.tileAt(point.x, point.y);
+      const prop = cell && this.props.find(p => p.x === cell.x && p.y === cell.y);
+      return prop
+        ? { title: NATURE_NAMES[prop.kind] || 'Décor', text: 'Une décoration posée ici le remplace.', hint: 'Toucher : poser une décoration' }
+        : { title: 'Case libre', text: 'De la place pour une décoration de ton Livre.', hint: 'Toucher : poser une décoration' };
     },
     // Point de l'écran (page) d'un point du canvas
     canvasPoint(x, y) {
@@ -1960,7 +2145,7 @@ export default {
     },
     buyLabel(site, item) {
       const lock = this.lockOf(site, item);
-      if (lock) return `${item.name} : ${lock}`;
+      if (lock) return `${item.name} : ${lock} (toucher : sa fiche)`;
       return `Acheter ${item.name} pour ${item.price} écus (appui long : sa fiche)`;
     },
     perHourOf(site) {
@@ -2136,6 +2321,11 @@ export default {
     },
     // Achat d'un article en un toucher ; « Annuler » reste proposé UNDO_MS
     async buyItem(site, item, event) {
+      // Pas encore achetable : sa fiche dit pourquoi (palier, écus, butins)
+      if (!this.canBuy(site, item)) {
+        this.describeItem(site, item);
+        return;
+      }
       const from = event && event.currentTarget ? center(event.currentTarget.getBoundingClientRect()) : null;
       this.busy = true;
       try {
@@ -2150,7 +2340,12 @@ export default {
         this.$emit('show-alert', item.kind === 'skin' ? `Skin porté : ${bought}\u00a0!` : `Nouveau sur ton île : ${bought}\u00a0!`);
         clearTimeout(this.undoTimer);
         this.undoable = { id: item.id, name: bought };
-        this.undoTimer = setTimeout(() => { this.undoable = null; }, UNDO_MS);
+        // Premier achat de cette sorte : son mode d'emploi, une fois l'achat devenu définitif
+        const firstOfKind = !guideSeen(guideKind(item)) ? { siteId: site.id, itemId: item.id } : null;
+        this.undoTimer = setTimeout(() => {
+          this.undoable = null;
+          if (firstOfKind && !this.gone) this.guide = firstOfKind;
+        }, UNDO_MS);
       } catch (error) {
         this.$emit('show-alert', messageOf(error, 'L’achat n’a pas pu se faire.'));
       } finally {
@@ -2178,13 +2373,31 @@ export default {
     // Fiche d'un article (toucher sur son dessin, appui long sur son prix)
     describeItem(site, item) {
       vibrate(10);
-      this.sheetId = item.id;
+      this.sheet = { siteId: site.id, itemId: item.id };
     },
     // Achat depuis la fiche : elle se ferme, l'achat reste annulable depuis la boutique
     buyFromSheet(event) {
-      const item = this.sheetItem;
-      this.sheetId = null;
-      if (item) this.buyItem(this.site, item, event);
+      const [site, item] = [this.sheetSite, this.sheetItem];
+      this.sheet = null;
+      if (item) this.buyItem(site, item, event);
+    },
+    // Mode d'emploi du premier achat d'une sorte : « Voir sur l'île » ferme les fiches et montre l'article, qui sautille
+    closeGuide() {
+      if (this.guideItem) markGuideSeen(guideKind(this.guideItem));
+      this.guide = null;
+    },
+    showGuideOnIsland() {
+      const [site, item] = [this.guideSite, this.guideItem];
+      this.closeGuide();
+      if (!site) return;
+      this.site = null;
+      const c = this.centerOf(site);
+      this.cam.x = c.x;
+      this.cam.y = c.y - 20;
+      this.cam.s = Math.max(this.cam.s, 1.3);
+      this.clampCam();
+      if (item && item.kind !== 'skin') this.scared.set(`item:${site.id}:${item.id}`, { at: performance.now() / 1000 });
+      this.draw(performance.now());
     },
     // Skin porté par un bâtiment ('' : apparence d'origine)
     async wearSkin(site, skin) {
@@ -2256,6 +2469,22 @@ export default {
   font-family: var(--font-ui); font-size: 13px; font-weight: 700; text-align: center;
 }
 .world__link { margin-left: 6px; border: 0; background: none; color: #F2C04B; font: inherit; font-weight: 900; cursor: pointer; text-decoration: underline; }
+.world__tip {
+  position: absolute; z-index: 3; transform: translate(-50%, -100%); pointer-events: none;
+  display: flex; flex-direction: column; gap: 2px; max-width: 220px; padding: 8px 12px; border-radius: 14px;
+  background: rgba(30, 22, 16, .9); color: #F6EEDD; font-family: var(--font-ui); text-align: center;
+  box-shadow: 0 8px 22px rgba(0, 0, 0, .35);
+}
+.world__tip.is-below { transform: translate(-50%, 0); }
+.world__tip-title { font-weight: 900; font-size: 14px; }
+.world__tip-text { font-size: 12px; font-weight: 700; line-height: 1.3; color: #E8DCC4; }
+.world__tip-hint { margin-top: 2px; font-size: 11px; font-weight: 800; color: #F2C04B; }
+.world-tip-enter-active, .world-tip-leave-active { transition: opacity .18s ease, margin .18s ease; }
+.world-tip-enter-from, .world-tip-leave-to { opacity: 0; margin-top: 6px; }
+.world__guide { margin: 0; display: grid; gap: 10px; }
+.world__guide div { display: grid; grid-template-columns: 80px 1fr; gap: 10px; align-items: baseline; }
+.world__guide dt { color: var(--ink-500); font-weight: 800; font-size: 12px; text-transform: uppercase; letter-spacing: .04em; }
+.world__guide dd { margin: 0; font-size: 14px; font-weight: 700; line-height: 1.4; }
 .world__menu {
   position: absolute; transform: translate(-50%, -100%);
   display: flex; align-items: center; gap: 6px;
@@ -2359,7 +2588,7 @@ export default {
   background: var(--ink-900); color: var(--vellum-50);
   font-family: var(--font-ui); font-weight: 900; font-size: 14px; cursor: pointer; touch-action: manipulation;
 }
-.world__card-btn:disabled { background: var(--vellum-300); color: var(--ink-500); cursor: default; font-size: 12px; }
+.world__card-btn:disabled, .world__card-btn.is-off { background: var(--vellum-300); color: var(--ink-500); cursor: default; font-size: 12px; }
 /* Bandeau d'annulation d'un achat (4 s) */
 .world__undo {
   position: sticky; bottom: 0; margin-top: 10px; padding: 8px 8px 8px 14px; border-radius: 999px;

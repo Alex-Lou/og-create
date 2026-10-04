@@ -15,6 +15,15 @@
           <dd>{{ fact.value }}</dd>
         </div>
       </dl>
+      <!-- Mode d'emploi : où le trouver, comment s'en servir, pourquoi l'avoir -->
+      <section class="item-sheet__guide" aria-label="Mode d’emploi">
+        <h3 class="item-sheet__guide-title">Mode d’emploi</h3>
+        <dl class="item-sheet__guide-list">
+          <div><dt>Où</dt><dd>{{ guide.where }}</dd></div>
+          <div><dt>Comment</dt><dd>{{ guide.how }}</dd></div>
+          <div><dt>Pourquoi</dt><dd>{{ guide.why }}</dd></div>
+        </dl>
+      </section>
     </div>
     <template #actions>
       <span v-if="!item.owned && item.rare" class="item-sheet__lock">À trouver dans les butins</span>
@@ -36,6 +45,7 @@
 import GModal from '@/components/ui/GModal.vue';
 import { roman } from '@/utils/roman';
 import { tintOf } from '@/world/tints';
+import { guideOf } from '@/world/itemGuide';
 
 const KIND = { outil: 'Outil', objet: 'Objet', skin: 'Skin' };
 const PROD_CAP = 100;
@@ -70,6 +80,9 @@ export default {
     },
     worn() {
       return this.site.skin === this.item.id;
+    },
+    guide() {
+      return guideOf(this.item, this.site);
     },
     eyebrow() {
       const kind = this.item.rare ? 'Pièce rare' : this.item.kind === 'skin' && tintOf(this.item.id) ? 'Teinte' : KIND[this.item.kind] || 'Article';
@@ -119,6 +132,12 @@ export default {
 .item-sheet__fact { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; padding: 6px 2px; border-bottom: 1px dashed rgba(74, 52, 38, .18); }
 .item-sheet__fact dt { color: var(--ink-500); font-weight: 700; font-size: 13px; }
 .item-sheet__fact dd { margin: 0; font-weight: 900; font-size: 15px; text-align: right; }
+.item-sheet__guide { padding: 10px 12px; border-radius: 14px; background: var(--vellum-200); }
+.item-sheet__guide-title { margin: 0 0 6px; font-family: var(--font-display); font-size: 15px; font-weight: 700; }
+.item-sheet__guide-list { margin: 0; display: grid; gap: 6px; }
+.item-sheet__guide-list div { display: grid; grid-template-columns: 74px 1fr; gap: 8px; align-items: baseline; }
+.item-sheet__guide-list dt { color: var(--ink-500); font-weight: 800; font-size: 12px; text-transform: uppercase; letter-spacing: .04em; }
+.item-sheet__guide-list dd { margin: 0; font-size: 13px; font-weight: 700; line-height: 1.35; }
 .item-sheet__lock { flex: 1; color: var(--ink-500); font-weight: 800; font-size: 13px; }
 .item-sheet__owned { color: #4E8A3A; font-weight: 900; }
 .item-sheet__coin {
