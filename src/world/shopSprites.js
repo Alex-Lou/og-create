@@ -581,7 +581,7 @@ const canne = {
     n: 8,
     fps: 4,
     draw: (T, level, f, n) => {
-      const c = CANNE[level] || CANNE[1];
+      const c = CANNE[Math.min(level, 2)];
       const [bx, by] = T.p(0, 0, 10);
       const [tx, ty] = T.p(...c.tip);
       const dip = f === 5 || f === 6 ? 1.8 : wave(f, n, 0.5);
@@ -721,7 +721,7 @@ const etabli = {
 // Grande enclume à bigorne sur un billot, marteau ; une pièce encore rouge luit et fume
 const ENCLUME = { 1: [-0.72, 0.76], 2: [-0.04, 0.86] };
 const enclume = {
-  light: level => { const [u, v] = ENCLUME[level] || ENCLUME[1]; return [u - 0.02, v, 18, 12]; },
+  light: level => { const [u, v] = ENCLUME[Math.min(level, 2)]; return [u - 0.02, v, 18, 12]; },
   layers: [{
     at: ENCLUME,
     frame: [-18, -28, 38, 34],
@@ -959,10 +959,16 @@ export const SHOP_SPRITES = {
   chien
 };
 
-// Place d'un calque selon le niveau du bâtiment (repli sur le niveau 1)
+// Emprise de 3 × 3 cases à partir de ce palier : les articles s'écartent d'autant (leur taille ne change pas)
+const BIG_FROM = 4;
+const spread = level => (level >= BIG_FROM ? 1.5 : 1);
+// Place d'un calque selon le niveau du bâtiment : celle du niveau (paliers 1 à 3), repli sur le niveau 2 puis 1,
+// écartée de moitié en plus quand l'emprise passe à 3 × 3
 function placeOf(layer, level) {
   const at = layer.at;
-  return typeof at[0] === 'number' ? at : at[level] || at[1];
+  const base = typeof at[0] === 'number' ? at : at[Math.min(level, 3)] || at[2] || at[1];
+  const k = spread(level);
+  return [base[0] * k, base[1] * k];
 }
 function boxOf(layer, level) {
   const [u, v] = placeOf(layer, level);
@@ -982,7 +988,9 @@ export function itemLayers(id, level, t = 0) {
   if (!item) return [];
   return item.layers.map((layer, k) => {
     const f = layer.n ? Math.floor(t * layer.fps) % layer.n : 0;
-    const [du, dv, dz] = layer.motion ? layer.motion(t, level) : [0, 0, 0];
+    const [mu, mv, dz] = layer.motion ? layer.motion(t, level) : [0, 0, 0];
+    const du = mu * spread(level);
+    const dv = mv * spread(level);
     return {
       key: `shop-${id}-${level}-${k}-${f}`,
       make: () => sprite(bodyOf(id, k, layer, level, f), boxOf(layer, level)),
@@ -995,7 +1003,9 @@ export function itemLayers(id, level, t = 0) {
 // Lumière de nuit d'un article : [u, v, z, rayon] dans le repère du bâtiment, ou null
 export function itemLight(id, level) {
   const item = SHOP_SPRITES[id];
-  return item && item.light ? item.light(level) : null;
+  if (!item || !item.light) return null;
+  const [u, v, z, r] = item.light(level);
+  return [u * spread(level), v * spread(level), z, r];
 }
 
 // Vignette d'un article pour la boutique : tous ses calques (première image), cadrés au plus juste

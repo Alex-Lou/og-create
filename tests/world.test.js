@@ -5,6 +5,7 @@ import { BUILDINGS, NATURE } from '@/world/sprites';
 import { FUTURE, UPGRADES, fountainFrames, orbSprite } from '@/world/buildings2';
 import { NATURE2, CRITTERS, PLINTH } from '@/world/nature';
 import { SHOP_SPRITES, itemLayers, itemLight, itemThumb } from '@/world/shopSprites';
+import { LOOKS, lookAt, artMake } from '@/world/looks';
 
 const at = (h, m = 0) => {
   const d = new Date(2026, 9, 4, h, m);
@@ -98,6 +99,47 @@ describe('boutique des ateliers', () => {
         expect(new Set(variants).size).toBe(skins.length);
       }
     }
+  });
+});
+
+describe('paliers des bâtiments', () => {
+  const SKINS_OF = {
+    foyer: ['toit-rouge', 'toit-bleu-foyer', 'toit-chaume-foyer'], carriere: ['roche-ocre', 'roche-granit', 'roche-cristal'],
+    bosquet: ['printemps', 'automne', 'givre'], puits: ['toit-bleu', 'toit-chaume', 'pierre-blanche'],
+    potager: ['cloture-blanche', 'cloture-pierre', 'cloture-fleurie'], atelier: ['enseigne-doree', 'toit-ardoise'], ponton: ['voile-rouge', 'voile-rayee', 'voile-bleue']
+  };
+  it('chaque bâtiment a ses 7 paliers, chacun dessiné sans valeur manquante, avec et sans skin', () => {
+    for (const [site, skins] of Object.entries(SKINS_OF)) {
+      expect(LOOKS[site]).toHaveLength(7);
+      for (let level = 1; level <= 7; level++) {
+        for (const skin of [undefined, ...skins]) {
+          const { svg, box: frame } = artMake(site, level, skin)();
+          expect(svg).not.toMatch(/NaN|undefined/);
+          // Paliers IV et suivants : emprise 3 × 3, cadre élargi
+          expect(frame.w).toBe(level >= 4 ? 224 : 152);
+        }
+        const look = lookAt(site, level);
+        look.anims.forEach(anim => {
+          const frames = Array.from({ length: anim.n }, (_, f) => anim.frame(f).svg);
+          frames.forEach(f => expect(f).not.toMatch(/NaN|undefined/));
+          expect(new Set(frames).size).toBeGreaterThan(1);
+        });
+        look.lights.forEach(light => expect(light).toHaveLength(4));
+        look.smoke.forEach(at => expect(at).toHaveLength(3));
+      }
+    }
+  });
+  it('les skins changent aussi les grands paliers', () => {
+    for (const site of ['foyer', 'carriere', 'bosquet', 'puits', 'atelier']) {
+      for (const level of [4, 7]) {
+        const origin = lookAt(site, level).make().svg;
+        expect(lookAt(site, level).make(SKINS_OF[site][0]).svg).not.toBe(origin);
+      }
+    }
+  });
+  it('au-delà du dernier dessin, le plus haut palier sert', () => {
+    expect(lookAt('foyer', 9)).toBe(LOOKS.foyer[6]);
+    expect(lookAt('carriere', 0)).toBe(LOOKS.carriere[0]);
   });
 });
 
