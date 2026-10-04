@@ -43,6 +43,14 @@ export default {
   ink(page) {
     return asPlayer(() => http.post('/play/ink', { page }));
   },
+  // Pendu d'une page : une lettre jugée par le serveur → { page, hangman }
+  letter(page, letter) {
+    return asPlayer(() => http.post('/play/letter', { page, letter }));
+  },
+  // Rejouer un pendu perdu contre des écus (compte) → { page, coins, hangman }
+  retryLetters(page) {
+    return asPlayer(() => http.post('/play/letter/retry', { page }));
+  },
   // Le Monde (compte requis) : { size, sites, stock, charges, harvest, rate, capHours, pending, tiles: [{ x, y, element, emoji, family }] }
   world() {
     return http.get('/play/world').then(response => response.data);
