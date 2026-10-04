@@ -5,6 +5,7 @@
         <span class="world__eyebrow">Ton île</span>
         <span class="world__title">Le Monde</span>
       </div>
+      <span v-if="state" class="world__phase" :title="`Sur ton île, c’est le moment : ${phaseLabel}`">{{ phaseGlyph }} {{ phaseLabel }}</span>
       <!-- Écus produits par l'île, à récolter (le solde reste dans l'en-tête) -->
       <button
         v-if="state && state.pending > 0"
@@ -167,6 +168,10 @@ import { glyph } from '@/book/painter';
 import { burst, ring, vibrate, center, reducedMotion } from '@/utils/fx';
 import * as storage from '@/utils/storage';
 import { GLYPH, LABEL, RESOURCES } from '@/game/resources';
+import { BUILDINGS, NATURE, LIGHTS, SMOKE, flameFrames, boatSprite } from '@/world/sprites';
+import { drawSprite } from '@/world/spriteCache';
+import { P } from '@/world/iso';
+import { phaseAt, forcedPhase, drawSea, drawCloudShadows, drawClouds, drawBirds, drawTint, glow, fireflies, hash } from '@/world/scene';
 
 const FRAME_MS = 33; // ~30 images/s : l'île respire, sans user la batterie
 const TW = 64; // largeur d'une case à l'échelle 1 (unités du monde)
@@ -176,6 +181,11 @@ const MAX_SCALE = 1.8;
 // Allure des bâtiments construits, par niveau
 const LOOK = { foyer: ['🔥', '🛖', '🏠'], carriere: ['⛏️'], bosquet: ['🌳'], puits: ['🪣'], potager: ['🥕'], atelier: ['🛠️'], ponton: ['⛵'] };
 const SEEN_KEY = 'oc_world_seen';
+// Construction ou amélioration : le chantier tremble dans la poussière, puis le bâtiment s'élève (ms)
+const RAISE_MS = 2400;
+const FLAMES = flameFrames();
+// Ce qui plie au vent, et de combien
+const SWAY = { bosquet: 0.03, tree: 0.04, palm: 0.05, bush: 0.03, tuft: 0.09, flowers: 0.06 };
 
 // Le Monde : l'île du joueur en isométrique (Canvas 2D), avec une caméra qu'on fait glisser et zoomer.
 // L'état vient du serveur (chantiers, réserves, parties, décorations) ; le dessin, la caméra et la boucle
@@ -209,7 +219,9 @@ export default {
       runResult: null,
       runError: '',
       firstVisit: false,
-      clock: Date.now()
+      clock: Date.now(),
+      phaseLabel: '',
+      phaseGlyph: ''
     };
   },
   computed: {
@@ -256,6 +268,10 @@ export default {
     this.raf = 0;
     this.lastFrame = 0;
     this.pops = new Map();
+    // Bâtiments en train de s'élever : id → { at, from } ; décor naturel des cases libres
+    this.raises = new Map();
+    this.props = [];
+    this.forced = forcedPhase();
     this.ac = null;
     this.observer = null;
     this.loadedAt = Date.now();
@@ -266,8 +282,10 @@ export default {
   async mounted() {
     this.ac = new AbortController();
     document.addEventListener('visibilitychange', () => this.syncLoop(), { signal: this.ac.signal });
+    this.syncPhase();
     this.tick = setInterval(() => {
       this.clock = Date.now();
+      this.syncPhase();
       const charges = this.state && this.state.charges;
       if (charges && charges.nextIn !== null && this.clock - this.loadedAt > charges.nextIn + 2000 && !this.busy && !this.run) this.load();
     }, 20000);
@@ -309,6 +327,15 @@ export default {
       }
     },
     apply(state) {
+      // Un niveau gagné depuis le dernier état : le bâtiment s'élève sous les yeux du joueur
+      if (this.state && !this.reduced()) {
+        const before = new Map(this.state.sites.map(site => [site.id, site.level]));
+        state.sites.forEach(site => {
+          const from = before.get(site.id);
+          if (from !== undefined && site.level > from) this.raises.set(site.id, { at: performance.now(), from });
+        });
+      }
+      this.props = this.natureOf(state);
       this.state = state;
       this.loadedAt = Date.now();
       this.clock = this.loadedAt;
@@ -322,6 +349,69 @@ export default {
     lookOf(site) {
       const looks = LOOK[site.id] || ['🏗️'];
       return site.level ? looks[Math.min(site.level, looks.length) - 1] : '🚧';
+    },
+    syncPhase() {
+      const phase = phaseAt(this.forced || new Date());
+      this.phaseLabel = phase.label;
+      this.phaseGlyph = phase.glyph;
+    },
+    // Décor naturel, fixe pour une île donnée : palmiers et rochers sur la plage, touffes et fleurs dans l'herbe.
+    // Seulement sur les cases libres : une décoration posée le remplace, et il ne gêne aucun toucher.
+    natureOf(state) {
+      const n = state.size;
+      const taken = new Set(state.tiles.map(t => t.y * n + t.x));
+      state.sites.forEach(site => {
+        for (let dy = 0; dy < 2; dy++) for (let dx = 0; dx < 2; dx++) taken.add((site.y + dy) * n + site.x + dx);
+      });
+      const props = [];
+      for (let y = 0; y < n; y++) {
+        for (let x = 0; x < n; x++) {
+          if (taken.has(y * n + x)) continue;
+          const beach = x === 0 || y === 0 || x === n - 1 || y === n - 1;
+          const roll = hash(x, y);
+          let kind = null;
+          if (beach) kind = roll < 0.11 ? 'palm' : roll < 0.17 ? 'rock' : null;
+          else kind = roll < 0.12 ? 'tuft' : roll < 0.19 ? 'flowers' : roll < 0.22 ? 'bush' : null;
+          if (kind) props.push({ kind, x, y, depth: x + y });
+        }
+      }
+      return props;
+    },
+    // Chantier : 0 = plan à trouver, 1 = plan trouvé, 2 = tout est prêt
+    stageOf(site) {
+      if (!site.next || !site.next.planOwned) return 0;
+      return this.affordable(site) ? 2 : 1;
+    },
+    // Vent : rafales lentes et frémissement, différents d'un point à l'autre de l'île
+    windAt(t, x) {
+      const gust = 0.55 + 0.45 * Math.sin(t * 0.21);
+      return (Math.sin(t * 1.1 + x * 0.35) * 0.65 + Math.sin(t * 2.6 + x) * 0.25) * gust;
+    },
+    // Dessine un sprite ancré en (x, y) du monde, plié par le vent (cisaillement depuis sa base)
+    swayed(ctx, key, make, x, y, skew, repaint) {
+      if (!skew) {
+        drawSprite(ctx, key, make, x, y, repaint);
+        return;
+      }
+      ctx.save();
+      ctx.translate(x, y);
+      ctx.transform(1, 0, -skew, 1, 0, 0);
+      drawSprite(ctx, key, make, 0, 0, repaint);
+      ctx.restore();
+    },
+    // Bouffées de poussière autour d'une emprise de chantier, k de 0 à 1
+    dust(ctx, x, y, k, count = 9) {
+      for (let i = 0; i < count; i++) {
+        const a = (i / count) * Math.PI * 2 + hash(i, 3);
+        const d = TW * (0.45 + 0.5 * k);
+        const px = x + Math.cos(a) * d;
+        const py = y + Math.sin(a) * d * 0.5 - k * 14;
+        const r = 7 + k * 16 * (0.6 + hash(i, 9));
+        ctx.fillStyle = `rgba(214,190,150,${(0.55 * (1 - k)).toFixed(3)})`;
+        ctx.beginPath();
+        ctx.arc(px, py, r, 0, Math.PI * 2);
+        ctx.fill();
+      }
     },
     affordable(site) {
       return Boolean(site.next) && Object.entries(site.next.cost).every(([r, n]) => this.state.stock[r] >= n);
@@ -434,13 +524,10 @@ export default {
       const { width, height, dpr, n } = this.geo;
       const { s } = this.cam;
       const t = this.reduced() ? 0 : now / 1000;
-      // Mer
+      const phase = phaseAt(this.forced || new Date());
+      // Mer, selon l'heure
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-      const sea = ctx.createLinearGradient(0, 0, 0, height);
-      sea.addColorStop(0, '#5FB4DD');
-      sea.addColorStop(1, '#3E8DBF');
-      ctx.fillStyle = sea;
-      ctx.fillRect(0, 0, width, height);
+      drawSea(ctx, width, height, t, phase);
       // Monde : unités du monde, caméra appliquée
       const o = this.toScreen(0, 0);
       ctx.setTransform(dpr * s, 0, 0, dpr * s, dpr * o.x, dpr * o.y);
@@ -454,6 +541,19 @@ export default {
         ctx.ellipse(mid.x, mid.y + DEPTH, (n * TW) * (0.58 + phase * 0.3), (n * TH) * (0.62 + phase * 0.3), 0, 0, Math.PI * 2);
         ctx.stroke();
       }
+      // Écume au pied des falaises : une frange claire qui respire
+      const foam = 0.35 + 0.25 * Math.sin(t * 1.6);
+      ctx.strokeStyle = `rgba(255, 255, 255, ${foam.toFixed(3)})`;
+      ctx.lineWidth = 3;
+      ctx.lineJoin = 'round';
+      ctx.beginPath();
+      const west = this.world(-0.5, n - 0.5);
+      const south = this.world(n - 0.5, n - 0.5);
+      const east = this.world(n - 0.5, -0.5);
+      ctx.moveTo(west.x, west.y + DEPTH + 2 + Math.sin(t * 2) * 1.5);
+      ctx.lineTo(south.x, south.y + DEPTH + 2 + Math.sin(t * 2 + 1) * 1.5);
+      ctx.lineTo(east.x, east.y + DEPTH + 2 + Math.sin(t * 2 + 2) * 1.5);
+      ctx.stroke();
       // Falaises (faces avant)
       const side = (x0, y0, x1, y1, color) => {
         ctx.beginPath();
@@ -522,41 +622,145 @@ export default {
           ctx.stroke();
         }
       }
-      // Ce qui se tient debout (bâtiments, décorations), du plus loin au plus proche
+      const worldTransform = ctx.getTransform();
+      // Ombres des nuages qui glissent sur l'île (écran)
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      drawCloudShadows(ctx, width, height, t, phase);
+      ctx.setTransform(worldTransform);
+      // Ce qui se tient debout (bâtiments, décorations, nature), du plus loin au plus proche
       const standing = [
         ...this.state.sites.map(site => ({ depth: site.x + site.y + 2, site })),
-        ...this.state.tiles.map(tile => ({ depth: tile.x + tile.y, tile }))
+        ...this.state.tiles.map(tile => ({ depth: tile.x + tile.y, tile })),
+        ...this.props.map(prop => ({ depth: prop.depth, prop }))
       ].sort((p, q) => p.depth - q.depth);
       const repaint = () => this.draw(performance.now());
       for (const item of standing) {
-        if (item.site) this.drawSite(ctx, item.site, t, repaint);
-        else this.drawTile(ctx, item.tile, now, t, repaint);
+        if (item.site) this.drawSite(ctx, item.site, t, now, repaint);
+        else if (item.tile) this.drawTile(ctx, item.tile, now, t, repaint);
+        else this.drawProp(ctx, item.prop, t, repaint);
       }
+      this.drawSmoke(ctx, t, phase);
+      // Ciel : nuages et mouettes (écran), puis la teinte de l'heure sur toute la scène
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      drawClouds(ctx, width, height, t, phase);
+      drawBirds(ctx, width, height, t, phase);
+      drawTint(ctx, width, height, phase);
+      ctx.setTransform(worldTransform);
+      this.drawLights(ctx, t, phase);
       // Les noms des lieux passent par-dessus tout : aucune décoration ne les cache
       if (this.cam.s >= 0.55) this.state.sites.forEach(site => this.drawLabel(ctx, site));
     },
-    drawSite(ctx, site, t, repaint) {
+    drawSite(ctx, site, t, now, repaint) {
       const c = this.world(site.x + 0.5, site.y + 0.5);
-      if (site.level) {
-        // Socle de pierre et bâtiment
-        ctx.fillStyle = 'rgba(40, 50, 20, .25)';
-        ctx.beginPath();
-        ctx.ellipse(c.x, c.y + 4, TW * 0.62, TH * 0.62, 0, 0, Math.PI * 2);
-        ctx.fill();
-        const bob = site.id === 'ponton' ? Math.sin(t * 1.4) * 2 : 0;
-        // Un emoji peint au canvas prend l'opacité du remplissage courant (ici, celle de l'ombre)
-        ctx.fillStyle = '#000';
-        glyph(ctx, this.lookOf(site), c.x, c.y - TW * 0.42 + bob, TW * 1.15, repaint);
-      } else {
-        // Chantier : piquets, panneau et le plan attendu en filigrane
-        ctx.fillStyle = '#8A5A2B';
-        for (const [dx, dy] of [[-0.8, 0], [0.8, 0], [0, -0.8], [0, 0.8]]) {
-          const p = { x: c.x + (dx * TW) / 2, y: c.y + (dy * TH) / 2 };
-          ctx.fillRect(p.x - 2, p.y - 14, 4, 14);
+      const looks = BUILDINGS[site.id] || [BUILDINGS.chantier[2]];
+      const raise = this.raises.get(site.id);
+      const k = raise ? Math.min(1, (now - raise.at) / RAISE_MS) : 1;
+      if (raise && k >= 1) this.raises.delete(site.id);
+      if (!site.level) {
+        // Chantier, dans sa phase ; tout prêt, un peu de poussière de temps en temps
+        const stage = this.stageOf(site);
+        drawSprite(ctx, `chantier-${stage}`, BUILDINGS.chantier[stage], c.x, c.y, repaint);
+        if (stage === 2) {
+          const puff = (t * 0.5) % 1;
+          if (puff < 0.4) this.dust(ctx, c.x, c.y + 6, puff / 0.4, 3);
         }
-        glyph(ctx, '🚧', c.x, c.y - TW * 0.22, TW * 0.62, repaint);
-        if (site.next && site.next.planEmoji) glyph(ctx, site.next.planEmoji, c.x, c.y - TW * 0.78, TW * 0.5, repaint, site.next.planOwned ? 0.9 : 0.35);
+        if (site.next && site.next.planEmoji) glyph(ctx, site.next.planEmoji, c.x, c.y - TW * 1.02 + Math.sin(t * 2) * 2, TW * 0.46, repaint, site.next.planOwned ? 0.95 : 0.4);
+        return;
       }
+      const level = Math.min(site.level, looks.length);
+      const key = `${site.id}-${level}`;
+      const make = looks[level - 1];
+      if (k < 1) {
+        // 1. L'ancien état tremble dans la poussière ; 2. le nouveau bâtiment s'élève depuis le sol ; 3. petit rebond
+        const before = raise.from ? Math.min(raise.from, looks.length) : 0;
+        const beforeKey = before ? `${site.id}-${before}` : 'chantier-2';
+        const beforeMake = before ? looks[before - 1] : BUILDINGS.chantier[2];
+        if (k < 0.35) {
+          const shake = Math.sin(now / 28) * 1.6 * (1 - k / 0.35);
+          drawSprite(ctx, beforeKey, beforeMake, c.x + shake, c.y, repaint);
+        } else {
+          const r = Math.min(1, (k - 0.35) / 0.5);
+          const rise = 1 - Math.pow(1 - r, 3);
+          const pop = k > 0.85 ? 1 + Math.sin(((k - 0.85) / 0.15) * Math.PI) * 0.05 : 1;
+          ctx.save();
+          // Le bâtiment sort de terre : découpé au ras du sol (bas de l'emprise), il monte de 96 px
+          ctx.beginPath();
+          ctx.rect(c.x - TW * 1.4, c.y - TW * 2.6, TW * 2.8, TW * 2.6 + TH * 1.05);
+          ctx.clip();
+          ctx.translate(c.x, c.y + (1 - rise) * 96);
+          ctx.scale(pop, pop);
+          drawSprite(ctx, key, make, 0, 0, repaint);
+          ctx.restore();
+        }
+        this.dust(ctx, c.x, c.y + 6, k);
+        return;
+      }
+      this.swayed(ctx, key, make, c.x, c.y, (SWAY[site.id] || 0) * this.windAt(t, site.x + site.y), repaint);
+      // Parties vivantes : flamme du feu de camp, voilier bercé au Ponton
+      if (site.id === 'foyer' && level === 1) {
+        const frame = Math.floor(t * 9) % FLAMES.length;
+        drawSprite(ctx, `flame-${frame}`, () => FLAMES[frame], c.x, c.y, repaint);
+      }
+      if (site.id === 'ponton') {
+        const [bx, by] = P(0.05, 0.5, 0);
+        ctx.save();
+        ctx.translate(c.x + bx, c.y + by + Math.sin(t * 1.4) * 1.6);
+        ctx.rotate(Math.sin(t * 1.1) * 0.035);
+        drawSprite(ctx, 'boat', boatSprite, -bx, -by, repaint);
+        ctx.restore();
+      }
+    },
+    drawProp(ctx, prop, t, repaint) {
+      const c = this.world(prop.x, prop.y);
+      this.swayed(ctx, `nature-${prop.kind}`, NATURE[prop.kind], c.x, c.y, (SWAY[prop.kind] || 0) * this.windAt(t, prop.x * 0.7 + prop.y), repaint);
+    },
+    // Fumée des cheminées : bouffées qui montent, grossissent, s'effacent et partent avec le vent
+    drawSmoke(ctx, t, phase) {
+      for (const site of this.state.sites) {
+        const anchors = site.level && SMOKE[site.id];
+        const at = anchors && anchors[Math.min(site.level, anchors.length) - 1];
+        if (!at || this.raises.has(site.id)) continue;
+        const c = this.world(site.x + 0.5, site.y + 0.5);
+        const [sx, sy] = P(...at);
+        for (let i = 0; i < 4; i++) {
+          const k = (t * 0.32 + i / 4) % 1;
+          const x = c.x + sx + k * 16 + this.windAt(t, i) * 4 * k;
+          const y = c.y + sy - k * 46;
+          const tone = phase.night > 0.5 ? '170,175,200' : '236,232,224';
+          ctx.fillStyle = `rgba(${tone},${(0.5 * (1 - k)).toFixed(3)})`;
+          ctx.beginPath();
+          ctx.arc(x, y, 3.5 + k * 9, 0, Math.PI * 2);
+          ctx.fill();
+        }
+      }
+    },
+    // Lumières : fenêtres et feux s'allument au crépuscule ; lucioles la nuit
+    drawLights(ctx, t, phase) {
+      const lit = Math.min(1, phase.night * 1.1 + phase.warm * 0.45);
+      ctx.save();
+      ctx.globalCompositeOperation = 'lighter';
+      for (const site of this.state.sites) {
+        const sets = site.level && LIGHTS[site.id];
+        const lights = sets && sets[Math.min(site.level, sets.length) - 1];
+        if (!lights || this.raises.has(site.id)) continue;
+        const c = this.world(site.x + 0.5, site.y + 0.5);
+        const fire = site.id === 'foyer' && site.level === 1;
+        lights.forEach(([u, v, z, r], i) => {
+          const [lx, ly] = P(u, v, z);
+          const flicker = fire ? 0.85 + 0.15 * Math.sin(t * 13 + i) * Math.sin(t * 7.3) : 0.95 + 0.05 * Math.sin(t * 2 + i);
+          glow(ctx, c.x + lx, c.y + ly, r, (fire ? Math.max(0.3, lit) : lit) * flicker);
+        });
+      }
+      if (phase.night > 0.35) {
+        const strength = (phase.night - 0.35) / 0.65;
+        for (const fly of fireflies(t, this.state.size)) {
+          const p = this.world(fly.x, fly.y);
+          glow(ctx, p.x, p.y - fly.z, 9, strength * fly.a, '255,236,140');
+          ctx.fillStyle = `rgba(255,250,200,${(strength * fly.a).toFixed(3)})`;
+          ctx.fillRect(p.x - 1, p.y - fly.z - 1, 2, 2);
+        }
+      }
+      ctx.restore();
     },
     // Nom du lieu, lisible dès qu'on est assez près
     drawLabel(ctx, site) {
@@ -846,6 +1050,13 @@ export default {
 .world { position: relative; }
 .world__head { display: flex; align-items: flex-end; justify-content: space-between; gap: 12px; padding: 4px 2px 8px; }
 .world__eyebrow { display: block; font-family: var(--oc-font-mono); font-weight: 800; font-size: 11px; letter-spacing: .14em; text-transform: uppercase; color: var(--oc-on-bg-faint); }
+.world__phase {
+  margin-left: auto; flex: none; min-height: 32px; padding: 4px 12px;
+  display: inline-flex; align-items: center; gap: 6px;
+  border-radius: 999px; background: var(--vellum-50); color: var(--ink-700);
+  box-shadow: inset 0 0 0 1px var(--oc-line), 0 2px 0 var(--vellum-400);
+  font-family: var(--font-ui); font-weight: 800; font-size: 13px;
+}
 .world__title { display: block; font-family: var(--oc-font-display); font-weight: 700; font-size: 24px; line-height: 1.1; color: var(--oc-on-bg); }
 .world__coins {
   flex: none; display: inline-flex; align-items: center; gap: 7px;
