@@ -82,6 +82,10 @@ export default {
   worldBuild(site) {
     return http.post('/play/world/build', { site }).then(response => response.data);
   },
+  // Quête de Brume : récompense de la quête active, { gained, coins, world }
+  worldQuest(id) {
+    return http.post('/play/world/quest', { id }).then(response => response.data);
+  },
   // Récolte : { id, seed, kinds, maxMoves, boosts } puis { gains, world } une fois les coups rejoués par le serveur
   harvestStart() {
     return http.post('/play/world/harvest/start').then(response => response.data);
