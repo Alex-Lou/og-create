@@ -5,8 +5,7 @@
 // - perte de contexte gérée ; destroy() retire écouteurs, boucles, textures, tampons et programme ;
 // - double page (opts.spread, grand écran) : la feuille de droite se soulève et retombe à gauche, son verso est
 //   la vraie page suivante ; la page visée (gauche ou droite) est la dernière touchée ;
-// - vue rapprochée (opts.zoom, téléphone) : la double page lue de près, une page à la fois ; la caméra (BookView)
-//   glisse d'une page à l'autre de la même double page, et la feuille tourne pour changer de double page.
+// - une page à la fois (téléphone) : chaque page se tourne comme une feuille, reliure à gauche.
 // Le contenu des pages vient de paint(index, ctx, largeur, hauteur, côté) → { hotspots, label } ; en double page,
 // index vaut aussi −1 (la garde, au revers de la couverture) ou count() (la garde de fin).
 import { paperNoise as noise, PAPER_BACK } from './painter';
@@ -101,7 +100,6 @@ void main() {
 export function createBook(opts) {
   const { stage, rig, wrap, hot, count, paint, onChange, onRest } = opts;
   const spread = Boolean(opts.spread);
-  const zoom = spread && Boolean(opts.zoom);
   const ac = new AbortController();
   const on = (target, type, fn, extra) => target.addEventListener(type, fn, { ...extra, signal: ac.signal });
   const canvas = document.createElement('canvas');
@@ -140,19 +138,13 @@ export function createBook(opts) {
     if (side === 'left' && !valid(left)) side = 'right';
     else if (side === 'right' && !valid(right)) side = 'left';
   }
-  // Côté visé à l'arrivée du tour en cours : la page demandée ; sinon, de près, la page qu'on lit ensuite (la
-  // gauche en avançant, la droite en reculant) ; sinon le choix de BookView (pickSide)
+  // Côté visé à l'arrivée du tour en cours : la page demandée, sinon le choix de BookView (pickSide)
   function arrivalSide() {
     const { left, right } = pagesOf(goal);
-    let s = goalPage !== null ? sideOf(goalPage) : zoom ? (dir > 0 ? 'left' : 'right') : opts.pickSide ? opts.pickSide({ left, right }) : 'left';
+    let s = goalPage !== null ? sideOf(goalPage) : opts.pickSide ? opts.pickSide({ left, right }) : 'left';
     if (s === 'left' && !valid(left)) s = 'right';
     else if (s === 'right' && !valid(right)) s = 'left';
     return s;
-  }
-  // Un tour validé commence : BookView fait suivre la caméra vers la page d'arrivée
-  function announceTurn() {
-    if (!opts.onTurn) return;
-    opts.onTurn(spread ? (arrivalSide() === 'left' ? pagesOf(goal).left : pagesOf(goal).right) : goal);
   }
 
   function compile(type, src) {
@@ -252,7 +244,7 @@ export function createBook(opts) {
 
   function layout() {
     layoutRaf = 0;
-    // Le canvas couvre le gréement (plus large que la scène en vue rapprochée : la caméra le fait glisser)
+    // Le canvas couvre le gréement
     const rect = rig.getBoundingClientRect();
     const book = wrap.getBoundingClientRect();
     const rigRect = rig.getBoundingClientRect();
@@ -466,10 +458,8 @@ export function createBook(opts) {
     const active = activeIndex();
     const { left, right } = pagesOf(at);
     const pages = [left, right].filter(valid).map(i => ({ i, e: entry(i) }));
-    // De près, seule la page lue est interactive (l'autre est hors champ)
-    const live = zoom ? pages.filter(p => p.i === active) : pages;
-    const hotspots = live.flatMap(({ i, e }) => spreadSpots(e.hotspots, sideOf(i)));
-    const labels = [...live].sort((a, b) => (b.i === active) - (a.i === active)).map(p => p.e.label);
+    const hotspots = pages.flatMap(({ i, e }) => spreadSpots(e.hotspots, sideOf(i)));
+    const labels = [...pages].sort((a, b) => (b.i === active) - (a.i === active)).map(p => p.e.label);
     onRest(active, hotspots, labels.join(' — '));
   }
   // Double page : toucher une page la vise (l'Athanor y envoie ses verdicts)
@@ -576,7 +566,6 @@ export function createBook(opts) {
         phase = 'fade';
         turning = true;
         hot.classList.add('is-turning');
-        announceTurn();
         const t0 = performance.now();
         anim = {
           tx: 0, ty: 0, done: () => {
@@ -596,7 +585,6 @@ export function createBook(opts) {
       }
       const d = dir;
       begin(d, pos, H() * .62);
-      announceTurn();
       phase = 'anim';
       const finish = d > 0 ? Fend : P0;
       animateTo(finish.x, finish.y, (spread ? 700 : 560) * speed, easeOut, d > 0 ? H() * .07 : -H() * .04, () => {
@@ -609,30 +597,16 @@ export function createBook(opts) {
   // Page publique : en double page, aller à sa double page et la viser
   const go = (i, speed = 1) => (spread ? move(spreadOf(i), i, speed) : move(i, null, speed));
 
-  // Page suivante, précédente : de près, d'abord l'autre page de la même double page (rien ne tourne)
-  function next() {
-    if (zoom && side === 'left' && phase === 'idle' && !anim && valid(pagesOf(at).right)) return look('right');
-    return move(at + 1);
-  }
-  function prev() {
-    if (zoom && side === 'right' && phase === 'idle' && !anim && valid(pagesOf(at).left)) return look('left');
-    return move(at - 1);
-  }
-  function look(s) {
-    side = s;
-    notify();
-    if (onChange) onChange(activeIndex());
-    return Promise.resolve(true);
-  }
+  // Page (ou double page) suivante, précédente
+  const next = () => move(at + 1);
+  const prev = () => move(at - 1);
 
   function tap(event) {
     if (event.target.closest('button')) return;
     const rect = hot.getBoundingClientRect();
-    let x = (event.clientX - rect.left) / rect.width;
-    // De près : position dans la page lue (au-delà de ses bords, la page voisine qui dépasse)
-    if (zoom) x = x * 2 - (side === 'right' ? 1 : 0);
+    const x = (event.clientX - rect.left) / rect.width;
     // Bord extérieur d'une page : tourner (sur la double page, le tiers extérieur de chaque page)
-    const edge = spread && !zoom ? .17 : .34;
+    const edge = spread ? .17 : .34;
     if (x > 1 - edge) next();
     else if (x < edge) prev();
   }
@@ -641,7 +615,7 @@ export function createBook(opts) {
     if (event.button !== 0 || pointer !== null) return;
     if (anim) finishNow();
     if (phase !== 'idle') return;
-    if (spread && !zoom) aimAt(event);
+    if (spread) aimAt(event);
     suppressClick = false;
     pointer = event.pointerId;
     sx = xPrev = xLast = event.clientX;
@@ -658,12 +632,6 @@ export function createBook(opts) {
         const d = dx < 0 ? 1 : -1;
         const tgt = at + d;
         suppressClick = true;
-        // De près, vers l'autre page de la même double page : la caméra glissera au lâcher
-        if (zoom && ((d > 0 && side === 'left' && valid(pagesOf(at).right)) || (d < 0 && side === 'right' && valid(pagesOf(at).left)))) {
-          phase = 'swipe';
-          dir = d;
-          return;
-        }
         if (tgt < 0 || tgt >= positions()) { phase = 'blocked'; return; }
         if (reducedMotion() || !gl) { phase = 'swipe'; dir = d; return; }
         hot.setPointerCapture(pointer);
@@ -706,7 +674,6 @@ export function createBook(opts) {
       const flick = dir > 0 ? -velocity : velocity;
       const progress = dir > 0 ? curl().progress : 1 - curl().progress;
       const commit = event.type === 'pointerup' && (flick > .45 || (flick > -.45 && progress > .3));
-      if (commit) announceTurn();
       settle(commit, 1, null);
     } else if (phase === 'swipe') {
       phase = 'idle';

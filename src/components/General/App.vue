@@ -1,6 +1,6 @@
 <template>
   <div class="oc-app" id="game-container">
-    <LivingBackground ref="background" :era="era" :population="population" :palette="palette" />
+    <LivingBackground ref="background" :era="era" :population="population" :palette="palette" :paused="isWorldActive" />
 
     <div class="oc-app__shell">
       <AppHeader :found="discoveredCount" :total="totalElements" :era="era" :eraName="eraName" :coins="coins" :timerActive="isTimerActive" @open-sceau="handleModeSelect('sceau')" @open-shop="openShop">
