@@ -70,6 +70,14 @@ export default {
   worldZone(zone) {
     return http.post('/play/world/zone', { zone }).then(response => response.data);
   },
+  // Boutique d'un atelier : { bought, coins, world }
+  worldItem(item) {
+    return http.post('/play/world/item', { item }).then(response => response.data);
+  },
+  // Skin porté par un bâtiment (vide : apparence d'origine) : vue de l'île
+  worldSkin(site, skin) {
+    return http.post('/play/world/skin', { site, skin }).then(response => response.data);
+  },
   // { built, world }
   worldBuild(site) {
     return http.post('/play/world/build', { site }).then(response => response.data);

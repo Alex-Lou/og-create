@@ -44,6 +44,7 @@
             :elementEmojis="elementEmojis"
             :isLoggedIn="isLoggedIn"
             :categories="categories"
+            :coins="coins"
             @coins-updated="handleCoinsUpdated"
             @show-alert="showAlert"
             @login="showSeuil = true"

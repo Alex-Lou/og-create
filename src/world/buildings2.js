@@ -3,8 +3,10 @@
 import { P, TW, face, box, gable, pyramid, disc, cylinder, shadow, sprite, EDGE } from './iso';
 import {
   WOOD, WOOD_DARK, STONE, WALL, BRICK, SOIL, ROOF_RED, PINE, BUILDING_BOX,
-  pebble, doorLeft, windowLeft, windowRight, planksLeft, planksRight, roundTree
+  pebble, doorLeft, windowLeft, windowRight, planksLeft, planksRight, roundTree,
+  WHITE_STONE, ROCKS, FOLIAGE, roofOf, roofTexture, stoneCourses, seasonDots, crystals
 } from './palette';
+import { gardenFence, goldenSign } from './sprites';
 
 const COPPER = { top: '#F4B07A', left: '#D9844E', right: '#A85C31' };
 const SLATE = { front: '#9A88CF', back: '#6F5DA6' };
@@ -164,7 +166,8 @@ function sanctuary() {
 
 /* ---------- Niveaux supérieurs ---------- */
 // Mine (Carrière 2) : la roche s'ouvre sur une galerie boisée, des rails mènent au wagonnet, une lanterne
-function mine() {
+function mine(skin) {
+  const rockColor = ROCKS[skin] || STONE;
   const portal = face([[-0.55, -0.2, 0], [-0.15, -0.2, 0], [-0.15, -0.2, 24], [-0.55, -0.2, 24]], '#2A2420');
   const frame = box(-0.6, -0.22, -0.55, -0.16, 0, 26, WOOD_DARK) + box(-0.15, -0.22, -0.1, -0.16, 0, 26, WOOD_DARK) + box(-0.6, -0.22, -0.1, -0.16, 24, 28, WOOD);
   let rails = '';
@@ -176,8 +179,9 @@ function mine() {
   const lantern = box(0.02, -0.25, 0.06, -0.21, 0, 30, WOOD_DARK) + box(-0.02, -0.29, 0.1, -0.17, 30, 38, { top: '#3D3A36', left: '#FFE08A', right: '#E9BF4E' });
   return sprite(
     shadow(0, 0, 1.15, 0.18)
-    + box(-0.95, -0.95, 0.9, -0.2, 0, 44, STONE)
-    + box(0.3, -0.2, 0.9, 0.3, 0, 26, STONE)
+    + box(-0.95, -0.95, 0.9, -0.2, 0, 44, rockColor)
+    + box(0.3, -0.2, 0.9, 0.3, 0, 26, rockColor)
+    + (skin === 'roche-cristal' ? crystals(0.1, -0.6, 44, 1.2) + crystals(0.6, 0.05, 26) : '')
     + `<polyline points="${[P(-0.95, -0.2, 34), P(-0.3, -0.2, 40), P(0.3, -0.2, 30)].map(p => p.join(',')).join(' ')}" stroke="rgba(90,80,65,.4)" stroke-width="1" fill="none"/>`
     + portal + frame + rails
     + box(-0.5, 0.45, -0.2, 0.72, 2, 12, WOOD_DARK) + pebble(-0.38, 0.55, 3.4, DARK_STONE) + pebble(-0.3, 0.62, 3, DARK_STONE)
@@ -186,21 +190,79 @@ function mine() {
     BUILDING_BOX
   );
 }
+// Kiosque de la Fontaine (skins toit bleu ou chaume) : quatre poteaux et un toit conique au-dessus du bassin.
+// Poteaux en losange (avant gauche et avant droit) : la fontaine reste dégagée au centre.
+const KIOSK_Z = 64;
+const KIOSK_R = 0.98;
+function kioskPost(u, v) {
+  return box(u - 0.035, v - 0.035, u + 0.035, v + 0.035, 0, KIOSK_Z, WOOD_DARK)
+    + box(u - 0.05, v - 0.05, u + 0.05, v + 0.05, 0, 3, STONE);
+}
+function kioskRoof(skin) {
+  const thatch = skin === 'toit-chaume';
+  const colors = thatch ? { light: '#F3D27E', dark: '#C4943F', edge: '#A97B32' } : { light: '#86B6E6', dark: '#3F6FA3', edge: '#2E5585' };
+  const f = n => Math.round(n * 100) / 100;
+  const [, cy] = P(0, 0, KIOSK_Z);
+  const rx = KIOSK_R * 45.25;
+  const ry = KIOSK_R * 22.63;
+  const h = 26;
+  const apex = cy - h;
+  // Silhouette : du sommet aux points de tangence, puis l'arc avant de la base
+  const ty = cy - (ry * ry) / h;
+  const tx = rx * Math.sqrt(Math.max(0, 1 - ((cy - ty) / ry) ** 2));
+  const cone = `M0,${f(apex)} L${f(tx)},${f(ty)} A${f(rx)},${f(ry)} 0 1 1 ${f(-tx)},${f(ty)} Z`;
+  let texture = '';
+  if (thatch) {
+    for (let a = 0.12; a < Math.PI - 0.1; a += 0.09) {
+      const bx = rx * Math.cos(a);
+      const by = cy + ry * Math.sin(a);
+      const j = Math.sin(a * 53) * 0.04;
+      texture += `<line x1="${f(bx * (0.18 + j))}" y1="${f(apex + (by - apex) * (0.18 + j))}" x2="${f(bx * 0.97)}" y2="${f(apex + (by - apex) * 0.97)}" stroke="rgba(140,95,35,.45)" stroke-width="0.6"/>`;
+    }
+    texture += `<path d="M${f(-rx * 0.62)},${f(cy - ry * 0.05 - h * 0.38)} A${f(rx * 0.62)},${f(ry * 0.62)} 0 0 0 ${f(rx * 0.62)},${f(cy - ry * 0.05 - h * 0.38)}" fill="none" stroke="#B88A3A" stroke-width="1.6" stroke-dasharray="1.6 1.2"/>`;
+  } else {
+    [0.35, 0.55, 0.75, 0.95].forEach((k, r) => {
+      const ey = apex + h * k;
+      texture += `<path d="M${f(-rx * k)},${f(ey)} A${f(rx * k)},${f(ry * k)} 0 0 0 ${f(rx * k)},${f(ey)}" fill="none" stroke="rgba(20,40,70,.4)" stroke-width="0.8"/>`;
+      for (let a = r % 2 ? 0.3 : 0.55; a < Math.PI - 0.15; a += 0.5) {
+        const k0 = k - 0.2;
+        texture += `<line x1="${f(rx * k0 * Math.cos(a))}" y1="${f(apex + h * k0 + ry * k0 * Math.sin(a))}" x2="${f(rx * k * Math.cos(a))}" y2="${f(ey + ry * k * Math.sin(a))}" stroke="rgba(20,40,70,.28)" stroke-width="0.6"/>`;
+      }
+    });
+  }
+  return `<defs><linearGradient id="kioskg-${skin}" x1="0" x2="1"><stop offset="0" stop-color="${colors.light}"/><stop offset="1" stop-color="${colors.dark}"/></linearGradient></defs>`
+    // Ombre du toit sur le haut des poteaux, puis le cône, sa texture, son rebord et l'épi de faîtage
+    + `<path d="${cone}" fill="url(#kioskg-${skin})" stroke="rgba(60,40,25,.35)" stroke-width="0.8" stroke-linejoin="round"/>`
+    + texture
+    + `<path d="M${f(-rx)},${f(cy)} A${f(rx)},${f(ry)} 0 0 0 ${f(rx)},${f(cy)}" fill="none" stroke="${colors.edge}" stroke-width="${thatch ? 2.6 : 2}" ${thatch ? 'stroke-dasharray="1.8 1.2"' : ''}/>`
+    + `<line x1="0" y1="${f(apex)}" x2="0" y2="${f(apex - 7)}" stroke="#7A5A3A" stroke-width="1.4"/><circle cx="0" cy="${f(apex - 8)}" r="2" fill="#E9BF4E" stroke="#8A6A22" stroke-width="0.6"/>`;
+}
 // Fontaine (Puits 2) : bassin rond, colonne, vasque ; les jets d'eau sont animés à part
-function fountain() {
+function fountain(skin) {
+  const stone = skin === 'pierre-blanche' ? WHITE_STONE : STONE;
+  const kiosk = skin === 'toit-bleu' || skin === 'toit-chaume';
+  const r = KIOSK_R * 0.88;
   return sprite(
-    shadow(0, 0, 0.95)
-    + cylinder(0, 0, 0, 10, 0.72, STONE, 'fobasin')
+    shadow(0, 0, kiosk ? 1.05 : 0.95)
+    + (kiosk ? kioskPost(-r, 0) + kioskPost(0, -r) : '')
+    + cylinder(0, 0, 0, 10, 0.72, stone, 'fobasin')
+    + (skin === 'pierre-blanche' ? stoneCourses(0, 0, 0, 10, 0.72, 1) : '')
     + disc(0, 0, 10, 0.62, '#4C9CC8') + disc(-0.1, -0.1, 10, 0.3, '#7CC4E8', ' opacity=".7"')
     + cylinder(0, 0, 10, 30, 0.08, WALL, 'focol')
-    + cylinder(0, 0, 30, 34, 0.3, STONE, 'fobowl')
+    + cylinder(0, 0, 30, 34, 0.3, stone, 'fobowl')
     + disc(0, 0, 34, 0.24, '#4C9CC8')
-    + cylinder(0, 0, 34, 42, 0.04, WALL, 'fotip'),
+    + cylinder(0, 0, 34, 42, 0.04, WALL, 'fotip')
+    + (kiosk ? kioskPost(r, 0) + kioskPost(0, r) + kioskRoof(skin) : ''),
     BUILDING_BOX
   );
 }
 // Grand bosquet (Bosquet 2) : quatre arbres dont un sapin, souche et hache, champignons
-function bigGrove() {
+function bigGrove(skin) {
+  const colors = FOLIAGE[skin];
+  const tree = (u, v, sc, base) => {
+    const [x, y] = P(u, v, 0);
+    return roundTree(u, v, sc, colors || base) + seasonDots(skin, x, y - 34 * sc, 12 * sc);
+  };
   const [px, py] = P(0.5, 0.5, 0);
   const pine = shadow(-0.55, 0.45, 0.3) + box(-0.6, 0.4, -0.5, 0.5, 0, 12, WOOD_DARK)
     + [[-8, 15, 22], [-20, 12, 20], [-31, 9, 18]].map(([dy, w, h], k) => {
@@ -210,10 +272,14 @@ function bigGrove() {
   const stump = shadow(0.5, 0.5, 0.18, 0.2) + cylinder(0.5, 0.5, 0, 7, 0.13, { top: '#E7C08A', left: WOOD.left, right: WOOD.right }, 'bgstump')
     + `<ellipse cx="${px}" cy="${py - 7}" rx="3.6" ry="1.8" fill="none" stroke="#B98552" stroke-width="0.8"/>`
     + line([px + 2, py - 8], [px + 9, py - 20], WOOD.right, 1.8) + `<path d="M${px + 6},${py - 23} l7,2 l-2,5 l-6,-3 Z" fill="#9AA6B2"/>`;
-  return sprite(roundTree(-0.5, -0.5, 1.15) + roundTree(0.45, -0.5, 1.0, { light: '#C7E98F', mid: '#93CC5E', dark: '#5E9A3C' }) + pine + roundTree(0.05, 0.05, 1.25) + stump, BUILDING_BOX);
+  const snowy = skin === 'givre' ? (() => {
+    const [x, y] = P(-0.55, 0.45, 0);
+    return `<path d="M${x - 6},${y - 46} L${x},${y - 49} L${x + 6},${y - 46} L${x},${y - 43} Z" fill="#FFFFFF"/>`;
+  })() : '';
+  return sprite(tree(-0.5, -0.5, 1.15) + tree(0.45, -0.5, 1.0, { light: '#C7E98F', mid: '#93CC5E', dark: '#5E9A3C' }) + pine + snowy + tree(0.05, 0.05, 1.25) + stump, BUILDING_BOX);
 }
 // Potager 2 : planches cultivées, serre vitrée au fond, épouvantail
-function greenhouseGarden() {
+function greenhouseGarden(skin) {
   let plants = '';
   for (let j = 0; j < 4; j++) {
     for (let k = 0; k < 2; k++) {
@@ -225,6 +291,7 @@ function greenhouseGarden() {
   const sc = P(0.65, 0.05, 0);
   return sprite(
     shadow(0, 0, 1.15, 0.14)
+    + (skin ? gardenFence(skin) : '')
     + box(-0.85, 0.05, 0.85, 0.85, 0, 4, SOIL) + plants
     // Serre : armature et vitres
     + box(-0.8, -0.85, 0.3, -0.2, 0, 22, { top: glass, left: glass, right: 'rgba(170,205,220,.6)' }, ' stroke="#FFFFFF" stroke-width="1.2" stroke-linejoin="round"')
@@ -238,8 +305,9 @@ function greenhouseGarden() {
   );
 }
 // Forge (Atelier 2) : l'appentis gagne un étage de pierre, enseigne, tonneaux et caisses
-function forge() {
+function forge(skin) {
   const u0 = -0.8, u1 = 0.15, v0 = -0.55, v1 = 0.45;
+  const roof = roofOf(skin, ROOF_RED);
   const sign = P(0.15, 0.5, 30);
   return sprite(
     shadow(0, 0, 1.15)
@@ -247,7 +315,9 @@ function forge() {
     + doorLeft(-0.55, -0.15, v1, 17, WOOD_DARK.right)
     + box(u0, v0, u1, v1, 22, 40, WOOD) + planksLeft(u0, u1, v1, 22, 40) + planksRight(u1, v0, v1, 22, 40)
     + windowLeft(-0.6, -0.35, v1, 27, 36) + windowRight(u1, -0.3, -0.05, 27, 36)
-    + gable(u0, v0, u1, v1, 40, 18, { front: ROOF_RED.front, back: ROOF_RED.back, gable: WOOD.right }, 0.1)
+    + gable(u0, v0, u1, v1, 40, 18, { front: roof.front, back: roof.back, gable: WOOD.right }, 0.1)
+    + roofTexture(skin, u0, v0, u1, v1, 40, 18, 0.1)
+    + (skin === 'enseigne-doree' ? goldenSign(-0.3, v1, 44) : '')
     // Four agrandi et cheminée haute
     + box(0.25, -0.45, 0.88, 0.3, 0, 22, BRICK)
     + face([[0.88, -0.2, 2], [0.88, 0.1, 2], [0.88, 0.1, 13], [0.88, -0.2, 13]], '#3A1E14')

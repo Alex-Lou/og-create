@@ -5,7 +5,8 @@
 import { P, TW, TH, face, box, gable, pyramid, disc, cylinder, shadow, foliage, sprite, EDGE } from './iso';
 import {
   WOOD, WOOD_DARK, STONE, WALL, BRICK, SOIL, ROOF_RED, THATCH, LEAVES, PINE, INK, BUILDING_BOX, PROP_BOX,
-  pebble, doorLeft, windowLeft, windowRight, planksLeft, planksRight, roundTree
+  pebble, doorLeft, windowLeft, windowRight, planksLeft, planksRight, roundTree,
+  WHITE_STONE, WHITE_WOOD, ROCKS, FOLIAGE, SAILS, roofOf, roofTexture, stoneCourses, seasonDots, crystals
 } from './palette';
 
 /* ---------- Bâtiments ---------- */
@@ -26,24 +27,28 @@ function campfire() {
 }
 
 // Foyer, niveau 2 : cabane de planches, toit de chaume
-function hut() {
+function hut(skin) {
   const u0 = -0.55, u1 = 0.55, v0 = -0.45, v1 = 0.45, h = 26;
+  const roof = roofOf(skin, THATCH);
+  const thatch = !skin;
   return sprite(
     shadow(0, 0, 0.95)
     + box(u0, v0, u1, v1, 0, h, WOOD)
     + planksLeft(u0, u1, v1, 0, h) + planksRight(u1, v0, v1, 0, h)
     + doorLeft(-0.12, 0.16, v1, 17)
     + windowRight(u1, -0.22, 0.08, 10, 18)
-    + gable(u0, v0, u1, v1, h, 24, { front: THATCH.front, back: THATCH.back, gable: WOOD.right }, 0.12)
-    // Mèches de chaume sur le bord du pan avant
-    + `<polyline points="${[P(-0.67, 0.57, h), P(0.67, 0.57, h)].map(p => p.join(',')).join(' ')}" stroke="#B88A3A" stroke-width="1.6" stroke-dasharray="2 3"/>`,
+    + gable(u0, v0, u1, v1, h, 24, { front: roof.front, back: roof.back, gable: WOOD.right }, 0.12)
+    + roofTexture(skin, u0, v0, u1, v1, h, 24, 0.12)
+    // Mèches de chaume sur le bord du pan avant (toit d'origine)
+    + (thatch ? `<polyline points="${[P(-0.67, 0.57, h), P(0.67, 0.57, h)].map(p => p.join(',')).join(' ')}" stroke="#B88A3A" stroke-width="1.6" stroke-dasharray="2 3"/>` : ''),
     BUILDING_BOX
   );
 }
 
 // Foyer, niveau 3 : maison crème sur soubassement de pierre, toit de tuiles, cheminée
-function house() {
+function house(skin) {
   const u0 = -0.72, u1 = 0.62, v0 = -0.5, v1 = 0.5, h = 34;
+  const roof = roofOf(skin, ROOF_RED);
   return sprite(
     shadow(0, 0, 1.15)
     + box(u0 - 0.04, v0 - 0.04, u1 + 0.04, v1 + 0.04, 0, 5, STONE)
@@ -54,16 +59,18 @@ function house() {
     + windowRight(u1, -0.3, 0.1, 13, 24)
     // Cheminée derrière le faîtage
     + box(0.18, -0.36, 0.36, -0.18, h, h + 30, BRICK)
-    + gable(u0, v0, u1, v1, h, 28, { front: ROOF_RED.front, back: ROOF_RED.back, gable: WALL.right }, 0.1)
-    // Rangs de tuiles sur le pan avant
-    + [0.3, 0.6].map(k => `<polyline points="${[P(-0.82, k * 0.6 + 0.0, h + 28 * (1 - k)), P(0.72, k * 0.6, h + 28 * (1 - k))].map(p => p.join(',')).join(' ')}" stroke="rgba(120,40,25,.35)" stroke-width="1"/>`).join(''),
+    + gable(u0, v0, u1, v1, h, 28, { front: roof.front, back: roof.back, gable: WALL.right }, 0.1)
+    + roofTexture(skin, u0, v0, u1, v1, h, 28, 0.1)
+    // Rangs de tuiles sur le pan avant (toit d'origine)
+    + (skin ? '' : [0.3, 0.6].map(k => `<polyline points="${[P(-0.82, k * 0.6 + 0.0, h + 28 * (1 - k)), P(0.72, k * 0.6, h + 28 * (1 - k))].map(p => p.join(',')).join(' ')}" stroke="rgba(120,40,25,.35)" stroke-width="1"/>`).join('')),
     BUILDING_BOX
   );
 }
 
 // Carrière : affleurement rocheux taillé en gradins, blocs extraits, pioche et wagonnet
-function quarry() {
-  const rock = (u0, v0, u1, v1, h) => box(u0, v0, u1, v1, 0, h, STONE);
+function quarry(skin) {
+  const rockColor = ROCKS[skin] || STONE;
+  const rock = (u0, v0, u1, v1, h) => box(u0, v0, u1, v1, 0, h, rockColor);
   const pick = `<line x1="${P(0.55, 0.3, 0)[0]}" y1="${P(0.55, 0.3, 0)[1]}" x2="${P(0.55, 0.3, 22)[0] - 4}" y2="${P(0.55, 0.3, 22)[1]}" stroke="${WOOD.right}" stroke-width="2.4" stroke-linecap="round"/>`
     + `<path d="M${P(0.55, 0.3, 22)[0] - 13},${P(0.55, 0.3, 22)[1] + 3} Q${P(0.55, 0.3, 22)[0] - 4},${P(0.55, 0.3, 22)[1] - 5} ${P(0.55, 0.3, 22)[0] + 6},${P(0.55, 0.3, 22)[1] + 3}" stroke="#7C8A96" stroke-width="2.6" fill="none" stroke-linecap="round"/>`;
   const cart = shadow(-0.45, 0.6, 0.3, 0.2)
@@ -78,36 +85,71 @@ function quarry() {
     + rock(-0.1, -0.2, 0.4, 0.2, 12)
     // Veines dans la roche
     + `<polyline points="${[P(-0.9, -0.2, 30), P(-0.4, -0.2, 34), P(0.2, -0.2, 26)].map(p => p.join(',')).join(' ')}" stroke="rgba(90,80,65,.4)" stroke-width="1" fill="none"/>`
-    + box(0.45, -0.1, 0.75, 0.15, 0, 9, STONE) + box(0.5, 0.18, 0.78, 0.42, 0, 7, STONE)
+    + box(0.45, -0.1, 0.75, 0.15, 0, 9, rockColor) + box(0.5, 0.18, 0.78, 0.42, 0, 7, rockColor)
+    + (skin === 'roche-cristal' ? crystals(-0.35, -0.55, 40, 1.1) + crystals(0.5, -0.62, 28) + crystals(-0.6, 0.05, 22, 0.8) : '')
     + cart + pick,
     BUILDING_BOX
   );
 }
 
 // Bosquet : trois arbres ronds de tailles différentes
-function grove() {
-  return sprite(roundTree(-0.45, -0.4, 1.1) + roundTree(0.45, -0.35, 0.95) + roundTree(0, 0.4, 1.2), BUILDING_BOX);
+function grove(skin) {
+  const colors = FOLIAGE[skin] || LEAVES;
+  const tree = (u, v, sc) => {
+    const [x, y] = P(u, v, 0);
+    return roundTree(u, v, sc, colors) + seasonDots(skin, x, y - 34 * sc, 12 * sc) + seasonDots(skin, x - 7 * sc, y - 24 * sc, 10 * sc);
+  };
+  return sprite(tree(-0.45, -0.4, 1.1) + tree(0.45, -0.35, 0.95) + tree(0, 0.4, 1.2), BUILDING_BOX);
 }
 
 // Puits : margelle de pierre, eau sombre, deux montants, petit toit, treuil et seau
-function well() {
+function well(skin) {
+  const roof = roofOf(skin, ROOF_RED);
   return sprite(
     shadow(0, 0, 0.75)
     + box(-0.42, -0.06, -0.34, 0.06, 0, 40, WOOD_DARK)
-    + cylinder(0, 0, 0, 16, 0.36, STONE, 'wellg')
+    + cylinder(0, 0, 0, 16, 0.36, skin === 'pierre-blanche' ? WHITE_STONE : STONE, 'wellg')
+    + (skin === 'pierre-blanche' ? stoneCourses(0, 0, 0, 16, 0.36, 2) : '')
     + disc(0, 0, 16, 0.26, '#2F5E7A') + disc(-0.04, -0.04, 16, 0.14, '#4C8DB0', ' opacity=".7"')
     + box(0.34, -0.06, 0.42, 0.06, 0, 40, WOOD_DARK)
     // Treuil (axe le long de u) et corde
     + box(-0.38, -0.025, 0.38, 0.025, 31, 34, WOOD)
     + `<line x1="${P(0, 0, 32)[0]}" y1="${P(0, 0, 32)[1]}" x2="${P(0, 0, 22)[0]}" y2="${P(0, 0, 22)[1]}" stroke="#7A5A3A" stroke-width="1.2"/>`
     + cylinder(0, 0, 16, 22, 0.08, { top: '#B98552', left: WOOD.left, right: WOOD.right }, 'bucketg')
-    + gable(-0.5, -0.28, 0.5, 0.28, 40, 14, { front: ROOF_RED.front, back: ROOF_RED.back, gable: WOOD_DARK.right }, 0.06),
+    + gable(-0.5, -0.28, 0.5, 0.28, 40, 14, { front: roof.front, back: roof.back, gable: WOOD_DARK.right }, 0.06)
+    + roofTexture(skin, -0.5, -0.28, 0.5, 0.28, 40, 14, 0.06),
     BUILDING_BOX
   );
 }
 
 // Potager : planche de terre labourée en sillons, pousses et fanes, petite clôture au fond
-function garden() {
+// Clôture du fond du Potager selon le skin : bois, blanche, muret de pierre, fleurie
+export function gardenFence(skin) {
+  if (skin === 'cloture-pierre') {
+    let wall = '';
+    for (let k = 0; k < 6; k++) {
+      const u = -0.9 + k * 0.3;
+      wall += box(u, -0.96, u + 0.29, -0.86, 0, 7 + (k % 2), STONE);
+    }
+    return wall;
+  }
+  const wood = skin === 'cloture-blanche' ? WHITE_WOOD : WOOD;
+  let fence = '';
+  for (let k = 0; k <= 6; k++) {
+    const u = -0.9 + k * 0.3;
+    fence += box(u - 0.025, -0.95, u + 0.025, -0.9, 0, 12, wood);
+  }
+  fence += box(-0.9, -0.94, 0.9, -0.91, 8, 10, wood) + box(-0.9, -0.94, 0.9, -0.91, 3, 5, wood);
+  if (skin === 'cloture-fleurie') {
+    for (let k = 0; k < 6; k++) {
+      const [x, y] = P(-0.75 + k * 0.3, -0.92, 11);
+      fence += `<circle cx="${x}" cy="${y}" r="2.2" fill="${k % 2 ? '#F7A8C8' : '#FFD45E'}"/><circle cx="${x}" cy="${y}" r="0.8" fill="#FFFFFF"/>`
+        + `<ellipse cx="${x + 3}" cy="${y + 1.5}" rx="2" ry="1" fill="#6DB64C"/>`;
+    }
+  }
+  return fence;
+}
+function garden(skin) {
   let rows = '';
   for (let k = 0; k < 4; k++) {
     const v = -0.6 + k * 0.38;
@@ -125,24 +167,28 @@ function garden() {
         : `<ellipse cx="${x - 3}" cy="${y - 3}" rx="3.4" ry="2" fill="#86CB5E" transform="rotate(-30 ${x - 3} ${y - 3})"/><ellipse cx="${x + 3}" cy="${y - 3}" rx="3.4" ry="2" fill="#6DB64C" transform="rotate(30 ${x + 3} ${y - 3})"/>`;
     }
   }
-  let fence = '';
-  for (let k = 0; k <= 6; k++) {
-    const u = -0.9 + k * 0.3;
-    fence += box(u - 0.025, -0.95, u + 0.025, -0.9, 0, 12, WOOD);
-  }
-  fence += box(-0.9, -0.94, 0.9, -0.91, 8, 10, WOOD) + box(-0.9, -0.94, 0.9, -0.91, 3, 5, WOOD);
-  return sprite(shadow(0, 0, 1.15, 0.14) + fence + box(-0.85, -0.85, 0.85, 0.85, 0, 4, SOIL) + rows + plants, BUILDING_BOX);
+  return sprite(shadow(0, 0, 1.15, 0.14) + gardenFence(skin) + box(-0.85, -0.85, 0.85, 0.85, 0, 4, SOIL) + rows + plants, BUILDING_BOX);
 }
 
 // Atelier : appentis de bois et four de briques à cheminée ronde, enclume devant
-function workshop() {
+// Enseigne dorée (skin) accrochée au mur gauche d'un atelier, à la hauteur z
+export function goldenSign(u, v, z) {
+  const [x, y] = P(u, v, z);
+  return `<line x1="${x}" y1="${y}" x2="${x - 9}" y2="${y + 4.5}" stroke="#5E3A22" stroke-width="1.6"/>`
+    + `<path d="M${x - 16},${y + 5} h12 v9 q-6,5 -12,0 Z" fill="#F2C04B" stroke="#8A6A22" stroke-width="1"/>`
+    + `<path d="M${x - 13},${y + 8} l3,3 l4,-4" stroke="#8A6A22" stroke-width="1.2" fill="none"/>`;
+}
+function workshop(skin) {
   const u0 = -0.8, u1 = 0.15, v0 = -0.55, v1 = 0.45, h = 28;
+  const roof = roofOf(skin, { front: '#8E6A4A', back: '#6F5038' });
   return sprite(
     shadow(0, 0, 1.15)
     + box(u0, v0, u1, v1, 0, h, WOOD)
     + planksLeft(u0, u1, v1, 0, h) + planksRight(u1, v0, v1, 0, h)
     + doorLeft(-0.55, -0.15, v1, 19, WOOD_DARK.right)
-    + gable(u0, v0, u1, v1, h, 18, { front: '#8E6A4A', back: '#6F5038', gable: WOOD.right }, 0.1)
+    + gable(u0, v0, u1, v1, h, 18, { front: roof.front, back: roof.back, gable: WOOD.right }, 0.1)
+    + roofTexture(skin, u0, v0, u1, v1, h, 18, 0.1)
+    + (skin === 'enseigne-doree' ? goldenSign(0.05, v1, 24) : '')
     // Four : socle de briques, voûte en pyramide, bouche rougeoyante, cheminée
     + box(0.25, -0.4, 0.85, 0.3, 0, 18, BRICK)
     + face([[0.85, -0.18, 2], [0.85, 0.08, 2], [0.85, 0.08, 11], [0.85, -0.18, 11]], '#3A1E14')
@@ -286,13 +332,20 @@ export function flameFrames() {
   ));
 }
 // Voilier amarré au Ponton (bercé par l'île) ; ancré au centre de l'emprise
-export function boatSprite() {
+export function boatSprite(skin) {
   const [x, y] = P(0.05, 0.5, 0);
+  const sail = SAILS[skin];
   const hull = `<path d="M${x - 22},${y - 6} L${x + 22},${y - 6} Q${x + 18},${y + 5} ${x + 8},${y + 6} L${x - 12},${y + 6} Q${x - 20},${y + 4} ${x - 22},${y - 6} Z" fill="${WOOD.left}" stroke="rgba(60,40,25,.35)" stroke-width="0.8"/>`
     + `<path d="M${x - 22},${y - 6} L${x + 22},${y - 6} L${x + 19},${y - 2} L${x - 20},${y - 2} Z" fill="#FBF6EA"/>`;
   const mast = `<line x1="${x}" y1="${y - 6}" x2="${x}" y2="${y - 46}" stroke="${WOOD_DARK.right}" stroke-width="2"/>`;
-  const sail = `<path d="M${x + 1},${y - 44} L${x + 1},${y - 10} L${x + 20},${y - 12} Z" fill="#FFFDF8" stroke="rgba(60,40,25,.25)" stroke-width="0.8"/><path d="M${x - 1},${y - 38} L${x - 1},${y - 12} L${x - 14},${y - 13} Z" fill="#F2E4C0"/>`;
-  return sprite(`<ellipse cx="${x}" cy="${y + 6}" rx="22" ry="5" fill="rgba(30,70,110,.25)"/>` + hull + mast + sail, BUILDING_BOX);
+  // Voile : blanche d'origine, ou couleur du skin (rayée : bandes rouges sur blanc)
+  const main = sail && sail[0] !== 'stripes' ? sail[0] : '#FFFDF8';
+  const jib = sail && sail[0] !== 'stripes' ? sail[1] : '#F2E4C0';
+  const stripes = sail && sail[0] === 'stripes'
+    ? [0, 1, 2].map(k => `<path d="M${x + 1},${y - 40 + k * 10} L${x + 1},${y - 35 + k * 10} L${x + 6 + k * 4.5},${y - 35.5 + k * 10} L${x + 4 + k * 4.5},${y - 40.5 + k * 10} Z" fill="${sail[1]}"/>`).join('')
+    : '';
+  const sails = `<path d="M${x + 1},${y - 44} L${x + 1},${y - 10} L${x + 20},${y - 12} Z" fill="${main}" stroke="rgba(60,40,25,.25)" stroke-width="0.8"/>${stripes}<path d="M${x - 1},${y - 38} L${x - 1},${y - 12} L${x - 14},${y - 13} Z" fill="${jib}"/>`;
+  return sprite(`<ellipse cx="${x}" cy="${y + 6}" rx="22" ry="5" fill="rgba(30,70,110,.25)"/>` + hull + mast + sails, BUILDING_BOX);
 }
 
 export const BUILDINGS = {
