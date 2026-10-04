@@ -90,7 +90,7 @@
         :aria-pressed="!query.trim() && activeFilter === pill.id"
         :class="['book-view__filter', { 'is-on': !query.trim() && activeFilter === pill.id, 'is-page': pill.id === 'page' }]"
         @click="pickFilter(pill.id)"
-      >{{ pill.label }} <span class="book-view__filter-count">{{ pill.count }}</span></button>
+      ><ElementGlyph v-if="pill.glyph" :glyph="pill.glyph" /> {{ pill.label }} <span class="book-view__filter-count">{{ pill.count }}</span></button>
     </div>
     <div class="book-view__shelf" aria-label="Éléments connus">
       <ElementTile
@@ -139,7 +139,7 @@
     <!-- Fiche d'un élément (appui long sur sa tuile) : famille, chapitre, mélanges qu'il cache encore -->
     <GModal v-if="info" :eyebrow="info.family || 'Élément'" :title="info.name" align="center" :width="420" @close="info = null">
       <div class="book-view__info">
-        <span class="book-view__info-glyph"><ElementGlyph :glyph="elementEmojis[info.name] || '❔'" /></span>
+        <span class="book-view__info-glyph"><ElementGlyph :glyph="elementEmojis[info.name] || 'ui:unknown'" /></span>
         <p>Chapitre {{ info.chapter }} du Livre</p>
         <p v-if="info.fertile > 0">Il cache encore <strong>{{ info.fertile }}</strong> mélange{{ info.fertile > 1 ? 's' : '' }} inédit{{ info.fertile > 1 ? 's' : '' }}.</p>
         <p v-else>Tous ses mélanges sont découverts.</p>
@@ -299,7 +299,7 @@ export default {
       if (this.pageClue) pills.push({ id: 'page', label: '✦ Pour cette page', count: this.pageList.length });
       pills.push({ id: 'all', label: 'Tout', count: owned.length });
       const fertile = owned.filter(name => this.unexplored[name] > 0).length;
-      if (fertile) pills.push({ id: 'fertile', label: '🌱 Fertiles', count: fertile });
+      if (fertile) pills.push({ id: 'fertile', glyph: 'ui:sprout', label: 'Fertiles', count: fertile });
       Object.keys(this.categories).forEach(family => {
         if (counts[family]) pills.push({ id: family, label: family === 'Elements Fondamentaux' ? 'Éléments premiers' : family, count: counts[family] });
       });

@@ -6,7 +6,7 @@
     :aria-label="label"
   >
     <span class="tile__corner" aria-hidden="true"></span>
-    <span class="tile__medal" aria-hidden="true"><ElementGlyph :glyph="glyph || '❔'" /></span>
+    <span class="tile__medal" aria-hidden="true"><ElementGlyph :glyph="glyph || 'ui:unknown'" /></span>
     <span v-if="!compact" :class="['tile__name', lengthClass]">{{ name }}</span>
     <span v-if="slotIndex >= 0" class="tile__slot" aria-hidden="true">{{ numeral }}</span>
     <span v-if="badge" class="tile__badge" aria-hidden="true">{{ fertile > 99 ? '99+' : fertile }}</span>

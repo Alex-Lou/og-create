@@ -91,7 +91,7 @@
     >
       <!-- Ce qui a été créé, et avec quoi -->
       <div v-if="lastCreation" class="tq-creation">
-        <span class="tq-creation__ink g-ink--glow" aria-hidden="true"><ElementGlyph :glyph="lastCreation.emoji || '✨'" /></span>
+        <span class="tq-creation__ink g-ink--glow" aria-hidden="true"><ElementGlyph :glyph="lastCreation.emoji || 'ui:spark'" /></span>
         <span class="tq-creation__name">{{ lastCreation.name }}</span>
         <span v-if="lastCreation.ingredients.length" class="tq-creation__from">
           <span class="g-mono">Créé avec</span>

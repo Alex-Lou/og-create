@@ -81,14 +81,22 @@ function drawing(src, onReady) {
   if (drawings.has(src)) return drawings.get(src);
   const entry = { img: null };
   drawings.set(src, entry);
+  const load = url => {
+    const img = new Image();
+    img.onload = () => { entry.img = img; if (onReady) onReady(); };
+    img.src = url;
+  };
+  // Icônes de l'interface (utils/icons.js) : déjà en mémoire, à leur taille
+  if (src.startsWith('data:')) {
+    load(src);
+    return entry;
+  }
   // Les dessins n'ont qu'un viewBox : sans taille explicite, un canvas les dessinerait en 300 × 150, déformés
   fetch(src)
     .then(response => (response.ok ? response.text() : Promise.reject(new Error(src))))
     .then(text => {
       const sized = /<svg[^>]*\swidth=/.test(text) ? text : text.replace('<svg', '<svg width="256" height="256"');
-      const img = new Image();
-      img.onload = () => { entry.img = img; if (onReady) onReady(); };
-      img.src = `data:image/svg+xml;charset=utf-8,${encodeURIComponent(sized)}`;
+      load(`data:image/svg+xml;charset=utf-8,${encodeURIComponent(sized)}`);
     })
     .catch(() => {});
   return entry;
@@ -99,7 +107,7 @@ export function clearDrawings() {
 }
 // Dessine le glyphe d'un élément (emoji ou dessin du jeu) centré en (cx, cy) ; aussi utilisé par le Monde
 export function glyph(ctx, emoji, cx, cy, size, onReady, alpha = 1) {
-  const src = glyphSrc(emoji);
+  const src = glyphSrc(emoji || 'ui:unknown');
   ctx.save();
   ctx.globalAlpha = alpha;
   if (src) {
@@ -109,7 +117,7 @@ export function glyph(ctx, emoji, cx, cy, size, onReady, alpha = 1) {
     ctx.font = `${size * 0.86}px "Apple Color Emoji", "Segoe UI Emoji", "Noto Color Emoji", sans-serif`;
     ctx.textAlign = 'center';
     ctx.textBaseline = 'middle';
-    ctx.fillText(emoji || '❔', cx, cy + size * 0.04);
+    ctx.fillText(emoji, cx, cy + size * 0.04);
   }
   ctx.restore();
 }
@@ -921,7 +929,10 @@ function paintToc(ctx, u, model, index, assets) {
     setFont(ctx, u, 3.1, 900, TEXT, false);
     ctx.textAlign = 'right';
     ctx.fillStyle = chapter.open ? '#4A3426' : '#8A7262';
-    ctx.fillText(chapter.open ? `${chapter.found}/${chapter.total}` : `🔒 ${chapter.need}`, 89 * u, (y + 7) * u);
+    const count = chapter.open ? `${chapter.found}/${chapter.total}` : String(chapter.need);
+    ctx.fillText(count, 89 * u, (y + 7) * u);
+    // Chapitre scellé : un cadenas devant le nombre de découvertes qu'il demande
+    if (!chapter.open) glyph(ctx, 'ui:lock', 89 * u - ctx.measureText(count).width - 2.4 * u, (y + 6) * u, 3.6 * u, assets.onReady);
     hotspots.push({ id: `toc-${chapter.id}`, x: 12, y, w: 80, h: 11, action: 'goto', data: model.chapterIndex[chapter.id], label: `Chapitre ${chapter.id}, ${chapter.name}${chapter.open ? '' : ', scellé'}` });
   });
   setFont(ctx, u, 3.3, 700, TEXT, false);

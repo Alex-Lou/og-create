@@ -14,7 +14,7 @@
       <!-- Gains de la partie : estimés pendant le jeu, ceux du serveur à la fin -->
       <ul class="harvest__tally" aria-label="Gains">
         <li v-for="r in RESOURCES" :key="r.id" :class="['harvest__res', { 'is-boost': run.boosts[r.id] }]">
-          <span aria-hidden="true">{{ r.glyph }}</span>
+          <span aria-hidden="true"><ElementGlyph :glyph="r.glyph" /></span>
           <strong>{{ shown[r.id] }}</strong>
           <span class="oc-sr-only">{{ r.label }}</span>
           <em v-if="run.boosts[r.id]" class="harvest__boost">×{{ run.boosts[r.id] }}</em>
@@ -22,7 +22,7 @@
       </ul>
 
       <div v-if="!finished" class="harvest__hint" aria-live="polite">
-        <template v-if="path.length >= MIN_CHAIN">Chaîne de {{ path.length }} : +{{ preview.amount }} {{ GLYPH[preview.kind] }}</template>
+        <template v-if="path.length >= MIN_CHAIN">Chaîne de {{ path.length }} : +{{ preview.amount }} <ElementGlyph :glyph="GLYPH[preview.kind]" /></template>
         <template v-else-if="path.length">Encore {{ MIN_CHAIN - path.length }}…</template>
         <template v-else>Relie au doigt 3 tuiles identiques voisines ou plus.</template>
       </div>
@@ -42,7 +42,7 @@
           :class="['harvest__tile', `is-${tile.kind}`, { 'is-picked': picked.has(tile.y * SIZE + tile.x), 'is-gone': gone.has(tile.y * SIZE + tile.x), 'is-fresh': tile.from !== null }]"
           :style="{ '--x': tile.x, '--y': tile.y, '--from': tile.from === null ? tile.y : tile.from }"
         >
-          <span aria-hidden="true">{{ GLYPH[tile.kind] }}</span>
+          <span aria-hidden="true"><ElementGlyph :glyph="GLYPH[tile.kind]" /></span>
         </div>
         <svg class="harvest__path" viewBox="0 0 6 6" aria-hidden="true">
           <polyline v-if="path.length > 1" :points="pathPoints" />
@@ -65,6 +65,7 @@ import { SIZE, MIN_CHAIN, create, play, gainOf } from '@/game/harvest';
 import { vibrate } from '@/utils/fx';
 import { GLYPH, RESOURCES } from '@/game/resources';
 import { RARITY } from '@/world/chest';
+import ElementGlyph from '@/components/ui/ElementGlyph.vue';
 
 const GONE_MS = 170;
 
@@ -72,6 +73,7 @@ const GONE_MS = 170;
 // il les rejoue et décide seul du gain (result). Le moteur est partagé avec le serveur.
 export default {
   name: 'HarvestGame',
+  components: { ElementGlyph },
   props: {
     run: { type: Object, required: true },
     sending: { type: Boolean, default: false },
