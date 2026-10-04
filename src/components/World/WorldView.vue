@@ -214,6 +214,34 @@
       </transition>
 
       <!-- Quartier à acheter : prix en écus et chapitre du Livre -->
+      <!-- Brume : sa réplique, la quête active, son avancée, sa récompense -->
+      <transition name="world-sheet">
+        <div v-if="questOpen && state && state.brume" class="world__sheet-backdrop" @click.self="questOpen = false">
+          <div class="world__sheet" role="dialog" aria-label="Brume, l’esprit de la brume">
+            <div class="world__sheet-head">
+              <span class="world__sheet-title">✨ Brume</span>
+              <button type="button" class="world__link" @click="questOpen = false">Fermer</button>
+            </div>
+            <template v-if="quest">
+              <span class="world__eyebrow world__quest-eyebrow">Acte {{ quest.act }} · quête {{ quest.step }} sur {{ quest.total }}</span>
+              <p class="world__brume-say">« {{ quest.say }} »</p>
+              <div class="world__quest">
+                <span class="world__quest-label">{{ quest.label }}</span>
+                <span class="world__quest-count">{{ quest.have }}/{{ quest.need }}</span>
+                <span class="world__quest-bar" role="progressbar" :aria-valuenow="quest.have" aria-valuemin="0" :aria-valuemax="quest.need">
+                  <i :style="{ width: `${(100 * quest.have) / quest.need}%` }"></i>
+                </span>
+                <span class="world__quest-reward">Récompense : <strong>{{ quest.coins }} écus</strong></span>
+              </div>
+              <div class="world__sheet-actions">
+                <button v-if="quest.done" type="button" class="world__btn" :disabled="busy" @click="claimQuest">Réclamer · {{ quest.coins }} écus</button>
+                <button v-else-if="quest.target" type="button" class="world__btn" @click="showQuestTarget">Montrer</button>
+              </div>
+            </template>
+            <p v-else class="world__brume-say">« {{ state.brume.rested }} »</p>
+          </div>
+        </div>
+      </transition>
       <transition name="world-sheet">
         <div v-if="zone" class="world__sheet-backdrop" @click.self="zone = null">
           <div class="world__sheet" role="dialog" :aria-label="zone.name">
@@ -305,6 +333,7 @@ import {
   drawSpout, jelliesAt, drawJellies, circling, crossing, drawGullShadow, drawFlyingGull, DOLPHIN_EVERY, DOLPHIN_FOR, WHALE_EVERY, WHALE_FOR
 } from '@/world/sea';
 import { SEA_SPRITES, FISH_SPECIES } from '@/world/seaSprites';
+import { drawBrume, floatOf, BRUME_ALT, BRUME_REACH } from '@/world/brume';
 import { chapterOfFamily } from '@/book/chapters';
 import { P } from '@/world/iso';
 import { phaseAt, forcedPhase, drawSea, drawCloudShadows, drawClouds, drawTint, glow, fireflies, hash } from '@/world/scene';
@@ -386,10 +415,16 @@ export default {
       firstVisit: false,
       clock: Date.now(),
       phaseLabel: '',
-      phaseGlyph: ''
+      phaseGlyph: '',
+      // Fiche de Brume (quête active) ouverte
+      questOpen: false
     };
   },
   computed: {
+    // Quête active de Brume (null : toutes faites)
+    quest() {
+      return this.state && this.state.brume ? this.state.brume.quest : null;
+    },
     familyOf() {
       return familyIndex(this.categories);
     },
@@ -461,6 +496,8 @@ export default {
     this.passages = {};
     this.scared = new Map();
     this.seaHits = [];
+    // Brume dans la dernière image (pour le toucher)
+    this.brumeHit = null;
     this.moreRaf = 0;
     this.forced = forcedPhase();
     this.ac = null;
@@ -990,6 +1027,8 @@ export default {
       drawPlankton(ctx, this.live.shore, view, t, phase.night);
       if (life.jellies) drawJellies(ctx, life.jellies, view, t, phase.night);
       ctx.restore();
+      // Brume flotte au-dessus de tout (et luit la nuit)
+      this.drawBrume(ctx, t, s);
       // Les noms des lieux passent par-dessus tout : aucune décoration ne les cache
       if (this.cam.s >= 0.55) this.state.sites.filter(site => !site.locked).forEach(site => this.drawLabel(ctx, site));
       // Bulles de production à toucher, au-dessus de tout
@@ -1352,6 +1391,64 @@ export default {
       const a = (2 * (wy + SEA_Z * HS)) / TH, b = (2 * wx) / TW;
       return { x: (a + b) / 2, y: (a - b) / 2 };
     },
+    // Où flotte Brume (point au sol) : à côté du bâtiment ou du panneau du quartier que vise la quête active, sinon près
+    // du Foyer
+    brumeSpot() {
+      const target = this.quest && this.quest.target;
+      const zone = target && target.zone && this.state.map.zones.find(z => z.id === target.zone);
+      if (zone && zone.anchor) {
+        const g = this.ground(zone.anchor.x, zone.anchor.y);
+        return { x: g.x + TW * 0.45, y: g.y - TH * 0.2 };
+      }
+      const site = this.state.sites.find(s => s.id === ((target && target.site) || 'foyer'));
+      if (!site) return null;
+      const c = this.centerOf(site);
+      return { x: c.x - TW * 0.42 * site.w, y: c.y - TH * 0.15 };
+    },
+    drawBrume(ctx, t, s) {
+      const spot = this.brumeSpot();
+      if (!spot) {
+        this.brumeHit = null;
+        return;
+      }
+      const { dx, dy } = floatOf(t);
+      const x = spot.x + dx, y = spot.y - BRUME_ALT + dy;
+      drawBrume(ctx, x, y, spot, t, Boolean(this.quest && this.quest.done), s);
+      this.brumeHit = { x, y, r: BRUME_REACH * Math.max(1, 0.6 / s) };
+    },
+    // La caméra va vers l'objectif de la quête
+    showQuestTarget() {
+      const spot = this.brumeSpot();
+      this.questOpen = false;
+      if (!spot) return;
+      this.cam.x = spot.x;
+      this.cam.y = spot.y;
+      this.clampCam();
+      this.draw(performance.now());
+    },
+    // Récompense de la quête active : versée par le serveur ; la fiche reste ouverte sur la quête suivante
+    async claimQuest() {
+      if (!this.quest || this.busy) return;
+      this.busy = true;
+      try {
+        const hit = this.brumeHit;
+        const { gained, coins, world } = await playService.worldQuest(this.quest.id);
+        this.apply(world);
+        this.$emit('coins-updated', coins);
+        if (hit) {
+          const sp = this.toScreen(hit.x, hit.y);
+          const at = this.canvasPoint(sp.x, sp.y);
+          ring(at, 90);
+          burst(at, 24, 80);
+        }
+        vibrate([12, 30, 16]);
+        this.$emit('show-alert', `Brume : +${gained} écus\u00a0!`);
+      } catch (error) {
+        this.$emit('show-alert', messageOf(error, 'La récompense n’a pas pu être reçue.'));
+      } finally {
+        this.busy = false;
+      }
+    },
     // Un toucher sur un animal : les dauphins plongent, la baleine souffle, les mouettes posées s'envolent
     scare(animal) {
       if (this.reduced()) return;
@@ -1538,6 +1635,7 @@ export default {
     // Ce qui est sous le doigt : bulle de production, panneau de quartier, bâtiment, décoration, puis case
     hitAt(px, py) {
       const w = this.toWorld(px, py);
+      if (this.brumeHit && Math.hypot(w.x - this.brumeHit.x, w.y - this.brumeHit.y) < this.brumeHit.r) return { brume: true };
       const bubble = this.bubbles.find(b => Math.abs(w.x - b.x) < b.w / 2 + 6 && Math.abs(w.y - b.y) < b.h / 2 + 8);
       if (bubble) return { bubble };
       const sign = this.signs.find(sg => Math.hypot(w.x - sg.x, (w.y - sg.y) * 1.2) < sg.r);
@@ -1581,6 +1679,9 @@ export default {
         const sp = this.toScreen(hit.bubble.x, hit.bubble.y);
         this.collect(this.canvasPoint(sp.x, sp.y));
         vibrate(8);
+      } else if (hit.brume) {
+        this.questOpen = true;
+        vibrate(6);
       } else if (hit.animal) {
         this.scare(hit.animal);
         return;
@@ -2020,6 +2121,15 @@ export default {
 .world__coin--small { width: 13px; height: 13px; }
 .world__pick-note { margin: 0 0 8px; color: var(--ink-500); font-size: 13px; }
 .world__needs { margin: 0; padding: 0; list-style: none; display: grid; gap: 6px; }
+/* Fiche de Brume : sa réplique, puis l'objectif, son avancée et la récompense */
+.world__quest-eyebrow { color: var(--ink-500); margin-bottom: 6px; }
+.world__brume-say { margin: 0 0 12px; font-family: var(--font-display); font-style: italic; font-size: 17px; line-height: 1.4; }
+.world__quest { display: grid; grid-template-columns: 1fr auto; gap: 6px 10px; padding: 10px 12px; border-radius: 14px; background: var(--vellum-200); }
+.world__quest-label { font-weight: 900; }
+.world__quest-count { font-family: var(--oc-font-mono); font-weight: 800; }
+.world__quest-bar { grid-column: 1 / -1; height: 8px; border-radius: 999px; background: var(--vellum-300, #E6D8B8); overflow: hidden; }
+.world__quest-bar i { display: block; height: 100%; border-radius: inherit; background: var(--oc-gold); transition: width var(--oc-fast) var(--oc-ease-out); }
+.world__quest-reward { grid-column: 1 / -1; font-size: 14px; color: var(--ink-500); }
 .world__need { display: flex; align-items: center; gap: 10px; min-height: 44px; padding: 6px 12px; border-radius: 12px; background: var(--vellum-50); box-shadow: inset 0 0 0 1px rgba(74, 52, 38, .08); }
 .world__need em { margin-left: auto; font-size: 12px; font-weight: 800; font-style: normal; }
 .world__need.is-ok em, .world__need.is-ok strong { color: #4E8A3A; }
