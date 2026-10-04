@@ -243,7 +243,7 @@ function bigQuestion(ctx, u, color) {
   ctx.textAlign = 'center';
   ctx.fillText('?', 52 * u, 41.6 * u);
 }
-function iconBox(ctx, u, name, emoji, cx, top, ink, onReady) {
+function iconBox(ctx, u, name, emoji, cx, top, ink, onReady, maxLabel = 12) {
   const s = 13;
   ctx.save();
   rr(ctx, (cx - s / 2) * u, top * u, s * u, s * u, 3.6 * u);
@@ -261,7 +261,7 @@ function iconBox(ctx, u, name, emoji, cx, top, ink, onReady) {
     setFont(ctx, u, 2.9, 800, TEXT, false);
     ctx.fillStyle = '#8A7262';
     ctx.textAlign = 'center';
-    const label = name.length > 12 ? `${name.slice(0, 11)}…` : name;
+    const label = name.length > maxLabel ? `${name.slice(0, maxLabel - 1)}…` : name;
     ctx.fillText(label, cx * u, (top + s + 4.2) * u);
   } else {
     ctx.setLineDash([1.4 * u, 1.1 * u]);
@@ -276,13 +276,14 @@ function iconBox(ctx, u, name, emoji, cx, top, ink, onReady) {
   }
   ctx.restore();
 }
+// Positions des cases (ingrédients puis résultat) selon le nombre d'ingrédients : 2, 3 ou 4
+const ROW_XS = { 2: [30, 52, 74], 3: [24, 41, 58, 79], 4: [17, 33, 49, 65, 85] };
 function recipeRow(ctx, u, parts, result, ink, onReady) {
-  const [a, b, c] = parts;
-  const xs = parts.length > 2 ? [24, 41, 58, 79] : [30, 52, 74];
-  iconBox(ctx, u, a && a.name, a && a.emoji, xs[0], 89, ink, onReady);
-  iconBox(ctx, u, b && b.name, b && b.emoji, xs[1], 89, ink, onReady);
-  if (parts.length > 2) iconBox(ctx, u, c && c.name, c && c.emoji, xs[2], 89, ink, onReady);
-  iconBox(ctx, u, result && result.name, result && result.emoji, xs[xs.length - 1], 89, ink, onReady);
+  const xs = ROW_XS[Math.min(4, Math.max(2, parts.length))];
+  // Quatre ingrédients : cases plus serrées, noms plus courts
+  const maxLabel = parts.length > 3 ? 9 : 12;
+  parts.slice(0, 4).forEach((part, k) => iconBox(ctx, u, part && part.name, part && part.emoji, xs[k], 89, ink, onReady, maxLabel));
+  iconBox(ctx, u, result && result.name, result && result.emoji, xs[xs.length - 1], 89, ink, onReady, maxLabel);
   setFont(ctx, u, 5.6, 400, TITLE, false);
   ctx.fillStyle = '#BDAA94';
   ctx.textAlign = 'center';
@@ -327,7 +328,6 @@ function paintFound(ctx, u, model, i, assets) {
 
 function paintReach(ctx, u, model, i, assets) {
   const { chapter, page, revealed, aim, freeInk } = model;
-  const given = Boolean(page.given);
   const style = CHAPTER_STYLE[chapter.id];
   frame(ctx, u, style.ink);
   header(ctx, u, chapter, style, 0);
@@ -380,13 +380,12 @@ function paintReach(ctx, u, model, i, assets) {
   ctx.fillStyle = revealed ? '#BDAA94' : '#FFFDF8';
   ctx.textAlign = 'center';
   ctx.textBaseline = 'middle';
-  const done = given ? 'Ingrédient offert' : 'Encre utilisée';
-  ctx.fillText(revealed ? done : freeInk ? '✒︎ Encre offerte' : `✒︎ Encre · ${assets.inkPrice} écus`, 52 * u, 119.7 * u);
+  ctx.fillText(revealed ? 'Encre utilisée' : freeInk ? '✒︎ Encre offerte' : `✒︎ Encre · ${assets.inkPrice} écus`, 52 * u, 119.7 * u);
   ctx.textBaseline = 'alphabetic';
   if (!revealed) hotspots.push({ id: 'ink', x: 28, y: 115.5, w: 48, h: 8, action: 'ink', data: page.id, label: freeInk ? 'Encre offerte : révéler un ingrédient' : `Encre : révéler un ingrédient pour ${assets.inkPrice} écus` });
   folio(ctx, u, i);
   const start = page.first ? `, commence par ${page.first}` : '';
-  return { hotspots, label: `Page à trouver : ${familyName(page.family)}, ${page.letters} lettres${start}. ${clueText(page.clue, page.groups)}${note ? ` ${note}.` : ''}${revealed ? ` ${given ? 'Ingrédient offert' : 'Un ingrédient'} : ${revealed}.` : ''}` };
+  return { hotspots, label: `Page à trouver : ${familyName(page.family)}, ${page.letters} lettres${start}. ${clueText(page.clue, page.groups)}${note ? ` ${note}.` : ''}${revealed ? ` Un ingrédient : ${revealed}.` : ''}` };
 }
 
 function paintFar(ctx, u, model, i) {
