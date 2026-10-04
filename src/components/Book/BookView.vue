@@ -45,46 +45,41 @@
       </p>
     </div>
 
+    <!-- Une seule ligne : le titre et un seul bouton ; recherche et filtres se déplient ensemble au toucher -->
     <div class="book-view__shelf-head">
       <span class="book-view__shelf-title">Tes éléments</span>
+      <button
+        type="button"
+        :class="['book-view__tool', { 'is-on': showFilters, 'is-page': !query.trim() && activeFilter === 'page' }]"
+        :aria-expanded="String(showFilters)"
+        aria-label="Chercher et filtrer les éléments"
+        @click="toggleFilters"
+      >
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="6.5"></circle><path d="M16 16l4.5 4.5"></path></svg>
+        <span class="book-view__tool-label">{{ query.trim() ? `« ${query.trim()} »` : activeLabel }}</span>
+        <span class="book-view__chevron" aria-hidden="true">▾</span>
+      </button>
+    </div>
+    <div v-if="showFilters" class="book-view__filters" aria-label="Chercher et filtrer">
       <input
+        ref="search"
         v-model="query"
         class="book-view__search"
         type="search"
         :placeholder="`Chercher parmi ${discoveredElements.length}…`"
         aria-label="Chercher un élément"
+        @keydown.enter="showFilters = false"
+        @keydown.esc="showFilters = false"
       />
+      <button
+        v-for="pill in filters"
+        :key="pill.id"
+        type="button"
+        :aria-pressed="!query.trim() && activeFilter === pill.id"
+        :class="['book-view__filter', { 'is-on': !query.trim() && activeFilter === pill.id, 'is-page': pill.id === 'page' }]"
+        @click="pickFilter(pill.id)"
+      >{{ pill.label }} <span class="book-view__filter-count">{{ pill.count }}</span></button>
     </div>
-    <!-- Filtres : la page ouverte, tout, et les familles repliées derrière un seul bouton (une ligne, rien de coupé) -->
-    <template v-if="!query.trim()">
-      <div class="book-view__filters" aria-label="Filtres">
-        <button
-          v-for="pill in mainFilters"
-          :key="pill.id"
-          type="button"
-          :aria-pressed="activeFilter === pill.id"
-          :class="['book-view__filter', { 'is-on': activeFilter === pill.id, 'is-page': pill.id === 'page' }]"
-          @click="pickFilter(pill.id)"
-        >{{ pill.label }} <span class="book-view__filter-count">{{ pill.count }}</span></button>
-        <button
-          v-if="familyFilters.length"
-          type="button"
-          :aria-expanded="String(showFamilies)"
-          :class="['book-view__filter', 'book-view__filter--families', { 'is-on': activeFamily }]"
-          @click="showFamilies = !showFamilies"
-        >{{ activeFamily ? activeFamily.label : 'Familles' }} <span class="book-view__chevron" aria-hidden="true">▾</span></button>
-      </div>
-      <div v-if="showFamilies" class="book-view__families" aria-label="Familles">
-        <button
-          v-for="pill in familyFilters"
-          :key="pill.id"
-          type="button"
-          :aria-pressed="activeFilter === pill.id"
-          :class="['book-view__filter', { 'is-on': activeFilter === pill.id }]"
-          @click="pickFilter(pill.id)"
-        >{{ pill.label }} <span class="book-view__filter-count">{{ pill.count }}</span></button>
-      </div>
-    </template>
     <div class="book-view__shelf" aria-label="Éléments connus">
       <button
         v-for="name in shelf"
@@ -145,8 +140,8 @@ export default {
       query: '',
       // Filtre de l'étagère : « auto » suit la page (familles de l'indice), sinon « all » ou une famille
       filter: 'auto',
-      // Liste des familles dépliée sous les filtres
-      showFamilies: false,
+      // Recherche et filtres, repliés par défaut sous la ligne « Tes éléments »
+      showFilters: false,
       // Page à portée ouverte : familles de ses ingrédients et ingrédient révélé par l'Encre
       pageClue: null,
       showHint: !storage.load(HINT_KEY, false),
@@ -203,14 +198,9 @@ export default {
       });
       return pills;
     },
-    mainFilters() {
-      return this.filters.filter(pill => pill.id === 'page' || pill.id === 'all');
-    },
-    familyFilters() {
-      return this.filters.filter(pill => pill.id !== 'page' && pill.id !== 'all');
-    },
-    activeFamily() {
-      return this.familyFilters.find(pill => pill.id === this.activeFilter) || null;
+    // Libellé du bouton des filtres : le filtre en cours
+    activeLabel() {
+      return this.filters.find(pill => pill.id === this.activeFilter)?.label || 'Tout';
     },
     shelf() {
       const newestFirst = [...this.discoveredElements].reverse();
@@ -263,9 +253,14 @@ export default {
     this.engine = null;
   },
   methods: {
+    // Choisir un filtre efface la recherche et replie le panneau
     pickFilter(id) {
       this.filter = id;
-      this.showFamilies = false;
+      this.query = '';
+      this.showFilters = false;
+    },
+    toggleFilters() {
+      this.showFilters = !this.showFilters;
     },
     // Un long mot ne tient pas sur une tuile de téléphone : un ou deux crans plus petit (jamais coupé)
     lengthClass(name) {
@@ -558,15 +553,15 @@ export default {
 .book-view__shelf-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-top: 10px; }
 .book-view__shelf-title { font-family: var(--oc-font-mono); font-weight: 800; font-size: 11px; letter-spacing: .14em; text-transform: uppercase; color: var(--oc-on-bg-faint); }
 .book-view__search {
-  min-width: 0; flex: 1; max-width: 220px;
+  flex: 1 1 100%; min-width: 0; margin-bottom: 4px;
   padding: 8px 14px; border-radius: 999px;
   border: 0;
   background: var(--vellum-50); color: var(--ink-900);
   box-shadow: inset 0 0 0 1px var(--oc-line-strong);
   font: inherit; font-size: 14px; font-weight: 700;
 }
-.book-view__filters { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px; padding: 2px; }
-.book-view__families {
+/* Panneau des filtres, déplié sous la ligne du titre */
+.book-view__filters {
   display: flex; flex-wrap: wrap; gap: 6px;
   margin-top: 8px; padding: 10px;
   border-radius: var(--r-md);
@@ -575,8 +570,19 @@ export default {
   animation: book-unfold .2s var(--oc-ease-out);
 }
 @keyframes book-unfold { from { opacity: 0; transform: translateY(-4px); } }
+.book-view__tool {
+  flex: 0 1 auto; min-width: 0; max-width: 62%; height: 40px; padding: 0 12px;
+  display: inline-flex; align-items: center; justify-content: center; gap: 4px;
+  border: 0; border-radius: 999px; cursor: pointer;
+  background: var(--vellum-50); color: var(--ink-700);
+  box-shadow: inset 0 0 0 1px var(--oc-line), 0 2px 0 var(--vellum-400);
+  font-family: var(--font-ui); font-size: 13px; font-weight: 800;
+}
+.book-view__tool-label { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.book-view__tool.is-page { color: var(--oc-gold); box-shadow: inset 0 0 0 2px var(--gold-300), 0 2px 0 var(--vellum-400); }
+.book-view__tool.is-on { background: var(--gold-200); box-shadow: inset 0 0 0 1px var(--oc-accent-line), 0 2px 0 var(--gold-600); }
 .book-view__chevron { display: inline-block; margin-left: 2px; font-size: 11px; transition: transform .2s ease; }
-.book-view__filter--families[aria-expanded='true'] .book-view__chevron { transform: rotate(180deg); }
+.book-view__tool[aria-expanded='true'] .book-view__chevron { transform: rotate(180deg); }
 .book-view__filter {
   flex: none;
   min-height: 34px; padding: 4px 12px;
