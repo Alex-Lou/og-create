@@ -68,14 +68,6 @@ export default {
   harvestFinish(run, moves) {
     return http.post('/play/world/harvest/finish', { run, moves }).then(response => response.data);
   },
-  // { origins: [[ingrédients]], more }
-  origins(name) {
-    return asPlayer(() => http.get('/play/origins', { params: { name } }));
-  },
-  // Piste de l'Infini : { name, coins }
-  hint() {
-    return asPlayer(() => http.post('/play/hint'));
-  },
   // Joker de l'Épreuve : { freeJokers, coins?, ingredients? | ingredient? }
   joker(kind) {
     return asPlayer(() => http.post('/play/joker', { kind }));

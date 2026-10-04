@@ -1,64 +1,5 @@
-// Effets du Livre : étincelles, anneau, vibrations, cinématique d'ouverture de chapitre.
-// Chaque élément créé est retiré à la fin de son animation (aucun reste dans le DOM).
-const reduceMotion = () => window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-export const center = r => ({ x: r.left + r.width / 2, y: r.top + r.height / 2 });
-
-let layer = null;
-function fxLayer() {
-  if (layer && layer.isConnected) return layer;
-  layer = document.createElement('div');
-  layer.className = 'book-fx';
-  layer.setAttribute('aria-hidden', 'true');
-  Object.assign(layer.style, { position: 'fixed', inset: '0', pointerEvents: 'none', zIndex: '60', overflow: 'hidden' });
-  document.body.appendChild(layer);
-  return layer;
-}
-function spawn(style) {
-  const el = document.createElement('div');
-  Object.assign(el.style, { position: 'absolute', left: '0', top: '0', willChange: 'transform, opacity' }, style);
-  fxLayer().appendChild(el);
-  return el;
-}
-function play(el, keyframes, options) {
-  const animation = el.animate(keyframes, { fill: 'both', ...options });
-  return new Promise(resolve => {
-    animation.onfinish = () => { el.remove(); resolve(); };
-    animation.oncancel = () => { el.remove(); resolve(); };
-  });
-}
-
-export function buzz(pattern) {
-  try {
-    if (navigator.vibrate && (!navigator.userActivation || navigator.userActivation.hasBeenActive)) navigator.vibrate(pattern);
-  } catch { /* vibration refusée */ }
-}
-
-export function burst(at, count = 18, spread = 90) {
-  if (reduceMotion()) return;
-  for (let i = 0; i < count; i++) {
-    const angle = (i / count) * Math.PI * 2 + Math.random() * 0.4;
-    const dist = spread * (0.55 + Math.random() * 0.6);
-    const white = i % 3 === 0;
-    const el = spawn({
-      width: '9px', height: '9px', borderRadius: '50%',
-      background: white ? 'radial-gradient(circle, #fff 30%, rgba(255,255,255,.2) 80%)' : 'radial-gradient(circle, #FFF7D6 20%, #F2B640 70%)'
-    });
-    const s = 0.6 + Math.random() * 0.9;
-    play(el, [
-      { transform: `translate(${at.x - 4}px, ${at.y - 4}px) scale(${s})`, opacity: 1 },
-      { transform: `translate(${at.x - 4 + Math.cos(angle) * dist}px, ${at.y - 4 + Math.sin(angle) * dist + 20}px) scale(0)`, opacity: 0 }
-    ], { duration: 650 + Math.random() * 350, easing: 'cubic-bezier(.15, .7, .3, 1)' });
-  }
-}
-
-export function ring(at, size) {
-  if (reduceMotion()) return;
-  const el = spawn({ width: `${size}px`, height: `${size}px`, borderRadius: '50%', border: '4px solid rgba(255, 214, 120, .95)', boxShadow: '0 0 24px rgba(255, 214, 120, .8)' });
-  play(el, [
-    { transform: `translate(${at.x - size / 2}px, ${at.y - size / 2}px) scale(.5)`, opacity: 1 },
-    { transform: `translate(${at.x - size / 2}px, ${at.y - size / 2}px) scale(1.7)`, opacity: 0 }
-  ], { duration: 700, easing: 'cubic-bezier(.2, .7, .3, 1)' });
-}
+// Cinématique d'ouverture d'un chapitre du Livre : le sceau tremble, se brise, et le chapitre s'ouvre.
+import { burst, center, reducedMotion, ring, vibrate } from '@/utils/fx';
 
 // Sceau de cire en deux moitiés, pour la cinématique
 function sealSrc(color, label, half) {
@@ -88,7 +29,7 @@ export function unlockCinematic(chapter, wax) {
     overlay.querySelector('.book-unlock__name').textContent = chapter.name;
     document.body.appendChild(overlay);
     const [left, right] = overlay.querySelectorAll('.book-unlock__seal img');
-    const fast = reduceMotion() ? 0.01 : 1;
+    const fast = reducedMotion() ? 0.01 : 1;
     const opts = (duration, delay = 0, easing = 'ease-out') => ({ duration: duration * fast, delay: delay * fast, easing, fill: 'forwards' });
     const anims = [
       overlay.animate([{ opacity: 0 }, { opacity: 1 }], opts(300)),
@@ -102,7 +43,7 @@ export function unlockCinematic(chapter, wax) {
       overlay.querySelector('.book-unlock__go').animate([{ opacity: 0, transform: 'translateY(10px)' }, { opacity: 1, transform: 'none' }], opts(400, 1700))
     ];
     const timer = setTimeout(() => {
-      buzz([20, 60, 20, 60, 40]);
+      vibrate([20, 60, 20, 60, 40]);
       const seal = overlay.querySelector('.book-unlock__seal').getBoundingClientRect();
       burst(center(seal), 26, 140);
       ring(center(seal), 160);

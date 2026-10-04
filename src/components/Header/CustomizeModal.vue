@@ -121,6 +121,7 @@
 </template>
 
 <script>
+import { messageOf } from '@/utils/errors';
 import customizationService from '@/services/customizationService';
 import GModal from '@/components/ui/GModal.vue';
 import GSigil from '@/components/ui/GSigil.vue';
@@ -274,7 +275,7 @@ export default {
         this.owned = new Set([...this.owned, item.image_path]);
         this.flash(`${item.name} est à toi.`, 'success');
       } catch (error) {
-        this.flash(error.response?.data?.message || 'L’achat n’a pas abouti.', 'error');
+        this.flash(messageOf(error, 'L’achat n’a pas abouti.'), 'error');
       } finally {
         this.isPurchasing = false;
         this.pendingItem = null;

@@ -24,6 +24,7 @@
 </template>
 
 <script>
+import { messageOf } from '@/utils/errors';
 import AuthService from '@/services/authService';
 import GModal from '@/components/ui/GModal.vue';
 
@@ -49,7 +50,7 @@ export default {
       try {
         this.done = (await AuthService.resetPassword(this.token, this.password)).message;
       } catch (error) {
-        this.error = error.response?.data?.message || 'Le mot de passe n’a pas pu être changé.';
+        this.error = messageOf(error, 'Le mot de passe n’a pas pu être changé.');
       } finally {
         this.loading = false;
       }

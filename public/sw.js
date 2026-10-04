@@ -20,9 +20,6 @@ self.addEventListener('fetch', event => {
   const url = new URL(request.url);
   if (request.method !== 'GET' || url.origin !== self.location.origin) return;
 
-  // Maquettes : pages autonomes, jamais mises en cache à la place de l'application
-  if (url.pathname.startsWith('/maquettes/')) return;
-
   if (request.mode === 'navigate') {
     event.respondWith(
       fetch(request)

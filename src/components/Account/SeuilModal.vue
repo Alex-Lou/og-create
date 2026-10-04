@@ -36,6 +36,7 @@
 </template>
 
 <script>
+import { messageOf } from '@/utils/errors';
 import AuthService from '@/services/authService';
 import GModal from '@/components/ui/GModal.vue';
 
@@ -67,7 +68,7 @@ export default {
         else if (this.mode === 'login') await AuthService.login(this.email, this.password);
         else await AuthService.register(this.email, this.password);
       } catch (error) {
-        this.error = error.response?.data?.message || (this.mode === 'forgot' ? 'Le lien n’a pas pu être envoyé.' : 'Email ou mot de passe incorrect.');
+        this.error = messageOf(error, this.mode === 'forgot' ? 'Le lien n’a pas pu être envoyé.' : 'Email ou mot de passe incorrect.');
       } finally {
         this.loading = false;
       }

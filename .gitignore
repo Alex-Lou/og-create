@@ -3,7 +3,8 @@ node_modules
 /dist
 
 
-# local env files
+# Fichiers d'environnement (secrets éventuels : jamais versionnés ; VUE_APP_API_URL vaut /api par défaut)
+.env
 .env.local
 .env.*.local
 

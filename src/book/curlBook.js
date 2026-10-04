@@ -5,6 +5,7 @@
 // - perte de contexte gérée ; destroy() retire écouteurs, boucles, textures, tampons et programme.
 // Le contenu des pages vient de paint(index, ctx, largeur, hauteur) → { hotspots, label }.
 import { paperNoise as noise } from './painter';
+import { reducedMotion } from '@/utils/fx';
 
 const VERT = `
 attribute vec2 aUV;
@@ -92,14 +93,13 @@ export function createBook(opts) {
   const canvas = document.createElement('canvas');
   canvas.className = 'gl';
   rig.insertBefore(canvas, hot);
-  const reduce = window.matchMedia('(prefers-reduced-motion: reduce)');
   const COLS = 44, ROWS = 30, POOL = 4;
 
   let gl = null, ctx2d = null, prog = null, buf = null, ibuf = null, backTex = null, indexCount = 0;
   const loc = {};
   let dpr = 1, cw = 0, ch = 0;
   const page = { x: 0, y: 0, w: 0, h: 0 }; // en px CSS, relatif au canvas
-  let index = opts.start || 0, version = 0, locked = false;
+  let index = opts.start || 0, version = 0;
   const pool = [];
   // Tour en cours : P0 = point saisi (bord droit), F = doigt (en px de texture)
   let phase = 'idle', dir = 0, target = 0, turning = false, fade = 1;
@@ -423,9 +423,9 @@ export function createBook(opts) {
 
   function go(tgt, speed = 1) {
     if (anim) finishNow();
-    if (locked || phase !== 'idle' || tgt < 0 || tgt >= count() || tgt === index) return Promise.resolve(false);
+    if (phase !== 'idle' || tgt < 0 || tgt >= count() || tgt === index) return Promise.resolve(false);
     return new Promise(resolve => {
-      if (reduce.matches || !gl) {
+      if (reducedMotion() || !gl) {
         // Fondu
         target = tgt;
         phase = 'fade';
@@ -468,7 +468,7 @@ export function createBook(opts) {
   }
 
   on(hot, 'pointerdown', event => {
-    if (event.button !== 0 || pointer !== null || locked) return;
+    if (event.button !== 0 || pointer !== null) return;
     if (anim) finishNow();
     if (phase !== 'idle') return;
     suppressClick = false;
@@ -488,7 +488,7 @@ export function createBook(opts) {
         const tgt = index + d;
         suppressClick = true;
         if (tgt < 0 || tgt >= count()) { phase = 'blocked'; return; }
-        if (reduce.matches || !gl) { phase = 'swipe'; dir = d; return; }
+        if (reducedMotion() || !gl) { phase = 'swipe'; dir = d; return; }
         hot.setPointerCapture(pointer);
         const rect = hot.getBoundingClientRect();
         begin(d, tgt, ((event.clientY - rect.top) / rect.height) * H());
@@ -574,9 +574,6 @@ export function createBook(opts) {
   return {
     go,
     get index() { return index; },
-    get busy() { return phase !== 'idle'; },
-    get webgl() { return Boolean(gl); },
-    lock(value) { locked = value; },
     // Change de page sans animation (pages rechargées, page courante retrouvée par son identifiant)
     jump(i) {
       if (anim) finishNow();
@@ -599,21 +596,6 @@ export function createBook(opts) {
       if (!spot) return null;
       const k = rect.width / 100;
       return { left: rect.left + spot.x * k, top: rect.top + spot.y * k, width: spot.w * k, height: spot.h * k };
-    },
-    textures() { return gl ? pool.filter(e => e.tex).length + (backTex ? 1 : 0) : 0; },
-    // Banc de mesure : fige une courbure pour une capture
-    peek(progress, tilt = 0) {
-      if (!gl || phase !== 'idle' || index + 1 >= count()) return;
-      begin(1, index + 1, H() * .7);
-      phase = 'peek';
-      F.x = P0.x + (Fend.x - P0.x) * progress;
-      F.y = P0.y + tilt * H();
-      draw();
-    },
-    unpeek() {
-      if (phase !== 'peek') return;
-      F.x = P0.x;
-      end(false);
     },
     destroy() {
       ac.abort();

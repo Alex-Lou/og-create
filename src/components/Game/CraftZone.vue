@@ -79,21 +79,22 @@
 </template>
 
 <script>
+import { messageOf } from '@/utils/errors';
 import playService from '@/services/playService';
-import { HAPTIC, burst, fly, vibrate } from '@/utils/feedback';
+import { HAPTIC, burst, center, fly, ring, vibrate } from '@/utils/fx';
 import ElementGlyph from '@/components/ui/ElementGlyph.vue';
 import { aimMessage } from '@/book/aim';
+import { roman } from '@/utils/roman';
 
 const MERGE_MS = 520;
 // Fusion à 2 : même geste, plus vif (voir .athanor--quick)
 const QUICK_MERGE_MS = 300;
 const REVEAL_MS = 1700;
 const FAIL_MS = 1800;
-// Durée du vol d'un élément jusqu'à son emplacement (utils/feedback.js) : l'animation attend qu'il soit posé
+// Durée du vol d'un élément jusqu'à son emplacement (utils/fx.js) : l'animation attend qu'il soit posé
 const FLIGHT_MS = 380;
 // Rayon de l'anneau des emplacements, en px (cercle de 360 px)
 const RING_RADIUS = 130;
-const ROMAN = ['I', 'II', 'III', 'IV'];
 
 function creatureImage(name) {
   try {
@@ -112,13 +113,12 @@ export default {
     // Mode de jeu : le serveur juge le mélange avec les éléments en main dans ce mode
     mode: { type: String, default: 'infinite' },
     elementEmojis: { type: Object, required: true },
-    autoFuse: { type: Boolean, default: true },
     // Phrase d'un mélange raté (Infini) ; sans elle, la phrase par défaut
     failText: { type: Function, default: null },
     // Page du Livre visée : le serveur dit combien d'ingrédients du mélange sont justes
     aimPage: { type: String, default: null }
   },
-  emits: ['craft-success', 'craft-fail', 'discovery', 'learned', 'show-alert', 'revealing', 'aimed'],
+  emits: ['craft-success', 'discovery', 'learned', 'show-alert', 'revealing', 'aimed'],
   data() {
     return {
       picked: [],
@@ -137,8 +137,9 @@ export default {
     quick() {
       return this.slotCount === 2;
     },
+    // Plus de deux emplacements : le bouton sert aux combinaisons partielles (2/3, 3/4…)
     showFuseButton() {
-      return !this.autoFuse || this.slotCount > 2;
+      return this.slotCount > 2;
     },
     // Emplacements posés sur l'anneau (PC) ; à la transmutation, chacun glisse vers le centre
     slots() {
@@ -146,7 +147,7 @@ export default {
         const a = -Math.PI / 2 + (i * 2 * Math.PI) / this.slotCount;
         const x = Math.round(RING_RADIUS * Math.cos(a));
         const y = Math.round(RING_RADIUS * Math.sin(a));
-        return { name: this.picked[i] || null, num: ROMAN[i], style: { '--x': `${x}px`, '--y': `${y}px` } };
+        return { name: this.picked[i] || null, num: roman(i + 1), style: { '--x': `${x}px`, '--y': `${y}px` } };
       });
     },
     ringPolygon() {
@@ -207,7 +208,7 @@ export default {
       this.landsAt = from ? performance.now() + FLIGHT_MS : 0;
       if (from) this.$nextTick(() => fly(this.emojiOf(name), from, this.slotEls[index]));
       // Toutes les cases remplies : la fusion part seule ; le bouton sert aux combinaisons partielles (2/3, 3/4…)
-      if (this.autoFuse && this.picked.length === this.slotCount) this.later(() => this.fuse(), this.quick ? 0 : 300);
+      if (this.picked.length === this.slotCount) this.later(() => this.fuse(), this.quick ? 0 : 300);
     },
     remove(index) {
       if (this.merging || this.busy) return;
@@ -231,7 +232,7 @@ export default {
       } catch (error) {
         await this.untilLanded();
         this.busy = false;
-        this.fail(error.response?.data?.message || 'L’Athanor ne répond pas, réessaie.');
+        this.fail(messageOf(error, 'L’Athanor ne répond pas, réessaie.'));
         return;
       }
       await this.untilLanded();
@@ -239,7 +240,6 @@ export default {
       const aim = reply.aim ? { ...reply.aim, tried: ingredients } : null;
       if (aim) this.$emit('aimed', aim);
       if (!reply.result) {
-        this.$emit('craft-fail', ingredients);
         this.fail(aim ? aimMessage(aim) : this.failText ? this.failText(ingredients) : 'Rien ne se passe… Essaie une autre combinaison.');
         return;
       }
@@ -252,7 +252,11 @@ export default {
         this.result = { name, isNew, image: creatureImage(name), from: ingredients };
         this.$emit('craft-success', name, ingredients);
         vibrate(isNew ? HAPTIC.discovery : HAPTIC.success);
-        if (isNew) this.$nextTick(() => burst(this.$refs.revealCard, { count: 26, spread: 170 }));
+        if (isNew) this.$nextTick(() => {
+          const at = center(this.$refs.revealCard.getBoundingClientRect());
+          burst(at, 26, 170);
+          ring(at, 180);
+        });
         if (isNew) {
           const box = this.$refs.zone.getBoundingClientRect();
           this.$emit('discovery', { name, x: box.left + box.width / 2, y: box.top + box.height / 2 });

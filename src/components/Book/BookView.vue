@@ -85,28 +85,20 @@
 </template>
 
 <script>
+import { messageOf } from '@/utils/errors';
 import playService from '@/services/playService';
 import ElementGlyph from '@/components/ui/ElementGlyph.vue';
 import { search } from '@/utils/search';
+import { familyIndex } from '@/utils/eras';
+import * as storage from '@/utils/storage';
 import { createBook } from '@/book/curlBook';
 import { paintPage, CHAPTER_STYLE } from '@/book/painter';
-import { burst, ring, buzz, center, unlockCinematic } from '@/book/fx';
+import { burst, ring, vibrate, center } from '@/utils/fx';
+import { unlockCinematic } from '@/book/fx';
 
 const INK_PRICE = 50;
 const INK_KEY = 'oc_book_ink';
 const HINT_KEY = 'oc_livre_hint';
-
-function readStore(key, fallback) {
-  try {
-    const value = JSON.parse(localStorage.getItem(key));
-    return value ?? fallback;
-  } catch {
-    return fallback;
-  }
-}
-function writeStore(key, value) {
-  try { localStorage.setItem(key, JSON.stringify(value)); } catch { /* stockage plein ou bloqué */ }
-}
 
 // Le Livre : chapitres et pages du joueur (calculés par le serveur), tournés au doigt en WebGL.
 // Le moteur et les pages peintes ne sont pas réactifs (propriétés d'instance) : seule la couche
@@ -137,7 +129,7 @@ export default {
       filter: 'auto',
       // Page à portée ouverte : familles de ses ingrédients et ingrédient révélé par l'Encre
       pageClue: null,
-      showHint: !readStore(HINT_KEY, false),
+      showHint: !storage.load(HINT_KEY, false),
       loadError: false
     };
   },
@@ -157,9 +149,7 @@ export default {
       ];
     },
     familyOf() {
-      const map = {};
-      for (const [family, names] of Object.entries(this.categories)) names.forEach(name => { map[name] = family; });
-      return map;
+      return familyIndex(this.categories);
     },
     pageHint() {
       return this.pageClue ? this.pageClue.revealed : null;
@@ -221,7 +211,7 @@ export default {
     this.engine = null;
     this.models = [{ type: 'toc', key: 'toc', chapters: [], chapterIndex: {} }];
     this.bookData = null;
-    this.revealed = readStore(INK_KEY, {});
+    this.revealed = storage.load(INK_KEY, {});
     // Dernier verdict de chaque page visée : { tried, right, of, misses, need, freeInk }
     this.aims = {};
     this.aimedKey = null;
@@ -289,7 +279,7 @@ export default {
           ring(center(slot), slot.width * 0.8);
           burst(center(slot), 14, 44);
         }
-        buzz([10, 30, 10]);
+        vibrate([10, 30, 10]);
       }
     },
     assets() {
@@ -349,9 +339,9 @@ export default {
         onChange: () => {
           if (this.showHint) {
             this.showHint = false;
-            writeStore(HINT_KEY, true);
+            storage.save(HINT_KEY, true);
           }
-          buzz(8);
+          vibrate(8);
         },
         onRest: (index, hotspots, label) => {
           const model = this.models[index];
@@ -395,7 +385,7 @@ export default {
             ring(center(rect), rect.width * 1.5);
             burst(center(rect), 22, rect.width * 1.1);
           }
-          buzz([12, 40, 18]);
+          vibrate([12, 40, 18]);
         } else if (effect.kind === 'inscribed') {
           const ribbon = this.ribbonEls[effect.chapter];
           if (ribbon) {
@@ -428,15 +418,15 @@ export default {
       try {
         const { page, ingredient, coins } = await playService.ink(spot.data);
         this.revealed = { ...this.revealed, [page]: ingredient };
-        writeStore(INK_KEY, this.revealed);
+        storage.save(INK_KEY, this.revealed);
         this.$emit('coins-updated', coins);
         this.models = this.buildModels(this.bookData);
         this.engine.refresh();
         this.filter = 'page';
         if (slot) burst(center(slot), 12, 40);
-        buzz(10);
+        vibrate(10);
       } catch (error) {
-        this.$emit('show-alert', error.response?.data?.message || 'L’Encre n’a pas pu être utilisée.');
+        this.$emit('show-alert', messageOf(error, 'L’Encre n’a pas pu être utilisée.'));
       }
     }
   }
