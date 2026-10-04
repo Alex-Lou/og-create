@@ -55,18 +55,36 @@
         aria-label="Chercher un élément"
       />
     </div>
-    <!-- Filtres : les familles demandées par la page ouverte d'abord, puis toutes les familles -->
-    <div v-if="!query.trim()" class="book-view__filters" role="tablist" aria-label="Familles">
-      <button
-        v-for="pill in filters"
-        :key="pill.id"
-        type="button"
-        role="tab"
-        :aria-selected="activeFilter === pill.id"
-        :class="['book-view__filter', { 'is-on': activeFilter === pill.id, 'is-page': pill.id === 'page' }]"
-        @click="filter = pill.id"
-      >{{ pill.label }} <span class="book-view__filter-count">{{ pill.count }}</span></button>
-    </div>
+    <!-- Filtres : la page ouverte, tout, et les familles repliées derrière un seul bouton (une ligne, rien de coupé) -->
+    <template v-if="!query.trim()">
+      <div class="book-view__filters" aria-label="Filtres">
+        <button
+          v-for="pill in mainFilters"
+          :key="pill.id"
+          type="button"
+          :aria-pressed="activeFilter === pill.id"
+          :class="['book-view__filter', { 'is-on': activeFilter === pill.id, 'is-page': pill.id === 'page' }]"
+          @click="pickFilter(pill.id)"
+        >{{ pill.label }} <span class="book-view__filter-count">{{ pill.count }}</span></button>
+        <button
+          v-if="familyFilters.length"
+          type="button"
+          :aria-expanded="String(showFamilies)"
+          :class="['book-view__filter', 'book-view__filter--families', { 'is-on': activeFamily }]"
+          @click="showFamilies = !showFamilies"
+        >{{ activeFamily ? activeFamily.label : 'Familles' }} <span class="book-view__chevron" aria-hidden="true">▾</span></button>
+      </div>
+      <div v-if="showFamilies" class="book-view__families" aria-label="Familles">
+        <button
+          v-for="pill in familyFilters"
+          :key="pill.id"
+          type="button"
+          :aria-pressed="activeFilter === pill.id"
+          :class="['book-view__filter', { 'is-on': activeFilter === pill.id }]"
+          @click="pickFilter(pill.id)"
+        >{{ pill.label }} <span class="book-view__filter-count">{{ pill.count }}</span></button>
+      </div>
+    </template>
     <div class="book-view__shelf" aria-label="Éléments connus">
       <button
         v-for="name in shelf"
@@ -77,7 +95,7 @@
         @click="$emit('select', name, $event.currentTarget.getBoundingClientRect())"
       >
         <span class="book-view__chip-glyph" aria-hidden="true"><ElementGlyph :glyph="elementEmojis[name]" /></span>
-        <span class="book-view__chip-name">{{ name }}</span>
+        <span :class="['book-view__chip-name', lengthClass(name)]">{{ name }}</span>
       </button>
       <p v-if="!shelf.length" class="book-view__empty">{{ query.trim() ? `Aucun élément ne ressemble à « ${query} ».` : 'Aucun élément dans cette famille.' }}</p>
     </div>
@@ -127,6 +145,8 @@ export default {
       query: '',
       // Filtre de l'étagère : « auto » suit la page (familles de l'indice), sinon « all » ou une famille
       filter: 'auto',
+      // Liste des familles dépliée sous les filtres
+      showFamilies: false,
       // Page à portée ouverte : familles de ses ingrédients et ingrédient révélé par l'Encre
       pageClue: null,
       showHint: !storage.load(HINT_KEY, false),
@@ -183,6 +203,15 @@ export default {
       });
       return pills;
     },
+    mainFilters() {
+      return this.filters.filter(pill => pill.id === 'page' || pill.id === 'all');
+    },
+    familyFilters() {
+      return this.filters.filter(pill => pill.id !== 'page' && pill.id !== 'all');
+    },
+    activeFamily() {
+      return this.familyFilters.find(pill => pill.id === this.activeFilter) || null;
+    },
     shelf() {
       const newestFirst = [...this.discoveredElements].reverse();
       if (this.query.trim()) return search(newestFirst, this.query);
@@ -234,6 +263,16 @@ export default {
     this.engine = null;
   },
   methods: {
+    pickFilter(id) {
+      this.filter = id;
+      this.showFamilies = false;
+    },
+    // Un long mot ne tient pas sur une tuile de téléphone : un ou deux crans plus petit (jamais coupé)
+    lengthClass(name) {
+      const longest = Math.max(...name.split(/[\s'’-]+/).map(word => word.length));
+      if (longest >= 12) return 'is-xlong';
+      return longest >= 9 ? 'is-long' : '';
+    },
     setRibbonRef(el, key) {
       if (el) this.ribbonEls[key] = el;
       else delete this.ribbonEls[key];
@@ -526,13 +565,18 @@ export default {
   box-shadow: inset 0 0 0 1px var(--oc-line-strong);
   font: inherit; font-size: 14px; font-weight: 700;
 }
-.book-view__filters {
-  display: flex; gap: 6px;
-  margin-top: 8px; padding: 2px;
-  overflow-x: auto; overscroll-behavior-x: contain;
-  scrollbar-width: none;
+.book-view__filters { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px; padding: 2px; }
+.book-view__families {
+  display: flex; flex-wrap: wrap; gap: 6px;
+  margin-top: 8px; padding: 10px;
+  border-radius: var(--r-md);
+  background: var(--vellum-100);
+  box-shadow: inset 0 0 0 1px var(--oc-line), var(--shadow-1);
+  animation: book-unfold .2s var(--oc-ease-out);
 }
-.book-view__filters::-webkit-scrollbar { display: none; }
+@keyframes book-unfold { from { opacity: 0; transform: translateY(-4px); } }
+.book-view__chevron { display: inline-block; margin-left: 2px; font-size: 11px; transition: transform .2s ease; }
+.book-view__filter--families[aria-expanded='true'] .book-view__chevron { transform: rotate(180deg); }
 .book-view__filter {
   flex: none;
   min-height: 34px; padding: 4px 12px;
@@ -546,32 +590,35 @@ export default {
 .book-view__filter.is-on { background: linear-gradient(180deg, var(--gold-300), var(--gold-500)); color: var(--ink-900); box-shadow: inset 0 1px 0 rgba(255, 255, 255, .6), 0 2px 0 var(--gold-600); }
 .book-view__filter.is-page:not(.is-on) { color: var(--oc-gold); box-shadow: inset 0 0 0 2px var(--gold-300), 0 2px 0 var(--vellum-400); }
 .book-view__filter-count { opacity: .6; font-weight: 700; margin-left: 2px; }
-/* Deux rangées qui défilent ensemble : deux fois plus d'éléments sous les yeux */
+/* Grille verticale qui remplit exactement la largeur : aucune tuile coupée au bord */
 .book-view__shelf {
-  display: grid; grid-auto-flow: column; grid-template-rows: repeat(2, auto); grid-auto-columns: 64px;
+  display: grid; grid-template-columns: repeat(auto-fill, minmax(62px, 1fr));
   gap: 8px;
-  margin-top: 8px; padding: 2px 2px 6px;
-  overflow-x: auto; overscroll-behavior-x: contain;
-  scrollbar-width: none;
+  margin-top: 10px; padding: 2px 2px 6px;
 }
-.book-view__shelf::-webkit-scrollbar { display: none; }
 .book-view__chip {
-  flex: none;
-  display: flex; flex-direction: column; align-items: center; gap: 2px;
-  width: 64px; min-height: 64px; padding: 7px 3px 5px;
+  display: flex; flex-direction: column; align-items: center; justify-content: flex-start; gap: 3px;
+  min-width: 0; min-height: 70px; padding: 8px 3px 6px;
   border: 0; border-radius: 16px;
-  background: var(--book-paper); color: var(--book-ink);
-  box-shadow: 0 3px 0 rgba(0, 0, 0, .35);
+  background: linear-gradient(180deg, var(--vellum-50), var(--vellum-100)); color: var(--book-ink);
+  box-shadow: inset 0 0 0 1px var(--oc-line), var(--edge-paper), var(--shadow-1);
   cursor: pointer;
   transition: transform .15s ease;
 }
-.book-view__chip:active { transform: scale(.92); }
+.book-view__chip:active { transform: translateY(2px) scale(.96); }
 .book-view__chip-glyph { font-size: 26px; line-height: 1; }
-.book-view__chip-name { font-size: 10.5px; font-weight: 700; max-width: 60px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-family: var(--font-ui); color: var(--ink-500); }
-.book-view__chip.is-hint { box-shadow: 0 0 0 3px var(--oc-gold), 0 0 16px rgba(224, 182, 84, .6), 0 3px 0 rgba(0, 0, 0, .35); }
-.book-view__chip.is-new { box-shadow: 0 0 0 2.5px var(--oc-gold), 0 3px 0 rgba(0, 0, 0, .35); animation: book-pop .55s cubic-bezier(.3, 1.5, .55, 1); }
+.book-view__chip-name {
+  max-width: 100%; overflow: hidden;
+  display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical;
+  font-family: var(--font-ui); font-size: 10.5px; font-weight: 800; line-height: 1.15; text-align: center; color: var(--ink-700);
+  hyphens: auto; -webkit-hyphens: auto;
+}
+.book-view__chip-name.is-long { font-size: 9px; letter-spacing: -0.02em; }
+.book-view__chip-name.is-xlong { font-size: 7.5px; letter-spacing: -0.03em; }
+.book-view__chip.is-hint { box-shadow: inset 0 0 0 2px var(--gold-400), 0 0 16px rgba(239, 193, 99, .6), var(--edge-paper); }
+.book-view__chip.is-new { box-shadow: inset 0 0 0 2px var(--gold-400), var(--edge-paper), var(--shadow-1); animation: book-pop .55s cubic-bezier(.3, 1.5, .55, 1); }
 @keyframes book-pop { 0% { transform: scale(.55); } 100% { transform: scale(1); } }
-.book-view__empty { grid-row: 1 / -1; width: max-content; margin: 8px 0; color: var(--oc-on-bg-faint); font-style: italic; }
+.book-view__empty { grid-column: 1 / -1; margin: 8px 0; color: var(--oc-on-bg-faint); font-style: italic; }
 
 @media (prefers-reduced-motion: reduce) {
   .book-view__pulse, .book-view__hint, .book-view__ribbon.is-ping, .book-view__chip.is-new { animation: none; }
