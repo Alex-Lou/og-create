@@ -335,6 +335,7 @@ const SWAY = { tree: 0.04, palm: 0.05, bush: 0.03, tuft: 0.09, flowers: 0.06, bi
 // Tous les décors naturels (planches 1 et 2), et ce qui pousse où, avec sa fréquence cumulée
 const ALL_NATURE = { ...NATURE, ...NATURE2 };
 const BEACH_MIX = [['palm', 0.1], ['mossy', 0.15], ['shells', 0.2], ['driftwood', 0.23]];
+const ROCK_MIX = [['rock', 0.3], ['rocks', 0.55], ['crag', 0.72], ['mossy', 1]];
 const GRASS_MIX = [['tuft', 0.1], ['flowers', 0.16], ['bush', 0.185], ['mushrooms', 0.205], ['stump', 0.22], ['birch', 0.235], ['apple', 0.245], ['autumn', 0.255], ['log', 0.265]];
 // Forêt : deux arbres par case (sapins en hauteur) ; au bord de l'eau douce, roseaux et nénuphars
 const FOREST_LOW = ['tree', 'birch', 'pine', 'autumn'];
@@ -604,7 +605,7 @@ export default {
             add(kinds[Math.floor(roll * kinds.length)], x, y, -0.2, -0.16);
             add(kinds[Math.floor(hash(y, x) * kinds.length)], x, y, 0.18, 0.22);
           } else if (g === 't') add(roll < 0.55 ? 'tree' : roll < 0.8 ? 'apple' : 'birch', x, y);
-          else if (g === 'r') add(roll < 0.6 ? 'rock' : 'mossy', x, y);
+          else if (g === 'r') add(ROCK_MIX.find(([, upTo]) => roll < upTo)[0], x, y);
           else if (g === 'd') add('tuft', x, y);
           else if ((g === 'g' || g === 'm') && wet(x, y) && roll < 0.45) add(roll < 0.3 ? 'reeds' : 'lily', x, y);
           else if (g === 's' || g === 'g' || g === 'm') {

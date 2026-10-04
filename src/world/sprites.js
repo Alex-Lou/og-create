@@ -2,7 +2,7 @@
 // Bâtiments : emprise de 2 × 2 cases (u, v ∈ [-1, 1]), ancrés au centre de l'emprise.
 // Nature : emprise d'une case (u, v ∈ [-0.5, 0.5]), ancrée au centre de la case.
 // Les parties animées (flamme, fumée, eau, voile) sont des sprites à part, peints image par image par l'île.
-import { P, TW, TH, face, box, gable, pyramid, disc, cylinder, shadow, foliage, sprite, EDGE } from './iso';
+import { P, TW, TH, face, box, gable, pyramid, disc, cylinder, shadow, foliage, sprite, boulder, EDGE } from './iso';
 import {
   WOOD, WOOD_DARK, STONE, WALL, BRICK, SOIL, ROOF_RED, THATCH, LEAVES, PINE, INK, BUILDING_BOX, PROP_BOX,
   pebble, doorLeft, windowLeft, windowRight, planksLeft, planksRight, roundTree,
@@ -297,9 +297,14 @@ function bushProp() {
   return sprite(shadow(0, 0, 0.32) + foliage(x - 7, y - 6, 8, LEAVES) + foliage(x + 7, y - 6, 8.5, LEAVES) + foliage(x, y - 12, 9, LEAVES)
     + `<circle cx="${x - 5}" cy="${y - 14}" r="1.8" fill="#F27A9A"/><circle cx="${x + 6}" cy="${y - 10}" r="1.8" fill="#F27A9A"/><circle cx="${x + 1}" cy="${y - 4}" r="1.8" fill="#FFFFFF"/>`, PROP_BOX);
 }
-function rockProp() {
-  return sprite(shadow(0, 0, 0.3) + box(-0.22, -0.18, 0.14, 0.16, 0, 13, STONE) + box(0.1, 0.0, 0.3, 0.2, 0, 7, STONE) + pebble(-0.3, 0.25, 3.2), PROP_BOX);
-}
+// Rochers du sol rocheux, en granit à facettes : un bloc, un amas, une aiguille ; lichen sur les plus gros
+const GRANITE = { top: '#CBC6BA', left: '#A6A094', right: '#7E786E' };
+const lichen = (u, v, z) => { const [x, y] = P(u, v, z); return `<ellipse cx="${x}" cy="${y}" rx="2.6" ry="1.3" fill="#B7C46C" opacity=".85"/>`; };
+const rockProp = () => sprite(shadow(0, 0, 0.3) + boulder(0, 0, 0.3, 0.26, 12, GRANITE, 1) + lichen(-0.06, -0.08, 11) + pebble(-0.32, 0.26, 3, GRANITE), PROP_BOX);
+const rocksProp = () => sprite(shadow(0, 0, 0.34) + boulder(-0.12, -0.1, 0.26, 0.22, 13, GRANITE, 2) + boulder(0.2, 0.14, 0.16, 0.14, 7, GRANITE, 3)
+  + boulder(-0.26, 0.22, 0.1, 0.09, 4, GRANITE, 4) + lichen(-0.17, -0.16, 12), PROP_BOX);
+const cragProp = () => sprite(shadow(0, 0, 0.3) + boulder(0, 0, 0.27, 0.23, 26, GRANITE, 5, 0.35, 0.35) + boulder(0.22, 0.14, 0.13, 0.11, 8, GRANITE, 6)
+  + pebble(-0.3, 0.2, 2.6, GRANITE), PROP_BOX);
 function flowersProp() {
   let out = '';
   const spots = [[-0.25, -0.2, '#F27A9A'], [0.15, -0.25, '#FFD45E'], [0.25, 0.1, '#FFFFFF'], [-0.1, 0.2, '#B9A0F0'], [-0.3, 0.1, '#FFD45E'], [0.05, 0.0, '#F27A9A']];
@@ -358,7 +363,7 @@ export const BUILDINGS = {
   ponton: [pier],
   chantier: [() => worksite(0), () => worksite(1), () => worksite(2)]
 };
-export const NATURE = { tree: treeProp, pine: pineProp, palm: palmProp, bush: bushProp, rock: rockProp, flowers: flowersProp, tuft: tuftProp };
+export const NATURE = { tree: treeProp, pine: pineProp, palm: palmProp, bush: bushProp, rock: rockProp, rocks: rocksProp, crag: cragProp, flowers: flowersProp, tuft: tuftProp };
 export { TW, TH };
 
 // Lumières de nuit par bâtiment et niveau : [u, v, z, rayon en px] (fenêtres, feu, bouche du four)

@@ -222,6 +222,18 @@ export function drawCell(ctx, M, x, y, veil = 0) {
     ctx.quadraticCurveTo(c.x, c.y + k - 3, c.x + 12, c.y + k);
     ctx.stroke();
   } else if (g === 'r') {
+    // Roche : une dalle claire, une dalle sombre, une fissure, des cailloux
+    for (let k = 0; k < 2; k++) {
+      const ox = c.x - 9 + rnd(x, y, k + 30) * 18, oy = c.y - 3 + rnd(x, y, k + 33) * 6, sz = 5 + rnd(x, y, k + 36) * 4;
+      ctx.fillStyle = k ? 'rgba(255, 255, 255, .16)' : 'rgba(55, 45, 35, .13)';
+      ctx.beginPath();
+      ctx.moveTo(ox - sz, oy);
+      ctx.lineTo(ox - sz * 0.2, oy - sz * 0.45);
+      ctx.lineTo(ox + sz, oy - sz * 0.1);
+      ctx.lineTo(ox + sz * 0.3, oy + sz * 0.42);
+      ctx.closePath();
+      ctx.fill();
+    }
     ctx.strokeStyle = 'rgba(70, 60, 50, .3)';
     ctx.lineWidth = 1;
     ctx.beginPath();
@@ -229,6 +241,8 @@ export function drawCell(ctx, M, x, y, veil = 0) {
     ctx.lineTo(c.x + rnd(x, y, 1) * 4, c.y + 1);
     ctx.lineTo(c.x + 8, c.y - 2 + rnd(x, y, 2) * 5);
     ctx.stroke();
+    ctx.fillStyle = 'rgba(80, 70, 60, .4)';
+    for (let k = 0; k < 3; k++) ctx.fillRect(c.x - 13 + rnd(x, y, k + 40) * 26, c.y - 5 + rnd(x, y, k + 44) * 10, 1.8, 1.4);
   } else if (grassy && g !== 'f') {
     ctx.fillStyle = 'rgba(60, 110, 40, .22)';
     for (let k = 0; k < 3; k++) ctx.fillRect(c.x - 15 + rnd(x, y, k) * 30, c.y - 5 + rnd(x, y, k + 4) * 10, 1.4, 3);

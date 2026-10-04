@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { P, TW, TH, box } from '@/world/iso';
+import { P, TW, TH, box, boulder, mixHex } from '@/world/iso';
 import { phaseAt } from '@/world/scene';
 import { BUILDINGS, NATURE } from '@/world/sprites';
 import { FUTURE, UPGRADES, fountainFrames, orbSprite } from '@/world/buildings2';
@@ -21,6 +21,27 @@ describe('géométrie isométrique', () => {
   });
   it('une boîte ne montre que ses trois faces visibles', () => {
     expect(box(0, 0, 1, 1, 0, 10, { top: '#a', left: '#b', right: '#c' }).match(/<polygon/g)).toHaveLength(3);
+  });
+});
+
+describe('rochers à facettes', () => {
+  const ROCK = { top: '#CCCCCC', left: '#999999', right: '#666666' };
+  it('même graine, même rocher ; seules les facettes tournées vers le joueur sont tracées, le dessus en dernier', () => {
+    const a = boulder(0, 0, 0.3, 0.25, 12, ROCK, 3);
+    expect(a).toBe(boulder(0, 0, 0.3, 0.25, 12, ROCK, 3));
+    expect(a).not.toBe(boulder(0, 0, 0.3, 0.25, 12, ROCK, 4));
+    const faces = a.match(/<polygon/g).length;
+    expect(faces).toBeGreaterThan(4);
+    expect(faces).toBeLessThan(2 * 8 + 1);
+    expect(a.endsWith(`fill="${ROCK.top}"${' stroke="rgba(60,40,25,.28)" stroke-width="0.8" stroke-linejoin="round"'}/>`)).toBe(true);
+  });
+  it('mélange de couleurs', () => {
+    expect(mixHex('#000000', '#FFFFFF', 0)).toBe('#000000');
+    expect(mixHex('#000000', '#FFFFFF', 1)).toBe('#ffffff');
+    expect(mixHex('#102030', '#305070', 0.5)).toBe('#203850');
+  });
+  it('trois rochers différents pour le sol rocheux', () => {
+    ['rock', 'rocks', 'crag'].forEach(kind => expect(NATURE[kind]().svg).toContain('<polygon'));
   });
 });
 
