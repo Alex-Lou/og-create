@@ -225,7 +225,7 @@ const sparkles = f => sprite((() => {
 export const POTAGER_TIERS = [
   { make: orchard },
   { make: farm },
-  { make: windmill, anims: [{ key: 'sails', n: 8, fps: 6, frame: millSails }] },
+  { make: windmill, anims: [{ key: 'sails', n: 8, fps: 6, frame: millSails, tint: true }] },
   { make: estate, smoke: [[-1.2, -1.2, 69]], lights: [[-1.16, -0.55, 13, 14], [-0.71, -0.55, 13, 14]] },
   { make: unicornGarden, anims: [{ key: 'unicorn', n: 6, fps: 3, frame: unicorn }, { key: 'sparkles', n: 6, fps: 5, frame: sparkles }], lights: [[-1.05, -0.95, 30, 22]] }
 ];
