@@ -8,6 +8,8 @@
       </div>
 
       <p v-if="page.riddle" class="hang__riddle">« {{ page.riddle }} »</p>
+      <!-- Le type de l'élément, pour ne pas chercher dans le vide -->
+      <p v-if="kind" class="hang__kind">✦ {{ kind }} ✦</p>
 
       <!-- Le mot : on touche une case, puis une lettre -->
       <p class="hang__word" role="group" :aria-label="wordLabel">
@@ -63,6 +65,7 @@
 import GModal from '@/components/ui/GModal.vue';
 import ElementGlyph from '@/components/ui/ElementGlyph.vue';
 import { shownPatches } from '@/book/patchwork';
+import { FAMILY_WORDS } from '@/book/painter';
 
 const ROWS = ['AZERTYUIOP', 'QSDFGHJKLM', 'WXCVBN'];
 const fold = char => char.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toUpperCase();
@@ -95,6 +98,9 @@ export default {
   computed: {
     hm() {
       return this.page.hangman;
+    },
+    kind() {
+      return FAMILY_WORDS[this.page.family] || '';
     },
     cells() {
       return this.inscribed ? [...this.inscribed] : this.hm.mask.map(char => char || '');
@@ -236,6 +242,7 @@ export default {
 
 .hang__riddle { margin: 0; max-width: 34ch; text-align: center; font-family: var(--oc-font-display); font-style: italic; font-size: 16px; line-height: 1.35; color: var(--ink-700); }
 
+.hang__kind { margin: -6px 0 0; font-family: var(--oc-font-body); font-weight: 800; font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--hi); opacity: 0.85; }
 .hang__word { margin: 4px 0 0; display: flex; flex-wrap: wrap; justify-content: center; gap: 6px; }
 .hang__cell {
   min-width: 26px;
