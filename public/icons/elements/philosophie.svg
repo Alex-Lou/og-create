@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+<path d="M10 62c0-12 6-18 14-18s14 6 14 18z" fill="#f6f2ea" stroke="#8a847a" stroke-width="2.4" stroke-linejoin="round"/>
+<circle cx="24" cy="30" r="12" fill="#f8d8a8" stroke="#8a5a3a" stroke-width="2.2"/>
+<path d="M14 34c0 8 4 14 10 14s10-6 10-14c-2 2-6 4-10 4s-8-2-10-4z" fill="#e8e8e2" stroke="#8a8a84" stroke-width="1.8"/>
+<path d="M12 26c0-8 6-12 12-12s12 4 12 12c-2-4-6-6-12-6s-10 2-12 6z" fill="#e8e8e2" stroke="#8a8a84" stroke-width="1.6"/>
+<circle cx="20" cy="29" r="1.4" fill="#3a2418"/><circle cx="28" cy="29" r="1.4" fill="#3a2418"/>
+<path d="M34 44c4 0 6-4 4-8" stroke="#8a5a3a" stroke-width="2.4" stroke-linecap="round" fill="none"/>
+<g fill="#ffffff" stroke="#7a8a9c" stroke-width="2"><circle cx="40" cy="20" r="2.4"/><circle cx="46" cy="14" r="3.4"/></g>
+<path d="M44 10a6 6 0 0 1 4-8 8 8 0 0 1 12 4 5 5 0 0 1-2 8H46z" fill="#ffffff" stroke="#7a8a9c" stroke-width="2" stroke-linejoin="round"/>
+<text x="53" y="12" font-family="serif" font-size="8" font-weight="800" fill="#7a8a9c" text-anchor="middle">?</text>
+</svg>
