@@ -5,7 +5,10 @@ import { BUILDINGS, NATURE } from '@/world/sprites';
 import { FUTURE, UPGRADES, fountainFrames, orbSprite } from '@/world/buildings2';
 import { NATURE2, CRITTERS, PLINTH } from '@/world/nature';
 import { SHOP_SPRITES, itemLayers, itemLight, itemThumb } from '@/world/shopSprites';
-import { LOOKS, lookAt, artMake } from '@/world/looks';
+import { LOOKS, lookAt, artMake, boatOf } from '@/world/looks';
+import { TINTS, TINT_IDS, RARE_TINTS, tintOf, tintSvg } from '@/world/tints';
+import { RARE_SPRITES, FORGE_CHIMNEYS, crestOf, rareLights } from '@/world/rareSprites';
+import { boatSprite } from '@/world/sprites';
 
 const at = (h, m = 0) => {
   const d = new Date(2026, 9, 4, h, m);
@@ -84,7 +87,7 @@ const SKINS = {
 describe('boutique des ateliers', () => {
   it('chaque article du catalogue a son dessin, à chaque niveau de son bâtiment', () => {
     const ids = Object.values(SHOP_ITEMS).flat();
-    expect(Object.keys(SHOP_SPRITES).sort()).toEqual([...ids].sort());
+    expect(Object.keys(SHOP_SPRITES).filter(id => !RARE_SPRITES[id]).sort()).toEqual([...ids].sort());
     for (const id of ids) {
       for (const level of LATE_ITEMS.includes(id) ? [5, 6, 7] : [1, 2, 3, 4, 7]) {
         const reach = level >= 4 ? 112 : 80;
@@ -188,6 +191,101 @@ describe('paliers des bâtiments', () => {
   it('au-delà du dernier dessin, le plus haut palier sert', () => {
     expect(lookAt('foyer', 9)).toBe(LOOKS.foyer[6]);
     expect(lookAt('carriere', 0)).toBe(LOOKS.carriere[0]);
+  });
+});
+
+describe('teintes (skins qui recolorent un bâtiment à tous ses paliers)', () => {
+  it('un skin dit sa teinte : teinte vendue « <teinte>-<bâtiment> », pièce rare, ou aucune', () => {
+    expect(tintOf('sakura-foyer')).toBe('sakura');
+    expect(tintOf('nuit-etoilee-carriere')).toBe('nuit-etoilee');
+    expect(tintOf('or-royal-ponton')).toBe('or-royal');
+    expect(tintOf('lampions')).toBe('lampions');
+    expect(tintOf('toit-bleu')).toBeNull();
+    expect(tintOf('givre')).toBeNull();
+    expect(tintOf('')).toBeNull();
+    expect(TINT_IDS).toHaveLength(12);
+  });
+  it('chaque teinte recolore chaque bâtiment, sans valeur manquante, et garde la lueur des vitres', () => {
+    for (const site of Object.keys(LOOKS)) {
+      for (const level of [1, 4, 7]) {
+        const origin = artMake(site, level)().svg;
+        const tinted = TINT_IDS.map(tint => artMake(site, level, `${tint}-${site}`)().svg);
+        tinted.forEach(svg => {
+          expect(svg).not.toMatch(/NaN|undefined/);
+          expect(svg).not.toBe(origin);
+          (svg.match(/#[0-9A-Fa-f]{6}\b/g) || []).forEach(hex => expect(hex).toMatch(/^#[0-9A-F]{6}$/i));
+        });
+        expect(new Set(tinted).size).toBe(TINT_IDS.length);
+      }
+    }
+    expect(tintSvg('<rect fill="#FFE6A3"/><rect fill="#E06E52"/>', 'nuit-etoilee')).toMatch(/^<rect fill="#FFE6A3"\/><rect fill="#(?!E06E52)/);
+    expect(tintSvg('<rect fill="#E06E52"/>', 'inconnue')).toBe('<rect fill="#E06E52"/>');
+  });
+  it('les mécanismes animés et le voilier prennent la teinte ; le feu et l’eau non', () => {
+    const mill = lookAt('potager', 5).anims[0];
+    expect(mill.skinned).toBe(true);
+    expect(mill.frame(0, 'nuit-etoilee-potager').svg).not.toBe(mill.frame(0).svg);
+    const flame = lookAt('foyer', 1).anims[0];
+    expect(flame.skinned).toBeFalsy();
+    expect(boatOf('sakura-ponton').svg).not.toBe(boatOf().svg);
+    expect(boatOf('voile-rouge').svg).toBe(boatSprite('voile-rouge').svg);
+  });
+  it('les teintes vendues et celles des pièces rares sont toutes définies', () => {
+    expect(Object.keys(RARE_TINTS).sort()).toEqual(Object.keys(RARE_SPRITES).sort());
+    for (const tint of [...Object.values(TINTS), ...Object.values(RARE_TINTS)]) {
+      expect(Object.keys(tint).every(key => ['name', 'all', 'warm', 'leaf', 'cool', 'violet'].includes(key))).toBe(true);
+    }
+  });
+});
+
+describe('pièces rares (accessoire animé à tous les paliers)', () => {
+  const RARE_SITE = {
+    papillons: 'potager', tournesols: 'potager', 'filon-or': 'carriere', 'coeur-lave': 'carriere', fees: 'bosquet', petales: 'bosquet',
+    'arc-en-ciel': 'puits', nenuphars: 'puits', pavois: 'ponton', mouettes: 'ponton', etincelles: 'atelier', engrenages: 'atelier', lampions: 'foyer', lierre: 'foyer'
+  };
+  it('chaque pièce se dessine à chaque palier, en calques légers, et sa vignette montre bâtiment et accessoire', () => {
+    expect(Object.keys(RARE_SPRITES).sort()).toEqual(Object.keys(RARE_SITE).sort());
+    for (const [id, site] of Object.entries(RARE_SITE)) {
+      for (let level = 1; level <= 7; level++) {
+        const layers = itemLayers(id, level, 1.3);
+        expect(layers.length).toBeGreaterThan(0);
+        RARE_SPRITES[id].layers.forEach((spec, k) => {
+          const { svg, box: frame } = layers[k].make();
+          expect(svg).not.toMatch(/NaN|undefined/);
+          // Images gardées à 4× en mémoire : une image par animation petite, une image seule (décor, guirlande) bornée
+          if (spec.n) expect(frame.w * frame.h).toBeLessThanOrEqual(60 * 60);
+          expect(frame.w * frame.h).toBeLessThanOrEqual(240 * 240);
+          expect(frame.x).toBeGreaterThanOrEqual(-140);
+          expect(frame.x + frame.w).toBeLessThanOrEqual(140);
+        });
+        const building = artMake(site, level, `${id}-x`)();
+        const art = artMake(site, level, id)();
+        expect(art.svg).not.toMatch(/NaN|undefined/);
+        expect(art.box.x).toBeLessThanOrEqual(building.box.x);
+        expect(art.box.y).toBeLessThanOrEqual(building.box.y);
+        expect(art.svg.length).toBeGreaterThan(lookAt(site, level).make(id).svg.length);
+      }
+    }
+  });
+  it('les petites bêtes bougent, la crête suit chaque palier, la forge crache par sa cheminée', () => {
+    const fly = [0, 1, 2].map(t => itemLayers('papillons', 4, t)[1].offset.join());
+    expect(new Set(fly).size).toBe(3);
+    expect(crestOf('foyer', 7)[1]).toBeLessThan(crestOf('foyer', 1)[1]);
+    expect(crestOf('foyer', 9)).toEqual(crestOf('foyer', 7));
+    FORGE_CHIMNEYS.forEach((at, i) => expect(lookAt('atelier', i + 1).smoke).toContainEqual(at));
+  });
+  it('certaines pièces luisent la nuit ; les lucioles déplacent leur lueur', () => {
+    for (const id of ['lampions', 'lierre', 'fees', 'coeur-lave', 'filon-or', 'etincelles', 'engrenages']) {
+      const lights = rareLights(id, 5, 0.7);
+      expect(lights.length).toBeGreaterThan(0);
+      lights.forEach(([x, y, r, color, strength]) => {
+        expect([x, y, r, strength].every(Number.isFinite)).toBe(true);
+        expect(color).toMatch(/^\d{1,3},\d{1,3},\d{1,3}$/);
+      });
+    }
+    expect(rareLights('lierre', 2, 0)[0]).not.toEqual(rareLights('lierre', 2, 3)[0]);
+    expect(rareLights('papillons', 2, 0)).toEqual([]);
+    expect(rareLights('toit-bleu', 2, 0)).toEqual([]);
   });
 });
 

@@ -7,6 +7,7 @@
 // - en option : back (dessiné avant le bâtiment, donc derrière) et motion (glissement continu dans le temps).
 import { P, TW, box, gable, disc, cylinder, face, sprite, EDGE } from './iso';
 import { WOOD, WOOD_DARK, STONE, WALL, pebble, planksLeft, planksRight } from './palette';
+import { RARE_SPRITES } from './rareSprites';
 
 const IRON = { top: '#B4BEC8', left: '#8E99A4', right: '#68737E' };
 const DARK_IRON = { top: '#77818B', left: '#5A636C', right: '#41484F' };
@@ -1728,7 +1729,9 @@ export const SHOP_SPRITES = {
   chien,
   sablier,
   hibou,
-  grimoire
+  grimoire,
+  // Pièces rares (skins) : leur accessoire se dessine comme un article quand le bâtiment les porte
+  ...RARE_SPRITES
 };
 
 // Emprise de 3 × 3 cases à partir de ce palier : les articles s'écartent d'autant (leur taille ne change pas)
@@ -1745,7 +1748,8 @@ function placeOf(layer, level) {
 function boxOf(layer, level) {
   const [u, v] = placeOf(layer, level);
   const [sx, sy] = P(u, v, 0);
-  const [x, y, w, h] = layer.frame;
+  // Cadre fixe, ou propre au niveau (pièces rares qui suivent la hauteur du bâtiment)
+  const [x, y, w, h] = typeof layer.frame === 'function' ? layer.frame(level) : layer.frame;
   return { x: sx + x, y: sy + y, w, h };
 }
 function bodyOf(id, k, layer, level, f) {

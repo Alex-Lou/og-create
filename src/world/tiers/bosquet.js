@@ -209,6 +209,6 @@ export const BOSQUET_TIERS = [
   { make: clearing, sway: 0.015, smoke: [[-0.04, -0.2, 44]], lights: [[0.42, -0.04, 12, 12]] },
   { make: oakwood, sway: 0.012, smoke: [[-0.27, -0.12, 52]], lights: [[0.45, 0.12, 14, 13]] },
   { make: sawmill, anims: [{ key: 'saw', n: 6, fps: 12, frame: sawBlade }] },
-  { make: forestry, anims: [{ key: 'saw', n: 6, fps: 12, frame: sawBlade }, { key: 'log', n: 6, fps: 3, frame: swingingLog }] },
+  { make: forestry, anims: [{ key: 'saw', n: 6, fps: 12, frame: sawBlade }, { key: 'log', n: 6, fps: 3, frame: swingingLog, tint: true }] },
   { make: enchanted, lights: [[0.05, -0.25, 12, 22], [-0.07, -0.25, 40, 14], [0.17, -0.25, 48, 14], [-0.8, 0.6, 10, 14], [0.75, 0.55, 10, 14]], anims: [{ key: 'dust', n: 6, fps: 5, frame: fairyDust }] }
 ];

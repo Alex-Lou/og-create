@@ -1,9 +1,14 @@
 // Registre des bâtiments palier par palier : dessin (avec son skin), lumières de nuit, fumées, parties animées,
 // voilier du Ponton, souplesse au vent. Paliers I-II (et Cabane du Foyer) : sprites.js et buildings2.js ;
 // paliers suivants : tiers/. Chaque entrée : { make(skin), lights, smoke, anims, boat, sway }.
+// Une partie animée marquée tint (ailes de moulin, roue…) prend la teinte du bâtiment ; les effets (feu, eau) non.
 import { BUILDINGS, LIGHTS, SMOKE, SHELTER_FIRE, flameFrames, boatSprite } from './sprites';
 import { UPGRADES, fountainFrames } from './buildings2';
 import { TIERS } from './tiers';
+import { tintOf, tintSvg } from './tints';
+import { RARE_SPRITES } from './rareSprites';
+import { itemLayers } from './shopSprites';
+import { sprite } from './iso';
 
 const FLAMES = flameFrames();
 const SHELTER_FLAMES = flameFrames(SHELTER_FIRE[0], SHELTER_FIRE[1], 0.75);
@@ -32,7 +37,25 @@ const FIRST = {
   ponton: [{ make: BUILDINGS.ponton[0], boat: BOAT_AT }, { make: UPGRADES.ponton, boat: BOAT_AT, lights: [[0.82, 0.14, 37, 16]] }]
 };
 const DEFAULTS = { lights: [], smoke: [], anims: [], boat: null, sway: 0, fire: false };
-export const LOOKS = Object.fromEntries(Object.entries(FIRST).map(([id, list]) => [id, [...list, ...(TIERS[id] || [])].map(look => ({ ...DEFAULTS, ...look }))]));
+
+// Dessin porté par un skin : recoloré si le skin est une teinte (tints.js), sinon dessiné avec le skin
+function tinted(make) {
+  return skin => {
+    const tint = tintOf(skin);
+    if (!tint) return make(skin);
+    const drawn = make();
+    return { ...drawn, svg: tintSvg(drawn.svg, tint) };
+  };
+}
+const withTints = look => ({
+  ...DEFAULTS,
+  ...look,
+  make: tinted(look.make),
+  anims: (look.anims || []).map(anim => (anim.tint ? { ...anim, skinned: true, frame: (f, skin) => tinted(s => anim.frame(f, s))(skin) } : anim))
+});
+export const LOOKS = Object.fromEntries(Object.entries(FIRST).map(([id, list]) => [id, [...list, ...(TIERS[id] || [])].map(withTints)]));
+// Voilier du Ponton, teinté comme son bâtiment
+export const boatOf = tinted(boatSprite);
 
 // Dessin d'un bâtiment à un niveau (le plus haut dessiné si le niveau le dépasse)
 export function lookAt(siteId, level) {
@@ -43,7 +66,8 @@ export function lookAt(siteId, level) {
 export function boatOffset(at) {
   return [((at[0] - BOAT_AT[0]) - (at[1] - BOAT_AT[1])) * 32, ((at[0] - BOAT_AT[0]) + (at[1] - BOAT_AT[1])) * 16];
 }
-// Image complète d'un bâtiment pour une vignette : son dessin, ses parties animées (première image) et le voilier
+// Image complète d'un bâtiment pour une vignette : son dessin, ses parties animées (première image), le voilier
+// et l'accessoire de la pièce rare qu'il porte (derrière ou devant lui ; le cadre s'agrandit pour le contenir)
 export function artMake(siteId, level, skin) {
   const look = lookAt(siteId, level);
   return () => {
@@ -52,8 +76,15 @@ export function artMake(siteId, level, skin) {
     let extra = look.anims.filter(a => !(a.skip && a.skip(skin))).map(a => inner(a.frame(0, skin))).join('');
     if (look.boat) {
       const [dx, dy] = boatOffset(look.boat);
-      extra += `<g transform="translate(${dx} ${dy})">${inner(boatSprite(skin || undefined))}</g>`;
+      extra += `<g transform="translate(${dx} ${dy})">${inner(boatOf(skin || undefined))}</g>`;
     }
-    return { box: building.box, svg: building.svg.replace(/<\/svg>$/, `${extra}</svg>`) };
+    if (!RARE_SPRITES[skin]) return { box: building.box, svg: building.svg.replace(/<\/svg>$/, `${extra}</svg>`) };
+    const parts = itemLayers(skin, level, 0).map(layer => ({ ...layer, sprite: layer.make() }));
+    const placed = side => parts.filter(p => p.back === side).map(p => `<g transform="translate(${p.offset[0]} ${p.offset[1]})">${inner(p.sprite)}</g>`).join('');
+    const boxes = [building.box, ...parts.map(p => ({ ...p.sprite.box, x: p.sprite.box.x + p.offset[0], y: p.sprite.box.y + p.offset[1] }))];
+    const x = Math.min(...boxes.map(b => b.x));
+    const y = Math.min(...boxes.map(b => b.y));
+    const box = { x, y, w: Math.max(...boxes.map(b => b.x + b.w)) - x, h: Math.max(...boxes.map(b => b.y + b.h)) - y };
+    return sprite(placed(true) + inner(building) + extra + placed(false), box);
   };
 }

@@ -228,6 +228,6 @@ export const PUITS_TIERS = [
   { make: washhouse, anims: [{ key: 'laundry', n: 4, fps: 3, frame: laundry }] },
   { make: bigBasin, anims: [{ key: 'jets', n: 4, fps: 6, frame: basinJets, skip: skin => KIOSK.includes(skin) }] },
   { make: aqueduct, anims: [{ key: 'fall', n: 4, fps: 8, frame: fall }] },
-  { make: watermill, anims: [{ key: 'wheel', n: 8, fps: 8, frame: millWheel }], smoke: [[-1.05, -1.05, 84]], lights: [[-1.06, -0.25, 39, 14], [-0.11, -0.25, 39, 14]] },
+  { make: watermill, anims: [{ key: 'wheel', n: 8, fps: 8, frame: millWheel, tint: true }], smoke: [[-1.05, -1.05, 84]], lights: [[-1.06, -0.25, 39, 14], [-0.11, -0.25, 39, 14]] },
   { make: youth, anims: [{ key: 'magic', n: 6, fps: 6, frame: youthMagic }], lights: [[0, 0, 14, 40], [0, 0, 40, 18]] }
 ];

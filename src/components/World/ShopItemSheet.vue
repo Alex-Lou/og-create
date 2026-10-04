@@ -3,9 +3,10 @@
     <div class="item-sheet">
       <div :class="['item-sheet__art', { 'is-locked': !reached && !item.owned }]">
         <img :src="art" alt="" />
-        <span class="item-sheet__chip" :aria-label="`Palier ${palier}`">{{ palier }}</span>
+        <span v-if="item.rare" class="item-sheet__chip item-sheet__chip--rare">Rare</span>
+        <span v-else class="item-sheet__chip" :aria-label="`Palier ${palier}`">{{ palier }}</span>
       </div>
-      <p v-if="!item.owned" :class="['item-sheet__palier', reached ? 'is-ok' : 'is-missing']">
+      <p v-if="!item.owned && !item.rare" :class="['item-sheet__palier', reached ? 'is-ok' : 'is-missing']">
         {{ reached ? `Palier ${palier} atteint` : `Il faut le palier ${palier} : ce bâtiment est au palier ${current}.` }}
       </p>
       <dl class="item-sheet__facts">
@@ -16,7 +17,8 @@
       </dl>
     </div>
     <template #actions>
-      <template v-if="!item.owned">
+      <span v-if="!item.owned && item.rare" class="item-sheet__lock">À trouver dans les butins</span>
+      <template v-else-if="!item.owned">
         <span v-if="lock && reached" class="item-sheet__lock">{{ lock }}</span>
         <button type="button" class="g-btn" :disabled="busy || Boolean(lock)" @click="$emit('buy', $event)">
           Acheter · {{ item.price }}<span class="item-sheet__coin" aria-hidden="true"></span>
@@ -33,6 +35,7 @@
 <script>
 import GModal from '@/components/ui/GModal.vue';
 import { roman } from '@/utils/roman';
+import { tintOf } from '@/world/tints';
 
 const KIND = { outil: 'Outil', objet: 'Objet', skin: 'Skin' };
 const PROD_CAP = 100;
@@ -69,7 +72,8 @@ export default {
       return this.site.skin === this.item.id;
     },
     eyebrow() {
-      return `${KIND[this.item.kind] || 'Article'} · ${this.site.name}`;
+      const kind = this.item.rare ? 'Pièce rare' : this.item.kind === 'skin' && tintOf(this.item.id) ? 'Teinte' : KIND[this.item.kind] || 'Article';
+      return `${kind} · ${this.site.name}`;
     },
     facts() {
       const gain = this.item.gain;
@@ -107,6 +111,7 @@ export default {
   position: absolute; top: 10px; left: 10px; min-width: 30px; padding: 2px 8px; border-radius: 999px;
   background: var(--ink-900); color: var(--gold-300); font-family: var(--font-display); font-weight: 700; font-size: 14px; text-align: center;
 }
+.item-sheet__chip--rare { background: linear-gradient(135deg, #F2C04B, #C9952A); color: var(--ink-900); }
 .item-sheet__palier { margin: 0; padding: 8px 12px; border-radius: 12px; font-weight: 800; font-size: 14px; }
 .item-sheet__palier.is-ok { background: #E3F1D6; color: #3E6E2E; }
 .item-sheet__palier.is-missing { background: var(--vellum-200); color: var(--ink-700); }

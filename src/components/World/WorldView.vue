@@ -129,8 +129,8 @@
               </div>
             </div>
 
-            <!-- Boutique : outils et objets (effets), skins (apparence), rangés par palier ; un toucher sur le prix achète
-                 (annulable 4 s), un toucher sur le dessin ou un appui long sur le prix ouvre la fiche de l'article -->
+            <!-- Boutique : outils et objets (effets), pièces rares, skins et teintes (apparence), rangés par palier ; un toucher
+                 sur le prix achète (annulable 4 s), un toucher sur le dessin ou un appui long sur le prix ouvre la fiche -->
             <div v-else-if="siteTab === 'shop'" class="world__panel">
               <p v-if="!site.level" class="world__site-effect">Bâtis d’abord ce bâtiment pour ouvrir sa boutique.</p>
               <p v-else-if="site.produce" class="world__shop-note">
@@ -142,12 +142,13 @@
                   <li
                     v-for="item in group.items"
                     :key="item.id"
-                    :class="['world__card', { 'is-owned': item.owned, 'is-worn': site.skin === item.id, 'is-locked': !item.owned && site.level < item.minLevel }]"
+                    :class="['world__card', { 'is-owned': item.owned, 'is-worn': site.skin === item.id, 'is-locked': !item.owned && site.level < item.minLevel, 'is-rare': item.rare }]"
                   >
                     <button type="button" class="world__card-open" :aria-label="`Fiche : ${item.name}`" @click="describeItem(site, item)">
                       <span class="world__card-art">
                         <img :src="itemArt(site, item)" alt="" />
-                        <span class="world__card-palier" :aria-label="`Palier ${roman(item.minLevel)}`">{{ roman(item.minLevel) }}</span>
+                        <span v-if="item.rare" class="world__card-palier world__card-palier--rare">Rare</span>
+                        <span v-else class="world__card-palier" :aria-label="`Palier ${roman(item.minLevel)}`">{{ roman(item.minLevel) }}</span>
                         <span v-if="site.skin === item.id" class="world__card-badge">Porté</span>
                         <span v-else-if="item.owned && item.kind !== 'skin'" class="world__card-badge">✓</span>
                       </span>
@@ -349,9 +350,11 @@ import { search } from '@/utils/search';
 import { glyph, clearDrawings } from '@/book/painter';
 import { burst, ring, vibrate, center, reducedMotion } from '@/utils/fx';
 import { GLYPH, LABEL, RESOURCES } from '@/game/resources';
-import { BUILDINGS, NATURE, boatSprite } from '@/world/sprites';
-import { lookAt, boatOffset, artMake } from '@/world/looks';
+import { BUILDINGS, NATURE } from '@/world/sprites';
+import { lookAt, boatOffset, boatOf, artMake } from '@/world/looks';
 import { itemLayers, itemLight, itemThumb } from '@/world/shopSprites';
+import { rareLights } from '@/world/rareSprites';
+import { tintOf } from '@/world/tints';
 import { NATURE2, CRITTERS, PLINTH, SIGN } from '@/world/nature';
 import { drawSprite, spriteUrl, clearSprites } from '@/world/spriteCache';
 import { islandOf, liveOf, drawLive, drawCell, TerrainCache, HS, SEA_Z, worldOf, lampGlowOf } from '@/world/terrain';
@@ -387,7 +390,9 @@ const UNVEIL_MS = 1600;
 // Un toucher reste un toucher tant que le doigt bouge de moins de 14 px (au-delà : on fait glisser la carte)
 const TAP_SLOP = 14;
 // Boutique d'un atelier : rubriques dans l'ordre de la fiche
-const SHOP_GROUPS = [['outil', 'Outils'], ['objet', 'Objets'], ['skin', 'Skins']];
+const SHOP_GROUPS = [['outil', 'Outils'], ['objet', 'Objets'], ['rare', 'Pièces rares'], ['skin', 'Skins'], ['teinte', 'Teintes']];
+// Rubrique d'un article : les skins se partagent entre pièces rares, skins dessinés et teintes
+const groupOf = item => (item.rare ? 'rare' : item.kind === 'skin' && tintOf(item.id) ? 'teinte' : item.kind);
 // Achat en un toucher : « Annuler » reste proposé 4 s (le serveur accepte l'annulation un peu plus longtemps)
 const UNDO_MS = 4000;
 // Ce qui plie au vent, et de combien
@@ -1166,7 +1171,7 @@ export default {
         ctx.save();
         ctx.translate(c.x + bx, c.y + by + Math.sin(t * 1.4) * 1.6);
         ctx.rotate(Math.sin(t * 1.1) * 0.035);
-        drawSprite(ctx, `boat-${skin}`, () => boatSprite(skin || undefined), ox - bx, oy - by, repaint);
+        drawSprite(ctx, `boat-${skin}`, () => boatOf(skin || undefined), ox - bx, oy - by, repaint);
         ctx.restore();
       }
       this.drawItems(ctx, site, c, t, repaint, false);
@@ -1180,10 +1185,10 @@ export default {
     covers(site, x, y) {
       return x >= site.x && x < site.x + site.w && y >= site.y && y < site.y + site.h;
     },
-    // Articles possédés d'un bâtiment (outils et objets, pas les skins), dessinés et animés autour de lui
+    // Articles possédés d'un bâtiment (outils, objets, accessoire de la pièce rare portée), dessinés et animés autour de lui
     drawItems(ctx, site, c, t, repaint, back) {
       for (const item of site.shop || []) {
-        if (!item.owned || item.kind === 'skin') continue;
+        if (!item.owned || (item.kind === 'skin' && site.skin !== item.id)) continue;
         for (const layer of itemLayers(item.id, site.level, t)) {
           if (layer.back === back) drawSprite(ctx, layer.key, layer.make, c.x + layer.offset[0], c.y + layer.offset[1], repaint);
         }
@@ -1619,6 +1624,10 @@ export default {
           const [lx, ly] = P(light[0], light[1], light[2]);
           glow(ctx, c.x + lx, c.y + ly, light[3], lit * (0.9 + 0.1 * Math.sin(t * 3 + light[0])), light[4]);
         }
+        // Pièce rare portée : lampions, lucioles, lave…
+        for (const [x, y, r, color, strength] of rareLights(site.skin, site.level, t)) {
+          glow(ctx, c.x + x, c.y + y, r, lit * strength * (0.9 + 0.1 * Math.sin(t * 3 + x)), color);
+        }
       }
       // Lanternes du pont de l'Îlot aux Mouettes, lanterne de la barque du passeur
       for (const lamp of this.islets.lamps) {
@@ -1847,12 +1856,12 @@ export default {
     // Rubriques de la boutique ; dans chacune, les articles du premier palier au dernier
     shopGroups(site) {
       const byPalier = (a, b) => a.minLevel - b.minLevel || a.price - b.price;
-      return SHOP_GROUPS.map(([kind, label]) => ({ kind, label, items: site.shop.filter(item => item.kind === kind).sort(byPalier) })).filter(group => group.items.length);
+      return SHOP_GROUPS.map(([kind, label]) => ({ kind, label, items: site.shop.filter(item => groupOf(item) === kind).sort(byPalier) })).filter(group => group.items.length);
     },
     // Niveau auquel montrer un article ou un skin : celui du bâtiment, ou celui qu'il demande (le toit du Foyer se voit dès l’Abri)
     previewLevel(site, item) {
       const level = Math.max(site.level, item.minLevel, 1);
-      return site.id === 'foyer' && item.kind === 'skin' ? Math.max(level, 2) : level;
+      return site.id === 'foyer' && groupOf(item) === 'skin' ? Math.max(level, 2) : level;
     },
     itemArt(site, item) {
       const level = this.previewLevel(site, item);
@@ -1860,11 +1869,12 @@ export default {
       return spriteUrl(`thumb-${item.id}-${level}`, () => itemThumb(item.id, level));
     },
     itemNote(site, item) {
-      if (item.kind === 'skin' && site.id === 'foyer' && site.level < 2) return 'Se voit dès l’Abri.';
+      if (groupOf(item) === 'skin' && site.id === 'foyer' && site.level < 2) return 'Se voit dès l’Abri.';
       return item.effect;
     },
     // Raison pour laquelle un article ne s'achète pas encore (texte du bouton), ou ''
     lockOf(site, item) {
+      if (item.rare) return 'Dans les butins';
       if (!site.level) return 'Bâtis d’abord';
       if (site.level < item.minLevel) return `Palier ${roman(item.minLevel)}`;
       if (this.coins !== null && this.coins < item.price) return `Il manque ${item.price - this.coins}`;
@@ -2254,6 +2264,9 @@ export default {
   background: var(--ink-900); color: var(--gold-300); font-family: var(--font-display); font-weight: 700; font-size: 12px; text-align: center;
 }
 .world__card.is-locked .world__card-palier { background: var(--vellum-300); color: var(--ink-700); }
+.world__card-palier--rare { background: linear-gradient(135deg, #F2C04B, #C9952A); color: var(--ink-900); }
+.world__card.is-rare { box-shadow: inset 0 0 0 1px rgba(201, 149, 42, .55); }
+.world__card.is-rare.is-worn { box-shadow: inset 0 0 0 2px var(--gold-500); }
 .world__card-art {
   position: relative; display: grid; place-items: center; height: 78px; border-radius: 12px;
   background: radial-gradient(circle at 50% 72%, #CFE8B8, var(--vellum-200) 72%);
