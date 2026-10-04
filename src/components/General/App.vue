@@ -260,7 +260,7 @@ export default {
       isLoggedIn: !!user,
       currentUser: user,
       // Éléments de base affichés tout de suite, avant la réponse du serveur
-      elementEmojis: { Eau: '💧', Feu: '🔥', Terre: '🌎', Air: '💨' },
+      elementEmojis: { Eau: 'svg:eau', Feu: 'svg:feu', Terre: 'svg:terre', Air: 'svg:air' },
       // Familles : éléments connus du joueur seulement ; leur taille vient du serveur (familyTotals)
       categories: { [BASE_CATEGORY]: [...BASE_ELEMENTS] },
       familyTotals: {},
