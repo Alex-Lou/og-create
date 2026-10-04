@@ -34,7 +34,7 @@
           @click="$emit('selectResource', element, $event.currentTarget.getBoundingClientRect())"
         >
           <span class="plate__dot" :style="{ background: dotColor(element) }" aria-hidden="true"></span>
-          <span :class="['plate__ink', element === freshElement ? 'g-ink--glow' : 'g-ink']" aria-hidden="true"><ElementGlyph :glyph="elementEmojis[element] || '❔'" /></span>
+          <span :class="['plate__ink', { 'g-ink--glow': element === freshElement }]" aria-hidden="true"><ElementGlyph :glyph="elementEmojis[element] || '❔'" /></span>
           <span :class="['plate__name', { 'plate__name--long': isLong(element) }]">{{ element }}</span>
         </button>
       </div>
@@ -48,7 +48,7 @@
 </template>
 
 <script>
-import { familyColor, familyIndex } from '@/utils/eras';
+import { familyInk, familyIndex } from '@/utils/eras';
 import ElementGlyph from '@/components/ui/ElementGlyph.vue';
 import { search, suggest } from '@/utils/search';
 
@@ -132,7 +132,7 @@ export default {
       return element.split(/[\s'’-]+/).some(word => word.length >= 11);
     },
     dotColor(element) {
-      const [r, g, b] = familyColor(this.familyOf[element]);
+      const [r, g, b] = familyInk(this.familyOf[element]);
       return `rgb(${r}, ${g}, ${b})`;
     },
     // Entrée dans la recherche : le premier résultat part dans l'Athanor ; recherche vide = fusionner
@@ -172,7 +172,7 @@ export default {
   align-items: center;
   gap: 10px;
   padding: 10px 0 8px;
-  background: linear-gradient(180deg, rgba(12, 10, 8, 0.96) 80%, rgba(12, 10, 8, 0));
+  background: linear-gradient(180deg, var(--bg) 80%, rgba(237, 224, 196, 0));
 }
 .registry__search {
   flex: 1;
@@ -207,7 +207,8 @@ export default {
   /* Voile léger : lisible, le fond vivant reste visible autour */
   padding: 8px 12px 12px;
   margin: 0 -12px;
-  background: rgba(12, 10, 8, 0.55);
+  border-radius: var(--r-lg);
+  background: rgba(255, 252, 245, 0.55);
 }
 .shelf__head { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; }
 .shelf__title {
@@ -230,6 +231,7 @@ export default {
   min-height: 92px;
   padding: 14px 4px 8px;
   border: 0;
+  border-radius: 14px;
   cursor: pointer;
   display: flex;
   flex-direction: column;
@@ -237,8 +239,8 @@ export default {
   justify-content: center;
   gap: 6px;
   color: var(--oc-text);
-  background: linear-gradient(180deg, rgba(233, 223, 200, 0.05), rgba(233, 223, 200, 0.015));
-  box-shadow: inset 0 0 0 1px var(--oc-line);
+  background: linear-gradient(180deg, var(--vellum-50), var(--vellum-100));
+  box-shadow: inset 0 0 0 1px var(--oc-line), var(--edge-paper), var(--shadow-1);
   user-select: none;
   -webkit-user-select: none;
   -webkit-touch-callout: none;
@@ -247,28 +249,28 @@ export default {
   transition: background var(--oc-fast), box-shadow var(--oc-fast), transform var(--oc-fast) var(--oc-ease-out), opacity var(--oc-fast);
 }
 .plate[draggable='true'] { cursor: grab; }
-.plate:hover { background: var(--oc-surface-hover); box-shadow: inset 0 0 0 1px var(--oc-line-strong); }
+.plate:hover { background: var(--vellum-50); box-shadow: inset 0 0 0 1px var(--oc-line-strong), var(--edge-paper), var(--shadow-1); }
 .plate:hover .plate__ink { animation: quiver 0.5s var(--oc-ease-spring); }
-.plate:active { transform: scale(0.95); }
+.plate:active { transform: translateY(2px) scale(0.96); box-shadow: inset 0 0 0 1px var(--oc-line), 0 1px 0 var(--vellum-400); }
 
 .plate__dot { position: absolute; top: 7px; left: 7px; width: 6px; height: 6px; border-radius: 50%; opacity: 0.85; }
 .plate__ink { font-size: 28px; line-height: 1; }
 .plate__name {
   max-width: 100%;
   padding: 0 2px;
-  font-size: 13px;
+  font-weight: 800;
+  font-size: 12px;
   line-height: 1.15;
   text-align: center;
   overflow: hidden;
   display: -webkit-box;
   -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
-  /* Noms longs : césure française aux bonnes syllabes, jamais au milieu d'une lettre isolée */
+  /* Noms longs : césure française aux bonnes syllabes si le navigateur la connaît, jamais une coupure en plein mot */
   hyphens: auto;
   -webkit-hyphens: auto;
-  overflow-wrap: break-word;
 }
-.plate--fresh { box-shadow: inset 0 0 0 1px rgba(224, 182, 84, 0.75), var(--oc-shadow-accent); animation: fresh 1.6s var(--oc-ease-out); }
+.plate--fresh { box-shadow: inset 0 0 0 2px var(--gold-400), var(--oc-shadow-accent); animation: fresh 1.6s var(--oc-ease-out); }
 
 .registry__empty { margin: 24px 0; text-align: center; }
 .registry__suggest {
@@ -301,12 +303,12 @@ export default {
 /* Mobile : 5 planches par ligne sur la plupart des téléphones, cibles de 60 px et plus */
 @media (max-width: 859px) {
   .registry { gap: 12px; }
-  .plates { grid-template-columns: repeat(auto-fill, minmax(60px, 1fr)); gap: 6px; }
+  .plates { grid-template-columns: repeat(auto-fill, minmax(62px, 1fr)); gap: 6px; }
   .plate { min-height: 72px; padding: 12px 2px 5px; gap: 4px; --oc-bevel: 7px; }
   /* Une nouvelle découverte défile au-dessus des panneaux fixés en bas (dock, consigne) */
   .plate { scroll-margin: 70px 0 calc(var(--oc-overlay, 120px) + 16px); }
   .plate__ink { font-size: 23px; }
-  .plate__name { font-size: 11px; }
-  .plate__name--long { font-size: 9.5px; letter-spacing: -0.01em; }
+  .plate__name { font-size: 10.5px; }
+  .plate__name--long { font-size: 9px; letter-spacing: -0.02em; }
 }
 </style>

@@ -17,7 +17,7 @@
         </button>
         <header v-if="eyebrow || title" class="g-modal__head">
           <span v-if="eyebrow" class="g-mono">{{ eyebrow }}</span>
-          <h2 v-if="title" :id="titleId" class="g-title">{{ title }}</h2>
+          <h2 v-if="title" :id="titleId" class="g-title">{{ frenchSpaces(title) }}</h2>
         </header>
         <slot></slot>
         <footer v-if="$slots.actions" class="g-modal__actions">
@@ -29,6 +29,7 @@
 </template>
 
 <script>
+import { frenchSpaces } from '@/utils/typo';
 let uid = 0;
 
 // Fenêtre unique du jeu : fond assombri, Échap / clic à côté pour fermer, focus gardé dans la fenêtre
@@ -59,6 +60,7 @@ export default {
     this.previousFocus?.focus?.({ preventScroll: true });
   },
   methods: {
+    frenchSpaces,
     close() {
       this.$emit('close');
     }
@@ -75,11 +77,12 @@ export default {
   align-items: center;
   justify-content: center;
   padding: 16px;
-  background: rgba(6, 5, 4, 0.78);
+  background: rgba(52, 36, 26, 0.45);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
   animation: g-fade var(--oc-medium) var(--oc-ease-out);
 }
 .g-modal {
-  --oc-panel: #14110d;
   position: relative;
   display: flex;
   flex-direction: column;
@@ -88,6 +91,7 @@ export default {
   max-height: calc(100dvh - 32px);
   overflow-y: auto;
   padding: 34px 32px 28px;
+  border-radius: var(--r-lg);
   box-shadow: inset 0 0 0 1px var(--oc-line), var(--oc-shadow);
   outline: none;
   animation: oc-rise var(--oc-medium) var(--oc-ease-out);
@@ -105,11 +109,12 @@ export default {
   align-items: center;
   justify-content: center;
   border: 0;
+  border-radius: 50%;
   background: none;
   cursor: pointer;
   color: var(--oc-text-muted);
 }
-.g-modal__close:hover { color: var(--oc-text-strong); }
+.g-modal__close:hover { color: var(--oc-text-strong); background: var(--vellum-200); }
 .g-modal__actions {
   display: flex;
   flex-wrap: wrap;

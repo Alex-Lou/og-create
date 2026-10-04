@@ -37,6 +37,11 @@ export function sortFamilies(categories) {
   return Object.fromEntries(Object.entries(categories).sort(([a], [b]) => rank(a) - rank(b)));
 }
 
+// Couleur de famille lisible sur le vélin (points, repères) : la même, assombrie
+export function familyInk(name) {
+  return familyColor(name).map(v => Math.round(v * 0.62));
+}
+
 export function familyColor(name) {
   if (FAMILY_COLORS[name]) return FAMILY_COLORS[name];
   // Famille inconnue : couleur stable dérivée du nom
