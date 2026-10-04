@@ -300,9 +300,14 @@ import { itemLayers, itemLight, itemThumb } from '@/world/shopSprites';
 import { NATURE2, CRITTERS, PLINTH, SIGN } from '@/world/nature';
 import { drawSprite, spriteUrl, clearSprites } from '@/world/spriteCache';
 import { islandOf, liveOf, drawLive, drawCell, TerrainCache, HS, SEA_Z } from '@/world/terrain';
+import {
+  seaOf, seaGuests, spread, nearestOpen, drawShallows, drawSparkles, drawWaves, drawPlankton, schoolFish, drawSchools, podAt, whaleAt, drawRings,
+  drawSpout, jelliesAt, drawJellies, circling, crossing, drawGullShadow, drawFlyingGull, DOLPHIN_EVERY, DOLPHIN_FOR, WHALE_EVERY, WHALE_FOR
+} from '@/world/sea';
+import { SEA_SPRITES, FISH_SPECIES } from '@/world/seaSprites';
 import { chapterOfFamily } from '@/book/chapters';
 import { P } from '@/world/iso';
-import { phaseAt, forcedPhase, drawSea, drawCloudShadows, drawClouds, drawBirds, drawTint, glow, fireflies, hash } from '@/world/scene';
+import { phaseAt, forcedPhase, drawSea, drawCloudShadows, drawClouds, drawTint, glow, fireflies, hash } from '@/world/scene';
 
 const FRAME_MS = 33; // ~30 images/s : l'île respire, sans user la batterie
 const TW = 64; // largeur d'une case à l'échelle 1 (unités du monde)
@@ -310,6 +315,11 @@ const TH = TW / 2;
 const DEPTH = 30;
 const MAX_SCALE = 1.8;
 const SEEN_KEY = 'oc_world_seen';
+// Ce qui vit à la surface de la mer (posé au niveau de l'eau, jamais caché par la terre : eau libre)
+const SEA_KINDS = new Set(['fish', 'dolphin', 'whale', 'fluke', 'spout']);
+// Mouettes posées effrayées : envol (s), puis retour
+const FLY_OFF = 2.6;
+const GULL_BACK = 30;
 // Construction ou amélioration : le chantier tremble dans la poussière, puis le bâtiment s'élève (ms)
 const RAISE_MS = 2400;
 // Achat d'un quartier : la brume se dissipe (ms)
@@ -443,6 +453,13 @@ export default {
     this.live = null;
     this.zoneTiles = new Map();
     this.mistKey = null;
+    // Mer vivante : eaux de l'île (sea), mouettes posées (perches), passages en cours des dauphins et de la baleine,
+    // animaux qui ont réagi à un toucher (clé → { at, … }), et ce qu'on peut toucher dans la dernière image
+    this.sea = null;
+    this.perches = [];
+    this.passages = {};
+    this.scared = new Map();
+    this.seaHits = [];
     this.moreRaf = 0;
     this.forced = forcedPhase();
     this.ac = null;
@@ -523,6 +540,7 @@ export default {
       if (!this.terrain) this.terrain = new TerrainCache(M, (x, y) => this.veilAt(x, y));
       this.M = M;
       this.live = liveOf(M);
+      if (!this.sea) this.sea = seaOf(M);
       this.zoneTiles = new Map();
       for (let y = 0; y < state.size; y++) {
         for (let x = 0; x < state.size; x++) {
@@ -536,6 +554,7 @@ export default {
         this.siteTab = lastView.siteTab || 'overview';
       }
       this.props = this.natureOf(state);
+      this.perches = this.perchesOf(state);
       this.shore = this.shoreOf(state);
       this.state = state;
       const mistKey = state.map.zones.filter(z => z.owned).map(z => z.id).join();
@@ -827,23 +846,23 @@ export default {
       // Monde : unités du monde, caméra appliquée
       const o = this.toScreen(0, 0);
       ctx.setTransform(dpr * s, 0, 0, dpr * s, dpr * o.x, dpr * o.y);
-      const mid = this.world(n / 2 - 0.5, n / 2 - 0.5);
-      // Ronds dans l'eau autour de l'île
-      for (let k = 0; k < 3; k++) {
-        const ripple = (t * 0.12 + k / 3) % 1;
-        ctx.strokeStyle = `rgba(255, 255, 255, ${0.22 * (1 - ripple)})`;
-        ctx.lineWidth = 2 / s;
-        ctx.beginPath();
-        ctx.ellipse(mid.x, mid.y + DEPTH, (n * TW) * (0.46 + ripple * 0.3), (n * TH) * (0.5 + ripple * 0.3), 0, 0, Math.PI * 2);
-        ctx.stroke();
-      }
       // Monde visible : seuls les carrés de sol et ce qui s'y tient, à l'écran, sont dessinés
       const tl = this.toWorld(0, 0);
       const br = this.toWorld(width, height);
       const view = { x: tl.x, y: tl.y, w: br.x - tl.x, h: br.y - tl.y };
-      // Sol en relief, en carrés gardés en images (les nouveaux dans un budget de 8 ms) ; puis l'eau qui bouge et l'écume
+      // Sous le sol : reflets, vagues qui arrivent derrière l'île, bancs de poissons, puis les eaux peu profondes par-dessus
+      // (la terre les recouvre)
+      drawSparkles(ctx, view, t, phase.night, s);
+      drawWaves(ctx, this.live.back, view, t, false);
+      drawSchools(ctx, schoolFish(this.sea.schools, t), view, phase.night);
+      drawShallows(ctx, this.sea.shallow, view, phase.night);
+      // Sol en relief, en carrés gardés en images (les nouveaux dans un budget de 8 ms) ; puis l'eau douce qui bouge,
+      // les vagues et l'écume devant l'île, les ronds dans l'eau des dauphins et de la baleine
       const missing = this.terrain.draw(ctx, view, s * dpr, 8);
       drawLive(ctx, this.M, this.live, view, t);
+      drawWaves(ctx, this.live.shore, view, t, true);
+      const life = this.seaLife(t, view, phase);
+      drawRings(ctx, life.rings);
       // Sol des chantiers : terre battue (bâti) ou chantier ; cases libres pendant un déplacement ; case choisie
       const plots = new Map();
       for (const site of this.state.sites) {
@@ -922,10 +941,9 @@ export default {
         });
       }
       const worldTransform = ctx.getTransform();
-      // Ombres des nuages qui glissent sur l'île (écran)
-      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-      drawCloudShadows(ctx, width, height, t, phase);
-      ctx.setTransform(worldTransform);
+      // Ombres des nuages et des mouettes qui glissent sur la mer et le relief
+      drawCloudShadows(ctx, this.terrain.bounds, t, phase);
+      for (const g of life.gulls) drawGullShadow(ctx, g, s);
       // Ce qui se tient debout (bâtiments, décorations, nature), du plus loin au plus proche
       // (seulement ce qui est à l'écran ; un grand sprite dépasse vers le haut de son pied)
       const seenAt = (wx, wy) => wx > view.x - TW * 2.5 && wx < view.x + view.w + TW * 2.5 && wy > view.y - TW * 0.6 && wy < view.y + view.h + TW * 3.2;
@@ -934,7 +952,8 @@ export default {
         ...this.state.sites.map(site => ({ depth: site.x + site.y + site.w, site })),
         ...this.state.tiles.filter(tile => seen(tile.x, tile.y)).map(tile => ({ depth: tile.x + tile.y, tile })),
         ...this.props.filter(prop => seenAt(prop.wx, prop.wy)).map(prop => ({ depth: prop.depth, prop })),
-        ...this.critters(t).filter(critter => seen(critter.x, critter.y)).map(critter => ({ depth: critter.x + critter.y, critter })),
+        ...[...this.critters(t), ...life.standing].filter(critter => seen(critter.x, critter.y))
+          .map(critter => ({ depth: critter.depth ?? critter.x + critter.y, critter })),
         ...this.state.map.zones.filter(zone => !zone.owned).map(zone => ({ zone, at: this.signPlaceOf(zone) }))
           .filter(sign => sign.at && seen(sign.at.x, sign.at.y)).map(sign => ({ depth: sign.at.x + sign.at.y, sign }))
       ].sort((p, q) => p.depth - q.depth);
@@ -951,19 +970,25 @@ export default {
         } else if (item.sign) this.drawSign(ctx, item.sign, t, repaint);
         else {
           this.drawCritter(ctx, item.critter, repaint);
-          if (item.critter.kind !== 'fish') this.occlude(ctx, Math.round(item.critter.x), Math.round(item.critter.y));
+          if (!SEA_KINDS.has(item.critter.kind)) this.occlude(ctx, Math.round(item.critter.x), Math.round(item.critter.y));
         }
       }
       // Volutes de brume qui dérivent au-dessus des quartiers à acheter
       this.drawWisps(ctx, t, now);
       this.drawSmoke(ctx, t, phase);
-      // Ciel : nuages et mouettes (écran), puis la teinte de l'heure sur toute la scène
+      // Ciel : mouettes en vol, nuages haut au-dessus de l'île, puis la teinte de l'heure sur toute la scène
+      for (const g of life.gulls) drawFlyingGull(ctx, g, t, s);
+      drawClouds(ctx, this.terrain.bounds, t, phase, s);
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-      drawClouds(ctx, width, height, t, phase);
-      drawBirds(ctx, width, height, t, phase);
       drawTint(ctx, width, height, phase);
       ctx.setTransform(worldTransform);
       this.drawLights(ctx, t, phase);
+      // La nuit, le plancton s'allume dans l'écume et les méduses luisent
+      ctx.save();
+      ctx.globalCompositeOperation = 'lighter';
+      drawPlankton(ctx, this.live.shore, view, t, phase.night);
+      if (life.jellies) drawJellies(ctx, life.jellies, view, t, phase.night);
+      ctx.restore();
       // Les noms des lieux passent par-dessus tout : aucune décoration ne les cache
       if (this.cam.s >= 0.55) this.state.sites.filter(site => !site.locked).forEach(site => this.drawLabel(ctx, site));
       // Bulles de production à toucher, au-dessus de tout
@@ -1191,24 +1216,168 @@ export default {
       }
       const pond = this.props.find(p => p.kind === 'lily' || p.kind === 'reeds');
       if (pond) out.push({ kind: 'frog', x: pond.x + 0.12, y: pond.y + 0.1, z: 0, frame: (t % 4) < 0.35 ? 1 : 0, flip: false });
-      // Poisson : un saut toutes les 7 s, à un endroit différent du rivage
+      // Poisson : un saut toutes les 7 s, à un endroit différent du rivage (sardine, daurade) ; le poisson volant plane
+      // vers le large
       const cycle = Math.floor(t / 7);
       const into = (t % 7) / 7;
-      if (into < 0.12 && this.shore.length) {
+      const species = FISH_SPECIES[Math.floor(hash(cycle, 5) * FISH_SPECIES.length)];
+      const span = species === 'volant' ? 0.2 : 0.12;
+      if (into < span && this.shore.length) {
         const spot = this.shore[Math.floor(hash(cycle, 2) * this.shore.length)];
-        out.push({ kind: 'fish', x: spot.x + 0.2, y: spot.y + 0.2, z: 0, frame: into < 0.06 ? 0 : 1, flip: hash(cycle, 3) < 0.5 });
+        if (species === 'volant') {
+          const k = into / span, alongX = hash(cycle, 3) < 0.5;
+          out.push({ kind: 'fish', species, x: spot.x + 0.2 + (alongX ? k * 1.4 : 0), y: spot.y + 0.2 + (alongX ? 0 : k * 1.4), z: 0, frame: 0, flip: !alongX });
+        } else out.push({ kind: 'fish', species, x: spot.x + 0.2, y: spot.y + 0.2, z: 0, frame: into < 0.06 ? 0 : 1, flip: hash(cycle, 3) < 0.5 });
+      }
+      // Mouettes posées sur les plages (envolées après un toucher, elles reviennent plus tard)
+      for (const perch of this.perches) {
+        const fled = this.scared.get(`perch:${perch.id}`);
+        if (fled && t - fled.at < GULL_BACK) continue;
+        for (let i = 0; i < perch.count; i++) {
+          out.push({ kind: 'gull', x: perch.x + i * 0.32 - 0.1, y: perch.y + 0.1 - i * 0.18, z: 0, frame: Math.sin(t * 0.7 + i * 2 + perch.x) > 0.75 ? 1 : 0, flip: (i + Math.floor(t / 9 + perch.y)) % 2 === 1 });
+        }
       }
       return out;
     },
     drawCritter(ctx, critter, repaint) {
-      // Le poisson saute au niveau de la mer ; les autres vivent sur le sol de leur case
-      const c = critter.kind === 'fish' ? this.world(critter.x, critter.y) : this.ground(critter.x, critter.y);
-      if (critter.kind === 'fish') c.y -= SEA_Z * HS;
+      // À la surface de la mer : poissons, dauphins, baleine ; les autres vivent sur le sol de leur case
+      if (critter.kind === 'spout') {
+        drawSpout(ctx, critter);
+        return;
+      }
+      const atSea = SEA_KINDS.has(critter.kind);
+      const c = atSea ? this.world(critter.x, critter.y) : this.ground(critter.x, critter.y);
+      if (atSea) c.y -= SEA_Z * HS;
       ctx.save();
       ctx.translate(c.x, c.y - critter.z);
       if (critter.flip) ctx.scale(-1, 1);
-      drawSprite(ctx, `${critter.kind}-${critter.frame}`, CRITTERS[critter.kind][critter.frame], 0, 0, repaint);
+      // Ce qui sort de l'eau peu à peu (dos, queue de la baleine) : e de 0 à 1
+      if (critter.e !== undefined) {
+        ctx.globalAlpha = critter.e;
+        ctx.translate(0, (1 - critter.e) * 8);
+      }
+      const [key, make] = this.critterSprite(critter);
+      drawSprite(ctx, key, make, 0, 0, repaint);
       ctx.restore();
+    },
+    critterSprite(c) {
+      if (c.kind === 'fish') return [`fish-${c.species}-${c.frame}`, SEA_SPRITES.fish[c.species][c.frame]];
+      if (c.kind === 'dolphin') return [`dolphin-${c.frame}`, SEA_SPRITES.dolphin[c.frame]];
+      if (c.kind === 'whale') return ['whale-back', SEA_SPRITES.whaleBack];
+      if (c.kind === 'fluke') return ['whale-fluke', SEA_SPRITES.whaleFluke];
+      if (c.kind === 'gull') return [`gull-${c.frame}`, SEA_SPRITES.gull[c.frame]];
+      return [`${c.kind}-${c.frame}`, CRITTERS[c.kind][c.frame]];
+    },
+    // La mer à cet instant (lot 5b) : ce qui se montre à la surface (dauphins, baleine), les ronds dans l'eau, les
+    // mouettes en vol, les méduses ; et ce qu'on peut toucher (seaHits). Les visiteurs arrivent avec les quartiers
+    // achetés ; en mouvement réduit, seuls restent ceux qui ne passent pas
+    seaLife(t, view, phase) {
+      const out = { standing: [], rings: [], gulls: [], jellies: null };
+      const hits = [];
+      const still = this.reduced();
+      const guests = seaGuests(new Set(this.state.map.zones.filter(z => z.owned).map(z => z.id)));
+      const center = this.cellAt(view.x + view.w / 2, view.y + view.h / 2);
+      const surface = (x, y) => { const c = this.world(x, y); return { x: c.x, y: c.y - SEA_Z * HS }; };
+      if (!still && guests.dolphins) {
+        const go = this.passageOf('pod', t, DOLPHIN_EVERY, DOLPHIN_FOR, 3, center);
+        const fled = go && this.scared.get(go.key);
+        if (go && !fled) {
+          const pod = podAt(go.spot, go.dir, go.τ);
+          out.rings.push(...pod.rings);
+          for (const d of pod.dolphins) {
+            out.standing.push({ kind: 'dolphin', ...d });
+            const c = surface(d.x, d.y);
+            hits.push({ key: go.key, kind: 'pod', x: c.x, y: c.y - d.z - 4, r: 26, where: pod.dolphins.map(p => ({ x: p.x, y: p.y })) });
+          }
+        } else if (fled && t - fled.at < 1.2) fled.where.forEach(p => out.rings.push({ x: p.x, y: p.y, k: (t - fled.at) / 1.2 }));
+      }
+      if (!still && guests.whale) {
+        const go = this.passageOf('whale', t, WHALE_EVERY, WHALE_FOR, 5, center);
+        if (go) {
+          const w = whaleAt(go.spot, go.dir, go.τ);
+          const tapped = this.scared.get(go.key);
+          if (tapped && t - tapped.at < 1.8) w.spouts.push({ x: tapped.x, y: tapped.y, k: (t - tapped.at) / 1.8 });
+          out.rings.push(...w.rings);
+          if (w.back) {
+            const depth = w.back.x + w.back.y;
+            out.standing.push({ kind: 'whale', x: w.back.x, y: w.back.y, z: 0, e: w.back.e, flip: w.flip });
+            w.spouts.forEach(sp => out.standing.push({ kind: 'spout', ...sp, depth: depth + 0.5 }));
+            const c = surface(w.back.x, w.back.y);
+            hits.push({ key: go.key, kind: 'whale', x: c.x, y: c.y - 6, r: 44, at: { x: w.back.x, y: w.back.y } });
+          }
+          if (w.fluke) out.standing.push({ kind: 'fluke', x: w.fluke.x, y: w.fluke.y, z: 0, e: w.fluke.e, flip: w.flip });
+        }
+      }
+      if (guests.jellies && phase.night > 0.3) out.jellies = jelliesAt(this.sea.open, t);
+      // Mouettes : un vol tourne au-dessus du ponton (ou de la Grève), un autre traverse l'île de temps en temps ; la nuit,
+      // elles dorment
+      if (!still && phase.night < 0.6) {
+        const harbor = this.state.sites.find(site => site.id === 'ponton' && site.level);
+        const greve = this.state.map.zones.find(z => z.id === 'coeur');
+        const home = harbor ? this.centerOf(harbor) : greve && greve.anchor ? this.ground(greve.anchor.x, greve.anchor.y) : null;
+        if (home) out.gulls.push(...circling(home.x, home.y, t, 1));
+        out.gulls.push(...crossing(this.terrain.bounds, t));
+      }
+      // Mouettes posées : on peut les toucher ; celles qu'on vient d'effrayer s'envolent vers le large
+      for (const perch of this.perches) {
+        const key = `perch:${perch.id}`;
+        const fled = this.scared.get(key);
+        const c = this.ground(perch.x, perch.y);
+        if (!fled || t - fled.at >= GULL_BACK) hits.push({ key, kind: 'perch', x: c.x, y: c.y - 8, r: 16 });
+        else if (t - fled.at < FLY_OFF) {
+          const k = (t - fled.at) / FLY_OFF;
+          for (let i = 0; i < perch.count; i++) out.gulls.push({ wx: c.x + (60 + i * 14) * k, wy: c.y + i * 4 - 20 * k, alt: 6 + 90 * k * k, flip: false, phase: i });
+        }
+      }
+      this.seaHits = hits;
+      return out;
+    },
+    // Passage en cours des dauphins ou de la baleine : où (l'eau libre la plus proche de la caméra au début du
+    // passage) et dans quelle direction ; null entre deux passages
+    passageOf(name, t, every, length, far, center) {
+      const cycle = Math.floor(t / every), τ = t - cycle * every;
+      if (τ >= length) return null;
+      let p = this.passages[name];
+      if (!p || p.cycle !== cycle) {
+        const spot = nearestOpen(this.sea.open, center.x, center.y, far);
+        if (!spot) return null;
+        p = { cycle, spot, dir: spot.dirs[Math.floor(hash(cycle, name.length) * spot.dirs.length)], key: `${name}:${cycle}` };
+        this.passages[name] = p;
+      }
+      return { ...p, τ };
+    },
+    // Case (fractionnaire) sous un point du monde, au niveau de la mer
+    cellAt(wx, wy) {
+      const a = (2 * (wy + SEA_Z * HS)) / TH, b = (2 * wx) / TW;
+      return { x: (a + b) / 2, y: (a - b) / 2 };
+    },
+    // Un toucher sur un animal : les dauphins plongent, la baleine souffle, les mouettes posées s'envolent
+    scare(animal) {
+      if (this.reduced()) return;
+      const t = performance.now() / 1000;
+      for (const [key, was] of this.scared) if (t - was.at > 2 * GULL_BACK) this.scared.delete(key);
+      if (animal.kind === 'pod') this.scared.set(animal.key, { at: t, where: animal.where });
+      else if (animal.kind === 'whale') this.scared.set(animal.key, { at: t, ...animal.at });
+      else this.scared.set(animal.key, { at: t });
+      vibrate(6);
+      this.draw(performance.now());
+    },
+    // Mouettes posées : quelques plages au bord de la mer (côté large), dans les quartiers à soi, libres (ni
+    // chantier, ni décoration, ni arbre ou rocher)
+    perchesOf(state) {
+      const M = this.M;
+      const owned = new Set(state.map.zones.filter(z => z.owned).map(z => z.id));
+      const busy = new Set([...state.tiles, ...this.props].map(c => `${c.x},${c.y}`));
+      const cells = [];
+      for (let y = 0; y < state.size; y++) {
+        for (let x = 0; x < state.size; x++) {
+          if (M.ground(x, y) !== 's' || busy.has(`${x},${y}`)) continue;
+          const zone = state.map.zones[M.zone(x, y)];
+          if (!zone || !owned.has(zone.id) || state.sites.some(site => this.covers(site, x, y))) continue;
+          if ([[1, 0], [0, 1]].some(([dx, dy]) => M.ground(x + dx, y + dy) === '~')) cells.push({ x, y });
+        }
+      }
+      return spread(cells, 5, 3).map((c, k) => ({ id: `${c.x},${c.y}`, x: c.x, y: c.y, count: 1 + (k % 2) }));
     },
     // Fumée des cheminées : bouffées qui montent, grossissent, s'effacent et partent avec le vent
     drawSmoke(ctx, t, phase) {
@@ -1372,6 +1541,9 @@ export default {
       if (bubble) return { bubble };
       const sign = this.signs.find(sg => Math.hypot(w.x - sg.x, (w.y - sg.y) * 1.2) < sg.r);
       if (sign) return { zone: sign.zone };
+      // Animaux de la mer et mouettes posées : un toucher les fait réagir
+      const animal = this.seaHits.find(h => Math.hypot(w.x - h.x, w.y - h.y) < h.r);
+      if (animal) return { animal };
       // Zones de toucher généreuses : tout le volume dessiné du bâtiment, pas seulement sa base
       const candidates = [
         ...this.state.sites.map(site => ({ site, depth: site.x + site.y + site.w, c: this.centerOf(site), r: TW * 0.49 * site.w, h: TW * 0.875 * site.w, below: TH * 0.525 * site.w })),
@@ -1408,6 +1580,9 @@ export default {
         const sp = this.toScreen(hit.bubble.x, hit.bubble.y);
         this.collect(this.canvasPoint(sp.x, sp.y));
         vibrate(8);
+      } else if (hit.animal) {
+        this.scare(hit.animal);
+        return;
       } else if (hit.zone) {
         this.zone = hit.zone;
         vibrate(6);

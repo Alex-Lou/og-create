@@ -1,4 +1,5 @@
-// Ambiance de l'île : heure du jour, mer, nuages, mouettes, nuit (voile, lumières, lucioles).
+// Ambiance de l'île : heure du jour, fond de la mer, nuages, nuit (voile, lumières, lucioles). La vie de la mer
+// (reflets, vagues, animaux, mouettes) est dans sea.js.
 // Tout est déterministe en fonction du temps : pas d'état, rien à nettoyer.
 
 const lerp = (a, b, k) => a + (b - a) * k;
@@ -33,7 +34,7 @@ export function forcedPhase() {
   return d;
 }
 
-// Mer : dégradé selon l'heure, reflets qui dérivent
+// Fond de la mer (écran) : dégradé selon l'heure ; les reflets sont accrochés au monde (sea.js)
 export function drawSea(ctx, w, h, t, phase) {
   const top = mix('#6CC0E6', '#1D3557', phase.night);
   const bottom = mix('#3E8DBF', '#13263F', phase.night);
@@ -43,21 +44,6 @@ export function drawSea(ctx, w, h, t, phase) {
   g.addColorStop(1, bottom);
   ctx.fillStyle = g;
   ctx.fillRect(0, 0, w, h);
-  // Reflets : petits traits clairs qui dérivent lentement
-  ctx.lineCap = 'round';
-  for (let k = 0; k < 26; k++) {
-    const seed = hash(k, 7);
-    const x = ((seed * w * 1.3 + t * (6 + seed * 8)) % (w + 60)) - 30;
-    const y = (hash(k, 13) * h * 0.98) + Math.sin(t * 0.8 + k) * 2;
-    const len = 6 + hash(k, 3) * 12;
-    const a = (0.18 + 0.22 * Math.sin(t * 1.3 + k * 1.7) ** 2) * (1 - phase.night * 0.6);
-    ctx.strokeStyle = `rgba(255,255,255,${a.toFixed(3)})`;
-    ctx.lineWidth = 1.6;
-    ctx.beginPath();
-    ctx.moveTo(x, y);
-    ctx.quadraticCurveTo(x + len / 2, y - 2, x + len, y);
-    ctx.stroke();
-  }
   // La nuit, des étoiles se reflètent dans l'eau
   if (phase.night > 0.2) {
     for (let k = 0; k < 40; k++) {
@@ -68,12 +54,17 @@ export function drawSea(ctx, w, h, t, phase) {
   }
 }
 
-// Nuages (écran) : ombres sur l'île puis nuages légers, qui traversent lentement
-// Les nuages restent au-dessus de la mer (haut et bas de la scène) : seules leurs ombres passent sur l'île
-const CLOUDS = [{ y: 0.07, s: 0.9, v: 7, o: 0 }, { y: 0.95, s: 0.75, v: 10, o: 0.45 }, { y: 0.03, s: 0.55, v: 5, o: 0.75 }];
-function cloudX(c, w, t) {
-  const span = w + 260;
-  return ((t * c.v + c.o * span) % span) - 130;
+// Nuages (monde) : ils traversent l'île avec le vent, haut dans le ciel, et leur ombre glisse sur la mer et le relief.
+// bounds : rectangle du monde de l'île ; de près (échelle s de la caméra), ils s'effacent pour laisser voir l'île
+const CLOUDS = [
+  { x: 0.08, y: 0.18, s: 2.2, v: 9 }, { x: 0.52, y: 0.38, s: 1.7, v: 12 }, { x: 0.3, y: 0.64, s: 2.6, v: 7 },
+  { x: 0.78, y: 0.82, s: 1.9, v: 10 }, { x: 0.64, y: 0.06, s: 1.6, v: 8 }
+];
+const CLOUD_ALT = 170;
+function cloudAt(c, bounds, t) {
+  const span = bounds.w + 600;
+  const k = (c.x * span + t * c.v) / span;
+  return { x: bounds.x - 300 + (k - Math.floor(k)) * span, y: bounds.y + c.y * bounds.h };
 }
 function blob(ctx, x, y, s) {
   ctx.beginPath();
@@ -83,44 +74,26 @@ function blob(ctx, x, y, s) {
   ctx.ellipse(x - 4 * s, y - 10 * s, 26 * s, 15 * s, 0, 0, Math.PI * 2);
   ctx.fill();
 }
-export function drawCloudShadows(ctx, w, h, t, phase) {
+export function drawCloudShadows(ctx, bounds, t, phase) {
   if (phase.night > 0.6) return;
-  ctx.fillStyle = `rgba(30,50,40,${(0.09 * (1 - phase.night)).toFixed(3)})`;
-  // Ombres projetées vers le bas de l'écran, loin de leur nuage (le soleil est haut)
-  for (const c of CLOUDS) blob(ctx, cloudX(c, w, t) + 50 * c.s, (c.y < 0.5 ? 0.42 : 0.62) * h, c.s * 1.25);
-}
-export function drawClouds(ctx, w, h, t, phase) {
-  const tone = mix('#FFFFFF', '#8E9AC0', phase.night);
+  ctx.fillStyle = `rgba(30,50,40,${(0.08 * (1 - phase.night)).toFixed(3)})`;
+  // Ombres projetées vers le bas, à côté de leur nuage (le soleil est haut)
   for (const c of CLOUDS) {
-    const x = cloudX(c, w, t);
-    ctx.fillStyle = mixWarm(tone, phase.warm * 0.6);
-    ctx.globalAlpha = 0.82 - phase.night * 0.45;
-    blob(ctx, x, c.y * h, c.s);
-    ctx.globalAlpha = 1;
+    const p = cloudAt(c, bounds, t);
+    blob(ctx, p.x + 40, p.y, c.s * 1.2);
   }
 }
-
-// Mouettes : un petit vol traverse l'écran de temps en temps, ailes battantes
-export function drawBirds(ctx, w, h, t, phase) {
-  if (phase.night > 0.6) return;
-  const cycle = 26;
-  const k = (t % cycle) / cycle;
-  if (k > 0.55) return;
-  const x0 = -40 + (k / 0.55) * (w + 80);
-  const y0 = h * 0.22 + Math.sin(k * 6) * 10;
-  ctx.strokeStyle = `rgba(60,55,50,${(0.75 * (1 - phase.night)).toFixed(3)})`;
-  ctx.lineWidth = 1.6;
-  ctx.lineCap = 'round';
-  [[0, 0], [-16, 9], [-30, -4]].forEach(([dx, dy], i) => {
-    const flap = Math.sin(t * 9 + i * 1.3) * 4;
-    const x = x0 + dx;
-    const y = y0 + dy;
-    ctx.beginPath();
-    ctx.moveTo(x - 7, y - flap);
-    ctx.quadraticCurveTo(x - 3, y - 3, x, y);
-    ctx.quadraticCurveTo(x + 3, y - 3, x + 7, y - flap);
-    ctx.stroke();
-  });
+export function drawClouds(ctx, bounds, t, phase, s) {
+  const fade = Math.min(1, Math.max(0, (1.1 - s) / 0.5));
+  if (fade <= 0) return;
+  const tone = mix('#FFFFFF', '#8E9AC0', phase.night);
+  ctx.fillStyle = mixWarm(tone, phase.warm * 0.6);
+  ctx.globalAlpha = (0.78 - phase.night * 0.42) * fade;
+  for (const c of CLOUDS) {
+    const p = cloudAt(c, bounds, t);
+    blob(ctx, p.x, p.y - CLOUD_ALT, c.s);
+  }
+  ctx.globalAlpha = 1;
 }
 
 // Voile de la nuit et teinte du crépuscule, en multiplication sur toute la scène
