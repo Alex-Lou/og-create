@@ -5,7 +5,8 @@ import { aimNote } from './aim';
 import { glyphSrc } from '@/utils/glyph';
 import { roman } from '@/utils/roman';
 import { shownPatches, PATCHES } from './patchwork';
-import { CHAPTER_STYLE, BOOK_TITLE } from './chapters';
+import { CHAPTER_STYLE, BOOK_TITLE, tintOfFamily } from './chapters';
+import { SIGILS, ORNAMENTS, GOLD } from './grimoire';
 
 // Les pages des chapitres suivent leurs couleurs (book/chapters.js)
 export { CHAPTER_STYLE };
@@ -110,6 +111,27 @@ export function glyph(ctx, emoji, cx, cy, size, onReady, alpha = 1) {
 }
 
 /* ---------- Papier ---------- */
+// Parchemin : fond des pages, verso des feuilles qui tournent (moteur), ivoire des médaillons et vélin des cases éteintes
+export const PAPER = '#F5EAD0';
+export const PAPER_BACK = '#EADBBA';
+const IVORY = '#FFF8E8';
+const VELLUM = '#EEE1C3';
+// Hasard reproductible : chaque page garde ses fibres et ses taches d'une peinture à l'autre
+function seeded(seed) {
+  let a = (seed * 2654435761) >>> 0;
+  return () => {
+    a = (a + 0x6D2B79F5) >>> 0;
+    let t = Math.imul(a ^ (a >>> 15), 1 | a);
+    t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
+    return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+  };
+}
+// Chemins SVG des ornements et des sigles, préparés une fois
+const paths = new Map();
+const path2d = d => {
+  if (!paths.has(d)) paths.set(d, new Path2D(d));
+  return paths.get(d);
+};
 let noiseTile = null;
 export function paperNoise() {
   if (noiseTile) return noiseTile;
@@ -162,39 +184,134 @@ function alpha(hex, a) {
   const n = parseInt(hex.slice(1), 16);
   return `rgba(${n >> 16}, ${(n >> 8) & 255}, ${n & 255}, ${a})`;
 }
-function paperBase(ctx, w, h, u) {
-  ctx.fillStyle = '#FBF6EA';
+// Parchemin vieilli : grain, fibres, piqûres et parfois une auréole (propres à chaque page), bords brunis,
+// et l'ombre du pli côté reliure (à gauche d'une page de droite, à droite d'une page de gauche)
+function paperBase(ctx, w, h, u, side = 'right', seed = 0) {
+  const rand = seeded(seed + 1);
+  ctx.fillStyle = PAPER;
   ctx.fillRect(0, 0, w, h);
-  let g = ctx.createRadialGradient(w * 0.7, h * 0.18, 0, w * 0.7, h * 0.18, w);
-  g.addColorStop(0, 'rgba(255, 255, 255, .6)');
-  g.addColorStop(1, 'rgba(255, 255, 255, 0)');
+  let g = ctx.createRadialGradient(w * 0.62, h * 0.22, 0, w * 0.62, h * 0.22, w * 1.05);
+  g.addColorStop(0, 'rgba(255, 252, 240, .7)');
+  g.addColorStop(1, 'rgba(255, 252, 240, 0)');
   ctx.fillStyle = g;
   ctx.fillRect(0, 0, w, h);
   ctx.fillStyle = ctx.createPattern(paperNoise(), 'repeat');
   ctx.fillRect(0, 0, w, h);
-  g = ctx.createRadialGradient(w / 2, h / 2, w * 0.5, w / 2, h / 2, w);
-  g.addColorStop(0, 'rgba(130, 95, 60, 0)');
-  g.addColorStop(1, 'rgba(130, 95, 60, .12)');
+  // Fibres
+  ctx.lineCap = 'round';
+  for (let k = 0; k < 34; k++) {
+    const x = rand() * w, y = rand() * h, len = (4 + rand() * 14) * u, a = rand() * Math.PI;
+    ctx.beginPath();
+    ctx.moveTo(x, y);
+    ctx.quadraticCurveTo(x + Math.cos(a) * len * 0.5 + (rand() - 0.5) * 2 * u, y + Math.sin(a) * len * 0.5, x + Math.cos(a) * len, y + Math.sin(a) * len);
+    ctx.strokeStyle = `rgba(${rand() < 0.5 ? '140, 104, 60' : '255, 250, 235'}, ${0.07 + rand() * 0.08})`;
+    ctx.lineWidth = (0.12 + rand() * 0.18) * u;
+    ctx.stroke();
+  }
+  // Piqûres (rousseurs), plutôt près des bords
+  for (let k = 0, n = 4 + Math.floor(rand() * 9); k < n; k++) {
+    const edge = rand() < 0.5;
+    const x = edge ? (rand() < 0.5 ? rand() * 12 : 88 + rand() * 12) * u : rand() * w;
+    const y = edge ? rand() * h : (rand() < 0.5 ? rand() * 14 : 119 + rand() * 14) * u;
+    ctx.beginPath();
+    ctx.arc(x, y, (0.2 + rand() * 0.6) * u, 0, Math.PI * 2);
+    ctx.fillStyle = `rgba(150, 96, 44, ${0.08 + rand() * 0.12})`;
+    ctx.fill();
+  }
+  // Une page sur trois garde l'auréole d'une goutte, très pâle
+  if (rand() < 0.34) {
+    const x = (18 + rand() * 64) * u, y = (20 + rand() * 94) * u, r = (5 + rand() * 7) * u;
+    g = ctx.createRadialGradient(x, y, r * 0.7, x, y, r);
+    g.addColorStop(0, 'rgba(150, 100, 50, 0)');
+    g.addColorStop(0.85, 'rgba(150, 100, 50, .07)');
+    g.addColorStop(1, 'rgba(150, 100, 50, 0)');
+    ctx.fillStyle = g;
+    ctx.fillRect(x - r, y - r, r * 2, r * 2);
+  }
+  // Bords brunis
+  g = ctx.createRadialGradient(w / 2, h / 2, w * 0.42, w / 2, h / 2, w * 0.98);
+  g.addColorStop(0, 'rgba(120, 78, 36, 0)');
+  g.addColorStop(1, 'rgba(120, 78, 36, .2)');
   ctx.fillStyle = g;
   ctx.fillRect(0, 0, w, h);
-  g = ctx.createLinearGradient(0, 0, 10 * u, 0);
-  g.addColorStop(0, 'rgba(74, 52, 38, .24)');
-  g.addColorStop(1, 'rgba(74, 52, 38, 0)');
+  const outer = side === 'left' ? 0 : w;
+  g = ctx.createLinearGradient(outer, 0, side === 'left' ? 3 * u : w - 3 * u, 0);
+  g.addColorStop(0, 'rgba(110, 66, 28, .16)');
+  g.addColorStop(1, 'rgba(110, 66, 28, 0)');
   ctx.fillStyle = g;
-  ctx.fillRect(0, 0, 10 * u, h);
+  ctx.fillRect(side === 'left' ? 0 : w - 3 * u, 0, 3 * u, h);
+  // Pli de la reliure
+  const spine = side === 'left' ? w : 0;
+  g = ctx.createLinearGradient(spine, 0, side === 'left' ? w - 11 * u : 11 * u, 0);
+  g.addColorStop(0, 'rgba(74, 46, 26, .3)');
+  g.addColorStop(0.35, 'rgba(74, 46, 26, .1)');
+  g.addColorStop(1, 'rgba(74, 46, 26, 0)');
+  ctx.fillStyle = g;
+  ctx.fillRect(side === 'left' ? w - 11 * u : 0, 0, 11 * u, h);
 }
+// Un ornement doré (chemin d'ORNAMENTS ou d'un sigle) posé en (x, y) u, tourné de rot, à l'échelle k
+function ornament(ctx, u, d, x, y, rot, k, fill, stroke) {
+  ctx.save();
+  ctx.translate(x * u, y * u);
+  ctx.rotate(rot);
+  ctx.scale(k * u, k * u);
+  if (fill) {
+    ctx.fillStyle = fill;
+    ctx.fill(path2d(d));
+  }
+  if (stroke) {
+    ctx.strokeStyle = stroke;
+    ctx.lineWidth = 0.22;
+    ctx.stroke(path2d(d));
+  }
+  ctx.restore();
+}
+// Sigle de planète d'un chapitre, tracé en (cx, cy) u sur size u
+function sigil(ctx, u, id, cx, cy, size, color, width = 2) {
+  const k = size / 24;
+  ctx.save();
+  ctx.translate((cx - size / 2) * u, (cy - size / 2) * u);
+  ctx.scale(k * u, k * u);
+  ctx.strokeStyle = color;
+  ctx.lineWidth = width;
+  ctx.lineCap = 'round';
+  ctx.lineJoin = 'round';
+  ctx.stroke(path2d(SIGILS[id].d));
+  ctx.restore();
+}
+// Cadre enluminé : filet d'encre, filet d'or, fleurons aux coins et losanges au milieu des bords
 function frame(ctx, u, ink) {
+  const color = ink || '#4A3426';
   rr(ctx, 7 * u, 3.4 * u, 89.5 * u, 126.5 * u, 3 * u);
-  ctx.strokeStyle = alpha(ink || '#4A3426', 0.22);
-  ctx.lineWidth = 0.45 * u;
+  ctx.strokeStyle = alpha(color, 0.32);
+  ctx.lineWidth = 0.5 * u;
   ctx.stroke();
+  rr(ctx, 8.3 * u, 4.7 * u, 86.9 * u, 123.9 * u, 2.2 * u);
+  ctx.strokeStyle = alpha(GOLD.base, 0.6);
+  ctx.lineWidth = 0.28 * u;
+  ctx.stroke();
+  const gold = alpha(GOLD.base, 0.92), edge = alpha(GOLD.edge, 0.55);
+  ornament(ctx, u, ORNAMENTS.corner, 9.2, 5.6, 0, 0.62, gold, edge);
+  ornament(ctx, u, ORNAMENTS.corner, 94.3, 5.6, Math.PI / 2, 0.62, gold, edge);
+  ornament(ctx, u, ORNAMENTS.corner, 94.3, 127.7, Math.PI, 0.62, gold, edge);
+  ornament(ctx, u, ORNAMENTS.corner, 9.2, 127.7, -Math.PI / 2, 0.62, gold, edge);
+  ornament(ctx, u, ORNAMENTS.diamond, 51.75, 3.4, 0, 1, gold, edge);
+  ornament(ctx, u, ORNAMENTS.diamond, 51.75, 129.9, 0, 1, gold, edge);
 }
 function folio(ctx, u, i) {
   setFont(ctx, u, 3.6, 500, TITLE, true);
   ctx.fillStyle = '#8A7262';
   ctx.textAlign = 'center';
-  // Folio en chiffres romains tant qu'ils restent lisibles, puis en chiffres
-  ctx.fillText(i <= 39 ? roman(i).toLowerCase() : String(i), 52 * u, 127 * u);
+  // Folio en chiffres romains tant qu'ils restent lisibles, puis en chiffres ; un point doré de chaque côté
+  const text = i <= 39 ? roman(i).toLowerCase() : String(i);
+  ctx.fillText(text, 52 * u, 127 * u);
+  const half = ctx.measureText(text).width / (2 * u) + 2.4;
+  ctx.fillStyle = alpha(GOLD.base, 0.8);
+  [-half, half].forEach(dx => {
+    ctx.beginPath();
+    ctx.arc((52 + dx) * u, 125.9 * u, 0.55 * u, 0, Math.PI * 2);
+    ctx.fill();
+  });
 }
 function pill(ctx, u, cx, cy, w, h, fill, text, color, size) {
   rr(ctx, (cx - w / 2) * u, (cy - h / 2) * u, w * u, h * u, (h / 2) * u);
@@ -227,15 +344,28 @@ function vignette(ctx, u, style, mode) {
   ctx.shadowColor = 'rgba(74, 52, 38, .2)';
   ctx.shadowBlur = 3.4 * u;
   ctx.shadowOffsetY = 1.4 * u;
-  ctx.fillStyle = '#FFFDF8';
+  ctx.fillStyle = IVORY;
   ctx.fill();
   ctx.restore();
+  // Médaillon serti d'or : filet plein et couronne de points
+  ctx.beginPath();
+  ctx.arc(vx * u, vy * u, (vr + 2.5) * u, 0, Math.PI * 2);
+  ctx.strokeStyle = alpha(GOLD.base, 0.75);
+  ctx.lineWidth = 0.35 * u;
+  ctx.stroke();
+  ctx.fillStyle = alpha(GOLD.base, 0.7);
+  for (let k = 0; k < 36; k++) {
+    const a = (k / 36) * Math.PI * 2;
+    ctx.beginPath();
+    ctx.arc((vx + Math.cos(a) * (vr + 3.6)) * u, (vy + Math.sin(a) * (vr + 3.6)) * u, 0.32 * u, 0, Math.PI * 2);
+    ctx.fill();
+  }
   ctx.save();
   ctx.beginPath();
   ctx.arc(vx * u, vy * u, vr * u, 0, Math.PI * 2);
   ctx.clip();
   if (mode === 'far') {
-    ctx.fillStyle = '#F1E7D2';
+    ctx.fillStyle = VELLUM;
     ctx.fillRect((vx - vr) * u, (vy - vr) * u, vr * 2 * u, vr * 2 * u);
     ctx.strokeStyle = 'rgba(189, 170, 148, .45)';
     ctx.lineWidth = 1.2 * u;
@@ -285,7 +415,7 @@ function patchwork(ctx, u, page, ink, onReady) {
     ctx.beginPath();
     ctx.rect(x * u, y * u, cell * u, cell * u);
     ctx.clip();
-    ctx.fillStyle = '#FFFDF8';
+    ctx.fillStyle = IVORY;
     ctx.fillRect(x * u, y * u, cell * u, cell * u);
     glyph(ctx, page.hangman.emoji, vx * u, vy * u, 24 * u, onReady);
     ctx.restore();
@@ -314,7 +444,7 @@ function iconBox(ctx, u, name, emoji, cx, top, ink, onReady, maxLabel = 12, hint
     ctx.shadowColor = 'rgba(74, 52, 38, .16)';
     ctx.shadowBlur = 1.6 * u;
     ctx.shadowOffsetY = 0.6 * u;
-    ctx.fillStyle = '#FFFDF8';
+    ctx.fillStyle = IVORY;
     ctx.fill();
     ctx.shadowColor = 'transparent';
     ctx.strokeStyle = alpha(ink, 0.28);
@@ -525,7 +655,7 @@ function paintReach(ctx, u, model, i, assets) {
     button(13, 37, style.color, guessLabel, style.ink, true);
     hotspots.push({ id: 'guess', x: 13, y: 115.5, w: 37, h: 8, action: 'guess', data: page.id, label: 'Pendu : deviner le nom lettre par lettre' });
   }
-  button(inkX, inkW, revealed ? '#F1E7D2' : freeInk ? '#B7862F' : '#4A3426', revealed ? 'Encre utilisée' : freeInk ? '✒︎ Encre offerte' : `✒︎ Encre · ${assets.inkPrice} écus`, revealed ? '#BDAA94' : '#FFFDF8', !revealed);
+  button(inkX, inkW, revealed ? VELLUM : freeInk ? '#B7862F' : '#4A3426', revealed ? 'Encre utilisée' : freeInk ? '✒︎ Encre offerte' : `✒︎ Encre · ${assets.inkPrice} écus`, revealed ? '#BDAA94' : '#FFFDF8', !revealed);
   if (!revealed) hotspots.push({ id: 'ink', x: inkX, y: 115.5, w: inkW, h: 8, action: 'ink', data: page.id, label: freeInk ? 'Encre offerte : révéler un ingrédient' : `Encre : révéler un ingrédient pour ${assets.inkPrice} écus` });
   // Le sceau mélange ce qui est posé dans l'Athanor (comme « Transmuer »)
   if (ready && sealX !== null) hotspots.push({ id: 'seal', x: sealX - 6, y: 89, w: 12, h: 13, action: 'seal', data: page.id, label: `Sceller le mélange : ${picked.join(' et ')}` });
@@ -583,15 +713,17 @@ function paintIndex(ctx, u, model, i, assets) {
     const y = 17 + Math.floor(k / INDEX_COLS) * 21;
     const cx = x + cellW / 2;
     const found = entry.page.status === 'found';
+    // Case inscrite : teinte de la famille de l'élément (comme sa tuile)
+    const tint = found ? tintOfFamily(entry.page.family) : null;
     rr(ctx, (x + 1) * u, y * u, (cellW - 2) * u, 19.5 * u, 3 * u);
-    ctx.fillStyle = found ? alpha(style.color, 0.6) : '#FFFDF8';
+    ctx.fillStyle = found ? tint.card : IVORY;
     ctx.fill();
-    ctx.strokeStyle = found ? alpha(style.ink, 0.15) : alpha(style.ink, 0.45);
+    ctx.strokeStyle = found ? alpha(tint.ink, 0.25) : alpha(style.ink, 0.45);
     ctx.lineWidth = 0.35 * u;
     ctx.stroke();
     ctx.beginPath();
     ctx.arc(cx * u, (y + 7.6) * u, 5.4 * u, 0, Math.PI * 2);
-    ctx.fillStyle = '#FFFDF8';
+    ctx.fillStyle = IVORY;
     ctx.fill();
     if (found) {
       glyph(ctx, entry.page.emoji, cx * u, (y + 7.6) * u, 7.2 * u, assets.onReady);
@@ -627,6 +759,54 @@ function maskText(page) {
   return mask.map(char => (char === ' ' ? '·' : char || '_')).join(mask.length > 6 ? '\u2009' : ' ');
 }
 
+// Lettrine : la première lettre dans un carré enluminé, le texte en drapeau autour (deux lignes à côté, puis
+// pleine largeur), en lignes de 5,6 u depuis la ligne de base top ; au plus maxLines lignes
+function lettrine(ctx, u, text, top, style, maxLines) {
+  const x0 = 15, box = 10.4, right = 88;
+  rr(ctx, x0 * u, (top - 4.4) * u, box * u, box * u, 1.2 * u);
+  ctx.fillStyle = style.color;
+  ctx.fill();
+  ctx.strokeStyle = GOLD.base;
+  ctx.lineWidth = 0.4 * u;
+  ctx.stroke();
+  rr(ctx, (x0 + 0.9) * u, (top - 3.5) * u, (box - 1.8) * u, (box - 1.8) * u, 0.7 * u);
+  ctx.strokeStyle = alpha(GOLD.base, 0.7);
+  ctx.lineWidth = 0.2 * u;
+  ctx.stroke();
+  ctx.fillStyle = GOLD.base;
+  [[x0 + 1.9, top - 2.5], [x0 + box - 1.9, top - 2.5], [x0 + 1.9, top + 4.1], [x0 + box - 1.9, top + 4.1]].forEach(([x, y]) => {
+    ctx.beginPath();
+    ctx.arc(x * u, y * u, 0.35 * u, 0, Math.PI * 2);
+    ctx.fill();
+  });
+  setFont(ctx, u, 8.4, 700, TITLE, false);
+  ctx.fillStyle = style.ink;
+  ctx.textAlign = 'center';
+  ctx.fillText(text[0], (x0 + box / 2) * u, (top + 3.4) * u);
+  setFont(ctx, u, 4.1, 400, TITLE, true);
+  ctx.fillStyle = '#8A7262';
+  ctx.textAlign = 'left';
+  const words = text.slice(1).split(' ');
+  let line = '', n = 0;
+  const lineX = k => (k < 2 ? x0 + box + 1.6 : x0);
+  const flush = () => {
+    ctx.fillText(line, lineX(n) * u, (top + n * 5.6) * u);
+    n++;
+    line = '';
+  };
+  for (const word of words) {
+    const next = line ? `${line} ${word}` : word;
+    if (ctx.measureText(next).width > (right - lineX(n)) * u && line) {
+      if (n === maxLines - 1) {
+        line = `${line}…`;
+        break;
+      }
+      flush();
+      line = word;
+    } else line = next;
+  }
+  if (line && n < maxLines) flush();
+}
 function paintChapter(ctx, u, model, i, assets) {
   const { chapter } = model;
   const style = CHAPTER_STYLE[chapter.id];
@@ -637,12 +817,23 @@ function paintChapter(ctx, u, model, i, assets) {
   ctx.shadowColor = 'rgba(74, 52, 38, .18)';
   ctx.shadowBlur = 3 * u;
   ctx.shadowOffsetY = 1.2 * u;
-  ctx.fillStyle = '#FFFDF8';
+  ctx.fillStyle = IVORY;
   ctx.fill();
   ctx.restore();
   ctx.beginPath();
+  ctx.arc(52 * u, 34 * u, 17.4 * u, 0, Math.PI * 2);
+  ctx.strokeStyle = alpha(GOLD.base, 0.75);
+  ctx.lineWidth = 0.35 * u;
+  ctx.stroke();
+  // Les sept sigles en couronne : celui du chapitre en or
+  Object.keys(SIGILS).forEach((id, k) => {
+    const a = -Math.PI / 2 + (k * Math.PI * 2) / 7;
+    const own = id === chapter.id;
+    sigil(ctx, u, id, 52 + Math.cos(a) * 22, 34 + Math.sin(a) * 22, own ? 5 : 4, own ? GOLD.base : alpha(style.ink, 0.28), own ? 2.4 : 2);
+  });
+  ctx.beginPath();
   ctx.arc(52 * u, 34 * u, 15 * u, 0, Math.PI * 2);
-  ctx.fillStyle = chapter.open ? style.color : '#EFE6D3';
+  ctx.fillStyle = chapter.open ? style.color : VELLUM;
   ctx.fill();
   setFont(ctx, u, chapter.id.length > 2 ? 10 : 13, 700, TITLE, false);
   ctx.fillStyle = chapter.open ? style.ink : '#BDAA94';
@@ -656,12 +847,15 @@ function paintChapter(ctx, u, model, i, assets) {
   ctx.fillStyle = '#4A3426';
   const lines = wrap(ctx, chapter.name, 78 * u);
   lines.forEach((line, k) => ctx.fillText(line, 52 * u, (69 + k * 9) * u));
-  setFont(ctx, u, 4.1, 400, TITLE, true);
-  ctx.fillStyle = '#8A7262';
   const top = 69 + lines.length * 9;
-  // La phrase du chapitre (à défaut, ses familles)
-  const verse = chapter.verse ? `«\u00a0${chapter.verse}\u00a0»` : assets.familiesOf(chapter.id).map(familyName).join(' · ');
-  wrap(ctx, verse, 76 * u).slice(0, 3).forEach((line, k) => ctx.fillText(line, 52 * u, (top + k * 5.6) * u));
+  // La phrase du chapitre en lettrine (à défaut, ses familles)
+  if (chapter.verse) lettrine(ctx, u, chapter.verse, top, style, lines.length > 1 ? 3 : 4);
+  else {
+    setFont(ctx, u, 4.1, 400, TITLE, true);
+    ctx.fillStyle = '#8A7262';
+    ctx.fillText(assets.familiesOf(chapter.id).map(familyName).join(' · '), 52 * u, top * u);
+  }
+  ctx.textAlign = 'center';
   if (chapter.open) {
     pill(ctx, u, 52, 106, 50, 8.4, alpha(style.color, 0.95), `${chapter.found} / ${chapter.total} pages inscrites`, '#4A3426', 3.4);
     const reach = chapter.pages.filter(p => p.status === 'reach').length;
@@ -669,7 +863,7 @@ function paintChapter(ctx, u, model, i, assets) {
     ctx.fillStyle = '#8A7262';
     ctx.fillText(reach ? `${reach} à portée de mélange` : 'Rien à portée pour l’instant', 52 * u, 116.5 * u);
   } else {
-    pill(ctx, u, 52, 106, 56, 8.4, '#EFE6D3', `Scellé · encore ${Math.max(0, chapter.need - assets.stars)} découvertes`, '#8A7262', 3.4);
+    pill(ctx, u, 52, 106, 56, 8.4, VELLUM, `Scellé · encore ${Math.max(0, chapter.need - assets.stars)} découvertes`, '#8A7262', 3.4);
   }
   folio(ctx, u, i);
   return { hotspots: [], label: `Chapitre ${chapter.id}, ${chapter.name}.${chapter.verse ? ` ${chapter.verse}` : ''} ${chapter.open ? `${chapter.found} pages inscrites sur ${chapter.total}.` : `Scellé : encore ${Math.max(0, chapter.need - assets.stars)} découvertes.`}` };
@@ -685,15 +879,24 @@ function paintToc(ctx, u, model, index, assets) {
   setFont(ctx, u, 4.2, 400, TITLE, true);
   ctx.fillStyle = '#8A7262';
   ctx.fillText(`Grimoire d’alchimie · ${assets.stars} découverte${assets.stars > 1 ? 's' : ''}`, 52 * u, 27.5 * u);
+  ctx.strokeStyle = alpha(GOLD.base, 0.7);
+  ctx.lineWidth = 0.3 * u;
+  [[30, 48.6], [55.4, 74]].forEach(([a, b]) => {
+    ctx.beginPath();
+    ctx.moveTo(a * u, 30.4 * u);
+    ctx.lineTo(b * u, 30.4 * u);
+    ctx.stroke();
+  });
+  ornament(ctx, u, ORNAMENTS.diamond, 52, 30.4, 0, 1, alpha(GOLD.base, 0.92), alpha(GOLD.edge, 0.55));
   model.chapters.forEach((chapter, k) => {
     const style = CHAPTER_STYLE[chapter.id];
     const y = 33 + k * 12.6;
     rr(ctx, 12 * u, y * u, 80 * u, 11 * u, 3.2 * u);
-    ctx.fillStyle = chapter.open ? alpha(style.color, 0.75) : '#F1E7D2';
+    ctx.fillStyle = chapter.open ? alpha(style.color, 0.75) : VELLUM;
     ctx.fill();
     ctx.beginPath();
     ctx.arc(18.6 * u, (y + 5.5) * u, 3.8 * u, 0, Math.PI * 2);
-    ctx.fillStyle = '#FFFDF8';
+    ctx.fillStyle = IVORY;
     ctx.fill();
     setFont(ctx, u, chapter.id.length > 2 ? 2.8 : 3.6, 700, TITLE, false);
     ctx.fillStyle = chapter.open ? style.ink : '#BDAA94';
@@ -724,14 +927,89 @@ function paintToc(ctx, u, model, index, assets) {
   return { hotspots, label: `Sommaire du ${BOOK_TITLE}. ${model.chapters.map(c => `Chapitre ${c.id}, ${c.name}`).join('. ')}.` };
 }
 
-// model : { type: 'toc' | 'chapter' | 'found' | 'reach' | 'far', … } ; assets : { emojiOf, onReady, inkPrice, stars, familiesOf }
-export function paintPage(model, index, ctx, w, h, assets) {
+// Gardes du grimoire (double page) : papier marbré peigné ; au revers de la couverture, l'ex-libris
+export function paintEndpaper(ctx, w, h, side, front) {
   const u = w / 100;
+  const rand = seeded(front ? 7 : 11);
   ctx.save();
   ctx.clearRect(0, 0, w, h);
-  paperBase(ctx, w, h, u);
+  ctx.fillStyle = '#2E1A22';
+  ctx.fillRect(0, 0, w, h);
+  const colors = ['110, 38, 51', '184, 139, 62', '39, 67, 79', '227, 210, 172', '74, 26, 36', '140, 90, 43'];
+  ctx.lineCap = 'round';
+  for (let k = 0; k < 54; k++) {
+    const y0 = rand() * h, amp = (2 + rand() * 8) * u, freq = (0.05 + rand() * 0.07) / u, ph = rand() * 6.28;
+    ctx.beginPath();
+    for (let x = -2 * u; x <= w + 2 * u; x += 1.5 * u) {
+      const y = y0 + Math.sin(x * freq + ph) * amp + Math.sin(x * freq * 2.7 + ph * 1.3) * amp * 0.35;
+      if (x < 0) ctx.moveTo(x, y);
+      else ctx.lineTo(x, y);
+    }
+    ctx.strokeStyle = `rgba(${colors[Math.floor(rand() * colors.length)]}, ${0.45 + rand() * 0.45})`;
+    ctx.lineWidth = (0.5 + rand() * 3.4) * u;
+    ctx.stroke();
+  }
+  // Coups de peigne : fines ondes verticales claires
+  for (let x = 0; x < w; x += 2.6 * u) {
+    ctx.beginPath();
+    for (let y = 0; y <= h; y += 2 * u) {
+      const dx = Math.sin(y / (6 * u) + x / (9 * u)) * 1.2 * u;
+      if (!y) ctx.moveTo(x + dx, y);
+      else ctx.lineTo(x + dx, y);
+    }
+    ctx.strokeStyle = 'rgba(255, 236, 200, .07)';
+    ctx.lineWidth = 0.3 * u;
+    ctx.stroke();
+  }
+  const spine = side === 'left' ? w : 0;
+  const g = ctx.createLinearGradient(spine, 0, side === 'left' ? w - 12 * u : 12 * u, 0);
+  g.addColorStop(0, 'rgba(0, 0, 0, .45)');
+  g.addColorStop(1, 'rgba(0, 0, 0, 0)');
+  ctx.fillStyle = g;
+  ctx.fillRect(side === 'left' ? w - 12 * u : 0, 0, 12 * u, h);
+  if (front) {
+    // Ex-libris : cartouche de parchemin à double filet
+    ctx.save();
+    ctx.shadowColor = 'rgba(0, 0, 0, .45)';
+    ctx.shadowBlur = 3 * u;
+    ctx.shadowOffsetY = 1 * u;
+    rr(ctx, 24 * u, 46 * u, 52 * u, 38 * u, 2 * u);
+    ctx.fillStyle = PAPER;
+    ctx.fill();
+    ctx.restore();
+    rr(ctx, 25.6 * u, 47.6 * u, 48.8 * u, 34.8 * u, 1.4 * u);
+    ctx.strokeStyle = 'rgba(74, 52, 38, .55)';
+    ctx.lineWidth = 0.4 * u;
+    ctx.stroke();
+    rr(ctx, 26.8 * u, 48.8 * u, 46.4 * u, 32.4 * u, 1 * u);
+    ctx.strokeStyle = alpha(GOLD.base, 0.8);
+    ctx.lineWidth = 0.25 * u;
+    ctx.stroke();
+    ctx.textAlign = 'center';
+    setFont(ctx, u, 3.6, 400, TITLE, true);
+    ctx.fillStyle = '#8A7262';
+    ctx.fillText('Ex libris', 50 * u, 56.5 * u);
+    setFont(ctx, u, 7, 700, TITLE, false);
+    ctx.fillStyle = '#4A3426';
+    ctx.fillText(BOOK_TITLE, 50 * u, 66 * u);
+    Object.keys(SIGILS).forEach((id, k) => sigil(ctx, u, id, 32 + k * 6, 74.5, 3.6, alpha(GOLD.dark, 0.85), 2.2));
+  }
+  ctx.restore();
+  return { hotspots: [], label: front ? `Garde du grimoire : ex-libris du ${BOOK_TITLE}.` : 'Garde de fin du grimoire.' };
+}
+
+// model : { type: 'toc' | 'chapter' | 'found' | 'reach' | 'far', … } ; assets : { emojiOf, onReady, inkPrice, stars, familiesOf }
+// side : 'right' (page seule, ou de droite) ou 'left' (double page : la reliure à droite, le contenu décalé vers
+// l'extérieur, zones comprises)
+export function paintPage(model, index, ctx, w, h, assets, side = 'right') {
+  const u = w / 100;
+  const shift = side === 'left' ? -4 : 0;
+  ctx.save();
+  ctx.clearRect(0, 0, w, h);
+  paperBase(ctx, w, h, u, side, index);
+  ctx.translate(shift * u, 0);
   const painters = { toc: paintToc, chapter: paintChapter, index: paintIndex, found: paintFound, reach: paintReach, far: paintFar };
   const result = painters[model.type](ctx, u, model, index, assets);
   ctx.restore();
-  return result;
+  return shift ? { ...result, hotspots: result.hotspots.map(spot => ({ ...spot, x: spot.x + shift })) } : result;
 }
