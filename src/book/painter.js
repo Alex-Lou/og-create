@@ -493,6 +493,8 @@ function paintReach(ctx, u, model, i, assets) {
   const inkX = hm ? 54 : 28;
   const inkW = hm ? 37 : 48;
   if (hm) {
+    // Les blancs du nom ouvrent aussi le pendu : c'est là qu'on a envie de toucher
+    if (!hm.name) hotspots.push({ id: 'blanks', x: 12, y: 58, w: 80, h: 11, action: 'guess', data: page.id, label: 'Deviner le nom lettre par lettre' });
     button(13, 37, hm.name ? '#F1E7D2' : style.color, guessLabel, hm.name ? '#8A7262' : style.ink, !hm.name);
     hotspots.push({ id: 'guess', x: 13, y: 115.5, w: 37, h: 8, action: 'guess', data: page.id, label: hm.name ? `Nom trouvé : ${hm.name}` : 'Pendu : deviner le nom lettre par lettre' });
   }
