@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+<defs><clipPath id="ballon"><circle cx="32" cy="32" r="26"/></clipPath></defs>
+<circle cx="32" cy="32" r="26" fill="#ffffff"/>
+<g clip-path="url(#ballon)"><g fill="#2a2a2e"><path d="M51.4 5.3L54.3 14.2L46.7 19.8L39.1 14.2L42.0 5.3z"/><path d="M63.4 42.2L55.8 47.7L48.2 42.2L51.1 33.3L60.5 33.3z"/><path d="M32.0 65.0L24.4 59.5L27.3 50.5L36.7 50.5L39.6 59.5z"/><path d="M0.6 42.2L3.5 33.3L12.9 33.3L15.8 42.2L8.2 47.7z"/><path d="M12.6 5.3L22.0 5.3L24.9 14.2L17.3 19.8L9.7 14.2z"/></g><g stroke="#2a2a2e" stroke-width="2" fill="none"><path d="M32.0 23.0L32.0 14.0"/><path d="M40.6 29.2L49.1 26.4"/><path d="M37.3 39.3L42.6 46.6"/><path d="M26.7 39.3L21.4 46.6"/><path d="M23.4 29.2L14.9 26.4"/><path d="M32.0 14.0L46.7 19.8"/><path d="M32.0 14.0L17.3 19.8"/><path d="M49.1 26.4L48.2 42.2"/><path d="M49.1 26.4L39.1 14.2"/><path d="M42.6 46.6L27.3 50.5"/><path d="M42.6 46.6L51.1 33.3"/><path d="M21.4 46.6L12.9 33.3"/><path d="M21.4 46.6L36.7 50.5"/><path d="M14.9 26.4L24.9 14.2"/><path d="M14.9 26.4L15.8 42.2"/></g></g>
+<path d="M32.0 23.0L40.6 29.2L37.3 39.3L26.7 39.3L23.4 29.2z" fill="#2a2a2e"/>
+<circle cx="32" cy="32" r="26" fill="none" stroke="#2a2a2e" stroke-width="2.5"/>
+<path d="M14 22a21 21 0 0 1 6-7" stroke="#c8ccd4" stroke-width="2" stroke-linecap="round" fill="none"/>
+</svg>

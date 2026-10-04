@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+<path d="M10 14h44v46H10z" fill="#e8c8a8" stroke="#6a4a2a" stroke-width="2.5" stroke-linejoin="round"/>
+<path d="M6 14h52v6H6z" fill="#8a3a5a" stroke="#4a1a2a" stroke-width="2.2" stroke-linejoin="round"/>
+<text x="32" y="12" font-family="sans-serif" font-size="9" font-weight="800" fill="#8a3a5a" text-anchor="middle">H</text>
+<g fill="#9ad8f4" stroke="#6a4a2a" stroke-width="1.4"><rect x="14" y="24" width="6" height="6"/><rect x="24" y="24" width="6" height="6"/><rect x="34" y="24" width="6" height="6"/><rect x="44" y="24" width="6" height="6"/><rect x="14" y="34" width="6" height="6"/><rect x="24" y="34" width="6" height="6"/><rect x="34" y="34" width="6" height="6"/><rect x="44" y="34" width="6" height="6"/></g>
+<path d="M24 60V46h16v14" fill="#8a3a5a" stroke="#4a1a2a" stroke-width="2"/><path d="M32 46v14" stroke="#4a1a2a" stroke-width="1.6"/>
+</svg>

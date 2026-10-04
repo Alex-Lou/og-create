@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+<path d="M2 62h60" stroke="#5a5e66" stroke-width="3" stroke-linecap="round"/>
+<path d="M20 62V12h24v50z" fill="#7a9ac8" stroke="#2a3a5a" stroke-width="2.5" stroke-linejoin="round"/>
+<path d="M24 12V6h16v6M32 6V2" fill="none" stroke="#2a3a5a" stroke-width="2.4"/>
+<g fill="#d8ecf8"><rect x="24" y="16" width="4" height="4"/><rect x="30" y="16" width="4" height="4"/><rect x="36" y="16" width="4" height="4"/><rect x="24" y="23" width="4" height="4"/><rect x="30" y="23" width="4" height="4"/><rect x="36" y="23" width="4" height="4"/><rect x="24" y="30" width="4" height="4"/><rect x="30" y="30" width="4" height="4"/><rect x="36" y="30" width="4" height="4"/><rect x="24" y="37" width="4" height="4"/><rect x="30" y="37" width="4" height="4"/><rect x="36" y="37" width="4" height="4"/><rect x="24" y="44" width="4" height="4"/><rect x="30" y="44" width="4" height="4"/><rect x="36" y="44" width="4" height="4"/><rect x="24" y="51" width="4" height="4"/><rect x="30" y="51" width="4" height="4"/><rect x="36" y="51" width="4" height="4"/></g>
+<path d="M8 62V36h12M44 36h12v26" fill="#9ab4d8" stroke="#2a3a5a" stroke-width="2.2" stroke-linejoin="round"/>
+</svg>

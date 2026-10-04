@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+<path d="M12 6h36a4 4 0 0 1 4 4v44a4 4 0 0 1-4 4H12z" fill="#2a6ab8" stroke="#123a6a" stroke-width="2.5" stroke-linejoin="round"/>
+<path d="M12 6v52" stroke="#123a6a" stroke-width="4"/>
+<path d="M52 12h4v40h-4" fill="#f6eedd" stroke="#123a6a" stroke-width="2"/>
+<path d="M54 16v4M54 24v4M54 32v4M54 40v4" stroke="#8a7a5a" stroke-width="2"/>
+<text x="31" y="38" font-family="serif" font-size="18" font-weight="800" fill="#f2c04b" text-anchor="middle">Aa</text>
+<path d="M20 14h24M20 48h24" stroke="#f2c04b" stroke-width="1.8"/>
+</svg>
