@@ -1,20 +1,19 @@
 <template>
   <header class="hud">
-    <div class="hud__era" :title="`${found} / ${total} éléments consignés`">
+    <button type="button" class="hud__era" :aria-label="`${eraName}, ${found} sur ${total} éléments : ouvrir ton sceau`" @click="$emit('open-sceau')">
       <span :key="era" class="hud__era-mark">{{ eraNumber }}</span>
       <span class="hud__era-text">
         <span class="hud__era-name">{{ eraName }}</span>
         <span class="hud__era-count">{{ found }} / {{ total }}</span>
       </span>
-    </div>
+    </button>
 
     <div class="hud__right">
       <slot name="timer"></slot>
-      <span :class="['hud__pill', { 'is-busy': timerActive }]" :title="`${coins} écus`">
+      <button type="button" :class="['hud__pill', { 'is-busy': timerActive }]" :aria-label="`${coins} écus : ouvrir le Cabinet`" @click="$emit('open-shop')">
         <span class="hud__coin" aria-hidden="true"></span>
         <span :key="coins" class="hud__value">{{ formattedCoins }}</span>
-        <span class="oc-sr-only">écus</span>
-      </span>
+      </button>
     </div>
   </header>
 </template>
@@ -22,7 +21,8 @@
 <script>
 import { roman } from '@/utils/roman';
 
-// HUD : l'ère et la progression à gauche, le sablier de l'Épreuve et les écus à droite
+// HUD : l'ère et la progression à gauche, le sablier de l'Épreuve et les écus à droite.
+// L'ère mène au Sceau (progression), les écus au Cabinet où les dépenser.
 export default {
   name: 'AppHeader',
   props: {
@@ -34,6 +34,7 @@ export default {
     // Épreuve en cours : sur mobile, le sablier prend la place des écus
     timerActive: { type: Boolean, default: false }
   },
+  emits: ['open-sceau', 'open-shop'],
   computed: {
     eraNumber() {
       return roman(this.era);
@@ -67,7 +68,15 @@ export default {
   border-radius: var(--r-pill);
   background: var(--vellum-50);
   box-shadow: inset 0 0 0 1px var(--oc-line), 0 2px 0 var(--vellum-400), var(--shadow-1);
+  appearance: none;
+  border: 0;
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+  transition: transform var(--oc-fast) var(--oc-ease-out);
 }
+.hud__era:active,
+.hud__pill:active { transform: translateY(1px); }
 .hud__era { padding: 0 14px 0 4px; }
 .hud__era-mark {
   flex-shrink: 0;

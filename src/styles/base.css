@@ -21,6 +21,16 @@ body {
   line-height: 1.4;
   -webkit-font-smoothing: antialiased;
   -webkit-tap-highlight-color: transparent;
+  /* Un jeu, pas une page : un appui long ne sélectionne pas de texte (ni « Rechercher » d'Android, ni loupe d'iOS) */
+  -webkit-user-select: none;
+  user-select: none;
+  -webkit-touch-callout: none;
+}
+/* Les champs de saisie restent sélectionnables */
+input,
+textarea {
+  -webkit-user-select: text;
+  user-select: text;
 }
 
 /* Grain de vélin, par-dessus tout, discret, sans jamais capter la souris */
