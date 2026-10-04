@@ -3,77 +3,10 @@
 // Nature : emprise d'une case (u, v ∈ [-0.5, 0.5]), ancrée au centre de la case.
 // Les parties animées (flamme, fumée, eau, voile) sont des sprites à part, peints image par image par l'île.
 import { P, TW, TH, face, box, gable, pyramid, disc, cylinder, shadow, foliage, sprite, EDGE } from './iso';
-
-// Palette « Vélin & Veillée », version île : chaque matière a son dessus, sa face gauche (éclairée) et sa face droite
-const WOOD = { top: '#E0A96C', left: '#BF8049', right: '#965C30' };
-const WOOD_DARK = { top: '#A9703F', left: '#8B5631', right: '#6A3F22' };
-const STONE = { top: '#E6E1D4', left: '#C3BBA9', right: '#9B927F' };
-const WALL = { top: '#FCF4E2', left: '#F3E4C4', right: '#D8C39B' };
-const BRICK = { top: '#E08A62', left: '#C66B47', right: '#A05035' };
-const SOIL = { top: '#946240', left: '#784C2E', right: '#5E3A22' };
-const ROOF_RED = { front: '#E06E52', back: '#B9503B' };
-const THATCH = { front: '#EBC46F', back: '#C99A45' };
-const LEAVES = { light: '#B3E386', mid: '#7EC45B', dark: '#4F8F3A' };
-const PINE = { light: '#86C774', mid: '#4F9A4C', dark: '#2F6E3A' };
-const GLASS = '#FFE6A3';
-const INK = '#4A3426';
-
-const BUILDING_BOX = { x: -76, y: -124, w: 152, h: 168 };
-const PROP_BOX = { x: -40, y: -92, w: 80, h: 112 };
-
-/* ---------- Petits motifs ---------- */
-// Pierre arrondie posée au sol (vue de 3/4) : masse, ombre, éclat
-function pebble(u, v, s, color = STONE) {
-  const [x, y] = P(u, v, 0);
-  return `<ellipse cx="${x + s * 0.12}" cy="${y + s * 0.18}" rx="${s}" ry="${s * 0.62}" fill="${color.right}"/>`
-    + `<ellipse cx="${x}" cy="${y}" rx="${s}" ry="${s * 0.66}" fill="${color.left}"/>`
-    + `<ellipse cx="${x - s * 0.28}" cy="${y - s * 0.22}" rx="${s * 0.5}" ry="${s * 0.3}" fill="${color.top}"/>`;
-}
-// Porte sur la face gauche (côté v = vf) : u de ua à ub, hauteur h
-function doorLeft(ua, ub, vf, h, color = WOOD_DARK.right) {
-  return face([[ua, vf, 0], [ub, vf, 0], [ub, vf, h], [ua, vf, h]], color, EDGE)
-    + face([[ub - 0.04, vf, h * 0.45], [ub - 0.02, vf, h * 0.45], [ub - 0.02, vf, h * 0.5], [ub - 0.04, vf, h * 0.5]], '#F2C04B');
-}
-// Fenêtre sur la face gauche (v = vf) ou droite (u = uf), avec croisillon
-function windowLeft(ua, ub, vf, z0, z1, glass = GLASS) {
-  const um = (ua + ub) / 2;
-  const zm = (z0 + z1) / 2;
-  return face([[ua, vf, z0], [ub, vf, z0], [ub, vf, z1], [ua, vf, z1]], glass, ' stroke="#7A4E2C" stroke-width="1.4" stroke-linejoin="round"')
-    + `<polyline points="${[P(um, vf, z0), P(um, vf, z1)].map(p => p.join(',')).join(' ')}" stroke="#7A4E2C" stroke-width="1"/>`
-    + `<polyline points="${[P(ua, vf, zm), P(ub, vf, zm)].map(p => p.join(',')).join(' ')}" stroke="#7A4E2C" stroke-width="1"/>`;
-}
-function windowRight(uf, va, vb, z0, z1, glass = GLASS) {
-  const vm = (va + vb) / 2;
-  const zm = (z0 + z1) / 2;
-  return face([[uf, va, z0], [uf, vb, z0], [uf, vb, z1], [uf, va, z1]], glass, ' stroke="#5E3A22" stroke-width="1.4" stroke-linejoin="round"')
-    + `<polyline points="${[P(uf, vm, z0), P(uf, vm, z1)].map(p => p.join(',')).join(' ')}" stroke="#5E3A22" stroke-width="1"/>`
-    + `<polyline points="${[P(uf, va, zm), P(uf, vb, zm)].map(p => p.join(',')).join(' ')}" stroke="#5E3A22" stroke-width="1"/>`;
-}
-// Lattes horizontales sur une face gauche de bois
-function planksLeft(u0, u1, vf, z0, z1, step = 6) {
-  let out = '';
-  for (let z = z0 + step; z < z1; z += step) {
-    out += `<polyline points="${[P(u0, vf, z), P(u1, vf, z)].map(p => p.join(',')).join(' ')}" stroke="rgba(70,40,20,.25)" stroke-width="0.8"/>`;
-  }
-  return out;
-}
-function planksRight(uf, v0, v1, z0, z1, step = 6) {
-  let out = '';
-  for (let z = z0 + step; z < z1; z += step) {
-    out += `<polyline points="${[P(uf, v0, z), P(uf, v1, z)].map(p => p.join(',')).join(' ')}" stroke="rgba(40,20,10,.25)" stroke-width="0.8"/>`;
-  }
-  return out;
-}
-// Arbre rond : tronc, houppier en trois boules
-function roundTree(u, v, scale = 1, colors = LEAVES) {
-  const s = scale;
-  const [x, y] = P(u, v, 0);
-  return shadow(u, v, 0.34 * s)
-    + box(u - 0.06 * s, v - 0.06 * s, u + 0.06 * s, v + 0.06 * s, 0, 16 * s, WOOD_DARK)
-    + foliage(x - 7 * s, y - 24 * s, 10 * s, colors)
-    + foliage(x + 7 * s, y - 25 * s, 10.5 * s, colors)
-    + foliage(x, y - 34 * s, 12 * s, colors);
-}
+import {
+  WOOD, WOOD_DARK, STONE, WALL, BRICK, SOIL, ROOF_RED, THATCH, LEAVES, PINE, INK, BUILDING_BOX, PROP_BOX,
+  pebble, doorLeft, windowLeft, windowRight, planksLeft, planksRight, roundTree
+} from './palette';
 
 /* ---------- Bâtiments ---------- */
 // Foyer, niveau 1 : feu de camp dans un cercle de pierres, une bûche pour s'asseoir (la flamme est animée à part)

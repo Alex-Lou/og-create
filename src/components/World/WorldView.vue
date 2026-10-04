@@ -169,6 +169,8 @@ import { burst, ring, vibrate, center, reducedMotion } from '@/utils/fx';
 import * as storage from '@/utils/storage';
 import { GLYPH, LABEL, RESOURCES } from '@/game/resources';
 import { BUILDINGS, NATURE, LIGHTS, SMOKE, flameFrames, boatSprite } from '@/world/sprites';
+import { UPGRADES } from '@/world/buildings2';
+import { NATURE2, CRITTERS, PLINTH } from '@/world/nature';
 import { drawSprite } from '@/world/spriteCache';
 import { P } from '@/world/iso';
 import { phaseAt, forcedPhase, drawSea, drawCloudShadows, drawClouds, drawBirds, drawTint, glow, fireflies, hash } from '@/world/scene';
@@ -185,7 +187,13 @@ const SEEN_KEY = 'oc_world_seen';
 const RAISE_MS = 2400;
 const FLAMES = flameFrames();
 // Ce qui plie au vent, et de combien
-const SWAY = { bosquet: 0.03, tree: 0.04, palm: 0.05, bush: 0.03, tuft: 0.09, flowers: 0.06 };
+const SWAY = { bosquet: 0.03, tree: 0.04, palm: 0.05, bush: 0.03, tuft: 0.09, flowers: 0.06, birch: 0.05, apple: 0.03, autumn: 0.035, reeds: 0.08 };
+// Tous les décors naturels (planches 1 et 2), et ce qui pousse où, avec sa fréquence cumulée
+const ALL_NATURE = { ...NATURE, ...NATURE2 };
+const BEACH_MIX = [['palm', 0.1], ['mossy', 0.15], ['shells', 0.2], ['driftwood', 0.23]];
+const GRASS_MIX = [['tuft', 0.1], ['flowers', 0.16], ['bush', 0.185], ['mushrooms', 0.205], ['stump', 0.22], ['birch', 0.235], ['apple', 0.245], ['autumn', 0.255], ['reeds', 0.265], ['lily', 0.275], ['log', 0.285]];
+// Chaque chantier a ses niveaux : ceux de la planche 1, puis le niveau 2 (prêt pour quand le serveur l'ouvrira)
+const LOOKS = Object.fromEntries(Object.entries(BUILDINGS).map(([id, list]) => [id, UPGRADES[id] ? [...list, UPGRADES[id]] : list]));
 
 // Le Monde : l'île du joueur en isométrique (Canvas 2D), avec une caméra qu'on fait glisser et zoomer.
 // L'état vient du serveur (chantiers, réserves, parties, décorations) ; le dessin, la caméra et la boucle
@@ -369,9 +377,8 @@ export default {
           if (taken.has(y * n + x)) continue;
           const beach = x === 0 || y === 0 || x === n - 1 || y === n - 1;
           const roll = hash(x, y);
-          let kind = null;
-          if (beach) kind = roll < 0.11 ? 'palm' : roll < 0.17 ? 'rock' : null;
-          else kind = roll < 0.12 ? 'tuft' : roll < 0.19 ? 'flowers' : roll < 0.22 ? 'bush' : null;
+          let kind;
+          kind = ((beach ? BEACH_MIX : GRASS_MIX).find(([, upTo]) => roll < upTo) || [null])[0];
           if (kind) props.push({ kind, x, y, depth: x + y });
         }
       }
@@ -631,13 +638,15 @@ export default {
       const standing = [
         ...this.state.sites.map(site => ({ depth: site.x + site.y + 2, site })),
         ...this.state.tiles.map(tile => ({ depth: tile.x + tile.y, tile })),
-        ...this.props.map(prop => ({ depth: prop.depth, prop }))
+        ...this.props.map(prop => ({ depth: prop.depth, prop })),
+        ...this.critters(t).map(critter => ({ depth: critter.x + critter.y, critter }))
       ].sort((p, q) => p.depth - q.depth);
       const repaint = () => this.draw(performance.now());
       for (const item of standing) {
         if (item.site) this.drawSite(ctx, item.site, t, now, repaint);
         else if (item.tile) this.drawTile(ctx, item.tile, now, t, repaint);
-        else this.drawProp(ctx, item.prop, t, repaint);
+        else if (item.prop) this.drawProp(ctx, item.prop, t, repaint);
+        else this.drawCritter(ctx, item.critter, repaint);
       }
       this.drawSmoke(ctx, t, phase);
       // Ciel : nuages et mouettes (écran), puis la teinte de l'heure sur toute la scène
@@ -652,7 +661,7 @@ export default {
     },
     drawSite(ctx, site, t, now, repaint) {
       const c = this.world(site.x + 0.5, site.y + 0.5);
-      const looks = BUILDINGS[site.id] || [BUILDINGS.chantier[2]];
+      const looks = LOOKS[site.id] || [BUILDINGS.chantier[2]];
       const raise = this.raises.get(site.id);
       const k = raise ? Math.min(1, (now - raise.at) / RAISE_MS) : 1;
       if (raise && k >= 1) this.raises.delete(site.id);
@@ -712,7 +721,52 @@ export default {
     },
     drawProp(ctx, prop, t, repaint) {
       const c = this.world(prop.x, prop.y);
-      this.swayed(ctx, `nature-${prop.kind}`, NATURE[prop.kind], c.x, c.y, (SWAY[prop.kind] || 0) * this.windAt(t, prop.x * 0.7 + prop.y), repaint);
+      this.swayed(ctx, `nature-${prop.kind}`, ALL_NATURE[prop.kind], c.x, c.y, (SWAY[prop.kind] || 0) * this.windAt(t, prop.x * 0.7 + prop.y), repaint);
+    },
+    // Petite vie de l'île, déterministe dans le temps : où est chaque animal, dans quelle image, de quel côté il regarde.
+    // Poules autour du Foyer, papillons et abeilles sur les fleurs (le jour), grenouille aux nénuphars, poisson près de la côte.
+    critters(t) {
+      if (!this.state) return [];
+      const phase = phaseAt(this.forced || new Date());
+      const out = [];
+      const foyer = this.state.sites.find(s => s.id === 'foyer');
+      if (foyer) {
+        for (let k = 0; k < 2; k++) {
+          const a = t * 0.22 + k * 2.4;
+          const x = foyer.x + 1 + Math.cos(a) * 1.55 + Math.sin(t * 0.9 + k) * 0.08;
+          const y = foyer.y + 1 + Math.sin(a * 1.3) * 1.35;
+          const pecking = Math.sin(t * 0.7 + k * 3) > 0.55;
+          out.push({ kind: 'chicken', x, y, z: 0, frame: pecking && Math.sin(t * 9) > 0 ? 1 : 0, flip: Math.sin(a) > 0 });
+        }
+      }
+      if (phase.night < 0.5) {
+        const flowers = this.props.filter(p => p.kind === 'flowers' || p.kind === 'bush').slice(0, 4);
+        flowers.forEach((p, k) => {
+          const a = t * (0.6 + k * 0.1) + k;
+          const kind = k % 2 ? 'bee' : 'butterfly';
+          out.push({ kind, x: p.x + Math.cos(a) * 0.35, y: p.y + Math.sin(a * 1.4) * 0.3, z: 6 + Math.sin(t * 2 + k) * 3, frame: Math.floor(t * (kind === 'bee' ? 20 : 8) + k) % 2, flip: Math.cos(a) < 0 });
+        });
+      }
+      const pond = this.props.find(p => p.kind === 'lily' || p.kind === 'reeds');
+      if (pond) out.push({ kind: 'frog', x: pond.x + 0.12, y: pond.y + 0.1, z: 0, frame: (t % 4) < 0.35 ? 1 : 0, flip: false });
+      // Poisson : un saut toutes les 7 s, à un endroit différent du rivage
+      const cycle = Math.floor(t / 7);
+      const into = (t % 7) / 7;
+      if (into < 0.12) {
+        const n = this.state.size;
+        const side = hash(cycle, 1) < 0.5;
+        const along = 1 + hash(cycle, 2) * (n - 2);
+        out.push({ kind: 'fish', x: side ? n + 0.6 : along, y: side ? along : n + 0.6, z: 0, frame: into < 0.06 ? 0 : 1, flip: hash(cycle, 3) < 0.5 });
+      }
+      return out;
+    },
+    drawCritter(ctx, critter, repaint) {
+      const c = this.world(critter.x, critter.y);
+      ctx.save();
+      ctx.translate(c.x, c.y - critter.z);
+      if (critter.flip) ctx.scale(-1, 1);
+      drawSprite(ctx, `${critter.kind}-${critter.frame}`, CRITTERS[critter.kind][critter.frame], 0, 0, repaint);
+      ctx.restore();
     },
     // Fumée des cheminées : bouffées qui montent, grossissent, s'effacent et partent avec le vent
     drawSmoke(ctx, t, phase) {
@@ -792,19 +846,10 @@ export default {
         if (k >= 1) this.pops.delete(tile.element);
       }
       const bob = Math.sin(t * 1.6 + tile.x * 0.8 + tile.y * 1.3) * TW * 0.025;
-      ctx.fillStyle = 'rgba(40, 60, 20, .28)';
-      ctx.beginPath();
-      ctx.ellipse(c.x, c.y + TH * 0.08, TW * 0.3, TH * 0.3, 0, 0, Math.PI * 2);
-      ctx.fill();
-      ctx.fillStyle = '#E8DCC2';
-      ctx.beginPath();
-      ctx.ellipse(c.x, c.y, TW * 0.22, TH * 0.22, 0, 0, Math.PI * 2);
-      ctx.fill();
-      ctx.fillStyle = '#FBF6EA';
-      ctx.beginPath();
-      ctx.ellipse(c.x, c.y - TH * 0.08, TW * 0.22, TH * 0.22, 0, 0, Math.PI * 2);
-      ctx.fill();
-      glyph(ctx, tile.emoji, c.x, c.y - TW * 0.36 + bob, TW * 0.58 * scale, repaint);
+      // Socle de pierre et de bois ; l'élément flotte au-dessus et respire
+      drawSprite(ctx, 'plinth', PLINTH, c.x, c.y, repaint);
+      ctx.fillStyle = '#000';
+      glyph(ctx, tile.emoji, c.x, c.y - TW * 0.42 + bob, TW * 0.56 * scale, repaint);
     },
 
     /* ---------- Gestes : glisser, pincer, toucher ---------- */

@@ -2,6 +2,8 @@ import { describe, it, expect } from 'vitest';
 import { P, TW, TH, box } from '@/world/iso';
 import { phaseAt } from '@/world/scene';
 import { BUILDINGS, NATURE } from '@/world/sprites';
+import { FUTURE, UPGRADES, fountainFrames, orbSprite } from '@/world/buildings2';
+import { NATURE2, CRITTERS, PLINTH } from '@/world/nature';
 
 const at = (h, m = 0) => {
   const d = new Date(2026, 9, 4, h, m);
@@ -22,7 +24,10 @@ describe('géométrie isométrique', () => {
 
 describe('sprites', () => {
   it('chaque bâtiment et chaque élément de nature donne un SVG cadré', () => {
-    const all = [...Object.values(BUILDINGS).flat(), ...Object.values(NATURE)];
+    const all = [
+      ...Object.values(BUILDINGS).flat(), ...Object.values(NATURE), ...Object.values(FUTURE).flat(), ...Object.values(UPGRADES),
+      ...Object.values(NATURE2), ...Object.values(CRITTERS).flat(), PLINTH, orbSprite, ...fountainFrames().map(f => () => f)
+    ];
     for (const make of all) {
       const { svg, box: frame } = make();
       expect(svg.startsWith('<svg')).toBe(true);
