@@ -17,7 +17,7 @@
           <span aria-hidden="true">{{ r.glyph }}</span>
           <strong>{{ shown[r.id] }}</strong>
           <span class="oc-sr-only">{{ r.label }}</span>
-          <em v-if="run.boosts[r.id]" class="harvest__boost">×2</em>
+          <em v-if="run.boosts[r.id]" class="harvest__boost">×{{ run.boosts[r.id] }}</em>
         </li>
       </ul>
 
