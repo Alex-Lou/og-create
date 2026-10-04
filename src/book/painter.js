@@ -368,6 +368,20 @@ function recipeRow(ctx, u, parts, result, ink, onReady, hints = null) {
 }
 
 /* ---------- Pages ---------- */
+// Citation en italique sous le nom (énigme, ou familles), rétrécie pour tenir sur deux lignes
+function paintQuote(ctx, u, text) {
+  const quote = `«\u00a0${text}\u00a0»`;
+  let size = 4.3;
+  let lines;
+  do {
+    setFont(ctx, u, size, 400, TITLE, true);
+    lines = wrap(ctx, quote, 76 * u);
+    size -= 0.2;
+  } while (lines.length > 2 && size > 3.3);
+  ctx.fillStyle = '#8A7262';
+  ctx.textAlign = 'center';
+  lines.slice(0, 2).forEach((line, k) => ctx.fillText(line, 52 * u, (80.5 + k * 5.4) * u));
+}
 function paintFound(ctx, u, model, i, assets) {
   const { chapter, page } = model;
   const style = CHAPTER_STYLE[chapter.id];
@@ -388,6 +402,8 @@ function paintFound(ctx, u, model, i, assets) {
   ctx.fillStyle = style.ink;
   ctx.fillText(familyName(page.family).toUpperCase(), 52 * u, 74 * u);
   if ('letterSpacing' in ctx) ctx.letterSpacing = '0px';
+  // L'énigme reste sur la page trouvée, comme une épigraphe
+  if (page.riddle) paintQuote(ctx, u, page.riddle);
   if (page.recipe) {
     const parts = page.recipe.map(name => ({ name, emoji: assets.emojiOf(name) }));
     recipeRow(ctx, u, parts, { name: page.name, emoji: page.emoji }, style.ink, assets.onReady);
@@ -398,7 +414,7 @@ function paintFound(ctx, u, model, i, assets) {
     ctx.fillText(first ? 'Élément premier : tout commence ici.' : 'Né d’un mélange dont la trace s’est perdue.', 52 * u, 96 * u);
   }
   folio(ctx, u, i);
-  return { hotspots: [spot], label: `${page.name}, inscrite. Famille ${familyName(page.family)}.${page.recipe ? ` Née de ${page.recipe.join(' et ')}.` : ''}` };
+  return { hotspots: [spot], label: `${page.name}, inscrite. Famille ${familyName(page.family)}.${page.riddle ? ` « ${page.riddle} »` : ''}${page.recipe ? ` Née de ${page.recipe.join(' et ')}.` : ''}` };
 }
 
 function paintReach(ctx, u, model, i, assets) {
@@ -442,17 +458,8 @@ function paintReach(ctx, u, model, i, assets) {
   ctx.fillStyle = style.ink;
   ctx.fillText(`${familyName(page.family).toUpperCase()} · ${page.letters} LETTRES`, 52 * u, 73.5 * u);
   if ('letterSpacing' in ctx) ctx.letterSpacing = '0px';
-  // L'énigme de l'élément d'abord (sans énigme : les familles en toutes lettres), rétrécie pour tenir sur deux lignes
-  const quote = `«\u00a0${page.riddle || clueText(page.clue, page.groups)}\u00a0»`;
-  let quoteSize = 4.3;
-  let quoteLines;
-  do {
-    setFont(ctx, u, quoteSize, 400, TITLE, true);
-    quoteLines = wrap(ctx, quote, 76 * u);
-    quoteSize -= 0.2;
-  } while (quoteLines.length > 2 && quoteSize > 3.3);
-  ctx.fillStyle = '#8A7262';
-  quoteLines.slice(0, 2).forEach((line, k) => ctx.fillText(line, 52 * u, (80.5 + k * 5.4) * u));
+  // L'énigme de l'élément d'abord (sans énigme : les familles en toutes lettres)
+  paintQuote(ctx, u, page.riddle || clueText(page.clue, page.groups));
   const parts = page.clue.map((family, k) => (k === 0 && revealed ? { name: revealed, emoji: assets.emojiOf(revealed) } : null));
   // Après un premier essai sur la page, la famille de chaque ingrédient apparaît sous sa case
   const hints = page.riddle && tried ? familyHints(page.clue, page.groups) : null;
@@ -493,6 +500,8 @@ function paintReach(ctx, u, model, i, assets) {
   const inkX = hm ? 54 : 28;
   const inkW = hm ? 37 : 48;
   if (hm) {
+    // Les blancs du nom ouvrent aussi le pendu : c'est là qu'on a envie de toucher
+    if (!hm.name) hotspots.push({ id: 'blanks', x: 12, y: 58, w: 80, h: 11, action: 'guess', data: page.id, label: 'Deviner le nom lettre par lettre' });
     button(13, 37, hm.name ? '#F1E7D2' : style.color, guessLabel, hm.name ? '#8A7262' : style.ink, !hm.name);
     hotspots.push({ id: 'guess', x: 13, y: 115.5, w: 37, h: 8, action: 'guess', data: page.id, label: hm.name ? `Nom trouvé : ${hm.name}` : 'Pendu : deviner le nom lettre par lettre' });
   }
