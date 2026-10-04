@@ -53,6 +53,7 @@
         <p v-if="error" class="harvest__error" role="alert">{{ error }}</p>
         <p v-else-if="sending" class="harvest__wait">Le serveur pèse ta récolte…</p>
         <p v-else class="harvest__done">Ta récolte rejoint les réserves de l’île.</p>
+        <p v-if="chest && !error && !sending" class="harvest__chest">Un coffre {{ chestLabel }} est tombé ! Il s’ouvre au retour sur l’île.</p>
         <button type="button" class="harvest__btn" :disabled="sending" @click="$emit('close')">Retour à l’île</button>
       </div>
     </div>
@@ -63,6 +64,7 @@
 import { SIZE, MIN_CHAIN, create, play, gainOf } from '@/game/harvest';
 import { vibrate } from '@/utils/fx';
 import { GLYPH, RESOURCES } from '@/game/resources';
+import { RARITY } from '@/world/chest';
 
 const GONE_MS = 170;
 
@@ -73,6 +75,8 @@ export default {
   props: {
     run: { type: Object, required: true },
     sending: { type: Boolean, default: false },
+    // Rareté du coffre tombé pendant la partie ('' : aucun)
+    chest: { type: String, default: '' },
     result: { type: Object, default: null },
     error: { type: String, default: '' }
   },
@@ -90,6 +94,9 @@ export default {
     };
   },
   computed: {
+    chestLabel() {
+      return (RARITY[this.chest] || RARITY.commun).label.toLowerCase();
+    },
     movesLeft() {
       return this.run.maxMoves - this.moves.length;
     },
@@ -303,6 +310,7 @@ export default {
 
 .harvest__result { padding: 18px 4px 6px; text-align: center; }
 .harvest__done, .harvest__wait { margin: 0 0 14px; color: var(--ink-500); font-style: italic; }
+.harvest__chest { margin: 0 0 14px; color: var(--ink-900); font-weight: 900; }
 .harvest__error { margin: 0 0 14px; color: #A2412B; font-weight: 800; }
 .harvest__btn { min-height: 46px; padding: 10px 22px; border: 0; border-radius: 999px; background: var(--ink-900); color: var(--vellum-50); font: inherit; font-weight: 900; font-size: 15px; cursor: pointer; }
 .harvest__btn:disabled { opacity: .5; }

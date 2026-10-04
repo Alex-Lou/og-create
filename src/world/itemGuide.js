@@ -24,8 +24,10 @@ const HOW = {
   compagnon: 'Rien à faire : il vit sa vie près du bâtiment. Touche-le sur l’île pour le saluer.',
   skin: 'Porté dès l’achat. Pour changer : Boutique, puis Porter ou Ôter.',
   teinte: 'Portée dès l’achat. Pour changer : Boutique, puis Porter ou Ôter.',
-  rare: 'Trouve-la dans les butins, puis porte-la depuis la Boutique (Porter ou Ôter).'
+  rare: 'Trouve-la dans un coffre légendaire (Récolte, coffre du jour, quêtes de Brume), puis porte-la depuis la Boutique (Porter ou Ôter).'
 };
+// Pièce rare offerte par un chapitre du Livre : son coffre attend dans les Coffres de l'île
+const chapterHow = chapter => `Ouvre le chapitre ${chapter} du Livre : son coffre l’offre (bouton Coffres de l’île). Porte-la ensuite depuis la Boutique.`;
 const WHY = {
   prod: 'Plus de ressources et d’écus à chaque récolte du bâtiment, jusqu’à +100 %.',
   coins: 'Des écus en plus chaque heure, même quand tu ne joues pas.',
@@ -47,5 +49,5 @@ export function guideOf(item, site) {
     : kind === 'rare'
       ? `Sur ${name} : sa teinte et son accessoire animé.`
       : `Posé à côté de ${name}, sur ton île.`;
-  return { kind, where, how: HOW[kind], why: WHY[kind] };
+  return { kind, where, how: kind === 'rare' && item.chapter ? chapterHow(item.chapter) : HOW[kind], why: WHY[kind] };
 }

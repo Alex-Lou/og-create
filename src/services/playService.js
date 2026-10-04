@@ -94,7 +94,12 @@ export default {
   worldQuest(id) {
     return http.post('/play/world/quest', { id }).then(response => response.data);
   },
-  // Récolte : { id, seed, kinds, maxMoves, boosts } puis { gains, world } une fois les coups rejoués par le serveur
+  // Coffre qui attend ('jour', 'bouteille', 'chapitre:<id>', 'quete:<id>') : { chest: { source, rarity, prize }, coins, world }
+  worldChest(source) {
+    return http.post('/play/world/chest', { source }).then(response => response.data);
+  },
+  // Récolte : { id, seed, kinds, maxMoves, boosts } puis { gains, earned, coins (solde), chest, world } une fois les
+  // coups rejoués par le serveur
   harvestStart() {
     return http.post('/play/world/harvest/start').then(response => response.data);
   },

@@ -54,6 +54,22 @@
           @touchend.prevent
           @wheel.prevent="onWheel"
         ></canvas>
+        <!-- Coffres : celui du jour et ceux qui attendent (pastille) -->
+        <button
+          v-if="state && state.chests"
+          type="button"
+          :class="['world__chest-btn', { 'is-ready': chestCount }]"
+          :aria-label="chestCount ? `Coffres : ${chestCount} à ouvrir` : 'Coffres'"
+          @click="chestsOpen = true"
+        >
+          <svg viewBox="0 0 32 32" width="26" height="26" aria-hidden="true">
+            <path d="M5,15 v-3 a11,5 0 0 1 22,0 v3 z" fill="#B57A44" stroke="#5A3A1E" stroke-width="1.4" />
+            <rect x="5" y="15" width="22" height="11" rx="2" fill="#9A6A3E" stroke="#5A3A1E" stroke-width="1.4" />
+            <rect x="5" y="17.5" width="22" height="2" fill="#E2B546" />
+            <rect x="13.5" y="14" width="5" height="6" rx="1.2" fill="#F4D67A" stroke="#5A3A1E" stroke-width="1" />
+          </svg>
+          <span v-if="chestCount" class="world__chest-badge" aria-hidden="true">{{ chestCount }}</span>
+        </button>
         <div v-if="state" class="world__zoom">
           <button type="button" aria-label="Zoomer" @click="zoomBy(1.25)">+</button>
           <button type="button" aria-label="Dézoomer" @click="zoomBy(0.8)">−</button>
@@ -256,7 +272,7 @@
                 <span class="world__quest-reward">Récompense : <strong>{{ quest.coins }} écus</strong></span>
               </div>
               <div class="world__sheet-actions">
-                <button v-if="quest.done" type="button" class="world__btn" :disabled="busy" @click="claimQuest">Réclamer · {{ quest.coins }} écus</button>
+                <button v-if="quest.done" type="button" class="world__btn" :disabled="busy" @click="claimQuest">Réclamer · {{ quest.coins }} écus{{ quest.chest ? ' + un coffre' : '' }}</button>
                 <button v-else-if="quest.target" type="button" class="world__btn" @click="showQuestTarget">Montrer</button>
                 <button v-else-if="quest.kind === 'runs'" type="button" class="world__btn" :disabled="busy || !state.charges.count" @click="questHarvest">
                   {{ state.charges.count ? 'Lancer une Récolte' : `Récolte : ${chargesText}` }}
@@ -350,12 +366,17 @@
       </template>
     </GModal>
 
+    <!-- Coffres : la liste (jour, en attente), puis l'ouverture d'un coffre -->
+    <ChestList v-if="chestsOpen && state" :chests="state.chests" :busy="busy" @open="openChest" @close="chestsOpen = false" />
+    <ChestReveal v-if="reveal" v-bind="reveal" :busy="busy" @wear="wearRevealed" @close="reveal = null" />
+
     <HarvestGame
       v-if="run"
       :run="run"
       :sending="sending"
       :result="runResult"
       :error="runError"
+      :chest="runChest ? runChest.rarity : ''"
       @finish="finishHarvest"
       @close="closeHarvest"
     />
@@ -372,6 +393,9 @@ import { familyIndex } from '@/utils/eras';
 import HarvestGame from './HarvestGame.vue';
 import ShopItemSheet from './ShopItemSheet.vue';
 import IslandClock from './IslandClock.vue';
+import ChestList from './ChestList.vue';
+import ChestReveal from './ChestReveal.vue';
+import { BOTTLE, noteOf } from '@/world/chest';
 import GModal from '@/components/ui/GModal.vue';
 import { guideOf, guideKind } from '@/world/itemGuide';
 import { villageOf } from '@/world/village';
@@ -481,7 +505,7 @@ let lastView = null;
 // d'animation sont non réactifs et s'arrêtent quand l'onglet est caché ou le composant démonté.
 export default {
   name: 'WorldView',
-  components: { ElementGlyph, ElementTile, HarvestGame, ShopItemSheet, BrumeWisp, IslandClock, GModal },
+  components: { ElementGlyph, ElementTile, HarvestGame, ShopItemSheet, BrumeWisp, IslandClock, GModal, ChestList, ChestReveal },
   directives: { longpress },
   props: {
     discoveredElements: { type: Array, required: true },
@@ -522,6 +546,11 @@ export default {
       sending: false,
       runResult: null,
       runError: '',
+      // Coffre tombé pendant la Récolte (ouvert au retour sur l'île) ; liste des coffres ouverte ; coffre en cours
+      // d'ouverture : { chest, streak, note, art, wearable }
+      runChest: null,
+      chestsOpen: false,
+      reveal: null,
       clock: Date.now(),
       // Horloge de l'en-tête (heure, moment, temps, soleil) ; journée en accéléré
       skyClock: null,
@@ -531,6 +560,11 @@ export default {
     };
   },
   computed: {
+    // Coffres à ouvrir : celui du jour s'il attend, et ceux des chapitres et des quêtes
+    chestCount() {
+      const chests = this.state && this.state.chests;
+      return chests ? (chests.daily.available ? 1 : 0) + chests.pending.length : 0;
+    },
     sheetSite() {
       return this.sheet && this.state ? this.state.sites.find(s => s.id === this.sheet.siteId) || null : null;
     },
@@ -618,6 +652,8 @@ export default {
     // animaux qui ont réagi à un toucher (clé → { at, … }), et ce qu'on peut toucher dans la dernière image
     this.sea = null;
     this.perches = [];
+    // Plage où la bouteille à la mer s'est échouée (case), si elle attend
+    this.bottleSpot = null;
     this.passages = {};
     this.scared = new Map();
     this.seaHits = [];
@@ -737,6 +773,7 @@ export default {
       }
       this.props = this.natureOf(state);
       this.perches = this.perchesOf(state);
+      this.bottleSpot = this.bottleSpotOf(state);
       this.shore = this.shoreOf(state);
       // Habitants et bêtes : ils vivent dans les quartiers à soi, autour des bâtiments bâtis
       this.village = villageOf({
@@ -1527,6 +1564,14 @@ export default {
           out.push({ kind: 'gull', x: perch.x + i * 0.32 - 0.1, y: perch.y + 0.1 - i * 0.18, z: 0, frame: Math.sin(t * 0.7 + i * 2 + perch.x) > 0.75 ? 1 : 0, flip: (i + Math.floor(t / 9 + perch.y)) % 2 === 1 });
         }
       }
+      // Bouteille à la mer échouée : la vague la berce ; un toucher l'ouvre
+      if (this.bottleSpot) {
+        const { x, y } = this.bottleSpot;
+        const frame = Math.sin(t * 1.6) > 0.6 ? 1 : 0;
+        out.push({ kind: 'bottle', x: x + 0.5, y: y + 0.5, z: 0, frame, flip: false, sprite: [`bottle-${frame}`, BOTTLE[frame]] });
+        const c = this.ground(x + 0.5, y + 0.5);
+        hits.push({ key: 'bottle', kind: 'bottle', bottle: true, x: c.x, y: c.y - 6, r: 14 });
+      }
       // Habitants et bêtes du village (on peut les toucher)
       const life = this.village ? this.village.at(t, phase, this.scared) : { list: [], lights: [] };
       for (const who of life.list) {
@@ -1737,6 +1782,9 @@ export default {
     // Récompense de la quête active : versée par le serveur ; la fiche reste ouverte sur la quête suivante
     async claimQuest() {
       if (!this.quest || this.busy) return;
+      // La dernière quête d'un acte donne aussi un coffre : il s'ouvre juste après les écus
+      const chest = this.quest.chest ? `quete:${this.quest.id}` : null;
+      let claimed = false;
       this.busy = true;
       try {
         const hit = this.brumeHit;
@@ -1751,10 +1799,15 @@ export default {
         }
         vibrate([12, 30, 16]);
         this.$emit('show-alert', `Brume : +${gained} écus\u00a0!`);
+        claimed = true;
       } catch (error) {
         this.$emit('show-alert', messageOf(error, 'La récompense n’a pas pu être reçue.'));
       } finally {
         this.busy = false;
+      }
+      if (claimed && chest) {
+        this.questOpen = false;
+        this.openChest(chest);
       }
     },
     // Un toucher sur un animal : les dauphins plongent, la baleine souffle, les mouettes posées s'envolent
@@ -1770,10 +1823,9 @@ export default {
     },
     // Mouettes posées : quelques plages au bord de la mer (côté large), dans les quartiers à soi, libres (ni
     // chantier, ni décoration, ni arbre ou rocher)
-    perchesOf(state) {
+    // Cases de sable libres au bord de la mer, dans les quartiers à soi (mouettes posées, bouteille à la mer)
+    beachOf(state, owned, busy) {
       const M = this.M;
-      const owned = new Set(state.map.zones.filter(z => z.owned).map(z => z.id));
-      const busy = new Set([...state.tiles, ...this.props].map(c => `${c.x},${c.y}`));
       const cells = [];
       for (let y = 0; y < state.size; y++) {
         for (let x = 0; x < state.size; x++) {
@@ -1783,6 +1835,23 @@ export default {
           if ([[1, 0], [0, 1]].some(([dx, dy]) => M.ground(x + dx, y + dy) === '~')) cells.push({ x, y });
         }
       }
+      return cells;
+    },
+    // Bouteille à la mer qui attend : sur une plage libre (pas sous les mouettes), la même pour une même bouteille
+    bottleSpotOf(state) {
+      const bottle = state.chests && state.chests.bottle;
+      if (!bottle || !bottle.available) return null;
+      const owned = new Set(state.map.zones.filter(z => z.owned).map(z => z.id));
+      const busy = new Set([...state.tiles, ...this.props, ...this.perches].map(c => `${c.x},${c.y}`));
+      const cells = this.beachOf(state, owned, busy);
+      const h = [...bottle.key].reduce((n, c) => (n * 31 + c.charCodeAt(0)) >>> 0, 0);
+      return cells.length ? cells[h % cells.length] : null;
+    },
+    perchesOf(state) {
+      const M = this.M;
+      const owned = new Set(state.map.zones.filter(z => z.owned).map(z => z.id));
+      const busy = new Set([...state.tiles, ...this.props].map(c => `${c.x},${c.y}`));
+      const cells = this.beachOf(state, owned, busy);
       // La colonie de l'Îlot aux Mouettes : trois groupes plus nombreux au bord de l'îlot
       const colony = owned.has(COLONY_ZONE)
         ? this.islets.colony.filter(c => !busy.has(`${c.x},${c.y}`) && [[1, 0], [0, 1], [-1, 0], [0, -1]].some(([dx, dy]) => !M.land(c.x + dx, c.y + dy)))
@@ -2003,7 +2072,7 @@ export default {
       if (sign) return { zone: sign.zone };
       // Animaux de la mer et mouettes posées : un toucher les fait réagir
       const animal = [...this.seaHits, ...this.landHits].find(h => Math.hypot(w.x - h.x, w.y - h.y) < h.r);
-      if (animal) return { animal };
+      if (animal) return animal.bottle ? { bottle: true } : { animal };
       // Articles posés près des bâtiments (le plus proche du doigt)
       const items = this.itemHits.filter(h => Math.hypot(w.x - h.x, w.y - h.y) < h.r);
       if (items.length) {
@@ -2055,6 +2124,9 @@ export default {
       } else if (hit.brume) {
         this.questAct();
         vibrate(6);
+      } else if (hit.bottle) {
+        this.openChest('bouteille');
+        vibrate(8);
       } else if (hit.animal) {
         // Un habitant parle, une bête de la ferme répond ; les bêtes sauvages s'enfuient
         const said = this.village && hit.animal.who ? this.village.say(hit.animal.who, this.phase || this.skyAt(this.skyDate())) : null;
@@ -2105,6 +2177,7 @@ export default {
     // Ce que dit la bulle pour ce qui est sous le doigt (null : la mer)
     tipOf(hit, point) {
       if (!hit) return { title: 'La mer', text: 'Dauphins, baleine et méduses passent au large.', hint: 'Toucher : des ronds dans l’eau' };
+      if (hit.bottle) return { title: 'Bouteille à la mer', text: 'Un mot du dernier alchimiste, et un coffre.', hint: 'Toucher : l’ouvrir' };
       if (hit.animal) {
         if (hit.animal.who && this.village) return this.village.describe(hit.animal.who);
         const [title, text] = ANIMALS[hit.animal.kind] || ['Une bête', ''];
@@ -2231,6 +2304,7 @@ export default {
         this.site = null;
         this.runResult = null;
         this.runError = '';
+        this.runChest = null;
         this.run = await playService.harvestStart();
         this.syncLoop();
       } catch (error) {
@@ -2243,8 +2317,9 @@ export default {
     async finishHarvest(moves) {
       this.sending = true;
       try {
-        const { gains, coins, world } = await playService.harvestFinish(this.run.id, moves);
+        const { gains, coins, chest, world } = await playService.harvestFinish(this.run.id, moves);
         this.runResult = gains;
+        this.runChest = chest || null;
         this.apply(world);
         if (coins !== undefined) this.$emit('coins-updated', coins);
         vibrate([12, 40, 18]);
@@ -2258,6 +2333,46 @@ export default {
     closeHarvest() {
       this.run = null;
       this.syncLoop();
+      // Un coffre est tombé pendant la partie : il s'ouvre au retour sur l'île
+      if (this.runChest) this.showChest(this.runChest);
+      this.runChest = null;
+    },
+    // Ouvre un coffre qui attend (jour, bouteille, chapitre, quête) : le serveur tire et donne le lot, l'île le montre
+    async openChest(source) {
+      if (this.busy) return;
+      this.busy = true;
+      try {
+        const { chest, coins, world } = await playService.worldChest(source);
+        this.apply(world);
+        this.$emit('coins-updated', coins);
+        this.chestsOpen = false;
+        this.showChest(chest);
+      } catch (error) {
+        this.$emit('show-alert', messageOf(error, 'Le coffre ne s’est pas ouvert.'));
+        this.load();
+      } finally {
+        this.busy = false;
+      }
+    },
+    // Montre un coffre ouvert : sa série (coffre du jour), le mot de la bouteille, l'aperçu du bâtiment paré
+    showChest(chest) {
+      const { prize, source } = chest;
+      const site = prize.site ? this.state.sites.find(s => s.id === prize.site) : null;
+      const item = site ? site.shop.find(i => i.id === prize.item) : null;
+      this.reveal = {
+        chest,
+        streak: source.startsWith('jour:') ? this.state.chests.daily.streak : 0,
+        note: source.startsWith('bouteille:') ? noteOf(source) : '',
+        art: item ? this.itemArt(site, item) : '',
+        wearable: Boolean(item && site.level && site.skin !== item.id)
+      };
+      vibrate([10, 40, 14]);
+    },
+    // « Porter » à l'ouverture : la teinte ou la pièce rare va tout de suite sur son bâtiment
+    async wearRevealed() {
+      const { prize } = this.reveal.chest;
+      await this.wearSkin(this.state.sites.find(s => s.id === prize.site), prize.item);
+      this.reveal = null;
     },
     async place(name, x, y) {
       this.picking = null;
@@ -2487,6 +2602,17 @@ export default {
 
 .world__stage { position: relative; border-radius: 22px; overflow: hidden; }
 .world__canvas { display: block; width: 100%; touch-action: none; cursor: grab; }
+.world__chest-btn {
+  position: absolute; left: 10px; top: 10px; display: grid; place-items: center;
+  width: 46px; height: 46px; border: 0; border-radius: 14px; background: rgba(30, 22, 16, .55); cursor: pointer;
+}
+.world__chest-btn.is-ready { background: var(--gold-400); box-shadow: 0 3px 0 var(--gold-600); animation: world-chest-call 2.4s ease-in-out infinite; }
+.world__chest-badge {
+  position: absolute; right: -5px; top: -5px; min-width: 20px; height: 20px; padding: 0 5px; border-radius: 999px;
+  background: #D2453A; color: #fff; font-family: var(--font-ui); font-size: 12px; font-weight: 900; line-height: 20px;
+}
+@keyframes world-chest-call { 0%, 80%, 100% { transform: none; } 86% { transform: rotate(-8deg); } 92% { transform: rotate(8deg); } }
+@media (prefers-reduced-motion: reduce) { .world__chest-btn.is-ready { animation: none; } }
 .world__zoom { position: absolute; right: 10px; top: 10px; display: flex; flex-direction: column; gap: 6px; }
 .world__zoom button {
   width: 38px; height: 38px; border: 0; border-radius: 12px;
