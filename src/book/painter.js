@@ -428,31 +428,24 @@ function paintReach(ctx, u, model, i, assets) {
   if (!hm || !hm.emoji) bigQuestion(ctx, u, alpha(style.ink, 0.45));
   patchwork(ctx, u, page, style.ink, assets.onReady);
   ctx.textAlign = 'center';
-  if (hm && hm.name) {
-    // Pendu gagné : le nom est connu, il reste à fabriquer l'élément
-    setFont(ctx, u, hm.name.length > 14 ? 6.4 : 7.6, 600, TITLE, false);
-    ctx.fillStyle = style.ink;
-    ctx.fillText(hm.name, 52 * u, 66 * u);
-  } else {
-    // Lettres trouvées à leur place (pendu, ou première lettre donnée), le reste en blancs : « L_M__ »
-    const mask = hm ? hm.mask : [...Array(page.letters)].map((_, k) => (k === 0 && page.first ? page.first : null));
-    const blanks = mask.map(char => char || '_').join('');
-    let size = 7;
-    do {
-      setFont(ctx, u, size, 600, TITLE, false, 0.22);
-      size -= 0.4;
-    } while (size > 3.6 && ctx.measureText(blanks).width > 80 * u);
-    // Caractère par caractère : lettres trouvées à l'encre, blancs en pâle
-    let x = 52 * u - ctx.measureText(blanks).width / 2;
-    ctx.textAlign = 'left';
-    mask.forEach(char => {
-      const shown = char || '_';
-      ctx.fillStyle = char ? style.ink : '#BDAA94';
-      ctx.fillText(shown, x, 66 * u);
-      x += ctx.measureText(shown).width;
-    });
-    ctx.textAlign = 'center';
-  }
+  // Lettres trouvées à leur place (pendu, ou première lettre donnée), le reste en blancs : « L_M__ »
+  const mask = hm ? hm.mask : [...Array(page.letters)].map((_, k) => (k === 0 && page.first ? page.first : null));
+  const blanks = mask.map(char => char || '_').join('');
+  let size = 7;
+  do {
+    setFont(ctx, u, size, 600, TITLE, false, 0.22);
+    size -= 0.4;
+  } while (size > 3.6 && ctx.measureText(blanks).width > 80 * u);
+  // Caractère par caractère : lettres trouvées à l'encre, blancs en pâle
+  let x = 52 * u - ctx.measureText(blanks).width / 2;
+  ctx.textAlign = 'left';
+  mask.forEach(char => {
+    const shown = char || '_';
+    ctx.fillStyle = char ? style.ink : '#BDAA94';
+    ctx.fillText(shown, x, 66 * u);
+    x += ctx.measureText(shown).width;
+  });
+  ctx.textAlign = 'center';
   if ('letterSpacing' in ctx) ctx.letterSpacing = '0px';
   setFont(ctx, u, 3.2, 900, TEXT, false, 0.1);
   ctx.fillStyle = style.ink;
@@ -477,7 +470,7 @@ function paintReach(ctx, u, model, i, assets) {
     ctx.fillText(note, 52 * u, 110.8 * u);
   }
   // Deux boutons : le pendu (deviner le nom) et l'encre (révéler un ingrédient)
-  const guessLabel = !hm ? '' : hm.name ? '✓ Nom trouvé' : hm.failedUntil ? '✎ Pendu perdu' : '✎ Deviner le nom';
+  const guessLabel = hm && hm.failedUntil ? '✎ Pendu perdu' : '✎ Deviner le nom';
   const hotspots = [{ ...spot, pulse: true, ...(hm ? { action: 'guess', data: page.id, label: 'Ouvrir le pendu de la page' } : {}) }];
   const button = (x, w, fill, text, color, raised) => {
     ctx.save();
@@ -501,14 +494,14 @@ function paintReach(ctx, u, model, i, assets) {
   const inkW = hm ? 37 : 48;
   if (hm) {
     // Les blancs du nom ouvrent aussi le pendu : c'est là qu'on a envie de toucher
-    if (!hm.name) hotspots.push({ id: 'blanks', x: 12, y: 58, w: 80, h: 11, action: 'guess', data: page.id, label: 'Deviner le nom lettre par lettre' });
-    button(13, 37, hm.name ? '#F1E7D2' : style.color, guessLabel, hm.name ? '#8A7262' : style.ink, !hm.name);
-    hotspots.push({ id: 'guess', x: 13, y: 115.5, w: 37, h: 8, action: 'guess', data: page.id, label: hm.name ? `Nom trouvé : ${hm.name}` : 'Pendu : deviner le nom lettre par lettre' });
+    hotspots.push({ id: 'blanks', x: 12, y: 58, w: 80, h: 11, action: 'guess', data: page.id, label: 'Deviner le nom lettre par lettre' });
+    button(13, 37, style.color, guessLabel, style.ink, true);
+    hotspots.push({ id: 'guess', x: 13, y: 115.5, w: 37, h: 8, action: 'guess', data: page.id, label: 'Pendu : deviner le nom lettre par lettre' });
   }
   button(inkX, inkW, revealed ? '#F1E7D2' : freeInk ? '#B7862F' : '#4A3426', revealed ? 'Encre utilisée' : freeInk ? '✒︎ Encre offerte' : `✒︎ Encre · ${assets.inkPrice} écus`, revealed ? '#BDAA94' : '#FFFDF8', !revealed);
   if (!revealed) hotspots.push({ id: 'ink', x: inkX, y: 115.5, w: inkW, h: 8, action: 'ink', data: page.id, label: freeInk ? 'Encre offerte : révéler un ingrédient' : `Encre : révéler un ingrédient pour ${assets.inkPrice} écus` });
   folio(ctx, u, i);
-  const start = hm && hm.name ? `, son nom : ${hm.name}` : page.first ? `, commence par ${page.first}` : '';
+  const start = page.first ? `, commence par ${page.first}` : '';
   const clue = page.riddle ? `Énigme : ${page.riddle}${hints ? ` ${clueText(page.clue, page.groups)}` : ''}` : clueText(page.clue, page.groups);
   return { hotspots, label: `Page à trouver : ${familyName(page.family)}, ${page.letters} lettres${start}. ${clue}${note ? ` ${note}.` : ''}${revealed ? ` Un ingrédient : ${revealed}.` : ''}` };
 }

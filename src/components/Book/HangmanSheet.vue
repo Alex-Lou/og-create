@@ -1,34 +1,43 @@
 <template>
   <GModal :eyebrow="`Pendu · Chapitre ${chapter.id}`" title="Devine le nom" :width="440" align="center" @close="$emit('close')">
     <div class="hang" :style="{ '--hc': color, '--hi': ink }" @keydown="onKey">
-      <!-- L'illustration se recoud pièce par pièce, une par bonne lettre -->
-      <div :class="['hang__art', { 'is-whole': hm.name }]" aria-hidden="true">
+      <!-- L'illustration se recoud pièce par pièce, une par lettre posée -->
+      <div :class="['hang__art', { 'is-whole': inscribed }]" aria-hidden="true">
         <span v-if="hm.emoji" class="hang__glyph"><ElementGlyph :glyph="hm.emoji" /></span>
         <span v-for="k in 9" :key="k" :class="['hang__patch', { 'is-off': shown.has(k - 1) }]"><span>?</span></span>
       </div>
 
       <p v-if="page.riddle" class="hang__riddle">« {{ page.riddle }} »</p>
 
-      <p class="hang__word" :aria-label="wordLabel">
-        <span
-          v-for="(char, k) in cells"
-          :key="k"
-          :class="['hang__cell', { 'is-gap': char === ' ', 'is-mark': char && !isLetter(char), 'is-on': char && char !== ' ' }]"
-        >{{ char === ' ' ? '' : char }}</span>
+      <!-- Le mot : on touche une case, puis une lettre -->
+      <p class="hang__word" role="group" :aria-label="wordLabel">
+        <template v-for="(char, k) in cells" :key="k">
+          <span v-if="!playable[k]" :class="['hang__cell', char === ' ' ? 'is-gap' : 'is-mark']">{{ char === ' ' ? '' : char }}</span>
+          <button
+            v-else
+            type="button"
+            :class="['hang__cell', { 'is-on': char, 'is-picked': !char && k === selected && playing, 'is-shake': k === shaken }]"
+            :disabled="Boolean(char) || !playing"
+            :aria-label="char ? `Case ${k + 1} : ${char}` : `Case ${k + 1}, vide`"
+            :aria-pressed="!char && k === selected"
+            @click="selected = k"
+          >{{ char }}</button>
+        </template>
       </p>
+      <p class="hang__say" aria-live="polite">{{ say }}</p>
 
       <p class="hang__lives" :aria-label="`${hm.max - hm.misses} erreur(s) permise(s) sur ${hm.max}`">
         <span v-for="k in hm.max" :key="k" :class="['hang__drop', { 'is-lost': k > hm.max - hm.misses }]" aria-hidden="true"></span>
         <span class="hang__lives-text">{{ livesText }}</span>
       </p>
 
-      <!-- Fin de partie : nom trouvé (à fabriquer) ou partie perdue -->
-      <div v-if="hm.name" class="hang__end is-won" role="status">
-        <p><strong>{{ hm.name }}</strong> ! Il te reste à le fabriquer.</p>
-        <button type="button" class="g-btn" @click="$emit('craft')">Chercher la recette</button>
+      <!-- Fin de partie : élément inscrit, ou partie perdue -->
+      <div v-if="inscribed" class="hang__end is-won" role="status">
+        <p><strong>{{ inscribed }}</strong> rejoint ton registre&nbsp;!</p>
+        <button type="button" class="g-btn" @click="$emit('close')">Voir la page</button>
       </div>
       <div v-else-if="hm.failedUntil" class="hang__end is-lost" role="status">
-        <p>Toutes les gouttes sont tombées : le pendu se rouvre {{ reopens }}.</p>
+        <p>Toutes les gouttes sont tombées&nbsp;: le pendu se rouvre {{ reopens }}.</p>
         <button v-if="isLoggedIn" type="button" class="g-btn" :disabled="busy" @click="$emit('retry')">Rejouer · {{ retryPrice }} écus</button>
         <p v-else class="hang__note">Avec un compte, tu peux rejouer tout de suite contre des écus.</p>
       </div>
@@ -40,9 +49,9 @@
             :key="letter"
             type="button"
             :class="['hang__key', keyState(letter)]"
-            :disabled="busy || tried.has(letter)"
+            :disabled="busy || selected < 0 || absent.has(letter)"
             :aria-label="`Lettre ${letter}`"
-            @click="$emit('guess', letter)"
+            @click="put(letter)"
           >{{ letter }}</button>
         </div>
       </div>
@@ -56,9 +65,11 @@ import ElementGlyph from '@/components/ui/ElementGlyph.vue';
 import { shownPatches } from '@/book/patchwork';
 
 const ROWS = ['AZERTYUIOP', 'QSDFGHJKLM', 'WXCVBN'];
-const fold = char => char.normalize('NFD').replace(/[̀-ͯ]/g, '').toUpperCase();
+const fold = char => char.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toUpperCase();
+const isLetter = char => /^[A-Z]$/.test(fold(char));
 
-// Le pendu d'une page à portée : le serveur juge chaque lettre, cette feuille ne fait que montrer son verdict
+// Le pendu d'une page à portée : le joueur choisit une case puis une lettre ; le serveur juge chaque lettre
+// (juste, ailleurs dans le mot, absente). Cette feuille ne fait que montrer son verdict.
 export default {
   name: 'HangmanSheet',
   components: { GModal, ElementGlyph },
@@ -70,34 +81,51 @@ export default {
     ink: { type: String, default: '#4A3426' },
     isLoggedIn: { type: Boolean, default: false },
     busy: { type: Boolean, default: false },
-    retryPrice: { type: Number, default: 20 }
+    retryPrice: { type: Number, default: 20 },
+    // Dernier verdict du serveur : { position, letter, verdict }
+    verdict: { type: Object, default: null },
+    // Nom de l'élément inscrit (mot complet), sinon vide
+    inscribed: { type: String, default: '' }
   },
-  emits: ['guess', 'retry', 'craft', 'close'],
+  emits: ['guess', 'retry', 'close'],
   data() {
-    return { ROWS };
+    return { ROWS, selected: -1, shaken: -1 };
   },
   computed: {
     hm() {
       return this.page.hangman;
     },
     cells() {
-      return this.hm.name ? [...this.hm.name] : this.hm.mask.map(char => char || '');
+      return this.inscribed ? [...this.inscribed] : this.hm.mask.map(char => char || '');
     },
-    tried() {
-      return new Set(this.hm.tried);
+    // Cases de lettres (cachées ou déjà posées) ; espaces, tirets, apostrophes restent figés
+    playable() {
+      return this.hm.mask.map(char => !char || isLetter(char));
     },
-    // Lettres présentes dans le mot (d'après le masque) : pour colorer les touches
-    found() {
+    playing() {
+      return !this.inscribed && !this.hm.failedUntil;
+    },
+    absent() {
+      return new Set(this.hm.absent || []);
+    },
+    placed() {
       return new Set(this.cells.filter(Boolean).map(fold));
     },
     shown() {
-      return shownPatches(this.page.id, this.hm);
+      return shownPatches(this.page.id, { ...this.hm, name: this.inscribed || undefined });
     },
     livesText() {
       const left = this.hm.max - this.hm.misses;
-      if (this.hm.name) return 'Mot trouvé';
+      if (this.inscribed) return 'Mot trouvé';
       if (this.hm.failedUntil) return 'Partie perdue';
       return left > 1 ? `${left} erreurs permises` : left === 1 ? 'Dernière erreur permise' : '';
+    },
+    say() {
+      if (!this.verdict || !this.playing) return '';
+      const { letter, verdict } = this.verdict;
+      if (verdict === 'elsewhere') return `«\u00a0${letter}\u00a0» est dans le mot, mais pas ici.`;
+      if (verdict === 'miss') return `Pas de «\u00a0${letter}\u00a0» dans ce mot.`;
+      return '';
     },
     reopens() {
       const at = new Date(this.hm.failedUntil);
@@ -105,21 +133,57 @@ export default {
       return at.toDateString() === new Date().toDateString() ? `à ${time}` : `demain à ${time}`;
     },
     wordLabel() {
-      return this.hm.name ? `Mot trouvé : ${this.hm.name}` : `Mot : ${this.cells.map(c => c || 'blanc').join(', ')}`;
+      return `Mot de ${this.cells.length} lettres : ${this.cells.map(c => c || 'vide').join(', ')}`;
+    }
+  },
+  watch: {
+    // Après chaque verdict : la case suivante encore vide est choisie ; une lettre mal placée fait trembler sa case
+    'hm.mask': {
+      handler() {
+        if (this.selected < 0 || this.hm.mask[this.selected]) this.selectNext();
+      },
+      immediate: true
+    },
+    verdict(next) {
+      if (next && next.verdict === 'elsewhere') {
+        this.shaken = next.position;
+        setTimeout(() => (this.shaken = -1), 450);
+      }
     }
   },
   methods: {
-    isLetter: char => /^[A-Z]$/.test(fold(char)),
-    keyState(letter) {
-      if (!this.tried.has(letter)) return '';
-      return this.found.has(letter) ? 'is-hit' : 'is-miss';
+    selectNext() {
+      const from = Math.max(0, this.selected);
+      const order = [...this.hm.mask.keys()].map(i => (from + i) % this.hm.mask.length);
+      this.selected = order.find(k => !this.hm.mask[k]) ?? -1;
     },
-    // Clavier physique : une lettre tapée = une touche
+    put(letter) {
+      if (this.busy || this.selected < 0 || !this.playing || this.absent.has(letter)) return;
+      this.$emit('guess', { position: this.selected, letter });
+    },
+    // Lettre absente : barrée ; posée quelque part : verte ; dans le mot mais pas encore posée : ambre
+    keyState(letter) {
+      if (this.absent.has(letter)) return 'is-miss';
+      if (this.placed.has(letter)) return 'is-hit';
+      return (this.hm.tried || []).includes(letter) ? 'is-elsewhere' : '';
+    },
+    // Clavier physique : une lettre tapée = une touche ; flèches pour changer de case
     onKey(event) {
+      if (!this.playing) return;
+      if (event.key === 'ArrowRight' || event.key === 'ArrowLeft') {
+        const step = event.key === 'ArrowRight' ? 1 : -1;
+        const n = this.hm.mask.length;
+        for (let k = 1; k < n; k++) {
+          const next = (this.selected + step * k + n) % n;
+          if (!this.hm.mask[next]) { this.selected = next; break; }
+        }
+        event.preventDefault();
+        return;
+      }
       const letter = event.key && event.key.length === 1 ? fold(event.key) : '';
-      if (!/^[A-Z]$/.test(letter) || this.busy || this.hm.name || this.hm.failedUntil || this.tried.has(letter)) return;
+      if (!/^[A-Z]$/.test(letter)) return;
       event.preventDefault();
-      this.$emit('guess', letter);
+      this.put(letter);
     }
   }
 };
@@ -172,10 +236,16 @@ export default {
   font-size: 24px;
   color: var(--hi);
 }
+.hang__cell { appearance: none; padding: 0; background: none; border-top: 0; border-left: 0; border-right: 0; cursor: pointer; }
+.hang__cell:disabled { cursor: default; opacity: 1; }
 .hang__cell.is-on { border-bottom-color: var(--hi); animation: land 0.35s var(--oc-ease-spring); }
+/* Case choisie : c'est là que la prochaine lettre ira */
+.hang__cell.is-picked { border-radius: 6px 6px 0 0; border-bottom-color: var(--gold-500); background: var(--gold-200); box-shadow: 0 0 0 2px var(--gold-300); }
+.hang__cell.is-shake { animation: shake 0.45s ease; }
 .hang__cell.is-gap { min-width: 10px; border: 0; }
 .hang__cell.is-mark { min-width: 10px; border: 0; color: var(--ink-500); animation: none; }
 
+.hang__say { min-height: 18px; margin: -4px 0 0; font-weight: 800; font-size: 13px; color: var(--gold-700); text-align: center; }
 .hang__lives { margin: 0; display: flex; align-items: center; gap: 6px; }
 /* Gouttes d'encre : une par erreur permise */
 .hang__drop {
@@ -210,6 +280,7 @@ export default {
 .hang__key:active:not(:disabled) { transform: translateY(2px); box-shadow: inset 0 0 0 1px var(--oc-line); }
 .hang__key:disabled { cursor: default; }
 .hang__key.is-hit { background: var(--verdigris-100); color: var(--verdigris-500); box-shadow: inset 0 0 0 1px var(--verdigris-500); }
+.hang__key.is-elsewhere { background: var(--gold-200); color: var(--gold-700); box-shadow: inset 0 0 0 1px var(--gold-500); }
 .hang__key.is-miss { background: transparent; color: var(--ink-300); box-shadow: inset 0 0 0 1px var(--oc-line); text-decoration: line-through; }
 
 .hang__end { display: flex; flex-direction: column; align-items: center; gap: 10px; text-align: center; }
@@ -217,6 +288,7 @@ export default {
 .hang__end strong { font-family: var(--oc-font-display); font-size: 20px; color: var(--hi); }
 .hang__note { font-size: 14px !important; color: var(--ink-500) !important; }
 
+@keyframes shake { 20% { transform: translateX(-5px); } 40% { transform: translateX(5px); } 60% { transform: translateX(-3px); } 80% { transform: translateX(3px); } }
 @keyframes land { 0% { transform: translateY(-8px); opacity: 0; } 100% { transform: none; opacity: 1; } }
 @keyframes whole { 40% { transform: scale(1.08); } }
 

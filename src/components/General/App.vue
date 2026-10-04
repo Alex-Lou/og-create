@@ -61,6 +61,7 @@
             @coins-updated="handleCoinsUpdated"
             @show-alert="showAlert"
             @aim="bookAim = $event"
+            @inscribed="handleInscribed"
           />
           <TrialInventory
             v-else
@@ -577,6 +578,13 @@ export default {
     handleDiscovery({ name, x, y }) {
       this.$refs.background?.burst(x, y);
       this.freshElement = name;
+    },
+    // Pendu gagné : l'élément est inscrit par le serveur, comme après un mélange
+    handleInscribed(reply) {
+      this.learnElement(reply);
+      this.handleCraftSuccess(reply.result);
+      this.freshElement = reply.result;
+      notificationService.show({ message: `${reply.result} rejoint ton registre\u00a0!`, type: 'success' });
     },
     handleCraftSuccess(craftedItem, ingredients = []) {
       if (!this.discoveredElements.includes(craftedItem)) {
