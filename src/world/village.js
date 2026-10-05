@@ -10,6 +10,10 @@
 //   autour du Potager, se couchent la nuit et ne bougent plus sous la pluie.
 // - Bois : lapins le jour, cerf à l'aube et au crépuscule, renard et hérisson la nuit, écureuil dans les arbres.
 //   Touchés, ils s'enfuient. Eau : carpes koï dans l'eau douce, héron le matin.
+// - Climats : deux bêtes par climat, une de chaque dans chaque quartier à soi de ce climat, sur une case libre (ni
+//   décor, ni bâtiment, ni création, ni annexe, ni la clairière d'un gisement ou d'un lieu remarquable). Chacune a ses
+//   heures (le fennec et la salamandre sortent la nuit) ; hors de ses heures, ou sous la pluie, elle se couche sur place.
+//   Touchées, elles s'enfuient.
 import { villagerSprite, ROLES, SKINS, HAIRS } from './villagers';
 import { visitorLook } from './visitors';
 import { ANIMAL_SPRITES } from './animals';
@@ -44,9 +48,27 @@ export const BEAST_NAMES = {
   pig: ['Cochon', 'Il fouille la terre du bout du groin.'], goat: ['Chèvre', 'Elle grimpe partout où elle peut.'],
   deer: ['Cerf', 'Il sort du bois à l’aube et au crépuscule.'], fox: ['Renard', 'Il rôde au crépuscule et la nuit.'],
   rabbit: ['Lapin', 'Il gambade près du bois le jour.'], hedgehog: ['Hérisson', 'Il renifle les buissons la nuit.'],
-  squirrel: ['Écureuil', 'Il saute d’arbre en arbre.'], koi: ['Carpe koï', 'Elle nage dans l’eau douce.'], heron: ['Héron', 'Il pêche au bord de l’eau le matin.']
+  squirrel: ['Écureuil', 'Il saute d’arbre en arbre.'], koi: ['Carpe koï', 'Elle nage dans l’eau douce.'], heron: ['Héron', 'Il pêche au bord de l’eau le matin.'],
+  snowFox: ['Renard des neiges', 'Il trotte sur la neige des Cimes.'], ibex: ['Bouquetin', 'Il broute entre les rochers des Cimes.'],
+  puffin: ['Macareux', 'Il bat des ailes au bord des Landes.'], pony: ['Poney', 'Il broute la bruyère des Landes.'],
+  frog: ['Grenouille', 'Elle saute dans le Marais, même sous la pluie.'], tortoise: ['Tortue', 'Elle avance tout doucement dans le Marais.'],
+  fennec: ['Fennec', 'Il dort le jour et trotte la nuit dans les Dunes.'], camel: ['Dromadaire', 'Il traverse les Dunes à pas lents.'],
+  chameleon: ['Caméléon', 'Il change de teinte sous les feuilles de la Jungle.'], toucan: ['Toucan', 'Il penche la tête sous les feuilles de la Jungle.'],
+  salamander: ['Salamandre', 'Elle sort la nuit et sous la pluie, sur les cendres du Volcan.'], crow: ['Corbeau des cendres', 'Il croasse sur les pentes du Volcan.']
 };
-const WILD = new Set(['deer', 'fox', 'rabbit', 'hedgehog', 'squirrel', 'heron']);
+// Bêtes des climats : les deux de chaque climat, leurs heures (jour, nuit, toujours), leur façon de bouger, et si
+// elles aiment la pluie
+const CLIMATE_BEASTS = {
+  cimes: [['snowFox', 'day', 'trot'], ['ibex', 'day', 'graze']],
+  landes: [['puffin', 'day', 'idle'], ['pony', 'day', 'graze']],
+  marais: [['frog', 'always', 'hop', true], ['tortoise', 'day', 'slow']],
+  dunes: [['fennec', 'night', 'trot'], ['camel', 'day', 'slow']],
+  jungle: [['chameleon', 'day', 'idle'], ['toucan', 'day', 'idle']],
+  volcan: [['salamander', 'night', 'slow', true], ['crow', 'day', 'idle']]
+};
+// Sols où se posent les bêtes des climats (ni eau, ni lac gelé, ni lave, ni pont, ni forêt, ni roche)
+const BEAST_GROUND = 'gmsdpnlxja';
+const WILD = new Set(['deer', 'fox', 'rabbit', 'hedgehog', 'squirrel', 'heron', ...Object.values(CLIMATE_BEASTS).flat().map(([s]) => s)]);
 
 /* ---------- Chemins ---------- */
 // Grille où l'on marche : sol praticable des quartiers à soi, ni bâtiment, ni création, ni annexe, ni arbre ou
@@ -62,7 +84,9 @@ function gridOf({ n, M, sites, owned, crafts, props, annexes }) {
     const dh = Math.abs(M.height(a.x, a.y) - M.height(b.x, b.y));
     return dh === 0 || (STAIRS.includes(ga) && STAIRS.includes(gb) && dh <= 1) || ga === 'b' || gb === 'b';
   };
-  return { n, M, walk, step };
+  // Case libre (pour les bêtes des climats, qui ne suivent pas les chemins)
+  const free = (x, y) => x >= 0 && y >= 0 && x < n && y < n && !blocked[y * n + x];
+  return { n, M, walk, step, free };
 }
 // Plus court chemin (les chemins coûtent moitié moins que l'herbe) : liste de cases, ou null
 function route(grid, from, to) {
@@ -124,8 +148,9 @@ function doorOf(grid, site) {
 /* ---------- Le village ---------- */
 // sites : bâtiments de l'île ({ id, x, y, w, h, level, locked, name }) ; owned : indices des quartiers à soi ;
 // crafts : créations d'île posées ({ x, y }) ; props : décor naturel ({ kind, x, y }) ; annexes : annexes posées ({ x, y, site }) ;
-// visitor : visiteur du moment (vue du serveur) ou null ; settlers : visiteurs installés ({ id, seed, role, site, home })
-export function villageOf({ n, M, sites, owned, crafts = [], props, annexes = [], visitor = null, settlers = [] }) {
+// visitor : visiteur du moment (vue du serveur) ou null ; settlers : visiteurs installés ({ id, seed, role, site, home }) ;
+// climates : climat de chaque quartier (par indice) ; avoid : cases à laisser libres autour (gisements, lieux remarquables)
+export function villageOf({ n, M, sites, owned, crafts = [], props, annexes = [], visitor = null, settlers = [], climates = [], avoid = [] }) {
   const grid = gridOf({ n, M, sites, owned, crafts, props, annexes });
   const built = sites.filter(s => s.level > 0 && !s.locked);
   const doors = Object.fromEntries(built.map(s => [s.id, doorOf(grid, s)]).filter(([, d]) => d));
@@ -254,6 +279,18 @@ export function villageOf({ n, M, sites, owned, crafts = [], props, annexes = []
     }
   }
   const trees = props.filter(p => (p.kind === 'tree' || p.kind === 'apple' || p.kind === 'birch' || p.kind === 'autumn') && owned.has(M.zone(p.x, p.y)));
+  // Climats : cases libres de chaque quartier à soi qui a un climat (quartier → cases)
+  const taken = new Set(props.map(p => p.y * n + p.x));
+  for (const a of avoid) for (let dy = -1; dy <= 1; dy++) for (let dx = -1; dx <= 1; dx++) taken.add((a.y + dy) * n + a.x + dx);
+  const wildZones = new Map();
+  for (let y = 0; y < n; y++) {
+    for (let x = 0; x < n; x++) {
+      const z = M.zone(x, y);
+      if (!owned.has(z) || !CLIMATE_BEASTS[climates[z]] || taken.has(y * n + x) || !grid.free(x, y) || !BEAST_GROUND.includes(M.ground(x, y))) continue;
+      if (!wildZones.has(z)) wildZones.set(z, []);
+      wildZones.get(z).push({ x, y });
+    }
+  }
 
   // Tout ce qui vit à l'instant t (secondes) sous ce ciel : [{ id, kind, species, x, y, z, flip, sprite: [clé, dessin] }]
   // et les lanternes [{ x, y }] ; scared : touchers récents (Map id → { at })
@@ -350,6 +387,34 @@ export function villageOf({ n, M, sites, owned, crafts = [], props, annexes = []
       });
     }
     wild('wild:heron', 'heron', banks, dawn && rain < 0.5, c => ({ ...c, frame: (t % 6) < 0.6 ? 1 : 0, flip: hash(day, 6) < 0.5 }));
+    // Climats : chaque bête vit à ses heures ; sinon (ou sous la pluie, si elle ne l'aime pas) elle se couche sur place
+    for (const [z, cells] of wildZones) {
+      CLIMATE_BEASTS[climates[z]].forEach(([species, hours, move, wet], k) => {
+        const awake = (hours === 'always' || (hours === 'day' ? dayTime : night || dusk)) && (wet || rain < 0.5);
+        const salt = z * 7 + k * 3;
+        // Elle reste dans sa case (moins d'une demi-case de chaque côté) : ni eau ni décor voisins sous ses pattes
+        wild(`clim:${z}:${species}`, species, cells, true, c => {
+          const flip = hash(day, salt) < 0.5;
+          if (!awake) return { ...c, frame: 'rest', flip };
+          if (move === 'trot') {
+            const a = t * 0.25 + salt;
+            return { x: c.x + Math.sin(a) * 0.4, y: c.y, frame: Math.floor(t * 4) % 2, flip: Math.cos(a) < 0 };
+          }
+          if (move === 'slow') {
+            const a = t * 0.08 + salt;
+            return { x: c.x + Math.sin(a) * 0.35, y: c.y, frame: Math.floor(t * 1.2) % 2, flip: Math.cos(a) < 0 };
+          }
+          if (move === 'hop') {
+            const go = clamp((((t + salt) % 4) - 3.2) / 0.6);
+            const jump = go > 0 && go < 1;
+            return { x: c.x + (flip ? -0.3 : 0.3) * go, y: c.y, z: jump ? Math.sin(go * Math.PI) * 4 : 0, frame: jump ? 1 : 0, flip };
+          }
+          // Broute ou fait son geste (ailes, teinte, tête penchée, croassement) de temps en temps
+          const every = move === 'graze' ? 3 : 5;
+          return { ...c, frame: (t + salt) % every < (move === 'graze' ? 1.2 : 0.8) ? 1 : 0, flip };
+        });
+      });
+    }
     // Carpes koï : trois qui tournent dans l'eau douce
     if (water.length >= 3) {
       const pond = water[Math.floor(hash(day, 41) * water.length)];
