@@ -3,7 +3,7 @@
 Document pour l'agent qui reprend le projet : ce qu'est le jeu, comment travailler avec son auteur, comment le code est
 construit, ce qui est fait et ce qui reste à faire. **À lire en entier avant la première ligne de code.**
 L'histoire, les personnages et le game design sont dans **`HISTOIRE.md`** (la bible, à lire ensuite).
-État au 5 octobre 2026, après les lots H0 à H2 de la bible (la troupe et les textes ; la colonne vertébrale ; le fil d'Ariane).
+État au 5 octobre 2026, après les lots H0 à H3 de la bible (la troupe et les textes ; la colonne vertébrale ; le fil d'Ariane ; dormeurs, naufrages et souvenirs).
 
 ---
 
@@ -299,6 +299,10 @@ chronométrer 20 appels. Comparer à zoom égal, au même endroit.
   par générations, d'abord avec les recettes qui tiennent dans l'Athanor ; 2 à 7 ms par calcul, rien de stocké. La
   page marquée s'ajoute à son chapitre, même scellé (marque-page peint par `painter.js`) ; ruban « Vers : … » dans
   le Grimoire et dans la fiche de Brume ; « Voir dans le Grimoire » ouvre la page marquée (`openMarked`).
+- **Lot H3 de la bible** (dormeurs, naufrages, souvenirs), front seul : la pose « endormi » du générateur (couché,
+  « z ») ; `src/world/story.js` (naufrages annoncés à l'ouverture de leur acte, retenus sur l'appareil dans
+  `oc_wrecks` ; répliques des souvenirs retrouvés) ; dans `WorldView.vue`, l'image de nuit du naufrage (jamais
+  par-dessus un coffre : `holdWreck`), la scène du souvenir à la réclamation de sa quête, « … se réveille ! ».
 
 ### Décisions déjà prises par l'auteur (ne pas les redemander)
 - **Île** : 96 × 96 ; l'ancienne carte devient le cœur ; découverte par expéditions ; un quartier s'ouvre avec des

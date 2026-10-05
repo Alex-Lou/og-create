@@ -67,6 +67,35 @@ describe('village : habitants', () => {
   });
 });
 
+describe('village : la troupe envoyée par le serveur (bible, § 6.6 et § 6.7)', () => {
+  // Sans Atelier ni Potager bâtis : Rivet au camp, Mélisse endormie près de l'emplacement du Potager
+  const unbuilt = sites.map(s => (s.id === 'potager' ? { ...s, level: 0 } : s));
+  const troupe = [{ id: 'potager', built: false, asleep: true }, { id: 'ponton', built: true }, { id: 'atelier', built: false }, { id: 'foyer', built: true }];
+  const life = villageOf({ n: N, M, sites: unbuilt, owned: new Set([0]), crafts: [], props: [], troupe });
+  const who = role => life.residents.find(r => r.role === role);
+  it('chacun à sa place : au travail, au camp, ou couché près de son futur bâtiment', () => {
+    expect(life.residents.map(r => r.role)).toEqual(['potager', 'ponton', 'atelier', 'foyer']);
+    expect([who('atelier').camp, who('atelier').work]).toEqual([true, who('foyer').work]);
+    expect([who('potager').asleep, who('potager').camp]).toEqual([true, false]);
+    expect(Math.abs(who('potager').work.x - 9.5) + Math.abs(who('potager').work.y - 3.5)).toBeLessThan(4);
+  });
+  it('le dormeur reste couché jour et nuit, et ronfle quand on le touche', () => {
+    for (const h of [3, 13, 22]) {
+      const sleeper = life.at(5, at(h)).list.find(c => c.id === 'vil:potager');
+      expect(sleeper.sprite[0]).toMatch(/-sleep-[01]$/);
+    }
+    expect(life.say({ kind: 'villager', id: 'vil:potager' }, at(13)).text).toBe('Zzz…');
+    expect(life.describe({ kind: 'villager', id: 'vil:potager' }).text).toMatch(/réveiller/);
+    expect(life.describe({ kind: 'villager', id: 'vil:atelier' }).text).toMatch(/camp/);
+  });
+  it('réveillé sans bâtiment, il attend près de son emplacement (pas au camp)', () => {
+    const awake = villageOf({ n: N, M, sites: unbuilt, owned: new Set([0]), crafts: [], props: [], troupe: troupe.map(v => (v.id === 'potager' ? { ...v, asleep: false } : v)) });
+    const melisse = awake.residents.find(r => r.role === 'potager');
+    expect([melisse.asleep, melisse.camp, melisse.waiting]).toEqual([false, false, true]);
+    expect(melisse.work).toEqual(who('potager').work);
+  });
+});
+
 describe('village : tournées variées', () => {
   it('à l’arrêt, personne ne se tient sur personne (le soir autour du feu non plus)', () => {
     for (const h of [10, 13, 22]) {

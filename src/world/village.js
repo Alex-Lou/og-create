@@ -24,6 +24,8 @@ const WALK = 'gsmdpkb';
 const STAIRS = 'pkb';
 const BLOCKING = new Set(['tree', 'pine', 'palm', 'bush', 'rock', 'rocks', 'crag', 'apple', 'birch', 'autumn', 'stump', 'log', 'mossy', 'lantern', 'bench', 'nest']);
 const WORK_ORDER = ['potager', 'carriere', 'bosquet', 'puits', 'ponton', 'atelier'];
+// Sans leur bâtiment, Aster (Ponton) et Rivet (Atelier) vivent au camp, près du Foyer (bible, § 6.6)
+const CAMP = ['ponton', 'atelier'];
 // Où regarde un habitant au repos (tiré toutes les 9 s) : souvent de côté, parfois vers le joueur ou au loin
 const IDLE_VIEWS = ['se', 'se', 'front', 'ne'];
 const hash = (a, b) => {
@@ -169,8 +171,8 @@ export function villageOf({ n, M, sites, owned, crafts = [], props, annexes = []
   };
   const stops = Object.values(doors);
 
-  // Habitants : la troupe rencontrée (8 au plus). Son bâtiment bâti, chacun y travaille ; sans bâtiment, il vit au camp
-  // (la porte du Foyer) ; endormi, il reste près de l'emplacement de son bâtiment
+  // Habitants : la troupe rencontrée (8 au plus). Son bâtiment bâti, chacun y travaille ; sans bâtiment, Aster et Rivet
+  // vivent au camp (la porte du Foyer), les dormeurs restent près de l'emplacement du leur (couchés, puis éveillés)
   const residents = [];
   const present = troupe && new Map(troupe.map(v => [v.id, v]));
   if (home) {
@@ -179,12 +181,13 @@ export function villageOf({ n, M, sites, owned, crafts = [], props, annexes = []
       const who = present ? present.get(id) : built.includes(site) && { built: true };
       if (!site || !who) continue;
       const asleep = Boolean(who.asleep);
-      const work = who.built ? doors[id] : asleep ? doorOf(grid, site) : home;
+      const camp = !who.built && CAMP.includes(id);
+      const work = who.built ? doors[id] : camp ? home : doorOf(grid, site);
       if (!work) continue;
       const k = residents.length;
       residents.push({
-        id: `vil:${id}`, k, key: `vil-${k}`, role: id, site: who.built ? site.name : foyer ? foyer.name : site.name,
-        camp: !who.built && !asleep, asleep,
+        id: `vil:${id}`, k, key: `vil-${k}`, role: id, site: camp && foyer ? foyer.name : site.name,
+        camp, waiting: !who.built && !camp && !asleep, asleep,
         look: { skin: SKINS[Math.floor(hash(k, 3) * SKINS.length)], hair: HAIRS[Math.floor(hash(k, 5) * HAIRS.length)], ...ROLES[id] },
         work, wake: 6.4 + (k % 3) * 0.25, bed: 21.6 + (k % 3) * 0.3,
         // Une annexe à soi (la première posée) : on y travaille une partie de la journée
@@ -360,11 +363,12 @@ export function villageOf({ n, M, sites, owned, crafts = [], props, annexes = []
     };
     // Habitants
     for (const r of residents) {
-      // Un dormeur reste à sa place, les yeux fermés, jour et nuit (la pose « endormi » viendra : bible, § 14)
+      // Un dormeur reste couché à sa place, jour et nuit, des « z » au-dessus de la tête (bible, § 6.7 et § 14)
       if (r.asleep) {
+        const frame = Math.floor(t * 0.8 + r.k) % 2;
         out.push({
-          id: r.id, kind: 'villager', role: r.role, x: r.work.x, y: r.work.y, z: 0, flip: r.k % 2 === 1,
-          sprite: [`${r.key}-asleep`, () => villagerSprite(r.look, { pose: 'idle', view: 'front', frame: 1 })]
+          id: r.id, kind: 'villager', role: r.role, x: r.work.x, y: r.work.y, z: 0, flip: false,
+          sprite: [`${r.key}-sleep-${frame}`, () => villagerSprite(r.look, { pose: 'sleep', view: 'se', frame })]
         });
         continue;
       }
@@ -515,6 +519,7 @@ export function villageOf({ n, M, sites, owned, crafts = [], props, annexes = []
       if (r && r.guest) return { title: `${r.guest.name} · ${r.guest.role}`, text: 'De passage sur l’île : son bateau attend au Ponton.', hint: 'Toucher : lui parler' };
       if (r && r.asleep) return { title: r.look.label, text: 'Il dort dans la brume. Parle-lui pour le réveiller.', hint: 'Toucher : lui parler' };
       if (r && r.camp) return { title: r.look.label, text: `Vit au camp, près de « ${r.site} », en attendant son bâtiment.`, hint: 'Toucher : lui parler' };
+      if (r && r.waiting) return { title: r.look.label, text: `Attend que « ${r.site} » sorte de terre, tout près.`, hint: 'Toucher : lui parler' };
       return r ? { title: r.look.label, text: `Travaille à « ${r.site} » le jour, rentre au Foyer le soir.`, hint: 'Toucher : lui parler' } : null;
     }
     const [title, text] = BEAST_NAMES[who.species] || ['Une bête', ''];

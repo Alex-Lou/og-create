@@ -5,7 +5,8 @@
 // § 14) ajoute ses pièces : foulard, châle, cape de feuilles, bottes, pieds nus, loupes, barbe de lichen, taches de
 // rousseur, peintures, brindilles, cuillère dans le chignon, mèche rebelle, crayon, et un petit sceau doré brodé.
 // Poses : marche (4 images : jambes, bras opposés, petit rebond), repos (2 images, clignement), travail (2 images,
-// l'outil va et vient), salut de la main (2 images). Le soir une lanterne, sous la pluie un parapluie.
+// l'outil va et vient), salut de la main (2 images), endormi (2 images : allongé, les yeux fermés, des « z » qui
+// montent ; les dormeurs de la bible, § 6.7). Le soir une lanterne, sous la pluie un parapluie.
 // Ancrage aux pieds, cadre serré (images gardées à 4×). Repère de la tête : centre (0, 0), rayon 6,6, mis à l'échelle.
 import { sprite } from './iso';
 
@@ -277,7 +278,8 @@ const at = (x, y, body) => `<g transform="translate(${f2(x)} ${f2(y)})">${body}<
 // look : { skin, hair, style, top, bottom, hat, tool, apron, build, shape, beard, glasses, shoes, pack, et les pièces de
 // la troupe : neckerchief, shawl, cape, boots, barefoot, freckles, blush, paint, loupes, twigs, spoon, lock, pencil,
 // stains, pockets, seal } ; shape : mesures qui remplacent celles de la silhouette (Galet, tout petit) ;
-// view : front | se | ne (back : ancien nom de ne) ; pose : walk | idle | work | wave ; frame : 0 à 3 (marche) ou 0 à 1
+// view : front | se | ne (back : ancien nom de ne) ; pose : walk | idle | work | wave | sleep ; frame : 0 à 3 (marche)
+// ou 0 à 1
 export function villagerSprite(look, { pose = 'idle', view, back = false, frame = 0, lantern = false, umbrella = false } = {}) {
   const v = view || (back ? 'ne' : 'front');
   const S = { ...(BUILDS[look.build] || BUILDS.slim), ...(look.shape || {}) };
@@ -389,13 +391,14 @@ export function villagerSprite(look, { pose = 'idle', view, back = false, frame 
   // Tête : un peu en avant pour l'ancien (dos voûté) et dans le sens de la marche
   const hx = (v === 'front' ? 0 : 0.9) + S.stoop * (v === 'front' ? 0 : lean);
   const hy = topY - S.head * 0.78 + S.stoop * 0.4;
-  const blink = pose === 'idle' && f === 1;
+  const sleeping = pose === 'sleep';
+  const blink = (pose === 'idle' && f === 1) || sleeping;
   // De dos, la nuque entre les cheveux et le col
   const neck = v === 'ne' ? `<rect x="${f2(hx - 1.6)}" y="${f2(hy + S.head * 0.55)}" width="3.2" height="${f2(topY - hy - S.head * 0.4)}" rx="1" fill="${shade(look.skin, 0.92)}"/>` : '';
   const head = neck + headPart(hx, hy, k, hairBackOf(look.style || 'short', look.hair, v)) + `<circle cx="${f2(hx)}" cy="${f2(hy)}" r="${f2(S.head)}" fill="${look.skin}"${OUT}/>`
     + headPart(hx, hy, k, faceOf(v, look.skin, blink) + hairOf(look.style || 'short', look.hair, v) + hairBitsOf(look, v) + earOf(v, look.skin) + extrasOf(look, v, (hipY - 0.6 - hy) / k) + hatOf(look.hat, v));
   // Outil dans la main de devant (pas avec le parapluie) ; lanterne dans l'autre ; parapluie au-dessus
-  const held = umbrella || waving ? '' : at(frontHand[0] - 6.5, frontHand[1] + 8.5, toolOf(look.tool, working));
+  const held = umbrella || waving || sleeping ? '' : at(frontHand[0] - 6.5, frontHand[1] + 8.5, toolOf(look.tool, working));
   const lamp = lantern
     ? at(backHand[0] + 6.4, backHand[1] + 8, ln([-6.4, -8], [-6.4, -4.6], '#3D3A36', 0.5) + `<path d="M-8.4,-4.6 L-4.4,-4.6 L-4.8,-0.6 L-8,-0.6 Z" fill="#FFE08A" stroke="#3D3A36" stroke-width=".6"/>` + `<circle cx="-6.4" cy="-2.6" r="2.6" fill="rgba(255,224,138,.35)"/>`)
     : '';
@@ -403,6 +406,12 @@ export function villagerSprite(look, { pose = 'idle', view, back = false, frame 
     ? ln(frontHand, [frontHand[0] + 1.4, hy - S.head - 9], '#4A3426', 0.8)
       + at(frontHand[0] + 1.4, hy - S.head - 9, `<path d="M-12.6,1 Q0,-12 12.6,1 Q9.4,-1 6.2,1 Q3,-1 -0.2,1 Q-3.4,-1 -6.6,1 Q-9.6,-1 -12.6,1 Z" fill="#E2574C" stroke="rgba(60,30,20,.4)" stroke-width=".6"/>`)
     : '';
+  // Endormi : le personnage de trois quarts, couché sur le côté (la tête à gauche), et des « z » au-dessus de la tête
+  if (sleeping) {
+    const z = (x, y, k, o) => `<path d="M${f2(x)},${f2(y)} h${f2(2 * k)} l${f2(-2 * k)},${f2(2.4 * k)} h${f2(2 * k)}" fill="none" stroke="#5E7FA8" stroke-width="${f2(0.7 * k)}" stroke-linecap="round" stroke-linejoin="round" opacity="${o}"/>`;
+    const zs = f ? z(-13, -16, 1, 0.9) + z(-9, -22, 1.3, 0.55) : z(-12, -13, 0.8, 0.6) + z(-10, -19, 1.1, 0.9);
+    return sprite(`${ell(-1, -0.6, 13, 2.6, 'rgba(40,55,20,.22)')}<g transform="translate(15 -3) rotate(-82)">${cape + legs + backArm + torso + frontArm + head}</g>${zs}`, VILLAGER_BOX);
+  }
   // Ordre de dessin : de dos, les bras passent devant la tête ; sinon la tête recouvre le haut des bras
   const shadow = ell(0.4, 0, 6.8, 2.2, 'rgba(40,55,20,.22)');
   const body = v === 'ne'
