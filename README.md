@@ -1,6 +1,6 @@
-# Origins Création — le jeu (front)
+# Brumelune — le jeu (front)
 
-Jeu d'alchimie en français : on découvre des éléments en les mélangeant dans l'Athanor pour remplir les pages du **Livre**, on relève **l'Épreuve** (questions chronométrées) et on bâtit son **île** (le Monde) avec les ressources de la Récolte.
+Jeu d'alchimie en français : on découvre des éléments en les mélangeant dans l'Athanor pour remplir les pages du **Grimoire**, on relève **l'Épreuve** (questions chronométrées) et on bâtit son **île** (le Monde) avec les ressources de la Récolte.
 
 Vue 3 (Options API), servi en site statique et installable (PWA). Le serveur de jeu ([Og-create-backend](https://github.com/Alex-Lou/Og-create-backend)) garde les recettes, les écus et l'île : le navigateur ne reçoit que des résultats.
 

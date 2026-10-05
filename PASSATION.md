@@ -1,4 +1,4 @@
-# Passation — Origins Création
+# Passation — Brumelune
 
 Document pour l'agent qui reprend le projet : ce qu'est le jeu, comment travailler avec son auteur, comment le code est
 construit, ce qui est fait et ce qui reste à faire. **À lire en entier avant la première ligne de code.**

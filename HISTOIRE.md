@@ -1,4 +1,4 @@
-# Origins Création — Les Naufragés de la Brume
+# Brumelune — Les Naufragés de la Brume
 
 > **Bible narrative et plan de game design : version finale** (v5, 5 octobre 2026). Elle remplace toutes les versions précédentes. Pour commencer à construire : § 19.
 > - Rien de ce document n'était codé à sa rédaction. L'état du jeu décrit ici est celui d'après le lot 9e (12 bêtes des climats) et le compteur `?perf`.
@@ -6,6 +6,7 @@
 > - **Chaque recette citée est une vraie recette de la base** (calculée le 5 octobre 2026).
 
 > **Mises à jour depuis la v5** (règle du § 19 : la bible change avant le code).
+> - **Le jeu s'appelle désormais Brumelune** (choix de l'auteur, 5 octobre 2026) : le nom visible partout ; les identifiants techniques (dépôts, base, clés de sauvegarde) ne changent pas.
 > - **Lots livrés** : H0 (la troupe et les textes), H1 (la colonne vertébrale), H2 (le fil d'Ariane : 2 à 7 ms par calcul), H3 (dormeurs, naufrages, souvenirs).
 > - **Lot H0, choix de l'auteur** :
 >   - le mot d'Héliane de l'acte II dit « Grimoire » (§ 10) ;
