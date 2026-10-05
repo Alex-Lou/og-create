@@ -1,10 +1,11 @@
-// Annexes des bâtiments (lot 4c) : 21 constructions posées par le joueur sur une case, autour de leur bâtiment.
+// Annexes des bâtiments (lot 4c) : 21 constructions posées par le joueur sur une case, autour de leur bâtiment, et les
+// maisons du Foyer (lot 7d), où s'installent les visiteurs.
 // Repère : celui de la case (u, v ∈ [-0,5 ; 0,5], ancrage au centre), même projection et même lumière que le reste de
 // l'île. Une annexe est faite de calques, comme les articles de la boutique : un cadre serré (images gardées à 4× en
 // mémoire), un dessin fixe ou n images d'animation jouées à fps images/s. variant : le n° d'exemplaire (0, 1, 2) d'une
 // petite annexe, qui change ce qui y pousse (blé, carottes, citrouilles…).
 import { box, gable, sprite, boulder, EDGE } from './iso';
-import { WOOD, WOOD_DARK, STONE, WALL, BRICK, THATCH, GLASS, SLATE_ROOF, planksLeft, planksRight } from './palette';
+import { WOOD, WOOD_DARK, STONE, WALL, BRICK, THATCH, GLASS, SLATE_ROOF, ROOF_RED, BLUE_ROOF, planksLeft, planksRight } from './palette';
 import { tools, ln, poly, ell, dot, wave, star, bird, bucket, IRON, DARK_IRON, COPPER, STRAW, STUMP, BARN, OUT, f2 } from './shopSprites';
 
 const TAU = Math.PI * 2;
@@ -845,9 +846,51 @@ const fourneau = {
   }]
 };
 
+// Maison (lot 7d) : maisonnette blanchie à la chaux sur son soubassement de pierre, toit à deux pentes, porte, fenêtre
+// éclairée la nuit, jardinière fleurie ; la cheminée fume. variant : n° de la maison (0 à 3), qui change le toit et
+// la porte
+const HOUSE_LOOKS = [
+  { roof: ROOF_RED, door: '#3E6E9C' },
+  { roof: BLUE_ROOF, door: '#C9473A' },
+  { roof: THATCH, door: '#4F8A3A' },
+  { roof: SLATE_ROOF, door: '#B5772F' }
+];
+const maison = {
+  light: () => [0.27, 0.06, 13, 12],
+  layers: [{
+    frame: [-34, -78, 68, 96],
+    n: 6,
+    fps: 3,
+    draw: (T, f, n, variant = 0) => {
+      const look = HOUSE_LOOKS[variant % HOUSE_LOOKS.length];
+      const [chx, chy] = T.p(-0.12, -0.1, 36);
+      const smoke = [0, 1].map(k => {
+        const p = ((f + k * 3) % n) / n;
+        return puff(chx + p * 5, chy - 4 - p * 16, 1.8 + p * 3.2, 0.55 * (1 - p));
+      }).join('');
+      const pane = (pts, fill) => T.face(pts, fill, ` stroke="${WOOD_DARK.right}" stroke-width="0.9"`);
+      return T.shadow(0, 0, 0.36, 0.2)
+        + T.box(-0.26, -0.22, 0.26, 0.22, 0, 4, STONE)
+        + T.box(-0.24, -0.2, 0.24, 0.2, 4, 21, WALL)
+        // Porte (face avant) et fenêtre (pignon), linteaux de bois
+        + pane([[-0.05, 0.2, 4], [0.07, 0.2, 4], [0.07, 0.2, 15], [-0.05, 0.2, 15]], look.door)
+        + dot(...T.p(0.05, 0.2, 9.5), 0.6, '#F2C04B')
+        + pane([[0.24, -0.06, 10], [0.24, 0.07, 10], [0.24, 0.07, 16], [0.24, -0.06, 16]], GLASS)
+        + ln(T.p(0.24, 0.005, 10), T.p(0.24, 0.005, 16), WOOD_DARK.right, 0.7)
+        + pane([[-0.16, 0.2, 10], [-0.1, 0.2, 10], [-0.1, 0.2, 15], [-0.16, 0.2, 15]], GLASS)
+        // Jardinière fleurie sous la fenêtre de façade
+        + T.box(-0.18, 0.2, -0.08, 0.25, 8, 10, WOOD)
+        + [-0.165, -0.13, -0.095].map((du, k) => dot(...T.p(du, 0.23, 11.2), 1.3, ['#E8566A', '#F2C04B', '#B48AE0'][k])).join('')
+        + T.cyl(-0.12, -0.1, 24, 36, 0.035, BRICK, 'chem')
+        + T.gable(-0.27, -0.23, 0.27, 0.23, 21, 11, { front: look.roof.front, back: look.roof.back, gable: WALL.right }, 0.05)
+        + smoke;
+    }
+  }]
+};
+
 export const ANNEX_SPRITES = {
   champ, grenier, enclos, filon, depot, taille, coupe, remise, pepiniere,
-  citerne, reservoir, eolienne, vivier, fumoir, huitres, jardin, four, belvedere, charbon, hangar, fourneau
+  citerne, reservoir, eolienne, vivier, fumoir, huitres, jardin, four, belvedere, charbon, hangar, fourneau, maison
 };
 
 // Calques d'une annexe prêts à peindre à l'instant t (secondes) : clé d'image et dessin

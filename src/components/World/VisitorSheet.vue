@@ -30,6 +30,15 @@
         </template>
         <p v-else class="guest__done">Demande comblée : merci !</p>
       </section>
+
+      <!-- Comblé, il peut rester s'il y a une maison libre (annexes du Foyer) -->
+      <section v-if="visitor.satisfied" class="guest__stay" aria-label="Rester sur l’île">
+        <template v-if="houses.total > houses.used">
+          <p class="guest__stay-text">Une maison est libre : {{ visitor.name }} pourrait s’installer et travailler à « {{ workName }} ».</p>
+          <button type="button" class="g-btn guest__btn" :disabled="busy" @click="$emit('settle')">Lui proposer de rester</button>
+        </template>
+        <p v-else class="guest__stay-text">Pour que {{ visitor.name }} reste, pose une Maison près du Foyer (onglet Annexes du Foyer).</p>
+      </section>
     </div>
   </GModal>
 </template>
@@ -49,13 +58,15 @@ export default {
     // Vue du serveur : { id, seed, name, site, role, request, leavesIn, satisfied }
     visitor: { type: Object, required: true },
     stock: { type: Object, required: true },
-    // Parties de Récolte en réserve
+    // Parties de Récolte en réserve ; maisons du Foyer ({ total, used }) ; nom du bâtiment où il travaillerait
     charges: { type: Number, default: 0 },
+    houses: { type: Object, default: () => ({ total: 0, used: 0 }) },
+    workName: { type: String, default: '' },
     portrait: { type: String, default: '' },
     said: { type: String, default: '' },
     busy: { type: Boolean, default: false }
   },
-  emits: ['satisfy', 'harvest', 'close'],
+  emits: ['satisfy', 'harvest', 'settle', 'close'],
   computed: {
     glyph() {
       return this.visitor.request.kind === 'livrer' ? GLYPH[this.visitor.request.resource] : 'ui:spark';
@@ -95,4 +106,6 @@ export default {
 .guest__reward { margin: 0; font-size: 13px; font-weight: 800; color: var(--ink-700); }
 .guest__btn { width: 100%; display: inline-flex; justify-content: center; align-items: center; gap: 6px; }
 .guest__done { margin: 0; font-size: 14px; font-weight: 900; color: #4E8A3A; }
+.guest__stay { display: grid; gap: 8px; padding: 12px 14px; border-radius: 16px; background: #F1F8FD; box-shadow: inset 0 0 0 1px rgba(62, 110, 156, .25); }
+.guest__stay-text { margin: 0; font-size: 13px; font-weight: 700; line-height: 1.4; color: var(--ink-700); }
 </style>

@@ -2,7 +2,7 @@
 // variante de chaque annexe posée (ce qui pousse dans un champ…), production qu'elles ajoutent.
 import { roman } from '@/utils/roman';
 
-export const KIND_LABEL = { small: 'Petite annexe', reserve: 'Réserve', grand: 'Grande annexe' };
+export const KIND_LABEL = { small: 'Petite annexe', reserve: 'Réserve', grand: 'Grande annexe', house: 'Logement' };
 
 // État d'une annexe du catalogue d'un bâtiment (site.annexes) : done (tous ses exemplaires posés), locked (palier du
 // bâtiment), poor (ressources ou écus manquants), full (plus de case libre autour), ready ; text : ce que dit son bouton.

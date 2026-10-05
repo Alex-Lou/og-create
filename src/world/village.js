@@ -4,7 +4,8 @@
 // - Habitants : un par bâtiment bâti (son métier), plus la cuisinière du Foyer, dessinés sous trois angles
 //   (villagers.js) : ils regardent où ils vont. Le jour ils travaillent et font leurs tournées par les chemins ; le soir ils rentrent au Foyer avec une lanterne ; la nuit ils dorment. Sous la pluie,
 //   un sur deux reste à l'abri, les autres sortent avec un parapluie.
-// - Visiteur (lot 7d, vue du serveur) : arrivé en bateau, il flâne entre le Ponton, le Foyer et les bâtiments.
+// - Visiteur (lot 7d, vue du serveur) : arrivé en bateau, il flâne entre le Ponton, le Foyer et les bâtiments. Les
+//   visiteurs installés travaillent au bâtiment de leur métier et passent par leur maison.
 // - Ferme (avec les paliers du Potager) : poules de race et poussins, vache, moutons, cochon, chèvre, qui broutent
 //   autour du Potager, se couchent la nuit et ne bougent plus sous la pluie.
 // - Bois : lapins le jour, cerf à l'aube et au crépuscule, renard et hérisson la nuit, écureuil dans les arbres.
@@ -123,8 +124,8 @@ function doorOf(grid, site) {
 /* ---------- Le village ---------- */
 // sites : bâtiments de l'île ({ id, x, y, w, h, level, locked, name }) ; owned : indices des quartiers à soi ;
 // tiles : décorations posées ; props : décor naturel ({ kind, x, y }) ; annexes : annexes posées ({ x, y, site }) ;
-// visitor : visiteur du moment (vue du serveur) ou null
-export function villageOf({ n, M, sites, owned, tiles, props, annexes = [], visitor = null }) {
+// visitor : visiteur du moment (vue du serveur) ou null ; settlers : visiteurs installés ({ id, seed, role, site, home })
+export function villageOf({ n, M, sites, owned, tiles, props, annexes = [], visitor = null, settlers = [] }) {
   const grid = gridOf({ n, M, sites, owned, tiles, props, annexes });
   const built = sites.filter(s => s.level > 0 && !s.locked);
   const doors = Object.fromEntries(built.map(s => [s.id, doorOf(grid, s)]).filter(([, d]) => d));
@@ -151,6 +152,16 @@ export function villageOf({ n, M, sites, owned, tiles, props, annexes = [], visi
         work: doors[id], wake: 6.4 + (k % 3) * 0.25, bed: 21.6 + (k % 3) * 0.3,
         // Une annexe à soi (la première posée) : on y travaille une partie de la journée
         field: (() => { const annex = annexes.find(a => a.site === id); return annex ? besideOf(grid, annex, doors[id]) : null; })()
+      });
+    }
+    // Visiteurs installés : au bâtiment de leur métier, et à leur maison (à la place de l'annexe)
+    for (const s of settlers) {
+      if (!doors[s.site]) continue;
+      const k = residents.length;
+      residents.push({
+        id: `vil:${s.id}`, k, key: `set-${s.seed}`, role: s.site, site: built.find(b => b.id === s.site).name,
+        look: visitorLook(s.seed, s.role), work: doors[s.site], wake: 6.6 + (k % 3) * 0.25, bed: 21.4 + (k % 3) * 0.3,
+        field: s.home ? besideOf(grid, s.home, doors[s.site]) : null
       });
     }
     // Le visiteur : il débarque au Ponton et flâne (il ne travaille pas)
