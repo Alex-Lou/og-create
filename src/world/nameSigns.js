@@ -5,6 +5,7 @@
 // polices du jeu (Fraunces, Nunito), au-dessus de l'image, et suit le balancement de l'enseigne en fer forgé.
 import { sprite } from './iso';
 import { ln, dot, ell, poly, f2, OUT } from './shopSprites';
+import { cleanName } from '@/utils/names';
 
 const TAU = Math.PI * 2;
 const FRAME = [-32, -56, 64, 62];
@@ -276,10 +277,5 @@ export function paintName(ctx, style, raw, t = 0) {
 // Cadre commun des calques (vignette d'une fiche)
 export const NAME_SIGN_FRAME = FRAME;
 
-// Nom d'enseigne saisi, nettoyé comme le fait le serveur (services/signs.js : mêmes règles), ou null s'il ne convient
-// pas : 2 à 14 lettres ou chiffres, un espace, une apostrophe ou un tiret seulement entre deux d'entre eux
-const NAME_RE = /^[\p{L}\p{N}](?:[\p{L}\p{N}]|[ '’-](?=[\p{L}\p{N}])){1,13}$/u;
-export function cleanSignName(raw) {
-  const name = String(raw ?? '').slice(0, 64).normalize('NFC').trim().replace(/\s+/g, ' ');
-  return NAME_RE.test(name) ? name : null;
-}
+// Nom d'enseigne saisi, nettoyé comme le fait le serveur (règles communes des noms, 14 caractères au plus), ou null
+export const cleanSignName = raw => cleanName(raw, 14);

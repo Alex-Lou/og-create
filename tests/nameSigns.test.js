@@ -47,3 +47,14 @@ describe('enseignes', () => {
     for (const bad of ['A', '', 'a--b', '-ab', '<b>', 'abcdefghijklmno', null]) expect(cleanSignName(bad)).toBeNull();
   });
 });
+
+describe('noms choisis (bâtiments, quartiers)', async () => {
+  const { cleanName, NAME_MAX } = await import('@/utils/names');
+  it('suivent les règles du serveur, jusqu’à 22 caractères', () => {
+    expect(NAME_MAX).toBe(22);
+    expect(cleanName('  Port   de la Lune bleue ')).toBe('Port de la Lune bleue');
+    expect(cleanName('L’Anse-aux-Fées')).toBe('L’Anse-aux-Fées');
+    for (const bad of ['x', 'x'.repeat(23), '-ab', '<b>', '']) expect(cleanName(bad)).toBeNull();
+    expect(cleanName('Port de la Lune', 14)).toBeNull();
+  });
+});

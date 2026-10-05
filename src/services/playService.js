@@ -86,6 +86,10 @@ export default {
   worldAnnexMove(x, y, toX, toY) {
     return http.post('/play/world/annex/move', { x, y, toX, toY }).then(response => response.data);
   },
+  // Nom d'un bâtiment (dès son palier III) ou d'un quartier à soi ; nom vide : celui d'origine → vue de l'île
+  worldName(kind, id, name) {
+    return http.post('/play/world/name', { kind, id, name }).then(response => response.data);
+  },
   // Enseigne d'un bâtiment (dès le palier V) : style porté, acheté au passage → { coins?, world } ; nom écrit sur les
   // enseignes de l'île → vue de l'île
   worldSign(site, style) {
