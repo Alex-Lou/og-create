@@ -20,6 +20,11 @@
       </button>
       <button type="button" class="book-view__stars" :aria-label="`${stars} découvertes : revenir au sommaire`" @click="goTo(0)">★ {{ stars }}</button>
     </header>
+    <!-- Le fil d'Ariane (bible, § 6.1) : la cible de la quête, les pages qui restent ; un toucher ouvre la page marquée -->
+    <button v-if="ariane" type="button" class="book-view__ariane" @click="goMarked">
+      <span class="book-view__ariane-ribbon" aria-hidden="true"></span>
+      <span>Vers : <strong>{{ ariane.target }}</strong> — {{ ariane.remaining > 1 ? `encore ${ariane.remaining} pages` : 'dernière page' }}</span>
+    </button>
 
     <div ref="stage" :class="['book-view__stage', single ? 'is-single' : 'is-spread', { 'is-opening': opening }]">
       <div ref="rig" class="book-view__rig">
@@ -207,9 +212,11 @@ export default {
     // Éléments posés dans l'Athanor, dans l'ordre des emplacements
     picked: { type: Array, default: () => [] },
     // Révélation en cours dans l'Athanor : les effets du Livre attendent qu'elle se ferme
-    revealing: { type: Boolean, default: false }
+    revealing: { type: Boolean, default: false },
+    // Venu de la quête de l'île : le Grimoire s'ouvre sur la page marquée du fil d'Ariane
+    openMarked: { type: Boolean, default: false }
   },
-  emits: ['select', 'coins-updated', 'show-alert', 'aim', 'inscribed', 'seal'],
+  emits: ['select', 'coins-updated', 'show-alert', 'aim', 'inscribed', 'seal', 'marked-opened'],
   data() {
     return {
       spots: [],
@@ -223,6 +230,8 @@ export default {
       sheetPages: {},
       pageLabel: BOOK_TITLE,
       stars: 0,
+      // Le fil d'Ariane de la quête active (serveur) : { target, remaining, page, chapter } ou null
+      ariane: null,
       currentKey: 'toc',
       // Les pages (non réactives) changent à chaque chargement : ce compteur fait suivre ce qui en dépend
       modelsVersion: 0,
@@ -398,7 +407,11 @@ export default {
       for (const chapter of data.chapters) {
         chapterIndex[chapter.id] = models.length;
         models.push({ type: 'chapter', key: `ch-${chapter.id}`, chapter });
-        if (!chapter.open) continue;
+        // Chapitre scellé : seule la page marquée du fil d'Ariane s'y ouvre
+        if (!chapter.open) {
+          chapter.pages.filter(page => page.marked).forEach(page => models.push(this.reachModel(chapter, page)));
+          continue;
+        }
         // Table du chapitre, sur autant de feuilles qu'il faut : pages à trouver d'abord, puis inscrites
         const listed = [...chapter.pages.filter(p => p.status !== 'found'), ...chapter.pages.filter(p => p.status === 'found')];
         const parts = Math.ceil(listed.length / INDEX_SIZE);
@@ -483,6 +496,7 @@ export default {
       const previousKey = this.engine ? this.models[this.engine.index]?.key : 'toc';
       this.bookData = data;
       this.stars = data.stars;
+      this.ariane = data.ariane || null;
       this.models = this.buildModels(data);
       this.modelsVersion++;
       this.chapterState = data.chapters.map(c => ({
@@ -490,8 +504,10 @@ export default {
         index: this.models.findIndex(m => m.key === `ch-${c.id}`)
       }));
       if (!this.engine) {
-        // Retour sur le Livre : la page qu'on lisait (si elle existe encore)
-        this.mountEngine(Math.max(0, lastKey ? this.models.findIndex(m => m.key === lastKey) : 0));
+        // Venu de la quête de l'île : la page marquée ; sinon, retour sur la page qu'on lisait (si elle existe encore)
+        const marked = this.openMarked && data.ariane ? this.models.findIndex(m => m.key === data.ariane.page) : -1;
+        if (marked >= 0) this.$emit('marked-opened');
+        this.mountEngine(marked >= 0 ? marked : Math.max(0, lastKey ? this.models.findIndex(m => m.key === lastKey) : 0));
         return;
       }
       // La page courante est retrouvée par son identifiant (des pages peuvent s'insérer avant elle)
@@ -636,6 +652,10 @@ export default {
     goTo(index) {
       if (this.engine && index >= 0) this.engine.go(index);
     },
+    // La page marquée du fil d'Ariane
+    goMarked() {
+      if (this.ariane) this.goTo(this.models.findIndex(m => m.key === this.ariane.page));
+    },
     async onSpot(spot) {
       if (spot.action === 'goto') {
         this.goTo(Number(spot.data));
@@ -762,6 +782,15 @@ export default {
   font-family: var(--oc-font-display); font-weight: 700; font-size: 14px;
 }
 .book-view__chapter-name { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-family: var(--oc-font-display); font-weight: 700; font-size: 20px; line-height: 1.1; }
+.book-view__ariane {
+  display: flex; align-items: center; gap: 8px; margin: 2px auto 6px; padding: 6px 12px 6px 8px; border: 0; border-radius: 999px;
+  background: rgba(184, 50, 42, .12); color: var(--oc-text, #3A2A1E); font: inherit; font-size: 14px; font-weight: 700; cursor: pointer;
+}
+.book-view__ariane strong { font-weight: 900; }
+.book-view__ariane-ribbon {
+  width: 9px; height: 16px; background: #B8322A; box-shadow: inset 0 0 0 1px #E3A93B;
+  clip-path: polygon(0 0, 100% 0, 100% 100%, 50% 78%, 0 100%);
+}
 .book-view__stars {
   appearance: none; border: 0; cursor: pointer;
   flex: none; min-height: 32px; padding: 4px 12px; border-radius: 999px;

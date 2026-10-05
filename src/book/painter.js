@@ -580,11 +580,29 @@ function paintFound(ctx, u, model, i, assets) {
   return { hotspots: [spot], label: `${page.name}, inscrite. Famille ${familyName(page.family)}.${page.riddle ? ` « ${page.riddle} »` : ''}${page.recipe ? ` Née de ${page.recipe.join(' et ')}.` : ''}` };
 }
 
+// Marque-page du fil d'Ariane (bible, § 6.1) : un ruban de soie qui pend du haut de la page marquée
+function bookmark(ctx, u) {
+  const x = 82 * u;
+  const w = 7 * u;
+  ctx.beginPath();
+  ctx.moveTo(x, 0);
+  ctx.lineTo(x + w, 0);
+  ctx.lineTo(x + w, 21 * u);
+  ctx.lineTo(x + w / 2, 17.6 * u);
+  ctx.lineTo(x, 21 * u);
+  ctx.closePath();
+  ctx.fillStyle = '#B8322A';
+  ctx.fill();
+  ctx.strokeStyle = '#E3A93B';
+  ctx.lineWidth = 0.7 * u;
+  ctx.stroke();
+}
 function paintReach(ctx, u, model, i, assets) {
   const { chapter, page, revealed, aim, freeInk, tried } = model;
   const style = CHAPTER_STYLE[chapter.id];
   frame(ctx, u, style.ink);
   header(ctx, u, chapter, style, 0);
+  if (page.marked) bookmark(ctx, u);
   const spot = vignette(ctx, u, style, 'reach');
   const hm = page.hangman || null;
   // Le grand « ? » tant qu'aucune pièce de l'illustration n'est gagnée

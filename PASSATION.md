@@ -3,7 +3,7 @@
 Document pour l'agent qui reprend le projet : ce qu'est le jeu, comment travailler avec son auteur, comment le code est
 construit, ce qui est fait et ce qui reste à faire. **À lire en entier avant la première ligne de code.**
 L'histoire, les personnages et le game design sont dans **`HISTOIRE.md`** (la bible, à lire ensuite).
-État au 5 octobre 2026, après les lots H0 et H1 de la bible (la troupe et les textes ; la colonne vertébrale).
+État au 5 octobre 2026, après les lots H0 à H2 de la bible (la troupe et les textes ; la colonne vertébrale ; le fil d'Ariane).
 
 ---
 
@@ -294,6 +294,11 @@ chronométrer 20 appels. Comparer à zoom égal, au même endroit.
     leurs coffres restent dus. Les tests fixent la date de création des comptes (`newPlayer({ veteran })`) ;
   - front : la fiche de Brume propose l'action de chaque objectif (`questAction`), « Prologue », le chapitre à
     ouvrir, le nom du peuple ; le village suit la troupe envoyée par le serveur (au camp, endormie ou au travail).
+- **Lot H2 de la bible** (le fil d'Ariane) : `bookPages.arianeOf` cherche le chemin de recettes le plus court vers la
+  cible de la quête active (`world.arianeTargets` : élément, plan du prochain palier, savoir-faire d'une création),
+  par générations, d'abord avec les recettes qui tiennent dans l'Athanor ; 2 à 7 ms par calcul, rien de stocké. La
+  page marquée s'ajoute à son chapitre, même scellé (marque-page peint par `painter.js`) ; ruban « Vers : … » dans
+  le Grimoire et dans la fiche de Brume ; « Voir dans le Grimoire » ouvre la page marquée (`openMarked`).
 
 ### Décisions déjà prises par l'auteur (ne pas les redemander)
 - **Île** : 96 × 96 ; l'ancienne carte devient le cœur ; découverte par expéditions ; un quartier s'ouvre avec des
