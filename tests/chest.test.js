@@ -15,6 +15,7 @@ describe('coffres', () => {
     expect(sourceText('recolte:12')).toBe('Coffre de la Récolte');
     expect(sourceText('bouteille:2026-10-04-2')).toBe('Bouteille à la mer');
     expect(sourceText('chapitre:IV')).toBe('Coffre du chapitre IV');
+    expect(sourceText('lieu:grotte')).toBe('Trésor de l’explorateur');
     expect(sourceText('quete:source')).toBe('Coffre de Brume');
   });
   it('compte ce qu’ouvre « Tout ouvrir » (jour, en attente, bouteille) et fait le bilan de la rafale', () => {

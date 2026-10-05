@@ -48,6 +48,7 @@ export function sourceText(source, streak) {
   if (source.startsWith('recolte')) return 'Coffre de la Récolte';
   if (source.startsWith('bouteille')) return 'Bouteille à la mer';
   if (source.startsWith('chapitre:')) return `Coffre du chapitre ${source.slice(9)}`;
+  if (source.startsWith('lieu:')) return 'Trésor de l’explorateur';
   return 'Coffre de Brume';
 }
 

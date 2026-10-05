@@ -4,7 +4,7 @@ import { phaseAt } from '@/world/scene';
 import { sunTimes, weatherAt, clockText } from '@/world/sky';
 import { BUILDINGS, NATURE } from '@/world/sprites';
 import { FUTURE, UPGRADES, fountainFrames, orbSprite } from '@/world/buildings2';
-import { NATURE2, CRITTERS, PLINTH } from '@/world/nature';
+import { NATURE2, CRITTERS } from '@/world/nature';
 import { SHOP_SPRITES, itemLayers, itemLight, itemThumb } from '@/world/shopSprites';
 import { LOOKS, lookAt, artMake, boatOf } from '@/world/looks';
 import { TINTS, TINT_IDS, RARE_TINTS, tintOf, tintSvg } from '@/world/tints';
@@ -53,7 +53,7 @@ describe('sprites', () => {
   it('chaque bâtiment et chaque élément de nature donne un SVG cadré', () => {
     const all = [
       ...Object.values(BUILDINGS).flat(), ...Object.values(NATURE), ...Object.values(FUTURE).flat(), ...Object.values(UPGRADES),
-      ...Object.values(NATURE2), ...Object.values(CRITTERS).flat(), PLINTH, orbSprite, ...fountainFrames().map(f => () => f)
+      ...Object.values(NATURE2), ...Object.values(CRITTERS).flat(), orbSprite, ...fountainFrames().map(f => () => f)
     ];
     for (const make of all) {
       const { svg, box: frame } = make();
