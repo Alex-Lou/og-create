@@ -126,6 +126,14 @@ export default {
   harvestFinish(run, moves) {
     return http.post('/play/world/harvest/finish', { run, moves }).then(response => response.data);
   },
+  // Mini-jeu d'un bâtiment (palier III) : une partie → { run: { id, game, seed, level }, world } ; puis les gestes,
+  // rejoués par le serveur → { earned, raw, detail, coins, world }
+  gameStart(game) {
+    return http.post('/play/world/game/start', { game }).then(response => response.data);
+  },
+  gameFinish(run, input) {
+    return http.post('/play/world/game/finish', { run, input }).then(response => response.data);
+  },
   // Joker de l'Épreuve : { freeJokers, coins?, ingredients? | ingredient? }
   joker(kind) {
     return asPlayer(() => http.post('/play/joker', { kind }));
