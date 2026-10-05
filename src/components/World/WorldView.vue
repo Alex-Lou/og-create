@@ -420,6 +420,35 @@
       </transition>
 
       <!-- Quartier à acheter : prix en écus et chapitre du Livre -->
+      <!-- Naufrage (bible, § 6.7 et § 14) : une nuit, une épave au loin, la brume, et Brume ; un toucher pour continuer -->
+      <transition name="world-wreck">
+        <div v-if="wreck" class="world__wreck" role="dialog" aria-label="Un naufrage" @click="closeWreck">
+          <svg class="world__wreck-scene" viewBox="0 0 360 240" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+            <defs>
+              <linearGradient id="world-wreck-sky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#0B1630" /><stop offset="1" stop-color="#22385E" /></linearGradient>
+            </defs>
+            <rect width="360" height="240" fill="url(#world-wreck-sky)" />
+            <circle cx="290" cy="50" r="15" fill="#F4EEDC" opacity=".85" />
+            <g fill="#F4EEDC" opacity=".6"><circle cx="40" cy="30" r="1.2" /><circle cx="96" cy="58" r="1" /><circle cx="168" cy="24" r="1.3" /><circle cx="226" cy="70" r="1" /><circle cx="330" cy="96" r="1.1" /></g>
+            <rect y="152" width="360" height="88" fill="#132645" />
+            <g class="world__wreck-ship" fill="#070E1E">
+              <template v-if="wreck.wreck === 'raft'">
+                <g transform="translate(176 150) rotate(-9)"><rect x="-30" y="-5" width="60" height="6" rx="3" /><rect x="-26" y="-11" width="52" height="6" rx="3" /><path d="M-4 -11 L4 -44 L7 -43 L1 -11 Z" /><path d="M5 -40 L22 -30 L6 -26 Z" opacity=".8" /></g>
+              </template>
+              <template v-else-if="wreck.wreck === 'boat'">
+                <g transform="translate(180 152) rotate(12)"><path d="M-46 -10 L46 -10 L34 6 L-36 6 Z" /><path d="M-6 -10 L-2 -58 L2 -58 L2 -10 Z" /><path d="M2 -52 L-30 -40 L2 -34 Z" opacity=".75" /><rect x="-26" y="-18" width="12" height="8" /><rect x="-10" y="-18" width="10" height="8" /></g>
+              </template>
+              <template v-else>
+                <g transform="translate(172 152) rotate(-16)"><path d="M-30 -8 Q0 6 30 -8 L24 2 Q0 12 -24 2 Z" /><circle cx="-8" cy="-11" r="2.4" /><circle cx="2" cy="-12" r="2" /><circle cx="10" cy="-10" r="2.2" /></g>
+              </template>
+            </g>
+            <path d="M0 152 Q45 146 90 152 T180 152 T270 152 T360 152" fill="none" stroke="#4A6A9A" stroke-width="2" />
+            <g class="world__wreck-fog" fill="#DCE6F2"><ellipse cx="80" cy="146" rx="90" ry="14" opacity=".22" /><ellipse cx="250" cy="140" rx="110" ry="16" opacity=".2" /><ellipse cx="170" cy="160" rx="140" ry="12" opacity=".18" /></g>
+          </svg>
+          <p class="world__wreck-text">« {{ wreck.text }} »</p>
+          <span class="world__wreck-hint">Toucher pour continuer</span>
+        </div>
+      </transition>
       <!-- Brume : sa réplique, la quête active, son avancée, sa récompense -->
       <transition name="world-sheet">
         <div v-if="questOpen && state && state.brume" class="world__sheet-backdrop" @click.self="questOpen = false">
@@ -687,6 +716,7 @@ import { annexLayers, annexLight } from '@/world/annexSprites';
 import { craftLayers, craftLight, craftThumb } from '@/world/craftSprites';
 import { landmarkLayers, landmarkLight, landmarkTop, landmarkScale } from '@/world/landmarkSprites';
 import { landmarksShown, landmarksWaiting, landmarkTip } from '@/world/landmarks';
+import { wreckOf, memoryOf } from '@/world/story';
 import { depositLayer } from '@/world/depositSprites';
 import { DEPOSIT_NAMES, depositsShown, depositsReady, depositWait, waitText } from '@/world/finds';
 import { CLIMATE_NAMES, CLIMATE_TEXT, climateAt, mixToward, drawClimate } from '@/world/climates';
@@ -894,6 +924,8 @@ export default {
       questOpen: false,
       // Nom du peuple en cours de saisie (quête « peuple »)
       peopleName: '',
+      // Naufrage annoncé (bible, § 6.7) : { id, zone, wreck, text } ou null
+      wreck: null,
       // Annexe en cours de pose ou de déplacement : { siteId, annexId, from: { x, y } | null } ; case dorée choisie, en
       // attente de confirmation : { x, y, px, py } ; fiche d'une annexe posée ouverte : { x, y }
       annexPlacing: null,
@@ -1119,6 +1151,17 @@ export default {
     isLoggedIn() {
       this.load();
     },
+    // La quête qui ouvre un acte annonce son naufrage, une fois par appareil ; jamais par-dessus un coffre : il attend
+    // que le coffre se referme
+    'quest.id'() {
+      this.checkWreck();
+    },
+    reveal(open) {
+      if (!open) this.checkWreck();
+    },
+    haul(open) {
+      if (!open) this.checkWreck();
+    },
     // Changer de fiche ou d'onglet retire le bandeau d'annulation
     'site.id'() {
       this.undoable = null;
@@ -1283,6 +1326,11 @@ export default {
         const { count, coins, balance } = state.refund;
         this.$emit('coins-updated', balance);
         this.$emit('show-alert', `Les décorations laissent place aux créations d’île : ${count} décoration${count > 1 ? 's' : ''} remboursée${count > 1 ? 's' : ''}, ${coins} écus. Assemble tes créations à l’établi du Foyer.`);
+      }
+      // Un dormeur qu'on vient de réveiller (bible, § 6.7) : l'île le dit
+      if (this.state) {
+        const slept = new Set((this.state.villagers || []).filter(v => v.asleep).map(v => v.id));
+        (state.villagers || []).filter(v => slept.has(v.id) && !v.asleep).forEach(v => this.$emit('show-alert', `${v.name} se réveille !`));
       }
       // Un niveau gagné depuis le dernier état : le bâtiment s'élève sous les yeux du joueur
       if (this.state && !this.reduced()) {
@@ -2562,6 +2610,37 @@ export default {
       } else if (quest && quest.kind === 'runs' && this.state.charges.count) this.questHarvest();
       else this.questOpen = true;
     },
+    // Naufrage à annoncer pour la quête active (déjà vus : retenus sur l'appareil)
+    checkWreck() {
+      let seen = [];
+      try { seen = JSON.parse(localStorage.getItem('oc_wrecks') || '[]'); } catch (e) { seen = []; }
+      const wreck = wreckOf(this.quest, Array.isArray(seen) ? seen : []);
+      if (!wreck || this.wreck || this.reveal || this.haul || this.holdWreck) return;
+      this.wreck = wreck;
+      try { localStorage.setItem('oc_wrecks', JSON.stringify([...seen, wreck.id])); } catch (e) { /* le confort seulement */ }
+    },
+    // Fin de l'annonce : la caméra va vers le quartier où dort le naufragé
+    closeWreck() {
+      const zone = this.wreck && this.state && this.state.map.zones.find(z => z.id === this.wreck.zone);
+      this.wreck = null;
+      if (zone && zone.anchor) this.lookAtCell(zone.anchor.x, zone.anchor.y);
+    },
+    // Le souvenir retrouvé (bible, § 6.2 et § 14) : la caméra va vers le naufragé ; un éclat doré, sa réplique
+    showMemory(questId) {
+      const memory = memoryOf(questId);
+      const resident = memory && this.village && this.village.residents.find(r => r.id === `vil:${memory.villager}`);
+      const friend = memory && (this.state.villagers || []).find(v => v.id === memory.villager);
+      if (!resident || !friend) return;
+      this.lookAtCell(resident.work.x, resident.work.y);
+      const g = this.ground(resident.work.x, resident.work.y);
+      const sp = this.toScreen(g.x, g.y);
+      const at = this.canvasPoint(sp.x, sp.y - 30);
+      if (!this.reduced()) {
+        ring(at, 110);
+        burst(at, 30, 90);
+      }
+      this.showTip(sp.x, sp.y - 40, { title: `${friend.name} · ${friend.role}`, text: memory.line }, 6000);
+    },
     // L'action de la quête active : la fiche de Brume se ferme, puis l'action (Grimoire, fiche, caméra…)
     runQuestAction() {
       const action = this.questAction;
@@ -2608,6 +2687,9 @@ export default {
       if (!this.quest || this.busy) return;
       // La dernière quête d'un acte donne aussi un coffre : il s'ouvre juste après les écus
       const chest = this.quest.chest ? `quete:${this.quest.id}` : null;
+      const questId = this.quest.id;
+      // Un coffre va s'ouvrir : le naufrage de la quête suivante l'attendra
+      this.holdWreck = Boolean(chest);
       let claimed = false;
       this.busy = true;
       try {
@@ -2631,7 +2713,14 @@ export default {
       }
       if (claimed && chest) {
         this.questOpen = false;
-        this.openChest(chest);
+        await this.openChest(chest);
+      }
+      this.holdWreck = false;
+      if (claimed && chest) this.checkWreck();
+      else if (claimed && memoryOf(questId)) {
+        // Un souvenir rendu : la fiche se ferme sur la scène du souvenir retrouvé
+        this.questOpen = false;
+        this.$nextTick(() => this.showMemory(questId));
       }
     },
     // Un toucher sur un animal : les dauphins plongent, la baleine souffle, les mouettes posées s'envolent
@@ -4690,6 +4779,25 @@ export default {
 .world__brume-say { margin: 0 0 12px; font-family: var(--font-display); font-style: italic; font-size: 17px; line-height: 1.4; }
 .world__quest { display: grid; grid-template-columns: 1fr auto; gap: 6px 10px; padding: 10px 12px; border-radius: 14px; background: var(--vellum-200); }
 .world__quest-label { font-weight: 900; }
+.world__wreck {
+  position: absolute; inset: 0; z-index: 40; display: flex; flex-direction: column; align-items: center; justify-content: flex-end;
+  padding: 0 20px 18%; background: #0B1630; color: #F4EEDC; cursor: pointer; text-align: center;
+}
+.world__wreck-scene { position: absolute; inset: 0; width: 100%; height: 100%; }
+.world__wreck-text {
+  position: relative; max-width: 420px; margin: 0 0 10px; font-family: var(--font-display); font-style: italic; font-size: 19px; line-height: 1.4;
+  text-shadow: 0 2px 8px rgba(0, 0, 0, .6);
+}
+.world__wreck-hint { position: relative; font-size: 13px; font-weight: 800; letter-spacing: .08em; opacity: .7; }
+.world__wreck-ship { animation: world-wreck-bob 3.2s ease-in-out infinite; }
+.world__wreck-fog { animation: world-wreck-fog 9s ease-in-out infinite alternate; }
+@keyframes world-wreck-bob { 50% { transform: translateY(3px); } }
+@keyframes world-wreck-fog { to { transform: translateX(-24px); } }
+.world-wreck-enter-active, .world-wreck-leave-active { transition: opacity .6s ease; }
+.world-wreck-enter-from, .world-wreck-leave-to { opacity: 0; }
+@media (prefers-reduced-motion: reduce) {
+  .world__wreck-ship, .world__wreck-fog { animation: none; }
+}
 .world__quest-lock { margin: 10px 0 0; font-size: 14px; font-weight: 700; color: var(--oc-text-muted, #7A6A58); }
 .world__people { display: flex; gap: 8px; width: 100%; }
 .world__people-input {
