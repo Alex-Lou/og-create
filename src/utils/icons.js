@@ -84,7 +84,33 @@ export const ICONS = {
     + '<path d="M18 25l8-3M46 25l-8-3" stroke="#2e3a52" stroke-width="3.2" stroke-linecap="round"/>'
     + '<circle cx="24" cy="31" r="3.2" fill="#2e3a52"/><circle cx="40" cy="31" r="3.2" fill="#2e3a52"/>'
     + '<path d="M22 46q10-9 20 0" fill="none" stroke="#2e3a52" stroke-width="3.6" stroke-linecap="round"/>'
-    + '<path d="M44 35c-2 4-3 6-1 8s5 0 4-3z" fill="#7ac0f0" stroke="#2e6a9e" stroke-width="1.6"/>')
+    + '<path d="M44 35c-2 4-3 6-1 8s5 0 4-3z" fill="#7ac0f0" stroke="#2e6a9e" stroke-width="1.6"/>'),
+  // Trouvailles de climat (lot 9d)
+  glace: svg('<path d="M32 5l20 12v30L32 59 12 47V17z" fill="#bfe7f7" stroke="#2e6a9e" stroke-width="3" stroke-linejoin="round"/>'
+    + '<path d="M12 17l20 12 20-12M32 29v30" fill="none" stroke="#2e6a9e" stroke-width="2.4" stroke-linejoin="round"/>'
+    + '<path d="M32 29l20-12v30L32 59z" fill="#8ccbe8"/><path d="M12 17l20-12 20 12-20 12z" fill="#e9f8ff"/>'
+    + '<path d="M18 24v16M24 21l6 4" stroke="#ffffff" stroke-width="3" stroke-linecap="round"/>'),
+  laine: svg('<circle cx="31" cy="34" r="22" fill="#f4ecdc" stroke="#7a6a52" stroke-width="3"/>'
+    + '<path d="M13 26c10 2 26 14 30 26M11 36c12 0 26 8 30 18M18 16c8 6 20 22 22 36M30 12c6 8 14 22 14 32" fill="none" stroke="#c9b894" stroke-width="2.6" stroke-linecap="round"/>'
+    + '<path d="M50 44c4 4 6 8 8 14" fill="none" stroke="#7a6a52" stroke-width="3" stroke-linecap="round"/>'
+    + '<path d="M18 24a16 16 0 0 1 8-6" fill="none" stroke="#ffffff" stroke-width="3" stroke-linecap="round"/>'),
+  roseau: svg('<path d="M22 58C22 40 20 26 16 10M32 58V8M42 58c0-18 2-32 6-48" fill="none" stroke="#5f8f3c" stroke-width="3.5" stroke-linecap="round"/>'
+    + '<rect x="12" y="10" width="7" height="16" rx="3.5" fill="#8a5a2e" stroke="#4a2e14" stroke-width="2.4" transform="rotate(-12 15 18)"/>'
+    + '<rect x="28.5" y="7" width="7" height="17" rx="3.5" fill="#8a5a2e" stroke="#4a2e14" stroke-width="2.4"/>'
+    + '<rect x="45" y="10" width="7" height="16" rx="3.5" fill="#8a5a2e" stroke="#4a2e14" stroke-width="2.4" transform="rotate(12 48 18)"/>'
+    + '<path d="M17 44c10 4 20 4 30 0" fill="none" stroke="#c9a24a" stroke-width="5" stroke-linecap="round"/>'),
+  sel: svg('<path d="M6 50c4-10 14-14 26-14s22 4 26 14z" fill="#f6f1ec" stroke="#8a7a6a" stroke-width="3" stroke-linejoin="round"/>'
+    + '<path d="M18 38l6-12 8 6-4 10zM30 30l8-14 9 9-6 10zM40 40l6-9 7 7-4 6z" fill="#ffffff" stroke="#8a7a6a" stroke-width="2.4" stroke-linejoin="round"/>'
+    + '<path d="M38 18l6 6" stroke="#f4c6d0" stroke-width="2.4" stroke-linecap="round"/>'
+    + '<path d="M10 50h44" stroke="#d8cfc4" stroke-width="2.4"/>'),
+  fruits: svg('<path d="M24 8c2 6 6 9 8 12 2-3 6-6 8-12-4 1-6 3-8 6-2-3-4-5-8-6z" fill="#5ab04a" stroke="#2e6a24" stroke-width="2.4" stroke-linejoin="round"/>'
+    + '<ellipse cx="32" cy="40" rx="15" ry="19" fill="#f2b23c" stroke="#8a5a14" stroke-width="3"/>'
+    + '<path d="M21 30l22 20M21 42l16 14M27 23l18 17M43 30L21 50M43 42L29 55M37 23L19 40" stroke="#c8822a" stroke-width="2" stroke-linecap="round"/>'
+    + '<path d="M24 31c1-4 3-6 6-7" fill="none" stroke="#ffe39a" stroke-width="3" stroke-linecap="round"/>'),
+  obsidienne: svg('<path d="M22 6l24 10 10 22-14 20-24-4L8 34z" fill="#2c2a34" stroke="#0e0d12" stroke-width="3" stroke-linejoin="round"/>'
+    + '<path d="M22 6l6 22 28 10M28 28L18 54M28 28L8 34" fill="none" stroke="#0e0d12" stroke-width="2.2" stroke-linejoin="round"/>'
+    + '<path d="M22 6l24 10 10 22-28-10z" fill="#4a4258"/><path d="M8 34l20-6-10 26z" fill="#1c1a22"/>'
+    + '<path d="M26 12l14 6M32 22l12 10" stroke="#b9a6e8" stroke-width="2.6" stroke-linecap="round"/>')
 };
 
 // Adresse d'une icône (data: URL), calculée une fois ; null si l'icône n'existe pas. Taille explicite : un canvas

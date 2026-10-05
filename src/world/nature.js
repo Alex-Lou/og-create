@@ -1,4 +1,4 @@
-// Nature variée (planche 2), animaux et socle des décorations. Emprise d'une case, ancrage au centre de la case.
+// Nature variée (planche 2), décor des climats et animaux. Emprise d'une case, ancrage au centre de la case.
 import { P, box, disc, cylinder, shadow, foliage, sprite } from './iso';
 import { WOOD, WOOD_DARK, STONE, LEAVES, PROP_BOX, pebble } from './palette';
 
@@ -142,8 +142,49 @@ function zoneSign() {
     + `<path d="M${x - 2.8},${y - 50} v-3 a2.8,2.8 0 0 1 5.6,0 v3" fill="none" stroke="#8A6A22" stroke-width="1.2"/>`, PROP_BOX);
 }
 
+/* ---------- Décor des climats (lot 9d) ---------- */
+// Pin enneigé (les Cimes) : trois étages de branches sombres, chacun coiffé de neige
+function snowPine() {
+  const [x, y] = P(0, 0, 0);
+  const tier = (yy, w, h) => `<path d="M${x - w},${yy} L${x},${yy - h} L${x + w},${yy} Z" fill="#2F6E3A"/>`
+    + `<path d="M${x - w * 0.7},${yy - h * 0.3} Q${x - w * 0.2},${yy - h * 0.5} ${x},${yy - h} Q${x + w * 0.3},${yy - h * 0.45} ${x + w * 0.75},${yy - h * 0.28} Q${x},${yy - h * 0.38} ${x - w * 0.7},${yy - h * 0.3} Z" fill="#F7FAFD"/>`
+    + `<path d="M${x - w},${yy} q${w * 0.5},-3 ${w},-1 q${w * 0.5},-2 ${w},1" stroke="#F7FAFD" stroke-width="2" fill="none" stroke-linecap="round"/>`;
+  return sprite(shadow(0, 0, 0.3, 0.16) + box(-0.05, -0.05, 0.05, 0.05, 0, 12, WOOD_DARK) + tier(y - 8, 15, 22) + tier(y - 20, 12, 20) + tier(y - 31, 9, 18), PROP_BOX);
+}
+// Cactus (les Dunes) : une colonne côtelée et deux bras, une fleur rose au sommet
+function cactus() {
+  const [x, y] = P(0, 0, 0);
+  const column = (cx, top, bottom, w) => `<rect x="${cx - w}" y="${top}" width="${w * 2}" height="${bottom - top}" rx="${w}" fill="#5E9E4A" stroke="#2F5E28" stroke-width="1"/>`
+    + `<line x1="${cx - w * 0.35}" y1="${top + w}" x2="${cx - w * 0.35}" y2="${bottom - 1}" stroke="#7FBF62" stroke-width="1"/>`
+    + `<line x1="${cx + w * 0.4}" y1="${top + w}" x2="${cx + w * 0.4}" y2="${bottom - 1}" stroke="#3F7A34" stroke-width="1"/>`;
+  return sprite(shadow(0, 0, 0.2, 0.18)
+    + `<path d="M${x - 4},${y - 16} h-6 v-10" stroke="#5E9E4A" stroke-width="6" fill="none" stroke-linecap="round" stroke-linejoin="round"/>`
+    + `<path d="M${x + 4},${y - 22} h6 v-9" stroke="#4F8E3E" stroke-width="6" fill="none" stroke-linecap="round" stroke-linejoin="round"/>`
+    + column(x, y - 40, y, 5) + `<circle cx="${x}" cy="${y - 41}" r="2.4" fill="#F27A9A"/><circle cx="${x}" cy="${y - 41}" r="1" fill="#FFE08A"/>`, PROP_BOX);
+}
+// Arbre mort (le Volcan) : un tronc gris tordu, des branches nues
+function deadTree() {
+  const [x, y] = P(0, 0, 0);
+  const bark = '#6E625A';
+  return sprite(shadow(0, 0, 0.24, 0.18)
+    + `<path d="M${x - 3},${y} Q${x - 4},${y - 14} ${x - 1},${y - 30} L${x + 2},${y - 30} Q${x + 2},${y - 14} ${x + 3},${y} Z" fill="${bark}" stroke="#3E3530" stroke-width="0.8"/>`
+    + `<path d="M${x},${y - 22} Q${x - 8},${y - 26} ${x - 13},${y - 36} M${x - 8},${y - 27} l-5,1 M${x + 1},${y - 28} Q${x + 8},${y - 32} ${x + 11},${y - 42} M${x + 7},${y - 33} l5,-2 M${x},${y - 30} l-1,-8"`
+    + ` stroke="${bark}" stroke-width="2" fill="none" stroke-linecap="round"/>`
+    + `<path d="M${x + 1},${y - 6} q1,-8 0,-16" stroke="#8A7E74" stroke-width="0.9" fill="none"/>`, PROP_BOX);
+}
+// Bruyère (les Landes) : des coussins bas de fleurs mauves
+function heather() {
+  const [x, y] = P(0, 0, 0);
+  const cushion = (cx, cy, r) => `<ellipse cx="${cx}" cy="${cy}" rx="${r}" ry="${r * 0.6}" fill="#6E8A4E"/>`
+    + [-0.5, 0, 0.5].map((k, i) => `<circle cx="${cx + k * r}" cy="${cy - r * 0.35 - (i % 2)}" r="${r * 0.32}" fill="${i % 2 ? '#C77FB0' : '#A8609A'}"/>`).join('');
+  return sprite(shadow(0, 0, 0.26, 0.14) + cushion(x - 6, y - 2, 6) + cushion(x + 5, y - 1, 5.5) + cushion(x, y - 5, 5), PROP_BOX);
+}
+
 export const SIGN = zoneSign;
-export const NATURE2 = { birch, apple: appleTree, autumn: autumnTree, stump, log, mushrooms, reeds, lily: lilyPond, shells, driftwood, mossy: mossyRocks, lantern: lanternPost, bench };
+export const NATURE2 = {
+  birch, apple: appleTree, autumn: autumnTree, stump, log, mushrooms, reeds, lily: lilyPond, shells, driftwood, mossy: mossyRocks, lantern: lanternPost, bench,
+  snowpine: snowPine, cactus, deadtree: deadTree, heather
+};
 export const CRITTERS = {
   chicken: [0, 1].map(f => () => chicken(f)),
   butterfly: [0, 1].map(f => () => butterfly(f)),

@@ -1,8 +1,8 @@
 // Ce que dit Brume, le feu follet guide, aux moments clés du jeu (une seule fois chacun) : son arrivée et le Livre,
 // la première page à portée, le premier mélange raté sur une page visée, chaque chapitre qui s'ouvre, la première
 // visite de l'île, le premier bâtiment qui peut s'étendre (annexes), le deuxième habitant (amitié), le premier besoin
-// d'un habitant, le premier visiteur, le premier mini-jeu ouvert, la première expédition. Les quêtes accomplies
-// (questTip) ont leur propre réplique.
+// d'un habitant, le premier visiteur, le premier mini-jeu ouvert, la première expédition, la première trouvaille.
+// Les quêtes accomplies (questTip) ont leur propre réplique.
 export const TIPS = {
   welcome: 'Je suis Brume, un souffle de la brume qui couvre ton île. Ce grimoire est le Codex : chaque élément que tu crées s’y inscrit. Glisse une page du doigt, ou touche son bord, pour le feuilleter.',
   reach: 'Cette page est à ta portée : son élément peut naître de ce que tu connais déjà. Lis l’indice, puis dépose les bons éléments dans l’Athanor.',
@@ -13,6 +13,7 @@ export const TIPS = {
   needs: 'Un habitant a besoin de toi : la bulle au-dessus de sa tête dit quoi. Manger, des outils, quelques créations d’île autour de son bâtiment… Comble ses besoins depuis sa fiche : heureux, il travaille mieux (+10 % de production) ; négligé, moins bien.',
   visitor: 'Un bateau vient d’accoster au Ponton ! Son voyageur reste quelques jours et a une demande : la bulle dorée au-dessus de sa tête. Touche-le, puis garde le doigt appuyé pour ouvrir sa fiche : sa demande comblée, une récompense en écus t’attend.',
   expedition: 'Ton expédition est partie dans la brume ! À son retour, la terre qu’elle explore se dévoile : son relief, son climat… Tu pourras alors l’acheter. Une seule expédition à la fois : la boussole, en haut à gauche, dit quand elle revient.',
+  finds: 'Ta première trouvaille de climat ! Chaque climat a la sienne : glace, laine, roseau, sel, fruits, obsidienne. Ses gisements repoussent en quelques heures. Le sac, en haut à gauche, garde cette réserve à part : elle sert aux créations et annexes de climat.',
   games: 'Un mini-jeu s’est ouvert ! Au palier III, le Ponton pêche, la Carrière creuse son filon et le Bosquet se cueille. Touche le bâtiment : « Jouer » est dans sa fiche, et chaque partie rapporte des écus.',
   'chapter-II': 'La Matière s’ouvre : ce qui se pétrit, se fond, se forge. Sur l’île, La Colline peut sortir de la brume.',
   'chapter-III': 'Ciel et Terre : lève les yeux vers les astres. Les Jardins, le Faubourg et les Hauteurs t’attendent.',
