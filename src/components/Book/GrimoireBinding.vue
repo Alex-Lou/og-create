@@ -417,11 +417,17 @@ export default {
 .grim__strap--inside { left: -38px; }
 .grim.is-compact .grim__strap--inside { left: -30px; }
 
-/* Téléphone, une seule page : le plat droit sous la page, le dos en mince bande à gauche (sans coins ni lanière),
-   le pli, les tranchefiles et le signet au bord gauche ; la couverture couvre la page et s'ouvre vers la gauche */
+/* Téléphone, une seule page : le plat droit sous la page, le dos en mince bande à gauche quand le livre est fermé
+   (sans coins ni lanière), le pli, les tranchefiles et le signet au bord gauche ; la couverture couvre la page et
+   s'ouvre vers la gauche */
 .grim.is-compact .grim__board--right, .grim.is-compact .grim__block--right, .grim.is-compact .grim__cover { left: 0; }
 .grim.is-compact .grim__board--left { right: 100%; border-radius: 10px 2px 2px 10px; }
 .grim.is-compact.is-closed .grim__board--left { visibility: visible; }
+/* Livre ouvert : le plat gauche passe sous la feuille posée à gauche et s'efface vers le bord de la scène */
+.grim.is-compact:not(.is-closed) .grim__board--left {
+  left: calc(-1 * (var(--m) + var(--smax)) - 90px); border-radius: 0 2px 2px 0;
+  -webkit-mask-image: linear-gradient(90deg, transparent 30%, #000 75%); mask-image: linear-gradient(90deg, transparent 30%, #000 75%);
+}
 .grim.is-compact .grim__board--left .grim__tool, .grim.is-compact > .grim__corner.grim__left, .grim.is-compact .grim__block--left, .grim.is-compact > .grim__strap { display: none; }
 .grim.is-compact .grim__fold { left: -2px; }
 .grim.is-compact .grim__headband { left: -6px; }
