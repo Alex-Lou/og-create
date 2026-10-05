@@ -62,7 +62,29 @@ export const ICONS = {
     + '<path d="M37 30c-1-7 3-11 9-11 0 6-3 10-9 11z" fill="#8ad45a" stroke="#2e6a1e" stroke-width="2.6" stroke-linejoin="round"/>'
     + '<path d="M8 33h48l-5 20a4 4 0 0 1-4 3H17a4 4 0 0 1-4-3z" fill="#c8893e" stroke="#6a4a22" stroke-width="3" stroke-linejoin="round"/>'
     + '<path d="M11 42h42M13 49h38M23 35v20M32 35v21M41 35v20" stroke="#8a5a2a" stroke-width="2.2"/>'
-    + '<rect x="5" y="29" width="54" height="7" rx="3.5" fill="#dba25a" stroke="#6a4a22" stroke-width="3"/>')
+    + '<rect x="5" y="29" width="54" height="7" rx="3.5" fill="#dba25a" stroke="#6a4a22" stroke-width="3"/>'),
+  // Besoins des habitants : travailler (marteau), se distraire (fleur) ; leur humeur (heureux, content, triste)
+  tools: svg('<path d="M13 55L39 25" stroke="#5a3a1c" stroke-width="10" stroke-linecap="round"/>'
+    + '<path d="M13 55L39 25" stroke="#c8893e" stroke-width="5" stroke-linecap="round"/>'
+    + '<path d="M55.5 25.3L48.3 33.7 28.5 16.7 35.7 8.3z" fill="#9a9a94" stroke="#45453f" stroke-width="3" stroke-linejoin="round"/>'
+    + '<path d="M33 12.5l17 14.6" stroke="#dcdcd5" stroke-width="2.6" stroke-linecap="round"/>'),
+  flower: svg('<path d="M32 58V32" stroke="#2e6a1e" stroke-width="4" stroke-linecap="round"/>'
+    + '<path d="M32 49c-8-1-13-6-14-12 8 0 13 5 14 12z" fill="#6cc04a" stroke="#2e6a1e" stroke-width="2.6" stroke-linejoin="round"/>'
+    + '<g fill="#f58fb4" stroke="#a3285a" stroke-width="2.6"><circle cx="32" cy="13" r="8"/><circle cx="42.5" cy="20.6" r="8"/>'
+    + '<circle cx="38.5" cy="32.9" r="8"/><circle cx="25.5" cy="32.9" r="8"/><circle cx="21.5" cy="20.6" r="8"/></g>'
+    + '<circle cx="32" cy="24" r="6.5" fill="#ffd34d" stroke="#b07a10" stroke-width="2.6"/>'),
+  smile: svg('<circle cx="32" cy="32" r="25" fill="#ffd34d" stroke="#b07a10" stroke-width="3"/>'
+    + '<circle cx="18" cy="37" r="4" fill="#f5998a"/><circle cx="46" cy="37" r="4" fill="#f5998a"/>'
+    + '<path d="M20 27q4-5 8 0M36 27q4-5 8 0" fill="none" stroke="#5a3a10" stroke-width="3.4" stroke-linecap="round"/>'
+    + '<path d="M21 37q11 12 22 0" fill="none" stroke="#5a3a10" stroke-width="3.6" stroke-linecap="round"/>'),
+  calm: svg('<circle cx="32" cy="32" r="25" fill="#f6dc8a" stroke="#a07a20" stroke-width="3"/>'
+    + '<circle cx="24" cy="27" r="3.4" fill="#5a3a10"/><circle cx="40" cy="27" r="3.4" fill="#5a3a10"/>'
+    + '<path d="M23 41h18" stroke="#5a3a10" stroke-width="3.6" stroke-linecap="round"/>'),
+  frown: svg('<circle cx="32" cy="32" r="25" fill="#c9d6ea" stroke="#4a5a7a" stroke-width="3"/>'
+    + '<path d="M18 25l8-3M46 25l-8-3" stroke="#2e3a52" stroke-width="3.2" stroke-linecap="round"/>'
+    + '<circle cx="24" cy="31" r="3.2" fill="#2e3a52"/><circle cx="40" cy="31" r="3.2" fill="#2e3a52"/>'
+    + '<path d="M22 46q10-9 20 0" fill="none" stroke="#2e3a52" stroke-width="3.6" stroke-linecap="round"/>'
+    + '<path d="M44 35c-2 4-3 6-1 8s5 0 4-3z" fill="#7ac0f0" stroke="#2e6a9e" stroke-width="1.6"/>')
 };
 
 // Adresse d'une icône (data: URL), calculée une fois ; null si l'icône n'existe pas. Taille explicite : un canvas

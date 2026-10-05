@@ -145,6 +145,13 @@ export default {
   villagerGift(villager, resource) {
     return http.post('/play/world/villager/gift', { villager, resource }).then(response => response.data);
   },
+  // Besoins : en combler un ('manger', 'outils') avec le stock, ou tout ce qui peut l'être → { filled, world }
+  villagerNeed(villager, need) {
+    return http.post('/play/world/villager/need', { villager, need }).then(response => response.data);
+  },
+  villagersNeeds() {
+    return http.post('/play/world/villagers/needs').then(response => response.data);
+  },
   // Joker de l'Épreuve : { freeJokers, coins?, ingredients? | ingredient? }
   joker(kind) {
     return asPlayer(() => http.post('/play/joker', { kind }));

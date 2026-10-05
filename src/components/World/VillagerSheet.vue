@@ -2,7 +2,10 @@
   <GModal :eyebrow="`${villager.role} · ${siteName}`" :title="villager.name" :width="400" align="center" @close="$emit('close')">
     <div class="friend">
       <div class="friend__top">
-        <span class="friend__portrait"><img :src="portrait" alt="" /></span>
+        <span class="friend__portrait">
+          <img :src="portrait" alt="" />
+          <span v-if="villager.mood" class="friend__mood-badge" aria-hidden="true"><ElementGlyph :glyph="MOOD_GLYPH[villager.mood]" /></span>
+        </span>
         <div class="friend__love">
           <span class="friend__hearts" :aria-label="`${villager.hearts} cœur${villager.hearts > 1 ? 's' : ''} sur 5`">
             <svg v-for="k in 5" :key="k" :class="['friend__heart', { 'is-full': k <= villager.hearts, 'is-new': k === popped }]" viewBox="0 0 24 22" aria-hidden="true">
@@ -14,7 +17,37 @@
         </div>
       </div>
 
-      <p class="friend__say" aria-live="polite">« {{ said || talkLine(villager.id, villager.hearts) }} »</p>
+      <!-- Besoins : humeur et ce qu'elle fait, puis chaque besoin (manger, travailler : à combler avec le stock ; se
+           distraire : des décorations autour de son bâtiment) -->
+      <section v-if="villager.needs" class="friend__needs" aria-label="Besoins">
+        <h3 class="friend__title">Besoins · <span :class="['friend__mood', `is-${villager.mood}`]">{{ MOOD_LABEL[villager.mood] }}</span></h3>
+        <p class="friend__mood-effect">{{ moodText }}</p>
+        <ul class="friend__need-list">
+          <li v-for="need in villager.needs" :key="need.id" :class="['friend__need', { 'is-missing': !need.met }]">
+            <span class="friend__need-glyph" aria-hidden="true"><ElementGlyph :glyph="NEED_GLYPH[need.id]" /></span>
+            <span class="friend__need-body">
+              <strong>{{ labelOf(need.id) }}</strong>
+              <span>{{ needState(need, siteName) }}</span>
+            </span>
+            <button
+              v-if="need.cost"
+              type="button"
+              class="friend__fill"
+              :disabled="busy || !need.refill || !affordable(need, stock)"
+              :aria-label="need.refill ? `${labelOf(need.id)} : donner ${costText(need.cost)}` : `${labelOf(need.id)} : comblé`"
+              @click="$emit('fill', need.id)"
+            >
+              <template v-if="need.refill">
+                <span v-for="(n, r) in need.cost" :key="r" class="friend__fill-cost"><ElementGlyph :glyph="GLYPH[r]" />{{ n }}</span>
+              </template>
+              <template v-else>Comblé</template>
+            </button>
+            <span v-else :class="['friend__need-tag', { 'is-done': need.met }]">{{ need.met ? 'Comblé' : `${need.have} / ${need.need}` }}</span>
+          </li>
+        </ul>
+      </section>
+
+      <p class="friend__say" aria-live="polite">« {{ said || askOr(villager, talkLine(villager.id, villager.hearts)) }} »</p>
 
       <button type="button" class="g-btn friend__talk" :disabled="busy || villager.talked" @click="$emit('talk')">
         {{ villager.talked ? 'Vous avez bavardé aujourd’hui' : `Bavarder · +${rules.talk}` }}
@@ -59,19 +92,24 @@
 <script>
 import GModal from '@/components/ui/GModal.vue';
 import ElementGlyph from '@/components/ui/ElementGlyph.vue';
-import { RESOURCES } from '@/game/resources';
+import { RESOURCES, GLYPH } from '@/game/resources';
 import { talkLine, rewardText } from '@/world/friends';
+import { NEED_GLYPH, MOOD_GLYPH, MOOD_LABEL, needState, affordable, costText, askOr } from '@/world/needs';
 
-// Fiche d'un habitant : son portrait, ses cœurs, ce qu'il dit ; bavarder et offrir des ressources (chacun une fois par
-// jour), et ce que rapporte chaque cœur. Le serveur décide (points, jour, récompenses) ; l'île envoie et met à jour.
+// Fiche d'un habitant : son portrait, ses cœurs, ses besoins et son humeur, ce qu'il dit ; combler un besoin, bavarder
+// et offrir des ressources (chacun une fois par jour), et ce que rapporte chaque cœur. Le serveur décide (points, jour,
+// récompenses, besoins) ; l'île envoie et met à jour.
 export default {
   name: 'VillagerSheet',
   components: { GModal, ElementGlyph },
   props: {
-    // Vue du serveur : { id, name, role, loves, likes, points, hearts, next, talked, gifted }
+    // Vue du serveur : { id, name, role, loves, likes, points, hearts, next, talked, gifted, needs, mood, moodEffect,
+    // happyEffect }
     villager: { type: Object, required: true },
     // Règles : { talk, gift: { cost, loves, likes, other }, hearts, rewards }
     rules: { type: Object, required: true },
+    // Besoins : { kinds: { besoin: { label, … } } }
+    needRules: { type: Object, default: null },
     stock: { type: Object, required: true },
     siteName: { type: String, default: '' },
     portrait: { type: String, default: '' },
@@ -80,9 +118,9 @@ export default {
     popped: { type: Number, default: 0 },
     busy: { type: Boolean, default: false }
   },
-  emits: ['talk', 'gift', 'close'],
+  emits: ['talk', 'gift', 'fill', 'close'],
   data() {
-    return { RESOURCES };
+    return { RESOURCES, GLYPH, NEED_GLYPH, MOOD_GLYPH, MOOD_LABEL };
   },
   computed: {
     // Avancée vers le cœur suivant
@@ -90,11 +128,24 @@ export default {
       const { hearts, points, next } = this.villager;
       const from = hearts ? this.rules.hearts[hearts - 1] : 0;
       return next === null ? 1 : Math.max(0, Math.min(1, (points - from) / (next - from)));
+    },
+    // Ce que fait son humeur, ou ce que ferait une humeur heureuse
+    moodText() {
+      const { moodEffect, happyEffect } = this.villager;
+      if (moodEffect) return `${moodEffect} à « ${this.siteName} ».`;
+      return happyEffect ? `Tous ses besoins comblés : ${happyEffect.charAt(0).toLowerCase()}${happyEffect.slice(1)}.` : '';
     }
   },
   methods: {
     talkLine,
     rewardText,
+    needState,
+    affordable,
+    costText,
+    askOr,
+    labelOf(id) {
+      return this.needRules?.kinds?.[id]?.label || id;
+    },
     gainOf(resource) {
       const { gift } = this.rules;
       return resource === this.villager.loves ? gift.loves : resource === this.villager.likes ? gift.likes : gift.other;
@@ -121,6 +172,26 @@ export default {
   box-shadow: inset 0 0 0 1px rgba(74, 52, 38, .1); font-family: var(--font-display); font-style: italic; font-size: 15px; line-height: 1.4;
 }
 .friend__talk { width: 100%; }
+.friend__mood-badge { position: absolute; right: -6px; bottom: -6px; display: grid; place-items: center; width: 34px; height: 34px; border-radius: 50%; background: var(--vellum-50); box-shadow: 0 2px 6px rgba(60, 40, 25, .25); font-size: 24px; }
+.friend__mood { text-transform: none; letter-spacing: 0; }
+.friend__mood.is-heureux { color: #4E8A3A; }
+.friend__mood.is-triste { color: #4A5A7A; }
+.friend__mood-effect { margin: -2px 0 6px; font-size: 13px; font-weight: 700; color: var(--ink-700); }
+.friend__need-list { display: grid; gap: 6px; margin: 0; padding: 0; list-style: none; }
+.friend__need { display: grid; grid-template-columns: 34px 1fr auto; align-items: center; gap: 10px; padding: 8px 10px; border-radius: 14px; background: var(--vellum-50); box-shadow: inset 0 0 0 1px rgba(74, 52, 38, .1); }
+.friend__need.is-missing { background: #FFF4E5; box-shadow: inset 0 0 0 2px #F0A84A; }
+.friend__need-glyph { font-size: 28px; line-height: 1; }
+.friend__need-body { display: grid; gap: 1px; min-width: 0; font-size: 12px; font-weight: 700; color: var(--ink-500); }
+.friend__need-body strong { font-size: 14px; font-weight: 900; color: var(--ink-900); }
+.friend__fill {
+  display: inline-flex; align-items: center; gap: 6px; min-height: 36px; padding: 0 12px; border: 0; border-radius: 999px;
+  background: #F0A84A; color: #3A2410; font-family: var(--font-ui); font-size: 13px; font-weight: 900; cursor: pointer;
+  box-shadow: 0 2px 0 #B87420;
+}
+.friend__fill:disabled { background: var(--vellum-200); color: var(--ink-500); box-shadow: none; cursor: default; }
+.friend__fill-cost { display: inline-flex; align-items: center; gap: 2px; }
+.friend__need-tag { font-size: 12px; font-weight: 900; color: #B86A10; }
+.friend__need-tag.is-done { color: #4E8A3A; }
 .friend__title { margin: 0 0 6px; font-size: 12px; font-weight: 800; text-transform: uppercase; letter-spacing: .05em; color: var(--ink-500); }
 .friend__done { text-transform: none; letter-spacing: 0; color: #4E8A3A; }
 .friend__gifts { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; margin: 0; padding: 0; list-style: none; }
