@@ -9,9 +9,9 @@ describe('les répliques de Brume', () => {
     CHAPTER_IDS.filter(id => id !== 'I').forEach(id => expect(TIPS[`chapter-${id}`]).toBeTruthy());
   });
   it('une quête accomplie : son intitulé, sa récompense, et l’île pour la réclamer', () => {
-    const tip = questTip({ id: 'livre5', label: 'Inscris 5 découvertes au Livre', coins: 60 });
+    const tip = questTip({ id: 'livre5', label: 'Inscris 5 découvertes au Grimoire', coins: 60 });
     expect(tip.id).toBe('quest-livre5');
-    expect(tip.text).toContain('Inscris 5 découvertes au Livre');
+    expect(tip.text).toContain('Inscris 5 découvertes au Grimoire');
     expect(tip.text).toContain('60 écus');
     expect(tip.action).toEqual({ label: 'Aller sur l’île', mode: 'world' });
   });
@@ -33,7 +33,7 @@ describe('le guide', () => {
     expect(guide.state.seen.has('welcome') && guide.state.seen.has('reach')).toBe(true);
   });
   it('annonce une quête accomplie une seule fois, même redemandée', () => {
-    const tip = questTip({ id: 'livre12', label: 'Inscris 12 découvertes au Livre', coins: 100 });
+    const tip = questTip({ id: 'livre12', label: 'Inscris 12 découvertes au Grimoire', coins: 100 });
     expect(guide.say(tip)).toBe(true);
     expect(guide.say(tip)).toBe(false);
     guide.dismiss();

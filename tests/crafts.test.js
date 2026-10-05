@@ -30,8 +30,8 @@ describe('créations d’île', () => {
 
   it('dit ce qui ouvre un palier', () => {
     expect(TIER_LABEL.start).toBe('Débuts');
-    expect(tierHint('I', { have: 12, need: 10 })).toBe('Finis le chapitre I du Livre, ou réussis 10 questions de l’Épreuve (10/10).');
-    expect(tierHint('II', { have: 0, need: 10 })).toBe('Finis le chapitre II du Livre.');
+    expect(tierHint('I', { have: 12, need: 10 })).toBe('Finis le chapitre I du Grimoire, ou réussis 10 questions de l’Épreuve (10/10).');
+    expect(tierHint('II', { have: 0, need: 10 })).toBe('Finis le chapitre II du Grimoire.');
   });
 
   it('chaque création du serveur a son dessin (les 18 premières et les 12 de climat)', () => {

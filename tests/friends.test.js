@@ -15,10 +15,10 @@ describe('amitié des habitants', () => {
     expect(lines).not.toContain(talkLine('foyer', 0));
   });
   it('remercie selon le cadeau, nomme les récompenses, sait qui attend une visite', () => {
-    const rose = { loves: 'water', likes: 'food' };
-    expect(giftLine('potager', rose, 'water')).toMatch(/eau/);
-    expect(giftLine('potager', rose, 'food')).toMatch(/merci/i);
-    expect(giftLine('potager', rose, 'stone')).toMatch(/intention/);
+    const melisse = { loves: 'water', likes: 'food' };
+    expect(giftLine('potager', melisse, 'water')).toMatch(/eau/);
+    expect(giftLine('potager', melisse, 'food')).toMatch(/merci/i);
+    expect(giftLine('potager', melisse, 'stone')).toMatch(/intention/);
     expect(rewardText({ kind: 'coins', amount: 40 })).toBe('40 écus');
     expect(rewardText({ kind: 'chest', rarity: 'epique' })).toBe('Coffre épique');
     expect(awaits({ talked: true, gifted: false })).toBe(true);

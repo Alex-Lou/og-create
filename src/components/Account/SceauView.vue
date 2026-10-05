@@ -21,7 +21,7 @@
         <span class="sceau__row-title">Le Cabinet</span><span class="sceau__row-note">Cadres et emblèmes de ton sceau</span>
       </button>
       <button type="button" class="sceau__row" @click="$emit('open-codex')">
-        <span class="sceau__row-title">Codex des succès</span><span class="sceau__row-note">{{ unlocked }} sceaux rompus sur {{ achievementsTotal }}</span>
+        <span class="sceau__row-title">Succès</span><span class="sceau__row-note">{{ unlocked }} sceaux rompus sur {{ achievementsTotal }}</span>
       </button>
       <button type="button" class="sceau__row" @click="$emit('open-contact')">
         <span class="sceau__row-title">Écrire aux créateurs</span><span class="sceau__row-note">Une idée, un souci : on lit tout</span>
@@ -52,7 +52,7 @@ import GSigil from '@/components/ui/GSigil.vue';
 import { roman } from '@/utils/roman';
 import { LEVELS } from '@/utils/trialProgress';
 
-// Onglet Sceau : le sceau vivant du joueur, ce qui le façonne, et son compte (Cabinet, Codex, contact)
+// Onglet Sceau : le sceau vivant du joueur, ce qui le façonne, et son compte (Cabinet, Succès, contact)
 export default {
   name: 'SceauView',
   components: { GSigil },

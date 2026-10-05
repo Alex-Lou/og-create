@@ -3,7 +3,7 @@
 Document pour l'agent qui reprend le projet : ce qu'est le jeu, comment travailler avec son auteur, comment le code est
 construit, ce qui est fait et ce qui reste à faire. **À lire en entier avant la première ligne de code.**
 L'histoire, les personnages et le game design sont dans **`HISTOIRE.md`** (la bible, à lire ensuite).
-État au 5 octobre 2026, après le lot 9e (bêtes des climats).
+État au 5 octobre 2026, après le lot H0 de la bible (la troupe et les textes).
 
 ---
 
@@ -11,7 +11,7 @@ L'histoire, les personnages et le game design sont dans **`HISTOIRE.md`** (la bi
 
 Jeu d'alchimie en français, sur mobile d'abord (PWA installable) :
 
-- **le Livre** (le Codex) : on découvre des centaines d'éléments en les mélangeant dans l'Athanor ; pages, chapitres, énigmes,
+- **le Grimoire** (*Codex Mundi* ; « le Livre » dans le code) : on découvre des centaines d'éléments en les mélangeant dans l'Athanor ; pages, chapitres, énigmes,
   encre, pendu des lettres ;
 - **l'Épreuve** : questions chronométrées ;
 - **l'Île** (le Monde) : une île isométrique de 96 × 96 cases. On y bâtit 7 bâtiments à 7 paliers, on achète des
@@ -277,6 +277,12 @@ chronométrer 20 appels. Comparer à zoom égal, au même endroit.
   renard des neiges, bouquetin, macareux, poney, grenouille, tortue, fennec, dromadaire, caméléon, toucan,
   salamandre, corbeau des cendres. Une de chaque par quartier à soi de son climat, sur une case libre, à ses heures
   (`village.js`, `CLIMATE_BEASTS`).
+- **Compteur `?perf`** (`src/world/perf.js`) et **lot confort** : toucher en deux temps, île de bord à bord avec un
+  plein écran, habitants qui ne se marchent plus dessus et tournées variées (`village.js`).
+- **Lot H0 de la bible** (la troupe et les textes) : Cannelle, Aster, Rivet, Ondin, Sylve, Galet, Mélisse (prénoms,
+  rôles, cadeaux, répliques par cœurs dans `friends.js`, répliques de travail dans `village.js`) ; Brume se présente
+  une fois ; les bouteilles d'Héliane sont signées « H. » ; « Grimoire » partout dans les textes. Les identifiants
+  (bâtiments, quêtes) ne changent pas. `tests/troupe.test.js` garde les critères d'acceptation.
 
 ### Décisions déjà prises par l'auteur (ne pas les redemander)
 - **Île** : 96 × 96 ; l'ancienne carte devient le cœur ; découverte par expéditions ; un quartier s'ouvre avec des

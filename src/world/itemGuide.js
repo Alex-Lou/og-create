@@ -27,7 +27,7 @@ const HOW = {
   rare: 'Trouve-la dans un coffre légendaire (Récolte, coffre du jour, quêtes de Brume), puis porte-la depuis la Boutique (Porter ou Ôter).'
 };
 // Pièce rare offerte par un chapitre du Livre : son coffre attend dans les Coffres de l'île
-const chapterHow = chapter => `Ouvre le chapitre ${chapter} du Livre : son coffre l’offre (bouton Coffres de l’île). Porte-la ensuite depuis la Boutique.`;
+const chapterHow = chapter => `Ouvre le chapitre ${chapter} du Grimoire : son coffre l’offre (bouton Coffres de l’île). Porte-la ensuite depuis la Boutique.`;
 const WHY = {
   prod: 'Le bâtiment produit plus de ressources et d’écus, jusqu’à +100 %.',
   coins: 'Des écus en plus chaque heure, même quand tu ne joues pas.',

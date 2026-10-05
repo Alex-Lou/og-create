@@ -1,9 +1,16 @@
 # Origins Création — Les Naufragés de la Brume
 
 > **Bible narrative et plan de game design : version finale** (v5, 5 octobre 2026). Elle remplace toutes les versions précédentes. Pour commencer à construire : § 19.
-> - Rien de ce document n'est encore codé. L'état du jeu décrit ici est celui d'après le lot 9e (12 bêtes des climats) et le compteur `?perf`.
+> - Rien de ce document n'était codé à sa rédaction. L'état du jeu décrit ici est celui d'après le lot 9e (12 bêtes des climats) et le compteur `?perf`.
 > - Chaque fait sur le jeu actuel est vérifié dans le code ou dans la base de test (`B/` = serveur, `F/` = front).
 > - **Chaque recette citée est une vraie recette de la base** (calculée le 5 octobre 2026).
+
+> **Mises à jour depuis la v5** (règle du § 19 : la bible change avant le code).
+> - **Lots livrés** : H0 (la troupe et les textes).
+> - **Lot H0, choix de l'auteur** :
+>   - le mot d'Héliane de l'acte II dit « Grimoire » (§ 10) ;
+>   - les familiers suivent le style des bêtes du lot 9e, et non plus « à plat, avec les gros yeux ronds » (§ 14) ;
+>   - « Codex des succès » devient « Succès » : seul le livre s'appelle Grimoire (*Codex Mundi*).
 
 **Ce que les versions 4 et 5 changent.**
 1. **Une nouvelle troupe** : nouveaux noms, vraies personnalités, chacun avec une magie, une voix, un familier, un secret et un arc.
@@ -972,7 +979,7 @@ Les 24 visiteurs actuels gardent leurs prénoms et leurs histoires. Dans le réc
   - liens « Le bois et la pierre » et « La feuille et la flamme ».
   - Étape : **Le Hameau**.
 - **Brume** : stade 2 (turquoise).
-- **Mot d'Héliane** : « Le Livre n'aime pas qu'on le brusque. Mélange doucement. — H. »
+- **Mot d'Héliane** : « Le Grimoire n'aime pas qu'on le brusque. Mélange doucement. — H. »
 - **Le Savoir de Galet** : à partir de maintenant, il souffle des indices sur la Matière (le sceau de Saturne a trouvé son gardien).
 
 ### Acte III — « Ciel et Terre » · ☾ · se nourrir, explorer
@@ -1210,7 +1217,7 @@ Le prix des quartiers et des paliers décide du rythme : l'équilibrage reste à
   | Basalte | Galet | Tortue (dessin du lot 9e) |
   | Lunette | Mélisse | Papillon |
 
-  Ils sont dans le style à plat, avec les gros yeux ronds de la feuille de route.
+  Ils sont dans le style des bêtes du lot 9e (le style du jeu, un peu plus mignon, de profil).
 - **Anya** : la seule figure « majestueuse » du jeu.
   - Deux fois la taille d'un naufragé, animation lente (elle respire, son manteau ondule), lueur dorée, lucioles.
   - Son apparition ralentit tout (et baisse la musique, si le son arrive un jour). Palette or et vert.

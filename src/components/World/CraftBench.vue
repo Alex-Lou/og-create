@@ -38,7 +38,7 @@
                 <ElementGlyph :glyph="FIND_GLYPH[f]" /> {{ n }}
               </li>
             </ul>
-            <ul v-if="c.elements.length" class="bench__know" aria-label="Savoir-faire (éléments du Livre, non dépensés)">
+            <ul v-if="c.elements.length" class="bench__know" aria-label="Savoir-faire (éléments du Grimoire, non dépensés)">
               <li v-for="e in c.elements" :key="e.name" :class="{ 'is-missing': !e.have }">
                 <ElementGlyph :glyph="e.have ? elementEmojis[e.name] || 'ui:spark' : 'ui:unknown'" /> {{ e.name }}
               </li>

@@ -5,8 +5,8 @@
 export const TIER_LABEL = { start: 'Débuts', I: 'Palier I', II: 'Palier II', III: 'Palier III', climat: 'Climats' };
 // Ce qui ouvre un palier (en clair)
 export function tierHint(tier, epreuves) {
-  if (tier === 'I') return `Finis le chapitre I du Livre, ou réussis ${epreuves.need} questions de l’Épreuve (${Math.min(epreuves.have, epreuves.need)}/${epreuves.need}).`;
-  return `Finis le chapitre ${tier} du Livre.`;
+  if (tier === 'I') return `Finis le chapitre I du Grimoire, ou réussis ${epreuves.need} questions de l’Épreuve (${Math.min(epreuves.have, epreuves.need)}/${epreuves.need}).`;
+  return `Finis le chapitre ${tier} du Grimoire.`;
 }
 
 // Cases d'un gabarit, dans l'ordre de lecture : [[x, y]]

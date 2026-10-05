@@ -29,13 +29,13 @@ export const BUILDS = {
 };
 // Une tenue par métier (haut, bas, chapeau, outil, coiffure, silhouette, poils, tablier)
 export const ROLES = {
-  potager: { label: 'Jardinière', top: '#7EC45B', bottom: '#6B4A2E', hat: 'straw', tool: 'can', style: 'long', build: 'slim' },
-  carriere: { label: 'Mineur', top: '#8E99A4', bottom: '#4F5660', hat: 'helmet', tool: 'pick', style: 'short', build: 'broad', beard: 'full' },
-  bosquet: { label: 'Bûcheronne', top: '#C9473A', bottom: '#4F5A72', hat: 'beanie', tool: 'axe', style: 'braids', build: 'slim' },
-  puits: { label: 'Porteur d’eau', top: '#6FA3D9', bottom: '#5E616B', hat: 'scarf', tool: 'bucket', style: 'curly', build: 'slim', glasses: true },
-  ponton: { label: 'Pêcheuse', top: '#F2C04B', bottom: '#2F5684', hat: 'bucket', tool: 'rod', style: 'ponytail', build: 'slim' },
-  atelier: { label: 'Forgeron', top: '#9C6A44', bottom: '#3D3A36', hat: null, tool: 'hammer', style: 'short', build: 'broad', beard: 'mustache', apron: '#5E3A22' },
-  foyer: { label: 'Cuisinière', top: '#FFFFFF', bottom: '#B9503B', hat: 'toque', tool: 'ladle', style: 'bun', build: 'elder', apron: '#F4EEDC', glasses: true }
+  potager: { label: 'Jardinière des lunes', top: '#7EC45B', bottom: '#6B4A2E', hat: 'straw', tool: 'can', style: 'long', build: 'slim' },
+  carriere: { label: 'Tailleur de runes', top: '#8E99A4', bottom: '#4F5660', hat: 'helmet', tool: 'pick', style: 'short', build: 'broad', beard: 'full' },
+  bosquet: { label: 'Gardienne des bois', top: '#C9473A', bottom: '#4F5A72', hat: 'beanie', tool: 'axe', style: 'braids', build: 'slim' },
+  puits: { label: 'Petit sourcier', top: '#6FA3D9', bottom: '#5E616B', hat: 'scarf', tool: 'bucket', style: 'curly', build: 'slim', glasses: true },
+  ponton: { label: 'Navigatrice', top: '#F2C04B', bottom: '#2F5684', hat: 'bucket', tool: 'rod', style: 'ponytail', build: 'slim' },
+  atelier: { label: 'Horloger-artificier', top: '#9C6A44', bottom: '#3D3A36', hat: null, tool: 'hammer', style: 'short', build: 'broad', beard: 'mustache', apron: '#5E3A22' },
+  foyer: { label: 'Cuisinière-guérisseuse', top: '#FFFFFF', bottom: '#B9503B', hat: 'toque', tool: 'ladle', style: 'bun', build: 'elder', apron: '#F4EEDC', glasses: true }
 };
 
 /* ---------- Tête : cheveux, visage, poils, chapeau (repère de la tête) ---------- */

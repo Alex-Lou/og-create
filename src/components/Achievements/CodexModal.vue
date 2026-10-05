@@ -1,5 +1,5 @@
 <template>
-  <GModal eyebrow="Codex" :title="`${unlockedCount} sceaux rompus sur ${achievements.length}`" :width="1040" @close="$emit('close')">
+  <GModal eyebrow="Succès" :title="`${unlockedCount} sceaux rompus sur ${achievements.length}`" :width="1040" @close="$emit('close')">
     <p class="g-italic codex__lead">Chaque palier de cinq sceaux ajoute un anneau à ton sceau.</p>
     <ul class="codex__grid">
       <li v-for="achievement in sorted" :key="achievement.name" :class="['codex__cell', { 'is-open': achievement.unlocked }]">
@@ -28,7 +28,7 @@ function veil(text) {
   return [...text].map((char, i) => (char === ' ' ? ' ' : GLYPHS[(char.charCodeAt(0) + i) % GLYPHS.length])).join('');
 }
 
-// Codex des succès : obtenus d'abord, les scellés restent illisibles
+// Succès : obtenus d'abord, les scellés restent illisibles
 export default {
   name: 'CodexModal',
   components: { GModal, GSeal },
