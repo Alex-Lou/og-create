@@ -1,8 +1,8 @@
 // Vie ambiante de l'île : habitants et bêtes. Qui vit où, par où ils passent et ce qu'ils font à chaque instant,
 // selon l'heure et le temps qu'il fait (sky.js). Rien n'est gardé par le serveur : tout se déduit de l'île (bâtiments
 // bâtis, quartiers à soi, décor) et du temps.
-// - Habitants : un par bâtiment bâti (son métier), plus la cuisinière du Foyer. Le jour ils travaillent et font leurs
-//   tournées par les chemins ; le soir ils rentrent au Foyer avec une lanterne ; la nuit ils dorment. Sous la pluie,
+// - Habitants : un par bâtiment bâti (son métier), plus la cuisinière du Foyer, dessinés sous trois angles
+//   (villagers.js) : ils regardent où ils vont. Le jour ils travaillent et font leurs tournées par les chemins ; le soir ils rentrent au Foyer avec une lanterne ; la nuit ils dorment. Sous la pluie,
 //   un sur deux reste à l'abri, les autres sortent avec un parapluie.
 // - Ferme (avec les paliers du Potager) : poules de race et poussins, vache, moutons, cochon, chèvre, qui broutent
 //   autour du Potager, se couchent la nuit et ne bougent plus sous la pluie.
@@ -16,6 +16,8 @@ const WALK = 'gsmdpkb';
 const STAIRS = 'pkb';
 const BLOCKING = new Set(['tree', 'pine', 'palm', 'bush', 'rock', 'rocks', 'crag', 'apple', 'birch', 'autumn', 'stump', 'log', 'mossy', 'lantern', 'bench', 'nest']);
 const WORK_ORDER = ['potager', 'carriere', 'bosquet', 'puits', 'ponton', 'atelier'];
+// Où regarde un habitant au repos (tiré toutes les 9 s) : souvent de côté, parfois vers le joueur ou au loin
+const IDLE_VIEWS = ['se', 'se', 'front', 'ne'];
 const hash = (a, b) => {
   const s = Math.sin(a * 127.1 + b * 311.7) * 43758.5453;
   return s - Math.floor(s);
@@ -248,15 +250,20 @@ export function villageOf({ n, M, sites, owned, tiles, props, annexes = [] }) {
       const p = onPlan(planOf(r, evening), t);
       const lantern = evening && phase.lit > 0.35;
       const umbrella = rain > 0.5;
-      const frame = p.pose === 'walk' ? Math.floor(t * 4) % 2 : p.pose === 'work' ? Math.floor(t * 1.6 + r.k) % 2 : (t + r.k * 1.3) % 5 < 0.18 ? 1 : 0;
+      // En marche, il regarde où il va (4 images) ; au travail, de trois quarts ; au repos, de face, de côté ou au loin,
+      // selon le moment ; touché, il se tourne vers le joueur et fait coucou
+      const walking = p.pose === 'walk';
+      const frame = walking ? Math.floor(t * 6) % 4 : p.pose === 'work' ? Math.floor(t * 1.6 + r.k) % 2 : (t + r.k * 1.3) % 5 < 0.18 ? 1 : 0;
       const hop = tapped(r.id, 0.6);
-      const opts = { pose: hop !== null ? 'idle' : p.pose, back: hop !== null ? false : p.back, frame: hop !== null ? 0 : frame, lantern, umbrella };
-      const flip = hop !== null ? false : p.pose === 'walk' ? p.flip : hash(r.k, Math.floor(t / 20)) < 0.5;
+      const glance = IDLE_VIEWS[Math.floor(hash(r.k, Math.floor(t / 9)) * IDLE_VIEWS.length)];
+      const view = hop !== null ? 'front' : walking ? (p.back ? 'ne' : 'se') : p.pose === 'work' ? 'se' : glance;
+      const opts = { pose: hop !== null ? 'wave' : p.pose, view, frame: hop !== null ? Math.floor(t * 5) % 2 : frame, lantern, umbrella };
+      const flip = hop !== null ? false : walking ? p.flip : hash(r.k, Math.floor(t / 20)) < 0.5;
       out.push({
         id: r.id, kind: 'villager', role: r.role, x: p.x, y: p.y, z: hop === null ? 0 : Math.sin(hop * Math.PI) * 6, flip,
-        sprite: [`vil-${r.k}-${opts.pose}-${opts.back ? 1 : 0}-${opts.frame}-${lantern ? 1 : 0}-${umbrella ? 1 : 0}`, () => villagerSprite(r.look, opts)]
+        sprite: [`vil-${r.k}-${opts.pose}-${view}-${opts.frame}-${lantern ? 1 : 0}-${umbrella ? 1 : 0}`, () => villagerSprite(r.look, opts)]
       });
-      if (lantern) lights.push({ x: p.x, y: p.y, dx: flip ? 6.4 : -6.4, dy: -3 });
+      if (lantern) lights.push({ x: p.x, y: p.y, dx: flip ? 5.8 : -5.8, dy: -3 });
     }
     // Ferme
     for (const a of farm) {

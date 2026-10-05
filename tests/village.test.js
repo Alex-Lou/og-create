@@ -1,7 +1,7 @@
 import { describe, it, expect } from 'vitest';
 import { villageOf } from '@/world/village';
 import { skyAt } from '@/world/sky';
-import { villagerSprite, ROLES } from '@/world/villagers';
+import { villagerSprite, personOf, ROLES, VIEWS, BUILDS, STYLES } from '@/world/villagers';
 import { ANIMAL_SPRITES, HEN_BREEDS } from '@/world/animals';
 
 // Petite île de 14 × 14 : un chemin en croix, de l'herbe, une forêt au nord-ouest, une mare au sud-est
@@ -94,12 +94,42 @@ describe('village : bêtes', () => {
     for (const k of ['cow', 'sheep', 'pig', 'goat']) [0, 1, 'rest'].forEach(f => expect(ANIMAL_SPRITES[k](f).svg).not.toMatch(/NaN|undefined/));
     for (const k of ['chick', 'deer', 'fox', 'rabbit', 'hedgehog', 'squirrel', 'heron']) [0, 1].forEach(f => expect(ANIMAL_SPRITES[k](f).svg).not.toMatch(/NaN|undefined/));
     for (const [id, role] of Object.entries(ROLES)) {
-      for (const pose of ['walk', 'idle', 'work']) {
-        for (const back of [false, true]) {
-          const { svg } = villagerSprite({ ...role, skin: '#F6D3B3', hair: '#3A2A1E' }, { pose, back, frame: 1, lantern: true, umbrella: id === 'ponton' });
-          expect(svg).not.toMatch(/NaN|undefined/);
+      for (const pose of ['walk', 'idle', 'work', 'wave']) {
+        for (const view of VIEWS) {
+          for (const frame of [0, 1, 2, 3]) {
+            const { svg } = villagerSprite({ ...role, skin: '#F6D3B3', hair: '#3A2A1E' }, { pose, view, frame, lantern: true, umbrella: id === 'ponton' });
+            expect(svg).not.toMatch(/NaN|undefined/);
+          }
         }
       }
     }
+    // Ancien nom de la vue de dos ; visiteurs tirés au hasard, toutes silhouettes et coiffures
+    expect(villagerSprite({ ...ROLES.potager, skin: '#F6D3B3', hair: '#3A2A1E' }, { back: true }).svg).toBe(villagerSprite({ ...ROLES.potager, skin: '#F6D3B3', hair: '#3A2A1E' }, { view: 'ne' }).svg);
+    const builds = new Set();
+    const styles = new Set();
+    for (let i = 0; i < 80; i++) {
+      const look = personOf(i * 7919 + 3);
+      builds.add(look.build);
+      styles.add(look.style);
+      for (const view of VIEWS) expect(villagerSprite(look, { pose: 'walk', view, frame: i % 4 }).svg).not.toMatch(/NaN|undefined|null/);
+    }
+    expect([...builds].sort()).toEqual(Object.keys(BUILDS).sort());
+    expect(styles.size).toBe(STYLES.length);
+    expect(personOf(42)).toEqual(personOf(42));
+  });
+  it('chaque habitant est un SVG bien formé (une image se charge seulement sans attribut en double)', () => {
+    const doubled = svg => [...svg.matchAll(/<(\w+)([^>]*)>/g)].filter(m => {
+      const names = [...m[2].matchAll(/\s([\w-]+)=/g)].map(x => x[1]);
+      return new Set(names).size !== names.length;
+    });
+    for (const role of Object.values(ROLES)) {
+      for (const view of VIEWS) {
+        for (const pose of ['walk', 'idle', 'work', 'wave']) {
+          const { svg } = villagerSprite({ ...role, skin: '#F6D3B3', hair: '#3A2A1E' }, { pose, view, frame: 1, lantern: true, umbrella: true });
+          expect(doubled(svg)).toEqual([]);
+        }
+      }
+    }
+    for (let i = 0; i < 30; i++) expect(doubled(villagerSprite(personOf(i * 31 + 1), { view: VIEWS[i % 3], pose: 'walk', frame: i % 4 }).svg)).toEqual([]);
   });
 });
