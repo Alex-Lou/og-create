@@ -1,7 +1,8 @@
 // Bêtes de l'île (vie ambiante) : la ferme (poules de races, poussins, vache, moutons, cochon, chèvre), les bois
-// (cerf, renard, lapin, hérisson, écureuil) et l'eau (carpes koï, héron). Vues de profil, tournées vers la droite
-// (l'île les retourne pour la gauche) ; ancrage aux pieds, cadre serré. Images : 0 et 1 (pas, picore, broute),
-// rest (couchée, la nuit).
+// (cerf, renard, lapin, hérisson, écureuil), l'eau (carpes koï, héron) et deux bêtes par climat (renard des neiges,
+// bouquetin, macareux, poney, grenouille, tortue, fennec, dromadaire, caméléon, toucan, salamandre, corbeau des
+// cendres). Vues de profil, tournées vers la droite (l'île les retourne pour la gauche) ; ancrage aux pieds, cadre
+// serré. Images : 0 et 1 (pas, picore, broute, geste), rest (couchée, la nuit).
 import { sprite } from './iso';
 
 const f2 = n => Math.round(n * 100) / 100;
@@ -14,6 +15,11 @@ const EYE = '#2A2420';
 const SMALL = { x: -12, y: -18, w: 24, h: 20 };
 const MID = { x: -16, y: -24, w: 32, h: 26 };
 const TALL = { x: -16, y: -34, w: 32, h: 36 };
+// Œil mignon : rond sombre et reflet ; fermé (la nuit) : petit arc
+const eye = (x, y, r = 0.8) => dot(x, y, r, EYE) + dot(x - r * 0.3, y - r * 0.35, r * 0.36, '#FFFFFF');
+const shut = (x, y, r = 0.8) => `<path d="M${f2(x - r)},${f2(y)} q${f2(r)},${f2(r * 0.9)} ${f2(r * 2)},0" fill="none" stroke="${EYE}" stroke-width=".5" stroke-linecap="round"/>`;
+const cheek = (x, y, r = 0.9) => ell(x, y, r, r * 0.6, '#F4A0A8', ' opacity=".75"');
+const path = (d, fill, extra = '') => `<path d="${d}" fill="${fill}"${extra}/>`;
 
 // Pattes : quatre traits, qui s'écartent à la marche
 function legs(xs, y0, len, color, frame, w = 1.4) {
@@ -151,8 +157,201 @@ export function heron(frame) {
     + dot(hx + 0.4, hy - 0.6, 0.45, EYE) + ln([hx - 1.4, hy - 1], [hx - 4.6, hy - 1.6], '#2A2420', 0.6), TALL);
 }
 
+/* ---------- Les Cimes ---------- */
+// Renard des neiges : blanc, bout de queue et oreilles bleutés ; 0 et 1 : il trotte ; rest : roulé en boule
+export function snowFox(frame) {
+  if (frame === 'rest') {
+    return sprite(shadow(8) + ell(0, -3.6, 6.6, 3.4, '#FDFCF8', OUT) + ell(5, -5, 2.6, 2.2, '#FDFCF8', OUT)
+      + path('M5.4,-6.8 l.6,-2.4 l1.4,2 Z', '#FDFCF8', OUT) + shut(5.6, -5.2, 0.6) + cheek(6.2, -4.2, 0.7)
+      + path('M-6,-3.4 Q-4,0.4 4,-1.2 Q6.6,-1.6 7,-2.6 Q2,-1.4 -6,-3.4 Z', '#FDFCF8', OUT) + ell(6.2, -2.4, 1.2, 0.9, '#B7D2EC'), SMALL);
+  }
+  return sprite(shadow(9) + legs([-4, -2, 3, 5], -5, 5, '#C9D3DD', frame, 1.3)
+    + path('M-6,-8 Q-13.4,-11 -13.4,-5.2 Q-10,-2.6 -6,-6 Z', '#FDFCF8', OUT) + ell(-12.2, -5.2, 2, 1.5, '#B7D2EC')
+    + ell(0, -8, 6.4, 3.4, '#FDFCF8', OUT)
+    + ell(6.6, -9.4, 2.8, 2.4, '#FDFCF8', OUT) + path('M8.4,-10.2 L11.4,-9.2 L8.6,-7.6 Z', '#FDFCF8', OUT) + dot(11.2, -9.2, 0.55, EYE)
+    + path('M5,-11 l.8,-3.2 l1.8,2.4 Z M6.8,-11.4 l1.6,-2.8 l.9,3 Z', '#FDFCF8', OUT) + path('M5.5,-11.3 l.4,-1.6 l.9,1.2 Z', '#B7D2EC')
+    + eye(7.6, -9.8) + cheek(7, -8.2), MID);
+}
+// Bouquetin : brun gris, ventre clair, grandes cornes annelées en arc ; 1 : il broute ; rest : couché
+export function ibex(frame) {
+  // Cornes en arc vers l'arrière ; tête baissée, elles se couchent le long du cou (low)
+  const horns = (hx, hy, low = false) => {
+    const [cx, cy, ex, ey] = low ? [hx - 3.6, hy - 4.4, hx - 6.4, hy - 2.8] : [hx - 2.6, hy - 8, hx - 7.4, hy - 7.4];
+    const q = t => [(1 - t) ** 2 * (hx - 0.6) + 2 * t * (1 - t) * cx + t * t * ex, (1 - t) ** 2 * (hy - 2) + 2 * t * (1 - t) * cy + t * t * ey];
+    return `<path d="M${hx - 0.6},${hy - 2} Q${cx},${cy} ${ex},${ey}" fill="none" stroke="#8A7560" stroke-width="1.6" stroke-linecap="round"/>`
+      + [0.3, 0.55, 0.8].map(t => { const [x, y] = q(t); return ln([x - 0.5, y - 0.5], [x + 0.5, y + 0.5], '#6E5A44', 0.5); }).join('');
+  };
+  if (frame === 'rest') {
+    return sprite(shadow(8) + ell(-1, -4.4, 7.4, 3.8, '#B39A7A', OUT) + ell(-0.4, -2.6, 5, 1.6, '#E8D9C0') + horns(6.6, -6.6)
+      + ell(6.6, -6.6, 2.4, 2.3, '#B39A7A', OUT) + shut(7.2, -7, 0.6) + cheek(7.6, -5.6, 0.7), MID);
+  }
+  const graze = frame === 1;
+  const [hx, hy] = graze ? [8, -5.6] : [8, -13];
+  return sprite(shadow(8) + legs([-5, -2.4, 2.4, 5], -6, 6, '#6E5A44', 0, 1.4)
+    + ell(0, -9.6, 7.4, 4.2, '#B39A7A', OUT) + ell(0.6, -7.4, 5, 1.6, '#E8D9C0') + path('M-7.2,-11 l-1.6,-1.6 l.6,2.4 Z', '#6E5A44')
+    + horns(hx, hy, graze) + ell(hx, hy, 2.5, 2.4, '#B39A7A', OUT) + path(`M${hx + 1.2},${hy + 1.8} l.3,2.4 l.9,-2.2 Z`, '#6E5A44')
+    + eye(hx + 0.8, hy - 0.4, 0.75) + cheek(hx + 1.2, hy + 1, 0.7), MID);
+}
+
+/* ---------- Les Landes ---------- */
+// Macareux : dos noir, ventre et joues blancs, bec orange à base jaune ; 1 : il bat des ailes ; rest : ramassé
+export function puffin(frame) {
+  const flap = frame === 1;
+  const sit = frame === 'rest';
+  const y = sit ? 1.6 : 0;
+  return sprite(shadow(5) + (sit ? '' : ln([-1, -2], [-1.2, 0], '#F58A4C', 1) + ln([1.4, -2], [1.8, 0], '#F58A4C', 1)
+    + ell(-1.4, 0, 1.2, 0.5, '#F58A4C') + ell(2, 0, 1.2, 0.5, '#F58A4C'))
+    + ell(0, -6.4 + y, 4.4, 5, '#2F2A36', OUT) + ell(1.2, -5 + y, 3, 3.6, '#FFFDF7')
+    + (flap ? path(`M-2,${-8 + y} Q-6,${-15 + y} -3,${-14 + y} Q-1,${-11 + y} 0,${-8 + y} Z`, '#2F2A36', OUT) : path(`M-3.4,${-8 + y} Q-5,${-4 + y} -2,${-2.4 + y} Q-2,${-6 + y} -3.4,${-8 + y} Z`, '#24202A'))
+    + ell(1.4, -11.6 + y, 3.4, 3.2, '#2F2A36', OUT) + ell(2.2, -11 + y, 2.2, 2.1, '#FFFDF7')
+    + path(`M3.8,${-12.8 + y} Q7.4,${-12.2 + y} 7.6,${-10.2 + y} Q6.2,${-9 + y} 3.8,${-9.6 + y} Z`, '#F2683A', OUT) + path(`M3.8,${-12.8 + y} L4.8,${-12.6 + y} L4.8,${-9.6 + y} L3.8,${-9.6 + y} Z`, '#FFC24B')
+    + (sit ? shut(2, -12.2 + y, 0.65) : eye(2.2, -12.2 + y, 0.75)) + cheek(2.2, -10.2 + y, 0.65), SMALL);
+}
+// Poney : brun, crinière et queue sombres, liste blanche ; 1 : il broute ; rest : couché
+export function pony(frame) {
+  const BODY = '#9A6A44', MANE = '#4A3426', MUZ = '#7E5434';
+  // Tête allongée inclinée de a degrés autour de (hx, hy) : crâne, museau plus sombre, oreille, liste blanche
+  const head = (hx, hy, a, shut0 = false) => `<g transform="rotate(${a} ${hx} ${hy})">`
+    + ell(hx, hy, 3.4, 1.9, BODY, OUT) + ell(hx + 2.4, hy + 0.3, 1.5, 1.5, MUZ) + dot(hx + 3.2, hy, 0.35, '#2A2420')
+    + path(`M${hx - 1.6},${hy - 1.4} l-.4,-2.2 l1.6,1.4 Z`, BODY, OUT) + path(`M${hx - 0.6},${hy - 1.6} Q${hx + 1.4},${hy - 1.2} ${hx + 2.2},${hy - 0.6}`, 'none', ' stroke="#FFFDF7" stroke-width=".7" stroke-linecap="round"')
+    + (shut0 ? shut(hx - 0.4, hy - 0.3, 0.6) : eye(hx - 0.4, hy - 0.4, 0.72)) + cheek(hx + 0.6, hy + 0.9, 0.65) + `</g>`;
+  if (frame === 'rest') {
+    return sprite(shadow(10) + path('M-8,-5 Q-12,-4 -11,-0.6 Q-9,-2 -8,-3 Z', MANE) + ell(-0.6, -4.6, 8.4, 4, BODY, OUT)
+      + path('M5,-6 Q6.6,-10.6 8.6,-11 L9.6,-8 Q8,-7.4 7.4,-4.6 Z', BODY, OUT) + path('M4.6,-6.4 Q6,-11 8.4,-11.6 Q7,-9.4 6.4,-6 Z', MANE)
+      + head(10, -9.6, 20, true), MID);
+  }
+  const graze = frame === 1;
+  const neck = graze ? 'M4.6,-12.6 Q8.4,-11 9.6,-5.6 L7.4,-5 Q6.4,-8.6 4,-9.2 Z' : 'M4.4,-12.4 Q6.4,-17.6 9,-18.4 L10,-15.4 Q8.4,-14 7.6,-10.4 Z';
+  const mane = graze ? 'M4.4,-13.2 Q8.8,-11.8 9.8,-6.6 Q8.6,-10 5,-11.4 Z' : 'M4,-12.6 Q5.8,-18.8 9,-19.2 Q7,-17 6,-12.4 Z';
+  return sprite(shadow(10) + legs([-6, -3.6, 3.4, 5.8], -7, 7, BODY, 0, 1.7)
+    + [-6, -3.6, 3.4, 5.8].map(x => ln([x, -0.6], [x, 0], '#2A2420', 1.8)).join('')
+    + path('M-7.6,-12 Q-11.4,-10 -10.6,-4.6 Q-9,-7.6 -7.4,-9.4 Z', MANE) + ell(0, -10.6, 8, 4.4, BODY, OUT)
+    + path(neck, BODY, OUT) + path(mane, MANE) + (graze ? head(9.6, -3.6, 62) : head(10.6, -17.2, 28)), MID);
+}
+
+/* ---------- Le Marais ---------- */
+// Grenouille : verte, yeux en bosses, ventre clair ; 1 : elle bondit ; rest : aplatie, yeux fermés
+export function frog(frame) {
+  const G = '#6CC15A', L = '#D8F0A2', D = '#4E9C46';
+  if (frame === 1) {
+    return sprite(shadow(4) + ell(-3.4, -6.6, 2.4, 1.4, G, OUT) + ln([-5, -6], [-8, -3.6], G, 1.3) + ell(-8.8, -3, 1.4, 0.6, G)
+      + ell(0.4, -8, 4.6, 2.6, G, OUT) + ell(1.4, -7, 3, 1.4, L) + dot(3.4, -10.4, 1.6, G) + eye(3.6, -10.6, 0.8)
+      + ln([3.6, -6.6], [6.4, -4.4], G, 1.2) + `<path d="M2.6,-8.4 q1.4,1 2.8,0" fill="none" stroke="${EYE}" stroke-width=".45" stroke-linecap="round"/>`, SMALL);
+  }
+  const rest = frame === 'rest';
+  return sprite(shadow(6) + ell(-3.6, -1.6, 2.6, 1.6, G, OUT) + ell(-1.6, -0.4, 2.2, 0.6, G)
+    + ell(0, -3.4, 5.4, 3.2, G, OUT) + ell(1.4, -2.2, 3.4, 1.8, L) + dot(-2, -4.4, 0.6, D)
+    + dot(1, -6.4, 1.7, G) + dot(3.6, -6.2, 1.7, G)
+    + (rest ? shut(1, -6.6, 0.7) + shut(3.6, -6.4, 0.7) : eye(1.2, -6.6, 0.85) + eye(3.8, -6.4, 0.85))
+    + `<path d="M2.2,-3.8 q1.6,1.2 3.2,0" fill="none" stroke="${EYE}" stroke-width=".45" stroke-linecap="round"/>` + cheek(5, -4.2, 0.6)
+    + ln([3.6, -2], [4.2, 0], G, 1.1), SMALL);
+}
+// Tortue : carapace bombée à écailles, tête qui sort ; 1 : elle avance ; rest : rentrée dans sa carapace
+export function tortoise(frame) {
+  const SH = '#7A8F4A', SC = '#5E7238', SK = '#B9C27A';
+  const step = frame === 1 ? 1 : 0;
+  const shell = ell(0, -4, 6, 4, SH, OUT) + ell(0, -0.6, 6.2, 0.9, SC)
+    + `<path d="M-3.4,-7 L-1.6,-4.4 L1.6,-4.4 L3.4,-7 M-1.6,-4.4 L-2.6,-1.4 M1.6,-4.4 L2.6,-1.4 M-5.4,-3.4 L-1.6,-4.4 M1.6,-4.4 L5.4,-3.4" fill="none" stroke="${SC}" stroke-width=".6"/>`;
+  if (frame === 'rest') return sprite(shadow(6) + shell + ell(6, -1.2, 0.8, 0.6, SK), SMALL);
+  return sprite(shadow(7) + ln([-3.6, -1], [-3.6 - step, 0], SK, 1.6) + ln([3.4, -1], [3.4 + step, 0], SK, 1.6)
+    + path(`M5,-3 Q7.6,-5.4 ${9 + step},-4.6 Q${10 + step},-3 ${8.6 + step},-2 Q7,-1.6 5.4,-1.4 Z`, SK, OUT) + shell
+    + eye(8 + step, -4, 0.7) + cheek(8.6 + step, -2.8, 0.55) + `<path d="M${8.8 + step},-2.6 q.6,.3 1,-.2" fill="none" stroke="${EYE}" stroke-width=".4" stroke-linecap="round"/>`, SMALL);
+}
+
+/* ---------- Les Dunes ---------- */
+// Fennec : sable, très grandes oreilles, bout de queue noir ; 0 et 1 : il trotte ; rest : couché, oreilles basses
+export function fennec(frame) {
+  const S = '#F2BF73', C = '#FFF0D2';
+  if (frame === 'rest') {
+    return sprite(shadow(7) + path('M-5,-3 Q-10,-3.6 -9.6,-0.6 Q-6,0 -4,-1.4 Z', S, OUT) + ell(-9.2, -1.2, 1, 0.8, '#3D2A1E')
+      + ell(0, -3.2, 5.6, 2.8, S, OUT) + ell(5, -4, 2.4, 2, S, OUT) + path('M3.8,-5.4 Q2,-9 0.6,-8.6 Q2,-6.4 3,-4.6 Z M5.6,-5.6 Q5,-9.4 3.6,-9.6 Q4.2,-7 4.6,-5 Z', S, OUT)
+      + path('M6.4,-4 L8.2,-3.4 L6.6,-2.6 Z', C) + shut(5.4, -4.4, 0.55) + cheek(6, -3.2, 0.6), SMALL);
+  }
+  return sprite(shadow(7) + legs([-3, -1.4, 2.2, 3.8], -3.6, 3.6, '#D9A25E', frame, 1.1)
+    + path('M-4.6,-6 Q-10.6,-8 -10.4,-3.4 Q-8,-2 -4.4,-4.6 Z', S, OUT) + ell(-10, -3.6, 1.2, 1, '#3D2A1E')
+    + ell(0, -5.8, 5, 2.8, S, OUT) + ell(1.6, -4.4, 2.6, 1.4, C)
+    + path('M4.2,-8.6 Q1.8,-15.4 0.4,-15.2 Q1.2,-11 2.8,-7.6 Z', S, OUT) + path('M2.4,-8.6 Q1.4,-12.8 1,-13.6 Q1.8,-11 2.6,-8.6 Z', C)
+    + path('M6,-8.8 Q6.4,-15.8 4.8,-16 Q3.6,-12 4.4,-8.4 Z', S, OUT) + path('M5.6,-9 Q5.6,-13.6 5,-14.4 Q4.4,-12 4.8,-9 Z', C)
+    + ell(5.4, -7, 2.8, 2.4, S, OUT) + path('M7,-7.6 L10.4,-6.6 L7.4,-5 Z', S, OUT) + ell(7.6, -5.8, 1.6, 0.8, C) + dot(10.2, -6.6, 0.5, EYE)
+    + eye(6.4, -7.6, 0.8) + cheek(6, -5.8, 0.65), MID);
+}
+// Dromadaire : une bosse, long cou, lèvres tombantes ; 1 : il marche ; rest : couché, pattes repliées
+export function camel(frame) {
+  const B = '#C99A5E', D = '#A87C46';
+  if (frame === 'rest') {
+    return sprite(shadow(11) + ell(-1, -5, 9, 4.4, B, OUT) + path('M-5,-8 Q-1,-15 3,-8 Z', B, OUT)
+      + path('M6.4,-7 Q8.4,-14 11,-14.6 Q13.4,-14.6 13.4,-12.4 Q11.6,-12 10.6,-11.4 Q9.4,-8 8.8,-5 Z', B, OUT)
+      + shut(11.2, -13.4, 0.6) + cheek(12, -12, 0.7) + ell(-1, -1, 7, 1, D), TALL);
+  }
+  return sprite(shadow(11) + legs([-6, -3.8, 3.6, 6], -10, 10, D, frame, 1.5)
+    + [-6, -3.8, 3.6, 6].map((x, i) => dot(x + (frame === 1 ? (i % 2 ? 0.7 : -0.7) : 0), -5, 0.9, D)).join('')
+    + path('M-9,-15 Q-11,-13 -10,-9.6', 'none', ' stroke="#8A6236" stroke-width="1" stroke-linecap="round"')
+    + ell(0, -14, 9, 4.6, B, OUT) + path('M-5,-17 Q-1,-27 3.6,-17 Z', B, OUT)
+    + path('M6.6,-15.4 Q8.6,-25 11.4,-27 Q14,-28.6 14.6,-26 Q13.6,-25 12.4,-24.6 Q10.6,-20 9.6,-13.4 Z', B, OUT)
+    + path('M12.6,-25 Q14,-24.6 14.6,-25.6 L14.4,-24 Q13.4,-23.6 12.4,-24 Z', D)
+    + eye(12, -26.2, 0.75) + cheek(12.8, -24.8, 0.65) + path('M11,-28 l.4,-1.6 l1,1.2 Z', D), TALL);
+}
+
+/* ---------- La Jungle ---------- */
+// Caméléon : vert, queue en spirale, casque, œil en tourelle ; 1 : il change de teinte ; rest : immobile, œil fermé
+export function chameleon(frame) {
+  const G = frame === 1 ? '#C9D24A' : '#3CBF9C', D = frame === 1 ? '#A9B23A' : '#2E9C7E', Y = '#F6D04E';
+  return sprite(shadow(7) + ln([-3, -3], [-4, 0], D, 1.1) + ln([-1.4, -3], [-0.6, 0], D, 1.1) + ln([2.4, -3], [1.8, 0], D, 1.1) + ln([4, -3], [4.8, 0], D, 1.1)
+    + `<path d="M-5,-5 Q-9,-5 -9,-8 Q-9,-10.4 -6.8,-10 Q-5.6,-9.4 -6.6,-8.2" fill="none" stroke="${G}" stroke-width="1.6" stroke-linecap="round"/>`
+    + path('M-5.4,-4.4 Q-5.4,-9 0,-9.4 Q4.6,-9.6 5.6,-6 Q5,-3 0,-3 Q-4,-3 -5.4,-4.4 Z', G, OUT)
+    + path('M-4,-3.8 Q0,-2.6 4.8,-3.8 L4.6,-3.2 Q0,-2.2 -4,-3.4 Z', Y)
+    + path('M4,-6.6 Q4.4,-11 7.6,-10 Q9.6,-8.4 9,-6 Q8,-4.2 5.6,-4.4 Z', G, OUT) + path('M4.4,-8.6 Q5,-10.6 7,-10.4', 'none', ` stroke="${Y}" stroke-width=".7"`)
+    + dot(7, -7.4, 1.5, G) + (frame === 'rest' ? shut(7.1, -7.4, 0.6) : eye(7.3, -7.5, 0.7))
+    + `<path d="M6.6,-5.2 q1.2,.6 2.2,-.4" fill="none" stroke="${EYE}" stroke-width=".4" stroke-linecap="round"/>`, SMALL);
+}
+// Toucan : noir, gorge jaune, grand bec orange à pointe noire ; 1 : il penche la tête ; rest : bec sous l'aile
+export function toucan(frame) {
+  const tilt = frame === 1 ? 8 : 0;
+  if (frame === 'rest') {
+    return sprite(shadow(4) + ln([-0.6, -2], [-0.8, 0], '#5A6FB0', 0.9) + ln([1, -2], [1.2, 0], '#5A6FB0', 0.9)
+      + ell(-0.4, -6, 3.6, 4.4, '#2A2630', OUT) + ell(0.8, -8.6, 2.4, 1.8, '#FFD23E') + ell(-0.6, -9.6, 3, 2.6, '#2A2630', OUT)
+      + path('M-1,-10.6 Q3,-11.4 4.4,-9 Q2,-8.6 -0.6,-9 Z', '#F2A33A', OUT) + shut(0.4, -10.6, 0.55), SMALL);
+  }
+  return sprite(shadow(4) + ln([-0.6, -2], [-0.8, 0], '#5A6FB0', 0.9) + ln([1, -2], [1.2, 0], '#5A6FB0', 0.9)
+    + path('M-2.6,-4 L-5.6,-1 L-3.6,-1 L-1.4,-3 Z', '#2A2630')
+    + ell(-0.4, -6.4, 3.4, 4.8, '#2A2630', OUT) + ell(1.2, -8.4, 2.2, 2.6, '#FFD23E')
+    + `<g transform="rotate(${tilt} 0.6 -11.4)">` + ell(0.6, -11.6, 2.6, 2.4, '#2A2630', OUT)
+    + path('M2.4,-13 Q7.6,-14.4 9.6,-11.4 Q7.6,-9.4 2.6,-10 Z', '#F2A33A', OUT) + path('M8.4,-12.4 Q9.6,-12 9.6,-11.4 Q9,-10.6 8.2,-10.4 Z', '#2A2630')
+    + path('M2.6,-11.6 Q6,-12 9.2,-11.4', 'none', ' stroke="#D9822A" stroke-width=".4"')
+    + dot(1.2, -12.2, 1.1, '#7FC6E8') + eye(1.2, -12.2, 0.6) + `</g>`, SMALL);
+}
+
+/* ---------- Le Volcan ---------- */
+// Salamandre : noire à taches orange ; 0 et 1 : elle marche ; rest : immobile, yeux fermés
+export function salamander(frame) {
+  const B = '#38333F', S = '#FFB23E';
+  const st = frame === 1 ? 1 : 0;
+  return sprite(shadow(9) + ln([-3, -1.6], [-4.4 + st, 0], B, 1.2) + ln([3, -1.6], [4.4 - st, 0], B, 1.2)
+    + `<path d="M-4,-2.4 Q-8,-2 -11,-1" fill="none" stroke="${B}" stroke-width="2" stroke-linecap="round"/>`
+    + ell(0, -2.6, 5, 1.8, B, OUT) + ell(6, -3, 2.4, 1.9, B, OUT)
+    + ln([-1.6, -1.4], [-2.8 - st, 0], B, 1.2) + ln([2.2, -1.4], [3 + st, 0], B, 1.2)
+    + [[-8, -1.8, 0.5], [-4.6, -3.2, 0.7], [-1.4, -3.6, 0.8], [2, -3.4, 0.7], [5, -4.2, 0.55]].map(([x, y, r]) => dot(x, y, r, S)).join('')
+    + (frame === 'rest' ? shut(6.6, -3.8, 0.55) : eye(6.8, -3.9, 0.7)) + cheek(7.6, -2.6, 0.55), SMALL);
+}
+// Corbeau des cendres : noir bleuté, bec gris ; 1 : il croasse (bec ouvert) ; rest : en boule
+export function crow(frame) {
+  const B = '#3A3848', D = '#2C2A36';
+  if (frame === 'rest') {
+    return sprite(shadow(5) + ell(0, -4, 4.4, 3.8, B, OUT) + ell(2.6, -6.4, 2.2, 2, B, OUT) + path('M4.4,-6.8 L6.4,-6.2 L4.4,-5.6 Z', '#6A6672')
+      + shut(3, -6.8, 0.55), SMALL);
+  }
+  const caw = frame === 1;
+  return sprite(shadow(5) + ln([-0.6, -2.6], [-0.8, 0], '#4A4652', 0.8) + ln([1, -2.6], [1.4, 0], '#4A4652', 0.8)
+    + path('M-3,-5 L-7,-3.4 L-6.6,-2.6 L-2.6,-3.4 Z', D)
+    + ell(0, -5.4, 4, 3.4, B, OUT) + path('M-3.4,-6 Q-1,-8 2,-5.6 Q-1,-4 -3.4,-6 Z', D)
+    + ell(3, -8.8, 2.4, 2.2, B, OUT)
+    + (caw ? path('M4.8,-9.6 L8.2,-10.4 L5,-8.8 Z M4.8,-8.6 L7.8,-7.4 L4.8,-7.8 Z', '#6A6672') : path('M4.8,-9.6 L8,-8.6 L4.8,-7.8 Z', '#6A6672'))
+    + eye(3.6, -9.4, 0.7) + cheek(3.8, -7.8, 0.55), SMALL);
+}
+
 // Toutes les bêtes de l'île par sorte : dessin d'une image (0, 1 ou rest)
 export const ANIMAL_SPRITES = {
   hen: (frame, breed) => hen(breed, frame), chick, cow, sheep, pig, goat, deer, fox, rabbit, hedgehog, squirrel,
-  koi: (frame, color) => koi(color, frame), heron
+  koi: (frame, color) => koi(color, frame), heron,
+  snowFox, ibex, puffin, pony, frog, tortoise, fennec, camel, chameleon, toucan, salamander, crow
 };

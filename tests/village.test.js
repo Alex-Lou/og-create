@@ -159,3 +159,62 @@ describe('village : bêtes', () => {
     for (let i = 0; i < 30; i++) expect(doubled(villagerSprite(personOf(i * 31 + 1), { view: VIEWS[i % 3], pose: 'walk', frame: i % 4 }).svg)).toEqual([]);
   });
 });
+
+describe('village : bêtes des climats', () => {
+  // Deux quartiers : à l'ouest le cœur (sans climat), à l'est des dunes ; un cactus et un gisement à laisser libres
+  const dunesM = {
+    ground: (x, y) => (x < 0 || y < 0 || x >= N || y >= N || x === 0 || y === 0 || x === N - 1 || y === N - 1 ? '~' : x >= 7 ? 's' : 'g'),
+    height: () => 1,
+    zone: (x, y) => (x < 0 || y < 0 || x >= N || y >= N ? -1 : x >= 7 ? 1 : 0)
+  };
+  const props = [{ kind: 'cactus', x: 10, y: 3 }];
+  const deposit = { x: 10, y: 9 };
+  const make = owned => villageOf({ n: N, M: dunesM, sites: [], owned, crafts: [], props, climates: [null, 'dunes'], avoid: [deposit] });
+  const dunes = make(new Set([0, 1]));
+  const climBeasts = (v, t, phase) => v.at(t, phase).list.filter(c => c.id.startsWith('clim:'));
+  const free = c => !(c.x === 10 && c.y === 3) && !(Math.abs(c.x - deposit.x) <= 1 && Math.abs(c.y - deposit.y) <= 1);
+  it('une bête de chaque par quartier à soi de son climat, sur une case libre ; aucune ailleurs', () => {
+    for (const h of [3, 13]) {
+      const list = climBeasts(dunes, 5, at(h));
+      expect(list.map(c => c.species).sort()).toEqual(['camel', 'fennec']);
+      // Celle qui dort est posée au centre de sa case : dans les dunes, hors du décor et de la clairière du gisement
+      const asleep = list.find(c => c.sprite[0].endsWith('rest'));
+      expect(dunesM.zone(asleep.x, asleep.y)).toBe(1);
+      expect(free(asleep)).toBe(true);
+    }
+    expect(climBeasts(make(new Set([0])), 5, at(13))).toEqual([]);
+  });
+  it('chacune à ses heures : le fennec dort le jour et trotte la nuit, le dromadaire l’inverse', () => {
+    const key = (h, s) => climBeasts(dunes, 5, at(h)).find(c => c.species === s).sprite[0];
+    expect(key(13, 'fennec')).toMatch(/rest$/);
+    expect(key(13, 'camel')).not.toMatch(/rest$/);
+    expect(key(2, 'fennec')).not.toMatch(/rest$/);
+    expect(key(2, 'camel')).toMatch(/rest$/);
+    // Sous la pluie, le dromadaire se couche
+    expect(climBeasts(dunes, 5, at(13, 'pluie')).find(c => c.species === 'camel').sprite[0]).toMatch(/rest$/);
+  });
+  it('touchées, elles s’enfuient puis disparaissent ; appui long : leur fiche', () => {
+    const id = climBeasts(dunes, 5, at(13)).find(c => c.species === 'camel').id;
+    const scared = new Map([[id, { at: 2 }]]);
+    expect(dunes.at(2.5, at(13), scared).list.find(c => c.id === id).flip).toBe(true);
+    expect(dunes.at(10, at(13), scared).list.find(c => c.id === id)).toBeUndefined();
+    expect(dunes.describe({ kind: 'beast', species: 'fennec' })).toEqual({ title: 'Fennec', text: 'Il dort le jour et trotte la nuit dans les Dunes.', hint: 'Toucher : il s’enfuit' });
+    expect(dunes.say({ kind: 'beast', species: 'camel' }, at(13))).toBeNull();
+  });
+  it('les douze dessins se font sans valeur manquante ni attribut en double, à chaque image', () => {
+    const doubled = svg => [...svg.matchAll(/<(\w+)([^>]*)>/g)].filter(m => {
+      const names = [...m[2].matchAll(/\s([\w-]+)=/g)].map(x => x[1]);
+      return new Set(names).size !== names.length;
+    });
+    const species = ['snowFox', 'ibex', 'puffin', 'pony', 'frog', 'tortoise', 'fennec', 'camel', 'chameleon', 'toucan', 'salamander', 'crow'];
+    for (const k of species) {
+      const frames = [0, 1, 'rest'].map(f => ANIMAL_SPRITES[k](f).svg);
+      for (const svg of frames) {
+        expect(svg).not.toMatch(/NaN|undefined/);
+        expect(doubled(svg)).toEqual([]);
+      }
+      // Trois images distinctes : le geste et le sommeil se voient
+      expect(new Set(frames).size).toBe(3);
+    }
+  });
+});

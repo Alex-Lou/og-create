@@ -1259,7 +1259,8 @@ export default {
       this.village = villageOf({
         n: state.size, M, sites: state.sites, crafts: state.crafts ? state.crafts.placed : [], props: this.props, annexes: state.annexes || [],
         owned: new Set(state.map.zones.map((z, i) => (z.owned ? i : -1)).filter(i => i >= 0)), visitor: state.visitor || null,
-        settlers: (state.villagers || []).filter(v => v.seed !== undefined)
+        settlers: (state.villagers || []).filter(v => v.seed !== undefined),
+        climates: state.map.zones.map(z => z.climate || null), avoid: [...landmarksShown(state), ...depositsShown(state)]
       });
       // Visiteur : son bateau s'amarre près du Ponton ; un visiteur jamais vu sur cet appareil arrive sous les yeux
       this.visitorDock = state.visitor ? this.dockOf(state, M) : null;

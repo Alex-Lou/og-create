@@ -2,7 +2,7 @@
 
 Document pour l'agent qui reprend le projet : ce qu'est le jeu, comment travailler avec son auteur, comment le code est
 construit, ce qui est fait et ce qui reste à faire. **À lire en entier avant la première ligne de code.**
-État au 5 octobre 2026, après le lot 9d (trouvailles, créations et annexes de climat).
+État au 5 octobre 2026, après le lot 9e (bêtes des climats).
 
 ---
 
@@ -272,6 +272,10 @@ chronométrer 20 appels. Comparer à zoom égal, au même endroit.
     du quartier, jusqu'à +3) ;
   - 6 annexes de climat payées en trouvailles : Glacière, Métier à tisser, Hutte de roseaux, Saline, Serre
     tropicale, Forge d'obsidienne.
+- **Lot 9e** : 12 bêtes des climats dans le style de `animals.js` (profil, images 0, 1 et `rest`), deux par climat :
+  renard des neiges, bouquetin, macareux, poney, grenouille, tortue, fennec, dromadaire, caméléon, toucan,
+  salamandre, corbeau des cendres. Une de chaque par quartier à soi de son climat, sur une case libre, à ses heures
+  (`village.js`, `CLIMATE_BEASTS`).
 
 ### Décisions déjà prises par l'auteur (ne pas les redemander)
 - **Île** : 96 × 96 ; l'ancienne carte devient le cœur ; découverte par expéditions ; un quartier s'ouvre avec des
@@ -283,6 +287,9 @@ chronométrer 20 appels. Comparer à zoom égal, au même endroit.
 - **Besoins des habitants** : humeur et production ; un habitant ne part jamais.
 - **Population** : visiteurs et maisons.
 - **Personnages** : générateur SVG maison (pas de pixel art).
+- **Bêtes** : le style des bêtes du jeu (`animals.js`), un peu plus mignon (œil rond avec reflet, joue rose), de
+  profil seulement. Le style « sac d'animalerie » et les bêtes en trois vues ont été essayés puis **abandonnés** par
+  l'auteur : ne pas les reproposer. Les 13 bêtes de la ferme, des bois et de l'eau restent telles quelles.
 - **Skins** : teintes et pièces rares.
 - **Plateforme** : rester **une seule base web** (§ 9). L'auteur vise la **fluidité** et des animations et
   graphismes plus riches. Achats intégrés plus tard.
@@ -291,22 +298,12 @@ chronométrer 20 appels. Comparer à zoom égal, au même endroit.
 
 ## 7. À faire (dans l'ordre conseillé)
 
-1. **Bêtes très mignonnes, partout (priorité visuelle demandée par l'auteur)**.
-   - Des animaux SVG « hyper choupis » et variés : par zone et climat, dans la boutique, dans les quêtes, partout.
-   - Ce lot englobe le **9e** (bêtes et visiteurs propres à chaque climat) et le **7b-2** (bêtes orientées : vues de
-     trois quarts avant et dos, bêtes de ferme et sauvages).
-   - **Style de référence** : illustration à plat façon sac de magasin animalier (l'auteur a montré une photo).
-     - Formes simples et rondes, **gros yeux ronds au blanc bien visible avec une pupille sombre décalée**.
-     - Aplats sans dégradé, deux ou trois couleurs franches par bête, un contour sombre discret.
-     - Joues ou petits détails clairs, expressions joyeuses.
-     - Exemples : perroquet perché, caméléon souriant, chat qui dépasse d'un bord, oiseau sur une tête, chien aux
-       oreilles tombantes, lapin.
-   - S'inspirer du style, **ne pas copier** les dessins d'une marque.
-   - Bêtes par climat, à définir avec l'auteur : renard des neiges, chèvre des cimes, mouton, héron, grenouille,
-     fennec, chameau, toucan, caméléon, salamandre…
-   - **Avant de dessiner, lui proposer une planche d'essai de 4 à 6 bêtes.**
-   - Fichiers concernés : `src/world/animals.js`, `village.js` (où vivent les bêtes), `villagers.js`
-     (générateur), `climates.js`.
+1. **Bêtes, suite** (les 12 bêtes des climats sont faites, lot 9e) :
+   - compagnons d'atelier dans la boutique (une ou deux bêtes par bâtiment, avec un petit bonus, comme les objets
+     vivants) : serveur (`worldShop.js`) puis front ;
+   - quêtes de Brume : portraits des bêtes et quêtes de « rencontre » (toucher pour la première fois la bête d'un
+     climat ; retenue par le serveur, inscrite au Carnet) ;
+   - à confirmer avec l'auteur avant de commencer (choisis par lui pendant les essais du lot 9e, puis non redits).
 2. **Compteur d'images par seconde** activable par `?perf`. Demander à l'auteur de mesurer **sur son téléphone** :
    aucune mesure sur un vrai téléphone n'a encore été faite.
 3. **Lot « santé »** (refactor sans changer le jeu ; l'auteur l'a approuvé) :
