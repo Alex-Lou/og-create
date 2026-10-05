@@ -3,9 +3,12 @@
 // l'identique, pour que la disposition envoyée se lise de la même façon des deux côtés.
 
 export const TIER_LABEL = { start: 'Débuts', I: 'Palier I', II: 'Palier II', III: 'Palier III', climat: 'Climats' };
-// Ce qui ouvre un palier (en clair)
-export function tierHint(tier, epreuves) {
-  if (tier === 'I') return `Finis le chapitre I du Grimoire, ou réussis ${epreuves.need} questions de l’Épreuve (${Math.min(epreuves.have, epreuves.need)}/${epreuves.need}).`;
+// Ce qui ouvre un palier (en clair). Palier I : des découvertes du Grimoire (stars, bible D7) ou l'Épreuve ; un
+// serveur d'avant le lot H1 n'envoie pas stars (le chapitre I fini ouvrait alors le palier)
+const count = ({ have, need }) => `${Math.min(have, need)}/${need}`;
+export function tierHint(tier, epreuves, stars = null) {
+  if (tier === 'I' && stars) return `Inscris ${stars.need} découvertes au Grimoire (${count(stars)}), ou réussis ${epreuves.need} questions de l’Épreuve (${count(epreuves)}).`;
+  if (tier === 'I') return `Finis le chapitre I du Grimoire, ou réussis ${epreuves.need} questions de l’Épreuve (${count(epreuves)}).`;
   return `Finis le chapitre ${tier} du Grimoire.`;
 }
 

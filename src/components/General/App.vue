@@ -46,6 +46,7 @@
             @coins-updated="handleCoinsUpdated"
             @show-alert="showAlert"
             @login="showSeuil = true"
+            @go="handleModeSelect"
           />
           <!-- Mode principal : le Livre ; l'Épreuve garde son inventaire -->
           <BookView
@@ -574,12 +575,12 @@ export default {
           .catch(error => console.error('Erreur lors de la sauvegarde des succès:', error));
       }
     },
-    // Brume apporte la quête : une quête de découvertes accomplie dans le Livre est annoncée (comptes seulement)
+    // Brume apporte la quête : une quête accomplie dans le Grimoire (découvertes, élément écrit) est annoncée (comptes)
     async checkQuest() {
       if (!this.isLoggedIn) return;
       try {
         const { quest } = await playService.brume();
-        if (quest && quest.done && quest.kind === 'stars') guide.say(questTip(quest));
+        if (quest && quest.done && ['stars', 'element'].includes(quest.kind)) guide.say(questTip(quest));
       } catch {
         // Le guide n'est qu'un confort : la quête reste visible sur l'île
       }

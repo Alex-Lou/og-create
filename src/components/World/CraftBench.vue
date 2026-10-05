@@ -19,7 +19,7 @@
           <ElementGlyph v-if="!isOpen(tier)" glyph="ui:lock" />{{ TIER_LABEL[tier] }}
         </button>
       </div>
-      <p v-if="!isOpen(tab)" class="bench__locked">{{ tierHint(tab, crafts.epreuves) }}</p>
+      <p v-if="!isOpen(tab)" class="bench__locked">{{ tierHint(tab, crafts.epreuves, crafts.stars) }}</p>
 
       <ul class="bench__list">
         <li v-for="c in shown" :key="c.id" :class="['bench__card', { 'is-ready': !c.block, 'is-locked': !c.open }]">
