@@ -48,6 +48,7 @@
             @show-alert="showAlert"
             @login="showSeuil = true"
             @go="openFromWorld"
+            @quest="onIslandQuest"
           />
           <!-- Mode principal : le Livre ; l'Épreuve garde son inventaire -->
           <BookView
@@ -123,7 +124,7 @@
       @signed-in="prologueSignedIn"
       @skip="skipPrologue"
     />
-    <TutorialHand v-if="prologueHand && currentMode === 'infinite' && !prologueScene" :target="prologueHand" />
+    <TutorialHand v-if="prologueHand && currentMode === prologueHand.mode && !prologueScene" :key="prologueHand.target" :target="prologueHand.target" />
     <GameAchievementsPopup
       v-if="achievementQueue.length && !isRevealing"
       :key="achievementQueue[0].name"
@@ -232,7 +233,8 @@ import PrologueName from '../Game/PrologueName.vue';
 import TutorialHand from '../Game/TutorialHand.vue';
 import { guide } from '@/game/guide';
 import { questTip } from '@/game/guideTips';
-import { loadPrologue, savePrologue, prologueStep } from '@/game/prologue';
+import { loadPrologue, savePrologue, prologueStep, islandStep } from '@/game/prologue';
+import { faceHref, NAMES } from '@/world/faces';
 import { LINES as PROLOGUE_LINES } from '@/game/prologueScenes';
 
 // Retour sur l'application (PWA remise au premier plan) : carnet rechargé s'il date de plus de 30 s
@@ -345,7 +347,9 @@ export default {
       prologueScene: null,
       prologueName: null,
       prologueHand: null,
-      prologueReplay: null
+      prologueReplay: null,
+      // La quête active de Brume sur l'île ({ id, done }), pour les étapes 2 à 5
+      islandQuest: null
     };
   },
   async created() {
@@ -435,6 +439,9 @@ export default {
     },
     'discoveredElements.length'() {
       if (this.progressReady) this.runPrologue();
+    },
+    isWorldActive(now) {
+      if (now) this.runIsland();
     },
     // Les panneaux fixés en bas changent avec le mode : on remesure la place à leur réserver
     isTimerActive() {
@@ -695,7 +702,7 @@ export default {
     runPrologue() {
       if (this.prologueReplay) return;
       const step = prologueStep({ state: this.prologue, loggedIn: this.isLoggedIn, elements: this.discoveredElements });
-      this.prologueHand = null;
+      if (this.prologueHand?.mode === 'infinite') this.prologueHand = null;
       if (!step) return;
       const { phase } = step;
       if (phase === 'start') {
@@ -715,7 +722,7 @@ export default {
         else this.prologueTimer = setTimeout(show, 2500);
       } else if (phase === 'vent') {
         guide.say({ id: 'prologue-vent', text: PROLOGUE_LINES.vent, top: true });
-        this.prologueHand = '.book-view__shelf [data-name="Air"]';
+        this.prologueHand = { target: '.book-view__shelf [data-name="Air"]', mode: 'infinite' };
       } else if (phase === 'pluie') {
         // La page de l'énigme suivante : le Grimoire s'y ouvre une fois, ses pages rechargées (Vent inscrit)
         if (guide.say({ id: 'prologue-pluie', text: PROLOGUE_LINES.pluie })) this.prologueOpenReach = true;
@@ -728,6 +735,27 @@ export default {
       } else if (phase === 'greve') {
         guide.say({ id: 'prologue-greve', text: PROLOGUE_LINES.greve, action: { label: 'Aller sur l’île', mode: 'world' } });
       }
+    },
+    // Étapes 2 (sur l'île) à 5 : la quête active de Brume
+    onIslandQuest(quest) {
+      this.islandQuest = quest ? { id: quest.id, done: Boolean(quest.done) } : null;
+      this.runIsland();
+    },
+    runIsland() {
+      if (this.prologueReplay || this.prologueScene || !this.isWorldActive) return;
+      const step = islandStep({ state: this.prologue, quest: this.islandQuest });
+      if (this.prologueHand?.mode === 'world') this.prologueHand = null;
+      if (!step) return;
+      if (step.phase === 'scene') this.prologueScene = step.scene;
+      else if (step.phase === 'harvest') this.prologueHand = { target: '.world__play', mode: 'world' };
+      else if (step.phase === 'lines') step.lines.forEach(line => this.sayPrologue(line));
+      else if (step.phase === 'finish') this.savePrologue({ finished: true });
+    },
+    // Une réplique du tutoriel : de Brume, ou d'un membre de la troupe (son portrait dans la bulle)
+    sayPrologue(line) {
+      const entry = PROLOGUE_LINES[line];
+      const { who, text } = typeof entry === 'string' ? { text: entry } : entry;
+      guide.say({ id: `prologue-${line}`, text, ...(who ? { who: NAMES[who], face: faceHref(who) } : {}) });
     },
     onBookLoaded() {
       if (!this.prologueOpenReach) return;
@@ -745,6 +773,7 @@ export default {
       this.prologueScene = null;
       this.savePrologue({ seen: [...new Set([...this.prologue.seen, scene])] });
       this.runPrologue();
+      this.runIsland();
     },
     skipPrologue() {
       this.prologueScene = null;
@@ -753,7 +782,7 @@ export default {
       this.savePrologue({ skipped: true });
     },
     replayPrologue() {
-      this.prologueReplay = ['aster'];
+      this.prologueReplay = ['aster', 'recolte', 'cannelle', 'rivet', 'ondin', 'campement'];
       this.prologueScene = 'arrivee';
     },
     // Page de garde : l'inscription recharge la page ; le nom attend sur l'appareil, puis part au serveur

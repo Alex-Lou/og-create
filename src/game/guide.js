@@ -14,7 +14,8 @@ const state = reactive({
   born: Boolean(storage.load(BORN_KEY, false))
 });
 
-// Une réplique ({ id, text, action?, top? : en haut de l'écran }) si elle n'a encore été ni dite ni mise en attente
+// Une réplique ({ id, text, action?, top? : en haut de l'écran, who? et face? : un autre que Brume parle, et son
+// portrait }) si elle n'a encore été ni dite ni mise en attente
 function say(entry) {
   if (!entry || !entry.text || state.seen.has(entry.id) || state.queue.some(q => q.id === entry.id)) return false;
   state.queue.push(entry);

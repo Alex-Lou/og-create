@@ -8,10 +8,11 @@
         <template v-if="birth">
           <i v-for="k in MIST" :key="k" class="guide__mist" :style="mistStyle(k)"></i>
         </template>
-        <BrumeWisp class="guide__wisp" :size="46" :waking="birth" />
+        <img v-if="entry.face" class="guide__face" :src="entry.face" alt="" />
+        <BrumeWisp v-else class="guide__wisp" :size="46" :waking="birth" />
       </div>
       <div class="guide__bubble" role="status">
-        <span class="guide__name">Brume</span>
+        <span class="guide__name">{{ entry.who || 'Brume' }}</span>
         <p class="guide__text">{{ entry.text }}</p>
         <div class="guide__actions">
           <button v-if="entry.action" type="button" class="guide__btn" @click.stop="act">{{ entry.action.label }}</button>
@@ -93,6 +94,8 @@ export default {
 }
 /* En haut de l'écran : la réplique laisse voir le bas (le tutoriel y montre un élément du doigt) */
 .guide.is-top { top: calc(env(safe-area-inset-top) + 10px); bottom: auto; }
+/* Un autre que Brume parle (le tutoriel) : son portrait à la place du feu follet */
+.guide__face { width: 48px; height: 67px; filter: drop-shadow(0 3px 6px rgba(0, 0, 0, .3)); }
 .guide__spirit { position: relative; flex: none; width: 56px; height: 64px; display: grid; place-items: end center; pointer-events: auto; }
 .guide__wisp { filter: drop-shadow(0 4px 10px rgba(92, 200, 240, .45)); animation: guide-float 3.2s ease-in-out infinite; }
 .guide__bubble {

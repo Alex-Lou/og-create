@@ -860,7 +860,7 @@ export default {
     // Solde d'écus (en-tête) : grise les articles hors de portée ; le serveur reste seul juge
     coins: { type: Number, default: null }
   },
-  emits: ['coins-updated', 'show-alert', 'login', 'go'],
+  emits: ['coins-updated', 'show-alert', 'login', 'go', 'quest'],
   data() {
     return {
       GLYPH, LABEL, RESOURCES, GAME_ICONS, NEED_GLYPH, MOOD_GLYPH, CLIMATE_NAMES, CLIMATE_TEXT, WORDS,
@@ -1410,6 +1410,8 @@ export default {
         }
       }
       this.state = state;
+      // La quête active de Brume : le tutoriel (App.vue) y lit où en est le joueur
+      this.$emit('quest', state.brume ? state.brume.quest : null);
       // Brume et sol d'un quartier : à soi (o), connu (k), inconnu (u) ; un changement refait ses carrés de sol
       const mistKey = state.map.zones.map(z => `${z.id}:${z.owned ? 'o' : z.known === false ? 'u' : 'k'}`).join();
       if (this.mistKey !== null && mistKey !== this.mistKey) {

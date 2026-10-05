@@ -10,7 +10,7 @@ const KEY = 'oc_prologue';
 // Les trois premières pages de l'étape 1 (Vent, Pluie, Brasier) ouvrent le chapitre II
 export const FIRST_PAGES = 3;
 
-const blank = () => ({ started: false, skipped: false, registered: false, named: false, name: null, seen: [] });
+const blank = () => ({ started: false, skipped: false, registered: false, named: false, finished: false, name: null, seen: [] });
 
 export function loadPrologue() {
   const saved = storage.load(KEY, null);
@@ -47,4 +47,37 @@ export function prologueStep({ state, loggedIn, elements }) {
   if (!loggedIn) return { phase: 'name', account: true };
   if (!state.named) return { phase: 'name', account: false };
   return { phase: 'greve' };
+}
+
+// Les quêtes du prologue (T1 à T8, serveur : services/quests.js), dans l'ordre
+const PROLOGUE = ['pages', 'recolte', 'soupe', 'deco', 'achat-source', 'eveil-ondin', 'souvenir-ondin', 'puits-ondin'];
+
+// Étapes 2 (sur l'île) à 5 : la quête active de Brume ({ id, done }, vue de l'île) dit où l'on en est. Rend une scène,
+// la main sur la Récolte, des répliques (ids du guide : chacune n'est dite qu'une fois), la fin ; ou null
+export function islandStep({ state, quest }) {
+  if (state.skipped || state.finished || !state.registered || !state.named || !quest) return null;
+  const seen = new Set(state.seen);
+  const at = PROLOGUE.indexOf(quest.id);
+  // Le Puits réclamé : l'étape « Le Campement », puis le tutoriel est fini
+  if (at < 0) return seen.has('campement') ? { phase: 'finish' } : { phase: 'scene', scene: 'campement' };
+  const lines = [];
+  // Une quête accomplie se réclame auprès de Brume (dit une fois)
+  if (quest.done) lines.push('claim');
+  if (!seen.has('recolte')) return { phase: 'scene', scene: 'recolte' };
+  if (quest.id === 'recolte') return quest.done ? { phase: 'lines', lines: ['chaine', ...lines] } : { phase: 'harvest' };
+  if (quest.id === 'soupe') {
+    if (!seen.has('cannelle')) return { phase: 'scene', scene: 'cannelle' };
+    return { phase: 'lines', lines: quest.done ? ['soupe', ...lines] : ['bulle'] };
+  }
+  if (quest.id === 'deco') {
+    if (!seen.has('rivet')) return { phase: 'scene', scene: 'rivet' };
+    return { phase: 'lines', lines: quest.done ? lines : ['puzzle', 'or'] };
+  }
+  if (quest.id === 'achat-source') return { phase: 'lines', lines: quest.done ? lines : ['source'] };
+  if (quest.id === 'souvenir-ondin') {
+    if (!seen.has('ondin')) return { phase: 'scene', scene: 'ondin' };
+    return { phase: 'lines', lines: quest.done ? lines : ['ruban'] };
+  }
+  if (quest.id === 'puits-ondin') return { phase: 'lines', lines: quest.done ? ['chut', 'produit', ...lines] : [] };
+  return { phase: 'lines', lines };
 }
