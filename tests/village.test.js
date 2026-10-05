@@ -65,6 +65,32 @@ describe('village : habitants', () => {
   });
 });
 
+describe('village : visiteur et visiteurs installés', () => {
+  const visitor = { id: 3, seed: 77, name: 'Iris', role: 'Cartographe', site: 'ponton' };
+  const settlers = [{ id: 'v5', seed: 99, name: 'Basile', role: 'Botaniste', site: 'potager', home: { x: 8, y: 2 } }];
+  const busy = villageOf({ n: N, M, sites, owned: new Set([0]), tiles: [], props: [], visitor, settlers });
+  it('un installé travaille au bâtiment de son métier, le visiteur flâne depuis le Ponton', () => {
+    const settler = busy.residents.find(r => r.id === 'vil:v5');
+    const guest = busy.residents.find(r => r.id === 'vis:3');
+    expect([settler.role, settler.key, settler.look.label]).toEqual(['potager', 'set-99', 'Botaniste']);
+    expect(settler.field).toBeTruthy();
+    expect([guest.role, guest.key, guest.guest.name]).toEqual(['visitor', 'vis-77', 'Iris']);
+    expect(busy.residents.map(r => r.look.build).includes('child')).toBe(false);
+  });
+  it('le visiteur ne travaille pas ; touché, il laisse l’île parler pour lui ; appui long : son bateau au Ponton', () => {
+    const noon = at(12);
+    const seen = new Set();
+    for (let t = 0; t < 600; t += 7) {
+      const me = busy.at(t, noon).list.find(w => w.id === 'vis:3');
+      if (me) seen.add(me.sprite[0].split('-')[2]);
+    }
+    expect(seen.has('work')).toBe(false);
+    const who = { kind: 'villager', id: 'vis:3' };
+    expect(busy.say(who, noon)).toEqual({ title: 'Iris', text: '' });
+    expect(busy.describe(who).text).toMatch(/Ponton/);
+  });
+});
+
 describe('village : bêtes', () => {
   it('la ferme suit le palier du Potager : poules, poussins, vache, moutons ; couchés la nuit', () => {
     const species = village.at(12, at(13)).list.filter(c => c.kind === 'beast').map(c => c.species);

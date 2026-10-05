@@ -73,9 +73,18 @@ const LOVED = {
 const LIKED = 'Oh, merci ! C’est gentil d’avoir pensé à moi.';
 const OTHER = 'C’est… pour moi ? Merci, c’est l’intention qui compte !';
 
+// Visiteurs installés (id 'v<n>') : ce qu'ils disent selon les cœurs
+const SETTLER_TALKS = [
+  'Bonjour ! Je m’habitue à ma nouvelle maison, elle est charmante.',
+  'Je n’aurais jamais cru rester. Votre île a quelque chose de spécial.',
+  'J’ai défait mes malles. Cette fois, c’est décidé : je suis d’ici.',
+  'Le soir, je regarde la mer depuis ma fenêtre. Je ne repartirais pour rien au monde.',
+  'Merci de m’avoir gardé une place. Je me sens chez moi.',
+  'Tu es la meilleure raison qui m’ait fait poser mes valises ici.'
+];
 // Réplique quand on bavarde, selon les cœurs
 export function talkLine(id, hearts) {
-  const lines = TALKS[id] || TALKS.foyer;
+  const lines = TALKS[id] || (/^v\d+$/.test(id) ? SETTLER_TALKS : TALKS.foyer);
   return lines[Math.max(0, Math.min(lines.length - 1, hearts))];
 }
 // Réaction à un cadeau

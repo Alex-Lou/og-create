@@ -156,6 +156,10 @@ export default {
   visitorSatisfy(id) {
     return http.post('/play/world/visitor', { id }).then(response => response.data);
   },
+  // Visiteur comblé : il reste dans une maison libre → { settled, world }
+  visitorSettle(id) {
+    return http.post('/play/world/visitor/settle', { id }).then(response => response.data);
+  },
   // Joker de l'Épreuve : { freeJokers, coins?, ingredients? | ingredient? }
   joker(kind) {
     return asPlayer(() => http.post('/play/joker', { kind }));

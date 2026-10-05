@@ -495,11 +495,14 @@
       :visitor="state.visitor"
       :stock="state.stock"
       :charges="state.charges.count"
+      :houses="state.houses || undefined"
+      :work-name="siteName(state.visitor.site)"
       :portrait="visitorPortrait(state.visitor)"
       :said="visitorSaid"
       :busy="busy"
       @satisfy="satisfyVisitor"
       @harvest="visitorHarvest"
+      @settle="settleVisitor"
       @close="visitorOpen = false"
     />
     <!-- Coffres : la liste (jour, en attente), puis l'ouverture d'un coffre, ou de tous d'un coup -->
@@ -774,8 +777,7 @@ export default {
       return fillAllOf(this.state ? this.state.villagers || [] : []);
     },
     villagerSiteName() {
-      const site = this.villagerView && this.state.sites.find(s => s.id === this.villagerView.id);
-      return site ? site.name : '';
+      return this.villagerView ? this.siteName(this.villagerView.site || this.villagerView.id) : '';
     },
     // Mini-jeu ouvert : sa vue (réserve de parties à jour) et le nom de son bâtiment
     gameView() {
@@ -1061,7 +1063,8 @@ export default {
       // Habitants et bêtes : ils vivent dans les quartiers à soi, autour des bâtiments bâtis
       this.village = villageOf({
         n: state.size, M, sites: state.sites, tiles: state.tiles, props: this.props, annexes: state.annexes || [],
-        owned: new Set(state.map.zones.map((z, i) => (z.owned ? i : -1)).filter(i => i >= 0)), visitor: state.visitor || null
+        owned: new Set(state.map.zones.map((z, i) => (z.owned ? i : -1)).filter(i => i >= 0)), visitor: state.visitor || null,
+        settlers: (state.villagers || []).filter(v => v.seed !== undefined)
       });
       // Visiteur : son bateau s'amarre près du Ponton ; un visiteur jamais vu sur cet appareil arrive sous les yeux
       this.visitorDock = state.visitor ? this.dockOf(state, M) : null;
@@ -2880,6 +2883,23 @@ export default {
         this.busy = false;
       }
     },
+    // Un visiteur comblé reste dans une maison libre : il devient habitant
+    async settleVisitor() {
+      const guest = this.state && this.state.visitor;
+      if (this.busy || !guest) return;
+      this.busy = true;
+      try {
+        const { settled, world } = await playService.visitorSettle(guest.id);
+        this.apply(world);
+        this.visitorOpen = false;
+        vibrate([12, 40, 18]);
+        this.$emit('show-alert', `${settled} s’installe sur ton île : bienvenue !`);
+      } catch (error) {
+        this.$emit('show-alert', messageOf(error, 'Le visiteur n’a pas pu s’installer.'));
+      } finally {
+        this.busy = false;
+      }
+    },
     // Demande de Récoltes : on ferme sa fiche et on lance une partie
     visitorHarvest() {
       this.visitorOpen = false;
@@ -2900,8 +2920,15 @@ export default {
       if (!info || !friend) return info;
       return { ...info, title: `${friend.name} · ${friend.role}`, text: ask ? askOr(friend, info.text) : info.text, hint: 'Appui long : sa fiche' };
     },
-    // Portrait d'un habitant : son allure sur l'île (teint, cheveux), de face
+    // Nom d'un bâtiment de l'île (celui que le joueur lui a donné)
+    siteName(id) {
+      const site = this.state && this.state.sites.find(s => s.id === id);
+      return site ? site.name : '';
+    },
+    // Portrait d'un habitant : son allure sur l'île (teint, cheveux), de face ; un visiteur installé, d'après sa graine
     portraitOf(id) {
+      const settler = (this.state.villagers || []).find(v => v.id === id && v.seed !== undefined);
+      if (settler) return this.visitorPortrait(settler);
       const resident = this.village && this.village.residents.find(r => r.role === id);
       const look = resident ? resident.look : { ...ROLES[id], skin: '#F6D3B3', hair: '#7A4E2C' };
       return spriteUrl(`portrait-${id}-${look.skin}-${look.hair}`, () => villagerSprite(look));

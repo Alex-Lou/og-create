@@ -9,6 +9,11 @@ describe('amitié des habitants', () => {
       expect(talkLine(id, 9)).toBe(lines[5]);
     }
   });
+  it('un visiteur installé a ses propres répliques', () => {
+    const lines = [0, 1, 2, 3, 4, 5].map(h => talkLine('v12', h));
+    expect(new Set(lines).size).toBe(6);
+    expect(lines).not.toContain(talkLine('foyer', 0));
+  });
   it('remercie selon le cadeau, nomme les récompenses, sait qui attend une visite', () => {
     const rose = { loves: 'water', likes: 'food' };
     expect(giftLine('potager', rose, 'water')).toMatch(/eau/);
