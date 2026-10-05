@@ -38,6 +38,20 @@
         <feGaussianBlur stdDeviation="3" result="blur" />
         <feMerge><feMergeNode in="blur" /><feMergeNode in="SourceGraphic" /></feMerge>
       </filter>
+      <radialGradient id="pa-wisp-gold" gradientUnits="userSpaceOnUse" cx="0" cy="-2.4" r="17.6" fx="0" fy="1.6">
+        <stop offset="0" :stop-color="GOLD.core" />
+        <stop offset=".45" :stop-color="GOLD.flame" />
+        <stop offset="1" :stop-color="GOLD.edge" />
+      </radialGradient>
+      <radialGradient id="pa-glow-gold">
+        <stop offset="0" :stop-color="`rgba(${GOLD.halo},.6)`" />
+        <stop offset="1" :stop-color="`rgba(${GOLD.halo},0)`" />
+      </radialGradient>
+      <radialGradient id="pa-sun">
+        <stop offset="0" stop-color="rgba(255,236,170,.95)" />
+        <stop offset=".35" stop-color="rgba(255,206,120,.55)" />
+        <stop offset="1" stop-color="rgba(255,190,100,0)" />
+      </radialGradient>
       <linearGradient id="pa-leather" x1="0" y1="0" x2="1" y2="1">
         <stop offset="0" stop-color="#7A2A31" />
         <stop offset="1" stop-color="#3A1214" />
@@ -47,8 +61,10 @@
     <!-- Ciel, lune, étoiles -->
     <rect width="400" height="400" fill="url(#pa-night)" />
     <template v-if="art !== 'storm'">
-      <circle cx="252" cy="72" r="46" fill="url(#pa-moon)" />
-      <circle cx="252" cy="72" r="15" fill="#E6EEF8" opacity=".85" />
+      <template v-if="!dawn">
+        <circle cx="252" cy="72" r="46" fill="url(#pa-moon)" />
+        <circle cx="252" cy="72" r="15" fill="#E6EEF8" opacity=".85" />
+      </template>
       <circle v-for="(s, k) in STARS" :key="`s${k}`" :cx="s[0]" :cy="s[1]" :r="s[2]" fill="#DCE6F5" :opacity="s[3]" class="pa__star" :style="{ '--k': k }" />
     </template>
 
@@ -197,11 +213,46 @@
       </g>
     </g>
 
+    <!-- La finale : le Phare de Brume sur son rocher, la mer ; la lanterne bleutée, puis le soleil du phare -->
+    <g v-if="lighthouse" :transform="lighthouse.transform">
+      <path d="M-200 30 Q-100 20 0 28 T220 26 V140 H-220 Z" :fill="dawn ? '#4A7FA8' : 'url(#pa-sea)'" />
+      <path d="M-46 30 Q-40 4 -16 0 H18 Q44 6 48 30 Z" fill="#2B2A2E" stroke="#141316" stroke-width="2" />
+      <g v-if="dawn" class="pa__sunrays">
+        <circle cx="0" cy="-166" r="96" fill="url(#pa-sun)" />
+        <path v-for="k in 12" :key="`sr${k}`" :d="`M${(Math.cos(k * 0.5236) * 30).toFixed(1)} ${(-166 + Math.sin(k * 0.5236) * 30).toFixed(1)} L${(Math.cos(k * 0.5236) * 70).toFixed(1)} ${(-166 + Math.sin(k * 0.5236) * 70).toFixed(1)}`" stroke="rgba(255,226,150,.7)" stroke-width="3" stroke-linecap="round" />
+      </g>
+      <path d="M-22 0 L-14 -150 H14 L22 0 Z" fill="#E9EEF3" stroke="#2A3346" stroke-width="2" />
+      <path d="M-20.5 -30 L-19.2 -52 H19.2 L20.5 -30 Z M-17.6 -88 L-16.4 -110 H16.4 L17.6 -88 Z" fill="#9FC9E6" opacity=".85" />
+      <rect x="-20" y="-155" width="40" height="5" fill="#3D3A36" />
+      <rect x="-12" y="-179" width="24" height="24" rx="2" :fill="dawn ? '#FFE6A0' : '#BFE3F7'" stroke="#2A3346" stroke-width="1.5" />
+      <path d="M-16 -179 L0 -197 L16 -179 Z" fill="#6A3F6E" stroke="#2A3346" stroke-width="1.5" />
+      <circle cx="0" cy="-199" r="2.6" fill="#F2C04B" />
+      <!-- Rivet sur la galerie, la lentille dans les mains -->
+      <template v-if="art === 'phare'">
+        <image :href="person('atelier', 'se')" x="-48" y="-196" width="30" height="42" />
+        <circle cx="-14" cy="-170" r="7" fill="rgba(220,240,255,.65)" stroke="#D6AA5A" stroke-width="2" class="pa__lens" />
+      </template>
+    </g>
+
+    <!-- Ondin au bord de l'eau ; dans le reflet, le vrai visage de Brume -->
+    <g v-if="art === 'reflet'">
+      <path d="M0 262 Q100 250 200 258 T400 256 V400 H0 Z" fill="#1E3A5A" />
+      <path d="M0 262 Q100 250 200 258 T400 256" fill="none" stroke="rgba(190,220,240,.35)" stroke-width="2" />
+      <g transform="translate(238 320)" class="pa__face" filter="url(#pa-light)">
+        <path d="M-34 -10 Q-40 -46 -6 -50 Q30 -54 34 -16 Q40 14 22 30 M-34 -10 Q-38 18 -20 32" fill="none" stroke="rgba(255,214,140,.55)" stroke-width="4" stroke-linecap="round" />
+        <ellipse rx="24" ry="30" fill="rgba(255,240,206,.32)" />
+        <path d="M-12 -4 q5 4 10 0 M4 -4 q5 4 10 0" fill="none" stroke="rgba(120,90,60,.7)" stroke-width="1.6" stroke-linecap="round" />
+        <path d="M-6 14 q6 5 12 0" fill="none" stroke="rgba(120,90,60,.6)" stroke-width="1.6" stroke-linecap="round" />
+      </g>
+      <path d="M0 300 H400 M0 336 H400 M0 372 H400" stroke="rgba(190,220,240,.12)" stroke-width="1.4" class="pa__ripple" />
+      <image :href="person('puits', 'se')" x="106" y="196" width="62" height="87" />
+    </g>
+
     <!-- Brume, le feu follet -->
     <g v-if="wisp" :transform="`translate(${wisp.x} ${wisp.y}) scale(${wisp.k})`" class="pa__wisp">
-      <circle cy="-5" r="26" fill="url(#pa-glow)" />
+      <circle cy="-5" r="26" :fill="wisp.gold ? 'url(#pa-glow-gold)' : 'url(#pa-glow)'" />
       <g class="pa__wisp-flame">
-        <path d="M0,8 C10.4,8 9.2,-3.6 0,-16.4 C-9.2,-3.6 -10.4,8 0,8 Z" fill="url(#pa-wisp)" />
+        <path d="M0,8 C10.4,8 9.2,-3.6 0,-16.4 C-9.2,-3.6 -10.4,8 0,8 Z" :fill="wisp.gold ? 'url(#pa-wisp-gold)' : 'url(#pa-wisp)'" />
         <path d="M0,8.4 C5.7,8.4 5.1,2 0,-4.4 C-5.1,2 -5.7,8.4 0,8.4 Z" fill="rgba(255,255,255,.75)" />
       </g>
       <g :fill="WISP.eye" class="pa__eyes">
@@ -213,14 +264,14 @@
     <path v-if="art === 'rock'" d="M204 312 Q204 274 232 270 Q262 266 276 286 Q288 302 284 312 Z" fill="#232226" stroke="#141316" stroke-width="1.5" />
 
     <!-- La brume, qui recule quand le feu prend -->
-    <g :class="['pa__mist', { 'is-thin': art !== 'storm' && art !== 'beach' && art !== 'wisp' && art !== 'rock' }]">
+    <g :class="['pa__mist', { 'is-thin': art !== 'storm' && art !== 'beach' && art !== 'wisp' && art !== 'rock', 'is-lift': art === 'soleil', 'is-gone': art === 'flammeche' }]">
       <ellipse v-for="(m, k) in MIST" :key="`m${k}`" :cx="m[0]" :cy="m[1]" :rx="m[2]" :ry="m[3]" fill="rgba(210,222,236,.16)" :style="{ '--k': k }" />
     </g>
   </svg>
 </template>
 
 <script>
-import { WISP } from '@/world/brume';
+import { WISP, STAGES } from '@/world/brume';
 import { SIGILS, CHAPTER_IDS } from '@/book/grimoire';
 import { faceHref } from '@/world/faces';
 
@@ -241,28 +292,43 @@ const WISPS = {
   veillee: { x: 212, y: 196, k: 1.5 },
   rite: { x: 212, y: 196, k: 1.3 },
   horizon: { x: 120, y: 150, k: 1.4 },
-  seal: { x: 128, y: 118, k: 1.7, wide: true }
+  seal: { x: 128, y: 118, k: 1.7, wide: true },
+  phare: { x: 252, y: 146, k: 1.1 },
+  reflet: { x: 236, y: 200, k: 1.6 },
+  flammeche: { x: 168, y: 250, k: 3, gold: true }
 };
+// Le Phare de Brume dans les images de la finale (pied du phare, échelle) ; sur un écran en hauteur, seul le milieu du
+// cadre (x de 100 à 300) se voit
+const LIGHTHOUSES = { phare: [206, 336, 1.05], soleil: [200, 344, 1.05], flammeche: [262, 296, 0.5] };
 
 export default {
   name: 'PrologueArt',
   props: {
     // storm | beach | wisp | rock | fire | book | seal | aster | cannelle | cannelle-feu | rivet | ondin | campement |
-    // veillee | rite | lien | horizon
+    // veillee | rite | lien | horizon | phare | reflet | soleil | flammeche (la finale)
     art: { type: String, required: true },
     // Veillées : qui est là (bâtiments de la troupe), et la recette écrite en lumière
     cast: { type: Array, default: () => [] },
     recipe: { type: String, default: '' }
   },
   data() {
-    return { WISP, STARS, MIST };
+    return { WISP, GOLD: STAGES[7], STARS, MIST };
   },
   computed: {
     sky() {
       if (this.art === 'storm') return ['#05080F', '#121D2E', '#0B1220'];
       if (this.art === 'aster') return ['#1B2A44', '#3E5470', '#6E7F92'];
       if (this.art === 'horizon') return ['#1B2A44', '#7E6A8A', '#E8A87C'];
+      if (this.dawn) return ['#2A3A5E', '#B9806E', '#F6D58A'];
       return ['#070D1A', '#14213A', '#1D2B44'];
+    },
+    // La finale : l'aube se lève avec le soleil du phare
+    dawn() {
+      return this.art === 'soleil' || this.art === 'flammeche';
+    },
+    lighthouse() {
+      const at = LIGHTHOUSES[this.art];
+      return at ? { transform: `translate(${at[0]} ${at[1]}) scale(${at[2]})` } : null;
     },
     wisp() {
       return WISPS[this.art] || null;
@@ -334,6 +400,13 @@ export default {
 .pa__dark { opacity: 0; animation: pa-dark 1s ease-in 6s forwards; }
 .pa__broken { animation: pa-crack 1.4s ease-out forwards; transform-box: fill-box; transform-origin: center; }
 .pa__rays { opacity: 0; animation: pa-rays 1.6s ease-out .4s forwards; }
+/* La finale : la lentille brille, le visage ondule, le soleil du phare tourne, la brume se lève */
+.pa__lens { animation: pa-glow 1.2s ease-in-out infinite; }
+.pa__face { animation: pa-float 5s ease-in-out infinite; opacity: .95; }
+.pa__ripple { animation: pa-foam 4s ease-in-out infinite; }
+.pa__sunrays { transform-origin: 0 -166px; animation: pa-spin 24s linear infinite; }
+.pa__mist.is-lift { animation: pa-lift 4.5s ease-out forwards; }
+.pa__mist.is-gone { opacity: 0; }
 @keyframes pa-twinkle { 0%, 100% { opacity: .9; } 50% { opacity: .35; } }
 @keyframes pa-drift { from { transform: translateX(-14px); } to { transform: translateX(14px); } }
 @keyframes pa-flick { 0%, 100% { transform: scaleY(1) skewX(0deg); } 50% { transform: scaleY(1.08) skewX(-3deg); } }
@@ -349,6 +422,8 @@ export default {
 @keyframes pa-dark { to { opacity: 1; } }
 @keyframes pa-crack { 0% { transform: scale(1); filter: none; } 40% { transform: scale(1.5); filter: drop-shadow(0 0 4px #FFE29A); } 100% { transform: scale(1.15); filter: drop-shadow(0 0 3px #FFE29A); opacity: .55; } }
 @keyframes pa-rays { 0% { opacity: 0; transform: scale(.4); } 50% { opacity: 1; } 100% { opacity: .6; transform: scale(1); } }
+@keyframes pa-spin { to { transform: rotate(360deg); } }
+@keyframes pa-lift { from { opacity: .35; transform: translateY(0); } to { opacity: 0; transform: translateY(-60px); } }
 /* Mouvement réduit : des images fixes (la tempête montre directement la vague) */
 @media (prefers-reduced-motion: reduce) {
   .pa *, .pa { animation: none !important; }

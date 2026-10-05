@@ -2,22 +2,25 @@
 // arc-en-ciel), lumières et lucioles. Le ciel lui-même (soleil, météo, couleurs minute par minute) est dans sky.js ;
 // la vie de la mer (reflets, vagues, animaux, mouettes) dans sea.js.
 // Tout est déterministe en fonction du temps : pas d'état, rien à nettoyer.
-import { skyAt, sunTimes, WEATHERS } from './sky';
+import { skyAt, sunTimes, WEATHERS, OPUS } from './sky';
 
 // Ciel de l'île à une date (voir sky.js) : moment, nuit, chaleur, lumières, teinte, mer, nuages, soleil, météo
 export const phaseAt = (date = new Date(), forced = {}) => skyAt(date, forced);
 
-// Moment ou temps imposés (essais) : ?heure=nuit|aube|matin|jour|couchant|crepuscule et ?meteo=clair|voile|brume|pluie|orage
+// Moment, temps ou étape du Grand Œuvre imposés (essais) : ?heure=nuit|aube|matin|jour|couchant|crepuscule,
+// ?meteo=clair|voile|brume|pluie|orage et ?oeuvre=noir|blanc|jaune|rouge
 export function forcedPhase() {
   const query = new URLSearchParams(window.location.search);
   const wanted = query.get('heure');
   const weather = query.get('meteo');
+  const opus = query.get('oeuvre');
   const d = new Date();
   const { rise, set, noon } = sunTimes(d);
   const hours = { aube: rise - 0.2, matin: rise + 0.6, jour: noon, couchant: set - 0.15, crepuscule: set + 0.45, nuit: 23.5 };
   const date = wanted in hours ? new Date(d.getFullYear(), d.getMonth(), d.getDate(), 0, Math.round(hours[wanted] * 60)) : null;
   const forced = weather in WEATHERS ? weather : null;
-  return date || forced ? { date, weather: forced } : null;
+  const oeuvre = opus in OPUS ? opus : null;
+  return date || forced || oeuvre ? { date, weather: forced, opus: oeuvre } : null;
 }
 
 // Fond de la mer (écran) : dégradé selon le ciel (reflets dorés ou roses au lever et au couchant) ; les reflets

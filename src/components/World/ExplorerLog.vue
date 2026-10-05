@@ -34,6 +34,16 @@
           </li>
         </ul>
       </template>
+      <!-- Les mots d'Héliane (bible, § 6.13) : un par acte, trouvés dans les bouteilles -->
+      <template v-if="words.length">
+        <h3 class="log__title">Les mots d’Héliane</h3>
+        <ul class="log__list">
+          <li v-for="w in words" :key="w.act" class="log__row log__row--link">
+            <span class="log__where">Acte {{ w.act }}</span>
+            <span class="log__text">« {{ w.text }} »</span>
+          </li>
+        </ul>
+      </template>
       <!-- Le Bestiaire (bible, § 6.5) : les bêtes écrites dans le Grimoire, et les familiers venus auprès de leur maître -->
       <h3 class="log__title">Bestiaire · {{ beasts.length }} / {{ BEASTS.length }}</h3>
       <p v-if="!beasts.length" class="log__hint">Aucune bête écrite : ce qu’on écrit dans le Grimoire renaît sur l’île.</p>
@@ -97,6 +107,7 @@ import { ACTS, stageOf, linksOf, peopleOf } from '@/game/vigils';
 import { MEMORIES } from '@/world/story';
 import { NAMES } from '@/world/faces';
 import { BEASTS, beastsOf, familiarsOf } from '@/world/bestiary';
+import { HELIANE } from '@/world/chest';
 
 // Les souvenirs retrouvés : chacun dans l'acte de sa quête (la Chronique les montre une fois l'acte fini)
 const MEMORY_ACTS = { 'souvenir-ondin': 'T', 'souvenir-sylve': 'I', 'souvenir-galet': 'II', 'eveil-melisse': 'III', 'souvenir-aster': 'IV' };
@@ -118,7 +129,9 @@ export default {
     acts: { type: Array, default: () => [] },
     people: { type: String, default: null },
     // Éléments écrits dans le Grimoire : le Bestiaire et les familiers
-    elements: { type: Array, default: () => [] }
+    elements: { type: Array, default: () => [] },
+    // Les actes dont le mot d'Héliane a été trouvé (serveur : heliane.found)
+    heliane: { type: Array, default: () => [] }
   },
   emits: ['show', 'close', 'replay'],
   data() {
@@ -133,6 +146,9 @@ export default {
     },
     links() {
       return linksOf(this.acts);
+    },
+    words() {
+      return ACTS.filter(act => this.heliane.includes(act)).map(act => ({ act, text: HELIANE[act] }));
     },
     beasts() {
       return beastsOf(this.elements);

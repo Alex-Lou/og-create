@@ -117,16 +117,28 @@ const KEYS = [
   { id: 'dusk', at: (R, S) => S + 0.95, tint: '#8C80C4', sea: ['#4A4E8E', '#22355C'], night: 0.7, warm: 0.3 },
   { id: 'night', at: (R, S) => S + 1.6, ...NIGHT }
 ];
+// Le Grand Œuvre (HISTOIRE.md, § 4.3) : la lumière de l'île suit l'avancée du peuple, par touches (l'heure reste
+// reine). Œuvre au noir : nuits bleues, brume épaisse le matin ; au blanc : aubes argentées et laiteuses ; au jaune :
+// aube dorée, fenêtres allumées plus tôt ; au rouge : couchants rouge et or. [couleur, force] ; mist : brume du matin
+// en plus ; lit : lumières plus fortes ; warm : chaleur du couchant en plus
+export const OPUS = {
+  noir: { night: ['#3E4C9A', 0.45], mist: 0.35 },
+  blanc: { dawn: ['#EEF2FB', 0.45], night: ['#7E88BE', 0.25] },
+  jaune: { dawn: ['#FFD27A', 0.4], lit: 1.4 },
+  rouge: { dusk: ['#FF8A5A', 0.35], warm: 0.3 }
+};
 export const MOMENTS = {
   night: 'Nuit', dawn: 'Aube', morning: 'Matin', noon: 'Midi', afternoon: 'Après-midi', sunset: 'Couchant', dusk: 'Crépuscule'
 };
 
 // Ciel complet à une date : { hour, rise, set, id, label, night, warm, lit, tint, sea, cloud, sun, weather }
-// forced : { weather } pour imposer un temps (essais)
+// forced : { weather } pour imposer un temps (essais) ; { opus } : l'étape du Grand Œuvre (OPUS), ou rien
 export function skyAt(date, forced = {}) {
   const hour = date.getHours() + date.getMinutes() / 60 + date.getSeconds() / 3600;
   const { rise, set } = sunTimes(date);
-  const weather = weatherAt(date, forced.weather);
+  const opus = OPUS[forced.opus] || {};
+  let weather = weatherAt(date, forced.weather);
+  if (opus.mist) weather = { ...weather, mist: clamp(weather.mist + opus.mist * clamp(1 - Math.abs(hour - (rise + 0.8)) / 2.6)) };
   const times = KEYS.map(key => key.at(rise, set));
   // Étape courante et suivante (la nuit relie le dernier soir au premier matin)
   let i = times.findIndex((h, k) => k < KEYS.length - 1 && hour >= h && hour < times[k + 1]);
@@ -150,11 +162,17 @@ export function skyAt(date, forced = {}) {
     return mix(clear, grey(clear, 0.95 * dim), weather.cover * 0.7);
   });
   const night = lerp('night');
-  const warm = lerp('warm') * (1 - weather.cover * 0.75);
+  // Le Grand Œuvre : l'aube (autour du lever), le couchant (autour du coucher) et la nuit prennent sa couleur
+  const dawn = clamp(1 - Math.abs(hour - (rise + 0.3)) / 2.2);
+  const dusk = clamp(1 - Math.abs(hour - (set + 0.1)) / 1.8);
+  if (opus.dawn) tint = mix(tint, opus.dawn[0], opus.dawn[1] * dawn);
+  if (opus.dusk) tint = mix(tint, opus.dusk[0], opus.dusk[1] * dusk);
+  if (opus.night) tint = mix(tint, opus.night[0], opus.night[1] * night);
+  const warm = clamp(lerp('warm') + (opus.warm || 0) * dusk) * (1 - weather.cover * 0.75);
   // Nuages : blancs, dorés ou roses avec la chaleur du ciel, gris sous la pluie, bleutés la nuit
   const cloud = mix(mix(mix('#FFFFFF', '#FFC7A0', warm * 0.7), '#8E9AC0', night), '#9BA3AE', weather.rain * 0.7 * (1 - night));
   // Lumières : elles s'allument quand la scène s'assombrit (soir, nuit, gros temps)
-  const lit = clamp((0.9 - luma(tint)) / 0.42);
+  const lit = clamp(((0.9 - luma(tint)) / 0.42) * (opus.lit || 1));
   // Soleil : de 0 (lever) à 1 (coucher), hauteur 0 à 1 ; la lune la nuit
   const progress = clamp((hour - rise) / (set - rise));
   const up = hour > rise && hour < set ? Math.sin(progress * Math.PI) : 0;

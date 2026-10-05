@@ -9,7 +9,7 @@
           <i v-for="k in MIST" :key="k" class="guide__mist" :style="mistStyle(k)"></i>
         </template>
         <img v-if="entry.face" class="guide__face" :src="entry.face" alt="" />
-        <BrumeWisp v-else class="guide__wisp" :size="46" :waking="birth" />
+        <BrumeWisp v-else class="guide__wisp" :size="46" :waking="birth" :stage="stage" />
       </div>
       <div class="guide__bubble" role="status">
         <span class="guide__name">{{ entry.who || 'Brume' }}</span>
@@ -35,6 +35,10 @@ const MIST = 9;
 export default {
   name: 'BrumeGuide',
   components: { BrumeWisp },
+  props: {
+    // Le stade de Brume (game/opus.js), qui donne sa couleur ; null : la couleur de toujours
+    stage: { type: Number, default: null }
+  },
   emits: ['go'],
   data() {
     return { MIST, birth: false };

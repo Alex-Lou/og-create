@@ -455,7 +455,7 @@
         <div v-if="questOpen && state && state.brume" class="world__sheet-backdrop" @click.self="questOpen = false">
           <div class="world__sheet" role="dialog" aria-label="Brume, le feu follet">
             <div class="world__sheet-head">
-              <span class="world__sheet-title world__brume-title"><BrumeWisp :size="30" :ready="Boolean(quest && quest.done)" /> Brume</span>
+              <span class="world__sheet-title world__brume-title"><BrumeWisp :size="30" :ready="Boolean(quest && quest.done)" :stage="brumeState.stage" /> Brume</span>
               <button type="button" class="world__link" @click="questOpen = false">Fermer</button>
             </div>
             <template v-if="quest">
@@ -667,12 +667,13 @@
       :acts="(state.brume && state.brume.acts) || []"
       :people="state.people || null"
       :elements="elements"
+      :heliane="(state.heliane && state.heliane.found) || []"
       @show="showLandmark"
       @replay="act => { logOpen = false; $emit('replay-vigil', act); }"
       @close="logOpen = false"
     />
     <ChestReveal v-if="reveal" v-bind="reveal" :busy="busy" @wear="wearRevealed" @close="reveal = null" />
-    <ChestHaul v-if="haul && state" :items="haulItems" :busy="busy" @wear="wearHauled" @close="haul = null" />
+    <ChestHaul v-if="haul && state" :items="haulItems" :note="haulNote" :busy="busy" @wear="wearHauled" @close="haul = null" />
 
     <MiniGame
       v-if="gameId && gameView"
@@ -762,6 +763,7 @@ import {
 import { SEA_SPRITES, FISH_SPECIES } from '@/world/seaSprites';
 import { drawBrume, floatOf, BRUME_ALT, BRUME_REACH } from '@/world/brume';
 import { stageOf as civilizationOf } from '@/game/vigils';
+import { brumeLook, opusOf, secretDue, SECRET } from '@/game/opus';
 import { BEASTS } from '@/world/bestiary';
 import { faceHref } from '@/world/faces';
 import { guide } from '@/game/guide';
@@ -1115,6 +1117,18 @@ export default {
     quest() {
       return this.state && this.state.brume ? this.state.brume.quest : null;
     },
+    // Les actes finis (Brume) : le Grand Œuvre, la lumière de l'île et le stade de Brume (game/opus.js)
+    actsDone() {
+      return (this.state && this.state.brume && this.state.brume.acts) || [];
+    },
+    brumeState() {
+      return brumeLook({ acts: this.actsDone, quest: this.quest, elements: this.elements });
+    },
+    // Un mot d'Héliane dans la bouteille ouverte par « Tout ouvrir » (bible, § 6.13)
+    haulNote() {
+      const bottle = (this.haul || []).find(chest => chest.story);
+      return bottle ? noteOf(bottle.source, bottle.story) : '';
+    },
     // Expédition en route : temps avant son retour, en clair (« 1 h 40 », « 12 min »)
     tripLeft() {
       const trip = this.state && this.state.expedition;
@@ -1339,6 +1353,10 @@ export default {
         // Premier mini-jeu ouvert (Ponton, Carrière ou Bosquet au palier III)
         if ((state.games || []).some(g => g.open)) guide.tip('games');
         this.bestiaryTips(state);
+        // Acte VI : Galet a lu la dernière rune ; Brume comprend (dit une fois)
+        if (secretDue(state.brume && state.brume.acts, state.brume && state.brume.quest)) {
+          SECRET.forEach(line => guide.say({ id: line.id, text: line.text, ...(line.who ? { who: line.who, face: faceHref(line.face) } : {}) }));
+        }
       } catch (error) {
         if (this.gone) return;
         if ([401, 402].includes(error.response?.status)) {
@@ -1477,7 +1495,8 @@ export default {
       return new Date();
     },
     skyAt(date) {
-      return phaseAt(date, { weather: this.forced ? this.forced.weather : null });
+      // La lumière suit le Grand Œuvre (?oeuvre= pour l'imposer pendant les essais)
+      return phaseAt(date, { weather: this.forced ? this.forced.weather : null, opus: (this.forced && this.forced.opus) || opusOf(this.actsDone) });
     },
     // Horloge de l'en-tête : remise à jour quand la minute, le moment ou le temps changent (10 fois par seconde au plus
     // pendant l'accéléré)
@@ -2620,7 +2639,7 @@ export default {
       }
       const { dx, dy } = floatOf(t);
       const x = spot.x + dx, y = spot.y - BRUME_ALT + dy;
-      drawBrume(ctx, x, y, spot, t, Boolean(this.quest && this.quest.done), s);
+      drawBrume(ctx, x, y, spot, t, Boolean(this.quest && this.quest.done), s, this.brumeState);
       this.brumeHit = { x, y, r: BRUME_REACH * Math.max(1, 0.6 / s) };
     },
     // La caméra va vers l'objectif de la quête
@@ -3939,7 +3958,7 @@ export default {
       this.reveal = {
         chest,
         streak: source.startsWith('jour:') ? this.state.chests.daily.streak : 0,
-        note: source.startsWith('bouteille:') ? noteOf(source) : '',
+        note: source.startsWith('bouteille:') ? noteOf(source, chest.story) : '',
         art,
         wearable
       };

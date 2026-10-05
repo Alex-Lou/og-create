@@ -26,7 +26,7 @@
 </template>
 
 <script>
-import { WISP } from '@/world/brume';
+import { WISP, STAGES } from '@/world/brume';
 
 let count = 0;
 
@@ -38,7 +38,9 @@ export default {
     // Récompense à réclamer : le feu follet devient doré
     ready: { type: Boolean, default: false },
     // Naissance (BrumeGuide) : les yeux restent fermés, puis s'ouvrent
-    waking: { type: Boolean, default: false }
+    waking: { type: Boolean, default: false },
+    // Son stade (game/opus.js : brumeLook), qui donne sa couleur ; null : la couleur de toujours
+    stage: { type: Number, default: null }
   },
   data() {
     count += 1;
@@ -46,7 +48,8 @@ export default {
   },
   computed: {
     tone() {
-      return this.ready ? WISP.ready : WISP.calm;
+      if (this.ready) return WISP.ready;
+      return this.stage === null ? WISP.calm : STAGES[this.stage] || WISP.calm;
     }
   }
 };

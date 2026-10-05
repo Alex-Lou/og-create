@@ -336,6 +336,13 @@ chronométrer 20 appels. Comparer à zoom égal, au même endroit.
   Bestiaire : `src/world/bestiary.js` (bêtes écrites, variantes de ferme, familiers) ; `village.js` les fait vivre
   (`written` : les éléments du Grimoire, passés par `App` à `WorldView`) ; dessins nouveaux dans `animals.js`
   (mésange, papillons, luciole, abeille, hibou, Tic-Tac, bocal, renardeau). Chronique : Bestiaire et familiers.
+- **Lot H7 de la bible** (le Grand Œuvre et la finale). Serveur : `quests.actStartsOf`, `loot.helianeOf` (pur) ; une
+  bouteille porte `story` (l'acte) quand c'est la première ouverte pendant l'acte ; la vue dit `heliane`. Front :
+  `src/game/opus.js` (acte en cours, étape alchimique, `brumeLook`, le secret de l'acte VI, Feu follet écrit tôt) ;
+  `sky.js` (`OPUS`, passé par `phaseAt(date, { opus })` ; `?oeuvre=noir|blanc|jaune|rouge` pour l'imposer) ; `brume.js`
+  (`STAGES`, `toneOf`, ornements) ; `BrumeWisp` (prop `stage`, aussi dans le guide) ; la finale avant la veillée VII
+  (`vigils.js`, images `phare`, `reflet`, `soleil`, `flammeche` de `PrologueArt.vue`) ; les mots d'Héliane dans
+  `chest.js` (`HELIANE`, `noteOf(source, story)`), la rafale de « Tout ouvrir » et la Chronique.
 
 ### Décisions déjà prises par l'auteur (ne pas les redemander)
 - **Île** : 96 × 96 ; l'ancienne carte devient le cœur ; découverte par expéditions ; un quartier s'ouvre avec des
