@@ -3,7 +3,8 @@
 // bâtis, quartiers à soi, décor) et du temps.
 // - Habitants : un par bâtiment bâti (son métier), plus la cuisinière du Foyer, dessinés sous trois angles
 //   (villagers.js) : ils regardent où ils vont. Le jour ils travaillent et font leurs tournées par les chemins ; le soir ils rentrent au Foyer avec une lanterne ; la nuit ils dorment. Sous la pluie,
-//   un sur deux reste à l'abri, les autres sortent avec un parapluie.
+//   un sur deux reste à l'abri, les autres sortent avec un parapluie. Chacun a son allure, sa file quand il marche,
+//   sa place autour d'un arrêt (personne ne marche sur personne), et une tournée qui change chaque jour.
 // - Visiteur (lot 7d, vue du serveur) : arrivé en bateau, il flâne entre le Ponton, le Foyer et les bâtiments. Les
 //   visiteurs installés travaillent au bâtiment de leur métier et passent par leur maison.
 // - Ferme (avec les paliers du Potager) : poules de race et poussins, vache, moutons, cochon, chèvre, qui broutent
@@ -86,7 +87,10 @@ function gridOf({ n, M, sites, owned, crafts, props, annexes }) {
   };
   // Case libre (pour les bêtes des climats, qui ne suivent pas les chemins)
   const free = (x, y) => x >= 0 && y >= 0 && x < n && y < n && !blocked[y * n + x];
-  return { n, M, walk, step, free };
+  // Cases où l'on marche (pour flâner)
+  const walkable = [];
+  for (let y = 0; y < n; y++) for (let x = 0; x < n; x++) if (walk(x, y)) walkable.push({ x, y });
+  return { n, M, walk, step, free, walkable };
 }
 // Plus court chemin (les chemins coûtent moitié moins que l'herbe) : liste de cases, ou null
 function route(grid, from, to) {
@@ -198,47 +202,88 @@ export function villageOf({ n, M, sites, owned, crafts = [], props, annexes = []
       });
     }
   }
-  // Tournée d'un habitant : une suite d'arrêts (travail, ailleurs, travail, Foyer…), chacun avec la marche pour y aller
-  // et une pause ; elle tourne en boucle. evening : allers-retours entre le Foyer et le bâtiment le plus proche
+  // Place d'un habitant à un arrêt : une case où l'on marche autour de la porte (ou la porte elle-même). Le tour
+  // commence à une case tirée pour l'arrêt, puis chacun prend la suivante selon son rang : à un même arrêt, deux
+  // habitants ne prennent pas la même case (tant qu'il y a des cases)
+  const RING = [[0, 0], [1, 0], [0, 1], [-1, 0], [0, -1], [1, 1], [-1, -1], [1, -1], [-1, 1]];
+  const spotOf = (r, stop, salt) => {
+    const around = RING.map(([dx, dy]) => ({ x: stop.x + dx, y: stop.y + dy })).filter((c, i) => i === 0 || grid.walk(c.x, c.y));
+    return around[(Math.floor(hash(stop.x * 31 + stop.y, salt) * around.length) + r.k) % around.length];
+  };
+  // Une case où flâner, à quelques pas de son travail
+  const roamOf = (r, salt) => {
+    const near = grid.walkable.filter(c => Math.abs(c.x - r.work.x) + Math.abs(c.y - r.work.y) <= 6);
+    return near.length ? near[Math.floor(hash(r.k * 29 + salt, 53) * near.length)] : r.work;
+  };
+  // Tournée d'un habitant pour la journée (ou la soirée) : une suite d'arrêts, chacun avec la marche pour y aller et
+  // une pause ; elle tourne en boucle. Tirée pour lui et pour ce jour-là : elle change d'un habitant et d'un jour à
+  // l'autre. Chacun marche à son allure, dans sa file (un petit pas de côté)
   const plans = new Map();
-  const planOf = (r, evening) => {
-    const key = `${r.id}:${evening ? 'soir' : 'jour'}`;
+  const planOf = (r, evening, day) => {
+    const key = `${r.id}:${evening ? 'soir' : 'jour'}:${day}`;
     if (plans.has(key)) return plans.get(key);
-    const near = stops.filter(s => s !== home).sort((a, b) => Math.hypot(a.x - home.x, a.y - home.y) - Math.hypot(b.x - home.x, b.y - home.y))[0] || r.work;
-    const other = i => stops[Math.floor(hash(r.k * 7 + i, 13) * stops.length)] || r.work;
-    const seq = evening
-      ? [[home, 40, 'idle'], [near, 14, 'idle'], [home, 60, 'idle']]
-      : r.guest
-        ? [[r.work, 60, 'idle'], [other(1), 40, 'idle'], [home, 40, 'idle'], [other(2), 40, 'idle']]
-        : [[r.work, 90, 'work'], [other(1), 25, 'idle'], [r.field || r.work, 110, 'work'], [home, 30, 'idle'], [r.work, 80, 'work'], [other(2), 20, 'idle']];
+    const salt = i => day * 13 + i;
+    const roll = (i, a, b) => a + (b - a) * hash(r.k * 7 + i, day % 997 + 3);
+    const other = i => stops[Math.floor(hash(r.k * 7 + i, salt(13)) * stops.length)] || r.work;
+    const near = stops.filter(s => s !== home).sort((a, b) => Math.hypot(a.x - home.x, a.y - home.y) - Math.hypot(b.x - home.x, b.y - home.y));
+    let seq;
+    if (evening) {
+      // Le soir : chacun sa place autour du feu, un petit tour (un bâtiment proche ou quelques pas), puis le feu encore
+      const stroll = hash(r.k, salt(5)) < 0.5 && near.length ? spotOf(r, near[Math.floor(hash(r.k, salt(6)) * Math.min(3, near.length))], 61) : roamOf(r, salt(7));
+      seq = [[spotOf(r, home, salt(1)), roll(1, 30, 70), 'idle'], [stroll, roll(2, 10, 25), 'idle'], [spotOf(r, home, salt(2)), roll(3, 40, 90), 'idle']];
+    } else if (r.guest) {
+      seq = [[spotOf(r, r.work, 1), roll(1, 40, 80), 'idle'], [spotOf(r, other(1), 2), roll(2, 25, 45), 'idle'], [roamOf(r, salt(3)), roll(3, 15, 30), 'idle'],
+        [spotOf(r, home, 4), roll(4, 30, 50), 'idle'], [spotOf(r, other(2), 5), roll(5, 25, 45), 'idle']];
+    } else {
+      // Le jour : le travail d'abord, puis cinq moments tirés parmi travailler (ou son annexe), passer voir un autre
+      // bâtiment, flâner, une pause au Foyer ; le travail pour finir
+      const moments = [
+        i => [spotOf(r, r.field || r.work, salt(i)), roll(i, 70, 120), 'work'],
+        i => [spotOf(r, other(i), salt(i)), roll(i, 15, 35), 'idle'],
+        i => [roamOf(r, salt(i)), roll(i, 10, 25), 'idle'],
+        i => [spotOf(r, home, salt(i)), roll(i, 20, 40), 'idle']
+      ];
+      seq = [[spotOf(r, r.work, salt(0)), roll(0, 60, 110), 'work']];
+      for (let i = 1; i <= 5; i++) seq.push(moments[Math.floor(hash(r.k * 5 + i, salt(9)) * moments.length)](i));
+      seq.push([spotOf(r, r.work, salt(8)), roll(8, 50, 90), 'work']);
+    }
+    const speed = SPEED * (0.8 + 0.35 * hash(r.k, 7));
     const legs = [];
     let at = seq[seq.length - 1][0];
     let total = 0;
     for (const [to, pause, act] of seq) {
       const path = routeOf(at, to) || [to];
-      const walk = (path.length - 1) / SPEED;
-      legs.push({ path, walk, pause: pause * (0.8 + hash(r.k, legs.length) * 0.4), act, start: total });
-      total += walk + legs[legs.length - 1].pause;
+      const walk = (path.length - 1) / speed;
+      legs.push({ path, walk, pause, act, start: total });
+      total += walk + pause;
       at = to;
     }
-    const plan = { legs, total, offset: hash(r.k, 21) * total };
+    // À l'arrêt, chacun se tient à sa place dans la case, sur un petit cercle (angle d'or : deux rangs voisins sont loin)
+    const rest = { x: Math.cos(r.k * 2.4) * 0.26, y: Math.sin(r.k * 2.4) * 0.26 };
+    const plan = { legs, total, speed, lane: (hash(r.k, 9) - 0.5) * 0.24, rest, offset: hash(r.k, salt(21)) * total };
     plans.set(key, plan);
     return plan;
   };
-  // Place sur une tournée à l'instant t : case (fractionnaire), sens de marche, pose
+  // Place sur une tournée à l'instant t : case (fractionnaire), sens de marche, pose. En marche, un petit pas de côté
+  // (perpendiculaire au chemin) ; à l'arrêt, sa place dans la case ; on passe de l'une à l'autre dans la première et
+  // la dernière case du chemin (pas de saut)
   function onPlan(plan, t) {
     const tt = (t + plan.offset) % plan.total;
     const leg = plan.legs.reduce((found, l) => (tt >= l.start ? l : found), plan.legs[0]);
     const into = tt - leg.start;
     const last = leg.path[leg.path.length - 1];
-    if (into >= leg.walk || leg.path.length < 2) return { x: last.x, y: last.y, pose: leg.act, back: false, flip: false };
-    const d = into * SPEED;
+    if (into >= leg.walk || leg.path.length < 2) return { x: last.x + plan.rest.x, y: last.y + plan.rest.y, pose: leg.act, back: false, flip: false };
+    const d = into * plan.speed;
     const i = Math.min(leg.path.length - 2, Math.floor(d));
     const k = d - i;
     const [a, b] = [leg.path[i], leg.path[i + 1]];
     const dx = b.x - a.x;
     const dy = b.y - a.y;
-    return { x: a.x + dx * k, y: a.y + dy * k, pose: 'walk', back: dx + dy < 0, flip: dx - dy < 0 };
+    const side = { x: dy ? plan.lane : 0, y: dx ? plan.lane : 0 };
+    const blend = leg.path.length === 2 ? 1 : i === leg.path.length - 2 ? k : i === 0 ? 1 - k : 0;
+    const ox = side.x + (plan.rest.x - side.x) * blend;
+    const oy = side.y + (plan.rest.y - side.y) * blend;
+    return { x: a.x + dx * k + ox, y: a.y + dy * k + oy, pose: 'walk', back: dx + dy < 0, flip: dx - dy < 0 };
   }
 
   // Ferme : bêtes autour du Potager, selon son palier
@@ -299,6 +344,8 @@ export function villageOf({ n, M, sites, owned, crafts = [], props, annexes = []
     const lights = [];
     const h = phase.hour;
     const rain = phase.weather.rain;
+    // Le jour (les tournées des habitants et les places des bêtes en changent)
+    const day = Math.floor(Date.now() / 86400000);
     const tapped = (id, span) => {
       const s = scared.get(id);
       return s && t - s.at < span ? (t - s.at) / span : null;
@@ -308,7 +355,7 @@ export function villageOf({ n, M, sites, owned, crafts = [], props, annexes = []
       if (h < r.wake || h >= r.bed) continue;
       if (rain > 0.5 && r.k % 2 === 1) continue;
       const evening = h >= phase.set + 0.4;
-      const p = onPlan(planOf(r, evening), t);
+      const p = onPlan(planOf(r, evening, day), t);
       const lantern = evening && phase.lit > 0.35;
       const umbrella = rain > 0.5;
       // En marche, il regarde où il va (4 images) ; au travail, de trois quarts ; au repos, de face, de côté ou au loin,
@@ -355,7 +402,6 @@ export function villageOf({ n, M, sites, owned, crafts = [], props, annexes = []
       }
     }
     // Bois : chaque bête a ses heures ; elle change de place à chaque heure
-    const day = Math.floor(Date.now() / 86400000);
     const spot = (list, salt) => list[Math.floor(hash(day * 31 + Math.floor(h), salt) * list.length)];
     const wild = (id, species, cells, when, place) => {
       if (!cells.length || !when) return;

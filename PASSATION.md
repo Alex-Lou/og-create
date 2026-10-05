@@ -284,6 +284,9 @@ chronométrer 20 appels. Comparer à zoom égal, au même endroit.
   dans la Récolte). Créations de climat qui enrichissent les gisements ; une annexe de climat par trouvaille.
 - **Lieux remarquables** : découverte avec un effet durable.
 - **Fluidité** : vent seulement de près ; cases dorées avec contour net et pulsation.
+- **Toucher** : en deux temps. Un premier toucher choisit ce qui ouvre une fiche ou agit sur le serveur (contour doré,
+  bulle avec un bouton) ; le bouton ou un second toucher l'ouvre (`pickOf`, `choose`, `runPick` dans `WorldView.vue`).
+  Ce qui ne fait que réagir (bêtes, habitants qui parlent, mer, Brume, bulles de production) réagit tout de suite.
 - **Besoins des habitants** : humeur et production ; un habitant ne part jamais.
 - **Population** : visiteurs et maisons.
 - **Personnages** : générateur SVG maison (pas de pixel art).

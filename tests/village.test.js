@@ -1,4 +1,4 @@
-import { describe, it, expect } from 'vitest';
+import { describe, it, expect, vi } from 'vitest';
 import { villageOf } from '@/world/village';
 import { skyAt } from '@/world/sky';
 import { villagerSprite, personOf, ROLES, VIEWS, BUILDS, STYLES } from '@/world/villagers';
@@ -62,6 +62,33 @@ describe('village : habitants', () => {
     expect(village.say(who, at(13)).title).toBe('Pêcheuse');
     expect(village.say(who, at(13, 'orage')).text).toMatch(/orage/);
     expect(village.describe(who).text).toMatch(/Ponton/);
+  });
+});
+
+describe('village : tournées variées', () => {
+  it('à l’arrêt, personne ne se tient sur personne (le soir autour du feu non plus)', () => {
+    for (const h of [10, 13, 22]) {
+      for (let t = 0; t < 900; t += 11) {
+        const still = village.at(t, at(h)).list.filter(c => c.kind === 'villager' && !c.sprite[0].includes('-walk-'));
+        for (let i = 0; i < still.length; i++) {
+          for (let j = i + 1; j < still.length; j++) expect(Math.hypot(still[i].x - still[j].x, still[i].y - still[j].y)).toBeGreaterThan(0.1);
+        }
+      }
+    }
+  });
+  it('chacun sa tournée, et elle change d’un jour à l’autre', () => {
+    const track = (v, id) => Array.from({ length: 60 }, (_, i) => v.at(i * 15, at(11)).list.find(c => c.id === id)).map(c => (c ? `${c.x.toFixed(2)},${c.y.toFixed(2)}` : '-')).join(' ');
+    vi.useFakeTimers();
+    try {
+      vi.setSystemTime(new Date(2026, 9, 5, 11));
+      const a = villageOf({ n: N, M, sites, owned: new Set([0]), crafts: [], props: [] });
+      const day1 = track(a, 'vil:potager');
+      expect(day1).not.toBe(track(a, 'vil:ponton'));
+      vi.setSystemTime(new Date(2026, 9, 6, 11));
+      expect(track(a, 'vil:potager')).not.toBe(day1);
+    } finally {
+      vi.useRealTimers();
+    }
   });
 });
 

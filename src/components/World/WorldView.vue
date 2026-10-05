@@ -1,30 +1,5 @@
 <template>
-  <section class="world" aria-label="Le Monde">
-    <header class="world__head">
-      <div>
-        <span class="world__eyebrow">Ton île<IslandClock v-if="state && skyClock" v-bind="skyClock" :warping="warping" @warp="toggleWarp" /></span>
-        <span class="world__title">Le Monde</span>
-      </div>
-      <!-- « Tout ramasser » : ce que tous les bâtiments ont produit (écus et ressources), d'un toucher ; le solde reste
-           dans l'en-tête. (« Récolte » ne désigne que les mini-jeux, joués un par un.) -->
-      <button
-        v-if="harvestable.length"
-        type="button"
-        class="world__coins is-ready"
-        :disabled="busy"
-        :aria-label="`Tout ramasser : ${harvestable.map(g => `${g.n} ${g.label}`).join(', ')}`"
-        @click="collect"
-      >
-        <span class="world__coins-icon" aria-hidden="true"><ElementGlyph glyph="ui:basket" /></span>
-        <span class="world__coins-text" aria-hidden="true">
-          <span class="world__coins-label">Tout ramasser</span>
-          <span class="world__coins-gains">
-            <span v-for="g in harvestable" :key="g.id">+{{ g.n }}<ElementGlyph :glyph="g.glyph" /></span>
-          </span>
-        </span>
-      </button>
-    </header>
-
+  <section :class="['world', { 'world--immersive': immersive }]" aria-label="Le Monde">
     <!-- Invité : l'île demande un compte (ses ressources et écus sont gardés par le serveur) -->
     <div v-if="guest" class="world__guest">
       <p class="world__guest-title">Ton île t’attend.</p>
@@ -33,19 +8,47 @@
     </div>
 
     <template v-else>
-      <!-- Réserves de l'île et Récolte -->
-      <div v-if="state" class="world__hud">
-        <ul class="world__stock" aria-label="Réserves">
-          <li v-for="r in RESOURCES" :key="r.id" class="world__res" :title="r.label">
-            <span aria-hidden="true"><ElementGlyph :glyph="r.glyph" /></span><strong>{{ state.stock[r.id] }}</strong><span class="oc-sr-only">{{ r.label }}</span>
-          </li>
-        </ul>
-        <button type="button" class="world__play" :disabled="busy || !state.charges.count" @click="startHarvest">
-          <span class="world__play-label">Récolte</span>
-          <span class="world__play-sub">{{ chargesText }}</span>
-        </button>
+      <!-- L'île de bord à bord : en haut, une barre qui flotte par-dessus (horloge, écus, réserves, Récolte) ;
+           masquée en plein écran -->
+      <div ref="top" class="world__top">
+        <header class="world__head">
+          <div class="world__head-left">
+            <h2 class="oc-sr-only">Le Monde</h2>
+            <IslandClock v-if="state && skyClock" v-bind="skyClock" :warping="warping" @warp="toggleWarp" />
+            <span class="world__purse" :aria-label="`${coins} écus`"><span class="world__coin" aria-hidden="true"></span>{{ coinsText }}</span>
+          </div>
+          <!-- « Tout ramasser » : ce que tous les bâtiments ont produit (écus et ressources), d'un toucher ; le solde reste
+               dans l'en-tête. (« Récolte » ne désigne que les mini-jeux, joués un par un.) -->
+          <button
+            v-if="harvestable.length"
+            type="button"
+            class="world__coins is-ready"
+            :disabled="busy"
+            :aria-label="`Tout ramasser : ${harvestable.map(g => `${g.n} ${g.label}`).join(', ')}`"
+            @click="collect"
+          >
+            <span class="world__coins-icon" aria-hidden="true"><ElementGlyph glyph="ui:basket" /></span>
+            <span class="world__coins-text" aria-hidden="true">
+              <span class="world__coins-label">Tout ramasser</span>
+              <span class="world__coins-gains">
+                <span v-for="g in harvestable" :key="g.id">+{{ g.n }}<ElementGlyph :glyph="g.glyph" /></span>
+              </span>
+            </span>
+          </button>
+        </header>
+        <!-- Réserves de l'île et Récolte -->
+        <div v-if="state" class="world__hud">
+          <ul class="world__stock" aria-label="Réserves">
+            <li v-for="r in RESOURCES" :key="r.id" class="world__res" :title="r.label">
+              <span aria-hidden="true"><ElementGlyph :glyph="r.glyph" /></span><strong>{{ state.stock[r.id] }}</strong><span class="oc-sr-only">{{ r.label }}</span>
+            </li>
+          </ul>
+          <button type="button" class="world__play" :disabled="busy || !state.charges.count" @click="startHarvest">
+            <span class="world__play-label">Récolte</span>
+            <span class="world__play-sub">{{ chargesText }}</span>
+          </button>
+        </div>
       </div>
-
       <div ref="stage" class="world__stage">
         <!-- Les gestes passent par les pointeurs ; touchend annulé : pas de clic fantôme après un toucher au doigt (il
              tomberait sur le fond de la fiche qui vient de s'ouvrir et la refermerait aussitôt) -->
@@ -125,6 +128,13 @@
         <div v-if="state" class="world__zoom">
           <button type="button" aria-label="Zoomer" @click="zoomBy(1.25)">+</button>
           <button type="button" aria-label="Dézoomer" @click="zoomBy(0.8)">−</button>
+          <!-- Plein écran : l'île seule, sans barres (et l'écran entier quand l'appareil le permet) -->
+          <button type="button" :aria-label="immersive ? 'Quitter le plein écran' : 'Plein écran'" :aria-pressed="immersive" @click="toggleImmersive">
+            <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
+              <path v-if="immersive" d="M9 4v5H4M15 4v5h5M9 20v-5H4M15 20v-5h5" />
+              <path v-else d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5" />
+            </svg>
+          </button>
         </div>
         <p v-if="loadError" class="world__error" role="alert">
           L’île ne répond pas.
@@ -145,6 +155,7 @@
             <strong class="world__tip-title">{{ tip.title }}</strong>
             <span v-if="tip.text" class="world__tip-text">{{ tip.text }}</span>
             <span v-if="tip.hint" class="world__tip-hint">{{ tip.hint }}</span>
+            <button v-if="tip.action" type="button" class="world__tip-btn" @click="runPick">{{ tip.action }}</button>
           </div>
         </transition>
 
@@ -702,6 +713,8 @@ import { clockText } from '@/world/sky';
 const FRAME_MS = 33; // ~30 images/s : l'île respire, sans user la batterie
 // Bulle d'info de l'appui long : durée d'affichage ; noms du décor naturel et des bêtes, pour elle
 const TIP_MS = 3600;
+// Toucher en deux temps : ce qui est choisi (contour doré, bulle et bouton) le reste ce temps, puis s'oublie
+const PICK_MS = 7000;
 const NATURE_NAMES = {
   tree: 'Arbre', pine: 'Pin', palm: 'Palmier', bush: 'Buisson', rock: 'Rocher', rocks: 'Rochers', crag: 'Rocher escarpé', flowers: 'Fleurs',
   tuft: 'Touffe d’herbe', birch: 'Bouleau', apple: 'Pommier', autumn: 'Arbre d’automne', stump: 'Souche', log: 'Rondin', mushrooms: 'Champignons',
@@ -833,6 +846,8 @@ export default {
       runError: '',
       // Texte du compteur d'images (« ?perf »)
       perfText: '',
+      // Plein écran : l'île seule, sans la barre du haut ni la barre d'onglets
+      immersive: false,
       // Coffre tombé pendant la Récolte (ouvert au retour sur l'île) ; liste des coffres ouverte ; coffre en cours
       // d'ouverture : { chest, streak, note, art, wearable } ; coffres ouverts d'un coup (« Tout ouvrir »)
       runChest: null,
@@ -1036,6 +1051,10 @@ export default {
     menuStyle() {
       return { left: `${this.menuPos.x}px`, top: `${this.menuPos.y}px` };
     },
+    // Écus, dans la barre du haut (l'en-tête général est sous l'île)
+    coinsText() {
+      return new Intl.NumberFormat('fr-FR').format(this.coins || 0);
+    },
     chargesText() {
       if (!this.state) return '';
       const { count, max, nextIn } = this.state.charges;
@@ -1127,6 +1146,8 @@ export default {
     this.villageLights = [];
     this.ripples = [];
     this.tipTimer = 0;
+    // Chose choisie par un premier toucher : { key, run, ring } (voir pick)
+    this.picked = null;
     this.ac = null;
     this.observer = null;
     this.loadedAt = Date.now();
@@ -1142,6 +1163,10 @@ export default {
       this.setup();
       this.draw(performance.now());
     }, { signal: this.ac.signal });
+    // Plein écran quitté par l'appareil (geste ou touche Échap) : l'île retrouve ses barres
+    document.addEventListener('fullscreenchange', () => {
+      if (!document.fullscreenElement && this.immersive) this.setImmersive(false);
+    }, { signal: this.ac.signal });
     this.syncPhase();
     this.tick = setInterval(() => {
       this.clock = Date.now();
@@ -1155,6 +1180,7 @@ export default {
   },
   beforeUnmount() {
     this.gone = true;
+    if (this.immersive) this.setImmersive(false);
     clearTimeout(this.undoTimer);
     clearTimeout(this.holdTimer);
     clearTimeout(this.tipTimer);
@@ -1527,6 +1553,28 @@ export default {
       return Boolean(next) && next.planOwned && next.chapterOpen !== false && this.affordable(site) && this.coinsOk(next.coins);
     },
 
+    /* ---------- Plein écran ---------- */
+    toggleImmersive() {
+      this.setImmersive(!this.immersive);
+    },
+    // L'île seule : la barre du haut et la barre d'onglets se cachent ; l'écran entier quand l'appareil le permet
+    // (pas sur iPhone : l'île garde alors toute la fenêtre)
+    setImmersive(on) {
+      this.immersive = on;
+      document.documentElement.classList.toggle('oc-immersive', on);
+      try {
+        if (on && document.documentElement.requestFullscreen && !document.fullscreenElement) document.documentElement.requestFullscreen().catch(() => {});
+        if (!on && document.fullscreenElement && document.exitFullscreen) document.exitFullscreen().catch(() => {});
+      } catch (e) {
+        // Plein écran refusé : la fenêtre suffit
+      }
+      this.dropPick();
+      this.$nextTick(() => {
+        this.setup();
+        this.draw(performance.now());
+      });
+    },
+
     /* ---------- Géométrie et caméra ---------- */
     setup() {
       const stage = this.$refs.stage;
@@ -1538,12 +1586,13 @@ export default {
           this.draw(performance.now());
         });
         this.observer.observe(stage);
+        if (this.$refs.top) this.observer.observe(this.$refs.top);
       }
+      // Hauteur de la barre qui flotte en haut : les boutons du dessin se rangent dessous
+      stage.style.setProperty('--world-top', `${this.immersive || !this.$refs.top ? 0 : this.$refs.top.offsetHeight}px`);
       const width = stage.clientWidth;
-      // Hauteur : tout l'écran sous l'en-tête de l'île, jusqu'à la barre d'onglets (fixe), sans place perdue
-      const bar = document.querySelector('.tabbar');
-      const top = stage.getBoundingClientRect().top + window.scrollY;
-      const height = Math.round(Math.max(360, Math.min(window.innerHeight - top - (bar ? bar.offsetHeight : 64) - 12, 1100)));
+      // Hauteur : toute la scène (l'île couvre l'écran, de bord à bord, jusqu'à la barre d'onglets)
+      const height = Math.max(240, Math.round(stage.clientHeight));
       const dpr = Math.min(window.devicePixelRatio || 1, 2);
       canvas.width = Math.round(width * dpr);
       canvas.height = Math.round(height * dpr);
@@ -1602,6 +1651,7 @@ export default {
     },
     // Zoom autour d'un point de l'écran (le point du monde sous le doigt ne bouge pas)
     zoomAt(px, py, factor) {
+      this.dropPick();
       const before = this.toWorld(px, py);
       this.cam.s *= factor;
       this.clampCam();
@@ -1860,6 +1910,8 @@ export default {
       this.drawBeacons(ctx, t, seen);
       // Bulles de production à toucher, au-dessus de tout
       this.drawBubbles(ctx, t, repaint);
+      // Ce qui est choisi (premier toucher) : un contour doré qui bat
+      this.drawPick(ctx, t);
     },
     // Ce qui se tient derrière une case plus haute : cette case est repeinte par-dessus (le relief cache le pied)
     occlude(ctx, x, y, baked = false) {
@@ -2017,7 +2069,7 @@ export default {
       ctx.fillText(zone.known === false ? (going ? 'En route' : zone.explorable ? 'Explorer' : '? ? ?') : zone.open ? `${zone.price} écus` : `Chap. ${zone.chapter}`, 0, -31.5);
       ctx.textBaseline = 'alphabetic';
       ctx.restore();
-      this.signs.push({ zone, x: c.x, y: c.y - 30, r: 26 });
+      this.signs.push({ zone, x: c.x, y: c.y - 30, r: 20 });
     },
     // Pied de l'enseigne d'un bâtiment (dès le palier V) : sur le bord avant gauche de son emprise
     nameSignAt(site) {
@@ -2883,6 +2935,7 @@ export default {
       this.gesture.moved = Math.max(this.gesture.moved, Math.hypot(p.x - this.gesture.start.x, p.y - this.gesture.start.y));
       if (this.gesture.moved > TAP_SLOP) {
         clearTimeout(this.holdTimer);
+        this.dropPick();
         this.craftMenu = null;
         this.annexConfirm = null;
         this.cam.x -= (p.x - prev.x) / this.cam.s;
@@ -2920,24 +2973,25 @@ export default {
     hitAt(px, py) {
       const w = this.toWorld(px, py);
       if (this.brumeHit && Math.hypot(w.x - this.brumeHit.x, w.y - this.brumeHit.y) < this.brumeHit.r) return { brume: true };
-      const asking = this.needBubbles.find(b => Math.hypot(w.x - b.x, w.y - b.y) < b.r + 6);
+      const asking = this.needBubbles.find(b => Math.hypot(w.x - b.x, w.y - b.y) < b.r + 2);
       if (asking) return { asking };
       const bubble = this.bubbles.find(b => Math.abs(w.x - b.x) < b.w / 2 + 6 && Math.abs(w.y - b.y) < b.h / 2 + 8);
       if (bubble) return { bubble };
-      const sign = this.signs.find(sg => Math.hypot(w.x - sg.x, (w.y - sg.y) * 1.2) < sg.r);
-      if (sign) return { zone: sign.zone };
       // Animaux de la mer et mouettes posées : un toucher les fait réagir
       const animal = [...this.seaHits, ...this.landHits].find(h => Math.hypot(w.x - h.x, w.y - h.y) < h.r);
       if (animal) return animal.bottle ? { bottle: true } : { animal };
       // Enseignes des bâtiments
       const nameSign = this.nameSignHits.find(h => Math.hypot(w.x - h.x, (w.y - h.y) * 0.9) < h.r);
-      if (nameSign) return { nameSign: nameSign.site };
+      if (nameSign) return { nameSign: nameSign.site, at: nameSign };
       // Articles posés près des bâtiments (le plus proche du doigt)
       const items = this.itemHits.filter(h => Math.hypot(w.x - h.x, w.y - h.y) < h.r);
       if (items.length) {
         const near = items.reduce((a, b) => (Math.hypot(w.x - a.x, w.y - a.y) <= Math.hypot(w.x - b.x, w.y - b.y) ? a : b));
-        return { item: near.item, site: near.site };
+        return { item: near.item, site: near.site, at: near };
       }
+      // Panneau d'un quartier : seulement le panneau lui-même, après ce qui vit et ce qui est posé
+      const sign = this.signs.find(sg => Math.hypot(w.x - sg.x, (w.y - sg.y) * 1.2) < sg.r);
+      if (sign) return { zone: sign.zone, at: sign };
       // Zones de toucher généreuses : tout le volume dessiné du bâtiment, pas seulement sa base
       const candidates = [
         ...this.state.sites.map(site => ({ site, depth: site.x + site.y + site.w, c: this.centerOf(site), r: TW * 0.49 * site.w, h: TW * 0.875 * site.w, below: TH * 0.525 * site.w })),
@@ -2968,6 +3022,14 @@ export default {
       }
       const hit = this.hitAt(px, py);
       this.craftMenu = null;
+      // Toucher en deux temps : ce qui ouvre une fiche ou agit sur le serveur se choisit d'abord (contour doré, bulle et
+      // bouton) ; un second toucher dessus, ou le bouton, l'ouvre. Ce qui ne fait que réagir réagit tout de suite.
+      const pick = hit ? this.pickOf(hit, px, py) : null;
+      if (pick && this.picked && this.picked.key === pick.key) {
+        this.runPick();
+        return;
+      }
+      this.dropPick();
       if (!hit) {
         // La mer : des ronds dans l'eau là où le doigt touche (en mouvement réduit, la bulle d'info)
         if (this.reduced()) this.showTip(px, py, this.tipOf(null, { x: px, y: py }));
@@ -2979,16 +3041,10 @@ export default {
         this.draw(performance.now());
         return;
       }
-      if (hit.asking) {
-        if (hit.asking.visitor) this.openVisitor();
-        else this.openVillager(hit.asking.id);
-        vibrate(6);
-      } else if (hit.animal && (hit.animal.kind === 'vboat' || this.guestOf(hit.animal.who))) {
-        // Le visiteur ou son bateau : il dit ce qu'il demande (appui long : sa fiche)
-        const guest = this.state.visitor;
-        this.showTip(px, py, { title: `${guest.name} · ${guest.role}`, text: askLine(guest), hint: 'Appui long : sa fiche' });
-        if (hit.animal.who) this.scare(hit.animal);
-        vibrate(6);
+      if (pick) {
+        // Le visiteur sursaute quand même : on l'a touché
+        if (hit.animal && hit.animal.who) this.scare(hit.animal);
+        this.choose(pick, px, py);
       } else if (hit.bubble) {
         const sp = this.toScreen(hit.bubble.x, hit.bubble.y);
         this.collect(this.canvasPoint(sp.x, sp.y));
@@ -2996,9 +3052,6 @@ export default {
       } else if (hit.brume) {
         this.questAct();
         vibrate(6);
-      } else if (hit.bottle) {
-        this.openChest('bouteille');
-        vibrate(8);
       } else if (hit.animal) {
         // Un habitant parle, une bête de la ferme répond ; les bêtes sauvages s'enfuient
         const said = this.named(this.village && hit.animal.who ? this.village.say(hit.animal.who, this.phase || this.skyAt(this.skyDate())) : null, hit.animal.who, true);
@@ -3007,41 +3060,9 @@ export default {
           if (!said) this.showTip(px, py, this.tipOf(hit, { x: px, y: py }));
         } else this.scare(hit.animal);
         return;
-      } else if (hit.item) {
-        // Un article posé sautille et dit son nom (appui long : sa fiche et son mode d'emploi)
-        this.scared.set(`item:${hit.site.id}:${hit.item.id}`, { at: performance.now() / 1000 });
-        this.showTip(px, py, { title: hit.item.name, text: hit.item.effect, hint: 'Appui long : sa fiche' });
-        vibrate(6);
-      } else if (hit.nameSign) {
-        // L'enseigne sautille et dit son nom (appui long : la changer)
-        this.scared.set(`name-sign:${hit.nameSign.id}`, { at: performance.now() / 1000 });
-        this.showTip(px, py, this.tipOf(hit));
-        vibrate(6);
-      } else if (hit.annex) {
-        // Une annexe sautille et dit ce qu'elle rapporte (appui long : sa fiche)
-        const { annex } = hit;
-        this.scared.set(`annex:${annex.x},${annex.y}`, { at: performance.now() / 1000 });
-        this.showTip(px, py, this.annexTip(annex));
-        vibrate(6);
-      } else if (hit.landmark) {
-        this.tapLandmark(hit.landmark, px, py);
       } else if (hit.deposit) {
-        this.tapDeposit(hit.deposit, px, py);
-      } else if (hit.zone) {
-        this.zone = hit.zone;
-        vibrate(6);
-      } else if (hit.site) {
-        if (hit.site.locked) {
-          this.zone = this.zoneAt(hit.site.x, hit.site.y);
-        } else {
-          this.site = hit.site;
-          this.siteTab = hit.site.level ? 'overview' : 'evolution';
-        }
-        vibrate(6);
-      } else if (hit.craft) {
-        // Une création sautille et dit son nom (appui long : la déplacer ou la ranger)
-        const { craft } = hit;
-        this.scared.set(`craft:${craft.x},${craft.y}`, { at: performance.now() / 1000 });
+        // Un gisement qui n'est pas prêt sautille et dit quand il repousse
+        this.scared.set(`deposit:${hit.deposit.id}`, { at: performance.now() / 1000 });
         this.showTip(px, py, this.tipOf(hit));
         vibrate(6);
       } else {
@@ -3050,13 +3071,135 @@ export default {
       }
       this.draw(performance.now());
     },
+    // Ce que choisit un premier toucher : { key, action (texte du bouton), info (bulle), ring (contour), bounce, run } ;
+    // null pour ce qui ne fait que réagir (bêtes, habitants, mer, Brume, bulles de production, case libre)
+    pickOf(hit, px, py) {
+      const ring = (x, y, r) => ({ x, y, rx: r, ry: r * 0.55 });
+      if (hit.asking) {
+        const { asking } = hit;
+        return {
+          key: `ask:${asking.visitor ? 'visitor' : asking.id}`, action: 'Sa fiche', info: this.tipOf(hit), ring: ring(asking.x, asking.y, asking.r + 3),
+          run: () => (asking.visitor ? this.openVisitor() : this.openVillager(asking.id))
+        };
+      }
+      if (hit.animal && (hit.animal.kind === 'vboat' || this.guestOf(hit.animal.who))) {
+        const guest = this.state.visitor;
+        return { key: 'visitor', action: 'Sa fiche', info: { title: `${guest.name} · ${guest.role}`, text: askLine(guest) }, ring: ring(hit.animal.x, hit.animal.y, hit.animal.r), run: () => this.openVisitor() };
+      }
+      if (hit.bottle) {
+        const c = this.ground(this.bottleSpot.x + 0.5, this.bottleSpot.y + 0.5);
+        return { key: 'bottle', action: 'L’ouvrir', info: this.tipOf(hit), ring: ring(c.x, c.y, 14), run: () => this.openChest('bouteille') };
+      }
+      if (hit.item) {
+        const { item, site } = hit;
+        return {
+          key: `item:${site.id}:${item.id}`, action: 'Sa fiche', info: { title: item.name, text: item.effect }, ring: ring(hit.at.x, hit.at.y, hit.at.r),
+          bounce: `item:${site.id}:${item.id}`, run: () => this.describeItem(site, item)
+        };
+      }
+      if (hit.nameSign) {
+        const site = hit.nameSign;
+        return { key: `name-sign:${site.id}`, action: 'La changer', info: this.tipOf(hit), ring: ring(hit.at.x, hit.at.y, hit.at.r), bounce: `name-sign:${site.id}`, run: () => this.openNameSign(site) };
+      }
+      if (hit.annex) {
+        const { annex } = hit;
+        const c = this.ground(annex.x, annex.y);
+        return { key: `annex:${annex.x},${annex.y}`, action: 'Sa fiche', info: this.annexTip(annex), ring: ring(c.x, c.y, TW * 0.4), bounce: `annex:${annex.x},${annex.y}`, run: () => { this.annexSheet = { x: annex.x, y: annex.y }; } };
+      }
+      if (hit.craft) {
+        const { craft } = hit;
+        const c = this.ground(craft.x, craft.y);
+        return { key: `craft:${craft.x},${craft.y}`, action: 'La déplacer ou la ranger', info: this.tipOf(hit), ring: ring(c.x, c.y, TW * 0.4), bounce: `craft:${craft.x},${craft.y}`, run: () => this.openCraftMenu(craft) };
+      }
+      if (hit.landmark) {
+        const { landmark } = hit;
+        const zone = this.state.map.zones.find(z => z.id === landmark.zone);
+        const c = this.ground(landmark.x, landmark.y);
+        const toFind = !landmark.found && zone && zone.owned;
+        return {
+          key: `landmark:${landmark.id}`, action: toFind ? 'Le découvrir' : landmark.found ? 'Sa page du Carnet' : 'Le Carnet', info: this.tipOf(hit),
+          ring: ring(c.x, c.y, TW * 0.5 * landmarkScale(landmark.id)), bounce: `landmark:${landmark.id}`,
+          run: () => (toFind ? this.findLandmark(landmark, px, py) : this.openLog(landmark.id))
+        };
+      }
+      if (hit.deposit) {
+        const { deposit } = hit;
+        const zone = this.state.map.zones.find(z => z.id === deposit.zone);
+        if (!zone || !zone.owned || depositWait(deposit, this.clock - this.loadedAt)) return null;
+        const c = this.ground(deposit.x, deposit.y);
+        return { key: `deposit:${deposit.id}`, action: 'Ramasser', info: this.tipOf(hit), ring: ring(c.x, c.y, TW * 0.4 * DEPOSIT_SCALE), bounce: `deposit:${deposit.id}`, run: () => this.gatherDeposit(deposit, px, py) };
+      }
+      const zoneOf = zone => {
+        const w = hit.at || this.toWorld(px, py);
+        return { key: `zone:${zone.id}`, action: zone.known === false ? 'Préparer l’expédition' : 'Voir le quartier', info: this.tipOf({ zone }), ring: hit.at ? ring(w.x, w.y, w.r) : null, run: () => { this.zone = zone; } };
+      };
+      if (hit.zone) return zoneOf(hit.zone);
+      if (hit.site) {
+        const { site } = hit;
+        if (site.locked) return zoneOf(this.zoneAt(site.x, site.y));
+        const c = this.centerOf(site);
+        return {
+          key: `site:${site.id}`, action: site.level ? 'Sa fiche' : 'Bâtir', info: this.tipOf(hit), diamond: { x: c.x, y: c.y, w: TW * site.w, h: TH * site.h },
+          run: () => { this.site = site; this.siteTab = site.level ? 'overview' : 'evolution'; }
+        };
+      }
+      return null;
+    },
+    // Premier toucher : la chose est choisie (contour doré, bulle avec son bouton), elle sautille
+    choose(pick, px, py) {
+      if (pick.bounce) this.scared.set(pick.bounce, { at: performance.now() / 1000 });
+      this.picked = pick;
+      this.showTip(px, py, { ...pick.info, hint: null, action: pick.action }, PICK_MS);
+      vibrate(6);
+    },
+    // Second toucher, ou le bouton de la bulle : ce qui est choisi s'ouvre
+    runPick() {
+      const pick = this.picked;
+      this.dropPick();
+      if (!pick || this.busy) return;
+      vibrate(8);
+      pick.run();
+    },
+    // Le choix s'oublie (toucher ailleurs, la vue bouge) ; sa bulle s'en va avec lui
+    dropPick() {
+      if (!this.picked) return;
+      this.picked = null;
+      if (this.tip && this.tip.action) this.hideTip();
+    },
+    // Contour doré de ce qui est choisi : un trait sombre sous un trait doré, qui bat
+    drawPick(ctx, t) {
+      const pick = this.picked;
+      if (!pick || (!pick.ring && !pick.diamond)) return;
+      const k = 1 / Math.min(1, this.cam.s);
+      const beat = 0.65 + 0.35 * Math.sin(t * 6);
+      ctx.save();
+      const path = () => {
+        if (pick.diamond) this.diamond(ctx, pick.diamond.x, pick.diamond.y, pick.diamond.w, pick.diamond.h);
+        else {
+          ctx.beginPath();
+          ctx.ellipse(pick.ring.x, pick.ring.y, pick.ring.rx, pick.ring.ry, 0, 0, Math.PI * 2);
+        }
+      };
+      path();
+      ctx.lineWidth = 4.2 * k;
+      ctx.strokeStyle = 'rgba(58, 42, 30, .55)';
+      ctx.stroke();
+      path();
+      ctx.lineWidth = 2.2 * k;
+      ctx.strokeStyle = `rgba(242, 192, 75, ${beat.toFixed(3)})`;
+      ctx.stroke();
+      ctx.restore();
+    },
     // Bulle d'info au-dessus du doigt (en dessous près du haut), qui s'efface seule
-    showTip(px, py, info) {
+    showTip(px, py, info, ms = TIP_MS) {
       if (!info || !this.geo) return;
       clearTimeout(this.tipTimer);
       const below = py < 110;
       this.tip = { ...info, x: Math.max(96, Math.min(this.geo.width - 96, px)), y: below ? py + 18 : py - 16, below };
-      this.tipTimer = setTimeout(() => { this.tip = null; }, TIP_MS);
+      this.tipTimer = setTimeout(() => {
+        this.tip = null;
+        this.picked = null;
+      }, ms);
     },
     hideTip() {
       if (!this.tip) return;
@@ -3066,7 +3209,7 @@ export default {
     // Ce que dit la bulle pour ce qui est sous le doigt (null : la mer)
     tipOf(hit, point) {
       if (!hit) return { title: 'La mer', text: 'Dauphins, baleine et méduses passent au large.', hint: 'Toucher : des ronds dans l’eau' };
-      if (hit.bottle) return { title: 'Bouteille à la mer', text: 'Un mot du dernier alchimiste, et un coffre.', hint: 'Toucher : l’ouvrir' };
+      if (hit.bottle) return { title: 'Bouteille à la mer', text: 'Un mot du dernier alchimiste, et un coffre.', hint: 'Toucher deux fois : l’ouvrir' };
       if (hit.nameSign) {
         const look = this.state.signs.styles.find(st => st.id === hit.nameSign.sign);
         return { title: this.state.signs.name, text: `${look ? look.name : 'Enseigne'} · ${hit.nameSign.name}`, hint: 'Appui long : la changer' };
@@ -3076,10 +3219,10 @@ export default {
         const [title, text] = ANIMALS[hit.animal.kind] || ['Une bête', ''];
         return { title, text, hint: 'Toucher : la faire réagir' };
       }
-      if (hit.asking && hit.asking.visitor) return { title: this.state.visitor.name, text: askLine(this.state.visitor), hint: 'Toucher : sa fiche' };
+      if (hit.asking && hit.asking.visitor) return { title: this.state.visitor.name, text: askLine(this.state.visitor), hint: 'Toucher deux fois : sa fiche' };
       if (hit.asking) {
         const friend = this.friendAt(hit.asking.id);
-        return { title: friend ? friend.name : 'Un habitant', text: ASKS[hit.asking.need], hint: 'Toucher : sa fiche' };
+        return { title: friend ? friend.name : 'Un habitant', text: ASKS[hit.asking.need], hint: 'Toucher deux fois : sa fiche' };
       }
       if (hit.bubble) {
         const made = Object.entries(hit.bubble.site ? hit.bubble.site.pending || {} : {}).filter(([, n]) => n > 0).map(([k, n]) => `${Math.floor(n)} ${k === 'coins' ? 'écus' : LABEL[k] || k}`);
@@ -3087,16 +3230,16 @@ export default {
       }
       if (hit.zone) {
         const zone = hit.zone;
-        if (zone.known === false) return { title: 'Terre inconnue', text: 'Une expédition révélera ce qu’elle cache.', hint: 'Toucher : préparer l’expédition' };
-        return { title: zone.name, text: zone.owned ? 'Quartier à toi.' : zone.open ? `Quartier à acheter : ${zone.price} écus.` : `S’ouvre avec le chapitre ${zone.chapter} du Livre.`, hint: 'Toucher : voir le quartier' };
+        if (zone.known === false) return { title: 'Terre inconnue', text: 'Une expédition révélera ce qu’elle cache.', hint: 'Toucher deux fois : préparer l’expédition' };
+        return { title: zone.name, text: zone.owned ? 'Quartier à toi.' : zone.open ? `Quartier à acheter : ${zone.price} écus.` : `S’ouvre avec le chapitre ${zone.chapter} du Livre.`, hint: 'Toucher deux fois : voir le quartier' };
       }
       if (hit.site) {
         const site = hit.site;
-        if (site.locked) return { title: site.name, text: 'Dans un quartier encore fermé.', hint: 'Toucher : voir le quartier' };
-        if (!site.level) return { title: `${site.name} · à bâtir`, text: site.next && site.next.effect ? site.next.effect : '', hint: 'Toucher : ce qu’il faut pour bâtir' };
+        if (site.locked) return { title: site.name, text: 'Dans un quartier encore fermé.', hint: 'Toucher deux fois : voir le quartier' };
+        if (!site.level) return { title: `${site.name} · à bâtir`, text: site.next && site.next.effect ? site.next.effect : '', hint: 'Toucher deux fois : ce qu’il faut pour bâtir' };
         const per = site.perHour;
         const text = per ? `Palier ${roman(site.level)} · ${per.amount} ${LABEL[site.produce] || ''} et ${per.coins} écus par heure` : `Palier ${roman(site.level)}${site.effect ? ` · ${site.effect}` : ''}`;
-        return { title: site.name, text, hint: 'Toucher : sa fiche et sa boutique' };
+        return { title: site.name, text, hint: 'Toucher deux fois : sa fiche et sa boutique' };
       }
       if (hit.craft) return { title: this.craftName(hit.craft.craft), text: 'Une création d’île, assemblée à l’établi.', hint: 'Appui long : la déplacer ou la ranger' };
       if (hit.deposit) {
@@ -3106,13 +3249,13 @@ export default {
         const wait = depositWait(deposit, this.clock - this.loadedAt);
         if (!zone || !zone.owned) return { title: name, text: `Achète ${zone ? zone.name : 'ce quartier'} pour ${verb}.`, hint: 'Le sac, en haut à gauche : tes trouvailles' };
         if (wait) return { title: name, text: `Repousse dans ${waitText(wait)}.`, hint: 'Le sac, en haut à gauche : tes trouvailles' };
-        return { title: name, text: `Prêt : touche pour ${verb}${deposit.bonus ? ` (+${deposit.bonus} grâce aux créations de climat)` : ''}.`, hint: 'Toucher : ramasser' };
+        return { title: name, text: `Prêt : touche pour ${verb}${deposit.bonus ? ` (+${deposit.bonus} grâce aux créations de climat)` : ''}.`, hint: 'Toucher deux fois : ramasser' };
       }
       if (hit.landmark) {
         const landmark = hit.landmark;
         const zone = this.state.map.zones.find(z => z.id === landmark.zone);
         if (landmark.found) return { title: landmark.name, text: landmark.effect, hint: 'Appui long : sa page du Carnet' };
-        if (zone && zone.owned) return { title: landmark.name, text: 'Un lieu remarquable à découvrir.', hint: 'Toucher : le découvrir' };
+        if (zone && zone.owned) return { title: landmark.name, text: 'Un lieu remarquable à découvrir.', hint: 'Toucher deux fois : le découvrir' };
         return { title: landmark.name, text: `Achète ${zone ? zone.name : 'ce quartier'} pour découvrir ce lieu.`, hint: 'Appui long : le Carnet d’explorateur' };
       }
       // Case de l'île : son décor naturel, ou de l'herbe libre
@@ -4159,10 +4302,31 @@ export default {
 </script>
 
 <style scoped>
-.world { position: relative; }
-.world__head { display: flex; align-items: flex-end; justify-content: space-between; gap: 12px; padding: 4px 2px 8px; }
+.world {
+  /* De bord à bord : tout l'écran au-dessus de la barre d'onglets (à droite du rail sur PC) ; en plein écran, tout */
+  position: fixed; z-index: 20; top: 0; left: 0; right: 0; bottom: var(--oc-tabbar-h); background: #5FB0DD;
+}
+@media (min-width: 860px) { .world { left: var(--oc-rail-w); bottom: 0; } }
+.world--immersive { z-index: 30; left: 0; bottom: 0; }
+/* La barre du haut flotte sur l'île : seuls ses boutons et pastilles prennent le doigt */
+.world__top {
+  position: absolute; z-index: 4; top: 0; left: 0; right: 0; display: grid; gap: 6px;
+  padding: calc(env(safe-area-inset-top) + 8px) 10px 12px;
+  background: linear-gradient(rgba(24, 17, 12, .5), rgba(24, 17, 12, .22) 72%, rgba(24, 17, 12, 0));
+  pointer-events: none;
+}
+.world__top .world__head, .world__top .world__hud { pointer-events: none; }
+.world__top .world__head > *, .world__top .world__hud > * { pointer-events: auto; }
+.world--immersive .world__top { display: none; }
+.world__head-left { display: flex; align-items: center; gap: 8px; }
+.world__purse {
+  display: inline-flex; align-items: center; gap: 5px; height: 32px; padding: 0 11px 0 8px; border-radius: 999px;
+  background: rgba(251, 246, 234, .94); color: var(--ink-900); font-family: var(--font-ui); font-size: 14px; font-weight: 900;
+  font-variant-numeric: tabular-nums;
+}
+.world__guest { margin: calc(env(safe-area-inset-top) + 72px) 16px 0; }
+.world__head { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
 .world__eyebrow { display: block; font-family: var(--oc-font-mono); font-weight: 800; font-size: 11px; letter-spacing: .14em; text-transform: uppercase; color: var(--oc-on-bg-faint); }
-.world__title { display: block; font-family: var(--oc-font-display); font-weight: 700; font-size: 24px; line-height: 1.1; color: var(--oc-on-bg); }
 .world__coins {
   flex: 0 1 auto; min-width: 0; max-width: 60%; display: inline-flex; align-items: center; gap: 7px; text-align: left;
   min-height: 38px; padding: 6px 14px;
@@ -4181,7 +4345,7 @@ export default {
 @keyframes world-glow { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-2px); } }
 .world__coin { width: 16px; height: 16px; border-radius: 50%; background: radial-gradient(circle at 35% 35%, #FFE7A0, #E9AE2E 70%); box-shadow: inset 0 0 0 1.5px rgba(59, 42, 32, .5); }
 
-.world__hud { display: flex; align-items: stretch; gap: 8px; margin-bottom: 8px; }
+.world__hud { display: flex; align-items: stretch; gap: 8px; width: min(100%, 540px); }
 .world__stock { flex: 1; min-width: 0; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 6px; margin: 0; padding: 0; list-style: none; }
 .world__res {
   display: flex; align-items: center; justify-content: center; gap: 4px;
@@ -4200,29 +4364,29 @@ export default {
 .world__play-label { font-family: var(--font-display); font-size: 17px; font-weight: 700; line-height: 1.1; }
 .world__play-sub { font-size: 11px; font-weight: 800; opacity: .85; white-space: nowrap; }
 
-.world__stage { position: relative; border-radius: 22px; overflow: hidden; }
+.world__stage { position: absolute; inset: 0; overflow: hidden; --world-top: 0px; }
 .world__canvas { display: block; width: 100%; touch-action: none; cursor: grab; }
 .world__perf {
-  position: absolute; left: 10px; top: 62px; max-width: calc(100% - 80px); margin: 0; padding: 3px 8px; border-radius: 8px; white-space: nowrap;
+  position: absolute; left: 10px; top: calc(var(--world-top) + 60px); max-width: calc(100% - 80px); margin: 0; padding: 3px 8px; border-radius: 8px; white-space: nowrap;
   background: rgba(20, 14, 10, .7); color: #F6EEDF; font: 600 11px/1.3 ui-monospace, monospace; pointer-events: none;
 }
 .world__chest-btn {
-  position: absolute; left: 10px; top: 10px; display: grid; place-items: center;
+  position: absolute; left: 10px; top: calc(var(--world-top) + 8px); display: grid; place-items: center;
   width: 46px; height: 46px; border: 0; border-radius: 14px; background: rgba(30, 22, 16, .55); cursor: pointer;
 }
 .world__chest-btn.is-ready { background: var(--gold-400); box-shadow: 0 3px 0 var(--gold-600); animation: world-chest-call 2.4s ease-in-out infinite; }
 .world__log-btn {
-  position: absolute; left: 62px; top: 10px; display: grid; place-items: center;
+  position: absolute; left: 62px; top: calc(var(--world-top) + 8px); display: grid; place-items: center;
   width: 46px; height: 46px; border: 0; border-radius: 14px; background: rgba(30, 22, 16, .55); cursor: pointer;
 }
 .world__log-btn.is-ready { background: var(--gold-400); box-shadow: 0 3px 0 var(--gold-600); }
 .world__finds-btn {
-  position: absolute; left: 114px; top: 10px; display: grid; place-items: center;
+  position: absolute; left: 114px; top: calc(var(--world-top) + 8px); display: grid; place-items: center;
   width: 46px; height: 46px; border: 0; border-radius: 14px; background: rgba(30, 22, 16, .55); cursor: pointer;
 }
 .world__finds-btn.is-ready { background: var(--gold-400); box-shadow: 0 3px 0 var(--gold-600); }
 .world__trip-btn {
-  position: absolute; left: 10px; top: 64px; display: flex; align-items: center; gap: 5px; height: 36px; padding: 0 10px 0 6px;
+  position: absolute; left: 10px; top: calc(var(--world-top) + 62px); display: flex; align-items: center; gap: 5px; height: 36px; padding: 0 10px 0 6px;
   border: 0; border-radius: 12px; background: rgba(30, 22, 16, .6); color: #FFF4C8; font-family: var(--font-ui); font-size: 12px; font-weight: 900; cursor: pointer;
 }
 .world__trip-note { margin: 8px 0 0; padding: 8px 12px; border-radius: 12px; background: #FFF4D6; font-size: 13px; font-weight: 800; line-height: 1.4; }
@@ -4233,7 +4397,7 @@ export default {
 }
 @keyframes world-chest-call { 0%, 80%, 100% { transform: none; } 86% { transform: rotate(-8deg); } 92% { transform: rotate(8deg); } }
 @media (prefers-reduced-motion: reduce) { .world__chest-btn.is-ready { animation: none; } }
-.world__zoom { position: absolute; right: 10px; top: 10px; display: flex; flex-direction: column; gap: 6px; }
+.world__zoom { position: absolute; right: 10px; top: calc(var(--world-top) + 8px); display: flex; flex-direction: column; gap: 6px; }
 .world__zoom button {
   width: 38px; height: 38px; border: 0; border-radius: 12px;
   background: rgba(251, 246, 234, .92); color: var(--ink-900);
@@ -4257,6 +4421,10 @@ export default {
 .world__tip-title { font-weight: 900; font-size: 14px; }
 .world__tip-text { font-size: 12px; font-weight: 700; line-height: 1.3; color: #E8DCC4; }
 .world__tip-hint { margin-top: 2px; font-size: 11px; font-weight: 800; color: #F2C04B; }
+.world__tip-btn {
+  pointer-events: auto; align-self: center; min-height: 32px; margin-top: 6px; padding: 4px 14px; border: 0; border-radius: 999px;
+  background: #F2C04B; color: #3A2A1E; font: inherit; font-size: 13px; font-weight: 900; cursor: pointer;
+}
 .world-tip-enter-active, .world-tip-leave-active { transition: opacity .18s ease, margin .18s ease; }
 .world-tip-enter-from, .world-tip-leave-to { opacity: 0; margin-top: 6px; }
 .world__guide { margin: 0; display: grid; gap: 10px; }
@@ -4451,4 +4619,9 @@ export default {
 @media (prefers-reduced-motion: reduce) {
   .world__coins.is-ready { animation: none; }
 }
+</style>
+
+<style>
+/* Plein écran de l'île : la barre d'onglets se cache (hors du composant, d'où ce style global) */
+:root.oc-immersive .tabbar { display: none; }
 </style>
