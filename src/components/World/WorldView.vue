@@ -1568,6 +1568,7 @@ export default {
       } catch (e) {
         // Plein écran refusé : la fenêtre suffit
       }
+      this.dropPick();
       this.$nextTick(() => {
         this.setup();
         this.draw(performance.now());
