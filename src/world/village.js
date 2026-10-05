@@ -4,11 +4,13 @@
 // - Habitants : un par bâtiment bâti (son métier), plus la cuisinière du Foyer, dessinés sous trois angles
 //   (villagers.js) : ils regardent où ils vont. Le jour ils travaillent et font leurs tournées par les chemins ; le soir ils rentrent au Foyer avec une lanterne ; la nuit ils dorment. Sous la pluie,
 //   un sur deux reste à l'abri, les autres sortent avec un parapluie.
+// - Visiteur (lot 7d, vue du serveur) : arrivé en bateau, il flâne entre le Ponton, le Foyer et les bâtiments.
 // - Ferme (avec les paliers du Potager) : poules de race et poussins, vache, moutons, cochon, chèvre, qui broutent
 //   autour du Potager, se couchent la nuit et ne bougent plus sous la pluie.
 // - Bois : lapins le jour, cerf à l'aube et au crépuscule, renard et hérisson la nuit, écureuil dans les arbres.
 //   Touchés, ils s'enfuient. Eau : carpes koï dans l'eau douce, héron le matin.
 import { villagerSprite, ROLES, SKINS, HAIRS } from './villagers';
+import { visitorLook } from './visitors';
 import { ANIMAL_SPRITES } from './animals';
 
 const SPEED = 0.8; // cases par seconde, à pied
@@ -120,8 +122,9 @@ function doorOf(grid, site) {
 
 /* ---------- Le village ---------- */
 // sites : bâtiments de l'île ({ id, x, y, w, h, level, locked, name }) ; owned : indices des quartiers à soi ;
-// tiles : décorations posées ; props : décor naturel ({ kind, x, y }) ; annexes : annexes posées ({ x, y, site })
-export function villageOf({ n, M, sites, owned, tiles, props, annexes = [] }) {
+// tiles : décorations posées ; props : décor naturel ({ kind, x, y }) ; annexes : annexes posées ({ x, y, site }) ;
+// visitor : visiteur du moment (vue du serveur) ou null
+export function villageOf({ n, M, sites, owned, tiles, props, annexes = [], visitor = null }) {
   const grid = gridOf({ n, M, sites, owned, tiles, props, annexes });
   const built = sites.filter(s => s.level > 0 && !s.locked);
   const doors = Object.fromEntries(built.map(s => [s.id, doorOf(grid, s)]).filter(([, d]) => d));
@@ -143,11 +146,19 @@ export function villageOf({ n, M, sites, owned, tiles, props, annexes = [] }) {
       if (!site || !doors[id]) continue;
       const k = residents.length;
       residents.push({
-        id: `vil:${id}`, k, role: id, site: site.name,
+        id: `vil:${id}`, k, key: `vil-${k}`, role: id, site: site.name,
         look: { ...ROLES[id], skin: SKINS[Math.floor(hash(k, 3) * SKINS.length)], hair: HAIRS[Math.floor(hash(k, 5) * HAIRS.length)] },
         work: doors[id], wake: 6.4 + (k % 3) * 0.25, bed: 21.6 + (k % 3) * 0.3,
         // Une annexe à soi (la première posée) : on y travaille une partie de la journée
         field: (() => { const annex = annexes.find(a => a.site === id); return annex ? besideOf(grid, annex, doors[id]) : null; })()
+      });
+    }
+    // Le visiteur : il débarque au Ponton et flâne (il ne travaille pas)
+    if (visitor && doors.ponton) {
+      const k = residents.length;
+      residents.push({
+        id: `vis:${visitor.id}`, k, key: `vis-${visitor.seed}`, role: 'visitor', guest: visitor, site: built.find(s => s.id === 'ponton').name,
+        look: visitorLook(visitor.seed, visitor.role), work: doors.ponton, wake: 7, bed: 21.3, field: null
       });
     }
   }
@@ -161,7 +172,9 @@ export function villageOf({ n, M, sites, owned, tiles, props, annexes = [] }) {
     const other = i => stops[Math.floor(hash(r.k * 7 + i, 13) * stops.length)] || r.work;
     const seq = evening
       ? [[home, 40, 'idle'], [near, 14, 'idle'], [home, 60, 'idle']]
-      : [[r.work, 90, 'work'], [other(1), 25, 'idle'], [r.field || r.work, 110, 'work'], [home, 30, 'idle'], [r.work, 80, 'work'], [other(2), 20, 'idle']];
+      : r.guest
+        ? [[r.work, 60, 'idle'], [other(1), 40, 'idle'], [home, 40, 'idle'], [other(2), 40, 'idle']]
+        : [[r.work, 90, 'work'], [other(1), 25, 'idle'], [r.field || r.work, 110, 'work'], [home, 30, 'idle'], [r.work, 80, 'work'], [other(2), 20, 'idle']];
     const legs = [];
     let at = seq[seq.length - 1][0];
     let total = 0;
@@ -261,7 +274,7 @@ export function villageOf({ n, M, sites, owned, tiles, props, annexes = [] }) {
       const flip = hop !== null ? false : walking ? p.flip : hash(r.k, Math.floor(t / 20)) < 0.5;
       out.push({
         id: r.id, kind: 'villager', role: r.role, x: p.x, y: p.y, z: hop === null ? 0 : Math.sin(hop * Math.PI) * 6, flip,
-        sprite: [`vil-${r.k}-${opts.pose}-${view}-${opts.frame}-${lantern ? 1 : 0}-${umbrella ? 1 : 0}`, () => villagerSprite(r.look, opts)]
+        sprite: [`${r.key}-${opts.pose}-${view}-${opts.frame}-${lantern ? 1 : 0}-${umbrella ? 1 : 0}`, () => villagerSprite(r.look, opts)]
       });
       if (lantern) lights.push({ x: p.x, y: p.y, dx: flip ? 5.8 : -5.8, dy: -3 });
     }
@@ -341,6 +354,7 @@ export function villageOf({ n, M, sites, owned, tiles, props, annexes = [] }) {
     if (who.kind === 'villager') {
       const r = residents.find(v => v.id === who.id);
       if (!r) return null;
+      if (r.guest) return { title: r.guest.name, text: '' };
       const evening = phase.hour >= phase.set + 0.4;
       const lines = phase.weather.storm > 0.5
         ? ['L’orage gronde, mieux vaut rentrer !']
@@ -359,6 +373,7 @@ export function villageOf({ n, M, sites, owned, tiles, props, annexes = [] }) {
   function describe(who) {
     if (who.kind === 'villager') {
       const r = residents.find(v => v.id === who.id);
+      if (r && r.guest) return { title: `${r.guest.name} · ${r.guest.role}`, text: 'De passage sur l’île : son bateau attend au Ponton.', hint: 'Toucher : lui parler' };
       return r ? { title: r.look.label, text: `Travaille à « ${r.site} » le jour, rentre au Foyer le soir.`, hint: 'Toucher : lui parler' } : null;
     }
     const [title, text] = BEAST_NAMES[who.species] || ['Une bête', ''];
