@@ -3496,7 +3496,7 @@ export default {
       const settler = (this.state.villagers || []).find(v => v.id === id && v.seed !== undefined);
       if (settler) return this.visitorPortrait(settler);
       const resident = this.village && this.village.residents.find(r => r.role === id);
-      const look = resident ? resident.look : { ...ROLES[id], skin: '#F6D3B3', hair: '#7A4E2C' };
+      const look = resident ? resident.look : { skin: '#F6D3B3', hair: '#7A4E2C', ...ROLES[id] };
       return spriteUrl(`portrait-${id}-${look.skin}-${look.hair}`, () => villagerSprite(look));
     },
     openVillager(id) {
