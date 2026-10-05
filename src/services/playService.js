@@ -106,6 +106,10 @@ export default {
   worldChest(source) {
     return http.post('/play/world/chest', { source }).then(response => response.data);
   },
+  // « Tout ouvrir » : tous les coffres qui attendent, d'un coup → { chests, coins, world }
+  worldChestsAll() {
+    return http.post('/play/world/chests/all').then(response => response.data);
+  },
   // Récolte : { id, seed, kinds, maxMoves, boosts } puis { gains, earned, coins (solde), chest, world } une fois les
   // coups rejoués par le serveur
   harvestStart() {

@@ -5,16 +5,23 @@
         <span class="world__eyebrow">Ton île<IslandClock v-if="state && skyClock" v-bind="skyClock" :warping="warping" @warp="toggleWarp" /></span>
         <span class="world__title">Le Monde</span>
       </div>
-      <!-- Écus produits par l'île, à récolter (le solde reste dans l'en-tête) -->
+      <!-- « Tout récolter » : ce que tous les bâtiments ont produit (écus et ressources), d'un toucher ; le solde reste
+           dans l'en-tête -->
       <button
-        v-if="state && state.pending > 0"
+        v-if="harvestable.length"
         type="button"
         class="world__coins is-ready"
         :disabled="busy"
-        :aria-label="`Récolter ${state.pending} écus`"
+        :aria-label="`Tout récolter : ${harvestable.map(g => `${g.n} ${g.label}`).join(', ')}`"
         @click="collect"
       >
-        <span class="world__coin" aria-hidden="true"></span>+{{ state.pending }}<span class="world__coins-note">à récolter</span>
+        <span class="world__coins-icon" aria-hidden="true"><ElementGlyph glyph="ui:basket" /></span>
+        <span class="world__coins-text" aria-hidden="true">
+          <span class="world__coins-label">Tout récolter</span>
+          <span class="world__coins-gains">
+            <span v-for="g in harvestable" :key="g.id">+{{ g.n }}<ElementGlyph :glyph="g.glyph" /></span>
+          </span>
+        </span>
       </button>
     </header>
 
@@ -391,9 +398,10 @@
       </template>
     </GModal>
 
-    <!-- Coffres : la liste (jour, en attente), puis l'ouverture d'un coffre -->
-    <ChestList v-if="chestsOpen && state" :chests="state.chests" :busy="busy" @open="openChest" @close="chestsOpen = false" />
+    <!-- Coffres : la liste (jour, en attente), puis l'ouverture d'un coffre, ou de tous d'un coup -->
+    <ChestList v-if="chestsOpen && state" :chests="state.chests" :busy="busy" @open="openChest" @open-all="openAllChests" @close="chestsOpen = false" />
     <ChestReveal v-if="reveal" v-bind="reveal" :busy="busy" @wear="wearRevealed" @close="reveal = null" />
+    <ChestHaul v-if="haul && state" :items="haulItems" :busy="busy" @wear="wearHauled" @close="haul = null" />
 
     <HarvestGame
       v-if="run"
@@ -420,6 +428,7 @@ import ShopItemSheet from './ShopItemSheet.vue';
 import IslandClock from './IslandClock.vue';
 import ChestList from './ChestList.vue';
 import ChestReveal from './ChestReveal.vue';
+import ChestHaul from './ChestHaul.vue';
 import AnnexPanel from './AnnexPanel.vue';
 import AnnexSheet from './AnnexSheet.vue';
 import { annexLayers, annexLight } from '@/world/annexSprites';
@@ -534,7 +543,7 @@ let lastView = null;
 // d'animation sont non réactifs et s'arrêtent quand l'onglet est caché ou le composant démonté.
 export default {
   name: 'WorldView',
-  components: { ElementGlyph, ElementTile, HarvestGame, ShopItemSheet, BrumeWisp, IslandClock, GModal, ChestList, ChestReveal, AnnexPanel, AnnexSheet },
+  components: { ElementGlyph, ElementTile, HarvestGame, ShopItemSheet, BrumeWisp, IslandClock, GModal, ChestList, ChestReveal, ChestHaul, AnnexPanel, AnnexSheet },
   directives: { longpress },
   props: {
     discoveredElements: { type: Array, required: true },
@@ -576,10 +585,11 @@ export default {
       runResult: null,
       runError: '',
       // Coffre tombé pendant la Récolte (ouvert au retour sur l'île) ; liste des coffres ouverte ; coffre en cours
-      // d'ouverture : { chest, streak, note, art, wearable }
+      // d'ouverture : { chest, streak, note, art, wearable } ; coffres ouverts d'un coup (« Tout ouvrir »)
       runChest: null,
       chestsOpen: false,
       reveal: null,
+      haul: null,
       clock: Date.now(),
       // Horloge de l'en-tête (heure, moment, temps, soleil) ; journée en accéléré
       skyClock: null,
@@ -594,6 +604,18 @@ export default {
     };
   },
   computed: {
+    // « Tout récolter » : ce qui attend dans les bâtiments, écus puis ressources : [{ id, glyph, n, label }]
+    harvestable() {
+      if (!this.state) return [];
+      const stock = this.state.pendingStock || {};
+      return [{ id: 'coins', glyph: 'ui:coin', n: this.state.pending, label: 'écus' }, ...RESOURCES.map(r => ({ id: r.id, glyph: r.glyph, n: stock[r.id], label: r.label }))]
+        .map(g => ({ ...g, n: Math.floor(g.n || 0) }))
+        .filter(g => g.n > 0);
+    },
+    // Lots de « Tout ouvrir », avec l'aperçu et l'état de leur bâtiment (porté ou non) selon la vue du moment
+    haulItems() {
+      return (this.haul || []).map(chest => ({ chest, ...this.prizeLook(chest) }));
+    },
     // Coffres à ouvrir : celui du jour s'il attend, et ceux des chapitres et des quêtes
     chestCount() {
       const chests = this.state && this.state.chests;
@@ -2485,17 +2507,44 @@ export default {
         this.busy = false;
       }
     },
-    // Montre un coffre ouvert : sa série (coffre du jour), le mot de la bouteille, l'aperçu du bâtiment paré
-    showChest(chest) {
-      const { prize, source } = chest;
+    // « Tout ouvrir » : le serveur ouvre tout ce qui attend (jour, chapitres, quêtes, bouteille), l'île montre la rafale
+    async openAllChests() {
+      if (this.busy) return;
+      this.busy = true;
+      try {
+        const { chests, coins, world } = await playService.worldChestsAll();
+        this.apply(world);
+        this.$emit('coins-updated', coins);
+        this.chestsOpen = false;
+        this.haul = chests;
+        vibrate([10, 40, 14, 40, 18]);
+      } catch (error) {
+        this.$emit('show-alert', messageOf(error, 'Les coffres ne se sont pas ouverts.'));
+        this.load();
+      } finally {
+        this.busy = false;
+      }
+    },
+    // Ce qu'un lot montre de son bâtiment (teinte, pièce rare) : l'aperçu paré, s'il peut s'y porter, s'il y est porté
+    prizeLook({ prize }) {
       const site = prize.site ? this.state.sites.find(s => s.id === prize.site) : null;
       const item = site ? site.shop.find(i => i.id === prize.item) : null;
+      return {
+        art: item ? this.itemArt(site, item) : '',
+        wearable: Boolean(item && site.level && site.skin !== item.id),
+        worn: Boolean(item && site.skin === item.id)
+      };
+    },
+    // Montre un coffre ouvert : sa série (coffre du jour), le mot de la bouteille, l'aperçu du bâtiment paré
+    showChest(chest) {
+      const { source } = chest;
+      const { art, wearable } = this.prizeLook(chest);
       this.reveal = {
         chest,
         streak: source.startsWith('jour:') ? this.state.chests.daily.streak : 0,
         note: source.startsWith('bouteille:') ? noteOf(source) : '',
-        art: item ? this.itemArt(site, item) : '',
-        wearable: Boolean(item && site.level && site.skin !== item.id)
+        art,
+        wearable
       };
       vibrate([10, 40, 14]);
     },
@@ -2504,6 +2553,11 @@ export default {
       const { prize } = this.reveal.chest;
       await this.wearSkin(this.state.sites.find(s => s.id === prize.site), prize.item);
       this.reveal = null;
+    },
+    // « Porter » dans la rafale : la fenêtre reste ouverte, le lot passe à « Porté »
+    wearHauled(index) {
+      const { prize } = this.haul[index];
+      return this.wearSkin(this.state.sites.find(s => s.id === prize.site), prize.item);
     },
     async place(name, x, y) {
       this.picking = null;
@@ -2811,7 +2865,7 @@ export default {
 .world__eyebrow { display: block; font-family: var(--oc-font-mono); font-weight: 800; font-size: 11px; letter-spacing: .14em; text-transform: uppercase; color: var(--oc-on-bg-faint); }
 .world__title { display: block; font-family: var(--oc-font-display); font-weight: 700; font-size: 24px; line-height: 1.1; color: var(--oc-on-bg); }
 .world__coins {
-  flex: none; display: inline-flex; align-items: center; gap: 7px;
+  flex: 0 1 auto; min-width: 0; max-width: 60%; display: inline-flex; align-items: center; gap: 7px; text-align: left;
   min-height: 38px; padding: 6px 14px;
   border: 1px solid rgba(224, 182, 84, .3); border-radius: 999px;
   background: rgba(224, 182, 84, .08); color: var(--oc-text-faint);
@@ -2820,7 +2874,11 @@ export default {
 }
 .world__coins.is-ready { background: var(--gold-400); border-color: var(--gold-400); color: var(--ink-900); box-shadow: 0 4px 0 var(--gold-600); animation: world-glow 2s ease-in-out infinite; }
 .world__coins:disabled { cursor: default; }
-.world__coins-note { font-size: 11px; font-weight: 800; letter-spacing: .02em; opacity: .8; }
+.world__coins-icon { flex: none; font-size: 24px; line-height: 1; }
+.world__coins-text { display: grid; justify-items: start; gap: 1px; line-height: 1.1; }
+.world__coins-label { font-size: 13px; font-weight: 900; white-space: nowrap; }
+.world__coins-gains { display: flex; flex-wrap: wrap; gap: 0 7px; font-size: 12px; font-weight: 900; font-variant-numeric: tabular-nums; }
+.world__coins-gains > span { display: inline-flex; align-items: center; gap: 2px; }
 @keyframes world-glow { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-2px); } }
 .world__coin { width: 16px; height: 16px; border-radius: 50%; background: radial-gradient(circle at 35% 35%, #FFE7A0, #E9AE2E 70%); box-shadow: inset 0 0 0 1.5px rgba(59, 42, 32, .5); }
 

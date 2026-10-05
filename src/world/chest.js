@@ -23,6 +23,25 @@ export function stockOf(prize) {
   return Object.entries(prize.stock || {}).map(([r, n]) => ({ glyph: GLYPH[r], n, label: LABEL[r] }));
 }
 
+// Coffres qu'ouvre « Tout ouvrir » (vue du serveur) : celui du jour s'il attend, ceux des chapitres et des quêtes, la
+// bouteille échouée
+export function openableOf(chests) {
+  return (chests.daily.available ? 1 : 0) + chests.pending.length + (chests.bottle.available ? 1 : 0);
+}
+
+// Bilan d'une ouverture en rafale : écus et ressources additionnés, nombre de teintes et pièces rares
+export function haulOf(chests) {
+  const stock = {};
+  let coins = 0;
+  let items = 0;
+  for (const { prize } of chests) {
+    if (prize.kind === 'coins') coins += prize.amount;
+    else if (prize.kind === 'stock') for (const [r, n] of Object.entries(prize.stock)) stock[r] = (stock[r] || 0) + n;
+    else items++;
+  }
+  return { coins, stock: stockOf({ stock }), items };
+}
+
 // D'où vient un coffre (titre de l'ouverture)
 export function sourceText(source, streak) {
   if (source.startsWith('jour')) return streak ? `Coffre du jour · jour ${streak}` : 'Coffre du jour';
