@@ -31,6 +31,8 @@ describe('village : habitants', () => {
   it('un habitant par bâtiment bâti, plus la cuisinière du Foyer ; pas de chantier', () => {
     expect(village.residents.map(r => r.role)).toEqual(['potager', 'ponton', 'foyer']);
     expect(village.residents.every(r => r.look.skin && r.look.hair && ROLES[r.role])).toBe(true);
+    // La peau et les cheveux fixés par la fiche l'emportent sur le tirage (Galet, peau de granit ; Rivet, mèche grise)
+    for (const r of village.residents) for (const k of ['skin', 'hair']) if (ROLES[r.role][k]) expect(r.look[k]).toBe(ROLES[r.role][k]);
   });
   it('ils marchent par des cases praticables voisines, le jour ; dorment la nuit ; rentrent avec une lanterne le soir', () => {
     const noon = at(13);

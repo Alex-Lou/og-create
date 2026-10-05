@@ -177,7 +177,7 @@ export function villageOf({ n, M, sites, owned, crafts = [], props, annexes = []
       const k = residents.length;
       residents.push({
         id: `vil:${id}`, k, key: `vil-${k}`, role: id, site: site.name,
-        look: { ...ROLES[id], skin: SKINS[Math.floor(hash(k, 3) * SKINS.length)], hair: HAIRS[Math.floor(hash(k, 5) * HAIRS.length)] },
+        look: { skin: SKINS[Math.floor(hash(k, 3) * SKINS.length)], hair: HAIRS[Math.floor(hash(k, 5) * HAIRS.length)], ...ROLES[id] },
         work: doors[id], wake: 6.4 + (k % 3) * 0.25, bed: 21.6 + (k % 3) * 0.3,
         // Une annexe à soi (la première posée) : on y travaille une partie de la journée
         field: (() => { const annex = annexes.find(a => a.site === id); return annex ? besideOf(grid, annex, doors[id]) : null; })()
