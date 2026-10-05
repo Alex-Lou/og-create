@@ -1,6 +1,7 @@
-// Le sol de la grande île en relief (Canvas 2D, unités du monde) : chaque case a un sol (herbe, sable, prairie,
-// forêt, roche, chemin, eau…) et une hauteur de 0 à 3 ; ses faces avant (vers +x et +y) descendent jusqu'au voisin,
-// ou jusqu'à la mer. Le sol est préparé en carrés alignés sur l'écran, gardés en images (TerrainCache) : seuls les
+// Le sol de la très grande île en relief (Canvas 2D, unités du monde) : chaque case a un sol (herbe, sable, prairie,
+// forêt, roche, chemin, eau, et ceux des climats : neige, lac gelé, lande, marais, jungle, cendre, lave ; 'u' : terre
+// encore inconnue) et une hauteur de 0 à 6 ; ses faces avant (vers +x et +y) descendent jusqu'au voisin, ou jusqu'à
+// la mer. Le sol est préparé en carrés alignés sur l'écran, gardés en images (TerrainCache) : seuls les
 // carrés visibles sont dessinés, les nouveaux préparés dans un budget de temps par image.
 // L'eau douce (reflets, cascades) est animée par-dessus, case par case visible ; la mer vit dans sea.js.
 
@@ -16,6 +17,14 @@ const PAD_PX = 2;
 const MAX_TILES = 24;
 const MAX_RES = 2;
 const OVERVIEW_RES = 0.25;
+// Vu de loin (résolution des carrés jusqu'à BAKE_RES, et la vue d'ensemble), le décor fixe (arbres, rochers…) est peint
+// dans les carrés du sol, une fois, dans l'ordre du relief : l'île n'a plus à le redessiner à chaque image
+const BAKE_RES = 0.71;
+// Vue d'ensemble peinte avant que tous les dessins du décor soient prêts : refaite au plus tant de fois
+const OVERVIEW_RETRIES = 6;
+// Ce qu'un élément du décor dépasse de sa case : vers le haut, sur les côtés (unités du monde, cadre des dessins)
+const STAND_ABOVE = 96;
+const STAND_SIDE = 10;
 // Mer : bande d'eaux peu profondes (en cases depuis la terre), aussi un peu hors de la carte ; « au large »
 export const SHALLOW = 3;
 export const SEA_PAD = 3;
@@ -23,7 +32,7 @@ export const SEA_FAR = 9;
 // Ce qu'une case peut couvrir au-dessus de son centre (relief, détails) et au-dessous (faces jusqu'à la mer, piles
 // du pont), en unités du monde
 const cellAbove = h => TH / 2 + Math.max(0, h) * HS + 8;
-const CELL_ABOVE_MAX = TH / 2 + 3 * HS + 8;
+const CELL_ABOVE_MAX = TH / 2 + 6 * HS + 8;
 const CELL_BELOW = TH / 2 - SEA_Z * HS + 8;
 
 // Île flottante (lot 5e) : sous sa surface, une croûte de terre (CRUST paliers), puis un dessous rocheux en pointes,
@@ -103,7 +112,15 @@ const TOPS = {
   r: [['#A9A294', '#B2AB9D']],
   s: [['#EBD49B', '#F0DBA6']],
   p: [['#DCC28B', '#E1C892'], ['#D6BC83', '#DBC28A']],
-  w: [['#5FB0DD', '#66B6E1']]
+  w: [['#5FB0DD', '#66B6E1']],
+  n: [['#EEF3F8', '#F5F8FB']],
+  v: [['#BFE3F2', '#C9E9F5']],
+  l: [['#A8889E', '#B192A7'], ['#9E8396', '#A78D9F']],
+  x: [['#7E9A62', '#86A169']],
+  j: [['#3E8A48', '#46924F']],
+  a: [['#6A6461', '#726C68']],
+  o: [['#D9532E', '#E2603A']],
+  u: [['#E4E7EC', '#E9ECF0']]
 };
 const topColor = (g, h, odd) => {
   const key = g === 't' ? 'g' : g === 'd' ? 's' : g === 'k' ? 'w' : g;
@@ -116,9 +133,12 @@ const FACES = {
   sand: ['#D2B47A', '#BC9C63'],
   rock: ['#8E8578', '#766D61'],
   fall: ['#9AD3F0', '#86C6E8'],
-  stairs: ['#CDBB94', '#B8A57D']
+  stairs: ['#CDBB94', '#B8A57D'],
+  basalt: ['#4C4744', '#3B3734'],
+  fog: ['#D5D9DF', '#C8CDD4']
 };
 
+// grassy : liseré en haut de la face (true : herbe ; ou une couleur [gauche, droite] : neige, bruyère…)
 function face(ctx, x0, y0, x1, y1, drop, kind, side, grassy) {
   ctx.beginPath();
   ctx.moveTo(x0, y0);
@@ -141,7 +161,7 @@ function face(ctx, x0, y0, x1, y1, drop, kind, side, grassy) {
     }
     return;
   }
-  if (kind === 'fall') return;
+  if (kind === 'fall' || kind === 'fog') return;
   // Strates sur les hautes faces, ombre au pied, liseré d'herbe en haut
   if (drop > HS * 0.9) {
     ctx.strokeStyle = 'rgba(60, 35, 15, .16)';
@@ -159,7 +179,7 @@ function face(ctx, x0, y0, x1, y1, drop, kind, side, grassy) {
   ctx.closePath();
   ctx.fill();
   if (grassy) {
-    ctx.fillStyle = side ? '#5F8F41' : '#6E9E4C';
+    ctx.fillStyle = Array.isArray(grassy) ? grassy[side] : side ? '#5F8F41' : '#6E9E4C';
     ctx.beginPath();
     ctx.moveTo(x0, y0); ctx.lineTo(x1, y1); ctx.lineTo(x1, y1 + 3.5); ctx.lineTo(x0, y0 + 3.5);
     ctx.closePath();
@@ -268,6 +288,9 @@ function seaBridge(ctx, M, x, y) {
 // Lueur d'une lanterne du pont (unités du monde), pour l'éclairage de nuit
 export const lampGlowOf = lamp => { const p = worldOf(lamp.x, lamp.y, lamp.z); return { x: p.x, y: p.y - LAMP_H - 3 }; };
 
+// Liseré en haut des faces des sols des climats : [gauche, droite]
+const LIPS = { n: ['#F4F7FA', '#E3EAF1'], v: ['#DDEFF7', '#CFE5F0'], l: ['#8E6F86', '#7E6277'] };
+
 // Une case : faces avant puis dessus, détails du sol, voile de brume (quartier à acheter)
 export function drawCell(ctx, M, x, y, veil = 0) {
   const g = M.ground(x, y);
@@ -277,13 +300,15 @@ export function drawCell(ctx, M, x, y, veil = 0) {
   const top = M.surface(x, y);
   const c = worldOf(x, y, top);
   const odd = (x + y) % 2;
-  const grassy = 'gtmf'.includes(g);
+  const grassy = 'gtmfjx'.includes(g) || LIPS[g] || false;
   const kindOf = (nx, ny) => {
     if (g === 'w') return M.ground(nx, ny) === 'w' || M.ground(nx, ny) === 'k' ? 'fall' : 'earth';
     if ((g === 'p' || g === 'k') && 'pk'.includes(M.ground(nx, ny))) return 'stairs';
     if (g === 's' || g === 'd') return 'sand';
-    if (g === 'r') return 'rock';
-    return h >= 2 && !grassy ? 'rock' : 'earth';
+    if (g === 'r' || g === 'n' || g === 'v') return 'rock';
+    if (g === 'a' || g === 'o') return 'basalt';
+    if (g === 'u') return 'fog';
+    return h >= 2 && !'gtmfjx'.includes(g) ? 'rock' : 'earth';
   };
   const zl = M.surface(x, y + 1), zr = M.surface(x + 1, y);
   // Île flottante : côté mer, la face est suspendue (croûte et roche en pointes) ; son contour sert au voile
@@ -339,7 +364,68 @@ export function drawCell(ctx, M, x, y, veil = 0) {
     ctx.stroke();
     ctx.fillStyle = 'rgba(80, 70, 60, .4)';
     for (let k = 0; k < 3; k++) ctx.fillRect(c.x - 13 + rnd(x, y, k + 40) * 26, c.y - 5 + rnd(x, y, k + 44) * 10, 1.8, 1.4);
-  } else if (grassy && g !== 'f') {
+  } else if (g === 'n' || g === 'v') {
+    // Neige : un reflet bleuté, quelques scintillements ; lac gelé : des fêlures claires
+    ctx.fillStyle = 'rgba(160, 190, 220, .25)';
+    ctx.beginPath();
+    ctx.ellipse(c.x - 6 + rnd(x, y, 5) * 12, c.y + 2, 9, 3, 0, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.fillStyle = 'rgba(255, 255, 255, .95)';
+    for (let k = 0; k < 3; k++) ctx.fillRect(c.x - 14 + rnd(x, y, k + 50) * 28, c.y - 5 + rnd(x, y, k + 53) * 10, 1.6, 1.6);
+    if (g === 'v') {
+      ctx.strokeStyle = 'rgba(255, 255, 255, .7)';
+      ctx.lineWidth = 0.8;
+      ctx.beginPath();
+      ctx.moveTo(c.x - 12, c.y - 2 + rnd(x, y, 6) * 4);
+      ctx.lineTo(c.x - 2, c.y + 1);
+      ctx.lineTo(c.x + 10, c.y - 3 + rnd(x, y, 7) * 5);
+      ctx.stroke();
+    }
+  } else if (g === 'l') {
+    // Lande : touffes de bruyère mauve et d'ajonc doré
+    for (let k = 0; k < 6; k++) {
+      ctx.fillStyle = k % 3 === 2 ? 'rgba(232, 196, 78, .8)' : 'rgba(150, 92, 160, .55)';
+      ctx.beginPath();
+      ctx.arc(c.x - 15 + rnd(x, y, k + 60) * 30, c.y - 5 + rnd(x, y, k + 66) * 10, 1.8, 0, Math.PI * 2);
+      ctx.fill();
+    }
+  } else if (g === 'x') {
+    // Marais : une flaque d'eau dormante et des brins de joncs
+    ctx.fillStyle = 'rgba(70, 120, 120, .45)';
+    ctx.beginPath();
+    ctx.ellipse(c.x - 4 + rnd(x, y, 8) * 8, c.y + rnd(x, y, 9) * 4 - 2, 8 + rnd(x, y, 10) * 4, 3, 0, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.fillStyle = 'rgba(40, 80, 30, .45)';
+    for (let k = 0; k < 4; k++) ctx.fillRect(c.x - 14 + rnd(x, y, k + 70) * 28, c.y - 6 + rnd(x, y, k + 74) * 10, 1.2, 4);
+  } else if (g === 'j') {
+    // Jungle : sous-bois sombre, feuilles larges
+    for (let k = 0; k < 4; k++) {
+      ctx.fillStyle = k % 2 ? 'rgba(20, 70, 30, .4)' : 'rgba(110, 170, 80, .35)';
+      ctx.beginPath();
+      ctx.ellipse(c.x - 12 + rnd(x, y, k + 80) * 24, c.y - 4 + rnd(x, y, k + 84) * 8, 4, 1.8, rnd(x, y, k + 88) * 3, 0, Math.PI * 2);
+      ctx.fill();
+    }
+  } else if (g === 'a' || g === 'o') {
+    // Cendre : fissures sombres (la lave, elle, rougeoie dans ses fissures)
+    ctx.strokeStyle = g === 'o' ? 'rgba(255, 214, 120, .85)' : 'rgba(30, 26, 24, .45)';
+    ctx.lineWidth = g === 'o' ? 1.4 : 1;
+    ctx.beginPath();
+    ctx.moveTo(c.x - 12 + rnd(x, y, 11) * 5, c.y - 3);
+    ctx.lineTo(c.x - 1, c.y + 1 + rnd(x, y, 12) * 2);
+    ctx.lineTo(c.x + 11, c.y - 2 + rnd(x, y, 13) * 4);
+    ctx.stroke();
+    if (g === 'a') {
+      ctx.fillStyle = 'rgba(200, 190, 180, .25)';
+      for (let k = 0; k < 3; k++) ctx.fillRect(c.x - 13 + rnd(x, y, k + 90) * 26, c.y - 5 + rnd(x, y, k + 93) * 10, 1.6, 1.2);
+    }
+  } else if (g === 'u') {
+    // Terre inconnue : des volutes de brume, rien de ce qui est dessous
+    ctx.fillStyle = 'rgba(255, 255, 255, .55)';
+    ctx.beginPath();
+    ctx.arc(c.x - 7 + rnd(x, y, 14) * 6, c.y - 1, 6 + rnd(x, y, 15) * 3, 0, Math.PI * 2);
+    ctx.arc(c.x + 4 + rnd(x, y, 16) * 6, c.y + 1, 5 + rnd(x, y, 17) * 3, 0, Math.PI * 2);
+    ctx.fill();
+  } else if (grassy === true && g !== 'f') {
     ctx.fillStyle = 'rgba(60, 110, 40, .22)';
     for (let k = 0; k < 3; k++) ctx.fillRect(c.x - 15 + rnd(x, y, k) * 30, c.y - 5 + rnd(x, y, k + 4) * 10, 1.4, 3);
   }
@@ -373,11 +459,13 @@ export function drawCell(ctx, M, x, y, veil = 0) {
 // de côté, quelle que soit la résolution, et couvre donc TILE_PX / res unités du monde. Les carrés à l'écran ne
 // sont jamais jetés ; au-delà de MAX_TILES, les plus anciens hors de l'écran partent d'abord. Vue de toute l'île :
 // une seule image basse résolution (la vue d'ensemble), qui sert aussi en attendant un carré pas encore prêt.
-// veilOf(x, y) : voile de brume d'une case (0 si son quartier est à soi)
+// veilOf(x, y) : voile de brume d'une case (0 si son quartier est à soi) ; standOf(ctx, x, y) : peint le décor fixe
+// d'une case, vrai si tout était prêt (les carrés cuits avant que tous les dessins soient chargés seront refaits)
 export class TerrainCache {
-  constructor(M, veilOf) {
+  constructor(M, veilOf, standOf = null) {
     this.M = M;
     this.veilOf = veilOf;
+    this.standOf = standOf;
     this.tiles = new Map();
     this.overview = null;
     const n = M.n;
@@ -385,22 +473,37 @@ export class TerrainCache {
     this.bounds = { x: (-n * TW) / 2 - TW, y: -CELL_ABOVE_MAX, w: n * TW + 2 * TW, h: n * TH + CELL_ABOVE_MAX + CELL_BELOW };
   }
 
+  // Le décor fixe est-il cuit dans le sol à cette échelle (pixels par unité du monde) ?
+  bakes(scale) {
+    return Boolean(this.standOf) && resOf(scale) <= BAKE_RES;
+  }
+
+  // Le décor fixe a changé : les carrés où il est cuit et la vue d'ensemble seront refaits
+  restand() {
+    for (const [key, tile] of this.tiles) if (tile.res <= BAKE_RES) { tile.stale = true; this.tiles.set(key, tile); }
+    if (this.overview) { this.overview.stale = true; this.overview.retries = 0; }
+  }
+
   // Peint les cases qui touchent un rectangle du monde, dans l'ordre du relief (diagonale après diagonale, de gauche
-  // à droite) ; le canvas ou la découpe coupe ce qui dépasse. Renvoie le nombre de cases peintes
-  paint(ctx, r) {
+  // à droite) ; le canvas ou la découpe coupe ce qui dépasse. stand : avec le décor fixe de chaque case. Renvoie le
+  // nombre de cases peintes (this.ready dit si tout le décor était prêt)
+  paint(ctx, r, stand = false) {
+    this.ready = true;
     const M = this.M, n = M.n;
     // Centre d'une case : ((x - y) · TW/2, (x + y) · TH/2) ; d = x + y, u = x - y
-    // (cases qui touchent le rectangle sur plus qu'un bord)
-    const umin = Math.floor(((r.x - TW / 2 - 2) * 2) / TW) + 1, umax = Math.ceil(((r.x + r.w + TW / 2 + 2) * 2) / TW) - 1;
-    const dmin = Math.max(0, Math.floor(((r.y - CELL_BELOW) * 2) / TH) + 1), dmax = Math.min(2 * n - 2, Math.ceil(((r.y + r.h + CELL_ABOVE_MAX) * 2) / TH) - 1);
+    // (cases qui touchent le rectangle sur plus qu'un bord ; avec le décor, aussi celles dont un arbre y dépasse)
+    const side = TW / 2 + 2 + (stand ? STAND_SIDE : 0), above = stand ? STAND_ABOVE : 0;
+    const umin = Math.floor(((r.x - side) * 2) / TW) + 1, umax = Math.ceil(((r.x + r.w + side) * 2) / TW) - 1;
+    const dmin = Math.max(0, Math.floor(((r.y - CELL_BELOW) * 2) / TH) + 1), dmax = Math.min(2 * n - 2, Math.ceil(((r.y + r.h + CELL_ABOVE_MAX + above) * 2) / TH) - 1);
     let count = 0;
     for (let d = dmin; d <= dmax; d++) {
       const xa = Math.max(0, d - n + 1, Math.ceil((d + umin) / 2)), xb = Math.min(n - 1, d, Math.floor((d + umax) / 2));
       for (let x = xa; x <= xb; x++) {
         const y = d - x;
         if (!M.land(x, y) && M.ground(x, y) !== 'b') continue;
-        if ((d * TH) / 2 - cellAbove(M.height(x, y)) >= r.y + r.h || (d * TH) / 2 + CELL_BELOW <= r.y) continue;
+        if ((d * TH) / 2 - cellAbove(M.height(x, y)) - above >= r.y + r.h || (d * TH) / 2 + CELL_BELOW <= r.y) continue;
         drawCell(ctx, M, x, y, this.veilOf(x, y));
+        if (stand && !this.standOf(ctx, x, y)) this.ready = false;
         count++;
       }
     }
@@ -416,22 +519,26 @@ export class TerrainCache {
     canvas.width = canvas.height = TILE_PX + 2 * PAD_PX;
     const ctx = canvas.getContext('2d');
     ctx.setTransform(res, 0, 0, res, -r.x * res, -r.y * res);
-    if (this.paint(ctx, r)) return { canvas, r };
+    const bake = Boolean(this.standOf) && res <= BAKE_RES;
+    if (this.paint(ctx, r, bake)) return { canvas, r, res, stale: bake && !this.ready };
     canvas.width = canvas.height = 0;
-    return { canvas: null, r };
+    return { canvas: null, r, res };
   }
 
   // Toute l'île en basse résolution
+  // (avec le décor fixe ; peinte trop tôt, elle est refaite un peu plus tard, OVERVIEW_RETRIES fois au plus)
   overviewOf() {
-    if (this.overview) return this.overview;
+    const now = performance.now();
+    const o = this.overview;
+    if (o && !(o.stale && o.retries < OVERVIEW_RETRIES && now - o.at > 400)) return o;
     const b = this.bounds;
-    const canvas = document.createElement('canvas');
+    const canvas = o ? o.canvas : document.createElement('canvas');
     canvas.width = Math.ceil(b.w * OVERVIEW_RES);
     canvas.height = Math.ceil(b.h * OVERVIEW_RES);
     const ctx = canvas.getContext('2d');
     ctx.setTransform(OVERVIEW_RES, 0, 0, OVERVIEW_RES, -b.x * OVERVIEW_RES, -b.y * OVERVIEW_RES);
-    this.paint(ctx, b);
-    this.overview = { canvas, ctx };
+    this.paint(ctx, b, Boolean(this.standOf));
+    this.overview = { canvas, ctx, at: now, stale: !this.ready, retries: o ? o.retries + 1 : 0 };
     return this.overview;
   }
 
@@ -532,7 +639,7 @@ export class TerrainCache {
       ctx.rect(r.x, r.y, r.w, r.h);
       ctx.clip();
       ctx.clearRect(r.x, r.y, r.w, r.h);
-      this.paint(ctx, r);
+      this.paint(ctx, r, Boolean(this.standOf));
       ctx.restore();
     }
   }

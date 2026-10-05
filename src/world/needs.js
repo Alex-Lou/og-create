@@ -5,8 +5,8 @@ export const NEED_GLYPH = { manger: 'ui:food', outils: 'ui:tools', deco: 'ui:flo
 export const MOOD_GLYPH = { heureux: 'ui:smile', content: 'ui:calm', triste: 'ui:frown' };
 export const MOOD_LABEL = { heureux: 'Aux anges', content: 'Ça va', triste: 'Le moral en berne' };
 
-// Ressources au pluriel, dans les prix
-const WORDS = { stone: 'pierres', wood: 'bûches', water: 'seaux d’eau', food: 'vivres' };
+// Ressources au pluriel, dans les prix (besoins, expéditions)
+export const WORDS = { stone: 'pierres', wood: 'bûches', water: 'seaux d’eau', food: 'vivres' };
 // Prix d'un besoin : « 10 vivres », « 5 pierres et 5 bûches »
 export const costText = cost => Object.entries(cost).map(([r, n]) => `${n} ${WORDS[r] || r}`).join(' et ');
 

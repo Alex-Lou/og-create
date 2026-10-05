@@ -77,6 +77,16 @@
           </svg>
           <span v-if="chestCount" class="world__chest-badge" aria-hidden="true">{{ chestCount }}</span>
         </button>
+        <!-- Expédition en route : une boussole et le temps avant son retour -->
+        <button v-if="state && state.expedition" type="button" class="world__trip-btn" :aria-label="`Expédition en route : retour dans ${tripLeft}`" @click="showExpedition">
+          <svg viewBox="0 0 32 32" width="24" height="24" aria-hidden="true">
+            <circle cx="16" cy="16" r="12" fill="#F6EEDD" stroke="#5A3A1E" stroke-width="1.6" />
+            <path d="M16,6 L19,16 L16,26 L13,16 Z" fill="#C9473A" stroke="#5A3A1E" stroke-width="0.8" />
+            <path d="M16,16 L19,16 L16,26 L13,16 Z" fill="#E9DCC4" />
+            <circle cx="16" cy="16" r="1.6" fill="#5A3A1E" />
+          </svg>
+          <span class="world__trip-left">{{ tripLeft }}</span>
+        </button>
         <div v-if="state" class="world__zoom">
           <button type="button" aria-label="Zoomer" @click="zoomBy(1.25)">+</button>
           <button type="button" aria-label="Dézoomer" @click="zoomBy(0.8)">−</button>
@@ -394,7 +404,35 @@
       </transition>
       <transition name="world-sheet">
         <div v-if="zone" class="world__sheet-backdrop" @click.self="zone = null">
-          <div class="world__sheet" role="dialog" :aria-label="zone.name">
+          <div v-if="zone.known === false" class="world__sheet" role="dialog" aria-label="Terre inconnue">
+            <div class="world__sheet-head">
+              <span class="world__sheet-title"><ElementGlyph glyph="ui:map" /> Terre inconnue</span>
+              <button type="button" class="world__link" @click="zone = null">Fermer</button>
+            </div>
+            <p class="world__site-effect">Une brume épaisse couvre cette terre. Une expédition révélera son relief, son climat et ce qu’elle cache. Elle emporte :</p>
+            <ul class="world__needs">
+              <li class="world__need">
+                <span class="world__need-glyph" aria-hidden="true"><ElementGlyph glyph="ui:map" /></span>
+                <span><strong>{{ zone.trip }} h</strong> de voyage</span>
+              </li>
+              <li v-for="(n, r) in zone.cost" :key="r" :class="['world__need', state.stock[r] >= n ? 'is-ok' : 'is-missing']">
+                <span class="world__need-glyph" aria-hidden="true"><ElementGlyph :glyph="GLYPH[r]" /></span>
+                <span><strong>{{ n }}</strong> {{ WORDS[r] }}</span>
+              </li>
+              <li :class="['world__need', state.charges.count ? 'is-ok' : 'is-missing']">
+                <span class="world__need-glyph" aria-hidden="true"><ElementGlyph glyph="ui:spark" /></span>
+                <span>Une partie de Récolte</span>
+                <em>{{ state.charges.count }} en réserve</em>
+              </li>
+            </ul>
+            <p v-if="state.expedition && state.expedition.zone === zone.id" class="world__trip-note">Ton expédition est en route : retour dans {{ tripLeft }}.</p>
+            <p v-else-if="state.expedition" class="world__trip-note">Une expédition est déjà en route ailleurs : attends son retour.</p>
+            <p v-else-if="!zone.explorable" class="world__trip-note">Une expédition part d’un quartier à toi, vers un quartier voisin : achète d’abord un quartier qui touche celui-ci.</p>
+            <div class="world__sheet-actions">
+              <button type="button" class="world__btn" :disabled="!zone.explorable || busy" @click="explore(zone)">Envoyer une expédition</button>
+            </div>
+          </div>
+          <div v-else class="world__sheet" role="dialog" :aria-label="zone.name">
             <div class="world__sheet-head">
               <span class="world__sheet-title"><ElementGlyph glyph="ui:map" /> {{ zone.name }}</span>
               <button type="button" class="world__link" @click="zone = null">Fermer</button>
@@ -402,6 +440,7 @@
             <p class="world__site-effect">
               Agrandis ton île<template v-if="sitesIn(zone).length"> : ce quartier abrite {{ sitesIn(zone).join(', ') }}</template>, et de la place pour tes créations.
             </p>
+            <p v-if="CLIMATE_TEXT[zone.climate]" class="world__climate"><strong>{{ CLIMATE_NAMES[zone.climate] }}</strong> · {{ CLIMATE_TEXT[zone.climate] }}</p>
             <ul class="world__needs">
               <li v-if="zone.chapter" :class="['world__need', zone.open ? 'is-ok' : 'is-missing']">
                 <span class="world__need-glyph" aria-hidden="true"><ElementGlyph glyph="ui:book" /></span>
@@ -575,11 +614,12 @@ import CraftBench from './CraftBench.vue';
 import CraftPuzzle from './CraftPuzzle.vue';
 import { villagerSprite, ROLES } from '@/world/villagers';
 import { talkLine, giftLine, awaits } from '@/world/friends';
-import { NEED_GLYPH, MOOD_GLYPH, MOOD_LABEL, ASKS, THANKS, missingOf, fillAllOf, askOr } from '@/world/needs';
+import { NEED_GLYPH, MOOD_GLYPH, MOOD_LABEL, ASKS, THANKS, WORDS, missingOf, fillAllOf, askOr } from '@/world/needs';
 import { visitorLook, visitorBoat, askLine, THANKS as VISITOR_THANKS } from '@/world/visitors';
 import { nameSignLayers, nameSignLight, paintName } from '@/world/nameSigns';
 import { annexLayers, annexLight } from '@/world/annexSprites';
 import { craftLayers, craftLight, craftThumb } from '@/world/craftSprites';
+import { CLIMATE_NAMES, CLIMATE_TEXT, climateAt, mixToward, drawClimate } from '@/world/climates';
 import { annexReady, annexYield, variantsOf } from '@/world/annexes';
 import { BOTTLE, noteOf, openableOf } from '@/world/chest';
 import GModal from '@/components/ui/GModal.vue';
@@ -594,7 +634,7 @@ import { itemLayers, itemLight, itemThumb } from '@/world/shopSprites';
 import { rareLights } from '@/world/rareSprites';
 import { tintOf } from '@/world/tints';
 import { NATURE2, CRITTERS, SIGN } from '@/world/nature';
-import { drawSprite, imageOf, spriteUrl, clearSprites } from '@/world/spriteCache';
+import { drawSprite, imageOf, spriteUrl, clearSprites, setSpriteDetail } from '@/world/spriteCache';
 import { islandOf, liveOf, drawLive, drawCell, TerrainCache, HS, SEA_Z, worldOf, lampGlowOf } from '@/world/terrain';
 import { FLOATING_ZONE, COLONY_ZONE, isletsOf, ferryPose, drawFloatBelow, drawSpring } from '@/world/islets';
 import { ISLET_SPRITES, ISLET_NATURE } from '@/world/isletSprites';
@@ -653,6 +693,10 @@ const TW = 64; // largeur d'une case à l'échelle 1 (unités du monde)
 const TH = TW / 2;
 const DEPTH = 30;
 const MAX_SCALE = 1.8;
+// Vue de loin (zoom sous FAR_SCALE) : ni masquage par le relief devant ce qui se tient debout (invisible à cette
+// taille), ni petits détails du décor ; la très grande île reste fluide
+const FAR_SCALE = 0.45;
+const SMALL_PROPS = new Set(['tuft', 'flowers', 'shells', 'mushrooms', 'reeds', 'lily', 'stump', 'log', 'driftwood', 'nest']);
 // Ce qui vit à la surface de la mer (posé au niveau de l'eau, jamais caché par la terre : eau libre)
 const SEA_KINDS = new Set(['fish', 'dolphin', 'whale', 'fluke', 'spout', 'vboat']);
 // Arrivée du bateau d'un visiteur (secondes) et distance d'où il vient (cases)
@@ -711,7 +755,7 @@ export default {
   emits: ['coins-updated', 'show-alert', 'login'],
   data() {
     return {
-      GLYPH, LABEL, RESOURCES, GAME_ICONS, NEED_GLYPH, MOOD_GLYPH,
+      GLYPH, LABEL, RESOURCES, GAME_ICONS, NEED_GLYPH, MOOD_GLYPH, CLIMATE_NAMES, CLIMATE_TEXT, WORDS,
       state: null,
       guest: false,
       loadError: false,
@@ -869,6 +913,14 @@ export default {
     quest() {
       return this.state && this.state.brume ? this.state.brume.quest : null;
     },
+    // Expédition en route : temps avant son retour, en clair (« 1 h 40 », « 12 min »)
+    tripLeft() {
+      const trip = this.state && this.state.expedition;
+      if (!trip) return '';
+      const ms = Math.max(0, trip.endsIn - (this.clock - this.loadedAt));
+      const minutes = Math.max(1, Math.ceil(ms / 60000));
+      return minutes >= 60 ? `${Math.floor(minutes / 60)} h${minutes % 60 ? ` ${String(minutes % 60).padStart(2, '0')}` : ''}` : `${minutes} min`;
+    },
     // Créations d'île posées ([{ x, y, craft }])
     crafted() {
       return this.state && this.state.crafts ? this.state.crafts.placed : [];
@@ -958,6 +1010,9 @@ export default {
     this.live = null;
     this.zoneTiles = new Map();
     this.mistKey = null;
+    // Climat(s) visé(s) par la caméra et leur poids (fondu d'un climat à l'autre), instant du dernier dessin
+    this.climateMix = {};
+    this.climateT = 0;
     // Mer vivante : eaux de l'île (sea), mouettes posées (perches), passages en cours des dauphins et de la baleine,
     // animaux qui ont réagi à un toucher (clé → { at, … }), et ce qu'on peut toucher dans la dernière image
     this.sea = null;
@@ -1009,7 +1064,9 @@ export default {
       this.clock = Date.now();
       this.syncPhase();
       const charges = this.state && this.state.charges;
-      if (charges && charges.nextIn !== null && this.clock - this.loadedAt > charges.nextIn + 2000 && !this.busy && !this.run) this.load();
+      const trip = this.state && this.state.expedition;
+      const due = (charges && charges.nextIn !== null && this.clock - this.loadedAt > charges.nextIn + 2000) || (trip && this.clock - this.loadedAt > trip.endsIn + 2000);
+      if (due && !this.busy && !this.run) this.load();
     }, 20000);
     await this.load();
   },
@@ -1083,7 +1140,7 @@ export default {
       }
       // Calques du sol ; la brume est peinte dans les carrés du sol : un quartier acheté fait refaire les siens
       const M = islandOf(state.map, state.size, state.map.zones.findIndex(z => z.id === FLOATING_ZONE));
-      if (!this.terrain) this.terrain = new TerrainCache(M, (x, y) => this.veilAt(x, y));
+      if (!this.terrain) this.terrain = new TerrainCache(M, (x, y) => this.veilAt(x, y), (ctx, x, y) => this.standAt(ctx, x, y));
       this.M = M;
       this.live = liveOf(M);
       // Îlots des chapitres VI et VII : île flottante, colonie de mouettes, barque du passeur, lanternes du pont
@@ -1103,6 +1160,15 @@ export default {
       }
       this.annexVariants = variantsOf(state.annexes || []);
       this.props = this.natureOf(state);
+      // Décor par case (cuit dans le sol vu de loin) ; s'il a changé, les carrés cuits seront refaits
+      this.propsAt = new Map();
+      for (const prop of this.props) {
+        const key = prop.y * state.size + prop.x;
+        this.propsAt.set(key, [...(this.propsAt.get(key) || []), prop]);
+      }
+      const propsKey = this.props.map(p => `${p.kind}${p.x},${p.y}`).join(';');
+      if (this.propsKey !== undefined && propsKey !== this.propsKey) this.terrain.restand();
+      this.propsKey = propsKey;
       this.perches = this.perchesOf(state);
       this.bottleSpot = this.bottleSpotOf(state);
       this.shore = this.shoreOf(state);
@@ -1122,11 +1188,21 @@ export default {
           try { localStorage.setItem('oc_visitor_seen', String(state.visitor.id)); } catch (e) { /* stockage indisponible */ }
         }
       }
+      // Expédition revenue : le quartier qu'elle a découvert se dévoile (nom, climat, relief)
+      if (this.state) {
+        const unknown = new Set(this.state.map.zones.filter(z => z.known === false).map(z => z.id));
+        const found = state.map.zones.filter(z => unknown.has(z.id) && z.known !== false);
+        if (found.length) {
+          found.forEach(z => this.unveils.set(z.id, performance.now()));
+          this.$emit('show-alert', found.map(z => `Expédition revenue : ${z.name} découvert (${CLIMATE_NAMES[z.climate] || 'climat inconnu'}) !`).join(' '));
+        }
+      }
       this.state = state;
-      const mistKey = state.map.zones.filter(z => z.owned).map(z => z.id).join();
+      // Brume et sol d'un quartier : à soi (o), connu (k), inconnu (u) ; un changement refait ses carrés de sol
+      const mistKey = state.map.zones.map(z => `${z.id}:${z.owned ? 'o' : z.known === false ? 'u' : 'k'}`).join();
       if (this.mistKey !== null && mistKey !== this.mistKey) {
         const before = new Set(this.mistKey.split(',')), after = new Set(mistKey.split(','));
-        const changed = [...new Set([...before, ...after])].filter(id => before.has(id) !== after.has(id));
+        const changed = [...new Set([...before, ...after].map(k => k.split(':')[0]))].filter(id => [...before].find(k => k.startsWith(`${id}:`)) !== [...after].find(k => k.startsWith(`${id}:`)));
         this.terrain.invalidate(changed.flatMap(id => this.zoneTiles.get(id) || []));
       }
       this.mistKey = mistKey;
@@ -1214,6 +1290,14 @@ export default {
           } else if (g === 't') add(roll < 0.55 ? 'tree' : roll < 0.8 ? 'apple' : 'birch', x, y);
           else if (g === 'r') add(ROCK_MIX.find(([, upTo]) => roll < upTo)[0], x, y);
           else if (g === 'd') add('tuft', x, y);
+          else if (g === 'j') {
+            // Jungle : deux arbres par case, palmiers et feuillus
+            add(roll < 0.5 ? 'palm' : 'tree', x, y, -0.2, -0.16);
+            add(hash(y, x) < 0.4 ? 'palm' : 'tree', x, y, 0.18, 0.22);
+          } else if (g === 'x') { if (roll < 0.6) add(roll < 0.35 ? 'reeds' : roll < 0.48 ? 'lily' : 'stump', x, y); }
+          else if (g === 'l') { if (roll < 0.3) add(roll < 0.14 ? 'bush' : roll < 0.24 ? 'tuft' : 'rocks', x, y); }
+          else if (g === 'n') { if (roll < 0.14) add(M.height(x, y) <= 4 && roll < 0.08 ? 'pine' : 'crag', x, y); }
+          else if (g === 'a') { if (roll < 0.18) add(roll < 0.08 ? 'stump' : 'rocks', x, y); }
           else if ((g === 'g' || g === 'm') && wet(x, y) && roll < 0.45) add(roll < 0.3 ? 'reeds' : 'lily', x, y);
           else if (g === 's' || g === 'g' || g === 'm') {
             const kind = ((g === 's' ? BEACH_MIX : GRASS_MIX).find(([, upTo]) => roll < upTo) || [null])[0];
@@ -1242,7 +1326,7 @@ export default {
     // Voile de brume d'une case (quartier à acheter), peint dans les carrés du sol
     veilAt(x, y) {
       const zone = this.state && this.state.map.zones[this.M.zone(x, y)];
-      return zone && !zone.owned ? 0.62 : 0;
+      return zone && !zone.owned ? (zone.known === false ? 0.35 : 0.62) : 0;
     },
     // Hauteur (unités du monde) du sol d'une case : ce qui s'y tient debout est remonté d'autant
     liftAt(x, y) {
@@ -1466,6 +1550,8 @@ export default {
       // Monde : unités du monde, caméra appliquée
       const o = this.toScreen(0, 0);
       ctx.setTransform(dpr * s, 0, 0, dpr * s, dpr * o.x, dpr * o.y);
+      // Vue de loin, les dessins sont recopiés à moindre détail (images réduites une fois pour toutes)
+      setSpriteDetail(dpr * s);
       // Monde visible : seuls les carrés de sol et ce qui s'y tient, à l'écran, sont dessinés
       const tl = this.toWorld(0, 0);
       const br = this.toWorld(width, height);
@@ -1569,6 +1655,9 @@ export default {
       for (const g of life.gulls) drawGullShadow(ctx, g, s);
       // Ce qui se tient debout (bâtiments, créations, nature), du plus loin au plus proche
       // (seulement ce qui est à l'écran ; un grand sprite dépasse vers le haut de son pied)
+      const far = s < FAR_SCALE;
+      // Plus loin encore, le décor fixe est déjà peint dans le sol
+      const baked = this.terrain.bakes(s * dpr);
       const seenAt = (wx, wy) => wx > view.x - TW * 2.5 && wx < view.x + view.w + TW * 2.5 && wy > view.y - TW * 0.6 && wy < view.y + view.h + TW * 3.2;
       const seen = (x, y) => { const c = this.ground(x, y); return seenAt(c.x, c.y); };
       const standing = [
@@ -1577,7 +1666,7 @@ export default {
         ...(this.state.annexes || []).filter(annex => seen(annex.x, annex.y)).map(annex => ({ depth: annex.x + annex.y, annex })),
         ...this.state.sites.filter(site => site.sign && !site.locked).map(site => ({ site, at: this.nameSignAt(site) }))
           .filter(({ at }) => seen(at.gx, at.gy)).map(({ site, at }) => ({ depth: at.gx + at.gy, nameSign: site })),
-        ...this.props.filter(prop => seenAt(prop.wx, prop.wy)).map(prop => ({ depth: prop.depth, prop })),
+        ...(baked ? [] : this.props.filter(prop => seenAt(prop.wx, prop.wy) && !(far && SMALL_PROPS.has(prop.kind)))).map(prop => ({ depth: prop.depth, prop })),
         ...[...this.critters(t), ...life.standing].filter(critter => seen(critter.x, critter.y))
           .map(critter => ({ depth: critter.depth ?? critter.x + critter.y, critter })),
         ...this.ferryItems(t),
@@ -1590,19 +1679,19 @@ export default {
         if (item.site) this.drawSite(ctx, item.site, t, now, repaint);
         else if (item.craft) {
           this.drawCraft(ctx, item.craft, t, now, repaint);
-          this.occlude(ctx, item.craft.x, item.craft.y);
+          if (!far) this.occlude(ctx, item.craft.x, item.craft.y);
         } else if (item.annex) {
           this.drawAnnex(ctx, item.annex, t, now, repaint);
-          this.occlude(ctx, item.annex.x, item.annex.y);
+          if (!far) this.occlude(ctx, item.annex.x, item.annex.y);
         } else if (item.prop) {
           this.drawProp(ctx, item.prop, t, repaint, now);
-          this.occlude(ctx, item.prop.x, item.prop.y);
+          if (!far) this.occlude(ctx, item.prop.x, item.prop.y);
         } else if (item.nameSign) this.drawNameSign(ctx, item.nameSign, t, repaint);
         else if (item.sign) this.drawSign(ctx, item.sign, t, repaint);
         else if (item.ferry) this.drawFerry(ctx, item.ferry, repaint);
         else {
           this.drawCritter(ctx, item.critter, repaint);
-          if (!SEA_KINDS.has(item.critter.kind)) this.occlude(ctx, Math.round(item.critter.x), Math.round(item.critter.y));
+          if (!far && !SEA_KINDS.has(item.critter.kind)) this.occlude(ctx, Math.round(item.critter.x), Math.round(item.critter.y));
         }
       }
       // Volutes de brume qui dérivent au-dessus des quartiers à acheter
@@ -1614,6 +1703,10 @@ export default {
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
       drawTint(ctx, width, height, phase);
       drawWeather(ctx, width, height, t, phase);
+      const here = this.cellAt(this.cam.x, this.cam.y);
+      this.climateMix = mixToward(this.climateMix, climateAt(this.M, this.state.map.zones, here.x, here.y), this.climateT ? Math.min(0.5, t - this.climateT) : 1);
+      this.climateT = t;
+      drawClimate(ctx, width, height, t, this.climateMix, this.reduced());
       ctx.setTransform(worldTransform);
       this.drawLights(ctx, t, phase);
       // La nuit, le plancton s'allume dans l'écume et les méduses luisent
@@ -1745,6 +1838,18 @@ export default {
         }
       }
     },
+    // Décor fixe d'une case, cuit dans le sol vu de loin (sans le vent ; à demi effacé sous la brume, comme le sol) :
+    // vrai si tous ses dessins étaient prêts
+    standAt(ctx, x, y) {
+      const props = this.propsAt && this.propsAt.get(y * this.state.size + x);
+      if (!props) return true;
+      const zone = this.zoneAt(x, y);
+      ctx.globalAlpha = zone && !zone.owned ? 0.5 : 1;
+      let ready = true;
+      for (const prop of props) ready = drawSprite(ctx, `nature-${prop.kind}`, ALL_NATURE[prop.kind], prop.wx, prop.wy) && ready;
+      ctx.globalAlpha = 1;
+      return ready;
+    },
     drawProp(ctx, prop, t, repaint, now) {
       const c = { x: prop.wx, y: prop.wy };
       const mist = this.mistOf(this.zoneAt(prop.x, prop.y), now);
@@ -1766,7 +1871,8 @@ export default {
       ctx.textAlign = 'center';
       ctx.textBaseline = 'middle';
       ctx.fillStyle = '#4A3426';
-      ctx.fillText(zone.open ? `${zone.price} écus` : `Chap. ${zone.chapter}`, 0, -31.5);
+      const going = this.state.expedition && this.state.expedition.zone === zone.id;
+      ctx.fillText(zone.known === false ? (going ? 'En route' : zone.explorable ? 'Explorer' : '? ? ?') : zone.open ? `${zone.price} écus` : `Chap. ${zone.chapter}`, 0, -31.5);
       ctx.textBaseline = 'alphabetic';
       ctx.restore();
       this.signs.push({ zone, x: c.x, y: c.y - 30, r: 26 });
@@ -2722,6 +2828,7 @@ export default {
       }
       if (hit.zone) {
         const zone = hit.zone;
+        if (zone.known === false) return { title: 'Terre inconnue', text: 'Une expédition révélera ce qu’elle cache.', hint: 'Toucher : préparer l’expédition' };
         return { title: zone.name, text: zone.owned ? 'Quartier à toi.' : zone.open ? `Quartier à acheter : ${zone.price} écus.` : `S’ouvre avec le chapitre ${zone.chapter} du Livre.`, hint: 'Toucher : voir le quartier' };
       }
       if (hit.site) {
@@ -3450,6 +3557,37 @@ export default {
         this.busy = false;
       }
     },
+    // Expédition vers un quartier inconnu : le serveur prend vivres, bois et une partie de Récolte ; elle revient après
+    // zone.trip heures (l'île se recharge alors, le quartier se dévoile)
+    async explore(zone) {
+      if (this.busy) return;
+      this.busy = true;
+      try {
+        const { world } = await playService.worldExpedition(zone.id);
+        this.apply(world);
+        this.zone = null;
+        vibrate([10, 30, 10]);
+        this.$emit('show-alert', `L’expédition est partie ! Retour dans ${zone.trip} h.`);
+        guide.tip('expedition');
+      } catch (error) {
+        this.$emit('show-alert', messageOf(error, 'L’expédition n’a pas pu partir.'));
+      } finally {
+        this.busy = false;
+      }
+    },
+    // La pastille de l'expédition : la caméra va vers le quartier qu'elle explore, sa fiche s'ouvre
+    showExpedition() {
+      const zone = this.state.map.zones.find(z => z.id === this.state.expedition.zone);
+      if (!zone) return;
+      if (zone.anchor) {
+        const c = this.ground(zone.anchor.x, zone.anchor.y);
+        this.cam.x = c.x;
+        this.cam.y = c.y;
+        this.clampCam();
+        this.draw(performance.now());
+      }
+      this.zone = zone;
+    },
     // Achat d'un article en un toucher ; « Annuler » reste proposé UNDO_MS
     async buyItem(site, item, event) {
       // Pas encore achetable : sa fiche dit pourquoi (palier, écus, butins)
@@ -3707,6 +3845,12 @@ export default {
   width: 46px; height: 46px; border: 0; border-radius: 14px; background: rgba(30, 22, 16, .55); cursor: pointer;
 }
 .world__chest-btn.is-ready { background: var(--gold-400); box-shadow: 0 3px 0 var(--gold-600); animation: world-chest-call 2.4s ease-in-out infinite; }
+.world__trip-btn {
+  position: absolute; left: 10px; top: 64px; display: flex; align-items: center; gap: 5px; height: 36px; padding: 0 10px 0 6px;
+  border: 0; border-radius: 12px; background: rgba(30, 22, 16, .6); color: #FFF4C8; font-family: var(--font-ui); font-size: 12px; font-weight: 900; cursor: pointer;
+}
+.world__trip-note { margin: 8px 0 0; padding: 8px 12px; border-radius: 12px; background: #FFF4D6; font-size: 13px; font-weight: 800; line-height: 1.4; }
+.world__climate { margin: 0 0 8px; font-size: 13px; font-weight: 700; line-height: 1.4; color: var(--ink-700); }
 .world__chest-badge {
   position: absolute; right: -5px; top: -5px; min-width: 20px; height: 20px; padding: 0 5px; border-radius: 999px;
   background: #D2453A; color: #fff; font-family: var(--font-ui); font-size: 12px; font-weight: 900; line-height: 20px;
