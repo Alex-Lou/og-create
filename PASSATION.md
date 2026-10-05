@@ -2,6 +2,7 @@
 
 Document pour l'agent qui reprend le projet : ce qu'est le jeu, comment travailler avec son auteur, comment le code est
 construit, ce qui est fait et ce qui reste à faire. **À lire en entier avant la première ligne de code.**
+L'histoire, les personnages et le game design sont dans **`HISTOIRE.md`** (la bible, à lire ensuite).
 État au 5 octobre 2026, après le lot 9e (bêtes des climats).
 
 ---
@@ -297,6 +298,10 @@ chronométrer 20 appels. Comparer à zoom égal, au même endroit.
 ---
 
 ## 7. À faire (dans l'ordre conseillé)
+
+**La feuille de route principale est maintenant `HISTOIRE.md`** : l'adaptation du jeu à la bible, lots H0 à H8
+(§ 16 et § 19 de la bible). Les points ci-dessous s'y rangent : la suite des bêtes va au Bestiaire et aux
+familiers (H6) et aux créatures d'Anya (H8).
 
 1. **Bêtes, suite** (les 12 bêtes des climats sont faites, lot 9e) :
    - compagnons d'atelier dans la boutique (une ou deux bêtes par bâtiment, avec un petit bonus, comme les objets
