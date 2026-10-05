@@ -5,7 +5,8 @@
 // - perte de contexte gérée ; destroy() retire écouteurs, boucles, textures, tampons et programme ;
 // - double page (opts.spread, grand écran) : la feuille de droite se soulève et retombe à gauche, son verso est
 //   la vraie page suivante ; la page visée (gauche ou droite) est la dernière touchée ;
-// - une page à la fois (téléphone) : chaque page se tourne comme une feuille, reliure à gauche.
+// - une page à la fois (téléphone) : chaque page se tourne comme une feuille et retombe à plat à gauche de la
+//   reliure, où son revers reste en vue (la scène n'en montre qu'une bande) ; avant la première page, la garde.
 // Le contenu des pages vient de paint(index, ctx, largeur, hauteur, côté) → { hotspots, label } ; en double page,
 // index vaut aussi −1 (la garde, au revers de la couverture) ou count() (la garde de fin).
 import { paperNoise as noise, PAPER_BACK } from './painter';
@@ -105,7 +106,7 @@ export function createBook(opts) {
   const canvas = document.createElement('canvas');
   canvas.className = 'gl';
   rig.insertBefore(canvas, hot);
-  const COLS = 44, ROWS = 30, POOL = spread ? 8 : 4;
+  const COLS = 44, ROWS = 30, POOL = spread ? 8 : 6;
 
   let gl = null, ctx2d = null, prog = null, buf = null, ibuf = null, backTex = null, indexCount = 0;
   const loc = {};
@@ -270,10 +271,11 @@ export function createBook(opts) {
     rest();
   }
 
-  // Pages affichées (et celles de l'arrivée pendant un tour) : jamais évincées du cache
+  // Pages affichées (et celles de l'arrivée pendant un tour) : jamais évincées du cache ; une page à la fois, la
+  // feuille posée à gauche aussi
   function shown(i) {
-    const list = spread ? [pagesOf(at).left, pagesOf(at).right] : [at];
-    if (turning) list.push(...(spread ? [pagesOf(goal).left, pagesOf(goal).right] : [goal]));
+    const list = spread ? [pagesOf(at).left, pagesOf(at).right] : [at, at - 1];
+    if (turning) list.push(...(spread ? [pagesOf(goal).left, pagesOf(goal).right] : [goal, goal - 1]));
     return list.includes(i);
   }
   function victim() {
@@ -292,7 +294,7 @@ export function createBook(opts) {
     if (!e) e = victim();
     e.index = i;
     e.version = version;
-    const result = paint(i, e.ctx, e.canvas.width, e.canvas.height, spread ? sideOf(i) : 'right');
+    const result = paint(i, e.ctx, e.canvas.width, e.canvas.height, spread ? sideOf(i) : i < 0 ? 'left' : 'right');
     e.hotspots = result.hotspots;
     e.label = result.label;
     if (gl && e.tex) {
@@ -311,8 +313,8 @@ export function createBook(opts) {
     if (dx <= 0) angle = 0;
     const tilt = .55 * (1 - progress);
     angle = Math.max(-tilt, Math.min(tilt, angle));
-    // Double page : le rayon du pli s'efface en fin de tour, pour que la feuille retombe à plat sur la gauche
-    const r = spread ? w * Math.max(.002, .1 * (1 - progress)) : w * (.1 - .04 * progress);
+    // Le rayon du pli s'efface en fin de tour, pour que la feuille retombe à plat sur la gauche
+    const r = w * Math.max(.002, .1 * (1 - progress));
     return { lx: (P0.x + F.x) / 2, ly: (P0.y + F.y) / 2, ux: Math.cos(angle), uy: Math.sin(angle), r, progress };
   }
 
@@ -356,22 +358,33 @@ export function createBook(opts) {
     gl.uniform1f(loc.uDepth, H() * 2.6);
     gl.uniform1f(loc.uCorner, 20 * dpr);
     if (spread) return drawSpread();
+    gl.disable(gl.DEPTH_TEST);
     if (turning && phase !== 'fade') {
       const c = curl();
-      const under = entry(dir > 0 ? goal : at);
-      const front = entry(dir > 0 ? at : goal);
-      gl.disable(gl.DEPTH_TEST);
-      drawSheet(under, 1, c, 1);
+      // Sous la feuille qui tourne : à gauche, la feuille d'avant déjà posée ; à droite, la page d'en dessous
+      leftPage(Math.min(at, goal) - 1, 1);
+      drawSheet(entry(dir > 0 ? goal : at), 1, c, 1);
       gl.clear(gl.DEPTH_BUFFER_BIT);
       gl.enable(gl.DEPTH_TEST);
-      drawSheet(front, 0, c, 1);
+      drawSheet(entry(dir > 0 ? at : goal), 0, c, 1);
       gl.disable(gl.DEPTH_TEST);
     } else if (phase === 'fade') {
+      leftPage(goal - 1, 1);
       drawSheet(entry(goal), 0, null, 1);
+      leftPage(at - 1, fade);
       drawSheet(entry(at), 0, null, fade);
     } else {
+      leftPage(at - 1, 1);
       drawSheet(entry(at), 0, null, 1);
     }
+  }
+  // Une page à la fois : à gauche de la reliure, la feuille k retombée à plat (son revers, comme à la fin d'un
+  // tour), ou la garde au revers de la couverture avant la première page
+  const landed = () => ({ lx: 0, ly: H() / 2, ux: 1, uy: 0, r: W() * .002, progress: 1 });
+  function leftPage(k, a) {
+    if (closed) return;
+    if (k < 0) drawSheet(entry(-1), 0, null, a, { x: page.x - page.w, mirror: true });
+    else drawSheet(entry(k), 0, landed(), a);
   }
   // Double page : vers l'avant, la feuille de droite (recto : la page de droite, verso : la future page de gauche)
   // se soulève au-dessus de la page de droite suivante ; vers l'arrière, la feuille revient de la gauche
@@ -407,7 +420,13 @@ export function createBook(opts) {
       sheet2d(entry(pages.right), page.x, false, a);
     };
     if (!spread) {
-      if (phase === 'fade') sheet2d(entry(goal), page.x, false, 1);
+      // La feuille d'avant, à gauche : son revers de papier nu (la garde avant la première page)
+      const back = (k, a) => { if (!closed) sheet2d(k < 0 ? entry(-1) : null, left, true, a); };
+      if (phase === 'fade') {
+        back(goal - 1, 1);
+        sheet2d(entry(goal), page.x, false, 1);
+      }
+      back(at - 1, phase === 'fade' ? fade : 1);
       sheet2d(entry(at), page.x, false, phase === 'fade' ? fade : 1);
     } else if (phase === 'fade') {
       pair(pagesOf(goal), 1);
@@ -416,7 +435,8 @@ export function createBook(opts) {
       pair(pagesOf(at), 1);
     }
   }
-  // Coins arrondis comme en WebGL : petit côté reliure, grand côté tranche (à gauche pour une page de gauche)
+  // Coins arrondis comme en WebGL : petit côté reliure, grand côté tranche (à gauche pour une page de gauche) ;
+  // sans page (e nul), le revers de papier nu
   function sheet2d(e, px, mirror, a) {
     const x = px * dpr, y = page.y * dpr, w = W(), h = H();
     const big = 20 * dpr, small = 6 * dpr;
@@ -430,7 +450,11 @@ export function createBook(opts) {
     ctx2d.arcTo(x, y + h, x, y, bl);
     ctx2d.arcTo(x, y, x + w, y, tl);
     ctx2d.clip();
-    ctx2d.drawImage(e.canvas, x, y);
+    if (e) ctx2d.drawImage(e.canvas, x, y);
+    else {
+      ctx2d.fillStyle = PAPER_BACK;
+      ctx2d.fillRect(x, y, w, h);
+    }
     ctx2d.restore();
   }
 
@@ -442,7 +466,7 @@ export function createBook(opts) {
     clearTimeout(prefetchTimer);
     prefetchTimer = setTimeout(() => {
       if (turning) return;
-      const near = [at + 1, at - 1].filter(p => p >= 0 && p < positions());
+      const near = [at + 1, at - 1, ...(spread ? [] : [at - 2])].filter(p => p >= 0 && p < positions());
       (spread ? near.flatMap(p => [pagesOf(p).left, pagesOf(p).right]) : near).forEach(i => entry(i));
     }, 80);
   }
@@ -481,8 +505,8 @@ export function createBook(opts) {
     const w = W(), h = H();
     P0.x = w;
     P0.y = Math.min(h * .92, Math.max(h * .08, y));
-    // Page simple : la feuille part au-delà de la reliure ; double page : elle retombe en miroir sur la gauche
-    Fend.x = spread ? -P0.x : 2 * (-(Math.PI * .06 + .035) * w) - P0.x;
+    // La feuille retombe en miroir à gauche de la reliure (une page à la fois : la scène n'en garde qu'une bande)
+    Fend.x = -P0.x;
     Fend.y = P0.y;
     const start = d > 0 ? P0 : Fend;
     F.x = F0.x = start.x;

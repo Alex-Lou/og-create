@@ -303,6 +303,13 @@ chronométrer 20 appels. Comparer à zoom égal, au même endroit.
   « z ») ; `src/world/story.js` (naufrages annoncés à l'ouverture de leur acte, retenus sur l'appareil dans
   `oc_wrecks` ; répliques des souvenirs retrouvés) ; dans `WorldView.vue`, l'image de nuit du naufrage (jamais
   par-dessus un coffre : `holdWreck`), la scène du souvenir à la réclamation de sa quête, « … se réveille ! ».
+- **Refonte de l'intérieur du Grimoire**, front seul : polices IM Fell English (texte, petites capitales) et
+  UnifrakturMaguntia (lettrines), hébergées avec le jeu (`src/assets/fonts`, licence OFL, déclarées dans
+  `BookView.vue`) ; pages repeintes quand elles sont chargées (`bookFontsReady`). Une seule graisse : jamais de gras
+  dans `painter.js`. Corps bien plus grands, titre courant en petites capitales, tables de chapitre sur deux colonnes
+  de 8, tampon « Inscrite », boutons et zones de toucher plus grands. Téléphone : le livre prend la largeur, et la
+  feuille tournée retombe à gauche de la reliure, où une bande de son revers reste visible (la garde avant la
+  première page) ; toucher cette bande revient en arrière (`curlBook.js`, `leftPage`).
 
 ### Décisions déjà prises par l'auteur (ne pas les redemander)
 - **Île** : 96 × 96 ; l'ancienne carte devient le cœur ; découverte par expéditions ; un quartier s'ouvre avec des

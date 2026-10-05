@@ -42,6 +42,8 @@
             @opened="onOpened"
           />
         </div>
+        <!-- Une page à la fois : la bande de la feuille tournée, à gauche de la reliure, ramène à la page d'avant -->
+        <button v-if="single && currentKey !== 'toc' && !opening" type="button" class="book-view__back" aria-label="Page précédente" @click="goBack"></button>
         <div ref="hot" class="book-view__hot" role="region" aria-roledescription="page de livre" tabindex="0" :aria-label="pageLabel">
           <template v-for="spot in spots" :key="spot.id">
             <div v-if="spot.pulse" class="book-view__pulse" :style="spotStyle(spot)"></div>
@@ -170,7 +172,7 @@ import { familyIndex } from '@/utils/eras';
 import * as storage from '@/utils/storage';
 import { createBook } from '@/book/curlBook';
 import { sideOf } from '@/book/spread';
-import { paintPage, paintEndpaper, clearDrawings, CHAPTER_STYLE } from '@/book/painter';
+import { paintPage, paintEndpaper, clearDrawings, bookFontsReady, CHAPTER_STYLE } from '@/book/painter';
 import { burst, ring, vibrate, center, reducedMotion, HAPTIC } from '@/utils/fx';
 import { unlockCinematic } from '@/book/fx';
 import { guide } from '@/game/guide';
@@ -181,8 +183,8 @@ import longpress from '@/directives/longpress';
 const INK_PRICE = 50;
 // Rejouer un pendu perdu sans attendre le lendemain (le serveur fixe le prix : services/bookLetters.js)
 const RETRY_PRICE = 20;
-// Pages par feuille de table de chapitre (grille 3 × 5)
-const INDEX_SIZE = 15;
+// Pages par feuille de table de chapitre (deux colonnes de 8)
+const INDEX_SIZE = 16;
 const INK_KEY = 'oc_book_ink';
 // Les deux pages côte à côte dès que le Livre a la place (largeur du composant, hauteur de la fenêtre) ;
 // sinon (téléphone) la double page lue de près, une page à la fois
@@ -371,6 +373,10 @@ export default {
     this.single = this.wantsSingle();
     this.sizeObserver = new ResizeObserver(() => this.checkMode());
     this.sizeObserver.observe(this.$el);
+    // Les polices des pages arrivent : les pages déjà peintes sans elles sont repeintes
+    bookFontsReady().then(() => {
+      if (!this.gone && this.engine) this.engine.refresh();
+    });
     await this.load();
   },
   beforeUnmount() {
@@ -652,6 +658,9 @@ export default {
     goTo(index) {
       if (this.engine && index >= 0) this.engine.go(index);
     },
+    goBack() {
+      if (this.engine) this.goTo(this.engine.index - 1);
+    },
     // La page marquée du fil d'Ariane
     goMarked() {
       if (this.ariane) this.goTo(this.models.findIndex(m => m.key === this.ariane.page));
@@ -761,7 +770,7 @@ export default {
 }
 .book-view__head {
   display: flex; align-items: flex-end; justify-content: space-between; gap: 12px;
-  padding: 4px 2px 10px;
+  padding: 2px 2px 6px;
 }
 .book-view__chapter {
   appearance: none; border: 0; cursor: pointer;
@@ -822,13 +831,29 @@ export default {
   width: calc(2 * var(--book-w));
   aspect-ratio: 3 / 2;
 }
-/* Téléphone : une page à la fois, reliure à gauche (dos ~19 px à gauche, plat et fermoir ~26 px à droite) ; la
-   scène coupe la couverture quand elle s'ouvre vers la gauche */
+/* Téléphone : une page à la fois, aussi grande que la largeur le permet (plat et fermoir ~26 px à droite ; à gauche
+   de la reliure, une bande de la feuille tournée) ; l'étagère des éléments suit dessous. La scène coupe la
+   couverture qui s'ouvre vers la gauche, et la feuille posée à gauche s'efface vers le bord */
 .book-view__stage.is-single {
-  --book-w: max(220px, min(calc(100cqw - 60px), calc((100dvh - 446px) * .75), 460px));
+  --book-w: max(min(240px, calc(100cqw - 60px)), min(calc(100cqw - 60px), calc((100dvh - 400px) * .75), 460px));
   height: calc(var(--book-w) * 4 / 3 + 48px);
   overflow-x: clip; overflow-y: visible;
 }
+/* PC étroit (l'Athanor à droite, pas de dock en bas) : moins de hauteur à réserver sous le livre */
+@media (min-width: 860px) {
+  .book-view__stage.is-single { --book-w: max(220px, min(calc(100cqw - 60px), calc((100dvh - 300px) * .75), 460px)); }
+}
+.book-view__stage.is-single .book-view__rig :deep(canvas.gl) {
+  -webkit-mask-image: linear-gradient(90deg, transparent 0, #000 calc((100% - var(--book-w)) * .36));
+  mask-image: linear-gradient(90deg, transparent 0, #000 calc((100% - var(--book-w)) * .36));
+}
+.book-view__back {
+  position: absolute; z-index: 4; left: 0; top: 14px;
+  width: calc((100% - var(--book-w)) / 2 - 3px); height: calc(var(--book-w) * 4 / 3);
+  border: 0; padding: 0; background: transparent; cursor: pointer;
+  touch-action: manipulation; -webkit-tap-highlight-color: transparent;
+}
+.book-view__back:focus-visible { outline: 3px solid rgba(227, 169, 59, .9); outline-offset: -3px; }
 .book-view__stage.is-single .book-view__wrap {
   top: 14px;
   left: calc((100% - var(--book-w)) / 2 - 3px);
@@ -919,6 +944,13 @@ export default {
 </style>
 
 <style>
+/* Polices de l'intérieur du Grimoire (pages peintes en canvas : book/painter.js), hébergées avec le jeu pour
+   s'afficher hors ligne ; licence : src/assets/fonts/OFL.txt */
+@font-face { font-family: 'IM Fell English'; font-style: normal; font-weight: 400; font-display: swap; src: url('~@/assets/fonts/im-fell-english.woff2') format('woff2'); }
+@font-face { font-family: 'IM Fell English'; font-style: italic; font-weight: 400; font-display: swap; src: url('~@/assets/fonts/im-fell-english-italic.woff2') format('woff2'); }
+@font-face { font-family: 'IM Fell English SC'; font-style: normal; font-weight: 400; font-display: swap; src: url('~@/assets/fonts/im-fell-english-sc.woff2') format('woff2'); }
+@font-face { font-family: 'UnifrakturMaguntia'; font-style: normal; font-weight: 400; font-display: swap; src: url('~@/assets/fonts/unifraktur-maguntia.woff2') format('woff2'); }
+
 /* Cinématique d'ouverture de chapitre (montée hors du composant, dans body) */
 .book-unlock {
   position: fixed; inset: 0; z-index: 80;

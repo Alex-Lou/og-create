@@ -176,11 +176,44 @@ function starPath(ctx, cx, cy, r) {
   }
   ctx.closePath();
 }
-const TITLE = 'Fraunces, Georgia, serif';
-const TEXT = "Nunito, 'Trebuchet MS', sans-serif";
-function setFont(ctx, u, size, weight, family, italic, spacing) {
-  ctx.font = `${italic ? 'italic ' : ''}${weight} ${size * u}px ${family}`;
-  if ('letterSpacing' in ctx) ctx.letterSpacing = `${(spacing || 0) * size * u}px`;
+// Polices de l'intérieur (déclarées dans BookView.vue) : IM Fell English, ses petites capitales, et une fraktur
+// pour les lettrines. Une seule graisse : jamais de gras (le navigateur l'imiterait mal).
+const FELL = "'IM Fell English', Georgia, 'Times New Roman', serif";
+const CAPS = "'IM Fell English SC', 'IM Fell English', Georgia, serif";
+const GOTHIC = "UnifrakturMaguntia, 'IM Fell English', Georgia, serif";
+// Encres : titres, texte, notes (lisibles sur le parchemin) ; les blancs et les traits ne servent qu'au décor
+const INK = '#3E2A1E';
+const TEXT_INK = '#523B2C';
+const NOTE = '#6E5646';
+const FAINT = '#B3A08A';
+// Le canvas ne dessine une police qu'une fois chargée : le Livre repeint ses pages quand elles sont prêtes
+export function bookFontsReady() {
+  if (typeof document === 'undefined' || !document.fonts) return Promise.resolve();
+  const faces = [`16px ${FELL}`, `italic 16px ${FELL}`, `16px ${CAPS}`, `16px ${GOTHIC}`];
+  return Promise.all(faces.map(face => document.fonts.load(face))).then(() => {}, () => {});
+}
+// Corps en u, interlettrage en fraction du corps
+function setFont(ctx, u, size, family, italic = false, spacing = 0) {
+  ctx.font = `${italic ? 'italic ' : ''}400 ${size * u}px ${family}`;
+  if ('letterSpacing' in ctx) ctx.letterSpacing = `${spacing * size * u}px`;
+}
+// Le plus grand corps, de size à min, qui fait tenir text sur max u
+function fitFont(ctx, u, text, max, size, min, family, italic = false, spacing = 0) {
+  let s = size;
+  setFont(ctx, u, s, family, italic, spacing);
+  while (s > min && ctx.measureText(text).width > max * u) {
+    s -= 0.2;
+    setFont(ctx, u, s, family, italic, spacing);
+  }
+  return s;
+}
+// Comme fitFont, puis coupé d'une ellipse s'il dépasse encore
+function fitText(ctx, u, text, max, size, min, family, italic = false) {
+  fitFont(ctx, u, text, max, size, min, family, italic);
+  if (ctx.measureText(text).width <= max * u) return text;
+  let cut = text;
+  while (cut.length > 1 && ctx.measureText(`${cut}…`).width > max * u) cut = cut.slice(0, -1);
+  return `${cut.trimEnd()}…`;
 }
 function wrap(ctx, text, max) {
   const lines = [];
@@ -311,45 +344,59 @@ function frame(ctx, u, ink) {
   ornament(ctx, u, ORNAMENTS.diamond, 51.75, 129.9, 0, 1, gold, edge);
 }
 function folio(ctx, u, i) {
-  setFont(ctx, u, 3.6, 500, TITLE, true);
-  ctx.fillStyle = '#8A7262';
+  setFont(ctx, u, 4.4, FELL, true);
+  ctx.fillStyle = NOTE;
   ctx.textAlign = 'center';
   // Folio en chiffres romains tant qu'ils restent lisibles, puis en chiffres ; un point doré de chaque côté
   const text = i <= 39 ? roman(i).toLowerCase() : String(i);
-  ctx.fillText(text, 52 * u, 127 * u);
-  const half = ctx.measureText(text).width / (2 * u) + 2.4;
+  ctx.fillText(text, 52 * u, 127.4 * u);
+  const half = ctx.measureText(text).width / (2 * u) + 2.6;
   ctx.fillStyle = alpha(GOLD.base, 0.8);
   [-half, half].forEach(dx => {
     ctx.beginPath();
-    ctx.arc((52 + dx) * u, 125.9 * u, 0.55 * u, 0, Math.PI * 2);
+    ctx.arc((52 + dx) * u, 126.1 * u, 0.6 * u, 0, Math.PI * 2);
     ctx.fill();
   });
 }
-function pill(ctx, u, cx, cy, w, h, fill, text, color, size) {
-  rr(ctx, (cx - w / 2) * u, (cy - h / 2) * u, w * u, h * u, (h / 2) * u);
-  ctx.fillStyle = fill;
-  ctx.fill();
-  setFont(ctx, u, size || 3.6, 800, TEXT, false);
-  ctx.fillStyle = color;
-  ctx.textAlign = 'center';
-  ctx.textBaseline = 'middle';
-  ctx.fillText(text, cx * u, (cy + 0.2) * u);
-  ctx.textBaseline = 'alphabetic';
+// Filet d'or à la hauteur y, de a à b (u), coupé d'un losange au milieu si diamond
+function rule(ctx, u, y, a, b, diamond = false) {
+  const mid = (a + b) / 2, gap = diamond ? 3.4 : 0;
+  ctx.strokeStyle = alpha(GOLD.base, 0.7);
+  ctx.lineWidth = 0.3 * u;
+  [[a, mid - gap], [mid + gap, b]].forEach(([x0, x1]) => {
+    ctx.beginPath();
+    ctx.moveTo(x0 * u, y * u);
+    ctx.lineTo(x1 * u, y * u);
+    ctx.stroke();
+  });
+  if (diamond) ornament(ctx, u, ORNAMENTS.diamond, mid, y, 0, 1, alpha(GOLD.base, 0.92), alpha(GOLD.edge, 0.55));
 }
-function header(ctx, u, chapter, style, stars) {
-  setFont(ctx, u, 3.2, 900, TEXT, false, 0.12);
+// Titre courant : le chapitre en petites capitales sur un filet d'or ; à droite, l'étoile de la page ou un repère
+function header(ctx, u, chapter, style, stars, mark = null) {
   ctx.fillStyle = style.ink;
   ctx.textAlign = 'left';
-  ctx.fillText(`${chapter.id} · ${chapter.name}`.toUpperCase(), 13 * u, 11 * u);
-  if ('letterSpacing' in ctx) ctx.letterSpacing = '0px';
-  if (stars !== null) {
-    starPath(ctx, 90 * u, 9.9 * u, 2.4 * u);
-    ctx.fillStyle = stars ? '#E3A93B' : 'rgba(189, 170, 148, .55)';
+  ctx.fillText(fitText(ctx, u, `${chapter.id} · ${chapter.name}`, mark ? 54 : 70, 4.8, 3.8, CAPS), 13 * u, 11.4 * u);
+  if (mark) {
+    setFont(ctx, u, 4.4, CAPS);
+    ctx.fillStyle = NOTE;
+    ctx.textAlign = 'right';
+    ctx.fillText(mark, 91 * u, 11.4 * u);
+  } else if (stars !== null) {
+    starPath(ctx, 89.6 * u, 9.8 * u, 2.5 * u);
+    ctx.fillStyle = stars ? '#E3A93B' : 'rgba(179, 160, 138, .6)';
     ctx.fill();
   }
+  ctx.strokeStyle = alpha(GOLD.base, 0.5);
+  ctx.lineWidth = 0.25 * u;
+  ctx.beginPath();
+  ctx.moveTo(13 * u, 14.2 * u);
+  ctx.lineTo(91 * u, 14.2 * u);
+  ctx.stroke();
 }
+// Médaillon des pages d'élément : centre et rayon (u)
+const MEDAL = { x: 52, y: 35, r: 15 };
 function vignette(ctx, u, style, mode) {
-  const vx = 52, vy = 36, vr = 19;
+  const { x: vx, y: vy, r: vr } = MEDAL;
   ctx.save();
   ctx.beginPath();
   ctx.arc(vx * u, vy * u, (vr + 1.6) * u, 0, Math.PI * 2);
@@ -366,10 +413,10 @@ function vignette(ctx, u, style, mode) {
   ctx.lineWidth = 0.35 * u;
   ctx.stroke();
   ctx.fillStyle = alpha(GOLD.base, 0.7);
-  for (let k = 0; k < 36; k++) {
-    const a = (k / 36) * Math.PI * 2;
+  for (let k = 0; k < 32; k++) {
+    const a = (k / 32) * Math.PI * 2;
     ctx.beginPath();
-    ctx.arc((vx + Math.cos(a) * (vr + 3.6)) * u, (vy + Math.sin(a) * (vr + 3.6)) * u, 0.32 * u, 0, Math.PI * 2);
+    ctx.arc((vx + Math.cos(a) * (vr + 3.5)) * u, (vy + Math.sin(a) * (vr + 3.5)) * u, 0.3 * u, 0, Math.PI * 2);
     ctx.fill();
   }
   ctx.save();
@@ -388,7 +435,7 @@ function vignette(ctx, u, style, mode) {
       ctx.stroke();
     }
   } else {
-    const g = ctx.createRadialGradient((vx - 6) * u, (vy - 8) * u, 0, vx * u, vy * u, vr * u);
+    const g = ctx.createRadialGradient((vx - 5) * u, (vy - 6.5) * u, 0, vx * u, vy * u, vr * u);
     g.addColorStop(0, '#FFFFFF');
     g.addColorStop(1, style.color);
     ctx.fillStyle = g;
@@ -401,10 +448,11 @@ function vignette(ctx, u, style, mode) {
 function patchwork(ctx, u, page, ink, onReady) {
   const shown = shownPatches(page.id, page.hangman);
   if (!shown.size) return;
-  const vx = 52, vy = 36, vr = 19, cell = (vr * 2) / 3;
+  const { x: vx, y: vy, r: vr } = MEDAL;
+  const cell = (vr * 2) / 3, size = vr * 1.26;
   // Illustration entière (nom trouvé) : d'un seul tenant, sans coutures
   if (shown.size === PATCHES) {
-    glyph(ctx, page.hangman.emoji, vx * u, vy * u, 24 * u, onReady);
+    glyph(ctx, page.hangman.emoji, vx * u, vy * u, size * u, onReady);
     return;
   }
   ctx.save();
@@ -412,7 +460,7 @@ function patchwork(ctx, u, page, ink, onReady) {
   ctx.arc(vx * u, vy * u, vr * u, 0, Math.PI * 2);
   ctx.clip();
   // Pièces encore cachées : un petit « ? » chacune
-  setFont(ctx, u, 4.6, 700, TITLE, false);
+  setFont(ctx, u, 4.6, FELL);
   ctx.fillStyle = alpha(ink, 0.35);
   ctx.textAlign = 'center';
   ctx.textBaseline = 'middle';
@@ -429,29 +477,29 @@ function patchwork(ctx, u, page, ink, onReady) {
     ctx.clip();
     ctx.fillStyle = IVORY;
     ctx.fillRect(x * u, y * u, cell * u, cell * u);
-    glyph(ctx, page.hangman.emoji, vx * u, vy * u, 24 * u, onReady);
+    glyph(ctx, page.hangman.emoji, vx * u, vy * u, size * u, onReady);
     ctx.restore();
     // Coutures du patchwork tant qu'il manque des pièces
-    if (shown.size < PATCHES) {
-      ctx.setLineDash([1 * u, 0.8 * u]);
-      ctx.strokeStyle = alpha(ink, 0.35);
-      ctx.lineWidth = 0.35 * u;
-      ctx.strokeRect(x * u, y * u, cell * u, cell * u);
-      ctx.setLineDash([]);
-    }
+    ctx.setLineDash([1 * u, 0.8 * u]);
+    ctx.strokeStyle = alpha(ink, 0.35);
+    ctx.lineWidth = 0.35 * u;
+    ctx.strokeRect(x * u, y * u, cell * u, cell * u);
+    ctx.setLineDash([]);
   });
   ctx.restore();
 }
 function bigQuestion(ctx, u, color) {
-  setFont(ctx, u, 16, 700, TITLE, false);
+  setFont(ctx, u, 14, FELL);
   ctx.fillStyle = color;
   ctx.textAlign = 'center';
-  ctx.fillText('?', 52 * u, 41.6 * u);
+  ctx.fillText('?', MEDAL.x * u, (MEDAL.y + 4.6) * u);
 }
-function iconBox(ctx, u, name, emoji, cx, top, ink, onReady, maxLabel = 12, hint = null) {
-  const s = 13;
+// Case d'ingrédient (ou de résultat) : le dessin et son nom dessous, ou un « ? » et le mot de sa famille
+const BOX = 12;
+function iconBox(ctx, u, name, emoji, cx, top, ink, onReady, labelW, hint = null) {
   ctx.save();
-  rr(ctx, (cx - s / 2) * u, top * u, s * u, s * u, 3.6 * u);
+  rr(ctx, (cx - BOX / 2) * u, top * u, BOX * u, BOX * u, 3.2 * u);
+  ctx.textAlign = 'center';
   if (name) {
     ctx.shadowColor = 'rgba(74, 52, 38, .16)';
     ctx.shadowBlur = 1.6 * u;
@@ -462,56 +510,51 @@ function iconBox(ctx, u, name, emoji, cx, top, ink, onReady, maxLabel = 12, hint
     ctx.strokeStyle = alpha(ink, 0.28);
     ctx.lineWidth = 0.4 * u;
     ctx.stroke();
-    glyph(ctx, emoji, cx * u, (top + s / 2) * u, 8.6 * u, onReady);
-    setFont(ctx, u, 2.9, 800, TEXT, false);
-    ctx.fillStyle = '#8A7262';
-    ctx.textAlign = 'center';
-    const label = name.length > maxLabel ? `${name.slice(0, maxLabel - 1)}…` : name;
-    ctx.fillText(label, cx * u, (top + s + 4.2) * u);
+    glyph(ctx, emoji, cx * u, (top + BOX / 2) * u, 8 * u, onReady);
+    ctx.fillStyle = NOTE;
+    ctx.fillText(fitText(ctx, u, name, labelW, 4.2, 3.2, FELL), cx * u, (top + BOX + 4.4) * u);
   } else {
     ctx.setLineDash([1.4 * u, 1.1 * u]);
-    ctx.strokeStyle = '#BDAA94';
+    ctx.strokeStyle = FAINT;
     ctx.lineWidth = 0.4 * u;
     ctx.stroke();
     ctx.setLineDash([]);
-    setFont(ctx, u, 6.4, 700, TITLE, false);
-    ctx.fillStyle = '#BDAA94';
-    ctx.textAlign = 'center';
-    ctx.fillText('?', cx * u, (top + 9) * u);
+    setFont(ctx, u, 6.4, FELL);
+    ctx.fillStyle = FAINT;
+    ctx.fillText('?', cx * u, (top + 8.2) * u);
     if (hint) {
-      setFont(ctx, u, 2.9, 400, TITLE, true);
-      ctx.fillStyle = alpha(ink, 0.85);
-      ctx.fillText(hint, cx * u, (top + s + 4.2) * u);
+      ctx.fillStyle = alpha(ink, 0.9);
+      ctx.fillText(fitText(ctx, u, hint, labelW, 4, 3.2, FELL, true), cx * u, (top + BOX + 4.4) * u);
     }
   }
   ctx.restore();
 }
 // Positions des cases (ingrédients puis résultat) selon le nombre d'ingrédients : 2, 3 ou 4
 const ROW_XS = { 2: [30, 52, 74], 3: [24, 41, 58, 79], 4: [17, 33, 49, 65, 85] };
-// hints : un mot sous chaque case vide d'ingrédient (familles), ou null
+// Rangée du mélange, cases en haut à top (u) ; hints : un mot sous chaque case vide d'ingrédient (familles), ou null
 // seal : { wax, ready } pour peindre le « = » en sceau de l'Athanor ; renvoie le centre du sceau (en u)
-function recipeRow(ctx, u, parts, result, ink, onReady, hints = null, seal = null) {
+function recipeRow(ctx, u, parts, result, ink, onReady, top, hints = null, seal = null) {
   const xs = ROW_XS[Math.min(4, Math.max(2, parts.length))];
-  // Quatre ingrédients : cases plus serrées, noms plus courts
-  const maxLabel = parts.length > 3 ? 9 : 12;
-  parts.slice(0, 4).forEach((part, k) => iconBox(ctx, u, part && part.name, part && part.emoji, xs[k], 89, ink, onReady, maxLabel, hints && hints[k]));
-  iconBox(ctx, u, result && result.name, result && result.emoji, xs[xs.length - 1], 89, ink, onReady, maxLabel);
-  setFont(ctx, u, 5.6, 400, TITLE, false);
-  ctx.fillStyle = '#BDAA94';
+  const labelW = xs[1] - xs[0] - 1;
+  parts.slice(0, 4).forEach((part, k) => iconBox(ctx, u, part && part.name, part && part.emoji, xs[k], top, ink, onReady, labelW, hints && hints[k]));
+  iconBox(ctx, u, result && result.name, result && result.emoji, xs[xs.length - 1], top, ink, onReady, labelW);
+  const mid = top + BOX / 2;
+  setFont(ctx, u, 6.4, FELL);
+  ctx.fillStyle = FAINT;
   ctx.textAlign = 'center';
   for (let k = 0; k < xs.length - 2; k++) {
-    ctx.fillText('+', ((xs[k] + xs[k + 1]) / 2) * u, 97.6 * u);
+    ctx.fillText('+', ((xs[k] + xs[k + 1]) / 2) * u, (mid + 2) * u);
   }
   const sx = (xs[xs.length - 2] + xs[xs.length - 1]) / 2;
   if (!seal) {
-    ctx.fillText('=', sx * u, 97.6 * u);
+    ctx.fillText('=', sx * u, (mid + 2) * u);
     return null;
   }
   // Sceau de cire : pâle tant qu'il manque un ingrédient, à la couleur du chapitre quand on peut sceller
   ctx.save();
   if (seal.ready) {
     ctx.beginPath();
-    ctx.arc(sx * u, 95.5 * u, 4.6 * u, 0, Math.PI * 2);
+    ctx.arc(sx * u, mid * u, 4.8 * u, 0, Math.PI * 2);
     ctx.fillStyle = alpha(seal.wax, 0.22);
     ctx.fill();
     ctx.shadowColor = 'rgba(74, 52, 38, .3)';
@@ -519,31 +562,91 @@ function recipeRow(ctx, u, parts, result, ink, onReady, hints = null, seal = nul
     ctx.shadowOffsetY = 0.5 * u;
   }
   ctx.beginPath();
-  ctx.arc(sx * u, 95.5 * u, 3.5 * u, 0, Math.PI * 2);
+  ctx.arc(sx * u, mid * u, 3.6 * u, 0, Math.PI * 2);
   ctx.fillStyle = seal.ready ? seal.wax : '#E6DCC8';
   ctx.fill();
   ctx.restore();
-  setFont(ctx, u, 5, 700, TITLE, false);
-  ctx.fillStyle = seal.ready ? '#FFFDF8' : '#BDAA94';
+  setFont(ctx, u, 5.8, FELL);
+  ctx.fillStyle = seal.ready ? '#FFFDF8' : FAINT;
   ctx.textAlign = 'center';
-  ctx.fillText('=', sx * u, 97.3 * u);
+  ctx.fillText('=', sx * u, (mid + 1.8) * u);
   return sx;
 }
 
 /* ---------- Pages ---------- */
-// Citation en italique sous le nom (énigme, ou familles), rétrécie pour tenir sur deux lignes
-function paintQuote(ctx, u, text) {
+// Citation en italique sous le nom (énigme, ou familles) : trois lignes au plus, le corps se réduit pour tenir ;
+// renvoie la ligne de base de la dernière ligne (u)
+function paintQuote(ctx, u, text, top) {
   const quote = `«\u00a0${text}\u00a0»`;
-  let size = 4.3;
-  let lines;
-  do {
-    setFont(ctx, u, size, 400, TITLE, true);
-    lines = wrap(ctx, quote, 76 * u);
+  let size = 5.2;
+  setFont(ctx, u, size, FELL, true);
+  let lines = wrap(ctx, quote, 76 * u);
+  while (lines.length > 3 && size > 4.2) {
     size -= 0.2;
-  } while (lines.length > 2 && size > 3.3);
-  ctx.fillStyle = '#8A7262';
+    setFont(ctx, u, size, FELL, true);
+    lines = wrap(ctx, quote, 76 * u);
+  }
+  lines = lines.slice(0, 3);
+  const lead = size * 1.18;
+  ctx.fillStyle = TEXT_INK;
   ctx.textAlign = 'center';
-  lines.slice(0, 2).forEach((line, k) => ctx.fillText(line, 52 * u, (80.5 + k * 5.4) * u));
+  lines.forEach((line, k) => ctx.fillText(line, 52 * u, (top + k * lead) * u));
+  return top + (lines.length - 1) * lead;
+}
+// Nom à trouver, une case par lettre : lettres trouvées à l'encre, un trait pour chacune qui manque
+function paintMask(ctx, u, mask, y, ink) {
+  const cell = Math.min(8.4, 80 / Math.max(1, mask.length));
+  const x0 = 52 - (cell * mask.length) / 2;
+  setFont(ctx, u, Math.min(9.6, cell * 1.15), FELL);
+  ctx.textAlign = 'center';
+  ctx.fillStyle = ink;
+  ctx.strokeStyle = alpha(ink, 0.45);
+  ctx.lineWidth = 0.45 * u;
+  ctx.lineCap = 'round';
+  mask.forEach((char, k) => {
+    const cx = x0 + cell * (k + 0.5);
+    if (char === ' ') return;
+    if (char) {
+      ctx.fillText(char, cx * u, y * u);
+      return;
+    }
+    ctx.beginPath();
+    ctx.moveTo((cx - cell * 0.3) * u, (y + 0.6) * u);
+    ctx.lineTo((cx + cell * 0.3) * u, (y + 0.6) * u);
+    ctx.stroke();
+  });
+}
+// Nom et famille sous le médaillon (page inscrite ou à trouver) ; renvoie le haut de la rangée du mélange (u),
+// sous l'énigme
+const NAME_Y = 62;
+function familyLine(ctx, u, text, ink) {
+  ctx.fillStyle = ink;
+  ctx.textAlign = 'center';
+  fitFont(ctx, u, text, 80, 4.8, 3.8, CAPS, false, 0.04);
+  ctx.fillText(text, 52 * u, (NAME_Y + 7) * u);
+}
+const quoteBottom = last => Math.max(89.5, last + 3.6);
+// Tampon « Inscrite » à l'encre du chapitre, de biais au bord du médaillon
+function stamp(ctx, u, color) {
+  ctx.save();
+  ctx.translate(67.5 * u, 49.5 * u);
+  ctx.rotate(-0.16);
+  rr(ctx, -11 * u, -3.6 * u, 22 * u, 7.2 * u, 1.4 * u);
+  ctx.fillStyle = 'rgba(255, 250, 238, .85)';
+  ctx.fill();
+  ctx.strokeStyle = alpha(color, 0.9);
+  ctx.lineWidth = 0.55 * u;
+  ctx.stroke();
+  rr(ctx, -10 * u, -2.6 * u, 20 * u, 5.2 * u, 1 * u);
+  ctx.lineWidth = 0.22 * u;
+  ctx.stroke();
+  setFont(ctx, u, 4.2, CAPS, false, 0.12);
+  ctx.fillStyle = color;
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'middle';
+  ctx.fillText('Inscrite', 0, 0.3 * u);
+  ctx.textBaseline = 'alphabetic';
+  ctx.restore();
 }
 function paintFound(ctx, u, model, i, assets) {
   const { chapter, page } = model;
@@ -551,30 +654,24 @@ function paintFound(ctx, u, model, i, assets) {
   frame(ctx, u, style.ink);
   header(ctx, u, chapter, style, 1);
   const spot = vignette(ctx, u, style, 'found');
-  glyph(ctx, page.emoji, 52 * u, 36 * u, 22 * u, assets.onReady);
-  ctx.save();
-  ctx.translate(66 * u, 52 * u);
-  ctx.rotate(-0.14);
-  pill(ctx, u, 0, 0, 22, 6, style.ink, 'INSCRITE', '#FFFDF8', 3);
-  ctx.restore();
-  setFont(ctx, u, page.name.length > 14 ? 7 : 8.6, 600, TITLE, false);
-  ctx.fillStyle = '#4A3426';
+  glyph(ctx, page.emoji, MEDAL.x * u, MEDAL.y * u, MEDAL.r * 1.2 * u, assets.onReady);
+  stamp(ctx, u, style.wax);
+  ctx.fillStyle = INK;
   ctx.textAlign = 'center';
-  ctx.fillText(page.name, 52 * u, 67 * u);
-  setFont(ctx, u, 3.2, 900, TEXT, false, 0.1);
-  ctx.fillStyle = style.ink;
-  ctx.fillText(familyName(page.family).toUpperCase(), 52 * u, 74 * u);
-  if ('letterSpacing' in ctx) ctx.letterSpacing = '0px';
+  fitFont(ctx, u, page.name, 80, 10, 6, FELL);
+  ctx.fillText(page.name, 52 * u, NAME_Y * u);
+  familyLine(ctx, u, familyName(page.family), style.ink);
   // L'énigme reste sur la page trouvée, comme une épigraphe
-  if (page.riddle) paintQuote(ctx, u, page.riddle);
+  const top = page.riddle ? quoteBottom(paintQuote(ctx, u, page.riddle, NAME_Y + 14.5)) : 89.5;
   if (page.recipe) {
     const parts = page.recipe.map(name => ({ name, emoji: assets.emojiOf(name) }));
-    recipeRow(ctx, u, parts, { name: page.name, emoji: page.emoji }, style.ink, assets.onReady);
+    recipeRow(ctx, u, parts, { name: page.name, emoji: page.emoji }, style.ink, assets.onReady, top);
   } else {
-    setFont(ctx, u, 4.4, 400, TITLE, true);
-    ctx.fillStyle = '#8A7262';
+    setFont(ctx, u, 4.8, FELL, true);
+    ctx.fillStyle = NOTE;
+    ctx.textAlign = 'center';
     const first = ['Eau', 'Feu', 'Terre', 'Air'].includes(page.name);
-    ctx.fillText(first ? 'Élément premier : tout commence ici.' : 'Né d’un mélange dont la trace s’est perdue.', 52 * u, 96 * u);
+    ctx.fillText(first ? 'Élément premier : tout commence ici.' : 'Né d’un mélange dont la trace s’est perdue.', 52 * u, (top + 6) * u);
   }
   folio(ctx, u, i);
   return { hotspots: [spot], label: `${page.name}, inscrite. Famille ${familyName(page.family)}.${page.riddle ? ` « ${page.riddle} »` : ''}${page.recipe ? ` Née de ${page.recipe.join(' et ')}.` : ''}` };
@@ -582,7 +679,7 @@ function paintFound(ctx, u, model, i, assets) {
 
 // Marque-page du fil d'Ariane (bible, § 6.1) : un ruban de soie qui pend du haut de la page marquée
 function bookmark(ctx, u) {
-  const x = 82 * u;
+  const x = 74 * u;
   const w = 7 * u;
   ctx.beginPath();
   ctx.moveTo(x, 0);
@@ -597,6 +694,8 @@ function bookmark(ctx, u) {
   ctx.lineWidth = 0.7 * u;
   ctx.stroke();
 }
+// Boutons du bas d'une page à trouver (u) ; leur zone de toucher déborde un peu le dessin
+const BTN = { y: 115.2, h: 8.6, pad: 1.6 };
 function paintReach(ctx, u, model, i, assets) {
   const { chapter, page, revealed, aim, freeInk, tried } = model;
   const style = CHAPTER_STYLE[chapter.id];
@@ -608,32 +707,12 @@ function paintReach(ctx, u, model, i, assets) {
   // Le grand « ? » tant qu'aucune pièce de l'illustration n'est gagnée
   if (!hm || !hm.emoji) bigQuestion(ctx, u, alpha(style.ink, 0.45));
   patchwork(ctx, u, page, style.ink, assets.onReady);
-  ctx.textAlign = 'center';
-  // Lettres trouvées à leur place (pendu, ou première lettre donnée), le reste en blancs : « L_M__ »
+  // Lettres trouvées à leur place (pendu, ou première lettre donnée), un trait pour les autres
   const mask = hm ? hm.mask : [...Array(page.letters)].map((_, k) => (k === 0 && page.first ? page.first : null));
-  const blanks = mask.map(char => char || '_').join('');
-  let size = 7;
-  do {
-    setFont(ctx, u, size, 600, TITLE, false, 0.22);
-    size -= 0.4;
-  } while (size > 3.6 && ctx.measureText(blanks).width > 80 * u);
-  // Caractère par caractère : lettres trouvées à l'encre, blancs en pâle
-  let x = 52 * u - ctx.measureText(blanks).width / 2;
-  ctx.textAlign = 'left';
-  mask.forEach(char => {
-    const shown = char || '_';
-    ctx.fillStyle = char ? style.ink : '#BDAA94';
-    ctx.fillText(shown, x, 66 * u);
-    x += ctx.measureText(shown).width;
-  });
-  ctx.textAlign = 'center';
-  if ('letterSpacing' in ctx) ctx.letterSpacing = '0px';
-  setFont(ctx, u, 3.2, 900, TEXT, false, 0.1);
-  ctx.fillStyle = style.ink;
-  ctx.fillText(`${familyName(page.family).toUpperCase()} · ${page.letters} LETTRES`, 52 * u, 73.5 * u);
-  if ('letterSpacing' in ctx) ctx.letterSpacing = '0px';
+  paintMask(ctx, u, mask, NAME_Y, style.ink);
+  familyLine(ctx, u, `${familyName(page.family)} · ${page.letters} lettres`, style.ink);
   // L'énigme de l'élément d'abord (sans énigme : les familles en toutes lettres)
-  paintQuote(ctx, u, page.riddle || clueText(page.clue, page.groups));
+  const top = quoteBottom(paintQuote(ctx, u, page.riddle || clueText(page.clue, page.groups), NAME_Y + 14.5));
   // L'équation suit l'Athanor : les éléments posés s'y inscrivent ; sinon l'ingrédient révélé par l'Encre
   const picked = assets.picked || [];
   const parts = page.clue.map((family, k) => {
@@ -643,52 +722,44 @@ function paintReach(ctx, u, model, i, assets) {
   // Après un premier essai sur la page, la famille de chaque ingrédient apparaît sous sa case
   const hints = page.riddle && tried ? familyHints(page.clue, page.groups) : null;
   const ready = picked.length >= 2;
-  const sealX = recipeRow(ctx, u, parts, null, style.ink, assets.onReady, hints, { wax: style.wax, ready });
+  const sealX = recipeRow(ctx, u, parts, null, style.ink, assets.onReady, top, hints, { wax: style.wax, ready });
   // Verdict du dernier essai visé (ou essais ratés), rétréci pour tenir sur une ligne
   const note = aimNote(aim, page.misses, page.freeInkAfter);
   if (note) {
-    let size = 3.4;
-    do {
-      setFont(ctx, u, size, 800, TEXT, false);
-      size -= 0.2;
-    } while (size > 2.4 && ctx.measureText(note).width > 80 * u);
-    ctx.fillStyle = aim && aim.right ? style.ink : '#8A7262';
+    ctx.fillStyle = aim && aim.right ? style.ink : NOTE;
     ctx.textAlign = 'center';
-    ctx.fillText(note, 52 * u, 110.8 * u);
+    fitFont(ctx, u, note, 80, 4.6, 3.4, FELL, true);
+    ctx.fillText(note, 52 * u, (top + 20.8) * u);
   }
   // Deux boutons : le pendu (deviner le nom) et l'encre (révéler un ingrédient)
   const guessLabel = hm && hm.failedUntil ? '✎ Pendu perdu' : '✎ Deviner le nom';
   const hotspots = [{ ...spot, pulse: true, ...(hm ? { action: 'guess', data: page.id, label: 'Ouvrir le pendu de la page' } : {}) }];
   const button = (x, w, fill, text, color, raised) => {
     ctx.save();
-    rr(ctx, x * u, 115.5 * u, w * u, 8 * u, 4 * u);
+    rr(ctx, x * u, BTN.y * u, w * u, BTN.h * u, (BTN.h / 2) * u);
     ctx.fillStyle = fill;
     if (raised) { ctx.shadowColor = 'rgba(0, 0, 0, .18)'; ctx.shadowOffsetY = 0.5 * u; }
     ctx.fill();
     ctx.restore();
-    let size = 3.4;
-    do {
-      setFont(ctx, u, size, 900, TEXT, false);
-      size -= 0.2;
-    } while (size > 2.4 && ctx.measureText(text).width > (w - 4) * u);
     ctx.fillStyle = color;
     ctx.textAlign = 'center';
     ctx.textBaseline = 'middle';
-    ctx.fillText(text, (x + w / 2) * u, 119.7 * u);
+    ctx.fillText(fitText(ctx, u, text, w - 4, 4.6, 3.4, FELL), (x + w / 2) * u, (BTN.y + BTN.h / 2 + 0.3) * u);
     ctx.textBaseline = 'alphabetic';
   };
+  const zone = (id, x, w, rest) => ({ id, x, y: BTN.y - BTN.pad, w, h: BTN.h + 2 * BTN.pad, ...rest });
   const inkX = hm ? 54 : 28;
   const inkW = hm ? 37 : 48;
   if (hm) {
-    // Les blancs du nom ouvrent aussi le pendu : c'est là qu'on a envie de toucher
-    hotspots.push({ id: 'blanks', x: 12, y: 58, w: 80, h: 11, action: 'guess', data: page.id, label: 'Deviner le nom lettre par lettre' });
+    // Les traits du nom ouvrent aussi le pendu : c'est là qu'on a envie de toucher
+    hotspots.push({ id: 'blanks', x: 12, y: NAME_Y - 8, w: 80, h: 11, action: 'guess', data: page.id, label: 'Deviner le nom lettre par lettre' });
     button(13, 37, style.color, guessLabel, style.ink, true);
-    hotspots.push({ id: 'guess', x: 13, y: 115.5, w: 37, h: 8, action: 'guess', data: page.id, label: 'Pendu : deviner le nom lettre par lettre' });
+    hotspots.push(zone('guess', 13, 37, { action: 'guess', data: page.id, label: 'Pendu : deviner le nom lettre par lettre' }));
   }
-  button(inkX, inkW, revealed ? VELLUM : freeInk ? '#B7862F' : '#4A3426', revealed ? 'Encre utilisée' : freeInk ? '✒︎ Encre offerte' : `✒︎ Encre · ${assets.inkPrice} écus`, revealed ? '#BDAA94' : '#FFFDF8', !revealed);
-  if (!revealed) hotspots.push({ id: 'ink', x: inkX, y: 115.5, w: inkW, h: 8, action: 'ink', data: page.id, label: freeInk ? 'Encre offerte : révéler un ingrédient' : `Encre : révéler un ingrédient pour ${assets.inkPrice} écus` });
+  button(inkX, inkW, revealed ? VELLUM : freeInk ? '#B7862F' : INK, revealed ? 'Encre utilisée' : freeInk ? '✒︎ Encre offerte' : `✒︎ Encre · ${assets.inkPrice} écus`, revealed ? FAINT : '#FFFDF8', !revealed);
+  if (!revealed) hotspots.push(zone('ink', inkX, inkW, { action: 'ink', data: page.id, label: freeInk ? 'Encre offerte : révéler un ingrédient' : `Encre : révéler un ingrédient pour ${assets.inkPrice} écus` }));
   // Le sceau mélange ce qui est posé dans l'Athanor (comme « Transmuer »)
-  if (ready && sealX !== null) hotspots.push({ id: 'seal', x: sealX - 6, y: 89, w: 12, h: 13, action: 'seal', data: page.id, label: `Sceller le mélange : ${picked.join(' et ')}` });
+  if (ready && sealX !== null) hotspots.push({ id: 'seal', x: sealX - 6, y: top - 0.5, w: 12, h: BOX + 1, action: 'seal', data: page.id, label: `Sceller le mélange : ${picked.join(' et ')}` });
   folio(ctx, u, i);
   const start = page.first ? `, commence par ${page.first}` : '';
   const clue = page.riddle ? `Énigme : ${page.riddle}${hints ? ` ${clueText(page.clue, page.groups)}` : ''}` : clueText(page.clue, page.groups);
@@ -701,80 +772,80 @@ function paintFar(ctx, u, model, i) {
   frame(ctx, u, style.ink);
   header(ctx, u, chapter, style, null);
   vignette(ctx, u, style, 'far');
-  bigQuestion(ctx, u, '#BDAA94');
-  setFont(ctx, u, 7.6, 600, TITLE, false);
-  ctx.fillStyle = '#4A3426';
-  ctx.textAlign = 'center';
+  bigQuestion(ctx, u, FAINT);
   const far = `${count} page${count > 1 ? 's' : ''} lointaine${count > 1 ? 's' : ''}`;
   // Pages à portée pas encore ouvertes : elles viennent une à une, les plus simples d'abord
   const queued = `${waiting} page${waiting > 1 ? 's' : ''} en attente`;
-  ctx.fillText(waiting ? queued : far, 52 * u, 67 * u);
-  setFont(ctx, u, 4.3, 400, TITLE, true);
-  ctx.fillStyle = '#8A7262';
+  ctx.fillStyle = INK;
+  ctx.textAlign = 'center';
+  fitFont(ctx, u, waiting ? queued : far, 80, 8.4, 6, FELL);
+  ctx.fillText(waiting ? queued : far, 52 * u, (NAME_Y + 1) * u);
+  setFont(ctx, u, 5, FELL, true);
+  ctx.fillStyle = TEXT_INK;
   const text = waiting
     ? 'Elles s’ouvrent une à une : chaque page trouvée dans ce chapitre en ouvre une autre.'
     : 'Il te manque encore des ingrédients pour les tenter. Chaque découverte en rapproche quelques-unes.';
-  const lines = wrap(ctx, text, 72 * u);
-  lines.forEach((line, k) => ctx.fillText(line, 52 * u, (76 + k * 5.8) * u));
+  const lines = wrap(ctx, text, 74 * u);
+  lines.forEach((line, k) => ctx.fillText(line, 52 * u, (73 + k * 6.2) * u));
   if (waiting && count) {
-    setFont(ctx, u, 3.4, 800, TEXT, false);
-    ctx.fillText(`Et ${far} au-delà.`, 52 * u, (80 + lines.length * 5.8) * u);
+    setFont(ctx, u, 4.8, CAPS);
+    ctx.fillStyle = NOTE;
+    ctx.fillText(`Et ${far} au-delà.`, 52 * u, (78 + lines.length * 6.2) * u);
   }
   folio(ctx, u, i);
   return { hotspots: [], label: waiting ? `${queued} dans ce chapitre${count ? `, et ${far}` : ''}.` : `${far} dans ce chapitre.` };
 }
 
-// Table d'un chapitre : 15 pages par feuille (à trouver d'abord, puis inscrites), chacune mène à sa page
-const INDEX_COLS = 3;
+// Table d'un chapitre : jusqu'à 16 pages par feuille, sur deux colonnes (à trouver d'abord, puis inscrites) ;
+// chacune mène à sa page
+const INDEX_COLS = 2;
+const INDEX_ROW = 13.3;
 function paintIndex(ctx, u, model, i, assets) {
   const { chapter, entries, part, parts } = model;
   const style = CHAPTER_STYLE[chapter.id];
   frame(ctx, u, style.ink);
-  header(ctx, u, chapter, style, null);
-  setFont(ctx, u, 3.2, 900, TEXT, false, 0.12);
-  ctx.fillStyle = '#8A7262';
-  ctx.textAlign = 'right';
-  ctx.fillText(parts > 1 ? `TABLE ${part}/${parts}` : 'TABLE', 91 * u, 11 * u);
-  if ('letterSpacing' in ctx) ctx.letterSpacing = '0px';
+  header(ctx, u, chapter, style, null, parts > 1 ? `Table ${part}/${parts}` : 'Table');
   const hotspots = [];
   const cellW = 80 / INDEX_COLS;
+  const h = INDEX_ROW - 1.2;
   entries.forEach((entry, k) => {
     const x = 12 + (k % INDEX_COLS) * cellW;
-    const y = 17 + Math.floor(k / INDEX_COLS) * 21;
-    const cx = x + cellW / 2;
+    const y = 17 + Math.floor(k / INDEX_COLS) * INDEX_ROW;
     const found = entry.page.status === 'found';
-    // Case inscrite : teinte de la famille de l'élément (comme sa tuile)
+    // Case inscrite : teinte de la famille de l'élément (comme sa tuile) ; case à trouver : vélin pointillé
     const tint = found ? tintOfFamily(entry.page.family) : null;
-    rr(ctx, (x + 1) * u, y * u, (cellW - 2) * u, 19.5 * u, 3 * u);
+    rr(ctx, (x + 0.6) * u, y * u, (cellW - 1.2) * u, h * u, 2.6 * u);
     ctx.fillStyle = found ? tint.card : IVORY;
     ctx.fill();
-    ctx.strokeStyle = found ? alpha(tint.ink, 0.25) : alpha(style.ink, 0.45);
     ctx.lineWidth = 0.35 * u;
-    ctx.stroke();
-    ctx.beginPath();
-    ctx.arc(cx * u, (y + 7.6) * u, 5.4 * u, 0, Math.PI * 2);
-    ctx.fillStyle = IVORY;
-    ctx.fill();
     if (found) {
-      glyph(ctx, entry.page.emoji, cx * u, (y + 7.6) * u, 7.2 * u, assets.onReady);
+      ctx.strokeStyle = alpha(tint.ink, 0.25);
+      ctx.stroke();
     } else {
-      setFont(ctx, u, 6, 700, TITLE, false);
+      ctx.setLineDash([1.2 * u, 0.9 * u]);
+      ctx.strokeStyle = alpha(style.ink, 0.45);
+      ctx.stroke();
+      ctx.setLineDash([]);
+    }
+    const cx = x + 6.6, cy = y + h / 2;
+    ctx.beginPath();
+    ctx.arc(cx * u, cy * u, 4.4 * u, 0, Math.PI * 2);
+    ctx.fillStyle = found ? IVORY : alpha(style.color, 0.7);
+    ctx.fill();
+    if (found) glyph(ctx, entry.page.emoji, cx * u, cy * u, 6.4 * u, assets.onReady);
+    else {
+      setFont(ctx, u, 6, FELL);
       ctx.fillStyle = style.ink;
       ctx.textAlign = 'center';
-      ctx.fillText('?', cx * u, (y + 9.8) * u);
+      ctx.fillText('?', cx * u, (cy + 2) * u);
     }
     // Nom inscrit, ou lettres trouvées d'une page à portée (« S _ _ e »)
     const text = found ? entry.page.name : maskText(entry.page);
-    let size = found ? 3.1 : 3.3;
-    do {
-      setFont(ctx, u, size, found ? 800 : 700, found ? TEXT : TITLE, false);
-      size -= 0.15;
-    } while (size > 2 && ctx.measureText(text).width > (cellW - 4) * u);
-    ctx.fillStyle = found ? '#4A3426' : style.ink;
-    ctx.textAlign = 'center';
-    ctx.fillText(text, cx * u, (y + 17) * u);
+    ctx.fillStyle = found ? INK : style.ink;
+    ctx.textAlign = 'left';
+    ctx.fillText(fitText(ctx, u, text, cellW - 14, 4.8, 3.4, FELL), (x + 12.4) * u, (cy + 1.6) * u);
     hotspots.push({
-      id: `idx-${entry.key}`, x: x + 1, y, w: cellW - 2, h: 19.5, action: 'goto', data: entry.index,
+      id: `idx-${entry.key}`, x: x + 0.6, y, w: cellW - 1.2, h, action: 'goto', data: entry.index,
       label: found ? `${entry.page.name}, inscrite` : `Page à trouver, ${entry.page.letters} lettres`
     });
   });
@@ -789,38 +860,23 @@ function maskText(page) {
   return mask.map(char => (char === ' ' ? '·' : char || '_')).join(mask.length > 6 ? '\u2009' : ' ');
 }
 
-// Lettrine : la première lettre dans un carré enluminé, le texte en drapeau autour (deux lignes à côté, puis
-// pleine largeur), en lignes de 5,6 u depuis la ligne de base top ; au plus maxLines lignes
+// Lettrine : la première lettre en fraktur, à la cire du chapitre, haute de deux lignes ; le texte, en italique,
+// coule autour (deux lignes à côté, puis pleine largeur), en lignes de 5,9 u depuis la ligne de base top ; au
+// plus maxLines lignes
 function lettrine(ctx, u, text, top, style, maxLines) {
-  const x0 = 15, box = 10.4, right = 88;
-  rr(ctx, x0 * u, (top - 4.4) * u, box * u, box * u, 1.2 * u);
-  ctx.fillStyle = style.color;
-  ctx.fill();
-  ctx.strokeStyle = GOLD.base;
-  ctx.lineWidth = 0.4 * u;
-  ctx.stroke();
-  rr(ctx, (x0 + 0.9) * u, (top - 3.5) * u, (box - 1.8) * u, (box - 1.8) * u, 0.7 * u);
-  ctx.strokeStyle = alpha(GOLD.base, 0.7);
-  ctx.lineWidth = 0.2 * u;
-  ctx.stroke();
-  ctx.fillStyle = GOLD.base;
-  [[x0 + 1.9, top - 2.5], [x0 + box - 1.9, top - 2.5], [x0 + 1.9, top + 4.1], [x0 + box - 1.9, top + 4.1]].forEach(([x, y]) => {
-    ctx.beginPath();
-    ctx.arc(x * u, y * u, 0.35 * u, 0, Math.PI * 2);
-    ctx.fill();
-  });
-  setFont(ctx, u, 8.4, 700, TITLE, false);
-  ctx.fillStyle = style.ink;
-  ctx.textAlign = 'center';
-  ctx.fillText(text[0], (x0 + box / 2) * u, (top + 3.4) * u);
-  setFont(ctx, u, 4.1, 400, TITLE, true);
-  ctx.fillStyle = '#8A7262';
+  const x0 = 14, right = 90, lead = 5.9;
+  setFont(ctx, u, 15, GOTHIC);
+  ctx.fillStyle = style.wax;
   ctx.textAlign = 'left';
+  ctx.fillText(text[0], x0 * u, (top + lead) * u);
+  const indent = x0 + ctx.measureText(text[0]).width / u + 1.8;
+  setFont(ctx, u, 4.8, FELL, true);
+  ctx.fillStyle = TEXT_INK;
   const words = text.slice(1).split(' ');
   let line = '', n = 0;
-  const lineX = k => (k < 2 ? x0 + box + 1.6 : x0);
+  const lineX = k => (k < 2 ? indent : x0);
   const flush = () => {
-    ctx.fillText(line, lineX(n) * u, (top + n * 5.6) * u);
+    ctx.fillText(line, lineX(n) * u, (top + n * lead) * u);
     n++;
     line = '';
   };
@@ -841,9 +897,10 @@ function paintChapter(ctx, u, model, i, assets) {
   const { chapter } = model;
   const style = CHAPTER_STYLE[chapter.id];
   frame(ctx, u, style.ink);
+  const cx = 52, cy = 31;
   ctx.save();
   ctx.beginPath();
-  ctx.arc(52 * u, 34 * u, 16.4 * u, 0, Math.PI * 2);
+  ctx.arc(cx * u, cy * u, 15.4 * u, 0, Math.PI * 2);
   ctx.shadowColor = 'rgba(74, 52, 38, .18)';
   ctx.shadowBlur = 3 * u;
   ctx.shadowOffsetY = 1.2 * u;
@@ -851,7 +908,7 @@ function paintChapter(ctx, u, model, i, assets) {
   ctx.fill();
   ctx.restore();
   ctx.beginPath();
-  ctx.arc(52 * u, 34 * u, 17.4 * u, 0, Math.PI * 2);
+  ctx.arc(cx * u, cy * u, 16.4 * u, 0, Math.PI * 2);
   ctx.strokeStyle = alpha(GOLD.base, 0.75);
   ctx.lineWidth = 0.35 * u;
   ctx.stroke();
@@ -859,41 +916,57 @@ function paintChapter(ctx, u, model, i, assets) {
   Object.keys(SIGILS).forEach((id, k) => {
     const a = -Math.PI / 2 + (k * Math.PI * 2) / 7;
     const own = id === chapter.id;
-    sigil(ctx, u, id, 52 + Math.cos(a) * 22, 34 + Math.sin(a) * 22, own ? 5 : 4, own ? GOLD.base : alpha(style.ink, 0.28), own ? 2.4 : 2);
+    sigil(ctx, u, id, cx + Math.cos(a) * 21, cy + Math.sin(a) * 21, own ? 5.2 : 4.2, own ? GOLD.base : alpha(style.ink, 0.3), own ? 2.4 : 2);
   });
   ctx.beginPath();
-  ctx.arc(52 * u, 34 * u, 15 * u, 0, Math.PI * 2);
+  ctx.arc(cx * u, cy * u, 13.8 * u, 0, Math.PI * 2);
   ctx.fillStyle = chapter.open ? style.color : VELLUM;
   ctx.fill();
-  setFont(ctx, u, chapter.id.length > 2 ? 10 : 13, 700, TITLE, false);
-  ctx.fillStyle = chapter.open ? style.ink : '#BDAA94';
+  setFont(ctx, u, chapter.id.length > 2 ? 10 : 12.6, FELL);
+  ctx.fillStyle = chapter.open ? style.ink : FAINT;
   ctx.textAlign = 'center';
-  ctx.fillText(chapter.id, 52 * u, 38.6 * u);
-  setFont(ctx, u, 3.3, 900, TEXT, false, 0.16);
+  ctx.fillText(chapter.id, cx * u, (cy + 4.3) * u);
+  setFont(ctx, u, 5, CAPS, false, 0.14);
   ctx.fillStyle = style.ink;
-  ctx.fillText(`CHAPITRE ${chapter.id}`, 52 * u, 59 * u);
-  if ('letterSpacing' in ctx) ctx.letterSpacing = '0px';
-  setFont(ctx, u, 8.6, 700, TITLE, false);
-  ctx.fillStyle = '#4A3426';
-  const lines = wrap(ctx, chapter.name, 78 * u);
-  lines.forEach((line, k) => ctx.fillText(line, 52 * u, (69 + k * 9) * u));
-  const top = 69 + lines.length * 9;
+  ctx.fillText(`Chapitre ${chapter.id}`, 52 * u, 59.5 * u);
+  // Le nom, sur une ligne si possible, puis un filet d'or
+  let size = 10;
+  setFont(ctx, u, size, FELL);
+  if (ctx.measureText(chapter.name).width > 80 * u) {
+    size = 8.6;
+    setFont(ctx, u, size, FELL);
+  }
+  ctx.fillStyle = INK;
+  const lines = wrap(ctx, chapter.name, 80 * u);
+  const lead = size * 0.94;
+  lines.forEach((line, k) => ctx.fillText(line, 52 * u, (70 + k * lead) * u));
+  const ruleY = 70 + (lines.length - 1) * lead + 5.6;
+  rule(ctx, u, ruleY, 30, 74, true);
+  const top = ruleY + 8.6;
   // La phrase du chapitre en lettrine (à défaut, ses familles)
   if (chapter.verse) lettrine(ctx, u, chapter.verse, top, style, lines.length > 1 ? 3 : 4);
   else {
-    setFont(ctx, u, 4.1, 400, TITLE, true);
-    ctx.fillStyle = '#8A7262';
-    ctx.fillText(assets.familiesOf(chapter.id).map(familyName).join(' · '), 52 * u, top * u);
+    setFont(ctx, u, 4.8, FELL, true);
+    ctx.fillStyle = NOTE;
+    ctx.textAlign = 'center';
+    ctx.fillText(fitText(ctx, u, assets.familiesOf(chapter.id).map(familyName).join(' · '), 80, 4.8, 3.6, FELL, true), 52 * u, top * u);
   }
   ctx.textAlign = 'center';
   if (chapter.open) {
-    pill(ctx, u, 52, 106, 50, 8.4, alpha(style.color, 0.95), `${chapter.found} / ${chapter.total} pages inscrites`, '#4A3426', 3.4);
+    setFont(ctx, u, 5.4, FELL);
+    ctx.fillStyle = INK;
+    ctx.fillText(`${chapter.found} / ${chapter.total} pages inscrites`, 52 * u, 112 * u);
     const reach = chapter.pages.filter(p => p.status === 'reach').length;
-    setFont(ctx, u, 3.4, 800, TEXT, false);
-    ctx.fillStyle = '#8A7262';
-    ctx.fillText(reach ? `${reach} à portée de mélange` : 'Rien à portée pour l’instant', 52 * u, 116.5 * u);
+    setFont(ctx, u, 4.6, FELL, true);
+    ctx.fillStyle = NOTE;
+    ctx.fillText(reach ? `${reach} à portée de mélange` : 'Rien à portée pour l’instant', 52 * u, 118.6 * u);
   } else {
-    pill(ctx, u, 52, 106, 56, 8.4, VELLUM, `Scellé · encore ${Math.max(0, chapter.need - assets.stars)} découvertes`, '#8A7262', 3.4);
+    const left = Math.max(0, chapter.need - assets.stars);
+    setFont(ctx, u, 5.2, CAPS, false, 0.06);
+    ctx.fillStyle = NOTE;
+    ctx.fillText('Chapitre scellé', 52 * u, 112 * u);
+    setFont(ctx, u, 4.6, FELL, true);
+    ctx.fillText(`encore ${left} découverte${left > 1 ? 's' : ''} pour l’ouvrir`, 52 * u, 118.6 * u);
   }
   folio(ctx, u, i);
   return { hotspots: [], label: `Chapitre ${chapter.id}, ${chapter.name}.${chapter.verse ? ` ${chapter.verse}` : ''} ${chapter.open ? `${chapter.found} pages inscrites sur ${chapter.total}.` : `Scellé : encore ${Math.max(0, chapter.need - assets.stars)} découvertes.`}` };
@@ -902,61 +975,56 @@ function paintChapter(ctx, u, model, i, assets) {
 function paintToc(ctx, u, model, index, assets) {
   frame(ctx, u);
   const hotspots = [];
-  setFont(ctx, u, 10, 700, TITLE, false);
-  ctx.fillStyle = '#4A3426';
+  ctx.fillStyle = INK;
   ctx.textAlign = 'center';
-  ctx.fillText(BOOK_TITLE, 52 * u, 20 * u);
-  setFont(ctx, u, 4.2, 400, TITLE, true);
-  ctx.fillStyle = '#8A7262';
-  ctx.fillText(`Grimoire d’alchimie · ${assets.stars} découverte${assets.stars > 1 ? 's' : ''}`, 52 * u, 27.5 * u);
-  ctx.strokeStyle = alpha(GOLD.base, 0.7);
-  ctx.lineWidth = 0.3 * u;
-  [[30, 48.6], [55.4, 74]].forEach(([a, b]) => {
-    ctx.beginPath();
-    ctx.moveTo(a * u, 30.4 * u);
-    ctx.lineTo(b * u, 30.4 * u);
-    ctx.stroke();
-  });
-  ornament(ctx, u, ORNAMENTS.diamond, 52, 30.4, 0, 1, alpha(GOLD.base, 0.92), alpha(GOLD.edge, 0.55));
+  fitFont(ctx, u, BOOK_TITLE, 76, 11.5, 8, FELL);
+  ctx.fillText(BOOK_TITLE, 52 * u, 20.5 * u);
+  setFont(ctx, u, 4.8, FELL, true);
+  ctx.fillStyle = NOTE;
+  // Les chiffres anciens d'IM Fell font du zéro un « o » : en toutes lettres
+  const found = assets.stars ? `${assets.stars} découverte${assets.stars > 1 ? 's' : ''}` : 'aucune découverte';
+  ctx.fillText(`Grimoire d’alchimie · ${found}`, 52 * u, 27.6 * u);
+  rule(ctx, u, 31, 28, 76, true);
+  const h = 11.6;
   model.chapters.forEach((chapter, k) => {
     const style = CHAPTER_STYLE[chapter.id];
-    const y = 33 + k * 12.6;
-    rr(ctx, 12 * u, y * u, 80 * u, 11 * u, 3.2 * u);
+    const y = 34.4 + k * 12.7;
+    const mid = y + h / 2;
+    rr(ctx, 12 * u, y * u, 80 * u, h * u, 3 * u);
     ctx.fillStyle = chapter.open ? alpha(style.color, 0.75) : VELLUM;
     ctx.fill();
     ctx.beginPath();
-    ctx.arc(18.6 * u, (y + 5.5) * u, 3.8 * u, 0, Math.PI * 2);
+    ctx.arc(18.4 * u, mid * u, 4.2 * u, 0, Math.PI * 2);
     ctx.fillStyle = IVORY;
     ctx.fill();
-    setFont(ctx, u, chapter.id.length > 2 ? 2.8 : 3.6, 700, TITLE, false);
-    ctx.fillStyle = chapter.open ? style.ink : '#BDAA94';
+    ctx.fillStyle = chapter.open ? style.ink : FAINT;
     ctx.textAlign = 'center';
-    ctx.fillText(chapter.id, 18.6 * u, (y + 6.8) * u);
-    setFont(ctx, u, 3.6, 900, TEXT, false);
-    ctx.fillStyle = chapter.open ? '#4A3426' : '#8A7262';
+    fitFont(ctx, u, chapter.id, 7, 5, 3, FELL);
+    ctx.fillText(chapter.id, 18.4 * u, (mid + 1.6) * u);
+    ctx.fillStyle = chapter.open ? INK : NOTE;
     ctx.textAlign = 'left';
-    ctx.fillText(chapter.name, 25 * u, (y + 4.9) * u);
-    rr(ctx, 25 * u, (y + 6.8) * u, 50 * u, 1.4 * u, 0.7 * u);
+    ctx.fillText(fitText(ctx, u, chapter.name, 46, 5.4, 4.2, FELL), 25.4 * u, (y + 5.6) * u);
+    rr(ctx, 25.4 * u, (y + 7.6) * u, 47 * u, 1.3 * u, 0.65 * u);
     ctx.fillStyle = 'rgba(255, 253, 248, .9)';
     ctx.fill();
     if (chapter.open && chapter.found) {
-      rr(ctx, 25 * u, (y + 6.8) * u, Math.max(1.4, (50 * chapter.found) / chapter.total) * u, 1.4 * u, 0.7 * u);
+      rr(ctx, 25.4 * u, (y + 7.6) * u, Math.max(1.3, (47 * chapter.found) / chapter.total) * u, 1.3 * u, 0.65 * u);
       ctx.fillStyle = style.ink;
       ctx.fill();
     }
-    setFont(ctx, u, 3.1, 900, TEXT, false);
+    setFont(ctx, u, 4.6, FELL);
     ctx.textAlign = 'right';
-    ctx.fillStyle = chapter.open ? '#4A3426' : '#8A7262';
+    ctx.fillStyle = chapter.open ? INK : NOTE;
     const count = chapter.open ? `${chapter.found}/${chapter.total}` : String(chapter.need);
-    ctx.fillText(count, 89 * u, (y + 7) * u);
+    ctx.fillText(count, 89.4 * u, (mid + 1.6) * u);
     // Chapitre scellé : un cadenas devant le nombre de découvertes qu'il demande
-    if (!chapter.open) glyph(ctx, 'ui:lock', 89 * u - ctx.measureText(count).width - 2.4 * u, (y + 6) * u, 3.6 * u, assets.onReady);
-    hotspots.push({ id: `toc-${chapter.id}`, x: 12, y, w: 80, h: 11, action: 'goto', data: model.chapterIndex[chapter.id], label: `Chapitre ${chapter.id}, ${chapter.name}${chapter.open ? '' : ', scellé'}` });
+    if (!chapter.open) glyph(ctx, 'ui:lock', 89.4 * u - ctx.measureText(count).width - 2.6 * u, mid * u, 3.8 * u, assets.onReady);
+    hotspots.push({ id: `toc-${chapter.id}`, x: 12, y, w: 80, h, action: 'goto', data: model.chapterIndex[chapter.id], label: `Chapitre ${chapter.id}, ${chapter.name}${chapter.open ? '' : ', scellé'}` });
   });
-  setFont(ctx, u, 3.3, 700, TEXT, false);
-  ctx.fillStyle = '#8A7262';
+  setFont(ctx, u, 4.2, FELL, true);
+  ctx.fillStyle = NOTE;
   ctx.textAlign = 'center';
-  ctx.fillText('Glisse la page du doigt, ou touche son bord.', 52 * u, 125 * u);
+  ctx.fillText('Touche un chapitre, ou tourne la page.', 52 * u, 126.8 * u);
   return { hotspots, label: `Sommaire du ${BOOK_TITLE}. ${model.chapters.map(c => `Chapitre ${c.id}, ${c.name}`).join('. ')}.` };
 }
 
@@ -1019,12 +1087,12 @@ export function paintEndpaper(ctx, w, h, side, front) {
     ctx.lineWidth = 0.25 * u;
     ctx.stroke();
     ctx.textAlign = 'center';
-    setFont(ctx, u, 3.6, 400, TITLE, true);
-    ctx.fillStyle = '#8A7262';
+    setFont(ctx, u, 4.4, FELL, true);
+    ctx.fillStyle = NOTE;
     ctx.fillText('Ex libris', 50 * u, 56.5 * u);
-    setFont(ctx, u, 7, 700, TITLE, false);
-    ctx.fillStyle = '#4A3426';
-    ctx.fillText(BOOK_TITLE, 50 * u, 66 * u);
+    fitFont(ctx, u, BOOK_TITLE, 44, 8, 5, FELL);
+    ctx.fillStyle = INK;
+    ctx.fillText(BOOK_TITLE, 50 * u, 66.4 * u);
     Object.keys(SIGILS).forEach((id, k) => sigil(ctx, u, id, 32 + k * 6, 74.5, 3.6, alpha(GOLD.dark, 0.85), 2.2));
   }
   ctx.restore();
