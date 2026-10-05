@@ -1,30 +1,5 @@
 <template>
-  <section class="world" aria-label="Le Monde">
-    <header class="world__head">
-      <div>
-        <span class="world__eyebrow">Ton île<IslandClock v-if="state && skyClock" v-bind="skyClock" :warping="warping" @warp="toggleWarp" /></span>
-        <span class="world__title">Le Monde</span>
-      </div>
-      <!-- « Tout ramasser » : ce que tous les bâtiments ont produit (écus et ressources), d'un toucher ; le solde reste
-           dans l'en-tête. (« Récolte » ne désigne que les mini-jeux, joués un par un.) -->
-      <button
-        v-if="harvestable.length"
-        type="button"
-        class="world__coins is-ready"
-        :disabled="busy"
-        :aria-label="`Tout ramasser : ${harvestable.map(g => `${g.n} ${g.label}`).join(', ')}`"
-        @click="collect"
-      >
-        <span class="world__coins-icon" aria-hidden="true"><ElementGlyph glyph="ui:basket" /></span>
-        <span class="world__coins-text" aria-hidden="true">
-          <span class="world__coins-label">Tout ramasser</span>
-          <span class="world__coins-gains">
-            <span v-for="g in harvestable" :key="g.id">+{{ g.n }}<ElementGlyph :glyph="g.glyph" /></span>
-          </span>
-        </span>
-      </button>
-    </header>
-
+  <section :class="['world', { 'world--immersive': immersive }]" aria-label="Le Monde">
     <!-- Invité : l'île demande un compte (ses ressources et écus sont gardés par le serveur) -->
     <div v-if="guest" class="world__guest">
       <p class="world__guest-title">Ton île t’attend.</p>
@@ -33,19 +8,47 @@
     </div>
 
     <template v-else>
-      <!-- Réserves de l'île et Récolte -->
-      <div v-if="state" class="world__hud">
-        <ul class="world__stock" aria-label="Réserves">
-          <li v-for="r in RESOURCES" :key="r.id" class="world__res" :title="r.label">
-            <span aria-hidden="true"><ElementGlyph :glyph="r.glyph" /></span><strong>{{ state.stock[r.id] }}</strong><span class="oc-sr-only">{{ r.label }}</span>
-          </li>
-        </ul>
-        <button type="button" class="world__play" :disabled="busy || !state.charges.count" @click="startHarvest">
-          <span class="world__play-label">Récolte</span>
-          <span class="world__play-sub">{{ chargesText }}</span>
-        </button>
+      <!-- L'île de bord à bord : en haut, une barre qui flotte par-dessus (horloge, écus, réserves, Récolte) ;
+           masquée en plein écran -->
+      <div ref="top" class="world__top">
+        <header class="world__head">
+          <div class="world__head-left">
+            <h2 class="oc-sr-only">Le Monde</h2>
+            <IslandClock v-if="state && skyClock" v-bind="skyClock" :warping="warping" @warp="toggleWarp" />
+            <span class="world__purse" :aria-label="`${coins} écus`"><span class="world__coin" aria-hidden="true"></span>{{ coinsText }}</span>
+          </div>
+          <!-- « Tout ramasser » : ce que tous les bâtiments ont produit (écus et ressources), d'un toucher ; le solde reste
+               dans l'en-tête. (« Récolte » ne désigne que les mini-jeux, joués un par un.) -->
+          <button
+            v-if="harvestable.length"
+            type="button"
+            class="world__coins is-ready"
+            :disabled="busy"
+            :aria-label="`Tout ramasser : ${harvestable.map(g => `${g.n} ${g.label}`).join(', ')}`"
+            @click="collect"
+          >
+            <span class="world__coins-icon" aria-hidden="true"><ElementGlyph glyph="ui:basket" /></span>
+            <span class="world__coins-text" aria-hidden="true">
+              <span class="world__coins-label">Tout ramasser</span>
+              <span class="world__coins-gains">
+                <span v-for="g in harvestable" :key="g.id">+{{ g.n }}<ElementGlyph :glyph="g.glyph" /></span>
+              </span>
+            </span>
+          </button>
+        </header>
+        <!-- Réserves de l'île et Récolte -->
+        <div v-if="state" class="world__hud">
+          <ul class="world__stock" aria-label="Réserves">
+            <li v-for="r in RESOURCES" :key="r.id" class="world__res" :title="r.label">
+              <span aria-hidden="true"><ElementGlyph :glyph="r.glyph" /></span><strong>{{ state.stock[r.id] }}</strong><span class="oc-sr-only">{{ r.label }}</span>
+            </li>
+          </ul>
+          <button type="button" class="world__play" :disabled="busy || !state.charges.count" @click="startHarvest">
+            <span class="world__play-label">Récolte</span>
+            <span class="world__play-sub">{{ chargesText }}</span>
+          </button>
+        </div>
       </div>
-
       <div ref="stage" class="world__stage">
         <!-- Les gestes passent par les pointeurs ; touchend annulé : pas de clic fantôme après un toucher au doigt (il
              tomberait sur le fond de la fiche qui vient de s'ouvrir et la refermerait aussitôt) -->
@@ -125,6 +128,13 @@
         <div v-if="state" class="world__zoom">
           <button type="button" aria-label="Zoomer" @click="zoomBy(1.25)">+</button>
           <button type="button" aria-label="Dézoomer" @click="zoomBy(0.8)">−</button>
+          <!-- Plein écran : l'île seule, sans barres (et l'écran entier quand l'appareil le permet) -->
+          <button type="button" :aria-label="immersive ? 'Quitter le plein écran' : 'Plein écran'" :aria-pressed="immersive" @click="toggleImmersive">
+            <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
+              <path v-if="immersive" d="M9 4v5H4M15 4v5h5M9 20v-5H4M15 20v-5h5" />
+              <path v-else d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5" />
+            </svg>
+          </button>
         </div>
         <p v-if="loadError" class="world__error" role="alert">
           L’île ne répond pas.
@@ -836,6 +846,8 @@ export default {
       runError: '',
       // Texte du compteur d'images (« ?perf »)
       perfText: '',
+      // Plein écran : l'île seule, sans la barre du haut ni la barre d'onglets
+      immersive: false,
       // Coffre tombé pendant la Récolte (ouvert au retour sur l'île) ; liste des coffres ouverte ; coffre en cours
       // d'ouverture : { chest, streak, note, art, wearable } ; coffres ouverts d'un coup (« Tout ouvrir »)
       runChest: null,
@@ -1039,6 +1051,10 @@ export default {
     menuStyle() {
       return { left: `${this.menuPos.x}px`, top: `${this.menuPos.y}px` };
     },
+    // Écus, dans la barre du haut (l'en-tête général est sous l'île)
+    coinsText() {
+      return new Intl.NumberFormat('fr-FR').format(this.coins || 0);
+    },
     chargesText() {
       if (!this.state) return '';
       const { count, max, nextIn } = this.state.charges;
@@ -1147,6 +1163,10 @@ export default {
       this.setup();
       this.draw(performance.now());
     }, { signal: this.ac.signal });
+    // Plein écran quitté par l'appareil (geste ou touche Échap) : l'île retrouve ses barres
+    document.addEventListener('fullscreenchange', () => {
+      if (!document.fullscreenElement && this.immersive) this.setImmersive(false);
+    }, { signal: this.ac.signal });
     this.syncPhase();
     this.tick = setInterval(() => {
       this.clock = Date.now();
@@ -1160,6 +1180,7 @@ export default {
   },
   beforeUnmount() {
     this.gone = true;
+    if (this.immersive) this.setImmersive(false);
     clearTimeout(this.undoTimer);
     clearTimeout(this.holdTimer);
     clearTimeout(this.tipTimer);
@@ -1532,6 +1553,27 @@ export default {
       return Boolean(next) && next.planOwned && next.chapterOpen !== false && this.affordable(site) && this.coinsOk(next.coins);
     },
 
+    /* ---------- Plein écran ---------- */
+    toggleImmersive() {
+      this.setImmersive(!this.immersive);
+    },
+    // L'île seule : la barre du haut et la barre d'onglets se cachent ; l'écran entier quand l'appareil le permet
+    // (pas sur iPhone : l'île garde alors toute la fenêtre)
+    setImmersive(on) {
+      this.immersive = on;
+      document.documentElement.classList.toggle('oc-immersive', on);
+      try {
+        if (on && document.documentElement.requestFullscreen && !document.fullscreenElement) document.documentElement.requestFullscreen().catch(() => {});
+        if (!on && document.fullscreenElement && document.exitFullscreen) document.exitFullscreen().catch(() => {});
+      } catch (e) {
+        // Plein écran refusé : la fenêtre suffit
+      }
+      this.$nextTick(() => {
+        this.setup();
+        this.draw(performance.now());
+      });
+    },
+
     /* ---------- Géométrie et caméra ---------- */
     setup() {
       const stage = this.$refs.stage;
@@ -1543,12 +1585,13 @@ export default {
           this.draw(performance.now());
         });
         this.observer.observe(stage);
+        if (this.$refs.top) this.observer.observe(this.$refs.top);
       }
+      // Hauteur de la barre qui flotte en haut : les boutons du dessin se rangent dessous
+      stage.style.setProperty('--world-top', `${this.immersive || !this.$refs.top ? 0 : this.$refs.top.offsetHeight}px`);
       const width = stage.clientWidth;
-      // Hauteur : tout l'écran sous l'en-tête de l'île, jusqu'à la barre d'onglets (fixe), sans place perdue
-      const bar = document.querySelector('.tabbar');
-      const top = stage.getBoundingClientRect().top + window.scrollY;
-      const height = Math.round(Math.max(360, Math.min(window.innerHeight - top - (bar ? bar.offsetHeight : 64) - 12, 1100)));
+      // Hauteur : toute la scène (l'île couvre l'écran, de bord à bord, jusqu'à la barre d'onglets)
+      const height = Math.max(240, Math.round(stage.clientHeight));
       const dpr = Math.min(window.devicePixelRatio || 1, 2);
       canvas.width = Math.round(width * dpr);
       canvas.height = Math.round(height * dpr);
@@ -4258,10 +4301,31 @@ export default {
 </script>
 
 <style scoped>
-.world { position: relative; }
-.world__head { display: flex; align-items: flex-end; justify-content: space-between; gap: 12px; padding: 4px 2px 8px; }
+.world {
+  /* De bord à bord : tout l'écran au-dessus de la barre d'onglets (à droite du rail sur PC) ; en plein écran, tout */
+  position: fixed; z-index: 20; top: 0; left: 0; right: 0; bottom: var(--oc-tabbar-h); background: #5FB0DD;
+}
+@media (min-width: 860px) { .world { left: var(--oc-rail-w); bottom: 0; } }
+.world--immersive { z-index: 30; left: 0; bottom: 0; }
+/* La barre du haut flotte sur l'île : seuls ses boutons et pastilles prennent le doigt */
+.world__top {
+  position: absolute; z-index: 4; top: 0; left: 0; right: 0; display: grid; gap: 6px;
+  padding: calc(env(safe-area-inset-top) + 8px) 10px 12px;
+  background: linear-gradient(rgba(24, 17, 12, .5), rgba(24, 17, 12, .22) 72%, rgba(24, 17, 12, 0));
+  pointer-events: none;
+}
+.world__top .world__head, .world__top .world__hud { pointer-events: none; }
+.world__top .world__head > *, .world__top .world__hud > * { pointer-events: auto; }
+.world--immersive .world__top { display: none; }
+.world__head-left { display: flex; align-items: center; gap: 8px; }
+.world__purse {
+  display: inline-flex; align-items: center; gap: 5px; height: 32px; padding: 0 11px 0 8px; border-radius: 999px;
+  background: rgba(251, 246, 234, .94); color: var(--ink-900); font-family: var(--font-ui); font-size: 14px; font-weight: 900;
+  font-variant-numeric: tabular-nums;
+}
+.world__guest { margin: calc(env(safe-area-inset-top) + 72px) 16px 0; }
+.world__head { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
 .world__eyebrow { display: block; font-family: var(--oc-font-mono); font-weight: 800; font-size: 11px; letter-spacing: .14em; text-transform: uppercase; color: var(--oc-on-bg-faint); }
-.world__title { display: block; font-family: var(--oc-font-display); font-weight: 700; font-size: 24px; line-height: 1.1; color: var(--oc-on-bg); }
 .world__coins {
   flex: 0 1 auto; min-width: 0; max-width: 60%; display: inline-flex; align-items: center; gap: 7px; text-align: left;
   min-height: 38px; padding: 6px 14px;
@@ -4280,7 +4344,7 @@ export default {
 @keyframes world-glow { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-2px); } }
 .world__coin { width: 16px; height: 16px; border-radius: 50%; background: radial-gradient(circle at 35% 35%, #FFE7A0, #E9AE2E 70%); box-shadow: inset 0 0 0 1.5px rgba(59, 42, 32, .5); }
 
-.world__hud { display: flex; align-items: stretch; gap: 8px; margin-bottom: 8px; }
+.world__hud { display: flex; align-items: stretch; gap: 8px; width: min(100%, 540px); }
 .world__stock { flex: 1; min-width: 0; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 6px; margin: 0; padding: 0; list-style: none; }
 .world__res {
   display: flex; align-items: center; justify-content: center; gap: 4px;
@@ -4299,29 +4363,29 @@ export default {
 .world__play-label { font-family: var(--font-display); font-size: 17px; font-weight: 700; line-height: 1.1; }
 .world__play-sub { font-size: 11px; font-weight: 800; opacity: .85; white-space: nowrap; }
 
-.world__stage { position: relative; border-radius: 22px; overflow: hidden; }
+.world__stage { position: absolute; inset: 0; overflow: hidden; --world-top: 0px; }
 .world__canvas { display: block; width: 100%; touch-action: none; cursor: grab; }
 .world__perf {
-  position: absolute; left: 10px; top: 62px; max-width: calc(100% - 80px); margin: 0; padding: 3px 8px; border-radius: 8px; white-space: nowrap;
+  position: absolute; left: 10px; top: calc(var(--world-top) + 60px); max-width: calc(100% - 80px); margin: 0; padding: 3px 8px; border-radius: 8px; white-space: nowrap;
   background: rgba(20, 14, 10, .7); color: #F6EEDF; font: 600 11px/1.3 ui-monospace, monospace; pointer-events: none;
 }
 .world__chest-btn {
-  position: absolute; left: 10px; top: 10px; display: grid; place-items: center;
+  position: absolute; left: 10px; top: calc(var(--world-top) + 8px); display: grid; place-items: center;
   width: 46px; height: 46px; border: 0; border-radius: 14px; background: rgba(30, 22, 16, .55); cursor: pointer;
 }
 .world__chest-btn.is-ready { background: var(--gold-400); box-shadow: 0 3px 0 var(--gold-600); animation: world-chest-call 2.4s ease-in-out infinite; }
 .world__log-btn {
-  position: absolute; left: 62px; top: 10px; display: grid; place-items: center;
+  position: absolute; left: 62px; top: calc(var(--world-top) + 8px); display: grid; place-items: center;
   width: 46px; height: 46px; border: 0; border-radius: 14px; background: rgba(30, 22, 16, .55); cursor: pointer;
 }
 .world__log-btn.is-ready { background: var(--gold-400); box-shadow: 0 3px 0 var(--gold-600); }
 .world__finds-btn {
-  position: absolute; left: 114px; top: 10px; display: grid; place-items: center;
+  position: absolute; left: 114px; top: calc(var(--world-top) + 8px); display: grid; place-items: center;
   width: 46px; height: 46px; border: 0; border-radius: 14px; background: rgba(30, 22, 16, .55); cursor: pointer;
 }
 .world__finds-btn.is-ready { background: var(--gold-400); box-shadow: 0 3px 0 var(--gold-600); }
 .world__trip-btn {
-  position: absolute; left: 10px; top: 64px; display: flex; align-items: center; gap: 5px; height: 36px; padding: 0 10px 0 6px;
+  position: absolute; left: 10px; top: calc(var(--world-top) + 62px); display: flex; align-items: center; gap: 5px; height: 36px; padding: 0 10px 0 6px;
   border: 0; border-radius: 12px; background: rgba(30, 22, 16, .6); color: #FFF4C8; font-family: var(--font-ui); font-size: 12px; font-weight: 900; cursor: pointer;
 }
 .world__trip-note { margin: 8px 0 0; padding: 8px 12px; border-radius: 12px; background: #FFF4D6; font-size: 13px; font-weight: 800; line-height: 1.4; }
@@ -4332,7 +4396,7 @@ export default {
 }
 @keyframes world-chest-call { 0%, 80%, 100% { transform: none; } 86% { transform: rotate(-8deg); } 92% { transform: rotate(8deg); } }
 @media (prefers-reduced-motion: reduce) { .world__chest-btn.is-ready { animation: none; } }
-.world__zoom { position: absolute; right: 10px; top: 10px; display: flex; flex-direction: column; gap: 6px; }
+.world__zoom { position: absolute; right: 10px; top: calc(var(--world-top) + 8px); display: flex; flex-direction: column; gap: 6px; }
 .world__zoom button {
   width: 38px; height: 38px; border: 0; border-radius: 12px;
   background: rgba(251, 246, 234, .92); color: var(--ink-900);
@@ -4554,4 +4618,9 @@ export default {
 @media (prefers-reduced-motion: reduce) {
   .world__coins.is-ready { animation: none; }
 }
+</style>
+
+<style>
+/* Plein écran de l'île : la barre d'onglets se cache (hors du composant, d'où ce style global) */
+:root.oc-immersive .tabbar { display: none; }
 </style>
