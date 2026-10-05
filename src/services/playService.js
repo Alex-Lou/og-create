@@ -152,6 +152,10 @@ export default {
   villagersNeeds() {
     return http.post('/play/world/villagers/needs').then(response => response.data);
   },
+  // Visiteur : combler sa demande (livrer, ou ses Récoltes faites) → { reward, coins, world }
+  visitorSatisfy(id) {
+    return http.post('/play/world/visitor', { id }).then(response => response.data);
+  },
   // Joker de l'Épreuve : { freeJokers, coins?, ingredients? | ingredient? }
   joker(kind) {
     return asPlayer(() => http.post('/play/joker', { kind }));

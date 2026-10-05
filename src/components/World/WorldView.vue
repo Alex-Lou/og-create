@@ -206,6 +206,14 @@
                       <span v-else-if="awaits(v)" class="world__friend-dot" aria-hidden="true"></span>
                     </button>
                   </li>
+                  <li v-if="state.visitor">
+                    <button type="button" class="world__friend is-guest" :aria-label="`${state.visitor.name}, ${state.visitor.role}, de passage`" @click="openVisitor">
+                      <span class="world__friend-face"><img :src="visitorPortrait(state.visitor)" alt="" /></span>
+                      <span class="world__friend-name">{{ state.visitor.name }}</span>
+                      <span class="world__friend-guest">de passage</span>
+                      <span v-if="!state.visitor.satisfied" class="world__friend-need is-quest" aria-hidden="true"><ElementGlyph glyph="ui:spark" /></span>
+                    </button>
+                  </li>
                 </ul>
                 <button v-if="fillAll.count" type="button" class="world__btn world__fill-all" :disabled="busy" @click="fillAllNeeds">
                   Tout combler
@@ -481,6 +489,19 @@
       @fill="fillNeed"
       @close="villagerId = null"
     />
+    <!-- Visiteur arrivé en bateau : sa fiche (demande, récompense) -->
+    <VisitorSheet
+      v-if="visitorOpen && state && state.visitor"
+      :visitor="state.visitor"
+      :stock="state.stock"
+      :charges="state.charges.count"
+      :portrait="visitorPortrait(state.visitor)"
+      :said="visitorSaid"
+      :busy="busy"
+      @satisfy="satisfyVisitor"
+      @harvest="visitorHarvest"
+      @close="visitorOpen = false"
+    />
     <!-- Coffres : la liste (jour, en attente), puis l'ouverture d'un coffre, ou de tous d'un coup -->
     <ChestList v-if="chestsOpen && state" :chests="state.chests" :busy="busy" @open="openChest" @open-all="openAllChests" @close="chestsOpen = false" />
     <ChestReveal v-if="reveal" v-bind="reveal" :busy="busy" @wear="wearRevealed" @close="reveal = null" />
@@ -531,10 +552,12 @@ import NameSignPanel from './NameSignPanel.vue';
 import MiniGame from './minigames/MiniGame.vue';
 import GameIcon from './minigames/GameIcon.vue';
 import VillagerSheet from './VillagerSheet.vue';
+import VisitorSheet from './VisitorSheet.vue';
 import RenameSheet from './RenameSheet.vue';
 import { villagerSprite, ROLES } from '@/world/villagers';
 import { talkLine, giftLine, awaits } from '@/world/friends';
 import { NEED_GLYPH, MOOD_GLYPH, MOOD_LABEL, ASKS, THANKS, missingOf, fillAllOf, askOr } from '@/world/needs';
+import { visitorLook, visitorBoat, askLine, THANKS as VISITOR_THANKS } from '@/world/visitors';
 import { nameSignLayers, nameSignLight, paintName } from '@/world/nameSigns';
 import { annexLayers, annexLight } from '@/world/annexSprites';
 import { annexReady, annexYield, variantsOf } from '@/world/annexes';
@@ -613,7 +636,10 @@ const TH = TW / 2;
 const DEPTH = 30;
 const MAX_SCALE = 1.8;
 // Ce qui vit à la surface de la mer (posé au niveau de l'eau, jamais caché par la terre : eau libre)
-const SEA_KINDS = new Set(['fish', 'dolphin', 'whale', 'fluke', 'spout']);
+const SEA_KINDS = new Set(['fish', 'dolphin', 'whale', 'fluke', 'spout', 'vboat']);
+// Arrivée du bateau d'un visiteur (secondes) et distance d'où il vient (cases)
+const BOAT_SAIL = 6;
+const BOAT_FAR = 7;
 // Mouettes posées effrayées : envol (s), puis retour
 const FLY_OFF = 2.6;
 const GULL_BACK = 30;
@@ -655,7 +681,7 @@ let lastView = null;
 // d'animation sont non réactifs et s'arrêtent quand l'onglet est caché ou le composant démonté.
 export default {
   name: 'WorldView',
-  components: { ElementGlyph, ElementTile, HarvestGame, ShopItemSheet, BrumeWisp, IslandClock, GModal, ChestList, ChestReveal, ChestHaul, AnnexPanel, AnnexSheet, NameSignPanel, MiniGame, GameIcon, VillagerSheet, RenameSheet },
+  components: { ElementGlyph, ElementTile, HarvestGame, ShopItemSheet, BrumeWisp, IslandClock, GModal, ChestList, ChestReveal, ChestHaul, AnnexPanel, AnnexSheet, NameSignPanel, MiniGame, GameIcon, VillagerSheet, VisitorSheet, RenameSheet },
   directives: { longpress },
   props: {
     discoveredElements: { type: Array, required: true },
@@ -715,6 +741,8 @@ export default {
       villagerId: null,
       villagerSaid: '',
       villagerPopped: 0,
+      visitorOpen: false,
+      visitorSaid: '',
       clock: Date.now(),
       // Horloge de l'en-tête (heure, moment, temps, soleil) ; journée en accéléré
       skyClock: null,
@@ -877,6 +905,9 @@ export default {
     this.bubbles = [];
     // Bulles de besoin au-dessus des habitants (pour le toucher)
     this.needBubbles = [];
+    // Bateau du visiteur : case de mer où il s'amarre, arrivée en cours ({ id, at })
+    this.visitorDock = null;
+    this.boatArrival = null;
     this.signs = [];
     this.shore = [];
     // Sol en relief : calques lus (M), carrés d'images (terrain), eau animée (live), cases de chaque quartier
@@ -978,6 +1009,8 @@ export default {
         if ((state.villagers || []).length >= 2) guide.tip('friends');
         // Un habitant à qui il manque quelque chose : ses besoins et son humeur
         if ((state.villagers || []).some(v => missingOf(v).length)) guide.tip('needs');
+        // Un visiteur vient d'accoster
+        if (state.visitor) guide.tip('visitor');
         // Premier mini-jeu ouvert (Ponton, Carrière ou Bosquet au palier III)
         if ((state.games || []).some(g => g.open)) guide.tip('games');
       } catch (error) {
@@ -1028,8 +1061,18 @@ export default {
       // Habitants et bêtes : ils vivent dans les quartiers à soi, autour des bâtiments bâtis
       this.village = villageOf({
         n: state.size, M, sites: state.sites, tiles: state.tiles, props: this.props, annexes: state.annexes || [],
-        owned: new Set(state.map.zones.map((z, i) => (z.owned ? i : -1)).filter(i => i >= 0))
+        owned: new Set(state.map.zones.map((z, i) => (z.owned ? i : -1)).filter(i => i >= 0)), visitor: state.visitor || null
       });
+      // Visiteur : son bateau s'amarre près du Ponton ; un visiteur jamais vu sur cet appareil arrive sous les yeux
+      this.visitorDock = state.visitor ? this.dockOf(state, M) : null;
+      if (state.visitor && this.visitorDock && !this.reduced()) {
+        let seen = null;
+        try { seen = localStorage.getItem('oc_visitor_seen'); } catch (e) { seen = null; }
+        if (seen !== String(state.visitor.id)) {
+          this.boatArrival = { id: state.visitor.id, at: performance.now() / 1000 };
+          try { localStorage.setItem('oc_visitor_seen', String(state.visitor.id)); } catch (e) { /* stockage indisponible */ }
+        }
+      }
       this.state = state;
       const mistKey = state.map.zones.filter(z => z.owned).map(z => z.id).join();
       if (this.mistKey !== null && mistKey !== this.mistKey) {
@@ -1783,6 +1826,17 @@ export default {
       this.needBubbles = [];
       if (this.cam.s < 0.55) return;
       for (const h of this.landHits) {
+        // Le visiteur : une bulle dorée avec sa demande, tant qu'elle n'est pas comblée
+        const guest = h.kind === 'villager' ? this.guestOf(h.who) : null;
+        if (guest && !guest.satisfied) {
+          const k = 1 / Math.min(1, this.cam.s);
+          const r = 11 * k;
+          const y = h.y - 16 - r + Math.sin(t * 2.6 + h.x) * 1.5;
+          this.bubbleAt(ctx, h.x, y, r, k, '#FFF6D8', '#E2A72E');
+          glyph(ctx, guest.request.kind === 'livrer' ? GLYPH[guest.request.resource] : 'ui:spark', h.x, y + 0.5, 14 * k, repaint);
+          this.needBubbles.push({ id: guest.id, visitor: true, x: h.x, y, r });
+          continue;
+        }
         const friend = h.kind === 'villager' ? this.friendOf(h.who) : null;
         const [first] = friend ? missingOf(friend) : [];
         if (!first) continue;
@@ -1791,29 +1845,33 @@ export default {
         const x = h.x;
         // Juste au-dessus de la tête (le point touché est au milieu du corps)
         const y = h.y - 16 - r + Math.sin(t * 2.6 + h.x) * 1.5;
-        ctx.save();
-        ctx.shadowColor = 'rgba(60, 40, 25, .3)';
-        ctx.shadowBlur = 5 * k;
-        ctx.shadowOffsetY = 2 * k;
-        ctx.fillStyle = '#FFF4E5';
-        ctx.beginPath();
-        ctx.arc(x, y, r, 0, Math.PI * 2);
-        ctx.fill();
-        ctx.restore();
-        ctx.fillStyle = '#FFF4E5';
-        ctx.beginPath();
-        ctx.moveTo(x - 4 * k, y + r - 2);
-        ctx.lineTo(x, y + r + 5 * k);
-        ctx.lineTo(x + 4 * k, y + r - 2);
-        ctx.fill();
-        ctx.strokeStyle = '#F0A84A';
-        ctx.lineWidth = 1.6 * k;
-        ctx.beginPath();
-        ctx.arc(x, y, r, 0, Math.PI * 2);
-        ctx.stroke();
+        this.bubbleAt(ctx, x, y, r, k, '#FFF4E5', '#F0A84A');
         glyph(ctx, NEED_GLYPH[first.id], x, y + 0.5, 14 * k, repaint);
         this.needBubbles.push({ id: friend.id, need: first.id, x, y, r });
       }
+    },
+    // Bulle ronde cernée, sa pointe vers le bas (au-dessus d'un habitant)
+    bubbleAt(ctx, x, y, r, k, fill, ring) {
+      ctx.save();
+      ctx.shadowColor = 'rgba(60, 40, 25, .3)';
+      ctx.shadowBlur = 5 * k;
+      ctx.shadowOffsetY = 2 * k;
+      ctx.fillStyle = fill;
+      ctx.beginPath();
+      ctx.arc(x, y, r, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.restore();
+      ctx.fillStyle = fill;
+      ctx.beginPath();
+      ctx.moveTo(x - 4 * k, y + r - 2);
+      ctx.lineTo(x, y + r + 5 * k);
+      ctx.lineTo(x + 4 * k, y + r - 2);
+      ctx.fill();
+      ctx.strokeStyle = ring;
+      ctx.lineWidth = 1.6 * k;
+      ctx.beginPath();
+      ctx.arc(x, y, r, 0, Math.PI * 2);
+      ctx.stroke();
     },
     // Petite vie de l'île, déterministe dans le temps : où est chaque animal, dans quelle image, de quel côté il regarde.
     // Poules autour du Foyer, papillons et abeilles sur les fleurs (le jour), grenouille aux nénuphars, poisson près de la côte.
@@ -2033,6 +2091,20 @@ export default {
           const k = (t - fled.at) / FLY_OFF;
           for (let i = 0; i < perch.count; i++) out.gulls.push({ wx: c.x + (60 + i * 14) * k, wy: c.y + i * 4 - 20 * k, alt: 6 + 90 * k * k, flip: false, phase: i });
         }
+      }
+      // Bateau du visiteur : il arrive du large (BOAT_SAIL secondes), puis se balance à quai
+      const dock = this.visitorDock;
+      if (dock && this.state.visitor) {
+        const arrival = this.boatArrival && this.boatArrival.id === this.state.visitor.id ? this.boatArrival : null;
+        const k = arrival ? Math.min(1, (t - arrival.at) / BOAT_SAIL) : 1;
+        const ease = 1 - (1 - k) ** 3;
+        const x = dock.x + dock.dx * BOAT_FAR * (1 - ease);
+        const y = dock.y + dock.dy * BOAT_FAR * (1 - ease);
+        const frame = Math.floor(t * 2) % 2;
+        out.standing.push({ kind: 'vboat', x, y, z: Math.sin(t * 1.4) * 1.2, flip: dock.flip, sprite: [`vboat-${frame}`, () => visitorBoat(frame)] });
+        if (k < 1) out.rings.push({ x: x - dock.dx * 0.4, y: y - dock.dy * 0.4, k: (t * 1.5) % 1 });
+        const c = surface(x, y);
+        hits.push({ key: 'vboat', kind: 'vboat', x: c.x, y: c.y - 18, r: 26 });
       }
       // Ronds dans l'eau là où le doigt a touché la mer (1,2 s)
       this.ripples = this.ripples.filter(r => t - r.at < 1.2);
@@ -2376,6 +2448,7 @@ export default {
       else if (hit && hit.annex) this.annexSheet = { x: hit.annex.x, y: hit.annex.y };
       else if (hit && hit.nameSign) this.openNameSign(hit.nameSign);
       else if (hit && hit.animal && this.friendOf(hit.animal.who)) this.openVillager(this.friendOf(hit.animal.who).id);
+      else if (hit && hit.animal && (hit.animal.kind === 'vboat' || this.guestOf(hit.animal.who))) this.openVisitor();
       else this.showTip(gesture.start.x, gesture.start.y, this.tipOf(hit, gesture.start));
       gesture.held = true;
       vibrate(12);
@@ -2505,7 +2578,14 @@ export default {
         return;
       }
       if (hit.asking) {
-        this.openVillager(hit.asking.id);
+        if (hit.asking.visitor) this.openVisitor();
+        else this.openVillager(hit.asking.id);
+        vibrate(6);
+      } else if (hit.animal && (hit.animal.kind === 'vboat' || this.guestOf(hit.animal.who))) {
+        // Le visiteur ou son bateau : il dit ce qu'il demande (appui long : sa fiche)
+        const guest = this.state.visitor;
+        this.showTip(px, py, { title: `${guest.name} · ${guest.role}`, text: askLine(guest), hint: 'Appui long : sa fiche' });
+        if (hit.animal.who) this.scare(hit.animal);
         vibrate(6);
       } else if (hit.bubble) {
         const sp = this.toScreen(hit.bubble.x, hit.bubble.y);
@@ -2588,6 +2668,7 @@ export default {
         const [title, text] = ANIMALS[hit.animal.kind] || ['Une bête', ''];
         return { title, text, hint: 'Toucher : la faire réagir' };
       }
+      if (hit.asking && hit.asking.visitor) return { title: this.state.visitor.name, text: askLine(this.state.visitor), hint: 'Toucher : sa fiche' };
       if (hit.asking) {
         const friend = this.friendAt(hit.asking.id);
         return { title: friend ? friend.name : 'Un habitant', text: ASKS[hit.asking.need], hint: 'Toucher : sa fiche' };
@@ -2746,6 +2827,64 @@ export default {
     },
     awaits,
     missingOf,
+    // Le visiteur qu'on touche (who : { kind: 'villager', id: 'vis:<id>' }), ou null
+    guestOf(who) {
+      const v = this.state && this.state.visitor;
+      return v && who && who.id === `vis:${v.id}` ? v : null;
+    },
+    // Case de mer où s'amarre le bateau du visiteur : la plus proche du Ponton, et d'où il arrive (vers le large)
+    dockOf(state, M) {
+      const site = state.sites.find(s => s.id === 'ponton');
+      if (!site) return null;
+      const cx = site.x + site.w / 2;
+      const cy = site.y + site.h / 2;
+      let best = null;
+      for (let y = site.y - 3; y < site.y + site.h + 3; y++) {
+        for (let x = site.x - 3; x < site.x + site.w + 3; x++) {
+          if (M.ground(x, y) !== '~') continue;
+          const d = Math.hypot(x + 0.5 - cx, y + 0.5 - cy) - (x + y) * 0.01;
+          if (!best || d < best.d) best = { x: x + 0.5, y: y + 0.5, d };
+        }
+      }
+      if (!best) return null;
+      const len = Math.hypot(best.x - cx, best.y - cy) || 1;
+      const dx = (best.x - cx) / len;
+      const dy = (best.y - cy) / len;
+      return { x: best.x, y: best.y, dx, dy, flip: dx - dy > 0 };
+    },
+    visitorPortrait(v) {
+      return spriteUrl(`portrait-vis-${v.seed}`, () => villagerSprite(visitorLook(v.seed, v.role)));
+    },
+    openVisitor() {
+      if (!this.state || !this.state.visitor) return;
+      this.site = null;
+      this.villagerId = null;
+      this.visitorSaid = '';
+      this.visitorOpen = true;
+    },
+    // Combler la demande du visiteur : le serveur vérifie, prend les ressources et verse les écus
+    async satisfyVisitor() {
+      const guest = this.state && this.state.visitor;
+      if (this.busy || !guest) return;
+      this.busy = true;
+      try {
+        const { reward, coins, world } = await playService.visitorSatisfy(guest.id);
+        this.apply(world);
+        this.$emit('coins-updated', coins);
+        this.visitorSaid = VISITOR_THANKS;
+        vibrate([12, 40, 18]);
+        this.$emit('show-alert', `${guest.name} te remercie : +${reward} écus !`);
+      } catch (error) {
+        this.$emit('show-alert', messageOf(error, 'Le visiteur n’a pas pu être comblé.'));
+      } finally {
+        this.busy = false;
+      }
+    },
+    // Demande de Récoltes : on ferme sa fiche et on lance une partie
+    visitorHarvest() {
+      this.visitorOpen = false;
+      this.startHarvest();
+    },
     // Habitant d'un bâtiment (vue du serveur), ou null
     friendAt(siteId) {
       return (this.state.villagers || []).find(v => v.id === siteId) || null;
@@ -3476,6 +3615,9 @@ export default {
 .world__friend-hearts span { color: var(--vellum-300); }
 .world__friend-dot { position: absolute; top: 6px; right: 8px; width: 9px; height: 9px; border-radius: 50%; background: #E8566A; box-shadow: 0 0 0 2px var(--vellum-50); }
 .world__friend-mood { position: absolute; right: -6px; bottom: -4px; display: grid; place-items: center; width: 22px; height: 22px; border-radius: 50%; background: var(--vellum-50); box-shadow: 0 1px 4px rgba(60, 40, 25, .25); font-size: 16px; }
+.world__friend.is-guest { background: #F1F8FD; box-shadow: inset 0 0 0 1px rgba(62, 110, 156, .25); }
+.world__friend-guest { font-size: 11px; font-weight: 800; color: #3E6E9C; }
+.world__friend-need.is-quest { background: #FFF6D8; box-shadow: inset 0 0 0 2px #E2A72E; }
 .world__friend-need { position: absolute; top: 4px; right: 4px; display: grid; place-items: center; width: 24px; height: 24px; border-radius: 50%; background: #FFF4E5; box-shadow: inset 0 0 0 2px #F0A84A; font-size: 15px; }
 .world__fill-all { width: 100%; margin-top: 8px; display: inline-flex; justify-content: center; align-items: center; gap: 8px; }
 .world__fill-cost { display: inline-flex; align-items: center; gap: 2px; }
