@@ -71,7 +71,7 @@ function hairOf(style, color, view) {
   if (view === 'se') out += `<path d="M-6.9,1.2 Q-6.6,4.6 -3.4,5.6 Q-4.6,2.4 -4.1,-0.4 Z" fill="${dark}"/>`;
   if (style === 'long') {
     if (view === 'front') out += `<path d="M-6.9,-0.4 Q-8,6.6 -6,9 L-4.6,7.6 Q-5.8,3.6 -5.4,-0.4 Z M6.9,-0.4 Q8,6.6 6,9 L4.6,7.6 Q5.8,3.6 5.4,-0.4 Z" fill="${color}"/>`;
-    else if (view === 'se') out += `<path d="M-6.9,0 Q-8.4,7.4 -4.8,10 Q-3.6,6 -4,1.4 Z" fill="${color}"/><path d="M5.8,-1.6 Q6.8,3.6 5.4,6.6 Q4.6,3 4.6,-1 Z" fill="${color}"/>`;
+    else if (view === 'se') out += `<path d="M-6.9,0 Q-8.4,7.4 -4.8,10 Q-3.6,6 -4,1.4 Z" fill="${color}"/>`;
     else out += `<path d="M-6.9,0 Q-7.8,8.8 0,10.4 Q7.6,8.8 6.9,0 Z" fill="${color}"${OUT}/>`;
   } else if (style === 'bun') {
     const at = { front: [0, -8.8], se: [-3.4, -7.4], ne: [-0.6, -6.6] }[view];
@@ -89,22 +89,34 @@ function hairOf(style, color, view) {
   } else if (style === 'braids') {
     const braid = (x, y, len) => Array.from({ length: len }, (_, i) => `<circle cx="${x}" cy="${f2(y + i * 2.2)}" r="${f2(1.6 - i * 0.12)}" fill="${color}"${OUT}/>`).join('');
     if (view === 'front') out += braid(-6.2, 1.6, 4) + braid(6.2, 1.6, 4);
-    else if (view === 'se') out += braid(-5.8, 2, 4) + braid(5, 3, 3);
+    else if (view === 'se') out += braid(-5.8, 2, 4);
     else out += braid(-3.4, 3.8, 4) + braid(3.4, 3.8, 4);
   }
   return out;
 }
+// Ce qui pend derrière la tête de trois quarts, du côté de l'œil du fond (dessiné avant la tête : seul ce qui dépasse
+// du contour se voit) : la mèche des cheveux longs, la tresse du fond
+function hairBackOf(style, color, view) {
+  if (view !== 'se') return '';
+  if (style === 'long') return `<path d="M4.6,-4.6 Q9.2,0.4 7.4,9.6 Q6.2,6.4 5.4,2 Z" fill="${color}"${OUT}/>`;
+  if (style === 'braids') return [0, 1, 2].map(i => `<circle cx="${f2(6.9 + i * 0.1)}" cy="${f2(3.4 + i * 2.2)}" r="${f2(1.5 - i * 0.12)}" fill="${color}"${OUT}/>`).join('');
+  return '';
+}
 // Visage selon la vue : yeux (fermés au clignement), joues, bouche, nez de profil. De trois quarts, les traits glissent
 // vers le côté où l'on regarde et l'autre joue s'ombre ; de dos, rien (l'oreille vient par-dessus les cheveux : earOf)
+// Les deux yeux de trois quarts (x dans le repère de la tête) : partout les mêmes (lunettes, loupes, joues)
+const SE_EYES = [0.5, 3.9];
 function faceOf(view, skin, blink) {
   const eye = (x, rx) => (blink ? ln([x - 0.9, 0.6], [x + 0.9, 0.6], '#2A2420', 0.75) : ell(x, 0.6, rx, 1.15, '#2A2420') + `<circle cx="${f2(x + 0.3)}" cy="0.2" r=".32" fill="#FFFFFF"/>`);
   if (view === 'ne') return '';
+  // De trois quarts (vers la droite) : l'œil de devant, puis celui du fond, un peu plus étroit et toujours dégagé du
+  // contour (rien ne passe devant lui : cheveux, verres, outils), le nez sur le contour, la bouche entre les deux
   if (view === 'se') {
-    return `<path d="M-2.6,-6.1 Q-7.4,-3 -6,3.6 Q-4.2,6.6 -1.4,6.5 Q-5,3 -2.6,-6.1 Z" fill="rgba(0,0,0,.06)"/>`
-      + eye(1.1, 0.8) + eye(4.5, 0.55)
-      + `<circle cx="-0.6" cy="2.8" r="1.1" fill="rgba(240,120,120,.35)"/><circle cx="5.3" cy="2.5" r=".7" fill="rgba(240,120,120,.3)"/>`
-      + `<path d="M6.3,0.6 Q8.1,1.6 6.5,2.8" fill="${skin}" stroke="rgba(60,40,25,.45)" stroke-width=".45"/>`
-      + `<path d="M2.4,3.5 Q3.5,4.2 4.6,3.3" fill="none" stroke="#7A4030" stroke-width=".5" stroke-linecap="round"/>`;
+    return `<path d="M-2.6,-6.1 Q-7.4,-3 -6,3.6 Q-4.2,6.6 -1.4,6.5 Q-5,3 -2.6,-6.1 Z" fill="rgba(0,0,0,.05)"/>`
+      + eye(SE_EYES[0], 0.82) + eye(SE_EYES[1], 0.66)
+      + `<circle cx="-1.3" cy="2.9" r="1.05" fill="rgba(240,120,120,.35)"/><circle cx="5" cy="3" r=".62" fill="rgba(240,120,120,.3)"/>`
+      + `<path d="M6.35,0.7 Q7.9,1.6 6.45,2.6" fill="${skin}" stroke="rgba(60,40,25,.45)" stroke-width=".45"/>`
+      + `<path d="M1.6,3.7 Q2.8,4.4 4,3.6" fill="none" stroke="#7A4030" stroke-width=".5" stroke-linecap="round"/>`;
   }
   return eye(-2.3, 0.8) + eye(2.3, 0.8)
     + `<circle cx="-3.8" cy="2.4" r="1.1" fill="rgba(240,120,120,.35)"/><circle cx="3.8" cy="2.4" r="1.1" fill="rgba(240,120,120,.35)"/>`
@@ -120,9 +132,8 @@ function earOf(view, skin) {
 // descend jusqu'à la ceinture (length : de la bouche à la ceinture, dans le repère de la tête)
 function extrasOf(look, view, length = 12) {
   if (view === 'ne') return '';
-  const dx = view === 'se' ? 2.6 : 0;
   let out = '';
-  const cheeks = view === 'se' ? [[-0.6, 2.8, 1], [5.3, 2.5, 0.6]] : [[-3.8, 2.4, 1], [3.8, 2.4, 1]];
+  const cheeks = view === 'se' ? [[-1.3, 2.9, 1], [5, 3, 0.6]] : [[-3.8, 2.4, 1], [3.8, 2.4, 1]];
   if (look.blush) out += cheeks.map(([x, y, r]) => `<circle cx="${x}" cy="${y}" r="${f2(1.5 * r)}" fill="rgba(226,84,84,.5)"/>`).join('');
   if (look.freckles) out += cheeks.map(([x, y, r]) => [[-0.7, -0.3], [0.2, 0.3], [0.8, -0.4]].map(([a, b]) => `<circle cx="${f2(x + a * r)}" cy="${f2(y + b)}" r=".28" fill="#B0643A"/>`).join('')).join('');
   if (look.paint) out += cheeks.map(([x, y, r]) => ln([x - 0.9 * r, y - 0.5], [x + 0.9 * r, y - 0.9], '#4E9A3A', 0.5) + ln([x - 0.9 * r, y + 0.4], [x + 0.9 * r, y], '#4E9A3A', 0.5)).join('');
@@ -140,20 +151,29 @@ function extrasOf(look, view, length = 12) {
       : `<path d="M-5.2,1.6 Q-5.6,6.6 0,8 Q5.6,6.6 5.2,1.6 Q3.4,4.6 0,4.6 Q-3.4,4.6 -5.2,1.6 Z" fill="${look.hair}"${OUT}/>`;
   }
   if (look.beard === 'full' || look.beard === 'mustache') {
-    out += `<path d="M${f2(-2.6 + dx)},2.9 Q${f2(dx)},1.8 ${f2(2.6 + dx)},2.9 Q${f2(dx)},3.7 ${f2(-2.6 + dx)},2.9 Z" fill="${shade(look.hair, 0.85)}"/>`;
+    out += view === 'se'
+      ? `<path d="M0.4,3.3 Q2.7,2.4 4.9,3.3 Q2.7,4.1 0.4,3.3 Z" fill="${shade(look.hair, 0.85)}"/>`
+      : `<path d="M-2.6,2.9 Q0,1.8 2.6,2.9 Q0,3.7 -2.6,2.9 Z" fill="${shade(look.hair, 0.85)}"/>`;
   }
   if (look.glasses) {
-    const lens = (x, rx) => ell(x, 0.6, rx, 1.6, 'rgba(220,240,255,.25)', ' stroke="#3D3A36" stroke-width=".55"');
+    // Des verres fins, sans teinte : l'œil reste net au travers ; de trois quarts, celui du fond se rétrécit
+    const lens = (x, rx) => ell(x, 0.6, rx, 1.55, 'none', ' stroke="#3D3A36" stroke-width=".45"');
+    const [a, b] = SE_EYES;
     out += view === 'se'
-      ? lens(1.1, 1.6) + lens(4.5, 1.1) + ln([2.7, 0.4], [3.4, 0.4], '#3D3A36', 0.5) + ln([-0.5, 0.3], [-2.4, 0.7], '#3D3A36', 0.5)
-      : lens(-2.3, 1.6) + lens(2.3, 1.6) + ln([-0.7, 0.4], [0.7, 0.4], '#3D3A36', 0.5);
+      ? lens(a, 1.55) + lens(b, 1.05) + ln([a + 1.55, 0.3], [b - 1.05, 0.3], '#3D3A36', 0.45) + ln([a - 1.55, 0.3], [-2.6, 0.6], '#3D3A36', 0.45)
+      : lens(-2.3, 1.55) + lens(2.3, 1.55) + ln([-0.75, 0.3], [0.75, 0.3], '#3D3A36', 0.45);
   }
   if (look.loupes) {
-    // Lunettes d'horloger : deux verres cerclés de laiton, et deux loupes empilées devant l'œil de devant
-    const ring = (x, y, r) => `<circle cx="${f2(x)}" cy="${f2(y)}" r="${f2(r)}" fill="rgba(220,240,255,.3)" stroke="#B08A3A" stroke-width=".55"/>`;
+    // Lunettes d'horloger : deux verres cerclés de laiton, et une loupe épaisse devant l'œil droit (celui de devant de
+    // trois quarts) qui le grossit : on le voit, plus grand, au travers. L'autre œil reste dégagé
+    const ring = (x, rx, ry, w = 0.55) => ell(x, 0.6, rx, ry, 'none', ` stroke="#B08A3A" stroke-width="${w}"`);
+    const loupe = x => ell(x, 0.6, 2.05, 2.05, '#FFF6E6', ' stroke="#8A6A2A" stroke-width=".7"')
+      + ell(x, 0.6, 1.2, 1.7, '#2A2420') + `<circle cx="${f2(x + 0.45)}" cy="0" r=".5" fill="#FFFFFF"/>`
+      + ell(x, 0.6, 2.05, 2.05, 'rgba(200,230,255,.18)') + `<path d="M${f2(x - 1.2)},-0.6 Q${f2(x - 0.6)},-1.2 ${f2(x + 0.2)},-1.3" fill="none" stroke="rgba(255,255,255,.7)" stroke-width=".35" stroke-linecap="round"/>`;
+    const [a, b] = SE_EYES;
     out += view === 'se'
-      ? ring(1.1, 0.6, 1.5) + ring(4.5, 0.6, 1.1) + ring(5.6, 0.7, 1.3) + ring(6.4, 0.8, 1) + ln([-0.4, 0.3], [-2.4, 0.7], '#B08A3A', 0.5)
-      : ring(-2.3, 0.6, 1.6) + ring(2.3, 0.6, 1.6) + ln([-0.7, 0.4], [0.7, 0.4], '#B08A3A', 0.5) + ring(2.6, 0.9, 1.25) + ring(2.9, 1.1, 0.9);
+      ? ring(b, 1.05, 1.55) + ln([a + 2.05, 0.3], [b - 1.05, 0.3], '#B08A3A', 0.45) + ln([a - 2.05, 0.3], [-2.6, 0.6], '#B08A3A', 0.45) + loupe(a)
+      : ring(2.3, 1.55, 1.55) + ln([-0.25, 0.3], [0.75, 0.3], '#B08A3A', 0.45) + loupe(-2.3);
   }
   return out;
 }
@@ -167,7 +187,7 @@ function hairBitsOf(look, view) {
   }
   if (look.twigs) {
     const twig = (x, y, a) => ln([x, y], [x + Math.cos(a) * 1.8, y + Math.sin(a) * 1.8], '#7A5230', 0.45) + ln([x + Math.cos(a) * 0.9, y + Math.sin(a) * 0.9], [x + Math.cos(a - 0.8) * 1.6, y + Math.sin(a - 0.8) * 1.6], '#7A5230', 0.35);
-    const spots = view === 'ne' ? [[-3.6, -4.6, -2.6], [2.4, -5.6, -0.6], [-0.6, -1.6, 0.4]] : [[-4.6, -5, -2.8], [2.6, -6.4, -0.4], [5.2, -3, 0.2]];
+    const spots = view === 'ne' ? [[-3.6, -4.6, -2.6], [2.4, -5.6, -0.6], [-0.6, -1.6, 0.4]] : [[-4.6, -5, -2.8], [2.6, -6.4, -0.4], [5.6, -5.2, -0.3]];
     out += spots.map(([x, y, a]) => twig(x, y, a)).join('');
     // La plume, couchée au-dessus de l'oreille
     const [px, py, rot] = view === 'se' ? [-4.6, -2.6, -70] : view === 'ne' ? [5.2, -2.8, 60] : [-5.4, -2.4, -60];
@@ -217,19 +237,20 @@ function hatOf(kind, view) {
 }
 
 /* ---------- Outils et accessoires (tenus par la main de devant ; ancrage de la main en (6,5 ; −8,5)) ---------- */
+// Au repos, un outil long penche vers l'extérieur ; au travail, il va vers l'avant : jamais devant le visage
 function toolOf(kind, up) {
   const a = up ? -1 : 0;
   switch (kind) {
     case 'can': return `<g transform="rotate(${up ? -30 : 0} 7 -9)">` + `<path d="M5,-11 L10,-11 L10,-6 L5,-6 Z" fill="#7FA6B8"${OUT}/>` + ln([10, -10], [13.5, -12.6], '#7FA6B8', 1.2) + `<path d="M6,-12 Q7.5,-14.4 9,-12" fill="none" stroke="#5E7F90" stroke-width=".9"/></g>` + (up ? [0, 1, 2].map(k => `<circle cx="${14 + k * 0.6}" cy="${-11 + k * 2}" r=".6" fill="#86C6E6"/>`).join('') : '');
-    case 'pick': return `<g transform="rotate(${up ? -55 : 0} 6.5 -8.5)">` + ln([6.5, -8.5], [6.5, -21], '#8B5631', 1.3) + `<path d="M1.4,-20.4 Q6.5,-24 11.6,-20.4 Q6.5,-22 1.4,-20.4 Z" fill="#8E99A4" stroke="#5A636C" stroke-width=".6"/></g>`;
-    case 'axe': return `<g transform="rotate(${up ? -60 : 0} 6.5 -8.5)">` + ln([6.5, -8.5], [6.5, -20], '#A9703F', 1.3) + `<path d="M6.5,-20 L10.6,-21.4 Q11.6,-18 10.6,-15.6 L6.5,-17 Z" fill="#B4BEC8" stroke="#68737E" stroke-width=".6"/></g>`;
+    case 'pick': return `<g transform="rotate(${up ? 50 : 18} 6.5 -8.5)">` + ln([6.5, -8.5], [6.5, -21], '#8B5631', 1.3) + `<path d="M1.4,-20.4 Q6.5,-24 11.6,-20.4 Q6.5,-22 1.4,-20.4 Z" fill="#8E99A4" stroke="#5A636C" stroke-width=".6"/></g>`;
+    case 'axe': return `<g transform="rotate(${up ? 50 : 18} 6.5 -8.5)">` + ln([6.5, -8.5], [6.5, -20], '#A9703F', 1.3) + `<path d="M6.5,-20 L10.6,-21.4 Q11.6,-18 10.6,-15.6 L6.5,-17 Z" fill="#B4BEC8" stroke="#68737E" stroke-width=".6"/></g>`;
     case 'bucket': return `<path d="M3.8,${-6 + a} L9.4,${-6 + a} L8.6,${-0.8 + a} L4.6,${-0.8 + a} Z" fill="#B98552"${OUT}/>` + `<path d="M4,${-6 + a} Q6.6,${-10.6 + a} 9.2,${-6 + a}" fill="none" stroke="#5E3A22" stroke-width=".7"/>` + ell(6.6, -5.9 + a, 2.6, 0.7, '#86C6E6');
     case 'rod': return up
       ? ln([6.5, -9], [15, -34], '#8B5631', 0.9) + `<path d="M15,-34 Q18,-24 16,-12" fill="none" stroke="rgba(255,255,255,.8)" stroke-width=".4"/>`
       : ln([6.5, -9], [12, -30], '#8B5631', 0.9) + `<path d="M12,-30 Q14,-20 13,-14" fill="none" stroke="rgba(255,255,255,.8)" stroke-width=".4"/>`;
-    case 'hammer': return `<g transform="rotate(${up ? -70 : 0} 6.5 -8.5)">` + ln([6.5, -8.5], [6.5, -17], '#8B5631', 1.3) + `<rect x="3.4" y="-19.6" width="6.2" height="3" rx=".6" fill="#68737E"/></g>`;
-    case 'ladle': return `<g transform="rotate(${up ? -35 : 0} 6.5 -8.5)">` + ln([6.5, -8.5], [8.8, -18.4], '#C87533', 1.1) + ell(9.4, -19.2, 2.4, 1.6, '#C87533', ' stroke="#8A4A1E" stroke-width=".5"') + ell(9.4, -19.6, 1.6, 0.7, '#E09A5A') + `</g>`;
-    case 'spyglass': return `<g transform="rotate(${up ? -38 : 0} 6.5 -8.5)">` + ln([6.5, -8.5], [10.4, -13.6], '#C9A043', 1.6) + ln([10.2, -13.4], [13.4, -17.6], '#D9B85A', 2.1)
+    case 'hammer': return `<g transform="rotate(${up ? 55 : 20} 6.5 -8.5)">` + ln([6.5, -8.5], [6.5, -17], '#8B5631', 1.3) + `<rect x="3.4" y="-19.6" width="6.2" height="3" rx=".6" fill="#68737E"/></g>`;
+    case 'ladle': return `<g transform="rotate(${up ? 42 : 20} 6.5 -8.5)">` + ln([6.5, -8.5], [8.8, -18.4], '#C87533', 1.1) + ell(9.4, -19.2, 2.4, 1.6, '#C87533', ' stroke="#8A4A1E" stroke-width=".5"') + ell(9.4, -19.6, 1.6, 0.7, '#E09A5A') + `</g>`;
+    case 'spyglass': return `<g transform="rotate(${up ? 14 : 0} 6.5 -8.5)">` + ln([6.5, -8.5], [10.4, -13.6], '#C9A043', 1.6) + ln([10.2, -13.4], [13.4, -17.6], '#D9B85A', 2.1)
       + ln([12.9, -16.9], [13.9, -18.3], '#8A6A2A', 2.3) + ln([8.3, -10.9], [8.9, -11.7], '#8A6A2A', 1.8) + `</g>`;
     case 'dowsing': {
       // Baguette de noisetier fourchue : les deux branches dans la main, la pointe en avant ; au travail, elle plonge
@@ -239,8 +260,8 @@ function toolOf(kind, up) {
     }
     case 'fagot': return `<g transform="rotate(${up ? -12 : 0} 6.5 -8.5)">` + [[-0.9, '#8B5631'], [0, '#A9703F'], [0.9, '#7A4A28']].map(([d, c]) => ln([2.6, -6.6 + d], [12.6, -10.4 + d], c, 0.9)).join('')
       + ln([7.2, -10.2], [7.8, -6.8], '#C8A86A', 0.7) + ln([11.6, -10.6], [13.4, -12.6], '#8B5631', 0.5) + `<circle cx="13.6" cy="-12.8" r=".7" fill="#7EC45B"/></g>`;
-    case 'mallet': return `<g transform="rotate(${up ? -70 : 0} 6.5 -8.5)">` + ln([6.5, -8.5], [6.5, -15.6], '#8B5631', 1.2) + `<rect x="3.6" y="-18.6" width="5.8" height="3.4" rx="1.4" fill="#A9703F"${OUT}/></g>`;
-    case 'windkey': return `<g transform="rotate(${up ? -50 : 0} 6.5 -8.5)">` + ln([6.5, -8.5], [10.4, -12.4], '#C9A043', 0.9)
+    case 'mallet': return `<g transform="rotate(${up ? 55 : 22} 6.5 -8.5)">` + ln([6.5, -8.5], [6.5, -15.6], '#8B5631', 1.2) + `<rect x="3.6" y="-18.6" width="5.8" height="3.4" rx="1.4" fill="#A9703F"${OUT}/></g>`;
+    case 'windkey': return `<g transform="rotate(${up ? 40 : 0} 6.5 -8.5)">` + ln([6.5, -8.5], [10.4, -12.4], '#C9A043', 0.9)
       + ell(6.2, -8.2, 1.9, 1, '#D9B85A', ' stroke="#8A6A2A" stroke-width=".35" transform="rotate(45 6.2 -8.2)"') + `<rect x="9.8" y="-13.4" width="1.6" height="1.6" fill="#8A6A2A" transform="rotate(45 10.6 -12.6)"/></g>`;
     case 'tin': return `<rect x="3.6" y="${-8.6 + a * 2}" width="6.2" height="4.4" rx=".6" fill="#8E99A4"${OUT}/>` + `<rect x="3.4" y="${-9.4 + a * 2}" width="6.6" height="1.3" rx=".4" fill="#6E7884"/>`
       + `<circle cx="6.7" cy="${-6.4 + a * 2}" r=".8" fill="#E8C46A"/>` + (up ? [0, 1, 2].map(k => `<circle cx="${f2(10.6 + k * 0.5)}" cy="${f2(-8 + k * 1.8)}" r=".4" fill="#6B4A2E"/>`).join('') : '');
@@ -371,7 +392,7 @@ export function villagerSprite(look, { pose = 'idle', view, back = false, frame 
   const blink = pose === 'idle' && f === 1;
   // De dos, la nuque entre les cheveux et le col
   const neck = v === 'ne' ? `<rect x="${f2(hx - 1.6)}" y="${f2(hy + S.head * 0.55)}" width="3.2" height="${f2(topY - hy - S.head * 0.4)}" rx="1" fill="${shade(look.skin, 0.92)}"/>` : '';
-  const head = neck + `<circle cx="${f2(hx)}" cy="${f2(hy)}" r="${f2(S.head)}" fill="${look.skin}"${OUT}/>`
+  const head = neck + headPart(hx, hy, k, hairBackOf(look.style || 'short', look.hair, v)) + `<circle cx="${f2(hx)}" cy="${f2(hy)}" r="${f2(S.head)}" fill="${look.skin}"${OUT}/>`
     + headPart(hx, hy, k, faceOf(v, look.skin, blink) + hairOf(look.style || 'short', look.hair, v) + hairBitsOf(look, v) + earOf(v, look.skin) + extrasOf(look, v, (hipY - 0.6 - hy) / k) + hatOf(look.hat, v));
   // Outil dans la main de devant (pas avec le parapluie) ; lanterne dans l'autre ; parapluie au-dessus
   const held = umbrella || waving ? '' : at(frontHand[0] - 6.5, frontHand[1] + 8.5, toolOf(look.tool, working));
