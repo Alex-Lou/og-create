@@ -61,6 +61,8 @@
           @touchend.prevent
           @wheel.prevent="onWheel"
         ></canvas>
+        <!-- Compteur d'images (« ?perf ») -->
+        <p v-if="perfText" class="world__perf" aria-hidden="true">{{ perfText }}</p>
         <!-- Coffres : celui du jour et ceux qui attendent (pastille) -->
         <button
           v-if="state && state.chests"
@@ -694,6 +696,7 @@ import longpress, { HOLD_MS } from '@/directives/longpress';
 import { roman } from '@/utils/roman';
 import { P } from '@/world/iso';
 import { phaseAt, forcedPhase, drawSea, drawCloudShadows, drawClouds, drawTint, drawWeather, glow, fireflies, hash } from '@/world/scene';
+import { perfWanted, perfMeter } from '@/world/perf';
 import { clockText } from '@/world/sky';
 
 const FRAME_MS = 33; // ~30 images/s : l'île respire, sans user la batterie
@@ -828,6 +831,8 @@ export default {
       sending: false,
       runResult: null,
       runError: '',
+      // Texte du compteur d'images (« ?perf »)
+      perfText: '',
       // Coffre tombé pendant la Récolte (ouvert au retour sur l'île) ; liste des coffres ouverte ; coffre en cours
       // d'ouverture : { chest, streak, note, art, wearable } ; coffres ouverts d'un coup (« Tout ouvrir »)
       runChest: null,
@@ -1105,6 +1110,8 @@ export default {
     this.moreRaf = 0;
     // Heure ou temps imposés (essais), journée jouée en accéléré, ciel de la dernière image
     this.forced = forcedPhase();
+    // Compteur d'images (« ?perf » dans l'adresse) : mesure du temps de dessin, pour les essais sur téléphone
+    this.perf = perfWanted() ? perfMeter() : null;
     this.warp = null;
     this.phase = null;
     this.clockAt = 0;
@@ -1621,7 +1628,13 @@ export default {
       this.raf = 0;
       if (now - this.lastFrame >= FRAME_MS) {
         this.lastFrame = now;
+        const start = this.perf ? performance.now() : 0;
         this.draw(now);
+        if (this.perf) {
+          this.perf.frame(now, performance.now() - start);
+          const text = this.perf.text(now, this.cam ? this.cam.s : 0);
+          if (text) this.perfText = text;
+        }
       }
       this.syncLoop();
     },
@@ -4189,6 +4202,10 @@ export default {
 
 .world__stage { position: relative; border-radius: 22px; overflow: hidden; }
 .world__canvas { display: block; width: 100%; touch-action: none; cursor: grab; }
+.world__perf {
+  position: absolute; left: 10px; top: 62px; max-width: calc(100% - 80px); margin: 0; padding: 3px 8px; border-radius: 8px; white-space: nowrap;
+  background: rgba(20, 14, 10, .7); color: #F6EEDF; font: 600 11px/1.3 ui-monospace, monospace; pointer-events: none;
+}
 .world__chest-btn {
   position: absolute; left: 10px; top: 10px; display: grid; place-items: center;
   width: 46px; height: 46px; border: 0; border-radius: 14px; background: rgba(30, 22, 16, .55); cursor: pointer;
