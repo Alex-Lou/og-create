@@ -78,6 +78,14 @@ export default {
   worldItemUndo(item) {
     return http.post('/play/world/item/undo', { item }).then(response => response.data);
   },
+  // Annexe d'un bâtiment : pose de l'exemplaire suivant sur une case libre autour de lui → { built, coins, world }
+  worldAnnex(annex, x, y) {
+    return http.post('/play/world/annex', { annex, x, y }).then(response => response.data);
+  },
+  // Déplacement gratuit d'une annexe vers une autre case autorisée : vue de l'île
+  worldAnnexMove(x, y, toX, toY) {
+    return http.post('/play/world/annex/move', { x, y, toX, toY }).then(response => response.data);
+  },
   // Skin porté par un bâtiment (vide : apparence d'origine) : vue de l'île
   worldSkin(site, skin) {
     return http.post('/play/world/skin', { site, skin }).then(response => response.data);

@@ -1797,3 +1797,6 @@ export function itemThumb(id, level) {
   const front = item.layers.map((layer, k) => (layer.back ? '' : bodyOf(id, k, layer, level, 0))).join('');
   return sprite(back + front, { x, y, w, h });
 }
+
+// Outils de dessin partagés avec les annexes (annexSprites.js) : même trait, mêmes matières, mêmes bêtes
+export { tools, ln, poly, ell, dot, wave, star, bird, bucket, IRON, DARK_IRON, COPPER, STRAW, STUMP, BARN, OUT, f2 };

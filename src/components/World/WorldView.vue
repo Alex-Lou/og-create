@@ -82,6 +82,10 @@
           Touche une case libre pour y poser {{ moving }}.
           <button type="button" class="world__link" @click="moving = null">Annuler</button>
         </p>
+        <p v-else-if="annexPlacing && placingAnnex" class="world__banner" role="status">
+          {{ annexBanner }}
+          <button type="button" class="world__link" @click="cancelAnnex">Annuler</button>
+        </p>
 
         <!-- Appui long ailleurs : une bulle dit ce que c'est et ce que fait un toucher -->
         <transition name="world-tip">
@@ -97,6 +101,13 @@
           <span class="world__menu-name">{{ selected.element }}</span>
           <button type="button" class="world__menu-btn" @click="startMove">Déplacer</button>
           <button type="button" class="world__menu-btn world__menu-btn--quiet" @click="removeSelected">Retirer</button>
+        </div>
+
+        <!-- Pose d'une annexe : la case dorée choisie, son prix ; poser ici ou choisir une autre case -->
+        <div v-if="annexConfirm && placingAnnex && placingAnnex.next" class="world__menu" :style="annexConfirmStyle" role="dialog" :aria-label="`Poser ${placingAnnex.name}`">
+          <span class="world__menu-name">{{ placingAnnex.name }} · {{ placingAnnex.next.coins }}<span class="world__coin world__coin--small" aria-hidden="true"></span></span>
+          <button type="button" class="world__menu-btn" :disabled="busy" @click="confirmAnnex">Poser ici</button>
+          <button type="button" class="world__menu-btn world__menu-btn--quiet" @click="annexConfirm = null">Autre case</button>
         </div>
       </div>
 
@@ -128,6 +139,9 @@
                 Évolution<span v-if="canBuild(site)" class="world__tab-dot" aria-label="prête"></span>
               </button>
               <button v-if="site.shop && site.shop.length" type="button" role="tab" :aria-selected="String(siteTab === 'shop')" :class="['world__tab', { 'is-on': siteTab === 'shop' }]" @click="siteTab = 'shop'">Boutique</button>
+              <button v-if="site.annexes && site.annexes.length" type="button" role="tab" :aria-selected="String(siteTab === 'annexes')" :class="['world__tab', { 'is-on': siteTab === 'annexes' }]" @click="siteTab = 'annexes'">
+                Annexes<span v-if="annexReady(site, state.stock, coins)" class="world__tab-dot" aria-label="à poser"></span>
+              </button>
             </div>
 
             <div v-if="siteTab === 'overview'" class="world__panel">
@@ -142,9 +156,14 @@
                   <span>Bonus de la boutique</span>
                   <strong>+{{ site.bonus }} % de production</strong>
                 </div>
+                <div v-if="annexYield(site).count" class="world__prod-row">
+                  <span>Annexes · {{ annexYield(site).count }}</span>
+                  <strong v-if="annexYield(site).rate">+{{ annexYield(site).rate }} <ElementGlyph :glyph="GLYPH[site.produce]" /> · +{{ annexYield(site).earn }} écus par heure</strong>
+                  <strong v-else>Réserve agrandie</strong>
+                </div>
                 <div class="world__prod-row">
                   <span>Réserve</span>
-                  <strong>{{ state.capHours }} h de production au plus</strong>
+                  <strong>{{ site.capHours || state.capHours }} h de production au plus</strong>
                 </div>
                 <div class="world__prod-row is-pending">
                   <span>À récolter</span>
@@ -208,6 +227,9 @@
                 </div>
               </transition>
             </div>
+
+            <!-- Annexes : champs, filons, viviers… à poser autour du bâtiment (la case se choisit sur la carte) -->
+            <AnnexPanel v-else-if="siteTab === 'annexes'" :site="site" :stock="state.stock" :coins="coins" :busy="busy" @place="annex => startAnnex(site, annex)" />
 
             <ol v-else class="world__steps">
               <li v-for="(step, i) in site.levels" :key="step.name" :class="['world__step', `is-${stepState(site, i)}`]">
@@ -353,6 +375,9 @@
       @close="sheet = null"
     />
 
+    <!-- Fiche d'une annexe posée (appui long) : la déplacer, ou ouvrir son bâtiment -->
+    <AnnexSheet v-if="sheetAnnex" v-bind="sheetAnnex" :busy="busy" @close="annexSheet = null" @move="moveFromSheet" @site="siteFromSheet" />
+
     <!-- Premier achat d'une sorte d'article : son mode d'emploi, et de quoi aller le voir sur l'île -->
     <GModal v-if="guideItem" eyebrow="Mode d’emploi" :title="guideItem.name" :width="400" @close="closeGuide">
       <dl class="world__guide">
@@ -395,6 +420,10 @@ import ShopItemSheet from './ShopItemSheet.vue';
 import IslandClock from './IslandClock.vue';
 import ChestList from './ChestList.vue';
 import ChestReveal from './ChestReveal.vue';
+import AnnexPanel from './AnnexPanel.vue';
+import AnnexSheet from './AnnexSheet.vue';
+import { annexLayers, annexLight } from '@/world/annexSprites';
+import { annexReady, annexYield, variantsOf } from '@/world/annexes';
 import { BOTTLE, noteOf } from '@/world/chest';
 import GModal from '@/components/ui/GModal.vue';
 import { guideOf, guideKind } from '@/world/itemGuide';
@@ -505,7 +534,7 @@ let lastView = null;
 // d'animation sont non réactifs et s'arrêtent quand l'onglet est caché ou le composant démonté.
 export default {
   name: 'WorldView',
-  components: { ElementGlyph, ElementTile, HarvestGame, ShopItemSheet, BrumeWisp, IslandClock, GModal, ChestList, ChestReveal },
+  components: { ElementGlyph, ElementTile, HarvestGame, ShopItemSheet, BrumeWisp, IslandClock, GModal, ChestList, ChestReveal, AnnexPanel, AnnexSheet },
   directives: { longpress },
   props: {
     discoveredElements: { type: Array, required: true },
@@ -556,7 +585,12 @@ export default {
       skyClock: null,
       warping: false,
       // Fiche de Brume (quête active) ouverte
-      questOpen: false
+      questOpen: false,
+      // Annexe en cours de pose ou de déplacement : { siteId, annexId, from: { x, y } | null } ; case dorée choisie, en
+      // attente de confirmation : { x, y, px, py } ; fiche d'une annexe posée ouverte : { x, y }
+      annexPlacing: null,
+      annexConfirm: null,
+      annexSheet: null
     };
   },
   computed: {
@@ -579,6 +613,31 @@ export default {
     },
     guideText() {
       return guideOf(this.guideItem, this.guideSite);
+    },
+    // Annexe en cours de pose : son bâtiment et sa carte du catalogue
+    placingSite() {
+      return this.annexPlacing && this.state ? this.state.sites.find(s => s.id === this.annexPlacing.siteId) || null : null;
+    },
+    placingAnnex() {
+      return this.placingSite ? this.placingSite.annexes.find(a => a.id === this.annexPlacing.annexId) || null : null;
+    },
+    annexBanner() {
+      const name = this.placingAnnex ? this.placingAnnex.name : '';
+      return this.annexPlacing && this.annexPlacing.from ? `Touche une case dorée pour y déplacer : ${name}.` : `Touche une case dorée pour poser : ${name}.`;
+    },
+    annexConfirmStyle() {
+      const c = this.annexConfirm;
+      if (!c || !this.geo) return {};
+      return { left: `${Math.max(110, Math.min(this.geo.width - 110, c.px))}px`, top: `${Math.max(56, c.py - 24)}px` };
+    },
+    // Fiche d'une annexe posée : sa carte du catalogue, son bâtiment, son n° d'exemplaire
+    sheetAnnex() {
+      if (!this.annexSheet || !this.state) return null;
+      const { x, y } = this.annexSheet;
+      const row = (this.state.annexes || []).find(a => a.x === x && a.y === y);
+      const site = row && this.state.sites.find(s => s.id === row.site);
+      const annex = site && site.annexes.find(a => a.id === row.annex);
+      return annex ? { annex, site, variant: this.annexVariants.get(`${x},${y}`) || 0 } : null;
     },
     // Quête active de Brume (null : toutes faites)
     quest() {
@@ -610,7 +669,8 @@ export default {
       if (!this.state) return 'Ton île';
       const built = this.state.sites.filter(s => s.level).map(s => s.name);
       const names = this.state.tiles.map(t => t.element);
-      return `Ton île : ${built.join(', ')} bâtis${names.length ? ` ; décorations : ${names.join(', ')}` : ''}.`;
+      const annexes = (this.state.annexes || []).length;
+      return `Ton île : ${built.join(', ')} bâtis${annexes ? ` ; ${annexes} annexe${annexes > 1 ? 's' : ''}` : ''}${names.length ? ` ; décorations : ${names.join(', ')}` : ''}.`;
     }
   },
   watch: {
@@ -670,6 +730,8 @@ export default {
     // Ce qu'on peut toucher dans la dernière image : bêtes sur l'île, articles posés ; ronds dans l'eau ; bulle d'info
     this.landHits = [];
     this.itemHits = [];
+    // Variante de chaque annexe posée (« x,y » → n° d'exemplaire : ce qui pousse dans un champ…)
+    this.annexVariants = new Map();
     // Vie ambiante (village.js) et lanternes des habitants dans la dernière image
     this.village = null;
     this.villageLights = [];
@@ -731,6 +793,8 @@ export default {
         this.guest = false;
         this.loadError = false;
         guide.tip('island');
+        // Premier bâtiment au palier II : ses annexes s'ouvrent
+        if (state.sites.some(s => s.level >= 2 && !s.locked)) guide.tip('annexes');
       } catch (error) {
         if (this.gone) return;
         if ([401, 402].includes(error.response?.status)) {
@@ -771,13 +835,14 @@ export default {
         this.site = state.sites.find(s => s.id === lastView.site) || null;
         this.siteTab = lastView.siteTab || 'overview';
       }
+      this.annexVariants = variantsOf(state.annexes || []);
       this.props = this.natureOf(state);
       this.perches = this.perchesOf(state);
       this.bottleSpot = this.bottleSpotOf(state);
       this.shore = this.shoreOf(state);
       // Habitants et bêtes : ils vivent dans les quartiers à soi, autour des bâtiments bâtis
       this.village = villageOf({
-        n: state.size, M, sites: state.sites, tiles: state.tiles, props: this.props,
+        n: state.size, M, sites: state.sites, tiles: state.tiles, props: this.props, annexes: state.annexes || [],
         owned: new Set(state.map.zones.map((z, i) => (z.owned ? i : -1)).filter(i => i >= 0))
       });
       this.state = state;
@@ -791,6 +856,8 @@ export default {
       this.loadedAt = Date.now();
       this.clock = this.loadedAt;
       if (this.site) this.site = state.sites.find(s => s.id === this.site.id) || null;
+      // Pose d'annexe en cours : abandonnée si le bâtiment n'a plus de case libre
+      if (this.annexPlacing && !(this.placingSite && this.placingSite.spots.length)) this.cancelAnnex();
       this.$nextTick(() => {
         this.setup();
         this.draw(performance.now());
@@ -846,7 +913,7 @@ export default {
     natureOf(state) {
       const n = state.size;
       const M = this.M;
-      const taken = new Set(state.tiles.map(t => t.y * n + t.x));
+      const taken = new Set([...state.tiles, ...(state.annexes || [])].map(t => t.y * n + t.x));
       state.sites.forEach(site => {
         for (let dy = 0; dy < site.h; dy++) for (let dx = 0; dx < site.w; dx++) taken.add((site.y + dy) * n + site.x + dx);
       });
@@ -1160,7 +1227,7 @@ export default {
         ctx.stroke();
       }
       if (this.moving) {
-        const occupied = new Set(this.state.tiles.map(tile => tile.y * n + tile.x));
+        const occupied = new Set([...this.state.tiles, ...(this.state.annexes || [])].map(tile => tile.y * n + tile.x));
         ctx.setLineDash([4 / s, 3 / s]);
         ctx.strokeStyle = 'rgba(255, 250, 220, .9)';
         ctx.lineWidth = 1.5 / s;
@@ -1174,6 +1241,20 @@ export default {
           }
         }
         ctx.setLineDash([]);
+      }
+      // Pose d'une annexe : les cases autorisées battent en doré, la case choisie est cerclée
+      if (this.annexPlacing && this.placingSite) {
+        const pulse = 0.5 + 0.5 * Math.sin(t * 4);
+        for (const spot of this.placingSite.spots) {
+          const c = this.ground(spot.x, spot.y);
+          const chosen = this.annexConfirm && this.annexConfirm.x === spot.x && this.annexConfirm.y === spot.y;
+          this.diamond(ctx, c.x, c.y, TW, TH);
+          ctx.fillStyle = chosen ? 'rgba(242, 192, 75, .62)' : `rgba(242, 192, 75, ${(0.2 + 0.18 * pulse).toFixed(3)})`;
+          ctx.fill();
+          ctx.strokeStyle = chosen ? '#FFF4C8' : 'rgba(255, 236, 170, .9)';
+          ctx.lineWidth = (chosen ? 2.6 : 1.4) / s;
+          ctx.stroke();
+        }
       }
       for (const cell of [this.selected, this.picking]) {
         if (!cell) continue;
@@ -1231,6 +1312,7 @@ export default {
       const standing = [
         ...this.state.sites.map(site => ({ depth: site.x + site.y + site.w, site })),
         ...this.state.tiles.filter(tile => seen(tile.x, tile.y)).map(tile => ({ depth: tile.x + tile.y, tile })),
+        ...(this.state.annexes || []).filter(annex => seen(annex.x, annex.y)).map(annex => ({ depth: annex.x + annex.y, annex })),
         ...this.props.filter(prop => seenAt(prop.wx, prop.wy)).map(prop => ({ depth: prop.depth, prop })),
         ...[...this.critters(t), ...life.standing].filter(critter => seen(critter.x, critter.y))
           .map(critter => ({ depth: critter.depth ?? critter.x + critter.y, critter })),
@@ -1245,6 +1327,9 @@ export default {
         else if (item.tile) {
           this.drawTile(ctx, item.tile, now, t, repaint);
           this.occlude(ctx, item.tile.x, item.tile.y);
+        } else if (item.annex) {
+          this.drawAnnex(ctx, item.annex, t, now, repaint);
+          this.occlude(ctx, item.annex.x, item.annex.y);
         } else if (item.prop) {
           this.drawProp(ctx, item.prop, t, repaint, now);
           this.occlude(ctx, item.prop.x, item.prop.y);
@@ -1914,6 +1999,16 @@ export default {
           glow(ctx, c.x + x, c.y + y, r, lit * strength * (0.9 + 0.1 * Math.sin(t * 3 + x)), color);
         }
       }
+      // Annexes : lanternes, braises, four et haut fourneau (le feu brûle même de jour)
+      for (const annex of this.state.annexes || []) {
+        const light = annexLight(annex.annex);
+        if (!light) continue;
+        const [u, v, z, r, color, fire] = light;
+        const c = this.ground(annex.x, annex.y);
+        const [lx, ly] = P(u, v, z);
+        const flicker = fire ? 0.85 + 0.15 * Math.sin(t * 13 + annex.x) * Math.sin(t * 7.3) : 0.95 + 0.05 * Math.sin(t * 2 + annex.y);
+        glow(ctx, c.x + lx, c.y + ly, r, (fire ? Math.max(0.3, lit) : litFor(annex.x * 13 + annex.y)) * flicker, color);
+      }
       // Lanternes des habitants qui rentrent le soir
       for (const l of this.villageLights) {
         const p = this.ground(l.x, l.y);
@@ -1975,6 +2070,29 @@ export default {
       glyph(ctx, tile.emoji, c.x, c.y - TW * 0.42 + bob, TW * 0.56 * scale, repaint);
     },
 
+    // Annexe posée sur sa case : elle surgit à la pose, sautille au toucher, s'efface à demi pendant qu'on la déplace
+    drawAnnex(ctx, annex, t, now, repaint) {
+      const c = this.ground(annex.x, annex.y);
+      const key = `annex:${annex.x},${annex.y}`;
+      const started = this.pops.get(key);
+      let scale = 1;
+      if (started) {
+        const k = Math.min(1, (now - started) / 450);
+        const back = 1.7;
+        scale = 1 + (back + 1) * Math.pow(k - 1, 3) + back * Math.pow(k - 1, 2);
+        if (k >= 1) this.pops.delete(key);
+      }
+      const tapped = this.scared.get(key);
+      const hop = tapped && t - tapped.at < 0.5 ? Math.sin(((t - tapped.at) / 0.5) * Math.PI) * 5 : 0;
+      const from = this.annexPlacing && this.annexPlacing.from;
+      ctx.save();
+      ctx.translate(c.x, c.y - hop);
+      if (scale !== 1) ctx.scale(scale, scale);
+      if (from && from.x === annex.x && from.y === annex.y) ctx.globalAlpha = 0.45;
+      for (const layer of annexLayers(annex.annex, this.annexVariants.get(`${annex.x},${annex.y}`) || 0, t)) drawSprite(ctx, layer.key, layer.make, 0, 0, repaint);
+      ctx.restore();
+    },
+
     /* ---------- Gestes : glisser, pincer, toucher ---------- */
     point(event) {
       const rect = this.$refs.canvas.getBoundingClientRect();
@@ -1995,11 +2113,12 @@ export default {
     // d'un article posé ; partout ailleurs, une bulle dit ce que c'est et ce que fait un toucher
     onHold() {
       const gesture = this.gesture;
-      if (!gesture || !gesture.start || gesture.moved > TAP_SLOP || this.moving || this.busy) return;
+      if (!gesture || !gesture.start || gesture.moved > TAP_SLOP || this.moving || this.annexPlacing || this.busy) return;
       const hit = this.hitAt(gesture.start.x, gesture.start.y);
       if (hit && hit.brume) this.questOpen = true;
       else if (hit && hit.tile) this.openTileMenu(hit.tile);
       else if (hit && hit.item) this.describeItem(hit.site, hit.item);
+      else if (hit && hit.annex) this.annexSheet = { x: hit.annex.x, y: hit.annex.y };
       else this.showTip(gesture.start.x, gesture.start.y, this.tipOf(hit, gesture.start));
       gesture.held = true;
       vibrate(12);
@@ -2029,6 +2148,7 @@ export default {
       if (this.gesture.moved > TAP_SLOP) {
         clearTimeout(this.holdTimer);
         this.selected = null;
+        this.annexConfirm = null;
         this.cam.x -= (p.x - prev.x) / this.cam.s;
         this.cam.y -= (p.y - prev.y) / this.cam.s;
         this.clampCam();
@@ -2081,7 +2201,8 @@ export default {
       // Zones de toucher généreuses : tout le volume dessiné du bâtiment, pas seulement sa base
       const candidates = [
         ...this.state.sites.map(site => ({ site, depth: site.x + site.y + site.w, c: this.centerOf(site), r: TW * 0.49 * site.w, h: TW * 0.875 * site.w, below: TH * 0.525 * site.w })),
-        ...this.state.tiles.map(tile => ({ tile, depth: tile.x + tile.y, c: this.ground(tile.x, tile.y), r: TW * 0.4, h: TW * 0.95 }))
+        ...this.state.tiles.map(tile => ({ tile, depth: tile.x + tile.y, c: this.ground(tile.x, tile.y), r: TW * 0.4, h: TW * 0.95 })),
+        ...(this.state.annexes || []).map(annex => ({ annex, depth: annex.x + annex.y, c: this.ground(annex.x, annex.y), r: TW * 0.44, h: TW * 1.1 }))
       ].sort((p, q) => q.depth - p.depth);
       const hit = candidates.find(o => Math.abs(w.x - o.c.x) < o.r && w.y > o.c.y - o.h && w.y < o.c.y + (o.site ? o.below : TH * 0.3));
       if (hit) return hit;
@@ -2092,6 +2213,11 @@ export default {
       return this.lockedAt(tile.x, tile.y) ? { zone: this.zoneAt(tile.x, tile.y) } : { cell: tile };
     },
     tap(px, py) {
+      // Pose ou déplacement d'une annexe : seule compte la case, dorée ou non
+      if (this.annexPlacing) {
+        this.tapAnnexSpot(px, py);
+        return;
+      }
       const hit = this.hitAt(px, py);
       if (this.moving) {
         const cell = hit && hit.cell;
@@ -2138,6 +2264,12 @@ export default {
         // Un article posé sautille et dit son nom (appui long : sa fiche et son mode d'emploi)
         this.scared.set(`item:${hit.site.id}:${hit.item.id}`, { at: performance.now() / 1000 });
         this.showTip(px, py, { title: hit.item.name, text: hit.item.effect, hint: 'Appui long : sa fiche' });
+        vibrate(6);
+      } else if (hit.annex) {
+        // Une annexe sautille et dit ce qu'elle rapporte (appui long : sa fiche)
+        const { annex } = hit;
+        this.scared.set(`annex:${annex.x},${annex.y}`, { at: performance.now() / 1000 });
+        this.showTip(px, py, this.annexTip(annex));
         vibrate(6);
       } else if (hit.zone) {
         this.zone = hit.zone;
@@ -2544,6 +2676,118 @@ export default {
       this.clampCam();
       if (item && item.kind !== 'skin') this.scared.set(`item:${site.id}:${item.id}`, { at: performance.now() / 1000 });
       this.draw(performance.now());
+    },
+    /* ---------- Annexes ---------- */
+    annexReady,
+    annexYield,
+    // Ce que dit la bulle d'une annexe touchée
+    annexTip(annex) {
+      const site = this.state.sites.find(s => s.id === annex.site);
+      const entry = site && site.annexes.find(a => a.id === annex.annex);
+      return entry ? { title: entry.name, text: `${entry.effect} · ${site.name}`, hint: 'Appui long : sa fiche' } : null;
+    },
+    // La carte se recentre sur un bâtiment, assez près pour voir ses cases autour
+    focusOn(site) {
+      const c = this.centerOf(site);
+      this.cam.x = c.x;
+      this.cam.y = c.y - 10;
+      this.cam.s = Math.max(this.cam.s, 1.15);
+      this.clampCam();
+      this.draw(performance.now());
+    },
+    // « Poser » dans l'onglet Annexes : la fiche se ferme, les cases autorisées s'allument autour du bâtiment
+    startAnnex(site, annex) {
+      this.site = null;
+      this.annexSheet = null;
+      this.annexConfirm = null;
+      this.annexPlacing = { siteId: site.id, annexId: annex.id, from: null };
+      vibrate(8);
+      this.$nextTick(() => this.focusOn(site));
+    },
+    cancelAnnex() {
+      this.annexPlacing = null;
+      this.annexConfirm = null;
+      this.draw(performance.now());
+    },
+    // Toucher pendant la pose : une case dorée demande confirmation (déplacement : elle s'y pose aussitôt)
+    tapAnnexSpot(px, py) {
+      const cell = this.tileAt(px, py);
+      const site = this.placingSite;
+      if (!site || !cell || !site.spots.some(spot => spot.x === cell.x && spot.y === cell.y)) {
+        this.annexConfirm = null;
+        this.$emit('show-alert', `Choisis une case dorée autour de ${site ? site.name : 'son bâtiment'}.`);
+        this.draw(performance.now());
+        return;
+      }
+      vibrate(6);
+      if (this.annexPlacing.from) this.moveAnnex(cell);
+      else this.annexConfirm = { x: cell.x, y: cell.y, px, py };
+      this.draw(performance.now());
+    },
+    // Pose confirmée : le serveur vérifie et débite ; l'annexe surgit dans un nuage d'éclats
+    async confirmAnnex() {
+      const target = this.annexConfirm;
+      const annex = this.placingAnnex;
+      if (!target || !annex || this.busy) return;
+      this.busy = true;
+      try {
+        const { built, coins, world } = await playService.worldAnnex(annex.id, target.x, target.y);
+        this.annexPlacing = null;
+        this.annexConfirm = null;
+        this.pops.set(`annex:${target.x},${target.y}`, performance.now());
+        this.apply(world);
+        this.$emit('coins-updated', coins);
+        this.$nextTick(() => {
+          const at = center(this.screenRectOf(target.x, target.y));
+          ring(at, 90);
+          burst(at, 20, 70);
+          vibrate([12, 40, 18]);
+        });
+        this.$emit('show-alert', `Nouvelle annexe : ${built}\u00a0!`);
+      } catch (error) {
+        this.annexConfirm = null;
+        this.$emit('show-alert', messageOf(error, 'L’annexe n’a pas pu être posée.'));
+        this.load();
+      } finally {
+        this.busy = false;
+      }
+    },
+    // Déplacement gratuit vers la case dorée touchée
+    async moveAnnex(cell) {
+      const { from } = this.annexPlacing;
+      const key = `annex:${cell.x},${cell.y}`;
+      this.annexPlacing = null;
+      this.busy = true;
+      try {
+        this.pops.set(key, performance.now());
+        this.apply(await playService.worldAnnexMove(from.x, from.y, cell.x, cell.y));
+        this.$nextTick(() => {
+          burst(center(this.screenRectOf(cell.x, cell.y)), 14, 50);
+          vibrate([10, 30, 10]);
+        });
+      } catch (error) {
+        this.pops.delete(key);
+        this.$emit('show-alert', messageOf(error, 'L’annexe n’a pas pu être déplacée.'));
+        this.load();
+      } finally {
+        this.busy = false;
+      }
+    },
+    // Fiche d'une annexe : « Déplacer » allume les cases libres autour de son bâtiment ; « Bâtiment » ouvre sa fiche
+    moveFromSheet() {
+      const info = this.sheetAnnex;
+      if (!info) return;
+      const { x, y } = this.annexSheet;
+      this.annexSheet = null;
+      this.annexPlacing = { siteId: info.site.id, annexId: info.annex.id, from: { x, y } };
+      this.focusOn(info.site);
+    },
+    siteFromSheet() {
+      const info = this.sheetAnnex;
+      this.annexSheet = null;
+      if (!info) return;
+      this.site = info.site;
+      this.siteTab = 'annexes';
     },
     // Skin porté par un bâtiment ('' : apparence d'origine)
     async wearSkin(site, skin) {
