@@ -178,6 +178,16 @@
                 </div>
                 <button type="button" class="world__btn" :disabled="busy || !state.pending" @click="collect">Récolter l’île</button>
               </div>
+              <!-- Mini-jeu du bâtiment (Ponton, Carrière, Bosquet), ouvert au palier III -->
+              <div v-if="gameOf(site)" :class="['world__game', { 'is-locked': !gameOf(site).open }]">
+                <span class="world__game-art" aria-hidden="true"><GameIcon :kind="GAME_ICONS[gameOf(site).id]" :size="40" /></span>
+                <span class="world__game-body">
+                  <span class="world__game-kind">Mini-jeu</span>
+                  <span class="world__game-name">{{ gameOf(site).name }}</span>
+                  <span class="world__game-text">{{ gameOf(site).open ? `${gameOf(site).plays} / ${gameOf(site).max} parties · jusqu’à ${gameOf(site).cap} écus` : `S’ouvre au palier ${roman(gameOf(site).level)}` }}</span>
+                </span>
+                <button type="button" class="world__game-btn" :disabled="busy || !gameOf(site).open" @click="openGame(gameOf(site).id)">{{ gameOf(site).open ? 'Jouer' : `Palier ${roman(gameOf(site).level)}` }}</button>
+              </div>
               <div v-else-if="!site.level" class="world__sheet-actions">
                 <button type="button" class="world__btn" @click="siteTab = 'evolution'">Voir ce qu’il faut pour bâtir</button>
               </div>
@@ -413,6 +423,19 @@
     <ChestReveal v-if="reveal" v-bind="reveal" :busy="busy" @wear="wearRevealed" @close="reveal = null" />
     <ChestHaul v-if="haul && state" :items="haulItems" :busy="busy" @wear="wearHauled" @close="haul = null" />
 
+    <MiniGame
+      v-if="gameId && gameView"
+      :game="gameView"
+      :site-name="gameSiteName"
+      :run="gameRun"
+      :starting="gameStarting"
+      :sending="gameSending"
+      :result="gameResult"
+      :error="gameError"
+      @start="startGame"
+      @finish="finishGame"
+      @close="closeGame"
+    />
     <HarvestGame
       v-if="run"
       :run="run"
@@ -442,6 +465,8 @@ import ChestHaul from './ChestHaul.vue';
 import AnnexPanel from './AnnexPanel.vue';
 import AnnexSheet from './AnnexSheet.vue';
 import NameSignPanel from './NameSignPanel.vue';
+import MiniGame from './minigames/MiniGame.vue';
+import GameIcon from './minigames/GameIcon.vue';
 import { nameSignLayers, nameSignLight, paintName } from '@/world/nameSigns';
 import { annexLayers, annexLight } from '@/world/annexSprites';
 import { annexReady, annexYield, variantsOf } from '@/world/annexes';
@@ -536,6 +561,8 @@ const SHOP_GROUPS = [['outil', 'Outils'], ['objet', 'Objets'], ['rare', 'Pièces
 const groupOf = item => (item.rare ? 'rare' : item.kind === 'skin' && tintOf(item.id) ? 'teinte' : item.kind);
 // Achat en un toucher : « Annuler » reste proposé 4 s (le serveur accepte l'annulation un peu plus longtemps)
 const UNDO_MS = 4000;
+// Mini-jeux : l'icône de chaque jeu dans la fiche de son bâtiment
+const GAME_ICONS = { peche: 'dore', filon: 'diamant', cueillette: 'fraise' };
 // Enseigne d'un bâtiment : pied sur le bord avant gauche de son emprise, à tant de cases du coin vers le joueur (le nom
 // du bâtiment, sous ce coin, reste dégagé), un peu en retrait du bord ; dessinée un peu plus grande que nature
 const NAME_SIGN_ALONG = 1.6;
@@ -560,7 +587,7 @@ let lastView = null;
 // d'animation sont non réactifs et s'arrêtent quand l'onglet est caché ou le composant démonté.
 export default {
   name: 'WorldView',
-  components: { ElementGlyph, ElementTile, HarvestGame, ShopItemSheet, BrumeWisp, IslandClock, GModal, ChestList, ChestReveal, ChestHaul, AnnexPanel, AnnexSheet, NameSignPanel },
+  components: { ElementGlyph, ElementTile, HarvestGame, ShopItemSheet, BrumeWisp, IslandClock, GModal, ChestList, ChestReveal, ChestHaul, AnnexPanel, AnnexSheet, NameSignPanel, MiniGame, GameIcon },
   directives: { longpress },
   props: {
     discoveredElements: { type: Array, required: true },
@@ -574,7 +601,7 @@ export default {
   emits: ['coins-updated', 'show-alert', 'login'],
   data() {
     return {
-      GLYPH, LABEL, RESOURCES,
+      GLYPH, LABEL, RESOURCES, GAME_ICONS,
       state: null,
       guest: false,
       loadError: false,
@@ -607,6 +634,13 @@ export default {
       chestsOpen: false,
       reveal: null,
       haul: null,
+      // Mini-jeu ouvert (id), sa partie, son envoi, son résultat
+      gameId: null,
+      gameRun: null,
+      gameStarting: false,
+      gameSending: false,
+      gameResult: null,
+      gameError: '',
       clock: Date.now(),
       // Horloge de l'en-tête (heure, moment, temps, soleil) ; journée en accéléré
       skyClock: null,
@@ -621,6 +655,14 @@ export default {
     };
   },
   computed: {
+    // Mini-jeu ouvert : sa vue (réserve de parties à jour) et le nom de son bâtiment
+    gameView() {
+      return this.gameId && this.state ? (this.state.games || []).find(g => g.id === this.gameId) || null : null;
+    },
+    gameSiteName() {
+      const site = this.gameView && this.state.sites.find(s => s.id === this.gameView.site);
+      return site ? site.name : '';
+    },
     // « Tout récolter » : ce qui attend dans les bâtiments, écus puis ressources : [{ id, glyph, n, label }]
     harvestable() {
       if (!this.state) return [];
@@ -836,6 +878,8 @@ export default {
         guide.tip('island');
         // Premier bâtiment au palier II : ses annexes s'ouvrent
         if (state.sites.some(s => s.level >= 2 && !s.locked)) guide.tip('annexes');
+        // Premier mini-jeu ouvert (Ponton, Carrière ou Bosquet au palier III)
+        if ((state.games || []).some(g => g.open)) guide.tip('games');
       } catch (error) {
         if (this.gone) return;
         if ([401, 402].includes(error.response?.status)) {
@@ -1190,7 +1234,7 @@ export default {
 
     /* ---------- Boucle et dessin ---------- */
     syncLoop() {
-      const run = !document.hidden && !this.reduced() && this.state && !this.guest && !this.run;
+      const run = !document.hidden && !this.reduced() && this.state && !this.guest && !this.run && !this.gameId;
       if (run && !this.raf) this.raf = requestAnimationFrame(this.frame);
       if (!run && this.raf) {
         cancelAnimationFrame(this.raf);
@@ -2547,6 +2591,56 @@ export default {
         this.sending = false;
       }
     },
+    // Mini-jeux : la fiche du bâtiment se ferme, la fenêtre du jeu s'ouvre sur sa règle
+    gameOf(site) {
+      return (this.state.games || []).find(g => g.site === site.id) || null;
+    },
+    openGame(id) {
+      this.site = null;
+      this.gameId = id;
+      this.gameRun = null;
+      this.gameResult = null;
+      this.gameError = '';
+      this.syncLoop();
+    },
+    // Une partie : prise sur la réserve par le serveur, qui donne la graine (Rejouer : une nouvelle)
+    async startGame() {
+      if (this.gameStarting) return;
+      this.gameStarting = true;
+      this.gameError = '';
+      try {
+        const { run, world } = await playService.gameStart(this.gameId);
+        this.gameResult = null;
+        this.apply(world);
+        this.gameRun = run;
+      } catch (error) {
+        this.gameError = messageOf(error, 'La partie n’a pas pu commencer.');
+        this.gameRun = null;
+        this.load();
+      } finally {
+        this.gameStarting = false;
+      }
+    },
+    async finishGame(input) {
+      this.gameSending = true;
+      try {
+        const { earned, raw, detail, coins, world } = await playService.gameFinish(this.gameRun.id, input);
+        this.gameResult = { earned, raw, detail };
+        this.apply(world);
+        this.$emit('coins-updated', coins);
+        vibrate(earned ? [12, 40, 18] : 8);
+      } catch (error) {
+        this.gameError = messageOf(error, 'Le serveur n’a pas pu compter tes prises.');
+        this.load();
+      } finally {
+        this.gameSending = false;
+      }
+    },
+    closeGame() {
+      this.gameId = null;
+      this.gameRun = null;
+      this.syncLoop();
+    },
     closeHarvest() {
       this.run = null;
       this.syncLoop();
@@ -3092,6 +3186,22 @@ export default {
 .world__prod-row { display: flex; justify-content: space-between; align-items: center; gap: 10px; min-height: 40px; padding: 6px 12px; border-radius: 12px; background: var(--vellum-50); box-shadow: inset 0 0 0 1px rgba(74, 52, 38, .08); font-size: 14px; }
 .world__prod-row span { color: var(--ink-500); font-weight: 800; }
 .world__prod-row.is-pending { background: var(--gold-200); }
+.world__game {
+  display: grid; grid-template-columns: auto minmax(0, 1fr) auto; align-items: center; gap: 10px; margin-top: 10px;
+  padding: 10px 12px; border-radius: 16px; background: linear-gradient(135deg, #FFF4D6, var(--vellum-100)); box-shadow: inset 0 0 0 2px var(--gold-300);
+}
+.world__game.is-locked { background: var(--vellum-100); box-shadow: inset 0 0 0 1px rgba(74, 52, 38, .12); }
+.world__game.is-locked .world__game-art { filter: grayscale(.7) opacity(.6); }
+.world__game-art { display: grid; place-items: center; width: 52px; height: 52px; border-radius: 14px; background: rgba(255, 255, 255, .6); }
+.world__game-body { display: grid; gap: 1px; min-width: 0; }
+.world__game-kind { font-size: 11px; font-weight: 800; text-transform: uppercase; letter-spacing: .04em; color: var(--ink-500); }
+.world__game-name { font-family: var(--font-display); font-weight: 700; font-size: 17px; line-height: 1.15; }
+.world__game-text { font-size: 12px; font-weight: 700; color: var(--ink-700); }
+.world__game-btn {
+  min-height: 40px; min-width: 84px; padding: 6px 16px; border: 0; border-radius: 999px; cursor: pointer;
+  background: var(--ink-900); color: var(--vellum-50); font-family: var(--font-ui); font-weight: 900; font-size: 14px;
+}
+.world__game-btn:disabled { background: var(--vellum-300); color: var(--ink-500); cursor: default; font-size: 12px; }
 /* Évolution : paliers en frise verticale (atteint, prochain, à venir) */
 .world__steps { margin: 0; padding: 0; list-style: none; display: flex; flex-direction: column; gap: 10px; }
 .world__step { display: flex; gap: 12px; position: relative; }
