@@ -44,12 +44,12 @@ export const BEAST_NAMES = {
 const WILD = new Set(['deer', 'fox', 'rabbit', 'hedgehog', 'squirrel', 'heron']);
 
 /* ---------- Chemins ---------- */
-// Grille où l'on marche : sol praticable des quartiers à soi, ni bâtiment, ni décoration, ni arbre ou rocher ;
-// d'une case à l'autre à la même hauteur, ou par les marches des chemins
-function gridOf({ n, M, sites, owned, tiles, props }) {
+// Grille où l'on marche : sol praticable des quartiers à soi, ni bâtiment, ni décoration, ni annexe, ni arbre ou
+// rocher ; d'une case à l'autre à la même hauteur, ou par les marches des chemins
+function gridOf({ n, M, sites, owned, tiles, props, annexes }) {
   const blocked = new Uint8Array(n * n);
   for (const s of sites) for (let y = s.y; y < s.y + s.h; y++) for (let x = s.x; x < s.x + s.w; x++) if (x >= 0 && y >= 0 && x < n && y < n) blocked[y * n + x] = 1;
-  for (const t of tiles) blocked[t.y * n + t.x] = 1;
+  for (const t of [...tiles, ...annexes]) blocked[t.y * n + t.x] = 1;
   for (const p of props) if (BLOCKING.has(p.kind)) blocked[p.y * n + p.x] = 1;
   const walk = (x, y) => x >= 0 && y >= 0 && x < n && y < n && !blocked[y * n + x] && owned.has(M.zone(x, y)) && WALK.includes(M.ground(x, y));
   const step = (a, b) => {
@@ -98,6 +98,13 @@ function route(grid, from, to) {
   for (let i = goal; i !== -1; i = prev[i]) path.push({ x: i % n, y: Math.floor(i / n) });
   return path.reverse();
 }
+// Case où l'on travaille à une annexe : une case praticable qui la touche, la plus proche de la porte du bâtiment
+function besideOf(grid, annex, door) {
+  const ok = [[1, 0], [0, 1], [-1, 0], [0, -1]].map(([dx, dy]) => ({ x: annex.x + dx, y: annex.y + dy })).filter(c => grid.walk(c.x, c.y));
+  if (!ok.length) return null;
+  const d = c => (door ? Math.abs(c.x - door.x) + Math.abs(c.y - door.y) : 0);
+  return ok.reduce((a, b) => (d(b) < d(a) ? b : a));
+}
 // Porte d'un bâtiment : la case praticable autour de son emprise la plus en avant (vers le joueur), un chemin si possible
 function doorOf(grid, site) {
   const ring = [];
@@ -111,9 +118,9 @@ function doorOf(grid, site) {
 
 /* ---------- Le village ---------- */
 // sites : bâtiments de l'île ({ id, x, y, w, h, level, locked, name }) ; owned : indices des quartiers à soi ;
-// tiles : décorations posées ; props : décor naturel ({ kind, x, y })
-export function villageOf({ n, M, sites, owned, tiles, props }) {
-  const grid = gridOf({ n, M, sites, owned, tiles, props });
+// tiles : décorations posées ; props : décor naturel ({ kind, x, y }) ; annexes : annexes posées ({ x, y, site })
+export function villageOf({ n, M, sites, owned, tiles, props, annexes = [] }) {
+  const grid = gridOf({ n, M, sites, owned, tiles, props, annexes });
   const built = sites.filter(s => s.level > 0 && !s.locked);
   const doors = Object.fromEntries(built.map(s => [s.id, doorOf(grid, s)]).filter(([, d]) => d));
   const foyer = built.find(s => s.id === 'foyer');
@@ -136,7 +143,9 @@ export function villageOf({ n, M, sites, owned, tiles, props }) {
       residents.push({
         id: `vil:${id}`, k, role: id, site: site.name,
         look: { ...ROLES[id], skin: SKINS[Math.floor(hash(k, 3) * SKINS.length)], hair: HAIRS[Math.floor(hash(k, 5) * HAIRS.length)] },
-        work: doors[id], wake: 6.4 + (k % 3) * 0.25, bed: 21.6 + (k % 3) * 0.3
+        work: doors[id], wake: 6.4 + (k % 3) * 0.25, bed: 21.6 + (k % 3) * 0.3,
+        // Une annexe à soi (la première posée) : on y travaille une partie de la journée
+        field: (() => { const annex = annexes.find(a => a.site === id); return annex ? besideOf(grid, annex, doors[id]) : null; })()
       });
     }
   }
@@ -150,7 +159,7 @@ export function villageOf({ n, M, sites, owned, tiles, props }) {
     const other = i => stops[Math.floor(hash(r.k * 7 + i, 13) * stops.length)] || r.work;
     const seq = evening
       ? [[home, 40, 'idle'], [near, 14, 'idle'], [home, 60, 'idle']]
-      : [[r.work, 90, 'work'], [other(1), 25, 'idle'], [r.work, 110, 'work'], [home, 30, 'idle'], [r.work, 80, 'work'], [other(2), 20, 'idle']];
+      : [[r.work, 90, 'work'], [other(1), 25, 'idle'], [r.field || r.work, 110, 'work'], [home, 30, 'idle'], [r.work, 80, 'work'], [other(2), 20, 'idle']];
     const legs = [];
     let at = seq[seq.length - 1][0];
     let total = 0;
