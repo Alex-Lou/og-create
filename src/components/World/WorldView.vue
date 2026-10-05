@@ -442,6 +442,11 @@
               <p v-if="quest.chapter && !quest.done" class="world__quest-lock">
                 Ouvre d’abord le chapitre {{ quest.chapter }} du Grimoire : écris de nouvelles découvertes.
               </p>
+              <!-- Le fil d'Ariane (bible, § 6.1 à 6.3) : la cible et les pages qui restent -->
+              <p v-else-if="quest.ariane && !quest.done" class="world__quest-lock">
+                {{ ['level', 'craft'].includes(quest.kind) ? 'Le Grimoire connaît cette invention. ' : '' }}Vers : <strong>{{ quest.ariane.target }}</strong> —
+                {{ quest.ariane.remaining > 1 ? `encore ${quest.ariane.remaining} pages` : 'dernière page' }}
+              </p>
               <div class="world__sheet-actions">
                 <button v-if="quest.done" type="button" class="world__btn" :disabled="busy" @click="claimQuest">Réclamer · {{ quest.coins }} écus{{ quest.chest ? ' + un coffre' : '' }}</button>
                 <button v-else-if="quest.kind === 'runs'" type="button" class="world__btn" :disabled="busy || !state.charges.count" @click="questHarvest">
@@ -915,10 +920,10 @@ export default {
       const state = this.state;
       if (!quest || quest.done || !state) return null;
       const target = quest.target || {};
-      const grimoire = { label: 'Ouvrir le Grimoire', run: () => this.$emit('go', 'infinite') };
+      const grimoire = { label: quest.ariane ? 'Voir dans le Grimoire' : 'Ouvrir le Grimoire', run: () => this.$emit('go', 'infinite') };
       const sheetOf = id => ({ label: 'Fiche du Foyer', run: () => this.openSiteSheet(id, 'annexes') });
       const look = (label, cell) => (cell ? { label, run: () => this.lookAtCell(cell.x, cell.y) } : null);
-      if (quest.chapter || quest.kind === 'stars' || quest.kind === 'element') return grimoire;
+      if (quest.chapter || quest.ariane || quest.kind === 'stars' || quest.kind === 'element') return grimoire;
       if (quest.kind === 'need' || quest.kind === 'wake') {
         const who = (state.villagers || []).find(v => v.id === target.villager);
         return who ? { label: `Voir ${who.name}`, run: () => this.openVillager(who.id) } : null;

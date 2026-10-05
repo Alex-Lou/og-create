@@ -6,7 +6,7 @@
 > - **Chaque recette citée est une vraie recette de la base** (calculée le 5 octobre 2026).
 
 > **Mises à jour depuis la v5** (règle du § 19 : la bible change avant le code).
-> - **Lots livrés** : H0 (la troupe et les textes), H1 (la colonne vertébrale).
+> - **Lots livrés** : H0 (la troupe et les textes), H1 (la colonne vertébrale), H2 (le fil d'Ariane : 2 à 7 ms par calcul).
 > - **Lot H0, choix de l'auteur** :
 >   - le mot d'Héliane de l'acte II dit « Grimoire » (§ 10) ;
 >   - les familiers suivent le style des bêtes du lot 9e, et non plus « à plat, avec les gros yeux ronds » (§ 14) ;

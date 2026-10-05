@@ -46,7 +46,7 @@
             @coins-updated="handleCoinsUpdated"
             @show-alert="showAlert"
             @login="showSeuil = true"
-            @go="handleModeSelect"
+            @go="openFromWorld"
           />
           <!-- Mode principal : le Livre ; l'Épreuve garde son inventaire -->
           <BookView
@@ -60,6 +60,8 @@
             :unexplored="unexploredCounts"
             :picked="athanorPicked"
             :revealing="isRevealing"
+            :openMarked="bookOpenMarked"
+            @marked-opened="bookOpenMarked = false"
             @select="handleResourceSelection"
             @coins-updated="handleCoinsUpdated"
             @show-alert="showAlert"
@@ -280,6 +282,8 @@ export default {
       freshElement: null,
       // Page à portée ouverte dans le Livre (visée par l'Athanor)
       bookAim: null,
+      // Venu de la quête de l'île : le Grimoire s'ouvre sur la page marquée du fil d'Ariane
+      bookOpenMarked: false,
       // Révélation d'une création en cours : les popups de succès attendent
       isRevealing: false,
       // Une ère franchie pendant le jeu (pas au chargement) annonce son nouvel emplacement
@@ -641,6 +645,11 @@ export default {
     },
 
     // ----- Modes -----
+    // L'île mène ailleurs (la quête de Brume) : vers le Grimoire, il s'ouvre sur la page marquée
+    openFromWorld(mode) {
+      this.bookOpenMarked = mode === 'infinite';
+      this.handleModeSelect(mode);
+    },
     handleModeSelect(mode) {
       if (mode === this.currentMode) return;
       if (mode === 'world' || mode === 'sceau') {
