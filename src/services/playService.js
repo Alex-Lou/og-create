@@ -82,6 +82,10 @@ export default {
   worldZone(zone) {
     return http.post('/play/world/zone', { zone }).then(response => response.data);
   },
+  // Expédition vers un quartier inconnu des terres nouvelles : { expedition: { zone, endsAt }, world }
+  worldExpedition(zone) {
+    return http.post('/play/world/expedition', { zone }).then(response => response.data);
+  },
   // Boutique d'un atelier : { bought, coins, world }
   worldItem(item) {
     return http.post('/play/world/item', { item }).then(response => response.data);
