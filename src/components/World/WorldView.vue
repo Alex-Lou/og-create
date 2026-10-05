@@ -132,8 +132,15 @@
             <div class="world__site-head">
               <img class="world__site-art" :src="artOf(site)" alt="" />
               <div class="world__site-id">
-                <span class="world__eyebrow">{{ zoneName(site.zone) }}</span>
-                <span class="world__sheet-title">{{ site.level ? site.name : `${site.name} · à bâtir` }}</span>
+                <!-- Le quartier se renomme dès qu'il est à soi, le bâtiment dès son palier III -->
+                <span class="world__eyebrow world__named">{{ zoneName(site.zone) }}<button type="button" class="world__pen world__pen--small" :aria-label="`Renommer le quartier ${zoneName(site.zone)}`" @click="startRename('zone', site.zone)"><svg viewBox="0 0 20 20" width="15" height="15" aria-hidden="true"><path d="M3,14.6 L3,17 L5.4,17 L14.6,7.8 L12.2,5.4 Z M15.6,6.8 L17,5.4 C17.4,5 17.4,4.4 17,4 L16,3 C15.6,2.6 15,2.6 14.6,3 L13.2,4.4 Z" fill="currentColor"/></svg></button></span>
+                <span class="world__sheet-title world__named">{{ site.level ? site.name : `${site.name} · à bâtir` }}<button
+                  v-if="site.level"
+                  type="button"
+                  :class="['world__pen', { 'is-locked': site.level < site.renameLevel }]"
+                  :aria-label="site.level < site.renameLevel ? `Renommer : au palier ${roman(site.renameLevel)}` : `Renommer ${site.name}`"
+                  @click="startRename('site', site.id)"
+                ><svg viewBox="0 0 20 20" width="15" height="15" aria-hidden="true"><path d="M3,14.6 L3,17 L5.4,17 L14.6,7.8 L12.2,5.4 Z M15.6,6.8 L17,5.4 C17.4,5 17.4,4.4 17,4 L16,3 C15.6,2.6 15,2.6 14.6,3 L13.2,4.4 Z" fill="currentColor"/></svg></button></span>
                 <span class="world__pips" :aria-label="`Niveau ${site.level} sur ${site.maxLevel}`">
                   <span v-for="k in site.maxLevel" :key="k" :class="['world__pip', { 'is-on': k <= site.level }]"></span>
                 </span>
@@ -432,6 +439,18 @@
       </template>
     </GModal>
 
+    <!-- Renommer un bâtiment ou un quartier -->
+    <RenameSheet
+      v-if="renameTarget"
+      :key="`${renaming.kind}:${renaming.id}`"
+      :eyebrow="renameTarget.eyebrow"
+      :title="renameTarget.title"
+      :current="renameTarget.current"
+      :base="renameTarget.base"
+      :busy="busy"
+      @save="saveName"
+      @close="renaming = null"
+    />
     <!-- Habitant : sa fiche (bavarder, offrir) ; un coffre gagné s'ouvre par-dessus -->
     <VillagerSheet
       v-if="villagerView && state"
@@ -497,6 +516,7 @@ import NameSignPanel from './NameSignPanel.vue';
 import MiniGame from './minigames/MiniGame.vue';
 import GameIcon from './minigames/GameIcon.vue';
 import VillagerSheet from './VillagerSheet.vue';
+import RenameSheet from './RenameSheet.vue';
 import { villagerSprite, ROLES } from '@/world/villagers';
 import { talkLine, giftLine, awaits } from '@/world/friends';
 import { nameSignLayers, nameSignLight, paintName } from '@/world/nameSigns';
@@ -619,7 +639,7 @@ let lastView = null;
 // d'animation sont non réactifs et s'arrêtent quand l'onglet est caché ou le composant démonté.
 export default {
   name: 'WorldView',
-  components: { ElementGlyph, ElementTile, HarvestGame, ShopItemSheet, BrumeWisp, IslandClock, GModal, ChestList, ChestReveal, ChestHaul, AnnexPanel, AnnexSheet, NameSignPanel, MiniGame, GameIcon, VillagerSheet },
+  components: { ElementGlyph, ElementTile, HarvestGame, ShopItemSheet, BrumeWisp, IslandClock, GModal, ChestList, ChestReveal, ChestHaul, AnnexPanel, AnnexSheet, NameSignPanel, MiniGame, GameIcon, VillagerSheet, RenameSheet },
   directives: { longpress },
   props: {
     discoveredElements: { type: Array, required: true },
@@ -673,6 +693,8 @@ export default {
       gameSending: false,
       gameResult: null,
       gameError: '',
+      // Bâtiment ou quartier en train d'être renommé : { kind: 'site' | 'zone', id }
+      renaming: null,
       // Habitant dont la fiche est ouverte, sa dernière réplique, le cœur tout juste gagné
       villagerId: null,
       villagerSaid: '',
@@ -691,6 +713,14 @@ export default {
     };
   },
   computed: {
+    // Ce qu'on renomme : son nom actuel et celui d'origine
+    renameTarget() {
+      if (!this.renaming || !this.state) return null;
+      const { kind, id } = this.renaming;
+      const place = kind === 'site' ? this.state.sites.find(s => s.id === id) : this.state.map.zones.find(z => z.id === id);
+      if (!place) return null;
+      return { eyebrow: kind === 'site' ? 'Bâtiment' : 'Quartier', title: `Renommer ${place.name}`, current: place.name, base: place.baseName || place.name };
+    },
     // Habitant dont la fiche est ouverte (vue du serveur, à jour) et le nom de son lieu de travail
     villagerView() {
       return this.villagerId && this.state ? (this.state.villagers || []).find(v => v.id === this.villagerId) || null : null;
@@ -2692,6 +2722,31 @@ export default {
         this.busy = false;
       }
     },
+    // Renommer : un bâtiment dès son palier III (avant, on dit quand), un quartier à soi
+    startRename(kind, id) {
+      if (kind === 'site') {
+        const site = this.state.sites.find(s => s.id === id);
+        if (site.level < site.renameLevel) {
+          this.$emit('show-alert', `${site.name} se renommera au palier ${roman(site.renameLevel)}.`);
+          return;
+        }
+      }
+      this.renaming = { kind, id };
+    },
+    // Nouveau nom (vide : celui d'origine), gardé par le serveur ; l'île et ses étiquettes suivent
+    async saveName(name) {
+      const { kind, id } = this.renaming;
+      this.busy = true;
+      try {
+        this.apply(await playService.worldName(kind, id, name));
+        this.renaming = null;
+        vibrate(8);
+      } catch (error) {
+        this.$emit('show-alert', messageOf(error, 'Le nom n’a pas pu changer.'));
+      } finally {
+        this.busy = false;
+      }
+    },
     // Mini-jeux : la fiche du bâtiment se ferme, la fenêtre du jeu s'ouvre sur sa règle
     gameOf(site) {
       return (this.state.games || []).find(g => g.site === site.id) || null;
@@ -3287,6 +3342,14 @@ export default {
 .world__prod-row { display: flex; justify-content: space-between; align-items: center; gap: 10px; min-height: 40px; padding: 6px 12px; border-radius: 12px; background: var(--vellum-50); box-shadow: inset 0 0 0 1px rgba(74, 52, 38, .08); font-size: 14px; }
 .world__prod-row span { color: var(--ink-500); font-weight: 800; }
 .world__prod-row.is-pending { background: var(--gold-200); }
+.world__named { display: inline-flex; align-items: center; gap: 6px; }
+.world__pen {
+  flex: none; display: inline-grid; place-items: center; width: 30px; height: 30px; padding: 0; border: 0; border-radius: 50%;
+  background: var(--vellum-200); color: var(--ink-700); cursor: pointer; box-shadow: inset 0 0 0 1px rgba(74, 52, 38, .15);
+}
+.world__pen--small { width: 24px; height: 24px; }
+.world__pen--small svg { width: 12px; height: 12px; }
+.world__pen.is-locked { opacity: .45; }
 .world__friends { margin-top: 12px; }
 .world__friends-title { margin: 0 0 6px; font-size: 12px; font-weight: 800; text-transform: uppercase; letter-spacing: .05em; color: var(--ink-500); }
 .world__friends-list { display: grid; grid-template-columns: repeat(auto-fill, minmax(84px, 1fr)); gap: 6px; margin: 0; padding: 0; list-style: none; }
