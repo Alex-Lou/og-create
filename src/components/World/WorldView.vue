@@ -170,6 +170,10 @@
                   <span>Bonus de la boutique</span>
                   <strong>+{{ site.bonus }} % de production</strong>
                 </div>
+                <div v-if="site.moodBonus && friendAt(site.id)" :class="['world__prod-row', site.moodBonus > 0 ? 'is-happy' : 'is-sad']">
+                  <span>Humeur de {{ friendAt(site.id).name }}</span>
+                  <strong>{{ site.moodBonus > 0 ? '+' : '−' }}{{ Math.abs(site.moodBonus) }} % de production</strong>
+                </div>
                 <div v-if="annexYield(site).count" class="world__prod-row">
                   <span>Annexes · {{ annexYield(site).count }}</span>
                   <strong v-if="annexYield(site).rate">+{{ annexYield(site).rate }} <ElementGlyph :glyph="GLYPH[site.produce]" /> · +{{ annexYield(site).earn }} écus par heure</strong>
@@ -185,19 +189,28 @@
                 </div>
                 <button type="button" class="world__btn" :disabled="busy || !state.pending" @click="collect">Ramasser la production</button>
               </div>
-              <!-- Foyer : les habitants de l'île, leurs cœurs ; un point quand l'un attend une visite aujourd'hui -->
+              <!-- Foyer : les habitants de l'île, leurs cœurs, leur humeur ; le besoin qui manque, sinon un point quand l'un
+                   attend une visite aujourd'hui ; « Tout combler » donne ce qu'il faut à tous, tant que le stock suffit -->
               <section v-if="site.id === 'foyer' && state.villagers && state.villagers.length" class="world__friends" aria-label="Habitants">
                 <h3 class="world__friends-title">Habitants</h3>
                 <ul class="world__friends-list">
                   <li v-for="v in state.villagers" :key="v.id">
-                    <button type="button" class="world__friend" :aria-label="`${v.name}, ${v.role} : ${v.hearts} cœur${v.hearts > 1 ? 's' : ''}`" @click="openVillager(v.id)">
-                      <span class="world__friend-face"><img :src="portraitOf(v.id)" alt="" /></span>
+                    <button type="button" class="world__friend" :aria-label="friendLabel(v)" @click="openVillager(v.id)">
+                      <span class="world__friend-face">
+                        <img :src="portraitOf(v.id)" alt="" />
+                        <span v-if="v.mood" class="world__friend-mood" aria-hidden="true"><ElementGlyph :glyph="MOOD_GLYPH[v.mood]" /></span>
+                      </span>
                       <span class="world__friend-name">{{ v.name }}</span>
                       <span class="world__friend-hearts" aria-hidden="true">{{ '♥'.repeat(v.hearts) }}<span>{{ '♥'.repeat(5 - v.hearts) }}</span></span>
-                      <span v-if="awaits(v)" class="world__friend-dot" aria-hidden="true"></span>
+                      <span v-if="missingOf(v).length" class="world__friend-need" aria-hidden="true"><ElementGlyph :glyph="NEED_GLYPH[missingOf(v)[0].id]" /></span>
+                      <span v-else-if="awaits(v)" class="world__friend-dot" aria-hidden="true"></span>
                     </button>
                   </li>
                 </ul>
+                <button v-if="fillAll.count" type="button" class="world__btn world__fill-all" :disabled="busy" @click="fillAllNeeds">
+                  Tout combler
+                  <span v-for="(n, r) in fillAll.cost" :key="r" class="world__fill-cost"><ElementGlyph :glyph="GLYPH[r]" />{{ n }}</span>
+                </button>
               </section>
               <!-- Mini-jeu du bâtiment (Ponton, Carrière, Bosquet), ouvert au palier III -->
               <div v-if="gameOf(site)" :class="['world__game', { 'is-locked': !gameOf(site).open }]">
@@ -456,6 +469,7 @@
       v-if="villagerView && state"
       :villager="villagerView"
       :rules="state.friendship"
+      :need-rules="state.needs"
       :stock="state.stock"
       :site-name="villagerSiteName"
       :portrait="portraitOf(villagerView.id)"
@@ -464,6 +478,7 @@
       :busy="busy"
       @talk="talkVillager"
       @gift="giftVillager"
+      @fill="fillNeed"
       @close="villagerId = null"
     />
     <!-- Coffres : la liste (jour, en attente), puis l'ouverture d'un coffre, ou de tous d'un coup -->
@@ -519,6 +534,7 @@ import VillagerSheet from './VillagerSheet.vue';
 import RenameSheet from './RenameSheet.vue';
 import { villagerSprite, ROLES } from '@/world/villagers';
 import { talkLine, giftLine, awaits } from '@/world/friends';
+import { NEED_GLYPH, MOOD_GLYPH, MOOD_LABEL, ASKS, THANKS, missingOf, fillAllOf, askOr } from '@/world/needs';
 import { nameSignLayers, nameSignLight, paintName } from '@/world/nameSigns';
 import { annexLayers, annexLight } from '@/world/annexSprites';
 import { annexReady, annexYield, variantsOf } from '@/world/annexes';
@@ -653,7 +669,7 @@ export default {
   emits: ['coins-updated', 'show-alert', 'login'],
   data() {
     return {
-      GLYPH, LABEL, RESOURCES, GAME_ICONS,
+      GLYPH, LABEL, RESOURCES, GAME_ICONS, NEED_GLYPH, MOOD_GLYPH,
       state: null,
       guest: false,
       loadError: false,
@@ -724,6 +740,10 @@ export default {
     // Habitant dont la fiche est ouverte (vue du serveur, à jour) et le nom de son lieu de travail
     villagerView() {
       return this.villagerId && this.state ? (this.state.villagers || []).find(v => v.id === this.villagerId) || null : null;
+    },
+    // « Tout combler » : besoins renouvelables de tous les habitants et leur prix
+    fillAll() {
+      return fillAllOf(this.state ? this.state.villagers || [] : []);
     },
     villagerSiteName() {
       const site = this.villagerView && this.state.sites.find(s => s.id === this.villagerView.id);
@@ -855,6 +875,8 @@ export default {
     // Quartiers qui viennent d'être achetés (brume qui se dissipe), bulles de production et panneaux dessinés (pour le toucher)
     this.unveils = new Map();
     this.bubbles = [];
+    // Bulles de besoin au-dessus des habitants (pour le toucher)
+    this.needBubbles = [];
     this.signs = [];
     this.shore = [];
     // Sol en relief : calques lus (M), carrés d'images (terrain), eau animée (live), cases de chaque quartier
@@ -954,6 +976,8 @@ export default {
         if (state.sites.some(s => s.level >= 2 && !s.locked)) guide.tip('annexes');
         // Deux habitants ou plus : ils ont un prénom, on peut s'en faire des amis
         if ((state.villagers || []).length >= 2) guide.tip('friends');
+        // Un habitant à qui il manque quelque chose : ses besoins et son humeur
+        if ((state.villagers || []).some(v => missingOf(v).length)) guide.tip('needs');
         // Premier mini-jeu ouvert (Ponton, Carrière ou Bosquet au palier III)
         if ((state.games || []).some(g => g.open)) guide.tip('games');
       } catch (error) {
@@ -1752,6 +1776,44 @@ export default {
         ctx.textBaseline = 'alphabetic';
         this.bubbles.push({ site, x, y, w, h });
       }
+      this.drawNeedBubbles(ctx, t, repaint);
+    },
+    // Au-dessus d'un habitant à qui il manque quelque chose : une bulle avec ce besoin (la toucher ouvre sa fiche)
+    drawNeedBubbles(ctx, t, repaint) {
+      this.needBubbles = [];
+      if (this.cam.s < 0.55) return;
+      for (const h of this.landHits) {
+        const friend = h.kind === 'villager' ? this.friendOf(h.who) : null;
+        const [first] = friend ? missingOf(friend) : [];
+        if (!first) continue;
+        const k = 1 / Math.min(1, this.cam.s);
+        const r = 11 * k;
+        const x = h.x;
+        // Juste au-dessus de la tête (le point touché est au milieu du corps)
+        const y = h.y - 16 - r + Math.sin(t * 2.6 + h.x) * 1.5;
+        ctx.save();
+        ctx.shadowColor = 'rgba(60, 40, 25, .3)';
+        ctx.shadowBlur = 5 * k;
+        ctx.shadowOffsetY = 2 * k;
+        ctx.fillStyle = '#FFF4E5';
+        ctx.beginPath();
+        ctx.arc(x, y, r, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.restore();
+        ctx.fillStyle = '#FFF4E5';
+        ctx.beginPath();
+        ctx.moveTo(x - 4 * k, y + r - 2);
+        ctx.lineTo(x, y + r + 5 * k);
+        ctx.lineTo(x + 4 * k, y + r - 2);
+        ctx.fill();
+        ctx.strokeStyle = '#F0A84A';
+        ctx.lineWidth = 1.6 * k;
+        ctx.beginPath();
+        ctx.arc(x, y, r, 0, Math.PI * 2);
+        ctx.stroke();
+        glyph(ctx, NEED_GLYPH[first.id], x, y + 0.5, 14 * k, repaint);
+        this.needBubbles.push({ id: friend.id, need: first.id, x, y, r });
+      }
     },
     // Petite vie de l'île, déterministe dans le temps : où est chaque animal, dans quelle image, de quel côté il regarde.
     // Poules autour du Foyer, papillons et abeilles sur les fleurs (le jour), grenouille aux nénuphars, poisson près de la côte.
@@ -2380,6 +2442,8 @@ export default {
     hitAt(px, py) {
       const w = this.toWorld(px, py);
       if (this.brumeHit && Math.hypot(w.x - this.brumeHit.x, w.y - this.brumeHit.y) < this.brumeHit.r) return { brume: true };
+      const asking = this.needBubbles.find(b => Math.hypot(w.x - b.x, w.y - b.y) < b.r + 6);
+      if (asking) return { asking };
       const bubble = this.bubbles.find(b => Math.abs(w.x - b.x) < b.w / 2 + 6 && Math.abs(w.y - b.y) < b.h / 2 + 8);
       if (bubble) return { bubble };
       const sign = this.signs.find(sg => Math.hypot(w.x - sg.x, (w.y - sg.y) * 1.2) < sg.r);
@@ -2440,7 +2504,10 @@ export default {
         this.draw(performance.now());
         return;
       }
-      if (hit.bubble) {
+      if (hit.asking) {
+        this.openVillager(hit.asking.id);
+        vibrate(6);
+      } else if (hit.bubble) {
         const sp = this.toScreen(hit.bubble.x, hit.bubble.y);
         this.collect(this.canvasPoint(sp.x, sp.y));
         vibrate(8);
@@ -2452,7 +2519,7 @@ export default {
         vibrate(8);
       } else if (hit.animal) {
         // Un habitant parle, une bête de la ferme répond ; les bêtes sauvages s'enfuient
-        const said = this.named(this.village && hit.animal.who ? this.village.say(hit.animal.who, this.phase || this.skyAt(this.skyDate())) : null, hit.animal.who);
+        const said = this.named(this.village && hit.animal.who ? this.village.say(hit.animal.who, this.phase || this.skyAt(this.skyDate())) : null, hit.animal.who, true);
         if (said) this.showTip(px, py, said);
         if (this.reduced()) {
           if (!said) this.showTip(px, py, this.tipOf(hit, { x: px, y: py }));
@@ -2520,6 +2587,10 @@ export default {
         if (hit.animal.who && this.village) return this.named(this.village.describe(hit.animal.who), hit.animal.who);
         const [title, text] = ANIMALS[hit.animal.kind] || ['Une bête', ''];
         return { title, text, hint: 'Toucher : la faire réagir' };
+      }
+      if (hit.asking) {
+        const friend = this.friendAt(hit.asking.id);
+        return { title: friend ? friend.name : 'Un habitant', text: ASKS[hit.asking.need], hint: 'Toucher : sa fiche' };
       }
       if (hit.bubble) {
         const made = Object.entries(hit.bubble.site ? hit.bubble.site.pending || {} : {}).filter(([, n]) => n > 0).map(([k, n]) => `${Math.floor(n)} ${k === 'coins' ? 'écus' : LABEL[k] || k}`);
@@ -2674,11 +2745,21 @@ export default {
       return (this.state.villagers || []).find(v => `vil:${v.id}` === who.id) || null;
     },
     awaits,
-    // Bulle d'un habitant : son prénom et son métier ; l'appui long ouvre sa fiche
-    named(info, who) {
+    missingOf,
+    // Habitant d'un bâtiment (vue du serveur), ou null
+    friendAt(siteId) {
+      return (this.state.villagers || []).find(v => v.id === siteId) || null;
+    },
+    friendLabel(v) {
+      const missing = missingOf(v).map(n => this.state.needs?.kinds?.[n.id]?.label || n.id);
+      return `${v.name}, ${v.role} : ${v.hearts} cœur${v.hearts > 1 ? 's' : ''}, ${MOOD_LABEL[v.mood] || ''}${missing.length ? `, besoin : ${missing.join(', ')}` : ''}`;
+    },
+    // Bulle d'un habitant : son prénom et son métier ; l'appui long ouvre sa fiche. ask : quand on lui parle, il dit
+    // d'abord ce qui lui manque
+    named(info, who, ask = false) {
       const friend = this.friendOf(who);
       if (!info || !friend) return info;
-      return { ...info, title: `${friend.name} · ${friend.role}`, hint: 'Appui long : sa fiche' };
+      return { ...info, title: `${friend.name} · ${friend.role}`, text: ask ? askOr(friend, info.text) : info.text, hint: 'Appui long : sa fiche' };
     },
     // Portrait d'un habitant : son allure sur l'île (teint, cheveux), de face
     portraitOf(id) {
@@ -2718,6 +2799,37 @@ export default {
         else if (chests.length > 1) this.haul = chests;
       } catch (error) {
         this.$emit('show-alert', messageOf(error, 'L’habitant n’a pas pu répondre.'));
+      } finally {
+        this.busy = false;
+      }
+    },
+    // Combler un besoin depuis la fiche (le serveur prend les ressources du stock) : l'habitant remercie
+    async fillNeed(need) {
+      if (this.busy || !this.villagerView) return;
+      this.busy = true;
+      try {
+        const { world } = await playService.villagerNeed(this.villagerView.id, need);
+        this.apply(world);
+        this.villagerSaid = THANKS[need] || '';
+        vibrate(10);
+      } catch (error) {
+        this.$emit('show-alert', messageOf(error, 'Ce besoin n’a pas pu être comblé.'));
+      } finally {
+        this.busy = false;
+      }
+    },
+    // « Tout combler » (fiche du Foyer) : tout ce qui peut l'être, tant que le stock suffit
+    async fillAllNeeds() {
+      if (this.busy) return;
+      this.busy = true;
+      try {
+        const { filled, world } = await playService.villagersNeeds();
+        this.apply(world);
+        vibrate([10, 30, 10]);
+        const n = filled.length;
+        this.$emit('show-alert', `${n} besoin${n > 1 ? 's' : ''} comblé${n > 1 ? 's' : ''} : tes habitants te remercient !`);
+      } catch (error) {
+        this.$emit('show-alert', messageOf(error, 'Les besoins n’ont pas pu être comblés.'));
       } finally {
         this.busy = false;
       }
@@ -3363,6 +3475,12 @@ export default {
 .world__friend-hearts { color: #E8566A; font-size: 11px; letter-spacing: .04em; }
 .world__friend-hearts span { color: var(--vellum-300); }
 .world__friend-dot { position: absolute; top: 6px; right: 8px; width: 9px; height: 9px; border-radius: 50%; background: #E8566A; box-shadow: 0 0 0 2px var(--vellum-50); }
+.world__friend-mood { position: absolute; right: -6px; bottom: -4px; display: grid; place-items: center; width: 22px; height: 22px; border-radius: 50%; background: var(--vellum-50); box-shadow: 0 1px 4px rgba(60, 40, 25, .25); font-size: 16px; }
+.world__friend-need { position: absolute; top: 4px; right: 4px; display: grid; place-items: center; width: 24px; height: 24px; border-radius: 50%; background: #FFF4E5; box-shadow: inset 0 0 0 2px #F0A84A; font-size: 15px; }
+.world__fill-all { width: 100%; margin-top: 8px; display: inline-flex; justify-content: center; align-items: center; gap: 8px; }
+.world__fill-cost { display: inline-flex; align-items: center; gap: 2px; }
+.world__prod-row.is-happy { background: #EAF6E2; }
+.world__prod-row.is-sad { background: #E8EDF6; }
 .world__game {
   display: grid; grid-template-columns: auto minmax(0, 1fr) auto; align-items: center; gap: 10px; margin-top: 10px;
   padding: 10px 12px; border-radius: 16px; background: linear-gradient(135deg, #FFF4D6, var(--vellum-100)); box-shadow: inset 0 0 0 2px var(--gold-300);
