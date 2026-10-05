@@ -28,7 +28,7 @@
     <!-- Invité : l'île demande un compte (ses ressources et écus sont gardés par le serveur) -->
     <div v-if="guest" class="world__guest">
       <p class="world__guest-title">Ton île t’attend.</p>
-      <p class="world__guest-text">Crée un compte pour bâtir ton île : chantiers, récoltes et décorations y sont gardés pour toi.</p>
+      <p class="world__guest-text">Crée un compte pour bâtir ton île : chantiers, récoltes et créations y sont gardés pour toi.</p>
       <button type="button" class="world__btn" @click="$emit('login')">Se connecter · créer un compte</button>
     </div>
 
@@ -85,9 +85,9 @@
           L’île ne répond pas.
           <button type="button" class="world__btn world__btn--small" @click="load">Réessayer</button>
         </p>
-        <p v-else-if="moving" class="world__banner" role="status">
-          Touche une case libre pour y poser {{ moving }}.
-          <button type="button" class="world__link" @click="moving = null">Annuler</button>
+        <p v-else-if="craftPlacing && placingCraft" class="world__banner" role="status">
+          {{ craftBanner }}
+          <button type="button" class="world__link" @click="cancelCraft">Annuler</button>
         </p>
         <p v-else-if="annexPlacing && placingAnnex" class="world__banner" role="status">
           {{ annexBanner }}
@@ -103,11 +103,18 @@
           </div>
         </transition>
 
-        <!-- Appui long sur une décoration : déplacer ou retirer -->
-        <div v-if="selected && !moving" class="world__menu" :style="menuStyle" role="dialog" :aria-label="`${selected.element}`">
-          <span class="world__menu-name">{{ selected.element }}</span>
-          <button type="button" class="world__menu-btn" @click="startMove">Déplacer</button>
-          <button type="button" class="world__menu-btn world__menu-btn--quiet" @click="removeSelected">Retirer</button>
+        <!-- Appui long sur une création d'île : la déplacer ou la ranger dans la réserve de l'établi -->
+        <div v-if="craftMenu && !craftPlacing" class="world__menu" :style="menuStyle" role="dialog" :aria-label="craftName(craftMenu.craft)">
+          <span class="world__menu-name">{{ craftName(craftMenu.craft) }}</span>
+          <button type="button" class="world__menu-btn" @click="moveFromMenu">Déplacer</button>
+          <button type="button" class="world__menu-btn world__menu-btn--quiet" :disabled="busy" @click="storeFromMenu">Ranger</button>
+        </div>
+
+        <!-- Pose d'une création : la case dorée choisie ; poser ici ou choisir une autre case -->
+        <div v-if="craftConfirm && placingCraft" class="world__menu" :style="craftConfirmStyle" role="dialog" :aria-label="`Poser ${placingCraft.name}`">
+          <span class="world__menu-name">{{ placingCraft.name }}</span>
+          <button type="button" class="world__menu-btn" :disabled="busy" @click="confirmCraft">Poser ici</button>
+          <button type="button" class="world__menu-btn world__menu-btn--quiet" @click="craftConfirm = null">Autre case</button>
         </div>
 
         <!-- Pose d'une annexe : la case dorée choisie, son prix ; poser ici ou choisir une autre case -->
@@ -119,7 +126,7 @@
       </div>
 
       <p v-if="state" class="world__note">
-        Tes bâtiments produisent ressources et écus, la Récolte aussi. Les décorations s’achètent pour embellir l’île.
+        Tes bâtiments produisent ressources et écus, la Récolte aussi. À l’établi du Foyer, assemble des créations pour embellir l’île.
       </p>
     </template>
 
@@ -220,6 +227,16 @@
                   <span v-for="(n, r) in fillAll.cost" :key="r" class="world__fill-cost"><ElementGlyph :glyph="GLYPH[r]" />{{ n }}</span>
                 </button>
               </section>
+              <!-- Foyer : l'établi des créations d'île -->
+              <div v-if="site.id === 'foyer' && state.crafts" class="world__game">
+                <span class="world__game-art" aria-hidden="true"><img :src="benchArt" alt="" /></span>
+                <span class="world__game-body">
+                  <span class="world__game-kind">Établi</span>
+                  <span class="world__game-name">Créations d’île</span>
+                  <span class="world__game-text">{{ benchText }}</span>
+                </span>
+                <button type="button" class="world__game-btn" aria-label="Ouvrir l’établi" :disabled="busy" @click="openBench">Ouvrir</button>
+              </div>
               <!-- Mini-jeu du bâtiment (Ponton, Carrière, Bosquet), ouvert au palier III -->
               <div v-if="gameOf(site)" :class="['world__game', { 'is-locked': !gameOf(site).open }]">
                 <span class="world__game-art" aria-hidden="true"><GameIcon :kind="GAME_ICONS[gameOf(site).id]" :size="40" /></span>
@@ -368,6 +385,7 @@
                 <button v-else-if="quest.kind === 'runs'" type="button" class="world__btn" :disabled="busy || !state.charges.count" @click="questHarvest">
                   {{ state.charges.count ? 'Lancer une Récolte' : `Récolte : ${chargesText}` }}
                 </button>
+                <button v-else-if="quest.kind === 'crafts'" type="button" class="world__btn" @click="openBench">Ouvrir l’établi</button>
               </div>
             </template>
             <p v-else class="world__brume-say">« {{ state.brume.rested }} »</p>
@@ -382,7 +400,7 @@
               <button type="button" class="world__link" @click="zone = null">Fermer</button>
             </div>
             <p class="world__site-effect">
-              Agrandis ton île<template v-if="sitesIn(zone).length"> : ce quartier abrite {{ sitesIn(zone).join(', ') }}</template>, et de la place pour décorer.
+              Agrandis ton île<template v-if="sitesIn(zone).length"> : ce quartier abrite {{ sitesIn(zone).join(', ') }}</template>, et de la place pour tes créations.
             </p>
             <ul class="world__needs">
               <li v-if="zone.chapter" :class="['world__need', zone.open ? 'is-ok' : 'is-missing']">
@@ -402,32 +420,6 @@
         </div>
       </transition>
 
-      <!-- Choix de la décoration à poser -->
-      <transition name="world-sheet">
-        <div v-if="picking" class="world__sheet-backdrop" @click.self="picking = null">
-          <div class="world__sheet" role="dialog" aria-label="Choisir une décoration">
-            <div class="world__sheet-head">
-              <span class="world__sheet-title">Décorer</span>
-              <button type="button" class="world__link" @click="picking = null">Fermer</button>
-            </div>
-            <p class="world__pick-note">Une décoration s’achète une fois ; son prix dépend du chapitre de l’élément. La déplacer ensuite est gratuit.</p>
-            <input v-model="query" class="world__search" type="search" :placeholder="`Chercher parmi ${available.length}…`" aria-label="Chercher un élément" />
-            <div class="world__grid">
-              <ElementTile
-                v-for="name in pickList"
-                :key="name"
-                :name="name"
-                :glyph="elementEmojis[name]"
-                :family="familyOf[name]"
-                :price="decoPriceOf(name)"
-                :aria-label="`Poser ${name}${decoPriceOf(name) ? ` pour ${decoPriceOf(name)} écus` : ''}`"
-                @click="place(name, picking.x, picking.y)"
-              />
-              <p v-if="!pickList.length" class="world__empty">{{ available.length ? 'Aucun élément ne ressemble à cette recherche.' : 'Toutes tes découvertes sont déjà sur l’île.' }}</p>
-            </div>
-          </div>
-        </div>
-      </transition>
     </teleport>
 
     <ShopItemSheet
@@ -442,6 +434,30 @@
       @buy="buyFromSheet"
       @wear="skin => wearSkin(sheetSite, skin)"
       @close="sheet = null"
+    />
+
+    <!-- Établi (créations d'île) et assemblage d'une création -->
+    <CraftBench
+      v-if="benchOpen && state && state.crafts"
+      :crafts="state.crafts"
+      :stock="state.stock"
+      :element-emojis="elementEmojis"
+      :busy="busy || craftStarting"
+      @assemble="assemble"
+      @place="placeFromBench"
+      @close="benchOpen = false"
+    />
+    <CraftPuzzle
+      v-if="craftRun"
+      :run="craftRun"
+      :name="craftName(craftRun.craft)"
+      :sending="craftSending || craftStarting"
+      :error="craftError"
+      :made="craftMade"
+      @finish="finishCraft"
+      @restart="assemble(craftRun.craft)"
+      @place="placeFromPuzzle"
+      @close="closePuzzle"
     />
 
     <!-- Fiche d'une annexe posée (appui long) : la déplacer, ou ouvrir son bâtiment -->
@@ -540,9 +556,7 @@
 import { messageOf } from '@/utils/errors';
 import playService from '@/services/playService';
 import ElementGlyph from '@/components/ui/ElementGlyph.vue';
-import ElementTile from '@/components/ui/ElementTile.vue';
 import BrumeWisp from '@/components/ui/BrumeWisp.vue';
-import { familyIndex } from '@/utils/eras';
 import HarvestGame from './HarvestGame.vue';
 import ShopItemSheet from './ShopItemSheet.vue';
 import IslandClock from './IslandClock.vue';
@@ -557,18 +571,20 @@ import GameIcon from './minigames/GameIcon.vue';
 import VillagerSheet from './VillagerSheet.vue';
 import VisitorSheet from './VisitorSheet.vue';
 import RenameSheet from './RenameSheet.vue';
+import CraftBench from './CraftBench.vue';
+import CraftPuzzle from './CraftPuzzle.vue';
 import { villagerSprite, ROLES } from '@/world/villagers';
 import { talkLine, giftLine, awaits } from '@/world/friends';
 import { NEED_GLYPH, MOOD_GLYPH, MOOD_LABEL, ASKS, THANKS, missingOf, fillAllOf, askOr } from '@/world/needs';
 import { visitorLook, visitorBoat, askLine, THANKS as VISITOR_THANKS } from '@/world/visitors';
 import { nameSignLayers, nameSignLight, paintName } from '@/world/nameSigns';
 import { annexLayers, annexLight } from '@/world/annexSprites';
+import { craftLayers, craftLight, craftThumb } from '@/world/craftSprites';
 import { annexReady, annexYield, variantsOf } from '@/world/annexes';
 import { BOTTLE, noteOf, openableOf } from '@/world/chest';
 import GModal from '@/components/ui/GModal.vue';
 import { guideOf, guideKind } from '@/world/itemGuide';
 import { villageOf } from '@/world/village';
-import { search } from '@/utils/search';
 import { glyph, clearDrawings } from '@/book/painter';
 import { burst, ring, vibrate, center, reducedMotion } from '@/utils/fx';
 import { GLYPH, LABEL, RESOURCES } from '@/game/resources';
@@ -577,7 +593,7 @@ import { lookAt, boatOffset, boatOf, artMake } from '@/world/looks';
 import { itemLayers, itemLight, itemThumb } from '@/world/shopSprites';
 import { rareLights } from '@/world/rareSprites';
 import { tintOf } from '@/world/tints';
-import { NATURE2, CRITTERS, PLINTH, SIGN } from '@/world/nature';
+import { NATURE2, CRITTERS, SIGN } from '@/world/nature';
 import { drawSprite, imageOf, spriteUrl, clearSprites } from '@/world/spriteCache';
 import { islandOf, liveOf, drawLive, drawCell, TerrainCache, HS, SEA_Z, worldOf, lampGlowOf } from '@/world/terrain';
 import { FLOATING_ZONE, COLONY_ZONE, isletsOf, ferryPose, drawFloatBelow, drawSpring } from '@/world/islets';
@@ -590,7 +606,6 @@ import { SEA_SPRITES, FISH_SPECIES } from '@/world/seaSprites';
 import { drawBrume, floatOf, BRUME_ALT, BRUME_REACH } from '@/world/brume';
 import { guide } from '@/game/guide';
 import longpress, { HOLD_MS } from '@/directives/longpress';
-import { chapterOfFamily } from '@/book/chapters';
 import { roman } from '@/utils/roman';
 import { P } from '@/world/iso';
 import { phaseAt, forcedPhase, drawSea, drawCloudShadows, drawClouds, drawTint, drawWeather, glow, fireflies, hash } from '@/world/scene';
@@ -680,18 +695,16 @@ const FOREST_HIGH = ['pine', 'pine', 'tree'];
 let lastView = null;
 
 // Le Monde : l'île du joueur en isométrique (Canvas 2D), avec une caméra qu'on fait glisser et zoomer.
-// L'état vient du serveur (chantiers, réserves, parties, décorations) ; le dessin, la caméra et la boucle
+// L'état vient du serveur (chantiers, réserves, parties, créations d'île) ; le dessin, la caméra et la boucle
 // d'animation sont non réactifs et s'arrêtent quand l'onglet est caché ou le composant démonté.
 export default {
   name: 'WorldView',
-  components: { ElementGlyph, ElementTile, HarvestGame, ShopItemSheet, BrumeWisp, IslandClock, GModal, ChestList, ChestReveal, ChestHaul, AnnexPanel, AnnexSheet, NameSignPanel, MiniGame, GameIcon, VillagerSheet, VisitorSheet, RenameSheet },
+  components: { ElementGlyph, HarvestGame, ShopItemSheet, BrumeWisp, IslandClock, GModal, ChestList, ChestReveal, ChestHaul, AnnexPanel, AnnexSheet, NameSignPanel, MiniGame, GameIcon, VillagerSheet, VisitorSheet, RenameSheet, CraftBench, CraftPuzzle },
   directives: { longpress },
   props: {
-    discoveredElements: { type: Array, required: true },
+    // Glyphes des éléments du Livre (savoir-faire demandé à l'établi)
     elementEmojis: { type: Object, required: true },
     isLoggedIn: { type: Boolean, default: false },
-    // Familles des éléments connus ({ famille: [noms] }) : teinte des tuiles
-    categories: { type: Object, default: () => ({}) },
     // Solde d'écus (en-tête) : grise les articles hors de portée ; le serveur reste seul juge
     coins: { type: Number, default: null }
   },
@@ -703,9 +716,6 @@ export default {
       guest: false,
       loadError: false,
       busy: false,
-      picking: null,
-      selected: null,
-      moving: null,
       site: null,
       // Onglet de la fiche d'un bâtiment : aperçu ou évolution
       siteTab: 'overview',
@@ -719,7 +729,6 @@ export default {
       guide: null,
       // Bulle d'info de l'appui long : { x, y, below, title, text, hint }
       tip: null,
-      query: '',
       menuPos: { x: 0, y: 0 },
       run: null,
       sending: false,
@@ -756,7 +765,19 @@ export default {
       // attente de confirmation : { x, y, px, py } ; fiche d'une annexe posée ouverte : { x, y }
       annexPlacing: null,
       annexConfirm: null,
-      annexSheet: null
+      annexSheet: null,
+      // Créations d'île : établi ouvert ; assemblage en cours ({ id, craft, shape, pieces, turned }), son envoi, son refus,
+      // sa réussite ; pose ou déplacement en cours ({ craft, from: { x, y } | null }) et case dorée choisie ({ x, y, px,
+      // py }) ; menu d'une création posée ({ x, y, craft })
+      benchOpen: false,
+      craftRun: null,
+      craftStarting: false,
+      craftSending: false,
+      craftError: '',
+      craftMade: false,
+      craftPlacing: null,
+      craftConfirm: null,
+      craftMenu: null
     };
   },
   computed: {
@@ -848,17 +869,36 @@ export default {
     quest() {
       return this.state && this.state.brume ? this.state.brume.quest : null;
     },
-    familyOf() {
-      return familyIndex(this.categories);
+    // Créations d'île posées ([{ x, y, craft }])
+    crafted() {
+      return this.state && this.state.crafts ? this.state.crafts.placed : [];
     },
-    placedNames() {
-      return new Set(this.state ? this.state.tiles.map(t => t.element) : []);
+    // Création en cours de pose : sa carte du catalogue ; ses cases dorées (sans la sienne, si on la déplace)
+    placingCraft() {
+      return this.craftPlacing && this.state ? this.state.crafts.catalog.find(c => c.id === this.craftPlacing.craft) || null : null;
     },
-    available() {
-      return [...this.discoveredElements].reverse().filter(name => !this.placedNames.has(name));
+    craftSpots() {
+      const from = this.craftPlacing && this.craftPlacing.from;
+      return this.placingCraft ? this.placingCraft.spots.filter(sp => !from || sp.x !== from.x || sp.y !== from.y) : [];
     },
-    pickList() {
-      return this.query.trim() ? search(this.available, this.query) : this.available;
+    craftBanner() {
+      const name = this.placingCraft ? this.placingCraft.name : '';
+      return this.craftPlacing && this.craftPlacing.from ? `Touche une case dorée pour y déplacer : ${name}.` : `Touche une case dorée pour poser : ${name}.`;
+    },
+    craftConfirmStyle() {
+      const c = this.craftConfirm;
+      if (!c || !this.geo) return {};
+      return { left: `${Math.max(110, Math.min(this.geo.width - 110, c.px))}px`, top: `${Math.max(56, c.py - 24)}px` };
+    },
+    // Établi (fiche du Foyer) : son dessin, ce qui attend
+    benchArt() {
+      return spriteUrl('craft-thumb-cloture', () => craftThumb('cloture'));
+    },
+    benchText() {
+      const { catalog } = this.state.crafts;
+      const ready = catalog.filter(c => !c.block).length;
+      const reserve = catalog.reduce((n, c) => n + c.reserve, 0);
+      return [`${this.crafted.length} sur l’île`, reserve ? `${reserve} en réserve` : '', ready ? `${ready} à assembler` : ''].filter(Boolean).join(' · ');
     },
     menuStyle() {
       return { left: `${this.menuPos.x}px`, top: `${this.menuPos.y}px` };
@@ -873,9 +913,9 @@ export default {
     canvasLabel() {
       if (!this.state) return 'Ton île';
       const built = this.state.sites.filter(s => s.level).map(s => s.name);
-      const names = this.state.tiles.map(t => t.element);
+      const names = this.crafted.map(c => this.craftName(c.craft));
       const annexes = (this.state.annexes || []).length;
-      return `Ton île : ${built.join(', ')} bâtis${annexes ? ` ; ${annexes} annexe${annexes > 1 ? 's' : ''}` : ''}${names.length ? ` ; décorations : ${names.join(', ')}` : ''}.`;
+      return `Ton île : ${built.join(', ')} bâtis${annexes ? ` ; ${annexes} annexe${annexes > 1 ? 's' : ''}` : ''}${names.length ? ` ; créations : ${names.join(', ')}` : ''}.`;
     }
   },
   watch: {
@@ -1027,6 +1067,12 @@ export default {
       }
     },
     apply(state) {
+      // Les décorations de l'ancienne règle viennent d'être remboursées (une seule fois) : le solde suit, l'île le dit
+      if (state.refund) {
+        const { count, coins, balance } = state.refund;
+        this.$emit('coins-updated', balance);
+        this.$emit('show-alert', `Les décorations laissent place aux créations d’île : ${count} décoration${count > 1 ? 's' : ''} remboursée${count > 1 ? 's' : ''}, ${coins} écus. Assemble tes créations à l’établi du Foyer.`);
+      }
       // Un niveau gagné depuis le dernier état : le bâtiment s'élève sous les yeux du joueur
       if (this.state && !this.reduced()) {
         const before = new Map(this.state.sites.map(site => [site.id, site.level]));
@@ -1062,7 +1108,7 @@ export default {
       this.shore = this.shoreOf(state);
       // Habitants et bêtes : ils vivent dans les quartiers à soi, autour des bâtiments bâtis
       this.village = villageOf({
-        n: state.size, M, sites: state.sites, tiles: state.tiles, props: this.props, annexes: state.annexes || [],
+        n: state.size, M, sites: state.sites, crafts: state.crafts ? state.crafts.placed : [], props: this.props, annexes: state.annexes || [],
         owned: new Set(state.map.zones.map((z, i) => (z.owned ? i : -1)).filter(i => i >= 0)), visitor: state.visitor || null,
         settlers: (state.villagers || []).filter(v => v.seed !== undefined)
       });
@@ -1087,8 +1133,10 @@ export default {
       this.loadedAt = Date.now();
       this.clock = this.loadedAt;
       if (this.site) this.site = state.sites.find(s => s.id === this.site.id) || null;
-      // Pose d'annexe en cours : abandonnée si le bâtiment n'a plus de case libre
+      // Pose d'annexe en cours : abandonnée si le bâtiment n'a plus de case libre ; de même pour une création
       if (this.annexPlacing && !(this.placingSite && this.placingSite.spots.length)) this.cancelAnnex();
+      if (this.craftPlacing && !this.craftSpots.length) this.cancelCraft();
+      if (this.craftMenu && !this.crafted.some(c => c.x === this.craftMenu.x && c.y === this.craftMenu.y)) this.craftMenu = null;
       this.$nextTick(() => {
         this.setup();
         this.draw(performance.now());
@@ -1140,11 +1188,11 @@ export default {
     },
     // Décor naturel, fixe pour une île donnée, selon le sol : arbres des forêts, arbres isolés, rochers, touffes des
     // dunes ; roseaux et nénuphars au bord de l'eau douce ; palmiers et coquillages sur le sable, touffes et fleurs
-    // dans l'herbe libre. Une décoration posée le remplace, et il ne gêne aucun toucher.
+    // dans l'herbe libre. Une création posée le remplace, et il ne gêne aucun toucher.
     natureOf(state) {
       const n = state.size;
       const M = this.M;
-      const taken = new Set([...state.tiles, ...(state.annexes || [])].map(t => t.y * n + t.x));
+      const taken = new Set([...(state.crafts ? state.crafts.placed : []), ...(state.annexes || [])].map(t => t.y * n + t.x));
       state.sites.forEach(site => {
         for (let dy = 0; dy < site.h; dy++) for (let dx = 0; dx < site.w; dx++) taken.add((site.y + dy) * n + site.x + dx);
       });
@@ -1236,10 +1284,6 @@ export default {
     // Place du panneau d'un quartier : choisie par le serveur (sol libre, au bord d'un chemin, près du centre)
     signPlaceOf(zone) {
       return zone.anchor || null;
-    },
-    decoPriceOf(name) {
-      const prices = this.state && this.state.decoPrices;
-      return prices ? prices[chapterOfFamily(this.familyOf[name])] ?? null : null;
     },
     // Chantier : 0 = plan à trouver, 1 = plan trouvé, 2 = tout est prêt
     stageOf(site) {
@@ -1458,28 +1502,15 @@ export default {
         ctx.lineWidth = 1 / s;
         ctx.stroke();
       }
-      if (this.moving) {
-        const occupied = new Set([...this.state.tiles, ...(this.state.annexes || [])].map(tile => tile.y * n + tile.x));
-        ctx.setLineDash([4 / s, 3 / s]);
-        ctx.strokeStyle = 'rgba(255, 250, 220, .9)';
-        ctx.lineWidth = 1.5 / s;
-        for (let y = 0; y < n; y++) {
-          for (let x = 0; x < n; x++) {
-            if (plots.has(y * n + x) || occupied.has(y * n + x) || !'gsm'.includes(this.M.ground(x, y)) || this.lockedAt(x, y)) continue;
-            const c = this.ground(x, y);
-            if (c.x < view.x - TW || c.x > view.x + view.w + TW || c.y < view.y - TW || c.y > view.y + view.h + TW) continue;
-            this.diamond(ctx, c.x, c.y, TW, TH);
-            ctx.stroke();
-          }
-        }
-        ctx.setLineDash([]);
-      }
-      // Pose d'une annexe : les cases autorisées battent en doré, la case choisie est cerclée
-      if (this.annexPlacing && this.placingSite) {
+      // Pose d'une annexe ou d'une création : les cases autorisées battent en doré, la case choisie est cerclée
+      const golden = this.annexPlacing && this.placingSite ? { spots: this.placingSite.spots, chosen: this.annexConfirm }
+        : this.craftPlacing ? { spots: this.craftSpots, chosen: this.craftConfirm } : null;
+      if (golden) {
         const pulse = 0.5 + 0.5 * Math.sin(t * 4);
-        for (const spot of this.placingSite.spots) {
+        for (const spot of golden.spots) {
           const c = this.ground(spot.x, spot.y);
-          const chosen = this.annexConfirm && this.annexConfirm.x === spot.x && this.annexConfirm.y === spot.y;
+          if (c.x < view.x - TW || c.x > view.x + view.w + TW || c.y < view.y - TW || c.y > view.y + view.h + TW) continue;
+          const chosen = golden.chosen && golden.chosen.x === spot.x && golden.chosen.y === spot.y;
           this.diamond(ctx, c.x, c.y, TW, TH);
           ctx.fillStyle = chosen ? 'rgba(242, 192, 75, .62)' : `rgba(242, 192, 75, ${(0.2 + 0.18 * pulse).toFixed(3)})`;
           ctx.fill();
@@ -1488,9 +1519,8 @@ export default {
           ctx.stroke();
         }
       }
-      for (const cell of [this.selected, this.picking]) {
-        if (!cell) continue;
-        const c = this.ground(cell.x, cell.y);
+      if (this.craftMenu) {
+        const c = this.ground(this.craftMenu.x, this.craftMenu.y);
         this.diamond(ctx, c.x, c.y, TW, TH);
         ctx.strokeStyle = '#F2C04B';
         ctx.lineWidth = 2.5 / s;
@@ -1537,13 +1567,13 @@ export default {
       // Ombres des nuages et des mouettes qui glissent sur la mer et le relief
       drawCloudShadows(ctx, this.terrain.bounds, t, phase);
       for (const g of life.gulls) drawGullShadow(ctx, g, s);
-      // Ce qui se tient debout (bâtiments, décorations, nature), du plus loin au plus proche
+      // Ce qui se tient debout (bâtiments, créations, nature), du plus loin au plus proche
       // (seulement ce qui est à l'écran ; un grand sprite dépasse vers le haut de son pied)
       const seenAt = (wx, wy) => wx > view.x - TW * 2.5 && wx < view.x + view.w + TW * 2.5 && wy > view.y - TW * 0.6 && wy < view.y + view.h + TW * 3.2;
       const seen = (x, y) => { const c = this.ground(x, y); return seenAt(c.x, c.y); };
       const standing = [
         ...this.state.sites.map(site => ({ depth: site.x + site.y + site.w, site })),
-        ...this.state.tiles.filter(tile => seen(tile.x, tile.y)).map(tile => ({ depth: tile.x + tile.y, tile })),
+        ...this.crafted.filter(craft => seen(craft.x, craft.y)).map(craft => ({ depth: craft.x + craft.y, craft })),
         ...(this.state.annexes || []).filter(annex => seen(annex.x, annex.y)).map(annex => ({ depth: annex.x + annex.y, annex })),
         ...this.state.sites.filter(site => site.sign && !site.locked).map(site => ({ site, at: this.nameSignAt(site) }))
           .filter(({ at }) => seen(at.gx, at.gy)).map(({ site, at }) => ({ depth: at.gx + at.gy, nameSign: site })),
@@ -1558,9 +1588,9 @@ export default {
       const repaint = () => this.draw(performance.now());
       for (const item of standing) {
         if (item.site) this.drawSite(ctx, item.site, t, now, repaint);
-        else if (item.tile) {
-          this.drawTile(ctx, item.tile, now, t, repaint);
-          this.occlude(ctx, item.tile.x, item.tile.y);
+        else if (item.craft) {
+          this.drawCraft(ctx, item.craft, t, now, repaint);
+          this.occlude(ctx, item.craft.x, item.craft.y);
         } else if (item.annex) {
           this.drawAnnex(ctx, item.annex, t, now, repaint);
           this.occlude(ctx, item.annex.x, item.annex.y);
@@ -1594,7 +1624,7 @@ export default {
       ctx.restore();
       // Brume flotte au-dessus de tout (et luit la nuit)
       this.drawBrume(ctx, t, s);
-      // Les noms des lieux passent par-dessus tout : aucune décoration ne les cache
+      // Les noms des lieux passent par-dessus tout : aucune création ne les cache
       if (this.cam.s >= 0.55) this.state.sites.filter(site => !site.locked).forEach(site => this.drawLabel(ctx, site));
       // Bulles de production à toucher, au-dessus de tout
       this.drawBubbles(ctx, t, repaint);
@@ -2228,7 +2258,7 @@ export default {
       this.draw(performance.now());
     },
     // Mouettes posées : quelques plages au bord de la mer (côté large), dans les quartiers à soi, libres (ni
-    // chantier, ni décoration, ni arbre ou rocher)
+    // chantier, ni création, ni arbre ou rocher)
     // Cases de sable libres au bord de la mer, dans les quartiers à soi (mouettes posées, bouteille à la mer)
     beachOf(state, owned, busy) {
       const M = this.M;
@@ -2248,7 +2278,7 @@ export default {
       const bottle = state.chests && state.chests.bottle;
       if (!bottle || !bottle.available) return null;
       const owned = new Set(state.map.zones.filter(z => z.owned).map(z => z.id));
-      const busy = new Set([...state.tiles, ...this.props, ...this.perches].map(c => `${c.x},${c.y}`));
+      const busy = new Set([...(state.crafts ? state.crafts.placed : []), ...this.props, ...this.perches].map(c => `${c.x},${c.y}`));
       const cells = this.beachOf(state, owned, busy);
       const h = [...bottle.key].reduce((n, c) => (n * 31 + c.charCodeAt(0)) >>> 0, 0);
       return cells.length ? cells[h % cells.length] : null;
@@ -2256,7 +2286,7 @@ export default {
     perchesOf(state) {
       const M = this.M;
       const owned = new Set(state.map.zones.filter(z => z.owned).map(z => z.id));
-      const busy = new Set([...state.tiles, ...this.props].map(c => `${c.x},${c.y}`));
+      const busy = new Set([...(state.crafts ? state.crafts.placed : []), ...this.props].map(c => `${c.x},${c.y}`));
       const cells = this.beachOf(state, owned, busy);
       // La colonie de l'Îlot aux Mouettes : trois groupes plus nombreux au bord de l'îlot
       const colony = owned.has(COLONY_ZONE)
@@ -2331,6 +2361,16 @@ export default {
         const flicker = fire ? 0.85 + 0.15 * Math.sin(t * 13 + annex.x) * Math.sin(t * 7.3) : 0.95 + 0.05 * Math.sin(t * 2 + annex.y);
         glow(ctx, c.x + lx, c.y + ly, r, (fire ? Math.max(0.3, lit) : litFor(annex.x * 13 + annex.y)) * flicker, color);
       }
+      // Créations d'île : lanterne, brasero (son feu brûle même de jour), fontaine, kiosque
+      for (const craft of this.crafted) {
+        const light = craftLight(craft.craft);
+        if (!light) continue;
+        const [u, v, z, r, color, fire] = light;
+        const c = this.ground(craft.x, craft.y);
+        const [lx, ly] = P(u, v, z);
+        const flicker = fire ? 0.85 + 0.15 * Math.sin(t * 13 + craft.x) * Math.sin(t * 7.3) : 0.95 + 0.05 * Math.sin(t * 2 + craft.y);
+        glow(ctx, c.x + lx, c.y + ly, r, (fire ? Math.max(0.3, lit) : litFor(craft.x * 11 + craft.y)) * flicker, color);
+      }
       // Enseignes à lanternes
       for (const site of this.state.sites) {
         if (!site.sign || site.locked) continue;
@@ -2383,21 +2423,27 @@ export default {
       ctx.fillText(site.name, c.x, y + 0.5);
       ctx.textBaseline = 'alphabetic';
     },
-    drawTile(ctx, tile, now, t, repaint) {
-      const c = this.ground(tile.x, tile.y);
-      const started = this.pops.get(tile.element);
+    // Création d'île posée : elle surgit à la pose, sautille au toucher, s'efface à demi pendant qu'on la déplace
+    drawCraft(ctx, craft, t, now, repaint) {
+      const c = this.ground(craft.x, craft.y);
+      const key = `craft:${craft.x},${craft.y}`;
+      const started = this.pops.get(key);
       let scale = 1;
       if (started) {
         const k = Math.min(1, (now - started) / 450);
         const back = 1.7;
         scale = 1 + (back + 1) * Math.pow(k - 1, 3) + back * Math.pow(k - 1, 2);
-        if (k >= 1) this.pops.delete(tile.element);
+        if (k >= 1) this.pops.delete(key);
       }
-      const bob = Math.sin(t * 1.6 + tile.x * 0.8 + tile.y * 1.3) * TW * 0.025;
-      // Socle de pierre et de bois ; l'élément flotte au-dessus et respire
-      drawSprite(ctx, 'plinth', PLINTH, c.x, c.y, repaint);
-      ctx.fillStyle = '#000';
-      glyph(ctx, tile.emoji, c.x, c.y - TW * 0.42 + bob, TW * 0.56 * scale, repaint);
+      const tapped = this.scared.get(key);
+      const hop = tapped && t - tapped.at < 0.5 ? Math.sin(((t - tapped.at) / 0.5) * Math.PI) * 5 : 0;
+      const from = this.craftPlacing && this.craftPlacing.from;
+      ctx.save();
+      ctx.translate(c.x, c.y - hop);
+      if (scale !== 1) ctx.scale(scale, scale);
+      if (from && from.x === craft.x && from.y === craft.y) ctx.globalAlpha = 0.45;
+      for (const layer of craftLayers(craft.craft, t)) drawSprite(ctx, layer.key, layer.make, 0, 0, repaint);
+      ctx.restore();
     },
 
     // Annexe posée sur sa case : elle surgit à la pose, sautille au toucher, s'efface à demi pendant qu'on la déplace
@@ -2439,14 +2485,14 @@ export default {
         this.holdTimer = setTimeout(() => this.onHold(), HOLD_MS);
       } else this.gesture = { pinch: this.pinchOf(), moved: Infinity };
     },
-    // Appui long sans bouger : une autre réaction que le toucher. La fiche de Brume, le menu d'une décoration, la fiche
+    // Appui long sans bouger : une autre réaction que le toucher. La fiche de Brume, le menu d'une création, la fiche
     // d'un article posé ; partout ailleurs, une bulle dit ce que c'est et ce que fait un toucher
     onHold() {
       const gesture = this.gesture;
-      if (!gesture || !gesture.start || gesture.moved > TAP_SLOP || this.moving || this.annexPlacing || this.busy) return;
+      if (!gesture || !gesture.start || gesture.moved > TAP_SLOP || this.craftPlacing || this.annexPlacing || this.busy) return;
       const hit = this.hitAt(gesture.start.x, gesture.start.y);
       if (hit && hit.brume) this.questOpen = true;
-      else if (hit && hit.tile) this.openTileMenu(hit.tile);
+      else if (hit && hit.craft) this.openCraftMenu(hit.craft);
       else if (hit && hit.item) this.describeItem(hit.site, hit.item);
       else if (hit && hit.annex) this.annexSheet = { x: hit.annex.x, y: hit.annex.y };
       else if (hit && hit.nameSign) this.openNameSign(hit.nameSign);
@@ -2480,7 +2526,7 @@ export default {
       this.gesture.moved = Math.max(this.gesture.moved, Math.hypot(p.x - this.gesture.start.x, p.y - this.gesture.start.y));
       if (this.gesture.moved > TAP_SLOP) {
         clearTimeout(this.holdTimer);
-        this.selected = null;
+        this.craftMenu = null;
         this.annexConfirm = null;
         this.cam.x -= (p.x - prev.x) / this.cam.s;
         this.cam.y -= (p.y - prev.y) / this.cam.s;
@@ -2513,8 +2559,7 @@ export default {
       const p = this.point(event);
       this.zoomAt(p.x, p.y, event.deltaY < 0 ? 1.12 : 0.89);
     },
-    // Ce qui est sous le doigt : bâtiment, décoration, puis case
-    // Ce qui est sous le doigt : bulle de production, panneau de quartier, bâtiment, décoration, puis case
+    // Ce qui est sous le doigt : bulle de production, panneau de quartier, bâtiment, création, annexe, puis case
     hitAt(px, py) {
       const w = this.toWorld(px, py);
       if (this.brumeHit && Math.hypot(w.x - this.brumeHit.x, w.y - this.brumeHit.y) < this.brumeHit.r) return { brume: true };
@@ -2539,7 +2584,7 @@ export default {
       // Zones de toucher généreuses : tout le volume dessiné du bâtiment, pas seulement sa base
       const candidates = [
         ...this.state.sites.map(site => ({ site, depth: site.x + site.y + site.w, c: this.centerOf(site), r: TW * 0.49 * site.w, h: TW * 0.875 * site.w, below: TH * 0.525 * site.w })),
-        ...this.state.tiles.map(tile => ({ tile, depth: tile.x + tile.y, c: this.ground(tile.x, tile.y), r: TW * 0.4, h: TW * 0.95 })),
+        ...this.crafted.map(craft => ({ craft, depth: craft.x + craft.y, c: this.ground(craft.x, craft.y), r: TW * 0.42, h: TW * 1.1 })),
         ...(this.state.annexes || []).map(annex => ({ annex, depth: annex.x + annex.y, c: this.ground(annex.x, annex.y), r: TW * 0.44, h: TW * 1.1 }))
       ].sort((p, q) => q.depth - p.depth);
       const hit = candidates.find(o => Math.abs(w.x - o.c.x) < o.r && w.y > o.c.y - o.h && w.y < o.c.y + (o.site ? o.below : TH * 0.3));
@@ -2551,24 +2596,17 @@ export default {
       return this.lockedAt(tile.x, tile.y) ? { zone: this.zoneAt(tile.x, tile.y) } : { cell: tile };
     },
     tap(px, py) {
-      // Pose ou déplacement d'une annexe : seule compte la case, dorée ou non
+      // Pose ou déplacement d'une annexe ou d'une création : seule compte la case, dorée ou non
       if (this.annexPlacing) {
         this.tapAnnexSpot(px, py);
         return;
       }
-      const hit = this.hitAt(px, py);
-      if (this.moving) {
-        const cell = hit && hit.cell;
-        if (!cell) {
-          this.$emit('show-alert', hit && hit.zone ? 'Achète d’abord ce quartier pour y décorer.' : 'Choisis une case d’herbe libre.');
-          return;
-        }
-        const name = this.moving;
-        this.moving = null;
-        this.place(name, cell.x, cell.y);
+      if (this.craftPlacing) {
+        this.tapCraftSpot(px, py);
         return;
       }
-      this.selected = null;
+      const hit = this.hitAt(px, py);
+      this.craftMenu = null;
       if (!hit) {
         // La mer : des ronds dans l'eau là où le doigt touche (en mouvement réduit, la bulle d'info)
         if (this.reduced()) this.showTip(px, py, this.tipOf(null, { x: px, y: py }));
@@ -2635,13 +2673,15 @@ export default {
           this.siteTab = hit.site.level ? 'overview' : 'evolution';
         }
         vibrate(6);
-      } else if (hit.tile) {
-        // Un toucher soulève la décoration : un toucher sur une case libre la pose (appui long : son menu)
-        this.moving = hit.tile.element;
+      } else if (hit.craft) {
+        // Une création sautille et dit son nom (appui long : la déplacer ou la ranger)
+        const { craft } = hit;
+        this.scared.set(`craft:${craft.x},${craft.y}`, { at: performance.now() / 1000 });
+        this.showTip(px, py, this.tipOf(hit));
         vibrate(6);
       } else {
-        this.query = '';
-        this.picking = hit.cell;
+        // Une case libre : elle dit ce qu'on peut y faire
+        this.showTip(px, py, this.tipOf(hit, { x: px, y: py }));
       }
       this.draw(performance.now());
     },
@@ -2692,12 +2732,13 @@ export default {
         const text = per ? `Palier ${roman(site.level)} · ${per.amount} ${LABEL[site.produce] || ''} et ${per.coins} écus par heure` : `Palier ${roman(site.level)}${site.effect ? ` · ${site.effect}` : ''}`;
         return { title: site.name, text, hint: 'Toucher : sa fiche et sa boutique' };
       }
+      if (hit.craft) return { title: this.craftName(hit.craft.craft), text: 'Une création d’île, assemblée à l’établi.', hint: 'Appui long : la déplacer ou la ranger' };
       // Case de l'île : son décor naturel, ou de l'herbe libre
       const cell = hit.cell || this.tileAt(point.x, point.y);
       const prop = cell && this.props.find(p => p.x === cell.x && p.y === cell.y);
       return prop
-        ? { title: NATURE_NAMES[prop.kind] || 'Décor', text: 'Une décoration posée ici le remplace.', hint: 'Toucher : poser une décoration' }
-        : { title: 'Case libre', text: 'De la place pour une décoration de ton Livre.', hint: 'Toucher : poser une décoration' };
+        ? { title: NATURE_NAMES[prop.kind] || 'Décor', text: 'Une création posée ici le remplace.', hint: 'Les créations s’assemblent à l’établi du Foyer' }
+        : { title: 'Case libre', text: 'De la place pour une création d’île.', hint: 'Les créations s’assemblent à l’établi du Foyer' };
     },
     // Point de l'écran (page) d'un point du canvas
     canvasPoint(x, y) {
@@ -3185,46 +3226,178 @@ export default {
       const { prize } = this.haul[index];
       return this.wearSkin(this.state.sites.find(s => s.id === prize.site), prize.item);
     },
-    async place(name, x, y) {
-      this.picking = null;
-      this.busy = true;
+    /* ---------- Créations d'île : établi, assemblage, pose ---------- */
+    craftName(id) {
+      const c = this.state && this.state.crafts ? this.state.crafts.catalog.find(k => k.id === id) : null;
+      return c ? c.name : id;
+    },
+    openBench() {
+      this.site = null;
+      this.questOpen = false;
+      this.benchOpen = true;
+    },
+    // « Assembler » (ou Recommencer) : le serveur tire les pièces ; rien n'est payé avant la réussite
+    async assemble(craftId) {
+      if (this.craftStarting) return;
+      this.craftStarting = true;
       try {
-        this.pops.set(name, performance.now());
-        const world = await playService.worldPlace(name, x, y);
+        const { run } = await playService.craftStart(craftId);
+        this.craftRun = run;
+        this.craftError = '';
+        this.craftMade = false;
+      } catch (error) {
+        const message = messageOf(error, 'L’assemblage n’a pas pu commencer.');
+        if (this.craftRun) this.craftError = message;
+        else this.$emit('show-alert', message);
+      } finally {
+        this.craftStarting = false;
+      }
+    },
+    // Gabarit rempli : le serveur vérifie la disposition, prend les ressources, met la création en réserve
+    async finishCraft(layout) {
+      if (!this.craftRun || this.craftSending) return;
+      this.craftSending = true;
+      try {
+        const { world } = await playService.craftFinish(this.craftRun.id, layout);
         this.apply(world);
-        // Une nouvelle décoration s'achète : le solde suit (absent pour un simple déplacement)
-        if (world.coins !== undefined) this.$emit('coins-updated', world.coins);
+        this.craftMade = true;
+        vibrate([10, 30, 10]);
+      } catch (error) {
+        // Refusé : cet assemblage est rendu ; « Recommencer » en tire un autre
+        this.craftError = messageOf(error, 'L’assemblage n’a pas pu être vérifié.');
+      } finally {
+        this.craftSending = false;
+      }
+    },
+    closePuzzle() {
+      this.craftRun = null;
+      this.craftError = '';
+      this.craftMade = false;
+    },
+    // « Poser » (établi, ou juste après l'assemblage) : les cases permises s'allument sur l'île
+    startCraftPlace(craftId, from = null) {
+      this.benchOpen = false;
+      this.closePuzzle();
+      this.craftMenu = null;
+      this.craftConfirm = null;
+      this.craftPlacing = { craft: craftId, from };
+      if (!this.craftSpots.length) {
+        this.craftPlacing = null;
+        this.$emit('show-alert', 'Aucune case libre ne convient pour l’instant : sa règle de pose est dans l’établi.');
+        return;
+      }
+      vibrate(8);
+      this.focusOnSpots();
+      this.draw(performance.now());
+    },
+    placeFromBench(craftId) {
+      this.startCraftPlace(craftId);
+    },
+    placeFromPuzzle() {
+      this.startCraftPlace(this.craftRun.craft);
+    },
+    // La caméra va vers la case dorée la plus proche du centre de la vue
+    focusOnSpots() {
+      if (!this.craftSpots.length) return;
+      const near = this.craftSpots.map(sp => ({ sp, c: this.ground(sp.x, sp.y) }))
+        .reduce((a, b) => (Math.hypot(b.c.x - this.cam.x, b.c.y - this.cam.y) < Math.hypot(a.c.x - this.cam.x, a.c.y - this.cam.y) ? b : a));
+      this.cam.x = near.c.x;
+      this.cam.y = near.c.y - 10;
+      this.cam.s = Math.max(this.cam.s, 1.15);
+      this.clampCam();
+    },
+    cancelCraft() {
+      this.craftPlacing = null;
+      this.craftConfirm = null;
+      this.draw(performance.now());
+    },
+    // Toucher pendant la pose : une case dorée demande confirmation (déplacement : elle s'y pose aussitôt)
+    tapCraftSpot(px, py) {
+      const cell = this.tileAt(px, py);
+      if (!cell || !this.craftSpots.some(sp => sp.x === cell.x && sp.y === cell.y)) {
+        this.craftConfirm = null;
+        this.$emit('show-alert', this.placingCraft ? `Choisis une case dorée : ${this.placingCraft.place.toLowerCase()}` : 'Choisis une case dorée.');
+        this.draw(performance.now());
+        return;
+      }
+      vibrate(6);
+      if (this.craftPlacing.from) this.moveCraftTo(cell);
+      else this.craftConfirm = { x: cell.x, y: cell.y, px, py };
+      this.draw(performance.now());
+    },
+    // Pose confirmée : le serveur vérifie la règle ; la création surgit dans un nuage d'éclats
+    async confirmCraft() {
+      const target = this.craftConfirm;
+      const craft = this.placingCraft;
+      if (!target || !craft || this.busy) return;
+      this.busy = true;
+      const key = `craft:${target.x},${target.y}`;
+      try {
+        this.pops.set(key, performance.now());
+        const { world } = await playService.craftPlace(craft.id, target.x, target.y);
+        this.craftPlacing = null;
+        this.craftConfirm = null;
+        this.apply(world);
         this.$nextTick(() => {
-          burst(center(this.screenRectOf(x, y)), 14, 50);
-          vibrate([10, 30, 10]);
+          const at = center(this.screenRectOf(target.x, target.y));
+          ring(at, 80);
+          burst(at, 18, 60);
+          vibrate([12, 40, 18]);
         });
       } catch (error) {
-        this.pops.delete(name);
-        this.$emit('show-alert', messageOf(error, 'L’objet n’a pas pu être posé.'));
+        this.pops.delete(key);
+        this.craftConfirm = null;
+        this.$emit('show-alert', messageOf(error, 'La création n’a pas pu être posée.'));
+        this.load();
       } finally {
         this.busy = false;
       }
     },
-    // Menu d'une décoration (appui long) : déplacer, retirer
-    openTileMenu(tile) {
-      const c = this.ground(tile.x, tile.y);
-      const sp = this.toScreen(c.x, c.y);
-      this.menuPos = { x: Math.max(80, Math.min(this.geo.width - 80, sp.x)), y: Math.max(8, sp.y - TW * this.cam.s * 1.05) };
-      this.selected = tile;
-    },
-    startMove() {
-      this.moving = this.selected.element;
-      this.selected = null;
-      this.draw(performance.now());
-    },
-    async removeSelected() {
-      const tile = this.selected;
-      this.selected = null;
+    // Déplacement gratuit vers la case dorée touchée
+    async moveCraftTo(cell) {
+      const { from } = this.craftPlacing;
+      const key = `craft:${cell.x},${cell.y}`;
+      this.craftPlacing = null;
       this.busy = true;
       try {
-        this.apply(await playService.worldRemove(tile.x, tile.y));
+        this.pops.set(key, performance.now());
+        const { world } = await playService.craftMove(from.x, from.y, cell.x, cell.y);
+        this.apply(world);
+        this.$nextTick(() => {
+          burst(center(this.screenRectOf(cell.x, cell.y)), 14, 50);
+          vibrate([10, 30, 10]);
+        });
       } catch (error) {
-        this.$emit('show-alert', messageOf(error, 'L’objet n’a pas pu être retiré.'));
+        this.pops.delete(key);
+        this.$emit('show-alert', messageOf(error, 'La création n’a pas pu être déplacée.'));
+        this.load();
+      } finally {
+        this.busy = false;
+      }
+    },
+    // Menu d'une création posée (appui long) : déplacer, ranger
+    openCraftMenu(craft) {
+      const c = this.ground(craft.x, craft.y);
+      const sp = this.toScreen(c.x, c.y);
+      // Le menu tient au-dessus de la création, sans sortir de la vue par le haut
+      this.menuPos = { x: Math.max(80, Math.min(this.geo.width - 80, sp.x)), y: Math.max(56, sp.y - TW * this.cam.s * 1.15) };
+      this.craftMenu = { x: craft.x, y: craft.y, craft: craft.craft };
+    },
+    moveFromMenu() {
+      const { x, y, craft } = this.craftMenu;
+      this.startCraftPlace(craft, { x, y });
+    },
+    // Rangée dans la réserve de l'établi : elle se repose plus tard, sans rien payer
+    async storeFromMenu() {
+      const { x, y, craft } = this.craftMenu;
+      this.craftMenu = null;
+      this.busy = true;
+      try {
+        const { world } = await playService.craftStore(x, y);
+        this.apply(world);
+        this.$emit('show-alert', `${this.craftName(craft)} rangée dans la réserve de l’établi.`);
+      } catch (error) {
+        this.$emit('show-alert', messageOf(error, 'La création n’a pas pu être rangée.'));
       } finally {
         this.busy = false;
       }
@@ -3572,7 +3745,7 @@ export default {
 .world__guide dd { margin: 0; font-size: 14px; font-weight: 700; line-height: 1.4; }
 .world__menu {
   position: absolute; transform: translate(-50%, -100%);
-  display: flex; align-items: center; gap: 6px;
+  display: flex; align-items: center; gap: 6px; width: max-content;
   padding: 6px 8px; border-radius: 16px;
   background: var(--vellum-100); color: var(--ink-900);
   box-shadow: 0 10px 26px rgba(0, 0, 0, .45);
@@ -3657,6 +3830,7 @@ export default {
 .world__game.is-locked { background: var(--vellum-100); box-shadow: inset 0 0 0 1px rgba(74, 52, 38, .12); }
 .world__game.is-locked .world__game-art { filter: grayscale(.7) opacity(.6); }
 .world__game-art { display: grid; place-items: center; width: 52px; height: 52px; border-radius: 14px; background: rgba(255, 255, 255, .6); }
+.world__game-art img { width: 46px; height: 46px; object-fit: contain; }
 .world__game-body { display: grid; gap: 1px; min-width: 0; }
 .world__game-kind { font-size: 11px; font-weight: 800; text-transform: uppercase; letter-spacing: .04em; color: var(--ink-500); }
 .world__game-name { font-family: var(--font-display); font-weight: 700; font-size: 17px; line-height: 1.15; }
@@ -3733,7 +3907,6 @@ export default {
 .world__card-btn--quiet { background: var(--vellum-200); color: var(--ink-900); }
 .world__card-owned { display: grid; place-items: center; min-height: 40px; color: #4E8A3A; font-size: 13px; font-weight: 900; }
 .world__coin--small { width: 13px; height: 13px; }
-.world__pick-note { margin: 0 0 8px; color: var(--ink-500); font-size: 13px; }
 .world__needs { margin: 0; padding: 0; list-style: none; display: grid; gap: 6px; }
 /* Fiche de Brume : sa réplique, puis l'objectif, son avancée et la récompense */
 .world__quest-eyebrow { color: var(--ink-500); margin-bottom: 6px; }
@@ -3751,9 +3924,6 @@ export default {
 .world__need.is-missing em, .world__need.is-missing strong { color: #B0503A; }
 .world__need-glyph { width: 28px; font-size: 22px; text-align: center; }
 .world__sheet-actions { display: flex; flex-wrap: wrap; gap: 8px; }
-.world__search { width: 100%; padding: 8px 12px; border-radius: 12px; border: 1px solid var(--vellum-300); background: var(--vellum-50); color: var(--ink-900); font: inherit; font-size: 15px; }
-.world__grid { margin-top: 10px; overflow-y: auto; display: grid; grid-template-columns: repeat(auto-fill, minmax(70px, 1fr)); gap: 14px 8px; padding: 8px 2px 10px; }
-.world__empty { grid-column: 1 / -1; color: var(--ink-500); font-style: italic; text-align: center; }
 .world-sheet-enter-active, .world-sheet-leave-active { transition: opacity .25s ease; }
 .world-sheet-enter-active .world__sheet, .world-sheet-leave-active .world__sheet { transition: transform .3s cubic-bezier(.3, 1.2, .5, 1); }
 .world-sheet-enter-from, .world-sheet-leave-to { opacity: 0; }

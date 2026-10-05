@@ -40,10 +40,8 @@
           <!-- Le Monde : l'île du joueur -->
           <WorldView
             v-else-if="isWorldActive"
-            :discoveredElements="discoveredElements"
             :elementEmojis="elementEmojis"
             :isLoggedIn="isLoggedIn"
-            :categories="categories"
             :coins="coins"
             @coins-updated="handleCoinsUpdated"
             @show-alert="showAlert"

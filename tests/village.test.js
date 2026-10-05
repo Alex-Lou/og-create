@@ -24,7 +24,7 @@ const sites = [
   { id: 'ponton', name: 'Ponton', x: 3, y: 9, w: 2, h: 2, level: 1 },
   { id: 'atelier', name: 'Atelier', x: 9, y: 9, w: 2, h: 2, level: 0 }
 ];
-const village = villageOf({ n: N, M, sites, owned: new Set([0]), tiles: [], props: [{ kind: 'tree', x: 5, y: 1 }, { kind: 'apple', x: 6, y: 2 }] });
+const village = villageOf({ n: N, M, sites, owned: new Set([0]), crafts: [], props: [{ kind: 'tree', x: 5, y: 1 }, { kind: 'apple', x: 6, y: 2 }] });
 const at = (h, weather = 'clair') => skyAt(new Date(2026, 5, 21, 0, Math.round(h * 60)), { weather });
 
 describe('village : habitants', () => {
@@ -68,7 +68,7 @@ describe('village : habitants', () => {
 describe('village : visiteur et visiteurs installés', () => {
   const visitor = { id: 3, seed: 77, name: 'Iris', role: 'Cartographe', site: 'ponton' };
   const settlers = [{ id: 'v5', seed: 99, name: 'Basile', role: 'Botaniste', site: 'potager', home: { x: 8, y: 2 } }];
-  const busy = villageOf({ n: N, M, sites, owned: new Set([0]), tiles: [], props: [], visitor, settlers });
+  const busy = villageOf({ n: N, M, sites, owned: new Set([0]), crafts: [], props: [], visitor, settlers });
   it('un installé travaille au bâtiment de son métier, le visiteur flâne depuis le Ponton', () => {
     const settler = busy.residents.find(r => r.id === 'vil:v5');
     const guest = busy.residents.find(r => r.id === 'vis:3');

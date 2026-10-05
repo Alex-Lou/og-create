@@ -21,8 +21,8 @@ describe('besoins des habitants', () => {
     expect(needState(manger({ met: false, left: 0 }), 'Carrière')).toBe('A faim');
     expect(needState(outils(), 'Carrière')).toBe('Outils en bon état encore 30 h');
     expect(needState(outils({ met: false }), 'Carrière')).toBe('Outils usés');
-    expect(needState(deco(), 'Carrière')).toBe('1 / 3 décorations à 3 cases au plus de « Carrière »');
-    expect(needState(deco({ met: true, have: 3 }), 'Carrière')).toBe('3 décorations autour de « Carrière »');
+    expect(needState(deco(), 'Carrière')).toBe('1 / 3 créations d’île à 3 cases au plus de « Carrière »');
+    expect(needState(deco({ met: true, have: 3 }), 'Carrière')).toBe('3 créations d’île autour de « Carrière »');
   });
 
   it('sait ce qui manque, ce qui se paie, et ce que « Tout combler » coûterait', () => {

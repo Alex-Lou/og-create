@@ -49,12 +49,12 @@ export const BEAST_NAMES = {
 const WILD = new Set(['deer', 'fox', 'rabbit', 'hedgehog', 'squirrel', 'heron']);
 
 /* ---------- Chemins ---------- */
-// Grille où l'on marche : sol praticable des quartiers à soi, ni bâtiment, ni décoration, ni annexe, ni arbre ou
+// Grille où l'on marche : sol praticable des quartiers à soi, ni bâtiment, ni création, ni annexe, ni arbre ou
 // rocher ; d'une case à l'autre à la même hauteur, ou par les marches des chemins
-function gridOf({ n, M, sites, owned, tiles, props, annexes }) {
+function gridOf({ n, M, sites, owned, crafts, props, annexes }) {
   const blocked = new Uint8Array(n * n);
   for (const s of sites) for (let y = s.y; y < s.y + s.h; y++) for (let x = s.x; x < s.x + s.w; x++) if (x >= 0 && y >= 0 && x < n && y < n) blocked[y * n + x] = 1;
-  for (const t of [...tiles, ...annexes]) blocked[t.y * n + t.x] = 1;
+  for (const t of [...crafts, ...annexes]) blocked[t.y * n + t.x] = 1;
   for (const p of props) if (BLOCKING.has(p.kind)) blocked[p.y * n + p.x] = 1;
   const walk = (x, y) => x >= 0 && y >= 0 && x < n && y < n && !blocked[y * n + x] && owned.has(M.zone(x, y)) && WALK.includes(M.ground(x, y));
   const step = (a, b) => {
@@ -123,10 +123,10 @@ function doorOf(grid, site) {
 
 /* ---------- Le village ---------- */
 // sites : bâtiments de l'île ({ id, x, y, w, h, level, locked, name }) ; owned : indices des quartiers à soi ;
-// tiles : décorations posées ; props : décor naturel ({ kind, x, y }) ; annexes : annexes posées ({ x, y, site }) ;
+// crafts : créations d'île posées ({ x, y }) ; props : décor naturel ({ kind, x, y }) ; annexes : annexes posées ({ x, y, site }) ;
 // visitor : visiteur du moment (vue du serveur) ou null ; settlers : visiteurs installés ({ id, seed, role, site, home })
-export function villageOf({ n, M, sites, owned, tiles, props, annexes = [], visitor = null, settlers = [] }) {
-  const grid = gridOf({ n, M, sites, owned, tiles, props, annexes });
+export function villageOf({ n, M, sites, owned, crafts = [], props, annexes = [], visitor = null, settlers = [] }) {
+  const grid = gridOf({ n, M, sites, owned, crafts, props, annexes });
   const built = sites.filter(s => s.level > 0 && !s.locked);
   const doors = Object.fromEntries(built.map(s => [s.id, doorOf(grid, s)]).filter(([, d]) => d));
   const foyer = built.find(s => s.id === 'foyer');

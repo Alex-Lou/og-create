@@ -18,7 +18,7 @@
       </div>
 
       <!-- Besoins : humeur et ce qu'elle fait, puis chaque besoin (manger, travailler : à combler avec le stock ; se
-           distraire : des décorations autour de son bâtiment) -->
+           distraire : des créations d'île autour de son bâtiment) -->
       <section v-if="villager.needs" class="friend__needs" aria-label="Besoins">
         <h3 class="friend__title">Besoins · <span :class="['friend__mood', `is-${villager.mood}`]">{{ MOOD_LABEL[villager.mood] }}</span></h3>
         <p class="friend__mood-effect">{{ moodText }}</p>
