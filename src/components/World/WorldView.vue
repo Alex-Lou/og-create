@@ -190,6 +190,16 @@
               <p v-else-if="site.produce" class="world__shop-note">
                 Bonus de production : <strong>+{{ site.bonus || 0 }} %</strong> <span>(jusqu’à +100 %)</span>
               </p>
+              <NameSignPanel
+                v-if="site.level && state.signs"
+                ref="nameSign"
+                :site="site"
+                :signs="state.signs"
+                :coins="coins"
+                :busy="busy"
+                @choose="look => chooseSign(site, look)"
+                @rename="renameSigns"
+              />
               <section v-for="group in shopGroups(site)" :key="group.kind" class="world__shop-group" :aria-label="group.label">
                 <h3 class="world__shop-title">{{ group.label }}</h3>
                 <ul class="world__cards">
@@ -431,9 +441,11 @@ import ChestReveal from './ChestReveal.vue';
 import ChestHaul from './ChestHaul.vue';
 import AnnexPanel from './AnnexPanel.vue';
 import AnnexSheet from './AnnexSheet.vue';
+import NameSignPanel from './NameSignPanel.vue';
+import { nameSignLayers, nameSignLight, paintName } from '@/world/nameSigns';
 import { annexLayers, annexLight } from '@/world/annexSprites';
 import { annexReady, annexYield, variantsOf } from '@/world/annexes';
-import { BOTTLE, noteOf } from '@/world/chest';
+import { BOTTLE, noteOf, openableOf } from '@/world/chest';
 import GModal from '@/components/ui/GModal.vue';
 import { guideOf, guideKind } from '@/world/itemGuide';
 import { villageOf } from '@/world/village';
@@ -524,6 +536,11 @@ const SHOP_GROUPS = [['outil', 'Outils'], ['objet', 'Objets'], ['rare', 'Pièces
 const groupOf = item => (item.rare ? 'rare' : item.kind === 'skin' && tintOf(item.id) ? 'teinte' : item.kind);
 // Achat en un toucher : « Annuler » reste proposé 4 s (le serveur accepte l'annulation un peu plus longtemps)
 const UNDO_MS = 4000;
+// Enseigne d'un bâtiment : pied sur le bord avant gauche de son emprise, à tant de cases du coin vers le joueur (le nom
+// du bâtiment, sous ce coin, reste dégagé), un peu en retrait du bord ; dessinée un peu plus grande que nature
+const NAME_SIGN_ALONG = 1.6;
+const NAME_SIGN_INSET = 0.25;
+const NAME_SIGN_SCALE = 1.2;
 // Ce qui plie au vent, et de combien
 const SWAY = { tree: 0.04, palm: 0.05, bush: 0.03, tuft: 0.09, flowers: 0.06, birch: 0.05, apple: 0.03, autumn: 0.035, reeds: 0.08 };
 // Tous les décors naturels (planches 1 et 2), et ce qui pousse où, avec sa fréquence cumulée
@@ -543,7 +560,7 @@ let lastView = null;
 // d'animation sont non réactifs et s'arrêtent quand l'onglet est caché ou le composant démonté.
 export default {
   name: 'WorldView',
-  components: { ElementGlyph, ElementTile, HarvestGame, ShopItemSheet, BrumeWisp, IslandClock, GModal, ChestList, ChestReveal, ChestHaul, AnnexPanel, AnnexSheet },
+  components: { ElementGlyph, ElementTile, HarvestGame, ShopItemSheet, BrumeWisp, IslandClock, GModal, ChestList, ChestReveal, ChestHaul, AnnexPanel, AnnexSheet, NameSignPanel },
   directives: { longpress },
   props: {
     discoveredElements: { type: Array, required: true },
@@ -616,10 +633,10 @@ export default {
     haulItems() {
       return (this.haul || []).map(chest => ({ chest, ...this.prizeLook(chest) }));
     },
-    // Coffres à ouvrir : celui du jour s'il attend, et ceux des chapitres et des quêtes
+    // Coffres à ouvrir (ceux que « Tout ouvrir » ouvre) : du jour, des chapitres et des quêtes, bouteille échouée
     chestCount() {
       const chests = this.state && this.state.chests;
-      return chests ? (chests.daily.available ? 1 : 0) + chests.pending.length : 0;
+      return chests ? openableOf(chests) : 0;
     },
     sheetSite() {
       return this.sheet && this.state ? this.state.sites.find(s => s.id === this.sheet.siteId) || null : null;
@@ -749,9 +766,11 @@ export default {
     this.warp = null;
     this.phase = null;
     this.clockAt = 0;
-    // Ce qu'on peut toucher dans la dernière image : bêtes sur l'île, articles posés ; ronds dans l'eau ; bulle d'info
+    // Ce qu'on peut toucher dans la dernière image : bêtes sur l'île, articles posés, enseignes ; ronds dans l'eau ;
+    // bulle d'info
     this.landHits = [];
     this.itemHits = [];
+    this.nameSignHits = [];
     // Variante de chaque annexe posée (« x,y » → n° d'exemplaire : ce qui pousse dans un champ…)
     this.annexVariants = new Map();
     // Vie ambiante (village.js) et lanternes des habitants dans la dernière image
@@ -1205,6 +1224,7 @@ export default {
       const phase = this.skyAt(date);
       this.phase = phase;
       this.itemHits = [];
+      this.nameSignHits = [];
       this.syncClock(phase, date, now);
       // Mer, selon l'heure
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
@@ -1335,6 +1355,8 @@ export default {
         ...this.state.sites.map(site => ({ depth: site.x + site.y + site.w, site })),
         ...this.state.tiles.filter(tile => seen(tile.x, tile.y)).map(tile => ({ depth: tile.x + tile.y, tile })),
         ...(this.state.annexes || []).filter(annex => seen(annex.x, annex.y)).map(annex => ({ depth: annex.x + annex.y, annex })),
+        ...this.state.sites.filter(site => site.sign && !site.locked).map(site => ({ site, at: this.nameSignAt(site) }))
+          .filter(({ at }) => seen(at.gx, at.gy)).map(({ site, at }) => ({ depth: at.gx + at.gy, nameSign: site })),
         ...this.props.filter(prop => seenAt(prop.wx, prop.wy)).map(prop => ({ depth: prop.depth, prop })),
         ...[...this.critters(t), ...life.standing].filter(critter => seen(critter.x, critter.y))
           .map(critter => ({ depth: critter.depth ?? critter.x + critter.y, critter })),
@@ -1355,7 +1377,8 @@ export default {
         } else if (item.prop) {
           this.drawProp(ctx, item.prop, t, repaint, now);
           this.occlude(ctx, item.prop.x, item.prop.y);
-        } else if (item.sign) this.drawSign(ctx, item.sign, t, repaint);
+        } else if (item.nameSign) this.drawNameSign(ctx, item.nameSign, t, repaint);
+        else if (item.sign) this.drawSign(ctx, item.sign, t, repaint);
         else if (item.ferry) this.drawFerry(ctx, item.ferry, repaint);
         else {
           this.drawCritter(ctx, item.critter, repaint);
@@ -1527,6 +1550,26 @@ export default {
       ctx.textBaseline = 'alphabetic';
       ctx.restore();
       this.signs.push({ zone, x: c.x, y: c.y - 30, r: 26 });
+    },
+    // Pied de l'enseigne d'un bâtiment (dès le palier V) : sur le bord avant gauche de son emprise
+    nameSignAt(site) {
+      const gx = site.x + site.w - 0.5 - NAME_SIGN_ALONG;
+      const gy = site.y + site.h - 0.5 - NAME_SIGN_INSET;
+      return { gx, gy, ...this.ground(gx, gy) };
+    },
+    // Enseigne d'un bâtiment : son style (dessin animé) et le nom écrit dessus ; un toucher la fait sautiller
+    drawNameSign(ctx, site, t, repaint) {
+      const at = this.nameSignAt(site);
+      const tapped = this.scared.get(`name-sign:${site.id}`);
+      const hop = tapped && t - tapped.at < 0.5 ? Math.sin(((t - tapped.at) / 0.5) * Math.PI) * 5 : 0;
+      let ready = true;
+      ctx.save();
+      ctx.translate(at.x, at.y - hop);
+      ctx.scale(NAME_SIGN_SCALE, NAME_SIGN_SCALE);
+      for (const layer of nameSignLayers(site.sign, t)) ready = drawSprite(ctx, layer.key, layer.make, 0, 0, repaint) && ready;
+      if (ready) paintName(ctx, site.sign, this.state.signs.name, t);
+      ctx.restore();
+      this.nameSignHits.push({ site, x: at.x, y: at.y - 24 * NAME_SIGN_SCALE, r: 22 * NAME_SIGN_SCALE });
     },
     // Volutes de brume (monde) : ellipses claires qui dérivent lentement sur les quartiers à acheter
     drawWisps(ctx, t, now) {
@@ -2031,6 +2074,14 @@ export default {
         const flicker = fire ? 0.85 + 0.15 * Math.sin(t * 13 + annex.x) * Math.sin(t * 7.3) : 0.95 + 0.05 * Math.sin(t * 2 + annex.y);
         glow(ctx, c.x + lx, c.y + ly, r, (fire ? Math.max(0.3, lit) : litFor(annex.x * 13 + annex.y)) * flicker, color);
       }
+      // Enseignes à lanternes
+      for (const site of this.state.sites) {
+        if (!site.sign || site.locked) continue;
+        const lights = nameSignLight(site.sign);
+        if (!lights.length) continue;
+        const at = this.nameSignAt(site);
+        for (const [dx, dy, r] of lights) glow(ctx, at.x + dx * NAME_SIGN_SCALE, at.y + dy * NAME_SIGN_SCALE, r * NAME_SIGN_SCALE, Math.max(0.3, lit) * (0.85 + 0.15 * Math.sin(t * 11 + dx) * Math.sin(t * 6.1)));
+      }
       // Lanternes des habitants qui rentrent le soir
       for (const l of this.villageLights) {
         const p = this.ground(l.x, l.y);
@@ -2141,6 +2192,7 @@ export default {
       else if (hit && hit.tile) this.openTileMenu(hit.tile);
       else if (hit && hit.item) this.describeItem(hit.site, hit.item);
       else if (hit && hit.annex) this.annexSheet = { x: hit.annex.x, y: hit.annex.y };
+      else if (hit && hit.nameSign) this.openNameSign(hit.nameSign);
       else this.showTip(gesture.start.x, gesture.start.y, this.tipOf(hit, gesture.start));
       gesture.held = true;
       vibrate(12);
@@ -2214,6 +2266,9 @@ export default {
       // Animaux de la mer et mouettes posées : un toucher les fait réagir
       const animal = [...this.seaHits, ...this.landHits].find(h => Math.hypot(w.x - h.x, w.y - h.y) < h.r);
       if (animal) return animal.bottle ? { bottle: true } : { animal };
+      // Enseignes des bâtiments
+      const nameSign = this.nameSignHits.find(h => Math.hypot(w.x - h.x, (w.y - h.y) * 0.9) < h.r);
+      if (nameSign) return { nameSign: nameSign.site };
       // Articles posés près des bâtiments (le plus proche du doigt)
       const items = this.itemHits.filter(h => Math.hypot(w.x - h.x, w.y - h.y) < h.r);
       if (items.length) {
@@ -2287,6 +2342,11 @@ export default {
         this.scared.set(`item:${hit.site.id}:${hit.item.id}`, { at: performance.now() / 1000 });
         this.showTip(px, py, { title: hit.item.name, text: hit.item.effect, hint: 'Appui long : sa fiche' });
         vibrate(6);
+      } else if (hit.nameSign) {
+        // L'enseigne sautille et dit son nom (appui long : la changer)
+        this.scared.set(`name-sign:${hit.nameSign.id}`, { at: performance.now() / 1000 });
+        this.showTip(px, py, this.tipOf(hit));
+        vibrate(6);
       } else if (hit.annex) {
         // Une annexe sautille et dit ce qu'elle rapporte (appui long : sa fiche)
         const { annex } = hit;
@@ -2331,6 +2391,10 @@ export default {
     tipOf(hit, point) {
       if (!hit) return { title: 'La mer', text: 'Dauphins, baleine et méduses passent au large.', hint: 'Toucher : des ronds dans l’eau' };
       if (hit.bottle) return { title: 'Bouteille à la mer', text: 'Un mot du dernier alchimiste, et un coffre.', hint: 'Toucher : l’ouvrir' };
+      if (hit.nameSign) {
+        const look = this.state.signs.styles.find(st => st.id === hit.nameSign.sign);
+        return { title: this.state.signs.name, text: `${look ? look.name : 'Enseigne'} · ${hit.nameSign.name}`, hint: 'Appui long : la changer' };
+      }
       if (hit.animal) {
         if (hit.animal.who && this.village) return this.village.describe(hit.animal.who);
         const [title, text] = ANIMALS[hit.animal.kind] || ['Une bête', ''];
@@ -2553,6 +2617,40 @@ export default {
       const { prize } = this.reveal.chest;
       await this.wearSkin(this.state.sites.find(s => s.id === prize.site), prize.item);
       this.reveal = null;
+    },
+    // Enseigne : un style porté (acheté au passage s'il ne l'est pas : le solde suit), ou le nom écrit dessus
+    async chooseSign(site, look) {
+      this.busy = true;
+      try {
+        const { coins, world } = await playService.worldSign(site.id, look.id);
+        this.apply(world);
+        if (coins !== undefined) this.$emit('coins-updated', coins);
+        vibrate([8, 30, 12]);
+      } catch (error) {
+        this.$emit('show-alert', messageOf(error, 'L’enseigne n’a pas pu changer.'));
+      } finally {
+        this.busy = false;
+      }
+    },
+    async renameSigns(name) {
+      this.busy = true;
+      try {
+        this.apply(await playService.worldSignName(name));
+        vibrate(8);
+      } catch (error) {
+        this.$emit('show-alert', messageOf(error, 'Le nom n’a pas pu changer.'));
+      } finally {
+        this.busy = false;
+      }
+    },
+    // Appui long sur une enseigne : la boutique de son bâtiment, à la section Enseigne
+    openNameSign(site) {
+      this.site = site;
+      this.siteTab = 'shop';
+      this.$nextTick(() => {
+        const panel = this.$refs.nameSign;
+        if (panel && panel.$el && panel.$el.scrollIntoView) panel.$el.scrollIntoView({ block: 'start', behavior: this.reduced() ? 'auto' : 'smooth' });
+      });
     },
     // « Porter » dans la rafale : la fenêtre reste ouverte, le lot passe à « Porté »
     wearHauled(index) {

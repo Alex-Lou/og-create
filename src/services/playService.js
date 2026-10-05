@@ -86,6 +86,14 @@ export default {
   worldAnnexMove(x, y, toX, toY) {
     return http.post('/play/world/annex/move', { x, y, toX, toY }).then(response => response.data);
   },
+  // Enseigne d'un bâtiment (dès le palier V) : style porté, acheté au passage → { coins?, world } ; nom écrit sur les
+  // enseignes de l'île → vue de l'île
+  worldSign(site, style) {
+    return http.post('/play/world/sign', { site, style }).then(response => response.data);
+  },
+  worldSignName(name) {
+    return http.post('/play/world/sign/name', { name }).then(response => response.data);
+  },
   // Skin porté par un bâtiment (vide : apparence d'origine) : vue de l'île
   worldSkin(site, skin) {
     return http.post('/play/world/skin', { site, skin }).then(response => response.data);
