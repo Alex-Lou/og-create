@@ -34,6 +34,10 @@
         <stop offset=".45" :stop-color="WISP.calm.flame" />
         <stop offset="1" :stop-color="WISP.calm.edge" />
       </radialGradient>
+      <filter id="pa-light" x="-20%" y="-60%" width="140%" height="220%">
+        <feGaussianBlur stdDeviation="3" result="blur" />
+        <feMerge><feMergeNode in="blur" /><feMergeNode in="SourceGraphic" /></feMerge>
+      </filter>
       <linearGradient id="pa-leather" x1="0" y1="0" x2="1" y2="1">
         <stop offset="0" stop-color="#7A2A31" />
         <stop offset="1" stop-color="#3A1214" />
@@ -116,8 +120,27 @@
       <image :href="person('foyer', 'front', 'walk')" x="236" y="208" width="60" height="84" />
     </g>
 
+    <!-- Veillée : la troupe en cercle autour du feu (ceux du fond derrière les flammes) -->
+    <g v-if="art === 'veillee' || art === 'rite' || (art === 'lien' && cast.length > 2)">
+      <image v-for="m in ring.back" :key="`b${m.id}`" :href="person(m.id, 'se')" :x="m.x" :y="m.y" :width="m.w" :height="m.h" :transform="m.transform" />
+    </g>
+
+    <!-- Un lien : deux naufragés face à face, la recette de leurs Arts en lumière -->
+    <g v-if="art === 'lien' && cast.length === 2">
+      <image :href="person(cast[0], 'se')" x="122" y="200" width="70" height="98" />
+      <image :href="person(cast[1], 'se')" transform="translate(278 200) scale(-1 1)" width="70" height="98" />
+    </g>
+
+    <!-- L'étape : l'aube sur les terres à libérer -->
+    <g v-if="art === 'horizon'">
+      <circle cx="200" cy="246" r="44" fill="#F6D58A" opacity=".85" />
+      <path d="M100 240 Q130 214 160 236 Q176 222 196 240 Z M232 242 Q262 206 300 238 Z" fill="#2A2F45" opacity=".9" />
+      <path d="M0 240 H400 V300 H0 Z" fill="#3E5470" />
+      <path d="M0 246 Q100 240 200 246 T400 244" fill="none" stroke="rgba(255,220,160,.5)" stroke-width="2" />
+    </g>
+
     <!-- Le Feu de camp -->
-    <g v-if="art === 'fire' || art === 'cannelle-feu' || art === 'campement'" transform="translate(212 300)">
+    <g v-if="['fire', 'cannelle-feu', 'campement', 'veillee', 'rite'].includes(art) || (art === 'lien' && cast.length > 2)" transform="translate(212 300)">
       <circle r="120" fill="url(#pa-fire)" class="pa__flicker" />
       <path d="M-30 6 L30 -6 M-28 -6 L30 8" stroke="#4A3020" stroke-width="7" stroke-linecap="round" />
       <g class="pa__flames">
@@ -125,6 +148,16 @@
         <path d="M0 0 C-10 -8 -8 -24 0 -40 C8 -24 10 -8 0 0 Z" fill="#FFD166" />
         <path d="M-12 0 C-20 -8 -18 -20 -10 -32 C-6 -18 -4 -8 -12 0 Z" fill="#F25C28" opacity=".9" />
       </g>
+    </g>
+
+    <!-- Veillée : ceux du premier rang, devant le feu -->
+    <g v-if="art === 'veillee' || art === 'rite' || (art === 'lien' && cast.length > 2)">
+      <image v-for="m in ring.front" :key="`f${m.id}`" :href="person(m.id, 'se')" :x="m.x" :y="m.y" :width="m.w" :height="m.h" :transform="m.transform" />
+    </g>
+    <!-- La recette du rite ou du lien, écrite en lumière au-dessus du feu -->
+    <g v-if="recipe && (art === 'rite' || art === 'lien')" class="pa__recipe" filter="url(#pa-light)">
+      <text x="200" y="138" text-anchor="middle" class="pa__recipe-name">{{ recipeParts[0] }}</text>
+      <text v-if="recipeParts[1]" x="200" y="160" text-anchor="middle" class="pa__recipe-of">{{ recipeParts[1] }}</text>
     </g>
 
     <!-- Cannelle se redresse devant le feu -->
@@ -205,14 +238,21 @@ const WISPS = {
   rivet: { x: 132, y: 236, k: 1.3 },
   ondin: { x: 140, y: 196, k: 1.5 },
   campement: { x: 212, y: 206, k: 1.5 },
+  veillee: { x: 212, y: 196, k: 1.5 },
+  rite: { x: 212, y: 196, k: 1.3 },
+  horizon: { x: 120, y: 150, k: 1.4 },
   seal: { x: 128, y: 118, k: 1.7, wide: true }
 };
 
 export default {
   name: 'PrologueArt',
   props: {
-    // storm | beach | wisp | rock | fire | book | seal | aster | cannelle | cannelle-feu | rivet | ondin | campement
-    art: { type: String, required: true }
+    // storm | beach | wisp | rock | fire | book | seal | aster | cannelle | cannelle-feu | rivet | ondin | campement |
+    // veillee | rite | lien | horizon
+    art: { type: String, required: true },
+    // Veillées : qui est là (bâtiments de la troupe), et la recette écrite en lumière
+    cast: { type: Array, default: () => [] },
+    recipe: { type: String, default: '' }
   },
   data() {
     return { WISP, STARS, MIST };
@@ -221,6 +261,7 @@ export default {
     sky() {
       if (this.art === 'storm') return ['#05080F', '#121D2E', '#0B1220'];
       if (this.art === 'aster') return ['#1B2A44', '#3E5470', '#6E7F92'];
+      if (this.art === 'horizon') return ['#1B2A44', '#7E6A8A', '#E8A87C'];
       return ['#070D1A', '#14213A', '#1D2B44'];
     },
     wisp() {
@@ -236,6 +277,25 @@ export default {
         const a = -Math.PI / 2 + (k * Math.PI * 2) / 7;
         return { id, d: SIGILS[id].d, x: Math.cos(a) * 44, y: Math.sin(a) * 44, broken: this.art === 'seal' && id === 'II' };
       });
+    },
+    // La recette en lumière : le résultat, puis ses ingrédients (« Lanterne = Feu + Lumière »)
+    recipeParts() {
+      return this.recipe.split('=').map(part => part.trim());
+    },
+    // La troupe en arc de cercle derrière le feu (centre 212, 290), tournée vers lui, en deux groupes de part et d'autre
+    // des flammes : ceux de gauche de trois quarts, ceux de droite en miroir
+    ring() {
+      const n = this.cast.length;
+      const w = n > 5 ? 38 : 46;
+      const left = Math.ceil(n / 2);
+      const back = this.cast.map((id, k) => {
+        const side = k < left ? k / Math.max(1, left - 1) : (k - left) / Math.max(1, n - left - 1);
+        const a = Math.PI * (k < left ? 1.1 + 0.3 * side : 1.6 + 0.3 * side);
+        const x = 208 + Math.cos(a) * 76 - w / 2, y = 290 + Math.sin(a) * 24 - w * 1.4;
+        const flip = x + w / 2 > 212;
+        return { id, w, h: w * 1.4, x: flip ? 0 : x, y: flip ? 0 : y, transform: flip ? `translate(${(x + w).toFixed(1)} ${y.toFixed(1)}) scale(-1 1)` : null };
+      });
+      return { back, front: [] };
     },
     saturn() {
       return this.seals.find(seal => seal.id === 'II');
@@ -262,6 +322,9 @@ export default {
 .pa__flicker { animation: pa-glow 1.6s ease-in-out infinite; }
 .pa__foam { animation: pa-foam 3s ease-in-out infinite; }
 .pa__shiver { animation: pa-shiver .18s linear infinite; }
+.pa__recipe { font-family: 'IM Fell English', Georgia, serif; fill: #FFE6A8; animation: pa-glow 2.4s ease-in-out infinite; }
+.pa__recipe-name { font-size: 24px; }
+.pa__recipe-of { font-size: 15px; font-style: italic; }
 /* La tempête : éclair, roulis, la vague qui monte, puis le noir */
 .pa__bolt { opacity: 0; animation: pa-bolt 3.2s linear infinite; }
 .pa__rain { animation: pa-rain .5s linear infinite; }

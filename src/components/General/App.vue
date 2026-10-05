@@ -49,6 +49,7 @@
             @login="showSeuil = true"
             @go="openFromWorld"
             @quest="onIslandQuest"
+            @replay-vigil="replayVigil"
           />
           <!-- Mode principal : le Livre ; l'Épreuve garde son inventaire -->
           <BookView
@@ -64,6 +65,7 @@
             :revealing="isRevealing"
             :openMarked="bookOpenMarked"
             :hold="prologueHold"
+            :stage="civStage"
             @loaded="onBookLoaded"
             @marked-opened="bookOpenMarked = false"
             @select="handleResourceSelection"
@@ -114,7 +116,16 @@
     <TabBar :current="currentMode" :dots="isLoggedIn ? [] : ['sceau']" @select="handleModeSelect" />
     <BrumeGuide @go="handleModeSelect" />
     <!-- Le tutoriel (HISTOIRE.md, § 9) : scènes, page de garde du Grimoire, main qui montre où toucher -->
-    <PrologueScene v-if="prologueScene" :key="prologueScene" :scene="prologueScene" :skippable="!prologueReplay" @done="prologueSceneDone" @skip="skipPrologue" />
+    <PrologueScene
+      v-if="prologueScene"
+      :key="prologueScene"
+      :scene="prologueScene"
+      :frames="sceneFrames"
+      :skippable="!prologueReplay"
+      :skip-label="isVigil ? 'Passer la veillée' : 'Passer le prologue'"
+      @done="prologueSceneDone"
+      @skip="isVigil ? prologueSceneDone(prologueScene) : skipPrologue()"
+    />
     <PrologueName
       v-if="prologueName"
       :account="prologueName.account"
@@ -235,6 +246,10 @@ import { guide } from '@/game/guide';
 import { questTip } from '@/game/guideTips';
 import { loadPrologue, savePrologue, prologueStep, islandStep } from '@/game/prologue';
 import { faceHref, NAMES } from '@/world/faces';
+import { vigilFrames, vigilDue, stageOf as civilizationOf } from '@/game/vigils';
+
+// Veillées déjà vues sur cet appareil (game/vigils.js)
+const VIGILS_KEY = 'oc_vigils';
 import { LINES as PROLOGUE_LINES } from '@/game/prologueScenes';
 
 // Retour sur l'application (PWA remise au premier plan) : carnet rechargé s'il date de plus de 30 s
@@ -348,8 +363,12 @@ export default {
       prologueName: null,
       prologueHand: null,
       prologueReplay: null,
-      // La quête active de Brume sur l'île ({ id, done }), pour les étapes 2 à 5
-      islandQuest: null
+      // La quête active de Brume sur l'île ({ id, done }), pour les étapes 2 à 5 ; les actes finis et le nom du peuple
+      // (veillées, étape de civilisation) ; les veillées déjà vues ici
+      islandQuest: null,
+      islandActs: [],
+      people: null,
+      vigilsSeen: storage.load(VIGILS_KEY, [])
     };
   },
   async created() {
@@ -363,6 +382,17 @@ export default {
     this.progressReady = true;
   },
   computed: {
+    isVigil() {
+      return Boolean(this.prologueScene && this.prologueScene.startsWith('veillee-'));
+    },
+    // Une veillée se compose de ses images (le nom du peuple y figure) ; les autres scènes ont les leurs
+    sceneFrames() {
+      return this.isVigil ? vigilFrames(this.prologueScene.slice(8), { people: this.people }) : null;
+    },
+    // L'étape de civilisation (bible, § 6.10) : l'Ex libris du Grimoire l'affiche
+    civStage() {
+      return civilizationOf(this.islandActs, this.people);
+    },
     // La couverture du Grimoire attend la scène d'arrivée (et, pour un invité, de savoir s'il est tout neuf)
     prologueHold() {
       const { skipped, started, seen } = this.prologue;
@@ -497,6 +527,11 @@ export default {
     // ----- Compte -----
     // Écus, records de l'Épreuve et pièces portées (le Cabinet les garde sur le serveur, d'un appareil à l'autre)
     async loadAccount() {
+      // Les actes finis et le nom du peuple : l'étape de civilisation de l'Ex libris (l'île les redonne ensuite)
+      playService.brume().then(board => {
+        if (!this.islandActs.length) this.islandActs = board.acts || [];
+        if (!this.people) this.people = board.people || null;
+      }).catch(() => {});
       const [progress, selections] = await Promise.all([
         progressService.load().catch(() => null),
         customizationService.getUserSelections()
@@ -737,15 +772,27 @@ export default {
       }
     },
     // Étapes 2 (sur l'île) à 5 : la quête active de Brume
-    onIslandQuest(quest) {
-      this.islandQuest = quest ? { id: quest.id, done: Boolean(quest.done) } : null;
+    onIslandQuest(brume) {
+      const quest = brume && brume.quest;
+      this.islandQuest = quest ? { id: quest.id, done: Boolean(quest.done) } : { id: null, done: true };
+      if (brume) {
+        this.islandActs = brume.acts || [];
+        this.people = brume.people || null;
+      }
       this.runIsland();
     },
     runIsland() {
       if (this.prologueReplay || this.prologueScene || !this.isWorldActive) return;
-      const step = islandStep({ state: this.prologue, quest: this.islandQuest });
+      const step = islandStep({ state: this.prologue, quest: this.islandQuest?.id ? this.islandQuest : null });
       if (this.prologueHand?.mode === 'world') this.prologueHand = null;
-      if (!step) return;
+      if (!step) {
+        // Hors du tutoriel : la veillée du dernier acte fini, si elle n'a pas encore été vue ici
+        // (jamais pendant le tutoriel d'un compte créé par la page de garde)
+        const { registered, finished, skipped } = this.prologue;
+        const act = vigilDue(this.islandActs, this.vigilsSeen);
+        if (act && !(registered && !finished && !skipped)) this.prologueScene = `veillee-${act}`;
+        return;
+      }
       if (step.phase === 'scene') this.prologueScene = step.scene;
       else if (step.phase === 'harvest') this.prologueHand = { target: '.world__play', mode: 'world' };
       else if (step.phase === 'lines') step.lines.forEach(line => this.sayPrologue(line));
@@ -762,7 +809,19 @@ export default {
       this.prologueOpenReach = false;
       this.$refs.book?.openReach('I');
     },
+    // Chronique : revoir une veillée (rien ne change à la partie)
+    replayVigil(act) {
+      this.prologueReplay = [];
+      this.prologueScene = `veillee-${act}`;
+    },
     prologueSceneDone(scene) {
+      if (scene.startsWith('veillee-') && !this.prologueReplay) {
+        this.prologueScene = null;
+        this.vigilsSeen = [...new Set([...this.vigilsSeen, scene.slice(8)])];
+        storage.save(VIGILS_KEY, this.vigilsSeen);
+        this.runIsland();
+        return;
+      }
       if (this.prologueReplay) {
         // Revoir le prologue : les scènes s'enchaînent, sans rien changer à la partie
         const next = this.prologueReplay.shift();

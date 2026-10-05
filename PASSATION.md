@@ -321,6 +321,12 @@ chronométrer 20 appels. Comparer à zoom égal, au même endroit.
   active de Brume (émise par `WorldView`, événement `quest`) donne l'étape (`islandStep`) : scènes de la Récolte, de
   Cannelle, de Rivet, d'Ondin et du Campement, répliques de la troupe avec leur portrait dans la bulle du guide
   (`world/faces.js`), main sur le bouton Récolte. Le tutoriel est fini quand le Puits est réclamé (`finished`).
+- **Lot H5 de la bible** (veillées et civilisation) : le serveur dit les actes finis (`quests.actsDoneOf`, dans
+  `brume.acts` ; `GET /world/brume` dit aussi `people`). Le front : `src/game/vigils.js` (images des veillées,
+  liens, étapes, `vigilDue`) ; les veillées passent par `PrologueScene` (prop `frames`) et `PrologueArt` (cercle,
+  rite, lien, horizon) ; vues retenues dans `oc_vigils`. L'étape s'affiche dans la fiche de Brume et du Foyer
+  (`civStage`) et l'Ex libris (`paintEndpaper(…, stage)`). La Chronique : onglet du Carnet d'explorateur
+  (`ExplorerLog.vue`), « Revoir » rejoue une veillée.
 
 ### Décisions déjà prises par l'auteur (ne pas les redemander)
 - **Île** : 96 × 96 ; l'ancienne carte devient le cœur ; découverte par expéditions ; un quartier s'ouvre avec des

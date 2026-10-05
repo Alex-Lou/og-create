@@ -39,6 +39,7 @@
             :opening="opening"
             :ready="engineReady && !hold"
             :title="BOOK_TITLE"
+            :stage="stage"
             @opened="onOpened"
           />
         </div>
@@ -219,7 +220,9 @@ export default {
     // Venu de la quête de l'île : le Grimoire s'ouvre sur la page marquée du fil d'Ariane
     openMarked: { type: Boolean, default: false },
     // Le tutoriel joue une scène : la couverture attend avant de s'ouvrir
-    hold: { type: Boolean, default: false }
+    hold: { type: Boolean, default: false },
+    // L'étape de civilisation, sous le titre de l'Ex libris (la garde au revers de la couverture)
+    stage: { type: String, default: null }
   },
   emits: ['select', 'coins-updated', 'show-alert', 'aim', 'inscribed', 'seal', 'marked-opened', 'loaded'],
   data() {
@@ -352,6 +355,9 @@ export default {
     },
     revealing(now) {
       if (!now) this.flushEffects();
+    },
+    stage() {
+      if (this.engine) this.engine.refresh();
     }
   },
   created() {
@@ -576,7 +582,7 @@ export default {
         count: () => this.models.length,
         // Hors du Livre (−1, count), les gardes marbrées ; une page de gauche se peint côté gauche (reliure à droite)
         paint: (index, ctx, w, h, side) => (index < 0 || index >= this.models.length
-          ? paintEndpaper(ctx, w, h, side, index < 0)
+          ? paintEndpaper(ctx, w, h, side, index < 0, this.stage)
           : paintPage(this.models[index], index, ctx, w, h, this.assets(), side)),
         // Double page : la page visée par défaut, celle de gauche, sauf si seule la droite attend un mélange
         pickSide: ({ left, right }) => {
