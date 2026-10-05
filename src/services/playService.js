@@ -134,6 +134,13 @@ export default {
   gameFinish(run, input) {
     return http.post('/play/world/game/finish', { run, input }).then(response => response.data);
   },
+  // Habitants : bavarder, offrir des ressources (chacun une fois par jour) → { gained, points, hearts, rewards, coins, world }
+  villagerTalk(villager) {
+    return http.post('/play/world/villager/talk', { villager }).then(response => response.data);
+  },
+  villagerGift(villager, resource) {
+    return http.post('/play/world/villager/gift', { villager, resource }).then(response => response.data);
+  },
   // Joker de l'Épreuve : { freeJokers, coins?, ingredients? | ingredient? }
   joker(kind) {
     return asPlayer(() => http.post('/play/joker', { kind }));
