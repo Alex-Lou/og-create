@@ -4,9 +4,10 @@ import { annexState, annexReady, variantsOf, annexYield, KIND_LABEL } from '@/wo
 import { villageOf } from '@/world/village';
 import { skyAt } from '@/world/sky';
 
-// Les 22 annexes du serveur (services/annexes.js), mêmes identifiants (maison : le logement des visiteurs, lot 7d)
+// Les 28 annexes du serveur (services/annexes.js), mêmes identifiants (maison : le logement des visiteurs, lot 7d ;
+// les 6 dernières : annexes de climat, lot 9d)
 const IDS = ['champ', 'grenier', 'enclos', 'filon', 'depot', 'taille', 'coupe', 'remise', 'pepiniere', 'citerne', 'reservoir', 'eolienne',
-  'vivier', 'fumoir', 'huitres', 'jardin', 'four', 'belvedere', 'charbon', 'hangar', 'fourneau', 'maison'];
+  'vivier', 'fumoir', 'huitres', 'jardin', 'four', 'belvedere', 'charbon', 'hangar', 'fourneau', 'maison', 'glaciere', 'metier', 'hutte', 'saline', 'serre', 'fonderie'];
 
 describe('annexes : dessins', () => {
   it('chaque annexe du serveur a son dessin, propre à chaque image et chaque exemplaire', () => {

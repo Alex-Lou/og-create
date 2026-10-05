@@ -34,6 +34,9 @@
               <li v-for="(n, r) in c.cost" :key="r" :class="{ 'is-missing': (stock[r] || 0) < n }">
                 <ElementGlyph :glyph="GLYPH[r]" /> {{ n }}
               </li>
+              <li v-for="(n, f) in c.finds || {}" :key="f" :class="{ 'is-missing': (stock[f] || 0) < n }">
+                <ElementGlyph :glyph="FIND_GLYPH[f]" /> {{ n }}
+              </li>
             </ul>
             <ul v-if="c.elements.length" class="bench__know" aria-label="Savoir-faire (éléments du Livre, non dépensés)">
               <li v-for="e in c.elements" :key="e.name" :class="{ 'is-missing': !e.have }">
@@ -72,18 +75,21 @@ import { GLYPH, LABEL } from '@/game/resources';
 import { spriteUrl } from '@/world/spriteCache';
 import { craftThumb } from '@/world/craftSprites';
 import { TIER_LABEL, tierHint } from '@/world/crafts';
+import { FIND_GLYPH } from '@/world/finds';
 
-const TIERS = ['start', 'I', 'II', 'III'];
+const TIERS = ['start', 'I', 'II', 'III', 'climat'];
 
 // L'établi (fiche du Foyer, quête de Brume) : les créations d'île par palier, ce qu'elles coûtent, le savoir-faire du
 // Livre qu'elles demandent, où elles se posent. « Assembler » ouvre le puzzle ; « Poser » allume les cases permises sur
-// l'île. Le serveur décide de tout (crafts : vue de l'île).
+// l'île. Le palier des climats : des créations payées aussi en trouvailles, posées seulement dans leur climat, qui y
+// enrichissent les gisements. Le serveur décide de tout (crafts : vue de l'île).
 export default {
   name: 'CraftBench',
   components: { GModal, ElementGlyph },
   props: {
     // { epreuves: { have, need }, open: [paliers], catalog: [...], placed: [...] }
     crafts: { type: Object, required: true },
+    // Ressources et trouvailles de climat
     stock: { type: Object, required: true },
     elementEmojis: { type: Object, default: () => ({}) },
     busy: { type: Boolean, default: false }
@@ -92,8 +98,9 @@ export default {
   data() {
     // Onglet du départ : le premier palier ouvert où il reste une création jamais faite (sinon le plus haut ouvert)
     const open = this.crafts.open;
-    const fresh = open.find(t => this.crafts.catalog.some(c => c.tier === t && !c.made));
-    return { GLYPH, TIERS, TIER_LABEL, tab: fresh || open[open.length - 1] || 'start' };
+    // (celui des climats ne s'ouvre pas de lui-même : ses créations attendent des trouvailles)
+    const fresh = open.filter(t => t !== 'climat').find(t => this.crafts.catalog.some(c => c.tier === t && !c.made));
+    return { GLYPH, FIND_GLYPH, TIERS, TIER_LABEL, tab: fresh || open.filter(t => t !== 'climat').pop() || 'start' };
   },
   computed: {
     shown() {
@@ -109,7 +116,7 @@ export default {
       return spriteUrl(`craft-thumb-${c.id}`, () => craftThumb(c.id));
     },
     costLabel(c) {
-      return Object.entries(c.cost).map(([r, n]) => `${n} ${LABEL[r]}`).join(', ');
+      return [...Object.entries(c.cost).map(([r, n]) => `${n} ${LABEL[r]}`), ...Object.entries(c.finds || {}).map(([f, n]) => `${n} ${f}`)].join(', ');
     }
   }
 };
@@ -118,10 +125,10 @@ export default {
 <style scoped>
 .bench { display: flex; flex-direction: column; gap: 10px; font-family: var(--font-ui); }
 .bench__note { margin: 0; padding: 8px 12px; border-radius: 12px; background: var(--vellum-200); font-weight: 700; font-size: 13px; line-height: 1.4; }
-.bench__tabs { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 4px; padding: 4px; border-radius: 999px; background: var(--vellum-200); }
+.bench__tabs { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 4px; padding: 4px; border-radius: 999px; background: var(--vellum-200); }
 .bench__tab {
   display: inline-flex; justify-content: center; align-items: center; gap: 4px; min-height: 36px; padding: 4px 6px; border: 0; border-radius: 999px;
-  background: none; color: var(--ink-700); font: inherit; font-weight: 900; font-size: 13px; white-space: nowrap; cursor: pointer; touch-action: manipulation;
+  background: none; color: var(--ink-700); font: inherit; font-weight: 900; font-size: 12px; white-space: nowrap; cursor: pointer; touch-action: manipulation;
 }
 .bench__tab.is-on { background: var(--ink-900); color: var(--vellum-50); }
 .bench__tab.is-locked:not(.is-on) { color: var(--ink-500); }

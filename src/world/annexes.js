@@ -2,15 +2,16 @@
 // variante de chaque annexe posée (ce qui pousse dans un champ…), production qu'elles ajoutent.
 import { roman } from '@/utils/roman';
 
-export const KIND_LABEL = { small: 'Petite annexe', reserve: 'Réserve', grand: 'Grande annexe', house: 'Logement' };
+export const KIND_LABEL = { small: 'Petite annexe', reserve: 'Réserve', grand: 'Grande annexe', house: 'Logement', climate: 'Annexe de climat' };
 
 // État d'une annexe du catalogue d'un bâtiment (site.annexes) : done (tous ses exemplaires posés), locked (palier du
-// bâtiment), poor (ressources ou écus manquants), full (plus de case libre autour), ready ; text : ce que dit son bouton.
-// coins : solde connu, ou null (le serveur tranchera)
+// bâtiment), poor (ressources, trouvailles ou écus manquants), full (plus de case libre autour), ready ; text : ce que
+// dit son bouton. stock : ressources et trouvailles de climat ; coins : solde connu, ou null (le serveur tranchera)
 export function annexState(annex, site, stock, coins) {
   if (!annex.next) return { state: 'done', text: annex.max > 1 ? 'Toutes posées' : 'Posée' };
   if (site.level < annex.next.level) return { state: 'locked', text: `Palier ${roman(annex.next.level)}` };
   if (Object.entries(annex.next.cost).some(([r, n]) => (stock[r] || 0) < n)) return { state: 'poor', text: 'Ressources' };
+  if (Object.entries(annex.next.finds || {}).some(([f, n]) => (stock[f] || 0) < n)) return { state: 'poor', text: 'Trouvailles' };
   if (coins !== null && coins < annex.next.coins) return { state: 'poor', text: `Il manque ${annex.next.coins - coins}` };
   if (!site.spots || !site.spots.length) return { state: 'full', text: 'Plus de place' };
   return { state: 'ready', text: 'Poser' };

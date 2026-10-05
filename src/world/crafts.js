@@ -2,7 +2,7 @@
 // découpe des pièces viennent du serveur (services/crafts.js) ; seul le quart de tour (turn) est recopié ici, à
 // l'identique, pour que la disposition envoyée se lise de la même façon des deux côtés.
 
-export const TIER_LABEL = { start: 'Débuts', I: 'Palier I', II: 'Palier II', III: 'Palier III' };
+export const TIER_LABEL = { start: 'Débuts', I: 'Palier I', II: 'Palier II', III: 'Palier III', climat: 'Climats' };
 // Ce qui ouvre un palier (en clair)
 export function tierHint(tier, epreuves) {
   if (tier === 'I') return `Finis le chapitre I du Livre, ou réussis ${epreuves.need} questions de l’Épreuve (${Math.min(epreuves.have, epreuves.need)}/${epreuves.need}).`;

@@ -20,6 +20,9 @@
             <li v-for="(n, r) in annex.next.cost" :key="r" :class="{ 'is-missing': (stock[r] || 0) < n }">
               <ElementGlyph :glyph="GLYPH[r]" /> {{ n }}
             </li>
+            <li v-for="(n, f) in annex.next.finds || {}" :key="f" :class="{ 'is-missing': (stock[f] || 0) < n }">
+              <ElementGlyph :glyph="FIND_GLYPH[f]" /> {{ n }}
+            </li>
             <li :class="{ 'is-missing': coins !== null && coins < annex.next.coins }"><ElementGlyph glyph="ui:coin" /> {{ annex.next.coins }}</li>
           </ul>
         </span>
@@ -44,6 +47,7 @@ import { roman } from '@/utils/roman';
 import { spriteUrl } from '@/world/spriteCache';
 import { annexThumb } from '@/world/annexSprites';
 import { annexState, KIND_LABEL } from '@/world/annexes';
+import { FIND_GLYPH } from '@/world/finds';
 
 // Onglet « Annexes » de la fiche d'un bâtiment : ses trois annexes, ce qu'elles font, ce qu'elles coûtent, et le bouton
 // qui lance la pose sur l'île (le choix de la case se fait sur la carte)
@@ -52,6 +56,7 @@ export default {
   components: { ElementGlyph },
   props: {
     site: { type: Object, required: true },
+    // Ressources et trouvailles de climat
     stock: { type: Object, required: true },
     // Solde connu, ou null (le serveur tranchera)
     coins: { type: Number, default: null },
@@ -59,7 +64,7 @@ export default {
   },
   emits: ['place'],
   data() {
-    return { GLYPH, KIND_LABEL };
+    return { GLYPH, KIND_LABEL, FIND_GLYPH };
   },
   methods: {
     roman,
@@ -72,7 +77,7 @@ export default {
       return spriteUrl(`annex-thumb-${annex.id}-${variant}`, () => annexThumb(annex.id, variant));
     },
     costLabel(annex) {
-      return [...Object.entries(annex.next.cost).map(([r, n]) => `${n} ${LABEL[r]}`), `${annex.next.coins} écus`].join(', ');
+      return [...Object.entries(annex.next.cost).map(([r, n]) => `${n} ${LABEL[r]}`), ...Object.entries(annex.next.finds || {}).map(([f, n]) => `${n} ${f}`), `${annex.next.coins} écus`].join(', ');
     }
   }
 };
