@@ -37,7 +37,7 @@
             :flash="runeFlash"
             :aim="aimSide"
             :opening="opening"
-            :ready="engineReady"
+            :ready="engineReady && !hold"
             :title="BOOK_TITLE"
             @opened="onOpened"
           />
@@ -104,6 +104,7 @@
         v-for="name in shelf"
         :key="name"
         :name="name"
+        :data-name="name"
         :glyph="elementEmojis[name]"
         :family="familyOf[name]"
         :is-new="name === freshElement"
@@ -216,9 +217,11 @@ export default {
     // Révélation en cours dans l'Athanor : les effets du Livre attendent qu'elle se ferme
     revealing: { type: Boolean, default: false },
     // Venu de la quête de l'île : le Grimoire s'ouvre sur la page marquée du fil d'Ariane
-    openMarked: { type: Boolean, default: false }
+    openMarked: { type: Boolean, default: false },
+    // Le tutoriel joue une scène : la couverture attend avant de s'ouvrir
+    hold: { type: Boolean, default: false }
   },
-  emits: ['select', 'coins-updated', 'show-alert', 'aim', 'inscribed', 'seal', 'marked-opened'],
+  emits: ['select', 'coins-updated', 'show-alert', 'aim', 'inscribed', 'seal', 'marked-opened', 'loaded'],
   data() {
     return {
       spots: [],
@@ -522,6 +525,7 @@ export default {
       if (index !== this.engine.index) this.engine.jump(index);
       else this.engine.refresh();
       if (previous) this.queueEffects(previous, data, previousKey);
+      this.$emit('loaded');
     },
     // Appui long sur une tuile : la fiche de l'élément (le toucher, lui, l'envoie dans l'Athanor)
     openInfo(name, event) {
@@ -660,6 +664,10 @@ export default {
     },
     goBack() {
       if (this.engine) this.goTo(this.engine.index - 1);
+    },
+    // La première page à trouver d'un chapitre (le tutoriel y mène, sans dire laquelle c'est)
+    openReach(chapterId) {
+      this.goTo(this.models.findIndex(m => m.type === 'reach' && m.chapter.id === chapterId));
     },
     // La page marquée du fil d'Ariane
     goMarked() {

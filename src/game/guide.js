@@ -14,7 +14,7 @@ const state = reactive({
   born: Boolean(storage.load(BORN_KEY, false))
 });
 
-// Une réplique ({ id, text, action? }) si elle n'a encore été ni dite ni mise en attente
+// Une réplique ({ id, text, action?, top? : en haut de l'écran }) si elle n'a encore été ni dite ni mise en attente
 function say(entry) {
   if (!entry || !entry.text || state.seen.has(entry.id) || state.queue.some(q => q.id === entry.id)) return false;
   state.queue.push(entry);
@@ -37,6 +37,12 @@ export const guide = {
     const entry = state.queue.shift();
     if (!entry) return;
     state.seen.add(entry.id);
+    storage.save(SEEN_KEY, [...state.seen]);
+  },
+  // Une réplique qui n'a plus lieu d'être (le tutoriel la dit autrement) : retirée de la file et tenue pour dite
+  drop(id) {
+    state.queue = state.queue.filter(entry => entry.id !== id);
+    state.seen.add(id);
     storage.save(SEEN_KEY, [...state.seen]);
   },
   // Brume est né (sa naissance ne se rejoue pas)

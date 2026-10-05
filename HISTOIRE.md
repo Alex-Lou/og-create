@@ -21,6 +21,10 @@
 >   - un dormeur est couché près de l'emplacement de son bâtiment ; réveillé, il y reste (Aster et Rivet, eux, vivent au camp) ;
 >   - les naufrages s'annoncent quand s'ouvre la quête de leur acte (La Lisière, La Colline, Les Jardins), jamais par-dessus un coffre ;
 >   - Galet retrouve la pierre en « Hm », que Brume traduit ; Aster retrouve son courage avec le Bateau.
+> - **Lot H4, choix de l'auteur** : scènes illustrées plein écran (un toucher avance, « Passer le prologue » toujours là) ; à l'étape 2, on écrit son nom sur la page de garde du Grimoire, puis e-mail et mot de passe sur la même page ; le prologue se revoit depuis le Sceau en attendant la Chronique.
+> - **Lot H4, en deux temps** :
+>   - livré d'abord : les étapes 1 et 2 jusqu'au compte (tempête, Grève, Brume, Grimoire ; Vent avec une main qui montre l'Air, Pluie, Brasier ; le sceau de Saturne ; Aster ; la page de garde) ; le nom du joueur est gardé par le serveur ; la toute première Récolte est généreuse (sans l'eau, 4 coups de plus) ;
+>   - ensuite : la Récolte guidée d'Aster, puis les étapes 3 à 5 (Cannelle, Rivet, Ondin) et « Le Campement ».
 
 **Ce que les versions 4 et 5 changent.**
 1. **Une nouvelle troupe** : nouveaux noms, vraies personnalités, chacun avec une magie, une voix, un familier, un secret et un arc.

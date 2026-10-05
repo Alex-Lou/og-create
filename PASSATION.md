@@ -310,6 +310,14 @@ chronométrer 20 appels. Comparer à zoom égal, au même endroit.
   de 8, tampon « Inscrite », boutons et zones de toucher plus grands. Téléphone : le livre prend la largeur, et la
   feuille tournée retombe à gauche de la reliure, où une bande de son revers reste visible (la garde avant la
   première page) ; toucher cette bande revient en arrière (`curlBook.js`, `leftPage`).
+- **Lot H4 de la bible, étapes 1 et 2** (le tutoriel) : l'étape se déduit du jeu (`src/game/prologue.js` :
+  `prologueStep`) ; l'appareil ne retient que le prologue commencé, les scènes vues, le nom écrit avant l'inscription
+  et « Passer » (`oc_prologue`). Il ne commence que pour un invité qui n'a que les quatre Souffles ; un compte ne le
+  poursuit que s'il a été créé par la page de garde. Scènes : `PrologueScene.vue` (texte : `prologueScenes.js`),
+  images en SVG : `PrologueArt.vue` (une seule racine : la scène l'anime en fondu). Page de garde :
+  `PrologueName.vue` (l'inscription recharge la page ; le nom part ensuite à `POST /world/player`). La main :
+  `TutorialHand.vue` ; la réplique qui l'accompagne s'affiche en haut (`guide.say({ top: true })`). La couverture du
+  Grimoire attend la scène d'arrivée (`BookView` : `hold`). « Revoir le prologue » dans le Sceau.
 
 ### Décisions déjà prises par l'auteur (ne pas les redemander)
 - **Île** : 96 × 96 ; l'ancienne carte devient le cœur ; découverte par expéditions ; un quartier s'ouvre avec des

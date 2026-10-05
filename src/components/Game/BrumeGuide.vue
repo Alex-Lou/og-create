@@ -3,7 +3,7 @@
        bloquer le jeu. À sa toute première apparition, il naît de la brume : des volutes se resserrent en flamme, puis
        ses yeux s'ouvrent (un toucher passe la naissance) -->
   <transition name="guide">
-    <aside v-if="entry" :key="entry.id" :class="['guide', { 'is-birth': birth }]" aria-label="Brume" @click="skip">
+    <aside v-if="entry" :key="entry.id" :class="['guide', { 'is-birth': birth, 'is-top': entry.top }]" aria-label="Brume" @click="skip">
       <div class="guide__spirit" aria-hidden="true">
         <template v-if="birth">
           <i v-for="k in MIST" :key="k" class="guide__mist" :style="mistStyle(k)"></i>
@@ -91,6 +91,8 @@ export default {
   display: flex; align-items: flex-end; gap: 10px;
   pointer-events: none;
 }
+/* En haut de l'écran : la réplique laisse voir le bas (le tutoriel y montre un élément du doigt) */
+.guide.is-top { top: calc(env(safe-area-inset-top) + 10px); bottom: auto; }
 .guide__spirit { position: relative; flex: none; width: 56px; height: 64px; display: grid; place-items: end center; pointer-events: auto; }
 .guide__wisp { filter: drop-shadow(0 4px 10px rgba(92, 200, 240, .45)); animation: guide-float 3.2s ease-in-out infinite; }
 .guide__bubble {
