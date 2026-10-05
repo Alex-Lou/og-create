@@ -29,7 +29,7 @@ const HOW = {
 // Pièce rare offerte par un chapitre du Livre : son coffre attend dans les Coffres de l'île
 const chapterHow = chapter => `Ouvre le chapitre ${chapter} du Livre : son coffre l’offre (bouton Coffres de l’île). Porte-la ensuite depuis la Boutique.`;
 const WHY = {
-  prod: 'Plus de ressources et d’écus à chaque récolte du bâtiment, jusqu’à +100 %.',
+  prod: 'Le bâtiment produit plus de ressources et d’écus, jusqu’à +100 %.',
   coins: 'Des écus en plus chaque heure, même quand tu ne joues pas.',
   moves: 'Plus de coups, ce sont de plus belles Récoltes.',
   charges: 'Jouer plus de Récoltes d’affilée.',

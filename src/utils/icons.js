@@ -56,7 +56,7 @@ export const ICONS = {
     + '<path d="M32 54V32" stroke="#3e7a2a" stroke-width="4" stroke-linecap="round"/>'
     + '<path d="M32 38C30 26 20 20 8 22c0 12 10 18 24 16z" fill="#6cc04a" stroke="#2e6a1e" stroke-width="3" stroke-linejoin="round"/>'
     + '<path d="M32 31c2-12 12-18 24-16 0 12-10 18-24 16z" fill="#8ad45a" stroke="#2e6a1e" stroke-width="3" stroke-linejoin="round"/>'),
-  // Panier d'osier plein (« Tout récolter »)
+  // Panier d'osier plein (« Tout ramasser » : la production des bâtiments)
   basket: svg('<path d="M15 31a17 17 0 0 1 34 0" fill="none" stroke="#7a4e24" stroke-width="4" stroke-linecap="round"/>'
     + '<circle cx="24" cy="28" r="7.5" fill="#e2483a" stroke="#8a1e16" stroke-width="2.6"/>'
     + '<path d="M37 30c-1-7 3-11 9-11 0 6-3 10-9 11z" fill="#8ad45a" stroke="#2e6a1e" stroke-width="2.6" stroke-linejoin="round"/>'
