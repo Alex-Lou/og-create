@@ -3,7 +3,9 @@
     <div class="finds">
       <p class="finds__note">
         Chaque climat a sa trouvaille. Elle se ramasse sur les gisements de ses quartiers, une fois à toi ; un gisement
-        repousse en quelques heures. Les trouvailles servent aux créations et annexes de climat.
+        repousse en quelques heures. Les trouvailles paient les créations de climat (établi, onglet Climats) et les
+        annexes de climat (fiche d’un bâtiment, dès le palier III). Chaque création de climat posée dans un quartier y
+        fait rendre une trouvaille de plus à chaque ramassage (jusqu’à +3).
       </p>
       <ul class="finds__list">
         <li v-for="f in finds" :key="f.id" :class="['finds__row', { 'is-empty': !f.amount }]">

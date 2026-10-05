@@ -1,5 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import { cellsOf, turn, sizeOf, coverOf, fits, covered, tierHint, TIER_LABEL } from '@/world/crafts';
+import { CRAFT_SPRITES, craftLayers, craftThumb, craftLight } from '@/world/craftSprites';
 
 describe('créations d’île', () => {
   it('lit un gabarit et tourne une pièce comme le serveur', () => {
@@ -31,5 +32,20 @@ describe('créations d’île', () => {
     expect(TIER_LABEL.start).toBe('Débuts');
     expect(tierHint('I', { have: 12, need: 10 })).toBe('Finis le chapitre I du Livre, ou réussis 10 questions de l’Épreuve (10/10).');
     expect(tierHint('II', { have: 0, need: 10 })).toBe('Finis le chapitre II du Livre.');
+  });
+
+  it('chaque création du serveur a son dessin (les 18 premières et les 12 de climat)', () => {
+    const ids = ['cloture', 'massif', 'muret', 'lanterne', 'banc', 'epouvantail', 'nichoir', 'girouette', 'fontaine', 'brasero', 'pergola', 'statue',
+      'arche', 'etal', 'kiosque', 'cadran', 'bassin', 'longuevue', 'igloo', 'sculpture', 'parc', 'cairn', 'passerelle', 'heron', 'tente', 'cadransel',
+      'hamac', 'totem', 'obelisque', 'bassinchaud'];
+    expect(Object.keys(CRAFT_SPRITES).sort()).toEqual([...ids].sort());
+    for (const id of ids) {
+      for (const t of [0, 0.7, 2.3]) {
+        for (const layer of craftLayers(id, t)) expect(layer.make().svg).not.toMatch(/NaN|undefined|Infinity/);
+      }
+      expect(craftThumb(id).svg).toContain('<svg');
+    }
+    expect(TIER_LABEL.climat).toBe('Climats');
+    expect(craftLight('obelisque')[4]).toMatch(/^\d+,\d+,\d+$/);
   });
 });

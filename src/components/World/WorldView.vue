@@ -204,7 +204,7 @@
               </button>
               <button v-if="site.shop && site.shop.length" type="button" role="tab" :aria-selected="String(siteTab === 'shop')" :class="['world__tab', { 'is-on': siteTab === 'shop' }]" @click="siteTab = 'shop'">Boutique</button>
               <button v-if="site.annexes && site.annexes.length" type="button" role="tab" :aria-selected="String(siteTab === 'annexes')" :class="['world__tab', { 'is-on': siteTab === 'annexes' }]" @click="siteTab = 'annexes'">
-                Annexes<span v-if="annexReady(site, state.stock, coins)" class="world__tab-dot" aria-label="à poser"></span>
+                Annexes<span v-if="annexReady(site, stockAll, coins)" class="world__tab-dot" aria-label="à poser"></span>
               </button>
             </div>
 
@@ -362,7 +362,7 @@
             </div>
 
             <!-- Annexes : champs, filons, viviers… à poser autour du bâtiment (la case se choisit sur la carte) -->
-            <AnnexPanel v-else-if="siteTab === 'annexes'" :site="site" :stock="state.stock" :coins="coins" :busy="busy" @place="annex => startAnnex(site, annex)" />
+            <AnnexPanel v-else-if="siteTab === 'annexes'" :site="site" :stock="stockAll" :coins="coins" :busy="busy" @place="annex => startAnnex(site, annex)" />
 
             <ol v-else class="world__steps">
               <li v-for="(step, i) in site.levels" :key="step.name" :class="['world__step', `is-${stepState(site, i)}`]">
@@ -516,7 +516,7 @@
     <CraftBench
       v-if="benchOpen && state && state.crafts"
       :crafts="state.crafts"
-      :stock="state.stock"
+      :stock="stockAll"
       :element-emojis="elementEmojis"
       :busy="busy || craftStarting"
       @assemble="assemble"
@@ -940,6 +940,10 @@ export default {
     },
     ownedFinds() {
       return Boolean(this.state && (this.state.finds || []).some(f => f.amount > 0));
+    },
+    // Ressources et trouvailles de climat ensemble (ce que coûtent créations et annexes de climat)
+    stockAll() {
+      return this.state ? { ...this.state.stock, ...Object.fromEntries((this.state.finds || []).map(f => [f.id, f.amount])) } : {};
     },
     sheetSite() {
       return this.sheet && this.state ? this.state.sites.find(s => s.id === this.sheet.siteId) || null : null;
@@ -3088,7 +3092,7 @@ export default {
         const wait = depositWait(deposit, this.clock - this.loadedAt);
         if (!zone || !zone.owned) return { title: name, text: `Achète ${zone ? zone.name : 'ce quartier'} pour ${verb}.`, hint: 'Le sac, en haut à gauche : tes trouvailles' };
         if (wait) return { title: name, text: `Repousse dans ${waitText(wait)}.`, hint: 'Le sac, en haut à gauche : tes trouvailles' };
-        return { title: name, text: `Prêt : touche pour ${verb}.`, hint: 'Toucher : ramasser' };
+        return { title: name, text: `Prêt : touche pour ${verb}${deposit.bonus ? ` (+${deposit.bonus} grâce aux créations de climat)` : ''}.`, hint: 'Toucher : ramasser' };
       }
       if (hit.landmark) {
         const landmark = hit.landmark;
