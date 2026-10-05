@@ -304,8 +304,10 @@ chronométrer 20 appels. Comparer à zoom égal, au même endroit.
    - quêtes de Brume : portraits des bêtes et quêtes de « rencontre » (toucher pour la première fois la bête d'un
      climat ; retenue par le serveur, inscrite au Carnet) ;
    - à confirmer avec l'auteur avant de commencer (choisis par lui pendant les essais du lot 9e, puis non redits).
-2. **Compteur d'images par seconde** activable par `?perf`. Demander à l'auteur de mesurer **sur son téléphone** :
-   aucune mesure sur un vrai téléphone n'a encore été faite.
+2. **Mesurer sur le téléphone de l'auteur** avec le compteur `?perf` (`src/world/perf.js`) : ouvrir l'île avec
+   `?perf` dans l'adresse. Le compteur affiche, sur la dernière seconde : images par seconde (plafonnées vers 30 par
+   `FRAME_MS`), temps de dessin moyen d'une image, pire image, zoom. Le budget d'une image est de 33 ms. Aucune
+   mesure sur un vrai téléphone n'a encore été faite.
 3. **Lot « santé »** (refactor sans changer le jeu ; l'auteur l'a approuvé) :
    - découper `WorldView.vue` :
      - moteur de rendu (sol, tri debout, lumières, particules) en modules `src/world/render/*` ;
