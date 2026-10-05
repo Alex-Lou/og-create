@@ -34,13 +34,13 @@ const clamp = (n, a = 0, b = 1) => Math.max(a, Math.min(b, n));
 
 // Paroles des habitants (toucher), par métier et selon le moment
 const WORK_LINES = {
-  potager: ['Les tomates rougissent à vue d’œil.', 'Un peu d’eau et ça repart !'],
-  carriere: ['Ce filon promet !', 'La pierre est dure aujourd’hui.'],
-  bosquet: ['Attention, ça va tomber !', 'Ce chêne a plus de cent ans.'],
-  puits: ['L’eau du puits est bien fraîche.', 'Deux seaux et j’y retourne.'],
-  ponton: ['Ça mord, aujourd’hui !', 'J’ai vu passer les dauphins.'],
-  atelier: ['Le fer se travaille chaud.', 'Encore un clou et c’est fini.'],
-  foyer: ['La soupe est presque prête.', 'Ça sent bon le pain chaud.']
+  potager: ['Chaque chose en sa lune. Les carottes aussi.', 'Tu entends ? Les courges se disputent encore.'],
+  carriere: ['Hm.', 'Hm. Belle pierre.'],
+  bosquet: ['Chut. Arbre dort.', 'Graine, pousse… pousse…'],
+  puits: ['Chut… l’eau parle.', 'Ma baguette tremble. Il y a de l’eau là-dessous.'],
+  ponton: ['Ce nuage, c’est Gaston. Il apporte la pluie.', 'Vent d’ouest ! Ça mord, aujourd’hui !'],
+  atelier: ['Clic… tac… Attends. Voilà !', 'Encore une vis et ça tourne. Tac !'],
+  foyer: ['Ce qui mijote ne se presse pas !', 'Goûte-moi ça, ma brindille. Alors ?']
 };
 const SOUNDS = { hen: 'Cot cot !', chick: 'Piou piou !', cow: 'Meuh !', sheep: 'Bêêê !', pig: 'Groin groin !', goat: 'Mêêê !' };
 export const BEAST_NAMES = {

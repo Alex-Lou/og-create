@@ -52,7 +52,7 @@
         </div>
       </div>
       <p v-if="loadError" class="book-view__error" role="alert">
-        Le Livre ne s’ouvre pas.
+        Le Grimoire ne s’ouvre pas.
         <button type="button" class="book-view__retry" @click="load">Réessayer</button>
       </p>
     </div>
@@ -140,7 +140,7 @@
     <GModal v-if="info" :eyebrow="info.family || 'Élément'" :title="info.name" align="center" :width="420" @close="info = null">
       <div class="book-view__info">
         <span class="book-view__info-glyph"><ElementGlyph :glyph="elementEmojis[info.name] || 'ui:unknown'" /></span>
-        <p>Chapitre {{ info.chapter }} du Livre</p>
+        <p>Chapitre {{ info.chapter }} du Grimoire</p>
         <p v-if="info.fertile > 0">Il cache encore <strong>{{ info.fertile }}</strong> mélange{{ info.fertile > 1 ? 's' : '' }} inédit{{ info.fertile > 1 ? 's' : '' }}.</p>
         <p v-else>Tous ses mélanges sont découverts.</p>
         <p v-if="info.name === pageHint">L’Encre l’a révélé pour la page ouverte.</p>
@@ -261,7 +261,7 @@ export default {
       const id = this.chapterOfKey(key);
       const first = id ? this.models.findIndex(m => m.key === `idx-${id}-1`) : -1;
       if (first > 0 && key !== `idx-${id}-1` && key !== `ch-${id}`) return { index: first, label: `Revenir à la table du chapitre ${id}` };
-      return { index: 0, label: 'Revenir au sommaire du Livre' };
+      return { index: 0, label: 'Revenir au sommaire du Grimoire' };
     },
     // Couleurs de la puce : celles du chapitre ouvert, vélin au sommaire
     chipStyle() {

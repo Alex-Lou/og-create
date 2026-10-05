@@ -386,13 +386,13 @@
                   <ul v-if="stepState(site, i) !== 'done'" class="world__needs">
                     <li v-if="step.chapter" :class="['world__need', step.chapterOpen ? 'is-ok' : 'is-missing']">
                       <span class="world__need-glyph" aria-hidden="true"><ElementGlyph glyph="ui:book" /></span>
-                      <span>Chapitre <strong>{{ step.chapter }}</strong> du Livre</span>
+                      <span>Chapitre <strong>{{ step.chapter }}</strong> du Grimoire</span>
                       <em>{{ step.chapterOpen ? 'ouvert' : 'encore scellé' }}</em>
                     </li>
                     <li v-if="step.plan" :class="['world__need', step.planOwned ? 'is-ok' : 'is-missing']">
                       <span class="world__need-glyph" aria-hidden="true"><ElementGlyph :glyph="step.planEmoji || 'ui:plan'" /></span>
                       <span>Plan : <strong>{{ step.plan }}</strong></span>
-                      <em>{{ step.planOwned ? 'trouvé' : 'à découvrir dans le Livre' }}</em>
+                      <em>{{ step.planOwned ? 'trouvé' : 'à découvrir dans le Grimoire' }}</em>
                     </li>
                     <li v-for="(n, r) in step.cost" :key="r" :class="['world__need', state.stock[r] >= n ? 'is-ok' : 'is-missing']">
                       <span class="world__need-glyph" aria-hidden="true"><ElementGlyph :glyph="GLYPH[r]" /></span>
@@ -423,7 +423,7 @@
       <!-- Brume : sa réplique, la quête active, son avancée, sa récompense -->
       <transition name="world-sheet">
         <div v-if="questOpen && state && state.brume" class="world__sheet-backdrop" @click.self="questOpen = false">
-          <div class="world__sheet" role="dialog" aria-label="Brume, l’esprit de la brume">
+          <div class="world__sheet" role="dialog" aria-label="Brume, le feu follet">
             <div class="world__sheet-head">
               <span class="world__sheet-title world__brume-title"><BrumeWisp :size="30" :ready="Boolean(quest && quest.done)" /> Brume</span>
               <button type="button" class="world__link" @click="questOpen = false">Fermer</button>
@@ -494,7 +494,7 @@
             <ul class="world__needs">
               <li v-if="zone.chapter" :class="['world__need', zone.open ? 'is-ok' : 'is-missing']">
                 <span class="world__need-glyph" aria-hidden="true"><ElementGlyph glyph="ui:book" /></span>
-                <span>Chapitre <strong>{{ zone.chapter }}</strong> du Livre</span>
+                <span>Chapitre <strong>{{ zone.chapter }}</strong> du Grimoire</span>
                 <em>{{ zone.open ? 'ouvert' : 'encore scellé' }}</em>
               </li>
               <li class="world__need">
@@ -3209,7 +3209,7 @@ export default {
     // Ce que dit la bulle pour ce qui est sous le doigt (null : la mer)
     tipOf(hit, point) {
       if (!hit) return { title: 'La mer', text: 'Dauphins, baleine et méduses passent au large.', hint: 'Toucher : des ronds dans l’eau' };
-      if (hit.bottle) return { title: 'Bouteille à la mer', text: 'Un mot du dernier alchimiste, et un coffre.', hint: 'Toucher deux fois : l’ouvrir' };
+      if (hit.bottle) return { title: 'Bouteille à la mer', text: 'Un mot signé « H. », et un coffre.', hint: 'Toucher deux fois : l’ouvrir' };
       if (hit.nameSign) {
         const look = this.state.signs.styles.find(st => st.id === hit.nameSign.sign);
         return { title: this.state.signs.name, text: `${look ? look.name : 'Enseigne'} · ${hit.nameSign.name}`, hint: 'Appui long : la changer' };
@@ -3231,7 +3231,7 @@ export default {
       if (hit.zone) {
         const zone = hit.zone;
         if (zone.known === false) return { title: 'Terre inconnue', text: 'Une expédition révélera ce qu’elle cache.', hint: 'Toucher deux fois : préparer l’expédition' };
-        return { title: zone.name, text: zone.owned ? 'Quartier à toi.' : zone.open ? `Quartier à acheter : ${zone.price} écus.` : `S’ouvre avec le chapitre ${zone.chapter} du Livre.`, hint: 'Toucher deux fois : voir le quartier' };
+        return { title: zone.name, text: zone.owned ? 'Quartier à toi.' : zone.open ? `Quartier à acheter : ${zone.price} écus.` : `S’ouvre avec le chapitre ${zone.chapter} du Grimoire.`, hint: 'Toucher deux fois : voir le quartier' };
       }
       if (hit.site) {
         const site = hit.site;

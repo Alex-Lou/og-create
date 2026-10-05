@@ -52,7 +52,9 @@ export function sourceText(source, streak) {
   return 'Coffre de Brume';
 }
 
-// Mots du dernier alchimiste, glissés dans les bouteilles (un par bouteille, toujours le même pour une bouteille)
+// Mots d'Héliane, la dernière alchimiste des Anciens, glissés dans les bouteilles (un par bouteille, toujours le même
+// pour une bouteille). Elle signe « H. » : son prénom ne se découvre que plus tard (HISTOIRE.md, § 6.13).
+const SIGN = ' — H.';
 const NOTES = [
   'Si tu lis ceci, l’île t’a choisi. Prends soin des poules : elles savent tout.',
   'J’ai caché des choses dans la brume. Pas toutes : il fallait bien te laisser des surprises.',
@@ -61,16 +63,16 @@ const NOTES = [
   'Une longue chaîne à la Récolte, et la mer se montre généreuse.',
   'J’ai planté le premier pommier de travers. Il a poussé droit quand même.',
   'Les dauphins reviennent quand on chante faux. J’ai essayé.',
-  'Un jour, la baleine m’a salué. Je crois. Ou elle éternuait.',
+  'Un jour, la baleine m’a saluée. Je crois. Ou elle éternuait.',
   'Garde un œil sur les plages : la mer rend toujours ce qu’on lui confie.',
-  'Le Livre n’aime pas qu’on le brusque. Mélange doucement.',
+  'Le Grimoire n’aime pas qu’on le brusque. Mélange doucement.',
   'J’ai laissé la clé du phare sous une pierre. Laquelle ? Bonne question.',
   'Chaque lumière allumée sur l’île repousse un peu la brume. Allume-les toutes.'
 ];
 export function noteOf(key) {
   let h = 0;
   for (const c of String(key)) h = (h * 31 + c.charCodeAt(0)) >>> 0;
-  return NOTES[h % NOTES.length];
+  return NOTES[h % NOTES.length] + SIGN;
 }
 
 // Bouteille échouée : verre vert, bouchon, rouleau de papier ; frame 1 : penchée par la vague

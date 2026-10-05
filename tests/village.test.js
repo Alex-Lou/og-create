@@ -59,7 +59,7 @@ describe('village : habitants', () => {
   });
   it('touchés, ils parlent selon leur métier et le temps ; appui long : leur fiche', () => {
     const who = village.at(30, at(13)).list.find(c => c.id === 'vil:ponton');
-    expect(village.say(who, at(13)).title).toBe('Pêcheuse');
+    expect(village.say(who, at(13)).title).toBe('Navigatrice');
     expect(village.say(who, at(13, 'orage')).text).toMatch(/orage/);
     expect(village.describe(who).text).toMatch(/Ponton/);
   });
