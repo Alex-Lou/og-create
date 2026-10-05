@@ -5,19 +5,19 @@
         <span class="world__eyebrow">Ton île<IslandClock v-if="state && skyClock" v-bind="skyClock" :warping="warping" @warp="toggleWarp" /></span>
         <span class="world__title">Le Monde</span>
       </div>
-      <!-- « Tout récolter » : ce que tous les bâtiments ont produit (écus et ressources), d'un toucher ; le solde reste
-           dans l'en-tête -->
+      <!-- « Tout ramasser » : ce que tous les bâtiments ont produit (écus et ressources), d'un toucher ; le solde reste
+           dans l'en-tête. (« Récolte » ne désigne que les mini-jeux, joués un par un.) -->
       <button
         v-if="harvestable.length"
         type="button"
         class="world__coins is-ready"
         :disabled="busy"
-        :aria-label="`Tout récolter : ${harvestable.map(g => `${g.n} ${g.label}`).join(', ')}`"
+        :aria-label="`Tout ramasser : ${harvestable.map(g => `${g.n} ${g.label}`).join(', ')}`"
         @click="collect"
       >
         <span class="world__coins-icon" aria-hidden="true"><ElementGlyph glyph="ui:basket" /></span>
         <span class="world__coins-text" aria-hidden="true">
-          <span class="world__coins-label">Tout récolter</span>
+          <span class="world__coins-label">Tout ramasser</span>
           <span class="world__coins-gains">
             <span v-for="g in harvestable" :key="g.id">+{{ g.n }}<ElementGlyph :glyph="g.glyph" /></span>
           </span>
@@ -173,10 +173,10 @@
                   <strong>{{ site.capHours || state.capHours }} h de production au plus</strong>
                 </div>
                 <div class="world__prod-row is-pending">
-                  <span>À récolter</span>
+                  <span>À ramasser</span>
                   <strong>+{{ site.pending ? site.pending[site.produce] : 0 }} <ElementGlyph :glyph="GLYPH[site.produce]" /> · +{{ site.pending ? site.pending.coins : 0 }} écus</strong>
                 </div>
-                <button type="button" class="world__btn" :disabled="busy || !state.pending" @click="collect">Récolter l’île</button>
+                <button type="button" class="world__btn" :disabled="busy || !state.pending" @click="collect">Ramasser la production</button>
               </div>
               <!-- Foyer : les habitants de l'île, leurs cœurs ; un point quand l'un attend une visite aujourd'hui -->
               <section v-if="site.id === 'foyer' && state.villagers && state.villagers.length" class="world__friends" aria-label="Habitants">
@@ -707,7 +707,7 @@ export default {
       const site = this.gameView && this.state.sites.find(s => s.id === this.gameView.site);
       return site ? site.name : '';
     },
-    // « Tout récolter » : ce qui attend dans les bâtiments, écus puis ressources : [{ id, glyph, n, label }]
+    // « Tout ramasser » : ce qui attend dans les bâtiments, écus puis ressources : [{ id, glyph, n, label }]
     harvestable() {
       if (!this.state) return [];
       const stock = this.state.pendingStock || {};
@@ -1681,7 +1681,7 @@ export default {
         }
       }
     },
-    // Bulles de production au-dessus des bâtiments : ressource et écus à récolter, d'un toucher
+    // Bulles de production au-dessus des bâtiments : ressource et écus à ramasser, d'un toucher
     drawBubbles(ctx, t, repaint) {
       this.bubbles = [];
       for (const site of this.state.sites) {
@@ -2493,7 +2493,7 @@ export default {
       }
       if (hit.bubble) {
         const made = Object.entries(hit.bubble.site ? hit.bubble.site.pending || {} : {}).filter(([, n]) => n > 0).map(([k, n]) => `${Math.floor(n)} ${k === 'coins' ? 'écus' : LABEL[k] || k}`);
-        return { title: 'Production prête', text: made.join(', ') || 'Ressources et écus à encaisser.', hint: 'Toucher : encaisser' };
+        return { title: 'Production prête', text: made.join(', ') || 'Ressources et écus à encaisser.', hint: 'Toucher : tout ramasser' };
       }
       if (hit.zone) {
         const zone = hit.zone;
@@ -2896,7 +2896,7 @@ export default {
         this.busy = false;
       }
     },
-    // Récolte de la production des bâtiments ; at = point de l'écran d'où partent les éclats
+    // Ramassage de la production des bâtiments ; at = point de l'écran d'où partent les éclats
     async collect(at = null) {
       if (this.busy) return;
       const from = at && at.currentTarget ? center(at.currentTarget.getBoundingClientRect()) : at;
@@ -2912,10 +2912,10 @@ export default {
             burst(from, 20, 70);
           }
           vibrate([12, 40, 18]);
-          this.$emit('show-alert', `Récolte de l’île : ${[...goods, ...(gained ? [`+${gained} écu${gained > 1 ? 's' : ''}`] : [])].join(' · ')}`);
+          this.$emit('show-alert', `Production ramassée : ${[...goods, ...(gained ? [`+${gained} écu${gained > 1 ? 's' : ''}`] : [])].join(' · ')}`);
         }
       } catch (error) {
-        this.$emit('show-alert', messageOf(error, 'La récolte n’a pas pu se faire.'));
+        this.$emit('show-alert', messageOf(error, 'La production n’a pas pu être ramassée.'));
       } finally {
         this.busy = false;
       }
