@@ -90,6 +90,10 @@ export default {
   worldLandmark(id) {
     return http.post('/play/world/landmark', { id }).then(response => response.data);
   },
+  // Gisement d'un quartier de climat à soi : ramasser ses trouvailles → { find, amount, world }
+  worldDeposit(id) {
+    return http.post('/play/world/deposit', { id }).then(response => response.data);
+  },
   // Boutique d'un atelier : { bought, coins, world }
   worldItem(item) {
     return http.post('/play/world/item', { item }).then(response => response.data);
