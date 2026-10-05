@@ -35,18 +35,23 @@
       </section>
 
       <p class="chests__hint">
-        <template v-if="bottle">Une bouteille s’est échouée sur une plage de ton île : touche-la pour l’ouvrir.</template>
+        <template v-if="bottle">Une bouteille s’est échouée sur une plage de ton île : touche-la pour l’ouvrir<template v-if="openable > 1">, ou ouvre tout d’un coup</template>.</template>
         <template v-else>Les Récoltes lâchent parfois un coffre, sûr avec une chaîne de 8 tuiles. Une bouteille s’échoue sur tes plages toutes les 6 heures.</template>
       </p>
     </div>
+    <!-- « Tout ouvrir » : dès deux coffres (bouteille comprise), en plus des boutons de chacun -->
+    <template v-if="openable > 1" #actions>
+      <button type="button" class="g-btn chests__all" :disabled="busy" @click="$emit('open-all')">Tout ouvrir · {{ openable }}</button>
+    </template>
   </GModal>
 </template>
 
 <script>
 import GModal from '@/components/ui/GModal.vue';
-import { RARITY } from '@/world/chest';
+import { RARITY, openableOf } from '@/world/chest';
 
-// Les coffres de l'île : celui du jour (série), ceux qui attendent d'être ouverts, et où trouver les autres
+// Les coffres de l'île : celui du jour (série), ceux qui attendent d'être ouverts, et où trouver les autres ; « Tout
+// ouvrir » les ouvre tous d'un coup
 export default {
   name: 'ChestList',
   components: { GModal },
@@ -55,7 +60,7 @@ export default {
     chests: { type: Object, required: true },
     busy: { type: Boolean, default: false }
   },
-  emits: ['open', 'close'],
+  emits: ['open', 'open-all', 'close'],
   data() {
     return { RARITY };
   },
@@ -68,6 +73,9 @@ export default {
     },
     bottle() {
       return this.chests.bottle.available;
+    },
+    openable() {
+      return openableOf(this.chests);
     },
     // Place du jour dans la semaine de la série, et numéro du premier jour de cette semaine
     today() {
@@ -97,5 +105,6 @@ export default {
 .chests__chip { padding: 2px 8px; border-radius: 999px; background: var(--rarity); color: var(--ink-900); font-size: 11px; font-weight: 900; }
 .chests__label { font-size: 14px; font-weight: 700; }
 .chests__item-btn { min-height: 36px; padding: 4px 14px; }
+.chests__all { width: 100%; }
 .chests__hint { margin: 0; font-size: 13px; color: var(--ink-500); font-style: italic; line-height: 1.4; }
 </style>

@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { RARITY, prizeText, sourceText, noteOf, stockOf, BOTTLE } from '@/world/chest';
+import { RARITY, prizeText, sourceText, noteOf, stockOf, openableOf, haulOf, BOTTLE } from '@/world/chest';
 
 describe('coffres', () => {
   it('nomme chaque rareté et chaque lot', () => {
@@ -16,6 +16,17 @@ describe('coffres', () => {
     expect(sourceText('bouteille:2026-10-04-2')).toBe('Bouteille à la mer');
     expect(sourceText('chapitre:IV')).toBe('Coffre du chapitre IV');
     expect(sourceText('quete:source')).toBe('Coffre de Brume');
+  });
+  it('compte ce qu’ouvre « Tout ouvrir » (jour, en attente, bouteille) et fait le bilan de la rafale', () => {
+    const chests = { daily: { available: true }, pending: [{ source: 'chapitre:II' }, { source: 'quete:source' }], bottle: { available: true } };
+    expect(openableOf(chests)).toBe(4);
+    expect(openableOf({ daily: { available: false }, pending: [], bottle: { available: false } })).toBe(0);
+    expect(haulOf([
+      { prize: { kind: 'coins', amount: 25 } }, { prize: { kind: 'stock', stock: { wood: 20, water: 30 } } },
+      { prize: { kind: 'coins', amount: 50 } }, { prize: { kind: 'stock', stock: { wood: 5 } } },
+      { prize: { kind: 'rare', item: 'etincelles', name: 'Gerbe d’étincelles' } }, { prize: { kind: 'tint', item: 'craie-foyer', name: 'Craie' } }
+    ])).toEqual({ coins: 75, stock: [{ glyph: 'ui:wood', n: 25, label: 'bois' }, { glyph: 'ui:water', n: 30, label: 'eau' }], items: 2 });
+    expect(haulOf([])).toEqual({ coins: 0, stock: [], items: 0 });
   });
   it('glisse toujours le même mot dans une même bouteille, et dessine la bouteille', () => {
     expect(noteOf('bouteille:2026-10-04-2')).toBe(noteOf('bouteille:2026-10-04-2'));
