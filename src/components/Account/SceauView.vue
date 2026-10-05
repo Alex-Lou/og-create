@@ -23,6 +23,9 @@
       <button type="button" class="sceau__row" @click="$emit('open-codex')">
         <span class="sceau__row-title">Succès</span><span class="sceau__row-note">{{ unlocked }} sceaux rompus sur {{ achievementsTotal }}</span>
       </button>
+      <button type="button" class="sceau__row" @click="$emit('replay-prologue')">
+        <span class="sceau__row-title">Revoir le prologue</span><span class="sceau__row-note">Le naufrage de l’Hirondelle et la rencontre de Brume</span>
+      </button>
       <button type="button" class="sceau__row" @click="$emit('open-contact')">
         <span class="sceau__row-title">Écrire aux créateurs</span><span class="sceau__row-note">Une idée, un souci : on lit tout</span>
       </button>
@@ -71,7 +74,7 @@ export default {
     achievementsTotal: { type: Number, default: 0 },
     bestScores: { type: Object, default: () => ({}) }
   },
-  emits: ['open-cabinet', 'open-codex', 'open-contact', 'login', 'logout'],
+  emits: ['open-cabinet', 'open-codex', 'open-contact', 'replay-prologue', 'login', 'logout'],
   computed: {
     records() {
       return LEVELS.map(level => this.bestScores[level] || 0).join(' · ');

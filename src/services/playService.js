@@ -118,6 +118,10 @@ export default {
   worldPeople(name) {
     return http.post('/play/world/people', { name }).then(response => response.data);
   },
+  // Le nom du joueur, écrit dans le Grimoire au tutoriel → la vue de l'île
+  worldPlayer(name) {
+    return http.post('/play/world/player', { name }).then(response => response.data);
+  },
   // Enseigne d'un bâtiment (dès le palier V) : style porté, acheté au passage → { coins?, world } ; nom écrit sur les
   // enseignes de l'île → vue de l'île
   worldSign(site, style) {

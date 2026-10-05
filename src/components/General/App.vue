@@ -34,6 +34,7 @@
             @open-cabinet="isCustomizeModalOpen = true"
             @open-codex="showCodex = true"
             @open-contact="showContact = true"
+            @replay-prologue="replayPrologue"
             @login="showSeuil = true"
             @logout="handleLogout"
           />
@@ -47,6 +48,7 @@
             @show-alert="showAlert"
             @login="showSeuil = true"
             @go="openFromWorld"
+            @quest="onIslandQuest"
           />
           <!-- Mode principal : le Livre ; l'Épreuve garde son inventaire -->
           <BookView
@@ -61,6 +63,8 @@
             :picked="athanorPicked"
             :revealing="isRevealing"
             :openMarked="bookOpenMarked"
+            :hold="prologueHold"
+            @loaded="onBookLoaded"
             @marked-opened="bookOpenMarked = false"
             @select="handleResourceSelection"
             @coins-updated="handleCoinsUpdated"
@@ -109,6 +113,18 @@
     </div>
     <TabBar :current="currentMode" :dots="isLoggedIn ? [] : ['sceau']" @select="handleModeSelect" />
     <BrumeGuide @go="handleModeSelect" />
+    <!-- Le tutoriel (HISTOIRE.md, § 9) : scènes, page de garde du Grimoire, main qui montre où toucher -->
+    <PrologueScene v-if="prologueScene" :key="prologueScene" :scene="prologueScene" :skippable="!prologueReplay" @done="prologueSceneDone" @skip="skipPrologue" />
+    <PrologueName
+      v-if="prologueName"
+      :account="prologueName.account"
+      @named="namePlayer"
+      @signing="prologueSigning"
+      @unsigned="prologueUnsigned"
+      @signed-in="prologueSignedIn"
+      @skip="skipPrologue"
+    />
+    <TutorialHand v-if="prologueHand && currentMode === prologueHand.mode && !prologueScene" :key="prologueHand.target" :target="prologueHand.target" />
     <GameAchievementsPopup
       v-if="achievementQueue.length && !isRevealing"
       :key="achievementQueue[0].name"
@@ -212,8 +228,14 @@ import TrialInventory from '../TimerMode/TrialInventory.vue';
 import GModal from '../ui/GModal.vue';
 import TabBar from '../ui/TabBar.vue';
 import BrumeGuide from '../Game/BrumeGuide.vue';
+import PrologueScene from '../Game/PrologueScene.vue';
+import PrologueName from '../Game/PrologueName.vue';
+import TutorialHand from '../Game/TutorialHand.vue';
 import { guide } from '@/game/guide';
 import { questTip } from '@/game/guideTips';
+import { loadPrologue, savePrologue, prologueStep, islandStep } from '@/game/prologue';
+import { faceHref, NAMES } from '@/world/faces';
+import { LINES as PROLOGUE_LINES } from '@/game/prologueScenes';
 
 // Retour sur l'application (PWA remise au premier plan) : carnet rechargé s'il date de plus de 30 s
 const STATE_RELOAD_AFTER_MS = 30000;
@@ -252,7 +274,10 @@ export default {
     TrialInventory,
     GModal,
     TabBar,
-    BrumeGuide
+    BrumeGuide,
+    PrologueScene,
+    PrologueName,
+    TutorialHand
   },
   data() {
     const user = AuthService.getCurrentUser();
@@ -315,7 +340,16 @@ export default {
       // Jeton du lien « mot de passe oublié » (?reset=…)
       resetToken: takeResetToken(),
       selectedFrame: worn.frame || DEFAULT_FRAME,
-      selectedAvatar: worn.avatar || DEFAULT_EMBLEM
+      selectedAvatar: worn.avatar || DEFAULT_EMBLEM,
+      // Le tutoriel : ce que l'appareil en retient (game/prologue.js), la scène jouée, la page de garde ({ account }),
+      // l'élément montré du doigt (sélecteur), les scènes rejouées depuis le Sceau
+      prologue: loadPrologue(),
+      prologueScene: null,
+      prologueName: null,
+      prologueHand: null,
+      prologueReplay: null,
+      // La quête active de Brume sur l'île ({ id, done }), pour les étapes 2 à 5
+      islandQuest: null
     };
   },
   async created() {
@@ -329,6 +363,12 @@ export default {
     this.progressReady = true;
   },
   computed: {
+    // La couverture du Grimoire attend la scène d'arrivée (et, pour un invité, de savoir s'il est tout neuf)
+    prologueHold() {
+      const { skipped, started, seen } = this.prologue;
+      if (this.isLoggedIn || skipped || seen.includes('arrivee')) return false;
+      return !this.progressReady || started;
+    },
     currentMode() {
       if (this.isSceauActive) return 'sceau';
       if (this.isWorldActive) return 'world';
@@ -394,6 +434,15 @@ export default {
     }
   },
   watch: {
+    progressReady(now) {
+      if (now) this.runPrologue();
+    },
+    'discoveredElements.length'() {
+      if (this.progressReady) this.runPrologue();
+    },
+    isWorldActive(now) {
+      if (now) this.runIsland();
+    },
     // Les panneaux fixés en bas changent avec le mode : on remesure la place à leur réserver
     isTimerActive() {
       this.$nextTick(this.trackOverlays);
@@ -418,6 +467,7 @@ export default {
   beforeUnmount() {
     this.overlays?.disconnect();
     document.removeEventListener('visibilitychange', this.handleVisibility);
+    clearTimeout(this.prologueTimer);
   },
   methods: {
     // Mobile : hauteur réelle du dock et de la consigne, réservée sous la liste (et pour le défilement)
@@ -642,6 +692,120 @@ export default {
     },
     resetCraftBoard() {
       this.$refs.craftZone?.clear();
+    },
+
+    // ----- Le tutoriel (HISTOIRE.md, § 9) : l'étape se déduit du jeu (game/prologue.js) -----
+    savePrologue(changes) {
+      this.prologue = { ...this.prologue, ...changes };
+      savePrologue(this.prologue);
+    },
+    runPrologue() {
+      if (this.prologueReplay) return;
+      const step = prologueStep({ state: this.prologue, loggedIn: this.isLoggedIn, elements: this.discoveredElements });
+      if (this.prologueHand?.mode === 'infinite') this.prologueHand = null;
+      if (!step) return;
+      const { phase } = step;
+      if (phase === 'start') {
+        // Brume se présente dans la scène : sa présentation du Grimoire n'a plus lieu d'être
+        guide.drop('welcome');
+        this.savePrologue({ started: true });
+        this.runPrologue();
+      } else if (phase === 'scene') {
+        // Jamais par-dessus l'ouverture d'un chapitre (le sceau qui se brise après la 3e page, qui arrive un peu
+        // après la page inscrite) : la scène attend qu'elle ait commencé puis fini
+        clearTimeout(this.prologueTimer);
+        const show = () => {
+          if (document.querySelector('.book-unlock')) this.prologueTimer = setTimeout(show, 700);
+          else this.prologueScene = step.scene;
+        };
+        if (step.scene === 'arrivee') show();
+        else this.prologueTimer = setTimeout(show, 2500);
+      } else if (phase === 'vent') {
+        guide.say({ id: 'prologue-vent', text: PROLOGUE_LINES.vent, top: true });
+        this.prologueHand = { target: '.book-view__shelf [data-name="Air"]', mode: 'infinite' };
+      } else if (phase === 'pluie') {
+        // La page de l'énigme suivante : le Grimoire s'y ouvre une fois, ses pages rechargées (Vent inscrit)
+        if (guide.say({ id: 'prologue-pluie', text: PROLOGUE_LINES.pluie })) this.prologueOpenReach = true;
+      } else if (phase === 'seul') {
+        guide.say({ id: 'prologue-seul', text: PROLOGUE_LINES.seul });
+      } else if (phase === 'name') {
+        // Le nom écrit juste avant l'inscription (la page s'est rechargée) : il part sans redemander
+        if (!step.account && this.prologue.name) this.namePlayer(this.prologue.name);
+        else this.prologueName = { account: step.account };
+      } else if (phase === 'greve') {
+        guide.say({ id: 'prologue-greve', text: PROLOGUE_LINES.greve, action: { label: 'Aller sur l’île', mode: 'world' } });
+      }
+    },
+    // Étapes 2 (sur l'île) à 5 : la quête active de Brume
+    onIslandQuest(quest) {
+      this.islandQuest = quest ? { id: quest.id, done: Boolean(quest.done) } : null;
+      this.runIsland();
+    },
+    runIsland() {
+      if (this.prologueReplay || this.prologueScene || !this.isWorldActive) return;
+      const step = islandStep({ state: this.prologue, quest: this.islandQuest });
+      if (this.prologueHand?.mode === 'world') this.prologueHand = null;
+      if (!step) return;
+      if (step.phase === 'scene') this.prologueScene = step.scene;
+      else if (step.phase === 'harvest') this.prologueHand = { target: '.world__play', mode: 'world' };
+      else if (step.phase === 'lines') step.lines.forEach(line => this.sayPrologue(line));
+      else if (step.phase === 'finish') this.savePrologue({ finished: true });
+    },
+    // Une réplique du tutoriel : de Brume, ou d'un membre de la troupe (son portrait dans la bulle)
+    sayPrologue(line) {
+      const entry = PROLOGUE_LINES[line];
+      const { who, text } = typeof entry === 'string' ? { text: entry } : entry;
+      guide.say({ id: `prologue-${line}`, text, ...(who ? { who: NAMES[who], face: faceHref(who) } : {}) });
+    },
+    onBookLoaded() {
+      if (!this.prologueOpenReach) return;
+      this.prologueOpenReach = false;
+      this.$refs.book?.openReach('I');
+    },
+    prologueSceneDone(scene) {
+      if (this.prologueReplay) {
+        // Revoir le prologue : les scènes s'enchaînent, sans rien changer à la partie
+        const next = this.prologueReplay.shift();
+        this.prologueScene = next || null;
+        if (!next) this.prologueReplay = null;
+        return;
+      }
+      this.prologueScene = null;
+      this.savePrologue({ seen: [...new Set([...this.prologue.seen, scene])] });
+      this.runPrologue();
+      this.runIsland();
+    },
+    skipPrologue() {
+      this.prologueScene = null;
+      this.prologueName = null;
+      this.prologueHand = null;
+      this.savePrologue({ skipped: true });
+    },
+    replayPrologue() {
+      this.prologueReplay = ['aster', 'recolte', 'cannelle', 'rivet', 'ondin', 'campement'];
+      this.prologueScene = 'arrivee';
+    },
+    // Page de garde : l'inscription recharge la page ; le nom attend sur l'appareil, puis part au serveur
+    prologueSigning(name) {
+      this.savePrologue({ name, registered: true });
+    },
+    prologueUnsigned() {
+      this.savePrologue({ name: null, registered: false });
+    },
+    // Un compte existant retrouvé : c'est un joueur qui a déjà sa partie, le tutoriel s'arrête
+    prologueSignedIn() {
+      this.savePrologue({ registered: false });
+    },
+    async namePlayer(name) {
+      try {
+        await playService.worldPlayer(name);
+        this.prologueName = null;
+        this.savePrologue({ named: true, name: null });
+        this.runPrologue();
+      } catch (error) {
+        this.prologueName = { account: false };
+        this.showAlert(messageOf(error, 'Le nom n’a pas pu être écrit.'));
+      }
     },
 
     // ----- Modes -----
