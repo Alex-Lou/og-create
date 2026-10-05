@@ -77,6 +77,23 @@
           </svg>
           <span v-if="chestCount" class="world__chest-badge" aria-hidden="true">{{ chestCount }}</span>
         </button>
+        <!-- Carnet d'explorateur : les lieux remarquables (pastille : ceux qui attendent d'être découverts) -->
+        <button
+          v-if="state && shownLandmarks.length"
+          type="button"
+          :class="['world__log-btn', { 'is-ready': waitingLandmarks }]"
+          :aria-label="waitingLandmarks ? `Carnet d’explorateur : ${waitingLandmarks} lieu${waitingLandmarks > 1 ? 'x' : ''} à découvrir` : 'Carnet d’explorateur'"
+          @click="openLog()"
+        >
+          <svg viewBox="0 0 32 32" width="24" height="24" aria-hidden="true">
+            <rect x="7" y="5" width="19" height="23" rx="2.5" fill="#7A4E2C" stroke="#3E2615" stroke-width="1.3" />
+            <rect x="9.5" y="7" width="15" height="19" rx="1.5" fill="#F6EEDD" />
+            <path d="M17,10 L19,16 L17,22 L15,16 Z" fill="#C9473A" />
+            <circle cx="17" cy="16" r="5" fill="none" stroke="#5A3A1E" stroke-width="1" />
+            <rect x="5" y="9" width="4" height="2" rx="1" fill="#E2B546" /><rect x="5" y="20" width="4" height="2" rx="1" fill="#E2B546" />
+          </svg>
+          <span v-if="waitingLandmarks" class="world__chest-badge" aria-hidden="true">{{ waitingLandmarks }}</span>
+        </button>
         <!-- Expédition en route : une boussole et le temps avant son retour -->
         <button v-if="state && state.expedition" type="button" class="world__trip-btn" :aria-label="`Expédition en route : retour dans ${tripLeft}`" @click="showExpedition">
           <svg viewBox="0 0 32 32" width="24" height="24" aria-hidden="true">
@@ -190,6 +207,10 @@
                 <div v-if="site.moodBonus && friendAt(site.id)" :class="['world__prod-row', site.moodBonus > 0 ? 'is-happy' : 'is-sad']">
                   <span>Humeur de {{ friendAt(site.id).name }}</span>
                   <strong>{{ site.moodBonus > 0 ? '+' : '−' }}{{ Math.abs(site.moodBonus) }} % de production</strong>
+                </div>
+                <div v-if="site.landmarkBonus" class="world__prod-row">
+                  <span>Lieux remarquables</span>
+                  <strong>+{{ site.landmarkBonus }} % de production</strong>
                 </div>
                 <div v-if="annexYield(site).count" class="world__prod-row">
                   <span>Annexes · {{ annexYield(site).count }}</span>
@@ -562,6 +583,7 @@
     />
     <!-- Coffres : la liste (jour, en attente), puis l'ouverture d'un coffre, ou de tous d'un coup -->
     <ChestList v-if="chestsOpen && state" :chests="state.chests" :busy="busy" @open="openChest" @open-all="openAllChests" @close="chestsOpen = false" />
+    <ExplorerLog v-if="logOpen && state" :landmarks="state.landmarks || []" :zones="state.map.zones" :focus="logFocus" @show="showLandmark" @close="logOpen = false" />
     <ChestReveal v-if="reveal" v-bind="reveal" :busy="busy" @wear="wearRevealed" @close="reveal = null" />
     <ChestHaul v-if="haul && state" :items="haulItems" :busy="busy" @wear="wearHauled" @close="haul = null" />
 
@@ -612,6 +634,7 @@ import VisitorSheet from './VisitorSheet.vue';
 import RenameSheet from './RenameSheet.vue';
 import CraftBench from './CraftBench.vue';
 import CraftPuzzle from './CraftPuzzle.vue';
+import ExplorerLog from './ExplorerLog.vue';
 import { villagerSprite, ROLES } from '@/world/villagers';
 import { talkLine, giftLine, awaits } from '@/world/friends';
 import { NEED_GLYPH, MOOD_GLYPH, MOOD_LABEL, ASKS, THANKS, WORDS, missingOf, fillAllOf, askOr } from '@/world/needs';
@@ -619,6 +642,8 @@ import { visitorLook, visitorBoat, askLine, THANKS as VISITOR_THANKS } from '@/w
 import { nameSignLayers, nameSignLight, paintName } from '@/world/nameSigns';
 import { annexLayers, annexLight } from '@/world/annexSprites';
 import { craftLayers, craftLight, craftThumb } from '@/world/craftSprites';
+import { landmarkLayers, landmarkLight, landmarkTop, landmarkScale } from '@/world/landmarkSprites';
+import { landmarksShown, landmarksWaiting, landmarkTip } from '@/world/landmarks';
 import { CLIMATE_NAMES, CLIMATE_TEXT, climateAt, mixToward, drawClimate } from '@/world/climates';
 import { annexReady, annexYield, variantsOf } from '@/world/annexes';
 import { BOTTLE, noteOf, openableOf } from '@/world/chest';
@@ -696,6 +721,9 @@ const MAX_SCALE = 1.8;
 // Vue de loin (zoom sous FAR_SCALE) : ni masquage par le relief devant ce qui se tient debout (invisible à cette
 // taille), ni petits détails du décor ; la très grande île reste fluide
 const FAR_SCALE = 0.45;
+// De près seulement (zoom dès NEAR_SCALE), le décor fixe se dessine à chaque image et plie au vent ; plus loin, il est
+// cuit dans les carrés du sol (sauf près de ce qui se tient debout : il doit pouvoir passer devant)
+const NEAR_SCALE = 0.9;
 const SMALL_PROPS = new Set(['tuft', 'flowers', 'shells', 'mushrooms', 'reeds', 'lily', 'stump', 'log', 'driftwood', 'nest']);
 // Ce qui vit à la surface de la mer (posé au niveau de l'eau, jamais caché par la terre : eau libre)
 const SEA_KINDS = new Set(['fish', 'dolphin', 'whale', 'fluke', 'spout', 'vboat']);
@@ -743,7 +771,7 @@ let lastView = null;
 // d'animation sont non réactifs et s'arrêtent quand l'onglet est caché ou le composant démonté.
 export default {
   name: 'WorldView',
-  components: { ElementGlyph, HarvestGame, ShopItemSheet, BrumeWisp, IslandClock, GModal, ChestList, ChestReveal, ChestHaul, AnnexPanel, AnnexSheet, NameSignPanel, MiniGame, GameIcon, VillagerSheet, VisitorSheet, RenameSheet, CraftBench, CraftPuzzle },
+  components: { ElementGlyph, HarvestGame, ShopItemSheet, BrumeWisp, IslandClock, GModal, ChestList, ChestReveal, ChestHaul, AnnexPanel, AnnexSheet, NameSignPanel, MiniGame, GameIcon, VillagerSheet, VisitorSheet, RenameSheet, CraftBench, CraftPuzzle, ExplorerLog },
   directives: { longpress },
   props: {
     // Glyphes des éléments du Livre (savoir-faire demandé à l'établi)
@@ -782,6 +810,9 @@ export default {
       // d'ouverture : { chest, streak, note, art, wearable } ; coffres ouverts d'un coup (« Tout ouvrir »)
       runChest: null,
       chestsOpen: false,
+      // Carnet d'explorateur ouvert, et la page qu'il montre d'emblée (identifiant d'un lieu)
+      logOpen: false,
+      logFocus: null,
       reveal: null,
       haul: null,
       // Mini-jeu ouvert (id), sa partie, son envoi, son résultat
@@ -868,6 +899,13 @@ export default {
     chestCount() {
       const chests = this.state && this.state.chests;
       return chests ? openableOf(chests) : 0;
+    },
+    // Lieux remarquables des quartiers connus ; ceux d'un quartier à soi qui attendent d'être découverts
+    shownLandmarks() {
+      return landmarksShown(this.state);
+    },
+    waitingLandmarks() {
+      return landmarksWaiting(this.state).length;
     },
     sheetSite() {
       return this.sheet && this.state ? this.state.sites.find(s => s.id === this.sheet.siteId) || null : null;
@@ -1160,13 +1198,17 @@ export default {
       }
       this.annexVariants = variantsOf(state.annexes || []);
       this.props = this.natureOf(state);
-      // Décor par case (cuit dans le sol vu de loin) ; s'il a changé, les carrés cuits seront refaits
+      // Décor par case, cuit dans le sol sauf de près ; celui qui entoure ce qui se tient debout reste dessiné à part
+      // (liveProps), pour passer devant dans l'ordre du relief. Si le décor cuit a changé, ses carrés seront refaits
+      const live = this.liveCellsOf(state);
+      this.liveProps = this.props.filter(prop => live.has(prop.y * state.size + prop.x));
       this.propsAt = new Map();
       for (const prop of this.props) {
         const key = prop.y * state.size + prop.x;
+        if (live.has(key)) continue;
         this.propsAt.set(key, [...(this.propsAt.get(key) || []), prop]);
       }
-      const propsKey = this.props.map(p => `${p.kind}${p.x},${p.y}`).join(';');
+      const propsKey = [...this.propsAt.values()].flat().map(p => `${p.kind}${p.x},${p.y}`).join(';');
       if (this.propsKey !== undefined && propsKey !== this.propsKey) this.terrain.restand();
       this.propsKey = propsKey;
       this.perches = this.perchesOf(state);
@@ -1262,13 +1304,25 @@ export default {
       this.syncLoop();
       this.draw(performance.now());
     },
+    // Cases autour de ce qui se tient debout (bâtiments, créations, annexes, lieux remarquables), jusqu'à deux cases
+    // devant : le décor qui s'y trouve n'est jamais cuit dans le sol (il passe devant eux). Set des clés y * n + x
+    liveCellsOf(state) {
+      const n = state.size;
+      const cells = new Set();
+      const around = (x0, y0, w, h) => {
+        for (let y = y0 - 1; y <= y0 + h + 1; y++) for (let x = x0 - 1; x <= x0 + w + 1; x++) cells.add(y * n + x);
+      };
+      state.sites.forEach(site => around(site.x, site.y, site.w, site.h));
+      [...(state.crafts ? state.crafts.placed : []), ...(state.annexes || []), ...landmarksShown(state)].forEach(o => around(o.x, o.y, 1, 1));
+      return cells;
+    },
     // Décor naturel, fixe pour une île donnée, selon le sol : arbres des forêts, arbres isolés, rochers, touffes des
     // dunes ; roseaux et nénuphars au bord de l'eau douce ; palmiers et coquillages sur le sable, touffes et fleurs
     // dans l'herbe libre. Une création posée le remplace, et il ne gêne aucun toucher.
     natureOf(state) {
       const n = state.size;
       const M = this.M;
-      const taken = new Set([...(state.crafts ? state.crafts.placed : []), ...(state.annexes || [])].map(t => t.y * n + t.x));
+      const taken = new Set([...(state.crafts ? state.crafts.placed : []), ...(state.annexes || []), ...landmarksShown(state)].map(t => t.y * n + t.x));
       state.sites.forEach(site => {
         for (let dy = 0; dy < site.h; dy++) for (let dx = 0; dx < site.w; dx++) taken.add((site.y + dy) * n + site.x + dx);
       });
@@ -1566,7 +1620,10 @@ export default {
       drawFloatBelow(ctx, this.islets.float, view, t, phase.night);
       // Sol en relief, en carrés gardés en images (les nouveaux dans un budget de 8 ms) ; puis l'eau douce qui bouge,
       // les vagues et l'écume devant l'île, les ronds dans l'eau des dauphins et de la baleine
-      const missing = this.terrain.draw(ctx, view, s * dpr, 8);
+      // (avec le décor fixe cuit dedans, sauf de près)
+      const near = s >= NEAR_SCALE;
+      const baked = !near;
+      const missing = this.terrain.draw(ctx, view, s * dpr, 8, baked);
       drawLive(ctx, this.M, this.live, view, t);
       if (this.owns(this.state, FLOATING_ZONE)) drawSpring(ctx, this.islets.spring, view, t);
       drawWaves(ctx, this.live.shore, view, t, true);
@@ -1588,20 +1645,33 @@ export default {
         ctx.lineWidth = 1 / s;
         ctx.stroke();
       }
-      // Pose d'une annexe ou d'une création : les cases autorisées battent en doré, la case choisie est cerclée
+      // Pose d'une annexe ou d'une création : les cases autorisées battent en doré, la case choisie est cerclée. Contour
+      // net (un trait sombre sous un trait doré : lisible sur le sable, la neige et la lande) ; un losange clair part du
+      // centre de chaque case et s'efface (sauf en mouvement réduit)
       const golden = this.annexPlacing && this.placingSite ? { spots: this.placingSite.spots, chosen: this.annexConfirm }
         : this.craftPlacing ? { spots: this.craftSpots, chosen: this.craftConfirm } : null;
       if (golden) {
         const pulse = 0.5 + 0.5 * Math.sin(t * 4);
+        const wave = (t * 1.1) % 1;
+        const still = this.reduced();
+        ctx.lineJoin = 'round';
         for (const spot of golden.spots) {
           const c = this.ground(spot.x, spot.y);
           if (c.x < view.x - TW || c.x > view.x + view.w + TW || c.y < view.y - TW || c.y > view.y + view.h + TW) continue;
           const chosen = golden.chosen && golden.chosen.x === spot.x && golden.chosen.y === spot.y;
           this.diamond(ctx, c.x, c.y, TW, TH);
-          ctx.fillStyle = chosen ? 'rgba(242, 192, 75, .62)' : `rgba(242, 192, 75, ${(0.2 + 0.18 * pulse).toFixed(3)})`;
+          ctx.fillStyle = chosen ? 'rgba(242, 192, 75, .62)' : `rgba(242, 192, 75, ${(0.24 + 0.2 * pulse).toFixed(3)})`;
           ctx.fill();
-          ctx.strokeStyle = chosen ? '#FFF4C8' : 'rgba(255, 236, 170, .9)';
-          ctx.lineWidth = (chosen ? 2.6 : 1.4) / s;
+          ctx.strokeStyle = 'rgba(92, 56, 12, .78)';
+          ctx.lineWidth = (chosen ? 4.6 : 3.4) / s;
+          ctx.stroke();
+          ctx.strokeStyle = chosen ? '#FFF4C8' : '#FFD45E';
+          ctx.lineWidth = (chosen ? 2.4 : 1.7) / s;
+          ctx.stroke();
+          if (chosen || still) continue;
+          this.diamond(ctx, c.x, c.y, TW * (0.2 + 0.7 * wave), TH * (0.2 + 0.7 * wave));
+          ctx.strokeStyle = `rgba(255, 246, 210, ${(0.95 * (1 - wave)).toFixed(3)})`;
+          ctx.lineWidth = 1.5 / s;
           ctx.stroke();
         }
       }
@@ -1656,17 +1726,16 @@ export default {
       // Ce qui se tient debout (bâtiments, créations, nature), du plus loin au plus proche
       // (seulement ce qui est à l'écran ; un grand sprite dépasse vers le haut de son pied)
       const far = s < FAR_SCALE;
-      // Plus loin encore, le décor fixe est déjà peint dans le sol
-      const baked = this.terrain.bakes(s * dpr);
       const seenAt = (wx, wy) => wx > view.x - TW * 2.5 && wx < view.x + view.w + TW * 2.5 && wy > view.y - TW * 0.6 && wy < view.y + view.h + TW * 3.2;
       const seen = (x, y) => { const c = this.ground(x, y); return seenAt(c.x, c.y); };
       const standing = [
         ...this.state.sites.map(site => ({ depth: site.x + site.y + site.w, site })),
         ...this.crafted.filter(craft => seen(craft.x, craft.y)).map(craft => ({ depth: craft.x + craft.y, craft })),
         ...(this.state.annexes || []).filter(annex => seen(annex.x, annex.y)).map(annex => ({ depth: annex.x + annex.y, annex })),
+        ...this.shownLandmarks.filter(landmark => seen(landmark.x, landmark.y)).map(landmark => ({ depth: landmark.x + landmark.y, landmark })),
         ...this.state.sites.filter(site => site.sign && !site.locked).map(site => ({ site, at: this.nameSignAt(site) }))
           .filter(({ at }) => seen(at.gx, at.gy)).map(({ site, at }) => ({ depth: at.gx + at.gy, nameSign: site })),
-        ...(baked ? [] : this.props.filter(prop => seenAt(prop.wx, prop.wy) && !(far && SMALL_PROPS.has(prop.kind)))).map(prop => ({ depth: prop.depth, prop })),
+        ...(baked ? this.liveProps : this.props).filter(prop => seenAt(prop.wx, prop.wy) && !(far && SMALL_PROPS.has(prop.kind))).map(prop => ({ depth: prop.depth, prop })),
         ...[...this.critters(t), ...life.standing].filter(critter => seen(critter.x, critter.y))
           .map(critter => ({ depth: critter.depth ?? critter.x + critter.y, critter })),
         ...this.ferryItems(t),
@@ -1679,19 +1748,22 @@ export default {
         if (item.site) this.drawSite(ctx, item.site, t, now, repaint);
         else if (item.craft) {
           this.drawCraft(ctx, item.craft, t, now, repaint);
-          if (!far) this.occlude(ctx, item.craft.x, item.craft.y);
+          if (!far) this.occlude(ctx, item.craft.x, item.craft.y, baked);
         } else if (item.annex) {
           this.drawAnnex(ctx, item.annex, t, now, repaint);
-          if (!far) this.occlude(ctx, item.annex.x, item.annex.y);
+          if (!far) this.occlude(ctx, item.annex.x, item.annex.y, baked);
+        } else if (item.landmark) {
+          this.drawLandmark(ctx, item.landmark, t, now, repaint);
+          if (!far) this.occlude(ctx, item.landmark.x, item.landmark.y, baked);
         } else if (item.prop) {
-          this.drawProp(ctx, item.prop, t, repaint, now);
-          if (!far) this.occlude(ctx, item.prop.x, item.prop.y);
+          this.drawProp(ctx, item.prop, t, repaint, now, !near);
+          if (!far) this.occlude(ctx, item.prop.x, item.prop.y, baked);
         } else if (item.nameSign) this.drawNameSign(ctx, item.nameSign, t, repaint);
         else if (item.sign) this.drawSign(ctx, item.sign, t, repaint);
         else if (item.ferry) this.drawFerry(ctx, item.ferry, repaint);
         else {
           this.drawCritter(ctx, item.critter, repaint);
-          if (!far && !SEA_KINDS.has(item.critter.kind)) this.occlude(ctx, Math.round(item.critter.x), Math.round(item.critter.y));
+          if (!far && !SEA_KINDS.has(item.critter.kind)) this.occlude(ctx, Math.round(item.critter.x), Math.round(item.critter.y), baked);
         }
       }
       // Volutes de brume qui dérivent au-dessus des quartiers à acheter
@@ -1719,16 +1791,21 @@ export default {
       this.drawBrume(ctx, t, s);
       // Les noms des lieux passent par-dessus tout : aucune création ne les cache
       if (this.cam.s >= 0.55) this.state.sites.filter(site => !site.locked).forEach(site => this.drawLabel(ctx, site));
+      // Étoiles des lieux à découvrir : par-dessus tout, de jour comme de nuit
+      this.drawBeacons(ctx, t, seen);
       // Bulles de production à toucher, au-dessus de tout
       this.drawBubbles(ctx, t, repaint);
     },
     // Ce qui se tient derrière une case plus haute : cette case est repeinte par-dessus (le relief cache le pied)
-    occlude(ctx, x, y) {
+    occlude(ctx, x, y, baked = false) {
       const M = this.M;
       const h = M.surface(x, y);
       for (const [dx, dy] of [[1, 0], [0, 1], [1, 1]]) {
         const nx = x + dx, ny = y + dy;
-        if (M.land(nx, ny) && M.surface(nx, ny) > h + 0.01) drawCell(ctx, M, nx, ny, this.veilAt(nx, ny));
+        if (!M.land(nx, ny) || M.surface(nx, ny) <= h + 0.01) continue;
+        drawCell(ctx, M, nx, ny, this.veilAt(nx, ny));
+        // (le décor cuit dans cette case est repeint avec elle)
+        if (baked) this.standAt(ctx, nx, ny);
       }
     },
     drawSite(ctx, site, t, now, repaint) {
@@ -1838,7 +1915,7 @@ export default {
         }
       }
     },
-    // Décor fixe d'une case, cuit dans le sol vu de loin (sans le vent ; à demi effacé sous la brume, comme le sol) :
+    // Décor fixe d'une case, cuit dans le sol sauf de près (sans le vent ; à demi effacé sous la brume, comme le sol) :
     // vrai si tous ses dessins étaient prêts
     standAt(ctx, x, y) {
       const props = this.propsAt && this.propsAt.get(y * this.state.size + x);
@@ -1850,14 +1927,14 @@ export default {
       ctx.globalAlpha = 1;
       return ready;
     },
-    drawProp(ctx, prop, t, repaint, now) {
+    drawProp(ctx, prop, t, repaint, now, still = false) {
       const c = { x: prop.wx, y: prop.wy };
       const mist = this.mistOf(this.zoneAt(prop.x, prop.y), now);
       if (mist) {
         ctx.save();
         ctx.globalAlpha = 1 - 0.5 * mist;
       }
-      this.swayed(ctx, `nature-${prop.kind}`, ALL_NATURE[prop.kind], c.x, c.y, (SWAY[prop.kind] || 0) * this.windAt(t, prop.x * 0.7 + prop.y), repaint);
+      this.swayed(ctx, `nature-${prop.kind}`, ALL_NATURE[prop.kind], c.x, c.y, still ? 0 : (SWAY[prop.kind] || 0) * this.windAt(t, prop.x * 0.7 + prop.y), repaint);
       if (mist) ctx.restore();
     },
     // Panneau d'un quartier à acheter : prix, ou chapitre du Livre encore fermé ; il se balance un peu
@@ -2467,6 +2544,17 @@ export default {
         const flicker = fire ? 0.85 + 0.15 * Math.sin(t * 13 + annex.x) * Math.sin(t * 7.3) : 0.95 + 0.05 * Math.sin(t * 2 + annex.y);
         glow(ctx, c.x + lx, c.y + ly, r, (fire ? Math.max(0.3, lit) : litFor(annex.x * 13 + annex.y)) * flicker, color);
       }
+      // Lieux remarquables : bouche de la grotte, gravures des menhirs, lanterne des pilotis, lave (elle luit même de jour)
+      for (const landmark of this.shownLandmarks) {
+        const light = landmarkLight(landmark.id);
+        if (!light) continue;
+        const [u, v, z, r, color, fire] = light;
+        const c = this.ground(landmark.x, landmark.y);
+        const k = landmarkScale(landmark.id);
+        const [lx, ly] = P(u, v, z);
+        const flicker = fire ? 0.85 + 0.15 * Math.sin(t * 9 + landmark.x) * Math.sin(t * 5.3) : 0.9 + 0.1 * Math.sin(t * 1.6 + landmark.y);
+        glow(ctx, c.x + lx * k, c.y + ly * k, r * k, (fire ? Math.max(0.35, lit) : lit) * flicker, color);
+      }
       // Créations d'île : lanterne, brasero (son feu brûle même de jour), fontaine, kiosque
       for (const craft of this.crafted) {
         const light = craftLight(craft.craft);
@@ -2528,6 +2616,57 @@ export default {
       ctx.textBaseline = 'middle';
       ctx.fillText(site.name, c.x, y + 0.5);
       ctx.textBaseline = 'alphabetic';
+    },
+    // Lieu remarquable, un peu plus grand que sa case (landmarkScale) : il surgit à sa découverte, sautille au toucher ;
+    // sous la brume d'un quartier à acheter, à demi effacé
+    drawLandmark(ctx, landmark, t, now, repaint) {
+      const c = this.ground(landmark.x, landmark.y);
+      const key = `landmark:${landmark.id}`;
+      const started = this.pops.get(key);
+      let scale = landmarkScale(landmark.id);
+      if (started) {
+        const k = Math.min(1, (now - started) / 600);
+        const back = 1.7;
+        scale *= 1 + (back + 1) * Math.pow(k - 1, 3) + back * Math.pow(k - 1, 2);
+        if (k >= 1) this.pops.delete(key);
+      }
+      const tapped = this.scared.get(key);
+      const hop = tapped && t - tapped.at < 0.5 ? Math.sin(((t - tapped.at) / 0.5) * Math.PI) * 4 : 0;
+      const zone = this.zoneAt(landmark.x, landmark.y);
+      const mist = this.mistOf(zone, now);
+      ctx.save();
+      ctx.translate(c.x, c.y - hop);
+      ctx.scale(scale, scale);
+      if (mist) ctx.globalAlpha = 1 - 0.5 * mist;
+      for (const layer of landmarkLayers(landmark.id, this.reduced() ? 0 : t)) drawSprite(ctx, layer.key, layer.make, 0, 0, repaint);
+      ctx.restore();
+    },
+    // Étoile dorée qui bat au-dessus de chaque lieu d'un quartier à soi encore à découvrir (seen : case à l'écran)
+    drawBeacons(ctx, t, seen) {
+      const still = this.reduced();
+      for (const landmark of landmarksWaiting(this.state)) {
+        if (!seen(landmark.x, landmark.y)) continue;
+        const c = this.ground(landmark.x, landmark.y);
+        const y = c.y + landmarkTop(landmark.id) * landmarkScale(landmark.id) * 0.85 + (still ? 0 : Math.sin(t * 2.4) * 3);
+        const pulse = still ? 1 : 0.5 + 0.5 * Math.sin(t * 4);
+        glow(ctx, c.x, y, 22, 0.55 + 0.35 * pulse, '255,214,94');
+        ctx.save();
+        ctx.translate(c.x, y);
+        ctx.beginPath();
+        for (let i = 0; i < 8; i++) {
+          const r = i % 2 ? 4 : 10 + pulse * 1.5;
+          const a = (i / 8) * Math.PI * 2 - Math.PI / 2;
+          ctx.lineTo(Math.cos(a) * r, Math.sin(a) * r);
+        }
+        ctx.closePath();
+        ctx.fillStyle = '#FFD45E';
+        ctx.strokeStyle = 'rgba(92, 56, 12, .85)';
+        ctx.lineWidth = 1.6;
+        ctx.lineJoin = 'round';
+        ctx.fill();
+        ctx.stroke();
+        ctx.restore();
+      }
     },
     // Création d'île posée : elle surgit à la pose, sautille au toucher, s'efface à demi pendant qu'on la déplace
     drawCraft(ctx, craft, t, now, repaint) {
@@ -2601,6 +2740,7 @@ export default {
       else if (hit && hit.craft) this.openCraftMenu(hit.craft);
       else if (hit && hit.item) this.describeItem(hit.site, hit.item);
       else if (hit && hit.annex) this.annexSheet = { x: hit.annex.x, y: hit.annex.y };
+      else if (hit && hit.landmark) this.openLog(hit.landmark.id);
       else if (hit && hit.nameSign) this.openNameSign(hit.nameSign);
       else if (hit && hit.animal && this.friendOf(hit.animal.who)) this.openVillager(this.friendOf(hit.animal.who).id);
       else if (hit && hit.animal && (hit.animal.kind === 'vboat' || this.guestOf(hit.animal.who))) this.openVisitor();
@@ -2691,7 +2831,10 @@ export default {
       const candidates = [
         ...this.state.sites.map(site => ({ site, depth: site.x + site.y + site.w, c: this.centerOf(site), r: TW * 0.49 * site.w, h: TW * 0.875 * site.w, below: TH * 0.525 * site.w })),
         ...this.crafted.map(craft => ({ craft, depth: craft.x + craft.y, c: this.ground(craft.x, craft.y), r: TW * 0.42, h: TW * 1.1 })),
-        ...(this.state.annexes || []).map(annex => ({ annex, depth: annex.x + annex.y, c: this.ground(annex.x, annex.y), r: TW * 0.44, h: TW * 1.1 }))
+        ...(this.state.annexes || []).map(annex => ({ annex, depth: annex.x + annex.y, c: this.ground(annex.x, annex.y), r: TW * 0.44, h: TW * 1.1 })),
+        ...this.shownLandmarks.map(landmark => ({
+          landmark, depth: landmark.x + landmark.y, c: this.ground(landmark.x, landmark.y), r: TW * 0.56 * landmarkScale(landmark.id), h: -landmarkTop(landmark.id) * landmarkScale(landmark.id) + 14
+        }))
       ].sort((p, q) => q.depth - p.depth);
       const hit = candidates.find(o => Math.abs(w.x - o.c.x) < o.r && w.y > o.c.y - o.h && w.y < o.c.y + (o.site ? o.below : TH * 0.3));
       if (hit) return hit;
@@ -2768,6 +2911,8 @@ export default {
         this.scared.set(`annex:${annex.x},${annex.y}`, { at: performance.now() / 1000 });
         this.showTip(px, py, this.annexTip(annex));
         vibrate(6);
+      } else if (hit.landmark) {
+        this.tapLandmark(hit.landmark, px, py);
       } else if (hit.zone) {
         this.zone = hit.zone;
         vibrate(6);
@@ -2840,6 +2985,13 @@ export default {
         return { title: site.name, text, hint: 'Toucher : sa fiche et sa boutique' };
       }
       if (hit.craft) return { title: this.craftName(hit.craft.craft), text: 'Une création d’île, assemblée à l’établi.', hint: 'Appui long : la déplacer ou la ranger' };
+      if (hit.landmark) {
+        const landmark = hit.landmark;
+        const zone = this.state.map.zones.find(z => z.id === landmark.zone);
+        if (landmark.found) return { title: landmark.name, text: landmark.effect, hint: 'Appui long : sa page du Carnet' };
+        if (zone && zone.owned) return { title: landmark.name, text: 'Un lieu remarquable à découvrir.', hint: 'Toucher : le découvrir' };
+        return { title: landmark.name, text: `Achète ${zone ? zone.name : 'ce quartier'} pour découvrir ce lieu.`, hint: 'Appui long : le Carnet d’explorateur' };
+      }
       // Case de l'île : son décor naturel, ou de l'herbe libre
       const cell = hit.cell || this.tileAt(point.x, point.y);
       const prop = cell && this.props.find(p => p.x === cell.x && p.y === cell.y);
@@ -3588,6 +3740,61 @@ export default {
       }
       this.zone = zone;
     },
+    // Lieu remarquable touché : à découvrir dans un quartier à soi, le serveur l'inscrit ; sinon il sautille et dit ce
+    // qu'il fait, ou comment l'atteindre
+    tapLandmark(landmark, px, py) {
+      const zone = this.state.map.zones.find(z => z.id === landmark.zone);
+      this.scared.set(`landmark:${landmark.id}`, { at: performance.now() / 1000 });
+      if (!landmark.found && zone && zone.owned) {
+        this.findLandmark(landmark, px, py);
+        return;
+      }
+      this.showTip(px, py, this.tipOf({ landmark }));
+      vibrate(6);
+    },
+    // Découverte d'un lieu : le serveur l'inscrit (effet durable, coffre qui attend) ; l'île le fête, Brume en parle,
+    // puis son coffre s'ouvre
+    async findLandmark(landmark, px, py) {
+      if (this.busy) return;
+      this.busy = true;
+      let fresh = false;
+      try {
+        const { fresh: first, world } = await playService.worldLandmark(landmark.id);
+        fresh = first;
+        this.apply(world);
+        const found = (world.landmarks || []).find(l => l.id === landmark.id) || landmark;
+        if (fresh) {
+          const at = this.canvasPoint(px, py);
+          ring(at, 110);
+          burst(at, 32, 120);
+          vibrate([14, 40, 20, 40, 26]);
+          this.pops.set(`landmark:${landmark.id}`, performance.now());
+          this.$emit('show-alert', `Lieu découvert : ${found.name}\u00a0! ${found.effect}.`);
+          guide.say(landmarkTip(found));
+        }
+      } catch (error) {
+        this.$emit('show-alert', messageOf(error, 'Ce lieu n’a pas pu être découvert.'));
+      } finally {
+        this.busy = false;
+      }
+      if (fresh) this.openChest(`lieu:${landmark.id}`);
+    },
+    // Carnet d'explorateur, ouvert à la page d'un lieu (ou au début)
+    openLog(id = null) {
+      this.logFocus = id;
+      this.logOpen = true;
+    },
+    // « Voir sur l'île » : la caméra va vers le lieu, le carnet se ferme
+    showLandmark(id) {
+      const landmark = this.shownLandmarks.find(l => l.id === id);
+      this.logOpen = false;
+      if (!landmark) return;
+      const c = this.ground(landmark.x, landmark.y);
+      this.cam.x = c.x;
+      this.cam.y = c.y + (landmarkTop(landmark.id) * landmarkScale(landmark.id)) / 2;
+      this.clampCam();
+      this.draw(performance.now());
+    },
     // Achat d'un article en un toucher ; « Annuler » reste proposé UNDO_MS
     async buyItem(site, item, event) {
       // Pas encore achetable : sa fiche dit pourquoi (palier, écus, butins)
@@ -3845,6 +4052,11 @@ export default {
   width: 46px; height: 46px; border: 0; border-radius: 14px; background: rgba(30, 22, 16, .55); cursor: pointer;
 }
 .world__chest-btn.is-ready { background: var(--gold-400); box-shadow: 0 3px 0 var(--gold-600); animation: world-chest-call 2.4s ease-in-out infinite; }
+.world__log-btn {
+  position: absolute; left: 62px; top: 10px; display: grid; place-items: center;
+  width: 46px; height: 46px; border: 0; border-radius: 14px; background: rgba(30, 22, 16, .55); cursor: pointer;
+}
+.world__log-btn.is-ready { background: var(--gold-400); box-shadow: 0 3px 0 var(--gold-600); }
 .world__trip-btn {
   position: absolute; left: 10px; top: 64px; display: flex; align-items: center; gap: 5px; height: 36px; padding: 0 10px 0 6px;
   border: 0; border-radius: 12px; background: rgba(30, 22, 16, .6); color: #FFF4C8; font-family: var(--font-ui); font-size: 12px; font-weight: 900; cursor: pointer;

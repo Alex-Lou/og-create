@@ -86,6 +86,10 @@ export default {
   worldExpedition(zone) {
     return http.post('/play/world/expedition', { zone }).then(response => response.data);
   },
+  // Lieu remarquable d'un quartier à soi : le découvrir → { landmark, fresh, world }
+  worldLandmark(id) {
+    return http.post('/play/world/landmark', { id }).then(response => response.data);
+  },
   // Boutique d'un atelier : { bought, coins, world }
   worldItem(item) {
     return http.post('/play/world/item', { item }).then(response => response.data);

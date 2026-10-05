@@ -17,9 +17,9 @@ const PAD_PX = 2;
 const MAX_TILES = 24;
 const MAX_RES = 2;
 const OVERVIEW_RES = 0.25;
-// Vu de loin (résolution des carrés jusqu'à BAKE_RES, et la vue d'ensemble), le décor fixe (arbres, rochers…) est peint
-// dans les carrés du sol, une fois, dans l'ordre du relief : l'île n'a plus à le redessiner à chaque image
-const BAKE_RES = 0.71;
+// Sauf de près (l'île en décide à chaque image : draw(…, bake)), le décor fixe (arbres, rochers…) est peint dans les
+// carrés du sol, une fois, dans l'ordre du relief : l'île n'a plus à le redessiner à chaque image. Un carré est fait
+// avec ou sans décor (clé distincte) ; la vue d'ensemble l'a toujours
 // Vue d'ensemble peinte avant que tous les dessins du décor soient prêts : refaite au plus tant de fois
 const OVERVIEW_RETRIES = 6;
 // Ce qu'un élément du décor dépasse de sa case : vers le haut, sur les côtés (unités du monde, cadre des dessins)
@@ -473,14 +473,9 @@ export class TerrainCache {
     this.bounds = { x: (-n * TW) / 2 - TW, y: -CELL_ABOVE_MAX, w: n * TW + 2 * TW, h: n * TH + CELL_ABOVE_MAX + CELL_BELOW };
   }
 
-  // Le décor fixe est-il cuit dans le sol à cette échelle (pixels par unité du monde) ?
-  bakes(scale) {
-    return Boolean(this.standOf) && resOf(scale) <= BAKE_RES;
-  }
-
   // Le décor fixe a changé : les carrés où il est cuit et la vue d'ensemble seront refaits
   restand() {
-    for (const [key, tile] of this.tiles) if (tile.res <= BAKE_RES) { tile.stale = true; this.tiles.set(key, tile); }
+    for (const tile of this.tiles.values()) if (tile.bake) tile.stale = true;
     if (this.overview) { this.overview.stale = true; this.overview.retries = 0; }
   }
 
@@ -512,17 +507,16 @@ export class TerrainCache {
 
   // Un carré : sa case de la grille à cette résolution, avec une marge de PAD_PX pixels qui recouvre ses voisins
   // (aucune couture entre deux carrés). Un carré de pleine mer ne garde pas d'image
-  render(tx, ty, res) {
+  render(tx, ty, res, bake = false) {
     const size = TILE_PX / res, pad = PAD_PX / res;
     const r = { x: tx * size - pad, y: ty * size - pad, w: size + 2 * pad, h: size + 2 * pad };
     const canvas = document.createElement('canvas');
     canvas.width = canvas.height = TILE_PX + 2 * PAD_PX;
     const ctx = canvas.getContext('2d');
     ctx.setTransform(res, 0, 0, res, -r.x * res, -r.y * res);
-    const bake = Boolean(this.standOf) && res <= BAKE_RES;
-    if (this.paint(ctx, r, bake)) return { canvas, r, res, stale: bake && !this.ready };
+    if (this.paint(ctx, r, bake)) return { canvas, r, res, bake, stale: bake && !this.ready };
     canvas.width = canvas.height = 0;
-    return { canvas: null, r, res };
+    return { canvas: null, r, res, bake };
   }
 
   // Toute l'île en basse résolution
@@ -542,11 +536,14 @@ export class TerrainCache {
     return this.overview;
   }
 
-  // Dessine le sol visible (view : rectangle du monde, scale : pixels par unité du monde). Les carrés manquants sont
-  // préparés tant qu'il reste du temps (budget en ms, au moins un par image ; tous d'un coup à l'arrivée sur l'île),
-  // puis, tout étant prêt, un voisin de l'écran d'avance. Renvoie le nombre de carrés encore à préparer
-  draw(ctx, view, scale, budget = 8) {
+  // Dessine le sol visible (view : rectangle du monde, scale : pixels par unité du monde ; bake : avec le décor fixe).
+  // Les carrés manquants sont préparés tant qu'il reste du temps (budget en ms, au moins un par image ; tous d'un coup
+  // à l'arrivée sur l'île), puis, tout étant prêt, un voisin de l'écran d'avance. Renvoie le nombre de carrés encore à
+  // préparer
+  draw(ctx, view, scale, budget = 8, bake = false) {
     const res = resOf(scale);
+    bake = bake && Boolean(this.standOf);
+    const tag = `${res}${bake ? 'b' : ''}`;
     const b = this.bounds;
     if (res <= OVERVIEW_RES) {
       ctx.drawImage(this.overviewOf().canvas, b.x, b.y, b.w, b.h);
@@ -561,12 +558,12 @@ export class TerrainCache {
     let rendered = 0, missing = 0;
     for (let ty = y0; ty <= y1; ty++) {
       for (let tx = x0; tx <= x1; tx++) {
-        const key = `${res}:${tx},${ty}`;
+        const key = `${tag}:${tx},${ty}`;
         seen.add(key);
         let tile = this.tiles.get(key);
         if ((!tile || tile.stale) && (all || !rendered || performance.now() - start < budget)) {
           if (tile && tile.canvas) tile.canvas.width = tile.canvas.height = 0;
-          tile = this.render(tx, ty, res);
+          tile = this.render(tx, ty, res, bake);
           rendered++;
         }
         if (tile) {
@@ -581,7 +578,7 @@ export class TerrainCache {
         }
       }
     }
-    if (!missing && this.tiles.size < MAX_TILES && performance.now() - start < budget) this.ahead(res, x0 - 1, y0 - 1, x1 + 1, y1 + 1);
+    if (!missing && this.tiles.size < MAX_TILES && performance.now() - start < budget) this.ahead(res, bake, x0 - 1, y0 - 1, x1 + 1, y1 + 1);
     for (const [key, tile] of this.tiles) {
       if (this.tiles.size <= MAX_TILES) break;
       if (seen.has(key)) continue;
@@ -592,13 +589,13 @@ export class TerrainCache {
   }
 
   // Un carré pas encore prêt autour de l'écran (sur l'île), préparé d'avance
-  ahead(res, x0, y0, x1, y1) {
+  ahead(res, bake, x0, y0, x1, y1) {
     const size = TILE_PX / res, b = this.bounds;
     for (let ty = y0; ty <= y1; ty++) {
       for (let tx = x0; tx <= x1; tx++) {
-        const key = `${res}:${tx},${ty}`;
+        const key = `${res}${bake ? 'b' : ''}:${tx},${ty}`;
         if (this.tiles.has(key) || (tx + 1) * size < b.x || tx * size > b.x + b.w || (ty + 1) * size < b.y || ty * size > b.y + b.h) continue;
-        this.tiles.set(key, this.render(tx, ty, res));
+        this.tiles.set(key, this.render(tx, ty, res, bake));
         return;
       }
     }

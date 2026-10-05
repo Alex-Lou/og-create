@@ -11,7 +11,6 @@
     <span v-if="slotIndex >= 0" class="tile__slot" aria-hidden="true">{{ numeral }}</span>
     <span v-if="badge" class="tile__badge" aria-hidden="true">{{ fertile > 99 ? '99+' : fertile }}</span>
     <span v-if="tag" :class="['tile__tag', `tile__tag--${tag.kind}`]" aria-hidden="true">{{ tag.text }}</span>
-    <span v-if="price !== null" class="tile__price" aria-hidden="true">{{ price }}</span>
   </button>
 </template>
 
@@ -38,9 +37,7 @@ export default {
     // Ingrédient révélé par l'Encre pour la page ouverte
     ink: { type: Boolean, default: false },
     // Densité compacte : sans nom (Épreuve, longues listes)
-    compact: { type: Boolean, default: false },
-    // Prix en écus (décoration à acheter), null sinon
-    price: { type: Number, default: null }
+    compact: { type: Boolean, default: false }
   },
   computed: {
     tint() {
@@ -181,22 +178,6 @@ export default {
 .tile__tag--new { top: -7px; background: var(--gold-300); color: var(--ink-900); box-shadow: 0 0 0 1px var(--gold-600); }
 .tile__tag--ink { bottom: -7px; background: var(--ink-900); color: var(--gold-200); }
 
-/* Prix d'achat : pastille dorée en bas de la tuile */
-.tile__price {
-  position: absolute;
-  bottom: -7px;
-  left: 50%;
-  transform: translateX(-50%);
-  padding: 1px 6px 1px 16px;
-  border-radius: 999px;
-  background: var(--gold-200) radial-gradient(circle at 8px 50%, var(--gold-500) 0 4px, transparent 4.5px);
-  color: var(--ink-900);
-  font-family: var(--font-ui);
-  font-weight: 900;
-  font-size: 10px;
-  box-shadow: 0 0 0 1px var(--gold-600);
-  white-space: nowrap;
-}
 /* Nouveau : liseré d'or, gardé jusqu'au premier usage */
 .tile.is-new { box-shadow: inset 0 0 0 2px var(--gold-400), 0 3px 0 var(--gold-600), var(--shadow-1); animation: tile-pop 0.55s var(--oc-ease-spring); }
 /* Révélé par l'Encre pour la page ouverte */

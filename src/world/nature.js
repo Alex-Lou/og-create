@@ -101,11 +101,6 @@ function bench() {
     + box(-0.28, -0.05, -0.22, 0.05, 0, 6, WOOD_DARK) + box(0.22, -0.05, 0.28, 0.05, 0, 6, WOOD_DARK)
     + box(-0.32, -0.08, 0.32, 0.08, 6, 8, WOOD) + box(-0.32, -0.1, 0.32, -0.07, 8, 15, WOOD), PROP_BOX);
 }
-// Socle des décorations posées : dalle de pierre, plateau de bois ; l'élément flotte au-dessus
-function plinth() {
-  return sprite(shadow(0, 0, 0.3, 0.2) + box(-0.24, -0.24, 0.24, 0.24, 0, 4, STONE) + box(-0.18, -0.18, 0.18, 0.18, 4, 7, WOOD), PROP_BOX);
-}
-
 /* ---------- Animaux (2 images chacun) ---------- */
 function chicken(f) {
   const peck = f === 1;
@@ -149,7 +144,6 @@ function zoneSign() {
 
 export const SIGN = zoneSign;
 export const NATURE2 = { birch, apple: appleTree, autumn: autumnTree, stump, log, mushrooms, reeds, lily: lilyPond, shells, driftwood, mossy: mossyRocks, lantern: lanternPost, bench };
-export const PLINTH = plinth;
 export const CRITTERS = {
   chicken: [0, 1].map(f => () => chicken(f)),
   butterfly: [0, 1].map(f => () => butterfly(f)),

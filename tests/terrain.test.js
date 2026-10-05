@@ -111,4 +111,27 @@ describe('carrés du sol', () => {
     expect(cache.draw(ctx, view, 2, Infinity)).toBe(0);
     expect(made).toBe(first);
   });
+  it('un carré avec le décor cuit est distinct d’un carré sans ; le décor changé ne refait que les premiers', () => {
+    const big = islandOf({ height: Array(48).fill('1'.repeat(48)), ground: Array(48).fill('g'.repeat(48)), grid: Array(48).fill('0'.repeat(48)) }, 48);
+    const cache = new TerrainCache(big, () => 0, () => true);
+    const made = [];
+    cache.render = (tx, ty, res, bake) => { made.push(bake); return { canvas: { width: 1, height: 1 }, r: { x: tx * 512 / res, y: ty * 512 / res, w: 512 / res, h: 512 / res }, res, bake }; };
+    const ctx = { drawImage() {}, save() {}, restore() {}, beginPath() {}, rect() {}, clip() {} };
+    const view = { x: -300, y: 0, w: 600, h: 300 };
+    cache.draw(ctx, view, 1, Infinity, false);
+    const plain = made.length;
+    expect(made.every(b => b === false)).toBe(true);
+    cache.draw(ctx, view, 1, Infinity, true);
+    expect(made.slice(plain).every(b => b === true)).toBe(true);
+    expect(made.length).toBeGreaterThan(plain);
+    cache.restand();
+    expect([...cache.tiles.values()].filter(tile => tile.stale).every(tile => tile.bake)).toBe(true);
+    expect([...cache.tiles.values()].some(tile => tile.stale)).toBe(true);
+    // Sans dessin du décor (standOf absent), jamais de carré cuit
+    const bare = new TerrainCache(big, () => 0);
+    const bakes = [];
+    bare.render = (tx, ty, res, bake) => { bakes.push(bake); return { canvas: null, r: { x: 0, y: 0, w: 1, h: 1 }, res, bake }; };
+    bare.draw(ctx, view, 1, Infinity, true);
+    expect(bakes.every(b => b === false)).toBe(true);
+  });
 });
