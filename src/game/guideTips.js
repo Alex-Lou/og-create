@@ -9,7 +9,7 @@ export const TIPS = {
   island: 'Voici ton île, encore noyée de brume. Je t’y attendais : touche-moi, je te mènerai à ta prochaine tâche ; garde le doigt appuyé sur moi pour lire ma quête.',
   annexes: 'Ton bâtiment a grandi : il peut s’étendre. Dans sa fiche, l’onglet Annexes propose champs, filons, viviers… Pose-les toi-même autour de lui : ce sont eux qui produisent le plus.',
   friends: 'Tes habitants ont chacun un prénom et leurs goûts. Bavarde avec eux chaque jour, offre-leur ce qu’ils aiment : chaque cœur d’amitié leur donne envie de te faire un cadeau. Garde le doigt appuyé sur l’un d’eux, ou ouvre la fiche du Foyer.',
-  needs: 'Un habitant a besoin de toi : la bulle au-dessus de sa tête dit quoi. Manger, des outils, quelques décorations autour de son bâtiment… Comble ses besoins depuis sa fiche : heureux, il travaille mieux (+10 % de production) ; négligé, moins bien.',
+  needs: 'Un habitant a besoin de toi : la bulle au-dessus de sa tête dit quoi. Manger, des outils, quelques créations d’île autour de son bâtiment… Comble ses besoins depuis sa fiche : heureux, il travaille mieux (+10 % de production) ; négligé, moins bien.',
   visitor: 'Un bateau vient d’accoster au Ponton ! Son voyageur reste quelques jours et a une demande : la bulle dorée au-dessus de sa tête. Touche-le, puis garde le doigt appuyé pour ouvrir sa fiche : sa demande comblée, une récompense en écus t’attend.',
   games: 'Un mini-jeu s’est ouvert ! Au palier III, le Ponton pêche, la Carrière creuse son filon et le Bosquet se cueille. Touche le bâtiment : « Jouer » est dans sa fiche, et chaque partie rapporte des écus.',
   'chapter-II': 'La Matière s’ouvre : ce qui se pétrit, se fond, se forge. Sur l’île, La Colline peut sortir de la brume.',

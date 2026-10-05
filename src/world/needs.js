@@ -1,4 +1,4 @@
-// Besoins des habitants (lot 7c) : comment les dire et les montrer. Les règles (durées, prix, décorations, humeur et
+// Besoins des habitants (lot 7c) : comment les dire et les montrer. Les règles (durées, prix, créations d'île, humeur et
 // son effet) viennent du serveur (services/villagers.js, mêmes identifiants : manger, outils, deco).
 
 export const NEED_GLYPH = { manger: 'ui:food', outils: 'ui:tools', deco: 'ui:flower' };
@@ -19,7 +19,7 @@ export function leftText(ms) {
 // Où en est un besoin (fiche de l'habitant) ; place : nom du bâtiment de l'habitant
 export function needState(need, place) {
   if (need.id === 'deco') {
-    return need.met ? `${need.need} décorations autour de « ${place} »` : `${need.have} / ${need.need} décorations à ${need.reach} cases au plus de « ${place} »`;
+    return need.met ? `${need.need} créations d’île autour de « ${place} »` : `${need.have} / ${need.need} créations d’île à ${need.reach} cases au plus de « ${place} »`;
   }
   if (!need.met) return need.id === 'manger' ? 'A faim' : 'Outils usés';
   return `${need.id === 'manger' ? 'Le ventre plein' : 'Outils en bon état'} encore ${leftText(need.left)}`;
@@ -42,7 +42,7 @@ export function fillAllOf(villagers) {
 export const ASKS = {
   manger: 'J’ai un petit creux… Tu n’aurais pas de quoi manger ?',
   outils: 'Mes outils sont tout usés. Il m’en faudrait des neufs.',
-  deco: 'C’est un peu triste, autour de chez moi. Quelques décorations ?'
+  deco: 'C’est un peu triste, autour de chez moi. Quelques créations de l’établi ?'
 };
 export const THANKS = {
   manger: 'Merci ! Ça tombait bien, j’avais un creux.',

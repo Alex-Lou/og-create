@@ -52,15 +52,27 @@ export default {
   retryLetters(page) {
     return asPlayer(() => http.post('/play/letter/retry', { page }));
   },
-  // Le Monde (compte requis) : { size, sites, stock, charges, harvest, rate, capHours, pending, tiles: [{ x, y, element, emoji, family }] }
+  // Le Monde (compte requis) : { size, sites, stock, charges, harvest, rate, capHours, pending, crafts, … } ; refund
+  // { count, coins, balance } une fois, quand les décorations de l'ancienne règle viennent d'être remboursées
   world() {
     return http.get('/play/world').then(response => response.data);
   },
-  worldPlace(element, x, y) {
-    return http.post('/play/world/place', { element, x, y }).then(response => response.data);
+  // Créations d'île : assemblage (début → { run: { id, craft, shape, pieces, turned } } ; fin → { made, craft, world }),
+  // pose, déplacement, rangement dans la réserve → { world }
+  craftStart(craft) {
+    return http.post('/play/world/craft/start', { craft }).then(response => response.data);
   },
-  worldRemove(x, y) {
-    return http.post('/play/world/remove', { x, y }).then(response => response.data);
+  craftFinish(run, layout) {
+    return http.post('/play/world/craft/finish', { run, layout }).then(response => response.data);
+  },
+  craftPlace(craft, x, y) {
+    return http.post('/play/world/craft/place', { craft, x, y }).then(response => response.data);
+  },
+  craftMove(x, y, toX, toY) {
+    return http.post('/play/world/craft/move', { x, y, toX, toY }).then(response => response.data);
+  },
+  craftStore(x, y) {
+    return http.post('/play/world/craft/store', { x, y }).then(response => response.data);
   },
   // { gained, stock, coins, world }
   worldCollect() {
