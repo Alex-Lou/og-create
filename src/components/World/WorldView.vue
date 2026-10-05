@@ -258,6 +258,7 @@
               </div>
               <!-- Foyer : les habitants de l'île, leurs cœurs, leur humeur ; le besoin qui manque, sinon un point quand l'un
                    attend une visite aujourd'hui ; « Tout combler » donne ce qu'il faut à tous, tant que le stock suffit -->
+              <p v-if="site.id === 'foyer' && civStage" class="world__civ world__civ--site">Étape : {{ civStage }}</p>
               <section v-if="site.id === 'foyer' && state.villagers && state.villagers.length" class="world__friends" aria-label="Habitants">
                 <h3 class="world__friends-title">Habitants</h3>
                 <ul class="world__friends-list">
@@ -459,6 +460,7 @@
             </div>
             <template v-if="quest">
               <span class="world__eyebrow world__quest-eyebrow">{{ quest.act === 'T' ? 'Prologue' : `Acte ${quest.act}` }} · quête {{ quest.step }} sur {{ quest.total }}</span>
+              <span v-if="civStage" class="world__civ">{{ civStage }}</span>
               <p class="world__brume-say">« {{ quest.say }} »</p>
               <div class="world__quest">
                 <span class="world__quest-label">{{ quest.label }}</span>
@@ -654,7 +656,17 @@
     <!-- Coffres : la liste (jour, en attente), puis l'ouverture d'un coffre, ou de tous d'un coup -->
     <ChestList v-if="chestsOpen && state" :chests="state.chests" :busy="busy" @open="openChest" @open-all="openAllChests" @close="chestsOpen = false" />
     <FindsSheet v-if="findsOpen && state" :finds="state.finds || []" :deposits="state.deposits || []" :zones="state.map.zones" :elapsed="clock - loadedAt" @close="findsOpen = false" />
-    <ExplorerLog v-if="logOpen && state" :landmarks="state.landmarks || []" :zones="state.map.zones" :focus="logFocus" @show="showLandmark" @close="logOpen = false" />
+    <ExplorerLog
+      v-if="logOpen && state"
+      :landmarks="state.landmarks || []"
+      :zones="state.map.zones"
+      :focus="logFocus"
+      :acts="(state.brume && state.brume.acts) || []"
+      :people="state.people || null"
+      @show="showLandmark"
+      @replay="act => { logOpen = false; $emit('replay-vigil', act); }"
+      @close="logOpen = false"
+    />
     <ChestReveal v-if="reveal" v-bind="reveal" :busy="busy" @wear="wearRevealed" @close="reveal = null" />
     <ChestHaul v-if="haul && state" :items="haulItems" :busy="busy" @wear="wearHauled" @close="haul = null" />
 
@@ -744,6 +756,7 @@ import {
 } from '@/world/sea';
 import { SEA_SPRITES, FISH_SPECIES } from '@/world/seaSprites';
 import { drawBrume, floatOf, BRUME_ALT, BRUME_REACH } from '@/world/brume';
+import { stageOf as civilizationOf } from '@/game/vigils';
 import { guide } from '@/game/guide';
 import longpress, { HOLD_MS } from '@/directives/longpress';
 import { roman } from '@/utils/roman';
@@ -860,7 +873,7 @@ export default {
     // Solde d'écus (en-tête) : grise les articles hors de portée ; le serveur reste seul juge
     coins: { type: Number, default: null }
   },
-  emits: ['coins-updated', 'show-alert', 'login', 'go', 'quest'],
+  emits: ['coins-updated', 'show-alert', 'login', 'go', 'quest', 'replay-vigil'],
   data() {
     return {
       GLYPH, LABEL, RESOURCES, GAME_ICONS, NEED_GLYPH, MOOD_GLYPH, CLIMATE_NAMES, CLIMATE_TEXT, WORDS,
@@ -1083,6 +1096,10 @@ export default {
       return annex ? { annex, site, variant: this.annexVariants.get(`${x},${y}`) || 0 } : null;
     },
     // Quête active de Brume (null : toutes faites)
+    // L'étape de civilisation (bible, § 6.10) : déduite des actes finis et du nom du peuple
+    civStage() {
+      return this.state && this.state.brume ? civilizationOf(this.state.brume.acts, this.state.people) : null;
+    },
     quest() {
       return this.state && this.state.brume ? this.state.brume.quest : null;
     },
@@ -1410,8 +1427,9 @@ export default {
         }
       }
       this.state = state;
-      // La quête active de Brume : le tutoriel (App.vue) y lit où en est le joueur
-      this.$emit('quest', state.brume ? state.brume.quest : null);
+      // Brume (quête active, actes finis) et le nom du peuple : le tutoriel et les veillées (App.vue) y lisent où en est
+      // le joueur
+      this.$emit('quest', state.brume ? { ...state.brume, people: state.people || null } : null);
       // Brume et sol d'un quartier : à soi (o), connu (k), inconnu (u) ; un changement refait ses carrés de sol
       const mistKey = state.map.zones.map(z => `${z.id}:${z.owned ? 'o' : z.known === false ? 'u' : 'k'}`).join();
       if (this.mistKey !== null && mistKey !== this.mistKey) {
@@ -4802,6 +4820,8 @@ export default {
 }
 .world__quest-lock { margin: 10px 0 0; font-size: 14px; font-weight: 700; color: var(--oc-text-muted, #7A6A58); }
 .world__people { display: flex; gap: 8px; width: 100%; }
+.world__civ { display: block; margin: -2px 0 6px; font-family: var(--font-display); font-style: italic; font-size: 14px; color: var(--ink-700); }
+.world__civ--site { margin: 0 0 10px; font-size: 15px; }
 .world__people-input {
   flex: 1; min-width: 0; padding: 10px 12px; border: 2px solid var(--vellum-300, #E6D8B8); border-radius: 12px;
   font: inherit; font-weight: 700; background: #FFFDF6; color: inherit;

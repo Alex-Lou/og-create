@@ -1,6 +1,41 @@
 <template>
-  <GModal eyebrow="Carnet d’explorateur" title="Lieux remarquables" :width="520" @close="$emit('close')">
-    <div class="log">
+  <GModal eyebrow="Carnet d’explorateur" :title="tab === 'places' ? 'Lieux remarquables' : 'La Chronique'" :width="520" @close="$emit('close')">
+    <div class="g-tabs log__tabs" role="tablist" aria-label="Carnet d’explorateur">
+      <button type="button" role="tab" :aria-selected="tab === 'places'" @click="tab = 'places'">Lieux</button>
+      <button type="button" role="tab" :aria-selected="tab === 'chronicle'" @click="tab = 'chronicle'">Chronique</button>
+    </div>
+    <!-- La Chronique (bible, § 6.12) : la mémoire du peuple ; tout se déduit des actes finis -->
+    <div v-if="tab === 'chronicle'" class="log">
+      <p v-if="stage" class="log__progress">Étape : <strong>{{ stage }}</strong></p>
+      <p v-if="!vigils.length" class="log__hint">Rien encore : la première veillée se tient à la fin de l’acte I.</p>
+      <template v-else>
+        <h3 class="log__title">Veillées</h3>
+        <ul class="log__list">
+          <li v-for="v in vigils" :key="v.act" class="log__row">
+            <span class="log__body"><span class="log__name">Veillée {{ v.act }}</span><span class="log__where">{{ v.stage }}</span></span>
+            <button type="button" class="log__btn" @click="$emit('replay', v.act)">Revoir</button>
+          </li>
+        </ul>
+        <h3 class="log__title">Liens</h3>
+        <ul class="log__list">
+          <li v-for="link in links" :key="link.id" class="log__row log__row--link">
+            <span class="log__name">{{ link.name }}</span>
+            <span class="log__recipe">{{ link.recipe }}</span>
+            <span class="log__text">{{ link.text }}</span>
+          </li>
+        </ul>
+      </template>
+      <template v-if="memories.length">
+        <h3 class="log__title">Souvenirs retrouvés</h3>
+        <ul class="log__list">
+          <li v-for="m in memories" :key="m.id" class="log__row log__row--link">
+            <span class="log__name">{{ m.name }}</span>
+            <span class="log__text">« {{ m.line }} »</span>
+          </li>
+        </ul>
+      </template>
+    </div>
+    <div v-else class="log">
       <p class="log__progress">
         <strong>{{ foundCount }} / {{ landmarks.length }}</strong> lieux découverts
         <span v-if="waiting" class="log__waiting">· {{ waiting }} t’attend{{ waiting > 1 ? 'ent' : '' }} sur l’île</span>
@@ -43,6 +78,12 @@ import GModal from '@/components/ui/GModal.vue';
 import { spriteUrl } from '@/world/spriteCache';
 import { landmarkThumb } from '@/world/landmarkSprites';
 import { CLIMATE_NAMES } from '@/world/climates';
+import { ACTS, stageOf, linksOf, peopleOf } from '@/game/vigils';
+import { MEMORIES } from '@/world/story';
+import { NAMES } from '@/world/faces';
+
+// Les souvenirs retrouvés : chacun dans l'acte de sa quête (la Chronique les montre une fois l'acte fini)
+const MEMORY_ACTS = { 'souvenir-ondin': 'T', 'souvenir-sylve': 'I', 'souvenir-galet': 'II', 'eveil-melisse': 'III', 'souvenir-aster': 'IV' };
 
 // Le Carnet d'explorateur : une page par lieu remarquable. Découvert : son dessin, ce qu'il raconte, son effet durable,
 // le jour de sa découverte ; connu : son effet et comment le découvrir ; inconnu : rien qu'un point d'interrogation.
@@ -56,10 +97,28 @@ export default {
     // Quartiers de la carte (nom, climat, à soi)
     zones: { type: Array, required: true },
     // Page ouverte d'emblée (appui long sur un lieu), ou null
-    focus: { type: String, default: null }
+    focus: { type: String, default: null },
+    // Actes finis (Brume) et nom du peuple : la Chronique
+    acts: { type: Array, default: () => [] },
+    people: { type: String, default: null }
   },
-  emits: ['show', 'close'],
+  emits: ['show', 'close', 'replay'],
+  data() {
+    return { tab: 'places' };
+  },
   computed: {
+    stage() {
+      return stageOf(this.acts, this.people);
+    },
+    vigils() {
+      return ACTS.filter(act => this.acts.includes(act)).map(act => ({ act, stage: act === 'V' ? peopleOf(this.people) : stageOf([act], this.people) }));
+    },
+    links() {
+      return linksOf(this.acts);
+    },
+    memories() {
+      return Object.entries(MEMORY_ACTS).filter(([, act]) => this.acts.includes(act)).map(([id]) => ({ id, name: NAMES[MEMORIES[id].villager], line: MEMORIES[id].line }));
+    },
     foundCount() {
       return this.landmarks.filter(l => l.found).length;
     },
@@ -99,6 +158,13 @@ export default {
 
 <style scoped>
 .log { display: flex; flex-direction: column; gap: 10px; font-family: var(--font-ui); }
+.log__tabs { margin-bottom: 10px; }
+.log__title { margin: 6px 0 0; font-family: var(--font-display); font-size: 16px; }
+.log__row { display: flex; align-items: center; gap: 10px; padding: 10px 12px; border-radius: 14px; background: var(--vellum-50); box-shadow: inset 0 0 0 1px rgba(74, 52, 38, .1); }
+.log__row--link { flex-direction: column; align-items: flex-start; gap: 2px; }
+.log__row .log__body { flex: 1; }
+.log__row .log__btn { align-self: center; }
+.log__recipe { font-size: 12px; font-weight: 900; color: #6A4A12; }
 .log__progress { margin: 0; padding: 8px 12px; border-radius: 12px; background: var(--vellum-200); font-size: 13px; font-weight: 700; }
 .log__waiting { color: #8A5A12; font-weight: 900; }
 .log__list { margin: 0; padding: 0; list-style: none; display: flex; flex-direction: column; gap: 8px; }

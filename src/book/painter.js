@@ -1028,8 +1028,9 @@ function paintToc(ctx, u, model, index, assets) {
   return { hotspots, label: `Sommaire du ${BOOK_TITLE}. ${model.chapters.map(c => `Chapitre ${c.id}, ${c.name}`).join('. ')}.` };
 }
 
-// Gardes du grimoire (double page) : papier marbré peigné ; au revers de la couverture, l'ex-libris
-export function paintEndpaper(ctx, w, h, side, front) {
+// Gardes du grimoire (double page) : papier marbré peigné ; au revers de la couverture, l'ex-libris (et l'étape de
+// civilisation du joueur, s'il en a une)
+export function paintEndpaper(ctx, w, h, side, front, stage = null) {
   const u = w / 100;
   const rand = seeded(front ? 7 : 11);
   ctx.save();
@@ -1074,15 +1075,15 @@ export function paintEndpaper(ctx, w, h, side, front) {
     ctx.shadowColor = 'rgba(0, 0, 0, .45)';
     ctx.shadowBlur = 3 * u;
     ctx.shadowOffsetY = 1 * u;
-    rr(ctx, 24 * u, 46 * u, 52 * u, 38 * u, 2 * u);
+    rr(ctx, 24 * u, 46 * u, 52 * u, (stage ? 42 : 38) * u, 2 * u);
     ctx.fillStyle = PAPER;
     ctx.fill();
     ctx.restore();
-    rr(ctx, 25.6 * u, 47.6 * u, 48.8 * u, 34.8 * u, 1.4 * u);
+    rr(ctx, 25.6 * u, 47.6 * u, 48.8 * u, (stage ? 38.8 : 34.8) * u, 1.4 * u);
     ctx.strokeStyle = 'rgba(74, 52, 38, .55)';
     ctx.lineWidth = 0.4 * u;
     ctx.stroke();
-    rr(ctx, 26.8 * u, 48.8 * u, 46.4 * u, 32.4 * u, 1 * u);
+    rr(ctx, 26.8 * u, 48.8 * u, 46.4 * u, (stage ? 36.4 : 32.4) * u, 1 * u);
     ctx.strokeStyle = alpha(GOLD.base, 0.8);
     ctx.lineWidth = 0.25 * u;
     ctx.stroke();
@@ -1094,6 +1095,10 @@ export function paintEndpaper(ctx, w, h, side, front) {
     ctx.fillStyle = INK;
     ctx.fillText(BOOK_TITLE, 50 * u, 66.4 * u);
     Object.keys(SIGILS).forEach((id, k) => sigil(ctx, u, id, 32 + k * 6, 74.5, 3.6, alpha(GOLD.dark, 0.85), 2.2));
+    if (stage) {
+      ctx.fillStyle = NOTE;
+      ctx.fillText(fitText(ctx, u, stage, 44, 4.2, 3, FELL, true), 50 * u, 81.6 * u);
+    }
   }
   ctx.restore();
   return { hotspots: [], label: front ? `Garde du grimoire : ex-libris du ${BOOK_TITLE}.` : 'Garde de fin du grimoire.' };

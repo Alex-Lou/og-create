@@ -96,7 +96,9 @@ export default {
     // Ouverture : le grimoire est d'abord fermé ; ready : les pages sont peintes, la couverture peut s'ouvrir
     opening: { type: Boolean, default: false },
     ready: { type: Boolean, default: false },
-    title: { type: String, default: '' }
+    title: { type: String, default: '' },
+    // L'étape de civilisation, sous le titre de l'Ex libris
+    stage: { type: String, default: null }
   },
   emits: ['opened'],
   data() {
@@ -188,7 +190,7 @@ export default {
       const w = this.compact ? rect.width : rect.width / 2;
       canvas.width = Math.round(w * dpr);
       canvas.height = Math.round(rect.height * dpr);
-      paintEndpaper(canvas.getContext('2d'), canvas.width, canvas.height, 'left', true);
+      paintEndpaper(canvas.getContext('2d'), canvas.width, canvas.height, 'left', true, this.stage);
     },
     play() {
       const opts = (duration, delay = 0, easing = 'ease-out') => ({ duration, delay, easing, fill: 'forwards' });
