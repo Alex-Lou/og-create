@@ -429,7 +429,7 @@
               <button type="button" class="world__link" @click="questOpen = false">Fermer</button>
             </div>
             <template v-if="quest">
-              <span class="world__eyebrow world__quest-eyebrow">Acte {{ quest.act }} · quête {{ quest.step }} sur {{ quest.total }}</span>
+              <span class="world__eyebrow world__quest-eyebrow">{{ quest.act === 'T' ? 'Prologue' : `Acte ${quest.act}` }} · quête {{ quest.step }} sur {{ quest.total }}</span>
               <p class="world__brume-say">« {{ quest.say }} »</p>
               <div class="world__quest">
                 <span class="world__quest-label">{{ quest.label }}</span>
@@ -439,13 +439,20 @@
                 </span>
                 <span class="world__quest-reward">Récompense : <strong>{{ quest.coins }} écus</strong></span>
               </div>
+              <p v-if="quest.chapter && !quest.done" class="world__quest-lock">
+                Ouvre d’abord le chapitre {{ quest.chapter }} du Grimoire : écris de nouvelles découvertes.
+              </p>
               <div class="world__sheet-actions">
                 <button v-if="quest.done" type="button" class="world__btn" :disabled="busy" @click="claimQuest">Réclamer · {{ quest.coins }} écus{{ quest.chest ? ' + un coffre' : '' }}</button>
-                <button v-else-if="quest.target" type="button" class="world__btn" @click="showQuestTarget">Montrer</button>
                 <button v-else-if="quest.kind === 'runs'" type="button" class="world__btn" :disabled="busy || !state.charges.count" @click="questHarvest">
                   {{ state.charges.count ? 'Lancer une Récolte' : `Récolte : ${chargesText}` }}
                 </button>
-                <button v-else-if="quest.kind === 'crafts'" type="button" class="world__btn" @click="openBench">Ouvrir l’établi</button>
+                <!-- Le nom du peuple (bible, § 6.11) : même règle que les autres noms -->
+                <form v-else-if="quest.kind === 'name'" class="world__people" @submit.prevent="namePeople">
+                  <input v-model="peopleName" class="world__people-input" type="text" maxlength="22" placeholder="Le peuple de…" aria-label="Nom du peuple" />
+                  <button type="submit" class="world__btn" :disabled="busy || peopleName.trim().length < 2">Nommer</button>
+                </form>
+                <button v-else-if="questAction" type="button" class="world__btn" @click="runQuestAction">{{ questAction.label }}</button>
               </div>
             </template>
             <p v-else class="world__brume-say">« {{ state.brume.rested }} »</p>
@@ -818,7 +825,7 @@ export default {
     // Solde d'écus (en-tête) : grise les articles hors de portée ; le serveur reste seul juge
     coins: { type: Number, default: null }
   },
-  emits: ['coins-updated', 'show-alert', 'login'],
+  emits: ['coins-updated', 'show-alert', 'login', 'go'],
   data() {
     return {
       GLYPH, LABEL, RESOURCES, GAME_ICONS, NEED_GLYPH, MOOD_GLYPH, CLIMATE_NAMES, CLIMATE_TEXT, WORDS,
@@ -880,6 +887,8 @@ export default {
       warping: false,
       // Fiche de Brume (quête active) ouverte
       questOpen: false,
+      // Nom du peuple en cours de saisie (quête « peuple »)
+      peopleName: '',
       // Annexe en cours de pose ou de déplacement : { siteId, annexId, from: { x, y } | null } ; case dorée choisie, en
       // attente de confirmation : { x, y, px, py } ; fiche d'une annexe posée ouverte : { x, y }
       annexPlacing: null,
@@ -900,6 +909,37 @@ export default {
     };
   },
   computed: {
+    // Ce que propose Brume pour la quête active pas encore faite (hors Récolte et nom du peuple) : { label, run } ou null
+    questAction() {
+      const quest = this.quest;
+      const state = this.state;
+      if (!quest || quest.done || !state) return null;
+      const target = quest.target || {};
+      const grimoire = { label: 'Ouvrir le Grimoire', run: () => this.$emit('go', 'infinite') };
+      const sheetOf = id => ({ label: 'Fiche du Foyer', run: () => this.openSiteSheet(id, 'annexes') });
+      const look = (label, cell) => (cell ? { label, run: () => this.lookAtCell(cell.x, cell.y) } : null);
+      if (quest.chapter || quest.kind === 'stars' || quest.kind === 'element') return grimoire;
+      if (quest.kind === 'need' || quest.kind === 'wake') {
+        const who = (state.villagers || []).find(v => v.id === target.villager);
+        return who ? { label: `Voir ${who.name}`, run: () => this.openVillager(who.id) } : null;
+      }
+      if (quest.kind === 'heart') {
+        const best = (state.villagers || []).reduce((a, b) => (!a || b.points > a.points ? b : a), null);
+        return best ? { label: `Voir ${best.name}`, run: () => this.openVillager(best.id) } : null;
+      }
+      if (quest.kind === 'crafts' || quest.kind === 'craft') return { label: 'Ouvrir l’établi', run: () => this.openBench() };
+      if (quest.kind === 'annex' || quest.kind === 'house') return sheetOf('foyer');
+      if (quest.kind === 'visitor' || quest.kind === 'settle') {
+        return state.visitor ? { label: 'Voir le voyageur', run: () => this.openVisitor() } : look('Montrer le Ponton', state.sites.find(s => s.id === 'ponton'));
+      }
+      if (quest.kind === 'expedition') {
+        const zone = state.map.zones.find(z => z.known === false && z.explorable && z.anchor);
+        return look('Montrer une terre à explorer', zone && zone.anchor);
+      }
+      if (quest.kind === 'landmark' && !target.landmark) return look('Montrer un lieu', landmarksWaiting(state)[0]);
+      if (quest.kind === 'gather') return look('Montrer un gisement', depositsReady(state)[0]);
+      return quest.target ? { label: 'Montrer', run: () => this.showQuestTarget() } : null;
+    },
     // Ce qu'on renomme : son nom actuel et celui d'origine
     renameTarget() {
       if (!this.renaming || !this.state) return null;
@@ -1293,7 +1333,9 @@ export default {
         n: state.size, M, sites: state.sites, crafts: state.crafts ? state.crafts.placed : [], props: this.props, annexes: state.annexes || [],
         owned: new Set(state.map.zones.map((z, i) => (z.owned ? i : -1)).filter(i => i >= 0)), visitor: state.visitor || null,
         settlers: (state.villagers || []).filter(v => v.seed !== undefined),
-        climates: state.map.zones.map(z => z.climate || null), avoid: [...landmarksShown(state), ...depositsShown(state)]
+        climates: state.map.zones.map(z => z.climate || null), avoid: [...landmarksShown(state), ...depositsShown(state)],
+        // La troupe rencontrée (serveur) : bâtie, au camp, ou endormie
+        troupe: (state.villagers || []).filter(v => v.seed === undefined).map(v => ({ id: v.id, built: v.built !== false, asleep: Boolean(v.asleep) }))
       });
       // Visiteur : son bateau s'amarre près du Ponton ; un visiteur jamais vu sur cet appareil arrive sous les yeux
       this.visitorDock = state.visitor ? this.dockOf(state, M) : null;
@@ -2473,7 +2515,12 @@ export default {
         const g = this.ground(zone.anchor.x, zone.anchor.y);
         return { x: g.x + TW * 0.45, y: g.y - TH * 0.2 };
       }
-      const site = this.state.sites.find(s => s.id === ((target && target.site) || 'foyer'));
+      const place = target && target.landmark && landmarksShown(this.state).find(l => l.id === target.landmark);
+      if (place) {
+        const g = this.ground(place.x, place.y);
+        return { x: g.x + TW * 0.45, y: g.y - TH * 0.2 };
+      }
+      const site = this.state.sites.find(s => s.id === ((target && (target.site || target.villager)) || 'foyer'));
       if (!site) return null;
       const c = this.centerOf(site);
       return { x: c.x - TW * 0.42 * site.w, y: c.y - TH * 0.15 };
@@ -2509,6 +2556,42 @@ export default {
         this.$emit('show-alert', `Brume : ${quest.label}.`);
       } else if (quest && quest.kind === 'runs' && this.state.charges.count) this.questHarvest();
       else this.questOpen = true;
+    },
+    // L'action de la quête active : la fiche de Brume se ferme, puis l'action (Grimoire, fiche, caméra…)
+    runQuestAction() {
+      const action = this.questAction;
+      this.questOpen = false;
+      if (action) action.run();
+    },
+    // La caméra va vers une case de l'île
+    lookAtCell(x, y) {
+      const g = this.ground(x, y);
+      this.cam.x = g.x;
+      this.cam.y = g.y;
+      this.clampCam();
+      this.draw(performance.now());
+    },
+    // Fiche d'un bâtiment, sur un onglet (s'il existe)
+    openSiteSheet(id, tab) {
+      const site = this.state && this.state.sites.find(s => s.id === id);
+      if (!site) return;
+      this.site = site;
+      this.siteTab = tab === 'annexes' && site.annexes && site.annexes.length && site.level >= 2 ? 'annexes' : site.level ? 'overview' : 'evolution';
+    },
+    // Le nom du peuple (quête « peuple ») : enregistré par le serveur, qui renvoie la vue de l'île
+    async namePeople() {
+      const name = this.peopleName.trim();
+      if (this.busy || name.length < 2) return;
+      this.busy = true;
+      try {
+        this.apply(await playService.worldPeople(name));
+        this.peopleName = '';
+        this.$emit('show-alert', `Le peuple de « ${this.state.people} »`);
+      } catch (error) {
+        this.$emit('show-alert', messageOf(error, 'Ce nom n’a pas pu être donné.'));
+      } finally {
+        this.busy = false;
+      }
     },
     // La quête demande une Récolte : la fiche se ferme, la Récolte commence
     questHarvest() {
@@ -4602,6 +4685,12 @@ export default {
 .world__brume-say { margin: 0 0 12px; font-family: var(--font-display); font-style: italic; font-size: 17px; line-height: 1.4; }
 .world__quest { display: grid; grid-template-columns: 1fr auto; gap: 6px 10px; padding: 10px 12px; border-radius: 14px; background: var(--vellum-200); }
 .world__quest-label { font-weight: 900; }
+.world__quest-lock { margin: 10px 0 0; font-size: 14px; font-weight: 700; color: var(--oc-text-muted, #7A6A58); }
+.world__people { display: flex; gap: 8px; width: 100%; }
+.world__people-input {
+  flex: 1; min-width: 0; padding: 10px 12px; border: 2px solid var(--vellum-300, #E6D8B8); border-radius: 12px;
+  font: inherit; font-weight: 700; background: #FFFDF6; color: inherit;
+}
 .world__quest-count { font-family: var(--oc-font-mono); font-weight: 800; }
 .world__quest-bar { grid-column: 1 / -1; height: 8px; border-radius: 999px; background: var(--vellum-300, #E6D8B8); overflow: hidden; }
 .world__quest-bar i { display: block; height: 100%; border-radius: inherit; background: var(--oc-gold); transition: width var(--oc-fast) var(--oc-ease-out); }

@@ -153,8 +153,9 @@ function doorOf(grid, site) {
 // sites : bâtiments de l'île ({ id, x, y, w, h, level, locked, name }) ; owned : indices des quartiers à soi ;
 // crafts : créations d'île posées ({ x, y }) ; props : décor naturel ({ kind, x, y }) ; annexes : annexes posées ({ x, y, site }) ;
 // visitor : visiteur du moment (vue du serveur) ou null ; settlers : visiteurs installés ({ id, seed, role, site, home }) ;
-// climates : climat de chaque quartier (par indice) ; avoid : cases à laisser libres autour (gisements, lieux remarquables)
-export function villageOf({ n, M, sites, owned, crafts = [], props, annexes = [], visitor = null, settlers = [], climates = [], avoid = [] }) {
+// climates : climat de chaque quartier (par indice) ; avoid : cases à laisser libres autour (gisements, lieux remarquables) ;
+// troupe : la troupe rencontrée, vue du serveur ({ id, built, asleep } : bible, § 6.6), ou null (un par bâtiment bâti)
+export function villageOf({ n, M, sites, owned, crafts = [], props, annexes = [], visitor = null, settlers = [], climates = [], avoid = [], troupe = null }) {
   const grid = gridOf({ n, M, sites, owned, crafts, props, annexes });
   const built = sites.filter(s => s.level > 0 && !s.locked);
   const doors = Object.fromEntries(built.map(s => [s.id, doorOf(grid, s)]).filter(([, d]) => d));
@@ -168,19 +169,26 @@ export function villageOf({ n, M, sites, owned, crafts = [], props, annexes = []
   };
   const stops = Object.values(doors);
 
-  // Habitants : un par bâtiment bâti qui a une porte, plus la cuisinière du Foyer (8 au plus)
+  // Habitants : la troupe rencontrée (8 au plus). Son bâtiment bâti, chacun y travaille ; sans bâtiment, il vit au camp
+  // (la porte du Foyer) ; endormi, il reste près de l'emplacement de son bâtiment
   const residents = [];
+  const present = troupe && new Map(troupe.map(v => [v.id, v]));
   if (home) {
     for (const id of [...WORK_ORDER, 'foyer']) {
-      const site = built.find(s => s.id === id);
-      if (!site || !doors[id]) continue;
+      const site = sites.find(s => s.id === id);
+      const who = present ? present.get(id) : built.includes(site) && { built: true };
+      if (!site || !who) continue;
+      const asleep = Boolean(who.asleep);
+      const work = who.built ? doors[id] : asleep ? doorOf(grid, site) : home;
+      if (!work) continue;
       const k = residents.length;
       residents.push({
-        id: `vil:${id}`, k, key: `vil-${k}`, role: id, site: site.name,
+        id: `vil:${id}`, k, key: `vil-${k}`, role: id, site: who.built ? site.name : foyer ? foyer.name : site.name,
+        camp: !who.built && !asleep, asleep,
         look: { skin: SKINS[Math.floor(hash(k, 3) * SKINS.length)], hair: HAIRS[Math.floor(hash(k, 5) * HAIRS.length)], ...ROLES[id] },
-        work: doors[id], wake: 6.4 + (k % 3) * 0.25, bed: 21.6 + (k % 3) * 0.3,
+        work, wake: 6.4 + (k % 3) * 0.25, bed: 21.6 + (k % 3) * 0.3,
         // Une annexe à soi (la première posée) : on y travaille une partie de la journée
-        field: (() => { const annex = annexes.find(a => a.site === id); return annex ? besideOf(grid, annex, doors[id]) : null; })()
+        field: (() => { const annex = who.built && annexes.find(a => a.site === id); return annex ? besideOf(grid, annex, doors[id]) : null; })()
       });
     }
     // Visiteurs installés : au bâtiment de leur métier, et à leur maison (à la place de l'annexe)
@@ -352,6 +360,14 @@ export function villageOf({ n, M, sites, owned, crafts = [], props, annexes = []
     };
     // Habitants
     for (const r of residents) {
+      // Un dormeur reste à sa place, les yeux fermés, jour et nuit (la pose « endormi » viendra : bible, § 14)
+      if (r.asleep) {
+        out.push({
+          id: r.id, kind: 'villager', role: r.role, x: r.work.x, y: r.work.y, z: 0, flip: r.k % 2 === 1,
+          sprite: [`${r.key}-asleep`, () => villagerSprite(r.look, { pose: 'idle', view: 'front', frame: 1 })]
+        });
+        continue;
+      }
       if (h < r.wake || h >= r.bed) continue;
       if (rain > 0.5 && r.k % 2 === 1) continue;
       const evening = h >= phase.set + 0.4;
@@ -477,6 +493,7 @@ export function villageOf({ n, M, sites, owned, crafts = [], props, annexes = []
       const r = residents.find(v => v.id === who.id);
       if (!r) return null;
       if (r.guest) return { title: r.guest.name, text: '' };
+      if (r.asleep) return { title: r.look.label, text: 'Zzz…' };
       const evening = phase.hour >= phase.set + 0.4;
       const lines = phase.weather.storm > 0.5
         ? ['L’orage gronde, mieux vaut rentrer !']
@@ -496,6 +513,8 @@ export function villageOf({ n, M, sites, owned, crafts = [], props, annexes = []
     if (who.kind === 'villager') {
       const r = residents.find(v => v.id === who.id);
       if (r && r.guest) return { title: `${r.guest.name} · ${r.guest.role}`, text: 'De passage sur l’île : son bateau attend au Ponton.', hint: 'Toucher : lui parler' };
+      if (r && r.asleep) return { title: r.look.label, text: 'Il dort dans la brume. Parle-lui pour le réveiller.', hint: 'Toucher : lui parler' };
+      if (r && r.camp) return { title: r.look.label, text: `Vit au camp, près de « ${r.site} », en attendant son bâtiment.`, hint: 'Toucher : lui parler' };
       return r ? { title: r.look.label, text: `Travaille à « ${r.site} » le jour, rentre au Foyer le soir.`, hint: 'Toucher : lui parler' } : null;
     }
     const [title, text] = BEAST_NAMES[who.species] || ['Une bête', ''];

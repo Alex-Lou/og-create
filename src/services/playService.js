@@ -114,6 +114,10 @@ export default {
   worldName(kind, id, name) {
     return http.post('/play/world/name', { kind, id, name }).then(response => response.data);
   },
+  // Nom du peuple (bible, § 6.11) → vue de l'île
+  worldPeople(name) {
+    return http.post('/play/world/people', { name }).then(response => response.data);
+  },
   // Enseigne d'un bâtiment (dès le palier V) : style porté, acheté au passage → { coins?, world } ; nom écrit sur les
   // enseignes de l'île → vue de l'île
   worldSign(site, style) {

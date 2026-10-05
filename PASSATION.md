@@ -3,7 +3,7 @@
 Document pour l'agent qui reprend le projet : ce qu'est le jeu, comment travailler avec son auteur, comment le code est
 construit, ce qui est fait et ce qui reste à faire. **À lire en entier avant la première ligne de code.**
 L'histoire, les personnages et le game design sont dans **`HISTOIRE.md`** (la bible, à lire ensuite).
-État au 5 octobre 2026, après le lot H0 de la bible (la troupe et les textes).
+État au 5 octobre 2026, après les lots H0 et H1 de la bible (la troupe et les textes ; la colonne vertébrale).
 
 ---
 
@@ -283,6 +283,17 @@ chronométrer 20 appels. Comparer à zoom égal, au même endroit.
   rôles, cadeaux, répliques par cœurs dans `friends.js`, répliques de travail dans `village.js`) ; Brume se présente
   une fois ; les bouteilles d'Héliane sont signées « H. » ; « Grimoire » partout dans les textes. Les identifiants
   (bâtiments, quêtes) ne changent pas. `tests/troupe.test.js` garde les critères d'acceptation.
+- **Tenues de la troupe** : le générateur (`villagers.js`) porte les pièces du § 14 de la bible (foulard, châle, cape
+  de feuilles, loupes, barbe de lichen, bonnet de nuit…) et un petit sceau doré pour chacun.
+- **Lot H1 de la bible** (la colonne vertébrale) :
+  - serveur : la chaîne de 55 quêtes du prologue à l'acte VII (`quests.js`), 13 objectifs nouveaux lus dans les
+    tables existantes ; la troupe là dès sa rencontre (`world.js`, `metOf`) ; chapitre II à 3 découvertes, palier I
+    de l'établi à 10 ; le nom du peuple (`POST /world/people`, cible `peuple` de `world_names`) ;
+  - **joueur d'avant la bible** : compte créé avant `VETERAN_BEFORE` (`players.js`, lu dans `users.created_at`, sans
+    migration). Rien ne recule pour lui. Les anciennes quêtes se rangent dans la nouvelle chaîne (`LEGACY`) ;
+    leurs coffres restent dus. Les tests fixent la date de création des comptes (`newPlayer({ veteran })`) ;
+  - front : la fiche de Brume propose l'action de chaque objectif (`questAction`), « Prologue », le chapitre à
+    ouvrir, le nom du peuple ; le village suit la troupe envoyée par le serveur (au camp, endormie ou au travail).
 
 ### Décisions déjà prises par l'auteur (ne pas les redemander)
 - **Île** : 96 × 96 ; l'ancienne carte devient le cœur ; découverte par expéditions ; un quartier s'ouvre avec des

@@ -32,6 +32,8 @@ describe('créations d’île', () => {
     expect(TIER_LABEL.start).toBe('Débuts');
     expect(tierHint('I', { have: 12, need: 10 })).toBe('Finis le chapitre I du Grimoire, ou réussis 10 questions de l’Épreuve (10/10).');
     expect(tierHint('II', { have: 0, need: 10 })).toBe('Finis le chapitre II du Grimoire.');
+    // Palier I : 10 découvertes au Grimoire (bible, D7), ou l'Épreuve
+    expect(tierHint('I', { have: 2, need: 10 }, { have: 4, need: 10 })).toBe('Inscris 10 découvertes au Grimoire (4/10), ou réussis 10 questions de l’Épreuve (2/10).');
   });
 
   it('chaque création du serveur a son dessin (les 18 premières et les 12 de climat)', () => {
