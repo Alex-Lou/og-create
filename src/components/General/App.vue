@@ -116,7 +116,7 @@
       </main>
     </div>
     <TabBar :current="currentMode" :dots="isLoggedIn ? [] : ['sceau']" @select="handleModeSelect" />
-    <BrumeGuide @go="handleModeSelect" />
+    <BrumeGuide :stage="brumeStage" @go="handleModeSelect" />
     <!-- Le tutoriel (HISTOIRE.md, § 9) : scènes, page de garde du Grimoire, main qui montre où toucher -->
     <PrologueScene
       v-if="prologueScene"
@@ -249,6 +249,7 @@ import { questTip } from '@/game/guideTips';
 import { loadPrologue, savePrologue, prologueStep, islandStep } from '@/game/prologue';
 import { faceHref, NAMES } from '@/world/faces';
 import { vigilFrames, vigilDue, stageOf as civilizationOf } from '@/game/vigils';
+import { brumeLook, earlyWisp, EARLY_WISP } from '@/game/opus';
 
 // Veillées déjà vues sur cet appareil (game/vigils.js)
 const VIGILS_KEY = 'oc_vigils';
@@ -371,6 +372,8 @@ export default {
       // (veillées, étape de civilisation) ; les veillées déjà vues ici
       islandQuest: null,
       islandActs: [],
+      // Les actes finis sont connus (le serveur a répondu) : Brume peut réagir à Feu follet écrit tôt
+      actsKnown: false,
       people: null,
       vigilsSeen: storage.load(VIGILS_KEY, [])
     };
@@ -396,6 +399,10 @@ export default {
     // L'étape de civilisation (bible, § 6.10) : l'Ex libris du Grimoire l'affiche
     civStage() {
       return civilizationOf(this.islandActs, this.people);
+    },
+    // Le stade de Brume (bible, § 13), pour la couleur du guide ; avant que le serveur ait répondu, sa couleur de toujours
+    brumeStage() {
+      return this.actsKnown ? brumeLook({ acts: this.islandActs, quest: this.islandQuest, elements: this.discoveredElements }).stage : null;
     },
     // La couverture du Grimoire attend la scène d'arrivée (et, pour un invité, de savoir s'il est tout neuf)
     prologueHold() {
@@ -473,6 +480,7 @@ export default {
     },
     'discoveredElements.length'() {
       if (this.progressReady) this.runPrologue();
+      this.checkEarlyWisp();
     },
     isWorldActive(now) {
       if (now) this.runIsland();
@@ -535,6 +543,8 @@ export default {
       playService.brume().then(board => {
         if (!this.islandActs.length) this.islandActs = board.acts || [];
         if (!this.people) this.people = board.people || null;
+        this.actsKnown = true;
+        this.checkEarlyWisp();
       }).catch(() => {});
       const [progress, selections] = await Promise.all([
         progressService.load().catch(() => null),
@@ -782,8 +792,14 @@ export default {
       if (brume) {
         this.islandActs = brume.acts || [];
         this.people = brume.people || null;
+        this.actsKnown = true;
+        this.checkEarlyWisp();
       }
       this.runIsland();
+    },
+    // Feu follet écrit avant l'acte VII (bible, § 10) : Brume se reconnaît, une seule fois ; la finale reste au Phare
+    checkEarlyWisp() {
+      if (this.actsKnown && earlyWisp(this.islandActs, this.discoveredElements)) guide.say(EARLY_WISP);
     },
     runIsland() {
       if (this.prologueReplay || this.prologueScene || !this.isWorldActive) return;

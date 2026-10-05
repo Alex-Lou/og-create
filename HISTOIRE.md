@@ -7,7 +7,7 @@
 
 > **Mises à jour depuis la v5** (règle du § 19 : la bible change avant le code).
 > - **Le jeu s'appelle désormais Brumelune** (choix de l'auteur, 5 octobre 2026) : le nom visible partout ; les identifiants techniques (dépôts, base, clés de sauvegarde) ne changent pas.
-> - **Lots livrés** : H0 (la troupe et les textes), H1 (la colonne vertébrale), H2 (le fil d'Ariane : 2 à 7 ms par calcul), H3 (dormeurs, naufrages, souvenirs), H4 (le tutoriel), H5 (veillées et civilisation), H6 (Savoirs et Bestiaire).
+> - **Lots livrés** : H0 (la troupe et les textes), H1 (la colonne vertébrale), H2 (le fil d'Ariane : 2 à 7 ms par calcul), H3 (dormeurs, naufrages, souvenirs), H4 (le tutoriel), H5 (veillées et civilisation), H6 (Savoirs et Bestiaire), H7 (le Grand Œuvre et la finale).
 > - **Lot H0, choix de l'auteur** :
 >   - le mot d'Héliane de l'acte II dit « Grimoire » (§ 10) ;
 >   - les familiers suivent le style des bêtes du lot 9e, et non plus « à plat, avec les gros yeux ronds » (§ 14) ;
@@ -37,6 +37,12 @@
 >   - Tic-Tac (un automate) et le bocal d'Ondin sont là dès le début ; Bulle revient dans le bocal quand Poisson est écrit, et Rivet fabrique une amie à Tic-Tac quand Abeille l'est ; Lunette est un papillon de nuit (variante du Papillon) ;
 >   - Sylve présente le Bestiaire dès la première bête écrite (sa grammaire du moment), Brume si Sylve n'est pas encore là ;
 >   - la suite des bêtes de `PASSATION.md` (§ 7, point 1 : compagnons d'atelier dans la boutique, quêtes de rencontre) n'est pas faite : elle reste à confirmer avec l'auteur.
+> - **Lot H7** :
+>   - la lumière du Grand Œuvre est une touche sur l'heure, jamais un filtre : nuits plus bleues et brume du matin plus épaisse (noir), aube argentée (blanc), aube dorée et fenêtres allumées plus tôt (jaune), couchant rouge et or (rouge) ;
+>   - les huit stades de Brume s'ajoutent l'un à l'autre (étoiles, feuille, cœur ambré, runes, couronne) ; à l'acte VI, elle pâlit dès que l'Écriture est réclamée (Galet a lu la rune : Galet et Brume le disent une fois), jusqu'au Phénix écrit (l'éclat) ; après le Phare, elle n'est plus qu'une petite flamme dorée, des rayons autour ;
+>   - la finale se joue juste avant la veillée VII (qui porte l'épilogue) : la lentille, le reflet, le soleil du phare, « Je reste avec toi. » ; elle se revoit depuis la Chronique ; le Phare de l'île garde son dessin (la flamme de Brume y brûle déjà) ;
+>   - le mot d'Héliane d'un acte est dans la première bouteille ouverte pendant cet acte (le prologue n'en a pas) ; tout se déduit des quêtes réclamées et des bouteilles ouvertes, avec leurs heures ; un joueur qui a passé un acte sans ouvrir de bouteille n'aura pas son mot ; la Chronique garde les mots trouvés ;
+>   - Feu follet écrit avant l'acte VII : « C'est… moi ? Comme c'est étrange. », une seule fois.
 
 **Ce que les versions 4 et 5 changent.**
 1. **Une nouvelle troupe** : nouveaux noms, vraies personnalités, chacun avec une magie, une voix, un familier, un secret et un arc.

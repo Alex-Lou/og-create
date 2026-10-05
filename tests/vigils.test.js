@@ -4,7 +4,7 @@ import { describe, it, expect } from 'vitest';
 import { ACTS, LINKS, stageOf, vigilDue, vigilFrames, linksOf } from '@/game/vigils';
 import { ROLES } from '@/world/villagers';
 
-const ARTS = ['veillee', 'rite', 'lien', 'horizon'];
+const ARTS = ['veillee', 'rite', 'lien', 'horizon', 'phare', 'reflet', 'soleil', 'flammeche'];
 
 describe('les veillées et la civilisation', () => {
   it('l’étape suit le dernier acte fini, avec le nom du peuple', () => {
