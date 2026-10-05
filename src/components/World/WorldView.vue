@@ -178,6 +178,20 @@
                 </div>
                 <button type="button" class="world__btn" :disabled="busy || !state.pending" @click="collect">Récolter l’île</button>
               </div>
+              <!-- Foyer : les habitants de l'île, leurs cœurs ; un point quand l'un attend une visite aujourd'hui -->
+              <section v-if="site.id === 'foyer' && state.villagers && state.villagers.length" class="world__friends" aria-label="Habitants">
+                <h3 class="world__friends-title">Habitants</h3>
+                <ul class="world__friends-list">
+                  <li v-for="v in state.villagers" :key="v.id">
+                    <button type="button" class="world__friend" :aria-label="`${v.name}, ${v.role} : ${v.hearts} cœur${v.hearts > 1 ? 's' : ''}`" @click="openVillager(v.id)">
+                      <span class="world__friend-face"><img :src="portraitOf(v.id)" alt="" /></span>
+                      <span class="world__friend-name">{{ v.name }}</span>
+                      <span class="world__friend-hearts" aria-hidden="true">{{ '♥'.repeat(v.hearts) }}<span>{{ '♥'.repeat(5 - v.hearts) }}</span></span>
+                      <span v-if="awaits(v)" class="world__friend-dot" aria-hidden="true"></span>
+                    </button>
+                  </li>
+                </ul>
+              </section>
               <!-- Mini-jeu du bâtiment (Ponton, Carrière, Bosquet), ouvert au palier III -->
               <div v-if="gameOf(site)" :class="['world__game', { 'is-locked': !gameOf(site).open }]">
                 <span class="world__game-art" aria-hidden="true"><GameIcon :kind="GAME_ICONS[gameOf(site).id]" :size="40" /></span>
@@ -418,6 +432,21 @@
       </template>
     </GModal>
 
+    <!-- Habitant : sa fiche (bavarder, offrir) ; un coffre gagné s'ouvre par-dessus -->
+    <VillagerSheet
+      v-if="villagerView && state"
+      :villager="villagerView"
+      :rules="state.friendship"
+      :stock="state.stock"
+      :site-name="villagerSiteName"
+      :portrait="portraitOf(villagerView.id)"
+      :said="villagerSaid"
+      :popped="villagerPopped"
+      :busy="busy"
+      @talk="talkVillager"
+      @gift="giftVillager"
+      @close="villagerId = null"
+    />
     <!-- Coffres : la liste (jour, en attente), puis l'ouverture d'un coffre, ou de tous d'un coup -->
     <ChestList v-if="chestsOpen && state" :chests="state.chests" :busy="busy" @open="openChest" @open-all="openAllChests" @close="chestsOpen = false" />
     <ChestReveal v-if="reveal" v-bind="reveal" :busy="busy" @wear="wearRevealed" @close="reveal = null" />
@@ -467,6 +496,9 @@ import AnnexSheet from './AnnexSheet.vue';
 import NameSignPanel from './NameSignPanel.vue';
 import MiniGame from './minigames/MiniGame.vue';
 import GameIcon from './minigames/GameIcon.vue';
+import VillagerSheet from './VillagerSheet.vue';
+import { villagerSprite, ROLES } from '@/world/villagers';
+import { talkLine, giftLine, awaits } from '@/world/friends';
 import { nameSignLayers, nameSignLight, paintName } from '@/world/nameSigns';
 import { annexLayers, annexLight } from '@/world/annexSprites';
 import { annexReady, annexYield, variantsOf } from '@/world/annexes';
@@ -587,7 +619,7 @@ let lastView = null;
 // d'animation sont non réactifs et s'arrêtent quand l'onglet est caché ou le composant démonté.
 export default {
   name: 'WorldView',
-  components: { ElementGlyph, ElementTile, HarvestGame, ShopItemSheet, BrumeWisp, IslandClock, GModal, ChestList, ChestReveal, ChestHaul, AnnexPanel, AnnexSheet, NameSignPanel, MiniGame, GameIcon },
+  components: { ElementGlyph, ElementTile, HarvestGame, ShopItemSheet, BrumeWisp, IslandClock, GModal, ChestList, ChestReveal, ChestHaul, AnnexPanel, AnnexSheet, NameSignPanel, MiniGame, GameIcon, VillagerSheet },
   directives: { longpress },
   props: {
     discoveredElements: { type: Array, required: true },
@@ -641,6 +673,10 @@ export default {
       gameSending: false,
       gameResult: null,
       gameError: '',
+      // Habitant dont la fiche est ouverte, sa dernière réplique, le cœur tout juste gagné
+      villagerId: null,
+      villagerSaid: '',
+      villagerPopped: 0,
       clock: Date.now(),
       // Horloge de l'en-tête (heure, moment, temps, soleil) ; journée en accéléré
       skyClock: null,
@@ -655,6 +691,14 @@ export default {
     };
   },
   computed: {
+    // Habitant dont la fiche est ouverte (vue du serveur, à jour) et le nom de son lieu de travail
+    villagerView() {
+      return this.villagerId && this.state ? (this.state.villagers || []).find(v => v.id === this.villagerId) || null : null;
+    },
+    villagerSiteName() {
+      const site = this.villagerView && this.state.sites.find(s => s.id === this.villagerView.id);
+      return site ? site.name : '';
+    },
     // Mini-jeu ouvert : sa vue (réserve de parties à jour) et le nom de son bâtiment
     gameView() {
       return this.gameId && this.state ? (this.state.games || []).find(g => g.id === this.gameId) || null : null;
@@ -878,6 +922,8 @@ export default {
         guide.tip('island');
         // Premier bâtiment au palier II : ses annexes s'ouvrent
         if (state.sites.some(s => s.level >= 2 && !s.locked)) guide.tip('annexes');
+        // Deux habitants ou plus : ils ont un prénom, on peut s'en faire des amis
+        if ((state.villagers || []).length >= 2) guide.tip('friends');
         // Premier mini-jeu ouvert (Ponton, Carrière ou Bosquet au palier III)
         if ((state.games || []).some(g => g.open)) guide.tip('games');
       } catch (error) {
@@ -2237,6 +2283,7 @@ export default {
       else if (hit && hit.item) this.describeItem(hit.site, hit.item);
       else if (hit && hit.annex) this.annexSheet = { x: hit.annex.x, y: hit.annex.y };
       else if (hit && hit.nameSign) this.openNameSign(hit.nameSign);
+      else if (hit && hit.animal && this.friendOf(hit.animal.who)) this.openVillager(this.friendOf(hit.animal.who).id);
       else this.showTip(gesture.start.x, gesture.start.y, this.tipOf(hit, gesture.start));
       gesture.held = true;
       vibrate(12);
@@ -2375,7 +2422,7 @@ export default {
         vibrate(8);
       } else if (hit.animal) {
         // Un habitant parle, une bête de la ferme répond ; les bêtes sauvages s'enfuient
-        const said = this.village && hit.animal.who ? this.village.say(hit.animal.who, this.phase || this.skyAt(this.skyDate())) : null;
+        const said = this.named(this.village && hit.animal.who ? this.village.say(hit.animal.who, this.phase || this.skyAt(this.skyDate())) : null, hit.animal.who);
         if (said) this.showTip(px, py, said);
         if (this.reduced()) {
           if (!said) this.showTip(px, py, this.tipOf(hit, { x: px, y: py }));
@@ -2440,7 +2487,7 @@ export default {
         return { title: this.state.signs.name, text: `${look ? look.name : 'Enseigne'} · ${hit.nameSign.name}`, hint: 'Appui long : la changer' };
       }
       if (hit.animal) {
-        if (hit.animal.who && this.village) return this.village.describe(hit.animal.who);
+        if (hit.animal.who && this.village) return this.named(this.village.describe(hit.animal.who), hit.animal.who);
         const [title, text] = ANIMALS[hit.animal.kind] || ['Une bête', ''];
         return { title, text, hint: 'Toucher : la faire réagir' };
       }
@@ -2589,6 +2636,60 @@ export default {
         this.load();
       } finally {
         this.sending = false;
+      }
+    },
+    // Habitants : celui qu'on touche (who : { kind: 'villager', id: 'vil:<bâtiment>' }) dans la vue du serveur
+    friendOf(who) {
+      if (!who || who.kind !== 'villager' || !this.state) return null;
+      return (this.state.villagers || []).find(v => `vil:${v.id}` === who.id) || null;
+    },
+    awaits,
+    // Bulle d'un habitant : son prénom et son métier ; l'appui long ouvre sa fiche
+    named(info, who) {
+      const friend = this.friendOf(who);
+      if (!info || !friend) return info;
+      return { ...info, title: `${friend.name} · ${friend.role}`, hint: 'Appui long : sa fiche' };
+    },
+    // Portrait d'un habitant : son allure sur l'île (teint, cheveux), de face
+    portraitOf(id) {
+      const resident = this.village && this.village.residents.find(r => r.role === id);
+      const look = resident ? resident.look : { ...ROLES[id], skin: '#F6D3B3', hair: '#7A4E2C' };
+      return spriteUrl(`portrait-${id}-${look.skin}-${look.hair}`, () => villagerSprite(look));
+    },
+    openVillager(id) {
+      this.site = null;
+      this.villagerId = id;
+      this.villagerSaid = '';
+      this.villagerPopped = 0;
+    },
+    async talkVillager() {
+      await this.befriend(() => playService.villagerTalk(this.villagerId), (v, hearts) => talkLine(v.id, hearts));
+    },
+    async giftVillager(resource) {
+      await this.befriend(() => playService.villagerGift(this.villagerId, resource), v => giftLine(v.id, v, resource));
+    },
+    // Bavarder ou offrir : le serveur compte les points ; la réplique s'affiche, un cœur gagné pulse et sa récompense
+    // arrive (écus annoncés, coffre ouvert par-dessus la fiche)
+    async befriend(call, lineOf) {
+      if (this.busy) return;
+      const friend = this.villagerView;
+      this.busy = true;
+      try {
+        const { hearts, rewards, coins, world } = await call();
+        this.apply(world);
+        this.$emit('coins-updated', coins);
+        this.villagerSaid = lineOf(friend, hearts);
+        this.villagerPopped = hearts > friend.hearts ? hearts : 0;
+        vibrate(hearts > friend.hearts ? [12, 40, 18] : 8);
+        const gained = rewards.filter(r => r.kind === 'coins').reduce((sum, r) => sum + r.amount, 0);
+        if (gained) this.$emit('show-alert', `${friend.name} t’offre ${gained} écus pour votre amitié !`);
+        const chests = rewards.filter(r => r.chest).map(r => r.chest);
+        if (chests.length === 1) this.showChest(chests[0]);
+        else if (chests.length > 1) this.haul = chests;
+      } catch (error) {
+        this.$emit('show-alert', messageOf(error, 'L’habitant n’a pas pu répondre.'));
+      } finally {
+        this.busy = false;
       }
     },
     // Mini-jeux : la fiche du bâtiment se ferme, la fenêtre du jeu s'ouvre sur sa règle
@@ -3186,6 +3287,19 @@ export default {
 .world__prod-row { display: flex; justify-content: space-between; align-items: center; gap: 10px; min-height: 40px; padding: 6px 12px; border-radius: 12px; background: var(--vellum-50); box-shadow: inset 0 0 0 1px rgba(74, 52, 38, .08); font-size: 14px; }
 .world__prod-row span { color: var(--ink-500); font-weight: 800; }
 .world__prod-row.is-pending { background: var(--gold-200); }
+.world__friends { margin-top: 12px; }
+.world__friends-title { margin: 0 0 6px; font-size: 12px; font-weight: 800; text-transform: uppercase; letter-spacing: .05em; color: var(--ink-500); }
+.world__friends-list { display: grid; grid-template-columns: repeat(auto-fill, minmax(84px, 1fr)); gap: 6px; margin: 0; padding: 0; list-style: none; }
+.world__friend {
+  position: relative; width: 100%; display: grid; justify-items: center; gap: 2px; padding: 6px 4px 8px; border: 0; border-radius: 14px;
+  background: var(--vellum-50); box-shadow: inset 0 0 0 1px rgba(74, 52, 38, .1); font-family: var(--font-ui); color: var(--ink-900); cursor: pointer;
+}
+.world__friend-face { position: relative; display: block; width: 52px; height: 58px; border-radius: 12px; background: radial-gradient(circle at 50% 75%, #FFE9C4, var(--vellum-200) 74%); }
+.world__friend-face img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; padding: 3px; box-sizing: border-box; }
+.world__friend-name { font-family: var(--font-display); font-weight: 700; font-size: 14px; }
+.world__friend-hearts { color: #E8566A; font-size: 11px; letter-spacing: .04em; }
+.world__friend-hearts span { color: var(--vellum-300); }
+.world__friend-dot { position: absolute; top: 6px; right: 8px; width: 9px; height: 9px; border-radius: 50%; background: #E8566A; box-shadow: 0 0 0 2px var(--vellum-50); }
 .world__game {
   display: grid; grid-template-columns: auto minmax(0, 1fr) auto; align-items: center; gap: 10px; margin-top: 10px;
   padding: 10px 12px; border-radius: 16px; background: linear-gradient(135deg, #FFF4D6, var(--vellum-100)); box-shadow: inset 0 0 0 2px var(--gold-300);
