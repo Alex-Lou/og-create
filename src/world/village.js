@@ -15,9 +15,14 @@
 //   décor, ni bâtiment, ni création, ni annexe, ni la clairière d'un gisement ou d'un lieu remarquable). Chacune a ses
 //   heures (le fennec et la salamandre sortent la nuit) ; hors de ses heures, ou sous la pluie, elle se couche sur place.
 //   Touchées, elles s'enfuient.
+// - Bestiaire (bible, § 6.5 : bestiary.js) : les bêtes écrites dans le Grimoire s'y ajoutent (mésanges et hibou dans
+//   les arbres, papillons et abeilles le jour, lucioles la nuit, grenouille et tortue au bord de l'eau douce, une
+//   variante de plus à la ferme). Les familiers suivent leur maître, un pas derrière lui ; le bocal d'Ondin attend
+//   près de lui, vide tant que Poisson n'est pas écrit.
 import { villagerSprite, ROLES, SKINS, HAIRS } from './villagers';
 import { visitorLook } from './visitors';
 import { ANIMAL_SPRITES } from './animals';
+import { bestiaryOf, FAMILIARS } from './bestiary';
 
 const SPEED = 0.8; // cases par seconde, à pied
 const WALK = 'gsmdpkb';
@@ -57,7 +62,9 @@ export const BEAST_NAMES = {
   frog: ['Grenouille', 'Elle saute dans le Marais, même sous la pluie.'], tortoise: ['Tortue', 'Elle avance tout doucement dans le Marais.'],
   fennec: ['Fennec', 'Il dort le jour et trotte la nuit dans les Dunes.'], camel: ['Dromadaire', 'Il traverse les Dunes à pas lents.'],
   chameleon: ['Caméléon', 'Il change de teinte sous les feuilles de la Jungle.'], toucan: ['Toucan', 'Il penche la tête sous les feuilles de la Jungle.'],
-  salamander: ['Salamandre', 'Elle sort la nuit et sous la pluie, sur les cendres du Volcan.'], crow: ['Corbeau des cendres', 'Il croasse sur les pentes du Volcan.']
+  salamander: ['Salamandre', 'Elle sort la nuit et sous la pluie, sur les cendres du Volcan.'], crow: ['Corbeau des cendres', 'Il croasse sur les pentes du Volcan.'],
+  bird: ['Mésange', 'Elle sautille dans les arbres, le jour.'], butterfly: ['Papillon', 'Il volette au bord des bois, le jour.'],
+  firefly: ['Luciole', 'Elle s’allume la nuit, près de l’eau.'], bee: ['Abeille', 'Elle butine autour du Potager.'], owl: ['Hibou', 'Il veille la nuit, perché dans un arbre.']
 };
 // Bêtes des climats : les deux de chaque climat, leurs heures (jour, nuit, toujours), leur façon de bouger, et si
 // elles aiment la pluie
@@ -71,7 +78,8 @@ const CLIMATE_BEASTS = {
 };
 // Sols où se posent les bêtes des climats (ni eau, ni lac gelé, ni lave, ni pont, ni forêt, ni roche)
 const BEAST_GROUND = 'gmsdpnlxja';
-const WILD = new Set(['deer', 'fox', 'rabbit', 'hedgehog', 'squirrel', 'heron', ...Object.values(CLIMATE_BEASTS).flat().map(([s]) => s)]);
+const WILD = new Set(['deer', 'fox', 'rabbit', 'hedgehog', 'squirrel', 'heron', ...Object.values(CLIMATE_BEASTS).flat().map(([s]) => s),
+  'bird', 'butterfly', 'firefly', 'bee', 'owl']);
 
 /* ---------- Chemins ---------- */
 // Grille où l'on marche : sol praticable des quartiers à soi, ni bâtiment, ni création, ni annexe, ni arbre ou
@@ -156,9 +164,11 @@ function doorOf(grid, site) {
 // crafts : créations d'île posées ({ x, y }) ; props : décor naturel ({ kind, x, y }) ; annexes : annexes posées ({ x, y, site }) ;
 // visitor : visiteur du moment (vue du serveur) ou null ; settlers : visiteurs installés ({ id, seed, role, site, home }) ;
 // climates : climat de chaque quartier (par indice) ; avoid : cases à laisser libres autour (gisements, lieux remarquables) ;
-// troupe : la troupe rencontrée, vue du serveur ({ id, built, asleep } : bible, § 6.6), ou null (un par bâtiment bâti)
-export function villageOf({ n, M, sites, owned, crafts = [], props, annexes = [], visitor = null, settlers = [], climates = [], avoid = [], troupe = null }) {
+// troupe : la troupe rencontrée, vue du serveur ({ id, built, asleep } : bible, § 6.6), ou null (un par bâtiment bâti) ;
+// written : les éléments écrits dans le Grimoire (le Bestiaire et les familiers), ou null
+export function villageOf({ n, M, sites, owned, crafts = [], props, annexes = [], visitor = null, settlers = [], climates = [], avoid = [], troupe = null, written = null }) {
   const grid = gridOf({ n, M, sites, owned, crafts, props, annexes });
+  const bestiary = bestiaryOf(written);
   const built = sites.filter(s => s.level > 0 && !s.locked);
   const doors = Object.fromEntries(built.map(s => [s.id, doorOf(grid, s)]).filter(([, d]) => d));
   const foyer = built.find(s => s.id === 'foyer');
@@ -190,6 +200,8 @@ export function villageOf({ n, M, sites, owned, crafts = [], props, annexes = []
         camp, waiting: !who.built && !camp && !asleep, asleep,
         look: { skin: SKINS[Math.floor(hash(k, 3) * SKINS.length)], hair: HAIRS[Math.floor(hash(k, 5) * HAIRS.length)], ...ROLES[id] },
         work, wake: 6.4 + (k % 3) * 0.25, bed: 21.6 + (k % 3) * 0.3,
+        // Son familier, s'il est venu (bestiary.js)
+        pet: bestiary.familiars.has(id) ? id : null,
         // Une annexe à soi (la première posée) : on y travaille une partie de la journée
         field: (() => { const annex = who.built && annexes.find(a => a.site === id); return annex ? besideOf(grid, annex, doors[id]) : null; })()
       });
@@ -318,6 +330,9 @@ export function villageOf({ n, M, sites, owned, crafts = [], props, annexes = []
     }
     if (potager.level >= 5) add('pig', '', 12);
     if (potager.level >= 6) add('goat', '', 11);
+    // Le Bestiaire : un élément de la ferme écrit ajoute une variante aux bêtes que le palier montre déjà
+    const kinds = new Set(farm.map(a => a.species));
+    bestiary.farm.filter(([species]) => kinds.has(species)).forEach(([species, variant], i) => add(species, variant, 10 + i));
   }
   // Bois : lisières (herbe ou prairie au bord d'une forêt ou d'un arbre), arbres du décor, eau douce
   const edge = [];
@@ -335,6 +350,10 @@ export function villageOf({ n, M, sites, owned, crafts = [], props, annexes = []
     }
   }
   const trees = props.filter(p => (p.kind === 'tree' || p.kind === 'apple' || p.kind === 'birch' || p.kind === 'autumn') && owned.has(M.zone(p.x, p.y)));
+  // Deux moitiés des arbres et des lisières : deux bêtes d'une même sorte ne se posent pas au même endroit
+  const halves = list => [list.filter((_, i) => i % 2 === 0), list.filter((_, i) => i % 2 === 1)];
+  const treeHalves = halves(trees);
+  const edgeHalves = halves(edge);
   // Climats : cases libres de chaque quartier à soi qui a un climat (quartier → cases)
   const taken = new Set(props.map(p => p.y * n + p.x));
   for (const a of avoid) for (let dy = -1; dy <= 1; dy++) for (let dx = -1; dx <= 1; dx++) taken.add((a.y + dy) * n + a.x + dx);
@@ -347,6 +366,13 @@ export function villageOf({ n, M, sites, owned, crafts = [], props, annexes = []
       wildZones.get(z).push({ x, y });
     }
   }
+
+  // Un familier prêt à dessiner (le bocal d'Ondin : avec Bulle, ou vide)
+  const familiar = (r, x, y, z, flip, frame) => {
+    const pet = FAMILIARS[r.role];
+    const variant = r.role === 'puits' ? (bestiary.bulle ? 'bulle' : '') : pet.variant || '';
+    return beast(`fam:${r.role}`, pet.species, variant, x, y, z, flip, frame);
+  };
 
   // Tout ce qui vit à l'instant t (secondes) sous ce ciel : [{ id, kind, species, x, y, z, flip, sprite: [clé, dessin] }]
   // et les lanternes [{ x, y }] ; scared : touchers récents (Map id → { at })
@@ -361,21 +387,54 @@ export function villageOf({ n, M, sites, owned, crafts = [], props, annexes = []
       const s = scared.get(id);
       return s && t - s.at < span ? (t - s.at) / span : null;
     };
+    // Un familier suit son maître (p : sa place, sur sa tournée plan) : Tic-Tac et Lunette volent autour de lui, les
+    // autres marchent un pas derrière (Basalte, la tortue, traîne davantage) ; touché, il sautille
+    const follow = (r, pet, plan, p, flip, now) => {
+      const hop = tapped(`fam:${pet}`, 0.6);
+      const lift = hop === null ? 0 : Math.sin(hop * Math.PI) * 4;
+      if (pet === 'atelier') {
+        // Tic-Tac s'arrête toutes les 23 s, au mauvais moment, et tombe le temps qu'on le remonte
+        const stop = (now + r.k * 5) % 23 < 2.4;
+        const a = now * 1.4;
+        out.push(familiar(r, p.x + Math.cos(a) * 0.32, p.y + Math.sin(a) * 0.22, stop ? 0 : 13 + Math.sin(now * 3.2) * 2 + lift, Math.sin(a) > 0, stop ? 'rest' : Math.floor(now * 12) % 2));
+        // Abeille écrite : Rivet lui a fabriqué une amie
+        if (bestiary.friend) out.push(beast('fam:atelier:amie', 'bee', '', p.x + Math.cos(a + 2.6) * 0.38, p.y + Math.sin(a + 2.6) * 0.26, 12 + Math.cos(now * 2.8) * 2, Math.sin(a + 2.6) > 0, Math.floor(now * 12 + 1) % 2));
+        return;
+      }
+      if (pet === 'potager') {
+        const a = now * 0.9;
+        out.push(familiar(r, p.x + Math.cos(a) * 0.36, p.y + Math.sin(a) * 0.24, 14 + Math.sin(now * 2.2) * 3 + lift, Math.cos(a) < 0, Math.floor(now * 6) % 2));
+        return;
+      }
+      const q = onPlan(plan, now - (pet === 'carriere' ? 2.4 : 0.8));
+      const moving = q.pose === 'walk';
+      // Mousse se cache : on ne le voit que quand Sylve s'arrête, et pas juste après l'avoir touché
+      if (pet === 'bosquet' && (moving || tapped(`fam:${pet}`, 20) !== null)) return;
+      const jump = pet === 'foyer' && moving && Math.floor(now * 2) % 2 === 1;
+      const frame = pet === 'foyer' ? (jump ? 1 : 0) : moving ? Math.floor(now * (pet === 'carriere' ? 1.5 : 5)) % 2 : 0;
+      out.push(familiar(r, q.x + 0.3, q.y + 0.22, lift + (jump ? 2.5 : 0), moving ? q.flip : flip, frame));
+    };
     // Habitants
     for (const r of residents) {
-      // Un dormeur reste couché à sa place, jour et nuit, des « z » au-dessus de la tête (bible, § 6.7 et § 14)
+      // Le bocal d'Ondin reste près de lui, de jour comme de nuit ; Bulle y revient quand Poisson est écrit
+      if (r.pet === 'puits') out.push(familiar(r, r.work.x + 0.42, r.work.y + 0.34, 0, false, Math.floor(t * 0.7 + r.k) % 2));
+      const pet = r.pet && r.pet !== 'puits' ? r.pet : null;
+      // Un dormeur reste couché à sa place, jour et nuit, des « z » au-dessus de la tête (bible, § 6.7 et § 14) ; son
+      // familier dort à côté de lui
       if (r.asleep) {
         const frame = Math.floor(t * 0.8 + r.k) % 2;
         out.push({
           id: r.id, kind: 'villager', role: r.role, x: r.work.x, y: r.work.y, z: 0, flip: false,
           sprite: [`${r.key}-sleep-${frame}`, () => villagerSprite(r.look, { pose: 'sleep', view: 'se', frame })]
         });
+        if (pet) out.push(familiar(r, r.work.x + 0.34, r.work.y + 0.28, 0, false, 'rest'));
         continue;
       }
       if (h < r.wake || h >= r.bed) continue;
       if (rain > 0.5 && r.k % 2 === 1) continue;
       const evening = h >= phase.set + 0.4;
-      const p = onPlan(planOf(r, evening, day), t);
+      const plan = planOf(r, evening, day);
+      const p = onPlan(plan, t);
       const lantern = evening && phase.lit > 0.35;
       const umbrella = rain > 0.5;
       // En marche, il regarde où il va (4 images) ; au travail, de trois quarts ; au repos, de face, de côté ou au loin,
@@ -392,6 +451,7 @@ export function villageOf({ n, M, sites, owned, crafts = [], props, annexes = []
         sprite: [`${r.key}-${opts.pose}-${view}-${opts.frame}-${lantern ? 1 : 0}-${umbrella ? 1 : 0}`, () => villagerSprite(r.look, opts)]
       });
       if (lantern) lights.push({ x: p.x, y: p.y, dx: flip ? 5.8 : -5.8, dy: -3 });
+      if (pet) follow(r, pet, plan, p, flip, t);
     }
     // Ferme
     for (const a of farm) {
@@ -481,6 +541,50 @@ export function villageOf({ n, M, sites, owned, crafts = [], props, annexes = []
         });
       });
     }
+    // Le Bestiaire (bible, § 6.5) : les bêtes écrites dans le Grimoire, en plus de celles des bois, de la mer et des climats
+    if (bestiary.has('Oiseau')) {
+      [0, 1].forEach(k => wild(`best:bird:${k}`, 'bird', treeHalves[k], dayTime && rain < 0.5, c => {
+        const peck = (t + k * 1.7) % 4 < 0.5;
+        // Devant le feuillage (comme l'écureuil) : un peu plus vers le joueur que l'arbre
+        return { x: c.x + 0.14, y: c.y + 0.12 + k * 0.04, z: 13 + k * 2 + ((t + k) % 3.2 < 0.25 ? 1.5 : 0), frame: peck ? 1 : 0, flip: hash(day + k, 12) < 0.5 };
+      }));
+    }
+    if (bestiary.has('Hibou')) wild('best:owl', 'owl', trees, (night || dusk) && rain < 0.8, c => ({ x: c.x + 0.14, y: c.y + 0.14, z: 14, frame: t % 5 < 0.25 ? 1 : 0, flip: false }));
+    if (bestiary.has('Papillon')) {
+      ['jaune', 'bleu'].forEach((variant, k) => wild(`best:butterfly:${k}`, 'butterfly', edgeHalves[k], dayTime && rain < 0.4, c => {
+        const a = t * 0.6 + k * 2;
+        return { x: c.x + Math.sin(a) * 0.5, y: c.y + Math.cos(a * 0.7) * 0.3, z: 6 + Math.sin(t * 2.4 + k) * 2.5, frame: Math.floor(t * 7 + k) % 2, flip: Math.cos(a) < 0, variant };
+      }));
+    }
+    if (bestiary.has('Abeille')) {
+      const hive = doors.potager ? [doors.potager] : edge;
+      [0, 1].forEach(k => wild(`best:bee:${k}`, 'bee', hive, dayTime && rain < 0.4, c => {
+        const a = t * 1.8 + k * 3;
+        return { x: c.x + Math.cos(a) * 0.5, y: c.y + Math.sin(a * 1.2) * 0.4, z: 7 + Math.sin(t * 4 + k) * 1.5, frame: Math.floor(t * 14 + k) % 2, flip: Math.sin(a) > 0 };
+      }));
+    }
+    if (bestiary.has('Luciole')) {
+      const glade = banks.length ? banks : edge;
+      for (let k = 0; k < 5; k++) {
+        wild(`best:firefly:${k}`, 'firefly', glade, (night || dusk) && rain < 0.5, c => {
+          const a = t * 0.35 + k * 1.3;
+          return { x: c.x + Math.cos(a) * (0.35 + k * 0.08), y: c.y + Math.sin(a * 1.3) * 0.32, z: 4 + k * 1.6 + Math.sin(t * 1.1 + k) * 1.5, frame: Math.floor(t * 1.6 + k * 0.7) % 2, flip: false };
+        });
+      }
+    }
+    if (bestiary.has('Grenouille')) {
+      wild('best:frog', 'frog', banks, true, c => {
+        const go = clamp((((t + 5) % 4) - 3.2) / 0.6);
+        const jump = go > 0 && go < 1;
+        return { x: c.x + 0.3 * go - 0.15, y: c.y, z: jump ? Math.sin(go * Math.PI) * 4 : 0, frame: night && rain < 0.3 ? 'rest' : jump ? 1 : 0, flip: hash(day, 14) < 0.5 };
+      });
+    }
+    if (bestiary.has('Tortue')) {
+      wild('best:tortoise', 'tortoise', banks, true, c => {
+        const a = t * 0.08 + 3;
+        return dayTime ? { x: c.x + Math.sin(a) * 0.3, y: c.y, frame: Math.floor(t * 1.2) % 2, flip: Math.cos(a) < 0 } : { ...c, frame: 'rest', flip: false };
+      });
+    }
     // Carpes koï : trois qui tournent dans l'eau douce
     if (water.length >= 3) {
       const pond = water[Math.floor(hash(day, 41) * water.length)];
@@ -491,8 +595,20 @@ export function villageOf({ n, M, sites, owned, crafts = [], props, annexes = []
     }
     return { list: out, lights };
   }
+  // Ce que dit un familier qu'on touche, ou sa fiche courte (appui long)
+  function petInfo(who, long) {
+    const id = who.id.split(':')[1];
+    if (who.id === 'fam:atelier:amie') return { title: 'L’amie de Tic-Tac', text: long ? 'Une vraie abeille : Rivet l’a fabriquée pour Tic-Tac quand Abeille a été écrite.' : 'Bzz !' };
+    if (id === 'puits') {
+      if (!bestiary.bulle) return { title: 'Le bocal d’Ondin', text: long ? 'Vide : « Bulle est retourné dans la mer. » Ce qu’on écrit renaît…' : '« Bulle est retourné dans la mer. »' };
+      return { title: 'Bulle', text: long ? 'Le petit poisson d’Ondin, revenu quand Poisson a été écrit : ce qu’on écrit renaît.' : 'Blub !' };
+    }
+    const f = FAMILIARS[id];
+    return { title: long ? `${f.name} · familier` : f.name, text: long ? f.text : f.says };
+  }
   // Ce que dit un habitant ou une bête de la ferme qu'on touche ; null pour les bêtes sauvages (elles s'enfuient)
   function say(who, phase) {
+    if (who.id && who.id.startsWith('fam:')) return petInfo(who, false);
     if (who.kind === 'villager') {
       const r = residents.find(v => v.id === who.id);
       if (!r) return null;
@@ -522,6 +638,7 @@ export function villageOf({ n, M, sites, owned, crafts = [], props, annexes = []
       if (r && r.waiting) return { title: r.look.label, text: `Attend que « ${r.site} » sorte de terre, tout près.`, hint: 'Toucher : lui parler' };
       return r ? { title: r.look.label, text: `Travaille à « ${r.site} » le jour, rentre au Foyer le soir.`, hint: 'Toucher : lui parler' } : null;
     }
+    if (who.id && who.id.startsWith('fam:')) return { ...petInfo(who, true), hint: 'Toucher : le saluer' };
     const [title, text] = BEAST_NAMES[who.species] || ['Une bête', ''];
     return { title, text, hint: WILD.has(who.species) ? 'Toucher : il s’enfuit' : 'Toucher : la faire réagir' };
   }

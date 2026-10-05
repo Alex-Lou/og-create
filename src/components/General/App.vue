@@ -42,6 +42,7 @@
           <WorldView
             v-else-if="isWorldActive"
             :elementEmojis="elementEmojis"
+            :elements="discoveredElements"
             :isLoggedIn="isLoggedIn"
             :coins="coins"
             @coins-updated="handleCoinsUpdated"
@@ -64,10 +65,11 @@
             :picked="athanorPicked"
             :revealing="isRevealing"
             :openMarked="bookOpenMarked"
+            :openPage="bookOpenPage"
             :hold="prologueHold"
             :stage="civStage"
             @loaded="onBookLoaded"
-            @marked-opened="bookOpenMarked = false"
+            @marked-opened="bookOpenMarked = false; bookOpenPage = null"
             @select="handleResourceSelection"
             @coins-updated="handleCoinsUpdated"
             @show-alert="showAlert"
@@ -324,6 +326,8 @@ export default {
       bookAim: null,
       // Venu de la quête de l'île : le Grimoire s'ouvre sur la page marquée du fil d'Ariane
       bookOpenMarked: false,
+      // Page à ouvrir en venant de l'île (un Savoir soufflé : bible, § 6.4), ou null
+      bookOpenPage: null,
       // Révélation d'une création en cours : les popups de succès attendent
       isRevealing: false,
       // Une ère franchie pendant le jeu (pas au chargement) annonce son nouvel emplacement
@@ -869,8 +873,9 @@ export default {
 
     // ----- Modes -----
     // L'île mène ailleurs (la quête de Brume) : vers le Grimoire, il s'ouvre sur la page marquée
-    openFromWorld(mode) {
+    openFromWorld(mode, page = null) {
       this.bookOpenMarked = mode === 'infinite';
+      this.bookOpenPage = page;
       this.handleModeSelect(mode);
     },
     handleModeSelect(mode) {

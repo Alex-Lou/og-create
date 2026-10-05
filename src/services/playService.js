@@ -170,9 +170,10 @@ export default {
   gameFinish(run, input) {
     return http.post('/play/world/game/finish', { run, input }).then(response => response.data);
   },
-  // Habitants : bavarder, offrir des ressources (chacun une fois par jour) → { gained, points, hearts, rewards, coins, world }
-  villagerTalk(villager) {
-    return http.post('/play/world/villager/talk', { villager }).then(response => response.data);
+  // Habitants : bavarder, offrir des ressources (chacun une fois par jour) → { gained, points, hearts, rewards, coins, world } ;
+  // bavarder avec un maître rend aussi son Savoir (ou null) ; pages : { known, heard }, les pages dont l'appareil a un indice
+  villagerTalk(villager, pages = {}) {
+    return http.post('/play/world/villager/talk', { villager, ...pages }).then(response => response.data);
   },
   villagerGift(villager, resource) {
     return http.post('/play/world/villager/gift', { villager, resource }).then(response => response.data);

@@ -327,6 +327,15 @@ chronométrer 20 appels. Comparer à zoom égal, au même endroit.
   rite, lien, horizon) ; vues retenues dans `oc_vigils`. L'étape s'affiche dans la fiche de Brume et du Foyer
   (`civStage`) et l'Ex libris (`paintEndpaper(…, stage)`). La Chronique : onglet du Carnet d'explorateur
   (`ExplorerLog.vue`), « Revoir » rejoue une veillée.
+- **Lot H6 de la bible** (Savoirs et Bestiaire). Serveur : `villagers.SAVOIRS` (familles de l'Art de chaque
+  maître), `bookPages.savoir` (pur : page à portée de l'Art, la marquée d'abord ; famille sous 2 cœurs, sur une page
+  à énigme pas encore essayée ; ingrédient de l'Encre à partir de 2), renvoyé par `POST /world/villager/talk`
+  seulement quand le bavardage compte (`known`, `heard` : ce que l'appareil sait déjà). Front : `src/game/savoirs.js`
+  (`oc_book_savoirs` ; l'ingrédient rejoint `oc_book_ink`) ; la page peint la famille soufflée sous la première case
+  et « Soufflé par … » (`painter.js`, `whisper`) ; « Voir dans le Grimoire » ouvre la page (`BookView` : `openPage`).
+  Bestiaire : `src/world/bestiary.js` (bêtes écrites, variantes de ferme, familiers) ; `village.js` les fait vivre
+  (`written` : les éléments du Grimoire, passés par `App` à `WorldView`) ; dessins nouveaux dans `animals.js`
+  (mésange, papillons, luciole, abeille, hibou, Tic-Tac, bocal, renardeau). Chronique : Bestiaire et familiers.
 
 ### Décisions déjà prises par l'auteur (ne pas les redemander)
 - **Île** : 96 × 96 ; l'ancienne carte devient le cœur ; découverte par expéditions ; un quartier s'ouvre avec des

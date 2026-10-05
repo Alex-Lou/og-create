@@ -632,9 +632,12 @@
       :said="villagerSaid"
       :popped="villagerPopped"
       :busy="busy"
+      :art="savoirOf(villagerView.id)"
+      :savoir="villagerSavoir"
       @talk="talkVillager"
       @gift="giftVillager"
       @fill="fillNeed"
+      @grimoire="openSavoir"
       @close="villagerId = null"
     />
     <!-- Visiteur arrivé en bateau : sa fiche (demande, récompense) -->
@@ -663,6 +666,7 @@
       :focus="logFocus"
       :acts="(state.brume && state.brume.acts) || []"
       :people="state.people || null"
+      :elements="elements"
       @show="showLandmark"
       @replay="act => { logOpen = false; $emit('replay-vigil', act); }"
       @close="logOpen = false"
@@ -721,6 +725,7 @@ import ExplorerLog from './ExplorerLog.vue';
 import FindsSheet from './FindsSheet.vue';
 import { villagerSprite, ROLES } from '@/world/villagers';
 import { talkLine, giftLine, awaits } from '@/world/friends';
+import { heardPages, keepSavoir, savoirLine, artOf as savoirOf } from '@/game/savoirs';
 import { NEED_GLYPH, MOOD_GLYPH, MOOD_LABEL, ASKS, THANKS, WORDS, missingOf, fillAllOf, askOr } from '@/world/needs';
 import { visitorLook, visitorBoat, askLine, THANKS as VISITOR_THANKS } from '@/world/visitors';
 import { nameSignLayers, nameSignLight, paintName } from '@/world/nameSigns';
@@ -757,7 +762,10 @@ import {
 import { SEA_SPRITES, FISH_SPECIES } from '@/world/seaSprites';
 import { drawBrume, floatOf, BRUME_ALT, BRUME_REACH } from '@/world/brume';
 import { stageOf as civilizationOf } from '@/game/vigils';
+import { BEASTS } from '@/world/bestiary';
+import { faceHref } from '@/world/faces';
 import { guide } from '@/game/guide';
+import { TIPS } from '@/game/guideTips';
 import longpress, { HOLD_MS } from '@/directives/longpress';
 import { roman } from '@/utils/roman';
 import { P } from '@/world/iso';
@@ -869,6 +877,8 @@ export default {
   props: {
     // Glyphes des éléments du Livre (savoir-faire demandé à l'établi)
     elementEmojis: { type: Object, required: true },
+    // Éléments écrits dans le Grimoire : le Bestiaire vivant et les familiers (bible, § 6.5)
+    elements: { type: Array, default: () => [] },
     isLoggedIn: { type: Boolean, default: false },
     // Solde d'écus (en-tête) : grise les articles hors de portée ; le serveur reste seul juge
     coins: { type: Number, default: null }
@@ -927,6 +937,8 @@ export default {
       villagerId: null,
       villagerSaid: '',
       villagerPopped: 0,
+      // Savoir que le maître vient de souffler (bible, § 6.4) : { page, chapter, ingredient | family } ou null
+      villagerSavoir: null,
       visitorOpen: false,
       visitorSaid: '',
       clock: Date.now(),
@@ -1326,6 +1338,7 @@ export default {
         if (state.visitor) guide.tip('visitor');
         // Premier mini-jeu ouvert (Ponton, Carrière ou Bosquet au palier III)
         if ((state.games || []).some(g => g.open)) guide.tip('games');
+        this.bestiaryTips(state);
       } catch (error) {
         if (this.gone) return;
         if ([401, 402].includes(error.response?.status)) {
@@ -1405,7 +1418,8 @@ export default {
         settlers: (state.villagers || []).filter(v => v.seed !== undefined),
         climates: state.map.zones.map(z => z.climate || null), avoid: [...landmarksShown(state), ...depositsShown(state)],
         // La troupe rencontrée (serveur) : bâtie, au camp, ou endormie
-        troupe: (state.villagers || []).filter(v => v.seed === undefined).map(v => ({ id: v.id, built: v.built !== false, asleep: Boolean(v.asleep) }))
+        troupe: (state.villagers || []).filter(v => v.seed === undefined).map(v => ({ id: v.id, built: v.built !== false, asleep: Boolean(v.asleep) })),
+        written: this.elements
       });
       // Visiteur : son bateau s'amarre près du Ponton ; un visiteur jamais vu sur cet appareil arrive sous les yeux
       this.visitorDock = state.visitor ? this.dockOf(state, M) : null;
@@ -3701,9 +3715,36 @@ export default {
       this.villagerId = id;
       this.villagerSaid = '';
       this.villagerPopped = 0;
+      this.villagerSavoir = null;
     },
+    savoirOf,
+    // Les Savoirs et le Bestiaire, dits une fois (bible, § 6.4 et § 6.5) : un maître à qui bavarder ; Bulle revenu dans
+    // le bocal d'Ondin ; une bête écrite qui vit sur l'île (Sylve la présente, si elle est là)
+    bestiaryTips(state) {
+      const troupe = new Set((state.villagers || []).map(v => v.id));
+      if (troupe.size) guide.tip('savoirs');
+      const written = new Set(this.elements);
+      if (troupe.has('puits') && written.has('Poisson')) guide.tip('bulle');
+      if (BEASTS.some(name => name !== 'Poisson' && written.has(name))) {
+        const sylve = troupe.has('bosquet');
+        guide.say({ id: 'bestiaire', ...(sylve ? { text: TIPS.bestiaireSylve, who: 'Sylve', face: faceHref('bosquet') } : { text: TIPS.bestiaire }) });
+      }
+    },
+    // Bavarder : au premier bavardage du jour, un maître souffle un Savoir sur une page de son Art ; l'appareil le
+    // garde (comme l'Encre) et dit au serveur les pages dont il a déjà un indice
     async talkVillager() {
-      await this.befriend(() => playService.villagerTalk(this.villagerId), (v, hearts) => talkLine(v.id, hearts));
+      await this.befriend(() => playService.villagerTalk(this.villagerId, heardPages()), (v, hearts, { savoir }) => {
+        if (!savoir) return talkLine(v.id, hearts);
+        keepSavoir(savoir, v.name);
+        this.villagerSavoir = savoir;
+        return savoirLine(v.id, savoir);
+      });
+    },
+    // « Voir dans le Grimoire » : le Grimoire s'ouvre sur la page soufflée
+    openSavoir() {
+      const { page } = this.villagerSavoir;
+      this.villagerId = null;
+      this.$emit('go', 'infinite', page);
     },
     async giftVillager(resource) {
       await this.befriend(() => playService.villagerGift(this.villagerId, resource), v => giftLine(v.id, v, resource));
@@ -3715,10 +3756,11 @@ export default {
       const friend = this.villagerView;
       this.busy = true;
       try {
-        const { hearts, rewards, coins, world } = await call();
+        const reply = await call();
+        const { hearts, rewards, coins, world } = reply;
         this.apply(world);
         this.$emit('coins-updated', coins);
-        this.villagerSaid = lineOf(friend, hearts);
+        this.villagerSaid = lineOf(friend, hearts, reply);
         this.villagerPopped = hearts > friend.hearts ? hearts : 0;
         vibrate(hearts > friend.hearts ? [12, 40, 18] : 8);
         const gained = rewards.filter(r => r.kind === 'coins').reduce((sum, r) => sum + r.amount, 0);

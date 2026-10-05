@@ -697,7 +697,7 @@ function bookmark(ctx, u) {
 // Boutons du bas d'une page à trouver (u) ; leur zone de toucher déborde un peu le dessin
 const BTN = { y: 115.2, h: 8.6, pad: 1.6 };
 function paintReach(ctx, u, model, i, assets) {
-  const { chapter, page, revealed, aim, freeInk, tried } = model;
+  const { chapter, page, revealed, aim, freeInk, tried, whisper = null } = model;
   const style = CHAPTER_STYLE[chapter.id];
   frame(ctx, u, style.ink);
   header(ctx, u, chapter, style, 0);
@@ -719,12 +719,14 @@ function paintReach(ctx, u, model, i, assets) {
     if (picked.length) return picked[k] ? { name: picked[k], emoji: assets.emojiOf(picked[k]) } : null;
     return k === 0 && revealed ? { name: revealed, emoji: assets.emojiOf(revealed) } : null;
   });
-  // Après un premier essai sur la page, la famille de chaque ingrédient apparaît sous sa case
-  const hints = page.riddle && tried ? familyHints(page.clue, page.groups) : null;
+  // Après un premier essai sur la page, la famille de chaque ingrédient apparaît sous sa case ; avant, celle qu'un maître
+  // a soufflée (Savoirs : bible, § 6.4), sous la première case, là où l'Encre pose son ingrédient
+  const heard = whisper && whisper.family && !revealed ? whisper : null;
+  const hints = page.riddle && tried ? familyHints(page.clue, page.groups) : heard ? [FAMILY_SHORT[heard.family] || 'élément'] : null;
   const ready = picked.length >= 2;
   const sealX = recipeRow(ctx, u, parts, null, style.ink, assets.onReady, top, hints, { wax: style.wax, ready });
-  // Verdict du dernier essai visé (ou essais ratés), rétréci pour tenir sur une ligne
-  const note = aimNote(aim, page.misses, page.freeInkAfter);
+  // Verdict du dernier essai visé (ou essais ratés), rétréci pour tenir sur une ligne ; sinon, qui a soufflé l'indice
+  const note = aimNote(aim, page.misses, page.freeInkAfter) || (heard ? `Soufflé par ${heard.who}` : '');
   if (note) {
     ctx.fillStyle = aim && aim.right ? style.ink : NOTE;
     ctx.textAlign = 'center';
@@ -756,14 +758,16 @@ function paintReach(ctx, u, model, i, assets) {
     button(13, 37, style.color, guessLabel, style.ink, true);
     hotspots.push(zone('guess', 13, 37, { action: 'guess', data: page.id, label: 'Pendu : deviner le nom lettre par lettre' }));
   }
-  button(inkX, inkW, revealed ? VELLUM : freeInk ? '#B7862F' : INK, revealed ? 'Encre utilisée' : freeInk ? '✒︎ Encre offerte' : `✒︎ Encre · ${assets.inkPrice} écus`, revealed ? FAINT : '#FFFDF8', !revealed);
+  const told = revealed && whisper && whisper.ingredient === revealed ? `Soufflé par ${whisper.who}` : 'Encre utilisée';
+  button(inkX, inkW, revealed ? VELLUM : freeInk ? '#B7862F' : INK, revealed ? told : freeInk ? '✒︎ Encre offerte' : `✒︎ Encre · ${assets.inkPrice} écus`, revealed ? FAINT : '#FFFDF8', !revealed);
   if (!revealed) hotspots.push(zone('ink', inkX, inkW, { action: 'ink', data: page.id, label: freeInk ? 'Encre offerte : révéler un ingrédient' : `Encre : révéler un ingrédient pour ${assets.inkPrice} écus` }));
   // Le sceau mélange ce qui est posé dans l'Athanor (comme « Transmuer »)
   if (ready && sealX !== null) hotspots.push({ id: 'seal', x: sealX - 6, y: top - 0.5, w: 12, h: BOX + 1, action: 'seal', data: page.id, label: `Sceller le mélange : ${picked.join(' et ')}` });
   folio(ctx, u, i);
   const start = page.first ? `, commence par ${page.first}` : '';
   const clue = page.riddle ? `Énigme : ${page.riddle}${hints ? ` ${clueText(page.clue, page.groups)}` : ''}` : clueText(page.clue, page.groups);
-  return { hotspots, label: `Page à trouver : ${familyName(page.family)}, ${page.letters} lettres${start}. ${clue}${note ? ` ${note}.` : ''}${revealed ? ` Un ingrédient : ${revealed}.` : ''}` };
+  const said = heard ? ` Un ingrédient est ${FAMILY_WORDS[heard.family] || 'un élément'}.` : '';
+  return { hotspots, label: `Page à trouver : ${familyName(page.family)}, ${page.letters} lettres${start}. ${clue}${note ? ` ${note}.` : ''}${said}${revealed ? ` Un ingrédient : ${revealed}.` : ''}` };
 }
 
 function paintFar(ctx, u, model, i) {

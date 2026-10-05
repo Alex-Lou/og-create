@@ -10,6 +10,11 @@ export const TIPS = {
   island: 'Voici ton île, encore noyée de brume. Je t’y attendais : touche-moi, je te mènerai à ta prochaine tâche ; garde le doigt appuyé sur moi pour lire ma quête.',
   annexes: 'Ton bâtiment a grandi : il peut s’étendre. Dans sa fiche, l’onglet Annexes propose champs, filons, viviers… Pose-les toi-même autour de lui : ce sont eux qui produisent le plus.',
   friends: 'Tes habitants ont chacun un prénom et leurs goûts. Bavarde avec eux chaque jour, offre-leur ce qu’ils aiment : chaque cœur d’amitié leur donne envie de te faire un cadeau. Garde le doigt appuyé sur l’un d’eux, ou ouvre la fiche du Foyer.',
+  savoirs: 'Chaque maître garde un Savoir : au premier bavardage du jour, il souffle un indice sur une page de son chapitre. Plus vous êtes amis, plus l’indice est précis.',
+  bulle: 'Regarde le bocal d’Ondin : Bulle est revenu ! Ce qu’on écrit dans le Grimoire renaît sur l’île.',
+  bestiaire: 'Une bête écrite dans le Grimoire vit maintenant sur ton île. Cherche-la ! Le Carnet d’explorateur garde le Bestiaire.',
+  // La même, dite par Sylve (sa grammaire revient peu à peu : bible, § 8.2)
+  bestiaireSylve: 'Bêtes… réveillées ! Grimoire écrit, bête vit. Arbres, eau, ciel : regarde. Le Carnet garde le Bestiaire.',
   needs: 'Un habitant a besoin de toi : la bulle au-dessus de sa tête dit quoi. Manger, des outils, quelques créations d’île autour de son bâtiment… Comble ses besoins depuis sa fiche : heureux, il travaille mieux (+10 % de production) ; négligé, moins bien.',
   visitor: 'Un bateau vient d’accoster au Ponton ! Son voyageur reste quelques jours et a une demande : la bulle dorée au-dessus de sa tête. Touche-le, puis garde le doigt appuyé pour ouvrir sa fiche : sa demande comblée, une récompense en écus t’attend.',
   expedition: 'Ton expédition est partie dans la brume ! À son retour, la terre qu’elle explore se dévoile : son relief, son climat… Tu pourras alors l’acheter. Une seule expédition à la fois : la boussole, en haut à gauche, dit quand elle revient.',

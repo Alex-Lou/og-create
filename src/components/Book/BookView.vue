@@ -181,6 +181,7 @@ import { guide } from '@/game/guide';
 import GModal from '@/components/ui/GModal.vue';
 import ElementGlyph from '@/components/ui/ElementGlyph.vue';
 import longpress from '@/directives/longpress';
+import { loadSavoirs } from '@/game/savoirs';
 
 const INK_PRICE = 50;
 // Rejouer un pendu perdu sans attendre le lendemain (le serveur fixe le prix : services/bookLetters.js)
@@ -219,6 +220,8 @@ export default {
     revealing: { type: Boolean, default: false },
     // Venu de la quête de l'île : le Grimoire s'ouvre sur la page marquée du fil d'Ariane
     openMarked: { type: Boolean, default: false },
+    // Venu d'un Savoir soufflé sur l'île : le Grimoire s'ouvre sur cette page (si elle est encore à trouver)
+    openPage: { type: String, default: null },
     // Le tutoriel joue une scène : la couverture attend avant de s'ouvrir
     hold: { type: Boolean, default: false },
     // L'étape de civilisation, sous le titre de l'Ex libris (la garde au revers de la couverture)
@@ -361,11 +364,12 @@ export default {
     }
   },
   created() {
-    // Non réactifs : moteur, modèles de pages, données brutes, encre révélée
+    // Non réactifs : moteur, modèles de pages, données brutes, encre révélée, Savoirs soufflés par les maîtres
     this.engine = null;
     this.models = [{ type: 'toc', key: 'toc', chapters: [], chapterIndex: {} }];
     this.bookData = null;
     this.revealed = storage.load(INK_KEY, {});
+    this.savoirs = loadSavoirs();
     // Dernier verdict de chaque page visée : { tried, right, of, misses, need, freeInk }
     this.aims = {};
     this.aimedKey = null;
@@ -455,7 +459,9 @@ export default {
       const revealed = this.revealed[page.id] || null;
       // Un premier essai sur la page (compté par le serveur, ou fait pendant la session) dévoile les familles
       const tried = Boolean(aim) || page.misses > 0;
-      return { type: 'reach', key: page.id, chapter, page, revealed, aim, freeInk, tried };
+      // Ce qu'un maître a soufflé sur la page : { who, ingredient } ou { who, family }
+      const whisper = this.savoirs[page.id] || null;
+      return { type: 'reach', key: page.id, chapter, page, revealed, aim, freeInk, tried, whisper };
     },
     // Verdict d'un mélange visé sur cette page (transmis par l'Athanor)
     onAim(aim) {
@@ -519,8 +525,10 @@ export default {
         index: this.models.findIndex(m => m.key === `ch-${c.id}`)
       }));
       if (!this.engine) {
-        // Venu de la quête de l'île : la page marquée ; sinon, retour sur la page qu'on lisait (si elle existe encore)
-        const marked = this.openMarked && data.ariane ? this.models.findIndex(m => m.key === data.ariane.page) : -1;
+        // Venu de l'île : la page d'un Savoir soufflé, ou celle que marque la quête ; sinon, retour sur la page qu'on
+        // lisait (si elle existe encore)
+        const wanted = this.openPage || (this.openMarked && data.ariane ? data.ariane.page : null);
+        const marked = wanted ? this.models.findIndex(m => m.key === wanted) : -1;
         if (marked >= 0) this.$emit('marked-opened');
         this.mountEngine(marked >= 0 ? marked : Math.max(0, lastKey ? this.models.findIndex(m => m.key === lastKey) : 0));
         return;
