@@ -34,6 +34,21 @@
           </li>
         </ul>
       </template>
+      <!-- Le Bestiaire (bible, § 6.5) : les bêtes écrites dans le Grimoire, et les familiers venus auprès de leur maître -->
+      <h3 class="log__title">Bestiaire · {{ beasts.length }} / {{ BEASTS.length }}</h3>
+      <p v-if="!beasts.length" class="log__hint">Aucune bête écrite : ce qu’on écrit dans le Grimoire renaît sur l’île.</p>
+      <ul v-else class="log__list log__beasts">
+        <li v-for="b in beasts" :key="b.name" class="log__beast"><span class="log__name">{{ b.name }}</span><span class="log__where">{{ b.where }}</span></li>
+      </ul>
+      <template v-if="familiars.length">
+        <h3 class="log__title">Familiers</h3>
+        <ul class="log__list">
+          <li v-for="f in familiars" :key="f.id" class="log__row log__row--link">
+            <span class="log__name">{{ f.name }} · {{ NAMES[f.id] }}</span>
+            <span class="log__text">{{ f.text }}</span>
+          </li>
+        </ul>
+      </template>
     </div>
     <div v-else class="log">
       <p class="log__progress">
@@ -81,6 +96,7 @@ import { CLIMATE_NAMES } from '@/world/climates';
 import { ACTS, stageOf, linksOf, peopleOf } from '@/game/vigils';
 import { MEMORIES } from '@/world/story';
 import { NAMES } from '@/world/faces';
+import { BEASTS, beastsOf, familiarsOf } from '@/world/bestiary';
 
 // Les souvenirs retrouvés : chacun dans l'acte de sa quête (la Chronique les montre une fois l'acte fini)
 const MEMORY_ACTS = { 'souvenir-ondin': 'T', 'souvenir-sylve': 'I', 'souvenir-galet': 'II', 'eveil-melisse': 'III', 'souvenir-aster': 'IV' };
@@ -100,11 +116,13 @@ export default {
     focus: { type: String, default: null },
     // Actes finis (Brume) et nom du peuple : la Chronique
     acts: { type: Array, default: () => [] },
-    people: { type: String, default: null }
+    people: { type: String, default: null },
+    // Éléments écrits dans le Grimoire : le Bestiaire et les familiers
+    elements: { type: Array, default: () => [] }
   },
   emits: ['show', 'close', 'replay'],
   data() {
-    return { tab: 'places' };
+    return { tab: 'places', BEASTS, NAMES };
   },
   computed: {
     stage() {
@@ -115,6 +133,12 @@ export default {
     },
     links() {
       return linksOf(this.acts);
+    },
+    beasts() {
+      return beastsOf(this.elements);
+    },
+    familiars() {
+      return familiarsOf(this.elements);
     },
     memories() {
       return Object.entries(MEMORY_ACTS).filter(([, act]) => this.acts.includes(act)).map(([id]) => ({ id, name: NAMES[MEMORIES[id].villager], line: MEMORIES[id].line }));
@@ -162,6 +186,9 @@ export default {
 .log__title { margin: 6px 0 0; font-family: var(--font-display); font-size: 16px; }
 .log__row { display: flex; align-items: center; gap: 10px; padding: 10px 12px; border-radius: 14px; background: var(--vellum-50); box-shadow: inset 0 0 0 1px rgba(74, 52, 38, .1); }
 .log__row--link { flex-direction: column; align-items: flex-start; gap: 2px; }
+/* Bestiaire : deux colonnes de petites cartes */
+.log__beasts { display: grid; grid-template-columns: repeat(auto-fill, minmax(112px, 1fr)); gap: 8px; }
+.log__beast { display: flex; flex-direction: column; gap: 2px; padding: 8px 10px; border-radius: 12px; background: var(--vellum-50); box-shadow: inset 0 0 0 1px rgba(74, 52, 38, .1); }
 .log__row .log__body { flex: 1; }
 .log__row .log__btn { align-self: center; }
 .log__recipe { font-size: 12px; font-weight: 900; color: #6A4A12; }

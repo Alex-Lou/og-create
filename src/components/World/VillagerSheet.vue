@@ -48,10 +48,13 @@
       </section>
 
       <p class="friend__say" aria-live="polite">« {{ said || askOr(villager, talkLine(villager.id, villager.hearts)) }} »</p>
+      <!-- Un Savoir tout juste soufflé (bible, § 6.4) : la page où il est noté -->
+      <button v-if="savoir" type="button" class="g-btn g-btn--ghost friend__grimoire" @click="$emit('grimoire')">Voir dans le Grimoire</button>
 
       <button type="button" class="g-btn friend__talk" :disabled="busy || villager.talked" @click="$emit('talk')">
         {{ villager.talked ? 'Vous avez bavardé aujourd’hui' : `Bavarder · +${rules.talk}` }}
       </button>
+      <p v-if="art" class="friend__art">{{ art }}</p>
 
       <section class="friend__gift" aria-label="Offrir un cadeau">
         <h3 class="friend__title">
@@ -116,9 +119,12 @@ export default {
     // Dernière réplique (après avoir bavardé ou offert), cœur tout juste gagné (il pulse)
     said: { type: String, default: '' },
     popped: { type: Number, default: 0 },
-    busy: { type: Boolean, default: false }
+    busy: { type: Boolean, default: false },
+    // Le Savoir du maître (son Art, en clair) ; celui qu'il vient de souffler ({ page, chapter, … }) ou null
+    art: { type: String, default: '' },
+    savoir: { type: Object, default: null }
   },
-  emits: ['talk', 'gift', 'fill', 'close'],
+  emits: ['talk', 'gift', 'fill', 'close', 'grimoire'],
   data() {
     return { RESOURCES, GLYPH, NEED_GLYPH, MOOD_GLYPH, MOOD_LABEL };
   },
@@ -172,6 +178,8 @@ export default {
   box-shadow: inset 0 0 0 1px rgba(74, 52, 38, .1); font-family: var(--font-display); font-style: italic; font-size: 15px; line-height: 1.4;
 }
 .friend__talk { width: 100%; }
+.friend__grimoire { justify-self: center; }
+.friend__art { margin: -4px 0 0; font-size: 12.5px; font-weight: 700; color: var(--ink-500); text-align: center; }
 .friend__mood-badge { position: absolute; right: -6px; bottom: -6px; display: grid; place-items: center; width: 34px; height: 34px; border-radius: 50%; background: var(--vellum-50); box-shadow: 0 2px 6px rgba(60, 40, 25, .25); font-size: 24px; }
 .friend__mood { text-transform: none; letter-spacing: 0; }
 .friend__mood.is-heureux { color: #4E8A3A; }

@@ -7,7 +7,7 @@
 
 > **Mises à jour depuis la v5** (règle du § 19 : la bible change avant le code).
 > - **Le jeu s'appelle désormais Brumelune** (choix de l'auteur, 5 octobre 2026) : le nom visible partout ; les identifiants techniques (dépôts, base, clés de sauvegarde) ne changent pas.
-> - **Lots livrés** : H0 (la troupe et les textes), H1 (la colonne vertébrale), H2 (le fil d'Ariane : 2 à 7 ms par calcul), H3 (dormeurs, naufrages, souvenirs), H4 (le tutoriel), H5 (veillées et civilisation).
+> - **Lots livrés** : H0 (la troupe et les textes), H1 (la colonne vertébrale), H2 (le fil d'Ariane : 2 à 7 ms par calcul), H3 (dormeurs, naufrages, souvenirs), H4 (le tutoriel), H5 (veillées et civilisation), H6 (Savoirs et Bestiaire).
 > - **Lot H0, choix de l'auteur** :
 >   - le mot d'Héliane de l'acte II dit « Grimoire » (§ 10) ;
 >   - les familiers suivent le style des bêtes du lot 9e, et non plus « à plat, avec les gros yeux ronds » (§ 14) ;
@@ -30,6 +30,13 @@
 >   - rites ajoutés faute de recette dans le § 10 : « Pierre qui chante » (II), « Vent » (IV), « Feu follet » (VII) ; les veillées III, V et VI n'ont pas de rite ;
 >   - l'étape de civilisation (dernier acte fini, et le nom du peuple pour « Le peuple de « … » ») s'affiche dans la fiche de Brume, la fiche du Foyer et l'Ex libris du Grimoire ;
 >   - la Chronique est un onglet du Carnet d'explorateur : veillées (à revoir), liens et leurs recettes, souvenirs retrouvés ; le Bestiaire, les mots d'Héliane et les ruines y viendront avec leurs lots.
+> - **Lot H6** :
+>   - le Savoir d'un maître porte sur les pages de son chapitre (Aster : Éléments fondamentaux et Phénomènes naturels ; Sylve et Mélisse se partagent le Vivant) ; Brume (Légendes) ne souffle pas encore, faute de bavardage avec elle ;
+>   - la famille ne se souffle que sur une page à énigme pas encore essayée (ailleurs, la page écrit déjà ses familles) ; l'ingrédient est celui que l'Encre révélerait ; l'appareil dit au serveur ce qu'il sait déjà, pour ne pas recevoir deux fois le même indice ; « Voir dans le Grimoire » ouvre la page soufflée ;
+>   - le Bestiaire s'ajoute aux bêtes déjà là pour tous (la mer : poissons, dauphins, baleine, méduses ; les bois : cerf, renard, hérisson, écureuil), qui ne changent pas : écrire ces bêtes-là fait venir les familiers (Bulle, Mousse) et compte au Bestiaire de la Chronique ; les bêtes nouvelles : mésanges et hibou dans les arbres, papillons et abeilles le jour, lucioles la nuit, grenouille et tortue au bord de l'eau douce ; à la ferme, une variante (poules blanche et grise, vache rousse, mouton noir, cochon tacheté, chèvre brune) si le palier montre déjà la bête ; le Chat et le Chien attendent (ils sont déjà dans la boutique du Foyer) ;
+>   - Tic-Tac (un automate) et le bocal d'Ondin sont là dès le début ; Bulle revient dans le bocal quand Poisson est écrit, et Rivet fabrique une amie à Tic-Tac quand Abeille l'est ; Lunette est un papillon de nuit (variante du Papillon) ;
+>   - Sylve présente le Bestiaire dès la première bête écrite (sa grammaire du moment), Brume si Sylve n'est pas encore là ;
+>   - la suite des bêtes de `PASSATION.md` (§ 7, point 1 : compagnons d'atelier dans la boutique, quêtes de rencontre) n'est pas faite : elle reste à confirmer avec l'auteur.
 
 **Ce que les versions 4 et 5 changent.**
 1. **Une nouvelle troupe** : nouveaux noms, vraies personnalités, chacun avec une magie, une voix, un familier, un secret et un arc.

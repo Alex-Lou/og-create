@@ -1,8 +1,10 @@
 // Bêtes de l'île (vie ambiante) : la ferme (poules de races, poussins, vache, moutons, cochon, chèvre), les bois
-// (cerf, renard, lapin, hérisson, écureuil), l'eau (carpes koï, héron) et deux bêtes par climat (renard des neiges,
+// (cerf, renard, lapin, hérisson, écureuil), l'eau (carpes koï, héron), deux bêtes par climat (renard des neiges,
 // bouquetin, macareux, poney, grenouille, tortue, fennec, dromadaire, caméléon, toucan, salamandre, corbeau des
-// cendres). Vues de profil, tournées vers la droite (l'île les retourne pour la gauche) ; ancrage aux pieds, cadre
-// serré. Images : 0 et 1 (pas, picore, broute, geste), rest (couchée, la nuit).
+// cendres), le Bestiaire (mésange, papillons, lucioles, abeilles, hibou) et les familiers (Tic-Tac, le bocal de
+// Bulle, Mousse le renardeau ; les autres réutilisent les bêtes des climats). Vues de profil, tournées vers la droite
+// (l'île les retourne pour la gauche) ; ancrage aux pieds, cadre serré. Images : 0 et 1 (pas, picore, broute, geste),
+// rest (couchée, la nuit).
 import { sprite } from './iso';
 
 const f2 = n => Math.round(n * 100) / 100;
@@ -49,46 +51,50 @@ export function chick(frame) {
   return sprite(shadow(3) + ell(0, -3.4 + y, 3.2, 2.8, '#FFE07A', OUT) + dot(2, -5.4 + y, 1.9, '#FFE07A')
     + `<path d="M3.6,${-5.4 + y} l1.6,.6 l-1.6,.6 Z" fill="#E8A13A"/>` + dot(2.4, -5.8 + y, 0.45, EYE), SMALL);
 }
-// Vache blanche à taches noires ; 1 : broute ; rest : couchée
-export function cow(frame) {
+// Vache blanche à taches noires (rousse : taches rousses, Bestiaire) ; 1 : broute ; rest : couchée
+export function cow(frame, variant = '') {
+  const SPOT = variant === 'rousse' ? '#A0562C' : '#2E2A26';
   if (frame === 'rest') {
-    return sprite(shadow(11) + ell(-1, -5, 10, 5, '#FFFDF8', OUT) + ell(-4, -6, 3, 2.2, '#2E2A26') + ell(3, -4, 2.4, 1.8, '#2E2A26')
+    return sprite(shadow(11) + ell(-1, -5, 10, 5, '#FFFDF8', OUT) + ell(-4, -6, 3, 2.2, SPOT) + ell(3, -4, 2.4, 1.8, SPOT)
       + ell(9, -6, 3.6, 3, '#FFFDF8', OUT) + ell(11, -5, 2, 1.4, '#F2B8A8') + dot(9.6, -7.4, 0.6, EYE) + `<path d="M7,-9 l-1.6,-1.8 M10.6,-9 l1.4,-1.8" stroke="#C9C4BA" stroke-width="1"/>`, MID);
   }
   const graze = frame === 1;
   const [hx, hy] = graze ? [11, -6] : [11, -13];
   return sprite(shadow(11) + legs([-7, -4, 4, 7], -6, 6, '#3D3A36', graze ? 0 : frame, 1.6)
-    + ell(0, -10, 10, 5.6, '#FFFDF8', OUT) + ell(-4, -11.4, 3.2, 2.4, '#2E2A26') + ell(3.4, -9, 2.6, 2, '#2E2A26') + ell(-7.6, -8, 1.6, 1.4, '#2E2A26')
+    + ell(0, -10, 10, 5.6, '#FFFDF8', OUT) + ell(-4, -11.4, 3.2, 2.4, SPOT) + ell(3.4, -9, 2.6, 2, SPOT) + ell(-7.6, -8, 1.6, 1.4, SPOT)
     + ell(1, -5.4, 1.8, 1.2, '#F2B8A8') + ln([-9.6, -11], [-11.6, -6], '#3D3A36', 0.8)
     + ell(hx, hy, 3.6, 3.2, '#FFFDF8', OUT) + ell(hx + 2, hy + 1, 2, 1.5, '#F2B8A8') + dot(hx + 0.6, hy - 1.2, 0.65, EYE)
     + `<path d="M${hx - 2},${hy - 2.6} l-1.4,-2 M${hx + 1.4},${hy - 2.8} l1,-2" stroke="#C9C4BA" stroke-width="1.1" stroke-linecap="round"/>`, MID);
 }
-// Mouton : toison en boules, tête et pattes noires
-export function sheep(frame) {
-  const wool = (cx, cy) => [[-5, 0], [-1.6, -1.6], [2, -1.4], [5, 0.2], [-3, 2], [1, 2.2], [4, 1.8]].map(([x, y]) => dot(cx + x, cy + y, 3, '#FBF8F0')).join('');
+// Mouton : toison en boules, tête et pattes noires (noir : toison sombre, Bestiaire)
+export function sheep(frame, variant = '') {
+  const fleece = variant === 'noir' ? '#5E5650' : '#FBF8F0';
+  const wool = (cx, cy) => [[-5, 0], [-1.6, -1.6], [2, -1.4], [5, 0.2], [-3, 2], [1, 2.2], [4, 1.8]].map(([x, y]) => dot(cx + x, cy + y, 3, fleece)).join('');
   if (frame === 'rest') return sprite(shadow(9) + `<g${OUT}>${wool(-1, -5)}</g>` + ell(7, -5.6, 2.6, 2.2, '#2E2A26') + dot(7.6, -6.4, 0.55, '#FFFFFF'), MID);
   const graze = frame === 1;
   const [hx, hy] = graze ? [8.4, -5] : [8.4, -11];
   return sprite(shadow(9) + legs([-5, -2, 2.6, 5.4], -5, 5, '#2E2A26', graze ? 0 : frame, 1.4)
     + `<g${OUT}>${wool(0, -9)}</g>` + ell(hx, hy, 2.8, 2.4, '#2E2A26') + ell(hx - 2.4, hy - 1.6, 1.4, 0.8, '#2E2A26') + dot(hx + 0.8, hy - 0.6, 0.55, '#FFFFFF'), MID);
 }
-// Cochon rose, queue en tire-bouchon
-export function pig(frame) {
-  if (frame === 'rest') return sprite(shadow(9) + ell(0, -4.6, 8.6, 4.4, '#F4A9B4', OUT) + ell(7.6, -4.6, 2, 1.8, '#E88E9C') + dot(6, -6.4, 0.6, EYE), MID);
+// Cochon rose, queue en tire-bouchon (tacheté : taches sombres, Bestiaire)
+export function pig(frame, variant = '') {
+  const spots = (y, k = 1) => (variant === 'tachete' ? ell(-3, y - 1, 2.4 * k, 1.8 * k, '#5E4A44') + ell(2.6, y + 0.4, 1.8 * k, 1.4 * k, '#5E4A44') : '');
+  if (frame === 'rest') return sprite(shadow(9) + ell(0, -4.6, 8.6, 4.4, '#F4A9B4', OUT) + spots(-4.6, 0.8) + ell(7.6, -4.6, 2, 1.8, '#E88E9C') + dot(6, -6.4, 0.6, EYE), MID);
   const snuffle = frame === 1 ? 1 : 0;
   return sprite(shadow(9) + legs([-5, -2.4, 2.4, 5], -4.4, 4.4, '#E88E9C', snuffle ? 0 : frame, 1.8)
-    + ell(0, -8, 8.4, 5, '#F4A9B4', OUT) + `<path d="M-8.4,-9 q-2.6,-1 -1.6,-3 q1.4,-.8 1.2,1.2" fill="none" stroke="#E88E9C" stroke-width=".9"/>`
+    + ell(0, -8, 8.4, 5, '#F4A9B4', OUT) + spots(-8) + `<path d="M-8.4,-9 q-2.6,-1 -1.6,-3 q1.4,-.8 1.2,1.2" fill="none" stroke="#E88E9C" stroke-width=".9"/>`
     + ell(8.6, -8 + snuffle * 2, 2.2, 2, '#E88E9C', OUT) + dot(8.2, -8.4 + snuffle * 2, 0.4, '#B85A6A') + dot(9.4, -8.4 + snuffle * 2, 0.4, '#B85A6A')
     + dot(5.6, -10.4 + snuffle, 0.65, EYE) + `<path d="M3.4,-12.4 l1.6,-2.2 l1,2.4 Z" fill="#E88E9C"/>`, MID);
 }
-// Chèvre beige, petites cornes et barbiche ; 1 : broute
-export function goat(frame) {
-  if (frame === 'rest') return sprite(shadow(8) + ell(-1, -4.6, 7.4, 4, '#E6D2B0', OUT) + ell(6.6, -6.6, 2.4, 2.4, '#E6D2B0', OUT) + dot(7, -7.4, 0.55, EYE), MID);
+// Chèvre beige, petites cornes et barbiche (brune : robe brune, Bestiaire) ; 1 : broute
+export function goat(frame, variant = '') {
+  const COAT = variant === 'brune' ? '#A9825C' : '#E6D2B0';
+  if (frame === 'rest') return sprite(shadow(8) + ell(-1, -4.6, 7.4, 4, COAT, OUT) + ell(6.6, -6.6, 2.4, 2.4, COAT, OUT) + dot(7, -7.4, 0.55, EYE), MID);
   const graze = frame === 1;
   const [hx, hy] = graze ? [8, -5.4] : [8, -13];
   return sprite(shadow(8) + legs([-5, -2.4, 2.4, 5], -6, 6, '#8E7A5A', graze ? 0 : frame, 1.3)
-    + ell(0, -9.6, 7.6, 4.4, '#E6D2B0', OUT) + `<path d="M-7.4,-11 l-2.4,-2" stroke="#8E7A5A" stroke-width="1.2" stroke-linecap="round"/>`
-    + ell(hx, hy, 2.6, 2.6, '#E6D2B0', OUT) + `<path d="M${hx - 1},${hy - 2} q-1,-3 -3,-3.4 M${hx + 0.6},${hy - 2.2} q.4,-3 -1.4,-4" fill="none" stroke="#8E7A5A" stroke-width="1"/>`
+    + ell(0, -9.6, 7.6, 4.4, COAT, OUT) + `<path d="M-7.4,-11 l-2.4,-2" stroke="#8E7A5A" stroke-width="1.2" stroke-linecap="round"/>`
+    + ell(hx, hy, 2.6, 2.6, COAT, OUT) + `<path d="M${hx - 1},${hy - 2} q-1,-3 -3,-3.4 M${hx + 0.6},${hy - 2.2} q.4,-3 -1.4,-4" fill="none" stroke="#8E7A5A" stroke-width="1"/>`
     + `<path d="M${hx + 1},${hy + 2} l.4,2.6 l.8,-2.4 Z" fill="#B8A07A"/>` + dot(hx + 0.8, hy - 0.4, 0.55, EYE), MID);
 }
 
@@ -349,9 +355,97 @@ export function crow(frame) {
     + eye(3.6, -9.4, 0.7) + cheek(3.8, -7.8, 0.55), SMALL);
 }
 
+/* ---------- Le Bestiaire (HISTOIRE.md, § 6.5) et les familiers (§ 14) ---------- */
+// Mésange : calotte bleue, joues blanches, ventre jaune, dos olive ; 1 : elle picore ; rest : en boule
+export function bird(frame) {
+  const sit = frame === 'rest';
+  const y = sit ? 1 : 0;
+  const [hx, hy] = frame === 1 ? [3.4, -3.8] : [2.6, -6 + y];
+  return sprite(shadow(3.2) + (sit ? '' : ln([-0.4, -1.6], [-0.6, 0], '#7A6A5A', 0.6) + ln([0.8, -1.6], [1, 0], '#7A6A5A', 0.6))
+    + path(`M-2.8,${-3.6 + y} L-6.4,${-4.8 + y} L-5.8,${-2.8 + y} Z`, '#3F5F8E')
+    + ell(0, -3.4 + y, 3.2, 2.3, '#F2D04B', OUT) + path(`M-3,${-3.8 + y} Q-0.6,${-6.2 + y} 2.2,${-4.8 + y} Q0,${-3.2 + y} -3,${-3.8 + y} Z`, '#8FA65A')
+    + ell(-0.8, -3.8 + y, 1.7, 1, '#4A7FC1')
+    + dot(hx, hy, 1.9, '#FFFDF7', OUT) + path(`M${hx - 1.9},${hy} Q${hx},${hy - 2.9} ${hx + 1.9},${hy} Q${hx},${hy - 1} ${hx - 1.9},${hy} Z`, '#4A7FC1')
+    + ln([hx - 0.6, hy + 0.4], [hx + 1.6, hy + 0.2], '#2A3A5A', 0.5) + path(`M${hx + 1.8},${hy - 0.2} l1.4,.5 l-1.4,.5 Z`, '#3A3A3A')
+    + (sit ? shut(hx + 0.6, hy - 0.1, 0.5) : eye(hx + 0.7, hy - 0.2, 0.55)), { x: -8, y: -10, w: 14, h: 11 });
+}
+// Papillon de profil, ailes ouvertes (0) ou levées (1) ; variante : jaune, bleu, ou « lune » (Lunette, le papillon de
+// nuit de Mélisse : ailes lilas à croissants pâles, corps duveteux)
+const WINGS = { jaune: ['#F2C04B', '#C98A2E'], bleu: ['#8EC5F0', '#4A7FC1'], lune: ['#C8BEDC', '#F6EDB0'] };
+export function butterfly(frame, variant = 'jaune') {
+  const [wing, mark] = WINGS[variant] || WINGS.jaune;
+  const moth = variant === 'lune';
+  const wings = frame === 1
+    ? ell(-0.6, -5.6, 1.4, 3.2, wing, `${OUT} transform="rotate(-12 -0.6 -5.6)"`) + ell(-0.4, -5.6, 0.6, 1.4, mark)
+    : ell(-2.2, -4.2, 2.8, 2.2, wing, `${OUT} transform="rotate(-28 -2.2 -4.2)"`) + ell(1.6, -4.4, 2.4, 2, wing, `${OUT} transform="rotate(24 1.6 -4.4)"`)
+      + ell(-2.6, -2.2, 1.6, 1.2, wing, OUT) + ell(1.4, -2.2, 1.4, 1.1, wing, OUT)
+      + (moth ? path('M-3,-4.6 q.8,-.9 1.6,0 q-.8,-.4 -1.6,0 Z M1,-4.8 q.8,-.9 1.6,0 q-.8,-.4 -1.6,0 Z', mark) : dot(-2.4, -4.4, 0.6, mark) + dot(1.8, -4.6, 0.55, mark));
+  return sprite(wings + ell(0, -2.8, moth ? 0.8 : 0.5, 2, moth ? '#8E82AA' : '#3D2A1E')
+    + `<path d="M0.3,-4.6 q.6,-1.8 1.8,-2.2 M0.1,-4.6 q-.2,-1.9 -1,-2.6" fill="none" stroke="#3D2A1E" stroke-width=".3" stroke-linecap="round"/>`, { x: -6, y: -9, w: 12, h: 9 });
+}
+// Luciole : un point de lumière qui palpite (1 : plus vif)
+export function firefly(frame) {
+  const glow = frame === 1 ? 0.95 : 0.5;
+  return sprite(`<defs><radialGradient id="ff"><stop offset="0" stop-color="#FFF6A8" stop-opacity="${glow}"/><stop offset="1" stop-color="#FFE45C" stop-opacity="0"/></radialGradient></defs>`
+    + `<circle r="4.4" fill="url(#ff)"/>` + dot(0.3, 0.2, 0.85, '#FFFBD6') + ell(-0.5, -0.3, 0.6, 0.35, '#5A4A3A'), { x: -5, y: -5, w: 10, h: 10 });
+}
+// Abeille : rayée, ailes qui vibrent (0 et 1)
+export function bee(frame) {
+  const up = frame === 1;
+  return sprite(ell(-0.6, up ? -4.4 : -3.8, 1.8, up ? 0.9 : 1.4, 'rgba(232,242,255,.85)', ' stroke="rgba(60,40,25,.25)" stroke-width=".3"')
+    + ell(0, -2, 2.4, 1.7, '#F2C04B', OUT) + `<path d="M-1,-3.5 L-1,-0.5 M0.6,-3.6 L0.6,-0.4" stroke="#3D2A1E" stroke-width=".8"/>`
+    + path('M-2.4,-2.1 L-3.4,-1.9 L-2.3,-1.6 Z', '#3D2A1E') + dot(2.2, -2.3, 1.1, '#3D2A1E') + dot(2.5, -2.6, 0.3, '#FFFFFF'), { x: -5, y: -7, w: 10, h: 8 });
+}
+// Hibou perché, de face : aigrettes, disque facial, grands yeux ; 1 : il cligne
+export function owl(frame) {
+  const B = '#8B6A4A', L = '#E6D2B0', D = '#5E4632';
+  const blink = frame === 1;
+  return sprite(ell(0, -5, 3.8, 4.8, B, OUT) + ell(0, -3.8, 2.4, 3, L)
+    + `<path d="M-1.6,-4.4 l.8,.6 l.8,-.6 M-1.2,-2.6 l.8,.6 l.8,-.6" fill="none" stroke="${D}" stroke-width=".4"/>`
+    + path('M-3.6,-9.6 L-2.8,-12.2 L-1.4,-9.8 Z M3.6,-9.6 L2.8,-12.2 L1.4,-9.8 Z', B) + ell(0, -9.2, 3.6, 2.8, B, OUT)
+    + ell(-1.4, -9.2, 1.4, 1.4, '#FFF4D6') + ell(1.4, -9.2, 1.4, 1.4, '#FFF4D6')
+    + (blink ? shut(-1.4, -9.2, 0.7) + shut(1.4, -9.2, 0.7) : eye(-1.4, -9.2, 0.8) + eye(1.4, -9.2, 0.8))
+    + path('M-0.45,-8.4 L0.45,-8.4 L0,-7.3 Z', '#E8A13A') + ln([-1, -0.4], [-1, 0.2], '#E8A13A', 0.6) + ln([1, -0.4], [1, 0.2], '#E8A13A', 0.6), { x: -6, y: -14, w: 12, h: 15 });
+}
+// Tic-Tac, l'abeille mécanique de Rivet : laiton, clé de remontoir, œil de verre ; 1 : ailes levées ; rest : arrêtée
+export function tictac(frame) {
+  const rest = frame === 'rest';
+  const up = frame === 1;
+  const BR = '#C9A04A', DK = '#8A6A2A';
+  return sprite((rest ? shadow(3.4) : '') + (rest ? '' : ell(-0.4, up ? -6.2 : -5.4, 2.6, up ? 1.1 : 1.8, 'rgba(225,235,245,.8)', ' stroke="#8A9AA8" stroke-width=".35"'))
+    + ell(0, -3, 3.4, 2.4, BR, OUT) + `<path d="M-1.4,-5.2 L-1.4,-0.8 M0.6,-5.3 L0.6,-0.7" stroke="${DK}" stroke-width=".7"/>` + dot(-0.4, -3, 0.45, DK)
+    + ln([-0.6, -5.4], [-1.2, -7.4], DK, 0.6) + `<path d="M-2.6,-8.2 h2.8 M-1.2,-7.4 v-1.6" stroke="${DK}" stroke-width=".7" stroke-linecap="round"/>`
+    + path('M-3.4,-3.1 L-4.6,-2.8 L-3.4,-2.5 Z', DK) + dot(3, -3.4, 1.5, '#6E7A84') + dot(3.4, -3.8, 0.55, '#BFE3F2')
+    + (rest ? ln([2.4, -1.4], [2.8, 0], DK, 0.5) + ln([-1.6, -0.9], [-2, 0], DK, 0.5) : ''), { x: -6, y: -10, w: 12, h: 11 });
+}
+// Le bocal d'Ondin : du verre, de l'eau, un caillou ; Bulle dedans (variante « bulle ») qui fait l'aller-retour (0 et 1)
+export function bowl(frame, variant = '') {
+  const fx = frame === 1 ? 1.2 : -1.2;
+  const fish = variant === 'bulle'
+    ? `<g transform="translate(${fx} -3.6)${frame === 1 ? ' scale(-1 1)' : ''}">` + ell(0, 0, 1.7, 1, '#F08A3A', OUT) + path('M-1.5,0 L-2.8,-0.9 L-2.8,0.9 Z', '#F08A3A') + dot(0.8, -0.2, 0.3, EYE) + `</g>`
+      + dot(fx * 0.6 + 0.4, -6.4, 0.35, 'rgba(255,255,255,.9)') + dot(fx * 0.6 + 0.9, -7.4, 0.25, 'rgba(255,255,255,.8)')
+    : '';
+  return sprite(shadow(4.6) + ell(0, -3.9, 4.1, 3.3, 'rgba(110,175,215,.55)') + ell(-1, -1.2, 1.1, 0.6, '#9A9A90') + fish
+    + ell(0, -4.6, 4.6, 4.4, 'rgba(210,235,248,.28)', ' stroke="rgba(90,130,150,.75)" stroke-width=".6"')
+    + ell(0, -8.7, 2.3, 0.7, 'rgba(210,235,248,.5)', ' stroke="rgba(90,130,150,.75)" stroke-width=".5"')
+    + `<path d="M-3,-6.4 Q-3.2,-4 -2,-2.6" fill="none" stroke="rgba(255,255,255,.8)" stroke-width=".6" stroke-linecap="round"/>`, { x: -6, y: -10, w: 12, h: 11 });
+}
+// Mousse, le renardeau de Sylve : rond, grandes oreilles, queue à bout blanc ; 0 et 1 : il trotte ; rest : roulé en boule
+export function kit(frame) {
+  const O = '#E58A3E';
+  const sit = frame === 'rest';
+  return sprite(shadow(5) + (sit ? '' : legs([-2.4, -0.8, 1.6, 3], -2.6, 2.6, '#3D2A1E', frame, 1))
+    + `<path d="M-3.4,-4.2 Q-8,-5.6 -7.6,-2.4 Q-5.6,-1.4 -3.4,-3 Z" fill="${O}"${OUT}/>` + ell(-7.2, -2.6, 1.1, 0.9, '#FFFDF8')
+    + ell(0, -4.2, 4, 2.6, O, OUT) + ell(1.2, -3.4, 2, 1.2, '#FFF4E4')
+    + path('M2.4,-8.8 L2.4,-11.6 L4,-9.4 Z M4.6,-9.2 L5.6,-11.8 L6.2,-9 Z', O, OUT) + path('M2.8,-9.4 L2.8,-10.8 L3.6,-9.6 Z', '#3D2A1E')
+    + ell(4, -7, 2.8, 2.5, O, OUT) + ell(5.4, -6.2, 1.4, 1, '#FFF4E4') + dot(6.7, -6.4, 0.45, '#2A2420')
+    + (sit ? shut(4.6, -7.4, 0.6) : eye(4.6, -7.4, 0.75)) + cheek(5.2, -6, 0.55), SMALL);
+}
+
 // Toutes les bêtes de l'île par sorte : dessin d'une image (0, 1 ou rest)
 export const ANIMAL_SPRITES = {
   hen: (frame, breed) => hen(breed, frame), chick, cow, sheep, pig, goat, deer, fox, rabbit, hedgehog, squirrel,
   koi: (frame, color) => koi(color, frame), heron,
-  snowFox, ibex, puffin, pony, frog, tortoise, fennec, camel, chameleon, toucan, salamander, crow
+  snowFox, ibex, puffin, pony, frog, tortoise, fennec, camel, chameleon, toucan, salamander, crow,
+  bird, butterfly, firefly, bee, owl, tictac, bowl, kit
 };
