@@ -1,0 +1,6452 @@
+{
+ "_lisez_moi": "Cadres en pixels (x, y, largeur, hauteur) autour de l'ancre (0, 0), centre de l'emprise au sol (2 × 2 cases aux paliers I-III, 3 × 3 ensuite), à l'échelle du jeu × 1,25 (case de 80 × 40). Paliers : images composées (bâtiment + parties animées + voilier du Ponton) ; lumieres [u, v, z, rayon] et fumees [u, v, z] en cases et pixels × 1,25. Objets : un fichier par calque, ancré à sa place au sol ; place = [u, v] en cases autour du centre du bâtiment, par palier ; derriere = à peindre avant le bâtiment ; mouvement = le jeu le déplace en plus. Teintes : recolorations (teintes/teinter.mjs). Quand un dessin du jeu dépasse un peu de son cadre (faisceau du phare, ombre d'un objet), le cadre est élargi juste ce qu'il faut, l'ancre ne bouge pas : prendre le cadre noté ici.",
+ "paliers": {
+  "foyer_palier1": {
+   "nom": "Foyer — palier I",
+   "fichiers": [
+    "paliers/foyer/foyer_palier1_1.svg",
+    "paliers/foyer/foyer_palier1_2.svg",
+    "paliers/foyer/foyer_palier1_3.svg"
+   ],
+   "cadre": [
+    -95,
+    -155,
+    190,
+    210
+   ],
+   "emprise": "2 × 2",
+   "ms_par_image": 111,
+   "animations": [
+    "flame (3 images, 9/s)"
+   ],
+   "lumieres": [
+    {
+     "u": 0,
+     "v": 0,
+     "z": 12.5,
+     "rayon": 67.5
+    }
+   ],
+   "fumees": [
+    {
+     "u": 0,
+     "v": 0,
+     "z": 30
+    }
+   ]
+  },
+  "foyer_palier2": {
+   "nom": "Foyer — palier II",
+   "fichiers": [
+    "paliers/foyer/foyer_palier2_1.svg",
+    "paliers/foyer/foyer_palier2_2.svg",
+    "paliers/foyer/foyer_palier2_3.svg"
+   ],
+   "cadre": [
+    -95,
+    -155,
+    190,
+    210
+   ],
+   "emprise": "2 × 2",
+   "ms_par_image": 111,
+   "animations": [
+    "flame (3 images, 9/s)"
+   ],
+   "lumieres": [
+    {
+     "u": 0.5,
+     "v": 0.36,
+     "z": 10,
+     "rayon": 50
+    }
+   ],
+   "fumees": [
+    {
+     "u": 0.5,
+     "v": 0.36,
+     "z": 22.5
+    }
+   ]
+  },
+  "foyer_palier3": {
+   "nom": "Foyer — palier III",
+   "fichiers": [
+    "paliers/foyer/foyer_palier3.svg"
+   ],
+   "cadre": [
+    -95,
+    -155,
+    190,
+    210
+   ],
+   "emprise": "2 × 2",
+   "lumieres": [
+    {
+     "u": 0.55,
+     "v": -0.07,
+     "z": 17.5,
+     "rayon": 27.5
+    }
+   ],
+   "fumees": [
+    {
+     "u": 0.3,
+     "v": -0.27,
+     "z": 77.5
+    }
+   ]
+  },
+  "foyer_palier4": {
+   "nom": "Foyer — palier IV",
+   "fichiers": [
+    "paliers/foyer/foyer_palier4_1.svg",
+    "paliers/foyer/foyer_palier4_2.svg",
+    "paliers/foyer/foyer_palier4_3.svg",
+    "paliers/foyer/foyer_palier4_4.svg"
+   ],
+   "cadre": [
+    -140,
+    -250,
+    280,
+    330
+   ],
+   "emprise": "3 × 3",
+   "ms_par_image": 333,
+   "animations": [
+    "vapor (4 images, 3/s)"
+   ],
+   "lumieres": [
+    {
+     "u": -0.81,
+     "v": 0.42,
+     "z": 16.25,
+     "rayon": 17.5
+    },
+    {
+     "u": -0.79,
+     "v": 0.42,
+     "z": 40,
+     "rayon": 17.5
+    },
+    {
+     "u": 0.17,
+     "v": 0.42,
+     "z": 40,
+     "rayon": 17.5
+    },
+    {
+     "u": 0.42,
+     "v": -0.56,
+     "z": 40,
+     "rayon": 17.5
+    },
+    {
+     "u": 0.19,
+     "v": 0.42,
+     "z": 16.25,
+     "rayon": 17.5
+    },
+    {
+     "u": 0.78,
+     "v": 0.06,
+     "z": 7.5,
+     "rayon": 22.5
+    }
+   ]
+  },
+  "foyer_palier5": {
+   "nom": "Foyer — palier V",
+   "fichiers": [
+    "paliers/foyer/foyer_palier5_1.svg",
+    "paliers/foyer/foyer_palier5_2.svg",
+    "paliers/foyer/foyer_palier5_3.svg",
+    "paliers/foyer/foyer_palier5_4.svg"
+   ],
+   "cadre": [
+    -140,
+    -250,
+    280,
+    330
+   ],
+   "emprise": "3 × 3",
+   "ms_par_image": 333,
+   "animations": [
+    "vapor (4 images, 3/s)"
+   ],
+   "lumieres": [
+    {
+     "u": -0.84,
+     "v": 0.42,
+     "z": 16.25,
+     "rayon": 17.5
+    },
+    {
+     "u": -0.82,
+     "v": 0.42,
+     "z": 40,
+     "rayon": 17.5
+    },
+    {
+     "u": -0.03,
+     "v": 0.42,
+     "z": 40,
+     "rayon": 17.5
+    },
+    {
+     "u": 0.22,
+     "v": -0.42,
+     "z": 40,
+     "rayon": 17.5
+    },
+    {
+     "u": -0.01,
+     "v": 0.42,
+     "z": 16.25,
+     "rayon": 17.5
+    },
+    {
+     "u": 0.9,
+     "v": -0.38,
+     "z": 40,
+     "rayon": 17.5
+    },
+    {
+     "u": 0.9,
+     "v": -0.38,
+     "z": 76.25,
+     "rayon": 17.5
+    }
+   ]
+  },
+  "foyer_palier6": {
+   "nom": "Foyer — palier VI",
+   "fichiers": [
+    "paliers/foyer/foyer_palier6_1.svg",
+    "paliers/foyer/foyer_palier6_2.svg",
+    "paliers/foyer/foyer_palier6_3.svg",
+    "paliers/foyer/foyer_palier6_4.svg"
+   ],
+   "cadre": [
+    -140,
+    -250,
+    280,
+    330
+   ],
+   "emprise": "3 × 3",
+   "ms_par_image": 333,
+   "animations": [
+    "vapor (4 images, 3/s)"
+   ],
+   "lumieres": [
+    {
+     "u": -0.87,
+     "v": 0.5,
+     "z": 16.25,
+     "rayon": 17.5
+    },
+    {
+     "u": -0.85,
+     "v": 0.5,
+     "z": 40,
+     "rayon": 17.5
+    },
+    {
+     "u": -0.27,
+     "v": 0.5,
+     "z": 40,
+     "rayon": 17.5
+    },
+    {
+     "u": -0.02,
+     "v": -0.1,
+     "z": 40,
+     "rayon": 17.5
+    },
+    {
+     "u": 0.74,
+     "v": -0.3,
+     "z": 52.5,
+     "rayon": 17.5
+    },
+    {
+     "u": 0.74,
+     "v": -0.3,
+     "z": 118.75,
+     "rayon": 17.5
+    },
+    {
+     "u": -0.2,
+     "v": 0.75,
+     "z": 31.25,
+     "rayon": 20
+    }
+   ]
+  },
+  "foyer_palier7": {
+   "nom": "Foyer — palier VII",
+   "fichiers": [
+    "paliers/foyer/foyer_palier7_1.svg",
+    "paliers/foyer/foyer_palier7_2.svg",
+    "paliers/foyer/foyer_palier7_3.svg",
+    "paliers/foyer/foyer_palier7_4.svg",
+    "paliers/foyer/foyer_palier7_5.svg",
+    "paliers/foyer/foyer_palier7_6.svg",
+    "paliers/foyer/foyer_palier7_7.svg",
+    "paliers/foyer/foyer_palier7_8.svg"
+   ],
+   "cadre": [
+    -140,
+    -250,
+    282.5,
+    330
+   ],
+   "emprise": "3 × 3",
+   "ms_par_image": 250,
+   "animations": [
+    "beam (8 images, 4/s)",
+    "vapor (4 images, 3/s)"
+   ],
+   "lumieres": [
+    {
+     "u": -0.87,
+     "v": 0.48,
+     "z": 16.25,
+     "rayon": 17.5
+    },
+    {
+     "u": -0.85,
+     "v": 0.48,
+     "z": 40,
+     "rayon": 17.5
+    },
+    {
+     "u": -0.29,
+     "v": 0.48,
+     "z": 40,
+     "rayon": 17.5
+    },
+    {
+     "u": -0.04,
+     "v": -0.12,
+     "z": 40,
+     "rayon": 17.5
+    },
+    {
+     "u": 0.42,
+     "v": -0.5,
+     "z": 180,
+     "rayon": 42.5
+    },
+    {
+     "u": -0.24,
+     "v": 0.76,
+     "z": 31.25,
+     "rayon": 20
+    }
+   ]
+  },
+  "carriere_palier1": {
+   "nom": "Carrière — palier I",
+   "fichiers": [
+    "paliers/carriere/carriere_palier1.svg"
+   ],
+   "cadre": [
+    -95,
+    -155,
+    190,
+    210
+   ],
+   "emprise": "2 × 2"
+  },
+  "carriere_palier2": {
+   "nom": "Carrière — palier II",
+   "fichiers": [
+    "paliers/carriere/carriere_palier2.svg"
+   ],
+   "cadre": [
+    -95,
+    -155,
+    190,
+    210
+   ],
+   "emprise": "2 × 2"
+  },
+  "carriere_palier3": {
+   "nom": "Carrière — palier III",
+   "fichiers": [
+    "paliers/carriere/carriere_palier3.svg"
+   ],
+   "cadre": [
+    -95,
+    -155,
+    190,
+    210
+   ],
+   "emprise": "2 × 2",
+   "lumieres": [
+    {
+     "u": 0.04,
+     "v": -0.23,
+     "z": 42.5,
+     "rayon": 22.5
+    },
+    {
+     "u": -0.35,
+     "v": -0.16,
+     "z": 32.5,
+     "rayon": 25
+    }
+   ]
+  },
+  "carriere_palier4": {
+   "nom": "Carrière — palier IV",
+   "fichiers": [
+    "paliers/carriere/carriere_palier4.svg"
+   ],
+   "cadre": [
+    -140,
+    -250,
+    280,
+    330
+   ],
+   "emprise": "3 × 3",
+   "lumieres": [
+    {
+     "u": -0.53,
+     "v": -0.3,
+     "z": 22.5,
+     "rayon": 30
+    },
+    {
+     "u": 0.12,
+     "v": -0.3,
+     "z": 15,
+     "rayon": 20
+    },
+    {
+     "u": -0.12,
+     "v": 0.02,
+     "z": 38.75,
+     "rayon": 20
+    }
+   ]
+  },
+  "carriere_palier5": {
+   "nom": "Carrière — palier V",
+   "fichiers": [
+    "paliers/carriere/carriere_palier5.svg"
+   ],
+   "cadre": [
+    -140,
+    -250,
+    280,
+    330
+   ],
+   "emprise": "3 × 3",
+   "lumieres": [
+    {
+     "u": -0.53,
+     "v": -0.3,
+     "z": 22.5,
+     "rayon": 30
+    },
+    {
+     "u": 1.15,
+     "v": 0.62,
+     "z": 12.5,
+     "rayon": 17.5
+    }
+   ]
+  },
+  "carriere_palier6": {
+   "nom": "Carrière — palier VI",
+   "fichiers": [
+    "paliers/carriere/carriere_palier6.svg"
+   ],
+   "cadre": [
+    -140,
+    -250,
+    280,
+    330
+   ],
+   "emprise": "3 × 3",
+   "lumieres": [
+    {
+     "u": -0.53,
+     "v": -0.3,
+     "z": 22.5,
+     "rayon": 30
+    },
+    {
+     "u": -1.1,
+     "v": -0.3,
+     "z": 32.5,
+     "rayon": 20
+    },
+    {
+     "u": -0.05,
+     "v": -0.3,
+     "z": 42.5,
+     "rayon": 17.5
+    },
+    {
+     "u": 1.4,
+     "v": -0.9,
+     "z": 50,
+     "rayon": 20
+    },
+    {
+     "u": 0.12,
+     "v": 0.62,
+     "z": 10,
+     "rayon": 20
+    },
+    {
+     "u": -1,
+     "v": 0.3,
+     "z": 10,
+     "rayon": 17.5
+    }
+   ]
+  },
+  "carriere_palier7": {
+   "nom": "Carrière — palier VII",
+   "fichiers": [
+    "paliers/carriere/carriere_palier7.svg"
+   ],
+   "cadre": [
+    -140,
+    -250,
+    280,
+    330
+   ],
+   "emprise": "3 × 3",
+   "lumieres": [
+    {
+     "u": -0.53,
+     "v": -0.3,
+     "z": 22.5,
+     "rayon": 30
+    },
+    {
+     "u": -0.12,
+     "v": 0.02,
+     "z": 38.75,
+     "rayon": 20
+    },
+    {
+     "u": 0.55,
+     "v": 0.85,
+     "z": 33.75,
+     "rayon": 20
+    },
+    {
+     "u": 1.06,
+     "v": 0.49,
+     "z": 11.25,
+     "rayon": 15
+    },
+    {
+     "u": 1.42,
+     "v": 0.49,
+     "z": 11.25,
+     "rayon": 15
+    },
+    {
+     "u": 1.32,
+     "v": -0.08,
+     "z": 48.75,
+     "rayon": 15
+    },
+    {
+     "u": -1,
+     "v": -1.22,
+     "z": 88.75,
+     "rayon": 12.5
+    },
+    {
+     "u": -0.05,
+     "v": -1.24,
+     "z": 88.75,
+     "rayon": 12.5
+    }
+   ],
+   "fumees": [
+    {
+     "u": 0.89,
+     "v": -0.17,
+     "z": 77.5
+    },
+    {
+     "u": 0.81,
+     "v": 0.39,
+     "z": 40
+    },
+    {
+     "u": 1.19,
+     "v": 0.39,
+     "z": 40
+    }
+   ]
+  },
+  "bosquet_palier1": {
+   "nom": "Bosquet — palier I",
+   "fichiers": [
+    "paliers/bosquet/bosquet_palier1.svg"
+   ],
+   "cadre": [
+    -95,
+    -155,
+    190,
+    210
+   ],
+   "emprise": "2 × 2",
+   "souplesse_au_vent": 0.03
+  },
+  "bosquet_palier2": {
+   "nom": "Bosquet — palier II",
+   "fichiers": [
+    "paliers/bosquet/bosquet_palier2.svg"
+   ],
+   "cadre": [
+    -95,
+    -155,
+    190,
+    210
+   ],
+   "emprise": "2 × 2",
+   "souplesse_au_vent": 0.03
+  },
+  "bosquet_palier3": {
+   "nom": "Bosquet — palier III",
+   "fichiers": [
+    "paliers/bosquet/bosquet_palier3.svg"
+   ],
+   "cadre": [
+    -95,
+    -155,
+    190,
+    210
+   ],
+   "emprise": "2 × 2",
+   "lumieres": [
+    {
+     "u": 0.42,
+     "v": -0.04,
+     "z": 15,
+     "rayon": 15
+    }
+   ],
+   "fumees": [
+    {
+     "u": -0.04,
+     "v": -0.2,
+     "z": 55
+    }
+   ],
+   "souplesse_au_vent": 0.015
+  },
+  "bosquet_palier4": {
+   "nom": "Bosquet — palier IV",
+   "fichiers": [
+    "paliers/bosquet/bosquet_palier4.svg"
+   ],
+   "cadre": [
+    -140,
+    -250,
+    280,
+    330
+   ],
+   "emprise": "3 × 3",
+   "lumieres": [
+    {
+     "u": 0.45,
+     "v": 0.12,
+     "z": 17.5,
+     "rayon": 16.25
+    }
+   ],
+   "fumees": [
+    {
+     "u": -0.27,
+     "v": -0.12,
+     "z": 65
+    }
+   ],
+   "souplesse_au_vent": 0.012
+  },
+  "bosquet_palier5": {
+   "nom": "Bosquet — palier V",
+   "fichiers": [
+    "paliers/bosquet/bosquet_palier5_1.svg",
+    "paliers/bosquet/bosquet_palier5_2.svg",
+    "paliers/bosquet/bosquet_palier5_3.svg",
+    "paliers/bosquet/bosquet_palier5_4.svg",
+    "paliers/bosquet/bosquet_palier5_5.svg",
+    "paliers/bosquet/bosquet_palier5_6.svg"
+   ],
+   "cadre": [
+    -140,
+    -250,
+    280,
+    330
+   ],
+   "emprise": "3 × 3",
+   "ms_par_image": 83,
+   "animations": [
+    "saw (6 images, 12/s)"
+   ]
+  },
+  "bosquet_palier6": {
+   "nom": "Bosquet — palier VI",
+   "fichiers": [
+    "paliers/bosquet/bosquet_palier6_1.svg",
+    "paliers/bosquet/bosquet_palier6_2.svg",
+    "paliers/bosquet/bosquet_palier6_3.svg",
+    "paliers/bosquet/bosquet_palier6_4.svg",
+    "paliers/bosquet/bosquet_palier6_5.svg",
+    "paliers/bosquet/bosquet_palier6_6.svg"
+   ],
+   "cadre": [
+    -140,
+    -250,
+    280,
+    330
+   ],
+   "emprise": "3 × 3",
+   "ms_par_image": 83,
+   "animations": [
+    "saw (6 images, 12/s)",
+    "log (6 images, 3/s)"
+   ]
+  },
+  "bosquet_palier7": {
+   "nom": "Bosquet — palier VII",
+   "fichiers": [
+    "paliers/bosquet/bosquet_palier7_1.svg",
+    "paliers/bosquet/bosquet_palier7_2.svg",
+    "paliers/bosquet/bosquet_palier7_3.svg",
+    "paliers/bosquet/bosquet_palier7_4.svg",
+    "paliers/bosquet/bosquet_palier7_5.svg",
+    "paliers/bosquet/bosquet_palier7_6.svg"
+   ],
+   "cadre": [
+    -140,
+    -250,
+    280,
+    330
+   ],
+   "emprise": "3 × 3",
+   "ms_par_image": 200,
+   "animations": [
+    "dust (6 images, 5/s)"
+   ],
+   "lumieres": [
+    {
+     "u": 0.05,
+     "v": -0.25,
+     "z": 15,
+     "rayon": 27.5
+    },
+    {
+     "u": -0.07,
+     "v": -0.25,
+     "z": 50,
+     "rayon": 17.5
+    },
+    {
+     "u": 0.17,
+     "v": -0.25,
+     "z": 60,
+     "rayon": 17.5
+    },
+    {
+     "u": -0.8,
+     "v": 0.6,
+     "z": 12.5,
+     "rayon": 17.5
+    },
+    {
+     "u": 0.75,
+     "v": 0.55,
+     "z": 12.5,
+     "rayon": 17.5
+    }
+   ]
+  },
+  "puits_palier1": {
+   "nom": "Puits — palier I",
+   "fichiers": [
+    "paliers/puits/puits_palier1.svg"
+   ],
+   "cadre": [
+    -95,
+    -155,
+    190,
+    210
+   ],
+   "emprise": "2 × 2"
+  },
+  "puits_palier2": {
+   "nom": "Puits — palier II",
+   "fichiers": [
+    "paliers/puits/puits_palier2_1.svg",
+    "paliers/puits/puits_palier2_2.svg",
+    "paliers/puits/puits_palier2_3.svg"
+   ],
+   "cadre": [
+    -95,
+    -155,
+    190,
+    210
+   ],
+   "emprise": "2 × 2",
+   "ms_par_image": 167,
+   "animations": [
+    "fountain (3 images, 6/s)"
+   ]
+  },
+  "puits_palier3": {
+   "nom": "Puits — palier III",
+   "fichiers": [
+    "paliers/puits/puits_palier3_1.svg",
+    "paliers/puits/puits_palier3_2.svg",
+    "paliers/puits/puits_palier3_3.svg",
+    "paliers/puits/puits_palier3_4.svg"
+   ],
+   "cadre": [
+    -95,
+    -155,
+    190,
+    210
+   ],
+   "emprise": "2 × 2",
+   "ms_par_image": 333,
+   "animations": [
+    "laundry (4 images, 3/s)"
+   ]
+  },
+  "puits_palier4": {
+   "nom": "Puits — palier IV",
+   "fichiers": [
+    "paliers/puits/puits_palier4_1.svg",
+    "paliers/puits/puits_palier4_2.svg",
+    "paliers/puits/puits_palier4_3.svg",
+    "paliers/puits/puits_palier4_4.svg"
+   ],
+   "cadre": [
+    -140,
+    -250,
+    280,
+    330
+   ],
+   "emprise": "3 × 3",
+   "ms_par_image": 167,
+   "animations": [
+    "jets (4 images, 6/s)"
+   ]
+  },
+  "puits_palier5": {
+   "nom": "Puits — palier V",
+   "fichiers": [
+    "paliers/puits/puits_palier5_1.svg",
+    "paliers/puits/puits_palier5_2.svg",
+    "paliers/puits/puits_palier5_3.svg",
+    "paliers/puits/puits_palier5_4.svg"
+   ],
+   "cadre": [
+    -140,
+    -250,
+    280,
+    330
+   ],
+   "emprise": "3 × 3",
+   "ms_par_image": 125,
+   "animations": [
+    "fall (4 images, 8/s)"
+   ]
+  },
+  "puits_palier6": {
+   "nom": "Puits — palier VI",
+   "fichiers": [
+    "paliers/puits/puits_palier6_1.svg",
+    "paliers/puits/puits_palier6_2.svg",
+    "paliers/puits/puits_palier6_3.svg",
+    "paliers/puits/puits_palier6_4.svg",
+    "paliers/puits/puits_palier6_5.svg",
+    "paliers/puits/puits_palier6_6.svg",
+    "paliers/puits/puits_palier6_7.svg",
+    "paliers/puits/puits_palier6_8.svg"
+   ],
+   "cadre": [
+    -140,
+    -250,
+    280,
+    330
+   ],
+   "emprise": "3 × 3",
+   "ms_par_image": 125,
+   "animations": [
+    "wheel (8 images, 8/s)"
+   ],
+   "lumieres": [
+    {
+     "u": -1.06,
+     "v": -0.25,
+     "z": 48.75,
+     "rayon": 17.5
+    },
+    {
+     "u": -0.11,
+     "v": -0.25,
+     "z": 48.75,
+     "rayon": 17.5
+    }
+   ],
+   "fumees": [
+    {
+     "u": -1.05,
+     "v": -1.05,
+     "z": 105
+    }
+   ]
+  },
+  "puits_palier7": {
+   "nom": "Puits — palier VII",
+   "fichiers": [
+    "paliers/puits/puits_palier7_1.svg",
+    "paliers/puits/puits_palier7_2.svg",
+    "paliers/puits/puits_palier7_3.svg",
+    "paliers/puits/puits_palier7_4.svg",
+    "paliers/puits/puits_palier7_5.svg",
+    "paliers/puits/puits_palier7_6.svg"
+   ],
+   "cadre": [
+    -140,
+    -250,
+    280,
+    330
+   ],
+   "emprise": "3 × 3",
+   "ms_par_image": 167,
+   "animations": [
+    "magic (6 images, 6/s)"
+   ],
+   "lumieres": [
+    {
+     "u": 0,
+     "v": 0,
+     "z": 17.5,
+     "rayon": 50
+    },
+    {
+     "u": 0,
+     "v": 0,
+     "z": 50,
+     "rayon": 22.5
+    }
+   ]
+  },
+  "potager_palier1": {
+   "nom": "Potager — palier I",
+   "fichiers": [
+    "paliers/potager/potager_palier1.svg"
+   ],
+   "cadre": [
+    -95,
+    -155,
+    190,
+    210
+   ],
+   "emprise": "2 × 2"
+  },
+  "potager_palier2": {
+   "nom": "Potager — palier II",
+   "fichiers": [
+    "paliers/potager/potager_palier2.svg"
+   ],
+   "cadre": [
+    -95,
+    -155,
+    190,
+    210
+   ],
+   "emprise": "2 × 2"
+  },
+  "potager_palier3": {
+   "nom": "Potager — palier III",
+   "fichiers": [
+    "paliers/potager/potager_palier3.svg"
+   ],
+   "cadre": [
+    -95,
+    -155,
+    190,
+    210
+   ],
+   "emprise": "2 × 2"
+  },
+  "potager_palier4": {
+   "nom": "Potager — palier IV",
+   "fichiers": [
+    "paliers/potager/potager_palier4.svg"
+   ],
+   "cadre": [
+    -140,
+    -250,
+    280,
+    330
+   ],
+   "emprise": "3 × 3"
+  },
+  "potager_palier5": {
+   "nom": "Potager — palier V",
+   "fichiers": [
+    "paliers/potager/potager_palier5_1.svg",
+    "paliers/potager/potager_palier5_2.svg",
+    "paliers/potager/potager_palier5_3.svg",
+    "paliers/potager/potager_palier5_4.svg",
+    "paliers/potager/potager_palier5_5.svg",
+    "paliers/potager/potager_palier5_6.svg",
+    "paliers/potager/potager_palier5_7.svg",
+    "paliers/potager/potager_palier5_8.svg"
+   ],
+   "cadre": [
+    -140,
+    -250,
+    280,
+    330
+   ],
+   "emprise": "3 × 3",
+   "ms_par_image": 167,
+   "animations": [
+    "sails (8 images, 6/s)"
+   ]
+  },
+  "potager_palier6": {
+   "nom": "Potager — palier VI",
+   "fichiers": [
+    "paliers/potager/potager_palier6.svg"
+   ],
+   "cadre": [
+    -140,
+    -250,
+    280,
+    330
+   ],
+   "emprise": "3 × 3",
+   "lumieres": [
+    {
+     "u": -1.16,
+     "v": -0.55,
+     "z": 16.25,
+     "rayon": 17.5
+    },
+    {
+     "u": -0.71,
+     "v": -0.55,
+     "z": 16.25,
+     "rayon": 17.5
+    }
+   ],
+   "fumees": [
+    {
+     "u": -1.2,
+     "v": -1.2,
+     "z": 86.25
+    }
+   ]
+  },
+  "potager_palier7": {
+   "nom": "Potager — palier VII",
+   "fichiers": [
+    "paliers/potager/potager_palier7_1.svg",
+    "paliers/potager/potager_palier7_2.svg",
+    "paliers/potager/potager_palier7_3.svg",
+    "paliers/potager/potager_palier7_4.svg",
+    "paliers/potager/potager_palier7_5.svg",
+    "paliers/potager/potager_palier7_6.svg"
+   ],
+   "cadre": [
+    -140,
+    -250,
+    280,
+    330
+   ],
+   "emprise": "3 × 3",
+   "ms_par_image": 333,
+   "animations": [
+    "unicorn (6 images, 3/s)",
+    "sparkles (6 images, 5/s)"
+   ],
+   "lumieres": [
+    {
+     "u": -1.05,
+     "v": -0.95,
+     "z": 37.5,
+     "rayon": 27.5
+    }
+   ]
+  },
+  "atelier_palier1": {
+   "nom": "Atelier — palier I",
+   "fichiers": [
+    "paliers/atelier/atelier_palier1.svg"
+   ],
+   "cadre": [
+    -95,
+    -155,
+    190,
+    210
+   ],
+   "emprise": "2 × 2",
+   "lumieres": [
+    {
+     "u": 0.85,
+     "v": -0.05,
+     "z": 7.5,
+     "rayon": 37.5
+    }
+   ],
+   "fumees": [
+    {
+     "u": 0.55,
+     "v": -0.05,
+     "z": 55
+    }
+   ]
+  },
+  "atelier_palier2": {
+   "nom": "Atelier — palier II",
+   "fichiers": [
+    "paliers/atelier/atelier_palier2.svg"
+   ],
+   "cadre": [
+    -95,
+    -155,
+    190,
+    210
+   ],
+   "emprise": "2 × 2",
+   "lumieres": [
+    {
+     "u": 0.88,
+     "v": -0.05,
+     "z": 8.75,
+     "rayon": 37.5
+    }
+   ],
+   "fumees": [
+    {
+     "u": 0.55,
+     "v": -0.2,
+     "z": 72.5
+    }
+   ]
+  },
+  "atelier_palier3": {
+   "nom": "Atelier — palier III",
+   "fichiers": [
+    "paliers/atelier/atelier_palier3.svg"
+   ],
+   "cadre": [
+    -95,
+    -155,
+    190,
+    210
+   ],
+   "emprise": "2 × 2",
+   "lumieres": [
+    {
+     "u": 0.88,
+     "v": -0.05,
+     "z": 8.75,
+     "rayon": 32.5
+    },
+    {
+     "u": 0.56,
+     "v": -0.08,
+     "z": 35,
+     "rayon": 22.5
+    },
+    {
+     "u": 0.42,
+     "v": 0.6,
+     "z": 6.25,
+     "rayon": 15
+    }
+   ],
+   "fumees": [
+    {
+     "u": 0.7,
+     "v": -0.34,
+     "z": 80
+    },
+    {
+     "u": 0.36,
+     "v": -0.36,
+     "z": 65
+    }
+   ]
+  },
+  "atelier_palier4": {
+   "nom": "Atelier — palier IV",
+   "fichiers": [
+    "paliers/atelier/atelier_palier4.svg"
+   ],
+   "cadre": [
+    -140,
+    -250,
+    280,
+    330
+   ],
+   "emprise": "3 × 3",
+   "lumieres": [
+    {
+     "u": 1.4,
+     "v": -0.15,
+     "z": 10,
+     "rayon": 42.5
+    },
+    {
+     "u": -0.55,
+     "v": 0.6,
+     "z": 12.5,
+     "rayon": 32.5
+    },
+    {
+     "u": -1.05,
+     "v": 0.6,
+     "z": 25,
+     "rayon": 17.5
+    },
+    {
+     "u": 0.1,
+     "v": 0.6,
+     "z": 25,
+     "rayon": 17.5
+    }
+   ],
+   "fumees": [
+    {
+     "u": 0.91,
+     "v": -0.15,
+     "z": 120
+    }
+   ]
+  },
+  "atelier_palier5": {
+   "nom": "Atelier — palier V",
+   "fichiers": [
+    "paliers/atelier/atelier_palier5.svg"
+   ],
+   "cadre": [
+    -140,
+    -250,
+    280,
+    330
+   ],
+   "emprise": "3 × 3",
+   "lumieres": [
+    {
+     "u": 1.4,
+     "v": -0.15,
+     "z": 10,
+     "rayon": 42.5
+    },
+    {
+     "u": -1.09,
+     "v": 0.45,
+     "z": 27.5,
+     "rayon": 17.5
+    },
+    {
+     "u": -0.74,
+     "v": 0.45,
+     "z": 27.5,
+     "rayon": 17.5
+    },
+    {
+     "u": -0.39,
+     "v": 0.45,
+     "z": 27.5,
+     "rayon": 17.5
+    },
+    {
+     "u": -0.04,
+     "v": 0.45,
+     "z": 27.5,
+     "rayon": 17.5
+    }
+   ],
+   "fumees": [
+    {
+     "u": 0.93,
+     "v": -0.15,
+     "z": 125
+    }
+   ]
+  },
+  "atelier_palier6": {
+   "nom": "Atelier — palier VI",
+   "fichiers": [
+    "paliers/atelier/atelier_palier6_1.svg",
+    "paliers/atelier/atelier_palier6_2.svg",
+    "paliers/atelier/atelier_palier6_3.svg",
+    "paliers/atelier/atelier_palier6_4.svg",
+    "paliers/atelier/atelier_palier6_5.svg",
+    "paliers/atelier/atelier_palier6_6.svg"
+   ],
+   "cadre": [
+    -140,
+    -250,
+    280,
+    330
+   ],
+   "emprise": "3 × 3",
+   "ms_par_image": 167,
+   "animations": [
+    "gear (6 images, 6/s)"
+   ],
+   "lumieres": [
+    {
+     "u": 1.4,
+     "v": -0.15,
+     "z": 11.25,
+     "rayon": 45
+    },
+    {
+     "u": -1.12,
+     "v": 0.45,
+     "z": 25,
+     "rayon": 17.5
+    },
+    {
+     "u": -0.87,
+     "v": 0.45,
+     "z": 25,
+     "rayon": 17.5
+    },
+    {
+     "u": -0.12,
+     "v": 0.45,
+     "z": 25,
+     "rayon": 17.5
+    },
+    {
+     "u": 0.13,
+     "v": 0.45,
+     "z": 25,
+     "rayon": 17.5
+    }
+   ],
+   "fumees": [
+    {
+     "u": -1.05,
+     "v": -1.05,
+     "z": 142.5
+    },
+    {
+     "u": -0.45,
+     "v": -1.1,
+     "z": 127.5
+    },
+    {
+     "u": 0.93,
+     "v": -0.15,
+     "z": 135
+    }
+   ]
+  },
+  "atelier_palier7": {
+   "nom": "Atelier — palier VII",
+   "fichiers": [
+    "paliers/atelier/atelier_palier7_1.svg",
+    "paliers/atelier/atelier_palier7_2.svg",
+    "paliers/atelier/atelier_palier7_3.svg",
+    "paliers/atelier/atelier_palier7_4.svg",
+    "paliers/atelier/atelier_palier7_5.svg",
+    "paliers/atelier/atelier_palier7_6.svg"
+   ],
+   "cadre": [
+    -140,
+    -250,
+    280,
+    330
+   ],
+   "emprise": "3 × 3",
+   "ms_par_image": 167,
+   "animations": [
+    "bubbles (6 images, 6/s)"
+   ],
+   "lumieres": [
+    {
+     "u": -0.75,
+     "v": -0.12,
+     "z": 32.5,
+     "rayon": 17.5
+    },
+    {
+     "u": -0.38,
+     "v": -0.14,
+     "z": 60,
+     "rayon": 17.5
+    },
+    {
+     "u": -0.62,
+     "v": -0.1,
+     "z": 82.5,
+     "rayon": 17.5
+    },
+    {
+     "u": 0.9,
+     "v": -0.15,
+     "z": 45,
+     "rayon": 30
+    },
+    {
+     "u": 1.4,
+     "v": -0.15,
+     "z": 10,
+     "rayon": 37.5
+    }
+   ],
+   "fumees": [
+    {
+     "u": 0.91,
+     "v": -0.15,
+     "z": 82.5
+    }
+   ]
+  },
+  "ponton_palier1": {
+   "nom": "Ponton — palier I",
+   "fichiers": [
+    "paliers/ponton/ponton_palier1.svg"
+   ],
+   "cadre": [
+    -95,
+    -155,
+    190,
+    210
+   ],
+   "emprise": "2 × 2",
+   "voilier": "compris dans l'image (le jeu le berce à part : décor/ilots/voilier)"
+  },
+  "ponton_palier2": {
+   "nom": "Ponton — palier II",
+   "fichiers": [
+    "paliers/ponton/ponton_palier2.svg"
+   ],
+   "cadre": [
+    -95,
+    -155,
+    190,
+    210
+   ],
+   "emprise": "2 × 2",
+   "lumieres": [
+    {
+     "u": 0.82,
+     "v": 0.14,
+     "z": 46.25,
+     "rayon": 20
+    }
+   ],
+   "voilier": "compris dans l'image (le jeu le berce à part : décor/ilots/voilier)"
+  },
+  "ponton_palier3": {
+   "nom": "Ponton — palier III",
+   "fichiers": [
+    "paliers/ponton/ponton_palier3.svg"
+   ],
+   "cadre": [
+    -95,
+    -155,
+    190,
+    210
+   ],
+   "emprise": "2 × 2",
+   "lumieres": [
+    {
+     "u": 0.82,
+     "v": 0.14,
+     "z": 46.25,
+     "rayon": 20
+    }
+   ],
+   "voilier": "compris dans l'image (le jeu le berce à part : décor/ilots/voilier)"
+  },
+  "ponton_palier4": {
+   "nom": "Ponton — palier IV",
+   "fichiers": [
+    "paliers/ponton/ponton_palier4.svg"
+   ],
+   "cadre": [
+    -140,
+    -250,
+    280,
+    330
+   ],
+   "emprise": "3 × 3",
+   "lumieres": [
+    {
+     "u": -1.12,
+     "v": -1.12,
+     "z": 57.5,
+     "rayon": 25
+    },
+    {
+     "u": 1.24,
+     "v": 0.22,
+     "z": 51.25,
+     "rayon": 20
+    }
+   ],
+   "voilier": "compris dans l'image (le jeu le berce à part : décor/ilots/voilier)"
+  },
+  "ponton_palier5": {
+   "nom": "Ponton — palier V",
+   "fichiers": [
+    "paliers/ponton/ponton_palier5.svg"
+   ],
+   "cadre": [
+    -140,
+    -250,
+    280,
+    330
+   ],
+   "emprise": "3 × 3",
+   "lumieres": [
+    {
+     "u": -1.12,
+     "v": -1.12,
+     "z": 57.5,
+     "rayon": 25
+    },
+    {
+     "u": 1.24,
+     "v": 0.22,
+     "z": 51.25,
+     "rayon": 20
+    },
+    {
+     "u": -0.75,
+     "v": 0.2,
+     "z": 37.5,
+     "rayon": 22.5
+    }
+   ],
+   "voilier": "compris dans l'image (le jeu le berce à part : décor/ilots/voilier)"
+  },
+  "ponton_palier6": {
+   "nom": "Ponton — palier VI",
+   "fichiers": [
+    "paliers/ponton/ponton_palier6.svg"
+   ],
+   "cadre": [
+    -140,
+    -250,
+    280,
+    330
+   ],
+   "emprise": "3 × 3",
+   "lumieres": [
+    {
+     "u": -1.12,
+     "v": -1.12,
+     "z": 57.5,
+     "rayon": 25
+    },
+    {
+     "u": 1.24,
+     "v": 0.22,
+     "z": 51.25,
+     "rayon": 20
+    },
+    {
+     "u": -0.25,
+     "v": -0.74,
+     "z": 12.5,
+     "rayon": 22.5
+    }
+   ],
+   "fumees": [
+    {
+     "u": -0.1,
+     "v": -0.82,
+     "z": 50
+    }
+   ],
+   "voilier": "compris dans l'image (le jeu le berce à part : décor/ilots/voilier)"
+  },
+  "ponton_palier7": {
+   "nom": "Ponton — palier VII",
+   "fichiers": [
+    "paliers/ponton/ponton_palier7_1.svg",
+    "paliers/ponton/ponton_palier7_2.svg",
+    "paliers/ponton/ponton_palier7_3.svg",
+    "paliers/ponton/ponton_palier7_4.svg",
+    "paliers/ponton/ponton_palier7_5.svg",
+    "paliers/ponton/ponton_palier7_6.svg"
+   ],
+   "cadre": [
+    -140,
+    -250,
+    280,
+    330
+   ],
+   "emprise": "3 × 3",
+   "ms_par_image": 200,
+   "animations": [
+    "kraken (6 images, 5/s)"
+   ],
+   "lumieres": [
+    {
+     "u": -1.12,
+     "v": -1.12,
+     "z": 57.5,
+     "rayon": 27.5
+    },
+    {
+     "u": 1.24,
+     "v": 0.22,
+     "z": 51.25,
+     "rayon": 20
+    },
+    {
+     "u": 0.95,
+     "v": -0.12,
+     "z": 27.5,
+     "rayon": 20
+    },
+    {
+     "u": -0.6,
+     "v": 0.95,
+     "z": 5,
+     "rayon": 20
+    }
+   ],
+   "voilier": "compris dans l'image (le jeu le berce à part : décor/ilots/voilier)"
+  }
+ },
+ "chantier": {
+  "nom": "Chantier (3 phases)",
+  "fichiers": [
+   "chantier/chantier_1.svg",
+   "chantier/chantier_2.svg",
+   "chantier/chantier_3.svg"
+  ],
+  "cadres": [
+   [
+    -95,
+    -155,
+    190,
+    210
+   ],
+   [
+    -95,
+    -155,
+    190,
+    210
+   ],
+   [
+    -95,
+    -155,
+    190,
+    210
+   ]
+  ]
+ },
+ "skins": {
+  "toit-rouge": {
+   "nom": "Foyer — toit rouge",
+   "batiment": "foyer",
+   "fichiers": [
+    "skins/foyer/toit-rouge/foyer_toit-rouge_palier2.svg",
+    "skins/foyer/toit-rouge/foyer_toit-rouge_palier3.svg",
+    "skins/foyer/toit-rouge/foyer_toit-rouge_palier4.svg",
+    "skins/foyer/toit-rouge/foyer_toit-rouge_palier5.svg",
+    "skins/foyer/toit-rouge/foyer_toit-rouge_palier6.svg",
+    "skins/foyer/toit-rouge/foyer_toit-rouge_palier7.svg"
+   ],
+   "cadres": [
+    [
+     -95,
+     -155,
+     190,
+     210
+    ],
+    [
+     -95,
+     -155,
+     190,
+     210
+    ],
+    [
+     -140,
+     -250,
+     280,
+     330
+    ],
+    [
+     -140,
+     -250,
+     280,
+     330
+    ],
+    [
+     -140,
+     -250,
+     280,
+     330
+    ],
+    [
+     -140,
+     -250,
+     282.5,
+     330
+    ]
+   ]
+  },
+  "toit-bleu-foyer": {
+   "nom": "Foyer — toit bleu",
+   "batiment": "foyer",
+   "fichiers": [
+    "skins/foyer/toit-bleu-foyer/foyer_toit-bleu-foyer_palier2.svg",
+    "skins/foyer/toit-bleu-foyer/foyer_toit-bleu-foyer_palier3.svg",
+    "skins/foyer/toit-bleu-foyer/foyer_toit-bleu-foyer_palier4.svg",
+    "skins/foyer/toit-bleu-foyer/foyer_toit-bleu-foyer_palier5.svg",
+    "skins/foyer/toit-bleu-foyer/foyer_toit-bleu-foyer_palier6.svg",
+    "skins/foyer/toit-bleu-foyer/foyer_toit-bleu-foyer_palier7.svg"
+   ],
+   "cadres": [
+    [
+     -95,
+     -155,
+     190,
+     210
+    ],
+    [
+     -95,
+     -155,
+     190,
+     210
+    ],
+    [
+     -140,
+     -250,
+     280,
+     330
+    ],
+    [
+     -140,
+     -250,
+     280,
+     330
+    ],
+    [
+     -140,
+     -250,
+     280,
+     330
+    ],
+    [
+     -140,
+     -250,
+     282.5,
+     330
+    ]
+   ]
+  },
+  "toit-chaume-foyer": {
+   "nom": "Foyer — toit de chaume",
+   "batiment": "foyer",
+   "fichiers": [
+    "skins/foyer/toit-chaume-foyer/foyer_toit-chaume-foyer_palier2.svg",
+    "skins/foyer/toit-chaume-foyer/foyer_toit-chaume-foyer_palier3.svg",
+    "skins/foyer/toit-chaume-foyer/foyer_toit-chaume-foyer_palier4.svg",
+    "skins/foyer/toit-chaume-foyer/foyer_toit-chaume-foyer_palier5.svg",
+    "skins/foyer/toit-chaume-foyer/foyer_toit-chaume-foyer_palier6.svg",
+    "skins/foyer/toit-chaume-foyer/foyer_toit-chaume-foyer_palier7.svg"
+   ],
+   "cadres": [
+    [
+     -95,
+     -155,
+     190,
+     210
+    ],
+    [
+     -95,
+     -155,
+     190,
+     210
+    ],
+    [
+     -140,
+     -250,
+     280,
+     330
+    ],
+    [
+     -140,
+     -250,
+     280,
+     330
+    ],
+    [
+     -140,
+     -250,
+     280,
+     330
+    ],
+    [
+     -140,
+     -250,
+     282.5,
+     330
+    ]
+   ]
+  },
+  "roche-ocre": {
+   "nom": "Carrière — roche ocre",
+   "batiment": "carriere",
+   "fichiers": [
+    "skins/carriere/roche-ocre/carriere_roche-ocre_palier1.svg",
+    "skins/carriere/roche-ocre/carriere_roche-ocre_palier2.svg",
+    "skins/carriere/roche-ocre/carriere_roche-ocre_palier3.svg",
+    "skins/carriere/roche-ocre/carriere_roche-ocre_palier4.svg",
+    "skins/carriere/roche-ocre/carriere_roche-ocre_palier5.svg",
+    "skins/carriere/roche-ocre/carriere_roche-ocre_palier6.svg",
+    "skins/carriere/roche-ocre/carriere_roche-ocre_palier7.svg"
+   ],
+   "cadres": [
+    [
+     -95,
+     -155,
+     190,
+     210
+    ],
+    [
+     -95,
+     -155,
+     190,
+     210
+    ],
+    [
+     -95,
+     -155,
+     190,
+     210
+    ],
+    [
+     -140,
+     -250,
+     280,
+     330
+    ],
+    [
+     -140,
+     -250,
+     280,
+     330
+    ],
+    [
+     -140,
+     -250,
+     280,
+     330
+    ],
+    [
+     -140,
+     -250,
+     280,
+     330
+    ]
+   ]
+  },
+  "roche-granit": {
+   "nom": "Carrière — granit",
+   "batiment": "carriere",
+   "fichiers": [
+    "skins/carriere/roche-granit/carriere_roche-granit_palier1.svg",
+    "skins/carriere/roche-granit/carriere_roche-granit_palier2.svg",
+    "skins/carriere/roche-granit/carriere_roche-granit_palier3.svg",
+    "skins/carriere/roche-granit/carriere_roche-granit_palier4.svg",
+    "skins/carriere/roche-granit/carriere_roche-granit_palier5.svg",
+    "skins/carriere/roche-granit/carriere_roche-granit_palier6.svg",
+    "skins/carriere/roche-granit/carriere_roche-granit_palier7.svg"
+   ],
+   "cadres": [
+    [
+     -95,
+     -155,
+     190,
+     210
+    ],
+    [
+     -95,
+     -155,
+     190,
+     210
+    ],
+    [
+     -95,
+     -155,
+     190,
+     210
+    ],
+    [
+     -140,
+     -250,
+     280,
+     330
+    ],
+    [
+     -140,
+     -250,
+     280,
+     330
+    ],
+    [
+     -140,
+     -250,
+     280,
+     330
+    ],
+    [
+     -140,
+     -250,
+     280,
+     330
+    ]
+   ]
+  },
+  "roche-cristal": {
+   "nom": "Carrière — veines de cristal",
+   "batiment": "carriere",
+   "fichiers": [
+    "skins/carriere/roche-cristal/carriere_roche-cristal_palier1.svg",
+    "skins/carriere/roche-cristal/carriere_roche-cristal_palier2.svg",
+    "skins/carriere/roche-cristal/carriere_roche-cristal_palier3.svg"
+   ],
+   "cadres": [
+    [
+     -95,
+     -155,
+     190,
+     210
+    ],
+    [
+     -95,
+     -155,
+     190,
+     210
+    ],
+    [
+     -95,
+     -155,
+     190,
+     210
+    ]
+   ]
+  },
+  "printemps": {
+   "nom": "Bosquet — printemps",
+   "batiment": "bosquet",
+   "fichiers": [
+    "skins/bosquet/printemps/bosquet_printemps_palier1.svg",
+    "skins/bosquet/printemps/bosquet_printemps_palier2.svg",
+    "skins/bosquet/printemps/bosquet_printemps_palier3.svg",
+    "skins/bosquet/printemps/bosquet_printemps_palier4.svg",
+    "skins/bosquet/printemps/bosquet_printemps_palier5.svg",
+    "skins/bosquet/printemps/bosquet_printemps_palier6.svg",
+    "skins/bosquet/printemps/bosquet_printemps_palier7.svg"
+   ],
+   "cadres": [
+    [
+     -95,
+     -155,
+     190,
+     210
+    ],
+    [
+     -95,
+     -155,
+     190,
+     210
+    ],
+    [
+     -95,
+     -155,
+     190,
+     210
+    ],
+    [
+     -140,
+     -250,
+     280,
+     330
+    ],
+    [
+     -140,
+     -250,
+     280,
+     330
+    ],
+    [
+     -140,
+     -250,
+     280,
+     330
+    ],
+    [
+     -140,
+     -250,
+     280,
+     330
+    ]
+   ]
+  },
+  "automne": {
+   "nom": "Bosquet — automne",
+   "batiment": "bosquet",
+   "fichiers": [
+    "skins/bosquet/automne/bosquet_automne_palier1.svg",
+    "skins/bosquet/automne/bosquet_automne_palier2.svg",
+    "skins/bosquet/automne/bosquet_automne_palier3.svg",
+    "skins/bosquet/automne/bosquet_automne_palier4.svg",
+    "skins/bosquet/automne/bosquet_automne_palier5.svg",
+    "skins/bosquet/automne/bosquet_automne_palier6.svg",
+    "skins/bosquet/automne/bosquet_automne_palier7.svg"
+   ],
+   "cadres": [
+    [
+     -95,
+     -155,
+     190,
+     210
+    ],
+    [
+     -95,
+     -155,
+     190,
+     210
+    ],
+    [
+     -95,
+     -155,
+     190,
+     210
+    ],
+    [
+     -140,
+     -250,
+     280,
+     330
+    ],
+    [
+     -140,
+     -250,
+     280,
+     330
+    ],
+    [
+     -140,
+     -250,
+     280,
+     330
+    ],
+    [
+     -140,
+     -250,
+     280,
+     330
+    ]
+   ]
+  },
+  "givre": {
+   "nom": "Bosquet — givre",
+   "batiment": "bosquet",
+   "fichiers": [
+    "skins/bosquet/givre/bosquet_givre_palier1.svg",
+    "skins/bosquet/givre/bosquet_givre_palier2.svg",
+    "skins/bosquet/givre/bosquet_givre_palier3.svg",
+    "skins/bosquet/givre/bosquet_givre_palier4.svg",
+    "skins/bosquet/givre/bosquet_givre_palier5.svg",
+    "skins/bosquet/givre/bosquet_givre_palier6.svg",
+    "skins/bosquet/givre/bosquet_givre_palier7.svg"
+   ],
+   "cadres": [
+    [
+     -95,
+     -155,
+     190,
+     210
+    ],
+    [
+     -95,
+     -155,
+     190,
+     210
+    ],
+    [
+     -95,
+     -155,
+     190,
+     210
+    ],
+    [
+     -140,
+     -250,
+     280,
+     330
+    ],
+    [
+     -140,
+     -250,
+     280,
+     330
+    ],
+    [
+     -140,
+     -250,
+     280,
+     330
+    ],
+    [
+     -140,
+     -250,
+     280,
+     330
+    ]
+   ]
+  },
+  "toit-bleu": {
+   "nom": "Puits — kiosque bleu",
+   "batiment": "puits",
+   "fichiers": [
+    "skins/puits/toit-bleu/puits_toit-bleu_palier1.svg",
+    "skins/puits/toit-bleu/puits_toit-bleu_palier2.svg",
+    "skins/puits/toit-bleu/puits_toit-bleu_palier3.svg",
+    "skins/puits/toit-bleu/puits_toit-bleu_palier4.svg",
+    "skins/puits/toit-bleu/puits_toit-bleu_palier5.svg",
+    "skins/puits/toit-bleu/puits_toit-bleu_palier6.svg",
+    "skins/puits/toit-bleu/puits_toit-bleu_palier7.svg"
+   ],
+   "cadres": [
+    [
+     -95,
+     -155,
+     190,
+     210
+    ],
+    [
+     -95,
+     -155,
+     190,
+     210
+    ],
+    [
+     -95,
+     -155,
+     190,
+     210
+    ],
+    [
+     -140,
+     -250,
+     280,
+     330
+    ],
+    [
+     -140,
+     -250,
+     280,
+     330
+    ],
+    [
+     -140,
+     -250,
+     280,
+     330
+    ],
+    [
+     -140,
+     -250,
+     280,
+     330
+    ]
+   ]
+  },
+  "toit-chaume": {
+   "nom": "Puits — kiosque de chaume",
+   "batiment": "puits",
+   "fichiers": [
+    "skins/puits/toit-chaume/puits_toit-chaume_palier1.svg",
+    "skins/puits/toit-chaume/puits_toit-chaume_palier2.svg",
+    "skins/puits/toit-chaume/puits_toit-chaume_palier3.svg",
+    "skins/puits/toit-chaume/puits_toit-chaume_palier4.svg",
+    "skins/puits/toit-chaume/puits_toit-chaume_palier5.svg",
+    "skins/puits/toit-chaume/puits_toit-chaume_palier6.svg",
+    "skins/puits/toit-chaume/puits_toit-chaume_palier7.svg"
+   ],
+   "cadres": [
+    [
+     -95,
+     -155,
+     190,
+     210
+    ],
+    [
+     -95,
+     -155,
+     190,
+     210
+    ],
+    [
+     -95,
+     -155,
+     190,
+     210
+    ],
+    [
+     -140,
+     -250,
+     280,
+     330
+    ],
+    [
+     -140,
+     -250,
+     280,
+     330
+    ],
+    [
+     -140,
+     -250,
+     280,
+     330
+    ],
+    [
+     -140,
+     -250,
+     280,
+     330
+    ]
+   ]
+  },
+  "pierre-blanche": {
+   "nom": "Puits — pierre blanche",
+   "batiment": "puits",
+   "fichiers": [
+    "skins/puits/pierre-blanche/puits_pierre-blanche_palier1.svg",
+    "skins/puits/pierre-blanche/puits_pierre-blanche_palier2.svg",
+    "skins/puits/pierre-blanche/puits_pierre-blanche_palier3.svg",
+    "skins/puits/pierre-blanche/puits_pierre-blanche_palier4.svg",
+    "skins/puits/pierre-blanche/puits_pierre-blanche_palier5.svg",
+    "skins/puits/pierre-blanche/puits_pierre-blanche_palier6.svg"
+   ],
+   "cadres": [
+    [
+     -95,
+     -155,
+     190,
+     210
+    ],
+    [
+     -95,
+     -155,
+     190,
+     210
+    ],
+    [
+     -95,
+     -155,
+     190,
+     210
+    ],
+    [
+     -140,
+     -250,
+     280,
+     330
+    ],
+    [
+     -140,
+     -250,
+     280,
+     330
+    ],
+    [
+     -140,
+     -250,
+     280,
+     330
+    ]
+   ]
+  },
+  "cloture-blanche": {
+   "nom": "Potager — clôture blanche",
+   "batiment": "potager",
+   "fichiers": [
+    "skins/potager/cloture-blanche/potager_cloture-blanche_palier1.svg",
+    "skins/potager/cloture-blanche/potager_cloture-blanche_palier2.svg",
+    "skins/potager/cloture-blanche/potager_cloture-blanche_palier3.svg",
+    "skins/potager/cloture-blanche/potager_cloture-blanche_palier4.svg",
+    "skins/potager/cloture-blanche/potager_cloture-blanche_palier5.svg",
+    "skins/potager/cloture-blanche/potager_cloture-blanche_palier6.svg",
+    "skins/potager/cloture-blanche/potager_cloture-blanche_palier7.svg"
+   ],
+   "cadres": [
+    [
+     -95,
+     -155,
+     190,
+     210
+    ],
+    [
+     -95,
+     -155,
+     190,
+     210
+    ],
+    [
+     -95,
+     -155,
+     190,
+     210
+    ],
+    [
+     -140,
+     -250,
+     280,
+     330
+    ],
+    [
+     -140,
+     -250,
+     280,
+     330
+    ],
+    [
+     -140,
+     -250,
+     280,
+     330
+    ],
+    [
+     -140,
+     -250,
+     280,
+     330
+    ]
+   ]
+  },
+  "cloture-pierre": {
+   "nom": "Potager — muret de pierre",
+   "batiment": "potager",
+   "fichiers": [
+    "skins/potager/cloture-pierre/potager_cloture-pierre_palier1.svg",
+    "skins/potager/cloture-pierre/potager_cloture-pierre_palier2.svg",
+    "skins/potager/cloture-pierre/potager_cloture-pierre_palier3.svg",
+    "skins/potager/cloture-pierre/potager_cloture-pierre_palier4.svg",
+    "skins/potager/cloture-pierre/potager_cloture-pierre_palier5.svg",
+    "skins/potager/cloture-pierre/potager_cloture-pierre_palier6.svg",
+    "skins/potager/cloture-pierre/potager_cloture-pierre_palier7.svg"
+   ],
+   "cadres": [
+    [
+     -95,
+     -155,
+     190,
+     210
+    ],
+    [
+     -95,
+     -155,
+     190,
+     210
+    ],
+    [
+     -95,
+     -155,
+     190,
+     210
+    ],
+    [
+     -140,
+     -250,
+     280,
+     330
+    ],
+    [
+     -140,
+     -250,
+     280,
+     330
+    ],
+    [
+     -140,
+     -250,
+     280,
+     330
+    ],
+    [
+     -140,
+     -250,
+     280,
+     330
+    ]
+   ]
+  },
+  "cloture-fleurie": {
+   "nom": "Potager — clôture fleurie",
+   "batiment": "potager",
+   "fichiers": [
+    "skins/potager/cloture-fleurie/potager_cloture-fleurie_palier1.svg",
+    "skins/potager/cloture-fleurie/potager_cloture-fleurie_palier2.svg",
+    "skins/potager/cloture-fleurie/potager_cloture-fleurie_palier3.svg",
+    "skins/potager/cloture-fleurie/potager_cloture-fleurie_palier4.svg",
+    "skins/potager/cloture-fleurie/potager_cloture-fleurie_palier5.svg",
+    "skins/potager/cloture-fleurie/potager_cloture-fleurie_palier6.svg",
+    "skins/potager/cloture-fleurie/potager_cloture-fleurie_palier7.svg"
+   ],
+   "cadres": [
+    [
+     -95,
+     -155,
+     190,
+     210
+    ],
+    [
+     -95,
+     -155,
+     190,
+     210
+    ],
+    [
+     -95,
+     -155,
+     190,
+     210
+    ],
+    [
+     -140,
+     -250,
+     280,
+     330
+    ],
+    [
+     -140,
+     -250,
+     280,
+     330
+    ],
+    [
+     -140,
+     -250,
+     280,
+     330
+    ],
+    [
+     -140,
+     -250,
+     280,
+     330
+    ]
+   ]
+  },
+  "enseigne-doree": {
+   "nom": "Atelier — enseigne dorée",
+   "batiment": "atelier",
+   "fichiers": [
+    "skins/atelier/enseigne-doree/atelier_enseigne-doree_palier1.svg",
+    "skins/atelier/enseigne-doree/atelier_enseigne-doree_palier2.svg",
+    "skins/atelier/enseigne-doree/atelier_enseigne-doree_palier3.svg",
+    "skins/atelier/enseigne-doree/atelier_enseigne-doree_palier4.svg",
+    "skins/atelier/enseigne-doree/atelier_enseigne-doree_palier5.svg",
+    "skins/atelier/enseigne-doree/atelier_enseigne-doree_palier6.svg",
+    "skins/atelier/enseigne-doree/atelier_enseigne-doree_palier7.svg"
+   ],
+   "cadres": [
+    [
+     -95,
+     -155,
+     190,
+     210
+    ],
+    [
+     -95,
+     -155,
+     190,
+     210
+    ],
+    [
+     -95,
+     -155,
+     190,
+     210
+    ],
+    [
+     -140,
+     -250,
+     280,
+     330
+    ],
+    [
+     -140,
+     -250,
+     280,
+     330
+    ],
+    [
+     -140,
+     -250,
+     280,
+     330
+    ],
+    [
+     -140,
+     -250,
+     280,
+     330
+    ]
+   ]
+  },
+  "toit-ardoise": {
+   "nom": "Atelier — toit d'ardoise",
+   "batiment": "atelier",
+   "fichiers": [
+    "skins/atelier/toit-ardoise/atelier_toit-ardoise_palier1.svg",
+    "skins/atelier/toit-ardoise/atelier_toit-ardoise_palier2.svg",
+    "skins/atelier/toit-ardoise/atelier_toit-ardoise_palier3.svg",
+    "skins/atelier/toit-ardoise/atelier_toit-ardoise_palier4.svg",
+    "skins/atelier/toit-ardoise/atelier_toit-ardoise_palier5.svg",
+    "skins/atelier/toit-ardoise/atelier_toit-ardoise_palier6.svg",
+    "skins/atelier/toit-ardoise/atelier_toit-ardoise_palier7.svg"
+   ],
+   "cadres": [
+    [
+     -95,
+     -155,
+     190,
+     210
+    ],
+    [
+     -95,
+     -155,
+     190,
+     210
+    ],
+    [
+     -95,
+     -155,
+     190,
+     210
+    ],
+    [
+     -140,
+     -250,
+     280,
+     330
+    ],
+    [
+     -140,
+     -250,
+     280,
+     330
+    ],
+    [
+     -140,
+     -250,
+     280,
+     330
+    ],
+    [
+     -140,
+     -250,
+     280,
+     330
+    ]
+   ]
+  },
+  "voile-rouge": {
+   "nom": "Ponton — voile rouge",
+   "batiment": "ponton",
+   "fichiers": [
+    "skins/ponton/voile-rouge/ponton_voile-rouge_palier1.svg",
+    "skins/ponton/voile-rouge/ponton_voile-rouge_palier2.svg",
+    "skins/ponton/voile-rouge/ponton_voile-rouge_palier3.svg",
+    "skins/ponton/voile-rouge/ponton_voile-rouge_palier4.svg",
+    "skins/ponton/voile-rouge/ponton_voile-rouge_palier5.svg",
+    "skins/ponton/voile-rouge/ponton_voile-rouge_palier6.svg",
+    "skins/ponton/voile-rouge/ponton_voile-rouge_palier7.svg"
+   ],
+   "cadres": [
+    [
+     -95,
+     -155,
+     190,
+     210
+    ],
+    [
+     -95,
+     -155,
+     190,
+     210
+    ],
+    [
+     -95,
+     -155,
+     190,
+     210
+    ],
+    [
+     -140,
+     -250,
+     280,
+     330
+    ],
+    [
+     -140,
+     -250,
+     280,
+     330
+    ],
+    [
+     -140,
+     -250,
+     280,
+     330
+    ],
+    [
+     -140,
+     -250,
+     280,
+     330
+    ]
+   ]
+  },
+  "voile-rayee": {
+   "nom": "Ponton — voile rayée",
+   "batiment": "ponton",
+   "fichiers": [
+    "skins/ponton/voile-rayee/ponton_voile-rayee_palier1.svg",
+    "skins/ponton/voile-rayee/ponton_voile-rayee_palier2.svg",
+    "skins/ponton/voile-rayee/ponton_voile-rayee_palier3.svg",
+    "skins/ponton/voile-rayee/ponton_voile-rayee_palier4.svg",
+    "skins/ponton/voile-rayee/ponton_voile-rayee_palier5.svg",
+    "skins/ponton/voile-rayee/ponton_voile-rayee_palier6.svg",
+    "skins/ponton/voile-rayee/ponton_voile-rayee_palier7.svg"
+   ],
+   "cadres": [
+    [
+     -95,
+     -155,
+     190,
+     210
+    ],
+    [
+     -95,
+     -155,
+     190,
+     210
+    ],
+    [
+     -95,
+     -155,
+     190,
+     210
+    ],
+    [
+     -140,
+     -250,
+     280,
+     330
+    ],
+    [
+     -140,
+     -250,
+     280,
+     330
+    ],
+    [
+     -140,
+     -250,
+     280,
+     330
+    ],
+    [
+     -140,
+     -250,
+     280,
+     330
+    ]
+   ]
+  },
+  "voile-bleue": {
+   "nom": "Ponton — voile bleue",
+   "batiment": "ponton",
+   "fichiers": [
+    "skins/ponton/voile-bleue/ponton_voile-bleue_palier1.svg",
+    "skins/ponton/voile-bleue/ponton_voile-bleue_palier2.svg",
+    "skins/ponton/voile-bleue/ponton_voile-bleue_palier3.svg",
+    "skins/ponton/voile-bleue/ponton_voile-bleue_palier4.svg",
+    "skins/ponton/voile-bleue/ponton_voile-bleue_palier5.svg",
+    "skins/ponton/voile-bleue/ponton_voile-bleue_palier6.svg",
+    "skins/ponton/voile-bleue/ponton_voile-bleue_palier7.svg"
+   ],
+   "cadres": [
+    [
+     -95,
+     -155,
+     190,
+     210
+    ],
+    [
+     -95,
+     -155,
+     190,
+     210
+    ],
+    [
+     -95,
+     -155,
+     190,
+     210
+    ],
+    [
+     -140,
+     -250,
+     280,
+     330
+    ],
+    [
+     -140,
+     -250,
+     280,
+     330
+    ],
+    [
+     -140,
+     -250,
+     280,
+     330
+    ],
+    [
+     -140,
+     -250,
+     280,
+     330
+    ]
+   ]
+  }
+ },
+ "objets": {
+  "pelle": {
+   "nom": "pelle",
+   "batiment": "potager",
+   "paliers": "I à VII",
+   "calques": [
+    {
+     "fichiers": [
+      "objets/potager/pelle/pelle.svg"
+     ],
+     "cadre": [
+      -15,
+      -43,
+      32.5,
+      50.5
+     ],
+     "derriere": false,
+     "place": {
+      "I": [
+       0.6,
+       -0.3
+      ],
+      "II": [
+       0.42,
+       0.58
+      ],
+      "III": [
+       0.42,
+       0.58
+      ],
+      "IV": [
+       0.63,
+       0.87
+      ],
+      "V": [
+       0.63,
+       0.87
+      ],
+      "VI": [
+       0.63,
+       0.87
+      ],
+      "VII": [
+       0.63,
+       0.87
+      ]
+     }
+    }
+   ]
+  },
+  "arrosoir": {
+   "nom": "arrosoir",
+   "batiment": "potager",
+   "paliers": "I à VII",
+   "calques": [
+    {
+     "fichiers": [
+      "objets/potager/arrosoir/arrosoir.svg"
+     ],
+     "cadre": [
+      -17.5,
+      -32.5,
+      45,
+      40
+     ],
+     "derriere": false,
+     "place": {
+      "I": [
+       0.76,
+       0.76
+      ],
+      "II": [
+       0.76,
+       0.76
+      ],
+      "III": [
+       0.76,
+       0.76
+      ],
+      "IV": [
+       1.14,
+       1.14
+      ],
+      "V": [
+       1.14,
+       1.14
+      ],
+      "VI": [
+       1.14,
+       1.14
+      ],
+      "VII": [
+       1.14,
+       1.14
+      ]
+     }
+    }
+   ]
+  },
+  "poulailler": {
+   "nom": "poulailler",
+   "batiment": "potager",
+   "paliers": "I à VII",
+   "calques": [
+    {
+     "fichiers": [
+      "objets/potager/poulailler/poulailler_calque1.svg"
+     ],
+     "cadre": [
+      -30,
+      -60,
+      60,
+      70
+     ],
+     "derriere": true,
+     "place": {
+      "I": [
+       0.7,
+       -0.78
+      ],
+      "II": [
+       0.68,
+       -0.62
+      ],
+      "III": [
+       0.68,
+       -0.62
+      ],
+      "IV": [
+       1.02,
+       -0.93
+      ],
+      "V": [
+       1.02,
+       -0.93
+      ],
+      "VI": [
+       1.02,
+       -0.93
+      ],
+      "VII": [
+       1.02,
+       -0.93
+      ]
+     }
+    },
+    {
+     "fichiers": [
+      "objets/potager/poulailler/poulailler_calque2_1.svg",
+      "objets/potager/poulailler/poulailler_calque2_2.svg",
+      "objets/potager/poulailler/poulailler_calque2_3.svg",
+      "objets/potager/poulailler/poulailler_calque2_4.svg",
+      "objets/potager/poulailler/poulailler_calque2_5.svg",
+      "objets/potager/poulailler/poulailler_calque2_6.svg",
+      "objets/potager/poulailler/poulailler_calque2_7.svg",
+      "objets/potager/poulailler/poulailler_calque2_8.svg"
+     ],
+     "cadre": [
+      -37.5,
+      -32.5,
+      80,
+      47.5
+     ],
+     "derriere": false,
+     "ms_par_image": 250,
+     "place": {
+      "I": [
+       0.1,
+       0.72
+      ],
+      "II": [
+       0.1,
+       0.72
+      ],
+      "III": [
+       0.1,
+       0.72
+      ],
+      "IV": [
+       0.15,
+       1.08
+      ],
+      "V": [
+       0.15,
+       1.08
+      ],
+      "VI": [
+       0.15,
+       1.08
+      ],
+      "VII": [
+       0.15,
+       1.08
+      ]
+     }
+    }
+   ]
+  },
+  "ruche": {
+   "nom": "ruche",
+   "batiment": "potager",
+   "paliers": "I à VII",
+   "calques": [
+    {
+     "fichiers": [
+      "objets/potager/ruche/ruche_calque1.svg"
+     ],
+     "cadre": [
+      -22.5,
+      -50,
+      50,
+      58
+     ],
+     "derriere": false,
+     "place": {
+      "I": [
+       -0.86,
+       0.86
+      ],
+      "II": [
+       -0.86,
+       0.86
+      ],
+      "III": [
+       -0.86,
+       0.86
+      ],
+      "IV": [
+       -1.29,
+       1.29
+      ],
+      "V": [
+       -1.29,
+       1.29
+      ],
+      "VI": [
+       -1.29,
+       1.29
+      ],
+      "VII": [
+       -1.29,
+       1.29
+      ]
+     }
+    },
+    {
+     "fichiers": [
+      "objets/potager/ruche/ruche_calque2_1.svg",
+      "objets/potager/ruche/ruche_calque2_2.svg",
+      "objets/potager/ruche/ruche_calque2_3.svg",
+      "objets/potager/ruche/ruche_calque2_4.svg",
+      "objets/potager/ruche/ruche_calque2_5.svg",
+      "objets/potager/ruche/ruche_calque2_6.svg",
+      "objets/potager/ruche/ruche_calque2_7.svg",
+      "objets/potager/ruche/ruche_calque2_8.svg"
+     ],
+     "cadre": [
+      -27.5,
+      -60,
+      57.5,
+      50
+     ],
+     "derriere": false,
+     "ms_par_image": 100,
+     "place": {
+      "I": [
+       -0.86,
+       0.86
+      ],
+      "II": [
+       -0.86,
+       0.86
+      ],
+      "III": [
+       -0.86,
+       0.86
+      ],
+      "IV": [
+       -1.29,
+       1.29
+      ],
+      "V": [
+       -1.29,
+       1.29
+      ],
+      "VI": [
+       -1.29,
+       1.29
+      ],
+      "VII": [
+       -1.29,
+       1.29
+      ]
+     }
+    }
+   ]
+  },
+  "brouette": {
+   "nom": "brouette",
+   "batiment": "potager",
+   "paliers": "V à VII",
+   "calques": [
+    {
+     "fichiers": [
+      "objets/potager/brouette/brouette.svg"
+     ],
+     "cadre": [
+      -30,
+      -35,
+      57.5,
+      43
+     ],
+     "derriere": false,
+     "place": {
+      "V": [
+       1.35,
+       -0.08
+      ],
+      "VI": [
+       1.35,
+       -0.08
+      ],
+      "VII": [
+       1.35,
+       -0.08
+      ]
+     }
+    }
+   ]
+  },
+  "epouvantail": {
+   "nom": "epouvantail",
+   "batiment": "potager",
+   "paliers": "V à VII",
+   "calques": [
+    {
+     "fichiers": [
+      "objets/potager/epouvantail/epouvantail_1.svg",
+      "objets/potager/epouvantail/epouvantail_2.svg",
+      "objets/potager/epouvantail/epouvantail_3.svg",
+      "objets/potager/epouvantail/epouvantail_4.svg",
+      "objets/potager/epouvantail/epouvantail_5.svg",
+      "objets/potager/epouvantail/epouvantail_6.svg",
+      "objets/potager/epouvantail/epouvantail_7.svg",
+      "objets/potager/epouvantail/epouvantail_8.svg"
+     ],
+     "cadre": [
+      -32.5,
+      -67.5,
+      65,
+      75
+     ],
+     "derriere": false,
+     "ms_par_image": 333,
+     "place": {
+      "V": [
+       -1.32,
+       0.3
+      ],
+      "VI": [
+       -1.32,
+       0.3
+      ],
+      "VII": [
+       -1.32,
+       0.3
+      ]
+     }
+    }
+   ]
+  },
+  "citrouille": {
+   "nom": "citrouille",
+   "batiment": "potager",
+   "paliers": "V à VII",
+   "calques": [
+    {
+     "fichiers": [
+      "objets/potager/citrouille/citrouille_1.svg",
+      "objets/potager/citrouille/citrouille_2.svg",
+      "objets/potager/citrouille/citrouille_3.svg",
+      "objets/potager/citrouille/citrouille_4.svg",
+      "objets/potager/citrouille/citrouille_5.svg",
+      "objets/potager/citrouille/citrouille_6.svg",
+      "objets/potager/citrouille/citrouille_7.svg",
+      "objets/potager/citrouille/citrouille_8.svg"
+     ],
+     "cadre": [
+      -32.5,
+      -62.5,
+      65,
+      75
+     ],
+     "derriere": false,
+     "ms_par_image": 250,
+     "place": {
+      "V": [
+       0.87,
+       0.45
+      ],
+      "VI": [
+       0.87,
+       0.45
+      ],
+      "VII": [
+       0.87,
+       0.45
+      ]
+     }
+    }
+   ],
+   "lumiere": {
+    "u": 0.87,
+    "v": 0.45,
+    "z": 11.25,
+    "rayon": 32.5
+   }
+  },
+  "pioche": {
+   "nom": "pioche",
+   "batiment": "carriere",
+   "paliers": "I à VII",
+   "calques": [
+    {
+     "fichiers": [
+      "objets/carriere/pioche/pioche.svg"
+     ],
+     "cadre": [
+      -20,
+      -42.5,
+      42.5,
+      50
+     ],
+     "derriere": false,
+     "place": {
+      "I": [
+       0.16,
+       0.8
+      ],
+      "II": [
+       0.16,
+       0.8
+      ],
+      "III": [
+       0.16,
+       0.8
+      ],
+      "IV": [
+       0.24,
+       1.2
+      ],
+      "V": [
+       0.24,
+       1.2
+      ],
+      "VI": [
+       0.24,
+       1.2
+      ],
+      "VII": [
+       0.24,
+       1.2
+      ]
+     }
+    }
+   ]
+  },
+  "wagonnet": {
+   "nom": "wagonnet",
+   "batiment": "carriere",
+   "paliers": "I à VII",
+   "calques": [
+    {
+     "fichiers": [
+      "objets/carriere/wagonnet/wagonnet.svg"
+     ],
+     "cadre": [
+      -30,
+      -35,
+      60,
+      45
+     ],
+     "derriere": false,
+     "place": {
+      "I": [
+       0.76,
+       0.8
+      ],
+      "II": [
+       0.76,
+       0.8
+      ],
+      "III": [
+       0.76,
+       0.8
+      ],
+      "IV": [
+       1.14,
+       1.2
+      ],
+      "V": [
+       1.14,
+       1.2
+      ],
+      "VI": [
+       1.14,
+       1.2
+      ],
+      "VII": [
+       1.14,
+       1.2
+      ]
+     }
+    }
+   ]
+  },
+  "lanterne-mine": {
+   "nom": "lanterne mine",
+   "batiment": "carriere",
+   "paliers": "I à VII",
+   "calques": [
+    {
+     "fichiers": [
+      "objets/carriere/lanterne-mine/lanterne-mine_calque1.svg"
+     ],
+     "cadre": [
+      -15,
+      -55,
+      42.5,
+      62.5
+     ],
+     "derriere": false,
+     "place": {
+      "I": [
+       -0.86,
+       0.5
+      ],
+      "II": [
+       -0.86,
+       0.5
+      ],
+      "III": [
+       -0.86,
+       0.5
+      ],
+      "IV": [
+       -1.29,
+       0.75
+      ],
+      "V": [
+       -1.29,
+       0.75
+      ],
+      "VI": [
+       -1.29,
+       0.75
+      ],
+      "VII": [
+       -1.29,
+       0.75
+      ]
+     }
+    },
+    {
+     "fichiers": [
+      "objets/carriere/lanterne-mine/lanterne-mine_calque2_1.svg",
+      "objets/carriere/lanterne-mine/lanterne-mine_calque2_2.svg",
+      "objets/carriere/lanterne-mine/lanterne-mine_calque2_3.svg",
+      "objets/carriere/lanterne-mine/lanterne-mine_calque2_4.svg",
+      "objets/carriere/lanterne-mine/lanterne-mine_calque2_5.svg",
+      "objets/carriere/lanterne-mine/lanterne-mine_calque2_6.svg",
+      "objets/carriere/lanterne-mine/lanterne-mine_calque2_7.svg",
+      "objets/carriere/lanterne-mine/lanterne-mine_calque2_8.svg"
+     ],
+     "cadre": [
+      -2.5,
+      -50,
+      30,
+      32.5
+     ],
+     "derriere": false,
+     "ms_par_image": 200,
+     "place": {
+      "I": [
+       -0.86,
+       0.5
+      ],
+      "II": [
+       -0.86,
+       0.5
+      ],
+      "III": [
+       -0.86,
+       0.5
+      ],
+      "IV": [
+       -1.29,
+       0.75
+      ],
+      "V": [
+       -1.29,
+       0.75
+      ],
+      "VI": [
+       -1.29,
+       0.75
+      ],
+      "VII": [
+       -1.29,
+       0.75
+      ]
+     }
+    }
+   ],
+   "lumiere": {
+    "u": -0.99,
+    "v": 0.75,
+    "z": 30,
+    "rayon": 27.5
+   }
+  },
+  "rails": {
+   "nom": "rails",
+   "batiment": "carriere",
+   "paliers": "I à VII",
+   "calques": [
+    {
+     "fichiers": [
+      "objets/carriere/rails/rails_calque1.svg"
+     ],
+     "cadre": [
+      -22.5,
+      -20,
+      45,
+      32.5
+     ],
+     "derriere": false,
+     "place": {
+      "I": [
+       -0.35,
+       0.88
+      ],
+      "II": [
+       -0.35,
+       0.88
+      ],
+      "III": [
+       -0.35,
+       0.88
+      ],
+      "IV": [
+       -0.52,
+       1.32
+      ],
+      "V": [
+       -0.52,
+       1.32
+      ],
+      "VI": [
+       -0.52,
+       1.32
+      ],
+      "VII": [
+       -0.52,
+       1.32
+      ]
+     }
+    },
+    {
+     "fichiers": [
+      "objets/carriere/rails/rails_calque2_1.svg",
+      "objets/carriere/rails/rails_calque2_2.svg",
+      "objets/carriere/rails/rails_calque2_3.svg",
+      "objets/carriere/rails/rails_calque2_4.svg"
+     ],
+     "cadre": [
+      -22.5,
+      -32.5,
+      45,
+      40
+     ],
+     "derriere": false,
+     "ms_par_image": 125,
+     "mouvement": true,
+     "place": {
+      "I": [
+       -0.35,
+       0
+      ],
+      "II": [
+       -0.35,
+       0
+      ],
+      "III": [
+       -0.35,
+       0
+      ],
+      "IV": [
+       -0.52,
+       0
+      ],
+      "V": [
+       -0.52,
+       0
+      ],
+      "VI": [
+       -0.52,
+       0
+      ],
+      "VII": [
+       -0.52,
+       0
+      ]
+     }
+    }
+   ]
+  },
+  "casque": {
+   "nom": "casque",
+   "batiment": "carriere",
+   "paliers": "V à VII",
+   "calques": [
+    {
+     "fichiers": [
+      "objets/carriere/casque/casque.svg"
+     ],
+     "cadre": [
+      -25,
+      -40,
+      50,
+      48.5
+     ],
+     "derriere": false,
+     "place": {
+      "V": [
+       -0.15,
+       1.41
+      ],
+      "VI": [
+       -0.15,
+       1.41
+      ],
+      "VII": [
+       -0.15,
+       1.41
+      ]
+     }
+    }
+   ]
+  },
+  "geode": {
+   "nom": "geode",
+   "batiment": "carriere",
+   "paliers": "V à VII",
+   "calques": [
+    {
+     "fichiers": [
+      "objets/carriere/geode/geode_1.svg",
+      "objets/carriere/geode/geode_2.svg",
+      "objets/carriere/geode/geode_3.svg",
+      "objets/carriere/geode/geode_4.svg",
+      "objets/carriere/geode/geode_5.svg",
+      "objets/carriere/geode/geode_6.svg"
+     ],
+     "cadre": [
+      -27.5,
+      -37.5,
+      55,
+      46.5
+     ],
+     "derriere": false,
+     "ms_par_image": 250,
+     "place": {
+      "V": [
+       -1.38,
+       1.23
+      ],
+      "VI": [
+       -1.38,
+       1.23
+      ],
+      "VII": [
+       -1.38,
+       1.23
+      ]
+     }
+    }
+   ],
+   "lumiere": {
+    "u": -1.38,
+    "v": 1.23,
+    "z": 10,
+    "rayon": 25
+   }
+  },
+  "golem": {
+   "nom": "golem",
+   "batiment": "carriere",
+   "paliers": "V à VII",
+   "calques": [
+    {
+     "fichiers": [
+      "objets/carriere/golem/golem_1.svg",
+      "objets/carriere/golem/golem_2.svg",
+      "objets/carriere/golem/golem_3.svg",
+      "objets/carriere/golem/golem_4.svg",
+      "objets/carriere/golem/golem_5.svg",
+      "objets/carriere/golem/golem_6.svg",
+      "objets/carriere/golem/golem_7.svg",
+      "objets/carriere/golem/golem_8.svg"
+     ],
+     "cadre": [
+      -30,
+      -67.5,
+      60,
+      78.5
+     ],
+     "derriere": false,
+     "ms_par_image": 333,
+     "place": {
+      "V": [
+       -1.35,
+       0.12
+      ],
+      "VI": [
+       -1.35,
+       0.12
+      ],
+      "VII": [
+       -1.35,
+       0.12
+      ]
+     }
+    }
+   ],
+   "lumiere": {
+    "u": -1.35,
+    "v": 0.21,
+    "z": 32.5,
+    "rayon": 22.5
+   }
+  },
+  "hache": {
+   "nom": "hache",
+   "batiment": "bosquet",
+   "paliers": "I à VII",
+   "calques": [
+    {
+     "fichiers": [
+      "objets/bosquet/hache/hache.svg"
+     ],
+     "cadre": [
+      -30,
+      -40,
+      57.5,
+      48
+     ],
+     "derriere": false,
+     "place": {
+      "I": [
+       -0.42,
+       0.84
+      ],
+      "II": [
+       -0.42,
+       0.84
+      ],
+      "III": [
+       -0.42,
+       0.84
+      ],
+      "IV": [
+       -0.63,
+       1.26
+      ],
+      "V": [
+       -0.63,
+       1.26
+      ],
+      "VI": [
+       -0.63,
+       1.26
+      ],
+      "VII": [
+       -0.63,
+       1.26
+      ]
+     }
+    }
+   ]
+  },
+  "scie": {
+   "nom": "scie",
+   "batiment": "bosquet",
+   "paliers": "I à VII",
+   "calques": [
+    {
+     "fichiers": [
+      "objets/bosquet/scie/scie.svg"
+     ],
+     "cadre": [
+      -32.5,
+      -42.5,
+      65,
+      52.5
+     ],
+     "derriere": false,
+     "place": {
+      "I": [
+       0.78,
+       -0.74
+      ],
+      "II": [
+       0.78,
+       -0.74
+      ],
+      "III": [
+       0.78,
+       -0.74
+      ],
+      "IV": [
+       1.17,
+       -1.11
+      ],
+      "V": [
+       1.17,
+       -1.11
+      ],
+      "VI": [
+       1.17,
+       -1.11
+      ],
+      "VII": [
+       1.17,
+       -1.11
+      ]
+     }
+    }
+   ]
+  },
+  "nichoir": {
+   "nom": "nichoir",
+   "batiment": "bosquet",
+   "paliers": "I à VII",
+   "calques": [
+    {
+     "fichiers": [
+      "objets/bosquet/nichoir/nichoir_calque1.svg"
+     ],
+     "cadre": [
+      -17.5,
+      -71,
+      35,
+      78.5
+     ],
+     "derriere": false,
+     "place": {
+      "I": [
+       0.86,
+       0.12
+      ],
+      "II": [
+       0.86,
+       0.12
+      ],
+      "III": [
+       0.86,
+       0.12
+      ],
+      "IV": [
+       1.29,
+       0.18
+      ],
+      "V": [
+       1.29,
+       0.18
+      ],
+      "VI": [
+       1.29,
+       0.18
+      ],
+      "VII": [
+       1.29,
+       0.18
+      ]
+     }
+    },
+    {
+     "fichiers": [
+      "objets/bosquet/nichoir/nichoir_calque2_1.svg",
+      "objets/bosquet/nichoir/nichoir_calque2_2.svg",
+      "objets/bosquet/nichoir/nichoir_calque2_3.svg",
+      "objets/bosquet/nichoir/nichoir_calque2_4.svg",
+      "objets/bosquet/nichoir/nichoir_calque2_5.svg",
+      "objets/bosquet/nichoir/nichoir_calque2_6.svg",
+      "objets/bosquet/nichoir/nichoir_calque2_7.svg",
+      "objets/bosquet/nichoir/nichoir_calque2_8.svg"
+     ],
+     "cadre": [
+      -32.5,
+      -22.5,
+      65,
+      30
+     ],
+     "derriere": false,
+     "ms_par_image": 250,
+     "place": {
+      "I": [
+       0.75,
+       0.42
+      ],
+      "II": [
+       0.75,
+       0.42
+      ],
+      "III": [
+       0.75,
+       0.42
+      ],
+      "IV": [
+       1.13,
+       0.63
+      ],
+      "V": [
+       1.13,
+       0.63
+      ],
+      "VI": [
+       1.13,
+       0.63
+      ],
+      "VII": [
+       1.13,
+       0.63
+      ]
+     }
+    }
+   ]
+  },
+  "charrette": {
+   "nom": "charrette",
+   "batiment": "bosquet",
+   "paliers": "I à VII",
+   "calques": [
+    {
+     "fichiers": [
+      "objets/bosquet/charrette/charrette.svg"
+     ],
+     "cadre": [
+      -37.5,
+      -42.5,
+      77.5,
+      53.5
+     ],
+     "derriere": false,
+     "place": {
+      "I": [
+       0.62,
+       0.78
+      ],
+      "II": [
+       0.25,
+       0.84
+      ],
+      "III": [
+       0.25,
+       0.84
+      ],
+      "IV": [
+       0.38,
+       1.26
+      ],
+      "V": [
+       0.38,
+       1.26
+      ],
+      "VI": [
+       0.38,
+       1.26
+      ],
+      "VII": [
+       0.38,
+       1.26
+      ]
+     }
+    }
+   ]
+  },
+  "passe-partout": {
+   "nom": "passe partout",
+   "batiment": "bosquet",
+   "paliers": "V à VII",
+   "calques": [
+    {
+     "fichiers": [
+      "objets/bosquet/passe-partout/passe-partout.svg"
+     ],
+     "cadre": [
+      -37.5,
+      -40,
+      72.5,
+      51.5
+     ],
+     "derriere": false,
+     "place": {
+      "V": [
+       1.35,
+       0.93
+      ],
+      "VI": [
+       1.35,
+       0.93
+      ],
+      "VII": [
+       1.35,
+       0.93
+      ]
+     }
+    }
+   ]
+  },
+  "ecureuil": {
+   "nom": "ecureuil",
+   "batiment": "bosquet",
+   "paliers": "V à VII",
+   "calques": [
+    {
+     "fichiers": [
+      "objets/bosquet/ecureuil/ecureuil_1.svg",
+      "objets/bosquet/ecureuil/ecureuil_2.svg",
+      "objets/bosquet/ecureuil/ecureuil_3.svg",
+      "objets/bosquet/ecureuil/ecureuil_4.svg",
+      "objets/bosquet/ecureuil/ecureuil_5.svg",
+      "objets/bosquet/ecureuil/ecureuil_6.svg",
+      "objets/bosquet/ecureuil/ecureuil_7.svg",
+      "objets/bosquet/ecureuil/ecureuil_8.svg"
+     ],
+     "cadre": [
+      -22.5,
+      -47.5,
+      45,
+      55
+     ],
+     "derriere": false,
+     "ms_par_image": 200,
+     "place": {
+      "V": [
+       -0.18,
+       1.41
+      ],
+      "VI": [
+       -0.18,
+       1.41
+      ],
+      "VII": [
+       -0.18,
+       1.41
+      ]
+     }
+    }
+   ]
+  },
+  "cerf": {
+   "nom": "cerf",
+   "batiment": "bosquet",
+   "paliers": "V à VII",
+   "calques": [
+    {
+     "fichiers": [
+      "objets/bosquet/cerf/cerf_1.svg",
+      "objets/bosquet/cerf/cerf_2.svg",
+      "objets/bosquet/cerf/cerf_3.svg",
+      "objets/bosquet/cerf/cerf_4.svg",
+      "objets/bosquet/cerf/cerf_5.svg",
+      "objets/bosquet/cerf/cerf_6.svg",
+      "objets/bosquet/cerf/cerf_7.svg",
+      "objets/bosquet/cerf/cerf_8.svg"
+     ],
+     "cadre": [
+      -32.5,
+      -62.5,
+      62.5,
+      70
+     ],
+     "derriere": false,
+     "ms_par_image": 333,
+     "place": {
+      "V": [
+       1.35,
+       -0.45
+      ],
+      "VI": [
+       1.35,
+       -0.45
+      ],
+      "VII": [
+       1.35,
+       -0.45
+      ]
+     }
+    }
+   ],
+   "lumiere": {
+    "u": 1.35,
+    "v": -0.45,
+    "z": 35,
+    "rayon": 22.5
+   }
+  },
+  "seau-cuivre": {
+   "nom": "seau cuivre",
+   "batiment": "puits",
+   "paliers": "I à VII",
+   "calques": [
+    {
+     "fichiers": [
+      "objets/puits/seau-cuivre/seau-cuivre.svg"
+     ],
+     "cadre": [
+      -17.5,
+      -30,
+      35,
+      37.5
+     ],
+     "derriere": false,
+     "place": {
+      "I": [
+       0.3,
+       0.88
+      ],
+      "II": [
+       0.3,
+       0.88
+      ],
+      "III": [
+       0.3,
+       0.88
+      ],
+      "IV": [
+       0.45,
+       1.32
+      ],
+      "V": [
+       0.45,
+       1.32
+      ],
+      "VI": [
+       0.45,
+       1.32
+      ],
+      "VII": [
+       0.45,
+       1.32
+      ]
+     }
+    }
+   ]
+  },
+  "poulie": {
+   "nom": "poulie",
+   "batiment": "puits",
+   "paliers": "I à VII",
+   "calques": [
+    {
+     "fichiers": [
+      "objets/puits/poulie/poulie_des_palier1.svg",
+      "objets/puits/poulie/poulie_des_palier2.svg"
+     ],
+     "cadre": [
+      [
+       -27.5,
+       -62.5,
+       50,
+       70
+      ],
+      [
+       -27.5,
+       -62.5,
+       50,
+       70
+      ]
+     ],
+     "derriere": false,
+     "place": {
+      "I": [
+       0.44,
+       0
+      ],
+      "II": [
+       0.84,
+       0.32
+      ],
+      "III": [
+       0.84,
+       0.32
+      ],
+      "IV": [
+       1.26,
+       0.48
+      ],
+      "V": [
+       1.26,
+       0.48
+      ],
+      "VI": [
+       1.26,
+       0.48
+      ],
+      "VII": [
+       1.26,
+       0.48
+      ]
+     }
+    }
+   ]
+  },
+  "abreuvoir": {
+   "nom": "abreuvoir",
+   "batiment": "puits",
+   "paliers": "I à VII",
+   "calques": [
+    {
+     "fichiers": [
+      "objets/puits/abreuvoir/abreuvoir_calque1.svg"
+     ],
+     "cadre": [
+      -30,
+      -22.5,
+      60,
+      32.5
+     ],
+     "derriere": false,
+     "place": {
+      "I": [
+       -0.78,
+       0.66
+      ],
+      "II": [
+       -0.78,
+       0.66
+      ],
+      "III": [
+       -0.78,
+       0.66
+      ],
+      "IV": [
+       -1.17,
+       0.99
+      ],
+      "V": [
+       -1.17,
+       0.99
+      ],
+      "VI": [
+       -1.17,
+       0.99
+      ],
+      "VII": [
+       -1.17,
+       0.99
+      ]
+     }
+    },
+    {
+     "fichiers": [
+      "objets/puits/abreuvoir/abreuvoir_calque2_1.svg",
+      "objets/puits/abreuvoir/abreuvoir_calque2_2.svg",
+      "objets/puits/abreuvoir/abreuvoir_calque2_3.svg",
+      "objets/puits/abreuvoir/abreuvoir_calque2_4.svg",
+      "objets/puits/abreuvoir/abreuvoir_calque2_5.svg",
+      "objets/puits/abreuvoir/abreuvoir_calque2_6.svg",
+      "objets/puits/abreuvoir/abreuvoir_calque2_7.svg",
+      "objets/puits/abreuvoir/abreuvoir_calque2_8.svg"
+     ],
+     "cadre": [
+      -27.5,
+      -35,
+      47.5,
+      40
+     ],
+     "derriere": false,
+     "ms_par_image": 250,
+     "place": {
+      "I": [
+       -0.5,
+       0.74
+      ],
+      "II": [
+       -0.5,
+       0.74
+      ],
+      "III": [
+       -0.5,
+       0.74
+      ],
+      "IV": [
+       -0.75,
+       1.11
+      ],
+      "V": [
+       -0.75,
+       1.11
+      ],
+      "VI": [
+       -0.75,
+       1.11
+      ],
+      "VII": [
+       -0.75,
+       1.11
+      ]
+     }
+    }
+   ]
+  },
+  "pompe": {
+   "nom": "pompe",
+   "batiment": "puits",
+   "paliers": "I à VII",
+   "calques": [
+    {
+     "fichiers": [
+      "objets/puits/pompe/pompe_calque1.svg"
+     ],
+     "cadre": [
+      -22.5,
+      -52.5,
+      45,
+      61.5
+     ],
+     "derriere": true,
+     "place": {
+      "I": [
+       0.74,
+       -0.62
+      ],
+      "II": [
+       0.74,
+       -0.62
+      ],
+      "III": [
+       0.74,
+       -0.62
+      ],
+      "IV": [
+       1.11,
+       -0.93
+      ],
+      "V": [
+       1.11,
+       -0.93
+      ],
+      "VI": [
+       1.11,
+       -0.93
+      ],
+      "VII": [
+       1.11,
+       -0.93
+      ]
+     }
+    },
+    {
+     "fichiers": [
+      "objets/puits/pompe/pompe_calque2_1.svg",
+      "objets/puits/pompe/pompe_calque2_2.svg",
+      "objets/puits/pompe/pompe_calque2_3.svg",
+      "objets/puits/pompe/pompe_calque2_4.svg",
+      "objets/puits/pompe/pompe_calque2_5.svg",
+      "objets/puits/pompe/pompe_calque2_6.svg",
+      "objets/puits/pompe/pompe_calque2_7.svg",
+      "objets/puits/pompe/pompe_calque2_8.svg"
+     ],
+     "cadre": [
+      -15,
+      -50,
+      40,
+      57.5
+     ],
+     "derriere": false,
+     "ms_par_image": 200,
+     "place": {
+      "I": [
+       0.74,
+       -0.62
+      ],
+      "II": [
+       0.74,
+       -0.62
+      ],
+      "III": [
+       0.74,
+       -0.62
+      ],
+      "IV": [
+       1.11,
+       -0.93
+      ],
+      "V": [
+       1.11,
+       -0.93
+      ],
+      "VI": [
+       1.11,
+       -0.93
+      ],
+      "VII": [
+       1.11,
+       -0.93
+      ]
+     }
+    }
+   ]
+  },
+  "sourcier": {
+   "nom": "sourcier",
+   "batiment": "puits",
+   "paliers": "V à VII",
+   "calques": [
+    {
+     "fichiers": [
+      "objets/puits/sourcier/sourcier_1.svg",
+      "objets/puits/sourcier/sourcier_2.svg",
+      "objets/puits/sourcier/sourcier_3.svg",
+      "objets/puits/sourcier/sourcier_4.svg",
+      "objets/puits/sourcier/sourcier_5.svg",
+      "objets/puits/sourcier/sourcier_6.svg"
+     ],
+     "cadre": [
+      -22.5,
+      -42.5,
+      45,
+      50
+     ],
+     "derriere": false,
+     "ms_par_image": 250,
+     "place": {
+      "V": [
+       1.38,
+       -0.18
+      ],
+      "VI": [
+       1.38,
+       -0.18
+      ],
+      "VII": [
+       1.38,
+       -0.18
+      ]
+     }
+    }
+   ]
+  },
+  "canards": {
+   "nom": "canards",
+   "batiment": "puits",
+   "paliers": "V à VII",
+   "calques": [
+    {
+     "fichiers": [
+      "objets/puits/canards/canards_1.svg",
+      "objets/puits/canards/canards_2.svg",
+      "objets/puits/canards/canards_3.svg",
+      "objets/puits/canards/canards_4.svg",
+      "objets/puits/canards/canards_5.svg",
+      "objets/puits/canards/canards_6.svg",
+      "objets/puits/canards/canards_7.svg",
+      "objets/puits/canards/canards_8.svg",
+      "objets/puits/canards/canards_9.svg",
+      "objets/puits/canards/canards_10.svg",
+      "objets/puits/canards/canards_11.svg",
+      "objets/puits/canards/canards_12.svg"
+     ],
+     "cadre": [
+      -32.5,
+      -35,
+      65,
+      46
+     ],
+     "derriere": false,
+     "ms_par_image": 500,
+     "place": {
+      "V": [
+       1.17,
+       1.11
+      ],
+      "VI": [
+       1.17,
+       1.11
+      ],
+      "VII": [
+       1.17,
+       1.11
+      ]
+     }
+    }
+   ]
+  },
+  "naiade": {
+   "nom": "naiade",
+   "batiment": "puits",
+   "paliers": "V à VII",
+   "calques": [
+    {
+     "fichiers": [
+      "objets/puits/naiade/naiade_1.svg",
+      "objets/puits/naiade/naiade_2.svg",
+      "objets/puits/naiade/naiade_3.svg",
+      "objets/puits/naiade/naiade_4.svg",
+      "objets/puits/naiade/naiade_5.svg",
+      "objets/puits/naiade/naiade_6.svg",
+      "objets/puits/naiade/naiade_7.svg",
+      "objets/puits/naiade/naiade_8.svg"
+     ],
+     "cadre": [
+      -27.5,
+      -75,
+      55,
+      85
+     ],
+     "derriere": false,
+     "ms_par_image": 167,
+     "place": {
+      "V": [
+       -1.35,
+       0.15
+      ],
+      "VI": [
+       -1.35,
+       0.15
+      ],
+      "VII": [
+       -1.35,
+       0.15
+      ]
+     }
+    }
+   ],
+   "lumiere": {
+    "u": -1.35,
+    "v": 0.15,
+    "z": 17.5,
+    "rayon": 27.5
+   }
+  },
+  "canne": {
+   "nom": "canne",
+   "batiment": "ponton",
+   "paliers": "I à VII",
+   "calques": [
+    {
+     "fichiers": [
+      "objets/ponton/canne/canne_des_palier1_1.svg",
+      "objets/ponton/canne/canne_des_palier1_2.svg",
+      "objets/ponton/canne/canne_des_palier1_3.svg",
+      "objets/ponton/canne/canne_des_palier1_4.svg",
+      "objets/ponton/canne/canne_des_palier1_5.svg",
+      "objets/ponton/canne/canne_des_palier1_6.svg",
+      "objets/ponton/canne/canne_des_palier1_7.svg",
+      "objets/ponton/canne/canne_des_palier1_8.svg",
+      "objets/ponton/canne/canne_des_palier2_1.svg",
+      "objets/ponton/canne/canne_des_palier2_2.svg",
+      "objets/ponton/canne/canne_des_palier2_3.svg",
+      "objets/ponton/canne/canne_des_palier2_4.svg",
+      "objets/ponton/canne/canne_des_palier2_5.svg",
+      "objets/ponton/canne/canne_des_palier2_6.svg",
+      "objets/ponton/canne/canne_des_palier2_7.svg",
+      "objets/ponton/canne/canne_des_palier2_8.svg"
+     ],
+     "cadre": [
+      [
+       -32.5,
+       -50,
+       52.5,
+       67.5
+      ],
+      [
+       -32.5,
+       -50,
+       52.5,
+       67.5
+      ]
+     ],
+     "derriere": false,
+     "ms_par_image": 250,
+     "place": {
+      "I": [
+       0.62,
+       0.2
+      ],
+      "II": [
+       0.73,
+       0.45
+      ],
+      "III": [
+       0.73,
+       0.45
+      ],
+      "IV": [
+       1.1,
+       0.68
+      ],
+      "V": [
+       1.1,
+       0.68
+      ],
+      "VI": [
+       1.1,
+       0.68
+      ],
+      "VII": [
+       1.1,
+       0.68
+      ]
+     }
+    }
+   ]
+  },
+  "filet": {
+   "nom": "filet",
+   "batiment": "ponton",
+   "paliers": "I à VII",
+   "calques": [
+    {
+     "fichiers": [
+      "objets/ponton/filet/filet.svg"
+     ],
+     "cadre": [
+      -22.5,
+      -30,
+      45,
+      35
+     ],
+     "derriere": false,
+     "place": {
+      "I": [
+       0.34,
+       -0.06
+      ],
+      "II": [
+       0.6,
+       -0.04
+      ],
+      "III": [
+       0.6,
+       -0.04
+      ],
+      "IV": [
+       0.9,
+       -0.06
+      ],
+      "V": [
+       0.9,
+       -0.06
+      ],
+      "VI": [
+       0.9,
+       -0.06
+      ],
+      "VII": [
+       0.9,
+       -0.06
+      ]
+     }
+    }
+   ]
+  },
+  "casier": {
+   "nom": "casier",
+   "batiment": "ponton",
+   "paliers": "I à VII",
+   "calques": [
+    {
+     "fichiers": [
+      "objets/ponton/casier/casier_calque1.svg"
+     ],
+     "cadre": [
+      -22.5,
+      -30,
+      50,
+      39.5
+     ],
+     "derriere": false,
+     "place": {
+      "I": [
+       -0.84,
+       0.46
+      ],
+      "II": [
+       -0.84,
+       0.46
+      ],
+      "III": [
+       -0.84,
+       0.46
+      ],
+      "IV": [
+       -1.26,
+       0.69
+      ],
+      "V": [
+       -1.26,
+       0.69
+      ],
+      "VI": [
+       -1.26,
+       0.69
+      ],
+      "VII": [
+       -1.26,
+       0.69
+      ]
+     }
+    },
+    {
+     "fichiers": [
+      "objets/ponton/casier/casier_calque2_1.svg",
+      "objets/ponton/casier/casier_calque2_2.svg",
+      "objets/ponton/casier/casier_calque2_3.svg",
+      "objets/ponton/casier/casier_calque2_4.svg"
+     ],
+     "cadre": [
+      -12.5,
+      -15,
+      25,
+      18.75
+     ],
+     "derriere": false,
+     "ms_par_image": 143,
+     "mouvement": true,
+     "place": {
+      "I": [
+       -0.66,
+       0.84
+      ],
+      "II": [
+       -0.66,
+       0.84
+      ],
+      "III": [
+       -0.66,
+       0.84
+      ],
+      "IV": [
+       -0.99,
+       1.26
+      ],
+      "V": [
+       -0.99,
+       1.26
+      ],
+      "VI": [
+       -0.99,
+       1.26
+      ],
+      "VII": [
+       -0.99,
+       1.26
+      ]
+     }
+    }
+   ]
+  },
+  "barque": {
+   "nom": "barque",
+   "batiment": "ponton",
+   "paliers": "I à VII",
+   "calques": [
+    {
+     "fichiers": [
+      "objets/ponton/barque/barque_1.svg",
+      "objets/ponton/barque/barque_2.svg",
+      "objets/ponton/barque/barque_3.svg",
+      "objets/ponton/barque/barque_4.svg",
+      "objets/ponton/barque/barque_5.svg",
+      "objets/ponton/barque/barque_6.svg",
+      "objets/ponton/barque/barque_7.svg",
+      "objets/ponton/barque/barque_8.svg"
+     ],
+     "cadre": [
+      -32.5,
+      -37.5,
+      65,
+      49
+     ],
+     "derriere": true,
+     "ms_par_image": 200,
+     "mouvement": true,
+     "place": {
+      "I": [
+       0.46,
+       -0.62
+      ],
+      "II": [
+       0.46,
+       -0.62
+      ],
+      "III": [
+       0.46,
+       -0.62
+      ],
+      "IV": [
+       0.69,
+       -0.93
+      ],
+      "V": [
+       0.69,
+       -0.93
+      ],
+      "VI": [
+       0.69,
+       -0.93
+      ],
+      "VII": [
+       0.69,
+       -0.93
+      ]
+     }
+    }
+   ]
+  },
+  "harpon": {
+   "nom": "harpon",
+   "batiment": "ponton",
+   "paliers": "V à VII",
+   "calques": [
+    {
+     "fichiers": [
+      "objets/ponton/harpon/harpon.svg"
+     ],
+     "cadre": [
+      -32.5,
+      -37.5,
+      65,
+      48.5
+     ],
+     "derriere": false,
+     "place": {
+      "V": [
+       0.75,
+       -1.38
+      ],
+      "VI": [
+       0.75,
+       -1.38
+      ],
+      "VII": [
+       0.75,
+       -1.38
+      ]
+     }
+    }
+   ]
+  },
+  "pelican": {
+   "nom": "pelican",
+   "batiment": "ponton",
+   "paliers": "V à VII",
+   "calques": [
+    {
+     "fichiers": [
+      "objets/ponton/pelican/pelican_1.svg",
+      "objets/ponton/pelican/pelican_2.svg",
+      "objets/ponton/pelican/pelican_3.svg",
+      "objets/ponton/pelican/pelican_4.svg",
+      "objets/ponton/pelican/pelican_5.svg",
+      "objets/ponton/pelican/pelican_6.svg",
+      "objets/ponton/pelican/pelican_7.svg",
+      "objets/ponton/pelican/pelican_8.svg"
+     ],
+     "cadre": [
+      -27.5,
+      -60,
+      50,
+      67.5
+     ],
+     "derriere": false,
+     "ms_par_image": 333,
+     "place": {
+      "V": [
+       1.38,
+       -0.18
+      ],
+      "VI": [
+       1.38,
+       -0.18
+      ],
+      "VII": [
+       1.38,
+       -0.18
+      ]
+     }
+    }
+   ]
+  },
+  "sirene": {
+   "nom": "sirene",
+   "batiment": "ponton",
+   "paliers": "V à VII",
+   "calques": [
+    {
+     "fichiers": [
+      "objets/ponton/sirene/sirene_1.svg",
+      "objets/ponton/sirene/sirene_2.svg",
+      "objets/ponton/sirene/sirene_3.svg",
+      "objets/ponton/sirene/sirene_4.svg",
+      "objets/ponton/sirene/sirene_5.svg",
+      "objets/ponton/sirene/sirene_6.svg",
+      "objets/ponton/sirene/sirene_7.svg",
+      "objets/ponton/sirene/sirene_8.svg"
+     ],
+     "cadre": [
+      -32.5,
+      -55,
+      65,
+      64
+     ],
+     "derriere": false,
+     "ms_par_image": 250,
+     "place": {
+      "V": [
+       -0.15,
+       1.41
+      ],
+      "VI": [
+       -0.15,
+       1.41
+      ],
+      "VII": [
+       -0.15,
+       1.41
+      ]
+     }
+    }
+   ],
+   "lumiere": {
+    "u": -0.15,
+    "v": 1.41,
+    "z": 17.5,
+    "rayon": 22.5
+   }
+  },
+  "etabli": {
+   "nom": "etabli",
+   "batiment": "atelier",
+   "paliers": "I à VII",
+   "calques": [
+    {
+     "fichiers": [
+      "objets/atelier/etabli/etabli.svg"
+     ],
+     "cadre": [
+      -32.5,
+      -40,
+      65,
+      49.5
+     ],
+     "derriere": false,
+     "place": {
+      "I": [
+       0.82,
+       -0.78
+      ],
+      "II": [
+       0.82,
+       -0.78
+      ],
+      "III": [
+       0.82,
+       -0.78
+      ],
+      "IV": [
+       1.23,
+       -1.17
+      ],
+      "V": [
+       1.23,
+       -1.17
+      ],
+      "VI": [
+       1.23,
+       -1.17
+      ],
+      "VII": [
+       1.23,
+       -1.17
+      ]
+     }
+    }
+   ]
+  },
+  "enclume": {
+   "nom": "enclume",
+   "batiment": "atelier",
+   "paliers": "I à VII",
+   "calques": [
+    {
+     "fichiers": [
+      "objets/atelier/enclume/enclume_calque1.svg"
+     ],
+     "cadre": [
+      -22.5,
+      -35,
+      47.5,
+      43
+     ],
+     "derriere": false,
+     "place": {
+      "I": [
+       -0.72,
+       0.76
+      ],
+      "II": [
+       -0.04,
+       0.86
+      ],
+      "III": [
+       -0.04,
+       0.86
+      ],
+      "IV": [
+       -0.06,
+       1.29
+      ],
+      "V": [
+       -0.06,
+       1.29
+      ],
+      "VI": [
+       -0.06,
+       1.29
+      ],
+      "VII": [
+       -0.06,
+       1.29
+      ]
+     }
+    },
+    {
+     "fichiers": [
+      "objets/atelier/enclume/enclume_calque2_1.svg",
+      "objets/atelier/enclume/enclume_calque2_2.svg",
+      "objets/atelier/enclume/enclume_calque2_3.svg",
+      "objets/atelier/enclume/enclume_calque2_4.svg",
+      "objets/atelier/enclume/enclume_calque2_5.svg",
+      "objets/atelier/enclume/enclume_calque2_6.svg",
+      "objets/atelier/enclume/enclume_calque2_7.svg",
+      "objets/atelier/enclume/enclume_calque2_8.svg"
+     ],
+     "cadre": [
+      -15,
+      -43,
+      30,
+      30.5
+     ],
+     "derriere": false,
+     "ms_par_image": 167,
+     "place": {
+      "I": [
+       -0.72,
+       0.76
+      ],
+      "II": [
+       -0.04,
+       0.86
+      ],
+      "III": [
+       -0.04,
+       0.86
+      ],
+      "IV": [
+       -0.06,
+       1.29
+      ],
+      "V": [
+       -0.06,
+       1.29
+      ],
+      "VI": [
+       -0.06,
+       1.29
+      ],
+      "VII": [
+       -0.06,
+       1.29
+      ]
+     }
+    }
+   ],
+   "lumiere": {
+    "u": -0.09,
+    "v": 1.29,
+    "z": 22.5,
+    "rayon": 15
+   }
+  },
+  "soufflet": {
+   "nom": "soufflet",
+   "batiment": "atelier",
+   "paliers": "I à VII",
+   "calques": [
+    {
+     "fichiers": [
+      "objets/atelier/soufflet/soufflet_1.svg",
+      "objets/atelier/soufflet/soufflet_2.svg",
+      "objets/atelier/soufflet/soufflet_3.svg",
+      "objets/atelier/soufflet/soufflet_4.svg",
+      "objets/atelier/soufflet/soufflet_5.svg",
+      "objets/atelier/soufflet/soufflet_6.svg",
+      "objets/atelier/soufflet/soufflet_7.svg",
+      "objets/atelier/soufflet/soufflet_8.svg"
+     ],
+     "cadre": [
+      -30,
+      -37.5,
+      60,
+      50
+     ],
+     "derriere": false,
+     "ms_par_image": 200,
+     "place": {
+      "I": [
+       0.84,
+       0.5
+      ],
+      "II": [
+       0.84,
+       0.5
+      ],
+      "III": [
+       0.84,
+       0.5
+      ],
+      "IV": [
+       1.26,
+       0.75
+      ],
+      "V": [
+       1.26,
+       0.75
+      ],
+      "VI": [
+       1.26,
+       0.75
+      ],
+      "VII": [
+       1.26,
+       0.75
+      ]
+     }
+    }
+   ]
+  },
+  "marteau-pilon": {
+   "nom": "marteau pilon",
+   "batiment": "atelier",
+   "paliers": "V à VII",
+   "calques": [
+    {
+     "fichiers": [
+      "objets/atelier/marteau-pilon/marteau-pilon_1.svg",
+      "objets/atelier/marteau-pilon/marteau-pilon_2.svg",
+      "objets/atelier/marteau-pilon/marteau-pilon_3.svg",
+      "objets/atelier/marteau-pilon/marteau-pilon_4.svg",
+      "objets/atelier/marteau-pilon/marteau-pilon_5.svg",
+      "objets/atelier/marteau-pilon/marteau-pilon_6.svg",
+      "objets/atelier/marteau-pilon/marteau-pilon_7.svg",
+      "objets/atelier/marteau-pilon/marteau-pilon_8.svg"
+     ],
+     "cadre": [
+      -27.5,
+      -64,
+      55,
+      73
+     ],
+     "derriere": false,
+     "ms_par_image": 167,
+     "place": {
+      "V": [
+       0.9,
+       1.38
+      ],
+      "VI": [
+       0.9,
+       1.38
+      ],
+      "VII": [
+       0.9,
+       1.38
+      ]
+     }
+    }
+   ]
+  },
+  "automate": {
+   "nom": "automate",
+   "batiment": "atelier",
+   "paliers": "V à VII",
+   "calques": [
+    {
+     "fichiers": [
+      "objets/atelier/automate/automate_1.svg",
+      "objets/atelier/automate/automate_2.svg",
+      "objets/atelier/automate/automate_3.svg",
+      "objets/atelier/automate/automate_4.svg",
+      "objets/atelier/automate/automate_5.svg",
+      "objets/atelier/automate/automate_6.svg",
+      "objets/atelier/automate/automate_7.svg",
+      "objets/atelier/automate/automate_8.svg"
+     ],
+     "cadre": [
+      -25,
+      -55,
+      50,
+      62.5
+     ],
+     "derriere": false,
+     "ms_par_image": 167,
+     "place": {
+      "V": [
+       -1.35,
+       1.29
+      ],
+      "VI": [
+       -1.35,
+       1.29
+      ],
+      "VII": [
+       -1.35,
+       1.29
+      ]
+     }
+    }
+   ]
+  },
+  "athanor": {
+   "nom": "athanor",
+   "batiment": "atelier",
+   "paliers": "V à VII",
+   "calques": [
+    {
+     "fichiers": [
+      "objets/atelier/athanor/athanor_1.svg",
+      "objets/atelier/athanor/athanor_2.svg",
+      "objets/atelier/athanor/athanor_3.svg",
+      "objets/atelier/athanor/athanor_4.svg",
+      "objets/atelier/athanor/athanor_5.svg",
+      "objets/atelier/athanor/athanor_6.svg",
+      "objets/atelier/athanor/athanor_7.svg",
+      "objets/atelier/athanor/athanor_8.svg"
+     ],
+     "cadre": [
+      -32.5,
+      -80,
+      65,
+      90
+     ],
+     "derriere": false,
+     "ms_par_image": 200,
+     "place": {
+      "V": [
+       -0.6,
+       1.41
+      ],
+      "VI": [
+       -0.6,
+       1.41
+      ],
+      "VII": [
+       -0.6,
+       1.41
+      ]
+     }
+    }
+   ],
+   "lumiere": {
+    "u": -0.6,
+    "v": 1.41,
+    "z": 20,
+    "rayon": 30
+   }
+  },
+  "cuisine": {
+   "nom": "cuisine",
+   "batiment": "foyer",
+   "paliers": "I à VII",
+   "calques": [
+    {
+     "fichiers": [
+      "objets/foyer/cuisine/cuisine_calque1.svg"
+     ],
+     "cadre": [
+      -30,
+      -47.5,
+      57.5,
+      58
+     ],
+     "derriere": false,
+     "place": {
+      "I": [
+       -0.84,
+       0.8
+      ],
+      "II": [
+       -0.84,
+       0.8
+      ],
+      "III": [
+       -0.84,
+       0.8
+      ],
+      "IV": [
+       -1.26,
+       1.2
+      ],
+      "V": [
+       -1.26,
+       1.2
+      ],
+      "VI": [
+       -1.26,
+       1.2
+      ],
+      "VII": [
+       -1.26,
+       1.2
+      ]
+     }
+    },
+    {
+     "fichiers": [
+      "objets/foyer/cuisine/cuisine_calque2_1.svg",
+      "objets/foyer/cuisine/cuisine_calque2_2.svg",
+      "objets/foyer/cuisine/cuisine_calque2_3.svg",
+      "objets/foyer/cuisine/cuisine_calque2_4.svg",
+      "objets/foyer/cuisine/cuisine_calque2_5.svg",
+      "objets/foyer/cuisine/cuisine_calque2_6.svg",
+      "objets/foyer/cuisine/cuisine_calque2_7.svg",
+      "objets/foyer/cuisine/cuisine_calque2_8.svg"
+     ],
+     "cadre": [
+      -17.5,
+      -67.5,
+      37.5,
+      72.5
+     ],
+     "derriere": false,
+     "ms_par_image": 200,
+     "place": {
+      "I": [
+       -0.84,
+       0.8
+      ],
+      "II": [
+       -0.84,
+       0.8
+      ],
+      "III": [
+       -0.84,
+       0.8
+      ],
+      "IV": [
+       -1.26,
+       1.2
+      ],
+      "V": [
+       -1.26,
+       1.2
+      ],
+      "VI": [
+       -1.26,
+       1.2
+      ],
+      "VII": [
+       -1.26,
+       1.2
+      ]
+     }
+    }
+   ],
+   "lumiere": {
+    "u": -1.29,
+    "v": 1.38,
+    "z": 12.5,
+    "rayon": 20
+   }
+  },
+  "lit": {
+   "nom": "lit",
+   "batiment": "foyer",
+   "paliers": "I à VII",
+   "calques": [
+    {
+     "fichiers": [
+      "objets/foyer/lit/lit_calque1.svg"
+     ],
+     "cadre": [
+      -27.5,
+      -41.5,
+      57.5,
+      59
+     ],
+     "derriere": false,
+     "place": {
+      "I": [
+       0.9,
+       -0.22
+      ],
+      "II": [
+       0.9,
+       -0.22
+      ],
+      "III": [
+       0.9,
+       -0.22
+      ],
+      "IV": [
+       1.35,
+       -0.33
+      ],
+      "V": [
+       1.35,
+       -0.33
+      ],
+      "VI": [
+       1.35,
+       -0.33
+      ],
+      "VII": [
+       1.35,
+       -0.33
+      ]
+     }
+    },
+    {
+     "fichiers": [
+      "objets/foyer/lit/lit_calque2_1.svg",
+      "objets/foyer/lit/lit_calque2_2.svg",
+      "objets/foyer/lit/lit_calque2_3.svg",
+      "objets/foyer/lit/lit_calque2_4.svg",
+      "objets/foyer/lit/lit_calque2_5.svg",
+      "objets/foyer/lit/lit_calque2_6.svg",
+      "objets/foyer/lit/lit_calque2_7.svg",
+      "objets/foyer/lit/lit_calque2_8.svg"
+     ],
+     "cadre": [
+      -25,
+      -33,
+      52.5,
+      43
+     ],
+     "derriere": false,
+     "ms_par_image": 333,
+     "place": {
+      "I": [
+       0.9,
+       -0.22
+      ],
+      "II": [
+       0.9,
+       -0.22
+      ],
+      "III": [
+       0.9,
+       -0.22
+      ],
+      "IV": [
+       1.35,
+       -0.33
+      ],
+      "V": [
+       1.35,
+       -0.33
+      ],
+      "VI": [
+       1.35,
+       -0.33
+      ],
+      "VII": [
+       1.35,
+       -0.33
+      ]
+     }
+    }
+   ]
+  },
+  "chat": {
+   "nom": "chat",
+   "batiment": "foyer",
+   "paliers": "I à VII",
+   "calques": [
+    {
+     "fichiers": [
+      "objets/foyer/chat/chat_1.svg",
+      "objets/foyer/chat/chat_2.svg",
+      "objets/foyer/chat/chat_3.svg",
+      "objets/foyer/chat/chat_4.svg",
+      "objets/foyer/chat/chat_5.svg",
+      "objets/foyer/chat/chat_6.svg",
+      "objets/foyer/chat/chat_7.svg",
+      "objets/foyer/chat/chat_8.svg"
+     ],
+     "cadre": [
+      -17.5,
+      -20,
+      35,
+      25
+     ],
+     "derriere": false,
+     "ms_par_image": 333,
+     "place": {
+      "I": [
+       0.46,
+       0.8
+      ],
+      "II": [
+       0.46,
+       0.8
+      ],
+      "III": [
+       0.46,
+       0.8
+      ],
+      "IV": [
+       0.69,
+       1.2
+      ],
+      "V": [
+       0.69,
+       1.2
+      ],
+      "VI": [
+       0.69,
+       1.2
+      ],
+      "VII": [
+       0.69,
+       1.2
+      ]
+     }
+    }
+   ]
+  },
+  "chien": {
+   "nom": "chien",
+   "batiment": "foyer",
+   "paliers": "I à VII",
+   "calques": [
+    {
+     "fichiers": [
+      "objets/foyer/chien/chien_1.svg",
+      "objets/foyer/chien/chien_2.svg",
+      "objets/foyer/chien/chien_3.svg",
+      "objets/foyer/chien/chien_4.svg",
+      "objets/foyer/chien/chien_5.svg",
+      "objets/foyer/chien/chien_6.svg",
+      "objets/foyer/chien/chien_7.svg",
+      "objets/foyer/chien/chien_8.svg"
+     ],
+     "cadre": [
+      -20,
+      -32.5,
+      42.5,
+      37.5
+     ],
+     "derriere": false,
+     "ms_par_image": 167,
+     "place": {
+      "I": [
+       -0.24,
+       0.88
+      ],
+      "II": [
+       -0.24,
+       0.88
+      ],
+      "III": [
+       -0.24,
+       0.88
+      ],
+      "IV": [
+       -0.36,
+       1.32
+      ],
+      "V": [
+       -0.36,
+       1.32
+      ],
+      "VI": [
+       -0.36,
+       1.32
+      ],
+      "VII": [
+       -0.36,
+       1.32
+      ]
+     }
+    }
+   ]
+  },
+  "sablier": {
+   "nom": "sablier",
+   "batiment": "foyer",
+   "paliers": "V à VII",
+   "calques": [
+    {
+     "fichiers": [
+      "objets/foyer/sablier/sablier_1.svg",
+      "objets/foyer/sablier/sablier_2.svg",
+      "objets/foyer/sablier/sablier_3.svg",
+      "objets/foyer/sablier/sablier_4.svg",
+      "objets/foyer/sablier/sablier_5.svg",
+      "objets/foyer/sablier/sablier_6.svg",
+      "objets/foyer/sablier/sablier_7.svg",
+      "objets/foyer/sablier/sablier_8.svg"
+     ],
+     "cadre": [
+      -20,
+      -57.5,
+      40,
+      65
+     ],
+     "derriere": false,
+     "ms_par_image": 500,
+     "place": {
+      "V": [
+       1.38,
+       0.93
+      ],
+      "VI": [
+       1.38,
+       0.93
+      ],
+      "VII": [
+       1.38,
+       0.93
+      ]
+     }
+    }
+   ]
+  },
+  "hibou": {
+   "nom": "hibou",
+   "batiment": "foyer",
+   "paliers": "V à VII",
+   "calques": [
+    {
+     "fichiers": [
+      "objets/foyer/hibou/hibou_1.svg",
+      "objets/foyer/hibou/hibou_2.svg",
+      "objets/foyer/hibou/hibou_3.svg",
+      "objets/foyer/hibou/hibou_4.svg",
+      "objets/foyer/hibou/hibou_5.svg",
+      "objets/foyer/hibou/hibou_6.svg",
+      "objets/foyer/hibou/hibou_7.svg",
+      "objets/foyer/hibou/hibou_8.svg"
+     ],
+     "cadre": [
+      -20,
+      -57.5,
+      40,
+      65
+     ],
+     "derriere": false,
+     "ms_par_image": 333,
+     "place": {
+      "V": [
+       -1.38,
+       0.54
+      ],
+      "VI": [
+       -1.38,
+       0.54
+      ],
+      "VII": [
+       -1.38,
+       0.54
+      ]
+     }
+    }
+   ]
+  },
+  "grimoire": {
+   "nom": "grimoire",
+   "batiment": "foyer",
+   "paliers": "V à VII",
+   "calques": [
+    {
+     "fichiers": [
+      "objets/foyer/grimoire/grimoire_calque1.svg"
+     ],
+     "cadre": [
+      -17.5,
+      -27.5,
+      35,
+      35
+     ],
+     "derriere": false,
+     "place": {
+      "V": [
+       1.32,
+       1.42
+      ],
+      "VI": [
+       1.32,
+       1.42
+      ],
+      "VII": [
+       1.32,
+       1.42
+      ]
+     }
+    },
+    {
+     "fichiers": [
+      "objets/foyer/grimoire/grimoire_calque2_1.svg",
+      "objets/foyer/grimoire/grimoire_calque2_2.svg",
+      "objets/foyer/grimoire/grimoire_calque2_3.svg",
+      "objets/foyer/grimoire/grimoire_calque2_4.svg",
+      "objets/foyer/grimoire/grimoire_calque2_5.svg",
+      "objets/foyer/grimoire/grimoire_calque2_6.svg",
+      "objets/foyer/grimoire/grimoire_calque2_7.svg",
+      "objets/foyer/grimoire/grimoire_calque2_8.svg"
+     ],
+     "cadre": [
+      -27.5,
+      -62.5,
+      55,
+      45
+     ],
+     "derriere": false,
+     "ms_par_image": 200,
+     "mouvement": true,
+     "place": {
+      "V": [
+       1.32,
+       1.42
+      ],
+      "VI": [
+       1.32,
+       1.42
+      ],
+      "VII": [
+       1.32,
+       1.42
+      ]
+     }
+    }
+   ],
+   "lumiere": {
+    "u": 1.32,
+    "v": 1.42,
+    "z": 30,
+    "rayon": 27.5
+   }
+  }
+ },
+ "pieces_rares": {
+  "papillons": {
+   "nom": "papillons",
+   "batiment": "potager",
+   "fichiers": [
+    "pieces_rares/papillons/papillons_potager_palier1.svg",
+    "pieces_rares/papillons/papillons_potager_palier2.svg",
+    "pieces_rares/papillons/papillons_potager_palier3.svg",
+    "pieces_rares/papillons/papillons_potager_palier4.svg",
+    "pieces_rares/papillons/papillons_potager_palier5.svg",
+    "pieces_rares/papillons/papillons_potager_palier6.svg",
+    "pieces_rares/papillons/papillons_potager_palier7.svg"
+   ],
+   "cadres": [
+    [
+     -95,
+     -155,
+     190,
+     210
+    ],
+    [
+     -95,
+     -155,
+     190,
+     210
+    ],
+    [
+     -95,
+     -155,
+     190,
+     210
+    ],
+    [
+     -140,
+     -250,
+     280,
+     330
+    ],
+    [
+     -140,
+     -250,
+     280,
+     330
+    ],
+    [
+     -140,
+     -250,
+     280,
+     330
+    ],
+    [
+     -140,
+     -250,
+     280,
+     330
+    ]
+   ],
+   "note": "image 1 de l'accessoire ; le jeu l'anime (calques de shopSprites)"
+  },
+  "tournesols": {
+   "nom": "tournesols",
+   "batiment": "potager",
+   "fichiers": [
+    "pieces_rares/tournesols/tournesols_potager_palier1.svg",
+    "pieces_rares/tournesols/tournesols_potager_palier2.svg",
+    "pieces_rares/tournesols/tournesols_potager_palier3.svg",
+    "pieces_rares/tournesols/tournesols_potager_palier4.svg",
+    "pieces_rares/tournesols/tournesols_potager_palier5.svg",
+    "pieces_rares/tournesols/tournesols_potager_palier6.svg",
+    "pieces_rares/tournesols/tournesols_potager_palier7.svg"
+   ],
+   "cadres": [
+    [
+     -95,
+     -155,
+     190,
+     210
+    ],
+    [
+     -95,
+     -155,
+     190,
+     210
+    ],
+    [
+     -95,
+     -155,
+     190,
+     210
+    ],
+    [
+     -140,
+     -250,
+     280,
+     330
+    ],
+    [
+     -140,
+     -250,
+     280,
+     330
+    ],
+    [
+     -140,
+     -250,
+     280,
+     330
+    ],
+    [
+     -140,
+     -250,
+     280,
+     330
+    ]
+   ],
+   "note": "image 1 de l'accessoire ; le jeu l'anime (calques de shopSprites)"
+  },
+  "filon-or": {
+   "nom": "filon or",
+   "batiment": "carriere",
+   "fichiers": [
+    "pieces_rares/filon-or/filon-or_carriere_palier1.svg",
+    "pieces_rares/filon-or/filon-or_carriere_palier2.svg",
+    "pieces_rares/filon-or/filon-or_carriere_palier3.svg",
+    "pieces_rares/filon-or/filon-or_carriere_palier4.svg",
+    "pieces_rares/filon-or/filon-or_carriere_palier5.svg",
+    "pieces_rares/filon-or/filon-or_carriere_palier6.svg",
+    "pieces_rares/filon-or/filon-or_carriere_palier7.svg"
+   ],
+   "cadres": [
+    [
+     -95,
+     -155,
+     192,
+     210
+    ],
+    [
+     -95,
+     -155,
+     192,
+     210
+    ],
+    [
+     -95,
+     -155,
+     192,
+     210
+    ],
+    [
+     -140,
+     -250,
+     280,
+     330
+    ],
+    [
+     -140,
+     -250,
+     280,
+     330
+    ],
+    [
+     -140,
+     -250,
+     280,
+     330
+    ],
+    [
+     -140,
+     -250,
+     280,
+     330
+    ]
+   ],
+   "note": "image 1 de l'accessoire ; le jeu l'anime (calques de shopSprites)"
+  },
+  "coeur-lave": {
+   "nom": "coeur lave",
+   "batiment": "carriere",
+   "fichiers": [
+    "pieces_rares/coeur-lave/coeur-lave_carriere_palier1.svg",
+    "pieces_rares/coeur-lave/coeur-lave_carriere_palier2.svg",
+    "pieces_rares/coeur-lave/coeur-lave_carriere_palier3.svg",
+    "pieces_rares/coeur-lave/coeur-lave_carriere_palier4.svg",
+    "pieces_rares/coeur-lave/coeur-lave_carriere_palier5.svg",
+    "pieces_rares/coeur-lave/coeur-lave_carriere_palier6.svg",
+    "pieces_rares/coeur-lave/coeur-lave_carriere_palier7.svg"
+   ],
+   "cadres": [
+    [
+     -95,
+     -155,
+     190,
+     210
+    ],
+    [
+     -95,
+     -155,
+     190,
+     210
+    ],
+    [
+     -95,
+     -155,
+     190,
+     210
+    ],
+    [
+     -140,
+     -250,
+     280,
+     330
+    ],
+    [
+     -140,
+     -250,
+     280,
+     330
+    ],
+    [
+     -140,
+     -250,
+     280,
+     330
+    ],
+    [
+     -140,
+     -250,
+     280,
+     330
+    ]
+   ],
+   "note": "image 1 de l'accessoire ; le jeu l'anime (calques de shopSprites)"
+  },
+  "fees": {
+   "nom": "fees",
+   "batiment": "bosquet",
+   "fichiers": [
+    "pieces_rares/fees/fees_bosquet_palier1.svg",
+    "pieces_rares/fees/fees_bosquet_palier2.svg",
+    "pieces_rares/fees/fees_bosquet_palier3.svg",
+    "pieces_rares/fees/fees_bosquet_palier4.svg",
+    "pieces_rares/fees/fees_bosquet_palier5.svg",
+    "pieces_rares/fees/fees_bosquet_palier6.svg",
+    "pieces_rares/fees/fees_bosquet_palier7.svg"
+   ],
+   "cadres": [
+    [
+     -95,
+     -155,
+     190,
+     210
+    ],
+    [
+     -95,
+     -155,
+     190,
+     210
+    ],
+    [
+     -95,
+     -155,
+     190,
+     210
+    ],
+    [
+     -140,
+     -250,
+     280,
+     330
+    ],
+    [
+     -140,
+     -250,
+     280,
+     330
+    ],
+    [
+     -140,
+     -250,
+     280,
+     330
+    ],
+    [
+     -140,
+     -250,
+     280,
+     330
+    ]
+   ],
+   "note": "image 1 de l'accessoire ; le jeu l'anime (calques de shopSprites)"
+  },
+  "petales": {
+   "nom": "petales",
+   "batiment": "bosquet",
+   "fichiers": [
+    "pieces_rares/petales/petales_bosquet_palier1.svg",
+    "pieces_rares/petales/petales_bosquet_palier2.svg",
+    "pieces_rares/petales/petales_bosquet_palier3.svg",
+    "pieces_rares/petales/petales_bosquet_palier4.svg",
+    "pieces_rares/petales/petales_bosquet_palier5.svg",
+    "pieces_rares/petales/petales_bosquet_palier6.svg",
+    "pieces_rares/petales/petales_bosquet_palier7.svg"
+   ],
+   "cadres": [
+    [
+     -95,
+     -155,
+     190,
+     210
+    ],
+    [
+     -95,
+     -155,
+     190,
+     210
+    ],
+    [
+     -95,
+     -155,
+     190,
+     210
+    ],
+    [
+     -140,
+     -250,
+     280,
+     330
+    ],
+    [
+     -140,
+     -250,
+     280,
+     330
+    ],
+    [
+     -140,
+     -250,
+     280,
+     330
+    ],
+    [
+     -140,
+     -250,
+     280,
+     330
+    ]
+   ],
+   "note": "image 1 de l'accessoire ; le jeu l'anime (calques de shopSprites)"
+  },
+  "arc-en-ciel": {
+   "nom": "arc en ciel",
+   "batiment": "puits",
+   "fichiers": [
+    "pieces_rares/arc-en-ciel/arc-en-ciel_puits_palier1.svg",
+    "pieces_rares/arc-en-ciel/arc-en-ciel_puits_palier2.svg",
+    "pieces_rares/arc-en-ciel/arc-en-ciel_puits_palier3.svg",
+    "pieces_rares/arc-en-ciel/arc-en-ciel_puits_palier4.svg",
+    "pieces_rares/arc-en-ciel/arc-en-ciel_puits_palier5.svg",
+    "pieces_rares/arc-en-ciel/arc-en-ciel_puits_palier6.svg",
+    "pieces_rares/arc-en-ciel/arc-en-ciel_puits_palier7.svg"
+   ],
+   "cadres": [
+    [
+     -95,
+     -155,
+     190,
+     210
+    ],
+    [
+     -95,
+     -155,
+     190,
+     210
+    ],
+    [
+     -95,
+     -155,
+     190,
+     210
+    ],
+    [
+     -140,
+     -250,
+     280,
+     330
+    ],
+    [
+     -140,
+     -250,
+     280,
+     330
+    ],
+    [
+     -140,
+     -250,
+     280,
+     330
+    ],
+    [
+     -140,
+     -250,
+     280,
+     330
+    ]
+   ],
+   "note": "image 1 de l'accessoire ; le jeu l'anime (calques de shopSprites)"
+  },
+  "nenuphars": {
+   "nom": "nenuphars",
+   "batiment": "puits",
+   "fichiers": [
+    "pieces_rares/nenuphars/nenuphars_puits_palier1.svg",
+    "pieces_rares/nenuphars/nenuphars_puits_palier2.svg",
+    "pieces_rares/nenuphars/nenuphars_puits_palier3.svg",
+    "pieces_rares/nenuphars/nenuphars_puits_palier4.svg",
+    "pieces_rares/nenuphars/nenuphars_puits_palier5.svg",
+    "pieces_rares/nenuphars/nenuphars_puits_palier6.svg",
+    "pieces_rares/nenuphars/nenuphars_puits_palier7.svg"
+   ],
+   "cadres": [
+    [
+     -95,
+     -155,
+     207.5,
+     210
+    ],
+    [
+     -95,
+     -155,
+     207.5,
+     210
+    ],
+    [
+     -95,
+     -155,
+     207.5,
+     210
+    ],
+    [
+     -140,
+     -250,
+     292.5,
+     330
+    ],
+    [
+     -140,
+     -250,
+     292.5,
+     330
+    ],
+    [
+     -140,
+     -250,
+     292.5,
+     330
+    ],
+    [
+     -140,
+     -250,
+     292.5,
+     330
+    ]
+   ],
+   "note": "image 1 de l'accessoire ; le jeu l'anime (calques de shopSprites)"
+  },
+  "pavois": {
+   "nom": "pavois",
+   "batiment": "ponton",
+   "fichiers": [
+    "pieces_rares/pavois/pavois_ponton_palier1.svg",
+    "pieces_rares/pavois/pavois_ponton_palier2.svg",
+    "pieces_rares/pavois/pavois_ponton_palier3.svg",
+    "pieces_rares/pavois/pavois_ponton_palier4.svg",
+    "pieces_rares/pavois/pavois_ponton_palier5.svg",
+    "pieces_rares/pavois/pavois_ponton_palier6.svg",
+    "pieces_rares/pavois/pavois_ponton_palier7.svg"
+   ],
+   "cadres": [
+    [
+     -95,
+     -155,
+     190,
+     210
+    ],
+    [
+     -95,
+     -155,
+     190,
+     210
+    ],
+    [
+     -95,
+     -155,
+     190,
+     210
+    ],
+    [
+     -140,
+     -250,
+     280,
+     330
+    ],
+    [
+     -140,
+     -250,
+     280,
+     330
+    ],
+    [
+     -140,
+     -250,
+     280,
+     330
+    ],
+    [
+     -140,
+     -250,
+     280,
+     330
+    ]
+   ],
+   "note": "image 1 de l'accessoire ; le jeu l'anime (calques de shopSprites)"
+  },
+  "mouettes": {
+   "nom": "mouettes",
+   "batiment": "ponton",
+   "fichiers": [
+    "pieces_rares/mouettes/mouettes_ponton_palier1.svg",
+    "pieces_rares/mouettes/mouettes_ponton_palier2.svg",
+    "pieces_rares/mouettes/mouettes_ponton_palier3.svg",
+    "pieces_rares/mouettes/mouettes_ponton_palier4.svg",
+    "pieces_rares/mouettes/mouettes_ponton_palier5.svg",
+    "pieces_rares/mouettes/mouettes_ponton_palier6.svg",
+    "pieces_rares/mouettes/mouettes_ponton_palier7.svg"
+   ],
+   "cadres": [
+    [
+     -95,
+     -155,
+     190,
+     210
+    ],
+    [
+     -95,
+     -155,
+     190,
+     210
+    ],
+    [
+     -95,
+     -155,
+     190,
+     210
+    ],
+    [
+     -140,
+     -250,
+     280,
+     330
+    ],
+    [
+     -140,
+     -250,
+     280,
+     330
+    ],
+    [
+     -140,
+     -250,
+     280,
+     330
+    ],
+    [
+     -140,
+     -250,
+     280,
+     330
+    ]
+   ],
+   "note": "image 1 de l'accessoire ; le jeu l'anime (calques de shopSprites)"
+  },
+  "etincelles": {
+   "nom": "etincelles",
+   "batiment": "atelier",
+   "fichiers": [
+    "pieces_rares/etincelles/etincelles_atelier_palier1.svg",
+    "pieces_rares/etincelles/etincelles_atelier_palier2.svg",
+    "pieces_rares/etincelles/etincelles_atelier_palier3.svg",
+    "pieces_rares/etincelles/etincelles_atelier_palier4.svg",
+    "pieces_rares/etincelles/etincelles_atelier_palier5.svg",
+    "pieces_rares/etincelles/etincelles_atelier_palier6.svg",
+    "pieces_rares/etincelles/etincelles_atelier_palier7.svg"
+   ],
+   "cadres": [
+    [
+     -95,
+     -155,
+     190,
+     210
+    ],
+    [
+     -95,
+     -155,
+     190,
+     210
+    ],
+    [
+     -95,
+     -155,
+     190,
+     210
+    ],
+    [
+     -140,
+     -250,
+     280,
+     330
+    ],
+    [
+     -140,
+     -250,
+     280,
+     330
+    ],
+    [
+     -140,
+     -250,
+     280,
+     330
+    ],
+    [
+     -140,
+     -250,
+     280,
+     330
+    ]
+   ],
+   "note": "image 1 de l'accessoire ; le jeu l'anime (calques de shopSprites)"
+  },
+  "engrenages": {
+   "nom": "engrenages",
+   "batiment": "atelier",
+   "fichiers": [
+    "pieces_rares/engrenages/engrenages_atelier_palier1.svg",
+    "pieces_rares/engrenages/engrenages_atelier_palier2.svg",
+    "pieces_rares/engrenages/engrenages_atelier_palier3.svg",
+    "pieces_rares/engrenages/engrenages_atelier_palier4.svg",
+    "pieces_rares/engrenages/engrenages_atelier_palier5.svg",
+    "pieces_rares/engrenages/engrenages_atelier_palier6.svg",
+    "pieces_rares/engrenages/engrenages_atelier_palier7.svg"
+   ],
+   "cadres": [
+    [
+     -95,
+     -155,
+     190,
+     210
+    ],
+    [
+     -95,
+     -155,
+     190,
+     210
+    ],
+    [
+     -95,
+     -155,
+     190,
+     210
+    ],
+    [
+     -140,
+     -250,
+     280,
+     330
+    ],
+    [
+     -140,
+     -250,
+     280,
+     330
+    ],
+    [
+     -140,
+     -250,
+     280,
+     330
+    ],
+    [
+     -140,
+     -250,
+     280,
+     330
+    ]
+   ],
+   "note": "image 1 de l'accessoire ; le jeu l'anime (calques de shopSprites)"
+  },
+  "lampions": {
+   "nom": "lampions",
+   "batiment": "foyer",
+   "fichiers": [
+    "pieces_rares/lampions/lampions_foyer_palier1.svg",
+    "pieces_rares/lampions/lampions_foyer_palier2.svg",
+    "pieces_rares/lampions/lampions_foyer_palier3.svg",
+    "pieces_rares/lampions/lampions_foyer_palier4.svg",
+    "pieces_rares/lampions/lampions_foyer_palier5.svg",
+    "pieces_rares/lampions/lampions_foyer_palier6.svg",
+    "pieces_rares/lampions/lampions_foyer_palier7.svg"
+   ],
+   "cadres": [
+    [
+     -95,
+     -155,
+     190,
+     210
+    ],
+    [
+     -95,
+     -155,
+     190,
+     210
+    ],
+    [
+     -95,
+     -155,
+     190,
+     210
+    ],
+    [
+     -140,
+     -250,
+     280,
+     330
+    ],
+    [
+     -140,
+     -250,
+     280,
+     330
+    ],
+    [
+     -140,
+     -250,
+     280,
+     330
+    ],
+    [
+     -140,
+     -250,
+     282.5,
+     330
+    ]
+   ],
+   "note": "image 1 de l'accessoire ; le jeu l'anime (calques de shopSprites)"
+  },
+  "lierre": {
+   "nom": "lierre",
+   "batiment": "foyer",
+   "fichiers": [
+    "pieces_rares/lierre/lierre_foyer_palier1.svg",
+    "pieces_rares/lierre/lierre_foyer_palier2.svg",
+    "pieces_rares/lierre/lierre_foyer_palier3.svg",
+    "pieces_rares/lierre/lierre_foyer_palier4.svg",
+    "pieces_rares/lierre/lierre_foyer_palier5.svg",
+    "pieces_rares/lierre/lierre_foyer_palier6.svg",
+    "pieces_rares/lierre/lierre_foyer_palier7.svg"
+   ],
+   "cadres": [
+    [
+     -95,
+     -155,
+     190,
+     210
+    ],
+    [
+     -95,
+     -155,
+     190,
+     210
+    ],
+    [
+     -95,
+     -155,
+     190,
+     210
+    ],
+    [
+     -140,
+     -250,
+     280,
+     330
+    ],
+    [
+     -140,
+     -250,
+     280,
+     330
+    ],
+    [
+     -140,
+     -250,
+     280,
+     330
+    ],
+    [
+     -140,
+     -250,
+     282.5,
+     330
+    ]
+   ],
+   "note": "image 1 de l'accessoire ; le jeu l'anime (calques de shopSprites)"
+  }
+ },
+ "teintes": {
+  "vendues": {
+   "craie": "Craie",
+   "sepia": "Sépia",
+   "corail": "Corail",
+   "ocean": "Océan",
+   "emeraude": "Émeraude",
+   "lavande": "Lavande",
+   "flamboyant": "Flamboyant",
+   "sakura": "Sakura",
+   "frimas": "Frimas",
+   "cristal": "Cristal",
+   "nuit-etoilee": "Nuit étoilée",
+   "or-royal": "Or royal"
+  },
+  "des_pieces_rares": [
+   "papillons",
+   "tournesols",
+   "filon-or",
+   "coeur-lave",
+   "fees",
+   "petales",
+   "arc-en-ciel",
+   "nenuphars",
+   "pavois",
+   "mouettes",
+   "etincelles",
+   "engrenages",
+   "lampions",
+   "lierre"
+  ],
+  "outil": "teintes/teinter.mjs : tintSvg(svg, idDeTeinte)"
+ }
+}

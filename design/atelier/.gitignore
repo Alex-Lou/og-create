@@ -1,0 +1,9 @@
+# Sorties des générateurs (la bibliothèque assemblée est dans ../bibliotheque)
+/lib/
+/svg2/
+/planches/
+/tmpn/
+/*_apercu.html
+/planche_*.png
+/expressions_*.png
+/*.zip

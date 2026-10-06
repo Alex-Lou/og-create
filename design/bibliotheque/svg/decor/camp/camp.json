@@ -1,0 +1,517 @@
+{
+ "_lisez_moi": [
+  "Décor iso du camp des naufragés, au trait de la troupe, à l'échelle du jeu × 1,25 (case de 80 × 40). Ancre (0, 0) au centre de l'emprise au sol : coins, tente, hamac et épave sur 2 × 2 cases (cadre BUILDING_BOX ; l'épave un peu plus large), objets sur une case (PROP_BOX). Quand un dessin dépasse un peu, le cadre est élargi, l'ancre ne bouge pas : prendre le cadre noté ici.",
+  "Coins des maîtres : débris (à l'arrivée), abri, cabanon ; Cannelle (la cuisine de l'épave) et Galet (le muret de la Fissure) n'ont que des débris, leur bâtiment prend vite le relais. Les maîtres quittent le look du naufragé au souvenir retrouvé (lib/personnages/naufrages/), mais leur coin reste leur toit jusqu'aux maisons.",
+  "etape : quand l'objet apparaît (codes de STEPS) ; images et ms : animation en boucle (le feu à la vitesse du jeu, 9 images/s). Les étapes sont une proposition tirée de HISTOIRE.md."
+ ],
+ "etapes": {
+  "T1": "tutoriel, étape 1 — la Grève, la nuit (Brume allume le feu)",
+  "T2": "tutoriel, étape 2 — Aster repêche les caisses",
+  "T3": "tutoriel, étape 3 — Cannelle derrière l'épave",
+  "T4": "tutoriel, étape 4 — Rivet sous une voile échouée",
+  "T5": "tutoriel, étape 5 — Ondin à La Source ; fin : « Le Campement »",
+  "I": "acte I — veillée I, « Le Camp des naufragés » (Sylve arrive)",
+  "II": "acte II — veillée II, « Le Hameau » (Galet arrive)",
+  "III": "acte III — veillée III, « Le Village » (Mélisse arrive)",
+  "IV": "acte IV — la première barque de voyageurs"
+ },
+ "objets": {
+  "feu_debris": {
+   "nom": "Feu de débris",
+   "categorie": "epave",
+   "etape": "T1",
+   "cadre": [
+    -50,
+    -115,
+    100,
+    140
+   ],
+   "images": 3,
+   "ms": 111,
+   "fichiers": [
+    "epave/feu_debris_1.svg",
+    "epave/feu_debris_2.svg",
+    "epave/feu_debris_3.svg"
+   ]
+  },
+  "hirondelle": {
+   "nom": "Épave de l'Hirondelle",
+   "categorie": "epave",
+   "etape": "T1",
+   "cadre": [
+    -110,
+    -125,
+    220,
+    187.5
+   ],
+   "images": 1,
+   "fichiers": [
+    "epave/hirondelle_1.svg"
+   ]
+  },
+  "aster_debris": {
+   "nom": "Aster · débris",
+   "categorie": "coins",
+   "etape": "T2",
+   "cadre": [
+    -95,
+    -155,
+    190,
+    210
+   ],
+   "images": 1,
+   "fichiers": [
+    "coins/aster/aster_debris_1.svg"
+   ],
+   "maitre": "Aster",
+   "etat": "débris"
+  },
+  "aster_abri": {
+   "nom": "Aster · abri",
+   "categorie": "coins",
+   "etape": "I",
+   "cadre": [
+    -95,
+    -155,
+    190,
+    210
+   ],
+   "images": 1,
+   "fichiers": [
+    "coins/aster/aster_abri_1.svg"
+   ],
+   "maitre": "Aster",
+   "etat": "abri"
+  },
+  "aster_cabanon": {
+   "nom": "Aster · cabanon",
+   "categorie": "coins",
+   "etape": "II",
+   "cadre": [
+    -95,
+    -155,
+    190,
+    210
+   ],
+   "images": 2,
+   "ms": 500,
+   "fichiers": [
+    "coins/aster/aster_cabanon_1.svg",
+    "coins/aster/aster_cabanon_2.svg"
+   ],
+   "maitre": "Aster",
+   "etat": "cabanon",
+   "suite": "jusqu'aux maisons du Foyer (annexes) : l'intégration choisira le moment"
+  },
+  "cannelle_debris": {
+   "nom": "Cannelle · cuisine de l'épave",
+   "categorie": "coins",
+   "etape": "T3",
+   "cadre": [
+    -95,
+    -155,
+    190,
+    210
+   ],
+   "images": 3,
+   "ms": 111,
+   "fichiers": [
+    "coins/cannelle/cannelle_debris_1.svg",
+    "coins/cannelle/cannelle_debris_2.svg",
+    "coins/cannelle/cannelle_debris_3.svg"
+   ],
+   "maitre": "Cannelle",
+   "etat": "débris",
+   "suite": "jusqu'à l'Abri (Foyer II, acte II)"
+  },
+  "rivet_debris": {
+   "nom": "Rivet · débris",
+   "categorie": "coins",
+   "etape": "T4",
+   "cadre": [
+    -95,
+    -155,
+    190,
+    210
+   ],
+   "images": 1,
+   "fichiers": [
+    "coins/rivet/rivet_debris_1.svg"
+   ],
+   "maitre": "Rivet",
+   "etat": "débris"
+  },
+  "rivet_abri": {
+   "nom": "Rivet · abri",
+   "categorie": "coins",
+   "etape": "I",
+   "cadre": [
+    -95,
+    -155,
+    190,
+    210
+   ],
+   "images": 1,
+   "fichiers": [
+    "coins/rivet/rivet_abri_1.svg"
+   ],
+   "maitre": "Rivet",
+   "etat": "abri"
+  },
+  "rivet_cabanon": {
+   "nom": "Rivet · cabanon",
+   "categorie": "coins",
+   "etape": "II",
+   "cadre": [
+    -95,
+    -155,
+    190,
+    210
+   ],
+   "images": 1,
+   "fichiers": [
+    "coins/rivet/rivet_cabanon_1.svg"
+   ],
+   "maitre": "Rivet",
+   "etat": "cabanon",
+   "suite": "jusqu'aux maisons du Foyer (annexes) : l'intégration choisira le moment"
+  },
+  "ondin_debris": {
+   "nom": "Ondin · débris",
+   "categorie": "coins",
+   "etape": "T5",
+   "cadre": [
+    -95,
+    -155,
+    190,
+    210
+   ],
+   "images": 2,
+   "ms": 600,
+   "fichiers": [
+    "coins/ondin/ondin_debris_1.svg",
+    "coins/ondin/ondin_debris_2.svg"
+   ],
+   "maitre": "Ondin",
+   "etat": "débris"
+  },
+  "ondin_abri": {
+   "nom": "Ondin · abri",
+   "categorie": "coins",
+   "etape": "I",
+   "cadre": [
+    -95,
+    -155,
+    190,
+    210
+   ],
+   "images": 2,
+   "ms": 600,
+   "fichiers": [
+    "coins/ondin/ondin_abri_1.svg",
+    "coins/ondin/ondin_abri_2.svg"
+   ],
+   "maitre": "Ondin",
+   "etat": "abri"
+  },
+  "ondin_cabanon": {
+   "nom": "Ondin · cabanon",
+   "categorie": "coins",
+   "etape": "II",
+   "cadre": [
+    -95,
+    -155,
+    190,
+    210
+   ],
+   "images": 2,
+   "ms": 600,
+   "fichiers": [
+    "coins/ondin/ondin_cabanon_1.svg",
+    "coins/ondin/ondin_cabanon_2.svg"
+   ],
+   "maitre": "Ondin",
+   "etat": "cabanon",
+   "suite": "jusqu'aux maisons du Foyer (annexes) : l'intégration choisira le moment"
+  },
+  "sylve_debris": {
+   "nom": "Sylve · débris",
+   "categorie": "coins",
+   "etape": "I",
+   "cadre": [
+    -95,
+    -155,
+    190,
+    210
+   ],
+   "images": 1,
+   "fichiers": [
+    "coins/sylve/sylve_debris_1.svg"
+   ],
+   "maitre": "Sylve",
+   "etat": "débris"
+  },
+  "sylve_abri": {
+   "nom": "Sylve · abri",
+   "categorie": "coins",
+   "etape": "I",
+   "cadre": [
+    -95,
+    -155,
+    190,
+    210
+   ],
+   "images": 1,
+   "fichiers": [
+    "coins/sylve/sylve_abri_1.svg"
+   ],
+   "maitre": "Sylve",
+   "etat": "abri"
+  },
+  "sylve_cabanon": {
+   "nom": "Sylve · cabanon",
+   "categorie": "coins",
+   "etape": "II",
+   "cadre": [
+    -95,
+    -155,
+    190,
+    210
+   ],
+   "images": 1,
+   "fichiers": [
+    "coins/sylve/sylve_cabanon_1.svg"
+   ],
+   "maitre": "Sylve",
+   "etat": "cabanon",
+   "suite": "jusqu'aux maisons du Foyer (annexes) : l'intégration choisira le moment"
+  },
+  "galet_debris": {
+   "nom": "Galet · muret de la Fissure",
+   "categorie": "coins",
+   "etape": "II",
+   "cadre": [
+    -95,
+    -155,
+    190,
+    210
+   ],
+   "images": 1,
+   "fichiers": [
+    "coins/galet/galet_debris_1.svg"
+   ],
+   "maitre": "Galet",
+   "etat": "débris",
+   "suite": "jusqu'à la Carrière I (acte II)"
+  },
+  "melisse_debris": {
+   "nom": "Mélisse · débris",
+   "categorie": "coins",
+   "etape": "III",
+   "cadre": [
+    -95,
+    -155,
+    190,
+    210
+   ],
+   "images": 1,
+   "fichiers": [
+    "coins/melisse/melisse_debris_1.svg"
+   ],
+   "maitre": "Mélisse",
+   "etat": "débris"
+  },
+  "melisse_abri": {
+   "nom": "Mélisse · abri",
+   "categorie": "coins",
+   "etape": "III",
+   "cadre": [
+    -95,
+    -155,
+    190,
+    210
+   ],
+   "images": 1,
+   "fichiers": [
+    "coins/melisse/melisse_abri_1.svg"
+   ],
+   "maitre": "Mélisse",
+   "etat": "abri"
+  },
+  "melisse_cabanon": {
+   "nom": "Mélisse · cabanon",
+   "categorie": "coins",
+   "etape": "III",
+   "cadre": [
+    -95,
+    -155,
+    190,
+    210
+   ],
+   "images": 1,
+   "fichiers": [
+    "coins/melisse/melisse_cabanon_1.svg"
+   ],
+   "maitre": "Mélisse",
+   "etat": "cabanon",
+   "suite": "jusqu'aux maisons du Foyer (annexes) : l'intégration choisira le moment"
+  },
+  "tente": {
+   "nom": "Tente de voyageur",
+   "categorie": "voyageurs",
+   "etape": "IV",
+   "cadre": [
+    -95,
+    -155,
+    190,
+    210
+   ],
+   "images": 1,
+   "fichiers": [
+    "voyageurs/tente_1.svg"
+   ]
+  },
+  "hamac": {
+   "nom": "Hamac",
+   "categorie": "voyageurs",
+   "etape": "IV",
+   "cadre": [
+    -95,
+    -155,
+    190,
+    210
+   ],
+   "images": 2,
+   "ms": 900,
+   "fichiers": [
+    "voyageurs/hamac_1.svg",
+    "voyageurs/hamac_2.svg"
+   ]
+  },
+  "etendoir": {
+   "nom": "Étendoir",
+   "categorie": "objets",
+   "etape": "T3",
+   "cadre": [
+    -50,
+    -115,
+    100,
+    140
+   ],
+   "images": 2,
+   "ms": 600,
+   "fichiers": [
+    "objets/etendoir_1.svg",
+    "objets/etendoir_2.svg"
+   ]
+  },
+  "tonneau": {
+   "nom": "Tonneau d'eau de pluie",
+   "categorie": "objets",
+   "etape": "T5",
+   "cadre": [
+    -50,
+    -115,
+    100,
+    140
+   ],
+   "images": 1,
+   "fichiers": [
+    "objets/tonneau_1.svg"
+   ]
+  },
+  "rondins": {
+   "nom": "Rondins",
+   "categorie": "objets",
+   "etape": "T3",
+   "cadre": [
+    -50,
+    -115,
+    100,
+    140
+   ],
+   "images": 1,
+   "fichiers": [
+    "objets/rondins_1.svg"
+   ]
+  },
+  "filet": {
+   "nom": "Filet tendu",
+   "categorie": "objets",
+   "etape": "T2",
+   "cadre": [
+    -50,
+    -115,
+    100,
+    140
+   ],
+   "images": 1,
+   "fichiers": [
+    "objets/filet_1.svg"
+   ]
+  },
+  "paillasse": {
+   "nom": "Paillasse",
+   "categorie": "objets",
+   "etape": "T5",
+   "cadre": [
+    -50,
+    -115,
+    100,
+    140
+   ],
+   "images": 1,
+   "fichiers": [
+    "objets/paillasse_1.svg"
+   ]
+  },
+  "torche": {
+   "nom": "Torche de bois flotté",
+   "categorie": "objets",
+   "etape": "I",
+   "cadre": [
+    -50,
+    -115,
+    100,
+    140
+   ],
+   "images": 3,
+   "ms": 111,
+   "fichiers": [
+    "objets/torche_1.svg",
+    "objets/torche_2.svg",
+    "objets/torche_3.svg"
+   ]
+  },
+  "sos": {
+   "nom": "SOS en galets",
+   "categorie": "objets",
+   "etape": "T2",
+   "cadre": [
+    -50,
+    -115,
+    100,
+    140
+   ],
+   "images": 1,
+   "fichiers": [
+    "objets/sos_1.svg"
+   ]
+  },
+  "caisses": {
+   "nom": "Pile de caisses",
+   "categorie": "objets",
+   "etape": "T2",
+   "cadre": [
+    -50,
+    -115,
+    100,
+    140
+   ],
+   "images": 1,
+   "fichiers": [
+    "objets/caisses_1.svg"
+   ]
+  }
+ }
+}

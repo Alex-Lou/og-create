@@ -1,0 +1,1307 @@
+{
+ "_lisez_moi": "Petit format du jeu (VILLAGER_BOX × 1,25), ancre aux pieds (0, 0). Vues : face, trois_quarts (avance vers le joueur, se), dos (s'éloigne, ne) ; miroir horizontal pour les deux autres directions. Marche 4 images (≈ 160 ms), repos 2 (clignement), salut 2, travail 2 (maîtres), dort 2, lanterne et parapluie : marche de trois quarts dans un cadre élargi. Visiteurs : visitorLook(graine) du jeu.",
+ "habitants": {
+  "melisse": {
+   "nom": "Mélisse — Jardinière des lunes",
+   "fichiers": {
+    "melisse_marche_face": [
+     "habitants/melisse/melisse_marche_face_1.svg",
+     "habitants/melisse/melisse_marche_face_2.svg",
+     "habitants/melisse/melisse_marche_face_3.svg",
+     "habitants/melisse/melisse_marche_face_4.svg"
+    ],
+    "melisse_repos_face": [
+     "habitants/melisse/melisse_repos_face_1.svg",
+     "habitants/melisse/melisse_repos_face_2.svg"
+    ],
+    "melisse_salut_face": [
+     "habitants/melisse/melisse_salut_face_1.svg",
+     "habitants/melisse/melisse_salut_face_2.svg"
+    ],
+    "melisse_travail_face": [
+     "habitants/melisse/melisse_travail_face_1.svg",
+     "habitants/melisse/melisse_travail_face_2.svg"
+    ],
+    "melisse_marche_trois_quarts": [
+     "habitants/melisse/melisse_marche_trois_quarts_1.svg",
+     "habitants/melisse/melisse_marche_trois_quarts_2.svg",
+     "habitants/melisse/melisse_marche_trois_quarts_3.svg",
+     "habitants/melisse/melisse_marche_trois_quarts_4.svg"
+    ],
+    "melisse_repos_trois_quarts": [
+     "habitants/melisse/melisse_repos_trois_quarts_1.svg",
+     "habitants/melisse/melisse_repos_trois_quarts_2.svg"
+    ],
+    "melisse_salut_trois_quarts": [
+     "habitants/melisse/melisse_salut_trois_quarts_1.svg",
+     "habitants/melisse/melisse_salut_trois_quarts_2.svg"
+    ],
+    "melisse_travail_trois_quarts": [
+     "habitants/melisse/melisse_travail_trois_quarts_1.svg",
+     "habitants/melisse/melisse_travail_trois_quarts_2.svg"
+    ],
+    "melisse_marche_dos": [
+     "habitants/melisse/melisse_marche_dos_1.svg",
+     "habitants/melisse/melisse_marche_dos_2.svg",
+     "habitants/melisse/melisse_marche_dos_3.svg",
+     "habitants/melisse/melisse_marche_dos_4.svg"
+    ],
+    "melisse_repos_dos": [
+     "habitants/melisse/melisse_repos_dos_1.svg",
+     "habitants/melisse/melisse_repos_dos_2.svg"
+    ],
+    "melisse_salut_dos": [
+     "habitants/melisse/melisse_salut_dos_1.svg",
+     "habitants/melisse/melisse_salut_dos_2.svg"
+    ],
+    "melisse_travail_dos": [
+     "habitants/melisse/melisse_travail_dos_1.svg",
+     "habitants/melisse/melisse_travail_dos_2.svg"
+    ],
+    "melisse_dort": [
+     "habitants/melisse/melisse_dort_1.svg",
+     "habitants/melisse/melisse_dort_2.svg"
+    ],
+    "melisse_lanterne_trois_quarts": [
+     "habitants/melisse/melisse_lanterne_trois_quarts_1.svg",
+     "habitants/melisse/melisse_lanterne_trois_quarts_2.svg",
+     "habitants/melisse/melisse_lanterne_trois_quarts_3.svg",
+     "habitants/melisse/melisse_lanterne_trois_quarts_4.svg"
+    ],
+    "melisse_parapluie_trois_quarts": [
+     "habitants/melisse/melisse_parapluie_trois_quarts_1.svg",
+     "habitants/melisse/melisse_parapluie_trois_quarts_2.svg",
+     "habitants/melisse/melisse_parapluie_trois_quarts_3.svg",
+     "habitants/melisse/melisse_parapluie_trois_quarts_4.svg"
+    ]
+   },
+   "batiment": "potager"
+  },
+  "galet": {
+   "nom": "Galet — Tailleur de runes",
+   "fichiers": {
+    "galet_marche_face": [
+     "habitants/galet/galet_marche_face_1.svg",
+     "habitants/galet/galet_marche_face_2.svg",
+     "habitants/galet/galet_marche_face_3.svg",
+     "habitants/galet/galet_marche_face_4.svg"
+    ],
+    "galet_repos_face": [
+     "habitants/galet/galet_repos_face_1.svg",
+     "habitants/galet/galet_repos_face_2.svg"
+    ],
+    "galet_salut_face": [
+     "habitants/galet/galet_salut_face_1.svg",
+     "habitants/galet/galet_salut_face_2.svg"
+    ],
+    "galet_travail_face": [
+     "habitants/galet/galet_travail_face_1.svg",
+     "habitants/galet/galet_travail_face_2.svg"
+    ],
+    "galet_marche_trois_quarts": [
+     "habitants/galet/galet_marche_trois_quarts_1.svg",
+     "habitants/galet/galet_marche_trois_quarts_2.svg",
+     "habitants/galet/galet_marche_trois_quarts_3.svg",
+     "habitants/galet/galet_marche_trois_quarts_4.svg"
+    ],
+    "galet_repos_trois_quarts": [
+     "habitants/galet/galet_repos_trois_quarts_1.svg",
+     "habitants/galet/galet_repos_trois_quarts_2.svg"
+    ],
+    "galet_salut_trois_quarts": [
+     "habitants/galet/galet_salut_trois_quarts_1.svg",
+     "habitants/galet/galet_salut_trois_quarts_2.svg"
+    ],
+    "galet_travail_trois_quarts": [
+     "habitants/galet/galet_travail_trois_quarts_1.svg",
+     "habitants/galet/galet_travail_trois_quarts_2.svg"
+    ],
+    "galet_marche_dos": [
+     "habitants/galet/galet_marche_dos_1.svg",
+     "habitants/galet/galet_marche_dos_2.svg",
+     "habitants/galet/galet_marche_dos_3.svg",
+     "habitants/galet/galet_marche_dos_4.svg"
+    ],
+    "galet_repos_dos": [
+     "habitants/galet/galet_repos_dos_1.svg",
+     "habitants/galet/galet_repos_dos_2.svg"
+    ],
+    "galet_salut_dos": [
+     "habitants/galet/galet_salut_dos_1.svg",
+     "habitants/galet/galet_salut_dos_2.svg"
+    ],
+    "galet_travail_dos": [
+     "habitants/galet/galet_travail_dos_1.svg",
+     "habitants/galet/galet_travail_dos_2.svg"
+    ],
+    "galet_dort": [
+     "habitants/galet/galet_dort_1.svg",
+     "habitants/galet/galet_dort_2.svg"
+    ],
+    "galet_lanterne_trois_quarts": [
+     "habitants/galet/galet_lanterne_trois_quarts_1.svg",
+     "habitants/galet/galet_lanterne_trois_quarts_2.svg",
+     "habitants/galet/galet_lanterne_trois_quarts_3.svg",
+     "habitants/galet/galet_lanterne_trois_quarts_4.svg"
+    ],
+    "galet_parapluie_trois_quarts": [
+     "habitants/galet/galet_parapluie_trois_quarts_1.svg",
+     "habitants/galet/galet_parapluie_trois_quarts_2.svg",
+     "habitants/galet/galet_parapluie_trois_quarts_3.svg",
+     "habitants/galet/galet_parapluie_trois_quarts_4.svg"
+    ]
+   },
+   "batiment": "carriere"
+  },
+  "sylve": {
+   "nom": "Sylve — Gardienne des bois",
+   "fichiers": {
+    "sylve_marche_face": [
+     "habitants/sylve/sylve_marche_face_1.svg",
+     "habitants/sylve/sylve_marche_face_2.svg",
+     "habitants/sylve/sylve_marche_face_3.svg",
+     "habitants/sylve/sylve_marche_face_4.svg"
+    ],
+    "sylve_repos_face": [
+     "habitants/sylve/sylve_repos_face_1.svg",
+     "habitants/sylve/sylve_repos_face_2.svg"
+    ],
+    "sylve_salut_face": [
+     "habitants/sylve/sylve_salut_face_1.svg",
+     "habitants/sylve/sylve_salut_face_2.svg"
+    ],
+    "sylve_travail_face": [
+     "habitants/sylve/sylve_travail_face_1.svg",
+     "habitants/sylve/sylve_travail_face_2.svg"
+    ],
+    "sylve_marche_trois_quarts": [
+     "habitants/sylve/sylve_marche_trois_quarts_1.svg",
+     "habitants/sylve/sylve_marche_trois_quarts_2.svg",
+     "habitants/sylve/sylve_marche_trois_quarts_3.svg",
+     "habitants/sylve/sylve_marche_trois_quarts_4.svg"
+    ],
+    "sylve_repos_trois_quarts": [
+     "habitants/sylve/sylve_repos_trois_quarts_1.svg",
+     "habitants/sylve/sylve_repos_trois_quarts_2.svg"
+    ],
+    "sylve_salut_trois_quarts": [
+     "habitants/sylve/sylve_salut_trois_quarts_1.svg",
+     "habitants/sylve/sylve_salut_trois_quarts_2.svg"
+    ],
+    "sylve_travail_trois_quarts": [
+     "habitants/sylve/sylve_travail_trois_quarts_1.svg",
+     "habitants/sylve/sylve_travail_trois_quarts_2.svg"
+    ],
+    "sylve_marche_dos": [
+     "habitants/sylve/sylve_marche_dos_1.svg",
+     "habitants/sylve/sylve_marche_dos_2.svg",
+     "habitants/sylve/sylve_marche_dos_3.svg",
+     "habitants/sylve/sylve_marche_dos_4.svg"
+    ],
+    "sylve_repos_dos": [
+     "habitants/sylve/sylve_repos_dos_1.svg",
+     "habitants/sylve/sylve_repos_dos_2.svg"
+    ],
+    "sylve_salut_dos": [
+     "habitants/sylve/sylve_salut_dos_1.svg",
+     "habitants/sylve/sylve_salut_dos_2.svg"
+    ],
+    "sylve_travail_dos": [
+     "habitants/sylve/sylve_travail_dos_1.svg",
+     "habitants/sylve/sylve_travail_dos_2.svg"
+    ],
+    "sylve_dort": [
+     "habitants/sylve/sylve_dort_1.svg",
+     "habitants/sylve/sylve_dort_2.svg"
+    ],
+    "sylve_lanterne_trois_quarts": [
+     "habitants/sylve/sylve_lanterne_trois_quarts_1.svg",
+     "habitants/sylve/sylve_lanterne_trois_quarts_2.svg",
+     "habitants/sylve/sylve_lanterne_trois_quarts_3.svg",
+     "habitants/sylve/sylve_lanterne_trois_quarts_4.svg"
+    ],
+    "sylve_parapluie_trois_quarts": [
+     "habitants/sylve/sylve_parapluie_trois_quarts_1.svg",
+     "habitants/sylve/sylve_parapluie_trois_quarts_2.svg",
+     "habitants/sylve/sylve_parapluie_trois_quarts_3.svg",
+     "habitants/sylve/sylve_parapluie_trois_quarts_4.svg"
+    ]
+   },
+   "batiment": "bosquet"
+  },
+  "ondin": {
+   "nom": "Ondin — Petit sourcier",
+   "fichiers": {
+    "ondin_marche_face": [
+     "habitants/ondin/ondin_marche_face_1.svg",
+     "habitants/ondin/ondin_marche_face_2.svg",
+     "habitants/ondin/ondin_marche_face_3.svg",
+     "habitants/ondin/ondin_marche_face_4.svg"
+    ],
+    "ondin_repos_face": [
+     "habitants/ondin/ondin_repos_face_1.svg",
+     "habitants/ondin/ondin_repos_face_2.svg"
+    ],
+    "ondin_salut_face": [
+     "habitants/ondin/ondin_salut_face_1.svg",
+     "habitants/ondin/ondin_salut_face_2.svg"
+    ],
+    "ondin_travail_face": [
+     "habitants/ondin/ondin_travail_face_1.svg",
+     "habitants/ondin/ondin_travail_face_2.svg"
+    ],
+    "ondin_marche_trois_quarts": [
+     "habitants/ondin/ondin_marche_trois_quarts_1.svg",
+     "habitants/ondin/ondin_marche_trois_quarts_2.svg",
+     "habitants/ondin/ondin_marche_trois_quarts_3.svg",
+     "habitants/ondin/ondin_marche_trois_quarts_4.svg"
+    ],
+    "ondin_repos_trois_quarts": [
+     "habitants/ondin/ondin_repos_trois_quarts_1.svg",
+     "habitants/ondin/ondin_repos_trois_quarts_2.svg"
+    ],
+    "ondin_salut_trois_quarts": [
+     "habitants/ondin/ondin_salut_trois_quarts_1.svg",
+     "habitants/ondin/ondin_salut_trois_quarts_2.svg"
+    ],
+    "ondin_travail_trois_quarts": [
+     "habitants/ondin/ondin_travail_trois_quarts_1.svg",
+     "habitants/ondin/ondin_travail_trois_quarts_2.svg"
+    ],
+    "ondin_marche_dos": [
+     "habitants/ondin/ondin_marche_dos_1.svg",
+     "habitants/ondin/ondin_marche_dos_2.svg",
+     "habitants/ondin/ondin_marche_dos_3.svg",
+     "habitants/ondin/ondin_marche_dos_4.svg"
+    ],
+    "ondin_repos_dos": [
+     "habitants/ondin/ondin_repos_dos_1.svg",
+     "habitants/ondin/ondin_repos_dos_2.svg"
+    ],
+    "ondin_salut_dos": [
+     "habitants/ondin/ondin_salut_dos_1.svg",
+     "habitants/ondin/ondin_salut_dos_2.svg"
+    ],
+    "ondin_travail_dos": [
+     "habitants/ondin/ondin_travail_dos_1.svg",
+     "habitants/ondin/ondin_travail_dos_2.svg"
+    ],
+    "ondin_dort": [
+     "habitants/ondin/ondin_dort_1.svg",
+     "habitants/ondin/ondin_dort_2.svg"
+    ],
+    "ondin_lanterne_trois_quarts": [
+     "habitants/ondin/ondin_lanterne_trois_quarts_1.svg",
+     "habitants/ondin/ondin_lanterne_trois_quarts_2.svg",
+     "habitants/ondin/ondin_lanterne_trois_quarts_3.svg",
+     "habitants/ondin/ondin_lanterne_trois_quarts_4.svg"
+    ],
+    "ondin_parapluie_trois_quarts": [
+     "habitants/ondin/ondin_parapluie_trois_quarts_1.svg",
+     "habitants/ondin/ondin_parapluie_trois_quarts_2.svg",
+     "habitants/ondin/ondin_parapluie_trois_quarts_3.svg",
+     "habitants/ondin/ondin_parapluie_trois_quarts_4.svg"
+    ]
+   },
+   "batiment": "puits"
+  },
+  "aster": {
+   "nom": "Aster — Navigatrice",
+   "fichiers": {
+    "aster_marche_face": [
+     "habitants/aster/aster_marche_face_1.svg",
+     "habitants/aster/aster_marche_face_2.svg",
+     "habitants/aster/aster_marche_face_3.svg",
+     "habitants/aster/aster_marche_face_4.svg"
+    ],
+    "aster_repos_face": [
+     "habitants/aster/aster_repos_face_1.svg",
+     "habitants/aster/aster_repos_face_2.svg"
+    ],
+    "aster_salut_face": [
+     "habitants/aster/aster_salut_face_1.svg",
+     "habitants/aster/aster_salut_face_2.svg"
+    ],
+    "aster_travail_face": [
+     "habitants/aster/aster_travail_face_1.svg",
+     "habitants/aster/aster_travail_face_2.svg"
+    ],
+    "aster_marche_trois_quarts": [
+     "habitants/aster/aster_marche_trois_quarts_1.svg",
+     "habitants/aster/aster_marche_trois_quarts_2.svg",
+     "habitants/aster/aster_marche_trois_quarts_3.svg",
+     "habitants/aster/aster_marche_trois_quarts_4.svg"
+    ],
+    "aster_repos_trois_quarts": [
+     "habitants/aster/aster_repos_trois_quarts_1.svg",
+     "habitants/aster/aster_repos_trois_quarts_2.svg"
+    ],
+    "aster_salut_trois_quarts": [
+     "habitants/aster/aster_salut_trois_quarts_1.svg",
+     "habitants/aster/aster_salut_trois_quarts_2.svg"
+    ],
+    "aster_travail_trois_quarts": [
+     "habitants/aster/aster_travail_trois_quarts_1.svg",
+     "habitants/aster/aster_travail_trois_quarts_2.svg"
+    ],
+    "aster_marche_dos": [
+     "habitants/aster/aster_marche_dos_1.svg",
+     "habitants/aster/aster_marche_dos_2.svg",
+     "habitants/aster/aster_marche_dos_3.svg",
+     "habitants/aster/aster_marche_dos_4.svg"
+    ],
+    "aster_repos_dos": [
+     "habitants/aster/aster_repos_dos_1.svg",
+     "habitants/aster/aster_repos_dos_2.svg"
+    ],
+    "aster_salut_dos": [
+     "habitants/aster/aster_salut_dos_1.svg",
+     "habitants/aster/aster_salut_dos_2.svg"
+    ],
+    "aster_travail_dos": [
+     "habitants/aster/aster_travail_dos_1.svg",
+     "habitants/aster/aster_travail_dos_2.svg"
+    ],
+    "aster_dort": [
+     "habitants/aster/aster_dort_1.svg",
+     "habitants/aster/aster_dort_2.svg"
+    ],
+    "aster_lanterne_trois_quarts": [
+     "habitants/aster/aster_lanterne_trois_quarts_1.svg",
+     "habitants/aster/aster_lanterne_trois_quarts_2.svg",
+     "habitants/aster/aster_lanterne_trois_quarts_3.svg",
+     "habitants/aster/aster_lanterne_trois_quarts_4.svg"
+    ],
+    "aster_parapluie_trois_quarts": [
+     "habitants/aster/aster_parapluie_trois_quarts_1.svg",
+     "habitants/aster/aster_parapluie_trois_quarts_2.svg",
+     "habitants/aster/aster_parapluie_trois_quarts_3.svg",
+     "habitants/aster/aster_parapluie_trois_quarts_4.svg"
+    ]
+   },
+   "batiment": "ponton"
+  },
+  "rivet": {
+   "nom": "Rivet — Horloger-artificier",
+   "fichiers": {
+    "rivet_marche_face": [
+     "habitants/rivet/rivet_marche_face_1.svg",
+     "habitants/rivet/rivet_marche_face_2.svg",
+     "habitants/rivet/rivet_marche_face_3.svg",
+     "habitants/rivet/rivet_marche_face_4.svg"
+    ],
+    "rivet_repos_face": [
+     "habitants/rivet/rivet_repos_face_1.svg",
+     "habitants/rivet/rivet_repos_face_2.svg"
+    ],
+    "rivet_salut_face": [
+     "habitants/rivet/rivet_salut_face_1.svg",
+     "habitants/rivet/rivet_salut_face_2.svg"
+    ],
+    "rivet_travail_face": [
+     "habitants/rivet/rivet_travail_face_1.svg",
+     "habitants/rivet/rivet_travail_face_2.svg"
+    ],
+    "rivet_marche_trois_quarts": [
+     "habitants/rivet/rivet_marche_trois_quarts_1.svg",
+     "habitants/rivet/rivet_marche_trois_quarts_2.svg",
+     "habitants/rivet/rivet_marche_trois_quarts_3.svg",
+     "habitants/rivet/rivet_marche_trois_quarts_4.svg"
+    ],
+    "rivet_repos_trois_quarts": [
+     "habitants/rivet/rivet_repos_trois_quarts_1.svg",
+     "habitants/rivet/rivet_repos_trois_quarts_2.svg"
+    ],
+    "rivet_salut_trois_quarts": [
+     "habitants/rivet/rivet_salut_trois_quarts_1.svg",
+     "habitants/rivet/rivet_salut_trois_quarts_2.svg"
+    ],
+    "rivet_travail_trois_quarts": [
+     "habitants/rivet/rivet_travail_trois_quarts_1.svg",
+     "habitants/rivet/rivet_travail_trois_quarts_2.svg"
+    ],
+    "rivet_marche_dos": [
+     "habitants/rivet/rivet_marche_dos_1.svg",
+     "habitants/rivet/rivet_marche_dos_2.svg",
+     "habitants/rivet/rivet_marche_dos_3.svg",
+     "habitants/rivet/rivet_marche_dos_4.svg"
+    ],
+    "rivet_repos_dos": [
+     "habitants/rivet/rivet_repos_dos_1.svg",
+     "habitants/rivet/rivet_repos_dos_2.svg"
+    ],
+    "rivet_salut_dos": [
+     "habitants/rivet/rivet_salut_dos_1.svg",
+     "habitants/rivet/rivet_salut_dos_2.svg"
+    ],
+    "rivet_travail_dos": [
+     "habitants/rivet/rivet_travail_dos_1.svg",
+     "habitants/rivet/rivet_travail_dos_2.svg"
+    ],
+    "rivet_dort": [
+     "habitants/rivet/rivet_dort_1.svg",
+     "habitants/rivet/rivet_dort_2.svg"
+    ],
+    "rivet_lanterne_trois_quarts": [
+     "habitants/rivet/rivet_lanterne_trois_quarts_1.svg",
+     "habitants/rivet/rivet_lanterne_trois_quarts_2.svg",
+     "habitants/rivet/rivet_lanterne_trois_quarts_3.svg",
+     "habitants/rivet/rivet_lanterne_trois_quarts_4.svg"
+    ],
+    "rivet_parapluie_trois_quarts": [
+     "habitants/rivet/rivet_parapluie_trois_quarts_1.svg",
+     "habitants/rivet/rivet_parapluie_trois_quarts_2.svg",
+     "habitants/rivet/rivet_parapluie_trois_quarts_3.svg",
+     "habitants/rivet/rivet_parapluie_trois_quarts_4.svg"
+    ]
+   },
+   "batiment": "atelier"
+  },
+  "cannelle": {
+   "nom": "Cannelle — Cuisinière-guérisseuse",
+   "fichiers": {
+    "cannelle_marche_face": [
+     "habitants/cannelle/cannelle_marche_face_1.svg",
+     "habitants/cannelle/cannelle_marche_face_2.svg",
+     "habitants/cannelle/cannelle_marche_face_3.svg",
+     "habitants/cannelle/cannelle_marche_face_4.svg"
+    ],
+    "cannelle_repos_face": [
+     "habitants/cannelle/cannelle_repos_face_1.svg",
+     "habitants/cannelle/cannelle_repos_face_2.svg"
+    ],
+    "cannelle_salut_face": [
+     "habitants/cannelle/cannelle_salut_face_1.svg",
+     "habitants/cannelle/cannelle_salut_face_2.svg"
+    ],
+    "cannelle_travail_face": [
+     "habitants/cannelle/cannelle_travail_face_1.svg",
+     "habitants/cannelle/cannelle_travail_face_2.svg"
+    ],
+    "cannelle_marche_trois_quarts": [
+     "habitants/cannelle/cannelle_marche_trois_quarts_1.svg",
+     "habitants/cannelle/cannelle_marche_trois_quarts_2.svg",
+     "habitants/cannelle/cannelle_marche_trois_quarts_3.svg",
+     "habitants/cannelle/cannelle_marche_trois_quarts_4.svg"
+    ],
+    "cannelle_repos_trois_quarts": [
+     "habitants/cannelle/cannelle_repos_trois_quarts_1.svg",
+     "habitants/cannelle/cannelle_repos_trois_quarts_2.svg"
+    ],
+    "cannelle_salut_trois_quarts": [
+     "habitants/cannelle/cannelle_salut_trois_quarts_1.svg",
+     "habitants/cannelle/cannelle_salut_trois_quarts_2.svg"
+    ],
+    "cannelle_travail_trois_quarts": [
+     "habitants/cannelle/cannelle_travail_trois_quarts_1.svg",
+     "habitants/cannelle/cannelle_travail_trois_quarts_2.svg"
+    ],
+    "cannelle_marche_dos": [
+     "habitants/cannelle/cannelle_marche_dos_1.svg",
+     "habitants/cannelle/cannelle_marche_dos_2.svg",
+     "habitants/cannelle/cannelle_marche_dos_3.svg",
+     "habitants/cannelle/cannelle_marche_dos_4.svg"
+    ],
+    "cannelle_repos_dos": [
+     "habitants/cannelle/cannelle_repos_dos_1.svg",
+     "habitants/cannelle/cannelle_repos_dos_2.svg"
+    ],
+    "cannelle_salut_dos": [
+     "habitants/cannelle/cannelle_salut_dos_1.svg",
+     "habitants/cannelle/cannelle_salut_dos_2.svg"
+    ],
+    "cannelle_travail_dos": [
+     "habitants/cannelle/cannelle_travail_dos_1.svg",
+     "habitants/cannelle/cannelle_travail_dos_2.svg"
+    ],
+    "cannelle_dort": [
+     "habitants/cannelle/cannelle_dort_1.svg",
+     "habitants/cannelle/cannelle_dort_2.svg"
+    ],
+    "cannelle_lanterne_trois_quarts": [
+     "habitants/cannelle/cannelle_lanterne_trois_quarts_1.svg",
+     "habitants/cannelle/cannelle_lanterne_trois_quarts_2.svg",
+     "habitants/cannelle/cannelle_lanterne_trois_quarts_3.svg",
+     "habitants/cannelle/cannelle_lanterne_trois_quarts_4.svg"
+    ],
+    "cannelle_parapluie_trois_quarts": [
+     "habitants/cannelle/cannelle_parapluie_trois_quarts_1.svg",
+     "habitants/cannelle/cannelle_parapluie_trois_quarts_2.svg",
+     "habitants/cannelle/cannelle_parapluie_trois_quarts_3.svg",
+     "habitants/cannelle/cannelle_parapluie_trois_quarts_4.svg"
+    ]
+   },
+   "batiment": "foyer"
+  }
+ },
+ "visiteurs": {
+  "visiteur_01": {
+   "nom": "Visiteur 1",
+   "fichiers": {
+    "visiteur_01_marche_face": [
+     "visiteurs/visiteur_01/visiteur_01_marche_face_1.svg",
+     "visiteurs/visiteur_01/visiteur_01_marche_face_2.svg",
+     "visiteurs/visiteur_01/visiteur_01_marche_face_3.svg",
+     "visiteurs/visiteur_01/visiteur_01_marche_face_4.svg"
+    ],
+    "visiteur_01_repos_face": [
+     "visiteurs/visiteur_01/visiteur_01_repos_face_1.svg",
+     "visiteurs/visiteur_01/visiteur_01_repos_face_2.svg"
+    ],
+    "visiteur_01_salut_face": [
+     "visiteurs/visiteur_01/visiteur_01_salut_face_1.svg",
+     "visiteurs/visiteur_01/visiteur_01_salut_face_2.svg"
+    ],
+    "visiteur_01_marche_trois_quarts": [
+     "visiteurs/visiteur_01/visiteur_01_marche_trois_quarts_1.svg",
+     "visiteurs/visiteur_01/visiteur_01_marche_trois_quarts_2.svg",
+     "visiteurs/visiteur_01/visiteur_01_marche_trois_quarts_3.svg",
+     "visiteurs/visiteur_01/visiteur_01_marche_trois_quarts_4.svg"
+    ],
+    "visiteur_01_repos_trois_quarts": [
+     "visiteurs/visiteur_01/visiteur_01_repos_trois_quarts_1.svg",
+     "visiteurs/visiteur_01/visiteur_01_repos_trois_quarts_2.svg"
+    ],
+    "visiteur_01_salut_trois_quarts": [
+     "visiteurs/visiteur_01/visiteur_01_salut_trois_quarts_1.svg",
+     "visiteurs/visiteur_01/visiteur_01_salut_trois_quarts_2.svg"
+    ],
+    "visiteur_01_marche_dos": [
+     "visiteurs/visiteur_01/visiteur_01_marche_dos_1.svg",
+     "visiteurs/visiteur_01/visiteur_01_marche_dos_2.svg",
+     "visiteurs/visiteur_01/visiteur_01_marche_dos_3.svg",
+     "visiteurs/visiteur_01/visiteur_01_marche_dos_4.svg"
+    ],
+    "visiteur_01_repos_dos": [
+     "visiteurs/visiteur_01/visiteur_01_repos_dos_1.svg",
+     "visiteurs/visiteur_01/visiteur_01_repos_dos_2.svg"
+    ],
+    "visiteur_01_salut_dos": [
+     "visiteurs/visiteur_01/visiteur_01_salut_dos_1.svg",
+     "visiteurs/visiteur_01/visiteur_01_salut_dos_2.svg"
+    ],
+    "visiteur_01_dort": [
+     "visiteurs/visiteur_01/visiteur_01_dort_1.svg",
+     "visiteurs/visiteur_01/visiteur_01_dort_2.svg"
+    ],
+    "visiteur_01_lanterne_trois_quarts": [
+     "visiteurs/visiteur_01/visiteur_01_lanterne_trois_quarts_1.svg",
+     "visiteurs/visiteur_01/visiteur_01_lanterne_trois_quarts_2.svg",
+     "visiteurs/visiteur_01/visiteur_01_lanterne_trois_quarts_3.svg",
+     "visiteurs/visiteur_01/visiteur_01_lanterne_trois_quarts_4.svg"
+    ],
+    "visiteur_01_parapluie_trois_quarts": [
+     "visiteurs/visiteur_01/visiteur_01_parapluie_trois_quarts_1.svg",
+     "visiteurs/visiteur_01/visiteur_01_parapluie_trois_quarts_2.svg",
+     "visiteurs/visiteur_01/visiteur_01_parapluie_trois_quarts_3.svg",
+     "visiteurs/visiteur_01/visiteur_01_parapluie_trois_quarts_4.svg"
+    ]
+   },
+   "graine": 7919
+  },
+  "visiteur_02": {
+   "nom": "Visiteur 2",
+   "fichiers": {
+    "visiteur_02_marche_face": [
+     "visiteurs/visiteur_02/visiteur_02_marche_face_1.svg",
+     "visiteurs/visiteur_02/visiteur_02_marche_face_2.svg",
+     "visiteurs/visiteur_02/visiteur_02_marche_face_3.svg",
+     "visiteurs/visiteur_02/visiteur_02_marche_face_4.svg"
+    ],
+    "visiteur_02_repos_face": [
+     "visiteurs/visiteur_02/visiteur_02_repos_face_1.svg",
+     "visiteurs/visiteur_02/visiteur_02_repos_face_2.svg"
+    ],
+    "visiteur_02_salut_face": [
+     "visiteurs/visiteur_02/visiteur_02_salut_face_1.svg",
+     "visiteurs/visiteur_02/visiteur_02_salut_face_2.svg"
+    ],
+    "visiteur_02_marche_trois_quarts": [
+     "visiteurs/visiteur_02/visiteur_02_marche_trois_quarts_1.svg",
+     "visiteurs/visiteur_02/visiteur_02_marche_trois_quarts_2.svg",
+     "visiteurs/visiteur_02/visiteur_02_marche_trois_quarts_3.svg",
+     "visiteurs/visiteur_02/visiteur_02_marche_trois_quarts_4.svg"
+    ],
+    "visiteur_02_repos_trois_quarts": [
+     "visiteurs/visiteur_02/visiteur_02_repos_trois_quarts_1.svg",
+     "visiteurs/visiteur_02/visiteur_02_repos_trois_quarts_2.svg"
+    ],
+    "visiteur_02_salut_trois_quarts": [
+     "visiteurs/visiteur_02/visiteur_02_salut_trois_quarts_1.svg",
+     "visiteurs/visiteur_02/visiteur_02_salut_trois_quarts_2.svg"
+    ],
+    "visiteur_02_marche_dos": [
+     "visiteurs/visiteur_02/visiteur_02_marche_dos_1.svg",
+     "visiteurs/visiteur_02/visiteur_02_marche_dos_2.svg",
+     "visiteurs/visiteur_02/visiteur_02_marche_dos_3.svg",
+     "visiteurs/visiteur_02/visiteur_02_marche_dos_4.svg"
+    ],
+    "visiteur_02_repos_dos": [
+     "visiteurs/visiteur_02/visiteur_02_repos_dos_1.svg",
+     "visiteurs/visiteur_02/visiteur_02_repos_dos_2.svg"
+    ],
+    "visiteur_02_salut_dos": [
+     "visiteurs/visiteur_02/visiteur_02_salut_dos_1.svg",
+     "visiteurs/visiteur_02/visiteur_02_salut_dos_2.svg"
+    ],
+    "visiteur_02_dort": [
+     "visiteurs/visiteur_02/visiteur_02_dort_1.svg",
+     "visiteurs/visiteur_02/visiteur_02_dort_2.svg"
+    ],
+    "visiteur_02_lanterne_trois_quarts": [
+     "visiteurs/visiteur_02/visiteur_02_lanterne_trois_quarts_1.svg",
+     "visiteurs/visiteur_02/visiteur_02_lanterne_trois_quarts_2.svg",
+     "visiteurs/visiteur_02/visiteur_02_lanterne_trois_quarts_3.svg",
+     "visiteurs/visiteur_02/visiteur_02_lanterne_trois_quarts_4.svg"
+    ],
+    "visiteur_02_parapluie_trois_quarts": [
+     "visiteurs/visiteur_02/visiteur_02_parapluie_trois_quarts_1.svg",
+     "visiteurs/visiteur_02/visiteur_02_parapluie_trois_quarts_2.svg",
+     "visiteurs/visiteur_02/visiteur_02_parapluie_trois_quarts_3.svg",
+     "visiteurs/visiteur_02/visiteur_02_parapluie_trois_quarts_4.svg"
+    ]
+   },
+   "graine": 15838
+  },
+  "visiteur_03": {
+   "nom": "Visiteur 3",
+   "fichiers": {
+    "visiteur_03_marche_face": [
+     "visiteurs/visiteur_03/visiteur_03_marche_face_1.svg",
+     "visiteurs/visiteur_03/visiteur_03_marche_face_2.svg",
+     "visiteurs/visiteur_03/visiteur_03_marche_face_3.svg",
+     "visiteurs/visiteur_03/visiteur_03_marche_face_4.svg"
+    ],
+    "visiteur_03_repos_face": [
+     "visiteurs/visiteur_03/visiteur_03_repos_face_1.svg",
+     "visiteurs/visiteur_03/visiteur_03_repos_face_2.svg"
+    ],
+    "visiteur_03_salut_face": [
+     "visiteurs/visiteur_03/visiteur_03_salut_face_1.svg",
+     "visiteurs/visiteur_03/visiteur_03_salut_face_2.svg"
+    ],
+    "visiteur_03_marche_trois_quarts": [
+     "visiteurs/visiteur_03/visiteur_03_marche_trois_quarts_1.svg",
+     "visiteurs/visiteur_03/visiteur_03_marche_trois_quarts_2.svg",
+     "visiteurs/visiteur_03/visiteur_03_marche_trois_quarts_3.svg",
+     "visiteurs/visiteur_03/visiteur_03_marche_trois_quarts_4.svg"
+    ],
+    "visiteur_03_repos_trois_quarts": [
+     "visiteurs/visiteur_03/visiteur_03_repos_trois_quarts_1.svg",
+     "visiteurs/visiteur_03/visiteur_03_repos_trois_quarts_2.svg"
+    ],
+    "visiteur_03_salut_trois_quarts": [
+     "visiteurs/visiteur_03/visiteur_03_salut_trois_quarts_1.svg",
+     "visiteurs/visiteur_03/visiteur_03_salut_trois_quarts_2.svg"
+    ],
+    "visiteur_03_marche_dos": [
+     "visiteurs/visiteur_03/visiteur_03_marche_dos_1.svg",
+     "visiteurs/visiteur_03/visiteur_03_marche_dos_2.svg",
+     "visiteurs/visiteur_03/visiteur_03_marche_dos_3.svg",
+     "visiteurs/visiteur_03/visiteur_03_marche_dos_4.svg"
+    ],
+    "visiteur_03_repos_dos": [
+     "visiteurs/visiteur_03/visiteur_03_repos_dos_1.svg",
+     "visiteurs/visiteur_03/visiteur_03_repos_dos_2.svg"
+    ],
+    "visiteur_03_salut_dos": [
+     "visiteurs/visiteur_03/visiteur_03_salut_dos_1.svg",
+     "visiteurs/visiteur_03/visiteur_03_salut_dos_2.svg"
+    ],
+    "visiteur_03_dort": [
+     "visiteurs/visiteur_03/visiteur_03_dort_1.svg",
+     "visiteurs/visiteur_03/visiteur_03_dort_2.svg"
+    ],
+    "visiteur_03_lanterne_trois_quarts": [
+     "visiteurs/visiteur_03/visiteur_03_lanterne_trois_quarts_1.svg",
+     "visiteurs/visiteur_03/visiteur_03_lanterne_trois_quarts_2.svg",
+     "visiteurs/visiteur_03/visiteur_03_lanterne_trois_quarts_3.svg",
+     "visiteurs/visiteur_03/visiteur_03_lanterne_trois_quarts_4.svg"
+    ],
+    "visiteur_03_parapluie_trois_quarts": [
+     "visiteurs/visiteur_03/visiteur_03_parapluie_trois_quarts_1.svg",
+     "visiteurs/visiteur_03/visiteur_03_parapluie_trois_quarts_2.svg",
+     "visiteurs/visiteur_03/visiteur_03_parapluie_trois_quarts_3.svg",
+     "visiteurs/visiteur_03/visiteur_03_parapluie_trois_quarts_4.svg"
+    ]
+   },
+   "graine": 23757
+  },
+  "visiteur_04": {
+   "nom": "Visiteur 4",
+   "fichiers": {
+    "visiteur_04_marche_face": [
+     "visiteurs/visiteur_04/visiteur_04_marche_face_1.svg",
+     "visiteurs/visiteur_04/visiteur_04_marche_face_2.svg",
+     "visiteurs/visiteur_04/visiteur_04_marche_face_3.svg",
+     "visiteurs/visiteur_04/visiteur_04_marche_face_4.svg"
+    ],
+    "visiteur_04_repos_face": [
+     "visiteurs/visiteur_04/visiteur_04_repos_face_1.svg",
+     "visiteurs/visiteur_04/visiteur_04_repos_face_2.svg"
+    ],
+    "visiteur_04_salut_face": [
+     "visiteurs/visiteur_04/visiteur_04_salut_face_1.svg",
+     "visiteurs/visiteur_04/visiteur_04_salut_face_2.svg"
+    ],
+    "visiteur_04_marche_trois_quarts": [
+     "visiteurs/visiteur_04/visiteur_04_marche_trois_quarts_1.svg",
+     "visiteurs/visiteur_04/visiteur_04_marche_trois_quarts_2.svg",
+     "visiteurs/visiteur_04/visiteur_04_marche_trois_quarts_3.svg",
+     "visiteurs/visiteur_04/visiteur_04_marche_trois_quarts_4.svg"
+    ],
+    "visiteur_04_repos_trois_quarts": [
+     "visiteurs/visiteur_04/visiteur_04_repos_trois_quarts_1.svg",
+     "visiteurs/visiteur_04/visiteur_04_repos_trois_quarts_2.svg"
+    ],
+    "visiteur_04_salut_trois_quarts": [
+     "visiteurs/visiteur_04/visiteur_04_salut_trois_quarts_1.svg",
+     "visiteurs/visiteur_04/visiteur_04_salut_trois_quarts_2.svg"
+    ],
+    "visiteur_04_marche_dos": [
+     "visiteurs/visiteur_04/visiteur_04_marche_dos_1.svg",
+     "visiteurs/visiteur_04/visiteur_04_marche_dos_2.svg",
+     "visiteurs/visiteur_04/visiteur_04_marche_dos_3.svg",
+     "visiteurs/visiteur_04/visiteur_04_marche_dos_4.svg"
+    ],
+    "visiteur_04_repos_dos": [
+     "visiteurs/visiteur_04/visiteur_04_repos_dos_1.svg",
+     "visiteurs/visiteur_04/visiteur_04_repos_dos_2.svg"
+    ],
+    "visiteur_04_salut_dos": [
+     "visiteurs/visiteur_04/visiteur_04_salut_dos_1.svg",
+     "visiteurs/visiteur_04/visiteur_04_salut_dos_2.svg"
+    ],
+    "visiteur_04_dort": [
+     "visiteurs/visiteur_04/visiteur_04_dort_1.svg",
+     "visiteurs/visiteur_04/visiteur_04_dort_2.svg"
+    ],
+    "visiteur_04_lanterne_trois_quarts": [
+     "visiteurs/visiteur_04/visiteur_04_lanterne_trois_quarts_1.svg",
+     "visiteurs/visiteur_04/visiteur_04_lanterne_trois_quarts_2.svg",
+     "visiteurs/visiteur_04/visiteur_04_lanterne_trois_quarts_3.svg",
+     "visiteurs/visiteur_04/visiteur_04_lanterne_trois_quarts_4.svg"
+    ],
+    "visiteur_04_parapluie_trois_quarts": [
+     "visiteurs/visiteur_04/visiteur_04_parapluie_trois_quarts_1.svg",
+     "visiteurs/visiteur_04/visiteur_04_parapluie_trois_quarts_2.svg",
+     "visiteurs/visiteur_04/visiteur_04_parapluie_trois_quarts_3.svg",
+     "visiteurs/visiteur_04/visiteur_04_parapluie_trois_quarts_4.svg"
+    ]
+   },
+   "graine": 31676
+  },
+  "visiteur_05": {
+   "nom": "Visiteur 5",
+   "fichiers": {
+    "visiteur_05_marche_face": [
+     "visiteurs/visiteur_05/visiteur_05_marche_face_1.svg",
+     "visiteurs/visiteur_05/visiteur_05_marche_face_2.svg",
+     "visiteurs/visiteur_05/visiteur_05_marche_face_3.svg",
+     "visiteurs/visiteur_05/visiteur_05_marche_face_4.svg"
+    ],
+    "visiteur_05_repos_face": [
+     "visiteurs/visiteur_05/visiteur_05_repos_face_1.svg",
+     "visiteurs/visiteur_05/visiteur_05_repos_face_2.svg"
+    ],
+    "visiteur_05_salut_face": [
+     "visiteurs/visiteur_05/visiteur_05_salut_face_1.svg",
+     "visiteurs/visiteur_05/visiteur_05_salut_face_2.svg"
+    ],
+    "visiteur_05_marche_trois_quarts": [
+     "visiteurs/visiteur_05/visiteur_05_marche_trois_quarts_1.svg",
+     "visiteurs/visiteur_05/visiteur_05_marche_trois_quarts_2.svg",
+     "visiteurs/visiteur_05/visiteur_05_marche_trois_quarts_3.svg",
+     "visiteurs/visiteur_05/visiteur_05_marche_trois_quarts_4.svg"
+    ],
+    "visiteur_05_repos_trois_quarts": [
+     "visiteurs/visiteur_05/visiteur_05_repos_trois_quarts_1.svg",
+     "visiteurs/visiteur_05/visiteur_05_repos_trois_quarts_2.svg"
+    ],
+    "visiteur_05_salut_trois_quarts": [
+     "visiteurs/visiteur_05/visiteur_05_salut_trois_quarts_1.svg",
+     "visiteurs/visiteur_05/visiteur_05_salut_trois_quarts_2.svg"
+    ],
+    "visiteur_05_marche_dos": [
+     "visiteurs/visiteur_05/visiteur_05_marche_dos_1.svg",
+     "visiteurs/visiteur_05/visiteur_05_marche_dos_2.svg",
+     "visiteurs/visiteur_05/visiteur_05_marche_dos_3.svg",
+     "visiteurs/visiteur_05/visiteur_05_marche_dos_4.svg"
+    ],
+    "visiteur_05_repos_dos": [
+     "visiteurs/visiteur_05/visiteur_05_repos_dos_1.svg",
+     "visiteurs/visiteur_05/visiteur_05_repos_dos_2.svg"
+    ],
+    "visiteur_05_salut_dos": [
+     "visiteurs/visiteur_05/visiteur_05_salut_dos_1.svg",
+     "visiteurs/visiteur_05/visiteur_05_salut_dos_2.svg"
+    ],
+    "visiteur_05_dort": [
+     "visiteurs/visiteur_05/visiteur_05_dort_1.svg",
+     "visiteurs/visiteur_05/visiteur_05_dort_2.svg"
+    ],
+    "visiteur_05_lanterne_trois_quarts": [
+     "visiteurs/visiteur_05/visiteur_05_lanterne_trois_quarts_1.svg",
+     "visiteurs/visiteur_05/visiteur_05_lanterne_trois_quarts_2.svg",
+     "visiteurs/visiteur_05/visiteur_05_lanterne_trois_quarts_3.svg",
+     "visiteurs/visiteur_05/visiteur_05_lanterne_trois_quarts_4.svg"
+    ],
+    "visiteur_05_parapluie_trois_quarts": [
+     "visiteurs/visiteur_05/visiteur_05_parapluie_trois_quarts_1.svg",
+     "visiteurs/visiteur_05/visiteur_05_parapluie_trois_quarts_2.svg",
+     "visiteurs/visiteur_05/visiteur_05_parapluie_trois_quarts_3.svg",
+     "visiteurs/visiteur_05/visiteur_05_parapluie_trois_quarts_4.svg"
+    ]
+   },
+   "graine": 39595
+  },
+  "visiteur_06": {
+   "nom": "Visiteur 6",
+   "fichiers": {
+    "visiteur_06_marche_face": [
+     "visiteurs/visiteur_06/visiteur_06_marche_face_1.svg",
+     "visiteurs/visiteur_06/visiteur_06_marche_face_2.svg",
+     "visiteurs/visiteur_06/visiteur_06_marche_face_3.svg",
+     "visiteurs/visiteur_06/visiteur_06_marche_face_4.svg"
+    ],
+    "visiteur_06_repos_face": [
+     "visiteurs/visiteur_06/visiteur_06_repos_face_1.svg",
+     "visiteurs/visiteur_06/visiteur_06_repos_face_2.svg"
+    ],
+    "visiteur_06_salut_face": [
+     "visiteurs/visiteur_06/visiteur_06_salut_face_1.svg",
+     "visiteurs/visiteur_06/visiteur_06_salut_face_2.svg"
+    ],
+    "visiteur_06_marche_trois_quarts": [
+     "visiteurs/visiteur_06/visiteur_06_marche_trois_quarts_1.svg",
+     "visiteurs/visiteur_06/visiteur_06_marche_trois_quarts_2.svg",
+     "visiteurs/visiteur_06/visiteur_06_marche_trois_quarts_3.svg",
+     "visiteurs/visiteur_06/visiteur_06_marche_trois_quarts_4.svg"
+    ],
+    "visiteur_06_repos_trois_quarts": [
+     "visiteurs/visiteur_06/visiteur_06_repos_trois_quarts_1.svg",
+     "visiteurs/visiteur_06/visiteur_06_repos_trois_quarts_2.svg"
+    ],
+    "visiteur_06_salut_trois_quarts": [
+     "visiteurs/visiteur_06/visiteur_06_salut_trois_quarts_1.svg",
+     "visiteurs/visiteur_06/visiteur_06_salut_trois_quarts_2.svg"
+    ],
+    "visiteur_06_marche_dos": [
+     "visiteurs/visiteur_06/visiteur_06_marche_dos_1.svg",
+     "visiteurs/visiteur_06/visiteur_06_marche_dos_2.svg",
+     "visiteurs/visiteur_06/visiteur_06_marche_dos_3.svg",
+     "visiteurs/visiteur_06/visiteur_06_marche_dos_4.svg"
+    ],
+    "visiteur_06_repos_dos": [
+     "visiteurs/visiteur_06/visiteur_06_repos_dos_1.svg",
+     "visiteurs/visiteur_06/visiteur_06_repos_dos_2.svg"
+    ],
+    "visiteur_06_salut_dos": [
+     "visiteurs/visiteur_06/visiteur_06_salut_dos_1.svg",
+     "visiteurs/visiteur_06/visiteur_06_salut_dos_2.svg"
+    ],
+    "visiteur_06_dort": [
+     "visiteurs/visiteur_06/visiteur_06_dort_1.svg",
+     "visiteurs/visiteur_06/visiteur_06_dort_2.svg"
+    ],
+    "visiteur_06_lanterne_trois_quarts": [
+     "visiteurs/visiteur_06/visiteur_06_lanterne_trois_quarts_1.svg",
+     "visiteurs/visiteur_06/visiteur_06_lanterne_trois_quarts_2.svg",
+     "visiteurs/visiteur_06/visiteur_06_lanterne_trois_quarts_3.svg",
+     "visiteurs/visiteur_06/visiteur_06_lanterne_trois_quarts_4.svg"
+    ],
+    "visiteur_06_parapluie_trois_quarts": [
+     "visiteurs/visiteur_06/visiteur_06_parapluie_trois_quarts_1.svg",
+     "visiteurs/visiteur_06/visiteur_06_parapluie_trois_quarts_2.svg",
+     "visiteurs/visiteur_06/visiteur_06_parapluie_trois_quarts_3.svg",
+     "visiteurs/visiteur_06/visiteur_06_parapluie_trois_quarts_4.svg"
+    ]
+   },
+   "graine": 47514
+  },
+  "visiteur_07": {
+   "nom": "Visiteur 7",
+   "fichiers": {
+    "visiteur_07_marche_face": [
+     "visiteurs/visiteur_07/visiteur_07_marche_face_1.svg",
+     "visiteurs/visiteur_07/visiteur_07_marche_face_2.svg",
+     "visiteurs/visiteur_07/visiteur_07_marche_face_3.svg",
+     "visiteurs/visiteur_07/visiteur_07_marche_face_4.svg"
+    ],
+    "visiteur_07_repos_face": [
+     "visiteurs/visiteur_07/visiteur_07_repos_face_1.svg",
+     "visiteurs/visiteur_07/visiteur_07_repos_face_2.svg"
+    ],
+    "visiteur_07_salut_face": [
+     "visiteurs/visiteur_07/visiteur_07_salut_face_1.svg",
+     "visiteurs/visiteur_07/visiteur_07_salut_face_2.svg"
+    ],
+    "visiteur_07_marche_trois_quarts": [
+     "visiteurs/visiteur_07/visiteur_07_marche_trois_quarts_1.svg",
+     "visiteurs/visiteur_07/visiteur_07_marche_trois_quarts_2.svg",
+     "visiteurs/visiteur_07/visiteur_07_marche_trois_quarts_3.svg",
+     "visiteurs/visiteur_07/visiteur_07_marche_trois_quarts_4.svg"
+    ],
+    "visiteur_07_repos_trois_quarts": [
+     "visiteurs/visiteur_07/visiteur_07_repos_trois_quarts_1.svg",
+     "visiteurs/visiteur_07/visiteur_07_repos_trois_quarts_2.svg"
+    ],
+    "visiteur_07_salut_trois_quarts": [
+     "visiteurs/visiteur_07/visiteur_07_salut_trois_quarts_1.svg",
+     "visiteurs/visiteur_07/visiteur_07_salut_trois_quarts_2.svg"
+    ],
+    "visiteur_07_marche_dos": [
+     "visiteurs/visiteur_07/visiteur_07_marche_dos_1.svg",
+     "visiteurs/visiteur_07/visiteur_07_marche_dos_2.svg",
+     "visiteurs/visiteur_07/visiteur_07_marche_dos_3.svg",
+     "visiteurs/visiteur_07/visiteur_07_marche_dos_4.svg"
+    ],
+    "visiteur_07_repos_dos": [
+     "visiteurs/visiteur_07/visiteur_07_repos_dos_1.svg",
+     "visiteurs/visiteur_07/visiteur_07_repos_dos_2.svg"
+    ],
+    "visiteur_07_salut_dos": [
+     "visiteurs/visiteur_07/visiteur_07_salut_dos_1.svg",
+     "visiteurs/visiteur_07/visiteur_07_salut_dos_2.svg"
+    ],
+    "visiteur_07_dort": [
+     "visiteurs/visiteur_07/visiteur_07_dort_1.svg",
+     "visiteurs/visiteur_07/visiteur_07_dort_2.svg"
+    ],
+    "visiteur_07_lanterne_trois_quarts": [
+     "visiteurs/visiteur_07/visiteur_07_lanterne_trois_quarts_1.svg",
+     "visiteurs/visiteur_07/visiteur_07_lanterne_trois_quarts_2.svg",
+     "visiteurs/visiteur_07/visiteur_07_lanterne_trois_quarts_3.svg",
+     "visiteurs/visiteur_07/visiteur_07_lanterne_trois_quarts_4.svg"
+    ],
+    "visiteur_07_parapluie_trois_quarts": [
+     "visiteurs/visiteur_07/visiteur_07_parapluie_trois_quarts_1.svg",
+     "visiteurs/visiteur_07/visiteur_07_parapluie_trois_quarts_2.svg",
+     "visiteurs/visiteur_07/visiteur_07_parapluie_trois_quarts_3.svg",
+     "visiteurs/visiteur_07/visiteur_07_parapluie_trois_quarts_4.svg"
+    ]
+   },
+   "graine": 55433
+  },
+  "visiteur_08": {
+   "nom": "Visiteur 8",
+   "fichiers": {
+    "visiteur_08_marche_face": [
+     "visiteurs/visiteur_08/visiteur_08_marche_face_1.svg",
+     "visiteurs/visiteur_08/visiteur_08_marche_face_2.svg",
+     "visiteurs/visiteur_08/visiteur_08_marche_face_3.svg",
+     "visiteurs/visiteur_08/visiteur_08_marche_face_4.svg"
+    ],
+    "visiteur_08_repos_face": [
+     "visiteurs/visiteur_08/visiteur_08_repos_face_1.svg",
+     "visiteurs/visiteur_08/visiteur_08_repos_face_2.svg"
+    ],
+    "visiteur_08_salut_face": [
+     "visiteurs/visiteur_08/visiteur_08_salut_face_1.svg",
+     "visiteurs/visiteur_08/visiteur_08_salut_face_2.svg"
+    ],
+    "visiteur_08_marche_trois_quarts": [
+     "visiteurs/visiteur_08/visiteur_08_marche_trois_quarts_1.svg",
+     "visiteurs/visiteur_08/visiteur_08_marche_trois_quarts_2.svg",
+     "visiteurs/visiteur_08/visiteur_08_marche_trois_quarts_3.svg",
+     "visiteurs/visiteur_08/visiteur_08_marche_trois_quarts_4.svg"
+    ],
+    "visiteur_08_repos_trois_quarts": [
+     "visiteurs/visiteur_08/visiteur_08_repos_trois_quarts_1.svg",
+     "visiteurs/visiteur_08/visiteur_08_repos_trois_quarts_2.svg"
+    ],
+    "visiteur_08_salut_trois_quarts": [
+     "visiteurs/visiteur_08/visiteur_08_salut_trois_quarts_1.svg",
+     "visiteurs/visiteur_08/visiteur_08_salut_trois_quarts_2.svg"
+    ],
+    "visiteur_08_marche_dos": [
+     "visiteurs/visiteur_08/visiteur_08_marche_dos_1.svg",
+     "visiteurs/visiteur_08/visiteur_08_marche_dos_2.svg",
+     "visiteurs/visiteur_08/visiteur_08_marche_dos_3.svg",
+     "visiteurs/visiteur_08/visiteur_08_marche_dos_4.svg"
+    ],
+    "visiteur_08_repos_dos": [
+     "visiteurs/visiteur_08/visiteur_08_repos_dos_1.svg",
+     "visiteurs/visiteur_08/visiteur_08_repos_dos_2.svg"
+    ],
+    "visiteur_08_salut_dos": [
+     "visiteurs/visiteur_08/visiteur_08_salut_dos_1.svg",
+     "visiteurs/visiteur_08/visiteur_08_salut_dos_2.svg"
+    ],
+    "visiteur_08_dort": [
+     "visiteurs/visiteur_08/visiteur_08_dort_1.svg",
+     "visiteurs/visiteur_08/visiteur_08_dort_2.svg"
+    ],
+    "visiteur_08_lanterne_trois_quarts": [
+     "visiteurs/visiteur_08/visiteur_08_lanterne_trois_quarts_1.svg",
+     "visiteurs/visiteur_08/visiteur_08_lanterne_trois_quarts_2.svg",
+     "visiteurs/visiteur_08/visiteur_08_lanterne_trois_quarts_3.svg",
+     "visiteurs/visiteur_08/visiteur_08_lanterne_trois_quarts_4.svg"
+    ],
+    "visiteur_08_parapluie_trois_quarts": [
+     "visiteurs/visiteur_08/visiteur_08_parapluie_trois_quarts_1.svg",
+     "visiteurs/visiteur_08/visiteur_08_parapluie_trois_quarts_2.svg",
+     "visiteurs/visiteur_08/visiteur_08_parapluie_trois_quarts_3.svg",
+     "visiteurs/visiteur_08/visiteur_08_parapluie_trois_quarts_4.svg"
+    ]
+   },
+   "graine": 63352
+  },
+  "visiteur_09": {
+   "nom": "Visiteur 9",
+   "fichiers": {
+    "visiteur_09_marche_face": [
+     "visiteurs/visiteur_09/visiteur_09_marche_face_1.svg",
+     "visiteurs/visiteur_09/visiteur_09_marche_face_2.svg",
+     "visiteurs/visiteur_09/visiteur_09_marche_face_3.svg",
+     "visiteurs/visiteur_09/visiteur_09_marche_face_4.svg"
+    ],
+    "visiteur_09_repos_face": [
+     "visiteurs/visiteur_09/visiteur_09_repos_face_1.svg",
+     "visiteurs/visiteur_09/visiteur_09_repos_face_2.svg"
+    ],
+    "visiteur_09_salut_face": [
+     "visiteurs/visiteur_09/visiteur_09_salut_face_1.svg",
+     "visiteurs/visiteur_09/visiteur_09_salut_face_2.svg"
+    ],
+    "visiteur_09_marche_trois_quarts": [
+     "visiteurs/visiteur_09/visiteur_09_marche_trois_quarts_1.svg",
+     "visiteurs/visiteur_09/visiteur_09_marche_trois_quarts_2.svg",
+     "visiteurs/visiteur_09/visiteur_09_marche_trois_quarts_3.svg",
+     "visiteurs/visiteur_09/visiteur_09_marche_trois_quarts_4.svg"
+    ],
+    "visiteur_09_repos_trois_quarts": [
+     "visiteurs/visiteur_09/visiteur_09_repos_trois_quarts_1.svg",
+     "visiteurs/visiteur_09/visiteur_09_repos_trois_quarts_2.svg"
+    ],
+    "visiteur_09_salut_trois_quarts": [
+     "visiteurs/visiteur_09/visiteur_09_salut_trois_quarts_1.svg",
+     "visiteurs/visiteur_09/visiteur_09_salut_trois_quarts_2.svg"
+    ],
+    "visiteur_09_marche_dos": [
+     "visiteurs/visiteur_09/visiteur_09_marche_dos_1.svg",
+     "visiteurs/visiteur_09/visiteur_09_marche_dos_2.svg",
+     "visiteurs/visiteur_09/visiteur_09_marche_dos_3.svg",
+     "visiteurs/visiteur_09/visiteur_09_marche_dos_4.svg"
+    ],
+    "visiteur_09_repos_dos": [
+     "visiteurs/visiteur_09/visiteur_09_repos_dos_1.svg",
+     "visiteurs/visiteur_09/visiteur_09_repos_dos_2.svg"
+    ],
+    "visiteur_09_salut_dos": [
+     "visiteurs/visiteur_09/visiteur_09_salut_dos_1.svg",
+     "visiteurs/visiteur_09/visiteur_09_salut_dos_2.svg"
+    ],
+    "visiteur_09_dort": [
+     "visiteurs/visiteur_09/visiteur_09_dort_1.svg",
+     "visiteurs/visiteur_09/visiteur_09_dort_2.svg"
+    ],
+    "visiteur_09_lanterne_trois_quarts": [
+     "visiteurs/visiteur_09/visiteur_09_lanterne_trois_quarts_1.svg",
+     "visiteurs/visiteur_09/visiteur_09_lanterne_trois_quarts_2.svg",
+     "visiteurs/visiteur_09/visiteur_09_lanterne_trois_quarts_3.svg",
+     "visiteurs/visiteur_09/visiteur_09_lanterne_trois_quarts_4.svg"
+    ],
+    "visiteur_09_parapluie_trois_quarts": [
+     "visiteurs/visiteur_09/visiteur_09_parapluie_trois_quarts_1.svg",
+     "visiteurs/visiteur_09/visiteur_09_parapluie_trois_quarts_2.svg",
+     "visiteurs/visiteur_09/visiteur_09_parapluie_trois_quarts_3.svg",
+     "visiteurs/visiteur_09/visiteur_09_parapluie_trois_quarts_4.svg"
+    ]
+   },
+   "graine": 71271
+  },
+  "visiteur_10": {
+   "nom": "Visiteur 10",
+   "fichiers": {
+    "visiteur_10_marche_face": [
+     "visiteurs/visiteur_10/visiteur_10_marche_face_1.svg",
+     "visiteurs/visiteur_10/visiteur_10_marche_face_2.svg",
+     "visiteurs/visiteur_10/visiteur_10_marche_face_3.svg",
+     "visiteurs/visiteur_10/visiteur_10_marche_face_4.svg"
+    ],
+    "visiteur_10_repos_face": [
+     "visiteurs/visiteur_10/visiteur_10_repos_face_1.svg",
+     "visiteurs/visiteur_10/visiteur_10_repos_face_2.svg"
+    ],
+    "visiteur_10_salut_face": [
+     "visiteurs/visiteur_10/visiteur_10_salut_face_1.svg",
+     "visiteurs/visiteur_10/visiteur_10_salut_face_2.svg"
+    ],
+    "visiteur_10_marche_trois_quarts": [
+     "visiteurs/visiteur_10/visiteur_10_marche_trois_quarts_1.svg",
+     "visiteurs/visiteur_10/visiteur_10_marche_trois_quarts_2.svg",
+     "visiteurs/visiteur_10/visiteur_10_marche_trois_quarts_3.svg",
+     "visiteurs/visiteur_10/visiteur_10_marche_trois_quarts_4.svg"
+    ],
+    "visiteur_10_repos_trois_quarts": [
+     "visiteurs/visiteur_10/visiteur_10_repos_trois_quarts_1.svg",
+     "visiteurs/visiteur_10/visiteur_10_repos_trois_quarts_2.svg"
+    ],
+    "visiteur_10_salut_trois_quarts": [
+     "visiteurs/visiteur_10/visiteur_10_salut_trois_quarts_1.svg",
+     "visiteurs/visiteur_10/visiteur_10_salut_trois_quarts_2.svg"
+    ],
+    "visiteur_10_marche_dos": [
+     "visiteurs/visiteur_10/visiteur_10_marche_dos_1.svg",
+     "visiteurs/visiteur_10/visiteur_10_marche_dos_2.svg",
+     "visiteurs/visiteur_10/visiteur_10_marche_dos_3.svg",
+     "visiteurs/visiteur_10/visiteur_10_marche_dos_4.svg"
+    ],
+    "visiteur_10_repos_dos": [
+     "visiteurs/visiteur_10/visiteur_10_repos_dos_1.svg",
+     "visiteurs/visiteur_10/visiteur_10_repos_dos_2.svg"
+    ],
+    "visiteur_10_salut_dos": [
+     "visiteurs/visiteur_10/visiteur_10_salut_dos_1.svg",
+     "visiteurs/visiteur_10/visiteur_10_salut_dos_2.svg"
+    ],
+    "visiteur_10_dort": [
+     "visiteurs/visiteur_10/visiteur_10_dort_1.svg",
+     "visiteurs/visiteur_10/visiteur_10_dort_2.svg"
+    ],
+    "visiteur_10_lanterne_trois_quarts": [
+     "visiteurs/visiteur_10/visiteur_10_lanterne_trois_quarts_1.svg",
+     "visiteurs/visiteur_10/visiteur_10_lanterne_trois_quarts_2.svg",
+     "visiteurs/visiteur_10/visiteur_10_lanterne_trois_quarts_3.svg",
+     "visiteurs/visiteur_10/visiteur_10_lanterne_trois_quarts_4.svg"
+    ],
+    "visiteur_10_parapluie_trois_quarts": [
+     "visiteurs/visiteur_10/visiteur_10_parapluie_trois_quarts_1.svg",
+     "visiteurs/visiteur_10/visiteur_10_parapluie_trois_quarts_2.svg",
+     "visiteurs/visiteur_10/visiteur_10_parapluie_trois_quarts_3.svg",
+     "visiteurs/visiteur_10/visiteur_10_parapluie_trois_quarts_4.svg"
+    ]
+   },
+   "graine": 79190
+  },
+  "visiteur_11": {
+   "nom": "Visiteur 11",
+   "fichiers": {
+    "visiteur_11_marche_face": [
+     "visiteurs/visiteur_11/visiteur_11_marche_face_1.svg",
+     "visiteurs/visiteur_11/visiteur_11_marche_face_2.svg",
+     "visiteurs/visiteur_11/visiteur_11_marche_face_3.svg",
+     "visiteurs/visiteur_11/visiteur_11_marche_face_4.svg"
+    ],
+    "visiteur_11_repos_face": [
+     "visiteurs/visiteur_11/visiteur_11_repos_face_1.svg",
+     "visiteurs/visiteur_11/visiteur_11_repos_face_2.svg"
+    ],
+    "visiteur_11_salut_face": [
+     "visiteurs/visiteur_11/visiteur_11_salut_face_1.svg",
+     "visiteurs/visiteur_11/visiteur_11_salut_face_2.svg"
+    ],
+    "visiteur_11_marche_trois_quarts": [
+     "visiteurs/visiteur_11/visiteur_11_marche_trois_quarts_1.svg",
+     "visiteurs/visiteur_11/visiteur_11_marche_trois_quarts_2.svg",
+     "visiteurs/visiteur_11/visiteur_11_marche_trois_quarts_3.svg",
+     "visiteurs/visiteur_11/visiteur_11_marche_trois_quarts_4.svg"
+    ],
+    "visiteur_11_repos_trois_quarts": [
+     "visiteurs/visiteur_11/visiteur_11_repos_trois_quarts_1.svg",
+     "visiteurs/visiteur_11/visiteur_11_repos_trois_quarts_2.svg"
+    ],
+    "visiteur_11_salut_trois_quarts": [
+     "visiteurs/visiteur_11/visiteur_11_salut_trois_quarts_1.svg",
+     "visiteurs/visiteur_11/visiteur_11_salut_trois_quarts_2.svg"
+    ],
+    "visiteur_11_marche_dos": [
+     "visiteurs/visiteur_11/visiteur_11_marche_dos_1.svg",
+     "visiteurs/visiteur_11/visiteur_11_marche_dos_2.svg",
+     "visiteurs/visiteur_11/visiteur_11_marche_dos_3.svg",
+     "visiteurs/visiteur_11/visiteur_11_marche_dos_4.svg"
+    ],
+    "visiteur_11_repos_dos": [
+     "visiteurs/visiteur_11/visiteur_11_repos_dos_1.svg",
+     "visiteurs/visiteur_11/visiteur_11_repos_dos_2.svg"
+    ],
+    "visiteur_11_salut_dos": [
+     "visiteurs/visiteur_11/visiteur_11_salut_dos_1.svg",
+     "visiteurs/visiteur_11/visiteur_11_salut_dos_2.svg"
+    ],
+    "visiteur_11_dort": [
+     "visiteurs/visiteur_11/visiteur_11_dort_1.svg",
+     "visiteurs/visiteur_11/visiteur_11_dort_2.svg"
+    ],
+    "visiteur_11_lanterne_trois_quarts": [
+     "visiteurs/visiteur_11/visiteur_11_lanterne_trois_quarts_1.svg",
+     "visiteurs/visiteur_11/visiteur_11_lanterne_trois_quarts_2.svg",
+     "visiteurs/visiteur_11/visiteur_11_lanterne_trois_quarts_3.svg",
+     "visiteurs/visiteur_11/visiteur_11_lanterne_trois_quarts_4.svg"
+    ],
+    "visiteur_11_parapluie_trois_quarts": [
+     "visiteurs/visiteur_11/visiteur_11_parapluie_trois_quarts_1.svg",
+     "visiteurs/visiteur_11/visiteur_11_parapluie_trois_quarts_2.svg",
+     "visiteurs/visiteur_11/visiteur_11_parapluie_trois_quarts_3.svg",
+     "visiteurs/visiteur_11/visiteur_11_parapluie_trois_quarts_4.svg"
+    ]
+   },
+   "graine": 87109
+  },
+  "visiteur_12": {
+   "nom": "Visiteur 12",
+   "fichiers": {
+    "visiteur_12_marche_face": [
+     "visiteurs/visiteur_12/visiteur_12_marche_face_1.svg",
+     "visiteurs/visiteur_12/visiteur_12_marche_face_2.svg",
+     "visiteurs/visiteur_12/visiteur_12_marche_face_3.svg",
+     "visiteurs/visiteur_12/visiteur_12_marche_face_4.svg"
+    ],
+    "visiteur_12_repos_face": [
+     "visiteurs/visiteur_12/visiteur_12_repos_face_1.svg",
+     "visiteurs/visiteur_12/visiteur_12_repos_face_2.svg"
+    ],
+    "visiteur_12_salut_face": [
+     "visiteurs/visiteur_12/visiteur_12_salut_face_1.svg",
+     "visiteurs/visiteur_12/visiteur_12_salut_face_2.svg"
+    ],
+    "visiteur_12_marche_trois_quarts": [
+     "visiteurs/visiteur_12/visiteur_12_marche_trois_quarts_1.svg",
+     "visiteurs/visiteur_12/visiteur_12_marche_trois_quarts_2.svg",
+     "visiteurs/visiteur_12/visiteur_12_marche_trois_quarts_3.svg",
+     "visiteurs/visiteur_12/visiteur_12_marche_trois_quarts_4.svg"
+    ],
+    "visiteur_12_repos_trois_quarts": [
+     "visiteurs/visiteur_12/visiteur_12_repos_trois_quarts_1.svg",
+     "visiteurs/visiteur_12/visiteur_12_repos_trois_quarts_2.svg"
+    ],
+    "visiteur_12_salut_trois_quarts": [
+     "visiteurs/visiteur_12/visiteur_12_salut_trois_quarts_1.svg",
+     "visiteurs/visiteur_12/visiteur_12_salut_trois_quarts_2.svg"
+    ],
+    "visiteur_12_marche_dos": [
+     "visiteurs/visiteur_12/visiteur_12_marche_dos_1.svg",
+     "visiteurs/visiteur_12/visiteur_12_marche_dos_2.svg",
+     "visiteurs/visiteur_12/visiteur_12_marche_dos_3.svg",
+     "visiteurs/visiteur_12/visiteur_12_marche_dos_4.svg"
+    ],
+    "visiteur_12_repos_dos": [
+     "visiteurs/visiteur_12/visiteur_12_repos_dos_1.svg",
+     "visiteurs/visiteur_12/visiteur_12_repos_dos_2.svg"
+    ],
+    "visiteur_12_salut_dos": [
+     "visiteurs/visiteur_12/visiteur_12_salut_dos_1.svg",
+     "visiteurs/visiteur_12/visiteur_12_salut_dos_2.svg"
+    ],
+    "visiteur_12_dort": [
+     "visiteurs/visiteur_12/visiteur_12_dort_1.svg",
+     "visiteurs/visiteur_12/visiteur_12_dort_2.svg"
+    ],
+    "visiteur_12_lanterne_trois_quarts": [
+     "visiteurs/visiteur_12/visiteur_12_lanterne_trois_quarts_1.svg",
+     "visiteurs/visiteur_12/visiteur_12_lanterne_trois_quarts_2.svg",
+     "visiteurs/visiteur_12/visiteur_12_lanterne_trois_quarts_3.svg",
+     "visiteurs/visiteur_12/visiteur_12_lanterne_trois_quarts_4.svg"
+    ],
+    "visiteur_12_parapluie_trois_quarts": [
+     "visiteurs/visiteur_12/visiteur_12_parapluie_trois_quarts_1.svg",
+     "visiteurs/visiteur_12/visiteur_12_parapluie_trois_quarts_2.svg",
+     "visiteurs/visiteur_12/visiteur_12_parapluie_trois_quarts_3.svg",
+     "visiteurs/visiteur_12/visiteur_12_parapluie_trois_quarts_4.svg"
+    ]
+   },
+   "graine": 95028
+  }
+ }
+}

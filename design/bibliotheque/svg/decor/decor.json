@@ -1,0 +1,2140 @@
+{
+ "_lisez_moi": "Cadres en pixels (x, y, largeur, hauteur) autour de l'ancre (0, 0) : centre de la case (créations, lieux, gisements, annexes, ponton, pont, panneau), pied (enseignes), ligne de flottaison (bateaux), point d'échouage (bouteille). Tout est à l'échelle du jeu × 1,25 (case de 80 × 40). Annexes : ips = images par seconde du jeu. Enseignes : cadre_du_nom = où écrire le nom (centre x, y ; largeur, hauteur max ; corps de police), déjà × 1,25.",
+ "creations": {
+  "cloture": {
+   "nom": "Clôture",
+   "fichiers": [
+    "creations/cloture.svg"
+   ],
+   "cadre": [
+    -50,
+    -115,
+    100,
+    140
+   ]
+  },
+  "massif": {
+   "nom": "Massif de fleurs",
+   "fichiers": [
+    "creations/massif_1.svg",
+    "creations/massif_2.svg"
+   ],
+   "cadre": [
+    -50,
+    -115,
+    100,
+    140
+   ],
+   "ms_par_image": 420
+  },
+  "muret": {
+   "nom": "Muret",
+   "fichiers": [
+    "creations/muret.svg"
+   ],
+   "cadre": [
+    -50,
+    -115,
+    100,
+    140
+   ]
+  },
+  "lanterne": {
+   "nom": "Lanterne",
+   "fichiers": [
+    "creations/lanterne_1.svg",
+    "creations/lanterne_2.svg"
+   ],
+   "cadre": [
+    -50,
+    -115,
+    100,
+    140
+   ],
+   "ms_par_image": 420
+  },
+  "banc": {
+   "nom": "Banc",
+   "fichiers": [
+    "creations/banc.svg"
+   ],
+   "cadre": [
+    -50,
+    -115,
+    100,
+    140
+   ]
+  },
+  "epouvantail": {
+   "nom": "Épouvantail",
+   "fichiers": [
+    "creations/epouvantail_1.svg",
+    "creations/epouvantail_2.svg"
+   ],
+   "cadre": [
+    -50,
+    -115,
+    100,
+    140
+   ],
+   "ms_par_image": 420
+  },
+  "nichoir": {
+   "nom": "Nichoir",
+   "fichiers": [
+    "creations/nichoir_1.svg",
+    "creations/nichoir_2.svg"
+   ],
+   "cadre": [
+    -50,
+    -115,
+    100,
+    140
+   ],
+   "ms_par_image": 420
+  },
+  "girouette": {
+   "nom": "Girouette",
+   "fichiers": [
+    "creations/girouette_1.svg",
+    "creations/girouette_2.svg",
+    "creations/girouette_3.svg",
+    "creations/girouette_4.svg"
+   ],
+   "cadre": [
+    -50,
+    -115,
+    100,
+    140
+   ],
+   "ms_par_image": 300
+  },
+  "fontaine": {
+   "nom": "Fontaine",
+   "fichiers": [
+    "creations/fontaine_1.svg",
+    "creations/fontaine_2.svg",
+    "creations/fontaine_3.svg"
+   ],
+   "cadre": [
+    -50,
+    -115,
+    100,
+    140
+   ],
+   "ms_par_image": 420
+  },
+  "brasero": {
+   "nom": "Brasero",
+   "fichiers": [
+    "creations/brasero_1.svg",
+    "creations/brasero_2.svg",
+    "creations/brasero_3.svg"
+   ],
+   "cadre": [
+    -50,
+    -115,
+    100,
+    140
+   ],
+   "ms_par_image": 420
+  },
+  "pergola": {
+   "nom": "Pergola",
+   "fichiers": [
+    "creations/pergola_1.svg",
+    "creations/pergola_2.svg"
+   ],
+   "cadre": [
+    -50,
+    -115,
+    100,
+    140
+   ],
+   "ms_par_image": 420
+  },
+  "statue": {
+   "nom": "Statue",
+   "fichiers": [
+    "creations/statue.svg"
+   ],
+   "cadre": [
+    -50,
+    -115,
+    100,
+    140
+   ]
+  },
+  "arche": {
+   "nom": "Arche fleurie",
+   "fichiers": [
+    "creations/arche_1.svg",
+    "creations/arche_2.svg"
+   ],
+   "cadre": [
+    -50,
+    -115,
+    100,
+    140
+   ],
+   "ms_par_image": 420
+  },
+  "etal": {
+   "nom": "Étal du marché",
+   "fichiers": [
+    "creations/etal_1.svg",
+    "creations/etal_2.svg"
+   ],
+   "cadre": [
+    -50,
+    -115,
+    100,
+    140
+   ],
+   "ms_par_image": 420
+  },
+  "kiosque": {
+   "nom": "Kiosque",
+   "fichiers": [
+    "creations/kiosque_1.svg",
+    "creations/kiosque_2.svg"
+   ],
+   "cadre": [
+    -50,
+    -115,
+    100,
+    140
+   ],
+   "ms_par_image": 420
+  },
+  "cadran": {
+   "nom": "Cadran solaire",
+   "fichiers": [
+    "creations/cadran_1.svg",
+    "creations/cadran_2.svg"
+   ],
+   "cadre": [
+    -50,
+    -115,
+    100,
+    140
+   ],
+   "ms_par_image": 420
+  },
+  "bassin": {
+   "nom": "Bassin",
+   "fichiers": [
+    "creations/bassin_1.svg",
+    "creations/bassin_2.svg"
+   ],
+   "cadre": [
+    -50,
+    -115,
+    100,
+    140
+   ],
+   "ms_par_image": 420
+  },
+  "longuevue": {
+   "nom": "Longue-vue",
+   "fichiers": [
+    "creations/longuevue_1.svg",
+    "creations/longuevue_2.svg"
+   ],
+   "cadre": [
+    -50,
+    -115,
+    100,
+    140
+   ],
+   "ms_par_image": 420
+  },
+  "igloo": {
+   "nom": "Igloo (cimes)",
+   "fichiers": [
+    "creations/igloo_1.svg",
+    "creations/igloo_2.svg"
+   ],
+   "cadre": [
+    -50,
+    -115,
+    100,
+    140
+   ],
+   "ms_par_image": 420
+  },
+  "sculpture": {
+   "nom": "Sculpture de glace (cimes)",
+   "fichiers": [
+    "creations/sculpture_1.svg",
+    "creations/sculpture_2.svg"
+   ],
+   "cadre": [
+    -50,
+    -115,
+    100,
+    140
+   ],
+   "ms_par_image": 420
+  },
+  "parc": {
+   "nom": "Parc à moutons (landes)",
+   "fichiers": [
+    "creations/parc_1.svg",
+    "creations/parc_2.svg"
+   ],
+   "cadre": [
+    -50,
+    -115,
+    100,
+    140
+   ],
+   "ms_par_image": 420
+  },
+  "cairn": {
+   "nom": "Cairn aux rubans (landes)",
+   "fichiers": [
+    "creations/cairn_1.svg",
+    "creations/cairn_2.svg"
+   ],
+   "cadre": [
+    -50,
+    -115,
+    100,
+    140
+   ],
+   "ms_par_image": 420
+  },
+  "passerelle": {
+   "nom": "Passerelle de roseaux (marais)",
+   "fichiers": [
+    "creations/passerelle_1.svg",
+    "creations/passerelle_2.svg"
+   ],
+   "cadre": [
+    -50,
+    -115,
+    100,
+    140
+   ],
+   "ms_par_image": 420
+  },
+  "heron": {
+   "nom": "Héron de bois (marais)",
+   "fichiers": [
+    "creations/heron_1.svg",
+    "creations/heron_2.svg"
+   ],
+   "cadre": [
+    -50,
+    -115,
+    100,
+    140
+   ],
+   "ms_par_image": 420
+  },
+  "tente": {
+   "nom": "Tente nomade (dunes)",
+   "fichiers": [
+    "creations/tente_1.svg",
+    "creations/tente_2.svg"
+   ],
+   "cadre": [
+    -50,
+    -115,
+    100,
+    140
+   ],
+   "ms_par_image": 420
+  },
+  "cadransel": {
+   "nom": "Cadran de sel (dunes)",
+   "fichiers": [
+    "creations/cadransel_1.svg",
+    "creations/cadransel_2.svg"
+   ],
+   "cadre": [
+    -50,
+    -115,
+    100,
+    140
+   ],
+   "ms_par_image": 420
+  },
+  "hamac": {
+   "nom": "Hamac (jungle)",
+   "fichiers": [
+    "creations/hamac_1.svg",
+    "creations/hamac_2.svg"
+   ],
+   "cadre": [
+    -50,
+    -115,
+    100,
+    140
+   ],
+   "ms_par_image": 420
+  },
+  "totem": {
+   "nom": "Totem (jungle)",
+   "fichiers": [
+    "creations/totem_1.svg",
+    "creations/totem_2.svg"
+   ],
+   "cadre": [
+    -50,
+    -115,
+    100,
+    140
+   ],
+   "ms_par_image": 420
+  },
+  "obelisque": {
+   "nom": "Obélisque d'obsidienne (volcan)",
+   "fichiers": [
+    "creations/obelisque_1.svg",
+    "creations/obelisque_2.svg"
+   ],
+   "cadre": [
+    -50,
+    -115,
+    100,
+    140
+   ],
+   "ms_par_image": 420
+  },
+  "bassinchaud": {
+   "nom": "Bassin chaud (volcan)",
+   "fichiers": [
+    "creations/bassinchaud_1.svg",
+    "creations/bassinchaud_2.svg",
+    "creations/bassinchaud_3.svg"
+   ],
+   "cadre": [
+    -50,
+    -115,
+    100,
+    140
+   ],
+   "ms_par_image": 420
+  }
+ },
+ "lieux": {
+  "grotte": {
+   "nom": "Grotte de glace",
+   "fichiers": [
+    "lieux/grotte_1.svg",
+    "lieux/grotte_2.svg"
+   ],
+   "cadre": [
+    -75,
+    -150,
+    150,
+    190
+   ],
+   "ms_par_image": 520,
+   "echelle_jeu": 1.35
+  },
+  "lac": {
+   "nom": "Lac gelé",
+   "fichiers": [
+    "lieux/lac_1.svg",
+    "lieux/lac_2.svg"
+   ],
+   "cadre": [
+    -75,
+    -150,
+    150,
+    190
+   ],
+   "ms_par_image": 520,
+   "echelle_jeu": 1.35
+  },
+  "col": {
+   "nom": "Col du Vent",
+   "fichiers": [
+    "lieux/col_1.svg",
+    "lieux/col_2.svg"
+   ],
+   "cadre": [
+    -75,
+    -150,
+    150,
+    190
+   ],
+   "ms_par_image": 520,
+   "echelle_jeu": 1.35
+  },
+  "menhirs": {
+   "nom": "Cercle de menhirs",
+   "fichiers": [
+    "lieux/menhirs_1.svg",
+    "lieux/menhirs_2.svg"
+   ],
+   "cadre": [
+    -75,
+    -150,
+    150,
+    190
+   ],
+   "ms_par_image": 520,
+   "echelle_jeu": 1.35
+  },
+  "menhirs_fleuri": {
+   "nom": "Cercle de menhirs (fleuri)",
+   "fichiers": [
+    "lieux/menhirs_fleuri_1.svg",
+    "lieux/menhirs_fleuri_2.svg"
+   ],
+   "cadre": [
+    -75,
+    -150,
+    150,
+    190
+   ],
+   "ms_par_image": 520,
+   "echelle_jeu": 1.35
+  },
+  "arche": {
+   "nom": "Arche des falaises",
+   "fichiers": [
+    "lieux/arche_1.svg",
+    "lieux/arche_2.svg"
+   ],
+   "cadre": [
+    -75,
+    -150,
+    150,
+    190
+   ],
+   "ms_par_image": 520,
+   "echelle_jeu": 1.35
+  },
+  "saule": {
+   "nom": "Saule millénaire",
+   "fichiers": [
+    "lieux/saule_1.svg",
+    "lieux/saule_2.svg"
+   ],
+   "cadre": [
+    -75,
+    -150,
+    150,
+    190
+   ],
+   "ms_par_image": 520,
+   "echelle_jeu": 1.35
+  },
+  "pilotis": {
+   "nom": "Cabane sur pilotis",
+   "fichiers": [
+    "lieux/pilotis_1.svg",
+    "lieux/pilotis_2.svg"
+   ],
+   "cadre": [
+    -75,
+    -150,
+    150,
+    190
+   ],
+   "ms_par_image": 520,
+   "echelle_jeu": 1.35
+  },
+  "oasis": {
+   "nom": "Source de l'oasis",
+   "fichiers": [
+    "lieux/oasis_1.svg",
+    "lieux/oasis_2.svg"
+   ],
+   "cadre": [
+    -75,
+    -150,
+    150,
+    190
+   ],
+   "ms_par_image": 520,
+   "echelle_jeu": 1.35
+  },
+  "pyramide": {
+   "nom": "Pyramide ensablée",
+   "fichiers": [
+    "lieux/pyramide_1.svg",
+    "lieux/pyramide_2.svg"
+   ],
+   "cadre": [
+    -75,
+    -150,
+    150,
+    190
+   ],
+   "ms_par_image": 520,
+   "echelle_jeu": 1.35
+  },
+  "arbre": {
+   "nom": "Arbre-géant",
+   "fichiers": [
+    "lieux/arbre_1.svg",
+    "lieux/arbre_2.svg"
+   ],
+   "cadre": [
+    -75,
+    -150,
+    150,
+    190
+   ],
+   "ms_par_image": 520,
+   "echelle_jeu": 1.35
+  },
+  "cascade": {
+   "nom": "Grande cascade",
+   "fichiers": [
+    "lieux/cascade_1.svg",
+    "lieux/cascade_2.svg"
+   ],
+   "cadre": [
+    -75,
+    -150,
+    150,
+    190
+   ],
+   "ms_par_image": 520,
+   "echelle_jeu": 1
+  },
+  "geyser": {
+   "nom": "Geyser",
+   "fichiers": [
+    "lieux/geyser_1.svg",
+    "lieux/geyser_2.svg"
+   ],
+   "cadre": [
+    -75,
+    -150,
+    150,
+    190
+   ],
+   "ms_par_image": 520,
+   "echelle_jeu": 1.35
+  },
+  "cratere": {
+   "nom": "Lac de lave",
+   "fichiers": [
+    "lieux/cratere_1.svg",
+    "lieux/cratere_2.svg"
+   ],
+   "cadre": [
+    -75,
+    -150,
+    150,
+    190
+   ],
+   "ms_par_image": 520,
+   "echelle_jeu": 1.35
+  }
+ },
+ "gisements": {
+  "glace_pret": {
+   "nom": "Cristaux de glace — prêt",
+   "fichiers": [
+    "gisements/glace_pret_1.svg",
+    "gisements/glace_pret_2.svg"
+   ],
+   "cadre": [
+    -37.5,
+    -57.5,
+    75,
+    70
+   ],
+   "ms_par_image": 450
+  },
+  "glace_ramasse": {
+   "nom": "Cristaux de glace — ramassé",
+   "fichiers": [
+    "gisements/glace_ramasse.svg"
+   ],
+   "cadre": [
+    -30,
+    -20,
+    60,
+    32.5
+   ]
+  },
+  "laine_pret": {
+   "nom": "Moutons à tondre — prêt",
+   "fichiers": [
+    "gisements/laine_pret_1.svg",
+    "gisements/laine_pret_2.svg"
+   ],
+   "cadre": [
+    -37.5,
+    -32.5,
+    75,
+    42.5
+   ],
+   "ms_par_image": 450
+  },
+  "laine_ramasse": {
+   "nom": "Moutons à tondre — ramassé",
+   "fichiers": [
+    "gisements/laine_ramasse.svg"
+   ],
+   "cadre": [
+    -37.5,
+    -30,
+    75,
+    40
+   ]
+  },
+  "roseau_pret": {
+   "nom": "Roseaux — prêt",
+   "fichiers": [
+    "gisements/roseau_pret_1.svg",
+    "gisements/roseau_pret_2.svg"
+   ],
+   "cadre": [
+    -30,
+    -55,
+    60,
+    65
+   ],
+   "ms_par_image": 450
+  },
+  "roseau_ramasse": {
+   "nom": "Roseaux — ramassé",
+   "fichiers": [
+    "gisements/roseau_ramasse.svg"
+   ],
+   "cadre": [
+    -25,
+    -17.5,
+    50,
+    27.5
+   ]
+  },
+  "sel_pret": {
+   "nom": "Croûte de sel — prêt",
+   "fichiers": [
+    "gisements/sel_pret_1.svg",
+    "gisements/sel_pret_2.svg"
+   ],
+   "cadre": [
+    -37.5,
+    -32.5,
+    75,
+    45
+   ],
+   "ms_par_image": 450
+  },
+  "sel_ramasse": {
+   "nom": "Croûte de sel — ramassé",
+   "fichiers": [
+    "gisements/sel_ramasse.svg"
+   ],
+   "cadre": [
+    -32.5,
+    -12.5,
+    65,
+    25
+   ]
+  },
+  "fruits_pret": {
+   "nom": "Arbre à fruits — prêt",
+   "fichiers": [
+    "gisements/fruits_pret_1.svg",
+    "gisements/fruits_pret_2.svg"
+   ],
+   "cadre": [
+    -30,
+    -62.5,
+    60,
+    72.5
+   ],
+   "ms_par_image": 450
+  },
+  "fruits_ramasse": {
+   "nom": "Arbre à fruits — ramassé",
+   "fichiers": [
+    "gisements/fruits_ramasse.svg"
+   ],
+   "cadre": [
+    -30,
+    -62.5,
+    60,
+    72.5
+   ]
+  },
+  "obsidienne_pret": {
+   "nom": "Éclats d'obsidienne — prêt",
+   "fichiers": [
+    "gisements/obsidienne_pret_1.svg",
+    "gisements/obsidienne_pret_2.svg"
+   ],
+   "cadre": [
+    -35,
+    -47.5,
+    70,
+    60
+   ],
+   "ms_par_image": 450
+  },
+  "obsidienne_ramasse": {
+   "nom": "Éclats d'obsidienne — ramassé",
+   "fichiers": [
+    "gisements/obsidienne_ramasse.svg"
+   ],
+   "cadre": [
+    -27.5,
+    -15,
+    55,
+    25
+   ]
+  }
+ },
+ "annexes": {
+  "champ_ble": {
+   "nom": "Champ — blé",
+   "fichiers": [
+    "annexes/champ/champ_ble_1.svg",
+    "annexes/champ/champ_ble_2.svg",
+    "annexes/champ/champ_ble_3.svg",
+    "annexes/champ/champ_ble_4.svg",
+    "annexes/champ/champ_ble_5.svg",
+    "annexes/champ/champ_ble_6.svg"
+   ],
+   "cadre": [
+    -42.5,
+    -37.5,
+    85,
+    60
+   ],
+   "ms_par_image": 333,
+   "variante_jeu": 0,
+   "ips": 3
+  },
+  "champ_carottes": {
+   "nom": "Champ — carottes",
+   "fichiers": [
+    "annexes/champ/champ_carottes_1.svg",
+    "annexes/champ/champ_carottes_2.svg",
+    "annexes/champ/champ_carottes_3.svg",
+    "annexes/champ/champ_carottes_4.svg",
+    "annexes/champ/champ_carottes_5.svg",
+    "annexes/champ/champ_carottes_6.svg"
+   ],
+   "cadre": [
+    -42.5,
+    -37.5,
+    85,
+    60
+   ],
+   "ms_par_image": 333,
+   "variante_jeu": 1,
+   "ips": 3
+  },
+  "champ_citrouilles": {
+   "nom": "Champ — citrouilles",
+   "fichiers": [
+    "annexes/champ/champ_citrouilles_1.svg",
+    "annexes/champ/champ_citrouilles_2.svg",
+    "annexes/champ/champ_citrouilles_3.svg",
+    "annexes/champ/champ_citrouilles_4.svg",
+    "annexes/champ/champ_citrouilles_5.svg",
+    "annexes/champ/champ_citrouilles_6.svg"
+   ],
+   "cadre": [
+    -42.5,
+    -37.5,
+    85,
+    60
+   ],
+   "ms_par_image": 333,
+   "variante_jeu": 2,
+   "ips": 3
+  },
+  "grenier": {
+   "nom": "Grenier",
+   "fichiers": [
+    "annexes/grenier/grenier_1.svg",
+    "annexes/grenier/grenier_2.svg",
+    "annexes/grenier/grenier_3.svg",
+    "annexes/grenier/grenier_4.svg",
+    "annexes/grenier/grenier_5.svg",
+    "annexes/grenier/grenier_6.svg"
+   ],
+   "cadre": [
+    -42.5,
+    -77.5,
+    85,
+    100
+   ],
+   "ms_par_image": 500,
+   "variante_jeu": 0,
+   "ips": 2
+  },
+  "enclos": {
+   "nom": "Enclos",
+   "fichiers": [
+    "annexes/enclos/enclos_1.svg",
+    "annexes/enclos/enclos_2.svg",
+    "annexes/enclos/enclos_3.svg",
+    "annexes/enclos/enclos_4.svg",
+    "annexes/enclos/enclos_5.svg",
+    "annexes/enclos/enclos_6.svg",
+    "annexes/enclos/enclos_7.svg",
+    "annexes/enclos/enclos_8.svg"
+   ],
+   "cadre": [
+    -45,
+    -52.5,
+    90,
+    75
+   ],
+   "ms_par_image": 333,
+   "variante_jeu": 0,
+   "ips": 3
+  },
+  "filon_quartz": {
+   "nom": "Filon — quartz",
+   "fichiers": [
+    "annexes/filon/filon_quartz_1.svg",
+    "annexes/filon/filon_quartz_2.svg",
+    "annexes/filon/filon_quartz_3.svg",
+    "annexes/filon/filon_quartz_4.svg",
+    "annexes/filon/filon_quartz_5.svg",
+    "annexes/filon/filon_quartz_6.svg"
+   ],
+   "cadre": [
+    -42.5,
+    -50,
+    85,
+    70
+   ],
+   "ms_par_image": 250,
+   "variante_jeu": 0,
+   "ips": 4
+  },
+  "filon_cuivre": {
+   "nom": "Filon — cuivre",
+   "fichiers": [
+    "annexes/filon/filon_cuivre_1.svg",
+    "annexes/filon/filon_cuivre_2.svg",
+    "annexes/filon/filon_cuivre_3.svg",
+    "annexes/filon/filon_cuivre_4.svg",
+    "annexes/filon/filon_cuivre_5.svg",
+    "annexes/filon/filon_cuivre_6.svg"
+   ],
+   "cadre": [
+    -42.5,
+    -50,
+    85,
+    70
+   ],
+   "ms_par_image": 250,
+   "variante_jeu": 1,
+   "ips": 4
+  },
+  "filon_cristaux": {
+   "nom": "Filon — cristaux",
+   "fichiers": [
+    "annexes/filon/filon_cristaux_1.svg",
+    "annexes/filon/filon_cristaux_2.svg",
+    "annexes/filon/filon_cristaux_3.svg",
+    "annexes/filon/filon_cristaux_4.svg",
+    "annexes/filon/filon_cristaux_5.svg",
+    "annexes/filon/filon_cristaux_6.svg"
+   ],
+   "cadre": [
+    -42.5,
+    -50,
+    85,
+    70
+   ],
+   "ms_par_image": 250,
+   "variante_jeu": 2,
+   "ips": 4
+  },
+  "depot": {
+   "nom": "Dépôt de pierres",
+   "fichiers": [
+    "annexes/depot/depot_1.svg",
+    "annexes/depot/depot_2.svg",
+    "annexes/depot/depot_3.svg",
+    "annexes/depot/depot_4.svg",
+    "annexes/depot/depot_5.svg",
+    "annexes/depot/depot_6.svg"
+   ],
+   "cadre": [
+    -42.5,
+    -62.5,
+    85,
+    85
+   ],
+   "ms_par_image": 500,
+   "variante_jeu": 0,
+   "ips": 2
+  },
+  "taille": {
+   "nom": "Atelier de taille",
+   "fichiers": [
+    "annexes/taille/taille_1.svg",
+    "annexes/taille/taille_2.svg",
+    "annexes/taille/taille_3.svg",
+    "annexes/taille/taille_4.svg",
+    "annexes/taille/taille_5.svg",
+    "annexes/taille/taille_6.svg"
+   ],
+   "cadre": [
+    -42.5,
+    -77.5,
+    85,
+    100
+   ],
+   "ms_par_image": 250,
+   "variante_jeu": 0,
+   "ips": 4,
+   "lumiere": {
+    "u": -0.33,
+    "v": -0.3,
+    "z": 31.25,
+    "rayon": 17.5,
+    "couleur": "chaude",
+    "vacille": false
+   }
+  },
+  "coupe_rondins": {
+   "nom": "Coupe de bois — rondins",
+   "fichiers": [
+    "annexes/coupe/coupe_rondins_1.svg",
+    "annexes/coupe/coupe_rondins_2.svg",
+    "annexes/coupe/coupe_rondins_3.svg",
+    "annexes/coupe/coupe_rondins_4.svg",
+    "annexes/coupe/coupe_rondins_5.svg",
+    "annexes/coupe/coupe_rondins_6.svg"
+   ],
+   "cadre": [
+    -42.5,
+    -50,
+    85,
+    70
+   ],
+   "ms_par_image": 333,
+   "variante_jeu": 0,
+   "ips": 3
+  },
+  "coupe_souches": {
+   "nom": "Coupe de bois — souches",
+   "fichiers": [
+    "annexes/coupe/coupe_souches_1.svg",
+    "annexes/coupe/coupe_souches_2.svg",
+    "annexes/coupe/coupe_souches_3.svg",
+    "annexes/coupe/coupe_souches_4.svg",
+    "annexes/coupe/coupe_souches_5.svg",
+    "annexes/coupe/coupe_souches_6.svg"
+   ],
+   "cadre": [
+    -42.5,
+    -50,
+    85,
+    70
+   ],
+   "ms_par_image": 333,
+   "variante_jeu": 1,
+   "ips": 3
+  },
+  "coupe_chevalet": {
+   "nom": "Coupe de bois — chevalet",
+   "fichiers": [
+    "annexes/coupe/coupe_chevalet_1.svg",
+    "annexes/coupe/coupe_chevalet_2.svg",
+    "annexes/coupe/coupe_chevalet_3.svg",
+    "annexes/coupe/coupe_chevalet_4.svg",
+    "annexes/coupe/coupe_chevalet_5.svg",
+    "annexes/coupe/coupe_chevalet_6.svg"
+   ],
+   "cadre": [
+    -42.5,
+    -50,
+    85,
+    70
+   ],
+   "ms_par_image": 333,
+   "variante_jeu": 2,
+   "ips": 3
+  },
+  "remise": {
+   "nom": "Remise à bois",
+   "fichiers": [
+    "annexes/remise/remise.svg"
+   ],
+   "cadre": [
+    -45,
+    -75,
+    90,
+    97.5
+   ],
+   "variante_jeu": 0,
+   "ips": 0,
+   "lumiere": {
+    "u": 0.22,
+    "v": 0.27,
+    "z": 20,
+    "rayon": 17.5,
+    "couleur": "chaude",
+    "vacille": false
+   }
+  },
+  "pepiniere": {
+   "nom": "Pépinière",
+   "fichiers": [
+    "annexes/pepiniere/pepiniere_1.svg",
+    "annexes/pepiniere/pepiniere_2.svg",
+    "annexes/pepiniere/pepiniere_3.svg",
+    "annexes/pepiniere/pepiniere_4.svg",
+    "annexes/pepiniere/pepiniere_5.svg",
+    "annexes/pepiniere/pepiniere_6.svg",
+    "annexes/pepiniere/pepiniere_7.svg",
+    "annexes/pepiniere/pepiniere_8.svg"
+   ],
+   "cadre": [
+    -45,
+    -75,
+    90,
+    97.5
+   ],
+   "ms_par_image": 333,
+   "variante_jeu": 0,
+   "ips": 3,
+   "lumiere": {
+    "u": 0,
+    "v": 0,
+    "z": 15,
+    "rayon": 25,
+    "couleur": "255,236,170",
+    "vacille": false
+   }
+  },
+  "citerne_tonneau": {
+   "nom": "Citerne — tonneau",
+   "fichiers": [
+    "annexes/citerne/citerne_tonneau_1.svg",
+    "annexes/citerne/citerne_tonneau_2.svg",
+    "annexes/citerne/citerne_tonneau_3.svg",
+    "annexes/citerne/citerne_tonneau_4.svg",
+    "annexes/citerne/citerne_tonneau_5.svg",
+    "annexes/citerne/citerne_tonneau_6.svg"
+   ],
+   "cadre": [
+    -37.5,
+    -77.5,
+    75,
+    97.5
+   ],
+   "ms_par_image": 167,
+   "variante_jeu": 0,
+   "ips": 6
+  },
+  "citerne_pompe": {
+   "nom": "Citerne — pompe",
+   "fichiers": [
+    "annexes/citerne/citerne_pompe_1.svg",
+    "annexes/citerne/citerne_pompe_2.svg",
+    "annexes/citerne/citerne_pompe_3.svg",
+    "annexes/citerne/citerne_pompe_4.svg",
+    "annexes/citerne/citerne_pompe_5.svg",
+    "annexes/citerne/citerne_pompe_6.svg"
+   ],
+   "cadre": [
+    -37.5,
+    -77.5,
+    75,
+    97.5
+   ],
+   "ms_par_image": 167,
+   "variante_jeu": 1,
+   "ips": 6
+  },
+  "citerne_cuivre": {
+   "nom": "Citerne — cuivre",
+   "fichiers": [
+    "annexes/citerne/citerne_cuivre_1.svg",
+    "annexes/citerne/citerne_cuivre_2.svg",
+    "annexes/citerne/citerne_cuivre_3.svg",
+    "annexes/citerne/citerne_cuivre_4.svg",
+    "annexes/citerne/citerne_cuivre_5.svg",
+    "annexes/citerne/citerne_cuivre_6.svg"
+   ],
+   "cadre": [
+    -37.5,
+    -77.5,
+    75,
+    97.5
+   ],
+   "ms_par_image": 167,
+   "variante_jeu": 2,
+   "ips": 6
+  },
+  "reservoir": {
+   "nom": "Réservoir",
+   "fichiers": [
+    "annexes/reservoir/reservoir_1.svg",
+    "annexes/reservoir/reservoir_2.svg",
+    "annexes/reservoir/reservoir_3.svg",
+    "annexes/reservoir/reservoir_4.svg",
+    "annexes/reservoir/reservoir_5.svg",
+    "annexes/reservoir/reservoir_6.svg"
+   ],
+   "cadre": [
+    -40,
+    -97.5,
+    80,
+    120
+   ],
+   "ms_par_image": 333,
+   "variante_jeu": 0,
+   "ips": 3
+  },
+  "eolienne": {
+   "nom": "Éolienne",
+   "fichiers": [
+    "annexes/eolienne/eolienne_1.svg",
+    "annexes/eolienne/eolienne_2.svg",
+    "annexes/eolienne/eolienne_3.svg",
+    "annexes/eolienne/eolienne_4.svg",
+    "annexes/eolienne/eolienne_5.svg",
+    "annexes/eolienne/eolienne_6.svg",
+    "annexes/eolienne/eolienne_7.svg",
+    "annexes/eolienne/eolienne_8.svg"
+   ],
+   "cadre": [
+    -42.5,
+    -135,
+    85,
+    157.5
+   ],
+   "ms_par_image": 125,
+   "variante_jeu": 0,
+   "ips": 8
+  },
+  "vivier_orange": {
+   "nom": "Vivier — orange",
+   "fichiers": [
+    "annexes/vivier/vivier_orange_1.svg",
+    "annexes/vivier/vivier_orange_2.svg",
+    "annexes/vivier/vivier_orange_3.svg",
+    "annexes/vivier/vivier_orange_4.svg",
+    "annexes/vivier/vivier_orange_5.svg",
+    "annexes/vivier/vivier_orange_6.svg",
+    "annexes/vivier/vivier_orange_7.svg",
+    "annexes/vivier/vivier_orange_8.svg"
+   ],
+   "cadre": [
+    -42.5,
+    -37.5,
+    85,
+    60
+   ],
+   "ms_par_image": 250,
+   "variante_jeu": 0,
+   "ips": 4
+  },
+  "vivier_argent": {
+   "nom": "Vivier — argent",
+   "fichiers": [
+    "annexes/vivier/vivier_argent_1.svg",
+    "annexes/vivier/vivier_argent_2.svg",
+    "annexes/vivier/vivier_argent_3.svg",
+    "annexes/vivier/vivier_argent_4.svg",
+    "annexes/vivier/vivier_argent_5.svg",
+    "annexes/vivier/vivier_argent_6.svg",
+    "annexes/vivier/vivier_argent_7.svg",
+    "annexes/vivier/vivier_argent_8.svg"
+   ],
+   "cadre": [
+    -42.5,
+    -37.5,
+    85,
+    60
+   ],
+   "ms_par_image": 250,
+   "variante_jeu": 1,
+   "ips": 4
+  },
+  "vivier_bleu_or": {
+   "nom": "Vivier — bleu-or",
+   "fichiers": [
+    "annexes/vivier/vivier_bleu_or_1.svg",
+    "annexes/vivier/vivier_bleu_or_2.svg",
+    "annexes/vivier/vivier_bleu_or_3.svg",
+    "annexes/vivier/vivier_bleu_or_4.svg",
+    "annexes/vivier/vivier_bleu_or_5.svg",
+    "annexes/vivier/vivier_bleu_or_6.svg",
+    "annexes/vivier/vivier_bleu_or_7.svg",
+    "annexes/vivier/vivier_bleu_or_8.svg"
+   ],
+   "cadre": [
+    -42.5,
+    -37.5,
+    85,
+    60
+   ],
+   "ms_par_image": 250,
+   "variante_jeu": 2,
+   "ips": 4
+  },
+  "fumoir": {
+   "nom": "Fumoir",
+   "fichiers": [
+    "annexes/fumoir/fumoir_1.svg",
+    "annexes/fumoir/fumoir_2.svg",
+    "annexes/fumoir/fumoir_3.svg",
+    "annexes/fumoir/fumoir_4.svg",
+    "annexes/fumoir/fumoir_5.svg",
+    "annexes/fumoir/fumoir_6.svg",
+    "annexes/fumoir/fumoir_7.svg",
+    "annexes/fumoir/fumoir_8.svg"
+   ],
+   "cadre": [
+    -42.5,
+    -102.5,
+    85,
+    125
+   ],
+   "ms_par_image": 333,
+   "variante_jeu": 0,
+   "ips": 3,
+   "lumiere": {
+    "u": 0,
+    "v": 0.2,
+    "z": 6.25,
+    "rayon": 13.75,
+    "couleur": "255,140,70",
+    "vacille": false
+   }
+  },
+  "huitres": {
+   "nom": "Parc à huîtres",
+   "fichiers": [
+    "annexes/huitres/huitres_1.svg",
+    "annexes/huitres/huitres_2.svg",
+    "annexes/huitres/huitres_3.svg",
+    "annexes/huitres/huitres_4.svg",
+    "annexes/huitres/huitres_5.svg",
+    "annexes/huitres/huitres_6.svg"
+   ],
+   "cadre": [
+    -42.5,
+    -42.5,
+    85,
+    62.5
+   ],
+   "ms_par_image": 333,
+   "variante_jeu": 0,
+   "ips": 3
+  },
+  "jardin": {
+   "nom": "Jardin d'herbes",
+   "fichiers": [
+    "annexes/jardin/jardin_1.svg",
+    "annexes/jardin/jardin_2.svg",
+    "annexes/jardin/jardin_3.svg",
+    "annexes/jardin/jardin_4.svg",
+    "annexes/jardin/jardin_5.svg",
+    "annexes/jardin/jardin_6.svg",
+    "annexes/jardin/jardin_7.svg",
+    "annexes/jardin/jardin_8.svg"
+   ],
+   "cadre": [
+    -40,
+    -60,
+    80,
+    80
+   ],
+   "ms_par_image": 167,
+   "variante_jeu": 0,
+   "ips": 6
+  },
+  "four": {
+   "nom": "Four à pain",
+   "fichiers": [
+    "annexes/four/four_1.svg",
+    "annexes/four/four_2.svg",
+    "annexes/four/four_3.svg",
+    "annexes/four/four_4.svg",
+    "annexes/four/four_5.svg",
+    "annexes/four/four_6.svg"
+   ],
+   "cadre": [
+    -42.5,
+    -87.5,
+    85,
+    110
+   ],
+   "ms_par_image": 167,
+   "variante_jeu": 0,
+   "ips": 6,
+   "lumiere": {
+    "u": -0.04,
+    "v": 0.24,
+    "z": 16.25,
+    "rayon": 21.25,
+    "couleur": "255,150,70",
+    "vacille": true
+   }
+  },
+  "belvedere": {
+   "nom": "Belvédère",
+   "fichiers": [
+    "annexes/belvedere/belvedere_1.svg",
+    "annexes/belvedere/belvedere_2.svg",
+    "annexes/belvedere/belvedere_3.svg",
+    "annexes/belvedere/belvedere_4.svg",
+    "annexes/belvedere/belvedere_5.svg",
+    "annexes/belvedere/belvedere_6.svg"
+   ],
+   "cadre": [
+    -47.5,
+    -115,
+    95,
+    137.5
+   ],
+   "ms_par_image": 250,
+   "variante_jeu": 0,
+   "ips": 4,
+   "lumiere": {
+    "u": 0,
+    "v": 0,
+    "z": 36.25,
+    "rayon": 18.75,
+    "couleur": "chaude",
+    "vacille": false
+   }
+  },
+  "charbon": {
+   "nom": "Charbonnière",
+   "fichiers": [
+    "annexes/charbon/charbon_1.svg",
+    "annexes/charbon/charbon_2.svg",
+    "annexes/charbon/charbon_3.svg",
+    "annexes/charbon/charbon_4.svg",
+    "annexes/charbon/charbon_5.svg",
+    "annexes/charbon/charbon_6.svg"
+   ],
+   "cadre": [
+    -40,
+    -52.5,
+    80,
+    72.5
+   ],
+   "ms_par_image": 250,
+   "variante_jeu": 0,
+   "ips": 4,
+   "lumiere": {
+    "u": 0,
+    "v": 0.1,
+    "z": 3.75,
+    "rayon": 15,
+    "couleur": "255,110,50",
+    "vacille": false
+   }
+  },
+  "hangar": {
+   "nom": "Hangar",
+   "fichiers": [
+    "annexes/hangar/hangar.svg"
+   ],
+   "cadre": [
+    -47.5,
+    -82.5,
+    95,
+    105
+   ],
+   "variante_jeu": 0,
+   "ips": 0,
+   "lumiere": {
+    "u": 0.02,
+    "v": 0.18,
+    "z": 26.25,
+    "rayon": 18.75,
+    "couleur": "chaude",
+    "vacille": false
+   }
+  },
+  "fourneau": {
+   "nom": "Haut-fourneau",
+   "fichiers": [
+    "annexes/fourneau/fourneau_1.svg",
+    "annexes/fourneau/fourneau_2.svg",
+    "annexes/fourneau/fourneau_3.svg",
+    "annexes/fourneau/fourneau_4.svg",
+    "annexes/fourneau/fourneau_5.svg",
+    "annexes/fourneau/fourneau_6.svg",
+    "annexes/fourneau/fourneau_7.svg",
+    "annexes/fourneau/fourneau_8.svg"
+   ],
+   "cadre": [
+    -45,
+    -152.5,
+    90,
+    175
+   ],
+   "ms_par_image": 200,
+   "variante_jeu": 0,
+   "ips": 5,
+   "lumiere": {
+    "u": -0.02,
+    "v": 0.3,
+    "z": 15,
+    "rayon": 30,
+    "couleur": "255,130,50",
+    "vacille": true
+   }
+  },
+  "maison_toit_rouge": {
+   "nom": "Maison — toit rouge",
+   "fichiers": [
+    "annexes/maison/maison_toit_rouge_1.svg",
+    "annexes/maison/maison_toit_rouge_2.svg",
+    "annexes/maison/maison_toit_rouge_3.svg",
+    "annexes/maison/maison_toit_rouge_4.svg",
+    "annexes/maison/maison_toit_rouge_5.svg",
+    "annexes/maison/maison_toit_rouge_6.svg"
+   ],
+   "cadre": [
+    -42.5,
+    -97.5,
+    85,
+    120
+   ],
+   "ms_par_image": 333,
+   "variante_jeu": 0,
+   "ips": 3,
+   "lumiere": {
+    "u": 0.27,
+    "v": 0.06,
+    "z": 16.25,
+    "rayon": 15,
+    "couleur": "chaude",
+    "vacille": false
+   }
+  },
+  "maison_toit_bleu": {
+   "nom": "Maison — toit bleu",
+   "fichiers": [
+    "annexes/maison/maison_toit_bleu_1.svg",
+    "annexes/maison/maison_toit_bleu_2.svg",
+    "annexes/maison/maison_toit_bleu_3.svg",
+    "annexes/maison/maison_toit_bleu_4.svg",
+    "annexes/maison/maison_toit_bleu_5.svg",
+    "annexes/maison/maison_toit_bleu_6.svg"
+   ],
+   "cadre": [
+    -42.5,
+    -97.5,
+    85,
+    120
+   ],
+   "ms_par_image": 333,
+   "variante_jeu": 1,
+   "ips": 3,
+   "lumiere": {
+    "u": 0.27,
+    "v": 0.06,
+    "z": 16.25,
+    "rayon": 15,
+    "couleur": "chaude",
+    "vacille": false
+   }
+  },
+  "maison_chaume": {
+   "nom": "Maison — chaume",
+   "fichiers": [
+    "annexes/maison/maison_chaume_1.svg",
+    "annexes/maison/maison_chaume_2.svg",
+    "annexes/maison/maison_chaume_3.svg",
+    "annexes/maison/maison_chaume_4.svg",
+    "annexes/maison/maison_chaume_5.svg",
+    "annexes/maison/maison_chaume_6.svg"
+   ],
+   "cadre": [
+    -42.5,
+    -97.5,
+    85,
+    120
+   ],
+   "ms_par_image": 333,
+   "variante_jeu": 2,
+   "ips": 3,
+   "lumiere": {
+    "u": 0.27,
+    "v": 0.06,
+    "z": 16.25,
+    "rayon": 15,
+    "couleur": "chaude",
+    "vacille": false
+   }
+  },
+  "maison_ardoise": {
+   "nom": "Maison — ardoise",
+   "fichiers": [
+    "annexes/maison/maison_ardoise_1.svg",
+    "annexes/maison/maison_ardoise_2.svg",
+    "annexes/maison/maison_ardoise_3.svg",
+    "annexes/maison/maison_ardoise_4.svg",
+    "annexes/maison/maison_ardoise_5.svg",
+    "annexes/maison/maison_ardoise_6.svg"
+   ],
+   "cadre": [
+    -42.5,
+    -97.5,
+    85,
+    120
+   ],
+   "ms_par_image": 333,
+   "variante_jeu": 3,
+   "ips": 3,
+   "lumiere": {
+    "u": 0.27,
+    "v": 0.06,
+    "z": 16.25,
+    "rayon": 15,
+    "couleur": "chaude",
+    "vacille": false
+   }
+  },
+  "glaciere": {
+   "nom": "Glacière (cimes)",
+   "fichiers": [
+    "annexes/glaciere/glaciere.svg"
+   ],
+   "cadre": [
+    -42.5,
+    -62.5,
+    85,
+    80
+   ],
+   "variante_jeu": 0,
+   "ips": 0
+  },
+  "metier": {
+   "nom": "Métier à tisser (landes)",
+   "fichiers": [
+    "annexes/metier/metier_1.svg",
+    "annexes/metier/metier_2.svg",
+    "annexes/metier/metier_3.svg",
+    "annexes/metier/metier_4.svg"
+   ],
+   "cadre": [
+    -42.5,
+    -65,
+    85,
+    82.5
+   ],
+   "ms_par_image": 500,
+   "variante_jeu": 0,
+   "ips": 2
+  },
+  "hutte": {
+   "nom": "Hutte de roseaux (marais)",
+   "fichiers": [
+    "annexes/hutte/hutte.svg"
+   ],
+   "cadre": [
+    -42.5,
+    -70,
+    85,
+    87.5
+   ],
+   "variante_jeu": 0,
+   "ips": 0
+  },
+  "saline": {
+   "nom": "Saline (dunes)",
+   "fichiers": [
+    "annexes/saline/saline_1.svg",
+    "annexes/saline/saline_2.svg",
+    "annexes/saline/saline_3.svg",
+    "annexes/saline/saline_4.svg",
+    "annexes/saline/saline_5.svg",
+    "annexes/saline/saline_6.svg"
+   ],
+   "cadre": [
+    -45,
+    -50,
+    90,
+    65
+   ],
+   "ms_par_image": 500,
+   "variante_jeu": 0,
+   "ips": 2
+  },
+  "serre": {
+   "nom": "Serre tropicale (jungle)",
+   "fichiers": [
+    "annexes/serre/serre_1.svg",
+    "annexes/serre/serre_2.svg",
+    "annexes/serre/serre_3.svg",
+    "annexes/serre/serre_4.svg",
+    "annexes/serre/serre_5.svg",
+    "annexes/serre/serre_6.svg"
+   ],
+   "cadre": [
+    -45,
+    -72.5,
+    90,
+    90
+   ],
+   "ms_par_image": 500,
+   "variante_jeu": 0,
+   "ips": 2,
+   "lumiere": {
+    "u": 0,
+    "v": 0,
+    "z": 20,
+    "rayon": 22.5,
+    "couleur": "190,255,170",
+    "vacille": false
+   }
+  },
+  "fonderie": {
+   "nom": "Forge d'obsidienne (volcan)",
+   "fichiers": [
+    "annexes/fonderie/fonderie_1.svg",
+    "annexes/fonderie/fonderie_2.svg",
+    "annexes/fonderie/fonderie_3.svg",
+    "annexes/fonderie/fonderie_4.svg",
+    "annexes/fonderie/fonderie_5.svg",
+    "annexes/fonderie/fonderie_6.svg"
+   ],
+   "cadre": [
+    -45,
+    -67.5,
+    90,
+    85
+   ],
+   "ms_par_image": 167,
+   "variante_jeu": 0,
+   "ips": 6,
+   "lumiere": {
+    "u": -0.1,
+    "v": 0.05,
+    "z": 10,
+    "rayon": 32.5,
+    "couleur": "255,120,50",
+    "vacille": true
+   }
+  }
+ },
+ "enseignes": {
+  "bois": {
+   "nom": "Planche de bois",
+   "fichiers": [
+    "enseignes/bois.svg"
+   ],
+   "cadre": [
+    -40,
+    -70,
+    80,
+    77.5
+   ],
+   "cadre_du_nom": {
+    "x": 0,
+    "y": -28.12,
+    "w": 42.5,
+    "h": 15,
+    "size": 11.88,
+    "font": "Fraunces 800",
+    "color": "#4A2C16"
+   }
+  },
+  "ardoise": {
+   "nom": "Ardoise",
+   "fichiers": [
+    "enseignes/ardoise.svg"
+   ],
+   "cadre": [
+    -40,
+    -70,
+    80,
+    77.5
+   ],
+   "cadre_du_nom": {
+    "x": 0,
+    "y": -34.5,
+    "w": 32.5,
+    "h": 12.5,
+    "size": 10.75,
+    "font": "Nunito 800",
+    "color": "#F4F1E8"
+   }
+  },
+  "fer": {
+   "nom": "Fer forgé",
+   "fichiers": [
+    "enseignes/fer_1.svg",
+    "enseignes/fer_2.svg",
+    "enseignes/fer_3.svg",
+    "enseignes/fer_4.svg"
+   ],
+   "cadre": [
+    -40,
+    -70,
+    80,
+    77.5
+   ],
+   "ms_par_image": 200,
+   "cadre_du_nom": {
+    "x": 0,
+    "y": -33.75,
+    "w": 35,
+    "h": 13.75,
+    "size": 11.25,
+    "font": "Fraunces 700",
+    "color": "#F3DC9C",
+    "pivot": [
+     0,
+     -53.75
+    ]
+   }
+  },
+  "laiton": {
+   "nom": "Plaque de laiton",
+   "fichiers": [
+    "enseignes/laiton_1.svg",
+    "enseignes/laiton_2.svg"
+   ],
+   "cadre": [
+    -40,
+    -70,
+    80,
+    77.5
+   ],
+   "ms_par_image": 900,
+   "cadre_du_nom": {
+    "x": 0,
+    "y": -24.75,
+    "w": 38.75,
+    "h": 12.5,
+    "size": 11.25,
+    "font": "Fraunces 800",
+    "color": "#5A3A10"
+   }
+  },
+  "fleurie": {
+   "nom": "Fleurie",
+   "fichiers": [
+    "enseignes/fleurie_1.svg",
+    "enseignes/fleurie_2.svg"
+   ],
+   "cadre": [
+    -40,
+    -70,
+    80,
+    77.5
+   ],
+   "ms_par_image": 260,
+   "cadre_du_nom": {
+    "x": 0,
+    "y": -25.75,
+    "w": 42.5,
+    "h": 12.5,
+    "size": 11.25,
+    "font": "Fraunces 700",
+    "color": "#3F6B35"
+   }
+  },
+  "lanterne": {
+   "nom": "Lanternes",
+   "fichiers": [
+    "enseignes/lanterne_1.svg",
+    "enseignes/lanterne_2.svg"
+   ],
+   "cadre": [
+    -40,
+    -70,
+    80,
+    77.5
+   ],
+   "ms_par_image": 260,
+   "cadre_du_nom": {
+    "x": 0,
+    "y": -34.87,
+    "w": 35,
+    "h": 13.75,
+    "size": 11.25,
+    "font": "Fraunces 700",
+    "color": "#F4D27A",
+    "light": [
+     [
+      -30,
+      -42.5,
+      22.5
+     ],
+     [
+      30,
+      -42.5,
+      22.5
+     ]
+    ]
+   }
+  }
+ },
+ "ilots": {
+  "ponton": {
+   "nom": "Ponton d'amarrage",
+   "fichiers": [
+    "ilots/ponton.svg"
+   ],
+   "cadre": [
+    -95,
+    -155,
+    190,
+    210
+   ]
+  },
+  "barque_volante": {
+   "nom": "Barque volante du passeur",
+   "fichiers": [
+    "ilots/barque_volante_1.svg",
+    "ilots/barque_volante_2.svg"
+   ],
+   "cadre": [
+    -40,
+    -70,
+    80,
+    85
+   ],
+   "ms_par_image": 300
+  },
+  "bateau_visiteur": {
+   "nom": "Bateau des visiteurs",
+   "fichiers": [
+    "ilots/bateau_visiteur_1.svg",
+    "ilots/bateau_visiteur_2.svg"
+   ],
+   "cadre": [
+    -37.5,
+    -70,
+    77.5,
+    80
+   ],
+   "ms_par_image": 300
+  },
+  "voilier_blanche": {
+   "nom": "Voilier du Ponton — blanche",
+   "fichiers": [
+    "ilots/voilier_blanche.svg"
+   ],
+   "cadre": [
+    -95,
+    -155,
+    190,
+    210
+   ]
+  },
+  "voilier_rouge": {
+   "nom": "Voilier du Ponton — rouge",
+   "fichiers": [
+    "ilots/voilier_rouge.svg"
+   ],
+   "cadre": [
+    -95,
+    -155,
+    190,
+    210
+   ]
+  },
+  "voilier_bleue": {
+   "nom": "Voilier du Ponton — bleue",
+   "fichiers": [
+    "ilots/voilier_bleue.svg"
+   ],
+   "cadre": [
+    -95,
+    -155,
+    190,
+    210
+   ]
+  },
+  "voilier_rayee": {
+   "nom": "Voilier du Ponton — rayée",
+   "fichiers": [
+    "ilots/voilier_rayee.svg"
+   ],
+   "cadre": [
+    -95,
+    -155,
+    190,
+    210
+   ]
+  },
+  "bouteille": {
+   "nom": "Bouteille à la mer",
+   "fichiers": [
+    "ilots/bouteille_1.svg",
+    "ilots/bouteille_2.svg"
+   ],
+   "cadre": [
+    -20,
+    -35,
+    40,
+    40
+   ],
+   "ms_par_image": 700
+  },
+  "panneau_quartier": {
+   "nom": "Panneau de quartier (cadenas)",
+   "fichiers": [
+    "ilots/panneau_quartier.svg"
+   ],
+   "cadre": [
+    -50,
+    -115,
+    100,
+    140
+   ]
+  },
+  "pont_segment": {
+   "nom": "Pont de planches — segment",
+   "fichiers": [
+    "ilots/pont_segment.svg"
+   ],
+   "cadre": [
+    -50,
+    -57.5,
+    100,
+    107.5
+   ]
+  },
+  "pont_segment_v": {
+   "nom": "Pont de planches — segment (le long de v)",
+   "fichiers": [
+    "ilots/pont_segment_v.svg"
+   ],
+   "cadre": [
+    -50,
+    -57.5,
+    100,
+    107.5
+   ]
+  },
+  "pont_bout_avant": {
+   "nom": "Pont de planches — bout avant",
+   "fichiers": [
+    "ilots/pont_bout_avant.svg"
+   ],
+   "cadre": [
+    -50,
+    -57.5,
+    100,
+    107.5
+   ]
+  },
+  "pont_bout_avant_v": {
+   "nom": "Pont de planches — bout avant (le long de v)",
+   "fichiers": [
+    "ilots/pont_bout_avant_v.svg"
+   ],
+   "cadre": [
+    -50,
+    -57.5,
+    100,
+    107.5
+   ]
+  },
+  "pont_bout_arriere": {
+   "nom": "Pont de planches — bout arrière",
+   "fichiers": [
+    "ilots/pont_bout_arriere.svg"
+   ],
+   "cadre": [
+    -50,
+    -57.5,
+    100,
+    107.5
+   ]
+  },
+  "pont_bout_arriere_v": {
+   "nom": "Pont de planches — bout arrière (le long de v)",
+   "fichiers": [
+    "ilots/pont_bout_arriere_v.svg"
+   ],
+   "cadre": [
+    -50,
+    -57.5,
+    100,
+    107.5
+   ]
+  },
+  "epave_radeau": {
+   "nom": "Épave : radeau",
+   "fichiers": [
+    "ilots/epave_radeau.svg"
+   ],
+   "cadre": [
+    -50,
+    -70,
+    100,
+    80
+   ]
+  },
+  "epave_radeau_silhouette": {
+   "nom": "Épave : radeau (silhouette du prologue)",
+   "fichiers": [
+    "ilots/epave_radeau_silhouette.svg"
+   ],
+   "cadre": [
+    -50,
+    -70,
+    100,
+    80
+   ]
+  },
+  "epave_bateau": {
+   "nom": "Épave : caboteur",
+   "fichiers": [
+    "ilots/epave_bateau.svg"
+   ],
+   "cadre": [
+    -67.5,
+    -90,
+    135,
+    112.5
+   ]
+  },
+  "epave_bateau_silhouette": {
+   "nom": "Épave : caboteur (silhouette du prologue)",
+   "fichiers": [
+    "ilots/epave_bateau_silhouette.svg"
+   ],
+   "cadre": [
+    -67.5,
+    -90,
+    135,
+    112.5
+   ]
+  },
+  "epave_barque": {
+   "nom": "Épave : barque de graines",
+   "fichiers": [
+    "ilots/epave_barque.svg"
+   ],
+   "cadre": [
+    -50,
+    -40,
+    100,
+    55
+   ]
+  },
+  "epave_barque_silhouette": {
+   "nom": "Épave : barque de graines (silhouette du prologue)",
+   "fichiers": [
+    "ilots/epave_barque_silhouette.svg"
+   ],
+   "cadre": [
+    -50,
+    -40,
+    100,
+    55
+   ]
+  }
+ }
+}
