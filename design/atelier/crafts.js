@@ -265,9 +265,12 @@ C.fontaine = { n: 3, draw: f => {
   for (let i = 0; i < 2; i++) { const p = ((f / 3) + i * 0.5) % 1; const [x, y] = at(0.02, 0.02, 7); s += E(x, y, 9 + p * 12, 4.5 + p * 6, 'none', 0).replace('stroke="none" stroke-width="0"', `stroke="#E8F6FF" stroke-width="0.7" opacity="${r2(0.8 - p * 0.7)}"`); }
   const a = (f / 3) * TAU + 0.8, [px, py] = at(Math.cos(a) * 0.25, Math.sin(a) * 0.25, 7), dir = Math.cos(a + Math.PI / 2) > 0 ? 1 : -1;
   s += `<g transform="translate(${r2(px)} ${r2(py)}) scale(${dir} 1)">` + E(0, 0, 2.6, 1.3, '#F08A3A', 0.6) + P('M-2.4,0 L-4.4,-1.4 L-4,0 L-4.4,1.4 Z', '#F2A35A', 0.5) + E(1.2, -0.3, 0.3, 0.3, OUT, 0) + '</g>';
-  // la colonne, sa bague, la vasque en coquille et son eau
-  s += cylinder(0, 0, 0.06, 7, 21, WHITE_STONE, 0.9) + cylinder(0, 0, 0.075, 12.6, 13.8, STONE, 0.7);
-  const [bx, by] = at(0, 0, 21.6);
+  // la bague dans l'eau, la colonne, la vasque en coquille et son eau
+  s += cylinder(0, 0, 0.075, 7, 8.4, STONE, 0.7) + cylinder(0, 0, 0.06, 8.4, 21, WHITE_STONE, 0.9);
+  const [bx, by] = at(0, 0, 21.6), [, yn] = at(0, 0, 13);
+  // le pied évasé qui porte la vasque
+  s += P(`M${r2(bx - 3.36)},${r2(yn)} Q${r2(bx - 3.6)},${r2(by + 5.2)} ${r2(bx - 6.6)},${r2(by + 4)} L${r2(bx + 6.6)},${r2(by + 4)} Q${r2(bx + 3.6)},${r2(by + 5.2)} ${r2(bx + 3.36)},${r2(yn)} A3.36 1.68 0 0 1 ${r2(bx - 3.36)},${r2(yn)} Z`, WHITE_STONE.left, 0.9)
+    + L([bx + 1.6, yn + 1.2], [bx + 2.4, by + 5], WHITE_STONE.right, 0.6);
   s += P(`M${r2(bx - 12)},${r2(by)} Q${r2(bx - 9.6)},${r2(by + 6)} ${r2(bx)},${r2(by + 6.4)} Q${r2(bx + 9.6)},${r2(by + 6)} ${r2(bx + 12)},${r2(by)} Z`, WHITE_STONE.left, 0.9)
     + [-7.2, -2.4, 2.4, 7.2].map(dx => L([bx + dx * 0.9, by + 0.6], [bx + dx * 0.5, by + 5.4], WHITE_STONE.right, 0.5)).join('')
     + E(bx, by, 12, 4.2, WHITE_STONE.top, 0.9) + E(bx, by + 0.2, 9.2, 2.9, WATER, 0.6) + E(bx - 1.6, by - 0.3, 4.4, 1.1, WATER_LIGHT, 0);
