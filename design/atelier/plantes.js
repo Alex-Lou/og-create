@@ -1,5 +1,5 @@
 // Les autres plantes refaites au niveau des PNJ, une par une, avec le trait, la lumière et les verts des arbres
-// (arbres.js) : le buisson, la bruyère. Cadre et ancrage des plantes de deco.js (PROP, centre de la case en (0, 0)) ; le jeu fait
+// (arbres.js) : le buisson, la bruyère, les fleurs. Cadre et ancrage des plantes de deco.js (PROP, centre de la case en (0, 0)) ; le jeu fait
 // balancer le dessin entier depuis sa base, il n'y a donc qu'une image.
 const { OUT, E, r2 } = require('./troupe');
 const { VERTS, fleurette, feuillage } = require('./arbres');
@@ -82,4 +82,56 @@ for (const petit of [false, true]) for (const teinte of ['mauve', 'rose']) for (
   BRUYERES.push([fichier, libelle, { teinte, petit, papillon: pap }]);
 }
 
-module.exports = { buisson, BUISSONS, bruyere, BRUYERES };
+// ——— Les fleurs : trois touffes sur tiges et feuilles, mélangées ou en marguerites ; une abeille butine parfois ———
+const tige = (x0, y0, x1, y1) => {
+  const d = `M${r2(x0)},${r2(y0)} Q${r2((x0 + x1) / 2 + (x1 > x0 ? -1 : 1))},${r2((y0 + y1) / 2)} ${r2(x1)},${r2(y1)}`;
+  return `<path d="${d}" stroke="${OUT}" stroke-width="2.4" fill="none" stroke-linecap="round"/><path d="${d}" stroke="#6FA84A" stroke-width="1.1" fill="none" stroke-linecap="round"/>`;
+};
+const feuilleTige = (x, y, a) => `<path d="M0,0 Q2.4,-2 5,-0.6 Q2.4,1.6 0,0 Z" fill="#86C15A" stroke="${OUT}" stroke-width="0.7" stroke-linejoin="round" transform="translate(${r2(x)} ${r2(y)}) rotate(${a})"/>`;
+// fleur à cinq pétales ronds (contour commun), cœur jaune
+function fleur(x, y, col, s) {
+  const p = [0, 72, 144, 216, 288].map(a => [x + Math.cos((a - 90) * Math.PI / 180) * 1.8 * s, y + Math.sin((a - 90) * Math.PI / 180) * 1.8 * s]);
+  return p.map(([a, b]) => E(a, b, 1.75 * s + 0.6, 1.75 * s + 0.6, OUT, 0)).join('') + p.map(([a, b]) => E(a, b, 1.75 * s, 1.75 * s, col, 0)).join('')
+    + p.map(([a, b]) => E(a - 0.4 * s, b - 0.5 * s, 0.6 * s, 0.6 * s, '#FFFFFF', 0).replace('/>', ' opacity="0.55"/>')).join('')
+    + E(x, y, 1.1 * s, 1.1 * s, '#F2B33D', 0.6);
+}
+// marguerite : huit pétales allongés blancs, gros cœur jaune
+function marguerite(x, y, s) {
+  const p = [0, 45, 90, 135, 180, 225, 270, 315];
+  const petale = (a, col, w) => `<ellipse cx="0" cy="${r2(-2.4 * s)}" rx="${r2(0.95 * s + w)}" ry="${r2(1.9 * s + w)}" fill="${col}" transform="translate(${r2(x)} ${r2(y)}) rotate(${a})"/>`;
+  return p.map(a => petale(a, OUT, 0.6)).join('') + p.map(a => petale(a, '#FFFFFF', 0)).join('') + E(x, y, 1.6 * s, 1.6 * s, '#F2B33D', 0.6) + E(x - 0.5 * s, y - 0.5 * s, 0.5 * s, 0.5 * s, '#FFE08A', 0);
+}
+// abeille : corps rayé, deux ailes claires
+const abeille = (x, y) => `<g transform="translate(${r2(x)} ${r2(y)})">`
+  + E(-1.2, -2, 1.6, 1.2, '#FFFFFF', 0.6).replace('/>', ' opacity="0.9"/>') + E(1.2, -2.2, 1.6, 1.2, '#FFFFFF', 0.6).replace('/>', ' opacity="0.9"/>')
+  + E(0, 0, 2.6, 1.8, '#FFD45E', 0.7) + `<path d="M-0.6,-1.7 L-0.6,1.7 M1,-1.6 L1,1.6" stroke="${OUT}" stroke-width="0.8"/>` + E(-2.2, -0.3, 0.9, 0.9, OUT, 0) + '</g>';
+const COULEURS = ['#F7B6C8', '#FFD45E', '#FFFFFF', '#C9A8F0', '#F49A7A', '#FFD45E', '#F7B6C8', '#FFFFFF'];
+// trois touffes réparties sur la case : [x, y du pied, fleurs [écart de la tige au sol, x et y de la fleur]]
+const TOUFFES_FLEURS = [
+  [-13, -1, [[-1, -4, -12], [1, 3, -14], [0, -1, -7]]],
+  [12, 1, [[-1, -3, -13], [1, 3, -10]]],
+  [0, 7, [[-1, -4, -11], [1, 2, -14], [0, 5, -7]]]
+];
+
+// marguerites : des marguerites plutôt qu'un bouquet mélangé ; petites : × 0,75 ; abeille : une abeille butine
+function fleurs({ marguerites = false, petites = false, abeille: avecAbeille = false } = {}) {
+  const k = petites ? 0.75 : 1;
+  let o = E(1, 2, 22 * k, 8 * k, 'rgba(40,55,20,0.2)', 0), n = 0;
+  TOUFFES_FLEURS.forEach(([cx, cy, fl], j) => {
+    const X = cx * k, Y = cy * k;
+    o += fl.map(([x0, x, y]) => tige(X + x0 * k, Y + 0.5, X + x * k, Y + (y + 1.5) * k)).join('');
+    o += feuilleTige(X - 1.6 * k, Y - 3 * k, j % 2 ? -30 : -150) + feuilleTige(X + 1.2 * k, Y - 4.5 * k, j % 2 ? -150 : -25);
+    o += fl.map(([, x, y]) => (marguerites ? marguerite(X + x * k, Y + y * k, k) : fleur(X + x * k, Y + y * k, COULEURS[n++ % COULEURS.length], k))).join('');
+  });
+  return o + (avecAbeille ? abeille(4 * k, -22 * k) : '');
+}
+
+// Les 8 fleurs : [fichier, libellé, options] ; « fleurs » (bouquet mélangé, grand, sans abeille) est celui par défaut
+const FLEURS = [];
+for (const petites of [false, true]) for (const marguerites of [false, true]) for (const ab of [false, true]) {
+  const fichier = ['fleurs', petites && 'petites', marguerites && 'marguerites', ab && 'abeille'].filter(Boolean).join('_');
+  const libelle = `Fleurs (${[marguerites ? 'marguerites' : 'bouquet mélangé', petites ? 'petit' : 'grand', ab && 'une abeille'].filter(Boolean).join(', ')})`;
+  FLEURS.push([fichier, libelle, { marguerites, petites, abeille: ab }]);
+}
+
+module.exports = { buisson, BUISSONS, bruyere, BRUYERES, fleurs, FLEURS };

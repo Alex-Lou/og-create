@@ -46564,10 +46564,129 @@
   {
    "id": "plantes/fleurs",
    "rubrique": "plantes",
-   "titre": "Fleurs",
+   "titre": "Fleurs (bouquet mélangé, grand)",
    "images": 1,
    "fichiers": [
     "svg/plantes/fleurs.svg"
+   ],
+   "cadre": [
+    -50,
+    -115,
+    100,
+    140
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "plantes/fleurs_abeille",
+   "rubrique": "plantes",
+   "titre": "Fleurs (bouquet mélangé, grand, une abeille)",
+   "images": 1,
+   "fichiers": [
+    "svg/plantes/fleurs_abeille.svg"
+   ],
+   "cadre": [
+    -50,
+    -115,
+    100,
+    140
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "plantes/fleurs_marguerites",
+   "rubrique": "plantes",
+   "titre": "Fleurs (marguerites, grand)",
+   "images": 1,
+   "fichiers": [
+    "svg/plantes/fleurs_marguerites.svg"
+   ],
+   "cadre": [
+    -50,
+    -115,
+    100,
+    140
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "plantes/fleurs_marguerites_abeille",
+   "rubrique": "plantes",
+   "titre": "Fleurs (marguerites, grand, une abeille)",
+   "images": 1,
+   "fichiers": [
+    "svg/plantes/fleurs_marguerites_abeille.svg"
+   ],
+   "cadre": [
+    -50,
+    -115,
+    100,
+    140
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "plantes/fleurs_petites",
+   "rubrique": "plantes",
+   "titre": "Fleurs (bouquet mélangé, petit)",
+   "images": 1,
+   "fichiers": [
+    "svg/plantes/fleurs_petites.svg"
+   ],
+   "cadre": [
+    -50,
+    -115,
+    100,
+    140
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "plantes/fleurs_petites_abeille",
+   "rubrique": "plantes",
+   "titre": "Fleurs (bouquet mélangé, petit, une abeille)",
+   "images": 1,
+   "fichiers": [
+    "svg/plantes/fleurs_petites_abeille.svg"
+   ],
+   "cadre": [
+    -50,
+    -115,
+    100,
+    140
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "plantes/fleurs_petites_marguerites",
+   "rubrique": "plantes",
+   "titre": "Fleurs (marguerites, petit)",
+   "images": 1,
+   "fichiers": [
+    "svg/plantes/fleurs_petites_marguerites.svg"
+   ],
+   "cadre": [
+    -50,
+    -115,
+    100,
+    140
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "plantes/fleurs_petites_marguerites_abeille",
+   "rubrique": "plantes",
+   "titre": "Fleurs (marguerites, petit, une abeille)",
+   "images": 1,
+   "fichiers": [
+    "svg/plantes/fleurs_petites_marguerites_abeille.svg"
    ],
    "cadre": [
     -50,
