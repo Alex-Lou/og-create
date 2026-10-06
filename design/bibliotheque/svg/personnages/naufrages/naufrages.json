@@ -5,7 +5,8 @@
   "Debout : même repère que la troupe (48 × 64, pieds en bas au centre, 24 ; 62), mêmes vues et poses (face, trois quarts avant « se », trois quarts dos « ne », miroir pour les deux autres), mêmes expressions.",
   "Endormi : assis, 48 × 64 (sol en bas) ; Sylve roulée en boule : 64 × 48 (sol en bas, centre 32 ; 46). 2 images (les « z » montent, la bulle d'Ondin gonfle). L'endormi du maître est rangé avec lui (maitres/<prénom>/<prénom>_dort_*.svg ; à ne pas confondre avec l'expression expr_endormi).",
   "Plans d'entrée du tutoriel : 80 × 64, fond transparent, sol en bas (40 ; 62), 2 images (≈ 450 ms).",
-  "Expressions en marche : trois quarts avant, 4 images (≈ 170 ms), pour chacun les expressions de son caractère ; naufragé ici (naufrage_avant_marche_<expression>), maître dans maitres/<prénom>/<prénom>_avant_marche_<expression>_*.svg."
+  "Expressions en marche : trois quarts avant, 4 images (≈ 170 ms), pour chacun les expressions de son caractère ; naufragé ici (naufrage_avant_marche_<expression>), maître dans maitres/<prénom>/<prénom>_avant_marche_<expression>_*.svg.",
+  "Noms rangés à l'assemblage (README, catalogue.json) : <sujet>_<vue>_<pose>_<n>.svg, vues face, avant (l'ancien « trois_quarts »), dos, profil ; les chemins ci-dessous suivent ces noms."
  ],
  "naufrages": {
   "aster": {
@@ -13,70 +14,70 @@
    "arrivee": "tutoriel, étape 2",
    "fichiers": {
     "naufrage_face_repos": [
-     "naufrages/aster/aster_naufrage_face_repos_1.svg",
-     "naufrages/aster/aster_naufrage_face_repos_2.svg"
+     "naufrages/aster/aster-naufrage_face_repos_1.svg",
+     "naufrages/aster/aster-naufrage_face_repos_2.svg"
     ],
     "naufrage_avant_marche": [
-     "naufrages/aster/aster_naufrage_avant_marche_1.svg",
-     "naufrages/aster/aster_naufrage_avant_marche_2.svg",
-     "naufrages/aster/aster_naufrage_avant_marche_3.svg",
-     "naufrages/aster/aster_naufrage_avant_marche_4.svg"
+     "naufrages/aster/aster-naufrage_avant_marche_1.svg",
+     "naufrages/aster/aster-naufrage_avant_marche_2.svg",
+     "naufrages/aster/aster-naufrage_avant_marche_3.svg",
+     "naufrages/aster/aster-naufrage_avant_marche_4.svg"
     ],
     "naufrage_dos_marche": [
-     "naufrages/aster/aster_naufrage_dos_marche_1.svg",
-     "naufrages/aster/aster_naufrage_dos_marche_2.svg",
-     "naufrages/aster/aster_naufrage_dos_marche_3.svg",
-     "naufrages/aster/aster_naufrage_dos_marche_4.svg"
+     "naufrages/aster/aster-naufrage_dos_marche_1.svg",
+     "naufrages/aster/aster-naufrage_dos_marche_2.svg",
+     "naufrages/aster/aster-naufrage_dos_marche_3.svg",
+     "naufrages/aster/aster-naufrage_dos_marche_4.svg"
     ],
     "naufrage_face_salut": [
-     "naufrages/aster/aster_naufrage_face_salut_1.svg",
-     "naufrages/aster/aster_naufrage_face_salut_2.svg"
+     "naufrages/aster/aster-naufrage_face_salut_1.svg",
+     "naufrages/aster/aster-naufrage_face_salut_2.svg"
     ],
     "naufrage_avant_longuevue": [
-     "naufrages/aster/aster_naufrage_avant_longuevue_1.svg",
-     "naufrages/aster/aster_naufrage_avant_longuevue_2.svg"
+     "naufrages/aster/aster-naufrage_avant_longuevue_1.svg",
+     "naufrages/aster/aster-naufrage_avant_longuevue_2.svg"
     ],
     "naufrage_expr_neutre": [
-     "naufrages/aster/aster_naufrage_expr_neutre_1.svg",
-     "naufrages/aster/aster_naufrage_expr_neutre_2.svg"
+     "naufrages/aster/aster-naufrage_expr_neutre_1.svg",
+     "naufrages/aster/aster-naufrage_expr_neutre_2.svg"
     ],
     "naufrage_expr_content": [
-     "naufrages/aster/aster_naufrage_expr_content_1.svg",
-     "naufrages/aster/aster_naufrage_expr_content_2.svg"
+     "naufrages/aster/aster-naufrage_expr_content_1.svg",
+     "naufrages/aster/aster-naufrage_expr_content_2.svg"
     ],
     "naufrage_expr_rire": [
-     "naufrages/aster/aster_naufrage_expr_rire_1.svg",
-     "naufrages/aster/aster_naufrage_expr_rire_2.svg"
+     "naufrages/aster/aster-naufrage_expr_rire_1.svg",
+     "naufrages/aster/aster-naufrage_expr_rire_2.svg"
     ],
     "naufrage_expr_surpris": [
-     "naufrages/aster/aster_naufrage_expr_surpris_1.svg",
-     "naufrages/aster/aster_naufrage_expr_surpris_2.svg"
+     "naufrages/aster/aster-naufrage_expr_surpris_1.svg",
+     "naufrages/aster/aster-naufrage_expr_surpris_2.svg"
     ],
     "naufrage_expr_triste": [
-     "naufrages/aster/aster_naufrage_expr_triste_1.svg",
-     "naufrages/aster/aster_naufrage_expr_triste_2.svg"
+     "naufrages/aster/aster-naufrage_expr_triste_1.svg",
+     "naufrages/aster/aster-naufrage_expr_triste_2.svg"
     ],
     "naufrage_expr_fache": [
-     "naufrages/aster/aster_naufrage_expr_fache_1.svg",
-     "naufrages/aster/aster_naufrage_expr_fache_2.svg"
+     "naufrages/aster/aster-naufrage_expr_fache_1.svg",
+     "naufrages/aster/aster-naufrage_expr_fache_2.svg"
     ],
     "naufrage_expr_gene": [
-     "naufrages/aster/aster_naufrage_expr_gene_1.svg",
-     "naufrages/aster/aster_naufrage_expr_gene_2.svg"
+     "naufrages/aster/aster-naufrage_expr_gene_1.svg",
+     "naufrages/aster/aster-naufrage_expr_gene_2.svg"
     ],
     "naufrage_expr_endormi": [
-     "naufrages/aster/aster_naufrage_expr_endormi_1.svg",
-     "naufrages/aster/aster_naufrage_expr_endormi_2.svg"
+     "naufrages/aster/aster-naufrage_expr_endormi_1.svg",
+     "naufrages/aster/aster-naufrage_expr_endormi_2.svg"
     ],
     "naufrage_dort": [
-     "naufrages/aster/aster_naufrage_dort_1.svg",
-     "naufrages/aster/aster_naufrage_dort_2.svg"
+     "naufrages/aster/aster-naufrage_dort_1.svg",
+     "naufrages/aster/aster-naufrage_dort_2.svg"
     ],
     "naufrage_avant_marche_content": [
-     "naufrages/aster/aster_naufrage_avant_marche_content_1.svg",
-     "naufrages/aster/aster_naufrage_avant_marche_content_2.svg",
-     "naufrages/aster/aster_naufrage_avant_marche_content_3.svg",
-     "naufrages/aster/aster_naufrage_avant_marche_content_4.svg"
+     "naufrages/aster/aster-naufrage_avant_marche_content_1.svg",
+     "naufrages/aster/aster-naufrage_avant_marche_content_2.svg",
+     "naufrages/aster/aster-naufrage_avant_marche_content_3.svg",
+     "naufrages/aster/aster-naufrage_avant_marche_content_4.svg"
     ],
     "maitre_avant_marche_content": [
      "maitres/aster/aster_avant_marche_content_1.svg",
@@ -85,10 +86,10 @@
      "maitres/aster/aster_avant_marche_content_4.svg"
     ],
     "naufrage_avant_marche_surpris": [
-     "naufrages/aster/aster_naufrage_avant_marche_surpris_1.svg",
-     "naufrages/aster/aster_naufrage_avant_marche_surpris_2.svg",
-     "naufrages/aster/aster_naufrage_avant_marche_surpris_3.svg",
-     "naufrages/aster/aster_naufrage_avant_marche_surpris_4.svg"
+     "naufrages/aster/aster-naufrage_avant_marche_surpris_1.svg",
+     "naufrages/aster/aster-naufrage_avant_marche_surpris_2.svg",
+     "naufrages/aster/aster-naufrage_avant_marche_surpris_3.svg",
+     "naufrages/aster/aster-naufrage_avant_marche_surpris_4.svg"
     ],
     "maitre_avant_marche_surpris": [
      "maitres/aster/aster_avant_marche_surpris_1.svg",
@@ -97,10 +98,10 @@
      "maitres/aster/aster_avant_marche_surpris_4.svg"
     ],
     "naufrage_avant_marche_triste": [
-     "naufrages/aster/aster_naufrage_avant_marche_triste_1.svg",
-     "naufrages/aster/aster_naufrage_avant_marche_triste_2.svg",
-     "naufrages/aster/aster_naufrage_avant_marche_triste_3.svg",
-     "naufrages/aster/aster_naufrage_avant_marche_triste_4.svg"
+     "naufrages/aster/aster-naufrage_avant_marche_triste_1.svg",
+     "naufrages/aster/aster-naufrage_avant_marche_triste_2.svg",
+     "naufrages/aster/aster-naufrage_avant_marche_triste_3.svg",
+     "naufrages/aster/aster-naufrage_avant_marche_triste_4.svg"
     ],
     "maitre_avant_marche_triste": [
      "maitres/aster/aster_avant_marche_triste_1.svg",
@@ -109,8 +110,8 @@
      "maitres/aster/aster_avant_marche_triste_4.svg"
     ],
     "arrivee": [
-     "naufrages/aster/aster_arrivee_1.svg",
-     "naufrages/aster/aster_arrivee_2.svg"
+     "naufrages/aster/aster-naufrage_arrivee_1.svg",
+     "naufrages/aster/aster-naufrage_arrivee_2.svg"
     ]
    },
    "dort_du_maitre": [
@@ -123,70 +124,70 @@
    "arrivee": "tutoriel, étape 3",
    "fichiers": {
     "naufrage_face_repos": [
-     "naufrages/cannelle/cannelle_naufrage_face_repos_1.svg",
-     "naufrages/cannelle/cannelle_naufrage_face_repos_2.svg"
+     "naufrages/cannelle/cannelle-naufrage_face_repos_1.svg",
+     "naufrages/cannelle/cannelle-naufrage_face_repos_2.svg"
     ],
     "naufrage_avant_marche": [
-     "naufrages/cannelle/cannelle_naufrage_avant_marche_1.svg",
-     "naufrages/cannelle/cannelle_naufrage_avant_marche_2.svg",
-     "naufrages/cannelle/cannelle_naufrage_avant_marche_3.svg",
-     "naufrages/cannelle/cannelle_naufrage_avant_marche_4.svg"
+     "naufrages/cannelle/cannelle-naufrage_avant_marche_1.svg",
+     "naufrages/cannelle/cannelle-naufrage_avant_marche_2.svg",
+     "naufrages/cannelle/cannelle-naufrage_avant_marche_3.svg",
+     "naufrages/cannelle/cannelle-naufrage_avant_marche_4.svg"
     ],
     "naufrage_dos_marche": [
-     "naufrages/cannelle/cannelle_naufrage_dos_marche_1.svg",
-     "naufrages/cannelle/cannelle_naufrage_dos_marche_2.svg",
-     "naufrages/cannelle/cannelle_naufrage_dos_marche_3.svg",
-     "naufrages/cannelle/cannelle_naufrage_dos_marche_4.svg"
+     "naufrages/cannelle/cannelle-naufrage_dos_marche_1.svg",
+     "naufrages/cannelle/cannelle-naufrage_dos_marche_2.svg",
+     "naufrages/cannelle/cannelle-naufrage_dos_marche_3.svg",
+     "naufrages/cannelle/cannelle-naufrage_dos_marche_4.svg"
     ],
     "naufrage_face_salut": [
-     "naufrages/cannelle/cannelle_naufrage_face_salut_1.svg",
-     "naufrages/cannelle/cannelle_naufrage_face_salut_2.svg"
+     "naufrages/cannelle/cannelle-naufrage_face_salut_1.svg",
+     "naufrages/cannelle/cannelle-naufrage_face_salut_2.svg"
     ],
     "naufrage_face_louche": [
-     "naufrages/cannelle/cannelle_naufrage_face_louche_1.svg",
-     "naufrages/cannelle/cannelle_naufrage_face_louche_2.svg"
+     "naufrages/cannelle/cannelle-naufrage_face_louche_1.svg",
+     "naufrages/cannelle/cannelle-naufrage_face_louche_2.svg"
     ],
     "naufrage_expr_neutre": [
-     "naufrages/cannelle/cannelle_naufrage_expr_neutre_1.svg",
-     "naufrages/cannelle/cannelle_naufrage_expr_neutre_2.svg"
+     "naufrages/cannelle/cannelle-naufrage_expr_neutre_1.svg",
+     "naufrages/cannelle/cannelle-naufrage_expr_neutre_2.svg"
     ],
     "naufrage_expr_content": [
-     "naufrages/cannelle/cannelle_naufrage_expr_content_1.svg",
-     "naufrages/cannelle/cannelle_naufrage_expr_content_2.svg"
+     "naufrages/cannelle/cannelle-naufrage_expr_content_1.svg",
+     "naufrages/cannelle/cannelle-naufrage_expr_content_2.svg"
     ],
     "naufrage_expr_rire": [
-     "naufrages/cannelle/cannelle_naufrage_expr_rire_1.svg",
-     "naufrages/cannelle/cannelle_naufrage_expr_rire_2.svg"
+     "naufrages/cannelle/cannelle-naufrage_expr_rire_1.svg",
+     "naufrages/cannelle/cannelle-naufrage_expr_rire_2.svg"
     ],
     "naufrage_expr_surpris": [
-     "naufrages/cannelle/cannelle_naufrage_expr_surpris_1.svg",
-     "naufrages/cannelle/cannelle_naufrage_expr_surpris_2.svg"
+     "naufrages/cannelle/cannelle-naufrage_expr_surpris_1.svg",
+     "naufrages/cannelle/cannelle-naufrage_expr_surpris_2.svg"
     ],
     "naufrage_expr_triste": [
-     "naufrages/cannelle/cannelle_naufrage_expr_triste_1.svg",
-     "naufrages/cannelle/cannelle_naufrage_expr_triste_2.svg"
+     "naufrages/cannelle/cannelle-naufrage_expr_triste_1.svg",
+     "naufrages/cannelle/cannelle-naufrage_expr_triste_2.svg"
     ],
     "naufrage_expr_fache": [
-     "naufrages/cannelle/cannelle_naufrage_expr_fache_1.svg",
-     "naufrages/cannelle/cannelle_naufrage_expr_fache_2.svg"
+     "naufrages/cannelle/cannelle-naufrage_expr_fache_1.svg",
+     "naufrages/cannelle/cannelle-naufrage_expr_fache_2.svg"
     ],
     "naufrage_expr_gene": [
-     "naufrages/cannelle/cannelle_naufrage_expr_gene_1.svg",
-     "naufrages/cannelle/cannelle_naufrage_expr_gene_2.svg"
+     "naufrages/cannelle/cannelle-naufrage_expr_gene_1.svg",
+     "naufrages/cannelle/cannelle-naufrage_expr_gene_2.svg"
     ],
     "naufrage_expr_endormi": [
-     "naufrages/cannelle/cannelle_naufrage_expr_endormi_1.svg",
-     "naufrages/cannelle/cannelle_naufrage_expr_endormi_2.svg"
+     "naufrages/cannelle/cannelle-naufrage_expr_endormi_1.svg",
+     "naufrages/cannelle/cannelle-naufrage_expr_endormi_2.svg"
     ],
     "naufrage_dort": [
-     "naufrages/cannelle/cannelle_naufrage_dort_1.svg",
-     "naufrages/cannelle/cannelle_naufrage_dort_2.svg"
+     "naufrages/cannelle/cannelle-naufrage_dort_1.svg",
+     "naufrages/cannelle/cannelle-naufrage_dort_2.svg"
     ],
     "naufrage_avant_marche_rire": [
-     "naufrages/cannelle/cannelle_naufrage_avant_marche_rire_1.svg",
-     "naufrages/cannelle/cannelle_naufrage_avant_marche_rire_2.svg",
-     "naufrages/cannelle/cannelle_naufrage_avant_marche_rire_3.svg",
-     "naufrages/cannelle/cannelle_naufrage_avant_marche_rire_4.svg"
+     "naufrages/cannelle/cannelle-naufrage_avant_marche_rire_1.svg",
+     "naufrages/cannelle/cannelle-naufrage_avant_marche_rire_2.svg",
+     "naufrages/cannelle/cannelle-naufrage_avant_marche_rire_3.svg",
+     "naufrages/cannelle/cannelle-naufrage_avant_marche_rire_4.svg"
     ],
     "maitre_avant_marche_rire": [
      "maitres/cannelle/cannelle_avant_marche_rire_1.svg",
@@ -195,10 +196,10 @@
      "maitres/cannelle/cannelle_avant_marche_rire_4.svg"
     ],
     "naufrage_avant_marche_triste": [
-     "naufrages/cannelle/cannelle_naufrage_avant_marche_triste_1.svg",
-     "naufrages/cannelle/cannelle_naufrage_avant_marche_triste_2.svg",
-     "naufrages/cannelle/cannelle_naufrage_avant_marche_triste_3.svg",
-     "naufrages/cannelle/cannelle_naufrage_avant_marche_triste_4.svg"
+     "naufrages/cannelle/cannelle-naufrage_avant_marche_triste_1.svg",
+     "naufrages/cannelle/cannelle-naufrage_avant_marche_triste_2.svg",
+     "naufrages/cannelle/cannelle-naufrage_avant_marche_triste_3.svg",
+     "naufrages/cannelle/cannelle-naufrage_avant_marche_triste_4.svg"
     ],
     "maitre_avant_marche_triste": [
      "maitres/cannelle/cannelle_avant_marche_triste_1.svg",
@@ -207,10 +208,10 @@
      "maitres/cannelle/cannelle_avant_marche_triste_4.svg"
     ],
     "naufrage_avant_marche_fache": [
-     "naufrages/cannelle/cannelle_naufrage_avant_marche_fache_1.svg",
-     "naufrages/cannelle/cannelle_naufrage_avant_marche_fache_2.svg",
-     "naufrages/cannelle/cannelle_naufrage_avant_marche_fache_3.svg",
-     "naufrages/cannelle/cannelle_naufrage_avant_marche_fache_4.svg"
+     "naufrages/cannelle/cannelle-naufrage_avant_marche_fache_1.svg",
+     "naufrages/cannelle/cannelle-naufrage_avant_marche_fache_2.svg",
+     "naufrages/cannelle/cannelle-naufrage_avant_marche_fache_3.svg",
+     "naufrages/cannelle/cannelle-naufrage_avant_marche_fache_4.svg"
     ],
     "maitre_avant_marche_fache": [
      "maitres/cannelle/cannelle_avant_marche_fache_1.svg",
@@ -219,8 +220,8 @@
      "maitres/cannelle/cannelle_avant_marche_fache_4.svg"
     ],
     "arrivee": [
-     "naufrages/cannelle/cannelle_arrivee_1.svg",
-     "naufrages/cannelle/cannelle_arrivee_2.svg"
+     "naufrages/cannelle/cannelle-naufrage_arrivee_1.svg",
+     "naufrages/cannelle/cannelle-naufrage_arrivee_2.svg"
     ]
    },
    "dort_du_maitre": [
@@ -233,70 +234,70 @@
    "arrivee": "tutoriel, étape 4",
    "fichiers": {
     "naufrage_face_repos": [
-     "naufrages/rivet/rivet_naufrage_face_repos_1.svg",
-     "naufrages/rivet/rivet_naufrage_face_repos_2.svg"
+     "naufrages/rivet/rivet-naufrage_face_repos_1.svg",
+     "naufrages/rivet/rivet-naufrage_face_repos_2.svg"
     ],
     "naufrage_avant_marche": [
-     "naufrages/rivet/rivet_naufrage_avant_marche_1.svg",
-     "naufrages/rivet/rivet_naufrage_avant_marche_2.svg",
-     "naufrages/rivet/rivet_naufrage_avant_marche_3.svg",
-     "naufrages/rivet/rivet_naufrage_avant_marche_4.svg"
+     "naufrages/rivet/rivet-naufrage_avant_marche_1.svg",
+     "naufrages/rivet/rivet-naufrage_avant_marche_2.svg",
+     "naufrages/rivet/rivet-naufrage_avant_marche_3.svg",
+     "naufrages/rivet/rivet-naufrage_avant_marche_4.svg"
     ],
     "naufrage_dos_marche": [
-     "naufrages/rivet/rivet_naufrage_dos_marche_1.svg",
-     "naufrages/rivet/rivet_naufrage_dos_marche_2.svg",
-     "naufrages/rivet/rivet_naufrage_dos_marche_3.svg",
-     "naufrages/rivet/rivet_naufrage_dos_marche_4.svg"
+     "naufrages/rivet/rivet-naufrage_dos_marche_1.svg",
+     "naufrages/rivet/rivet-naufrage_dos_marche_2.svg",
+     "naufrages/rivet/rivet-naufrage_dos_marche_3.svg",
+     "naufrages/rivet/rivet-naufrage_dos_marche_4.svg"
     ],
     "naufrage_face_salut": [
-     "naufrages/rivet/rivet_naufrage_face_salut_1.svg",
-     "naufrages/rivet/rivet_naufrage_face_salut_2.svg"
+     "naufrages/rivet/rivet-naufrage_face_salut_1.svg",
+     "naufrages/rivet/rivet-naufrage_face_salut_2.svg"
     ],
     "naufrage_face_loupe": [
-     "naufrages/rivet/rivet_naufrage_face_loupe_1.svg",
-     "naufrages/rivet/rivet_naufrage_face_loupe_2.svg"
+     "naufrages/rivet/rivet-naufrage_face_loupe_1.svg",
+     "naufrages/rivet/rivet-naufrage_face_loupe_2.svg"
     ],
     "naufrage_expr_neutre": [
-     "naufrages/rivet/rivet_naufrage_expr_neutre_1.svg",
-     "naufrages/rivet/rivet_naufrage_expr_neutre_2.svg"
+     "naufrages/rivet/rivet-naufrage_expr_neutre_1.svg",
+     "naufrages/rivet/rivet-naufrage_expr_neutre_2.svg"
     ],
     "naufrage_expr_content": [
-     "naufrages/rivet/rivet_naufrage_expr_content_1.svg",
-     "naufrages/rivet/rivet_naufrage_expr_content_2.svg"
+     "naufrages/rivet/rivet-naufrage_expr_content_1.svg",
+     "naufrages/rivet/rivet-naufrage_expr_content_2.svg"
     ],
     "naufrage_expr_rire": [
-     "naufrages/rivet/rivet_naufrage_expr_rire_1.svg",
-     "naufrages/rivet/rivet_naufrage_expr_rire_2.svg"
+     "naufrages/rivet/rivet-naufrage_expr_rire_1.svg",
+     "naufrages/rivet/rivet-naufrage_expr_rire_2.svg"
     ],
     "naufrage_expr_surpris": [
-     "naufrages/rivet/rivet_naufrage_expr_surpris_1.svg",
-     "naufrages/rivet/rivet_naufrage_expr_surpris_2.svg"
+     "naufrages/rivet/rivet-naufrage_expr_surpris_1.svg",
+     "naufrages/rivet/rivet-naufrage_expr_surpris_2.svg"
     ],
     "naufrage_expr_triste": [
-     "naufrages/rivet/rivet_naufrage_expr_triste_1.svg",
-     "naufrages/rivet/rivet_naufrage_expr_triste_2.svg"
+     "naufrages/rivet/rivet-naufrage_expr_triste_1.svg",
+     "naufrages/rivet/rivet-naufrage_expr_triste_2.svg"
     ],
     "naufrage_expr_fache": [
-     "naufrages/rivet/rivet_naufrage_expr_fache_1.svg",
-     "naufrages/rivet/rivet_naufrage_expr_fache_2.svg"
+     "naufrages/rivet/rivet-naufrage_expr_fache_1.svg",
+     "naufrages/rivet/rivet-naufrage_expr_fache_2.svg"
     ],
     "naufrage_expr_gene": [
-     "naufrages/rivet/rivet_naufrage_expr_gene_1.svg",
-     "naufrages/rivet/rivet_naufrage_expr_gene_2.svg"
+     "naufrages/rivet/rivet-naufrage_expr_gene_1.svg",
+     "naufrages/rivet/rivet-naufrage_expr_gene_2.svg"
     ],
     "naufrage_expr_endormi": [
-     "naufrages/rivet/rivet_naufrage_expr_endormi_1.svg",
-     "naufrages/rivet/rivet_naufrage_expr_endormi_2.svg"
+     "naufrages/rivet/rivet-naufrage_expr_endormi_1.svg",
+     "naufrages/rivet/rivet-naufrage_expr_endormi_2.svg"
     ],
     "naufrage_dort": [
-     "naufrages/rivet/rivet_naufrage_dort_1.svg",
-     "naufrages/rivet/rivet_naufrage_dort_2.svg"
+     "naufrages/rivet/rivet-naufrage_dort_1.svg",
+     "naufrages/rivet/rivet-naufrage_dort_2.svg"
     ],
     "naufrage_avant_marche_content": [
-     "naufrages/rivet/rivet_naufrage_avant_marche_content_1.svg",
-     "naufrages/rivet/rivet_naufrage_avant_marche_content_2.svg",
-     "naufrages/rivet/rivet_naufrage_avant_marche_content_3.svg",
-     "naufrages/rivet/rivet_naufrage_avant_marche_content_4.svg"
+     "naufrages/rivet/rivet-naufrage_avant_marche_content_1.svg",
+     "naufrages/rivet/rivet-naufrage_avant_marche_content_2.svg",
+     "naufrages/rivet/rivet-naufrage_avant_marche_content_3.svg",
+     "naufrages/rivet/rivet-naufrage_avant_marche_content_4.svg"
     ],
     "maitre_avant_marche_content": [
      "maitres/rivet/rivet_avant_marche_content_1.svg",
@@ -305,10 +306,10 @@
      "maitres/rivet/rivet_avant_marche_content_4.svg"
     ],
     "naufrage_avant_marche_surpris": [
-     "naufrages/rivet/rivet_naufrage_avant_marche_surpris_1.svg",
-     "naufrages/rivet/rivet_naufrage_avant_marche_surpris_2.svg",
-     "naufrages/rivet/rivet_naufrage_avant_marche_surpris_3.svg",
-     "naufrages/rivet/rivet_naufrage_avant_marche_surpris_4.svg"
+     "naufrages/rivet/rivet-naufrage_avant_marche_surpris_1.svg",
+     "naufrages/rivet/rivet-naufrage_avant_marche_surpris_2.svg",
+     "naufrages/rivet/rivet-naufrage_avant_marche_surpris_3.svg",
+     "naufrages/rivet/rivet-naufrage_avant_marche_surpris_4.svg"
     ],
     "maitre_avant_marche_surpris": [
      "maitres/rivet/rivet_avant_marche_surpris_1.svg",
@@ -317,10 +318,10 @@
      "maitres/rivet/rivet_avant_marche_surpris_4.svg"
     ],
     "naufrage_avant_marche_fache": [
-     "naufrages/rivet/rivet_naufrage_avant_marche_fache_1.svg",
-     "naufrages/rivet/rivet_naufrage_avant_marche_fache_2.svg",
-     "naufrages/rivet/rivet_naufrage_avant_marche_fache_3.svg",
-     "naufrages/rivet/rivet_naufrage_avant_marche_fache_4.svg"
+     "naufrages/rivet/rivet-naufrage_avant_marche_fache_1.svg",
+     "naufrages/rivet/rivet-naufrage_avant_marche_fache_2.svg",
+     "naufrages/rivet/rivet-naufrage_avant_marche_fache_3.svg",
+     "naufrages/rivet/rivet-naufrage_avant_marche_fache_4.svg"
     ],
     "maitre_avant_marche_fache": [
      "maitres/rivet/rivet_avant_marche_fache_1.svg",
@@ -329,8 +330,8 @@
      "maitres/rivet/rivet_avant_marche_fache_4.svg"
     ],
     "arrivee": [
-     "naufrages/rivet/rivet_arrivee_1.svg",
-     "naufrages/rivet/rivet_arrivee_2.svg"
+     "naufrages/rivet/rivet-naufrage_arrivee_1.svg",
+     "naufrages/rivet/rivet-naufrage_arrivee_2.svg"
     ]
    },
    "dort_du_maitre": [
@@ -343,70 +344,70 @@
    "arrivee": "tutoriel, étape 5",
    "fichiers": {
     "naufrage_face_repos": [
-     "naufrages/ondin/ondin_naufrage_face_repos_1.svg",
-     "naufrages/ondin/ondin_naufrage_face_repos_2.svg"
+     "naufrages/ondin/ondin-naufrage_face_repos_1.svg",
+     "naufrages/ondin/ondin-naufrage_face_repos_2.svg"
     ],
     "naufrage_avant_marche": [
-     "naufrages/ondin/ondin_naufrage_avant_marche_1.svg",
-     "naufrages/ondin/ondin_naufrage_avant_marche_2.svg",
-     "naufrages/ondin/ondin_naufrage_avant_marche_3.svg",
-     "naufrages/ondin/ondin_naufrage_avant_marche_4.svg"
+     "naufrages/ondin/ondin-naufrage_avant_marche_1.svg",
+     "naufrages/ondin/ondin-naufrage_avant_marche_2.svg",
+     "naufrages/ondin/ondin-naufrage_avant_marche_3.svg",
+     "naufrages/ondin/ondin-naufrage_avant_marche_4.svg"
     ],
     "naufrage_dos_marche": [
-     "naufrages/ondin/ondin_naufrage_dos_marche_1.svg",
-     "naufrages/ondin/ondin_naufrage_dos_marche_2.svg",
-     "naufrages/ondin/ondin_naufrage_dos_marche_3.svg",
-     "naufrages/ondin/ondin_naufrage_dos_marche_4.svg"
+     "naufrages/ondin/ondin-naufrage_dos_marche_1.svg",
+     "naufrages/ondin/ondin-naufrage_dos_marche_2.svg",
+     "naufrages/ondin/ondin-naufrage_dos_marche_3.svg",
+     "naufrages/ondin/ondin-naufrage_dos_marche_4.svg"
     ],
     "naufrage_face_salut": [
-     "naufrages/ondin/ondin_naufrage_face_salut_1.svg",
-     "naufrages/ondin/ondin_naufrage_face_salut_2.svg"
+     "naufrages/ondin/ondin-naufrage_face_salut_1.svg",
+     "naufrages/ondin/ondin-naufrage_face_salut_2.svg"
     ],
     "naufrage_face_baguette": [
-     "naufrages/ondin/ondin_naufrage_face_baguette_1.svg",
-     "naufrages/ondin/ondin_naufrage_face_baguette_2.svg"
+     "naufrages/ondin/ondin-naufrage_face_baguette_1.svg",
+     "naufrages/ondin/ondin-naufrage_face_baguette_2.svg"
     ],
     "naufrage_expr_neutre": [
-     "naufrages/ondin/ondin_naufrage_expr_neutre_1.svg",
-     "naufrages/ondin/ondin_naufrage_expr_neutre_2.svg"
+     "naufrages/ondin/ondin-naufrage_expr_neutre_1.svg",
+     "naufrages/ondin/ondin-naufrage_expr_neutre_2.svg"
     ],
     "naufrage_expr_content": [
-     "naufrages/ondin/ondin_naufrage_expr_content_1.svg",
-     "naufrages/ondin/ondin_naufrage_expr_content_2.svg"
+     "naufrages/ondin/ondin-naufrage_expr_content_1.svg",
+     "naufrages/ondin/ondin-naufrage_expr_content_2.svg"
     ],
     "naufrage_expr_rire": [
-     "naufrages/ondin/ondin_naufrage_expr_rire_1.svg",
-     "naufrages/ondin/ondin_naufrage_expr_rire_2.svg"
+     "naufrages/ondin/ondin-naufrage_expr_rire_1.svg",
+     "naufrages/ondin/ondin-naufrage_expr_rire_2.svg"
     ],
     "naufrage_expr_surpris": [
-     "naufrages/ondin/ondin_naufrage_expr_surpris_1.svg",
-     "naufrages/ondin/ondin_naufrage_expr_surpris_2.svg"
+     "naufrages/ondin/ondin-naufrage_expr_surpris_1.svg",
+     "naufrages/ondin/ondin-naufrage_expr_surpris_2.svg"
     ],
     "naufrage_expr_triste": [
-     "naufrages/ondin/ondin_naufrage_expr_triste_1.svg",
-     "naufrages/ondin/ondin_naufrage_expr_triste_2.svg"
+     "naufrages/ondin/ondin-naufrage_expr_triste_1.svg",
+     "naufrages/ondin/ondin-naufrage_expr_triste_2.svg"
     ],
     "naufrage_expr_fache": [
-     "naufrages/ondin/ondin_naufrage_expr_fache_1.svg",
-     "naufrages/ondin/ondin_naufrage_expr_fache_2.svg"
+     "naufrages/ondin/ondin-naufrage_expr_fache_1.svg",
+     "naufrages/ondin/ondin-naufrage_expr_fache_2.svg"
     ],
     "naufrage_expr_gene": [
-     "naufrages/ondin/ondin_naufrage_expr_gene_1.svg",
-     "naufrages/ondin/ondin_naufrage_expr_gene_2.svg"
+     "naufrages/ondin/ondin-naufrage_expr_gene_1.svg",
+     "naufrages/ondin/ondin-naufrage_expr_gene_2.svg"
     ],
     "naufrage_expr_endormi": [
-     "naufrages/ondin/ondin_naufrage_expr_endormi_1.svg",
-     "naufrages/ondin/ondin_naufrage_expr_endormi_2.svg"
+     "naufrages/ondin/ondin-naufrage_expr_endormi_1.svg",
+     "naufrages/ondin/ondin-naufrage_expr_endormi_2.svg"
     ],
     "naufrage_dort": [
-     "naufrages/ondin/ondin_naufrage_dort_1.svg",
-     "naufrages/ondin/ondin_naufrage_dort_2.svg"
+     "naufrages/ondin/ondin-naufrage_dort_1.svg",
+     "naufrages/ondin/ondin-naufrage_dort_2.svg"
     ],
     "naufrage_avant_marche_endormi": [
-     "naufrages/ondin/ondin_naufrage_avant_marche_endormi_1.svg",
-     "naufrages/ondin/ondin_naufrage_avant_marche_endormi_2.svg",
-     "naufrages/ondin/ondin_naufrage_avant_marche_endormi_3.svg",
-     "naufrages/ondin/ondin_naufrage_avant_marche_endormi_4.svg"
+     "naufrages/ondin/ondin-naufrage_avant_marche_endormi_1.svg",
+     "naufrages/ondin/ondin-naufrage_avant_marche_endormi_2.svg",
+     "naufrages/ondin/ondin-naufrage_avant_marche_endormi_3.svg",
+     "naufrages/ondin/ondin-naufrage_avant_marche_endormi_4.svg"
     ],
     "maitre_avant_marche_endormi": [
      "maitres/ondin/ondin_avant_marche_endormi_1.svg",
@@ -415,10 +416,10 @@
      "maitres/ondin/ondin_avant_marche_endormi_4.svg"
     ],
     "naufrage_avant_marche_surpris": [
-     "naufrages/ondin/ondin_naufrage_avant_marche_surpris_1.svg",
-     "naufrages/ondin/ondin_naufrage_avant_marche_surpris_2.svg",
-     "naufrages/ondin/ondin_naufrage_avant_marche_surpris_3.svg",
-     "naufrages/ondin/ondin_naufrage_avant_marche_surpris_4.svg"
+     "naufrages/ondin/ondin-naufrage_avant_marche_surpris_1.svg",
+     "naufrages/ondin/ondin-naufrage_avant_marche_surpris_2.svg",
+     "naufrages/ondin/ondin-naufrage_avant_marche_surpris_3.svg",
+     "naufrages/ondin/ondin-naufrage_avant_marche_surpris_4.svg"
     ],
     "maitre_avant_marche_surpris": [
      "maitres/ondin/ondin_avant_marche_surpris_1.svg",
@@ -427,10 +428,10 @@
      "maitres/ondin/ondin_avant_marche_surpris_4.svg"
     ],
     "naufrage_avant_marche_content": [
-     "naufrages/ondin/ondin_naufrage_avant_marche_content_1.svg",
-     "naufrages/ondin/ondin_naufrage_avant_marche_content_2.svg",
-     "naufrages/ondin/ondin_naufrage_avant_marche_content_3.svg",
-     "naufrages/ondin/ondin_naufrage_avant_marche_content_4.svg"
+     "naufrages/ondin/ondin-naufrage_avant_marche_content_1.svg",
+     "naufrages/ondin/ondin-naufrage_avant_marche_content_2.svg",
+     "naufrages/ondin/ondin-naufrage_avant_marche_content_3.svg",
+     "naufrages/ondin/ondin-naufrage_avant_marche_content_4.svg"
     ],
     "maitre_avant_marche_content": [
      "maitres/ondin/ondin_avant_marche_content_1.svg",
@@ -439,8 +440,8 @@
      "maitres/ondin/ondin_avant_marche_content_4.svg"
     ],
     "arrivee": [
-     "naufrages/ondin/ondin_arrivee_1.svg",
-     "naufrages/ondin/ondin_arrivee_2.svg"
+     "naufrages/ondin/ondin-naufrage_arrivee_1.svg",
+     "naufrages/ondin/ondin-naufrage_arrivee_2.svg"
     ]
    },
    "dort_du_maitre": [
@@ -453,70 +454,70 @@
    "arrivee": "acte I (La Lisière)",
    "fichiers": {
     "naufrage_face_repos": [
-     "naufrages/sylve/sylve_naufrage_face_repos_1.svg",
-     "naufrages/sylve/sylve_naufrage_face_repos_2.svg"
+     "naufrages/sylve/sylve-naufrage_face_repos_1.svg",
+     "naufrages/sylve/sylve-naufrage_face_repos_2.svg"
     ],
     "naufrage_avant_marche": [
-     "naufrages/sylve/sylve_naufrage_avant_marche_1.svg",
-     "naufrages/sylve/sylve_naufrage_avant_marche_2.svg",
-     "naufrages/sylve/sylve_naufrage_avant_marche_3.svg",
-     "naufrages/sylve/sylve_naufrage_avant_marche_4.svg"
+     "naufrages/sylve/sylve-naufrage_avant_marche_1.svg",
+     "naufrages/sylve/sylve-naufrage_avant_marche_2.svg",
+     "naufrages/sylve/sylve-naufrage_avant_marche_3.svg",
+     "naufrages/sylve/sylve-naufrage_avant_marche_4.svg"
     ],
     "naufrage_dos_marche": [
-     "naufrages/sylve/sylve_naufrage_dos_marche_1.svg",
-     "naufrages/sylve/sylve_naufrage_dos_marche_2.svg",
-     "naufrages/sylve/sylve_naufrage_dos_marche_3.svg",
-     "naufrages/sylve/sylve_naufrage_dos_marche_4.svg"
+     "naufrages/sylve/sylve-naufrage_dos_marche_1.svg",
+     "naufrages/sylve/sylve-naufrage_dos_marche_2.svg",
+     "naufrages/sylve/sylve-naufrage_dos_marche_3.svg",
+     "naufrages/sylve/sylve-naufrage_dos_marche_4.svg"
     ],
     "naufrage_face_salut": [
-     "naufrages/sylve/sylve_naufrage_face_salut_1.svg",
-     "naufrages/sylve/sylve_naufrage_face_salut_2.svg"
+     "naufrages/sylve/sylve-naufrage_face_salut_1.svg",
+     "naufrages/sylve/sylve-naufrage_face_salut_2.svg"
     ],
     "naufrage_face_chant": [
-     "naufrages/sylve/sylve_naufrage_face_chant_1.svg",
-     "naufrages/sylve/sylve_naufrage_face_chant_2.svg"
+     "naufrages/sylve/sylve-naufrage_face_chant_1.svg",
+     "naufrages/sylve/sylve-naufrage_face_chant_2.svg"
     ],
     "naufrage_expr_neutre": [
-     "naufrages/sylve/sylve_naufrage_expr_neutre_1.svg",
-     "naufrages/sylve/sylve_naufrage_expr_neutre_2.svg"
+     "naufrages/sylve/sylve-naufrage_expr_neutre_1.svg",
+     "naufrages/sylve/sylve-naufrage_expr_neutre_2.svg"
     ],
     "naufrage_expr_content": [
-     "naufrages/sylve/sylve_naufrage_expr_content_1.svg",
-     "naufrages/sylve/sylve_naufrage_expr_content_2.svg"
+     "naufrages/sylve/sylve-naufrage_expr_content_1.svg",
+     "naufrages/sylve/sylve-naufrage_expr_content_2.svg"
     ],
     "naufrage_expr_rire": [
-     "naufrages/sylve/sylve_naufrage_expr_rire_1.svg",
-     "naufrages/sylve/sylve_naufrage_expr_rire_2.svg"
+     "naufrages/sylve/sylve-naufrage_expr_rire_1.svg",
+     "naufrages/sylve/sylve-naufrage_expr_rire_2.svg"
     ],
     "naufrage_expr_surpris": [
-     "naufrages/sylve/sylve_naufrage_expr_surpris_1.svg",
-     "naufrages/sylve/sylve_naufrage_expr_surpris_2.svg"
+     "naufrages/sylve/sylve-naufrage_expr_surpris_1.svg",
+     "naufrages/sylve/sylve-naufrage_expr_surpris_2.svg"
     ],
     "naufrage_expr_triste": [
-     "naufrages/sylve/sylve_naufrage_expr_triste_1.svg",
-     "naufrages/sylve/sylve_naufrage_expr_triste_2.svg"
+     "naufrages/sylve/sylve-naufrage_expr_triste_1.svg",
+     "naufrages/sylve/sylve-naufrage_expr_triste_2.svg"
     ],
     "naufrage_expr_fache": [
-     "naufrages/sylve/sylve_naufrage_expr_fache_1.svg",
-     "naufrages/sylve/sylve_naufrage_expr_fache_2.svg"
+     "naufrages/sylve/sylve-naufrage_expr_fache_1.svg",
+     "naufrages/sylve/sylve-naufrage_expr_fache_2.svg"
     ],
     "naufrage_expr_gene": [
-     "naufrages/sylve/sylve_naufrage_expr_gene_1.svg",
-     "naufrages/sylve/sylve_naufrage_expr_gene_2.svg"
+     "naufrages/sylve/sylve-naufrage_expr_gene_1.svg",
+     "naufrages/sylve/sylve-naufrage_expr_gene_2.svg"
     ],
     "naufrage_expr_endormi": [
-     "naufrages/sylve/sylve_naufrage_expr_endormi_1.svg",
-     "naufrages/sylve/sylve_naufrage_expr_endormi_2.svg"
+     "naufrages/sylve/sylve-naufrage_expr_endormi_1.svg",
+     "naufrages/sylve/sylve-naufrage_expr_endormi_2.svg"
     ],
     "naufrage_dort": [
-     "naufrages/sylve/sylve_naufrage_dort_1.svg",
-     "naufrages/sylve/sylve_naufrage_dort_2.svg"
+     "naufrages/sylve/sylve-naufrage_dort_1.svg",
+     "naufrages/sylve/sylve-naufrage_dort_2.svg"
     ],
     "naufrage_avant_marche_fache": [
-     "naufrages/sylve/sylve_naufrage_avant_marche_fache_1.svg",
-     "naufrages/sylve/sylve_naufrage_avant_marche_fache_2.svg",
-     "naufrages/sylve/sylve_naufrage_avant_marche_fache_3.svg",
-     "naufrages/sylve/sylve_naufrage_avant_marche_fache_4.svg"
+     "naufrages/sylve/sylve-naufrage_avant_marche_fache_1.svg",
+     "naufrages/sylve/sylve-naufrage_avant_marche_fache_2.svg",
+     "naufrages/sylve/sylve-naufrage_avant_marche_fache_3.svg",
+     "naufrages/sylve/sylve-naufrage_avant_marche_fache_4.svg"
     ],
     "maitre_avant_marche_fache": [
      "maitres/sylve/sylve_avant_marche_fache_1.svg",
@@ -525,10 +526,10 @@
      "maitres/sylve/sylve_avant_marche_fache_4.svg"
     ],
     "naufrage_avant_marche_gene": [
-     "naufrages/sylve/sylve_naufrage_avant_marche_gene_1.svg",
-     "naufrages/sylve/sylve_naufrage_avant_marche_gene_2.svg",
-     "naufrages/sylve/sylve_naufrage_avant_marche_gene_3.svg",
-     "naufrages/sylve/sylve_naufrage_avant_marche_gene_4.svg"
+     "naufrages/sylve/sylve-naufrage_avant_marche_gene_1.svg",
+     "naufrages/sylve/sylve-naufrage_avant_marche_gene_2.svg",
+     "naufrages/sylve/sylve-naufrage_avant_marche_gene_3.svg",
+     "naufrages/sylve/sylve-naufrage_avant_marche_gene_4.svg"
     ],
     "maitre_avant_marche_gene": [
      "maitres/sylve/sylve_avant_marche_gene_1.svg",
@@ -537,10 +538,10 @@
      "maitres/sylve/sylve_avant_marche_gene_4.svg"
     ],
     "naufrage_avant_marche_content": [
-     "naufrages/sylve/sylve_naufrage_avant_marche_content_1.svg",
-     "naufrages/sylve/sylve_naufrage_avant_marche_content_2.svg",
-     "naufrages/sylve/sylve_naufrage_avant_marche_content_3.svg",
-     "naufrages/sylve/sylve_naufrage_avant_marche_content_4.svg"
+     "naufrages/sylve/sylve-naufrage_avant_marche_content_1.svg",
+     "naufrages/sylve/sylve-naufrage_avant_marche_content_2.svg",
+     "naufrages/sylve/sylve-naufrage_avant_marche_content_3.svg",
+     "naufrages/sylve/sylve-naufrage_avant_marche_content_4.svg"
     ],
     "maitre_avant_marche_content": [
      "maitres/sylve/sylve_avant_marche_content_1.svg",
@@ -559,70 +560,70 @@
    "arrivee": "acte II (La Colline)",
    "fichiers": {
     "naufrage_face_repos": [
-     "naufrages/galet/galet_naufrage_face_repos_1.svg",
-     "naufrages/galet/galet_naufrage_face_repos_2.svg"
+     "naufrages/galet/galet-naufrage_face_repos_1.svg",
+     "naufrages/galet/galet-naufrage_face_repos_2.svg"
     ],
     "naufrage_avant_marche": [
-     "naufrages/galet/galet_naufrage_avant_marche_1.svg",
-     "naufrages/galet/galet_naufrage_avant_marche_2.svg",
-     "naufrages/galet/galet_naufrage_avant_marche_3.svg",
-     "naufrages/galet/galet_naufrage_avant_marche_4.svg"
+     "naufrages/galet/galet-naufrage_avant_marche_1.svg",
+     "naufrages/galet/galet-naufrage_avant_marche_2.svg",
+     "naufrages/galet/galet-naufrage_avant_marche_3.svg",
+     "naufrages/galet/galet-naufrage_avant_marche_4.svg"
     ],
     "naufrage_dos_marche": [
-     "naufrages/galet/galet_naufrage_dos_marche_1.svg",
-     "naufrages/galet/galet_naufrage_dos_marche_2.svg",
-     "naufrages/galet/galet_naufrage_dos_marche_3.svg",
-     "naufrages/galet/galet_naufrage_dos_marche_4.svg"
+     "naufrages/galet/galet-naufrage_dos_marche_1.svg",
+     "naufrages/galet/galet-naufrage_dos_marche_2.svg",
+     "naufrages/galet/galet-naufrage_dos_marche_3.svg",
+     "naufrages/galet/galet-naufrage_dos_marche_4.svg"
     ],
     "naufrage_face_salut": [
-     "naufrages/galet/galet_naufrage_face_salut_1.svg",
-     "naufrages/galet/galet_naufrage_face_salut_2.svg"
+     "naufrages/galet/galet-naufrage_face_salut_1.svg",
+     "naufrages/galet/galet-naufrage_face_salut_2.svg"
     ],
     "naufrage_face_rune": [
-     "naufrages/galet/galet_naufrage_face_rune_1.svg",
-     "naufrages/galet/galet_naufrage_face_rune_2.svg"
+     "naufrages/galet/galet-naufrage_face_rune_1.svg",
+     "naufrages/galet/galet-naufrage_face_rune_2.svg"
     ],
     "naufrage_expr_neutre": [
-     "naufrages/galet/galet_naufrage_expr_neutre_1.svg",
-     "naufrages/galet/galet_naufrage_expr_neutre_2.svg"
+     "naufrages/galet/galet-naufrage_expr_neutre_1.svg",
+     "naufrages/galet/galet-naufrage_expr_neutre_2.svg"
     ],
     "naufrage_expr_content": [
-     "naufrages/galet/galet_naufrage_expr_content_1.svg",
-     "naufrages/galet/galet_naufrage_expr_content_2.svg"
+     "naufrages/galet/galet-naufrage_expr_content_1.svg",
+     "naufrages/galet/galet-naufrage_expr_content_2.svg"
     ],
     "naufrage_expr_rire": [
-     "naufrages/galet/galet_naufrage_expr_rire_1.svg",
-     "naufrages/galet/galet_naufrage_expr_rire_2.svg"
+     "naufrages/galet/galet-naufrage_expr_rire_1.svg",
+     "naufrages/galet/galet-naufrage_expr_rire_2.svg"
     ],
     "naufrage_expr_surpris": [
-     "naufrages/galet/galet_naufrage_expr_surpris_1.svg",
-     "naufrages/galet/galet_naufrage_expr_surpris_2.svg"
+     "naufrages/galet/galet-naufrage_expr_surpris_1.svg",
+     "naufrages/galet/galet-naufrage_expr_surpris_2.svg"
     ],
     "naufrage_expr_triste": [
-     "naufrages/galet/galet_naufrage_expr_triste_1.svg",
-     "naufrages/galet/galet_naufrage_expr_triste_2.svg"
+     "naufrages/galet/galet-naufrage_expr_triste_1.svg",
+     "naufrages/galet/galet-naufrage_expr_triste_2.svg"
     ],
     "naufrage_expr_fache": [
-     "naufrages/galet/galet_naufrage_expr_fache_1.svg",
-     "naufrages/galet/galet_naufrage_expr_fache_2.svg"
+     "naufrages/galet/galet-naufrage_expr_fache_1.svg",
+     "naufrages/galet/galet-naufrage_expr_fache_2.svg"
     ],
     "naufrage_expr_gene": [
-     "naufrages/galet/galet_naufrage_expr_gene_1.svg",
-     "naufrages/galet/galet_naufrage_expr_gene_2.svg"
+     "naufrages/galet/galet-naufrage_expr_gene_1.svg",
+     "naufrages/galet/galet-naufrage_expr_gene_2.svg"
     ],
     "naufrage_expr_endormi": [
-     "naufrages/galet/galet_naufrage_expr_endormi_1.svg",
-     "naufrages/galet/galet_naufrage_expr_endormi_2.svg"
+     "naufrages/galet/galet-naufrage_expr_endormi_1.svg",
+     "naufrages/galet/galet-naufrage_expr_endormi_2.svg"
     ],
     "naufrage_dort": [
-     "naufrages/galet/galet_naufrage_dort_1.svg",
-     "naufrages/galet/galet_naufrage_dort_2.svg"
+     "naufrages/galet/galet-naufrage_dort_1.svg",
+     "naufrages/galet/galet-naufrage_dort_2.svg"
     ],
     "naufrage_avant_marche_fache": [
-     "naufrages/galet/galet_naufrage_avant_marche_fache_1.svg",
-     "naufrages/galet/galet_naufrage_avant_marche_fache_2.svg",
-     "naufrages/galet/galet_naufrage_avant_marche_fache_3.svg",
-     "naufrages/galet/galet_naufrage_avant_marche_fache_4.svg"
+     "naufrages/galet/galet-naufrage_avant_marche_fache_1.svg",
+     "naufrages/galet/galet-naufrage_avant_marche_fache_2.svg",
+     "naufrages/galet/galet-naufrage_avant_marche_fache_3.svg",
+     "naufrages/galet/galet-naufrage_avant_marche_fache_4.svg"
     ],
     "maitre_avant_marche_fache": [
      "maitres/galet/galet_avant_marche_fache_1.svg",
@@ -631,10 +632,10 @@
      "maitres/galet/galet_avant_marche_fache_4.svg"
     ],
     "naufrage_avant_marche_triste": [
-     "naufrages/galet/galet_naufrage_avant_marche_triste_1.svg",
-     "naufrages/galet/galet_naufrage_avant_marche_triste_2.svg",
-     "naufrages/galet/galet_naufrage_avant_marche_triste_3.svg",
-     "naufrages/galet/galet_naufrage_avant_marche_triste_4.svg"
+     "naufrages/galet/galet-naufrage_avant_marche_triste_1.svg",
+     "naufrages/galet/galet-naufrage_avant_marche_triste_2.svg",
+     "naufrages/galet/galet-naufrage_avant_marche_triste_3.svg",
+     "naufrages/galet/galet-naufrage_avant_marche_triste_4.svg"
     ],
     "maitre_avant_marche_triste": [
      "maitres/galet/galet_avant_marche_triste_1.svg",
@@ -643,10 +644,10 @@
      "maitres/galet/galet_avant_marche_triste_4.svg"
     ],
     "naufrage_avant_marche_content": [
-     "naufrages/galet/galet_naufrage_avant_marche_content_1.svg",
-     "naufrages/galet/galet_naufrage_avant_marche_content_2.svg",
-     "naufrages/galet/galet_naufrage_avant_marche_content_3.svg",
-     "naufrages/galet/galet_naufrage_avant_marche_content_4.svg"
+     "naufrages/galet/galet-naufrage_avant_marche_content_1.svg",
+     "naufrages/galet/galet-naufrage_avant_marche_content_2.svg",
+     "naufrages/galet/galet-naufrage_avant_marche_content_3.svg",
+     "naufrages/galet/galet-naufrage_avant_marche_content_4.svg"
     ],
     "maitre_avant_marche_content": [
      "maitres/galet/galet_avant_marche_content_1.svg",
@@ -665,70 +666,70 @@
    "arrivee": "acte III (Les Jardins)",
    "fichiers": {
     "naufrage_face_repos": [
-     "naufrages/melisse/melisse_naufrage_face_repos_1.svg",
-     "naufrages/melisse/melisse_naufrage_face_repos_2.svg"
+     "naufrages/melisse/melisse-naufrage_face_repos_1.svg",
+     "naufrages/melisse/melisse-naufrage_face_repos_2.svg"
     ],
     "naufrage_avant_marche": [
-     "naufrages/melisse/melisse_naufrage_avant_marche_1.svg",
-     "naufrages/melisse/melisse_naufrage_avant_marche_2.svg",
-     "naufrages/melisse/melisse_naufrage_avant_marche_3.svg",
-     "naufrages/melisse/melisse_naufrage_avant_marche_4.svg"
+     "naufrages/melisse/melisse-naufrage_avant_marche_1.svg",
+     "naufrages/melisse/melisse-naufrage_avant_marche_2.svg",
+     "naufrages/melisse/melisse-naufrage_avant_marche_3.svg",
+     "naufrages/melisse/melisse-naufrage_avant_marche_4.svg"
     ],
     "naufrage_dos_marche": [
-     "naufrages/melisse/melisse_naufrage_dos_marche_1.svg",
-     "naufrages/melisse/melisse_naufrage_dos_marche_2.svg",
-     "naufrages/melisse/melisse_naufrage_dos_marche_3.svg",
-     "naufrages/melisse/melisse_naufrage_dos_marche_4.svg"
+     "naufrages/melisse/melisse-naufrage_dos_marche_1.svg",
+     "naufrages/melisse/melisse-naufrage_dos_marche_2.svg",
+     "naufrages/melisse/melisse-naufrage_dos_marche_3.svg",
+     "naufrages/melisse/melisse-naufrage_dos_marche_4.svg"
     ],
     "naufrage_face_salut": [
-     "naufrages/melisse/melisse_naufrage_face_salut_1.svg",
-     "naufrages/melisse/melisse_naufrage_face_salut_2.svg"
+     "naufrages/melisse/melisse-naufrage_face_salut_1.svg",
+     "naufrages/melisse/melisse-naufrage_face_salut_2.svg"
     ],
     "naufrage_face_graines": [
-     "naufrages/melisse/melisse_naufrage_face_graines_1.svg",
-     "naufrages/melisse/melisse_naufrage_face_graines_2.svg"
+     "naufrages/melisse/melisse-naufrage_face_graines_1.svg",
+     "naufrages/melisse/melisse-naufrage_face_graines_2.svg"
     ],
     "naufrage_expr_neutre": [
-     "naufrages/melisse/melisse_naufrage_expr_neutre_1.svg",
-     "naufrages/melisse/melisse_naufrage_expr_neutre_2.svg"
+     "naufrages/melisse/melisse-naufrage_expr_neutre_1.svg",
+     "naufrages/melisse/melisse-naufrage_expr_neutre_2.svg"
     ],
     "naufrage_expr_content": [
-     "naufrages/melisse/melisse_naufrage_expr_content_1.svg",
-     "naufrages/melisse/melisse_naufrage_expr_content_2.svg"
+     "naufrages/melisse/melisse-naufrage_expr_content_1.svg",
+     "naufrages/melisse/melisse-naufrage_expr_content_2.svg"
     ],
     "naufrage_expr_rire": [
-     "naufrages/melisse/melisse_naufrage_expr_rire_1.svg",
-     "naufrages/melisse/melisse_naufrage_expr_rire_2.svg"
+     "naufrages/melisse/melisse-naufrage_expr_rire_1.svg",
+     "naufrages/melisse/melisse-naufrage_expr_rire_2.svg"
     ],
     "naufrage_expr_surpris": [
-     "naufrages/melisse/melisse_naufrage_expr_surpris_1.svg",
-     "naufrages/melisse/melisse_naufrage_expr_surpris_2.svg"
+     "naufrages/melisse/melisse-naufrage_expr_surpris_1.svg",
+     "naufrages/melisse/melisse-naufrage_expr_surpris_2.svg"
     ],
     "naufrage_expr_triste": [
-     "naufrages/melisse/melisse_naufrage_expr_triste_1.svg",
-     "naufrages/melisse/melisse_naufrage_expr_triste_2.svg"
+     "naufrages/melisse/melisse-naufrage_expr_triste_1.svg",
+     "naufrages/melisse/melisse-naufrage_expr_triste_2.svg"
     ],
     "naufrage_expr_fache": [
-     "naufrages/melisse/melisse_naufrage_expr_fache_1.svg",
-     "naufrages/melisse/melisse_naufrage_expr_fache_2.svg"
+     "naufrages/melisse/melisse-naufrage_expr_fache_1.svg",
+     "naufrages/melisse/melisse-naufrage_expr_fache_2.svg"
     ],
     "naufrage_expr_gene": [
-     "naufrages/melisse/melisse_naufrage_expr_gene_1.svg",
-     "naufrages/melisse/melisse_naufrage_expr_gene_2.svg"
+     "naufrages/melisse/melisse-naufrage_expr_gene_1.svg",
+     "naufrages/melisse/melisse-naufrage_expr_gene_2.svg"
     ],
     "naufrage_expr_endormi": [
-     "naufrages/melisse/melisse_naufrage_expr_endormi_1.svg",
-     "naufrages/melisse/melisse_naufrage_expr_endormi_2.svg"
+     "naufrages/melisse/melisse-naufrage_expr_endormi_1.svg",
+     "naufrages/melisse/melisse-naufrage_expr_endormi_2.svg"
     ],
     "naufrage_dort": [
-     "naufrages/melisse/melisse_naufrage_dort_1.svg",
-     "naufrages/melisse/melisse_naufrage_dort_2.svg"
+     "naufrages/melisse/melisse-naufrage_dort_1.svg",
+     "naufrages/melisse/melisse-naufrage_dort_2.svg"
     ],
     "naufrage_avant_marche_content": [
-     "naufrages/melisse/melisse_naufrage_avant_marche_content_1.svg",
-     "naufrages/melisse/melisse_naufrage_avant_marche_content_2.svg",
-     "naufrages/melisse/melisse_naufrage_avant_marche_content_3.svg",
-     "naufrages/melisse/melisse_naufrage_avant_marche_content_4.svg"
+     "naufrages/melisse/melisse-naufrage_avant_marche_content_1.svg",
+     "naufrages/melisse/melisse-naufrage_avant_marche_content_2.svg",
+     "naufrages/melisse/melisse-naufrage_avant_marche_content_3.svg",
+     "naufrages/melisse/melisse-naufrage_avant_marche_content_4.svg"
     ],
     "maitre_avant_marche_content": [
      "maitres/melisse/melisse_avant_marche_content_1.svg",
@@ -737,10 +738,10 @@
      "maitres/melisse/melisse_avant_marche_content_4.svg"
     ],
     "naufrage_avant_marche_rire": [
-     "naufrages/melisse/melisse_naufrage_avant_marche_rire_1.svg",
-     "naufrages/melisse/melisse_naufrage_avant_marche_rire_2.svg",
-     "naufrages/melisse/melisse_naufrage_avant_marche_rire_3.svg",
-     "naufrages/melisse/melisse_naufrage_avant_marche_rire_4.svg"
+     "naufrages/melisse/melisse-naufrage_avant_marche_rire_1.svg",
+     "naufrages/melisse/melisse-naufrage_avant_marche_rire_2.svg",
+     "naufrages/melisse/melisse-naufrage_avant_marche_rire_3.svg",
+     "naufrages/melisse/melisse-naufrage_avant_marche_rire_4.svg"
     ],
     "maitre_avant_marche_rire": [
      "maitres/melisse/melisse_avant_marche_rire_1.svg",
@@ -749,10 +750,10 @@
      "maitres/melisse/melisse_avant_marche_rire_4.svg"
     ],
     "naufrage_avant_marche_triste": [
-     "naufrages/melisse/melisse_naufrage_avant_marche_triste_1.svg",
-     "naufrages/melisse/melisse_naufrage_avant_marche_triste_2.svg",
-     "naufrages/melisse/melisse_naufrage_avant_marche_triste_3.svg",
-     "naufrages/melisse/melisse_naufrage_avant_marche_triste_4.svg"
+     "naufrages/melisse/melisse-naufrage_avant_marche_triste_1.svg",
+     "naufrages/melisse/melisse-naufrage_avant_marche_triste_2.svg",
+     "naufrages/melisse/melisse-naufrage_avant_marche_triste_3.svg",
+     "naufrages/melisse/melisse-naufrage_avant_marche_triste_4.svg"
     ],
     "maitre_avant_marche_triste": [
      "maitres/melisse/melisse_avant_marche_triste_1.svg",
