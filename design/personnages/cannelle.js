@@ -126,5 +126,4 @@ const cannelle = {
     return { expr: 'rire', left, right };
   }
 };
-cannelle.pose = cannelle.pose.bind(cannelle);
 module.exports = cannelle;

@@ -129,7 +129,7 @@ const rivet = {
       mouth: [se ? 20.8 : 24, 27.2], mw: 1.8, mouthC: C.mouth, tongue: C.tongue,
       // au repos : absorbé, un demi-sourire (il pense déjà à autre chose)
       neutral: (mx, my) => `M${r2(mx - 1.3)},${r2(my + 0.6)} L${r2(mx + 0.7)},${r2(my + 0.6)} Q${r2(mx + 1.3)},${r2(my + 0.6)} ${r2(mx + 1.6)},${r2(my + 0.1)}`,
-      cheeks, cheekY: 26.2, temple: [se ? 13 : 13.6, 20.4], anger: [40.6, 7.4], zz: [37, 4.6]
+      cheeks, cheekY: 26.2, temple: [se ? 13 : 13.6, 20.4], anger: [40.6, 7.4], zz: [37, 8.4]
     }, ctx);
     return s;
   },
@@ -155,5 +155,4 @@ const rivet = {
     return { expr: n ? 'rire' : 'neutre', lensDown: true, left, right: '', over: loupe + g + right };
   }
 };
-rivet.pose = rivet.pose.bind(rivet);
 module.exports = rivet;

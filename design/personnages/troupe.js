@@ -16,12 +16,12 @@ const limb = (a, b, w, fill) => L(a, b, OUT, w + W * 2) + L(a, b, fill, w);
 // Découpe : dessine « inner » seulement à l'intérieur de « d »
 const clip = (id, d, inner) => `<clipPath id="${id}"><path d="${d}"/></clipPath><g clip-path="url(#${id})">${inner}</g>`;
 
-const EYE = '#2A2420';
+const EYE_DARK = '#2A2420';
 const WHITE = '#FFFFFF';
 
 // Yeux : grands ovales sombres et reflet. Modes : open, blink (fermés), joy (arcs vers le haut), wink (2e œil fermé),
-// big (surpris : blanc et petite pupille), sad / angry (paupière inclinée), squeeze (> <)
-function eyes(list, mode, ry = 2.35) {
+// big (surpris : blanc et petite pupille), sad / angry (paupière inclinée), sleepy (mi-clos), squeeze (> <)
+function eyes(list, mode, ry = 2.35, EYE = EYE_DARK) {
   const cx = list.reduce((a, e) => a + e[0], 0) / list.length;
   let s = '';
   list.forEach(([x, y, rx], i) => {
@@ -31,7 +31,13 @@ function eyes(list, mode, ry = 2.35) {
     else if (mode === 'wink' && i === 1) s += P(`M${r2(x - 1.6)},${r2(y + 0.2)} L${r2(x + 1.6)},${r2(y + 0.2)}`, 'none', 1);
     else if (mode === 'big') s += E(x, y, rx + 0.25, ry + 0.1, WHITE, 0.8) + E(x, y + 0.2, rx * 0.55, ry * 0.5, EYE, 0) + E(x + 0.35, y - 0.4, 0.3, 0.3, WHITE, 0);
     else if (mode === 'squeeze') s += P(`M${r2(x - k * 1.3)},${r2(y - 1.4)} L${r2(x + k * 1.1)},${y} L${r2(x - k * 1.3)},${r2(y + 1.4)}`, 'none', 1.1);
-    else if (mode === 'sad' || mode === 'angry') {
+    else if (mode === 'sleepy') {
+      // mi-clos : paupière lourde et bombée, on ne voit que le bas de l'œil
+      const top = y + 0.3;
+      s += `<path d="M${r2(x - rx)},${r2(top)} Q${x},${r2(top - 0.9)} ${r2(x + rx)},${r2(top)} A${rx} ${r2(ry * 0.85)} 0 0 1 ${r2(x - rx)},${r2(top)} Z" fill="${EYE}"/>`
+        + E(x + 0.4, top + 0.9, 0.35, 0.35, WHITE, 0)
+        + P(`M${r2(x - rx - 0.5)},${r2(top + 0.3)} Q${x},${r2(top - 1.1)} ${r2(x + rx + 0.5)},${r2(top + 0.3)}`, 'none', 0.9);
+    } else if (mode === 'sad' || mode === 'angry') {
       // demi-œil sous une paupière inclinée (triste : coin extérieur tombant ; fâché : coin intérieur abaissé)
       const [tO, tI] = mode === 'sad' ? [0.9, -0.3] : [-0.3, 1];
       const top = y - 0.6;
@@ -62,7 +68,8 @@ const zee = (x, y, z) => {
 
 // Expression du visage selon ctx.expr. g : géométrie propre au personnage et à la vue
 //   eyes [[x, y, rx], …], ry, brow (couleur), browY, browW, mouth [x, y], mw (demi-largeur du sourire), neutral(mx, my)
-//   (bouche au repos, propre au caractère), mouthC, tongue, cheeks [[x, rx], …], cheekY, temple, anger, zz (où poser les signes)
+//   (bouche au repos, propre au caractère), restEyes (yeux au repos, « open » par défaut), mouthC, tongue,
+//   cheeks [[x, rx], …], cheekY, temple, anger, zz (où poser les signes)
 function expression(g, ctx) {
   const { expr, n } = ctx;
   const [mx, my] = g.mouth;
@@ -74,7 +81,8 @@ function expression(g, ctx) {
     const k = cx > x ? 1 : -1, hw = rx + 0.45, by = y + g.browY;
     s += `<path d="M${r2(x - k * hw)},${r2(by + bo)} Q${r2(x)},${r2(by + (bi + bo) / 2 + arch)} ${r2(x + k * hw)},${r2(by + bi)}" fill="none" stroke="${g.brow}" stroke-width="${g.browW}" stroke-linecap="round"/>`;
   }
-  s += eyes(g.eyes, ctx.eyeMode || EYEMODE[expr] || (ctx.blink ? 'blink' : 'open'), g.ry);
+  const rest = expr === 'neutre' && g.restEyes ? g.restEyes : 'open'; // yeux au repos propres au personnage
+  s += eyes(g.eyes, ctx.eyeMode || EYEMODE[expr] || (ctx.blink ? 'blink' : rest), g.ry, g.eyeColor); // g.eyeColor : facultatif
   // bouche ouverte : contour sombre, langue découpée dedans
   const open = (hw, depth) => {
     const d = `M${r2(mx - hw)},${r2(my - 0.2)} Q${r2(mx)},${r2(my + depth)} ${r2(mx + hw)},${r2(my - 0.2)} Z`;
@@ -119,16 +127,26 @@ function shoe(c, x, y, dir, tilt = 0) {
     + E(x - 1 - toe * 0.4, y + 1.6, 0.9, 0.5, c.shoeH, 0);
   return tilt ? `<g transform="rotate(${tilt} ${r2(x - (dir < 0 ? 3 : -3))} ${r2(y + 4.5)})">${body}</g>` : body;
 }
+// Pied nu : dir -1 pointe à gauche, 0 de face, 1 de dos (talon seul) ; tilt : talon levé
+function bareFoot(c, x, y, dir, tilt = 0) {
+  const toe = dir < 0 ? 1.4 : 0;
+  const d = `M${r2(x - 2.3)},${r2(y)} L${r2(x + 2.3)},${r2(y)} Q${r2(x + 2.9)},${r2(y + 3.4)} ${r2(x + 1.4)},${r2(y + 4.3)} L${r2(x - 1.4 - toe)},${r2(y + 4.3)} Q${r2(x - 3.1 - toe)},${r2(y + 3.8)} ${r2(x - 2.3)},${r2(y)} Z`;
+  let s = P(d, c.skin) + E(x + 1.1, y + 1.4, 0.7, 1.1, c.skinS || c.skin, 0);
+  if (dir <= 0) for (const t of dir < 0 ? [-3, -1.9] : [-1, 0.4]) s += L([x + t, y + 3.5], [x + t, y + 4.1], OUT, 0.45); // orteils
+  return tilt ? `<g transform="rotate(${tilt} ${r2(x - (dir < 0 ? 3 : -3))} ${r2(y + 4.5)})">${s}</g>` : s;
+}
+
 function leg(c, x, y, dir, tilt) {
   const top = c.hip;
   return `<rect x="${r2(x - c.legW / 2)}" y="${top}" width="${c.legW}" height="${r2(y - top + 1.2)}" rx="1.6" fill="${c.leg}" ${st()}/>`
     + `<rect x="${r2(x + c.legW / 2 - 1.6)}" y="${top + 0.6}" width="1.1" height="${r2(y - top - 0.4)}" rx="0.5" fill="${c.legS}"/>`
-    + shoe(c, x, y, dir, tilt);
+    + (c.foot ? c.foot(c, x, y, dir, tilt) : shoe(c, x, y, dir, tilt));
 }
 // Bras : épaule a → main b, avec un coude facultatif (deux segments d'un seul trait, sans couture au coude) ;
 // le revers éventuel est posé juste avant la main
 function arm(c, a, b, elbow) {
   const pts = elbow ? [a, elbow, b] : [a, b];
+  if (c.sleeves || c.bandage) return armOf(c, pts); // naufragés : manche retroussée ou arrachée, bandage
   const d = 'M' + pts.map(p => `${r2(p[0])},${r2(p[1])}`).join(' L');
   const line = (color, w) => `<path d="${d}" fill="none" stroke="${color}" stroke-width="${r2(w)}" stroke-linecap="round" stroke-linejoin="round"/>`;
   let s = line(OUT, c.armW + W * 2) + line(c.sleeve, c.armW);
@@ -138,13 +156,60 @@ function arm(c, a, b, elbow) {
     const at = k => [b[0] - (b[0] - f[0]) * k / len, b[1] - (b[1] - f[1]) * k / len];
     s += limb(at(2.5), at(0.9), c.armW, c.cuff);
   }
-  return s + E(b[0], b[1], 2.1, 2.1, c.skin);
+  return s + E(b[0], b[1], 2.1, 2.1, c.hand || c.skin); // main (c.hand : mains terreuses, gants…)
+}
+
+// Bras d'un naufragé : c.sleeves 'roll' (manche retroussée : bourrelet, avant-bras nu) ou 'torn' (arrachée au coude :
+// bord en dents, avant-bras nu) ; c.bandage 'left' ou 'right' : un bandage de chiffon sur l'avant-bras de ce côté
+// du personnage (de face et de trois quarts, son bras gauche est à droite de l'écran ; de dos, à gauche)
+function armOf(c, pts) {
+  const b = pts[pts.length - 1], f = pts[pts.length - 2];
+  const len = Math.hypot(b[0] - f[0], b[1] - f[1]) || 1;
+  const ux = (b[0] - f[0]) / len, uy = (b[1] - f[1]) / len, nx = -uy, ny = ux;
+  const at = k => [b[0] - ux * k, b[1] - uy * k]; // à k du poignet, vers l'épaule
+  const path = list => 'M' + list.map(p => `${r2(p[0])},${r2(p[1])}`).join(' L');
+  const stroke = (d, color, w) => `<path d="${d}" fill="none" stroke="${color}" stroke-width="${r2(w)}" stroke-linecap="round" stroke-linejoin="round"/>`;
+  const fw = c.armW * 0.8;
+  let s = '';
+  let cut = null;
+  if (c.sleeves) {
+    const k = Math.min(c.sleeveCut || 5, len * 0.62);
+    cut = at(k);
+    const d = path([...pts.slice(0, -1), cut]);
+    s += stroke(d, OUT, c.armW + W * 2) + stroke(d, c.sleeve, c.armW);
+    const fd = path([cut, b]);
+    s += stroke(fd, OUT, fw + W * 2) + stroke(fd, c.skin, fw);
+    const h = c.armW / 2 + 0.5, P2 = (k1, k2) => [cut[0] + nx * k1 + ux * k2, cut[1] + ny * k1 + uy * k2];
+    if (c.sleeves === 'torn') {
+      const zig = [P2(h, -0.5), P2(h * 0.45, 1.5), P2(0, 0.4), P2(-h * 0.5, 1.6), P2(-h, -0.5)];
+      s += `<path d="${path([P2(h, -1.8), ...zig, P2(-h, -1.8)])} Z" fill="${c.sleeve}"/>` + stroke(path(zig), OUT, 0.85);
+    } else {
+      // bourrelet de la manche roulée : une bande fine en travers du bras, un peu plus large que la manche
+      const r = h + 0.3, band = [P2(r, -0.7), P2(r, 0.75), P2(-r, 0.75), P2(-r, -0.7)];
+      s += `<path d="${path(band)} Z" fill="${c.cuff || c.sleeve}" stroke="${OUT}" stroke-width="0.85" stroke-linejoin="round"/>`
+        + L(P2(r * 0.7, -0.1), P2(-r * 0.7, -0.1), 'rgba(255,255,255,.35)', 0.45);
+    }
+  } else {
+    const d = path(pts);
+    s += stroke(d, OUT, c.armW + W * 2) + stroke(d, c.sleeve, c.armW);
+  }
+  if (c.bandage) {
+    const screenLeft = pts[0][0] < 24;
+    const charLeft = c.view === 'ne' ? screenLeft : !screenLeft;
+    if ((c.bandage === 'left') === charLeft) {
+      const w = (cut ? fw : c.armW) + 0.7;
+      s += limb(at(2.2), at(4.4), w, '#F4EEDF');
+      for (const k of [2.9, 3.7]) { const p = at(k); s += L([p[0] + nx * w * 0.48, p[1] + ny * w * 0.48], [p[0] - nx * w * 0.48 + ux * 0.5, p[1] - ny * w * 0.48 + uy * 0.5], '#C9BFA8', 0.45); }
+      const t = at(4); s += L(t, [t[0] + nx * 2.2 - ux * 0.4, t[1] + ny * 2.2 - uy * 0.4], OUT, 1.5) + L(t, [t[0] + nx * 2.2 - ux * 0.4, t[1] + ny * 2.2 - uy * 0.4], '#F4EEDF', 0.7);
+    }
+  }
+  return s + E(b[0], b[1], 2.1, 2.1, c.hand || c.skin);
 }
 
 // Une image d'un personnage
 function frame(c, view, pose, n, expr) {
   const id = `${c.uid}${view}${pose}${n}`;
-  const cc = { ...c, uid: id };
+  const cc = { ...c, uid: id, view };
   const walk = pose === 'marche';
   const ph = walk ? [1, 0, -1, 0][n] : 0; // jambe gauche (à l'écran) en avant : 1 ; croisement : 0
   const bob = walk && n % 2 === 1 ? -1 : 0;
@@ -165,9 +230,12 @@ function frame(c, view, pose, n, expr) {
   const [shL, shR] = c.shoulders;
   const handL = [c.hands[0][0] + swing * 0.9, c.hands[0][1] + swing * 1.4];
   const handR = [c.hands[1][0] - swing * 0.9, c.hands[1][1] - swing * 1.4];
-  const act = pose === 'action' || pose === 'salut' ? c.pose(ctx) : null;
-  const armLeft = act && act.left != null ? act.left : arm(cc, shL, handL);
-  const armRight = act && act.right != null ? act.right : arm(cc, shR, handR);
+  const act = pose === 'action' || pose === 'salut' ? c.pose.call(cc, ctx) : null;
+  // c.restLeft : bras gauche qui ne balance pas (il tient quelque chose contre lui)
+  const armLeft = act && act.left != null ? act.left : c.restLeft ? c.restLeft(cc, ctx) : arm(cc, shL, handL);
+  // objet tenu en main droite : sous le poing, ou par-dessus la tête si c.holdOver (une longue perche)
+  const held = c.hold && !(act && act.right != null) ? c.hold(cc, handR, ctx) : '';
+  const armRight = act && act.right != null ? act.right : (c.holdOver ? '' : held) + arm(cc, shR, handR);
   ctx.expr = expr || (act && act.expr) || (pose === 'salut' ? 'content' : 'neutre');
   ctx.eyeMode = expr ? null : act && act.eyeMode;
   ctx.open = !expr && act && act.open;
@@ -179,7 +247,10 @@ function frame(c, view, pose, n, expr) {
   if (view !== 'front') s += armRight; // bras éloigné (à droite de l'écran), le long du flanc
   s += c.neck ? c.neck(cc, ctx) : '';
   if (view === 'front') s += armLeft + armRight; else s += armLeft;
+  s += c.overArms ? c.overArms(cc, ctx) : ''; // facultatif : ce qui couvre les épaules (voile du naufragé)
   s += c.head(cc, ctx, act || {});
+  s += c.overHead ? c.overHead(cc, ctx) : ''; // facultatif : par-dessus la tête (algues, mèches)
+  s += c.holdOver ? held : '';
   s += act && act.over ? act.over : '';
   return `<g transform="translate(0 ${bob})">${s}</g>`;
 }
@@ -187,4 +258,4 @@ function frame(c, view, pose, n, expr) {
 const svg = (body, scale = 1) => `<svg xmlns="http://www.w3.org/2000/svg" width="${48 * scale}" height="${64 * scale}" viewBox="0 0 48 64">${body}</svg>`;
 const POSES = [['face_repos', 'front', 'repos', 2], ['avant_marche', 'se', 'marche', 4], ['dos_marche', 'ne', 'marche', 4], ['face_salut', 'front', 'salut', 2]];
 
-module.exports = { OUT, W, r2, st, P, E, L, limb, clip, eyes, expression, EXPRS, arm, frame, svg, POSES };
+module.exports = { OUT, W, r2, st, P, E, L, limb, clip, eyes, expression, EXPRS, drop, zee, arm, bareFoot, shoe, frame, svg, POSES };

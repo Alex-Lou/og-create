@@ -12,7 +12,8 @@ Les personnages et leurs fiches sont dans `HISTOIRE.md` (§ 8).
 ## Fichiers
 
 - `troupe.js` : le kit commun (trait, yeux, bras à coude, marche, ombres, expressions).
-- `aster.js`, `cannelle.js`, `rivet.js` : un fichier par personnage (couleurs, pièces, action).
+- `aster.js`, `cannelle.js`, `rivet.js`, `ondin.js`, `sylve.js`, `galet.js`, `melisse.js` : un fichier par personnage
+  (couleurs, pièces, action).
 - `svg/<nom>/` : 30 SVG par personnage (poses, action, et chaque expression en face au repos).
 - `planches/` : planches d'essai (poses, expressions) ; `troupe_apercu.html` : aperçu animé.
 
@@ -24,3 +25,9 @@ node design/personnages/apercu.js
 
 Les planches PNG demandent Playwright (sinon, seuls les SVG et la page animée sont écrits) ;
 `CHROMIUM_PATH` désigne un Chromium précis si besoin.
+
+## Et le reste ?
+
+La bibliothèque complète (naufragés, petit format, vivants, animaux, plantes, décor, camp, ruines, bâtiments, météo)
+est dans `design/bibliotheque/` ; les générateurs qui l'ont produite sont dans `design/atelier/`. Ce kit en est la
+base : l'atelier l'utilise tel quel.

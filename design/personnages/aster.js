@@ -144,5 +144,4 @@ const aster = {
     return { expr: 'neutre', eyeMode: 'wink', left: '', right: hip, over: heldGlass(16.4, 22.8, 4, ext) + near + (ext ? twinkle(2.8, 18.6, 1.9) : '') };
   }
 };
-aster.pose = aster.pose.bind(aster);
 module.exports = aster;

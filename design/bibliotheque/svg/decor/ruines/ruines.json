@@ -1,0 +1,106 @@
+{
+ "_lisez_moi": [
+  "Ce qui reste des Anciens, en iso au trait de la troupe, à l'échelle du jeu × 1,25 (case de 80 × 40). Ancre (0, 0) au centre de l'emprise : ruines sur 2 × 2 cases (BUILDING_BOX), petits objets sur une case (PROP_BOX), phare sur son îlot (cadre propre). Quand un dessin dépasse un peu, le cadre est élargi, l'ancre ne bouge pas : prendre le cadre noté ici.",
+  "Le Cercle de menhirs existe déjà (lib/decor/lieux/menhirs_*). Les runes reprennent sa spirale et sa lueur turquoise.",
+  "etape : quand l'objet apparaît (proposition tirée de HISTOIRE.md)."
+ ],
+ "etapes": {
+  "III": "acte III — Mélisse trouve les premières ruines, Galet lit leurs runes (« Nous aussi, nous étions des naufragés »)",
+  "VI": "acte VI — l'Îlot aux Mouettes et le phare éteint ; la baguette d'Ondin trouve la clé du phare parmi les ruines"
+ },
+ "objets": {
+  "ruine_maison": {
+   "nom": "Maison en ruine des Anciens",
+   "etape": "III",
+   "cadre": [
+    -95,
+    -155,
+    190,
+    210
+   ],
+   "images": 1,
+   "fichiers": [
+    "ruine_maison_1.svg"
+   ]
+  },
+  "colonnade": {
+   "nom": "Colonnade des Anciens",
+   "etape": "III",
+   "cadre": [
+    -95,
+    -155,
+    190,
+    210
+   ],
+   "images": 1,
+   "fichiers": [
+    "colonnade_1.svg"
+   ]
+  },
+  "pierre_runes": {
+   "nom": "Pierre à runes (jour, nuit)",
+   "etape": "III",
+   "cadre": [
+    -50,
+    -115,
+    100,
+    140
+   ],
+   "images": 2,
+   "ms": 1200,
+   "note": "image 1 : le jour (runes gravées) ; image 2 : à la nuit tombée (elles luisent) — à alterner selon l'heure plutôt qu'en boucle",
+   "fichiers": [
+    "pierre_runes_1.svg",
+    "pierre_runes_2.svg"
+   ]
+  },
+  "colonne_brisee": {
+   "nom": "Colonne brisée",
+   "etape": "III",
+   "cadre": [
+    -50,
+    -115,
+    100,
+    140
+   ],
+   "images": 1,
+   "fichiers": [
+    "colonne_brisee_1.svg"
+   ]
+  },
+  "cle_du_phare": {
+   "nom": "La clé du phare sous sa pierre",
+   "etape": "VI",
+   "cadre": [
+    -50,
+    -115,
+    100,
+    140
+   ],
+   "images": 2,
+   "ms": 600,
+   "note": "« J'ai laissé la clé du phare sous une pierre » (bouteille d'Héliane) ; image 2 : la clé brille",
+   "fichiers": [
+    "cle_du_phare_1.svg",
+    "cle_du_phare_2.svg"
+   ]
+  },
+  "phare_eteint": {
+   "nom": "Le phare éteint des Anciens",
+   "etape": "VI",
+   "cadre": [
+    -90,
+    -220,
+    180,
+    260
+   ],
+   "images": 2,
+   "ms": 700,
+   "note": "éteint jusqu'à l'acte VII : le Phare de Brume (Foyer VII, lib/batiments/) prend sa place ; les mouettes volent (2 images)",
+   "fichiers": [
+    "phare_eteint_1.svg",
+    "phare_eteint_2.svg"
+   ]
+  }
+ }
+}

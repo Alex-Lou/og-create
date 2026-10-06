@@ -1,0 +1,781 @@
+{
+ "_lisez_moi": "Calques d'écran : les tuiles se répètent sans couture (background-repeat) et leurs images bouclent ; « étirer » = à poser sur tout l'écran (preserveAspectRatio none). Teintes des moments : en multiplication (mix-blend-mode: multiply) sur toute la scène. Soleil bas : en « screen ». Couleurs et densités du jeu (sky.js, scene.js, climates.js).",
+ "tuiles": {
+  "pluie_jour": {
+   "nom": "Pluie (jour)",
+   "fichiers": [
+    "temps/pluie_jour_1.svg",
+    "temps/pluie_jour_2.svg",
+    "temps/pluie_jour_3.svg",
+    "temps/pluie_jour_4.svg",
+    "temps/pluie_jour_5.svg",
+    "temps/pluie_jour_6.svg",
+    "temps/pluie_jour_7.svg",
+    "temps/pluie_jour_8.svg"
+   ],
+   "tuile": [
+    256,
+    256
+   ],
+   "ms_par_image": 110
+  },
+  "pluie_nuit": {
+   "nom": "Pluie (nuit)",
+   "fichiers": [
+    "temps/pluie_nuit_1.svg",
+    "temps/pluie_nuit_2.svg",
+    "temps/pluie_nuit_3.svg",
+    "temps/pluie_nuit_4.svg",
+    "temps/pluie_nuit_5.svg",
+    "temps/pluie_nuit_6.svg",
+    "temps/pluie_nuit_7.svg",
+    "temps/pluie_nuit_8.svg"
+   ],
+   "tuile": [
+    256,
+    256
+   ],
+   "ms_par_image": 110
+  },
+  "neige": {
+   "nom": "Neige — les Cimes",
+   "fichiers": [
+    "climats/neige_1.svg",
+    "climats/neige_2.svg",
+    "climats/neige_3.svg",
+    "climats/neige_4.svg",
+    "climats/neige_5.svg",
+    "climats/neige_6.svg",
+    "climats/neige_7.svg",
+    "climats/neige_8.svg",
+    "climats/neige_9.svg",
+    "climats/neige_10.svg",
+    "climats/neige_11.svg",
+    "climats/neige_12.svg",
+    "climats/neige_13.svg",
+    "climats/neige_14.svg",
+    "climats/neige_15.svg",
+    "climats/neige_16.svg"
+   ],
+   "tuile": [
+    256,
+    256
+   ],
+   "ms_par_image": 200
+  },
+  "rafales": {
+   "nom": "Rafales — les Landes",
+   "fichiers": [
+    "climats/rafales_1.svg",
+    "climats/rafales_2.svg",
+    "climats/rafales_3.svg",
+    "climats/rafales_4.svg",
+    "climats/rafales_5.svg",
+    "climats/rafales_6.svg",
+    "climats/rafales_7.svg",
+    "climats/rafales_8.svg"
+   ],
+   "tuile": [
+    256,
+    256
+   ],
+   "ms_par_image": 100
+  },
+  "brume": {
+   "nom": "Brume du matin",
+   "fichiers": [
+    "temps/brume_1.svg",
+    "temps/brume_2.svg",
+    "temps/brume_3.svg",
+    "temps/brume_4.svg",
+    "temps/brume_5.svg",
+    "temps/brume_6.svg",
+    "temps/brume_7.svg",
+    "temps/brume_8.svg",
+    "temps/brume_9.svg",
+    "temps/brume_10.svg",
+    "temps/brume_11.svg",
+    "temps/brume_12.svg"
+   ],
+   "tuile": [
+    512,
+    256
+   ],
+   "ms_par_image": 500
+  },
+  "brume_marais": {
+   "nom": "Brume tiède — le Marais",
+   "fichiers": [
+    "climats/brume_marais_1.svg",
+    "climats/brume_marais_2.svg",
+    "climats/brume_marais_3.svg",
+    "climats/brume_marais_4.svg",
+    "climats/brume_marais_5.svg",
+    "climats/brume_marais_6.svg",
+    "climats/brume_marais_7.svg",
+    "climats/brume_marais_8.svg",
+    "climats/brume_marais_9.svg",
+    "climats/brume_marais_10.svg",
+    "climats/brume_marais_11.svg",
+    "climats/brume_marais_12.svg"
+   ],
+   "tuile": [
+    512,
+    256
+   ],
+   "ms_par_image": 500
+  },
+  "chaleur": {
+   "nom": "Ondes de chaleur — les Dunes",
+   "fichiers": [
+    "climats/chaleur_1.svg",
+    "climats/chaleur_2.svg",
+    "climats/chaleur_3.svg",
+    "climats/chaleur_4.svg",
+    "climats/chaleur_5.svg",
+    "climats/chaleur_6.svg"
+   ],
+   "tuile": [
+    256,
+    256
+   ],
+   "ms_par_image": 160
+  },
+  "averse": {
+   "nom": "Averse tropicale — la Jungle",
+   "fichiers": [
+    "climats/averse_1.svg",
+    "climats/averse_2.svg",
+    "climats/averse_3.svg",
+    "climats/averse_4.svg",
+    "climats/averse_5.svg",
+    "climats/averse_6.svg",
+    "climats/averse_7.svg",
+    "climats/averse_8.svg"
+   ],
+   "tuile": [
+    256,
+    256
+   ],
+   "ms_par_image": 100
+  },
+  "cendres": {
+   "nom": "Cendres et braises — le Volcan",
+   "fichiers": [
+    "climats/cendres_1.svg",
+    "climats/cendres_2.svg",
+    "climats/cendres_3.svg",
+    "climats/cendres_4.svg",
+    "climats/cendres_5.svg",
+    "climats/cendres_6.svg",
+    "climats/cendres_7.svg",
+    "climats/cendres_8.svg",
+    "climats/cendres_9.svg",
+    "climats/cendres_10.svg",
+    "climats/cendres_11.svg",
+    "climats/cendres_12.svg",
+    "climats/cendres_13.svg",
+    "climats/cendres_14.svg",
+    "climats/cendres_15.svg",
+    "climats/cendres_16.svg"
+   ],
+   "tuile": [
+    256,
+    256
+   ],
+   "ms_par_image": 200
+  },
+  "etoiles": {
+   "nom": "Étoiles dans la mer (nuit)",
+   "fichiers": [
+    "ciel/etoiles_1.svg",
+    "ciel/etoiles_2.svg",
+    "ciel/etoiles_3.svg",
+    "ciel/etoiles_4.svg"
+   ],
+   "tuile": [
+    256,
+    256
+   ],
+   "ms_par_image": 400
+  }
+ },
+ "sprites": {
+  "nuage1_jour": {
+   "nom": "Nuage 1 — jour",
+   "fichiers": [
+    "nuages/nuage1_jour.svg"
+   ],
+   "cadre": [
+    -80,
+    -38,
+    160,
+    66
+   ],
+   "ancre": "centre (0, 0)"
+  },
+  "nuage1_dore": {
+   "nom": "Nuage 1 — doré",
+   "fichiers": [
+    "nuages/nuage1_dore.svg"
+   ],
+   "cadre": [
+    -80,
+    -38,
+    160,
+    66
+   ],
+   "ancre": "centre (0, 0)"
+  },
+  "nuage1_nuit": {
+   "nom": "Nuage 1 — nuit",
+   "fichiers": [
+    "nuages/nuage1_nuit.svg"
+   ],
+   "cadre": [
+    -80,
+    -38,
+    160,
+    66
+   ],
+   "ancre": "centre (0, 0)"
+  },
+  "nuage1_pluie": {
+   "nom": "Nuage 1 — pluie",
+   "fichiers": [
+    "nuages/nuage1_pluie.svg"
+   ],
+   "cadre": [
+    -80,
+    -38,
+    160,
+    66
+   ],
+   "ancre": "centre (0, 0)"
+  },
+  "nuage2_jour": {
+   "nom": "Nuage 2 — jour",
+   "fichiers": [
+    "nuages/nuage2_jour.svg"
+   ],
+   "cadre": [
+    -80,
+    -38,
+    160,
+    66
+   ],
+   "ancre": "centre (0, 0)"
+  },
+  "nuage2_dore": {
+   "nom": "Nuage 2 — doré",
+   "fichiers": [
+    "nuages/nuage2_dore.svg"
+   ],
+   "cadre": [
+    -80,
+    -38,
+    160,
+    66
+   ],
+   "ancre": "centre (0, 0)"
+  },
+  "nuage2_nuit": {
+   "nom": "Nuage 2 — nuit",
+   "fichiers": [
+    "nuages/nuage2_nuit.svg"
+   ],
+   "cadre": [
+    -80,
+    -38,
+    160,
+    66
+   ],
+   "ancre": "centre (0, 0)"
+  },
+  "nuage2_pluie": {
+   "nom": "Nuage 2 — pluie",
+   "fichiers": [
+    "nuages/nuage2_pluie.svg"
+   ],
+   "cadre": [
+    -80,
+    -38,
+    160,
+    66
+   ],
+   "ancre": "centre (0, 0)"
+  },
+  "nuage3_jour": {
+   "nom": "Nuage 3 — jour",
+   "fichiers": [
+    "nuages/nuage3_jour.svg"
+   ],
+   "cadre": [
+    -80,
+    -38,
+    160,
+    66
+   ],
+   "ancre": "centre (0, 0)"
+  },
+  "nuage3_dore": {
+   "nom": "Nuage 3 — doré",
+   "fichiers": [
+    "nuages/nuage3_dore.svg"
+   ],
+   "cadre": [
+    -80,
+    -38,
+    160,
+    66
+   ],
+   "ancre": "centre (0, 0)"
+  },
+  "nuage3_nuit": {
+   "nom": "Nuage 3 — nuit",
+   "fichiers": [
+    "nuages/nuage3_nuit.svg"
+   ],
+   "cadre": [
+    -80,
+    -38,
+    160,
+    66
+   ],
+   "ancre": "centre (0, 0)"
+  },
+  "nuage3_pluie": {
+   "nom": "Nuage 3 — pluie",
+   "fichiers": [
+    "nuages/nuage3_pluie.svg"
+   ],
+   "cadre": [
+    -80,
+    -38,
+    160,
+    66
+   ],
+   "ancre": "centre (0, 0)"
+  },
+  "ombre_nuage": {
+   "nom": "Ombre de nuage",
+   "fichiers": [
+    "nuages/ombre_nuage.svg"
+   ],
+   "cadre": [
+    -80,
+    -38,
+    160,
+    66
+   ],
+   "ancre": "centre (0, 0)"
+  },
+  "arc_en_ciel": {
+   "nom": "Arc-en-ciel",
+   "fichiers": [
+    "ciel/arc_en_ciel.svg"
+   ],
+   "cadre": [
+    -200,
+    -205,
+    400,
+    210
+   ],
+   "ancre": "centre (0, 0)"
+  },
+  "eclair": {
+   "nom": "Éclair",
+   "fichiers": [
+    "ciel/eclair_1.svg",
+    "ciel/eclair_2.svg"
+   ],
+   "cadre": [
+    -50,
+    -120,
+    100,
+    130
+   ],
+   "ancre": "centre (0, 0)",
+   "ms_par_image": 300
+  },
+  "flash": {
+   "nom": "Flash d'orage (écran)",
+   "fichiers": [
+    "ciel/flash.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    640,
+    360
+   ],
+   "etirer": true
+  },
+  "soleil_bas_matin": {
+   "nom": "Soleil bas du matin (écran, screen)",
+   "fichiers": [
+    "ciel/soleil_bas_matin.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    640,
+    360
+   ],
+   "etirer": true
+  },
+  "soleil_bas_soir": {
+   "nom": "Soleil bas du soir (écran, screen)",
+   "fichiers": [
+    "ciel/soleil_bas_soir.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    640,
+    360
+   ],
+   "etirer": true
+  },
+  "luciole": {
+   "nom": "Luciole",
+   "fichiers": [
+    "lumieres/luciole_1.svg",
+    "lumieres/luciole_2.svg",
+    "lumieres/luciole_3.svg",
+    "lumieres/luciole_4.svg"
+   ],
+   "cadre": [
+    -12,
+    -12,
+    24,
+    24
+   ],
+   "ancre": "centre (0, 0)",
+   "ms_par_image": 180
+  },
+  "halo_chaud": {
+   "nom": "Halo chaud (fenêtres, feux)",
+   "fichiers": [
+    "lumieres/halo_chaud.svg"
+   ],
+   "cadre": [
+    -60,
+    -60,
+    120,
+    120
+   ],
+   "ancre": "centre (0, 0)"
+  }
+ },
+ "moments": {
+  "nuit": {
+   "nom": "Nuit",
+   "quand": "au lever − 2 h, et au coucher + 1 h 36",
+   "teinte": "#5A68A6",
+   "mer": [
+    "#1D3557",
+    "#13263F"
+   ],
+   "nuit": 1,
+   "chaleur": 0,
+   "fichiers": [
+    "moments/teinte_nuit.svg",
+    "moments/mer_nuit.svg"
+   ]
+  },
+  "aube_1": {
+   "nom": "Aube (tôt)",
+   "quand": "au lever − 48 min",
+   "teinte": "#6E7CB6",
+   "mer": [
+    "#2E4A78",
+    "#1B3354"
+   ],
+   "nuit": 0.8,
+   "chaleur": 0.1,
+   "fichiers": [
+    "moments/teinte_aube_1.svg",
+    "moments/mer_aube_1.svg"
+   ]
+  },
+  "aube_2": {
+   "nom": "Aube",
+   "quand": "au lever − 12 min",
+   "teinte": "#D0A9B4",
+   "mer": [
+    "#9FA8CC",
+    "#4C6E96"
+   ],
+   "nuit": 0.3,
+   "chaleur": 0.6,
+   "fichiers": [
+    "moments/teinte_aube_2.svg",
+    "moments/mer_aube_2.svg"
+   ]
+  },
+  "matin_1": {
+   "nom": "Matin doré",
+   "quand": "au lever + 27 min",
+   "teinte": "#FFDCA6",
+   "mer": [
+    "#F2CFA0",
+    "#4F8FBF"
+   ],
+   "nuit": 0,
+   "chaleur": 1,
+   "fichiers": [
+    "moments/teinte_matin_1.svg",
+    "moments/mer_matin_1.svg"
+   ]
+  },
+  "matin_2": {
+   "nom": "Matin",
+   "quand": "au lever + 2 h 12",
+   "teinte": "#FFF5E4",
+   "mer": [
+    "#7CC4E6",
+    "#3E8DBF"
+   ],
+   "nuit": 0,
+   "chaleur": 0.15,
+   "fichiers": [
+    "moments/teinte_matin_2.svg",
+    "moments/mer_matin_2.svg"
+   ]
+  },
+  "midi": {
+   "nom": "Midi",
+   "quand": "midi solaire",
+   "teinte": "#FFFFFF",
+   "mer": [
+    "#6CC0E6",
+    "#3E8DBF"
+   ],
+   "nuit": 0,
+   "chaleur": 0,
+   "fichiers": [
+    "moments/teinte_midi.svg",
+    "moments/mer_midi.svg"
+   ]
+  },
+  "apres_midi_1": {
+   "nom": "Après-midi",
+   "quand": "au coucher − 3 h",
+   "teinte": "#FFF7EA",
+   "mer": [
+    "#72C2E4",
+    "#3E8BBC"
+   ],
+   "nuit": 0,
+   "chaleur": 0.1,
+   "fichiers": [
+    "moments/teinte_apres_midi_1.svg",
+    "moments/mer_apres_midi_1.svg"
+   ]
+  },
+  "apres_midi_2": {
+   "nom": "Fin d'après-midi",
+   "quand": "au coucher − 1 h 12",
+   "teinte": "#FFE3B2",
+   "mer": [
+    "#90C6DE",
+    "#3E86B8"
+   ],
+   "nuit": 0,
+   "chaleur": 0.5,
+   "fichiers": [
+    "moments/teinte_apres_midi_2.svg",
+    "moments/mer_apres_midi_2.svg"
+   ]
+  },
+  "couchant": {
+   "nom": "Couchant",
+   "quand": "au coucher − 9 min",
+   "teinte": "#FFBA88",
+   "mer": [
+    "#F2AA82",
+    "#3C6F9E"
+   ],
+   "nuit": 0.05,
+   "chaleur": 1,
+   "fichiers": [
+    "moments/teinte_couchant.svg",
+    "moments/mer_couchant.svg"
+   ]
+  },
+  "crepuscule_1": {
+   "nom": "Crépuscule rosé",
+   "quand": "au coucher + 24 min",
+   "teinte": "#EEA4C0",
+   "mer": [
+    "#C88AB0",
+    "#2F5684"
+   ],
+   "nuit": 0.3,
+   "chaleur": 0.8,
+   "fichiers": [
+    "moments/teinte_crepuscule_1.svg",
+    "moments/mer_crepuscule_1.svg"
+   ]
+  },
+  "crepuscule_2": {
+   "nom": "Crépuscule",
+   "quand": "au coucher + 57 min",
+   "teinte": "#8C80C4",
+   "mer": [
+    "#4A4E8E",
+    "#22355C"
+   ],
+   "nuit": 0.7,
+   "chaleur": 0.3,
+   "fichiers": [
+    "moments/teinte_crepuscule_2.svg",
+    "moments/mer_crepuscule_2.svg"
+   ]
+  }
+ },
+ "temps": {
+  "clair": {
+   "nom": "Ciel clair",
+   "couverture": 0,
+   "pluie": 0,
+   "orage": 0,
+   "brume": 0,
+   "calques": [
+    "ciel/soleil_bas_matin ou soleil_bas_soir quand le soleil est bas",
+    "nuages/nuage*_jour (5 nuages)"
+   ]
+  },
+  "voile": {
+   "nom": "Ciel voilé",
+   "couverture": 0.72,
+   "pluie": 0,
+   "orage": 0,
+   "brume": 0,
+   "calques": [
+    "nuages : jusqu'à 9 nuages",
+    "la teinte du moment grisaille (≈ 58 % vers un gris)"
+   ]
+  },
+  "brume": {
+   "nom": "Brume",
+   "couverture": 0.35,
+   "pluie": 0,
+   "orage": 0,
+   "brume": 1,
+   "calques": [
+    "temps/brume_* (le matin seulement)",
+    "nuages : 7"
+   ]
+  },
+  "pluie": {
+   "nom": "Pluie",
+   "couverture": 0.92,
+   "pluie": 1,
+   "orage": 0,
+   "brume": 0.25,
+   "calques": [
+    "temps/pluie_jour_* ou pluie_nuit_*",
+    "temps/brume_* à 25 %",
+    "nuages/nuage*_pluie (10)",
+    "ciel/arc_en_ciel juste après"
+   ]
+  },
+  "orage": {
+   "nom": "Orage",
+   "couverture": 1,
+   "pluie": 1,
+   "orage": 1,
+   "brume": 0,
+   "calques": [
+    "temps/pluie_*",
+    "ciel/flash selon la courbe ci-dessous",
+    "ciel/eclair (facultatif : le jeu ne montre que le flash)",
+    "nuages/nuage*_pluie (11)"
+   ]
+  },
+  "flash_orage": {
+   "periode_s": 9.7,
+   "chance": 0.65,
+   "courbe": "opacité 1 → 0 en 0,12 s, rien jusqu'à 0,22 s, puis 0,7 → 0 jusqu'à 0,45 s (× 0,42)"
+  }
+ },
+ "climats": {
+  "cimes": {
+   "nom": "Les Cimes",
+   "teinte": "rgba(200,222,255,.16)",
+   "air": "climats/neige_*",
+   "fichiers": [
+    "climats/teinte_cimes.svg"
+   ]
+  },
+  "landes": {
+   "nom": "Les Landes",
+   "teinte": "rgba(170,160,190,.12)",
+   "air": "climats/rafales_*",
+   "fichiers": [
+    "climats/teinte_landes.svg"
+   ]
+  },
+  "marais": {
+   "nom": "Le Marais",
+   "teinte": "rgba(150,175,140,.16)",
+   "air": "climats/brume_marais_*",
+   "fichiers": [
+    "climats/teinte_marais.svg"
+   ]
+  },
+  "dunes": {
+   "nom": "Les Dunes",
+   "teinte": "rgba(255,210,140,.15)",
+   "air": "climats/chaleur_*",
+   "fichiers": [
+    "climats/teinte_dunes.svg"
+   ]
+  },
+  "jungle": {
+   "nom": "La Jungle",
+   "teinte": "rgba(90,160,110,.14)",
+   "air": "climats/averse_*",
+   "fichiers": [
+    "climats/teinte_jungle.svg"
+   ]
+  },
+  "volcan": {
+   "nom": "Le Volcan",
+   "teinte": "rgba(120,60,50,.2)",
+   "air": "climats/cendres_*",
+   "fichiers": [
+    "climats/teinte_volcan.svg"
+   ]
+  }
+ },
+ "icones": {
+  "temps": [
+   "icones/temps/clair.svg",
+   "icones/temps/voile.svg",
+   "icones/temps/brume.svg",
+   "icones/temps/pluie.svg",
+   "icones/temps/orage.svg",
+   "icones/temps/arc_en_ciel.svg"
+  ],
+  "moments": [
+   "icones/moments/nuit.svg",
+   "icones/moments/aube.svg",
+   "icones/moments/matin.svg",
+   "icones/moments/midi.svg",
+   "icones/moments/apres_midi.svg",
+   "icones/moments/couchant.svg",
+   "icones/moments/crepuscule.svg"
+  ],
+  "climats": [
+   "icones/climats/cimes.svg",
+   "icones/climats/landes.svg",
+   "icones/climats/marais.svg",
+   "icones/climats/dunes.svg",
+   "icones/climats/jungle.svg",
+   "icones/climats/volcan.svg"
+  ]
+ }
+}

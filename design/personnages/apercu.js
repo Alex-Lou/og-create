@@ -5,9 +5,11 @@ const fs = require('fs');
 const path = require('path');
 const { frame, svg, POSES, EXPRS } = require('./troupe');
 
-const CAST = [require('./aster'), require('./cannelle'), require('./rivet')];
+const CAST = [require('./aster'), require('./cannelle'), require('./rivet'), require('./ondin'), require('./sylve'), require('./galet'), require('./melisse')];
 const LABEL = { face_repos: 'Face · repos', avant_marche: 'Trois quarts avant · marche', dos_marche: 'Trois quarts dos · marche', face_salut: 'Face · salut',
-  avant_longuevue: 'Action · longue-vue', face_louche: 'Action · louche brandie', face_loupe: 'Action · loupe et rouage' };
+  avant_longuevue: 'Action · longue-vue', face_louche: 'Action · louche brandie', face_loupe: 'Action · loupe et rouage', face_baguette: 'Action · baguette de sourcier', face_chant: 'Action · chant aux graines', face_rune: 'Action · rune gravée', face_graines: 'Action · boîte à graines' };
+// identifiant de fichier sans accent (Mélisse → melisse)
+const slug = name => name.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase();
 const XLABEL = { neutre: 'Neutre', content: 'Content', rire: 'Rire', surpris: 'Surpris', triste: 'Triste', fache: 'Fâché', gene: 'Gêné', endormi: 'Endormi' };
 const css = `body{margin:0;font-family:system-ui,sans-serif;background:#F4EEDF;color:#3C2819}
 h1{font-size:20px;margin:16px 20px 4px}h2{font-size:17px;margin:18px 20px 6px}p{margin:0 20px 12px;font-size:13px}
@@ -20,13 +22,13 @@ const unique = body => { const t = `_${uniq++}`; return body.replace(/id="([^"]+
 const all = {};
 for (const c of CAST) {
   const poses = [...POSES, [c.action[0], c.action[1], 'action', 2]];
-  const dir = path.join(__dirname, 'svg', c.name.toLowerCase());
+  const dir = path.join(__dirname, 'svg', slug(c.name));
   fs.mkdirSync(dir, { recursive: true });
   all[c.name] = poses.map(([name, view, pose, count]) => {
     const frames = [];
     for (let n = 0; n < count; n++) {
       const body = frame(c, view, pose, n);
-      fs.writeFileSync(path.join(dir, `${c.name.toLowerCase()}_${name}_${n + 1}.svg`), svg(body) + '\n');
+      fs.writeFileSync(path.join(dir, `${slug(c.name)}_${name}_${n + 1}.svg`), svg(body) + '\n');
       frames.push(body);
     }
     return { name, view, pose, frames };
@@ -36,17 +38,17 @@ for (const c of CAST) {
 // expressions : face au repos (2 images, un SVG chacune) et trois quarts avant pour la planche
 const exprs = {};
 for (const c of CAST) {
-  const dir = path.join(__dirname, 'svg', c.name.toLowerCase());
+  const dir = path.join(__dirname, 'svg', slug(c.name));
   exprs[c.name] = EXPRS.map(x => {
     const front = [0, 1].map(n => frame(c, 'front', 'repos', n, x));
-    front.forEach((b, n) => fs.writeFileSync(path.join(dir, `${c.name.toLowerCase()}_expr_${x}_${n + 1}.svg`), svg(b) + '\n'));
+    front.forEach((b, n) => fs.writeFileSync(path.join(dir, `${slug(c.name)}_expr_${x}_${n + 1}.svg`), svg(b) + '\n'));
     return { x, front, se: frame(c, 'se', 'repos', 0, x) };
   });
 }
 const exprSheets = CAST.map(c => {
   const cells = exprs[c.name].map(e => `<div class="row" style="display:inline-flex;margin:0 0 14px 20px"><b style="width:70px">${XLABEL[e.x]}</b>`
     + [...e.front, e.se].map((b, i) => `<div class="cell">${svg(unique(b), 4)}<div>${i < 2 ? 'face ' + (i + 1) : 'trois quarts'}</div></div>`).join('') + '</div>').join('');
-  return [`expressions_${c.name.toLowerCase()}`, `<!doctype html><meta charset="utf-8"><style>${css}</style><h1>${c.name} — expressions</h1><p>Face au repos (2 images) et trois quarts avant. Chaque expression se combine avec n'importe quelle pose.</p>${cells}`];
+  return [`expressions_${slug(c.name)}`, `<!doctype html><meta charset="utf-8"><style>${css}</style><h1>${c.name} — expressions</h1><p>Face au repos (2 images) et trois quarts avant. Chaque expression se combine avec n'importe quelle pose.</p>${cells}`];
 });
 
 // planches
@@ -100,7 +102,7 @@ fs.mkdirSync(out, { recursive: true });
   const p = await b.newPage({ viewport: { width: 1060, height: 900 }, deviceScaleFactor: 1 });
   for (const [name, html] of sheets) {
     await p.setContent(html);
-    await p.screenshot({ path: path.join(out, `planche_${name.toLowerCase()}.png`), fullPage: true });
+    await p.screenshot({ path: path.join(out, `planche_${slug(name)}.png`), fullPage: true });
   }
   await p.setViewportSize({ width: 1440, height: 900 });
   for (const [name, html] of exprSheets) {

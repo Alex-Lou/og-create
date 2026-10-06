@@ -1,0 +1,173 @@
+// Gisements des trouvailles de climat (lot 9d) : six dessins, chacun prêt (plein, animé) ou ramassé (il repousse) —
+// cristaux de glace, moutons à tondre (tondus : ils broutent), roseaux, croûte de sel, arbre à fruits, éclats
+// d'obsidienne. Repère et calques : ceux des créations d'île (craftSprites.js), case u, v ∈ [-0,5 ; 0,5].
+import { boulder, sprite, EDGE } from './iso.js';
+import { WOOD_DARK } from './palette.js';
+import { tools, ln, poly, ell, dot, wave, star, OUT, f2 } from './shopSprites.js';
+
+const TAU = Math.PI * 2;
+const ICE = { top: '#E9F8FF', left: '#BFE7F7', right: '#8CCBE8' };
+const OBSIDIAN = { top: '#4A4258', left: '#2C2A34', right: '#1C1A22' };
+
+// Étincelle qui scintille une fois par boucle (k : décalage)
+function twinkle(x, y, r, fr, n, k) {
+  const o = Math.max(0, Math.sin((fr / n) * TAU + k));
+  return o > 0.1 ? star(x, y, r * (0.55 + 0.45 * o), '#FFFFFF', o) : '';
+}
+// Aiguille de cristal (en pixels) : deux facettes, un reflet ; colors = { left, right }
+function spire(x, y, h, w, colors, lean = 0) {
+  return poly([[x - w, y], [x, y + w * 0.45], [x + lean, y - h]], colors.left, EDGE) + poly([[x, y + w * 0.45], [x + w, y], [x + lean, y - h]], colors.right, EDGE)
+    + ln([x - w * 0.45 + lean * 0.2, y - h * 0.15], [x - w * 0.15 + lean * 0.7, y - h * 0.75], 'rgba(255,255,255,.75)', 0.8);
+}
+// Mouton vu de trois quarts (en pixels) : laineux ou tondu ; head : tête levée (0) ou qui broute (1)
+function sheep(x, y, woolly, head = 0, flip = false) {
+  const s = flip ? -1 : 1;
+  const body = woolly ? '#F7F2E6' : '#E8D9CC';
+  const bump = woolly ? [-5, -1, 3].map(dx => dot(x + s * dx, y - 9, 3.6, body)).join('') : '';
+  const hx = x + s * 8, hy = y - 8 + head * 4;
+  return ell(x, y + 0.5, 8, 2.2, 'rgba(40,55,20,.22)')
+    + [-4, -1.5, 2, 4.5].map(dx => ln([x + s * dx, y - 3], [x + s * dx, y], '#4A3E36', 1.2)).join('')
+    + ell(x, y - 6, woolly ? 8 : 6.4, woolly ? 5 : 3.8, body, ` stroke="${OUT}" stroke-width="0.5"`) + bump
+    + ell(hx, hy, 2.6, 2, '#3D342E') + ell(hx - s * 1.6, hy - 1.6, 1.4, 0.8, '#3D342E') + dot(hx + s * 0.8, hy - 0.6, 0.45, '#F4ECDC');
+}
+// Massette (en pixels) : tige qui plie de sway, épi brun en haut
+function cattail(x, y, h, sway, head = true) {
+  const tx = x + sway, ty = y - h;
+  return `<path d="M${f2(x)},${f2(y)} q${f2(sway * 0.3)},${f2(-h * 0.5)} ${f2(sway)},${f2(-h)}" stroke="#5F8F3C" stroke-width="1.3" fill="none"/>`
+    + (head ? ell(tx, ty + 2.5, 1.6, 3.6, '#8A5A2E', ` stroke="#4A2E14" stroke-width="0.5"`) : '');
+}
+
+// Cristaux de glace : une touffe d'aiguilles bleues qui scintillent ; ramassés, des moignons
+const glace = {
+  ready: {
+    frame: [-30, -46, 60, 56], n: 8, fps: 3,
+    draw: (T, fr, n) => {
+      const [x, y] = T.p(0, 0, 0);
+      return T.shadow(0, 0, 0.3, 0.14) + ell(x, y + 1, 18, 7, 'rgba(255,255,255,.7)')
+        + spire(x - 9, y - 1, 20, 5, ICE, -2) + spire(x + 8, y, 24, 5.5, ICE, 2) + spire(x - 1, y + 3, 34, 6.5, ICE) + spire(x + 3, y + 6, 16, 4.5, ICE, 1)
+        + twinkle(x - 1, y - 30, 3, fr, n, 0) + twinkle(x + 9, y - 20, 2.4, fr, n, 2.2) + twinkle(x - 9, y - 16, 2.2, fr, n, 4.1);
+    }
+  },
+  spent: {
+    frame: [-24, -16, 48, 26],
+    draw: T => {
+      const [x, y] = T.p(0, 0, 0);
+      return ell(x, y + 1, 14, 5, 'rgba(255,255,255,.6)') + spire(x - 6, y, 5, 4, ICE) + spire(x + 5, y + 1, 6, 4, ICE) + spire(x, y + 3, 4, 3.5, ICE);
+    }
+  }
+};
+
+// Moutons à tondre : deux moutons laineux qui broutent ; tondus, ils attendent que leur laine repousse
+const laine = {
+  ready: {
+    frame: [-30, -26, 60, 34], n: 8, fps: 2,
+    draw: (T, fr) => {
+      const [x, y] = T.p(0, 0, 0);
+      return sheep(x - 8, y - 2, true, fr % 4 < 2 ? 1 : 0) + sheep(x + 9, y + 4, true, fr % 4 >= 2 ? 1 : 0, true);
+    }
+  },
+  spent: {
+    frame: [-30, -24, 60, 32],
+    draw: T => {
+      const [x, y] = T.p(0, 0, 0);
+      return sheep(x - 8, y - 2, false, 1) + sheep(x + 9, y + 4, false, 0, true);
+    }
+  }
+};
+
+// Roseaux : une touffe de massettes qui ondulent ; coupés, des tiges courtes
+const roseau = {
+  ready: {
+    frame: [-24, -44, 48, 52], n: 8, fps: 3,
+    draw: (T, fr, n) => {
+      const [x, y] = T.p(0, 0, 0);
+      let out = ell(x, y + 1, 14, 4.5, 'rgba(60,90,50,.3)');
+      [[-9, 26], [-5, 32], [-1, 36], [3, 30], [7, 34], [11, 24], [-12, 20]].forEach(([dx, h], k) => {
+        out += cattail(x + dx, y + (k % 2) * 2, h, wave(fr, n, 2.2, k * 0.8));
+      });
+      return out + [-7, 0, 6].map(dx => ln([x + dx, y + 2], [x + dx * 1.5, y - 8], '#7FA45A', 1.2)).join('');
+    }
+  },
+  spent: {
+    frame: [-20, -14, 40, 22],
+    draw: T => {
+      const [x, y] = T.p(0, 0, 0);
+      return ell(x, y + 1, 12, 4, 'rgba(60,90,50,.3)') + [-8, -4, 0, 4, 8].map((dx, k) => cattail(x + dx, y + (k % 2) * 2, 5 + (k % 3), 0, false)).join('');
+    }
+  }
+};
+
+// Croûte de sel : des plaques blanches et des cristaux qui accrochent le soleil ; ramassée, une croûte grise
+const sel = {
+  ready: {
+    frame: [-30, -26, 60, 36], n: 8, fps: 3,
+    draw: (T, fr, n) => {
+      const [x, y] = T.p(0, 0, 0);
+      const cube = (cx, cy, s) => poly([[cx - s, cy], [cx, cy + s * 0.5], [cx, cy - s * 0.9], [cx - s, cy - s * 1.4]], '#F4EEE8', EDGE)
+        + poly([[cx, cy + s * 0.5], [cx + s, cy], [cx + s, cy - s * 1.4], [cx, cy - s * 0.9]], '#DCD2C8', EDGE)
+        + poly([[cx - s, cy - s * 1.4], [cx, cy - s * 0.9], [cx + s, cy - s * 1.4], [cx, cy - s * 1.9]], '#FFFFFF', EDGE);
+      return ell(x, y + 1, 22, 9, '#FFFFFF', ` stroke="#E8DCCF" stroke-width="0.8"`) + ell(x + 6, y - 1, 9, 3.5, 'rgba(244,198,208,.5)')
+        + cube(x - 8, y + 1, 4) + cube(x + 6, y + 3, 5) + cube(x - 1, y - 3, 3.5) + cube(x + 12, y - 2, 3)
+        + twinkle(x + 6, y - 7, 2.8, fr, n, 0.5) + twinkle(x - 8, y - 5, 2.2, fr, n, 3);
+    }
+  },
+  spent: {
+    frame: [-26, -10, 52, 20],
+    draw: T => {
+      const [x, y] = T.p(0, 0, 0);
+      return ell(x, y + 1, 20, 8, '#E6DED4', ` stroke="#D2C6B8" stroke-width="0.8"`) + `<path d="M${x - 12},${y} l6,2 l5,-3 l7,2" stroke="#CFC3B4" stroke-width="0.8" fill="none"/>`;
+    }
+  }
+};
+
+// Arbre à fruits : un petit manguier chargé de fruits dorés ; cueilli, il garde ses feuilles
+function fruitTree(T, fr, n, fruits) {
+  const [x, y] = T.p(0, 0, 0);
+  const sway = fruits ? wave(fr, n, 1.2) : 0;
+  let out = T.shadow(0, 0, 0.3, 0.18) + `<path d="M${x - 2},${y} Q${x - 3},${y - 12} ${x},${y - 22} L${x + 3},${y - 22} Q${x + 2},${y - 10} ${x + 3},${y} Z" fill="${WOOD_DARK.left}" stroke="${OUT}" stroke-width="0.5"/>`;
+  for (const [dx, dy, r, c] of [[-9, -26, 9, '#2F7A3A'], [9, -27, 9, '#2F7A3A'], [0, -34, 11, '#3E8A48'], [-4, -28, 8, '#5FAE5A'], [5, -31, 6, '#8FD06E']]) {
+    out += dot(x + dx + sway, y + dy, r, c);
+  }
+  if (fruits) {
+    for (const [dx, dy] of [[-8, -22], [7, -24], [-2, -28], [10, -31], [-10, -30], [2, -20]]) {
+      out += ell(x + dx + sway, y + dy, 2.2, 2.8, '#F2B23C', ` stroke="#8A5A14" stroke-width="0.5"`) + dot(x + dx + sway - 0.6, y + dy - 1, 0.7, '#FFE39A');
+    }
+  }
+  return out;
+}
+const fruits = {
+  ready: { frame: [-24, -50, 48, 58], n: 8, fps: 2, draw: (T, fr, n) => fruitTree(T, fr, n, true) },
+  spent: { frame: [-24, -50, 48, 58], draw: T => fruitTree(T, 0, 1, false) }
+};
+
+// Éclats d'obsidienne : des lames noires au reflet violet, qui luisent de braises ; ramassés, des cailloux sombres
+const obsidienne = {
+  ready: {
+    frame: [-28, -38, 56, 48], n: 8, fps: 3,
+    draw: (T, fr, n) => {
+      const [x, y] = T.p(0, 0, 0);
+      const glint = 0.4 + 0.6 * Math.max(0, Math.sin((fr / n) * TAU));
+      return T.shadow(0, 0, 0.28, 0.2) + ell(x, y + 1, 15, 5, 'rgba(255,120,50,.25)')
+        + spire(x - 8, y, 16, 5, OBSIDIAN, -3) + spire(x + 7, y + 1, 20, 5.5, OBSIDIAN, 2) + spire(x, y + 4, 26, 6, OBSIDIAN) + boulder(0.18, 0.12, 0.08, 0.06, 5, OBSIDIAN, 3, 0.3, 0.4)
+        + ln([x - 1, y - 18], [x + 1.5, y - 6], `rgba(185,166,232,${f2(glint)})`, 1.2) + ln([x + 7, y - 14], [x + 8, y - 6], `rgba(185,166,232,${f2(glint * 0.7)})`, 1)
+        + twinkle(x, y - 24, 2.4, fr, n, 1.5);
+    }
+  },
+  spent: {
+    frame: [-22, -12, 44, 20],
+    draw: () => boulder(-0.1, 0, 0.07, 0.05, 4, OBSIDIAN, 1, 0.3, 0.4) + boulder(0.12, 0.06, 0.06, 0.05, 3, OBSIDIAN, 2, 0.3, 0.4) + boulder(0, 0.14, 0.05, 0.04, 3, OBSIDIAN, 4, 0.3, 0.4)
+  }
+};
+
+export const DEPOSIT_SPRITES = { glace, laine, roseau, sel, fruits, obsidienne };
+
+// Calque d'un gisement prêt à peindre à l'instant t (secondes) : clé d'image et dessin
+export function depositLayer(find, ready, t = 0) {
+  const kind = DEPOSIT_SPRITES[find];
+  if (!kind) return null;
+  const layer = ready ? kind.ready : kind.spent;
+  const f = layer.n ? Math.floor(t * layer.fps) % layer.n : 0;
+  const [x, y, w, h] = layer.frame;
+  const name = `deposit-${find}-${ready ? 'r' : 's'}`;
+  return { key: `${name}-${f}`, make: () => sprite(layer.draw(tools(0, 0, name), f, layer.n || 1), { x, y, w, h }) };
+}
