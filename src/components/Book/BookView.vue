@@ -165,7 +165,7 @@
 <script>
 import { messageOf } from '@/utils/errors';
 import playService from '@/services/playService';
-import ElementTile from '@/components/ui/ElementTile.vue';
+import ElementTile from '@/components/ui/ElementTile/ElementTile.vue';
 import HangmanSheet from './HangmanSheet.vue';
 import ChapterSheet from './ChapterSheet.vue';
 import GrimoireBinding from './GrimoireBinding.vue';
@@ -179,8 +179,8 @@ import { paintPage, paintEndpaper, clearDrawings, bookFontsReady, CHAPTER_STYLE 
 import { burst, ring, vibrate, center, reducedMotion, HAPTIC } from '@/utils/fx';
 import { unlockCinematic } from '@/book/fx';
 import { guide } from '@/game/guide';
-import GModal from '@/components/ui/GModal.vue';
-import ElementGlyph from '@/components/ui/ElementGlyph.vue';
+import GModal from '@/components/ui/GModal/GModal.vue';
+import ElementGlyph from '@/components/ui/ElementGlyph/ElementGlyph.vue';
 import longpress from '@/directives/longpress';
 import { loadSavoirs } from '@/game/savoirs';
 

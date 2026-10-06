@@ -1,0 +1,39 @@
+/* Mise en page : PC en 2 colonnes (registre | Athanor), mobile en registre plein écran + dock */
+.oc-app {
+  position: relative;
+  min-height: 100vh;
+  min-height: 100dvh;
+  color: var(--oc-text);
+  font-family: var(--oc-font-body);
+}
+.oc-app__shell {
+  position: relative;
+  z-index: var(--z-shell);
+  max-width: 1480px;
+  margin: 0 auto;
+  /* Mobile : la place des panneaux fixés en bas (dock et consigne mesurés, puis la barre d'onglets) */
+  padding: 0 var(--oc-gutter) calc(var(--oc-overlay, var(--oc-dock-height)) + var(--oc-tabbar-h) + 24px);
+}
+/* Le Monde et le Sceau n'ont pas de dock : seule la barre d'onglets prend de la place */
+.oc-app__shell:has(.oc-app__main--world) { padding-bottom: calc(var(--oc-tabbar-h) + 24px); }
+.oc-app__main { display: block; }
+.oc-app__main--world { display: block !important; max-width: 760px; margin: 0 auto; }
+.oc-app__inventory { min-width: 0; }
+@media (min-width: 860px) {
+  /* PC : le rail d'onglets à gauche */
+  .oc-app__shell, .oc-app__shell:has(.oc-app__main--world) { padding: 0 28px 32px calc(var(--oc-rail-w) + 28px); }
+  .oc-app__main {
+    display: grid;
+    /* La liste prend la place disponible et grandit avec les découvertes ; la zone reste à droite */
+    grid-template-columns: minmax(0, 1fr) 420px;
+    gap: 28px;
+    align-items: start;
+  }
+  /* La zone reste en vue pendant qu'on fait défiler l'inventaire */
+  .oc-app__craft { position: sticky; top: 16px; }
+}
+
+/* Fin d'épreuve (fenêtre de l'App) */
+.timer-end { display: flex; gap: 48px; justify-content: center; }
+.timer-end__stat { display: flex; flex-direction: column; gap: 4px; align-items: center; }
+.timer-end__big { font-size: 56px; line-height: 1; }

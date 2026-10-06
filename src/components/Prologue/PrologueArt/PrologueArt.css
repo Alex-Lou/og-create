@@ -1,0 +1,64 @@
+.pa { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
+.pa__star { animation: pa-twinkle 4s ease-in-out calc(var(--k) * -.7s) infinite; }
+.pa__mist ellipse { animation: pa-drift 14s ease-in-out calc(var(--k) * -2.6s) infinite alternate; }
+.pa__mist { transition: opacity 1.6s ease; }
+.pa__mist.is-thin { opacity: .35; }
+.pa__wisp-flame { transform-origin: 0 8px; animation: pa-flick 2.2s ease-in-out infinite; }
+.pa__wisp { animation: pa-float 4s ease-in-out infinite; }
+.pa__eyes { animation: pa-blink 5s steps(1, end) infinite; transform-origin: 0 -1px; transform-box: fill-box; }
+.pa__flames { transform-origin: 0 0; animation: pa-flick 0.9s ease-in-out infinite; }
+.pa__flicker { animation: pa-glow 1.6s ease-in-out infinite; }
+.pa__foam { animation: pa-foam 3s ease-in-out infinite; }
+.pa__shiver { animation: pa-shiver .18s linear infinite; }
+.pa__recipe { font-family: var(--font-fell); fill: var(--oc-glow-ink); animation: pa-glow 2.4s ease-in-out infinite; }
+.pa__recipe-name { font-size: 24px; }
+.pa__recipe-of { font-size: 15px; font-style: italic; }
+/* La tempête : éclair, roulis, la vague qui monte, puis le noir */
+.pa__bolt { opacity: 0; animation: pa-bolt 3.2s linear infinite; }
+.pa__rain { animation: pa-rain .5s linear infinite; }
+.pa__ship { animation: pa-roll 3s ease-in-out infinite; }
+.pa__crew { filter: brightness(.55) saturate(.8); }
+.pa__wave { transform: translateY(260px); animation: pa-wave 6.2s cubic-bezier(.5, 0, .3, 1) forwards; }
+.pa__dark { opacity: 0; animation: pa-dark 1s ease-in 6s forwards; }
+.pa__broken { animation: pa-crack 1.4s ease-out forwards; transform-box: fill-box; transform-origin: center; }
+.pa__rays { opacity: 0; animation: pa-rays 1.6s ease-out .4s forwards; }
+/* La finale : la lentille brille, le visage ondule, le soleil du phare tourne, la brume se lève */
+.pa__lens { animation: pa-glow 1.2s ease-in-out infinite; }
+.pa__face { animation: pa-float 5s ease-in-out infinite; opacity: .95; }
+.pa__ripple { animation: pa-foam 4s ease-in-out infinite; }
+.pa__sunrays { transform-origin: 0 -166px; animation: pa-spin 24s linear infinite; }
+.pa__mist.is-lift { animation: pa-lift 4.5s ease-out forwards; }
+.pa__mist.is-gone { opacity: 0; }
+/* Anya : les sigles s'allument un à un, la lueur respire, les lucioles clignent, la gemme s'éveille */
+.pa__sigil { opacity: 0; animation: pa-sigil .6s ease-out calc(var(--k) * .35s) forwards; filter: drop-shadow(0 0 3px rgba(var(--oc-glow-rgb), .9)); }
+.pa__anya { animation: pa-rise 2.4s ease-out both; }
+.pa__flies circle { animation: pa-twinkle 2.6s ease-in-out calc(var(--k) * -.4s) infinite; }
+.pa__bloom { animation: pa-glow 3s ease-in-out infinite; }
+.pa__trace { animation: pa-glow 2.8s ease-in-out infinite; }
+.pa__gem-glow { animation: pa-glow 1.8s ease-in-out infinite; }
+@keyframes pa-twinkle { 0%, 100% { opacity: .9; } 50% { opacity: .35; } }
+@keyframes pa-drift { from { transform: translateX(-14px); } to { transform: translateX(14px); } }
+@keyframes pa-flick { 0%, 100% { transform: scaleY(1) skewX(0deg); } 50% { transform: scaleY(1.08) skewX(-3deg); } }
+@keyframes pa-float { 0%, 100% { translate: 0 0; } 50% { translate: 0 -5px; } }
+@keyframes pa-blink { 0%, 92%, 100% { transform: scaleY(1); } 94% { transform: scaleY(.1); } }
+@keyframes pa-glow { 0%, 100% { opacity: .85; } 50% { opacity: 1; } }
+@keyframes pa-foam { 0%, 100% { transform: translateX(0); } 50% { transform: translateX(6px); } }
+@keyframes pa-shiver { 0%, 100% { transform: translateX(0); } 50% { transform: translateX(1.2px); } }
+@keyframes pa-bolt { 0%, 8%, 14%, 100% { opacity: 0; } 9%, 12% { opacity: 1; } }
+@keyframes pa-rain { from { transform: translate(0, 0); } to { transform: translate(-8px, 26px); } }
+@keyframes pa-roll { 0%, 100% { transform: translate(200px, 236px) rotate(-4deg); } 50% { transform: translate(200px, 240px) rotate(5deg); } }
+@keyframes pa-wave { 0% { transform: translateY(260px); } 70% { transform: translateY(40px); } 100% { transform: translateY(-40px); } }
+@keyframes pa-dark { to { opacity: 1; } }
+@keyframes pa-crack { 0% { transform: scale(1); filter: none; } 40% { transform: scale(1.5); filter: drop-shadow(0 0 4px var(--oc-glow-halo)); } 100% { transform: scale(1.15); filter: drop-shadow(0 0 3px var(--oc-glow-halo)); opacity: .55; } }
+@keyframes pa-rays { 0% { opacity: 0; transform: scale(.4); } 50% { opacity: 1; } 100% { opacity: .6; transform: scale(1); } }
+@keyframes pa-spin { to { transform: rotate(360deg); } }
+@keyframes pa-sigil { to { opacity: 1; } }
+@keyframes pa-rise { from { opacity: 0; translate: 0 18px; } to { opacity: 1; translate: 0 0; } }
+@keyframes pa-lift { from { opacity: .35; transform: translateY(0); } to { opacity: 0; transform: translateY(-60px); } }
+/* Mouvement réduit : des images fixes (la tempête montre directement la vague) */
+@media (prefers-reduced-motion: reduce) {
+  .pa *, .pa { animation: none !important; }
+  .pa__wave { transform: translateY(40px); }
+  .pa__bolt, .pa__rays { opacity: .8; }
+  .pa__sigil { opacity: 1; }
+}

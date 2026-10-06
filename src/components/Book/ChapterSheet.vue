@@ -67,8 +67,8 @@
 </template>
 
 <script>
-import GModal from '@/components/ui/GModal.vue';
-import ElementGlyph from '@/components/ui/ElementGlyph.vue';
+import GModal from '@/components/ui/GModal/GModal.vue';
+import ElementGlyph from '@/components/ui/ElementGlyph/ElementGlyph.vue';
 import { CHAPTER_STYLE } from '@/book/chapters';
 
 const PER_SHEET = 12;

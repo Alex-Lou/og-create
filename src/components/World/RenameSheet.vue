@@ -29,7 +29,7 @@
 </template>
 
 <script>
-import GModal from '@/components/ui/GModal.vue';
+import GModal from '@/components/ui/GModal/GModal.vue';
 import { cleanName, NAME_MAX } from '@/utils/names';
 
 // Renommer un bâtiment (dès son palier III) ou un quartier à soi : le nom actuel, prêt à changer ; le nom d'origine

@@ -123,8 +123,8 @@
 <script>
 import { messageOf } from '@/utils/errors';
 import customizationService from '@/services/customizationService';
-import GModal from '@/components/ui/GModal.vue';
-import GSigil from '@/components/ui/GSigil.vue';
+import GModal from '@/components/ui/GModal/GModal.vue';
+import GSigil from '@/components/ui/GSigil/GSigil.vue';
 import { DEFAULT_EMBLEM, DEFAULT_FRAME } from '@/utils/cabinet';
 
 const MESSAGE_DURATION = 3000;

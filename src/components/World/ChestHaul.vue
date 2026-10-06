@@ -58,8 +58,8 @@
 </template>
 
 <script>
-import GModal from '@/components/ui/GModal.vue';
-import ElementGlyph from '@/components/ui/ElementGlyph.vue';
+import GModal from '@/components/ui/GModal/GModal.vue';
+import ElementGlyph from '@/components/ui/ElementGlyph/ElementGlyph.vue';
 import { RARITY, haulOf, prizeText, sourceText, stockOf } from '@/world/chest';
 
 // « Tout ouvrir » : les coffres ouverts d'un coup s'ouvrent en rafale, puis restent en grille (lot, rareté, d'où il

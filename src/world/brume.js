@@ -1,7 +1,7 @@
 // Brume, l'esprit de la brume (quêtes de l'île) : un feu follet, une petite flamme bleutée qui vacille, avec deux
 // yeux et rien d'autre ; dorée, avec une pastille « ! », quand la récompense attend. Il flotte près de l'objectif de la
 // quête active, et change avec les actes (huit stades : STAGES). Unités du monde, en fonction du temps : rien à garder,
-// rien à nettoyer. Le même feu follet en SVG (fiches, Livre) : components/ui/BrumeWisp.vue, mêmes couleurs.
+// rien à nettoyer. Le même feu follet en SVG (fiches, Livre) : components/Guide/BrumeWisp/BrumeWisp.vue, mêmes couleurs.
 
 // Hauteur de vol au-dessus du sol (unités du monde) et rayon de toucher
 export const BRUME_ALT = 46;
