@@ -336,17 +336,18 @@ export function villageOf({ n, M, sites, owned, crafts = [], props, annexes = []
   }
   const farm = [];
   if (potager && pen.length >= 3) {
-    // seg : durée d'un tour (secondes) : marche vers une case du pré, puis broute ou picore
-    const add = (species, variant, seg) => farm.push({ id: `farm:${species}:${farm.length}`, species, variant, k: farm.length, seg });
-    add('hen', 'rousse', 8);
-    add('hen', 'noire', 9);
-    if (potager.level >= 3) add('cow', '', 16);
+    // seg : durée d'un tour (secondes) : marche vers une case du pré, puis broute ou picore ; beast : son nom au serveur
+    // (bêtes de ferme, bible § 6.16 : on la nourrit, elle remplit sa bulle), pour celles que le palier amène
+    const add = (species, variant, seg, beast = null) => farm.push({ id: `farm:${species}:${farm.length}`, species, variant, k: farm.length, seg, beast });
+    add('hen', 'rousse', 8, 'poule-rousse');
+    add('hen', 'noire', 9, 'poule-noire');
+    if (potager.level >= 3) add('cow', '', 16, 'vache');
     if (potager.level >= 4) {
-      add('sheep', '', 13);
-      add('sheep', '', 14);
+      add('sheep', '', 13, 'mouton');
+      add('sheep', '', 14, 'brebis');
     }
-    if (potager.level >= 5) add('pig', '', 12);
-    if (potager.level >= 6) add('goat', '', 11);
+    if (potager.level >= 5) add('pig', '', 12, 'cochon');
+    if (potager.level >= 6) add('goat', '', 11, 'chevre');
     // Le Bestiaire : un élément de la ferme écrit ajoute une variante aux bêtes que le palier montre déjà
     const kinds = new Set(farm.map(a => a.species));
     bestiary.farm.filter(([species]) => kinds.has(species)).forEach(([species, variant], i) => add(species, variant, 10 + i));
@@ -492,7 +493,7 @@ export function villageOf({ n, M, sites, owned, crafts = [], props, annexes = []
         frame = move < 1 ? 0 : Math.floor(t * 1.2 + a.k) % 3 === 0 ? 1 : 0;
       }
       const hop = tapped(a.id, 0.6);
-      out.push(beast(a.id, a.species, a.variant, x, y, hop === null ? 0 : Math.sin(hop * Math.PI) * 5, flip, frame));
+      out.push({ ...beast(a.id, a.species, a.variant, x, y, hop === null ? 0 : Math.sin(hop * Math.PI) * 5, flip, frame), ...(a.beast ? { beast: a.beast } : {}) });
       // Les poussins suivent la poule rousse
       if (a.species === 'hen' && a.variant === 'rousse') {
         [[-0.32, 0.18], [-0.22, 0.4]].forEach(([dx, dy], c) => out.push(beast(`farm:chick:${c}`, 'chick', '', x + dx, y + dy, 0, flip, phase.night > 0.6 ? 0 : Math.floor(t * 2 + c) % 2)));

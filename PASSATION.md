@@ -432,6 +432,20 @@ chronométrer 20 appels. Comparer à zoom égal, au même endroit.
   Le front (égarés, pointillés du soir, cases dorées, toucher, « Réparer », état embrumé) attend les dessins de
   l'auteur. Points laissés à son avis : les écus de la boutique continuent pendant une panne ; Anya guérit à heure
   fixe (10 h ou 23 h, selon l'aube ou le crépuscule) ; la torche du tutoriel rejoindra les lumières avec H9.6.
+- **Lot H9.3 de la bible v6** (les bêtes de ferme, § 6.16 ; réglage « petit plus » choisi par l'auteur). Serveur :
+  une table ajoutée, `world_beasts` (autorisée par l'auteur) ; règles dans `services/beasts.js`, base dans
+  `world/beasts.js` :
+  - les bêtes sont celles que le Potager montre selon son palier (deux poules, puis vache, mouton et brebis, cochon,
+    chèvre) ; les variantes du Bestiaire restent des décors ; les poules de Cannelle viendront avec le tutoriel (H9.6) ;
+  - nourrir coûte 2 vivres (`POST /world/beast/feed { beast }`, sa bulle ramassée d'abord) ; contente un jour, elle
+    se renourrit passé la moitié du jour ; sa bulle se remplit (par jour : poule 4, vache 8, mouton 4, cochon 6,
+    chèvre 6), un jour au plus ; `POST /world/beasts/collect` ramasse toutes les bulles ;
+  - la vue du monde dit `beasts : { cost, hours, list: [{ id, species, name, daily, fed, left, refill, ready }] }`.
+
+  Front : `village.js` donne à chaque bête du Potager son nom au serveur (`who.beast`) ; au-dessus d'elle, sa bulle
+  pleine (« +N », comme la production : un toucher la ramasse) ou sa faim (bulle ronde : deux touchers, sa fiche) ;
+  appui long : sa fiche (`BeastSheet.vue` : ce qu'elle aime, son humeur, ce qu'elle donne, Ramasser, Nourrir ; les
+  mots dans `world/farmBeasts.js`).
 
 ### Décisions déjà prises par l'auteur (ne pas les redemander)
 - **Île** : 96 × 96 ; l'ancienne carte devient le cœur ; découverte par expéditions ; un quartier s'ouvre avec des
@@ -449,6 +463,8 @@ chronométrer 20 appels. Comparer à zoom égal, au même endroit.
 - **Bêtes** : le style des bêtes du jeu (`animals.js`), un peu plus mignon (œil rond avec reflet, joue rose), de
   profil seulement. Le style « sac d'animalerie » et les bêtes en trois vues ont été essayés puis **abandonnés** par
   l'auteur : ne pas les reproposer. Les 13 bêtes de la ferme, des bois et de l'eau restent telles quelles.
+  Touchées, les bêtes sauvages sursautent (un bond, quelques pas du côté où elles regardent, puis retour à leur
+  place) : elles ne s'enfuient plus hors de l'écran (choix de l'auteur, le 6 octobre 2026).
 - **Skins** : teintes et pièces rares.
 - **Plateforme** : rester **une seule base web** (§ 9). L'auteur vise la **fluidité** et des animations et
   graphismes plus riches. Achats intégrés plus tard.
