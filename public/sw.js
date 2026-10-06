@@ -8,6 +8,19 @@ const STATIC_PREFIXES = ['/js/', '/css/', '/img/', '/fonts/', '/icons/'];
 
 self.addEventListener('install', () => self.skipWaiting());
 
+// Les fichiers du build changent de nom à chaque version (« /js/index.CF9HPkaY.js ») : sans ménage, le cache
+// gardait toutes les versions. Retire ceux qu'une nouvelle page remplace (même nom, autre empreinte) ; un fichier
+// qu'elle ne cite pas (chargé à la demande) reste
+const nameOf = path => path.replace(/\.[^./]+\.(js|css)$/, '');
+function prune(cache, html) {
+  const current = new Set(html.match(/\/(?:js|css)\/[^"'\s>]+/g) || []);
+  const replaced = new Set([...current].map(nameOf));
+  return cache.keys().then(requests => Promise.all(requests.map(request => {
+    const { pathname } = new URL(request.url);
+    return !current.has(pathname) && replaced.has(nameOf(pathname)) ? cache.delete(request) : null;
+  })));
+}
+
 self.addEventListener('activate', event => {
   event.waitUntil(
     caches.keys()
@@ -25,8 +38,15 @@ self.addEventListener('fetch', event => {
     event.respondWith(
       fetch(request)
         .then(response => {
-          const copy = response.clone();
-          caches.open(CACHE).then(cache => cache.put('/', copy));
+          // Une page d'erreur ne remplace pas la copie hors ligne
+          if (response.ok) {
+            const copy = response.clone();
+            const page = response.clone();
+            event.waitUntil(caches.open(CACHE).then(cache => Promise.all([
+              cache.put('/', copy),
+              page.text().then(html => prune(cache, html))
+            ])));
+          }
           return response;
         })
         .catch(() => caches.match('/'))
