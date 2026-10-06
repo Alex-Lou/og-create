@@ -9,7 +9,7 @@
  "regles": {
   "noms": "<sujet>_<vue>_<pose>[_<variante>]_<n>.svg pour les personnages et les bêtes ; <sujet>_<état>_<n>.svg ailleurs. Un dessin fixe n'a pas de numéro.",
   "directions": "avant : vient vers le bas à droite ; dos : s'éloigne vers le haut à droite ; profil : tourné vers la droite. Le miroir (scaleX(-1)) donne le bas à gauche, le haut à gauche, la gauche. Les trois quarts avant du grand format (maîtres, naufragés, Anya, le Passeur) sortent du kit tournés vers le bas à gauche : ils sont publiés en miroir pour suivre cette règle.",
-  "lumiere": "En haut à gauche. Trait brun #3C2819."
+  "lumiere": "En haut à gauche. Trait brun #3C2819 ; les égarés, eux, ont le trait bleu nuit #3B4763 de la famille de la brume."
  },
  "chapitres": [
   {
@@ -87,10 +87,6 @@
   {
    "parcours": "tuto-1",
    "quoi": "La carte d'embarquement de l'Hirondelle (écran d'avatar), le gilet de sauvetage, la chaise longue échouée."
-  },
-  {
-   "parcours": "tuto-1",
-   "quoi": "Les égarés : petits fantômes, petits zombies tout mous, bêtes égarées selon le climat ; marche, bouderie au toucher, passage en luciole (lot M)."
   },
   {
    "parcours": "tuto-2",
@@ -284,6 +280,233 @@
    "parcours": "tuto-1",
    "statut": "a-revoir",
    "note": "À retirer quand les voyageurs arrivent (acte IV)."
+  },
+  {
+   "id": "egares/fantome/fantome_avant_bouderie",
+   "rubrique": "egares",
+   "sujet": "fantome",
+   "vue": "avant",
+   "pose": "bouderie",
+   "titre": "Petit fantôme (égaré), trois quarts avant, bouderie",
+   "regarde": "bas-droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/egares/fantome/fantome_avant_bouderie_1.svg",
+    "svg/egares/fantome/fantome_avant_bouderie_2.svg"
+   ],
+   "cadre": [
+    -16,
+    -26.5,
+    32,
+    30.5
+   ],
+   "ms_par_image": [
+    500,
+    700
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "egares/fantome/fantome_avant_brume",
+   "rubrique": "egares",
+   "sujet": "fantome",
+   "vue": "avant",
+   "pose": "brume",
+   "titre": "Petit fantôme (égaré), trois quarts avant, brume",
+   "regarde": "bas-droite",
+   "miroir": true,
+   "images": 3,
+   "fichiers": [
+    "svg/egares/fantome/fantome_avant_brume_1.svg",
+    "svg/egares/fantome/fantome_avant_brume_2.svg",
+    "svg/egares/fantome/fantome_avant_brume_3.svg"
+   ],
+   "cadre": [
+    -16,
+    -26.5,
+    32,
+    30.5
+   ],
+   "ms_par_image": [
+    220,
+    220,
+    900
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "egares/fantome/fantome_avant_fuite",
+   "rubrique": "egares",
+   "sujet": "fantome",
+   "vue": "avant",
+   "pose": "fuite",
+   "titre": "Petit fantôme (égaré), trois quarts avant, fuite",
+   "regarde": "bas-droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/egares/fantome/fantome_avant_fuite_1.svg",
+    "svg/egares/fantome/fantome_avant_fuite_2.svg"
+   ],
+   "cadre": [
+    -16,
+    -26.5,
+    32,
+    30.5
+   ],
+   "ms_par_image": 160,
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "egares/fantome/fantome_avant_luciole",
+   "rubrique": "egares",
+   "sujet": "fantome",
+   "vue": "avant",
+   "pose": "luciole",
+   "titre": "Petit fantôme (égaré), trois quarts avant, luciole",
+   "regarde": "bas-droite",
+   "miroir": true,
+   "images": 4,
+   "fichiers": [
+    "svg/egares/fantome/fantome_avant_luciole_1.svg",
+    "svg/egares/fantome/fantome_avant_luciole_2.svg",
+    "svg/egares/fantome/fantome_avant_luciole_3.svg",
+    "svg/egares/fantome/fantome_avant_luciole_4.svg"
+   ],
+   "cadre": [
+    -16,
+    -26.5,
+    32,
+    30.5
+   ],
+   "ms_par_image": [
+    300,
+    200,
+    200,
+    1000
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "egares/fantome/fantome_avant_marche",
+   "rubrique": "egares",
+   "sujet": "fantome",
+   "vue": "avant",
+   "pose": "marche",
+   "titre": "Petit fantôme (égaré), trois quarts avant, marche",
+   "regarde": "bas-droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/egares/fantome/fantome_avant_marche_1.svg",
+    "svg/egares/fantome/fantome_avant_marche_2.svg"
+   ],
+   "cadre": [
+    -16,
+    -26.5,
+    32,
+    30.5
+   ],
+   "ms_par_image": 240,
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "egares/fantome/fantome_avant_repos",
+   "rubrique": "egares",
+   "sujet": "fantome",
+   "vue": "avant",
+   "pose": "repos",
+   "titre": "Petit fantôme (égaré), trois quarts avant, repos",
+   "regarde": "bas-droite",
+   "miroir": true,
+   "images": 1,
+   "fichiers": [
+    "svg/egares/fantome/fantome_avant_repos.svg"
+   ],
+   "cadre": [
+    -16,
+    -26.5,
+    32,
+    30.5
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "egares/fantome/fantome_dos_fuite",
+   "rubrique": "egares",
+   "sujet": "fantome",
+   "vue": "dos",
+   "pose": "fuite",
+   "titre": "Petit fantôme (égaré), trois quarts dos, fuite",
+   "regarde": "haut-droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/egares/fantome/fantome_dos_fuite_1.svg",
+    "svg/egares/fantome/fantome_dos_fuite_2.svg"
+   ],
+   "cadre": [
+    -16,
+    -26.5,
+    32,
+    30.5
+   ],
+   "ms_par_image": 160,
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "egares/fantome/fantome_dos_marche",
+   "rubrique": "egares",
+   "sujet": "fantome",
+   "vue": "dos",
+   "pose": "marche",
+   "titre": "Petit fantôme (égaré), trois quarts dos, marche",
+   "regarde": "haut-droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/egares/fantome/fantome_dos_marche_1.svg",
+    "svg/egares/fantome/fantome_dos_marche_2.svg"
+   ],
+   "cadre": [
+    -16,
+    -26.5,
+    32,
+    30.5
+   ],
+   "ms_par_image": 240,
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "egares/fantome/fantome_dos_repos",
+   "rubrique": "egares",
+   "sujet": "fantome",
+   "vue": "dos",
+   "pose": "repos",
+   "titre": "Petit fantôme (égaré), trois quarts dos, repos",
+   "regarde": "haut-droite",
+   "miroir": true,
+   "images": 1,
+   "fichiers": [
+    "svg/egares/fantome/fantome_dos_repos.svg"
+   ],
+   "cadre": [
+    -16,
+    -26.5,
+    32,
+    30.5
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
   },
   {
    "id": "personnages/avatar/avatar-01-naufrage/avatar-01-naufrage_avant_marche",
@@ -9087,6 +9310,460 @@
     -115,
     100,
     140
+   ],
+   "parcours": "tuto-3",
+   "statut": "ok"
+  },
+  {
+   "id": "egares/lapin-de-brume/lapin-de-brume_avant_bouderie",
+   "rubrique": "egares",
+   "sujet": "lapin-de-brume",
+   "vue": "avant",
+   "pose": "bouderie",
+   "titre": "Lapin de brume (égaré, tempéré), trois quarts avant, bouderie",
+   "regarde": "bas-droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/egares/lapin-de-brume/lapin-de-brume_avant_bouderie_1.svg",
+    "svg/egares/lapin-de-brume/lapin-de-brume_avant_bouderie_2.svg"
+   ],
+   "cadre": [
+    -16,
+    -26,
+    32,
+    32
+   ],
+   "ms_par_image": [
+    500,
+    700
+   ],
+   "parcours": "tuto-3",
+   "statut": "ok"
+  },
+  {
+   "id": "egares/lapin-de-brume/lapin-de-brume_avant_brume",
+   "rubrique": "egares",
+   "sujet": "lapin-de-brume",
+   "vue": "avant",
+   "pose": "brume",
+   "titre": "Lapin de brume (égaré, tempéré), trois quarts avant, brume",
+   "regarde": "bas-droite",
+   "miroir": true,
+   "images": 3,
+   "fichiers": [
+    "svg/egares/lapin-de-brume/lapin-de-brume_avant_brume_1.svg",
+    "svg/egares/lapin-de-brume/lapin-de-brume_avant_brume_2.svg",
+    "svg/egares/lapin-de-brume/lapin-de-brume_avant_brume_3.svg"
+   ],
+   "cadre": [
+    -16,
+    -26,
+    32,
+    32
+   ],
+   "ms_par_image": [
+    220,
+    220,
+    900
+   ],
+   "parcours": "tuto-3",
+   "statut": "ok"
+  },
+  {
+   "id": "egares/lapin-de-brume/lapin-de-brume_avant_fuite",
+   "rubrique": "egares",
+   "sujet": "lapin-de-brume",
+   "vue": "avant",
+   "pose": "fuite",
+   "titre": "Lapin de brume (égaré, tempéré), trois quarts avant, fuite",
+   "regarde": "bas-droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/egares/lapin-de-brume/lapin-de-brume_avant_fuite_1.svg",
+    "svg/egares/lapin-de-brume/lapin-de-brume_avant_fuite_2.svg"
+   ],
+   "cadre": [
+    -16,
+    -26,
+    32,
+    32
+   ],
+   "ms_par_image": 160,
+   "parcours": "tuto-3",
+   "statut": "ok"
+  },
+  {
+   "id": "egares/lapin-de-brume/lapin-de-brume_avant_luciole",
+   "rubrique": "egares",
+   "sujet": "lapin-de-brume",
+   "vue": "avant",
+   "pose": "luciole",
+   "titre": "Lapin de brume (égaré, tempéré), trois quarts avant, luciole",
+   "regarde": "bas-droite",
+   "miroir": true,
+   "images": 4,
+   "fichiers": [
+    "svg/egares/lapin-de-brume/lapin-de-brume_avant_luciole_1.svg",
+    "svg/egares/lapin-de-brume/lapin-de-brume_avant_luciole_2.svg",
+    "svg/egares/lapin-de-brume/lapin-de-brume_avant_luciole_3.svg",
+    "svg/egares/lapin-de-brume/lapin-de-brume_avant_luciole_4.svg"
+   ],
+   "cadre": [
+    -16,
+    -26,
+    32,
+    32
+   ],
+   "ms_par_image": [
+    300,
+    200,
+    200,
+    1000
+   ],
+   "parcours": "tuto-3",
+   "statut": "ok"
+  },
+  {
+   "id": "egares/lapin-de-brume/lapin-de-brume_avant_marche",
+   "rubrique": "egares",
+   "sujet": "lapin-de-brume",
+   "vue": "avant",
+   "pose": "marche",
+   "titre": "Lapin de brume (égaré, tempéré), trois quarts avant, marche",
+   "regarde": "bas-droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/egares/lapin-de-brume/lapin-de-brume_avant_marche_1.svg",
+    "svg/egares/lapin-de-brume/lapin-de-brume_avant_marche_2.svg"
+   ],
+   "cadre": [
+    -16,
+    -26,
+    32,
+    32
+   ],
+   "ms_par_image": 240,
+   "parcours": "tuto-3",
+   "statut": "ok"
+  },
+  {
+   "id": "egares/lapin-de-brume/lapin-de-brume_avant_repos",
+   "rubrique": "egares",
+   "sujet": "lapin-de-brume",
+   "vue": "avant",
+   "pose": "repos",
+   "titre": "Lapin de brume (égaré, tempéré), trois quarts avant, repos",
+   "regarde": "bas-droite",
+   "miroir": true,
+   "images": 1,
+   "fichiers": [
+    "svg/egares/lapin-de-brume/lapin-de-brume_avant_repos.svg"
+   ],
+   "cadre": [
+    -16,
+    -26,
+    32,
+    32
+   ],
+   "parcours": "tuto-3",
+   "statut": "ok"
+  },
+  {
+   "id": "egares/lapin-de-brume/lapin-de-brume_dos_fuite",
+   "rubrique": "egares",
+   "sujet": "lapin-de-brume",
+   "vue": "dos",
+   "pose": "fuite",
+   "titre": "Lapin de brume (égaré, tempéré), trois quarts dos, fuite",
+   "regarde": "haut-droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/egares/lapin-de-brume/lapin-de-brume_dos_fuite_1.svg",
+    "svg/egares/lapin-de-brume/lapin-de-brume_dos_fuite_2.svg"
+   ],
+   "cadre": [
+    -16,
+    -26,
+    32,
+    32
+   ],
+   "ms_par_image": 160,
+   "parcours": "tuto-3",
+   "statut": "ok"
+  },
+  {
+   "id": "egares/lapin-de-brume/lapin-de-brume_dos_marche",
+   "rubrique": "egares",
+   "sujet": "lapin-de-brume",
+   "vue": "dos",
+   "pose": "marche",
+   "titre": "Lapin de brume (égaré, tempéré), trois quarts dos, marche",
+   "regarde": "haut-droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/egares/lapin-de-brume/lapin-de-brume_dos_marche_1.svg",
+    "svg/egares/lapin-de-brume/lapin-de-brume_dos_marche_2.svg"
+   ],
+   "cadre": [
+    -16,
+    -26,
+    32,
+    32
+   ],
+   "ms_par_image": 240,
+   "parcours": "tuto-3",
+   "statut": "ok"
+  },
+  {
+   "id": "egares/lapin-de-brume/lapin-de-brume_dos_repos",
+   "rubrique": "egares",
+   "sujet": "lapin-de-brume",
+   "vue": "dos",
+   "pose": "repos",
+   "titre": "Lapin de brume (égaré, tempéré), trois quarts dos, repos",
+   "regarde": "haut-droite",
+   "miroir": true,
+   "images": 1,
+   "fichiers": [
+    "svg/egares/lapin-de-brume/lapin-de-brume_dos_repos.svg"
+   ],
+   "cadre": [
+    -16,
+    -26,
+    32,
+    32
+   ],
+   "parcours": "tuto-3",
+   "statut": "ok"
+  },
+  {
+   "id": "egares/zombie/zombie_avant_bouderie",
+   "rubrique": "egares",
+   "sujet": "zombie",
+   "vue": "avant",
+   "pose": "bouderie",
+   "titre": "Petit zombie tout mou (égaré), trois quarts avant, bouderie",
+   "regarde": "bas-droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/egares/zombie/zombie_avant_bouderie_1.svg",
+    "svg/egares/zombie/zombie_avant_bouderie_2.svg"
+   ],
+   "cadre": [
+    -16,
+    -26,
+    32,
+    30
+   ],
+   "ms_par_image": [
+    500,
+    700
+   ],
+   "parcours": "tuto-3",
+   "statut": "ok"
+  },
+  {
+   "id": "egares/zombie/zombie_avant_brume",
+   "rubrique": "egares",
+   "sujet": "zombie",
+   "vue": "avant",
+   "pose": "brume",
+   "titre": "Petit zombie tout mou (égaré), trois quarts avant, brume",
+   "regarde": "bas-droite",
+   "miroir": true,
+   "images": 3,
+   "fichiers": [
+    "svg/egares/zombie/zombie_avant_brume_1.svg",
+    "svg/egares/zombie/zombie_avant_brume_2.svg",
+    "svg/egares/zombie/zombie_avant_brume_3.svg"
+   ],
+   "cadre": [
+    -16,
+    -26,
+    32,
+    30
+   ],
+   "ms_par_image": [
+    220,
+    220,
+    900
+   ],
+   "parcours": "tuto-3",
+   "statut": "ok"
+  },
+  {
+   "id": "egares/zombie/zombie_avant_fuite",
+   "rubrique": "egares",
+   "sujet": "zombie",
+   "vue": "avant",
+   "pose": "fuite",
+   "titre": "Petit zombie tout mou (égaré), trois quarts avant, fuite",
+   "regarde": "bas-droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/egares/zombie/zombie_avant_fuite_1.svg",
+    "svg/egares/zombie/zombie_avant_fuite_2.svg"
+   ],
+   "cadre": [
+    -16,
+    -26,
+    32,
+    30
+   ],
+   "ms_par_image": 160,
+   "parcours": "tuto-3",
+   "statut": "ok"
+  },
+  {
+   "id": "egares/zombie/zombie_avant_luciole",
+   "rubrique": "egares",
+   "sujet": "zombie",
+   "vue": "avant",
+   "pose": "luciole",
+   "titre": "Petit zombie tout mou (égaré), trois quarts avant, luciole",
+   "regarde": "bas-droite",
+   "miroir": true,
+   "images": 4,
+   "fichiers": [
+    "svg/egares/zombie/zombie_avant_luciole_1.svg",
+    "svg/egares/zombie/zombie_avant_luciole_2.svg",
+    "svg/egares/zombie/zombie_avant_luciole_3.svg",
+    "svg/egares/zombie/zombie_avant_luciole_4.svg"
+   ],
+   "cadre": [
+    -16,
+    -26,
+    32,
+    30
+   ],
+   "ms_par_image": [
+    300,
+    200,
+    200,
+    1000
+   ],
+   "parcours": "tuto-3",
+   "statut": "ok"
+  },
+  {
+   "id": "egares/zombie/zombie_avant_marche",
+   "rubrique": "egares",
+   "sujet": "zombie",
+   "vue": "avant",
+   "pose": "marche",
+   "titre": "Petit zombie tout mou (égaré), trois quarts avant, marche",
+   "regarde": "bas-droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/egares/zombie/zombie_avant_marche_1.svg",
+    "svg/egares/zombie/zombie_avant_marche_2.svg"
+   ],
+   "cadre": [
+    -16,
+    -26,
+    32,
+    30
+   ],
+   "ms_par_image": 240,
+   "parcours": "tuto-3",
+   "statut": "ok"
+  },
+  {
+   "id": "egares/zombie/zombie_avant_repos",
+   "rubrique": "egares",
+   "sujet": "zombie",
+   "vue": "avant",
+   "pose": "repos",
+   "titre": "Petit zombie tout mou (égaré), trois quarts avant, repos",
+   "regarde": "bas-droite",
+   "miroir": true,
+   "images": 1,
+   "fichiers": [
+    "svg/egares/zombie/zombie_avant_repos.svg"
+   ],
+   "cadre": [
+    -16,
+    -26,
+    32,
+    30
+   ],
+   "parcours": "tuto-3",
+   "statut": "ok"
+  },
+  {
+   "id": "egares/zombie/zombie_dos_fuite",
+   "rubrique": "egares",
+   "sujet": "zombie",
+   "vue": "dos",
+   "pose": "fuite",
+   "titre": "Petit zombie tout mou (égaré), trois quarts dos, fuite",
+   "regarde": "haut-droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/egares/zombie/zombie_dos_fuite_1.svg",
+    "svg/egares/zombie/zombie_dos_fuite_2.svg"
+   ],
+   "cadre": [
+    -16,
+    -26,
+    32,
+    30
+   ],
+   "ms_par_image": 160,
+   "parcours": "tuto-3",
+   "statut": "ok"
+  },
+  {
+   "id": "egares/zombie/zombie_dos_marche",
+   "rubrique": "egares",
+   "sujet": "zombie",
+   "vue": "dos",
+   "pose": "marche",
+   "titre": "Petit zombie tout mou (égaré), trois quarts dos, marche",
+   "regarde": "haut-droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/egares/zombie/zombie_dos_marche_1.svg",
+    "svg/egares/zombie/zombie_dos_marche_2.svg"
+   ],
+   "cadre": [
+    -16,
+    -26,
+    32,
+    30
+   ],
+   "ms_par_image": 240,
+   "parcours": "tuto-3",
+   "statut": "ok"
+  },
+  {
+   "id": "egares/zombie/zombie_dos_repos",
+   "rubrique": "egares",
+   "sujet": "zombie",
+   "vue": "dos",
+   "pose": "repos",
+   "titre": "Petit zombie tout mou (égaré), trois quarts dos, repos",
+   "regarde": "haut-droite",
+   "miroir": true,
+   "images": 1,
+   "fichiers": [
+    "svg/egares/zombie/zombie_dos_repos.svg"
+   ],
+   "cadre": [
+    -16,
+    -26,
+    32,
+    30
    ],
    "parcours": "tuto-3",
    "statut": "ok"
@@ -24080,6 +24757,1368 @@
     -155,
     190,
     210
+   ],
+   "parcours": "acte-4",
+   "statut": "ok"
+  },
+  {
+   "id": "egares/bouquetin-de-brume/bouquetin-de-brume_avant_bouderie",
+   "rubrique": "egares",
+   "sujet": "bouquetin-de-brume",
+   "vue": "avant",
+   "pose": "bouderie",
+   "titre": "Bouquetin de brume (égaré, les Cimes), trois quarts avant, bouderie",
+   "regarde": "bas-droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/egares/bouquetin-de-brume/bouquetin-de-brume_avant_bouderie_1.svg",
+    "svg/egares/bouquetin-de-brume/bouquetin-de-brume_avant_bouderie_2.svg"
+   ],
+   "cadre": [
+    -16,
+    -27,
+    32,
+    36
+   ],
+   "ms_par_image": [
+    500,
+    700
+   ],
+   "parcours": "acte-4",
+   "statut": "ok"
+  },
+  {
+   "id": "egares/bouquetin-de-brume/bouquetin-de-brume_avant_brume",
+   "rubrique": "egares",
+   "sujet": "bouquetin-de-brume",
+   "vue": "avant",
+   "pose": "brume",
+   "titre": "Bouquetin de brume (égaré, les Cimes), trois quarts avant, brume",
+   "regarde": "bas-droite",
+   "miroir": true,
+   "images": 3,
+   "fichiers": [
+    "svg/egares/bouquetin-de-brume/bouquetin-de-brume_avant_brume_1.svg",
+    "svg/egares/bouquetin-de-brume/bouquetin-de-brume_avant_brume_2.svg",
+    "svg/egares/bouquetin-de-brume/bouquetin-de-brume_avant_brume_3.svg"
+   ],
+   "cadre": [
+    -16,
+    -27,
+    32,
+    36
+   ],
+   "ms_par_image": [
+    220,
+    220,
+    900
+   ],
+   "parcours": "acte-4",
+   "statut": "ok"
+  },
+  {
+   "id": "egares/bouquetin-de-brume/bouquetin-de-brume_avant_fuite",
+   "rubrique": "egares",
+   "sujet": "bouquetin-de-brume",
+   "vue": "avant",
+   "pose": "fuite",
+   "titre": "Bouquetin de brume (égaré, les Cimes), trois quarts avant, fuite",
+   "regarde": "bas-droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/egares/bouquetin-de-brume/bouquetin-de-brume_avant_fuite_1.svg",
+    "svg/egares/bouquetin-de-brume/bouquetin-de-brume_avant_fuite_2.svg"
+   ],
+   "cadre": [
+    -16,
+    -27,
+    32,
+    36
+   ],
+   "ms_par_image": 160,
+   "parcours": "acte-4",
+   "statut": "ok"
+  },
+  {
+   "id": "egares/bouquetin-de-brume/bouquetin-de-brume_avant_luciole",
+   "rubrique": "egares",
+   "sujet": "bouquetin-de-brume",
+   "vue": "avant",
+   "pose": "luciole",
+   "titre": "Bouquetin de brume (égaré, les Cimes), trois quarts avant, luciole",
+   "regarde": "bas-droite",
+   "miroir": true,
+   "images": 4,
+   "fichiers": [
+    "svg/egares/bouquetin-de-brume/bouquetin-de-brume_avant_luciole_1.svg",
+    "svg/egares/bouquetin-de-brume/bouquetin-de-brume_avant_luciole_2.svg",
+    "svg/egares/bouquetin-de-brume/bouquetin-de-brume_avant_luciole_3.svg",
+    "svg/egares/bouquetin-de-brume/bouquetin-de-brume_avant_luciole_4.svg"
+   ],
+   "cadre": [
+    -16,
+    -27,
+    32,
+    36
+   ],
+   "ms_par_image": [
+    300,
+    200,
+    200,
+    1000
+   ],
+   "parcours": "acte-4",
+   "statut": "ok"
+  },
+  {
+   "id": "egares/bouquetin-de-brume/bouquetin-de-brume_avant_marche",
+   "rubrique": "egares",
+   "sujet": "bouquetin-de-brume",
+   "vue": "avant",
+   "pose": "marche",
+   "titre": "Bouquetin de brume (égaré, les Cimes), trois quarts avant, marche",
+   "regarde": "bas-droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/egares/bouquetin-de-brume/bouquetin-de-brume_avant_marche_1.svg",
+    "svg/egares/bouquetin-de-brume/bouquetin-de-brume_avant_marche_2.svg"
+   ],
+   "cadre": [
+    -16,
+    -27,
+    32,
+    36
+   ],
+   "ms_par_image": 240,
+   "parcours": "acte-4",
+   "statut": "ok"
+  },
+  {
+   "id": "egares/bouquetin-de-brume/bouquetin-de-brume_avant_repos",
+   "rubrique": "egares",
+   "sujet": "bouquetin-de-brume",
+   "vue": "avant",
+   "pose": "repos",
+   "titre": "Bouquetin de brume (égaré, les Cimes), trois quarts avant, repos",
+   "regarde": "bas-droite",
+   "miroir": true,
+   "images": 1,
+   "fichiers": [
+    "svg/egares/bouquetin-de-brume/bouquetin-de-brume_avant_repos.svg"
+   ],
+   "cadre": [
+    -16,
+    -27,
+    32,
+    36
+   ],
+   "parcours": "acte-4",
+   "statut": "ok"
+  },
+  {
+   "id": "egares/bouquetin-de-brume/bouquetin-de-brume_dos_fuite",
+   "rubrique": "egares",
+   "sujet": "bouquetin-de-brume",
+   "vue": "dos",
+   "pose": "fuite",
+   "titre": "Bouquetin de brume (égaré, les Cimes), trois quarts dos, fuite",
+   "regarde": "haut-droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/egares/bouquetin-de-brume/bouquetin-de-brume_dos_fuite_1.svg",
+    "svg/egares/bouquetin-de-brume/bouquetin-de-brume_dos_fuite_2.svg"
+   ],
+   "cadre": [
+    -16,
+    -27,
+    32,
+    36
+   ],
+   "ms_par_image": 160,
+   "parcours": "acte-4",
+   "statut": "ok"
+  },
+  {
+   "id": "egares/bouquetin-de-brume/bouquetin-de-brume_dos_marche",
+   "rubrique": "egares",
+   "sujet": "bouquetin-de-brume",
+   "vue": "dos",
+   "pose": "marche",
+   "titre": "Bouquetin de brume (égaré, les Cimes), trois quarts dos, marche",
+   "regarde": "haut-droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/egares/bouquetin-de-brume/bouquetin-de-brume_dos_marche_1.svg",
+    "svg/egares/bouquetin-de-brume/bouquetin-de-brume_dos_marche_2.svg"
+   ],
+   "cadre": [
+    -16,
+    -27,
+    32,
+    36
+   ],
+   "ms_par_image": 240,
+   "parcours": "acte-4",
+   "statut": "ok"
+  },
+  {
+   "id": "egares/bouquetin-de-brume/bouquetin-de-brume_dos_repos",
+   "rubrique": "egares",
+   "sujet": "bouquetin-de-brume",
+   "vue": "dos",
+   "pose": "repos",
+   "titre": "Bouquetin de brume (égaré, les Cimes), trois quarts dos, repos",
+   "regarde": "haut-droite",
+   "miroir": true,
+   "images": 1,
+   "fichiers": [
+    "svg/egares/bouquetin-de-brume/bouquetin-de-brume_dos_repos.svg"
+   ],
+   "cadre": [
+    -16,
+    -27,
+    32,
+    36
+   ],
+   "parcours": "acte-4",
+   "statut": "ok"
+  },
+  {
+   "id": "egares/cameleon-de-brume/cameleon-de-brume_avant_bouderie",
+   "rubrique": "egares",
+   "sujet": "cameleon-de-brume",
+   "vue": "avant",
+   "pose": "bouderie",
+   "titre": "Caméléon de brume (égaré, la Jungle), trois quarts avant, bouderie",
+   "regarde": "bas-droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/egares/cameleon-de-brume/cameleon-de-brume_avant_bouderie_1.svg",
+    "svg/egares/cameleon-de-brume/cameleon-de-brume_avant_bouderie_2.svg"
+   ],
+   "cadre": [
+    -16,
+    -26,
+    32,
+    32
+   ],
+   "ms_par_image": [
+    500,
+    700
+   ],
+   "parcours": "acte-4",
+   "statut": "ok"
+  },
+  {
+   "id": "egares/cameleon-de-brume/cameleon-de-brume_avant_brume",
+   "rubrique": "egares",
+   "sujet": "cameleon-de-brume",
+   "vue": "avant",
+   "pose": "brume",
+   "titre": "Caméléon de brume (égaré, la Jungle), trois quarts avant, brume",
+   "regarde": "bas-droite",
+   "miroir": true,
+   "images": 3,
+   "fichiers": [
+    "svg/egares/cameleon-de-brume/cameleon-de-brume_avant_brume_1.svg",
+    "svg/egares/cameleon-de-brume/cameleon-de-brume_avant_brume_2.svg",
+    "svg/egares/cameleon-de-brume/cameleon-de-brume_avant_brume_3.svg"
+   ],
+   "cadre": [
+    -16,
+    -26,
+    32,
+    32
+   ],
+   "ms_par_image": [
+    220,
+    220,
+    900
+   ],
+   "parcours": "acte-4",
+   "statut": "ok"
+  },
+  {
+   "id": "egares/cameleon-de-brume/cameleon-de-brume_avant_fuite",
+   "rubrique": "egares",
+   "sujet": "cameleon-de-brume",
+   "vue": "avant",
+   "pose": "fuite",
+   "titre": "Caméléon de brume (égaré, la Jungle), trois quarts avant, fuite",
+   "regarde": "bas-droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/egares/cameleon-de-brume/cameleon-de-brume_avant_fuite_1.svg",
+    "svg/egares/cameleon-de-brume/cameleon-de-brume_avant_fuite_2.svg"
+   ],
+   "cadre": [
+    -16,
+    -26,
+    32,
+    32
+   ],
+   "ms_par_image": 160,
+   "parcours": "acte-4",
+   "statut": "ok"
+  },
+  {
+   "id": "egares/cameleon-de-brume/cameleon-de-brume_avant_luciole",
+   "rubrique": "egares",
+   "sujet": "cameleon-de-brume",
+   "vue": "avant",
+   "pose": "luciole",
+   "titre": "Caméléon de brume (égaré, la Jungle), trois quarts avant, luciole",
+   "regarde": "bas-droite",
+   "miroir": true,
+   "images": 4,
+   "fichiers": [
+    "svg/egares/cameleon-de-brume/cameleon-de-brume_avant_luciole_1.svg",
+    "svg/egares/cameleon-de-brume/cameleon-de-brume_avant_luciole_2.svg",
+    "svg/egares/cameleon-de-brume/cameleon-de-brume_avant_luciole_3.svg",
+    "svg/egares/cameleon-de-brume/cameleon-de-brume_avant_luciole_4.svg"
+   ],
+   "cadre": [
+    -16,
+    -26,
+    32,
+    32
+   ],
+   "ms_par_image": [
+    300,
+    200,
+    200,
+    1000
+   ],
+   "parcours": "acte-4",
+   "statut": "ok"
+  },
+  {
+   "id": "egares/cameleon-de-brume/cameleon-de-brume_avant_marche",
+   "rubrique": "egares",
+   "sujet": "cameleon-de-brume",
+   "vue": "avant",
+   "pose": "marche",
+   "titre": "Caméléon de brume (égaré, la Jungle), trois quarts avant, marche",
+   "regarde": "bas-droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/egares/cameleon-de-brume/cameleon-de-brume_avant_marche_1.svg",
+    "svg/egares/cameleon-de-brume/cameleon-de-brume_avant_marche_2.svg"
+   ],
+   "cadre": [
+    -16,
+    -26,
+    32,
+    32
+   ],
+   "ms_par_image": 240,
+   "parcours": "acte-4",
+   "statut": "ok"
+  },
+  {
+   "id": "egares/cameleon-de-brume/cameleon-de-brume_avant_repos",
+   "rubrique": "egares",
+   "sujet": "cameleon-de-brume",
+   "vue": "avant",
+   "pose": "repos",
+   "titre": "Caméléon de brume (égaré, la Jungle), trois quarts avant, repos",
+   "regarde": "bas-droite",
+   "miroir": true,
+   "images": 1,
+   "fichiers": [
+    "svg/egares/cameleon-de-brume/cameleon-de-brume_avant_repos.svg"
+   ],
+   "cadre": [
+    -16,
+    -26,
+    32,
+    32
+   ],
+   "parcours": "acte-4",
+   "statut": "ok"
+  },
+  {
+   "id": "egares/cameleon-de-brume/cameleon-de-brume_dos_fuite",
+   "rubrique": "egares",
+   "sujet": "cameleon-de-brume",
+   "vue": "dos",
+   "pose": "fuite",
+   "titre": "Caméléon de brume (égaré, la Jungle), trois quarts dos, fuite",
+   "regarde": "haut-droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/egares/cameleon-de-brume/cameleon-de-brume_dos_fuite_1.svg",
+    "svg/egares/cameleon-de-brume/cameleon-de-brume_dos_fuite_2.svg"
+   ],
+   "cadre": [
+    -16,
+    -26,
+    32,
+    32
+   ],
+   "ms_par_image": 160,
+   "parcours": "acte-4",
+   "statut": "ok"
+  },
+  {
+   "id": "egares/cameleon-de-brume/cameleon-de-brume_dos_marche",
+   "rubrique": "egares",
+   "sujet": "cameleon-de-brume",
+   "vue": "dos",
+   "pose": "marche",
+   "titre": "Caméléon de brume (égaré, la Jungle), trois quarts dos, marche",
+   "regarde": "haut-droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/egares/cameleon-de-brume/cameleon-de-brume_dos_marche_1.svg",
+    "svg/egares/cameleon-de-brume/cameleon-de-brume_dos_marche_2.svg"
+   ],
+   "cadre": [
+    -16,
+    -26,
+    32,
+    32
+   ],
+   "ms_par_image": 240,
+   "parcours": "acte-4",
+   "statut": "ok"
+  },
+  {
+   "id": "egares/cameleon-de-brume/cameleon-de-brume_dos_repos",
+   "rubrique": "egares",
+   "sujet": "cameleon-de-brume",
+   "vue": "dos",
+   "pose": "repos",
+   "titre": "Caméléon de brume (égaré, la Jungle), trois quarts dos, repos",
+   "regarde": "haut-droite",
+   "miroir": true,
+   "images": 1,
+   "fichiers": [
+    "svg/egares/cameleon-de-brume/cameleon-de-brume_dos_repos.svg"
+   ],
+   "cadre": [
+    -16,
+    -26,
+    32,
+    32
+   ],
+   "parcours": "acte-4",
+   "statut": "ok"
+  },
+  {
+   "id": "egares/fennec-de-brume/fennec-de-brume_avant_bouderie",
+   "rubrique": "egares",
+   "sujet": "fennec-de-brume",
+   "vue": "avant",
+   "pose": "bouderie",
+   "titre": "Fennec de brume (égaré, les Dunes), trois quarts avant, bouderie",
+   "regarde": "bas-droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/egares/fennec-de-brume/fennec-de-brume_avant_bouderie_1.svg",
+    "svg/egares/fennec-de-brume/fennec-de-brume_avant_bouderie_2.svg"
+   ],
+   "cadre": [
+    -16,
+    -26,
+    32,
+    32
+   ],
+   "ms_par_image": [
+    500,
+    700
+   ],
+   "parcours": "acte-4",
+   "statut": "ok"
+  },
+  {
+   "id": "egares/fennec-de-brume/fennec-de-brume_avant_brume",
+   "rubrique": "egares",
+   "sujet": "fennec-de-brume",
+   "vue": "avant",
+   "pose": "brume",
+   "titre": "Fennec de brume (égaré, les Dunes), trois quarts avant, brume",
+   "regarde": "bas-droite",
+   "miroir": true,
+   "images": 3,
+   "fichiers": [
+    "svg/egares/fennec-de-brume/fennec-de-brume_avant_brume_1.svg",
+    "svg/egares/fennec-de-brume/fennec-de-brume_avant_brume_2.svg",
+    "svg/egares/fennec-de-brume/fennec-de-brume_avant_brume_3.svg"
+   ],
+   "cadre": [
+    -16,
+    -26,
+    32,
+    32
+   ],
+   "ms_par_image": [
+    220,
+    220,
+    900
+   ],
+   "parcours": "acte-4",
+   "statut": "ok"
+  },
+  {
+   "id": "egares/fennec-de-brume/fennec-de-brume_avant_fuite",
+   "rubrique": "egares",
+   "sujet": "fennec-de-brume",
+   "vue": "avant",
+   "pose": "fuite",
+   "titre": "Fennec de brume (égaré, les Dunes), trois quarts avant, fuite",
+   "regarde": "bas-droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/egares/fennec-de-brume/fennec-de-brume_avant_fuite_1.svg",
+    "svg/egares/fennec-de-brume/fennec-de-brume_avant_fuite_2.svg"
+   ],
+   "cadre": [
+    -16,
+    -26,
+    32,
+    32
+   ],
+   "ms_par_image": 160,
+   "parcours": "acte-4",
+   "statut": "ok"
+  },
+  {
+   "id": "egares/fennec-de-brume/fennec-de-brume_avant_luciole",
+   "rubrique": "egares",
+   "sujet": "fennec-de-brume",
+   "vue": "avant",
+   "pose": "luciole",
+   "titre": "Fennec de brume (égaré, les Dunes), trois quarts avant, luciole",
+   "regarde": "bas-droite",
+   "miroir": true,
+   "images": 4,
+   "fichiers": [
+    "svg/egares/fennec-de-brume/fennec-de-brume_avant_luciole_1.svg",
+    "svg/egares/fennec-de-brume/fennec-de-brume_avant_luciole_2.svg",
+    "svg/egares/fennec-de-brume/fennec-de-brume_avant_luciole_3.svg",
+    "svg/egares/fennec-de-brume/fennec-de-brume_avant_luciole_4.svg"
+   ],
+   "cadre": [
+    -16,
+    -26,
+    32,
+    32
+   ],
+   "ms_par_image": [
+    300,
+    200,
+    200,
+    1000
+   ],
+   "parcours": "acte-4",
+   "statut": "ok"
+  },
+  {
+   "id": "egares/fennec-de-brume/fennec-de-brume_avant_marche",
+   "rubrique": "egares",
+   "sujet": "fennec-de-brume",
+   "vue": "avant",
+   "pose": "marche",
+   "titre": "Fennec de brume (égaré, les Dunes), trois quarts avant, marche",
+   "regarde": "bas-droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/egares/fennec-de-brume/fennec-de-brume_avant_marche_1.svg",
+    "svg/egares/fennec-de-brume/fennec-de-brume_avant_marche_2.svg"
+   ],
+   "cadre": [
+    -16,
+    -26,
+    32,
+    32
+   ],
+   "ms_par_image": 240,
+   "parcours": "acte-4",
+   "statut": "ok"
+  },
+  {
+   "id": "egares/fennec-de-brume/fennec-de-brume_avant_repos",
+   "rubrique": "egares",
+   "sujet": "fennec-de-brume",
+   "vue": "avant",
+   "pose": "repos",
+   "titre": "Fennec de brume (égaré, les Dunes), trois quarts avant, repos",
+   "regarde": "bas-droite",
+   "miroir": true,
+   "images": 1,
+   "fichiers": [
+    "svg/egares/fennec-de-brume/fennec-de-brume_avant_repos.svg"
+   ],
+   "cadre": [
+    -16,
+    -26,
+    32,
+    32
+   ],
+   "parcours": "acte-4",
+   "statut": "ok"
+  },
+  {
+   "id": "egares/fennec-de-brume/fennec-de-brume_dos_fuite",
+   "rubrique": "egares",
+   "sujet": "fennec-de-brume",
+   "vue": "dos",
+   "pose": "fuite",
+   "titre": "Fennec de brume (égaré, les Dunes), trois quarts dos, fuite",
+   "regarde": "haut-droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/egares/fennec-de-brume/fennec-de-brume_dos_fuite_1.svg",
+    "svg/egares/fennec-de-brume/fennec-de-brume_dos_fuite_2.svg"
+   ],
+   "cadre": [
+    -16,
+    -26,
+    32,
+    32
+   ],
+   "ms_par_image": 160,
+   "parcours": "acte-4",
+   "statut": "ok"
+  },
+  {
+   "id": "egares/fennec-de-brume/fennec-de-brume_dos_marche",
+   "rubrique": "egares",
+   "sujet": "fennec-de-brume",
+   "vue": "dos",
+   "pose": "marche",
+   "titre": "Fennec de brume (égaré, les Dunes), trois quarts dos, marche",
+   "regarde": "haut-droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/egares/fennec-de-brume/fennec-de-brume_dos_marche_1.svg",
+    "svg/egares/fennec-de-brume/fennec-de-brume_dos_marche_2.svg"
+   ],
+   "cadre": [
+    -16,
+    -26,
+    32,
+    32
+   ],
+   "ms_par_image": 240,
+   "parcours": "acte-4",
+   "statut": "ok"
+  },
+  {
+   "id": "egares/fennec-de-brume/fennec-de-brume_dos_repos",
+   "rubrique": "egares",
+   "sujet": "fennec-de-brume",
+   "vue": "dos",
+   "pose": "repos",
+   "titre": "Fennec de brume (égaré, les Dunes), trois quarts dos, repos",
+   "regarde": "haut-droite",
+   "miroir": true,
+   "images": 1,
+   "fichiers": [
+    "svg/egares/fennec-de-brume/fennec-de-brume_dos_repos.svg"
+   ],
+   "cadre": [
+    -16,
+    -26,
+    32,
+    32
+   ],
+   "parcours": "acte-4",
+   "statut": "ok"
+  },
+  {
+   "id": "egares/grenouille-de-brume/grenouille-de-brume_avant_bouderie",
+   "rubrique": "egares",
+   "sujet": "grenouille-de-brume",
+   "vue": "avant",
+   "pose": "bouderie",
+   "titre": "Grenouille de brume (égaré, le Marais), trois quarts avant, bouderie",
+   "regarde": "bas-droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/egares/grenouille-de-brume/grenouille-de-brume_avant_bouderie_1.svg",
+    "svg/egares/grenouille-de-brume/grenouille-de-brume_avant_bouderie_2.svg"
+   ],
+   "cadre": [
+    -16,
+    -26,
+    32,
+    32
+   ],
+   "ms_par_image": [
+    500,
+    700
+   ],
+   "parcours": "acte-4",
+   "statut": "ok"
+  },
+  {
+   "id": "egares/grenouille-de-brume/grenouille-de-brume_avant_brume",
+   "rubrique": "egares",
+   "sujet": "grenouille-de-brume",
+   "vue": "avant",
+   "pose": "brume",
+   "titre": "Grenouille de brume (égaré, le Marais), trois quarts avant, brume",
+   "regarde": "bas-droite",
+   "miroir": true,
+   "images": 3,
+   "fichiers": [
+    "svg/egares/grenouille-de-brume/grenouille-de-brume_avant_brume_1.svg",
+    "svg/egares/grenouille-de-brume/grenouille-de-brume_avant_brume_2.svg",
+    "svg/egares/grenouille-de-brume/grenouille-de-brume_avant_brume_3.svg"
+   ],
+   "cadre": [
+    -16,
+    -26,
+    32,
+    32
+   ],
+   "ms_par_image": [
+    220,
+    220,
+    900
+   ],
+   "parcours": "acte-4",
+   "statut": "ok"
+  },
+  {
+   "id": "egares/grenouille-de-brume/grenouille-de-brume_avant_fuite",
+   "rubrique": "egares",
+   "sujet": "grenouille-de-brume",
+   "vue": "avant",
+   "pose": "fuite",
+   "titre": "Grenouille de brume (égaré, le Marais), trois quarts avant, fuite",
+   "regarde": "bas-droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/egares/grenouille-de-brume/grenouille-de-brume_avant_fuite_1.svg",
+    "svg/egares/grenouille-de-brume/grenouille-de-brume_avant_fuite_2.svg"
+   ],
+   "cadre": [
+    -16,
+    -26,
+    32,
+    32
+   ],
+   "ms_par_image": 160,
+   "parcours": "acte-4",
+   "statut": "ok"
+  },
+  {
+   "id": "egares/grenouille-de-brume/grenouille-de-brume_avant_luciole",
+   "rubrique": "egares",
+   "sujet": "grenouille-de-brume",
+   "vue": "avant",
+   "pose": "luciole",
+   "titre": "Grenouille de brume (égaré, le Marais), trois quarts avant, luciole",
+   "regarde": "bas-droite",
+   "miroir": true,
+   "images": 4,
+   "fichiers": [
+    "svg/egares/grenouille-de-brume/grenouille-de-brume_avant_luciole_1.svg",
+    "svg/egares/grenouille-de-brume/grenouille-de-brume_avant_luciole_2.svg",
+    "svg/egares/grenouille-de-brume/grenouille-de-brume_avant_luciole_3.svg",
+    "svg/egares/grenouille-de-brume/grenouille-de-brume_avant_luciole_4.svg"
+   ],
+   "cadre": [
+    -16,
+    -26,
+    32,
+    32
+   ],
+   "ms_par_image": [
+    300,
+    200,
+    200,
+    1000
+   ],
+   "parcours": "acte-4",
+   "statut": "ok"
+  },
+  {
+   "id": "egares/grenouille-de-brume/grenouille-de-brume_avant_marche",
+   "rubrique": "egares",
+   "sujet": "grenouille-de-brume",
+   "vue": "avant",
+   "pose": "marche",
+   "titre": "Grenouille de brume (égaré, le Marais), trois quarts avant, marche",
+   "regarde": "bas-droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/egares/grenouille-de-brume/grenouille-de-brume_avant_marche_1.svg",
+    "svg/egares/grenouille-de-brume/grenouille-de-brume_avant_marche_2.svg"
+   ],
+   "cadre": [
+    -16,
+    -26,
+    32,
+    32
+   ],
+   "ms_par_image": 240,
+   "parcours": "acte-4",
+   "statut": "ok"
+  },
+  {
+   "id": "egares/grenouille-de-brume/grenouille-de-brume_avant_repos",
+   "rubrique": "egares",
+   "sujet": "grenouille-de-brume",
+   "vue": "avant",
+   "pose": "repos",
+   "titre": "Grenouille de brume (égaré, le Marais), trois quarts avant, repos",
+   "regarde": "bas-droite",
+   "miroir": true,
+   "images": 1,
+   "fichiers": [
+    "svg/egares/grenouille-de-brume/grenouille-de-brume_avant_repos.svg"
+   ],
+   "cadre": [
+    -16,
+    -26,
+    32,
+    32
+   ],
+   "parcours": "acte-4",
+   "statut": "ok"
+  },
+  {
+   "id": "egares/grenouille-de-brume/grenouille-de-brume_dos_fuite",
+   "rubrique": "egares",
+   "sujet": "grenouille-de-brume",
+   "vue": "dos",
+   "pose": "fuite",
+   "titre": "Grenouille de brume (égaré, le Marais), trois quarts dos, fuite",
+   "regarde": "haut-droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/egares/grenouille-de-brume/grenouille-de-brume_dos_fuite_1.svg",
+    "svg/egares/grenouille-de-brume/grenouille-de-brume_dos_fuite_2.svg"
+   ],
+   "cadre": [
+    -16,
+    -26,
+    32,
+    32
+   ],
+   "ms_par_image": 160,
+   "parcours": "acte-4",
+   "statut": "ok"
+  },
+  {
+   "id": "egares/grenouille-de-brume/grenouille-de-brume_dos_marche",
+   "rubrique": "egares",
+   "sujet": "grenouille-de-brume",
+   "vue": "dos",
+   "pose": "marche",
+   "titre": "Grenouille de brume (égaré, le Marais), trois quarts dos, marche",
+   "regarde": "haut-droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/egares/grenouille-de-brume/grenouille-de-brume_dos_marche_1.svg",
+    "svg/egares/grenouille-de-brume/grenouille-de-brume_dos_marche_2.svg"
+   ],
+   "cadre": [
+    -16,
+    -26,
+    32,
+    32
+   ],
+   "ms_par_image": 240,
+   "parcours": "acte-4",
+   "statut": "ok"
+  },
+  {
+   "id": "egares/grenouille-de-brume/grenouille-de-brume_dos_repos",
+   "rubrique": "egares",
+   "sujet": "grenouille-de-brume",
+   "vue": "dos",
+   "pose": "repos",
+   "titre": "Grenouille de brume (égaré, le Marais), trois quarts dos, repos",
+   "regarde": "haut-droite",
+   "miroir": true,
+   "images": 1,
+   "fichiers": [
+    "svg/egares/grenouille-de-brume/grenouille-de-brume_dos_repos.svg"
+   ],
+   "cadre": [
+    -16,
+    -26,
+    32,
+    32
+   ],
+   "parcours": "acte-4",
+   "statut": "ok"
+  },
+  {
+   "id": "egares/poney-de-brume/poney-de-brume_avant_bouderie",
+   "rubrique": "egares",
+   "sujet": "poney-de-brume",
+   "vue": "avant",
+   "pose": "bouderie",
+   "titre": "Poney de brume (égaré, les Landes), trois quarts avant, bouderie",
+   "regarde": "bas-droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/egares/poney-de-brume/poney-de-brume_avant_bouderie_1.svg",
+    "svg/egares/poney-de-brume/poney-de-brume_avant_bouderie_2.svg"
+   ],
+   "cadre": [
+    -16,
+    -26,
+    32,
+    35.5
+   ],
+   "ms_par_image": [
+    500,
+    700
+   ],
+   "parcours": "acte-4",
+   "statut": "ok"
+  },
+  {
+   "id": "egares/poney-de-brume/poney-de-brume_avant_brume",
+   "rubrique": "egares",
+   "sujet": "poney-de-brume",
+   "vue": "avant",
+   "pose": "brume",
+   "titre": "Poney de brume (égaré, les Landes), trois quarts avant, brume",
+   "regarde": "bas-droite",
+   "miroir": true,
+   "images": 3,
+   "fichiers": [
+    "svg/egares/poney-de-brume/poney-de-brume_avant_brume_1.svg",
+    "svg/egares/poney-de-brume/poney-de-brume_avant_brume_2.svg",
+    "svg/egares/poney-de-brume/poney-de-brume_avant_brume_3.svg"
+   ],
+   "cadre": [
+    -16,
+    -26,
+    32,
+    35.5
+   ],
+   "ms_par_image": [
+    220,
+    220,
+    900
+   ],
+   "parcours": "acte-4",
+   "statut": "ok"
+  },
+  {
+   "id": "egares/poney-de-brume/poney-de-brume_avant_fuite",
+   "rubrique": "egares",
+   "sujet": "poney-de-brume",
+   "vue": "avant",
+   "pose": "fuite",
+   "titre": "Poney de brume (égaré, les Landes), trois quarts avant, fuite",
+   "regarde": "bas-droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/egares/poney-de-brume/poney-de-brume_avant_fuite_1.svg",
+    "svg/egares/poney-de-brume/poney-de-brume_avant_fuite_2.svg"
+   ],
+   "cadre": [
+    -16,
+    -26,
+    32,
+    35.5
+   ],
+   "ms_par_image": 160,
+   "parcours": "acte-4",
+   "statut": "ok"
+  },
+  {
+   "id": "egares/poney-de-brume/poney-de-brume_avant_luciole",
+   "rubrique": "egares",
+   "sujet": "poney-de-brume",
+   "vue": "avant",
+   "pose": "luciole",
+   "titre": "Poney de brume (égaré, les Landes), trois quarts avant, luciole",
+   "regarde": "bas-droite",
+   "miroir": true,
+   "images": 4,
+   "fichiers": [
+    "svg/egares/poney-de-brume/poney-de-brume_avant_luciole_1.svg",
+    "svg/egares/poney-de-brume/poney-de-brume_avant_luciole_2.svg",
+    "svg/egares/poney-de-brume/poney-de-brume_avant_luciole_3.svg",
+    "svg/egares/poney-de-brume/poney-de-brume_avant_luciole_4.svg"
+   ],
+   "cadre": [
+    -16,
+    -26,
+    32,
+    35.5
+   ],
+   "ms_par_image": [
+    300,
+    200,
+    200,
+    1000
+   ],
+   "parcours": "acte-4",
+   "statut": "ok"
+  },
+  {
+   "id": "egares/poney-de-brume/poney-de-brume_avant_marche",
+   "rubrique": "egares",
+   "sujet": "poney-de-brume",
+   "vue": "avant",
+   "pose": "marche",
+   "titre": "Poney de brume (égaré, les Landes), trois quarts avant, marche",
+   "regarde": "bas-droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/egares/poney-de-brume/poney-de-brume_avant_marche_1.svg",
+    "svg/egares/poney-de-brume/poney-de-brume_avant_marche_2.svg"
+   ],
+   "cadre": [
+    -16,
+    -26,
+    32,
+    35.5
+   ],
+   "ms_par_image": 240,
+   "parcours": "acte-4",
+   "statut": "ok"
+  },
+  {
+   "id": "egares/poney-de-brume/poney-de-brume_avant_repos",
+   "rubrique": "egares",
+   "sujet": "poney-de-brume",
+   "vue": "avant",
+   "pose": "repos",
+   "titre": "Poney de brume (égaré, les Landes), trois quarts avant, repos",
+   "regarde": "bas-droite",
+   "miroir": true,
+   "images": 1,
+   "fichiers": [
+    "svg/egares/poney-de-brume/poney-de-brume_avant_repos.svg"
+   ],
+   "cadre": [
+    -16,
+    -26,
+    32,
+    35.5
+   ],
+   "parcours": "acte-4",
+   "statut": "ok"
+  },
+  {
+   "id": "egares/poney-de-brume/poney-de-brume_dos_fuite",
+   "rubrique": "egares",
+   "sujet": "poney-de-brume",
+   "vue": "dos",
+   "pose": "fuite",
+   "titre": "Poney de brume (égaré, les Landes), trois quarts dos, fuite",
+   "regarde": "haut-droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/egares/poney-de-brume/poney-de-brume_dos_fuite_1.svg",
+    "svg/egares/poney-de-brume/poney-de-brume_dos_fuite_2.svg"
+   ],
+   "cadre": [
+    -16,
+    -26,
+    32,
+    35.5
+   ],
+   "ms_par_image": 160,
+   "parcours": "acte-4",
+   "statut": "ok"
+  },
+  {
+   "id": "egares/poney-de-brume/poney-de-brume_dos_marche",
+   "rubrique": "egares",
+   "sujet": "poney-de-brume",
+   "vue": "dos",
+   "pose": "marche",
+   "titre": "Poney de brume (égaré, les Landes), trois quarts dos, marche",
+   "regarde": "haut-droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/egares/poney-de-brume/poney-de-brume_dos_marche_1.svg",
+    "svg/egares/poney-de-brume/poney-de-brume_dos_marche_2.svg"
+   ],
+   "cadre": [
+    -16,
+    -26,
+    32,
+    35.5
+   ],
+   "ms_par_image": 240,
+   "parcours": "acte-4",
+   "statut": "ok"
+  },
+  {
+   "id": "egares/poney-de-brume/poney-de-brume_dos_repos",
+   "rubrique": "egares",
+   "sujet": "poney-de-brume",
+   "vue": "dos",
+   "pose": "repos",
+   "titre": "Poney de brume (égaré, les Landes), trois quarts dos, repos",
+   "regarde": "haut-droite",
+   "miroir": true,
+   "images": 1,
+   "fichiers": [
+    "svg/egares/poney-de-brume/poney-de-brume_dos_repos.svg"
+   ],
+   "cadre": [
+    -16,
+    -26,
+    32,
+    35.5
+   ],
+   "parcours": "acte-4",
+   "statut": "ok"
+  },
+  {
+   "id": "egares/salamandre-de-brume/salamandre-de-brume_avant_bouderie",
+   "rubrique": "egares",
+   "sujet": "salamandre-de-brume",
+   "vue": "avant",
+   "pose": "bouderie",
+   "titre": "Salamandre de brume (égaré, le Volcan), trois quarts avant, bouderie",
+   "regarde": "bas-droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/egares/salamandre-de-brume/salamandre-de-brume_avant_bouderie_1.svg",
+    "svg/egares/salamandre-de-brume/salamandre-de-brume_avant_bouderie_2.svg"
+   ],
+   "cadre": [
+    -16,
+    -26,
+    32,
+    32
+   ],
+   "ms_par_image": [
+    500,
+    700
+   ],
+   "parcours": "acte-4",
+   "statut": "ok"
+  },
+  {
+   "id": "egares/salamandre-de-brume/salamandre-de-brume_avant_brume",
+   "rubrique": "egares",
+   "sujet": "salamandre-de-brume",
+   "vue": "avant",
+   "pose": "brume",
+   "titre": "Salamandre de brume (égaré, le Volcan), trois quarts avant, brume",
+   "regarde": "bas-droite",
+   "miroir": true,
+   "images": 3,
+   "fichiers": [
+    "svg/egares/salamandre-de-brume/salamandre-de-brume_avant_brume_1.svg",
+    "svg/egares/salamandre-de-brume/salamandre-de-brume_avant_brume_2.svg",
+    "svg/egares/salamandre-de-brume/salamandre-de-brume_avant_brume_3.svg"
+   ],
+   "cadre": [
+    -16,
+    -26,
+    32,
+    32
+   ],
+   "ms_par_image": [
+    220,
+    220,
+    900
+   ],
+   "parcours": "acte-4",
+   "statut": "ok"
+  },
+  {
+   "id": "egares/salamandre-de-brume/salamandre-de-brume_avant_fuite",
+   "rubrique": "egares",
+   "sujet": "salamandre-de-brume",
+   "vue": "avant",
+   "pose": "fuite",
+   "titre": "Salamandre de brume (égaré, le Volcan), trois quarts avant, fuite",
+   "regarde": "bas-droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/egares/salamandre-de-brume/salamandre-de-brume_avant_fuite_1.svg",
+    "svg/egares/salamandre-de-brume/salamandre-de-brume_avant_fuite_2.svg"
+   ],
+   "cadre": [
+    -16,
+    -26,
+    32,
+    32
+   ],
+   "ms_par_image": 160,
+   "parcours": "acte-4",
+   "statut": "ok"
+  },
+  {
+   "id": "egares/salamandre-de-brume/salamandre-de-brume_avant_luciole",
+   "rubrique": "egares",
+   "sujet": "salamandre-de-brume",
+   "vue": "avant",
+   "pose": "luciole",
+   "titre": "Salamandre de brume (égaré, le Volcan), trois quarts avant, luciole",
+   "regarde": "bas-droite",
+   "miroir": true,
+   "images": 4,
+   "fichiers": [
+    "svg/egares/salamandre-de-brume/salamandre-de-brume_avant_luciole_1.svg",
+    "svg/egares/salamandre-de-brume/salamandre-de-brume_avant_luciole_2.svg",
+    "svg/egares/salamandre-de-brume/salamandre-de-brume_avant_luciole_3.svg",
+    "svg/egares/salamandre-de-brume/salamandre-de-brume_avant_luciole_4.svg"
+   ],
+   "cadre": [
+    -16,
+    -26,
+    32,
+    32
+   ],
+   "ms_par_image": [
+    300,
+    200,
+    200,
+    1000
+   ],
+   "parcours": "acte-4",
+   "statut": "ok"
+  },
+  {
+   "id": "egares/salamandre-de-brume/salamandre-de-brume_avant_marche",
+   "rubrique": "egares",
+   "sujet": "salamandre-de-brume",
+   "vue": "avant",
+   "pose": "marche",
+   "titre": "Salamandre de brume (égaré, le Volcan), trois quarts avant, marche",
+   "regarde": "bas-droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/egares/salamandre-de-brume/salamandre-de-brume_avant_marche_1.svg",
+    "svg/egares/salamandre-de-brume/salamandre-de-brume_avant_marche_2.svg"
+   ],
+   "cadre": [
+    -16,
+    -26,
+    32,
+    32
+   ],
+   "ms_par_image": 240,
+   "parcours": "acte-4",
+   "statut": "ok"
+  },
+  {
+   "id": "egares/salamandre-de-brume/salamandre-de-brume_avant_repos",
+   "rubrique": "egares",
+   "sujet": "salamandre-de-brume",
+   "vue": "avant",
+   "pose": "repos",
+   "titre": "Salamandre de brume (égaré, le Volcan), trois quarts avant, repos",
+   "regarde": "bas-droite",
+   "miroir": true,
+   "images": 1,
+   "fichiers": [
+    "svg/egares/salamandre-de-brume/salamandre-de-brume_avant_repos.svg"
+   ],
+   "cadre": [
+    -16,
+    -26,
+    32,
+    32
+   ],
+   "parcours": "acte-4",
+   "statut": "ok"
+  },
+  {
+   "id": "egares/salamandre-de-brume/salamandre-de-brume_dos_fuite",
+   "rubrique": "egares",
+   "sujet": "salamandre-de-brume",
+   "vue": "dos",
+   "pose": "fuite",
+   "titre": "Salamandre de brume (égaré, le Volcan), trois quarts dos, fuite",
+   "regarde": "haut-droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/egares/salamandre-de-brume/salamandre-de-brume_dos_fuite_1.svg",
+    "svg/egares/salamandre-de-brume/salamandre-de-brume_dos_fuite_2.svg"
+   ],
+   "cadre": [
+    -16,
+    -26,
+    32,
+    32
+   ],
+   "ms_par_image": 160,
+   "parcours": "acte-4",
+   "statut": "ok"
+  },
+  {
+   "id": "egares/salamandre-de-brume/salamandre-de-brume_dos_marche",
+   "rubrique": "egares",
+   "sujet": "salamandre-de-brume",
+   "vue": "dos",
+   "pose": "marche",
+   "titre": "Salamandre de brume (égaré, le Volcan), trois quarts dos, marche",
+   "regarde": "haut-droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/egares/salamandre-de-brume/salamandre-de-brume_dos_marche_1.svg",
+    "svg/egares/salamandre-de-brume/salamandre-de-brume_dos_marche_2.svg"
+   ],
+   "cadre": [
+    -16,
+    -26,
+    32,
+    32
+   ],
+   "ms_par_image": 240,
+   "parcours": "acte-4",
+   "statut": "ok"
+  },
+  {
+   "id": "egares/salamandre-de-brume/salamandre-de-brume_dos_repos",
+   "rubrique": "egares",
+   "sujet": "salamandre-de-brume",
+   "vue": "dos",
+   "pose": "repos",
+   "titre": "Salamandre de brume (égaré, le Volcan), trois quarts dos, repos",
+   "regarde": "haut-droite",
+   "miroir": true,
+   "images": 1,
+   "fichiers": [
+    "svg/egares/salamandre-de-brume/salamandre-de-brume_dos_repos.svg"
+   ],
+   "cadre": [
+    -16,
+    -26,
+    32,
+    32
    ],
    "parcours": "acte-4",
    "statut": "ok"

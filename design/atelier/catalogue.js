@@ -41,6 +41,13 @@ function renommer(rel) {
     return out([top, a, S], [S, v, p, n].filter(Boolean).join('_'));
   }
 
+  // Les égarés (lot M) : egares/<sujet>/<sujet>_<vue>_<pose><n> -> <sujet>_<vue>_<pose>_<n>
+  if (top === 'egares') {
+    const m = base.match(/^([a-z-]+)_(avant|dos)_([a-z]+?)(\d+)?$/);
+    if (!m || m[1] !== a) throw new Error('égaré inattendu : ' + rel);
+    return out([top, a], [m[1], m[2], m[3], m[4]].filter(Boolean).join('_'));
+  }
+
   if (top === 'vivants' && a === 'cerf') {
     const m = base.match(/^cerf_([a-z]+)(?:_(\d+))?$/);
     return out([top, 'cerf-blanc'], ['cerf-blanc', 'profil', m[1], m[2]].filter(Boolean).join('_'));
@@ -185,6 +192,8 @@ function moment(id, meta) {
     return 'evolutions';
   }
   if (top === 'coffres') return { commun: 'tuto-3', rare: 'tuto-3', epique: 'acte-3', legendaire: 'acte-5' }[a];
+  // le petit fantôme dès l'étape 6, la première nuit de garde à l'étape 12 (tempéré), les bêtes des climats à l'acte IV
+  if (top === 'egares') return a === 'fantome' ? 'tuto-1' : a === 'zombie' || a === 'lapin-de-brume' ? 'tuto-3' : 'acte-4';
   if (top === 'decor') {
     if (a === 'camp') {
       if (b === 'voyageurs') return 'acte-5';
@@ -239,7 +248,6 @@ const statut = id => { for (const [rx, note] of A_REVOIR) if (rx.test(id)) retur
 
 const MANQUANTS = [
   ['tuto-1', 'La carte d\'embarquement de l\'Hirondelle (écran d\'avatar), le gilet de sauvetage, la chaise longue échouée.'],
-  ['tuto-1', 'Les égarés : petits fantômes, petits zombies tout mous, bêtes égarées selon le climat ; marche, bouderie au toucher, passage en luciole (lot M).'],
   ['tuto-2', 'La cage aux poules du navire, l\'œuf, la bulle de production d\'une bête (lot M).'],
   ['tuto-2', 'Le crabe de la Grève (étape 8).'],
   ['tuto-2', 'L\'établi de Rivet au camp (une porte de cabine sur deux caisses) et sa voile tendue sur un aviron.'],
@@ -278,7 +286,11 @@ const SUJETS = {
   'bocal-bulle': 'Bocal d\'Ondin, Bulle revenu', macareux: 'Macareux (Bosco, le familier d\'Aster)', grenouille: 'Grenouille (Bouillon, le familier de Cannelle)',
   tortue: 'Tortue (Basalte, le familier de Galet)', 'papillon-lune': 'Papillon de nuit (Lunette, le familier de Mélisse)',
   'baleine-dos': 'Baleine, le dos', 'baleine-queue': 'Baleine, la queue', 'poisson-dorade': 'Dorade', 'poisson-sardine': 'Sardine',
-  'koi-or': 'Koï doré', 'koi-blanc': 'Koï blanc', 'koi-orange': 'Koï orange'
+  'koi-or': 'Koï doré', 'koi-blanc': 'Koï blanc', 'koi-orange': 'Koï orange',
+  fantome: 'Petit fantôme (égaré)', zombie: 'Petit zombie tout mou (égaré)', 'lapin-de-brume': 'Lapin de brume (égaré, tempéré)',
+  'bouquetin-de-brume': 'Bouquetin de brume (égaré, les Cimes)', 'poney-de-brume': 'Poney de brume (égaré, les Landes)',
+  'grenouille-de-brume': 'Grenouille de brume (égaré, le Marais)', 'fennec-de-brume': 'Fennec de brume (égaré, les Dunes)',
+  'cameleon-de-brume': 'Caméléon de brume (égaré, la Jungle)', 'salamandre-de-brume': 'Salamandre de brume (égaré, le Volcan)'
 };
 const PLANTES = {
   bois_flotte: 'Bois flotté', arbre_automne: 'Arbre d\'automne', arbre_mort: 'Arbre mort', sapin_neige: 'Sapin enneigé',
@@ -324,6 +336,7 @@ function vitesse(id, pose, images) {
   if (images < 2) return undefined;
   const [top, a] = id.split('/');
   if (top === 'animaux') return pose === 'vol' ? 120 : pose === 'nage' && /mer|familiers/.test(a) ? 420 : 260;
+  if (top === 'egares') return { marche: 240, fuite: 160, bouderie: [500, 700], luciole: [300, 200, 200, 1000], brume: [220, 220, 900] }[pose];
   if (top === 'vivants') {
     if (a === 'brume') return /expr/.test(id) ? 600 : 220;
     if (a === 'cerf-blanc') return pose === 'repos' ? [1800, 180] : 300;
@@ -379,7 +392,7 @@ function construire(svgRoot, metas) {
     const [top] = id.split('/');
     const nom = id.split('/').pop();
     const e = { id, rubrique: top };
-    const perso = top === 'personnages' || top === 'animaux' || top === 'vivants';
+    const perso = top === 'personnages' || top === 'animaux' || top === 'vivants' || top === 'egares';
     if (perso) {
       const tok = nom.split('_');
       e.sujet = tok[0];
