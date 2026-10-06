@@ -402,6 +402,36 @@ chronométrer 20 appels. Comparer à zoom égal, au même endroit.
   `anyaHere(…, slot)`) ; `village.js` (`anya: { visit }` ; les bêtes alentour se tournent vers elle ; ses loutres chaque
   jour) ; `opus.js` (`secretOf(awake)` : l'aveu de Brume quand Anya est déjà éveillée) ; la Chronique liste les huit
   traces. Les soins d'Anya, et ses effets sur les égarés et les bâtiments embrumés, viennent avec H9.3 et H9.5.
+- **Lot H9.6a de la bible v6** (le compte provisoire, V20), serveur seulement (`services/accounts.js`,
+  `routes/auth.js`) :
+  - `POST /auth/provisional` crée en coulisse un compte sans adresse ni mot de passe connus
+    (`naufrage-<hex>@provisoire.invalid`), avec la session de l'appareil ; le carnet invité le rejoint ;
+  - `POST /auth/claim { email, password }` (étape 6, la page de garde) y met la vraie adresse et le mot de passe,
+    une seule fois ; `GET /auth/me` dit `provisional` ;
+  - aucun lien de mot de passe ne part vers une adresse provisoire ; les comptes provisoires sans session depuis
+    30 jours s'effacent avec leur île (`sweepProvisional`, au plus une fois par heure).
+
+  Le front (le tutoriel, H9.6) reste à faire.
+- **Lot H9.5a de la bible v6** (les nuits de créatures, § 6.15), serveur seulement. Une table ajoutée,
+  `world_nights` (autorisée par l'auteur) ; règles pures dans `services/nights.js`, base dans `world/nights.js` :
+  - rien avant que Brume présente les nuits (`POST /world/nights/start`, idempotent) ; la première vient un jour
+    après. Un front qui n'appelle pas cette route ne déclenche jamais de nuit ;
+  - chaque nuit (21 h à 6 h, Paris), 2 à 6 égarés (selon les actes finis) partent du bord de la brume vers le
+    bâtiment le plus proche, une case toutes les 3 minutes, tirés d'une graine (le joueur, la nuit) ;
+  - le feu du Foyer, une lanterne ou un brasero à 2 cases les change en lucioles ; une clôture ou un muret barre sa
+    case ; un camarade content en repousse un par nuit ; un toucher en repousse un
+    (`POST /world/nights/repel { id }`, la nuit, quand il est sur son chemin) ;
+  - au plus une panne par nuit (le premier arrivé), un seul bâtiment embrumé à la fois : il ne produit plus, annexes
+    comprises (`withBlights` : sa part de production vaut −1 de la panne à la réparation), jusqu'à
+    `POST /world/repair { site }` (3 pierres ou bois au palier I, 2 de plus par palier) ou le passage d'Anya ;
+  - tout se règle au passage suivant, dans `migrate()`, avec l'île telle qu'elle est alors ;
+  - la vue du monde dit `nights` : `{ started: false }`, ou `{ started, first, now, night: { id, start, end },
+    creatures: [{ id, site, path, at, arrives, end, step }], panne, blight }` (`end` : `luciole`, `barre`,
+    `camarade`, `touche` ou `arrive`).
+
+  Le front (égarés, pointillés du soir, cases dorées, toucher, « Réparer », état embrumé) attend les dessins de
+  l'auteur. Points laissés à son avis : les écus de la boutique continuent pendant une panne ; Anya guérit à heure
+  fixe (10 h ou 23 h, selon l'aube ou le crépuscule) ; la torche du tutoriel rejoindra les lumières avec H9.6.
 
 ### Décisions déjà prises par l'auteur (ne pas les redemander)
 - **Île** : 96 × 96 ; l'ancienne carte devient le cœur ; découverte par expéditions ; un quartier s'ouvre avec des
