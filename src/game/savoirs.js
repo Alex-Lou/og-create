@@ -38,7 +38,8 @@ const ARTS = {
   bosquet: ['IV', 'Vie et créatures'],
   potager: ['IV', 'Flore, Biologie'],
   foyer: ['V', 'Corps et esprit, Créations humaines'],
-  atelier: ['VI', 'Histoire, Technologie']
+  atelier: ['VI', 'Histoire, Technologie'],
+  brume: ['VII', 'Légendes']
 };
 export const artOf = id => (ARTS[id] ? `Son Savoir : ${ARTS[id][1]} (chapitre ${ARTS[id][0]}). Un indice par jour, en bavardant.` : '');
 
@@ -50,7 +51,8 @@ const OPENERS = {
   puits: 'Chut… l’eau me dit :',
   bosquet: 'Feuilles disent :',
   carriere: 'Hm. (Brume traduit :)',
-  potager: 'La lune me souffle :'
+  potager: 'La lune me souffle :',
+  brume: 'Psst… le Grimoire me l’a dit :'
 };
 export function savoirLine(id, savoir) {
   const what = savoir.ingredient ? `il faut « ${savoir.ingredient} »` : `un ingrédient est ${FAMILY_WORDS[savoir.family] || 'un élément'}`;
