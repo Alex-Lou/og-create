@@ -201,8 +201,8 @@ function moment(id, meta) {
       return 'acte-4';
     }
   }
-  // les variantes de l'arbre refait (arbres.js : petit, vert profond, pied fleuri) se rangent avec l'arbre
-  if (top === 'plantes') { const n = nom.replace(/_\d+$/, '').replace(/^arbre(_petit)?(_profond)?(_fleuri)?$/, 'arbre'); return PLANTES_GREVE.has(n) ? 'tuto-1' : PLANTES_ACTE1.has(n) ? 'acte-1' : 'partout'; }
+  // les variantes de l'arbre et du pommier refaits (arbres.js) se rangent avec eux
+  if (top === 'plantes') { const n = nom.replace(/_\d+$/, '').replace(/^arbre(_petit)?(_profond)?(_fleuri)?$/, 'arbre').replace(/^pommier(_petit)?(_profond)?(_fleurs)?(_tombees)?$/, 'pommier'); return PLANTES_GREVE.has(n) ? 'tuto-1' : PLANTES_ACTE1.has(n) ? 'acte-1' : 'partout'; }
   // les scènes du tutoriel (lot J2) : scenes/tutoriel/<étape>_<nom>/…, la partie suit le numéro de l'étape
   if (top === 'scenes') { const n = parseInt(b, 10); return n <= 6 ? 'tuto-1' : n <= 9 ? 'tuto-2' : 'tuto-3'; }
   return 'partout';
@@ -277,6 +277,10 @@ const PLANTES = {
   arbre_profond_fleuri: 'Arbre (grand, vert profond, pied fleuri)', arbre_petit: 'Arbre (petit, vert doux)', arbre_petit_fleuri: 'Arbre (petit, vert doux, pied fleuri)',
   arbre_petit_profond: 'Arbre (petit, vert profond)', arbre_petit_profond_fleuri: 'Arbre (petit, vert profond, pied fleuri)'
 };
+// les 16 pommiers refaits (arbres.js) : pommier[_petit][_profond][_fleurs][_tombees]
+for (const petit of ['', '_petit']) for (const vert of ['', '_profond']) for (const fleurs of ['', '_fleurs']) for (const tombees of ['', '_tombees']) {
+  PLANTES[`pommier${petit}${vert}${fleurs}${tombees}`] = `Pommier (${[petit ? 'petit' : 'grand', `vert ${vert ? 'profond' : 'doux'}`, fleurs ? 'en fleurs' : 'en pommes', tombees && (fleurs ? 'pétales tombés' : 'pommes tombées')].filter(Boolean).join(', ')})`;
+}
 // les 16 touffes d'herbe refaites (herbes.js) : touffe[_motte][_petite][_profond][_fleurie]
 for (const motte of ['', '_motte']) for (const petite of ['', '_petite']) for (const vert of ['', '_profond']) for (const fleurie of ['', '_fleurie']) {
   PLANTES[`touffe${motte}${petite}${vert}${fleurie}`] = `Touffe d'herbe (${[motte && 'avec motte', petite ? 'petite' : 'grande', `vert ${vert ? 'profond' : 'doux'}`, fleurie && 'fleurie'].filter(Boolean).join(', ')})`;

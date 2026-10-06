@@ -1,4 +1,4 @@
-// Les arbres refaits au niveau des PNJ, un par un (le premier : l'arbre). Même trait et même lumière que la troupe : le
+// Les arbres refaits au niveau des PNJ, un par un (l'arbre, puis le pommier). Même trait et même lumière que la troupe : le
 // houppier est fait de touffes détourées comme les pièces d'un personnage (celle du fond plus sombre), chaque lobe a sa
 // masse d'ombre en bas à droite et son reflet en croissant en haut à gauche, de petites marques de feuilles ; le tronc a
 // ses racines, un peu d'écorce, et se sépare en deux branches sous les feuilles.
@@ -90,4 +90,44 @@ for (const petit of [false, true]) for (const vert of ['doux', 'profond']) for (
   ARBRES.push([fichier, libelle, { vert, petit, fleuri }]);
 }
 
-module.exports = { arbre, ARBRES, VERTS, fleurette };
+// ——— Le pommier : l'arbre, ses pommes (ou ses fleurs) et, au pied, les pommes (ou les pétales) tombées ———
+// Pomme : ronde, un peu plus large en haut, creux de la queue ; ombre en bas à droite, reflet, queue, parfois une feuille
+function pomme(id, x, y, s, feuille) {
+  const r = 2.7 * s;
+  const d = `M${r2(x)},${r2(y - r * 0.7)} Q${r2(x + r * 1.1)},${r2(y - r * 1.25)} ${r2(x + r * 1.05)},${r2(y + r * 0.05)} Q${r2(x + r * 0.9)},${r2(y + r * 1.05)} ${r2(x)},${r2(y + r * 0.95)} `
+    + `Q${r2(x - r * 0.9)},${r2(y + r * 1.05)} ${r2(x - r * 1.05)},${r2(y + r * 0.05)} Q${r2(x - r * 1.1)},${r2(y - r * 1.25)} ${r2(x)},${r2(y - r * 0.7)} Z`;
+  return `<path d="${d}" fill="#E2574C" stroke="${OUT}" stroke-width="0.9" stroke-linejoin="round"/>`
+    + `<defs><clipPath id="${id}"><path d="${d}"/></clipPath></defs><g clip-path="url(#${id})">${E(x + r * 0.55, y + r * 0.55, r * 0.95, r * 0.8, '#B83A35', 0)}</g>`
+    + `<ellipse cx="${r2(x - r * 0.42)}" cy="${r2(y - r * 0.2)}" rx="${r2(r * 0.3)}" ry="${r2(r * 0.38)}" fill="#FFFFFF" opacity="0.85"/>`
+    + `<path d="M${r2(x)},${r2(y - r * 0.6)} q${r2(0.2 * s)},${r2(-1.3 * s)} ${r2(0.9 * s)},${r2(-1.8 * s)}" stroke="${OUT}" stroke-width="${r2(0.9 * Math.max(s, 0.8))}" fill="none" stroke-linecap="round"/>`
+    + (feuille ? `<path d="M${r2(x + 0.7 * s)},${r2(y - r * 0.85)} q${r2(1.6 * s)},${r2(-1.6 * s)} ${r2(3.2 * s)},${r2(-0.9 * s)} q${r2(-1.2 * s)},${r2(1.4 * s)} ${r2(-3.2 * s)},${r2(0.9 * s)} Z" fill="#8CC152" stroke="${OUT}" stroke-width="0.7" stroke-linejoin="round"/>` : '');
+}
+// pétale tombé, en amande
+const petale = (x, y, a, col) => `<path d="M0,-1.9 Q1.5,0 0,1.9 Q-1.5,0 0,-1.9 Z" fill="${col}" stroke="${OUT}" stroke-width="0.5" transform="translate(${r2(x)} ${r2(y)}) rotate(${a})"/>`;
+// [x, y, taille, feuille ?] : sur les touffes de devant, deux sur celle du fond
+const POMMES = [[-26, -49, 1, true], [-15, -58, 1], [-31, -57, 0.9], [-7, -46, 1], [3, -66, 1, true], [13, -50, 1], [23, -45, 1, true], [27, -55, 0.9], [-3, -76, 0.9], [14, -73, 0.9]];
+const TOMBEES = [[12, 5, 1], [-17, 6, 0.95, true]];
+const FLEURS = [[-27, -52], [-17, -60], [-31, -45], [-8, -50], [2, -67], [-4, -58], [12, -52], [21, -47], [27, -57], [16, -60], [-4, -78], [12, -75], [-18, -72], [24, -68], [6, -84]];
+const PETALES_SOL = [[-16, 4.5, 30, '#F7B6C8'], [-12, 7, -40, '#FFFFFF'], [9, 6, 70, '#FFFFFF'], [14, 3.5, -20, '#F7B6C8'], [18, 6.5, 50, '#FFFFFF'], [-20, 2.5, 80, '#FFFFFF']];
+
+// vert, petit : comme l'arbre ; fleurs : en fleurs plutôt qu'en pommes ; tombees : pommes (ou pétales) tombées au pied
+function pommier({ vert = 'doux', petit = false, fleurs = false, tombees = false } = {}) {
+  const k = petit ? 0.76 : 1, s = 1.12 * Math.max(k, 0.85);
+  const id = `pom${petit ? 'p' : 'g'}${vert[0]}${fleurs ? 'f' : ''}${tombees ? 't' : ''}`;
+  let o = arbre({ vert, petit });
+  if (fleurs) o += FLEURS.map(([x, y], i) => fleurette(x * k, y * k, i % 3 ? '#FFFFFF' : '#F7B6C8')).join('')
+    + (tombees ? PETALES_SOL.map(([x, y, a, col]) => petale(x * k, y, a, col)).join('') : '');
+  else o += POMMES.map(([x, y, t, f], i) => pomme(`${id}${i}`, x * k, y * k, t * s, f)).join('')
+    + (tombees ? TOMBEES.map(([x, y, t, f], i) => pomme(`${id}s${i}`, x * k, y, t * 1.05, f)).join('') : '');
+  return o;
+}
+
+// Les 16 pommiers : [fichier, libellé, options] ; « pommier » (grand, vert doux, en pommes, pied sobre) est celui par défaut
+const POMMIERS = [];
+for (const petit of [false, true]) for (const vert of ['doux', 'profond']) for (const fleurs of [false, true]) for (const tombees of [false, true]) {
+  const fichier = ['pommier', petit && 'petit', vert === 'profond' && 'profond', fleurs && 'fleurs', tombees && 'tombees'].filter(Boolean).join('_');
+  const libelle = `Pommier (${[petit ? 'petit' : 'grand', `vert ${vert}`, fleurs ? 'en fleurs' : 'en pommes', tombees && (fleurs ? 'pétales tombés' : 'pommes tombées')].filter(Boolean).join(', ')})`;
+  POMMIERS.push([fichier, libelle, { vert, petit, fleurs, tombees }]);
+}
+
+module.exports = { arbre, ARBRES, pommier, POMMIERS, VERTS, fleurette };

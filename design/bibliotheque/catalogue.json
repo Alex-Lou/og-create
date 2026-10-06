@@ -14608,10 +14608,265 @@
   {
    "id": "plantes/pommier",
    "rubrique": "plantes",
-   "titre": "Pommier",
+   "titre": "Pommier (grand, vert doux, en pommes)",
    "images": 1,
    "fichiers": [
     "svg/plantes/pommier.svg"
+   ],
+   "cadre": [
+    -50,
+    -115,
+    100,
+    140
+   ],
+   "parcours": "acte-1",
+   "statut": "ok"
+  },
+  {
+   "id": "plantes/pommier_fleurs",
+   "rubrique": "plantes",
+   "titre": "Pommier (grand, vert doux, en fleurs)",
+   "images": 1,
+   "fichiers": [
+    "svg/plantes/pommier_fleurs.svg"
+   ],
+   "cadre": [
+    -50,
+    -115,
+    100,
+    140
+   ],
+   "parcours": "acte-1",
+   "statut": "ok"
+  },
+  {
+   "id": "plantes/pommier_fleurs_tombees",
+   "rubrique": "plantes",
+   "titre": "Pommier (grand, vert doux, en fleurs, pétales tombés)",
+   "images": 1,
+   "fichiers": [
+    "svg/plantes/pommier_fleurs_tombees.svg"
+   ],
+   "cadre": [
+    -50,
+    -115,
+    100,
+    140
+   ],
+   "parcours": "acte-1",
+   "statut": "ok"
+  },
+  {
+   "id": "plantes/pommier_petit",
+   "rubrique": "plantes",
+   "titre": "Pommier (petit, vert doux, en pommes)",
+   "images": 1,
+   "fichiers": [
+    "svg/plantes/pommier_petit.svg"
+   ],
+   "cadre": [
+    -50,
+    -115,
+    100,
+    140
+   ],
+   "parcours": "acte-1",
+   "statut": "ok"
+  },
+  {
+   "id": "plantes/pommier_petit_fleurs",
+   "rubrique": "plantes",
+   "titre": "Pommier (petit, vert doux, en fleurs)",
+   "images": 1,
+   "fichiers": [
+    "svg/plantes/pommier_petit_fleurs.svg"
+   ],
+   "cadre": [
+    -50,
+    -115,
+    100,
+    140
+   ],
+   "parcours": "acte-1",
+   "statut": "ok"
+  },
+  {
+   "id": "plantes/pommier_petit_fleurs_tombees",
+   "rubrique": "plantes",
+   "titre": "Pommier (petit, vert doux, en fleurs, pétales tombés)",
+   "images": 1,
+   "fichiers": [
+    "svg/plantes/pommier_petit_fleurs_tombees.svg"
+   ],
+   "cadre": [
+    -50,
+    -115,
+    100,
+    140
+   ],
+   "parcours": "acte-1",
+   "statut": "ok"
+  },
+  {
+   "id": "plantes/pommier_petit_profond",
+   "rubrique": "plantes",
+   "titre": "Pommier (petit, vert profond, en pommes)",
+   "images": 1,
+   "fichiers": [
+    "svg/plantes/pommier_petit_profond.svg"
+   ],
+   "cadre": [
+    -50,
+    -115,
+    100,
+    140
+   ],
+   "parcours": "acte-1",
+   "statut": "ok"
+  },
+  {
+   "id": "plantes/pommier_petit_profond_fleurs",
+   "rubrique": "plantes",
+   "titre": "Pommier (petit, vert profond, en fleurs)",
+   "images": 1,
+   "fichiers": [
+    "svg/plantes/pommier_petit_profond_fleurs.svg"
+   ],
+   "cadre": [
+    -50,
+    -115,
+    100,
+    140
+   ],
+   "parcours": "acte-1",
+   "statut": "ok"
+  },
+  {
+   "id": "plantes/pommier_petit_profond_fleurs_tombees",
+   "rubrique": "plantes",
+   "titre": "Pommier (petit, vert profond, en fleurs, pétales tombés)",
+   "images": 1,
+   "fichiers": [
+    "svg/plantes/pommier_petit_profond_fleurs_tombees.svg"
+   ],
+   "cadre": [
+    -50,
+    -115,
+    100,
+    140
+   ],
+   "parcours": "acte-1",
+   "statut": "ok"
+  },
+  {
+   "id": "plantes/pommier_petit_profond_tombees",
+   "rubrique": "plantes",
+   "titre": "Pommier (petit, vert profond, en pommes, pommes tombées)",
+   "images": 1,
+   "fichiers": [
+    "svg/plantes/pommier_petit_profond_tombees.svg"
+   ],
+   "cadre": [
+    -50,
+    -115,
+    100,
+    140
+   ],
+   "parcours": "acte-1",
+   "statut": "ok"
+  },
+  {
+   "id": "plantes/pommier_petit_tombees",
+   "rubrique": "plantes",
+   "titre": "Pommier (petit, vert doux, en pommes, pommes tombées)",
+   "images": 1,
+   "fichiers": [
+    "svg/plantes/pommier_petit_tombees.svg"
+   ],
+   "cadre": [
+    -50,
+    -115,
+    100,
+    140
+   ],
+   "parcours": "acte-1",
+   "statut": "ok"
+  },
+  {
+   "id": "plantes/pommier_profond",
+   "rubrique": "plantes",
+   "titre": "Pommier (grand, vert profond, en pommes)",
+   "images": 1,
+   "fichiers": [
+    "svg/plantes/pommier_profond.svg"
+   ],
+   "cadre": [
+    -50,
+    -115,
+    100,
+    140
+   ],
+   "parcours": "acte-1",
+   "statut": "ok"
+  },
+  {
+   "id": "plantes/pommier_profond_fleurs",
+   "rubrique": "plantes",
+   "titre": "Pommier (grand, vert profond, en fleurs)",
+   "images": 1,
+   "fichiers": [
+    "svg/plantes/pommier_profond_fleurs.svg"
+   ],
+   "cadre": [
+    -50,
+    -115,
+    100,
+    140
+   ],
+   "parcours": "acte-1",
+   "statut": "ok"
+  },
+  {
+   "id": "plantes/pommier_profond_fleurs_tombees",
+   "rubrique": "plantes",
+   "titre": "Pommier (grand, vert profond, en fleurs, pétales tombés)",
+   "images": 1,
+   "fichiers": [
+    "svg/plantes/pommier_profond_fleurs_tombees.svg"
+   ],
+   "cadre": [
+    -50,
+    -115,
+    100,
+    140
+   ],
+   "parcours": "acte-1",
+   "statut": "ok"
+  },
+  {
+   "id": "plantes/pommier_profond_tombees",
+   "rubrique": "plantes",
+   "titre": "Pommier (grand, vert profond, en pommes, pommes tombées)",
+   "images": 1,
+   "fichiers": [
+    "svg/plantes/pommier_profond_tombees.svg"
+   ],
+   "cadre": [
+    -50,
+    -115,
+    100,
+    140
+   ],
+   "parcours": "acte-1",
+   "statut": "ok"
+  },
+  {
+   "id": "plantes/pommier_tombees",
+   "rubrique": "plantes",
+   "titre": "Pommier (grand, vert doux, en pommes, pommes tombées)",
+   "images": 1,
+   "fichiers": [
+    "svg/plantes/pommier_tombees.svg"
    ],
    "cadre": [
     -50,
