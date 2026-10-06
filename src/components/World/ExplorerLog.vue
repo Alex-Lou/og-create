@@ -34,17 +34,17 @@
           </li>
         </ul>
       </template>
-      <!-- Anya (bible, § 6.14) : ses traces, une par terre nouvelle explorée ; la Révélation, à revoir -->
-      <template v-if="anya && (anya.traces.length || anya.revealed)">
-        <h3 class="log__title">Traces d’Anya · {{ anya.traces.length }} / {{ TRACE_COUNT }}</h3>
+      <!-- Anya (bible, § 6.14) : ses traces, une par quartier du cœur libéré, dans l'ordre ; la Révélation, à revoir -->
+      <template v-if="anya && (traces.length || anya.revealed)">
+        <h3 class="log__title">Traces d’Anya · {{ traces.length }} / {{ TRACE_COUNT }}</h3>
         <ul class="log__list">
           <li v-if="anya.revealed" class="log__row">
             <span class="log__body"><span class="log__name">La Révélation</span><span class="log__where">Anya s’est levée au Cercle de menhirs.</span></span>
             <button type="button" class="log__btn" @click="$emit('replay-anya')">Revoir</button>
           </li>
-          <li v-for="land in anya.traces" :key="land" class="log__row log__row--link">
-            <span class="log__where">{{ zoneName(land) }}</span>
-            <span class="log__text">« {{ TRACES[land] }} »</span>
+          <li v-for="n in traces" :key="n" class="log__row log__row--link">
+            <span class="log__where">Trace {{ n }}</span>
+            <span class="log__text">« {{ TRACES[n - 1] }} »</span>
           </li>
         </ul>
       </template>
@@ -122,7 +122,7 @@ import { MEMORIES } from '@/world/story';
 import { NAMES } from '@/world/faces';
 import { BEASTS, beastsOf, familiarsOf } from '@/world/bestiary';
 import { HELIANE } from '@/world/chest';
-import { TRACES, TRACE_COUNT } from '@/game/anya';
+import { TRACES, TRACE_COUNT, tracesOf } from '@/game/anya';
 
 // Les souvenirs retrouvés : chacun dans l'acte de sa quête (la Chronique les montre une fois l'acte fini)
 const MEMORY_ACTS = { 'souvenir-ondin': 'T', 'souvenir-sylve': 'I', 'souvenir-galet': 'II', 'eveil-melisse': 'III', 'souvenir-aster': 'IV' };
@@ -147,7 +147,7 @@ export default {
     elements: { type: Array, default: () => [] },
     // Les actes dont le mot d'Héliane a été trouvé (serveur : heliane.found)
     heliane: { type: Array, default: () => [] },
-    // Anya (serveur : { traces, awake, revealed }), ou null
+    // Anya (serveur : { traces, awake, revealed, visit }), ou null
     anya: { type: Object, default: null }
   },
   emits: ['show', 'close', 'replay', 'replay-anya'],
@@ -166,6 +166,10 @@ export default {
     },
     words() {
       return ACTS.filter(act => this.heliane.includes(act)).map(act => ({ act, text: HELIANE[act] }));
+    },
+    // Les traces d'Anya trouvées, en numéros (1 … n)
+    traces() {
+      return tracesOf(this.anya);
     },
     beasts() {
       return beastsOf(this.elements);

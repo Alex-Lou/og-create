@@ -253,7 +253,7 @@ import { loadPrologue, savePrologue, prologueStep, islandStep } from '@/game/pro
 import { faceHref, NAMES } from '@/world/faces';
 import { vigilFrames, vigilDue, stageOf as civilizationOf } from '@/game/vigils';
 import { brumeLook, earlyWisp, EARLY_WISP } from '@/game/opus';
-import { PRESENTIMENTS, revelationFrames, traceFrames, anyaSceneOf } from '@/game/anya';
+import { PRESENTIMENTS, revelationFrames, traceFrames, anyaSceneOf, tracesOf, seenOf } from '@/game/anya';
 
 // Veillées déjà vues sur cet appareil (game/vigils.js)
 const VIGILS_KEY = 'oc_vigils';
@@ -380,9 +380,10 @@ export default {
       islandActs: [],
       // Les actes finis sont connus (le serveur a répondu) : Brume peut réagir à Feu follet écrit tôt
       actsKnown: false,
-      // Anya (serveur : { traces, awake, revealed, breathed }), et les traces déjà montrées sur cet appareil
+      // Anya (serveur : { traces, awake, revealed, visit, breathed }), et les traces déjà montrées sur cet appareil (en
+      // numéros ; celles d'avant la v6, nommées par terre, sont converties)
       anya: null,
-      tracesSeen: storage.load(TRACES_KEY, []),
+      tracesSeen: seenOf(storage.load(TRACES_KEY, [])),
       // Un coffre est ouvert sur l'île (ou va s'ouvrir) : les veillées et les scènes attendent qu'il se referme
       islandHold: false,
       people: null,
@@ -413,7 +414,7 @@ export default {
       const scene = this.prologueScene;
       if (this.isVigil) return vigilFrames(scene.slice(8), { people: this.people });
       if (scene === 'revelation') return revelationFrames({ lit: this.islandActs.includes('VII') });
-      if (this.isStory) return traceFrames(scene.slice(6), (this.anya && this.anya.traces.length) || 0);
+      if (this.isStory) return traceFrames(scene.slice(6), tracesOf(this.anya).length);
       return null;
     },
     // L'étape de civilisation (bible, § 6.10) : l'Ex libris du Grimoire l'affiche
@@ -842,7 +843,7 @@ export default {
           this.prologueScene = `veillee-${act}`;
           return;
         }
-        // Anya : la trace d'une terre tout juste explorée (la douzième avant la Révélation), puis la Révélation, une fois
+        // Anya : la trace d'un quartier tout juste libéré (la huitième avant la Révélation), puis la Révélation, une fois
         const scene = anyaSceneOf(this.anya, this.tracesSeen);
         if (scene) this.prologueScene = scene;
         return;
@@ -893,7 +894,7 @@ export default {
       if (scene.startsWith('trace-') && !this.prologueReplay) {
         // Les traces déjà trouvées sont toutes tenues pour vues : les plus anciennes se lisent dans la Chronique
         this.prologueScene = null;
-        this.tracesSeen = [...new Set([...this.tracesSeen, ...((this.anya && this.anya.traces) || [])])];
+        this.tracesSeen = seenOf([...this.tracesSeen, ...tracesOf(this.anya)]);
         storage.save(TRACES_KEY, this.tracesSeen);
         this.runIsland();
         return;

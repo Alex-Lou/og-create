@@ -19,14 +19,18 @@
 //   les arbres, papillons et abeilles le jour, lucioles la nuit, grenouille et tortue au bord de l'eau douce, une
 //   variante de plus à la ferme). Les familiers suivent leur maître, un pas derrière lui ; le bocal d'Ondin attend
 //   près de lui, vide tant que Poisson n'est pas écrit.
-// - Anya (bible, § 6.14), une fois révélée : au Cercle de menhirs à l'aube et au crépuscule, son grand cerf blanc et un
-//   halo de lucioles ; ses créatures (les loutres) jouent au bord de l'eau douce. Avant même la Révélation, Cannelle
-//   pose chaque soir un bol de soupe « pour la Dame » au bord du Foyer.
+// - Anya (bible, § 6.14, v6), une fois révélée : elle erre. Les jours de son passage, à l'aube ou au crépuscule, elle
+//   se tient où le serveur l'a tirée, avec son grand cerf blanc et un halo de lucioles, et les bêtes alentour se
+//   tournent toutes vers elle. Ses créatures (les loutres) jouent chaque jour au bord de l'eau douce. Avant même la
+//   Révélation, Cannelle pose chaque soir un bol de soupe « pour la Dame » au bord du Foyer.
 import { villagerSprite, ROLES, SKINS, HAIRS } from './villagers';
 import { visitorLook } from './visitors';
 import { ANIMAL_SPRITES } from './animals';
 import { bestiaryOf, FAMILIARS } from './bestiary';
 import { anyaHere } from '@/game/anya';
+
+// Les bêtes qui se tournent vers Anya : à moins de 8 cases d'elle
+const ANYA_SIGN_RANGE = 8;
 
 const SPEED = 0.8; // cases par seconde, à pied
 const WALK = 'gsmdpkb';
@@ -170,8 +174,9 @@ function doorOf(grid, site) {
 // visitor : visiteur du moment (vue du serveur) ou null ; settlers : visiteurs installés ({ id, seed, role, site, home }) ;
 // climates : climat de chaque quartier (par indice) ; avoid : cases à laisser libres autour (gisements, lieux remarquables) ;
 // troupe : la troupe rencontrée, vue du serveur ({ id, built, asleep } : bible, § 6.6), ou null (un par bâtiment bâti) ;
-// written : les éléments écrits dans le Grimoire (le Bestiaire et les familiers), ou null ; anya : la case du Cercle de
-// menhirs une fois Anya révélée, ou null ; dame : le bol de soupe du soir « pour la Dame »
+// written : les éléments écrits dans le Grimoire (le Bestiaire et les familiers), ou null ; anya : une fois Anya
+// révélée, { visit } (son passage du jour, vu du serveur : { slot, x, y }, ou null), sinon null ; dame : le bol de soupe
+// du soir « pour la Dame »
 export function villageOf({ n, M, sites, owned, crafts = [], props, annexes = [], visitor = null, settlers = [], climates = [], avoid = [], troupe = null, written = null, anya = null, dame = false }) {
   const grid = gridOf({ n, M, sites, owned, crafts, props, annexes });
   const bestiary = bestiaryOf(written);
@@ -591,14 +596,15 @@ export function villageOf({ n, M, sites, owned, crafts = [], props, annexes = []
         return dayTime ? { x: c.x + Math.sin(a) * 0.3, y: c.y, frame: Math.floor(t * 1.2) % 2, flip: Math.cos(a) < 0 } : { ...c, frame: 'rest', flip: false };
       });
     }
-    // Anya, une fois révélée : au Cercle à l'aube et au crépuscule, son cerf blanc, ses lucioles ; ses loutres le jour
-    if (anya && anyaHere(h, phase.rise, phase.set)) {
+    // Anya, le jour de son passage, à son moment (l'aube ou le crépuscule) : son cerf blanc, ses lucioles
+    const here = anya && anya.visit && anyaHere(h, phase.rise, phase.set, anya.visit.slot) ? anya.visit : null;
+    if (here) {
       const hop = tapped('anya:dame', 0.8);
-      out.push(beast('anya:dame', 'anya', '', anya.x + 0.5, anya.y + 0.5, hop === null ? 0 : Math.sin(hop * Math.PI) * 3, false, Math.floor(t * 0.5) % 2));
-      out.push(beast('anya:cerf', 'deer', 'blanc', anya.x + 1.3, anya.y + 0.9, 0, true, Math.floor(t / 5) % 2));
+      out.push(beast('anya:dame', 'anya', '', here.x + 0.5, here.y + 0.5, hop === null ? 0 : Math.sin(hop * Math.PI) * 3, false, Math.floor(t * 0.5) % 2));
+      out.push(beast('anya:cerf', 'deer', 'blanc', here.x + 1.3, here.y + 0.9, 0, true, Math.floor(t / 5) % 2));
       for (let k = 0; k < 6; k++) {
         const a = t * 0.3 + k * 1.05;
-        out.push(beast(`anya:luciole:${k}`, 'firefly', '', anya.x + 0.5 + Math.cos(a) * 0.9, anya.y + 0.5 + Math.sin(a) * 0.6, 18 + k * 4 + Math.sin(t + k) * 3, false, Math.floor(t * 1.4 + k) % 2));
+        out.push(beast(`anya:luciole:${k}`, 'firefly', '', here.x + 0.5 + Math.cos(a) * 0.9, here.y + 0.5 + Math.sin(a) * 0.6, 18 + k * 4 + Math.sin(t + k) * 3, false, Math.floor(t * 1.4 + k) % 2));
       }
     }
     if (anya && banks.length) {
@@ -617,6 +623,13 @@ export function villageOf({ n, M, sites, owned, crafts = [], props, annexes = []
         out.push(beast(`koi:${k}`, 'koi', color, pond.x + Math.cos(a) * 0.32, pond.y + Math.sin(a) * 0.26, -6, Math.sin(a) > 0, Math.floor(t * 3 + k) % 2));
       });
     }
+    // Le signe de son passage (§ 6.14) : les bêtes alentour se tournent toutes vers Anya (les poissons non)
+    if (here) {
+      for (const b of out) {
+        if (b.id.startsWith('anya:') || b.species === 'koi' || Math.hypot(b.x - here.x, b.y - here.y) > ANYA_SIGN_RANGE) continue;
+        b.flip = (here.x - b.x) - (here.y - b.y) < 0;
+      }
+    }
     return { list: out, lights };
   }
   // Ce que dit un familier qu'on touche, ou sa fiche courte (appui long)
@@ -632,7 +645,7 @@ export function villageOf({ n, M, sites, owned, crafts = [], props, annexes = []
   }
   // Anya, son cerf, ses lucioles, ses loutres ; le bol de la Dame (toucher : ce qu'ils disent ; appui long : leur fiche)
   function storyInfo(who, long) {
-    if (who.id === 'anya:dame') return { title: 'Anya', text: long ? 'L’Âme de l’Île. Au Cercle, à l’aube et au crépuscule.' : 'La forêt se souvient de toi.', ...(long ? { hint: 'Toucher : son Souffle, une fois par jour' } : {}) };
+    if (who.id === 'anya:dame') return { title: 'Anya', text: long ? 'L’Âme de l’Île. Elle erre ; on la croise rarement, à l’aube ou au crépuscule.' : 'La forêt se souvient de toi.', ...(long ? { hint: 'Toucher : son Souffle, une fois par passage' } : {}) };
     if (who.id === 'anya:cerf') return { title: 'Le cerf blanc', text: long ? 'Le grand cerf blanc d’Anya. Il ne quitte pas sa Dame.' : 'Il incline ses bois.', ...(long ? { hint: 'Toucher : il incline ses bois' } : {}) };
     if (who.id === 'dame:bol') return { title: 'Un bol de soupe', text: '« Pour la Dame. » Cannelle le pose chaque soir au bord du Foyer.', ...(long ? { hint: 'Toucher : le regarder' } : {}) };
     if (who.id.startsWith('anya:otter')) return long ? { title: 'Loutre', text: BEAST_NAMES.otter[1], hint: 'Toucher : elle s’enfuit' } : null;

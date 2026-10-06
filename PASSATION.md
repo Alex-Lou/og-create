@@ -389,6 +389,19 @@ chronométrer 20 appels. Comparer à zoom égal, au même endroit.
   `trace-<terre>` dans `App.vue` (traces vues : `oc_traces`) ; images `cercle`, `cercle-sceaux`, `anya`, `gemme`, `trace`
   de `PrologueArt.vue` ; Anya sur l'île (`world/anyaSprite.js`, `village.js` : `anya`, `dame`) ; loutres et bol de soupe
   (`animals.js`) ; Cercle fleuri (`landmarkLayers(id, t, bloom)`) ; la gemme du Grimoire (`GrimoireBinding` : `awake`).
+- **Lot H9.1 de la bible v6** (Anya). Serveur (`services/anya.js`, `world/anyaBrume.js`) :
+  - l'éveil ne demande plus que les neuf quartiers du cœur ;
+  - huit traces dans l'ordre (`anya.traces` : `[1 … n]`), une par quartier libéré après La Source ; celles de la v5
+    (par terre explorée) restent acquises, sept au plus avant l'éveil ;
+  - l'errance : `anya.visit` (`{ slot: 'aube' | 'crepuscule', x, y }` ou `null`), deux ou trois jours par semaine
+    (semaines de Paris), tirés d'une graine (le joueur, la semaine, le jour), sur une case libre près du panneau d'un
+    quartier à soi, ou au Cercle une fois trouvé ; rien n'est stocké ;
+  - le Souffle : un par passage (`breathRefused`).
+
+  Front : `game/anya.js` (`TRACES` en tableau, `tracesOf` et `seenOf` acceptent aussi les anciennes traces par terre,
+  `anyaHere(…, slot)`) ; `village.js` (`anya: { visit }` ; les bêtes alentour se tournent vers elle ; ses loutres chaque
+  jour) ; `opus.js` (`secretOf(awake)` : l'aveu de Brume quand Anya est déjà éveillée) ; la Chronique liste les huit
+  traces. Les soins d'Anya, et ses effets sur les égarés et les bâtiments embrumés, viennent avec H9.3 et H9.5.
 
 ### Décisions déjà prises par l'auteur (ne pas les redemander)
 - **Île** : 96 × 96 ; l'ancienne carte devient le cœur ; découverte par expéditions ; un quartier s'ouvre avec des

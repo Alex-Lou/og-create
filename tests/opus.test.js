@@ -1,7 +1,7 @@
 // Lot H7 (HISTOIRE.md, § 4.3, § 6.13, § 10, § 13 et § 16) : le Grand Œuvre (la lumière suit les actes), les huit stades
 // de Brume, l'acte VI (la rune, le Phénix), la finale au Phare, les mots d'Héliane, Feu follet écrit tôt.
 import { describe, it, expect } from 'vitest';
-import { actNow, opusOf, brumeLook, secretDue, SECRET, earlyWisp, EARLY_WISP } from '@/game/opus';
+import { actNow, opusOf, brumeLook, secretDue, SECRET, secretOf, earlyWisp, EARLY_WISP } from '@/game/opus';
 import { ACTS, vigilFrames } from '@/game/vigils';
 import { HELIANE, noteOf } from '@/world/chest';
 import { skyAt } from '@/world/sky';
@@ -50,6 +50,12 @@ describe('Brume, ses huit stades', () => {
     // La dernière réplique de Brume finit par les mots de la bible
     expect(SECRET[1].text).toMatch(/parce que l’île est seule\. Parce qu’Elle dort\.$/);
     for (const line of SECRET) expect(line.text.length).toBeLessThanOrEqual(140);
+    // Anya déjà éveillée (v6 : dès l'acte V) : Brume ne dit plus qu'Elle dort
+    expect(secretOf(false)).toBe(SECRET);
+    const awake = secretOf(true);
+    expect(awake.map(line => line.id)).toEqual(SECRET.map(line => line.id));
+    expect(awake[1].text).toMatch(/parce que l’île a dormi si longtemps\. Et moi, j’ai pleuré pour deux\.$/);
+    for (const line of awake) expect(line.text.length).toBeLessThanOrEqual(140);
   });
   it('Feu follet écrit avant l’acte VII : une réplique, une seule (le guide ne redit jamais)', () => {
     expect(earlyWisp(upTo('II'), ['Feu follet'])).toBe(true);
