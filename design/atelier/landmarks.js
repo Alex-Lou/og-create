@@ -2,6 +2,7 @@
 // un lieu déborde de sa case comme un monument. Cadre LAND (le jeu les affiche × 1,35, la cascade × 1).
 const { OUT, P, E, L, r2 } = require('./troupe');
 const Dk = require('./deco');
+const { feuillage, herbe, fleurette } = require('./arbres');
 const { pt, poly, face, shadow, box, crown, boulder, flower, stroke, thick, cylinder, disc, post, rail, glow, LEAVES, PINE, WOOD, WOOD_DARK, GRANITE, STONE, WATER, WATER_LIGHT } = Dk;
 
 const LAND = [-75, -150, 150, 190];
@@ -242,13 +243,53 @@ LM.arche = { n: 2, draw: f => {
   const [gx, gy] = at(0.16, -0.02, Z);
   return s + gull(gx, gy - 4, f);
 } };
+// Saule millénaire : une berge d'herbe et sa mare (nénuphars, roseaux) ; un tronc noueux aux racines tordues, son creux
+// et son écorce ; un houppier en dôme ; le rideau de branches, devant et derrière le tronc, qui ondule jusqu'à l'eau et
+// y fait des ronds ; une feuille qui tombe (2 images)
+const SAULE = { devant: { light: '#E6F6AA', mid: '#B4D96E', dark: '#7DAE50' }, fond: { light: '#B7DA7C', mid: '#8DBE57', dark: '#5E9443' } };
 LM.saule = { n: 2, draw: f => {
-  const [x, y] = at(0, 0);
-  let s = E(x + 14, y + 8, 30, 10, '#8FC8E0', 1) + E(x + 10, y + 6, 20, 6, '#B6E0F0', 0) + shadow(-0.1, 0, 0.5, 0.15);
-  s += `<path d="M${x - 9},${y + 2} Q${x - 14},${y - 20} ${x - 6},${y - 40} L${x + 6},${y - 40} Q${x + 2},${y - 24} ${x + 10},${y + 3} Q${x},${y + 7} ${x - 9},${y + 2} Z" fill="${WOOD_DARK.left}" stroke="${OUT}" stroke-width="1.2"/>` + `<path d="M${x - 6},${y - 10} q4,-4 2,-10 M${x + 2},${y - 22} q-3,-4 0,-8" stroke="${WOOD_DARK.right}" stroke-width="1" fill="none"/>`;
-  s += crown([[-22, -52, 18], [20, -54, 19], [0, -66, 20], [-4, -46, 16]], { light: '#C8EE9A', mid: '#9CD06E', dark: '#6FAE4E' }, 'sa' + f);
-  for (let i = 0; i < 12; i++) { const xx = x - 38 + i * 7, sw = (f ? 1.6 : -1.2) * ((i % 2) ? 1 : 0.6), len = 30 + (i % 3) * 8; s += thick(`M${xx},${y - 48} q${sw},${len * 0.5} ${sw * 1.8},${len}`, 1.2, '#9CD06E'); }
-  return s;
+  const [x, y] = at(0, 0), BOIS = { left: '#8E7458', right: '#6A5440', bark: '#4A3A2C', light: '#A88E70' };
+  const bosses = (cx, cy, rx, ry, n) => { const pts = Array.from({ length: n }, (_, i) => { const t = (i / n) * TAU, r = 1 + (i % 2 ? 0.05 : -0.03); return [cx + Math.cos(t) * rx * r, cy + Math.sin(t) * ry * r]; }); const mil = i => { const p = pts[i % n], q = pts[(i + 1) % n]; return `${r2((p[0] + q[0]) / 2)},${r2((p[1] + q[1]) / 2)}`; }; let d = `M${mil(n - 1)}`; for (let i = 0; i < n; i++) d += ` Q${r2(pts[i][0])},${r2(pts[i][1])} ${mil(i)}`; return d + ' Z'; };
+  // une mèche du rideau : un ruban cerné qui pend et ondule, ses petites feuilles ; un rond dans l'eau si elle y touche
+  const meche = (sx, sy, len, sw, c, eau) => {
+    const ex = sx + sw, ey = sy + len, cx = sx + sw * 0.1 + (sx < x ? -2.2 : 2.2), cy = sy + len * 0.45, Q = t => [(1 - t) ** 2 * sx + 2 * t * (1 - t) * cx + t * t * ex, (1 - t) ** 2 * sy + 2 * t * (1 - t) * cy + t * t * ey];
+    const d = `M${r2(sx)},${r2(sy)} Q${r2(cx)},${r2(cy)} ${r2(ex)},${r2(ey)}`;
+    return `<path d="${d}" stroke="${OUT}" stroke-width="2.8" fill="none" stroke-linecap="round"/><path d="${d}" stroke="${c.mid}" stroke-width="1.5" fill="none" stroke-linecap="round"/>`
+      + [0.28, 0.46, 0.64, 0.82].map((t, k) => { const [px, py] = Q(t), sg = k % 2 ? 1 : -1; return `<path d="M${r2(px)},${r2(py)} q${sg * 1.4},0.3 ${sg * 2.2},1.8" stroke="${c.mid}" stroke-width="1.6" fill="none" stroke-linecap="round"/><path d="M${r2(px)},${r2(py)} q${sg * 1.4},0.3 ${sg * 2.2},1.8" stroke="${c.dark}" stroke-width="0.5" fill="none" stroke-linecap="round"/>`; }).join('')
+      + (eau ? `<ellipse cx="${r2(ex)}" cy="${r2(ey + 1.4)}" rx="${3 + (f ? 1 : 0)}" ry="${1.2 + (f ? 0.4 : 0)}" fill="none" stroke="#E2F4FC" stroke-width="0.8"/>` : '');
+  };
+  const sw = (i, k = 1) => ((f ? 1.8 : -1.4) + (i % 3 - 1) * 0.6) * k;
+  // la berge, la mare et ses reflets
+  let s = shadow(0, 0, 0.8, 0.1) + P(bosses(x, y + 4, 64, 28, 22), '#9CC874', 1.1) + E(x - 8, y + 2, 42, 17, '#AED486', 0)
+    + `<path d="M${x - 2},${y + 14} Q${x + 2},${y + 2} ${x + 20},${y + 3} Q${x + 46},${y + 4} ${x + 48},${y + 13} Q${x + 44},${y + 23} ${x + 22},${y + 23} Q${x + 2},${y + 23} ${x - 2},${y + 14} Z" fill="#7FC0E2" stroke="${OUT}" stroke-width="1"/>`
+    + E(x + 20, y + 11, 18, 5, '#A6D8F0', 0) + `<path d="M${x + 10},${y + 16} l9,-1 M${x + 30},${y + 19} l7,-1" stroke="#FFFFFF" stroke-width="1.2" stroke-linecap="round"/>`;
+  // le rideau du fond, derrière le tronc
+  s += [-42, -35, -27, -19, -10, -2, 7, 15, 24, 32, 40].map((sx, i) => meche(x + sx, y - 58 + Math.abs(sx) * 0.08, 50 - Math.abs(sx) * 0.05 + (i % 3) * 3, sw(i, 0.8) + (sx < 0 ? -1.5 : 1.5), SAULE.fond, false)).join('');
+  // le tronc noueux : racines tordues, trois maîtresses branches, le pan d'ombre, le creux, l'écorce
+  const d = `M${x - 21},${y + 3} Q${x - 12},${y} ${x - 10},${y - 8} Q${x - 13},${y - 22} ${x - 8},${y - 34} Q${x - 10},${y - 44} ${x - 21},${y - 52} L${x - 14},${y - 57} Q${x - 6},${y - 49} ${x - 3},${y - 44} Q${x - 2},${y - 53} ${x + 2},${y - 61} L${x + 9},${y - 59} Q${x + 5},${y - 51} ${x + 5},${y - 43} Q${x + 10},${y - 49} ${x + 19},${y - 53} L${x + 23},${y - 47} Q${x + 12},${y - 40} ${x + 9},${y - 32} Q${x + 12},${y - 18} ${x + 10},${y - 8} Q${x + 12},${y} ${x + 22},${y + 4} Q${x + 15},${y + 6} ${x + 9},${y + 4} Q${x + 5},${y + 7} ${x},${y + 5} Q${x - 5},${y + 7} ${x - 9},${y + 4} Q${x - 15},${y + 6} ${x - 21},${y + 3} Z`;
+  const idT = `saule-tronc-${f}`;
+  s += `<path d="${d}" fill="${BOIS.left}" stroke="${OUT}" stroke-width="1.2" stroke-linejoin="round"/><defs><clipPath id="${idT}"><path d="${d}"/></clipPath></defs><g clip-path="url(#${idT})">`
+    + `<path d="M${x + 3},${y + 8} Q${x + 6},${y - 14} ${x + 5},${y - 32} Q${x + 9},${y - 44} ${x + 15},${y - 60} L${x + 30},${y - 60} L${x + 30},${y + 8} Z" fill="${BOIS.right}"/>`
+    + E(x, y - 48, 22, 8, BOIS.right, 0)
+    + `<path d="M${x - 6},${y - 6} Q${x - 7},${y - 14} ${x - 5},${y - 20} M${x + 4},${y - 10} Q${x + 5},${y - 18} ${x + 3},${y - 26} M${x - 7},${y - 30} q1,-4 -0.4,-8 M${x + 1},${y - 36} q-1,-3 0,-6" fill="none" stroke="${BOIS.bark}" stroke-width="0.8" stroke-linecap="round"/>`
+    + `<path d="M${x - 8},${y - 4} Q${x - 9},${y - 16} ${x - 7.4},${y - 26}" fill="none" stroke="${BOIS.light}" stroke-width="1.2" stroke-linecap="round" opacity="0.8"/></g>`
+    + E(x - 2, y - 20, 3.2, 4.4, BOIS.bark, 0.9) + E(x - 2, y - 19.4, 2, 3.2, '#2E2218', 0);
+  // le houppier en dôme : la touffe du fond, puis les côtés et le milieu devant
+  s += feuillage(`saule-a-${f}`, [[-30, -72, 15], [-12, -84, 17], [10, -86, 17], [29, -74, 15], [-40, -60, 11], [40, -60, 11], [0, -74, 16]].map(([a, b, r]) => [x + a, y + b, r]), SAULE.fond, [[-18, -78], [4, -80, 0.9], [22, -76, 0.9], [-34, -64, 0.8]].map(([a, b, k]) => [x + a, y + b, k]), 1)
+    + feuillage(`saule-b-${f}`, [[24, -64, 13], [36, -54, 9, 0], [13, -58, 10, 0]].map(([a, b, r, h]) => [x + a, y + b, r, h]), SAULE.devant, [[24, -58], [33, -52, 0.8]].map(([a, b, k]) => [x + a, y + b, k]), 1)
+    + feuillage(`saule-c-${f}`, [[-25, -62, 13], [-37, -54, 9, 0], [-14, -56, 10, 0]].map(([a, b, r, h]) => [x + a, y + b, r, h]), SAULE.devant, [[-26, -56], [-34, -50, 0.8]].map(([a, b, k]) => [x + a, y + b, k]), 1)
+    + feuillage(`saule-d-${f}`, [[-1, -70, 12], [-6, -60, 9, 0], [6, -61, 9, 0]].map(([a, b, r, h]) => [x + a, y + b, r, h]), SAULE.devant, [[-2, -64], [5, -68, 0.8]].map(([a, b, k]) => [x + a, y + b, k]), 1);
+  // le rideau de devant : de longues mèches sur les côtés jusqu'au sol ou à l'eau, de plus courtes au milieu
+  s += [[-47, -54, 52], [-42, -52, 56], [-36, -51, 50], [-30, -50, 54], [-23, -50, 30], [-15, -52, 22], [-7, -55, 16], [9, -56, 18], [16, -54, 26], [23, -52, 54], [29, -50, 62], [35, -51, 58], [41, -52, 64], [47, -54, 58]]
+    .map(([sx, sy, len], i) => meche(x + sx, y + sy, len, sw(i) + (sx < 0 ? -2 : 2), SAULE.devant, sx > 20)).join('');
+  // les nénuphars, les roseaux au bord de la mare, une touffe et des fleurettes sur la berge
+  s += P(`M${x + 14},${y + 13} a5,1.9 0 1 1 1.4,1.4 L${x + 14},${y + 13} Z`, '#6FAE4E', 0.7) + P(`M${x + 38},${y + 17} a4,1.5 0 1 1 1.2,1.2 L${x + 38},${y + 17} Z`, '#6FAE4E', 0.7)
+    + fleurette(x + 13, y + 11.6, '#F7B6C8')
+    + [[-2, 12], [1, 16], [48, 11]].map(([dx, dy]) => `<path d="M${x + dx},${y + dy} l-1,-10 M${x + dx + 1.4},${y + dy} l0.6,-12 M${x + dx + 2.8},${y + dy} l1.8,-9" stroke="#5E8C3A" stroke-width="1.1" stroke-linecap="round"/>` + E(x + dx + 2, y + dy - 12.4, 0.9, 2.2, '#8A5A34', 0.5)).join('')
+    + herbe(x - 40, y + 14, '#86B852', 0.9) + herbe(x - 24, y + 22, '#94C25C', 0.75) + fleurette(x - 32, y + 18, '#FFFFFF') + fleurette(x - 46, y + 8, '#F7B6C8');
+  // une feuille qui tombe
+  const [lx, ly, la] = f ? [30, -26, 140] : [34, -42, 20];
+  return s + `<path d="M0,-2.6 Q1.6,0 0,2.6 Q-1.6,0 0,-2.6 Z" fill="${SAULE.devant.light}" stroke="${OUT}" stroke-width="0.6" transform="translate(${x + lx} ${y + ly}) rotate(${la})"/>`;
 } };
 LM.pilotis = { n: 2, draw: f => {
   let s = disc(0, 0, 0.72, 0, '#6FA8C8', 1) + disc(-0.08, -0.05, 0.5, 0, '#8FC8E0', 0);
