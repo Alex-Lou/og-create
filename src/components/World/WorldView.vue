@@ -309,6 +309,18 @@
       @grimoire="openSavoir"
       @close="villagerId = null"
     />
+    <!-- Bête de ferme : sa fiche (bible, § 6.16) ; la nourrir, ramasser les bulles -->
+    <BeastSheet
+      v-if="beastView && state"
+      :beast="beastView"
+      :cost="state.beasts.cost"
+      :stock="state.stock"
+      :portrait="beastPortrait(beastView.id)"
+      :busy="busy"
+      @feed="feedBeast"
+      @collect="collectBeasts()"
+      @close="beastId = null"
+    />
     <!-- Visiteur arrivé en bateau : sa fiche (demande, récompense) -->
     <VisitorSheet
       v-if="visitorOpen && state && state.visitor"
@@ -384,6 +396,7 @@ import AnnexPanel from './AnnexPanel.vue';
 import AnnexSheet from './AnnexSheet.vue';
 import MiniGame from './minigames/MiniGame.vue';
 import VillagerSheet from './VillagerSheet.vue';
+import BeastSheet from './BeastSheet.vue';
 import VisitorSheet from './VisitorSheet.vue';
 import RenameSheet from './RenameSheet.vue';
 import CraftBench from './CraftBench.vue';
@@ -413,6 +426,7 @@ import { noteOf, openableOf } from '@/world/chest';
 import GModal from '@/components/ui/GModal.vue';
 import { guideOf, guideKind } from '@/world/itemGuide';
 import { villageOf } from '@/world/village';
+import { ANIMAL_SPRITES } from '@/world/animals';
 import { clearDrawings } from '@/book/painter';
 import { burst, ring, vibrate, center, reducedMotion } from '@/utils/fx';
 import { LABEL, RESOURCES } from '@/game/resources';
@@ -476,7 +490,7 @@ const FOREST_HIGH = ['pine', 'pine', 'tree'];
 // d'animation sont non réactifs et s'arrêtent quand l'onglet est caché ou le composant démonté.
 export default {
   name: 'WorldView',
-  components: { HarvestGame, ShopItemSheet, GModal, ChestList, ChestReveal, ChestHaul, AnnexPanel, AnnexSheet, MiniGame, VillagerSheet, VisitorSheet, RenameSheet, CraftBench, CraftPuzzle, ExplorerLog, FindsSheet, WreckScene, BrumeSheet, ZoneSheet, SiteShop, SiteSteps, SiteOverview, SiteSheet, IslandHud, IslandButtons },
+  components: { HarvestGame, ShopItemSheet, GModal, ChestList, ChestReveal, ChestHaul, AnnexPanel, AnnexSheet, MiniGame, VillagerSheet, BeastSheet, VisitorSheet, RenameSheet, CraftBench, CraftPuzzle, ExplorerLog, FindsSheet, WreckScene, BrumeSheet, ZoneSheet, SiteShop, SiteSteps, SiteOverview, SiteSheet, IslandHud, IslandButtons },
   props: {
     // Glyphes des éléments du Livre (savoir-faire demandé à l'établi)
     elementEmojis: { type: Object, required: true },
@@ -537,6 +551,7 @@ export default {
       renaming: null,
       // Habitant dont la fiche est ouverte, sa dernière réplique, le cœur tout juste gagné
       villagerId: null,
+      beastId: null,
       villagerSaid: '',
       villagerPopped: 0,
       // Savoir que le maître vient de souffler (bible, § 6.4) : { page, chapter, ingredient | family } ou null
@@ -621,6 +636,10 @@ export default {
     },
     villagerSiteName() {
       return this.villagerView ? this.siteName(this.villagerView.site || this.villagerView.id) : '';
+    },
+    // Bête de ferme dont la fiche est ouverte (vue du serveur, à jour)
+    beastView() {
+      return this.beastId && this.state && this.state.beasts ? this.state.beasts.list.find(b => b.id === this.beastId) || null : null;
     },
     // Mini-jeu ouvert : sa vue (réserve de parties à jour) et le nom de son bâtiment
     gameView() {
@@ -1396,6 +1415,12 @@ export default {
       if (!who || who.kind !== 'villager' || !this.state) return null;
       return (this.state.villagers || []).find(v => `vil:${v.id}` === who.id) || null;
     },
+    // La bête de ferme qu'on touche (who.beast : son nom au serveur), vue du serveur, ou null (variante du Bestiaire,
+    // serveur d'avant les bêtes)
+    beastOf(who) {
+      if (!who || !who.beast || !this.state || !this.state.beasts) return null;
+      return this.state.beasts.list.find(b => b.id === who.beast) || null;
+    },
     // Le visiteur qu'on touche (who : { kind: 'villager', id: 'vis:<id>' }), ou null
     guestOf(who) {
       const v = this.state && this.state.visitor;
@@ -1500,6 +1525,18 @@ export default {
       const resident = this.village && this.village.residents.find(r => r.role === id);
       const look = resident ? resident.look : { skin: '#F6D3B3', hair: '#7A4E2C', ...ROLES[id] };
       return spriteUrl(`portrait-${id}-${look.skin}-${look.hair}`, () => villagerSprite(look));
+    },
+    openBeast(id) {
+      this.site = null;
+      this.villagerId = null;
+      this.beastId = id;
+    },
+    // Portrait d'une bête de ferme : son dessin, de la race que montre la ferme
+    beastPortrait(id) {
+      const a = this.village && this.village.farm.find(f => f.beast === id);
+      const species = a ? a.species : this.beastView.species;
+      const variant = a ? a.variant : '';
+      return spriteUrl(`portrait-beast-${species}-${variant}`, () => ANIMAL_SPRITES[species](0, variant));
     },
     openVillager(id) {
       this.site = null;
@@ -1628,6 +1665,39 @@ export default {
         vibrate(10);
       } catch (error) {
         this.$emit('show-alert', messageOf(error, 'Ce besoin n’a pas pu être comblé.'));
+      } finally {
+        this.busy = false;
+      }
+    },
+    // Nourrir la bête dont la fiche est ouverte (2 vivres du stock ; sa bulle est ramassée d'abord)
+    async feedBeast() {
+      if (this.busy || !this.beastView) return;
+      this.busy = true;
+      try {
+        const { collected, world } = await playService.beastFeed(this.beastView.id);
+        this.apply(world);
+        vibrate(10);
+        if (collected) this.$emit('show-alert', `Sa bulle, ramassée d’abord : +${collected} ${LABEL.food}`);
+      } catch (error) {
+        this.$emit('show-alert', messageOf(error, 'La bête n’a pas pu être nourrie.'));
+      } finally {
+        this.busy = false;
+      }
+    },
+    // Ramasser les bulles de toutes les bêtes ; at : point de l'écran d'où partent les éclats
+    async collectBeasts(at = null) {
+      if (this.busy) return;
+      this.busy = true;
+      try {
+        const { food, world } = await playService.beastsCollect();
+        this.apply(world);
+        if (food) {
+          if (at) burst(at, 14, 60);
+          vibrate([10, 30, 14]);
+          this.$emit('show-alert', `Bulles ramassées : +${food} ${LABEL.food}`);
+        }
+      } catch (error) {
+        this.$emit('show-alert', messageOf(error, 'Les bulles n’ont pas pu être ramassées.'));
       } finally {
         this.busy = false;
       }

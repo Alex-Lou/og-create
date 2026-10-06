@@ -67,6 +67,7 @@ export default {
     else if (hit && hit.annex) this.annexSheet = { x: hit.annex.x, y: hit.annex.y };
     else if (hit && hit.landmark) this.openLog(hit.landmark.id);
     else if (hit && hit.nameSign) this.openNameSign(hit.nameSign);
+    else if (hit && hit.animal && this.beastOf(hit.animal.who)) this.openBeast(hit.animal.who.beast);
     else if (hit && hit.animal && this.friendOf(hit.animal.who)) this.openVillager(this.friendOf(hit.animal.who).id);
     else if (hit && hit.animal && (hit.animal.kind === 'vboat' || this.guestOf(hit.animal.who))) this.openVisitor();
     else this.showTip(gesture.start.x, gesture.start.y, this.tipOf(hit, gesture.start));
@@ -145,7 +146,8 @@ export default {
     const w = this.toWorld(px, py);
     if (this.brumeHit && Math.hypot(w.x - this.brumeHit.x, w.y - this.brumeHit.y) < this.brumeHit.r) return { brume: true };
     const asking = this.needBubbles.find(b => Math.hypot(w.x - b.x, w.y - b.y) < b.r + 2);
-    if (asking) return { asking };
+    // La bulle pleine d'une bête de ferme se ramasse d'un toucher ; les autres (faim, besoins) ouvrent une fiche
+    if (asking) return asking.ready ? { beastBubble: asking } : { asking };
     const bubble = this.bubbles.find(b => Math.abs(w.x - b.x) < b.w / 2 + 6 && Math.abs(w.y - b.y) < b.h / 2 + 8);
     if (bubble) return { bubble };
     // Animaux de la mer et mouettes posées : un toucher les fait réagir
@@ -220,6 +222,10 @@ export default {
       const sp = this.toScreen(hit.bubble.x, hit.bubble.y);
       this.collect(this.canvasPoint(sp.x, sp.y));
       vibrate(8);
+    } else if (hit.beastBubble) {
+      const sp = this.toScreen(hit.beastBubble.x, hit.beastBubble.y);
+      this.collectBeasts(this.canvasPoint(sp.x, sp.y));
+      vibrate(8);
     } else if (hit.brume) {
       this.questAct();
       vibrate(6);
@@ -251,6 +257,10 @@ export default {
   // null pour ce qui ne fait que réagir (bêtes, habitants, mer, Brume, bulles de production, case libre)
   pickOf(hit, px, py) {
     const ring = (x, y, r) => ({ x, y, rx: r, ry: r * 0.55 });
+    if (hit.asking && hit.asking.beast) {
+      const { asking } = hit;
+      return { key: `ask:beast:${asking.beast}`, action: 'Sa fiche', info: this.tipOf(hit), ring: ring(asking.x, asking.y, asking.r + 3), run: () => this.openBeast(asking.beast) };
+    }
     if (hit.asking) {
       const { asking } = hit;
       return {
@@ -396,6 +406,14 @@ export default {
       return { title, text, hint: 'Toucher : la faire réagir' };
     }
     if (hit.asking && hit.asking.visitor) return { title: this.state.visitor.name, text: askLine(this.state.visitor), hint: 'Toucher deux fois : sa fiche' };
+    if (hit.asking && hit.asking.beast) {
+      const beast = this.beastOf({ beast: hit.asking.beast });
+      return { title: beast ? beast.name : 'Une bête', text: 'A faim : un peu de nourriture, et sa bulle se remplit.', hint: 'Toucher deux fois : sa fiche' };
+    }
+    if (hit.beastBubble) {
+      const beast = this.beastOf({ beast: hit.beastBubble.beast });
+      return { title: beast ? beast.name : 'Une bête', text: `${beast ? beast.ready : ''} ${LABEL.food} dans sa bulle.`, hint: 'Toucher : ramasser toutes les bulles' };
+    }
     if (hit.asking) {
       const friend = this.friendAt(hit.asking.id);
       return { title: friend ? friend.name : 'Un habitant', text: ASKS[hit.asking.need], hint: 'Toucher deux fois : sa fiche' };

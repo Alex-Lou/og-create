@@ -191,6 +191,14 @@ export default {
   villagersNeeds() {
     return http.post('/play/world/villagers/needs').then(response => response.data);
   },
+  // Bêtes de ferme (bible, § 6.16) : en nourrir une (sa bulle est ramassée d'abord) → { beast, collected, world } ;
+  // ramasser toutes les bulles → { food, world }
+  beastFeed(beast) {
+    return http.post('/play/world/beast/feed', { beast }).then(response => response.data);
+  },
+  beastsCollect() {
+    return http.post('/play/world/beasts/collect').then(response => response.data);
+  },
   // Visiteur : combler sa demande (livrer, ou ses Récoltes faites) → { reward, coins, world }
   visitorSatisfy(id) {
     return http.post('/play/world/visitor', { id }).then(response => response.data);
