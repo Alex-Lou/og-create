@@ -1,0 +1,132 @@
+{
+ "_lisez_moi": [
+  "Les coffres de la fenêtre d'ouverture (ChestReveal) : cadre 120 × 100, comme le dessin du jeu ; un coffre par rareté (couleurs de world/chest.js).",
+  "fermé : 2 images (un reflet passe, ~1200 ms) ; ouverture : 4 images à enchaîner une fois (il tremble à gauche, à droite, s'entrouvre, s'ouvre grand ; ~140 ms puis ~220 ms) ; ouvert : 2 images en boucle (~700 ms) ; rayons : calque facultatif à poser derrière le coffre ouvert (le jeu a déjà les siens en CSS) ; icône : 32 × 32, fermé, pour les listes."
+ ],
+ "coffres": {
+  "commun": {
+   "nom": "Commun",
+   "couleur": "#9DBB6E",
+   "cadre": [
+    0,
+    0,
+    120,
+    100
+   ],
+   "fichiers": {
+    "ferme": [
+     "commun/coffre_commun_ferme_1.svg",
+     "commun/coffre_commun_ferme_2.svg"
+    ],
+    "ouverture": [
+     "commun/coffre_commun_ouverture_1.svg",
+     "commun/coffre_commun_ouverture_2.svg",
+     "commun/coffre_commun_ouverture_3.svg",
+     "commun/coffre_commun_ouverture_4.svg"
+    ],
+    "ouvert": [
+     "commun/coffre_commun_ouvert_1.svg",
+     "commun/coffre_commun_ouvert_2.svg"
+    ],
+    "rayons": [
+     "commun/coffre_commun_rayons_1.svg",
+     "commun/coffre_commun_rayons_2.svg"
+    ],
+    "icone": "commun/coffre_commun_icone.svg"
+   }
+  },
+  "rare": {
+   "nom": "Rare",
+   "couleur": "#4C8FE8",
+   "cadre": [
+    0,
+    0,
+    120,
+    100
+   ],
+   "fichiers": {
+    "ferme": [
+     "rare/coffre_rare_ferme_1.svg",
+     "rare/coffre_rare_ferme_2.svg"
+    ],
+    "ouverture": [
+     "rare/coffre_rare_ouverture_1.svg",
+     "rare/coffre_rare_ouverture_2.svg",
+     "rare/coffre_rare_ouverture_3.svg",
+     "rare/coffre_rare_ouverture_4.svg"
+    ],
+    "ouvert": [
+     "rare/coffre_rare_ouvert_1.svg",
+     "rare/coffre_rare_ouvert_2.svg"
+    ],
+    "rayons": [
+     "rare/coffre_rare_rayons_1.svg",
+     "rare/coffre_rare_rayons_2.svg"
+    ],
+    "icone": "rare/coffre_rare_icone.svg"
+   }
+  },
+  "epique": {
+   "nom": "Épique",
+   "couleur": "#A86BE8",
+   "cadre": [
+    0,
+    0,
+    120,
+    100
+   ],
+   "fichiers": {
+    "ferme": [
+     "epique/coffre_epique_ferme_1.svg",
+     "epique/coffre_epique_ferme_2.svg"
+    ],
+    "ouverture": [
+     "epique/coffre_epique_ouverture_1.svg",
+     "epique/coffre_epique_ouverture_2.svg",
+     "epique/coffre_epique_ouverture_3.svg",
+     "epique/coffre_epique_ouverture_4.svg"
+    ],
+    "ouvert": [
+     "epique/coffre_epique_ouvert_1.svg",
+     "epique/coffre_epique_ouvert_2.svg"
+    ],
+    "rayons": [
+     "epique/coffre_epique_rayons_1.svg",
+     "epique/coffre_epique_rayons_2.svg"
+    ],
+    "icone": "epique/coffre_epique_icone.svg"
+   }
+  },
+  "legendaire": {
+   "nom": "Légendaire",
+   "couleur": "#F2C04B",
+   "cadre": [
+    0,
+    0,
+    120,
+    100
+   ],
+   "fichiers": {
+    "ferme": [
+     "legendaire/coffre_legendaire_ferme_1.svg",
+     "legendaire/coffre_legendaire_ferme_2.svg"
+    ],
+    "ouverture": [
+     "legendaire/coffre_legendaire_ouverture_1.svg",
+     "legendaire/coffre_legendaire_ouverture_2.svg",
+     "legendaire/coffre_legendaire_ouverture_3.svg",
+     "legendaire/coffre_legendaire_ouverture_4.svg"
+    ],
+    "ouvert": [
+     "legendaire/coffre_legendaire_ouvert_1.svg",
+     "legendaire/coffre_legendaire_ouvert_2.svg"
+    ],
+    "rayons": [
+     "legendaire/coffre_legendaire_rayons_1.svg",
+     "legendaire/coffre_legendaire_rayons_2.svg"
+    ],
+    "icone": "legendaire/coffre_legendaire_icone.svg"
+   }
+  }
+ }
+}

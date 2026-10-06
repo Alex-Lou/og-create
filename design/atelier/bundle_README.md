@@ -1,6 +1,6 @@
 # Bibliothèque d'assets SVG de l'île
 
-3 700 dessins SVG au trait de la troupe : personnages, naufragés, animaux, plantes, décor, camp, ruines, bâtiments et
+3 744 dessins SVG au trait de la troupe : personnages, naufragés, animaux, plantes, décor, camp, ruines, bâtiments et
 météo. Chaque dessin est
 calé sur les cadres et les ancres du jeu, pour se poser tel quel.
 
@@ -46,6 +46,7 @@ en mouvement.
 | `svg/decor/` | 30 créations d'île, 14 lieux remarquables, 6 gisements (prêt et ramassé), 28 annexes et leurs variantes, 6 enseignes, îlots, bateaux, épaves (`decor.json`) | 385 |
 | `svg/decor/camp/` | Le camp des naufragés : l'épave de l'Hirondelle, le feu de débris, le coin de chaque maître (débris → abri → cabanon), les objets du camp, la tente et le hamac des voyageurs ; l'étape de l'histoire de chaque chose (`camp.json`) | 41 |
 | `svg/decor/ruines/` | Ce qui reste des Anciens : maison en ruine, colonnade, pierre à runes (jour, nuit), colonne brisée, la clé du phare, le phare éteint (`ruines.json`) | 9 |
+| `svg/coffres/` | Les coffres des 4 raretés pour la fenêtre d'ouverture (cadre 120 × 100) : fermé, ouverture en 4 images, ouvert, rayons (calque facultatif), icône 32 × 32 (`coffres.json`) | 44 |
 | `svg/batiments/` | 7 bâtiments × 7 paliers (images animées), chantier, 20 skins, 48 objets de la boutique (un fichier par calque), 14 pièces rares à chaque palier, outil de teintes (`batiments.json`) | 659 |
 | `svg/meteo/` | Calques d'écran sans couture en boucle, nuages, arc-en-ciel, éclair, soleil bas, lumières, teintes des moments du jour, 19 icônes (`meteo.json`) | 169 |
 
