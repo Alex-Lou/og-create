@@ -1,17 +1,20 @@
 // L'avatar en naufragé (HISTOIRE.md § 6.17) : le même dessin que l'avatar (design/personnages/avatar.js), passé par
 // la transformation des naufragés (naufrage.js) : habits délavés, lambeaux à l'ourlet, un trou, manches retroussées
 // ou arrachées, pantalon retroussé (ou jambes nues sous le short, la jupe, la robe), pieds nus, une algue dans les
-// cheveux, du sable sur la joue. Le chapeau est perdu en mer. L'avatar garde ce look jusqu'au Campement (fin du
-// tutoriel), où Cannelle recoud ses habits.
-const { avatar, sansChapeau, shortLeg, delave } = require('../personnages/avatar');
+// cheveux, du sable sur la joue. La mer garde les chapeaux, les sacs, ce qu'on tenait à la main, et efface le
+// maquillage (ACCESSOIRES[id].garde) ; les lunettes, les bijoux, le foulard, le nœud restent. L'avatar garde ce look
+// jusqu'au Campement (fin du tutoriel), où Cannelle recoud ses habits.
+const { avatar, naufrageChoix, verifier, shortLeg, delave, ACCESSOIRES } = require('../personnages/avatar');
 const { bareFoot } = require('./troupe');
 const { castaway, weed, smudge } = require('./naufrage');
 
 function avatarNaufrage(choix = {}, opts = {}) {
-  const c = avatar(sansChapeau(choix), { ...opts, uid: (opts.uid || 'av') + 'n' });
+  const c = avatar(naufrageChoix(verifier(choix)), { ...opts, uid: (opts.uid || 'av') + 'n' });
   const { haut, bas } = c.o;
   const dy = c.dy;
-  const fadeList = [c.top, c.topS, c.topH, c.tee, c.base, c.stripe, c.bas, c.basS, c.basH, c.cuff, c.acc].filter(Boolean);
+  // les tissus se délavent (les bijoux et les montures, non)
+  const tissus = Object.entries(c.o.accessoires).flatMap(([place, a]) => c.acc[place].filter((col, i) => ACCESSOIRES[a.id].zones[i] === 'tissu'));
+  const fadeList = [c.top, c.topS, c.topH, c.tee, c.base, c.stripe, c.bas, c.basS, c.basH, c.cuff, ...tissus].filter(Boolean);
   // ce qui se voit à l'ourlet : le bas du haut (s'il n'est pas rentré), l'ourlet de la jupe ou de la robe
   const T = c.top === c.base ? c.top : c.base;
   const hemTop = bas === 'pantalon' || bas === 'short';

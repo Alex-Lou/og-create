@@ -215,6 +215,7 @@ function moment(id, meta) {
 // --- 3. Ce qui reste à revoir (audit du 6 octobre et HISTOIRE.md v6) -------------------------------
 
 const A_REVOIR = [
+  [/^personnages\/(habitants|visiteurs|epilogue|naufrages\/petit_format)\//, 'Petit format abandonné (choix de l\'auteur, 6 octobre) : dans le jeu, tout le monde est dessiné en détaillé. À remplacer au lot L4 (maîtres en détaillé, visiteurs et nouveaux venus tirés du générateur de l\'avatar, ceux de l\'épilogue en habits de voyage) ; ne pas intégrer.'],
   [/^vivants\/brume\/brume_expr_fache$/, 'Brume ne gronde jamais (§ 8) : expression à retirer.'],
   [/^vivants\/brume\/brume_s[1-7]/, 'Les ornements des stades doivent s\'additionner (§ 13) ; le stade 6 doit être ambré, le soleil du stade 7 une petite flamme dorée à rayons.'],
   [/^vivants\/brume\/brume_expr_/, 'Les expressions doivent être les yeux seuls, à poser sur n\'importe quel stade (aujourd\'hui le corps du stade 1).'],
@@ -244,7 +245,7 @@ const MANQUANTS = [
   ['tuto-2', 'L\'établi de Rivet au camp (une porte de cabine sur deux caisses) et sa voile tendue sur un aviron.'],
   ['tuto-3', 'Le bâtiment embrumé (calque de brume grise) et « Réparer » (lot M).'],
   ['tuto-3', 'La caisse d\'Aster au bout de sa corde.'],
-  ['acte-1', 'Les naufragés au petit format avec lanterne et parapluie (Aster et Rivet le restent après la première lanterne).'],
+  ['acte-1', 'Au détaillé, pour tout le monde (lot L4) : marcher avec une lanterne, sous un parapluie, dormir couché ; les naufragés aussi (Aster et Rivet le restent après la première lanterne).'],
   ['tuto-1', 'Les scènes plein écran du tutoriel v6, étapes 0 à 12 (lot J2).'],
   ['revelation', 'Les signes d\'Anya qui erre : bêtes tournées du même côté, fleurs qui s\'ouvrent, lucioles rassemblées.'],
   ['acte-1', 'L\'éclat du souvenir retrouvé (le sceau s\'allume, le maître se lève outil en main).'],

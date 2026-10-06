@@ -1,68 +1,68 @@
-// Lot L : l'avatar du joueur (HISTOIRE.md § 6.17). Le kit est un générateur, comme les habitants du jeu : on compose
-// l'avatar à partir de ses choix. Ce script en tire des exemples pour la bibliothèque, la planche des choix et une
-// page animée :
-//   - grand format (design/personnages/avatar.js, kit de la troupe) : lib/personnages/avatar/avatar-NN/ ;
-//   - naufragé (avatar_naufrage.js) : lib/personnages/avatar/avatar-NN-naufrage/ ;
-//   - petit format du jeu (lookPetit + villagers.js) : lib/personnages/avatar/petit_format/avatar-NN[-naufrage]/.
-// Noms déjà rangés (<sujet>_<vue>_<pose>_<n>) ; le trois quarts avant du grand format sort du kit vers le bas à gauche,
-// l'assemblage le publie en miroir (catalogue.js), comme pour les maîtres.
+// Lot L : l'avatar du joueur (HISTOIRE.md § 6.17). Le kit est un générateur : on compose l'avatar à partir de ses
+// choix. Ce script en tire des exemples pour la bibliothèque, les planches (choix, nuanciers, accessoires, exemples)
+// et une page animée :
+//   - avatar (design/personnages/avatar.js, kit de la troupe) : lib/personnages/avatar/avatar-NN/ ;
+//   - naufragé (avatar_naufrage.js) : lib/personnages/avatar/avatar-NN-naufrage/.
+// Pas de petit format : dans le jeu, tout le monde est dessiné en détaillé (choix de l'auteur, 6 octobre).
+// Noms déjà rangés (<sujet>_<vue>_<pose>_<n>) ; le trois quarts avant sort du kit vers le bas à gauche, l'assemblage le
+// publie en miroir (catalogue.js), comme pour les maîtres.
 import path from 'path';
 import { createRequire } from 'module';
 import { fileURLToPath } from 'url';
-import { villagerSprite, VILLAGER_BOX } from './port/src/world/villagers.js';
 
 const require = createRequire(import.meta.url);
 const DIR = path.dirname(fileURLToPath(import.meta.url));
 const { frame, EXPRS } = require('./troupe.js');
-const { avatar, lookPetit, CHOIX, LIBELLES, libelle, DEFAUT } = require('../personnages/avatar.js');
+const A = require('../personnages/avatar.js');
+const { avatar, CHOIX, FORMES, NUANCIERS, NOMS_NUANCIERS, TEINTURES_GAINS, EMPLACEMENTS, ACCESSOIRES, DEFAUT, libelle, verifier } = A;
 const { avatarNaufrage } = require('./avatar_naufrage.js');
 const { unique, row, sheet, animated, write, shoot } = require('./planche.js');
 
 const LIB = path.join(DIR, 'lib', 'personnages', 'avatar');
 const PNG = path.join(DIR, 'planches');
-const r2 = n => Math.round(n * 100) / 100;
-const K = 1.25;
 const grand = (body, s = 1) => `<svg xmlns="http://www.w3.org/2000/svg" width="${48 * s}" height="${64 * s}" viewBox="0 0 48 64">${body}</svg>`;
-const inner = s => s.svg.replace(/^<svg[^>]*>/, '').replace(/<\/svg>$/, '');
-const BOX = [VILLAGER_BOX.x, VILLAGER_BOX.y, VILLAGER_BOX.w, VILLAGER_BOX.h].map(n => r2(n * K));
-const WIDE = [-26, -66, 56, 72].map(n => r2(n * K));
-const petit = (frame_, body, s = 1) => `<svg xmlns="http://www.w3.org/2000/svg" width="${r2(frame_[2] * s)}" height="${r2(frame_[3] * s)}" viewBox="${frame_.join(' ')}">${body}</svg>`;
-const VUE = { front: 'face', se: 'avant', ne: 'dos' };
+const ac = (place, id, couleurs) => ({ [place]: couleurs ? { id, couleurs } : { id } });
 
-// Douze exemples, un par coupe, qui couvrent ensemble tous les choix (tailles, corpulences, visages, yeux, bouches,
-// hauts, bas, accessoires)
+// Douze exemples, qui couvrent ensemble les formes, les nuanciers et des accessoires de chaque emplacement
 const EXEMPLES = [
   {},
-  { taille: 'petite', silhouette: 'fine', coupe: 'couettes', cheveux: 'roux', rousseur: 'oui', yeux: 'vert', formeYeux: 'grands', haut: 'mariniere', couleurHaut: 'marine', bas: 'salopette', couleurBas: 'sable', chaussures: 'toile' },
-  { taille: 'grande', silhouette: 'large', coupe: 'bouclee', cheveux: 'noir', peau: 'cacao', visage: 'ovale', sourcils: 'epais', bouche: 'serieuse', haut: 'chemise', couleurHaut: 'ciel', couleurBas: 'sable', accessoire: 'lunettes' },
-  { coupe: 'queue', cheveux: 'blond', peau: 'porcelaine', yeux: 'bleu', formeYeux: 'amande', grain: 'levre', haut: 'veste', couleurHaut: 'marine', bas: 'jupe', couleurBas: 'charbon', accessoire: 'paille' },
-  { coupe: 'locks', cheveux: 'noir', peau: 'cannelle', yeux: 'noisette', formeYeux: 'rieurs', bouche: 'sourire', haut: 'tshirt', couleurHaut: 'soleil', bas: 'short', couleurBas: 'olive', accessoire: 'bandana', chaussures: 'rouge' },
-  { silhouette: 'ronde', coupe: 'chignon', cheveux: 'nuit', peau: 'miel', formeYeux: 'paisibles', sourcils: 'doux', haut: 'pull', couleurHaut: 'prune', bas: 'robe', couleurBas: 'creme', accessoire: 'foulard' },
-  { taille: 'grande', silhouette: 'large', coupe: 'rasee', cheveux: 'gris', peau: 'ebene', visage: 'carre', yeux: 'gris', bouche: 'malice', haut: 'sweat', couleurHaut: 'foret', couleurBas: 'noir', accessoire: 'casquette' },
-  { taille: 'petite', coupe: 'meche', cheveux: 'blanc', sourcils: 'epais', joues: 'discretes', grain: 'joue', haut: 'pull', couleurHaut: 'creme', couleurBas: 'bordeaux', accessoire: 'bonnet', chaussures: 'bleu' },
-  { coupe: 'carre', cheveux: 'noir', visage: 'ovale', formeYeux: 'amande', haut: 'tshirt', couleurHaut: 'rose', bas: 'jupe', couleurBas: 'jean', chaussures: 'rouge' },
-  { taille: 'petite', coupe: 'bataille', cheveux: 'chatain', peau: 'miel', rousseur: 'oui', formeYeux: 'grands', bouche: 'malice', haut: 'sweat', couleurHaut: 'soleil', bas: 'short', couleurBas: 'charbon' },
-  { taille: 'grande', silhouette: 'fine', coupe: 'longue', cheveux: 'brun', peau: 'cannelle', yeux: 'vert', grain: 'joue', haut: 'chemise', couleurHaut: 'creme', bas: 'robe', couleurBas: 'olive', chaussures: 'toile' },
-  { silhouette: 'ronde', coupe: 'tresses', cheveux: 'noir', peau: 'ebene', visage: 'carre', formeYeux: 'rieurs', haut: 'mariniere', couleurHaut: 'corail', couleurBas: 'creme', accessoire: 'lunettes' }
+  { taille: 'petite', silhouette: 'fine', coupe: 'deuxChignons', cheveux: 'bonbon', cils: 'recourbes', levres: 'rose', formeYeux: 'grands', haut: 'tshirt', couleurHaut: 'creme', bas: 'robe', couleurBas: 'framboise', chaussures: 'blanc', accessoires: { ...ac('joues', 'coeurs'), ...ac('cheveux', 'noeud', ['blanc']) } },
+  { taille: 'grande', silhouette: 'large', coupe: 'bouclee', cheveux: 'jais', peau: 'cacao', visage: 'ovale', sourcils: 'epais', bouche: 'serieuse', haut: 'chemise', couleurHaut: 'ciel', couleurBas: 'sable', accessoires: { ...ac('visage', 'lunettesRondes', ['or']), ...ac('dos', 'besace') } },
+  { coupe: 'queueCote', cheveux: 'platine', peau: 'nacre', yeux: 'azur', formeYeux: 'amande', cils: 'legers', grain: 'levre', haut: 'veste', couleurHaut: 'marine', bas: 'jupe', couleurBas: 'rosepale', accessoires: { ...ac('tete', 'paille', ['framboise']), ...ac('oreilles', 'pendantsEtoile') } },
+  { coupe: 'locks', cheveux: 'noir', peau: 'cannelle', yeux: 'noisette', formeYeux: 'rieurs', bouche: 'sourire', haut: 'tshirt', couleurHaut: 'soleil', bas: 'short', couleurBas: 'olive', chaussures: 'rouge', accessoires: { ...ac('tete', 'bandana', ['lagon']), ...ac('dos', 'sacDos') } },
+  { silhouette: 'ronde', coupe: 'chignon', cheveux: 'nuit', peau: 'miel', formeYeux: 'paisibles', sourcils: 'doux', levres: 'prune', haut: 'pull', couleurHaut: 'lavande', bas: 'robe', couleurBas: 'creme', accessoires: { ...ac('tete', 'couronneFleurs', ['rose']), ...ac('cou', 'perles') } },
+  { taille: 'grande', silhouette: 'large', coupe: 'rasee', cheveux: 'gris', peau: 'ebene', visage: 'carre', yeux: 'grisbleu', bouche: 'malice', haut: 'sweat', couleurHaut: 'foret', couleurBas: 'noir', accessoires: { ...ac('tete', 'casquette', ['rouge']), ...ac('oreilles', 'anneaux', ['argent']) } },
+  { taille: 'petite', coupe: 'meche', cheveux: 'blanc', meches: 'meches', couleurMeches: 'ciel', sourcils: 'epais', joues: 'discretes', haut: 'pull', couleurHaut: 'creme', couleurBas: 'bordeaux', chaussures: 'jean', accessoires: { ...ac('tete', 'bonnet', ['rouge']), ...ac('cou', 'echarpe', ['rouge', 'creme']) } },
+  { coupe: 'carre', cheveux: 'chocolat', peau: 'doree', visage: 'ovale', formeYeux: 'amande', cils: 'recourbes', levres: 'framboise', haut: 'mariniere', couleurHaut: 'marine', bas: 'jupe', couleurBas: 'rouge', chaussures: 'noir', accessoires: { ...ac('visage', 'lunettesPapillon', ['noir']), ...ac('oreilles', 'puces') } },
+  { taille: 'petite', coupe: 'bataille', cheveux: 'cuivre', peau: 'rosee', rousseur: 'oui', formeYeux: 'grands', bouche: 'malice', haut: 'sweat', couleurHaut: 'abricot', bas: 'short', couleurBas: 'charbon', accessoires: { ...ac('tete', 'oreillesChat', ['cuir']), ...ac('joues', 'pansement') } },
+  { taille: 'grande', silhouette: 'fine', coupe: 'ondulee', cheveux: 'lilas', meches: 'pointes', couleurMeches: 'menthe', peau: 'bronze', yeux: 'violet', cils: 'legers', haut: 'chemise', couleurHaut: 'blanc', bas: 'robe', couleurBas: 'lavande', chaussures: 'creme', accessoires: { ...ac('dos', 'ailes', ['menthe']), ...ac('cheveux', 'barrettes', ['nacre']) } },
+  { silhouette: 'ronde', coupe: 'couronne', cheveux: 'roux', peau: 'porcelaine', rousseur: 'legere', yeux: 'vert', formeYeux: 'rieurs', haut: 'mariniere', couleurHaut: 'rouge', bas: 'salopette', couleurBas: 'jean', accessoires: { ...ac('main', 'peluche'), ...ac('cou', 'papillon', ['soleil']) } }
 ];
 const nom = i => `avatar-${String(i + 1).padStart(2, '0')}`;
 
-// Grand format : poses de la troupe et gestes du tutoriel (et les expressions pour le premier exemple)
+// Poses de la troupe et gestes du tutoriel (et les expressions pour le premier exemple)
 const POSES = [['face_repos', 'front', 'repos', 2], ['avant_marche', 'se', 'marche', 4], ['dos_marche', 'ne', 'marche', 4], ['face_salut', 'front', 'salut', 2],
   ['avant_ramasser', 'se', 'action', 2, 'ramasser'], ['face_grelotter', 'front', 'action', 2, 'grelotter'], ['face_lire', 'front', 'action', 2, 'lire']];
 let count = 0;
+const options = k => Object.keys(CHOIX[k] === 'formes' ? FORMES[k] : NUANCIERS[CHOIX[k]]);
 const index = {
   _lisez_moi: [
     'L\'avatar du joueur (HISTOIRE.md § 6.17) : on le compose à partir de ses choix ; ces fichiers sont des exemples tirés du générateur.',
-    'Grand format : design/personnages/avatar.js (avatar(choix), à passer à troupe.frame comme un maître), 48 × 64, pieds en (24, 62). Naufragé : design/atelier/avatar_naufrage.js (le chapeau est perdu en mer ; les lunettes, le foulard et le bandana restent).',
-    'Les choix : taille et corpulence ; peau, forme du visage, yeux (couleur et forme), sourcils, bouche au repos, taches de rousseur, joues, grain de beauté ; 12 coupes et 8 couleurs de cheveux ; 6 hauts et 10 couleurs ; 5 bas (pantalon, short, jupe, salopette, robe chasuble portée sur le haut) et 8 couleurs ; chaussures ; accessoire.',
-    'Petit format du jeu : lookPetit(choix, { naufrage }) donne le « look » de src/world/villagers.js (villagerSprite) ; mêmes couleurs de peau et de cheveux que le jeu. Le visage (forme, yeux, bouche, grain de beauté) et la forme du haut (sauf les rayures de la marinière) ne se voient qu\'au grand format.',
-    'Le petit format de l\'avatar demande au jeu ce que la copie de l\'atelier (design/atelier/port/src/world/villagers.js) a reçu : look.bottomStyle (shorts, skirt, overalls, dress), look.stripes, et les coiffures swept, messy, bob, pigtails, locs, buzz.',
+    'Le kit : design/personnages/avatar.js (avatar(choix), à passer à troupe.frame comme un maître), 48 × 64, pieds en (24, 62). Les choix, les nuanciers et les accessoires : avatar_choix.js ; leur dessin : avatar_accessoires.js. Naufragé : design/atelier/avatar_naufrage.js.',
+    'Pas de petit format : dans le jeu, l\'avatar, les maîtres, les habitants et les visiteurs sont dessinés en détaillé (choix de l\'auteur, 6 octobre).',
+    'Les nuanciers de peau, d\'yeux, de cheveux et de tissus sont libres dès la création ; la peau et les yeux ne se gagnent jamais. Se gagnent pour toujours, à la boutique (écus) ou dans les coffres : les accessoires « boutique » ou « coffre » et les teintures rares. Tout est cosmétique.',
+    'Raretés : celles des coffres du jeu (commun, rare, epique, legendaire). La source d\'un accessoire : gratuit (dès la création), boutique ou coffre. garde : ce que la mer laisse au naufragé.',
+    'auHasard(graine, { gratuit }) tire un avatar harmonieux (le bouton « Au hasard », et plus tard les visiteurs). verifier(choix) refuse tout choix inconnu.',
     'Poses : repos (2), marche (4), salut (2), et les gestes du tutoriel : ramasser (trois quarts avant), grelotter et lire le Grimoire (face), 2 images chacun. Le premier exemple a aussi les 8 expressions.',
     'L\'avatar est naufragé du naufrage jusqu\'au Campement (fin du tutoriel), où Cannelle recoud ses habits.'
   ],
-  choix: CHOIX,
-  libelles: LIBELLES,
+  choix: Object.fromEntries(Object.keys(CHOIX).map(k => [k, { dans: CHOIX[k], options: options(k) }])),
+  formes: FORMES,
+  nuanciers: NUANCIERS,
+  noms: NOMS_NUANCIERS,
+  teintures: TEINTURES_GAINS,
+  emplacements: EMPLACEMENTS,
+  accessoires: ACCESSOIRES,
   defaut: DEFAUT,
   exemples: {}
 };
@@ -89,76 +89,66 @@ function grandFormat(c, dir, key, withExpr) {
   return files;
 }
 
-function petitFormat(look, dir, key, naufrage) {
-  const files = {};
-  const out = (pose, view, frames, opts = {}, fr = BOX) => {
-    const name = `${key}_${VUE[view]}_${pose}`;
-    files[name] = frames.map(f => {
-      const s = villagerSprite(look, { pose: opts.pose, view, frame: f, lantern: !!opts.lantern, umbrella: !!opts.umbrella });
-      const rel = `petit_format/${dir}/${name}_${f + 1}.svg`;
-      write(path.join(LIB, rel), petit(fr, `<g transform="scale(${K})">${inner(s)}</g>`));
-      count++;
-      return rel;
-    });
-  };
-  for (const v of ['front', 'se', 'ne']) {
-    out('marche', v, [0, 1, 2, 3], { pose: 'walk' });
-    out('repos', v, [0, 1], { pose: 'idle' });
-    out('salut', v, [0, 1], { pose: 'wave' });
-  }
-  if (!naufrage) {
-    out('lanterne', 'se', [0, 1, 2, 3], { pose: 'walk', lantern: true }, WIDE);
-    out('parapluie', 'se', [0, 1, 2, 3], { pose: 'walk', umbrella: true }, WIDE);
-  }
-  return files;
-}
-
-const anim = [['Grand format', []], ['Naufragé (jusqu\'au Campement)', []], ['Petit format du jeu', []]];
+// le trois quarts avant en miroir, comme la bibliothèque le publie (vers le bas à droite)
+const g = (cc, v, p, f, s = 1.6, geste, expr) => { const b = unique(frame(geste ? { ...cc, geste } : cc, v, p, f, expr)); return grand(v === 'se' ? `<g transform="translate(48 0) scale(-1 1)">${b}</g>` : b, s); };
+const anim = [['L\'avatar', []], ['Naufragé (jusqu\'au Campement)', []]];
 const cells = [];
 EXEMPLES.forEach((o, i) => {
   const key = nom(i);
   const c = avatar(o, { uid: `a${i}` });
   const n = avatarNaufrage(o, { uid: `a${i}` });
   index.exemples[key] = {
-    nom: `Avatar, exemple ${i + 1}`, choix: { ...DEFAUT, ...o },
-    fichiers: { ...grandFormat(c, key, key, i === 0), ...grandFormat(n, `${key}-naufrage`, `${key}-naufrage`, false),
-      ...petitFormat(lookPetit(o), key, key, false), ...petitFormat(lookPetit(o, { naufrage: true }), `${key}-naufrage`, `${key}-naufrage`, true) }
+    nom: `Avatar, exemple ${i + 1}`, choix: verifier(o),
+    fichiers: { ...grandFormat(c, key, key, i === 0), ...grandFormat(n, `${key}-naufrage`, `${key}-naufrage`, false) }
   };
-  // planche des exemples : face, avant, dos, salut, les trois gestes ; naufragé ; petit format
-  // le trois quarts avant en miroir, comme la bibliothèque le publie (vers le bas à droite)
-  const g = (cc, v, p, f, geste) => { const b = unique(frame(geste ? { ...cc, geste } : cc, v, p, f)); return grand(v === 'se' ? `<g transform="translate(48 0) scale(-1 1)">${b}</g>` : b, 1.6); };
-  const pf = (look, v, p, f) => petit(BOX, unique(`<g transform="scale(${K})">${inner(villagerSprite(look, { pose: p, view: v, frame: f }))}</g>`), 1.9);
   cells.push(row(`Exemple ${i + 1}`, [
     [g(c, 'front', 'repos', 0), 'face'], [g(c, 'se', 'marche', 1), 'avant'], [g(c, 'ne', 'marche', 0), 'dos'], [g(c, 'front', 'salut', 0), 'salut'],
-    [g(c, 'se', 'action', 1, 'ramasser'), 'ramasser'], [g(c, 'front', 'action', 0, 'grelotter'), 'grelotter'], [g(c, 'front', 'action', 0, 'lire'), 'lire'],
-    [g(n, 'front', 'repos', 0), 'naufragé'], [g(n, 'se', 'marche', 1), ''], [pf(lookPetit(o), 'se', 'walk', 1), 'petit format'], [pf(lookPetit(o, { naufrage: true }), 'se', 'walk', 1), 'naufragé']
+    [g(c, 'se', 'action', 1, 1.6, 'ramasser'), 'ramasser'], [g(c, 'front', 'action', 0, 1.6, 'grelotter'), 'grelotter'], [g(c, 'front', 'action', 0, 1.6, 'lire'), 'lire'],
+    [g(n, 'front', 'repos', 0), 'naufragé'], [g(n, 'se', 'marche', 1), '']
   ]));
-  const walk = (cc, s) => [0, 1, 2, 3].map(f => grand(unique(frame(cc, 'se', 'marche', f)), s));
-  anim[0][1].push({ label: `Exemple ${i + 1}`, frames: walk(c, 2.4), timings: [170], w: 115, h: 154, mirror: true });
-  anim[1][1].push({ label: `Exemple ${i + 1}`, frames: walk(n, 2.4), timings: [170], w: 115, h: 154, mirror: true });
-  // (le kit marche vers le bas à gauche : la page le montre en miroir, vers le bas à droite comme la bibliothèque)
-  anim[2][1].push({ label: `Exemple ${i + 1}`, frames: [0, 1, 2, 3].map(f => petit(BOX, unique(`<g transform="scale(${K})">${inner(villagerSprite(lookPetit(o), { pose: 'walk', view: 'se', frame: f }))}</g>`), 2.4)), timings: [160], w: r2(BOX[2] * 2.4), h: r2(BOX[3] * 2.4) });
+  const walk = cc => [0, 1, 2, 3].map(f => grand(unique(frame(cc, 'se', 'marche', f)), 2.4));
+  anim[0][1].push({ label: `Exemple ${i + 1}`, frames: walk(c), timings: [170], w: 115, h: 154, mirror: true });
+  anim[1][1].push({ label: `Exemple ${i + 1}`, frames: walk(n), timings: [170], w: 115, h: 154, mirror: true });
 });
 
-// Planche des choix : chaque rangée change un seul choix, à partir des réglages par défaut
+// Planche des choix : chaque rangée change un seul choix, à partir des réglages par défaut ; le visage en gros plan
 const face = (o, uid) => grand(unique(frame(avatar(o, { uid }), 'front', 'repos', 0)), 1.6);
-// les choix du visage se voient en gros plan sur la tête
-const tete = (o, uid) => `<svg xmlns="http://www.w3.org/2000/svg" width="94" height="88" viewBox="6 2 36 34">${unique(frame(avatar(o, { uid }), 'front', 'repos', 0))}</svg>`;
-const ligne = (label, key, base = {}, gros = false) => row(label, Object.keys(CHOIX[key]).map(v => [(gros ? tete : face)({ ...base, [key]: v }, `c${key}${v}`), libelle(key, v)]));
+const tete = (o, uid, w = 94) => `<svg xmlns="http://www.w3.org/2000/svg" width="${w}" height="${r2(w * 34 / 36)}" viewBox="6 2 36 34">${unique(frame(avatar(o, { uid }), 'front', 'repos', 0))}</svg>`;
+function r2(x) { return Math.round(x * 100) / 100; }
+const ligne = (label, key, base = {}, gros = false) => row(label, options(key).map(v => [(gros ? tete : face)({ ...base, [key]: v }, `c${key}${v}`), libelle(key, v)]));
 const choix = [
-  ligne('Taille', 'taille'), ligne('Corpulence', 'silhouette'), ligne('Peau', 'peau'), ligne('Visage', 'visage', {}, true),
-  ligne('Yeux', 'yeux', {}, true), ligne('Forme des yeux', 'formeYeux', {}, true), ligne('Sourcils', 'sourcils', {}, true), ligne('Bouche', 'bouche', {}, true),
-  ligne('Taches de rousseur', 'rousseur', {}, true), ligne('Joues', 'joues', {}, true), ligne('Grain de beauté', 'grain', {}, true),
-  ligne('Coupe', 'coupe', { cheveux: 'chatain' }), ligne('Cheveux', 'cheveux', { coupe: 'longue' }),
-  ligne('Haut', 'haut'), ligne('Couleur du haut', 'couleurHaut', { haut: 'pull' }),
-  ligne('Bas', 'bas', { couleurBas: 'brique', couleurHaut: 'menthe' }), ligne('Couleur du bas', 'couleurBas'), ligne('Chaussures', 'chaussures'),
-  ligne('Accessoire', 'accessoire')
+  ligne('Taille', 'taille'), ligne('Corpulence', 'silhouette'), ligne('Visage', 'visage', {}, true),
+  ligne('Forme des yeux', 'formeYeux', {}, true), ligne('Cils', 'cils', {}, true), ligne('Sourcils', 'sourcils', {}, true), ligne('Bouche', 'bouche', {}, true),
+  ligne('Lèvres', 'levres', {}, true), ligne('Taches de rousseur', 'rousseur', {}, true), ligne('Joues', 'joues', {}, true), ligne('Grain de beauté', 'grain', {}, true),
+  ligne('Coupe', 'coupe', { cheveux: 'chatain' }), ligne('Mèches', 'meches', { coupe: 'longue', couleurMeches: 'blond' }),
+  ligne('Haut', 'haut'), ligne('Bas', 'bas', { couleurBas: 'framboise', couleurHaut: 'menthe' })
 ];
 
+// Planche des nuanciers : les pastilles, puis l'avatar dans chaque peau et chaque couleur de cheveux
+const pastille = (col, cap, tag = '') => [`<svg xmlns="http://www.w3.org/2000/svg" width="34" height="34" viewBox="0 0 34 34"><circle cx="17" cy="17" r="14" fill="${col}" stroke="#3C2819" stroke-width="1.6"/><ellipse cx="12" cy="11" rx="4" ry="2.6" fill="#FFFFFF" opacity="0.35"/></svg>`, cap + (tag ? `<br><i>${tag}</i>` : '')];
+const RARETES = { commun: 'commun', rare: 'rare', epique: 'épique', legendaire: 'légendaire' };
+const nuancierRow = (label, nomN) => row(label, Object.entries(NUANCIERS[nomN]).filter(([, c]) => c).map(([k, c]) => pastille(c, NOMS_NUANCIERS[nomN][k])));
+const couleurs = [
+  nuancierRow('Peau (16)', 'peau'), row('', options('peau').map(v => [tete({ peau: v, coupe: 'courte' }, `p${v}`, 60), ''])),
+  nuancierRow('Cheveux (24)', 'cheveux'), row('', options('cheveux').map(v => [tete({ cheveux: v, coupe: 'longue' }, `h${v}`, 60), ''])),
+  nuancierRow('Yeux (16)', 'yeux'), nuancierRow('Tissus (24)', 'tissus'), nuancierRow('Métaux', 'metaux'), nuancierRow('Lèvres', 'levres'),
+  row('Teintures rares', Object.entries(NUANCIERS.teintures).map(([k, c]) => pastille(c, NOMS_NUANCIERS.teintures[k], `${RARETES[TEINTURES_GAINS[k].rarete]} · ${TEINTURES_GAINS[k].source}`)))
+];
+
+// Planche des accessoires : chacun de face, de trois quarts et de dos, avec sa rareté et sa source
+const accessoires = Object.entries(EMPLACEMENTS).map(([place, label]) => row(label, Object.entries(ACCESSOIRES).filter(([, a]) => a.emplacement === place).map(([id, a]) => {
+  const base = place === 'main' ? {} : { coupe: place === 'oreilles' ? 'queue' : 'courte' };
+  const c = avatar({ ...base, accessoires: { [place]: { id } } }, { uid: `x${id}` });
+  const vues = [['front', 'repos', 0], ['se', 'marche', 1], ['ne', 'marche', 0]].map(([v, p, f]) => g(c, v, p, f, 1.25)).join('');
+  return [vues, `${a.nom}<br><i>${a.source === 'gratuit' ? 'gratuit' : `${RARETES[a.rarete]} · ${a.source}`}${a.garde ? '' : ' · perdu au naufrage'}</i>`];
+})));
+
 write(path.join(LIB, 'avatar.json'), JSON.stringify(index, null, 1));
-write(path.join(DIR, 'avatar_apercu.html'), animated('L\'avatar du joueur', 'Exemples tirés du générateur : grand format, naufragé, petit format du jeu ; trois quarts avant et miroir.', anim));
+write(path.join(DIR, 'avatar_apercu.html'), animated('L\'avatar du joueur', 'Exemples tirés du générateur, et leur version naufragée ; trois quarts avant en marche.', anim));
 await shoot([
-  [path.join(PNG, 'avatar_choix.png'), sheet('L\'avatar — les choix', 'Chaque rangée change un seul choix, à partir des réglages par défaut (HISTOIRE.md § 6.17).', choix), 1300],
-  [path.join(PNG, 'avatar_exemples.png'), sheet('L\'avatar — exemples', 'Douze avatars, un par coupe : les vues, le salut, les gestes du tutoriel (ramasser, grelotter, lire le Grimoire), la version naufragée et le petit format du jeu.', cells), 1300]
+  [path.join(PNG, 'avatar_choix.png'), sheet('L\'avatar — les formes', 'Chaque rangée change un seul choix, à partir des réglages par défaut (HISTOIRE.md § 6.17). Le visage en gros plan.', choix), 1400],
+  [path.join(PNG, 'avatar_couleurs.png'), sheet('L\'avatar — les nuanciers', 'Tous libres dès la création, sauf les teintures rares, qui se gagnent (boutique, coffres) et s\'ajoutent aux tissus et aux cheveux.', couleurs), 1400],
+  [path.join(PNG, 'avatar_accessoires.png'), sheet('L\'avatar — les accessoires', 'Un par emplacement, chacun recolorable. Gratuit dès la création, ou à gagner pour toujours à la boutique ou dans les coffres (raretés des coffres du jeu).', accessoires), 1400],
+  [path.join(PNG, 'avatar_exemples.png'), sheet('L\'avatar — exemples', 'Douze avatars : les vues, le salut, les gestes du tutoriel (ramasser, grelotter, lire le Grimoire) et la version naufragée (la mer garde les chapeaux, les sacs et ce qu\'on tient).', cells), 1400]
 ]);
 console.log('ok', count, 'SVG');
