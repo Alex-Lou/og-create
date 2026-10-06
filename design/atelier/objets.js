@@ -1,6 +1,7 @@
 // Les objets du décor refaits au niveau des PNJ, un par un, avec le trait et la lumière des arbres (arbres.js) : le nid,
-// la lanterne. Cadre et ancrage des décors de deco.js (PROP, centre de la case en (0, 0)).
+// la lanterne, le banc. Cadre et ancrage des décors de deco.js (PROP, centre de la case en (0, 0)).
 const { OUT, E, r2 } = require('./troupe');
+const { box } = require('./deco');
 
 const ombre = (x, y, rx, ry) => E(x, y, rx, ry, 'rgba(40,55,20,0.22)', 0);
 const trait = (d, col, w) => `<path d="${d}" stroke="${col}" stroke-width="${r2(w)}" fill="none" stroke-linecap="round" stroke-linejoin="round"/>`;
@@ -114,4 +115,40 @@ for (const poteau of ['bois', 'fer']) for (const li of [false, true]) for (const
   LANTERNES.push([fichier, libelle, { poteau, lierre: li, allumee: al }]);
 }
 
-module.exports = { nid, NIDS, lanterne, LANTERNES };
+// ——— Le banc : un banc à lattes le long de la case, son dossier ; peint en vert, un chat y dort parfois ———
+const BANCS = {
+  naturel: { lattes: { top: '#E8B97E', left: '#C78D55', right: '#9C6438' }, pieds: { top: '#A9703F', left: '#8B5631', right: '#6A3F22' } },
+  peint: { lattes: { top: '#A6D690', left: '#74B366', right: '#518E4C' }, pieds: { top: '#5E8C56', left: '#4A7444', right: '#365A33' } }
+};
+// le chat qui dort en boule : roux, rayé, la queue autour, les yeux fermés, le nez rose
+const chat = (x, y) => `<g transform="translate(${r2(x)} ${r2(y)})">`
+  + E(0, -2.8, 5.4, 3.4, '#F2A35A', 0.8) + E(-1, -3.8, 3.2, 1.6, '#F7C08A', 0)
+  + `<path d="M-2.4,-5.4 Q-1.8,-3.4 -2.6,-1.4 M0,-5.9 Q0.6,-3.6 -0.2,-0.8" stroke="#D27E3A" stroke-width="0.6" fill="none" stroke-linecap="round"/>`
+  + `<path d="M-5,-1.4 Q-2,1.4 3.4,0.4 Q5.6,-0.2 5.4,-1.6" stroke="${OUT}" stroke-width="2.4" fill="none" stroke-linecap="round"/><path d="M-5,-1.4 Q-2,1.4 3.4,0.4 Q5.6,-0.2 5.4,-1.6" stroke="#F2A35A" stroke-width="1.2" fill="none" stroke-linecap="round"/>`
+  + `<path d="M1.6,-6.2 L2.2,-8.6 L3.6,-6.8 Z M4.4,-6.6 L5.8,-8.4 L6,-6 Z" fill="#F2A35A" stroke="${OUT}" stroke-width="0.7" stroke-linejoin="round"/>`
+  + E(3.8, -4.8, 2.8, 2.3, '#F2A35A', 0.8) + E(3.4, -5.4, 1.4, 0.8, '#F7C08A', 0)
+  + `<path d="M2.4,-4.8 q0.6,0.5 1.2,0 M4.4,-4.8 q0.6,0.5 1.2,0" stroke="${OUT}" stroke-width="0.5" fill="none" stroke-linecap="round"/>`
+  + E(4, -3.9, 0.4, 0.3, '#F29AA8', 0) + E(2.2, -3.9, 0.55, 0.32, '#F7A8B8', 0) + E(5.8, -3.9, 0.55, 0.32, '#F7A8B8', 0) + '</g>';
+
+// petit : un banc à deux places ; peint : peint en vert ; chat : un chat roux endormi dessus
+function banc({ petit = false, peint = false, chat: avecChat = false } = {}) {
+  const c = BANCS[peint ? 'peint' : 'naturel'], L = petit ? 0.21 : 0.31;
+  const pied = (u, v, z1) => box(u - 0.022, v - 0.022, u + 0.022, v + 0.022, 0, z1, c.pieds, 0.8);
+  // le dossier : deux montants, deux lattes ; puis les pieds, du fond vers l'avant ; puis les trois lattes de l'assise
+  const dossier = pied(-L + 0.04, -0.088, 22) + pied(L - 0.04, -0.088, 22)
+    + box(-L, -0.105, L, -0.078, 13.6, 16.4, c.lattes, 0.9) + box(-L, -0.105, L, -0.078, 18.4, 21.2, c.lattes, 0.9);
+  const pieds = pied(-L + 0.04, 0.066, 9) + pied(L - 0.04, 0.066, 9);
+  const assise = [[-0.092, -0.036], [-0.028, 0.028], [0.036, 0.092]].map(([v0, v1]) => box(-L, v0, L, v1, 9, 10.8, c.lattes, 0.9)).join('');
+  const [cx, cy] = require('./deco').pt(0.06, 0, 10.8);
+  return E(0, 3, (petit ? 17 : 24), 7.5, 'rgba(40,55,20,0.22)', 0) + dossier + pieds + assise + (avecChat ? chat(cx, cy) : '');
+}
+
+// Les 8 bancs : [fichier, libellé, options] ; « banc » (trois places, bois naturel, sans chat) est celui par défaut
+const BANCS_LISTE = [];
+for (const petit of [false, true]) for (const peint of [false, true]) for (const ch of [false, true]) {
+  const fichier = ['banc', petit && 'petit', peint && 'peint', ch && 'chat'].filter(Boolean).join('_');
+  const libelle = `Banc (${[petit ? 'deux places' : 'trois places', peint ? 'peint en vert' : 'bois naturel', ch && 'un chat endormi'].filter(Boolean).join(', ')})`;
+  BANCS_LISTE.push([fichier, libelle, { petit, peint, chat: ch }]);
+}
+
+module.exports = { nid, NIDS, lanterne, LANTERNES, banc, BANCS_LISTE };

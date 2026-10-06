@@ -47295,10 +47295,129 @@
   {
    "id": "plantes/banc",
    "rubrique": "plantes",
-   "titre": "Banc de bois (décor)",
+   "titre": "Banc de bois (trois places, bois naturel)",
    "images": 1,
    "fichiers": [
     "svg/plantes/banc.svg"
+   ],
+   "cadre": [
+    -50,
+    -115,
+    100,
+    140
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "plantes/banc_chat",
+   "rubrique": "plantes",
+   "titre": "Banc de bois (trois places, bois naturel, un chat endormi)",
+   "images": 1,
+   "fichiers": [
+    "svg/plantes/banc_chat.svg"
+   ],
+   "cadre": [
+    -50,
+    -115,
+    100,
+    140
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "plantes/banc_peint",
+   "rubrique": "plantes",
+   "titre": "Banc de bois (trois places, peint en vert)",
+   "images": 1,
+   "fichiers": [
+    "svg/plantes/banc_peint.svg"
+   ],
+   "cadre": [
+    -50,
+    -115,
+    100,
+    140
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "plantes/banc_peint_chat",
+   "rubrique": "plantes",
+   "titre": "Banc de bois (trois places, peint en vert, un chat endormi)",
+   "images": 1,
+   "fichiers": [
+    "svg/plantes/banc_peint_chat.svg"
+   ],
+   "cadre": [
+    -50,
+    -115,
+    100,
+    140
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "plantes/banc_petit",
+   "rubrique": "plantes",
+   "titre": "Banc de bois (deux places, bois naturel)",
+   "images": 1,
+   "fichiers": [
+    "svg/plantes/banc_petit.svg"
+   ],
+   "cadre": [
+    -50,
+    -115,
+    100,
+    140
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "plantes/banc_petit_chat",
+   "rubrique": "plantes",
+   "titre": "Banc de bois (deux places, bois naturel, un chat endormi)",
+   "images": 1,
+   "fichiers": [
+    "svg/plantes/banc_petit_chat.svg"
+   ],
+   "cadre": [
+    -50,
+    -115,
+    100,
+    140
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "plantes/banc_petit_peint",
+   "rubrique": "plantes",
+   "titre": "Banc de bois (deux places, peint en vert)",
+   "images": 1,
+   "fichiers": [
+    "svg/plantes/banc_petit_peint.svg"
+   ],
+   "cadre": [
+    -50,
+    -115,
+    100,
+    140
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "plantes/banc_petit_peint_chat",
+   "rubrique": "plantes",
+   "titre": "Banc de bois (deux places, peint en vert, un chat endormi)",
+   "images": 1,
+   "fichiers": [
+    "svg/plantes/banc_petit_peint_chat.svg"
    ],
    "cadre": [
     -50,
