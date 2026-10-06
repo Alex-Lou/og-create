@@ -291,17 +291,57 @@ LM.saule = { n: 2, draw: f => {
   const [lx, ly, la] = f ? [30, -26, 140] : [34, -42, 20];
   return s + `<path d="M0,-2.6 Q1.6,0 0,2.6 Q-1.6,0 0,-2.6 Z" fill="${SAULE.devant.light}" stroke="${OUT}" stroke-width="0.6" transform="translate(${x + lx} ${y + ly}) rotate(${la})"/>`;
 } };
+// Cabane sur pilotis : l'eau du marais aux bords bosselés, ses roseaux et ses nénuphars ; quatre pieux croisillonnés
+// et leurs ronds dans l'eau ; le plancher et son échelle ; la cabane de planches, sa porte, sa fenêtre allumée, son toit
+// de chaume ; la lanterne au coin ; le filet qui sèche ; la barque amarrée et ses rames ; les lucioles qui tournent
+// (2 images ; une lueur pour la lanterne et une par luciole, comme avant)
 LM.pilotis = { n: 2, draw: f => {
-  let s = disc(0, 0, 0.72, 0, '#6FA8C8', 1) + disc(-0.08, -0.05, 0.5, 0, '#8FC8E0', 0);
-  for (const [u, v] of [[-0.25, -0.25], [0.25, -0.25], [-0.25, 0.25], [0.25, 0.25]]) s += post(u, v, -4, 20, WOOD_DARK, 0.03);
-  s += box(-0.32, -0.32, 0.32, 0.32, 20, 23, WOOD) + box(-0.24, -0.24, 0.24, 0.24, 23, 42, WOOD) + Dk.gable(-0.24, -0.24, 0.24, 0.24, 42, 16, { back: '#C99A45', front: '#EBC46F', gable: '#F3E4C4' }, 0.07);
-  const [dx, dy] = at(0, 0.24, 30);
-  s += `<rect x="${dx - 3}" y="${dy - 9}" width="6" height="11" fill="#5A3A22" stroke="${OUT}" stroke-width="0.8"/>`;
-  const [lx, ly] = at(0.24, 0.24, 36);
-  s += glow(lx + 4, ly + 2, 10, '255,224,138', 0.35) + poly([[lx + 2, ly - 2], [lx + 7, ly - 2], [lx + 7, ly + 5], [lx + 2, ly + 5]], '#FFE08A', 0.8);
-  const [bx, by] = at(0.45, 0.4, 0);
-  s += `<path d="M${bx - 12},${by - 3} L${bx + 12},${by - 3} Q${bx + 9},${by + 3} ${bx},${by + 3} Q${bx - 9},${by + 3} ${bx - 12},${by - 3} Z" fill="${WOOD.left}" stroke="${OUT}" stroke-width="1"/>`;
-  for (let i = 0; i < 4; i++) { const a = (i / 4 + f / 8) * TAU, [fx, fy] = at(Math.cos(a) * 0.5, Math.sin(a) * 0.5, 34 + (i % 2) * 8); s += glow(fx, fy, 3, '255,236,150', 0.45) + E(fx, fy, 0.9, 0.9, '#FFF3A8', 0.3); }
+  const [x, y] = at(0, 0), xy = p => p.map(r2).join(',');
+  const bosses = (cx, cy, rx, ry, n) => { const pts = Array.from({ length: n }, (_, i) => { const t = (i / n) * TAU, r = 1 + (i % 2 ? 0.05 : -0.03); return [cx + Math.cos(t) * rx * r, cy + Math.sin(t) * ry * r]; }); const mil = i => { const p = pts[i % n], q = pts[(i + 1) % n]; return `${r2((p[0] + q[0]) / 2)},${r2((p[1] + q[1]) / 2)}`; }; let d = `M${mil(n - 1)}`; for (let i = 0; i < n; i++) d += ` Q${r2(pts[i][0])},${r2(pts[i][1])} ${mil(i)}`; return d + ' Z'; };
+  const CHAUME = { back: '#C99A45', front: '#E6BE6A', gable: '#8E6A44' };
+  const roseaux = (rx, ry) => `<path d="M${rx},${ry} l-1.4,-11 M${rx + 1.6},${ry} l0.4,-13 M${rx + 3.2},${ry} l2,-10 M${rx - 1.4},${ry} l-3,-7" stroke="#5E8C3A" stroke-width="1.1" stroke-linecap="round"/>` + E(rx + 0.4, ry - 13.6, 0.9, 2.4, '#8A5A34', 0.5) + E(rx + 5.4, ry - 10.6, 0.8, 2, '#8A5A34', 0.5);
+  // l'eau du marais, ses reflets, ses nénuphars, ses roseaux du fond
+  let s = P(bosses(x, y + 4, 62, 27, 22), '#6FA8C8', 1.1) + E(x - 8, y + 2, 44, 16, '#8FC8E0', 0)
+    + `<path d="M${x - 40},${y + 8} l10,-1.4 M${x + 26},${y + 20} l9,-1.2 M${x - 18},${y + 22} l7,-1" stroke="#E2F4FC" stroke-width="1.2" stroke-linecap="round"/>`
+    + roseaux(x - 46, y - 2) + roseaux(x + 44, y - 4) + roseaux(x + 22, y - 14);
+  s += [[-30, 16, 5], [40, 10, 4]].map(([dx, dy, r]) => P(`M${x + dx},${y + dy} a${r},${r * 0.4} 0 1 1 ${r * 0.3},${r * 0.3} L${x + dx},${y + dy} Z`, '#6FAE4E', 0.7)).join('') + fleurette(x - 31, y + 14.4, '#FFFFFF');
+  // les pieux (de l'arrière vers l'avant), leurs ronds dans l'eau, le croisillon de devant
+  const pieux = [[-0.22, -0.18], [0.22, -0.18], [-0.22, 0.18], [0.22, 0.18]];
+  for (const [u, v] of pieux) { const [px, py] = at(u, v); s += `<ellipse cx="${r2(px)}" cy="${r2(py + 1)}" rx="${4.4 + f * 1.2}" ry="${1.8 + f * 0.4}" fill="none" stroke="#E2F4FC" stroke-width="0.8"/>` + post(u, v, -3, 18, WOOD_DARK, 0.03); }
+  const barre = (p, q, w, c) => `<path d="M${xy(p)} L${xy(q)}" stroke="${OUT}" stroke-width="${w + 1.4}" stroke-linecap="round"/><path d="M${xy(p)} L${xy(q)}" stroke="${c}" stroke-width="${w}" stroke-linecap="round"/>`;
+  s += barre(at(-0.22, 0.21, 3), at(0.22, 0.21, 16), 1.2, WOOD_DARK.left) + barre(at(-0.22, 0.21, 16), at(0.22, 0.21, 3), 1.2, WOOD_DARK.left);
+  // le plancher et ses planches, la barque amarrée derrière l'échelle
+  s += box(-0.3, -0.26, 0.3, 0.32, 18, 21, WOOD, 1);
+  for (const u of [-0.18, -0.06, 0.06, 0.18]) s += L(at(u, -0.26, 21), at(u, 0.32, 21), WOOD.right, 0.6);
+  const [bx, by] = at(0.66, 0.14);
+  s += `<path d="M${xy(at(0.22, 0.18, 12))} Q${r2(bx - 10)},${r2(by - 8)} ${r2(bx - 14)},${r2(by - 4)}" stroke="#D8C8A0" stroke-width="0.8" fill="none"/>`
+    + `<ellipse cx="${r2(bx)}" cy="${r2(by + 2)}" rx="18" ry="3.4" fill="none" stroke="#E2F4FC" stroke-width="0.8"/>`
+    + P(`M${bx - 16},${by - 4} Q${bx - 12},${by + 4} ${bx},${by + 4} Q${bx + 12},${by + 4} ${bx + 16},${by - 4} Q${bx},${by - 1} ${bx - 16},${by - 4} Z`, WOOD.left, 1)
+    + P(`M${bx - 13},${by - 3.4} Q${bx},${by - 0.6} ${bx + 13},${by - 3.4} Q${bx},${by + 1.6} ${bx - 13},${by - 3.4} Z`, WOOD.right, 0)
+    + L([bx - 2, by - 2.4], [bx + 2, by - 1.4], WOOD.top, 1.6) + `<path d="M${bx - 6},${by - 2} L${bx + 14},${by - 9}" stroke="${OUT}" stroke-width="2.4" stroke-linecap="round"/><path d="M${bx - 6},${by - 2} L${bx + 14},${by - 9}" stroke="${WOOD.top}" stroke-width="1.2" stroke-linecap="round"/>` + E(bx + 15, by - 9.4, 2.4, 1.1, WOOD.top, 0.8);
+  const [lx, ly] = at(0.0, 0.33, 0);
+  s += `<path d="M${r2(lx - 3)},${r2(ly + 2)} L${r2(lx - 3)},${r2(ly - 26)} M${r2(lx + 3)},${r2(ly + 1)} L${r2(lx + 3)},${r2(ly - 27)}" stroke="${OUT}" stroke-width="2.4" stroke-linecap="round"/><path d="M${r2(lx - 3)},${r2(ly + 2)} L${r2(lx - 3)},${r2(ly - 26)} M${r2(lx + 3)},${r2(ly + 1)} L${r2(lx + 3)},${r2(ly - 27)}" stroke="${WOOD_DARK.left}" stroke-width="1.1" stroke-linecap="round"/>`
+    + [4, 10, 16, 22].map(z => L([lx - 3, ly - z], [lx + 3, ly - z - 0.6], WOOD_DARK.left, 1.1)).join('');
+  // la cabane : murs de planches, porte, fenêtre allumée, toit de chaume
+  s += box(-0.24, -0.2, 0.2, 0.15, 21, 37, WOOD_DARK, 1);
+  for (const u of [-0.15, -0.06, 0.03, 0.12]) s += L(at(u, 0.15, 21), at(u, 0.15, 37), WOOD_DARK.right, 0.6);
+  for (const v of [-0.11, -0.02, 0.07]) s += L(at(0.2, v, 21), at(0.2, v, 37), '#56331C', 0.6);
+  s += face([[-0.18, 0.15, 21], [-0.09, 0.15, 21], [-0.09, 0.15, 32], [-0.18, 0.15, 32]], '#3D2A1E', 0.9) + E(...at(-0.105, 0.15, 26.5), 0.7, 0.7, '#E0B060', 0);
+  s += face([[0.2, -0.13, 25], [0.2, 0.01, 25], [0.2, 0.01, 33], [0.2, -0.13, 33]], '#FFD978', 0.9) + L(at(0.2, -0.06, 25), at(0.2, -0.06, 33), '#56331C', 0.8) + L(at(0.2, -0.13, 29), at(0.2, 0.01, 29), '#56331C', 0.8);
+  s += Dk.gable(-0.24, -0.2, 0.2, 0.15, 37, 16, CHAUME, 0.08);
+  for (const u of [-0.24, -0.13, -0.02, 0.09, 0.2]) s += L(at(u, 0.2, 38.4), at(u, 0.06, 46), '#C99A45', 0.7);
+  s += [-0.26, -0.18, -0.1, -0.02, 0.06, 0.14, 0.22].map(u => L(at(u, 0.23, 37), at(u + 0.01, 0.23, 34.8), '#B88A3E', 1)).join('');
+  // le filet qui sèche sur le bord du plancher
+  const [nx, ny] = at(-0.17, 0.32, 18);
+  s += `<path d="M${r2(nx)},${r2(ny)} Q${r2(nx - 6)},${r2(ny + 6)} ${r2(nx - 4)},${r2(ny + 15)} L${r2(nx + 4)},${r2(ny + 18)} Q${r2(nx + 2)},${r2(ny + 8)} ${r2(nx + 6)},${r2(ny + 3)} Z" fill="#E8DCC0" fill-opacity="0.45" stroke="#CDBB92" stroke-width="0.8"/>`
+    + `<path d="M${r2(nx - 3)},${r2(ny + 5)} l7,2 M${r2(nx - 4)},${r2(ny + 10)} l7,2.4 M${r2(nx - 1)},${r2(ny + 2)} l-1,13 M${r2(nx + 2.6)},${r2(ny + 3)} l-1.4,14" stroke="#D8C8A0" stroke-width="0.6"/>`;
+  // la lanterne au coin, sa lueur
+  const [qx, qy] = at(0.2, 0.15, 35);
+  s += L([qx, qy], [qx + 5, qy - 1], WOOD_DARK.right, 1.2) + L([qx + 5, qy - 1], [qx + 5, qy + 2], '#3D3A36', 0.7)
+    + `<rect x="${r2(qx + 2.8)}" y="${r2(qy + 2)}" width="4.4" height="5.6" rx="1" fill="#FFD978" stroke="${OUT}" stroke-width="0.7"/>` + E(qx + 5, qy + 1.8, 2.6, 0.9, '#3D3A36', 0)
+    + glow(qx + 5, qy + 5, 10, '255,214,120', f ? 0.42 : 0.34);
+  // les lucioles qui tournent
+  for (let i = 0; i < 4; i++) { const a = (i / 4 + f / 8) * TAU, [fx, fy] = at(Math.cos(a) * 0.5, Math.sin(a) * 0.5, 30 + (i % 2) * 10); s += glow(fx, fy, 3, '255,236,150', 0.45) + E(fx, fy, 0.9, 0.9, '#FFF3A8', 0.3); }
   return s;
 } };
 LM.oasis = { n: 2, draw: f => {
