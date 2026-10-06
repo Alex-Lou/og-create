@@ -207,7 +207,7 @@ chronométrer 20 appels. Comparer à zoom égal, au même endroit.
   commencent par `world_`. Voir aussi `db/README.md`.
 
 ### Front : `src/world/` (moteur de l'île) et `src/components/World/`
-- **`WorldView.vue`** : l'île entière (≈ 2 840 lignes) : son état, le chargement, les actions, les fiches et le HUD.
+- **`WorldView.vue`** : l'île entière (≈ 2 820 lignes) : son état, le chargement, les actions, les fiches et le HUD.
   Ses méthodes de moteur sont à part, dans `src/world/view/`, des objets de méthodes étalés dans `methods`
   (`this` y reste le composant) :
   - `camera.js` : géométrie isométrique (monde ↔ écran), caméra, zoom, cadrage ;
@@ -215,12 +215,11 @@ chronométrer 20 appels. Comparer à zoom égal, au même endroit.
     bulles) ;
   - `gestures.js` : glisser, pincer, molette, toucher, appui long, ce qui est sous le doigt ;
   - `constants.js` (taille d'une case…) et `memory.js` (la vue gardée d'une visite à l'autre de l'onglet).
-  - Fiches déjà en composants : le naufrage (`WreckScene`), Brume (`BrumeSheet`), un quartier (`ZoneSheet`) ; dans la
-    fiche d'un bâtiment, les onglets Aperçu (`SiteOverview`), Boutique (`SiteShop`), Annexes (`AnnexPanel`) et
-    Évolution (`SiteSteps`). Leurs styles restent dans `WorldView` (globaux, classes `world__`) ; les actions restent à
-    l'île, qui les reçoit en événements. Les règles de la boutique et des paliers (verrous, prix, palier prêt) sont dans
-    `src/world/shop.js` et `src/world/levels.js`, testées. Reste à faire (lot « santé ») : le cadre de la fiche d'un
-    bâtiment, le HUD.
+  - Fiches déjà en composants : le naufrage (`WreckScene`), Brume (`BrumeSheet`), un quartier (`ZoneSheet`), un
+    bâtiment (`SiteSheet` : en-tête et onglets ; l'onglet ouvert vient en slot de l'île : `SiteOverview`, `SiteShop`,
+    `AnnexPanel`, `SiteSteps`). Leurs styles restent dans `WorldView` (globaux, classes `world__`) ; les actions restent
+    à l'île, qui les reçoit en événements. Les règles de la boutique et des paliers (verrous, prix, palier prêt) sont
+    dans `src/world/shop.js` et `src/world/levels.js`, testées. Reste à faire (lot « santé ») : le HUD.
 - **Le sol** : `terrain.js` (`TerrainCache`) peint le relief en **carrés de 512 px gardés en images**, à des
   résolutions par pas de √2.
   - Le décor fixe (arbres, rochers) est **cuit dans le sol** sauf de près : `NEAR_SCALE = 0.9`, avec le vent
@@ -419,8 +418,8 @@ familiers (H6) et aux créatures d'Anya (H8).
      - ~~moteur de rendu, gestes et caméra à part~~ : fait (`src/world/view/`, § 5) ;
      - fiches et HUD en composants : ~~styles de l'île rendus globaux~~ (classes `world__`, partagées entre fiches),
        ~~naufrage, Brume, quartier~~ : faits (`WreckScene`, `BrumeSheet`, `ZoneSheet`) ; fiche d'un bâtiment :
-       ~~Aperçu, Boutique, Évolution~~ faits (`SiteOverview`, `SiteShop`, `SiteSteps`), reste le cadre (`SiteSheet`) ;
-       reste le HUD (`IslandHud`). À vérifier chacun au pixel près ;
+       ~~onglets et cadre~~ faits (`SiteSheet`, `SiteOverview`, `SiteShop`, `SiteSteps`) ; reste le HUD (`IslandHud`), à
+       vérifier au pixel près ;
    - composants réutilisables : ~~une **`CostList**`~~ : fait pour l'établi et les annexes (`CostList.vue`) ; les
      fiches de palier et de quartier de `WorldView` gardent leur présentation en lignes ; une carte de catalogue
      commune reste à faire ;

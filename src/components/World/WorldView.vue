@@ -190,86 +190,66 @@
     <teleport to="body">
       <!-- Fiche d'un bâtiment : aperçu (production, récolte) et évolution (tous les paliers) -->
       <transition name="world-sheet">
-        <div v-if="site" class="world__sheet-backdrop" @click.self="site = null">
-          <div class="world__sheet world__sheet--site" role="dialog" :aria-label="site.name">
-            <div class="world__site-head">
-              <img class="world__site-art" :src="artOf(site)" alt="" />
-              <div class="world__site-id">
-                <!-- Le quartier se renomme dès qu'il est à soi, le bâtiment dès son palier III -->
-                <span class="world__eyebrow world__named">{{ zoneName(site.zone) }}<button type="button" class="world__pen world__pen--small" :aria-label="`Renommer le quartier ${zoneName(site.zone)}`" @click="startRename('zone', site.zone)"><svg viewBox="0 0 20 20" width="15" height="15" aria-hidden="true"><path d="M3,14.6 L3,17 L5.4,17 L14.6,7.8 L12.2,5.4 Z M15.6,6.8 L17,5.4 C17.4,5 17.4,4.4 17,4 L16,3 C15.6,2.6 15,2.6 14.6,3 L13.2,4.4 Z" fill="currentColor"/></svg></button></span>
-                <span class="world__sheet-title world__named">{{ site.level ? site.name : `${site.name} · à bâtir` }}<button
-                  v-if="site.level"
-                  type="button"
-                  :class="['world__pen', { 'is-locked': site.level < site.renameLevel }]"
-                  :aria-label="site.level < site.renameLevel ? `Renommer : au palier ${roman(site.renameLevel)}` : `Renommer ${site.name}`"
-                  @click="startRename('site', site.id)"
-                ><svg viewBox="0 0 20 20" width="15" height="15" aria-hidden="true"><path d="M3,14.6 L3,17 L5.4,17 L14.6,7.8 L12.2,5.4 Z M15.6,6.8 L17,5.4 C17.4,5 17.4,4.4 17,4 L16,3 C15.6,2.6 15,2.6 14.6,3 L13.2,4.4 Z" fill="currentColor"/></svg></button></span>
-                <span class="world__pips" :aria-label="`Niveau ${site.level} sur ${site.maxLevel}`">
-                  <span v-for="k in site.maxLevel" :key="k" :class="['world__pip', { 'is-on': k <= site.level }]"></span>
-                </span>
-              </div>
-              <button type="button" class="world__link" @click="site = null">Fermer</button>
-            </div>
-            <div class="world__tabs" role="tablist">
-              <button type="button" role="tab" :aria-selected="String(siteTab === 'overview')" :class="['world__tab', { 'is-on': siteTab === 'overview' }]" @click="siteTab = 'overview'">Aperçu</button>
-              <button type="button" role="tab" :aria-selected="String(siteTab === 'evolution')" :class="['world__tab', { 'is-on': siteTab === 'evolution' }]" @click="siteTab = 'evolution'">
-                Évolution<span v-if="canBuild(site)" class="world__tab-dot" aria-label="prête"></span>
-              </button>
-              <button v-if="site.shop && site.shop.length" type="button" role="tab" :aria-selected="String(siteTab === 'shop')" :class="['world__tab', { 'is-on': siteTab === 'shop' }]" @click="siteTab = 'shop'">Boutique</button>
-              <button v-if="site.annexes && site.annexes.length" type="button" role="tab" :aria-selected="String(siteTab === 'annexes')" :class="['world__tab', { 'is-on': siteTab === 'annexes' }]" @click="siteTab = 'annexes'">
-                Annexes<span v-if="annexReady(site, stockAll, coins)" class="world__tab-dot" aria-label="à poser"></span>
-              </button>
-            </div>
+        <SiteSheet
+          v-if="site"
+          :site="site"
+          :tab="siteTab"
+          :art="artOf(site)"
+          :zone-name="zoneName(site.zone)"
+          :build-ready="Boolean(canBuild(site))"
+          :annex-ready="annexReady(site, stockAll, coins)"
+          @tab="tab => (siteTab = tab)"
+          @rename="startRename"
+          @close="site = null"
+        >
+          <SiteOverview
+            v-if="siteTab === 'overview'"
+            :site="site"
+            :rates="state.rates"
+            :cap-hours="state.capHours"
+            :pending="state.pending"
+            :friend="friendAt(site.id)"
+            :civ-stage="civStage"
+            :villagers="state.villagers || []"
+            :needs="state.needs || null"
+            :portraits="villagerPortraits()"
+            :visitor="state.visitor || null"
+            :visitor-art="state.visitor ? visitorPortrait(state.visitor) : ''"
+            :crafts="state.crafts || null"
+            :games="state.games || []"
+            :busy="busy"
+            @collect="collect"
+            @villager="openVillager"
+            @visitor="openVisitor"
+            @fill-all="fillAllNeeds"
+            @bench="openBench"
+            @game="openGame"
+            @evolution="siteTab = 'evolution'"
+          />
 
-            <SiteOverview
-              v-if="siteTab === 'overview'"
-              :site="site"
-              :rates="state.rates"
-              :cap-hours="state.capHours"
-              :pending="state.pending"
-              :friend="friendAt(site.id)"
-              :civ-stage="civStage"
-              :villagers="state.villagers || []"
-              :needs="state.needs || null"
-              :portraits="villagerPortraits()"
-              :visitor="state.visitor || null"
-              :visitor-art="state.visitor ? visitorPortrait(state.visitor) : ''"
-              :crafts="state.crafts || null"
-              :games="state.games || []"
-              :busy="busy"
-              @collect="collect"
-              @villager="openVillager"
-              @visitor="openVisitor"
-              @fill-all="fillAllNeeds"
-              @bench="openBench"
-              @game="openGame"
-              @evolution="siteTab = 'evolution'"
-            />
+          <!-- Boutique : outils et objets (effets), pièces rares, skins et teintes (apparence), rangés par palier ; un toucher
+               sur le prix achète (annulable 4 s), un toucher sur le dessin ou un appui long sur le prix ouvre la fiche -->
+          <SiteShop
+            v-else-if="siteTab === 'shop'"
+            ref="shop"
+            :site="site"
+            :signs="state.signs || null"
+            :coins="coins"
+            :busy="busy"
+            :undoable="undoable"
+            @describe="item => describeItem(site, item)"
+            @buy="(item, event) => buyItem(site, item, event)"
+            @wear="skin => wearSkin(site, skin)"
+            @sign="look => chooseSign(site, look)"
+            @rename="renameSigns"
+            @undo="undoItem"
+          />
 
-            <!-- Boutique : outils et objets (effets), pièces rares, skins et teintes (apparence), rangés par palier ; un toucher
-                 sur le prix achète (annulable 4 s), un toucher sur le dessin ou un appui long sur le prix ouvre la fiche -->
-            <SiteShop
-              v-else-if="siteTab === 'shop'"
-              ref="shop"
-              :site="site"
-              :signs="state.signs || null"
-              :coins="coins"
-              :busy="busy"
-              :undoable="undoable"
-              @describe="item => describeItem(site, item)"
-              @buy="(item, event) => buyItem(site, item, event)"
-              @wear="skin => wearSkin(site, skin)"
-              @sign="look => chooseSign(site, look)"
-              @rename="renameSigns"
-              @undo="undoItem"
-            />
+          <!-- Annexes : champs, filons, viviers… à poser autour du bâtiment (la case se choisit sur la carte) -->
+          <AnnexPanel v-else-if="siteTab === 'annexes'" :site="site" :stock="stockAll" :coins="coins" :busy="busy" @place="annex => startAnnex(site, annex)" />
 
-            <!-- Annexes : champs, filons, viviers… à poser autour du bâtiment (la case se choisit sur la carte) -->
-            <AnnexPanel v-else-if="siteTab === 'annexes'" :site="site" :stock="stockAll" :coins="coins" :busy="busy" @place="annex => startAnnex(site, annex)" />
-
-            <SiteSteps v-else :site="site" :stock="state.stock" :charges="state.charges.count" :coins="coins" :busy="busy" @build="build(site)" @harvest="startHarvest" />
-          </div>
-        </div>
+          <SiteSteps v-else :site="site" :stock="state.stock" :charges="state.charges.count" :coins="coins" :busy="busy" @build="build(site)" @harvest="startHarvest" />
+        </SiteSheet>
       </transition>
 
       <!-- Naufrage (bible, § 6.7 et § 14) : une nuit, une épave au loin, la brume, et Brume ; un toucher pour continuer -->
@@ -495,6 +475,7 @@ import ZoneSheet from './ZoneSheet.vue';
 import SiteShop from './SiteShop.vue';
 import SiteSteps from './SiteSteps.vue';
 import SiteOverview from './SiteOverview.vue';
+import SiteSheet from './SiteSheet.vue';
 import { villagerSprite, ROLES } from '@/world/villagers';
 import { talkLine, giftLine } from '@/world/friends';
 import { heardPages, keepSavoir, savoirLine, artOf as savoirOf } from '@/game/savoirs';
@@ -571,7 +552,7 @@ const FOREST_HIGH = ['pine', 'pine', 'tree'];
 // d'animation sont non réactifs et s'arrêtent quand l'onglet est caché ou le composant démonté.
 export default {
   name: 'WorldView',
-  components: { ElementGlyph, HarvestGame, ShopItemSheet, IslandClock, GModal, ChestList, ChestReveal, ChestHaul, AnnexPanel, AnnexSheet, MiniGame, VillagerSheet, VisitorSheet, RenameSheet, CraftBench, CraftPuzzle, ExplorerLog, FindsSheet, WreckScene, BrumeSheet, ZoneSheet, SiteShop, SiteSteps, SiteOverview },
+  components: { ElementGlyph, HarvestGame, ShopItemSheet, IslandClock, GModal, ChestList, ChestReveal, ChestHaul, AnnexPanel, AnnexSheet, MiniGame, VillagerSheet, VisitorSheet, RenameSheet, CraftBench, CraftPuzzle, ExplorerLog, FindsSheet, WreckScene, BrumeSheet, ZoneSheet, SiteShop, SiteSteps, SiteOverview, SiteSheet },
   props: {
     // Glyphes des éléments du Livre (savoir-faire demandé à l'établi)
     elementEmojis: { type: Object, required: true },
@@ -1415,7 +1396,6 @@ export default {
 
     ...gestureMethods,
     /* ---------- Boutique d'un atelier (règles : world/shop.js ; onglet : SiteShop) ---------- */
-    roman,
     itemArt,
     // Raison pour laquelle un article ne s'achète pas encore (texte du bouton), ou ''
     lockOf(site, item) {
