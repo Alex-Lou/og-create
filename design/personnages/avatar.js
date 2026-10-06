@@ -308,6 +308,12 @@ function levres(c, ctx, mx, my) {
   return d ? `<path d="${d}" fill="none" stroke="${tone(c.levres, 0.82)}" stroke-width="1.15" stroke-linecap="round"/>` : '';
 }
 
+// De dos, le cou relie la tête au buste : la nuque se voit sous les cheveux courts ou tirés (derrière le col)
+function nuque(c) {
+  const d = 'M20,24.6 L28,24.6 L28.4,33.6 L19.6,33.6 Z';
+  return P(d, c.skinS);
+}
+
 function head(c0, ctx) {
   const { view } = ctx;
   const { h: c, defs } = peinture(c0, view);
@@ -651,7 +657,7 @@ function avatar(choixAvatar = {}, opts = {}) {
     legX: { front: [20.5 - sp, 27.5 + sp], se: [20 - sp, 27.6 + sp], ne: [21 - sp, 28 + sp] },
     shoulders: [[24 - (k.sw - 0.5), 34 + dy], [24 + (k.sw - 0.5), 34 + dy]],
     hands: [[24 - (k.hw - 0.4 + k.b * 0.6), 45.2 + dy], [24 + (k.hw - 0.4 + k.b * 0.6), 45.2 + dy]],
-    backItems: up((cc, ctx) => hairBehindBody(cc, ctx.view) + couche(cc, 'derriere', ctx), dy),
+    backItems: up((cc, ctx) => (ctx.view === 'ne' ? nuque(cc) : '') + hairBehindBody(cc, ctx.view) + couche(cc, 'derriere', ctx), dy),
     overArms: up((cc, ctx) => couche(cc, 'surBras', ctx), dy),
     body: up(body, dy), neck: up(neck, dy), head: up(head, dy), pose
   };
