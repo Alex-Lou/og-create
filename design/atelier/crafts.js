@@ -537,16 +537,47 @@ C.cadran = { n: 2, draw: f => {
   return s + herbe(hx - 6, hy + 1, '#86B852', 0.6) + fleurette(hx - 2.4, hy + 2, '#FFFFFF') + fleurette(hx + 3.4, hy + 1.4, '#F7B6C8');
 } };
 
-// Bassin : margelle, eau claire, nénuphars, poisson rouge ; des ronds dans l'eau (2 images)
+// Bassin : un bassin de moellons à deux assises, sa margelle de pierres taillées ; l'eau un peu plus bas, les parois
+// du fond dans l'ombre ; deux nénuphars et une fleur de lotus, une touffe de joncs et sa massette, deux carpes koï qui
+// nagent ; des ronds dans l'eau (2 images)
+const nenuphar = (x, y, r, a) => {
+  const p = t => `${r2(x + Math.cos(t) * r)},${r2(y + Math.sin(t) * r * 0.5)}`;
+  return `<path d="M${r2(x)},${r2(y)} L${p(a + 0.3)} A${r2(r)} ${r2(r * 0.5)} 0 1 1 ${p(a - 0.3)} Z" fill="#7EC45B" stroke="${OUT}" stroke-width="0.7" stroke-linejoin="round"/>`
+    + [a + 1.6, a + 3.1, a + 4.6].map(t => `<path d="M${r2(x)},${r2(y)} L${p(t)}" stroke="#5E9E48" stroke-width="0.45"/>`).join('')
+    + E(x - r * 0.35, y - r * 0.18, r * 0.3, r * 0.12, '#B3E386', 0);
+};
+const lotus = (x, y) => [-2.4, -1.2, 0, 1.2, 2.4].map((dx, i) => P(`M${r2(x)},${r2(y)} Q${r2(x + dx * 1.4 - 1.2)},${r2(y - 2.4 + Math.abs(dx) * 0.5)} ${r2(x + dx * 1.3)},${r2(y - 4 + Math.abs(dx) * 0.9)} Q${r2(x + dx * 1.4 + 1.2)},${r2(y - 2.4 + Math.abs(dx) * 0.5)} ${r2(x)},${r2(y)} Z`, i % 2 ? '#F7B6CE' : '#FBD6E1', 0.55)).join('') + E(x, y - 0.8, 1.2, 0.6, '#F2C94C', 0.4);
+const koi = (x, y, dir, tache) => `<g transform="translate(${r2(x)} ${r2(y)}) scale(${dir} 1)">` + P('M-2.4,0 L-4.8,-1.8 Q-4.2,0 -4.8,1.8 Z', '#F6A04A', 0.5) + E(0, 0, 3, 1.4, tache ? '#FFF4EA' : '#F08A3A', 0.6) + E(tache ? 0.4 : -0.6, -0.2, 1.2, 0.8, tache ? '#F08A3A' : '#FFF4EA', 0) + E(1.9, -0.3, 0.3, 0.3, OUT, 0) + '</g>';
 C.bassin = { n: 2, draw: f => {
-  let s = shadow(0, 0, 0.5, 0.1) + box(-0.42, -0.36, 0.42, 0.36, 0, 5, STONE) + face([[-0.36, -0.3, 5], [0.36, -0.3, 5], [0.36, 0.3, 5], [-0.36, 0.3, 5]], WATER, 0.7) + face([[-0.36, -0.3, 5], [0.1, -0.3, 5], [-0.36, 0.06, 5]], WATER_LIGHT, 0);
-  const [x, y] = at(0.05, 0.05, 5);
-  s += [[-14, 2, 30], [10, -4, -20]].map(([dx, dy, r]) => `<g transform="translate(${x + dx} ${y + dy}) rotate(${r})">${P('M0,0 L4.4,-1.4 A4.6,2.4 0 1,1 4,1.4 Z', '#7EC45B', 0.8)}</g>`).join('') + Dk.flower(x + 12, y - 5, 1.4, '#F7B6CE', '#F2C94C');
-  const fx = f ? 4 : -4;
-  s += `<g transform="translate(${x + fx} ${y + 4}) scale(${f ? -1 : 1} 1)">${P('M-2,0 L-4,-1.6 L-3.6,0 L-4,1.6 Z', '#F08A3A', 0.5)}${E(0, 0, 2.6, 1.4, '#F6A04A', 0.6)}</g>`;
-  s += E(x - 4 + f * 8, y - 2, 3 + f, 1.4 + f * 0.5, 'none', 0.5).replace(/stroke="[^"]+"/, 'stroke="#E8F6FF"');
-  return s;
+  const Z = 5.6, ZE = 4, U = 0.42, V = 0.36, u0 = 0.34, v0 = 0.28;
+  let s = shadow(0, 0, 0.52, 0.1) + box(-U, -V, U, V, 0, Z, STONE);
+  // les moellons des deux faces de devant : deux assises, joints décalés
+  const jo = (A, B, c = STONE.right) => L(A, B, c, 0.6);
+  s += jo(at(-U, V, Z / 2), at(U, V, Z / 2)) + jo(at(U, V, Z / 2), at(U, -V, Z / 2), '#807663');
+  for (const [t, z0, z1] of [[0.22, 0, Z / 2], [0.55, 0, Z / 2], [0.86, 0, Z / 2], [0.08, Z / 2, Z], [0.38, Z / 2, Z], [0.7, Z / 2, Z]]) { const u = -U + 2 * U * t; s += jo(at(u, V, z0), at(u, V, z1)); }
+  for (const [t, z0, z1] of [[0.3, 0, Z / 2], [0.68, 0, Z / 2], [0.14, Z / 2, Z], [0.5, Z / 2, Z], [0.86, Z / 2, Z]]) { const v = V - 2 * V * t; s += jo(at(U, v, z0), at(U, v, z1), '#807663'); }
+  // le trou du bassin : les parois du fond dans l'ombre, puis l'eau plus bas
+  const H = (u, v) => at(u, v, Z), W = (u, v) => at(u, v, ZE);
+  const X = (p1, p2, p3, p4) => { const d = (p1[0] - p2[0]) * (p3[1] - p4[1]) - (p1[1] - p2[1]) * (p3[0] - p4[0]), t = ((p1[0] - p3[0]) * (p3[1] - p4[1]) - (p1[1] - p3[1]) * (p3[0] - p4[0])) / d; return [p1[0] + t * (p2[0] - p1[0]), p1[1] + t * (p2[1] - p1[1])]; };
+  const T = H(-u0, -v0), R = H(u0, -v0), B = H(u0, v0), Lf = H(-u0, v0), WT = W(-u0, -v0);
+  const Pl = X(W(-u0, v0), WT, Lf, B), Pr = X(WT, W(u0, -v0), R, B);
+  s += poly([Lf, T, WT, Pl], '#A49A86', 0.6) + poly([T, R, Pr, WT], '#8E846F', 0.6) + poly([Pl, WT, Pr, B], WATER, 0.6)
+    + poly([Pl, WT, [WT[0] + 14, WT[1] + 7], [Pl[0] + 8, Pl[1] + 4]], WATER_LIGHT, 0);
+  // les joints de la margelle
+  for (const t of [0.25, 0.5, 0.75]) { const u = -U + 2 * U * t; s += jo(at(u, V, Z), at(u, v0, Z)) + jo(at(u, -V, Z), at(u, -v0, Z)); }
+  for (const t of [0.33, 0.66]) { const v = -V + 2 * V * t; s += jo(at(U, v, Z), at(u0, v, Z)) + jo(at(-U, v, Z), at(-u0, v, Z)); }
+  // les ronds dans l'eau, les carpes qui nagent, les nénuphars et le lotus
+  const [cx, cy] = at(0.04, 0.04, ZE);
+  for (const [dx, dy, k] of [[-6, 2, f], [8, -2, 1 - f]]) s += E(cx + dx, cy + dy, 3 + k * 4, 1.5 + k * 2, 'none', 0).replace('stroke="none"', `stroke="#E8F6FF" stroke-width="0.6" opacity="${r2(0.9 - k * 0.5)}"`);
+  s += koi(cx + (f ? 6 : -2), cy + 4, f ? -1 : 1, false) + koi(cx + (f ? -10 : -4), cy - 1, f ? 1 : -1, true);
+  const bob = f ? 0.3 : -0.3;
+  s += nenuphar(cx + 10, cy + 3 + bob, 4.6, 2.6) + nenuphar(cx - 13, cy + 3 - bob, 3.6, 0.4) + nenuphar(cx + 4, cy - 6 - bob, 3, 4) + lotus(cx + 10.6, cy + 2.6 + bob);
+  // la touffe de joncs et sa massette, dans le coin du fond
+  const [jx, jy] = at(-0.24, -0.2, ZE);
+  return s + thick(`M${r2(jx - 2)},${r2(jy)} q-1.4,-6 -3.6,-9.6 M${r2(jx)},${r2(jy)} q0.4,-8 1.4,-12.6 M${r2(jx + 2)},${r2(jy)} q2,-5 4.6,-7.4`, 0.9, '#7EC45B')
+    + thick(`M${r2(jx + 0.6)},${r2(jy - 2)} q0,-6 -0.6,-11`, 0.5, '#6E8A44') + E(jx, jy - 14, 1.1, 2.6, '#8A5A34', 0.7);
 } };
+
 // Longue-vue : trépied, lunette de laiton pointée vers le large ; un éclat glisse (2 images)
 C.longuevue = { n: 2, draw: f => {
   const [x, y] = at(0, 0, 26);
