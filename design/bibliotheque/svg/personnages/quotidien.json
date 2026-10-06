@@ -1,0 +1,3091 @@
+{
+ "_lisez_moi": [
+  "Lot L4 : tout le monde au grand format (le petit format est abandonné). Mêmes vues que la troupe : face, avant (vient vers le bas à droite), dos (s'éloigne vers le haut à droite) ; le miroir donne les deux autres directions. Pieds en (24, 62) dans le cadre 48 × 64.",
+  "Poses : marche (4 images, ~170 ms), repos (2 images : clignement), salut (2), travail (2, le geste du métier : maîtres et naufragés), lanterne et parapluie (avant et dos, 4 images, en marchant), couche (dormir couché, 2 images ~900 ms).",
+  "Cadres à part : parapluie [0, -18, 48, 82] (la toile passe au-dessus de la tête ; pieds toujours en (24, 62)) ; couche [0, 0, 64, 48] (allongé la tête à gauche, sous une couverture).",
+  "Naufragés : lanterne et parapluie seulement pour Aster et Rivet, qui restent naufragés après la première lanterne. Visiteurs et nouveaux venus : tirés du générateur de l'avatar (choix notés ici, pour en refaire d'autres avec design/personnages/avatar.js) ; les nouveaux venus de l'épilogue arrivent en habits de voyage, une valise à la main, et n'ont pas de pose endormie.",
+  "Noms rangés à l'assemblage (README, catalogue.json) : <sujet>_<vue>_<pose>_<n>.svg, vues face, avant (l'ancien « trois_quarts »), dos, profil ; les chemins ci-dessous suivent ces noms."
+ ],
+ "maitres": {
+  "aster": {
+   "nom": "Aster",
+   "fichiers": {
+    "face_marche": [
+     "maitres/aster/aster_face_marche_1.svg",
+     "maitres/aster/aster_face_marche_2.svg",
+     "maitres/aster/aster_face_marche_3.svg",
+     "maitres/aster/aster_face_marche_4.svg"
+    ],
+    "face_repos": [
+     "maitres/aster/aster_face_repos_1.svg",
+     "maitres/aster/aster_face_repos_2.svg"
+    ],
+    "face_salut": [
+     "maitres/aster/aster_face_salut_1.svg",
+     "maitres/aster/aster_face_salut_2.svg"
+    ],
+    "face_travail": [
+     "maitres/aster/aster_face_travail_1.svg",
+     "maitres/aster/aster_face_travail_2.svg"
+    ],
+    "avant_marche": [
+     "maitres/aster/aster_avant_marche_1.svg",
+     "maitres/aster/aster_avant_marche_2.svg",
+     "maitres/aster/aster_avant_marche_3.svg",
+     "maitres/aster/aster_avant_marche_4.svg"
+    ],
+    "avant_repos": [
+     "maitres/aster/aster_avant_repos_1.svg",
+     "maitres/aster/aster_avant_repos_2.svg"
+    ],
+    "avant_salut": [
+     "maitres/aster/aster_avant_salut_1.svg",
+     "maitres/aster/aster_avant_salut_2.svg"
+    ],
+    "avant_travail": [
+     "maitres/aster/aster_avant_travail_1.svg",
+     "maitres/aster/aster_avant_travail_2.svg"
+    ],
+    "dos_marche": [
+     "maitres/aster/aster_dos_marche_1.svg",
+     "maitres/aster/aster_dos_marche_2.svg",
+     "maitres/aster/aster_dos_marche_3.svg",
+     "maitres/aster/aster_dos_marche_4.svg"
+    ],
+    "dos_repos": [
+     "maitres/aster/aster_dos_repos_1.svg",
+     "maitres/aster/aster_dos_repos_2.svg"
+    ],
+    "dos_salut": [
+     "maitres/aster/aster_dos_salut_1.svg",
+     "maitres/aster/aster_dos_salut_2.svg"
+    ],
+    "dos_travail": [
+     "maitres/aster/aster_dos_travail_1.svg",
+     "maitres/aster/aster_dos_travail_2.svg"
+    ],
+    "avant_lanterne": [
+     "maitres/aster/aster_avant_lanterne_1.svg",
+     "maitres/aster/aster_avant_lanterne_2.svg",
+     "maitres/aster/aster_avant_lanterne_3.svg",
+     "maitres/aster/aster_avant_lanterne_4.svg"
+    ],
+    "avant_parapluie": [
+     "maitres/aster/aster_avant_parapluie_1.svg",
+     "maitres/aster/aster_avant_parapluie_2.svg",
+     "maitres/aster/aster_avant_parapluie_3.svg",
+     "maitres/aster/aster_avant_parapluie_4.svg"
+    ],
+    "dos_lanterne": [
+     "maitres/aster/aster_dos_lanterne_1.svg",
+     "maitres/aster/aster_dos_lanterne_2.svg",
+     "maitres/aster/aster_dos_lanterne_3.svg",
+     "maitres/aster/aster_dos_lanterne_4.svg"
+    ],
+    "dos_parapluie": [
+     "maitres/aster/aster_dos_parapluie_1.svg",
+     "maitres/aster/aster_dos_parapluie_2.svg",
+     "maitres/aster/aster_dos_parapluie_3.svg",
+     "maitres/aster/aster_dos_parapluie_4.svg"
+    ],
+    "couche": [
+     "maitres/aster/aster_couche_1.svg",
+     "maitres/aster/aster_couche_2.svg"
+    ]
+   }
+  },
+  "cannelle": {
+   "nom": "Cannelle",
+   "fichiers": {
+    "face_marche": [
+     "maitres/cannelle/cannelle_face_marche_1.svg",
+     "maitres/cannelle/cannelle_face_marche_2.svg",
+     "maitres/cannelle/cannelle_face_marche_3.svg",
+     "maitres/cannelle/cannelle_face_marche_4.svg"
+    ],
+    "face_repos": [
+     "maitres/cannelle/cannelle_face_repos_1.svg",
+     "maitres/cannelle/cannelle_face_repos_2.svg"
+    ],
+    "face_salut": [
+     "maitres/cannelle/cannelle_face_salut_1.svg",
+     "maitres/cannelle/cannelle_face_salut_2.svg"
+    ],
+    "face_travail": [
+     "maitres/cannelle/cannelle_face_travail_1.svg",
+     "maitres/cannelle/cannelle_face_travail_2.svg"
+    ],
+    "avant_marche": [
+     "maitres/cannelle/cannelle_avant_marche_1.svg",
+     "maitres/cannelle/cannelle_avant_marche_2.svg",
+     "maitres/cannelle/cannelle_avant_marche_3.svg",
+     "maitres/cannelle/cannelle_avant_marche_4.svg"
+    ],
+    "avant_repos": [
+     "maitres/cannelle/cannelle_avant_repos_1.svg",
+     "maitres/cannelle/cannelle_avant_repos_2.svg"
+    ],
+    "avant_salut": [
+     "maitres/cannelle/cannelle_avant_salut_1.svg",
+     "maitres/cannelle/cannelle_avant_salut_2.svg"
+    ],
+    "avant_travail": [
+     "maitres/cannelle/cannelle_avant_travail_1.svg",
+     "maitres/cannelle/cannelle_avant_travail_2.svg"
+    ],
+    "dos_marche": [
+     "maitres/cannelle/cannelle_dos_marche_1.svg",
+     "maitres/cannelle/cannelle_dos_marche_2.svg",
+     "maitres/cannelle/cannelle_dos_marche_3.svg",
+     "maitres/cannelle/cannelle_dos_marche_4.svg"
+    ],
+    "dos_repos": [
+     "maitres/cannelle/cannelle_dos_repos_1.svg",
+     "maitres/cannelle/cannelle_dos_repos_2.svg"
+    ],
+    "dos_salut": [
+     "maitres/cannelle/cannelle_dos_salut_1.svg",
+     "maitres/cannelle/cannelle_dos_salut_2.svg"
+    ],
+    "dos_travail": [
+     "maitres/cannelle/cannelle_dos_travail_1.svg",
+     "maitres/cannelle/cannelle_dos_travail_2.svg"
+    ],
+    "avant_lanterne": [
+     "maitres/cannelle/cannelle_avant_lanterne_1.svg",
+     "maitres/cannelle/cannelle_avant_lanterne_2.svg",
+     "maitres/cannelle/cannelle_avant_lanterne_3.svg",
+     "maitres/cannelle/cannelle_avant_lanterne_4.svg"
+    ],
+    "avant_parapluie": [
+     "maitres/cannelle/cannelle_avant_parapluie_1.svg",
+     "maitres/cannelle/cannelle_avant_parapluie_2.svg",
+     "maitres/cannelle/cannelle_avant_parapluie_3.svg",
+     "maitres/cannelle/cannelle_avant_parapluie_4.svg"
+    ],
+    "dos_lanterne": [
+     "maitres/cannelle/cannelle_dos_lanterne_1.svg",
+     "maitres/cannelle/cannelle_dos_lanterne_2.svg",
+     "maitres/cannelle/cannelle_dos_lanterne_3.svg",
+     "maitres/cannelle/cannelle_dos_lanterne_4.svg"
+    ],
+    "dos_parapluie": [
+     "maitres/cannelle/cannelle_dos_parapluie_1.svg",
+     "maitres/cannelle/cannelle_dos_parapluie_2.svg",
+     "maitres/cannelle/cannelle_dos_parapluie_3.svg",
+     "maitres/cannelle/cannelle_dos_parapluie_4.svg"
+    ],
+    "couche": [
+     "maitres/cannelle/cannelle_couche_1.svg",
+     "maitres/cannelle/cannelle_couche_2.svg"
+    ]
+   }
+  },
+  "rivet": {
+   "nom": "Rivet",
+   "fichiers": {
+    "face_marche": [
+     "maitres/rivet/rivet_face_marche_1.svg",
+     "maitres/rivet/rivet_face_marche_2.svg",
+     "maitres/rivet/rivet_face_marche_3.svg",
+     "maitres/rivet/rivet_face_marche_4.svg"
+    ],
+    "face_repos": [
+     "maitres/rivet/rivet_face_repos_1.svg",
+     "maitres/rivet/rivet_face_repos_2.svg"
+    ],
+    "face_salut": [
+     "maitres/rivet/rivet_face_salut_1.svg",
+     "maitres/rivet/rivet_face_salut_2.svg"
+    ],
+    "face_travail": [
+     "maitres/rivet/rivet_face_travail_1.svg",
+     "maitres/rivet/rivet_face_travail_2.svg"
+    ],
+    "avant_marche": [
+     "maitres/rivet/rivet_avant_marche_1.svg",
+     "maitres/rivet/rivet_avant_marche_2.svg",
+     "maitres/rivet/rivet_avant_marche_3.svg",
+     "maitres/rivet/rivet_avant_marche_4.svg"
+    ],
+    "avant_repos": [
+     "maitres/rivet/rivet_avant_repos_1.svg",
+     "maitres/rivet/rivet_avant_repos_2.svg"
+    ],
+    "avant_salut": [
+     "maitres/rivet/rivet_avant_salut_1.svg",
+     "maitres/rivet/rivet_avant_salut_2.svg"
+    ],
+    "avant_travail": [
+     "maitres/rivet/rivet_avant_travail_1.svg",
+     "maitres/rivet/rivet_avant_travail_2.svg"
+    ],
+    "dos_marche": [
+     "maitres/rivet/rivet_dos_marche_1.svg",
+     "maitres/rivet/rivet_dos_marche_2.svg",
+     "maitres/rivet/rivet_dos_marche_3.svg",
+     "maitres/rivet/rivet_dos_marche_4.svg"
+    ],
+    "dos_repos": [
+     "maitres/rivet/rivet_dos_repos_1.svg",
+     "maitres/rivet/rivet_dos_repos_2.svg"
+    ],
+    "dos_salut": [
+     "maitres/rivet/rivet_dos_salut_1.svg",
+     "maitres/rivet/rivet_dos_salut_2.svg"
+    ],
+    "dos_travail": [
+     "maitres/rivet/rivet_dos_travail_1.svg",
+     "maitres/rivet/rivet_dos_travail_2.svg"
+    ],
+    "avant_lanterne": [
+     "maitres/rivet/rivet_avant_lanterne_1.svg",
+     "maitres/rivet/rivet_avant_lanterne_2.svg",
+     "maitres/rivet/rivet_avant_lanterne_3.svg",
+     "maitres/rivet/rivet_avant_lanterne_4.svg"
+    ],
+    "avant_parapluie": [
+     "maitres/rivet/rivet_avant_parapluie_1.svg",
+     "maitres/rivet/rivet_avant_parapluie_2.svg",
+     "maitres/rivet/rivet_avant_parapluie_3.svg",
+     "maitres/rivet/rivet_avant_parapluie_4.svg"
+    ],
+    "dos_lanterne": [
+     "maitres/rivet/rivet_dos_lanterne_1.svg",
+     "maitres/rivet/rivet_dos_lanterne_2.svg",
+     "maitres/rivet/rivet_dos_lanterne_3.svg",
+     "maitres/rivet/rivet_dos_lanterne_4.svg"
+    ],
+    "dos_parapluie": [
+     "maitres/rivet/rivet_dos_parapluie_1.svg",
+     "maitres/rivet/rivet_dos_parapluie_2.svg",
+     "maitres/rivet/rivet_dos_parapluie_3.svg",
+     "maitres/rivet/rivet_dos_parapluie_4.svg"
+    ],
+    "couche": [
+     "maitres/rivet/rivet_couche_1.svg",
+     "maitres/rivet/rivet_couche_2.svg"
+    ]
+   }
+  },
+  "ondin": {
+   "nom": "Ondin",
+   "fichiers": {
+    "face_marche": [
+     "maitres/ondin/ondin_face_marche_1.svg",
+     "maitres/ondin/ondin_face_marche_2.svg",
+     "maitres/ondin/ondin_face_marche_3.svg",
+     "maitres/ondin/ondin_face_marche_4.svg"
+    ],
+    "face_repos": [
+     "maitres/ondin/ondin_face_repos_1.svg",
+     "maitres/ondin/ondin_face_repos_2.svg"
+    ],
+    "face_salut": [
+     "maitres/ondin/ondin_face_salut_1.svg",
+     "maitres/ondin/ondin_face_salut_2.svg"
+    ],
+    "face_travail": [
+     "maitres/ondin/ondin_face_travail_1.svg",
+     "maitres/ondin/ondin_face_travail_2.svg"
+    ],
+    "avant_marche": [
+     "maitres/ondin/ondin_avant_marche_1.svg",
+     "maitres/ondin/ondin_avant_marche_2.svg",
+     "maitres/ondin/ondin_avant_marche_3.svg",
+     "maitres/ondin/ondin_avant_marche_4.svg"
+    ],
+    "avant_repos": [
+     "maitres/ondin/ondin_avant_repos_1.svg",
+     "maitres/ondin/ondin_avant_repos_2.svg"
+    ],
+    "avant_salut": [
+     "maitres/ondin/ondin_avant_salut_1.svg",
+     "maitres/ondin/ondin_avant_salut_2.svg"
+    ],
+    "avant_travail": [
+     "maitres/ondin/ondin_avant_travail_1.svg",
+     "maitres/ondin/ondin_avant_travail_2.svg"
+    ],
+    "dos_marche": [
+     "maitres/ondin/ondin_dos_marche_1.svg",
+     "maitres/ondin/ondin_dos_marche_2.svg",
+     "maitres/ondin/ondin_dos_marche_3.svg",
+     "maitres/ondin/ondin_dos_marche_4.svg"
+    ],
+    "dos_repos": [
+     "maitres/ondin/ondin_dos_repos_1.svg",
+     "maitres/ondin/ondin_dos_repos_2.svg"
+    ],
+    "dos_salut": [
+     "maitres/ondin/ondin_dos_salut_1.svg",
+     "maitres/ondin/ondin_dos_salut_2.svg"
+    ],
+    "dos_travail": [
+     "maitres/ondin/ondin_dos_travail_1.svg",
+     "maitres/ondin/ondin_dos_travail_2.svg"
+    ],
+    "avant_lanterne": [
+     "maitres/ondin/ondin_avant_lanterne_1.svg",
+     "maitres/ondin/ondin_avant_lanterne_2.svg",
+     "maitres/ondin/ondin_avant_lanterne_3.svg",
+     "maitres/ondin/ondin_avant_lanterne_4.svg"
+    ],
+    "avant_parapluie": [
+     "maitres/ondin/ondin_avant_parapluie_1.svg",
+     "maitres/ondin/ondin_avant_parapluie_2.svg",
+     "maitres/ondin/ondin_avant_parapluie_3.svg",
+     "maitres/ondin/ondin_avant_parapluie_4.svg"
+    ],
+    "dos_lanterne": [
+     "maitres/ondin/ondin_dos_lanterne_1.svg",
+     "maitres/ondin/ondin_dos_lanterne_2.svg",
+     "maitres/ondin/ondin_dos_lanterne_3.svg",
+     "maitres/ondin/ondin_dos_lanterne_4.svg"
+    ],
+    "dos_parapluie": [
+     "maitres/ondin/ondin_dos_parapluie_1.svg",
+     "maitres/ondin/ondin_dos_parapluie_2.svg",
+     "maitres/ondin/ondin_dos_parapluie_3.svg",
+     "maitres/ondin/ondin_dos_parapluie_4.svg"
+    ],
+    "couche": [
+     "maitres/ondin/ondin_couche_1.svg",
+     "maitres/ondin/ondin_couche_2.svg"
+    ]
+   }
+  },
+  "sylve": {
+   "nom": "Sylve",
+   "fichiers": {
+    "face_marche": [
+     "maitres/sylve/sylve_face_marche_1.svg",
+     "maitres/sylve/sylve_face_marche_2.svg",
+     "maitres/sylve/sylve_face_marche_3.svg",
+     "maitres/sylve/sylve_face_marche_4.svg"
+    ],
+    "face_repos": [
+     "maitres/sylve/sylve_face_repos_1.svg",
+     "maitres/sylve/sylve_face_repos_2.svg"
+    ],
+    "face_salut": [
+     "maitres/sylve/sylve_face_salut_1.svg",
+     "maitres/sylve/sylve_face_salut_2.svg"
+    ],
+    "face_travail": [
+     "maitres/sylve/sylve_face_travail_1.svg",
+     "maitres/sylve/sylve_face_travail_2.svg"
+    ],
+    "avant_marche": [
+     "maitres/sylve/sylve_avant_marche_1.svg",
+     "maitres/sylve/sylve_avant_marche_2.svg",
+     "maitres/sylve/sylve_avant_marche_3.svg",
+     "maitres/sylve/sylve_avant_marche_4.svg"
+    ],
+    "avant_repos": [
+     "maitres/sylve/sylve_avant_repos_1.svg",
+     "maitres/sylve/sylve_avant_repos_2.svg"
+    ],
+    "avant_salut": [
+     "maitres/sylve/sylve_avant_salut_1.svg",
+     "maitres/sylve/sylve_avant_salut_2.svg"
+    ],
+    "avant_travail": [
+     "maitres/sylve/sylve_avant_travail_1.svg",
+     "maitres/sylve/sylve_avant_travail_2.svg"
+    ],
+    "dos_marche": [
+     "maitres/sylve/sylve_dos_marche_1.svg",
+     "maitres/sylve/sylve_dos_marche_2.svg",
+     "maitres/sylve/sylve_dos_marche_3.svg",
+     "maitres/sylve/sylve_dos_marche_4.svg"
+    ],
+    "dos_repos": [
+     "maitres/sylve/sylve_dos_repos_1.svg",
+     "maitres/sylve/sylve_dos_repos_2.svg"
+    ],
+    "dos_salut": [
+     "maitres/sylve/sylve_dos_salut_1.svg",
+     "maitres/sylve/sylve_dos_salut_2.svg"
+    ],
+    "dos_travail": [
+     "maitres/sylve/sylve_dos_travail_1.svg",
+     "maitres/sylve/sylve_dos_travail_2.svg"
+    ],
+    "avant_lanterne": [
+     "maitres/sylve/sylve_avant_lanterne_1.svg",
+     "maitres/sylve/sylve_avant_lanterne_2.svg",
+     "maitres/sylve/sylve_avant_lanterne_3.svg",
+     "maitres/sylve/sylve_avant_lanterne_4.svg"
+    ],
+    "avant_parapluie": [
+     "maitres/sylve/sylve_avant_parapluie_1.svg",
+     "maitres/sylve/sylve_avant_parapluie_2.svg",
+     "maitres/sylve/sylve_avant_parapluie_3.svg",
+     "maitres/sylve/sylve_avant_parapluie_4.svg"
+    ],
+    "dos_lanterne": [
+     "maitres/sylve/sylve_dos_lanterne_1.svg",
+     "maitres/sylve/sylve_dos_lanterne_2.svg",
+     "maitres/sylve/sylve_dos_lanterne_3.svg",
+     "maitres/sylve/sylve_dos_lanterne_4.svg"
+    ],
+    "dos_parapluie": [
+     "maitres/sylve/sylve_dos_parapluie_1.svg",
+     "maitres/sylve/sylve_dos_parapluie_2.svg",
+     "maitres/sylve/sylve_dos_parapluie_3.svg",
+     "maitres/sylve/sylve_dos_parapluie_4.svg"
+    ],
+    "couche": [
+     "maitres/sylve/sylve_couche_1.svg",
+     "maitres/sylve/sylve_couche_2.svg"
+    ]
+   }
+  },
+  "galet": {
+   "nom": "Galet",
+   "fichiers": {
+    "face_marche": [
+     "maitres/galet/galet_face_marche_1.svg",
+     "maitres/galet/galet_face_marche_2.svg",
+     "maitres/galet/galet_face_marche_3.svg",
+     "maitres/galet/galet_face_marche_4.svg"
+    ],
+    "face_repos": [
+     "maitres/galet/galet_face_repos_1.svg",
+     "maitres/galet/galet_face_repos_2.svg"
+    ],
+    "face_salut": [
+     "maitres/galet/galet_face_salut_1.svg",
+     "maitres/galet/galet_face_salut_2.svg"
+    ],
+    "face_travail": [
+     "maitres/galet/galet_face_travail_1.svg",
+     "maitres/galet/galet_face_travail_2.svg"
+    ],
+    "avant_marche": [
+     "maitres/galet/galet_avant_marche_1.svg",
+     "maitres/galet/galet_avant_marche_2.svg",
+     "maitres/galet/galet_avant_marche_3.svg",
+     "maitres/galet/galet_avant_marche_4.svg"
+    ],
+    "avant_repos": [
+     "maitres/galet/galet_avant_repos_1.svg",
+     "maitres/galet/galet_avant_repos_2.svg"
+    ],
+    "avant_salut": [
+     "maitres/galet/galet_avant_salut_1.svg",
+     "maitres/galet/galet_avant_salut_2.svg"
+    ],
+    "avant_travail": [
+     "maitres/galet/galet_avant_travail_1.svg",
+     "maitres/galet/galet_avant_travail_2.svg"
+    ],
+    "dos_marche": [
+     "maitres/galet/galet_dos_marche_1.svg",
+     "maitres/galet/galet_dos_marche_2.svg",
+     "maitres/galet/galet_dos_marche_3.svg",
+     "maitres/galet/galet_dos_marche_4.svg"
+    ],
+    "dos_repos": [
+     "maitres/galet/galet_dos_repos_1.svg",
+     "maitres/galet/galet_dos_repos_2.svg"
+    ],
+    "dos_salut": [
+     "maitres/galet/galet_dos_salut_1.svg",
+     "maitres/galet/galet_dos_salut_2.svg"
+    ],
+    "dos_travail": [
+     "maitres/galet/galet_dos_travail_1.svg",
+     "maitres/galet/galet_dos_travail_2.svg"
+    ],
+    "avant_lanterne": [
+     "maitres/galet/galet_avant_lanterne_1.svg",
+     "maitres/galet/galet_avant_lanterne_2.svg",
+     "maitres/galet/galet_avant_lanterne_3.svg",
+     "maitres/galet/galet_avant_lanterne_4.svg"
+    ],
+    "avant_parapluie": [
+     "maitres/galet/galet_avant_parapluie_1.svg",
+     "maitres/galet/galet_avant_parapluie_2.svg",
+     "maitres/galet/galet_avant_parapluie_3.svg",
+     "maitres/galet/galet_avant_parapluie_4.svg"
+    ],
+    "dos_lanterne": [
+     "maitres/galet/galet_dos_lanterne_1.svg",
+     "maitres/galet/galet_dos_lanterne_2.svg",
+     "maitres/galet/galet_dos_lanterne_3.svg",
+     "maitres/galet/galet_dos_lanterne_4.svg"
+    ],
+    "dos_parapluie": [
+     "maitres/galet/galet_dos_parapluie_1.svg",
+     "maitres/galet/galet_dos_parapluie_2.svg",
+     "maitres/galet/galet_dos_parapluie_3.svg",
+     "maitres/galet/galet_dos_parapluie_4.svg"
+    ],
+    "couche": [
+     "maitres/galet/galet_couche_1.svg",
+     "maitres/galet/galet_couche_2.svg"
+    ]
+   }
+  },
+  "melisse": {
+   "nom": "Mélisse",
+   "fichiers": {
+    "face_marche": [
+     "maitres/melisse/melisse_face_marche_1.svg",
+     "maitres/melisse/melisse_face_marche_2.svg",
+     "maitres/melisse/melisse_face_marche_3.svg",
+     "maitres/melisse/melisse_face_marche_4.svg"
+    ],
+    "face_repos": [
+     "maitres/melisse/melisse_face_repos_1.svg",
+     "maitres/melisse/melisse_face_repos_2.svg"
+    ],
+    "face_salut": [
+     "maitres/melisse/melisse_face_salut_1.svg",
+     "maitres/melisse/melisse_face_salut_2.svg"
+    ],
+    "face_travail": [
+     "maitres/melisse/melisse_face_travail_1.svg",
+     "maitres/melisse/melisse_face_travail_2.svg"
+    ],
+    "avant_marche": [
+     "maitres/melisse/melisse_avant_marche_1.svg",
+     "maitres/melisse/melisse_avant_marche_2.svg",
+     "maitres/melisse/melisse_avant_marche_3.svg",
+     "maitres/melisse/melisse_avant_marche_4.svg"
+    ],
+    "avant_repos": [
+     "maitres/melisse/melisse_avant_repos_1.svg",
+     "maitres/melisse/melisse_avant_repos_2.svg"
+    ],
+    "avant_salut": [
+     "maitres/melisse/melisse_avant_salut_1.svg",
+     "maitres/melisse/melisse_avant_salut_2.svg"
+    ],
+    "avant_travail": [
+     "maitres/melisse/melisse_avant_travail_1.svg",
+     "maitres/melisse/melisse_avant_travail_2.svg"
+    ],
+    "dos_marche": [
+     "maitres/melisse/melisse_dos_marche_1.svg",
+     "maitres/melisse/melisse_dos_marche_2.svg",
+     "maitres/melisse/melisse_dos_marche_3.svg",
+     "maitres/melisse/melisse_dos_marche_4.svg"
+    ],
+    "dos_repos": [
+     "maitres/melisse/melisse_dos_repos_1.svg",
+     "maitres/melisse/melisse_dos_repos_2.svg"
+    ],
+    "dos_salut": [
+     "maitres/melisse/melisse_dos_salut_1.svg",
+     "maitres/melisse/melisse_dos_salut_2.svg"
+    ],
+    "dos_travail": [
+     "maitres/melisse/melisse_dos_travail_1.svg",
+     "maitres/melisse/melisse_dos_travail_2.svg"
+    ],
+    "avant_lanterne": [
+     "maitres/melisse/melisse_avant_lanterne_1.svg",
+     "maitres/melisse/melisse_avant_lanterne_2.svg",
+     "maitres/melisse/melisse_avant_lanterne_3.svg",
+     "maitres/melisse/melisse_avant_lanterne_4.svg"
+    ],
+    "avant_parapluie": [
+     "maitres/melisse/melisse_avant_parapluie_1.svg",
+     "maitres/melisse/melisse_avant_parapluie_2.svg",
+     "maitres/melisse/melisse_avant_parapluie_3.svg",
+     "maitres/melisse/melisse_avant_parapluie_4.svg"
+    ],
+    "dos_lanterne": [
+     "maitres/melisse/melisse_dos_lanterne_1.svg",
+     "maitres/melisse/melisse_dos_lanterne_2.svg",
+     "maitres/melisse/melisse_dos_lanterne_3.svg",
+     "maitres/melisse/melisse_dos_lanterne_4.svg"
+    ],
+    "dos_parapluie": [
+     "maitres/melisse/melisse_dos_parapluie_1.svg",
+     "maitres/melisse/melisse_dos_parapluie_2.svg",
+     "maitres/melisse/melisse_dos_parapluie_3.svg",
+     "maitres/melisse/melisse_dos_parapluie_4.svg"
+    ],
+    "couche": [
+     "maitres/melisse/melisse_couche_1.svg",
+     "maitres/melisse/melisse_couche_2.svg"
+    ]
+   }
+  }
+ },
+ "naufrages": {
+  "aster": {
+   "nom": "Aster naufragée",
+   "fichiers": {
+    "face_marche": [
+     "naufrages/aster/aster-naufrage_face_marche_1.svg",
+     "naufrages/aster/aster-naufrage_face_marche_2.svg",
+     "naufrages/aster/aster-naufrage_face_marche_3.svg",
+     "naufrages/aster/aster-naufrage_face_marche_4.svg"
+    ],
+    "face_repos": [
+     "naufrages/aster/aster-naufrage_face_repos_1.svg",
+     "naufrages/aster/aster-naufrage_face_repos_2.svg"
+    ],
+    "face_salut": [
+     "naufrages/aster/aster-naufrage_face_salut_1.svg",
+     "naufrages/aster/aster-naufrage_face_salut_2.svg"
+    ],
+    "face_travail": [
+     "naufrages/aster/aster-naufrage_face_travail_1.svg",
+     "naufrages/aster/aster-naufrage_face_travail_2.svg"
+    ],
+    "avant_marche": [
+     "naufrages/aster/aster-naufrage_avant_marche_1.svg",
+     "naufrages/aster/aster-naufrage_avant_marche_2.svg",
+     "naufrages/aster/aster-naufrage_avant_marche_3.svg",
+     "naufrages/aster/aster-naufrage_avant_marche_4.svg"
+    ],
+    "avant_repos": [
+     "naufrages/aster/aster-naufrage_avant_repos_1.svg",
+     "naufrages/aster/aster-naufrage_avant_repos_2.svg"
+    ],
+    "avant_salut": [
+     "naufrages/aster/aster-naufrage_avant_salut_1.svg",
+     "naufrages/aster/aster-naufrage_avant_salut_2.svg"
+    ],
+    "avant_travail": [
+     "naufrages/aster/aster-naufrage_avant_travail_1.svg",
+     "naufrages/aster/aster-naufrage_avant_travail_2.svg"
+    ],
+    "dos_marche": [
+     "naufrages/aster/aster-naufrage_dos_marche_1.svg",
+     "naufrages/aster/aster-naufrage_dos_marche_2.svg",
+     "naufrages/aster/aster-naufrage_dos_marche_3.svg",
+     "naufrages/aster/aster-naufrage_dos_marche_4.svg"
+    ],
+    "dos_repos": [
+     "naufrages/aster/aster-naufrage_dos_repos_1.svg",
+     "naufrages/aster/aster-naufrage_dos_repos_2.svg"
+    ],
+    "dos_salut": [
+     "naufrages/aster/aster-naufrage_dos_salut_1.svg",
+     "naufrages/aster/aster-naufrage_dos_salut_2.svg"
+    ],
+    "dos_travail": [
+     "naufrages/aster/aster-naufrage_dos_travail_1.svg",
+     "naufrages/aster/aster-naufrage_dos_travail_2.svg"
+    ],
+    "avant_lanterne": [
+     "naufrages/aster/aster-naufrage_avant_lanterne_1.svg",
+     "naufrages/aster/aster-naufrage_avant_lanterne_2.svg",
+     "naufrages/aster/aster-naufrage_avant_lanterne_3.svg",
+     "naufrages/aster/aster-naufrage_avant_lanterne_4.svg"
+    ],
+    "avant_parapluie": [
+     "naufrages/aster/aster-naufrage_avant_parapluie_1.svg",
+     "naufrages/aster/aster-naufrage_avant_parapluie_2.svg",
+     "naufrages/aster/aster-naufrage_avant_parapluie_3.svg",
+     "naufrages/aster/aster-naufrage_avant_parapluie_4.svg"
+    ],
+    "dos_lanterne": [
+     "naufrages/aster/aster-naufrage_dos_lanterne_1.svg",
+     "naufrages/aster/aster-naufrage_dos_lanterne_2.svg",
+     "naufrages/aster/aster-naufrage_dos_lanterne_3.svg",
+     "naufrages/aster/aster-naufrage_dos_lanterne_4.svg"
+    ],
+    "dos_parapluie": [
+     "naufrages/aster/aster-naufrage_dos_parapluie_1.svg",
+     "naufrages/aster/aster-naufrage_dos_parapluie_2.svg",
+     "naufrages/aster/aster-naufrage_dos_parapluie_3.svg",
+     "naufrages/aster/aster-naufrage_dos_parapluie_4.svg"
+    ],
+    "couche": [
+     "naufrages/aster/aster-naufrage_couche_1.svg",
+     "naufrages/aster/aster-naufrage_couche_2.svg"
+    ]
+   }
+  },
+  "cannelle": {
+   "nom": "Cannelle naufragée",
+   "fichiers": {
+    "face_marche": [
+     "naufrages/cannelle/cannelle-naufrage_face_marche_1.svg",
+     "naufrages/cannelle/cannelle-naufrage_face_marche_2.svg",
+     "naufrages/cannelle/cannelle-naufrage_face_marche_3.svg",
+     "naufrages/cannelle/cannelle-naufrage_face_marche_4.svg"
+    ],
+    "face_repos": [
+     "naufrages/cannelle/cannelle-naufrage_face_repos_1.svg",
+     "naufrages/cannelle/cannelle-naufrage_face_repos_2.svg"
+    ],
+    "face_salut": [
+     "naufrages/cannelle/cannelle-naufrage_face_salut_1.svg",
+     "naufrages/cannelle/cannelle-naufrage_face_salut_2.svg"
+    ],
+    "face_travail": [
+     "naufrages/cannelle/cannelle-naufrage_face_travail_1.svg",
+     "naufrages/cannelle/cannelle-naufrage_face_travail_2.svg"
+    ],
+    "avant_marche": [
+     "naufrages/cannelle/cannelle-naufrage_avant_marche_1.svg",
+     "naufrages/cannelle/cannelle-naufrage_avant_marche_2.svg",
+     "naufrages/cannelle/cannelle-naufrage_avant_marche_3.svg",
+     "naufrages/cannelle/cannelle-naufrage_avant_marche_4.svg"
+    ],
+    "avant_repos": [
+     "naufrages/cannelle/cannelle-naufrage_avant_repos_1.svg",
+     "naufrages/cannelle/cannelle-naufrage_avant_repos_2.svg"
+    ],
+    "avant_salut": [
+     "naufrages/cannelle/cannelle-naufrage_avant_salut_1.svg",
+     "naufrages/cannelle/cannelle-naufrage_avant_salut_2.svg"
+    ],
+    "avant_travail": [
+     "naufrages/cannelle/cannelle-naufrage_avant_travail_1.svg",
+     "naufrages/cannelle/cannelle-naufrage_avant_travail_2.svg"
+    ],
+    "dos_marche": [
+     "naufrages/cannelle/cannelle-naufrage_dos_marche_1.svg",
+     "naufrages/cannelle/cannelle-naufrage_dos_marche_2.svg",
+     "naufrages/cannelle/cannelle-naufrage_dos_marche_3.svg",
+     "naufrages/cannelle/cannelle-naufrage_dos_marche_4.svg"
+    ],
+    "dos_repos": [
+     "naufrages/cannelle/cannelle-naufrage_dos_repos_1.svg",
+     "naufrages/cannelle/cannelle-naufrage_dos_repos_2.svg"
+    ],
+    "dos_salut": [
+     "naufrages/cannelle/cannelle-naufrage_dos_salut_1.svg",
+     "naufrages/cannelle/cannelle-naufrage_dos_salut_2.svg"
+    ],
+    "dos_travail": [
+     "naufrages/cannelle/cannelle-naufrage_dos_travail_1.svg",
+     "naufrages/cannelle/cannelle-naufrage_dos_travail_2.svg"
+    ],
+    "couche": [
+     "naufrages/cannelle/cannelle-naufrage_couche_1.svg",
+     "naufrages/cannelle/cannelle-naufrage_couche_2.svg"
+    ]
+   }
+  },
+  "rivet": {
+   "nom": "Rivet naufragé",
+   "fichiers": {
+    "face_marche": [
+     "naufrages/rivet/rivet-naufrage_face_marche_1.svg",
+     "naufrages/rivet/rivet-naufrage_face_marche_2.svg",
+     "naufrages/rivet/rivet-naufrage_face_marche_3.svg",
+     "naufrages/rivet/rivet-naufrage_face_marche_4.svg"
+    ],
+    "face_repos": [
+     "naufrages/rivet/rivet-naufrage_face_repos_1.svg",
+     "naufrages/rivet/rivet-naufrage_face_repos_2.svg"
+    ],
+    "face_salut": [
+     "naufrages/rivet/rivet-naufrage_face_salut_1.svg",
+     "naufrages/rivet/rivet-naufrage_face_salut_2.svg"
+    ],
+    "face_travail": [
+     "naufrages/rivet/rivet-naufrage_face_travail_1.svg",
+     "naufrages/rivet/rivet-naufrage_face_travail_2.svg"
+    ],
+    "avant_marche": [
+     "naufrages/rivet/rivet-naufrage_avant_marche_1.svg",
+     "naufrages/rivet/rivet-naufrage_avant_marche_2.svg",
+     "naufrages/rivet/rivet-naufrage_avant_marche_3.svg",
+     "naufrages/rivet/rivet-naufrage_avant_marche_4.svg"
+    ],
+    "avant_repos": [
+     "naufrages/rivet/rivet-naufrage_avant_repos_1.svg",
+     "naufrages/rivet/rivet-naufrage_avant_repos_2.svg"
+    ],
+    "avant_salut": [
+     "naufrages/rivet/rivet-naufrage_avant_salut_1.svg",
+     "naufrages/rivet/rivet-naufrage_avant_salut_2.svg"
+    ],
+    "avant_travail": [
+     "naufrages/rivet/rivet-naufrage_avant_travail_1.svg",
+     "naufrages/rivet/rivet-naufrage_avant_travail_2.svg"
+    ],
+    "dos_marche": [
+     "naufrages/rivet/rivet-naufrage_dos_marche_1.svg",
+     "naufrages/rivet/rivet-naufrage_dos_marche_2.svg",
+     "naufrages/rivet/rivet-naufrage_dos_marche_3.svg",
+     "naufrages/rivet/rivet-naufrage_dos_marche_4.svg"
+    ],
+    "dos_repos": [
+     "naufrages/rivet/rivet-naufrage_dos_repos_1.svg",
+     "naufrages/rivet/rivet-naufrage_dos_repos_2.svg"
+    ],
+    "dos_salut": [
+     "naufrages/rivet/rivet-naufrage_dos_salut_1.svg",
+     "naufrages/rivet/rivet-naufrage_dos_salut_2.svg"
+    ],
+    "dos_travail": [
+     "naufrages/rivet/rivet-naufrage_dos_travail_1.svg",
+     "naufrages/rivet/rivet-naufrage_dos_travail_2.svg"
+    ],
+    "avant_lanterne": [
+     "naufrages/rivet/rivet-naufrage_avant_lanterne_1.svg",
+     "naufrages/rivet/rivet-naufrage_avant_lanterne_2.svg",
+     "naufrages/rivet/rivet-naufrage_avant_lanterne_3.svg",
+     "naufrages/rivet/rivet-naufrage_avant_lanterne_4.svg"
+    ],
+    "avant_parapluie": [
+     "naufrages/rivet/rivet-naufrage_avant_parapluie_1.svg",
+     "naufrages/rivet/rivet-naufrage_avant_parapluie_2.svg",
+     "naufrages/rivet/rivet-naufrage_avant_parapluie_3.svg",
+     "naufrages/rivet/rivet-naufrage_avant_parapluie_4.svg"
+    ],
+    "dos_lanterne": [
+     "naufrages/rivet/rivet-naufrage_dos_lanterne_1.svg",
+     "naufrages/rivet/rivet-naufrage_dos_lanterne_2.svg",
+     "naufrages/rivet/rivet-naufrage_dos_lanterne_3.svg",
+     "naufrages/rivet/rivet-naufrage_dos_lanterne_4.svg"
+    ],
+    "dos_parapluie": [
+     "naufrages/rivet/rivet-naufrage_dos_parapluie_1.svg",
+     "naufrages/rivet/rivet-naufrage_dos_parapluie_2.svg",
+     "naufrages/rivet/rivet-naufrage_dos_parapluie_3.svg",
+     "naufrages/rivet/rivet-naufrage_dos_parapluie_4.svg"
+    ],
+    "couche": [
+     "naufrages/rivet/rivet-naufrage_couche_1.svg",
+     "naufrages/rivet/rivet-naufrage_couche_2.svg"
+    ]
+   }
+  },
+  "ondin": {
+   "nom": "Ondin naufragé",
+   "fichiers": {
+    "face_marche": [
+     "naufrages/ondin/ondin-naufrage_face_marche_1.svg",
+     "naufrages/ondin/ondin-naufrage_face_marche_2.svg",
+     "naufrages/ondin/ondin-naufrage_face_marche_3.svg",
+     "naufrages/ondin/ondin-naufrage_face_marche_4.svg"
+    ],
+    "face_repos": [
+     "naufrages/ondin/ondin-naufrage_face_repos_1.svg",
+     "naufrages/ondin/ondin-naufrage_face_repos_2.svg"
+    ],
+    "face_salut": [
+     "naufrages/ondin/ondin-naufrage_face_salut_1.svg",
+     "naufrages/ondin/ondin-naufrage_face_salut_2.svg"
+    ],
+    "face_travail": [
+     "naufrages/ondin/ondin-naufrage_face_travail_1.svg",
+     "naufrages/ondin/ondin-naufrage_face_travail_2.svg"
+    ],
+    "avant_marche": [
+     "naufrages/ondin/ondin-naufrage_avant_marche_1.svg",
+     "naufrages/ondin/ondin-naufrage_avant_marche_2.svg",
+     "naufrages/ondin/ondin-naufrage_avant_marche_3.svg",
+     "naufrages/ondin/ondin-naufrage_avant_marche_4.svg"
+    ],
+    "avant_repos": [
+     "naufrages/ondin/ondin-naufrage_avant_repos_1.svg",
+     "naufrages/ondin/ondin-naufrage_avant_repos_2.svg"
+    ],
+    "avant_salut": [
+     "naufrages/ondin/ondin-naufrage_avant_salut_1.svg",
+     "naufrages/ondin/ondin-naufrage_avant_salut_2.svg"
+    ],
+    "avant_travail": [
+     "naufrages/ondin/ondin-naufrage_avant_travail_1.svg",
+     "naufrages/ondin/ondin-naufrage_avant_travail_2.svg"
+    ],
+    "dos_marche": [
+     "naufrages/ondin/ondin-naufrage_dos_marche_1.svg",
+     "naufrages/ondin/ondin-naufrage_dos_marche_2.svg",
+     "naufrages/ondin/ondin-naufrage_dos_marche_3.svg",
+     "naufrages/ondin/ondin-naufrage_dos_marche_4.svg"
+    ],
+    "dos_repos": [
+     "naufrages/ondin/ondin-naufrage_dos_repos_1.svg",
+     "naufrages/ondin/ondin-naufrage_dos_repos_2.svg"
+    ],
+    "dos_salut": [
+     "naufrages/ondin/ondin-naufrage_dos_salut_1.svg",
+     "naufrages/ondin/ondin-naufrage_dos_salut_2.svg"
+    ],
+    "dos_travail": [
+     "naufrages/ondin/ondin-naufrage_dos_travail_1.svg",
+     "naufrages/ondin/ondin-naufrage_dos_travail_2.svg"
+    ],
+    "couche": [
+     "naufrages/ondin/ondin-naufrage_couche_1.svg",
+     "naufrages/ondin/ondin-naufrage_couche_2.svg"
+    ]
+   }
+  },
+  "sylve": {
+   "nom": "Sylve naufragée",
+   "fichiers": {
+    "face_marche": [
+     "naufrages/sylve/sylve-naufrage_face_marche_1.svg",
+     "naufrages/sylve/sylve-naufrage_face_marche_2.svg",
+     "naufrages/sylve/sylve-naufrage_face_marche_3.svg",
+     "naufrages/sylve/sylve-naufrage_face_marche_4.svg"
+    ],
+    "face_repos": [
+     "naufrages/sylve/sylve-naufrage_face_repos_1.svg",
+     "naufrages/sylve/sylve-naufrage_face_repos_2.svg"
+    ],
+    "face_salut": [
+     "naufrages/sylve/sylve-naufrage_face_salut_1.svg",
+     "naufrages/sylve/sylve-naufrage_face_salut_2.svg"
+    ],
+    "face_travail": [
+     "naufrages/sylve/sylve-naufrage_face_travail_1.svg",
+     "naufrages/sylve/sylve-naufrage_face_travail_2.svg"
+    ],
+    "avant_marche": [
+     "naufrages/sylve/sylve-naufrage_avant_marche_1.svg",
+     "naufrages/sylve/sylve-naufrage_avant_marche_2.svg",
+     "naufrages/sylve/sylve-naufrage_avant_marche_3.svg",
+     "naufrages/sylve/sylve-naufrage_avant_marche_4.svg"
+    ],
+    "avant_repos": [
+     "naufrages/sylve/sylve-naufrage_avant_repos_1.svg",
+     "naufrages/sylve/sylve-naufrage_avant_repos_2.svg"
+    ],
+    "avant_salut": [
+     "naufrages/sylve/sylve-naufrage_avant_salut_1.svg",
+     "naufrages/sylve/sylve-naufrage_avant_salut_2.svg"
+    ],
+    "avant_travail": [
+     "naufrages/sylve/sylve-naufrage_avant_travail_1.svg",
+     "naufrages/sylve/sylve-naufrage_avant_travail_2.svg"
+    ],
+    "dos_marche": [
+     "naufrages/sylve/sylve-naufrage_dos_marche_1.svg",
+     "naufrages/sylve/sylve-naufrage_dos_marche_2.svg",
+     "naufrages/sylve/sylve-naufrage_dos_marche_3.svg",
+     "naufrages/sylve/sylve-naufrage_dos_marche_4.svg"
+    ],
+    "dos_repos": [
+     "naufrages/sylve/sylve-naufrage_dos_repos_1.svg",
+     "naufrages/sylve/sylve-naufrage_dos_repos_2.svg"
+    ],
+    "dos_salut": [
+     "naufrages/sylve/sylve-naufrage_dos_salut_1.svg",
+     "naufrages/sylve/sylve-naufrage_dos_salut_2.svg"
+    ],
+    "dos_travail": [
+     "naufrages/sylve/sylve-naufrage_dos_travail_1.svg",
+     "naufrages/sylve/sylve-naufrage_dos_travail_2.svg"
+    ],
+    "couche": [
+     "naufrages/sylve/sylve-naufrage_couche_1.svg",
+     "naufrages/sylve/sylve-naufrage_couche_2.svg"
+    ]
+   }
+  },
+  "galet": {
+   "nom": "Galet naufragé",
+   "fichiers": {
+    "face_marche": [
+     "naufrages/galet/galet-naufrage_face_marche_1.svg",
+     "naufrages/galet/galet-naufrage_face_marche_2.svg",
+     "naufrages/galet/galet-naufrage_face_marche_3.svg",
+     "naufrages/galet/galet-naufrage_face_marche_4.svg"
+    ],
+    "face_repos": [
+     "naufrages/galet/galet-naufrage_face_repos_1.svg",
+     "naufrages/galet/galet-naufrage_face_repos_2.svg"
+    ],
+    "face_salut": [
+     "naufrages/galet/galet-naufrage_face_salut_1.svg",
+     "naufrages/galet/galet-naufrage_face_salut_2.svg"
+    ],
+    "face_travail": [
+     "naufrages/galet/galet-naufrage_face_travail_1.svg",
+     "naufrages/galet/galet-naufrage_face_travail_2.svg"
+    ],
+    "avant_marche": [
+     "naufrages/galet/galet-naufrage_avant_marche_1.svg",
+     "naufrages/galet/galet-naufrage_avant_marche_2.svg",
+     "naufrages/galet/galet-naufrage_avant_marche_3.svg",
+     "naufrages/galet/galet-naufrage_avant_marche_4.svg"
+    ],
+    "avant_repos": [
+     "naufrages/galet/galet-naufrage_avant_repos_1.svg",
+     "naufrages/galet/galet-naufrage_avant_repos_2.svg"
+    ],
+    "avant_salut": [
+     "naufrages/galet/galet-naufrage_avant_salut_1.svg",
+     "naufrages/galet/galet-naufrage_avant_salut_2.svg"
+    ],
+    "avant_travail": [
+     "naufrages/galet/galet-naufrage_avant_travail_1.svg",
+     "naufrages/galet/galet-naufrage_avant_travail_2.svg"
+    ],
+    "dos_marche": [
+     "naufrages/galet/galet-naufrage_dos_marche_1.svg",
+     "naufrages/galet/galet-naufrage_dos_marche_2.svg",
+     "naufrages/galet/galet-naufrage_dos_marche_3.svg",
+     "naufrages/galet/galet-naufrage_dos_marche_4.svg"
+    ],
+    "dos_repos": [
+     "naufrages/galet/galet-naufrage_dos_repos_1.svg",
+     "naufrages/galet/galet-naufrage_dos_repos_2.svg"
+    ],
+    "dos_salut": [
+     "naufrages/galet/galet-naufrage_dos_salut_1.svg",
+     "naufrages/galet/galet-naufrage_dos_salut_2.svg"
+    ],
+    "dos_travail": [
+     "naufrages/galet/galet-naufrage_dos_travail_1.svg",
+     "naufrages/galet/galet-naufrage_dos_travail_2.svg"
+    ],
+    "couche": [
+     "naufrages/galet/galet-naufrage_couche_1.svg",
+     "naufrages/galet/galet-naufrage_couche_2.svg"
+    ]
+   }
+  },
+  "melisse": {
+   "nom": "Mélisse naufragée",
+   "fichiers": {
+    "face_marche": [
+     "naufrages/melisse/melisse-naufrage_face_marche_1.svg",
+     "naufrages/melisse/melisse-naufrage_face_marche_2.svg",
+     "naufrages/melisse/melisse-naufrage_face_marche_3.svg",
+     "naufrages/melisse/melisse-naufrage_face_marche_4.svg"
+    ],
+    "face_repos": [
+     "naufrages/melisse/melisse-naufrage_face_repos_1.svg",
+     "naufrages/melisse/melisse-naufrage_face_repos_2.svg"
+    ],
+    "face_salut": [
+     "naufrages/melisse/melisse-naufrage_face_salut_1.svg",
+     "naufrages/melisse/melisse-naufrage_face_salut_2.svg"
+    ],
+    "face_travail": [
+     "naufrages/melisse/melisse-naufrage_face_travail_1.svg",
+     "naufrages/melisse/melisse-naufrage_face_travail_2.svg"
+    ],
+    "avant_marche": [
+     "naufrages/melisse/melisse-naufrage_avant_marche_1.svg",
+     "naufrages/melisse/melisse-naufrage_avant_marche_2.svg",
+     "naufrages/melisse/melisse-naufrage_avant_marche_3.svg",
+     "naufrages/melisse/melisse-naufrage_avant_marche_4.svg"
+    ],
+    "avant_repos": [
+     "naufrages/melisse/melisse-naufrage_avant_repos_1.svg",
+     "naufrages/melisse/melisse-naufrage_avant_repos_2.svg"
+    ],
+    "avant_salut": [
+     "naufrages/melisse/melisse-naufrage_avant_salut_1.svg",
+     "naufrages/melisse/melisse-naufrage_avant_salut_2.svg"
+    ],
+    "avant_travail": [
+     "naufrages/melisse/melisse-naufrage_avant_travail_1.svg",
+     "naufrages/melisse/melisse-naufrage_avant_travail_2.svg"
+    ],
+    "dos_marche": [
+     "naufrages/melisse/melisse-naufrage_dos_marche_1.svg",
+     "naufrages/melisse/melisse-naufrage_dos_marche_2.svg",
+     "naufrages/melisse/melisse-naufrage_dos_marche_3.svg",
+     "naufrages/melisse/melisse-naufrage_dos_marche_4.svg"
+    ],
+    "dos_repos": [
+     "naufrages/melisse/melisse-naufrage_dos_repos_1.svg",
+     "naufrages/melisse/melisse-naufrage_dos_repos_2.svg"
+    ],
+    "dos_salut": [
+     "naufrages/melisse/melisse-naufrage_dos_salut_1.svg",
+     "naufrages/melisse/melisse-naufrage_dos_salut_2.svg"
+    ],
+    "dos_travail": [
+     "naufrages/melisse/melisse-naufrage_dos_travail_1.svg",
+     "naufrages/melisse/melisse-naufrage_dos_travail_2.svg"
+    ],
+    "couche": [
+     "naufrages/melisse/melisse-naufrage_couche_1.svg",
+     "naufrages/melisse/melisse-naufrage_couche_2.svg"
+    ]
+   }
+  }
+ },
+ "visiteurs": {
+  "visiteur-01": {
+   "nom": "Visiteur 1",
+   "choix": {
+    "taille": "petite",
+    "silhouette": "fine",
+    "peau": "nacre",
+    "visage": "ovale",
+    "yeux": "brun",
+    "formeYeux": "rieurs",
+    "cils": "sans",
+    "sourcils": "fins",
+    "bouche": "serieuse",
+    "levres": "naturelles",
+    "rousseur": "non",
+    "joues": "discretes",
+    "grain": "non",
+    "coupe": "couettes",
+    "cheveux": "blanc",
+    "meches": "meches",
+    "couleurMeches": "sapin",
+    "haut": "veste",
+    "couleurHaut": "charbon",
+    "bas": "pantalon",
+    "couleurBas": "framboise",
+    "chaussures": "rouge",
+    "accessoires": {
+     "tete": {
+      "id": "paille",
+      "couleurs": [
+       "menthe"
+      ]
+     },
+     "cou": {
+      "id": "perles",
+      "couleurs": [
+       "or"
+      ]
+     }
+    }
+   },
+   "fichiers": {
+    "face_marche": [
+     "visiteurs/visiteur-01/visiteur-01_face_marche_1.svg",
+     "visiteurs/visiteur-01/visiteur-01_face_marche_2.svg",
+     "visiteurs/visiteur-01/visiteur-01_face_marche_3.svg",
+     "visiteurs/visiteur-01/visiteur-01_face_marche_4.svg"
+    ],
+    "face_repos": [
+     "visiteurs/visiteur-01/visiteur-01_face_repos_1.svg",
+     "visiteurs/visiteur-01/visiteur-01_face_repos_2.svg"
+    ],
+    "face_salut": [
+     "visiteurs/visiteur-01/visiteur-01_face_salut_1.svg",
+     "visiteurs/visiteur-01/visiteur-01_face_salut_2.svg"
+    ],
+    "avant_marche": [
+     "visiteurs/visiteur-01/visiteur-01_avant_marche_1.svg",
+     "visiteurs/visiteur-01/visiteur-01_avant_marche_2.svg",
+     "visiteurs/visiteur-01/visiteur-01_avant_marche_3.svg",
+     "visiteurs/visiteur-01/visiteur-01_avant_marche_4.svg"
+    ],
+    "avant_repos": [
+     "visiteurs/visiteur-01/visiteur-01_avant_repos_1.svg",
+     "visiteurs/visiteur-01/visiteur-01_avant_repos_2.svg"
+    ],
+    "avant_salut": [
+     "visiteurs/visiteur-01/visiteur-01_avant_salut_1.svg",
+     "visiteurs/visiteur-01/visiteur-01_avant_salut_2.svg"
+    ],
+    "dos_marche": [
+     "visiteurs/visiteur-01/visiteur-01_dos_marche_1.svg",
+     "visiteurs/visiteur-01/visiteur-01_dos_marche_2.svg",
+     "visiteurs/visiteur-01/visiteur-01_dos_marche_3.svg",
+     "visiteurs/visiteur-01/visiteur-01_dos_marche_4.svg"
+    ],
+    "dos_repos": [
+     "visiteurs/visiteur-01/visiteur-01_dos_repos_1.svg",
+     "visiteurs/visiteur-01/visiteur-01_dos_repos_2.svg"
+    ],
+    "dos_salut": [
+     "visiteurs/visiteur-01/visiteur-01_dos_salut_1.svg",
+     "visiteurs/visiteur-01/visiteur-01_dos_salut_2.svg"
+    ],
+    "avant_lanterne": [
+     "visiteurs/visiteur-01/visiteur-01_avant_lanterne_1.svg",
+     "visiteurs/visiteur-01/visiteur-01_avant_lanterne_2.svg",
+     "visiteurs/visiteur-01/visiteur-01_avant_lanterne_3.svg",
+     "visiteurs/visiteur-01/visiteur-01_avant_lanterne_4.svg"
+    ],
+    "avant_parapluie": [
+     "visiteurs/visiteur-01/visiteur-01_avant_parapluie_1.svg",
+     "visiteurs/visiteur-01/visiteur-01_avant_parapluie_2.svg",
+     "visiteurs/visiteur-01/visiteur-01_avant_parapluie_3.svg",
+     "visiteurs/visiteur-01/visiteur-01_avant_parapluie_4.svg"
+    ],
+    "dos_lanterne": [
+     "visiteurs/visiteur-01/visiteur-01_dos_lanterne_1.svg",
+     "visiteurs/visiteur-01/visiteur-01_dos_lanterne_2.svg",
+     "visiteurs/visiteur-01/visiteur-01_dos_lanterne_3.svg",
+     "visiteurs/visiteur-01/visiteur-01_dos_lanterne_4.svg"
+    ],
+    "dos_parapluie": [
+     "visiteurs/visiteur-01/visiteur-01_dos_parapluie_1.svg",
+     "visiteurs/visiteur-01/visiteur-01_dos_parapluie_2.svg",
+     "visiteurs/visiteur-01/visiteur-01_dos_parapluie_3.svg",
+     "visiteurs/visiteur-01/visiteur-01_dos_parapluie_4.svg"
+    ],
+    "couche": [
+     "visiteurs/visiteur-01/visiteur-01_couche_1.svg",
+     "visiteurs/visiteur-01/visiteur-01_couche_2.svg"
+    ]
+   }
+  },
+  "visiteur-02": {
+   "nom": "Visiteur 2",
+   "choix": {
+    "taille": "moyenne",
+    "silhouette": "ronde",
+    "peau": "miel",
+    "visage": "ovale",
+    "yeux": "bleu",
+    "formeYeux": "rieurs",
+    "cils": "sans",
+    "sourcils": "epais",
+    "bouche": "serieuse",
+    "levres": "naturelles",
+    "rousseur": "non",
+    "joues": "roses",
+    "grain": "non",
+    "coupe": "meche",
+    "cheveux": "nuit",
+    "meches": "sans",
+    "couleurMeches": "chatain",
+    "haut": "tshirt",
+    "couleurHaut": "lagon",
+    "bas": "robeEntiere",
+    "couleurBas": "lavande",
+    "chaussures": "cuir",
+    "accessoires": {
+     "tete": {
+      "id": "oreillesLapin",
+      "couleurs": [
+       "corail"
+      ]
+     }
+    }
+   },
+   "fichiers": {
+    "face_marche": [
+     "visiteurs/visiteur-02/visiteur-02_face_marche_1.svg",
+     "visiteurs/visiteur-02/visiteur-02_face_marche_2.svg",
+     "visiteurs/visiteur-02/visiteur-02_face_marche_3.svg",
+     "visiteurs/visiteur-02/visiteur-02_face_marche_4.svg"
+    ],
+    "face_repos": [
+     "visiteurs/visiteur-02/visiteur-02_face_repos_1.svg",
+     "visiteurs/visiteur-02/visiteur-02_face_repos_2.svg"
+    ],
+    "face_salut": [
+     "visiteurs/visiteur-02/visiteur-02_face_salut_1.svg",
+     "visiteurs/visiteur-02/visiteur-02_face_salut_2.svg"
+    ],
+    "avant_marche": [
+     "visiteurs/visiteur-02/visiteur-02_avant_marche_1.svg",
+     "visiteurs/visiteur-02/visiteur-02_avant_marche_2.svg",
+     "visiteurs/visiteur-02/visiteur-02_avant_marche_3.svg",
+     "visiteurs/visiteur-02/visiteur-02_avant_marche_4.svg"
+    ],
+    "avant_repos": [
+     "visiteurs/visiteur-02/visiteur-02_avant_repos_1.svg",
+     "visiteurs/visiteur-02/visiteur-02_avant_repos_2.svg"
+    ],
+    "avant_salut": [
+     "visiteurs/visiteur-02/visiteur-02_avant_salut_1.svg",
+     "visiteurs/visiteur-02/visiteur-02_avant_salut_2.svg"
+    ],
+    "dos_marche": [
+     "visiteurs/visiteur-02/visiteur-02_dos_marche_1.svg",
+     "visiteurs/visiteur-02/visiteur-02_dos_marche_2.svg",
+     "visiteurs/visiteur-02/visiteur-02_dos_marche_3.svg",
+     "visiteurs/visiteur-02/visiteur-02_dos_marche_4.svg"
+    ],
+    "dos_repos": [
+     "visiteurs/visiteur-02/visiteur-02_dos_repos_1.svg",
+     "visiteurs/visiteur-02/visiteur-02_dos_repos_2.svg"
+    ],
+    "dos_salut": [
+     "visiteurs/visiteur-02/visiteur-02_dos_salut_1.svg",
+     "visiteurs/visiteur-02/visiteur-02_dos_salut_2.svg"
+    ],
+    "avant_lanterne": [
+     "visiteurs/visiteur-02/visiteur-02_avant_lanterne_1.svg",
+     "visiteurs/visiteur-02/visiteur-02_avant_lanterne_2.svg",
+     "visiteurs/visiteur-02/visiteur-02_avant_lanterne_3.svg",
+     "visiteurs/visiteur-02/visiteur-02_avant_lanterne_4.svg"
+    ],
+    "avant_parapluie": [
+     "visiteurs/visiteur-02/visiteur-02_avant_parapluie_1.svg",
+     "visiteurs/visiteur-02/visiteur-02_avant_parapluie_2.svg",
+     "visiteurs/visiteur-02/visiteur-02_avant_parapluie_3.svg",
+     "visiteurs/visiteur-02/visiteur-02_avant_parapluie_4.svg"
+    ],
+    "dos_lanterne": [
+     "visiteurs/visiteur-02/visiteur-02_dos_lanterne_1.svg",
+     "visiteurs/visiteur-02/visiteur-02_dos_lanterne_2.svg",
+     "visiteurs/visiteur-02/visiteur-02_dos_lanterne_3.svg",
+     "visiteurs/visiteur-02/visiteur-02_dos_lanterne_4.svg"
+    ],
+    "dos_parapluie": [
+     "visiteurs/visiteur-02/visiteur-02_dos_parapluie_1.svg",
+     "visiteurs/visiteur-02/visiteur-02_dos_parapluie_2.svg",
+     "visiteurs/visiteur-02/visiteur-02_dos_parapluie_3.svg",
+     "visiteurs/visiteur-02/visiteur-02_dos_parapluie_4.svg"
+    ],
+    "couche": [
+     "visiteurs/visiteur-02/visiteur-02_couche_1.svg",
+     "visiteurs/visiteur-02/visiteur-02_couche_2.svg"
+    ]
+   }
+  },
+  "visiteur-03": {
+   "nom": "Visiteur 3",
+   "choix": {
+    "taille": "grande",
+    "silhouette": "large",
+    "peau": "cacao",
+    "visage": "ovale",
+    "yeux": "noir",
+    "formeYeux": "grands",
+    "cils": "sans",
+    "sourcils": "fins",
+    "bouche": "serieuse",
+    "levres": "naturelles",
+    "rousseur": "legere",
+    "joues": "discretes",
+    "grain": "non",
+    "coupe": "deuxChignons",
+    "cheveux": "venitien",
+    "meches": "sans",
+    "couleurMeches": "blond",
+    "haut": "veste",
+    "couleurHaut": "marine",
+    "bas": "short",
+    "couleurBas": "foret",
+    "chaussures": "noir",
+    "accessoires": {
+     "tete": {
+      "id": "bandana",
+      "couleurs": [
+       "jean"
+      ]
+     }
+    }
+   },
+   "fichiers": {
+    "face_marche": [
+     "visiteurs/visiteur-03/visiteur-03_face_marche_1.svg",
+     "visiteurs/visiteur-03/visiteur-03_face_marche_2.svg",
+     "visiteurs/visiteur-03/visiteur-03_face_marche_3.svg",
+     "visiteurs/visiteur-03/visiteur-03_face_marche_4.svg"
+    ],
+    "face_repos": [
+     "visiteurs/visiteur-03/visiteur-03_face_repos_1.svg",
+     "visiteurs/visiteur-03/visiteur-03_face_repos_2.svg"
+    ],
+    "face_salut": [
+     "visiteurs/visiteur-03/visiteur-03_face_salut_1.svg",
+     "visiteurs/visiteur-03/visiteur-03_face_salut_2.svg"
+    ],
+    "avant_marche": [
+     "visiteurs/visiteur-03/visiteur-03_avant_marche_1.svg",
+     "visiteurs/visiteur-03/visiteur-03_avant_marche_2.svg",
+     "visiteurs/visiteur-03/visiteur-03_avant_marche_3.svg",
+     "visiteurs/visiteur-03/visiteur-03_avant_marche_4.svg"
+    ],
+    "avant_repos": [
+     "visiteurs/visiteur-03/visiteur-03_avant_repos_1.svg",
+     "visiteurs/visiteur-03/visiteur-03_avant_repos_2.svg"
+    ],
+    "avant_salut": [
+     "visiteurs/visiteur-03/visiteur-03_avant_salut_1.svg",
+     "visiteurs/visiteur-03/visiteur-03_avant_salut_2.svg"
+    ],
+    "dos_marche": [
+     "visiteurs/visiteur-03/visiteur-03_dos_marche_1.svg",
+     "visiteurs/visiteur-03/visiteur-03_dos_marche_2.svg",
+     "visiteurs/visiteur-03/visiteur-03_dos_marche_3.svg",
+     "visiteurs/visiteur-03/visiteur-03_dos_marche_4.svg"
+    ],
+    "dos_repos": [
+     "visiteurs/visiteur-03/visiteur-03_dos_repos_1.svg",
+     "visiteurs/visiteur-03/visiteur-03_dos_repos_2.svg"
+    ],
+    "dos_salut": [
+     "visiteurs/visiteur-03/visiteur-03_dos_salut_1.svg",
+     "visiteurs/visiteur-03/visiteur-03_dos_salut_2.svg"
+    ],
+    "avant_lanterne": [
+     "visiteurs/visiteur-03/visiteur-03_avant_lanterne_1.svg",
+     "visiteurs/visiteur-03/visiteur-03_avant_lanterne_2.svg",
+     "visiteurs/visiteur-03/visiteur-03_avant_lanterne_3.svg",
+     "visiteurs/visiteur-03/visiteur-03_avant_lanterne_4.svg"
+    ],
+    "avant_parapluie": [
+     "visiteurs/visiteur-03/visiteur-03_avant_parapluie_1.svg",
+     "visiteurs/visiteur-03/visiteur-03_avant_parapluie_2.svg",
+     "visiteurs/visiteur-03/visiteur-03_avant_parapluie_3.svg",
+     "visiteurs/visiteur-03/visiteur-03_avant_parapluie_4.svg"
+    ],
+    "dos_lanterne": [
+     "visiteurs/visiteur-03/visiteur-03_dos_lanterne_1.svg",
+     "visiteurs/visiteur-03/visiteur-03_dos_lanterne_2.svg",
+     "visiteurs/visiteur-03/visiteur-03_dos_lanterne_3.svg",
+     "visiteurs/visiteur-03/visiteur-03_dos_lanterne_4.svg"
+    ],
+    "dos_parapluie": [
+     "visiteurs/visiteur-03/visiteur-03_dos_parapluie_1.svg",
+     "visiteurs/visiteur-03/visiteur-03_dos_parapluie_2.svg",
+     "visiteurs/visiteur-03/visiteur-03_dos_parapluie_3.svg",
+     "visiteurs/visiteur-03/visiteur-03_dos_parapluie_4.svg"
+    ],
+    "couche": [
+     "visiteurs/visiteur-03/visiteur-03_couche_1.svg",
+     "visiteurs/visiteur-03/visiteur-03_couche_2.svg"
+    ]
+   }
+  },
+  "visiteur-04": {
+   "nom": "Visiteur 4",
+   "choix": {
+    "taille": "petite",
+    "silhouette": "large",
+    "peau": "ombre",
+    "visage": "rond",
+    "yeux": "noir",
+    "formeYeux": "grands",
+    "cils": "legers",
+    "sourcils": "doux",
+    "bouche": "sourire",
+    "levres": "prune",
+    "rousseur": "non",
+    "joues": "roses",
+    "grain": "non",
+    "coupe": "queueCote",
+    "cheveux": "venitien",
+    "meches": "pointes",
+    "couleurMeches": "blanc",
+    "haut": "tshirt",
+    "couleurHaut": "cuir",
+    "bas": "robeEntiere",
+    "couleurBas": "corail",
+    "chaussures": "rose",
+    "accessoires": {
+     "visage": {
+      "id": "lunettesRondes",
+      "couleurs": [
+       "cuivre"
+      ]
+     },
+     "tete": {
+      "id": "oreillesChat",
+      "couleurs": [
+       "rosepale"
+      ]
+     }
+    }
+   },
+   "fichiers": {
+    "face_marche": [
+     "visiteurs/visiteur-04/visiteur-04_face_marche_1.svg",
+     "visiteurs/visiteur-04/visiteur-04_face_marche_2.svg",
+     "visiteurs/visiteur-04/visiteur-04_face_marche_3.svg",
+     "visiteurs/visiteur-04/visiteur-04_face_marche_4.svg"
+    ],
+    "face_repos": [
+     "visiteurs/visiteur-04/visiteur-04_face_repos_1.svg",
+     "visiteurs/visiteur-04/visiteur-04_face_repos_2.svg"
+    ],
+    "face_salut": [
+     "visiteurs/visiteur-04/visiteur-04_face_salut_1.svg",
+     "visiteurs/visiteur-04/visiteur-04_face_salut_2.svg"
+    ],
+    "avant_marche": [
+     "visiteurs/visiteur-04/visiteur-04_avant_marche_1.svg",
+     "visiteurs/visiteur-04/visiteur-04_avant_marche_2.svg",
+     "visiteurs/visiteur-04/visiteur-04_avant_marche_3.svg",
+     "visiteurs/visiteur-04/visiteur-04_avant_marche_4.svg"
+    ],
+    "avant_repos": [
+     "visiteurs/visiteur-04/visiteur-04_avant_repos_1.svg",
+     "visiteurs/visiteur-04/visiteur-04_avant_repos_2.svg"
+    ],
+    "avant_salut": [
+     "visiteurs/visiteur-04/visiteur-04_avant_salut_1.svg",
+     "visiteurs/visiteur-04/visiteur-04_avant_salut_2.svg"
+    ],
+    "dos_marche": [
+     "visiteurs/visiteur-04/visiteur-04_dos_marche_1.svg",
+     "visiteurs/visiteur-04/visiteur-04_dos_marche_2.svg",
+     "visiteurs/visiteur-04/visiteur-04_dos_marche_3.svg",
+     "visiteurs/visiteur-04/visiteur-04_dos_marche_4.svg"
+    ],
+    "dos_repos": [
+     "visiteurs/visiteur-04/visiteur-04_dos_repos_1.svg",
+     "visiteurs/visiteur-04/visiteur-04_dos_repos_2.svg"
+    ],
+    "dos_salut": [
+     "visiteurs/visiteur-04/visiteur-04_dos_salut_1.svg",
+     "visiteurs/visiteur-04/visiteur-04_dos_salut_2.svg"
+    ],
+    "avant_lanterne": [
+     "visiteurs/visiteur-04/visiteur-04_avant_lanterne_1.svg",
+     "visiteurs/visiteur-04/visiteur-04_avant_lanterne_2.svg",
+     "visiteurs/visiteur-04/visiteur-04_avant_lanterne_3.svg",
+     "visiteurs/visiteur-04/visiteur-04_avant_lanterne_4.svg"
+    ],
+    "avant_parapluie": [
+     "visiteurs/visiteur-04/visiteur-04_avant_parapluie_1.svg",
+     "visiteurs/visiteur-04/visiteur-04_avant_parapluie_2.svg",
+     "visiteurs/visiteur-04/visiteur-04_avant_parapluie_3.svg",
+     "visiteurs/visiteur-04/visiteur-04_avant_parapluie_4.svg"
+    ],
+    "dos_lanterne": [
+     "visiteurs/visiteur-04/visiteur-04_dos_lanterne_1.svg",
+     "visiteurs/visiteur-04/visiteur-04_dos_lanterne_2.svg",
+     "visiteurs/visiteur-04/visiteur-04_dos_lanterne_3.svg",
+     "visiteurs/visiteur-04/visiteur-04_dos_lanterne_4.svg"
+    ],
+    "dos_parapluie": [
+     "visiteurs/visiteur-04/visiteur-04_dos_parapluie_1.svg",
+     "visiteurs/visiteur-04/visiteur-04_dos_parapluie_2.svg",
+     "visiteurs/visiteur-04/visiteur-04_dos_parapluie_3.svg",
+     "visiteurs/visiteur-04/visiteur-04_dos_parapluie_4.svg"
+    ],
+    "couche": [
+     "visiteurs/visiteur-04/visiteur-04_couche_1.svg",
+     "visiteurs/visiteur-04/visiteur-04_couche_2.svg"
+    ]
+   }
+  },
+  "visiteur-05": {
+   "nom": "Visiteur 5",
+   "choix": {
+    "taille": "moyenne",
+    "silhouette": "large",
+    "peau": "miel",
+    "visage": "rond",
+    "yeux": "emeraude",
+    "formeYeux": "paisibles",
+    "cils": "legers",
+    "sourcils": "doux",
+    "bouche": "serieuse",
+    "levres": "naturelles",
+    "rousseur": "oui",
+    "joues": "discretes",
+    "grain": "non",
+    "coupe": "queueCote",
+    "cheveux": "auburn",
+    "meches": "sans",
+    "couleurMeches": "cuivre",
+    "haut": "sweat",
+    "couleurHaut": "prune",
+    "bas": "short",
+    "couleurBas": "sable",
+    "chaussures": "noir",
+    "accessoires": {}
+   },
+   "fichiers": {
+    "face_marche": [
+     "visiteurs/visiteur-05/visiteur-05_face_marche_1.svg",
+     "visiteurs/visiteur-05/visiteur-05_face_marche_2.svg",
+     "visiteurs/visiteur-05/visiteur-05_face_marche_3.svg",
+     "visiteurs/visiteur-05/visiteur-05_face_marche_4.svg"
+    ],
+    "face_repos": [
+     "visiteurs/visiteur-05/visiteur-05_face_repos_1.svg",
+     "visiteurs/visiteur-05/visiteur-05_face_repos_2.svg"
+    ],
+    "face_salut": [
+     "visiteurs/visiteur-05/visiteur-05_face_salut_1.svg",
+     "visiteurs/visiteur-05/visiteur-05_face_salut_2.svg"
+    ],
+    "avant_marche": [
+     "visiteurs/visiteur-05/visiteur-05_avant_marche_1.svg",
+     "visiteurs/visiteur-05/visiteur-05_avant_marche_2.svg",
+     "visiteurs/visiteur-05/visiteur-05_avant_marche_3.svg",
+     "visiteurs/visiteur-05/visiteur-05_avant_marche_4.svg"
+    ],
+    "avant_repos": [
+     "visiteurs/visiteur-05/visiteur-05_avant_repos_1.svg",
+     "visiteurs/visiteur-05/visiteur-05_avant_repos_2.svg"
+    ],
+    "avant_salut": [
+     "visiteurs/visiteur-05/visiteur-05_avant_salut_1.svg",
+     "visiteurs/visiteur-05/visiteur-05_avant_salut_2.svg"
+    ],
+    "dos_marche": [
+     "visiteurs/visiteur-05/visiteur-05_dos_marche_1.svg",
+     "visiteurs/visiteur-05/visiteur-05_dos_marche_2.svg",
+     "visiteurs/visiteur-05/visiteur-05_dos_marche_3.svg",
+     "visiteurs/visiteur-05/visiteur-05_dos_marche_4.svg"
+    ],
+    "dos_repos": [
+     "visiteurs/visiteur-05/visiteur-05_dos_repos_1.svg",
+     "visiteurs/visiteur-05/visiteur-05_dos_repos_2.svg"
+    ],
+    "dos_salut": [
+     "visiteurs/visiteur-05/visiteur-05_dos_salut_1.svg",
+     "visiteurs/visiteur-05/visiteur-05_dos_salut_2.svg"
+    ],
+    "avant_lanterne": [
+     "visiteurs/visiteur-05/visiteur-05_avant_lanterne_1.svg",
+     "visiteurs/visiteur-05/visiteur-05_avant_lanterne_2.svg",
+     "visiteurs/visiteur-05/visiteur-05_avant_lanterne_3.svg",
+     "visiteurs/visiteur-05/visiteur-05_avant_lanterne_4.svg"
+    ],
+    "avant_parapluie": [
+     "visiteurs/visiteur-05/visiteur-05_avant_parapluie_1.svg",
+     "visiteurs/visiteur-05/visiteur-05_avant_parapluie_2.svg",
+     "visiteurs/visiteur-05/visiteur-05_avant_parapluie_3.svg",
+     "visiteurs/visiteur-05/visiteur-05_avant_parapluie_4.svg"
+    ],
+    "dos_lanterne": [
+     "visiteurs/visiteur-05/visiteur-05_dos_lanterne_1.svg",
+     "visiteurs/visiteur-05/visiteur-05_dos_lanterne_2.svg",
+     "visiteurs/visiteur-05/visiteur-05_dos_lanterne_3.svg",
+     "visiteurs/visiteur-05/visiteur-05_dos_lanterne_4.svg"
+    ],
+    "dos_parapluie": [
+     "visiteurs/visiteur-05/visiteur-05_dos_parapluie_1.svg",
+     "visiteurs/visiteur-05/visiteur-05_dos_parapluie_2.svg",
+     "visiteurs/visiteur-05/visiteur-05_dos_parapluie_3.svg",
+     "visiteurs/visiteur-05/visiteur-05_dos_parapluie_4.svg"
+    ],
+    "couche": [
+     "visiteurs/visiteur-05/visiteur-05_couche_1.svg",
+     "visiteurs/visiteur-05/visiteur-05_couche_2.svg"
+    ]
+   }
+  },
+  "visiteur-06": {
+   "nom": "Visiteur 6",
+   "choix": {
+    "taille": "grande",
+    "silhouette": "ronde",
+    "peau": "ebene",
+    "visage": "carre",
+    "yeux": "noir",
+    "formeYeux": "paisibles",
+    "cils": "recourbes",
+    "sourcils": "doux",
+    "bouche": "malice",
+    "levres": "rose",
+    "rousseur": "non",
+    "joues": "roses",
+    "grain": "non",
+    "coupe": "courte",
+    "cheveux": "lilas",
+    "meches": "sans",
+    "couleurMeches": "menthe",
+    "haut": "mariniere",
+    "couleurHaut": "corail",
+    "bas": "salopette",
+    "couleurBas": "creme",
+    "chaussures": "caramel",
+    "accessoires": {}
+   },
+   "fichiers": {
+    "face_marche": [
+     "visiteurs/visiteur-06/visiteur-06_face_marche_1.svg",
+     "visiteurs/visiteur-06/visiteur-06_face_marche_2.svg",
+     "visiteurs/visiteur-06/visiteur-06_face_marche_3.svg",
+     "visiteurs/visiteur-06/visiteur-06_face_marche_4.svg"
+    ],
+    "face_repos": [
+     "visiteurs/visiteur-06/visiteur-06_face_repos_1.svg",
+     "visiteurs/visiteur-06/visiteur-06_face_repos_2.svg"
+    ],
+    "face_salut": [
+     "visiteurs/visiteur-06/visiteur-06_face_salut_1.svg",
+     "visiteurs/visiteur-06/visiteur-06_face_salut_2.svg"
+    ],
+    "avant_marche": [
+     "visiteurs/visiteur-06/visiteur-06_avant_marche_1.svg",
+     "visiteurs/visiteur-06/visiteur-06_avant_marche_2.svg",
+     "visiteurs/visiteur-06/visiteur-06_avant_marche_3.svg",
+     "visiteurs/visiteur-06/visiteur-06_avant_marche_4.svg"
+    ],
+    "avant_repos": [
+     "visiteurs/visiteur-06/visiteur-06_avant_repos_1.svg",
+     "visiteurs/visiteur-06/visiteur-06_avant_repos_2.svg"
+    ],
+    "avant_salut": [
+     "visiteurs/visiteur-06/visiteur-06_avant_salut_1.svg",
+     "visiteurs/visiteur-06/visiteur-06_avant_salut_2.svg"
+    ],
+    "dos_marche": [
+     "visiteurs/visiteur-06/visiteur-06_dos_marche_1.svg",
+     "visiteurs/visiteur-06/visiteur-06_dos_marche_2.svg",
+     "visiteurs/visiteur-06/visiteur-06_dos_marche_3.svg",
+     "visiteurs/visiteur-06/visiteur-06_dos_marche_4.svg"
+    ],
+    "dos_repos": [
+     "visiteurs/visiteur-06/visiteur-06_dos_repos_1.svg",
+     "visiteurs/visiteur-06/visiteur-06_dos_repos_2.svg"
+    ],
+    "dos_salut": [
+     "visiteurs/visiteur-06/visiteur-06_dos_salut_1.svg",
+     "visiteurs/visiteur-06/visiteur-06_dos_salut_2.svg"
+    ],
+    "avant_lanterne": [
+     "visiteurs/visiteur-06/visiteur-06_avant_lanterne_1.svg",
+     "visiteurs/visiteur-06/visiteur-06_avant_lanterne_2.svg",
+     "visiteurs/visiteur-06/visiteur-06_avant_lanterne_3.svg",
+     "visiteurs/visiteur-06/visiteur-06_avant_lanterne_4.svg"
+    ],
+    "avant_parapluie": [
+     "visiteurs/visiteur-06/visiteur-06_avant_parapluie_1.svg",
+     "visiteurs/visiteur-06/visiteur-06_avant_parapluie_2.svg",
+     "visiteurs/visiteur-06/visiteur-06_avant_parapluie_3.svg",
+     "visiteurs/visiteur-06/visiteur-06_avant_parapluie_4.svg"
+    ],
+    "dos_lanterne": [
+     "visiteurs/visiteur-06/visiteur-06_dos_lanterne_1.svg",
+     "visiteurs/visiteur-06/visiteur-06_dos_lanterne_2.svg",
+     "visiteurs/visiteur-06/visiteur-06_dos_lanterne_3.svg",
+     "visiteurs/visiteur-06/visiteur-06_dos_lanterne_4.svg"
+    ],
+    "dos_parapluie": [
+     "visiteurs/visiteur-06/visiteur-06_dos_parapluie_1.svg",
+     "visiteurs/visiteur-06/visiteur-06_dos_parapluie_2.svg",
+     "visiteurs/visiteur-06/visiteur-06_dos_parapluie_3.svg",
+     "visiteurs/visiteur-06/visiteur-06_dos_parapluie_4.svg"
+    ],
+    "couche": [
+     "visiteurs/visiteur-06/visiteur-06_couche_1.svg",
+     "visiteurs/visiteur-06/visiteur-06_couche_2.svg"
+    ]
+   }
+  },
+  "visiteur-07": {
+   "nom": "Visiteur 7",
+   "choix": {
+    "taille": "petite",
+    "silhouette": "fine",
+    "peau": "peche",
+    "visage": "rond",
+    "yeux": "eau",
+    "formeYeux": "ronds",
+    "cils": "recourbes",
+    "sourcils": "doux",
+    "bouche": "douce",
+    "levres": "naturelles",
+    "rousseur": "non",
+    "joues": "discretes",
+    "grain": "non",
+    "coupe": "bouclee",
+    "cheveux": "cuivre",
+    "meches": "sans",
+    "couleurMeches": "poudre",
+    "haut": "veste",
+    "couleurHaut": "jean",
+    "bas": "robe",
+    "couleurBas": "foret",
+    "chaussures": "noir",
+    "accessoires": {}
+   },
+   "fichiers": {
+    "face_marche": [
+     "visiteurs/visiteur-07/visiteur-07_face_marche_1.svg",
+     "visiteurs/visiteur-07/visiteur-07_face_marche_2.svg",
+     "visiteurs/visiteur-07/visiteur-07_face_marche_3.svg",
+     "visiteurs/visiteur-07/visiteur-07_face_marche_4.svg"
+    ],
+    "face_repos": [
+     "visiteurs/visiteur-07/visiteur-07_face_repos_1.svg",
+     "visiteurs/visiteur-07/visiteur-07_face_repos_2.svg"
+    ],
+    "face_salut": [
+     "visiteurs/visiteur-07/visiteur-07_face_salut_1.svg",
+     "visiteurs/visiteur-07/visiteur-07_face_salut_2.svg"
+    ],
+    "avant_marche": [
+     "visiteurs/visiteur-07/visiteur-07_avant_marche_1.svg",
+     "visiteurs/visiteur-07/visiteur-07_avant_marche_2.svg",
+     "visiteurs/visiteur-07/visiteur-07_avant_marche_3.svg",
+     "visiteurs/visiteur-07/visiteur-07_avant_marche_4.svg"
+    ],
+    "avant_repos": [
+     "visiteurs/visiteur-07/visiteur-07_avant_repos_1.svg",
+     "visiteurs/visiteur-07/visiteur-07_avant_repos_2.svg"
+    ],
+    "avant_salut": [
+     "visiteurs/visiteur-07/visiteur-07_avant_salut_1.svg",
+     "visiteurs/visiteur-07/visiteur-07_avant_salut_2.svg"
+    ],
+    "dos_marche": [
+     "visiteurs/visiteur-07/visiteur-07_dos_marche_1.svg",
+     "visiteurs/visiteur-07/visiteur-07_dos_marche_2.svg",
+     "visiteurs/visiteur-07/visiteur-07_dos_marche_3.svg",
+     "visiteurs/visiteur-07/visiteur-07_dos_marche_4.svg"
+    ],
+    "dos_repos": [
+     "visiteurs/visiteur-07/visiteur-07_dos_repos_1.svg",
+     "visiteurs/visiteur-07/visiteur-07_dos_repos_2.svg"
+    ],
+    "dos_salut": [
+     "visiteurs/visiteur-07/visiteur-07_dos_salut_1.svg",
+     "visiteurs/visiteur-07/visiteur-07_dos_salut_2.svg"
+    ],
+    "avant_lanterne": [
+     "visiteurs/visiteur-07/visiteur-07_avant_lanterne_1.svg",
+     "visiteurs/visiteur-07/visiteur-07_avant_lanterne_2.svg",
+     "visiteurs/visiteur-07/visiteur-07_avant_lanterne_3.svg",
+     "visiteurs/visiteur-07/visiteur-07_avant_lanterne_4.svg"
+    ],
+    "avant_parapluie": [
+     "visiteurs/visiteur-07/visiteur-07_avant_parapluie_1.svg",
+     "visiteurs/visiteur-07/visiteur-07_avant_parapluie_2.svg",
+     "visiteurs/visiteur-07/visiteur-07_avant_parapluie_3.svg",
+     "visiteurs/visiteur-07/visiteur-07_avant_parapluie_4.svg"
+    ],
+    "dos_lanterne": [
+     "visiteurs/visiteur-07/visiteur-07_dos_lanterne_1.svg",
+     "visiteurs/visiteur-07/visiteur-07_dos_lanterne_2.svg",
+     "visiteurs/visiteur-07/visiteur-07_dos_lanterne_3.svg",
+     "visiteurs/visiteur-07/visiteur-07_dos_lanterne_4.svg"
+    ],
+    "dos_parapluie": [
+     "visiteurs/visiteur-07/visiteur-07_dos_parapluie_1.svg",
+     "visiteurs/visiteur-07/visiteur-07_dos_parapluie_2.svg",
+     "visiteurs/visiteur-07/visiteur-07_dos_parapluie_3.svg",
+     "visiteurs/visiteur-07/visiteur-07_dos_parapluie_4.svg"
+    ],
+    "couche": [
+     "visiteurs/visiteur-07/visiteur-07_couche_1.svg",
+     "visiteurs/visiteur-07/visiteur-07_couche_2.svg"
+    ]
+   }
+  },
+  "visiteur-08": {
+   "nom": "Visiteur 8",
+   "choix": {
+    "taille": "grande",
+    "silhouette": "fine",
+    "peau": "ombre",
+    "visage": "carre",
+    "yeux": "brun",
+    "formeYeux": "paisibles",
+    "cils": "legers",
+    "sourcils": "doux",
+    "bouche": "douce",
+    "levres": "naturelles",
+    "rousseur": "non",
+    "joues": "discretes",
+    "grain": "non",
+    "coupe": "bouclee",
+    "cheveux": "sapin",
+    "meches": "sans",
+    "couleurMeches": "corail",
+    "haut": "chemise",
+    "couleurHaut": "rose",
+    "bas": "salopette",
+    "couleurBas": "foret",
+    "chaussures": "rose",
+    "accessoires": {}
+   },
+   "fichiers": {
+    "face_marche": [
+     "visiteurs/visiteur-08/visiteur-08_face_marche_1.svg",
+     "visiteurs/visiteur-08/visiteur-08_face_marche_2.svg",
+     "visiteurs/visiteur-08/visiteur-08_face_marche_3.svg",
+     "visiteurs/visiteur-08/visiteur-08_face_marche_4.svg"
+    ],
+    "face_repos": [
+     "visiteurs/visiteur-08/visiteur-08_face_repos_1.svg",
+     "visiteurs/visiteur-08/visiteur-08_face_repos_2.svg"
+    ],
+    "face_salut": [
+     "visiteurs/visiteur-08/visiteur-08_face_salut_1.svg",
+     "visiteurs/visiteur-08/visiteur-08_face_salut_2.svg"
+    ],
+    "avant_marche": [
+     "visiteurs/visiteur-08/visiteur-08_avant_marche_1.svg",
+     "visiteurs/visiteur-08/visiteur-08_avant_marche_2.svg",
+     "visiteurs/visiteur-08/visiteur-08_avant_marche_3.svg",
+     "visiteurs/visiteur-08/visiteur-08_avant_marche_4.svg"
+    ],
+    "avant_repos": [
+     "visiteurs/visiteur-08/visiteur-08_avant_repos_1.svg",
+     "visiteurs/visiteur-08/visiteur-08_avant_repos_2.svg"
+    ],
+    "avant_salut": [
+     "visiteurs/visiteur-08/visiteur-08_avant_salut_1.svg",
+     "visiteurs/visiteur-08/visiteur-08_avant_salut_2.svg"
+    ],
+    "dos_marche": [
+     "visiteurs/visiteur-08/visiteur-08_dos_marche_1.svg",
+     "visiteurs/visiteur-08/visiteur-08_dos_marche_2.svg",
+     "visiteurs/visiteur-08/visiteur-08_dos_marche_3.svg",
+     "visiteurs/visiteur-08/visiteur-08_dos_marche_4.svg"
+    ],
+    "dos_repos": [
+     "visiteurs/visiteur-08/visiteur-08_dos_repos_1.svg",
+     "visiteurs/visiteur-08/visiteur-08_dos_repos_2.svg"
+    ],
+    "dos_salut": [
+     "visiteurs/visiteur-08/visiteur-08_dos_salut_1.svg",
+     "visiteurs/visiteur-08/visiteur-08_dos_salut_2.svg"
+    ],
+    "avant_lanterne": [
+     "visiteurs/visiteur-08/visiteur-08_avant_lanterne_1.svg",
+     "visiteurs/visiteur-08/visiteur-08_avant_lanterne_2.svg",
+     "visiteurs/visiteur-08/visiteur-08_avant_lanterne_3.svg",
+     "visiteurs/visiteur-08/visiteur-08_avant_lanterne_4.svg"
+    ],
+    "avant_parapluie": [
+     "visiteurs/visiteur-08/visiteur-08_avant_parapluie_1.svg",
+     "visiteurs/visiteur-08/visiteur-08_avant_parapluie_2.svg",
+     "visiteurs/visiteur-08/visiteur-08_avant_parapluie_3.svg",
+     "visiteurs/visiteur-08/visiteur-08_avant_parapluie_4.svg"
+    ],
+    "dos_lanterne": [
+     "visiteurs/visiteur-08/visiteur-08_dos_lanterne_1.svg",
+     "visiteurs/visiteur-08/visiteur-08_dos_lanterne_2.svg",
+     "visiteurs/visiteur-08/visiteur-08_dos_lanterne_3.svg",
+     "visiteurs/visiteur-08/visiteur-08_dos_lanterne_4.svg"
+    ],
+    "dos_parapluie": [
+     "visiteurs/visiteur-08/visiteur-08_dos_parapluie_1.svg",
+     "visiteurs/visiteur-08/visiteur-08_dos_parapluie_2.svg",
+     "visiteurs/visiteur-08/visiteur-08_dos_parapluie_3.svg",
+     "visiteurs/visiteur-08/visiteur-08_dos_parapluie_4.svg"
+    ],
+    "couche": [
+     "visiteurs/visiteur-08/visiteur-08_couche_1.svg",
+     "visiteurs/visiteur-08/visiteur-08_couche_2.svg"
+    ]
+   }
+  },
+  "visiteur-09": {
+   "nom": "Visiteur 9",
+   "choix": {
+    "taille": "petite",
+    "silhouette": "moyenne",
+    "peau": "acajou",
+    "visage": "rond",
+    "yeux": "gris",
+    "formeYeux": "paisibles",
+    "cils": "legers",
+    "sourcils": "epais",
+    "bouche": "malice",
+    "levres": "naturelles",
+    "rousseur": "non",
+    "joues": "discretes",
+    "grain": "non",
+    "coupe": "queueCote",
+    "cheveux": "noir",
+    "meches": "sans",
+    "couleurMeches": "roux",
+    "haut": "tshirt",
+    "couleurHaut": "abricot",
+    "bas": "salopette",
+    "couleurBas": "lavande",
+    "chaussures": "blanc",
+    "accessoires": {
+     "visage": {
+      "id": "lunettesCarrees",
+      "couleurs": [
+       "rose"
+      ]
+     }
+    }
+   },
+   "fichiers": {
+    "face_marche": [
+     "visiteurs/visiteur-09/visiteur-09_face_marche_1.svg",
+     "visiteurs/visiteur-09/visiteur-09_face_marche_2.svg",
+     "visiteurs/visiteur-09/visiteur-09_face_marche_3.svg",
+     "visiteurs/visiteur-09/visiteur-09_face_marche_4.svg"
+    ],
+    "face_repos": [
+     "visiteurs/visiteur-09/visiteur-09_face_repos_1.svg",
+     "visiteurs/visiteur-09/visiteur-09_face_repos_2.svg"
+    ],
+    "face_salut": [
+     "visiteurs/visiteur-09/visiteur-09_face_salut_1.svg",
+     "visiteurs/visiteur-09/visiteur-09_face_salut_2.svg"
+    ],
+    "avant_marche": [
+     "visiteurs/visiteur-09/visiteur-09_avant_marche_1.svg",
+     "visiteurs/visiteur-09/visiteur-09_avant_marche_2.svg",
+     "visiteurs/visiteur-09/visiteur-09_avant_marche_3.svg",
+     "visiteurs/visiteur-09/visiteur-09_avant_marche_4.svg"
+    ],
+    "avant_repos": [
+     "visiteurs/visiteur-09/visiteur-09_avant_repos_1.svg",
+     "visiteurs/visiteur-09/visiteur-09_avant_repos_2.svg"
+    ],
+    "avant_salut": [
+     "visiteurs/visiteur-09/visiteur-09_avant_salut_1.svg",
+     "visiteurs/visiteur-09/visiteur-09_avant_salut_2.svg"
+    ],
+    "dos_marche": [
+     "visiteurs/visiteur-09/visiteur-09_dos_marche_1.svg",
+     "visiteurs/visiteur-09/visiteur-09_dos_marche_2.svg",
+     "visiteurs/visiteur-09/visiteur-09_dos_marche_3.svg",
+     "visiteurs/visiteur-09/visiteur-09_dos_marche_4.svg"
+    ],
+    "dos_repos": [
+     "visiteurs/visiteur-09/visiteur-09_dos_repos_1.svg",
+     "visiteurs/visiteur-09/visiteur-09_dos_repos_2.svg"
+    ],
+    "dos_salut": [
+     "visiteurs/visiteur-09/visiteur-09_dos_salut_1.svg",
+     "visiteurs/visiteur-09/visiteur-09_dos_salut_2.svg"
+    ],
+    "avant_lanterne": [
+     "visiteurs/visiteur-09/visiteur-09_avant_lanterne_1.svg",
+     "visiteurs/visiteur-09/visiteur-09_avant_lanterne_2.svg",
+     "visiteurs/visiteur-09/visiteur-09_avant_lanterne_3.svg",
+     "visiteurs/visiteur-09/visiteur-09_avant_lanterne_4.svg"
+    ],
+    "avant_parapluie": [
+     "visiteurs/visiteur-09/visiteur-09_avant_parapluie_1.svg",
+     "visiteurs/visiteur-09/visiteur-09_avant_parapluie_2.svg",
+     "visiteurs/visiteur-09/visiteur-09_avant_parapluie_3.svg",
+     "visiteurs/visiteur-09/visiteur-09_avant_parapluie_4.svg"
+    ],
+    "dos_lanterne": [
+     "visiteurs/visiteur-09/visiteur-09_dos_lanterne_1.svg",
+     "visiteurs/visiteur-09/visiteur-09_dos_lanterne_2.svg",
+     "visiteurs/visiteur-09/visiteur-09_dos_lanterne_3.svg",
+     "visiteurs/visiteur-09/visiteur-09_dos_lanterne_4.svg"
+    ],
+    "dos_parapluie": [
+     "visiteurs/visiteur-09/visiteur-09_dos_parapluie_1.svg",
+     "visiteurs/visiteur-09/visiteur-09_dos_parapluie_2.svg",
+     "visiteurs/visiteur-09/visiteur-09_dos_parapluie_3.svg",
+     "visiteurs/visiteur-09/visiteur-09_dos_parapluie_4.svg"
+    ],
+    "couche": [
+     "visiteurs/visiteur-09/visiteur-09_couche_1.svg",
+     "visiteurs/visiteur-09/visiteur-09_couche_2.svg"
+    ]
+   }
+  },
+  "visiteur-10": {
+   "nom": "Visiteur 10",
+   "choix": {
+    "taille": "grande",
+    "silhouette": "ronde",
+    "peau": "rosee",
+    "visage": "rond",
+    "yeux": "emeraude",
+    "formeYeux": "paisibles",
+    "cils": "legers",
+    "sourcils": "fins",
+    "bouche": "malice",
+    "levres": "naturelles",
+    "rousseur": "non",
+    "joues": "discretes",
+    "grain": "non",
+    "coupe": "carre",
+    "cheveux": "venitien",
+    "meches": "sans",
+    "couleurMeches": "cuivre",
+    "haut": "veste",
+    "couleurHaut": "noir",
+    "bas": "jupe",
+    "couleurBas": "creme",
+    "chaussures": "rouge",
+    "accessoires": {}
+   },
+   "fichiers": {
+    "face_marche": [
+     "visiteurs/visiteur-10/visiteur-10_face_marche_1.svg",
+     "visiteurs/visiteur-10/visiteur-10_face_marche_2.svg",
+     "visiteurs/visiteur-10/visiteur-10_face_marche_3.svg",
+     "visiteurs/visiteur-10/visiteur-10_face_marche_4.svg"
+    ],
+    "face_repos": [
+     "visiteurs/visiteur-10/visiteur-10_face_repos_1.svg",
+     "visiteurs/visiteur-10/visiteur-10_face_repos_2.svg"
+    ],
+    "face_salut": [
+     "visiteurs/visiteur-10/visiteur-10_face_salut_1.svg",
+     "visiteurs/visiteur-10/visiteur-10_face_salut_2.svg"
+    ],
+    "avant_marche": [
+     "visiteurs/visiteur-10/visiteur-10_avant_marche_1.svg",
+     "visiteurs/visiteur-10/visiteur-10_avant_marche_2.svg",
+     "visiteurs/visiteur-10/visiteur-10_avant_marche_3.svg",
+     "visiteurs/visiteur-10/visiteur-10_avant_marche_4.svg"
+    ],
+    "avant_repos": [
+     "visiteurs/visiteur-10/visiteur-10_avant_repos_1.svg",
+     "visiteurs/visiteur-10/visiteur-10_avant_repos_2.svg"
+    ],
+    "avant_salut": [
+     "visiteurs/visiteur-10/visiteur-10_avant_salut_1.svg",
+     "visiteurs/visiteur-10/visiteur-10_avant_salut_2.svg"
+    ],
+    "dos_marche": [
+     "visiteurs/visiteur-10/visiteur-10_dos_marche_1.svg",
+     "visiteurs/visiteur-10/visiteur-10_dos_marche_2.svg",
+     "visiteurs/visiteur-10/visiteur-10_dos_marche_3.svg",
+     "visiteurs/visiteur-10/visiteur-10_dos_marche_4.svg"
+    ],
+    "dos_repos": [
+     "visiteurs/visiteur-10/visiteur-10_dos_repos_1.svg",
+     "visiteurs/visiteur-10/visiteur-10_dos_repos_2.svg"
+    ],
+    "dos_salut": [
+     "visiteurs/visiteur-10/visiteur-10_dos_salut_1.svg",
+     "visiteurs/visiteur-10/visiteur-10_dos_salut_2.svg"
+    ],
+    "avant_lanterne": [
+     "visiteurs/visiteur-10/visiteur-10_avant_lanterne_1.svg",
+     "visiteurs/visiteur-10/visiteur-10_avant_lanterne_2.svg",
+     "visiteurs/visiteur-10/visiteur-10_avant_lanterne_3.svg",
+     "visiteurs/visiteur-10/visiteur-10_avant_lanterne_4.svg"
+    ],
+    "avant_parapluie": [
+     "visiteurs/visiteur-10/visiteur-10_avant_parapluie_1.svg",
+     "visiteurs/visiteur-10/visiteur-10_avant_parapluie_2.svg",
+     "visiteurs/visiteur-10/visiteur-10_avant_parapluie_3.svg",
+     "visiteurs/visiteur-10/visiteur-10_avant_parapluie_4.svg"
+    ],
+    "dos_lanterne": [
+     "visiteurs/visiteur-10/visiteur-10_dos_lanterne_1.svg",
+     "visiteurs/visiteur-10/visiteur-10_dos_lanterne_2.svg",
+     "visiteurs/visiteur-10/visiteur-10_dos_lanterne_3.svg",
+     "visiteurs/visiteur-10/visiteur-10_dos_lanterne_4.svg"
+    ],
+    "dos_parapluie": [
+     "visiteurs/visiteur-10/visiteur-10_dos_parapluie_1.svg",
+     "visiteurs/visiteur-10/visiteur-10_dos_parapluie_2.svg",
+     "visiteurs/visiteur-10/visiteur-10_dos_parapluie_3.svg",
+     "visiteurs/visiteur-10/visiteur-10_dos_parapluie_4.svg"
+    ],
+    "couche": [
+     "visiteurs/visiteur-10/visiteur-10_couche_1.svg",
+     "visiteurs/visiteur-10/visiteur-10_couche_2.svg"
+    ]
+   }
+  },
+  "visiteur-11": {
+   "nom": "Visiteur 11",
+   "choix": {
+    "taille": "grande",
+    "silhouette": "moyenne",
+    "peau": "miel",
+    "visage": "carre",
+    "yeux": "gris",
+    "formeYeux": "rieurs",
+    "cils": "legers",
+    "sourcils": "doux",
+    "bouche": "sourire",
+    "levres": "naturelles",
+    "rousseur": "non",
+    "joues": "roses",
+    "grain": "joue",
+    "coupe": "queueCote",
+    "cheveux": "lilas",
+    "meches": "sans",
+    "couleurMeches": "cuivre",
+    "haut": "veste",
+    "couleurHaut": "menthe",
+    "bas": "pantalon",
+    "couleurBas": "noir",
+    "chaussures": "jean",
+    "accessoires": {}
+   },
+   "fichiers": {
+    "face_marche": [
+     "visiteurs/visiteur-11/visiteur-11_face_marche_1.svg",
+     "visiteurs/visiteur-11/visiteur-11_face_marche_2.svg",
+     "visiteurs/visiteur-11/visiteur-11_face_marche_3.svg",
+     "visiteurs/visiteur-11/visiteur-11_face_marche_4.svg"
+    ],
+    "face_repos": [
+     "visiteurs/visiteur-11/visiteur-11_face_repos_1.svg",
+     "visiteurs/visiteur-11/visiteur-11_face_repos_2.svg"
+    ],
+    "face_salut": [
+     "visiteurs/visiteur-11/visiteur-11_face_salut_1.svg",
+     "visiteurs/visiteur-11/visiteur-11_face_salut_2.svg"
+    ],
+    "avant_marche": [
+     "visiteurs/visiteur-11/visiteur-11_avant_marche_1.svg",
+     "visiteurs/visiteur-11/visiteur-11_avant_marche_2.svg",
+     "visiteurs/visiteur-11/visiteur-11_avant_marche_3.svg",
+     "visiteurs/visiteur-11/visiteur-11_avant_marche_4.svg"
+    ],
+    "avant_repos": [
+     "visiteurs/visiteur-11/visiteur-11_avant_repos_1.svg",
+     "visiteurs/visiteur-11/visiteur-11_avant_repos_2.svg"
+    ],
+    "avant_salut": [
+     "visiteurs/visiteur-11/visiteur-11_avant_salut_1.svg",
+     "visiteurs/visiteur-11/visiteur-11_avant_salut_2.svg"
+    ],
+    "dos_marche": [
+     "visiteurs/visiteur-11/visiteur-11_dos_marche_1.svg",
+     "visiteurs/visiteur-11/visiteur-11_dos_marche_2.svg",
+     "visiteurs/visiteur-11/visiteur-11_dos_marche_3.svg",
+     "visiteurs/visiteur-11/visiteur-11_dos_marche_4.svg"
+    ],
+    "dos_repos": [
+     "visiteurs/visiteur-11/visiteur-11_dos_repos_1.svg",
+     "visiteurs/visiteur-11/visiteur-11_dos_repos_2.svg"
+    ],
+    "dos_salut": [
+     "visiteurs/visiteur-11/visiteur-11_dos_salut_1.svg",
+     "visiteurs/visiteur-11/visiteur-11_dos_salut_2.svg"
+    ],
+    "avant_lanterne": [
+     "visiteurs/visiteur-11/visiteur-11_avant_lanterne_1.svg",
+     "visiteurs/visiteur-11/visiteur-11_avant_lanterne_2.svg",
+     "visiteurs/visiteur-11/visiteur-11_avant_lanterne_3.svg",
+     "visiteurs/visiteur-11/visiteur-11_avant_lanterne_4.svg"
+    ],
+    "avant_parapluie": [
+     "visiteurs/visiteur-11/visiteur-11_avant_parapluie_1.svg",
+     "visiteurs/visiteur-11/visiteur-11_avant_parapluie_2.svg",
+     "visiteurs/visiteur-11/visiteur-11_avant_parapluie_3.svg",
+     "visiteurs/visiteur-11/visiteur-11_avant_parapluie_4.svg"
+    ],
+    "dos_lanterne": [
+     "visiteurs/visiteur-11/visiteur-11_dos_lanterne_1.svg",
+     "visiteurs/visiteur-11/visiteur-11_dos_lanterne_2.svg",
+     "visiteurs/visiteur-11/visiteur-11_dos_lanterne_3.svg",
+     "visiteurs/visiteur-11/visiteur-11_dos_lanterne_4.svg"
+    ],
+    "dos_parapluie": [
+     "visiteurs/visiteur-11/visiteur-11_dos_parapluie_1.svg",
+     "visiteurs/visiteur-11/visiteur-11_dos_parapluie_2.svg",
+     "visiteurs/visiteur-11/visiteur-11_dos_parapluie_3.svg",
+     "visiteurs/visiteur-11/visiteur-11_dos_parapluie_4.svg"
+    ],
+    "couche": [
+     "visiteurs/visiteur-11/visiteur-11_couche_1.svg",
+     "visiteurs/visiteur-11/visiteur-11_couche_2.svg"
+    ]
+   }
+  },
+  "visiteur-12": {
+   "nom": "Visiteur 12",
+   "choix": {
+    "taille": "grande",
+    "silhouette": "ronde",
+    "peau": "doree",
+    "visage": "rond",
+    "yeux": "grisbleu",
+    "formeYeux": "paisibles",
+    "cils": "sans",
+    "sourcils": "fins",
+    "bouche": "malice",
+    "levres": "naturelles",
+    "rousseur": "oui",
+    "joues": "discretes",
+    "grain": "non",
+    "coupe": "courte",
+    "cheveux": "jais",
+    "meches": "sans",
+    "couleurMeches": "chocolat",
+    "haut": "tshirt",
+    "couleurHaut": "prune",
+    "bas": "short",
+    "couleurBas": "foret",
+    "chaussures": "creme",
+    "accessoires": {
+     "tete": {
+      "id": "oreillesChat",
+      "couleurs": [
+       "charbon"
+      ]
+     },
+     "cheveux": {
+      "id": "barrettes",
+      "couleurs": [
+       "cuir"
+      ]
+     }
+    }
+   },
+   "fichiers": {
+    "face_marche": [
+     "visiteurs/visiteur-12/visiteur-12_face_marche_1.svg",
+     "visiteurs/visiteur-12/visiteur-12_face_marche_2.svg",
+     "visiteurs/visiteur-12/visiteur-12_face_marche_3.svg",
+     "visiteurs/visiteur-12/visiteur-12_face_marche_4.svg"
+    ],
+    "face_repos": [
+     "visiteurs/visiteur-12/visiteur-12_face_repos_1.svg",
+     "visiteurs/visiteur-12/visiteur-12_face_repos_2.svg"
+    ],
+    "face_salut": [
+     "visiteurs/visiteur-12/visiteur-12_face_salut_1.svg",
+     "visiteurs/visiteur-12/visiteur-12_face_salut_2.svg"
+    ],
+    "avant_marche": [
+     "visiteurs/visiteur-12/visiteur-12_avant_marche_1.svg",
+     "visiteurs/visiteur-12/visiteur-12_avant_marche_2.svg",
+     "visiteurs/visiteur-12/visiteur-12_avant_marche_3.svg",
+     "visiteurs/visiteur-12/visiteur-12_avant_marche_4.svg"
+    ],
+    "avant_repos": [
+     "visiteurs/visiteur-12/visiteur-12_avant_repos_1.svg",
+     "visiteurs/visiteur-12/visiteur-12_avant_repos_2.svg"
+    ],
+    "avant_salut": [
+     "visiteurs/visiteur-12/visiteur-12_avant_salut_1.svg",
+     "visiteurs/visiteur-12/visiteur-12_avant_salut_2.svg"
+    ],
+    "dos_marche": [
+     "visiteurs/visiteur-12/visiteur-12_dos_marche_1.svg",
+     "visiteurs/visiteur-12/visiteur-12_dos_marche_2.svg",
+     "visiteurs/visiteur-12/visiteur-12_dos_marche_3.svg",
+     "visiteurs/visiteur-12/visiteur-12_dos_marche_4.svg"
+    ],
+    "dos_repos": [
+     "visiteurs/visiteur-12/visiteur-12_dos_repos_1.svg",
+     "visiteurs/visiteur-12/visiteur-12_dos_repos_2.svg"
+    ],
+    "dos_salut": [
+     "visiteurs/visiteur-12/visiteur-12_dos_salut_1.svg",
+     "visiteurs/visiteur-12/visiteur-12_dos_salut_2.svg"
+    ],
+    "avant_lanterne": [
+     "visiteurs/visiteur-12/visiteur-12_avant_lanterne_1.svg",
+     "visiteurs/visiteur-12/visiteur-12_avant_lanterne_2.svg",
+     "visiteurs/visiteur-12/visiteur-12_avant_lanterne_3.svg",
+     "visiteurs/visiteur-12/visiteur-12_avant_lanterne_4.svg"
+    ],
+    "avant_parapluie": [
+     "visiteurs/visiteur-12/visiteur-12_avant_parapluie_1.svg",
+     "visiteurs/visiteur-12/visiteur-12_avant_parapluie_2.svg",
+     "visiteurs/visiteur-12/visiteur-12_avant_parapluie_3.svg",
+     "visiteurs/visiteur-12/visiteur-12_avant_parapluie_4.svg"
+    ],
+    "dos_lanterne": [
+     "visiteurs/visiteur-12/visiteur-12_dos_lanterne_1.svg",
+     "visiteurs/visiteur-12/visiteur-12_dos_lanterne_2.svg",
+     "visiteurs/visiteur-12/visiteur-12_dos_lanterne_3.svg",
+     "visiteurs/visiteur-12/visiteur-12_dos_lanterne_4.svg"
+    ],
+    "dos_parapluie": [
+     "visiteurs/visiteur-12/visiteur-12_dos_parapluie_1.svg",
+     "visiteurs/visiteur-12/visiteur-12_dos_parapluie_2.svg",
+     "visiteurs/visiteur-12/visiteur-12_dos_parapluie_3.svg",
+     "visiteurs/visiteur-12/visiteur-12_dos_parapluie_4.svg"
+    ],
+    "couche": [
+     "visiteurs/visiteur-12/visiteur-12_couche_1.svg",
+     "visiteurs/visiteur-12/visiteur-12_couche_2.svg"
+    ]
+   }
+  }
+ },
+ "epilogue": {
+  "arrivant-01": {
+   "nom": "Nouveau venu 1",
+   "choix": {
+    "taille": "grande",
+    "silhouette": "large",
+    "peau": "miel",
+    "visage": "rond",
+    "yeux": "rose",
+    "formeYeux": "ronds",
+    "cils": "sans",
+    "sourcils": "epais",
+    "bouche": "serieuse",
+    "levres": "rouge",
+    "rousseur": "non",
+    "joues": "roses",
+    "grain": "non",
+    "coupe": "chignon",
+    "cheveux": "chocolat",
+    "meches": "sans",
+    "couleurMeches": "gris",
+    "haut": "veste",
+    "couleurHaut": "jean",
+    "bas": "pantalon",
+    "couleurBas": "rouge",
+    "chaussures": "caramel",
+    "accessoires": {
+     "visage": {
+      "id": "lunettesCarrees",
+      "couleurs": [
+       "soleil"
+      ]
+     },
+     "tete": {
+      "id": "paille",
+      "couleurs": [
+       "rouge"
+      ]
+     },
+     "dos": {
+      "id": "sacDos",
+      "couleurs": [
+       "abricot"
+      ]
+     }
+    }
+   },
+   "fichiers": {
+    "face_marche": [
+     "epilogue/arrivant-01/arrivant-01_face_marche_1.svg",
+     "epilogue/arrivant-01/arrivant-01_face_marche_2.svg",
+     "epilogue/arrivant-01/arrivant-01_face_marche_3.svg",
+     "epilogue/arrivant-01/arrivant-01_face_marche_4.svg"
+    ],
+    "face_repos": [
+     "epilogue/arrivant-01/arrivant-01_face_repos_1.svg",
+     "epilogue/arrivant-01/arrivant-01_face_repos_2.svg"
+    ],
+    "face_salut": [
+     "epilogue/arrivant-01/arrivant-01_face_salut_1.svg",
+     "epilogue/arrivant-01/arrivant-01_face_salut_2.svg"
+    ],
+    "avant_marche": [
+     "epilogue/arrivant-01/arrivant-01_avant_marche_1.svg",
+     "epilogue/arrivant-01/arrivant-01_avant_marche_2.svg",
+     "epilogue/arrivant-01/arrivant-01_avant_marche_3.svg",
+     "epilogue/arrivant-01/arrivant-01_avant_marche_4.svg"
+    ],
+    "avant_repos": [
+     "epilogue/arrivant-01/arrivant-01_avant_repos_1.svg",
+     "epilogue/arrivant-01/arrivant-01_avant_repos_2.svg"
+    ],
+    "avant_salut": [
+     "epilogue/arrivant-01/arrivant-01_avant_salut_1.svg",
+     "epilogue/arrivant-01/arrivant-01_avant_salut_2.svg"
+    ],
+    "dos_marche": [
+     "epilogue/arrivant-01/arrivant-01_dos_marche_1.svg",
+     "epilogue/arrivant-01/arrivant-01_dos_marche_2.svg",
+     "epilogue/arrivant-01/arrivant-01_dos_marche_3.svg",
+     "epilogue/arrivant-01/arrivant-01_dos_marche_4.svg"
+    ],
+    "dos_repos": [
+     "epilogue/arrivant-01/arrivant-01_dos_repos_1.svg",
+     "epilogue/arrivant-01/arrivant-01_dos_repos_2.svg"
+    ],
+    "dos_salut": [
+     "epilogue/arrivant-01/arrivant-01_dos_salut_1.svg",
+     "epilogue/arrivant-01/arrivant-01_dos_salut_2.svg"
+    ]
+   }
+  },
+  "arrivant-02": {
+   "nom": "Nouveau venu 2",
+   "choix": {
+    "taille": "moyenne",
+    "silhouette": "large",
+    "peau": "ocre",
+    "visage": "ovale",
+    "yeux": "bleu",
+    "formeYeux": "grands",
+    "cils": "legers",
+    "sourcils": "fins",
+    "bouche": "sourire",
+    "levres": "rose",
+    "rousseur": "legere",
+    "joues": "discretes",
+    "grain": "non",
+    "coupe": "chignon",
+    "cheveux": "cuivre",
+    "meches": "sans",
+    "couleurMeches": "nuit",
+    "haut": "chemise",
+    "couleurHaut": "ciel",
+    "bas": "jupe",
+    "couleurBas": "sable",
+    "chaussures": "noir",
+    "accessoires": {
+     "tete": {
+      "id": "beret",
+      "couleurs": [
+       "bordeaux"
+      ]
+     },
+     "dos": {
+      "id": "besace",
+      "couleurs": [
+       "caramel"
+      ]
+     }
+    }
+   },
+   "fichiers": {
+    "face_marche": [
+     "epilogue/arrivant-02/arrivant-02_face_marche_1.svg",
+     "epilogue/arrivant-02/arrivant-02_face_marche_2.svg",
+     "epilogue/arrivant-02/arrivant-02_face_marche_3.svg",
+     "epilogue/arrivant-02/arrivant-02_face_marche_4.svg"
+    ],
+    "face_repos": [
+     "epilogue/arrivant-02/arrivant-02_face_repos_1.svg",
+     "epilogue/arrivant-02/arrivant-02_face_repos_2.svg"
+    ],
+    "face_salut": [
+     "epilogue/arrivant-02/arrivant-02_face_salut_1.svg",
+     "epilogue/arrivant-02/arrivant-02_face_salut_2.svg"
+    ],
+    "avant_marche": [
+     "epilogue/arrivant-02/arrivant-02_avant_marche_1.svg",
+     "epilogue/arrivant-02/arrivant-02_avant_marche_2.svg",
+     "epilogue/arrivant-02/arrivant-02_avant_marche_3.svg",
+     "epilogue/arrivant-02/arrivant-02_avant_marche_4.svg"
+    ],
+    "avant_repos": [
+     "epilogue/arrivant-02/arrivant-02_avant_repos_1.svg",
+     "epilogue/arrivant-02/arrivant-02_avant_repos_2.svg"
+    ],
+    "avant_salut": [
+     "epilogue/arrivant-02/arrivant-02_avant_salut_1.svg",
+     "epilogue/arrivant-02/arrivant-02_avant_salut_2.svg"
+    ],
+    "dos_marche": [
+     "epilogue/arrivant-02/arrivant-02_dos_marche_1.svg",
+     "epilogue/arrivant-02/arrivant-02_dos_marche_2.svg",
+     "epilogue/arrivant-02/arrivant-02_dos_marche_3.svg",
+     "epilogue/arrivant-02/arrivant-02_dos_marche_4.svg"
+    ],
+    "dos_repos": [
+     "epilogue/arrivant-02/arrivant-02_dos_repos_1.svg",
+     "epilogue/arrivant-02/arrivant-02_dos_repos_2.svg"
+    ],
+    "dos_salut": [
+     "epilogue/arrivant-02/arrivant-02_dos_salut_1.svg",
+     "epilogue/arrivant-02/arrivant-02_dos_salut_2.svg"
+    ]
+   }
+  },
+  "arrivant-03": {
+   "nom": "Nouveau venu 3",
+   "choix": {
+    "taille": "grande",
+    "silhouette": "moyenne",
+    "peau": "ebene",
+    "visage": "rond",
+    "yeux": "grisbleu",
+    "formeYeux": "paisibles",
+    "cils": "sans",
+    "sourcils": "doux",
+    "bouche": "malice",
+    "levres": "naturelles",
+    "rousseur": "oui",
+    "joues": "roses",
+    "grain": "non",
+    "coupe": "rasee",
+    "cheveux": "chatain",
+    "meches": "sans",
+    "couleurMeches": "menthe",
+    "haut": "pull",
+    "couleurHaut": "marine",
+    "bas": "pantalon",
+    "couleurBas": "creme",
+    "chaussures": "blanc",
+    "accessoires": {
+     "visage": {
+      "id": "lunettesPapillon",
+      "couleurs": [
+       "lavande"
+      ]
+     },
+     "dos": {
+      "id": "sacDos",
+      "couleurs": [
+       "abricot"
+      ]
+     },
+     "tete": {
+      "id": "bonnet",
+      "couleurs": [
+       "marine"
+      ]
+     }
+    }
+   },
+   "fichiers": {
+    "face_marche": [
+     "epilogue/arrivant-03/arrivant-03_face_marche_1.svg",
+     "epilogue/arrivant-03/arrivant-03_face_marche_2.svg",
+     "epilogue/arrivant-03/arrivant-03_face_marche_3.svg",
+     "epilogue/arrivant-03/arrivant-03_face_marche_4.svg"
+    ],
+    "face_repos": [
+     "epilogue/arrivant-03/arrivant-03_face_repos_1.svg",
+     "epilogue/arrivant-03/arrivant-03_face_repos_2.svg"
+    ],
+    "face_salut": [
+     "epilogue/arrivant-03/arrivant-03_face_salut_1.svg",
+     "epilogue/arrivant-03/arrivant-03_face_salut_2.svg"
+    ],
+    "avant_marche": [
+     "epilogue/arrivant-03/arrivant-03_avant_marche_1.svg",
+     "epilogue/arrivant-03/arrivant-03_avant_marche_2.svg",
+     "epilogue/arrivant-03/arrivant-03_avant_marche_3.svg",
+     "epilogue/arrivant-03/arrivant-03_avant_marche_4.svg"
+    ],
+    "avant_repos": [
+     "epilogue/arrivant-03/arrivant-03_avant_repos_1.svg",
+     "epilogue/arrivant-03/arrivant-03_avant_repos_2.svg"
+    ],
+    "avant_salut": [
+     "epilogue/arrivant-03/arrivant-03_avant_salut_1.svg",
+     "epilogue/arrivant-03/arrivant-03_avant_salut_2.svg"
+    ],
+    "dos_marche": [
+     "epilogue/arrivant-03/arrivant-03_dos_marche_1.svg",
+     "epilogue/arrivant-03/arrivant-03_dos_marche_2.svg",
+     "epilogue/arrivant-03/arrivant-03_dos_marche_3.svg",
+     "epilogue/arrivant-03/arrivant-03_dos_marche_4.svg"
+    ],
+    "dos_repos": [
+     "epilogue/arrivant-03/arrivant-03_dos_repos_1.svg",
+     "epilogue/arrivant-03/arrivant-03_dos_repos_2.svg"
+    ],
+    "dos_salut": [
+     "epilogue/arrivant-03/arrivant-03_dos_salut_1.svg",
+     "epilogue/arrivant-03/arrivant-03_dos_salut_2.svg"
+    ]
+   }
+  },
+  "arrivant-04": {
+   "nom": "Nouveau venu 4",
+   "choix": {
+    "taille": "moyenne",
+    "silhouette": "moyenne",
+    "peau": "acajou",
+    "visage": "carre",
+    "yeux": "grisbleu",
+    "formeYeux": "amande",
+    "cils": "recourbes",
+    "sourcils": "epais",
+    "bouche": "malice",
+    "levres": "naturelles",
+    "rousseur": "oui",
+    "joues": "discretes",
+    "grain": "joue",
+    "coupe": "bataille",
+    "cheveux": "nuit",
+    "meches": "sans",
+    "couleurMeches": "auburn",
+    "haut": "veste",
+    "couleurHaut": "charbon",
+    "bas": "robe",
+    "couleurBas": "framboise",
+    "chaussures": "rouge",
+    "accessoires": {
+     "oreilles": {
+      "id": "anneaux",
+      "couleurs": [
+       "or"
+      ]
+     },
+     "visage": {
+      "id": "lunettesCarrees",
+      "couleurs": [
+       "cuir"
+      ]
+     },
+     "tete": {
+      "id": "paille",
+      "couleurs": [
+       "rouge"
+      ]
+     },
+     "dos": {
+      "id": "besace",
+      "couleurs": [
+       "caramel"
+      ]
+     }
+    }
+   },
+   "fichiers": {
+    "face_marche": [
+     "epilogue/arrivant-04/arrivant-04_face_marche_1.svg",
+     "epilogue/arrivant-04/arrivant-04_face_marche_2.svg",
+     "epilogue/arrivant-04/arrivant-04_face_marche_3.svg",
+     "epilogue/arrivant-04/arrivant-04_face_marche_4.svg"
+    ],
+    "face_repos": [
+     "epilogue/arrivant-04/arrivant-04_face_repos_1.svg",
+     "epilogue/arrivant-04/arrivant-04_face_repos_2.svg"
+    ],
+    "face_salut": [
+     "epilogue/arrivant-04/arrivant-04_face_salut_1.svg",
+     "epilogue/arrivant-04/arrivant-04_face_salut_2.svg"
+    ],
+    "avant_marche": [
+     "epilogue/arrivant-04/arrivant-04_avant_marche_1.svg",
+     "epilogue/arrivant-04/arrivant-04_avant_marche_2.svg",
+     "epilogue/arrivant-04/arrivant-04_avant_marche_3.svg",
+     "epilogue/arrivant-04/arrivant-04_avant_marche_4.svg"
+    ],
+    "avant_repos": [
+     "epilogue/arrivant-04/arrivant-04_avant_repos_1.svg",
+     "epilogue/arrivant-04/arrivant-04_avant_repos_2.svg"
+    ],
+    "avant_salut": [
+     "epilogue/arrivant-04/arrivant-04_avant_salut_1.svg",
+     "epilogue/arrivant-04/arrivant-04_avant_salut_2.svg"
+    ],
+    "dos_marche": [
+     "epilogue/arrivant-04/arrivant-04_dos_marche_1.svg",
+     "epilogue/arrivant-04/arrivant-04_dos_marche_2.svg",
+     "epilogue/arrivant-04/arrivant-04_dos_marche_3.svg",
+     "epilogue/arrivant-04/arrivant-04_dos_marche_4.svg"
+    ],
+    "dos_repos": [
+     "epilogue/arrivant-04/arrivant-04_dos_repos_1.svg",
+     "epilogue/arrivant-04/arrivant-04_dos_repos_2.svg"
+    ],
+    "dos_salut": [
+     "epilogue/arrivant-04/arrivant-04_dos_salut_1.svg",
+     "epilogue/arrivant-04/arrivant-04_dos_salut_2.svg"
+    ]
+   }
+  },
+  "arrivant-05": {
+   "nom": "Nouveau venu 5",
+   "choix": {
+    "taille": "moyenne",
+    "silhouette": "large",
+    "peau": "peche",
+    "visage": "carre",
+    "yeux": "violet",
+    "formeYeux": "grands",
+    "cils": "recourbes",
+    "sourcils": "epais",
+    "bouche": "malice",
+    "levres": "naturelles",
+    "rousseur": "non",
+    "joues": "discretes",
+    "grain": "non",
+    "coupe": "couronne",
+    "cheveux": "chocolat",
+    "meches": "meches",
+    "couleurMeches": "noir",
+    "haut": "sweat",
+    "couleurHaut": "sable",
+    "bas": "pantalon",
+    "couleurBas": "rose",
+    "chaussures": "rouge",
+    "accessoires": {
+     "tete": {
+      "id": "casquette",
+      "couleurs": [
+       "ciel"
+      ]
+     },
+     "dos": {
+      "id": "sacDos",
+      "couleurs": [
+       "abricot"
+      ]
+     }
+    }
+   },
+   "fichiers": {
+    "face_marche": [
+     "epilogue/arrivant-05/arrivant-05_face_marche_1.svg",
+     "epilogue/arrivant-05/arrivant-05_face_marche_2.svg",
+     "epilogue/arrivant-05/arrivant-05_face_marche_3.svg",
+     "epilogue/arrivant-05/arrivant-05_face_marche_4.svg"
+    ],
+    "face_repos": [
+     "epilogue/arrivant-05/arrivant-05_face_repos_1.svg",
+     "epilogue/arrivant-05/arrivant-05_face_repos_2.svg"
+    ],
+    "face_salut": [
+     "epilogue/arrivant-05/arrivant-05_face_salut_1.svg",
+     "epilogue/arrivant-05/arrivant-05_face_salut_2.svg"
+    ],
+    "avant_marche": [
+     "epilogue/arrivant-05/arrivant-05_avant_marche_1.svg",
+     "epilogue/arrivant-05/arrivant-05_avant_marche_2.svg",
+     "epilogue/arrivant-05/arrivant-05_avant_marche_3.svg",
+     "epilogue/arrivant-05/arrivant-05_avant_marche_4.svg"
+    ],
+    "avant_repos": [
+     "epilogue/arrivant-05/arrivant-05_avant_repos_1.svg",
+     "epilogue/arrivant-05/arrivant-05_avant_repos_2.svg"
+    ],
+    "avant_salut": [
+     "epilogue/arrivant-05/arrivant-05_avant_salut_1.svg",
+     "epilogue/arrivant-05/arrivant-05_avant_salut_2.svg"
+    ],
+    "dos_marche": [
+     "epilogue/arrivant-05/arrivant-05_dos_marche_1.svg",
+     "epilogue/arrivant-05/arrivant-05_dos_marche_2.svg",
+     "epilogue/arrivant-05/arrivant-05_dos_marche_3.svg",
+     "epilogue/arrivant-05/arrivant-05_dos_marche_4.svg"
+    ],
+    "dos_repos": [
+     "epilogue/arrivant-05/arrivant-05_dos_repos_1.svg",
+     "epilogue/arrivant-05/arrivant-05_dos_repos_2.svg"
+    ],
+    "dos_salut": [
+     "epilogue/arrivant-05/arrivant-05_dos_salut_1.svg",
+     "epilogue/arrivant-05/arrivant-05_dos_salut_2.svg"
+    ]
+   }
+  },
+  "arrivant-06": {
+   "nom": "Nouveau venu 6",
+   "choix": {
+    "taille": "petite",
+    "silhouette": "moyenne",
+    "peau": "cuivre",
+    "visage": "rond",
+    "yeux": "olive",
+    "formeYeux": "grands",
+    "cils": "sans",
+    "sourcils": "doux",
+    "bouche": "sourire",
+    "levres": "rouge",
+    "rousseur": "non",
+    "joues": "discretes",
+    "grain": "non",
+    "coupe": "chignon",
+    "cheveux": "blanc",
+    "meches": "sans",
+    "couleurMeches": "blanc",
+    "haut": "chemise",
+    "couleurHaut": "abricot",
+    "bas": "pantalon",
+    "couleurBas": "marine",
+    "chaussures": "noir",
+    "accessoires": {
+     "cheveux": {
+      "id": "etoile",
+      "couleurs": [
+       "orrose"
+      ]
+     },
+     "dos": {
+      "id": "besace",
+      "couleurs": [
+       "caramel"
+      ]
+     },
+     "tete": {
+      "id": "beret",
+      "couleurs": [
+       "bordeaux"
+      ]
+     }
+    }
+   },
+   "fichiers": {
+    "face_marche": [
+     "epilogue/arrivant-06/arrivant-06_face_marche_1.svg",
+     "epilogue/arrivant-06/arrivant-06_face_marche_2.svg",
+     "epilogue/arrivant-06/arrivant-06_face_marche_3.svg",
+     "epilogue/arrivant-06/arrivant-06_face_marche_4.svg"
+    ],
+    "face_repos": [
+     "epilogue/arrivant-06/arrivant-06_face_repos_1.svg",
+     "epilogue/arrivant-06/arrivant-06_face_repos_2.svg"
+    ],
+    "face_salut": [
+     "epilogue/arrivant-06/arrivant-06_face_salut_1.svg",
+     "epilogue/arrivant-06/arrivant-06_face_salut_2.svg"
+    ],
+    "avant_marche": [
+     "epilogue/arrivant-06/arrivant-06_avant_marche_1.svg",
+     "epilogue/arrivant-06/arrivant-06_avant_marche_2.svg",
+     "epilogue/arrivant-06/arrivant-06_avant_marche_3.svg",
+     "epilogue/arrivant-06/arrivant-06_avant_marche_4.svg"
+    ],
+    "avant_repos": [
+     "epilogue/arrivant-06/arrivant-06_avant_repos_1.svg",
+     "epilogue/arrivant-06/arrivant-06_avant_repos_2.svg"
+    ],
+    "avant_salut": [
+     "epilogue/arrivant-06/arrivant-06_avant_salut_1.svg",
+     "epilogue/arrivant-06/arrivant-06_avant_salut_2.svg"
+    ],
+    "dos_marche": [
+     "epilogue/arrivant-06/arrivant-06_dos_marche_1.svg",
+     "epilogue/arrivant-06/arrivant-06_dos_marche_2.svg",
+     "epilogue/arrivant-06/arrivant-06_dos_marche_3.svg",
+     "epilogue/arrivant-06/arrivant-06_dos_marche_4.svg"
+    ],
+    "dos_repos": [
+     "epilogue/arrivant-06/arrivant-06_dos_repos_1.svg",
+     "epilogue/arrivant-06/arrivant-06_dos_repos_2.svg"
+    ],
+    "dos_salut": [
+     "epilogue/arrivant-06/arrivant-06_dos_salut_1.svg",
+     "epilogue/arrivant-06/arrivant-06_dos_salut_2.svg"
+    ]
+   }
+  },
+  "arrivant-07": {
+   "nom": "Nouveau venu 7",
+   "choix": {
+    "taille": "moyenne",
+    "silhouette": "ronde",
+    "peau": "rosee",
+    "visage": "rond",
+    "yeux": "azur",
+    "formeYeux": "ronds",
+    "cils": "legers",
+    "sourcils": "epais",
+    "bouche": "sourire",
+    "levres": "naturelles",
+    "rousseur": "non",
+    "joues": "discretes",
+    "grain": "non",
+    "coupe": "bataille",
+    "cheveux": "corail",
+    "meches": "sans",
+    "couleurMeches": "cuivre",
+    "haut": "veste",
+    "couleurHaut": "abricot",
+    "bas": "jupe",
+    "couleurBas": "cuir",
+    "chaussures": "jean",
+    "accessoires": {
+     "cou": {
+      "id": "perles",
+      "couleurs": [
+       "cuivre"
+      ]
+     },
+     "tete": {
+      "id": "bonnet",
+      "couleurs": [
+       "marine"
+      ]
+     },
+     "dos": {
+      "id": "sacDos",
+      "couleurs": [
+       "abricot"
+      ]
+     }
+    }
+   },
+   "fichiers": {
+    "face_marche": [
+     "epilogue/arrivant-07/arrivant-07_face_marche_1.svg",
+     "epilogue/arrivant-07/arrivant-07_face_marche_2.svg",
+     "epilogue/arrivant-07/arrivant-07_face_marche_3.svg",
+     "epilogue/arrivant-07/arrivant-07_face_marche_4.svg"
+    ],
+    "face_repos": [
+     "epilogue/arrivant-07/arrivant-07_face_repos_1.svg",
+     "epilogue/arrivant-07/arrivant-07_face_repos_2.svg"
+    ],
+    "face_salut": [
+     "epilogue/arrivant-07/arrivant-07_face_salut_1.svg",
+     "epilogue/arrivant-07/arrivant-07_face_salut_2.svg"
+    ],
+    "avant_marche": [
+     "epilogue/arrivant-07/arrivant-07_avant_marche_1.svg",
+     "epilogue/arrivant-07/arrivant-07_avant_marche_2.svg",
+     "epilogue/arrivant-07/arrivant-07_avant_marche_3.svg",
+     "epilogue/arrivant-07/arrivant-07_avant_marche_4.svg"
+    ],
+    "avant_repos": [
+     "epilogue/arrivant-07/arrivant-07_avant_repos_1.svg",
+     "epilogue/arrivant-07/arrivant-07_avant_repos_2.svg"
+    ],
+    "avant_salut": [
+     "epilogue/arrivant-07/arrivant-07_avant_salut_1.svg",
+     "epilogue/arrivant-07/arrivant-07_avant_salut_2.svg"
+    ],
+    "dos_marche": [
+     "epilogue/arrivant-07/arrivant-07_dos_marche_1.svg",
+     "epilogue/arrivant-07/arrivant-07_dos_marche_2.svg",
+     "epilogue/arrivant-07/arrivant-07_dos_marche_3.svg",
+     "epilogue/arrivant-07/arrivant-07_dos_marche_4.svg"
+    ],
+    "dos_repos": [
+     "epilogue/arrivant-07/arrivant-07_dos_repos_1.svg",
+     "epilogue/arrivant-07/arrivant-07_dos_repos_2.svg"
+    ],
+    "dos_salut": [
+     "epilogue/arrivant-07/arrivant-07_dos_salut_1.svg",
+     "epilogue/arrivant-07/arrivant-07_dos_salut_2.svg"
+    ]
+   }
+  },
+  "arrivant-08": {
+   "nom": "Nouveau venu 8",
+   "choix": {
+    "taille": "petite",
+    "silhouette": "moyenne",
+    "peau": "cannelle",
+    "visage": "rond",
+    "yeux": "brun",
+    "formeYeux": "paisibles",
+    "cils": "sans",
+    "sourcils": "doux",
+    "bouche": "malice",
+    "levres": "naturelles",
+    "rousseur": "non",
+    "joues": "discretes",
+    "grain": "non",
+    "coupe": "couronne",
+    "cheveux": "chatain",
+    "meches": "sans",
+    "couleurMeches": "auburn",
+    "haut": "mariniere",
+    "couleurHaut": "noir",
+    "bas": "pantalon",
+    "couleurBas": "rouge",
+    "chaussures": "creme",
+    "accessoires": {
+     "dos": {
+      "id": "besace",
+      "couleurs": [
+       "caramel"
+      ]
+     },
+     "tete": {
+      "id": "casquette",
+      "couleurs": [
+       "ciel"
+      ]
+     }
+    }
+   },
+   "fichiers": {
+    "face_marche": [
+     "epilogue/arrivant-08/arrivant-08_face_marche_1.svg",
+     "epilogue/arrivant-08/arrivant-08_face_marche_2.svg",
+     "epilogue/arrivant-08/arrivant-08_face_marche_3.svg",
+     "epilogue/arrivant-08/arrivant-08_face_marche_4.svg"
+    ],
+    "face_repos": [
+     "epilogue/arrivant-08/arrivant-08_face_repos_1.svg",
+     "epilogue/arrivant-08/arrivant-08_face_repos_2.svg"
+    ],
+    "face_salut": [
+     "epilogue/arrivant-08/arrivant-08_face_salut_1.svg",
+     "epilogue/arrivant-08/arrivant-08_face_salut_2.svg"
+    ],
+    "avant_marche": [
+     "epilogue/arrivant-08/arrivant-08_avant_marche_1.svg",
+     "epilogue/arrivant-08/arrivant-08_avant_marche_2.svg",
+     "epilogue/arrivant-08/arrivant-08_avant_marche_3.svg",
+     "epilogue/arrivant-08/arrivant-08_avant_marche_4.svg"
+    ],
+    "avant_repos": [
+     "epilogue/arrivant-08/arrivant-08_avant_repos_1.svg",
+     "epilogue/arrivant-08/arrivant-08_avant_repos_2.svg"
+    ],
+    "avant_salut": [
+     "epilogue/arrivant-08/arrivant-08_avant_salut_1.svg",
+     "epilogue/arrivant-08/arrivant-08_avant_salut_2.svg"
+    ],
+    "dos_marche": [
+     "epilogue/arrivant-08/arrivant-08_dos_marche_1.svg",
+     "epilogue/arrivant-08/arrivant-08_dos_marche_2.svg",
+     "epilogue/arrivant-08/arrivant-08_dos_marche_3.svg",
+     "epilogue/arrivant-08/arrivant-08_dos_marche_4.svg"
+    ],
+    "dos_repos": [
+     "epilogue/arrivant-08/arrivant-08_dos_repos_1.svg",
+     "epilogue/arrivant-08/arrivant-08_dos_repos_2.svg"
+    ],
+    "dos_salut": [
+     "epilogue/arrivant-08/arrivant-08_dos_salut_1.svg",
+     "epilogue/arrivant-08/arrivant-08_dos_salut_2.svg"
+    ]
+   }
+  }
+ }
+}
