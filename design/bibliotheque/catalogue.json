@@ -14404,10 +14404,129 @@
   {
    "id": "plantes/arbre_automne",
    "rubrique": "plantes",
-   "titre": "Arbre d'automne",
+   "titre": "Arbre d'automne (grand, orange)",
    "images": 1,
    "fichiers": [
     "svg/plantes/arbre_automne.svg"
+   ],
+   "cadre": [
+    -50,
+    -115,
+    100,
+    140
+   ],
+   "parcours": "acte-1",
+   "statut": "ok"
+  },
+  {
+   "id": "plantes/arbre_automne_feuilles",
+   "rubrique": "plantes",
+   "titre": "Arbre d'automne (grand, orange, feuilles tombées)",
+   "images": 1,
+   "fichiers": [
+    "svg/plantes/arbre_automne_feuilles.svg"
+   ],
+   "cadre": [
+    -50,
+    -115,
+    100,
+    140
+   ],
+   "parcours": "acte-1",
+   "statut": "ok"
+  },
+  {
+   "id": "plantes/arbre_automne_petit",
+   "rubrique": "plantes",
+   "titre": "Arbre d'automne (petit, orange)",
+   "images": 1,
+   "fichiers": [
+    "svg/plantes/arbre_automne_petit.svg"
+   ],
+   "cadre": [
+    -50,
+    -115,
+    100,
+    140
+   ],
+   "parcours": "acte-1",
+   "statut": "ok"
+  },
+  {
+   "id": "plantes/arbre_automne_petit_feuilles",
+   "rubrique": "plantes",
+   "titre": "Arbre d'automne (petit, orange, feuilles tombées)",
+   "images": 1,
+   "fichiers": [
+    "svg/plantes/arbre_automne_petit_feuilles.svg"
+   ],
+   "cadre": [
+    -50,
+    -115,
+    100,
+    140
+   ],
+   "parcours": "acte-1",
+   "statut": "ok"
+  },
+  {
+   "id": "plantes/arbre_automne_petit_rouge",
+   "rubrique": "plantes",
+   "titre": "Arbre d'automne (petit, rouge)",
+   "images": 1,
+   "fichiers": [
+    "svg/plantes/arbre_automne_petit_rouge.svg"
+   ],
+   "cadre": [
+    -50,
+    -115,
+    100,
+    140
+   ],
+   "parcours": "acte-1",
+   "statut": "ok"
+  },
+  {
+   "id": "plantes/arbre_automne_petit_rouge_feuilles",
+   "rubrique": "plantes",
+   "titre": "Arbre d'automne (petit, rouge, feuilles tombées)",
+   "images": 1,
+   "fichiers": [
+    "svg/plantes/arbre_automne_petit_rouge_feuilles.svg"
+   ],
+   "cadre": [
+    -50,
+    -115,
+    100,
+    140
+   ],
+   "parcours": "acte-1",
+   "statut": "ok"
+  },
+  {
+   "id": "plantes/arbre_automne_rouge",
+   "rubrique": "plantes",
+   "titre": "Arbre d'automne (grand, rouge)",
+   "images": 1,
+   "fichiers": [
+    "svg/plantes/arbre_automne_rouge.svg"
+   ],
+   "cadre": [
+    -50,
+    -115,
+    100,
+    140
+   ],
+   "parcours": "acte-1",
+   "statut": "ok"
+  },
+  {
+   "id": "plantes/arbre_automne_rouge_feuilles",
+   "rubrique": "plantes",
+   "titre": "Arbre d'automne (grand, rouge, feuilles tombées)",
+   "images": 1,
+   "fichiers": [
+    "svg/plantes/arbre_automne_rouge_feuilles.svg"
    ],
    "cadre": [
     -50,

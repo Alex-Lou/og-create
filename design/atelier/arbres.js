@@ -1,4 +1,4 @@
-// Les arbres refaits au niveau des PNJ, un par un (l'arbre, puis le pommier). Même trait et même lumière que la troupe : le
+// Les arbres refaits au niveau des PNJ, un par un (l'arbre, le pommier, l'arbre d'automne). Même trait et même lumière que la troupe : le
 // houppier est fait de touffes détourées comme les pièces d'un personnage (celle du fond plus sombre), chaque lobe a sa
 // masse d'ombre en bas à droite et son reflet en croissant en haut à gauche, de petites marques de feuilles ; le tronc a
 // ses racines, un peu d'écorce, et se sépare en deux branches sous les feuilles.
@@ -11,6 +11,12 @@ const VERTS = {
   doux: { devant: { light: '#DFF3A8', mid: '#A5D466', dark: '#68A64B' }, fond: { light: '#A3D172', mid: '#77AF50', dark: '#4F8744' } },
   profond: { devant: { light: '#C4E27E', mid: '#86C153', dark: '#4F8E40' }, fond: { light: '#86BE5C', mid: '#5E9946', dark: '#3B6E3D' } }
 };
+// les teintes de l'arbre d'automne, sur le même modèle
+const AUTOMNE = {
+  orange: { devant: { light: '#FFD98A', mid: '#F5A04A', dark: '#D06A2E' }, fond: { light: '#F2B562', mid: '#DB7F3A', dark: '#A9502A' } },
+  rouge: { devant: { light: '#FFB38A', mid: '#E8664A', dark: '#B8402F' }, fond: { light: '#E58A5E', mid: '#C4503A', dark: '#8E3328' } }
+};
+const TEINTES = { ...VERTS, ...AUTOMNE };
 const BOIS = { left: '#9C6A43', right: '#74492C', bark: '#55331E', light: '#B98458' };
 const W = 1.1;
 
@@ -70,9 +76,10 @@ const GAUCHE = [[-21, -55, 13], [-33, -50, 8], [-26, -41, 8, 0], [-13, -43, 8, 0
 const DROITE = [[17, -55, 12], [28, -49, 8.5], [22, -40, 7.5, 0], [10, -45, 7.5, 0]];
 const MILIEU = [[-2, -62, 11.5], [-9, -51, 7.5, 0], [5, -52, 8, 0]];
 
-// vert : 'doux' ou 'profond' ; petit : à la hauteur de l'ancien arbre (à peine plus grand qu'un PNJ) ; fleuri : le pied fleuri
+// vert : 'doux' ou 'profond' (ou une teinte d'automne) ; petit : à la hauteur de l'ancien arbre (à peine plus grand qu'un
+// PNJ) ; fleuri : le pied fleuri
 function arbre({ vert = 'doux', petit = false, fleuri = false } = {}) {
-  const c = VERTS[vert], k = petit ? 0.76 : 1;
+  const c = TEINTES[vert], k = petit ? 0.76 : 1;
   const id = `arb${petit ? 'p' : 'g'}${vert[0]}${fleuri ? 'f' : ''}`;
   return E(3 * k, 1.5, 27 * k, 12 * k, 'rgba(40,55,20,0.22)', 0) + tronc(`${id}t`, k)
     + touffe(`${id}a`, FOND, c.fond, [[-6, -69], [13, -66, 0.9], [24, -74, 0.8]], k)
@@ -130,4 +137,29 @@ for (const petit of [false, true]) for (const vert of ['doux', 'profond']) for (
   POMMIERS.push([fichier, libelle, { vert, petit, fleurs, tombees }]);
 }
 
-module.exports = { arbre, ARBRES, pommier, POMMIERS, VERTS, fleurette };
+// ——— L'arbre d'automne : l'arbre en orange ou en rouge et, au pied, des feuilles tombées (deux encore en l'air) ———
+// feuille morte : amande pointue, nervure au milieu
+const feuilleMorte = (x, y, a, col, s = 1) => `<g transform="translate(${r2(x)} ${r2(y)}) rotate(${a}) scale(${s})">`
+  + `<path d="M0,-2.8 Q2.2,-0.6 0,2.8 Q-2.2,-0.6 0,-2.8 Z" fill="${col}" stroke="${OUT}" stroke-width="0.6" stroke-linejoin="round"/>`
+  + `<path d="M0,-1.8 L0,2.2" stroke="${OUT}" stroke-width="0.4" stroke-linecap="round" opacity="0.6"/></g>`;
+const FEUILLES_SOL = [[-18, 3.5, 30, 0], [-12, 7, -50, 1], [-21, 7, 80, 2], [10, 6.5, 60, 1], [16, 3, -20, 0], [19, 7.5, 40, 2], [3, 8, -70, 0]];
+const FEUILLES_AIR = [[-31, -30, 25, 1], [30, -22, -35, 0]];
+const ROUSSES = ['#F5A04A', '#E8664A', '#F2C14E'];
+
+// teinte : 'orange' ou 'rouge' ; petit : comme l'arbre ; feuilles : feuilles tombées au pied, deux encore en l'air
+function automne({ teinte = 'orange', petit = false, feuilles = false } = {}) {
+  const k = petit ? 0.76 : 1;
+  return arbre({ vert: teinte, petit })
+    + (feuilles ? FEUILLES_SOL.map(([x, y, a, i]) => feuilleMorte(x * k, y, a, ROUSSES[i])).join('')
+      + FEUILLES_AIR.map(([x, y, a, i]) => feuilleMorte(x * k, y * k, a, ROUSSES[i], 1.1)).join('') : '');
+}
+
+// Les 8 arbres d'automne : [fichier, libellé, options] ; « arbre_automne » (grand, orange, pied sobre) est celui par défaut
+const AUTOMNES = [];
+for (const petit of [false, true]) for (const teinte of ['orange', 'rouge']) for (const feuilles of [false, true]) {
+  const fichier = ['arbre_automne', petit && 'petit', teinte === 'rouge' && 'rouge', feuilles && 'feuilles'].filter(Boolean).join('_');
+  const libelle = `Arbre d'automne (${[petit ? 'petit' : 'grand', teinte, feuilles && 'feuilles tombées'].filter(Boolean).join(', ')})`;
+  AUTOMNES.push([fichier, libelle, { teinte, petit, feuilles }]);
+}
+
+module.exports = { arbre, ARBRES, pommier, POMMIERS, automne, AUTOMNES, VERTS, fleurette };
