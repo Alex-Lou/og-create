@@ -192,8 +192,12 @@ chronométrer 20 appels. Comparer à zoom égal, au même endroit.
   façon, en deux lots (choix de l'auteur : mixins à côté du composant ; le moteur du canvas, déjà sorti dans
   `world/view/` — caméra, dessin, gestes —, n'y bouge pas) : 6a fait (`folk.js` les habitants, les bêtes, les
   visiteurs, Brume et Anya, `games.js` la Récolte et les mini-jeux, `chests.js` les coffres, `workshop.js` les créations
-  d'île), 6b à suivre (bâtiments, annexes, exploration, carte, ciel). Les observateurs et les crochets restent dans le
-  composant (l'ordre de création des observateurs ne change pas). Preuve d'un tel découpage : le relevé des membres du
+  d'île), 6b fait (`sites.js` les bâtiments, la boutique, l'apparence, le nom, le ramassage, `annexes.js` les annexes,
+  `explore.js` les quartiers, les expéditions, les lieux et les gisements, `terrain.js` la carte case par case,
+  `sky.js` l'heure et le ciel ; les constantes de module suivent la seule méthode qui les lit). `WorldView.vue`
+  (2479 → 896 lignes) garde ce qui relie les sujets : le chargement, la quête, le plein écran, ce que plusieurs
+  sujets partagent (`stockAll`, `chargesText`, `screenRectOf`), les observateurs et le cycle de vie. Les observateurs
+  et les crochets restent dans le composant (l'ordre de création des observateurs ne change pas). Preuve d'un tel découpage : le relevé des membres du
   composant vivant (données, calculées, méthodes, observateurs, crochets, et le texte de chaque fonction) est le même
   avant et après.
 - **Piège du passage en scoped** : une règle scoped gagne un attribut de spécificité. Si elle vise aussi la racine d'un
