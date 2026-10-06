@@ -2,7 +2,7 @@
 // la mer, vagues qui roulent vers les côtes, bancs de poissons sous l'eau, dauphins, baleine, méduses la nuit,
 // mouettes en vol. seaOf(M) cherche une fois par île les eaux où chacun peut vivre : les bancs dans les eaux peu
 // profondes, dauphins, baleine et méduses en eau libre, là où aucune terre ne se dresse devant eux.
-import { TW, TH, SEA_Z, SEA_PAD, SHALLOW, worldOf } from './terrain';
+import { TW, TH, SEA_Z, SEA_PAD, SHALLOW, worldOf, strokeBatch } from './terrain';
 import { hash } from './scene';
 
 // Cases devant (vers +x et +y, vers le joueur) qui doivent rester de la mer pour qu'aucune falaise ne cache un
@@ -74,7 +74,7 @@ export function seaGuests(owned) {
 /* ---------- Eaux peu profondes et reflets ---------- */
 
 // Turquoise près de la terre, qui s'efface vers le large (plus discret la nuit) : un seul tracé par distance, sans
-// couture entre les cases
+// couture entre les cases (fill ferme lui-même chaque losange)
 const SHALLOW_ALPHA = [0.42, 0.25, 0.11];
 export function drawShallows(ctx, shallow, view, night) {
   const k = 1 - night * 0.55;
@@ -87,7 +87,6 @@ export function drawShallows(ctx, shallow, view, night) {
       ctx.lineTo(c.x + TW / 2, c.y);
       ctx.lineTo(c.x, c.y + TH / 2);
       ctx.lineTo(c.x - TW / 2, c.y);
-      ctx.closePath();
     }
     ctx.fillStyle = `rgba(124,214,222,${(SHALLOW_ALPHA[level] * k).toFixed(3)})`;
     ctx.fill();
@@ -142,6 +141,7 @@ const seenEdge = (e, view) => e.x1 > view.x - TW && e.x0 < view.x + view.w + TW 
 // la terre la cache)
 export function drawWaves(ctx, segs, view, t, front) {
   ctx.lineCap = 'round';
+  const lines = strokeBatch();
   for (const seg of segs) {
     const e = edgeOf(seg, front);
     if (!seenEdge(e, view)) continue;
@@ -151,26 +151,22 @@ export function drawWaves(ctx, segs, view, t, front) {
     if (a > 0.02) {
       const shrink = (1 - w) * 0.18;
       const ox = e.nx * off, oy = e.ny * off;
-      ctx.strokeStyle = `rgba(255,255,255,${a.toFixed(3)})`;
-      ctx.lineWidth = 1.4 + w;
-      ctx.beginPath();
-      ctx.moveTo(e.x0 + (e.x1 - e.x0) * shrink + ox, e.y0 + (e.y1 - e.y0) * shrink + oy);
-      ctx.lineTo(e.x1 - (e.x1 - e.x0) * shrink + ox, e.y1 - (e.y1 - e.y0) * shrink + oy);
-      ctx.stroke();
+      lines.add(a, 1.4 + w, x => {
+        x.moveTo(e.x0 + (e.x1 - e.x0) * shrink + ox, e.y0 + (e.y1 - e.y0) * shrink + oy);
+        x.lineTo(e.x1 - (e.x1 - e.x0) * shrink + ox, e.y1 - (e.y1 - e.y0) * shrink + oy);
+      });
     }
     if (!front) continue;
     // L'écume s'éclaire quand la vague arrive, puis retombe
     const burst = w > 0.85 ? (w - 0.85) / 0.15 : 0;
     const after = w < 0.15 ? 1 - w / 0.15 : 0;
-    const foam = 0.3 + 0.4 * burst + 0.3 * after;
-    ctx.strokeStyle = `rgba(255,255,255,${foam.toFixed(3)})`;
-    ctx.lineWidth = 2.4 + burst * 1.6;
     const wob = k => 1.5 + Math.sin(t * 2 + k * 0.05) * 1.2;
-    ctx.beginPath();
-    ctx.moveTo(e.x0 + e.nx * wob(e.x0), e.y0 + e.ny * wob(e.x0) + 1);
-    ctx.lineTo(e.x1 + e.nx * wob(e.x1), e.y1 + e.ny * wob(e.x1) + 1);
-    ctx.stroke();
+    lines.add(0.3 + 0.4 * burst + 0.3 * after, 2.4 + burst * 1.6, x => {
+      x.moveTo(e.x0 + e.nx * wob(e.x0), e.y0 + e.ny * wob(e.x0) + 1);
+      x.lineTo(e.x1 + e.nx * wob(e.x1), e.y1 + e.ny * wob(e.x1) + 1);
+    });
   }
+  lines.flush(ctx);
 }
 
 // La nuit, l'écume s'éclaire de plancton bleu au moment où la vague se brise (à dessiner après le voile de la nuit)

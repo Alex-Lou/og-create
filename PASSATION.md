@@ -428,6 +428,14 @@ familiers (H6) et aux créatures d'Anya (H8).
    `?perf` dans l'adresse. Le compteur affiche, sur la dernière seconde : images par seconde (plafonnées vers 30 par
    `FRAME_MS`), temps de dessin moyen d'une image, pire image, zoom. Le budget d'une image est de 33 ms. Aucune
    mesure sur un vrai téléphone n'a encore été faite.
+   - **Mesure simulée** (Chromium sans carte graphique, écran 390 × 844, processeur ralenti ×4 et ×6, compte avancé,
+     vraie boucle de l'île). Temps de dessin JavaScript moyen à ×4 : 19 à 28 ms de près, au départ, en glissant, la
+     nuit sous la pluie ; 37 ms pour l'île entière (73 ms avant le regroupement des traits blancs : vagues, écume,
+     reflets et cascades tracés d'un seul coup par teinte, `strokeBatch` de `terrain.js`).
+   - Les images par seconde de cette mesure ne valent rien pour un téléphone : sans carte graphique, la
+     rastérisation du canvas est logicielle et prend l'essentiel du temps (sans le dessin du canvas, la boucle tient
+     30 images par seconde même à ×4 ; le HTML et les animations CSS ne pèsent rien). Seul `?perf` sur un vrai
+     téléphone dira si WebGL (point 4) est nécessaire.
 3. **Lot « santé »** (refactor sans changer le jeu ; l'auteur l'a approuvé) :
    - découper `WorldView.vue` :
      - ~~moteur de rendu, gestes et caméra à part~~ : fait (`src/world/view/`, § 5) ;
@@ -450,7 +458,8 @@ familiers (H6) et aux créatures d'Anya (H8).
 6. **Suivi en attente** :
    - **Équilibrage** de tous les chiffres : prix des quartiers, trouvailles (2 à 4 par ramassage, repousse 6 h,
      coûts de 8 à 15), effets des lieux, annexes de climat (+5/+4 par heure, palier III, 500 écus).
-   - **Règle « près de »** des créations : vérifiée seulement à la pose.
+   - ~~**Règle « près de »** des créations : vérifiée seulement à la pose~~ : corrigé (une création dont une autre a
+     besoin ne se déplace ni ne se range hors de sa portée : `crafts.leaveBlock`).
    - ~~**Création cachée** derrière un bâtiment (l'appui long est capté par le bâtiment)~~ : corrigé (l'appui long
      atteint la création sous le doigt ; le toucher court reste au bâtiment).
    - ~~**Étiquettes des bâtiments** dessinées sur la tête des habitants~~ : corrigé (le nom s'efface à demi quand un
