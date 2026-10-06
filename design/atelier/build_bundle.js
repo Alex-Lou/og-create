@@ -8,13 +8,13 @@ fs.mkdirSync(path.join(OUT, 'apercus'), { recursive: true });
 fs.cpSync(path.join(__dirname, 'lib'), path.join(OUT, 'svg'), { recursive: true });
 const pngs = [...fs.readdirSync(path.join(__dirname, 'planches')).map(f => ['planches', f]), ...fs.readdirSync(__dirname).filter(f => /^(planche|expressions)_.*\.png$/.test(f)).map(f => ['.', f])];
 for (const [d, f] of pngs) fs.copyFileSync(path.join(__dirname, d, f), path.join(OUT, 'planches', f));
-const PAGES = [['troupe_apercu.html', 'Les 7 maîtres'], ['vivants_apercu.html', 'Brume, Anya, le cerf, le Passeur'], ['pnj_apercu.html', 'PNJ au petit format'], ['animaux_apercu.html', 'Animaux'], ['decor_apercu.html', 'Décor'], ['batiments_apercu.html', 'Bâtiments'], ['meteo_apercu.html', 'Météo'], ['naufrages_apercu.html', 'Les naufragés'], ['naufrages_pnj_apercu.html', 'Naufragés au petit format'], ['camp_apercu.html', 'Le camp'], ['ruines_apercu.html', 'Ruines des Anciens'], ['betes_orientees_apercu.html', 'Bêtes orientées']];
+const PAGES = [['troupe_apercu.html', 'Les 7 maîtres'], ['vivants_apercu.html', 'Brume, Anya, le cerf, le Passeur'], ['pnj_apercu.html', 'PNJ au petit format'], ['animaux_apercu.html', 'Animaux'], ['decor_apercu.html', 'Décor'], ['batiments_apercu.html', 'Bâtiments'], ['meteo_apercu.html', 'Météo'], ['naufrages_apercu.html', 'Les naufragés'], ['naufrages_pnj_apercu.html', 'Naufragés au petit format'], ['camp_apercu.html', 'Le camp'], ['ruines_apercu.html', 'Ruines des Anciens'], ['betes_orientees_apercu.html', 'Bêtes orientées'], ['coffres_apercu.html', 'Coffres']];
 for (const [f] of PAGES) fs.copyFileSync(path.join(__dirname, f), path.join(OUT, 'apercus', f));
 fs.copyFileSync(path.join(__dirname, 'bundle_README.md'), path.join(OUT, 'README.md'));
 const files = fs.readdirSync(path.join(OUT, 'planches'));
 const SECTIONS = [
   ['Personnages', /^(planche|expressions)_(?!en_marche)|^pnj_/], ['Naufragés', /^naufrages_|^expressions_en_marche/], ['Vivants', /^planche_(anya|brume|cerf|passeur)/], ['Animaux', /^animaux_/], ['Plantes et rochers', /^plantes_/],
-  ['Décor', /^decor_/], ['Camp et ruines', /^camp_|^ruines_/], ['Bâtiments', /^batiments_/], ['Météo', /^meteo_/]
+  ['Décor', /^decor_/], ['Camp et ruines', /^camp_|^ruines_/], ['Coffres', /^coffres/], ['Bâtiments', /^batiments_/], ['Météo', /^meteo_/]
 ];
 const used = new Set();
 let body = '';
