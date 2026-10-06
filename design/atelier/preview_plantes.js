@@ -4,7 +4,7 @@ const path = require('path');
 const { unique, row, sheet, write, shoot } = require('./planche');
 const { D, PROP, pt } = require('./deco');
 const { up, M } = require('./decor2');
-const { arbre, ARBRES, pommier, POMMIERS, automne, AUTOMNES, bouleau, BOULEAUX, sapin, SAPINS, palmier, PALMIERS } = require('./arbres');
+const { arbre, ARBRES, pommier, POMMIERS, automne, AUTOMNES, bouleau, BOULEAUX, sapin, SAPINS, palmier, PALMIERS, arbreMort, ARBRES_MORTS } = require('./arbres');
 const { touffe, TOUFFES } = require('./herbes');
 
 const LIB = path.join(__dirname, 'lib', 'plantes');
@@ -12,18 +12,19 @@ const OUT = path.join(__dirname, 'planches');
 // [fichier, libellé, id du décor du jeu, dessin]
 const LIST = [
   // les arbres refaits (arbres.js) : l'arbre et ses 8 variantes, le pommier et ses 16, l'arbre d'automne et ses 8, le bouleau
-  // et ses 8, le sapin et le sapin enneigé et leurs 8 chacun, le palmier et ses 8
+  // et ses 8, le sapin et le sapin enneigé et leurs 8 chacun, le palmier et ses 8, l'arbre mort et ses 8
   ...ARBRES.map(([fichier, libelle, o]) => [fichier, libelle, 'tree', () => arbre(o)]),
   ...POMMIERS.map(([fichier, libelle, o]) => [fichier, libelle, 'apple', () => pommier(o)]),
   ...AUTOMNES.map(([fichier, libelle, o]) => [fichier, libelle, 'autumn', () => automne(o)]),
   ...BOULEAUX.map(([fichier, libelle, o]) => [fichier, libelle, 'birch', () => bouleau(o)]),
   ...SAPINS.map(([fichier, libelle, o]) => [fichier, libelle, o.neige ? 'snowpine' : 'pine', () => sapin(o)]),
   ...PALMIERS.map(([fichier, libelle, o]) => [fichier, libelle, 'palm', () => palmier(o)]),
+  ...ARBRES_MORTS.map(([fichier, libelle, o]) => [fichier, libelle, 'deadtree', () => arbreMort(o)]),
   ['buisson', 'Buisson fleuri', 'bush', () => D.bush()], ['bruyere', 'Bruyère', 'heather', () => D.heather()],
   ['fleurs', 'Fleurs', 'flowers', () => D.flowers()], ['cactus', 'Cactus', 'cactus', () => D.cactus()],
   // la touffe d'herbe refaite (herbes.js) et ses 16 variantes
   ...TOUFFES.map(([fichier, libelle, o]) => [fichier, libelle, 'tuft', () => touffe(o)]),
-  ['arbre_mort', 'Arbre mort', 'deadtree', () => D.deadtree()], ['souche', 'Souche', 'stump', () => D.stump()], ['rondin', 'Rondin', 'log', () => D.log()],
+  ['souche', 'Souche', 'stump', () => D.stump()], ['rondin', 'Rondin', 'log', () => D.log()],
   ['champignons', 'Champignons', 'mushrooms', () => D.mushrooms()], ['champignons_nuit', 'Champignons (la nuit, ils luisent)', 'mushrooms', () => D.mushrooms(true)],
   ['roseaux', 'Roseaux', 'reeds', () => D.reeds()], ['nenuphars', 'Nénuphars', 'lily', () => D.lily()],
   ['rocher', 'Rocher', 'rock', () => D.rock()], ['rochers', 'Rochers', 'rocks', () => D.rocks()], ['aiguille', 'Aiguille de roche', 'crag', () => D.crag()],
