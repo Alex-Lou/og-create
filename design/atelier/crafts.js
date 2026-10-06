@@ -774,12 +774,36 @@ C.passerelle = { n: 2, draw: f => {
   // la libellule qui file
   return s + (f ? libellule(x + 14, y - 30, -1) : libellule(x - 6, y - 26, 1));
 } };
+// Héron de bois : une petite mare bordée de galets, un caillou où se dresse un héron sculpté sur une seule patte, l'autre
+// repliée ; le bois veiné, l'aile aux plumes taillées, le long cou en S, la huppe et le bec peint ; il hoche la tête vers
+// l'eau d'une image à l'autre ; une grenouille sur son nénuphar le regarde (2 images)
+const BOIS_HERON = { light: '#E7B57A', mid: '#C68A50', dark: '#9A6534', grain: '#875A2E' };
 C.heron = { n: 2, draw: f => {
-  const [x, y] = at(0, 0);
-  let s = shadow(0, 0, 0.3, 0.12) + disc(0, 0, 0.3, 0, '#8FC8E0', 0.7) + `<rect x="${x - 0.8}" y="${y - 22}" width="1.6" height="22" fill="${WOOD_DARK.left}" stroke="${OUT}" stroke-width="0.6"/>`;
-  s += E(x, y - 28, 9, 6, WOOD.left, 1) + P(`M${x - 8},${y - 27} L${x - 16},${y - 22} L${x - 7},${y - 24} Z`, WOOD_DARK.left, 0.8);
-  const hy = f ? y - 40 : y - 44;
-  s += thick(`M${x + 5},${y - 32} Q${x + 10},${y - 38} ${x + 5},${hy}`, 2.6, WOOD.left) + E(x + 6, hy - 1, 3.4, 3, WOOD.left, 1) + P(`M${x + 9},${hy - 1} L${x + 18},${hy + (f ? 4 : 1)} L${x + 9},${hy + 1} Z`, WOOD_DARK.left, 0.8) + E(x + 7, hy - 2, 0.6, 0.6, OUT, 0);
+  const [x, y] = at(0, 0), c = BOIS_HERON;
+  // la mare, ses galets, ses ronds, le caillou du héron
+  let s = shadow(0, 0, 0.32, 0.1) + E(x, y + 2, 21, 8.6, '#8FC8E0', 0.8) + E(x - 3, y + 1, 13, 4.6, '#B4DCEC', 0);
+  s += [[-19, 3, 2.4], [-14, 7.6, 2], [-6, 10, 2.4], [4, 10.4, 2.2], [12, 8.6, 2.4], [19, 4.4, 2]].map(([dx, dy, r], i) => E(x + dx, y + dy, r, r * 0.6, i % 2 ? '#BDB4A2' : '#A9A69F', 0.6)).join('');
+  s += E(x + 6, y + 3, 4 + f * 2, 1.4 + f * 0.8, 'none', 0).replace('stroke="none"', `stroke="#E8F6FF" stroke-width="0.6" opacity="${f ? 0.5 : 0.9}"`);
+  s += P(`M${x - 6},${y + 1.6} Q${x - 6},${y - 1.8} ${x - 1},${y - 2.2} Q${x + 4},${y - 1.8} ${x + 4},${y + 1.4} Q${x - 1},${y + 3} ${x - 6},${y + 1.6} Z`, '#A9A69F', 0.8) + E(x - 2.4, y - 0.8, 2, 0.8, '#CBC8C0', 0);
+  // la patte d'appui et la patte repliée
+  s += thick(`M${x - 1},${y - 1.4} L${x - 1.4},${y - 9} L${x - 0.6},${y - 18}`, 0.9, c.dark) + thick(`M${x + 1},${y - 18} L${x + 3.6},${y - 13.6} L${x + 0.6},${y - 12}`, 0.7, c.dark);
+  // le corps veiné, l'ombre dessous, l'aile aux plumes taillées
+  s += P(`M${x - 12},${y - 21} Q${x - 6},${y - 16.4} ${x + 1},${y - 16.6} Q${x + 8},${y - 17.6} ${x + 8},${y - 24} Q${x + 7},${y - 30} ${x},${y - 30} Q${x - 6},${y - 29.4} ${x - 12},${y - 21} Z`, c.mid, 1)
+    + `<path d="M${x - 9},${y - 19.4} Q${x},${y - 16} ${x + 7.4},${y - 21}" stroke="${c.dark}" stroke-width="1.4" fill="none"/>`
+    + `<path d="M${x - 4},${y - 28.4} Q${x + 2},${y - 30} ${x + 5.6},${y - 27}" stroke="${c.light}" stroke-width="1" fill="none" stroke-linecap="round"/>`;
+  s += P(`M${x - 9},${y - 21.6} Q${x - 3},${y - 29} ${x + 5},${y - 26.4} Q${x + 1},${y - 21.6} ${x - 9},${y - 21.6} Z`, c.light, 0.8)
+    + `<path d="M${x - 5},${y - 22} q1.4,-2 3,-1 M${x - 1.4},${y - 22.4} q1.4,-2 3,-1 M${x + 2},${y - 23.4} q1,-1.6 2.4,-0.8" stroke="${c.grain}" stroke-width="0.55" fill="none"/>`;
+  // le cou en S, la tête (dressée, puis penchée vers l'eau), la huppe, le bec peint et l'œil
+  const [hx, hy, ang] = f ? [x + 11, y - 35, 28] : [x + 7, y - 42, -6];
+  s += thick(`M${x + 4},${y - 28} Q${x + 10},${y - 31} ${x + 6},${y - 35} Q${r2((x + 6 + hx) / 2 - 2)},${r2((y - 35 + hy) / 2)} ${hx},${hy + 2}`, 2.2, c.mid);
+  s += `<g transform="rotate(${ang} ${hx} ${hy})">`
+    + `<path d="M${hx - 2},${hy - 1.6} q-3,-2 -6,-1.2 M${hx - 2},${hy - 0.8} q-3,-0.6 -5.4,0.6" stroke="${OUT}" stroke-width="0.7" fill="none" stroke-linecap="round"/>`
+    + E(hx, hy, 3.2, 2.7, c.mid, 0.9) + P(`M${hx + 2.6},${hy - 0.8} L${hx + 12},${hy + 0.4} L${hx + 2.6},${hy + 1.2} Z`, '#E6B14C', 0.7)
+    + E(hx + 0.6, hy - 0.6, 0.65, 0.65, OUT, 0) + E(hx + 0.8, hy - 0.8, 0.22, 0.22, '#FFFFFF', 0) + '</g>';
+  // la grenouille sur son nénuphar
+  const [gx, gy] = [x + 13, y + 3];
+  s += nenuphar(gx, gy, 4.4, 2.4) + E(gx, gy - 2, 3, 2, '#7FBF55', 0.7) + E(gx - 1.4, gy - 3.8, 1.1, 1, '#7FBF55', 0.6) + E(gx + 1.4, gy - 3.8, 1.1, 1, '#7FBF55', 0.6)
+    + E(gx - 1.4, gy - 4, 0.45, 0.45, OUT, 0) + E(gx + 1.4, gy - 4, 0.45, 0.45, OUT, 0) + `<path d="M${gx - 1.2},${gy - 1.8} q1.2,0.9 2.4,0" stroke="${OUT}" stroke-width="0.45" fill="none"/>`;
   return s;
 } };
 C.tente = { n: 2, draw: f => {
