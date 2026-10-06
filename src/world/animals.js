@@ -6,6 +6,7 @@
 // (l'île les retourne pour la gauche) ; ancrage aux pieds, cadre serré. Images : 0 et 1 (pas, picore, broute, geste),
 // rest (couchée, la nuit).
 import { sprite } from './iso';
+import { anyaSprite } from './anyaSprite';
 
 const f2 = n => Math.round(n * 100) / 100;
 const ell = (x, y, rx, ry, fill, extra = '') => `<ellipse cx="${f2(x)}" cy="${f2(y)}" rx="${f2(rx)}" ry="${f2(ry)}" fill="${fill}"${extra}/>`;
@@ -99,14 +100,15 @@ export function goat(frame, variant = '') {
 }
 
 /* ---------- Bois ---------- */
-// Cerf : pelage brun, taches claires, bois ; 1 : tête baissée (il broute)
-export function deer(frame) {
+// Cerf : pelage brun, taches claires, bois ; 1 : tête baissée (il broute). Blanc : le grand cerf blanc d'Anya
+export function deer(frame, variant = '') {
   const graze = frame === 1;
   const [hx, hy] = graze ? [9, -9] : [9.4, -19];
-  return sprite(shadow(9) + legs([-5, -3, 3.4, 5.4], -9, 9, '#7A4E2C', 0, 1.2)
-    + ell(0, -12, 8, 4.4, '#B5793F', OUT) + [[-3, -13.4], [0, -14.2], [2.6, -13], [-1, -11.6]].map(([x, y]) => dot(x, y, 0.7, '#F4E2C0')).join('')
-    + `<path d="M5,-14 Q7,-17 ${hx - 1},${hy + 2}" fill="none" stroke="#B5793F" stroke-width="3"/>`
-    + ell(hx, hy, 2.6, 2.1, '#B5793F', OUT) + dot(hx + 2.2, hy + 0.6, 0.6, EYE) + dot(hx + 0.4, hy - 0.4, 0.55, EYE)
+  const [coat, leg] = variant === 'blanc' ? ['#F4F6F8', '#C8D0D6'] : ['#B5793F', '#7A4E2C'];
+  return sprite(shadow(9) + legs([-5, -3, 3.4, 5.4], -9, 9, leg, 0, 1.2)
+    + ell(0, -12, 8, 4.4, coat, OUT) + [[-3, -13.4], [0, -14.2], [2.6, -13], [-1, -11.6]].map(([x, y]) => dot(x, y, 0.7, '#F4E2C0')).join('')
+    + `<path d="M5,-14 Q7,-17 ${hx - 1},${hy + 2}" fill="none" stroke="${coat}" stroke-width="3"/>`
+    + ell(hx, hy, 2.6, 2.1, coat, OUT) + dot(hx + 2.2, hy + 0.6, 0.6, EYE) + dot(hx + 0.4, hy - 0.4, 0.55, EYE)
     + `<path d="M${hx - 1},${hy - 1.6} l-1.6,-5 l-2,-1.6 M${hx - 2.2},${hy - 4.6} l1.6,-1.8 M${hx + 0.4},${hy - 1.8} l1,-5 l2,-1.4 M${hx + 1},${hy - 4.6} l-1.4,-1.8" fill="none" stroke="#8B6A4A" stroke-width=".8" stroke-linecap="round"/>`
     + ell(-8, -13, 1.4, 1, '#F4E2C0'), TALL);
 }
@@ -442,10 +444,29 @@ export function kit(frame) {
     + (sit ? shut(4.6, -7.4, 0.6) : eye(4.6, -7.4, 0.75)) + cheek(5.2, -6, 0.55), SMALL);
 }
 
+// Loutre (une créature d'Anya) : brune, ventre clair, queue épaisse ; 1 : elle se dresse ; rest : roulée
+export function otter(frame) {
+  const B = '#7A5236', L = '#E6D2B0';
+  if (frame === 'rest') return sprite(shadow(6) + ell(0, -3, 6, 3, B, OUT) + ell(4.4, -4, 2.4, 2, B, OUT) + ell(4.8, -3.4, 1.2, 0.9, L) + shut(4.4, -4.6, 0.55), SMALL);
+  if (frame === 1) {
+    return sprite(shadow(4) + path('M-2,-1 Q-7,0 -8,-3 Q-5,-2 -2,-3 Z', B) + ell(0, -6, 2.8, 5, B, OUT) + ell(0.6, -5, 1.6, 3.4, L)
+      + dot(0.4, -12, 2.6, B) + ell(1.2, -11.4, 1.4, 1, L) + eye(1.6, -12.6, 0.6) + dot(2.8, -11.6, 0.4, EYE) + cheek(1.4, -10.8, 0.5), SMALL);
+  }
+  return sprite(shadow(7) + path('M-5,-3 Q-11,-2 -12,-5 Q-8,-4 -5,-5 Z', B) + ell(0, -3.6, 6, 2.8, B, OUT) + ell(1, -2.6, 3.6, 1.2, L)
+    + dot(5.4, -5.2, 2.4, B) + ell(6.2, -4.6, 1.3, 0.9, L) + eye(6, -5.8, 0.6) + dot(7.4, -4.8, 0.4, EYE) + cheek(6.2, -4.2, 0.5)
+    + ln([-3, -1.4], [-3.4, 0], B, 1) + ln([3, -1.4], [3.4, 0], B, 1), SMALL);
+}
+// Le bol de soupe que Cannelle pose chaque soir « pour la Dame » au bord du Foyer ; 0 et 1 : la vapeur monte
+export function soup(frame) {
+  const up = frame === 1 ? -1 : 0;
+  return sprite(shadow(4) + path('M-4.6,-3 Q-4.4,0 0,0.4 Q4.4,0 4.6,-3 Z', '#C46E45', OUT) + ell(0, -3, 4.6, 1.2, '#E8A86A', OUT)
+    + `<path d="M-1.2,${f2(-5 + up)} q-1,-1.6 0,-3.2 M1.4,${f2(-5.6 + up)} q1,-1.6 0,-3.2" fill="none" stroke="rgba(255,255,255,.7)" stroke-width=".6" stroke-linecap="round"/>`, { x: -6, y: -10, w: 12, h: 11 });
+}
+
 // Toutes les bêtes de l'île par sorte : dessin d'une image (0, 1 ou rest)
 export const ANIMAL_SPRITES = {
   hen: (frame, breed) => hen(breed, frame), chick, cow, sheep, pig, goat, deer, fox, rabbit, hedgehog, squirrel,
   koi: (frame, color) => koi(color, frame), heron,
   snowFox, ibex, puffin, pony, frog, tortoise, fennec, camel, chameleon, toucan, salamander, crow,
-  bird, butterfly, firefly, bee, owl, tictac, bowl, kit
+  bird, butterfly, firefly, bee, owl, tictac, bowl, kit, otter, soup, anya: anyaSprite
 };

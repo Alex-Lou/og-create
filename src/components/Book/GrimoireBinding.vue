@@ -44,7 +44,7 @@
             <span class="grim__corner grim__corner--br"></span>
             <span class="grim__corner grim__corner--bl"></span>
             <span v-for="(rune, k) in runes" :key="rune.id" ref="lights" class="grim__light" :style="lightStyle(k)"><svg viewBox="0 0 24 24"><path :d="rune.d"></path></svg></span>
-            <span ref="gem" class="grim__cover-gem"></span>
+            <span ref="gem" :class="['grim__cover-gem', { 'is-awake': awake }]"></span>
             <span class="grim__title">{{ title }}</span>
             <span class="grim__subtitle">Grimoire d’alchimie</span>
             <span ref="bandTop" class="grim__band grim__band--top"></span>
@@ -96,6 +96,8 @@ export default {
     // Ouverture : le grimoire est d'abord fermé ; ready : les pages sont peintes, la couverture peut s'ouvrir
     opening: { type: Boolean, default: false },
     ready: { type: Boolean, default: false },
+    // Anya s'est révélée : la gemme de la couverture (la Terre, au centre des sept sceaux) reste allumée, or et vert
+    awake: { type: Boolean, default: false },
     title: { type: String, default: '' },
     // L'étape de civilisation, sous le titre de l'Ex libris
     stage: { type: String, default: null }
@@ -398,6 +400,11 @@ export default {
   background: radial-gradient(circle at 34% 30%, #FFFFFF 0, #C2475A 30%, #5A1220 100%);
   box-shadow: inset 0 -2px 4px rgba(0, 0, 0, .55), 0 0 0 2px #7A5A1E, 0 0 0 4px rgba(201, 162, 74, .6), 0 0 18px rgba(255, 120, 130, .45);
   filter: brightness(.7);
+}
+.grim__cover-gem.is-awake {
+  background: radial-gradient(circle at 34% 30%, #FFFFFF 0, #B8E67A 30%, #2E6B3A 100%);
+  box-shadow: inset 0 -2px 4px rgba(0, 0, 0, .45), 0 0 0 2px #7A5A1E, 0 0 0 4px rgba(201, 162, 74, .7), 0 0 22px rgba(214, 236, 140, .85);
+  filter: brightness(1.15);
 }
 .grim__title, .grim__subtitle {
   position: absolute; left: 10%; right: 10%; text-align: center; font-family: var(--oc-font-display); font-weight: 700;

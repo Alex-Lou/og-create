@@ -668,8 +668,10 @@
       :people="state.people || null"
       :elements="elements"
       :heliane="(state.heliane && state.heliane.found) || []"
+      :anya="state.anya || null"
       @show="showLandmark"
       @replay="act => { logOpen = false; $emit('replay-vigil', act); }"
+      @replay-anya="logOpen = false; $emit('replay-anya')"
       @close="logOpen = false"
     />
     <ChestReveal v-if="reveal" v-bind="reveal" :busy="busy" @wear="wearRevealed" @close="reveal = null" />
@@ -764,6 +766,7 @@ import { SEA_SPRITES, FISH_SPECIES } from '@/world/seaSprites';
 import { drawBrume, floatOf, BRUME_ALT, BRUME_REACH } from '@/world/brume';
 import { stageOf as civilizationOf } from '@/game/vigils';
 import { brumeLook, opusOf, secretDue, SECRET } from '@/game/opus';
+import { PRESENTIMENTS, BREATH_LINE } from '@/game/anya';
 import { BEASTS } from '@/world/bestiary';
 import { faceHref } from '@/world/faces';
 import { guide } from '@/game/guide';
@@ -885,7 +888,7 @@ export default {
     // Solde d'écus (en-tête) : grise les articles hors de portée ; le serveur reste seul juge
     coins: { type: Number, default: null }
   },
-  emits: ['coins-updated', 'show-alert', 'login', 'go', 'quest', 'replay-vigil'],
+  emits: ['coins-updated', 'show-alert', 'login', 'go', 'quest', 'replay-vigil', 'replay-anya'],
   data() {
     return {
       GLYPH, LABEL, RESOURCES, GAME_ICONS, NEED_GLYPH, MOOD_GLYPH, CLIMATE_NAMES, CLIMATE_TEXT, WORDS,
@@ -1437,7 +1440,10 @@ export default {
         climates: state.map.zones.map(z => z.climate || null), avoid: [...landmarksShown(state), ...depositsShown(state)],
         // La troupe rencontrée (serveur) : bâtie, au camp, ou endormie
         troupe: (state.villagers || []).filter(v => v.seed === undefined).map(v => ({ id: v.id, built: v.built !== false, asleep: Boolean(v.asleep) })),
-        written: this.elements
+        written: this.elements,
+        // Anya révélée : au Cercle de menhirs ; le bol de la Dame, dès qu'on la pressent (le Cercle trouvé, une trace)
+        anya: state.anya && state.anya.revealed ? (state.landmarks || []).find(l => l.id === 'menhirs' && l.x !== undefined) || null : null,
+        dame: Boolean((state.landmarks || []).some(l => l.id === 'menhirs' && l.found) || (state.anya && state.anya.traces.length))
       });
       // Visiteur : son bateau s'amarre près du Ponton ; un visiteur jamais vu sur cet appareil arrive sous les yeux
       this.visitorDock = state.visitor ? this.dockOf(state, M) : null;
@@ -1461,7 +1467,7 @@ export default {
       this.state = state;
       // Brume (quête active, actes finis) et le nom du peuple : le tutoriel et les veillées (App.vue) y lisent où en est
       // le joueur
-      this.$emit('quest', state.brume ? { ...state.brume, people: state.people || null } : null);
+      this.$emit('quest', state.brume ? { ...state.brume, people: state.people || null, anya: state.anya || null } : null);
       // Brume et sol d'un quartier : à soi (o), connu (k), inconnu (u) ; un changement refait ses carrés de sol
       const mistKey = state.map.zones.map(z => `${z.id}:${z.owned ? 'o' : z.known === false ? 'u' : 'k'}`).join();
       if (this.mistKey !== null && mistKey !== this.mistKey) {
@@ -2989,7 +2995,9 @@ export default {
       ctx.translate(c.x, c.y - hop);
       ctx.scale(scale, scale);
       if (mist) ctx.globalAlpha = 1 - 0.5 * mist;
-      for (const layer of landmarkLayers(landmark.id, this.reduced() ? 0 : t)) drawSprite(ctx, layer.key, layer.make, 0, 0, repaint);
+      // Le Cercle de menhirs fleurit une fois Anya révélée
+      const bloom = landmark.id === 'menhirs' && Boolean(this.state.anya && this.state.anya.revealed);
+      for (const layer of landmarkLayers(landmark.id, this.reduced() ? 0 : t, bloom)) drawSprite(ctx, layer.key, layer.make, 0, 0, repaint);
       ctx.restore();
     },
     // Gisement de trouvailles, un peu plus grand que sa case : plein (animé) ou ramassé ; prêt dans un quartier à soi,
@@ -3282,6 +3290,11 @@ export default {
       } else if (hit.brume) {
         this.questAct();
         vibrate(6);
+      } else if (hit.animal && hit.animal.who && hit.animal.who.id === 'anya:dame') {
+        // Anya : son Souffle, une fois par jour
+        this.scare(hit.animal);
+        this.breatheAnya(px, py);
+        return;
       } else if (hit.animal) {
         // Un habitant parle, une bête de la ferme répond ; les bêtes sauvages s'enfuient
         const said = this.named(this.village && hit.animal.who ? this.village.say(hit.animal.who, this.phase || this.skyAt(this.skyDate())) : null, hit.animal.who, true);
@@ -3747,6 +3760,12 @@ export default {
       if (BEASTS.some(name => name !== 'Poisson' && written.has(name))) {
         const sylve = troupe.has('bosquet');
         guide.say({ id: 'bestiaire', ...(sylve ? { text: TIPS.bestiaireSylve, who: 'Sylve', face: faceHref('bosquet') } : { text: TIPS.bestiaire }) });
+        // Le troisième pressentiment d'Anya (bible, § 10, acte IV) : les bêtes se tournent vers la Lande aux Menhirs
+        PRESENTIMENTS.betes.forEach(line => guide.say(line));
+      }
+      // Le deuxième (acte III) : au Cercle de menhirs, la rune de Celle-qui-donne-souffle
+      if ((state.landmarks || []).some(l => l.id === 'menhirs' && l.found)) {
+        PRESENTIMENTS.rune.forEach(line => guide.say({ id: line.id, text: line.text, who: line.who, face: faceHref(line.face) }));
       }
     },
     // Bavarder : au premier bavardage du jour, un maître souffle un Savoir sur une page de son Art ; l'appareil le
@@ -3758,6 +3777,28 @@ export default {
         this.villagerSavoir = savoir;
         return savoirLine(v.id, savoir);
       });
+    },
+    // Le Souffle d'Anya (bible, § 6.14) : une fois par jour, un ingrédient sur n'importe quelle page à portée, gardé comme
+    // un Savoir
+    async breatheAnya(px, py) {
+      if (this.busy) return;
+      if (this.state.anya && this.state.anya.breathed) {
+        this.showTip(px, py, { title: 'Anya', text: 'Demain. La terre se repose aussi.' });
+        return;
+      }
+      this.busy = true;
+      try {
+        const { savoir, world } = await playService.villagerTalk('anya', heardPages());
+        this.apply(world);
+        if (savoir) keepSavoir(savoir, 'Anya');
+        const text = savoir ? `${BREATH_LINE} Sur une page du chapitre ${savoir.chapter}, il faut « ${savoir.ingredient} ».` : 'Le Grimoire n’a pas de page qui m’attende. Écris encore.';
+        this.showTip(px, py, { title: 'Anya', text });
+        vibrate([8, 30, 8]);
+      } catch (error) {
+        this.$emit('show-alert', messageOf(error, 'Anya n’a pas pu souffler.'));
+      } finally {
+        this.busy = false;
+      }
     },
     // « Voir dans le Grimoire » : le Grimoire s'ouvre sur la page soufflée
     openSavoir() {

@@ -343,6 +343,13 @@ chronométrer 20 appels. Comparer à zoom égal, au même endroit.
   (`STAGES`, `toneOf`, ornements) ; `BrumeWisp` (prop `stage`, aussi dans le guide) ; la finale avant la veillée VII
   (`vigils.js`, images `phare`, `reflet`, `soleil`, `flammeche` de `PrologueArt.vue`) ; les mots d'Héliane dans
   `chest.js` (`HELIANE`, `noteOf(source, story)`), la rafale de « Tout ouvrir » et la Chronique.
+- **Lot H8 de la bible** (Anya). Serveur : `services/anya.js` (condition d'éveil, traces, Bénédiction) ; la vue et le
+  tableau de Brume disent `anya` ; `POST /world/anya/reveal` (une fois) ; le Souffle passe par
+  `POST /world/villager/talk` avec la cible `anya` (une fois par jour) ; Bénédiction : `finds.readyIn` (4 h) et
+  `presence.blessed` (humeur). Front : `src/game/anya.js` (traces, pressentiments, Révélation) ; scènes `revelation` et
+  `trace-<terre>` dans `App.vue` (traces vues : `oc_traces`) ; images `cercle`, `cercle-sceaux`, `anya`, `gemme`, `trace`
+  de `PrologueArt.vue` ; Anya sur l'île (`world/anyaSprite.js`, `village.js` : `anya`, `dame`) ; loutres et bol de soupe
+  (`animals.js`) ; Cercle fleuri (`landmarkLayers(id, t, bloom)`) ; la gemme du Grimoire (`GrimoireBinding` : `awake`).
 
 ### Décisions déjà prises par l'auteur (ne pas les redemander)
 - **Île** : 96 × 96 ; l'ancienne carte devient le cœur ; découverte par expéditions ; un quartier s'ouvre avec des

@@ -34,6 +34,20 @@
           </li>
         </ul>
       </template>
+      <!-- Anya (bible, § 6.14) : ses traces, une par terre nouvelle explorée ; la Révélation, à revoir -->
+      <template v-if="anya && (anya.traces.length || anya.revealed)">
+        <h3 class="log__title">Traces d’Anya · {{ anya.traces.length }} / {{ TRACE_COUNT }}</h3>
+        <ul class="log__list">
+          <li v-if="anya.revealed" class="log__row">
+            <span class="log__body"><span class="log__name">La Révélation</span><span class="log__where">Anya s’est levée au Cercle de menhirs.</span></span>
+            <button type="button" class="log__btn" @click="$emit('replay-anya')">Revoir</button>
+          </li>
+          <li v-for="land in anya.traces" :key="land" class="log__row log__row--link">
+            <span class="log__where">{{ zoneName(land) }}</span>
+            <span class="log__text">« {{ TRACES[land] }} »</span>
+          </li>
+        </ul>
+      </template>
       <!-- Les mots d'Héliane (bible, § 6.13) : un par acte, trouvés dans les bouteilles -->
       <template v-if="words.length">
         <h3 class="log__title">Les mots d’Héliane</h3>
@@ -108,6 +122,7 @@ import { MEMORIES } from '@/world/story';
 import { NAMES } from '@/world/faces';
 import { BEASTS, beastsOf, familiarsOf } from '@/world/bestiary';
 import { HELIANE } from '@/world/chest';
+import { TRACES, TRACE_COUNT } from '@/game/anya';
 
 // Les souvenirs retrouvés : chacun dans l'acte de sa quête (la Chronique les montre une fois l'acte fini)
 const MEMORY_ACTS = { 'souvenir-ondin': 'T', 'souvenir-sylve': 'I', 'souvenir-galet': 'II', 'eveil-melisse': 'III', 'souvenir-aster': 'IV' };
@@ -131,11 +146,13 @@ export default {
     // Éléments écrits dans le Grimoire : le Bestiaire et les familiers
     elements: { type: Array, default: () => [] },
     // Les actes dont le mot d'Héliane a été trouvé (serveur : heliane.found)
-    heliane: { type: Array, default: () => [] }
+    heliane: { type: Array, default: () => [] },
+    // Anya (serveur : { traces, awake, revealed }), ou null
+    anya: { type: Object, default: null }
   },
-  emits: ['show', 'close', 'replay'],
+  emits: ['show', 'close', 'replay', 'replay-anya'],
   data() {
-    return { tab: 'places', BEASTS, NAMES };
+    return { tab: 'places', BEASTS, NAMES, TRACES, TRACE_COUNT };
   },
   computed: {
     stage() {

@@ -38,6 +38,7 @@
             :aim="aimSide"
             :opening="opening"
             :ready="engineReady && !hold"
+            :awake="anyaAwake"
             :title="BOOK_TITLE"
             :stage="stage"
             @opened="onOpened"
@@ -222,6 +223,8 @@ export default {
     openMarked: { type: Boolean, default: false },
     // Venu d'un Savoir soufflé sur l'île : le Grimoire s'ouvre sur cette page (si elle est encore à trouver)
     openPage: { type: String, default: null },
+    // Anya s'est révélée : la gemme de la couverture reste allumée (bible, § 6.14)
+    anyaAwake: { type: Boolean, default: false },
     // Le tutoriel joue une scène : la couverture attend avant de s'ouvrir
     hold: { type: Boolean, default: false },
     // L'étape de civilisation, sous le titre de l'Ex libris (la garde au revers de la couverture)
