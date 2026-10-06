@@ -1,4 +1,4 @@
-// Les arbres refaits au niveau des PNJ, un par un (l'arbre, le pommier, l'arbre d'automne, le bouleau). Même trait et même lumière que la troupe : le
+// Les arbres refaits au niveau des PNJ, un par un (l'arbre, le pommier, l'arbre d'automne, le bouleau, le sapin). Même trait et même lumière que la troupe : le
 // houppier est fait de touffes détourées comme les pièces d'un personnage (celle du fond plus sombre), chaque lobe a sa
 // masse d'ombre en bas à droite et son reflet en croissant en haut à gauche, de petites marques de feuilles ; le tronc a
 // ses racines, un peu d'écorce, et se sépare en deux branches sous les feuilles.
@@ -205,4 +205,71 @@ for (const petit of [false, true]) for (const vert of ['doux', 'profond']) for (
   BOULEAUX.push([fichier, libelle, { vert, petit, fleuri }]);
 }
 
-module.exports = { arbre, ARBRES, pommier, POMMIERS, automne, AUTOMNES, bouleau, BOULEAUX, VERTS, fleurette };
+// ——— Le sapin : des étages festonnés, ombrés comme les touffes, un tronc court ; en neige, chaque étage garde la sienne ———
+const PINS = {
+  doux: { light: '#A8D88A', mid: '#5FAE5C', dark: '#3B7F45' },
+  profond: { light: '#8CC77A', mid: '#4A9650', dark: '#2C6A3C' }
+};
+// Un étage : pointe en haut, flancs à peine creusés, bas festonné de n bosses
+function etageD(y, w, h, n) {
+  const top = y - h, pas = (2 * w) / n;
+  let d = `M0,${r2(top)} Q${r2(-w * 0.3)},${r2(top + h * 0.6)} ${r2(-w)},${r2(y)}`;
+  for (let i = 0; i < n; i++) { const x0 = -w + i * pas; d += ` Q${r2(x0 + pas / 2)},${r2(y + 3.6)} ${r2(x0 + pas)},${r2(y)}`; }
+  return d + ` Q${r2(w * 0.3)},${r2(top + h * 0.6)} 0,${r2(top)} Z`;
+}
+// ombre sur le côté droit et dans le creux de chaque feston, reflet le long du flanc gauche, marques d'aiguilles ; en
+// neige : une calotte au bord ondulé qui descend jusqu'à yNeige (un peu sous l'étage d'au-dessus), une frange en bas
+function etage(id, y, w, h, n, c, neige, yNeige) {
+  const d = etageD(y, w, h, n), top = y - h, pas = (2 * w) / n;
+  let dedans = `<path d="M${r2(w * 0.08)},${r2(top)} Q${r2(w * 0.45)},${r2(top + h * 0.6)} ${r2(w + 2)},${r2(y + 4)} L${r2(w * 0.12)},${r2(y + 4)} Z" fill="${c.dark}"/>`;
+  for (let i = 0; i < n; i++) dedans += `<ellipse cx="${r2(-w + (i + 0.5) * pas)}" cy="${r2(y + 1.6)}" rx="${r2(pas * 0.42)}" ry="2" fill="${c.dark}" opacity="0.55"/>`;
+  dedans += `<path d="M-1.2,${r2(top + 3)} Q${r2(-w * 0.32)},${r2(top + h * 0.6)} ${r2(-w + 3)},${r2(y - 1.2)}" stroke="${c.light}" stroke-width="1.6" fill="none" stroke-linecap="round"/>`
+    + [[-w * 0.45, y - h * 0.35], [w * 0.15, y - h * 0.55], [-w * 0.1, y - h * 0.2], [w * 0.5, y - h * 0.25]].map(([x, yy]) =>
+      `<path d="M${r2(x - 1.8)},${r2(yy - 1.2)} L${r2(x)},${r2(yy + 0.6)} L${r2(x + 1.8)},${r2(yy - 1.2)}" stroke="${c.dark}" stroke-width="0.8" fill="none" stroke-linecap="round" stroke-linejoin="round"/>`).join('');
+  if (neige) {
+    const yc = yNeige, xc = (w * (yc - top) / h) * 1.08;
+    dedans += `<path d="M0,${r2(top - 0.4)} Q${r2(-w * 0.18)},${r2(top + h * 0.3)} ${r2(-xc - 1)},${r2(yc)} Q${r2(-xc * 0.6)},${r2(yc + 3)} ${r2(-xc * 0.3)},${r2(yc + 0.6)} Q0,${r2(yc + 3.2)} ${r2(xc * 0.3)},${r2(yc + 0.4)} Q${r2(xc * 0.65)},${r2(yc + 2.8)} ${r2(xc + 1)},${r2(yc - 0.4)} Q${r2(w * 0.18)},${r2(top + h * 0.3)} 0,${r2(top - 0.4)} Z" fill="#FFFFFF" stroke="${OUT}" stroke-width="0.8" stroke-linejoin="round"/>`
+      + `<path d="M${r2(w * 0.06)},${r2(top + 1.5)} Q${r2(w * 0.2)},${r2(top + h * 0.3)} ${r2(xc * 0.9)},${r2(yc)}" stroke="#D6E4EE" stroke-width="1.4" fill="none" stroke-linecap="round"/>`;
+  }
+  let o = `<path d="${d}" fill="${c.mid}" stroke="${OUT}" stroke-width="${W}" stroke-linejoin="round"/>`
+    + `<defs><clipPath id="${id}"><path d="${d}"/></clipPath></defs><g clip-path="url(#${id})">${dedans}</g>`;
+  if (neige) {
+    let f = `M${r2(-w + 1)},${r2(y - 0.2)}`;
+    for (let i = 0; i < n; i++) { const x0 = -w + i * pas; f += ` Q${r2(x0 + pas / 2)},${r2(y + 3.4)} ${r2(Math.min(x0 + pas, w - 1))},${r2(y - 0.2)}`; }
+    o += `<path d="${f}" stroke="${OUT}" stroke-width="2.8" fill="none" stroke-linecap="round" stroke-linejoin="round"/><path d="${f}" stroke="#FFFFFF" stroke-width="1.1" fill="none" stroke-linecap="round" stroke-linejoin="round"/>`;
+  }
+  return o;
+}
+// tronc court : racines au pied, côté droit à l'ombre, un trait d'écorce
+function troncSapin(id, k) {
+  const d = sc('M-7.5,1.8 Q-4,0.6 -3.4,-4 L-3,-16 L3,-16 L3.4,-4 Q4,0.6 8,2 Q4.4,3.2 2,2 Q0,3.4 -2.2,2.2 Q-4.6,3.2 -7.5,1.8 Z', k);
+  return `<path d="${d}" fill="${BOIS.left}" stroke="${OUT}" stroke-width="${W}" stroke-linejoin="round"/>`
+    + `<defs><clipPath id="${id}"><path d="${d}"/></clipPath></defs><g clip-path="url(#${id})"><path d="${sc('M0.8,4 L1,-17 L9,-17 L9,4 Z', k)}" fill="${BOIS.right}"/>`
+    + `<path d="${sc('M-1.6,-4 L-1.4,-11', k)}" stroke="${BOIS.bark}" stroke-width="0.7" stroke-linecap="round"/></g>`;
+}
+const pommeDePin = (x, y, a) => `<g transform="translate(${r2(x)} ${r2(y)}) rotate(${a})"><path d="M0,-2.6 Q2.2,-1 1.8,1.2 Q0,3 -1.8,1.2 Q-2.2,-1 0,-2.6 Z" fill="#A0703F" stroke="${OUT}" stroke-width="0.7" stroke-linejoin="round"/>`
+  + `<path d="M-1.4,-0.6 Q0,0.4 1.4,-0.6 M-1.5,1 Q0,2 1.5,1" stroke="#6E4A28" stroke-width="0.5" fill="none"/></g>`;
+// congère au pied du sapin enneigé, ombre bleutée
+const congere = k => `<path d="M${r2(-17 * k)},4 Q${r2(-14 * k)},-1 ${r2(-8 * k)},1.5 Q${r2(-5 * k)},-0.5 ${r2(-2 * k)},3 Q${r2(4 * k)},0 ${r2(8 * k)},3 Q${r2(13 * k)},0 ${r2(18 * k)},4.5 Q0,9 ${r2(-17 * k)},4 Z" fill="#FFFFFF" stroke="${OUT}" stroke-width="0.9" stroke-linejoin="round"/>`
+  + `<path d="M${r2(3 * k)},5.5 Q${r2(10 * k)},6.6 ${r2(15 * k)},5" stroke="#D6E4EE" stroke-width="1.2" fill="none" stroke-linecap="round"/>`;
+// [y du bas, demi-largeur, hauteur, festons], du bas vers le haut
+const ETAGES = [[-10, 25, 28, 5], [-27, 20.5, 27, 4], [-44, 16, 25, 4], [-60, 11, 24, 3]];
+
+// vert : 'doux' ou 'profond' ; petit : comme l'arbre ; neige : le sapin enneigé ; pied : pommes de pin (ou congère, en neige)
+function sapin({ vert = 'doux', petit = false, neige = false, pied = false } = {}) {
+  const c = PINS[vert], k = petit ? 0.76 : 1;
+  const id = `sap${neige ? 'n' : ''}${petit ? 'p' : 'g'}${vert[0]}${pied ? 'x' : ''}`;
+  return E(2 * k, 1.5, 24 * k, 10.5 * k, neige ? 'rgba(60,80,110,0.22)' : 'rgba(40,55,20,0.22)', 0) + troncSapin(`${id}t`, k)
+    + ETAGES.map(([y, w, h, n], i) => etage(`${id}${i}`, y * k, w * k, h * k, n, c, neige, (i < ETAGES.length - 1 ? ETAGES[i + 1][0] + 6.5 : y - h * 0.55) * k)).join('')
+    + (pied ? (neige ? congere(k) : pommeDePin(-12 * k, 5, -20) + pommeDePin(11 * k, 6, 30) + pommeDePin(15 * k, 3.4, 80)) : '');
+}
+
+// Les 16 sapins : [fichier, libellé, options] ; « sapin » et « sapin_neige » (grands, vert doux, pied sobre) par défaut
+const SAPINS = [];
+for (const neige of [false, true]) for (const petit of [false, true]) for (const vert of ['doux', 'profond']) for (const pied of [false, true]) {
+  const fichier = [neige ? 'sapin_neige' : 'sapin', petit && 'petit', vert === 'profond' && 'profond', pied && (neige ? 'congere' : 'pommes_de_pin')].filter(Boolean).join('_');
+  const libelle = `${neige ? 'Sapin enneigé' : 'Sapin'} (${[petit ? 'petit' : 'grand', `vert ${vert}`, pied && (neige ? 'congère au pied' : 'pommes de pin')].filter(Boolean).join(', ')})`;
+  SAPINS.push([fichier, libelle, { vert, petit, neige, pied }]);
+}
+
+module.exports = { arbre, ARBRES, pommier, POMMIERS, automne, AUTOMNES, bouleau, BOULEAUX, sapin, SAPINS, VERTS, fleurette };

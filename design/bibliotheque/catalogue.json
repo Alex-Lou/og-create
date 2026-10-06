@@ -15118,10 +15118,129 @@
   {
    "id": "plantes/sapin",
    "rubrique": "plantes",
-   "titre": "Sapin",
+   "titre": "Sapin (grand, vert doux)",
    "images": 1,
    "fichiers": [
     "svg/plantes/sapin.svg"
+   ],
+   "cadre": [
+    -50,
+    -115,
+    100,
+    140
+   ],
+   "parcours": "acte-1",
+   "statut": "ok"
+  },
+  {
+   "id": "plantes/sapin_petit",
+   "rubrique": "plantes",
+   "titre": "Sapin (petit, vert doux)",
+   "images": 1,
+   "fichiers": [
+    "svg/plantes/sapin_petit.svg"
+   ],
+   "cadre": [
+    -50,
+    -115,
+    100,
+    140
+   ],
+   "parcours": "acte-1",
+   "statut": "ok"
+  },
+  {
+   "id": "plantes/sapin_petit_pommes_de_pin",
+   "rubrique": "plantes",
+   "titre": "Sapin (petit, vert doux, pommes de pin)",
+   "images": 1,
+   "fichiers": [
+    "svg/plantes/sapin_petit_pommes_de_pin.svg"
+   ],
+   "cadre": [
+    -50,
+    -115,
+    100,
+    140
+   ],
+   "parcours": "acte-1",
+   "statut": "ok"
+  },
+  {
+   "id": "plantes/sapin_petit_profond",
+   "rubrique": "plantes",
+   "titre": "Sapin (petit, vert profond)",
+   "images": 1,
+   "fichiers": [
+    "svg/plantes/sapin_petit_profond.svg"
+   ],
+   "cadre": [
+    -50,
+    -115,
+    100,
+    140
+   ],
+   "parcours": "acte-1",
+   "statut": "ok"
+  },
+  {
+   "id": "plantes/sapin_petit_profond_pommes_de_pin",
+   "rubrique": "plantes",
+   "titre": "Sapin (petit, vert profond, pommes de pin)",
+   "images": 1,
+   "fichiers": [
+    "svg/plantes/sapin_petit_profond_pommes_de_pin.svg"
+   ],
+   "cadre": [
+    -50,
+    -115,
+    100,
+    140
+   ],
+   "parcours": "acte-1",
+   "statut": "ok"
+  },
+  {
+   "id": "plantes/sapin_pommes_de_pin",
+   "rubrique": "plantes",
+   "titre": "Sapin (grand, vert doux, pommes de pin)",
+   "images": 1,
+   "fichiers": [
+    "svg/plantes/sapin_pommes_de_pin.svg"
+   ],
+   "cadre": [
+    -50,
+    -115,
+    100,
+    140
+   ],
+   "parcours": "acte-1",
+   "statut": "ok"
+  },
+  {
+   "id": "plantes/sapin_profond",
+   "rubrique": "plantes",
+   "titre": "Sapin (grand, vert profond)",
+   "images": 1,
+   "fichiers": [
+    "svg/plantes/sapin_profond.svg"
+   ],
+   "cadre": [
+    -50,
+    -115,
+    100,
+    140
+   ],
+   "parcours": "acte-1",
+   "statut": "ok"
+  },
+  {
+   "id": "plantes/sapin_profond_pommes_de_pin",
+   "rubrique": "plantes",
+   "titre": "Sapin (grand, vert profond, pommes de pin)",
+   "images": 1,
+   "fichiers": [
+    "svg/plantes/sapin_profond_pommes_de_pin.svg"
    ],
    "cadre": [
     -50,
@@ -46190,10 +46309,129 @@
   {
    "id": "plantes/sapin_neige",
    "rubrique": "plantes",
-   "titre": "Sapin enneigé",
+   "titre": "Sapin enneigé (grand, vert doux)",
    "images": 1,
    "fichiers": [
     "svg/plantes/sapin_neige.svg"
+   ],
+   "cadre": [
+    -50,
+    -115,
+    100,
+    140
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "plantes/sapin_neige_congere",
+   "rubrique": "plantes",
+   "titre": "Sapin enneigé (grand, vert doux, congère au pied)",
+   "images": 1,
+   "fichiers": [
+    "svg/plantes/sapin_neige_congere.svg"
+   ],
+   "cadre": [
+    -50,
+    -115,
+    100,
+    140
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "plantes/sapin_neige_petit",
+   "rubrique": "plantes",
+   "titre": "Sapin enneigé (petit, vert doux)",
+   "images": 1,
+   "fichiers": [
+    "svg/plantes/sapin_neige_petit.svg"
+   ],
+   "cadre": [
+    -50,
+    -115,
+    100,
+    140
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "plantes/sapin_neige_petit_congere",
+   "rubrique": "plantes",
+   "titre": "Sapin enneigé (petit, vert doux, congère au pied)",
+   "images": 1,
+   "fichiers": [
+    "svg/plantes/sapin_neige_petit_congere.svg"
+   ],
+   "cadre": [
+    -50,
+    -115,
+    100,
+    140
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "plantes/sapin_neige_petit_profond",
+   "rubrique": "plantes",
+   "titre": "Sapin enneigé (petit, vert profond)",
+   "images": 1,
+   "fichiers": [
+    "svg/plantes/sapin_neige_petit_profond.svg"
+   ],
+   "cadre": [
+    -50,
+    -115,
+    100,
+    140
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "plantes/sapin_neige_petit_profond_congere",
+   "rubrique": "plantes",
+   "titre": "Sapin enneigé (petit, vert profond, congère au pied)",
+   "images": 1,
+   "fichiers": [
+    "svg/plantes/sapin_neige_petit_profond_congere.svg"
+   ],
+   "cadre": [
+    -50,
+    -115,
+    100,
+    140
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "plantes/sapin_neige_profond",
+   "rubrique": "plantes",
+   "titre": "Sapin enneigé (grand, vert profond)",
+   "images": 1,
+   "fichiers": [
+    "svg/plantes/sapin_neige_profond.svg"
+   ],
+   "cadre": [
+    -50,
+    -115,
+    100,
+    140
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "plantes/sapin_neige_profond_congere",
+   "rubrique": "plantes",
+   "titre": "Sapin enneigé (grand, vert profond, congère au pied)",
+   "images": 1,
+   "fichiers": [
+    "svg/plantes/sapin_neige_profond_congere.svg"
    ],
    "cadre": [
     -50,
