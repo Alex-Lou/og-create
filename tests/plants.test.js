@@ -23,13 +23,13 @@ describe('les plantes de la bibliothèque', () => {
     expect(VARIANTS.tuft[0]).toBe('touffe');
   });
 
-  it('les variantes restent dans leur sorte (l\'arbre ne prend ni l\'automne ni l\'arbre mort)', () => {
+  it('les variantes restent dans leur sorte (l\'arbre ne prend ni l\'automne ni l\'arbre mort), sans les dessins de nuit', () => {
     expect(VARIANTS.tree.every(name => !/automne|mort/.test(name))).toBe(true);
     expect(VARIANTS.pine.every(name => !name.includes('neige'))).toBe(true);
     expect(VARIANTS.deadtree.every(name => name.startsWith('arbre_mort'))).toBe(true);
     expect(VARIANTS.rocks).not.toContain('rochers_moussus');
-    expect(VARIANTS.mushrooms).not.toContain('champignons_nuit');
-    expect(VARIANTS.mushrooms.some(name => name.includes('nuit'))).toBe(false);
+    expect(Object.values(VARIANTS).flat().filter(name => name.includes('nuit'))).toEqual([]);
+    expect(VARIANTS.mushrooms).toContain('champignons_petits_bruns');
   });
 
   it('un dessin redessiné en variantes dans la bibliothèque varie sur l\'île', () => {
