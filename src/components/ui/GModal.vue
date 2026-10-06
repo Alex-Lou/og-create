@@ -77,7 +77,7 @@ export default {
   align-items: center;
   justify-content: center;
   padding: 16px;
-  background: rgba(52, 36, 26, 0.45);
+  background: rgba(var(--ink-900-rgb), 0.45);
   backdrop-filter: blur(6px);
   -webkit-backdrop-filter: blur(6px);
   animation: g-fade var(--oc-medium) var(--oc-ease-out);

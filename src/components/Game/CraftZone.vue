@@ -449,7 +449,7 @@ export default {
   box-shadow: inset 0 0 0 2px var(--gold-400), inset 0 0 0 6px var(--vellum-50), inset 0 0 0 7px var(--gold-300), var(--shadow-3);
   animation: pop var(--oc-slow) var(--oc-ease-spring) both;
 }
-.reveal__image { width: 132px; height: 132px; object-fit: contain; filter: drop-shadow(0 8px 16px rgba(52, 36, 26, 0.3)); }
+.reveal__image { width: 132px; height: 132px; object-fit: contain; filter: drop-shadow(0 8px 16px rgba(var(--ink-900-rgb), 0.3)); }
 .reveal__ink { font-size: 76px; line-height: 1; }
 .reveal__name { font-family: var(--oc-font-display); font-weight: 700; font-size: 34px; line-height: 1.05; color: var(--oc-text-strong); }
 .reveal__origin { font-size: 16px; }
@@ -461,9 +461,9 @@ export default {
 
 @keyframes turn { to { transform: rotate(360deg); } }
 @keyframes unlock {
-  0% { transform: scale(0.4); opacity: 0; box-shadow: inset 0 0 0 2px var(--gold-500), 0 0 0 0 rgba(239, 193, 99, 0.8); }
+  0% { transform: scale(0.4); opacity: 0; box-shadow: inset 0 0 0 2px var(--gold-500), 0 0 0 0 rgba(var(--gold-400-rgb), 0.8); }
   60% { transform: scale(1.08); opacity: 1; }
-  100% { transform: scale(1); box-shadow: inset 0 0 0 2px var(--oc-line), 0 0 0 16px rgba(239, 193, 99, 0); }
+  100% { transform: scale(1); box-shadow: inset 0 0 0 2px var(--oc-line), 0 0 0 16px rgba(var(--gold-400-rgb), 0); }
 }
 @keyframes shake {
   20% { transform: translateX(-8px); }
@@ -477,8 +477,8 @@ export default {
   100% { transform: scale(1.25); opacity: 0.6; }
 }
 @keyframes kindle {
-  0% { color: var(--gold-600); text-shadow: 0 0 22px rgba(239, 193, 99, 0.9); }
-  100% { color: var(--oc-text-strong); text-shadow: 0 0 0 rgba(239, 193, 99, 0); }
+  0% { color: var(--gold-600); text-shadow: 0 0 22px rgba(var(--gold-400-rgb), 0.9); }
+  100% { color: var(--oc-text-strong); text-shadow: 0 0 0 rgba(var(--gold-400-rgb), 0); }
 }
 @keyframes rise {
   0% { transform: translateY(18px) scale(0.6); filter: brightness(1.6); }
@@ -504,7 +504,7 @@ export default {
     padding: 12px 16px 12px;
     border-radius: var(--r-lg) var(--r-lg) 0 0;
     background: linear-gradient(180deg, var(--vellum-50), var(--vellum-100));
-    box-shadow: 0 -1px 0 var(--oc-line), 0 -10px 28px rgba(52, 36, 26, 0.16);
+    box-shadow: 0 -1px 0 var(--oc-line), 0 -10px 28px rgba(var(--ink-900-rgb), 0.16);
   }
   /* Poignée de la feuille */
   .athanor::before {

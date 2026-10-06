@@ -34,6 +34,15 @@
   --oc-gold-ink: #8a5a1c;
   /* Le texte pâle des scènes de nuit (prologue, naufrage) */
   --oc-night-ink: #f4eedc;
+  /* L'or qui désigne : la main du tutoriel, la page qu'on vise, le signet, le focus du prologue */
+  --oc-aim: #e3a93b;
+  --oc-aim-rgb: 227, 169, 59;
+  /* Ce qui luit (le plat du Grimoire, une recette du prologue), son halo, et la lueur en canaux */
+  --oc-glow-ink: #ffe6a8;
+  --oc-glow-halo: #ffe29a;
+  --oc-glow-rgb: 255, 214, 120;
+  /* La dorure (sertissure des gemmes du Grimoire, cadre du prologue), en canaux */
+  --oc-gilt-rgb: 201, 162, 74;
   /* Le halo vert derrière l'illustration d'un objet, d'un bâtiment ou d'une annexe */
   --oc-art-halo: #cfe8b8;
   /* La pièce d'or (écu) : sa face et son liseré */

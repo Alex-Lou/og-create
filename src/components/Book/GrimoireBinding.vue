@@ -320,7 +320,7 @@ export default {
 .grim.is-compact .grim__rune { width: 11px; height: 11px; }
 .grim__rune svg { display: block; width: 100%; height: 100%; fill: none; stroke: currentColor; stroke-width: 2.4; stroke-linecap: round; stroke-linejoin: round; filter: drop-shadow(0 1px 0 rgba(255, 214, 170, .18)); }
 .grim__rune.is-open { color: #D8B260; }
-.grim__rune.is-open svg { filter: drop-shadow(0 0 2px rgba(255, 214, 120, .45)); }
+.grim__rune.is-open svg { filter: drop-shadow(0 0 2px rgba(var(--oc-glow-rgb), .45)); }
 .grim__rune.is-current { color: #FFE4A0; animation: grim-rune 2.8s ease-in-out infinite; }
 .grim__rune.is-ignite { animation: grim-ignite 1.4s cubic-bezier(.3, 1.5, .5, 1); }
 .grim__runes.is-flash .grim__rune.is-open { animation: grim-sweep 1.2s ease-out calc(var(--k) * 90ms) both; }
@@ -366,7 +366,7 @@ export default {
 .grim__motes i:nth-child(odd) { animation-duration: 11s; width: 2px; height: 2px; }
 .grim__aim {
   position: absolute; z-index: 3; top: 0; bottom: 0; width: 50%;
-  box-shadow: inset 0 0 0 2px rgba(227, 169, 59, .75), inset 0 0 26px rgba(227, 169, 59, .22);
+  box-shadow: inset 0 0 0 2px rgba(var(--oc-aim-rgb), .75), inset 0 0 26px rgba(var(--oc-aim-rgb), .22);
   transition: opacity .2s ease;
 }
 .grim__aim--left { left: 0; border-radius: var(--r) 4px 4px var(--r); }
@@ -393,17 +393,17 @@ export default {
 .grim__face .grim__corner--tr { top: -2px; right: -2px; transform: rotate(90deg); }
 .grim__face .grim__corner--br { bottom: -2px; right: -2px; transform: rotate(180deg); }
 .grim__face .grim__corner--bl { bottom: -2px; left: -2px; transform: rotate(270deg); }
-.grim__light { position: absolute; width: 7%; aspect-ratio: 1; transform: translate(-50%, -50%); opacity: 0; color: #FFE6A8; }
-.grim__light svg { display: block; width: 100%; height: 100%; fill: none; stroke: currentColor; stroke-width: 2.6; stroke-linecap: round; stroke-linejoin: round; filter: drop-shadow(0 0 3px rgba(255, 214, 120, .95)); }
+.grim__light { position: absolute; width: 7%; aspect-ratio: 1; transform: translate(-50%, -50%); opacity: 0; color: var(--oc-glow-ink); }
+.grim__light svg { display: block; width: 100%; height: 100%; fill: none; stroke: currentColor; stroke-width: 2.6; stroke-linecap: round; stroke-linejoin: round; filter: drop-shadow(0 0 3px rgba(var(--oc-glow-rgb), .95)); }
 .grim__cover-gem {
   position: absolute; left: 50%; top: 50%; width: 15%; aspect-ratio: 1; border-radius: var(--r-round); transform: translate(-50%, -50%);
   background: radial-gradient(circle at 34% 30%, #FFFFFF 0, #C2475A 30%, #5A1220 100%);
-  box-shadow: inset 0 -2px 4px rgba(0, 0, 0, .55), 0 0 0 2px #7A5A1E, 0 0 0 4px rgba(201, 162, 74, .6), 0 0 18px rgba(255, 120, 130, .45);
+  box-shadow: inset 0 -2px 4px rgba(0, 0, 0, .55), 0 0 0 2px #7A5A1E, 0 0 0 4px rgba(var(--oc-gilt-rgb), .6), 0 0 18px rgba(255, 120, 130, .45);
   filter: brightness(.7);
 }
 .grim__cover-gem.is-awake {
   background: radial-gradient(circle at 34% 30%, #FFFFFF 0, #B8E67A 30%, #2E6B3A 100%);
-  box-shadow: inset 0 -2px 4px rgba(0, 0, 0, .45), 0 0 0 2px #7A5A1E, 0 0 0 4px rgba(201, 162, 74, .7), 0 0 22px rgba(214, 236, 140, .85);
+  box-shadow: inset 0 -2px 4px rgba(0, 0, 0, .45), 0 0 0 2px #7A5A1E, 0 0 0 4px rgba(var(--oc-gilt-rgb), .7), 0 0 22px rgba(214, 236, 140, .85);
   filter: brightness(1.15);
 }
 .grim__title, .grim__subtitle {
@@ -448,9 +448,9 @@ export default {
   52% { opacity: 1; } 63% { opacity: .88; } 71% { opacity: .76; } 84% { opacity: .97; } 92% { opacity: .84; }
 }
 @keyframes grim-gem { 0%, 100% { opacity: .25; transform: scale(.85); } 50% { opacity: .7; transform: scale(1.12); } }
-@keyframes grim-rune { 0%, 100% { filter: drop-shadow(0 0 1px rgba(255, 214, 120, .5)); } 50% { filter: drop-shadow(0 0 5px rgba(255, 224, 140, 1)); } }
-@keyframes grim-ignite { 0% { transform: scale(1); } 40% { transform: scale(1.7); color: #FFFFFF; filter: drop-shadow(0 0 8px #FFE29A); } 100% { transform: scale(1); } }
-@keyframes grim-sweep { 0%, 100% { filter: none; } 40% { color: #FFFFFF; filter: drop-shadow(0 0 6px #FFE29A); transform: translateY(-1px); } }
+@keyframes grim-rune { 0%, 100% { filter: drop-shadow(0 0 1px rgba(var(--oc-glow-rgb), .5)); } 50% { filter: drop-shadow(0 0 5px rgba(255, 224, 140, 1)); } }
+@keyframes grim-ignite { 0% { transform: scale(1); } 40% { transform: scale(1.7); color: #FFFFFF; filter: drop-shadow(0 0 8px var(--oc-glow-halo)); } 100% { transform: scale(1); } }
+@keyframes grim-sweep { 0%, 100% { filter: none; } 40% { color: #FFFFFF; filter: drop-shadow(0 0 6px var(--oc-glow-halo)); transform: translateY(-1px); } }
 @keyframes grim-sway { 0%, 100% { transform: rotate(-4deg); } 50% { transform: rotate(3deg); } }
 @keyframes grim-mote {
   0% { opacity: 0; transform: translate(0, 0); }

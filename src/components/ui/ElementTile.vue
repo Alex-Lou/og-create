@@ -181,7 +181,7 @@ export default {
 /* Nouveau : liseré d'or, gardé jusqu'au premier usage */
 .tile.is-new { box-shadow: inset 0 0 0 2px var(--gold-400), 0 3px 0 var(--gold-600), var(--shadow-1); animation: tile-pop 0.55s var(--oc-ease-spring); }
 /* Révélé par l'Encre pour la page ouverte */
-.tile.is-ink { box-shadow: inset 0 0 0 2px var(--gold-500), 0 0 14px rgba(239, 193, 99, 0.55), 0 3px 0 var(--gold-600); }
+.tile.is-ink { box-shadow: inset 0 0 0 2px var(--gold-500), 0 0 14px rgba(var(--gold-400-rgb), 0.55), 0 3px 0 var(--gold-600); }
 /* Tout exploré : papier plus terne, dessin désaturé */
 .tile.is-spent { background: var(--vellum-200); color: var(--ink-500); }
 .tile.is-spent .tile__medal { filter: saturate(0.35); opacity: 0.75; }

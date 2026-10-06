@@ -41,7 +41,7 @@ export default {
 .hand { position: fixed; z-index: var(--z-hand); width: 0; height: 0; pointer-events: none; }
 .hand__ring {
   position: absolute; left: -30px; top: -30px; width: 60px; height: 60px; border-radius: var(--r-round);
-  box-shadow: 0 0 0 3px rgba(227, 169, 59, .9), 0 0 18px rgba(227, 169, 59, .6);
+  box-shadow: 0 0 0 3px rgba(var(--oc-aim-rgb), .9), 0 0 18px rgba(var(--oc-aim-rgb), .6);
   animation: hand-ring 1.4s ease-out infinite;
 }
 .hand__finger { position: absolute; left: -6px; top: 6px; width: 34px; height: 42px; filter: drop-shadow(0 3px 3px rgba(0, 0, 0, .35)); animation: hand-tap 1.4s ease-in-out infinite; }

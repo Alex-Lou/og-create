@@ -20,6 +20,10 @@ La seule source des valeurs de design, en variables CSS (`--nom`). Un fichier pa
 
 `tokens/index.css` les lit dans cet ordre.
 
+Une couleur qui s'écrit aussi à diverses transparences a son jeton en canaux, suffixé `-rgb`
+(`rgba(var(--gold-400-rgb), .55)`) ; quand il double une couleur (`--gold-400`), `tests/tokens.test.js` vérifie qu'il
+en garde la valeur.
+
 ## 2. La base (`base/`)
 
 Ce qui vaut pour toute la page, et les primitives `g-*` (boutons, champs, panneaux, onglets…), sans

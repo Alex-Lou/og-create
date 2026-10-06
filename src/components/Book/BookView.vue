@@ -823,7 +823,7 @@ export default {
 }
 .book-view__ariane strong { font-weight: 900; }
 .book-view__ariane-ribbon {
-  width: 9px; height: 16px; background: #B8322A; box-shadow: inset 0 0 0 1px #E3A93B;
+  width: 9px; height: 16px; background: #B8322A; box-shadow: inset 0 0 0 1px var(--oc-aim);
   clip-path: polygon(0 0, 100% 0, 100% 100%, 50% 78%, 0 100%);
 }
 .book-view__stars {
@@ -879,7 +879,7 @@ export default {
   border: 0; padding: 0; background: transparent; cursor: pointer;
   touch-action: manipulation; -webkit-tap-highlight-color: transparent;
 }
-.book-view__back:focus-visible { outline: 3px solid rgba(227, 169, 59, .9); outline-offset: -3px; }
+.book-view__back:focus-visible { outline: 3px solid rgba(var(--oc-aim-rgb), .9); outline-offset: -3px; }
 .book-view__stage.is-single .book-view__wrap {
   top: 14px;
   left: calc((100% - var(--book-w)) / 2 - 3px);
@@ -895,9 +895,9 @@ export default {
 .book-view__hot:focus-visible { box-shadow: 0 0 0 3px var(--oc-gold); }
 .book-view__hot.is-turning > * { visibility: hidden; }
 .book-view__spot { position: absolute; border: 0; padding: 0; background: transparent; border-radius: var(--r-tile); cursor: pointer; }
-.book-view__spot:focus-visible { outline: 3px solid rgba(227, 169, 59, .9); outline-offset: 2px; }
+.book-view__spot:focus-visible { outline: 3px solid rgba(var(--oc-aim-rgb), .9); outline-offset: 2px; }
 .book-view__pulse { position: absolute; border-radius: var(--r-round); pointer-events: none; animation: book-aura 2.4s ease-out infinite; }
-@keyframes book-aura { 0% { box-shadow: 0 0 0 0 rgba(227, 169, 59, .5); } 70%, 100% { box-shadow: 0 0 0 22px rgba(227, 169, 59, 0); } }
+@keyframes book-aura { 0% { box-shadow: 0 0 0 0 rgba(var(--oc-aim-rgb), .5); } 70%, 100% { box-shadow: 0 0 0 22px rgba(var(--oc-aim-rgb), 0); } }
 @keyframes book-ping { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-4px); } }
 .book-view__error { position: absolute; inset: 30% 10% auto; text-align: center; color: var(--oc-on-bg); z-index: 4; }
 .book-view__retry { margin-left: 8px; }

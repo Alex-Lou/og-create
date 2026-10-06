@@ -62,7 +62,7 @@ select {
 
 * {
   scrollbar-width: thin;
-  scrollbar-color: rgba(87, 65, 49, 0.28) transparent;
+  scrollbar-color: rgba(var(--ink-700-rgb), 0.28) transparent;
 }
 
 .oc-sr-only {

@@ -476,7 +476,7 @@ export default {
 .pa__flicker { animation: pa-glow 1.6s ease-in-out infinite; }
 .pa__foam { animation: pa-foam 3s ease-in-out infinite; }
 .pa__shiver { animation: pa-shiver .18s linear infinite; }
-.pa__recipe { font-family: var(--font-fell); fill: #FFE6A8; animation: pa-glow 2.4s ease-in-out infinite; }
+.pa__recipe { font-family: var(--font-fell); fill: var(--oc-glow-ink); animation: pa-glow 2.4s ease-in-out infinite; }
 .pa__recipe-name { font-size: 24px; }
 .pa__recipe-of { font-size: 15px; font-style: italic; }
 /* La tempête : éclair, roulis, la vague qui monte, puis le noir */
@@ -496,7 +496,7 @@ export default {
 .pa__mist.is-lift { animation: pa-lift 4.5s ease-out forwards; }
 .pa__mist.is-gone { opacity: 0; }
 /* Anya : les sigles s'allument un à un, la lueur respire, les lucioles clignent, la gemme s'éveille */
-.pa__sigil { opacity: 0; animation: pa-sigil .6s ease-out calc(var(--k) * .35s) forwards; filter: drop-shadow(0 0 3px rgba(255, 214, 120, .9)); }
+.pa__sigil { opacity: 0; animation: pa-sigil .6s ease-out calc(var(--k) * .35s) forwards; filter: drop-shadow(0 0 3px rgba(var(--oc-glow-rgb), .9)); }
 .pa__anya { animation: pa-rise 2.4s ease-out both; }
 .pa__flies circle { animation: pa-twinkle 2.6s ease-in-out calc(var(--k) * -.4s) infinite; }
 .pa__bloom { animation: pa-glow 3s ease-in-out infinite; }
@@ -515,7 +515,7 @@ export default {
 @keyframes pa-roll { 0%, 100% { transform: translate(200px, 236px) rotate(-4deg); } 50% { transform: translate(200px, 240px) rotate(5deg); } }
 @keyframes pa-wave { 0% { transform: translateY(260px); } 70% { transform: translateY(40px); } 100% { transform: translateY(-40px); } }
 @keyframes pa-dark { to { opacity: 1; } }
-@keyframes pa-crack { 0% { transform: scale(1); filter: none; } 40% { transform: scale(1.5); filter: drop-shadow(0 0 4px #FFE29A); } 100% { transform: scale(1.15); filter: drop-shadow(0 0 3px #FFE29A); opacity: .55; } }
+@keyframes pa-crack { 0% { transform: scale(1); filter: none; } 40% { transform: scale(1.5); filter: drop-shadow(0 0 4px var(--oc-glow-halo)); } 100% { transform: scale(1.15); filter: drop-shadow(0 0 3px var(--oc-glow-halo)); opacity: .55; } }
 @keyframes pa-rays { 0% { opacity: 0; transform: scale(.4); } 50% { opacity: 1; } 100% { opacity: .6; transform: scale(1); } }
 @keyframes pa-spin { to { transform: rotate(360deg); } }
 @keyframes pa-sigil { to { opacity: 1; } }

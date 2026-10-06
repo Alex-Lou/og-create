@@ -57,7 +57,7 @@ export default {
   background:
     linear-gradient(180deg, rgba(255, 255, 255, 0.07), rgba(0, 0, 0, 0) 35%),
     radial-gradient(140% 120% at 50% 0%, var(--leather-500) 0%, var(--leather-700) 70%);
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.12), 0 -6px 18px rgba(52, 36, 26, 0.22);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.12), 0 -6px 18px rgba(var(--ink-900-rgb), 0.22);
 }
 .tabbar::before {
   content: '';
@@ -65,7 +65,7 @@ export default {
   left: 14px;
   right: 14px;
   top: 5px;
-  border-top: 1.5px dashed rgba(239, 193, 99, 0.45);
+  border-top: 1.5px dashed rgba(var(--gold-400-rgb), 0.45);
   pointer-events: none;
 }
 .tabbar__item {
@@ -104,7 +104,7 @@ export default {
   border-radius: var(--r-round);
   color: var(--ink-900);
   background: radial-gradient(circle at 35% 30%, var(--gold-200) 0 15%, var(--gold-400) 45%, var(--gold-600) 100%);
-  box-shadow: 0 0 0 3px var(--leather-600), 0 0 0 4px rgba(239, 193, 99, 0.6), 0 4px 10px rgba(0, 0, 0, 0.35);
+  box-shadow: 0 0 0 3px var(--leather-600), 0 0 0 4px rgba(var(--gold-400-rgb), 0.6), 0 4px 10px rgba(0, 0, 0, 0.35);
 }
 .tabbar__dot {
   position: absolute;
@@ -132,9 +132,9 @@ export default {
     background:
       linear-gradient(90deg, rgba(255, 255, 255, 0.06), rgba(0, 0, 0, 0) 40%),
       radial-gradient(160% 120% at 0% 30%, var(--leather-500) 0%, var(--leather-700) 70%);
-    box-shadow: inset -1px 0 0 rgba(255, 255, 255, 0.1), 6px 0 18px rgba(52, 36, 26, 0.18);
+    box-shadow: inset -1px 0 0 rgba(255, 255, 255, 0.1), 6px 0 18px rgba(var(--ink-900-rgb), 0.18);
   }
-  .tabbar::before { left: auto; right: 6px; top: 14px; bottom: 14px; border-top: 0; border-right: 1.5px dashed rgba(239, 193, 99, 0.4); }
+  .tabbar::before { left: auto; right: 6px; top: 14px; bottom: 14px; border-top: 0; border-right: 1.5px dashed rgba(var(--gold-400-rgb), 0.4); }
   .tabbar__item.is-on .tabbar__medal { margin-top: 0; }
   .tabbar__dot { top: 0; }
 }
