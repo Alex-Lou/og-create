@@ -133,8 +133,9 @@ const MILONGUE = {
 const MECHE_LONGUE = 'M14.4,15 Q9.8,22 11.2,31.6 Q12.8,29.6 14.2,30.2 Q13.4,22 15.6,17.6 Z';
 const MECHE_MILONGUE = 'M14.4,15 Q10,21.6 11,28.4 Q10.4,30.4 9.2,31.4 Q12.2,31.4 13.8,29.6 Q13.4,22 15.6,17.6 Z';
 const MECHE_ONDULEE = 'M14.4,15 Q9.8,18.6 11.2,22.6 Q12.6,26.4 10.4,30 Q9.2,33.2 11.6,35.6 Q12.4,33.2 14,31.8 Q15.6,28.4 13.6,24.8 Q12.6,21.4 15.6,17.6 Z';
-// Queue sur le côté : nouée derrière l'oreille, elle tombe sur l'épaule
-const QUEUE_COTE = 'M32.8,19.6 Q39.4,22.4 39,29.4 Q38.8,35.4 35.2,38.6 Q35.8,33.4 34.8,29.6 Q33.8,25.6 31.4,23 Z';
+// Queue sur le côté : nouée bas, sous l'oreille, elle tombe sur l'épaule, près du cou (et son trait de mèche)
+const QUEUE_COTE = 'M32.6,27.8 Q37.4,28.6 37.2,33.4 Q37,38.4 33.2,41.8 Q34.2,37.6 33.6,34.4 Q33,31.4 32.4,29.8 Z';
+const QUEUE_COTE_SENS = 'M34.6,30.4 Q36.2,34.4 34.6,39';
 // Le sens des cheveux sur la frange (de face ; de trois quarts, décalé) : des traits fins, et les mèches de couleur
 const SENS_FRANGE = {
   defaut: 'M24.6,9.8 Q19.4,11.4 16,16.6 M26.4,9.8 Q23,12.4 21.8,15 M28.2,10 Q32,11.6 34.4,16',
@@ -173,7 +174,7 @@ const DOS = {
     sens: 'M21.2,9.8 Q17.4,15 18.8,21.6 Q20,28 17.2,34.6 Q16.2,37.6 17.6,39.6 M24.6,9.4 Q26,16 24,23 Q22.4,30 24.8,39.8 M28,9.8 Q31.6,15 29.6,21.6 Q28.2,28 31,34.6 Q32,37.6 30.6,39.6'
   },
   queue: { forme: TIRES, sens: 'M14.4,25.4 Q15.4,17.6 21.6,14.2 M33.6,25.4 Q32.6,17.6 26.4,14.2 M19.6,28.6 Q20.4,20 23,15.4 M28.4,28.6 Q27.6,20 25,15.4' },
-  queueCote: { forme: TIRES, sens: 'M30.4,10.4 Q22,11.6 16.4,19.4 M35.6,19.6 Q26,17.8 16.8,20.8 M33.6,27 Q25,26 16.6,22.4 M24.8,8.4 Q18.6,10.8 15.6,18.6' },
+  queueCote: { forme: TIRES, sens: 'M30.4,10.4 Q20,12 15.2,25.6 M35.6,19.6 Q24,19.4 15.6,26.4 M33.6,27 Q24,27.4 16,27.6 M24.8,8.4 Q17.4,11.6 14.6,24.8' },
   couettes: { forme: TIRES, sens: RAIE + ' M23.2,10.6 Q17.2,12.2 13.6,18.2 M23.2,17 Q18,17.4 13.6,19.6 M23,24.6 Q17.6,24.8 13.8,21 M24.8,10.6 Q30.8,12.2 34.4,18.2 M24.8,17 Q30,17.4 34.4,19.6 M25,24.6 Q30.4,24.8 34.2,21' },
   chignon: { forme: TIRES, sens: 'M15.4,26.6 Q15.6,17.6 20.6,11.8 M24,29.4 Q23.4,20 24,13.4 M32.6,26.6 Q32.4,17.6 27.4,11.8' },
   chignonBas: { forme: TIRES, sens: 'M16.6,12 Q17.4,20 21.4,24.6 M24,10 Q24.4,18 24,23.6 M31.4,12 Q30.6,20 26.6,24.6' },
@@ -192,14 +193,14 @@ const OREILLES_CACHEES = { front: new Set(['longue', 'carre', 'milongue', 'ondul
 // Pointes colorées : de quelle hauteur à quelle hauteur la seconde couleur monte, par coupe (repère de la tête)
 const POINTES = {
   courte: [12, 19.4], meche: [11, 19.4], bataille: [10, 18.4], carre: [19, 30], milongue: [21, 33.4], longue: [24, 40], ondulee: [24, 41],
-  queue: [16, 38], queueCote: [23, 39], couettes: [20, 29], chignon: [18, 30], deuxChignons: [18, 30], couronne: [18, 30], tresses: [26, 38],
+  queue: [16, 38], queueCote: [26, 41], couettes: [20, 29], chignon: [18, 30], deuxChignons: [18, 30], couronne: [18, 30], tresses: [26, 38],
   bouclee: [12, 30], locks: [22, 38]
 };
 // Les cheveux en une ou deux couleurs : h, le personnage avec la peinture des cheveux (couleur ou dégradé) ; defs, le dégradé
 // De dos, les pointes sont à la nuque ou au bas des cheveux longs
 const POINTES_DOS = {
   courte: [22, 30], meche: [22, 30], bataille: [22, 31], carre: [24, 31.6], milongue: [26, 34], longue: [28, 41], ondulee: [28, 42],
-  queue: [20, 33], queueCote: [22, 39], couettes: [20, 30], chignon: [22, 30], deuxChignons: [22, 30], couronne: [22, 30], tresses: [26, 40],
+  queue: [20, 33], queueCote: [24, 41], couettes: [20, 30], chignon: [22, 30], deuxChignons: [22, 30], couronne: [22, 30], tresses: [26, 40],
   bouclee: [16, 30], locks: [24, 40]
 };
 function peinture(c, view) {
@@ -348,7 +349,7 @@ function head(c0, ctx) {
       const queue = 'M21.8,14 Q19.2,21.4 21.2,29.6 Q22.4,32.6 24,33.2 Q25.6,32.6 26.8,29.6 Q28.8,21.4 26.2,14 Z';
       s += P(queue, H) + clip(`${c.uid}qd`, queue, `<rect x="24.6" y="12" width="6" height="24" fill="${S}"/>`) + P(queue, 'none') + P('M23,17 Q22.2,23.6 23.2,30.4 M25.2,17 Q25.8,23.6 24.8,30.6', 'none', 0.5) + E(24, 14, 2.4, 1.5, c.tie, 0.8);
     }
-    if (coupe === 'queueCote') s += P(mirror(QUEUE_COTE), H) + P('M14.6,24 Q11.6,28 12.6,35.4', 'none', 0.5) + E(14.8, 21, 1.6, 1.4, c.tie, 0.8);
+    if (coupe === 'queueCote') s += P(mirror(QUEUE_COTE), H) + P(mirror(QUEUE_COTE_SENS), 'none', 0.5) + E(13.8, 28.4, 1.6, 1.4, c.tie, 0.8);
     if (coupe === 'couettes') s += couettes(c, 'front');
     if (coupe === 'chignon') {
       s += couvert ? E(24, 25.4, 3.8, 3.2, H) + P('M21.2,24.6 Q24,23 26.8,24.6', 'none', 0.55)
@@ -403,7 +404,7 @@ function head(c0, ctx) {
       const lk = 'M14.2,15.4 Q10.4,20.4 11,29.4 L14.4,29.4 Q13.6,22.4 15.8,17.8 Z';
       s += se ? P(sx(mirror(lk), -0.4), H) : P(lk, H) + P(mirror(lk), H);
     }
-    if (coupe === 'queueCote') s += P(se ? sx(QUEUE_COTE, 0.6) : QUEUE_COTE, H) + E(se ? 33.8 : 33.2, 21, 1.6, 1.4, c.tie, 0.8) + P(se ? 'M26.6,10.6 Q32.2,13.6 33.6,19.4' : 'M27.6,10.4 Q32.6,13.6 33.4,19.6', 'none', 0.55);
+    if (coupe === 'queueCote') s += P(se ? sx(QUEUE_COTE, 0.4) : QUEUE_COTE, H) + P(se ? sx(QUEUE_COTE_SENS, 0.4) : QUEUE_COTE_SENS, 'none', 0.5) + E(se ? 34.6 : 34.2, 28.4, 1.6, 1.4, c.tie, 0.8);
     if (coupe === 'couronne' && !couvert) s += couronneTresse(c, view);
     if (coupe === 'tresses') s += se ? braid(12.6, 26.4, 37.4, -0.4, c) + braid(34.2, 26, 37.4, 0.8, c) : braid(13.4, 26, 37.8, -0.6, c) + braid(34.6, 26, 37.8, 0.6, c);
     if (coupe === 'couettes') s += couettes(c, view);
