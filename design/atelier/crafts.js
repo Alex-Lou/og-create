@@ -461,17 +461,53 @@ C.etal = { n: 2, draw: f => {
     + `<path d="M${r2(ax - 1)},${r2(ay - 2.6)} l1.2,0.2 m0.6,0.1 l1.4,0.2" stroke="#FFFFFF" stroke-width="0.5" stroke-linecap="round"/>`;
 } };
 
-// Kiosque : estrade ronde, colonnettes, toit conique bleu, fanion
+// Kiosque à musique : une estrade ronde à deux degrés et son plancher, six colonnettes blanches, une balustrade de fer,
+// une frise et son lambrequin festonné bleu et blanc ; un toit en cloche à côtes, son épi de laiton et son fanion qui
+// claque ; dedans, un pupitre et sa partition, une lampe pendue ; une note de musique s'envole (2 images)
+const FRISE = { top: '#FBF8F1', left: '#EDE6D8', right: '#CFC5B2' };
+const note = (x, y, k) => E(x, y, 1.5, 1.1, OUT, 0) + `<path d="M${r2(x + 1.3)},${r2(y)} L${r2(x + 1.3)},${r2(y - 6)} q${r2(1.6 * k)},1 2.6,3.2" stroke="${OUT}" stroke-width="0.8" fill="none" stroke-linecap="round"/>`;
 C.kiosque = { n: 2, draw: f => {
-  let s = shadow(0, 0, 0.5, 0.12) + cylinder(0, 0, 0.44, 0, 5, STONE);
-  for (let i = 0; i < 6; i++) { const a = (i / 6) * TAU + 0.3; const u = Math.cos(a) * 0.32, v = Math.sin(a) * 0.32; if (v < 0.05) s += post(u, v, 5, 32, WHITE_STONE, 0.022); }
-  s += E(...at(0, 0, 5.2), 0, 0, 'none', 0) + disc(0, 0, 0.36, 5.2, '#E8D2A8', 0.6);
-  for (let i = 0; i < 6; i++) { const a = (i / 6) * TAU + 0.3; const u = Math.cos(a) * 0.32, v = Math.sin(a) * 0.32; if (v >= 0.05) s += post(u, v, 5, 32, WHITE_STONE, 0.022); }
-  const [x, y] = at(0, 0, 32);
-  s += `<path d="M${x - 30},${y + 2} L${x},${y - 22} L${x + 30},${y + 2} Q${x},${y + 14} ${x - 30},${y + 2} Z" fill="#5C8FD0" stroke="${OUT}" stroke-width="1.1" stroke-linejoin="round"/><path d="M${x},${y - 22} L${x + 30},${y + 2} Q${x + 15},${y + 9} ${x + 6},${y + 10} Z" fill="#3E6FA8"/>`;
-  s += L([x, y - 22], [x, y - 32], IRON.right, 1.2) + P(`M${x},${y - 32} L${x + 9 + f * 1.6},${y - 30 + f} L${x},${y - 27} Z`, '#E8566A', 0.8);
-  return s;
+  let s = shadow(0, 0, 0.52, 0.12) + cylinder(0, 0, 0.46, 0, 2.4, STONE) + cylinder(0, 0, 0.4, 2.4, 5, STONE);
+  const [cx, cy] = at(0, 0, 5);
+  // le plancher et ses lames
+  s += disc(0, 0, 0.36, 5, WOOD.top, 0.7);
+  for (const dx of [-12, -6, 0, 6, 12]) { const h = Math.sqrt(Math.max(0, 1 - (dx / 20.2) ** 2)) * 10; s += L([cx + dx, cy - h], [cx + dx, cy + h], WOOD.left, 0.45); }
+  const cols = Array.from({ length: 6 }, (_, i) => (i / 6) * TAU + 0.26).map(a => [Math.cos(a) * 0.32, Math.sin(a) * 0.32]);
+  const col = ([u, v]) => cylinder(u, v, 0.024, 5, 30, WHITE_STONE, 0.7);
+  // la balustrade : la lisse et ses barreaux, derrière puis devant
+  const [, yr] = at(0, 0, 10.4), rx = 0.32 * 56, ry = 0.32 * 28;
+  const balustre = av => { let o = ''; for (let i = 0; i < 18; i++) { const t = (i / 18) * TAU, sy = Math.sin(t); if ((sy >= 0) !== av) continue; const x = cx + rx * Math.cos(t); o += L([x, cy + ry * sy], [x, yr + ry * sy], IRON.right, 0.7); } return o + `<path d="M${r2(cx - rx)},${r2(yr)} A${r2(rx)} ${r2(ry)} 0 0 ${av ? 0 : 1} ${r2(cx + rx)},${r2(yr)}" stroke="${IRON.right}" stroke-width="1.2" fill="none"/>`; };
+  s += cols.filter(([u, v]) => u + v < 0).map(col).join('') + balustre(false);
+  // dedans : la lampe pendue et le pupitre et sa partition
+  const [lx, ly] = at(0, 0, 25);
+  s += L([lx, ly - 8], [lx, ly - 1.6], IRON.right, 0.6) + P(`M${r2(lx - 1.8)},${r2(ly - 1.6)} L${r2(lx + 1.8)},${r2(ly - 1.6)} L${r2(lx + 1.3)},${r2(ly + 2.4)} L${r2(lx - 1.3)},${r2(ly + 2.4)} Z`, '#FFE08A', 0.6) + E(lx, ly - 1.8, 2.2, 0.8, BRASS.left, 0.5);
+  const [mx, my] = at(0.06, 0.04, 5);
+  s += L([mx, my], [mx, my - 9], IRON.right, 0.8) + L([mx - 2.4, my + 1], [mx + 2.4, my + 1], IRON.right, 0.8)
+    + P(`M${r2(mx - 4)},${r2(my - 9)} L${r2(mx + 4)},${r2(my - 10.4)} L${r2(mx + 4)},${r2(my - 15)} L${r2(mx - 4)},${r2(my - 13.6)} Z`, '#FFFDF6', 0.6)
+    + `<path d="M${r2(mx - 3)},${r2(my - 12)} l6,-1 M${r2(mx - 3)},${r2(my - 10.6)} l6,-1" stroke="#B9AF98" stroke-width="0.45"/>`;
+  s += balustre(true) + cols.filter(([u, v]) => u + v >= 0).map(col).join('');
+  // la frise et son lambrequin festonné
+  s += cylinder(0, 0, 0.38, 30, 33.4, FRISE, 0.9);
+  const [, yf] = at(0, 0, 30), fr = 0.38 * 56, fry = 0.38 * 28;
+  for (let i = 0; i < 9; i++) {
+    const t0 = (i / 9) * Math.PI, t1 = ((i + 1) / 9) * Math.PI, A = [cx + fr * Math.cos(t0), yf + fry * Math.sin(t0)], B = [cx + fr * Math.cos(t1), yf + fry * Math.sin(t1)];
+    s += P(`M${r2(A[0])},${r2(A[1])} L${r2(B[0])},${r2(B[1])} Q${r2((A[0] + B[0]) / 2)},${r2((A[1] + B[1]) / 2 + 5.6)} ${r2(A[0])},${r2(A[1])} Z`, i % 2 ? '#FFFFFF' : '#5C8FD0', 0.7);
+  }
+  // le toit en cloche : clair à gauche, sombre à droite, ses côtes, son épi de laiton et son fanion
+  const [tx, tb] = at(0, 0, 33.4), R = 27, Ry = 13.4, tip = tb - 25;
+  const gauche = `M${tx - R},${r2(tb)} C${r2(tx - R * 0.86)},${r2(tb - 11)} ${r2(tx - R * 0.3)},${r2(tb - 13)} ${tx},${r2(tip)}`;
+  const droite = `C${r2(tx + R * 0.3)},${r2(tb - 13)} ${r2(tx + R * 0.86)},${r2(tb - 11)} ${tx + R},${r2(tb)}`;
+  s += P(`${gauche} ${droite} A${R} ${Ry} 0 0 1 ${tx - R},${r2(tb)} Z`, ROOF_BLUE.front, 1.1)
+    + `<path d="M${tx},${r2(tip)} ${droite} A${R} ${Ry} 0 0 1 ${r2(tx + 6)},${r2(tb + Ry - 0.4)} C${r2(tx + 5)},${r2(tb - 6)} ${r2(tx + 2)},${r2(tb - 14)} ${tx},${r2(tip)} Z" fill="${ROOF_BLUE.back}"/>`
+    + [-0.7, -0.35, 0.4].map(k => `<path d="M${tx},${r2(tip)} C${r2(tx + R * k * 0.2)},${r2(tb - 14)} ${r2(tx + R * k * 0.8)},${r2(tb - 6)} ${r2(tx + R * k)},${r2(tb + Ry * Math.sqrt(1 - k * k))}" stroke="${k < 0 ? '#8DB6E6' : '#2F5A8C'}" stroke-width="0.7" fill="none"/>`).join('')
+    + P(`${gauche} ${droite} A${R} ${Ry} 0 0 1 ${tx - R},${r2(tb)} Z`, 'none', 1.1);
+  const k = wave(f, 2, 1.2);
+  s += L([tx, tip], [tx, tip - 10], IRON.right, 0.9) + E(tx, tip - 0.6, 2, 1.6, BRASS.left, 0.7)
+    + P(`M${tx},${r2(tip - 10)} Q${r2(tx + 5)},${r2(tip - 12 + k)} ${r2(tx + 10)},${r2(tip - 9 - k)} L${tx},${r2(tip - 5.6)} Z`, '#E8566A', 0.7) + E(tx, tip - 10.6, 1, 1, BRASS.top, 0.5);
+  // la note qui s'envole du pupitre
+  return s + (f ? note(cx + 30, cy - 24, 1) : note(cx + 26, cy - 15, 1));
 } };
+
 // Cadran solaire : colonne, table des heures, style de bronze ; l'ombre tourne (2 images)
 C.cadran = { n: 2, draw: f => {
   let s = shadow(0, 0, 0.34, 0.16) + box(-0.14, -0.14, 0.14, 0.14, 0, 3, STONE) + cylinder(0, 0, 0.08, 3, 18, WHITE_STONE, 0.9) + cylinder(0, 0, 0.28, 18, 21, WHITE_STONE);
