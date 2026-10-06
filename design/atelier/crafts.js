@@ -882,14 +882,38 @@ C.cadransel = { n: 2, draw: f => {
   s += cristal(0.38, 0.2, 0.026, 2.8) + cristal(0.43, 0.12, 0.018, 1.9) + cristal(0.33, 0.28, 0.016, 1.6) + cristal(-0.4, 0.16, 0.022, 2.4) + cristal(-0.34, 0.25, 0.015, 1.5);
   return s + (f ? [[x - 14, y - 6, 1.6], [x + 18, y + 1, 1.3], [x - 24, y + 4, 1.1]] : [[x + 10, y - 5, 1.5], [x - 18, y + 1, 1.2], [x + 26, y + 3, 1.3]]).map(([a, b, r]) => givre(a, b, r).replace('#FFFFFF', '#F4D67A')).join('');
 } };
+// Hamac : deux poteaux ronds sculptés (des anneaux taillés, une bande peinte, un épi en bouton) sur un peu de sable ;
+// une toile tissée à rayures vives tendue entre eux par ses cordes et ses barres d'écartement, frangée de pompons, qui
+// se balance doucement ; une mangue oubliée dedans ; une touffe de plante tropicale au pied d'un poteau (2 images)
+const RAYURES = ['#E8566A', '#F2C04B', '#4FB3B0', '#F7EBD0', '#E8566A'];
 C.hamac = { n: 2, draw: f => {
-  const a = at(-0.28, 0.28, 26), b = at(0.28, -0.28, 26);
-  let s = shadow(0, 0, 0.45, 0.12) + post(-0.28, 0.28, 0, 30, WOOD, 0.04) + post(0.28, -0.28, 0, 30, WOOD, 0.04);
-  for (const [u, v] of [[-0.28, 0.28], [0.28, -0.28]]) { const [x, y] = at(u, v, 30); s += P(`M${x - 3},${y} L${x},${y - 5} L${x + 3},${y} Z`, '#E8566A', 0.8); }
-  const sag = 12 + (f ? 2 : 0), mid = [(a[0] + b[0]) / 2 + (f ? 2 : -2), (a[1] + b[1]) / 2 + sag];
-  s += `<path d="M${a[0]},${a[1]} Q${mid[0]},${mid[1] + 6} ${b[0]},${b[1]} Q${mid[0]},${mid[1] - 2} ${a[0]},${a[1]} Z" fill="#F2C04B" stroke="${OUT}" stroke-width="1"/>`;
-  s += [-10, -3, 4, 11].map(dx => P(`M${mid[0] + dx},${mid[1] - 6} q1,4 0,8`, 'none', 0).replace('stroke="none"', 'stroke="#E8566A" stroke-width="1.2"')).join('');
-  return s + E(mid[0] + 3, mid[1] - 4, 2.6, 2.2, '#F2994A', 0.8) + L([mid[0] + 3, mid[1] - 6], [mid[0] + 4, mid[1] - 8], '#4F8F3A', 0.8);
+  const [x, y] = at(0, 0);
+  let s = E(x, y + 2, 30, 11, '#EED9A8', 0) + shadow(0, 0, 0.44, 0.1);
+  // les poteaux sculptés
+  const poteau = (u, v) => {
+    let o = cylinder(u, v, 0.04, 0, 28, WOOD, 0.9);
+    for (const z of [6, 20, 23]) { const [px, py] = at(u, v, z); o += `<path d="M${r2(px - 3.2)},${r2(py)} Q${r2(px)},${r2(py + 1.6)} ${r2(px + 3.2)},${r2(py)}" stroke="${WOOD.right}" stroke-width="0.8" fill="none"/>`; }
+    const [bx, by] = at(u, v, 12.6);
+    o += `<path d="M${r2(bx - 3.2)},${r2(by)} Q${r2(bx)},${r2(by + 1.6)} ${r2(bx + 3.2)},${r2(by)} L${r2(bx + 3.2)},${r2(by - 3)} Q${r2(bx)},${r2(by - 1.4)} ${r2(bx - 3.2)},${r2(by - 3)} Z" fill="#4FB3B0"/>`;
+    const [tx, ty] = at(u, v, 28);
+    return o + E(tx, ty - 2, 3, 3.2, WOOD.left, 0.8) + E(tx - 0.9, ty - 3, 1, 1, WOOD.top, 0);
+  };
+  s += poteau(-0.3, 0.3) + poteau(0.3, -0.3);
+  // les cordes, les barres d'écartement, puis la toile rayée qui se balance
+  const pa = at(-0.3, 0.3, 24), pb = at(0.3, -0.3, 24), sw = f ? 2 : -2;
+  const a0 = [pa[0] + 7, pa[1] + 2], b0 = [pb[0] - 7, pb[1] + 2];
+  for (const [p, q] of [[pa, a0], [pb, b0]]) s += `<path d="M${r2(p[0])},${r2(p[1])} L${r2(q[0])},${r2(q[1] - 3)} M${r2(p[0])},${r2(p[1])} L${r2(q[0])},${r2(q[1] + 3)}" stroke="#8A6A40" stroke-width="0.6"/>` + L([q[0], q[1] - 3.4], [q[0], q[1] + 3.4], WOOD.right, 1.4);
+  const mx = (a0[0] + b0[0]) / 2 + sw, my = (a0[1] + b0[1]) / 2;
+  const courbe = t => `M${r2(a0[0])},${r2(a0[1] - 3 + t * 6)} Q${r2(mx)},${r2(my + 9 + t * 16)} ${r2(b0[0])},${r2(b0[1] - 3 + t * 6)}`;
+  const bande = (t0, t1) => `${courbe(t0)} L${r2(b0[0])},${r2(b0[1] - 3 + t1 * 6)} Q${r2(mx)},${r2(my + 9 + t1 * 16)} ${r2(a0[0])},${r2(a0[1] - 3 + t1 * 6)} Z`;
+  RAYURES.forEach((c, i) => { s += `<path d="${bande(i / 5, (i + 1) / 5)}" fill="${c}"/>`; });
+  s += `<path d="${bande(0, 1)}" fill="none" stroke="${OUT}" stroke-width="1" stroke-linejoin="round"/>`;
+  // la mangue oubliée dans le creux, puis les pompons du bord
+  s += E(mx + 3, my + 7.4, 3, 2.2, '#F29A3A', 0.8) + E(mx + 1.8, my + 6.6, 1.4, 0.9, '#F8C060', 0) + E(mx + 4.6, my + 7.4, 1.4, 1.2, '#E2574C', 0) + P(`M${r2(mx + 4)},${r2(my + 5.4)} q2,-2 4,-1 q-2,1.6 -4,1 Z`, '#6FAE4E', 0.5);
+  for (let i = 1; i < 8; i++) { const t = i / 8, px = (1 - t) ** 2 * a0[0] + 2 * (1 - t) * t * mx + t * t * b0[0], py = (1 - t) ** 2 * (a0[1] + 3) + 2 * (1 - t) * t * (my + 25) + t * t * (b0[1] + 3); s += L([px, py], [px + sw * 0.3, py + 2.4], OUT, 0.5) + E(px + sw * 0.3, py + 3, 0.8, 0.8, RAYURES[i % 3], 0.4); }
+  // la touffe tropicale au pied du poteau de gauche
+  const [hx, hy] = at(-0.3, 0.3, 0);
+  return s + [[-8, -6, -30], [-3, -9, -8], [3, -8, 14], [7, -5, 34]].map(([dx, dy, r]) => `<g transform="translate(${r2(hx + 1)} ${r2(hy + 1)}) rotate(${r})">${P(`M0,0 Q-2.4,${dy * 0.5} 0,${dy} Q2.4,${dy * 0.5} 0,0 Z`, '#6FAE4E', 0.6)}</g>`).join('');
 } };
 C.totem = { n: 2, draw: f => {
   const [x, y] = at(0, 0);
