@@ -23,6 +23,18 @@
   --oc-gold-soft: rgba(224, 169, 58, 0.16);
   --oc-verdigris: var(--verdigris-500);
   --oc-danger: var(--wax-500);
+  /* Réussi, possédé, assez : texte et pastilles (et le texte posé sur une pastille) */
+  --oc-success: #4e8a3a;
+  --oc-on-success: #ffffff;
+  /* Ce qui manque ou est refusé (coût non couvert, nom refusé) ; plus doux que l'alerte (--oc-danger) */
+  --oc-missing: #b0503a;
+  /* L'or vif : sur fond sombre, jauges, palier rare */
+  --oc-gold-bright: #f2c04b;
+  /* Le halo vert derrière l'illustration d'un objet, d'un bâtiment ou d'une annexe */
+  --oc-art-halo: #cfe8b8;
+  /* La pièce d'or (écu) : sa face et son liseré */
+  --oc-coin: radial-gradient(circle at 35% 35%, #ffe7a0, #e9ae2e 70%);
+  --oc-coin-rim: rgba(59, 42, 32, .5);
 
   --oc-font-display: var(--font-display);
   --oc-font-italic: var(--font-display);

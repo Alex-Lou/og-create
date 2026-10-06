@@ -227,7 +227,7 @@ export default {
   display: grid;
   place-items: center;
   background: radial-gradient(circle at 38% 30%, #fff, var(--hc));
-  box-shadow: inset 0 0 0 0.5px rgba(74, 52, 38, 0.18);
+  box-shadow: inset 0 0 0 0.5px rgba(var(--shade-rgb), 0.18);
   font-family: var(--oc-font-display);
   font-weight: 700;
   font-size: 18px;

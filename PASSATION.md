@@ -167,7 +167,9 @@ chronométrer 20 appels. Comparer à zoom égal, au même endroit.
   `components/World/island-ui.css`, global, chargé par `WorldView`) ; 3) les valeurs en dur deviennent des jetons,
   sur trois niveaux (la palette ; des rôles globaux pour ce que plusieurs composants partagent ; des jetons locaux
   nommés en tête du CSS de chaque composant) : 3a-1 formes, profondeurs (`tokens/depth.css`, l'ordre des couches),
-  police IM Fell et durées (fait), 3a-2 couleurs partagées, puis les jetons locaux (île, Grimoire, le reste) ;
+  police IM Fell et durées (fait), 3a-2 couleurs partagées (fait : succès, manque, or vif, halo des illustrations,
+  pièce d'or, `--gold-100`, et `--shade-rgb` pour le brun des liserés à toute transparence), puis les jetons locaux
+  (île, Grimoire, le reste) ;
   4) les dossiers rangés par domaine ; 5) `App.vue` et `BookView.vue` découpés.
 - **Piège du passage en scoped** : une règle scoped gagne un attribut de spécificité. Si elle vise aussi la racine d'un
   composant enfant (un glyphe `img.glyph` dans un portrait, par exemple), elle peut l'emporter sur le style propre de

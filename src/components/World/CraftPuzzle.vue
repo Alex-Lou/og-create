@@ -286,7 +286,7 @@ export default {
 .puzzle__ghost-art img { width: 100%; height: 100%; object-fit: contain; }
 .puzzle__cell {
   position: absolute; width: 44px; height: 44px; padding: 0; border: 0; border-radius: 6px; box-sizing: border-box;
-  background: rgba(255, 252, 240, .75); box-shadow: inset 0 0 0 1.5px rgba(74, 52, 38, .28); cursor: pointer; touch-action: none;
+  background: rgba(255, 252, 240, .75); box-shadow: inset 0 0 0 1.5px rgba(var(--shade-rgb), .28); cursor: pointer; touch-action: none;
 }
 .puzzle__cell.is-hint { background: rgba(242, 192, 75, .55); box-shadow: inset 0 0 0 2px #E2A53A; }
 .puzzle__cell.is-bad { background: rgba(214, 96, 74, .35); box-shadow: inset 0 0 0 2px #C9473A; }
@@ -298,10 +298,10 @@ export default {
 .puzzle__bit { position: absolute; box-sizing: border-box; border-radius: 5px; box-shadow: inset 0 -3px 0 rgba(0, 0, 0, .14), inset 0 0 0 1.5px rgba(60, 40, 25, .35); }
 .puzzle__tray {
   align-self: stretch; display: flex; flex-wrap: wrap; justify-content: center; align-items: center; gap: 14px; min-height: 70px;
-  padding: 12px; border-radius: var(--r-md); background: var(--vellum-50); box-shadow: inset 0 0 0 1px rgba(74, 52, 38, .1);
+  padding: 12px; border-radius: var(--r-md); background: var(--vellum-50); box-shadow: inset 0 0 0 1px rgba(var(--shade-rgb), .1);
 }
 .puzzle__full { margin: 0; font-size: 13px; font-weight: 800; color: var(--ink-700); }
-.puzzle__error { margin: 0; color: #B0503A; font-size: 13px; font-weight: 800; }
+.puzzle__error { margin: 0; color: var(--oc-missing); font-size: 13px; font-weight: 800; }
 .puzzle__actions { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; }
 .puzzle__btn {
   min-height: 42px; min-width: 132px; padding: 6px 16px; border: 0; border-radius: var(--r-pill);

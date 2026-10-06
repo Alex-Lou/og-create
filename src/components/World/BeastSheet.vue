@@ -72,7 +72,7 @@ export default {
 .beast__mood.is-hungry { background: #FCE3C4; color: #8A4B12; }
 .beast__bubble {
   display: flex; align-items: center; justify-content: space-between; gap: 10px; width: 100%;
-  padding: 8px 8px 8px 12px; border-radius: var(--r-tile); background: var(--vellum-50); box-shadow: inset 0 0 0 1px rgba(74, 52, 38, .1);
+  padding: 8px 8px 8px 12px; border-radius: var(--r-tile); background: var(--vellum-50); box-shadow: inset 0 0 0 1px rgba(var(--shade-rgb), .1);
 }
 .beast__bubble-text { display: inline-flex; align-items: center; gap: 6px; font-weight: 800; font-size: 14px; }
 .beast__feed { width: 100%; }

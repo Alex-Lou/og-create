@@ -76,12 +76,12 @@ export default {
 .annexes__list { margin: 0; padding: 0; list-style: none; display: flex; flex-direction: column; gap: 8px; }
 .annexes__card {
   display: grid; grid-template-columns: 84px minmax(0, 1fr); grid-template-rows: auto auto; gap: 6px 10px; align-items: center;
-  padding: 8px; border-radius: var(--r-md); background: var(--vellum-50); box-shadow: inset 0 0 0 1px rgba(74, 52, 38, .1);
+  padding: 8px; border-radius: var(--r-md); background: var(--vellum-50); box-shadow: inset 0 0 0 1px rgba(var(--shade-rgb), .1);
 }
 .annexes__card.is-ready { box-shadow: inset 0 0 0 2px var(--gold-400); }
 .annexes__art {
   grid-row: 1 / span 2; position: relative; display: grid; place-items: center; height: 92px; border-radius: var(--r-sm);
-  background: radial-gradient(circle at 50% 72%, #CFE8B8, var(--vellum-200) 72%);
+  background: radial-gradient(circle at 50% 72%, var(--oc-art-halo), var(--vellum-200) 72%);
 }
 .annexes__art img { position: absolute; inset: 0; width: 100%; height: 100%; padding: 6px; box-sizing: border-box; object-fit: contain; }
 .annexes__card.is-locked .annexes__art img { filter: grayscale(.7) opacity(.6); }
@@ -90,7 +90,7 @@ export default {
   background: var(--ink-900); color: var(--gold-300); font-family: var(--font-display); font-weight: 700; font-size: 12px; text-align: center;
 }
 .annexes__card.is-locked .annexes__palier { background: var(--vellum-300); color: var(--ink-700); }
-.annexes__badge { position: absolute; top: 5px; right: 5px; padding: 1px 7px; border-radius: var(--r-pill); background: #4E8A3A; color: #FFFFFF; font-size: 11px; font-weight: 900; }
+.annexes__badge { position: absolute; top: 5px; right: 5px; padding: 1px 7px; border-radius: var(--r-pill); background: var(--oc-success); color: var(--oc-on-success); font-size: 11px; font-weight: 900; }
 .annexes__body { min-width: 0; display: flex; flex-direction: column; gap: 2px; }
 .annexes__kind { color: var(--ink-500); font-size: 11px; font-weight: 800; text-transform: uppercase; letter-spacing: .03em; }
 .annexes__name { font-family: var(--font-display); font-weight: 700; font-size: 17px; line-height: 1.15; }
@@ -102,5 +102,5 @@ export default {
   cursor: pointer; touch-action: manipulation;
 }
 .annexes__btn.is-off, .annexes__btn:disabled { background: var(--vellum-300); color: var(--ink-500); cursor: default; font-size: 12px; }
-.annexes__done { justify-self: end; color: #4E8A3A; font-size: 13px; font-weight: 900; }
+.annexes__done { justify-self: end; color: var(--oc-success); font-size: 13px; font-weight: 900; }
 </style>
