@@ -41,6 +41,13 @@ function renommer(rel) {
     return out([top, a, S], [S, v, p, n].filter(Boolean).join('_'));
   }
 
+  // Les égarés (lot M) : egares/<sujet>/<sujet>_<vue>_<pose><n> -> <sujet>_<vue>_<pose>_<n>
+  if (top === 'egares') {
+    const m = base.match(/^([a-z-]+)_(avant|dos)_([a-z]+?)(\d+)?$/);
+    if (!m || m[1] !== a) throw new Error('égaré inattendu : ' + rel);
+    return out([top, a], [m[1], m[2], m[3], m[4]].filter(Boolean).join('_'));
+  }
+
   if (top === 'vivants' && a === 'cerf') {
     const m = base.match(/^cerf_([a-z]+)(?:_(\d+))?$/);
     return out([top, 'cerf-blanc'], ['cerf-blanc', 'profil', m[1], m[2]].filter(Boolean).join('_'));
@@ -176,7 +183,7 @@ function moment(id, meta) {
     if (a === 'familiers') return { tictac: 'tuto-2', 'bocal-vide': 'tuto-3', 'bocal-bulle': 'acte-1', mousse: 'acte-1' }[b] || 'partout';
     if (a === 'bois') return b === 'loutre' ? 'revelation' : 'partout';
     if (a === 'climat' || a === 'bestiaire') return 'acte-4';
-    if (b === 'mouette') return 'tuto-2';
+    if (b === 'mouette' || b === 'crabe') return 'tuto-2';
     return 'partout';
   }
   if (top === 'batiments') {
@@ -185,15 +192,20 @@ function moment(id, meta) {
     return 'evolutions';
   }
   if (top === 'coffres') return { commun: 'tuto-3', rare: 'tuto-3', epique: 'acte-3', legendaire: 'acte-5' }[a];
+  // le petit fantôme dès l'étape 6, la première nuit de garde à l'étape 12 (tempéré), les bêtes des climats à l'acte IV
+  if (top === 'egares') return a === 'fantome' ? 'tuto-1' : a === 'zombie' || a === 'lapin-de-brume' ? 'tuto-3' : 'acte-4';
   if (top === 'decor') {
     if (a === 'camp') {
       if (b === 'voyageurs') return 'acte-5';
+      if (b === 'poules') return 'tuto-2';
       if (b === 'coins') return { aster: 'tuto-3', rivet: 'tuto-2', cannelle: 'tuto-2', ondin: 'tuto-3', sylve: 'acte-1', galet: 'acte-2', melisse: 'acte-3' }[p[3]];
       if (/torche|caisses|tonneau/.test(nom)) return 'tuto-3';
       return 'tuto-1';
     }
     if (a === 'creations') { const c = nom.split('_')[0]; return c === 'cloture' ? 'tuto-2' : c === 'lanterne' ? 'acte-1' : /\((cimes|landes|marais|dunes|jungle|volcan)\)/.test(meta.nom || '') ? 'acte-4' : 'evolutions'; }
     if (a === 'lieux') return nom.startsWith('menhirs_fleuri') ? 'revelation' : 'acte-3';
+    if (a === 'embrume') return 'tuto-3';
+    if (a === 'signes') return 'revelation';
     if (a === 'ruines') return /cle_du_phare|phare_eteint/.test(nom) ? 'acte-6' : 'acte-3';
     if (a === 'gisements') return 'acte-4';
     if (a === 'enseignes') return 'acte-5';
@@ -239,15 +251,10 @@ const statut = id => { for (const [rx, note] of A_REVOIR) if (rx.test(id)) retur
 
 const MANQUANTS = [
   ['tuto-1', 'La carte d\'embarquement de l\'Hirondelle (écran d\'avatar), le gilet de sauvetage, la chaise longue échouée.'],
-  ['tuto-1', 'Les égarés : petits fantômes, petits zombies tout mous, bêtes égarées selon le climat ; marche, bouderie au toucher, passage en luciole (lot M).'],
-  ['tuto-2', 'La cage aux poules du navire, l\'œuf, la bulle de production d\'une bête (lot M).'],
-  ['tuto-2', 'Le crabe de la Grève (étape 8).'],
   ['tuto-2', 'L\'établi de Rivet au camp (une porte de cabine sur deux caisses) et sa voile tendue sur un aviron.'],
-  ['tuto-3', 'Le bâtiment embrumé (calque de brume grise) et « Réparer » (lot M).'],
   ['tuto-3', 'La caisse d\'Aster au bout de sa corde.'],
   ['acte-1', 'Au détaillé, pour tout le monde (lot L4) : marcher avec une lanterne, sous un parapluie, dormir couché ; les naufragés aussi (Aster et Rivet le restent après la première lanterne).'],
   ['tuto-1', 'Les scènes plein écran du tutoriel v6, étapes 0 à 12 (lot J2).'],
-  ['revelation', 'Les signes d\'Anya qui erre : bêtes tournées du même côté, fleurs qui s\'ouvrent, lucioles rassemblées.'],
   ['acte-1', 'L\'éclat du souvenir retrouvé (le sceau s\'allume, le maître se lève outil en main).'],
   ['acte-4', 'L\'amie de Tic-Tac (quand on écrit Abeille).'],
   ['revelation', 'Le bol de soupe « pour la Dame », au bord du Foyer, le soir.']
@@ -278,7 +285,11 @@ const SUJETS = {
   'bocal-bulle': 'Bocal d\'Ondin, Bulle revenu', macareux: 'Macareux (Bosco, le familier d\'Aster)', grenouille: 'Grenouille (Bouillon, le familier de Cannelle)',
   tortue: 'Tortue (Basalte, le familier de Galet)', 'papillon-lune': 'Papillon de nuit (Lunette, le familier de Mélisse)',
   'baleine-dos': 'Baleine, le dos', 'baleine-queue': 'Baleine, la queue', 'poisson-dorade': 'Dorade', 'poisson-sardine': 'Sardine',
-  'koi-or': 'Koï doré', 'koi-blanc': 'Koï blanc', 'koi-orange': 'Koï orange'
+  'koi-or': 'Koï doré', 'koi-blanc': 'Koï blanc', 'koi-orange': 'Koï orange',
+  crabe: 'Crabe de la Grève', fantome: 'Petit fantôme (égaré)', zombie: 'Petit zombie tout mou (égaré)', 'lapin-de-brume': 'Lapin de brume (égaré, tempéré)',
+  'bouquetin-de-brume': 'Bouquetin de brume (égaré, les Cimes)', 'poney-de-brume': 'Poney de brume (égaré, les Landes)',
+  'grenouille-de-brume': 'Grenouille de brume (égaré, le Marais)', 'fennec-de-brume': 'Fennec de brume (égaré, les Dunes)',
+  'cameleon-de-brume': 'Caméléon de brume (égaré, la Jungle)', 'salamandre-de-brume': 'Salamandre de brume (égaré, le Volcan)'
 };
 const PLANTES = {
   bois_flotte: 'Bois flotté', arbre_automne: 'Arbre d\'automne', arbre_mort: 'Arbre mort', sapin_neige: 'Sapin enneigé',
@@ -324,6 +335,7 @@ function vitesse(id, pose, images) {
   if (images < 2) return undefined;
   const [top, a] = id.split('/');
   if (top === 'animaux') return pose === 'vol' ? 120 : pose === 'nage' && /mer|familiers/.test(a) ? 420 : 260;
+  if (top === 'egares') return { marche: 240, fuite: 160, bouderie: [500, 700], luciole: [300, 200, 200, 1000], brume: [220, 220, 900] }[pose];
   if (top === 'vivants') {
     if (a === 'brume') return /expr/.test(id) ? 600 : 220;
     if (a === 'cerf-blanc') return pose === 'repos' ? [1800, 180] : 300;
@@ -353,7 +365,7 @@ function collecterMeta(index, base, out) {
     if (typeof v === 'string') { if (/\.svg$/.test(v)) out.set(path.posix.join(base, v), ctx); return; }
     if (!v || typeof v !== 'object') return;
     const c = { ...ctx };
-    for (const k of ['nom', 'batiment', 'cadre', 'ms_par_image', 'ips', 'ms', 'etape']) if (v[k] !== undefined && typeof v[k] !== 'object' || k === 'cadre' && Array.isArray(v[k])) c[k] = v[k];
+    for (const k of ['nom', 'batiment', 'cadre', 'ms_par_image', 'ips', 'ms', 'etape']) if (v[k] !== undefined && typeof v[k] !== 'object' || (k === 'cadre' || k === 'ms_par_image') && Array.isArray(v[k])) c[k] = v[k];
     for (const [k, x] of Object.entries(v)) if (!['_lisez_moi', 'nom', 'cadre'].includes(k)) walk(x, c);
   };
   walk(index, {});
@@ -379,7 +391,7 @@ function construire(svgRoot, metas) {
     const [top] = id.split('/');
     const nom = id.split('/').pop();
     const e = { id, rubrique: top };
-    const perso = top === 'personnages' || top === 'animaux' || top === 'vivants';
+    const perso = top === 'personnages' || top === 'animaux' || top === 'vivants' || top === 'egares';
     if (perso) {
       const tok = nom.split('_');
       e.sujet = tok[0];

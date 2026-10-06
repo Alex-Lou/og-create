@@ -65,7 +65,7 @@ const catalogue = {
   regles: {
     noms: '<sujet>_<vue>_<pose>[_<variante>]_<n>.svg pour les personnages et les bêtes ; <sujet>_<état>_<n>.svg ailleurs. Un dessin fixe n\'a pas de numéro.',
     directions: 'avant : vient vers le bas à droite ; dos : s\'éloigne vers le haut à droite ; profil : tourné vers la droite. Le miroir (scaleX(-1)) donne le bas à gauche, le haut à gauche, la gauche. Les trois quarts avant du grand format (maîtres, naufragés, Anya, le Passeur) sortent du kit tournés vers le bas à gauche : ils sont publiés en miroir pour suivre cette règle.',
-    lumiere: 'En haut à gauche. Trait brun #3C2819.'
+    lumiere: 'En haut à gauche. Trait brun #3C2819 ; les égarés, eux, ont le trait bleu nuit #3B4763 de la famille de la brume.'
   },
   chapitres: C.CHAPITRES.map(([id, titre, resume]) => ({ id, titre, resume })),
   manquants: C.MANQUANTS.map(([parcours, quoi]) => ({ parcours, quoi })),
@@ -76,7 +76,7 @@ fs.writeFileSync(path.join(OUT, 'catalogue.json'), JSON.stringify(catalogue, nul
 // 3. Planches, pages animées, README
 const pngs = [...fs.readdirSync(path.join(__dirname, 'planches')).map(f => ['planches', f]), ...fs.readdirSync(__dirname).filter(f => /^(planche|expressions)_.*\.png$/.test(f)).map(f => ['.', f])];
 for (const [d, f] of pngs) fs.copyFileSync(path.join(__dirname, d, f), path.join(OUT, 'planches', f));
-const PAGES = [['troupe_apercu.html', 'Les 7 maîtres'], ['vivants_apercu.html', 'Brume, Anya, le cerf, le Passeur'], ['pnj_apercu.html', 'PNJ au petit format'], ['animaux_apercu.html', 'Animaux'], ['decor_apercu.html', 'Décor'], ['batiments_apercu.html', 'Bâtiments'], ['meteo_apercu.html', 'Météo'], ['naufrages_apercu.html', 'Les naufragés'], ['naufrages_pnj_apercu.html', 'Naufragés au petit format'], ['camp_apercu.html', 'Le camp'], ['ruines_apercu.html', 'Ruines des Anciens'], ['betes_orientees_apercu.html', 'Bêtes orientées'], ['coffres_apercu.html', 'Coffres'], ['avatar_apercu.html', 'L\'avatar du joueur']];
+const PAGES = [['troupe_apercu.html', 'Les 7 maîtres'], ['vivants_apercu.html', 'Brume, Anya, le cerf, le Passeur'], ['pnj_apercu.html', 'PNJ au petit format'], ['animaux_apercu.html', 'Animaux'], ['decor_apercu.html', 'Décor'], ['batiments_apercu.html', 'Bâtiments'], ['meteo_apercu.html', 'Météo'], ['naufrages_apercu.html', 'Les naufragés'], ['naufrages_pnj_apercu.html', 'Naufragés au petit format'], ['camp_apercu.html', 'Le camp'], ['ruines_apercu.html', 'Ruines des Anciens'], ['betes_orientees_apercu.html', 'Bêtes orientées'], ['coffres_apercu.html', 'Coffres'], ['avatar_apercu.html', 'L\'avatar du joueur'], ['egares_apercu.html', 'Les égarés'], ['lot_m_apercu.html', 'Le bâtiment embrumé, la cage aux poules, le crabe, les signes d\'Anya']];
 for (const [f] of PAGES) fs.copyFileSync(path.join(__dirname, f), path.join(OUT, 'apercus', f));
 fs.copyFileSync(path.join(__dirname, 'bundle_README.md'), path.join(OUT, 'README.md'));
 

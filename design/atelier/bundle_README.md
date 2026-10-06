@@ -1,7 +1,7 @@
 # Bibliothèque d'assets SVG de l'île
 
-4 192 dessins SVG au trait de la troupe : personnages, avatar du joueur, naufragés, animaux, plantes, décor, camp, ruines, bâtiments et
-météo. Chaque dessin est calé sur les cadres et les ancres du jeu, pour se poser tel quel.
+4 403 dessins SVG au trait de la troupe : personnages, avatar du joueur, naufragés, égarés, animaux, plantes, décor, camp, ruines,
+bâtiments et météo. Chaque dessin est calé sur les cadres et les ancres du jeu, pour se poser tel quel.
 
 **Par où commencer** :
 - `index.html` montre tout, chapitre après chapitre, dans l'ordre du parcours du joueur (`HISTOIRE.md`, version 6). Survoler ou toucher un dessin l'anime.
@@ -67,11 +67,14 @@ détails propres à un lot : places des objets de boutique, lumières des palier
 | `svg/personnages/avatar/` | L'avatar du joueur : 12 exemples tirés du générateur et leur version naufragée, poses, gestes du tutoriel (ramasser, grelotter, lire), expressions ; dans `avatar.json` : les formes, les nuanciers, les 36 accessoires (rareté, source) et les teintures rares | 448 |
 | `svg/personnages/epilogue/` | 8 nouveaux venus de l'épilogue, tirés d'une graine (à redessiner : ils sont accueillis, pas naufragés) | 208 |
 | `svg/vivants/` | Brume (8 stades et ses variantes), Anya, le cerf blanc, le Passeur | 128 |
-| `svg/animaux/` | Ferme, bois, eau douce, climats, bestiaire, familiers, mer : de profil, et de trois quarts avant et dos pour les 37 bêtes qui marchent (`orientees.json`) | 536 |
+| `svg/animaux/` | Ferme, bois, eau douce, climats, bestiaire, familiers, mer : de profil, et de trois quarts avant et dos pour les 37 bêtes qui marchent (`orientees.json`) ; le crabe de la Grève (`mer/crabe/crabe.json`) | 541 |
 | `svg/plantes/` | Arbres, buissons, fleurs, rochers, bois flotté, nid, lanterne sur pied, banc | 29 |
 | `svg/decor/` | 30 créations d'île, 14 lieux remarquables, 6 gisements (prêt et ramassé), 28 annexes et leurs variantes, 6 enseignes, îlots, bateaux, épaves (`decor.json`) | 385 |
-| `svg/decor/camp/` | Le camp des naufragés : l'épave de l'Hirondelle, les coins des maîtres, les objets du camp, la tente et le hamac des voyageurs (`camp.json`) | 41 |
+| `svg/decor/camp/` | Le camp des naufragés : l'épave de l'Hirondelle, les coins des maîtres, les objets du camp, la tente et le hamac des voyageurs (`camp.json`) ; la cage aux poules du navire (coincée, ouverte) et l'œuf avec son icône (`poules/poules.json`) | 46 |
+| `svg/decor/embrume/` | Le bâtiment embrumé : un calque de brume par emprise (1 × 1, 2 × 2, 3 × 3) et sa guérison, le petit nuage grognon à poser au-dessus, l'icône « Réparer » (`embrume.json`) | 22 |
+| `svg/decor/signes/` | Les signes d'Anya qui erre : des fleurs qui s'ouvrent, des lucioles rassemblées (`signes.json`) | 8 |
 | `svg/decor/ruines/` | Ce qui reste des Anciens : maison en ruine, colonnade, pierre à runes (jour, nuit), colonne brisée, la clé du phare, le phare éteint (`ruines.json`) | 9 |
+| `svg/egares/` | Les égarés, la nuit (`HISTOIRE.md` § 6.15) : petit fantôme, petit zombie tout mou, 7 bêtes de brume (une par climat) ; trois quarts avant et dos, marche, bouderie au toucher, fuite devant Anya, passage en luciole, retour dans la brume ; trait bleu nuit, celui de la famille de la brume (`egares.json`) | 171 |
 | `svg/coffres/` | Les coffres des 4 raretés pour la fenêtre d'ouverture (cadre 120 × 100) : fermé, ouverture en 4 images, ouvert, rayons (calque facultatif), icône 32 × 32 (`coffres.json`) | 44 |
 | `svg/batiments/` | 7 bâtiments × 7 paliers (images animées), chantier, 20 skins, 48 objets de la boutique (un fichier par calque), 14 pièces rares à chaque palier, outil de teintes (`batiments.json`) | 659 |
 | `svg/meteo/` | Calques d'écran sans couture en boucle, nuages, arc-en-ciel, éclair, soleil bas, lumières, teintes des moments du jour, 19 icônes (`meteo.json`) | 169 |
@@ -95,6 +98,13 @@ détails propres à un lot : places des objets de boutique, lumières des palier
   les accessoires « boutique » ou « coffre » et les teintures rares se gagnent pour toujours ; tout est cosmétique. Les
   fichiers de `svg/personnages/avatar/` sont des exemples. `design/atelier/verif_avatar.mjs` vérifie qu'aucun choix ne
   casse le dessin ni ne sort du cadre.
+- **Égarés** : en marche, `marche` en boucle (avant ou dos, le miroir pour les deux autres directions). Touché : `bouderie`
+  (une fois), puis `brume` (une fois) : il retourne dans la brume. Une lumière à 2 cases : `luciole` (une fois) ; la
+  luciole peut ensuite rejoindre les lumières de la nuit. Anya passe : `fuite` en boucle, en s'éloignant d'elle. La bête de
+  brume est celle du climat du morceau d'île d'où vient la nuit (le lapin au cœur, tempéré).
+- **Bâtiment embrumé** : griser le bâtiment (filtre CSS, par exemple `grayscale(.8)`), poser par-dessus le calque
+  `embrume_<n>x<n>` de son emprise (même ancre que le bâtiment) et le petit nuage au-dessus, comme une bulle. À la
+  réparation ou au passage d'Anya : `embrume_<n>x<n>_guerison` une fois, puis retirer le filtre.
 - **Naufragés** : un maître garde le look du naufragé jusqu'à son souvenir retrouvé (`HISTOIRE.md` § 8 à 10 : Cannelle
   dès l'étape 7 du tutoriel, Ondin à l'étape 11, Sylve à l'acte I, Galet à l'acte II, Mélisse à son réveil, Rivet à
   l'acte III, Aster à l'acte IV), puis prend celui de `maitres/`.
@@ -109,8 +119,7 @@ détails propres à un lot : places des objets de boutique, lumières des palier
   détaillé).
 
 - **Ce qui manque encore** est listé dans `catalogue.json` (`manquants`) et en tête de chaque chapitre d'`index.html` :
-  les égarés (les créatures de la brume) et les défenses, le bâtiment embrumé, la cage aux poules,
-  les scènes du tutoriel v6, les signes d'Anya…
+  les bâtiments de défense (à concevoir), les scènes du tutoriel v6, l'éclat du souvenir retrouvé…
 - **Les 84 teintes en images** : elles se tirent du dessin avec l'outil de teintes, plutôt que 588 fichiers figés.
 - **Relief, falaises, mer, île flottante** : le jeu les peint case par case au canvas. Ce ne sont pas des sprites.
 - **Visiteurs** : le jeu en tire autant qu'il veut d'une graine. Les 12 fournis sont des exemples.

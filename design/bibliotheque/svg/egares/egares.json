@@ -1,0 +1,324 @@
+{
+ "_lisez_moi": [
+  "Les égarés (HISTOIRE.md § 6.15) : les petites créatures que la brume laisse sortir la nuit. Grognons plus que méchants : ni coup, ni mal. Trait bleu nuit (#3B4763) pour toute la famille de la brume, au lieu du brun de l'île.",
+  "Vues des bêtes orientées : avant = il vient vers le bas à droite, dos = il s'éloigne vers le haut à droite ; le miroir horizontal donne les deux autres directions. Ancre (0, 0) au sol sous l'égaré ; prendre le cadre noté ici.",
+  "Poses (avant) : marche1, marche2 (~240 ms) ; repos ; bouderie1, bouderie2 (un toucher le repousse : il recule et boude, ~500 ms, puis brume) ; fuite1, fuite2 (devant Anya, ~160 ms) ; luciole1 à luciole4 (une lumière le change en luciole : il s'apaise et luit, rapetisse, devient une boule de lumière, la luciole s'envole ; ~200 ms, une fois) ; brume1 à brume3 (il retourne dans la brume, ~220 ms, une fois). Poses (dos) : marche1, marche2, repos, fuite1, fuite2.",
+  "Les bêtes de brume : une par climat (celui du morceau d'île d'où vient la nuit) ; ailleurs (le cœur, tempéré), le lapin de brume. Les fantômes et les zombies viennent de partout.",
+  "Noms rangés à l'assemblage (README, catalogue.json) : <sujet>_<vue>_<pose>_<n>.svg, vues face, avant (l'ancien « trois_quarts »), dos, profil ; les chemins ci-dessous suivent ces noms."
+ ],
+ "egares": {
+  "fantome": {
+   "nom": "Petit fantôme",
+   "cadre": [
+    -16,
+    -26.5,
+    32,
+    30.5
+   ],
+   "fichiers": {
+    "avant": {
+     "marche1": "fantome/fantome_avant_marche_1.svg",
+     "marche2": "fantome/fantome_avant_marche_2.svg",
+     "repos": "fantome/fantome_avant_repos.svg",
+     "bouderie1": "fantome/fantome_avant_bouderie_1.svg",
+     "bouderie2": "fantome/fantome_avant_bouderie_2.svg",
+     "fuite1": "fantome/fantome_avant_fuite_1.svg",
+     "fuite2": "fantome/fantome_avant_fuite_2.svg",
+     "luciole1": "fantome/fantome_avant_luciole_1.svg",
+     "luciole2": "fantome/fantome_avant_luciole_2.svg",
+     "luciole3": "fantome/fantome_avant_luciole_3.svg",
+     "luciole4": "fantome/fantome_avant_luciole_4.svg",
+     "brume1": "fantome/fantome_avant_brume_1.svg",
+     "brume2": "fantome/fantome_avant_brume_2.svg",
+     "brume3": "fantome/fantome_avant_brume_3.svg"
+    },
+    "dos": {
+     "marche1": "fantome/fantome_dos_marche_1.svg",
+     "marche2": "fantome/fantome_dos_marche_2.svg",
+     "repos": "fantome/fantome_dos_repos.svg",
+     "fuite1": "fantome/fantome_dos_fuite_1.svg",
+     "fuite2": "fantome/fantome_dos_fuite_2.svg"
+    }
+   }
+  },
+  "zombie": {
+   "nom": "Petit zombie tout mou",
+   "cadre": [
+    -16,
+    -26,
+    32,
+    30
+   ],
+   "fichiers": {
+    "avant": {
+     "marche1": "zombie/zombie_avant_marche_1.svg",
+     "marche2": "zombie/zombie_avant_marche_2.svg",
+     "repos": "zombie/zombie_avant_repos.svg",
+     "bouderie1": "zombie/zombie_avant_bouderie_1.svg",
+     "bouderie2": "zombie/zombie_avant_bouderie_2.svg",
+     "fuite1": "zombie/zombie_avant_fuite_1.svg",
+     "fuite2": "zombie/zombie_avant_fuite_2.svg",
+     "luciole1": "zombie/zombie_avant_luciole_1.svg",
+     "luciole2": "zombie/zombie_avant_luciole_2.svg",
+     "luciole3": "zombie/zombie_avant_luciole_3.svg",
+     "luciole4": "zombie/zombie_avant_luciole_4.svg",
+     "brume1": "zombie/zombie_avant_brume_1.svg",
+     "brume2": "zombie/zombie_avant_brume_2.svg",
+     "brume3": "zombie/zombie_avant_brume_3.svg"
+    },
+    "dos": {
+     "marche1": "zombie/zombie_dos_marche_1.svg",
+     "marche2": "zombie/zombie_dos_marche_2.svg",
+     "repos": "zombie/zombie_dos_repos.svg",
+     "fuite1": "zombie/zombie_dos_fuite_1.svg",
+     "fuite2": "zombie/zombie_dos_fuite_2.svg"
+    }
+   }
+  },
+  "lapin-de-brume": {
+   "nom": "Lapin de brume (tempéré)",
+   "climat": "tempere",
+   "cadre": [
+    -16,
+    -26,
+    32,
+    32
+   ],
+   "fichiers": {
+    "avant": {
+     "marche1": "lapin-de-brume/lapin-de-brume_avant_marche_1.svg",
+     "marche2": "lapin-de-brume/lapin-de-brume_avant_marche_2.svg",
+     "repos": "lapin-de-brume/lapin-de-brume_avant_repos.svg",
+     "bouderie1": "lapin-de-brume/lapin-de-brume_avant_bouderie_1.svg",
+     "bouderie2": "lapin-de-brume/lapin-de-brume_avant_bouderie_2.svg",
+     "fuite1": "lapin-de-brume/lapin-de-brume_avant_fuite_1.svg",
+     "fuite2": "lapin-de-brume/lapin-de-brume_avant_fuite_2.svg",
+     "luciole1": "lapin-de-brume/lapin-de-brume_avant_luciole_1.svg",
+     "luciole2": "lapin-de-brume/lapin-de-brume_avant_luciole_2.svg",
+     "luciole3": "lapin-de-brume/lapin-de-brume_avant_luciole_3.svg",
+     "luciole4": "lapin-de-brume/lapin-de-brume_avant_luciole_4.svg",
+     "brume1": "lapin-de-brume/lapin-de-brume_avant_brume_1.svg",
+     "brume2": "lapin-de-brume/lapin-de-brume_avant_brume_2.svg",
+     "brume3": "lapin-de-brume/lapin-de-brume_avant_brume_3.svg"
+    },
+    "dos": {
+     "marche1": "lapin-de-brume/lapin-de-brume_dos_marche_1.svg",
+     "marche2": "lapin-de-brume/lapin-de-brume_dos_marche_2.svg",
+     "repos": "lapin-de-brume/lapin-de-brume_dos_repos.svg",
+     "fuite1": "lapin-de-brume/lapin-de-brume_dos_fuite_1.svg",
+     "fuite2": "lapin-de-brume/lapin-de-brume_dos_fuite_2.svg"
+    }
+   }
+  },
+  "bouquetin-de-brume": {
+   "nom": "Bouquetin de brume (les Cimes)",
+   "climat": "cimes",
+   "cadre": [
+    -16,
+    -27,
+    32,
+    36
+   ],
+   "fichiers": {
+    "avant": {
+     "marche1": "bouquetin-de-brume/bouquetin-de-brume_avant_marche_1.svg",
+     "marche2": "bouquetin-de-brume/bouquetin-de-brume_avant_marche_2.svg",
+     "repos": "bouquetin-de-brume/bouquetin-de-brume_avant_repos.svg",
+     "bouderie1": "bouquetin-de-brume/bouquetin-de-brume_avant_bouderie_1.svg",
+     "bouderie2": "bouquetin-de-brume/bouquetin-de-brume_avant_bouderie_2.svg",
+     "fuite1": "bouquetin-de-brume/bouquetin-de-brume_avant_fuite_1.svg",
+     "fuite2": "bouquetin-de-brume/bouquetin-de-brume_avant_fuite_2.svg",
+     "luciole1": "bouquetin-de-brume/bouquetin-de-brume_avant_luciole_1.svg",
+     "luciole2": "bouquetin-de-brume/bouquetin-de-brume_avant_luciole_2.svg",
+     "luciole3": "bouquetin-de-brume/bouquetin-de-brume_avant_luciole_3.svg",
+     "luciole4": "bouquetin-de-brume/bouquetin-de-brume_avant_luciole_4.svg",
+     "brume1": "bouquetin-de-brume/bouquetin-de-brume_avant_brume_1.svg",
+     "brume2": "bouquetin-de-brume/bouquetin-de-brume_avant_brume_2.svg",
+     "brume3": "bouquetin-de-brume/bouquetin-de-brume_avant_brume_3.svg"
+    },
+    "dos": {
+     "marche1": "bouquetin-de-brume/bouquetin-de-brume_dos_marche_1.svg",
+     "marche2": "bouquetin-de-brume/bouquetin-de-brume_dos_marche_2.svg",
+     "repos": "bouquetin-de-brume/bouquetin-de-brume_dos_repos.svg",
+     "fuite1": "bouquetin-de-brume/bouquetin-de-brume_dos_fuite_1.svg",
+     "fuite2": "bouquetin-de-brume/bouquetin-de-brume_dos_fuite_2.svg"
+    }
+   }
+  },
+  "poney-de-brume": {
+   "nom": "Poney de brume (les Landes)",
+   "climat": "landes",
+   "cadre": [
+    -16,
+    -26,
+    32,
+    35.5
+   ],
+   "fichiers": {
+    "avant": {
+     "marche1": "poney-de-brume/poney-de-brume_avant_marche_1.svg",
+     "marche2": "poney-de-brume/poney-de-brume_avant_marche_2.svg",
+     "repos": "poney-de-brume/poney-de-brume_avant_repos.svg",
+     "bouderie1": "poney-de-brume/poney-de-brume_avant_bouderie_1.svg",
+     "bouderie2": "poney-de-brume/poney-de-brume_avant_bouderie_2.svg",
+     "fuite1": "poney-de-brume/poney-de-brume_avant_fuite_1.svg",
+     "fuite2": "poney-de-brume/poney-de-brume_avant_fuite_2.svg",
+     "luciole1": "poney-de-brume/poney-de-brume_avant_luciole_1.svg",
+     "luciole2": "poney-de-brume/poney-de-brume_avant_luciole_2.svg",
+     "luciole3": "poney-de-brume/poney-de-brume_avant_luciole_3.svg",
+     "luciole4": "poney-de-brume/poney-de-brume_avant_luciole_4.svg",
+     "brume1": "poney-de-brume/poney-de-brume_avant_brume_1.svg",
+     "brume2": "poney-de-brume/poney-de-brume_avant_brume_2.svg",
+     "brume3": "poney-de-brume/poney-de-brume_avant_brume_3.svg"
+    },
+    "dos": {
+     "marche1": "poney-de-brume/poney-de-brume_dos_marche_1.svg",
+     "marche2": "poney-de-brume/poney-de-brume_dos_marche_2.svg",
+     "repos": "poney-de-brume/poney-de-brume_dos_repos.svg",
+     "fuite1": "poney-de-brume/poney-de-brume_dos_fuite_1.svg",
+     "fuite2": "poney-de-brume/poney-de-brume_dos_fuite_2.svg"
+    }
+   }
+  },
+  "grenouille-de-brume": {
+   "nom": "Grenouille de brume (le Marais)",
+   "climat": "marais",
+   "cadre": [
+    -16,
+    -26,
+    32,
+    32
+   ],
+   "fichiers": {
+    "avant": {
+     "marche1": "grenouille-de-brume/grenouille-de-brume_avant_marche_1.svg",
+     "marche2": "grenouille-de-brume/grenouille-de-brume_avant_marche_2.svg",
+     "repos": "grenouille-de-brume/grenouille-de-brume_avant_repos.svg",
+     "bouderie1": "grenouille-de-brume/grenouille-de-brume_avant_bouderie_1.svg",
+     "bouderie2": "grenouille-de-brume/grenouille-de-brume_avant_bouderie_2.svg",
+     "fuite1": "grenouille-de-brume/grenouille-de-brume_avant_fuite_1.svg",
+     "fuite2": "grenouille-de-brume/grenouille-de-brume_avant_fuite_2.svg",
+     "luciole1": "grenouille-de-brume/grenouille-de-brume_avant_luciole_1.svg",
+     "luciole2": "grenouille-de-brume/grenouille-de-brume_avant_luciole_2.svg",
+     "luciole3": "grenouille-de-brume/grenouille-de-brume_avant_luciole_3.svg",
+     "luciole4": "grenouille-de-brume/grenouille-de-brume_avant_luciole_4.svg",
+     "brume1": "grenouille-de-brume/grenouille-de-brume_avant_brume_1.svg",
+     "brume2": "grenouille-de-brume/grenouille-de-brume_avant_brume_2.svg",
+     "brume3": "grenouille-de-brume/grenouille-de-brume_avant_brume_3.svg"
+    },
+    "dos": {
+     "marche1": "grenouille-de-brume/grenouille-de-brume_dos_marche_1.svg",
+     "marche2": "grenouille-de-brume/grenouille-de-brume_dos_marche_2.svg",
+     "repos": "grenouille-de-brume/grenouille-de-brume_dos_repos.svg",
+     "fuite1": "grenouille-de-brume/grenouille-de-brume_dos_fuite_1.svg",
+     "fuite2": "grenouille-de-brume/grenouille-de-brume_dos_fuite_2.svg"
+    }
+   }
+  },
+  "fennec-de-brume": {
+   "nom": "Fennec de brume (les Dunes)",
+   "climat": "dunes",
+   "cadre": [
+    -16,
+    -26,
+    32,
+    32
+   ],
+   "fichiers": {
+    "avant": {
+     "marche1": "fennec-de-brume/fennec-de-brume_avant_marche_1.svg",
+     "marche2": "fennec-de-brume/fennec-de-brume_avant_marche_2.svg",
+     "repos": "fennec-de-brume/fennec-de-brume_avant_repos.svg",
+     "bouderie1": "fennec-de-brume/fennec-de-brume_avant_bouderie_1.svg",
+     "bouderie2": "fennec-de-brume/fennec-de-brume_avant_bouderie_2.svg",
+     "fuite1": "fennec-de-brume/fennec-de-brume_avant_fuite_1.svg",
+     "fuite2": "fennec-de-brume/fennec-de-brume_avant_fuite_2.svg",
+     "luciole1": "fennec-de-brume/fennec-de-brume_avant_luciole_1.svg",
+     "luciole2": "fennec-de-brume/fennec-de-brume_avant_luciole_2.svg",
+     "luciole3": "fennec-de-brume/fennec-de-brume_avant_luciole_3.svg",
+     "luciole4": "fennec-de-brume/fennec-de-brume_avant_luciole_4.svg",
+     "brume1": "fennec-de-brume/fennec-de-brume_avant_brume_1.svg",
+     "brume2": "fennec-de-brume/fennec-de-brume_avant_brume_2.svg",
+     "brume3": "fennec-de-brume/fennec-de-brume_avant_brume_3.svg"
+    },
+    "dos": {
+     "marche1": "fennec-de-brume/fennec-de-brume_dos_marche_1.svg",
+     "marche2": "fennec-de-brume/fennec-de-brume_dos_marche_2.svg",
+     "repos": "fennec-de-brume/fennec-de-brume_dos_repos.svg",
+     "fuite1": "fennec-de-brume/fennec-de-brume_dos_fuite_1.svg",
+     "fuite2": "fennec-de-brume/fennec-de-brume_dos_fuite_2.svg"
+    }
+   }
+  },
+  "cameleon-de-brume": {
+   "nom": "Caméléon de brume (la Jungle)",
+   "climat": "jungle",
+   "cadre": [
+    -16,
+    -26,
+    32,
+    32
+   ],
+   "fichiers": {
+    "avant": {
+     "marche1": "cameleon-de-brume/cameleon-de-brume_avant_marche_1.svg",
+     "marche2": "cameleon-de-brume/cameleon-de-brume_avant_marche_2.svg",
+     "repos": "cameleon-de-brume/cameleon-de-brume_avant_repos.svg",
+     "bouderie1": "cameleon-de-brume/cameleon-de-brume_avant_bouderie_1.svg",
+     "bouderie2": "cameleon-de-brume/cameleon-de-brume_avant_bouderie_2.svg",
+     "fuite1": "cameleon-de-brume/cameleon-de-brume_avant_fuite_1.svg",
+     "fuite2": "cameleon-de-brume/cameleon-de-brume_avant_fuite_2.svg",
+     "luciole1": "cameleon-de-brume/cameleon-de-brume_avant_luciole_1.svg",
+     "luciole2": "cameleon-de-brume/cameleon-de-brume_avant_luciole_2.svg",
+     "luciole3": "cameleon-de-brume/cameleon-de-brume_avant_luciole_3.svg",
+     "luciole4": "cameleon-de-brume/cameleon-de-brume_avant_luciole_4.svg",
+     "brume1": "cameleon-de-brume/cameleon-de-brume_avant_brume_1.svg",
+     "brume2": "cameleon-de-brume/cameleon-de-brume_avant_brume_2.svg",
+     "brume3": "cameleon-de-brume/cameleon-de-brume_avant_brume_3.svg"
+    },
+    "dos": {
+     "marche1": "cameleon-de-brume/cameleon-de-brume_dos_marche_1.svg",
+     "marche2": "cameleon-de-brume/cameleon-de-brume_dos_marche_2.svg",
+     "repos": "cameleon-de-brume/cameleon-de-brume_dos_repos.svg",
+     "fuite1": "cameleon-de-brume/cameleon-de-brume_dos_fuite_1.svg",
+     "fuite2": "cameleon-de-brume/cameleon-de-brume_dos_fuite_2.svg"
+    }
+   }
+  },
+  "salamandre-de-brume": {
+   "nom": "Salamandre de brume (le Volcan)",
+   "climat": "volcan",
+   "cadre": [
+    -16,
+    -26,
+    32,
+    32
+   ],
+   "fichiers": {
+    "avant": {
+     "marche1": "salamandre-de-brume/salamandre-de-brume_avant_marche_1.svg",
+     "marche2": "salamandre-de-brume/salamandre-de-brume_avant_marche_2.svg",
+     "repos": "salamandre-de-brume/salamandre-de-brume_avant_repos.svg",
+     "bouderie1": "salamandre-de-brume/salamandre-de-brume_avant_bouderie_1.svg",
+     "bouderie2": "salamandre-de-brume/salamandre-de-brume_avant_bouderie_2.svg",
+     "fuite1": "salamandre-de-brume/salamandre-de-brume_avant_fuite_1.svg",
+     "fuite2": "salamandre-de-brume/salamandre-de-brume_avant_fuite_2.svg",
+     "luciole1": "salamandre-de-brume/salamandre-de-brume_avant_luciole_1.svg",
+     "luciole2": "salamandre-de-brume/salamandre-de-brume_avant_luciole_2.svg",
+     "luciole3": "salamandre-de-brume/salamandre-de-brume_avant_luciole_3.svg",
+     "luciole4": "salamandre-de-brume/salamandre-de-brume_avant_luciole_4.svg",
+     "brume1": "salamandre-de-brume/salamandre-de-brume_avant_brume_1.svg",
+     "brume2": "salamandre-de-brume/salamandre-de-brume_avant_brume_2.svg",
+     "brume3": "salamandre-de-brume/salamandre-de-brume_avant_brume_3.svg"
+    },
+    "dos": {
+     "marche1": "salamandre-de-brume/salamandre-de-brume_dos_marche_1.svg",
+     "marche2": "salamandre-de-brume/salamandre-de-brume_dos_marche_2.svg",
+     "repos": "salamandre-de-brume/salamandre-de-brume_dos_repos.svg",
+     "fuite1": "salamandre-de-brume/salamandre-de-brume_dos_fuite_1.svg",
+     "fuite2": "salamandre-de-brume/salamandre-de-brume_dos_fuite_2.svg"
+    }
+   }
+  }
+ }
+}

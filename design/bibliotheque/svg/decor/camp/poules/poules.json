@@ -1,0 +1,58 @@
+{
+ "_lisez_moi": [
+  "Étape 8 du tutoriel : la cage aux poules de la cuisine du navire, coincée sous les rochers de la Grève (2 images en boucle, ~300 ms : elle remue, les poules s'agitent) ; touchée, elle s'ouvre (cage_poules_ouverte) et les trois poules sortent (poule-rousse, poule-blanche, poule-noire des bêtes orientées).",
+  "L'œuf : posé au sol près de la poule qui l'a pondu, et son icône 32 × 32 (bulle de production, fiche de la bête). Ancre (0, 0) au centre de la case, échelle du jeu × 1,25."
+ ],
+ "poules": {
+  "cage_coincee": {
+   "nom": "Cage aux poules du navire, coincée sous les rochers",
+   "cadre": [
+    -50,
+    -50,
+    100,
+    72
+   ],
+   "ms_par_image": 300,
+   "fichiers": [
+    "cage_poules_coincee_1.svg",
+    "cage_poules_coincee_2.svg"
+   ]
+  },
+  "cage_ouverte": {
+   "nom": "Cage aux poules du navire, ouverte",
+   "cadre": [
+    -50,
+    -50,
+    100,
+    72
+   ],
+   "fichiers": [
+    "cage_poules_ouverte.svg"
+   ]
+  },
+  "oeuf": {
+   "nom": "Œuf",
+   "cadre": [
+    -10,
+    -14,
+    20,
+    17.5
+   ],
+   "fichiers": [
+    "oeuf.svg"
+   ]
+  },
+  "oeuf_icone": {
+   "nom": "Œuf (icône)",
+   "cadre": [
+    0,
+    0,
+    32,
+    32
+   ],
+   "fichiers": [
+    "oeuf_icone.svg"
+   ]
+  }
+ }
+}
