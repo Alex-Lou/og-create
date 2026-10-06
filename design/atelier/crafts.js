@@ -374,20 +374,50 @@ C.statue = { n: 1, draw: () => {
   return s + `<path d="M${r2(lx + 1)},${r2(ly)} Q${r2(lx - 1.4)},${r2(ly - 4)} ${r2(lx + 0.6)},${r2(ly - 8)} Q${r2(lx + 2.4)},${r2(ly - 11)} ${r2(lx + 0.4)},${r2(ly - 14)} M${r2(lx + 1)},${r2(ly)} Q${r2(lx + 4)},${r2(ly - 1)} ${r2(lx + 7)},${r2(ly + 1.6)}" stroke="#3E7A34" stroke-width="0.8" fill="none" stroke-linecap="round"/>`
     + feuille(lx - 0.6, ly - 2.4, -40) + feuille(lx + 1.4, ly - 6.6, 30) + feuille(lx - 0.2, ly - 10, -30) + feuille(lx + 1.2, ly - 13.6, 20) + feuille(lx + 4, ly - 0.2, 70) + feuille(lx + 6.6, ly + 1.8, 100);
 } };
-// Arche fleurie : deux montants, cintre de feuilles et de roses qui frémissent
+// Arche fleurie : une arche de jardin en bois peint, deux montants en treillage sur leurs dés de pierre, un cintre
+// double et ses barreaux ; un rosier grimpant monte surtout à gauche, ses roses, ses boutons ; les feuilles frémissent
+// et un pétale tombe (2 images)
+const PEINT = { light: '#FBF7EF', mid: '#E9E1D2', dark: '#C9BDA8' };
+const ROSES = [['#E8566A', '#B5344A'], ['#F5A3BE', '#D46F8E'], ['#FBD6E1', '#E59CB3']];
+// une rose vue de face : la corolle, la spirale de son cœur, un reflet
+const rose = (x, y, r, [c, d]) => E(x, y, r, r * 0.9, c, 0.6)
+  + `<path d="M${r2(x - r * 0.55)},${r2(y + r * 0.1)} q${r2(r * 0.5)},${r2(-r * 0.75)} ${r2(r * 1.05)},${r2(-r * 0.05)} q${r2(-r * 0.2)},${r2(r * 0.55)} ${r2(-r * 0.6)},${r2(r * 0.4)} q${r2(-r * 0.3)},${r2(-r * 0.3)} ${r2(r * 0.1)},${r2(-r * 0.45)}" stroke="${d}" stroke-width="0.6" fill="none" stroke-linecap="round"/>`
+  + E(x - r * 0.45, y - r * 0.4, r * 0.25, r * 0.18, '#FFFFFF', 0);
+// un bouton de rose : la goutte rose dans son calice vert
+const bouton = (x, y, c) => P(`M${r2(x)},${r2(y - 2.6)} Q${r2(x + 1.6)},${r2(y - 0.6)} ${r2(x)},${r2(y + 0.4)} Q${r2(x - 1.6)},${r2(y - 0.6)} ${r2(x)},${r2(y - 2.6)} Z`, c, 0.55)
+  + P(`M${r2(x - 1.2)},${r2(y - 0.6)} Q${r2(x)},${r2(y + 1.6)} ${r2(x + 1.2)},${r2(y - 0.6)} Q${r2(x)},${r2(y)} ${r2(x - 1.2)},${r2(y - 0.6)} Z`, '#6FAE4E', 0.5);
 C.arche = { n: 2, draw: f => {
-  // les deux montants face à nous (en travers de la case)
-  let s = shadow(0, 0, 0.42, 0.12) + post(-0.26, 0.26, 0, 34, WOOD, 0.035) + post(0.26, -0.26, 0, 34, WOOD, 0.035);
-  const a = at(-0.26, 0.26, 34), b = at(0.26, -0.26, 34);
-  const arc = `M${a[0]},${a[1]} Q${r2((a[0] + b[0]) / 2)},${r2((a[1] + b[1]) / 2 - 24)} ${b[0]},${b[1]}`;
-  s += thick(arc, 3, WOOD.left);
-  for (let i = 0; i <= 10; i++) {
-    const t = i / 10, x = (1 - t) ** 2 * a[0] + 2 * (1 - t) * t * ((a[0] + b[0]) / 2) + t * t * b[0], y = (1 - t) ** 2 * a[1] + 2 * (1 - t) * t * ((a[1] + b[1]) / 2 - 24) + t * t * b[1];
-    s += leafDot(x + wave(f, 2, 0.6, i), y, 3.2) + (i % 2 ? Dk.flower(x + wave(f, 2, 0.6, i), y - 1, 1.5, i % 4 === 1 ? '#E8566A' : '#F7B6CE', '#F7E27A') : '');
+  const H = 32, [, top] = at(0, 0, H);
+  let s = shadow(0, 0, 0.42, 0.12);
+  // les deux montants en treillage, chacun sur son dé de pierre
+  for (const k of [-1, 1]) {
+    const u = -0.25 * k, x0 = 20 * k - 3, x1 = 20 * k + 3, [, y0] = at(u, -u, 2.6);
+    s += box(u - 0.05, -u - 0.05, u + 0.05, -u + 0.05, 0, 2.6, STONE, 0.8);
+    let lat = '';
+    for (let y = y0; y > top + 4; y -= 7) lat += `M${x0},${r2(y)} L${x1},${r2(y - 7)} M${x1},${r2(y)} L${x0},${r2(y - 7)} `;
+    s += thick(lat, 0.8, PEINT.mid) + thick(`M${x0},${r2(y0)} L${x0},${r2(top)} M${x1},${r2(y0)} L${x1},${r2(top)}`, 1.6, PEINT.light)
+      + `<path d="M${x1 + 0.4},${r2(y0)} L${x1 + 0.4},${r2(top)}" stroke="${PEINT.dark}" stroke-width="0.6"/>`;
   }
-  for (const [u, v, k] of [[-0.26, 0.26, 0], [0.26, -0.26, 1]]) for (let z = 8; z < 34; z += 8) { const [x, y] = at(u, v, z); s += leafDot(x + (k ? 1.6 : -1.6), y, 2.4); }
-  return s;
+  // le cintre : deux arceaux et leurs barreaux
+  const arc = (rx, ry) => `M${-rx},${r2(top)} A${rx} ${ry} 0 0 1 ${rx},${r2(top)}`;
+  let rungs = '';
+  for (let i = 1; i < 8; i++) { const t = (i / 8) * Math.PI, c = Math.cos(t), si = Math.sin(t); rungs += `M${r2(-17 * c)},${r2(top - 15 * si)} L${r2(-23 * c)},${r2(top - 21 * si)} `; }
+  s += thick(rungs, 1, PEINT.mid) + thick(arc(23, 21), 1.6, PEINT.light) + thick(arc(17, 15), 1.6, PEINT.light)
+    + `<path d="${arc(23, 20.2)}" stroke="#FFFFFF" stroke-width="0.6" fill="none" opacity="0.8"/>`;
+  // le rosier : sa tige qui serpente au montant gauche, puis ses feuilles, ses roses et ses boutons le long du cintre
+  s += `<path d="M-18,0 Q-24,-8 -19,-15 Q-15,-22 -21,-29 Q-25,-34 -20,${r2(top - 4)}" stroke="#4E7A34" stroke-width="1" fill="none" stroke-linecap="round"/>`;
+  const along = th => [r2(-20 * Math.cos(th)), r2(top - 18 * Math.sin(th))];
+  const feuilles = [[-20, -4, 2.4], [-22, -12, 2.8], [-17.6, -18, 2.4], [-22.4, -25, 3], [-18, -31, 2.6], [-21, -37, 2.8], [21.4, -26, 2.4], [18.6, -33, 2.6], [22, -38, 2.4]];
+  for (let i = 0; i <= 9; i++) { const [x, y] = along((i / 13) * Math.PI); feuilles.push([x + (i % 2 ? 1.4 : -1.2), y + (i % 2 ? 1 : -0.8), 2.6 + (i % 3) * 0.3]); }
+  s += feuilles.map(([x, y, r], i) => leafDot(x + wave(f, 2, 0.5, i), y, r)).join('');
+  s += [[-21, -9, 2.4, 0], [-19, -22, 2.6, 1], [-21.6, -34, 2.8, 0], [21, -30, 2.2, 1]].map(([x, y, r, c]) => rose(x, y, r, ROSES[c])).join('');
+  for (const [i, r, c] of [[1, 2.8, 0], [3, 2.6, 1], [5, 2.8, 2], [7, 2.4, 0], [9, 2.4, 1]]) { const [x, y] = along((i / 13) * Math.PI); s += rose(x + wave(f, 2, 0.4, i), y - 0.6, r, ROSES[c]); }
+  s += bouton(-23.4, -16, ROSES[0][0]) + bouton(-16.4, -28, ROSES[1][0]) + bouton(...along((11 / 13) * Math.PI), ROSES[2][0]);
+  // le pétale qui tombe, plus bas d'une image à l'autre
+  const [px, py] = [f ? -9 : -12, f ? -14 : -26];
+  return s + `<path d="M${px},${py} q2,-1.4 3,0.4 q-1.6,1.4 -3,-0.4 Z" fill="${ROSES[1][0]}" stroke="${OUT}" stroke-width="0.5" transform="rotate(${f ? 40 : -20} ${px} ${py})"/>`;
 } };
+
 // Étal du marché : table, cageots, auvent rayé qui ondule
 C.etal = { n: 2, draw: f => {
   let s = shadow(0, 0, 0.48, 0.14);
