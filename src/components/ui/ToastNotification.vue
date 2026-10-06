@@ -130,7 +130,7 @@ export default {
 </style>
 
 <style>
-/* Pile créée par notificationService ; sur mobile, base.css la place en haut */
+/* Pile créée par notificationService ; sur mobile, styles/base/responsive.css la place en haut */
 .toast-stack {
   position: fixed;
   left: 50%;
