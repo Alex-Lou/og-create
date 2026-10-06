@@ -161,16 +161,28 @@ describe('village : bêtes', () => {
     expect(cow.sprite[0]).toMatch(/rest$/);
     expect(village.say({ kind: 'beast', species: 'cow' }, at(13)).text).toBe('Meuh !');
   });
-  it('les bêtes sauvages ont leurs heures ; touchées, elles s’enfuient puis disparaissent', () => {
+  it('les bêtes sauvages ont leurs heures ; touchées, elles sursautent, trottinent et reviennent, sans disparaître', () => {
     const day = at(13);
     const night = at(1);
     expect(village.at(3, day).list.some(c => c.species === 'rabbit')).toBe(true);
     expect(village.at(3, day).list.some(c => c.species === 'fox')).toBe(false);
     expect(village.at(3, night).list.some(c => c.species === 'fox' || c.species === 'hedgehog')).toBe(true);
     expect(village.at(3, day).list.some(c => c.species === 'koi')).toBe(true);
+    // Le lapin 0 regarde d'un côté ; touché, il bondit, trottine de ce côté (moins d'une demi-case), se retourne et revient
+    const rabbit = (time, scared) => village.at(time, day, scared).list.find(c => c.id === 'wild:rabbit:0');
+    const calm = rabbit(2);
     const scared = new Map([['wild:rabbit:0', { at: 2 }]]);
-    expect(village.at(2.5, day, scared).list.find(c => c.id === 'wild:rabbit:0').flip).toBe(true);
-    expect(village.at(10, day, scared).list.find(c => c.id === 'wild:rabbit:0')).toBeUndefined();
+    expect(rabbit(2.15, scared).z).toBeGreaterThan(0);
+    const away = rabbit(3.3, scared);
+    const step = (calm.flip ? -1 : 1) * 0.35;
+    expect(away.x - calm.x).toBeCloseTo(step, 1);
+    expect(away.y - calm.y).toBeCloseTo(-step, 1);
+    expect(away.flip).toBe(calm.flip);
+    expect(rabbit(4, scared).flip).toBe(!calm.flip);
+    // Revenu à sa place, toujours là
+    const pose = c => ({ x: c.x, y: c.y, z: c.z, flip: c.flip, key: c.sprite[0] });
+    expect(pose(rabbit(10, scared))).toEqual(pose(rabbit(10)));
+    expect(village.describe({ kind: 'beast', species: 'fox' }).hint).toBe('Toucher : il sursaute');
     expect(village.say({ kind: 'beast', species: 'fox' }, night)).toBeNull();
   });
   it('chaque dessin de bête et d’habitant se fait sans valeur manquante', () => {
@@ -251,12 +263,19 @@ describe('village : bêtes des climats', () => {
     // Sous la pluie, le dromadaire se couche
     expect(climBeasts(dunes, 5, at(13, 'pluie')).find(c => c.species === 'camel').sprite[0]).toMatch(/rest$/);
   });
-  it('touchées, elles s’enfuient puis disparaissent ; appui long : leur fiche', () => {
+  it('touchées, elles sursautent et reviennent, sans disparaître ; appui long : leur fiche', () => {
     const id = climBeasts(dunes, 5, at(13)).find(c => c.species === 'camel').id;
     const scared = new Map([[id, { at: 2 }]]);
-    expect(dunes.at(2.5, at(13), scared).list.find(c => c.id === id).flip).toBe(true);
-    expect(dunes.at(10, at(13), scared).list.find(c => c.id === id)).toBeUndefined();
-    expect(dunes.describe({ kind: 'beast', species: 'fennec' })).toEqual({ title: 'Fennec', text: 'Il dort le jour et trotte la nuit dans les Dunes.', hint: 'Toucher : il s’enfuit' });
+    const camel = (time, sc) => dunes.at(time, at(13), sc).list.find(c => c.id === id);
+    expect(camel(2.5, scared)).toBeDefined();
+    const pose = c => ({ x: c.x, y: c.y, z: c.z, flip: c.flip, key: c.sprite[0] });
+    expect(pose(camel(10, scared))).toEqual(pose(camel(10)));
+    // Il reste dans sa case : moins d'une demi-case de chaque côté
+    for (const time of [2.1, 2.5, 3, 3.3, 3.8, 4.2]) {
+      expect(Math.abs(camel(time, scared).x - camel(time).x)).toBeLessThan(0.5);
+      expect(Math.abs(camel(time, scared).y - camel(time).y)).toBeLessThan(0.5);
+    }
+    expect(dunes.describe({ kind: 'beast', species: 'fennec' })).toEqual({ title: 'Fennec', text: 'Il dort le jour et trotte la nuit dans les Dunes.', hint: 'Toucher : il sursaute' });
     expect(dunes.say({ kind: 'beast', species: 'camel' }, at(13))).toBeNull();
   });
   it('les douze dessins se font sans valeur manquante ni attribut en double, à chaque image', () => {
