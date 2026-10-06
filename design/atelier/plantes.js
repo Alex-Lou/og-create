@@ -1,5 +1,5 @@
 // Les autres plantes refaites au niveau des PNJ, une par une, avec le trait, la lumière et les verts des arbres
-// (arbres.js) : le buisson, la bruyère, les fleurs. Cadre et ancrage des plantes de deco.js (PROP, centre de la case en (0, 0)) ; le jeu fait
+// (arbres.js) : le buisson, la bruyère, les fleurs, le cactus. Cadre et ancrage des plantes de deco.js (PROP, centre de la case en (0, 0)) ; le jeu fait
 // balancer le dessin entier depuis sa base, il n'y a donc qu'une image.
 const { OUT, E, r2 } = require('./troupe');
 const { VERTS, fleurette, feuillage } = require('./arbres');
@@ -134,4 +134,46 @@ for (const petites of [false, true]) for (const marguerites of [false, true]) fo
   FLEURS.push([fichier, libelle, { marguerites, petites, abeille: ab }]);
 }
 
-module.exports = { buisson, BUISSONS, bruyere, BRUYERES, fleurs, FLEURS };
+// ——— Le cactus : un cierge à deux bras ou une boule, côtes et épines, une fleur au sommet ———
+const CACTUS = { light: '#B9DE8E', mid: '#7EBE5E', dark: '#4E8E4A', cote: '#3F7A40', epine: '#FFF6DC' };
+const corps = (id, d, ombre, cotes, epines) => `<path d="${d}" fill="${CACTUS.mid}" stroke="${OUT}" stroke-width="1.1" stroke-linejoin="round"/>`
+  + `<defs><clipPath id="${id}"><path d="${d}"/></clipPath></defs><g clip-path="url(#${id})"><path d="${ombre}" fill="${CACTUS.dark}"/>`
+  + `<path d="${cotes}" stroke="${CACTUS.cote}" stroke-width="0.7" fill="none" stroke-linecap="round"/></g>`
+  + epines.map(([x, y]) => `<path d="M${r2(x - 0.9)},${r2(y - 0.7)} L${r2(x)},${r2(y)} L${r2(x + 0.9)},${r2(y - 0.7)}" stroke="${CACTUS.epine}" stroke-width="0.55" fill="none" stroke-linecap="round"/>`).join('');
+const sc2 = (d, k) => d.replace(/-?\d+(\.\d+)?/g, n => r2(n * k));
+function cierge(id, k) {
+  const brasG = sc2('M-5,-13.6 L-11,-13.6 Q-15.8,-13.6 -15.8,-18.4 L-15.8,-27.6 Q-15.8,-30.4 -13,-30.4 Q-10.2,-30.4 -10.2,-27.6 L-10.2,-19.4 L-5,-19.4 Z', k);
+  const brasD = sc2('M5,-10 L10.6,-10 Q15.2,-10 15.2,-14.6 L15.2,-23.2 Q15.2,-26 12.5,-26 Q9.8,-26 9.8,-23.2 L9.8,-15.6 L5,-15.6 Z', k);
+  const tronc = sc2('M-5.6,0.6 L-5.6,-35 Q-5.6,-41.5 0,-41.5 Q5.6,-41.5 5.6,-35 L5.6,0.6 Q0,2 -5.6,0.6 Z', k);
+  return corps(`${id}g`, brasG, sc2('M-13,-13 L-9,-13 L-9,-31 L-13,-31 Z M-15,-16.4 L-4,-16.4 L-4,-12 L-15,-12 Z', k), sc2('M-13,-17 L-13,-28.4', k), [[-14.6 * k, -23 * k], [-11.4 * k, -26 * k], [-8 * k, -16 * k]])
+    + corps(`${id}d`, brasD, sc2('M12.5,-9 L16,-9 L16,-27 L12.5,-27 Z M4,-12.6 L16,-12.6 L16,-9 L4,-9 Z', k), sc2('M12.5,-13.4 L12.5,-24', k), [[14 * k, -19 * k], [11 * k, -22.4 * k], [8 * k, -12.6 * k]])
+    + corps(`${id}t`, tronc, sc2('M1.6,2 L1.6,-42 L7,-42 L7,2 Z', k), sc2('M-2.2,-1 L-2.2,-37 M2.2,-1 L2.2,-37', k),
+      [[-4.4, -8], [-0.2, -14], [4, -6], [-4.4, -22], [4, -20], [-0.2, -29], [-4.2, -34], [3.8, -33]].map(([x, y]) => [x * k, y * k]))
+    + `<path d="${sc2('M-3.8,-6 L-3.8,-32', k)}" stroke="${CACTUS.light}" stroke-width="${r2(1.1 * k)}" stroke-linecap="round" opacity="0.8"/>`;
+}
+function boule(id, k) {
+  const d = sc2('M-11,0.4 Q-13.5,-8 -9.5,-14.5 Q-5,-20 0,-20 Q5,-20 9.5,-14.5 Q13.5,-8 11,0.4 Q0,3 -11,0.4 Z', k);
+  return corps(`${id}b`, d, sc2('M3,3 Q6,-10 3,-21 L16,-21 L16,3 Z', k), sc2('M0,1.6 L0,-20 M-5,1.2 Q-8,-9 -4,-19 M5,1.2 Q8,-9 4,-19 M-9.5,0.8 Q-13,-7 -8.4,-15 M9.5,0.8 Q13,-7 8.4,-15', k),
+    [[-2.5, -6], [2.5, -12], [-7, -10], [7, -5], [-2.5, -16], [6.5, -14], [-9, -3]].map(([x, y]) => [x * k, y * k]))
+    + `<path d="${sc2('M-7,-4 Q-9,-10 -5,-16', k)}" stroke="${CACTUS.light}" stroke-width="${r2(1.1 * k)}" fill="none" stroke-linecap="round" opacity="0.8"/>`;
+}
+const caillou = (x, y, rx, ry) => E(x, y, rx, ry, '#B9A27A', 0.5) + E(x - rx * 0.25, y - ry * 0.3, rx * 0.55, ry * 0.45, '#D9C8A2', 0);
+const cailloux = k => caillou(-10 * k, 3, 2.2 * k, 1.3 * k) + caillou(11 * k, 4, 1.8 * k, 1.1 * k) + caillou(8 * k, 1.6, 1.2 * k, 0.8 * k);
+
+// forme : 'cierge' (à bras) ou 'boule' ; petit : × 0,75 ; fleur : une fleur rose au sommet
+function cactus({ forme = 'cierge', petit = false, fleur: avecFleur = true } = {}) {
+  const k = petit ? 0.75 : 1, id = `cac${forme[0]}${petit ? 'p' : 'g'}${avecFleur ? 'f' : ''}`;
+  const haut = forme === 'cierge' ? -42 : -20.5;
+  return E(1.5 * k, 1.5, 15 * k, 5.5 * k, 'rgba(60,50,20,0.22)', 0) + cailloux(k) + (forme === 'cierge' ? cierge(id, k) : boule(id, k))
+    + (avecFleur ? fleur(0, haut * k - 1.4, '#F27A9A', 0.95) : '');
+}
+
+// Les 8 cactus : [fichier, libellé, options] ; « cactus » (cierge, grand, fleuri) est celui par défaut, comme avant
+const CACTUS_LISTE = [];
+for (const forme of ['cierge', 'boule']) for (const petit of [false, true]) for (const fl of [true, false]) {
+  const fichier = ['cactus', forme === 'boule' && 'boule', petit && 'petit', !fl && 'sans_fleur'].filter(Boolean).join('_');
+  const libelle = `Cactus (${[forme === 'boule' ? 'en boule' : 'cierge à bras', petit ? 'petit' : 'grand', fl ? 'fleuri' : 'sans fleur'].join(', ')})`;
+  CACTUS_LISTE.push([fichier, libelle, { forme, petit, fleur: fl }]);
+}
+
+module.exports = { buisson, BUISSONS, bruyere, BRUYERES, fleurs, FLEURS, cactus, CACTUS_LISTE };

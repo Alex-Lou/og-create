@@ -46513,10 +46513,129 @@
   {
    "id": "plantes/cactus",
    "rubrique": "plantes",
-   "titre": "Cactus",
+   "titre": "Cactus (cierge à bras, grand, fleuri)",
    "images": 1,
    "fichiers": [
     "svg/plantes/cactus.svg"
+   ],
+   "cadre": [
+    -50,
+    -115,
+    100,
+    140
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "plantes/cactus_boule",
+   "rubrique": "plantes",
+   "titre": "Cactus (en boule, grand, fleuri)",
+   "images": 1,
+   "fichiers": [
+    "svg/plantes/cactus_boule.svg"
+   ],
+   "cadre": [
+    -50,
+    -115,
+    100,
+    140
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "plantes/cactus_boule_petit",
+   "rubrique": "plantes",
+   "titre": "Cactus (en boule, petit, fleuri)",
+   "images": 1,
+   "fichiers": [
+    "svg/plantes/cactus_boule_petit.svg"
+   ],
+   "cadre": [
+    -50,
+    -115,
+    100,
+    140
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "plantes/cactus_boule_petit_sans_fleur",
+   "rubrique": "plantes",
+   "titre": "Cactus (en boule, petit, sans fleur)",
+   "images": 1,
+   "fichiers": [
+    "svg/plantes/cactus_boule_petit_sans_fleur.svg"
+   ],
+   "cadre": [
+    -50,
+    -115,
+    100,
+    140
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "plantes/cactus_boule_sans_fleur",
+   "rubrique": "plantes",
+   "titre": "Cactus (en boule, grand, sans fleur)",
+   "images": 1,
+   "fichiers": [
+    "svg/plantes/cactus_boule_sans_fleur.svg"
+   ],
+   "cadre": [
+    -50,
+    -115,
+    100,
+    140
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "plantes/cactus_petit",
+   "rubrique": "plantes",
+   "titre": "Cactus (cierge à bras, petit, fleuri)",
+   "images": 1,
+   "fichiers": [
+    "svg/plantes/cactus_petit.svg"
+   ],
+   "cadre": [
+    -50,
+    -115,
+    100,
+    140
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "plantes/cactus_petit_sans_fleur",
+   "rubrique": "plantes",
+   "titre": "Cactus (cierge à bras, petit, sans fleur)",
+   "images": 1,
+   "fichiers": [
+    "svg/plantes/cactus_petit_sans_fleur.svg"
+   ],
+   "cadre": [
+    -50,
+    -115,
+    100,
+    140
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "plantes/cactus_sans_fleur",
+   "rubrique": "plantes",
+   "titre": "Cactus (cierge à bras, grand, sans fleur)",
+   "images": 1,
+   "fichiers": [
+    "svg/plantes/cactus_sans_fleur.svg"
    ],
    "cadre": [
     -50,
