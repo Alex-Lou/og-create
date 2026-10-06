@@ -481,6 +481,16 @@ familiers (H6) et aux créatures d'Anya (H8).
      la rendre juste : arrêter les compteurs (`charges`, `charges_at`) avant chaque changement de recharge (combler
      un besoin, créations, visiteur installé, Cuisine ou Sablier, Four, Col du Vent), et compter par morceaux entre
      les échéances des besoins, comme `prodSteps`.
+   - ~~**Courses** (double clic, deux onglets) sur les écus, les ressources et les récompenses~~ : auditées route par
+     route. Quatre défauts corrigés :
+     - un article de la Récolte (coups, réserve, recharge) se rendait après avoir servi à une partie ou à une
+       expédition ; il ne se rend plus ;
+     - un skin porté pendant que son achat s'annulait restait porté ;
+     - deux recalculs des succès s'écrasaient ;
+     - une création déplacée pendant l'ouverture de l'île pouvait être rangée à tort.
+
+     Reste, sans enjeu d'écus : une Épreuve jouée dans deux onglets peut perdre une réussite de la liste du niveau
+     (`trial.start`). Les points restent payés une fois, et seul le joueur y perd.
    - **`DECO_PRICES`** et la table `world_tiles` (`world.js`) : à garder tant que des joueurs peuvent avoir
      d'anciennes décorations à rembourser. Toute suppression en base attend **le feu vert explicite** de l'auteur.
 
@@ -491,6 +501,9 @@ familiers (H6) et aux créatures d'Anya (H8).
 - **Tests serveur et limites de requêtes** : toutes les requêtes d'un fichier de tests viennent de 127.0.0.1, dans un
   même serveur. La limite de jeu par adresse (600 par minute) est relevée pour eux par `PLAY_ADDRESS_RATE_LIMIT`
   (`test/helpers.js`) ; un 429 « Doucement ! » dans un test qui passe seul vient de là.
+- **Tester une course** : `whileHeld(hold, request)` (`test/helpers.js`) la rejoue à coup sûr. Une transaction du test
+  fait ses écritures et garde ses verrous ; la requête part ; la transaction est validée dès que la requête attend
+  l'un de ses verrous.
 - **Changer une version des outils du front** (Vite, Vitest) : `npm install` de npm 10 (Node 22) s'arrête sur
   « Cannot read properties of null (reading 'edgesOut') », un bug de npm. `npx npm@11 install` passe ; le lockfile
   obtenu s'installe ensuite normalement avec npm 10 (`npm ci`, comme la CI).
