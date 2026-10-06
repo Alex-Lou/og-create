@@ -19,7 +19,7 @@ troupe. Relancer ces scripts redonne la bibliothèque à l'octet près : c'est v
 | `naufrage.js`, `naufrages.js` | La transformation en naufragé, et la tenue propre à chaque maître |
 | `dormeurs.js`, `arrivees.js` | Les maîtres endormis, les plans d'entrée du tutoriel |
 | `brume.js`, `anya.js`, `cerf.js`, `passeur.js` | Les vivants |
-| `betes.js` | Les animaux de profil |
+| `betes.js`, `betes3.js` | Les animaux de profil ; les bêtes qui marchent de trois quarts avant et de dos |
 | `crafts.js`, `deco.js`, `decor2.js`, `landmarks.js` | Décor : créations, annexes, lieux, gisements, îlots |
 | `camp.mjs`, `ruines.mjs` | Le camp des naufragés, les ruines des Anciens |
 | `meteo.js` | Météo, ciel, moments du jour |
@@ -35,7 +35,8 @@ Depuis `design/atelier/` :
 ```
 node preview2.js                     # les 7 maîtres → svg2/<prénom>/, planches, troupe_apercu.html
 node preview_vivants.js              # Brume, Anya, le cerf, le Passeur
-node preview_betes.js                # animaux
+node preview_betes.js                # animaux de profil
+node preview_betes3.mjs              # bêtes orientées (trois quarts avant et dos)
 node preview_plantes.js              # plantes et rochers
 node preview_decor.mjs               # décor
 node preview_batiments.mjs           # bâtiments
