@@ -1,4 +1,4 @@
-// Les arbres refaits au niveau des PNJ, un par un (l'arbre, le pommier, l'arbre d'automne, le bouleau, le sapin). Même trait et même lumière que la troupe : le
+// Les arbres refaits au niveau des PNJ, un par un (l'arbre, le pommier, l'arbre d'automne, le bouleau, le sapin, le palmier). Même trait et même lumière que la troupe : le
 // houppier est fait de touffes détourées comme les pièces d'un personnage (celle du fond plus sombre), chaque lobe a sa
 // masse d'ombre en bas à droite et son reflet en croissant en haut à gauche, de petites marques de feuilles ; le tronc a
 // ses racines, un peu d'écorce, et se sépare en deux branches sous les feuilles.
@@ -272,4 +272,74 @@ for (const neige of [false, true]) for (const petit of [false, true]) for (const
   SAPINS.push([fichier, libelle, { vert, petit, neige, pied }]);
 }
 
-module.exports = { arbre, ARBRES, pommier, POMMIERS, automne, AUTOMNES, bouleau, BOULEAUX, sapin, SAPINS, VERTS, fleurette };
+// ——— Le palmier : tronc courbe en anneaux empilés, palmes arquées aux folioles découpées, noix de coco sous la couronne ———
+const PALMES = {
+  doux: { devant: { light: '#C2E594', mid: '#82C65E', dark: '#4F9046' }, fond: { light: '#94C870', mid: '#5E9F4A', dark: '#3D7340' } },
+  profond: { devant: { light: '#A6D67C', mid: '#66B052', dark: '#3E7C3E' }, fond: { light: '#7EB862', mid: '#4C8C44', dark: '#2F6136' } }
+};
+const STIPE = { left: '#C08A55', right: '#946339', light: '#D9A976' };
+// point et tangente d'une courbe quadratique (a, c, b) en t
+const qPt = (a, c, b, t) => [(1 - t) ** 2 * a[0] + 2 * (1 - t) * t * c[0] + t * t * b[0], (1 - t) ** 2 * a[1] + 2 * (1 - t) * t * c[1] + t * t * b[1]];
+const qTan = (a, c, b, t) => [2 * (1 - t) * (c[0] - a[0]) + 2 * t * (b[0] - c[0]), 2 * (1 - t) * (c[1] - a[1]) + 2 * t * (b[1] - c[1])];
+const pts = l => l.map(p => `${r2(p[0])},${r2(p[1])}`).join(' L');
+// Une palme : de la couronne o vers (dx, dy), arquée ; bord du dessus lisse, bord du dessous découpé en folioles ;
+// la moitié du dessous à l'ombre, nervure claire
+function palme(id, o, dx, dy, larg, c, k) {
+  const b = [o[0] + dx * k, o[1] + dy * k], ctl = [o[0] + dx * k * 0.5, o[1] + dy * k * 0.5 - Math.abs(dx) * 0.38 * k];
+  const N = 14, axe = [], haut = [], bas = [];
+  for (let i = 0; i <= N; i++) {
+    const t = i / N, p = qPt(o, ctl, b, t), d = qTan(o, ctl, b, t), L = Math.hypot(d[0], d[1]) || 1;
+    let nx = -d[1] / L, ny = d[0] / L;
+    if (ny > 0) { nx = -nx; ny = -ny; } // la normale regarde vers le haut
+    const w = larg * k * Math.pow(Math.sin(Math.PI * Math.min(t * 1.08, 1)), 0.75) + 0.3, cran = i % 2 ? 0.35 : 1;
+    axe.push(p); haut.push([p[0] + nx * w * 0.55, p[1] + ny * w * 0.55]); bas.push([p[0] - nx * w * cran, p[1] - ny * w * cran]);
+  }
+  const d = `M${pts(haut.concat(bas.slice().reverse()))} Z`;
+  return `<path d="${d}" fill="${c.mid}" stroke="${OUT}" stroke-width="${W}" stroke-linejoin="round"/>`
+    + `<defs><clipPath id="${id}"><path d="${d}"/></clipPath></defs><g clip-path="url(#${id})"><path d="M${pts(axe.concat(bas.slice().reverse()))} Z" fill="${c.dark}"/>`
+    + `<path d="M${r2(o[0])},${r2(o[1] - 0.8)} Q${r2(ctl[0])},${r2(ctl[1] - 0.8)} ${r2(b[0])},${r2(b[1] - 0.8)}" stroke="${c.light}" stroke-width="1" fill="none" stroke-linecap="round"/></g>`;
+}
+// Le tronc : huit anneaux le long d'une courbe, chacun un peu plus étroit, son bas arrondi par-dessus l'anneau d'en dessous
+function stipe(id, k) {
+  const a = [0, 0], ctl = [-7 * k, -32 * k], b = [8 * k, -62 * k], N = 8;
+  let o = '';
+  for (let i = 0; i < N; i++) {
+    const t0 = i / N, t1 = (i + 1) / N, p0 = qPt(a, ctl, b, t0), p1 = qPt(a, ctl, b, t1);
+    const w0 = (5 - 1.8 * t0) * k, w1 = (5 - 1.8 * t1) * k * 1.12;
+    const d0 = qTan(a, ctl, b, t0), L0 = Math.hypot(d0[0], d0[1]), n0 = [-d0[1] / L0, d0[0] / L0];
+    const d1 = qTan(a, ctl, b, t1), L1 = Math.hypot(d1[0], d1[1]), n1 = [-d1[1] / L1, d1[0] / L1];
+    const l0 = [p0[0] - n0[0] * w0, p0[1] - n0[1] * w0], r0 = [p0[0] + n0[0] * w0, p0[1] + n0[1] * w0];
+    const l1 = [p1[0] - n1[0] * w1, p1[1] - n1[1] * w1], r1 = [p1[0] + n1[0] * w1, p1[1] + n1[1] * w1];
+    const d = `M${r2(l0[0])},${r2(l0[1])} L${r2(l1[0])},${r2(l1[1])} Q${r2(p1[0])},${r2(p1[1] + 1.4 * k)} ${r2(r1[0])},${r2(r1[1])} L${r2(r0[0])},${r2(r0[1])} Q${r2(p0[0])},${r2(p0[1] + 1.8 * k)} ${r2(l0[0])},${r2(l0[1])} Z`;
+    o += `<path d="${d}" fill="${STIPE.left}" stroke="${OUT}" stroke-width="${W}" stroke-linejoin="round"/>`
+      + `<defs><clipPath id="${id}${i}"><path d="${d}"/></clipPath></defs><g clip-path="url(#${id}${i})">`
+      + `<path d="M${r2(p0[0] + n0[0] * w0 * 0.25)},${r2(p0[1] + 4)} L${r2(p1[0] + n1[0] * w1 * 0.25)},${r2(p1[1] - 2)} L${r2(p1[0] + n1[0] * 12)},${r2(p1[1] - 2)} L${r2(p0[0] + n0[0] * 12)},${r2(p0[1] + 4)} Z" fill="${STIPE.right}"/>`
+      + `<path d="M${r2(l1[0])},${r2(l1[1] + 1.2)} Q${r2(p1[0])},${r2(p1[1] + 2.6 * k)} ${r2(r1[0])},${r2(r1[1] + 1.2)}" stroke="${STIPE.light}" stroke-width="0.9" fill="none" stroke-linecap="round"/></g>`;
+  }
+  return o;
+}
+const noixDeCoco = (x, y, s) => E(x, y, 3 * s, 3 * s, '#7A4E28', 0.9) + E(x - 0.9 * s, y - s, 0.9 * s, 0.8 * s, '#A87A4C', 0) + E(x + 0.4 * s, y + 1.2 * s, 0.35 * s, 0.35 * s, '#4E3018', 0);
+// [dx, dy, largeur] : quatre palmes au fond, quatre devant
+const PALMES_FOND = [[-30, 4, 6], [31, 6, 6], [-10, -22, 5.5], [14, -21, 5.5]];
+const PALMES_DEVANT = [[-26, 17, 6.5], [27, 19, 6.5], [-20, -8, 6], [22, -6, 6]];
+
+// vert : 'doux' ou 'profond' ; petit : comme l'arbre ; cocos : deux noix de coco tombées au pied
+function palmier({ vert = 'doux', petit = false, cocos = false } = {}) {
+  const c = PALMES[vert], k = petit ? 0.76 : 1, o = [8 * k, -62 * k], s = Math.max(k, 0.85);
+  const id = `pal${petit ? 'p' : 'g'}${vert[0]}${cocos ? 'c' : ''}`;
+  return E(3 * k, 1.5, 22 * k, 9.5 * k, 'rgba(40,55,20,0.22)', 0) + stipe(`${id}s`, k)
+    + PALMES_FOND.map(([dx, dy, l], i) => palme(`${id}f${i}`, o, dx, dy, l, c.fond, k)).join('')
+    + PALMES_DEVANT.map(([dx, dy, l], i) => palme(`${id}d${i}`, o, dx, dy, l, c.devant, k)).join('')
+    + noixDeCoco(o[0] - 3.4 * k, o[1] + 6 * k, s) + noixDeCoco(o[0] + 3.6 * k, o[1] + 6.6 * k, s) + noixDeCoco(o[0] + 0.1 * k, o[1] + 9.6 * k, s)
+    + (cocos ? noixDeCoco(-12 * k, 4.5, 0.95) + noixDeCoco(14 * k, 5.5, 0.9) : '');
+}
+
+// Les 8 palmiers : [fichier, libellé, options] ; « palmier » (grand, vert doux, pied sobre) est celui par défaut
+const PALMIERS = [];
+for (const petit of [false, true]) for (const vert of ['doux', 'profond']) for (const cocos of [false, true]) {
+  const fichier = ['palmier', petit && 'petit', vert === 'profond' && 'profond', cocos && 'cocos'].filter(Boolean).join('_');
+  const libelle = `Palmier (${[petit ? 'petit' : 'grand', `vert ${vert}`, cocos && 'noix de coco au pied'].filter(Boolean).join(', ')})`;
+  PALMIERS.push([fichier, libelle, { vert, petit, cocos }]);
+}
+
+module.exports = { arbre, ARBRES, pommier, POMMIERS, automne, AUTOMNES, bouleau, BOULEAUX, sapin, SAPINS, palmier, PALMIERS, VERTS, fleurette };
