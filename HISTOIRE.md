@@ -1636,6 +1636,7 @@ Le prix des quartiers et des paliers décide du rythme : l'équilibrage reste à
   - Puits II du tutoriel : seule la condition de chapitre est levée ; son prix se paie ;
   - bêtes de ferme : ce qu'elles donnent va à la nourriture ; les chiffres se fixent au lot H9.3 ;
   - nuits, pour les joueurs qui ont déjà une île : pas de créatures avant que Brume les ait présentées et qu'un jour soit passé ; les lanternes et clôtures déjà posées comptent comme défenses.
+- **Les nuits, réglées pour H9.5** (choix de l'auteur, le même jour) : chaque nuit, plafonnée (au plus une panne par nuit, un seul bâtiment embrumé à la fois) ; une lumière change en luciole l'égaré qui passe à 2 cases ou moins, une clôture barre sa case ; un camarade content repousse un égaré par nuit ; réparer coûte 3 pierres ou bois au palier I, puis 2 de plus par palier.
 - **Le lot H9 se livre en six lots** : H9.1 Anya ; H9.2 Sylve et Galet ; H9.3 bêtes de ferme ; H9.4 avatar ; H9.5 créatures et défense ; H9.6 tutoriel.
 
 ### À valider (versions 4 et 5)
