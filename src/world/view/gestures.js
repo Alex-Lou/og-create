@@ -11,6 +11,7 @@ import { roman } from '@/utils/roman';
 import { spriteUrl } from '@/world/spriteCache';
 import { BUILDINGS } from '@/world/sprites';
 import { artMake } from '@/world/looks';
+import { buildingThumb } from '@/world/buildingArt';
 import { TW, TH, DEPOSIT_SCALE } from './constants';
 
 // Bulle d'info de l'appui long : durée d'affichage ; noms du décor naturel et des bêtes, pour elle
@@ -464,9 +465,9 @@ export default {
     const rect = this.$refs.canvas.getBoundingClientRect();
     return { x: rect.left + x, y: rect.top + y };
   },
-  // Vignette d'un bâtiment (son dessin actuel) pour sa fiche
+  // Vignette d'un bâtiment (son dessin actuel) pour sa fiche : celui de la bibliothèque sans skin, sinon celui du jeu
   artOf(site) {
-    if (!site.level) return spriteUrl(`chantier-${this.stageOf(site)}`, BUILDINGS.chantier[this.stageOf(site)]);
-    return spriteUrl(`art-${site.id}-${site.level}-${site.skin || ''}`, artMake(site.id, site.level, site.skin));
+    if (!site.level) return buildingThumb(site.id, 0, this.stageOf(site)) || spriteUrl(`chantier-${this.stageOf(site)}`, BUILDINGS.chantier[this.stageOf(site)]);
+    return (!site.skin && buildingThumb(site.id, site.level)) || spriteUrl(`art-${site.id}-${site.level}-${site.skin || ''}`, artMake(site.id, site.level, site.skin));
   }
 };

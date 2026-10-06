@@ -4,7 +4,7 @@
 import { reactive } from 'vue';
 import DECOR from '../../design/bibliotheque/svg/decor/decor.json';
 import { PROP_BOX } from './palette';
-import { librarySprite } from './library';
+import { librarySprite, cropTo, paintedBox } from './library';
 
 // Chargés à la demande, un fichier à la fois (le jeu ne lit que ce qui est posé sur l'île)
 const FILES = import.meta.glob('/design/bibliotheque/svg/decor/creations/*.svg', { query: '?raw', import: 'default' });
@@ -37,49 +37,6 @@ export function creationLayer(id, t = 0) {
   if (!FILES[path]) return null;
   if (!makes.has(path)) makes.set(path, librarySprite(FILES[path], PROP_BOX));
   return { key: `creation-${id}-${f}`, make: makes.get(path) };
-}
-
-// Le même SVG cadré sur box (unités du dessin) : il ne montre plus que cette partie
-export function cropTo(svg, box) {
-  const { x, y, w, h } = box;
-  return svg.replace(/width="[\d.]+" height="[\d.]+" viewBox="[^"]+"/, `width="${w}" height="${h}" viewBox="${x} ${y} ${w} ${h}"`);
-}
-
-// Ce que peint un SVG (unités du dessin, à MARGIN près), mesuré sur ses pixels : un tracé ou une ombre légère compte,
-// une forme invisible non. SCAN pixels par unité
-const SCAN = 2;
-const MARGIN = 1.5;
-async function paintedBox(svg) {
-  const [vx, vy, vw, vh] = svg.match(/viewBox="([^"]+)"/)[1].split(' ').map(Number);
-  const img = new Image();
-  const sized = svg.replace(/width="[\d.]+" height="[\d.]+"/, `width="${vw * SCAN}" height="${vh * SCAN}"`);
-  img.src = `data:image/svg+xml;charset=utf-8,${encodeURIComponent(sized)}`;
-  await img.decode();
-  const canvas = document.createElement('canvas');
-  canvas.width = vw * SCAN;
-  canvas.height = vh * SCAN;
-  const ctx = canvas.getContext('2d');
-  ctx.drawImage(img, 0, 0);
-  const { data } = ctx.getImageData(0, 0, canvas.width, canvas.height);
-  let x0 = canvas.width, y0 = canvas.height, x1 = -1, y1 = -1;
-  for (let py = 0; py < canvas.height; py++) {
-    for (let px = 0; px < canvas.width; px++) {
-      if (data[(py * canvas.width + px) * 4 + 3] <= 8) continue;
-      x0 = Math.min(x0, px);
-      x1 = Math.max(x1, px);
-      y0 = Math.min(y0, py);
-      y1 = Math.max(y1, py);
-    }
-  }
-  canvas.width = canvas.height = 0;
-  if (x1 < 0) throw new Error('dessin vide');
-  const round = v => Math.round(v * 10) / 10;
-  return {
-    x: round(vx + x0 / SCAN - MARGIN),
-    y: round(vy + y0 / SCAN - MARGIN),
-    w: round((x1 + 1 - x0) / SCAN + 2 * MARGIN),
-    h: round((y1 + 1 - y0) / SCAN + 2 * MARGIN)
-  };
 }
 
 // Vignette d'une création (établi, gabarit, aperçu du Foyer) : la première image de son dessin, recadrée sur ce

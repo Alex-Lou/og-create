@@ -28,9 +28,14 @@ function pump() {
       if (job.onReady) job.onReady();
     };
     img.onerror = done;
-    // Un dessin de la bibliothèque se lit d'abord (load) ; un dessin par code est déjà là (svg)
-    if (job.load) job.load().then(svg => { img.src = srcOf(svg); }, done);
-    else img.src = srcOf(job.svg);
+    // Un dessin de la bibliothèque se lit d'abord (load : son SVG, ou { svg, box } s'il est recadré à la lecture) ; un
+    // dessin par code est déjà là (svg)
+    if (job.load) {
+      job.load().then(read => {
+        if (typeof read !== 'string') job.entry.box = read.box;
+        img.src = srcOf(typeof read === 'string' ? read : read.svg);
+      }, done);
+    } else img.src = srcOf(job.svg);
   }
 }
 
@@ -52,7 +57,8 @@ function bitmapOf(img) {
 }
 
 // Image prête d'un sprite { svg, box } (dessiné par code) ou { load, box } (lu dans la bibliothèque, load : promesse de
-// son SVG), ou null pendant le chargement (onReady redessine l'île)
+// son SVG, ou de { svg, box } quand son cadre se mesure à la lecture), ou null pendant le chargement (onReady redessine
+// l'île)
 export function imageOf(key, make, onReady) {
   let entry = cache.get(key);
   if (!entry) {
