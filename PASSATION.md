@@ -336,6 +336,8 @@ chronométrer 20 appels. Comparer à zoom égal, au même endroit.
   Bestiaire : `src/world/bestiary.js` (bêtes écrites, variantes de ferme, familiers) ; `village.js` les fait vivre
   (`written` : les éléments du Grimoire, passés par `App` à `WorldView`) ; dessins nouveaux dans `animals.js`
   (mésange, papillons, luciole, abeille, hibou, Tic-Tac, bocal, renardeau). Chronique : Bestiaire et familiers.
+  Le Savoir de Brume (Légendes), une fois le Phare allumé : `world.brumeSavoirOf` / `talkBrume` (cible `brume` dans
+  `world_friends`, sans points), vue `brumeSavoir: { open, talked }`, bouton « Bavarder » dans la fiche de Brume.
 - **Lot H7 de la bible** (le Grand Œuvre et la finale). Serveur : `quests.actStartsOf`, `loot.helianeOf` (pur) ; une
   bouteille porte `story` (l'acte) quand c'est la première ouverte pendant l'acte ; la vue dit `heliane`. Front :
   `src/game/opus.js` (acte en cours, étape alchimique, `brumeLook`, le secret de l'acte VI, Feu follet écrit tôt) ;

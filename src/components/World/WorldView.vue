@@ -492,6 +492,17 @@
               </div>
             </template>
             <p v-else class="world__brume-say">« {{ state.brume.rested }} »</p>
+            <!-- Le Savoir de Brume (bible, § 6.4) : maîtresse du sceau ☉, qu'elle révèle à la fin, le Phare allumé -->
+            <template v-if="state.brumeSavoir && state.brumeSavoir.open">
+              <p class="world__brume-art">{{ savoirOf('brume') }}</p>
+              <p v-if="brumeSaid" class="world__brume-say">« {{ brumeSaid }} »</p>
+              <div class="world__sheet-actions">
+                <button v-if="brumeHint" type="button" class="world__btn world__btn--quiet" @click="openBrumeSavoir">Voir dans le Grimoire</button>
+                <button type="button" class="world__btn" :disabled="busy || state.brumeSavoir.talked" @click="talkBrume">
+                  {{ state.brumeSavoir.talked ? 'Un autre Savoir demain' : 'Bavarder' }}
+                </button>
+              </div>
+            </template>
           </div>
         </div>
       </transition>
@@ -944,6 +955,9 @@ export default {
       villagerPopped: 0,
       // Savoir que le maître vient de souffler (bible, § 6.4) : { page, chapter, ingredient | family } ou null
       villagerSavoir: null,
+      // Le Savoir de Brume, après le Phare : sa réplique et l'indice soufflé
+      brumeSaid: '',
+      brumeHint: null,
       visitorOpen: false,
       visitorSaid: '',
       clock: Date.now(),
@@ -3800,6 +3814,28 @@ export default {
         this.busy = false;
       }
     },
+    // Bavarder avec Brume, le Phare allumé : un Savoir par jour sur les Légendes ; s'il n'y a pas de page, rien n'est compté
+    async talkBrume() {
+      if (this.busy) return;
+      this.busy = true;
+      try {
+        const { savoir, world } = await playService.villagerTalk('brume', heardPages());
+        this.apply(world);
+        this.brumeHint = savoir;
+        if (savoir) keepSavoir(savoir, 'Brume');
+        this.brumeSaid = savoir ? savoirLine('brume', savoir) : 'Aucune page des Légendes n’est encore à portée : écris encore, et reviens me voir.';
+        vibrate(8);
+      } catch (error) {
+        this.$emit('show-alert', messageOf(error, 'Brume n’a pas pu répondre.'));
+      } finally {
+        this.busy = false;
+      }
+    },
+    openBrumeSavoir() {
+      const { page } = this.brumeHint;
+      this.questOpen = false;
+      this.$emit('go', 'infinite', page);
+    },
     // « Voir dans le Grimoire » : le Grimoire s'ouvre sur la page soufflée
     openSavoir() {
       const { page } = this.villagerSavoir;
@@ -4899,6 +4935,7 @@ export default {
 .world__quest-eyebrow { color: var(--ink-500); margin-bottom: 6px; }
 .world__brume-title { display: inline-flex; align-items: center; gap: 8px; }
 .world__brume-say { margin: 0 0 12px; font-family: var(--font-display); font-style: italic; font-size: 17px; line-height: 1.4; }
+.world__brume-art { margin: 0 0 8px; font-size: 13px; font-weight: 700; color: var(--ink-500); }
 .world__quest { display: grid; grid-template-columns: 1fr auto; gap: 6px 10px; padding: 10px 12px; border-radius: 14px; background: var(--vellum-200); }
 .world__quest-label { font-weight: 900; }
 .world__wreck {

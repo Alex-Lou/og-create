@@ -120,7 +120,7 @@ describe('les Savoirs des maîtres', () => {
     vi.stubGlobal('localStorage', { getItem: k => (memory.has(k) ? memory.get(k) : null), setItem: (k, v) => memory.set(k, String(v)), removeItem: k => memory.delete(k) });
   });
   it('chaque Savoir tient en une bulle', () => {
-    for (const id of ['ponton', 'carriere', 'puits', 'bosquet', 'potager', 'foyer', 'atelier']) {
+    for (const id of ['ponton', 'carriere', 'puits', 'bosquet', 'potager', 'foyer', 'atelier', 'brume']) {
       for (const family of Object.keys(FAMILY_WORDS)) expect(savoirLine(id, { page: 'p', chapter: 'VII', family }).length).toBeLessThanOrEqual(140);
       expect(savoirLine(id, { page: 'p', chapter: 'VII', ingredient: 'Créations Humaines' }).length).toBeLessThanOrEqual(140);
     }
