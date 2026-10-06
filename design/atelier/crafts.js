@@ -508,15 +508,35 @@ C.kiosque = { n: 2, draw: f => {
   return s + (f ? note(cx + 30, cy - 24, 1) : note(cx + 26, cy - 15, 1));
 } };
 
-// Cadran solaire : colonne, table des heures, style de bronze ; l'ombre tourne (2 images)
+// Cadran solaire : un dé de pierre à deux degrés, une colonne en balustre ombrée à droite, une table ronde et sa
+// plaque de bronze gravée (l'anneau des heures, un petit soleil au centre), le style triangulaire de laiton ; son
+// ombre tourne sur la plaque ; une touffe d'herbe et deux fleurettes au pied (2 images)
+const BRONZE = { plaque: '#D2AE62', bord: '#A9843E', trait: '#7E5E2A' };
 C.cadran = { n: 2, draw: f => {
-  let s = shadow(0, 0, 0.34, 0.16) + box(-0.14, -0.14, 0.14, 0.14, 0, 3, STONE) + cylinder(0, 0, 0.08, 3, 18, WHITE_STONE, 0.9) + cylinder(0, 0, 0.28, 18, 21, WHITE_STONE);
-  const [x, y] = at(0, 0, 21);
-  for (let i = 0; i < 12; i++) { const a = (i / 12) * TAU; s += L([x + Math.cos(a) * 12, y + Math.sin(a) * 6], [x + Math.cos(a) * 14.6, y + Math.sin(a) * 7.2], '#8A8070', 0.7); }
-  const sa = f ? 0.9 : -0.2;
-  s += `<path d="M${x},${y} L${r2(x + Math.cos(sa) * 12)},${r2(y + Math.sin(sa) * 6)}" stroke="rgba(60,40,25,.35)" stroke-width="2" stroke-linecap="round"/>`;
-  return s + poly([[x - 1, y], [x + 1, y], [x - 6, y - 9]], BRASS.left, 0.9);
+  let s = shadow(0, 0, 0.36, 0.16) + box(-0.17, -0.17, 0.17, 0.17, 0, 2.2, STONE) + box(-0.13, -0.13, 0.13, 0.13, 2.2, 4, STONE);
+  // la colonne en balustre : un profil galbé, son côté droit dans l'ombre
+  const [bx, by] = at(0, 0, 4), [, ty] = at(0, 0, 17.4), h = by - ty;
+  s += P(`M${r2(bx - 4.6)},${r2(by - 0.4)} Q${r2(bx - 2.6)},${r2(by - h * 0.14)} ${r2(bx - 2.8)},${r2(by - h * 0.24)} Q${r2(bx - 6)},${r2(by - h * 0.46)} ${r2(bx - 2.6)},${r2(by - h * 0.74)} Q${r2(bx - 2)},${r2(by - h * 0.86)} ${r2(bx - 4.4)},${r2(ty)} L${r2(bx + 4.4)},${r2(ty)} Q${r2(bx + 2)},${r2(by - h * 0.86)} ${r2(bx + 2.6)},${r2(by - h * 0.74)} Q${r2(bx + 6)},${r2(by - h * 0.46)} ${r2(bx + 2.8)},${r2(by - h * 0.24)} Q${r2(bx + 2.6)},${r2(by - h * 0.14)} ${r2(bx + 4.6)},${r2(by - 0.4)} Q${r2(bx)},${r2(by + 2)} ${r2(bx - 4.6)},${r2(by - 0.4)} Z`, WHITE_STONE.left, 0.9)
+    + `<path d="M${r2(bx + 1.2)},${r2(ty + 1)} Q${r2(bx + 3.4)},${r2(by - h * 0.46)} ${r2(bx + 1.6)},${r2(by + 1.2)} L${r2(bx + 4.2)},${r2(by - 0.2)} Q${r2(bx + 2.6)},${r2(by - h * 0.14)} ${r2(bx + 2.8)},${r2(by - h * 0.24)} Q${r2(bx + 5.6)},${r2(by - h * 0.46)} ${r2(bx + 2.6)},${r2(by - h * 0.74)} Q${r2(bx + 2)},${r2(by - h * 0.86)} ${r2(bx + 4)},${r2(ty + 0.6)} Z" fill="${WHITE_STONE.right}"/>`
+    + `<path d="M${r2(bx - 3.6)},${r2(by - h * 0.46)} Q${r2(bx)},${r2(by - h * 0.4)} ${r2(bx + 3.6)},${r2(by - h * 0.46)}" stroke="${WHITE_STONE.right}" stroke-width="0.6" fill="none"/>`;
+  // la table et sa plaque de bronze : l'anneau, les heures, le petit soleil gravé au centre
+  s += cylinder(0, 0, 0.28, 17.4, 20, WHITE_STONE) + disc(0, 0, 0.23, 20, BRONZE.plaque, 0.7);
+  const [x, y] = at(0, 0, 20), rx = 0.23 * 56, ry = 0.23 * 28;
+  s += E(x, y, rx * 0.8, ry * 0.8, 'none', 0).replace('stroke="none"', `stroke="${BRONZE.bord}" stroke-width="0.6"`);
+  for (let i = 0; i < 12; i++) { const a = (i / 12) * TAU, c = Math.cos(a), sn = Math.sin(a); s += L([x + c * rx * 0.8, y + sn * ry * 0.8], [x + c * rx * 0.95, y + sn * ry * 0.95], BRONZE.trait, i % 3 ? 0.5 : 0.9); }
+  for (let i = 0; i < 8; i++) { const a = (i / 8) * TAU; s += L([x + Math.cos(a) * 2.6, y + Math.sin(a) * 1.3], [x + Math.cos(a) * 3.8, y + Math.sin(a) * 1.9], BRONZE.trait, 0.45); }
+  s += E(x, y, 1.9, 1, BRONZE.bord, 0.4);
+  // l'ombre du style, qui tourne d'une image à l'autre
+  const sa = f ? 0.75 : -0.35;
+  s += `<path d="M${x},${y} L${r2(x + Math.cos(sa - 0.12) * rx * 0.86)},${r2(y + Math.sin(sa - 0.12) * ry * 0.86)} L${r2(x + Math.cos(sa + 0.12) * rx * 0.86)},${r2(y + Math.sin(sa + 0.12) * ry * 0.86)} Z" fill="rgba(70,45,20,0.4)"/>`;
+  // le style de laiton : un triangle debout dans l'axe de la plaque, sa tranche éclairée
+  const g0 = at(0, 0.12, 20), g1 = at(0, -0.12, 20), g2 = at(0, -0.12, 26.4), g3 = at(0.018, -0.12, 26.4), g4 = at(0.018, 0.12, 20);
+  s += poly([g0, g1, g2], BRASS.right, 0.8) + poly([g0, g2, g3, g4], BRASS.top, 0.7);
+  // l'herbe et les fleurettes au pied du dé
+  const [hx, hy] = at(0.1, 0.2, 0);
+  return s + herbe(hx - 6, hy + 1, '#86B852', 0.6) + fleurette(hx - 2.4, hy + 2, '#FFFFFF') + fleurette(hx + 3.4, hy + 1.4, '#F7B6C8');
 } };
+
 // Bassin : margelle, eau claire, nénuphars, poisson rouge ; des ronds dans l'eau (2 images)
 C.bassin = { n: 2, draw: f => {
   let s = shadow(0, 0, 0.5, 0.1) + box(-0.42, -0.36, 0.42, 0.36, 0, 5, STONE) + face([[-0.36, -0.3, 5], [0.36, -0.3, 5], [0.36, 0.3, 5], [-0.36, 0.3, 5]], WATER, 0.7) + face([[-0.36, -0.3, 5], [0.1, -0.3, 5], [-0.36, 0.06, 5]], WATER_LIGHT, 0);
