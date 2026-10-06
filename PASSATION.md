@@ -207,7 +207,7 @@ chronométrer 20 appels. Comparer à zoom égal, au même endroit.
   commencent par `world_`. Voir aussi `db/README.md`.
 
 ### Front : `src/world/` (moteur de l'île) et `src/components/World/`
-- **`WorldView.vue`** : l'île entière (≈ 3 150 lignes) : son état, le chargement, les actions, les fiches et le HUD.
+- **`WorldView.vue`** : l'île entière (≈ 3 060 lignes) : son état, le chargement, les actions, les fiches et le HUD.
   Ses méthodes de moteur sont à part, dans `src/world/view/`, des objets de méthodes étalés dans `methods`
   (`this` y reste le composant) :
   - `camera.js` : géométrie isométrique (monde ↔ écran), caméra, zoom, cadrage ;
@@ -215,7 +215,9 @@ chronométrer 20 appels. Comparer à zoom égal, au même endroit.
     bulles) ;
   - `gestures.js` : glisser, pincer, molette, toucher, appui long, ce qui est sous le doigt ;
   - `constants.js` (taille d'une case…) et `memory.js` (la vue gardée d'une visite à l'autre de l'onglet).
-  - Reste à faire (lot « santé ») : les fiches et le HUD en composants.
+  - Fiches déjà en composants : le naufrage (`WreckScene`), Brume (`BrumeSheet`), un quartier (`ZoneSheet`). Leurs
+    styles restent dans `WorldView` (globaux, classes `world__`) ; les actions restent à l'île, qui les reçoit en
+    événements. Reste à faire (lot « santé ») : la fiche d'un bâtiment et le HUD.
 - **Le sol** : `terrain.js` (`TerrainCache`) peint le relief en **carrés de 512 px gardés en images**, à des
   résolutions par pas de √2.
   - Le décor fixe (arbres, rochers) est **cuit dans le sol** sauf de près : `NEAR_SCALE = 0.9`, avec le vent
@@ -318,8 +320,9 @@ chronométrer 20 appels. Comparer à zoom égal, au même endroit.
   le Grimoire et dans la fiche de Brume ; « Voir dans le Grimoire » ouvre la page marquée (`openMarked`).
 - **Lot H3 de la bible** (dormeurs, naufrages, souvenirs), front seul : la pose « endormi » du générateur (couché,
   « z ») ; `src/world/story.js` (naufrages annoncés à l'ouverture de leur acte, retenus sur l'appareil dans
-  `oc_wrecks` ; répliques des souvenirs retrouvés) ; dans `WorldView.vue`, l'image de nuit du naufrage (jamais
-  par-dessus un coffre : `holdWreck`), la scène du souvenir à la réclamation de sa quête, « … se réveille ! ».
+  `oc_wrecks` ; répliques des souvenirs retrouvés) ; dans `WorldView.vue`, l'image de nuit du naufrage
+  (`WreckScene.vue` ; jamais par-dessus un coffre : `holdWreck`), la scène du souvenir à la réclamation de sa
+  quête, « … se réveille ! ».
 - **Refonte de l'intérieur du Grimoire**, front seul : polices IM Fell English (texte, petites capitales) et
   UnifrakturMaguntia (lettrines), hébergées avec le jeu (`src/assets/fonts`, licence OFL, déclarées dans
   `BookView.vue`) ; pages repeintes quand elles sont chargées (`bookFontsReady`). Une seule graisse : jamais de gras
@@ -411,9 +414,9 @@ familiers (H6) et aux créatures d'Anya (H8).
 3. **Lot « santé »** (refactor sans changer le jeu ; l'auteur l'a approuvé) :
    - découper `WorldView.vue` :
      - ~~moteur de rendu, gestes et caméra à part~~ : fait (`src/world/view/`, § 5) ;
-     - fiches et HUD en composants (`SiteSheet`, `ZoneSheet`, `IslandHud`…). Attention : leurs styles sont
-       « scoped » dans `WorldView` et partagés entre fiches (`world__sheet`, `world__need`…) ; un composant enfant ne
-       les reçoit pas, il faut d'abord les rassembler (feuille commune) et vérifier chaque fiche au pixel près ;
+     - fiches et HUD en composants : ~~styles de l'île rendus globaux~~ (classes `world__`, partagées entre fiches),
+       ~~naufrage, Brume, quartier~~ : faits (`WreckScene`, `BrumeSheet`, `ZoneSheet`) ; restent la fiche d'un
+       bâtiment (`SiteSheet`) et le HUD (`IslandHud`), à vérifier chacun au pixel près ;
    - composants réutilisables : ~~une **`CostList**`~~ : fait pour l'établi et les annexes (`CostList.vue`) ; les
      fiches de palier et de quartier de `WorldView` gardent leur présentation en lignes ; une carte de catalogue
      commune reste à faire ;
