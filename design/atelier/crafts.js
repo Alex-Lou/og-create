@@ -43,17 +43,45 @@ C.cloture = { n: 1, draw: () => {
   return s + herbe(ax - 1, ay + 1, '#86B852', 0.7) + herbe(bx + 1.6, by + 1.4, '#94C25C', 0.6) + herbe(cx + 2, cy + 1, '#86B852', 0.55)
     + fleurette(bx - 3.4, by + 2.6, '#FFFFFF') + fleurette(ax + 5, ay + 3, '#F7B6C8');
 } };
-// Massif : bordure de pierres, terre, fleurs qui ondulent
+// Massif : un parterre surélevé, son muret appareillé et ses pierres de bordure, la terre ; tulipes, marguerites et
+// pompons sur leurs feuilles, qui ondulent (2 images)
+const TERRE = { top: '#7E5233', grain: '#5E3A22' };
+const feuille = (x, y, a, col = '#6FB24E') => `<path d="M0,0 Q-2.4,-1.2 -3.4,-3.6 Q-0.6,-3.2 0,0 Z" fill="${col}" stroke="${OUT}" stroke-width="0.6" stroke-linejoin="round" transform="translate(${r2(x)} ${r2(y)}) rotate(${a})"/>`;
+const pierreBord = (x, y) => E(x, y, 2.5, 1.35, STONE.left, 0.7) + E(x - 0.5, y - 0.35, 1.5, 0.7, STONE.top, 0);
+// la tête d'une fleur du massif : 0 tulipe (coupe à trois pétales), 1 marguerite, 2 pompon
+function teteMassif(x, y, k) {
+  const sorte = k % 3, col = ['#E8566A', '#F7B6C8', '#F2C04B', '#B48AE0', '#F08A3A'][k % 5];
+  if (sorte === 0) return P(`M${r2(x - 2.4)},${r2(y)} Q${r2(x - 2.8)},${r2(y - 3.6)} ${r2(x - 1.2)},${r2(y - 4)} L${r2(x)},${r2(y - 2.6)} L${r2(x + 1.2)},${r2(y - 4)} Q${r2(x + 2.8)},${r2(y - 3.6)} ${r2(x + 2.4)},${r2(y)} Q${r2(x)},${r2(y + 1.2)} ${r2(x - 2.4)},${r2(y)} Z`, col, 0.8)
+    + E(x - 1, y - 2.2, 0.5, 1, '#FFFFFF', 0).replace('/>', ' opacity="0.5"/>');
+  if (sorte === 1) return fleurette(x, y - 1.4, k % 2 ? '#FFFFFF' : '#F7B6C8');
+  return E(x, y - 1.6, 2.4, 2.2, col, 0.8) + [[-1, -0.6], [0.8, -0.8], [0, 0.6], [-0.2, -1.6]].map(([dx, dy]) => E(x + dx, y - 1.6 + dy, 0.45, 0.45, '#FFFFFF', 0).replace('/>', ' opacity="0.45"/>')).join('');
+}
 C.massif = { n: 2, draw: f => {
-  let s = shadow(0, 0, 0.45, 0.12) + box(-0.38, -0.34, 0.38, 0.34, 0, 5, STONE) + face([[-0.34, -0.3, 5.2], [0.34, -0.3, 5.2], [0.34, 0.3, 5.2], [-0.34, 0.3, 5.2]], SOIL.top, 0.6);
+  let s = shadow(0, 0, 0.47, 0.12) + box(-0.38, -0.34, 0.38, 0.34, 0, 4.6, STONE);
+  // les joints du muret, sur ses deux faces visibles
+  for (const u of [-0.26, -0.06, 0.14, 0.32]) s += L(at(u, 0.34, 0.4), at(u, 0.34, 4.2), STONE.right, 0.6);
+  for (const v of [-0.18, 0.02, 0.22]) s += L(at(0.38, v, 0.4), at(0.38, v, 4.2), STONE.right, 0.6);
+  s += L(at(-0.38, 0.34, 2.3), at(0.38, 0.34, 2.3), STONE.right, 0.5) + L(at(0.38, -0.34, 2.3), at(0.38, 0.34, 2.3), STONE.right, 0.5);
+  s += face([[-0.34, -0.3, 4.8], [0.34, -0.3, 4.8], [0.34, 0.3, 4.8], [-0.34, 0.3, 4.8]], TERRE.top, 0.6);
+  for (const [du, dv] of [[-0.25, -0.1], [0.05, 0.18], [0.22, -0.2], [-0.1, 0.24], [0.28, 0.1]]) { const [x, y] = at(du, dv, 4.8); s += E(x, y, 0.8, 0.4, TERRE.grain, 0); }
+  // les pierres de bordure du fond, puis les plantes rang par rang, puis la bordure de devant
+  const bord = (fond) => {
+    let o = '';
+    for (let i = 0; i <= 7; i++) { const u = -0.36 + i * 0.103; o += pierreBord(...at(u, fond ? -0.33 : 0.33, 4.8)); }
+    for (let i = 1; i <= 5; i++) { const v = -0.33 + i * 0.11; o += pierreBord(...at(fond ? -0.37 : 0.37, v, 4.8)); }
+    return o;
+  };
+  s += bord(true);
   let k = 0;
   for (const dv of [-0.2, 0, 0.2]) for (const du of [-0.22, -0.07, 0.08, 0.23]) {
-    const [x, y] = at(du + (k % 2) * 0.03, dv, 5.4);
-    const sw = wave(f, 2, 1.4, k * 1.3);
-    s += leafDot(x, y - 1.6, 2.8) + stem(x, y - 2, 7 + (k % 3), sw) + Dk.flower(x + sw, y - 9 - (k % 3), 1.8, FLOWERS[k % 5], '#F7E27A');
+    const [x, y] = at(du + (k % 2) * 0.03, dv, 5);
+    const sw = wave(f, 2, 1.2, k * 1.3), h = 5 + (k % 3) * 1;
+    s += leafDot(x - 2.4, y - 0.6, 2.6) + leafDot(x + 2.2, y - 0.4, 2.4) + leafDot(x, y - 1.8, 2.8)
+      + thick(`M${r2(x)},${r2(y - 2)} q${r2(sw * 0.2)},${r2(-h * 0.5)} ${r2(sw)},${r2(-h)}`, 0.7, '#5DAA45')
+      + feuille(x + sw * 0.5, y - 2 - h * 0.45, -24 - (k % 2) * 10) + teteMassif(x + sw, y - 2 - h, k);
     k++;
   }
-  return s;
+  return s + bord(false);
 } };
 // Muret : moellons assisés, chaperon, mousse
 C.muret = { n: 1, draw: () => {
