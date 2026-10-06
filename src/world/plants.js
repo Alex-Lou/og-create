@@ -18,8 +18,8 @@ const PLANTS = {
   reeds: 'roseaux', lily: 'nenuphars', shells: 'coquillages', driftwood: 'bois_flotte', heather: 'bruyere',
   cactus: 'cactus', nest: 'nid'
 };
-// Des dessins d'un autre moment, pas des variantes : ils ne se tirent pas au hasard
-const NOT_VARIANTS = new Set(['champignons_nuit']);
+// Les dessins de nuit (« champignons_bruns_nuit ») sont d'un autre moment, pas des variantes : ils ne se tirent pas
+const NIGHT = /(^|_)nuit(_|$)/;
 
 const NAMES = Object.keys(FILES).map(path => path.slice(DIR.length, -'.svg'.length)).sort();
 const BASES = Object.values(PLANTS);
@@ -29,7 +29,7 @@ const baseOf = name => BASES.filter(base => name === base || name.startsWith(`${
 
 // Les dessins d'une sorte : le sien et ses variantes, dans un ordre fixe (le dessin par défaut en tête)
 function variantsOf(base) {
-  const own = NAMES.filter(name => name !== base && !NOT_VARIANTS.has(name) && baseOf(name) === base);
+  const own = NAMES.filter(name => name !== base && !NIGHT.test(name) && baseOf(name) === base);
   return NAMES.includes(base) ? [base, ...own] : own;
 }
 export const VARIANTS = Object.fromEntries(Object.entries(PLANTS).map(([kind, base]) => [kind, variantsOf(base)]));
