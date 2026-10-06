@@ -86,16 +86,16 @@ export default {
 
 <style scoped>
 .chest { display: grid; justify-items: center; gap: 10px; text-align: center; font-family: var(--font-ui); }
-.chest.is-commun { --wood: #9A6A3E; --band: #6E6A64; --lock: #C9A04A; }
-.chest.is-rare { --wood: #9A6A3E; --band: #3E78C8; --lock: #DDE7F4; }
-.chest.is-epique { --wood: #6C3FA2; --band: #E2B546; --lock: #F4D67A; }
-.chest.is-legendaire { --wood: #E2AE3A; --band: #B23A48; --lock: #FFF1C2; }
+.chest.is-commun { --wood: var(--island-chest-commun-wood); --band: var(--island-chest-commun-band); --lock: var(--island-chest-commun-lock); }
+.chest.is-rare { --wood: var(--island-chest-rare-wood); --band: var(--island-chest-rare-band); --lock: var(--island-chest-rare-lock); }
+.chest.is-epique { --wood: var(--island-chest-epique-wood); --band: var(--island-chest-epique-band); --lock: var(--island-chest-epique-lock); }
+.chest.is-legendaire { --wood: var(--island-chest-legendaire-wood); --band: var(--island-chest-legendaire-band); --lock: var(--island-chest-legendaire-lock); }
 .chest__note { margin: 0; max-width: 300px; color: var(--ink-500); font-style: italic; font-size: 14px; line-height: 1.4; }
 .chest__stage { position: relative; display: grid; place-items: center; width: 220px; height: 170px; }
 .chest__box { position: relative; width: 168px; height: 140px; overflow: visible; animation: chest-shake .7s ease-in-out both; }
-.chest__wood { fill: var(--wood); stroke: rgba(40, 24, 12, .55); stroke-width: 1.4; }
+.chest__wood { fill: var(--wood); stroke: var(--island-chest-line); stroke-width: 1.4; }
 .chest__band { fill: var(--band); }
-.chest__lock { fill: var(--lock); stroke: rgba(40, 24, 12, .5); stroke-width: 1; }
+.chest__lock { fill: var(--lock); stroke: var(--island-chest-lock-line); stroke-width: 1; }
 .chest__lid { transform-box: view-box; transform-origin: 102px 46px; animation: chest-lid .45s .7s cubic-bezier(.3, 1.6, .5, 1) both; }
 .chest__glow, .chest__rays { position: absolute; inset: 0; margin: auto; border-radius: var(--r-round); opacity: 0; }
 .chest__glow { width: 150px; height: 150px; background: radial-gradient(circle, var(--rarity) 0%, transparent 68%); animation: chest-glow .6s .75s ease-out both; }

@@ -96,7 +96,7 @@ export default {
   box-shadow: inset 0 0 0 1px rgba(var(--shade-rgb), .1); font-family: var(--font-display); font-style: italic; font-size: 15px; line-height: 1.4;
 }
 .guest__request { display: grid; gap: 8px; padding: 12px 14px; border-radius: var(--r-md); background: linear-gradient(135deg, var(--gold-100), var(--vellum-100)); box-shadow: inset 0 0 0 2px var(--gold-300); }
-.guest__request.is-done { background: #EAF6E2; box-shadow: inset 0 0 0 1px rgba(78, 138, 58, .35); }
+.guest__request.is-done { background: var(--island-happy); box-shadow: inset 0 0 0 1px rgba(78, 138, 58, .35); }
 .guest__title { margin: 0; font-size: 12px; font-weight: 800; text-transform: uppercase; letter-spacing: .05em; color: var(--ink-500); }
 .guest__ask { display: grid; grid-template-columns: auto 1fr; align-items: center; gap: 10px; }
 .guest__glyph { font-size: 30px; line-height: 1; }
@@ -106,6 +106,6 @@ export default {
 .guest__reward { margin: 0; font-size: 13px; font-weight: 800; color: var(--ink-700); }
 .guest__btn { width: 100%; display: inline-flex; justify-content: center; align-items: center; gap: 6px; }
 .guest__done { margin: 0; font-size: 14px; font-weight: 900; color: var(--oc-success); }
-.guest__stay { display: grid; gap: 8px; padding: 12px 14px; border-radius: var(--r-md); background: #F1F8FD; box-shadow: inset 0 0 0 1px rgba(62, 110, 156, .25); }
+.guest__stay { display: grid; gap: 8px; padding: 12px 14px; border-radius: var(--r-md); background: var(--island-visitor-bg); box-shadow: inset 0 0 0 1px var(--island-visitor-ring); }
 .guest__stay-text { margin: 0; font-size: 13px; font-weight: 700; line-height: 1.4; color: var(--ink-700); }
 </style>

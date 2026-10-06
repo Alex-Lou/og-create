@@ -1,10 +1,12 @@
 /* SiteSteps : ses styles (repris de WorldView, qui les gardait pour lui). */
+/* Ses jetons */
+.world__steps { --steps-done: #8fcb6b; }
 /* Évolution : paliers en frise verticale (atteint, prochain, à venir) */
 .world__steps { margin: 0; padding: 0; list-style: none; display: flex; flex-direction: column; gap: 10px; }
 .world__step { display: flex; gap: 12px; position: relative; }
 .world__step:not(:last-child)::after { content: ''; position: absolute; left: 15px; top: 34px; bottom: -10px; width: 2px; background: var(--vellum-300); }
 .world__step-mark { flex: none; width: 32px; height: 32px; display: grid; place-items: center; border-radius: var(--r-round); background: var(--vellum-300); color: var(--ink-700); font-weight: 900; z-index: 1; }
-.world__step.is-done .world__step-mark { background: #8FCB6B; color: #FFFFFF; }
+.world__step.is-done .world__step-mark { background: var(--steps-done); color: #FFFFFF; }
 .world__step.is-next .world__step-mark { background: linear-gradient(180deg, var(--gold-300), var(--gold-500)); color: var(--ink-900); box-shadow: 0 0 0 3px var(--gold-200); }
 .world__step-body { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 6px; padding-bottom: 4px; }
 .world__step-name { font-family: var(--font-display); font-weight: 700; font-size: 18px; }

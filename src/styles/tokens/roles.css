@@ -30,6 +30,10 @@
   --oc-missing: #b0503a;
   /* L'or vif : sur fond sombre, jauges, palier rare */
   --oc-gold-bright: #f2c04b;
+  /* L'or en encre chaude (lien d'une fiche, indice, bouton discret) ; un ton plus chaud que --oc-gold */
+  --oc-gold-ink: #8a5a1c;
+  /* Le texte pâle des scènes de nuit (prologue, naufrage) */
+  --oc-night-ink: #f4eedc;
   /* Le halo vert derrière l'illustration d'un objet, d'un bâtiment ou d'une annexe */
   --oc-art-halo: #cfe8b8;
   /* La pièce d'or (écu) : sa face et son liseré */

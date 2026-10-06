@@ -1,4 +1,6 @@
 /* SiteShop : ses styles (repris de WorldView, qui les gardait pour lui). */
+/* Ses jetons */
+.world__panel { --shop-rare-ring: rgba(201, 149, 42, .55); --shop-undo-shadow: rgba(40, 28, 18, .3); }
 /* Boutique : rubriques, cartes en deux colonnes (vignette, nom, effet, bouton d'achat en deux touchers) */
 .world__shop-note { margin: 0; padding: 8px 12px; border-radius: var(--r-sm); background: var(--gold-200); font-weight: 800; font-size: 14px; }
 .world__shop-note span { color: var(--ink-500); font-weight: 700; font-size: 12px; }
@@ -21,8 +23,8 @@
   background: var(--ink-900); color: var(--gold-300); font-family: var(--font-display); font-weight: 700; font-size: 12px; text-align: center;
 }
 .world__card.is-locked .world__card-palier { background: var(--vellum-300); color: var(--ink-700); }
-.world__card-palier--rare { background: linear-gradient(135deg, var(--oc-gold-bright), #C9952A); color: var(--ink-900); }
-.world__card.is-rare { box-shadow: inset 0 0 0 1px rgba(201, 149, 42, .55); }
+.world__card-palier--rare { background: var(--island-rare); color: var(--ink-900); }
+.world__card.is-rare { box-shadow: inset 0 0 0 1px var(--shop-rare-ring); }
 .world__card.is-rare.is-worn { box-shadow: inset 0 0 0 2px var(--gold-500); }
 .world__card-art {
   position: relative; display: grid; place-items: center; height: 78px; border-radius: var(--r-sm);
@@ -47,7 +49,7 @@
   position: sticky; bottom: 0; margin-top: 10px; padding: 8px 8px 8px 14px; border-radius: var(--r-pill);
   display: flex; align-items: center; justify-content: space-between; gap: 10px;
   background: var(--ink-900); color: var(--vellum-50); font-weight: 800;
-  box-shadow: 0 6px 18px rgba(40, 28, 18, .3);
+  box-shadow: 0 6px 18px var(--shop-undo-shadow);
 }
 .world__undo-btn { appearance: none; border: 0; cursor: pointer; min-height: 34px; padding: 4px 14px; border-radius: var(--r-pill); background: var(--gold-400); color: var(--ink-900); font-weight: 900; }
 .world__card-btn--quiet { background: var(--vellum-200); color: var(--ink-900); }

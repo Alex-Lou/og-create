@@ -108,10 +108,10 @@ export default {
   display: grid; justify-items: center; align-content: start; gap: 4px; padding: 8px 8px 12px; border-radius: var(--r-md);
   background: var(--vellum-50); box-shadow: inset 0 0 0 2px var(--rarity); text-align: center;
 }
-.haul__card.is-commun { --wood: #9A6A3E; --band: #6E6A64; --lock: #C9A04A; }
-.haul__card.is-rare { --wood: #9A6A3E; --band: #3E78C8; --lock: #DDE7F4; }
-.haul__card.is-epique { --wood: #6C3FA2; --band: #E2B546; --lock: #F4D67A; }
-.haul__card.is-legendaire { --wood: #E2AE3A; --band: #B23A48; --lock: #FFF1C2; }
+.haul__card.is-commun { --wood: var(--island-chest-commun-wood); --band: var(--island-chest-commun-band); --lock: var(--island-chest-commun-lock); }
+.haul__card.is-rare { --wood: var(--island-chest-rare-wood); --band: var(--island-chest-rare-band); --lock: var(--island-chest-rare-lock); }
+.haul__card.is-epique { --wood: var(--island-chest-epique-wood); --band: var(--island-chest-epique-band); --lock: var(--island-chest-epique-lock); }
+.haul__card.is-legendaire { --wood: var(--island-chest-legendaire-wood); --band: var(--island-chest-legendaire-band); --lock: var(--island-chest-legendaire-lock); }
 .haul__rarity {
   padding: 1px 8px; border-radius: var(--r-pill); background: var(--rarity); color: var(--ink-900);
   font-size: 10px; font-weight: 900; text-transform: uppercase; letter-spacing: .05em;
@@ -119,9 +119,9 @@ export default {
 .haul__stage { position: relative; display: grid; place-items: center; width: 100%; height: 72px; }
 .haul__box, .haul__prize, .haul__glow { position: absolute; inset: 0; margin: auto; }
 .haul__box { width: 66px; height: 57px; overflow: visible; animation: haul-shake .5s var(--delay) ease-in-out both, haul-gone .3s calc(var(--delay) + .8s) ease-in both; }
-.haul__wood { fill: var(--wood); stroke: rgba(40, 24, 12, .55); stroke-width: 1.2; }
+.haul__wood { fill: var(--wood); stroke: var(--island-chest-line); stroke-width: 1.2; }
 .haul__band { fill: var(--band); }
-.haul__lock { fill: var(--lock); stroke: rgba(40, 24, 12, .5); stroke-width: .8; }
+.haul__lock { fill: var(--lock); stroke: var(--island-chest-lock-line); stroke-width: .8; }
 .haul__lid { transform-box: view-box; transform-origin: 51px 24px; animation: haul-lid .3s calc(var(--delay) + .5s) cubic-bezier(.3, 1.6, .5, 1) both; }
 .haul__glow {
   width: 76px; height: 76px; border-radius: var(--r-round); background: radial-gradient(circle, var(--rarity) 0%, transparent 68%);

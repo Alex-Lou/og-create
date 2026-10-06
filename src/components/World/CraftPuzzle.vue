@@ -288,7 +288,7 @@ export default {
   position: absolute; width: 44px; height: 44px; padding: 0; border: 0; border-radius: 6px; box-sizing: border-box;
   background: rgba(255, 252, 240, .75); box-shadow: inset 0 0 0 1.5px rgba(var(--shade-rgb), .28); cursor: pointer; touch-action: none;
 }
-.puzzle__cell.is-hint { background: rgba(242, 192, 75, .55); box-shadow: inset 0 0 0 2px #E2A53A; }
+.puzzle__cell.is-hint { background: var(--island-hint); box-shadow: inset 0 0 0 2px #E2A53A; }
 .puzzle__cell.is-bad { background: rgba(214, 96, 74, .35); box-shadow: inset 0 0 0 2px #C9473A; }
 .puzzle__placed, .puzzle__piece { position: absolute; padding: 0; border: 0; background: none; cursor: grab; touch-action: none; }
 .puzzle__placed { z-index: 1; }

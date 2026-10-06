@@ -124,7 +124,7 @@ export default {
   position: absolute; top: 10px; left: 10px; min-width: 30px; padding: 2px 8px; border-radius: var(--r-pill);
   background: var(--ink-900); color: var(--gold-300); font-family: var(--font-display); font-weight: 700; font-size: 14px; text-align: center;
 }
-.item-sheet__chip--rare { background: linear-gradient(135deg, var(--oc-gold-bright), #C9952A); color: var(--ink-900); }
+.item-sheet__chip--rare { background: var(--island-rare); color: var(--ink-900); }
 .item-sheet__palier { margin: 0; padding: 8px 12px; border-radius: var(--r-sm); font-weight: 800; font-size: 14px; }
 .item-sheet__palier.is-ok { background: #E3F1D6; color: #3E6E2E; }
 .item-sheet__palier.is-missing { background: var(--vellum-200); color: var(--ink-700); }
