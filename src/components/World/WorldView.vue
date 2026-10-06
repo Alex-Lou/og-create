@@ -11,43 +11,19 @@
       <!-- L'île de bord à bord : en haut, une barre qui flotte par-dessus (horloge, écus, réserves, Récolte) ;
            masquée en plein écran -->
       <div ref="top" class="world__top">
-        <header class="world__head">
-          <div class="world__head-left">
-            <h2 class="oc-sr-only">Le Monde</h2>
-            <IslandClock v-if="state && skyClock" v-bind="skyClock" :warping="warping" @warp="toggleWarp" />
-            <span class="world__purse" :aria-label="`${coins} écus`"><span class="world__coin" aria-hidden="true"></span>{{ coinsText }}</span>
-          </div>
-          <!-- « Tout ramasser » : ce que tous les bâtiments ont produit (écus et ressources), d'un toucher ; le solde reste
-               dans l'en-tête. (« Récolte » ne désigne que les mini-jeux, joués un par un.) -->
-          <button
-            v-if="harvestable.length"
-            type="button"
-            class="world__coins is-ready"
-            :disabled="busy"
-            :aria-label="`Tout ramasser : ${harvestable.map(g => `${g.n} ${g.label}`).join(', ')}`"
-            @click="collect"
-          >
-            <span class="world__coins-icon" aria-hidden="true"><ElementGlyph glyph="ui:basket" /></span>
-            <span class="world__coins-text" aria-hidden="true">
-              <span class="world__coins-label">Tout ramasser</span>
-              <span class="world__coins-gains">
-                <span v-for="g in harvestable" :key="g.id">+{{ g.n }}<ElementGlyph :glyph="g.glyph" /></span>
-              </span>
-            </span>
-          </button>
-        </header>
-        <!-- Réserves de l'île et Récolte -->
-        <div v-if="state" class="world__hud">
-          <ul class="world__stock" aria-label="Réserves">
-            <li v-for="r in RESOURCES" :key="r.id" class="world__res" :title="r.label">
-              <span aria-hidden="true"><ElementGlyph :glyph="r.glyph" /></span><strong>{{ state.stock[r.id] }}</strong><span class="oc-sr-only">{{ r.label }}</span>
-            </li>
-          </ul>
-          <button type="button" class="world__play" :disabled="busy || !state.charges.count" @click="startHarvest">
-            <span class="world__play-label">Récolte</span>
-            <span class="world__play-sub">{{ chargesText }}</span>
-          </button>
-        </div>
+        <IslandHud
+          :clock="state ? skyClock : null"
+          :warping="warping"
+          :coins="coins"
+          :harvestable="harvestable"
+          :stock="state ? state.stock : null"
+          :charges="state ? state.charges.count : 0"
+          :charges-text="chargesText"
+          :busy="busy"
+          @warp="toggleWarp"
+          @collect="collect"
+          @harvest="startHarvest"
+        />
       </div>
       <div ref="stage" class="world__stage">
         <!-- Les gestes passent par les pointeurs ; touchend annulé : pas de clic fantôme après un toucher au doigt (il
@@ -66,76 +42,23 @@
         ></canvas>
         <!-- Compteur d'images (« ?perf ») -->
         <p v-if="perfText" class="world__perf" aria-hidden="true">{{ perfText }}</p>
-        <!-- Coffres : celui du jour et ceux qui attendent (pastille) -->
-        <button
-          v-if="state && state.chests"
-          type="button"
-          :class="['world__chest-btn', { 'is-ready': chestCount }]"
-          :aria-label="chestCount ? `Coffres : ${chestCount} à ouvrir` : 'Coffres'"
-          @click="chestsOpen = true"
-        >
-          <svg viewBox="0 0 32 32" width="26" height="26" aria-hidden="true">
-            <path d="M5,15 v-3 a11,5 0 0 1 22,0 v3 z" fill="#B57A44" stroke="#5A3A1E" stroke-width="1.4" />
-            <rect x="5" y="15" width="22" height="11" rx="2" fill="#9A6A3E" stroke="#5A3A1E" stroke-width="1.4" />
-            <rect x="5" y="17.5" width="22" height="2" fill="#E2B546" />
-            <rect x="13.5" y="14" width="5" height="6" rx="1.2" fill="#F4D67A" stroke="#5A3A1E" stroke-width="1" />
-          </svg>
-          <span v-if="chestCount" class="world__chest-badge" aria-hidden="true">{{ chestCount }}</span>
-        </button>
-        <!-- Carnet d'explorateur : les lieux remarquables (pastille : ceux qui attendent d'être découverts) -->
-        <button
-          v-if="state && shownLandmarks.length"
-          type="button"
-          :class="['world__log-btn', { 'is-ready': waitingLandmarks }]"
-          :aria-label="waitingLandmarks ? `Carnet d’explorateur : ${waitingLandmarks} lieu${waitingLandmarks > 1 ? 'x' : ''} à découvrir` : 'Carnet d’explorateur'"
-          @click="openLog()"
-        >
-          <svg viewBox="0 0 32 32" width="24" height="24" aria-hidden="true">
-            <rect x="7" y="5" width="19" height="23" rx="2.5" fill="#7A4E2C" stroke="#3E2615" stroke-width="1.3" />
-            <rect x="9.5" y="7" width="15" height="19" rx="1.5" fill="#F6EEDD" />
-            <path d="M17,10 L19,16 L17,22 L15,16 Z" fill="#C9473A" />
-            <circle cx="17" cy="16" r="5" fill="none" stroke="#5A3A1E" stroke-width="1" />
-            <rect x="5" y="9" width="4" height="2" rx="1" fill="#E2B546" /><rect x="5" y="20" width="4" height="2" rx="1" fill="#E2B546" />
-          </svg>
-          <span v-if="waitingLandmarks" class="world__chest-badge" aria-hidden="true">{{ waitingLandmarks }}</span>
-        </button>
-        <!-- Trouvailles de climat : la réserve à part (pastille : gisements prêts dans les quartiers à soi) -->
-        <button
-          v-if="state && (shownDeposits.length || ownedFinds)"
-          type="button"
-          :class="['world__finds-btn', { 'is-ready': readyDeposits }]"
-          :aria-label="readyDeposits ? `Trouvailles : ${readyDeposits} gisement${readyDeposits > 1 ? 's' : ''} prêt${readyDeposits > 1 ? 's' : ''}` : 'Trouvailles'"
-          @click="findsOpen = true"
-        >
-          <svg viewBox="0 0 32 32" width="24" height="24" aria-hidden="true">
-            <path d="M10,11 Q16,7 22,11 L25,24 Q16,30 7,24 Z" fill="#B57A44" stroke="#5A3A1E" stroke-width="1.4" stroke-linejoin="round" />
-            <path d="M10,11 Q16,14 22,11" fill="none" stroke="#5A3A1E" stroke-width="1.2" />
-            <path d="M12,10 Q16,4 20,10" fill="none" stroke="#E2B546" stroke-width="1.6" />
-            <path d="M13,18 l3,-3 l3,3 l-3,4 Z" fill="#BFE7F7" stroke="#2E6A9E" stroke-width="0.8" />
-          </svg>
-          <span v-if="readyDeposits" class="world__chest-badge" aria-hidden="true">{{ readyDeposits }}</span>
-        </button>
-        <!-- Expédition en route : une boussole et le temps avant son retour -->
-        <button v-if="state && state.expedition" type="button" class="world__trip-btn" :aria-label="`Expédition en route : retour dans ${tripLeft}`" @click="showExpedition">
-          <svg viewBox="0 0 32 32" width="24" height="24" aria-hidden="true">
-            <circle cx="16" cy="16" r="12" fill="#F6EEDD" stroke="#5A3A1E" stroke-width="1.6" />
-            <path d="M16,6 L19,16 L16,26 L13,16 Z" fill="#C9473A" stroke="#5A3A1E" stroke-width="0.8" />
-            <path d="M16,16 L19,16 L16,26 L13,16 Z" fill="#E9DCC4" />
-            <circle cx="16" cy="16" r="1.6" fill="#5A3A1E" />
-          </svg>
-          <span class="world__trip-left">{{ tripLeft }}</span>
-        </button>
-        <div v-if="state" class="world__zoom">
-          <button type="button" aria-label="Zoomer" @click="zoomBy(1.25)">+</button>
-          <button type="button" aria-label="Dézoomer" @click="zoomBy(0.8)">−</button>
-          <!-- Plein écran : l'île seule, sans barres (et l'écran entier quand l'appareil le permet) -->
-          <button type="button" :aria-label="immersive ? 'Quitter le plein écran' : 'Plein écran'" :aria-pressed="immersive" @click="toggleImmersive">
-            <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
-              <path v-if="immersive" d="M9 4v5H4M15 4v5h5M9 20v-5H4M15 20v-5h5" />
-              <path v-else d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5" />
-            </svg>
-          </button>
-        </div>
+        <IslandButtons
+          v-if="state"
+          :chests="Boolean(state.chests)"
+          :chest-count="chestCount"
+          :landmarks="shownLandmarks.length > 0"
+          :waiting-landmarks="waitingLandmarks"
+          :finds="Boolean(shownDeposits.length || ownedFinds)"
+          :ready-deposits="readyDeposits"
+          :trip-left="state.expedition ? tripLeft : ''"
+          :immersive="immersive"
+          @chests="chestsOpen = true"
+          @log="openLog()"
+          @finds="findsOpen = true"
+          @trip="showExpedition"
+          @zoom="zoomBy"
+          @immersive="toggleImmersive"
+        />
         <p v-if="loadError" class="world__error" role="alert">
           L’île ne répond pas.
           <button type="button" class="world__btn world__btn--small" @click="load">Réessayer</button>
@@ -452,10 +375,8 @@
 <script>
 import { messageOf } from '@/utils/errors';
 import playService from '@/services/playService';
-import ElementGlyph from '@/components/ui/ElementGlyph.vue';
 import HarvestGame from './HarvestGame.vue';
 import ShopItemSheet from './ShopItemSheet.vue';
-import IslandClock from './IslandClock.vue';
 import ChestList from './ChestList.vue';
 import ChestReveal from './ChestReveal.vue';
 import ChestHaul from './ChestHaul.vue';
@@ -476,6 +397,8 @@ import SiteShop from './SiteShop.vue';
 import SiteSteps from './SiteSteps.vue';
 import SiteOverview from './SiteOverview.vue';
 import SiteSheet from './SiteSheet.vue';
+import IslandHud from './IslandHud.vue';
+import IslandButtons from './IslandButtons.vue';
 import { villagerSprite, ROLES } from '@/world/villagers';
 import { talkLine, giftLine } from '@/world/friends';
 import { heardPages, keepSavoir, savoirLine, artOf as savoirOf } from '@/game/savoirs';
@@ -492,7 +415,7 @@ import { guideOf, guideKind } from '@/world/itemGuide';
 import { villageOf } from '@/world/village';
 import { clearDrawings } from '@/book/painter';
 import { burst, ring, vibrate, center, reducedMotion } from '@/utils/fx';
-import { GLYPH, LABEL, RESOURCES } from '@/game/resources';
+import { LABEL, RESOURCES } from '@/game/resources';
 import { itemArt, itemLock, itemBuyable } from '@/world/shop';
 import { levelAffordable, levelReady } from '@/world/levels';
 import { drawSprite, spriteUrl, clearSprites } from '@/world/spriteCache';
@@ -552,7 +475,7 @@ const FOREST_HIGH = ['pine', 'pine', 'tree'];
 // d'animation sont non réactifs et s'arrêtent quand l'onglet est caché ou le composant démonté.
 export default {
   name: 'WorldView',
-  components: { ElementGlyph, HarvestGame, ShopItemSheet, IslandClock, GModal, ChestList, ChestReveal, ChestHaul, AnnexPanel, AnnexSheet, MiniGame, VillagerSheet, VisitorSheet, RenameSheet, CraftBench, CraftPuzzle, ExplorerLog, FindsSheet, WreckScene, BrumeSheet, ZoneSheet, SiteShop, SiteSteps, SiteOverview, SiteSheet },
+  components: { HarvestGame, ShopItemSheet, GModal, ChestList, ChestReveal, ChestHaul, AnnexPanel, AnnexSheet, MiniGame, VillagerSheet, VisitorSheet, RenameSheet, CraftBench, CraftPuzzle, ExplorerLog, FindsSheet, WreckScene, BrumeSheet, ZoneSheet, SiteShop, SiteSteps, SiteOverview, SiteSheet, IslandHud, IslandButtons },
   props: {
     // Glyphes des éléments du Livre (savoir-faire demandé à l'établi)
     elementEmojis: { type: Object, required: true },
@@ -565,7 +488,6 @@ export default {
   emits: ['coins-updated', 'show-alert', 'login', 'go', 'quest', 'replay-vigil', 'replay-anya'],
   data() {
     return {
-      GLYPH, RESOURCES,
       state: null,
       guest: false,
       loadError: false,
@@ -836,10 +758,6 @@ export default {
     },
     menuStyle() {
       return { left: `${this.menuPos.x}px`, top: `${this.menuPos.y}px` };
-    },
-    // Écus, dans la barre du haut (l'en-tête général est sous l'île)
-    coinsText() {
-      return new Intl.NumberFormat('fr-FR').format(this.coins || 0);
     },
     chargesText() {
       if (!this.state) return '';
