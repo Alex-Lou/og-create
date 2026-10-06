@@ -284,13 +284,30 @@ C.fontaine = { n: 3, draw: f => {
   }
   return s;
 } };
-// Brasero : coupe de fer sur trois pieds, braises et flammes (3 images)
+// Brasero : un trépied de fer forgé aux pieds en volute, une coupe ronde cerclée et rivetée, les braises qui rougeoient,
+// trois flammes et des étincelles qui montent (3 images). Le feu reste vers z 24 : la lumière de nuit y est calée
 C.brasero = { n: 3, draw: f => {
   const [x, y] = at(0, 0, 16);
-  let s = shadow(0, 0, 0.3, 0.16) + [[-0.12, 0.06], [0.12, 0.06], [0, -0.12]].map(([u, v]) => { const p = at(u, v, 0); return thick(`M${p[0]},${p[1]} L${r2(x + (p[0] - x) * 0.8)},${y + 1}`, 1.6, IRON.right); }).join('');
-  s += glow(x, y - 10, 18, '255,170,90', 0.32) + `<path d="M${x - 13},${y - 2} Q${x},${y + 8} ${x + 13},${y - 2} Z" fill="${IRON.left}" stroke="${OUT}" stroke-width="1"/>` + E(x, y - 2, 13, 4, '#5A3A2A', 1);
-  s += [[-6, -2.4], [0, -3.2], [6, -2], [-2, -1]].map(([dx, dy]) => E(x + dx, y + dy, 2.6, 1.4, '#E8573A', 0.6)).join('');
+  let s = shadow(0, 0, 0.3, 0.16);
+  // le trépied : trois pieds de fer, chacun finit en volute au sol
+  s += [[-0.13, 0.07], [0.13, 0.07], [0, -0.13]].map(([u, v]) => {
+    const p = at(u, v, 0), tx = r2(x + (p[0] - x) * 0.7), side = p[0] < x ? -1 : p[0] > x ? 1 : 0.6;
+    return thick(`M${tx},${y + 2} L${r2(p[0])},${r2(p[1] - 1.6)} q${r2(side * 1.6)},1.4 ${r2(side * 0.2)},2.6 q${r2(-side * 1.2)},0 ${r2(-side * 0.6)},-1.2`, 1.4, IRON.right);
+  }).join('');
+  // la lueur, la coupe : panse ronde, bandeau riveté, bord
+  s += glow(x, y - 10, 18, '255,170,90', 0.32)
+    + `<path d="M${x - 13},${y - 2} Q${x - 12},${y + 9} ${x},${y + 9.4} Q${x + 12},${y + 9} ${x + 13},${y - 2} Z" fill="${IRON.left}" stroke="${OUT}" stroke-width="1"/>`
+    + `<path d="M${x + 1},${y + 9.3} Q${x + 11.4},${y + 8.6} ${x + 12.6},${y - 1.6} L${x + 13},${y - 2} Q${x + 6},${y + 2.6} ${x + 1},${y + 2.8} Z" fill="${IRON.right}"/>`
+    + `<path d="M${x - 12.4},${y + 2.4} Q${x},${y + 7} ${x + 12.4},${y + 2.4}" stroke="${IRON.top}" stroke-width="1.6" fill="none"/>`
+    + [-8, -3, 2, 7].map(dx => E(x + dx, y + 4.6 + Math.abs(dx) * -0.12, 0.55, 0.55, IRON.right, 0.4)).join('')
+    + `<path d="M${x - 10},${y + 1} Q${x - 8},${y + 4} ${x - 4},${y + 4.6}" stroke="#FFFFFF" stroke-width="0.8" fill="none" opacity="0.35" stroke-linecap="round"/>`
+    + E(x, y - 2, 13, 4, '#3A2620', 1);
+  // les braises : des charbons sombres fendus d'orange, plus vifs une image sur trois
+  s += [[-7, -2.2, 2.8], [-2, -3.2, 3], [3.4, -2.6, 2.8], [7.6, -1.8, 2.2], [0.6, -1, 2.4], [-4.6, -0.8, 2]].map(([dx, dy, r], i) =>
+    E(x + dx, y + dy, r, r * 0.55, '#5A3A2A', 0.6) + E(x + dx, y + dy - 0.2, r * 0.55, r * 0.25, (i + f) % 3 ? '#E8573A' : '#FFB347', 0)).join('');
+  // les flammes, puis des étincelles qui montent
   s += flame(x - 4, y - 2, 13 + f * 2, 4, f / 3) + flame(x + 4, y - 2, 11 + (2 - f), 3.6, f / 3 + 0.4) + flame(x, y - 2, 17 - f, 4.4, f / 3 + 0.2);
+  for (let i = 0; i < 3; i++) { const p = ((f / 3) + i / 3) % 1; s += E(x - 5 + i * 5 + Math.sin(p * 6 + i) * 1.6, y - 18 - p * 14, 0.7, 0.7, '#FFD27A', 0).replace('/>', ` opacity="${r2(1 - p * 0.8)}"/>`); }
   return s;
 } };
 // Pergola : quatre poteaux, poutres croisées, glycine mauve
