@@ -1,0 +1,4 @@
+/* Styles globaux du jeu : les jetons d'abord (variables CSS), puis la base et les primitives g-*.
+   Le style d'un composant vit à côté de lui (son dossier) et ne lit que des jetons. */
+@import './tokens/index.css';
+@import './base/index.css';

@@ -1,0 +1,14 @@
+/* Adaptations aux petits écrans (boutons, notifications). */
+/* Petits écrans : boutons plus serrés, pour que deux tiennent côte à côte */
+@media (max-width: 520px) {
+  .g-btn { padding: 0 16px; font-size: 15px; }
+}
+
+/* Mobile : les notifications descendent du haut (le bas est occupé par le dock de création) */
+@media (max-width: 859px) {
+  .toast-stack {
+    top: calc(12px + env(safe-area-inset-top));
+    bottom: auto;
+    flex-direction: column;
+  }
+}

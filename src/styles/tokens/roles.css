@@ -1,0 +1,37 @@
+/* Rôles utilisés par les composants (noms historiques « oc »), branchés sur la palette */
+:root {
+  --oc-bg: var(--bg);
+  --oc-surface: var(--vellum-50);
+  --oc-surface-hover: var(--vellum-200);
+  --oc-surface-strong: var(--vellum-100);
+  --oc-panel: var(--vellum-50);
+  --oc-line: rgba(87, 65, 49, 0.16);
+  --oc-line-strong: rgba(87, 65, 49, 0.32);
+
+  --oc-text: var(--ink-900);
+  --oc-text-strong: var(--ink-900);
+  --oc-text-muted: var(--ink-700);
+  --oc-text-faint: var(--ink-500);
+
+  --oc-accent: var(--gold-400);
+  --oc-accent-soft: rgba(224, 169, 58, 0.18);
+  --oc-accent-line: var(--gold-600);
+  --oc-on-accent: var(--ink-900);
+  /* L'or en texte sur papier : assez foncé pour se lire */
+  --oc-gold: var(--gold-700);
+  --oc-gold-strong: var(--gold-300);
+  --oc-gold-soft: rgba(224, 169, 58, 0.16);
+  --oc-verdigris: var(--verdigris-500);
+  --oc-danger: var(--wax-500);
+
+  --oc-font-display: var(--font-display);
+  --oc-font-italic: var(--font-display);
+  --oc-font-body: var(--font-ui);
+  --oc-font-mono: var(--font-ui);
+
+  --oc-radius: var(--r-md);
+  --oc-bevel: 0px;
+
+  --oc-shadow: var(--shadow-3);
+  --oc-shadow-accent: 0 0 0 2px var(--gold-300), 0 6px 18px rgba(224, 169, 58, 0.35);
+}

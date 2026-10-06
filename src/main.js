@@ -2,8 +2,7 @@ import { createApp } from 'vue';
 import { polyfill } from 'mobile-drag-drop';
 import { scrollBehaviourDragImageTranslateOverride } from 'mobile-drag-drop/scroll-behaviour';
 import 'mobile-drag-drop/default.css';
-import './styles/tokens.css';
-import './styles/base.css';
+import './styles/index.css';
 import App from './components/General/App.vue';
 
 // Glisser-déposer au doigt (le drag HTML5 ne réagit pas au tactile sur la plupart des mobiles) :

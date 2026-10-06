@@ -1,0 +1,42 @@
+/* Couleurs : la palette (vélin, encre, cuir, noyer, or, encres secondaires), le fond et le texte posé dessus. */
+:root {
+  /* Vélin (papier) */
+  --vellum-50: #fffcf5;
+  --vellum-100: #fbf5e8;
+  --vellum-200: #f4ead5;
+  --vellum-300: #e8d8b8;
+  --vellum-400: #d6c09a;
+  /* Encre sépia */
+  --ink-900: #34241a;
+  --ink-700: #574131;
+  --ink-500: #85705f;
+  --ink-300: #b9a691;
+  /* Cuir (chrome du jeu) */
+  --leather-500: #a34a36;
+  --leather-600: #8a3b2c;
+  --leather-700: #6e2e22;
+  --leather-800: #4f2119;
+  /* Noyer (bureau du soir, plateaux de mini-jeux) */
+  --walnut-700: #4a3427;
+  --walnut-800: #33241b;
+  --walnut-900: #221812;
+  /* Feuille d'or (précieux, action principale) */
+  --gold-200: #fbebc0;
+  --gold-300: #f7dc93;
+  --gold-400: #efc163;
+  --gold-500: #e0a93a;
+  --gold-600: #b9832a;
+  --gold-700: #8c5e18;
+  /* Encres secondaires */
+  --verdigris-500: #4f9a86;
+  --verdigris-100: #dcefe8;
+  --wax-500: #c0483a;
+  --wax-700: #8e2f25;
+
+  /* Fond : le bureau clair, une lumière douce venue d'en haut */
+  --bg: #ede0c4;
+  --bg-hi: #f8efdc;
+  /* Texte posé directement sur le fond (hors papier) */
+  --oc-on-bg: var(--ink-900);
+  --oc-on-bg-faint: var(--ink-500);
+}

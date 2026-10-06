@@ -1,0 +1,34 @@
+/* Champs de saisie (g-field). */
+.g-field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.g-field label {
+  font-family: var(--oc-font-mono);
+  font-weight: 800;
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--oc-text-faint);
+}
+.g-field input,
+.g-field textarea {
+  width: 100%;
+  min-height: 46px;
+  padding: 10px 14px;
+  border: 0;
+  border-radius: var(--r-sm);
+  outline: none;
+  background: var(--vellum-50);
+  box-shadow: inset 0 0 0 1px var(--oc-line-strong);
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--oc-text-strong);
+}
+.g-field textarea {
+  min-height: 120px;
+  resize: vertical;
+}
+.g-field input:focus,
+.g-field textarea:focus { box-shadow: inset 0 0 0 2px var(--oc-accent-line); }

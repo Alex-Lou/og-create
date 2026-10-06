@@ -1,0 +1,8 @@
+/* Mise en page */
+:root {
+  --oc-gutter: 20px;
+  --oc-dock-height: 104px;
+  /* Barre d'onglets en bas (mobile) et rail à gauche (PC) */
+  --oc-tabbar-h: calc(64px + env(safe-area-inset-bottom));
+  --oc-rail-w: 88px;
+}

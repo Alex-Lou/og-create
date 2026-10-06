@@ -155,6 +155,20 @@ chronométrer 20 appels. Comparer à zoom égal, au même endroit.
   courts. Pas de nouvelle dépendance sans en parler. Front en Options API. Chaque fichier a un en-tête qui dit ce
   qu'il contient.
 
+### Styles du front : `src/styles/` (refonte CSS, octobre 2026)
+- **Trois étages** (détail et règles : `src/styles/README.md`) : les **jetons** (`styles/tokens/`, un fichier par famille :
+  couleurs, typographie, formes et ombres, rôles `--oc-*`, mouvement, mise en page, thème sombre en dernier), la
+  **base** (`styles/base/` : remise à zéro et primitives `g-*`, dans un ordre qui compte), puis le **style de chaque
+  composant**, à côté de lui. `main.js` n'importe que `styles/index.css`.
+- **Refonte en cours, par petites PR, sans rien changer à l'écran** (choix de l'auteur : un dossier par composant,
+  `.vue` et `.css` côte à côte ; des jetons pour couleurs, polices, arrondis, ombres, profondeurs et durées ; les marges
+  restent des nombres) : 1) jetons et base découpés (fait) ; 2) chaque composant reprend ses styles (ceux que
+  `WorldView` garde pour ses fiches) ; 3) les couleurs en dur deviennent des jetons ; 4) les dossiers rangés par
+  domaine ; 5) `App.vue` et `BookView.vue` découpés.
+- **Preuve « rien de cassé »** pour chaque étape : le CSS compilé comparé avant/après (mêmes variables, mêmes règles
+  dans le même ordre, quand rien ne doit bouger) et un banc de captures (une vingtaine d'écrans, téléphone et PC, même
+  compte, horloges de la page figées) comparé pixel par pixel ; en plus du lint, des tests et du build.
+
 ### Serveur : `src/services/`
 - **Carte**
   - `worldMap.js` : la très grande île 96 × 96. Elle assemble `islandData.js` (le cœur, ancienne carte 48 × 48
