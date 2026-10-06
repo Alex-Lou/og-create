@@ -16,6 +16,7 @@ La seule source des valeurs de design, en variables CSS (`--nom`). Un fichier pa
 | `layout.css` | marges, dock, barre d'onglets, rail |
 | `depth.css` | profondeurs (`z-index`) : l'ordre des couches de la page, de la coque de l'application et de l'île |
 | `island.css` | les rôles de l'île : ce que plusieurs de ses composants partagent (verre, papier, voiles, habitants, visiteurs, coffres…) |
+| `book.css` | les rôles du Grimoire : ce que plusieurs de ses composants partagent |
 | `dark.css` | Veillée, le thème sombre : il redéfinit la palette, donc il vient en dernier |
 
 `tokens/index.css` les lit dans cet ordre.
