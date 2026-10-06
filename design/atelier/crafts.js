@@ -262,7 +262,7 @@ C.fontaine = { n: 3, draw: f => {
   for (const a of [0.35, 0.95, 1.55, 2.15, 2.75]) { const [x0, y0] = at(Math.cos(a) * 0.42, Math.sin(a) * 0.42, 0.4), [, y1] = at(Math.cos(a) * 0.42, Math.sin(a) * 0.42, 6.6); s += L([x0, y0], [x0, y1], STONE.right, 0.6); }
   s += disc(0, 0, 0.42, 7, STONE.top, 1) + disc(0, 0, 0.35, 7, WATER, 0.8) + disc(-0.05, -0.05, 0.22, 7, WATER_LIGHT, 0);
   // les ronds dans l'eau, le poisson rouge qui fait le tour
-  for (let i = 0; i < 2; i++) { const p = ((f / 3) + i * 0.5) % 1; const [x, y] = at(0.02, 0.02, 7); s += E(x, y, 9 + p * 12, 4.5 + p * 6, 'none', 0).replace('stroke="none" stroke-width="0"', `stroke="#E8F6FF" stroke-width="0.7" opacity="${r2(0.8 - p * 0.7)}"`); }
+  for (let i = 0; i < 2; i++) { const p = ((f / 3) + i * 0.5) % 1; const [x, y] = at(0.02, 0.02, 7); s += E(x, y, 9 + p * 12, 4.5 + p * 6, 'none', 0).replace('stroke="none"', `stroke="#E8F6FF" stroke-width="0.7" opacity="${r2(0.8 - p * 0.7)}"`); }
   const a = (f / 3) * TAU + 0.8, [px, py] = at(Math.cos(a) * 0.25, Math.sin(a) * 0.25, 7), dir = Math.cos(a + Math.PI / 2) > 0 ? 1 : -1;
   s += `<g transform="translate(${r2(px)} ${r2(py)}) scale(${dir} 1)">` + E(0, 0, 2.6, 1.3, '#F08A3A', 0.6) + P('M-2.4,0 L-4.4,-1.4 L-4,0 L-4.4,1.4 Z', '#F2A35A', 0.5) + E(1.2, -0.3, 0.3, 0.3, OUT, 0) + '</g>';
   // la bague dans l'eau, la colonne, la vasque en coquille et son eau
