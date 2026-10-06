@@ -8,7 +8,8 @@ import { HS } from '@/world/terrain';
 import { COLONY_ZONE } from '@/world/islets';
 import { spread } from '@/world/sea';
 import { hash } from '@/world/scene';
-import { TW } from '@/world/view/constants';
+import { plantLook } from '@/world/plants';
+import { TW, ALL_NATURE } from '@/world/view/constants';
 
 // Achat d'un quartier : la brume se dissipe (ms)
 const UNVEIL_MS = 1600;
@@ -49,7 +50,9 @@ export default {
       const props = [];
       const add = (kind, x, y, dx = 0, dy = 0) => {
         const c = this.world(x + dx, y + dy);
-        props.push({ kind, x, y, dx, dy, depth: x + y + (dx + dy) * 0.5, wx: c.x, wy: c.y - this.liftAt(x, y) });
+        // Son dessin : celui de la bibliothèque (sa variante tirée de sa place), sinon le dessin par code
+        const look = plantLook(kind, x + dx, y + dy) || { key: `nature-${kind}`, make: ALL_NATURE[kind] };
+        props.push({ kind, x, y, dx, dy, depth: x + y + (dx + dy) * 0.5, wx: c.x, wy: c.y - this.liftAt(x, y), key: look.key, make: look.make });
       };
       const wet = (x, y) => [[1, 0], [-1, 0], [0, 1], [0, -1]].some(([a, b]) => M.ground(x + a, y + b) === 'w');
       // Sable des Dunes : des cactus plutôt que des coquillages

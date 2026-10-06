@@ -28,8 +28,16 @@ function pump() {
       if (job.onReady) job.onReady();
     };
     img.onerror = done;
-    img.src = job.src;
+    // Un dessin de la bibliothèque se lit d'abord (load) ; un dessin par code est déjà là (svg)
+    if (job.load) job.load().then(svg => { img.src = srcOf(svg); }, done);
+    else img.src = srcOf(job.svg);
   }
+}
+
+// Adresse d'image d'un SVG, agrandi RES fois
+function srcOf(svg) {
+  const sized = svg.replace(/width="([\d.]+)" height="([\d.]+)"/, (_, w, h) => `width="${w * RES}" height="${h * RES}"`);
+  return `data:image/svg+xml;charset=utf-8,${encodeURIComponent(sized)}`;
 }
 
 // Une image SVG redessinée telle quelle est souvent recalculée par le navigateur à chaque dessin (surtout penchée ou
@@ -43,15 +51,15 @@ function bitmapOf(img) {
   return canvas;
 }
 
-// Image prête d'un sprite { svg, box }, ou null pendant le chargement (onReady redessine l'île)
+// Image prête d'un sprite { svg, box } (dessiné par code) ou { load, box } (lu dans la bibliothèque, load : promesse de
+// son SVG), ou null pendant le chargement (onReady redessine l'île)
 export function imageOf(key, make, onReady) {
   let entry = cache.get(key);
   if (!entry) {
     const sprite = make();
     entry = { img: null, box: sprite.box };
     cache.set(key, entry);
-    const sized = sprite.svg.replace(/width="([\d.]+)" height="([\d.]+)"/, (_, w, h) => `width="${w * RES}" height="${h * RES}"`);
-    queue.push({ key, entry, onReady, src: `data:image/svg+xml;charset=utf-8,${encodeURIComponent(sized)}` });
+    queue.push({ key, entry, onReady, svg: sprite.svg, load: sprite.load });
     pump();
   }
   return entry;
