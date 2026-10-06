@@ -420,147 +420,50 @@
         </div>
       </transition>
 
-      <!-- Quartier à acheter : prix en écus et chapitre du Livre -->
       <!-- Naufrage (bible, § 6.7 et § 14) : une nuit, une épave au loin, la brume, et Brume ; un toucher pour continuer -->
       <transition name="world-wreck">
-        <div v-if="wreck" class="world__wreck" role="dialog" aria-label="Un naufrage" @click="closeWreck">
-          <svg class="world__wreck-scene" viewBox="0 0 360 240" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
-            <defs>
-              <linearGradient id="world-wreck-sky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#0B1630" /><stop offset="1" stop-color="#22385E" /></linearGradient>
-            </defs>
-            <rect width="360" height="240" fill="url(#world-wreck-sky)" />
-            <circle cx="290" cy="50" r="15" fill="#F4EEDC" opacity=".85" />
-            <g fill="#F4EEDC" opacity=".6"><circle cx="40" cy="30" r="1.2" /><circle cx="96" cy="58" r="1" /><circle cx="168" cy="24" r="1.3" /><circle cx="226" cy="70" r="1" /><circle cx="330" cy="96" r="1.1" /></g>
-            <rect y="152" width="360" height="88" fill="#132645" />
-            <g class="world__wreck-ship" fill="#070E1E">
-              <template v-if="wreck.wreck === 'raft'">
-                <g transform="translate(176 150) rotate(-9)"><rect x="-30" y="-5" width="60" height="6" rx="3" /><rect x="-26" y="-11" width="52" height="6" rx="3" /><path d="M-4 -11 L4 -44 L7 -43 L1 -11 Z" /><path d="M5 -40 L22 -30 L6 -26 Z" opacity=".8" /></g>
-              </template>
-              <template v-else-if="wreck.wreck === 'boat'">
-                <g transform="translate(180 152) rotate(12)"><path d="M-46 -10 L46 -10 L34 6 L-36 6 Z" /><path d="M-6 -10 L-2 -58 L2 -58 L2 -10 Z" /><path d="M2 -52 L-30 -40 L2 -34 Z" opacity=".75" /><rect x="-26" y="-18" width="12" height="8" /><rect x="-10" y="-18" width="10" height="8" /></g>
-              </template>
-              <template v-else>
-                <g transform="translate(172 152) rotate(-16)"><path d="M-30 -8 Q0 6 30 -8 L24 2 Q0 12 -24 2 Z" /><circle cx="-8" cy="-11" r="2.4" /><circle cx="2" cy="-12" r="2" /><circle cx="10" cy="-10" r="2.2" /></g>
-              </template>
-            </g>
-            <path d="M0 152 Q45 146 90 152 T180 152 T270 152 T360 152" fill="none" stroke="#4A6A9A" stroke-width="2" />
-            <g class="world__wreck-fog" fill="#DCE6F2"><ellipse cx="80" cy="146" rx="90" ry="14" opacity=".22" /><ellipse cx="250" cy="140" rx="110" ry="16" opacity=".2" /><ellipse cx="170" cy="160" rx="140" ry="12" opacity=".18" /></g>
-          </svg>
-          <p class="world__wreck-text">« {{ wreck.text }} »</p>
-          <span class="world__wreck-hint">Toucher pour continuer</span>
-        </div>
+        <WreckScene v-if="wreck" :wreck="wreck" @close="closeWreck" />
       </transition>
       <!-- Brume : sa réplique, la quête active, son avancée, sa récompense -->
       <transition name="world-sheet">
-        <div v-if="questOpen && state && state.brume" class="world__sheet-backdrop" @click.self="questOpen = false">
-          <div class="world__sheet" role="dialog" aria-label="Brume, le feu follet">
-            <div class="world__sheet-head">
-              <span class="world__sheet-title world__brume-title"><BrumeWisp :size="30" :ready="Boolean(quest && quest.done)" :stage="brumeState.stage" /> Brume</span>
-              <button type="button" class="world__link" @click="questOpen = false">Fermer</button>
-            </div>
-            <template v-if="quest">
-              <span class="world__eyebrow world__quest-eyebrow">{{ quest.act === 'T' ? 'Prologue' : `Acte ${quest.act}` }} · quête {{ quest.step }} sur {{ quest.total }}</span>
-              <span v-if="civStage" class="world__civ">{{ civStage }}</span>
-              <p class="world__brume-say">« {{ quest.say }} »</p>
-              <div class="world__quest">
-                <span class="world__quest-label">{{ quest.label }}</span>
-                <span class="world__quest-count">{{ quest.have }}/{{ quest.need }}</span>
-                <span class="world__quest-bar" role="progressbar" :aria-valuenow="quest.have" aria-valuemin="0" :aria-valuemax="quest.need">
-                  <i :style="{ width: `${(100 * quest.have) / quest.need}%` }"></i>
-                </span>
-                <span class="world__quest-reward">Récompense : <strong>{{ quest.coins }} écus</strong></span>
-              </div>
-              <p v-if="quest.chapter && !quest.done" class="world__quest-lock">
-                Ouvre d’abord le chapitre {{ quest.chapter }} du Grimoire : écris de nouvelles découvertes.
-              </p>
-              <!-- Le fil d'Ariane (bible, § 6.1 à 6.3) : la cible et les pages qui restent -->
-              <p v-else-if="quest.ariane && !quest.done" class="world__quest-lock">
-                {{ ['level', 'craft'].includes(quest.kind) ? 'Le Grimoire connaît cette invention. ' : '' }}Vers : <strong>{{ quest.ariane.target }}</strong> —
-                {{ quest.ariane.remaining > 1 ? `encore ${quest.ariane.remaining} pages` : 'dernière page' }}
-              </p>
-              <div class="world__sheet-actions">
-                <button v-if="quest.done" type="button" class="world__btn" :disabled="busy" @click="claimQuest">Réclamer · {{ quest.coins }} écus{{ quest.chest ? ' + un coffre' : '' }}</button>
-                <button v-else-if="quest.kind === 'runs'" type="button" class="world__btn" :disabled="busy || !state.charges.count" @click="questHarvest">
-                  {{ state.charges.count ? 'Lancer une Récolte' : `Récolte : ${chargesText}` }}
-                </button>
-                <!-- Le nom du peuple (bible, § 6.11) : même règle que les autres noms -->
-                <form v-else-if="quest.kind === 'name'" class="world__people" @submit.prevent="namePeople">
-                  <input v-model="peopleName" class="world__people-input" type="text" maxlength="22" placeholder="Le peuple de…" aria-label="Nom du peuple" />
-                  <button type="submit" class="world__btn" :disabled="busy || peopleName.trim().length < 2">Nommer</button>
-                </form>
-                <button v-else-if="questAction" type="button" class="world__btn" @click="runQuestAction">{{ questAction.label }}</button>
-              </div>
-            </template>
-            <p v-else class="world__brume-say">« {{ state.brume.rested }} »</p>
-            <!-- Le Savoir de Brume (bible, § 6.4) : maîtresse du sceau ☉, qu'elle révèle à la fin, le Phare allumé -->
-            <template v-if="state.brumeSavoir && state.brumeSavoir.open">
-              <p class="world__brume-art">{{ savoirOf('brume') }}</p>
-              <p v-if="brumeSaid" class="world__brume-say">« {{ brumeSaid }} »</p>
-              <div class="world__sheet-actions">
-                <button v-if="brumeHint" type="button" class="world__btn world__btn--quiet" @click="openBrumeSavoir">Voir dans le Grimoire</button>
-                <button type="button" class="world__btn" :disabled="busy || state.brumeSavoir.talked" @click="talkBrume">
-                  {{ state.brumeSavoir.talked ? 'Un autre Savoir demain' : 'Bavarder' }}
-                </button>
-              </div>
-            </template>
-          </div>
-        </div>
+        <BrumeSheet
+          v-if="questOpen && state && state.brume"
+          v-model:people-name="peopleName"
+          :brume="state.brume"
+          :quest="quest"
+          :civ-stage="civStage"
+          :stage="brumeState.stage"
+          :charges="state.charges.count"
+          :charges-text="chargesText"
+          :action="questAction ? questAction.label : ''"
+          :savoir="state.brumeSavoir || null"
+          :said="brumeSaid"
+          :hint="Boolean(brumeHint)"
+          :busy="busy"
+          @claim="claimQuest"
+          @harvest="questHarvest"
+          @name="namePeople"
+          @action="runQuestAction"
+          @talk="talkBrume"
+          @grimoire="openBrumeSavoir"
+          @close="questOpen = false"
+        />
       </transition>
+      <!-- Quartier à acheter : prix en écus et chapitre du Livre -->
       <transition name="world-sheet">
-        <div v-if="zone" class="world__sheet-backdrop" @click.self="zone = null">
-          <div v-if="zone.known === false" class="world__sheet" role="dialog" aria-label="Terre inconnue">
-            <div class="world__sheet-head">
-              <span class="world__sheet-title"><ElementGlyph glyph="ui:map" /> Terre inconnue</span>
-              <button type="button" class="world__link" @click="zone = null">Fermer</button>
-            </div>
-            <p class="world__site-effect">Une brume épaisse couvre cette terre. Une expédition révélera son relief, son climat et ce qu’elle cache. Elle emporte :</p>
-            <ul class="world__needs">
-              <li class="world__need">
-                <span class="world__need-glyph" aria-hidden="true"><ElementGlyph glyph="ui:map" /></span>
-                <span><strong>{{ zone.trip }} h</strong> de voyage</span>
-              </li>
-              <li v-for="(n, r) in zone.cost" :key="r" :class="['world__need', state.stock[r] >= n ? 'is-ok' : 'is-missing']">
-                <span class="world__need-glyph" aria-hidden="true"><ElementGlyph :glyph="GLYPH[r]" /></span>
-                <span><strong>{{ n }}</strong> {{ WORDS[r] }}</span>
-              </li>
-              <li :class="['world__need', state.charges.count ? 'is-ok' : 'is-missing']">
-                <span class="world__need-glyph" aria-hidden="true"><ElementGlyph glyph="ui:spark" /></span>
-                <span>Une partie de Récolte</span>
-                <em>{{ state.charges.count }} en réserve</em>
-              </li>
-            </ul>
-            <p v-if="state.expedition && state.expedition.zone === zone.id" class="world__trip-note">Ton expédition est en route : retour dans {{ tripLeft }}.</p>
-            <p v-else-if="state.expedition" class="world__trip-note">Une expédition est déjà en route ailleurs : attends son retour.</p>
-            <p v-else-if="!zone.explorable" class="world__trip-note">Une expédition part d’un quartier à toi, vers un quartier voisin : achète d’abord un quartier qui touche celui-ci.</p>
-            <div class="world__sheet-actions">
-              <button type="button" class="world__btn" :disabled="!zone.explorable || busy" @click="explore(zone)">Envoyer une expédition</button>
-            </div>
-          </div>
-          <div v-else class="world__sheet" role="dialog" :aria-label="zone.name">
-            <div class="world__sheet-head">
-              <span class="world__sheet-title"><ElementGlyph glyph="ui:map" /> {{ zone.name }}</span>
-              <button type="button" class="world__link" @click="zone = null">Fermer</button>
-            </div>
-            <p class="world__site-effect">
-              Agrandis ton île<template v-if="sitesIn(zone).length"> : ce quartier abrite {{ sitesIn(zone).join(', ') }}</template>, et de la place pour tes créations.
-            </p>
-            <p v-if="CLIMATE_TEXT[zone.climate]" class="world__climate"><strong>{{ CLIMATE_NAMES[zone.climate] }}</strong> · {{ CLIMATE_TEXT[zone.climate] }}</p>
-            <ul class="world__needs">
-              <li v-if="zone.chapter" :class="['world__need', zone.open ? 'is-ok' : 'is-missing']">
-                <span class="world__need-glyph" aria-hidden="true"><ElementGlyph glyph="ui:book" /></span>
-                <span>Chapitre <strong>{{ zone.chapter }}</strong> du Grimoire</span>
-                <em>{{ zone.open ? 'ouvert' : 'encore scellé' }}</em>
-              </li>
-              <li class="world__need">
-                <span class="world__need-glyph" aria-hidden="true"><ElementGlyph glyph="ui:coin" /></span>
-                <span><strong>{{ zone.price }}</strong> écus</span>
-              </li>
-            </ul>
-            <div class="world__sheet-actions">
-              <button type="button" class="world__btn" :disabled="!zone.open || busy" @click="buyZone(zone)">Acheter · {{ zone.price }} écus</button>
-            </div>
-          </div>
-        </div>
+        <ZoneSheet
+          v-if="zone"
+          :zone="zone"
+          :sites="sitesIn(zone)"
+          :stock="state.stock"
+          :charges="state.charges.count"
+          :expedition="state.expedition || null"
+          :trip-left="tripLeft"
+          :busy="busy"
+          @explore="explore(zone)"
+          @buy="buyZone(zone)"
+          @close="zone = null"
+        />
       </transition>
 
     </teleport>
@@ -718,7 +621,6 @@
 import { messageOf } from '@/utils/errors';
 import playService from '@/services/playService';
 import ElementGlyph from '@/components/ui/ElementGlyph.vue';
-import BrumeWisp from '@/components/ui/BrumeWisp.vue';
 import HarvestGame from './HarvestGame.vue';
 import ShopItemSheet from './ShopItemSheet.vue';
 import IslandClock from './IslandClock.vue';
@@ -737,16 +639,19 @@ import CraftBench from './CraftBench.vue';
 import CraftPuzzle from './CraftPuzzle.vue';
 import ExplorerLog from './ExplorerLog.vue';
 import FindsSheet from './FindsSheet.vue';
+import WreckScene from './WreckScene.vue';
+import BrumeSheet from './BrumeSheet.vue';
+import ZoneSheet from './ZoneSheet.vue';
 import { villagerSprite, ROLES } from '@/world/villagers';
 import { talkLine, giftLine, awaits } from '@/world/friends';
 import { heardPages, keepSavoir, savoirLine, artOf as savoirOf } from '@/game/savoirs';
-import { NEED_GLYPH, MOOD_GLYPH, MOOD_LABEL, THANKS, WORDS, missingOf, fillAllOf, askOr } from '@/world/needs';
+import { NEED_GLYPH, MOOD_GLYPH, MOOD_LABEL, THANKS, missingOf, fillAllOf, askOr } from '@/world/needs';
 import { visitorLook, THANKS as VISITOR_THANKS } from '@/world/visitors';
 import { craftThumb } from '@/world/craftSprites';
 import { landmarkTop, landmarkScale } from '@/world/landmarkSprites';
 import { landmarksShown, landmarksWaiting, landmarkTip } from '@/world/landmarks';
 import { depositsShown, depositsReady, depositWait } from '@/world/finds';
-import { CLIMATE_NAMES, CLIMATE_TEXT } from '@/world/climates';
+import { CLIMATE_NAMES } from '@/world/climates';
 import { annexReady, annexYield, variantsOf } from '@/world/annexes';
 import { noteOf, openableOf } from '@/world/chest';
 import GModal from '@/components/ui/GModal.vue';
@@ -822,7 +727,7 @@ const FOREST_HIGH = ['pine', 'pine', 'tree'];
 // d'animation sont non réactifs et s'arrêtent quand l'onglet est caché ou le composant démonté.
 export default {
   name: 'WorldView',
-  components: { ElementGlyph, HarvestGame, ShopItemSheet, BrumeWisp, IslandClock, GModal, ChestList, ChestReveal, ChestHaul, AnnexPanel, AnnexSheet, NameSignPanel, MiniGame, GameIcon, VillagerSheet, VisitorSheet, RenameSheet, CraftBench, CraftPuzzle, ExplorerLog, FindsSheet },
+  components: { ElementGlyph, HarvestGame, ShopItemSheet, IslandClock, GModal, ChestList, ChestReveal, ChestHaul, AnnexPanel, AnnexSheet, NameSignPanel, MiniGame, GameIcon, VillagerSheet, VisitorSheet, RenameSheet, CraftBench, CraftPuzzle, ExplorerLog, FindsSheet, WreckScene, BrumeSheet, ZoneSheet },
   directives: { longpress },
   props: {
     // Glyphes des éléments du Livre (savoir-faire demandé à l'établi)
@@ -836,7 +741,7 @@ export default {
   emits: ['coins-updated', 'show-alert', 'login', 'go', 'quest', 'replay-vigil', 'replay-anya'],
   data() {
     return {
-      GLYPH, LABEL, RESOURCES, GAME_ICONS, NEED_GLYPH, MOOD_GLYPH, CLIMATE_NAMES, CLIMATE_TEXT, WORDS,
+      GLYPH, LABEL, RESOURCES, GAME_ICONS, NEED_GLYPH, MOOD_GLYPH,
       state: null,
       guest: false,
       loadError: false,
