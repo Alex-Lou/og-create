@@ -197,9 +197,9 @@ chronométrer 20 appels. Comparer à zoom égal, au même endroit.
   `sky.js` l'heure et le ciel ; les constantes de module suivent la seule méthode qui les lit). `WorldView.vue`
   (2479 → 896 lignes) garde ce qui relie les sujets : le chargement, la quête, le plein écran, ce que plusieurs
   sujets partagent (`stockAll`, `chargesText`, `screenRectOf`), les observateurs et le cycle de vie. Les observateurs
-  et les crochets restent dans le composant (l'ordre de création des observateurs ne change pas). Preuve d'un tel découpage : le relevé des membres du
-  composant vivant (données, calculées, méthodes, observateurs, crochets, et le texte de chaque fonction) est le même
-  avant et après.
+  et les crochets restent dans le composant (l'ordre de création des observateurs ne change pas). Preuve d'un tel
+  découpage : le relevé des membres du composant vivant (données, calculées, méthodes, observateurs, crochets, et le
+  texte de chaque fonction) est le même avant et après.
 - **Piège du passage en scoped** : une règle scoped gagne un attribut de spécificité. Si elle vise aussi la racine d'un
   composant enfant (un glyphe `img.glyph` dans un portrait, par exemple), elle peut l'emporter sur le style propre de
   l'enfant : garder la spécificité d'avant avec `:where()` sur l'ancêtre (`SiteOverview.css`, le portrait).
