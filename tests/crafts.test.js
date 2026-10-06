@@ -36,14 +36,20 @@ describe('créations d’île', () => {
     expect(tierHint('I', { have: 2, need: 10 }, { have: 4, need: 10 })).toBe('Inscris 10 découvertes au Grimoire (4/10), ou réussis 10 questions de l’Épreuve (2/10).');
   });
 
-  it('chaque création du serveur a son dessin (les 18 premières et les 12 de climat)', () => {
+  it('chaque création du serveur a son dessin (les 18 premières et les 12 de climat)', async () => {
     const ids = ['cloture', 'massif', 'muret', 'lanterne', 'banc', 'epouvantail', 'nichoir', 'girouette', 'fontaine', 'brasero', 'pergola', 'statue',
       'arche', 'etal', 'kiosque', 'cadran', 'bassin', 'longuevue', 'igloo', 'sculpture', 'parc', 'cairn', 'passerelle', 'heron', 'tente', 'cadransel',
       'hamac', 'totem', 'obelisque', 'bassinchaud'];
     expect(Object.keys(CRAFT_SPRITES).sort()).toEqual([...ids].sort());
     for (const id of ids) {
       for (const t of [0, 0.7, 2.3]) {
-        for (const layer of craftLayers(id, t)) expect(layer.make().svg).not.toMatch(/NaN|undefined|Infinity/);
+        for (const layer of craftLayers(id, t)) {
+          // Dessiné par code (svg), ou lu dans la bibliothèque (load)
+          const sprite = layer.make();
+          const svg = sprite.svg ?? await sprite.load();
+          expect(svg).toContain('<svg');
+          expect(svg).not.toMatch(/NaN|undefined|Infinity/);
+        }
       }
       expect(craftThumb(id).svg).toContain('<svg');
     }
