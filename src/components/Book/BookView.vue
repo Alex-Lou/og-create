@@ -971,10 +971,10 @@ export default {
 <style>
 /* Polices de l'intérieur du Grimoire (pages peintes en canvas : book/painter.js), hébergées avec le jeu pour
    s'afficher hors ligne ; licence : src/assets/fonts/OFL.txt */
-@font-face { font-family: 'IM Fell English'; font-style: normal; font-weight: 400; font-display: swap; src: url('~@/assets/fonts/im-fell-english.woff2') format('woff2'); }
-@font-face { font-family: 'IM Fell English'; font-style: italic; font-weight: 400; font-display: swap; src: url('~@/assets/fonts/im-fell-english-italic.woff2') format('woff2'); }
-@font-face { font-family: 'IM Fell English SC'; font-style: normal; font-weight: 400; font-display: swap; src: url('~@/assets/fonts/im-fell-english-sc.woff2') format('woff2'); }
-@font-face { font-family: 'UnifrakturMaguntia'; font-style: normal; font-weight: 400; font-display: swap; src: url('~@/assets/fonts/unifraktur-maguntia.woff2') format('woff2'); }
+@font-face { font-family: 'IM Fell English'; font-style: normal; font-weight: 400; font-display: swap; src: url('@/assets/fonts/im-fell-english.woff2') format('woff2'); }
+@font-face { font-family: 'IM Fell English'; font-style: italic; font-weight: 400; font-display: swap; src: url('@/assets/fonts/im-fell-english-italic.woff2') format('woff2'); }
+@font-face { font-family: 'IM Fell English SC'; font-style: normal; font-weight: 400; font-display: swap; src: url('@/assets/fonts/im-fell-english-sc.woff2') format('woff2'); }
+@font-face { font-family: 'UnifrakturMaguntia'; font-style: normal; font-weight: 400; font-display: swap; src: url('@/assets/fonts/unifraktur-maguntia.woff2') format('woff2'); }
 
 /* Cinématique d'ouverture de chapitre (montée hors du composant, dans body) */
 .book-unlock {

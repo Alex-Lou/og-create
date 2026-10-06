@@ -15,6 +15,6 @@ jobs:
           node-version: 22
           cache: npm
       - run: npm ci
-      - run: npx vue-cli-service lint --no-fix
+      - run: npm run lint
       - run: npm test
       - run: npm run build
