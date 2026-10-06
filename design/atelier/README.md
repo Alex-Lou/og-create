@@ -27,7 +27,8 @@ troupe. Relancer ces scripts redonne la bibliothèque à l'octet près : c'est v
 | `port/src/world/` | Copie restylée du moteur de l'île du jeu (iso, palette, sprites, bâtiments, petit format), prise à un instant donné : le jeu a pu évoluer depuis |
 | `planche.js`, `fit.mjs`, `clipcheck.js` | Outils : planches et pages animées, cadres ajustés, débordements |
 | `preview*.js`, `preview*.mjs` | Un script par lot : il écrit les SVG dans `lib/`, ses planches dans `planches/`, sa page `*_apercu.html` |
-| `build_bundle.js`, `bundle_README.md` | Assemble `../bibliotheque/` (SVG, planches, aperçus, index, README) |
+| `catalogue.js` | La règle des noms (`<sujet>_<vue>_<pose>_<n>`), le parcours du joueur (chapitres), ce qui reste à revoir ou à dessiner |
+| `build_bundle.js`, `bundle_README.md` | Assemble `../bibliotheque/` : SVG sous leur nom rangé, index des lots réécrits, `catalogue.json`, page `index.html`, planches, aperçus, README |
 
 ## Régénérer la bibliothèque
 
@@ -53,6 +54,11 @@ for d in svg2/*/; do mkdir -p lib/personnages/maitres/$(basename $d) && cp $d*.s
 node build_bundle.js                 # assemble ../bibliotheque/
 node clipcheck.js lib/decor/camp     # (facultatif) vérifie qu'aucun dessin ne dépasse de son cadre
 ```
+
+Les générateurs écrivent dans `lib/` avec leurs propres noms ; `build_bundle.js` les publie sous leur nom rangé
+(`catalogue.js`, `renommer`) et réécrit les chemins des index de chaque lot. Il s'arrête si deux dessins prennent le même
+nom, et chaque chemin des index doit pointer sur un fichier existant. Pour ranger un dessin dans le parcours, ou noter ce
+qui reste à revoir ou à dessiner, c'est dans `catalogue.js` (`moment`, `A_REVOIR`, `MANQUANTS`).
 
 `preview2.js` doit passer avant `preview_naufrages.js` (qui ajoute les endormis et les expressions en marche dans
 `lib/personnages/maitres/`). Les sorties (`lib/`, `svg2/`, `planches/`, pages) ne sont pas versionnées : la
