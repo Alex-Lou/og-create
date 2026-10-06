@@ -203,6 +203,8 @@ function moment(id, meta) {
     }
   }
   if (top === 'plantes') { const n = nom.replace(/_\d+$/, ''); return PLANTES_GREVE.has(n) ? 'tuto-1' : PLANTES_ACTE1.has(n) ? 'acte-1' : 'partout'; }
+  // les scènes du tutoriel (lot J2) : scenes/tutoriel/<étape>_<nom>/…, la partie suit le numéro de l'étape
+  if (top === 'scenes') { const n = parseInt(b, 10); return n <= 6 ? 'tuto-1' : n <= 9 ? 'tuto-2' : 'tuto-3'; }
   return 'partout';
 }
 
@@ -230,10 +232,8 @@ const A_REVOIR = [
 const statut = id => { for (const [rx, note] of A_REVOIR) if (rx.test(id)) return { statut: 'a-revoir', note }; return { statut: 'ok' }; };
 
 const MANQUANTS = [
-  ['tuto-1', 'La carte d\'embarquement de l\'Hirondelle (écran d\'avatar), le gilet de sauvetage, la chaise longue échouée.'],
   ['tuto-2', 'L\'établi de Rivet au camp (une porte de cabine sur deux caisses) et sa voile tendue sur un aviron.'],
   ['tuto-3', 'La caisse d\'Aster au bout de sa corde.'],
-  ['tuto-1', 'Les scènes plein écran du tutoriel v6, étapes 0 à 12 (lot J2).'],
   ['acte-1', 'L\'éclat du souvenir retrouvé (le sceau s\'allume, le maître se lève outil en main).'],
   ['acte-4', 'L\'amie de Tic-Tac (quand on écrit Abeille).'],
   ['revelation', 'Le bol de soupe « pour la Dame », au bord du Foyer, le soir.']

@@ -27,6 +27,7 @@ troupe. Relancer ces scripts redonne la bibliothèque à l'octet près : c'est v
 | `coffres.mjs` | Les coffres des quatre raretés (fenêtre d'ouverture) |
 | `gestes.js`, `preview_quotidien.mjs` | Le quotidien au grand format (lot L4) : lanterne, parapluie, valise, dormir couché ; toutes les poses du jeu pour les maîtres, leurs naufragés, 12 visiteurs et 8 nouveaux venus tirés du générateur de l'avatar |
 | `lot_m.js`, `preview_lot_m.mjs` | La suite du lot M : le bâtiment embrumé (calque par emprise, guérison, nuage, icône « Réparer »), la cage aux poules et l'œuf, le crabe de la Grève, les signes d'Anya |
+| `scenes6.js`, `preview_scenes6.mjs` | Les scènes plein écran du tutoriel v6 (lot J2, `HISTOIRE.md` § 9) : 27 scènes des étapes 0 à 12 dans le carré 400 × 400 du jeu, un fond et parfois un devant en petites boucles, la place de l'avatar du joueur notée dans l'index (le jeu l'y pose) |
 | `egares.js`, `preview_egares.mjs` | Les égarés (lot M, la nuit) : le petit fantôme, le petit zombie tout mou, une bête de brume par climat ; marche, bouderie au toucher, fuite devant Anya, passage en luciole, retour dans la brume |
 | `port/src/world/` | Copie restylée du moteur de l'île du jeu (iso, palette, sprites, bâtiments), prise à un instant donné : le jeu a pu évoluer depuis |
 | `planche.js`, `fit.mjs`, `clipcheck.js` | Outils : planches et pages animées, cadres ajustés, débordements |
@@ -54,6 +55,7 @@ node preview_ruines.mjs              # les ruines
 node preview_coffres.mjs             # les coffres
 node preview_egares.mjs              # les égarés : fantôme, zombie, bêtes de brume
 node preview_lot_m.mjs               # le bâtiment embrumé, la cage aux poules, le crabe, les signes d'Anya
+node preview_scenes6.mjs             # les scènes plein écran du tutoriel v6 (fonds, devants, place de l'avatar)
 node preview_camp_grandit.mjs        # planche « le camp grandit »
 node preview_avatar.mjs              # l'avatar du joueur : exemples, planches (formes, nuanciers, accessoires, exemples)
 node verif_avatar.mjs                # l'avatar : 8 400 images au hasard et accessoire × coupe, rien de cassé ni hors cadre
