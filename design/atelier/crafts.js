@@ -254,16 +254,30 @@ C.girouette = { n: 4, draw: f => {
   s += `<g transform="translate(${x} ${y - 52}) scale(${sx} 1)">${coqCuivre()}</g>`;
   return s;
 } };
-// Fontaine : vasque ronde, colonne et coupe ; l'eau retombe en gouttes (3 images)
+// Fontaine : un bassin rond de pierres appareillées, l'eau et ses ronds, un poisson rouge qui nage ; la colonne, sa
+// vasque en coquille, le jet qui monte et l'eau qui retombe en filets et en gouttes (3 images)
 C.fontaine = { n: 3, draw: f => {
-  let s = shadow(0, 0, 0.5, 0.14) + cylinder(0, 0, 0.42, 0, 7, STONE) + disc(0, 0, 0.36, 7, WATER, 0.8) + disc(-0.04, -0.04, 0.24, 7, WATER_LIGHT, 0);
-  s += cylinder(0, 0, 0.06, 7, 22, WHITE_STONE, 0.9) + cylinder(0, 0, 0.18, 22, 25, STONE) + disc(0, 0, 0.14, 25, WATER_LIGHT, 0.6);
-  const [x, y] = at(0, 0, 26);
-  s += thick(`M${x},${y} L${x},${y - 7}`, 1.6, WATER_LIGHT) + E(x, y - 7.6, 1.6, 1.6, '#E8F6FF', 0.6);
+  let s = shadow(0, 0, 0.52, 0.14) + cylinder(0, 0, 0.42, 0, 7, STONE);
+  // les joints du bassin, sur sa face visible
+  for (const a of [0.35, 0.95, 1.55, 2.15, 2.75]) { const [x0, y0] = at(Math.cos(a) * 0.42, Math.sin(a) * 0.42, 0.4), [, y1] = at(Math.cos(a) * 0.42, Math.sin(a) * 0.42, 6.6); s += L([x0, y0], [x0, y1], STONE.right, 0.6); }
+  s += disc(0, 0, 0.42, 7, STONE.top, 1) + disc(0, 0, 0.35, 7, WATER, 0.8) + disc(-0.05, -0.05, 0.22, 7, WATER_LIGHT, 0);
+  // les ronds dans l'eau, le poisson rouge qui fait le tour
+  for (let i = 0; i < 2; i++) { const p = ((f / 3) + i * 0.5) % 1; const [x, y] = at(0.02, 0.02, 7); s += E(x, y, 9 + p * 12, 4.5 + p * 6, 'none', 0).replace('stroke="none" stroke-width="0"', `stroke="#E8F6FF" stroke-width="0.7" opacity="${r2(0.8 - p * 0.7)}"`); }
+  const a = (f / 3) * TAU + 0.8, [px, py] = at(Math.cos(a) * 0.25, Math.sin(a) * 0.25, 7), dir = Math.cos(a + Math.PI / 2) > 0 ? 1 : -1;
+  s += `<g transform="translate(${r2(px)} ${r2(py)}) scale(${dir} 1)">` + E(0, 0, 2.6, 1.3, '#F08A3A', 0.6) + P('M-2.4,0 L-4.4,-1.4 L-4,0 L-4.4,1.4 Z', '#F2A35A', 0.5) + E(1.2, -0.3, 0.3, 0.3, OUT, 0) + '</g>';
+  // la colonne, sa bague, la vasque en coquille et son eau
+  s += cylinder(0, 0, 0.06, 7, 21, WHITE_STONE, 0.9) + cylinder(0, 0, 0.075, 12.6, 13.8, STONE, 0.7);
+  const [bx, by] = at(0, 0, 21.6);
+  s += P(`M${r2(bx - 12)},${r2(by)} Q${r2(bx - 9.6)},${r2(by + 6)} ${r2(bx)},${r2(by + 6.4)} Q${r2(bx + 9.6)},${r2(by + 6)} ${r2(bx + 12)},${r2(by)} Z`, WHITE_STONE.left, 0.9)
+    + [-7.2, -2.4, 2.4, 7.2].map(dx => L([bx + dx * 0.9, by + 0.6], [bx + dx * 0.5, by + 5.4], WHITE_STONE.right, 0.5)).join('')
+    + E(bx, by, 12, 4.2, WHITE_STONE.top, 0.9) + E(bx, by + 0.2, 9.2, 2.9, WATER, 0.6) + E(bx - 1.6, by - 0.3, 4.4, 1.1, WATER_LIGHT, 0);
+  // le jet, puis l'eau qui retombe de la vasque en filets, et les gouttes qui tombent (elles bougent d'une image à l'autre)
+  const [x, y] = at(0, 0, 22);
+  s += thick(`M${x},${y} L${x},${r2(y - 8)}`, 1.6, WATER_LIGHT) + E(x, y - 8.6, 1.8, 1.6, '#E8F6FF', 0.6);
+  for (const dx of [-9, 9]) s += `<path d="M${r2(bx + dx)},${r2(by + 1.4)} q${dx > 0 ? 1.6 : -1.6},3 ${dx > 0 ? 2.4 : -2.4},9" stroke="#E8F6FF" stroke-width="1.2" fill="none" stroke-linecap="round" opacity="0.85"/>`;
   for (let i = 0; i < 6; i++) {
-    const a = (i / 6) * TAU, p = ((f / 3) + i * 0.17) % 1;
-    const dx = Math.cos(a) * (8 + p * 7), dy = Math.sin(a) * (4 + p * 3.5);
-    s += E(x + dx, y + dy + p * 16, 0.9, 1.2, '#E8F6FF', 0.4);
+    const ang = (i / 6) * TAU, p = ((f / 3) + i * 0.17) % 1;
+    s += E(x + Math.cos(ang) * (4 + p * 5), y - 8 + p * 10 + Math.sin(ang) * 1.6, 0.8, 1.1, '#E8F6FF', 0.4);
   }
   return s;
 } };
