@@ -46,3 +46,9 @@ export function covered(shape, pieces, layout) {
   const filled = new Set(layout.flatMap(s => coverOf(pieces, s)));
   return filled.size === cellsOf(shape).length;
 }
+
+// Cases où déplacer une création posée (from) : ses cases dorées, sauf la sienne, à portée de chacune des créations
+// qui comptent sur elle (keeps : [{ x, y, reach }], donné par le serveur ; règle « près de »)
+export function moveSpots(spots, from, keeps = []) {
+  return spots.filter(sp => (sp.x !== from.x || sp.y !== from.y) && keeps.every(k => Math.max(Math.abs(sp.x - k.x), Math.abs(sp.y - k.y)) <= k.reach));
+}

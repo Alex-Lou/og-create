@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { cellsOf, turn, sizeOf, coverOf, fits, covered, tierHint, TIER_LABEL } from '@/world/crafts';
+import { cellsOf, turn, sizeOf, coverOf, fits, covered, tierHint, TIER_LABEL, moveSpots } from '@/world/crafts';
 import { CRAFT_SPRITES, craftLayers, craftThumb, craftLight } from '@/world/craftSprites';
 
 describe('créations d’île', () => {
@@ -49,5 +49,16 @@ describe('créations d’île', () => {
     }
     expect(TIER_LABEL.climat).toBe('Climats');
     expect(craftLight('obelisque')[4]).toMatch(/^\d+,\d+,\d+$/);
+  });
+});
+
+describe('moveSpots', () => {
+  const spots = [{ x: 4, y: 4 }, { x: 5, y: 5 }, { x: 6, y: 4 }, { x: 9, y: 9 }];
+  it('sans création qui compte sur elle : toutes ses cases, sauf la sienne', () => {
+    expect(moveSpots(spots, { x: 4, y: 4 })).toEqual([{ x: 5, y: 5 }, { x: 6, y: 4 }, { x: 9, y: 9 }]);
+  });
+  it('une Lanterne qui garde un Banc (2 cases) : seulement à portée de lui ; deux Bancs : à portée des deux', () => {
+    expect(moveSpots(spots, { x: 4, y: 4 }, [{ x: 3, y: 3, reach: 2 }])).toEqual([{ x: 5, y: 5 }]);
+    expect(moveSpots(spots, { x: 4, y: 4 }, [{ x: 3, y: 3, reach: 2 }, { x: 8, y: 8, reach: 2 }])).toEqual([]);
   });
 });

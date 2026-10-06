@@ -438,6 +438,7 @@ import drawMethods from '@/world/view/draw';
 import gestureMethods from '@/world/view/gestures';
 import { TW } from '@/world/view/constants';
 import { memory } from '@/world/view/memory';
+import { moveSpots } from '@/world/crafts';
 
 // Sortes d'articles dont le mode d'emploi a déjà été montré (une fois par sorte, sur cet appareil)
 const GUIDES_KEY = 'oc_item_guides';
@@ -745,7 +746,8 @@ export default {
     },
     craftSpots() {
       const from = this.craftPlacing && this.craftPlacing.from;
-      return this.placingCraft ? this.placingCraft.spots.filter(sp => !from || sp.x !== from.x || sp.y !== from.y) : [];
+      if (!this.placingCraft) return [];
+      return from ? moveSpots(this.placingCraft.spots, from, this.placedAt(from).keeps) : this.placingCraft.spots;
     },
     craftBanner() {
       const name = this.placingCraft ? this.placingCraft.name : '';
@@ -1893,7 +1895,8 @@ export default {
       this.craftPlacing = { craft: craftId, from };
       if (!this.craftSpots.length) {
         this.craftPlacing = null;
-        this.$emit('show-alert', 'Aucune case libre ne convient pour l’instant : sa règle de pose est dans l’établi.');
+        // Une création qui en garde une autre à portée le dit (règle « près de »)
+        this.$emit('show-alert', (from && this.placedAt(from).keepText) || 'Aucune case libre ne convient pour l’instant : sa règle de pose est dans l’établi.');
         return;
       }
       vibrate(8);
@@ -1999,10 +2002,19 @@ export default {
       const { x, y, craft } = this.craftMenu;
       this.startCraftPlace(craft, { x, y });
     },
-    // Rangée dans la réserve de l'établi : elle se repose plus tard, sans rien payer
+    // Création posée à cette case ({ x, y, craft, keeps?, keepText? }), ou un objet vide
+    placedAt(cell) {
+      return this.crafted.find(c => c.x === cell.x && c.y === cell.y) || {};
+    },
+    // Rangée dans la réserve de l'établi : elle se repose plus tard, sans rien payer ; pas si une autre compte sur elle
     async storeFromMenu() {
       const { x, y, craft } = this.craftMenu;
       this.craftMenu = null;
+      const { keepText } = this.placedAt({ x, y });
+      if (keepText) {
+        this.$emit('show-alert', keepText);
+        return;
+      }
       this.busy = true;
       try {
         const { coins, world } = await playService.craftStore(x, y);
