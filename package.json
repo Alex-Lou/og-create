@@ -20,8 +20,8 @@
     "eslint": "^7.32.0",
     "eslint-plugin-vue": "^8.0.3",
     "postcss": "^8.5.29",
-    "vite": "^5.4.21",
-    "vitest": "^2.1.9"
+    "vite": "^6.4.4",
+    "vitest": "^4.1.11"
   },
   "eslintConfig": {
     "root": true,
