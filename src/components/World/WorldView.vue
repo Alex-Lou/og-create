@@ -2799,7 +2799,9 @@ export default {
 };
 </script>
 
-<style scoped>
+<!-- Styles de l'île, globaux : toutes les classes sont préfixées world__, et les fiches peuvent devenir des composants
+     enfants qui s'en servent (un style « scoped » n'atteint pas l'intérieur d'un composant enfant) -->
+<style>
 .world {
   /* De bord à bord : tout l'écran au-dessus de la barre d'onglets (à droite du rail sur PC) ; en plein écran, tout */
   position: fixed; z-index: 20; top: 0; left: 0; right: 0; bottom: var(--oc-tabbar-h); background: #5FB0DD;
