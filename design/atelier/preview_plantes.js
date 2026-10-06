@@ -2,12 +2,12 @@
 // dessous pour juger l'ancrage ; il n'est pas dans les SVG).
 const path = require('path');
 const { unique, row, sheet, write, shoot } = require('./planche');
-const { D, PROP, pt } = require('./deco');
+const { PROP, pt } = require('./deco');
 const { arbre, ARBRES, pommier, POMMIERS, automne, AUTOMNES, bouleau, BOULEAUX, sapin, SAPINS, palmier, PALMIERS, arbreMort, ARBRES_MORTS } = require('./arbres');
 const { touffe, TOUFFES } = require('./herbes');
 const { rocher, ROCHERS, rochers, ROCHERS_TAS, aiguille, AIGUILLES, rochersMoussus, ROCHERS_MOUSSUS } = require('./rochers');
 const { coquillages, COQUILLAGES, boisFlotte, BOIS_FLOTTES } = require('./plage');
-const { nid, NIDS, lanterne, LANTERNES } = require('./objets');
+const { nid, NIDS, lanterne, LANTERNES, banc, BANCS_LISTE } = require('./objets');
 const { buisson, BUISSONS, bruyere, BRUYERES, fleurs, FLEURS, cactus, CACTUS_LISTE, souche, SOUCHES, rondin, RONDINS, champignons, CHAMPIGNONS, roseaux, ROSEAUX, nenuphars, NENUPHARS } = require('./plantes');
 
 const LIB = path.join(__dirname, 'lib', 'plantes');
@@ -45,10 +45,10 @@ const LIST = [
   // les coquillages et le bois flotté refaits (plage.js) et leurs 8 variantes chacun
   ...COQUILLAGES.map(([fichier, libelle, o]) => [fichier, libelle, 'shells', () => coquillages(o)]),
   ...BOIS_FLOTTES.map(([fichier, libelle, o]) => [fichier, libelle, 'driftwood', () => boisFlotte(o)]),
-  // le nid et la lanterne refaits (objets.js) et leurs 8 variantes chacun
+  // le nid, la lanterne et le banc refaits (objets.js) et leurs 8 variantes chacun
   ...NIDS.map(([fichier, libelle, o]) => [fichier, libelle, 'nest', () => nid(o)]),
   ...LANTERNES.map(([fichier, libelle, o]) => [fichier, libelle, 'lantern', () => lanterne(o)]),
-  ['banc', 'Banc', 'bench', () => D.bench()]
+  ...BANCS_LISTE.map(([fichier, libelle, o]) => [fichier, libelle, 'bench', () => banc(o)])
 ];
 const svgOf = (body, scale = 1, withCell = false) => {
   const cell = withCell ? `<polygon points="${[pt(-0.5, -0.5), pt(0.5, -0.5), pt(0.5, 0.5), pt(-0.5, 0.5)].map(q => q.join(',')).join(' ')}" fill="#BFD99A" stroke="#A8C680" stroke-width="0.6"/>` : '';
