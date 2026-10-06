@@ -4,12 +4,15 @@ const path = require('path');
 const { unique, row, sheet, write, shoot } = require('./planche');
 const { D, PROP, pt } = require('./deco');
 const { up, M } = require('./decor2');
+const { arbre, ARBRES } = require('./arbres');
 
 const LIB = path.join(__dirname, 'lib', 'plantes');
 const OUT = path.join(__dirname, 'planches');
 // [fichier, libellé, id du décor du jeu, dessin]
 const LIST = [
-  ['arbre', 'Arbre', 'tree', () => D.tree()], ['pommier', 'Pommier', 'apple', () => D.apple()], ['arbre_automne', 'Arbre d\'automne', 'autumn', () => D.autumn()],
+  // l'arbre refait (arbres.js) et ses 8 variantes ; le pommier et l'arbre d'automne gardent l'ancien dessin jusqu'à leur tour
+  ...ARBRES.map(([fichier, libelle, o]) => [fichier, libelle, 'tree', () => arbre(o)]),
+  ['pommier', 'Pommier', 'apple', () => D.apple()], ['arbre_automne', 'Arbre d\'automne', 'autumn', () => D.autumn()],
   ['bouleau', 'Bouleau', 'birch', () => D.birch()], ['sapin', 'Sapin', 'pine', () => D.pine()], ['sapin_neige', 'Sapin enneigé', 'snowpine', () => D.snowpine()],
   ['palmier', 'Palmier', 'palm', () => D.palm()], ['buisson', 'Buisson fleuri', 'bush', () => D.bush()], ['bruyere', 'Bruyère', 'heather', () => D.heather()],
   ['fleurs', 'Fleurs', 'flowers', () => D.flowers()], ['touffe', 'Touffe d\'herbe', 'tuft', () => D.tuft()], ['cactus', 'Cactus', 'cactus', () => D.cactus()],

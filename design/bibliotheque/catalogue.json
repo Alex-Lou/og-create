@@ -14387,7 +14387,7 @@
   {
    "id": "plantes/arbre",
    "rubrique": "plantes",
-   "titre": "Arbre",
+   "titre": "Arbre (grand, vert doux)",
    "images": 1,
    "fichiers": [
     "svg/plantes/arbre.svg"
@@ -14408,6 +14408,125 @@
    "images": 1,
    "fichiers": [
     "svg/plantes/arbre_automne.svg"
+   ],
+   "cadre": [
+    -50,
+    -115,
+    100,
+    140
+   ],
+   "parcours": "acte-1",
+   "statut": "ok"
+  },
+  {
+   "id": "plantes/arbre_fleuri",
+   "rubrique": "plantes",
+   "titre": "Arbre (grand, vert doux, pied fleuri)",
+   "images": 1,
+   "fichiers": [
+    "svg/plantes/arbre_fleuri.svg"
+   ],
+   "cadre": [
+    -50,
+    -115,
+    100,
+    140
+   ],
+   "parcours": "acte-1",
+   "statut": "ok"
+  },
+  {
+   "id": "plantes/arbre_petit",
+   "rubrique": "plantes",
+   "titre": "Arbre (petit, vert doux)",
+   "images": 1,
+   "fichiers": [
+    "svg/plantes/arbre_petit.svg"
+   ],
+   "cadre": [
+    -50,
+    -115,
+    100,
+    140
+   ],
+   "parcours": "acte-1",
+   "statut": "ok"
+  },
+  {
+   "id": "plantes/arbre_petit_fleuri",
+   "rubrique": "plantes",
+   "titre": "Arbre (petit, vert doux, pied fleuri)",
+   "images": 1,
+   "fichiers": [
+    "svg/plantes/arbre_petit_fleuri.svg"
+   ],
+   "cadre": [
+    -50,
+    -115,
+    100,
+    140
+   ],
+   "parcours": "acte-1",
+   "statut": "ok"
+  },
+  {
+   "id": "plantes/arbre_petit_profond",
+   "rubrique": "plantes",
+   "titre": "Arbre (petit, vert profond)",
+   "images": 1,
+   "fichiers": [
+    "svg/plantes/arbre_petit_profond.svg"
+   ],
+   "cadre": [
+    -50,
+    -115,
+    100,
+    140
+   ],
+   "parcours": "acte-1",
+   "statut": "ok"
+  },
+  {
+   "id": "plantes/arbre_petit_profond_fleuri",
+   "rubrique": "plantes",
+   "titre": "Arbre (petit, vert profond, pied fleuri)",
+   "images": 1,
+   "fichiers": [
+    "svg/plantes/arbre_petit_profond_fleuri.svg"
+   ],
+   "cadre": [
+    -50,
+    -115,
+    100,
+    140
+   ],
+   "parcours": "acte-1",
+   "statut": "ok"
+  },
+  {
+   "id": "plantes/arbre_profond",
+   "rubrique": "plantes",
+   "titre": "Arbre (grand, vert profond)",
+   "images": 1,
+   "fichiers": [
+    "svg/plantes/arbre_profond.svg"
+   ],
+   "cadre": [
+    -50,
+    -115,
+    100,
+    140
+   ],
+   "parcours": "acte-1",
+   "statut": "ok"
+  },
+  {
+   "id": "plantes/arbre_profond_fleuri",
+   "rubrique": "plantes",
+   "titre": "Arbre (grand, vert profond, pied fleuri)",
+   "images": 1,
+   "fichiers": [
+    "svg/plantes/arbre_profond_fleuri.svg"
    ],
    "cadre": [
     -50,

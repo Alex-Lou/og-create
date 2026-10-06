@@ -201,7 +201,8 @@ function moment(id, meta) {
       return 'acte-4';
     }
   }
-  if (top === 'plantes') { const n = nom.replace(/_\d+$/, ''); return PLANTES_GREVE.has(n) ? 'tuto-1' : PLANTES_ACTE1.has(n) ? 'acte-1' : 'partout'; }
+  // les variantes de l'arbre refait (arbres.js : petit, vert profond, pied fleuri) se rangent avec l'arbre
+  if (top === 'plantes') { const n = nom.replace(/_\d+$/, '').replace(/^arbre(_petit)?(_profond)?(_fleuri)?$/, 'arbre'); return PLANTES_GREVE.has(n) ? 'tuto-1' : PLANTES_ACTE1.has(n) ? 'acte-1' : 'partout'; }
   // les scènes du tutoriel (lot J2) : scenes/tutoriel/<étape>_<nom>/…, la partie suit le numéro de l'étape
   if (top === 'scenes') { const n = parseInt(b, 10); return n <= 6 ? 'tuto-1' : n <= 9 ? 'tuto-2' : 'tuto-3'; }
   return 'partout';
@@ -271,7 +272,10 @@ const PLANTES = {
   bois_flotte: 'Bois flotté', arbre_automne: 'Arbre d\'automne', arbre_mort: 'Arbre mort', sapin_neige: 'Sapin enneigé',
   champignons_nuit: 'Champignons, la nuit', rochers_moussus: 'Rochers moussus', lanterne: 'Lanterne sur pied, éteinte',
   lanterne_allumee: 'Lanterne sur pied, allumée', banc: 'Banc de bois (décor)', aiguille: 'Aiguille de roche', touffe: 'Touffe d\'herbe',
-  nid: 'Nid d\'oiseau', nenuphars: 'Nénuphars', bruyere: 'Bruyère'
+  nid: 'Nid d\'oiseau', nenuphars: 'Nénuphars', bruyere: 'Bruyère',
+  arbre: 'Arbre (grand, vert doux)', arbre_fleuri: 'Arbre (grand, vert doux, pied fleuri)', arbre_profond: 'Arbre (grand, vert profond)',
+  arbre_profond_fleuri: 'Arbre (grand, vert profond, pied fleuri)', arbre_petit: 'Arbre (petit, vert doux)', arbre_petit_fleuri: 'Arbre (petit, vert doux, pied fleuri)',
+  arbre_petit_profond: 'Arbre (petit, vert profond)', arbre_petit_profond_fleuri: 'Arbre (petit, vert profond, pied fleuri)'
 };
 const PIECES = { 'arc-en-ciel': 'Arc-en-ciel', 'coeur-lave': 'Cœur de lave', 'filon-or': 'Filon d\'or' };
 const ROMAIN = ['', 'I', 'II', 'III', 'IV', 'V', 'VI', 'VII'];
