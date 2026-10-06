@@ -714,9 +714,9 @@ C.parc = { n: 2, draw: f => {
     + `<path d="M${at(g0[0], g0[1], 2.6).map(r2).join(',')} L${at(g1[0], g1[1], 6.4).map(r2).join(',')}" stroke="${WOOD.right}" stroke-width="0.9"/>`;
   return s;
 } };
-// Cairn : cinq pierres plates empilées, de la plus large à la plus petite, chacune bombée, éclairée dessus et ombrée
-// dessous ; de la mousse sur la pierre du bas, des cailloux et des fleurettes au pied ; une cordelette de fanions tendue
-// du sommet à un piquet, qui claquent au vent (2 images)
+// Cairn aux rubans : cinq pierres plates empilées, de la plus large à la plus petite, chacune bombée, éclairée dessus et
+// ombrée dessous ; de la mousse sur la pierre du bas, des cailloux et des fleurettes au pied ; trois rubans de laine
+// colorés noués aux pierres, qui flottent au vent (2 images)
 const PIERRES_CAIRN = [['#B9B2A6', '#D8D2C6', '#8E877B'], ['#A9A69F', '#CBC8C0', '#817E77'], ['#BDB4A2', '#DCD3C1', '#938A78']];
 const galetCairn = (x, y, rx, ry, [c, l, d]) => P(`M${r2(x - rx)},${r2(y)} Q${r2(x - rx)},${r2(y - ry * 1.5)} ${r2(x)},${r2(y - ry * 1.6)} Q${r2(x + rx)},${r2(y - ry * 1.5)} ${r2(x + rx)},${r2(y)} Q${r2(x + rx * 0.9)},${r2(y + ry * 0.9)} ${r2(x)},${r2(y + ry)} Q${r2(x - rx * 0.9)},${r2(y + ry * 0.9)} ${r2(x - rx)},${r2(y)} Z`, c, 0.9)
   + `<path d="M${r2(x - rx * 0.7)},${r2(y + ry * 0.45)} Q${r2(x)},${r2(y + ry * 1.05)} ${r2(x + rx * 0.85)},${r2(y + ry * 0.2)} Q${r2(x + rx * 0.8)},${r2(y + ry * 0.7)} ${r2(x)},${r2(y + ry * 0.92)} Q${r2(x - rx * 0.6)},${r2(y + ry * 0.8)} ${r2(x - rx * 0.7)},${r2(y + ry * 0.45)} Z" fill="${d}"/>`
@@ -734,16 +734,13 @@ C.cairn = { n: 2, draw: f => {
   s += mousse.map(([dx, dy, r]) => E(x + dx, y + dy, r + 0.6, r * 0.8 + 0.6, OUT, 0)).join('') + mousse.map(([dx, dy, r]) => E(x + dx, y + dy, r, r * 0.8, '#8FCB6A', 0)).join('')
     + E(x - 7.4, y - 1.4, 1.2, 0.6, '#B3E386', 0) + E(x - 10, y - 0.4, 0.8, 0.4, '#B3E386', 0);
   s += fleurette(x - 15, y + 7, '#FFFFFF') + fleurette(x + 9, y + 8, '#F7B6C8');
-  // le piquet et la cordelette de fanions
-  const [px, py] = [x + 21, y + 1], top = [x + 2, y - 26], bout = [px - 0.6, py - 16];
-  s += L([px, py], bout, WOOD.left, 1.2) + E(bout[0], bout[1], 0.9, 0.9, WOOD.top, 0.5);
-  const cx = (top[0] + bout[0]) / 2, cy = (top[1] + bout[1]) / 2 + 4;
-  s += `<path d="M${top[0]},${top[1]} Q${r2(cx)},${r2(cy)} ${r2(bout[0])},${r2(bout[1])}" stroke="${OUT}" stroke-width="0.6" fill="none"/>`;
-  const cols = ['#E8566A', '#F2C04B', '#7EC45B', '#5C8FD0', '#F7B6C8'];
-  for (let i = 0; i < 5; i++) {
-    const t = 0.14 + i * 0.17, qx = (1 - t) ** 2 * top[0] + 2 * (1 - t) * t * cx + t * t * bout[0], qy = (1 - t) ** 2 * top[1] + 2 * (1 - t) * t * cy + t * t * bout[1], sw = wave(f, 2, 1.4, i * 1.7);
-    s += P(`M${r2(qx - 1.6)},${r2(qy)} L${r2(qx + 1.6)},${r2(qy)} L${r2(qx + sw)},${r2(qy + 4.6)} Z`, cols[i], 0.6);
-  }
+  // les rubans de laine noués aux pierres, qui flottent au vent : un nœud, un ruban ondulé, un bout fourchu
+  const rubans = [[3.6, -9.6, '#E8566A', 16], [3, -15.4, '#F2C04B', 13], [2, -20.4, '#5C8FD0', 11]];
+  rubans.forEach(([dx, dy, c, len], i) => {
+    const kx = x + dx + 5, ky = y + dy, a = wave(f, 2, 2.2, i * 1.9);
+    const d = `M${r2(kx)},${r2(ky)} q${r2(len * 0.3)},${r2(-2 + a * 0.4)} ${r2(len * 0.55)},${r2(a * 0.5)} t${r2(len * 0.45)},${r2(-1 + a)}`;
+    s += thick(d, 1.5, c) + P(`M${r2(kx + len - 0.4)},${r2(ky - 1 + a * 1.5 - 0.9)} l2.6,-0.6 l-1.2,1.5 l1.2,1.5 l-2.6,-0.6 Z`, c, 0.6) + E(kx, ky, 1.5, 1.2, c, 0.7);
+  });
   return s;
 } };
 // Passerelle du marais : une mare aux bords bosselés, ses nénuphars et ses touffes de joncs à massettes ; un caillebotis
