@@ -101,10 +101,12 @@ EXEMPLES.forEach((o, i) => {
     nom: `Avatar, exemple ${i + 1}`, choix: verifier(o),
     fichiers: { ...grandFormat(c, key, key, i === 0), ...grandFormat(n, `${key}-naufrage`, `${key}-naufrage`, false) }
   };
+  // en grand, pour juger les détails (2,3 fois le cadre de la troupe)
+  const G = 2.3;
   cells.push(row(`Exemple ${i + 1}`, [
-    [g(c, 'front', 'repos', 0), 'face'], [g(c, 'se', 'marche', 1), 'avant'], [g(c, 'ne', 'marche', 0), 'dos'], [g(c, 'front', 'salut', 0), 'salut'],
-    [g(c, 'se', 'action', 1, 1.6, 'ramasser'), 'ramasser'], [g(c, 'front', 'action', 0, 1.6, 'grelotter'), 'grelotter'], [g(c, 'front', 'action', 0, 1.6, 'lire'), 'lire'],
-    [g(n, 'front', 'repos', 0), 'naufragé'], [g(n, 'se', 'marche', 1), '']
+    [g(c, 'front', 'repos', 0, G), 'face'], [g(c, 'se', 'marche', 1, G), 'avant'], [g(c, 'ne', 'marche', 0, G), 'dos'], [g(c, 'front', 'salut', 0, G), 'salut'],
+    [g(c, 'se', 'action', 1, G, 'ramasser'), 'ramasser'], [g(c, 'front', 'action', 0, G, 'grelotter'), 'grelotter'], [g(c, 'front', 'action', 0, G, 'lire'), 'lire'],
+    [g(n, 'front', 'repos', 0, G), 'naufragé'], [g(n, 'se', 'marche', 1, G), '']
   ]));
   const walk = cc => [0, 1, 2, 3].map(f => grand(unique(frame(cc, 'se', 'marche', f)), 2.4));
   anim[0][1].push({ label: `Exemple ${i + 1}`, frames: walk(c), timings: [170], w: 115, h: 154, mirror: true });
@@ -123,6 +125,17 @@ const choix = [
   ligne('Coupe', 'coupe', { cheveux: 'chatain' }), ligne('Mèches', 'meches', { coupe: 'longue', couleurMeches: 'blond' }),
   ligne('Haut', 'haut'), ligne('Bas', 'bas', { couleurBas: 'framboise', couleurHaut: 'menthe' })
 ];
+
+// Planche des coiffures : chaque coupe de face, de trois quarts et de dos, puis avec des pointes colorées et des mèches
+const coiffures = options('coupe').map(coupe => {
+  const c = avatar({ coupe, cheveux: 'chatain' }, { uid: `k${coupe}` });
+  const p = avatar({ coupe, cheveux: 'lilas', meches: 'pointes', couleurMeches: 'menthe' }, { uid: `kp${coupe}` });
+  const m = avatar({ coupe, cheveux: 'chocolat', meches: 'meches', couleurMeches: 'blond' }, { uid: `km${coupe}` });
+  // recadré sur la tête et les épaules ; le trois quarts avant en miroir, comme la bibliothèque le publie
+  const buste = (cc, v, f) => { const b = unique(frame(cc, v, v === 'front' ? 'repos' : 'marche', f)); return `<svg xmlns="http://www.w3.org/2000/svg" width="118" height="118" viewBox="4 0 40 40">${v === 'se' ? `<g transform="translate(48 0) scale(-1 1)">${b}</g>` : b}</svg>`; };
+  return row(libelle('coupe', coupe), [[buste(c, 'front', 0), 'face'], [buste(c, 'se', 0), 'avant'], [buste(c, 'ne', 0), 'dos'],
+    [buste(p, 'front', 0), 'pointes'], [buste(p, 'ne', 0), ''], [buste(m, 'front', 0), 'mèches'], [buste(m, 'ne', 0), '']]);
+});
 
 // Planche des nuanciers : les pastilles, puis l'avatar dans chaque peau et chaque couleur de cheveux
 const pastille = (col, cap, tag = '') => [`<svg xmlns="http://www.w3.org/2000/svg" width="34" height="34" viewBox="0 0 34 34"><circle cx="17" cy="17" r="14" fill="${col}" stroke="#3C2819" stroke-width="1.6"/><ellipse cx="12" cy="11" rx="4" ry="2.6" fill="#FFFFFF" opacity="0.35"/></svg>`, cap + (tag ? `<br><i>${tag}</i>` : '')];
@@ -147,6 +160,7 @@ write(path.join(LIB, 'avatar.json'), JSON.stringify(index, null, 1));
 write(path.join(DIR, 'avatar_apercu.html'), animated('L\'avatar du joueur', 'Exemples tirés du générateur, et leur version naufragée ; trois quarts avant en marche.', anim));
 await shoot([
   [path.join(PNG, 'avatar_choix.png'), sheet('L\'avatar — les formes', 'Chaque rangée change un seul choix, à partir des réglages par défaut (HISTOIRE.md § 6.17). Le visage en gros plan.', choix), 1400],
+  [path.join(PNG, 'avatar_coiffures.png'), sheet('L\'avatar — les coiffures', 'Les 17 coupes de face, de trois quarts et de dos ; puis avec des pointes colorées (lilas et menthe) et des mèches (chocolat et blond), qui suivent le sens des cheveux.', coiffures), 1400],
   [path.join(PNG, 'avatar_couleurs.png'), sheet('L\'avatar — les nuanciers', 'Tous libres dès la création, sauf les teintures rares, qui se gagnent (boutique, coffres) et s\'ajoutent aux tissus et aux cheveux.', couleurs), 1400],
   [path.join(PNG, 'avatar_accessoires.png'), sheet('L\'avatar — les accessoires', 'Un par emplacement, chacun recolorable. Gratuit dès la création, ou à gagner pour toujours à la boutique ou dans les coffres (raretés des coffres du jeu).', accessoires), 1400],
   [path.join(PNG, 'avatar_exemples.png'), sheet('L\'avatar — exemples', 'Douze avatars : les vues, le salut, les gestes du tutoriel (ramasser, grelotter, lire le Grimoire) et la version naufragée (la mer garde les chapeaux, les sacs et ce qu\'on tient).', cells), 1400]
