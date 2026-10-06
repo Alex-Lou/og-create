@@ -395,4 +395,8 @@ for (const petit of [false, true]) for (const teinte of ['gris', 'brun']) for (c
   ARBRES_MORTS.push([fichier, libelle, { teinte, petit, champignons }]);
 }
 
-module.exports = { arbre, ARBRES, pommier, POMMIERS, automne, AUTOMNES, bouleau, BOULEAUX, sapin, SAPINS, palmier, PALMIERS, arbreMort, ARBRES_MORTS, VERTS, fleurette };
+module.exports = {
+  arbre, ARBRES, pommier, POMMIERS, automne, AUTOMNES, bouleau, BOULEAUX, sapin, SAPINS, palmier, PALMIERS, arbreMort, ARBRES_MORTS,
+  // pour les autres plantes (plantes.js) : les verts, la touffe de feuillage, la fleurette, le champignon, l'herbe
+  VERTS, fleurette, feuillage: touffe, champignon, herbe
+};

@@ -14795,10 +14795,129 @@
   {
    "id": "plantes/buisson",
    "rubrique": "plantes",
-   "titre": "Buisson",
+   "titre": "Buisson (grand, vert doux, fleuri)",
    "images": 1,
    "fichiers": [
     "svg/plantes/buisson.svg"
+   ],
+   "cadre": [
+    -50,
+    -115,
+    100,
+    140
+   ],
+   "parcours": "acte-1",
+   "statut": "ok"
+  },
+  {
+   "id": "plantes/buisson_baies",
+   "rubrique": "plantes",
+   "titre": "Buisson (grand, vert doux, à baies)",
+   "images": 1,
+   "fichiers": [
+    "svg/plantes/buisson_baies.svg"
+   ],
+   "cadre": [
+    -50,
+    -115,
+    100,
+    140
+   ],
+   "parcours": "acte-1",
+   "statut": "ok"
+  },
+  {
+   "id": "plantes/buisson_petit",
+   "rubrique": "plantes",
+   "titre": "Buisson (petit, vert doux, fleuri)",
+   "images": 1,
+   "fichiers": [
+    "svg/plantes/buisson_petit.svg"
+   ],
+   "cadre": [
+    -50,
+    -115,
+    100,
+    140
+   ],
+   "parcours": "acte-1",
+   "statut": "ok"
+  },
+  {
+   "id": "plantes/buisson_petit_baies",
+   "rubrique": "plantes",
+   "titre": "Buisson (petit, vert doux, à baies)",
+   "images": 1,
+   "fichiers": [
+    "svg/plantes/buisson_petit_baies.svg"
+   ],
+   "cadre": [
+    -50,
+    -115,
+    100,
+    140
+   ],
+   "parcours": "acte-1",
+   "statut": "ok"
+  },
+  {
+   "id": "plantes/buisson_petit_profond",
+   "rubrique": "plantes",
+   "titre": "Buisson (petit, vert profond, fleuri)",
+   "images": 1,
+   "fichiers": [
+    "svg/plantes/buisson_petit_profond.svg"
+   ],
+   "cadre": [
+    -50,
+    -115,
+    100,
+    140
+   ],
+   "parcours": "acte-1",
+   "statut": "ok"
+  },
+  {
+   "id": "plantes/buisson_petit_profond_baies",
+   "rubrique": "plantes",
+   "titre": "Buisson (petit, vert profond, à baies)",
+   "images": 1,
+   "fichiers": [
+    "svg/plantes/buisson_petit_profond_baies.svg"
+   ],
+   "cadre": [
+    -50,
+    -115,
+    100,
+    140
+   ],
+   "parcours": "acte-1",
+   "statut": "ok"
+  },
+  {
+   "id": "plantes/buisson_profond",
+   "rubrique": "plantes",
+   "titre": "Buisson (grand, vert profond, fleuri)",
+   "images": 1,
+   "fichiers": [
+    "svg/plantes/buisson_profond.svg"
+   ],
+   "cadre": [
+    -50,
+    -115,
+    100,
+    140
+   ],
+   "parcours": "acte-1",
+   "statut": "ok"
+  },
+  {
+   "id": "plantes/buisson_profond_baies",
+   "rubrique": "plantes",
+   "titre": "Buisson (grand, vert profond, à baies)",
+   "images": 1,
+   "fichiers": [
+    "svg/plantes/buisson_profond_baies.svg"
    ],
    "cadre": [
     -50,
