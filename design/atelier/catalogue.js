@@ -277,7 +277,7 @@ const SUJETS = {
 };
 const PLANTES = {
   bois_flotte: 'Bois flotté',
-  champignons_nuit: 'Champignons, la nuit', rochers_moussus: 'Rochers moussus', lanterne: 'Lanterne sur pied, éteinte',
+  rochers_moussus: 'Rochers moussus', lanterne: 'Lanterne sur pied, éteinte',
   lanterne_allumee: 'Lanterne sur pied, allumée', banc: 'Banc de bois (décor)', aiguille: 'Aiguille de roche',
   nid: 'Nid d\'oiseau', nenuphars: 'Nénuphars',
   arbre: 'Arbre (grand, vert doux)', arbre_fleuri: 'Arbre (grand, vert doux, pied fleuri)', arbre_profond: 'Arbre (grand, vert profond)',
@@ -331,6 +331,10 @@ for (const petite of ['', '_petite']) for (const grise of ['', '_grise']) for (c
 // les 8 rondins refaits (plantes.js) : rondin[_petit][_gris][_champignons]
 for (const petit of ['', '_petit']) for (const gris of ['', '_gris']) for (const ch of ['', '_champignons']) {
   PLANTES[`rondin${petit}${gris}${ch}`] = `Rondin (${[petit ? 'petit' : 'grand', `écorce ${gris ? 'grise' : 'brune'}`, ch ? 'des champignons' : 'mousse et pousse'].join(', ')})`;
+}
+// les 8 champignons refaits (plantes.js) : champignons[_petits][_bruns][_nuit]
+for (const petits of ['', '_petits']) for (const bruns of ['', '_bruns']) for (const nuit of ['', '_nuit']) {
+  PLANTES[`champignons${petits}${bruns}${nuit}`] = `Champignons (${[bruns ? 'cèpes bruns' : 'amanites rouges', petits ? 'petits' : 'grands', nuit && 'la nuit, ils luisent'].filter(Boolean).join(', ')})`;
 }
 // les 16 touffes d'herbe refaites (herbes.js) : touffe[_motte][_petite][_profond][_fleurie]
 for (const motte of ['', '_motte']) for (const petite of ['', '_petite']) for (const vert of ['', '_profond']) for (const fleurie of ['', '_fleurie']) {

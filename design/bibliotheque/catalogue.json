@@ -46887,7 +46887,7 @@
   {
    "id": "plantes/champignons",
    "rubrique": "plantes",
-   "titre": "Champignons",
+   "titre": "Champignons (amanites rouges, grands)",
    "images": 1,
    "fichiers": [
     "svg/plantes/champignons.svg"
@@ -46902,12 +46902,114 @@
    "statut": "ok"
   },
   {
+   "id": "plantes/champignons_bruns",
+   "rubrique": "plantes",
+   "titre": "Champignons (cèpes bruns, grands)",
+   "images": 1,
+   "fichiers": [
+    "svg/plantes/champignons_bruns.svg"
+   ],
+   "cadre": [
+    -50,
+    -115,
+    100,
+    140
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "plantes/champignons_bruns_nuit",
+   "rubrique": "plantes",
+   "titre": "Champignons (cèpes bruns, grands, la nuit, ils luisent)",
+   "images": 1,
+   "fichiers": [
+    "svg/plantes/champignons_bruns_nuit.svg"
+   ],
+   "cadre": [
+    -50,
+    -115,
+    100,
+    140
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
    "id": "plantes/champignons_nuit",
    "rubrique": "plantes",
-   "titre": "Champignons, la nuit",
+   "titre": "Champignons (amanites rouges, grands, la nuit, ils luisent)",
    "images": 1,
    "fichiers": [
     "svg/plantes/champignons_nuit.svg"
+   ],
+   "cadre": [
+    -50,
+    -115,
+    100,
+    140
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "plantes/champignons_petits",
+   "rubrique": "plantes",
+   "titre": "Champignons (amanites rouges, petits)",
+   "images": 1,
+   "fichiers": [
+    "svg/plantes/champignons_petits.svg"
+   ],
+   "cadre": [
+    -50,
+    -115,
+    100,
+    140
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "plantes/champignons_petits_bruns",
+   "rubrique": "plantes",
+   "titre": "Champignons (cèpes bruns, petits)",
+   "images": 1,
+   "fichiers": [
+    "svg/plantes/champignons_petits_bruns.svg"
+   ],
+   "cadre": [
+    -50,
+    -115,
+    100,
+    140
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "plantes/champignons_petits_bruns_nuit",
+   "rubrique": "plantes",
+   "titre": "Champignons (cèpes bruns, petits, la nuit, ils luisent)",
+   "images": 1,
+   "fichiers": [
+    "svg/plantes/champignons_petits_bruns_nuit.svg"
+   ],
+   "cadre": [
+    -50,
+    -115,
+    100,
+    140
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "plantes/champignons_petits_nuit",
+   "rubrique": "plantes",
+   "titre": "Champignons (amanites rouges, petits, la nuit, ils luisent)",
+   "images": 1,
+   "fichiers": [
+    "svg/plantes/champignons_petits_nuit.svg"
    ],
    "cadre": [
     -50,
