@@ -164,7 +164,12 @@ chronométrer 20 appels. Comparer à zoom égal, au même endroit.
     - le masquage des quartiers inconnus.
   - `worldMapV2.js` : l'ancienne carte, gardée pour la migration.
 - **Le jeu de l'île**
-  - `world.js` : la vue et toutes les actions de l'île (≈ 1 700 lignes, **à découper**, § 8).
+  - `world.js` : la vue et toutes les actions de l'île (≈ 1 350 lignes). Le découpage par domaine est en cours (lot
+    « santé », § 7) ; `world.js` garde toujours la même API. Déjà à part, dans `world/` :
+    - `rules.js` : constantes, chantiers (`SITES`), effets, production, charges (rien en base) ;
+    - `reads.js` : lectures de l'état d'un joueur en base ;
+    - `migrate.js` : passage des cartes v1 → v4 ;
+    - `chests.js` : les coffres (vue et ouverture).
   - Les bonus se combinent dans cet ordre :
     1. `shop.bonusesOf` (boutique) ;
     2. `annexes.bonusesOf` ;
@@ -195,10 +200,15 @@ chronométrer 20 appels. Comparer à zoom égal, au même endroit.
   commencent par `world_`. Voir aussi `db/README.md`.
 
 ### Front : `src/world/` (moteur de l'île) et `src/components/World/`
-- **`WorldView.vue`** : l'île entière (≈ 4 450 lignes, **à découper en priorité**, § 8). Elle contient :
-  - le canvas, la caméra et les gestes (toucher, appui long, pincer) ;
-  - le tri par profondeur de ce qui se tient debout, les lumières ;
-  - les fiches et le HUD.
+- **`WorldView.vue`** : l'île entière (≈ 3 150 lignes) : son état, le chargement, les actions, les fiches et le HUD.
+  Ses méthodes de moteur sont à part, dans `src/world/view/`, des objets de méthodes étalés dans `methods`
+  (`this` y reste le composant) :
+  - `camera.js` : géométrie isométrique (monde ↔ écran), caméra, zoom, cadrage ;
+  - `draw.js` : la boucle et le dessin (sol, mer, tri par profondeur de ce qui se tient debout, lumières, météo,
+    bulles) ;
+  - `gestures.js` : glisser, pincer, molette, toucher, appui long, ce qui est sous le doigt ;
+  - `constants.js` (taille d'une case…) et `memory.js` (la vue gardée d'une visite à l'autre de l'onglet).
+  - Reste à faire (lot « santé ») : les fiches et le HUD en composants.
 - **Le sol** : `terrain.js` (`TerrainCache`) peint le relief en **carrés de 512 px gardés en images**, à des
   résolutions par pas de √2.
   - Le décor fixe (arbres, rochers) est **cuit dans le sol** sauf de près : `NEAR_SCALE = 0.9`, avec le vent
