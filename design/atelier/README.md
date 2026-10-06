@@ -17,6 +17,7 @@ troupe. Relancer ces scripts redonne la bibliothèque à l'octet près : c'est v
 | --- | --- |
 | `troupe.js`, `aster2.js`, `cannelle.js`… | Renvois vers le kit de la troupe (`design/personnages/`), qui n'existe qu'en un exemplaire |
 | `naufrage.js`, `naufrages.js` | La transformation en naufragé, et la tenue propre à chaque maître |
+| `avatar_naufrage.js`, `preview_avatar.mjs` | L'avatar du joueur en naufragé ; les exemples d'avatar (grand format, naufragé, petit format), la planche des choix |
 | `dormeurs.js`, `arrivees.js` | Les maîtres endormis, les plans d'entrée du tutoriel |
 | `brume.js`, `anya.js`, `cerf.js`, `passeur.js` | Les vivants |
 | `betes.js`, `betes3.js` | Les animaux de profil ; les bêtes qui marchent de trois quarts avant et de dos |
@@ -50,6 +51,7 @@ node preview_camp.mjs                # le camp
 node preview_ruines.mjs              # les ruines
 node preview_coffres.mjs             # les coffres
 node preview_camp_grandit.mjs        # planche « le camp grandit »
+node preview_avatar.mjs              # l'avatar du joueur : exemples, planche des choix
 for d in svg2/*/; do mkdir -p lib/personnages/maitres/$(basename $d) && cp $d*.svg lib/personnages/maitres/$(basename $d)/; done
 node build_bundle.js                 # assemble ../bibliotheque/
 node clipcheck.js lib/decor/camp     # (facultatif) vérifie qu'aucun dessin ne dépasse de son cadre

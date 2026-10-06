@@ -1,6 +1,6 @@
 # Bibliothèque d'assets SVG de l'île
 
-3 744 dessins SVG au trait de la troupe : personnages, naufragés, animaux, plantes, décor, camp, ruines, bâtiments et
+4 496 dessins SVG au trait de la troupe : personnages, avatar du joueur, naufragés, animaux, plantes, décor, camp, ruines, bâtiments et
 météo. Chaque dessin est calé sur les cadres et les ancres du jeu, pour se poser tel quel.
 
 **Par où commencer** :
@@ -64,6 +64,7 @@ détails propres à un lot : places des objets de boutique, lumières des palier
 | `svg/personnages/visiteurs/` | 12 visiteurs types, tirés d'une graine comme dans le jeu (`pnj_jeu.json`) | 408 |
 | `svg/personnages/naufrages/<prénom>/` | Les maîtres tels qu'ils arrivent sur l'île (`<prénom>-naufrage_…`) : une tenue de naufragé à chacun, mêmes vues, poses et expressions, endormis (`naufrages.json`) | 316 |
 | `svg/personnages/naufrages/petit_format/` | Les mêmes au petit format du jeu (`petit_format.json`) | 224 |
+| `svg/personnages/avatar/` | L'avatar du joueur : 8 exemples tirés du générateur (grand format, naufragé, petit format du jeu), poses, gestes du tutoriel (ramasser, grelotter, lire), expressions ; les choix dans `avatar.json` | 752 |
 | `svg/personnages/epilogue/` | 8 nouveaux venus de l'épilogue, tirés d'une graine (à redessiner : ils sont accueillis, pas naufragés) | 208 |
 | `svg/vivants/` | Brume (8 stades et ses variantes), Anya, le cerf blanc, le Passeur | 128 |
 | `svg/animaux/` | Ferme, bois, eau douce, climats, bestiaire, familiers, mer : de profil, et de trois quarts avant et dos pour les 37 bêtes qui marchent (`orientees.json`) | 536 |
@@ -87,6 +88,10 @@ détails propres à un lot : places des objets de boutique, lumières des palier
   hauteur max, corps et couleur de police du jeu).
 - **Objets de la boutique** : chaque calque est ancré à sa place au sol. Sa `place` par palier (en cases, autour du
   centre du bâtiment) est dans `batiments.json`. Les calques marqués `derriere` se peignent avant le bâtiment.
+- **L'avatar** : il se compose à partir des choix du joueur, il ne se dessine pas à l'avance. Grand format :
+  `design/personnages/avatar.js` (`avatar(choix)`, à passer à `troupe.frame`) ; naufragé : `design/atelier/avatar_naufrage.js`
+  (le chapeau est perdu en mer) ; petit format du jeu : `lookPetit(choix)` donne le « look » de `villagerSprite`. Les
+  fichiers de `svg/personnages/avatar/` sont des exemples.
 - **Naufragés** : un maître garde le look du naufragé jusqu'à son souvenir retrouvé (`HISTOIRE.md` § 8 à 10 : Cannelle
   dès l'étape 7 du tutoriel, Ondin à l'étape 11, Sylve à l'acte I, Galet à l'acte II, Mélisse à son réveil, Rivet à
   l'acte III, Aster à l'acte IV), puis prend celui de `maitres/`.
@@ -96,7 +101,7 @@ détails propres à un lot : places des objets de boutique, lumières des palier
 ## Ce qui n'est pas encore dessiné, ou pas du tout
 
 - **Ce qui manque encore** est listé dans `catalogue.json` (`manquants`) et en tête de chaque chapitre d'`index.html` :
-  l'avatar du joueur, les égarés (les créatures de la brume) et les défenses, le bâtiment embrumé, la cage aux poules,
+  les égarés (les créatures de la brume) et les défenses, le bâtiment embrumé, la cage aux poules,
   les scènes du tutoriel v6, les signes d'Anya…
 - **Les 84 teintes en images** : elles se tirent du dessin avec l'outil de teintes, plutôt que 588 fichiers figés.
 - **Relief, falaises, mer, île flottante** : le jeu les peint case par case au canvas. Ce ne sont pas des sprites.

@@ -75,7 +75,7 @@ function renommer(rel) {
 // Le kit du grand format (design/personnages/troupe.js, Anya, le Passeur) dessine son trois quarts avant tourné vers
 // le bas à gauche ; le petit format, les bêtes et le jeu (vue « se ») le tournent vers le bas à droite. La bibliothèque
 // publie donc ces vues-là en miroir : « avant » veut dire « vers le bas à droite » partout.
-const MIROIR_KIT = /^(personnages\/maitres\/[a-z]+|personnages\/naufrages\/[a-z]+|vivants\/(anya|passeur))\/[a-z-]+_avant_/;
+const MIROIR_KIT = /^(personnages\/maitres\/[a-z]+|personnages\/naufrages\/[a-z]+|personnages\/avatar\/avatar-\d+(?:-naufrage)?|vivants\/(anya|passeur))\/[a-z0-9-]+_avant_/;
 function miroir(svg) {
   const m = svg.match(/^(<svg[^>]*viewBox="([^"]+)"[^>]*>)([\s\S]*)(<\/svg>\s*)$/);
   if (!m) throw new Error('SVG inattendu pour le miroir');
@@ -158,6 +158,7 @@ function moment(id, meta) {
   const nom = p[p.length - 1];
   if (top === 'personnages') {
     if (a === 'epilogue') return 'epilogue';
+    if (a === 'avatar') return 'tuto-1';
     if (a === 'visiteurs') return 'acte-4';
     const prenom = a === 'naufrages' && b === 'petit_format' ? p[3] : b;
     const m = MAITRES[prenom];
@@ -236,7 +237,6 @@ const A_REVOIR = [
 const statut = id => { for (const [rx, note] of A_REVOIR) if (rx.test(id)) return { statut: 'a-revoir', note }; return { statut: 'ok' }; };
 
 const MANQUANTS = [
-  ['tuto-1', 'L\'avatar du joueur : pièces au choix, trois vues, toutes les poses, grand et petit format, version naufragée (lot L).'],
   ['tuto-1', 'La carte d\'embarquement de l\'Hirondelle (écran d\'avatar), le gilet de sauvetage, la chaise longue échouée.'],
   ['tuto-1', 'Les égarés : petits fantômes, petits zombies tout mous, bêtes égarées selon le climat ; marche, bouderie au toucher, passage en luciole (lot M).'],
   ['tuto-2', 'La cage aux poules du navire, l\'œuf, la bulle de production d\'une bête (lot M).'],
@@ -288,9 +288,11 @@ const PLANTES = {
 const PIECES = { 'arc-en-ciel': 'Arc-en-ciel', 'coeur-lave': 'Cœur de lave', 'filon-or': 'Filon d\'or' };
 const ROMAIN = ['', 'I', 'II', 'III', 'IV', 'V', 'VI', 'VII'];
 const ETAT_COFFRE = { ferme: 'fermé', ouverture: 'ouverture', ouvert: 'ouvert', rayons: 'rayons (calque)', icone: 'icône' };
-const PETIT = /^personnages\/(habitants|visiteurs|epilogue|naufrages\/petit_format)\//;
+const PETIT = /^personnages\/(habitants|visiteurs|epilogue|naufrages\/petit_format|avatar\/petit_format)\//;
 
 function titreSujet(sujet) {
+  const av = sujet.match(/^avatar-(\d+)(-naufrage)?$/);
+  if (av) return `Avatar, exemple ${+av[1]}${av[2] ? ' (naufragé)' : ''}`;
   const m = sujet.match(/^([a-z]+)-naufrage$/);
   if (m) return `${NOMS[m[1]]} naufragé${FEM.has(m[1]) ? 'e' : ''}`;
   if (NOMS[sujet]) return NOMS[sujet][0].toUpperCase() + NOMS[sujet].slice(1);
@@ -328,13 +330,16 @@ function vitesse(id, pose, images) {
     return pose === 'repos' ? (a === 'anya' ? 1200 : [900, 160]) : [700, 900];
   }
   if (top === 'personnages') {
-    const petit = a !== 'maitres' && !(a === 'naufrages' && !id.includes('petit_format'));
+    const petit = PETIT.test(id + '/');
     if (/^(marche|lanterne|parapluie)$/.test(pose)) return petit ? 160 : 170;
     if (pose === 'repos') return [900, 160];
     if (pose === 'salut') return 260;
     if (pose === 'dort') return 900;
     if (pose === 'arrivee') return 450;
     if (pose === 'expr') return 800;
+    if (pose === 'grelotter') return 140; // un frisson
+    if (pose === 'lire') return [1400, 900];
+    if (pose === 'ramasser') return [500, 800];
     return [700, 1100];
   }
   return undefined;
