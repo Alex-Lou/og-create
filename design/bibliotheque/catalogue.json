@@ -47890,10 +47890,129 @@
   {
    "id": "plantes/nid",
    "rubrique": "plantes",
-   "titre": "Nid d'oiseau",
+   "titre": "Nid de mouettes (grand, trois œufs)",
    "images": 1,
    "fichiers": [
     "svg/plantes/nid.svg"
+   ],
+   "cadre": [
+    -50,
+    -115,
+    100,
+    140
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "plantes/nid_petit",
+   "rubrique": "plantes",
+   "titre": "Nid de mouettes (petit, trois œufs)",
+   "images": 1,
+   "fichiers": [
+    "svg/plantes/nid_petit.svg"
+   ],
+   "cadre": [
+    -50,
+    -115,
+    100,
+    140
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "plantes/nid_petit_plume",
+   "rubrique": "plantes",
+   "titre": "Nid de mouettes (petit, trois œufs, une plume)",
+   "images": 1,
+   "fichiers": [
+    "svg/plantes/nid_petit_plume.svg"
+   ],
+   "cadre": [
+    -50,
+    -115,
+    100,
+    140
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "plantes/nid_petit_poussins",
+   "rubrique": "plantes",
+   "titre": "Nid de mouettes (petit, deux poussins)",
+   "images": 1,
+   "fichiers": [
+    "svg/plantes/nid_petit_poussins.svg"
+   ],
+   "cadre": [
+    -50,
+    -115,
+    100,
+    140
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "plantes/nid_petit_poussins_plume",
+   "rubrique": "plantes",
+   "titre": "Nid de mouettes (petit, deux poussins, une plume)",
+   "images": 1,
+   "fichiers": [
+    "svg/plantes/nid_petit_poussins_plume.svg"
+   ],
+   "cadre": [
+    -50,
+    -115,
+    100,
+    140
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "plantes/nid_plume",
+   "rubrique": "plantes",
+   "titre": "Nid de mouettes (grand, trois œufs, une plume)",
+   "images": 1,
+   "fichiers": [
+    "svg/plantes/nid_plume.svg"
+   ],
+   "cadre": [
+    -50,
+    -115,
+    100,
+    140
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "plantes/nid_poussins",
+   "rubrique": "plantes",
+   "titre": "Nid de mouettes (grand, deux poussins)",
+   "images": 1,
+   "fichiers": [
+    "svg/plantes/nid_poussins.svg"
+   ],
+   "cadre": [
+    -50,
+    -115,
+    100,
+    140
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "plantes/nid_poussins_plume",
+   "rubrique": "plantes",
+   "titre": "Nid de mouettes (grand, deux poussins, une plume)",
+   "images": 1,
+   "fichiers": [
+    "svg/plantes/nid_poussins_plume.svg"
    ],
    "cadre": [
     -50,
