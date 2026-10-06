@@ -850,7 +850,12 @@ export default {
       if (step.phase === 'scene') this.prologueScene = step.scene;
       else if (step.phase === 'harvest') this.prologueHand = { target: '.world__play', mode: 'world' };
       else if (step.phase === 'lines') step.lines.forEach(line => this.sayPrologue(line));
-      else if (step.phase === 'finish') this.savePrologue({ finished: true });
+      else if (step.phase === 'finish') {
+        this.savePrologue({ finished: true });
+        // Le chapitre II s'est ouvert pendant le prologue (3e page), juste avant la création du compte, qui recharge la
+        // page : sa réplique, encore en attente, s'y perdait. Dite ici, une fois (rien si elle l'a déjà été)
+        guide.tip('chapter-II');
+      }
     },
     // Une réplique du tutoriel : de Brume, ou d'un membre de la troupe (son portrait dans la bulle)
     sayPrologue(line) {
