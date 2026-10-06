@@ -63,13 +63,29 @@ C.muret = { n: 1, draw: () => {
   const [mx, my] = at(-0.25, 0.05, 18.4);
   return s + E(mx, my, 5, 2, '#8FCB6A', 0.7) + E(mx + 18, my + 7, 3, 1.4, '#8FCB6A', 0.6) + Dk.flower(mx + 22, my + 5, 1.4, '#FFFFFF');
 } };
-// Lanterne : poteau de fer sur socle, lanterne vitrée, petit chapeau ; la flamme vacille
+// Lanterne : socle de pierre à deux degrés, poteau de fer et sa bague, la lanterne vitrée et son chapeau ; la flamme
+// vacille (2 images). La flamme reste à z 41 : la lumière de nuit du jeu y est calée (creations.js, ART_LIGHTS)
+const FER_LANTERNE = { light: '#6E757E', mid: '#474D55', dark: '#2E3238' };
 C.lanterne = { n: 2, draw: f => {
-  const [x, y] = at(0, 0);
-  let s = shadow(0, 0, 0.26, 0.16) + box(-0.08, -0.08, 0.08, 0.08, 0, 5, STONE) + `<rect x="${x - 1.6}" y="${y - 44}" width="3.2" height="40" fill="${IRON.left}" stroke="${OUT}" stroke-width="0.9"/>`;
-  s += glow(x, y - 52, 13 + f, '255,224,138', 0.3);
-  s += poly([[x - 6, y - 46], [x + 6, y - 46], [x + 6.6, y - 58], [x - 6.6, y - 58]], '#FFE08A', 1) + `<path d="M${x},${y - 47} L${x},${y - 57} M${x - 6.2},${y - 52} L${x + 6.2},${y - 52}" stroke="${IRON.right}" stroke-width="0.8"/>`
-    + flame(x, y - 48, 6 + f, 2.2, f * 0.5) + poly([[x - 8.6, y - 58], [x + 8.6, y - 58], [x, y - 65]], IRON.left, 1) + E(x, y - 66, 1.4, 1.4, IRON.top, 0.8);
+  const [x, y] = at(0, 0), c = FER_LANTERNE;
+  let s = shadow(0, 0, 0.26, 0.16) + box(-0.095, -0.095, 0.095, 0.095, 0, 3.4, STONE) + box(-0.066, -0.066, 0.066, 0.066, 3.4, 6.2, STONE);
+  const [mx, my] = at(-0.07, 0.09, 3.4);
+  s += E(mx + 1.2, my - 0.4, 2.6, 1, '#8FCB6A', 0.6);
+  // le poteau : pied évasé, fût éclairé à gauche, bague à mi-hauteur
+  s += `<path d="M${x - 3.2},${y - 7.6} Q${x - 2.2},${y - 10} ${x - 1.7},${y - 12} L${x + 1.7},${y - 12} Q${x + 2.2},${y - 10} ${x + 3.2},${y - 7.6} Z" fill="${c.mid}" stroke="${OUT}" stroke-width="0.9" stroke-linejoin="round"/>`
+    + `<rect x="${x - 1.7}" y="${y - 45}" width="3.4" height="33.4" fill="${c.mid}" stroke="${OUT}" stroke-width="0.9"/>`
+    + `<rect x="${x + 0.4}" y="${y - 44.6}" width="1" height="32.6" fill="${c.dark}"/><rect x="${x - 1.2}" y="${y - 44.6}" width="0.8" height="32.6" fill="${c.light}"/>`
+    + E(x, y - 29, 2.6, 1.2, c.mid, 0.8) + E(x - 0.8, y - 29.4, 1, 0.4, c.light, 0);
+  // la lueur, le plateau, les vitres et leurs croisillons, la flamme, le chapeau et son bouton
+  s += glow(x, y - 52, 13 + f, '255,224,138', 0.3)
+    + `<path d="M${x - 6.2},${y - 45} L${x + 6.2},${y - 45} L${x + 5},${y - 43.4} L${x - 5},${y - 43.4} Z" fill="${c.mid}" stroke="${OUT}" stroke-width="0.9" stroke-linejoin="round"/>`
+    + poly([[x - 5.2, y - 45], [x + 5.2, y - 45], [x + 5.8, y - 57.4], [x - 5.8, y - 57.4]], '#FFE27A', 1)
+    + flame(x, y - 46.6, 8.4 + f, 2.6, f * 0.5)
+    + `<path d="M${x},${y - 45.4} L${x},${y - 57} M${x - 5.5},${y - 51.4} L${x + 5.5},${y - 51.4}" stroke="${c.mid}" stroke-width="0.7"/>`
+    + `<path d="M${x - 4.4},${y - 46.4} L${x - 3},${y - 55.6}" stroke="#FFFFFF" stroke-width="0.8" stroke-linecap="round" opacity="0.7"/>`
+    + poly([[x - 7.8, y - 57.4], [x + 7.8, y - 57.4], [x + 3, y - 62.2], [x - 3, y - 62.2]], c.mid, 1)
+    + poly([[x + 0.8, y - 57.4], [x + 7.8, y - 57.4], [x + 3, y - 62.2], [x + 0.6, y - 62.2]], c.dark, 0)
+    + E(x, y - 63.6, 1.6, 1.5, c.mid, 0.8) + E(x - 0.5, y - 64, 0.5, 0.45, c.light, 0);
   return s;
 } };
 // Banc : lattes, pieds sombres, un coussin
