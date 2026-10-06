@@ -24,7 +24,7 @@ const MOODS = {
   Galet: ['fache', 'triste', 'content'], // « Hm. », la mémoire des Anciens, un sourire dans la barbe
   'Mélisse': ['content', 'rire', 'triste'] // tranquille, les lunes, le chagrin caché
 };
-const STEP = { Aster: 'tutoriel, étape 2', Cannelle: 'tutoriel, étape 3', Rivet: 'tutoriel, étape 4', Ondin: 'tutoriel, étape 5', Sylve: 'acte I (La Lisière)', Galet: 'acte II (La Colline)', 'Mélisse': 'acte III (Les Jardins)' };
+const STEP = { Aster: 'tutoriel, étape 10', Cannelle: 'tutoriel, étape 7', Rivet: 'tutoriel, étape 9', Ondin: 'tutoriel, étape 11', Sylve: 'acte I (La Lisière)', Galet: 'acte II (La Colline)', 'Mélisse': 'acte III (Les Jardins)' };
 
 const index = {
   _lisez_moi: [
