@@ -9,7 +9,7 @@ Vue 3 (Options API), servi en site statique et installable (PWA). Le serveur de 
 ```
 npm install
 npm run serve      # http://localhost:8080, /api relayé vers le backend (localhost:3000)
-npm run lint       # corrige ; la CI lance « npm run lint -- --no-fix »
+npm run lint       # vérifie (eslint.config.mjs), comme la CI ; « npm run lint -- --fix » corrige
 npm test           # tests unitaires (vitest)
 npm run build      # site statique dans dist/
 ```
