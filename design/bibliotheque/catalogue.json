@@ -46105,10 +46105,129 @@
   {
    "id": "plantes/arbre_mort",
    "rubrique": "plantes",
-   "titre": "Arbre mort",
+   "titre": "Arbre mort (grand, gris)",
    "images": 1,
    "fichiers": [
     "svg/plantes/arbre_mort.svg"
+   ],
+   "cadre": [
+    -50,
+    -115,
+    100,
+    140
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "plantes/arbre_mort_brun",
+   "rubrique": "plantes",
+   "titre": "Arbre mort (grand, brun)",
+   "images": 1,
+   "fichiers": [
+    "svg/plantes/arbre_mort_brun.svg"
+   ],
+   "cadre": [
+    -50,
+    -115,
+    100,
+    140
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "plantes/arbre_mort_brun_champignons",
+   "rubrique": "plantes",
+   "titre": "Arbre mort (grand, brun, champignons au pied)",
+   "images": 1,
+   "fichiers": [
+    "svg/plantes/arbre_mort_brun_champignons.svg"
+   ],
+   "cadre": [
+    -50,
+    -115,
+    100,
+    140
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "plantes/arbre_mort_champignons",
+   "rubrique": "plantes",
+   "titre": "Arbre mort (grand, gris, champignons au pied)",
+   "images": 1,
+   "fichiers": [
+    "svg/plantes/arbre_mort_champignons.svg"
+   ],
+   "cadre": [
+    -50,
+    -115,
+    100,
+    140
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "plantes/arbre_mort_petit",
+   "rubrique": "plantes",
+   "titre": "Arbre mort (petit, gris)",
+   "images": 1,
+   "fichiers": [
+    "svg/plantes/arbre_mort_petit.svg"
+   ],
+   "cadre": [
+    -50,
+    -115,
+    100,
+    140
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "plantes/arbre_mort_petit_brun",
+   "rubrique": "plantes",
+   "titre": "Arbre mort (petit, brun)",
+   "images": 1,
+   "fichiers": [
+    "svg/plantes/arbre_mort_petit_brun.svg"
+   ],
+   "cadre": [
+    -50,
+    -115,
+    100,
+    140
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "plantes/arbre_mort_petit_brun_champignons",
+   "rubrique": "plantes",
+   "titre": "Arbre mort (petit, brun, champignons au pied)",
+   "images": 1,
+   "fichiers": [
+    "svg/plantes/arbre_mort_petit_brun_champignons.svg"
+   ],
+   "cadre": [
+    -50,
+    -115,
+    100,
+    140
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "plantes/arbre_mort_petit_champignons",
+   "rubrique": "plantes",
+   "titre": "Arbre mort (petit, gris, champignons au pied)",
+   "images": 1,
+   "fichiers": [
+    "svg/plantes/arbre_mort_petit_champignons.svg"
    ],
    "cadre": [
     -50,

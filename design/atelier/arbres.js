@@ -1,4 +1,5 @@
-// Les arbres refaits au niveau des PNJ, un par un (l'arbre, le pommier, l'arbre d'automne, le bouleau, le sapin, le palmier). Même trait et même lumière que la troupe : le
+// Les arbres refaits au niveau des PNJ, un par un (l'arbre, le pommier, l'arbre d'automne, le bouleau, le sapin, le palmier,
+// l'arbre mort). Même trait et même lumière que la troupe : le
 // houppier est fait de touffes détourées comme les pièces d'un personnage (celle du fond plus sombre), chaque lobe a sa
 // masse d'ombre en bas à droite et son reflet en croissant en haut à gauche, de petites marques de feuilles ; le tronc a
 // ses racines, un peu d'écorce, et se sépare en deux branches sous les feuilles.
@@ -342,4 +343,56 @@ for (const petit of [false, true]) for (const vert of ['doux', 'profond']) for (
   PALMIERS.push([fichier, libelle, { vert, petit, cocos }]);
 }
 
-module.exports = { arbre, ARBRES, pommier, POMMIERS, automne, AUTOMNES, bouleau, BOULEAUX, sapin, SAPINS, palmier, PALMIERS, VERTS, fleurette };
+// ——— L'arbre mort : tronc noueux à racines et en fourche, branches nues qui s'affinent jusqu'aux brindilles, un nœud creux, du lichen ———
+const BOIS_MORT = {
+  gris: { left: '#A69B8F', right: '#7C7268', light: '#C4BAAE', bark: '#5E554C' },
+  brun: { left: '#8A6A4F', right: '#664C37', light: '#A7876A', bark: '#4A3626' }
+};
+// [points de la branche, largeur au départ] : la largeur décroît d'un segment à l'autre
+// (elles partent des deux bras de la fourche du tronc et du creux entre eux, et passent derrière lui)
+const BRANCHES = [
+  [[[-8.5, -42.7], [-16, -52], [-22, -63]], 3.6], [[[-13.5, -48.5], [-19, -48], [-23, -51]], 1.6],
+  [[[0, -34], [1.2, -48], [-1, -62], [2, -75]], 3.6], [[[1.2, -48], [7, -57]], 1.6],
+  [[[9.5, -41.2], [17, -47], [25, -57]], 3.6], [[[17, -47], [22, -43], [27, -45]], 1.5], [[[12.5, -43.5], [14, -55]], 1.5]
+];
+// une branche : segments en gélule, du plus épais au plus fin ; contour d'abord (pour toutes), puis le bois, puis l'ombre
+function branchesMortes(c, k) {
+  const segs = [];
+  BRANCHES.forEach(([p, w0]) => { for (let i = 0; i < p.length - 1; i++) segs.push([p[i], p[i + 1], w0 * (1 - i / p.length * 0.75)]); });
+  const seg = ([a, b], w, col) => `<path d="M${r2(a[0] * k)},${r2(a[1] * k)} L${r2(b[0] * k)},${r2(b[1] * k)}" stroke="${col}" stroke-width="${r2(w)}" stroke-linecap="round"/>`;
+  return segs.map(([a, b, w]) => seg([a, b], w * k + W * 2, OUT)).join('') + segs.map(([a, b, w]) => seg([a, b], w * k, c.left)).join('')
+    + segs.map(([a, b, w]) => seg([[a[0] + w * 0.22, a[1]], [b[0] + w * 0.22, b[1]]], w * k * 0.45, c.right)).join('');
+}
+function troncMort(id, c, k) {
+  const d = sc('M-12,2.2 Q-7,0.8 -5.8,-5 Q-4.6,-14 -5.2,-22 Q-5.6,-30 -10.5,-41 L-6.5,-44.5 Q-2.2,-38 0,-35 Q2,-38.5 7.5,-43 L11.5,-39.5 Q5.6,-31 5,-22 Q4.4,-12 5.8,-6 Q7,0.6 12.5,2.6 Q8,4 4.8,2.4 Q2.4,4.8 -0.6,3.4 Q-3.4,4.6 -5.8,2.6 Q-9,3.6 -12,2.2 Z', k);
+  const dedans = `<path d="${sc('M1.4,4 Q2.4,-12 1.8,-22 Q3.4,-32 8.5,-44.5 L16,-44.5 L16,4 Z', k)}" fill="${c.right}"/>`
+    + `<path d="${sc('M-2.4,-6 Q-3,-12 -2.2,-17 M2.6,-9 Q3.2,-14 2.6,-19 M-3.2,-21 q0.4,-3 -0.2,-5', k)}" fill="none" stroke="${c.bark}" stroke-width="0.7" stroke-linecap="round"/>`
+    + `<path d="${sc('M-4.4,-4 Q-3.8,-12 -4,-20', k)}" fill="none" stroke="${c.light}" stroke-width="1" stroke-linecap="round" opacity="0.8"/>`
+    // le nœud creux et un peu de lichen
+    + E(-0.6 * k, -15 * k, 2.4 * k, 3 * k, c.light, 0.8) + E(-0.4 * k, -14.6 * k, 1.5 * k, 2.1 * k, '#3A2E26', 0)
+    + E(-3.6 * k, -25 * k, 2 * k, 1 * k, '#B7C46C', 0.5) + E(-2.2 * k, -24.4 * k, 1 * k, 0.6 * k, '#B7C46C', 0.4);
+  return `<path d="${d}" fill="${c.left}" stroke="${OUT}" stroke-width="${W}" stroke-linejoin="round"/>`
+    + `<defs><clipPath id="${id}"><path d="${d}"/></clipPath></defs><g clip-path="url(#${id})">${dedans}</g>`;
+}
+
+// teinte : 'gris' ou 'brun' ; petit : comme l'arbre ; champignons : trois champignons au pied
+function arbreMort({ teinte = 'gris', petit = false, champignons = false } = {}) {
+  const c = BOIS_MORT[teinte], k = petit ? 0.76 : 1;
+  const id = `mor${petit ? 'p' : 'g'}${teinte[0]}${champignons ? 'c' : ''}`;
+  // raccords : le bois des deux grosses branches recouvre la couture au bout des bras de la fourche
+  const raccord = (a, b) => `<path d="M${r2(a[0] * k)},${r2(a[1] * k)} L${r2(b[0] * k)},${r2(b[1] * k)}" stroke="${c.left}" stroke-width="${r2(3.6 * k)}" stroke-linecap="butt"/>`
+    + `<path d="M${r2((a[0] + 0.8) * k)},${r2(a[1] * k)} L${r2((b[0] + 0.8) * k)},${r2(b[1] * k)}" stroke="${c.right}" stroke-width="${r2(1.6 * k)}" stroke-linecap="butt"/>`;
+  return E(2 * k, 1.5, 19 * k, 8.5 * k, 'rgba(40,55,20,0.22)', 0) + branchesMortes(c, k) + troncMort(`${id}t`, c, k)
+    + raccord([-7.6, -41.5], [-10, -45.6]) + raccord([8.6, -40.6], [11, -42.5])
+    + (champignons ? champignon(-9 * k, 5.4) + champignon(10.5 * k, 5.6) + champignon(14 * k, 3.4) : '');
+}
+
+// Les 8 arbres morts : [fichier, libellé, options] ; « arbre_mort » (grand, gris, pied sobre) est celui par défaut
+const ARBRES_MORTS = [];
+for (const petit of [false, true]) for (const teinte of ['gris', 'brun']) for (const champignons of [false, true]) {
+  const fichier = ['arbre_mort', petit && 'petit', teinte === 'brun' && 'brun', champignons && 'champignons'].filter(Boolean).join('_');
+  const libelle = `Arbre mort (${[petit ? 'petit' : 'grand', teinte, champignons && 'champignons au pied'].filter(Boolean).join(', ')})`;
+  ARBRES_MORTS.push([fichier, libelle, { teinte, petit, champignons }]);
+}
+
+module.exports = { arbre, ARBRES, pommier, POMMIERS, automne, AUTOMNES, bouleau, BOULEAUX, sapin, SAPINS, palmier, PALMIERS, arbreMort, ARBRES_MORTS, VERTS, fleurette };
