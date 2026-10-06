@@ -47805,10 +47805,129 @@
   {
    "id": "plantes/rochers_moussus",
    "rubrique": "plantes",
-   "titre": "Rochers moussus",
+   "titre": "Rochers moussus (grands)",
    "images": 1,
    "fichiers": [
     "svg/plantes/rochers_moussus.svg"
+   ],
+   "cadre": [
+    -50,
+    -115,
+    100,
+    140
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "plantes/rochers_moussus_escargot",
+   "rubrique": "plantes",
+   "titre": "Rochers moussus (grands, un escargot)",
+   "images": 1,
+   "fichiers": [
+    "svg/plantes/rochers_moussus_escargot.svg"
+   ],
+   "cadre": [
+    -50,
+    -115,
+    100,
+    140
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "plantes/rochers_moussus_fleuris",
+   "rubrique": "plantes",
+   "titre": "Rochers moussus (grands, mousse fleurie)",
+   "images": 1,
+   "fichiers": [
+    "svg/plantes/rochers_moussus_fleuris.svg"
+   ],
+   "cadre": [
+    -50,
+    -115,
+    100,
+    140
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "plantes/rochers_moussus_fleuris_escargot",
+   "rubrique": "plantes",
+   "titre": "Rochers moussus (grands, mousse fleurie, un escargot)",
+   "images": 1,
+   "fichiers": [
+    "svg/plantes/rochers_moussus_fleuris_escargot.svg"
+   ],
+   "cadre": [
+    -50,
+    -115,
+    100,
+    140
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "plantes/rochers_moussus_petits",
+   "rubrique": "plantes",
+   "titre": "Rochers moussus (petits)",
+   "images": 1,
+   "fichiers": [
+    "svg/plantes/rochers_moussus_petits.svg"
+   ],
+   "cadre": [
+    -50,
+    -115,
+    100,
+    140
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "plantes/rochers_moussus_petits_escargot",
+   "rubrique": "plantes",
+   "titre": "Rochers moussus (petits, un escargot)",
+   "images": 1,
+   "fichiers": [
+    "svg/plantes/rochers_moussus_petits_escargot.svg"
+   ],
+   "cadre": [
+    -50,
+    -115,
+    100,
+    140
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "plantes/rochers_moussus_petits_fleuris",
+   "rubrique": "plantes",
+   "titre": "Rochers moussus (petits, mousse fleurie)",
+   "images": 1,
+   "fichiers": [
+    "svg/plantes/rochers_moussus_petits_fleuris.svg"
+   ],
+   "cadre": [
+    -50,
+    -115,
+    100,
+    140
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "plantes/rochers_moussus_petits_fleuris_escargot",
+   "rubrique": "plantes",
+   "titre": "Rochers moussus (petits, mousse fleurie, un escargot)",
+   "images": 1,
+   "fichiers": [
+    "svg/plantes/rochers_moussus_petits_fleuris_escargot.svg"
    ],
    "cadre": [
     -50,

@@ -1,7 +1,8 @@
 // Les rochers refaits au niveau des PNJ, un par un, avec le trait et la lumière des arbres (arbres.js) : le rocher, les
-// rochers, l'aiguille.
+// rochers, l'aiguille, les rochers moussus.
 // Cadre et ancrage des décors de deco.js (PROP, centre de la case en (0, 0)).
 const { OUT, E, r2 } = require('./troupe');
+const { fleurette } = require('./arbres');
 
 // les teintes de la pierre : clair (le dessus, au soleil), moyen, sombre (le flanc droit), les fentes
 const PIERRES = {
@@ -12,8 +13,9 @@ const PIERRES = {
 const sc = (d, k) => d.replace(/-?\d+(\.\d+)?/g, n => r2(n * k));
 
 // un bloc de pierre détouré : le dessus clair, le flanc droit sombre, une ombre au pied, les fentes, un reflet ;
-// d, haut, flanc, fentes et reflet sont donnés à la taille 1 et mis à l'échelle k
-function bloc(id, { d, haut, flanc, fentes = '', reflet = '' }, c, k) {
+// d, haut, flanc, fentes et reflet sont donnés à la taille 1 et mis à l'échelle k ; dedans : un dessin de plus, découpé
+// dans le bloc (la mousse)
+function bloc(id, { d, haut, flanc, fentes = '', reflet = '' }, c, k, dedans = '') {
   return `<path d="${sc(d, k)}" fill="${c.mid}" stroke="${OUT}" stroke-width="1.1" stroke-linejoin="round"/>`
     + `<defs><clipPath id="${id}"><path d="${sc(d, k)}"/></clipPath></defs><g clip-path="url(#${id})">`
     + `<path d="${sc(flanc, k)}" fill="${c.dark}"/>`
@@ -21,7 +23,7 @@ function bloc(id, { d, haut, flanc, fentes = '', reflet = '' }, c, k) {
     + `<path d="${sc('M-30,1 Q0,-3 30,1 L30,8 L-30,8 Z', k)}" fill="${c.dark}" opacity="0.55"/>`
     + (fentes && `<path d="${sc(fentes, k)}" stroke="${c.fente}" stroke-width="0.8" fill="none" stroke-linecap="round" stroke-linejoin="round"/>`)
     + (reflet && `<path d="${sc(reflet, k)}" stroke="#FFFFFF" stroke-width="1.2" fill="none" stroke-linecap="round" opacity="0.75"/>`)
-    + '</g>';
+    + dedans + '</g>';
 }
 
 // le lézard qui prend le soleil, vu d'en haut, tête vers la droite : la queue enroulée, quatre pattes, l'œil, le sourire
@@ -144,4 +146,45 @@ for (const petite of [false, true]) for (const double of [false, true]) for (con
   AIGUILLES.push([fichier, libelle, { petite, double, oiseau: oi }]);
 }
 
-module.exports = { rocher, ROCHERS, rochers, ROCHERS_TAS, aiguille, AIGUILLES };
+// ——— Les rochers moussus : un gros bloc et un plat coiffés de mousse, un caillou ; des fleurettes ou un escargot ———
+const MOUSSE = { light: '#B5DC86', mid: '#8FC25E', dark: '#6FA24A', bord: '#5E8F3E' };
+// la mousse sur le dessus d'un bloc : bord festonné (liseré plus sombre), ombrée à droite, un reflet ; donnée à la taille 1
+function mousse(bord, ombre, reflet, k) {
+  return `<path d="${sc(bord, k)}" fill="${MOUSSE.mid}" stroke="${MOUSSE.bord}" stroke-width="0.7" stroke-linejoin="round"/>`
+    + `<path d="${sc(ombre, k)}" fill="${MOUSSE.dark}"/>` + `<path d="${sc(reflet, k)}" fill="${MOUSSE.light}"/>`;
+}
+const MOUSSE_ROCHER = ['M-22,-11 Q-18,-8.4 -15,-10.6 Q-12,-7.4 -8.6,-10 Q-5.6,-7.2 -2,-9.6 Q1.6,-6.8 4.6,-9.6 Q8,-7.4 10.6,-10.4 Q14,-8.2 22,-11 L22,-26 L-22,-26 Z',
+  'M7,-26 Q9.6,-18 8.6,-11 Q12,-9 22,-11 L22,-26 Z', 'M-11,-15.6 Q-7,-18.4 -1,-17.6 Q-5,-15.8 -11,-15.6 Z'];
+const MOUSSE_PLAT = ['M-14,-4 Q-10,-2.2 -7,-4 Q-4,-1.8 -1,-3.8 Q2,-1.8 5,-4 Q8,-2.2 14,-4.6 L14,-14 L-14,-14 Z',
+  'M4,-14 Q6,-8 5,-3.4 Q8,-2.4 14,-4.6 L14,-14 Z', 'M-6,-7 Q-3,-8.8 1,-8.4 Q-2,-7.2 -6,-7 Z'];
+const FLEURS_MOUSSE = [[-12, -12.6, '#FFFFFF'], [-4.6, -15.6, '#F7B6C8'], [3, -13, '#FFFFFF'], [12, 0.6, '#F7B6C8'], [16.4, 1.4, '#FFFFFF']];
+// l'escargot, tourné vers la droite : le pied clair, les deux cornes à œil, la coquille orange en spirale, un reflet
+const escargot = (x, y, s) => `<g transform="translate(${r2(x)} ${r2(y)}) scale(${r2(s)})">`
+  + `<path d="M4.6,-2.8 L5.2,-5.8 M5.4,-2.6 L6.8,-5.2" stroke="${OUT}" stroke-width="0.5" stroke-linecap="round"/>` + E(5.2, -5.9, 0.5, 0.5, OUT, 0) + E(6.8, -5.3, 0.5, 0.5, OUT, 0)
+  + `<path d="M-4.4,0 Q-5,-1.2 -2.6,-1.4 L3,-1.4 Q4.4,-1.6 4.8,-3.2 L5.6,-3.2 Q6.6,-0.6 5,0.2 Q0,0.6 -4.4,0 Z" fill="#E9D9B8" stroke="${OUT}" stroke-width="0.6" stroke-linejoin="round"/>`
+  + E(-0.4, -3.6, 3.4, 3.1, '#E59A55', 0.7) + E(-1.2, -4.6, 1.4, 0.9, '#F4BE84', 0)
+  + `<path d="M-0.2,-3.4 a0.8,0.8 0 1 1 0.9,-0.6 a1.8,1.8 0 1 1 -2.6,1.6" stroke="#B9692F" stroke-width="0.55" fill="none" stroke-linecap="round"/>`
+  + `<path d="M5.2,-1.2 Q5.6,-0.8 6,-1.2" stroke="${OUT}" stroke-width="0.4" fill="none" stroke-linecap="round"/>` + '</g>';
+
+// petits : × 0,75 ; fleuris : des fleurettes dans la mousse ; escargot : un escargot au pied
+function rochersMoussus({ petits = false, fleuris = false, escargot: avecEscargot = false } = {}) {
+  const c = PIERRES.gris, k = petits ? 0.75 : 1;
+  const id = `rcm${petits ? 'p' : 'g'}${fleuris ? 'f' : ''}${avecEscargot ? 'e' : ''}`;
+  const kg = k * 0.82, kp = k * 0.85;
+  return E(1, 2.5, 24 * k, 7.5 * k, 'rgba(40,55,20,0.22)', 0)
+    + pose(-4, -1, k, bloc(`${id}a`, ROCHER, c, kg, mousse(...MOUSSE_ROCHER, kg)))
+    + pose(-17, 4.6, k, bloc(`${id}b`, CAILLOU, c, k))
+    + pose(11, 4, k, bloc(`${id}c`, BLOC_PLAT, c, kp, mousse(...MOUSSE_PLAT, kp)))
+    + (fleuris ? FLEURS_MOUSSE.map(([x, y, col]) => fleurette(x * k, y * k, col)).join('') : '')
+    + (avecEscargot ? escargot(-8 * k, 8 * k, Math.max(k, 0.85)) : '');
+}
+
+// Les 8 rochers moussus : [fichier, libellé, options] ; « rochers_moussus » (grands, sans fleurs ni escargot) par défaut
+const ROCHERS_MOUSSUS = [];
+for (const petits of [false, true]) for (const fleuris of [false, true]) for (const es of [false, true]) {
+  const fichier = ['rochers_moussus', petits && 'petits', fleuris && 'fleuris', es && 'escargot'].filter(Boolean).join('_');
+  const libelle = `Rochers moussus (${[petits ? 'petits' : 'grands', fleuris && 'mousse fleurie', es && 'un escargot'].filter(Boolean).join(', ')})`;
+  ROCHERS_MOUSSUS.push([fichier, libelle, { petits, fleuris, escargot: es }]);
+}
+
+module.exports = { rocher, ROCHERS, rochers, ROCHERS_TAS, aiguille, AIGUILLES, rochersMoussus, ROCHERS_MOUSSUS };
