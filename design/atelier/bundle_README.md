@@ -50,7 +50,9 @@ détails propres à un lot : places des objets de boutique, lumières des palier
   - Exemples : `aster_avant_marche_content_2.svg`, `poule-rousse_profil_repos.svg`, `vache_dos_marche_1.svg`.
 - **Noms des autres dessins** : `<sujet>_<état>_<n>.svg` (`coffre_rare_ouverture_3.svg`, `foyer_palier2_1.svg`).
 - **Directions** : `avant` vient vers le bas à droite, `dos` s'éloigne vers le haut à droite, `profil` regarde à droite.
-  Le miroir (`transform: scaleX(-1)`) donne l'autre côté. Les dessins de face n'ont pas de miroir.
+  Le miroir (`transform: scaleX(-1)`) donne l'autre côté. Les dessins de face n'ont pas de miroir. Le kit du grand
+  format (maîtres, naufragés, Anya, le Passeur) dessine son trois quarts avant vers le bas à gauche : la bibliothèque
+  publie ces vues en miroir, pour que la règle soit la même partout (et la même que dans le jeu).
 - **Animation** : `ms_par_image` dans le catalogue (et `ips` = images par seconde du jeu dans certains index de lot).
 
 ## Contenu

@@ -33,7 +33,8 @@ for (const f of tous) {
   if (f.endsWith('.svg')) {
     const dst = path.join(SVG, carte.get(f));
     fs.mkdirSync(path.dirname(dst), { recursive: true });
-    fs.copyFileSync(src, dst);
+    if (C.MIROIR_KIT.test(carte.get(f))) fs.writeFileSync(dst, C.miroir(fs.readFileSync(src, 'utf8')));
+    else fs.copyFileSync(src, dst);
   } else if (f.endsWith('.json')) {
     const avant = JSON.parse(fs.readFileSync(src, 'utf8'));
     const json = C.reecrireIndex(avant, path.posix.dirname(f), carte, groupes);
@@ -63,7 +64,7 @@ const catalogue = {
   ],
   regles: {
     noms: '<sujet>_<vue>_<pose>[_<variante>]_<n>.svg pour les personnages et les bêtes ; <sujet>_<état>_<n>.svg ailleurs. Un dessin fixe n\'a pas de numéro.',
-    directions: 'avant : vient vers le bas à droite ; dos : s\'éloigne vers le haut à droite ; profil : tourné vers la droite. Le miroir (scaleX(-1)) donne le bas à gauche, le haut à gauche, la gauche.',
+    directions: 'avant : vient vers le bas à droite ; dos : s\'éloigne vers le haut à droite ; profil : tourné vers la droite. Le miroir (scaleX(-1)) donne le bas à gauche, le haut à gauche, la gauche. Les trois quarts avant du grand format (maîtres, naufragés, Anya, le Passeur) sortent du kit tournés vers le bas à gauche : ils sont publiés en miroir pour suivre cette règle.',
     lumiere: 'En haut à gauche. Trait brun #3C2819.'
   },
   chapitres: C.CHAPITRES.map(([id, titre, resume]) => ({ id, titre, resume })),

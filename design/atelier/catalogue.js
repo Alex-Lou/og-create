@@ -72,6 +72,17 @@ function renommer(rel) {
   return rel;
 }
 
+// Le kit du grand format (design/personnages/troupe.js, Anya, le Passeur) dessine son trois quarts avant tourné vers
+// le bas à gauche ; le petit format, les bêtes et le jeu (vue « se ») le tournent vers le bas à droite. La bibliothèque
+// publie donc ces vues-là en miroir : « avant » veut dire « vers le bas à droite » partout.
+const MIROIR_KIT = /^(personnages\/maitres\/[a-z]+|personnages\/naufrages\/[a-z]+|vivants\/(anya|passeur))\/[a-z-]+_avant_/;
+function miroir(svg) {
+  const m = svg.match(/^(<svg[^>]*viewBox="([^"]+)"[^>]*>)([\s\S]*)(<\/svg>\s*)$/);
+  if (!m) throw new Error('SVG inattendu pour le miroir');
+  const [x, , w] = m[2].trim().split(/[\s,]+/).map(Number);
+  return `${m[1]}<g transform="translate(${2 * x + w} 0) scale(-1 1)">${m[3]}</g>${m[4]}`;
+}
+
 // Liste des fichiers d'un dossier (posix, relatifs)
 function lister(root, rel = '') {
   const out = [];
@@ -404,4 +415,4 @@ function construire(svgRoot, metas) {
   return entrees;
 }
 
-module.exports = { renommer, lister, reecrireIndex, collecterMeta, construire, CHAPITRES, MANQUANTS };
+module.exports = { renommer, lister, reecrireIndex, collecterMeta, construire, MIROIR_KIT, miroir, CHAPITRES, MANQUANTS };
