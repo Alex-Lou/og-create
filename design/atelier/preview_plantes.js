@@ -6,6 +6,7 @@ const { D, PROP, pt } = require('./deco');
 const { up, M } = require('./decor2');
 const { arbre, ARBRES, pommier, POMMIERS, automne, AUTOMNES, bouleau, BOULEAUX, sapin, SAPINS, palmier, PALMIERS, arbreMort, ARBRES_MORTS } = require('./arbres');
 const { touffe, TOUFFES } = require('./herbes');
+const { buisson, BUISSONS } = require('./plantes');
 
 const LIB = path.join(__dirname, 'lib', 'plantes');
 const OUT = path.join(__dirname, 'planches');
@@ -20,7 +21,9 @@ const LIST = [
   ...SAPINS.map(([fichier, libelle, o]) => [fichier, libelle, o.neige ? 'snowpine' : 'pine', () => sapin(o)]),
   ...PALMIERS.map(([fichier, libelle, o]) => [fichier, libelle, 'palm', () => palmier(o)]),
   ...ARBRES_MORTS.map(([fichier, libelle, o]) => [fichier, libelle, 'deadtree', () => arbreMort(o)]),
-  ['buisson', 'Buisson fleuri', 'bush', () => D.bush()], ['bruyere', 'Bruyère', 'heather', () => D.heather()],
+  // les autres plantes refaites (plantes.js) : le buisson et ses 8 variantes
+  ...BUISSONS.map(([fichier, libelle, o]) => [fichier, libelle, 'bush', () => buisson(o)]),
+  ['bruyere', 'Bruyère', 'heather', () => D.heather()],
   ['fleurs', 'Fleurs', 'flowers', () => D.flowers()], ['cactus', 'Cactus', 'cactus', () => D.cactus()],
   // la touffe d'herbe refaite (herbes.js) et ses 16 variantes
   ...TOUFFES.map(([fichier, libelle, o]) => [fichier, libelle, 'tuft', () => touffe(o)]),

@@ -202,11 +202,12 @@ function moment(id, meta) {
     }
   }
   // les variantes des arbres refaits (arbres.js : arbre, pommier, arbre d'automne, bouleau, sapins, palmier, arbre mort) se
-  // rangent avec eux
+  // rangent avec eux, comme celles des autres plantes refaites (plantes.js : buisson)
   if (top === 'plantes') { const n = nom.replace(/_\d+$/, '').replace(/^arbre(_petit)?(_profond)?(_fleuri)?$/, 'arbre').replace(/^pommier(_petit)?(_profond)?(_fleurs)?(_tombees)?$/, 'pommier')
     .replace(/^arbre_automne(_petit)?(_rouge)?(_feuilles)?$/, 'arbre_automne').replace(/^bouleau(_petit)?(_profond)?(_fleuri)?$/, 'bouleau')
     .replace(/^sapin(_petit)?(_profond)?(_pommes_de_pin)?$/, 'sapin').replace(/^sapin_neige(_petit)?(_profond)?(_congere)?$/, 'sapin_neige')
-    .replace(/^palmier(_petit)?(_profond)?(_cocos)?$/, 'palmier').replace(/^arbre_mort(_petit)?(_brun)?(_champignons)?$/, 'arbre_mort'); return PLANTES_GREVE.has(n) ? 'tuto-1' : PLANTES_ACTE1.has(n) ? 'acte-1' : 'partout'; }
+    .replace(/^palmier(_petit)?(_profond)?(_cocos)?$/, 'palmier').replace(/^arbre_mort(_petit)?(_brun)?(_champignons)?$/, 'arbre_mort')
+    .replace(/^buisson(_petit)?(_profond)?(_baies)?$/, 'buisson'); return PLANTES_GREVE.has(n) ? 'tuto-1' : PLANTES_ACTE1.has(n) ? 'acte-1' : 'partout'; }
   // les scènes du tutoriel (lot J2) : scenes/tutoriel/<étape>_<nom>/…, la partie suit le numéro de l'étape
   if (top === 'scenes') { const n = parseInt(b, 10); return n <= 6 ? 'tuto-1' : n <= 9 ? 'tuto-2' : 'tuto-3'; }
   return 'partout';
@@ -304,6 +305,10 @@ for (const petit of ['', '_petit']) for (const vert of ['', '_profond']) for (co
 // les 8 arbres morts refaits (arbres.js) : arbre_mort[_petit][_brun][_champignons]
 for (const petit of ['', '_petit']) for (const brun of ['', '_brun']) for (const champignons of ['', '_champignons']) {
   PLANTES[`arbre_mort${petit}${brun}${champignons}`] = `Arbre mort (${[petit ? 'petit' : 'grand', brun ? 'brun' : 'gris', champignons && 'champignons au pied'].filter(Boolean).join(', ')})`;
+}
+// les 8 buissons refaits (plantes.js) : buisson[_petit][_profond][_baies]
+for (const petit of ['', '_petit']) for (const vert of ['', '_profond']) for (const baies of ['', '_baies']) {
+  PLANTES[`buisson${petit}${vert}${baies}`] = `Buisson (${[petit ? 'petit' : 'grand', `vert ${vert ? 'profond' : 'doux'}`, baies ? 'à baies' : 'fleuri'].join(', ')})`;
 }
 // les 16 touffes d'herbe refaites (herbes.js) : touffe[_motte][_petite][_profond][_fleurie]
 for (const motte of ['', '_motte']) for (const petite of ['', '_petite']) for (const vert of ['', '_profond']) for (const fleurie of ['', '_fleurie']) {
