@@ -16,7 +16,8 @@ npm run build      # site statique dans dist/
 
 ## Où est quoi
 
-- `src/components/` : les écrans et fenêtres (`General/App.vue` orchestre les modes).
+- `src/components/` : les écrans et fenêtres, rangés par domaine, un dossier par composant (`App/App/App.vue`
+  orchestre les modes).
 - `src/services/` : appels à l'API (`http.js` est le seul client ; `playService` pour le jeu, `trialService` pour l'Épreuve).
 - `src/book/` : moteur du Livre (pages tournées en WebGL, peinture des pages, cinématique de chapitre).
 - `src/game/` : règles partagées avec le serveur (moteur de la Récolte, ressources de l'île).

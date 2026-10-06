@@ -65,7 +65,7 @@ import { SIZE, MIN_CHAIN, create, play, gainOf } from '@/game/harvest';
 import { vibrate } from '@/utils/fx';
 import { GLYPH, RESOURCES } from '@/game/resources';
 import { RARITY } from '@/world/chest';
-import ElementGlyph from '@/components/ui/ElementGlyph.vue';
+import ElementGlyph from '@/components/ui/ElementGlyph/ElementGlyph.vue';
 
 const GONE_MS = 170;
 

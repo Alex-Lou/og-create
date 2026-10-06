@@ -17,7 +17,7 @@
 </template>
 
 <script>
-import GModal from '@/components/ui/GModal.vue';
+import GModal from '@/components/ui/GModal/GModal.vue';
 import { spriteUrl } from '@/world/spriteCache';
 import { annexThumb } from '@/world/annexSprites';
 import { KIND_LABEL } from '@/world/annexes';

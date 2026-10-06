@@ -34,6 +34,7 @@
   --oc-gold-ink: #8a5a1c;
   /* Le texte pâle des scènes de nuit (prologue, naufrage) */
   --oc-night-ink: #f4eedc;
+  --oc-night-ink-rgb: 244, 238, 220;
   /* L'or qui désigne : la main du tutoriel, la page qu'on vise, le signet, le focus du prologue */
   --oc-aim: #e3a93b;
   --oc-aim-rgb: 227, 169, 59;

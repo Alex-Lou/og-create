@@ -33,11 +33,13 @@
   /* Les mêmes, en canaux, pour les écrire à toute transparence : rgba(var(--gold-400-rgb), .55)
      (tests/tokens.test.js vérifie qu'un canal garde la valeur de sa couleur) */
   --gold-400-rgb: 239, 193, 99;
+  --gold-700-rgb: 140, 94, 24;
   /* Encres secondaires */
   --verdigris-500: #4f9a86;
   --verdigris-100: #dcefe8;
   --wax-500: #c0483a;
   --wax-700: #8e2f25;
+  --wax-800: #6e2219;
   /* Le brun des liserés et des ombres posés sur le papier, en canaux pour l'écrire à toute transparence :
      rgba(var(--shade-rgb), .1) */
   --shade-rgb: 74, 52, 38;

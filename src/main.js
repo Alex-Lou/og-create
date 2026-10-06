@@ -3,7 +3,7 @@ import { polyfill } from 'mobile-drag-drop';
 import { scrollBehaviourDragImageTranslateOverride } from 'mobile-drag-drop/scroll-behaviour';
 import 'mobile-drag-drop/default.css';
 import './styles/index.css';
-import App from './components/General/App.vue';
+import App from './components/App/App/App.vue';
 
 // Glisser-déposer au doigt (le drag HTML5 ne réagit pas au tactile sur la plupart des mobiles) :
 // maintenir ~200 ms pour saisir un élément ; un tap sélectionne toujours, un geste rapide fait défiler.

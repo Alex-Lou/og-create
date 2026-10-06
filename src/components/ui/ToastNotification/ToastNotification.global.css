@@ -1,0 +1,18 @@
+/* Pile créée par notificationService ; sur mobile, styles/base/responsive.css la place en haut */
+.toast-stack {
+  position: fixed;
+  left: 50%;
+  z-index: var(--z-toast);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: min(calc(100vw - 32px), 460px);
+  transform: translateX(-50%);
+  pointer-events: none;
+}
+@media (min-width: 860px) {
+  .toast-stack {
+    bottom: 24px;
+    flex-direction: column-reverse;
+  }
+}

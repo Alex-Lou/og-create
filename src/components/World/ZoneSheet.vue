@@ -56,7 +56,7 @@
 </template>
 
 <script>
-import ElementGlyph from '@/components/ui/ElementGlyph.vue';
+import ElementGlyph from '@/components/ui/ElementGlyph/ElementGlyph.vue';
 import { GLYPH } from '@/game/resources';
 import { WORDS } from '@/world/needs';
 import { CLIMATE_NAMES, CLIMATE_TEXT } from '@/world/climates';

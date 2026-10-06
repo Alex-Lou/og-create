@@ -62,8 +62,8 @@
 </template>
 
 <script>
-import GModal from '@/components/ui/GModal.vue';
-import ElementGlyph from '@/components/ui/ElementGlyph.vue';
+import GModal from '@/components/ui/GModal/GModal.vue';
+import ElementGlyph from '@/components/ui/ElementGlyph/ElementGlyph.vue';
 import { shownPatches } from '@/book/patchwork';
 import { FAMILY_WORDS } from '@/book/painter';
 
@@ -208,6 +208,8 @@ export default {
 </script>
 
 <style scoped>
+/* Ses jetons : la case d'une lettre, la goutte d'encre (sa forme et son reflet) */
+.hang { --hang-cell-radius: 6px 6px 0 0; --hang-drop-shape: 50% 50% 50% 50% / 60% 60% 40% 40%; --hang-drop-hi: #6b5446; }
 .hang { display: flex; flex-direction: column; align-items: center; gap: 12px; padding-top: 4px; outline: none; }
 
 .hang__art {
@@ -259,9 +261,9 @@ export default {
 .hang__cell:disabled { cursor: default; opacity: 1; }
 .hang__cell.is-on { border-bottom-color: var(--hi); animation: land 0.35s var(--oc-ease-spring); }
 /* Case choisie : c'est là que la prochaine lettre ira */
-.hang__cell.is-picked { border-radius: 6px 6px 0 0; border-bottom-color: var(--gold-500); background: var(--gold-200); box-shadow: 0 0 0 2px var(--gold-300); }
+.hang__cell.is-picked { border-radius: var(--hang-cell-radius); border-bottom-color: var(--gold-500); background: var(--gold-200); box-shadow: 0 0 0 2px var(--gold-300); }
 /* Lettre posée, en attente du verdict : déjà là, encore pâle */
-.hang__cell.is-pending { border-radius: 6px 6px 0 0; border-bottom-color: var(--gold-500); background: var(--gold-200); opacity: 0.6; animation: land 0.18s var(--oc-ease-out); }
+.hang__cell.is-pending { border-radius: var(--hang-cell-radius); border-bottom-color: var(--gold-500); background: var(--gold-200); opacity: 0.6; animation: land 0.18s var(--oc-ease-out); }
 .hang__cell.is-shake { animation: shake 0.45s ease; }
 .hang__cell.is-gap { min-width: 10px; border: 0; }
 .hang__cell.is-mark { min-width: 10px; border: 0; color: var(--ink-500); animation: none; }
@@ -272,8 +274,8 @@ export default {
 .hang__drop {
   width: 14px;
   height: 18px;
-  border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
-  background: radial-gradient(circle at 35% 35%, #6b5446, var(--ink-900));
+  border-radius: var(--hang-drop-shape);
+  background: radial-gradient(circle at 35% 35%, var(--hang-drop-hi), var(--ink-900));
   clip-path: path('M7 0 C7 0 14 9 14 12 A7 6.5 0 0 1 0 12 C0 9 7 0 7 0 Z');
   transition: opacity var(--oc-medium), transform var(--oc-medium);
 }

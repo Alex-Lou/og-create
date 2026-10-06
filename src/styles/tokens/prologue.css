@@ -1,0 +1,7 @@
+/* Le prologue (PrologueScene, PrologueName) : les valeurs que ses composants partagent. Une valeur propre à un seul
+   composant est un jeton local, en tête de son CSS. */
+:root {
+  /* L'encre des pages et des bulles, et le bleu des noms (qui parle, le champ du nom) */
+  --prologue-ink: #3e2a1e;
+  --prologue-blue: #2f6286;
+}

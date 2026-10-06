@@ -12,7 +12,7 @@
 </template>
 
 <script>
-import ElementGlyph from '@/components/ui/ElementGlyph.vue';
+import ElementGlyph from '@/components/ui/ElementGlyph/ElementGlyph.vue';
 import { GLYPH, costLabel } from '@/game/resources';
 import { FIND_GLYPH } from '@/world/finds';
 

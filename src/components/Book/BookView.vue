@@ -165,7 +165,7 @@
 <script>
 import { messageOf } from '@/utils/errors';
 import playService from '@/services/playService';
-import ElementTile from '@/components/ui/ElementTile.vue';
+import ElementTile from '@/components/ui/ElementTile/ElementTile.vue';
 import HangmanSheet from './HangmanSheet.vue';
 import ChapterSheet from './ChapterSheet.vue';
 import GrimoireBinding from './GrimoireBinding.vue';
@@ -179,8 +179,8 @@ import { paintPage, paintEndpaper, clearDrawings, bookFontsReady, CHAPTER_STYLE 
 import { burst, ring, vibrate, center, reducedMotion, HAPTIC } from '@/utils/fx';
 import { unlockCinematic } from '@/book/fx';
 import { guide } from '@/game/guide';
-import GModal from '@/components/ui/GModal.vue';
-import ElementGlyph from '@/components/ui/ElementGlyph.vue';
+import GModal from '@/components/ui/GModal/GModal.vue';
+import ElementGlyph from '@/components/ui/ElementGlyph/ElementGlyph.vue';
 import longpress from '@/directives/longpress';
 import { loadSavoirs } from '@/game/savoirs';
 
@@ -793,6 +793,9 @@ export default {
   --book-ink: var(--ink-900);
   --book-paper: var(--vellum-100);
   --book-radius: 20px;
+  /* Le fil d'Ariane : le ruban rouge et son fond */
+  --book-ribbon: #b8322a;
+  --book-ribbon-wash: rgba(184, 50, 42, .12);
 }
 .book-view__head {
   display: flex; align-items: flex-end; justify-content: space-between; gap: 12px;
@@ -813,17 +816,17 @@ export default {
 .book-view__chapter.is-ping { animation: book-ping .8s cubic-bezier(.3, 1.5, .55, 1) 2; }
 .book-view__chapter-seal {
   flex: none; width: 34px; height: 34px; display: grid; place-items: center;
-  border-radius: var(--r-round); background: #FFFDF8; color: var(--ri);
+  border-radius: var(--r-round); background: var(--grimoire-paper); color: var(--ri);
   font-family: var(--oc-font-display); font-weight: 700; font-size: 14px;
 }
 .book-view__chapter-name { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-family: var(--oc-font-display); font-weight: 700; font-size: 20px; line-height: 1.1; }
 .book-view__ariane {
   display: flex; align-items: center; gap: 8px; margin: 2px auto 6px; padding: 6px 12px 6px 8px; border: 0; border-radius: var(--r-pill);
-  background: rgba(184, 50, 42, .12); color: var(--oc-text, #3A2A1E); font: inherit; font-size: 14px; font-weight: 700; cursor: pointer;
+  background: var(--book-ribbon-wash); color: var(--oc-text); font: inherit; font-size: 14px; font-weight: 700; cursor: pointer;
 }
 .book-view__ariane strong { font-weight: 900; }
 .book-view__ariane-ribbon {
-  width: 9px; height: 16px; background: #B8322A; box-shadow: inset 0 0 0 1px var(--oc-aim);
+  width: 9px; height: 16px; background: var(--book-ribbon); box-shadow: inset 0 0 0 1px var(--oc-aim);
   clip-path: polygon(0 0, 100% 0, 100% 100%, 50% 78%, 0 100%);
 }
 .book-view__stars {
@@ -979,9 +982,14 @@ export default {
 
 /* Cinématique d'ouverture de chapitre (montée hors du composant, dans body) */
 .book-unlock {
+  /* Ses jetons : le voile, les rayons (en canaux), l'or du sceau et de son bouton */
+  --unlock-veil: radial-gradient(circle at 50% 42%, rgba(58, 38, 24, .82), rgba(24, 16, 10, .94));
+  --unlock-ray-rgb: 255, 220, 150;
+  --unlock-gold: #ffe2a6;
+  --unlock-gold-edge: #c9933a;
   position: fixed; inset: 0; z-index: var(--z-unlock);
   display: grid; place-items: center; align-content: center; gap: 18px;
-  background: radial-gradient(circle at 50% 42%, rgba(58, 38, 24, .82), rgba(24, 16, 10, .94));
+  background: var(--unlock-veil);
   -webkit-backdrop-filter: blur(6px);
   backdrop-filter: blur(6px);
   color: var(--vellum-50); text-align: center;
@@ -990,7 +998,7 @@ export default {
 .book-unlock__rays {
   position: absolute; left: 50%; top: 42%; width: 140vmax; height: 140vmax;
   margin: -70vmax 0 0 -70vmax;
-  background: repeating-conic-gradient(from 0deg, rgba(255, 220, 150, .16) 0 9deg, rgba(255, 220, 150, 0) 9deg 22deg);
+  background: repeating-conic-gradient(from 0deg, rgba(var(--unlock-ray-rgb), .16) 0 9deg, rgba(var(--unlock-ray-rgb), 0) 9deg 22deg);
   -webkit-mask: radial-gradient(circle, #000 0, transparent 45%);
   mask: radial-gradient(circle, #000 0, transparent 45%);
   animation: book-spin 14s linear infinite;
@@ -999,14 +1007,14 @@ export default {
 @keyframes book-spin { to { transform: rotate(360deg); } }
 .book-unlock__seal { position: relative; width: 150px; height: 150px; }
 .book-unlock__seal img { position: absolute; inset: 0; width: 100%; height: 100%; opacity: 0; }
-.book-unlock__eyebrow { font-size: 12px; font-weight: 900; letter-spacing: .2em; text-transform: uppercase; color: #FFE2A6; opacity: 0; font-family: var(--font-ui); }
+.book-unlock__eyebrow { font-size: 12px; font-weight: 900; letter-spacing: .2em; text-transform: uppercase; color: var(--unlock-gold); opacity: 0; font-family: var(--font-ui); }
 .book-unlock__name { font-family: var(--font-display); font-weight: 700; font-size: 34px; line-height: 1.05; opacity: 0; }
 .book-unlock__go {
   margin-top: 6px; min-height: 48px; padding: 12px 26px;
   border: 0; border-radius: var(--r-pill);
-  background: #FFE2A6; color: var(--ink-900);
+  background: var(--unlock-gold); color: var(--ink-900);
   font-family: var(--font-ui); font-weight: 900; font-size: 16px;
-  box-shadow: 0 6px 0 #C9933A;
+  box-shadow: 0 6px 0 var(--unlock-gold-edge);
   cursor: pointer; opacity: 0;
 }
 </style>

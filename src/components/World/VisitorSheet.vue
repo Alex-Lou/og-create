@@ -44,8 +44,8 @@
 </template>
 
 <script>
-import GModal from '@/components/ui/GModal.vue';
-import ElementGlyph from '@/components/ui/ElementGlyph.vue';
+import GModal from '@/components/ui/GModal/GModal.vue';
+import ElementGlyph from '@/components/ui/ElementGlyph/ElementGlyph.vue';
 import { GLYPH } from '@/game/resources';
 import { storyOf, requestText, askLine, readyOf, leavesText } from '@/world/visitors';
 

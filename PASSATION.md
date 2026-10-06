@@ -173,8 +173,16 @@ chronométrer 20 appels. Comparer à zoom égal, au même endroit.
   jetons locaux du décor de l'île, en tête de chaque CSS, sur la racine du composant), 3b-2 les fiches et les
   mini-jeux de l'île (fait : plus aucune valeur en dur dans `components/World`, hors noir et blanc), 3c-1 les teintes
   partagées entre domaines (fait : canaux `-rgb` de l'or et de l'encre, `--oc-aim`, `--oc-glow-*`, `--oc-gilt-rgb` ;
-  `tests/tokens.test.js`), puis les jetons locaux du Grimoire et du reste ;
-  4) les dossiers rangés par domaine ; 5) `App.vue` et `BookView.vue` découpés.
+  `tests/tokens.test.js`), 3c-2 le Grimoire (fait : `tokens/book.css` ; la reliure nomme ses matières et ses
+  arrondis en tête de `GrimoireBinding`), 3d le reste (fait : `tokens/prologue.css`, Brume, athanor, en-tête, tuile,
+  onglets, base). Il ne reste plus de valeur en dur hors des exceptions listées dans `src/styles/README.md` ;
+  4) les dossiers rangés par domaine, un dossier par composant (choix de l'auteur : les domaines refaits) :
+  `App` (la coque : App, AppHeader, TabBar, LivingBackground), `ui` (primitives), `Guide` (Brume, la main du
+  tutoriel), `Prologue`, `Craft` (l'athanor), `Book`, `World` (sous-domaines `Hud`, `Sites`, `Folk`, `Chests`,
+  `Workshop`, `Explore`, `Games`), `Trial` (l'Épreuve), `Account`, `Codex`, `Settings` ; chaque composant
+  `<Domaine>/<Composant>/<Composant>.vue`, ses styles dans `<Composant>.css` (scoped) et `<Composant>.global.css`
+  (non scoped) ; 4a fait (App, ui, Guide, Prologue, Craft), 4b et 4c à suivre ; 5) `App.vue` et `BookView.vue`
+  découpés.
 - **Piège du passage en scoped** : une règle scoped gagne un attribut de spécificité. Si elle vise aussi la racine d'un
   composant enfant (un glyphe `img.glyph` dans un portrait, par exemple), elle peut l'emporter sur le style propre de
   l'enfant : garder la spécificité d'avant avec `:where()` sur l'ancêtre (`SiteOverview.css`, le portrait).
@@ -183,7 +191,9 @@ chronométrer 20 appels. Comparer à zoom égal, au même endroit.
   doit redonner la valeur d'avant) et un banc de captures (23 écrans, sur téléphone, PC et téléphone en Veillée, même
   compte, horloges de la page figées) comparé pixel par pixel ; en plus du lint, des tests et du build.
 - **Banc** : les délais que le serveur calcule à son heure réelle (« encore 23 h » dans la fiche d'un habitant)
-  sont neutralisés à la capture ; refaire la référence sur master quand le compte du banc a vieilli.
+  sont neutralisés à la capture ; refaire la référence sur master quand le compte du banc a vieilli. Le pendu et
+  l'ouverture d'un chapitre n'y sont pas (il faudrait au compte une page en cours de pendu) : la preuve sur le CSS
+  compilé les couvre.
 - **Jeton et Veillée** : une valeur en dur ne devient un jeton de la palette que si ce jeton garde la même valeur en
   Veillée (`tokens/dark.css` redéfinit les vélins : un `#fffcf5` écrit en dur n'est pas `--vellum-50`).
 

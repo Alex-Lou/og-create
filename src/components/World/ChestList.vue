@@ -47,7 +47,7 @@
 </template>
 
 <script>
-import GModal from '@/components/ui/GModal.vue';
+import GModal from '@/components/ui/GModal/GModal.vue';
 import { RARITY, openableOf } from '@/world/chest';
 
 // Les coffres de l'île : celui du jour (série), ceux qui attendent d'être ouverts, et où trouver les autres ; « Tout

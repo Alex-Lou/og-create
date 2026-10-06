@@ -1,0 +1,8 @@
+/* Même taille qu'un emoji du texte environnant ; le filtre d'encre du parent s'applique aussi */
+.glyph {
+  display: inline-block;
+  width: 1em;
+  height: 1em;
+  vertical-align: -0.125em;
+  pointer-events: none;
+}

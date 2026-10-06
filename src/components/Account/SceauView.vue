@@ -51,7 +51,7 @@
 </template>
 
 <script>
-import GSigil from '@/components/ui/GSigil.vue';
+import GSigil from '@/components/ui/GSigil/GSigil.vue';
 import { roman } from '@/utils/roman';
 import { LEVELS } from '@/utils/trialProgress';
 

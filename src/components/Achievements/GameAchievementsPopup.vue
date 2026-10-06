@@ -18,8 +18,8 @@
 </template>
 
 <script>
-import GModal from '@/components/ui/GModal.vue';
-import GSeal from '@/components/ui/GSeal.vue';
+import GModal from '@/components/ui/GModal/GModal.vue';
+import GSeal from '@/components/ui/GSeal/GSeal.vue';
 
 const AUTO_CLOSE_DELAY = 5000;
 const FADE_DURATION = 320;

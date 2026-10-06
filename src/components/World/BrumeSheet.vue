@@ -55,7 +55,7 @@
 </template>
 
 <script>
-import BrumeWisp from '@/components/ui/BrumeWisp.vue';
+import BrumeWisp from '@/components/Guide/BrumeWisp/BrumeWisp.vue';
 import { artOf } from '@/game/savoirs';
 // Fiche de Brume : sa réplique, la quête active, son avancée, sa récompense ; après le Phare, son Savoir. Les actions
 // (réclamer, Récolte, nom du peuple, bavarder…) restent à l'île, qui les reçoit en événements. Ses styles sont ceux de

@@ -1,0 +1,6 @@
+.g-sigil {
+  display: block;
+  color: var(--oc-text);
+  flex-shrink: 0;
+}
+.g-sigil--small path { vector-effect: non-scaling-stroke; }
