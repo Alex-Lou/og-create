@@ -5,6 +5,7 @@
 import { gable, pyramid, sprite, EDGE } from './iso';
 import { WOOD, WOOD_DARK, STONE, WHITE_STONE, ROOF_RED, BLUE_ROOF, GLASS, SOIL } from './palette';
 import { tools, ln, poly, ell, dot, wave, star, bird, IRON, DARK_IRON, COPPER, STRAW, OUT, f2 } from './shopSprites';
+import { creationLayer, ART_LIGHTS } from './creations';
 
 const TAU = Math.PI * 2;
 const LEAF = '#5FA04A';
@@ -790,8 +791,11 @@ export const CRAFT_SPRITES = {
   igloo, sculpture, parc, cairn, passerelle, heron, tente, cadransel, hamac, totem, obelisque, bassinchaud
 };
 
-// Calques d'une création prêts à peindre à l'instant t (secondes) : clé d'image et dessin
+// Calques d'une création prêts à peindre à l'instant t (secondes) : clé d'image et dessin. Le dessin de la
+// bibliothèque d'abord (creations.js), sinon celui-ci
 export function craftLayers(id, t = 0) {
+  const art = creationLayer(id, t);
+  if (art) return [art];
   const craft = CRAFT_SPRITES[id];
   if (!craft) return [];
   return craft.layers.map((layer, k) => {
@@ -807,7 +811,9 @@ export function craftLayers(id, t = 0) {
 // Lumière de nuit d'une création : [u, v, z, rayon, couleur « r,g,b », feu qui brûle même de jour], ou null
 export function craftLight(id) {
   const craft = CRAFT_SPRITES[id];
-  return craft && craft.light ? craft.light() : null;
+  const light = craft && craft.light ? craft.light() : null;
+  // Dessinée par la bibliothèque : sa lumière tombe sur sa flamme (ou sa porte)
+  return light && ART_LIGHTS[id] && creationLayer(id) ? [...ART_LIGHTS[id], ...light.slice(3)] : light;
 }
 
 // Vignette d'une création (établi) : ses calques à la première image, cadrés au plus juste
