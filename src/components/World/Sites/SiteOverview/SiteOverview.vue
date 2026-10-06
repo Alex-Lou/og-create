@@ -102,6 +102,7 @@ import { NEED_GLYPH, MOOD_GLYPH, MOOD_LABEL, missingOf, fillAllOf } from '@/worl
 import { annexYield } from '@/world/annexes';
 import { spriteUrl } from '@/world/spriteCache';
 import { craftThumb } from '@/world/craftSprites';
+import { creationThumb } from '@/world/creations';
 
 // Mini-jeux : l'icône de chaque jeu dans la fiche de son bâtiment
 const GAME_ICONS = { peche: 'dore', filon: 'diamant', cueillette: 'fraise' };
@@ -146,7 +147,7 @@ export default {
     },
     // Établi : son dessin, ce qui attend
     benchArt() {
-      return spriteUrl('craft-thumb-cloture', () => craftThumb('cloture'));
+      return creationThumb('cloture') ?? spriteUrl('craft-thumb-cloture', () => craftThumb('cloture'));
     },
     benchText() {
       const { catalog } = this.crafts;

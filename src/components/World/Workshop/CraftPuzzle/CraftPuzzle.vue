@@ -89,6 +89,7 @@
 import GModal from '@/components/ui/GModal/GModal.vue';
 import { spriteUrl } from '@/world/spriteCache';
 import { craftThumb } from '@/world/craftSprites';
+import { creationThumb } from '@/world/creations';
 import { cellsOf, turn, sizeOf, fits, covered, coverOf } from '@/world/crafts';
 import { vibrate } from '@/utils/fx';
 
@@ -142,7 +143,7 @@ export default {
       return covered(this.run.shape, this.run.pieces, this.layout);
     },
     art() {
-      return spriteUrl(`craft-thumb-${this.run.craft}`, () => craftThumb(this.run.craft));
+      return creationThumb(this.run.craft) ?? spriteUrl(`craft-thumb-${this.run.craft}`, () => craftThumb(this.run.craft));
     },
     dragStyle() {
       const d = this.drag;
