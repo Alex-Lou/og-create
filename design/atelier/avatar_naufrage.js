@@ -18,7 +18,8 @@ function avatarNaufrage(choix = {}, opts = {}) {
   // ce qui se voit à l'ourlet : le bas du haut (s'il n'est pas rentré), l'ourlet de la jupe ou de la robe
   const T = c.top === c.base ? c.top : c.base;
   const hemTop = bas === 'pantalon' || bas === 'short';
-  const jupe = bas === 'jupe' ? c.skirtHem : bas === 'robe' ? c.robeHem : null;
+  const robe = bas === 'robe' || bas === 'robeEntiere';
+  const jupe = bas === 'jupe' ? c.skirtHem : robe ? c.robeHem : null;
   const tatters = {};
   for (const [v, list, skirtX] of [
     ['front', [[17.4, 47.4, 2, 1], [29.4, 47.6, 2.2, 1.2]], [19.2, 29.4]],
@@ -31,12 +32,14 @@ function avatarNaufrage(choix = {}, opts = {}) {
     ];
   }
   // le trou : sur la bavette ou le corsage quand il y en a un devant (de dos, la robe seule couvre le haut du dos)
-  const holeC = v => ((bas === 'salopette' && v !== 'ne') || bas === 'robe' ? c.basS : c.o.haut === 'mariniere' ? c.stripe : c.topS);
+  const holeC = v => ((bas === 'salopette' && v !== 'ne') || robe ? c.basS : c.o.haut === 'mariniere' ? c.stripe : c.topS);
   const holes = { front: [[28.4, 39.8 + dy, 1.25, holeC('front')]], se: [[26.8, 40 + dy, 1.15, holeC('se')]], ne: [[20.2, 41.6 + dy, 1.2, holeC('ne')]] };
   const shift = s => (dy ? `<g transform="translate(0 ${dy})">${s}</g>` : s);
   const n = castaway(c, {
     fade: fadeList, leg: bas === 'pantalon' || bas === 'salopette' ? 'roll' : 'skin',
-    sleeves: haut === 'tshirt' || haut === 'mariniere' ? 'roll' : 'torn', sleeveCut: haut === 'tshirt' ? 6.4 : haut === 'mariniere' ? 4.4 : 5,
+    // la robe d'une pièce garde ses manches courtes, comme le t-shirt
+    sleeves: haut === 'tshirt' || haut === 'mariniere' || bas === 'robeEntiere' ? 'roll' : 'torn',
+    sleeveCut: haut === 'tshirt' || bas === 'robeEntiere' ? 6.4 : haut === 'mariniere' ? 4.4 : 5,
     tatters, holes,
     rips: { front: [[19.6, 43.2 + dy, 2.4]], se: [[18.8, 43.4 + dy, 2.2]], ne: [[28.4, 43 + dy, 2.2]] },
     head: ({ view }) => shift(view === 'ne'

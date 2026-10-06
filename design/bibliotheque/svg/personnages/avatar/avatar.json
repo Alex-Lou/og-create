@@ -282,7 +282,8 @@
     "short",
     "jupe",
     "salopette",
-    "robe"
+    "robe",
+    "robeEntiere"
    ]
   },
   "couleurBas": {
@@ -435,7 +436,8 @@
    "short": "Short",
    "jupe": "Jupe",
    "salopette": "Salopette",
-   "robe": "Robe chasuble"
+   "robe": "Robe chasuble",
+   "robeEntiere": "Robe"
   }
  },
  "nuanciers": {

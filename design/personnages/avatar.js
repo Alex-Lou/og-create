@@ -487,18 +487,20 @@ function shortLeg(c, x, frayed = false) {
 
 function body(c, ctx) {
   const { view, n, walk } = ctx;
-  const k = c.k, haut = c.o.haut, bas = c.o.bas;
+  const k = c.k, bas = c.o.bas;
+  // la robe d'une pièce remplace le haut : le buste est de la couleur de la robe
+  const robeE = bas === 'robeEntiere', haut = robeE ? null : c.o.haut;
   const ne = view === 'ne', se = view === 'se';
-  const tucked = bas === 'jupe' || bas === 'salopette' || bas === 'robe';
+  const tucked = bas === 'jupe' || bas === 'salopette' || bas === 'robe' || robeE;
   const hem = tucked ? 44.8 : 46.6;
   const T = torso(k, hem);
-  const top = c.top, topS = c.topS, topH = c.topH;
+  const top = robeE ? c.bas : c.top, topS = robeE ? c.basS : c.topS, topH = robeE ? c.basH : c.topH;
   const o = se ? 21.6 : 24; // le milieu du devant
   const sway = walk ? [0.5, 0, -0.5, 0][n] : 0;
   let s = '';
   // 1. ce qui passe sous le haut : la jupe, le bas de la robe, le fond du short
   if (bas === 'jupe') s += skirt(c, view, sway, 43.6, c.skirtHem);
-  if (bas === 'robe') s += skirt(c, view, sway, 43.6, c.robeHem);
+  if (bas === 'robe' || robeE) s += skirt(c, view, sway, 43.6, c.robeHem);
   if (bas === 'short') s += `<rect x="21.6" y="44.4" width="4.8" height="4.6" fill="${c.bas}"/>`;
   // 2. le haut
   const mar = haut === 'mariniere';
@@ -525,6 +527,11 @@ function body(c, ctx) {
     s += P('M24,33.8 L24,47.4', 'none', 0.5);
     if (haut === 'chemise' || haut === 'veste') s += P('M17.6,31.4 Q24,34.4 30.4,31.4 L30,33.6 Q24,36.2 18,33.6 Z', topS, 0.8);
     if (haut === 'sweat') s += P('M16.4,30.8 Q24,29.2 31.6,30.8 Q32.8,37.6 24,40.2 Q15.2,37.6 16.4,30.8 Z', topS, 0.9) + P('M19.6,32.6 Q24,37.6 28.4,32.6', 'none', 0.6);
+    if (robeE) s += P('M17.6,31.4 Q24,34 30.4,31.4 L30,33.2 Q24,35.8 18,33.2 Z', '#FFFDF6', 0.8);
+  } else if (robeE) {
+    // col Claudine : deux pans arrondis, blancs
+    s += P(`M${o - 0.3},32.6 Q${o - 4.4},30.8 ${o - 5.4},32.8 Q${o - 4.6},35.8 ${o - 0.5},34.4 Z`, '#FFFDF6', 0.8)
+      + P(`M${o + 0.3},32.6 Q${o + 4.4},30.8 ${o + 5.4},32.8 Q${o + 4.6},35.8 ${o + 0.5},34.4 Z`, '#FFFDF6', 0.8);
   } else if (haut === 'chemise') {
     s += P(`M${o - 4.6},31.2 L${o},34.8 L${o - 1.6},36.4 Z`, '#FFFDF6', 0.8) + P(`M${o + 4.6},31.2 L${o},34.8 L${o + 1.6},36.4 Z`, '#FFFDF6', 0.8);
     s += L([o, 35], [o + (se ? -0.4 : 0), hem + 1], OUT, 0.6) + [38.4, 41.8, 45].filter(y => y < hem).map(y => E(o + 1, y, 0.55, 0.55, '#FFFDF6', 0.5)).join('');
@@ -542,6 +549,15 @@ function body(c, ctx) {
     s += P(`M${r2(24 - k.hw + 0.2)},43.2 L${r2(24 + k.hw - 0.2)},43.2 L${r2(24 + k.hw)},46.6 Q24,48 ${r2(24 - k.hw)},46.6 Z`, c.bas)
       + P(`M${r2(24 - k.hw + 1)},43.4 L${r2(24 - k.hw + 1.4)},46.2`, 'none', 0.5);
     if (haut !== 'veste' || ne) s += bretelles(c, view, o, true);
+  }
+  if (robeE) {
+    // la ceinture de la robe, nouée dans le dos
+    const band = 'M0,42.4 L48,42.4 L48,44.4 L0,44.4 Z';
+    s += clip(`${c.uid}rc`, T, P(band, c.basS, 0.6)) + P(T, 'none');
+    if (ne) {
+      s += P('M24,43.4 L22.6,47.6 L24.2,47 L25,47.8 Z', c.basS, 0.6) + P('M24,43.4 L25.6,47.4 L24.4,46.8 Z', c.basS, 0.6)
+        + E(21.6, 42.9, 2.1, 1.25, c.basS, 0.7) + E(26.4, 42.9, 2.1, 1.25, c.basS, 0.7) + E(24, 43.3, 0.95, 0.95, c.bas, 0.6);
+    }
   }
   if (bas === 'robe' && (haut !== 'veste' || ne)) {
     const d = ne ? 'M0,40.2 Q24,41.6 48,40.2 L48,50 L0,50 Z' : `M${o - 6.6},36.6 Q${o},37.8 ${o + 6.6},36.6 L${r2(o + k.hw + 1.6)},45.8 L${r2(o - k.hw - 1.6)},45.8 Z`;
@@ -573,7 +589,7 @@ function neck(c, ctx) {
   const o = view === 'se' ? 21.6 : 24;
   let s = '';
   // la capuche du sweat, roulée autour du cou, et ses deux cordons (rentrés sous la robe ou la bavette)
-  if (c.o.haut === 'sweat' && view !== 'ne') {
+  if (c.o.haut === 'sweat' && c.o.bas !== 'robeEntiere' && view !== 'ne') {
     const dessous = c.o.bas === 'robe' || c.o.bas === 'salopette';
     s += P(`M${o - 6.4},31 Q${o},35.6 ${o + 6.4},31 L${o + 8.2},32.6 Q${o},39 ${o - 8.2},32.6 Z`, c.topS, 0.9);
     if (!dessous) s += [-1.8, 1.8].map(d => L([o + d, 35.2], [o + d * 1.2, 40], OUT, 1.5) + L([o + d, 35.2], [o + d * 1.2, 40], c.tee, 0.6) + E(o + d * 1.2, 40.3, 0.6, 0.6, c.tee, 0.5)).join('');
@@ -625,11 +641,13 @@ function avatar(choixAvatar = {}, opts = {}) {
   const bas = couleur('tissus', o.couleurBas);
   const shoeC = couleur('tissus', o.chaussures);
   // jambes nues sous le short, la jupe et la robe
-  const nues = o.bas === 'short' || o.bas === 'jupe' || o.bas === 'robe';
+  const nues = o.bas === 'short' || o.bas === 'jupe' || o.bas === 'robe' || o.bas === 'robeEntiere';
   const sp = (k.hw - 10.2) * 0.45;
   const legLen = 56.5 - (44.5 + dy);
   // marinière : rayures de la couleur choisie sur fond écru ; des rayures claires se posent sur un fond marine
-  const mar = o.haut === 'mariniere';
+  // la robe d'une pièce remplace le haut : manches courtes de la couleur de la robe, bordées de blanc
+  const robe = o.bas === 'robeEntiere';
+  const mar = !robe && o.haut === 'mariniere';
   const claires = clarte(top) > 0.8;
   const base = mar ? (claires ? '#2E3E66' : '#F4EEDF') : top;
   // l'élastique des cheveux : rouge, ou bleu sur des cheveux déjà rouges ou roses
@@ -647,9 +665,9 @@ function avatar(choixAvatar = {}, opts = {}) {
     levres: o.levres === 'naturelles' ? null : couleur('levres', o.levres),
     top, topS: tone(top, 0.82), topH: tone(top, 1.28), tee: '#F4EEDF', base, stripe: top,
     bas, basS: tone(bas, 0.78), basH: tone(bas, 1.25),
-    sleeve: base, armW: k.arm,
-    cuff: { pull: tone(top, 0.82), sweat: tone(top, 0.82), veste: tone(top, 0.82), chemise: '#FFFDF6', mariniere: top }[o.haut] || null,
-    sleeves: o.haut === 'tshirt' || mar ? 'roll' : undefined, sleeveCut: mar ? 4.4 : 6.4,
+    sleeve: robe ? bas : base, armW: k.arm,
+    cuff: robe ? '#FFFDF6' : { pull: tone(top, 0.82), sweat: tone(top, 0.82), veste: tone(top, 0.82), chemise: '#FFFDF6', mariniere: top }[o.haut] || null,
+    sleeves: robe || o.haut === 'tshirt' || mar ? 'roll' : undefined, sleeveCut: mar ? 4.4 : 6.4,
     leg: nues ? skin : bas, legS: nues ? tone(skin, 0.88) : tone(bas, 0.78), legW: nues ? k.legW - 0.9 : k.legW,
     hip: r2(44.5 + dy), ground: 56.5,
     skirtHem: r2(44.5 + legLen * 0.6), robeHem: r2(44.5 + legLen * 0.66), shortLen: r2(legLen * 0.64),

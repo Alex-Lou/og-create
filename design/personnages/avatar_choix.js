@@ -112,7 +112,8 @@ const FORMES = {
   },
   meches: { sans: 'Une couleur', pointes: 'Pointes colorées', meches: 'Mèches' },
   haut: { tshirt: 'T-shirt', mariniere: 'Marinière', pull: 'Pull', sweat: 'Sweat à capuche', chemise: 'Chemise', veste: 'Veste ouverte' },
-  bas: { pantalon: 'Pantalon', short: 'Short', jupe: 'Jupe', salopette: 'Salopette', robe: 'Robe chasuble' }
+  // la robe d'une pièce remplace le haut (le choix du haut est gardé : il revient si l'on change de bas)
+  bas: { pantalon: 'Pantalon', short: 'Short', jupe: 'Jupe', salopette: 'Salopette', robe: 'Robe chasuble', robeEntiere: 'Robe' }
 };
 
 // ---- les accessoires : un par emplacement ----
