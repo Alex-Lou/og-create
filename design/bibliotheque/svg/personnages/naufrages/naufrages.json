@@ -10,7 +10,7 @@
  "naufrages": {
   "aster": {
    "nom": "Aster",
-   "arrivee": "tutoriel, étape 2",
+   "arrivee": "tutoriel, étape 10",
    "fichiers": {
     "naufrage_face_repos": [
      "naufrages/aster/aster-naufrage_face_repos_1.svg",
@@ -116,7 +116,7 @@
   },
   "cannelle": {
    "nom": "Cannelle",
-   "arrivee": "tutoriel, étape 3",
+   "arrivee": "tutoriel, étape 7",
    "fichiers": {
     "naufrage_face_repos": [
      "naufrages/cannelle/cannelle-naufrage_face_repos_1.svg",
@@ -222,7 +222,7 @@
   },
   "rivet": {
    "nom": "Rivet",
-   "arrivee": "tutoriel, étape 4",
+   "arrivee": "tutoriel, étape 9",
    "fichiers": {
     "naufrage_face_repos": [
      "naufrages/rivet/rivet-naufrage_face_repos_1.svg",
@@ -328,7 +328,7 @@
   },
   "ondin": {
    "nom": "Ondin",
-   "arrivee": "tutoriel, étape 5",
+   "arrivee": "tutoriel, étape 11",
    "fichiers": {
     "naufrage_face_repos": [
      "naufrages/ondin/ondin-naufrage_face_repos_1.svg",
