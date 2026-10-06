@@ -336,6 +336,10 @@ for (const petit of ['', '_petit']) for (const gris of ['', '_gris']) for (const
 for (const petits of ['', '_petits']) for (const bruns of ['', '_bruns']) for (const nuit of ['', '_nuit']) {
   PLANTES[`champignons${petits}${bruns}${nuit}`] = `Champignons (${[bruns ? 'cèpes bruns' : 'amanites rouges', petits ? 'petits' : 'grands', nuit && 'la nuit, ils luisent'].filter(Boolean).join(', ')})`;
 }
+// les 8 roseaux refaits (plantes.js) : roseaux[_petits][_rive][_libellule]
+for (const petits of ['', '_petits']) for (const rive of ['', '_rive']) for (const lib of ['', '_libellule']) {
+  PLANTES[`roseaux${petits}${rive}${lib}`] = `Roseaux (${[petits ? 'petits' : 'grands', rive ? 'sur la rive' : 'dans une mare', lib && 'une libellule'].filter(Boolean).join(', ')})`;
+}
 // les 16 touffes d'herbe refaites (herbes.js) : touffe[_motte][_petite][_profond][_fleurie]
 for (const motte of ['', '_motte']) for (const petite of ['', '_petite']) for (const vert of ['', '_profond']) for (const fleurie of ['', '_fleurie']) {
   PLANTES[`touffe${motte}${petite}${vert}${fleurie}`] = `Touffe d'herbe (${[motte && 'avec motte', petite ? 'petite' : 'grande', `vert ${vert ? 'profond' : 'doux'}`, fleurie && 'fleurie'].filter(Boolean).join(', ')})`;

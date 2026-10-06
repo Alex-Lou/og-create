@@ -6,7 +6,7 @@ const { D, PROP, pt } = require('./deco');
 const { up, M } = require('./decor2');
 const { arbre, ARBRES, pommier, POMMIERS, automne, AUTOMNES, bouleau, BOULEAUX, sapin, SAPINS, palmier, PALMIERS, arbreMort, ARBRES_MORTS } = require('./arbres');
 const { touffe, TOUFFES } = require('./herbes');
-const { buisson, BUISSONS, bruyere, BRUYERES, fleurs, FLEURS, cactus, CACTUS_LISTE, souche, SOUCHES, rondin, RONDINS, champignons, CHAMPIGNONS } = require('./plantes');
+const { buisson, BUISSONS, bruyere, BRUYERES, fleurs, FLEURS, cactus, CACTUS_LISTE, souche, SOUCHES, rondin, RONDINS, champignons, CHAMPIGNONS, roseaux, ROSEAUX } = require('./plantes');
 
 const LIB = path.join(__dirname, 'lib', 'plantes');
 const OUT = path.join(__dirname, 'planches');
@@ -22,7 +22,7 @@ const LIST = [
   ...PALMIERS.map(([fichier, libelle, o]) => [fichier, libelle, 'palm', () => palmier(o)]),
   ...ARBRES_MORTS.map(([fichier, libelle, o]) => [fichier, libelle, 'deadtree', () => arbreMort(o)]),
   // les autres plantes refaites (plantes.js) : le buisson et ses 8 variantes, la bruyère et ses 8, les fleurs et leurs 8,
-  // le cactus et ses 8, la souche et ses 8, le rondin et ses 8, les champignons et leurs 8
+  // le cactus et ses 8, la souche et ses 8, le rondin et ses 8, les champignons et leurs 8, les roseaux et leurs 8
   ...BUISSONS.map(([fichier, libelle, o]) => [fichier, libelle, 'bush', () => buisson(o)]),
   ...BRUYERES.map(([fichier, libelle, o]) => [fichier, libelle, 'heather', () => bruyere(o)]),
   ...FLEURS.map(([fichier, libelle, o]) => [fichier, libelle, 'flowers', () => fleurs(o)]),
@@ -30,9 +30,10 @@ const LIST = [
   ...SOUCHES.map(([fichier, libelle, o]) => [fichier, libelle, 'stump', () => souche(o)]),
   ...RONDINS.map(([fichier, libelle, o]) => [fichier, libelle, 'log', () => rondin(o)]),
   ...CHAMPIGNONS.map(([fichier, libelle, o]) => [fichier, libelle, 'mushrooms', () => champignons(o)]),
+  ...ROSEAUX.map(([fichier, libelle, o]) => [fichier, libelle, 'reeds', () => roseaux(o)]),
   // la touffe d'herbe refaite (herbes.js) et ses 16 variantes
   ...TOUFFES.map(([fichier, libelle, o]) => [fichier, libelle, 'tuft', () => touffe(o)]),
-  ['roseaux', 'Roseaux', 'reeds', () => D.reeds()], ['nenuphars', 'Nénuphars', 'lily', () => D.lily()],
+  ['nenuphars', 'Nénuphars', 'lily', () => D.lily()],
   ['rocher', 'Rocher', 'rock', () => D.rock()], ['rochers', 'Rochers', 'rocks', () => D.rocks()], ['aiguille', 'Aiguille de roche', 'crag', () => D.crag()],
   ['rochers_moussus', 'Rochers moussus', 'mossy', () => D.mossy()], ['coquillages', 'Coquillages', 'shells', () => D.shells()], ['bois_flotte', 'Bois flotté', 'driftwood', () => D.driftwood()],
   ['nid', 'Nid de mouettes', 'nest', () => up(M.nid.draw())], ['lanterne', 'Lanterne (éteinte)', 'lantern', () => D.lantern(false)], ['lanterne_allumee', 'Lanterne (allumée)', 'lantern', () => D.lantern(true)],

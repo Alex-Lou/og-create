@@ -47346,10 +47346,129 @@
   {
    "id": "plantes/roseaux",
    "rubrique": "plantes",
-   "titre": "Roseaux",
+   "titre": "Roseaux (grands, dans une mare)",
    "images": 1,
    "fichiers": [
     "svg/plantes/roseaux.svg"
+   ],
+   "cadre": [
+    -50,
+    -115,
+    100,
+    140
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "plantes/roseaux_libellule",
+   "rubrique": "plantes",
+   "titre": "Roseaux (grands, dans une mare, une libellule)",
+   "images": 1,
+   "fichiers": [
+    "svg/plantes/roseaux_libellule.svg"
+   ],
+   "cadre": [
+    -50,
+    -115,
+    100,
+    140
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "plantes/roseaux_petits",
+   "rubrique": "plantes",
+   "titre": "Roseaux (petits, dans une mare)",
+   "images": 1,
+   "fichiers": [
+    "svg/plantes/roseaux_petits.svg"
+   ],
+   "cadre": [
+    -50,
+    -115,
+    100,
+    140
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "plantes/roseaux_petits_libellule",
+   "rubrique": "plantes",
+   "titre": "Roseaux (petits, dans une mare, une libellule)",
+   "images": 1,
+   "fichiers": [
+    "svg/plantes/roseaux_petits_libellule.svg"
+   ],
+   "cadre": [
+    -50,
+    -115,
+    100,
+    140
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "plantes/roseaux_petits_rive",
+   "rubrique": "plantes",
+   "titre": "Roseaux (petits, sur la rive)",
+   "images": 1,
+   "fichiers": [
+    "svg/plantes/roseaux_petits_rive.svg"
+   ],
+   "cadre": [
+    -50,
+    -115,
+    100,
+    140
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "plantes/roseaux_petits_rive_libellule",
+   "rubrique": "plantes",
+   "titre": "Roseaux (petits, sur la rive, une libellule)",
+   "images": 1,
+   "fichiers": [
+    "svg/plantes/roseaux_petits_rive_libellule.svg"
+   ],
+   "cadre": [
+    -50,
+    -115,
+    100,
+    140
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "plantes/roseaux_rive",
+   "rubrique": "plantes",
+   "titre": "Roseaux (grands, sur la rive)",
+   "images": 1,
+   "fichiers": [
+    "svg/plantes/roseaux_rive.svg"
+   ],
+   "cadre": [
+    -50,
+    -115,
+    100,
+    140
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "plantes/roseaux_rive_libellule",
+   "rubrique": "plantes",
+   "titre": "Roseaux (grands, sur la rive, une libellule)",
+   "images": 1,
+   "fichiers": [
+    "svg/plantes/roseaux_rive_libellule.svg"
    ],
    "cadre": [
     -50,
