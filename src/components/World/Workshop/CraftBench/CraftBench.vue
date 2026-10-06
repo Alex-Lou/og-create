@@ -68,6 +68,7 @@ import ElementGlyph from '@/components/ui/ElementGlyph/ElementGlyph.vue';
 import CostList from '@/components/World/Sites/CostList/CostList.vue';
 import { spriteUrl } from '@/world/spriteCache';
 import { craftThumb } from '@/world/craftSprites';
+import { creationThumb } from '@/world/creations';
 import { TIER_LABEL, tierHint } from '@/world/crafts';
 
 const TIERS = ['start', 'I', 'II', 'III', 'climat'];
@@ -110,7 +111,7 @@ export default {
       return ['I', 'II', 'III'].includes(tier) ? tier : null;
     },
     artOf(c) {
-      return spriteUrl(`craft-thumb-${c.id}`, () => craftThumb(c.id));
+      return creationThumb(c.id) ?? spriteUrl(`craft-thumb-${c.id}`, () => craftThumb(c.id));
     }
   }
 };
