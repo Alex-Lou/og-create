@@ -72,20 +72,50 @@ LM.lac = { n: 2, draw: f => {
   s += thick(`M${x + 22},${y - 6} L${x + 4},${y - 22}`, 1.2, WOOD_DARK.left) + `<path d="M${x + 4},${y - 22} Q${x - 2},${y - 12} ${x - 1},${y + f}" fill="none" stroke="${OUT}" stroke-width="0.5"/>` + E(x - 1, y + f - 1, 1.4, 1.4, '#E8483C', 0.6);
   return s;
 } };
+// Col du Vent : un replat d'herbe rase et de rocaille sur le col, des touffes et des edelweiss ; deux cairns de pierres
+// plates ; entre eux, une corde de fanions qui claquent ; une manche à air rayée au bout de sa perche, gonflée puis
+// retombante ; des traits de vent qui passent (2 images)
+const ROCAILLE = [['#B9B2A6', '#D8D2C6', '#8E877B'], ['#A9A69F', '#CBC8C0', '#817E77'], ['#BDB4A2', '#DCD3C1', '#938A78']];
+const galet = (x, y, rx, ry, [c, l, d]) => P(`M${r2(x - rx)},${r2(y)} Q${r2(x - rx)},${r2(y - ry * 1.5)} ${r2(x)},${r2(y - ry * 1.6)} Q${r2(x + rx)},${r2(y - ry * 1.5)} ${r2(x + rx)},${r2(y)} Q${r2(x + rx * 0.9)},${r2(y + ry * 0.9)} ${r2(x)},${r2(y + ry)} Q${r2(x - rx * 0.9)},${r2(y + ry * 0.9)} ${r2(x - rx)},${r2(y)} Z`, c, 0.9)
+  + `<path d="M${r2(x - rx * 0.7)},${r2(y + ry * 0.45)} Q${r2(x)},${r2(y + ry * 1.05)} ${r2(x + rx * 0.85)},${r2(y + ry * 0.2)} Q${r2(x + rx * 0.8)},${r2(y + ry * 0.7)} ${r2(x)},${r2(y + ry * 0.92)} Q${r2(x - rx * 0.6)},${r2(y + ry * 0.8)} ${r2(x - rx * 0.7)},${r2(y + ry * 0.45)} Z" fill="${d}"/>`
+  + E(x - rx * 0.3, y - ry * 0.75, rx * 0.45, ry * 0.4, l, 0);
+const edelweiss = (x, y) => [0, 1, 2, 3, 4, 5].map(i => { const a = (i / 6) * TAU; return E(x + Math.cos(a) * 1.5, y + Math.sin(a) * 1, 1.1, 0.7, '#FFFFFF', 0.45); }).join('') + E(x, y, 0.8, 0.6, '#F2C94C', 0.3);
 LM.col = { n: 2, draw: f => {
-  let s = shadow(0, 0, 0.7, 0.1);
-  const cairn = (u, v) => { const [x, y] = at(u, v); return [[0, 0, 9, 4.6], [1, -6, 7, 3.8], [0, -11, 5, 3], [1, -15, 3.4, 2.2]].map(([dx, dy, rx, ry]) => E(x + dx, y + dy, rx, ry, GRANITE.left, 1) + E(x + dx - rx * 0.3, y + dy - ry * 0.4, rx * 0.5, ry * 0.4, GRANITE.top, 0)).join(''); };
-  s += cairn(-0.5, 0.2) + cairn(0.45, -0.3);
-  const a = at(-0.5, 0.2, 24), b = at(0.45, -0.3, 26);
-  const mid = [(a[0] + b[0]) / 2, (a[1] + b[1]) / 2 + 8];
-  s += `<path d="M${a[0]},${a[1]} Q${mid[0]},${mid[1]} ${b[0]},${b[1]}" fill="none" stroke="${OUT}" stroke-width="0.7"/>`;
-  const cols = ['#E8566A', '#F2C04B', '#5C8FD0', '#7EC45B', '#B48AE0', '#F08A3A', '#FFFFFF'];
-  for (let i = 1; i < 8; i++) { const t = i / 8, x = (1 - t) ** 2 * a[0] + 2 * (1 - t) * t * mid[0] + t * t * b[0], y = (1 - t) ** 2 * a[1] + 2 * (1 - t) * t * mid[1] + t * t * b[1]; const sw = (f ? 1 : -1) * ((i % 2) ? 1.6 : -1); s += poly([[x - 2.6, y], [x + 2.6, y], [x + sw, y + 6]], cols[i - 1], 0.6); }
-  const [px, py] = at(0.1, 0.45);
-  s += `<rect x="${px - 0.9}" y="${py - 40}" width="1.8" height="40" fill="${WOOD_DARK.left}" stroke="${OUT}" stroke-width="0.6"/>`;
-  const wl = f ? 18 : 14, droop = f ? 1 : 5;
-  s += `<path d="M${px},${py - 40} L${px + wl},${py - 38 + droop} L${px + wl},${py - 33 + droop} L${px},${py - 33} Z" fill="#F08A3A" stroke="${OUT}" stroke-width="0.8"/>` + `<path d="M${px + wl * 0.4},${py - 39.4 + droop * 0.4} L${px + wl * 0.4},${py - 33.4 + droop * 0.4}" stroke="#FFFFFF" stroke-width="2"/>`;
-  return s;
+  const [x, y] = at(0, 0);
+  // le replat d'herbe rase, sa rocaille, ses touffes et ses edelweiss
+  const bord = Array.from({ length: 16 }, (_, i) => { const t = (i / 16) * TAU, r = 1 + (i % 2 ? 0.05 : -0.04) + (i % 5 ? 0 : 0.06); return [x + Math.cos(t) * 62 * r, y + 2 + Math.sin(t) * 27 * r]; });
+  const mil = i => { const p = bord[i % 16], q = bord[(i + 1) % 16]; return `${r2((p[0] + q[0]) / 2)},${r2((p[1] + q[1]) / 2)}`; };
+  let d = `M${mil(15)}`;
+  for (let i = 0; i < 16; i++) d += ` Q${r2(bord[i][0])},${r2(bord[i][1])} ${mil(i)}`;
+  let s = shadow(0, 0, 0.7, 0.08) + P(`${d} Z`, '#B9D48C', 0.9) + E(x - 8, y - 2, 40, 15, '#C9E0A0', 0);
+  s += [[-40, 8, 4, 0], [36, 12, 3.4, 2], [-18, 18, 3, 1], [48, -2, 2.6, 0], [-50, -4, 2.4, 2], [14, -16, 2.2, 1]].map(([dx, dy, r, k]) => galet(x + dx, y + dy, r * 1.4, r * 0.75, ROCAILLE[k])).join('');
+  s += [[-30, 14], [24, 18], [6, -10]].map(([dx, dy]) => `<path d="M${x + dx - 3},${y + dy} q-0.6,-3.6 -2.4,-5 M${x + dx},${y + dy} q0.2,-4.4 1,-6.4 M${x + dx + 3},${y + dy} q1,-3 3,-4" stroke="#6E9E4A" stroke-width="1.1" fill="none" stroke-linecap="round"/>`).join('')
+    + edelweiss(x - 24, y + 8) + edelweiss(x + 30, y + 6) + edelweiss(x - 6, y + 20);
+  // les deux cairns de pierres plates
+  const cairn = (u, v, k) => { const [cx, cy] = at(u, v); return [[0, 0, 11, 4, 0], [1.2, -6.6, 8.6, 3.4, 2], [-0.8, -12, 7, 3, 1], [1, -16.8, 5.4, 2.4, 0], [0, -20.6, 3.8, 1.9, 2]].map(([dx, dy, rx, ry, c]) => galet(cx + dx, cy + dy, rx, ry, ROCAILLE[(c + k) % 3])).join(''); };
+  // les crêtes rocheuses du col, au fond, et leur neige
+  const crete = (u, v, k) => { const [cx, cy] = at(u, v); return P(`M${r2(cx - 16 * k)},${r2(cy)} L${r2(cx - 11 * k)},${r2(cy - 16 * k)} L${r2(cx - 4 * k)},${r2(cy - 22 * k)} L${r2(cx + 2 * k)},${r2(cy - 30 * k)} L${r2(cx + 9 * k)},${r2(cy - 20 * k)} L${r2(cx + 15 * k)},${r2(cy - 12 * k)} L${r2(cx + 17 * k)},${r2(cy)} Q${r2(cx)},${r2(cy + 4 * k)} ${r2(cx - 16 * k)},${r2(cy)} Z`, '#A9A69F', 1)
+    + `<path d="M${r2(cx + 2 * k)},${r2(cy - 30 * k)} L${r2(cx + 9 * k)},${r2(cy - 20 * k)} L${r2(cx + 15 * k)},${r2(cy - 12 * k)} L${r2(cx + 17 * k)},${r2(cy)} Q${r2(cx + 8 * k)},${r2(cy + 2.6 * k)} ${r2(cx + 2 * k)},${r2(cy + 3 * k)} L${r2(cx + 4 * k)},${r2(cy - 14 * k)} Z" fill="#817E77"/>`
+    + P(`M${r2(cx - 4 * k)},${r2(cy - 22 * k)} L${r2(cx + 2 * k)},${r2(cy - 30 * k)} L${r2(cx + 7 * k)},${r2(cy - 23 * k)} L${r2(cx + 3 * k)},${r2(cy - 24.6 * k)} L${r2(cx)},${r2(cy - 21 * k)} L${r2(cx - 2 * k)},${r2(cy - 22.6 * k)} Z`, '#FFFFFF', 0.7); };
+  s += crete(-0.62, -0.5, 1.1) + crete(0.06, -0.7, 0.85);
+  s += cairn(-0.5, 0.2, 0);
+  // la corde de fanions tendue d'un cairn à l'autre
+  const a = at(-0.5, 0.2, 18), b = at(0.45, -0.32, 18), m = [(a[0] + b[0]) / 2, (a[1] + b[1]) / 2 + 9];
+  s += `<path d="M${r2(a[0])},${r2(a[1])} Q${r2(m[0])},${r2(m[1])} ${r2(b[0])},${r2(b[1])}" fill="none" stroke="${OUT}" stroke-width="0.7"/>`;
+  const cols = ['#E8566A', '#F2C04B', '#5C8FD0', '#7EC45B', '#FFFFFF', '#E8566A', '#F2C04B', '#5C8FD0'];
+  cols.forEach((c, i) => { const t = (i + 1) / 9, qx = (1 - t) ** 2 * a[0] + 2 * (1 - t) * t * m[0] + t * t * b[0], qy = (1 - t) ** 2 * a[1] + 2 * (1 - t) * t * m[1] + t * t * b[1], sw = (f ? 1.8 : -1.2) * (i % 2 ? 1 : -0.6); s += P(`M${r2(qx - 2.6)},${r2(qy)} L${r2(qx + 2.6)},${r2(qy)} L${r2(qx + 2.2)},${r2(qy + 5.4)} L${r2(qx + sw)},${r2(qy + 3.8)} L${r2(qx - 2.2)},${r2(qy + 5.4)} Z`, c, 0.6); });
+  s += cairn(0.45, -0.32, 1);
+  // la manche à air au bout de sa perche, gonflée par le vent puis retombante
+  const [px, py] = at(0.16, 0.44), top = py - 44;
+  s += L([px, py], [px, top], WOOD_DARK.left, 1.4) + E(px, py, 2.2, 1, '#8A7A62', 0.6) + E(px, top - 1, 1.4, 1.4, '#E2B546', 0.6);
+  const len = f ? 20 : 15, drop = f ? 1 : 8, seg = 4;
+  for (let i = 0; i < seg; i++) {
+    const t0 = i / seg, t1 = (i + 1) / seg, h0 = 3.4 - t0 * 1.6, h1 = 3.4 - t1 * 1.6, x0 = px + 1 + len * t0, x1 = px + 1 + len * t1, y0 = top + 3 + drop * t0 * t0, y1 = top + 3 + drop * t1 * t1;
+    s += P(`M${r2(x0)},${r2(y0 - h0)} L${r2(x1)},${r2(y1 - h1)} L${r2(x1)},${r2(y1 + h1)} L${r2(x0)},${r2(y0 + h0)} Z`, i % 2 ? '#FFFFFF' : '#E8566A', 0.7);
+  }
+  s += E(px + 1.4, top + 3, 1.2, 3.4, '#C8402E', 0.6);
+  // les traits de vent qui passent
+  return s + (f ? [[-40, -40], [10, -58], [-10, -24]] : [[-56, -34], [-6, -52], [20, -30]]).map(([dx, dy]) => `<path d="M${x + dx},${y + dy} q10,-4 20,0 q6,2 10,-2" stroke="#FFFFFF" stroke-width="1.4" fill="none" stroke-linecap="round" opacity="0.8"/>`).join('');
 } };
 const menhirsDraw = fleuri => f => {
   let s = shadow(0, 0, 0.75, 0.1) + (fleuri ? disc(0, 0, 0.62, 0, '#A8D878', 0.6) : '');
