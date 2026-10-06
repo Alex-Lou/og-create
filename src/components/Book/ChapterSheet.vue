@@ -137,6 +137,8 @@ export default {
 </script>
 
 <style scoped>
+/* Ses jetons (le papier des sceaux et des cases : tokens/book.css) */
+.chapters { --chapters-bar-radius: 2px; }
 .chapters { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 6px; }
 .chapters__row {
   appearance: none;
@@ -169,7 +171,7 @@ export default {
   display: grid;
   place-items: center;
   border-radius: var(--r-round);
-  background: #FFFDF8;
+  background: var(--grimoire-paper);
   color: var(--ci, var(--ink-700));
   font-family: var(--oc-font-display);
   font-weight: 700;
@@ -179,8 +181,8 @@ export default {
 .chapters__body { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 5px; }
 .chapters__name { font-weight: 800; font-size: 15px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .chapters__row.is-toc .chapters__name { flex: 1; }
-.chapters__bar { height: 4px; border-radius: 2px; background: rgba(255, 255, 255, 0.75); overflow: hidden; }
-.chapters__bar span { display: block; height: 100%; border-radius: 2px; background: var(--ci); }
+.chapters__bar { height: 4px; border-radius: var(--chapters-bar-radius); background: rgba(255, 255, 255, 0.75); overflow: hidden; }
+.chapters__bar span { display: block; height: 100%; border-radius: var(--chapters-bar-radius); background: var(--ci); }
 .chapters__meta { flex: none; font-family: var(--oc-font-mono); font-weight: 800; font-size: 12px; color: var(--ink-700); }
 .chapters__go { flex: none; font-size: 22px; line-height: 1; color: var(--ci); }
 
@@ -215,7 +217,7 @@ export default {
   padding: 8px 4px;
   border: 0;
   border-radius: var(--r-tile);
-  background: #FFFDF8;
+  background: var(--grimoire-paper);
   color: var(--ci);
   box-shadow: inset 0 0 0 1.5px var(--ci), 0 2px 0 var(--vellum-400);
   cursor: pointer;
@@ -226,7 +228,7 @@ export default {
 .pages__cell:active { transform: translateY(2px) scale(0.97); }
 .pages__cell.is-found { background: var(--cc); color: var(--ink-900); box-shadow: inset 0 0 0 1px var(--oc-line), 0 2px 0 var(--vellum-400); }
 .pages__cell.is-on { box-shadow: inset 0 0 0 2.5px var(--gold-500), 0 2px 0 var(--gold-600); }
-.pages__medal { width: 40px; height: 40px; display: grid; place-items: center; border-radius: var(--r-round); background: #FFFDF8; font-family: var(--oc-font-display); font-weight: 700; font-size: 22px; line-height: 1; }
+.pages__medal { width: 40px; height: 40px; display: grid; place-items: center; border-radius: var(--r-round); background: var(--grimoire-paper); font-family: var(--oc-font-display); font-weight: 700; font-size: 22px; line-height: 1; }
 .pages__cell.is-found .pages__medal { font-size: 26px; }
 .pages__label { max-width: 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-weight: 800; font-size: 11.5px; }
 .pages__cell:not(.is-found) .pages__label { font-family: var(--oc-font-display); font-size: 13px; letter-spacing: 0.04em; }

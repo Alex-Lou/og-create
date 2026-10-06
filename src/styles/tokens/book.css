@@ -1,0 +1,6 @@
+/* Le Grimoire (components/Book) : les valeurs que plusieurs de ses composants partagent. Une valeur propre à un seul
+   composant est un jeton local, en tête de son CSS. */
+:root {
+  /* Le papier clair des sceaux de chapitre et des cases de pages */
+  --grimoire-paper: #fffdf8;
+}

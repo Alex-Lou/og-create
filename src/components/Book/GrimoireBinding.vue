@@ -238,13 +238,52 @@ export default {
 <style scoped>
 /* Mesures : --m marge du plat autour des pages, --sb tranche du bas ; --smax, --sr, --sl (tranches) viennent du script */
 .grim { position: absolute; inset: 0; --m: 16px; --sb: 5px; --r: 20px; pointer-events: none; }
+/* Ses matières : le cuir (et le reflet chaud de son biseau), le filet doré, la tranche dorée des pages, la bougie,
+   les tranchefiles, les sigles, le laiton et les gemmes, le titre doré, les poussières, le voile de la couverture.
+   Ses arrondis : le coin du plat, côté tranche ; le côté du dos (plat, blocs de pages, visée, voile) */
+.grim {
+  --grim-leather: #5c1f25;
+  --grim-leather-hi: #7a2a31;
+  --grim-leather-lo: #34100f;
+  --grim-bevel-rgb: 255, 214, 170;
+  --grim-tool-rgb: 214, 170, 90;
+  --grim-edge: linear-gradient(180deg, #ebd38c, #c9a24a 38%, #a9822f 70%, #e4c47a);
+  --grim-edge-dark: rgba(92, 60, 18, .45);
+  --grim-edge-light: rgba(255, 236, 180, .25);
+  --grim-candle-rgb: 255, 176, 88;
+  --grim-aura-rgb: 255, 190, 110;
+  --grim-headband-gold: #e9cf86;
+  --grim-headband-cream: #f4e6c8;
+  --grim-rune-open: #d8b260;
+  --grim-rune-current: #ffe4a0;
+  --grim-rune-flare: rgba(255, 224, 140, 1);
+  --grim-brass: #7a5a1e;
+  --grim-ruby: #c2475a;
+  --grim-ruby-deep: #5a1220;
+  --grim-ruby-glow: rgba(255, 120, 130, .45);
+  --grim-jade: #b8e67a;
+  --grim-jade-deep: #2e6b3a;
+  --grim-jade-glow: rgba(214, 236, 140, .85);
+  --grim-title: linear-gradient(180deg, #fbe7ae, #d3aa52 55%, #8a6420);
+  --grim-mote: #fff2c4;
+  --grim-mote-fade: rgba(255, 210, 120, 0);
+  --grim-mote-glow: rgba(255, 214, 140, .8);
+  --grim-shade-rgb: 20, 8, 4;
+  --grim-corner: 12px;
+  --grim-corner-compact: 10px;
+  --grim-hinge: 3px;
+  --grim-hinge-thin: 2px;
+  --grim-hinge-aim: 4px;
+  --grim-hinge-soft: 6px;
+  --grim-headband-radius: 3px;
+}
 .grim.is-compact { --m: 12px; --sb: 4px; }
 .grim.is-closed .grim__left, .grim.is-closed .grim__board--left, .grim.is-closed .grim__fold { visibility: hidden; }
 
 /* Lueur chaude de la bougie sur le bureau, sous le livre */
 .grim__glow {
   position: absolute; inset: -40px -50px -50px -60px; z-index: 0;
-  background: radial-gradient(closest-side at 50% 40%, rgba(255, 176, 88, .26), rgba(255, 176, 88, 0));
+  background: radial-gradient(closest-side at 50% 40%, rgba(var(--grim-candle-rgb), .26), rgba(var(--grim-candle-rgb), 0));
   animation: grim-flicker 6s steps(1, end) infinite;
 }
 
@@ -252,17 +291,17 @@ export default {
 .grim__board {
   position: absolute; z-index: 1;
   top: calc(-1 * var(--m)); bottom: calc(-1 * (var(--m) + var(--sb)));
-  background-color: #5C1F25;
-  background-image: var(--grain), radial-gradient(120% 90% at 38% 28%, #7A2A31 0%, #5C1F25 55%, #34100F 100%);
-  box-shadow: inset 0 0 0 1px rgba(0, 0, 0, .55), inset 0 2px 0 rgba(255, 214, 170, .14), inset 0 -4px 8px rgba(0, 0, 0, .45), 0 22px 46px rgba(0, 0, 0, .55), 0 4px 12px rgba(0, 0, 0, .35);
+  background-color: var(--grim-leather);
+  background-image: var(--grain), radial-gradient(120% 90% at 38% 28%, var(--grim-leather-hi) 0%, var(--grim-leather) 55%, var(--grim-leather-lo) 100%);
+  box-shadow: inset 0 0 0 1px rgba(0, 0, 0, .55), inset 0 2px 0 rgba(var(--grim-bevel-rgb), .14), inset 0 -4px 8px rgba(0, 0, 0, .45), 0 22px 46px rgba(0, 0, 0, .55), 0 4px 12px rgba(0, 0, 0, .35);
 }
-.grim__board--right { left: 50%; right: calc(-1 * (var(--m) + var(--smax))); border-radius: 3px 12px 12px 3px; }
-.grim__board--left { left: calc(-1 * (var(--m) + var(--smax))); right: 50%; border-radius: 12px 3px 3px 12px; }
+.grim__board--right { left: 50%; right: calc(-1 * (var(--m) + var(--smax))); border-radius: var(--grim-hinge) var(--grim-corner) var(--grim-corner) var(--grim-hinge); }
+.grim__board--left { left: calc(-1 * (var(--m) + var(--smax))); right: 50%; border-radius: var(--grim-corner) var(--grim-hinge) var(--grim-hinge) var(--grim-corner); }
 /* Double filet doré poussé au fer */
 .grim__tool {
   position: absolute; inset: 5px; border-radius: var(--r-xs);
-  border: 1px solid rgba(214, 170, 90, .55);
-  box-shadow: inset 0 0 0 2px rgba(0, 0, 0, 0), inset 0 0 0 3px rgba(214, 170, 90, .3);
+  border: 1px solid rgba(var(--grim-tool-rgb), .55);
+  box-shadow: inset 0 0 0 2px rgba(0, 0, 0, 0), inset 0 0 0 3px rgba(var(--grim-tool-rgb), .3);
 }
 
 /* Coins en laiton */
@@ -279,32 +318,32 @@ export default {
   background-repeat: no-repeat;
   box-shadow: 0 1px 2px rgba(0, 0, 0, .45);
   background-image:
-    repeating-linear-gradient(90deg, rgba(92, 60, 18, .45) 0 1px, rgba(255, 236, 180, .25) 1px 2px),
-    repeating-linear-gradient(180deg, rgba(92, 60, 18, .45) 0 1px, rgba(255, 236, 180, .25) 1px 2px),
-    linear-gradient(180deg, #EBD38C, #C9A24A 38%, #A9822F 70%, #E4C47A);
+    repeating-linear-gradient(90deg, var(--grim-edge-dark) 0 1px, var(--grim-edge-light) 1px 2px),
+    repeating-linear-gradient(180deg, var(--grim-edge-dark) 0 1px, var(--grim-edge-light) 1px 2px),
+    var(--grim-edge);
 }
 .grim__block--right {
   left: 50%; right: calc(-1 * var(--sr));
-  border-radius: 2px var(--r) var(--r) 2px;
+  border-radius: var(--grim-hinge-thin) var(--r) var(--r) var(--grim-hinge-thin);
   background-size: var(--sr) 100%, 100% var(--sb), 100% 100%;
   background-position: right top, left bottom, 0 0;
 }
 .grim__block--left {
   left: calc(-1 * var(--sl)); right: 50%;
-  border-radius: var(--r) 2px 2px var(--r);
+  border-radius: var(--r) var(--grim-hinge-thin) var(--grim-hinge-thin) var(--r);
   background-size: var(--sl) 100%, 100% var(--sb), 100% 100%;
   background-position: left top, left bottom, 0 0;
 }
 
 /* Pli du dos entre les deux pages, sur les marges du plat */
-.grim__fold { position: absolute; z-index: 1; left: calc(50% - 2px); width: 4px; background: linear-gradient(90deg, rgba(0, 0, 0, .55), rgba(255, 214, 170, .12), rgba(0, 0, 0, .55)); }
+.grim__fold { position: absolute; z-index: 1; left: calc(50% - 2px); width: 4px; background: linear-gradient(90deg, rgba(0, 0, 0, .55), rgba(var(--grim-bevel-rgb), .12), rgba(0, 0, 0, .55)); }
 .grim__fold--top { top: calc(-1 * var(--m)); height: var(--m); }
 .grim__fold--bottom { bottom: calc(-1 * (var(--m) + var(--sb))); height: calc(var(--m) + var(--sb)); }
 
 /* Tranchefiles : petites perles de soie brodée en tête et en queue du dos */
 .grim__headband {
-  position: absolute; z-index: 1; left: calc(50% - 6px); width: 12px; height: 5px; border-radius: 3px;
-  background: repeating-linear-gradient(90deg, var(--silk) 0 2px, #E9CF86 2px 3.5px, #F4E6C8 3.5px 4.5px);
+  position: absolute; z-index: 1; left: calc(50% - 6px); width: 12px; height: 5px; border-radius: var(--grim-headband-radius);
+  background: repeating-linear-gradient(90deg, var(--silk) 0 2px, var(--grim-headband-gold) 2px 3.5px, var(--grim-headband-cream) 3.5px 4.5px);
   box-shadow: 0 1px 1px rgba(0, 0, 0, .5);
 }
 .grim__headband--top { top: -4px; }
@@ -318,10 +357,10 @@ export default {
 }
 .grim__rune { position: relative; width: 13px; height: 13px; color: rgba(0, 0, 0, .55); transition: color .5s ease; }
 .grim.is-compact .grim__rune { width: 11px; height: 11px; }
-.grim__rune svg { display: block; width: 100%; height: 100%; fill: none; stroke: currentColor; stroke-width: 2.4; stroke-linecap: round; stroke-linejoin: round; filter: drop-shadow(0 1px 0 rgba(255, 214, 170, .18)); }
-.grim__rune.is-open { color: #D8B260; }
+.grim__rune svg { display: block; width: 100%; height: 100%; fill: none; stroke: currentColor; stroke-width: 2.4; stroke-linecap: round; stroke-linejoin: round; filter: drop-shadow(0 1px 0 rgba(var(--grim-bevel-rgb), .18)); }
+.grim__rune.is-open { color: var(--grim-rune-open); }
 .grim__rune.is-open svg { filter: drop-shadow(0 0 2px rgba(var(--oc-glow-rgb), .45)); }
-.grim__rune.is-current { color: #FFE4A0; animation: grim-rune 2.8s ease-in-out infinite; }
+.grim__rune.is-current { color: var(--grim-rune-current); animation: grim-rune 2.8s ease-in-out infinite; }
 .grim__rune.is-ignite { animation: grim-ignite 1.4s cubic-bezier(.3, 1.5, .5, 1); }
 .grim__runes.is-flash .grim__rune.is-open { animation: grim-sweep 1.2s ease-out calc(var(--k) * 90ms) both; }
 
@@ -334,7 +373,7 @@ export default {
 .grim__gem {
   position: absolute; left: 50%; top: 50%; width: 14px; height: 14px; margin: -7px 0 0 -7px; border-radius: var(--r-round);
   background: radial-gradient(circle at 34% 30%, #FFFFFF 0, var(--silk) 34%, var(--gem-deep) 100%);
-  box-shadow: inset 0 -1px 2px rgba(0, 0, 0, .5), 0 0 0 1.5px #7A5A1E;
+  box-shadow: inset 0 -1px 2px rgba(0, 0, 0, .5), 0 0 0 1.5px var(--grim-brass);
   transition: background .6s ease;
 }
 .grim.is-compact .grim__gem { width: 11px; height: 11px; margin: -5.5px 0 0 -5.5px; }
@@ -353,14 +392,14 @@ export default {
 /* Aura, au-dessus des pages */
 .grim__candle {
   position: absolute; inset: 0; z-index: 3; border-radius: var(--r);
-  background: radial-gradient(60% 60% at 30% 6%, rgba(255, 190, 110, .14), rgba(255, 190, 110, 0) 70%);
+  background: radial-gradient(60% 60% at 30% 6%, rgba(var(--grim-aura-rgb), .14), rgba(var(--grim-aura-rgb), 0) 70%);
   animation: grim-flicker 6s steps(1, end) infinite;
 }
 .grim__motes { position: absolute; inset: 0; z-index: 3; overflow: visible; }
 .grim__motes i {
   position: absolute; bottom: 8%; left: calc(var(--k) * 12.5% - 2%); width: 3px; height: 3px; border-radius: var(--r-round);
-  background: radial-gradient(circle, #FFF2C4, rgba(255, 210, 120, 0) 70%);
-  box-shadow: 0 0 4px rgba(255, 214, 140, .8);
+  background: radial-gradient(circle, var(--grim-mote), var(--grim-mote-fade) 70%);
+  box-shadow: 0 0 4px var(--grim-mote-glow);
   opacity: 0; animation: grim-mote 9s linear calc(var(--k) * -1.3s) infinite;
 }
 .grim__motes i:nth-child(odd) { animation-duration: 11s; width: 2px; height: 2px; }
@@ -369,11 +408,11 @@ export default {
   box-shadow: inset 0 0 0 2px rgba(var(--oc-aim-rgb), .75), inset 0 0 26px rgba(var(--oc-aim-rgb), .22);
   transition: opacity .2s ease;
 }
-.grim__aim--left { left: 0; border-radius: var(--r) 4px 4px var(--r); }
-.grim__aim--right { left: 50%; border-radius: 4px var(--r) var(--r) 4px; }
+.grim__aim--left { left: 0; border-radius: var(--r) var(--grim-hinge-aim) var(--grim-hinge-aim) var(--r); }
+.grim__aim--right { left: 50%; border-radius: var(--grim-hinge-aim) var(--r) var(--r) var(--grim-hinge-aim); }
 
 /* Couverture de l'ouverture : le plat avant, posé sur la page de droite, charnière sur le dos */
-.grim__shade { position: absolute; z-index: 5; inset: 0 0 0 50%; background: linear-gradient(90deg, rgba(20, 8, 4, .85), rgba(20, 8, 4, .4)); border-radius: 6px var(--r) var(--r) 6px; }
+.grim__shade { position: absolute; z-index: 5; inset: 0 0 0 50%; background: linear-gradient(90deg, rgba(var(--grim-shade-rgb), .85), rgba(var(--grim-shade-rgb), .4)); border-radius: var(--grim-hinge-soft) var(--r) var(--r) var(--grim-hinge-soft); }
 .grim__cover {
   position: absolute; z-index: 6; pointer-events: auto; cursor: pointer;
   left: 50%; top: calc(-1 * var(--m)); right: calc(-1 * (var(--m) + var(--smax))); bottom: calc(-1 * (var(--m) + var(--sb)));
@@ -383,12 +422,12 @@ export default {
 .grim__face {
   position: absolute; inset: 0; container-type: inline-size;
   backface-visibility: hidden; -webkit-backface-visibility: hidden;
-  background-color: #5C1F25;
-  background-image: var(--grain), radial-gradient(120% 90% at 38% 28%, #7A2A31 0%, #5C1F25 55%, #34100F 100%);
-  box-shadow: inset 0 0 0 1px rgba(0, 0, 0, .55), inset 0 2px 0 rgba(255, 214, 170, .14), inset 0 -4px 8px rgba(0, 0, 0, .45);
+  background-color: var(--grim-leather);
+  background-image: var(--grain), radial-gradient(120% 90% at 38% 28%, var(--grim-leather-hi) 0%, var(--grim-leather) 55%, var(--grim-leather-lo) 100%);
+  box-shadow: inset 0 0 0 1px rgba(0, 0, 0, .55), inset 0 2px 0 rgba(var(--grim-bevel-rgb), .14), inset 0 -4px 8px rgba(0, 0, 0, .45);
 }
-.grim__face--front { border-radius: 3px 12px 12px 3px; background-image: var(--grain), var(--art); background-size: auto, 100% 100%; box-shadow: 0 18px 40px rgba(0, 0, 0, .55); }
-.grim__face--back { transform: rotateY(180deg); border-radius: 12px 3px 3px 12px; box-shadow: inset 0 0 0 1px rgba(0, 0, 0, .55), inset 0 2px 0 rgba(255, 214, 170, .14), inset 0 -4px 8px rgba(0, 0, 0, .45), 0 22px 46px rgba(0, 0, 0, .55), 0 4px 12px rgba(0, 0, 0, .35); }
+.grim__face--front { border-radius: var(--grim-hinge) var(--grim-corner) var(--grim-corner) var(--grim-hinge); background-image: var(--grain), var(--art); background-size: auto, 100% 100%; box-shadow: 0 18px 40px rgba(0, 0, 0, .55); }
+.grim__face--back { transform: rotateY(180deg); border-radius: var(--grim-corner) var(--grim-hinge) var(--grim-hinge) var(--grim-corner); box-shadow: inset 0 0 0 1px rgba(0, 0, 0, .55), inset 0 2px 0 rgba(var(--grim-bevel-rgb), .14), inset 0 -4px 8px rgba(0, 0, 0, .45), 0 22px 46px rgba(0, 0, 0, .55), 0 4px 12px rgba(0, 0, 0, .35); }
 .grim__face .grim__corner--tl { top: -2px; left: -2px; }
 .grim__face .grim__corner--tr { top: -2px; right: -2px; transform: rotate(90deg); }
 .grim__face .grim__corner--br { bottom: -2px; right: -2px; transform: rotate(180deg); }
@@ -397,18 +436,18 @@ export default {
 .grim__light svg { display: block; width: 100%; height: 100%; fill: none; stroke: currentColor; stroke-width: 2.6; stroke-linecap: round; stroke-linejoin: round; filter: drop-shadow(0 0 3px rgba(var(--oc-glow-rgb), .95)); }
 .grim__cover-gem {
   position: absolute; left: 50%; top: 50%; width: 15%; aspect-ratio: 1; border-radius: var(--r-round); transform: translate(-50%, -50%);
-  background: radial-gradient(circle at 34% 30%, #FFFFFF 0, #C2475A 30%, #5A1220 100%);
-  box-shadow: inset 0 -2px 4px rgba(0, 0, 0, .55), 0 0 0 2px #7A5A1E, 0 0 0 4px rgba(var(--oc-gilt-rgb), .6), 0 0 18px rgba(255, 120, 130, .45);
+  background: radial-gradient(circle at 34% 30%, #FFFFFF 0, var(--grim-ruby) 30%, var(--grim-ruby-deep) 100%);
+  box-shadow: inset 0 -2px 4px rgba(0, 0, 0, .55), 0 0 0 2px var(--grim-brass), 0 0 0 4px rgba(var(--oc-gilt-rgb), .6), 0 0 18px var(--grim-ruby-glow);
   filter: brightness(.7);
 }
 .grim__cover-gem.is-awake {
-  background: radial-gradient(circle at 34% 30%, #FFFFFF 0, #B8E67A 30%, #2E6B3A 100%);
-  box-shadow: inset 0 -2px 4px rgba(0, 0, 0, .45), 0 0 0 2px #7A5A1E, 0 0 0 4px rgba(var(--oc-gilt-rgb), .7), 0 0 22px rgba(214, 236, 140, .85);
+  background: radial-gradient(circle at 34% 30%, #FFFFFF 0, var(--grim-jade) 30%, var(--grim-jade-deep) 100%);
+  box-shadow: inset 0 -2px 4px rgba(0, 0, 0, .45), 0 0 0 2px var(--grim-brass), 0 0 0 4px rgba(var(--oc-gilt-rgb), .7), 0 0 22px var(--grim-jade-glow);
   filter: brightness(1.15);
 }
 .grim__title, .grim__subtitle {
   position: absolute; left: 10%; right: 10%; text-align: center; font-family: var(--oc-font-display); font-weight: 700;
-  background: linear-gradient(180deg, #FBE7AE, #D3AA52 55%, #8A6420); -webkit-background-clip: text; background-clip: text; color: transparent;
+  background: var(--grim-title); -webkit-background-clip: text; background-clip: text; color: transparent;
   filter: drop-shadow(0 1px 0 rgba(0, 0, 0, .6));
 }
 .grim__title { top: 6.5%; font-size: 9.5cqw; line-height: 1.1; letter-spacing: .02em; }
@@ -418,11 +457,11 @@ export default {
 .grim__band--bottom { bottom: 22%; }
 .grim__block--inside {
   left: calc(var(--m) + var(--smax) - var(--sl)); right: 0; top: calc(var(--m) + 1px); bottom: var(--m);
-  border-radius: var(--r) 2px 2px var(--r);
+  border-radius: var(--r) var(--grim-hinge-thin) var(--grim-hinge-thin) var(--r);
   background-size: var(--sl) 100%, 100% var(--sb), 100% 100%;
   background-position: left top, left bottom, 0 0;
 }
-.grim__endpaper { position: absolute; z-index: 2; left: calc(var(--m) + var(--smax)); top: var(--m); width: calc(100% - var(--m) - var(--smax)); height: calc(100% - 2 * var(--m) - var(--sb)); border-radius: var(--r) 6px 6px var(--r); }
+.grim__endpaper { position: absolute; z-index: 2; left: calc(var(--m) + var(--smax)); top: var(--m); width: calc(100% - var(--m) - var(--smax)); height: calc(100% - 2 * var(--m) - var(--sb)); border-radius: var(--r) var(--grim-hinge-soft) var(--grim-hinge-soft) var(--r); }
 .grim__strap--inside { left: -38px; }
 .grim.is-compact .grim__strap--inside { left: -30px; }
 
@@ -430,25 +469,25 @@ export default {
    (sans coins ni lanière), le pli, les tranchefiles et le signet au bord gauche ; la couverture couvre la page et
    s'ouvre vers la gauche */
 .grim.is-compact .grim__board--right, .grim.is-compact .grim__block--right, .grim.is-compact .grim__cover { left: 0; }
-.grim.is-compact .grim__board--left { right: 100%; border-radius: 10px 2px 2px 10px; }
+.grim.is-compact .grim__board--left { right: 100%; border-radius: var(--grim-corner-compact) var(--grim-hinge-thin) var(--grim-hinge-thin) var(--grim-corner-compact); }
 .grim.is-compact.is-closed .grim__board--left { visibility: visible; }
 /* Livre ouvert : le plat gauche passe sous la feuille posée à gauche et s'efface vers le bord de la scène */
 .grim.is-compact:not(.is-closed) .grim__board--left {
-  left: calc(-1 * (var(--m) + var(--smax)) - 90px); border-radius: 0 2px 2px 0;
+  left: calc(-1 * (var(--m) + var(--smax)) - 90px); border-radius: 0 var(--grim-hinge-thin) var(--grim-hinge-thin) 0;
   -webkit-mask-image: linear-gradient(90deg, transparent 30%, #000 75%); mask-image: linear-gradient(90deg, transparent 30%, #000 75%);
 }
 .grim.is-compact .grim__board--left .grim__tool, .grim.is-compact > .grim__corner.grim__left, .grim.is-compact .grim__block--left, .grim.is-compact > .grim__strap { display: none; }
 .grim.is-compact .grim__fold { left: -2px; }
 .grim.is-compact .grim__headband { left: -6px; }
 .grim.is-compact .grim__runes { left: 9%; }
-.grim.is-compact .grim__shade { inset: 0; border-radius: 6px var(--r) var(--r) 6px; }
+.grim.is-compact .grim__shade { inset: 0; border-radius: var(--grim-hinge-soft) var(--r) var(--r) var(--grim-hinge-soft); }
 
 @keyframes grim-flicker {
   0% { opacity: .85; } 9% { opacity: 1; } 17% { opacity: .78; } 26% { opacity: .95; } 41% { opacity: .82; }
   52% { opacity: 1; } 63% { opacity: .88; } 71% { opacity: .76; } 84% { opacity: .97; } 92% { opacity: .84; }
 }
 @keyframes grim-gem { 0%, 100% { opacity: .25; transform: scale(.85); } 50% { opacity: .7; transform: scale(1.12); } }
-@keyframes grim-rune { 0%, 100% { filter: drop-shadow(0 0 1px rgba(var(--oc-glow-rgb), .5)); } 50% { filter: drop-shadow(0 0 5px rgba(255, 224, 140, 1)); } }
+@keyframes grim-rune { 0%, 100% { filter: drop-shadow(0 0 1px rgba(var(--oc-glow-rgb), .5)); } 50% { filter: drop-shadow(0 0 5px var(--grim-rune-flare)); } }
 @keyframes grim-ignite { 0% { transform: scale(1); } 40% { transform: scale(1.7); color: #FFFFFF; filter: drop-shadow(0 0 8px var(--oc-glow-halo)); } 100% { transform: scale(1); } }
 @keyframes grim-sweep { 0%, 100% { filter: none; } 40% { color: #FFFFFF; filter: drop-shadow(0 0 6px var(--oc-glow-halo)); transform: translateY(-1px); } }
 @keyframes grim-sway { 0%, 100% { transform: rotate(-4deg); } 50% { transform: rotate(3deg); } }
