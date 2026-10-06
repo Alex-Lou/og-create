@@ -694,21 +694,47 @@ export function liveOf(M) {
   return { water, falls, shore, back };
 }
 
+// Traits blancs regroupés : ceux de même teinte et de même épaisseur partent en un seul tracé (de loin, toute la côte et
+// toute l'eau douce sont à l'écran : un millier de traits). Teinte au 1/50 et épaisseur au 1/10 près, l'œil n'y voit
+// pas de différence. add(alpha, largeur, tracé) : tracé(ctx) ajoute ses segments au chemin ; flush(ctx) dessine tout
+export function strokeBatch() {
+  const groups = new Map();
+  return {
+    add(alpha, width, trace) {
+      const a = Math.round(alpha * 50) / 50, w = Math.round(width * 10) / 10;
+      if (a <= 0) return;
+      const key = `${a}|${w}`;
+      if (!groups.has(key)) groups.set(key, { a, w, traces: [] });
+      groups.get(key).traces.push(trace);
+    },
+    flush(ctx) {
+      for (const { a, w, traces } of groups.values()) {
+        ctx.strokeStyle = `rgba(255,255,255,${a})`;
+        ctx.lineWidth = w;
+        ctx.beginPath();
+        for (const trace of traces) trace(ctx);
+        ctx.stroke();
+      }
+      groups.clear();
+    }
+  };
+}
+
 // Animation de l'eau douce sur les cases visibles : reflets qui glissent, cascades qui tombent (la mer : sea.js)
 export function drawLive(ctx, M, live, view, t) {
   const seen = c => c.x > view.x - TW && c.x < view.x + view.w + TW && c.y > view.y - TW * 2 && c.y < view.y + view.h + TW;
   ctx.lineCap = 'round';
+  const glints = strokeBatch();
   for (const cell of live.water) {
     const c = worldOf(cell.x, cell.y, M.surface(cell.x, cell.y));
     if (!seen(c)) continue;
     const k = (t * 0.35 + rnd(cell.x, cell.y) ) % 1;
-    ctx.strokeStyle = `rgba(255, 255, 255, ${(0.45 * Math.sin(k * Math.PI)).toFixed(3)})`;
-    ctx.lineWidth = 1.4;
-    ctx.beginPath();
-    ctx.moveTo(c.x - 10 + k * 8, c.y - 3 + k * 4);
-    ctx.quadraticCurveTo(c.x - 2 + k * 8, c.y - 6 + k * 4, c.x + 6 + k * 8, c.y - 3 + k * 4);
-    ctx.stroke();
+    glints.add(0.45 * Math.sin(k * Math.PI), 1.4, x => {
+      x.moveTo(c.x - 10 + k * 8, c.y - 3 + k * 4);
+      x.quadraticCurveTo(c.x - 2 + k * 8, c.y - 6 + k * 4, c.x + 6 + k * 8, c.y - 3 + k * 4);
+    });
   }
+  glints.flush(ctx);
   for (const f of live.falls) {
     const c = worldOf(f.x, f.y, M.surface(f.x, f.y));
     if (!seen(c)) continue;
@@ -720,15 +746,15 @@ export function drawLive(ctx, M, live, view, t) {
     ctx.clip();
     ctx.strokeStyle = 'rgba(255, 255, 255, .7)';
     ctx.lineWidth = 2;
+    ctx.beginPath();
     for (let k = 0; k < 6; k++) {
       const u = (k + 0.5) / 6;
       const sx = x0 + (x1 - x0) * u, sy = y0 + (y1 - y0) * u;
       const off = ((t * 60 + k * 17) % (f.drop + 12)) - 12;
-      ctx.beginPath();
       ctx.moveTo(sx, sy + off);
       ctx.lineTo(sx, sy + off + 9);
-      ctx.stroke();
     }
+    ctx.stroke();
     ctx.restore();
     // Écume au pied de la cascade
     const fx = (x0 + x1) / 2, fy = (y0 + y1) / 2 + f.drop;
