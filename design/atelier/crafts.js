@@ -850,13 +850,37 @@ C.tente = { n: 2, draw: f => {
   const [jx, jy] = at(0.4, 0.44, 0);
   return s + P(`M${jx - 3},${jy} Q${jx - 5.4},${jy - 6} ${jx - 2.2},${jy - 9} L${jx + 2.2},${jy - 9} Q${jx + 5.4},${jy - 6} ${jx + 3},${jy} Z`, '#D9824A', 0.9) + E(jx, jy - 9, 2.4, 0.9, '#B86A36', 0.6) + `<path d="M${jx - 3.6},${jy - 5} Q${jx},${jy - 3.6} ${jx + 3.6},${jy - 5}" stroke="#F2C27A" stroke-width="0.8" fill="none"/>`;
 } };
+// Cadran de sel : une croûte de sel craquelée en alvéoles ; un disque de sel blanc aux flancs facettés, gravé de l'anneau
+// des heures et d'un petit soleil ; un gnomon de grès taillé, sa tranche éclairée ; son ombre tourne sur le disque ; des
+// cristaux de sel cubiques au pied, qui scintillent ailleurs d'une image à l'autre (2 images)
+const SEL = { top: '#FFFDF9', left: '#EEE7DD', right: '#D6CCBF' };
 C.cadransel = { n: 2, draw: f => {
-  let s = shadow(0, 0, 0.42, 0.1) + cylinder(0, 0, 0.36, 0, 4, { top: '#FBF8F1', left: '#E7E1D3', right: '#C9C0AC' });
-  const [x, y] = at(0, 0, 4);
-  for (let i = 0; i < 12; i++) { const a = (i / 12) * TAU; s += L([x + Math.cos(a) * 16, y + Math.sin(a) * 8], [x + Math.cos(a) * 19, y + Math.sin(a) * 9.6], '#B8AC98', 0.8); }
-  const sa = f ? 1 : 0;
-  s += `<path d="M${x},${y} L${r2(x + Math.cos(sa) * 16)},${r2(y + Math.sin(sa) * 8)}" stroke="rgba(60,40,25,.3)" stroke-width="2.4" stroke-linecap="round"/>`;
-  return s + poly([[x - 1.6, y], [x + 1.6, y], [x - 3, y - 16]], SANDSTONE.left, 1);
+  const [x, y] = at(0, 0);
+  // la croûte de sel et ses craquelures en alvéoles
+  const bord = Array.from({ length: 12 }, (_, i) => { const t = (i / 12) * TAU, r = 1 + (i % 2 ? 0.05 : -0.04); return [x + Math.cos(t) * 36 * r, y + 1 + Math.sin(t) * 15 * r]; });
+  const mil = i => { const p = bord[i % 12], q = bord[(i + 1) % 12]; return `${r2((p[0] + q[0]) / 2)},${r2((p[1] + q[1]) / 2)}`; };
+  let croute = `M${mil(11)}`;
+  for (let i = 0; i < 12; i++) croute += ` Q${r2(bord[i][0])},${r2(bord[i][1])} ${mil(i)}`;
+  let s = shadow(0, 0, 0.42, 0.1) + `<path d="${croute} Z" fill="#F8F2EA" stroke="#E0D3C4" stroke-width="1.2"/>`;
+  s += `<path d="M${x - 30},${y + 2} l5,-3 l6,1 l3,-4 M${x - 19},${y - 4} l-2,-5 M${x - 25},${y - 1} l-3,5 l5,4 l7,-1 M${x + 22},${y + 6} l5,-3 l6,0 M${x + 27},${y + 3} l2,-6 l-4,-4 M${x + 8},${y + 12} l5,1 l3,-3 M${x - 8},${y + 13} l-4,-2" stroke="#E0D3C4" stroke-width="0.8" fill="none" stroke-linejoin="round"/>`;
+  // le disque de sel, ses flancs facettés, l'anneau gravé, les heures et le petit soleil
+  s += cylinder(0, 0, 0.34, 0, 4.6, SEL);
+  for (const t of [0.35, 0.8, 1.25, 1.7, 2.15, 2.6]) { const [fx, fy] = at(Math.cos(t) * 0.34, Math.sin(t) * 0.34, 0.6); s += L([fx, fy], [fx, fy - 4.6], SEL.right, 0.5); }
+  const [dx, dy] = at(0, 0, 4.6), rx = 0.34 * 56, ry = 0.34 * 28;
+  s += E(dx, dy, rx * 0.84, ry * 0.84, 'none', 0).replace('stroke="none"', 'stroke="#CDBFAE" stroke-width="0.7"');
+  for (let i = 0; i < 12; i++) { const t = (i / 12) * TAU, c = Math.cos(t), sn = Math.sin(t); s += P(`M${r2(dx + c * rx * 0.86)},${r2(dy + sn * ry * 0.86)} L${r2(dx + c * rx * 0.97 - sn * 0.8)},${r2(dy + sn * ry * 0.97 + c * 0.4)} L${r2(dx + c * rx * 0.97 + sn * 0.8)},${r2(dy + sn * ry * 0.97 - c * 0.4)} Z`, '#CDBFAE', 0); }
+  for (let i = 0; i < 8; i++) { const t = (i / 8) * TAU; s += L([dx + Math.cos(t) * 2.8, dy + Math.sin(t) * 1.4], [dx + Math.cos(t) * 4.2, dy + Math.sin(t) * 2.1], '#CDBFAE', 0.5); }
+  s += E(dx, dy, 2, 1, '#E8DCCC', 0.4);
+  // l'ombre du gnomon, qui tourne d'une image à l'autre
+  const sa = f ? 0.8 : -0.3;
+  s += `<path d="M${dx},${dy} L${r2(dx + Math.cos(sa - 0.1) * rx * 0.9)},${r2(dy + Math.sin(sa - 0.1) * ry * 0.9)} L${r2(dx + Math.cos(sa + 0.1) * rx * 0.9)},${r2(dy + Math.sin(sa + 0.1) * ry * 0.9)} Z" fill="rgba(90,70,50,0.32)"/>`;
+  // le gnomon de grès : sa face à l'ombre, sa tranche éclairée, une encoche taillée
+  const g0 = at(0, 0.13, 4.6), g1 = at(0, -0.12, 4.6), g2 = at(0, -0.12, 14.4), g3 = at(0.018, -0.12, 14.4), g4 = at(0.018, 0.13, 4.6);
+  s += poly([g0, g1, g2], SANDSTONE.right, 0.8) + poly([g0, g2, g3, g4], SANDSTONE.top, 0.7) + L(at(0, -0.04, 6.4), at(0, -0.1, 8.4), SANDSTONE.left, 0.6);
+  // les cristaux de sel au pied, puis les scintillements
+  const ROSE_SEL = { top: '#FFF6F2', left: '#F0D6CF', right: '#D4B4AA' }, cristal = (u, v, w, h) => box(u - w, v - w, u + w, v + w, 0, h, ROSE_SEL, 0.6);
+  s += cristal(0.38, 0.2, 0.026, 2.8) + cristal(0.43, 0.12, 0.018, 1.9) + cristal(0.33, 0.28, 0.016, 1.6) + cristal(-0.4, 0.16, 0.022, 2.4) + cristal(-0.34, 0.25, 0.015, 1.5);
+  return s + (f ? [[x - 14, y - 6, 1.6], [x + 18, y + 1, 1.3], [x - 24, y + 4, 1.1]] : [[x + 10, y - 5, 1.5], [x - 18, y + 1, 1.2], [x + 26, y + 3, 1.3]]).map(([a, b, r]) => givre(a, b, r).replace('#FFFFFF', '#F4D67A')).join('');
 } };
 C.hamac = { n: 2, draw: f => {
   const a = at(-0.28, 0.28, 26), b = at(0.28, -0.28, 26);
