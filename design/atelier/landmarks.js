@@ -160,15 +160,57 @@ const menhirsDraw = fleuri => f => {
 };
 LM.menhirs = { n: 2, draw: menhirsDraw(false) };
 LM.menhirs_fleuri = { n: 2, draw: menhirsDraw(true) };
+// Arche des falaises : un rocher de falaise posé dans la mer, percé de part en part ; son flanc au soleil strié de
+// couches, son bout à l'ombre, la voûte qui laisse voir la mer derrière ; un tapis d'herbe sur le dessus qui déborde en
+// frange, des touffes et des fleurettes ; des rochers et de l'écume au pied, des vagues qui vont et viennent ; une
+// mouette posée sur le sommet qui s'ébroue (2 images)
+const FALAISE = { lit: '#D6BC96', mid: '#C2A47C', shade: '#A0835E', strate: '#B4966E', dark: '#6E5A44' };
 LM.arche = { n: 2, draw: f => {
-  const [x, y] = at(0, 0);
-  let s = E(x, y + 6, 54, 16, '#7FB8E0', 1) + E(x - 6, y + 4, 36, 9, '#A8D4F0', 0);
-  const rock = `M${x - 46},${y + 8} L${x - 44},${y - 40} Q${x - 30},${y - 60} ${x},${y - 60} Q${x + 34},${y - 58} ${x + 46},${y - 38} L${x + 48},${y + 8} L${x + 22},${y + 10} L${x + 20},${y - 14} Q${x},${y - 34} ${x - 18},${y - 14} L${x - 20},${y + 10} Z`;
-  s += `<path d="${rock}" fill="#C8B08E" stroke="${OUT}" stroke-width="1.2" stroke-linejoin="round"/>`;
-  s += `<defs><clipPath id="arc${f}"><path d="${rock}"/></clipPath></defs><g clip-path="url(#arc${f})"><rect x="${x + 14}" y="${y - 70}" width="40" height="90" fill="#A8906E"/>${[-30, -14, 2].map(dy => `<path d="M${x - 50},${y + dy} Q${x},${y + dy + 4} ${x + 50},${y + dy - 2}" stroke="#A8906E" stroke-width="0.8" fill="none"/>`).join('')}</g>`;
-  s += `<path d="M${x - 44},${y - 40} Q${x - 30},${y - 62} ${x},${y - 62} Q${x + 34},${y - 60} ${x + 46},${y - 38} Q${x + 30},${y - 50} ${x},${y - 52} Q${x - 26},${y - 52} ${x - 44},${y - 40} Z" fill="#7EC45B" stroke="${OUT}" stroke-width="1"/>`;
-  s += `<path d="M${x - 16},${y + 10} q-6,4 -14,2 M${x + 20},${y + 11} q8,3 16,1" stroke="#FFFFFF" stroke-width="1.2" fill="none" stroke-linecap="round"/>`;
-  return s + gull(x + 8, y - 64, f);
+  const [x, y] = at(0, 0), c = FALAISE, V = 0.14, Z = 34;
+  const F = (u, z) => at(u, V, z), B = (u, z) => at(u, -V, z), xy = p => p.map(r2).join(',');
+  // un tracé lissé qui passe par le premier et le dernier point (milieux en points d'appui)
+  const lisse = pts => { let d = `M${xy(pts[0])}`; for (let i = 1; i < pts.length - 1; i++) d += ` Q${xy(pts[i])} ${r2((pts[i][0] + pts[i + 1][0]) / 2)},${r2((pts[i][1] + pts[i + 1][1]) / 2)}`; return d + ` L${xy(pts[pts.length - 1])}`; };
+  // la mer, ses hauts-fonds et ses vagues
+  let s = E(x, y + 6, 70, 26, '#6FB0DA', 1) + E(x - 8, y + 2, 52, 16, '#8CC6E8', 0) + E(x - 16, y, 26, 6, '#B2DCF2', 0);
+  // le rocher : des flancs bosselés, une crête naturelle ; le flanc au soleil vers nous, le bout à l'ombre
+  const gauche = [[-0.58, 0], [-0.62, 6], [-0.6, 14], [-0.55, 21]], crete = [[-0.58, 25], [-0.42, 31], [-0.2, 34], [0.06, 35], [0.3, 33], [0.48, 31], [0.58, 28]], droite = [[0.6, 21], [0.56, 13], [0.6, 6], [0.58, 0]];
+  const face = lisse([...gauche, ...crete, ...droite].map(([u, z]) => F(u, z))) + ' Z';
+  const bout = [[0.58, 28], ...droite];
+  s += poly([...bout.map(([u, z]) => F(u, z)), ...bout.slice().reverse().map(([u, z]) => B(u + 0.01, z - 1.5))], c.shade, 1.1);
+  for (const z of [7, 14, 21]) s += L(F(0.59, z), B(0.6, z - 1.5), c.dark, 0.8);
+  const idF = `arche-face-${f}`;
+  s += `<defs><clipPath id="${idF}"><path d="${face}"/></clipPath></defs><path d="${face}" fill="${c.lit}"/>`;
+  // les couches de la falaise : des bandes ondulées, le bas mouillé et ses algues
+  s += `<g clip-path="url(#${idF})">`
+    + [[9, 15, c.mid], [22, 27, c.mid]].map(([z0, z1]) => `<path d="M${xy(F(-0.7, z0))} Q${xy(F(-0.3, z0 + 2))} ${xy(F(0, z0))} T${xy(F(0.7, z0))} L${xy(F(0.7, z1))} Q${xy(F(0.3, z1 - 1.6))} ${xy(F(0, z1))} T${xy(F(-0.7, z1))} Z" fill="#CDB28C"/>`).join('')
+    + [7, 15, 22, 28].map(z => `<path d="M${xy(F(-0.7, z))} Q${xy(F(-0.35, z + 1.6))} ${xy(F(0, z))} T${xy(F(0.7, z))}" stroke="${c.strate}" stroke-width="1" fill="none"/>`).join('')
+    + `<path d="M${xy(F(-0.7, 0))} L${xy(F(-0.7, 4))} Q${xy(F(-0.35, 5.4))} ${xy(F(0, 3.6))} T${xy(F(0.7, 4))} L${xy(F(0.7, 0))} Z" fill="#9C8A66"/>`
+    + `<path d="M${xy(F(-0.5, 4.4))} l1.4,3 M${xy(F(-0.42, 4.6))} l0.6,2.4 M${xy(F(0.36, 3.8))} l1,2.8 M${xy(F(0.46, 3.6))} l0.4,2.2" stroke="#6E8A4E" stroke-width="1" stroke-linecap="round"/>`
+    + `<path d="M${xy(F(-0.44, 26))} l1.6,5 l-1.4,4 M${xy(F(0.4, 18))} l-1,5 l1.4,3" stroke="${c.dark}" stroke-width="0.8" fill="none" stroke-linecap="round"/></g>`
+    + `<path d="${face}" fill="none" stroke="${OUT}" stroke-width="1.1" stroke-linejoin="round"/>`;
+  // la voûte : un trou irrégulier ; dedans l'intrados dans l'ombre et, par le trou de derrière, la mer
+  const trouUZ = [[-0.28, 0], [-0.31, 6], [-0.28, 13], [-0.17, 20], [0.01, 24], [0.17, 21], [0.27, 15], [0.31, 7], [0.29, 0]];
+  const trou = lisse(trouUZ.map(([u, z]) => F(u, z))) + ' Z', fond = lisse(trouUZ.map(([u, z]) => B(u, z))) + ' Z', id = `arche-trou-${f}`;
+  s += `<defs><clipPath id="${id}"><path d="${trou}"/></clipPath></defs>`
+    + `<path d="${trou}" fill="${c.dark}"/><g clip-path="url(#${id})"><path d="${trou}" fill="#5A4836" transform="translate(-3 -2)"/><path d="${fond}" fill="#8CC6E8"/>${E(x + 8, y - 4, 10, 2.4, '#B2DCF2', 0)}<path d="M${x - 2 + (f ? 3 : 0)},${y + 2} q6,2 12,0" stroke="#FFFFFF" stroke-width="1" fill="none"/></g>`
+    + `<path d="${trou}" fill="none" stroke="${OUT}" stroke-width="1.1" stroke-linejoin="round"/>`;
+  // le tapis d'herbe du dessus, sa frange qui déborde, ses fleurettes
+  const T = [...crete.map(([u, z]) => at(u, V + 0.02, z)), ...crete.slice().reverse().map(([u, z]) => at(u, -V - 0.02, z - 2))];
+  s += poly(T, '#8FCB6A', 1);
+  let frange = `M${xy(T[0])}`;
+  for (let i = 1; i < crete.length; i++) { const p0 = T[i - 1], p1 = T[i]; frange += ` Q${r2((p0[0] + p1[0]) / 2 - 1)},${r2((p0[1] + p1[1]) / 2 + 3.4)} ${xy(p1)}`; }
+  s += P(frange + ' Z', '#7EBE58', 0.8);
+  for (const [u, v, col] of [[-0.36, 0.04, '#FFFFFF'], [-0.12, 0.05, '#F7B6C8'], [0.32, 0.02, '#FFFFFF'], [0.12, -0.05, '#F7B6C8']]) { const [fx, fy] = at(u, v, Z); s += Dk.flower(fx, fy - 1, 1.4, col, '#F2C94C'); }
+  // les rochers au pied, chacun dans son collier d'écume ; les vagues qui vont et viennent
+  const rocher = (dx, dy, r) => `<path d="M${x + dx - r * 1.3},${y + dy + r * 0.3} q${r * 1.3},${r * 0.7} ${r * 2.6},0" stroke="#FFFFFF" stroke-width="1.4" fill="none" stroke-linecap="round"/>`
+    + E(x + dx, y + dy, r, r * 0.66, c.shade, 0.9) + E(x + dx - r * 0.15, y + dy - r * 0.16, r * 0.78, r * 0.44, c.mid, 0) + E(x + dx - r * 0.38, y + dy - r * 0.3, r * 0.34, r * 0.16, c.lit, 0);
+  s += rocher(-52, 8, 6.4) + rocher(-38, 17, 4.2) + rocher(52, 5, 5.6) + rocher(40, 15, 3.8);
+  s += `<path d="${lisse([F(-0.62, 0.6), F(-0.3, -0.4), F(0, 0.8), F(0.3, -0.2), F(0.6, 0.6)])}" stroke="#FFFFFF" stroke-width="1.6" fill="none" stroke-linecap="round" stroke-dasharray="7 3"/>`;
+  const k = f ? 3 : 0;
+  s += `<path d="M${x - 46 - k},${y + 22} q-6,3 -12,1 M${x + 22 + k},${y + 24} q8,3 16,1 M${x - 16},${y + 28 + k * 0.5} q8,2 16,0 M${x + 54},${y + 14 - k * 0.5} q5,2 10,0" stroke="#FFFFFF" stroke-width="1.3" fill="none" stroke-linecap="round"/>`;
+  // la mouette posée sur le sommet qui s'ébroue
+  const [gx, gy] = at(0.16, -0.02, Z);
+  return s + gull(gx, gy - 4, f);
 } };
 LM.saule = { n: 2, draw: f => {
   const [x, y] = at(0, 0);
