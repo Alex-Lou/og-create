@@ -418,23 +418,49 @@ C.arche = { n: 2, draw: f => {
   return s + `<path d="M${px},${py} q2,-1.4 3,0.4 q-1.6,1.4 -3,-0.4 Z" fill="${ROSES[1][0]}" stroke="${OUT}" stroke-width="0.5" transform="rotate(${f ? 40 : -20} ${px} ${py})"/>`;
 } };
 
-// Étal du marché : table, cageots, auvent rayé qui ondule
+// Étal du marché : une table de planches et sa nappe festonnée, trois paniers bien garnis (pommes, oranges, choux),
+// un auvent rayé haut perché sur ses deux poteaux, son lambrequin festonné qui ondule ; une ardoise posée au pied
+// (2 images)
+const fruit = (x, y, r, c) => E(x, y, r, r * 0.92, c, 0.6) + E(x - r * 0.35, y - r * 0.35, r * 0.32, r * 0.22, '#FFFFFF', 0);
+const pomme = (x, y) => fruit(x, y, 2.1, '#E2574C') + `<path d="M${r2(x)},${r2(y - 1.8)} l0.3,-1.2" stroke="${OUT}" stroke-width="0.6" stroke-linecap="round"/>` + E(x + 1, y - 2.6, 0.9, 0.45, '#7EC45B', 0.4);
+const orange = (x, y) => fruit(x, y, 2.1, '#F2994A') + E(x + 0.2, y - 1.4, 0.35, 0.3, '#B86A2A', 0);
+const chou = (x, y) => E(x, y, 2.5, 2.2, '#8FCB6A', 0.6) + `<path d="M${r2(x - 1.6)},${r2(y + 0.4)} q1.6,-2.6 3.2,0 M${r2(x - 0.8)},${r2(y + 1.4)} q0.8,-1.4 1.6,0" stroke="#5E9E48" stroke-width="0.55" fill="none"/>` + E(x - 0.8, y - 1, 0.8, 0.5, '#C6EBA4', 0);
+const PANIER = { top: '#E6B877', left: '#C9914E', right: '#A87238' };
 C.etal = { n: 2, draw: f => {
   let s = shadow(0, 0, 0.48, 0.14);
-  for (const [u, v] of [[-0.34, -0.2], [0.34, -0.2], [-0.34, 0.2], [0.34, 0.2]]) s += post(u, v, 0, 12, WOOD_DARK, 0.025);
-  s += box(-0.38, -0.24, 0.38, 0.24, 12, 15, WOOD);
-  for (const [u, col] of [[-0.22, '#E2574C'], [0.02, '#F2994A'], [0.24, '#7EC45B']]) {
-    s += box(u - 0.09, -0.14, u + 0.09, 0.08, 15, 21, WOOD_DARK, 0.7);
-    for (let k = 0; k < 3; k++) { const [x, y] = at(u - 0.04 + k * 0.04, -0.03, 22); s += E(x, y, 2.4, 2.2, col, 0.7); }
+  // les poteaux de l'auvent, derrière ; les pieds de la table ; le plateau et la nappe festonnée sur le devant
+  for (const u of [-0.36, 0.36]) s += post(u, -0.26, 0, 43, WOOD_DARK, 0.025);
+  for (const [u, v] of [[-0.34, -0.18], [0.34, -0.18], [-0.34, 0.18], [0.34, 0.18]]) s += post(u, v, 0, 12, WOOD_DARK, 0.025);
+  s += box(-0.38, -0.22, 0.38, 0.22, 12, 14.4, WOOD);
+  const n0 = at(-0.38, 0.22, 12), n1 = at(0.38, 0.22, 12);
+  let nappe = `M${r2(n0[0])},${r2(n0[1] - 2.4)} L${r2(n1[0])},${r2(n1[1] - 2.4)} L${r2(n1[0])},${r2(n1[1] + 2)}`;
+  for (let i = 6; i > 0; i--) { const t = (i - 1) / 6, [x, y] = [n0[0] + (n1[0] - n0[0]) * t, n0[1] + (n1[1] - n0[1]) * t]; nappe += ` Q${r2(x + (n1[0] - n0[0]) / 12)},${r2(y + (n1[1] - n0[1]) / 12 + 5)} ${r2(x)},${r2(y + 2)}`; }
+  s += P(nappe + ' Z', '#F6EEDB', 0.8) + L([n0[0], n0[1] - 0.8], [n1[0], n1[1] - 0.8], '#E8566A', 1);
+  // les trois paniers et leurs fruits en tas
+  for (const [u, fr] of [[-0.22, pomme], [0.02, orange], [0.24, chou]]) {
+    s += box(u - 0.09, -0.12, u + 0.09, 0.06, 14.4, 19, PANIER, 0.7);
+    const [bx, by] = at(u + 0.09, -0.03, 16.6);
+    s += `<path d="M${r2(bx - 6.4)},${r2(by + 2.4)} L${r2(bx - 0.2)},${r2(by + 5.6)} M${r2(bx - 6.4)},${r2(by + 0.2)} L${r2(bx - 0.2)},${r2(by + 3.4)}" stroke="${PANIER.right}" stroke-width="0.5"/>`;
+    for (const [du, dv, dz] of [[-0.05, -0.06, 20], [0.04, -0.06, 20], [-0.05, 0.02, 20], [0.04, 0.02, 20], [0, -0.02, 22.6]]) { const [x, y] = at(u + du, dv, dz); s += fr(x, y); }
   }
-  for (const [u, v] of [[-0.34, -0.24], [0.34, -0.24]]) s += post(u, v, 15, 38, WOOD_DARK, 0.02);
-  const fl = wave(f, 2, 1.4);
-  const p0 = at(-0.42, -0.3, 38), p1 = at(0.42, -0.3, 38), p2 = at(0.42, 0.26, 30), p3 = at(-0.42, 0.26, 30);
-  s += poly([p0, p1, p2, p3], '#FFFFFF', 1);
-  for (let i = 0; i < 4; i++) { const t0 = i / 4 + 0.0625, t1 = t0 + 0.125; const q = (A, B, t) => [A[0] + (B[0] - A[0]) * t, A[1] + (B[1] - A[1]) * t]; s += `<polygon points="${[q(p0, p1, t0), q(p0, p1, t1), q(p3, p2, t1), q(p3, p2, t0)].map(p => p.map(r2).join(',')).join(' ')}" fill="#E8566A"/>`; }
-  for (let i = 0; i <= 8; i++) { const t = i / 8; const x = p3[0] + (p2[0] - p3[0]) * t, y = p3[1] + (p2[1] - p3[1]) * t; s += E(x, y + 2 + (i % 2 ? fl : -fl) * 0.4, 2.6, 2.2, i % 2 ? '#E8566A' : '#FFFFFF', 0.7); }
-  return s;
+  // l'auvent rayé, haut et court pour laisser voir l'étal, puis son lambrequin festonné qui ondule
+  const p0 = at(-0.44, -0.32, 43), p1 = at(0.44, -0.32, 43), p2 = at(0.44, 0.12, 37.4), p3 = at(-0.44, 0.12, 37.4);
+  const q = (A, B, t) => [A[0] + (B[0] - A[0]) * t, A[1] + (B[1] - A[1]) * t], pts = a => a.map(p => p.map(r2).join(',')).join(' ');
+  s += `<polygon points="${pts([p0, p1, p2, p3])}" fill="#FFF4E2" stroke="${OUT}" stroke-width="1" stroke-linejoin="round"/>`;
+  for (let i = 0; i < 8; i += 2) s += `<polygon points="${pts([q(p0, p1, i / 8), q(p0, p1, (i + 1) / 8), q(p3, p2, (i + 1) / 8), q(p3, p2, i / 8)])}" fill="#E8566A"/>`;
+  s += `<polygon points="${pts([p0, p1, p2, p3])}" fill="none" stroke="${OUT}" stroke-width="1" stroke-linejoin="round"/>`;
+  for (let i = 0; i < 8; i++) {
+    const A = q(p3, p2, i / 8), B = q(p3, p2, (i + 1) / 8), d = 4 + wave(f, 2, 0.6, i * 1.3);
+    s += P(`M${r2(A[0])},${r2(A[1])} L${r2(B[0])},${r2(B[1])} L${r2(B[0])},${r2(B[1] + 3)} Q${r2((A[0] + B[0]) / 2)},${r2((A[1] + B[1]) / 2 + 3 + d)} ${r2(A[0])},${r2(A[1] + 3)} Z`, i % 2 ? '#FBEBD2' : '#D94A5E', 0.8);
+  }
+  // l'ardoise posée au pied de la table, une pomme et un prix à la craie
+  const [ax, ay] = at(0.5, 0.16, 0);
+  return s + P(`M${r2(ax - 3.6)},${r2(ay)} L${r2(ax - 2.4)},${r2(ay - 11)} L${r2(ax + 4.6)},${r2(ay - 9.6)} L${r2(ax + 3.6)},${r2(ay + 1.2)} Z`, WOOD.left, 0.8)
+    + `<path d="M${r2(ax - 2.4)},${r2(ay - 1)} L${r2(ax - 1.4)},${r2(ay - 9.8)} L${r2(ax + 3.6)},${r2(ay - 8.8)} L${r2(ax + 2.8)},${r2(ay)} Z" fill="#3E4A48"/>`
+    + E(ax, ay - 6.4, 1.2, 1.1, 'none', 0).replace('stroke="none"', 'stroke="#FFFFFF" stroke-width="0.5"')
+    + `<path d="M${r2(ax - 1)},${r2(ay - 2.6)} l1.2,0.2 m0.6,0.1 l1.4,0.2" stroke="#FFFFFF" stroke-width="0.5" stroke-linecap="round"/>`;
 } };
+
 // Kiosque : estrade ronde, colonnettes, toit conique bleu, fanion
 C.kiosque = { n: 2, draw: f => {
   let s = shadow(0, 0, 0.5, 0.12) + cylinder(0, 0, 0.44, 0, 5, STONE);
