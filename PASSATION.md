@@ -473,6 +473,14 @@ familiers (H6) et aux créatures d'Anya (H8).
      fois par question (`coin_ledger`, `timer-question`). Risque faible : le palier I s'ouvre aussi à 10 découvertes,
      et rien ne se gagne en écus. Compter plutôt les questions payées ferait reculer un joueur dont les réussites ne sont
      pas toutes au grand livre (réussies en invité : seul un compte est payé) : à décider avec l'auteur.
+   - ~~**L'Encre** achetée n'est retenue que sur l'appareil~~ : corrigé (chaque usage est inscrit au grand livre,
+     référence : la page ; `/play/book` renvoie `ink` ; une page ne se repaie pas). Les achats d'avant, sans page au
+     grand livre, restent retrouvés par l'appareil (`oc_book_ink`).
+   - **Recharge des parties de Récolte** : comptée avec l'humeur de Cannelle (et la boutique, le Four, le Col) **à
+     l'instant du calcul**, comme la production avant la correction de l'humeur. Écart faible (±3 min sur 30). Pour
+     la rendre juste : arrêter les compteurs (`charges`, `charges_at`) avant chaque changement de recharge (combler
+     un besoin, créations, visiteur installé, Cuisine ou Sablier, Four, Col du Vent), et compter par morceaux entre
+     les échéances des besoins, comme `prodSteps`.
    - **`DECO_PRICES`** et la table `world_tiles` (`world.js`) : à garder tant que des joueurs peuvent avoir
      d'anciennes décorations à rembourser. Toute suppression en base attend **le feu vert explicite** de l'auteur.
 
@@ -480,6 +488,9 @@ familiers (H6) et aux créatures d'Anya (H8).
 
 ## 8. Pièges connus
 
+- **Tests serveur et limites de requêtes** : toutes les requêtes d'un fichier de tests viennent de 127.0.0.1, dans un
+  même serveur. La limite de jeu par adresse (600 par minute) est relevée pour eux par `PLAY_ADDRESS_RATE_LIMIT`
+  (`test/helpers.js`) ; un 429 « Doucement ! » dans un test qui passe seul vient de là.
 - **Coordonnées** : la carte v4 décale le cœur de `OFFSET = (34, 26)`. Les tests utilisent `X(x)` et `Y(y)` pour
   écrire des coordonnées du cœur.
 - **Quartiers inconnus** : la vue envoie leur relief et leur sol masqués (`'1'` et `'u'`), sans nom ni climat. Leurs
