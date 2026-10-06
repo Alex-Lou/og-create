@@ -90,19 +90,7 @@
   },
   {
    "parcours": "tuto-2",
-   "quoi": "La cage aux poules du navire, l'œuf, la bulle de production d'une bête (lot M)."
-  },
-  {
-   "parcours": "tuto-2",
-   "quoi": "Le crabe de la Grève (étape 8)."
-  },
-  {
-   "parcours": "tuto-2",
    "quoi": "L'établi de Rivet au camp (une porte de cabine sur deux caisses) et sa voile tendue sur un aviron."
-  },
-  {
-   "parcours": "tuto-3",
-   "quoi": "Le bâtiment embrumé (calque de brume grise) et « Réparer » (lot M)."
   },
   {
    "parcours": "tuto-3",
@@ -115,10 +103,6 @@
   {
    "parcours": "tuto-1",
    "quoi": "Les scènes plein écran du tutoriel v6, étapes 0 à 12 (lot J2)."
-  },
-  {
-   "parcours": "revelation",
-   "quoi": "Les signes d'Anya qui erre : bêtes tournées du même côté, fleurs qui s'ouvrent, lucioles rassemblées."
   },
   {
    "parcours": "acte-1",
@@ -6220,6 +6204,96 @@
    "statut": "ok"
   },
   {
+   "id": "animaux/mer/crabe/crabe_profil_clignement",
+   "rubrique": "animaux",
+   "sujet": "crabe",
+   "vue": "profil",
+   "pose": "clignement",
+   "titre": "Crabe de la Grève, de profil, clignement",
+   "regarde": "droite",
+   "miroir": true,
+   "images": 1,
+   "fichiers": [
+    "svg/animaux/mer/crabe/crabe_profil_clignement.svg"
+   ],
+   "cadre": [
+    -14,
+    -22,
+    28,
+    24.5
+   ],
+   "parcours": "tuto-2",
+   "statut": "ok"
+  },
+  {
+   "id": "animaux/mer/crabe/crabe_profil_joie",
+   "rubrique": "animaux",
+   "sujet": "crabe",
+   "vue": "profil",
+   "pose": "joie",
+   "titre": "Crabe de la Grève, de profil, joie",
+   "regarde": "droite",
+   "miroir": true,
+   "images": 1,
+   "fichiers": [
+    "svg/animaux/mer/crabe/crabe_profil_joie.svg"
+   ],
+   "cadre": [
+    -14,
+    -22,
+    28,
+    24.5
+   ],
+   "parcours": "tuto-2",
+   "statut": "ok"
+  },
+  {
+   "id": "animaux/mer/crabe/crabe_profil_marche",
+   "rubrique": "animaux",
+   "sujet": "crabe",
+   "vue": "profil",
+   "pose": "marche",
+   "titre": "Crabe de la Grève, de profil, marche",
+   "regarde": "droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/animaux/mer/crabe/crabe_profil_marche_1.svg",
+    "svg/animaux/mer/crabe/crabe_profil_marche_2.svg"
+   ],
+   "cadre": [
+    -14,
+    -22,
+    28,
+    24.5
+   ],
+   "ms_par_image": 260,
+   "parcours": "tuto-2",
+   "statut": "ok"
+  },
+  {
+   "id": "animaux/mer/crabe/crabe_profil_repos",
+   "rubrique": "animaux",
+   "sujet": "crabe",
+   "vue": "profil",
+   "pose": "repos",
+   "titre": "Crabe de la Grève, de profil, repos",
+   "regarde": "droite",
+   "miroir": true,
+   "images": 1,
+   "fichiers": [
+    "svg/animaux/mer/crabe/crabe_profil_repos.svg"
+   ],
+   "cadre": [
+    -14,
+    -22,
+    28,
+    24.5
+   ],
+   "parcours": "tuto-2",
+   "statut": "ok"
+  },
+  {
    "id": "animaux/mer/mouette/mouette_avant_clignement",
    "rubrique": "animaux",
    "sujet": "mouette",
@@ -6513,6 +6587,76 @@
     -155,
     190,
     210
+   ],
+   "parcours": "tuto-2",
+   "statut": "ok"
+  },
+  {
+   "id": "decor/camp/poules/cage_poules_coincee",
+   "rubrique": "decor",
+   "titre": "Cage aux poules du navire, coincée sous les rochers",
+   "images": 2,
+   "fichiers": [
+    "svg/decor/camp/poules/cage_poules_coincee_1.svg",
+    "svg/decor/camp/poules/cage_poules_coincee_2.svg"
+   ],
+   "cadre": [
+    -50,
+    -50,
+    100,
+    72
+   ],
+   "ms_par_image": 300,
+   "parcours": "tuto-2",
+   "statut": "ok"
+  },
+  {
+   "id": "decor/camp/poules/cage_poules_ouverte",
+   "rubrique": "decor",
+   "titre": "Cage aux poules du navire, ouverte",
+   "images": 1,
+   "fichiers": [
+    "svg/decor/camp/poules/cage_poules_ouverte.svg"
+   ],
+   "cadre": [
+    -50,
+    -50,
+    100,
+    72
+   ],
+   "parcours": "tuto-2",
+   "statut": "ok"
+  },
+  {
+   "id": "decor/camp/poules/oeuf",
+   "rubrique": "decor",
+   "titre": "Œuf",
+   "images": 1,
+   "fichiers": [
+    "svg/decor/camp/poules/oeuf.svg"
+   ],
+   "cadre": [
+    -10,
+    -14,
+    20,
+    17.5
+   ],
+   "parcours": "tuto-2",
+   "statut": "ok"
+  },
+  {
+   "id": "decor/camp/poules/oeuf_icone",
+   "rubrique": "decor",
+   "titre": "Œuf (icône)",
+   "images": 1,
+   "fichiers": [
+    "svg/decor/camp/poules/oeuf_icone.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    32,
+    32
    ],
    "parcours": "tuto-2",
    "statut": "ok"
@@ -9294,6 +9438,175 @@
     140
    ],
    "ms_par_image": 111,
+   "parcours": "tuto-3",
+   "statut": "ok"
+  },
+  {
+   "id": "decor/embrume/embrume_1x1",
+   "rubrique": "decor",
+   "titre": "Brume du bâtiment embrumé, emprise 1 × 1",
+   "images": 3,
+   "fichiers": [
+    "svg/decor/embrume/embrume_1x1_1.svg",
+    "svg/decor/embrume/embrume_1x1_2.svg",
+    "svg/decor/embrume/embrume_1x1_3.svg"
+   ],
+   "cadre": [
+    -54,
+    -88,
+    108,
+    120
+   ],
+   "ms_par_image": 400,
+   "parcours": "tuto-3",
+   "statut": "ok"
+  },
+  {
+   "id": "decor/embrume/embrume_1x1_guerison",
+   "rubrique": "decor",
+   "titre": "Guérison du bâtiment embrumé, emprise 1 × 1",
+   "images": 3,
+   "fichiers": [
+    "svg/decor/embrume/embrume_1x1_guerison_1.svg",
+    "svg/decor/embrume/embrume_1x1_guerison_2.svg",
+    "svg/decor/embrume/embrume_1x1_guerison_3.svg"
+   ],
+   "cadre": [
+    -54,
+    -88,
+    108,
+    120
+   ],
+   "ms_par_image": [
+    180,
+    180,
+    600
+   ],
+   "parcours": "tuto-3",
+   "statut": "ok"
+  },
+  {
+   "id": "decor/embrume/embrume_2x2",
+   "rubrique": "decor",
+   "titre": "Brume du bâtiment embrumé, emprise 2 × 2",
+   "images": 3,
+   "fichiers": [
+    "svg/decor/embrume/embrume_2x2_1.svg",
+    "svg/decor/embrume/embrume_2x2_2.svg",
+    "svg/decor/embrume/embrume_2x2_3.svg"
+   ],
+   "cadre": [
+    -94,
+    -128,
+    188,
+    180
+   ],
+   "ms_par_image": 400,
+   "parcours": "tuto-3",
+   "statut": "ok"
+  },
+  {
+   "id": "decor/embrume/embrume_2x2_guerison",
+   "rubrique": "decor",
+   "titre": "Guérison du bâtiment embrumé, emprise 2 × 2",
+   "images": 3,
+   "fichiers": [
+    "svg/decor/embrume/embrume_2x2_guerison_1.svg",
+    "svg/decor/embrume/embrume_2x2_guerison_2.svg",
+    "svg/decor/embrume/embrume_2x2_guerison_3.svg"
+   ],
+   "cadre": [
+    -94,
+    -128,
+    188,
+    180
+   ],
+   "ms_par_image": [
+    180,
+    180,
+    600
+   ],
+   "parcours": "tuto-3",
+   "statut": "ok"
+  },
+  {
+   "id": "decor/embrume/embrume_3x3",
+   "rubrique": "decor",
+   "titre": "Brume du bâtiment embrumé, emprise 3 × 3",
+   "images": 3,
+   "fichiers": [
+    "svg/decor/embrume/embrume_3x3_1.svg",
+    "svg/decor/embrume/embrume_3x3_2.svg",
+    "svg/decor/embrume/embrume_3x3_3.svg"
+   ],
+   "cadre": [
+    -134,
+    -168,
+    268,
+    240
+   ],
+   "ms_par_image": 400,
+   "parcours": "tuto-3",
+   "statut": "ok"
+  },
+  {
+   "id": "decor/embrume/embrume_3x3_guerison",
+   "rubrique": "decor",
+   "titre": "Guérison du bâtiment embrumé, emprise 3 × 3",
+   "images": 3,
+   "fichiers": [
+    "svg/decor/embrume/embrume_3x3_guerison_1.svg",
+    "svg/decor/embrume/embrume_3x3_guerison_2.svg",
+    "svg/decor/embrume/embrume_3x3_guerison_3.svg"
+   ],
+   "cadre": [
+    -134,
+    -168,
+    268,
+    240
+   ],
+   "ms_par_image": [
+    180,
+    180,
+    600
+   ],
+   "parcours": "tuto-3",
+   "statut": "ok"
+  },
+  {
+   "id": "decor/embrume/embrume_nuage",
+   "rubrique": "decor",
+   "titre": "Petit nuage du bâtiment embrumé",
+   "images": 3,
+   "fichiers": [
+    "svg/decor/embrume/embrume_nuage_1.svg",
+    "svg/decor/embrume/embrume_nuage_2.svg",
+    "svg/decor/embrume/embrume_nuage_3.svg"
+   ],
+   "cadre": [
+    -24,
+    -34,
+    48,
+    40
+   ],
+   "ms_par_image": 500,
+   "parcours": "tuto-3",
+   "statut": "ok"
+  },
+  {
+   "id": "decor/embrume/reparer_icone",
+   "rubrique": "decor",
+   "titre": "Icône « Réparer »",
+   "images": 1,
+   "fichiers": [
+    "svg/decor/embrume/reparer_icone.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    32,
+    32
+   ],
    "parcours": "tuto-3",
    "statut": "ok"
   },
@@ -32057,6 +32370,53 @@
     190
    ],
    "ms_par_image": 520,
+   "parcours": "revelation",
+   "statut": "ok"
+  },
+  {
+   "id": "decor/signes/fleurs_ouverture",
+   "rubrique": "decor",
+   "titre": "Signe d'Anya : des fleurs qui s'ouvrent",
+   "images": 4,
+   "fichiers": [
+    "svg/decor/signes/fleurs_ouverture_1.svg",
+    "svg/decor/signes/fleurs_ouverture_2.svg",
+    "svg/decor/signes/fleurs_ouverture_3.svg",
+    "svg/decor/signes/fleurs_ouverture_4.svg"
+   ],
+   "cadre": [
+    -30,
+    -40,
+    60,
+    50.5
+   ],
+   "ms_par_image": [
+    600,
+    300,
+    300,
+    1500
+   ],
+   "parcours": "revelation",
+   "statut": "ok"
+  },
+  {
+   "id": "decor/signes/lucioles_rassemblees",
+   "rubrique": "decor",
+   "titre": "Signe d'Anya : des lucioles rassemblées",
+   "images": 4,
+   "fichiers": [
+    "svg/decor/signes/lucioles_rassemblees_1.svg",
+    "svg/decor/signes/lucioles_rassemblees_2.svg",
+    "svg/decor/signes/lucioles_rassemblees_3.svg",
+    "svg/decor/signes/lucioles_rassemblees_4.svg"
+   ],
+   "cadre": [
+    -30,
+    -52,
+    60,
+    58
+   ],
+   "ms_par_image": 220,
    "parcours": "revelation",
    "statut": "ok"
   },

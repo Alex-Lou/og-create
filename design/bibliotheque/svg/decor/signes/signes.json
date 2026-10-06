@@ -1,0 +1,44 @@
+{
+ "_lisez_moi": [
+  "Les signes d'Anya qui erre (HISTOIRE.md § 6.14, § 17) : là où elle passe, les fleurs s'ouvrent (4 images, une fois : ~600, 300, 300 ms, la dernière reste) et les lucioles se rassemblent (4 images en boucle, ~220 ms). Les bêtes tournées du même côté n'ont pas de dessin : le jeu tourne les bêtes déjà là. Ancre (0, 0) au centre de la case, échelle du jeu × 1,25."
+ ],
+ "signes": {
+  "fleurs": {
+   "nom": "Signe d'Anya : des fleurs qui s'ouvrent",
+   "cadre": [
+    -30,
+    -40,
+    60,
+    50.5
+   ],
+   "ms_par_image": [
+    600,
+    300,
+    300,
+    1500
+   ],
+   "fichiers": [
+    "fleurs_ouverture_1.svg",
+    "fleurs_ouverture_2.svg",
+    "fleurs_ouverture_3.svg",
+    "fleurs_ouverture_4.svg"
+   ]
+  },
+  "lucioles": {
+   "nom": "Signe d'Anya : des lucioles rassemblées",
+   "cadre": [
+    -30,
+    -52,
+    60,
+    58
+   ],
+   "ms_par_image": 220,
+   "fichiers": [
+    "lucioles_rassemblees_1.svg",
+    "lucioles_rassemblees_2.svg",
+    "lucioles_rassemblees_3.svg",
+    "lucioles_rassemblees_4.svg"
+   ]
+  }
+ }
+}

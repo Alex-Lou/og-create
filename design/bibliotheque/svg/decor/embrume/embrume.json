@@ -1,0 +1,137 @@
+{
+ "_lisez_moi": [
+  "Le bâtiment embrumé (HISTOIRE.md § 6.15) : quand un égaré l'atteint, il ne produit plus jusqu'à sa réparation. Le jeu grise le bâtiment (filtre CSS, par exemple grayscale(.8)) et pose par-dessus le calque de brume de son emprise : brume au pied, voile, deux écharpes de brume en travers. Ancre (0, 0) au centre de l'emprise, comme les bâtiments (case de 80 × 40, échelle du jeu × 1,25).",
+  "embrume_<n>x<n> : 3 images en boucle (~400 ms) ; embrume_<n>x<n>_guerison : 3 images, une fois (~180 ms, la dernière ~600 ms), à la réparation ou au passage d'Anya, puis on retire le filtre ; embrume_nuage : 3 images en boucle (~500 ms), le petit nuage grognon à poser au-dessus du bâtiment comme une bulle de production (ancre : son pied) ; reparer_icone : 32 × 32, pour le bouton « Réparer » de la fiche."
+ ],
+ "calques": {
+  "1x1": {
+   "nom": "Brume du bâtiment embrumé, emprise 1 × 1",
+   "cadre": [
+    -54,
+    -88,
+    108,
+    120
+   ],
+   "ms_par_image": 400,
+   "fichiers": [
+    "embrume_1x1_1.svg",
+    "embrume_1x1_2.svg",
+    "embrume_1x1_3.svg"
+   ]
+  },
+  "1x1_guerison": {
+   "nom": "Guérison du bâtiment embrumé, emprise 1 × 1",
+   "cadre": [
+    -54,
+    -88,
+    108,
+    120
+   ],
+   "ms_par_image": [
+    180,
+    180,
+    600
+   ],
+   "fichiers": [
+    "embrume_1x1_guerison_1.svg",
+    "embrume_1x1_guerison_2.svg",
+    "embrume_1x1_guerison_3.svg"
+   ]
+  },
+  "2x2": {
+   "nom": "Brume du bâtiment embrumé, emprise 2 × 2",
+   "cadre": [
+    -94,
+    -128,
+    188,
+    180
+   ],
+   "ms_par_image": 400,
+   "fichiers": [
+    "embrume_2x2_1.svg",
+    "embrume_2x2_2.svg",
+    "embrume_2x2_3.svg"
+   ]
+  },
+  "2x2_guerison": {
+   "nom": "Guérison du bâtiment embrumé, emprise 2 × 2",
+   "cadre": [
+    -94,
+    -128,
+    188,
+    180
+   ],
+   "ms_par_image": [
+    180,
+    180,
+    600
+   ],
+   "fichiers": [
+    "embrume_2x2_guerison_1.svg",
+    "embrume_2x2_guerison_2.svg",
+    "embrume_2x2_guerison_3.svg"
+   ]
+  },
+  "3x3": {
+   "nom": "Brume du bâtiment embrumé, emprise 3 × 3",
+   "cadre": [
+    -134,
+    -168,
+    268,
+    240
+   ],
+   "ms_par_image": 400,
+   "fichiers": [
+    "embrume_3x3_1.svg",
+    "embrume_3x3_2.svg",
+    "embrume_3x3_3.svg"
+   ]
+  },
+  "3x3_guerison": {
+   "nom": "Guérison du bâtiment embrumé, emprise 3 × 3",
+   "cadre": [
+    -134,
+    -168,
+    268,
+    240
+   ],
+   "ms_par_image": [
+    180,
+    180,
+    600
+   ],
+   "fichiers": [
+    "embrume_3x3_guerison_1.svg",
+    "embrume_3x3_guerison_2.svg",
+    "embrume_3x3_guerison_3.svg"
+   ]
+  },
+  "nuage": {
+   "nom": "Petit nuage du bâtiment embrumé",
+   "cadre": [
+    -24,
+    -34,
+    48,
+    40
+   ],
+   "ms_par_image": 500,
+   "fichiers": [
+    "embrume_nuage_1.svg",
+    "embrume_nuage_2.svg",
+    "embrume_nuage_3.svg"
+   ]
+  },
+  "reparer": {
+   "nom": "Icône « Réparer »",
+   "cadre": [
+    0,
+    0,
+    32,
+    32
+   ],
+   "fichiers": [
+    "reparer_icone.svg"
+   ]
+  }
+ }
+}

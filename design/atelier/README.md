@@ -25,6 +25,7 @@ troupe. Relancer ces scripts redonne la bibliothèque à l'octet près : c'est v
 | `camp.mjs`, `ruines.mjs` | Le camp des naufragés, les ruines des Anciens |
 | `meteo.js` | Météo, ciel, moments du jour |
 | `coffres.mjs` | Les coffres des quatre raretés (fenêtre d'ouverture) |
+| `lot_m.js`, `preview_lot_m.mjs` | La suite du lot M : le bâtiment embrumé (calque par emprise, guérison, nuage, icône « Réparer »), la cage aux poules et l'œuf, le crabe de la Grève, les signes d'Anya |
 | `egares.js`, `preview_egares.mjs` | Les égarés (lot M, la nuit) : le petit fantôme, le petit zombie tout mou, une bête de brume par climat ; marche, bouderie au toucher, fuite devant Anya, passage en luciole, retour dans la brume |
 | `port/src/world/` | Copie restylée du moteur de l'île du jeu (iso, palette, sprites, bâtiments, petit format), prise à un instant donné : le jeu a pu évoluer depuis |
 | `planche.js`, `fit.mjs`, `clipcheck.js` | Outils : planches et pages animées, cadres ajustés, débordements |
@@ -52,6 +53,7 @@ node preview_camp.mjs                # le camp
 node preview_ruines.mjs              # les ruines
 node preview_coffres.mjs             # les coffres
 node preview_egares.mjs              # les égarés : fantôme, zombie, bêtes de brume
+node preview_lot_m.mjs               # le bâtiment embrumé, la cage aux poules, le crabe, les signes d'Anya
 node preview_camp_grandit.mjs        # planche « le camp grandit »
 node preview_avatar.mjs              # l'avatar du joueur : exemples, planches (formes, nuanciers, accessoires, exemples)
 node verif_avatar.mjs                # l'avatar : 8 400 images au hasard et accessoire × coupe, rien de cassé ni hors cadre
