@@ -1,4 +1,4 @@
-// Les arbres refaits au niveau des PNJ, un par un (l'arbre, le pommier, l'arbre d'automne). Même trait et même lumière que la troupe : le
+// Les arbres refaits au niveau des PNJ, un par un (l'arbre, le pommier, l'arbre d'automne, le bouleau). Même trait et même lumière que la troupe : le
 // houppier est fait de touffes détourées comme les pièces d'un personnage (celle du fond plus sombre), chaque lobe a sa
 // masse d'ombre en bas à droite et son reflet en croissant en haut à gauche, de petites marques de feuilles ; le tronc a
 // ses racines, un peu d'écorce, et se sépare en deux branches sous les feuilles.
@@ -162,4 +162,47 @@ for (const petit of [false, true]) for (const teinte of ['orange', 'rouge']) for
   AUTOMNES.push([fichier, libelle, { teinte, petit, feuilles }]);
 }
 
-module.exports = { arbre, ARBRES, pommier, POMMIERS, automne, AUTOMNES, VERTS, fleurette };
+// ——— Le bouleau : tronc fin et blanc marqué de noir, houppier plus haut et plus léger, d'un vert tendre ———
+const VERTS_BOULEAU = {
+  doux: { devant: { light: '#EEF8C0', mid: '#C3E27E', dark: '#8BBB55' }, fond: { light: '#C2DF8C', mid: '#98C45E', dark: '#6C9C47' } },
+  profond: { devant: { light: '#D9EE9A', mid: '#A6D262', dark: '#6FA545' }, fond: { light: '#A4CC70', mid: '#7AAE4D', dark: '#527F3E' } }
+};
+const ECORCE = { left: '#F4F1EA', right: '#CFC8BA', marque: '#3A3A3A' };
+// Le tronc du bouleau : fin, à peine évasé au pied, deux branches sous les feuilles ; côté droit à l'ombre, marques noires
+// en lentilles, le pied plus sombre (l'écorce y est rugueuse)
+function troncBouleau(id, k) {
+  const d = sc('M-8,1.8 Q-4.5,0.6 -3.6,-4 Q-3,-20 -3.4,-36 Q-4,-44 -9,-52 L-5.4,-54.4 Q-1.6,-48 0,-44 Q1.4,-49 6,-55.4 L9.4,-52.4 Q4,-44 3.4,-36 Q3,-20 3.8,-5 Q5,0.6 8.5,2 Q5,3.2 2.6,2 Q0,3.6 -2.6,2.2 Q-5,3.4 -8,1.8 Z', k);
+  const marques = [[-2.2, -9, 2.4], [1.4, -15, 2], [-2.4, -22, 2.2], [1.2, -28, 2.6], [-1.8, -34, 1.8], [-5.6, -46, 1.6], [4.6, -47, 1.6]];
+  const dedans = `<path d="${sc('M1.2,4 Q1.8,-20 1.6,-36 Q3,-44 8,-56 L14,-56 L14,4 Z', k)}" fill="${ECORCE.right}"/>`
+    + `<path d="${sc('M-9,4 L-9,-1.5 Q-4,-3.5 0,-3 Q4,-3.5 9,-1.5 L9,4 Z', k)}" fill="#8E877C"/>`
+    + `<ellipse cx="0" cy="${r2(-44 * k)}" rx="${r2(12 * k)}" ry="${r2(6 * k)}" fill="${ECORCE.right}"/>`
+    + marques.map(([x, y, w]) => `<path d="M${r2((x - w / 2) * k)},${r2(y * k)} Q${r2(x * k)},${r2((y - 0.9) * k)} ${r2((x + w / 2) * k)},${r2(y * k)} Q${r2(x * k)},${r2((y + 0.6) * k)} ${r2((x - w / 2) * k)},${r2(y * k)} Z" fill="${ECORCE.marque}"/>`).join('');
+  return `<path d="${d}" fill="${ECORCE.left}" stroke="${OUT}" stroke-width="${W}" stroke-linejoin="round"/>`
+    + `<defs><clipPath id="${id}"><path d="${d}"/></clipPath></defs><g clip-path="url(#${id})">${dedans}</g>`;
+}
+const B_FOND = [[-10, -84, 10], [6, -90, 10.5], [17, -78, 9], [-19, -72, 8.5], [1, -75, 10]];
+const B_GAUCHE = [[-16, -60, 10], [-24, -55, 7], [-19, -48, 6.5, 0], [-9, -50, 7, 0]];
+const B_DROITE = [[14, -63, 9.5], [22, -57, 7], [17, -49, 6.5, 0], [7, -52, 6.5, 0]];
+const B_MILIEU = [[-1, -71, 9], [-6, -61, 6.5, 0], [5, -62, 6.5, 0]];
+
+// vert : 'doux' ou 'profond' (les verts tendres du bouleau) ; petit, fleuri : comme l'arbre
+function bouleau({ vert = 'doux', petit = false, fleuri = false } = {}) {
+  const c = VERTS_BOULEAU[vert], k = petit ? 0.76 : 1;
+  const id = `bou${petit ? 'p' : 'g'}${vert[0]}${fleuri ? 'f' : ''}`;
+  return E(2 * k, 1.5, 21 * k, 9.5 * k, 'rgba(40,55,20,0.22)', 0) + troncBouleau(`${id}t`, k)
+    + touffe(`${id}a`, B_FOND, c.fond, [[-4, -80], [12, -76, 0.8]], k)
+    + touffe(`${id}b`, B_DROITE, c.devant, [[13, -55, 0.8], [20, -60, 0.7]], k)
+    + touffe(`${id}c`, B_GAUCHE, c.devant, [[-17, -53, 0.8], [-10, -58, 0.7]], k)
+    + touffe(`${id}d`, B_MILIEU, c.devant, [[-2, -64, 0.8]], k)
+    + (fleuri ? pied(k * 0.85) : '');
+}
+
+// Les 8 bouleaux : [fichier, libellé, options] ; « bouleau » (grand, vert doux, pied sobre) est celui par défaut
+const BOULEAUX = [];
+for (const petit of [false, true]) for (const vert of ['doux', 'profond']) for (const fleuri of [false, true]) {
+  const fichier = ['bouleau', petit && 'petit', vert === 'profond' && 'profond', fleuri && 'fleuri'].filter(Boolean).join('_');
+  const libelle = `Bouleau (${[petit ? 'petit' : 'grand', `vert ${vert}`, fleuri && 'pied fleuri'].filter(Boolean).join(', ')})`;
+  BOULEAUX.push([fichier, libelle, { vert, petit, fleuri }]);
+}
+
+module.exports = { arbre, ARBRES, pommier, POMMIERS, automne, AUTOMNES, bouleau, BOULEAUX, VERTS, fleurette };

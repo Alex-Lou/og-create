@@ -14659,10 +14659,129 @@
   {
    "id": "plantes/bouleau",
    "rubrique": "plantes",
-   "titre": "Bouleau",
+   "titre": "Bouleau (grand, vert doux)",
    "images": 1,
    "fichiers": [
     "svg/plantes/bouleau.svg"
+   ],
+   "cadre": [
+    -50,
+    -115,
+    100,
+    140
+   ],
+   "parcours": "acte-1",
+   "statut": "ok"
+  },
+  {
+   "id": "plantes/bouleau_fleuri",
+   "rubrique": "plantes",
+   "titre": "Bouleau (grand, vert doux, pied fleuri)",
+   "images": 1,
+   "fichiers": [
+    "svg/plantes/bouleau_fleuri.svg"
+   ],
+   "cadre": [
+    -50,
+    -115,
+    100,
+    140
+   ],
+   "parcours": "acte-1",
+   "statut": "ok"
+  },
+  {
+   "id": "plantes/bouleau_petit",
+   "rubrique": "plantes",
+   "titre": "Bouleau (petit, vert doux)",
+   "images": 1,
+   "fichiers": [
+    "svg/plantes/bouleau_petit.svg"
+   ],
+   "cadre": [
+    -50,
+    -115,
+    100,
+    140
+   ],
+   "parcours": "acte-1",
+   "statut": "ok"
+  },
+  {
+   "id": "plantes/bouleau_petit_fleuri",
+   "rubrique": "plantes",
+   "titre": "Bouleau (petit, vert doux, pied fleuri)",
+   "images": 1,
+   "fichiers": [
+    "svg/plantes/bouleau_petit_fleuri.svg"
+   ],
+   "cadre": [
+    -50,
+    -115,
+    100,
+    140
+   ],
+   "parcours": "acte-1",
+   "statut": "ok"
+  },
+  {
+   "id": "plantes/bouleau_petit_profond",
+   "rubrique": "plantes",
+   "titre": "Bouleau (petit, vert profond)",
+   "images": 1,
+   "fichiers": [
+    "svg/plantes/bouleau_petit_profond.svg"
+   ],
+   "cadre": [
+    -50,
+    -115,
+    100,
+    140
+   ],
+   "parcours": "acte-1",
+   "statut": "ok"
+  },
+  {
+   "id": "plantes/bouleau_petit_profond_fleuri",
+   "rubrique": "plantes",
+   "titre": "Bouleau (petit, vert profond, pied fleuri)",
+   "images": 1,
+   "fichiers": [
+    "svg/plantes/bouleau_petit_profond_fleuri.svg"
+   ],
+   "cadre": [
+    -50,
+    -115,
+    100,
+    140
+   ],
+   "parcours": "acte-1",
+   "statut": "ok"
+  },
+  {
+   "id": "plantes/bouleau_profond",
+   "rubrique": "plantes",
+   "titre": "Bouleau (grand, vert profond)",
+   "images": 1,
+   "fichiers": [
+    "svg/plantes/bouleau_profond.svg"
+   ],
+   "cadre": [
+    -50,
+    -115,
+    100,
+    140
+   ],
+   "parcours": "acte-1",
+   "statut": "ok"
+  },
+  {
+   "id": "plantes/bouleau_profond_fleuri",
+   "rubrique": "plantes",
+   "titre": "Bouleau (grand, vert profond, pied fleuri)",
+   "images": 1,
+   "fichiers": [
+    "svg/plantes/bouleau_profond_fleuri.svg"
    ],
    "cadre": [
     -50,
