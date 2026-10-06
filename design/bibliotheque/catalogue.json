@@ -4920,10 +4920,129 @@
   {
    "id": "plantes/coquillages",
    "rubrique": "plantes",
-   "titre": "Coquillages",
+   "titre": "Coquillages (grands, coloris chauds)",
    "images": 1,
    "fichiers": [
     "svg/plantes/coquillages.svg"
+   ],
+   "cadre": [
+    -50,
+    -115,
+    100,
+    140
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "plantes/coquillages_etoile",
+   "rubrique": "plantes",
+   "titre": "Coquillages (grands, coloris chauds, une étoile de mer)",
+   "images": 1,
+   "fichiers": [
+    "svg/plantes/coquillages_etoile.svg"
+   ],
+   "cadre": [
+    -50,
+    -115,
+    100,
+    140
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "plantes/coquillages_nacres",
+   "rubrique": "plantes",
+   "titre": "Coquillages (grands, nacrés)",
+   "images": 1,
+   "fichiers": [
+    "svg/plantes/coquillages_nacres.svg"
+   ],
+   "cadre": [
+    -50,
+    -115,
+    100,
+    140
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "plantes/coquillages_nacres_etoile",
+   "rubrique": "plantes",
+   "titre": "Coquillages (grands, nacrés, une étoile de mer)",
+   "images": 1,
+   "fichiers": [
+    "svg/plantes/coquillages_nacres_etoile.svg"
+   ],
+   "cadre": [
+    -50,
+    -115,
+    100,
+    140
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "plantes/coquillages_petits",
+   "rubrique": "plantes",
+   "titre": "Coquillages (petits, coloris chauds)",
+   "images": 1,
+   "fichiers": [
+    "svg/plantes/coquillages_petits.svg"
+   ],
+   "cadre": [
+    -50,
+    -115,
+    100,
+    140
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "plantes/coquillages_petits_etoile",
+   "rubrique": "plantes",
+   "titre": "Coquillages (petits, coloris chauds, une étoile de mer)",
+   "images": 1,
+   "fichiers": [
+    "svg/plantes/coquillages_petits_etoile.svg"
+   ],
+   "cadre": [
+    -50,
+    -115,
+    100,
+    140
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "plantes/coquillages_petits_nacres",
+   "rubrique": "plantes",
+   "titre": "Coquillages (petits, nacrés)",
+   "images": 1,
+   "fichiers": [
+    "svg/plantes/coquillages_petits_nacres.svg"
+   ],
+   "cadre": [
+    -50,
+    -115,
+    100,
+    140
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "plantes/coquillages_petits_nacres_etoile",
+   "rubrique": "plantes",
+   "titre": "Coquillages (petits, nacrés, une étoile de mer)",
+   "images": 1,
+   "fichiers": [
+    "svg/plantes/coquillages_petits_nacres_etoile.svg"
    ],
    "cadre": [
     -50,
