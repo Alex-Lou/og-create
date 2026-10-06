@@ -1,11 +1,13 @@
-// Les rochers refaits au niveau des PNJ, un par un, avec le trait et la lumière des arbres (arbres.js) : le rocher.
+// Les rochers refaits au niveau des PNJ, un par un, avec le trait et la lumière des arbres (arbres.js) : le rocher, les
+// rochers.
 // Cadre et ancrage des décors de deco.js (PROP, centre de la case en (0, 0)).
 const { OUT, E, r2 } = require('./troupe');
 
 // les teintes de la pierre : clair (le dessus, au soleil), moyen, sombre (le flanc droit), les fentes
 const PIERRES = {
   gris: { light: '#D3CDC2', mid: '#ABA498', dark: '#857E73', fente: '#6B655C' },
-  ocre: { light: '#EDCD9A', mid: '#CFA06E', dark: '#A7774D', fente: '#8A5E3A' }
+  ocre: { light: '#EDCD9A', mid: '#CFA06E', dark: '#A7774D', fente: '#8A5E3A' },
+  sombre: { light: '#A39D96', mid: '#7A746E', dark: '#56514C', fente: '#433E3A' }
 };
 const sc = (d, k) => d.replace(/-?\d+(\.\d+)?/g, n => r2(n * k));
 
@@ -65,4 +67,43 @@ for (const petit of [false, true]) for (const teinte of ['gris', 'ocre']) for (c
   ROCHERS.push([fichier, libelle, { teinte, petit, lezard: lz }]);
 }
 
-module.exports = { rocher, ROCHERS };
+// ——— Les rochers : un tas de trois blocs, un haut au fond, un plat devant, un caillou ; des galets au pied parfois ———
+const BLOC_HAUT = {
+  d: 'M-12,0 Q-13.6,-7 -10.4,-12.4 L-3,-16.6 Q2.6,-18.6 7,-15.6 Q11.6,-11.6 11.4,-5 Q11,0.6 4,1.6 Q-6,2 -12,0 Z',
+  haut: 'M-16,-10 Q-8,-11 -1,-13 Q4,-14.4 8,-16 L8,-24 L-16,-24 Z',
+  flanc: 'M5,-20 Q7.4,-11 5.6,-5 Q4.6,-1 5.4,4 L16,4 L16,-20 Z',
+  fentes: 'M0,-17.4 Q1.4,-14 -0.6,-11.4 M-8,-3 l2.4,1',
+  reflet: 'M-9.4,-11.6 L-4,-14.8'
+};
+const BLOC_PLAT = {
+  d: 'M-10,0 Q-11.4,-4.4 -7.6,-7.4 Q-3,-10 3,-9.4 Q8.6,-8.6 10,-4.4 Q11,-0.6 7.6,0.8 Q0,2 -10,0 Z',
+  haut: 'M-14,-4.6 Q-6,-5.4 0,-6.6 Q4,-7.4 7,-9.8 L7,-14 L-14,-14 Z',
+  flanc: 'M3,-12 Q6,-6 4,-2 Q3.4,0 4,3 L14,3 L14,-12 Z',
+  fentes: 'M-3,-9.4 Q-2,-7.4 -3.4,-5.6',
+  reflet: 'M-7,-6.4 Q-5,-8.4 -2,-9'
+};
+// un galet : ovale plat détouré, le dessus clair
+const galet = (x, y, rx, ry, c) => E(x, y, rx, ry, c.mid, 0.6) + E(x - rx * 0.3, y - ry * 0.35, rx * 0.45, ry * 0.35, c.light, 0);
+const GALETS = [[-4, 9.4, 2.4, 1.3], [5, 10.2, 1.9, 1.05], [18, 8, 2.2, 1.2], [-21, 3.4, 1.7, 0.95], [-12.6, 10, 1.4, 0.8]];
+const pose = (x, y, k, svg) => `<g transform="translate(${r2(x * k)} ${r2(y * k)})">${svg}</g>`;
+
+// teinte : 'gris' ou 'sombre' ; petits : × 0,75 ; galets : des galets semés au pied
+function rochers({ teinte = 'gris', petits = false, galets = false } = {}) {
+  const c = PIERRES[teinte], k = petits ? 0.75 : 1;
+  const id = `rcs${petits ? 'p' : 'g'}${teinte[0]}${galets ? 'g' : ''}`;
+  return E(1, 3, 25 * k, 8 * k, 'rgba(40,55,20,0.22)', 0)
+    + pose(-5, -1, k, bloc(`${id}a`, BLOC_HAUT, c, k * 1.1))
+    + pose(-13, 4.6, k, bloc(`${id}b`, CAILLOU, c, k * 1.25))
+    + pose(8, 4, k, bloc(`${id}c`, BLOC_PLAT, c, k))
+    + (galets ? GALETS.map(([x, y, rx, ry]) => galet(x * k, y * k, rx * k, ry * k, c)).join('') : '');
+}
+
+// Les 8 rochers en tas : [fichier, libellé, options] ; « rochers » (grands, gris, sans galets) est celui par défaut
+const ROCHERS_TAS = [];
+for (const petits of [false, true]) for (const teinte of ['gris', 'sombre']) for (const ga of [false, true]) {
+  const fichier = ['rochers', petits && 'petits', teinte === 'sombre' && 'sombres', ga && 'galets'].filter(Boolean).join('_');
+  const libelle = `Rochers (${[petits ? 'petits' : 'grands', teinte === 'sombre' ? 'pierre sombre' : 'granite gris', ga && 'des galets au pied'].filter(Boolean).join(', ')})`;
+  ROCHERS_TAS.push([fichier, libelle, { teinte, petits, galets: ga }]);
+}
+
+module.exports = { rocher, ROCHERS, rochers, ROCHERS_TAS };
