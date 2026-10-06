@@ -1,9 +1,10 @@
 // La plage refaite au niveau des PNJ, un élément à la fois, avec le trait et la lumière des arbres (arbres.js) : les
-// coquillages. Cadre et ancrage des décors de deco.js (PROP, centre de la case en (0, 0)).
+// coquillages, le bois flotté. Cadre et ancrage des décors de deco.js (PROP, centre de la case en (0, 0)).
 const { OUT, E, r2 } = require('./troupe');
 
 // une ombre douce posée sur le sable
 const ombre = (x, y, rx, ry) => E(x, y, rx, ry, 'rgba(120,90,40,0.2)', 0);
+const sc = (d, k) => d.replace(/-?\d+(\.\d+)?/g, n => r2(n * k));
 const groupe = (x, y, s, svg) => `<g transform="translate(${r2(x)} ${r2(y)}) scale(${r2(s)})">${svg}</g>`;
 
 // ——— Les coquillages : une coquille Saint-Jacques, une conque, des coques ; une étoile de mer s'y mêle parfois ———
@@ -64,4 +65,42 @@ for (const petits of [false, true]) for (const coloris of ['chauds', 'nacres']) 
   COQUILLAGES.push([fichier, libelle, { coloris, petits, etoile: et }]);
 }
 
-module.exports = { coquillages, COQUILLAGES };
+// ——— Le bois flotté : une branche couchée, lisse, deux fourches ; des algues s'y accrochent parfois ———
+const BOIS = {
+  blanchi: { light: '#F3ECDE', mid: '#D9CEBB', dark: '#B0A38D' },
+  sombre: { light: '#BE9E7E', mid: '#97795D', dark: '#6F5641' }
+};
+// [tracé, épaisseur] : la branche, puis ses deux fourches
+const BRANCHE = [['M-22,5 Q-10,-1 4,1 Q14,2 22,-3', 6], ['M-2,0.6 Q2,-6 8,-9', 3], ['M13,1.6 Q16,-3.6 20,-5', 2.2]];
+const trait = (d, col, w, dy = 0) => `<path d="${d}" stroke="${col}" stroke-width="${r2(w)}" fill="none" stroke-linecap="round" stroke-linejoin="round"${dy ? ` transform="translate(0 ${r2(dy)})"` : ''}/>`;
+// une algue qui pend par-dessus la branche : ruban plat détouré, ondulé, sa nervure
+const algue = (d, nervure, col, k) => `<path d="${sc(d, k)}" fill="${col}" stroke="${OUT}" stroke-width="0.7" stroke-linejoin="round"/>` + trait(sc(nervure, k), '#4E8A3A', 0.45);
+const ALGUES = [
+  ['M-9,-1.6 Q-10.6,2 -9,4.6 Q-7.8,6.6 -9.4,8.6 Q-6.4,7.6 -6.8,4.8 Q-7.2,2 -6.6,-1.4 Z', 'M-7.8,-1 Q-8.6,2.4 -7.8,4.8 Q-7.4,6.4 -8.4,7.8', '#6FAE4E'],
+  ['M-6,-1.4 Q-4,1.6 -5.4,4 Q-3.2,3 -3.4,0.4 Q-3.6,-1 -4.4,-1.8 Z', 'M-5,-1.2 Q-4,1 -4.6,3', '#8CC45A'],
+  ['M9,0 Q7.6,3 9,5.8 Q10.4,4.6 10.6,2 Q10.8,0.6 10.6,-0.4 Z', 'M9.8,0 Q9,2.6 9.4,4.8', '#6FAE4E']
+];
+
+// bois : 'blanchi' ou 'sombre' (mouillé) ; petit : × 0,75 ; algues : des algues accrochées et un coquillage
+function boisFlotte({ bois = 'blanchi', petit = false, algues = false } = {}) {
+  const c = BOIS[bois], k = petit ? 0.75 : 1;
+  const tr = BRANCHE.map(([d, w]) => [sc(d, k), w * k]);
+  return ombre(0, 4.6 * k, 24 * k, 4.6 * k)
+    + tr.map(([d, w]) => trait(d, OUT, w + 2.2)).join('')
+    + tr.map(([d, w]) => trait(d, c.mid, w)).join('')
+    + tr.map(([d, w]) => trait(d, c.dark, w * 0.42, w * 0.22)).join('')
+    + tr.map(([d, w]) => trait(d, c.light, w * 0.36, -w * 0.2)).join('')
+    + trait(sc('M-16,3.2 Q-9,0.2 -3,0.4 M6,1.4 Q12,1.8 17,-0.2', k), c.dark, 0.5)
+    + E(-8 * k, 1.6 * k, 1.2 * k, 0.7 * k, c.dark, 0.5)
+    + (algues ? ALGUES.map(([d, n, col]) => algue(d, n, col, k)).join('') + coque(-17 * k, 9 * k, 2 * k, COLORIS.chauds) : '');
+}
+
+// Les 8 bois flottés : [fichier, libellé, options] ; « bois_flotte » (grand, blanchi, sans algues) est celui par défaut
+const BOIS_FLOTTES = [];
+for (const petit of [false, true]) for (const bois of ['blanchi', 'sombre']) for (const al of [false, true]) {
+  const fichier = ['bois_flotte', petit && 'petit', bois === 'sombre' && 'sombre', al && 'algues'].filter(Boolean).join('_');
+  const libelle = `Bois flotté (${[petit ? 'petit' : 'grand', bois === 'sombre' ? 'bois mouillé sombre' : 'bois blanchi', al && 'des algues accrochées'].filter(Boolean).join(', ')})`;
+  BOIS_FLOTTES.push([fichier, libelle, { bois, petit, algues: al }]);
+}
+
+module.exports = { coquillages, COQUILLAGES, boisFlotte, BOIS_FLOTTES };
