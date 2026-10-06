@@ -806,15 +806,49 @@ C.heron = { n: 2, draw: f => {
     + E(gx - 1.4, gy - 4, 0.45, 0.45, OUT, 0) + E(gx + 1.4, gy - 4, 0.45, 0.45, OUT, 0) + `<path d="M${gx - 1.2},${gy - 1.8} q1.2,0.9 2.4,0" stroke="${OUT}" stroke-width="0.45" fill="none"/>`;
   return s;
 } };
+// Tente nomade : une grande tente basse à faîtage, sa toile rayée crème et terre cuite (le pan de devant au soleil, le
+// pignon à l'ombre) ; l'entrée sombre, ses pans relevés et noués, ses coussins et sa lanterne ; des pompons au bord du
+// toit qui battent au vent ; un tapis à losanges et ses franges, une théière de laiton et deux verres qui fument ; une
+// jarre, une corde tendue à son piquet, un fanion au bout du faîtage (2 images)
+const TOILE = { creme: '#F6E9D0', rouge: '#D2583F', cremeO: '#DCCDB0', rougeO: '#A84030' };
 C.tente = { n: 2, draw: f => {
-  const [x, y] = at(0, 0);
-  let s = shadow(0, 0, 0.5, 0.12) + ellipseAt(0.1, 0.25, 0, 14, 5, '#C8503A', 0.8) + ellipseAt(0.1, 0.25, 0, 10, 3.4, '#F2C04B', 0);
-  const t = `M${x - 30},${y + 2} L${x - 4},${y - 40} L${x + 30},${y} Q${x},${y + 10} ${x - 30},${y + 2} Z`;
-  s += `<path d="${t}" fill="#F4E6CC" stroke="${OUT}" stroke-width="1.1" stroke-linejoin="round"/>`;
-  s += `<defs><clipPath id="tn${f}"><path d="${t}"/></clipPath></defs><g clip-path="url(#tn${f})">${[-20, -8, 4, 16].map(dx => `<path d="M${x + dx},${y + 10} L${x - 4 + dx * 0.2},${y - 40}" stroke="#C8503A" stroke-width="4"/>`).join('')}<path d="M${x - 4},${y - 40} L${x + 30},${y} L${x},${y + 10} Z" fill="rgba(60,40,25,.15)"/></g>`;
-  s += `<path d="M${x - 4},${y - 22} L${x - 12 - f * 3},${y + 4} L${x + 2},${y + 6} Z" fill="#E8D4B0" stroke="${OUT}" stroke-width="0.9"/>` + L([x - 4, y - 40], [x - 4, y - 46], WOOD_DARK.left, 1.4);
-  const [jx, jy] = at(0.36, 0.18, 0);
-  return s + P(`M${jx - 3},${jy} Q${jx - 5},${jy - 6} ${jx - 2},${jy - 9} L${jx + 2},${jy - 9} Q${jx + 5},${jy - 6} ${jx + 3},${jy} Z`, '#D9824A', 0.9);
+  const q = (A, B, t) => [A[0] + (B[0] - A[0]) * t, A[1] + (B[1] - A[1]) * t];
+  const raye = (A, B, C2, D, n, c1, c2) => { let o = ''; for (let i = 0; i < n; i++) o += poly([q(A, B, i / n), q(A, B, (i + 1) / n), q(D, C2, (i + 1) / n), q(D, C2, i / n)], i % 2 ? c2 : c1, 0); return o; };
+  let s = shadow(0, 0, 0.52, 0.12);
+  // la corde du fond et son piquet
+  { const a1 = at(-0.34, -0.05, 25), a2 = at(-0.5, 0.06, 0); s += L(a1, a2, '#8A6A40', 0.6) + L(a2, [a2[0], a2[1] - 3], WOOD.right, 1); }
+  // le pignon à l'ombre et son mur, rayés
+  const E0 = at(0.4, 0.26, 8), E1 = at(0.4, -0.36, 8), R1 = at(0.32, -0.05, 26), G0 = at(0.4, 0.26, 0), G1 = at(0.4, -0.36, 0);
+  s += raye(G0, G1, E1, E0, 6, TOILE.cremeO, TOILE.rougeO) + poly([G0, G1, E1, E0], 'none', 0.9);
+  s += poly([E0, E1, R1], TOILE.cremeO, 0.9) + `<path d="M${q(E0, E1, 0.5).map(r2).join(',')} L${R1.map(r2).join(',')}" stroke="${TOILE.rougeO}" stroke-width="2.4"/>` + poly([E0, E1, R1], 'none', 0.9);
+  // le mur de devant, l'entrée sombre et ses coussins
+  const F0 = at(-0.4, 0.26, 0), F1 = at(0.4, 0.26, 0), F2 = at(0.4, 0.26, 8), F3 = at(-0.4, 0.26, 8);
+  s += raye(F0, F1, F2, F3, 8, TOILE.creme, TOILE.rouge) + poly([F0, F1, F2, F3], 'none', 0.9);
+  s += poly([at(-0.17, 0.26, 0), at(0.17, 0.26, 0), at(0.17, 0.26, 7.4), at(-0.17, 0.26, 7.4)], '#4A3226', 0.8);
+  { const [cx, cy] = at(0, 0.26, 0), [lx, ly] = at(0, 0.26, 6); s += L([lx, ly - 1], [lx, ly + 1.4], BRASS.right, 0.5) + E(lx, ly + 2.6, 1.3, 1.6, '#FFD27A', 0.5) + E(cx - 3, cy - 2, 3.4, 1.8, '#5C8FD0', 0.6) + E(cx + 3, cy - 1.6, 3, 1.6, '#F2C04B', 0.6); }
+  // les pans de l'entrée relevés de chaque côté, noués d'une cordelette
+  for (const k of [-1, 1]) { const a1 = at(0.17 * k, 0.26, 7.4), a2 = at(0.09 * k, 0.26, 7.4), a3 = at(0.19 * k, 0.26, 0.6); s += poly([a1, a2, a3], TOILE.creme, 0.8) + L(q(a2, a3, 0.55), q(a1, a3, 0.55), TOILE.rouge, 0.9); }
+  // le pan de devant au soleil, rayé, et le faîtage
+  const T0 = at(-0.4, 0.26, 8), T1 = at(0.4, 0.26, 8), R0 = at(-0.32, -0.05, 26);
+  s += raye(T0, T1, R1, R0, 8, TOILE.creme, TOILE.rouge) + poly([T0, T1, R1, R0], 'none', 1) + L(R0, R1, OUT, 1.2);
+  // le fanion au bout du faîtage
+  const k = wave(f, 2, 1.2);
+  s += L(R1, [R1[0], R1[1] - 9], WOOD.right, 1.1) + P(`M${r2(R1[0])},${r2(R1[1] - 9)} Q${r2(R1[0] + 4)},${r2(R1[1] - 10 + k)} ${r2(R1[0] + 8)},${r2(R1[1] - 8 - k)} L${r2(R1[0])},${r2(R1[1] - 5)} Z`, '#5C8FD0', 0.6);
+  // le tapis à losanges et ses franges
+  const K0 = at(-0.26, 0.3, 0), K1 = at(0.26, 0.3, 0), K2 = at(0.26, 0.54, 0), K3 = at(-0.26, 0.54, 0);
+  s += poly([K0, K1, K2, K3], '#B8402E', 0.8) + poly([q(K0, K2, 0.12), q(K1, K3, 0.12), q(K0, K2, 0.88), q(K1, K3, 0.88)], '#E8B04A', 0);
+  for (const t of [0.3, 0.5, 0.7]) { const [mx, my] = q(q(K0, K3, 0.5), q(K1, K2, 0.5), t); s += `<path d="M${r2(mx)},${r2(my - 2.2)} l3,2.2 l-3,2.2 l-3,-2.2 Z" fill="#3E5A8C"/>`; }
+  for (let i = 0; i <= 6; i++) { const [mx, my] = q(K3, K2, i / 6); s += L([mx, my], [mx - 0.6, my + 1.6], '#E8B04A', 0.6); }
+  // les pompons qui pendent du bord du toit et battent au vent
+  for (let i = 0; i <= 8; i++) { const [mx, my] = q(T0, T1, i / 8), sw = wave(f, 2, 0.8, i); s += L([mx, my], [mx + sw, my + 2.4], OUT, 0.5) + E(mx + sw, my + 3, 0.9, 0.9, i % 2 ? '#E8B04A' : '#5C8FD0', 0.4); }
+  // la théière de laiton, ses deux verres et la vapeur
+  const [px, py] = at(-0.12, 0.42, 0);
+  s += E(px, py - 2.6, 2.6, 2.2, BRASS.left, 0.7) + P(`M${r2(px + 2.2)},${r2(py - 3)} q2.6,-0.6 3.2,-2.6`, 'none', 0.8) + E(px, py - 5, 1, 0.6, BRASS.top, 0.5) + E(px - 0.8, py - 3.2, 0.8, 0.6, BRASS.top, 0)
+    + [[-6, 1], [-3.6, 2]].map(([dx, dy]) => P(`M${r2(px + dx - 1)},${r2(py + dy - 3)} L${r2(px + dx + 1)},${r2(py + dy - 3)} L${r2(px + dx + 0.7)},${r2(py + dy)} L${r2(px + dx - 0.7)},${r2(py + dy)} Z`, '#E8F6FF', 0.5)).join('')
+    + `<path d="M${r2(px + 5.4)},${r2(py - 6 - f)} q1.2,-1.6 0,-3.2 q-1.2,-1.6 0,-3.2" stroke="#FFFFFF" stroke-width="0.8" fill="none" opacity="0.8"/>`;
+  // la jarre
+  const [jx, jy] = at(0.4, 0.44, 0);
+  return s + P(`M${jx - 3},${jy} Q${jx - 5.4},${jy - 6} ${jx - 2.2},${jy - 9} L${jx + 2.2},${jy - 9} Q${jx + 5.4},${jy - 6} ${jx + 3},${jy} Z`, '#D9824A', 0.9) + E(jx, jy - 9, 2.4, 0.9, '#B86A36', 0.6) + `<path d="M${jx - 3.6},${jy - 5} Q${jx},${jy - 3.6} ${jx + 3.6},${jy - 5}" stroke="#F2C27A" stroke-width="0.8" fill="none"/>`;
 } };
 C.cadransel = { n: 2, draw: f => {
   let s = shadow(0, 0, 0.42, 0.1) + cylinder(0, 0, 0.36, 0, 4, { top: '#FBF8F1', left: '#E7E1D3', right: '#C9C0AC' });
