@@ -83,13 +83,31 @@ C.massif = { n: 2, draw: f => {
   }
   return s + bord(false);
 } };
-// Muret : moellons assisés, chaperon, mousse
+// Muret : un mur de pierres sèches, moellons posés un à un sur trois assises, son chaperon de dalles ; la mousse s'y
+// installe, une fleurette, une touffe au pied
+const MOELLONS = ['#CFC7B4', '#C3BBA9', '#BBB29E', '#D6CFBE'];
+// une pierre du parement : un quadrilatère de la face avant (v fixe) ou du bout (u fixe), un peu en retrait des joints
+function moellon(a, b, z0, z1, face, fixe, col) {
+  const p = face === 'avant' ? [[a, fixe, z0], [b, fixe, z0], [b, fixe, z1], [a, fixe, z1]] : [[fixe, a, z0], [fixe, b, z0], [fixe, b, z1], [fixe, a, z1]];
+  const q = p.map(([u, v, z], i) => face === 'avant' ? [u + (i === 0 || i === 3 ? 0.008 : -0.008), v, z + (i < 2 ? 0.5 : -0.5)] : [u, v + (i === 0 || i === 3 ? 0.008 : -0.008), z + (i < 2 ? 0.5 : -0.5)]);
+  return poly(q.map(r => at(...r)), col, 0.6) + L(at(...q[3]), at(...q[2]), '#FFFFFF', 0.5).replace('/>', ' opacity="0.5"/>');
+}
 C.muret = { n: 1, draw: () => {
-  let s = shadow(0, 0, 0.42, 0.14) + box(-0.42, -0.1, 0.42, 0.1, 0, 15, STONE);
-  for (const [z, off] of [[4, 0], [9.5, 0.1]]) for (let u = -0.42 + off; u < 0.4; u += 0.2) { const p = at(u, 0.1, z), q = at(Math.min(u + 0.2, 0.42), 0.1, z); s += `<path d="M${r2(p[0])},${r2(p[1])} L${r2(q[0])},${r2(q[1])} M${r2(q[0])},${r2(q[1])} l0,${-5.5 * 1.25}" stroke="${STONE.right}" stroke-width="0.7"/>`; }
-  s += box(-0.44, -0.12, 0.44, 0.12, 15, 18, WHITE_STONE);
-  const [mx, my] = at(-0.25, 0.05, 18.4);
-  return s + E(mx, my, 5, 2, '#8FCB6A', 0.7) + E(mx + 18, my + 7, 3, 1.4, '#8FCB6A', 0.6) + Dk.flower(mx + 22, my + 5, 1.4, '#FFFFFF');
+  let s = shadow(0, 0, 0.44, 0.14) + box(-0.42, -0.1, 0.42, 0.1, 0, 15, { top: STONE.top, left: '#9E9584', right: '#857C6B' });
+  const assises = [[0, 5, [-0.42, -0.2, 0.02, 0.22, 0.42]], [5, 10, [-0.42, -0.3, -0.08, 0.12, 0.3, 0.42]], [10, 15, [-0.42, -0.18, 0.06, 0.26, 0.42]]];
+  assises.forEach(([z0, z1, us], r) => us.slice(1).forEach((b, i) => { s += moellon(us[i], b, z0, z1, 'avant', 0.1, MOELLONS[(i + r) % 4]); }));
+  [[0, 5, [-0.1, 0.02, 0.1]], [5, 10, [-0.1, -0.03, 0.1]], [10, 15, [-0.1, 0.04, 0.1]]].forEach(([z0, z1, vs], r) => vs.slice(1).forEach((b, i) => { s += moellon(vs[i], b, z0, z1, 'bout', 0.42, ['#A9A08D', '#9E9584'][(i + r) % 2]); }));
+  // le chaperon : trois dalles un peu débordantes
+  for (const [a, b] of [[-0.45, -0.15], [-0.15, 0.15], [0.15, 0.45]]) s += box(a, -0.125, b, 0.125, 15, 18.2, WHITE_STONE, 0.9);
+  const [m1x, m1y] = at(-0.3, 0.02, 18.2), [m2x, m2y] = at(0.2, 0.06, 18.2), [px, py] = at(0.28, 0.13, 0);
+  // la mousse : des coussinets bosselés, plus clairs dessus, quelques brins qui pendent du chaperon
+  const coussin = (x, y, n) => {
+    const bosses = [[-3.2, 0.2, 1.8], [-1, -0.6, 2.2], [1.4, -0.2, 2], [3.2, 0.4, 1.5]].slice(0, n);
+    return bosses.map(([dx, dy, r]) => E(x + dx, y + dy, r + 0.7, r * 0.62 + 0.6, OUT, 0)).join('') + bosses.map(([dx, dy, r]) => E(x + dx, y + dy, r, r * 0.62, '#86C25A', 0)).join('')
+      + bosses.map(([dx, dy, r]) => E(x + dx - r * 0.25, y + dy - r * 0.2, r * 0.5, r * 0.28, '#B5DC86', 0)).join('');
+  };
+  const brins = [[-0.36, 0.125], [-0.27, 0.125]].map(([u, v]) => { const [x, y] = at(u, v, 15.4); return thick(`M${r2(x)},${r2(y)} q0.4,2.2 -0.3,3.6`, 0.45, '#86C25A'); }).join('');
+  return s + brins + coussin(m1x, m1y, 4) + coussin(m2x, m2y, 2) + fleurette(m2x + 1, m2y - 1.8, '#FFFFFF') + herbe(px, py, '#86B852', 0.7);
 } };
 // Lanterne : socle de pierre à deux degrés, poteau de fer et sa bague, la lanterne vitrée et son chapeau ; la flamme
 // vacille (2 images). La flamme reste à z 41 : la lumière de nuit du jeu y est calée (creations.js, ART_LIGHTS)
