@@ -156,18 +156,49 @@ C.banc = { n: 1, draw: () => {
     + `<path d="M${r2(cx + 3.8)},${r2(cy - 1.8)} q-0.8,-0.9 -1.4,-0.1 q-0.5,0.8 1.4,1.8 q1.9,-1 1.4,-1.8 q-0.6,-0.8 -1.4,0.1 Z" fill="#FFFFFF" opacity="0.85"/>`;
   return s + accoudoir(L0 - 0.03);
 } };
-// Épouvantail : croix de bois, chemise rapiécée, chapeau de paille ; il penche au vent, un corbeau se pose
+// Épouvantail : croix de bois, chemise à carreaux rapiécée, paille aux manches et au col, tête de toile de jute aux
+// yeux boutons et au sourire cousu, chapeau de paille et son ruban ; il penche au vent, un corbeau se pose (2 images)
+const pailleSort = (x, y, a) => `<g transform="translate(${r2(x)} ${r2(y)}) rotate(${a})">${thick('M0,0 l-3.2,-1.4 M0,0 l-3.6,0.6 M0,0 l-2.8,2', 0.9, '#EBC46F')}</g>`;
 C.epouvantail = { n: 2, draw: f => {
   const [x, y] = at(0, 0);
   const tilt = f ? 4 : -2;
-  let s = shadow(0, 0, 0.3, 0.14) + `<g transform="rotate(${tilt} ${x} ${y})">`;
-  s += `<rect x="${x - 1.6}" y="${y - 50}" width="3.2" height="50" fill="${WOOD_DARK.left}" stroke="${OUT}" stroke-width="0.9"/>` + thick(`M${x - 17},${y - 34} L${x + 17},${y - 34}`, 2.6, WOOD_DARK.left);
-  s += poly([[x - 11, y - 37], [x + 11, y - 37], [x + 9, y - 18], [x - 9, y - 18]], '#5C8FD0', 1) + `<rect x="${x + 1}" y="${y - 28}" width="5" height="5" fill="#E8566A" stroke="${OUT}" stroke-width="0.6"/>` + L([x, y - 37], [x, y - 18], '#3E6FA8', 0.6);
-  s += thick(`M${x - 17},${y - 34} l-2,4 M${x + 17},${y - 34} l2,4`, 1, '#EBC46F');
-  s += E(x, y - 44, 6.4, 6.6, '#F2DEB0', 1) + P(`M${x - 2.6},${y - 45} l1.2,1.2 m0,-1.2 l-1.2,1.2 M${x + 1.6},${y - 45} l1.2,1.2 m0,-1.2 l-1.2,1.2`, 'none', 0.6) + P(`M${x - 2.4},${y - 41.4} q2.4,1.6 4.8,0`, 'none', 0.6);
-  s += E(x, y - 49.6, 11, 2.6, '#EBC46F', 1) + P(`M${x - 6},${y - 50} Q${x},${y - 60} ${x + 6},${y - 50} Z`, '#EBC46F', 1) + L([x - 6, y - 51], [x + 6, y - 51], '#E8566A', 1.2);
+  let s = shadow(0, 0, 0.3, 0.14) + herbe(x - 5, y + 1.4, '#86B852', 0.6) + `<g transform="rotate(${tilt} ${x} ${y})">`;
+  // le poteau et la traverse
+  s += `<rect x="${x - 1.7}" y="${y - 50}" width="3.4" height="50" fill="${WOOD_DARK.left}" stroke="${OUT}" stroke-width="0.9"/>` + `<rect x="${x + 0.3}" y="${y - 49.6}" width="1" height="49" fill="${WOOD_DARK.right}"/>`
+    + thick(`M${x - 17},${y - 34} L${x + 17},${y - 34}`, 2.6, WOOD_DARK.left);
+  // la paille qui sort des manches, puis la chemise : manches, corps à carreaux, pièce rouge cousue, boutons
+  s += pailleSort(x - 16, y - 34, 0) + pailleSort(x + 16, y - 34, 180);
+  s += P(`M${x - 15},${y - 37} L${x - 7},${y - 37.6} L${x - 7},${y - 31} L${x - 15},${y - 31.2} Z`, '#5C8FD0', 0.9) + P(`M${x + 15},${y - 37} L${x + 7},${y - 37.6} L${x + 7},${y - 31} L${x + 15},${y - 31.2} Z`, '#5C8FD0', 0.9)
+    + `<rect x="${x - 16}" y="${y - 37.4}" width="2" height="6.4" rx="0.6" fill="#3E6FA8" stroke="${OUT}" stroke-width="0.6"/><rect x="${x + 14}" y="${y - 37.4}" width="2" height="6.4" rx="0.6" fill="#3E6FA8" stroke="${OUT}" stroke-width="0.6"/>`;
+  const corps = `M${x - 9},${y - 38} L${x + 9},${y - 38} L${x + 8.4},${y - 19} Q${x},${y - 17} ${x - 8.4},${y - 19} Z`;
+  s += P(corps, '#5C8FD0', 1)
+    + `<path d="M${x - 4.4},${y - 37.6} L${x - 4.8},${y - 18.4} M${x + 3.6},${y - 37.6} L${x + 3.8},${y - 18} M${x - 8.6},${y - 31} L${x + 8.6},${y - 31} M${x - 8.4},${y - 24.6} L${x + 8.4},${y - 24.6}" stroke="#3E6FA8" stroke-width="1.2" opacity="0.7"/>`
+    + `<rect x="${x + 1.4}" y="${y - 29}" width="5.4" height="5" fill="#E8566A" stroke="${OUT}" stroke-width="0.7" transform="rotate(-6 ${x + 4} ${y - 26.5})"/>`
+    + `<path d="M${x + 1.8},${y - 28.4} l0.8,0 m1,0 l0.8,0 m1,0 l0.8,0 M${x + 1.8},${y - 24.4} l0.8,0 m1,0 l0.8,0 m1,0 l0.8,0" stroke="#FFFFFF" stroke-width="0.5" transform="rotate(-6 ${x + 4} ${y - 26.5})"/>`
+    + E(x - 1.6, y - 33.6, 0.8, 0.8, '#F6EBD6', 0.5) + E(x - 1.6, y - 27.4, 0.8, 0.8, '#F6EBD6', 0.5);
+  // le col de paille, la tête de jute : texture, ficelle, yeux boutons, joues, sourire cousu
+  s += pailleSort(x - 2, y - 38.4, 100) + pailleSort(x + 2, y - 38.4, 80);
+  s += E(x, y - 44, 6.6, 6.4, '#E9D2A0', 1) + [[-3, -46], [2.6, -41.4], [3.4, -47.4], [-2.2, -40.6]].map(([dx, dy]) => E(x + dx, y + dy, 0.4, 0.4, '#C9AE78', 0)).join('')
+    + thick(`M${x - 4.4},${y - 38.8} Q${x},${y - 37.6} ${x + 4.4},${y - 38.8}`, 0.7, '#B8935A')
+    + E(x - 2.4, y - 44.6, 1.2, 1.2, '#3A2A24', 0.5) + E(x + 2.4, y - 44.6, 1.2, 1.2, '#3A2A24', 0.5) + E(x - 2.7, y - 45, 0.35, 0.35, '#FFFFFF', 0) + E(x + 2.1, y - 45, 0.35, 0.35, '#FFFFFF', 0)
+    + E(x - 4, y - 42.2, 1, 0.6, '#F29AA8', 0) + E(x + 4, y - 42.2, 1, 0.6, '#F29AA8', 0)
+    + `<path d="M${x - 2.6},${y - 41.8} Q${x},${y - 40} ${x + 2.6},${y - 41.8}" stroke="${OUT}" stroke-width="0.6" fill="none" stroke-linecap="round"/>`
+    + `<path d="M${x - 1.6},${y - 41.6} l0,1.2 M${x},${y - 41} l0,1.2 M${x + 1.6},${y - 41.6} l0,1.2" stroke="${OUT}" stroke-width="0.45"/>`;
+  // le chapeau de paille : bord, calotte, ruban rouge, une fleurette
+  s += E(x, y - 49.4, 11, 2.8, '#EBC46F', 1) + `<path d="M${x - 9},${y - 49.6} q4,1.4 9,0.2 M${x + 2},${y - 50} q4,1 7,-0.4" stroke="#C9A045" stroke-width="0.5" fill="none"/>`
+    + P(`M${x - 6},${y - 50} Q${x - 6},${y - 59} ${x},${y - 59.4} Q${x + 6},${y - 59} ${x + 6},${y - 50} Z`, '#EBC46F', 1)
+    + `<path d="M${x - 6},${y - 51.6} Q${x},${y - 50.2} ${x + 6},${y - 51.6} L${x + 6},${y - 53.2} Q${x},${y - 51.8} ${x - 6},${y - 53.2} Z" fill="#E8566A" stroke="${OUT}" stroke-width="0.6"/>`
+    + E(x - 2, y - 56.4, 1.8, 1.2, '#F7DC8C', 0) + fleurette(x + 4.4, y - 52.4, '#FFFFFF');
   s += '</g>';
-  if (f) s += E(x + 16, y - 39, 3.2, 2.4, '#2E2E38', 0.8) + E(x + 18.6, y - 41.4, 1.8, 1.8, '#2E2E38', 0.8) + P(`M${x + 20.2},${y - 41.6} l2,0.6 l-2,0.6 Z`, '#5A5A64', 0.4) + E(x + 18.8, y - 42, 0.4, 0.4, '#FFFFFF', 0);
+  // le corbeau posé sur le bras, l'image où le vent tombe
+  if (f) {
+    const [bx, by] = [x + 17.6, y - 37.6];
+    s += P(`M${bx - 4.6},${by + 1.4} L${bx - 7.6},${by + 3.4} L${bx - 4},${by + 2.6} Z`, '#2E2E38', 0.6)
+      + E(bx - 1, by, 3.6, 2.6, '#2E2E38', 0.8) + E(bx - 1.6, by - 0.6, 1.8, 1, '#4A4A58', 0)
+      + E(bx + 1.8, by - 2.6, 2, 1.9, '#2E2E38', 0.8) + E(bx + 2.4, by - 3, 0.5, 0.5, '#FFFFFF', 0)
+      + P(`M${bx + 3.6},${by - 2.8} l2.2,0.6 l-2.2,0.6 Z`, '#F2B33D', 0.4)
+      + `<path d="M${bx - 1.6},${by + 2.4} l0,1.4 M${bx + 0.4},${by + 2.4} l0,1.4" stroke="#F2B33D" stroke-width="0.6"/>`;
+  }
   return s;
 } };
 // Nichoir : maisonnette sur piquet, toit rouge, trou rond ; un oiseau entre et sort
