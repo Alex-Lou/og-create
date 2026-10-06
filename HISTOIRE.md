@@ -1626,6 +1626,18 @@ Le prix des quartiers et des paliers décide du rythme : l'équilibrage reste à
 - **Anya** : la déesse de l'île. Elle se révèle quand le cœur de l'île est libéré (les 9 quartiers) ; ensuite, elle erre, et on la croise rarement ; elle défend l'île (les égarés fuient, les bâtiments embrumés guérissent) et apprend à la respecter, à la comprendre, à la soigner (son Souffle et ses soins).
 - **L'écriture** : les dialogues suivent la méthode du § 7.4 (les personnages ne lisent pas l'interface ; un enjeu par scène ; le non-dit).
 
+### Prises (le 6 octobre 2026, après la lecture de la v6)
+- **L'île avant le compte (V20)** : un **compte provisoire** se crée en coulisse dès que l'île sert (étape 4) ; à l'étape 6, signer la page de garde y ajoute l'e-mail et le mot de passe. Sans migration ; les comptes provisoires abandonnés s'effacent.
+- **L'expédition de l'étape 10 (T9)** : aucune terre à explorer ne touche la Grève ni La Source (vérifié sur la carte). L'expédition du tutoriel est une **reconnaissance** vers la forêt : elle ne découvre pas de terre, elle revient avec la lueur de La Lisière. La carte ne change pas.
+- **Les nuits** (créatures repoussées, pannes, réparations) : **une table ajoutée**, rien de modifié dans l'existant.
+- **Les dessins manquants** (kit d'avatar, égarés, torche, cage aux poules, état embrumé, scènes du naufrage) : Claude les dessine dans le style de la bibliothèque, **après les envois de l'auteur**, avec une planche à valider.
+- **Retenus par défaut** (proposés le même jour) :
+  - traces d'Anya : un joueur garde le plus grand de ses deux comptes (l'ancien, sur les terres explorées ; le nouveau, sur les quartiers) ; la huitième reste celle qui précède la Révélation ;
+  - Puits II du tutoriel : seule la condition de chapitre est levée ; son prix se paie ;
+  - bêtes de ferme : ce qu'elles donnent va à la nourriture ; les chiffres se fixent au lot H9.3 ;
+  - nuits, pour les joueurs qui ont déjà une île : pas de créatures avant que Brume les ait présentées et qu'un jour soit passé ; les lanternes et clôtures déjà posées comptent comme défenses.
+- **Le lot H9 se livre en six lots** : H9.1 Anya ; H9.2 Sylve et Galet ; H9.3 bêtes de ferme ; H9.4 avatar ; H9.5 créatures et défense ; H9.6 tutoriel.
+
 ### À valider (versions 4 et 5)
 
 | # | Question | Ma recommandation |
