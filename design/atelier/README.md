@@ -24,6 +24,7 @@ troupe. Relancer ces scripts redonne la bibliothèque à l'octet près : c'est v
 | `camp.mjs`, `ruines.mjs` | Le camp des naufragés, les ruines des Anciens |
 | `meteo.js` | Météo, ciel, moments du jour |
 | `coffres.mjs` | Les coffres des quatre raretés (fenêtre d'ouverture) |
+| `scenes.mjs` | Les scènes de l'histoire, plein écran (les images de `PrologueArt.vue`), animées en CSS |
 | `port/src/world/` | Copie restylée du moteur de l'île du jeu (iso, palette, sprites, bâtiments, petit format), prise à un instant donné : le jeu a pu évoluer depuis |
 | `planche.js`, `fit.mjs`, `clipcheck.js` | Outils : planches et pages animées, cadres ajustés, débordements |
 | `preview*.js`, `preview*.mjs` | Un script par lot : il écrit les SVG dans `lib/`, ses planches dans `planches/`, sa page `*_apercu.html` |
@@ -48,6 +49,7 @@ node preview_gens_naufrages.mjs      # naufragés au petit format, épilogue
 node preview_camp.mjs                # le camp
 node preview_ruines.mjs              # les ruines
 node preview_coffres.mjs             # les coffres
+node preview_scenes.mjs              # les scènes de l'histoire
 node preview_camp_grandit.mjs        # planche « le camp grandit »
 for d in svg2/*/; do mkdir -p lib/personnages/maitres/$(basename $d) && cp $d*.svg lib/personnages/maitres/$(basename $d)/; done
 node build_bundle.js                 # assemble ../bibliotheque/

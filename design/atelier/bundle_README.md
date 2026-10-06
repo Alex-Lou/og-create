@@ -1,7 +1,7 @@
 # Bibliothèque d'assets SVG de l'île
 
-3 744 dessins SVG au trait de la troupe : personnages, naufragés, animaux, plantes, décor, camp, ruines, bâtiments et
-météo. Chaque dessin est
+3 757 dessins SVG au trait de la troupe : personnages, naufragés, animaux, plantes, décor, camp, ruines, coffres,
+scènes de l'histoire, bâtiments et météo. Chaque dessin est
 calé sur les cadres et les ancres du jeu, pour se poser tel quel.
 
 Ouvrir `index.html` pour tout voir. Les planches (`planches/`) montrent chaque lot ; les pages `apercus/` les montrent
@@ -47,6 +47,7 @@ en mouvement.
 | `svg/decor/camp/` | Le camp des naufragés : l'épave de l'Hirondelle, le feu de débris, le coin de chaque maître (débris → abri → cabanon), les objets du camp, la tente et le hamac des voyageurs ; l'étape de l'histoire de chaque chose (`camp.json`) | 41 |
 | `svg/decor/ruines/` | Ce qui reste des Anciens : maison en ruine, colonnade, pierre à runes (jour, nuit), colonne brisée, la clé du phare, le phare éteint (`ruines.json`) | 9 |
 | `svg/coffres/` | Les coffres des 4 raretés pour la fenêtre d'ouverture (cadre 120 × 100) : fermé, ouverture en 4 images, ouvert, rayons (calque facultatif), icône 32 × 32 (`coffres.json`) | 44 |
+| `svg/scenes/` | Les images plein écran de l'histoire (celles de `PrologueArt.vue`, même clé `art`, cadre 400 × 400) : le tutoriel « Le Naufrage de l'Hirondelle ». Chaque SVG s'anime seul (`scenes.json`) | 13 |
 | `svg/batiments/` | 7 bâtiments × 7 paliers (images animées), chantier, 20 skins, 48 objets de la boutique (un fichier par calque), 14 pièces rares à chaque palier, outil de teintes (`batiments.json`) | 659 |
 | `svg/meteo/` | Calques d'écran sans couture en boucle, nuages, arc-en-ciel, éclair, soleil bas, lumières, teintes des moments du jour, 19 icônes (`meteo.json`) | 169 |
 
@@ -64,6 +65,9 @@ en mouvement.
 - **Naufragés** : un maître garde le look du naufragé jusqu'à son souvenir retrouvé (son bâtiment fondé), puis prend celui
   de `maitres/`. Son coin du camp reste son toit ; `camp.json` dit à quelle étape chaque chose apparaît et ce qui lui
   succède (propositions tirées de `HISTOIRE.md`, à valider à l'intégration).
+- **Scènes** : le cadre 400 × 400 se recadre sur l'écran (`slice`) ; l'essentiel tient dans x 108 → 292 et y 88 → 312.
+  Chaque SVG s'anime seul (CSS dans le fichier, noms en `sc-`) et montre l'image clé avec le mouvement réduit ; ses
+  identifiants sont préfixés par la scène, on peut en poser deux dans la même page.
 - **Teintes** (84 skins vendus = 12 teintes × 7 bâtiments) : on recolore, on ne redessine pas. Exemple :
   `import { tintSvg } from './svg/batiments/teintes/teinter.mjs'`, puis `tintSvg(svg, 'sakura')`.
 

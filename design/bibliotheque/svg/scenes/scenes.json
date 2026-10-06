@@ -1,0 +1,190 @@
+{
+ "_lisez_moi": [
+  "Les images plein écran de l'histoire (src/components/Game/PrologueArt.vue), au trait de la troupe : même clé « art », même cadre 400 × 400, même mise en place. Le cadre se recadre sur l'écran (preserveAspectRatio=\"xMidYMid slice\") : l'essentiel tient dans la zone utile, x de 108 à 292 (téléphone en hauteur) et y de 88 à 312 (écran large).",
+  "Chaque SVG s'anime seul (CSS dans le fichier, noms en sc-) ; avec le mouvement réduit (prefers-reduced-motion), il montre l'image clé. Les identifiants sont préfixés par la scène : on peut en poser deux dans la même page (fondu enchaîné).",
+  "Tenues : un maître est en naufragé jusqu'à son souvenir retrouvé (HISTOIRE.md § 8) — Cannelle au feu (T3), Ondin au Puits (T5), Sylve à l'acte I, Galet à l'acte II, Rivet et Mélisse à l'acte III, Aster à l'acte IV."
+ ],
+ "zone_utile": {
+  "x": 108,
+  "y": 88,
+  "w": 184,
+  "h": 224
+ },
+ "scenes": {
+  "storm": {
+   "nom": "L'Hirondelle dans la tempête",
+   "groupe": "tutoriel",
+   "etape": "étape 1 — Brume",
+   "fichier": "tutoriel/storm.svg",
+   "bouge": [
+    "l'écume",
+    "la pluie",
+    "un éclair",
+    "le roulis",
+    "la vague monte (une fois)",
+    "le noir tombe à 6 s (une fois)"
+   ]
+  },
+  "beach": {
+   "nom": "La Grève, la nuit, la brume",
+   "groupe": "tutoriel",
+   "etape": "étape 1 — Brume",
+   "fichier": "tutoriel/beach.svg",
+   "bouge": [
+    "étoiles qui scintillent",
+    "la brume dérive",
+    "l'écume"
+   ]
+  },
+  "wisp": {
+   "nom": "Un feu follet",
+   "groupe": "tutoriel",
+   "etape": "étape 1 — Brume",
+   "fichier": "tutoriel/wisp.svg",
+   "bouge": [
+    "Brume flotte",
+    "étoiles qui scintillent",
+    "la brume dérive",
+    "l'écume",
+    "images qui défilent"
+   ]
+  },
+  "rock": {
+   "nom": "Brume derrière le rocher",
+   "groupe": "tutoriel",
+   "etape": "étape 1 — Brume",
+   "fichier": "tutoriel/rock.svg",
+   "bouge": [
+    "Brume flotte",
+    "étoiles qui scintillent",
+    "la brume dérive",
+    "l'écume",
+    "images qui défilent"
+   ]
+  },
+  "fire": {
+   "nom": "Le premier feu",
+   "groupe": "tutoriel",
+   "etape": "étape 1 — Brume",
+   "fichier": "tutoriel/fire.svg",
+   "bouge": [
+    "les flammes",
+    "Brume flotte",
+    "étoiles qui scintillent",
+    "la brume dérive",
+    "l'écume",
+    "lueurs qui respirent",
+    "images qui défilent"
+   ]
+  },
+  "book": {
+   "nom": "Le Grimoire",
+   "groupe": "tutoriel",
+   "etape": "étape 1 — Brume",
+   "fichier": "tutoriel/book.svg",
+   "bouge": [
+    "Brume flotte",
+    "étoiles qui scintillent",
+    "la brume dérive",
+    "l'écume",
+    "lueurs qui respirent",
+    "images qui défilent"
+   ]
+  },
+  "seal": {
+   "nom": "Le sceau de Saturne se brise",
+   "groupe": "tutoriel",
+   "etape": "étape 1 — Brume",
+   "fichier": "tutoriel/seal.svg",
+   "bouge": [
+    "Brume flotte",
+    "étoiles qui scintillent",
+    "la brume dérive",
+    "l'écume",
+    "lueurs qui respirent",
+    "images qui défilent"
+   ]
+  },
+  "aster": {
+   "nom": "Aster dans les vagues",
+   "groupe": "tutoriel",
+   "etape": "étape 2 — Aster",
+   "fichier": "tutoriel/aster.svg",
+   "bouge": [
+    "étoiles qui scintillent",
+    "l'écume",
+    "images qui défilent"
+   ]
+  },
+  "cannelle": {
+   "nom": "Cannelle derrière l'épave",
+   "groupe": "tutoriel",
+   "etape": "étape 3 — Cannelle",
+   "fichier": "tutoriel/cannelle.svg",
+   "bouge": [
+    "Brume flotte",
+    "étoiles qui scintillent",
+    "la brume dérive",
+    "l'écume",
+    "images qui défilent"
+   ]
+  },
+  "cannelle-feu": {
+   "nom": "Cannelle se souvient",
+   "groupe": "tutoriel",
+   "etape": "étape 3 — Cannelle",
+   "fichier": "tutoriel/cannelle-feu.svg",
+   "bouge": [
+    "les flammes",
+    "Brume flotte",
+    "étoiles qui scintillent",
+    "la brume dérive",
+    "l'écume",
+    "lueurs qui respirent",
+    "images qui défilent"
+   ]
+  },
+  "rivet": {
+   "nom": "Rivet sous la voile",
+   "groupe": "tutoriel",
+   "etape": "étape 4 — Rivet",
+   "fichier": "tutoriel/rivet.svg",
+   "bouge": [
+    "Brume flotte",
+    "étoiles qui scintillent",
+    "la brume dérive",
+    "l'écume",
+    "images qui défilent"
+   ]
+  },
+  "ondin": {
+   "nom": "Ondin à La Source",
+   "groupe": "tutoriel",
+   "etape": "étape 5 — Ondin",
+   "fichier": "tutoriel/ondin.svg",
+   "bouge": [
+    "Brume flotte",
+    "étoiles qui scintillent",
+    "la brume dérive",
+    "l'écume",
+    "images qui défilent"
+   ]
+  },
+  "campement": {
+   "nom": "Le Campement",
+   "groupe": "tutoriel",
+   "etape": "étape 5 — Ondin",
+   "fichier": "tutoriel/campement.svg",
+   "bouge": [
+    "les flammes",
+    "Brume flotte",
+    "clignements",
+    "étoiles qui scintillent",
+    "la brume dérive",
+    "l'écume",
+    "lueurs qui respirent",
+    "images qui défilent"
+   ]
+  }
+ }
+}
