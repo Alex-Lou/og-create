@@ -21,12 +21,26 @@ const palm = (x, y, h, sw) => {
   const fr = (dx, dy, c) => { const mx = tx + dx * 0.5, my = ty + dy * 0.5 - 6, len = Math.hypot(dx, dy) || 1, nx = (-dy / len) * 4, ny = (dx / len) * 4; return `<path d="M${r2(tx)},${r2(ty)} Q${r2(mx + nx)},${r2(my + ny)} ${r2(tx + dx)},${r2(ty + dy)} Q${r2(mx - nx)},${r2(my - ny)} ${r2(tx)},${r2(ty)} Z" fill="${c}" stroke="${OUT}" stroke-width="0.9" stroke-linejoin="round"/>`; };
   return thick(`M${x},${y} Q${r2(x - 2)},${r2(y - h * 0.6)} ${r2(tx)},${r2(ty)}`, 3.4, WOOD.left) + fr(-16, 3, PINE.dark) + fr(16, 4, PINE.dark) + fr(-10, 10, PINE.mid) + fr(11, 10, PINE.mid) + fr(-6, -9, LEAVES.mid) + fr(7, -8, LEAVES.light);
 };
-const menhir = (u, v, h, w, lit) => {
-  const [x, y] = at(u, v);
-  return `<path d="M${r2(x - w)},${r2(y)} L${r2(x - w * 0.8)},${r2(y - h * 0.8)} Q${x},${r2(y - h - 3)} ${r2(x + w * 0.8)},${r2(y - h * 0.8)} L${r2(x + w)},${r2(y)} Q${x},${r2(y + w * 0.4)} ${r2(x - w)},${r2(y)} Z" fill="${GRANITE.left}" stroke="${OUT}" stroke-width="1.1"/>`
-    + `<path d="M${r2(x + w * 0.2)},${r2(y - h - 1)} Q${r2(x + w * 0.8)},${r2(y - h * 0.8)} ${r2(x + w)},${r2(y)} L${r2(x + w * 0.3)},${r2(y + w * 0.3)} Z" fill="${GRANITE.right}"/>`
-    + `<path d="M${r2(x - w * 0.3)},${r2(y - h * 0.62)} l${r2(w * 0.3)},-3 l${r2(w * 0.3)},3 M${r2(x)},${r2(y - h * 0.62 - 3)} l0,6" fill="none" stroke="${lit ? '#9FE8FF' : '#7E786E'}" stroke-width="${lit ? 1.1 : 0.7}" stroke-linecap="round"/>`
-    + (lit ? glow(x, y - h * 0.6, 6, '160,230,255', 0.35) : '') + E(x - w * 0.4, y - h * 0.3, 1.8, 1, '#B7C46C', 0);
+// une pierre levée : flancs bosselés, pan d'ombre à droite, reflet à gauche, lichens, mousse au pied, touffe ; sa
+// spirale gravée, turquoise et lumineuse quand elle s'allume
+const menhir = (u, v, h, w, lit, lean, id) => {
+  const [x, y] = at(u, v), xy = p => p.map(r2).join(',');
+  const pts = [[x - w, y], [x - w * 1.06 + lean * 0.35, y - h * 0.45], [x - w * 0.8 + lean * 0.85, y - h * 0.86], [x + lean, y - h - 2], [x + w * 0.82 + lean * 0.85, y - h * 0.82], [x + w * 1.04 + lean * 0.35, y - h * 0.42], [x + w, y]];
+  let d = `M${xy(pts[0])}`;
+  for (let i = 1; i < pts.length - 1; i++) d += ` Q${xy(pts[i])} ${r2((pts[i][0] + pts[i + 1][0]) / 2)},${r2((pts[i][1] + pts[i + 1][1]) / 2)}`;
+  d += ` L${xy(pts[6])} Q${x},${r2(y + w * 0.5)} ${xy(pts[0])} Z`;
+  const [gx, gy] = [r2(x - w * 0.1 + lean * 0.5), r2(y - h * 0.55)];
+  return `<defs><clipPath id="${id}"><path d="${d}"/></clipPath></defs><path d="${d}" fill="${GRANITE.left}"/><g clip-path="url(#${id})">`
+    + `<path d="M${r2(x + w * 0.15 + lean * 0.9)},${r2(y - h - 6)} L${r2(x + w * 1.4)},${r2(y - h - 6)} L${r2(x + w * 1.4)},${r2(y + w)} L${r2(x + w * 0.22)},${r2(y + w)} Q${r2(x + w * 0.4 + lean * 0.4)},${r2(y - h * 0.45)} ${r2(x + w * 0.15 + lean * 0.9)},${r2(y - h - 6)} Z" fill="${GRANITE.right}"/>`
+    + `<path d="M${r2(x - w * 0.62 + lean * 0.8)},${r2(y - h * 0.8)} Q${r2(x - w * 0.9 + lean * 0.3)},${r2(y - h * 0.45)} ${r2(x - w * 0.72)},${r2(y - h * 0.12)}" stroke="${GRANITE.top}" stroke-width="1.6" fill="none" stroke-linecap="round"/>`
+    + E(x - w * 0.4 + lean * 0.4, y - h * 0.3, 1.8, 1.1, '#C8C27A', 0) + E(x + w * 0.3 + lean * 0.7, y - h * 0.74, 1.3, 0.8, '#E0DDB0', 0) + E(x - w * 0.2 + lean * 0.8, y - h * 0.82, 0.9, 0.6, '#C8C27A', 0)
+    + `<path d="M${r2(x + w * 0.5 + lean * 0.5)},${r2(y - h * 0.36)} l-1.2,3 l1,2.4" stroke="#6A655C" stroke-width="0.7" fill="none" stroke-linecap="round"/>`
+    + `<path d="M${r2(x - w * 1.2)},${r2(y + 1)} Q${r2(x - w * 0.8)},${r2(y - 4.4)} ${r2(x - w * 0.35)},${r2(y - 2.2)} Q${r2(x)},${r2(y - 5)} ${r2(x + w * 0.4)},${r2(y - 2)} Q${r2(x + w * 0.8)},${r2(y - 4)} ${r2(x + w * 1.2)},${r2(y + 1)} L${r2(x + w * 1.2)},${r2(y + w)} L${r2(x - w * 1.2)},${r2(y + w)} Z" fill="#7FA35A"/>`
+    + `<path d="M${r2(x - w * 0.8)},${r2(y - 3.2)} q${r2(w * 0.3)},-1.4 ${r2(w * 0.5)},-0.6" stroke="#A8CC78" stroke-width="1" fill="none" stroke-linecap="round"/></g>`
+    + `<path d="${d}" fill="none" stroke="${OUT}" stroke-width="1.1" stroke-linejoin="round"/>`
+    + `<path d="M${gx},${gy} m-1.9,0 a1.9,1.9 0 1 1 1.9,1.9 a3,3 0 1 1 -3,-3" stroke="${lit ? '#6FF0D8' : '#857F74'}" stroke-width="${lit ? 1.3 : 0.9}" fill="none" stroke-linecap="round"/>`
+    + (lit ? glow(gx, gy, 7, '120,235,215', 0.4) : '')
+    + `<path d="M${r2(x + w * 0.9)},${r2(y + 1.5)} l-0.6,-4 M${r2(x + w * 1.1)},${r2(y + 1.5)} l0.8,-3.4 M${r2(x + w * 1.3)},${r2(y + 1.6)} l1.4,-2.4" stroke="#6E9A4A" stroke-width="0.9" stroke-linecap="round"/>`;
 };
 
 const LM = {};
@@ -143,17 +157,33 @@ LM.col = { n: 2, draw: f => {
   // les traits de vent qui passent
   return s + (f ? [[-40, -40], [10, -58], [-10, -24]] : [[-56, -34], [-6, -52], [20, -30]]).map(([dx, dy]) => `<path d="M${x + dx},${y + dy} q10,-4 20,0 q6,2 10,-2" stroke="#FFFFFF" stroke-width="1.4" fill="none" stroke-linecap="round" opacity="0.8"/>`).join('');
 } };
+// Cercle de menhirs : une clairière aux bords bosselés, un sentier tassé et ses cailloux en anneau ; sept pierres
+// levées autour d'une table de pierre moussue ; leurs spirales s'allument deux par deux d'une image à l'autre. Le
+// cercle fleuri : toutes les spirales allumées, une couronne de fleurs, des fleurs sur la table, une lueur dorée au
+// centre (2 images chacun)
 const menhirsDraw = fleuri => f => {
-  let s = shadow(0, 0, 0.75, 0.1) + (fleuri ? disc(0, 0, 0.62, 0, '#A8D878', 0.6) : '');
-  const stones = [];
-  for (let i = 0; i < 7; i++) { const a = (i / 7) * TAU - Math.PI / 2; stones.push([Math.cos(a) * 0.52, Math.sin(a) * 0.52, 26 + (i % 3) * 5, i]); }
-  const lit = i => (i === f * 3 || i === f * 3 + 1 || fleuri);
-  s += stones.filter(([, v]) => v < 0).map(([u, v, h, i]) => menhir(u, v, h, 6, lit(i))).join('');
-  s += box(-0.16, -0.1, 0.16, 0.1, 6, 10, GRANITE) + box(-0.08, -0.06, -0.04, 0.06, 0, 6, GRANITE, 0.7) + box(0.04, -0.06, 0.08, 0.06, 0, 6, GRANITE, 0.7);
-  s += stones.filter(([, v]) => v >= 0).map(([u, v, h, i]) => menhir(u, v, h, 6, lit(i))).join('');
+  const [x, y] = at(0, 0);
+  const bosses = (cx, cy, rx, ry, n) => { const pts = Array.from({ length: n }, (_, i) => { const t = (i / n) * TAU, r = 1 + (i % 2 ? 0.05 : -0.03); return [cx + Math.cos(t) * rx * r, cy + Math.sin(t) * ry * r]; }); const mil = i => { const p = pts[i % n], q = pts[(i + 1) % n]; return `${r2((p[0] + q[0]) / 2)},${r2((p[1] + q[1]) / 2)}`; }; let d = `M${mil(n - 1)}`; for (let i = 0; i < n; i++) d += ` Q${r2(pts[i][0])},${r2(pts[i][1])} ${mil(i)}`; return d + ' Z'; };
+  // la clairière, son herbe plus claire au milieu, le sentier tassé en anneau et ses cailloux
+  let s = shadow(0, 0, 0.78, 0.1) + P(bosses(x, y + 2, 62, 29, 22), fleuri ? '#A8D878' : '#9CC874', 1.1) + E(x - 4, y, 44, 19, fleuri ? '#BCE48E' : '#AED486', 0)
+    + `<ellipse cx="${x}" cy="${y}" rx="41" ry="20.5" fill="none" stroke="#D2C394" stroke-width="6" opacity="0.6"/>`
+    + [[-30, 10], [34, -6], [8, 19], [-20, -14], [22, 14]].map(([dx, dy]) => E(x + dx, y + dy, 1.6, 1, '#B4AD9F', 0.5)).join('');
+  // la couronne de fleurs du cercle fleuri : la moitié du fond avant les pierres, celle de devant après
+  const couronne = devant => fleuri ? Array.from({ length: 16 }, (_, i) => { const a = (i / 16) * TAU, u = Math.cos(a) * 0.68, v = Math.sin(a) * 0.68; if ((u + v >= 0) !== devant) return ''; const [fx, fy] = at(u, v); return flower(fx, fy - 2, 1.6, ['#F7C6D9', '#FFFFFF', '#F2C94C', '#B48AE0'][i % 4]); }).join('') : '';
+  s += couronne(false);
+  // les sept pierres, rangées de l'arrière vers l'avant ; la table au milieu
+  const lean = [-1.5, 1, 0, -1, 1.5, 0.5, -0.8];
+  const lit = i => fleuri || i === f * 3 || i === f * 3 + 1;
+  const stones = Array.from({ length: 7 }, (_, i) => { const a = (i / 7) * TAU - Math.PI / 2 + 0.11; return { i, u: Math.cos(a) * 0.58, v: Math.sin(a) * 0.58, h: 24 + (i * 7) % 11 }; }).sort((p, q) => p.u + p.v - (q.u + q.v));
+  const pierre = st => menhir(st.u, st.v, st.h, 5.2 + (st.i % 3) * 0.7, lit(st.i), lean[st.i], `menhir-${fleuri ? 'f' : 'c'}-${f}-${st.i}`);
+  s += stones.filter(st => st.u + st.v < 0).map(pierre).join('');
+  const TABLE = { top: '#D8D2C6', left: '#B4AD9F', right: '#8F887B' };
+  s += box(-0.09, -0.06, -0.04, 0.06, 0, 6, GRANITE, 0.8) + box(0.04, -0.06, 0.09, 0.06, 0, 6, GRANITE, 0.8) + box(-0.17, -0.11, 0.17, 0.11, 6, 10, TABLE, 1);
+  const [tx, ty] = at(0, 0, 10);
+  s += E(tx - 6, ty - 1, 4, 1.8, '#8DB866', 0) + E(tx - 7, ty - 1.4, 2, 0.8, '#A8CC78', 0) + `<path d="M${tx + 2},${ty - 3} l3,2 l-1,2.6" stroke="#9A9387" stroke-width="0.7" fill="none" stroke-linecap="round"/>`;
+  s += stones.filter(st => st.u + st.v >= 0).map(pierre).join('');
+  s += couronne(true);
   if (fleuri) {
-    for (let i = 0; i < 16; i++) { const a = (i / 16) * TAU; const [x, y] = at(Math.cos(a) * 0.66, Math.sin(a) * 0.66); s += flower(x, y - 2, 1.6, ['#F7C6D9', '#FFFFFF', '#F2C94C', '#B48AE0'][i % 4]); }
-    const [tx, ty] = at(0, 0, 10);
     s += [-8, 0, 8].map(dx => flower(tx + dx, ty - 1, 1.6, '#F7C6D9')).join('') + glow(tx, ty - 10, 26, '255,236,150', 0.22);
   }
   return s;
