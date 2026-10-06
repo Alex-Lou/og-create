@@ -134,13 +134,27 @@ C.lanterne = { n: 2, draw: f => {
     + E(x, y - 63.6, 1.6, 1.5, c.mid, 0.8) + E(x - 0.5, y - 64, 0.5, 0.45, c.light, 0);
   return s;
 } };
-// Banc : lattes, pieds sombres, un coussin
+// Banc : un banc de jardin à lattes, dossier à trois lattes, accoudoirs ; un coussin rouge piqué, son petit cœur
+const BOIS_BANC = { lattes: { top: '#EBBE84', left: '#CB9259', right: '#A0683B' }, pieds: { top: '#A9703F', left: '#8B5631', right: '#6A3F22' } };
 C.banc = { n: 1, draw: () => {
-  const legs = [[-0.3, -0.07], [-0.3, 0.07], [0.3, -0.07], [0.3, 0.07]].map(([u, v]) => post(u, v, 0, 9, WOOD_DARK, 0.025)).join('');
-  const back = box(-0.34, -0.11, 0.34, -0.08, 11, 23, WOOD);
-  const seat = box(-0.34, -0.09, 0.34, 0.09, 9, 11.5, WOOD);
-  const [cx, cy] = at(0.12, 0, 12);
-  return shadow(0, 0, 0.42, 0.14) + back + legs + seat + E(cx, cy - 1.6, 7, 3, '#E8566A', 1) + E(cx - 2, cy - 2.6, 2.4, 1, '#F29AA8', 0);
+  const c = BOIS_BANC, L0 = 0.33;
+  const pied = (u, v, z1) => box(u - 0.024, v - 0.024, u + 0.024, v + 0.024, 0, z1, c.pieds, 0.8);
+  let s = shadow(0, 0.02, 0.44, 0.14);
+  // le dossier : deux montants, trois lattes ; les pieds du fond, l'accoudoir de gauche
+  s += pied(-L0 + 0.03, -0.09, 24) + pied(L0 - 0.03, -0.09, 24);
+  for (const z of [13.4, 17.2, 21]) s += box(-L0, -0.108, L0, -0.082, z, z + 2.6, c.lattes, 0.9);
+  s += pied(-L0 + 0.03, 0.07, 9);
+  // l'assise : trois lattes ; les pieds de devant ; les accoudoirs
+  for (const [v0, v1] of [[-0.094, -0.038], [-0.03, 0.026], [0.034, 0.09]]) s += box(-L0, v0, L0, v1, 9, 10.8, c.lattes, 0.9);
+  s += pied(L0 - 0.03, 0.07, 9);
+  const accoudoir = u => pied(u, 0.07, 15.6) + box(u - 0.032, -0.1, u + 0.032, 0.09, 15.6, 17.2, c.lattes, 0.8);
+  s += accoudoir(-L0 + 0.03);
+  // le coussin, entre les accoudoirs : bombé, plus clair dessus, piqué au centre, un petit cœur brodé
+  const [cx, cy] = at(-0.02, 0, 10.8);
+  s += `<path d="M${r2(cx - 7)},${r2(cy - 0.4)} Q${r2(cx - 7.6)},${r2(cy - 3.8)} ${r2(cx - 3)},${r2(cy - 4.3)} L${r2(cx + 3.4)},${r2(cy - 4.5)} Q${r2(cx + 7.8)},${r2(cy - 4)} ${r2(cx + 7)},${r2(cy - 0.4)} Q${r2(cx)},${r2(cy + 2)} ${r2(cx - 7)},${r2(cy - 0.4)} Z" fill="#E8566A" stroke="${OUT}" stroke-width="0.9" stroke-linejoin="round"/>`
+    + E(cx - 1.2, cy - 2.9, 3.8, 1.1, '#F28A98', 0) + E(cx + 0.2, cy - 2, 0.45, 0.35, '#B23A4C', 0)
+    + `<path d="M${r2(cx + 3.8)},${r2(cy - 1.8)} q-0.8,-0.9 -1.4,-0.1 q-0.5,0.8 1.4,1.8 q1.9,-1 1.4,-1.8 q-0.6,-0.8 -1.4,0.1 Z" fill="#FFFFFF" opacity="0.85"/>`;
+  return s + accoudoir(L0 - 0.03);
 } };
 // Épouvantail : croix de bois, chemise rapiécée, chapeau de paille ; il penche au vent, un corbeau se pose
 C.epouvantail = { n: 2, draw: f => {
