@@ -5073,10 +5073,129 @@
   {
    "id": "plantes/rochers",
    "rubrique": "plantes",
-   "titre": "Rochers",
+   "titre": "Rochers (grands, granite gris)",
    "images": 1,
    "fichiers": [
     "svg/plantes/rochers.svg"
+   ],
+   "cadre": [
+    -50,
+    -115,
+    100,
+    140
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "plantes/rochers_galets",
+   "rubrique": "plantes",
+   "titre": "Rochers (grands, granite gris, des galets au pied)",
+   "images": 1,
+   "fichiers": [
+    "svg/plantes/rochers_galets.svg"
+   ],
+   "cadre": [
+    -50,
+    -115,
+    100,
+    140
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "plantes/rochers_petits",
+   "rubrique": "plantes",
+   "titre": "Rochers (petits, granite gris)",
+   "images": 1,
+   "fichiers": [
+    "svg/plantes/rochers_petits.svg"
+   ],
+   "cadre": [
+    -50,
+    -115,
+    100,
+    140
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "plantes/rochers_petits_galets",
+   "rubrique": "plantes",
+   "titre": "Rochers (petits, granite gris, des galets au pied)",
+   "images": 1,
+   "fichiers": [
+    "svg/plantes/rochers_petits_galets.svg"
+   ],
+   "cadre": [
+    -50,
+    -115,
+    100,
+    140
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "plantes/rochers_petits_sombres",
+   "rubrique": "plantes",
+   "titre": "Rochers (petits, pierre sombre)",
+   "images": 1,
+   "fichiers": [
+    "svg/plantes/rochers_petits_sombres.svg"
+   ],
+   "cadre": [
+    -50,
+    -115,
+    100,
+    140
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "plantes/rochers_petits_sombres_galets",
+   "rubrique": "plantes",
+   "titre": "Rochers (petits, pierre sombre, des galets au pied)",
+   "images": 1,
+   "fichiers": [
+    "svg/plantes/rochers_petits_sombres_galets.svg"
+   ],
+   "cadre": [
+    -50,
+    -115,
+    100,
+    140
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "plantes/rochers_sombres",
+   "rubrique": "plantes",
+   "titre": "Rochers (grands, pierre sombre)",
+   "images": 1,
+   "fichiers": [
+    "svg/plantes/rochers_sombres.svg"
+   ],
+   "cadre": [
+    -50,
+    -115,
+    100,
+    140
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "plantes/rochers_sombres_galets",
+   "rubrique": "plantes",
+   "titre": "Rochers (grands, pierre sombre, des galets au pied)",
+   "images": 1,
+   "fichiers": [
+    "svg/plantes/rochers_sombres_galets.svg"
    ],
    "cadre": [
     -50,
