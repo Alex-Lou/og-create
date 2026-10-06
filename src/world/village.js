@@ -31,6 +31,12 @@ import { anyaHere } from '@/game/anya';
 
 // Les bêtes qui se tournent vers Anya : à moins de 8 cases d'elle
 const ANYA_SIGN_RANGE = 8;
+// Une bête sauvage touchée : son sursaut dure 2,4 s ; elle trottine de 0,35 case (sur chaque axe) et revient
+const STARTLE = 2.4;
+const STARTLE_TROT = 0.35;
+// Celles qui se tiennent en l'air (branche, vol) : touchées, elles ne trottinent pas
+const ALOFT = new Set(['squirrel', 'bird', 'owl', 'butterfly', 'bee', 'firefly']);
+const smooth = k => k * k * (3 - 2 * k);
 
 const SPEED = 0.8; // cases par seconde, à pied
 const WALK = 'gsmdpkb';
@@ -494,13 +500,25 @@ export function villageOf({ n, M, sites, owned, crafts = [], props, annexes = []
     }
     // Bois : chaque bête a ses heures ; elle change de place à chaque heure
     const spot = (list, salt) => list[Math.floor(hash(day * 31 + Math.floor(h), salt) * list.length)];
+    // Touchée, elle sursaute (un bond sur place), trottine un peu du côté où elle regarde, se retourne et revient à sa
+    // place ; perchée ou en vol (ALOFT), elle sursaute et se retourne sans quitter sa branche. Elle ne disparaît jamais
+    // et reste dans sa case (moins d'une demi-case de chaque côté)
+    const startled = (base, s, aloft) => {
+      const jump = s < 0.15 ? Math.sin((s / 0.15) * Math.PI) * 5 : 0;
+      const turned = s >= 0.6 || (aloft && s >= 0.15);
+      const flip = turned ? !base.flip : base.flip;
+      if (aloft) return { ...base, z: (base.z || 0) + jump, flip, frame: jump ? 1 : base.frame === 'rest' ? 0 : base.frame };
+      const away = s < 0.15 ? 0 : s < 0.5 ? smooth((s - 0.15) / 0.35) : s < 0.6 ? 1 : 1 - smooth((s - 0.6) / 0.4);
+      const d = away * STARTLE_TROT * (base.flip ? -1 : 1);
+      const trotting = (s > 0.15 && s < 0.5) || s > 0.6;
+      return { ...base, x: base.x + d, y: base.y - d, z: jump, flip, frame: trotting ? Math.floor(t * 8) % 2 : jump ? 1 : 0 };
+    };
     const wild = (id, species, cells, when, place) => {
       if (!cells.length || !when) return;
-      const fled = tapped(id, 60);
-      if (fled !== null && fled * 60 > 1.6) return;
       const base = place(spot(cells, species.length * 7));
-      const run = fled === null ? 0 : (fled * 60) / 1.6;
-      out.push(beast(id, species, base.variant || '', base.x + run * 2.2, base.y - run * 1.2, base.z || 0, run > 0 ? true : base.flip, run > 0 ? 1 : base.frame));
+      const s = tapped(id, STARTLE);
+      const b = s === null ? base : startled(base, s, ALOFT.has(species));
+      out.push(beast(id, species, b.variant || '', b.x, b.y, b.z || 0, b.flip, b.frame));
     };
     const dawn = h > phase.rise - 0.6 && h < phase.rise + 1.6;
     const dusk = h > phase.set - 1.2 && h < phase.set + 0.6;
@@ -648,7 +666,7 @@ export function villageOf({ n, M, sites, owned, crafts = [], props, annexes = []
     if (who.id === 'anya:dame') return { title: 'Anya', text: long ? 'L’Âme de l’Île. Elle erre ; on la croise rarement, à l’aube ou au crépuscule.' : 'La forêt se souvient de toi.', ...(long ? { hint: 'Toucher : son Souffle, une fois par passage' } : {}) };
     if (who.id === 'anya:cerf') return { title: 'Le cerf blanc', text: long ? 'Le grand cerf blanc d’Anya. Il ne quitte pas sa Dame.' : 'Il incline ses bois.', ...(long ? { hint: 'Toucher : il incline ses bois' } : {}) };
     if (who.id === 'dame:bol') return { title: 'Un bol de soupe', text: '« Pour la Dame. » Cannelle le pose chaque soir au bord du Foyer.', ...(long ? { hint: 'Toucher : le regarder' } : {}) };
-    if (who.id.startsWith('anya:otter')) return long ? { title: 'Loutre', text: BEAST_NAMES.otter[1], hint: 'Toucher : elle s’enfuit' } : null;
+    if (who.id.startsWith('anya:otter')) return long ? { title: 'Loutre', text: BEAST_NAMES.otter[1], hint: 'Toucher : elle sursaute' } : null;
     return long ? { title: 'Luciole', text: 'Le halo d’Anya.', hint: 'Toucher : elle clignote' } : null;
   }
   // Ce que dit un habitant ou une bête de la ferme qu'on touche ; null pour les bêtes sauvages (elles s'enfuient)
@@ -687,7 +705,7 @@ export function villageOf({ n, M, sites, owned, crafts = [], props, annexes = []
     if (who.id && who.id.startsWith('fam:')) return { ...petInfo(who, true), hint: 'Toucher : le saluer' };
     if (who.id && (who.id.startsWith('anya:') || who.id === 'dame:bol')) return storyInfo(who, true);
     const [title, text] = BEAST_NAMES[who.species] || ['Une bête', ''];
-    return { title, text, hint: WILD.has(who.species) ? 'Toucher : il s’enfuit' : 'Toucher : la faire réagir' };
+    return { title, text, hint: WILD.has(who.species) ? 'Toucher : il sursaute' : 'Toucher : la faire réagir' };
   }
   return { residents, farm, at, say, describe, home, foyer };
 }
