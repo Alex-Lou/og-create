@@ -358,7 +358,7 @@ export default {
   margin: -42px 0 0 -42px;
   padding: 4px;
   border: 0;
-  border-radius: 50%;
+  border-radius: var(--r-round);
   background: rgba(255, 252, 245, 0.6);
   box-shadow: inset 0 0 0 2px var(--oc-line);
   outline: 2px dashed var(--oc-line-strong);
@@ -430,7 +430,7 @@ export default {
   width: 300px;
   height: 300px;
   margin: -150px 0 0 -150px;
-  border-radius: 50%;
+  border-radius: var(--r-round);
   background: radial-gradient(circle, rgba(247, 220, 147, 0.55) 0%, rgba(247, 220, 147, 0) 68%);
   animation: halo 1.2s var(--oc-ease-out) forwards;
 }
@@ -447,7 +447,7 @@ export default {
   text-align: center;
   background: linear-gradient(180deg, var(--vellum-50), var(--vellum-100));
   box-shadow: inset 0 0 0 2px var(--gold-400), inset 0 0 0 6px var(--vellum-50), inset 0 0 0 7px var(--gold-300), var(--shadow-3);
-  animation: pop 0.6s var(--oc-ease-spring) both;
+  animation: pop var(--oc-slow) var(--oc-ease-spring) both;
 }
 .reveal__image { width: 132px; height: 132px; object-fit: contain; filter: drop-shadow(0 8px 16px rgba(52, 36, 26, 0.3)); }
 .reveal__ink { font-size: 76px; line-height: 1; }
@@ -496,7 +496,7 @@ export default {
     left: 0;
     right: 0;
     bottom: var(--oc-tabbar-h);
-    z-index: 20;
+    z-index: var(--z-dock);
     flex-direction: row;
     flex-wrap: nowrap;
     align-items: center;
@@ -541,7 +541,7 @@ export default {
     box-shadow: inset 0 0 0 1px rgba(192, 72, 58, 0.35), var(--shadow-2);
   }
   .fail-enter-from, .fail-leave-to { transform: translateY(-8px); }
-  .reveal { position: fixed; z-index: 30; border-radius: 0; }
+  .reveal { position: fixed; z-index: var(--z-reveal); border-radius: 0; }
   .reveal__name { font-size: 48px; }
 }
 </style>

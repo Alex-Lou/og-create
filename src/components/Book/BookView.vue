@@ -802,7 +802,7 @@ export default {
   appearance: none; border: 0; cursor: pointer;
   min-width: 0; min-height: 44px; padding: 4px 14px 4px 5px;
   display: inline-flex; align-items: center; gap: 10px;
-  border-radius: 999px;
+  border-radius: var(--r-pill);
   background: var(--rc); color: var(--ri);
   box-shadow: inset 0 0 0 1px rgba(74, 52, 38, .12), 0 3px 0 rgba(74, 52, 38, .18);
   touch-action: manipulation; -webkit-tap-highlight-color: transparent;
@@ -813,12 +813,12 @@ export default {
 .book-view__chapter.is-ping { animation: book-ping .8s cubic-bezier(.3, 1.5, .55, 1) 2; }
 .book-view__chapter-seal {
   flex: none; width: 34px; height: 34px; display: grid; place-items: center;
-  border-radius: 50%; background: #FFFDF8; color: var(--ri);
+  border-radius: var(--r-round); background: #FFFDF8; color: var(--ri);
   font-family: var(--oc-font-display); font-weight: 700; font-size: 14px;
 }
 .book-view__chapter-name { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-family: var(--oc-font-display); font-weight: 700; font-size: 20px; line-height: 1.1; }
 .book-view__ariane {
-  display: flex; align-items: center; gap: 8px; margin: 2px auto 6px; padding: 6px 12px 6px 8px; border: 0; border-radius: 999px;
+  display: flex; align-items: center; gap: 8px; margin: 2px auto 6px; padding: 6px 12px 6px 8px; border: 0; border-radius: var(--r-pill);
   background: rgba(184, 50, 42, .12); color: var(--oc-text, #3A2A1E); font: inherit; font-size: 14px; font-weight: 700; cursor: pointer;
 }
 .book-view__ariane strong { font-weight: 900; }
@@ -828,14 +828,14 @@ export default {
 }
 .book-view__stars {
   appearance: none; border: 0; cursor: pointer;
-  flex: none; min-height: 32px; padding: 4px 12px; border-radius: 999px;
+  flex: none; min-height: 32px; padding: 4px 12px; border-radius: var(--r-pill);
   background: var(--vellum-50); color: var(--oc-gold);
   box-shadow: inset 0 0 0 1px var(--oc-line), 0 2px 0 var(--vellum-400);
   font-family: var(--oc-font-mono); font-size: 14px; font-weight: 900;
 }
 .book-view__summary {
   appearance: none; border: 0; cursor: pointer;
-  flex: none; width: 40px; height: 40px; border-radius: 50%;
+  flex: none; width: 40px; height: 40px; border-radius: var(--r-round);
   display: grid; place-items: center; margin-left: auto;
   background: var(--vellum-50); color: var(--ink-900);
   box-shadow: inset 0 0 0 1px var(--oc-line), 0 2px 0 var(--vellum-400);
@@ -894,9 +894,9 @@ export default {
 .book-view__rig:has(.book-view__hot.is-turning) :deep(.grim__aim) { opacity: 0; }
 .book-view__hot:focus-visible { box-shadow: 0 0 0 3px var(--oc-gold); }
 .book-view__hot.is-turning > * { visibility: hidden; }
-.book-view__spot { position: absolute; border: 0; padding: 0; background: transparent; border-radius: 14px; cursor: pointer; }
+.book-view__spot { position: absolute; border: 0; padding: 0; background: transparent; border-radius: var(--r-tile); cursor: pointer; }
 .book-view__spot:focus-visible { outline: 3px solid rgba(227, 169, 59, .9); outline-offset: 2px; }
-.book-view__pulse { position: absolute; border-radius: 50%; pointer-events: none; animation: book-aura 2.4s ease-out infinite; }
+.book-view__pulse { position: absolute; border-radius: var(--r-round); pointer-events: none; animation: book-aura 2.4s ease-out infinite; }
 @keyframes book-aura { 0% { box-shadow: 0 0 0 0 rgba(227, 169, 59, .5); } 70%, 100% { box-shadow: 0 0 0 22px rgba(227, 169, 59, 0); } }
 @keyframes book-ping { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-4px); } }
 .book-view__error { position: absolute; inset: 30% 10% auto; text-align: center; color: var(--oc-on-bg); z-index: 4; }
@@ -906,7 +906,7 @@ export default {
 .book-view__shelf-title { font-family: var(--oc-font-mono); font-weight: 800; font-size: 11px; letter-spacing: .14em; text-transform: uppercase; color: var(--oc-on-bg-faint); }
 .book-view__search {
   flex: 1 1 100%; min-width: 0; margin-bottom: 4px;
-  padding: 8px 14px; border-radius: 999px;
+  padding: 8px 14px; border-radius: var(--r-pill);
   border: 0;
   background: var(--vellum-50); color: var(--ink-900);
   box-shadow: inset 0 0 0 1px var(--oc-line-strong);
@@ -925,7 +925,7 @@ export default {
 .book-view__tool {
   flex: 0 1 auto; min-width: 0; max-width: 62%; height: 40px; padding: 0 12px;
   display: inline-flex; align-items: center; justify-content: center; gap: 4px;
-  border: 0; border-radius: 999px; cursor: pointer;
+  border: 0; border-radius: var(--r-pill); cursor: pointer;
   background: var(--vellum-50); color: var(--ink-700);
   box-shadow: inset 0 0 0 1px var(--oc-line), 0 2px 0 var(--vellum-400);
   font-family: var(--font-ui); font-size: 13px; font-weight: 800;
@@ -938,7 +938,7 @@ export default {
 .book-view__filter {
   flex: none;
   min-height: 34px; padding: 4px 12px;
-  border: 0; border-radius: 999px;
+  border: 0; border-radius: var(--r-pill);
   background: var(--vellum-50); color: var(--ink-700);
   box-shadow: inset 0 0 0 1px var(--oc-line), 0 2px 0 var(--vellum-400);
   font-family: var(--font-ui); font-size: 13px; font-weight: 800;
@@ -957,9 +957,9 @@ export default {
 /* Fiche d'un élément */
 .book-view__info { text-align: center; }
 .book-view__info p { margin: 6px 0; }
-.book-view__info-glyph { display: inline-grid; place-items: center; width: 72px; height: 72px; margin-bottom: 6px; border-radius: 50%; background: var(--vellum-200); font-size: 40px; }
+.book-view__info-glyph { display: inline-grid; place-items: center; width: 72px; height: 72px; margin-bottom: 6px; border-radius: var(--r-round); background: var(--vellum-200); font-size: 40px; }
 .book-view__info-btn {
-  appearance: none; border: 0; cursor: pointer; min-height: 44px; padding: 8px 22px; border-radius: 999px;
+  appearance: none; border: 0; cursor: pointer; min-height: 44px; padding: 8px 22px; border-radius: var(--r-pill);
   background: var(--ink-900); color: var(--vellum-50); font-family: var(--font-ui); font-weight: 900; font-size: 15px;
 }
 .book-view__empty { grid-column: 1 / -1; margin: 8px 0; color: var(--oc-on-bg-faint); font-style: italic; }
@@ -979,7 +979,7 @@ export default {
 
 /* Cinématique d'ouverture de chapitre (montée hors du composant, dans body) */
 .book-unlock {
-  position: fixed; inset: 0; z-index: 80;
+  position: fixed; inset: 0; z-index: var(--z-unlock);
   display: grid; place-items: center; align-content: center; gap: 18px;
   background: radial-gradient(circle at 50% 42%, rgba(58, 38, 24, .82), rgba(24, 16, 10, .94));
   -webkit-backdrop-filter: blur(6px);
@@ -1003,7 +1003,7 @@ export default {
 .book-unlock__name { font-family: var(--font-display); font-weight: 700; font-size: 34px; line-height: 1.05; opacity: 0; }
 .book-unlock__go {
   margin-top: 6px; min-height: 48px; padding: 12px 26px;
-  border: 0; border-radius: 999px;
+  border: 0; border-radius: var(--r-pill);
   background: #FFE2A6; color: var(--ink-900);
   font-family: var(--font-ui); font-weight: 900; font-size: 16px;
   box-shadow: 0 6px 0 #C9933A;

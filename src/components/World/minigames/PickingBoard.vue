@@ -146,12 +146,12 @@ export default {
 .picking__bar { display: grid; grid-template-columns: auto 1fr auto; align-items: center; gap: 10px; min-height: 34px; }
 .picking__time { font-size: 13px; font-weight: 800; color: var(--ink-700); }
 .picking__time strong { font-size: 18px; font-weight: 900; color: var(--ink-900); font-variant-numeric: tabular-nums; }
-.picking__meter { height: 8px; border-radius: 999px; background: rgba(74, 52, 38, .15); overflow: hidden; }
+.picking__meter { height: 8px; border-radius: var(--r-pill); background: rgba(74, 52, 38, .15); overflow: hidden; }
 .picking__meter span { display: block; height: 100%; border-radius: inherit; background: linear-gradient(90deg, #7FBF55, #F2C04B); }
 .picking__basket { font-size: 13px; font-weight: 800; color: var(--ink-700); }
 .picking__basket strong { font-size: 18px; font-weight: 900; color: var(--ink-900); font-variant-numeric: tabular-nums; }
 .picking__patch {
-  display: grid; grid-template-columns: repeat(var(--cols), 1fr); gap: 6px; padding: 10px; border-radius: 18px;
+  display: grid; grid-template-columns: repeat(var(--cols), 1fr); gap: 6px; padding: 10px; border-radius: var(--r-board);
   background: radial-gradient(circle at 50% 40%, #B9DC8F, #8FBF62); box-shadow: inset 0 3px 8px rgba(40, 70, 20, .3);
   touch-action: none; user-select: none; -webkit-user-select: none; transition: filter .2s ease;
 }

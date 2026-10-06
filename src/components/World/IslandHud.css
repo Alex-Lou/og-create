@@ -3,7 +3,7 @@
 .world__top .world__head > *, .world__top .world__hud > * { pointer-events: auto; }
 .world__head-left { display: flex; align-items: center; gap: 8px; }
 .world__purse {
-  display: inline-flex; align-items: center; gap: 5px; height: 32px; padding: 0 11px 0 8px; border-radius: 999px;
+  display: inline-flex; align-items: center; gap: 5px; height: 32px; padding: 0 11px 0 8px; border-radius: var(--r-pill);
   background: rgba(251, 246, 234, .94); color: var(--ink-900); font-family: var(--font-ui); font-size: 14px; font-weight: 900;
   font-variant-numeric: tabular-nums;
 }
@@ -11,7 +11,7 @@
 .world__coins {
   flex: 0 1 auto; min-width: 0; max-width: 60%; display: inline-flex; align-items: center; gap: 7px; text-align: left;
   min-height: 38px; padding: 6px 14px;
-  border: 1px solid rgba(224, 182, 84, .3); border-radius: 999px;
+  border: 1px solid rgba(224, 182, 84, .3); border-radius: var(--r-pill);
   background: rgba(224, 182, 84, .08); color: var(--oc-text-faint);
   font-family: var(--font-ui); font-weight: 900; font-size: 15px;
   cursor: pointer;
@@ -27,7 +27,7 @@
 .world__stock { flex: 1; min-width: 0; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 6px; margin: 0; padding: 0; list-style: none; }
 .world__res {
   display: flex; align-items: center; justify-content: center; gap: 4px;
-  min-height: 46px; border-radius: 14px; background: var(--vellum-100); color: var(--ink-900);
+  min-height: 46px; border-radius: var(--r-tile); background: var(--vellum-100); color: var(--ink-900);
   font-family: var(--font-ui); font-size: 17px;
 }
 .world__res strong { font-size: 15px; font-weight: 900; font-variant-numeric: tabular-nums; }

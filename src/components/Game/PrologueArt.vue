@@ -476,7 +476,7 @@ export default {
 .pa__flicker { animation: pa-glow 1.6s ease-in-out infinite; }
 .pa__foam { animation: pa-foam 3s ease-in-out infinite; }
 .pa__shiver { animation: pa-shiver .18s linear infinite; }
-.pa__recipe { font-family: 'IM Fell English', Georgia, serif; fill: #FFE6A8; animation: pa-glow 2.4s ease-in-out infinite; }
+.pa__recipe { font-family: var(--font-fell); fill: #FFE6A8; animation: pa-glow 2.4s ease-in-out infinite; }
 .pa__recipe-name { font-size: 24px; }
 .pa__recipe-of { font-size: 15px; font-style: italic; }
 /* La tempête : éclair, roulis, la vague qui monte, puis le noir */

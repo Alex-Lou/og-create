@@ -164,7 +164,7 @@ export default {
 
 <style scoped>
 .mini {
-  position: fixed; inset: 0; z-index: 80; display: flex; align-items: center; justify-content: center;
+  position: fixed; inset: 0; z-index: var(--z-game); display: flex; align-items: center; justify-content: center;
   padding: 16px; background: rgba(10, 8, 6, .72); font-family: var(--font-ui);
 }
 .mini__card {
@@ -175,20 +175,20 @@ export default {
 .mini__eyebrow { display: block; font-size: 11px; font-weight: 900; letter-spacing: .16em; text-transform: uppercase; color: var(--ink-500); }
 .mini__title { display: block; font-family: var(--font-display); font-size: 24px; font-weight: 700; line-height: 1.1; font-variant-numeric: tabular-nums; }
 .mini__end {
-  min-height: 38px; padding: 6px 14px; border: 0; border-radius: 999px; background: var(--ink-900); color: var(--vellum-50);
+  min-height: 38px; padding: 6px 14px; border: 0; border-radius: var(--r-pill); background: var(--ink-900); color: var(--vellum-50);
   font: inherit; font-weight: 900; font-size: 13px; cursor: pointer;
 }
 .mini__end--quiet { background: var(--vellum-200); color: var(--ink-900); box-shadow: inset 0 0 0 1px rgba(74, 52, 38, .18); }
 .mini__end:disabled { opacity: .5; cursor: default; }
 .mini__intro { display: grid; gap: 12px; }
-.mini__art { display: flex; align-items: flex-end; justify-content: center; gap: 4px; padding: 14px 0 10px; border-radius: 18px; background: radial-gradient(circle at 50% 70%, #FFF4D6, var(--vellum-200) 72%); }
+.mini__art { display: flex; align-items: flex-end; justify-content: center; gap: 4px; padding: 14px 0 10px; border-radius: var(--r-board); background: radial-gradient(circle at 50% 70%, #FFF4D6, var(--vellum-200) 72%); }
 .mini__rule { margin: 0; font-weight: 800; font-size: 15px; line-height: 1.4; text-align: center; }
 .mini__rules { margin: 0; padding-left: 18px; display: grid; gap: 4px; color: var(--ink-700); font-size: 13px; font-weight: 700; line-height: 1.4; }
 .mini__facts { margin: 0; padding: 0; list-style: none; display: grid; gap: 6px; }
-.mini__facts li { display: flex; justify-content: space-between; gap: 10px; padding: 8px 12px; border-radius: 12px; background: var(--vellum-50); font-size: 13px; font-weight: 700; }
+.mini__facts li { display: flex; justify-content: space-between; gap: 10px; padding: 8px 12px; border-radius: var(--r-sm); background: var(--vellum-50); font-size: 13px; font-weight: 700; }
 .mini__facts strong { font-weight: 900; }
 .mini__btn {
-  min-height: 48px; padding: 10px 22px; border: 0; border-radius: 999px; cursor: pointer;
+  min-height: 48px; padding: 10px 22px; border: 0; border-radius: var(--r-pill); cursor: pointer;
   background: linear-gradient(180deg, var(--gold-300), var(--gold-500)); color: var(--ink-900);
   box-shadow: inset 0 1px 0 rgba(255, 255, 255, .6), 0 3px 0 var(--gold-600);
   font: inherit; font-weight: 900; font-size: 16px;
@@ -203,7 +203,7 @@ export default {
 }
 .mini__result { display: grid; justify-items: center; gap: 12px; padding: 10px 0 2px; text-align: center; }
 .mini__earned { display: inline-flex; align-items: center; gap: 10px; margin: 0; font-family: var(--font-display); font-size: 36px; font-weight: 800; animation: mini-count .5s ease both; }
-.mini__coin { width: 30px; height: 30px; border-radius: 50%; background: radial-gradient(circle at 35% 35%, #FFE7A0, #E9AE2E 70%); box-shadow: inset 0 0 0 2px rgba(59, 42, 32, .5); }
+.mini__coin { width: 30px; height: 30px; border-radius: var(--r-round); background: radial-gradient(circle at 35% 35%, #FFE7A0, #E9AE2E 70%); box-shadow: inset 0 0 0 2px rgba(59, 42, 32, .5); }
 .mini__haul { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px 14px; margin: 0; padding: 0; list-style: none; }
 .mini__haul li { display: inline-flex; align-items: center; gap: 4px; font-size: 15px; font-weight: 900; }
 .mini__note, .mini__wait { margin: 0; color: var(--ink-500); font-size: 13px; font-weight: 700; }

@@ -2,4 +2,7 @@
 :root {
   --font-display: 'Fraunces', 'Iowan Old Style', Georgia, serif;
   --font-ui: 'Nunito', ui-rounded, 'SF Pro Rounded', system-ui, sans-serif;
+  /* Le Grimoire et le prologue : IM Fell (déclarée avec les polices du Grimoire, dans BookView) */
+  --font-fell: 'IM Fell English', Georgia, serif;
+  --font-fell-sc: 'IM Fell English SC', Georgia, serif;
 }

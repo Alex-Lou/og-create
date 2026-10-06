@@ -49,7 +49,7 @@ export default {
 <style scoped>
 .hud {
   position: relative;
-  z-index: 10;
+  z-index: var(--z-header);
   min-height: 60px;
   display: flex;
   align-items: center;
@@ -84,7 +84,7 @@ export default {
   height: 32px;
   display: grid;
   place-items: center;
-  border-radius: 50%;
+  border-radius: var(--r-round);
   font-family: var(--oc-font-display);
   font-weight: 700;
   font-size: 13px;
@@ -92,7 +92,7 @@ export default {
   background: radial-gradient(circle at 35% 30%, #d9705c 0 20%, var(--wax-500) 55%, var(--wax-700) 100%);
   box-shadow: inset 0 0 0 2px rgba(0, 0, 0, 0.12);
   /* Nouvelle ère : le sceau se pose */
-  animation: seal-in 0.6s var(--oc-ease-spring);
+  animation: seal-in var(--oc-slow) var(--oc-ease-spring);
 }
 .hud__era-text { min-width: 0; display: flex; flex-direction: column; line-height: 1.1; }
 .hud__era-name { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-family: var(--oc-font-display); font-weight: 700; font-size: 15px; color: var(--ink-900); }
@@ -103,11 +103,11 @@ export default {
   position: relative;
   width: 24px;
   height: 24px;
-  border-radius: 50%;
+  border-radius: var(--r-round);
   background: radial-gradient(circle at 35% 30%, #fff4c8 0 18%, var(--gold-400) 40%, var(--gold-600) 100%);
   box-shadow: inset 0 0 0 2px rgba(140, 94, 24, 0.55), inset 0 -2px 0 rgba(140, 94, 24, 0.35);
 }
-.hud__coin::after { content: ''; position: absolute; inset: 6px; border-radius: 50%; border: 1.5px solid rgba(140, 94, 24, 0.5); }
+.hud__coin::after { content: ''; position: absolute; inset: 6px; border-radius: var(--r-round); border: 1.5px solid rgba(140, 94, 24, 0.5); }
 .hud__value {
   font-weight: 900;
   font-size: 16px;

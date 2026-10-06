@@ -134,7 +134,7 @@ export default {
 .toast-stack {
   position: fixed;
   left: 50%;
-  z-index: 9999;
+  z-index: var(--z-toast);
   display: flex;
   align-items: center;
   gap: 8px;

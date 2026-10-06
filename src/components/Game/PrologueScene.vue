@@ -86,36 +86,36 @@ export default {
 
 <style scoped>
 .ps {
-  position: fixed; inset: 0; z-index: 90; overflow: hidden; cursor: pointer; outline: none;
+  position: fixed; inset: 0; z-index: var(--z-prologue); overflow: hidden; cursor: pointer; outline: none;
   background: #05080F; color: #F4EEDC;
   -webkit-tap-highlight-color: transparent; user-select: none;
 }
 .ps__caption {
   position: absolute; left: 0; right: 0; top: max(70px, calc(env(safe-area-inset-top) + 56px)); margin: 0; padding: 0 16px; text-align: center;
-  font-family: 'IM Fell English', Georgia, serif; font-style: italic; font-size: 20px; color: rgba(244, 238, 220, .85);
+  font-family: var(--font-fell); font-style: italic; font-size: 20px; color: rgba(244, 238, 220, .85);
   text-shadow: 0 2px 8px rgba(0, 0, 0, .8);
 }
 .ps__bubble {
   position: absolute; left: 50%; bottom: max(28px, calc(env(safe-area-inset-bottom) + 18px)); transform: translateX(-50%);
-  width: min(560px, calc(100% - 32px)); padding: 14px 18px 12px; border-radius: 18px;
+  width: min(560px, calc(100% - 32px)); padding: 14px 18px 12px; border-radius: var(--r-board);
   background: rgba(250, 244, 228, .96); color: #3E2A1E;
   box-shadow: 0 10px 30px rgba(0, 0, 0, .45), inset 0 0 0 1px rgba(201, 162, 74, .6);
 }
 .ps__bubble.is-thought { background: rgba(20, 30, 48, .82); color: #E8EEF8; box-shadow: 0 10px 30px rgba(0, 0, 0, .45), inset 0 0 0 1px rgba(200, 220, 240, .25); }
-.ps__who { display: block; margin-bottom: 2px; font-family: 'IM Fell English SC', Georgia, serif; font-size: 15px; letter-spacing: .06em; color: #2F6286; }
-.ps__text { margin: 0; font-family: 'IM Fell English', Georgia, serif; font-size: 20px; line-height: 1.3; }
+.ps__who { display: block; margin-bottom: 2px; font-family: var(--font-fell-sc); font-size: 15px; letter-spacing: .06em; color: #2F6286; }
+.ps__text { margin: 0; font-family: var(--font-fell); font-size: 20px; line-height: 1.3; }
 .is-thought .ps__text { font-style: italic; }
 .ps__hint { display: block; margin-top: 8px; font-family: var(--font-ui); font-size: 12px; font-weight: 800; letter-spacing: .08em; text-transform: uppercase; opacity: .6; }
 .ps__hint--alone { position: absolute; left: 0; right: 0; bottom: max(30px, calc(env(safe-area-inset-bottom) + 20px)); text-align: center; color: rgba(244, 238, 220, .7); }
 .ps__choices { display: flex; gap: 10px; margin-top: 12px; }
 .ps__choice {
-  flex: 1; min-height: 44px; border: 0; border-radius: 999px; cursor: pointer;
+  flex: 1; min-height: 44px; border: 0; border-radius: var(--r-pill); cursor: pointer;
   background: rgba(232, 238, 248, .14); color: inherit; box-shadow: inset 0 0 0 1px rgba(232, 238, 248, .35);
-  font-family: 'IM Fell English', Georgia, serif; font-size: 18px;
+  font-family: var(--font-fell); font-size: 18px;
 }
 .ps__skip {
   position: absolute; top: max(14px, env(safe-area-inset-top)); right: 14px; min-height: 40px; padding: 8px 16px;
-  border: 0; border-radius: 999px; cursor: pointer;
+  border: 0; border-radius: var(--r-pill); cursor: pointer;
   background: rgba(0, 0, 0, .35); color: rgba(244, 238, 220, .85); box-shadow: inset 0 0 0 1px rgba(244, 238, 220, .3);
   font-family: var(--font-ui); font-size: 13px; font-weight: 800;
 }

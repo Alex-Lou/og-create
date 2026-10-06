@@ -1,46 +1,46 @@
 /* SiteOverview : ses styles (repris de WorldView, qui les gardait pour lui). */
 .world__prod { display: grid; gap: 6px; }
-.world__prod-row { display: flex; justify-content: space-between; align-items: center; gap: 10px; min-height: 40px; padding: 6px 12px; border-radius: 12px; background: var(--vellum-50); box-shadow: inset 0 0 0 1px rgba(74, 52, 38, .08); font-size: 14px; }
+.world__prod-row { display: flex; justify-content: space-between; align-items: center; gap: 10px; min-height: 40px; padding: 6px 12px; border-radius: var(--r-sm); background: var(--vellum-50); box-shadow: inset 0 0 0 1px rgba(74, 52, 38, .08); font-size: 14px; }
 .world__prod-row span { color: var(--ink-500); font-weight: 800; }
 .world__prod-row.is-pending { background: var(--gold-200); }
 .world__friends { margin-top: 12px; }
 .world__friends-title { margin: 0 0 6px; font-size: 12px; font-weight: 800; text-transform: uppercase; letter-spacing: .05em; color: var(--ink-500); }
 .world__friends-list { display: grid; grid-template-columns: repeat(auto-fill, minmax(84px, 1fr)); gap: 6px; margin: 0; padding: 0; list-style: none; }
 .world__friend {
-  position: relative; width: 100%; display: grid; justify-items: center; gap: 2px; padding: 6px 4px 8px; border: 0; border-radius: 14px;
+  position: relative; width: 100%; display: grid; justify-items: center; gap: 2px; padding: 6px 4px 8px; border: 0; border-radius: var(--r-tile);
   background: var(--vellum-50); box-shadow: inset 0 0 0 1px rgba(74, 52, 38, .1); font-family: var(--font-ui); color: var(--ink-900); cursor: pointer;
 }
-.world__friend-face { position: relative; display: block; width: 52px; height: 58px; border-radius: 12px; background: radial-gradient(circle at 50% 75%, #FFE9C4, var(--vellum-200) 74%); }
+.world__friend-face { position: relative; display: block; width: 52px; height: 58px; border-radius: var(--r-sm); background: radial-gradient(circle at 50% 75%, #FFE9C4, var(--vellum-200) 74%); }
 /* Le portrait, et aussi le glyphe d'humeur posé dessus (sa propre règle .glyph garde la main sur sa taille) : la
    spécificité reste celle d'avant le passage en scoped grâce à :where() */
 :where(.world__friend-face) img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; padding: 3px; box-sizing: border-box; }
 .world__friend-name { font-family: var(--font-display); font-weight: 700; font-size: 14px; }
 .world__friend-hearts { color: #E8566A; font-size: 11px; letter-spacing: .04em; }
 .world__friend-hearts span { color: var(--vellum-300); }
-.world__friend-dot { position: absolute; top: 6px; right: 8px; width: 9px; height: 9px; border-radius: 50%; background: #E8566A; box-shadow: 0 0 0 2px var(--vellum-50); }
-.world__friend-mood { position: absolute; right: -6px; bottom: -4px; display: grid; place-items: center; width: 22px; height: 22px; border-radius: 50%; background: var(--vellum-50); box-shadow: 0 1px 4px rgba(60, 40, 25, .25); font-size: 16px; }
+.world__friend-dot { position: absolute; top: 6px; right: 8px; width: 9px; height: 9px; border-radius: var(--r-round); background: #E8566A; box-shadow: 0 0 0 2px var(--vellum-50); }
+.world__friend-mood { position: absolute; right: -6px; bottom: -4px; display: grid; place-items: center; width: 22px; height: 22px; border-radius: var(--r-round); background: var(--vellum-50); box-shadow: 0 1px 4px rgba(60, 40, 25, .25); font-size: 16px; }
 .world__friend.is-guest { background: #F1F8FD; box-shadow: inset 0 0 0 1px rgba(62, 110, 156, .25); }
 .world__friend-guest { font-size: 11px; font-weight: 800; color: #3E6E9C; }
 .world__friend-need.is-quest { background: #FFF6D8; box-shadow: inset 0 0 0 2px #E2A72E; }
-.world__friend-need { position: absolute; top: 4px; right: 4px; display: grid; place-items: center; width: 24px; height: 24px; border-radius: 50%; background: #FFF4E5; box-shadow: inset 0 0 0 2px #F0A84A; font-size: 15px; }
+.world__friend-need { position: absolute; top: 4px; right: 4px; display: grid; place-items: center; width: 24px; height: 24px; border-radius: var(--r-round); background: #FFF4E5; box-shadow: inset 0 0 0 2px #F0A84A; font-size: 15px; }
 .world__fill-all { width: 100%; margin-top: 8px; display: inline-flex; justify-content: center; align-items: center; gap: 8px; }
 .world__fill-cost { display: inline-flex; align-items: center; gap: 2px; }
 .world__prod-row.is-happy { background: #EAF6E2; }
 .world__prod-row.is-sad { background: #E8EDF6; }
 .world__game {
   display: grid; grid-template-columns: auto minmax(0, 1fr) auto; align-items: center; gap: 10px; margin-top: 10px;
-  padding: 10px 12px; border-radius: 16px; background: linear-gradient(135deg, #FFF4D6, var(--vellum-100)); box-shadow: inset 0 0 0 2px var(--gold-300);
+  padding: 10px 12px; border-radius: var(--r-md); background: linear-gradient(135deg, #FFF4D6, var(--vellum-100)); box-shadow: inset 0 0 0 2px var(--gold-300);
 }
 .world__game.is-locked { background: var(--vellum-100); box-shadow: inset 0 0 0 1px rgba(74, 52, 38, .12); }
 .world__game.is-locked .world__game-art { filter: grayscale(.7) opacity(.6); }
-.world__game-art { display: grid; place-items: center; width: 52px; height: 52px; border-radius: 14px; background: rgba(255, 255, 255, .6); }
+.world__game-art { display: grid; place-items: center; width: 52px; height: 52px; border-radius: var(--r-tile); background: rgba(255, 255, 255, .6); }
 .world__game-art img { width: 46px; height: 46px; object-fit: contain; }
 .world__game-body { display: grid; gap: 1px; min-width: 0; }
 .world__game-kind { font-size: 11px; font-weight: 800; text-transform: uppercase; letter-spacing: .04em; color: var(--ink-500); }
 .world__game-name { font-family: var(--font-display); font-weight: 700; font-size: 17px; line-height: 1.15; }
 .world__game-text { font-size: 12px; font-weight: 700; color: var(--ink-700); }
 .world__game-btn {
-  min-height: 40px; min-width: 84px; padding: 6px 16px; border: 0; border-radius: 999px; cursor: pointer;
+  min-height: 40px; min-width: 84px; padding: 6px 16px; border: 0; border-radius: var(--r-pill); cursor: pointer;
   background: var(--ink-900); color: var(--vellum-50); font-family: var(--font-ui); font-weight: 900; font-size: 14px;
 }
 .world__game-btn:disabled { background: var(--vellum-300); color: var(--ink-500); cursor: default; font-size: 12px; }

@@ -280,7 +280,7 @@ export default {
 
 <style scoped>
 .puzzle { display: flex; flex-direction: column; align-items: center; gap: 12px; font-family: var(--font-ui); }
-.puzzle__hint { margin: 0; align-self: stretch; padding: 8px 12px; border-radius: 12px; background: var(--vellum-200); font-size: 13px; font-weight: 700; line-height: 1.4; text-align: left; }
+.puzzle__hint { margin: 0; align-self: stretch; padding: 8px 12px; border-radius: var(--r-sm); background: var(--vellum-200); font-size: 13px; font-weight: 700; line-height: 1.4; text-align: left; }
 .puzzle__board { position: relative; margin: 4px 0; touch-action: none; }
 .puzzle__ghost-art { position: absolute; inset: -18%; display: block; opacity: .16; pointer-events: none; }
 .puzzle__ghost-art img { width: 100%; height: 100%; object-fit: contain; }
@@ -298,13 +298,13 @@ export default {
 .puzzle__bit { position: absolute; box-sizing: border-box; border-radius: 5px; box-shadow: inset 0 -3px 0 rgba(0, 0, 0, .14), inset 0 0 0 1.5px rgba(60, 40, 25, .35); }
 .puzzle__tray {
   align-self: stretch; display: flex; flex-wrap: wrap; justify-content: center; align-items: center; gap: 14px; min-height: 70px;
-  padding: 12px; border-radius: 16px; background: var(--vellum-50); box-shadow: inset 0 0 0 1px rgba(74, 52, 38, .1);
+  padding: 12px; border-radius: var(--r-md); background: var(--vellum-50); box-shadow: inset 0 0 0 1px rgba(74, 52, 38, .1);
 }
 .puzzle__full { margin: 0; font-size: 13px; font-weight: 800; color: var(--ink-700); }
 .puzzle__error { margin: 0; color: #B0503A; font-size: 13px; font-weight: 800; }
 .puzzle__actions { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; }
 .puzzle__btn {
-  min-height: 42px; min-width: 132px; padding: 6px 16px; border: 0; border-radius: 999px;
+  min-height: 42px; min-width: 132px; padding: 6px 16px; border: 0; border-radius: var(--r-pill);
   background: var(--ink-900); color: var(--vellum-50); font-family: var(--font-ui); font-weight: 900; font-size: 14px; cursor: pointer; touch-action: manipulation;
 }
 .puzzle__btn--quiet { background: var(--vellum-200); color: var(--ink-900); }
@@ -312,5 +312,5 @@ export default {
 .puzzle__art { position: relative; display: block; width: 140px; height: 150px; }
 .puzzle__art img { width: 100%; height: 100%; object-fit: contain; }
 .puzzle__done { margin: 0; font-size: 15px; font-weight: 800; text-align: center; line-height: 1.4; }
-.puzzle__drag { position: fixed; z-index: 3000; pointer-events: none; filter: drop-shadow(0 6px 8px rgba(40, 30, 20, .35)); }
+.puzzle__drag { position: fixed; z-index: var(--z-drag); pointer-events: none; filter: drop-shadow(0 6px 8px rgba(40, 30, 20, .35)); }
 </style>

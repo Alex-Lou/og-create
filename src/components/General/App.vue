@@ -1124,7 +1124,7 @@ export default {
 }
 .oc-app__shell {
   position: relative;
-  z-index: 1;
+  z-index: var(--z-shell);
   max-width: 1480px;
   margin: 0 auto;
   /* Mobile : la place des panneaux fixés en bas (dock et consigne mesurés, puis la barre d'onglets) */
