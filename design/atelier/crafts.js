@@ -343,14 +343,36 @@ C.pergola = { n: 2, draw: f => {
   }
   return s;
 } };
-// Statue : socle mouluré, personnage drapé tenant un livre levé
+// Statue : un socle mouluré à trois degrés et sa plaque gravée, une liseuse de marbre drapée, cheveux en chignon, qui
+// lève un livre ouvert ; les plis de sa robe, le côté droit dans l'ombre ; du lierre au pied du socle
+const MARBRE = { light: '#FBF8F1', mid: '#ECE6D8', dark: '#CFC6B2', pli: '#B9AF98' };
 C.statue = { n: 1, draw: () => {
-  const [x, y] = at(0, 0, 14);
-  let s = shadow(0, 0, 0.32, 0.16) + box(-0.16, -0.16, 0.16, 0.16, 0, 4, STONE) + box(-0.12, -0.12, 0.12, 0.12, 4, 14, WHITE_STONE);
-  s += P(`M${x - 7},${y} Q${x - 9},${y - 18} ${x - 4},${y - 30} L${x + 4},${y - 30} Q${x + 9},${y - 18} ${x + 7},${y} Z`, WHITE_STONE.top, 1) + P(`M${x - 4},${y - 26} Q${x},${y - 14} ${x + 3},${y}`, 'none', 0.6) + P(`M${x + 2},${y - 28} Q${x + 5},${y - 16} ${x + 6},${y - 2}`, 'none', 0.5);
-  s += E(x, y - 34, 4.6, 5, WHITE_STONE.top, 1) + P(`M${x - 4.6},${y - 35} Q${x},${y - 41} ${x + 4.6},${y - 35} Q${x},${y - 38} ${x - 4.6},${y - 35} Z`, WHITE_STONE.left, 0.6);
-  s += thick(`M${x + 4},${y - 27} L${x + 9},${y - 38}`, 2.2, WHITE_STONE.top) + poly([[x + 6, y - 39], [x + 13, y - 41], [x + 13, y - 46], [x + 6, y - 44]], WHITE_STONE.top, 0.9) + L([x + 9.5, y - 40], [x + 9.5, y - 45], WHITE_STONE.right, 0.5);
-  return s + E(x - 6, y + 1, 3, 1.2, '#8FCB6A', 0.6);
+  const [x, y] = at(0, 0, 15), c = MARBRE;
+  let s = shadow(0, 0, 0.32, 0.16) + box(-0.16, -0.16, 0.16, 0.16, 0, 3.4, STONE) + box(-0.12, -0.12, 0.12, 0.12, 3.4, 13, WHITE_STONE) + box(-0.14, -0.14, 0.14, 0.14, 13, 15, STONE);
+  // la plaque gravée sur la face avant du socle
+  const pl = [at(-0.09, 0.12, 6), at(0.03, 0.12, 6), at(0.03, 0.12, 10.6), at(-0.09, 0.12, 10.6)];
+  s += poly(pl, '#E4DCC8', 0.6) + L(at(-0.075, 0.12, 9.2), at(0.015, 0.12, 9.2), c.pli, 0.5) + L(at(-0.075, 0.12, 7.6), at(0.0, 0.12, 7.6), c.pli, 0.5);
+  // la robe : une cloche drapée, ombrée à droite, ses plis ; la ceinture
+  const robe = `M${x - 7.4},${y} Q${x - 8.6},${y - 14} ${x - 4.4},${y - 25} L${x + 4.4},${y - 25} Q${x + 8.6},${y - 14} ${x + 7.4},${y} Q${x},${y + 1.6} ${x - 7.4},${y} Z`;
+  s += P(robe, c.mid, 1) + `<path d="M${x + 1.2},${y - 25} L${x + 4.4},${y - 25} Q${x + 8.6},${y - 14} ${x + 7.4},${y} Q${x + 4},${y + 1} ${x + 2},${y + 1.2} Q${x + 4.6},${y - 12} ${x + 1.2},${y - 25} Z" fill="${c.dark}"/>`
+    + `<path d="M${x - 3.6},${y - 22} Q${x - 4.6},${y - 11} ${x - 3.4},${y + 0.8} M${x - 0.6},${y - 21} Q${x - 1},${y - 10} ${x},${y + 1.2} M${x + 3},${y - 20} Q${x + 4.4},${y - 10} ${x + 4.6},${y + 0.8}" stroke="${c.pli}" stroke-width="0.6" fill="none"/>`
+    + `<path d="M${x - 5.6},${y - 18} Q${x},${y - 16.4} ${x + 5.6},${y - 18}" stroke="${c.pli}" stroke-width="1" fill="none"/>`
+    + `<path d="M${x - 6.4},${y - 8} Q${x - 4},${y - 13} ${x - 6},${y - 20}" stroke="${c.light}" stroke-width="1" fill="none" stroke-linecap="round"/>`;
+  // le bras gauche replié sur la robe ; le bras droit levé et le livre ouvert
+  s += P(`M${x - 4.6},${y - 24} Q${x - 6.4},${y - 18} ${x - 2},${y - 15.6} Q${x + 0.4},${y - 15.4} ${x},${y - 17} Q${x - 3},${y - 18} ${x - 2.6},${y - 23} Z`, c.light, 0.8);
+  s += thick(`M${x + 3.4},${y - 24} Q${x + 6.6},${y - 28} ${x + 7.6},${y - 33.6}`, 1.6, c.mid)
+    + P(`M${x + 3.4},${y - 34} L${x + 8.6},${y - 36.4} L${x + 8.6},${y - 41.4} L${x + 3.4},${y - 39} Z`, c.light, 0.8)
+    + P(`M${x + 8.6},${y - 36.4} L${x + 13.6},${y - 34.6} L${x + 13.6},${y - 39.6} L${x + 8.6},${y - 41.4} Z`, c.mid, 0.8)
+    + `<path d="M${x + 4.4},${y - 37.4} l3.4,-1.6 M${x + 4.4},${y - 36} l3.4,-1.6 M${x + 9.6},${y - 39.6} l3,1 M${x + 9.6},${y - 38.2} l3,1" stroke="${c.pli}" stroke-width="0.45"/>`
+    + E(x + 8.2, y - 35.6, 1.5, 1.2, c.light, 0.7);
+  // la tête : le visage, les yeux clos de la liseuse, le chignon
+  s += E(x, y - 29, 3.6, 3.8, c.light, 0.9) + P(`M${x - 3.6},${y - 29.6} Q${x - 3.4},${y - 33.6} ${x},${y - 33.6} Q${x + 3.6},${y - 33.4} ${x + 3.6},${y - 29.4} Q${x + 1},${y - 31.6} ${x - 3.6},${y - 29.6} Z`, c.dark, 0.6)
+    + E(x + 0.6, y - 34.6, 2, 1.6, c.mid, 0.7)
+    + `<path d="M${x - 2},${y - 28.6} q0.7,0.6 1.4,0 M${x + 0.8},${y - 28.6} q0.7,0.6 1.4,0" stroke="${c.pli}" stroke-width="0.5" fill="none" stroke-linecap="round"/>`;
+  // le lierre qui grimpe à l'angle du socle : une tige fine, des feuilles en cœur
+  const [lx, ly] = at(-0.16, 0.16, 0), feuille = (fx, fy, a) => `<path d="M0,0 Q-2.4,-1.2 -1.8,-3 Q-0.8,-3.8 0,-2.8 Q0.8,-3.8 1.8,-3 Q2.4,-1.2 0,0 Z" transform="translate(${r2(fx)} ${r2(fy)}) rotate(${a})" fill="#5E9E48" stroke="${OUT}" stroke-width="0.55" stroke-linejoin="round"/>`;
+  return s + `<path d="M${r2(lx + 1)},${r2(ly)} Q${r2(lx - 1.4)},${r2(ly - 4)} ${r2(lx + 0.6)},${r2(ly - 8)} Q${r2(lx + 2.4)},${r2(ly - 11)} ${r2(lx + 0.4)},${r2(ly - 14)} M${r2(lx + 1)},${r2(ly)} Q${r2(lx + 4)},${r2(ly - 1)} ${r2(lx + 7)},${r2(ly + 1.6)}" stroke="#3E7A34" stroke-width="0.8" fill="none" stroke-linecap="round"/>`
+    + feuille(lx - 0.6, ly - 2.4, -40) + feuille(lx + 1.4, ly - 6.6, 30) + feuille(lx - 0.2, ly - 10, -30) + feuille(lx + 1.2, ly - 13.6, 20) + feuille(lx + 4, ly - 0.2, 70) + feuille(lx + 6.6, ly + 1.8, 100);
 } };
 // Arche fleurie : deux montants, cintre de feuilles et de roses qui frémissent
 C.arche = { n: 2, draw: f => {
