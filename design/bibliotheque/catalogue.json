@@ -4937,10 +4937,129 @@
   {
    "id": "plantes/rocher",
    "rubrique": "plantes",
-   "titre": "Rocher",
+   "titre": "Rocher (grand, granite gris)",
    "images": 1,
    "fichiers": [
     "svg/plantes/rocher.svg"
+   ],
+   "cadre": [
+    -50,
+    -115,
+    100,
+    140
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "plantes/rocher_lezard",
+   "rubrique": "plantes",
+   "titre": "Rocher (grand, granite gris, un lézard)",
+   "images": 1,
+   "fichiers": [
+    "svg/plantes/rocher_lezard.svg"
+   ],
+   "cadre": [
+    -50,
+    -115,
+    100,
+    140
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "plantes/rocher_ocre",
+   "rubrique": "plantes",
+   "titre": "Rocher (grand, grès ocre)",
+   "images": 1,
+   "fichiers": [
+    "svg/plantes/rocher_ocre.svg"
+   ],
+   "cadre": [
+    -50,
+    -115,
+    100,
+    140
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "plantes/rocher_ocre_lezard",
+   "rubrique": "plantes",
+   "titre": "Rocher (grand, grès ocre, un lézard)",
+   "images": 1,
+   "fichiers": [
+    "svg/plantes/rocher_ocre_lezard.svg"
+   ],
+   "cadre": [
+    -50,
+    -115,
+    100,
+    140
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "plantes/rocher_petit",
+   "rubrique": "plantes",
+   "titre": "Rocher (petit, granite gris)",
+   "images": 1,
+   "fichiers": [
+    "svg/plantes/rocher_petit.svg"
+   ],
+   "cadre": [
+    -50,
+    -115,
+    100,
+    140
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "plantes/rocher_petit_lezard",
+   "rubrique": "plantes",
+   "titre": "Rocher (petit, granite gris, un lézard)",
+   "images": 1,
+   "fichiers": [
+    "svg/plantes/rocher_petit_lezard.svg"
+   ],
+   "cadre": [
+    -50,
+    -115,
+    100,
+    140
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "plantes/rocher_petit_ocre",
+   "rubrique": "plantes",
+   "titre": "Rocher (petit, grès ocre)",
+   "images": 1,
+   "fichiers": [
+    "svg/plantes/rocher_petit_ocre.svg"
+   ],
+   "cadre": [
+    -50,
+    -115,
+    100,
+    140
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "plantes/rocher_petit_ocre_lezard",
+   "rubrique": "plantes",
+   "titre": "Rocher (petit, grès ocre, un lézard)",
+   "images": 1,
+   "fichiers": [
+    "svg/plantes/rocher_petit_ocre_lezard.svg"
    ],
    "cadre": [
     -50,

@@ -6,6 +6,7 @@ const { D, PROP, pt } = require('./deco');
 const { up, M } = require('./decor2');
 const { arbre, ARBRES, pommier, POMMIERS, automne, AUTOMNES, bouleau, BOULEAUX, sapin, SAPINS, palmier, PALMIERS, arbreMort, ARBRES_MORTS } = require('./arbres');
 const { touffe, TOUFFES } = require('./herbes');
+const { rocher, ROCHERS } = require('./rochers');
 const { buisson, BUISSONS, bruyere, BRUYERES, fleurs, FLEURS, cactus, CACTUS_LISTE, souche, SOUCHES, rondin, RONDINS, champignons, CHAMPIGNONS, roseaux, ROSEAUX, nenuphars, NENUPHARS } = require('./plantes');
 
 const LIB = path.join(__dirname, 'lib', 'plantes');
@@ -35,7 +36,9 @@ const LIST = [
   ...NENUPHARS.map(([fichier, libelle, o]) => [fichier, libelle, 'lily', () => nenuphars(o)]),
   // la touffe d'herbe refaite (herbes.js) et ses 16 variantes
   ...TOUFFES.map(([fichier, libelle, o]) => [fichier, libelle, 'tuft', () => touffe(o)]),
-  ['rocher', 'Rocher', 'rock', () => D.rock()], ['rochers', 'Rochers', 'rocks', () => D.rocks()], ['aiguille', 'Aiguille de roche', 'crag', () => D.crag()],
+  // le rocher refait (rochers.js) et ses 8 variantes
+  ...ROCHERS.map(([fichier, libelle, o]) => [fichier, libelle, 'rock', () => rocher(o)]),
+  ['rochers', 'Rochers', 'rocks', () => D.rocks()], ['aiguille', 'Aiguille de roche', 'crag', () => D.crag()],
   ['rochers_moussus', 'Rochers moussus', 'mossy', () => D.mossy()], ['coquillages', 'Coquillages', 'shells', () => D.shells()], ['bois_flotte', 'Bois flotté', 'driftwood', () => D.driftwood()],
   ['nid', 'Nid de mouettes', 'nest', () => up(M.nid.draw())], ['lanterne', 'Lanterne (éteinte)', 'lantern', () => D.lantern(false)], ['lanterne_allumee', 'Lanterne (allumée)', 'lantern', () => D.lantern(true)],
   ['banc', 'Banc', 'bench', () => D.bench()]
