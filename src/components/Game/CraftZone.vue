@@ -98,12 +98,10 @@ const FLIGHT_MS = 380;
 // Rayon de l'anneau des emplacements, en px (cercle de 360 px)
 const RING_RADIUS = 130;
 
+// Images des créatures (src/assets/creatures), par nom ; null s'il n'y en a pas
+const CREATURES = import.meta.glob('../../assets/creatures/*.png', { eager: true, import: 'default' });
 function creatureImage(name) {
-  try {
-    return require(`@/assets/creatures/${name}.png`);
-  } catch {
-    return null;
-  }
+  return CREATURES[`../../assets/creatures/${name}.png`] || null;
 }
 
 // Athanor : 2 à 4 emplacements ; la transmutation part seule quand toutes les cases sont remplies
