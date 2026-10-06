@@ -1216,11 +1216,16 @@ export default {
     'quest.id'() {
       this.checkWreck();
     },
+    // Un coffre refermé : le naufrage, puis la veillée qui l'attendait (App.vue)
     reveal(open) {
-      if (!open) this.checkWreck();
+      if (open) return;
+      this.checkWreck();
+      this.emitQuest();
     },
     haul(open) {
-      if (!open) this.checkWreck();
+      if (open) return;
+      this.checkWreck();
+      this.emitQuest();
     },
     // Changer de fiche ou d'onglet retire le bandeau d'annulation
     'site.id'() {
@@ -1479,9 +1484,7 @@ export default {
         }
       }
       this.state = state;
-      // Brume (quête active, actes finis) et le nom du peuple : le tutoriel et les veillées (App.vue) y lisent où en est
-      // le joueur
-      this.$emit('quest', state.brume ? { ...state.brume, people: state.people || null, anya: state.anya || null } : null);
+      this.emitQuest();
       // Brume et sol d'un quartier : à soi (o), connu (k), inconnu (u) ; un changement refait ses carrés de sol
       const mistKey = state.map.zones.map(z => `${z.id}:${z.owned ? 'o' : z.known === false ? 'u' : 'k'}`).join();
       if (this.mistKey !== null && mistKey !== this.mistKey) {
@@ -2468,7 +2471,9 @@ export default {
         out.push(who);
         const c = this.ground(who.x, who.y);
         const person = who.kind === 'villager';
-        hits.push({ key: who.id, kind: person ? 'villager' : who.species, who, x: c.x, y: c.y - who.z - (person ? 16 : 6), r: person ? 15 : 12 });
+        // Anya est grande (96 de haut) : on la touche au corps, pas seulement aux pieds
+        const tall = who.species === 'anya';
+        hits.push({ key: who.id, kind: person ? 'villager' : who.species, who, x: c.x, y: c.y - who.z - (person ? 16 : tall ? 44 : 6), r: person ? 15 : tall ? 34 : 12 });
       }
       this.villageLights = life.lights;
       this.landHits = hits;
@@ -2683,6 +2688,14 @@ export default {
       } else if (quest && quest.kind === 'runs' && this.state.charges.count) this.questHarvest();
       else this.questOpen = true;
     },
+    // Brume (quête active, actes finis), le nom du peuple et Anya : le tutoriel et les veillées (App.vue) y lisent où en
+    // est le joueur. hold : un coffre est ouvert, ou va s'ouvrir (une veillée ou une scène l'attend)
+    emitQuest() {
+      const state = this.state;
+      if (!state) return;
+      const hold = Boolean(this.holdWreck || this.reveal || this.haul);
+      this.$emit('quest', state.brume ? { ...state.brume, people: state.people || null, anya: state.anya || null, hold } : null);
+    },
     // Naufrage à annoncer pour la quête active (déjà vus : retenus sur l'appareil)
     checkWreck() {
       let seen = [];
@@ -2789,6 +2802,7 @@ export default {
         await this.openChest(chest);
       }
       this.holdWreck = false;
+      this.emitQuest();
       if (claimed && chest) this.checkWreck();
       else if (claimed && memoryOf(questId)) {
         // Un souvenir rendu : la fiche se ferme sur la scène du souvenir retrouvé
@@ -3775,10 +3789,11 @@ export default {
         const sylve = troupe.has('bosquet');
         guide.say({ id: 'bestiaire', ...(sylve ? { text: TIPS.bestiaireSylve, who: 'Sylve', face: faceHref('bosquet') } : { text: TIPS.bestiaire }) });
         // Le troisième pressentiment d'Anya (bible, § 10, acte IV) : les bêtes se tournent vers la Lande aux Menhirs
-        PRESENTIMENTS.betes.forEach(line => guide.say(line));
+        // (plus de pressentiment une fois Anya éveillée)
+        if (!(state.anya && state.anya.awake)) PRESENTIMENTS.betes.forEach(line => guide.say(line));
       }
       // Le deuxième (acte III) : au Cercle de menhirs, la rune de Celle-qui-donne-souffle
-      if ((state.landmarks || []).some(l => l.id === 'menhirs' && l.found)) {
+      if ((state.landmarks || []).some(l => l.id === 'menhirs' && l.found) && !(state.anya && state.anya.awake)) {
         PRESENTIMENTS.rune.forEach(line => guide.say({ id: line.id, text: line.text, who: line.who, face: faceHref(line.face) }));
       }
     },
@@ -3987,6 +4002,9 @@ export default {
     async openChest(source) {
       if (this.busy) return;
       this.busy = true;
+      // Le coffre va s'ouvrir : ni naufrage ni scène par-dessus (ils attendent qu'il se referme)
+      const held = this.holdWreck;
+      this.holdWreck = true;
       try {
         const { chest, coins, world } = await playService.worldChest(source);
         this.apply(world);
@@ -3998,12 +4016,16 @@ export default {
         this.load();
       } finally {
         this.busy = false;
+        this.holdWreck = held;
+        this.emitQuest();
       }
     },
     // « Tout ouvrir » : le serveur ouvre tout ce qui attend (jour, chapitres, quêtes, bouteille), l'île montre la rafale
     async openAllChests() {
       if (this.busy) return;
       this.busy = true;
+      const held = this.holdWreck;
+      this.holdWreck = true;
       try {
         const { chests, coins, world } = await playService.worldChestsAll();
         this.apply(world);
@@ -4016,6 +4038,8 @@ export default {
         this.load();
       } finally {
         this.busy = false;
+        this.holdWreck = held;
+        this.emitQuest();
       }
     },
     // Ce qu'un lot montre de son bâtiment (teinte, pièce rare) : l'aperçu paré, s'il peut s'y porter, s'il y est porté

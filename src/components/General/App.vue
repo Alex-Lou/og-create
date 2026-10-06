@@ -41,6 +41,7 @@
           <!-- Le Monde : l'île du joueur -->
           <WorldView
             v-else-if="isWorldActive"
+            ref="world"
             :elementEmojis="elementEmojis"
             :elements="discoveredElements"
             :isLoggedIn="isLoggedIn"
@@ -125,7 +126,7 @@
       :key="prologueScene"
       :scene="prologueScene"
       :frames="sceneFrames"
-      :skippable="!prologueReplay"
+      :skippable="!prologueReplay || isVigil || isStory"
       :skip-label="isVigil ? 'Passer la veillée' : isStory ? 'Passer' : 'Passer le prologue'"
       @done="prologueSceneDone"
       @skip="isVigil || isStory ? prologueSceneDone(prologueScene) : skipPrologue()"
@@ -252,7 +253,7 @@ import { loadPrologue, savePrologue, prologueStep, islandStep } from '@/game/pro
 import { faceHref, NAMES } from '@/world/faces';
 import { vigilFrames, vigilDue, stageOf as civilizationOf } from '@/game/vigils';
 import { brumeLook, earlyWisp, EARLY_WISP } from '@/game/opus';
-import { PRESENTIMENTS, revelationFrames, traceFrames, traceDue } from '@/game/anya';
+import { PRESENTIMENTS, revelationFrames, traceFrames, anyaSceneOf } from '@/game/anya';
 
 // Veillées déjà vues sur cet appareil (game/vigils.js)
 const VIGILS_KEY = 'oc_vigils';
@@ -382,6 +383,8 @@ export default {
       // Anya (serveur : { traces, awake, revealed, breathed }), et les traces déjà montrées sur cet appareil
       anya: null,
       tracesSeen: storage.load(TRACES_KEY, []),
+      // Un coffre est ouvert sur l'île (ou va s'ouvrir) : les veillées et les scènes attendent qu'il se referme
+      islandHold: false,
       people: null,
       vigilsSeen: storage.load(VIGILS_KEY, [])
     };
@@ -807,10 +810,12 @@ export default {
     onIslandQuest(brume) {
       const quest = brume && brume.quest;
       this.islandQuest = quest ? { id: quest.id, done: Boolean(quest.done) } : { id: null, done: true };
+      this.islandHold = Boolean(brume && brume.hold);
       if (brume) {
         this.islandActs = brume.acts || [];
         this.people = brume.people || null;
-        this.anya = brume.anya || this.anya;
+        // La Révélation vue reste vue, même si une réponse du serveur partie avant son envoi arrive après
+        this.anya = brume.anya ? { ...brume.anya, revealed: brume.anya.revealed || Boolean(this.anya && this.anya.revealed) } : this.anya;
         this.actsKnown = true;
         this.checkEarlyWisp();
       }
@@ -820,10 +825,11 @@ export default {
     // La Vie écrite : le premier pressentiment d'Anya (§ 10, acte I), une voix sans visage
     checkEarlyWisp() {
       if (this.actsKnown && earlyWisp(this.islandActs, this.discoveredElements)) guide.say(EARLY_WISP);
-      if (this.actsKnown && this.discoveredElements.includes('Vie')) PRESENTIMENTS.vie.forEach(line => guide.say(line));
+      if (this.actsKnown && this.discoveredElements.includes('Vie') && !(this.anya && this.anya.awake)) PRESENTIMENTS.vie.forEach(line => guide.say(line));
     },
     runIsland() {
-      if (this.prologueReplay || this.prologueScene || !this.isWorldActive) return;
+      // (jamais par-dessus un coffre : la veillée l'attend, l'île la relance quand il se referme)
+      if (this.prologueReplay || this.prologueScene || this.islandHold || !this.isWorldActive) return;
       const step = islandStep({ state: this.prologue, quest: this.islandQuest?.id ? this.islandQuest : null });
       if (this.prologueHand?.mode === 'world') this.prologueHand = null;
       if (!step) {
@@ -836,11 +842,9 @@ export default {
           this.prologueScene = `veillee-${act}`;
           return;
         }
-        // Anya : la Révélation, une seule fois ; sinon la trace d'une terre tout juste explorée
-        const anya = this.anya;
-        if (!anya) return;
-        if (anya.awake && !anya.revealed) this.prologueScene = 'revelation';
-        else if (traceDue(anya.traces, this.tracesSeen)) this.prologueScene = `trace-${traceDue(anya.traces, this.tracesSeen)}`;
+        // Anya : la trace d'une terre tout juste explorée (la douzième avant la Révélation), puis la Révélation, une fois
+        const scene = anyaSceneOf(this.anya, this.tracesSeen);
+        if (scene) this.prologueScene = scene;
         return;
       }
       if (step.phase === 'scene') this.prologueScene = step.scene;
@@ -873,7 +877,11 @@ export default {
         // Vue une fois pour toutes, d'un appareil à l'autre : le serveur le retient (la gemme du Grimoire s'allume)
         this.prologueScene = null;
         this.anya = { ...this.anya, revealed: true };
-        playService.anyaReveal().then(({ anya }) => { this.anya = anya; }).catch(() => {});
+        // L'île se met à jour tout de suite (Anya au Cercle, le Cercle fleuri)
+        playService.anyaReveal().then(({ anya, world }) => {
+          this.anya = anya;
+          if (world && this.$refs.world) this.$refs.world.apply(world);
+        }).catch(() => {});
         this.runIsland();
         return;
       }

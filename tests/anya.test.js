@@ -1,7 +1,7 @@
 // Lot H8 (HISTOIRE.md, § 4.5, § 6.14, § 8 et § 16) : les traces d'Anya, les pressentiments, la Révélation (deux
 // répliques finales, selon le Phare), Anya au Cercle à l'aube et au crépuscule, ses créatures, le Cercle fleuri.
 import { describe, it, expect } from 'vitest';
-import { TRACES, TRACE_COUNT, traceDue, traceFrames, PRESENTIMENTS, revelationFrames, anyaHere } from '@/game/anya';
+import { TRACES, TRACE_COUNT, traceDue, traceFrames, PRESENTIMENTS, revelationFrames, anyaHere, anyaSceneOf } from '@/game/anya';
 import { villageOf } from '@/world/village';
 import { skyAt } from '@/world/sky';
 import { landmarkLayers } from '@/world/landmarkSprites';
@@ -28,6 +28,14 @@ describe('Anya : traces, pressentiments, Révélation', () => {
     expect(revelationFrames({ lit: true }).pop().text).toBe('Ta lumière guide la mer. La mienne gardera la terre.');
     expect(revelationFrames().some(frame => frame.who === 'Brume' && frame.text === '… Tu es revenue.')).toBe(true);
     expect(PRESENTIMENTS.vie[0].text).toBe('… merci.');
+  });
+  it('sur l’île : la douzième trace d’abord, puis la Révélation, une seule fois', () => {
+    const all = Object.keys(TRACES);
+    expect(anyaSceneOf(null, [])).toBe(null);
+    expect(anyaSceneOf({ traces: all, awake: true, revealed: false }, all.slice(0, 11))).toBe('trace-cratere');
+    expect(anyaSceneOf({ traces: all, awake: true, revealed: false }, all)).toBe('revelation');
+    expect(anyaSceneOf({ traces: all, awake: true, revealed: true }, all)).toBe(null);
+    expect(anyaSceneOf({ traces: ['menhirs'], awake: false, revealed: false }, [])).toBe('trace-menhirs');
   });
   it('Anya est au Cercle à l’aube et au crépuscule seulement', () => {
     expect(anyaHere(6.2, 6, 21.5)).toBe(true);

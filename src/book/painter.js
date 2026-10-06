@@ -765,7 +765,8 @@ function paintReach(ctx, u, model, i, assets) {
   if (ready && sealX !== null) hotspots.push({ id: 'seal', x: sealX - 6, y: top - 0.5, w: 12, h: BOX + 1, action: 'seal', data: page.id, label: `Sceller le mélange : ${picked.join(' et ')}` });
   folio(ctx, u, i);
   const start = page.first ? `, commence par ${page.first}` : '';
-  const clue = page.riddle ? `Énigme : ${page.riddle}${hints ? ` ${clueText(page.clue, page.groups)}` : ''}` : clueText(page.clue, page.groups);
+  // (les familles en toutes lettres seulement après un essai, comme à l'écran ; la famille soufflée se dit à part)
+  const clue = page.riddle ? `Énigme : ${page.riddle}${tried ? ` ${clueText(page.clue, page.groups)}` : ''}` : clueText(page.clue, page.groups);
   const said = heard ? ` Un ingrédient est ${FAMILY_WORDS[heard.family] || 'un élément'}.` : '';
   return { hotspots, label: `Page à trouver : ${familyName(page.family)}, ${page.letters} lettres${start}. ${clue}${note ? ` ${note}.` : ''}${said}${revealed ? ` Un ingrédient : ${revealed}.` : ''}` };
 }
