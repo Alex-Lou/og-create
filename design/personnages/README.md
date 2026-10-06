@@ -31,6 +31,6 @@ Les planches PNG demandent Playwright (sinon, seuls les SVG et la page animée s
 
 ## Et le reste ?
 
-La bibliothèque complète (naufragés, petit format, vivants, animaux, plantes, décor, camp, ruines, bâtiments, météo)
+La bibliothèque complète (naufragés, visiteurs, vivants, animaux, plantes, décor, camp, ruines, bâtiments, météo)
 est dans `design/bibliotheque/` ; les générateurs qui l'ont produite sont dans `design/atelier/`. Ce kit en est la
 base : l'atelier l'utilise tel quel.

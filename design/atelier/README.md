@@ -25,9 +25,10 @@ troupe. Relancer ces scripts redonne la bibliothèque à l'octet près : c'est v
 | `camp.mjs`, `ruines.mjs` | Le camp des naufragés, les ruines des Anciens |
 | `meteo.js` | Météo, ciel, moments du jour |
 | `coffres.mjs` | Les coffres des quatre raretés (fenêtre d'ouverture) |
+| `gestes.js`, `preview_quotidien.mjs` | Le quotidien au grand format (lot L4) : lanterne, parapluie, valise, dormir couché ; toutes les poses du jeu pour les maîtres, leurs naufragés, 12 visiteurs et 8 nouveaux venus tirés du générateur de l'avatar |
 | `lot_m.js`, `preview_lot_m.mjs` | La suite du lot M : le bâtiment embrumé (calque par emprise, guérison, nuage, icône « Réparer »), la cage aux poules et l'œuf, le crabe de la Grève, les signes d'Anya |
 | `egares.js`, `preview_egares.mjs` | Les égarés (lot M, la nuit) : le petit fantôme, le petit zombie tout mou, une bête de brume par climat ; marche, bouderie au toucher, fuite devant Anya, passage en luciole, retour dans la brume |
-| `port/src/world/` | Copie restylée du moteur de l'île du jeu (iso, palette, sprites, bâtiments, petit format), prise à un instant donné : le jeu a pu évoluer depuis |
+| `port/src/world/` | Copie restylée du moteur de l'île du jeu (iso, palette, sprites, bâtiments), prise à un instant donné : le jeu a pu évoluer depuis |
 | `planche.js`, `fit.mjs`, `clipcheck.js` | Outils : planches et pages animées, cadres ajustés, débordements |
 | `preview*.js`, `preview*.mjs` | Un script par lot : il écrit les SVG dans `lib/`, ses planches dans `planches/`, sa page `*_apercu.html` |
 | `catalogue.js` | La règle des noms (`<sujet>_<vue>_<pose>_<n>`), le parcours du joueur (chapitres), ce qui reste à revoir ou à dessiner |
@@ -46,9 +47,8 @@ node preview_plantes.js              # plantes et rochers
 node preview_decor.mjs               # décor
 node preview_batiments.mjs           # bâtiments
 node preview_meteo.js                # météo
-node preview_gens.mjs                # petit format : habitants et visiteurs
 node preview_naufrages.js            # naufragés (grand format), endormis, plans d'entrée, expressions en marche
-node preview_gens_naufrages.mjs      # naufragés au petit format, épilogue
+node preview_quotidien.mjs           # le quotidien au grand format : maîtres, naufragés, visiteurs, nouveaux venus
 node preview_camp.mjs                # le camp
 node preview_ruines.mjs              # les ruines
 node preview_coffres.mjs             # les coffres

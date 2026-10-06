@@ -59,13 +59,11 @@ détails propres à un lot : places des objets de boutique, lumières des palier
 
 | Dossier | Contenu | SVG |
 | --- | --- | ---: |
-| `svg/personnages/maitres/` | Les 7 maîtres : Aster, Cannelle, Rivet, Ondin, Sylve, Galet, Mélisse. 3 vues, marche, repos, salut, action, 8 expressions ; endormis (`dort`) ; expressions en marche propres à chacun | 308 |
-| `svg/personnages/habitants/` | Les mêmes au petit format du jeu : marche, repos, salut, travail, sommeil, lanterne, parapluie | 280 |
-| `svg/personnages/visiteurs/` | 12 visiteurs types, tirés d'une graine comme dans le jeu (`pnj_jeu.json`) | 408 |
-| `svg/personnages/naufrages/<prénom>/` | Les maîtres tels qu'ils arrivent sur l'île (`<prénom>-naufrage_…`) : une tenue de naufragé à chacun, mêmes vues, poses et expressions, endormis (`naufrages.json`) | 316 |
-| `svg/personnages/naufrages/petit_format/` | Les mêmes au petit format du jeu (`petit_format.json`) | 224 |
+| `svg/personnages/maitres/` | Les 7 maîtres : Aster, Cannelle, Rivet, Ondin, Sylve, Galet, Mélisse. 3 vues : marche, repos, salut, travail (le geste du métier), action, 8 expressions, expressions en marche ; lanterne et parapluie (avant et dos) ; endormis assis (`dort`) et couchés (`couche`) | 560 |
+| `svg/personnages/visiteurs/` | 12 visiteurs tirés du générateur de l'avatar (leurs choix dans `quotidien.json`) : 3 vues, marche, repos, salut, lanterne, parapluie, couchés | 504 |
+| `svg/personnages/naufrages/<prénom>/` | Les maîtres tels qu'ils arrivent sur l'île (`<prénom>-naufrage_…`) : une tenue de naufragé à chacun, mêmes vues, poses et expressions, endormis assis et couchés ; lanterne et parapluie pour Aster et Rivet (`naufrages.json`, `quotidien.json`) | 488 |
 | `svg/personnages/avatar/` | L'avatar du joueur : 12 exemples tirés du générateur et leur version naufragée, poses, gestes du tutoriel (ramasser, grelotter, lire), expressions ; dans `avatar.json` : les formes, les nuanciers, les 36 accessoires (rareté, source) et les teintures rares | 448 |
-| `svg/personnages/epilogue/` | 8 nouveaux venus de l'épilogue, tirés d'une graine (à redessiner : ils sont accueillis, pas naufragés) | 208 |
+| `svg/personnages/epilogue/` | 8 nouveaux venus de l'épilogue, tirés du générateur de l'avatar, en habits de voyage (valise à la main, bagage sur le dos) : 3 vues, marche, repos, salut | 192 |
 | `svg/vivants/` | Brume (8 stades et ses variantes), Anya, le cerf blanc, le Passeur | 128 |
 | `svg/animaux/` | Ferme, bois, eau douce, climats, bestiaire, familiers, mer : de profil, et de trois quarts avant et dos pour les 37 bêtes qui marchent (`orientees.json`) ; le crabe de la Grève (`mer/crabe/crabe.json`) | 541 |
 | `svg/plantes/` | Arbres, buissons, fleurs, rochers, bois flotté, nid, lanterne sur pied, banc | 29 |
@@ -105,6 +103,10 @@ détails propres à un lot : places des objets de boutique, lumières des palier
 - **Bâtiment embrumé** : griser le bâtiment (filtre CSS, par exemple `grayscale(.8)`), poser par-dessus le calque
   `embrume_<n>x<n>` de son emprise (même ancre que le bâtiment) et le petit nuage au-dessus, comme une bulle. À la
   réparation ou au passage d'Anya : `embrume_<n>x<n>_guerison` une fois, puis retirer le filtre.
+- **Le quotidien** (`svg/personnages/quotidien.json`) : marche (face, avant, dos), repos et salut dans les trois vues,
+  travail, lanterne et parapluie (avant et dos), dormir couché. Le parapluie a un cadre plus haut (`[0, -18, 48, 82]`,
+  pieds toujours en (24, 62)), le couché un cadre 64 × 48 (la tête à gauche). Pour d'autres visiteurs : `avatar(choix)`
+  et `auHasard(graine)` (`design/personnages/avatar.js`), les gestes dans `design/atelier/gestes.js`.
 - **Naufragés** : un maître garde le look du naufragé jusqu'à son souvenir retrouvé (`HISTOIRE.md` § 8 à 10 : Cannelle
   dès l'étape 7 du tutoriel, Ondin à l'étape 11, Sylve à l'acte I, Galet à l'acte II, Mélisse à son réveil, Rivet à
   l'acte III, Aster à l'acte IV), puis prend celui de `maitres/`.
@@ -113,10 +115,7 @@ détails propres à un lot : places des objets de boutique, lumières des palier
 
 ## Ce qui n'est pas encore dessiné, ou pas du tout
 
-- **Le petit format est abandonné** (choix de l'auteur, 6 octobre) : dans le jeu, tout le monde est dessiné en détaillé.
-  `habitants/`, `visiteurs/`, `naufrages/petit_format/` et `epilogue/` sont marqués à revoir dans le catalogue et seront
-  remplacés au lot L4 (visiteurs et nouveaux venus tirés du générateur de l'avatar, lanterne, parapluie et sommeil au
-  détaillé).
+- **Le petit format n'existe plus** (choix de l'auteur, 6 octobre) : tout le monde est dessiné en détaillé (lot L4).
 
 - **Ce qui manque encore** est listé dans `catalogue.json` (`manquants`) et en tête de chaque chapitre d'`index.html` :
   les bâtiments de défense (à concevoir), les scènes du tutoriel v6, l'éclat du souvenir retrouvé…

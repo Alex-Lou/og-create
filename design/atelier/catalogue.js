@@ -15,7 +15,6 @@ const fs = require('fs');
 const path = require('path');
 
 const hyph = s => s.replace(/_/g, '-');
-const VUES_PETIT = { face: 'face', trois_quarts: 'avant', dos: 'dos' };
 const SANS_SENS = new Set(['hibou', 'meduse', 'papillon_bleu', 'papillon_jaune', 'papillon_lune']);
 
 // --- 1. Les noms -------------------------------------------------------------------------------
@@ -54,22 +53,6 @@ function renommer(rel) {
   }
 
   if (top === 'personnages') {
-    // Petit format : <sujet>_<pose>_<vue>_<n> -> <sujet>_<vue>_<pose>_<n>
-    const petit = (dirs, sujet, S) => {
-      const rest = base.slice(sujet.length + 1);
-      const d = rest.match(/^dort_(\d+)$/);
-      if (d) return out(dirs, `${S}_dort_${d[1]}`);
-      const m = rest.match(/^(.+)_(face|trois_quarts|dos)_(\d+)$/);
-      if (!m) throw new Error('personnage inattendu : ' + rel);
-      return out(dirs, `${S}_${VUES_PETIT[m[2]]}_${m[1]}_${m[3]}`);
-    };
-    if (a === 'habitants') return petit([top, a, b], b, b);
-    if (a === 'visiteurs') return petit([top, a, hyph(b)], b, hyph(b));
-    if (a === 'naufrages' && b === 'petit_format') return petit([top, a, b, parts[3]], parts[3] + '_naufrage', parts[3] + '-naufrage');
-    if (a === 'naufrages' && b === 'epilogue') {
-      const S = 'arrivant-' + parts[3].split('_')[1];
-      return petit([top, 'epilogue', S], parts[3], S);
-    }
     if (a === 'naufrages') {
       if (base.startsWith(b + '_naufrage_')) return out([top, a, b], `${b}-naufrage_${base.slice(b.length + 10)}`);
       if (base.startsWith(b + '_arrivee_')) return out([top, a, b], `${b}-naufrage_${base.slice(b.length + 1)}`);
@@ -82,7 +65,7 @@ function renommer(rel) {
 // Le kit du grand format (design/personnages/troupe.js, Anya, le Passeur) dessine son trois quarts avant tourné vers
 // le bas à gauche ; le petit format, les bêtes et le jeu (vue « se ») le tournent vers le bas à droite. La bibliothèque
 // publie donc ces vues-là en miroir : « avant » veut dire « vers le bas à droite » partout.
-const MIROIR_KIT = /^(personnages\/maitres\/[a-z]+|personnages\/naufrages\/[a-z]+|personnages\/avatar\/avatar-\d+(?:-naufrage)?|vivants\/(anya|passeur))\/[a-z0-9-]+_avant_/;
+const MIROIR_KIT = /^(personnages\/maitres\/[a-z]+|personnages\/naufrages\/[a-z]+|personnages\/avatar\/avatar-\d+(?:-naufrage)?|personnages\/visiteurs\/visiteur-\d+|personnages\/epilogue\/arrivant-\d+|vivants\/(anya|passeur))\/[a-z0-9-]+_avant_/;
 function miroir(svg) {
   const m = svg.match(/^(<svg[^>]*viewBox="([^"]+)"[^>]*>)([\s\S]*)(<\/svg>\s*)$/);
   if (!m) throw new Error('SVG inattendu pour le miroir');
@@ -167,8 +150,7 @@ function moment(id, meta) {
     if (a === 'epilogue') return 'epilogue';
     if (a === 'avatar') return 'tuto-1';
     if (a === 'visiteurs') return 'acte-4';
-    const prenom = a === 'naufrages' && b === 'petit_format' ? p[3] : b;
-    const m = MAITRES[prenom];
+    const m = MAITRES[b];
     if (!m) return 'partout';
     return a === 'naufrages' ? m[0] : m[1];
   }
@@ -227,7 +209,6 @@ function moment(id, meta) {
 // --- 3. Ce qui reste à revoir (audit du 6 octobre et HISTOIRE.md v6) -------------------------------
 
 const A_REVOIR = [
-  [/^personnages\/(habitants|visiteurs|epilogue|naufrages\/petit_format)\//, 'Petit format abandonné (choix de l\'auteur, 6 octobre) : dans le jeu, tout le monde est dessiné en détaillé. À remplacer au lot L4 (maîtres en détaillé, visiteurs et nouveaux venus tirés du générateur de l\'avatar, ceux de l\'épilogue en habits de voyage) ; ne pas intégrer.'],
   [/^vivants\/brume\/brume_expr_fache$/, 'Brume ne gronde jamais (§ 8) : expression à retirer.'],
   [/^vivants\/brume\/brume_s[1-7]/, 'Les ornements des stades doivent s\'additionner (§ 13) ; le stade 6 doit être ambré, le soleil du stade 7 une petite flamme dorée à rayons.'],
   [/^vivants\/brume\/brume_expr_/, 'Les expressions doivent être les yeux seuls, à poser sur n\'importe quel stade (aujourd\'hui le corps du stade 1).'],
@@ -238,7 +219,6 @@ const A_REVOIR = [
   [/^personnages\/naufrages\/galet\/galet-naufrage_face_rune$/, 'Un naufragé a oublié son don (§ 6.2) : la rune qui chante revient au maître.'],
   [/^personnages\/naufrages\/sylve\/sylve-naufrage_face_chant$/, 'Un naufragé a oublié son don (§ 6.2) : le chant aux graines revient au maître.'],
   [/^personnages\/naufrages\/[a-z]+\/[a-z]+-naufrage_arrivee$/, 'Plan d\'entrée de l\'ancien tutoriel : les scènes v6 le remplacent (lot J2).'],
-  [/^personnages\/epilogue\//, 'Les nouveaux venus de l\'épilogue sont accueillis, pas naufragés : habits de voyage, pas de pose endormie.'],
   [/^decor\/camp\/epave\/hirondelle$/, 'L\'Hirondelle est un petit navire de croisière (v6) : épave à redessiner.'],
   [/^decor\/camp\/epave\/feu_debris$/, 'Le feu de camp est le Foyer au palier I, bâti par le joueur (§ 9, étape 5) : ce feu fait double emploi.'],
   [/^decor\/camp\/coins\/(ondin|sylve|galet|melisse)\//, 'Seuls Aster et Rivet vivent au camp : ce coin va près du bâtiment de son maître (Ondin à La Source, Sylve à La Lisière, Galet à La Colline, Mélisse aux Jardins).'],
@@ -253,7 +233,6 @@ const MANQUANTS = [
   ['tuto-1', 'La carte d\'embarquement de l\'Hirondelle (écran d\'avatar), le gilet de sauvetage, la chaise longue échouée.'],
   ['tuto-2', 'L\'établi de Rivet au camp (une porte de cabine sur deux caisses) et sa voile tendue sur un aviron.'],
   ['tuto-3', 'La caisse d\'Aster au bout de sa corde.'],
-  ['acte-1', 'Au détaillé, pour tout le monde (lot L4) : marcher avec une lanterne, sous un parapluie, dormir couché ; les naufragés aussi (Aster et Rivet le restent après la première lanterne).'],
   ['tuto-1', 'Les scènes plein écran du tutoriel v6, étapes 0 à 12 (lot J2).'],
   ['acte-1', 'L\'éclat du souvenir retrouvé (le sceau s\'allume, le maître se lève outil en main).'],
   ['acte-4', 'L\'amie de Tic-Tac (quand on écrit Abeille).'],
@@ -275,7 +254,7 @@ const MOTS = {
   petales: 'pétales', etincelles: 'étincelles', coeur: 'cœur', arrivee: 'arrivée', fache: 'fâché', gene: 'gêné', longuevue: 'longue-vue',
   benediction: 'bénédiction', eveil: 'éveil', pret: 'prêt', ramasse: 'ramassé', sirene: 'sirène', poule: 'poule', etabli: 'établi',
   epouvantail: 'épouvantail', geode: 'géode', naiade: 'naïade', pelican: 'pélican', seau: 'seau', ferme: 'fermé', icone: 'icône',
-  rayons: 'rayons', ouvert: 'ouvert', ouverture: 'ouverture', reveil: 'réveil', degout: 'dégoût', etonne: 'étonné', apres: 'après'
+  rayons: 'rayons', ouvert: 'ouvert', couche: 'couché', parapluie: 'parapluie', ouverture: 'ouverture', reveil: 'réveil', degout: 'dégoût', etonne: 'étonné', apres: 'après'
 };
 const mot = w => MOTS[w] || w;
 const humain = s => s.split(/[-_ ]+/).filter(Boolean).map(mot).join(' ').replace(/^./, c => c.toUpperCase());
@@ -300,11 +279,14 @@ const PLANTES = {
 const PIECES = { 'arc-en-ciel': 'Arc-en-ciel', 'coeur-lave': 'Cœur de lave', 'filon-or': 'Filon d\'or' };
 const ROMAIN = ['', 'I', 'II', 'III', 'IV', 'V', 'VI', 'VII'];
 const ETAT_COFFRE = { ferme: 'fermé', ouverture: 'ouverture', ouvert: 'ouvert', rayons: 'rayons (calque)', icone: 'icône' };
-const PETIT = /^personnages\/(habitants|visiteurs|epilogue|naufrages\/petit_format|avatar\/petit_format)\//;
 
 function titreSujet(sujet) {
   const av = sujet.match(/^avatar-(\d+)(-naufrage)?$/);
   if (av) return `Avatar, exemple ${+av[1]}${av[2] ? ' (naufragé)' : ''}`;
+  const vi = sujet.match(/^visiteur-(\d+)$/);
+  if (vi) return `Visiteur ${+vi[1]}`;
+  const ar = sujet.match(/^arrivant-(\d+)$/);
+  if (ar) return `Nouveau venu ${+ar[1]} (épilogue)`;
   const m = sujet.match(/^([a-z]+)-naufrage$/);
   if (m) return `${NOMS[m[1]]} naufragé${FEM.has(m[1]) ? 'e' : ''}`;
   if (NOMS[sujet]) return NOMS[sujet][0].toUpperCase() + NOMS[sujet].slice(1);
@@ -343,11 +325,10 @@ function vitesse(id, pose, images) {
     return pose === 'repos' ? (a === 'anya' ? 1200 : [900, 160]) : [700, 900];
   }
   if (top === 'personnages') {
-    const petit = PETIT.test(id + '/');
-    if (/^(marche|lanterne|parapluie)$/.test(pose)) return petit ? 160 : 170;
+    if (/^(marche|lanterne|parapluie)$/.test(pose)) return 170;
     if (pose === 'repos') return [900, 160];
     if (pose === 'salut') return 260;
-    if (pose === 'dort') return 900;
+    if (pose === 'dort' || pose === 'couche') return 900;
     if (pose === 'arrivee') return 450;
     if (pose === 'expr') return 800;
     if (pose === 'grelotter') return 140; // un frisson
@@ -399,7 +380,6 @@ function construire(svgRoot, metas) {
       else if (tok[1] === 'expr') { e.pose = 'expr'; e.variante = tok.slice(2).join('_'); }
       else if (tok[1]) { e.pose = tok[1]; if (tok.length > 2) e.variante = tok.slice(2).join('_'); }
       const t = [titreSujet(e.sujet)];
-      if (PETIT.test(id)) t.push('petit format');
       if (e.vue) t.push(VUES[e.vue]);
       if (e.pose) t.push(e.pose === 'expr' ? 'expression' : mot(e.pose));
       if (e.variante) t.push(humain(e.variante).toLowerCase());

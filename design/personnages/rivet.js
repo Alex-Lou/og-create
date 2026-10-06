@@ -134,12 +134,13 @@ const rivet = {
     return s;
   },
 
-  pose({ pose, n }) {
+  pose({ pose, n, view }) {
     if (pose === 'salut') {
       return { open: true, right: arm(this, [32, 34], n === 0 ? [37.4, 25.4] : [38.8, 27.4]) };
     }
     // action : la loupe droite baissée sur l'œil (œil géant), un rouage levé ; image 2 : il tourne, eurêka
-    const [x, y] = [28.6, 22.8];
+    // (de trois quarts, la loupe suit l'œil proche ; de dos, on ne voit ni la loupe ni l'œil)
+    const [x, y] = [view === 'se' ? 25.2 : 28.6, 22.8];
     const eye = n === 0
       ? E(x, y, 2.3, 3, '#2A2420', 0) + E(x + 0.8, y - 1.3, 0.9, 0.9, '#FFFFFF', 0) + E(x - 0.7, y + 1.3, 0.45, 0.45, '#FFFFFF', 0)
       : P(`M${x - 2.6},${y + 1.2} Q${x},${y - 2} ${x + 2.6},${y + 1.2}`, 'none', 1.4);
@@ -152,6 +153,7 @@ const rivet = {
       + (n ? L([39.8, 21], [41.2, 19.6], '#3C2819', 0.6) + L([40.6, 24.2], [42.4, 23.8], '#3C2819', 0.6) + L([37.8, 20.6], [38.2, 18.8], '#3C2819', 0.6) : '');
     const right = arm(this, [32, 34], [35.8, 28.6], [37.6, 36.4]);
     const left = arm(this, [16, 34], [14.4, 45]) + screwdriver([14.4, 44.2], [12.8, 50.2]);
+    if (view === 'ne') return { expr: n ? 'rire' : 'neutre', left, right: '', over: g + right };
     return { expr: n ? 'rire' : 'neutre', lensDown: true, left, right: '', over: loupe + g + right };
   }
 };
