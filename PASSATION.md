@@ -186,7 +186,9 @@ chronométrer 20 appels. Comparer à zoom égal, au même endroit.
   (fichiers voisins, chacun un sujet, le code déplacé mot pour mot) : `App.vue` fait (`account.js` le compte,
   `carnet.js` le carnet de l'Infini, `achievements.js` les succès, `story.js` le tutoriel, les veillées et Anya,
   `trial.js` l'Épreuve ; `App.vue` garde les modes, l'Athanor, l'ère et les familles, le cycle de vie), `BookView.vue`
-  à suivre. Preuve d'un tel découpage : le relevé des membres du composant vivant (données, calculées, méthodes,
+  fait (`shelf.js` l'étagère « Tes éléments », `pages.js` les modèles de pages tirés du Livre du serveur, `effects.js`
+  les effets d'une découverte, `hangman.js` le pendu ; `BookView.vue` garde le chargement, le moteur, la navigation,
+  l'Encre, le cycle de vie, et les deux variables de module `openedOnce` et `lastKey`). Preuve d'un tel découpage : le relevé des membres du composant vivant (données, calculées, méthodes,
   observateurs, crochets, et le texte de chaque fonction) est le même avant et après.
 - **Piège du passage en scoped** : une règle scoped gagne un attribut de spécificité. Si elle vise aussi la racine d'un
   composant enfant (un glyphe `img.glyph` dans un portrait, par exemple), elle peut l'emporter sur le style propre de
