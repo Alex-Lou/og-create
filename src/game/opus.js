@@ -36,6 +36,10 @@ export const SECRET = [
   { id: 'secret-brume', text: 'Mon chagrin… C’est moi qui fais la brume de la mer ? … parce que l’île est seule. Parce qu’Elle dort.' },
   { id: 'secret-suite', text: 'Je pâlis, je sais. Ce n’est rien : continuons. Les quêtes, elles, ne s’arrêtent pas.' }
 ];
+// Anya déjà éveillée (v6 : la Révélation peut venir dès l'acte V), Brume ne dit plus qu'Elle dort
+export const secretOf = awake => (awake
+  ? SECRET.map(line => (line.id === 'secret-brume' ? { ...line, text: 'Mon chagrin… C’est moi qui fais la brume de la mer ? … parce que l’île a dormi si longtemps. Et moi, j’ai pleuré pour deux.' } : line))
+  : SECRET);
 
 // Feu follet écrit avant l'acte VII (§ 10, le cas particulier) : Brume réagit une fois ; la finale reste au Phare
 export const EARLY_WISP = { id: 'feu-follet-tot', text: 'C’est… moi ? Comme c’est étrange.' };

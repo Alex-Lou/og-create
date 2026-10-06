@@ -423,7 +423,7 @@ import { islandOf, liveOf, TerrainCache, HS } from '@/world/terrain';
 import { FLOATING_ZONE, COLONY_ZONE, isletsOf } from '@/world/islets';
 import { seaOf, spread } from '@/world/sea';
 import { stageOf as civilizationOf } from '@/game/vigils';
-import { brumeLook, opusOf, secretDue, SECRET } from '@/game/opus';
+import { brumeLook, opusOf, secretDue, secretOf } from '@/game/opus';
 import { PRESENTIMENTS, BREATH_LINE } from '@/game/anya';
 import { BEASTS } from '@/world/bestiary';
 import { faceHref } from '@/world/faces';
@@ -946,7 +946,7 @@ export default {
         this.bestiaryTips(state);
         // Acte VI : Galet a lu la dernière rune ; Brume comprend (dit une fois)
         if (secretDue(state.brume && state.brume.acts, state.brume && state.brume.quest)) {
-          SECRET.forEach(line => guide.say({ id: line.id, text: line.text, ...(line.who ? { who: line.who, face: faceHref(line.face) } : {}) }));
+          secretOf(Boolean(state.anya && state.anya.awake)).forEach(line => guide.say({ id: line.id, text: line.text, ...(line.who ? { who: line.who, face: faceHref(line.face) } : {}) }));
         }
       } catch (error) {
         if (this.gone) return;
@@ -1029,8 +1029,9 @@ export default {
         // La troupe rencontrée (serveur) : bâtie, au camp, ou endormie
         troupe: (state.villagers || []).filter(v => v.seed === undefined).map(v => ({ id: v.id, built: v.built !== false, asleep: Boolean(v.asleep) })),
         written: this.elements,
-        // Anya révélée : au Cercle de menhirs ; le bol de la Dame, dès qu'on la pressent (le Cercle trouvé, une trace)
-        anya: state.anya && state.anya.revealed ? (state.landmarks || []).find(l => l.id === 'menhirs' && l.x !== undefined) || null : null,
+        // Anya révélée : elle erre (son passage du jour, tiré par le serveur) ; le bol de la Dame, dès qu'on la pressent
+        // (le Cercle trouvé, une trace)
+        anya: state.anya && state.anya.revealed ? { visit: state.anya.visit || null } : null,
         dame: Boolean((state.landmarks || []).some(l => l.id === 'menhirs' && l.found) || (state.anya && state.anya.traces.length))
       });
       // Visiteur : son bateau s'amarre près du Ponton ; un visiteur jamais vu sur cet appareil arrive sous les yeux
@@ -1537,12 +1538,12 @@ export default {
         return savoirLine(v.id, savoir);
       });
     },
-    // Le Souffle d'Anya (bible, § 6.14) : une fois par jour, un ingrédient sur n'importe quelle page à portée, gardé comme
-    // un Savoir
+    // Le Souffle d'Anya (bible, § 6.14) : une fois par passage, un ingrédient sur n'importe quelle page à portée, gardé
+    // comme un Savoir
     async breatheAnya(px, py) {
       if (this.busy) return;
       if (this.state.anya && this.state.anya.breathed) {
-        this.showTip(px, py, { title: 'Anya', text: 'Demain. La terre se repose aussi.' });
+        this.showTip(px, py, { title: 'Anya', text: 'Va. La terre se repose aussi. Je repasserai.' });
         return;
       }
       this.busy = true;

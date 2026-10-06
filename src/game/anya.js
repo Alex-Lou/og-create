@@ -1,33 +1,42 @@
-// Anya, l'Âme de l'Île (HISTOIRE.md, § 4.5, § 6.14, § 8 et § 10) : les pressentiments, les traces et la Révélation.
-// Tout se déduit du serveur (vue de l'île : anya { traces, awake, revealed, breathed }) ; l'appareil ne retient que les
-// traces déjà montrées (oc_traces).
+// Anya, la déesse de l'île (HISTOIRE.md, § 4.5, § 6.14, § 8 et § 10, v6) : les pressentiments, les traces, la Révélation
+// et l'errance. Tout se déduit du serveur (vue de l'île : anya { traces, awake, revealed, visit, breathed }) ;
+// l'appareil ne retient que les traces déjà montrées (oc_traces).
 
-// Douze traces, une par terre nouvelle explorée (§ 6.14)
-export const TRACES = {
-  menhirs: 'Les pierres sont tièdes, comme une main.',
-  roselieres: 'Tous les roseaux s’inclinent du même côté.',
-  falaises: 'Une plume d’or, bien trop grande pour un oiseau.',
-  bayou: 'Les lucioles dessinent un visage, puis s’éparpillent.',
-  contreforts: 'Une empreinte de cerf, faite de lumière.',
-  oasis: 'Une fleur a poussé dans le sable pendant la nuit.',
-  neiges: 'Un cercle de fleurs ouvertes dans la neige.',
-  dunes: 'Le vent chante deux syllabes : « A… nya ».',
-  canopee: 'Tous les oiseaux se taisent ensemble, puis chantent.',
-  cascade: 'Dans l’écume, une silhouette coiffée de branches.',
-  coulees: 'La lave s’écarte autour d’une pousse verte.',
-  cratere: 'Au fond, un battement : un cœur qui s’éveille.'
-};
-export const TRACE_COUNT = Object.keys(TRACES).length;
+// Huit traces, une par quartier du cœur libéré après La Source, dans l'ordre (§ 6.14) : la huitième précède la Révélation
+export const TRACES = [
+  'Les pierres sont tièdes, comme une main.',
+  'Les herbes s’inclinent toutes du même côté. Il n’y a pas de vent.',
+  'Une plume d’or, bien trop grande pour un oiseau.',
+  'Une empreinte de cerf, faite de lumière.',
+  'Une fleur a poussé pendant la nuit, là où tu dormais.',
+  'Les lucioles dessinent un visage, puis s’éparpillent.',
+  'Le vent chante deux syllabes : « A… nya ».',
+  'Sous tes pieds, un battement : un cœur qui s’éveille.'
+];
+export const TRACE_COUNT = TRACES.length;
 
-// La trace à montrer : la plus récente des terres explorées pas encore vues sur cet appareil (les plus anciennes,
-// trouvées avant, se lisent dans la Chronique)
+// Les traces, en numéros (1 … n). Avant la v6, le serveur et l'appareil les nommaient par terre explorée : elles
+// comptent alors une à une, sans aller jusqu'à la huitième, celle de la Révélation (comme au serveur)
+function numbered(list) {
+  const numbers = (list || []).filter(id => Number.isInteger(id) && id >= 1 && id <= TRACE_COUNT);
+  const lands = new Set((list || []).filter(id => typeof id === 'string')).size;
+  const before = Array.from({ length: Math.min(lands, TRACE_COUNT - 1) }, (_, i) => i + 1);
+  return [...new Set([...before, ...numbers])].sort((a, b) => a - b);
+}
+export const tracesOf = anya => numbered(anya && anya.traces);
+// Les traces déjà montrées sur cet appareil (oc_traces), en numéros
+export const seenOf = saved => numbered(Array.isArray(saved) ? saved : []);
+
+// La trace à montrer : la plus récente pas encore vue sur cet appareil (les plus anciennes, trouvées avant, se lisent
+// dans la Chronique)
 export function traceDue(traces, seen) {
-  const fresh = (traces || []).filter(id => TRACES[id] && !(seen || []).includes(id));
+  const shown = new Set(seenOf(seen));
+  const fresh = numbered(traces).filter(n => !shown.has(n));
   return fresh.length ? fresh[fresh.length - 1] : null;
 }
-export const traceFrames = (land, count) => [{ art: 'trace', caption: `Traces d’Anya : ${count} / ${TRACE_COUNT}`, text: TRACES[land] }];
+export const traceFrames = (n, count) => [{ art: 'trace', caption: `Traces d’Anya : ${count} / ${TRACE_COUNT}`, text: TRACES[Number(n) - 1] }];
 
-// La scène d'Anya à jouer sur l'île : la trace d'une terre tout juste explorée (la douzième passe avant la Révélation),
+// La scène d'Anya à jouer sur l'île : la trace d'un quartier tout juste libéré (la huitième passe avant la Révélation),
 // puis la Révélation, une seule fois ; sinon null. anya : { traces, awake, revealed } (serveur) ; seen : traces vues ici
 export function anyaSceneOf(anya, seen) {
   if (!anya) return null;
@@ -72,6 +81,9 @@ export function revelationFrames({ lit = false } = {}) {
   ];
 }
 
-// Anya sur l'île, après la Révélation : au Cercle, à l'aube et au crépuscule (heures autour du lever et du coucher)
-export const anyaHere = (hour, rise, set) => Math.abs(hour - rise) < 1.2 || Math.abs(hour - set) < 1.2;
+// Anya sur l'île, après la Révélation (v6 : elle erre) : le jour de son passage, autour du lever (slot 'aube') ou du
+// coucher du soleil ('crepuscule'). Sans moment donné, l'un ou l'autre
+const NEAR_SUN = 1.2;
+export const anyaHere = (hour, rise, set, slot = null) =>
+  (slot !== 'crepuscule' && Math.abs(hour - rise) < NEAR_SUN) || (slot !== 'aube' && Math.abs(hour - set) < NEAR_SUN);
 export const BREATH_LINE = 'Ce que la terre sait, je te le souffle.';
