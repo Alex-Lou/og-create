@@ -946,13 +946,28 @@ C.totem = { n: 2, draw: f => {
     + `<path d="M${x + (w + 2) * k},${ya + 2.4} L${x + (w + 13) * k},${ya - 6} M${x + (w + 2) * k},${ya + 3.4} L${x + (w + 11) * k},${ya - 0.4}" stroke="#E8566A" stroke-width="1.1"/>` + E(x + (w + 3) * k, ya + 1.6, 1.6, 1.4, OUT, 0) + '</g>';
   return s + aile(-1) + aile(1) + P(`M${x - 5},${ya + 0.4} Q${x},${ya - 7} ${x + 5},${ya + 0.4} Z`, '#E8566A', 0.8);
 } };
+// Obélisque d'obsidienne : un sol de roche sombre fendu de braises, des éclats d'obsidienne ; un socle de basalte à
+// deux degrés ; l'aiguille à quatre pans qui s'effile, lisse et brillante (un reflet violet sur le pan éclairé, le pan
+// droit dans l'ombre), son pyramidion ; des signes gravés qui rougeoient comme des braises, plus vifs la nuit (image 2,
+// même lueur au même endroit qu'avant)
+const BASALTE = { top: '#5A5266', left: '#3A3644', right: '#26232E' };
 C.obelisque = { n: 2, draw: f => {
-  const [x, y] = at(0, 0);
-  let s = shadow(0, 0, 0.3, 0.16) + box(-0.14, -0.14, 0.14, 0.14, 0, 4, OBSIDIAN);
-  s += poly([[x - 7, y - 3], [x - 4.4, y - 46], [x, y - 54], [x + 4.4, y - 46], [x + 7, y - 3], [x, y + 1]], OBSIDIAN.left, 1.1) + poly([[x, y - 54], [x + 4.4, y - 46], [x + 7, y - 3], [x, y + 1]], OBSIDIAN.right, 0);
-  s += P(`M${x - 4},${y - 40} Q${x - 3},${y - 30} ${x - 4.6},${y - 12}`, 'none', 0).replace('stroke="none"', 'stroke="#6E6480" stroke-width="0.8"');
-  const g = f ? '#FF8A4A' : '#E8573A';
-  s += [[-2, -36], [-2.4, -28], [-2, -20], [-2.6, -12]].map(([dx, dy], i) => `<path d="M${x + dx},${y + dy} l2,-2 l-1,-1.4 M${x + dx + 0.6},${y + dy + 2} l1.4,0" stroke="${g}" stroke-width="0.9" stroke-linecap="round"/>`).join('');
+  const [x, y] = at(0, 0), g = f ? '#FFB066' : '#E8573A', braise = f ? '#FF8A4A' : '#C8401E';
+  // le sol de roche sombre, ses fentes de braise, ses éclats d'obsidienne
+  let s = E(x, y + 2, 24, 9.4, '#4A4452', 0.8) + E(x - 4, y + 1, 14, 4.6, '#5A5266', 0);
+  s += `<path d="M${x - 20},${y + 4} l5,-1.4 l3,2 l5,-0.6 M${x + 10},${y + 7} l4,-2 l5,0.4 M${x + 6},${y - 3} l5,-1.6" stroke="${braise}" stroke-width="1.1" fill="none" stroke-linecap="round" stroke-linejoin="round"/>`
+    + [[-14, 6, 0], [15, 2, 1], [-17, 0, 1]].map(([dx, dy, k]) => P(`M${x + dx},${y + dy} l1.4,-3.4 l1.6,3 Z`, k ? OBSIDIAN.top : OBSIDIAN.left, 0.5)).join('');
+  // le socle de basalte à deux degrés
+  s += shadow(0, 0, 0.22, 0.12) + box(-0.15, -0.15, 0.15, 0.15, 0, 2.6, BASALTE) + box(-0.115, -0.115, 0.115, 0.115, 2.6, 4.6, BASALTE);
+  // l'aiguille : pan éclairé (reflet violet), pan à l'ombre, pyramidion
+  const b = 0.085, t = 0.05, z0 = 4.6, z1 = 44, z2 = 52;
+  s += poly([at(-b, b, z0), at(b, b, z0), at(t, t, z1), at(-t, t, z1)], OBSIDIAN.left, 1) + poly([at(b, b, z0), at(b, -b, z0), at(t, -t, z1), at(t, t, z1)], OBSIDIAN.right, 1)
+    + poly([at(-t, t, z1), at(t, t, z1), at(0, 0, z2)], '#55506A', 0.9) + poly([at(t, t, z1), at(t, -t, z1), at(0, 0, z2)], OBSIDIAN.right, 0.9)
+    + L(at(-b + 0.02, b, z0 + 3), at(-t + 0.012, t, z1 - 2), '#8E84A6', 0.9) + L(at(-t + 0.008, t, z1 + 1), at(-0.004, 0.004, z2 - 2), '#A79DC0', 0.7);
+  // les signes gravés qui rougeoient : une spirale, un triangle, un œil, une ligne brisée
+  const [gx] = at(0.03, b - 0.012, 0);
+  const signes = [`M${gx - 3.2},${y - 38} q1.6,-1.6 2,0.4 q0,1.6 -1.6,1.2`, `M${gx - 4.2},${y - 28} l1.4,-3 l1.4,3 Z`, `M${gx - 4.6},${y - 20} q1.8,-1.8 3.6,0 q-1.8,1.8 -3.6,0 Z`, `M${gx - 4.8},${y - 11} l1.2,-1.4 l1.2,1.4 l1.2,-1.4`];
+  s += signes.map(d => `<path d="${d}" stroke="${g}" stroke-width="0.9" fill="none" stroke-linecap="round" stroke-linejoin="round"/>`).join('') + E(gx - 2.8, y - 20, 0.5, 0.5, g, 0);
   return s + (f ? glow(x - 1, y - 24, 12, '255,120,60', 0.22) : '');
 } };
 C.bassinchaud = { n: 3, draw: f => {
