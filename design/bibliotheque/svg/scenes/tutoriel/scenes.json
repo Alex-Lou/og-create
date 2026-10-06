@@ -1,0 +1,866 @@
+{
+ "_lisez_moi": [
+  "Les scènes plein écran du tutoriel v6 (HISTOIRE.md § 9), dans le carré 400 × 400 de PrologueArt (preserveAspectRatio=\"xMidYMid slice\" : le sujet reste au milieu). Chaque scène a un fond (derrière l'avatar) et parfois un devant (ce qui passe devant lui : pluie, brume, Brume quand elle s'approche) ; ses images tournent en boucle à ms_par_image. Les répliques, le nom du joueur et la légende ne sont pas dessinés : le jeu les écrit.",
+  "L'avatar n'est pas dessiné : le jeu pose entre le fond et le devant l'avatar du joueur (design/bibliotheque/svg/personnages/avatar, ou son générateur), à la place notée dans « avatar » : ses pieds en (x, y) du carré, le cadre 48 × 64 de l'avatar agrandi « echelle » fois ; « vue » face, avant (trois quarts avant, regarde vers la droite) ou dos (trois quarts dos, regarde vers le haut à droite) ; « miroir » : retourné, il regarde vers la gauche ; « pose » repos, salut ou grelotter (le geste de face) ; « naufrage » : sa tenue naufragée (jusqu'au Campement) ou sa tenue de croisière ; « cadre » (la carte d'embarquement) : l'avatar n'est visible que dans ce rectangle, la photo. Ses images suivent celles de la scène (image n de la scène → image n de l'avatar, en boucle). « avatar » vaut null quand il n'est pas à l'écran.",
+  "Étapes : 00_carte (0a-0b : l'écran d'avatar ; la photo se compose dans le cadre, le nom s'écrit sur la ligne « Nom »), 00_tampon (0c), 01 le naufrage, 02 Brume, 03 le Grimoire (3b à 3d sont dans le Grimoire lui-même), 05_feu (5d), 06_silhouette (6h, fin de la partie 1), 07 Cannelle, 09_rivet, 10_aster, 11 Ondin, 12 la veillée (12k, 12l : Cannelle tend à l'avatar ses habits recousus, le jeu passe ensuite l'avatar en tenue). Les autres temps du tutoriel se jouent sur l'île."
+ ],
+ "scenes": {
+  "00_carte": {
+   "nom": "Scène 0a, 0b : La carte d’embarquement de l’Hirondelle",
+   "etape": "0a, 0b",
+   "cadre": [
+    0,
+    0,
+    400,
+    400
+   ],
+   "images": 2,
+   "ms_par_image": 900,
+   "avatar": {
+    "x": 140,
+    "y": 340,
+    "echelle": 2.7,
+    "vue": "face",
+    "pose": "repos",
+    "naufrage": false,
+    "cadre": [
+     92,
+     150,
+     96,
+     116
+    ]
+   },
+   "calques": {
+    "fond": {
+     "nom": "Scène 0a, 0b : La carte d’embarquement de l’Hirondelle (fond)",
+     "fichiers": [
+      "00_carte/00_carte_fond_1.svg",
+      "00_carte/00_carte_fond_2.svg"
+     ]
+    }
+   }
+  },
+  "00_tampon": {
+   "nom": "Scène 0c : Embarqué : le vent emporte la carte",
+   "etape": "0c",
+   "cadre": [
+    0,
+    0,
+    400,
+    400
+   ],
+   "images": 3,
+   "ms_par_image": 500,
+   "avatar": null,
+   "calques": {
+    "fond": {
+     "nom": "Scène 0c : Embarqué : le vent emporte la carte (fond)",
+     "fichiers": [
+      "00_tampon/00_tampon_fond_1.svg",
+      "00_tampon/00_tampon_fond_2.svg",
+      "00_tampon/00_tampon_fond_3.svg"
+     ]
+    }
+   }
+  },
+  "01_pont": {
+   "nom": "Scène 1a : Le pont de l’Hirondelle dans la tempête",
+   "etape": "1a",
+   "cadre": [
+    0,
+    0,
+    400,
+    400
+   ],
+   "images": 3,
+   "ms_par_image": 160,
+   "avatar": {
+    "x": 232,
+    "y": 352,
+    "echelle": 3.4,
+    "vue": "face",
+    "pose": "grelotter",
+    "naufrage": false
+   },
+   "calques": {
+    "fond": {
+     "nom": "Scène 1a : Le pont de l’Hirondelle dans la tempête (fond)",
+     "fichiers": [
+      "01_pont/01_pont_fond_1.svg",
+      "01_pont/01_pont_fond_2.svg",
+      "01_pont/01_pont_fond_3.svg"
+     ]
+    },
+    "devant": {
+     "nom": "Scène 1a : Le pont de l’Hirondelle dans la tempête (devant l'avatar)",
+     "fichiers": [
+      "01_pont/01_pont_devant_1.svg",
+      "01_pont/01_pont_devant_2.svg",
+      "01_pont/01_pont_devant_3.svg"
+     ]
+    }
+   }
+  },
+  "01_vague": {
+   "nom": "Scène 1b : La vague",
+   "etape": "1b",
+   "cadre": [
+    0,
+    0,
+    400,
+    400
+   ],
+   "images": 3,
+   "ms_par_image": 260,
+   "avatar": null,
+   "calques": {
+    "fond": {
+     "nom": "Scène 1b : La vague (fond)",
+     "fichiers": [
+      "01_vague/01_vague_fond_1.svg",
+      "01_vague/01_vague_fond_2.svg",
+      "01_vague/01_vague_fond_3.svg"
+     ]
+    }
+   }
+  },
+  "01_noir": {
+   "nom": "Scène 1b : Le noir ; la mer, très loin",
+   "etape": "1b",
+   "cadre": [
+    0,
+    0,
+    400,
+    400
+   ],
+   "images": 2,
+   "ms_par_image": 1200,
+   "avatar": null,
+   "calques": {
+    "fond": {
+     "nom": "Scène 1b : Le noir ; la mer, très loin (fond)",
+     "fichiers": [
+      "01_noir/01_noir_fond_1.svg",
+      "01_noir/01_noir_fond_2.svg"
+     ]
+    }
+   }
+  },
+  "01_greve": {
+   "nom": "Scène 1c : La Grève, la nuit, dans la brume",
+   "etape": "1c",
+   "cadre": [
+    0,
+    0,
+    400,
+    400
+   ],
+   "images": 3,
+   "ms_par_image": 400,
+   "avatar": {
+    "x": 200,
+    "y": 344,
+    "echelle": 3.6,
+    "vue": "face",
+    "pose": "grelotter",
+    "naufrage": true
+   },
+   "calques": {
+    "fond": {
+     "nom": "Scène 1c : La Grève, la nuit, dans la brume (fond)",
+     "fichiers": [
+      "01_greve/01_greve_fond_1.svg",
+      "01_greve/01_greve_fond_2.svg",
+      "01_greve/01_greve_fond_3.svg"
+     ]
+    },
+    "devant": {
+     "nom": "Scène 1c : La Grève, la nuit, dans la brume (devant l'avatar)",
+     "fichiers": [
+      "01_greve/01_greve_devant_1.svg",
+      "01_greve/01_greve_devant_2.svg",
+      "01_greve/01_greve_devant_3.svg"
+     ]
+    }
+   }
+  },
+  "01_gilet": {
+   "nom": "Scène 1d : Le gilet de sauvetage de l’Hirondelle",
+   "etape": "1d",
+   "cadre": [
+    0,
+    0,
+    400,
+    400
+   ],
+   "images": 3,
+   "ms_par_image": 420,
+   "avatar": {
+    "x": 128,
+    "y": 372,
+    "echelle": 3.6,
+    "vue": "avant",
+    "pose": "repos",
+    "naufrage": true
+   },
+   "calques": {
+    "fond": {
+     "nom": "Scène 1d : Le gilet de sauvetage de l’Hirondelle (fond)",
+     "fichiers": [
+      "01_gilet/01_gilet_fond_1.svg",
+      "01_gilet/01_gilet_fond_2.svg",
+      "01_gilet/01_gilet_fond_3.svg"
+     ]
+    }
+   }
+  },
+  "02_lueur": {
+   "nom": "Scène 2a : Une lueur erre dans la brume",
+   "etape": "2a",
+   "cadre": [
+    0,
+    0,
+    400,
+    400
+   ],
+   "images": 4,
+   "ms_par_image": 600,
+   "avatar": {
+    "x": 120,
+    "y": 384,
+    "echelle": 3.4,
+    "vue": "dos",
+    "pose": "repos",
+    "naufrage": true
+   },
+   "calques": {
+    "fond": {
+     "nom": "Scène 2a : Une lueur erre dans la brume (fond)",
+     "fichiers": [
+      "02_lueur/02_lueur_fond_1.svg",
+      "02_lueur/02_lueur_fond_2.svg",
+      "02_lueur/02_lueur_fond_3.svg",
+      "02_lueur/02_lueur_fond_4.svg"
+     ]
+    },
+    "devant": {
+     "nom": "Scène 2a : Une lueur erre dans la brume (devant l'avatar)",
+     "fichiers": [
+      "02_lueur/02_lueur_devant_1.svg",
+      "02_lueur/02_lueur_devant_2.svg",
+      "02_lueur/02_lueur_devant_3.svg",
+      "02_lueur/02_lueur_devant_4.svg"
+     ]
+    }
+   }
+  },
+  "02_approche": {
+   "nom": "Scène 2b : Brume approche d’un coup",
+   "etape": "2b",
+   "cadre": [
+    0,
+    0,
+    400,
+    400
+   ],
+   "images": 2,
+   "ms_par_image": 300,
+   "avatar": {
+    "x": 108,
+    "y": 376,
+    "echelle": 3.6,
+    "vue": "avant",
+    "pose": "repos",
+    "naufrage": true
+   },
+   "calques": {
+    "fond": {
+     "nom": "Scène 2b : Brume approche d’un coup (fond)",
+     "fichiers": [
+      "02_approche/02_approche_fond_1.svg",
+      "02_approche/02_approche_fond_2.svg"
+     ]
+    },
+    "devant": {
+     "nom": "Scène 2b : Brume approche d’un coup (devant l'avatar)",
+     "fichiers": [
+      "02_approche/02_approche_devant_1.svg",
+      "02_approche/02_approche_devant_2.svg"
+     ]
+    }
+   }
+  },
+  "02_rocher": {
+   "nom": "Scène 2c : Brume se cache derrière un rocher",
+   "etape": "2c",
+   "cadre": [
+    0,
+    0,
+    400,
+    400
+   ],
+   "images": 2,
+   "ms_par_image": 500,
+   "avatar": {
+    "x": 116,
+    "y": 366,
+    "echelle": 3.4,
+    "vue": "avant",
+    "pose": "repos",
+    "naufrage": true
+   },
+   "calques": {
+    "fond": {
+     "nom": "Scène 2c : Brume se cache derrière un rocher (fond)",
+     "fichiers": [
+      "02_rocher/02_rocher_fond_1.svg",
+      "02_rocher/02_rocher_fond_2.svg"
+     ]
+    }
+   }
+  },
+  "02_examine": {
+   "nom": "Scène 2d : Brume tourne autour de l’avatar",
+   "etape": "2d",
+   "cadre": [
+    0,
+    0,
+    400,
+    400
+   ],
+   "images": 4,
+   "ms_par_image": 260,
+   "avatar": {
+    "x": 200,
+    "y": 364,
+    "echelle": 3.6,
+    "vue": "face",
+    "pose": "grelotter",
+    "naufrage": true
+   },
+   "calques": {
+    "fond": {
+     "nom": "Scène 2d : Brume tourne autour de l’avatar (fond)",
+     "fichiers": [
+      "02_examine/02_examine_fond_1.svg",
+      "02_examine/02_examine_fond_2.svg",
+      "02_examine/02_examine_fond_3.svg",
+      "02_examine/02_examine_fond_4.svg"
+     ]
+    },
+    "devant": {
+     "nom": "Scène 2d : Brume tourne autour de l’avatar (devant l'avatar)",
+     "fichiers": [
+      "02_examine/02_examine_devant_1.svg",
+      "02_examine/02_examine_devant_2.svg",
+      "02_examine/02_examine_devant_3.svg",
+      "02_examine/02_examine_devant_4.svg"
+     ]
+    }
+   }
+  },
+  "02_yeux": {
+   "nom": "Scène 2e : Brume, à hauteur des yeux",
+   "etape": "2e",
+   "cadre": [
+    0,
+    0,
+    400,
+    400
+   ],
+   "images": 4,
+   "ms_par_image": 220,
+   "avatar": {
+    "x": 120,
+    "y": 470,
+    "echelle": 6.4,
+    "vue": "dos",
+    "pose": "repos",
+    "naufrage": true
+   },
+   "calques": {
+    "fond": {
+     "nom": "Scène 2e : Brume, à hauteur des yeux (fond)",
+     "fichiers": [
+      "02_yeux/02_yeux_fond_1.svg",
+      "02_yeux/02_yeux_fond_2.svg",
+      "02_yeux/02_yeux_fond_3.svg",
+      "02_yeux/02_yeux_fond_4.svg"
+     ]
+    },
+    "devant": {
+     "nom": "Scène 2e : Brume, à hauteur des yeux (devant l'avatar)",
+     "fichiers": [
+      "02_yeux/02_yeux_devant_1.svg",
+      "02_yeux/02_yeux_devant_2.svg",
+      "02_yeux/02_yeux_devant_3.svg",
+      "02_yeux/02_yeux_devant_4.svg"
+     ]
+    }
+   }
+  },
+  "02_village": {
+   "nom": "Scène 2f : Là, il y avait un village",
+   "etape": "2f",
+   "cadre": [
+    0,
+    0,
+    400,
+    400
+   ],
+   "images": 3,
+   "ms_par_image": 420,
+   "avatar": {
+    "x": 336,
+    "y": 396,
+    "echelle": 3.2,
+    "vue": "dos",
+    "miroir": true,
+    "pose": "repos",
+    "naufrage": true
+   },
+   "calques": {
+    "fond": {
+     "nom": "Scène 2f : Là, il y avait un village (fond)",
+     "fichiers": [
+      "02_village/02_village_fond_1.svg",
+      "02_village/02_village_fond_2.svg",
+      "02_village/02_village_fond_3.svg"
+     ]
+    }
+   }
+  },
+  "02_epave": {
+   "nom": "Scène 2g : L’épave, à peine visible",
+   "etape": "2g",
+   "cadre": [
+    0,
+    0,
+    400,
+    400
+   ],
+   "images": 3,
+   "ms_par_image": 500,
+   "avatar": {
+    "x": 110,
+    "y": 384,
+    "echelle": 3.4,
+    "vue": "dos",
+    "pose": "repos",
+    "naufrage": true
+   },
+   "calques": {
+    "fond": {
+     "nom": "Scène 2g : L’épave, à peine visible (fond)",
+     "fichiers": [
+      "02_epave/02_epave_fond_1.svg",
+      "02_epave/02_epave_fond_2.svg",
+      "02_epave/02_epave_fond_3.svg"
+     ]
+    }
+   }
+  },
+  "02_proche": {
+   "nom": "Scène 2h : Brume, toute petite, tout près",
+   "etape": "2h",
+   "cadre": [
+    0,
+    0,
+    400,
+    400
+   ],
+   "images": 4,
+   "ms_par_image": 260,
+   "avatar": {
+    "x": 200,
+    "y": 376,
+    "echelle": 3.8,
+    "vue": "face",
+    "pose": "repos",
+    "naufrage": true
+   },
+   "calques": {
+    "fond": {
+     "nom": "Scène 2h : Brume, toute petite, tout près (fond)",
+     "fichiers": [
+      "02_proche/02_proche_fond_1.svg",
+      "02_proche/02_proche_fond_2.svg",
+      "02_proche/02_proche_fond_3.svg",
+      "02_proche/02_proche_fond_4.svg"
+     ]
+    },
+    "devant": {
+     "nom": "Scène 2h : Brume, toute petite, tout près (devant l'avatar)",
+     "fichiers": [
+      "02_proche/02_proche_devant_1.svg",
+      "02_proche/02_proche_devant_2.svg",
+      "02_proche/02_proche_devant_3.svg",
+      "02_proche/02_proche_devant_4.svg"
+     ]
+    }
+   }
+  },
+  "03_livre": {
+   "nom": "Scène 3a : Le livre aux sept sceaux",
+   "etape": "3a",
+   "cadre": [
+    0,
+    0,
+    400,
+    400
+   ],
+   "images": 3,
+   "ms_par_image": 360,
+   "avatar": {
+    "x": 108,
+    "y": 384,
+    "echelle": 3.4,
+    "vue": "avant",
+    "pose": "repos",
+    "naufrage": true
+   },
+   "calques": {
+    "fond": {
+     "nom": "Scène 3a : Le livre aux sept sceaux (fond)",
+     "fichiers": [
+      "03_livre/03_livre_fond_1.svg",
+      "03_livre/03_livre_fond_2.svg",
+      "03_livre/03_livre_fond_3.svg"
+     ]
+    }
+   }
+  },
+  "03_vent": {
+   "nom": "Scène 3e : Le vent chasse la brume",
+   "etape": "3e",
+   "cadre": [
+    0,
+    0,
+    400,
+    400
+   ],
+   "images": 3,
+   "ms_par_image": 420,
+   "avatar": {
+    "x": 200,
+    "y": 364,
+    "echelle": 3,
+    "vue": "dos",
+    "pose": "repos",
+    "naufrage": true
+   },
+   "calques": {
+    "fond": {
+     "nom": "Scène 3e : Le vent chasse la brume (fond)",
+     "fichiers": [
+      "03_vent/03_vent_fond_1.svg",
+      "03_vent/03_vent_fond_2.svg",
+      "03_vent/03_vent_fond_3.svg"
+     ]
+    }
+   }
+  },
+  "05_feu": {
+   "nom": "Scène 5d : Le feu prend",
+   "etape": "5d",
+   "cadre": [
+    0,
+    0,
+    400,
+    400
+   ],
+   "images": 4,
+   "ms_par_image": 300,
+   "avatar": {
+    "x": 118,
+    "y": 368,
+    "echelle": 3.3,
+    "vue": "avant",
+    "pose": "repos",
+    "naufrage": true
+   },
+   "calques": {
+    "fond": {
+     "nom": "Scène 5d : Le feu prend (fond)",
+     "fichiers": [
+      "05_feu/05_feu_fond_1.svg",
+      "05_feu/05_feu_fond_2.svg",
+      "05_feu/05_feu_fond_3.svg",
+      "05_feu/05_feu_fond_4.svg"
+     ]
+    }
+   }
+  },
+  "06_silhouette": {
+   "nom": "Scène 6h : Une silhouette sur les rochers",
+   "etape": "6h",
+   "cadre": [
+    0,
+    0,
+    400,
+    400
+   ],
+   "images": 3,
+   "ms_par_image": 300,
+   "avatar": {
+    "x": 96,
+    "y": 388,
+    "echelle": 3,
+    "vue": "dos",
+    "pose": "repos",
+    "naufrage": true
+   },
+   "calques": {
+    "fond": {
+     "nom": "Scène 6h : Une silhouette sur les rochers (fond)",
+     "fichiers": [
+      "06_silhouette/06_silhouette_fond_1.svg",
+      "06_silhouette/06_silhouette_fond_2.svg",
+      "06_silhouette/06_silhouette_fond_3.svg"
+     ]
+    }
+   }
+  },
+  "07_cannelle": {
+   "nom": "Scène 7a : Cannelle sort de la brume",
+   "etape": "7a",
+   "cadre": [
+    0,
+    0,
+    400,
+    400
+   ],
+   "images": 4,
+   "ms_par_image": 260,
+   "avatar": {
+    "x": 92,
+    "y": 392,
+    "echelle": 3,
+    "vue": "avant",
+    "pose": "salut",
+    "naufrage": true
+   },
+   "calques": {
+    "fond": {
+     "nom": "Scène 7a : Cannelle sort de la brume (fond)",
+     "fichiers": [
+      "07_cannelle/07_cannelle_fond_1.svg",
+      "07_cannelle/07_cannelle_fond_2.svg",
+      "07_cannelle/07_cannelle_fond_3.svg",
+      "07_cannelle/07_cannelle_fond_4.svg"
+     ]
+    }
+   }
+  },
+  "07_souvenir": {
+   "nom": "Scène 7b : Le souvenir de Cannelle revient",
+   "etape": "7b",
+   "cadre": [
+    0,
+    0,
+    400,
+    400
+   ],
+   "images": 4,
+   "ms_par_image": 300,
+   "avatar": {
+    "x": 84,
+    "y": 394,
+    "echelle": 3,
+    "vue": "avant",
+    "pose": "repos",
+    "naufrage": true
+   },
+   "calques": {
+    "fond": {
+     "nom": "Scène 7b : Le souvenir de Cannelle revient (fond)",
+     "fichiers": [
+      "07_souvenir/07_souvenir_fond_1.svg",
+      "07_souvenir/07_souvenir_fond_2.svg",
+      "07_souvenir/07_souvenir_fond_3.svg",
+      "07_souvenir/07_souvenir_fond_4.svg"
+     ]
+    }
+   }
+  },
+  "09_rivet": {
+   "nom": "Scène 9b : Rivet sous sa voile",
+   "etape": "9b",
+   "cadre": [
+    0,
+    0,
+    400,
+    400
+   ],
+   "images": 2,
+   "ms_par_image": 700,
+   "avatar": {
+    "x": 76,
+    "y": 388,
+    "echelle": 3,
+    "vue": "avant",
+    "pose": "repos",
+    "naufrage": true
+   },
+   "calques": {
+    "fond": {
+     "nom": "Scène 9b : Rivet sous sa voile (fond)",
+     "fichiers": [
+      "09_rivet/09_rivet_fond_1.svg",
+      "09_rivet/09_rivet_fond_2.svg"
+     ]
+    }
+   }
+  },
+  "10_aster": {
+   "nom": "Scène 10b : Aster tire une caisse des vagues",
+   "etape": "10b",
+   "cadre": [
+    0,
+    0,
+    400,
+    400
+   ],
+   "images": 3,
+   "ms_par_image": 360,
+   "avatar": {
+    "x": 76,
+    "y": 396,
+    "echelle": 3,
+    "vue": "avant",
+    "pose": "salut",
+    "naufrage": true
+   },
+   "calques": {
+    "fond": {
+     "nom": "Scène 10b : Aster tire une caisse des vagues (fond)",
+     "fichiers": [
+      "10_aster/10_aster_fond_1.svg",
+      "10_aster/10_aster_fond_2.svg",
+      "10_aster/10_aster_fond_3.svg"
+     ]
+    }
+   }
+  },
+  "11_ondin": {
+   "nom": "Scène 11a : Un enfant endormi à La Source",
+   "etape": "11a",
+   "cadre": [
+    0,
+    0,
+    400,
+    400
+   ],
+   "images": 2,
+   "ms_par_image": 900,
+   "avatar": {
+    "x": 334,
+    "y": 394,
+    "echelle": 3,
+    "vue": "avant",
+    "miroir": true,
+    "pose": "repos",
+    "naufrage": true
+   },
+   "calques": {
+    "fond": {
+     "nom": "Scène 11a : Un enfant endormi à La Source (fond)",
+     "fichiers": [
+      "11_ondin/11_ondin_fond_1.svg",
+      "11_ondin/11_ondin_fond_2.svg"
+     ]
+    }
+   }
+  },
+  "11_reveil": {
+   "nom": "Scène 11b : Ondin s’étire",
+   "etape": "11b",
+   "cadre": [
+    0,
+    0,
+    400,
+    400
+   ],
+   "images": 2,
+   "ms_par_image": 600,
+   "avatar": {
+    "x": 334,
+    "y": 394,
+    "echelle": 3,
+    "vue": "avant",
+    "miroir": true,
+    "pose": "repos",
+    "naufrage": true
+   },
+   "calques": {
+    "fond": {
+     "nom": "Scène 11b : Ondin s’étire (fond)",
+     "fichiers": [
+      "11_reveil/11_reveil_fond_1.svg",
+      "11_reveil/11_reveil_fond_2.svg"
+     ]
+    }
+   }
+  },
+  "12_veillee": {
+   "nom": "Scène 12k : La première veillée : cinq visages et Brume",
+   "etape": "12k",
+   "cadre": [
+    0,
+    0,
+    400,
+    400
+   ],
+   "images": 4,
+   "ms_par_image": 180,
+   "avatar": {
+    "x": 104,
+    "y": 404,
+    "echelle": 2.9,
+    "vue": "dos",
+    "pose": "repos",
+    "naufrage": false
+   },
+   "calques": {
+    "fond": {
+     "nom": "Scène 12k : La première veillée : cinq visages et Brume (fond)",
+     "fichiers": [
+      "12_veillee/12_veillee_fond_1.svg",
+      "12_veillee/12_veillee_fond_2.svg",
+      "12_veillee/12_veillee_fond_3.svg",
+      "12_veillee/12_veillee_fond_4.svg"
+     ]
+    }
+   }
+  },
+  "12_habits": {
+   "nom": "Scène 12l : Les habits recousus",
+   "etape": "12l",
+   "cadre": [
+    0,
+    0,
+    400,
+    400
+   ],
+   "images": 2,
+   "ms_par_image": 600,
+   "avatar": {
+    "x": 150,
+    "y": 398,
+    "echelle": 3,
+    "vue": "avant",
+    "pose": "repos",
+    "naufrage": true
+   },
+   "calques": {
+    "fond": {
+     "nom": "Scène 12l : Les habits recousus (fond)",
+     "fichiers": [
+      "12_habits/12_habits_fond_1.svg",
+      "12_habits/12_habits_fond_2.svg"
+     ]
+    }
+   }
+  }
+ }
+}

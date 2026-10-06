@@ -1,7 +1,7 @@
 # Bibliothèque d'assets SVG de l'île
 
-4 403 dessins SVG au trait de la troupe : personnages, avatar du joueur, naufragés, égarés, animaux, plantes, décor, camp, ruines,
-bâtiments et météo. Chaque dessin est calé sur les cadres et les ancres du jeu, pour se poser tel quel.
+4 508 dessins SVG au trait de la troupe : personnages, avatar du joueur, naufragés, égarés, animaux, plantes, décor, camp, ruines,
+bâtiments, météo et les scènes du tutoriel. Chaque dessin est calé sur les cadres et les ancres du jeu, pour se poser tel quel.
 
 **Par où commencer** :
 - `index.html` montre tout, chapitre après chapitre, dans l'ordre du parcours du joueur (`HISTOIRE.md`, version 6). Survoler ou toucher un dessin l'anime.
@@ -75,6 +75,7 @@ détails propres à un lot : places des objets de boutique, lumières des palier
 | `svg/egares/` | Les égarés, la nuit (`HISTOIRE.md` § 6.15) : petit fantôme, petit zombie tout mou, 7 bêtes de brume (une par climat) ; trois quarts avant et dos, marche, bouderie au toucher, fuite devant Anya, passage en luciole, retour dans la brume ; trait bleu nuit, celui de la famille de la brume (`egares.json`) | 171 |
 | `svg/coffres/` | Les coffres des 4 raretés pour la fenêtre d'ouverture (cadre 120 × 100) : fermé, ouverture en 4 images, ouvert, rayons (calque facultatif), icône 32 × 32 (`coffres.json`) | 44 |
 | `svg/batiments/` | 7 bâtiments × 7 paliers (images animées), chantier, 20 skins, 48 objets de la boutique (un fichier par calque), 14 pièces rares à chaque palier, outil de teintes (`batiments.json`) | 659 |
+| `svg/scenes/tutoriel/` | Les 27 scènes plein écran du tutoriel v6 (`HISTOIRE.md` § 9, étapes 0 à 12) : la carte d'embarquement, le naufrage, Brume, le Grimoire, le feu, la silhouette, l'arrivée de Cannelle, Rivet, Aster et Ondin, la veillée. Carré 400 × 400, un fond et parfois un devant, en boucle ; la place de l'avatar dans `scenes.json` | 105 |
 | `svg/meteo/` | Calques d'écran sans couture en boucle, nuages, arc-en-ciel, éclair, soleil bas, lumières, teintes des moments du jour, 19 icônes (`meteo.json`) | 169 |
 
 ## Mode d'emploi rapide
@@ -107,6 +108,11 @@ détails propres à un lot : places des objets de boutique, lumières des palier
   travail, lanterne et parapluie (avant et dos), dormir couché. Le parapluie a un cadre plus haut (`[0, -18, 48, 82]`,
   pieds toujours en (24, 62)), le couché un cadre 64 × 48 (la tête à gauche). Pour d'autres visiteurs : `avatar(choix)`
   et `auHasard(graine)` (`design/personnages/avatar.js`), les gestes dans `design/atelier/gestes.js`.
+- **Scènes du tutoriel** (`svg/scenes/tutoriel/scenes.json`) : dans le carré 400 × 400 de PrologueArt (recadré au
+  centre), peindre le fond, puis l'avatar du joueur à la place notée dans `avatar` (ses pieds en x, y ; son cadre
+  48 × 64 agrandi `echelle` fois ; `vue`, `miroir`, `pose`, tenue naufragée ou non ; `cadre` : la photo de la carte
+  d'embarquement, où il est découpé), puis le devant. Les images tournent en boucle à `ms_par_image`, l'avatar suit le
+  même numéro d'image. Les répliques, le nom et la légende s'écrivent par le jeu.
 - **Naufragés** : un maître garde le look du naufragé jusqu'à son souvenir retrouvé (`HISTOIRE.md` § 8 à 10 : Cannelle
   dès l'étape 7 du tutoriel, Ondin à l'étape 11, Sylve à l'acte I, Galet à l'acte II, Mélisse à son réveil, Rivet à
   l'acte III, Aster à l'acte IV), puis prend celui de `maitres/`.
@@ -118,7 +124,7 @@ détails propres à un lot : places des objets de boutique, lumières des palier
 - **Le petit format n'existe plus** (choix de l'auteur, 6 octobre) : tout le monde est dessiné en détaillé (lot L4).
 
 - **Ce qui manque encore** est listé dans `catalogue.json` (`manquants`) et en tête de chaque chapitre d'`index.html` :
-  les bâtiments de défense (à concevoir), les scènes du tutoriel v6, l'éclat du souvenir retrouvé…
+  les bâtiments de défense (à concevoir), l'éclat du souvenir retrouvé…
 - **Les 84 teintes en images** : elles se tirent du dessin avec l'outil de teintes, plutôt que 588 fichiers figés.
 - **Relief, falaises, mer, île flottante** : le jeu les peint case par case au canvas. Ce ne sont pas des sprites.
 - **Visiteurs** : le jeu en tire autant qu'il veut d'une graine. Les 12 fournis sont des exemples.
