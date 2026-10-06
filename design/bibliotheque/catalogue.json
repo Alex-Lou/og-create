@@ -3294,6 +3294,1422 @@
    "statut": "ok"
   },
   {
+   "id": "personnages/avatar/avatar-09-naufrage/avatar-09-naufrage_avant_marche",
+   "rubrique": "personnages",
+   "sujet": "avatar-09-naufrage",
+   "vue": "avant",
+   "pose": "marche",
+   "titre": "Avatar, exemple 9 (naufragé), trois quarts avant, marche",
+   "regarde": "bas-droite",
+   "miroir": true,
+   "images": 4,
+   "fichiers": [
+    "svg/personnages/avatar/avatar-09-naufrage/avatar-09-naufrage_avant_marche_1.svg",
+    "svg/personnages/avatar/avatar-09-naufrage/avatar-09-naufrage_avant_marche_2.svg",
+    "svg/personnages/avatar/avatar-09-naufrage/avatar-09-naufrage_avant_marche_3.svg",
+    "svg/personnages/avatar/avatar-09-naufrage/avatar-09-naufrage_avant_marche_4.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": 170,
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "personnages/avatar/avatar-09-naufrage/avatar-09-naufrage_avant_ramasser",
+   "rubrique": "personnages",
+   "sujet": "avatar-09-naufrage",
+   "vue": "avant",
+   "pose": "ramasser",
+   "titre": "Avatar, exemple 9 (naufragé), trois quarts avant, ramasser",
+   "regarde": "bas-droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/avatar/avatar-09-naufrage/avatar-09-naufrage_avant_ramasser_1.svg",
+    "svg/personnages/avatar/avatar-09-naufrage/avatar-09-naufrage_avant_ramasser_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    500,
+    800
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "personnages/avatar/avatar-09-naufrage/avatar-09-naufrage_dos_marche",
+   "rubrique": "personnages",
+   "sujet": "avatar-09-naufrage",
+   "vue": "dos",
+   "pose": "marche",
+   "titre": "Avatar, exemple 9 (naufragé), trois quarts dos, marche",
+   "regarde": "haut-droite",
+   "miroir": true,
+   "images": 4,
+   "fichiers": [
+    "svg/personnages/avatar/avatar-09-naufrage/avatar-09-naufrage_dos_marche_1.svg",
+    "svg/personnages/avatar/avatar-09-naufrage/avatar-09-naufrage_dos_marche_2.svg",
+    "svg/personnages/avatar/avatar-09-naufrage/avatar-09-naufrage_dos_marche_3.svg",
+    "svg/personnages/avatar/avatar-09-naufrage/avatar-09-naufrage_dos_marche_4.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": 170,
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "personnages/avatar/avatar-09-naufrage/avatar-09-naufrage_face_grelotter",
+   "rubrique": "personnages",
+   "sujet": "avatar-09-naufrage",
+   "vue": "face",
+   "pose": "grelotter",
+   "titre": "Avatar, exemple 9 (naufragé), de face, grelotter",
+   "regarde": "face",
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/avatar/avatar-09-naufrage/avatar-09-naufrage_face_grelotter_1.svg",
+    "svg/personnages/avatar/avatar-09-naufrage/avatar-09-naufrage_face_grelotter_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": 140,
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "personnages/avatar/avatar-09-naufrage/avatar-09-naufrage_face_lire",
+   "rubrique": "personnages",
+   "sujet": "avatar-09-naufrage",
+   "vue": "face",
+   "pose": "lire",
+   "titre": "Avatar, exemple 9 (naufragé), de face, lire",
+   "regarde": "face",
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/avatar/avatar-09-naufrage/avatar-09-naufrage_face_lire_1.svg",
+    "svg/personnages/avatar/avatar-09-naufrage/avatar-09-naufrage_face_lire_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    1400,
+    900
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "personnages/avatar/avatar-09-naufrage/avatar-09-naufrage_face_repos",
+   "rubrique": "personnages",
+   "sujet": "avatar-09-naufrage",
+   "vue": "face",
+   "pose": "repos",
+   "titre": "Avatar, exemple 9 (naufragé), de face, repos",
+   "regarde": "face",
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/avatar/avatar-09-naufrage/avatar-09-naufrage_face_repos_1.svg",
+    "svg/personnages/avatar/avatar-09-naufrage/avatar-09-naufrage_face_repos_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    900,
+    160
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "personnages/avatar/avatar-09-naufrage/avatar-09-naufrage_face_salut",
+   "rubrique": "personnages",
+   "sujet": "avatar-09-naufrage",
+   "vue": "face",
+   "pose": "salut",
+   "titre": "Avatar, exemple 9 (naufragé), de face, salut",
+   "regarde": "face",
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/avatar/avatar-09-naufrage/avatar-09-naufrage_face_salut_1.svg",
+    "svg/personnages/avatar/avatar-09-naufrage/avatar-09-naufrage_face_salut_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": 260,
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "personnages/avatar/avatar-09/avatar-09_avant_marche",
+   "rubrique": "personnages",
+   "sujet": "avatar-09",
+   "vue": "avant",
+   "pose": "marche",
+   "titre": "Avatar, exemple 9, trois quarts avant, marche",
+   "regarde": "bas-droite",
+   "miroir": true,
+   "images": 4,
+   "fichiers": [
+    "svg/personnages/avatar/avatar-09/avatar-09_avant_marche_1.svg",
+    "svg/personnages/avatar/avatar-09/avatar-09_avant_marche_2.svg",
+    "svg/personnages/avatar/avatar-09/avatar-09_avant_marche_3.svg",
+    "svg/personnages/avatar/avatar-09/avatar-09_avant_marche_4.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": 170,
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "personnages/avatar/avatar-09/avatar-09_avant_ramasser",
+   "rubrique": "personnages",
+   "sujet": "avatar-09",
+   "vue": "avant",
+   "pose": "ramasser",
+   "titre": "Avatar, exemple 9, trois quarts avant, ramasser",
+   "regarde": "bas-droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/avatar/avatar-09/avatar-09_avant_ramasser_1.svg",
+    "svg/personnages/avatar/avatar-09/avatar-09_avant_ramasser_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    500,
+    800
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "personnages/avatar/avatar-09/avatar-09_dos_marche",
+   "rubrique": "personnages",
+   "sujet": "avatar-09",
+   "vue": "dos",
+   "pose": "marche",
+   "titre": "Avatar, exemple 9, trois quarts dos, marche",
+   "regarde": "haut-droite",
+   "miroir": true,
+   "images": 4,
+   "fichiers": [
+    "svg/personnages/avatar/avatar-09/avatar-09_dos_marche_1.svg",
+    "svg/personnages/avatar/avatar-09/avatar-09_dos_marche_2.svg",
+    "svg/personnages/avatar/avatar-09/avatar-09_dos_marche_3.svg",
+    "svg/personnages/avatar/avatar-09/avatar-09_dos_marche_4.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": 170,
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "personnages/avatar/avatar-09/avatar-09_face_grelotter",
+   "rubrique": "personnages",
+   "sujet": "avatar-09",
+   "vue": "face",
+   "pose": "grelotter",
+   "titre": "Avatar, exemple 9, de face, grelotter",
+   "regarde": "face",
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/avatar/avatar-09/avatar-09_face_grelotter_1.svg",
+    "svg/personnages/avatar/avatar-09/avatar-09_face_grelotter_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": 140,
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "personnages/avatar/avatar-09/avatar-09_face_lire",
+   "rubrique": "personnages",
+   "sujet": "avatar-09",
+   "vue": "face",
+   "pose": "lire",
+   "titre": "Avatar, exemple 9, de face, lire",
+   "regarde": "face",
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/avatar/avatar-09/avatar-09_face_lire_1.svg",
+    "svg/personnages/avatar/avatar-09/avatar-09_face_lire_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    1400,
+    900
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "personnages/avatar/avatar-09/avatar-09_face_repos",
+   "rubrique": "personnages",
+   "sujet": "avatar-09",
+   "vue": "face",
+   "pose": "repos",
+   "titre": "Avatar, exemple 9, de face, repos",
+   "regarde": "face",
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/avatar/avatar-09/avatar-09_face_repos_1.svg",
+    "svg/personnages/avatar/avatar-09/avatar-09_face_repos_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    900,
+    160
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "personnages/avatar/avatar-09/avatar-09_face_salut",
+   "rubrique": "personnages",
+   "sujet": "avatar-09",
+   "vue": "face",
+   "pose": "salut",
+   "titre": "Avatar, exemple 9, de face, salut",
+   "regarde": "face",
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/avatar/avatar-09/avatar-09_face_salut_1.svg",
+    "svg/personnages/avatar/avatar-09/avatar-09_face_salut_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": 260,
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "personnages/avatar/avatar-10-naufrage/avatar-10-naufrage_avant_marche",
+   "rubrique": "personnages",
+   "sujet": "avatar-10-naufrage",
+   "vue": "avant",
+   "pose": "marche",
+   "titre": "Avatar, exemple 10 (naufragé), trois quarts avant, marche",
+   "regarde": "bas-droite",
+   "miroir": true,
+   "images": 4,
+   "fichiers": [
+    "svg/personnages/avatar/avatar-10-naufrage/avatar-10-naufrage_avant_marche_1.svg",
+    "svg/personnages/avatar/avatar-10-naufrage/avatar-10-naufrage_avant_marche_2.svg",
+    "svg/personnages/avatar/avatar-10-naufrage/avatar-10-naufrage_avant_marche_3.svg",
+    "svg/personnages/avatar/avatar-10-naufrage/avatar-10-naufrage_avant_marche_4.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": 170,
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "personnages/avatar/avatar-10-naufrage/avatar-10-naufrage_avant_ramasser",
+   "rubrique": "personnages",
+   "sujet": "avatar-10-naufrage",
+   "vue": "avant",
+   "pose": "ramasser",
+   "titre": "Avatar, exemple 10 (naufragé), trois quarts avant, ramasser",
+   "regarde": "bas-droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/avatar/avatar-10-naufrage/avatar-10-naufrage_avant_ramasser_1.svg",
+    "svg/personnages/avatar/avatar-10-naufrage/avatar-10-naufrage_avant_ramasser_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    500,
+    800
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "personnages/avatar/avatar-10-naufrage/avatar-10-naufrage_dos_marche",
+   "rubrique": "personnages",
+   "sujet": "avatar-10-naufrage",
+   "vue": "dos",
+   "pose": "marche",
+   "titre": "Avatar, exemple 10 (naufragé), trois quarts dos, marche",
+   "regarde": "haut-droite",
+   "miroir": true,
+   "images": 4,
+   "fichiers": [
+    "svg/personnages/avatar/avatar-10-naufrage/avatar-10-naufrage_dos_marche_1.svg",
+    "svg/personnages/avatar/avatar-10-naufrage/avatar-10-naufrage_dos_marche_2.svg",
+    "svg/personnages/avatar/avatar-10-naufrage/avatar-10-naufrage_dos_marche_3.svg",
+    "svg/personnages/avatar/avatar-10-naufrage/avatar-10-naufrage_dos_marche_4.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": 170,
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "personnages/avatar/avatar-10-naufrage/avatar-10-naufrage_face_grelotter",
+   "rubrique": "personnages",
+   "sujet": "avatar-10-naufrage",
+   "vue": "face",
+   "pose": "grelotter",
+   "titre": "Avatar, exemple 10 (naufragé), de face, grelotter",
+   "regarde": "face",
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/avatar/avatar-10-naufrage/avatar-10-naufrage_face_grelotter_1.svg",
+    "svg/personnages/avatar/avatar-10-naufrage/avatar-10-naufrage_face_grelotter_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": 140,
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "personnages/avatar/avatar-10-naufrage/avatar-10-naufrage_face_lire",
+   "rubrique": "personnages",
+   "sujet": "avatar-10-naufrage",
+   "vue": "face",
+   "pose": "lire",
+   "titre": "Avatar, exemple 10 (naufragé), de face, lire",
+   "regarde": "face",
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/avatar/avatar-10-naufrage/avatar-10-naufrage_face_lire_1.svg",
+    "svg/personnages/avatar/avatar-10-naufrage/avatar-10-naufrage_face_lire_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    1400,
+    900
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "personnages/avatar/avatar-10-naufrage/avatar-10-naufrage_face_repos",
+   "rubrique": "personnages",
+   "sujet": "avatar-10-naufrage",
+   "vue": "face",
+   "pose": "repos",
+   "titre": "Avatar, exemple 10 (naufragé), de face, repos",
+   "regarde": "face",
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/avatar/avatar-10-naufrage/avatar-10-naufrage_face_repos_1.svg",
+    "svg/personnages/avatar/avatar-10-naufrage/avatar-10-naufrage_face_repos_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    900,
+    160
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "personnages/avatar/avatar-10-naufrage/avatar-10-naufrage_face_salut",
+   "rubrique": "personnages",
+   "sujet": "avatar-10-naufrage",
+   "vue": "face",
+   "pose": "salut",
+   "titre": "Avatar, exemple 10 (naufragé), de face, salut",
+   "regarde": "face",
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/avatar/avatar-10-naufrage/avatar-10-naufrage_face_salut_1.svg",
+    "svg/personnages/avatar/avatar-10-naufrage/avatar-10-naufrage_face_salut_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": 260,
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "personnages/avatar/avatar-10/avatar-10_avant_marche",
+   "rubrique": "personnages",
+   "sujet": "avatar-10",
+   "vue": "avant",
+   "pose": "marche",
+   "titre": "Avatar, exemple 10, trois quarts avant, marche",
+   "regarde": "bas-droite",
+   "miroir": true,
+   "images": 4,
+   "fichiers": [
+    "svg/personnages/avatar/avatar-10/avatar-10_avant_marche_1.svg",
+    "svg/personnages/avatar/avatar-10/avatar-10_avant_marche_2.svg",
+    "svg/personnages/avatar/avatar-10/avatar-10_avant_marche_3.svg",
+    "svg/personnages/avatar/avatar-10/avatar-10_avant_marche_4.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": 170,
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "personnages/avatar/avatar-10/avatar-10_avant_ramasser",
+   "rubrique": "personnages",
+   "sujet": "avatar-10",
+   "vue": "avant",
+   "pose": "ramasser",
+   "titre": "Avatar, exemple 10, trois quarts avant, ramasser",
+   "regarde": "bas-droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/avatar/avatar-10/avatar-10_avant_ramasser_1.svg",
+    "svg/personnages/avatar/avatar-10/avatar-10_avant_ramasser_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    500,
+    800
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "personnages/avatar/avatar-10/avatar-10_dos_marche",
+   "rubrique": "personnages",
+   "sujet": "avatar-10",
+   "vue": "dos",
+   "pose": "marche",
+   "titre": "Avatar, exemple 10, trois quarts dos, marche",
+   "regarde": "haut-droite",
+   "miroir": true,
+   "images": 4,
+   "fichiers": [
+    "svg/personnages/avatar/avatar-10/avatar-10_dos_marche_1.svg",
+    "svg/personnages/avatar/avatar-10/avatar-10_dos_marche_2.svg",
+    "svg/personnages/avatar/avatar-10/avatar-10_dos_marche_3.svg",
+    "svg/personnages/avatar/avatar-10/avatar-10_dos_marche_4.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": 170,
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "personnages/avatar/avatar-10/avatar-10_face_grelotter",
+   "rubrique": "personnages",
+   "sujet": "avatar-10",
+   "vue": "face",
+   "pose": "grelotter",
+   "titre": "Avatar, exemple 10, de face, grelotter",
+   "regarde": "face",
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/avatar/avatar-10/avatar-10_face_grelotter_1.svg",
+    "svg/personnages/avatar/avatar-10/avatar-10_face_grelotter_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": 140,
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "personnages/avatar/avatar-10/avatar-10_face_lire",
+   "rubrique": "personnages",
+   "sujet": "avatar-10",
+   "vue": "face",
+   "pose": "lire",
+   "titre": "Avatar, exemple 10, de face, lire",
+   "regarde": "face",
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/avatar/avatar-10/avatar-10_face_lire_1.svg",
+    "svg/personnages/avatar/avatar-10/avatar-10_face_lire_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    1400,
+    900
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "personnages/avatar/avatar-10/avatar-10_face_repos",
+   "rubrique": "personnages",
+   "sujet": "avatar-10",
+   "vue": "face",
+   "pose": "repos",
+   "titre": "Avatar, exemple 10, de face, repos",
+   "regarde": "face",
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/avatar/avatar-10/avatar-10_face_repos_1.svg",
+    "svg/personnages/avatar/avatar-10/avatar-10_face_repos_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    900,
+    160
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "personnages/avatar/avatar-10/avatar-10_face_salut",
+   "rubrique": "personnages",
+   "sujet": "avatar-10",
+   "vue": "face",
+   "pose": "salut",
+   "titre": "Avatar, exemple 10, de face, salut",
+   "regarde": "face",
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/avatar/avatar-10/avatar-10_face_salut_1.svg",
+    "svg/personnages/avatar/avatar-10/avatar-10_face_salut_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": 260,
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "personnages/avatar/avatar-11-naufrage/avatar-11-naufrage_avant_marche",
+   "rubrique": "personnages",
+   "sujet": "avatar-11-naufrage",
+   "vue": "avant",
+   "pose": "marche",
+   "titre": "Avatar, exemple 11 (naufragé), trois quarts avant, marche",
+   "regarde": "bas-droite",
+   "miroir": true,
+   "images": 4,
+   "fichiers": [
+    "svg/personnages/avatar/avatar-11-naufrage/avatar-11-naufrage_avant_marche_1.svg",
+    "svg/personnages/avatar/avatar-11-naufrage/avatar-11-naufrage_avant_marche_2.svg",
+    "svg/personnages/avatar/avatar-11-naufrage/avatar-11-naufrage_avant_marche_3.svg",
+    "svg/personnages/avatar/avatar-11-naufrage/avatar-11-naufrage_avant_marche_4.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": 170,
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "personnages/avatar/avatar-11-naufrage/avatar-11-naufrage_avant_ramasser",
+   "rubrique": "personnages",
+   "sujet": "avatar-11-naufrage",
+   "vue": "avant",
+   "pose": "ramasser",
+   "titre": "Avatar, exemple 11 (naufragé), trois quarts avant, ramasser",
+   "regarde": "bas-droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/avatar/avatar-11-naufrage/avatar-11-naufrage_avant_ramasser_1.svg",
+    "svg/personnages/avatar/avatar-11-naufrage/avatar-11-naufrage_avant_ramasser_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    500,
+    800
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "personnages/avatar/avatar-11-naufrage/avatar-11-naufrage_dos_marche",
+   "rubrique": "personnages",
+   "sujet": "avatar-11-naufrage",
+   "vue": "dos",
+   "pose": "marche",
+   "titre": "Avatar, exemple 11 (naufragé), trois quarts dos, marche",
+   "regarde": "haut-droite",
+   "miroir": true,
+   "images": 4,
+   "fichiers": [
+    "svg/personnages/avatar/avatar-11-naufrage/avatar-11-naufrage_dos_marche_1.svg",
+    "svg/personnages/avatar/avatar-11-naufrage/avatar-11-naufrage_dos_marche_2.svg",
+    "svg/personnages/avatar/avatar-11-naufrage/avatar-11-naufrage_dos_marche_3.svg",
+    "svg/personnages/avatar/avatar-11-naufrage/avatar-11-naufrage_dos_marche_4.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": 170,
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "personnages/avatar/avatar-11-naufrage/avatar-11-naufrage_face_grelotter",
+   "rubrique": "personnages",
+   "sujet": "avatar-11-naufrage",
+   "vue": "face",
+   "pose": "grelotter",
+   "titre": "Avatar, exemple 11 (naufragé), de face, grelotter",
+   "regarde": "face",
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/avatar/avatar-11-naufrage/avatar-11-naufrage_face_grelotter_1.svg",
+    "svg/personnages/avatar/avatar-11-naufrage/avatar-11-naufrage_face_grelotter_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": 140,
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "personnages/avatar/avatar-11-naufrage/avatar-11-naufrage_face_lire",
+   "rubrique": "personnages",
+   "sujet": "avatar-11-naufrage",
+   "vue": "face",
+   "pose": "lire",
+   "titre": "Avatar, exemple 11 (naufragé), de face, lire",
+   "regarde": "face",
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/avatar/avatar-11-naufrage/avatar-11-naufrage_face_lire_1.svg",
+    "svg/personnages/avatar/avatar-11-naufrage/avatar-11-naufrage_face_lire_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    1400,
+    900
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "personnages/avatar/avatar-11-naufrage/avatar-11-naufrage_face_repos",
+   "rubrique": "personnages",
+   "sujet": "avatar-11-naufrage",
+   "vue": "face",
+   "pose": "repos",
+   "titre": "Avatar, exemple 11 (naufragé), de face, repos",
+   "regarde": "face",
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/avatar/avatar-11-naufrage/avatar-11-naufrage_face_repos_1.svg",
+    "svg/personnages/avatar/avatar-11-naufrage/avatar-11-naufrage_face_repos_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    900,
+    160
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "personnages/avatar/avatar-11-naufrage/avatar-11-naufrage_face_salut",
+   "rubrique": "personnages",
+   "sujet": "avatar-11-naufrage",
+   "vue": "face",
+   "pose": "salut",
+   "titre": "Avatar, exemple 11 (naufragé), de face, salut",
+   "regarde": "face",
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/avatar/avatar-11-naufrage/avatar-11-naufrage_face_salut_1.svg",
+    "svg/personnages/avatar/avatar-11-naufrage/avatar-11-naufrage_face_salut_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": 260,
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "personnages/avatar/avatar-11/avatar-11_avant_marche",
+   "rubrique": "personnages",
+   "sujet": "avatar-11",
+   "vue": "avant",
+   "pose": "marche",
+   "titre": "Avatar, exemple 11, trois quarts avant, marche",
+   "regarde": "bas-droite",
+   "miroir": true,
+   "images": 4,
+   "fichiers": [
+    "svg/personnages/avatar/avatar-11/avatar-11_avant_marche_1.svg",
+    "svg/personnages/avatar/avatar-11/avatar-11_avant_marche_2.svg",
+    "svg/personnages/avatar/avatar-11/avatar-11_avant_marche_3.svg",
+    "svg/personnages/avatar/avatar-11/avatar-11_avant_marche_4.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": 170,
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "personnages/avatar/avatar-11/avatar-11_avant_ramasser",
+   "rubrique": "personnages",
+   "sujet": "avatar-11",
+   "vue": "avant",
+   "pose": "ramasser",
+   "titre": "Avatar, exemple 11, trois quarts avant, ramasser",
+   "regarde": "bas-droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/avatar/avatar-11/avatar-11_avant_ramasser_1.svg",
+    "svg/personnages/avatar/avatar-11/avatar-11_avant_ramasser_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    500,
+    800
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "personnages/avatar/avatar-11/avatar-11_dos_marche",
+   "rubrique": "personnages",
+   "sujet": "avatar-11",
+   "vue": "dos",
+   "pose": "marche",
+   "titre": "Avatar, exemple 11, trois quarts dos, marche",
+   "regarde": "haut-droite",
+   "miroir": true,
+   "images": 4,
+   "fichiers": [
+    "svg/personnages/avatar/avatar-11/avatar-11_dos_marche_1.svg",
+    "svg/personnages/avatar/avatar-11/avatar-11_dos_marche_2.svg",
+    "svg/personnages/avatar/avatar-11/avatar-11_dos_marche_3.svg",
+    "svg/personnages/avatar/avatar-11/avatar-11_dos_marche_4.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": 170,
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "personnages/avatar/avatar-11/avatar-11_face_grelotter",
+   "rubrique": "personnages",
+   "sujet": "avatar-11",
+   "vue": "face",
+   "pose": "grelotter",
+   "titre": "Avatar, exemple 11, de face, grelotter",
+   "regarde": "face",
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/avatar/avatar-11/avatar-11_face_grelotter_1.svg",
+    "svg/personnages/avatar/avatar-11/avatar-11_face_grelotter_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": 140,
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "personnages/avatar/avatar-11/avatar-11_face_lire",
+   "rubrique": "personnages",
+   "sujet": "avatar-11",
+   "vue": "face",
+   "pose": "lire",
+   "titre": "Avatar, exemple 11, de face, lire",
+   "regarde": "face",
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/avatar/avatar-11/avatar-11_face_lire_1.svg",
+    "svg/personnages/avatar/avatar-11/avatar-11_face_lire_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    1400,
+    900
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "personnages/avatar/avatar-11/avatar-11_face_repos",
+   "rubrique": "personnages",
+   "sujet": "avatar-11",
+   "vue": "face",
+   "pose": "repos",
+   "titre": "Avatar, exemple 11, de face, repos",
+   "regarde": "face",
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/avatar/avatar-11/avatar-11_face_repos_1.svg",
+    "svg/personnages/avatar/avatar-11/avatar-11_face_repos_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    900,
+    160
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "personnages/avatar/avatar-11/avatar-11_face_salut",
+   "rubrique": "personnages",
+   "sujet": "avatar-11",
+   "vue": "face",
+   "pose": "salut",
+   "titre": "Avatar, exemple 11, de face, salut",
+   "regarde": "face",
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/avatar/avatar-11/avatar-11_face_salut_1.svg",
+    "svg/personnages/avatar/avatar-11/avatar-11_face_salut_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": 260,
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "personnages/avatar/avatar-12-naufrage/avatar-12-naufrage_avant_marche",
+   "rubrique": "personnages",
+   "sujet": "avatar-12-naufrage",
+   "vue": "avant",
+   "pose": "marche",
+   "titre": "Avatar, exemple 12 (naufragé), trois quarts avant, marche",
+   "regarde": "bas-droite",
+   "miroir": true,
+   "images": 4,
+   "fichiers": [
+    "svg/personnages/avatar/avatar-12-naufrage/avatar-12-naufrage_avant_marche_1.svg",
+    "svg/personnages/avatar/avatar-12-naufrage/avatar-12-naufrage_avant_marche_2.svg",
+    "svg/personnages/avatar/avatar-12-naufrage/avatar-12-naufrage_avant_marche_3.svg",
+    "svg/personnages/avatar/avatar-12-naufrage/avatar-12-naufrage_avant_marche_4.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": 170,
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "personnages/avatar/avatar-12-naufrage/avatar-12-naufrage_avant_ramasser",
+   "rubrique": "personnages",
+   "sujet": "avatar-12-naufrage",
+   "vue": "avant",
+   "pose": "ramasser",
+   "titre": "Avatar, exemple 12 (naufragé), trois quarts avant, ramasser",
+   "regarde": "bas-droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/avatar/avatar-12-naufrage/avatar-12-naufrage_avant_ramasser_1.svg",
+    "svg/personnages/avatar/avatar-12-naufrage/avatar-12-naufrage_avant_ramasser_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    500,
+    800
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "personnages/avatar/avatar-12-naufrage/avatar-12-naufrage_dos_marche",
+   "rubrique": "personnages",
+   "sujet": "avatar-12-naufrage",
+   "vue": "dos",
+   "pose": "marche",
+   "titre": "Avatar, exemple 12 (naufragé), trois quarts dos, marche",
+   "regarde": "haut-droite",
+   "miroir": true,
+   "images": 4,
+   "fichiers": [
+    "svg/personnages/avatar/avatar-12-naufrage/avatar-12-naufrage_dos_marche_1.svg",
+    "svg/personnages/avatar/avatar-12-naufrage/avatar-12-naufrage_dos_marche_2.svg",
+    "svg/personnages/avatar/avatar-12-naufrage/avatar-12-naufrage_dos_marche_3.svg",
+    "svg/personnages/avatar/avatar-12-naufrage/avatar-12-naufrage_dos_marche_4.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": 170,
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "personnages/avatar/avatar-12-naufrage/avatar-12-naufrage_face_grelotter",
+   "rubrique": "personnages",
+   "sujet": "avatar-12-naufrage",
+   "vue": "face",
+   "pose": "grelotter",
+   "titre": "Avatar, exemple 12 (naufragé), de face, grelotter",
+   "regarde": "face",
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/avatar/avatar-12-naufrage/avatar-12-naufrage_face_grelotter_1.svg",
+    "svg/personnages/avatar/avatar-12-naufrage/avatar-12-naufrage_face_grelotter_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": 140,
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "personnages/avatar/avatar-12-naufrage/avatar-12-naufrage_face_lire",
+   "rubrique": "personnages",
+   "sujet": "avatar-12-naufrage",
+   "vue": "face",
+   "pose": "lire",
+   "titre": "Avatar, exemple 12 (naufragé), de face, lire",
+   "regarde": "face",
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/avatar/avatar-12-naufrage/avatar-12-naufrage_face_lire_1.svg",
+    "svg/personnages/avatar/avatar-12-naufrage/avatar-12-naufrage_face_lire_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    1400,
+    900
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "personnages/avatar/avatar-12-naufrage/avatar-12-naufrage_face_repos",
+   "rubrique": "personnages",
+   "sujet": "avatar-12-naufrage",
+   "vue": "face",
+   "pose": "repos",
+   "titre": "Avatar, exemple 12 (naufragé), de face, repos",
+   "regarde": "face",
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/avatar/avatar-12-naufrage/avatar-12-naufrage_face_repos_1.svg",
+    "svg/personnages/avatar/avatar-12-naufrage/avatar-12-naufrage_face_repos_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    900,
+    160
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "personnages/avatar/avatar-12-naufrage/avatar-12-naufrage_face_salut",
+   "rubrique": "personnages",
+   "sujet": "avatar-12-naufrage",
+   "vue": "face",
+   "pose": "salut",
+   "titre": "Avatar, exemple 12 (naufragé), de face, salut",
+   "regarde": "face",
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/avatar/avatar-12-naufrage/avatar-12-naufrage_face_salut_1.svg",
+    "svg/personnages/avatar/avatar-12-naufrage/avatar-12-naufrage_face_salut_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": 260,
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "personnages/avatar/avatar-12/avatar-12_avant_marche",
+   "rubrique": "personnages",
+   "sujet": "avatar-12",
+   "vue": "avant",
+   "pose": "marche",
+   "titre": "Avatar, exemple 12, trois quarts avant, marche",
+   "regarde": "bas-droite",
+   "miroir": true,
+   "images": 4,
+   "fichiers": [
+    "svg/personnages/avatar/avatar-12/avatar-12_avant_marche_1.svg",
+    "svg/personnages/avatar/avatar-12/avatar-12_avant_marche_2.svg",
+    "svg/personnages/avatar/avatar-12/avatar-12_avant_marche_3.svg",
+    "svg/personnages/avatar/avatar-12/avatar-12_avant_marche_4.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": 170,
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "personnages/avatar/avatar-12/avatar-12_avant_ramasser",
+   "rubrique": "personnages",
+   "sujet": "avatar-12",
+   "vue": "avant",
+   "pose": "ramasser",
+   "titre": "Avatar, exemple 12, trois quarts avant, ramasser",
+   "regarde": "bas-droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/avatar/avatar-12/avatar-12_avant_ramasser_1.svg",
+    "svg/personnages/avatar/avatar-12/avatar-12_avant_ramasser_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    500,
+    800
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "personnages/avatar/avatar-12/avatar-12_dos_marche",
+   "rubrique": "personnages",
+   "sujet": "avatar-12",
+   "vue": "dos",
+   "pose": "marche",
+   "titre": "Avatar, exemple 12, trois quarts dos, marche",
+   "regarde": "haut-droite",
+   "miroir": true,
+   "images": 4,
+   "fichiers": [
+    "svg/personnages/avatar/avatar-12/avatar-12_dos_marche_1.svg",
+    "svg/personnages/avatar/avatar-12/avatar-12_dos_marche_2.svg",
+    "svg/personnages/avatar/avatar-12/avatar-12_dos_marche_3.svg",
+    "svg/personnages/avatar/avatar-12/avatar-12_dos_marche_4.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": 170,
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "personnages/avatar/avatar-12/avatar-12_face_grelotter",
+   "rubrique": "personnages",
+   "sujet": "avatar-12",
+   "vue": "face",
+   "pose": "grelotter",
+   "titre": "Avatar, exemple 12, de face, grelotter",
+   "regarde": "face",
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/avatar/avatar-12/avatar-12_face_grelotter_1.svg",
+    "svg/personnages/avatar/avatar-12/avatar-12_face_grelotter_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": 140,
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "personnages/avatar/avatar-12/avatar-12_face_lire",
+   "rubrique": "personnages",
+   "sujet": "avatar-12",
+   "vue": "face",
+   "pose": "lire",
+   "titre": "Avatar, exemple 12, de face, lire",
+   "regarde": "face",
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/avatar/avatar-12/avatar-12_face_lire_1.svg",
+    "svg/personnages/avatar/avatar-12/avatar-12_face_lire_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    1400,
+    900
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "personnages/avatar/avatar-12/avatar-12_face_repos",
+   "rubrique": "personnages",
+   "sujet": "avatar-12",
+   "vue": "face",
+   "pose": "repos",
+   "titre": "Avatar, exemple 12, de face, repos",
+   "regarde": "face",
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/avatar/avatar-12/avatar-12_face_repos_1.svg",
+    "svg/personnages/avatar/avatar-12/avatar-12_face_repos_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    900,
+    160
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "personnages/avatar/avatar-12/avatar-12_face_salut",
+   "rubrique": "personnages",
+   "sujet": "avatar-12",
+   "vue": "face",
+   "pose": "salut",
+   "titre": "Avatar, exemple 12, de face, salut",
+   "regarde": "face",
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/avatar/avatar-12/avatar-12_face_salut_1.svg",
+    "svg/personnages/avatar/avatar-12/avatar-12_face_salut_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": 260,
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
    "id": "personnages/avatar/petit_format/avatar-01-naufrage/avatar-01-naufrage_avant_marche",
    "rubrique": "personnages",
    "sujet": "avatar-01-naufrage",
@@ -7346,6 +8762,2038 @@
    "fichiers": [
     "svg/personnages/avatar/petit_format/avatar-08/avatar-08_face_salut_1.svg",
     "svg/personnages/avatar/petit_format/avatar-08/avatar-08_face_salut_2.svg"
+   ],
+   "cadre": [
+    -23.75,
+    -62.5,
+    47.5,
+    66.25
+   ],
+   "ms_par_image": 260,
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "personnages/avatar/petit_format/avatar-09-naufrage/avatar-09-naufrage_avant_marche",
+   "rubrique": "personnages",
+   "sujet": "avatar-09-naufrage",
+   "vue": "avant",
+   "pose": "marche",
+   "titre": "Avatar, exemple 9 (naufragé), petit format, trois quarts avant, marche",
+   "regarde": "bas-droite",
+   "miroir": true,
+   "images": 4,
+   "fichiers": [
+    "svg/personnages/avatar/petit_format/avatar-09-naufrage/avatar-09-naufrage_avant_marche_1.svg",
+    "svg/personnages/avatar/petit_format/avatar-09-naufrage/avatar-09-naufrage_avant_marche_2.svg",
+    "svg/personnages/avatar/petit_format/avatar-09-naufrage/avatar-09-naufrage_avant_marche_3.svg",
+    "svg/personnages/avatar/petit_format/avatar-09-naufrage/avatar-09-naufrage_avant_marche_4.svg"
+   ],
+   "cadre": [
+    -23.75,
+    -62.5,
+    47.5,
+    66.25
+   ],
+   "ms_par_image": 160,
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "personnages/avatar/petit_format/avatar-09-naufrage/avatar-09-naufrage_avant_repos",
+   "rubrique": "personnages",
+   "sujet": "avatar-09-naufrage",
+   "vue": "avant",
+   "pose": "repos",
+   "titre": "Avatar, exemple 9 (naufragé), petit format, trois quarts avant, repos",
+   "regarde": "bas-droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/avatar/petit_format/avatar-09-naufrage/avatar-09-naufrage_avant_repos_1.svg",
+    "svg/personnages/avatar/petit_format/avatar-09-naufrage/avatar-09-naufrage_avant_repos_2.svg"
+   ],
+   "cadre": [
+    -23.75,
+    -62.5,
+    47.5,
+    66.25
+   ],
+   "ms_par_image": [
+    900,
+    160
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "personnages/avatar/petit_format/avatar-09-naufrage/avatar-09-naufrage_avant_salut",
+   "rubrique": "personnages",
+   "sujet": "avatar-09-naufrage",
+   "vue": "avant",
+   "pose": "salut",
+   "titre": "Avatar, exemple 9 (naufragé), petit format, trois quarts avant, salut",
+   "regarde": "bas-droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/avatar/petit_format/avatar-09-naufrage/avatar-09-naufrage_avant_salut_1.svg",
+    "svg/personnages/avatar/petit_format/avatar-09-naufrage/avatar-09-naufrage_avant_salut_2.svg"
+   ],
+   "cadre": [
+    -23.75,
+    -62.5,
+    47.5,
+    66.25
+   ],
+   "ms_par_image": 260,
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "personnages/avatar/petit_format/avatar-09-naufrage/avatar-09-naufrage_dos_marche",
+   "rubrique": "personnages",
+   "sujet": "avatar-09-naufrage",
+   "vue": "dos",
+   "pose": "marche",
+   "titre": "Avatar, exemple 9 (naufragé), petit format, trois quarts dos, marche",
+   "regarde": "haut-droite",
+   "miroir": true,
+   "images": 4,
+   "fichiers": [
+    "svg/personnages/avatar/petit_format/avatar-09-naufrage/avatar-09-naufrage_dos_marche_1.svg",
+    "svg/personnages/avatar/petit_format/avatar-09-naufrage/avatar-09-naufrage_dos_marche_2.svg",
+    "svg/personnages/avatar/petit_format/avatar-09-naufrage/avatar-09-naufrage_dos_marche_3.svg",
+    "svg/personnages/avatar/petit_format/avatar-09-naufrage/avatar-09-naufrage_dos_marche_4.svg"
+   ],
+   "cadre": [
+    -23.75,
+    -62.5,
+    47.5,
+    66.25
+   ],
+   "ms_par_image": 160,
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "personnages/avatar/petit_format/avatar-09-naufrage/avatar-09-naufrage_dos_repos",
+   "rubrique": "personnages",
+   "sujet": "avatar-09-naufrage",
+   "vue": "dos",
+   "pose": "repos",
+   "titre": "Avatar, exemple 9 (naufragé), petit format, trois quarts dos, repos",
+   "regarde": "haut-droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/avatar/petit_format/avatar-09-naufrage/avatar-09-naufrage_dos_repos_1.svg",
+    "svg/personnages/avatar/petit_format/avatar-09-naufrage/avatar-09-naufrage_dos_repos_2.svg"
+   ],
+   "cadre": [
+    -23.75,
+    -62.5,
+    47.5,
+    66.25
+   ],
+   "ms_par_image": [
+    900,
+    160
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "personnages/avatar/petit_format/avatar-09-naufrage/avatar-09-naufrage_dos_salut",
+   "rubrique": "personnages",
+   "sujet": "avatar-09-naufrage",
+   "vue": "dos",
+   "pose": "salut",
+   "titre": "Avatar, exemple 9 (naufragé), petit format, trois quarts dos, salut",
+   "regarde": "haut-droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/avatar/petit_format/avatar-09-naufrage/avatar-09-naufrage_dos_salut_1.svg",
+    "svg/personnages/avatar/petit_format/avatar-09-naufrage/avatar-09-naufrage_dos_salut_2.svg"
+   ],
+   "cadre": [
+    -23.75,
+    -62.5,
+    47.5,
+    66.25
+   ],
+   "ms_par_image": 260,
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "personnages/avatar/petit_format/avatar-09-naufrage/avatar-09-naufrage_face_marche",
+   "rubrique": "personnages",
+   "sujet": "avatar-09-naufrage",
+   "vue": "face",
+   "pose": "marche",
+   "titre": "Avatar, exemple 9 (naufragé), petit format, de face, marche",
+   "regarde": "face",
+   "images": 4,
+   "fichiers": [
+    "svg/personnages/avatar/petit_format/avatar-09-naufrage/avatar-09-naufrage_face_marche_1.svg",
+    "svg/personnages/avatar/petit_format/avatar-09-naufrage/avatar-09-naufrage_face_marche_2.svg",
+    "svg/personnages/avatar/petit_format/avatar-09-naufrage/avatar-09-naufrage_face_marche_3.svg",
+    "svg/personnages/avatar/petit_format/avatar-09-naufrage/avatar-09-naufrage_face_marche_4.svg"
+   ],
+   "cadre": [
+    -23.75,
+    -62.5,
+    47.5,
+    66.25
+   ],
+   "ms_par_image": 160,
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "personnages/avatar/petit_format/avatar-09-naufrage/avatar-09-naufrage_face_repos",
+   "rubrique": "personnages",
+   "sujet": "avatar-09-naufrage",
+   "vue": "face",
+   "pose": "repos",
+   "titre": "Avatar, exemple 9 (naufragé), petit format, de face, repos",
+   "regarde": "face",
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/avatar/petit_format/avatar-09-naufrage/avatar-09-naufrage_face_repos_1.svg",
+    "svg/personnages/avatar/petit_format/avatar-09-naufrage/avatar-09-naufrage_face_repos_2.svg"
+   ],
+   "cadre": [
+    -23.75,
+    -62.5,
+    47.5,
+    66.25
+   ],
+   "ms_par_image": [
+    900,
+    160
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "personnages/avatar/petit_format/avatar-09-naufrage/avatar-09-naufrage_face_salut",
+   "rubrique": "personnages",
+   "sujet": "avatar-09-naufrage",
+   "vue": "face",
+   "pose": "salut",
+   "titre": "Avatar, exemple 9 (naufragé), petit format, de face, salut",
+   "regarde": "face",
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/avatar/petit_format/avatar-09-naufrage/avatar-09-naufrage_face_salut_1.svg",
+    "svg/personnages/avatar/petit_format/avatar-09-naufrage/avatar-09-naufrage_face_salut_2.svg"
+   ],
+   "cadre": [
+    -23.75,
+    -62.5,
+    47.5,
+    66.25
+   ],
+   "ms_par_image": 260,
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "personnages/avatar/petit_format/avatar-09/avatar-09_avant_lanterne",
+   "rubrique": "personnages",
+   "sujet": "avatar-09",
+   "vue": "avant",
+   "pose": "lanterne",
+   "titre": "Avatar, exemple 9, petit format, trois quarts avant, lanterne",
+   "regarde": "bas-droite",
+   "miroir": true,
+   "images": 4,
+   "fichiers": [
+    "svg/personnages/avatar/petit_format/avatar-09/avatar-09_avant_lanterne_1.svg",
+    "svg/personnages/avatar/petit_format/avatar-09/avatar-09_avant_lanterne_2.svg",
+    "svg/personnages/avatar/petit_format/avatar-09/avatar-09_avant_lanterne_3.svg",
+    "svg/personnages/avatar/petit_format/avatar-09/avatar-09_avant_lanterne_4.svg"
+   ],
+   "cadre": [
+    -32.5,
+    -82.5,
+    70,
+    90
+   ],
+   "ms_par_image": 160,
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "personnages/avatar/petit_format/avatar-09/avatar-09_avant_marche",
+   "rubrique": "personnages",
+   "sujet": "avatar-09",
+   "vue": "avant",
+   "pose": "marche",
+   "titre": "Avatar, exemple 9, petit format, trois quarts avant, marche",
+   "regarde": "bas-droite",
+   "miroir": true,
+   "images": 4,
+   "fichiers": [
+    "svg/personnages/avatar/petit_format/avatar-09/avatar-09_avant_marche_1.svg",
+    "svg/personnages/avatar/petit_format/avatar-09/avatar-09_avant_marche_2.svg",
+    "svg/personnages/avatar/petit_format/avatar-09/avatar-09_avant_marche_3.svg",
+    "svg/personnages/avatar/petit_format/avatar-09/avatar-09_avant_marche_4.svg"
+   ],
+   "cadre": [
+    -23.75,
+    -62.5,
+    47.5,
+    66.25
+   ],
+   "ms_par_image": 160,
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "personnages/avatar/petit_format/avatar-09/avatar-09_avant_parapluie",
+   "rubrique": "personnages",
+   "sujet": "avatar-09",
+   "vue": "avant",
+   "pose": "parapluie",
+   "titre": "Avatar, exemple 9, petit format, trois quarts avant, parapluie",
+   "regarde": "bas-droite",
+   "miroir": true,
+   "images": 4,
+   "fichiers": [
+    "svg/personnages/avatar/petit_format/avatar-09/avatar-09_avant_parapluie_1.svg",
+    "svg/personnages/avatar/petit_format/avatar-09/avatar-09_avant_parapluie_2.svg",
+    "svg/personnages/avatar/petit_format/avatar-09/avatar-09_avant_parapluie_3.svg",
+    "svg/personnages/avatar/petit_format/avatar-09/avatar-09_avant_parapluie_4.svg"
+   ],
+   "cadre": [
+    -32.5,
+    -82.5,
+    70,
+    90
+   ],
+   "ms_par_image": 160,
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "personnages/avatar/petit_format/avatar-09/avatar-09_avant_repos",
+   "rubrique": "personnages",
+   "sujet": "avatar-09",
+   "vue": "avant",
+   "pose": "repos",
+   "titre": "Avatar, exemple 9, petit format, trois quarts avant, repos",
+   "regarde": "bas-droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/avatar/petit_format/avatar-09/avatar-09_avant_repos_1.svg",
+    "svg/personnages/avatar/petit_format/avatar-09/avatar-09_avant_repos_2.svg"
+   ],
+   "cadre": [
+    -23.75,
+    -62.5,
+    47.5,
+    66.25
+   ],
+   "ms_par_image": [
+    900,
+    160
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "personnages/avatar/petit_format/avatar-09/avatar-09_avant_salut",
+   "rubrique": "personnages",
+   "sujet": "avatar-09",
+   "vue": "avant",
+   "pose": "salut",
+   "titre": "Avatar, exemple 9, petit format, trois quarts avant, salut",
+   "regarde": "bas-droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/avatar/petit_format/avatar-09/avatar-09_avant_salut_1.svg",
+    "svg/personnages/avatar/petit_format/avatar-09/avatar-09_avant_salut_2.svg"
+   ],
+   "cadre": [
+    -23.75,
+    -62.5,
+    47.5,
+    66.25
+   ],
+   "ms_par_image": 260,
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "personnages/avatar/petit_format/avatar-09/avatar-09_dos_marche",
+   "rubrique": "personnages",
+   "sujet": "avatar-09",
+   "vue": "dos",
+   "pose": "marche",
+   "titre": "Avatar, exemple 9, petit format, trois quarts dos, marche",
+   "regarde": "haut-droite",
+   "miroir": true,
+   "images": 4,
+   "fichiers": [
+    "svg/personnages/avatar/petit_format/avatar-09/avatar-09_dos_marche_1.svg",
+    "svg/personnages/avatar/petit_format/avatar-09/avatar-09_dos_marche_2.svg",
+    "svg/personnages/avatar/petit_format/avatar-09/avatar-09_dos_marche_3.svg",
+    "svg/personnages/avatar/petit_format/avatar-09/avatar-09_dos_marche_4.svg"
+   ],
+   "cadre": [
+    -23.75,
+    -62.5,
+    47.5,
+    66.25
+   ],
+   "ms_par_image": 160,
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "personnages/avatar/petit_format/avatar-09/avatar-09_dos_repos",
+   "rubrique": "personnages",
+   "sujet": "avatar-09",
+   "vue": "dos",
+   "pose": "repos",
+   "titre": "Avatar, exemple 9, petit format, trois quarts dos, repos",
+   "regarde": "haut-droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/avatar/petit_format/avatar-09/avatar-09_dos_repos_1.svg",
+    "svg/personnages/avatar/petit_format/avatar-09/avatar-09_dos_repos_2.svg"
+   ],
+   "cadre": [
+    -23.75,
+    -62.5,
+    47.5,
+    66.25
+   ],
+   "ms_par_image": [
+    900,
+    160
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "personnages/avatar/petit_format/avatar-09/avatar-09_dos_salut",
+   "rubrique": "personnages",
+   "sujet": "avatar-09",
+   "vue": "dos",
+   "pose": "salut",
+   "titre": "Avatar, exemple 9, petit format, trois quarts dos, salut",
+   "regarde": "haut-droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/avatar/petit_format/avatar-09/avatar-09_dos_salut_1.svg",
+    "svg/personnages/avatar/petit_format/avatar-09/avatar-09_dos_salut_2.svg"
+   ],
+   "cadre": [
+    -23.75,
+    -62.5,
+    47.5,
+    66.25
+   ],
+   "ms_par_image": 260,
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "personnages/avatar/petit_format/avatar-09/avatar-09_face_marche",
+   "rubrique": "personnages",
+   "sujet": "avatar-09",
+   "vue": "face",
+   "pose": "marche",
+   "titre": "Avatar, exemple 9, petit format, de face, marche",
+   "regarde": "face",
+   "images": 4,
+   "fichiers": [
+    "svg/personnages/avatar/petit_format/avatar-09/avatar-09_face_marche_1.svg",
+    "svg/personnages/avatar/petit_format/avatar-09/avatar-09_face_marche_2.svg",
+    "svg/personnages/avatar/petit_format/avatar-09/avatar-09_face_marche_3.svg",
+    "svg/personnages/avatar/petit_format/avatar-09/avatar-09_face_marche_4.svg"
+   ],
+   "cadre": [
+    -23.75,
+    -62.5,
+    47.5,
+    66.25
+   ],
+   "ms_par_image": 160,
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "personnages/avatar/petit_format/avatar-09/avatar-09_face_repos",
+   "rubrique": "personnages",
+   "sujet": "avatar-09",
+   "vue": "face",
+   "pose": "repos",
+   "titre": "Avatar, exemple 9, petit format, de face, repos",
+   "regarde": "face",
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/avatar/petit_format/avatar-09/avatar-09_face_repos_1.svg",
+    "svg/personnages/avatar/petit_format/avatar-09/avatar-09_face_repos_2.svg"
+   ],
+   "cadre": [
+    -23.75,
+    -62.5,
+    47.5,
+    66.25
+   ],
+   "ms_par_image": [
+    900,
+    160
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "personnages/avatar/petit_format/avatar-09/avatar-09_face_salut",
+   "rubrique": "personnages",
+   "sujet": "avatar-09",
+   "vue": "face",
+   "pose": "salut",
+   "titre": "Avatar, exemple 9, petit format, de face, salut",
+   "regarde": "face",
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/avatar/petit_format/avatar-09/avatar-09_face_salut_1.svg",
+    "svg/personnages/avatar/petit_format/avatar-09/avatar-09_face_salut_2.svg"
+   ],
+   "cadre": [
+    -23.75,
+    -62.5,
+    47.5,
+    66.25
+   ],
+   "ms_par_image": 260,
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "personnages/avatar/petit_format/avatar-10-naufrage/avatar-10-naufrage_avant_marche",
+   "rubrique": "personnages",
+   "sujet": "avatar-10-naufrage",
+   "vue": "avant",
+   "pose": "marche",
+   "titre": "Avatar, exemple 10 (naufragé), petit format, trois quarts avant, marche",
+   "regarde": "bas-droite",
+   "miroir": true,
+   "images": 4,
+   "fichiers": [
+    "svg/personnages/avatar/petit_format/avatar-10-naufrage/avatar-10-naufrage_avant_marche_1.svg",
+    "svg/personnages/avatar/petit_format/avatar-10-naufrage/avatar-10-naufrage_avant_marche_2.svg",
+    "svg/personnages/avatar/petit_format/avatar-10-naufrage/avatar-10-naufrage_avant_marche_3.svg",
+    "svg/personnages/avatar/petit_format/avatar-10-naufrage/avatar-10-naufrage_avant_marche_4.svg"
+   ],
+   "cadre": [
+    -23.75,
+    -62.5,
+    47.5,
+    66.25
+   ],
+   "ms_par_image": 160,
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "personnages/avatar/petit_format/avatar-10-naufrage/avatar-10-naufrage_avant_repos",
+   "rubrique": "personnages",
+   "sujet": "avatar-10-naufrage",
+   "vue": "avant",
+   "pose": "repos",
+   "titre": "Avatar, exemple 10 (naufragé), petit format, trois quarts avant, repos",
+   "regarde": "bas-droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/avatar/petit_format/avatar-10-naufrage/avatar-10-naufrage_avant_repos_1.svg",
+    "svg/personnages/avatar/petit_format/avatar-10-naufrage/avatar-10-naufrage_avant_repos_2.svg"
+   ],
+   "cadre": [
+    -23.75,
+    -62.5,
+    47.5,
+    66.25
+   ],
+   "ms_par_image": [
+    900,
+    160
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "personnages/avatar/petit_format/avatar-10-naufrage/avatar-10-naufrage_avant_salut",
+   "rubrique": "personnages",
+   "sujet": "avatar-10-naufrage",
+   "vue": "avant",
+   "pose": "salut",
+   "titre": "Avatar, exemple 10 (naufragé), petit format, trois quarts avant, salut",
+   "regarde": "bas-droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/avatar/petit_format/avatar-10-naufrage/avatar-10-naufrage_avant_salut_1.svg",
+    "svg/personnages/avatar/petit_format/avatar-10-naufrage/avatar-10-naufrage_avant_salut_2.svg"
+   ],
+   "cadre": [
+    -23.75,
+    -62.5,
+    47.5,
+    66.25
+   ],
+   "ms_par_image": 260,
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "personnages/avatar/petit_format/avatar-10-naufrage/avatar-10-naufrage_dos_marche",
+   "rubrique": "personnages",
+   "sujet": "avatar-10-naufrage",
+   "vue": "dos",
+   "pose": "marche",
+   "titre": "Avatar, exemple 10 (naufragé), petit format, trois quarts dos, marche",
+   "regarde": "haut-droite",
+   "miroir": true,
+   "images": 4,
+   "fichiers": [
+    "svg/personnages/avatar/petit_format/avatar-10-naufrage/avatar-10-naufrage_dos_marche_1.svg",
+    "svg/personnages/avatar/petit_format/avatar-10-naufrage/avatar-10-naufrage_dos_marche_2.svg",
+    "svg/personnages/avatar/petit_format/avatar-10-naufrage/avatar-10-naufrage_dos_marche_3.svg",
+    "svg/personnages/avatar/petit_format/avatar-10-naufrage/avatar-10-naufrage_dos_marche_4.svg"
+   ],
+   "cadre": [
+    -23.75,
+    -62.5,
+    47.5,
+    66.25
+   ],
+   "ms_par_image": 160,
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "personnages/avatar/petit_format/avatar-10-naufrage/avatar-10-naufrage_dos_repos",
+   "rubrique": "personnages",
+   "sujet": "avatar-10-naufrage",
+   "vue": "dos",
+   "pose": "repos",
+   "titre": "Avatar, exemple 10 (naufragé), petit format, trois quarts dos, repos",
+   "regarde": "haut-droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/avatar/petit_format/avatar-10-naufrage/avatar-10-naufrage_dos_repos_1.svg",
+    "svg/personnages/avatar/petit_format/avatar-10-naufrage/avatar-10-naufrage_dos_repos_2.svg"
+   ],
+   "cadre": [
+    -23.75,
+    -62.5,
+    47.5,
+    66.25
+   ],
+   "ms_par_image": [
+    900,
+    160
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "personnages/avatar/petit_format/avatar-10-naufrage/avatar-10-naufrage_dos_salut",
+   "rubrique": "personnages",
+   "sujet": "avatar-10-naufrage",
+   "vue": "dos",
+   "pose": "salut",
+   "titre": "Avatar, exemple 10 (naufragé), petit format, trois quarts dos, salut",
+   "regarde": "haut-droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/avatar/petit_format/avatar-10-naufrage/avatar-10-naufrage_dos_salut_1.svg",
+    "svg/personnages/avatar/petit_format/avatar-10-naufrage/avatar-10-naufrage_dos_salut_2.svg"
+   ],
+   "cadre": [
+    -23.75,
+    -62.5,
+    47.5,
+    66.25
+   ],
+   "ms_par_image": 260,
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "personnages/avatar/petit_format/avatar-10-naufrage/avatar-10-naufrage_face_marche",
+   "rubrique": "personnages",
+   "sujet": "avatar-10-naufrage",
+   "vue": "face",
+   "pose": "marche",
+   "titre": "Avatar, exemple 10 (naufragé), petit format, de face, marche",
+   "regarde": "face",
+   "images": 4,
+   "fichiers": [
+    "svg/personnages/avatar/petit_format/avatar-10-naufrage/avatar-10-naufrage_face_marche_1.svg",
+    "svg/personnages/avatar/petit_format/avatar-10-naufrage/avatar-10-naufrage_face_marche_2.svg",
+    "svg/personnages/avatar/petit_format/avatar-10-naufrage/avatar-10-naufrage_face_marche_3.svg",
+    "svg/personnages/avatar/petit_format/avatar-10-naufrage/avatar-10-naufrage_face_marche_4.svg"
+   ],
+   "cadre": [
+    -23.75,
+    -62.5,
+    47.5,
+    66.25
+   ],
+   "ms_par_image": 160,
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "personnages/avatar/petit_format/avatar-10-naufrage/avatar-10-naufrage_face_repos",
+   "rubrique": "personnages",
+   "sujet": "avatar-10-naufrage",
+   "vue": "face",
+   "pose": "repos",
+   "titre": "Avatar, exemple 10 (naufragé), petit format, de face, repos",
+   "regarde": "face",
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/avatar/petit_format/avatar-10-naufrage/avatar-10-naufrage_face_repos_1.svg",
+    "svg/personnages/avatar/petit_format/avatar-10-naufrage/avatar-10-naufrage_face_repos_2.svg"
+   ],
+   "cadre": [
+    -23.75,
+    -62.5,
+    47.5,
+    66.25
+   ],
+   "ms_par_image": [
+    900,
+    160
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "personnages/avatar/petit_format/avatar-10-naufrage/avatar-10-naufrage_face_salut",
+   "rubrique": "personnages",
+   "sujet": "avatar-10-naufrage",
+   "vue": "face",
+   "pose": "salut",
+   "titre": "Avatar, exemple 10 (naufragé), petit format, de face, salut",
+   "regarde": "face",
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/avatar/petit_format/avatar-10-naufrage/avatar-10-naufrage_face_salut_1.svg",
+    "svg/personnages/avatar/petit_format/avatar-10-naufrage/avatar-10-naufrage_face_salut_2.svg"
+   ],
+   "cadre": [
+    -23.75,
+    -62.5,
+    47.5,
+    66.25
+   ],
+   "ms_par_image": 260,
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "personnages/avatar/petit_format/avatar-10/avatar-10_avant_lanterne",
+   "rubrique": "personnages",
+   "sujet": "avatar-10",
+   "vue": "avant",
+   "pose": "lanterne",
+   "titre": "Avatar, exemple 10, petit format, trois quarts avant, lanterne",
+   "regarde": "bas-droite",
+   "miroir": true,
+   "images": 4,
+   "fichiers": [
+    "svg/personnages/avatar/petit_format/avatar-10/avatar-10_avant_lanterne_1.svg",
+    "svg/personnages/avatar/petit_format/avatar-10/avatar-10_avant_lanterne_2.svg",
+    "svg/personnages/avatar/petit_format/avatar-10/avatar-10_avant_lanterne_3.svg",
+    "svg/personnages/avatar/petit_format/avatar-10/avatar-10_avant_lanterne_4.svg"
+   ],
+   "cadre": [
+    -32.5,
+    -82.5,
+    70,
+    90
+   ],
+   "ms_par_image": 160,
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "personnages/avatar/petit_format/avatar-10/avatar-10_avant_marche",
+   "rubrique": "personnages",
+   "sujet": "avatar-10",
+   "vue": "avant",
+   "pose": "marche",
+   "titre": "Avatar, exemple 10, petit format, trois quarts avant, marche",
+   "regarde": "bas-droite",
+   "miroir": true,
+   "images": 4,
+   "fichiers": [
+    "svg/personnages/avatar/petit_format/avatar-10/avatar-10_avant_marche_1.svg",
+    "svg/personnages/avatar/petit_format/avatar-10/avatar-10_avant_marche_2.svg",
+    "svg/personnages/avatar/petit_format/avatar-10/avatar-10_avant_marche_3.svg",
+    "svg/personnages/avatar/petit_format/avatar-10/avatar-10_avant_marche_4.svg"
+   ],
+   "cadre": [
+    -23.75,
+    -62.5,
+    47.5,
+    66.25
+   ],
+   "ms_par_image": 160,
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "personnages/avatar/petit_format/avatar-10/avatar-10_avant_parapluie",
+   "rubrique": "personnages",
+   "sujet": "avatar-10",
+   "vue": "avant",
+   "pose": "parapluie",
+   "titre": "Avatar, exemple 10, petit format, trois quarts avant, parapluie",
+   "regarde": "bas-droite",
+   "miroir": true,
+   "images": 4,
+   "fichiers": [
+    "svg/personnages/avatar/petit_format/avatar-10/avatar-10_avant_parapluie_1.svg",
+    "svg/personnages/avatar/petit_format/avatar-10/avatar-10_avant_parapluie_2.svg",
+    "svg/personnages/avatar/petit_format/avatar-10/avatar-10_avant_parapluie_3.svg",
+    "svg/personnages/avatar/petit_format/avatar-10/avatar-10_avant_parapluie_4.svg"
+   ],
+   "cadre": [
+    -32.5,
+    -82.5,
+    70,
+    90
+   ],
+   "ms_par_image": 160,
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "personnages/avatar/petit_format/avatar-10/avatar-10_avant_repos",
+   "rubrique": "personnages",
+   "sujet": "avatar-10",
+   "vue": "avant",
+   "pose": "repos",
+   "titre": "Avatar, exemple 10, petit format, trois quarts avant, repos",
+   "regarde": "bas-droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/avatar/petit_format/avatar-10/avatar-10_avant_repos_1.svg",
+    "svg/personnages/avatar/petit_format/avatar-10/avatar-10_avant_repos_2.svg"
+   ],
+   "cadre": [
+    -23.75,
+    -62.5,
+    47.5,
+    66.25
+   ],
+   "ms_par_image": [
+    900,
+    160
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "personnages/avatar/petit_format/avatar-10/avatar-10_avant_salut",
+   "rubrique": "personnages",
+   "sujet": "avatar-10",
+   "vue": "avant",
+   "pose": "salut",
+   "titre": "Avatar, exemple 10, petit format, trois quarts avant, salut",
+   "regarde": "bas-droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/avatar/petit_format/avatar-10/avatar-10_avant_salut_1.svg",
+    "svg/personnages/avatar/petit_format/avatar-10/avatar-10_avant_salut_2.svg"
+   ],
+   "cadre": [
+    -23.75,
+    -62.5,
+    47.5,
+    66.25
+   ],
+   "ms_par_image": 260,
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "personnages/avatar/petit_format/avatar-10/avatar-10_dos_marche",
+   "rubrique": "personnages",
+   "sujet": "avatar-10",
+   "vue": "dos",
+   "pose": "marche",
+   "titre": "Avatar, exemple 10, petit format, trois quarts dos, marche",
+   "regarde": "haut-droite",
+   "miroir": true,
+   "images": 4,
+   "fichiers": [
+    "svg/personnages/avatar/petit_format/avatar-10/avatar-10_dos_marche_1.svg",
+    "svg/personnages/avatar/petit_format/avatar-10/avatar-10_dos_marche_2.svg",
+    "svg/personnages/avatar/petit_format/avatar-10/avatar-10_dos_marche_3.svg",
+    "svg/personnages/avatar/petit_format/avatar-10/avatar-10_dos_marche_4.svg"
+   ],
+   "cadre": [
+    -23.75,
+    -62.5,
+    47.5,
+    66.25
+   ],
+   "ms_par_image": 160,
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "personnages/avatar/petit_format/avatar-10/avatar-10_dos_repos",
+   "rubrique": "personnages",
+   "sujet": "avatar-10",
+   "vue": "dos",
+   "pose": "repos",
+   "titre": "Avatar, exemple 10, petit format, trois quarts dos, repos",
+   "regarde": "haut-droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/avatar/petit_format/avatar-10/avatar-10_dos_repos_1.svg",
+    "svg/personnages/avatar/petit_format/avatar-10/avatar-10_dos_repos_2.svg"
+   ],
+   "cadre": [
+    -23.75,
+    -62.5,
+    47.5,
+    66.25
+   ],
+   "ms_par_image": [
+    900,
+    160
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "personnages/avatar/petit_format/avatar-10/avatar-10_dos_salut",
+   "rubrique": "personnages",
+   "sujet": "avatar-10",
+   "vue": "dos",
+   "pose": "salut",
+   "titre": "Avatar, exemple 10, petit format, trois quarts dos, salut",
+   "regarde": "haut-droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/avatar/petit_format/avatar-10/avatar-10_dos_salut_1.svg",
+    "svg/personnages/avatar/petit_format/avatar-10/avatar-10_dos_salut_2.svg"
+   ],
+   "cadre": [
+    -23.75,
+    -62.5,
+    47.5,
+    66.25
+   ],
+   "ms_par_image": 260,
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "personnages/avatar/petit_format/avatar-10/avatar-10_face_marche",
+   "rubrique": "personnages",
+   "sujet": "avatar-10",
+   "vue": "face",
+   "pose": "marche",
+   "titre": "Avatar, exemple 10, petit format, de face, marche",
+   "regarde": "face",
+   "images": 4,
+   "fichiers": [
+    "svg/personnages/avatar/petit_format/avatar-10/avatar-10_face_marche_1.svg",
+    "svg/personnages/avatar/petit_format/avatar-10/avatar-10_face_marche_2.svg",
+    "svg/personnages/avatar/petit_format/avatar-10/avatar-10_face_marche_3.svg",
+    "svg/personnages/avatar/petit_format/avatar-10/avatar-10_face_marche_4.svg"
+   ],
+   "cadre": [
+    -23.75,
+    -62.5,
+    47.5,
+    66.25
+   ],
+   "ms_par_image": 160,
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "personnages/avatar/petit_format/avatar-10/avatar-10_face_repos",
+   "rubrique": "personnages",
+   "sujet": "avatar-10",
+   "vue": "face",
+   "pose": "repos",
+   "titre": "Avatar, exemple 10, petit format, de face, repos",
+   "regarde": "face",
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/avatar/petit_format/avatar-10/avatar-10_face_repos_1.svg",
+    "svg/personnages/avatar/petit_format/avatar-10/avatar-10_face_repos_2.svg"
+   ],
+   "cadre": [
+    -23.75,
+    -62.5,
+    47.5,
+    66.25
+   ],
+   "ms_par_image": [
+    900,
+    160
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "personnages/avatar/petit_format/avatar-10/avatar-10_face_salut",
+   "rubrique": "personnages",
+   "sujet": "avatar-10",
+   "vue": "face",
+   "pose": "salut",
+   "titre": "Avatar, exemple 10, petit format, de face, salut",
+   "regarde": "face",
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/avatar/petit_format/avatar-10/avatar-10_face_salut_1.svg",
+    "svg/personnages/avatar/petit_format/avatar-10/avatar-10_face_salut_2.svg"
+   ],
+   "cadre": [
+    -23.75,
+    -62.5,
+    47.5,
+    66.25
+   ],
+   "ms_par_image": 260,
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "personnages/avatar/petit_format/avatar-11-naufrage/avatar-11-naufrage_avant_marche",
+   "rubrique": "personnages",
+   "sujet": "avatar-11-naufrage",
+   "vue": "avant",
+   "pose": "marche",
+   "titre": "Avatar, exemple 11 (naufragé), petit format, trois quarts avant, marche",
+   "regarde": "bas-droite",
+   "miroir": true,
+   "images": 4,
+   "fichiers": [
+    "svg/personnages/avatar/petit_format/avatar-11-naufrage/avatar-11-naufrage_avant_marche_1.svg",
+    "svg/personnages/avatar/petit_format/avatar-11-naufrage/avatar-11-naufrage_avant_marche_2.svg",
+    "svg/personnages/avatar/petit_format/avatar-11-naufrage/avatar-11-naufrage_avant_marche_3.svg",
+    "svg/personnages/avatar/petit_format/avatar-11-naufrage/avatar-11-naufrage_avant_marche_4.svg"
+   ],
+   "cadre": [
+    -23.75,
+    -62.5,
+    47.5,
+    66.25
+   ],
+   "ms_par_image": 160,
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "personnages/avatar/petit_format/avatar-11-naufrage/avatar-11-naufrage_avant_repos",
+   "rubrique": "personnages",
+   "sujet": "avatar-11-naufrage",
+   "vue": "avant",
+   "pose": "repos",
+   "titre": "Avatar, exemple 11 (naufragé), petit format, trois quarts avant, repos",
+   "regarde": "bas-droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/avatar/petit_format/avatar-11-naufrage/avatar-11-naufrage_avant_repos_1.svg",
+    "svg/personnages/avatar/petit_format/avatar-11-naufrage/avatar-11-naufrage_avant_repos_2.svg"
+   ],
+   "cadre": [
+    -23.75,
+    -62.5,
+    47.5,
+    66.25
+   ],
+   "ms_par_image": [
+    900,
+    160
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "personnages/avatar/petit_format/avatar-11-naufrage/avatar-11-naufrage_avant_salut",
+   "rubrique": "personnages",
+   "sujet": "avatar-11-naufrage",
+   "vue": "avant",
+   "pose": "salut",
+   "titre": "Avatar, exemple 11 (naufragé), petit format, trois quarts avant, salut",
+   "regarde": "bas-droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/avatar/petit_format/avatar-11-naufrage/avatar-11-naufrage_avant_salut_1.svg",
+    "svg/personnages/avatar/petit_format/avatar-11-naufrage/avatar-11-naufrage_avant_salut_2.svg"
+   ],
+   "cadre": [
+    -23.75,
+    -62.5,
+    47.5,
+    66.25
+   ],
+   "ms_par_image": 260,
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "personnages/avatar/petit_format/avatar-11-naufrage/avatar-11-naufrage_dos_marche",
+   "rubrique": "personnages",
+   "sujet": "avatar-11-naufrage",
+   "vue": "dos",
+   "pose": "marche",
+   "titre": "Avatar, exemple 11 (naufragé), petit format, trois quarts dos, marche",
+   "regarde": "haut-droite",
+   "miroir": true,
+   "images": 4,
+   "fichiers": [
+    "svg/personnages/avatar/petit_format/avatar-11-naufrage/avatar-11-naufrage_dos_marche_1.svg",
+    "svg/personnages/avatar/petit_format/avatar-11-naufrage/avatar-11-naufrage_dos_marche_2.svg",
+    "svg/personnages/avatar/petit_format/avatar-11-naufrage/avatar-11-naufrage_dos_marche_3.svg",
+    "svg/personnages/avatar/petit_format/avatar-11-naufrage/avatar-11-naufrage_dos_marche_4.svg"
+   ],
+   "cadre": [
+    -23.75,
+    -62.5,
+    47.5,
+    66.25
+   ],
+   "ms_par_image": 160,
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "personnages/avatar/petit_format/avatar-11-naufrage/avatar-11-naufrage_dos_repos",
+   "rubrique": "personnages",
+   "sujet": "avatar-11-naufrage",
+   "vue": "dos",
+   "pose": "repos",
+   "titre": "Avatar, exemple 11 (naufragé), petit format, trois quarts dos, repos",
+   "regarde": "haut-droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/avatar/petit_format/avatar-11-naufrage/avatar-11-naufrage_dos_repos_1.svg",
+    "svg/personnages/avatar/petit_format/avatar-11-naufrage/avatar-11-naufrage_dos_repos_2.svg"
+   ],
+   "cadre": [
+    -23.75,
+    -62.5,
+    47.5,
+    66.25
+   ],
+   "ms_par_image": [
+    900,
+    160
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "personnages/avatar/petit_format/avatar-11-naufrage/avatar-11-naufrage_dos_salut",
+   "rubrique": "personnages",
+   "sujet": "avatar-11-naufrage",
+   "vue": "dos",
+   "pose": "salut",
+   "titre": "Avatar, exemple 11 (naufragé), petit format, trois quarts dos, salut",
+   "regarde": "haut-droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/avatar/petit_format/avatar-11-naufrage/avatar-11-naufrage_dos_salut_1.svg",
+    "svg/personnages/avatar/petit_format/avatar-11-naufrage/avatar-11-naufrage_dos_salut_2.svg"
+   ],
+   "cadre": [
+    -23.75,
+    -62.5,
+    47.5,
+    66.25
+   ],
+   "ms_par_image": 260,
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "personnages/avatar/petit_format/avatar-11-naufrage/avatar-11-naufrage_face_marche",
+   "rubrique": "personnages",
+   "sujet": "avatar-11-naufrage",
+   "vue": "face",
+   "pose": "marche",
+   "titre": "Avatar, exemple 11 (naufragé), petit format, de face, marche",
+   "regarde": "face",
+   "images": 4,
+   "fichiers": [
+    "svg/personnages/avatar/petit_format/avatar-11-naufrage/avatar-11-naufrage_face_marche_1.svg",
+    "svg/personnages/avatar/petit_format/avatar-11-naufrage/avatar-11-naufrage_face_marche_2.svg",
+    "svg/personnages/avatar/petit_format/avatar-11-naufrage/avatar-11-naufrage_face_marche_3.svg",
+    "svg/personnages/avatar/petit_format/avatar-11-naufrage/avatar-11-naufrage_face_marche_4.svg"
+   ],
+   "cadre": [
+    -23.75,
+    -62.5,
+    47.5,
+    66.25
+   ],
+   "ms_par_image": 160,
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "personnages/avatar/petit_format/avatar-11-naufrage/avatar-11-naufrage_face_repos",
+   "rubrique": "personnages",
+   "sujet": "avatar-11-naufrage",
+   "vue": "face",
+   "pose": "repos",
+   "titre": "Avatar, exemple 11 (naufragé), petit format, de face, repos",
+   "regarde": "face",
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/avatar/petit_format/avatar-11-naufrage/avatar-11-naufrage_face_repos_1.svg",
+    "svg/personnages/avatar/petit_format/avatar-11-naufrage/avatar-11-naufrage_face_repos_2.svg"
+   ],
+   "cadre": [
+    -23.75,
+    -62.5,
+    47.5,
+    66.25
+   ],
+   "ms_par_image": [
+    900,
+    160
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "personnages/avatar/petit_format/avatar-11-naufrage/avatar-11-naufrage_face_salut",
+   "rubrique": "personnages",
+   "sujet": "avatar-11-naufrage",
+   "vue": "face",
+   "pose": "salut",
+   "titre": "Avatar, exemple 11 (naufragé), petit format, de face, salut",
+   "regarde": "face",
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/avatar/petit_format/avatar-11-naufrage/avatar-11-naufrage_face_salut_1.svg",
+    "svg/personnages/avatar/petit_format/avatar-11-naufrage/avatar-11-naufrage_face_salut_2.svg"
+   ],
+   "cadre": [
+    -23.75,
+    -62.5,
+    47.5,
+    66.25
+   ],
+   "ms_par_image": 260,
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "personnages/avatar/petit_format/avatar-11/avatar-11_avant_lanterne",
+   "rubrique": "personnages",
+   "sujet": "avatar-11",
+   "vue": "avant",
+   "pose": "lanterne",
+   "titre": "Avatar, exemple 11, petit format, trois quarts avant, lanterne",
+   "regarde": "bas-droite",
+   "miroir": true,
+   "images": 4,
+   "fichiers": [
+    "svg/personnages/avatar/petit_format/avatar-11/avatar-11_avant_lanterne_1.svg",
+    "svg/personnages/avatar/petit_format/avatar-11/avatar-11_avant_lanterne_2.svg",
+    "svg/personnages/avatar/petit_format/avatar-11/avatar-11_avant_lanterne_3.svg",
+    "svg/personnages/avatar/petit_format/avatar-11/avatar-11_avant_lanterne_4.svg"
+   ],
+   "cadre": [
+    -32.5,
+    -82.5,
+    70,
+    90
+   ],
+   "ms_par_image": 160,
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "personnages/avatar/petit_format/avatar-11/avatar-11_avant_marche",
+   "rubrique": "personnages",
+   "sujet": "avatar-11",
+   "vue": "avant",
+   "pose": "marche",
+   "titre": "Avatar, exemple 11, petit format, trois quarts avant, marche",
+   "regarde": "bas-droite",
+   "miroir": true,
+   "images": 4,
+   "fichiers": [
+    "svg/personnages/avatar/petit_format/avatar-11/avatar-11_avant_marche_1.svg",
+    "svg/personnages/avatar/petit_format/avatar-11/avatar-11_avant_marche_2.svg",
+    "svg/personnages/avatar/petit_format/avatar-11/avatar-11_avant_marche_3.svg",
+    "svg/personnages/avatar/petit_format/avatar-11/avatar-11_avant_marche_4.svg"
+   ],
+   "cadre": [
+    -23.75,
+    -62.5,
+    47.5,
+    66.25
+   ],
+   "ms_par_image": 160,
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "personnages/avatar/petit_format/avatar-11/avatar-11_avant_parapluie",
+   "rubrique": "personnages",
+   "sujet": "avatar-11",
+   "vue": "avant",
+   "pose": "parapluie",
+   "titre": "Avatar, exemple 11, petit format, trois quarts avant, parapluie",
+   "regarde": "bas-droite",
+   "miroir": true,
+   "images": 4,
+   "fichiers": [
+    "svg/personnages/avatar/petit_format/avatar-11/avatar-11_avant_parapluie_1.svg",
+    "svg/personnages/avatar/petit_format/avatar-11/avatar-11_avant_parapluie_2.svg",
+    "svg/personnages/avatar/petit_format/avatar-11/avatar-11_avant_parapluie_3.svg",
+    "svg/personnages/avatar/petit_format/avatar-11/avatar-11_avant_parapluie_4.svg"
+   ],
+   "cadre": [
+    -32.5,
+    -82.5,
+    70,
+    90
+   ],
+   "ms_par_image": 160,
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "personnages/avatar/petit_format/avatar-11/avatar-11_avant_repos",
+   "rubrique": "personnages",
+   "sujet": "avatar-11",
+   "vue": "avant",
+   "pose": "repos",
+   "titre": "Avatar, exemple 11, petit format, trois quarts avant, repos",
+   "regarde": "bas-droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/avatar/petit_format/avatar-11/avatar-11_avant_repos_1.svg",
+    "svg/personnages/avatar/petit_format/avatar-11/avatar-11_avant_repos_2.svg"
+   ],
+   "cadre": [
+    -23.75,
+    -62.5,
+    47.5,
+    66.25
+   ],
+   "ms_par_image": [
+    900,
+    160
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "personnages/avatar/petit_format/avatar-11/avatar-11_avant_salut",
+   "rubrique": "personnages",
+   "sujet": "avatar-11",
+   "vue": "avant",
+   "pose": "salut",
+   "titre": "Avatar, exemple 11, petit format, trois quarts avant, salut",
+   "regarde": "bas-droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/avatar/petit_format/avatar-11/avatar-11_avant_salut_1.svg",
+    "svg/personnages/avatar/petit_format/avatar-11/avatar-11_avant_salut_2.svg"
+   ],
+   "cadre": [
+    -23.75,
+    -62.5,
+    47.5,
+    66.25
+   ],
+   "ms_par_image": 260,
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "personnages/avatar/petit_format/avatar-11/avatar-11_dos_marche",
+   "rubrique": "personnages",
+   "sujet": "avatar-11",
+   "vue": "dos",
+   "pose": "marche",
+   "titre": "Avatar, exemple 11, petit format, trois quarts dos, marche",
+   "regarde": "haut-droite",
+   "miroir": true,
+   "images": 4,
+   "fichiers": [
+    "svg/personnages/avatar/petit_format/avatar-11/avatar-11_dos_marche_1.svg",
+    "svg/personnages/avatar/petit_format/avatar-11/avatar-11_dos_marche_2.svg",
+    "svg/personnages/avatar/petit_format/avatar-11/avatar-11_dos_marche_3.svg",
+    "svg/personnages/avatar/petit_format/avatar-11/avatar-11_dos_marche_4.svg"
+   ],
+   "cadre": [
+    -23.75,
+    -62.5,
+    47.5,
+    66.25
+   ],
+   "ms_par_image": 160,
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "personnages/avatar/petit_format/avatar-11/avatar-11_dos_repos",
+   "rubrique": "personnages",
+   "sujet": "avatar-11",
+   "vue": "dos",
+   "pose": "repos",
+   "titre": "Avatar, exemple 11, petit format, trois quarts dos, repos",
+   "regarde": "haut-droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/avatar/petit_format/avatar-11/avatar-11_dos_repos_1.svg",
+    "svg/personnages/avatar/petit_format/avatar-11/avatar-11_dos_repos_2.svg"
+   ],
+   "cadre": [
+    -23.75,
+    -62.5,
+    47.5,
+    66.25
+   ],
+   "ms_par_image": [
+    900,
+    160
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "personnages/avatar/petit_format/avatar-11/avatar-11_dos_salut",
+   "rubrique": "personnages",
+   "sujet": "avatar-11",
+   "vue": "dos",
+   "pose": "salut",
+   "titre": "Avatar, exemple 11, petit format, trois quarts dos, salut",
+   "regarde": "haut-droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/avatar/petit_format/avatar-11/avatar-11_dos_salut_1.svg",
+    "svg/personnages/avatar/petit_format/avatar-11/avatar-11_dos_salut_2.svg"
+   ],
+   "cadre": [
+    -23.75,
+    -62.5,
+    47.5,
+    66.25
+   ],
+   "ms_par_image": 260,
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "personnages/avatar/petit_format/avatar-11/avatar-11_face_marche",
+   "rubrique": "personnages",
+   "sujet": "avatar-11",
+   "vue": "face",
+   "pose": "marche",
+   "titre": "Avatar, exemple 11, petit format, de face, marche",
+   "regarde": "face",
+   "images": 4,
+   "fichiers": [
+    "svg/personnages/avatar/petit_format/avatar-11/avatar-11_face_marche_1.svg",
+    "svg/personnages/avatar/petit_format/avatar-11/avatar-11_face_marche_2.svg",
+    "svg/personnages/avatar/petit_format/avatar-11/avatar-11_face_marche_3.svg",
+    "svg/personnages/avatar/petit_format/avatar-11/avatar-11_face_marche_4.svg"
+   ],
+   "cadre": [
+    -23.75,
+    -62.5,
+    47.5,
+    66.25
+   ],
+   "ms_par_image": 160,
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "personnages/avatar/petit_format/avatar-11/avatar-11_face_repos",
+   "rubrique": "personnages",
+   "sujet": "avatar-11",
+   "vue": "face",
+   "pose": "repos",
+   "titre": "Avatar, exemple 11, petit format, de face, repos",
+   "regarde": "face",
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/avatar/petit_format/avatar-11/avatar-11_face_repos_1.svg",
+    "svg/personnages/avatar/petit_format/avatar-11/avatar-11_face_repos_2.svg"
+   ],
+   "cadre": [
+    -23.75,
+    -62.5,
+    47.5,
+    66.25
+   ],
+   "ms_par_image": [
+    900,
+    160
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "personnages/avatar/petit_format/avatar-11/avatar-11_face_salut",
+   "rubrique": "personnages",
+   "sujet": "avatar-11",
+   "vue": "face",
+   "pose": "salut",
+   "titre": "Avatar, exemple 11, petit format, de face, salut",
+   "regarde": "face",
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/avatar/petit_format/avatar-11/avatar-11_face_salut_1.svg",
+    "svg/personnages/avatar/petit_format/avatar-11/avatar-11_face_salut_2.svg"
+   ],
+   "cadre": [
+    -23.75,
+    -62.5,
+    47.5,
+    66.25
+   ],
+   "ms_par_image": 260,
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "personnages/avatar/petit_format/avatar-12-naufrage/avatar-12-naufrage_avant_marche",
+   "rubrique": "personnages",
+   "sujet": "avatar-12-naufrage",
+   "vue": "avant",
+   "pose": "marche",
+   "titre": "Avatar, exemple 12 (naufragé), petit format, trois quarts avant, marche",
+   "regarde": "bas-droite",
+   "miroir": true,
+   "images": 4,
+   "fichiers": [
+    "svg/personnages/avatar/petit_format/avatar-12-naufrage/avatar-12-naufrage_avant_marche_1.svg",
+    "svg/personnages/avatar/petit_format/avatar-12-naufrage/avatar-12-naufrage_avant_marche_2.svg",
+    "svg/personnages/avatar/petit_format/avatar-12-naufrage/avatar-12-naufrage_avant_marche_3.svg",
+    "svg/personnages/avatar/petit_format/avatar-12-naufrage/avatar-12-naufrage_avant_marche_4.svg"
+   ],
+   "cadre": [
+    -23.75,
+    -62.5,
+    47.5,
+    66.25
+   ],
+   "ms_par_image": 160,
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "personnages/avatar/petit_format/avatar-12-naufrage/avatar-12-naufrage_avant_repos",
+   "rubrique": "personnages",
+   "sujet": "avatar-12-naufrage",
+   "vue": "avant",
+   "pose": "repos",
+   "titre": "Avatar, exemple 12 (naufragé), petit format, trois quarts avant, repos",
+   "regarde": "bas-droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/avatar/petit_format/avatar-12-naufrage/avatar-12-naufrage_avant_repos_1.svg",
+    "svg/personnages/avatar/petit_format/avatar-12-naufrage/avatar-12-naufrage_avant_repos_2.svg"
+   ],
+   "cadre": [
+    -23.75,
+    -62.5,
+    47.5,
+    66.25
+   ],
+   "ms_par_image": [
+    900,
+    160
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "personnages/avatar/petit_format/avatar-12-naufrage/avatar-12-naufrage_avant_salut",
+   "rubrique": "personnages",
+   "sujet": "avatar-12-naufrage",
+   "vue": "avant",
+   "pose": "salut",
+   "titre": "Avatar, exemple 12 (naufragé), petit format, trois quarts avant, salut",
+   "regarde": "bas-droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/avatar/petit_format/avatar-12-naufrage/avatar-12-naufrage_avant_salut_1.svg",
+    "svg/personnages/avatar/petit_format/avatar-12-naufrage/avatar-12-naufrage_avant_salut_2.svg"
+   ],
+   "cadre": [
+    -23.75,
+    -62.5,
+    47.5,
+    66.25
+   ],
+   "ms_par_image": 260,
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "personnages/avatar/petit_format/avatar-12-naufrage/avatar-12-naufrage_dos_marche",
+   "rubrique": "personnages",
+   "sujet": "avatar-12-naufrage",
+   "vue": "dos",
+   "pose": "marche",
+   "titre": "Avatar, exemple 12 (naufragé), petit format, trois quarts dos, marche",
+   "regarde": "haut-droite",
+   "miroir": true,
+   "images": 4,
+   "fichiers": [
+    "svg/personnages/avatar/petit_format/avatar-12-naufrage/avatar-12-naufrage_dos_marche_1.svg",
+    "svg/personnages/avatar/petit_format/avatar-12-naufrage/avatar-12-naufrage_dos_marche_2.svg",
+    "svg/personnages/avatar/petit_format/avatar-12-naufrage/avatar-12-naufrage_dos_marche_3.svg",
+    "svg/personnages/avatar/petit_format/avatar-12-naufrage/avatar-12-naufrage_dos_marche_4.svg"
+   ],
+   "cadre": [
+    -23.75,
+    -62.5,
+    47.5,
+    66.25
+   ],
+   "ms_par_image": 160,
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "personnages/avatar/petit_format/avatar-12-naufrage/avatar-12-naufrage_dos_repos",
+   "rubrique": "personnages",
+   "sujet": "avatar-12-naufrage",
+   "vue": "dos",
+   "pose": "repos",
+   "titre": "Avatar, exemple 12 (naufragé), petit format, trois quarts dos, repos",
+   "regarde": "haut-droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/avatar/petit_format/avatar-12-naufrage/avatar-12-naufrage_dos_repos_1.svg",
+    "svg/personnages/avatar/petit_format/avatar-12-naufrage/avatar-12-naufrage_dos_repos_2.svg"
+   ],
+   "cadre": [
+    -23.75,
+    -62.5,
+    47.5,
+    66.25
+   ],
+   "ms_par_image": [
+    900,
+    160
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "personnages/avatar/petit_format/avatar-12-naufrage/avatar-12-naufrage_dos_salut",
+   "rubrique": "personnages",
+   "sujet": "avatar-12-naufrage",
+   "vue": "dos",
+   "pose": "salut",
+   "titre": "Avatar, exemple 12 (naufragé), petit format, trois quarts dos, salut",
+   "regarde": "haut-droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/avatar/petit_format/avatar-12-naufrage/avatar-12-naufrage_dos_salut_1.svg",
+    "svg/personnages/avatar/petit_format/avatar-12-naufrage/avatar-12-naufrage_dos_salut_2.svg"
+   ],
+   "cadre": [
+    -23.75,
+    -62.5,
+    47.5,
+    66.25
+   ],
+   "ms_par_image": 260,
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "personnages/avatar/petit_format/avatar-12-naufrage/avatar-12-naufrage_face_marche",
+   "rubrique": "personnages",
+   "sujet": "avatar-12-naufrage",
+   "vue": "face",
+   "pose": "marche",
+   "titre": "Avatar, exemple 12 (naufragé), petit format, de face, marche",
+   "regarde": "face",
+   "images": 4,
+   "fichiers": [
+    "svg/personnages/avatar/petit_format/avatar-12-naufrage/avatar-12-naufrage_face_marche_1.svg",
+    "svg/personnages/avatar/petit_format/avatar-12-naufrage/avatar-12-naufrage_face_marche_2.svg",
+    "svg/personnages/avatar/petit_format/avatar-12-naufrage/avatar-12-naufrage_face_marche_3.svg",
+    "svg/personnages/avatar/petit_format/avatar-12-naufrage/avatar-12-naufrage_face_marche_4.svg"
+   ],
+   "cadre": [
+    -23.75,
+    -62.5,
+    47.5,
+    66.25
+   ],
+   "ms_par_image": 160,
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "personnages/avatar/petit_format/avatar-12-naufrage/avatar-12-naufrage_face_repos",
+   "rubrique": "personnages",
+   "sujet": "avatar-12-naufrage",
+   "vue": "face",
+   "pose": "repos",
+   "titre": "Avatar, exemple 12 (naufragé), petit format, de face, repos",
+   "regarde": "face",
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/avatar/petit_format/avatar-12-naufrage/avatar-12-naufrage_face_repos_1.svg",
+    "svg/personnages/avatar/petit_format/avatar-12-naufrage/avatar-12-naufrage_face_repos_2.svg"
+   ],
+   "cadre": [
+    -23.75,
+    -62.5,
+    47.5,
+    66.25
+   ],
+   "ms_par_image": [
+    900,
+    160
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "personnages/avatar/petit_format/avatar-12-naufrage/avatar-12-naufrage_face_salut",
+   "rubrique": "personnages",
+   "sujet": "avatar-12-naufrage",
+   "vue": "face",
+   "pose": "salut",
+   "titre": "Avatar, exemple 12 (naufragé), petit format, de face, salut",
+   "regarde": "face",
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/avatar/petit_format/avatar-12-naufrage/avatar-12-naufrage_face_salut_1.svg",
+    "svg/personnages/avatar/petit_format/avatar-12-naufrage/avatar-12-naufrage_face_salut_2.svg"
+   ],
+   "cadre": [
+    -23.75,
+    -62.5,
+    47.5,
+    66.25
+   ],
+   "ms_par_image": 260,
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "personnages/avatar/petit_format/avatar-12/avatar-12_avant_lanterne",
+   "rubrique": "personnages",
+   "sujet": "avatar-12",
+   "vue": "avant",
+   "pose": "lanterne",
+   "titre": "Avatar, exemple 12, petit format, trois quarts avant, lanterne",
+   "regarde": "bas-droite",
+   "miroir": true,
+   "images": 4,
+   "fichiers": [
+    "svg/personnages/avatar/petit_format/avatar-12/avatar-12_avant_lanterne_1.svg",
+    "svg/personnages/avatar/petit_format/avatar-12/avatar-12_avant_lanterne_2.svg",
+    "svg/personnages/avatar/petit_format/avatar-12/avatar-12_avant_lanterne_3.svg",
+    "svg/personnages/avatar/petit_format/avatar-12/avatar-12_avant_lanterne_4.svg"
+   ],
+   "cadre": [
+    -32.5,
+    -82.5,
+    70,
+    90
+   ],
+   "ms_par_image": 160,
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "personnages/avatar/petit_format/avatar-12/avatar-12_avant_marche",
+   "rubrique": "personnages",
+   "sujet": "avatar-12",
+   "vue": "avant",
+   "pose": "marche",
+   "titre": "Avatar, exemple 12, petit format, trois quarts avant, marche",
+   "regarde": "bas-droite",
+   "miroir": true,
+   "images": 4,
+   "fichiers": [
+    "svg/personnages/avatar/petit_format/avatar-12/avatar-12_avant_marche_1.svg",
+    "svg/personnages/avatar/petit_format/avatar-12/avatar-12_avant_marche_2.svg",
+    "svg/personnages/avatar/petit_format/avatar-12/avatar-12_avant_marche_3.svg",
+    "svg/personnages/avatar/petit_format/avatar-12/avatar-12_avant_marche_4.svg"
+   ],
+   "cadre": [
+    -23.75,
+    -62.5,
+    47.5,
+    66.25
+   ],
+   "ms_par_image": 160,
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "personnages/avatar/petit_format/avatar-12/avatar-12_avant_parapluie",
+   "rubrique": "personnages",
+   "sujet": "avatar-12",
+   "vue": "avant",
+   "pose": "parapluie",
+   "titre": "Avatar, exemple 12, petit format, trois quarts avant, parapluie",
+   "regarde": "bas-droite",
+   "miroir": true,
+   "images": 4,
+   "fichiers": [
+    "svg/personnages/avatar/petit_format/avatar-12/avatar-12_avant_parapluie_1.svg",
+    "svg/personnages/avatar/petit_format/avatar-12/avatar-12_avant_parapluie_2.svg",
+    "svg/personnages/avatar/petit_format/avatar-12/avatar-12_avant_parapluie_3.svg",
+    "svg/personnages/avatar/petit_format/avatar-12/avatar-12_avant_parapluie_4.svg"
+   ],
+   "cadre": [
+    -32.5,
+    -82.5,
+    70,
+    90
+   ],
+   "ms_par_image": 160,
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "personnages/avatar/petit_format/avatar-12/avatar-12_avant_repos",
+   "rubrique": "personnages",
+   "sujet": "avatar-12",
+   "vue": "avant",
+   "pose": "repos",
+   "titre": "Avatar, exemple 12, petit format, trois quarts avant, repos",
+   "regarde": "bas-droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/avatar/petit_format/avatar-12/avatar-12_avant_repos_1.svg",
+    "svg/personnages/avatar/petit_format/avatar-12/avatar-12_avant_repos_2.svg"
+   ],
+   "cadre": [
+    -23.75,
+    -62.5,
+    47.5,
+    66.25
+   ],
+   "ms_par_image": [
+    900,
+    160
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "personnages/avatar/petit_format/avatar-12/avatar-12_avant_salut",
+   "rubrique": "personnages",
+   "sujet": "avatar-12",
+   "vue": "avant",
+   "pose": "salut",
+   "titre": "Avatar, exemple 12, petit format, trois quarts avant, salut",
+   "regarde": "bas-droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/avatar/petit_format/avatar-12/avatar-12_avant_salut_1.svg",
+    "svg/personnages/avatar/petit_format/avatar-12/avatar-12_avant_salut_2.svg"
+   ],
+   "cadre": [
+    -23.75,
+    -62.5,
+    47.5,
+    66.25
+   ],
+   "ms_par_image": 260,
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "personnages/avatar/petit_format/avatar-12/avatar-12_dos_marche",
+   "rubrique": "personnages",
+   "sujet": "avatar-12",
+   "vue": "dos",
+   "pose": "marche",
+   "titre": "Avatar, exemple 12, petit format, trois quarts dos, marche",
+   "regarde": "haut-droite",
+   "miroir": true,
+   "images": 4,
+   "fichiers": [
+    "svg/personnages/avatar/petit_format/avatar-12/avatar-12_dos_marche_1.svg",
+    "svg/personnages/avatar/petit_format/avatar-12/avatar-12_dos_marche_2.svg",
+    "svg/personnages/avatar/petit_format/avatar-12/avatar-12_dos_marche_3.svg",
+    "svg/personnages/avatar/petit_format/avatar-12/avatar-12_dos_marche_4.svg"
+   ],
+   "cadre": [
+    -23.75,
+    -62.5,
+    47.5,
+    66.25
+   ],
+   "ms_par_image": 160,
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "personnages/avatar/petit_format/avatar-12/avatar-12_dos_repos",
+   "rubrique": "personnages",
+   "sujet": "avatar-12",
+   "vue": "dos",
+   "pose": "repos",
+   "titre": "Avatar, exemple 12, petit format, trois quarts dos, repos",
+   "regarde": "haut-droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/avatar/petit_format/avatar-12/avatar-12_dos_repos_1.svg",
+    "svg/personnages/avatar/petit_format/avatar-12/avatar-12_dos_repos_2.svg"
+   ],
+   "cadre": [
+    -23.75,
+    -62.5,
+    47.5,
+    66.25
+   ],
+   "ms_par_image": [
+    900,
+    160
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "personnages/avatar/petit_format/avatar-12/avatar-12_dos_salut",
+   "rubrique": "personnages",
+   "sujet": "avatar-12",
+   "vue": "dos",
+   "pose": "salut",
+   "titre": "Avatar, exemple 12, petit format, trois quarts dos, salut",
+   "regarde": "haut-droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/avatar/petit_format/avatar-12/avatar-12_dos_salut_1.svg",
+    "svg/personnages/avatar/petit_format/avatar-12/avatar-12_dos_salut_2.svg"
+   ],
+   "cadre": [
+    -23.75,
+    -62.5,
+    47.5,
+    66.25
+   ],
+   "ms_par_image": 260,
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "personnages/avatar/petit_format/avatar-12/avatar-12_face_marche",
+   "rubrique": "personnages",
+   "sujet": "avatar-12",
+   "vue": "face",
+   "pose": "marche",
+   "titre": "Avatar, exemple 12, petit format, de face, marche",
+   "regarde": "face",
+   "images": 4,
+   "fichiers": [
+    "svg/personnages/avatar/petit_format/avatar-12/avatar-12_face_marche_1.svg",
+    "svg/personnages/avatar/petit_format/avatar-12/avatar-12_face_marche_2.svg",
+    "svg/personnages/avatar/petit_format/avatar-12/avatar-12_face_marche_3.svg",
+    "svg/personnages/avatar/petit_format/avatar-12/avatar-12_face_marche_4.svg"
+   ],
+   "cadre": [
+    -23.75,
+    -62.5,
+    47.5,
+    66.25
+   ],
+   "ms_par_image": 160,
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "personnages/avatar/petit_format/avatar-12/avatar-12_face_repos",
+   "rubrique": "personnages",
+   "sujet": "avatar-12",
+   "vue": "face",
+   "pose": "repos",
+   "titre": "Avatar, exemple 12, petit format, de face, repos",
+   "regarde": "face",
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/avatar/petit_format/avatar-12/avatar-12_face_repos_1.svg",
+    "svg/personnages/avatar/petit_format/avatar-12/avatar-12_face_repos_2.svg"
+   ],
+   "cadre": [
+    -23.75,
+    -62.5,
+    47.5,
+    66.25
+   ],
+   "ms_par_image": [
+    900,
+    160
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "personnages/avatar/petit_format/avatar-12/avatar-12_face_salut",
+   "rubrique": "personnages",
+   "sujet": "avatar-12",
+   "vue": "face",
+   "pose": "salut",
+   "titre": "Avatar, exemple 12, petit format, de face, salut",
+   "regarde": "face",
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/avatar/petit_format/avatar-12/avatar-12_face_salut_1.svg",
+    "svg/personnages/avatar/petit_format/avatar-12/avatar-12_face_salut_2.svg"
    ],
    "cadre": [
     -23.75,

@@ -61,8 +61,19 @@ const SKULL = {
   se: 'M-6.9,2.4 Q-7.8,-7.6 0.8,-7.8 Q7,-7.6 6.9,-2.4 Q5.8,-4.8 3.6,-4.1 Q1.6,-4.9 -0.4,-3.5 Q-1.2,0.2 -2.4,2.2 Q-4.8,3 -6.9,2.4 Z',
   ne: 'M-6.9,0.4 Q-7.4,-8.2 0,-8 Q7.2,-8.2 6.9,0.2 Q6.6,4 2,5 Q-6.2,4.6 -6.9,0.4 Z'
 };
+// Mèche roulée (locks) : un trait cerné
+const cordOf = (a, b, color) => ln(a, b, '#3C2819', 2.1) + ln(a, b, color, 1.3);
 function hairOf(style, color, view) {
   const dark = shade(color, 0.82);
+  // Rasé (avatar) : un duvet de la couleur des cheveux, posé sur la peau, sans contour
+  if (style === 'buzz') {
+    const d = {
+      front: 'M-6.5,-1.4 Q-6.8,-7.1 0,-7.1 Q6.8,-7.1 6.5,-1.4 Q4.6,-4.4 0,-4.6 Q-4.6,-4.4 -6.5,-1.4 Z',
+      se: 'M-6.5,1.6 Q-7,-7.1 0.6,-7.1 Q6.4,-7 6.3,-3.2 Q3.8,-4.8 0.6,-4.4 Q-2.4,-3.6 -3.4,0.6 Q-4.8,2 -6.5,1.6 Z',
+      ne: 'M-6.5,0 Q-6.8,-7.2 0,-7.2 Q6.8,-7.2 6.5,0 Q6,3.6 0,4.4 Q-6,3.6 -6.5,0 Z'
+    }[view];
+    return `<path d="${d}" fill="${color}" opacity=".72"/>`;
+  }
   if (style === 'bald') {
     if (view === 'front') return `<path d="M-6.8,-1 Q-7.4,2.4 -5.8,3.6 L-5.6,0 Z M6.8,-1 Q7.4,2.4 5.8,3.6 L5.6,0 Z" fill="${color}"/>`;
     if (view === 'se') return `<path d="M-6.8,-1.6 Q-7.2,3.4 -4,5 Q-5,1.6 -4.6,-1.2 Z" fill="${color}"/>`;
@@ -92,6 +103,38 @@ function hairOf(style, color, view) {
     if (view === 'front') out += braid(-6.2, 1.6, 4) + braid(6.2, 1.6, 4);
     else if (view === 'se') out += braid(-5.8, 2, 4);
     else out += braid(-3.4, 3.8, 4) + braid(3.4, 3.8, 4);
+  } else if (style === 'swept') {
+    // Mèche (avatar) : une grande mèche qui retombe en biais sur le front (seul son bord est cerné)
+    const [edge, rest] = view === 'se' ? ['M6.8,-2 Q4.8,-3.4 2.6,-2.8 Q0.6,-2.4 -0.8,-1', ' Q-0.8,-4 -1.4,-6.6 Q4.6,-7.2 6.8,-2 Z']
+      : ['M6.6,-3 Q2.2,-4.4 -1.6,-2.6 Q-4,-1.4 -5.6,0.2', ' L-6.6,-2 Q-5.6,-6.6 0,-7 Q5,-6.8 6.6,-3 Z'];
+    if (view !== 'ne') out += `<path d="${edge}${rest}" fill="${color}"/><path d="${edge}" fill="none" stroke="#3C2819" stroke-width="0.5" stroke-linecap="round"/>`;
+  } else if (style === 'messy') {
+    // En bataille (avatar) : des épis inégaux au sommet ; seul le bord en pointes est cerné
+    const edge = 'M-5.6,-5 L-6.2,-7.6 L-4,-7 L-3,-9.2 L-1.4,-7.6 L0.6,-8.8 L1.6,-7.4 L3.6,-8.4 L3.8,-6.8 L5.8,-6.6 L5.6,-4.6';
+    const at = view === 'se' ? ' transform="translate(0.6 0)"' : '';
+    out += `<path d="${edge} Q0,-5.4 -5.6,-5 Z" fill="${color}"${at}/><path d="${edge}" fill="none" stroke="#3C2819" stroke-width="0.5" stroke-linejoin="round"${at}/>`;
+  } else if (style === 'bob') {
+    // Carré (avatar) : les cheveux tombent droit jusqu'à la mâchoire (cernés sur les côtés et en bas, pas en haut)
+    const open = {
+      front: ['M-6.9,-0.4 Q-7.6,4 -6.8,5.4 L-4.4,5.4 Q-5.4,2.6 -5.2,-0.4', 'M6.9,-0.4 Q7.6,4 6.8,5.4 L4.4,5.4 Q5.4,2.6 5.2,-0.4'],
+      se: ['M-6.9,0.4 Q-7.8,4.6 -6.6,5.8 L-2.2,5.8 Q-3.4,3.4 -3.4,0.6', 'M5.8,-2 Q7.4,2.4 6.4,5.4 L4.8,5.4 Q5.6,2.2 4.6,-1.4'],
+      ne: ['M-6.9,0 Q-7.4,5.6 -6.4,6 L6.4,6 Q7.4,5.6 6.9,0']
+    }[view];
+    out += open.map(d => `<path d="${d} Z" fill="${color}"/><path d="${d}" fill="none" stroke="#3C2819" stroke-width="0.5" stroke-linejoin="round"/>`).join('');
+  } else if (style === 'pigtails') {
+    // Couettes (avatar) : une touffe nouée de chaque côté (de trois quarts, celle du fond passe derrière : hairBackOf)
+    const tuft = 'M-6.2,-1 Q-10.8,0 -10,5.8 Q-8.6,4 -7.4,4.4 Q-7.8,2 -6.4,1 Z';
+    const tie = x => `<circle cx="${x}" cy="-0.2" r=".9" fill="#C8463A"${OUT}/>`;
+    out += `<path d="${tuft}" fill="${color}"${OUT}/>` + tie(-6.6);
+    if (view !== 'se') out += `<path d="${tuft}" fill="${color}"${OUT} transform="scale(-1 1)"/>` + tie(6.6);
+  } else if (style === 'locs') {
+    // Locks (avatar) : des mèches roulées en cordes
+    const cords = {
+      front: [[[-6.2, -1], [-6.8, 7]], [[-4.8, -3.4], [-5.4, 5.4]], [[6.2, -1], [6.8, 7]], [[4.8, -3.4], [5.4, 5.4]]],
+      se: [[[-6.4, -0.6], [-7.4, 6.8]], [[-4.6, -2.6], [-5.4, 7.4]], [[-2.8, -4], [-3.4, 5.6]]],
+      ne: [[[-5.6, 0], [-6, 8.6]], [[-2.8, 1.4], [-3, 9.4]], [[0, 1.8], [0, 9.8]], [[2.8, 1.4], [3, 9.4]], [[5.6, 0], [6, 8.6]]]
+    }[view];
+    out += cords.map(([a, b]) => cordOf(a, b, color)).join('');
   }
   return out;
 }
@@ -103,6 +146,7 @@ function hairBackOf(style, color, view, skin) {
   if (view !== 'se') return '';
   if (style === 'long') return `<path d="M4.6,-4.6 Q9.2,0.4 7.4,9.6 Q6.2,6.4 5.4,2 Z" fill="${color}"${OUT}/>`;
   if (style === 'braids') return [0, 1, 2].map(i => `<circle cx="${f2(6.9 + i * 0.1)}" cy="${f2(3.4 + i * 2.2)}" r="${f2(1.5 - i * 0.12)}" fill="${color}"${OUT}/>`).join('');
+  if (style === 'pigtails') return `<path d="M5.8,-1.6 Q10,-0.4 9.4,4.6 Q8.2,3 7,3.4 Z" fill="${color}"${OUT}/>`;
   return '';
 }
 // Visage selon la vue : yeux (fermés au clignement), joues, bouche, petit nez. De trois quarts, les traits glissent
@@ -293,7 +337,8 @@ const at = (x, y, body) => `<g transform="translate(${f2(x)} ${f2(y)})">${body}<
 /* ---------- Le personnage ---------- */
 // look : { skin, hair, style, top, bottom, hat, tool, apron, build, shape, beard, glasses, shoes, pack, et les pièces de
 // la troupe : neckerchief, shawl, cape, boots, barefoot, freckles, blush, paint, loupes, twigs, spoon, lock, pencil,
-// stains, pockets, seal } ; shape : mesures qui remplacent celles de la silhouette (Galet, tout petit) ;
+// stains, pockets, seal ; et celles de l'avatar : bottomStyle (shorts, skirt, overalls, dress), stripes (marinière),
+// les coiffures swept, messy, bob, pigtails, locs, buzz } ; shape : mesures qui remplacent celles de la silhouette (Galet, tout petit) ;
 // view : front | se | ne (back : ancien nom de ne) ; pose : walk | idle | work | wave | sleep ; frame : 0 à 3 (marche)
 // ou 0 à 1
 export function villagerSprite(look, { pose = 'idle', view, back = false, frame = 0, lantern = false, umbrella = false } = {}) {
@@ -312,22 +357,38 @@ export function villagerSprite(look, { pose = 'idle', view, back = false, frame 
   const bob = walking && f % 2 ? -0.7 : 0;
   const lean = v === 'ne' ? -1 : 1;
   const shoes = look.barefoot ? shade(look.skin, 0.94) : look.shoes || '#4A3426';
-  const dark = shade(look.bottom, 0.78);
+  // Bas de l'avatar (look.bottomStyle) : short, jupe et robe laissent les jambes nues ; salopette et robe ont une bavette
+  const bs = look.bottomStyle;
+  const bare = bs === 'shorts' || bs === 'skirt' || bs === 'dress';
+  const legColor = bare ? look.skin : look.bottom;
+  const dark = shade(legColor, bare ? 0.92 : 0.78);
+  const wearDark = shade(look.bottom, 0.78);
   // Pieds : vers la droite (se, ne) ; de face, côte à côte
   // Bottes trop grandes : le pied s'allonge et une tige monte sur le mollet
   const big = look.boots ? 1.3 : 1;
   const foot = (x, y, color) => ell(x + (v === 'front' ? 0 : 1) * big, y - 0.5, (v === 'front' ? 1.8 : 2.3) * big, 1.05 * big, color);
   const boot = (fx, fy) => (look.boots ? ln([fx, fy - 0.9], [fx, fy - 3.2], shoes, S.limb + 0.7) : '');
-  const leg = (hx, fx, fy, color) => ln([hx, hipY + 0.6], [fx, fy - 0.9], color, S.limb) + boot(fx, fy) + foot(fx, fy, shoes);
+  // Jambe de short : le haut de la jambe, de la couleur du bas, un peu plus large et cerné
+  const short = (hx, fx, fy, wear) => {
+    const b = [hx + (fx - hx) * 0.45, hipY + 0.2 + (fy - hipY) * 0.45];
+    return ln([hx, hipY + 0.2], b, '#3C2819', S.limb + 1.4) + ln([hx, hipY + 0.2], b, wear, S.limb + 0.8);
+  };
+  const leg = (hx, fx, fy, color, wear) => ln([hx, hipY + 0.6], [fx, fy - 0.9], color, S.limb) + (bs === 'shorts' ? short(hx, fx, fy, wear) : '') + boot(fx, fy) + foot(fx, fy, shoes);
   let legs;
   if (v === 'front') {
-    legs = leg(-1.9, -2 - swing * 0.2, 0, look.bottom) + leg(1.9, 2 + swing * 0.2, 0, dark);
+    legs = leg(-1.9, -2 - swing * 0.2, 0, legColor, look.bottom) + leg(1.9, 2 + swing * 0.2, 0, dark, wearDark);
   } else {
     // Jambe de derrière (plus sombre) puis jambe de devant ; « devant » = vers la droite
     const dir = v === 'ne' ? -0.3 : 0.3;
     const backX = -swing;
     const frontX = swing;
-    legs = leg(-0.9, -0.9 + backX, backX * dir - (f === 1 ? lift : 0), dark) + leg(1.1, 1.1 + frontX, frontX * dir - (f === 3 ? lift : 0), look.bottom);
+    legs = leg(-0.9, -0.9 + backX, backX * dir - (f === 1 ? lift : 0), dark, wearDark) + leg(1.1, 1.1 + frontX, frontX * dir - (f === 3 ? lift : 0), legColor, look.bottom);
+  }
+  // Jupe (et bas de la robe) : de la taille au genou, par-dessus les jambes, sous le buste
+  if (bs === 'skirt' || bs === 'dress') {
+    const sw = w / 2 + 0.2, bw = w / 2 + 1.6, y0 = hipY - 0.8, y1 = hipY + S.legs * (bs === 'dress' ? 0.62 : 0.55);
+    legs += `<path d="M${f2(-sw)},${f2(y0)} L${f2(sw)},${f2(y0)} L${f2(bw)},${f2(y1)} Q0,${f2(y1 + 1)} ${f2(-bw)},${f2(y1)} Z" fill="${look.bottom}"${OUT}/>`
+      + ln([w * 0.12, hipY + 0.8], [w * 0.18, y1 - 0.2], wearDark, 0.4);
   }
   // Bras : épaule, main ; celui de devant tient l'outil (à droite), celui de derrière la lanterne
   const sleeve = shade(look.top, 0.88);
@@ -349,9 +410,30 @@ export function villagerSprite(look, { pose = 'idle', view, back = false, frame 
   const tw = w * 0.86;
   const chest = `<path d="M${f2(-w / 2)},${f2(hipY + 0.4)} Q${f2(-tw / 2 - 0.4)},${f2(topY + 0.6)} 0,${f2(topY)} Q${f2(tw / 2 + 0.4)},${f2(topY + 0.6)} ${f2(w / 2)},${f2(hipY + 0.4)} Q0,${f2(hipY + 1.6)} ${f2(-w / 2)},${f2(hipY + 0.4)} Z" fill="${look.top}"${OUT}/>`;
   let torso = chest;
+  // Marinière (avatar) : des rayures en travers du buste, bord à bord
+  if (look.stripes) {
+    const side = y => {
+      let a = 0, b = 1;
+      for (let i = 0; i < 14; i++) { const m = (a + b) / 2; if ((1 - m) ** 2 * (hipY + 0.4) + 2 * m * (1 - m) * (topY + 0.6) + m * m * topY > y) a = m; else b = m; }
+      const t = (a + b) / 2;
+      return Math.abs((1 - t) ** 2 * (-w / 2) + 2 * t * (1 - t) * (-tw / 2 - 0.4));
+    };
+    for (let y = topY + 2.4; y < hipY - 0.2; y += 1.7) torso += ln([-side(y) + 0.6, y], [side(y) - 0.6, y], look.stripes, 0.6);
+  }
   if (v !== 'front') {
     const side = v === 'se' ? -1 : 1;
     torso += `<path d="M${f2(side * w / 2)},${f2(hipY + 0.4)} Q${f2(side * (tw / 2 + 0.4))},${f2(topY + 0.6)} ${f2(side * w * 0.16)},${f2(topY + 0.2)} Q${f2(side * w * 0.22)},${f2(hipY - 2)} ${f2(side * w * 0.2)},${f2(hipY + 1)} Z" fill="rgba(0,0,0,.09)"/>`;
+  }
+  if (bs === 'overalls' || bs === 'dress') {
+    const cx = v === 'se' ? w * 0.14 : 0;
+    if (v === 'ne') {
+      torso += ln([-w * 0.34, topY + 0.9], [w * 0.22, hipY - 0.4], look.bottom, 0.9) + ln([w * 0.34, topY + 0.9], [-w * 0.22, hipY - 0.4], look.bottom, 0.9);
+    } else {
+      const bw = bs === 'dress' ? w * 0.42 : w * 0.26, y0 = topY + (bs === 'dress' ? 3.4 : 3);
+      torso += `<path d="M${f2(cx - bw)},${f2(y0)} L${f2(cx + bw)},${f2(y0)} L${f2(cx + bw + 0.4)},${f2(hipY + 0.8)} L${f2(cx - bw - 0.4)},${f2(hipY + 0.8)} Z" fill="${look.bottom}" stroke="#3C2819" stroke-width=".4"/>`
+        + ln([cx - bw + 0.4, y0 + 0.2], [-w * 0.36, topY + 0.8], look.bottom, 0.8) + ln([cx + bw - 0.4, y0 + 0.2], [w * 0.36, topY + 0.8], look.bottom, 0.8);
+    }
+    if (bs === 'overalls') torso += `<path d="M${f2(-w / 2)},${f2(hipY - 1.2)} L${f2(w / 2)},${f2(hipY - 1.2)} L${f2(w / 2)},${f2(hipY + 0.4)} Q0,${f2(hipY + 1.6)} ${f2(-w / 2)},${f2(hipY + 0.4)} Z" fill="${look.bottom}" stroke="#3C2819" stroke-width=".4"/>`;
   }
   if (look.apron && v !== 'ne') {
     const ax = v === 'se' ? w * 0.14 : 0;
@@ -431,8 +513,11 @@ export function villagerSprite(look, { pose = 'idle', view, back = false, frame 
   const blink = (pose === 'idle' && f === 1) || sleeping;
   // De dos, la nuque entre les cheveux et le col
   const neck = v === 'ne' ? `<rect x="${f2(hx - 1.6)}" y="${f2(hy + S.head * 0.55)}" width="3.2" height="${f2(topY - hy - S.head * 0.4)}" rx="1" fill="${shade(look.skin, 0.92)}"/>` : '';
-  const head = neck + headPart(hx, hy, k, hairBackOf(look.style || 'short', look.hair, v, look.skin)) + `<circle cx="${f2(hx)}" cy="${f2(hy)}" r="${f2(S.head)}" fill="${look.skin}"${OUT}/>`
-    + headPart(hx, hy, k, faceOf(v, look.skin, blink) + hairOf(look.style || 'short', look.hair, v) + hairBitsOf(look, v) + earOf(v, look.skin) + extrasOf(look, v, (hipY - 0.6 - hy) / k) + hatOf(look.hat, v) + (look.castaway && look.castaway.weed ? weedOf(v) : ''));
+  // Sous un chapeau, les épis de la coupe en bataille rentrent ; le carré et les locks cachent l'oreille de trois quarts
+  const style = look.hat && look.style === 'messy' ? 'short' : look.style || 'short';
+  const ear = v === 'se' && (style === 'bob' || style === 'locs') ? '' : earOf(v, look.skin);
+  const head = neck + headPart(hx, hy, k, hairBackOf(style, look.hair, v, look.skin)) + `<circle cx="${f2(hx)}" cy="${f2(hy)}" r="${f2(S.head)}" fill="${look.skin}"${OUT}/>`
+    + headPart(hx, hy, k, faceOf(v, look.skin, blink) + hairOf(style, look.hair, v) + hairBitsOf(look, v) + ear + extrasOf(look, v, (hipY - 0.6 - hy) / k) + hatOf(look.hat, v) + (look.castaway && look.castaway.weed ? weedOf(v) : ''));
   // Outil dans la main de devant (pas avec le parapluie) ; lanterne dans l'autre ; parapluie au-dessus
   const held = umbrella || waving || sleeping ? '' : at(frontHand[0] - 6.5, frontHand[1] + 8.5, toolOf(look.tool, working));
   const lamp = lantern

@@ -1,6 +1,6 @@
 # Bibliothèque d'assets SVG de l'île
 
-4 496 dessins SVG au trait de la troupe : personnages, avatar du joueur, naufragés, animaux, plantes, décor, camp, ruines, bâtiments et
+4 864 dessins SVG au trait de la troupe : personnages, avatar du joueur, naufragés, animaux, plantes, décor, camp, ruines, bâtiments et
 météo. Chaque dessin est calé sur les cadres et les ancres du jeu, pour se poser tel quel.
 
 **Par où commencer** :
@@ -64,7 +64,7 @@ détails propres à un lot : places des objets de boutique, lumières des palier
 | `svg/personnages/visiteurs/` | 12 visiteurs types, tirés d'une graine comme dans le jeu (`pnj_jeu.json`) | 408 |
 | `svg/personnages/naufrages/<prénom>/` | Les maîtres tels qu'ils arrivent sur l'île (`<prénom>-naufrage_…`) : une tenue de naufragé à chacun, mêmes vues, poses et expressions, endormis (`naufrages.json`) | 316 |
 | `svg/personnages/naufrages/petit_format/` | Les mêmes au petit format du jeu (`petit_format.json`) | 224 |
-| `svg/personnages/avatar/` | L'avatar du joueur : 8 exemples tirés du générateur (grand format, naufragé, petit format du jeu), poses, gestes du tutoriel (ramasser, grelotter, lire), expressions ; les choix dans `avatar.json` | 752 |
+| `svg/personnages/avatar/` | L'avatar du joueur : 12 exemples tirés du générateur, un par coupe (grand format, naufragé, petit format du jeu), poses, gestes du tutoriel (ramasser, grelotter, lire), expressions ; les choix dans `avatar.json` (taille, corpulence, visage, yeux, bouche, 12 coupes, 6 hauts, 5 bas…) | 1 120 |
 | `svg/personnages/epilogue/` | 8 nouveaux venus de l'épilogue, tirés d'une graine (à redessiner : ils sont accueillis, pas naufragés) | 208 |
 | `svg/vivants/` | Brume (8 stades et ses variantes), Anya, le cerf blanc, le Passeur | 128 |
 | `svg/animaux/` | Ferme, bois, eau douce, climats, bestiaire, familiers, mer : de profil, et de trois quarts avant et dos pour les 37 bêtes qui marchent (`orientees.json`) | 536 |
@@ -90,8 +90,10 @@ détails propres à un lot : places des objets de boutique, lumières des palier
   centre du bâtiment) est dans `batiments.json`. Les calques marqués `derriere` se peignent avant le bâtiment.
 - **L'avatar** : il se compose à partir des choix du joueur, il ne se dessine pas à l'avance. Grand format :
   `design/personnages/avatar.js` (`avatar(choix)`, à passer à `troupe.frame`) ; naufragé : `design/atelier/avatar_naufrage.js`
-  (le chapeau est perdu en mer) ; petit format du jeu : `lookPetit(choix)` donne le « look » de `villagerSprite`. Les
-  fichiers de `svg/personnages/avatar/` sont des exemples.
+  (le chapeau est perdu en mer) ; petit format du jeu : `lookPetit(choix)` donne le « look » de `villagerSprite`, qui
+  doit recevoir ce que la copie de l'atelier (`design/atelier/port/src/world/villagers.js`) a gagné pour l'avatar : les
+  bas (`bottomStyle`), les rayures de la marinière (`stripes`) et six coiffures. Les fichiers de
+  `svg/personnages/avatar/` sont des exemples.
 - **Naufragés** : un maître garde le look du naufragé jusqu'à son souvenir retrouvé (`HISTOIRE.md` § 8 à 10 : Cannelle
   dès l'étape 7 du tutoriel, Ondin à l'étape 11, Sylve à l'acte I, Galet à l'acte II, Mélisse à son réveil, Rivet à
   l'acte III, Aster à l'acte IV), puis prend celui de `maitres/`.
