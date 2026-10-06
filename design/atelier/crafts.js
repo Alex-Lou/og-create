@@ -649,14 +649,30 @@ C.igloo = { n: 2, draw: f => {
     + L([hx + 6, hy + 2], [hx + 3, hy - 13], WOOD.left, 1.1) + `<path d="M${r2(hx + 3)},${r2(hy - 13)} Q${r2(hx + 0.6)},${r2(hy - 8)} ${r2(hx + 0.4)},${r2(hy)}" stroke="${OUT}" stroke-width="0.4" fill="none"/>`
     + `<g transform="translate(${r2(hx - 9)} ${r2(hy + 3.4)}) rotate(-12)">` + P('M2.4,0 L4.4,-1.6 L4,0 L4.4,1.6 Z', '#9FC9E2', 0.5) + E(0, 0, 2.8, 1.3, '#BFD7E8', 0.6) + E(-1.6, -0.3, 0.3, 0.3, OUT, 0) + '</g>';
 } };
+// Sculpture de glace : un socle de glace taillé aux arêtes biseautées et ses reflets, posé sur la neige ; un cygne de
+// glace, ses deux ailes levées aux plumes festonnées, son long cou en S, ses facettes et ses reflets ; des éclats de
+// glace au pied ; le givre scintille, ailleurs d'une image à l'autre (2 images)
 C.sculpture = { n: 2, draw: f => {
-  const [x, y] = at(0, 0, 10);
-  let s = shadow(0, 0, 0.34, 0.12) + box(-0.18, -0.18, 0.18, 0.18, 0, 10, ICE);
-  s += P(`M${x - 10},${y - 2} Q${x - 12},${y - 12} ${x - 2},${y - 12} Q${x + 8},${y - 12} ${x + 10},${y - 4} Q${x},${y + 2} ${x - 10},${y - 2} Z`, '#E9F8FF', 1)
-    + thick(`M${x + 4},${y - 10} Q${x + 10},${y - 18} ${x + 6},${y - 26} Q${x + 3},${y - 30} ${x + 7},${y - 31}`, 2.6, '#E9F8FF') + P(`M${x + 7},${y - 31} l4,0.8 l-4,0.8 Z`, '#BFE7F7', 0.6)
-    + P(`M${x - 8},${y - 6} Q${x - 4},${y - 16} ${x + 4},${y - 10}`, 'none', 0.6);
-  if (f) s += [[x - 10, y - 16], [x + 12, y - 22], [x + 2, y - 6]].map(([a, b]) => P(`M${a},${b - 2.4} L${a + 0.6},${b - 0.6} L${a + 2.4},${b} L${a + 0.6},${b + 0.6} L${a},${b + 2.4} L${a - 0.6},${b + 0.6} L${a - 2.4},${b} L${a - 0.6},${b - 0.6} Z`, '#FFFFFF', 0.4)).join('');
-  return s;
+  const [bx, by] = at(0, 0, 0), [x, y] = at(0, 0, 10);
+  let s = E(bx, by + 2, 24, 9, '#F4FBFF', 0).replace('stroke="none"', 'stroke="#CFE3EF" stroke-width="1.2"') + shadow(0, 0, 0.3, 0.12) + box(-0.18, -0.18, 0.18, 0.18, 0, 10, ICE);
+  // les reflets du socle et son biseau
+  s += `<path d="M${r2(bx - 12)},${r2(by - 4)} l4,-6 M${r2(bx - 8)},${r2(by - 1)} l2.6,-4 M${r2(bx + 5)},${r2(by - 2)} l3,-5" stroke="#FFFFFF" stroke-width="0.9" stroke-linecap="round" opacity="0.8"/>`
+    + `<path d="M${r2(x - 13.6)},${r2(y + 0.4)} L${r2(x)},${r2(y + 7.2)} L${r2(x + 13.6)},${r2(y + 0.4)}" stroke="#FFFFFF" stroke-width="0.8" fill="none" opacity="0.9"/>`;
+  // l'aile du fond, le corps, l'aile de devant aux plumes festonnées
+  const aile = (dx, dy, c) => P(`M${r2(x - 7 + dx)},${r2(y - 6 + dy)} C${r2(x - 9 + dx)},${r2(y - 15 + dy)} ${r2(x - 3 + dx)},${r2(y - 21 + dy)} ${r2(x + 4 + dx)},${r2(y - 20 + dy)} Q${r2(x + 2 + dx)},${r2(y - 17 + dy)} ${r2(x + 0.4 + dx)},${r2(y - 17.4 + dy)} Q${r2(x + 0.6 + dx)},${r2(y - 14 + dy)} ${r2(x - 2 + dx)},${r2(y - 14 + dy)} Q${r2(x - 1.6 + dx)},${r2(y - 10.6 + dy)} ${r2(x - 4.2 + dx)},${r2(y - 10.4 + dy)} Q${r2(x - 3.6 + dx)},${r2(y - 7.4 + dy)} ${r2(x - 7 + dx)},${r2(y - 6 + dy)} Z`, c, 0.8);
+  s += aile(5, -2, ICE.left);
+  s += P(`M${x - 12},${y - 9} Q${x - 10},${y - 2} ${x - 4},${y - 1} Q${x + 6},${y} ${x + 9},${y - 5} Q${x + 10},${y - 10} ${x + 5},${y - 11} Q${x - 2},${y - 10} ${x - 12},${y - 9} Z`, '#E9F8FF', 0.9)
+    + `<path d="M${x - 3},${y - 1.6} Q${x + 6},${y - 1} ${x + 8.4},${y - 5}" stroke="${ICE.left}" stroke-width="1.4" fill="none"/>`
+    + `<path d="M${x - 9},${y - 7.6} Q${x - 4},${y - 9.4} ${x + 1},${y - 9.6}" stroke="#FFFFFF" stroke-width="0.9" fill="none" stroke-linecap="round"/>`;
+  s += aile(0, 0, '#F4FBFF') + `<path d="M${x - 5.4},${y - 9} Q${x - 4},${y - 15} ${x + 1},${y - 18}" stroke="${ICE.left}" stroke-width="0.6" fill="none"/>`;
+  // le cou en S, la tête, le bec et l'œil
+  const cou = `M${x + 6},${y - 9} Q${x + 12},${y - 17} ${x + 8},${y - 24} Q${x + 4.6},${y - 30} ${x + 8},${y - 32}`;
+  s += thick(cou, 2.6, '#E9F8FF') + `<path d="M${x + 7},${y - 11} Q${x + 10.6},${y - 17} ${x + 7},${y - 23.6}" stroke="#FFFFFF" stroke-width="0.8" fill="none" stroke-linecap="round"/>`
+    + E(x + 9, y - 32, 2.6, 2.1, '#E9F8FF', 0.8) + P(`M${x + 11.2},${y - 32.8} L${x + 15},${y - 31.8} L${x + 11.2},${y - 31} Z`, '#BFE7F7', 0.6) + E(x + 9.6, y - 32.6, 0.45, 0.45, ICE.right, 0);
+  // les éclats de glace au pied du socle
+  s += [[-15, 5, 0], [14, 6, 1], [-6, 9, 2]].map(([dx, dy, k]) => P(`M${r2(bx + dx)},${r2(by + dy)} l${1.2 + k * 0.3},-2 l1.1,1.8 Z`, k % 2 ? ICE.right : ICE.left, 0.45)).join('');
+  // le givre qui scintille
+  return s + (f ? [[x - 12, y - 18, 1.8], [x + 13, y - 24, 1.4], [x + 3, y - 4, 1.2]] : [[x - 6, y - 24, 1.4], [x + 12, y - 12, 1.8], [bx - 10, by - 7, 1.2]]).map(([a, b, r]) => givre(a, b, r)).join('');
 } };
 C.parc = { n: 2, draw: f => {
   let s = shadow(0, 0, 0.5, 0.1) + disc(0, 0, 0.44, 0, '#A8D878', 0.6);
