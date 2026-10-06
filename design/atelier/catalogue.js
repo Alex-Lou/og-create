@@ -209,7 +209,8 @@ function moment(id, meta) {
     .replace(/^palmier(_petit)?(_profond)?(_cocos)?$/, 'palmier').replace(/^arbre_mort(_petit)?(_brun)?(_champignons)?$/, 'arbre_mort')
     .replace(/^buisson(_petit)?(_profond)?(_baies)?$/, 'buisson').replace(/^bruyere(_petite)?(_rose)?(_papillon)?$/, 'bruyere')
     .replace(/^fleurs(_petites)?(_marguerites)?(_abeille)?$/, 'fleurs').replace(/^cactus(_boule)?(_petit)?(_sans_fleur)?$/, 'cactus')
-    .replace(/^souche(_petite)?(_grise)?(_champignons)?$/, 'souche').replace(/^rondin(_petit)?(_gris)?(_champignons)?$/, 'rondin'); return PLANTES_GREVE.has(n) ? 'tuto-1' : PLANTES_ACTE1.has(n) ? 'acte-1' : 'partout'; }
+    .replace(/^souche(_petite)?(_grise)?(_champignons)?$/, 'souche').replace(/^rondin(_petit)?(_gris)?(_champignons)?$/, 'rondin')
+    .replace(/^rocher(_petit)?(_ocre)?(_lezard)?$/, 'rocher'); return PLANTES_GREVE.has(n) ? 'tuto-1' : PLANTES_ACTE1.has(n) ? 'acte-1' : 'partout'; }
   // les scènes du tutoriel (lot J2) : scenes/tutoriel/<étape>_<nom>/…, la partie suit le numéro de l'étape
   if (top === 'scenes') { const n = parseInt(b, 10); return n <= 6 ? 'tuto-1' : n <= 9 ? 'tuto-2' : 'tuto-3'; }
   return 'partout';
@@ -343,6 +344,10 @@ for (const petits of ['', '_petits']) for (const rive of ['', '_rive']) for (con
 // les 8 nénuphars refaits (plantes.js) : nenuphars[_petits][_blancs][_grenouille]
 for (const petits of ['', '_petits']) for (const blancs of ['', '_blancs']) for (const gr of ['', '_grenouille']) {
   PLANTES[`nenuphars${petits}${blancs}${gr}`] = `Nénuphars (${[petits ? 'petits' : 'grands', `fleurs ${blancs ? 'blanches' : 'roses'}`, gr && 'une grenouille'].filter(Boolean).join(', ')})`;
+}
+// les 8 rochers refaits (rochers.js) : rocher[_petit][_ocre][_lezard]
+for (const petit of ['', '_petit']) for (const ocre of ['', '_ocre']) for (const lz of ['', '_lezard']) {
+  PLANTES[`rocher${petit}${ocre}${lz}`] = `Rocher (${[petit ? 'petit' : 'grand', ocre ? 'grès ocre' : 'granite gris', lz && 'un lézard'].filter(Boolean).join(', ')})`;
 }
 // les 16 touffes d'herbe refaites (herbes.js) : touffe[_motte][_petite][_profond][_fleurie]
 for (const motte of ['', '_motte']) for (const petite of ['', '_petite']) for (const vert of ['', '_profond']) for (const fleurie of ['', '_fleurie']) {
