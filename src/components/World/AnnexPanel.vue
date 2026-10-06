@@ -16,15 +16,7 @@
           <span class="annexes__kind">{{ KIND_LABEL[annex.kind] }}<template v-if="annex.max > 1"> · jusqu’à {{ annex.max }} (paliers {{ annex.levels.map(roman).join(', ') }})</template></span>
           <span class="annexes__name">{{ annex.name }}</span>
           <span class="annexes__effect">{{ annex.effect }}</span>
-          <ul v-if="annex.next" class="annexes__cost" :aria-label="`Coût : ${costLabel(annex)}`">
-            <li v-for="(n, r) in annex.next.cost" :key="r" :class="{ 'is-missing': (stock[r] || 0) < n }">
-              <ElementGlyph :glyph="GLYPH[r]" /> {{ n }}
-            </li>
-            <li v-for="(n, f) in annex.next.finds || {}" :key="f" :class="{ 'is-missing': (stock[f] || 0) < n }">
-              <ElementGlyph :glyph="FIND_GLYPH[f]" /> {{ n }}
-            </li>
-            <li :class="{ 'is-missing': coins !== null && coins < annex.next.coins }"><ElementGlyph glyph="ui:coin" /> {{ annex.next.coins }}</li>
-          </ul>
+          <CostList v-if="annex.next" class="annexes__cost" :cost="annex.next.cost" :finds="annex.next.finds" :coins="annex.next.coins" :stock="stock" :have="coins" />
         </span>
         <button
           v-if="annex.next"
@@ -41,19 +33,17 @@
 </template>
 
 <script>
-import ElementGlyph from '@/components/ui/ElementGlyph.vue';
-import { GLYPH, LABEL } from '@/game/resources';
+import CostList from '@/components/World/CostList.vue';
 import { roman } from '@/utils/roman';
 import { spriteUrl } from '@/world/spriteCache';
 import { annexThumb } from '@/world/annexSprites';
 import { annexState, KIND_LABEL } from '@/world/annexes';
-import { FIND_GLYPH } from '@/world/finds';
 
 // Onglet « Annexes » de la fiche d'un bâtiment : ses trois annexes, ce qu'elles font, ce qu'elles coûtent, et le bouton
 // qui lance la pose sur l'île (le choix de la case se fait sur la carte)
 export default {
   name: 'AnnexPanel',
-  components: { ElementGlyph },
+  components: { CostList },
   props: {
     site: { type: Object, required: true },
     // Ressources et trouvailles de climat
@@ -64,7 +54,7 @@ export default {
   },
   emits: ['place'],
   data() {
-    return { GLYPH, KIND_LABEL, FIND_GLYPH };
+    return { KIND_LABEL };
   },
   methods: {
     roman,
@@ -75,9 +65,6 @@ export default {
     artOf(annex) {
       const variant = annex.next && annex.max > 1 ? annex.built : 0;
       return spriteUrl(`annex-thumb-${annex.id}-${variant}`, () => annexThumb(annex.id, variant));
-    },
-    costLabel(annex) {
-      return [...Object.entries(annex.next.cost).map(([r, n]) => `${n} ${LABEL[r]}`), ...Object.entries(annex.next.finds || {}).map(([f, n]) => `${n} ${f}`), `${annex.next.coins} écus`].join(', ');
     }
   }
 };
@@ -108,9 +95,7 @@ export default {
 .annexes__kind { color: var(--ink-500); font-size: 11px; font-weight: 800; text-transform: uppercase; letter-spacing: .03em; }
 .annexes__name { font-family: var(--font-display); font-weight: 700; font-size: 17px; line-height: 1.15; }
 .annexes__effect { color: var(--ink-700); font-size: 13px; font-weight: 700; line-height: 1.3; }
-.annexes__cost { margin: 4px 0 0; padding: 0; list-style: none; display: flex; flex-wrap: wrap; gap: 4px 10px; font-size: 13px; font-weight: 900; color: #4E8A3A; }
-.annexes__cost li { display: inline-flex; align-items: center; gap: 3px; }
-.annexes__cost li.is-missing { color: #B0503A; }
+.annexes__cost { margin: 4px 0 0; }
 .annexes__btn {
   justify-self: end; min-height: 40px; min-width: 96px; padding: 6px 14px; border: 0; border-radius: 999px;
   background: var(--ink-900); color: var(--vellum-50); font-family: var(--font-ui); font-weight: 900; font-size: 14px;
