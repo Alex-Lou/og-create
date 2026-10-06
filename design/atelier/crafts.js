@@ -201,12 +201,30 @@ C.epouvantail = { n: 2, draw: f => {
   }
   return s;
 } };
-// Nichoir : maisonnette sur piquet, toit rouge, trou rond ; un oiseau entre et sort
+// Nichoir : une maisonnette de planches sur son piquet et sa jambe de force, toit rouge à bardeaux, trou rond et son
+// perchoir ; une mésange passe la tête, puis se pose au perchoir (2 images)
+const PLANCHES_NICHOIR = { top: '#F6E7C8', left: '#EAD2A4', right: '#C7AA7A' };
+const mesange = (x, y, s, corps) => `<g transform="translate(${r2(x)} ${r2(y)}) scale(${r2(s)})">`
+  + (corps ? E(0.4, 1.8, 2.6, 2.2, '#F2D24A', 0.7) + P('M-1.4,0.6 Q1.6,-0.4 3.2,1.8 Q1.4,3.4 -1.2,2.6 Z', '#5C9CE0', 0.6) + P('M2.6,2 L5,3.4 L2.8,3.2 Z', '#4A80C0', 0.5) : '')
+  + E(-1.2, -1, 2.2, 2, '#FFFFFF', 0.7) + P('M-3.2,-1.4 Q-1.4,-3.8 1,-2 Q-0.6,-1.6 -3.2,-1.4 Z', '#5C9CE0', 0.5)
+  + E(-1.6, -0.9, 0.45, 0.5, OUT, 0) + E(-1.75, -1.1, 0.15, 0.15, '#FFFFFF', 0) + P('M-3.3,-0.6 L-4.6,-0.2 L-3.3,0.2 Z', '#3A3A44', 0.4)
+  + E(-0.4, 0.2, 0.6, 0.35, '#F7A8B8', 0) + '</g>';
 C.nichoir = { n: 2, draw: f => {
-  let s = shadow(0, 0, 0.22, 0.14) + post(0, 0, 0, 30, WOOD_DARK, 0.03) + box(-0.11, -0.11, 0.11, 0.11, 30, 44, WOOD) + gable(-0.11, -0.11, 0.11, 0.11, 44, 10, ROOF_RED, 0.04);
+  let s = shadow(0, 0, 0.22, 0.14) + post(0, 0, 0, 30, WOOD_DARK, 0.03);
+  const [jx, jy] = at(0, 0.03, 22), [kx, ky] = at(0, 0.09, 30);
+  s += thick(`M${r2(jx)},${r2(jy)} L${r2(kx)},${r2(ky)}`, 1.2, WOOD_DARK.left);
+  s += box(-0.11, -0.11, 0.11, 0.11, 30, 44, PLANCHES_NICHOIR);
+  // les planches de la façade et du côté
+  for (const u of [-0.055, 0, 0.055]) s += L(at(u, 0.11, 30.6), at(u, 0.11, 43.6), '#CDB283', 0.5);
+  for (const v of [-0.04, 0.04]) s += L(at(0.11, v, 30.6), at(0.11, v, 43.6), '#A88E62', 0.5);
+  s += gable(-0.11, -0.11, 0.11, 0.11, 44, 10, ROOF_RED, 0.04);
+  // les bardeaux du pan avant
+  for (const t of [0.33, 0.66]) s += L(at(-0.15, t * 0.15, 54 - 10 * t), at(0.15, t * 0.15, 54 - 10 * t), '#B9503B', 0.6);
+  s += E(...at(0.15, 0, 54), 1.2, 1, ROOF_RED.front, 0.7);
+  // le trou rond et son perchoir
   const [hx, hy] = at(0, 0.11, 39);
-  s += E(hx - 4, hy - 1, 2.6, 2.6, '#3A2A24', 0.8) + L([hx - 4, hy + 2.6], [hx - 4, hy + 5], WOOD_DARK.right, 1);
-  if (f) s += E(hx - 11, hy - 6, 3, 2.4, '#5C9CE0', 0.8) + E(hx - 9.6, hy - 5.4, 1.6, 1.2, '#FFE16A', 0) + E(hx - 9.4, hy - 7, 0.4, 0.4, '#2A2420', 0) + P(`M${hx - 8},${hy - 6.2} l1.6,0.4 l-1.6,0.4 Z`, '#3A3A44', 0.3);
+  s += E(hx, hy - 1, 2.9, 2.9, '#B89A6A', 0.8) + E(hx, hy - 1, 2.2, 2.2, '#3A2A24', 0) + thick(`M${r2(hx)},${r2(hy + 3.2)} l-2.6,1.2`, 0.9, WOOD_DARK.left);
+  s += f ? mesange(hx - 3.6, hy + 1.4, 1.05, true) : mesange(hx + 0.6, hy - 0.8, 0.78, false);
   return s;
 } };
 // Girouette : mât de fer, croix des points cardinaux, coq de cuivre qui tourne (4 images)
