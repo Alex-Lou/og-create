@@ -429,7 +429,8 @@ familiers (H6) et aux créatures d'Anya (H8).
    - **Équilibrage** de tous les chiffres : prix des quartiers, trouvailles (2 à 4 par ramassage, repousse 6 h,
      coûts de 8 à 15), effets des lieux, annexes de climat (+5/+4 par heure, palier III, 500 écus).
    - **Règle « près de »** des créations : vérifiée seulement à la pose.
-   - **Création cachée** derrière un bâtiment (l'appui long est capté par le bâtiment).
+   - ~~**Création cachée** derrière un bâtiment (l'appui long est capté par le bâtiment)~~ : corrigé (l'appui long
+     atteint la création sous le doigt ; le toucher court reste au bâtiment).
    - ~~**Étiquettes des bâtiments** dessinées sur la tête des habitants~~ : corrigé (le nom s'efface à demi quand un
      habitant passe dessous).
    - **Humeur rétroactive** au ramassage de la production.
