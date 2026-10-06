@@ -227,14 +227,31 @@ C.nichoir = { n: 2, draw: f => {
   s += f ? mesange(hx - 3.6, hy + 1.4, 1.05, true) : mesange(hx + 0.6, hy - 0.8, 0.78, false);
   return s;
 } };
-// Girouette : mât de fer, croix des points cardinaux, coq de cuivre qui tourne (4 images)
+// Girouette : socle de pierre, mât de fer et sa boule de laiton, croix des points cardinaux ; le coq de cuivre, dressé
+// sur sa flèche, tourne au vent (4 images)
+const coqCuivre = () => trait2('M-10,0 L9,0', OUT, 2.4) + trait2('M-10,0 L9,0', COPPER.right, 1.1)
+  + P('M11.6,0 L8,-2.4 L8,2.4 Z', COPPER.left, 0.8) + P('M-10,0 L-13,-3 L-11.4,0 L-13,3 Z', COPPER.left, 0.7)
+  + trait2('M-0.6,-0.6 L-0.6,-3.4 M1.2,-0.6 L1.2,-3.4', OUT, 0.7)
+  + P('M-3,-6 Q-8.6,-12 -6.4,-15.4 Q-4.2,-11.4 -1.4,-9 Z', COPPER.right, 0.8) + P('M-2.2,-6.6 Q-6,-14.6 -2.8,-16.6 Q-1.8,-12 0,-9.4 Z', COPPER.left, 0.8)
+  + E(0.4, -5.4, 4.6, 3, COPPER.left, 0.9) + E(-0.6, -6.4, 2.6, 1.2, COPPER.top, 0) + P('M-1.6,-5.6 Q0.6,-3.4 3,-5.2', 'none', 0.6)
+  + E(4, -9.4, 2.2, 2.1, COPPER.left, 0.9) + E(3.4, -10, 0.9, 0.6, COPPER.top, 0)
+  + P('M2.8,-11.2 q0.4,-1.8 1.4,-0.8 q0.8,-1.6 1.5,-0.1 q0.8,-0.9 0.9,0.6 Z', '#E8483C', 0.6)
+  + P('M6,-9.8 L8.2,-9.2 L6,-8.6 Z', '#F2B33D', 0.5) + E(5.6, -8, 0.6, 0.8, '#E8483C', 0.4) + E(4.6, -9.8, 0.45, 0.5, OUT, 0);
+const trait2 = (d, col, w) => `<path d="${d}" stroke="${col}" stroke-width="${w}" fill="none" stroke-linecap="round" stroke-linejoin="round"/>`;
 C.girouette = { n: 4, draw: f => {
   const [x, y] = at(0, 0);
-  let s = shadow(0, 0, 0.22, 0.14) + box(-0.07, -0.07, 0.07, 0.07, 0, 4, STONE) + `<rect x="${x - 1.2}" y="${y - 52}" width="2.4" height="48" fill="${IRON.left}" stroke="${OUT}" stroke-width="0.8"/>`;
-  s += thick(`M${x - 11},${y - 40} L${x + 11},${y - 40} M${x - 6},${y - 44} L${x + 6},${y - 36}`, 1, IRON.left);
-  s += [['N', x - 6, y - 45], ['E', x + 12, y - 40], ['S', x + 6, y - 34], ['O', x - 13, y - 39]].map(([t, a, b]) => `<text x="${a}" y="${b}" font-family="sans-serif" font-size="4.4" font-weight="700" fill="${OUT}">${t}</text>`).join('');
+  let s = shadow(0, 0, 0.22, 0.14) + box(-0.085, -0.085, 0.085, 0.085, 0, 2.6, STONE) + box(-0.06, -0.06, 0.06, 0.06, 2.6, 4.6, STONE);
+  // le mât : éclairé à gauche, une bague, la boule de laiton
+  s += `<rect x="${x - 1.3}" y="${y - 52}" width="2.6" height="46.4" fill="${IRON.left}" stroke="${OUT}" stroke-width="0.8"/>` + `<rect x="${x + 0.2}" y="${y - 51.6}" width="0.8" height="45.6" fill="${IRON.right}"/><rect x="${x - 1}" y="${y - 51.6}" width="0.6" height="45.6" fill="${IRON.top}"/>`
+    + E(x, y - 24, 2.2, 1, IRON.left, 0.7) + E(x, y - 47, 2.4, 2.3, BRASS.left, 0.8) + E(x - 0.7, y - 47.7, 0.9, 0.7, BRASS.top, 0);
+  // la croix des points cardinaux, ses bouts en boule, les lettres
+  const bras = [[-11, 0], [11, 0], [-6, -4], [6, 4]];
+  s += trait2(`M${x - 11},${y - 40} L${x + 11},${y - 40} M${x - 6},${y - 44} L${x + 6},${y - 36}`, OUT, 2.2) + trait2(`M${x - 11},${y - 40} L${x + 11},${y - 40} M${x - 6},${y - 44} L${x + 6},${y - 36}`, IRON.left, 1)
+    + bras.map(([dx, dy]) => E(x + dx, y - 40 + dy, 1, 1, IRON.left, 0.6)).join('')
+    + [['N', x - 7.4, y - 45.4], ['E', x + 12.6, y - 38.6], ['S', x + 6, y - 31.6], ['O', x - 15.6, y - 38.6]].map(([t, a, b]) => `<text x="${a}" y="${b}" font-family="sans-serif" font-size="4.4" font-weight="700" fill="${OUT}">${t}</text>`).join('');
+  // le coq, qui tourne
   const sx = [1, 0.5, -1, -0.5][f];
-  s += `<g transform="translate(${x} ${y - 54}) scale(${sx} 1)">` + P('M-7,0 L4,0 Q8,-1 7,-6 Q5,-9 3,-6 L2,-3 Q-2,-7 -6,-4 Z', COPPER.left, 0.9) + P('M3,-6 L4,-9.6 L6,-7 Z', '#E8483C', 0.6) + E(4.6, -5, 0.5, 0.5, OUT, 0) + P('M-7,0 L-10,-5 L-6,-3 Z', COPPER.right, 0.7) + '</g>';
+  s += `<g transform="translate(${x} ${y - 52}) scale(${sx} 1)">${coqCuivre()}</g>`;
   return s;
 } };
 // Fontaine : vasque ronde, colonne et coupe ; l'eau retombe en gouttes (3 images)
