@@ -38,9 +38,9 @@ export default {
 </script>
 
 <style scoped>
-.hand { position: fixed; z-index: 45; width: 0; height: 0; pointer-events: none; }
+.hand { position: fixed; z-index: var(--z-hand); width: 0; height: 0; pointer-events: none; }
 .hand__ring {
-  position: absolute; left: -30px; top: -30px; width: 60px; height: 60px; border-radius: 50%;
+  position: absolute; left: -30px; top: -30px; width: 60px; height: 60px; border-radius: var(--r-round);
   box-shadow: 0 0 0 3px rgba(227, 169, 59, .9), 0 0 18px rgba(227, 169, 59, .6);
   animation: hand-ring 1.4s ease-out infinite;
 }

@@ -1,0 +1,30 @@
+/* Profondeurs (z-index) : l'ordre des couches, du fond vers le dessus. Un nombre ne se compare qu'aux couches du
+   même contexte : la page ; la coque de l'application (.oc-app__shell, elle-même une couche de la page) ; l'île.
+   À égalité, l'ordre du document départage. Les petites profondeurs (0 à 9) restent dans leur composant. */
+:root {
+  /* Dans la page */
+  --z-shell: 1;       /* la coque : en-tête, onglet en cours, île */
+  --z-tabbar: 25;
+  --z-guide: 40;      /* Brume et sa bulle */
+  --z-wreck: 40;      /* le naufrage (rendu dans la page) */
+  --z-hand: 45;       /* la main du tutoriel */
+  --z-sheet: 70;      /* les fiches de l'île (rendues dans la page) */
+  --z-unlock: 80;     /* l'ouverture d'un chapitre du Grimoire */
+  --z-prologue: 90;
+  --z-modal: 1000;
+  --z-comet: 1100;
+  --z-drag: 3000;     /* ce qu'on fait glisser sur l'établi */
+  --z-grain: 9998;    /* le grain de vélin, par-dessus tout */
+  --z-toast: 9999;
+
+  /* Dans la coque */
+  --z-header: 10;
+  --z-brief: 19;      /* la consigne de l'Épreuve, posée sur l'athanor */
+  --z-dock: 20;       /* l'athanor, en bas (téléphone) */
+  --z-world: 20;      /* l'île */
+  --z-reveal: 30;     /* la révélation d'une découverte, plein écran (téléphone) */
+  --z-immersive: 30;  /* l'île en plein écran */
+
+  /* Dans l'île */
+  --z-game: 80;       /* mini-jeux et Récolte */
+}

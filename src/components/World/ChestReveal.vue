@@ -97,7 +97,7 @@ export default {
 .chest__band { fill: var(--band); }
 .chest__lock { fill: var(--lock); stroke: rgba(40, 24, 12, .5); stroke-width: 1; }
 .chest__lid { transform-box: view-box; transform-origin: 102px 46px; animation: chest-lid .45s .7s cubic-bezier(.3, 1.6, .5, 1) both; }
-.chest__glow, .chest__rays { position: absolute; inset: 0; margin: auto; border-radius: 50%; opacity: 0; }
+.chest__glow, .chest__rays { position: absolute; inset: 0; margin: auto; border-radius: var(--r-round); opacity: 0; }
 .chest__glow { width: 150px; height: 150px; background: radial-gradient(circle, var(--rarity) 0%, transparent 68%); animation: chest-glow .6s .75s ease-out both; }
 .chest__rays {
   width: 230px; height: 230px;

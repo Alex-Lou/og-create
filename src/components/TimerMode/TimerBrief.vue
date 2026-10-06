@@ -99,7 +99,7 @@ export default {
     right: 0;
     /* Posée sur le dock, à sa hauteur mesurée (repli : hauteur nominale) */
     bottom: calc(var(--oc-dock-h, var(--oc-dock-height)) + var(--oc-tabbar-h));
-    z-index: 19;
+    z-index: var(--z-brief);
     margin: 0;
     gap: 6px;
     padding: 8px 16px;

@@ -2,7 +2,7 @@
 /* Comète ajoutée au body par utils/fx.js (au-dessus des fenêtres) */
 .oc-comet {
   position: fixed;
-  z-index: 1100;
+  z-index: var(--z-comet);
   width: 40px;
   height: 40px;
   display: flex;

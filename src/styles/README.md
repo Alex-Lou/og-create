@@ -9,11 +9,12 @@ La seule source des valeurs de design, en variables CSS (`--nom`). Un fichier pa
 | Fichier | Contenu |
 |---|---|
 | `colors.css` | la palette (vélin, encre, cuir, noyer, or, encres secondaires), le fond et le texte posé dessus |
-| `typography.css` | les deux familles (Fraunces, Nunito) |
-| `shapes.css` | arrondis, tranche « papier », ombres portées |
+| `typography.css` | les deux familles (Fraunces, Nunito), et IM Fell (Grimoire, prologue) |
+| `shapes.css` | arrondis (de `--r-xs` à `--r-pill`, et `--r-round` pour un cercle), tranche « papier », ombres portées |
 | `roles.css` | les rôles des composants (`--oc-*`), branchés sur la palette |
 | `motion.css` | courbes et durées |
 | `layout.css` | marges, dock, barre d'onglets, rail |
+| `depth.css` | profondeurs (`z-index`) : l'ordre des couches de la page, de la coque de l'application et de l'île |
 | `dark.css` | Veillée, le thème sombre : il redéfinit la palette, donc il vient en dernier |
 
 `tokens/index.css` les lit dans cet ordre.

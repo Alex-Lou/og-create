@@ -99,7 +99,7 @@ export default {
   gap: 4px;
   padding: 7px 3px 6px;
   border: 0;
-  border-radius: 14px;
+  border-radius: var(--r-tile);
   background: linear-gradient(180deg, rgba(255, 255, 255, .6), rgba(255, 255, 255, 0) 62%), var(--card);
   box-shadow: inset 0 0 0 1px var(--oc-line), 0 3px 0 var(--card-edge), var(--shadow-1);
   color: var(--ink-700);
@@ -120,7 +120,7 @@ export default {
   flex-shrink: 0;
   display: grid;
   place-items: center;
-  border-radius: 50%;
+  border-radius: var(--r-round);
   background: radial-gradient(circle at 38% 32%, #fff 0 18%, var(--tc) 100%);
   /* Liseré clair : le médaillon se détache du carton teinté */
   box-shadow: 0 0 0 1.5px rgba(255, 255, 255, .8), 0 1px 2px rgba(74, 52, 38, .12);
@@ -154,7 +154,7 @@ export default {
   padding: 0 5px;
   display: grid;
   place-items: center;
-  border-radius: 999px;
+  border-radius: var(--r-pill);
   background: var(--verdigris-500);
   color: #fff;
   font-family: var(--font-ui);
@@ -197,7 +197,7 @@ export default {
   padding: 0 5px;
   display: grid;
   place-items: center;
-  border-radius: 999px;
+  border-radius: var(--r-pill);
   background: var(--ink-900);
   color: var(--gold-200);
   font-family: var(--font-display);

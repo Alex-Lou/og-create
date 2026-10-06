@@ -102,7 +102,7 @@ export default {
 .chests__open { margin-top: 10px; width: 100%; }
 .chests__list { display: grid; gap: 8px; margin: 0; padding: 0; list-style: none; }
 .chests__item { display: grid; grid-template-columns: auto 1fr auto; align-items: center; gap: 10px; }
-.chests__chip { padding: 2px 8px; border-radius: 999px; background: var(--rarity); color: var(--ink-900); font-size: 11px; font-weight: 900; }
+.chests__chip { padding: 2px 8px; border-radius: var(--r-pill); background: var(--rarity); color: var(--ink-900); font-size: 11px; font-weight: 900; }
 .chests__label { font-size: 14px; font-weight: 700; }
 .chests__item-btn { min-height: 36px; padding: 4px 14px; }
 .chests__all { width: 100%; }

@@ -1,4 +1,4 @@
-/* Jetons de design « Vélin & Veillée » : seule source des couleurs, typographies, formes et mouvements.
+/* Jetons de design « Vélin & Veillée » : seule source des couleurs, typographies, formes, profondeurs et mouvements.
    Le contenu est en papier (vélin), le jeu en matière (cuir, or, noyer), l'encre est sépia.
    Un fichier par famille ; le thème sombre (Veillée) en dernier, car il redéfinit la palette. */
 @import './colors.css';
@@ -7,4 +7,5 @@
 @import './roles.css';
 @import './motion.css';
 @import './layout.css';
+@import './depth.css';
 @import './dark.css';

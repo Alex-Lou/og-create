@@ -216,7 +216,7 @@ export default {
   height: 132px;
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  border-radius: 50%;
+  border-radius: var(--r-round);
   overflow: hidden;
   background: radial-gradient(circle at 38% 30%, #fff, var(--hc));
   box-shadow: 0 0 0 5px var(--vellum-50), 0 0 0 6px var(--oc-line), var(--shadow-2);

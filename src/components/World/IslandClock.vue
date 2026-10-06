@@ -76,7 +76,7 @@ export default {
 <style scoped>
 .island-clock {
   appearance: none; display: inline-flex; align-items: center; gap: 4px; margin-left: 6px; padding: 2px 8px 2px 5px;
-  border: 0; border-radius: 999px; background: rgba(255, 250, 240, .7); box-shadow: inset 0 0 0 1px rgba(74, 52, 38, .14);
+  border: 0; border-radius: var(--r-pill); background: rgba(255, 250, 240, .7); box-shadow: inset 0 0 0 1px rgba(74, 52, 38, .14);
   color: var(--ink-700); font: inherit; font-size: 12px; font-weight: 800; letter-spacing: 0; text-transform: none;
   vertical-align: middle; cursor: pointer; touch-action: manipulation;
 }

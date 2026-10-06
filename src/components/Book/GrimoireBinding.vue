@@ -260,7 +260,7 @@ export default {
 .grim__board--left { left: calc(-1 * (var(--m) + var(--smax))); right: 50%; border-radius: 12px 3px 3px 12px; }
 /* Double filet doré poussé au fer */
 .grim__tool {
-  position: absolute; inset: 5px; border-radius: 8px;
+  position: absolute; inset: 5px; border-radius: var(--r-xs);
   border: 1px solid rgba(214, 170, 90, .55);
   box-shadow: inset 0 0 0 2px rgba(0, 0, 0, 0), inset 0 0 0 3px rgba(214, 170, 90, .3);
 }
@@ -332,14 +332,14 @@ export default {
 .grim__clasp { position: absolute; z-index: 1; width: 26px; height: 56px; top: calc(50% - 28px); right: calc(-1 * (var(--m) + var(--smax)) - 9px); background: var(--plate) center / contain no-repeat; filter: drop-shadow(0 2px 2px rgba(0, 0, 0, .5)); }
 .grim.is-compact .grim__clasp { width: 20px; height: 44px; top: calc(50% - 22px); right: calc(-1 * (var(--m) + var(--smax)) - 7px); }
 .grim__gem {
-  position: absolute; left: 50%; top: 50%; width: 14px; height: 14px; margin: -7px 0 0 -7px; border-radius: 50%;
+  position: absolute; left: 50%; top: 50%; width: 14px; height: 14px; margin: -7px 0 0 -7px; border-radius: var(--r-round);
   background: radial-gradient(circle at 34% 30%, #FFFFFF 0, var(--silk) 34%, var(--gem-deep) 100%);
   box-shadow: inset 0 -1px 2px rgba(0, 0, 0, .5), 0 0 0 1.5px #7A5A1E;
   transition: background .6s ease;
 }
 .grim.is-compact .grim__gem { width: 11px; height: 11px; margin: -5.5px 0 0 -5.5px; }
 .grim__gem::after {
-  content: ''; position: absolute; inset: -9px; border-radius: 50%;
+  content: ''; position: absolute; inset: -9px; border-radius: var(--r-round);
   background: radial-gradient(closest-side, var(--silk), transparent);
   opacity: .35; animation: grim-gem 3.2s ease-in-out infinite;
 }
@@ -358,7 +358,7 @@ export default {
 }
 .grim__motes { position: absolute; inset: 0; z-index: 3; overflow: visible; }
 .grim__motes i {
-  position: absolute; bottom: 8%; left: calc(var(--k) * 12.5% - 2%); width: 3px; height: 3px; border-radius: 50%;
+  position: absolute; bottom: 8%; left: calc(var(--k) * 12.5% - 2%); width: 3px; height: 3px; border-radius: var(--r-round);
   background: radial-gradient(circle, #FFF2C4, rgba(255, 210, 120, 0) 70%);
   box-shadow: 0 0 4px rgba(255, 214, 140, .8);
   opacity: 0; animation: grim-mote 9s linear calc(var(--k) * -1.3s) infinite;
@@ -396,7 +396,7 @@ export default {
 .grim__light { position: absolute; width: 7%; aspect-ratio: 1; transform: translate(-50%, -50%); opacity: 0; color: #FFE6A8; }
 .grim__light svg { display: block; width: 100%; height: 100%; fill: none; stroke: currentColor; stroke-width: 2.6; stroke-linecap: round; stroke-linejoin: round; filter: drop-shadow(0 0 3px rgba(255, 214, 120, .95)); }
 .grim__cover-gem {
-  position: absolute; left: 50%; top: 50%; width: 15%; aspect-ratio: 1; border-radius: 50%; transform: translate(-50%, -50%);
+  position: absolute; left: 50%; top: 50%; width: 15%; aspect-ratio: 1; border-radius: var(--r-round); transform: translate(-50%, -50%);
   background: radial-gradient(circle at 34% 30%, #FFFFFF 0, #C2475A 30%, #5A1220 100%);
   box-shadow: inset 0 -2px 4px rgba(0, 0, 0, .55), 0 0 0 2px #7A5A1E, 0 0 0 4px rgba(201, 162, 74, .6), 0 0 18px rgba(255, 120, 130, .45);
   filter: brightness(.7);

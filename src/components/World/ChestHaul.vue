@@ -105,7 +105,7 @@ export default {
 .haul { display: grid; gap: 14px; font-family: var(--font-ui); }
 .haul__grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(124px, 1fr)); gap: 10px; margin: 0; padding: 0; list-style: none; }
 .haul__card {
-  display: grid; justify-items: center; align-content: start; gap: 4px; padding: 8px 8px 12px; border-radius: 16px;
+  display: grid; justify-items: center; align-content: start; gap: 4px; padding: 8px 8px 12px; border-radius: var(--r-md);
   background: var(--vellum-50); box-shadow: inset 0 0 0 2px var(--rarity); text-align: center;
 }
 .haul__card.is-commun { --wood: #9A6A3E; --band: #6E6A64; --lock: #C9A04A; }
@@ -113,7 +113,7 @@ export default {
 .haul__card.is-epique { --wood: #6C3FA2; --band: #E2B546; --lock: #F4D67A; }
 .haul__card.is-legendaire { --wood: #E2AE3A; --band: #B23A48; --lock: #FFF1C2; }
 .haul__rarity {
-  padding: 1px 8px; border-radius: 999px; background: var(--rarity); color: var(--ink-900);
+  padding: 1px 8px; border-radius: var(--r-pill); background: var(--rarity); color: var(--ink-900);
   font-size: 10px; font-weight: 900; text-transform: uppercase; letter-spacing: .05em;
 }
 .haul__stage { position: relative; display: grid; place-items: center; width: 100%; height: 72px; }
@@ -124,7 +124,7 @@ export default {
 .haul__lock { fill: var(--lock); stroke: rgba(40, 24, 12, .5); stroke-width: .8; }
 .haul__lid { transform-box: view-box; transform-origin: 51px 24px; animation: haul-lid .3s calc(var(--delay) + .5s) cubic-bezier(.3, 1.6, .5, 1) both; }
 .haul__glow {
-  width: 76px; height: 76px; border-radius: 50%; background: radial-gradient(circle, var(--rarity) 0%, transparent 68%);
+  width: 76px; height: 76px; border-radius: var(--r-round); background: radial-gradient(circle, var(--rarity) 0%, transparent 68%);
   animation: haul-glow .5s calc(var(--delay) + .75s) ease-out both;
 }
 .haul__prize { display: grid; place-items: center; animation: haul-pop .35s calc(var(--delay) + .85s) cubic-bezier(.3, 1.5, .5, 1) both; }
@@ -134,7 +134,7 @@ export default {
 .haul__name { font-size: 14px; font-weight: 900; line-height: 1.2; color: var(--ink-900); }
 .haul__from { font-size: 11px; font-weight: 700; color: var(--ink-500); }
 .haul__wear {
-  margin-top: 4px; min-height: 32px; padding: 4px 16px; border: 0; border-radius: 999px;
+  margin-top: 4px; min-height: 32px; padding: 4px 16px; border: 0; border-radius: var(--r-pill);
   background: var(--ink-900); color: var(--vellum-50); font-family: var(--font-ui); font-weight: 900; font-size: 13px;
   cursor: pointer; touch-action: manipulation;
 }
@@ -143,7 +143,7 @@ export default {
 .haul__note { margin: 0 0 10px; color: var(--ink-500); font-style: italic; font-size: 14px; line-height: 1.4; }
 .haul__total {
   display: flex; flex-wrap: wrap; justify-content: center; align-items: center; gap: 4px 12px; margin: 0;
-  padding: 8px 12px; border-radius: 12px; background: var(--vellum-200); font-size: 15px; font-weight: 900; color: var(--ink-900);
+  padding: 8px 12px; border-radius: var(--r-sm); background: var(--vellum-200); font-size: 15px; font-weight: 900; color: var(--ink-900);
   animation: haul-in .3s var(--delay) ease-out both;
 }
 .haul__total-label { width: 100%; text-align: center; font-size: 11px; font-weight: 800; text-transform: uppercase; letter-spacing: .05em; color: var(--ink-500); }

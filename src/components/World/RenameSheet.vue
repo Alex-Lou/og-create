@@ -69,7 +69,7 @@ export default {
 .rename { display: grid; gap: 8px; font-family: var(--font-ui); }
 .rename__label { font-size: 12px; font-weight: 800; color: var(--ink-500); }
 .rename__input {
-  min-height: 46px; padding: 8px 14px; border: 1px solid rgba(74, 52, 38, .25); border-radius: 14px;
+  min-height: 46px; padding: 8px 14px; border: 1px solid rgba(74, 52, 38, .25); border-radius: var(--r-tile);
   background: var(--vellum-50); color: var(--ink-900); font-family: var(--font-display); font-weight: 700; font-size: 19px;
 }
 .rename__input[aria-invalid='true'] { border-color: #B0503A; }

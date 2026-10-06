@@ -90,7 +90,7 @@ export default {
 
 <style scoped>
 .guide {
-  position: fixed; z-index: 40;
+  position: fixed; z-index: var(--z-guide);
   left: 12px; right: 12px; bottom: calc(var(--oc-tabbar-h) + 12px + env(safe-area-inset-bottom));
   max-width: 440px;
   display: flex; align-items: flex-end; gap: 10px;
@@ -112,7 +112,7 @@ export default {
 .guide__text { margin: 4px 0 8px; font-family: var(--oc-font-display); font-style: italic; font-size: 16px; line-height: 1.4; }
 .guide__actions { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: 8px; }
 .guide__btn {
-  appearance: none; border: 0; cursor: pointer; min-height: 36px; padding: 6px 16px; border-radius: 999px;
+  appearance: none; border: 0; cursor: pointer; min-height: 36px; padding: 6px 16px; border-radius: var(--r-pill);
   background: var(--ink-900); color: var(--vellum-50); font-family: var(--font-ui); font-weight: 900; font-size: 14px;
   touch-action: manipulation;
 }
@@ -121,13 +121,13 @@ export default {
 
 /* Naissance : les volutes se resserrent sur Brume, qui prend forme dans un flou, puis la bulle paraît */
 .guide__mist {
-  position: absolute; left: 50%; bottom: 12px; width: 64px; height: 42px; margin-left: -32px; border-radius: 50%;
+  position: absolute; left: 50%; bottom: 12px; width: 64px; height: 42px; margin-left: -32px; border-radius: var(--r-round);
   background: radial-gradient(closest-side, rgba(232, 242, 250, .98), rgba(206, 228, 244, .5) 60%, rgba(206, 228, 244, 0));
   animation: guide-mist 1.6s cubic-bezier(.45, 0, .25, 1) var(--d) both;
 }
 /* Éclat quand la flamme naît */
 .guide.is-birth .guide__spirit::after {
-  content: ''; position: absolute; left: 50%; bottom: 18px; width: 60px; height: 60px; margin-left: -30px; border-radius: 50%;
+  content: ''; position: absolute; left: 50%; bottom: 18px; width: 60px; height: 60px; margin-left: -30px; border-radius: var(--r-round);
   background: radial-gradient(closest-side, rgba(170, 230, 255, .9), rgba(170, 230, 255, 0));
   animation: guide-bloom .9s ease-out 1.05s both; pointer-events: none;
 }

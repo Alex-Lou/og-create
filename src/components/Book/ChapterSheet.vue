@@ -168,7 +168,7 @@ export default {
   height: 36px;
   display: grid;
   place-items: center;
-  border-radius: 50%;
+  border-radius: var(--r-round);
   background: #FFFDF8;
   color: var(--ci, var(--ink-700));
   font-family: var(--oc-font-display);
@@ -191,7 +191,7 @@ export default {
   min-height: 40px;
   padding: 0 14px;
   border: 0;
-  border-radius: 999px;
+  border-radius: var(--r-pill);
   background: var(--vellum-50);
   color: var(--ink-700);
   box-shadow: inset 0 0 0 1px var(--oc-line), 0 2px 0 var(--vellum-400);
@@ -214,7 +214,7 @@ export default {
   gap: 6px;
   padding: 8px 4px;
   border: 0;
-  border-radius: 14px;
+  border-radius: var(--r-tile);
   background: #FFFDF8;
   color: var(--ci);
   box-shadow: inset 0 0 0 1.5px var(--ci), 0 2px 0 var(--vellum-400);
@@ -226,7 +226,7 @@ export default {
 .pages__cell:active { transform: translateY(2px) scale(0.97); }
 .pages__cell.is-found { background: var(--cc); color: var(--ink-900); box-shadow: inset 0 0 0 1px var(--oc-line), 0 2px 0 var(--vellum-400); }
 .pages__cell.is-on { box-shadow: inset 0 0 0 2.5px var(--gold-500), 0 2px 0 var(--gold-600); }
-.pages__medal { width: 40px; height: 40px; display: grid; place-items: center; border-radius: 50%; background: #FFFDF8; font-family: var(--oc-font-display); font-weight: 700; font-size: 22px; line-height: 1; }
+.pages__medal { width: 40px; height: 40px; display: grid; place-items: center; border-radius: var(--r-round); background: #FFFDF8; font-family: var(--oc-font-display); font-weight: 700; font-size: 22px; line-height: 1; }
 .pages__cell.is-found .pages__medal { font-size: 26px; }
 .pages__label { max-width: 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-weight: 800; font-size: 11.5px; }
 .pages__cell:not(.is-found) .pages__label { font-family: var(--oc-font-display); font-size: 13px; letter-spacing: 0.04em; }

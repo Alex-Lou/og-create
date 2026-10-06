@@ -123,6 +123,6 @@ export default {
 /* Fondu de sortie de la fenêtre qui contient le sceau */
 .g-modal-backdrop:has(.seal--leaving) {
   opacity: 0;
-  transition: opacity 320ms var(--oc-ease-out);
+  transition: opacity var(--oc-medium) var(--oc-ease-out);
 }
 </style>

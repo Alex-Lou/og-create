@@ -87,7 +87,7 @@ export default {
 
 <style scoped>
 .pn {
-  position: fixed; inset: 0; z-index: 90; display: grid; place-items: center; padding: 16px; overflow-y: auto;
+  position: fixed; inset: 0; z-index: var(--z-prologue); display: grid; place-items: center; padding: 16px; overflow-y: auto;
   background: radial-gradient(circle at 50% 40%, rgba(40, 26, 18, .82), rgba(12, 8, 6, .94));
 }
 .pn__page {
@@ -96,18 +96,18 @@ export default {
   box-shadow: inset 0 0 0 2px #C9A86A, inset 0 0 0 7px #F3E6C6, inset 0 0 0 8px #B99556, 0 18px 50px rgba(0, 0, 0, .55);
   color: #3E2A1E; text-align: center;
 }
-.pn__brume { display: flex; align-items: center; gap: 8px; margin: 0 0 12px; text-align: left; font-family: 'IM Fell English', Georgia, serif; font-style: italic; font-size: 17px; color: #523B2C; }
-.pn__ex { margin: 0; font-family: 'IM Fell English', Georgia, serif; font-style: italic; font-size: 16px; color: #6E5646; }
-.pn__title { margin: 0 0 14px; font-family: 'IM Fell English', Georgia, serif; font-weight: 400; font-size: 34px; }
+.pn__brume { display: flex; align-items: center; gap: 8px; margin: 0 0 12px; text-align: left; font-family: var(--font-fell); font-style: italic; font-size: 17px; color: #523B2C; }
+.pn__ex { margin: 0; font-family: var(--font-fell); font-style: italic; font-size: 16px; color: #6E5646; }
+.pn__title { margin: 0 0 14px; font-family: var(--font-fell); font-weight: 400; font-size: 34px; }
 .pn__name { position: relative; display: block; margin: 0 auto 14px; max-width: 320px; }
-.pn__label { display: block; font-family: 'IM Fell English SC', Georgia, serif; font-size: 15px; letter-spacing: .06em; color: #2F6286; }
+.pn__label { display: block; font-family: var(--font-fell-sc); font-size: 15px; letter-spacing: .06em; color: #2F6286; }
 .pn__name input {
   width: 100%; padding: 6px 32px 4px; border: 0; border-bottom: 2px solid #8A6A3A; background: transparent; text-align: center;
-  font-family: 'IM Fell English', Georgia, serif; font-size: 30px; color: #2A1A10; outline: none;
+  font-family: var(--font-fell); font-size: 30px; color: #2A1A10; outline: none;
 }
 .pn__name input:focus { border-bottom-color: #2F6286; }
 .pn__quill { position: absolute; right: 2px; bottom: 8px; width: 24px; height: 24px; color: #6E5646; }
-.pn__lead { margin: 4px 0 8px; font-family: 'IM Fell English', Georgia, serif; font-style: italic; font-size: 16px; color: #523B2C; }
+.pn__lead { margin: 4px 0 8px; font-family: var(--font-fell); font-style: italic; font-size: 16px; color: #523B2C; }
 .pn__field { display: block; margin: 0 0 10px; text-align: left; font-family: var(--font-ui); font-size: 12px; font-weight: 800; color: #6E5646; }
 .pn__field input {
   display: block; width: 100%; margin-top: 4px; padding: 10px 12px; border: 0; border-radius: 10px;
@@ -117,9 +117,9 @@ export default {
 .pn__field input:focus-visible { outline: 2px solid #2F6286; }
 .pn__error { margin: 6px 0; font-family: var(--font-ui); font-size: 13px; font-weight: 800; color: #9A2A1E; }
 .pn__sign {
-  width: 100%; min-height: 48px; margin-top: 6px; border: 0; border-radius: 999px; cursor: pointer;
+  width: 100%; min-height: 48px; margin-top: 6px; border: 0; border-radius: var(--r-pill); cursor: pointer;
   background: #3E2A1E; color: #FFF8E8; box-shadow: 0 4px 0 #1E120A;
-  font-family: 'IM Fell English', Georgia, serif; font-size: 20px;
+  font-family: var(--font-fell); font-size: 20px;
 }
 .pn__sign:disabled { opacity: .7; cursor: default; }
 .pn__links { display: flex; justify-content: space-between; margin-top: 12px; }

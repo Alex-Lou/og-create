@@ -164,14 +164,20 @@ chronométrer 20 appels. Comparer à zoom égal, au même endroit.
   `.vue` et `.css` côte à côte ; des jetons pour couleurs, polices, arrondis, ombres, profondeurs et durées ; les marges
   restent des nombres) : 1) jetons et base découpés (fait) ; 2) chaque composant de l'île reprend ses styles (fait :
   `X.css` à côté de chaque composant, en `<style scoped src>` ; les primitives partagées des fiches de l'île dans
-  `components/World/island-ui.css`, global, chargé par `WorldView`) ; 3) les couleurs en dur deviennent des jetons ;
+  `components/World/island-ui.css`, global, chargé par `WorldView`) ; 3) les valeurs en dur deviennent des jetons,
+  sur trois niveaux (la palette ; des rôles globaux pour ce que plusieurs composants partagent ; des jetons locaux
+  nommés en tête du CSS de chaque composant) : 3a-1 formes, profondeurs (`tokens/depth.css`, l'ordre des couches),
+  police IM Fell et durées (fait), 3a-2 couleurs partagées, puis les jetons locaux (île, Grimoire, le reste) ;
   4) les dossiers rangés par domaine ; 5) `App.vue` et `BookView.vue` découpés.
 - **Piège du passage en scoped** : une règle scoped gagne un attribut de spécificité. Si elle vise aussi la racine d'un
   composant enfant (un glyphe `img.glyph` dans un portrait, par exemple), elle peut l'emporter sur le style propre de
   l'enfant : garder la spécificité d'avant avec `:where()` sur l'ancêtre (`SiteOverview.css`, le portrait).
-- **Preuve « rien de cassé »** pour chaque étape : le CSS compilé comparé avant/après (mêmes variables, mêmes règles
-  dans le même ordre, quand rien ne doit bouger) et un banc de captures (une vingtaine d'écrans, téléphone et PC, même
+- **Preuve « rien de cassé »** pour chaque étape : le CSS compilé comparé avant/après (mêmes règles dans le même
+  ordre ; quand des valeurs deviennent des jetons, chaque `var()` remplacé par sa valeur, en clair puis en Veillée,
+  doit redonner la valeur d'avant) et un banc de captures (23 écrans, sur téléphone, PC et téléphone en Veillée, même
   compte, horloges de la page figées) comparé pixel par pixel ; en plus du lint, des tests et du build.
+- **Jeton et Veillée** : une valeur en dur ne devient un jeton de la palette que si ce jeton garde la même valeur en
+  Veillée (`tokens/dark.css` redéfinit les vélins : un `#fffcf5` écrit en dur n'est pas `--vellum-50`).
 
 ### Serveur : `src/services/`
 - **Carte**

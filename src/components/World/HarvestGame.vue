@@ -245,7 +245,7 @@ export default {
 
 <style scoped>
 .harvest {
-  position: fixed; inset: 0; z-index: 80;
+  position: fixed; inset: 0; z-index: var(--z-game);
   display: flex; align-items: center; justify-content: center;
   padding: 16px; background: rgba(10, 8, 6, .72);
   font-family: var(--font-ui);
@@ -260,24 +260,24 @@ export default {
 .harvest__eyebrow { display: block; font-size: 11px; font-weight: 900; letter-spacing: .16em; text-transform: uppercase; color: var(--ink-500); }
 .harvest__title { display: block; font-family: var(--font-display); font-size: 24px; font-weight: 700; line-height: 1.1; }
 .harvest__end {
-  min-height: 38px; padding: 6px 14px; border: 0; border-radius: 999px;
+  min-height: 38px; padding: 6px 14px; border: 0; border-radius: var(--r-pill);
   background: var(--ink-900); color: var(--vellum-50); font: inherit; font-weight: 900; font-size: 13px; cursor: pointer;
 }
 .harvest__end:disabled { opacity: .5; cursor: default; }
 .harvest__tally { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; margin: 12px 0 8px; padding: 0; list-style: none; }
 .harvest__res {
   position: relative; display: flex; align-items: center; justify-content: center; gap: 5px;
-  min-height: 38px; border-radius: 12px; background: var(--vellum-50);
+  min-height: 38px; border-radius: var(--r-sm); background: var(--vellum-50);
   box-shadow: inset 0 0 0 1px rgba(74, 52, 38, .08); font-size: 18px;
 }
 .harvest__res strong { font-size: 16px; font-weight: 900; font-variant-numeric: tabular-nums; }
 .harvest__res.is-boost { box-shadow: inset 0 0 0 2px #E7B648; }
-.harvest__boost { position: absolute; top: -7px; right: -4px; padding: 0 5px; border-radius: 8px; background: #E7B648; color: var(--ink-900); font-size: 10px; font-style: normal; font-weight: 900; }
+.harvest__boost { position: absolute; top: -7px; right: -4px; padding: 0 5px; border-radius: var(--r-xs); background: #E7B648; color: var(--ink-900); font-size: 10px; font-style: normal; font-weight: 900; }
 .harvest__hint { min-height: 22px; margin-bottom: 8px; text-align: center; font-size: 14px; font-weight: 800; color: #8A5A1C; }
 
 .harvest__board {
   position: relative; width: 100%; aspect-ratio: 1;
-  border-radius: 18px; background: #E9DDC4;
+  border-radius: var(--r-board); background: #E9DDC4;
   box-shadow: inset 0 2px 6px rgba(74, 52, 38, .18);
   touch-action: none; user-select: none; -webkit-user-select: none;
   overflow: hidden;
@@ -291,7 +291,7 @@ export default {
 }
 .harvest__tile::before {
   content: ''; position: absolute; inset: 7%;
-  border-radius: 14px; background: var(--tile, var(--vellum-50));
+  border-radius: var(--r-tile); background: var(--tile, var(--vellum-50));
   box-shadow: 0 3px 0 rgba(74, 52, 38, .18), inset 0 0 0 1px rgba(255, 255, 255, .5);
   transition: transform .12s ease, box-shadow .12s ease;
 }
@@ -314,7 +314,7 @@ export default {
 .harvest__done, .harvest__wait { margin: 0 0 14px; color: var(--ink-500); font-style: italic; }
 .harvest__chest { margin: 0 0 14px; color: var(--ink-900); font-weight: 900; }
 .harvest__error { margin: 0 0 14px; color: #A2412B; font-weight: 800; }
-.harvest__btn { min-height: 46px; padding: 10px 22px; border: 0; border-radius: 999px; background: var(--ink-900); color: var(--vellum-50); font: inherit; font-weight: 900; font-size: 15px; cursor: pointer; }
+.harvest__btn { min-height: 46px; padding: 10px 22px; border: 0; border-radius: var(--r-pill); background: var(--ink-900); color: var(--vellum-50); font: inherit; font-weight: 900; font-size: 15px; cursor: pointer; }
 .harvest__btn:disabled { opacity: .5; }
 @media (prefers-reduced-motion: reduce) {
   .harvest__tile, .harvest__tile.is-fresh, .harvest__tile.is-gone { transition: none; animation: none; }

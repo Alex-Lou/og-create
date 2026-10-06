@@ -115,24 +115,24 @@ export default {
 <style scoped>
 .item-sheet { display: flex; flex-direction: column; gap: 12px; }
 .item-sheet__art {
-  position: relative; display: grid; place-items: center; height: 168px; border-radius: 16px;
+  position: relative; display: grid; place-items: center; height: 168px; border-radius: var(--r-md);
   background: radial-gradient(circle at 50% 70%, #CFE8B8, var(--vellum-200) 72%);
 }
 .item-sheet__art img { position: absolute; inset: 0; width: 100%; height: 100%; padding: 14px 18px; box-sizing: border-box; object-fit: contain; }
 .item-sheet__art.is-locked img { filter: grayscale(.7) opacity(.65); }
 .item-sheet__chip {
-  position: absolute; top: 10px; left: 10px; min-width: 30px; padding: 2px 8px; border-radius: 999px;
+  position: absolute; top: 10px; left: 10px; min-width: 30px; padding: 2px 8px; border-radius: var(--r-pill);
   background: var(--ink-900); color: var(--gold-300); font-family: var(--font-display); font-weight: 700; font-size: 14px; text-align: center;
 }
 .item-sheet__chip--rare { background: linear-gradient(135deg, #F2C04B, #C9952A); color: var(--ink-900); }
-.item-sheet__palier { margin: 0; padding: 8px 12px; border-radius: 12px; font-weight: 800; font-size: 14px; }
+.item-sheet__palier { margin: 0; padding: 8px 12px; border-radius: var(--r-sm); font-weight: 800; font-size: 14px; }
 .item-sheet__palier.is-ok { background: #E3F1D6; color: #3E6E2E; }
 .item-sheet__palier.is-missing { background: var(--vellum-200); color: var(--ink-700); }
 .item-sheet__facts { margin: 0; display: grid; gap: 6px; }
 .item-sheet__fact { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; padding: 6px 2px; border-bottom: 1px dashed rgba(74, 52, 38, .18); }
 .item-sheet__fact dt { color: var(--ink-500); font-weight: 700; font-size: 13px; }
 .item-sheet__fact dd { margin: 0; font-weight: 900; font-size: 15px; text-align: right; }
-.item-sheet__guide { padding: 10px 12px; border-radius: 14px; background: var(--vellum-200); }
+.item-sheet__guide { padding: 10px 12px; border-radius: var(--r-tile); background: var(--vellum-200); }
 .item-sheet__guide-title { margin: 0 0 6px; font-family: var(--font-display); font-size: 15px; font-weight: 700; }
 .item-sheet__guide-list { margin: 0; display: grid; gap: 6px; }
 .item-sheet__guide-list div { display: grid; grid-template-columns: 74px 1fr; gap: 8px; align-items: baseline; }
@@ -141,7 +141,7 @@ export default {
 .item-sheet__lock { flex: 1; color: var(--ink-500); font-weight: 800; font-size: 13px; }
 .item-sheet__owned { color: #4E8A3A; font-weight: 900; }
 .item-sheet__coin {
-  display: inline-block; width: 14px; height: 14px; margin-left: 5px; vertical-align: -2px; border-radius: 50%;
+  display: inline-block; width: 14px; height: 14px; margin-left: 5px; vertical-align: -2px; border-radius: var(--r-round);
   background: radial-gradient(circle at 35% 35%, #FFE7A0, #E9AE2E 70%); box-shadow: inset 0 0 0 1.5px rgba(59, 42, 32, .5);
 }
 </style>

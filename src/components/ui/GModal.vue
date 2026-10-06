@@ -72,7 +72,7 @@ export default {
 .g-modal-backdrop {
   position: fixed;
   inset: 0;
-  z-index: 1000;
+  z-index: var(--z-modal);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -109,7 +109,7 @@ export default {
   align-items: center;
   justify-content: center;
   border: 0;
-  border-radius: 50%;
+  border-radius: var(--r-round);
   background: none;
   cursor: pointer;
   color: var(--oc-text-muted);

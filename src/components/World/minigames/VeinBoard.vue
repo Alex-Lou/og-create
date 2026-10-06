@@ -130,7 +130,7 @@ export default {
 .vein__found li { animation: vein-pop .35s cubic-bezier(.3, 1.6, .5, 1); }
 .vein__none { font-size: 12px; font-weight: 700; color: var(--ink-500); animation: none !important; }
 .vein__wall {
-  display: grid; grid-template-columns: repeat(var(--cols), 1fr); gap: 3px; padding: 6px; border-radius: 18px;
+  display: grid; grid-template-columns: repeat(var(--cols), 1fr); gap: 3px; padding: 6px; border-radius: var(--r-board);
   background: linear-gradient(#5E5850, #3E3934); box-shadow: inset 0 3px 8px rgba(0, 0, 0, .35);
   touch-action: manipulation; user-select: none; -webkit-user-select: none;
 }

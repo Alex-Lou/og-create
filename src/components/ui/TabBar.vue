@@ -47,7 +47,7 @@ export default {
   left: 0;
   right: 0;
   bottom: 0;
-  z-index: 25;
+  z-index: var(--z-tabbar);
   height: var(--oc-tabbar-h);
   padding: 6px 8px env(safe-area-inset-bottom);
   display: grid;
@@ -101,7 +101,7 @@ export default {
   width: 52px;
   height: 52px;
   margin-top: -20px;
-  border-radius: 50%;
+  border-radius: var(--r-round);
   color: var(--ink-900);
   background: radial-gradient(circle at 35% 30%, var(--gold-200) 0 15%, var(--gold-400) 45%, var(--gold-600) 100%);
   box-shadow: 0 0 0 3px var(--leather-600), 0 0 0 4px rgba(239, 193, 99, 0.6), 0 4px 10px rgba(0, 0, 0, 0.35);
@@ -112,7 +112,7 @@ export default {
   left: calc(50% + 10px);
   width: 10px;
   height: 10px;
-  border-radius: 50%;
+  border-radius: var(--r-round);
   background: var(--gold-400);
   box-shadow: 0 0 0 2px var(--leather-600);
 }
