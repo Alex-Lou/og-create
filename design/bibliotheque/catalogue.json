@@ -4971,10 +4971,129 @@
   {
    "id": "plantes/rondin",
    "rubrique": "plantes",
-   "titre": "Rondin",
+   "titre": "Rondin (grand, écorce brune, mousse et pousse)",
    "images": 1,
    "fichiers": [
     "svg/plantes/rondin.svg"
+   ],
+   "cadre": [
+    -50,
+    -115,
+    100,
+    140
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "plantes/rondin_champignons",
+   "rubrique": "plantes",
+   "titre": "Rondin (grand, écorce brune, des champignons)",
+   "images": 1,
+   "fichiers": [
+    "svg/plantes/rondin_champignons.svg"
+   ],
+   "cadre": [
+    -50,
+    -115,
+    100,
+    140
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "plantes/rondin_gris",
+   "rubrique": "plantes",
+   "titre": "Rondin (grand, écorce grise, mousse et pousse)",
+   "images": 1,
+   "fichiers": [
+    "svg/plantes/rondin_gris.svg"
+   ],
+   "cadre": [
+    -50,
+    -115,
+    100,
+    140
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "plantes/rondin_gris_champignons",
+   "rubrique": "plantes",
+   "titre": "Rondin (grand, écorce grise, des champignons)",
+   "images": 1,
+   "fichiers": [
+    "svg/plantes/rondin_gris_champignons.svg"
+   ],
+   "cadre": [
+    -50,
+    -115,
+    100,
+    140
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "plantes/rondin_petit",
+   "rubrique": "plantes",
+   "titre": "Rondin (petit, écorce brune, mousse et pousse)",
+   "images": 1,
+   "fichiers": [
+    "svg/plantes/rondin_petit.svg"
+   ],
+   "cadre": [
+    -50,
+    -115,
+    100,
+    140
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "plantes/rondin_petit_champignons",
+   "rubrique": "plantes",
+   "titre": "Rondin (petit, écorce brune, des champignons)",
+   "images": 1,
+   "fichiers": [
+    "svg/plantes/rondin_petit_champignons.svg"
+   ],
+   "cadre": [
+    -50,
+    -115,
+    100,
+    140
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "plantes/rondin_petit_gris",
+   "rubrique": "plantes",
+   "titre": "Rondin (petit, écorce grise, mousse et pousse)",
+   "images": 1,
+   "fichiers": [
+    "svg/plantes/rondin_petit_gris.svg"
+   ],
+   "cadre": [
+    -50,
+    -115,
+    100,
+    140
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "plantes/rondin_petit_gris_champignons",
+   "rubrique": "plantes",
+   "titre": "Rondin (petit, écorce grise, des champignons)",
+   "images": 1,
+   "fichiers": [
+    "svg/plantes/rondin_petit_gris_champignons.svg"
    ],
    "cadre": [
     -50,

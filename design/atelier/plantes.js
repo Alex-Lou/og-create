@@ -1,5 +1,5 @@
 // Les autres plantes refaites au niveau des PNJ, une par une, avec le trait, la lumière et les verts des arbres
-// (arbres.js) : le buisson, la bruyère, les fleurs, le cactus, la souche. Cadre et ancrage des plantes de deco.js (PROP, centre de la case en (0, 0)) ; le jeu fait
+// (arbres.js) : le buisson, la bruyère, les fleurs, le cactus, la souche, le rondin. Cadre et ancrage des plantes de deco.js (PROP, centre de la case en (0, 0)) ; le jeu fait
 // balancer le dessin entier depuis sa base, il n'y a donc qu'une image.
 const { OUT, E, r2 } = require('./troupe');
 const { VERTS, fleurette, feuillage, champignon } = require('./arbres');
@@ -207,4 +207,39 @@ for (const petite of [false, true]) for (const ecorce of ['brune', 'grise']) for
   SOUCHES.push([fichier, libelle, { ecorce, petite, champignons: ch }]);
 }
 
-module.exports = { buisson, BUISSONS, bruyere, BRUYERES, fleurs, FLEURS, cactus, CACTUS_LISTE, souche, SOUCHES };
+// ——— Le rondin : un tronc couché le long de la case, sa coupe aux cernes vers nous ; mousse et pousse, ou champignons ———
+function rondin({ ecorce = 'brune', petit = false, champignons = false } = {}) {
+  const c = ECORCES[ecorce], k = petit ? 0.75 : 1;
+  const id = `ron${petit ? 'p' : 'g'}${ecorce[0]}${champignons ? 'c' : ''}`;
+  // l'axe du tronc suit la case (2 : 1), de l'arrière gauche A à la coupe B ; r : rayon, ra : demi-largeur des bouts
+  const A = [-21 * k, -4.5 * k], B = [18 * k, 15 * k], r = 6.8 * k, ra = 5.2 * k;
+  const surAxe = (t, o) => [A[0] + (B[0] - A[0]) * t, A[1] + (B[1] - A[1]) * t + o * r];
+  const d = `M${r2(A[0])},${r2(A[1] - r)} L${r2(B[0])},${r2(B[1] - r)} L${r2(B[0])},${r2(B[1] + r)} L${r2(A[0])},${r2(A[1] + r)} A${r2(ra)} ${r2(r)} 0 0 1 ${r2(A[0])},${r2(A[1] - r)} Z`;
+  const dedans = `<path d="M${r2(A[0] - ra)},${r2(A[1] + r * 0.25)} L${r2(B[0])},${r2(B[1] + r * 0.25)} L${r2(B[0])},${r2(B[1] + r + 2)} L${r2(A[0] - ra)},${r2(A[1] + r + 2)} Z" fill="${c.right}"/>`
+    + `<path d="M${r2(A[0] + 2 * k)},${r2(A[1] - r * 0.62)} L${r2(B[0] - 3 * k)},${r2(B[1] - r * 0.62)}" stroke="${c.coupe}" stroke-width="${r2(1.1 * k)}" stroke-linecap="round" opacity="0.6"/>`
+    + [[0.2, -0.15, 5], [0.45, 0.2, 6], [0.7, -0.3, 4.5], [0.3, 0.55, 5]].map(([t, o, l]) => {
+      const x = A[0] + (B[0] - A[0]) * t, y = A[1] + (B[1] - A[1]) * t + o * r;
+      return `<path d="M${r2(x)},${r2(y)} l${r2(l * 0.89 * k)},${r2(l * 0.45 * k)}" stroke="${c.bark}" stroke-width="0.7" stroke-linecap="round"/>`;
+    }).join('');
+  const coupe = E(B[0], B[1], ra, r, c.coupe, 1.1)
+    + E(B[0], B[1], ra * 0.62, r * 0.62, 'none', 0).replace('stroke="none"', `stroke="${c.cerne}" stroke-width="0.7"`)
+    + E(B[0], B[1], ra * 0.28, r * 0.28, 'none', 0).replace('stroke="none"', `stroke="${c.cerne}" stroke-width="0.7"`);
+  const mousse = E(A[0] + 7 * k, A[1] + 3.5 * k - r, 5 * k, 1.8 * k, '#9CCB6A', 0.8) + E(A[0] + 5.6 * k, A[1] + 3 * k - r - 0.6 * k, 2.4 * k, 0.7 * k, '#C8E59A', 0)
+    + `<path d="M${r2(A[0] + 15 * k)},${r2(A[1] + 7.5 * k - r)} q0,-4 2.4,-5" stroke="${OUT}" stroke-width="2.2" fill="none" stroke-linecap="round"/><path d="M${r2(A[0] + 15 * k)},${r2(A[1] + 7.5 * k - r)} q0,-4 2.4,-5" stroke="${c.left}" stroke-width="1" fill="none" stroke-linecap="round"/>`
+    + `<path d="M${r2(A[0] + 17.2 * k)},${r2(A[1] + 2.6 * k - r)} q2.6,-2.4 5,-0.8 q-2.4,1.8 -5,0.8 Z" fill="#86C15A" stroke="${OUT}" stroke-width="0.7" stroke-linejoin="round"/>`;
+  return E(0, 8 * k, 26 * k, 9 * k, 'rgba(40,55,20,0.22)', 0)
+    + `<path d="${d}" fill="${c.left}" stroke="${OUT}" stroke-width="1.1" stroke-linejoin="round"/>`
+    + `<defs><clipPath id="${id}"><path d="${d}"/></clipPath></defs><g clip-path="url(#${id})">${dedans}</g>`
+    + coupe + mousse
+    + (champignons ? [0.38, 0.5, 0.62].map((t, i) => { const [x, y] = surAxe(t, i === 1 ? 0.95 : 0.75); return champignon(x, y); }).join('') : '');
+}
+
+// Les 8 rondins : [fichier, libellé, options] ; « rondin » (grand, écorce brune, mousse et pousse) est celui par défaut
+const RONDINS = [];
+for (const petit of [false, true]) for (const ecorce of ['brune', 'grise']) for (const ch of [false, true]) {
+  const fichier = ['rondin', petit && 'petit', ecorce === 'grise' && 'gris', ch && 'champignons'].filter(Boolean).join('_');
+  const libelle = `Rondin (${[petit ? 'petit' : 'grand', `écorce ${ecorce}`, ch ? 'des champignons' : 'mousse et pousse'].join(', ')})`;
+  RONDINS.push([fichier, libelle, { ecorce, petit, champignons: ch }]);
+}
+
+module.exports = { buisson, BUISSONS, bruyere, BRUYERES, fleurs, FLEURS, cactus, CACTUS_LISTE, souche, SOUCHES, rondin, RONDINS };
