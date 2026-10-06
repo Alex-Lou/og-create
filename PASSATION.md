@@ -182,8 +182,12 @@ chronométrer 20 appels. Comparer à zoom égal, au même endroit.
   `Workshop`, `Explore`, `Games`), `Trial` (l'Épreuve), `Account`, `Codex`, `Settings` ; chaque composant
   `<Domaine>/<Composant>/<Composant>.vue`, ses styles dans `<Composant>.css` (scoped) et `<Composant>.global.css`
   (non scoped) ; fait en trois lots (4a, 4b, 4c) ; les primitives partagées des fiches de l'île restent dans
-  `components/World/island-ui.css`, chargé par `WorldView` ; 5) `App.vue` et `BookView.vue`
-  découpés.
+  `components/World/island-ui.css`, chargé par `WorldView` ; 5) `App.vue` et `BookView.vue` découpés en mixins
+  (fichiers voisins, chacun un sujet, le code déplacé mot pour mot) : `App.vue` fait (`account.js` le compte,
+  `carnet.js` le carnet de l'Infini, `achievements.js` les succès, `story.js` le tutoriel, les veillées et Anya,
+  `trial.js` l'Épreuve ; `App.vue` garde les modes, l'Athanor, l'ère et les familles, le cycle de vie), `BookView.vue`
+  à suivre. Preuve d'un tel découpage : le relevé des membres du composant vivant (données, calculées, méthodes,
+  observateurs, crochets, et le texte de chaque fonction) est le même avant et après.
 - **Piège du passage en scoped** : une règle scoped gagne un attribut de spécificité. Si elle vise aussi la racine d'un
   composant enfant (un glyphe `img.glyph` dans un portrait, par exemple), elle peut l'emporter sur le style propre de
   l'enfant : garder la spécificité d'avant avec `:where()` sur l'ancêtre (`SiteOverview.css`, le portrait).
@@ -429,7 +433,7 @@ chronométrer 20 appels. Comparer à zoom égal, au même endroit.
   tableau de Brume disent `anya` ; `POST /world/anya/reveal` (une fois) ; le Souffle passe par
   `POST /world/villager/talk` avec la cible `anya` (une fois par jour) ; Bénédiction : `finds.readyIn` (4 h) et
   `presence.blessed` (humeur). Front : `src/game/anya.js` (traces, pressentiments, Révélation) ; scènes `revelation` et
-  `trace-<terre>` dans `App.vue` (traces vues : `oc_traces`) ; images `cercle`, `cercle-sceaux`, `anya`, `gemme`, `trace`
+  `trace-<terre>` dans `components/App/App/story.js` (traces vues : `oc_traces`) ; images `cercle`, `cercle-sceaux`, `anya`, `gemme`, `trace`
   de `PrologueArt.vue` ; Anya sur l'île (`world/anyaSprite.js`, `village.js` : `anya`, `dame`) ; loutres et bol de soupe
   (`animals.js`) ; Cercle fleuri (`landmarkLayers(id, t, bloom)`) ; la gemme du Grimoire (`GrimoireBinding` : `awake`).
 - **Lot H9.1 de la bible v6** (Anya). Serveur (`services/anya.js`, `world/anyaBrume.js`) :

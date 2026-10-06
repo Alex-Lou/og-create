@@ -206,25 +206,18 @@
 </template>
 
 <script>
-import AuthService from '@/services/authService';
-import progressService from '@/services/progressService';
-import trialService from '@/services/trialService';
-import achievementsService from '@/services/achievementsService';
-import playService from '@/services/playService';
-import customizationService from '@/services/customizationService';
 import notificationService from '@/services/notificationService';
 import * as storage from '@/utils/storage';
-import { messageOf } from '@/utils/errors';
-import { readCarnet, writeCarnet, clearCarnet } from '@/utils/carnet';
+import { readCarnet } from '@/utils/carnet';
 import { failLine } from '@/utils/failLine';
-import { findNewlyUnlocked } from '@/utils/achievementChecker';
-import { BASE_ELEMENTS, BASE_CATEGORY } from '@/utils/gameConstants';
-import { DEFAULT_FRAME, DEFAULT_EMBLEM } from '@/utils/cabinet';
-import { FREE_JOKERS, JOKER_TIME } from '@/utils/hints';
 import { ringsFor } from '@/utils/sigil';
 import { roman } from '@/utils/roman';
-import { emptyProgress } from '@/utils/trialProgress';
-import { ERA_NAMES, familyColor, familyIndex, discoveredFamilies, eraOf, slotCountForEra, sortFamilies, stageOf, populationFor } from '@/utils/eras';
+import { ERA_NAMES, familyColor, familyIndex, discoveredFamilies, eraOf, slotCountForEra, stageOf, populationFor } from '@/utils/eras';
+import account, { COINS_KEY } from './account';
+import carnet from './carnet';
+import achievements from './achievements';
+import story from './story';
+import trial from './trial';
 import AppHeader from '../AppHeader/AppHeader.vue';
 import CraftZone from '../../Craft/CraftZone/CraftZone.vue';
 import LivingBackground from '../LivingBackground/LivingBackground.vue';
@@ -247,38 +240,12 @@ import BrumeGuide from '../../Guide/BrumeGuide/BrumeGuide.vue';
 import PrologueScene from '../../Prologue/PrologueScene/PrologueScene.vue';
 import PrologueName from '../../Prologue/PrologueName/PrologueName.vue';
 import TutorialHand from '../../Guide/TutorialHand/TutorialHand.vue';
-import { guide } from '@/game/guide';
-import { questTip } from '@/game/guideTips';
-import { loadPrologue, savePrologue, prologueStep, islandStep } from '@/game/prologue';
-import { faceHref, NAMES } from '@/world/faces';
-import { vigilFrames, vigilDue, stageOf as civilizationOf } from '@/game/vigils';
-import { brumeLook, earlyWisp, EARLY_WISP } from '@/game/opus';
-import { PRESENTIMENTS, revelationFrames, traceFrames, anyaSceneOf, tracesOf, seenOf } from '@/game/anya';
-
-// Veillées déjà vues sur cet appareil (game/vigils.js)
-const VIGILS_KEY = 'oc_vigils';
-// Les traces d'Anya déjà montrées sur cet appareil (bible, § 6.14)
-const TRACES_KEY = 'oc_traces';
-import { LINES as PROLOGUE_LINES } from '@/game/prologueScenes';
-
-// Retour sur l'application (PWA remise au premier plan) : carnet rechargé s'il date de plus de 30 s
-const STATE_RELOAD_AFTER_MS = 30000;
-// Copies sur l'appareil pour un affichage immédiat (le serveur reste la référence)
-const COINS_KEY = 'coins';
-const CUSTOMIZATION_KEY = 'userCustomization';
-
-// Lit le jeton de réinitialisation dans l'adresse puis l'efface (historique, partage d'écran)
-function takeResetToken() {
-  const url = new URL(window.location.href);
-  const token = url.searchParams.get('reset');
-  if (!token) return null;
-  url.searchParams.delete('reset');
-  window.history.replaceState(null, '', url.pathname + url.search + url.hash);
-  return /^[a-f0-9]{64}$/.test(token) ? token : null;
-}
 
 export default {
   name: 'App',
+  // Le compte, le carnet, les succès, l'histoire et l'Épreuve vivent chacun dans leur fichier, à côté (mixins) ;
+  // App garde ce qui les relie : les modes, l'Athanor, l'ère et les familles, le cycle de vie
+  mixins: [account, carnet, achievements, story, trial],
   components: {
     AppHeader,
     CraftZone,
@@ -304,29 +271,9 @@ export default {
     TutorialHand
   },
   data() {
-    const user = AuthService.getCurrentUser();
-    const worn = (user && storage.load(CUSTOMIZATION_KEY)) || {};
     return {
-      isLoggedIn: !!user,
-      currentUser: user,
-      // Éléments de base affichés tout de suite, avant la réponse du serveur
-      elementEmojis: { Eau: 'svg:eau', Feu: 'svg:feu', Terre: 'svg:terre', Air: 'svg:air' },
-      // Familles : éléments connus du joueur seulement ; leur taille vient du serveur (familyTotals)
-      categories: { [BASE_CATEGORY]: [...BASE_ELEMENTS] },
-      familyTotals: {},
-      // Recettes encore inexplorées par élément du carnet (calculées par le serveur)
-      unexploredCounts: {},
       // Éléments posés dans l'Athanor, dans l'ordre des emplacements
       athanorPicked: [],
-      discoveredElements: [...BASE_ELEMENTS],
-      // Dernier chargement du carnet, et éléments appris pendant un chargement en cours
-      stateLoadedAt: 0,
-      learnedDuringLoad: null,
-      // Écus : gardés par le serveur pour un compte ; un invité n'a qu'un solde de session
-      coins: user ? storage.load(COINS_KEY, 0) : 0,
-      achievements: [],
-      // Succès débloqués en attente d'affichage (un popup à la fois)
-      achievementQueue: [],
       // Dernière découverte, mise en valeur dans l'inventaire
       freshElement: null,
       // Page à portée ouverte dans le Livre (visée par l'Athanor)
@@ -345,49 +292,7 @@ export default {
       isCustomizeModalOpen: false,
       // Le Monde (île du joueur) et le Sceau (le joueur, son compte) remplacent le Livre et l'Athanor
       isWorldActive: false,
-      isSceauActive: false,
-      // L'Épreuve : inventaire du défi, l'inventaire Infini étant mis de côté (null hors Épreuve)
-      isTimerActive: false,
-      timerSnapshot: null,
-      selectedTimerLevel: null,
-      timerModeDiscoveries: 0,
-      showTimerEndModal: false,
-      timerProgress: emptyProgress(),
-      // Question affichée en consigne, jokers offerts restants
-      timerQuestion: null,
-      freeJokers: FREE_JOKERS,
-      // Indice de joker affiché ({ kind, text }), jusqu'à la prochaine découverte
-      timerHint: null,
-      // Verdict du serveur sur le dernier mélange de l'Épreuve, et bonnes réponses réunies (« 2 / 3 »)
-      timerVerdict: null,
-      timerAnswersFound: 0,
-      // Épreuve lancée côté serveur (les jokers offerts ne se donnent qu'au lancement)
-      timerLaunched: false,
-      // Jeton du lien « mot de passe oublié » (?reset=…)
-      resetToken: takeResetToken(),
-      selectedFrame: worn.frame || DEFAULT_FRAME,
-      selectedAvatar: worn.avatar || DEFAULT_EMBLEM,
-      // Le tutoriel : ce que l'appareil en retient (game/prologue.js), la scène jouée, la page de garde ({ account }),
-      // l'élément montré du doigt (sélecteur), les scènes rejouées depuis le Sceau
-      prologue: loadPrologue(),
-      prologueScene: null,
-      prologueName: null,
-      prologueHand: null,
-      prologueReplay: null,
-      // La quête active de Brume sur l'île ({ id, done }), pour les étapes 2 à 5 ; les actes finis et le nom du peuple
-      // (veillées, étape de civilisation) ; les veillées déjà vues ici
-      islandQuest: null,
-      islandActs: [],
-      // Les actes finis sont connus (le serveur a répondu) : Brume peut réagir à Feu follet écrit tôt
-      actsKnown: false,
-      // Anya (serveur : { traces, awake, revealed, visit, breathed }), et les traces déjà montrées sur cet appareil (en
-      // numéros ; celles d'avant la v6, nommées par terre, sont converties)
-      anya: null,
-      tracesSeen: seenOf(storage.load(TRACES_KEY, [])),
-      // Un coffre est ouvert sur l'île (ou va s'ouvrir) : les veillées et les scènes attendent qu'il se referme
-      islandHold: false,
-      people: null,
-      vigilsSeen: storage.load(VIGILS_KEY, [])
+      isSceauActive: false
     };
   },
   async created() {
@@ -401,36 +306,6 @@ export default {
     this.progressReady = true;
   },
   computed: {
-    isVigil() {
-      return Boolean(this.prologueScene && this.prologueScene.startsWith('veillee-'));
-    },
-    // La Révélation d'Anya et ses traces (bible, § 6.14) : des scènes de l'histoire, hors du tutoriel
-    isStory() {
-      return this.prologueScene === 'revelation' || Boolean(this.prologueScene && this.prologueScene.startsWith('trace-'));
-    },
-    // Une veillée se compose de ses images (le nom du peuple y figure) ; la Révélation (selon le Phare) et les traces
-    // aussi ; les autres scènes ont les leurs
-    sceneFrames() {
-      const scene = this.prologueScene;
-      if (this.isVigil) return vigilFrames(scene.slice(8), { people: this.people });
-      if (scene === 'revelation') return revelationFrames({ lit: this.islandActs.includes('VII') });
-      if (this.isStory) return traceFrames(scene.slice(6), tracesOf(this.anya).length);
-      return null;
-    },
-    // L'étape de civilisation (bible, § 6.10) : l'Ex libris du Grimoire l'affiche
-    civStage() {
-      return civilizationOf(this.islandActs, this.people);
-    },
-    // Le stade de Brume (bible, § 13), pour la couleur du guide ; avant que le serveur ait répondu, sa couleur de toujours
-    brumeStage() {
-      return this.actsKnown ? brumeLook({ acts: this.islandActs, quest: this.islandQuest, elements: this.discoveredElements }).stage : null;
-    },
-    // La couverture du Grimoire attend la scène d'arrivée (et, pour un invité, de savoir s'il est tout neuf)
-    prologueHold() {
-      const { skipped, started, seen } = this.prologue;
-      if (this.isLoggedIn || skipped || seen.includes('arrivee')) return false;
-      return !this.progressReady || started;
-    },
     currentMode() {
       if (this.isSceauActive) return 'sceau';
       if (this.isWorldActive) return 'world';
@@ -557,167 +432,6 @@ export default {
       notificationService.info(message);
     },
 
-    // ----- Compte -----
-    // Écus, records de l'Épreuve et pièces portées (le Cabinet les garde sur le serveur, d'un appareil à l'autre)
-    async loadAccount() {
-      // Les actes finis et le nom du peuple : l'étape de civilisation de l'Ex libris (l'île les redonne ensuite)
-      playService.brume().then(board => {
-        if (!this.islandActs.length) this.islandActs = board.acts || [];
-        if (!this.people) this.people = board.people || null;
-        if (!this.anya) this.anya = board.anya || null;
-        this.actsKnown = true;
-        this.checkEarlyWisp();
-      }).catch(() => {});
-      const [progress, selections] = await Promise.all([
-        progressService.load().catch(() => null),
-        customizationService.getUserSelections()
-      ]);
-      if (progress) {
-        this.handleCoinsUpdated(progress.coins);
-        this.timerProgress = { ...emptyProgress(), ...progress.timerProgress };
-      }
-      if (selections?.selectedFrame) this.selectedFrame = selections.selectedFrame;
-      if (selections?.selectedAvatar) this.selectedAvatar = selections.selectedAvatar;
-      storage.save(CUSTOMIZATION_KEY, { frame: this.selectedFrame, avatar: this.selectedAvatar });
-    },
-    handleCoinsUpdated(coins) {
-      this.coins = coins;
-      if (this.isLoggedIn) storage.save(COINS_KEY, coins);
-    },
-    handleSaveCustomization({ frame, avatar }) {
-      this.selectedFrame = frame;
-      this.selectedAvatar = avatar;
-      storage.save(CUSTOMIZATION_KEY, { frame, avatar });
-      this.isCustomizeModalOpen = false;
-    },
-    async handleLogout() {
-      await AuthService.logout();
-      clearCarnet();
-      storage.remove(COINS_KEY);
-      storage.remove(CUSTOMIZATION_KEY);
-      window.location.reload();
-    },
-
-    // ----- Carnet de l'Infini (compte ou invité) : ce qu'il faut pour l'afficher, aucune recette -----
-    async loadPlayState() {
-      // Un élément créé pendant le chargement peut manquer à la réponse : il est gardé
-      const learned = new Map();
-      this.learnedDuringLoad = learned;
-      this.stateLoadedAt = Date.now();
-      try {
-        const state = await playService.state();
-        this.applyPlayState({
-          ...state,
-          elements: [...new Set([...state.elements, ...learned.keys()])],
-          known: { ...state.known, ...Object.fromEntries(learned) }
-        });
-        this.stateLoadedAt = Date.now();
-        this.rememberCarnet();
-      } catch (error) {
-        console.error('Erreur lors du chargement du carnet:', error);
-      } finally {
-        if (this.learnedDuringLoad === learned) this.learnedDuringLoad = null;
-      }
-    },
-    applyPlayState(state) {
-      this.familyTotals = state.families || {};
-      const categories = Object.fromEntries(Object.keys(this.familyTotals).map(family => [family, []]));
-      this.applyKnown(state.known, categories);
-      this.categories = sortFamilies(categories);
-      this.unexploredCounts = state.unexplored || {};
-      if (this.timerSnapshot) this.timerSnapshot = state.elements;
-      else this.discoveredElements = state.elements;
-    },
-    // Copie du carnet sur l'appareil (compte seulement, hors Épreuve)
-    rememberCarnet() {
-      if (!this.isLoggedIn || !this.currentUser || this.timerSnapshot || this.isTimerActive) return;
-      // Rien d'utile tant que le serveur n'a pas encore décrit les familles
-      if (!Object.keys(this.familyTotals).length) return;
-      const owned = new Set(this.discoveredElements);
-      const known = {};
-      Object.entries(this.categories).forEach(([family, names]) => names.forEach(name => {
-        if (owned.has(name)) known[name] = { emoji: this.elementEmojis[name], family };
-      }));
-      writeCarnet(this.currentUser.userId, {
-        elements: [...this.discoveredElements],
-        known,
-        families: this.familyTotals,
-        unexplored: this.unexploredCounts
-      });
-    },
-    // Application mise de côté : copie à jour ; de retour au premier plan : carnet rechargé (autre appareil)
-    handleVisibility() {
-      if (document.visibilityState === 'hidden') {
-        this.rememberCarnet();
-        return;
-      }
-      if (!this.isLoggedIn || this.timerSnapshot || this.isTimerActive) return;
-      if (Date.now() - this.stateLoadedAt > STATE_RELOAD_AFTER_MS) this.loadPlayState();
-    },
-    // Emoji et famille d'éléments connus ({ nom: { emoji, family } })
-    applyKnown(known, categories = this.categories) {
-      const emojis = { ...this.elementEmojis };
-      Object.entries(known || {}).forEach(([name, { emoji, family }]) => {
-        emojis[name] = emoji;
-        if (!family) return;
-        if (!categories[family]) categories[family] = [];
-        if (!categories[family].includes(name)) categories[family].push(name);
-      });
-      this.elementEmojis = emojis;
-    },
-    // Résultat d'un mélange réussi, renvoyé par le serveur
-    learnElement({ result, emoji, family, unexplored, trial }) {
-      this.applyKnown({ [result]: { emoji, family } });
-      if (!this.isTimerActive) this.learnedDuringLoad?.set(result, { emoji, family });
-      if (unexplored) this.unexploredCounts = unexplored;
-      // Épreuve : verdict lu juste après, à la révélation (handleCraftSuccess)
-      this.timerVerdict = trial || null;
-    },
-
-    // ----- Succès -----
-    async loadAchievements() {
-      try {
-        this.achievements = await achievementsService.loadAchievements();
-        // Rattrapage : succès déjà mérités mais jamais enregistrés. Un invité n'a pas de succès enregistrés :
-        // ceux de son carnet ont déjà été montrés à leur découverte, on les coche sans les rejouer.
-        this.checkAchievements({ announce: this.isLoggedIn });
-      } catch (error) {
-        console.error('Erreur lors du chargement des succès:', error);
-      }
-    },
-    // Seul point de vérification des succès : après une découverte en mode Infini
-    checkAchievements({ announce = true } = {}) {
-      const unlocked = findNewlyUnlocked(this.achievements, this.discoveredElements);
-      if (!unlocked.length) return;
-      const unlockedAt = new Date().toISOString();
-      unlocked.forEach(achievement => {
-        achievement.unlocked = true;
-        achievement.unlockedAt = unlockedAt;
-      });
-      if (announce) this.achievementQueue.push(...unlocked);
-      if (this.isLoggedIn) {
-        achievementsService.saveUnlocked(unlocked)
-          .catch(error => console.error('Erreur lors de la sauvegarde des succès:', error));
-      }
-    },
-    // Brume apporte la quête : une quête accomplie dans le Grimoire (découvertes, élément écrit) est annoncée (comptes)
-    async checkQuest() {
-      if (!this.isLoggedIn) return;
-      try {
-        const { quest } = await playService.brume();
-        if (quest && quest.done && ['stars', 'element'].includes(quest.kind)) guide.say(questTip(quest));
-      } catch {
-        // Le guide n'est qu'un confort : la quête reste visible sur l'île
-      }
-    },
-    closeAchievementPopup() {
-      this.achievementQueue.shift();
-    },
-    // Succès débloqué : une gerbe de particules au centre de l'écran
-    handleAchievementPopupOpened() {
-      this.$refs.background?.burst(window.innerWidth / 2, window.innerHeight / 2);
-    },
-
     // ----- Athanor -----
     handleResourceSelection(resource, fromRect) {
       this.$refs.craftZone?.add(resource, fromRect);
@@ -765,192 +479,6 @@ export default {
       this.$refs.craftZone?.clear();
     },
 
-    // ----- Le tutoriel (HISTOIRE.md, § 9) : l'étape se déduit du jeu (game/prologue.js) -----
-    savePrologue(changes) {
-      this.prologue = { ...this.prologue, ...changes };
-      savePrologue(this.prologue);
-    },
-    runPrologue() {
-      if (this.prologueReplay) return;
-      const step = prologueStep({ state: this.prologue, loggedIn: this.isLoggedIn, elements: this.discoveredElements });
-      if (this.prologueHand?.mode === 'infinite') this.prologueHand = null;
-      if (!step) return;
-      const { phase } = step;
-      if (phase === 'start') {
-        // Brume se présente dans la scène : sa présentation du Grimoire n'a plus lieu d'être
-        guide.drop('welcome');
-        this.savePrologue({ started: true });
-        this.runPrologue();
-      } else if (phase === 'scene') {
-        // Jamais par-dessus l'ouverture d'un chapitre (le sceau qui se brise après la 3e page, qui arrive un peu
-        // après la page inscrite) : la scène attend qu'elle ait commencé puis fini
-        clearTimeout(this.prologueTimer);
-        const show = () => {
-          if (document.querySelector('.book-unlock')) this.prologueTimer = setTimeout(show, 700);
-          else this.prologueScene = step.scene;
-        };
-        if (step.scene === 'arrivee') show();
-        else this.prologueTimer = setTimeout(show, 2500);
-      } else if (phase === 'vent') {
-        guide.say({ id: 'prologue-vent', text: PROLOGUE_LINES.vent, top: true });
-        this.prologueHand = { target: '.book-view__shelf [data-name="Air"]', mode: 'infinite' };
-      } else if (phase === 'pluie') {
-        // La page de l'énigme suivante : le Grimoire s'y ouvre une fois, ses pages rechargées (Vent inscrit)
-        if (guide.say({ id: 'prologue-pluie', text: PROLOGUE_LINES.pluie })) this.prologueOpenReach = true;
-      } else if (phase === 'seul') {
-        guide.say({ id: 'prologue-seul', text: PROLOGUE_LINES.seul });
-      } else if (phase === 'name') {
-        // Le nom écrit juste avant l'inscription (la page s'est rechargée) : il part sans redemander
-        if (!step.account && this.prologue.name) this.namePlayer(this.prologue.name);
-        else this.prologueName = { account: step.account };
-      } else if (phase === 'greve') {
-        guide.say({ id: 'prologue-greve', text: PROLOGUE_LINES.greve, action: { label: 'Aller sur l’île', mode: 'world' } });
-      }
-    },
-    // Étapes 2 (sur l'île) à 5 : la quête active de Brume
-    onIslandQuest(brume) {
-      const quest = brume && brume.quest;
-      this.islandQuest = quest ? { id: quest.id, done: Boolean(quest.done) } : { id: null, done: true };
-      this.islandHold = Boolean(brume && brume.hold);
-      if (brume) {
-        this.islandActs = brume.acts || [];
-        this.people = brume.people || null;
-        // La Révélation vue reste vue, même si une réponse du serveur partie avant son envoi arrive après
-        this.anya = brume.anya ? { ...brume.anya, revealed: brume.anya.revealed || Boolean(this.anya && this.anya.revealed) } : this.anya;
-        this.actsKnown = true;
-        this.checkEarlyWisp();
-      }
-      this.runIsland();
-    },
-    // Feu follet écrit avant l'acte VII (bible, § 10) : Brume se reconnaît, une seule fois ; la finale reste au Phare.
-    // La Vie écrite : le premier pressentiment d'Anya (§ 10, acte I), une voix sans visage
-    checkEarlyWisp() {
-      if (this.actsKnown && earlyWisp(this.islandActs, this.discoveredElements)) guide.say(EARLY_WISP);
-      if (this.actsKnown && this.discoveredElements.includes('Vie') && !(this.anya && this.anya.awake)) PRESENTIMENTS.vie.forEach(line => guide.say(line));
-    },
-    runIsland() {
-      // (jamais par-dessus un coffre : la veillée l'attend, l'île la relance quand il se referme)
-      if (this.prologueReplay || this.prologueScene || this.islandHold || !this.isWorldActive) return;
-      const step = islandStep({ state: this.prologue, quest: this.islandQuest?.id ? this.islandQuest : null });
-      if (this.prologueHand?.mode === 'world') this.prologueHand = null;
-      if (!step) {
-        // Hors du tutoriel : la veillée du dernier acte fini, si elle n'a pas encore été vue ici
-        // (jamais pendant le tutoriel d'un compte créé par la page de garde)
-        const { registered, finished, skipped } = this.prologue;
-        if (registered && !finished && !skipped) return;
-        const act = vigilDue(this.islandActs, this.vigilsSeen);
-        if (act) {
-          this.prologueScene = `veillee-${act}`;
-          return;
-        }
-        // Anya : la trace d'un quartier tout juste libéré (la huitième avant la Révélation), puis la Révélation, une fois
-        const scene = anyaSceneOf(this.anya, this.tracesSeen);
-        if (scene) this.prologueScene = scene;
-        return;
-      }
-      if (step.phase === 'scene') this.prologueScene = step.scene;
-      else if (step.phase === 'harvest') this.prologueHand = { target: '.world__play', mode: 'world' };
-      else if (step.phase === 'lines') step.lines.forEach(line => this.sayPrologue(line));
-      else if (step.phase === 'finish') {
-        this.savePrologue({ finished: true });
-        // Le chapitre II s'est ouvert pendant le prologue (3e page), juste avant la création du compte, qui recharge la
-        // page : sa réplique, encore en attente, s'y perdait. Dite ici, une fois (rien si elle l'a déjà été)
-        guide.tip('chapter-II');
-      }
-    },
-    // Une réplique du tutoriel : de Brume, ou d'un membre de la troupe (son portrait dans la bulle)
-    sayPrologue(line) {
-      const entry = PROLOGUE_LINES[line];
-      const { who, text } = typeof entry === 'string' ? { text: entry } : entry;
-      guide.say({ id: `prologue-${line}`, text, ...(who ? { who: NAMES[who], face: faceHref(who) } : {}) });
-    },
-    onBookLoaded() {
-      if (!this.prologueOpenReach) return;
-      this.prologueOpenReach = false;
-      this.$refs.book?.openReach('I');
-    },
-    // Chronique : revoir une veillée, ou la Révélation (rien ne change à la partie)
-    replayVigil(act) {
-      this.prologueReplay = [];
-      this.prologueScene = `veillee-${act}`;
-    },
-    replayRevelation() {
-      this.prologueReplay = [];
-      this.prologueScene = 'revelation';
-    },
-    prologueSceneDone(scene) {
-      if (scene === 'revelation' && !this.prologueReplay) {
-        // Vue une fois pour toutes, d'un appareil à l'autre : le serveur le retient (la gemme du Grimoire s'allume)
-        this.prologueScene = null;
-        this.anya = { ...this.anya, revealed: true };
-        // L'île se met à jour tout de suite (Anya au Cercle, le Cercle fleuri)
-        playService.anyaReveal().then(({ anya, world }) => {
-          this.anya = anya;
-          if (world && this.$refs.world) this.$refs.world.apply(world);
-        }).catch(() => {});
-        this.runIsland();
-        return;
-      }
-      if (scene.startsWith('trace-') && !this.prologueReplay) {
-        // Les traces déjà trouvées sont toutes tenues pour vues : les plus anciennes se lisent dans la Chronique
-        this.prologueScene = null;
-        this.tracesSeen = seenOf([...this.tracesSeen, ...tracesOf(this.anya)]);
-        storage.save(TRACES_KEY, this.tracesSeen);
-        this.runIsland();
-        return;
-      }
-      if (scene.startsWith('veillee-') && !this.prologueReplay) {
-        this.prologueScene = null;
-        this.vigilsSeen = [...new Set([...this.vigilsSeen, scene.slice(8)])];
-        storage.save(VIGILS_KEY, this.vigilsSeen);
-        this.runIsland();
-        return;
-      }
-      if (this.prologueReplay) {
-        // Revoir le prologue : les scènes s'enchaînent, sans rien changer à la partie
-        const next = this.prologueReplay.shift();
-        this.prologueScene = next || null;
-        if (!next) this.prologueReplay = null;
-        return;
-      }
-      this.prologueScene = null;
-      this.savePrologue({ seen: [...new Set([...this.prologue.seen, scene])] });
-      this.runPrologue();
-      this.runIsland();
-    },
-    skipPrologue() {
-      this.prologueScene = null;
-      this.prologueName = null;
-      this.prologueHand = null;
-      this.savePrologue({ skipped: true });
-    },
-    replayPrologue() {
-      this.prologueReplay = ['aster', 'recolte', 'cannelle', 'rivet', 'ondin', 'campement'];
-      this.prologueScene = 'arrivee';
-    },
-    // Page de garde : l'inscription recharge la page ; le nom attend sur l'appareil, puis part au serveur
-    prologueSigning(name) {
-      this.savePrologue({ name, registered: true });
-    },
-    prologueUnsigned() {
-      this.savePrologue({ name: null, registered: false });
-    },
-    // Un compte existant retrouvé : c'est un joueur qui a déjà sa partie, le tutoriel s'arrête
-    prologueSignedIn() {
-      this.savePrologue({ registered: false });
-    },
-    async namePlayer(name) {
-      try {
-        await playService.worldPlayer(name);
-        this.prologueName = null;
-        this.savePrologue({ named: true, name: null });
-        this.runPrologue();
-      } catch (error) {
-        this.prologueName = { account: false };
-        this.showAlert(messageOf(error, 'Le nom n’a pas pu être écrit.'));
-      }
-    },
-
     // ----- Modes -----
     // L'île mène ailleurs (la quête de Brume) : vers le Grimoire, il s'ouvre sur la page marquée
     openFromWorld(mode, page = null) {
@@ -980,134 +508,6 @@ export default {
       } else {
         this.resetCraftBoard();
       }
-    },
-
-    // ----- L'Épreuve : le sablier (TimerModeButton) et les questions (TimerQuestions) passent par ici -----
-    handleTimerStateChange(isActive) {
-      // Le sablier peut émettre plusieurs fois « actif » : on n'agit que sur les transitions
-      const wasActive = this.isTimerActive;
-      this.isTimerActive = isActive;
-      if (isActive && !wasActive) {
-        this.resetCraftBoard();
-        this.enterTimerMode();
-        this.timerModeDiscoveries = 0;
-        this.selectedTimerLevel = null;
-        this.$refs.timerQuestions?.show();
-      } else if (!isActive) {
-        this.resetCraftBoard();
-        // selectedTimerLevel est conservé pour la fenêtre de fin (handleTimerComplete)
-        this.exitTimerMode();
-        this.$refs.timerQuestions?.resetQuestions();
-      }
-    },
-    // Met de côté l'inventaire Infini au début de l'Épreuve
-    enterTimerMode() {
-      if (!this.timerSnapshot) this.timerSnapshot = [...this.discoveredElements];
-    },
-    // Restaure l'inventaire Infini à la fin de l'Épreuve
-    exitTimerMode() {
-      if (!this.timerSnapshot) return;
-      this.discoveredElements = this.timerSnapshot;
-      this.timerSnapshot = null;
-    },
-    showLevelSelection() {
-      this.$refs.timerModeButton?.showLevelSelection();
-    },
-    showCurrentTimerQuestion() {
-      this.$refs.timerQuestions?.show();
-    },
-    handleLevelSelected(levelData) {
-      this.selectedTimerLevel = levelData.level;
-      this.freeJokers = FREE_JOKERS;
-      this.timerLaunched = false;
-      this.$refs.timerModeButton?.handleLevelSelected(levelData);
-    },
-    handleTimerPause() {
-      this.$refs.timerModeButton?.pauseTimer();
-    },
-    handleTimerResume() {
-      this.$refs.timerModeButton?.resumeTimer();
-    },
-    handleTimerStop() {
-      this.$refs.timerModeButton?.confirmStopTimer();
-    },
-    handleTimerReset() {
-      this.$refs.timerModeButton?.resetTimer();
-    },
-    handleTimerForceStop() {
-      this.isTimerActive = false;
-      this.selectedTimerLevel = null;
-      this.exitTimerMode();
-      this.timerModeDiscoveries = 0;
-      this.$refs.timerQuestions?.resetQuestions();
-    },
-    // Éléments de départ d'une question : le serveur les pose aussi en main (les mélanges y sont vérifiés)
-    handleSetInitialInventory(elements, questionId) {
-      if (!this.isTimerActive) return;
-      this.startTimerRun(questionId);
-      this.resetCraftBoard();
-      this.discoveredElements = [...new Set([...BASE_ELEMENTS, ...(Array.isArray(elements) ? elements : [])])];
-    },
-    async startTimerRun(questionId) {
-      if (!Number.isInteger(questionId)) return;
-      try {
-        const run = await playService.startRun('timer', { questionId, launch: !this.timerLaunched });
-        this.timerLaunched = true;
-        this.freeJokers = run.freeJokers;
-        this.applyKnown(run.known);
-      } catch (error) {
-        this.showAlert(messageOf(error, 'L’épreuve n’a pas pu démarrer, réessaie.'));
-      }
-    },
-    // Joker : le serveur compte les jokers offerts, débite les suivants et calcule l'indice
-    async useJoker(kind) {
-      try {
-        const reply = await playService.joker(kind);
-        this.freeJokers = reply.freeJokers;
-        if (reply.coins !== undefined) this.handleCoinsUpdated(reply.coins);
-        if (kind === 'time') this.$refs.timerModeButton?.addTime(JOKER_TIME);
-        else if (kind === 'step') this.timerHint = { kind, text: `Essaie ${reply.ingredients.join(' + ')}.` };
-        else this.timerHint = { kind, text: `Pense à ${reply.ingredient}…` };
-      } catch (error) {
-        this.showAlert(messageOf(error, 'Le joker n’a pas pu être utilisé.'));
-      }
-    },
-    // Un compte est payé par le serveur au moment de la réussite (verdict) ; un invité garde un solde de session
-    handleCoinsEarned({ points }) {
-      if (!this.isLoggedIn) this.handleCoinsUpdated(this.coins + points);
-    },
-    // Fin du sablier : score compté par le serveur, qui verse le bonus si le record du niveau monte (compte)
-    async handleTimerComplete() {
-      let end = null;
-      try {
-        end = await playService.finishTimer();
-      } catch (error) {
-        console.error('Fin d’épreuve non enregistrée:', error);
-      }
-      const score = end ? end.score : this.timerModeDiscoveries;
-      if (end?.coins !== undefined) this.handleCoinsUpdated(end.coins);
-      const level = this.selectedTimerLevel;
-      if (level && score > (this.timerProgress.bestScores?.[level] || 0)) {
-        if (!this.isLoggedIn) this.handleCoinsUpdated(this.coins + score * 5);
-        this.timerProgress = { ...this.timerProgress, bestScores: { ...this.timerProgress.bestScores, [level]: score } };
-        trialService.saveProgress({ bestScores: { [level]: score } })
-          .then(saved => { if (saved) this.timerProgress = saved; })
-          .catch(error => console.error('Record non enregistré:', error));
-      }
-      this.exitTimerMode();
-      this.showTimerEndModal = true;
-    },
-    // Questions et chapitres réussis (TimerQuestions) ; les records restent les meilleurs connus ici
-    handleTimerProgress(progress) {
-      const best = { ...this.timerProgress.bestScores };
-      Object.entries(progress.bestScores || {}).forEach(([level, score]) => { best[level] = Math.max(best[level] || 0, score || 0); });
-      this.timerProgress = { ...progress, bestScores: best };
-    },
-    handleTimerEndModalClose() {
-      this.showTimerEndModal = false;
-      this.exitTimerMode();
-      this.selectedTimerLevel = null;
-      this.$refs.timerQuestions?.resetQuestions();
     }
   }
 };
