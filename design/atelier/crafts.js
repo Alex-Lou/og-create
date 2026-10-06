@@ -2,6 +2,7 @@
 // Une case, ancre au centre, cadre PROP_BOX × 1,25. Chaque création : { n : nombre d'images, draw(f) }.
 const { OUT, P, E, L, r2 } = require('./troupe');
 const Dk = require('./deco');
+const { herbe, fleurette } = require('./arbres');
 const { pt, poly, face, shadow, box, crown, boulder, flower, stroke, thick, cylinder, disc, gable, pyramid, post, rail, flame, glow,
   LEAVES, WOOD, WOOD_DARK, GRANITE, STONE, WHITE_STONE, ROOF_RED, ROOF_BLUE, WALL, SOIL, WATER, WATER_LIGHT, BRASS, IRON } = Dk;
 
@@ -19,16 +20,28 @@ const REED = { top: '#D8C27A', left: '#C2A65A', right: '#9E8440' };
 const COPPER = { top: '#F2A66A', left: '#D9824A', right: '#A85E30' };
 
 const C = {};
-// Clôture : quatre piquets pointus et deux lisses, une touffe d'herbe
+// Clôture : deux lisses derrière, quatre planches à pointe clouées, pas tout à fait égales ; herbe et fleurettes au pied
+const BOIS_CLOTURE = { top: '#EFC992', left: '#D49D60', right: '#A86F3E', grain: '#B47C46', lumiere: '#F8E0B6' };
+// une planche à pointe, sa face avant tournée vers +v, son chant à droite, le biseau de la pointe
+function planche(u, w, v0, v1, z0, z1, tip, c) {
+  const a = u - w, b = u + w;
+  return poly([at(a, v1, z0), at(b, v1, z0), at(b, v1, z1), at(u, v1, z1 + tip), at(a, v1, z1)], c.left, 1)
+    + poly([at(b, v0, z0), at(b, v1, z0), at(b, v1, z1), at(b, v0, z1)], c.right, 0.8)
+    + poly([at(b, v0, z1), at(b, v1, z1), at(u, v1, z1 + tip), at(u, v0, z1 + tip)], c.top, 0.8)
+    + L(at(a + 0.012, v1, z0 + 2), at(a + 0.012, v1, z1 - 0.6), c.lumiere, 0.7)
+    + L(at(u + 0.012, v1, z0 + 4), at(u + 0.006, v1, z1 - 3), c.grain, 0.5);
+}
 C.cloture = { n: 1, draw: () => {
-  let s = shadow(0, 0.04, 0.4, 0.14) + rail([-0.44, 0.04], [0.42, 0.04], 7, 2.2, WOOD.left) + rail([-0.44, 0.04], [0.42, 0.04], 14, 2.2, WOOD.left);
-  for (const u of [-0.4, -0.14, 0.12, 0.38]) {
-    s += post(u, 0.04, 0, 18, WOOD, 0.035);
-    const [x, y] = at(u, 0.04, 18);
-    s += poly([[x - 2.8, y + 1.4], [x + 2.8, y + 1.4], [x, y - 4]], WOOD.top, 0.8);
-  }
-  const [gx, gy] = at(0.2, 0.32);
-  return s + thick(`M${gx - 3},${gy} q-1,-4 -2,-6 M${gx},${gy} q0,-5 1,-7 M${gx + 3},${gy} q1,-4 3,-5`, 1, '#7EC45B');
+  const c = BOIS_CLOTURE;
+  let s = shadow(0, 0.06, 0.42, 0.14)
+    + box(-0.47, -0.026, 0.45, -0.004, 6, 8.6, c, 0.9) + box(-0.47, -0.026, 0.45, -0.004, 13.4, 16, c, 0.9);
+  [[-0.37, 17.6], [-0.12, 18.8], [0.13, 18], [0.37, 18.6]].forEach(([u, h]) => {
+    s += planche(u, 0.052, 0, 0.026, 0, h, 4.4, c);
+    for (const z of [7.3, 14.7]) for (const du of [-0.024, 0.024]) { const [x, y] = at(u + du, 0.026, z); s += E(x, y, 0.5, 0.5, '#5E4430', 0); }
+  });
+  const [ax, ay] = at(-0.38, 0.06), [bx, by] = at(0.12, 0.06), [cx, cy] = at(0.37, 0.07);
+  return s + herbe(ax - 1, ay + 1, '#86B852', 0.7) + herbe(bx + 1.6, by + 1.4, '#94C25C', 0.6) + herbe(cx + 2, cy + 1, '#86B852', 0.55)
+    + fleurette(bx - 3.4, by + 2.6, '#FFFFFF') + fleurette(ax + 5, ay + 3, '#F7B6C8');
 } };
 // Massif : bordure de pierres, terre, fleurs qui ondulent
 C.massif = { n: 2, draw: f => {
