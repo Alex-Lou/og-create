@@ -86,10 +86,4 @@ export default {
 };
 </script>
 
-<style scoped>
-.contact__form { display: flex; flex-direction: column; gap: 20px; }
-.contact__actions { display: flex; justify-content: flex-end; }
-@media (max-width: 520px) {
-  .contact__actions > .g-btn { flex: 1; }
-}
-</style>
+<style scoped src="./ContactModal.css"></style>

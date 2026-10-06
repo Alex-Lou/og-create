@@ -372,7 +372,7 @@ L'alchimie transforme la nuit en or en quatre étapes. L'île suit le même chem
 
 ### 4.5 Le Cœur du Grimoire : Anya
 
-- **La gemme** : au centre de la couverture du Grimoire, entre les sept sceaux, il y a une gemme qui ne porte aucune planète. Elle « s'éveille » déjà dans l'animation d'ouverture (`F/src/components/Book/GrimoireBinding.vue:201-203`).
+- **La gemme** : au centre de la couverture du Grimoire, entre les sept sceaux, il y a une gemme qui ne porte aucune planète. Elle « s'éveille » déjà dans l'animation d'ouverture (`F/src/components/Book/GrimoireBinding/GrimoireBinding.vue:201-203`).
 - **Ce qu'elle est** : pour les alchimistes, les sept planètes tournaient autour de la **Terre**. La gemme, c'est la Terre : **Anya, l'Âme de l'Île**, la vie de toute chose.
   - Les sept sceaux sont ses gardiens.
   - Les maîtres de la troupe en sont les héritiers, sans le savoir.

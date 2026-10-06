@@ -59,7 +59,4 @@ export default {
 };
 </script>
 
-<style scoped>
-.reset__form { display: flex; flex-direction: column; gap: 18px; }
-.reset__actions { display: flex; justify-content: flex-end; margin-top: 6px; }
-</style>
+<style scoped src="./ResetPasswordModal.css"></style>

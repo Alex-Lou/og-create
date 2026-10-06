@@ -1,0 +1,44 @@
+/* Polices de l'intérieur du Grimoire (pages peintes en canvas : book/painter.js), hébergées avec le jeu pour
+   s'afficher hors ligne ; licence : src/assets/fonts/OFL.txt */
+@font-face { font-family: 'IM Fell English'; font-style: normal; font-weight: 400; font-display: swap; src: url('@/assets/fonts/im-fell-english.woff2') format('woff2'); }
+@font-face { font-family: 'IM Fell English'; font-style: italic; font-weight: 400; font-display: swap; src: url('@/assets/fonts/im-fell-english-italic.woff2') format('woff2'); }
+@font-face { font-family: 'IM Fell English SC'; font-style: normal; font-weight: 400; font-display: swap; src: url('@/assets/fonts/im-fell-english-sc.woff2') format('woff2'); }
+@font-face { font-family: 'UnifrakturMaguntia'; font-style: normal; font-weight: 400; font-display: swap; src: url('@/assets/fonts/unifraktur-maguntia.woff2') format('woff2'); }
+
+/* Cinématique d'ouverture de chapitre (montée hors du composant, dans body) */
+.book-unlock {
+  /* Ses jetons : le voile, les rayons (en canaux), l'or du sceau et de son bouton */
+  --unlock-veil: radial-gradient(circle at 50% 42%, rgba(58, 38, 24, .82), rgba(24, 16, 10, .94));
+  --unlock-ray-rgb: 255, 220, 150;
+  --unlock-gold: #ffe2a6;
+  --unlock-gold-edge: #c9933a;
+  position: fixed; inset: 0; z-index: var(--z-unlock);
+  display: grid; place-items: center; align-content: center; gap: 18px;
+  background: var(--unlock-veil);
+  -webkit-backdrop-filter: blur(6px);
+  backdrop-filter: blur(6px);
+  color: var(--vellum-50); text-align: center;
+  opacity: 0;
+}
+.book-unlock__rays {
+  position: absolute; left: 50%; top: 42%; width: 140vmax; height: 140vmax;
+  margin: -70vmax 0 0 -70vmax;
+  background: repeating-conic-gradient(from 0deg, rgba(var(--unlock-ray-rgb), .16) 0 9deg, rgba(var(--unlock-ray-rgb), 0) 9deg 22deg);
+  -webkit-mask: radial-gradient(circle, #000 0, transparent 45%);
+  mask: radial-gradient(circle, #000 0, transparent 45%);
+  animation: book-spin 14s linear infinite;
+  opacity: 0;
+}
+@keyframes book-spin { to { transform: rotate(360deg); } }
+.book-unlock__seal { position: relative; width: 150px; height: 150px; }
+.book-unlock__seal img { position: absolute; inset: 0; width: 100%; height: 100%; opacity: 0; }
+.book-unlock__eyebrow { font-size: 12px; font-weight: 900; letter-spacing: .2em; text-transform: uppercase; color: var(--unlock-gold); opacity: 0; font-family: var(--font-ui); }
+.book-unlock__name { font-family: var(--font-display); font-weight: 700; font-size: 34px; line-height: 1.05; opacity: 0; }
+.book-unlock__go {
+  margin-top: 6px; min-height: 48px; padding: 12px 26px;
+  border: 0; border-radius: var(--r-pill);
+  background: var(--unlock-gold); color: var(--ink-900);
+  font-family: var(--font-ui); font-weight: 900; font-size: 16px;
+  box-shadow: 0 6px 0 var(--unlock-gold-edge);
+  cursor: pointer; opacity: 0;
+}

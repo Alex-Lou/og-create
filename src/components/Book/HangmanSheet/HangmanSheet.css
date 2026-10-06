@@ -1,0 +1,112 @@
+/* Ses jetons : la case d'une lettre, la goutte d'encre (sa forme et son reflet) */
+.hang { --hang-cell-radius: 6px 6px 0 0; --hang-drop-shape: 50% 50% 50% 50% / 60% 60% 40% 40%; --hang-drop-hi: #6b5446; }
+.hang { display: flex; flex-direction: column; align-items: center; gap: 12px; padding-top: 4px; outline: none; }
+
+.hang__art {
+  position: relative;
+  width: 132px;
+  height: 132px;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  border-radius: var(--r-round);
+  overflow: hidden;
+  background: radial-gradient(circle at 38% 30%, #fff, var(--hc));
+  box-shadow: 0 0 0 5px var(--vellum-50), 0 0 0 6px var(--oc-line), var(--shadow-2);
+}
+.hang__glyph { position: absolute; inset: 0; display: grid; place-items: center; font-size: 84px; line-height: 1; }
+.hang__patch {
+  position: relative;
+  display: grid;
+  place-items: center;
+  background: radial-gradient(circle at 38% 30%, #fff, var(--hc));
+  box-shadow: inset 0 0 0 0.5px rgba(var(--shade-rgb), 0.18);
+  font-family: var(--oc-font-display);
+  font-weight: 700;
+  font-size: 18px;
+  color: var(--hi);
+  opacity: 1;
+  transition: opacity var(--oc-medium) var(--oc-ease-out), transform var(--oc-medium) var(--oc-ease-spring);
+}
+.hang__patch span { opacity: 0.35; }
+/* Pièce gagnée : elle s'envole et laisse voir l'illustration */
+.hang__patch.is-off { opacity: 0; transform: scale(0.6) rotate(8deg); }
+.hang__art.is-whole { animation: whole 0.8s var(--oc-ease-spring); }
+
+.hang__riddle { margin: 0; max-width: 34ch; text-align: center; font-family: var(--oc-font-display); font-style: italic; font-size: 16px; line-height: 1.35; color: var(--ink-700); }
+
+.hang__kind { margin: -6px 0 0; font-family: var(--oc-font-body); font-weight: 800; font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--hi); opacity: 0.85; }
+.hang__word { margin: 4px 0 0; display: flex; flex-wrap: wrap; justify-content: center; gap: 6px; }
+.hang__cell {
+  min-width: 26px;
+  height: 36px;
+  display: grid;
+  place-items: center;
+  border-bottom: 2.5px solid var(--ink-300);
+  font-family: var(--oc-font-display);
+  font-weight: 700;
+  font-size: 24px;
+  color: var(--hi);
+}
+.hang__cell { appearance: none; touch-action: manipulation; padding: 0; background: none; border-top: 0; border-left: 0; border-right: 0; cursor: pointer; }
+.hang__cell:disabled { cursor: default; opacity: 1; }
+.hang__cell.is-on { border-bottom-color: var(--hi); animation: land 0.35s var(--oc-ease-spring); }
+/* Case choisie : c'est là que la prochaine lettre ira */
+.hang__cell.is-picked { border-radius: var(--hang-cell-radius); border-bottom-color: var(--gold-500); background: var(--gold-200); box-shadow: 0 0 0 2px var(--gold-300); }
+/* Lettre posée, en attente du verdict : déjà là, encore pâle */
+.hang__cell.is-pending { border-radius: var(--hang-cell-radius); border-bottom-color: var(--gold-500); background: var(--gold-200); opacity: 0.6; animation: land 0.18s var(--oc-ease-out); }
+.hang__cell.is-shake { animation: shake 0.45s ease; }
+.hang__cell.is-gap { min-width: 10px; border: 0; }
+.hang__cell.is-mark { min-width: 10px; border: 0; color: var(--ink-500); animation: none; }
+
+.hang__say { min-height: 18px; margin: -4px 0 0; font-weight: 800; font-size: 13px; color: var(--gold-700); text-align: center; }
+.hang__lives { margin: 0; display: flex; align-items: center; gap: 6px; }
+/* Gouttes d'encre : une par erreur permise */
+.hang__drop {
+  width: 14px;
+  height: 18px;
+  border-radius: var(--hang-drop-shape);
+  background: radial-gradient(circle at 35% 35%, var(--hang-drop-hi), var(--ink-900));
+  clip-path: path('M7 0 C7 0 14 9 14 12 A7 6.5 0 0 1 0 12 C0 9 7 0 7 0 Z');
+  transition: opacity var(--oc-medium), transform var(--oc-medium);
+}
+.hang__drop.is-lost { opacity: 0.18; transform: scale(0.8); }
+.hang__lives-text { margin-left: 4px; font-weight: 800; font-size: 13px; color: var(--ink-500); }
+
+.hang__keys { display: flex; flex-direction: column; align-items: center; gap: 6px; width: 100%; }
+.hang__row { display: flex; justify-content: center; gap: 5px; width: 100%; }
+.hang__key {
+  appearance: none;
+  touch-action: manipulation;
+  flex: 0 1 34px;
+  min-width: 0;
+  height: 44px;
+  border: 0;
+  border-radius: var(--r-xs);
+  background: var(--vellum-50);
+  box-shadow: inset 0 0 0 1px var(--oc-line), 0 2px 0 var(--vellum-400);
+  font-family: var(--oc-font-body);
+  font-weight: 900;
+  font-size: 16px;
+  color: var(--ink-900);
+  cursor: pointer;
+  transition: transform var(--oc-fast) var(--oc-ease-out), background var(--oc-fast);
+}
+.hang__key:active:not(:disabled) { transform: translateY(2px); box-shadow: inset 0 0 0 1px var(--oc-line); }
+.hang__key:disabled { cursor: default; }
+.hang__key.is-sending { background: var(--gold-200); box-shadow: inset 0 0 0 2px var(--gold-500); }
+.hang__key.is-hit { background: var(--verdigris-100); color: var(--verdigris-500); box-shadow: inset 0 0 0 1px var(--verdigris-500); }
+.hang__key.is-elsewhere { background: var(--gold-200); color: var(--gold-700); box-shadow: inset 0 0 0 1px var(--gold-500); }
+.hang__key.is-miss { background: transparent; color: var(--ink-300); box-shadow: inset 0 0 0 1px var(--oc-line); text-decoration: line-through; }
+
+.hang__end { display: flex; flex-direction: column; align-items: center; gap: 10px; text-align: center; }
+.hang__end p { margin: 0; font-size: 16px; color: var(--ink-700); }
+.hang__end strong { font-family: var(--oc-font-display); font-size: 20px; color: var(--hi); }
+.hang__note { font-size: 14px !important; color: var(--ink-500) !important; }
+
+@keyframes shake { 20% { transform: translateX(-5px); } 40% { transform: translateX(5px); } 60% { transform: translateX(-3px); } 80% { transform: translateX(3px); } }
+@keyframes land { 0% { transform: translateY(-8px); opacity: 0; } 100% { transform: none; opacity: 1; } }
+@keyframes whole { 40% { transform: scale(1.08); } }
+
+@media (prefers-reduced-motion: reduce) {
+  .hang__patch, .hang__cell.is-on, .hang__art.is-whole { transition: none; animation: none; }
+}

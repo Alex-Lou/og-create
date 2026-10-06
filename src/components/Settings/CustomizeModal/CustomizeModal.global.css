@@ -1,0 +1,19 @@
+/* Mobile : le cabinet occupe tout l'écran, actions collées en bas */
+@media (max-width: 859px) {
+  .g-modal-backdrop:has(> .g-modal > .cabinet) { padding: 0; }
+  .g-modal:has(> .cabinet) {
+    width: 100% !important;
+    height: 100%;
+    max-height: none;
+    padding: calc(24px + env(safe-area-inset-top)) 16px 0;
+  }
+  .g-modal:has(> .cabinet) > .g-modal__actions {
+    position: sticky;
+    bottom: 0;
+    margin: auto -16px 0;
+    padding: 12px 16px calc(12px + env(safe-area-inset-bottom));
+    background: var(--oc-surface-strong);
+    box-shadow: 0 -1px 0 var(--oc-line);
+  }
+  .g-modal:has(> .cabinet) > .g-modal__actions > * { flex: 1; }
+}
