@@ -212,7 +212,7 @@ function moment(id, meta) {
     .replace(/^souche(_petite)?(_grise)?(_champignons)?$/, 'souche').replace(/^rondin(_petit)?(_gris)?(_champignons)?$/, 'rondin')
     .replace(/^rocher(_petit)?(_ocre)?(_lezard)?$/, 'rocher').replace(/^rochers(_petits)?(_sombres)?(_galets)?$/, 'rochers')
     .replace(/^aiguille(_petite)?(_double)?(_oiseau)?$/, 'aiguille').replace(/^rochers_moussus(_petits)?(_fleuris)?(_escargot)?$/, 'rochers_moussus')
-    .replace(/^coquillages(_petits)?(_nacres)?(_etoile)?$/, 'coquillages'); return PLANTES_GREVE.has(n) ? 'tuto-1' : PLANTES_ACTE1.has(n) ? 'acte-1' : 'partout'; }
+    .replace(/^coquillages(_petits)?(_nacres)?(_etoile)?$/, 'coquillages').replace(/^bois_flotte(_petit)?(_sombre)?(_algues)?$/, 'bois_flotte'); return PLANTES_GREVE.has(n) ? 'tuto-1' : PLANTES_ACTE1.has(n) ? 'acte-1' : 'partout'; }
   // les scènes du tutoriel (lot J2) : scenes/tutoriel/<étape>_<nom>/…, la partie suit le numéro de l'étape
   if (top === 'scenes') { const n = parseInt(b, 10); return n <= 6 ? 'tuto-1' : n <= 9 ? 'tuto-2' : 'tuto-3'; }
   return 'partout';
@@ -279,7 +279,6 @@ const SUJETS = {
   'cameleon-de-brume': 'Caméléon de brume (égaré, la Jungle)', 'salamandre-de-brume': 'Salamandre de brume (égaré, le Volcan)'
 };
 const PLANTES = {
-  bois_flotte: 'Bois flotté',
   lanterne: 'Lanterne sur pied, éteinte',
   lanterne_allumee: 'Lanterne sur pied, allumée', banc: 'Banc de bois (décor)',
   nid: 'Nid d\'oiseau',
@@ -366,6 +365,10 @@ for (const petits of ['', '_petits']) for (const fleuris of ['', '_fleuris']) fo
 // les 8 coquillages refaits (plage.js) : coquillages[_petits][_nacres][_etoile]
 for (const petits of ['', '_petits']) for (const nacres of ['', '_nacres']) for (const et of ['', '_etoile']) {
   PLANTES[`coquillages${petits}${nacres}${et}`] = `Coquillages (${[petits ? 'petits' : 'grands', nacres ? 'nacrés' : 'coloris chauds', et && 'une étoile de mer'].filter(Boolean).join(', ')})`;
+}
+// les 8 bois flottés refaits (plage.js) : bois_flotte[_petit][_sombre][_algues]
+for (const petit of ['', '_petit']) for (const sombre of ['', '_sombre']) for (const al of ['', '_algues']) {
+  PLANTES[`bois_flotte${petit}${sombre}${al}`] = `Bois flotté (${[petit ? 'petit' : 'grand', sombre ? 'bois mouillé sombre' : 'bois blanchi', al && 'des algues accrochées'].filter(Boolean).join(', ')})`;
 }
 // les 16 touffes d'herbe refaites (herbes.js) : touffe[_motte][_petite][_profond][_fleurie]
 for (const motte of ['', '_motte']) for (const petite of ['', '_petite']) for (const vert of ['', '_profond']) for (const fleurie of ['', '_fleurie']) {

@@ -4903,10 +4903,129 @@
   {
    "id": "plantes/bois_flotte",
    "rubrique": "plantes",
-   "titre": "Bois flotté",
+   "titre": "Bois flotté (grand, bois blanchi)",
    "images": 1,
    "fichiers": [
     "svg/plantes/bois_flotte.svg"
+   ],
+   "cadre": [
+    -50,
+    -115,
+    100,
+    140
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "plantes/bois_flotte_algues",
+   "rubrique": "plantes",
+   "titre": "Bois flotté (grand, bois blanchi, des algues accrochées)",
+   "images": 1,
+   "fichiers": [
+    "svg/plantes/bois_flotte_algues.svg"
+   ],
+   "cadre": [
+    -50,
+    -115,
+    100,
+    140
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "plantes/bois_flotte_petit",
+   "rubrique": "plantes",
+   "titre": "Bois flotté (petit, bois blanchi)",
+   "images": 1,
+   "fichiers": [
+    "svg/plantes/bois_flotte_petit.svg"
+   ],
+   "cadre": [
+    -50,
+    -115,
+    100,
+    140
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "plantes/bois_flotte_petit_algues",
+   "rubrique": "plantes",
+   "titre": "Bois flotté (petit, bois blanchi, des algues accrochées)",
+   "images": 1,
+   "fichiers": [
+    "svg/plantes/bois_flotte_petit_algues.svg"
+   ],
+   "cadre": [
+    -50,
+    -115,
+    100,
+    140
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "plantes/bois_flotte_petit_sombre",
+   "rubrique": "plantes",
+   "titre": "Bois flotté (petit, bois mouillé sombre)",
+   "images": 1,
+   "fichiers": [
+    "svg/plantes/bois_flotte_petit_sombre.svg"
+   ],
+   "cadre": [
+    -50,
+    -115,
+    100,
+    140
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "plantes/bois_flotte_petit_sombre_algues",
+   "rubrique": "plantes",
+   "titre": "Bois flotté (petit, bois mouillé sombre, des algues accrochées)",
+   "images": 1,
+   "fichiers": [
+    "svg/plantes/bois_flotte_petit_sombre_algues.svg"
+   ],
+   "cadre": [
+    -50,
+    -115,
+    100,
+    140
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "plantes/bois_flotte_sombre",
+   "rubrique": "plantes",
+   "titre": "Bois flotté (grand, bois mouillé sombre)",
+   "images": 1,
+   "fichiers": [
+    "svg/plantes/bois_flotte_sombre.svg"
+   ],
+   "cadre": [
+    -50,
+    -115,
+    100,
+    140
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "plantes/bois_flotte_sombre_algues",
+   "rubrique": "plantes",
+   "titre": "Bois flotté (grand, bois mouillé sombre, des algues accrochées)",
+   "images": 1,
+   "fichiers": [
+    "svg/plantes/bois_flotte_sombre_algues.svg"
    ],
    "cadre": [
     -50,
