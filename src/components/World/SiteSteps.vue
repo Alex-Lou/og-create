@@ -76,3 +76,5 @@ export default {
   }
 };
 </script>
+
+<style scoped src="./SiteSteps.css"></style>

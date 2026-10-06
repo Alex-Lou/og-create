@@ -39,3 +39,5 @@ export default {
   emits: ['close']
 };
 </script>
+
+<style scoped src="./WreckScene.css"></style>

@@ -106,3 +106,5 @@ export default {
   }
 };
 </script>
+
+<style scoped src="./SiteShop.css"></style>

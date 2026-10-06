@@ -94,3 +94,5 @@ export default {
   emits: ['chests', 'log', 'finds', 'trip', 'zoom', 'immersive']
 };
 </script>
+
+<style scoped src="./IslandButtons.css"></style>

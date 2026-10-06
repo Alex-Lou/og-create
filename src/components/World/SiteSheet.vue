@@ -58,3 +58,5 @@ export default {
   }
 };
 </script>
+
+<style scoped src="./SiteSheet.css"></style>

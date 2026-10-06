@@ -176,3 +176,5 @@ export default {
   }
 };
 </script>
+
+<style scoped src="./SiteOverview.css"></style>
