@@ -1,0 +1,51 @@
+.mini {
+  position: fixed; inset: 0; z-index: var(--z-game); display: flex; align-items: center; justify-content: center;
+  padding: 16px; background: var(--island-game-backdrop); font-family: var(--font-ui);
+}
+.mini__card {
+  width: min(100%, 440px); max-height: 100%; overflow-y: auto; padding: 16px; border-radius: var(--island-game-radius);
+  background: var(--vellum-100); color: var(--ink-900); box-shadow: 0 24px 60px rgba(0, 0, 0, .5);
+}
+.mini__head { display: flex; align-items: flex-end; justify-content: space-between; gap: 10px; margin-bottom: 12px; }
+.mini__eyebrow { display: block; font-size: 11px; font-weight: 900; letter-spacing: .16em; text-transform: uppercase; color: var(--ink-500); }
+.mini__title { display: block; font-family: var(--font-display); font-size: 24px; font-weight: 700; line-height: 1.1; font-variant-numeric: tabular-nums; }
+.mini__end {
+  min-height: 38px; padding: 6px 14px; border: 0; border-radius: var(--r-pill); background: var(--ink-900); color: var(--vellum-50);
+  font: inherit; font-weight: 900; font-size: 13px; cursor: pointer;
+}
+.mini__end--quiet { background: var(--vellum-200); color: var(--ink-900); box-shadow: inset 0 0 0 1px rgba(var(--shade-rgb), .18); }
+.mini__end:disabled { opacity: .5; cursor: default; }
+.mini__intro { display: grid; gap: 12px; }
+.mini__art { display: flex; align-items: flex-end; justify-content: center; gap: 4px; padding: 14px 0 10px; border-radius: var(--r-board); background: radial-gradient(circle at 50% 70%, var(--gold-100), var(--vellum-200) 72%); }
+.mini__rule { margin: 0; font-weight: 800; font-size: 15px; line-height: 1.4; text-align: center; }
+.mini__rules { margin: 0; padding-left: 18px; display: grid; gap: 4px; color: var(--ink-700); font-size: 13px; font-weight: 700; line-height: 1.4; }
+.mini__facts { margin: 0; padding: 0; list-style: none; display: grid; gap: 6px; }
+.mini__facts li { display: flex; justify-content: space-between; gap: 10px; padding: 8px 12px; border-radius: var(--r-sm); background: var(--vellum-50); font-size: 13px; font-weight: 700; }
+.mini__facts strong { font-weight: 900; }
+.mini__btn {
+  min-height: 48px; padding: 10px 22px; border: 0; border-radius: var(--r-pill); cursor: pointer;
+  background: linear-gradient(180deg, var(--gold-300), var(--gold-500)); color: var(--ink-900);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, .6), 0 3px 0 var(--gold-600);
+  font: inherit; font-weight: 900; font-size: 16px;
+}
+.mini__btn--quiet { background: var(--vellum-200); box-shadow: inset 0 0 0 1px rgba(var(--shade-rgb), .18); }
+.mini__btn:disabled { opacity: .5; cursor: default; }
+.mini__stage { position: relative; }
+.mini__count { position: absolute; inset: 0; display: grid; place-items: center; pointer-events: none; }
+.mini__count span {
+  font-family: var(--font-display); font-size: 64px; font-weight: 800; color: #FFFFFF;
+  text-shadow: 0 4px 0 rgba(0, 0, 0, .25), 0 0 24px rgba(0, 0, 0, .35); animation: mini-count .65s ease both;
+}
+.mini__result { display: grid; justify-items: center; gap: 12px; padding: 10px 0 2px; text-align: center; }
+.mini__earned { display: inline-flex; align-items: center; gap: 10px; margin: 0; font-family: var(--font-display); font-size: 36px; font-weight: 800; animation: mini-count .5s ease both; }
+.mini__coin { width: 30px; height: 30px; border-radius: var(--r-round); background: var(--oc-coin); box-shadow: inset 0 0 0 2px var(--oc-coin-rim); }
+.mini__haul { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px 14px; margin: 0; padding: 0; list-style: none; }
+.mini__haul li { display: inline-flex; align-items: center; gap: 4px; font-size: 15px; font-weight: 900; }
+.mini__note, .mini__wait { margin: 0; color: var(--ink-500); font-size: 13px; font-weight: 700; }
+.mini__wait { font-style: italic; }
+.mini__error { margin: 0; color: var(--island-game-error); font-weight: 800; }
+.mini__actions { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; }
+@keyframes mini-count { from { transform: scale(1.6); opacity: 0; } 40% { opacity: 1; } to { transform: none; opacity: 1; } }
+@media (prefers-reduced-motion: reduce) {
+  .mini__count span, .mini__earned { animation: none; }
+}

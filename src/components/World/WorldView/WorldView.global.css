@@ -1,0 +1,2 @@
+/* Plein écran de l'île : la barre d'onglets se cache (hors du composant, d'où ce style global) */
+:root.oc-immersive .tabbar { display: none; }

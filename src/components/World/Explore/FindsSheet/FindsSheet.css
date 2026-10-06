@@ -1,0 +1,15 @@
+.finds { display: flex; flex-direction: column; gap: 10px; font-family: var(--font-ui); }
+.finds__note { margin: 0; padding: 8px 12px; border-radius: var(--r-sm); background: var(--vellum-200); font-weight: 700; font-size: 13px; line-height: 1.4; }
+.finds__list { margin: 0; padding: 0; list-style: none; display: flex; flex-direction: column; gap: 6px; }
+.finds__row {
+  display: grid; grid-template-columns: 44px minmax(0, 1fr) auto; gap: 10px; align-items: center;
+  padding: 8px 12px 8px 8px; border-radius: var(--r-tile); background: var(--vellum-50); box-shadow: inset 0 0 0 1px rgba(var(--shade-rgb), .1);
+}
+.finds__icon { display: grid; place-items: center; width: 44px; height: 44px; border-radius: var(--r-sm); background: var(--vellum-200); font-size: 28px; }
+.finds__row.is-empty .finds__icon { filter: grayscale(.6) opacity(.65); }
+.finds__body { min-width: 0; display: flex; flex-direction: column; gap: 2px; }
+.finds__name { font-family: var(--font-display); font-weight: 700; font-size: 16px; }
+.finds__climate { font-family: var(--font-ui); font-size: 12px; font-weight: 700; color: var(--ink-700); }
+.finds__where { color: var(--ink-700); font-size: 12px; font-weight: 700; line-height: 1.3; }
+.finds__amount { font-size: 20px; font-weight: 900; font-variant-numeric: tabular-nums; }
+.finds__row.is-empty .finds__amount { color: var(--ink-500); }
