@@ -46258,10 +46258,129 @@
   {
    "id": "plantes/palmier",
    "rubrique": "plantes",
-   "titre": "Palmier",
+   "titre": "Palmier (grand, vert doux)",
    "images": 1,
    "fichiers": [
     "svg/plantes/palmier.svg"
+   ],
+   "cadre": [
+    -50,
+    -115,
+    100,
+    140
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "plantes/palmier_cocos",
+   "rubrique": "plantes",
+   "titre": "Palmier (grand, vert doux, noix de coco au pied)",
+   "images": 1,
+   "fichiers": [
+    "svg/plantes/palmier_cocos.svg"
+   ],
+   "cadre": [
+    -50,
+    -115,
+    100,
+    140
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "plantes/palmier_petit",
+   "rubrique": "plantes",
+   "titre": "Palmier (petit, vert doux)",
+   "images": 1,
+   "fichiers": [
+    "svg/plantes/palmier_petit.svg"
+   ],
+   "cadre": [
+    -50,
+    -115,
+    100,
+    140
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "plantes/palmier_petit_cocos",
+   "rubrique": "plantes",
+   "titre": "Palmier (petit, vert doux, noix de coco au pied)",
+   "images": 1,
+   "fichiers": [
+    "svg/plantes/palmier_petit_cocos.svg"
+   ],
+   "cadre": [
+    -50,
+    -115,
+    100,
+    140
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "plantes/palmier_petit_profond",
+   "rubrique": "plantes",
+   "titre": "Palmier (petit, vert profond)",
+   "images": 1,
+   "fichiers": [
+    "svg/plantes/palmier_petit_profond.svg"
+   ],
+   "cadre": [
+    -50,
+    -115,
+    100,
+    140
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "plantes/palmier_petit_profond_cocos",
+   "rubrique": "plantes",
+   "titre": "Palmier (petit, vert profond, noix de coco au pied)",
+   "images": 1,
+   "fichiers": [
+    "svg/plantes/palmier_petit_profond_cocos.svg"
+   ],
+   "cadre": [
+    -50,
+    -115,
+    100,
+    140
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "plantes/palmier_profond",
+   "rubrique": "plantes",
+   "titre": "Palmier (grand, vert profond)",
+   "images": 1,
+   "fichiers": [
+    "svg/plantes/palmier_profond.svg"
+   ],
+   "cadre": [
+    -50,
+    -115,
+    100,
+    140
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "plantes/palmier_profond_cocos",
+   "rubrique": "plantes",
+   "titre": "Palmier (grand, vert profond, noix de coco au pied)",
+   "images": 1,
+   "fichiers": [
+    "svg/plantes/palmier_profond_cocos.svg"
    ],
    "cadre": [
     -50,
