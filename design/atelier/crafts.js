@@ -743,10 +743,10 @@ C.cairn = { n: 2, draw: f => {
   });
   return s;
 } };
-// Passerelle du marais : une mare aux bords bosselés, ses nénuphars et ses touffes de joncs à massettes ; un caillebotis
-// de planches posé sur six pilotis ronds, une corde qui pend d'un pilotis à l'autre ; des ronds autour des pilotis ; une
-// libellule qui file au-dessus de l'eau (2 images)
-const PLANCHE = { top: '#D9B47C', left: '#B98E58', right: '#94693C' };
+// Passerelle de roseaux : une mare aux bords bosselés, ses nénuphars et ses touffes de joncs à massettes ; un platelage
+// de roseaux liés en bottes, posé sur six pilotis ronds, une corde qui pend d'un pilotis à l'autre ; des ronds autour
+// des pilotis ; une libellule qui file au-dessus de l'eau (2 images)
+const ROSEAU = { top: '#DCC680', left: '#C2A65A', right: '#9E8440', lien: '#7A5E2A' };
 const jonc = (x, y, k) => thick(`M${r2(x - 2 * k)},${r2(y)} q-1,-5 -3,-8 M${r2(x)},${r2(y)} q0.4,-7 1,-11 M${r2(x + 2 * k)},${r2(y)} q1.6,-4 3.8,-6.4`, 0.7, '#7EC45B') + E(x + 0.9, y - 12 * k, 0.9, 2.2 * k, '#8A5A34', 0.6);
 const libellule = (x, y, dir) => `<g transform="translate(${r2(x)} ${r2(y)}) scale(${dir} 1)">`
   + [[-1, -1.8, -20], [-1, 1.8, 20], [1.4, -1.6, -35], [1.4, 1.6, 35]].map(([dx, dy, r]) => `<ellipse cx="${dx}" cy="${dy}" rx="3.4" ry="1.1" transform="rotate(${r} ${dx} ${dy})" fill="#EAF6FB" fill-opacity="0.85" stroke="${OUT}" stroke-width="0.4"/>`).join('')
@@ -762,8 +762,12 @@ C.passerelle = { n: 2, draw: f => {
   s += nenuphar(x - 26, y + 6, 3.6, 0.6) + nenuphar(x + 24, y - 6, 3, 3.6) + nenuphar(x - 18, y - 9, 2.6, 2) + jonc(x - 30, y - 4, 1) + jonc(x + 30, y + 2, 0.9);
   // les pilotis du fond, le caillebotis, ses planches, puis les pilotis de devant
   const pilotis = v => [-0.4, 0, 0.4].map(u => { const [px, py] = at(u, v, 0); return E(px, py + 0.6, 3.6, 1.4, 'none', 0).replace('stroke="none"', 'stroke="#E8F6FF" stroke-width="0.6"') + cylinder(u, v, 0.026, -0.6, 12, WOOD, 0.8); }).join('');
-  s += pilotis(-0.18) + box(-0.46, -0.15, 0.46, 0.15, 5.6, 7.6, PLANCHE);
-  for (let i = 1; i < 12; i++) { const u = -0.46 + (0.92 * i) / 12; s += L(at(u, -0.15, 7.6), at(u, 0.15, 7.6), PLANCHE.right, 0.6) + L(at(u, 0.15, 7.6), at(u, 0.15, 5.6), PLANCHE.right, 0.5); }
+  s += pilotis(-0.18) + box(-0.46, -0.15, 0.46, 0.15, 5.6, 7.6, ROSEAU);
+  // les roseaux couchés en long, leurs bouts en bottes sur le côté, les liens qui serrent les bottes
+  for (let v = -0.12; v < 0.14; v += 0.04) s += L(at(-0.46, v, 7.6), at(0.46, v, 7.6), ROSEAU.right, 0.4);
+  s += L(at(-0.46, 0.15, 6.6), at(0.46, 0.15, 6.6), ROSEAU.right, 0.4);
+  for (let v = -0.12; v < 0.14; v += 0.05) { const [ex, ey] = at(0.46, v, 6.6); s += E(ex, ey, 0.8, 0.7, ROSEAU.top, 0.4); }
+  for (const u of [-0.34, -0.11, 0.11, 0.34]) s += L(at(u, -0.15, 7.6), at(u, 0.15, 7.6), ROSEAU.lien, 0.9) + L(at(u, 0.15, 7.6), at(u, 0.15, 5.6), ROSEAU.lien, 0.9) + L(at(u + 0.02, -0.15, 7.6), at(u + 0.02, 0.15, 7.6), ROSEAU.lien, 0.6);
   s += pilotis(0.18);
   // les cordes qui pendent d'un pilotis à l'autre
   const corde = v => [[-0.4, 0], [0, 0.4]].map(([a, b]) => { const p = at(a, v, 11), q = at(b, v, 11); const d = `M${r2(p[0])},${r2(p[1])} Q${r2((p[0] + q[0]) / 2)},${r2((p[1] + q[1]) / 2 + 4)} ${r2(q[0])},${r2(q[1])}`; return `<path d="${d}" stroke="${OUT}" stroke-width="1.8" fill="none"/><path d="${d}" stroke="#D8B878" stroke-width="0.9" fill="none"/>`; }).join('');
