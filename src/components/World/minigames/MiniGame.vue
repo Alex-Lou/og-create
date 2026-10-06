@@ -165,7 +165,7 @@ export default {
 <style scoped>
 .mini {
   position: fixed; inset: 0; z-index: var(--z-game); display: flex; align-items: center; justify-content: center;
-  padding: 16px; background: rgba(10, 8, 6, .72); font-family: var(--font-ui);
+  padding: 16px; background: var(--island-game-backdrop); font-family: var(--font-ui);
 }
 .mini__card {
   width: min(100%, 440px); max-height: 100%; overflow-y: auto; padding: 16px; border-radius: 26px;
@@ -208,7 +208,7 @@ export default {
 .mini__haul li { display: inline-flex; align-items: center; gap: 4px; font-size: 15px; font-weight: 900; }
 .mini__note, .mini__wait { margin: 0; color: var(--ink-500); font-size: 13px; font-weight: 700; }
 .mini__wait { font-style: italic; }
-.mini__error { margin: 0; color: #A2412B; font-weight: 800; }
+.mini__error { margin: 0; color: var(--island-game-error); font-weight: 800; }
 .mini__actions { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; }
 @keyframes mini-count { from { transform: scale(1.6); opacity: 0; } 40% { opacity: 1; } to { transform: none; opacity: 1; } }
 @media (prefers-reduced-motion: reduce) {

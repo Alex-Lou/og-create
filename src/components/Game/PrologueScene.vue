@@ -87,7 +87,7 @@ export default {
 <style scoped>
 .ps {
   position: fixed; inset: 0; z-index: var(--z-prologue); overflow: hidden; cursor: pointer; outline: none;
-  background: #05080F; color: #F4EEDC;
+  background: #05080F; color: var(--oc-night-ink);
   -webkit-tap-highlight-color: transparent; user-select: none;
 }
 .ps__caption {

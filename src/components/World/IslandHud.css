@@ -1,18 +1,20 @@
 /* IslandHud : ses styles (repris de WorldView, qui les gardait pour lui). */
+/* Ses jetons, sur ses deux racines : l'or du bouton « Tout ramasser » au repos */
+.world__head, .world__hud { --hud-gather-line: rgba(224, 182, 84, .3); --hud-gather-bg: rgba(224, 182, 84, .08); }
 .world__top .world__head, .world__top .world__hud { pointer-events: none; }
 .world__top .world__head > *, .world__top .world__hud > * { pointer-events: auto; }
 .world__head-left { display: flex; align-items: center; gap: 8px; }
 .world__purse {
   display: inline-flex; align-items: center; gap: 5px; height: 32px; padding: 0 11px 0 8px; border-radius: var(--r-pill);
-  background: rgba(251, 246, 234, .94); color: var(--ink-900); font-family: var(--font-ui); font-size: 14px; font-weight: 900;
+  background: rgba(var(--island-paper-rgb), .94); color: var(--ink-900); font-family: var(--font-ui); font-size: 14px; font-weight: 900;
   font-variant-numeric: tabular-nums;
 }
 .world__head { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
 .world__coins {
   flex: 0 1 auto; min-width: 0; max-width: 60%; display: inline-flex; align-items: center; gap: 7px; text-align: left;
   min-height: 38px; padding: 6px 14px;
-  border: 1px solid rgba(224, 182, 84, .3); border-radius: var(--r-pill);
-  background: rgba(224, 182, 84, .08); color: var(--oc-text-faint);
+  border: 1px solid var(--hud-gather-line); border-radius: var(--r-pill);
+  background: var(--hud-gather-bg); color: var(--oc-text-faint);
   font-family: var(--font-ui); font-weight: 900; font-size: 15px;
   cursor: pointer;
 }

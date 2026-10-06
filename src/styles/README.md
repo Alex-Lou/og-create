@@ -15,6 +15,7 @@ La seule source des valeurs de design, en variables CSS (`--nom`). Un fichier pa
 | `motion.css` | courbes et durées |
 | `layout.css` | marges, dock, barre d'onglets, rail |
 | `depth.css` | profondeurs (`z-index`) : l'ordre des couches de la page, de la coque de l'application et de l'île |
+| `island.css` | les rôles de l'île : ce que plusieurs de ses composants partagent (verre, papier, voiles, habitants, visiteurs, coffres…) |
 | `dark.css` | Veillée, le thème sombre : il redéfinit la palette, donc il vient en dernier |
 
 `tokens/index.css` les lit dans cet ordre.
@@ -28,11 +29,13 @@ dépendre d'aucun composant. `base/index.css` lit les fichiers dans un ordre qui
 ## 3. Le style d'un composant
 
 Il vit à côté de son composant, dans son dossier, et ne s'applique qu'à lui (`<style scoped>`). Il ne lit que des
-jetons pour les couleurs, polices, arrondis, ombres, profondeurs et durées ; les marges et tailles restent des nombres.
-Un composant ne stylise jamais l'intérieur d'un autre.
+jetons pour les couleurs (celles des ombres comprises), polices, arrondis et profondeurs ; les marges, tailles et
+durées restent des nombres (une durée de l'échelle de mouvement s'écrit avec son jeton). Un composant ne stylise
+jamais l'intérieur d'un autre.
 
 Une valeur que plusieurs composants partagent devient un rôle global (`tokens/`) ; une valeur propre à un composant
-devient un jeton local, nommé en tête de son CSS. Restent écrits en place : le noir et le blanc translucides (ombres,
+devient un jeton local, nommé en tête de son CSS, posé sur la racine du composant (sur chacune s'il en a plusieurs) et
+préfixé par son nom (`--world-sea`, `--hud-…`) ; une racine rendue ailleurs (`<teleport>`) porte aussi les siens. Restent écrits en place : le noir et le blanc translucides (ombres,
 reflets, voiles : des lumières, pas des couleurs de la palette), le noir des masques, et les couleurs des dessins
 (SVG, canvas).
 

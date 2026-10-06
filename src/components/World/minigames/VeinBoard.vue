@@ -152,7 +152,7 @@ export default {
     linear-gradient(170deg, transparent 30%, rgba(30, 22, 16, .5) 31%, transparent 33%);
 }
 .vein__block:not(.is-reach):not(.is-open) { filter: brightness(.72) saturate(.8); }
-.vein__block.is-reach { box-shadow: inset 0 -3px 0 rgba(0, 0, 0, .22), inset 0 2px 0 rgba(255, 255, 255, .3), 0 0 0 2px rgba(242, 192, 75, .55); }
+.vein__block.is-reach { box-shadow: inset 0 -3px 0 rgba(0, 0, 0, .22), inset 0 2px 0 rgba(255, 255, 255, .3), 0 0 0 2px var(--island-hint); }
 .vein__block.is-open { background: radial-gradient(circle at 50% 40%, #2E2A26, #1A1714); box-shadow: inset 0 3px 6px rgba(0, 0, 0, .6); cursor: default; }
 .vein__block.is-hit { animation: vein-hit .2s ease; }
 .vein__block.is-no { animation: vein-no .3s ease; }

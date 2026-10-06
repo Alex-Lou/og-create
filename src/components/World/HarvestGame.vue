@@ -247,7 +247,7 @@ export default {
 .harvest {
   position: fixed; inset: 0; z-index: var(--z-game);
   display: flex; align-items: center; justify-content: center;
-  padding: 16px; background: rgba(10, 8, 6, .72);
+  padding: 16px; background: var(--island-game-backdrop);
   font-family: var(--font-ui);
 }
 .harvest__card {
@@ -273,7 +273,7 @@ export default {
 .harvest__res strong { font-size: 16px; font-weight: 900; font-variant-numeric: tabular-nums; }
 .harvest__res.is-boost { box-shadow: inset 0 0 0 2px #E7B648; }
 .harvest__boost { position: absolute; top: -7px; right: -4px; padding: 0 5px; border-radius: var(--r-xs); background: #E7B648; color: var(--ink-900); font-size: 10px; font-style: normal; font-weight: 900; }
-.harvest__hint { min-height: 22px; margin-bottom: 8px; text-align: center; font-size: 14px; font-weight: 800; color: #8A5A1C; }
+.harvest__hint { min-height: 22px; margin-bottom: 8px; text-align: center; font-size: 14px; font-weight: 800; color: var(--oc-gold-ink); }
 
 .harvest__board {
   position: relative; width: 100%; aspect-ratio: 1;
@@ -313,7 +313,7 @@ export default {
 .harvest__result { padding: 18px 4px 6px; text-align: center; }
 .harvest__done, .harvest__wait { margin: 0 0 14px; color: var(--ink-500); font-style: italic; }
 .harvest__chest { margin: 0 0 14px; color: var(--ink-900); font-weight: 900; }
-.harvest__error { margin: 0 0 14px; color: #A2412B; font-weight: 800; }
+.harvest__error { margin: 0 0 14px; color: var(--island-game-error); font-weight: 800; }
 .harvest__btn { min-height: 46px; padding: 10px 22px; border: 0; border-radius: var(--r-pill); background: var(--ink-900); color: var(--vellum-50); font: inherit; font-weight: 900; font-size: 15px; cursor: pointer; }
 .harvest__btn:disabled { opacity: .5; }
 @media (prefers-reduced-motion: reduce) {
