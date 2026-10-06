@@ -60,17 +60,43 @@ LM.grotte = { n: 2, draw: f => {
   s += wisp(f ? 0.5 : 0) + wisp(f ? 0 : 0.5);
   return s + (f ? sparkle(x + 26, y - 58, 3) + sparkle(x - 34, y - 26, 2.2) : sparkle(x - 22, y - 66, 3) + sparkle(x + 40, y - 20, 2.2));
 } };
+// Lac gelé : une nappe de glace aux rives bosselées sous un bourrelet de neige, ses craquelures et ses reflets ; une
+// cabane de pêcheur au toit enneigé, sa cheminée qui fume, sa fenêtre chaude ; un trou de pêche, la canne posée sur sa
+// fourche et son bouchon qui danse ; un seau d'où dépasse une queue de poisson ; des blocs taillés, des aiguilles de
+// glace ; sous la glace, un poisson d'argent qui tourne (2 images)
+const NEIGE_TOIT = { back: '#E3EEF6', front: '#FFFFFF', gable: '#C98A52' };
 LM.lac = { n: 2, draw: f => {
-  // cabane du pêcheur au fond (porte, fenêtre), lac gelé, trou de pêche et canne, aiguilles puis blocs de glace taillés
-  const hut = box(-0.62, -0.62, -0.36, -0.38, 0, 18, WOOD) + Dk.gable(-0.62, -0.62, -0.36, -0.38, 18, 11, { back: '#B9503B', front: '#E06E52', gable: '#E0A96C' }, 0.05);
-  const [dx0, dy0] = at(-0.56, -0.38, 0), [wx, wy] = at(-0.36, -0.5, 9);
-  let s = disc(0, 0, 0.75, 0, ICE.top, 1.2) + disc(-0.1, -0.08, 0.5, 0, '#DDF2FC', 0) + hut + `<path d="M${dx0},${dy0} l0,-11 l6,3 l0,11 Z" fill="#5A3A22" stroke="${OUT}" stroke-width="0.7"/>` + `<path d="M${wx - 0.5},${wy - 2} l4,-2 l0,4 l-4,2 Z" fill="#FFE6A3" stroke="${OUT}" stroke-width="0.6"/>`;
-  for (const [u, v, h] of [[0.18, -0.62, 18], [0.3, -0.64, 12]]) { const [a2, b2] = at(u, v); s += poly([[a2 - 3, b2], [a2, b2 - h], [a2 + 3, b2]], ICE.left, 0.8) + poly([[a2, b2 - h], [a2 + 3, b2], [a2 + 0.6, b2]], ICE.right, 0); }
-  const [x, y] = at(0.05, 0.08);
-  s += E(x, y, 9, 4.4, '#2E6A9E', 1) + `<g opacity="0.6">${E(x - 8 + f * 16, y + 14, 4, 1.6, '#C9D8E6', 0)}</g>`;
-  s += box(0.45, -0.5, 0.6, -0.35, 0, 8, ICE) + box(-0.62, 0.2, -0.4, 0.42, 0, 12, ICE);
-  s += thick(`M${x + 22},${y - 6} L${x + 4},${y - 22}`, 1.2, WOOD_DARK.left) + `<path d="M${x + 4},${y - 22} Q${x - 2},${y - 12} ${x - 1},${y + f}" fill="none" stroke="${OUT}" stroke-width="0.5"/>` + E(x - 1, y + f - 1, 1.4, 1.4, '#E8483C', 0.6);
-  return s;
+  const [x, y] = at(0, 0);
+  // la nappe de glace sous son bourrelet de neige
+  const rive = (rx, ry, n, k) => { const pts = Array.from({ length: n }, (_, i) => { const t = (i / n) * TAU, r = 1 + (i % 2 ? 0.05 : -0.035) + (i % 5 ? 0 : 0.05) * k; return [x + Math.cos(t) * rx * r, y + 2 + Math.sin(t) * ry * r]; }); const mil = i => { const p = pts[i % n], q = pts[(i + 1) % n]; return `${r2((p[0] + q[0]) / 2)},${r2((p[1] + q[1]) / 2)}`; }; let d = `M${mil(n - 1)}`; for (let i = 0; i < n; i++) d += ` Q${r2(pts[i][0])},${r2(pts[i][1])} ${mil(i)}`; return d + ' Z'; };
+  let s = shadow(0, 0, 0.74, 0.08) + `<path d="${rive(64, 29, 18, 1)}" fill="#FFFFFF" stroke="${OUT}" stroke-width="1.1"/>` + `<path d="${rive(54, 23, 16, 0)}" fill="#CFEAF7" stroke="#9FC9E2" stroke-width="0.9"/>`
+    + E(x + 6, y + 5, 30, 10, '#B4DDF0', 0) + E(x - 14, y - 4, 16, 4, '#E9F8FF', 0);
+  // le poisson d'argent qui tourne sous la glace
+  const ang = f ? 2.4 : 0.6, [fx, fy] = [x + 10 + Math.cos(ang) * 16, y + 6 + Math.sin(ang) * 6];
+  s += `<g transform="translate(${r2(fx)} ${r2(fy)}) scale(${f ? -1 : 1} 1)" opacity="0.55">` + E(0, 0, 4, 1.6, '#8FA6B8', 0) + P('M-3.4,0 L-6,-1.8 L-5.4,0 L-6,1.8 Z', '#8FA6B8', 0) + '</g>';
+  // les craquelures et les reflets de la glace
+  s += `<path d="M${x - 30},${y + 8} l8,-3 l5,2 l7,-4 M${x + 18},${y + 14} l6,-4 l8,1 M${x + 28},${y - 6} l-5,-4 l3,-5" stroke="#9FC9E2" stroke-width="0.8" fill="none" stroke-linejoin="round"/>`
+    + `<path d="M${x - 24},${y - 6} l10,-4 M${x - 20},${y - 3} l6,-2.4 M${x + 6},${y + 18} l9,-3.6" stroke="#FFFFFF" stroke-width="1.2" stroke-linecap="round"/>`;
+  // la cabane du pêcheur au fond, son toit enneigé, sa fenêtre chaude, sa cheminée qui fume
+  s += box(-0.6, -0.6, -0.34, -0.36, 0, 16, WOOD) + Dk.gable(-0.62, -0.62, -0.32, -0.34, 16, 10, NEIGE_TOIT, 0.05);
+  const [dx0, dy0] = at(-0.54, -0.36, 0), [wx, wy] = at(-0.34, -0.5, 8);
+  s += `<path d="M${dx0},${dy0} l0,-10 l5,2.5 l0,10 Z" fill="#5A3A22" stroke="${OUT}" stroke-width="0.7"/>` + `<path d="M${wx - 0.4},${wy - 2} l4,-2 l0,4 l-4,2 Z" fill="#FFD27A" stroke="${OUT}" stroke-width="0.6"/>`
+    + box(-0.4, -0.58, -0.35, -0.53, 22, 30, { top: '#9A8E80', left: '#7E7266', right: '#5E554B' }, 0.7);
+  const [cx, cy] = at(-0.375, -0.555, 30);
+  s += puff(cx + (f ? 3 : 1), cy - 6 - f * 4, 3.4, 0.85) + puff(cx + (f ? 7 : 4), cy - 14 - f * 3, 2.4, 0.6);
+  // les aiguilles de glace et les blocs taillés
+  for (const [u, v, h] of [[0.2, -0.62, 20], [0.3, -0.64, 13], [0.12, -0.66, 10]]) { const [a2, b2] = at(u, v); s += poly([[a2 - 3, b2], [a2, b2 - h], [a2 + 3, b2]], ICE.left, 0.8) + poly([[a2, b2 - h], [a2 + 3, b2], [a2 + 0.6, b2]], ICE.right, 0) + L([a2 - 1.4, b2 - 2], [a2 - 0.4, b2 - h * 0.6], '#FFFFFF', 0.6); }
+  s += box(0.46, -0.48, 0.6, -0.34, 0, 7, ICE, 0.9) + box(0.48, -0.46, 0.58, -0.36, 7, 13, ICE, 0.9) + box(-0.62, 0.2, -0.42, 0.4, 0, 10, ICE, 0.9);
+  // le trou de pêche, la canne sur sa fourche, le bouchon qui danse, le seau
+  const [hx, hy] = at(0.06, 0.1);
+  s += E(hx, hy, 10.4, 5, '#F4FBFF', 0.8) + E(hx, hy + 0.4, 8.4, 3.8, '#2E6A9E', 0) + E(hx - 2.4, hy - 0.6, 3, 0.8, '#5A90C0', 0);
+  s += thick(`M${hx + 22},${hy - 2} L${hx + 22.4},${hy - 9}`, 0.7, WOOD_DARK.left) + thick(`M${hx + 26},${hy + 1} L${hx + 4},${hy - 20}`, 1, WOOD_DARK.left)
+    + `<path d="M${hx + 4},${hy - 20} Q${hx - 2},${hy - 12} ${hx - 1},${hy - 1 + f}" fill="none" stroke="${OUT}" stroke-width="0.45"/>`
+    + E(hx - 1, hy - 1 + f, 1.5, 1.3, '#E8483C', 0.6) + `<path d="M${hx - 2.4},${hy - 1.2 + f} h2.8" stroke="#FFFFFF" stroke-width="0.7"/>`
+    + E(hx - 1, hy + 1.4, 3 + f, 1 + f * 0.4, 'none', 0).replace('stroke="none"', 'stroke="#9FC9E2" stroke-width="0.5"');
+  const [bx, by] = at(-0.16, 0.34);
+  return s + P(`M${bx - 4},${by - 7} L${bx + 4},${by - 7} L${bx + 3.2},${by} L${bx - 3.2},${by} Z`, '#8FA0B0', 0.8) + E(bx, by - 7, 4, 1.4, '#5E6E7E', 0.6)
+    + P(`M${bx + 0.4},${by - 7.4} L${bx + 2.6},${by - 12} L${bx + 4.4},${by - 11} Z`, '#B8C8D6', 0.6) + L([bx - 3.6, by - 3.6], [bx + 3.6, by - 3.6], '#6E7E8E', 0.6);
 } };
 // Col du Vent : un replat d'herbe rase et de rocaille sur le col, des touffes et des edelweiss ; deux cairns de pierres
 // plates ; entre eux, une corde de fanions qui claquent ; une manche à air rayée au bout de sa perche, gonflée puis
