@@ -17,6 +17,7 @@ La seule source des valeurs de design, en variables CSS (`--nom`). Un fichier pa
 | `depth.css` | profondeurs (`z-index`) : l'ordre des couches de la page, de la coque de l'application et de l'île |
 | `island.css` | les rôles de l'île : ce que plusieurs de ses composants partagent (verre, papier, voiles, habitants, visiteurs, coffres…) |
 | `book.css` | les rôles du Grimoire : ce que plusieurs de ses composants partagent |
+| `prologue.css` | les rôles du prologue : son encre et son bleu, partagés par la scène et la page du nom |
 | `dark.css` | Veillée, le thème sombre : il redéfinit la palette, donc il vient en dernier |
 
 `tokens/index.css` les lit dans cet ordre.
@@ -41,7 +42,8 @@ jamais l'intérieur d'un autre.
 Une valeur que plusieurs composants partagent devient un rôle global (`tokens/`) ; une valeur propre à un composant
 devient un jeton local, nommé en tête de son CSS, posé sur la racine du composant (sur chacune s'il en a plusieurs) et
 préfixé par son nom (`--world-sea`, `--hud-…`) ; une racine rendue ailleurs (`<teleport>`) porte aussi les siens. Restent écrits en place : le noir et le blanc translucides (ombres,
-reflets, voiles : des lumières, pas des couleurs de la palette), le noir des masques, et les couleurs des dessins
-(SVG, canvas).
+reflets, voiles : des lumières, pas des couleurs de la palette), le noir des masques, les couleurs des dessins
+(SVG, canvas), les noms déclarés par un `@font-face`, et l'arrêt entièrement transparent du fond de page
+(`base/reset.css`).
 
 `index.css` (ce dossier) est le seul fichier importé par `main.js` : les jetons, puis la base.

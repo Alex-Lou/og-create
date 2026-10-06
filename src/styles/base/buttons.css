@@ -33,7 +33,7 @@
 .g-btn--danger {
   color: var(--vellum-50);
   background: linear-gradient(180deg, var(--wax-500), var(--wax-700));
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.25), 0 3px 0 #6e2219, var(--shadow-1);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.25), 0 3px 0 var(--wax-800), var(--shadow-1);
 }
 .g-btn--small { min-height: 40px; padding: 0 16px; font-size: 14px; }
 

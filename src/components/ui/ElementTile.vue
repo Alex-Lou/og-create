@@ -87,6 +87,8 @@ export default {
 </script>
 
 <style scoped>
+/* Ses jetons : le coin replié, l'étiquette */
+.tile { --tile-corner-radius: 1px; --tile-tag-radius: 6px; }
 .tile {
   appearance: none;
   position: relative;
@@ -113,7 +115,7 @@ export default {
 .tile:focus-visible { outline: 2px solid var(--gold-500); outline-offset: 2px; }
 
 /* Coin de famille : un losange à l'encre du chapitre */
-.tile__corner { position: absolute; top: 7px; left: 7px; width: 6px; height: 6px; transform: rotate(45deg); border-radius: 1px; background: var(--ti); opacity: 0.75; }
+.tile__corner { position: absolute; top: 7px; left: 7px; width: 6px; height: 6px; transform: rotate(45deg); border-radius: var(--tile-corner-radius); background: var(--ti); opacity: 0.75; }
 .tile__medal {
   width: 42px;
   height: 42px;
@@ -167,7 +169,7 @@ export default {
   left: 50%;
   transform: translateX(-50%);
   padding: 1px 6px;
-  border-radius: 6px;
+  border-radius: var(--tile-tag-radius);
   font-family: var(--font-ui);
   font-weight: 900;
   font-size: 8.5px;

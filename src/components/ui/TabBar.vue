@@ -41,6 +41,8 @@ export default {
 </script>
 
 <style scoped>
+/* Ses jetons : l'or pâle d'un onglet au repos */
+.tabbar { --tabbar-ink: rgba(251, 235, 192, 0.72); }
 /* Cuir oxblood, piqûre dorée en haut */
 .tabbar {
   position: fixed;
@@ -80,7 +82,7 @@ export default {
   flex-direction: column;
   align-items: center;
   gap: 2px;
-  color: rgba(251, 235, 192, 0.72);
+  color: var(--tabbar-ink);
   -webkit-tap-highlight-color: transparent;
   transition: color var(--oc-fast);
 }

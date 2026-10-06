@@ -321,6 +321,14 @@ export default {
 </script>
 
 <style scoped>
+/* Ses jetons : une case, l'échec, la révélation (voile et halo), la poignée du tiroir */
+.athanor {
+  --craft-slot-bg: rgba(255, 252, 245, 0.6);
+  --craft-fail-ring: rgba(192, 72, 58, 0.35);
+  --craft-reveal-veil: radial-gradient(circle at 50% 45%, rgba(74, 52, 39, 0.82), rgba(34, 24, 18, 0.92));
+  --craft-reveal-halo: radial-gradient(circle, rgba(247, 220, 147, 0.55) 0%, rgba(247, 220, 147, 0) 68%);
+  --craft-handle-radius: 2px;
+}
 .athanor {
   position: relative;
   display: flex;
@@ -359,7 +367,7 @@ export default {
   padding: 4px;
   border: 0;
   border-radius: var(--r-round);
-  background: rgba(255, 252, 245, 0.6);
+  background: var(--craft-slot-bg);
   box-shadow: inset 0 0 0 2px var(--oc-line);
   outline: 2px dashed var(--oc-line-strong);
   outline-offset: -8px;
@@ -395,7 +403,7 @@ export default {
   padding: 10px 16px;
   border-radius: var(--r-md);
   background: var(--vellum-50);
-  box-shadow: inset 0 0 0 1px rgba(192, 72, 58, 0.35), var(--shadow-1);
+  box-shadow: inset 0 0 0 1px var(--craft-fail-ring), var(--shadow-1);
   color: var(--wax-700);
   font-family: var(--oc-font-display);
   font-style: italic;
@@ -415,7 +423,7 @@ export default {
   z-index: 3;
   border: 0;
   border-radius: inherit;
-  background: radial-gradient(circle at 50% 45%, rgba(74, 52, 39, 0.82), rgba(34, 24, 18, 0.92));
+  background: var(--craft-reveal-veil);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -431,7 +439,7 @@ export default {
   height: 300px;
   margin: -150px 0 0 -150px;
   border-radius: var(--r-round);
-  background: radial-gradient(circle, rgba(247, 220, 147, 0.55) 0%, rgba(247, 220, 147, 0) 68%);
+  background: var(--craft-reveal-halo);
   animation: halo 1.2s var(--oc-ease-out) forwards;
 }
 /* Carte de vélin à double filet d'or */
@@ -515,7 +523,7 @@ export default {
     width: 40px;
     height: 4px;
     margin-left: -20px;
-    border-radius: 2px;
+    border-radius: var(--craft-handle-radius);
     background: var(--vellum-400);
   }
   .athanor__head { display: none; }
@@ -538,7 +546,7 @@ export default {
     right: 16px;
     top: calc(env(safe-area-inset-top) + 12px);
     pointer-events: none;
-    box-shadow: inset 0 0 0 1px rgba(192, 72, 58, 0.35), var(--shadow-2);
+    box-shadow: inset 0 0 0 1px var(--craft-fail-ring), var(--shadow-2);
   }
   .fail-enter-from, .fail-leave-to { transform: translateY(-8px); }
   .reveal { position: fixed; z-index: var(--z-reveal); border-radius: 0; }
