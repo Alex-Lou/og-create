@@ -8,7 +8,7 @@
 .world__card {
   display: flex; flex-direction: column; gap: 4px; min-width: 0;
   padding: 8px; border-radius: var(--r-md); background: var(--vellum-50);
-  box-shadow: inset 0 0 0 1px rgba(74, 52, 38, .1);
+  box-shadow: inset 0 0 0 1px rgba(var(--shade-rgb), .1);
 }
 .world__card.is-worn { box-shadow: inset 0 0 0 2px var(--gold-500); }
 .world__card.is-locked .world__card-art img { filter: grayscale(.7) opacity(.6); }
@@ -21,17 +21,17 @@
   background: var(--ink-900); color: var(--gold-300); font-family: var(--font-display); font-weight: 700; font-size: 12px; text-align: center;
 }
 .world__card.is-locked .world__card-palier { background: var(--vellum-300); color: var(--ink-700); }
-.world__card-palier--rare { background: linear-gradient(135deg, #F2C04B, #C9952A); color: var(--ink-900); }
+.world__card-palier--rare { background: linear-gradient(135deg, var(--oc-gold-bright), #C9952A); color: var(--ink-900); }
 .world__card.is-rare { box-shadow: inset 0 0 0 1px rgba(201, 149, 42, .55); }
 .world__card.is-rare.is-worn { box-shadow: inset 0 0 0 2px var(--gold-500); }
 .world__card-art {
   position: relative; display: grid; place-items: center; height: 78px; border-radius: var(--r-sm);
-  background: radial-gradient(circle at 50% 72%, #CFE8B8, var(--vellum-200) 72%);
+  background: radial-gradient(circle at 50% 72%, var(--oc-art-halo), var(--vellum-200) 72%);
 }
 .world__card-art img { position: absolute; inset: 0; width: 100%; height: 100%; padding: 6px 10px; box-sizing: border-box; object-fit: contain; }
 .world__card-badge {
   position: absolute; top: 6px; right: 6px; padding: 1px 7px; border-radius: var(--r-pill);
-  background: #4E8A3A; color: #FFFFFF; font-size: 11px; font-weight: 900;
+  background: var(--oc-success); color: var(--oc-on-success); font-size: 11px; font-weight: 900;
 }
 .world__card-name { font-weight: 900; font-size: 14px; line-height: 1.2; }
 .world__card-effect { flex: 1; color: var(--ink-500); font-size: 12px; font-weight: 700; line-height: 1.3; }
@@ -51,4 +51,4 @@
 }
 .world__undo-btn { appearance: none; border: 0; cursor: pointer; min-height: 34px; padding: 4px 14px; border-radius: var(--r-pill); background: var(--gold-400); color: var(--ink-900); font-weight: 900; }
 .world__card-btn--quiet { background: var(--vellum-200); color: var(--ink-900); }
-.world__card-owned { display: grid; place-items: center; min-height: 40px; color: #4E8A3A; font-size: 13px; font-weight: 900; }
+.world__card-owned { display: grid; place-items: center; min-height: 40px; color: var(--oc-success); font-size: 13px; font-weight: 900; }

@@ -29,10 +29,10 @@
 .world__tip.is-below { transform: translate(-50%, 0); }
 .world__tip-title { font-weight: 900; font-size: 14px; }
 .world__tip-text { font-size: 12px; font-weight: 700; line-height: 1.3; color: #E8DCC4; }
-.world__tip-hint { margin-top: 2px; font-size: 11px; font-weight: 800; color: #F2C04B; }
+.world__tip-hint { margin-top: 2px; font-size: 11px; font-weight: 800; color: var(--oc-gold-bright); }
 .world__tip-btn {
   pointer-events: auto; align-self: center; min-height: 32px; margin-top: 6px; padding: 4px 14px; border: 0; border-radius: var(--r-pill);
-  background: #F2C04B; color: #3A2A1E; font: inherit; font-size: 13px; font-weight: 900; cursor: pointer;
+  background: var(--oc-gold-bright); color: #3A2A1E; font: inherit; font-size: 13px; font-weight: 900; cursor: pointer;
 }
 .world-tip-enter-active, .world-tip-leave-active { transition: opacity .18s ease, margin .18s ease; }
 .world-tip-enter-from, .world-tip-leave-to { opacity: 0; margin-top: 6px; }

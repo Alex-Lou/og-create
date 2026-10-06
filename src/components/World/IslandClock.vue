@@ -76,15 +76,15 @@ export default {
 <style scoped>
 .island-clock {
   appearance: none; display: inline-flex; align-items: center; gap: 4px; margin-left: 6px; padding: 2px 8px 2px 5px;
-  border: 0; border-radius: var(--r-pill); background: rgba(255, 250, 240, .7); box-shadow: inset 0 0 0 1px rgba(74, 52, 38, .14);
+  border: 0; border-radius: var(--r-pill); background: rgba(255, 250, 240, .7); box-shadow: inset 0 0 0 1px rgba(var(--shade-rgb), .14);
   color: var(--ink-700); font: inherit; font-size: 12px; font-weight: 800; letter-spacing: 0; text-transform: none;
   vertical-align: middle; cursor: pointer; touch-action: manipulation;
 }
 .island-clock:focus-visible { outline: 2px solid var(--gold-500); outline-offset: 2px; }
 .island-clock.is-warping { background: var(--gold-200); box-shadow: inset 0 0 0 1.5px var(--gold-500); }
 .island-clock__dial { width: 27px; height: 17px; flex: none; }
-.island-clock__arc { stroke: rgba(74, 52, 38, .3); }
-.island-clock__horizon { stroke: rgba(74, 52, 38, .45); }
+.island-clock__arc { stroke: rgba(var(--shade-rgb), .3); }
+.island-clock__horizon { stroke: rgba(var(--shade-rgb), .45); }
 .island-clock__shade { fill: rgba(255, 250, 240, .95); }
 .island-clock__time { font-variant-numeric: tabular-nums; min-width: 34px; color: var(--ink-900); }
 .island-clock__weather { width: 18px; height: 15px; flex: none; }

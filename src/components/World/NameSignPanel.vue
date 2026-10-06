@@ -136,19 +136,19 @@ export default {
 .name-sign__label { font-size: 12px; font-weight: 800; color: var(--ink-500); }
 .name-sign__row { display: flex; gap: 6px; flex-wrap: wrap; }
 .name-sign__input {
-  flex: 1 1 140px; min-width: 0; min-height: 40px; padding: 6px 12px; border: 1px solid rgba(74, 52, 38, .25); border-radius: var(--r-sm);
+  flex: 1 1 140px; min-width: 0; min-height: 40px; padding: 6px 12px; border: 1px solid rgba(var(--shade-rgb), .25); border-radius: var(--r-sm);
   background: var(--vellum-50); color: var(--ink-900); font-family: var(--font-display); font-weight: 700; font-size: 17px;
 }
-.name-sign__input[aria-invalid='true'] { border-color: #B0503A; }
+.name-sign__input[aria-invalid='true'] { border-color: var(--oc-missing); }
 .name-sign__hint { margin: 0; font-size: 12px; color: var(--ink-500); }
-.name-sign__hint.is-bad { color: #B0503A; font-weight: 800; }
+.name-sign__hint.is-bad { color: var(--oc-missing); font-weight: 800; }
 .name-sign__styles { display: grid; grid-template-columns: repeat(auto-fill, minmax(132px, 1fr)); gap: 8px; margin: 0; padding: 0; list-style: none; }
 .name-sign__card {
   display: grid; justify-items: center; align-content: start; gap: 4px; padding: 8px 8px 10px; border-radius: var(--r-md); text-align: center;
-  background: var(--vellum-50); box-shadow: inset 0 0 0 1px rgba(74, 52, 38, .1);
+  background: var(--vellum-50); box-shadow: inset 0 0 0 1px rgba(var(--shade-rgb), .1);
 }
 .name-sign__card.is-worn { box-shadow: inset 0 0 0 2px var(--gold-400); }
-.name-sign__art { display: grid; place-items: center; width: 100%; padding: 4px 0; border-radius: var(--r-sm); background: radial-gradient(circle at 50% 78%, #CFE8B8, var(--vellum-200) 74%); }
+.name-sign__art { display: grid; place-items: center; width: 100%; padding: 4px 0; border-radius: var(--r-sm); background: radial-gradient(circle at 50% 78%, var(--oc-art-halo), var(--vellum-200) 74%); }
 .name-sign__style { font-family: var(--font-display); font-weight: 700; font-size: 15px; line-height: 1.15; }
 .name-sign__text { color: var(--ink-500); font-size: 12px; font-weight: 700; line-height: 1.3; }
 .name-sign__btn {
@@ -157,9 +157,9 @@ export default {
   background: var(--ink-900); color: var(--vellum-50); font-family: var(--font-ui); font-weight: 900; font-size: 14px;
   cursor: pointer; touch-action: manipulation;
 }
-.name-sign__btn--quiet { background: var(--vellum-200); color: var(--ink-900); box-shadow: inset 0 0 0 1px rgba(74, 52, 38, .18); }
+.name-sign__btn--quiet { background: var(--vellum-200); color: var(--ink-900); box-shadow: inset 0 0 0 1px rgba(var(--shade-rgb), .18); }
 .name-sign__btn.is-confirm { background: var(--gold-400); color: var(--ink-900); box-shadow: 0 3px 0 var(--gold-600); }
 .name-sign__btn:disabled { opacity: .45; cursor: default; }
-.name-sign__worn { margin-top: 2px; padding: 9px 0; color: #4E8A3A; font-size: 13px; font-weight: 900; }
-.name-sign__coin { width: 13px; height: 13px; border-radius: var(--r-round); background: radial-gradient(circle at 35% 35%, #FFE7A0, #E9AE2E 70%); box-shadow: inset 0 0 0 1.5px rgba(59, 42, 32, .5); }
+.name-sign__worn { margin-top: 2px; padding: 9px 0; color: var(--oc-success); font-size: 13px; font-weight: 900; }
+.name-sign__coin { width: 13px; height: 13px; border-radius: var(--r-round); background: var(--oc-coin); box-shadow: inset 0 0 0 1.5px var(--oc-coin-rim); }
 </style>

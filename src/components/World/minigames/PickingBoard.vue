@@ -146,8 +146,8 @@ export default {
 .picking__bar { display: grid; grid-template-columns: auto 1fr auto; align-items: center; gap: 10px; min-height: 34px; }
 .picking__time { font-size: 13px; font-weight: 800; color: var(--ink-700); }
 .picking__time strong { font-size: 18px; font-weight: 900; color: var(--ink-900); font-variant-numeric: tabular-nums; }
-.picking__meter { height: 8px; border-radius: var(--r-pill); background: rgba(74, 52, 38, .15); overflow: hidden; }
-.picking__meter span { display: block; height: 100%; border-radius: inherit; background: linear-gradient(90deg, #7FBF55, #F2C04B); }
+.picking__meter { height: 8px; border-radius: var(--r-pill); background: rgba(var(--shade-rgb), .15); overflow: hidden; }
+.picking__meter span { display: block; height: 100%; border-radius: inherit; background: linear-gradient(90deg, #7FBF55, var(--oc-gold-bright)); }
 .picking__basket { font-size: 13px; font-weight: 800; color: var(--ink-700); }
 .picking__basket strong { font-size: 18px; font-weight: 900; color: var(--ink-900); font-variant-numeric: tabular-nums; }
 .picking__patch {

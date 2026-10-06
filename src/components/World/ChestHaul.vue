@@ -139,7 +139,7 @@ export default {
   cursor: pointer; touch-action: manipulation;
 }
 .haul__wear:disabled { opacity: .5; cursor: default; }
-.haul__worn { margin-top: 4px; color: #4E8A3A; font-size: 12px; font-weight: 900; }
+.haul__worn { margin-top: 4px; color: var(--oc-success); font-size: 12px; font-weight: 900; }
 .haul__note { margin: 0 0 10px; color: var(--ink-500); font-style: italic; font-size: 14px; line-height: 1.4; }
 .haul__total {
   display: flex; flex-wrap: wrap; justify-content: center; align-items: center; gap: 4px 12px; margin: 0;
