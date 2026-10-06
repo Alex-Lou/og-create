@@ -2,7 +2,7 @@
 // un lieu déborde de sa case comme un monument. Cadre LAND (le jeu les affiche × 1,35, la cascade × 1).
 const { OUT, P, E, L, r2 } = require('./troupe');
 const Dk = require('./deco');
-const { feuillage, herbe, fleurette } = require('./arbres');
+const { feuillage, herbe, fleurette, palmier } = require('./arbres');
 const { pt, poly, face, shadow, box, crown, boulder, flower, stroke, thick, cylinder, disc, post, rail, glow, LEAVES, PINE, WOOD, WOOD_DARK, GRANITE, STONE, WATER, WATER_LIGHT } = Dk;
 
 const LAND = [-75, -150, 150, 190];
@@ -344,13 +344,46 @@ LM.pilotis = { n: 2, draw: f => {
   for (let i = 0; i < 4; i++) { const a = (i / 4 + f / 8) * TAU, [fx, fy] = at(Math.cos(a) * 0.5, Math.sin(a) * 0.5, 30 + (i % 2) * 10); s += glow(fx, fy, 3, '255,236,150', 0.45) + E(fx, fy, 0.9, 0.9, '#FFF3A8', 0.3); }
   return s;
 } };
+// Source de l'oasis : un replat de sable aux bords bosselés, un anneau de verdure ; le bassin, sa rive de sable mouillé,
+// ses reflets et ses ronds ; au milieu, un rocher de grès d'où l'eau jaillit et retombe en gerbe ; des lotus roses et
+// blancs sur leurs feuilles ; trois palmiers (ceux des arbres refaits) qui se balancent ; une jarre, des touffes (2 images)
 LM.oasis = { n: 2, draw: f => {
-  let s = disc(0, 0, 0.72, 0, SAND.top, 1) + disc(0, 0.04, 0.48, 0, WATER, 1) + disc(-0.06, 0, 0.32, 0, WATER_LIGHT, 0);
-  const [x, y] = at(0, 0.04);
-  s += boulder(0, 0.04, 0.1, 0.08, 8, GRANITE, 3) + thick(`M${x},${y - 9} Q${x - 4},${y - 18 - f * 3} ${x - 9},${y - 6}`, 1.4, WATER_LIGHT) + thick(`M${x},${y - 9} Q${x + 4},${y - 18 - f * 3} ${x + 9},${y - 6}`, 1.4, WATER_LIGHT);
-  for (const [u, v] of [[-0.18, 0.2], [0.2, 0.18]]) { const [lx, ly] = at(u, v); s += [0, 60, 120, 180, 240, 300].map(a => `<g transform="translate(${lx} ${ly}) rotate(${a})">${P('M0,0 Q1.4,-2 0,-3.6 Q-1.4,-2 0,0 Z', '#F7B6CE', 0.5)}</g>`).join(''); }
-  for (const [u, v, h] of [[-0.5, -0.3, 44], [0.5, -0.2, 50], [0.42, 0.45, 40]]) { const [px, py] = at(u, v); s += palm(px, py, h, f ? 1.4 : -1); }
-  return s;
+  const [x, y] = at(0, 0);
+  const bosses = (cx, cy, rx, ry, n) => { const pts = Array.from({ length: n }, (_, i) => { const t = (i / n) * TAU, r = 1 + (i % 2 ? 0.05 : -0.03); return [cx + Math.cos(t) * rx * r, cy + Math.sin(t) * ry * r]; }); const mil = i => { const p = pts[i % n], q = pts[(i + 1) % n]; return `${r2((p[0] + q[0]) / 2)},${r2((p[1] + q[1]) / 2)}`; }; let d = `M${mil(n - 1)}`; for (let i = 0; i < n; i++) d += ` Q${r2(pts[i][0])},${r2(pts[i][1])} ${mil(i)}`; return d + ' Z'; };
+  const GRES_ROSE = { top: '#F0D49A', left: '#D9B474', right: '#B48A50' };
+  // un palmier des arbres refaits, posé en (u, v), à l'échelle k, penché selon l'image (ids rendus uniques)
+  const palme = (u, v, k, tag) => { const [px, py] = at(u, v); return `<g transform="translate(${r2(px)} ${r2(py)}) rotate(${f ? 1.6 : -1.2}) scale(${k})">${palmier({ vert: 'doux' }).replace(/<ellipse[^>]*rgba\(40,55,20,0\.22\)[^>]*\/>/, '').replace(/(id="|url\(#)pal/g, `$1oasis${tag}${f}pal`)}</g>`; };
+  // un lotus : sa feuille échancrée, ses pétales pointus, son cœur
+  const lotus = (lx, ly, col) => P(`M${lx},${ly} a6,2.4 0 1 1 1.8,1.6 Z`, '#6FAE4E', 0.7)
+    + [-2.6, -1.3, 0, 1.3, 2.6].map(dx => P(`M${r2(lx + dx * 0.6)},${ly - 0.6} Q${r2(lx + dx - 1)},${r2(ly - 3.4 + Math.abs(dx) * 0.5)} ${r2(lx + dx * 1.1)},${r2(ly - 4.6 + Math.abs(dx) * 0.8)} Q${r2(lx + dx + 1)},${r2(ly - 3.4 + Math.abs(dx) * 0.5)} ${r2(lx + dx * 0.6 + 0.4)},${ly - 0.6} Z`, col, 0.5)).join('')
+    + E(lx + 0.3, ly - 1.4, 1.1, 0.7, '#F2C94C', 0.4);
+  // le sable, ses rides, l'anneau de verdure
+  let s = shadow(0, 0, 0.8, 0.08) + P(bosses(x, y + 4, 66, 29, 22), SAND.top, 1.1) + E(x + 8, y + 12, 50, 14, '#F7E2B0', 0)
+    + [[-48, 18], [40, 22], [-10, 28]].map(([dx, dy]) => `<path d="M${x + dx},${y + dy} q4,-1.6 8,0 q4,1.6 8,0" stroke="${SAND.left}" stroke-width="0.8" fill="none" stroke-linecap="round"/>`).join('')
+    + P(bosses(x, y + 2, 47, 20.5, 26), '#8FC46A', 1);
+  // les palmiers du fond
+  s += palme(-0.52, -0.42, 0.78, 'a') + palme(0.46, -0.48, 0.72, 'b');
+  // le bassin : rive de sable mouillé, eau, reflets
+  s += P(bosses(x, y + 2, 40, 16.5, 24), SAND.left, 0.9) + E(x, y + 2.4, 36, 14.4, WATER, 0.9) + E(x - 6, y + 1, 24, 8, WATER_LIGHT, 0)
+    + `<path d="M${x - 26},${y + 6} l8,-1.2 M${x + 14},${y + 10} l9,-1.2" stroke="#FFFFFF" stroke-width="1.2" stroke-linecap="round"/>`;
+  // les ronds autour du rocher
+  s += [0, 0.5].map(k => { const p = (k + f * 0.25) % 1; return `<ellipse cx="${x}" cy="${y + 2}" rx="${r2(12 + p * 18)}" ry="${r2(5 + p * 7)}" fill="none" stroke="#E6F6FF" stroke-width="0.9" opacity="${r2(0.85 * (1 - p))}"/>`; }).join('');
+  // les lotus
+  s += lotus(x - 22, y + 2, '#F7B6CE') + lotus(x + 24, y - 2, '#FFFFFF') + lotus(x - 6, y + 12, '#F7B6CE');
+  // le rocher de grès et l'eau qui jaillit en gerbe
+  s += Dk.boulder(0, 0.02, 0.13, 0.1, 11, GRES_ROSE, 4);
+  const [jx, jy] = at(0, 0.02, 12), h = f ? 22 : 18;
+  s += `<path d="M${jx - 2.4},${jy} Q${jx - 1.6},${jy - h * 0.7} ${jx},${jy - h} Q${jx + 1.6},${jy - h * 0.7} ${jx + 2.4},${jy} Z" fill="#DDF3FF" stroke="${OUT}" stroke-width="0.8"/>`
+    + [[-13, -4, -2], [-10, -2, 0], [-15, -6, 3], [13, -3, -2], [10, -1, 0], [15, -5, 3]].map(([ex, ey, hy]) => `<path d="M${jx},${jy - h} Q${r2(jx + ex * 0.65)},${jy - h - 2 - hy} ${jx + ex},${jy + ey}" stroke="#9ED4F0" stroke-width="1.8" fill="none" stroke-linecap="round" opacity="0.8"/><path d="M${jx},${jy - h} Q${r2(jx + ex * 0.65)},${jy - h - 2 - hy} ${jx + ex},${jy + ey}" stroke="#F2FBFF" stroke-width="0.8" fill="none" stroke-linecap="round"/>`).join('')
+    + `<path d="M${jx - 0.6},${jy - 2} L${jx - 0.3},${jy - h + 3}" stroke="#FFFFFF" stroke-width="0.8" stroke-linecap="round"/>`
+    + (f ? [[-16, -6], [15, -9], [-8, -16], [9, -18]] : [[-17, -2], [16, -4], [-11, -12], [12, -14]]).map(([dx, dy]) => E(jx + dx, jy + dy, 1, 1.3, '#BFE6FA', 0.5)).join('')
+    + E(jx - 12, jy - 3, 3, 1.2, '#FFFFFF', 0) + E(jx + 13, jy - 2, 3, 1.2, '#FFFFFF', 0);
+  // la jarre au bord de l'eau, des touffes et le palmier de devant
+  const [ax, ay] = at(0.75, 0.05);
+  s += P(`M${ax - 3},${ay} Q${ax - 6},${ay - 6} ${ax - 2.4},${ay - 10} L${ax - 2},${ay - 12} L${ax + 2},${ay - 12} L${ax + 2.4},${ay - 10} Q${ax + 6},${ay - 6} ${ax + 3},${ay} Q${ax},${ay + 1.4} ${ax - 3},${ay} Z`, '#C9764A', 0.9)
+    + P(`M${ax + 0.6},${ay - 10} Q${ax + 5},${ay - 6} ${ax + 2.4},${ay - 0.6} Q${ax + 4},${ay - 6} ${ax + 0.6},${ay - 10} Z`, '#A85C36', 0) + E(ax, ay - 12, 2.4, 0.8, '#7E4426', 0.7) + L([ax - 3.4, ay - 6], [ax + 3.4, ay - 6], '#F2D3A0', 0.8);
+  s += herbe(x + 44, y + 6, '#9CC86A', 0.9) + herbe(x - 44, y + 12, '#8CBF5C', 0.8) + herbe(x + 30, y + 20, '#9CC86A', 0.7) + fleurette(x + 50, y + 10, '#F7B6C8') + fleurette(x - 38, y + 18, '#FFFFFF');
+  return s + palme(-0.5, 0.34, 0.86, 'c');
 } };
 LM.pyramide = { n: 2, draw: f => {
   const [x, y] = at(0, 0);
