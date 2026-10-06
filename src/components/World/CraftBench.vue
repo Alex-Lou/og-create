@@ -14,9 +14,10 @@
           role="tab"
           :aria-selected="String(tab === tier)"
           :class="['bench__tab', { 'is-on': tab === tier, 'is-locked': !isOpen(tier) }]"
+          :aria-label="TIER_LABEL[tier]"
           @click="tab = tier"
         >
-          <ElementGlyph v-if="!isOpen(tier)" glyph="ui:lock" />{{ TIER_LABEL[tier] }}
+          <ElementGlyph v-if="!isOpen(tier)" glyph="ui:lock" /><span><span v-if="numberOf(tier)" class="bench__tab-word">Palier </span>{{ numberOf(tier) || TIER_LABEL[tier] }}</span>
         </button>
       </div>
       <p v-if="!isOpen(tab)" class="bench__locked">{{ tierHint(tab, crafts.epreuves, crafts.stars) }}</p>
@@ -104,6 +105,10 @@ export default {
     isOpen(tier) {
       return this.crafts.open.includes(tier);
     },
+    // Le numéro d'un palier (I, II, III), ou null : sur téléphone, son onglet ne montre que lui
+    numberOf(tier) {
+      return ['I', 'II', 'III'].includes(tier) ? tier : null;
+    },
     artOf(c) {
       return spriteUrl(`craft-thumb-${c.id}`, () => craftThumb(c.id));
     }
@@ -121,6 +126,10 @@ export default {
 }
 .bench__tab.is-on { background: var(--ink-900); color: var(--vellum-50); }
 .bench__tab.is-locked:not(.is-on) { color: var(--ink-500); }
+/* Téléphone : cinq onglets dans la largeur, « Palier » s'efface devant son numéro (le nom entier reste en aria-label) */
+@media (max-width: 520px) {
+  .bench__tab-word { display: none; }
+}
 .bench__locked { margin: 0; padding: 8px 12px; border-radius: 12px; background: #FFF4D6; box-shadow: inset 0 0 0 1px var(--gold-300); font-size: 13px; font-weight: 800; line-height: 1.4; }
 .bench__list { margin: 0; padding: 0; list-style: none; display: flex; flex-direction: column; gap: 8px; }
 .bench__card {
