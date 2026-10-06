@@ -160,6 +160,9 @@ describe('village : bêtes', () => {
     const cow = village.at(12, at(2)).list.find(c => c.species === 'cow');
     expect(cow.sprite[0]).toMatch(/rest$/);
     expect(village.say({ kind: 'beast', species: 'cow' }, at(13)).text).toBe('Meuh !');
+    // Chaque bête du Potager porte son nom au serveur (bible, § 6.16 : on la nourrit) ; les poussins, non
+    const named = village.at(12, at(13)).list.filter(c => c.beast).map(c => c.beast);
+    expect(named).toEqual(['poule-rousse', 'poule-noire', 'vache', 'mouton', 'brebis']);
   });
   it('les bêtes sauvages ont leurs heures ; touchées, elles sursautent, trottinent et reviennent, sans disparaître', () => {
     const day = at(13);
