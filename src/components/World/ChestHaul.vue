@@ -9,6 +9,8 @@
         <span v-for="s in total.stock" :key="s.label">+{{ s.n }} <ElementGlyph :glyph="s.glyph" /></span>
         <span v-if="total.items">{{ total.items }} {{ total.items > 1 ? 'objets' : 'objet' }} pour tes bâtiments</span>
       </p>
+      <!-- Un mot d'Héliane trouvé dans la bouteille -->
+      <p v-if="note" class="haul__note">« {{ note }} »</p>
       <ul class="haul__grid">
         <li
           v-for="(item, i) in items"
@@ -68,6 +70,8 @@ export default {
   props: {
     // [{ chest: { source, rarity, prize }, art, wearable, worn }] (aperçu et état du bâtiment calculés par l'île)
     items: { type: Array, required: true },
+    // Le mot d'Héliane d'une bouteille de la rafale (un mot d'histoire), ou rien
+    note: { type: String, default: '' },
     busy: { type: Boolean, default: false }
   },
   emits: ['close', 'wear'],
@@ -136,6 +140,7 @@ export default {
 }
 .haul__wear:disabled { opacity: .5; cursor: default; }
 .haul__worn { margin-top: 4px; color: #4E8A3A; font-size: 12px; font-weight: 900; }
+.haul__note { margin: 0 0 10px; color: var(--ink-500); font-style: italic; font-size: 14px; line-height: 1.4; }
 .haul__total {
   display: flex; flex-wrap: wrap; justify-content: center; align-items: center; gap: 4px 12px; margin: 0;
   padding: 8px 12px; border-radius: 12px; background: var(--vellum-200); font-size: 15px; font-weight: 900; color: var(--ink-900);

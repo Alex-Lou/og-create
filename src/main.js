@@ -18,7 +18,7 @@ window.addEventListener('touchmove', () => {}, { passive: false });
 const app = createApp(App);
 
 // Configuration pour réduire les logs
-if (process.env.NODE_ENV === 'production') {
+if (import.meta.env.PROD) {
   app.config.silent = true;
   app.config.errorHandler = null;
   app.config.warnHandler = null;
@@ -27,7 +27,7 @@ if (process.env.NODE_ENV === 'production') {
 app.mount('#app');
 
 // PWA : installable sur l'écran d'accueil, démarre hors ligne (production uniquement)
-if (process.env.NODE_ENV === 'production' && 'serviceWorker' in navigator) {
+if (import.meta.env.PROD && 'serviceWorker' in navigator) {
   window.addEventListener('load', () => {
     navigator.serviceWorker.register('/sw.js').catch(() => {});
   });

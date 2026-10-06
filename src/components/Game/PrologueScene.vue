@@ -50,6 +50,8 @@ export default {
     },
     label() {
       if (this.scene.startsWith('veillee-')) return `Veillée ${this.scene.slice(8)}`;
+      if (this.scene === 'revelation') return 'La Révélation';
+      if (this.scene.startsWith('trace-')) return 'Une trace d’Anya';
       return this.scene === 'arrivee' ? 'Le naufrage de l’Hirondelle' : 'La Grève';
     }
   },

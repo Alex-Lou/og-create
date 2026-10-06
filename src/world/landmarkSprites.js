@@ -571,11 +571,30 @@ const cratere = {
 
 export const LANDMARK_SPRITES = { grotte, lac, col, menhirs, arche, saule, pilotis, oasis, pyramide, arbre, cascade, geyser, cratere };
 
-// Calques d'un lieu prêts à peindre à l'instant t (secondes) : clé d'image et dessin
-export function landmarkLayers(id, t = 0) {
+// Le Cercle fleuri (HISTOIRE.md, § 6.14) : Anya révélée, des fleurs s'ouvrent autour de la table de pierre, une lueur
+// dorée et verte respire au centre
+const BLOOM = {
+  frame: [-60, -74, 120, 96],
+  n: 4,
+  fps: 1.5,
+  draw: (T, fr) => {
+    const colors = ['#F6A8C8', '#FFFFFF', '#FFF2A8', '#F6C8D8', '#BFE3F7'];
+    let out = `<defs><radialGradient id="mh-bloom"><stop offset="0" stop-color="rgba(250,236,170,${f2(0.5 + 0.12 * Math.sin((fr / 4) * TAU))})"/><stop offset="1" stop-color="rgba(170,225,130,0)"/></radialGradient></defs>`
+      + ell(0, -8, 34, 20, 'url(#mh-bloom)');
+    for (let k = 0; k < 16; k++) {
+      const a = k * 2.4, r = 0.16 + (k % 4) * 0.055;
+      const [x, y] = T.p(Math.cos(a) * r, Math.sin(a) * r, 0);
+      out += dot(x, y, 1.7, colors[k % colors.length]) + dot(x, y, 0.6, '#F2C04B');
+    }
+    return out;
+  }
+};
+
+// Calques d'un lieu prêts à peindre à l'instant t (secondes) : clé d'image et dessin ; bloom : le Cercle fleuri
+export function landmarkLayers(id, t = 0, bloom = false) {
   const place = LANDMARK_SPRITES[id];
   if (!place) return [];
-  return place.layers.map((layer, k) => {
+  return [...place.layers, ...(bloom && id === 'menhirs' ? [BLOOM] : [])].map((layer, k) => {
     const f = layer.n ? Math.floor(t * layer.fps) % layer.n : 0;
     const [x, y, w, h] = layer.frame;
     const name = `landmark-${id}-${k}`;

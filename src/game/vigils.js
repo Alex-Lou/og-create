@@ -54,10 +54,19 @@ const LINES = {
   VII: [{ who: 'Brume', text: 'La brume s’est levée. {peuple} veille sur la mer.' }]
 };
 
-// La veillée d'un acte, image par image (PrologueScene) ; people : le nom du peuple
+// La finale (§ 10, acte VII) : le Phare de Brume s'allume, juste avant la veillée VII (et l'épilogue qu'elle porte)
+const FINALE = [
+  { art: 'phare', caption: 'Le Phare de Brume', text: 'Tout en haut du phare, Rivet monte la lentille. « Tac ! Elle tient. »' },
+  { art: 'reflet', caption: 'Le Phare de Brume', text: 'Ondin se penche sur l’eau. Dans le reflet, il voit le vrai visage de Brume.' },
+  { art: 'soleil', caption: 'Le Phare de Brume', text: 'Brume entre dans la lanterne et devient le soleil du phare. La brume se lève sur l’île et sur la mer.' },
+  { art: 'flammeche', text: 'Une petite flamme se détache de la lanterne et revient tout près de toi.' },
+  { art: 'flammeche', who: 'Brume', text: 'Je reste avec toi.' }
+];
+
+// La veillée d'un acte, image par image (PrologueScene) ; people : le nom du peuple. La VII commence par la finale
 export function vigilFrames(act, { people = null } = {}) {
   const cast = CAST[act];
-  const frames = [{ art: 'veillee', cast, caption: `Veillée ${act}`, text: 'La nuit, le feu du Foyer. La troupe se rassemble en cercle ; Brume veille au-dessus.' }];
+  const frames = [...(act === 'VII' ? FINALE : []), { art: 'veillee', cast, caption: `Veillée ${act}`, text: 'La nuit, le feu du Foyer. La troupe se rassemble en cercle ; Brume veille au-dessus.' }];
   (NEWCOMERS[act] || []).forEach(id => frames.push({ art: 'veillee', cast, who: NAMES[id], text: talkLine(id, 0) }));
   if (RITES[act]) frames.push({ art: 'rite', cast, recipe: RITES[act].recipe, caption: 'Le rite', text: RITES[act].text });
   LINKS.filter(link => link.act === act).forEach(link => {

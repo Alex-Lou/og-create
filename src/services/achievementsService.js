@@ -2,12 +2,10 @@
 import http from './http';
 import { getSession } from './session';
 
+// Images des succès (src/assets/success), par nom ; null s'il n'y en a pas
+const SUCCESS = import.meta.glob('../assets/success/*.png', { eager: true, import: 'default' });
 function achievementImage(name) {
-  try {
-    return require(`@/assets/success/${name}.png`);
-  } catch {
-    return null;
-  }
+  return SUCCESS[`../assets/success/${name}.png`] || null;
 }
 
 class AchievementsService {

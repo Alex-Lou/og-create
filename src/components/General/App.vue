@@ -41,6 +41,7 @@
           <!-- Le Monde : l'île du joueur -->
           <WorldView
             v-else-if="isWorldActive"
+            ref="world"
             :elementEmojis="elementEmojis"
             :elements="discoveredElements"
             :isLoggedIn="isLoggedIn"
@@ -51,6 +52,7 @@
             @go="openFromWorld"
             @quest="onIslandQuest"
             @replay-vigil="replayVigil"
+            @replay-anya="replayRevelation"
           />
           <!-- Mode principal : le Livre ; l'Épreuve garde son inventaire -->
           <BookView
@@ -65,6 +67,7 @@
             :picked="athanorPicked"
             :revealing="isRevealing"
             :openMarked="bookOpenMarked"
+            :anyaAwake="Boolean(anya && anya.revealed)"
             :openPage="bookOpenPage"
             :hold="prologueHold"
             :stage="civStage"
@@ -116,17 +119,17 @@
       </main>
     </div>
     <TabBar :current="currentMode" :dots="isLoggedIn ? [] : ['sceau']" @select="handleModeSelect" />
-    <BrumeGuide @go="handleModeSelect" />
+    <BrumeGuide :stage="brumeStage" @go="handleModeSelect" />
     <!-- Le tutoriel (HISTOIRE.md, § 9) : scènes, page de garde du Grimoire, main qui montre où toucher -->
     <PrologueScene
       v-if="prologueScene"
       :key="prologueScene"
       :scene="prologueScene"
       :frames="sceneFrames"
-      :skippable="!prologueReplay"
-      :skip-label="isVigil ? 'Passer la veillée' : 'Passer le prologue'"
+      :skippable="!prologueReplay || isVigil || isStory"
+      :skip-label="isVigil ? 'Passer la veillée' : isStory ? 'Passer' : 'Passer le prologue'"
       @done="prologueSceneDone"
-      @skip="isVigil ? prologueSceneDone(prologueScene) : skipPrologue()"
+      @skip="isVigil || isStory ? prologueSceneDone(prologueScene) : skipPrologue()"
     />
     <PrologueName
       v-if="prologueName"
@@ -249,9 +252,13 @@ import { questTip } from '@/game/guideTips';
 import { loadPrologue, savePrologue, prologueStep, islandStep } from '@/game/prologue';
 import { faceHref, NAMES } from '@/world/faces';
 import { vigilFrames, vigilDue, stageOf as civilizationOf } from '@/game/vigils';
+import { brumeLook, earlyWisp, EARLY_WISP } from '@/game/opus';
+import { PRESENTIMENTS, revelationFrames, traceFrames, anyaSceneOf } from '@/game/anya';
 
 // Veillées déjà vues sur cet appareil (game/vigils.js)
 const VIGILS_KEY = 'oc_vigils';
+// Les traces d'Anya déjà montrées sur cet appareil (bible, § 6.14)
+const TRACES_KEY = 'oc_traces';
 import { LINES as PROLOGUE_LINES } from '@/game/prologueScenes';
 
 // Retour sur l'application (PWA remise au premier plan) : carnet rechargé s'il date de plus de 30 s
@@ -371,6 +378,13 @@ export default {
       // (veillées, étape de civilisation) ; les veillées déjà vues ici
       islandQuest: null,
       islandActs: [],
+      // Les actes finis sont connus (le serveur a répondu) : Brume peut réagir à Feu follet écrit tôt
+      actsKnown: false,
+      // Anya (serveur : { traces, awake, revealed, breathed }), et les traces déjà montrées sur cet appareil
+      anya: null,
+      tracesSeen: storage.load(TRACES_KEY, []),
+      // Un coffre est ouvert sur l'île (ou va s'ouvrir) : les veillées et les scènes attendent qu'il se referme
+      islandHold: false,
       people: null,
       vigilsSeen: storage.load(VIGILS_KEY, [])
     };
@@ -389,13 +403,26 @@ export default {
     isVigil() {
       return Boolean(this.prologueScene && this.prologueScene.startsWith('veillee-'));
     },
-    // Une veillée se compose de ses images (le nom du peuple y figure) ; les autres scènes ont les leurs
+    // La Révélation d'Anya et ses traces (bible, § 6.14) : des scènes de l'histoire, hors du tutoriel
+    isStory() {
+      return this.prologueScene === 'revelation' || Boolean(this.prologueScene && this.prologueScene.startsWith('trace-'));
+    },
+    // Une veillée se compose de ses images (le nom du peuple y figure) ; la Révélation (selon le Phare) et les traces
+    // aussi ; les autres scènes ont les leurs
     sceneFrames() {
-      return this.isVigil ? vigilFrames(this.prologueScene.slice(8), { people: this.people }) : null;
+      const scene = this.prologueScene;
+      if (this.isVigil) return vigilFrames(scene.slice(8), { people: this.people });
+      if (scene === 'revelation') return revelationFrames({ lit: this.islandActs.includes('VII') });
+      if (this.isStory) return traceFrames(scene.slice(6), (this.anya && this.anya.traces.length) || 0);
+      return null;
     },
     // L'étape de civilisation (bible, § 6.10) : l'Ex libris du Grimoire l'affiche
     civStage() {
       return civilizationOf(this.islandActs, this.people);
+    },
+    // Le stade de Brume (bible, § 13), pour la couleur du guide ; avant que le serveur ait répondu, sa couleur de toujours
+    brumeStage() {
+      return this.actsKnown ? brumeLook({ acts: this.islandActs, quest: this.islandQuest, elements: this.discoveredElements }).stage : null;
     },
     // La couverture du Grimoire attend la scène d'arrivée (et, pour un invité, de savoir s'il est tout neuf)
     prologueHold() {
@@ -473,6 +500,7 @@ export default {
     },
     'discoveredElements.length'() {
       if (this.progressReady) this.runPrologue();
+      this.checkEarlyWisp();
     },
     isWorldActive(now) {
       if (now) this.runIsland();
@@ -535,6 +563,9 @@ export default {
       playService.brume().then(board => {
         if (!this.islandActs.length) this.islandActs = board.acts || [];
         if (!this.people) this.people = board.people || null;
+        if (!this.anya) this.anya = board.anya || null;
+        this.actsKnown = true;
+        this.checkEarlyWisp();
       }).catch(() => {});
       const [progress, selections] = await Promise.all([
         progressService.load().catch(() => null),
@@ -779,22 +810,41 @@ export default {
     onIslandQuest(brume) {
       const quest = brume && brume.quest;
       this.islandQuest = quest ? { id: quest.id, done: Boolean(quest.done) } : { id: null, done: true };
+      this.islandHold = Boolean(brume && brume.hold);
       if (brume) {
         this.islandActs = brume.acts || [];
         this.people = brume.people || null;
+        // La Révélation vue reste vue, même si une réponse du serveur partie avant son envoi arrive après
+        this.anya = brume.anya ? { ...brume.anya, revealed: brume.anya.revealed || Boolean(this.anya && this.anya.revealed) } : this.anya;
+        this.actsKnown = true;
+        this.checkEarlyWisp();
       }
       this.runIsland();
     },
+    // Feu follet écrit avant l'acte VII (bible, § 10) : Brume se reconnaît, une seule fois ; la finale reste au Phare.
+    // La Vie écrite : le premier pressentiment d'Anya (§ 10, acte I), une voix sans visage
+    checkEarlyWisp() {
+      if (this.actsKnown && earlyWisp(this.islandActs, this.discoveredElements)) guide.say(EARLY_WISP);
+      if (this.actsKnown && this.discoveredElements.includes('Vie') && !(this.anya && this.anya.awake)) PRESENTIMENTS.vie.forEach(line => guide.say(line));
+    },
     runIsland() {
-      if (this.prologueReplay || this.prologueScene || !this.isWorldActive) return;
+      // (jamais par-dessus un coffre : la veillée l'attend, l'île la relance quand il se referme)
+      if (this.prologueReplay || this.prologueScene || this.islandHold || !this.isWorldActive) return;
       const step = islandStep({ state: this.prologue, quest: this.islandQuest?.id ? this.islandQuest : null });
       if (this.prologueHand?.mode === 'world') this.prologueHand = null;
       if (!step) {
         // Hors du tutoriel : la veillée du dernier acte fini, si elle n'a pas encore été vue ici
         // (jamais pendant le tutoriel d'un compte créé par la page de garde)
         const { registered, finished, skipped } = this.prologue;
+        if (registered && !finished && !skipped) return;
         const act = vigilDue(this.islandActs, this.vigilsSeen);
-        if (act && !(registered && !finished && !skipped)) this.prologueScene = `veillee-${act}`;
+        if (act) {
+          this.prologueScene = `veillee-${act}`;
+          return;
+        }
+        // Anya : la trace d'une terre tout juste explorée (la douzième avant la Révélation), puis la Révélation, une fois
+        const scene = anyaSceneOf(this.anya, this.tracesSeen);
+        if (scene) this.prologueScene = scene;
         return;
       }
       if (step.phase === 'scene') this.prologueScene = step.scene;
@@ -813,12 +863,36 @@ export default {
       this.prologueOpenReach = false;
       this.$refs.book?.openReach('I');
     },
-    // Chronique : revoir une veillée (rien ne change à la partie)
+    // Chronique : revoir une veillée, ou la Révélation (rien ne change à la partie)
     replayVigil(act) {
       this.prologueReplay = [];
       this.prologueScene = `veillee-${act}`;
     },
+    replayRevelation() {
+      this.prologueReplay = [];
+      this.prologueScene = 'revelation';
+    },
     prologueSceneDone(scene) {
+      if (scene === 'revelation' && !this.prologueReplay) {
+        // Vue une fois pour toutes, d'un appareil à l'autre : le serveur le retient (la gemme du Grimoire s'allume)
+        this.prologueScene = null;
+        this.anya = { ...this.anya, revealed: true };
+        // L'île se met à jour tout de suite (Anya au Cercle, le Cercle fleuri)
+        playService.anyaReveal().then(({ anya, world }) => {
+          this.anya = anya;
+          if (world && this.$refs.world) this.$refs.world.apply(world);
+        }).catch(() => {});
+        this.runIsland();
+        return;
+      }
+      if (scene.startsWith('trace-') && !this.prologueReplay) {
+        // Les traces déjà trouvées sont toutes tenues pour vues : les plus anciennes se lisent dans la Chronique
+        this.prologueScene = null;
+        this.tracesSeen = [...new Set([...this.tracesSeen, ...((this.anya && this.anya.traces) || [])])];
+        storage.save(TRACES_KEY, this.tracesSeen);
+        this.runIsland();
+        return;
+      }
       if (scene.startsWith('veillee-') && !this.prologueReplay) {
         this.prologueScene = null;
         this.vigilsSeen = [...new Set([...this.vigilsSeen, scene.slice(8)])];

@@ -14,9 +14,10 @@
           role="tab"
           :aria-selected="String(tab === tier)"
           :class="['bench__tab', { 'is-on': tab === tier, 'is-locked': !isOpen(tier) }]"
+          :aria-label="TIER_LABEL[tier]"
           @click="tab = tier"
         >
-          <ElementGlyph v-if="!isOpen(tier)" glyph="ui:lock" />{{ TIER_LABEL[tier] }}
+          <ElementGlyph v-if="!isOpen(tier)" glyph="ui:lock" /><span><span v-if="numberOf(tier)" class="bench__tab-word">Palier </span>{{ numberOf(tier) || TIER_LABEL[tier] }}</span>
         </button>
       </div>
       <p v-if="!isOpen(tab)" class="bench__locked">{{ tierHint(tab, crafts.epreuves, crafts.stars) }}</p>
@@ -30,14 +31,7 @@
           <span class="bench__body">
             <span class="bench__name">{{ c.name }}</span>
             <span class="bench__place">{{ c.place }}</span>
-            <ul class="bench__cost" :aria-label="`Coût : ${costLabel(c)}`">
-              <li v-for="(n, r) in c.cost" :key="r" :class="{ 'is-missing': (stock[r] || 0) < n }">
-                <ElementGlyph :glyph="GLYPH[r]" /> {{ n }}
-              </li>
-              <li v-for="(n, f) in c.finds || {}" :key="f" :class="{ 'is-missing': (stock[f] || 0) < n }">
-                <ElementGlyph :glyph="FIND_GLYPH[f]" /> {{ n }}
-              </li>
-            </ul>
+            <CostList class="bench__cost" :cost="c.cost" :finds="c.finds" :stock="stock" />
             <ul v-if="c.elements.length" class="bench__know" aria-label="Savoir-faire (éléments du Grimoire, non dépensés)">
               <li v-for="e in c.elements" :key="e.name" :class="{ 'is-missing': !e.have }">
                 <ElementGlyph :glyph="e.have ? elementEmojis[e.name] || 'ui:spark' : 'ui:unknown'" /> {{ e.name }}
@@ -71,11 +65,10 @@
 <script>
 import GModal from '@/components/ui/GModal.vue';
 import ElementGlyph from '@/components/ui/ElementGlyph.vue';
-import { GLYPH, LABEL } from '@/game/resources';
+import CostList from '@/components/World/CostList.vue';
 import { spriteUrl } from '@/world/spriteCache';
 import { craftThumb } from '@/world/craftSprites';
 import { TIER_LABEL, tierHint } from '@/world/crafts';
-import { FIND_GLYPH } from '@/world/finds';
 
 const TIERS = ['start', 'I', 'II', 'III', 'climat'];
 
@@ -85,7 +78,7 @@ const TIERS = ['start', 'I', 'II', 'III', 'climat'];
 // enrichissent les gisements. Le serveur décide de tout (crafts : vue de l'île).
 export default {
   name: 'CraftBench',
-  components: { GModal, ElementGlyph },
+  components: { GModal, ElementGlyph, CostList },
   props: {
     // { epreuves: { have, need }, open: [paliers], catalog: [...], placed: [...] }
     crafts: { type: Object, required: true },
@@ -100,7 +93,7 @@ export default {
     const open = this.crafts.open;
     // (celui des climats ne s'ouvre pas de lui-même : ses créations attendent des trouvailles)
     const fresh = open.filter(t => t !== 'climat').find(t => this.crafts.catalog.some(c => c.tier === t && !c.made));
-    return { GLYPH, FIND_GLYPH, TIERS, TIER_LABEL, tab: fresh || open.filter(t => t !== 'climat').pop() || 'start' };
+    return { TIERS, TIER_LABEL, tab: fresh || open.filter(t => t !== 'climat').pop() || 'start' };
   },
   computed: {
     shown() {
@@ -112,11 +105,12 @@ export default {
     isOpen(tier) {
       return this.crafts.open.includes(tier);
     },
+    // Le numéro d'un palier (I, II, III), ou null : sur téléphone, son onglet ne montre que lui
+    numberOf(tier) {
+      return ['I', 'II', 'III'].includes(tier) ? tier : null;
+    },
     artOf(c) {
       return spriteUrl(`craft-thumb-${c.id}`, () => craftThumb(c.id));
-    },
-    costLabel(c) {
-      return [...Object.entries(c.cost).map(([r, n]) => `${n} ${LABEL[r]}`), ...Object.entries(c.finds || {}).map(([f, n]) => `${n} ${f}`)].join(', ');
     }
   }
 };
@@ -132,6 +126,10 @@ export default {
 }
 .bench__tab.is-on { background: var(--ink-900); color: var(--vellum-50); }
 .bench__tab.is-locked:not(.is-on) { color: var(--ink-500); }
+/* Téléphone : cinq onglets dans la largeur, « Palier » s'efface devant son numéro (le nom entier reste en aria-label) */
+@media (max-width: 520px) {
+  .bench__tab-word { display: none; }
+}
 .bench__locked { margin: 0; padding: 8px 12px; border-radius: 12px; background: #FFF4D6; box-shadow: inset 0 0 0 1px var(--gold-300); font-size: 13px; font-weight: 800; line-height: 1.4; }
 .bench__list { margin: 0; padding: 0; list-style: none; display: flex; flex-direction: column; gap: 8px; }
 .bench__card {
@@ -149,11 +147,9 @@ export default {
 .bench__body { min-width: 0; display: flex; flex-direction: column; gap: 3px; }
 .bench__name { font-family: var(--font-display); font-weight: 700; font-size: 17px; line-height: 1.15; }
 .bench__place { color: var(--ink-700); font-size: 12px; font-weight: 700; line-height: 1.3; }
-.bench__cost, .bench__know { margin: 2px 0 0; padding: 0; list-style: none; display: flex; flex-wrap: wrap; gap: 4px 10px; font-size: 13px; font-weight: 900; color: #4E8A3A; }
-.bench__know { gap: 4px; font-size: 12px; color: var(--ink-700); }
-.bench__know li { padding: 1px 8px 1px 4px; border-radius: 999px; background: var(--vellum-200); }
-.bench__cost li, .bench__know li { display: inline-flex; align-items: center; gap: 3px; }
-.bench__cost li.is-missing { color: #B0503A; }
+.bench__cost { margin: 2px 0 0; }
+.bench__know { margin: 2px 0 0; padding: 0; list-style: none; display: flex; flex-wrap: wrap; gap: 4px; font-size: 12px; font-weight: 900; color: var(--ink-700); }
+.bench__know li { display: inline-flex; align-items: center; gap: 3px; padding: 1px 8px 1px 4px; border-radius: 999px; background: var(--vellum-200); }
 .bench__know li.is-missing { background: #F8E3DC; color: #B0503A; }
 .bench__block { color: #B0503A; font-size: 12px; font-weight: 800; line-height: 1.3; }
 .bench__actions { grid-column: 2; display: flex; flex-wrap: wrap; justify-content: flex-end; gap: 6px; }

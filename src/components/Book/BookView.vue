@@ -38,6 +38,7 @@
             :aim="aimSide"
             :opening="opening"
             :ready="engineReady && !hold"
+            :awake="anyaAwake"
             :title="BOOK_TITLE"
             :stage="stage"
             @opened="onOpened"
@@ -222,6 +223,8 @@ export default {
     openMarked: { type: Boolean, default: false },
     // Venu d'un Savoir soufflé sur l'île : le Grimoire s'ouvre sur cette page (si elle est encore à trouver)
     openPage: { type: String, default: null },
+    // Anya s'est révélée : la gemme de la couverture reste allumée (bible, § 6.14)
+    anyaAwake: { type: Boolean, default: false },
     // Le tutoriel joue une scène : la couverture attend avant de s'ouvrir
     hold: { type: Boolean, default: false },
     // L'étape de civilisation, sous le titre de l'Ex libris (la garde au revers de la couverture)
@@ -968,10 +971,10 @@ export default {
 <style>
 /* Polices de l'intérieur du Grimoire (pages peintes en canvas : book/painter.js), hébergées avec le jeu pour
    s'afficher hors ligne ; licence : src/assets/fonts/OFL.txt */
-@font-face { font-family: 'IM Fell English'; font-style: normal; font-weight: 400; font-display: swap; src: url('~@/assets/fonts/im-fell-english.woff2') format('woff2'); }
-@font-face { font-family: 'IM Fell English'; font-style: italic; font-weight: 400; font-display: swap; src: url('~@/assets/fonts/im-fell-english-italic.woff2') format('woff2'); }
-@font-face { font-family: 'IM Fell English SC'; font-style: normal; font-weight: 400; font-display: swap; src: url('~@/assets/fonts/im-fell-english-sc.woff2') format('woff2'); }
-@font-face { font-family: 'UnifrakturMaguntia'; font-style: normal; font-weight: 400; font-display: swap; src: url('~@/assets/fonts/unifraktur-maguntia.woff2') format('woff2'); }
+@font-face { font-family: 'IM Fell English'; font-style: normal; font-weight: 400; font-display: swap; src: url('@/assets/fonts/im-fell-english.woff2') format('woff2'); }
+@font-face { font-family: 'IM Fell English'; font-style: italic; font-weight: 400; font-display: swap; src: url('@/assets/fonts/im-fell-english-italic.woff2') format('woff2'); }
+@font-face { font-family: 'IM Fell English SC'; font-style: normal; font-weight: 400; font-display: swap; src: url('@/assets/fonts/im-fell-english-sc.woff2') format('woff2'); }
+@font-face { font-family: 'UnifrakturMaguntia'; font-style: normal; font-weight: 400; font-display: swap; src: url('@/assets/fonts/unifraktur-maguntia.woff2') format('woff2'); }
 
 /* Cinématique d'ouverture de chapitre (montée hors du composant, dans body) */
 .book-unlock {

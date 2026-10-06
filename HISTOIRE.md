@@ -7,7 +7,7 @@
 
 > **Mises à jour depuis la v5** (règle du § 19 : la bible change avant le code).
 > - **Le jeu s'appelle désormais Brumelune** (choix de l'auteur, 5 octobre 2026) : le nom visible partout ; les identifiants techniques (dépôts, base, clés de sauvegarde) ne changent pas.
-> - **Lots livrés** : H0 (la troupe et les textes), H1 (la colonne vertébrale), H2 (le fil d'Ariane : 2 à 7 ms par calcul), H3 (dormeurs, naufrages, souvenirs), H4 (le tutoriel), H5 (veillées et civilisation), H6 (Savoirs et Bestiaire).
+> - **Lots livrés** : H0 (la troupe et les textes), H1 (la colonne vertébrale), H2 (le fil d'Ariane : 2 à 7 ms par calcul), H3 (dormeurs, naufrages, souvenirs), H4 (le tutoriel), H5 (veillées et civilisation), H6 (Savoirs et Bestiaire), H7 (le Grand Œuvre et la finale), H8 (Anya).
 > - **Lot H0, choix de l'auteur** :
 >   - le mot d'Héliane de l'acte II dit « Grimoire » (§ 10) ;
 >   - les familiers suivent le style des bêtes du lot 9e, et non plus « à plat, avec les gros yeux ronds » (§ 14) ;
@@ -31,12 +31,31 @@
 >   - l'étape de civilisation (dernier acte fini, et le nom du peuple pour « Le peuple de « … » ») s'affiche dans la fiche de Brume, la fiche du Foyer et l'Ex libris du Grimoire ;
 >   - la Chronique est un onglet du Carnet d'explorateur : veillées (à revoir), liens et leurs recettes, souvenirs retrouvés ; le Bestiaire, les mots d'Héliane et les ruines y viendront avec leurs lots.
 > - **Lot H6** :
->   - le Savoir d'un maître porte sur les pages de son chapitre (Aster : Éléments fondamentaux et Phénomènes naturels ; Sylve et Mélisse se partagent le Vivant) ; Brume (Légendes) ne souffle pas encore, faute de bavardage avec elle ;
+>   - le Savoir d'un maître porte sur les pages de son chapitre (Aster : Éléments fondamentaux et Phénomènes naturels ; Sylve et Mélisse se partagent le Vivant) ; Brume, maîtresse du sceau ☉ qu'elle révèle à la fin, souffle le sien (Légendes, un ingrédient) une fois le Phare allumé, depuis sa fiche ; s'il n'y a aucune page des Légendes à portée, rien n'est compté ;
 >   - la famille ne se souffle que sur une page à énigme pas encore essayée (ailleurs, la page écrit déjà ses familles) ; l'ingrédient est celui que l'Encre révélerait ; l'appareil dit au serveur ce qu'il sait déjà, pour ne pas recevoir deux fois le même indice ; « Voir dans le Grimoire » ouvre la page soufflée ;
 >   - le Bestiaire s'ajoute aux bêtes déjà là pour tous (la mer : poissons, dauphins, baleine, méduses ; les bois : cerf, renard, hérisson, écureuil), qui ne changent pas : écrire ces bêtes-là fait venir les familiers (Bulle, Mousse) et compte au Bestiaire de la Chronique ; les bêtes nouvelles : mésanges et hibou dans les arbres, papillons et abeilles le jour, lucioles la nuit, grenouille et tortue au bord de l'eau douce ; à la ferme, une variante (poules blanche et grise, vache rousse, mouton noir, cochon tacheté, chèvre brune) si le palier montre déjà la bête ; le Chat et le Chien attendent (ils sont déjà dans la boutique du Foyer) ;
 >   - Tic-Tac (un automate) et le bocal d'Ondin sont là dès le début ; Bulle revient dans le bocal quand Poisson est écrit, et Rivet fabrique une amie à Tic-Tac quand Abeille l'est ; Lunette est un papillon de nuit (variante du Papillon) ;
 >   - Sylve présente le Bestiaire dès la première bête écrite (sa grammaire du moment), Brume si Sylve n'est pas encore là ;
 >   - la suite des bêtes de `PASSATION.md` (§ 7, point 1 : compagnons d'atelier dans la boutique, quêtes de rencontre) n'est pas faite : elle reste à confirmer avec l'auteur.
+> - **Lot H7** :
+>   - la lumière du Grand Œuvre est une touche sur l'heure, jamais un filtre : nuits plus bleues et brume du matin plus épaisse (noir), aube argentée (blanc), aube dorée et fenêtres allumées plus tôt (jaune), couchant rouge et or (rouge) ;
+>   - les huit stades de Brume s'ajoutent l'un à l'autre (étoiles, feuille, cœur ambré, runes, couronne) ; à l'acte VI, elle pâlit dès que l'Écriture est réclamée (Galet a lu la rune : Galet et Brume le disent une fois), jusqu'au Phénix écrit (l'éclat) ; après le Phare, elle n'est plus qu'une petite flamme dorée, des rayons autour ;
+>   - la finale se joue juste avant la veillée VII (qui porte l'épilogue) : la lentille, le reflet, le soleil du phare, « Je reste avec toi. » ; elle se revoit depuis la Chronique ; le Phare de l'île garde son dessin (la flamme de Brume y brûle déjà) ;
+>   - le mot d'Héliane d'un acte est dans la première bouteille ouverte pendant cet acte (le prologue n'en a pas) ; tout se déduit des quêtes réclamées et des bouteilles ouvertes, avec leurs heures ; un joueur qui a passé un acte sans ouvrir de bouteille n'aura pas son mot ; la Chronique garde les mots trouvés ;
+>   - Feu follet écrit avant l'acte VII : « C'est… moi ? Comme c'est étrange. », une seule fois.
+> - **Lot H8** :
+>   - la Révélation se joue à la visite de l'île qui suit la condition remplie (dans une scène à l'aube), une seule fois d'un appareil à l'autre : le serveur la retient dans `world_friends` (cible `anya`, sans points), comme le Souffle du jour ;
+>   - la Bénédiction s'applique dès que la condition est remplie, sans attendre la scène ;
+>   - une trace se montre une fois, celle de la dernière terre explorée ; les plus anciennes se lisent dans la Chronique (« Traces d'Anya : n / 12 ») ;
+>   - les pressentiments : la voix quand la Vie est écrite ; la rune de Galet et le murmure de Sylve quand le Cercle de menhirs est découvert ; les bêtes tournées vers la Lande dès la première bête écrite ; l'aveu de Brume (lot H7) ;
+>   - les créatures : les lapins, hérons, koïs et mouettes, déjà là pour tous, ne changent pas (personne ne perd rien) ; Anya ajoute les loutres, son cerf blanc et son halo de lucioles ;
+>   - Anya est au Cercle autour du lever et du coucher du soleil ; un toucher donne son Souffle ; le Cercle fleurit ;
+>   - le bol de soupe « pour la Dame » apparaît le soir au bord du Foyer dès que le Cercle est découvert ou qu'une trace est trouvée.
+> - **Relecture des lots H5 à H8** :
+>   - une veillée ou une scène d'Anya ne se joue jamais par-dessus un coffre : à la fin d'un acte, le coffre d'abord, puis la veillée, puis le naufrage de l'acte suivant ;
+>   - la douzième trace (« un cœur qui s'éveille ») se montre avant la Révélation ; l'île montre Anya et le Cercle fleuri dès la fin de la scène ;
+>   - plus de pressentiment une fois Anya éveillée ; une veillée ou la Révélation revue depuis la Chronique peut se passer ;
+>   - le Souffle d'Anya ne compte que s'il y a une page à souffler (sinon on peut revenir plus tard dans la journée), et seulement après la Révélation.
 
 **Ce que les versions 4 et 5 changent.**
 1. **Une nouvelle troupe** : nouveaux noms, vraies personnalités, chacun avec une magie, une voix, un familier, un secret et un arc.
