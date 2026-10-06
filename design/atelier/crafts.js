@@ -674,8 +674,8 @@ C.sculpture = { n: 2, draw: f => {
   // le givre qui scintille
   return s + (f ? [[x - 12, y - 18, 1.8], [x + 13, y - 24, 1.4], [x + 3, y - 4, 1.2]] : [[x - 6, y - 24, 1.4], [x + 12, y - 12, 1.8], [bx - 10, by - 7, 1.2]]).map(([a, b, r]) => givre(a, b, r)).join('');
 } };
-// Enclos à moutons : un carré d'herbe, ses touffes et ses fleurettes ; une clôture de piquets à deux lisses (les côtés
-// du fond, puis ceux de devant, plus bas, et la barrière entrebâillée) ; un râtelier de foin au fond ; deux moutons
+// Enclos à moutons : un rond d'herbe, ses touffes et ses fleurettes ; une barrière de bois en rond, douze piquets à deux
+// lisses (ceux du fond, puis ceux de devant) et sa barrière entrebâillée ; un râtelier de foin au fond ; deux moutons
 // laineux (un seul contour pour toute la laine) et un agneau : l'un broute pendant que l'autre relève la tête (2 images)
 const LAINE = { fond: '#FAF6EE', ombre: '#E6DECD', tete: '#5E5660' };
 function mouton(x, y, k, dir, broute) {
@@ -690,28 +690,28 @@ function mouton(x, y, k, dir, broute) {
   return o + (broute ? herbe(hx + 1.6 * k, hy + 2 * k, '#86B852', 0.4 * k) : '') + '</g>';
 }
 C.parc = { n: 2, draw: f => {
-  const Q = 0.42;
-  let s = shadow(0, 0, 0.5, 0.08) + face([[-0.46, -0.46, 0], [0.46, -0.46, 0], [0.46, 0.46, 0], [-0.46, 0.46, 0]], '#A8D878', 0.7);
-  for (const [u, v, c, k] of [[-0.3, 0.1, '#86B852', 0.6], [0.3, -0.12, '#94C25C', 0.55], [0.04, 0.34, '#86B852', 0.5], [-0.12, -0.3, '#94C25C', 0.5]]) { const [hx, hy] = at(u, v); s += herbe(hx, hy, c, k); }
-  { const [fx, fy] = at(0.28, 0.28); s += fleurette(fx, fy, '#FFFFFF') + fleurette(fx + 5, fy - 1.4, '#F7B6C8'); }
-  // la clôture du fond : piquets et deux lisses
-  const piquet = (u, v, h = 10) => post(u, v, 0, h, WOOD, 0.022);
-  for (const u of [-Q, -0.14, 0.14, Q]) s += piquet(u, -Q);
-  for (const v of [-0.14, 0.14, Q]) s += piquet(-Q, v);
-  for (const z of [4, 8]) s += rail([-Q, -Q], [Q, -Q], z, 1.3, WOOD.left) + rail([-Q, -Q], [-Q, Q], z, 1.3, WOOD.left);
+  const R = 0.42, H = 9, cos = Math.cos, sin = Math.sin;
+  let s = shadow(0, 0, 0.5, 0.08) + disc(0, 0, 0.47, 0, '#A8D878', 0.7);
+  for (const [u, v, c, k] of [[-0.24, 0.12, '#86B852', 0.6], [0.26, -0.14, '#94C25C', 0.55], [0.04, 0.3, '#86B852', 0.5], [-0.1, -0.28, '#94C25C', 0.5]]) { const [hx, hy] = at(u, v); s += herbe(hx, hy, c, k); }
+  { const [fx, fy] = at(0.22, 0.22); s += fleurette(fx, fy, '#FFFFFF') + fleurette(fx + 5, fy - 1.4, '#F7B6C8'); }
+  // la barrière en rond : douze piquets, deux lisses de l'un à l'autre, une ouverture devant à droite pour la barrière
+  const angles = Array.from({ length: 12 }, (_, i) => (i / 12) * TAU + 0.12), P0 = 0, P1 = 1;
+  const pts = angles.map(t => [cos(t) * R, sin(t) * R]), fond = ([u, v]) => u + v < 0;
+  const piquet = ([u, v]) => post(u, v, 0, H, WOOD, 0.022);
+  const lisses = (i, j) => rail(pts[i], pts[j], 3.4, 1.2, WOOD.left) + rail(pts[i], pts[j], 7, 1.2, WOOD.left);
+  const travees = pts.map((_, i) => [i, (i + 1) % 12]).filter(([i]) => i !== P0);
+  s += travees.filter(([i, j]) => fond(pts[i]) && fond(pts[j])).map(([i, j]) => lisses(i, j)).join('') + pts.filter(fond).map(piquet).join('');
   // le râtelier de foin au fond
   s += box(-0.14, -0.36, 0.12, -0.26, 0, 4.4, WOOD, 0.8);
   { const [rx, ry] = at(-0.01, -0.31, 4.4); s += P(`M${r2(rx - 8)},${r2(ry + 1)} Q${r2(rx - 6)},${r2(ry - 4)} ${r2(rx - 1)},${r2(ry - 3.4)} Q${r2(rx + 4)},${r2(ry - 5)} ${r2(rx + 7)},${r2(ry - 1)} Q${r2(rx)},${r2(ry + 3)} ${r2(rx - 8)},${r2(ry + 1)} Z`, '#EBC75A', 0.7) + `<path d="M${r2(rx - 5)},${r2(ry - 1)} l2,-2.4 M${r2(rx - 1)},${r2(ry - 1.4)} l1,-2.6 M${r2(rx + 3)},${r2(ry - 1.2)} l1.6,-2.2" stroke="#C9A23E" stroke-width="0.5"/>`; }
   // les moutons et l'agneau
-  const [m1x, m1y] = at(-0.08, -0.04), [m2x, m2y] = at(0.18, 0.14), [ax, ay] = at(-0.22, 0.22);
+  const [m1x, m1y] = at(-0.1, -0.06), [m2x, m2y] = at(0.14, 0.08), [ax, ay] = at(-0.2, 0.16);
   s += mouton(m1x, m1y, 1, 1, f === 0) + mouton(m2x, m2y, 1, -1, f === 1) + mouton(ax, ay, 0.68, 1, false);
-  // la clôture de devant, plus basse, et la barrière entrebâillée
-  for (const u of [-Q, -0.14, 0.14, Q]) s += piquet(u, Q, 8);
-  s += piquet(Q, -0.14, 8) + piquet(Q, 0.14, 8);
-  for (const z of [3, 6.4]) s += rail([-Q, Q], [Q, Q], z, 1.2, WOOD.left) + rail([Q, -Q], [Q, -0.14], z, 1.2, WOOD.left) + rail([Q, 0.14], [Q, Q], z, 1.2, WOOD.left);
-  const g0 = [Q, 0.14], g1 = [0.66, 0.03];
-  s += post(g1[0], g1[1], 0.4, 7.6, WOOD, 0.016) + rail(g0, g1, 2.6, 1.1, WOOD.top) + rail(g0, g1, 6.4, 1.1, WOOD.top)
-    + `<path d="M${at(g0[0], g0[1], 2.6).map(r2).join(',')} L${at(g1[0], g1[1], 6.4).map(r2).join(',')}" stroke="${WOOD.right}" stroke-width="0.9"/>`;
+  // la barrière de devant, puis la barrière entrebâillée qui pivote sur son piquet vers l'extérieur
+  s += travees.filter(([i, j]) => !(fond(pts[i]) && fond(pts[j]))).map(([i, j]) => lisses(i, j)).join('') + pts.filter(p => !fond(p)).map(piquet).join('');
+  const g0 = pts[P1], t = angles[P1] - 0.9, g1 = [g0[0] + cos(t) * 0.24, g0[1] + sin(t) * 0.24];
+  s += post(g1[0], g1[1], 0.4, 7.8, WOOD, 0.016) + rail(g0, g1, 2.8, 1.1, WOOD.top) + rail(g0, g1, 6.6, 1.1, WOOD.top)
+    + `<path d="M${at(g0[0], g0[1], 2.8).map(r2).join(',')} L${at(g1[0], g1[1], 6.6).map(r2).join(',')}" stroke="${WOOD.right}" stroke-width="0.9"/>`;
   return s;
 } };
 // Cairn aux rubans : cinq pierres plates empilées, de la plus large à la plus petite, chacune bombée, éclairée dessus et
