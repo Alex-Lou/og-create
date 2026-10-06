@@ -310,19 +310,38 @@ C.brasero = { n: 3, draw: f => {
   for (let i = 0; i < 3; i++) { const p = ((f / 3) + i / 3) % 1; s += E(x - 5 + i * 5 + Math.sin(p * 6 + i) * 1.6, y - 18 - p * 14, 0.7, 0.7, '#FFD27A', 0).replace('/>', ` opacity="${r2(1 - p * 0.8)}"/>`); }
   return s;
 } };
-// Pergola : quatre poteaux, poutres croisées, glycine mauve
-C.pergola = { n: 2, draw: f => {
-  let s = shadow(0, 0, 0.5, 0.12);
-  for (const [u, v] of [[-0.36, -0.36], [0.36, -0.36], [-0.36, 0.36], [0.36, 0.36]]) s += post(u, v, 0, 36, WOOD, 0.035);
-  s += box(-0.42, -0.38, 0.42, -0.34, 36, 40, WOOD) + box(-0.42, 0.34, 0.42, 0.38, 36, 40, WOOD);
-  for (const u of [-0.3, -0.1, 0.1, 0.3]) s += box(u - 0.02, -0.42, u + 0.02, 0.42, 40, 43, WOOD_DARK, 0.7);
-  for (const [u, v] of [[-0.3, 0.36], [0, 0.36], [0.3, 0.36], [0.36, 0]]) {
-    const [x, y] = at(u, v, 38);
-    const sw = wave(f, 2, 1, u * 9);
-    s += leafDot(x, y - 2, 4) + [0, 1, 2, 3].map(i => E(x + sw * (i / 3) + (i % 2 ? 1 : -1), y + 3 + i * 3.4, 2.4 - i * 0.3, 2 - i * 0.2, i % 2 ? '#B48AE0' : '#C9A8F0', 0.6)).join('');
+// Pergola : quatre poteaux sur leurs dés de pierre, deux poutres, cinq chevrons qui dépassent ; une glycine grimpe au
+// poteau et ses grappes mauves pendent et se balancent (2 images)
+// une grappe de glycine : des fleurs rondes en cône, du plus large au plus fin, qui suivent le balancement ; un seul
+// contour pour toute la grappe (les fleurs posées d'abord en sombre un peu plus grandes), clair à gauche, sombre à droite
+function grappe(x, y, sw, n = 6) {
+  const fl = [];
+  for (let i = 0; i < n; i++) {
+    const t = i / (n - 1), cx = x + sw * t * t, cy = y + 1.8 + i * 2.5, r = 2.2 - t * 1.1, dx = 2 * (1 - t * 0.75);
+    fl.push([cx - dx, cy, r, 0], [cx + dx, cy + 0.6, r * 0.95, 1]);
   }
+  fl.push([x + sw, y + 1.8 + n * 2.5 - 0.6, 0.9, 1]);
+  return fl.map(([cx, cy, r]) => E(cx, cy, r + 0.75, r * 0.9 + 0.75, OUT, 0)).join('')
+    + fl.map(([cx, cy, r]) => E(cx, cy, r, r * 0.9, '#C9A8F0', 0)).join('')
+    + fl.map(([cx, cy, r, d]) => d ? E(cx + r * 0.25, cy + r * 0.25, r * 0.6, r * 0.5, '#A57BD8', 0) : E(cx - r * 0.3, cy - r * 0.3, r * 0.45, r * 0.35, '#EEE2FC', 0)).join('')
+    + leafDot(x - 2.4, y - 0.6, 2.4) + leafDot(x + 2.2, y - 1, 2.2);
+}
+C.pergola = { n: 2, draw: f => {
+  let s = shadow(0, 0, 0.52, 0.12);
+  for (const [u, v] of [[-0.36, -0.36], [0.36, -0.36], [-0.36, 0.36], [0.36, 0.36]]) s += box(u - 0.05, v - 0.05, u + 0.05, v + 0.05, 0, 2.6, STONE, 0.8) + post(u, v, 2.6, 36, WOOD, 0.035);
+  // le cep de la glycine, enroulé au poteau de devant à gauche, et ses feuilles
   const [lx, ly] = at(-0.36, 0.36, 0);
-  return s + thick(`M${lx},${ly} q-2,-14 1,-30`, 1, '#4F8F3A');
+  s += thick(`M${r2(lx + 2)},${r2(ly)} q-4,-6 0.6,-11 q4,-5 -0.6,-10 q-4,-5 0.8,-11`, 1, '#6E5A3A')
+    + [[-1.6, -6, 2.2], [2.4, -13, 2.4], [-1.4, -21, 2.2], [2.2, -28, 2.4], [-0.6, -33, 2]].map(([dx, dy, r]) => leafDot(lx + dx, ly + dy, r)).join('');
+  // les poutres et les chevrons, leurs bouts taillés
+  s += box(-0.44, -0.385, 0.44, -0.335, 36, 40, WOOD) + box(-0.44, 0.335, 0.44, 0.385, 36, 40, WOOD);
+  for (const u of [-0.32, -0.16, 0, 0.16, 0.32]) s += box(u - 0.022, -0.46, u + 0.022, 0.46, 40, 43, WOOD_DARK, 0.7);
+  // les grappes qui pendent des poutres
+  for (const [u, v, n] of [[-0.24, 0.36, 6], [0.06, 0.36, 7], [0.3, 0.36, 5], [0.36, 0.04, 6], [0.36, -0.22, 5]]) {
+    const [x, y] = at(u, v, 37);
+    s += grappe(x, y, wave(f, 2, 1.2, u * 9 + v * 4), n);
+  }
+  return s;
 } };
 // Statue : socle mouluré, personnage drapé tenant un livre levé
 C.statue = { n: 1, draw: () => {
