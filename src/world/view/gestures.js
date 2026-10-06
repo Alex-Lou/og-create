@@ -58,8 +58,11 @@ export default {
     const gesture = this.gesture;
     if (!gesture || !gesture.start || gesture.moved > TAP_SLOP || this.craftPlacing || this.annexPlacing || this.busy) return;
     const hit = this.hitAt(gesture.start.x, gesture.start.y);
+    // Une création cachée derrière un bâtiment : l'appui long l'atteint quand même (le toucher court reste au bâtiment)
+    const behind = hit && hit.site ? this.craftBehind(gesture.start.x, gesture.start.y) : null;
     if (hit && hit.brume) this.questOpen = true;
     else if (hit && hit.craft) this.openCraftMenu(hit.craft);
+    else if (behind) this.openCraftMenu(behind);
     else if (hit && hit.item) this.describeItem(hit.site, hit.item);
     else if (hit && hit.annex) this.annexSheet = { x: hit.annex.x, y: hit.annex.y };
     else if (hit && hit.landmark) this.openLog(hit.landmark.id);
@@ -70,6 +73,15 @@ export default {
     gesture.held = true;
     vibrate(12);
     this.draw(performance.now());
+  },
+  // La création posée sous ce point (sa zone de toucher, comme dans hitAt), même cachée : la plus en avant, ou null
+  craftBehind(px, py) {
+    const w = this.toWorld(px, py);
+    const under = this.crafted.filter(craft => {
+      const c = this.ground(craft.x, craft.y);
+      return Math.abs(w.x - c.x) < TW * 0.42 && w.y > c.y - TW * 1.1 && w.y < c.y + TH * 0.3;
+    });
+    return under.sort((p, q) => q.x + q.y - (p.x + p.y))[0] || null;
   },
   pinchOf() {
     const [a, b] = [...this.pointers.values()];
