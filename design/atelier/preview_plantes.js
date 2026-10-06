@@ -5,6 +5,7 @@ const { unique, row, sheet, write, shoot } = require('./planche');
 const { D, PROP, pt } = require('./deco');
 const { up, M } = require('./decor2');
 const { arbre, ARBRES } = require('./arbres');
+const { touffe, TOUFFES } = require('./herbes');
 
 const LIB = path.join(__dirname, 'lib', 'plantes');
 const OUT = path.join(__dirname, 'planches');
@@ -15,7 +16,9 @@ const LIST = [
   ['pommier', 'Pommier', 'apple', () => D.apple()], ['arbre_automne', 'Arbre d\'automne', 'autumn', () => D.autumn()],
   ['bouleau', 'Bouleau', 'birch', () => D.birch()], ['sapin', 'Sapin', 'pine', () => D.pine()], ['sapin_neige', 'Sapin enneigé', 'snowpine', () => D.snowpine()],
   ['palmier', 'Palmier', 'palm', () => D.palm()], ['buisson', 'Buisson fleuri', 'bush', () => D.bush()], ['bruyere', 'Bruyère', 'heather', () => D.heather()],
-  ['fleurs', 'Fleurs', 'flowers', () => D.flowers()], ['touffe', 'Touffe d\'herbe', 'tuft', () => D.tuft()], ['cactus', 'Cactus', 'cactus', () => D.cactus()],
+  ['fleurs', 'Fleurs', 'flowers', () => D.flowers()], ['cactus', 'Cactus', 'cactus', () => D.cactus()],
+  // la touffe d'herbe refaite (herbes.js) et ses 16 variantes
+  ...TOUFFES.map(([fichier, libelle, o]) => [fichier, libelle, 'tuft', () => touffe(o)]),
   ['arbre_mort', 'Arbre mort', 'deadtree', () => D.deadtree()], ['souche', 'Souche', 'stump', () => D.stump()], ['rondin', 'Rondin', 'log', () => D.log()],
   ['champignons', 'Champignons', 'mushrooms', () => D.mushrooms()], ['champignons_nuit', 'Champignons (la nuit, ils luisent)', 'mushrooms', () => D.mushrooms(true)],
   ['roseaux', 'Roseaux', 'reeds', () => D.reeds()], ['nenuphars', 'Nénuphars', 'lily', () => D.lily()],

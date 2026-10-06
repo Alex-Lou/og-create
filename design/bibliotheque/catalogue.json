@@ -45714,10 +45714,265 @@
   {
    "id": "plantes/touffe",
    "rubrique": "plantes",
-   "titre": "Touffe d'herbe",
+   "titre": "Touffe d'herbe (grande, vert doux)",
    "images": 1,
    "fichiers": [
     "svg/plantes/touffe.svg"
+   ],
+   "cadre": [
+    -50,
+    -115,
+    100,
+    140
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "plantes/touffe_fleurie",
+   "rubrique": "plantes",
+   "titre": "Touffe d'herbe (grande, vert doux, fleurie)",
+   "images": 1,
+   "fichiers": [
+    "svg/plantes/touffe_fleurie.svg"
+   ],
+   "cadre": [
+    -50,
+    -115,
+    100,
+    140
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "plantes/touffe_motte",
+   "rubrique": "plantes",
+   "titre": "Touffe d'herbe (avec motte, grande, vert doux)",
+   "images": 1,
+   "fichiers": [
+    "svg/plantes/touffe_motte.svg"
+   ],
+   "cadre": [
+    -50,
+    -115,
+    100,
+    140
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "plantes/touffe_motte_fleurie",
+   "rubrique": "plantes",
+   "titre": "Touffe d'herbe (avec motte, grande, vert doux, fleurie)",
+   "images": 1,
+   "fichiers": [
+    "svg/plantes/touffe_motte_fleurie.svg"
+   ],
+   "cadre": [
+    -50,
+    -115,
+    100,
+    140
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "plantes/touffe_motte_petite",
+   "rubrique": "plantes",
+   "titre": "Touffe d'herbe (avec motte, petite, vert doux)",
+   "images": 1,
+   "fichiers": [
+    "svg/plantes/touffe_motte_petite.svg"
+   ],
+   "cadre": [
+    -50,
+    -115,
+    100,
+    140
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "plantes/touffe_motte_petite_fleurie",
+   "rubrique": "plantes",
+   "titre": "Touffe d'herbe (avec motte, petite, vert doux, fleurie)",
+   "images": 1,
+   "fichiers": [
+    "svg/plantes/touffe_motte_petite_fleurie.svg"
+   ],
+   "cadre": [
+    -50,
+    -115,
+    100,
+    140
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "plantes/touffe_motte_petite_profond",
+   "rubrique": "plantes",
+   "titre": "Touffe d'herbe (avec motte, petite, vert profond)",
+   "images": 1,
+   "fichiers": [
+    "svg/plantes/touffe_motte_petite_profond.svg"
+   ],
+   "cadre": [
+    -50,
+    -115,
+    100,
+    140
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "plantes/touffe_motte_petite_profond_fleurie",
+   "rubrique": "plantes",
+   "titre": "Touffe d'herbe (avec motte, petite, vert profond, fleurie)",
+   "images": 1,
+   "fichiers": [
+    "svg/plantes/touffe_motte_petite_profond_fleurie.svg"
+   ],
+   "cadre": [
+    -50,
+    -115,
+    100,
+    140
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "plantes/touffe_motte_profond",
+   "rubrique": "plantes",
+   "titre": "Touffe d'herbe (avec motte, grande, vert profond)",
+   "images": 1,
+   "fichiers": [
+    "svg/plantes/touffe_motte_profond.svg"
+   ],
+   "cadre": [
+    -50,
+    -115,
+    100,
+    140
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "plantes/touffe_motte_profond_fleurie",
+   "rubrique": "plantes",
+   "titre": "Touffe d'herbe (avec motte, grande, vert profond, fleurie)",
+   "images": 1,
+   "fichiers": [
+    "svg/plantes/touffe_motte_profond_fleurie.svg"
+   ],
+   "cadre": [
+    -50,
+    -115,
+    100,
+    140
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "plantes/touffe_petite",
+   "rubrique": "plantes",
+   "titre": "Touffe d'herbe (petite, vert doux)",
+   "images": 1,
+   "fichiers": [
+    "svg/plantes/touffe_petite.svg"
+   ],
+   "cadre": [
+    -50,
+    -115,
+    100,
+    140
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "plantes/touffe_petite_fleurie",
+   "rubrique": "plantes",
+   "titre": "Touffe d'herbe (petite, vert doux, fleurie)",
+   "images": 1,
+   "fichiers": [
+    "svg/plantes/touffe_petite_fleurie.svg"
+   ],
+   "cadre": [
+    -50,
+    -115,
+    100,
+    140
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "plantes/touffe_petite_profond",
+   "rubrique": "plantes",
+   "titre": "Touffe d'herbe (petite, vert profond)",
+   "images": 1,
+   "fichiers": [
+    "svg/plantes/touffe_petite_profond.svg"
+   ],
+   "cadre": [
+    -50,
+    -115,
+    100,
+    140
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "plantes/touffe_petite_profond_fleurie",
+   "rubrique": "plantes",
+   "titre": "Touffe d'herbe (petite, vert profond, fleurie)",
+   "images": 1,
+   "fichiers": [
+    "svg/plantes/touffe_petite_profond_fleurie.svg"
+   ],
+   "cadre": [
+    -50,
+    -115,
+    100,
+    140
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "plantes/touffe_profond",
+   "rubrique": "plantes",
+   "titre": "Touffe d'herbe (grande, vert profond)",
+   "images": 1,
+   "fichiers": [
+    "svg/plantes/touffe_profond.svg"
+   ],
+   "cadre": [
+    -50,
+    -115,
+    100,
+    140
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "plantes/touffe_profond_fleurie",
+   "rubrique": "plantes",
+   "titre": "Touffe d'herbe (grande, vert profond, fleurie)",
+   "images": 1,
+   "fichiers": [
+    "svg/plantes/touffe_profond_fleurie.svg"
    ],
    "cadre": [
     -50,
