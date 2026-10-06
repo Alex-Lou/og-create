@@ -210,7 +210,8 @@ function moment(id, meta) {
     .replace(/^buisson(_petit)?(_profond)?(_baies)?$/, 'buisson').replace(/^bruyere(_petite)?(_rose)?(_papillon)?$/, 'bruyere')
     .replace(/^fleurs(_petites)?(_marguerites)?(_abeille)?$/, 'fleurs').replace(/^cactus(_boule)?(_petit)?(_sans_fleur)?$/, 'cactus')
     .replace(/^souche(_petite)?(_grise)?(_champignons)?$/, 'souche').replace(/^rondin(_petit)?(_gris)?(_champignons)?$/, 'rondin')
-    .replace(/^rocher(_petit)?(_ocre)?(_lezard)?$/, 'rocher').replace(/^rochers(_petits)?(_sombres)?(_galets)?$/, 'rochers'); return PLANTES_GREVE.has(n) ? 'tuto-1' : PLANTES_ACTE1.has(n) ? 'acte-1' : 'partout'; }
+    .replace(/^rocher(_petit)?(_ocre)?(_lezard)?$/, 'rocher').replace(/^rochers(_petits)?(_sombres)?(_galets)?$/, 'rochers')
+    .replace(/^aiguille(_petite)?(_double)?(_oiseau)?$/, 'aiguille'); return PLANTES_GREVE.has(n) ? 'tuto-1' : PLANTES_ACTE1.has(n) ? 'acte-1' : 'partout'; }
   // les scènes du tutoriel (lot J2) : scenes/tutoriel/<étape>_<nom>/…, la partie suit le numéro de l'étape
   if (top === 'scenes') { const n = parseInt(b, 10); return n <= 6 ? 'tuto-1' : n <= 9 ? 'tuto-2' : 'tuto-3'; }
   return 'partout';
@@ -279,7 +280,7 @@ const SUJETS = {
 const PLANTES = {
   bois_flotte: 'Bois flotté',
   rochers_moussus: 'Rochers moussus', lanterne: 'Lanterne sur pied, éteinte',
-  lanterne_allumee: 'Lanterne sur pied, allumée', banc: 'Banc de bois (décor)', aiguille: 'Aiguille de roche',
+  lanterne_allumee: 'Lanterne sur pied, allumée', banc: 'Banc de bois (décor)',
   nid: 'Nid d\'oiseau',
   arbre: 'Arbre (grand, vert doux)', arbre_fleuri: 'Arbre (grand, vert doux, pied fleuri)', arbre_profond: 'Arbre (grand, vert profond)',
   arbre_profond_fleuri: 'Arbre (grand, vert profond, pied fleuri)', arbre_petit: 'Arbre (petit, vert doux)', arbre_petit_fleuri: 'Arbre (petit, vert doux, pied fleuri)',
@@ -352,6 +353,10 @@ for (const petit of ['', '_petit']) for (const ocre of ['', '_ocre']) for (const
 // les 8 rochers en tas refaits (rochers.js) : rochers[_petits][_sombres][_galets]
 for (const petits of ['', '_petits']) for (const sombres of ['', '_sombres']) for (const ga of ['', '_galets']) {
   PLANTES[`rochers${petits}${sombres}${ga}`] = `Rochers (${[petits ? 'petits' : 'grands', sombres ? 'pierre sombre' : 'granite gris', ga && 'des galets au pied'].filter(Boolean).join(', ')})`;
+}
+// les 8 aiguilles refaites (rochers.js) : aiguille[_petite][_double][_oiseau]
+for (const petite of ['', '_petite']) for (const double of ['', '_double']) for (const oi of ['', '_oiseau']) {
+  PLANTES[`aiguille${petite}${double}${oi}`] = `Aiguille de roche (${[petite ? 'petite' : 'grande', double ? 'double' : 'seule', oi && 'un oiseau perché'].filter(Boolean).join(', ')})`;
 }
 // les 16 touffes d'herbe refaites (herbes.js) : touffe[_motte][_petite][_profond][_fleurie]
 for (const motte of ['', '_motte']) for (const petite of ['', '_petite']) for (const vert of ['', '_profond']) for (const fleurie of ['', '_fleurie']) {
