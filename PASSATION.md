@@ -197,9 +197,12 @@ chronométrer 20 appels. Comparer à zoom égal, au même endroit.
   `sky.js` l'heure et le ciel ; les constantes de module suivent la seule méthode qui les lit). `WorldView.vue`
   (2479 → 896 lignes) garde ce qui relie les sujets : le chargement, la quête, le plein écran, ce que plusieurs
   sujets partagent (`stockAll`, `chargesText`, `screenRectOf`), les observateurs et le cycle de vie. Les observateurs
-  et les crochets restent dans le composant (l'ordre de création des observateurs ne change pas). Preuve d'un tel
-  découpage : le relevé des membres du composant vivant (données, calculées, méthodes, observateurs, crochets, et le
-  texte de chaque fonction) est le même avant et après.
+  et les crochets restent dans le composant (l'ordre de création des observateurs ne change pas) ; 7)
+  `world/view/draw.js` rangé par sujet dans `world/view/draw/` (choix de l'auteur : `draw.js` reste l'entrée qui les
+  réunit, `WorldView.vue` n'en sait rien ; la quête suit Brume ; les constantes lues par plusieurs sujets rejoignent
+  `constants.js`), voir « Front : `src/world/` » plus bas. Preuve d'un tel découpage : le relevé des membres du
+  composant vivant (données, calculées, méthodes, observateurs, crochets, et le texte de chaque fonction) est le même
+  avant et après.
 - **Piège du passage en scoped** : une règle scoped gagne un attribut de spécificité. Si elle vise aussi la racine d'un
   composant enfant (un glyphe `img.glyph` dans un portrait, par exemple), elle peut l'emporter sur le style propre de
   l'enfant : garder la spécificité d'avant avec `:where()` sur l'ancêtre (`SiteOverview.css`, le portrait).
@@ -276,21 +279,28 @@ chronométrer 20 appels. Comparer à zoom égal, au même endroit.
   commencent par `world_`. Voir aussi `db/README.md`.
 
 ### Front : `src/world/` (moteur de l'île) et `src/components/World/`
-- **`WorldView.vue`** : l'île entière (≈ 2 740 lignes : ≈ 370 de gabarit, ≈ 2 000 de script, ≈ 350 de styles) : son
-  état, le chargement, les actions ; elle assemble les fiches et le HUD, qui sont des composants.
+- **`WorldView.vue`** : l'île entière (≈ 900 lignes : ≈ 385 de gabarit, ≈ 500 de script ; ses styles dans
+  `WorldView.css`, `WorldView.global.css` et `../island-ui.css`) : son état, le chargement, la quête, le plein écran ;
+  elle assemble les fiches et le HUD, qui sont des composants. Ses sujets de jeu sont des mixins voisins (étape 6 de
+  la refonte, plus haut : `folk.js`, `games.js`, `chests.js`, `workshop.js`, `sites.js`, `annexes.js`, `explore.js`,
+  `terrain.js`, `sky.js`).
   Ses méthodes de moteur sont à part, dans `src/world/view/`, des objets de méthodes étalés dans `methods`
   (`this` y reste le composant) :
   - `camera.js` : géométrie isométrique (monde ↔ écran), caméra, zoom, cadrage ;
   - `draw.js` : la boucle et le dessin (sol, mer, tri par profondeur de ce qui se tient debout, lumières, météo,
-    bulles) ;
+    bulles) ; c'est l'index qui réunit les sujets rangés dans `draw/` : `loop.js` (la boucle, une image, le relief),
+    `sites.js` (ce qui se pose sur l'île), `nature.js` (le décor fixe d'une case), `bubbles.js` (les bulles),
+    `life.js` (animaux, mer, mouettes, passeur, bouteille), `air.js` (volutes, fumée, lumières), `brume.js` (Brume,
+    et ce que fait un toucher sur elle : la quête, le nom du peuple, le naufrage) ;
   - `gestures.js` : glisser, pincer, molette, toucher, appui long, ce qui est sous le doigt ;
-  - `constants.js` (taille d'une case…) et `memory.js` (la vue gardée d'une visite à l'autre de l'onglet).
+  - `constants.js` (taille d'une case, et les constantes que lisent plusieurs sujets du dessin) et `memory.js` (la vue
+    gardée d'une visite à l'autre de l'onglet).
   - Fiches et HUD en composants : le naufrage (`WreckScene`), Brume (`BrumeSheet`), un quartier (`ZoneSheet`), un
     bâtiment (`SiteSheet` : en-tête et onglets ; l'onglet ouvert vient en slot de l'île : `SiteOverview`, `SiteShop`,
     `AnnexPanel`, `SiteSteps`) ; la barre du haut (`IslandHud`, dans `.world__top` que l'île mesure) et les boutons
-    posés sur l'île (`IslandButtons`). Leurs styles restent dans `WorldView` (globaux, classes `world__`) ; les actions
-    restent à l'île, qui les reçoit en événements. Les règles de la boutique et des paliers (verrous, prix, palier
-    prêt) sont dans `src/world/shop.js` et `src/world/levels.js`, testées.
+    posés sur l'île (`IslandButtons`). Chacun a ses styles dans son dossier (les classes gardent leur préfixe
+    `world__`) ; les actions restent à l'île, qui les reçoit en événements. Les règles de la boutique et des paliers
+    (verrous, prix, palier prêt) sont dans `src/world/shop.js` et `src/world/levels.js`, testées.
 - **Le sol** : `terrain.js` (`TerrainCache`) peint le relief en **carrés de 512 px gardés en images**, à des
   résolutions par pas de √2.
   - Le décor fixe (arbres, rochers) est **cuit dans le sol** sauf de près : `NEAR_SCALE = 0.9`, avec le vent
