@@ -1,0 +1,20 @@
+.seuil__lead { margin: -6px 0 0; font-size: 17px; }
+.seuil__form { display: flex; flex-direction: column; gap: 18px; }
+.seuil__forgot {
+  appearance: none;
+  align-self: flex-end;
+  min-height: 32px;
+  padding: 0;
+  border: 0;
+  background: none;
+  cursor: pointer;
+  font-family: var(--oc-font-italic);
+  font-style: italic;
+  font-size: 15px;
+  color: var(--oc-text-muted);
+}
+.seuil__forgot:hover { color: var(--oc-gold); }
+.seuil__actions { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 12px; margin-top: 6px; }
+@media (max-width: 520px) {
+  .seuil__actions { flex-direction: column-reverse; }
+}

@@ -95,34 +95,6 @@ export default {
 };
 </script>
 
-<style scoped>
-.seal {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 14px;
-}
-.seal__image {
-  width: 96px;
-  height: 96px;
-  object-fit: contain;
-  filter: drop-shadow(0 0 18px rgba(var(--gold-400-rgb), 0.55));
-}
-.seal__name {
-  margin: 0;
-  font-size: 32px;
-  line-height: 1.1;
-  color: var(--oc-gold);
-}
-.seal__rule { width: 140px; }
-.seal__description { margin: 0; font-size: 18px; }
+<style scoped src="./GameAchievementsPopup.css"></style>
 
-</style>
-
-<style>
-/* Fondu de sortie de la fenêtre qui contient le sceau */
-.g-modal-backdrop:has(.seal--leaving) {
-  opacity: 0;
-  transition: opacity var(--oc-medium) var(--oc-ease-out);
-}
-</style>
+<style src="./GameAchievementsPopup.global.css"></style>
