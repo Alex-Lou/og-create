@@ -1,5 +1,5 @@
 // Les autres plantes refaites au niveau des PNJ, une par une, avec le trait, la lumière et les verts des arbres
-// (arbres.js) : le buisson, la bruyère, les fleurs, le cactus, la souche, le rondin, les champignons. Cadre et ancrage des plantes de deco.js (PROP, centre de la case en (0, 0)) ; le jeu fait
+// (arbres.js) : le buisson, la bruyère, les fleurs, le cactus, la souche, le rondin, les champignons, les roseaux. Cadre et ancrage des plantes de deco.js (PROP, centre de la case en (0, 0)) ; le jeu fait
 // balancer le dessin entier depuis sa base, il n'y a donc qu'une image.
 const { OUT, E, r2 } = require('./troupe');
 const { VERTS, fleurette, feuillage, champignon, herbe } = require('./arbres');
@@ -281,4 +281,47 @@ for (const petits of [false, true]) for (const sorte of ['rouges', 'bruns']) for
   CHAMPIGNONS.push([fichier, libelle, { sorte, petits, nuit }]);
 }
 
-module.exports = { buisson, BUISSONS, bruyere, BRUYERES, fleurs, FLEURS, cactus, CACTUS_LISTE, souche, SOUCHES, rondin, RONDINS, champignons, CHAMPIGNONS };
+// ——— Les roseaux : feuilles et massettes, dans une petite mare ou sur la rive ; une libellule s'y pose parfois ———
+// la mare : eau détourée, plus claire en haut à gauche, deux rides
+const mare = (k, rx = 24, ry = 10.5) => E(0, 1, rx * k, ry * k, '#8FC8E0', 1.1) + E(-3 * k, 0, rx * 0.68 * k, ry * 0.6 * k, '#B6E0F0', 0)
+  + `<path d="M${r2(-14 * k)},${r2(3 * k)} q${r2(6 * k)},${r2(-2 * k)} ${r2(12 * k)},0 M${r2(4 * k)},${r2(6 * k)} q${r2(4 * k)},${r2(-1.4 * k)} ${r2(8 * k)},0" stroke="#FFFFFF" stroke-width="1" fill="none" stroke-linecap="round" opacity="0.8"/>`;
+// feuille de roseau : longue et fine, détourée, nervure claire
+function feuilleRoseau(x, h, pli, k) {
+  const d = `M${r2((x - 1.4) * k)},${r2(3 * k)} Q${r2((x - 1.2) * k)},${r2((3 - h * 0.55) * k)} ${r2((x + pli) * k)},${r2((3 - h) * k)} Q${r2((x + 1) * k)},${r2((3 - h * 0.5) * k)} ${r2((x + 1.4) * k)},${r2(3 * k)} Z`;
+  return `<path d="${d}" fill="#7FB650" stroke="${OUT}" stroke-width="0.9" stroke-linejoin="round"/>`
+    + `<path d="M${r2((x - 0.3) * k)},${r2(2 * k)} Q${r2((x - 0.2) * k)},${r2((3 - h * 0.5) * k)} ${r2((x + pli * 0.8) * k)},${r2((3 - h * 0.9) * k)}" stroke="#B5DB86" stroke-width="0.7" fill="none" stroke-linecap="round"/>`;
+}
+// massette : tige détourée, épi brun en gélule (reflet), une pointe
+function massette(x, h, k) {
+  const tx = x + (x > 0 ? 1.2 : -1.2), top = 3 - h;
+  return `<path d="M${r2(x * k)},${r2(3 * k)} Q${r2(x * k)},${r2((3 - h * 0.6) * k)} ${r2(tx * k)},${r2(top * k)}" stroke="${OUT}" stroke-width="2.4" fill="none" stroke-linecap="round"/>`
+    + `<path d="M${r2(x * k)},${r2(3 * k)} Q${r2(x * k)},${r2((3 - h * 0.6) * k)} ${r2(tx * k)},${r2(top * k)}" stroke="#7EA850" stroke-width="1.1" fill="none" stroke-linecap="round"/>`
+    + `<rect x="${r2((tx - 1.7) * k)}" y="${r2((top + 1) * k)}" width="${r2(3.4 * k)}" height="${r2(7.4 * k)}" rx="${r2(1.7 * k)}" fill="#8A5A36" stroke="${OUT}" stroke-width="0.9"/>`
+    + `<rect x="${r2((tx - 1) * k)}" y="${r2((top + 2) * k)}" width="${r2(0.9 * k)}" height="${r2(4.4 * k)}" rx="${r2(0.45 * k)}" fill="#B88458"/>`
+    + `<path d="M${r2(tx * k)},${r2((top + 1) * k)} L${r2(tx * k)},${r2((top - 1.6) * k)}" stroke="${OUT}" stroke-width="0.8" stroke-linecap="round"/>`;
+}
+// libellule : corps fin bleu, quatre ailes claires
+const libellule = (x, y) => `<g transform="translate(${r2(x)} ${r2(y)}) rotate(-12)">`
+  + ['-2.4,-1.6,3.2,1', '2.4,-1.6,3.2,1', '-2.2,0.4,2.8,0.9', '2.2,0.4,2.8,0.9'].map(v => { const [cx, cy, rx, ry] = v.split(',').map(Number); return E(cx * 1.2, cy, rx, ry, '#EAF6FF', 0.5).replace('/>', ' opacity="0.9"/>'); }).join('')
+  + `<path d="M0,-1 L0,5.4" stroke="${OUT}" stroke-width="2.2" stroke-linecap="round"/><path d="M0,-1 L0,5.4" stroke="#4FA3C8" stroke-width="1" stroke-linecap="round"/>` + E(0, -1.6, 1.2, 1.1, '#4FA3C8', 0.7) + '</g>';
+// [x, hauteur, pli de la pointe] et massettes [x, hauteur]
+const FEUILLES_R = [[-12, 18, -3], [-7, 24, -2], [-2, 20, 2], [3, 26, 2.4], [8, 19, 3], [12, 15, 3.4]];
+const MASSETTES = [[-9, 26], [0.5, 30], [6, 24]];
+
+// petits : × 0,75 ; eau : dans une petite mare (sinon sur la rive) ; libellule : une libellule posée
+function roseaux({ petits = false, eau = true, libellule: avecLibellule = false } = {}) {
+  const k = petits ? 0.75 : 1;
+  return (eau ? mare(k) : E(1, 2, 16 * k, 5.5 * k, 'rgba(40,55,20,0.22)', 0))
+    + MASSETTES.map(([x, h]) => massette(x, h, k)).join('') + FEUILLES_R.map(([x, h, p]) => feuilleRoseau(x, h, p, k)).join('')
+    + (avecLibellule ? libellule(9 * k, -25 * k) : '');
+}
+
+// Les 8 roseaux : [fichier, libellé, options] ; « roseaux » (grands, dans la mare, sans libellule) est celui par défaut
+const ROSEAUX = [];
+for (const petits of [false, true]) for (const eau of [true, false]) for (const lib of [false, true]) {
+  const fichier = ['roseaux', petits && 'petits', !eau && 'rive', lib && 'libellule'].filter(Boolean).join('_');
+  const libelle = `Roseaux (${[petits ? 'petits' : 'grands', eau ? 'dans une mare' : 'sur la rive', lib && 'une libellule'].filter(Boolean).join(', ')})`;
+  ROSEAUX.push([fichier, libelle, { petits, eau, libellule: lib }]);
+}
+
+module.exports = { buisson, BUISSONS, bruyere, BRUYERES, fleurs, FLEURS, cactus, CACTUS_LISTE, souche, SOUCHES, rondin, RONDINS, champignons, CHAMPIGNONS, roseaux, ROSEAUX };
