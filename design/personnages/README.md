@@ -14,6 +14,9 @@ Les personnages et leurs fiches sont dans `HISTOIRE.md` (§ 8).
 - `troupe.js` : le kit commun (trait, yeux, bras à coude, marche, ombres, expressions).
 - `aster.js`, `cannelle.js`, `rivet.js`, `ondin.js`, `sylve.js`, `galet.js`, `melisse.js` : un fichier par personnage
   (couleurs, pièces, action).
+- `avatar.js` : l'avatar du joueur (HISTOIRE.md § 6.17), un personnage qu'on compose : `avatar(choix)`, à passer à
+  `troupe.frame` comme un maître. Les choix, les nuanciers, les accessoires (rareté, source : gratuit, boutique ou coffre)
+  et le tirage au hasard sont dans `avatar_choix.js` ; le dessin des accessoires dans `avatar_accessoires.js`.
 - `svg/<nom>/` : 30 SVG par personnage (poses, action, et chaque expression en face au repos).
 - `planches/` : planches d'essai (poses, expressions) ; `troupe_apercu.html` : aperçu animé.
 

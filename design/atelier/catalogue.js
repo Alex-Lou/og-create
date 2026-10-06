@@ -75,7 +75,7 @@ function renommer(rel) {
 // Le kit du grand format (design/personnages/troupe.js, Anya, le Passeur) dessine son trois quarts avant tourné vers
 // le bas à gauche ; le petit format, les bêtes et le jeu (vue « se ») le tournent vers le bas à droite. La bibliothèque
 // publie donc ces vues-là en miroir : « avant » veut dire « vers le bas à droite » partout.
-const MIROIR_KIT = /^(personnages\/maitres\/[a-z]+|personnages\/naufrages\/[a-z]+|vivants\/(anya|passeur))\/[a-z-]+_avant_/;
+const MIROIR_KIT = /^(personnages\/maitres\/[a-z]+|personnages\/naufrages\/[a-z]+|personnages\/avatar\/avatar-\d+(?:-naufrage)?|vivants\/(anya|passeur))\/[a-z0-9-]+_avant_/;
 function miroir(svg) {
   const m = svg.match(/^(<svg[^>]*viewBox="([^"]+)"[^>]*>)([\s\S]*)(<\/svg>\s*)$/);
   if (!m) throw new Error('SVG inattendu pour le miroir');
@@ -158,6 +158,7 @@ function moment(id, meta) {
   const nom = p[p.length - 1];
   if (top === 'personnages') {
     if (a === 'epilogue') return 'epilogue';
+    if (a === 'avatar') return 'tuto-1';
     if (a === 'visiteurs') return 'acte-4';
     const prenom = a === 'naufrages' && b === 'petit_format' ? p[3] : b;
     const m = MAITRES[prenom];
@@ -214,6 +215,7 @@ function moment(id, meta) {
 // --- 3. Ce qui reste à revoir (audit du 6 octobre et HISTOIRE.md v6) -------------------------------
 
 const A_REVOIR = [
+  [/^personnages\/(habitants|visiteurs|epilogue|naufrages\/petit_format)\//, 'Petit format abandonné (choix de l\'auteur, 6 octobre) : dans le jeu, tout le monde est dessiné en détaillé. À remplacer au lot L4 (maîtres en détaillé, visiteurs et nouveaux venus tirés du générateur de l\'avatar, ceux de l\'épilogue en habits de voyage) ; ne pas intégrer.'],
   [/^vivants\/brume\/brume_expr_fache$/, 'Brume ne gronde jamais (§ 8) : expression à retirer.'],
   [/^vivants\/brume\/brume_s[1-7]/, 'Les ornements des stades doivent s\'additionner (§ 13) ; le stade 6 doit être ambré, le soleil du stade 7 une petite flamme dorée à rayons.'],
   [/^vivants\/brume\/brume_expr_/, 'Les expressions doivent être les yeux seuls, à poser sur n\'importe quel stade (aujourd\'hui le corps du stade 1).'],
@@ -236,7 +238,6 @@ const A_REVOIR = [
 const statut = id => { for (const [rx, note] of A_REVOIR) if (rx.test(id)) return { statut: 'a-revoir', note }; return { statut: 'ok' }; };
 
 const MANQUANTS = [
-  ['tuto-1', 'L\'avatar du joueur : pièces au choix, trois vues, toutes les poses, grand et petit format, version naufragée (lot L).'],
   ['tuto-1', 'La carte d\'embarquement de l\'Hirondelle (écran d\'avatar), le gilet de sauvetage, la chaise longue échouée.'],
   ['tuto-1', 'Les égarés : petits fantômes, petits zombies tout mous, bêtes égarées selon le climat ; marche, bouderie au toucher, passage en luciole (lot M).'],
   ['tuto-2', 'La cage aux poules du navire, l\'œuf, la bulle de production d\'une bête (lot M).'],
@@ -244,7 +245,7 @@ const MANQUANTS = [
   ['tuto-2', 'L\'établi de Rivet au camp (une porte de cabine sur deux caisses) et sa voile tendue sur un aviron.'],
   ['tuto-3', 'Le bâtiment embrumé (calque de brume grise) et « Réparer » (lot M).'],
   ['tuto-3', 'La caisse d\'Aster au bout de sa corde.'],
-  ['acte-1', 'Les naufragés au petit format avec lanterne et parapluie (Aster et Rivet le restent après la première lanterne).'],
+  ['acte-1', 'Au détaillé, pour tout le monde (lot L4) : marcher avec une lanterne, sous un parapluie, dormir couché ; les naufragés aussi (Aster et Rivet le restent après la première lanterne).'],
   ['tuto-1', 'Les scènes plein écran du tutoriel v6, étapes 0 à 12 (lot J2).'],
   ['revelation', 'Les signes d\'Anya qui erre : bêtes tournées du même côté, fleurs qui s\'ouvrent, lucioles rassemblées.'],
   ['acte-1', 'L\'éclat du souvenir retrouvé (le sceau s\'allume, le maître se lève outil en main).'],
@@ -288,9 +289,11 @@ const PLANTES = {
 const PIECES = { 'arc-en-ciel': 'Arc-en-ciel', 'coeur-lave': 'Cœur de lave', 'filon-or': 'Filon d\'or' };
 const ROMAIN = ['', 'I', 'II', 'III', 'IV', 'V', 'VI', 'VII'];
 const ETAT_COFFRE = { ferme: 'fermé', ouverture: 'ouverture', ouvert: 'ouvert', rayons: 'rayons (calque)', icone: 'icône' };
-const PETIT = /^personnages\/(habitants|visiteurs|epilogue|naufrages\/petit_format)\//;
+const PETIT = /^personnages\/(habitants|visiteurs|epilogue|naufrages\/petit_format|avatar\/petit_format)\//;
 
 function titreSujet(sujet) {
+  const av = sujet.match(/^avatar-(\d+)(-naufrage)?$/);
+  if (av) return `Avatar, exemple ${+av[1]}${av[2] ? ' (naufragé)' : ''}`;
   const m = sujet.match(/^([a-z]+)-naufrage$/);
   if (m) return `${NOMS[m[1]]} naufragé${FEM.has(m[1]) ? 'e' : ''}`;
   if (NOMS[sujet]) return NOMS[sujet][0].toUpperCase() + NOMS[sujet].slice(1);
@@ -328,13 +331,16 @@ function vitesse(id, pose, images) {
     return pose === 'repos' ? (a === 'anya' ? 1200 : [900, 160]) : [700, 900];
   }
   if (top === 'personnages') {
-    const petit = a !== 'maitres' && !(a === 'naufrages' && !id.includes('petit_format'));
+    const petit = PETIT.test(id + '/');
     if (/^(marche|lanterne|parapluie)$/.test(pose)) return petit ? 160 : 170;
     if (pose === 'repos') return [900, 160];
     if (pose === 'salut') return 260;
     if (pose === 'dort') return 900;
     if (pose === 'arrivee') return 450;
     if (pose === 'expr') return 800;
+    if (pose === 'grelotter') return 140; // un frisson
+    if (pose === 'lire') return [1400, 900];
+    if (pose === 'ramasser') return [500, 800];
     return [700, 1100];
   }
   return undefined;
