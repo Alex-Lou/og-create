@@ -201,9 +201,10 @@ function moment(id, meta) {
       return 'acte-4';
     }
   }
-  // les variantes des arbres refaits (arbres.js : arbre, pommier, arbre d'automne, bouleau) se rangent avec eux
+  // les variantes des arbres refaits (arbres.js : arbre, pommier, arbre d'automne, bouleau, sapins) se rangent avec eux
   if (top === 'plantes') { const n = nom.replace(/_\d+$/, '').replace(/^arbre(_petit)?(_profond)?(_fleuri)?$/, 'arbre').replace(/^pommier(_petit)?(_profond)?(_fleurs)?(_tombees)?$/, 'pommier')
-    .replace(/^arbre_automne(_petit)?(_rouge)?(_feuilles)?$/, 'arbre_automne').replace(/^bouleau(_petit)?(_profond)?(_fleuri)?$/, 'bouleau'); return PLANTES_GREVE.has(n) ? 'tuto-1' : PLANTES_ACTE1.has(n) ? 'acte-1' : 'partout'; }
+    .replace(/^arbre_automne(_petit)?(_rouge)?(_feuilles)?$/, 'arbre_automne').replace(/^bouleau(_petit)?(_profond)?(_fleuri)?$/, 'bouleau')
+    .replace(/^sapin(_petit)?(_profond)?(_pommes_de_pin)?$/, 'sapin').replace(/^sapin_neige(_petit)?(_profond)?(_congere)?$/, 'sapin_neige'); return PLANTES_GREVE.has(n) ? 'tuto-1' : PLANTES_ACTE1.has(n) ? 'acte-1' : 'partout'; }
   // les scènes du tutoriel (lot J2) : scenes/tutoriel/<étape>_<nom>/…, la partie suit le numéro de l'étape
   if (top === 'scenes') { const n = parseInt(b, 10); return n <= 6 ? 'tuto-1' : n <= 9 ? 'tuto-2' : 'tuto-3'; }
   return 'partout';
@@ -270,7 +271,7 @@ const SUJETS = {
   'cameleon-de-brume': 'Caméléon de brume (égaré, la Jungle)', 'salamandre-de-brume': 'Salamandre de brume (égaré, le Volcan)'
 };
 const PLANTES = {
-  bois_flotte: 'Bois flotté', arbre_mort: 'Arbre mort', sapin_neige: 'Sapin enneigé',
+  bois_flotte: 'Bois flotté', arbre_mort: 'Arbre mort',
   champignons_nuit: 'Champignons, la nuit', rochers_moussus: 'Rochers moussus', lanterne: 'Lanterne sur pied, éteinte',
   lanterne_allumee: 'Lanterne sur pied, allumée', banc: 'Banc de bois (décor)', aiguille: 'Aiguille de roche',
   nid: 'Nid d\'oiseau', nenuphars: 'Nénuphars', bruyere: 'Bruyère',
@@ -289,6 +290,10 @@ for (const petit of ['', '_petit']) for (const rouge of ['', '_rouge']) for (con
 // les 8 bouleaux refaits (arbres.js) : bouleau[_petit][_profond][_fleuri]
 for (const petit of ['', '_petit']) for (const vert of ['', '_profond']) for (const fleuri of ['', '_fleuri']) {
   PLANTES[`bouleau${petit}${vert}${fleuri}`] = `Bouleau (${[petit ? 'petit' : 'grand', `vert ${vert ? 'profond' : 'doux'}`, fleuri && 'pied fleuri'].filter(Boolean).join(', ')})`;
+}
+// les 16 sapins refaits (arbres.js) : sapin[_petit][_profond][_pommes_de_pin], sapin_neige[_petit][_profond][_congere]
+for (const neige of [false, true]) for (const petit of ['', '_petit']) for (const vert of ['', '_profond']) for (const pied of [false, true]) {
+  PLANTES[`${neige ? 'sapin_neige' : 'sapin'}${petit}${vert}${pied ? (neige ? '_congere' : '_pommes_de_pin') : ''}`] = `${neige ? 'Sapin enneigé' : 'Sapin'} (${[petit ? 'petit' : 'grand', `vert ${vert ? 'profond' : 'doux'}`, pied && (neige ? 'congère au pied' : 'pommes de pin')].filter(Boolean).join(', ')})`;
 }
 // les 16 touffes d'herbe refaites (herbes.js) : touffe[_motte][_petite][_profond][_fleurie]
 for (const motte of ['', '_motte']) for (const petite of ['', '_petite']) for (const vert of ['', '_profond']) for (const fleurie of ['', '_fleurie']) {
