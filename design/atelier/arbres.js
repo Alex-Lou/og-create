@@ -90,4 +90,4 @@ for (const petit of [false, true]) for (const vert of ['doux', 'profond']) for (
   ARBRES.push([fichier, libelle, { vert, petit, fleuri }]);
 }
 
-module.exports = { arbre, ARBRES, VERTS };
+module.exports = { arbre, ARBRES, VERTS, fleurette };

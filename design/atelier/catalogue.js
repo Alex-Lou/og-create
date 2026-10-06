@@ -271,12 +271,16 @@ const SUJETS = {
 const PLANTES = {
   bois_flotte: 'Bois flotté', arbre_automne: 'Arbre d\'automne', arbre_mort: 'Arbre mort', sapin_neige: 'Sapin enneigé',
   champignons_nuit: 'Champignons, la nuit', rochers_moussus: 'Rochers moussus', lanterne: 'Lanterne sur pied, éteinte',
-  lanterne_allumee: 'Lanterne sur pied, allumée', banc: 'Banc de bois (décor)', aiguille: 'Aiguille de roche', touffe: 'Touffe d\'herbe',
+  lanterne_allumee: 'Lanterne sur pied, allumée', banc: 'Banc de bois (décor)', aiguille: 'Aiguille de roche',
   nid: 'Nid d\'oiseau', nenuphars: 'Nénuphars', bruyere: 'Bruyère',
   arbre: 'Arbre (grand, vert doux)', arbre_fleuri: 'Arbre (grand, vert doux, pied fleuri)', arbre_profond: 'Arbre (grand, vert profond)',
   arbre_profond_fleuri: 'Arbre (grand, vert profond, pied fleuri)', arbre_petit: 'Arbre (petit, vert doux)', arbre_petit_fleuri: 'Arbre (petit, vert doux, pied fleuri)',
   arbre_petit_profond: 'Arbre (petit, vert profond)', arbre_petit_profond_fleuri: 'Arbre (petit, vert profond, pied fleuri)'
 };
+// les 16 touffes d'herbe refaites (herbes.js) : touffe[_motte][_petite][_profond][_fleurie]
+for (const motte of ['', '_motte']) for (const petite of ['', '_petite']) for (const vert of ['', '_profond']) for (const fleurie of ['', '_fleurie']) {
+  PLANTES[`touffe${motte}${petite}${vert}${fleurie}`] = `Touffe d'herbe (${[motte && 'avec motte', petite ? 'petite' : 'grande', `vert ${vert ? 'profond' : 'doux'}`, fleurie && 'fleurie'].filter(Boolean).join(', ')})`;
+}
 const PIECES = { 'arc-en-ciel': 'Arc-en-ciel', 'coeur-lave': 'Cœur de lave', 'filon-or': 'Filon d\'or' };
 const ROMAIN = ['', 'I', 'II', 'III', 'IV', 'V', 'VI', 'VII'];
 const ETAT_COFFRE = { ferme: 'fermé', ouverture: 'ouverture', ouvert: 'ouvert', rayons: 'rayons (calque)', icone: 'icône' };
