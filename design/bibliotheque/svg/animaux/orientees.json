@@ -1,0 +1,897 @@
+{
+ "_lisez_moi": [
+  "Les bêtes qui marchent, dans les directions de la troupe : avant = trois quarts avant (la bête vient vers le bas à droite), dos = trois quarts dos (elle s'éloigne vers le haut à droite) ; le miroir horizontal donne le bas à gauche et le haut à gauche. Le profil (lot B) reste pour aller tout droit à gauche ou à droite.",
+  "Ancre (0, 0) au sol sous le milieu de la bête, comme le profil. Le cadre est celui du profil, élargi juste ce qu'il faut (les pieds avant descendent un peu sous l'ancre, la tête avance) : prendre le cadre noté ici.",
+  "Images : avant marche1, marche2, repos, clignement, joie (cœur) ; dos marche1, marche2, repos (on ne voit pas le visage). Marche à 260 ms par image, comme le profil."
+ ],
+ "betes": {
+  "poule_rousse": {
+   "nom": "Poule rousse",
+   "groupe": "ferme",
+   "cadre": [
+    -15,
+    -22.5,
+    30,
+    25
+   ],
+   "fichiers": {
+    "avant": [
+     "ferme/poule_rousse/poule_rousse_avant_marche1.svg",
+     "ferme/poule_rousse/poule_rousse_avant_marche2.svg",
+     "ferme/poule_rousse/poule_rousse_avant_repos.svg",
+     "ferme/poule_rousse/poule_rousse_avant_clignement.svg",
+     "ferme/poule_rousse/poule_rousse_avant_joie.svg"
+    ],
+    "dos": [
+     "ferme/poule_rousse/poule_rousse_dos_marche1.svg",
+     "ferme/poule_rousse/poule_rousse_dos_marche2.svg",
+     "ferme/poule_rousse/poule_rousse_dos_repos.svg"
+    ]
+   }
+  },
+  "poule_blanche": {
+   "nom": "Poule blanche",
+   "groupe": "ferme",
+   "cadre": [
+    -15,
+    -22.5,
+    30,
+    25
+   ],
+   "fichiers": {
+    "avant": [
+     "ferme/poule_blanche/poule_blanche_avant_marche1.svg",
+     "ferme/poule_blanche/poule_blanche_avant_marche2.svg",
+     "ferme/poule_blanche/poule_blanche_avant_repos.svg",
+     "ferme/poule_blanche/poule_blanche_avant_clignement.svg",
+     "ferme/poule_blanche/poule_blanche_avant_joie.svg"
+    ],
+    "dos": [
+     "ferme/poule_blanche/poule_blanche_dos_marche1.svg",
+     "ferme/poule_blanche/poule_blanche_dos_marche2.svg",
+     "ferme/poule_blanche/poule_blanche_dos_repos.svg"
+    ]
+   }
+  },
+  "poule_noire": {
+   "nom": "Poule noire",
+   "groupe": "ferme",
+   "cadre": [
+    -15,
+    -22.5,
+    30,
+    25
+   ],
+   "fichiers": {
+    "avant": [
+     "ferme/poule_noire/poule_noire_avant_marche1.svg",
+     "ferme/poule_noire/poule_noire_avant_marche2.svg",
+     "ferme/poule_noire/poule_noire_avant_repos.svg",
+     "ferme/poule_noire/poule_noire_avant_clignement.svg",
+     "ferme/poule_noire/poule_noire_avant_joie.svg"
+    ],
+    "dos": [
+     "ferme/poule_noire/poule_noire_dos_marche1.svg",
+     "ferme/poule_noire/poule_noire_dos_marche2.svg",
+     "ferme/poule_noire/poule_noire_dos_repos.svg"
+    ]
+   }
+  },
+  "poule_grise": {
+   "nom": "Poule grise",
+   "groupe": "ferme",
+   "cadre": [
+    -15,
+    -22.5,
+    30,
+    25
+   ],
+   "fichiers": {
+    "avant": [
+     "ferme/poule_grise/poule_grise_avant_marche1.svg",
+     "ferme/poule_grise/poule_grise_avant_marche2.svg",
+     "ferme/poule_grise/poule_grise_avant_repos.svg",
+     "ferme/poule_grise/poule_grise_avant_clignement.svg",
+     "ferme/poule_grise/poule_grise_avant_joie.svg"
+    ],
+    "dos": [
+     "ferme/poule_grise/poule_grise_dos_marche1.svg",
+     "ferme/poule_grise/poule_grise_dos_marche2.svg",
+     "ferme/poule_grise/poule_grise_dos_repos.svg"
+    ]
+   }
+  },
+  "poussin": {
+   "nom": "Poussin",
+   "groupe": "ferme",
+   "cadre": [
+    -15,
+    -22.5,
+    30,
+    25
+   ],
+   "fichiers": {
+    "avant": [
+     "ferme/poussin/poussin_avant_marche1.svg",
+     "ferme/poussin/poussin_avant_marche2.svg",
+     "ferme/poussin/poussin_avant_repos.svg",
+     "ferme/poussin/poussin_avant_clignement.svg",
+     "ferme/poussin/poussin_avant_joie.svg"
+    ],
+    "dos": [
+     "ferme/poussin/poussin_dos_marche1.svg",
+     "ferme/poussin/poussin_dos_marche2.svg",
+     "ferme/poussin/poussin_dos_repos.svg"
+    ]
+   }
+  },
+  "vache": {
+   "nom": "Vache",
+   "groupe": "ferme",
+   "cadre": [
+    -20,
+    -30,
+    40,
+    35.5
+   ],
+   "fichiers": {
+    "avant": [
+     "ferme/vache/vache_avant_marche1.svg",
+     "ferme/vache/vache_avant_marche2.svg",
+     "ferme/vache/vache_avant_repos.svg",
+     "ferme/vache/vache_avant_clignement.svg",
+     "ferme/vache/vache_avant_joie.svg"
+    ],
+    "dos": [
+     "ferme/vache/vache_dos_marche1.svg",
+     "ferme/vache/vache_dos_marche2.svg",
+     "ferme/vache/vache_dos_repos.svg"
+    ]
+   }
+  },
+  "vache_rousse": {
+   "nom": "Vache rousse",
+   "groupe": "ferme",
+   "cadre": [
+    -20,
+    -30,
+    40,
+    35.5
+   ],
+   "fichiers": {
+    "avant": [
+     "ferme/vache_rousse/vache_rousse_avant_marche1.svg",
+     "ferme/vache_rousse/vache_rousse_avant_marche2.svg",
+     "ferme/vache_rousse/vache_rousse_avant_repos.svg",
+     "ferme/vache_rousse/vache_rousse_avant_clignement.svg",
+     "ferme/vache_rousse/vache_rousse_avant_joie.svg"
+    ],
+    "dos": [
+     "ferme/vache_rousse/vache_rousse_dos_marche1.svg",
+     "ferme/vache_rousse/vache_rousse_dos_marche2.svg",
+     "ferme/vache_rousse/vache_rousse_dos_repos.svg"
+    ]
+   }
+  },
+  "mouton": {
+   "nom": "Mouton",
+   "groupe": "ferme",
+   "cadre": [
+    -20,
+    -30,
+    40,
+    34.5
+   ],
+   "fichiers": {
+    "avant": [
+     "ferme/mouton/mouton_avant_marche1.svg",
+     "ferme/mouton/mouton_avant_marche2.svg",
+     "ferme/mouton/mouton_avant_repos.svg",
+     "ferme/mouton/mouton_avant_clignement.svg",
+     "ferme/mouton/mouton_avant_joie.svg"
+    ],
+    "dos": [
+     "ferme/mouton/mouton_dos_marche1.svg",
+     "ferme/mouton/mouton_dos_marche2.svg",
+     "ferme/mouton/mouton_dos_repos.svg"
+    ]
+   }
+  },
+  "mouton_noir": {
+   "nom": "Mouton noir",
+   "groupe": "ferme",
+   "cadre": [
+    -20,
+    -30,
+    40,
+    34.5
+   ],
+   "fichiers": {
+    "avant": [
+     "ferme/mouton_noir/mouton_noir_avant_marche1.svg",
+     "ferme/mouton_noir/mouton_noir_avant_marche2.svg",
+     "ferme/mouton_noir/mouton_noir_avant_repos.svg",
+     "ferme/mouton_noir/mouton_noir_avant_clignement.svg",
+     "ferme/mouton_noir/mouton_noir_avant_joie.svg"
+    ],
+    "dos": [
+     "ferme/mouton_noir/mouton_noir_dos_marche1.svg",
+     "ferme/mouton_noir/mouton_noir_dos_marche2.svg",
+     "ferme/mouton_noir/mouton_noir_dos_repos.svg"
+    ]
+   }
+  },
+  "cochon": {
+   "nom": "Cochon",
+   "groupe": "ferme",
+   "cadre": [
+    -20,
+    -30,
+    40,
+    35.5
+   ],
+   "fichiers": {
+    "avant": [
+     "ferme/cochon/cochon_avant_marche1.svg",
+     "ferme/cochon/cochon_avant_marche2.svg",
+     "ferme/cochon/cochon_avant_repos.svg",
+     "ferme/cochon/cochon_avant_clignement.svg",
+     "ferme/cochon/cochon_avant_joie.svg"
+    ],
+    "dos": [
+     "ferme/cochon/cochon_dos_marche1.svg",
+     "ferme/cochon/cochon_dos_marche2.svg",
+     "ferme/cochon/cochon_dos_repos.svg"
+    ]
+   }
+  },
+  "cochon_tachete": {
+   "nom": "Cochon tacheté",
+   "groupe": "ferme",
+   "cadre": [
+    -20,
+    -30,
+    40,
+    35.5
+   ],
+   "fichiers": {
+    "avant": [
+     "ferme/cochon_tachete/cochon_tachete_avant_marche1.svg",
+     "ferme/cochon_tachete/cochon_tachete_avant_marche2.svg",
+     "ferme/cochon_tachete/cochon_tachete_avant_repos.svg",
+     "ferme/cochon_tachete/cochon_tachete_avant_clignement.svg",
+     "ferme/cochon_tachete/cochon_tachete_avant_joie.svg"
+    ],
+    "dos": [
+     "ferme/cochon_tachete/cochon_tachete_dos_marche1.svg",
+     "ferme/cochon_tachete/cochon_tachete_dos_marche2.svg",
+     "ferme/cochon_tachete/cochon_tachete_dos_repos.svg"
+    ]
+   }
+  },
+  "chevre": {
+   "nom": "Chèvre",
+   "groupe": "ferme",
+   "cadre": [
+    -20,
+    -30,
+    40,
+    34.5
+   ],
+   "fichiers": {
+    "avant": [
+     "ferme/chevre/chevre_avant_marche1.svg",
+     "ferme/chevre/chevre_avant_marche2.svg",
+     "ferme/chevre/chevre_avant_repos.svg",
+     "ferme/chevre/chevre_avant_clignement.svg",
+     "ferme/chevre/chevre_avant_joie.svg"
+    ],
+    "dos": [
+     "ferme/chevre/chevre_dos_marche1.svg",
+     "ferme/chevre/chevre_dos_marche2.svg",
+     "ferme/chevre/chevre_dos_repos.svg"
+    ]
+   }
+  },
+  "chevre_brune": {
+   "nom": "Chèvre brune",
+   "groupe": "ferme",
+   "cadre": [
+    -20,
+    -30,
+    40,
+    34.5
+   ],
+   "fichiers": {
+    "avant": [
+     "ferme/chevre_brune/chevre_brune_avant_marche1.svg",
+     "ferme/chevre_brune/chevre_brune_avant_marche2.svg",
+     "ferme/chevre_brune/chevre_brune_avant_repos.svg",
+     "ferme/chevre_brune/chevre_brune_avant_clignement.svg",
+     "ferme/chevre_brune/chevre_brune_avant_joie.svg"
+    ],
+    "dos": [
+     "ferme/chevre_brune/chevre_brune_dos_marche1.svg",
+     "ferme/chevre_brune/chevre_brune_dos_marche2.svg",
+     "ferme/chevre_brune/chevre_brune_dos_repos.svg"
+    ]
+   }
+  },
+  "chat": {
+   "nom": "Chat",
+   "groupe": "ferme",
+   "cadre": [
+    -15,
+    -22.5,
+    30,
+    26
+   ],
+   "fichiers": {
+    "avant": [
+     "ferme/chat/chat_avant_marche1.svg",
+     "ferme/chat/chat_avant_marche2.svg",
+     "ferme/chat/chat_avant_repos.svg",
+     "ferme/chat/chat_avant_clignement.svg",
+     "ferme/chat/chat_avant_joie.svg"
+    ],
+    "dos": [
+     "ferme/chat/chat_dos_marche1.svg",
+     "ferme/chat/chat_dos_marche2.svg",
+     "ferme/chat/chat_dos_repos.svg"
+    ]
+   }
+  },
+  "chien": {
+   "nom": "Chien",
+   "groupe": "ferme",
+   "cadre": [
+    -20,
+    -30,
+    40,
+    34.5
+   ],
+   "fichiers": {
+    "avant": [
+     "ferme/chien/chien_avant_marche1.svg",
+     "ferme/chien/chien_avant_marche2.svg",
+     "ferme/chien/chien_avant_repos.svg",
+     "ferme/chien/chien_avant_clignement.svg",
+     "ferme/chien/chien_avant_joie.svg"
+    ],
+    "dos": [
+     "ferme/chien/chien_dos_marche1.svg",
+     "ferme/chien/chien_dos_marche2.svg",
+     "ferme/chien/chien_dos_repos.svg"
+    ]
+   }
+  },
+  "cerf": {
+   "nom": "Cerf",
+   "groupe": "bois",
+   "cadre": [
+    -20,
+    -42.5,
+    40,
+    47.5
+   ],
+   "fichiers": {
+    "avant": [
+     "bois/cerf/cerf_avant_marche1.svg",
+     "bois/cerf/cerf_avant_marche2.svg",
+     "bois/cerf/cerf_avant_repos.svg",
+     "bois/cerf/cerf_avant_clignement.svg",
+     "bois/cerf/cerf_avant_joie.svg"
+    ],
+    "dos": [
+     "bois/cerf/cerf_dos_marche1.svg",
+     "bois/cerf/cerf_dos_marche2.svg",
+     "bois/cerf/cerf_dos_repos.svg"
+    ]
+   }
+  },
+  "renard": {
+   "nom": "Renard",
+   "groupe": "bois",
+   "cadre": [
+    -20,
+    -30,
+    40,
+    34.5
+   ],
+   "fichiers": {
+    "avant": [
+     "bois/renard/renard_avant_marche1.svg",
+     "bois/renard/renard_avant_marche2.svg",
+     "bois/renard/renard_avant_repos.svg",
+     "bois/renard/renard_avant_clignement.svg",
+     "bois/renard/renard_avant_joie.svg"
+    ],
+    "dos": [
+     "bois/renard/renard_dos_marche1.svg",
+     "bois/renard/renard_dos_marche2.svg",
+     "bois/renard/renard_dos_repos.svg"
+    ]
+   }
+  },
+  "lapin": {
+   "nom": "Lapin",
+   "groupe": "bois",
+   "cadre": [
+    -15,
+    -22.5,
+    30,
+    26.5
+   ],
+   "fichiers": {
+    "avant": [
+     "bois/lapin/lapin_avant_marche1.svg",
+     "bois/lapin/lapin_avant_marche2.svg",
+     "bois/lapin/lapin_avant_repos.svg",
+     "bois/lapin/lapin_avant_clignement.svg",
+     "bois/lapin/lapin_avant_joie.svg"
+    ],
+    "dos": [
+     "bois/lapin/lapin_dos_marche1.svg",
+     "bois/lapin/lapin_dos_marche2.svg",
+     "bois/lapin/lapin_dos_repos.svg"
+    ]
+   }
+  },
+  "herisson": {
+   "nom": "Hérisson",
+   "groupe": "bois",
+   "cadre": [
+    -15,
+    -22.5,
+    30,
+    26
+   ],
+   "fichiers": {
+    "avant": [
+     "bois/herisson/herisson_avant_marche1.svg",
+     "bois/herisson/herisson_avant_marche2.svg",
+     "bois/herisson/herisson_avant_repos.svg",
+     "bois/herisson/herisson_avant_clignement.svg",
+     "bois/herisson/herisson_avant_joie.svg"
+    ],
+    "dos": [
+     "bois/herisson/herisson_dos_marche1.svg",
+     "bois/herisson/herisson_dos_marche2.svg",
+     "bois/herisson/herisson_dos_repos.svg"
+    ]
+   }
+  },
+  "ecureuil": {
+   "nom": "Écureuil",
+   "groupe": "bois",
+   "cadre": [
+    -15,
+    -22.5,
+    30,
+    26
+   ],
+   "fichiers": {
+    "avant": [
+     "bois/ecureuil/ecureuil_avant_marche1.svg",
+     "bois/ecureuil/ecureuil_avant_marche2.svg",
+     "bois/ecureuil/ecureuil_avant_repos.svg",
+     "bois/ecureuil/ecureuil_avant_clignement.svg",
+     "bois/ecureuil/ecureuil_avant_joie.svg"
+    ],
+    "dos": [
+     "bois/ecureuil/ecureuil_dos_marche1.svg",
+     "bois/ecureuil/ecureuil_dos_marche2.svg",
+     "bois/ecureuil/ecureuil_dos_repos.svg"
+    ]
+   }
+  },
+  "loutre": {
+   "nom": "Loutre",
+   "groupe": "bois",
+   "cadre": [
+    -15,
+    -22.5,
+    30,
+    26.5
+   ],
+   "fichiers": {
+    "avant": [
+     "bois/loutre/loutre_avant_marche1.svg",
+     "bois/loutre/loutre_avant_marche2.svg",
+     "bois/loutre/loutre_avant_repos.svg",
+     "bois/loutre/loutre_avant_clignement.svg",
+     "bois/loutre/loutre_avant_joie.svg"
+    ],
+    "dos": [
+     "bois/loutre/loutre_dos_marche1.svg",
+     "bois/loutre/loutre_dos_marche2.svg",
+     "bois/loutre/loutre_dos_repos.svg"
+    ]
+   }
+  },
+  "heron": {
+   "nom": "Héron",
+   "groupe": "eau",
+   "cadre": [
+    -20,
+    -42.5,
+    40,
+    45.5
+   ],
+   "fichiers": {
+    "avant": [
+     "eau/heron/heron_avant_marche1.svg",
+     "eau/heron/heron_avant_marche2.svg",
+     "eau/heron/heron_avant_repos.svg",
+     "eau/heron/heron_avant_clignement.svg",
+     "eau/heron/heron_avant_joie.svg"
+    ],
+    "dos": [
+     "eau/heron/heron_dos_marche1.svg",
+     "eau/heron/heron_dos_marche2.svg",
+     "eau/heron/heron_dos_repos.svg"
+    ]
+   }
+  },
+  "renard_polaire": {
+   "nom": "Renard polaire (cimes)",
+   "groupe": "climat",
+   "cadre": [
+    -20,
+    -30,
+    40,
+    34.5
+   ],
+   "fichiers": {
+    "avant": [
+     "climat/renard_polaire/renard_polaire_avant_marche1.svg",
+     "climat/renard_polaire/renard_polaire_avant_marche2.svg",
+     "climat/renard_polaire/renard_polaire_avant_repos.svg",
+     "climat/renard_polaire/renard_polaire_avant_clignement.svg",
+     "climat/renard_polaire/renard_polaire_avant_joie.svg"
+    ],
+    "dos": [
+     "climat/renard_polaire/renard_polaire_dos_marche1.svg",
+     "climat/renard_polaire/renard_polaire_dos_marche2.svg",
+     "climat/renard_polaire/renard_polaire_dos_repos.svg"
+    ]
+   }
+  },
+  "bouquetin": {
+   "nom": "Bouquetin (cimes)",
+   "groupe": "climat",
+   "cadre": [
+    -20,
+    -42.5,
+    40,
+    47.5
+   ],
+   "fichiers": {
+    "avant": [
+     "climat/bouquetin/bouquetin_avant_marche1.svg",
+     "climat/bouquetin/bouquetin_avant_marche2.svg",
+     "climat/bouquetin/bouquetin_avant_repos.svg",
+     "climat/bouquetin/bouquetin_avant_clignement.svg",
+     "climat/bouquetin/bouquetin_avant_joie.svg"
+    ],
+    "dos": [
+     "climat/bouquetin/bouquetin_dos_marche1.svg",
+     "climat/bouquetin/bouquetin_dos_marche2.svg",
+     "climat/bouquetin/bouquetin_dos_repos.svg"
+    ]
+   }
+  },
+  "macareux": {
+   "nom": "Macareux (landes)",
+   "groupe": "climat",
+   "cadre": [
+    -15,
+    -22.5,
+    30,
+    25
+   ],
+   "fichiers": {
+    "avant": [
+     "climat/macareux/macareux_avant_marche1.svg",
+     "climat/macareux/macareux_avant_marche2.svg",
+     "climat/macareux/macareux_avant_repos.svg",
+     "climat/macareux/macareux_avant_clignement.svg",
+     "climat/macareux/macareux_avant_joie.svg"
+    ],
+    "dos": [
+     "climat/macareux/macareux_dos_marche1.svg",
+     "climat/macareux/macareux_dos_marche2.svg",
+     "climat/macareux/macareux_dos_repos.svg"
+    ]
+   }
+  },
+  "poney": {
+   "nom": "Poney (landes)",
+   "groupe": "climat",
+   "cadre": [
+    -20,
+    -42.5,
+    40,
+    47.5
+   ],
+   "fichiers": {
+    "avant": [
+     "climat/poney/poney_avant_marche1.svg",
+     "climat/poney/poney_avant_marche2.svg",
+     "climat/poney/poney_avant_repos.svg",
+     "climat/poney/poney_avant_clignement.svg",
+     "climat/poney/poney_avant_joie.svg"
+    ],
+    "dos": [
+     "climat/poney/poney_dos_marche1.svg",
+     "climat/poney/poney_dos_marche2.svg",
+     "climat/poney/poney_dos_repos.svg"
+    ]
+   }
+  },
+  "grenouille": {
+   "nom": "Grenouille (marais)",
+   "groupe": "climat",
+   "cadre": [
+    -15,
+    -22.5,
+    30,
+    26
+   ],
+   "fichiers": {
+    "avant": [
+     "climat/grenouille/grenouille_avant_marche1.svg",
+     "climat/grenouille/grenouille_avant_marche2.svg",
+     "climat/grenouille/grenouille_avant_repos.svg",
+     "climat/grenouille/grenouille_avant_clignement.svg",
+     "climat/grenouille/grenouille_avant_joie.svg"
+    ],
+    "dos": [
+     "climat/grenouille/grenouille_dos_marche1.svg",
+     "climat/grenouille/grenouille_dos_marche2.svg",
+     "climat/grenouille/grenouille_dos_repos.svg"
+    ]
+   }
+  },
+  "tortue": {
+   "nom": "Tortue (marais)",
+   "groupe": "climat",
+   "cadre": [
+    -15,
+    -22.5,
+    30,
+    26.5
+   ],
+   "fichiers": {
+    "avant": [
+     "climat/tortue/tortue_avant_marche1.svg",
+     "climat/tortue/tortue_avant_marche2.svg",
+     "climat/tortue/tortue_avant_repos.svg",
+     "climat/tortue/tortue_avant_clignement.svg",
+     "climat/tortue/tortue_avant_joie.svg"
+    ],
+    "dos": [
+     "climat/tortue/tortue_dos_marche1.svg",
+     "climat/tortue/tortue_dos_marche2.svg",
+     "climat/tortue/tortue_dos_repos.svg"
+    ]
+   }
+  },
+  "fennec": {
+   "nom": "Fennec (dunes)",
+   "groupe": "climat",
+   "cadre": [
+    -15,
+    -22.5,
+    30,
+    26
+   ],
+   "fichiers": {
+    "avant": [
+     "climat/fennec/fennec_avant_marche1.svg",
+     "climat/fennec/fennec_avant_marche2.svg",
+     "climat/fennec/fennec_avant_repos.svg",
+     "climat/fennec/fennec_avant_clignement.svg",
+     "climat/fennec/fennec_avant_joie.svg"
+    ],
+    "dos": [
+     "climat/fennec/fennec_dos_marche1.svg",
+     "climat/fennec/fennec_dos_marche2.svg",
+     "climat/fennec/fennec_dos_repos.svg"
+    ]
+   }
+  },
+  "chameau": {
+   "nom": "Chameau (dunes)",
+   "groupe": "climat",
+   "cadre": [
+    -20,
+    -42.5,
+    40,
+    47.5
+   ],
+   "fichiers": {
+    "avant": [
+     "climat/chameau/chameau_avant_marche1.svg",
+     "climat/chameau/chameau_avant_marche2.svg",
+     "climat/chameau/chameau_avant_repos.svg",
+     "climat/chameau/chameau_avant_clignement.svg",
+     "climat/chameau/chameau_avant_joie.svg"
+    ],
+    "dos": [
+     "climat/chameau/chameau_dos_marche1.svg",
+     "climat/chameau/chameau_dos_marche2.svg",
+     "climat/chameau/chameau_dos_repos.svg"
+    ]
+   }
+  },
+  "cameleon": {
+   "nom": "Caméléon (jungle)",
+   "groupe": "climat",
+   "cadre": [
+    -15,
+    -22.5,
+    30,
+    26
+   ],
+   "fichiers": {
+    "avant": [
+     "climat/cameleon/cameleon_avant_marche1.svg",
+     "climat/cameleon/cameleon_avant_marche2.svg",
+     "climat/cameleon/cameleon_avant_repos.svg",
+     "climat/cameleon/cameleon_avant_clignement.svg",
+     "climat/cameleon/cameleon_avant_joie.svg"
+    ],
+    "dos": [
+     "climat/cameleon/cameleon_dos_marche1.svg",
+     "climat/cameleon/cameleon_dos_marche2.svg",
+     "climat/cameleon/cameleon_dos_repos.svg"
+    ]
+   }
+  },
+  "toucan": {
+   "nom": "Toucan (jungle)",
+   "groupe": "climat",
+   "cadre": [
+    -15,
+    -22.5,
+    30,
+    25
+   ],
+   "fichiers": {
+    "avant": [
+     "climat/toucan/toucan_avant_marche1.svg",
+     "climat/toucan/toucan_avant_marche2.svg",
+     "climat/toucan/toucan_avant_repos.svg",
+     "climat/toucan/toucan_avant_clignement.svg",
+     "climat/toucan/toucan_avant_joie.svg"
+    ],
+    "dos": [
+     "climat/toucan/toucan_dos_marche1.svg",
+     "climat/toucan/toucan_dos_marche2.svg",
+     "climat/toucan/toucan_dos_repos.svg"
+    ]
+   }
+  },
+  "salamandre": {
+   "nom": "Salamandre (volcan)",
+   "groupe": "climat",
+   "cadre": [
+    -15,
+    -22.5,
+    30,
+    26.5
+   ],
+   "fichiers": {
+    "avant": [
+     "climat/salamandre/salamandre_avant_marche1.svg",
+     "climat/salamandre/salamandre_avant_marche2.svg",
+     "climat/salamandre/salamandre_avant_repos.svg",
+     "climat/salamandre/salamandre_avant_clignement.svg",
+     "climat/salamandre/salamandre_avant_joie.svg"
+    ],
+    "dos": [
+     "climat/salamandre/salamandre_dos_marche1.svg",
+     "climat/salamandre/salamandre_dos_marche2.svg",
+     "climat/salamandre/salamandre_dos_repos.svg"
+    ]
+   }
+  },
+  "corbeau": {
+   "nom": "Corbeau (volcan)",
+   "groupe": "climat",
+   "cadre": [
+    -15,
+    -22.5,
+    30,
+    25
+   ],
+   "fichiers": {
+    "avant": [
+     "climat/corbeau/corbeau_avant_marche1.svg",
+     "climat/corbeau/corbeau_avant_marche2.svg",
+     "climat/corbeau/corbeau_avant_repos.svg",
+     "climat/corbeau/corbeau_avant_clignement.svg",
+     "climat/corbeau/corbeau_avant_joie.svg"
+    ],
+    "dos": [
+     "climat/corbeau/corbeau_dos_marche1.svg",
+     "climat/corbeau/corbeau_dos_marche2.svg",
+     "climat/corbeau/corbeau_dos_repos.svg"
+    ]
+   }
+  },
+  "mesange": {
+   "nom": "Mésange",
+   "groupe": "bestiaire",
+   "cadre": [
+    -15,
+    -22.5,
+    30,
+    25
+   ],
+   "fichiers": {
+    "avant": [
+     "bestiaire/mesange/mesange_avant_marche1.svg",
+     "bestiaire/mesange/mesange_avant_marche2.svg",
+     "bestiaire/mesange/mesange_avant_repos.svg",
+     "bestiaire/mesange/mesange_avant_clignement.svg",
+     "bestiaire/mesange/mesange_avant_joie.svg"
+    ],
+    "dos": [
+     "bestiaire/mesange/mesange_dos_marche1.svg",
+     "bestiaire/mesange/mesange_dos_marche2.svg",
+     "bestiaire/mesange/mesange_dos_repos.svg"
+    ]
+   }
+  },
+  "mousse": {
+   "nom": "Mousse (renardeau de Sylve)",
+   "groupe": "familiers",
+   "cadre": [
+    -15,
+    -22.5,
+    30,
+    26
+   ],
+   "fichiers": {
+    "avant": [
+     "familiers/mousse/mousse_avant_marche1.svg",
+     "familiers/mousse/mousse_avant_marche2.svg",
+     "familiers/mousse/mousse_avant_repos.svg",
+     "familiers/mousse/mousse_avant_clignement.svg",
+     "familiers/mousse/mousse_avant_joie.svg"
+    ],
+    "dos": [
+     "familiers/mousse/mousse_dos_marche1.svg",
+     "familiers/mousse/mousse_dos_marche2.svg",
+     "familiers/mousse/mousse_dos_repos.svg"
+    ]
+   }
+  },
+  "mouette": {
+   "nom": "Mouette",
+   "groupe": "mer",
+   "cadre": [
+    -15,
+    -22.5,
+    30,
+    25
+   ],
+   "fichiers": {
+    "avant": [
+     "mer/mouette/mouette_avant_marche1.svg",
+     "mer/mouette/mouette_avant_marche2.svg",
+     "mer/mouette/mouette_avant_repos.svg",
+     "mer/mouette/mouette_avant_clignement.svg",
+     "mer/mouette/mouette_avant_joie.svg"
+    ],
+    "dos": [
+     "mer/mouette/mouette_dos_marche1.svg",
+     "mer/mouette/mouette_dos_marche2.svg",
+     "mer/mouette/mouette_dos_repos.svg"
+    ]
+   }
+  }
+ }
+}

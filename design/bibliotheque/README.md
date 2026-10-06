@@ -1,6 +1,6 @@
 # Bibliothèque d'assets SVG de l'île
 
-3 404 dessins SVG au trait de la troupe : personnages, naufragés, animaux, plantes, décor, camp, ruines, bâtiments et
+3 700 dessins SVG au trait de la troupe : personnages, naufragés, animaux, plantes, décor, camp, ruines, bâtiments et
 météo. Chaque dessin est
 calé sur les cadres et les ancres du jeu, pour se poser tel quel.
 
@@ -26,7 +26,8 @@ en mouvement.
 - **Noms de fichiers** : `<nom>_<pose ou variante>_<n>.svg`. Le numéro d'image `n` commence à 1. Un dessin fixe n'a
   pas de numéro.
 - **Directions** : les personnages ont trois vues (face, trois quarts avant, dos). Les animaux sont de profil, tournés
-  vers la droite. Le miroir (`transform: scaleX(-1)`) donne l'autre sens.
+  vers la droite, et ceux qui marchent ont aussi le trois quarts avant et le trois quarts dos. Le miroir
+  (`transform: scaleX(-1)`) donne l'autre sens.
 - **Animation** : le JSON de chaque lot donne la vitesse (`ms_par_image`, ou `ips` = images par seconde du jeu).
 
 ## Contenu
@@ -40,7 +41,7 @@ en mouvement.
 | `svg/personnages/naufrages/petit_format/` | Les mêmes au petit format du jeu (`petit_format.json`) | 224 |
 | `svg/personnages/naufrages/epilogue/` | 8 nouveaux naufragés de l'épilogue, tirés d'une graine | 208 |
 | `svg/vivants/` | Brume (8 stades et ses variantes), Anya, le cerf blanc, le Passeur | 128 |
-| `svg/animaux/` | Ferme, bois, eau douce, climats, bestiaire, familiers, mer | 240 |
+| `svg/animaux/` | Ferme, bois, eau douce, climats, bestiaire, familiers, mer : de profil ; et les 37 bêtes qui marchent de trois quarts avant et de dos (`<bête>_avant_*`, `<bête>_dos_*`, index `orientees.json`) | 536 |
 | `svg/plantes/` | Arbres, buissons, fleurs, rochers, bois flotté, nid, lanterne, banc | 29 |
 | `svg/decor/` | 30 créations d'île, 14 lieux remarquables, 6 gisements (prêt et ramassé), 28 annexes et leurs variantes, 6 enseignes, îlots, bateaux, épaves (`decor.json`) | 385 |
 | `svg/decor/camp/` | Le camp des naufragés : l'épave de l'Hirondelle, le feu de débris, le coin de chaque maître (débris → abri → cabanon), les objets du camp, la tente et le hamac des voyageurs ; l'étape de l'histoire de chaque chose (`camp.json`) | 41 |
