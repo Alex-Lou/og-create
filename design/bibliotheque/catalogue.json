@@ -15526,7 +15526,7 @@
   {
    "id": "plantes/lanterne",
    "rubrique": "plantes",
-   "titre": "Lanterne sur pied, éteinte",
+   "titre": "Lanterne sur pied (poteau de bois, éteinte)",
    "images": 1,
    "fichiers": [
     "svg/plantes/lanterne.svg"
@@ -15543,10 +15543,112 @@
   {
    "id": "plantes/lanterne_allumee",
    "rubrique": "plantes",
-   "titre": "Lanterne sur pied, allumée",
+   "titre": "Lanterne sur pied (poteau de bois, allumée)",
    "images": 1,
    "fichiers": [
     "svg/plantes/lanterne_allumee.svg"
+   ],
+   "cadre": [
+    -50,
+    -115,
+    100,
+    140
+   ],
+   "parcours": "acte-1",
+   "statut": "ok"
+  },
+  {
+   "id": "plantes/lanterne_fer",
+   "rubrique": "plantes",
+   "titre": "Lanterne sur pied (poteau de fer, éteinte)",
+   "images": 1,
+   "fichiers": [
+    "svg/plantes/lanterne_fer.svg"
+   ],
+   "cadre": [
+    -50,
+    -115,
+    100,
+    140
+   ],
+   "parcours": "acte-1",
+   "statut": "ok"
+  },
+  {
+   "id": "plantes/lanterne_fer_allumee",
+   "rubrique": "plantes",
+   "titre": "Lanterne sur pied (poteau de fer, allumée)",
+   "images": 1,
+   "fichiers": [
+    "svg/plantes/lanterne_fer_allumee.svg"
+   ],
+   "cadre": [
+    -50,
+    -115,
+    100,
+    140
+   ],
+   "parcours": "acte-1",
+   "statut": "ok"
+  },
+  {
+   "id": "plantes/lanterne_fer_lierre",
+   "rubrique": "plantes",
+   "titre": "Lanterne sur pied (poteau de fer, du lierre, éteinte)",
+   "images": 1,
+   "fichiers": [
+    "svg/plantes/lanterne_fer_lierre.svg"
+   ],
+   "cadre": [
+    -50,
+    -115,
+    100,
+    140
+   ],
+   "parcours": "acte-1",
+   "statut": "ok"
+  },
+  {
+   "id": "plantes/lanterne_fer_lierre_allumee",
+   "rubrique": "plantes",
+   "titre": "Lanterne sur pied (poteau de fer, du lierre, allumée)",
+   "images": 1,
+   "fichiers": [
+    "svg/plantes/lanterne_fer_lierre_allumee.svg"
+   ],
+   "cadre": [
+    -50,
+    -115,
+    100,
+    140
+   ],
+   "parcours": "acte-1",
+   "statut": "ok"
+  },
+  {
+   "id": "plantes/lanterne_lierre",
+   "rubrique": "plantes",
+   "titre": "Lanterne sur pied (poteau de bois, du lierre, éteinte)",
+   "images": 1,
+   "fichiers": [
+    "svg/plantes/lanterne_lierre.svg"
+   ],
+   "cadre": [
+    -50,
+    -115,
+    100,
+    140
+   ],
+   "parcours": "acte-1",
+   "statut": "ok"
+  },
+  {
+   "id": "plantes/lanterne_lierre_allumee",
+   "rubrique": "plantes",
+   "titre": "Lanterne sur pied (poteau de bois, du lierre, allumée)",
+   "images": 1,
+   "fichiers": [
+    "svg/plantes/lanterne_lierre_allumee.svg"
    ],
    "cadre": [
     -50,
