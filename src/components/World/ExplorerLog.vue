@@ -218,29 +218,31 @@ export default {
 </script>
 
 <style scoped>
+/* Ses jetons : les encres dorées (recette et effet ; en attente et indice), le fond d'un lieu */
+.log { --log-gold-ink: #6a4a12; --log-wait-ink: #8a5a12; --log-art: radial-gradient(circle at 50% 70%, #dcebf5, var(--vellum-200) 72%); }
 .log { display: flex; flex-direction: column; gap: 10px; font-family: var(--font-ui); }
 .log__tabs { margin-bottom: 10px; }
 .log__title { margin: 6px 0 0; font-family: var(--font-display); font-size: 16px; }
-.log__row { display: flex; align-items: center; gap: 10px; padding: 10px 12px; border-radius: var(--r-tile); background: var(--vellum-50); box-shadow: inset 0 0 0 1px rgba(74, 52, 38, .1); }
+.log__row { display: flex; align-items: center; gap: 10px; padding: 10px 12px; border-radius: var(--r-tile); background: var(--vellum-50); box-shadow: inset 0 0 0 1px rgba(var(--shade-rgb), .1); }
 .log__row--link { flex-direction: column; align-items: flex-start; gap: 2px; }
 /* Bestiaire : deux colonnes de petites cartes */
 .log__beasts { display: grid; grid-template-columns: repeat(auto-fill, minmax(112px, 1fr)); gap: 8px; }
-.log__beast { display: flex; flex-direction: column; gap: 2px; padding: 8px 10px; border-radius: var(--r-sm); background: var(--vellum-50); box-shadow: inset 0 0 0 1px rgba(74, 52, 38, .1); }
+.log__beast { display: flex; flex-direction: column; gap: 2px; padding: 8px 10px; border-radius: var(--r-sm); background: var(--vellum-50); box-shadow: inset 0 0 0 1px rgba(var(--shade-rgb), .1); }
 .log__row .log__body { flex: 1; }
 .log__row .log__btn { align-self: center; }
-.log__recipe { font-size: 12px; font-weight: 900; color: #6A4A12; }
+.log__recipe { font-size: 12px; font-weight: 900; color: var(--log-gold-ink); }
 .log__progress { margin: 0; padding: 8px 12px; border-radius: var(--r-sm); background: var(--vellum-200); font-size: 13px; font-weight: 700; }
-.log__waiting { color: #8A5A12; font-weight: 900; }
+.log__waiting { color: var(--log-wait-ink); font-weight: 900; }
 .log__list { margin: 0; padding: 0; list-style: none; display: flex; flex-direction: column; gap: 8px; }
 .log__page {
   display: grid; grid-template-columns: 92px minmax(0, 1fr); gap: 10px; align-items: start;
-  padding: 8px; border-radius: var(--r-md); background: var(--vellum-50); box-shadow: inset 0 0 0 1px rgba(74, 52, 38, .1);
+  padding: 8px; border-radius: var(--r-md); background: var(--vellum-50); box-shadow: inset 0 0 0 1px rgba(var(--shade-rgb), .1);
 }
 .log__page.is-found { box-shadow: inset 0 0 0 2px var(--gold-400); }
-.log__page.is-focus { background: #FFF4D6; }
+.log__page.is-focus { background: var(--gold-100); }
 .log__art {
   position: relative; display: block; height: 100px; border-radius: var(--r-sm);
-  background: radial-gradient(circle at 50% 70%, #DCEBF5, var(--vellum-200) 72%);
+  background: var(--log-art);
 }
 .log__art img { position: absolute; inset: 0; width: 100%; height: 100%; padding: 4px; box-sizing: border-box; object-fit: contain; }
 .log__page:not(.is-found) .log__art img { filter: grayscale(.85) opacity(.5); }
@@ -252,11 +254,11 @@ export default {
 .log__text { font-family: var(--font-display); font-style: italic; font-size: 14px; line-height: 1.35; }
 .log__effect {
   align-self: flex-start; margin-top: 2px; padding: 2px 9px; border-radius: var(--r-pill);
-  background: #FFF4D6; box-shadow: inset 0 0 0 1px var(--gold-300); font-size: 12px; font-weight: 900; color: #6A4A12;
+  background: var(--gold-100); box-shadow: inset 0 0 0 1px var(--gold-300); font-size: 12px; font-weight: 900; color: var(--log-gold-ink);
 }
 .log__effect.is-dim { background: var(--vellum-200); box-shadow: none; color: var(--ink-700); }
 .log__date, .log__hint { color: var(--ink-700); font-size: 12px; font-weight: 700; }
-.log__hint { color: #8A5A12; }
+.log__hint { color: var(--log-wait-ink); }
 .log__btn {
   align-self: flex-end; min-height: 36px; padding: 4px 14px; border: 0; border-radius: var(--r-pill);
   background: var(--ink-900); color: var(--vellum-50); font-family: var(--font-ui); font-weight: 900; font-size: 13px;

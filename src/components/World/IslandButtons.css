@@ -1,26 +1,31 @@
 /* IslandButtons : ses styles (repris de WorldView, qui les gardait pour lui). */
+/* Ses jetons, sur chacune de ses racines */
+.world__chest-btn, .world__log-btn, .world__finds-btn, .world__trip-btn, .world__zoom {
+  --buttons-trip-ink: #fff4c8;   /* l'expédition en route */
+  --buttons-badge: #d2453a;      /* la pastille de ce qui attend */
+}
 .world__chest-btn {
   position: absolute; left: 10px; top: calc(var(--world-top) + 8px); display: grid; place-items: center;
-  width: 46px; height: 46px; border: 0; border-radius: var(--r-tile); background: rgba(30, 22, 16, .55); cursor: pointer;
+  width: 46px; height: 46px; border: 0; border-radius: var(--r-tile); background: rgba(var(--island-glass-rgb), .55); cursor: pointer;
 }
 .world__chest-btn.is-ready { background: var(--gold-400); box-shadow: 0 3px 0 var(--gold-600); animation: world-chest-call 2.4s ease-in-out infinite; }
 .world__log-btn {
   position: absolute; left: 62px; top: calc(var(--world-top) + 8px); display: grid; place-items: center;
-  width: 46px; height: 46px; border: 0; border-radius: var(--r-tile); background: rgba(30, 22, 16, .55); cursor: pointer;
+  width: 46px; height: 46px; border: 0; border-radius: var(--r-tile); background: rgba(var(--island-glass-rgb), .55); cursor: pointer;
 }
 .world__log-btn.is-ready { background: var(--gold-400); box-shadow: 0 3px 0 var(--gold-600); }
 .world__finds-btn {
   position: absolute; left: 114px; top: calc(var(--world-top) + 8px); display: grid; place-items: center;
-  width: 46px; height: 46px; border: 0; border-radius: var(--r-tile); background: rgba(30, 22, 16, .55); cursor: pointer;
+  width: 46px; height: 46px; border: 0; border-radius: var(--r-tile); background: rgba(var(--island-glass-rgb), .55); cursor: pointer;
 }
 .world__finds-btn.is-ready { background: var(--gold-400); box-shadow: 0 3px 0 var(--gold-600); }
 .world__trip-btn {
   position: absolute; left: 10px; top: calc(var(--world-top) + 62px); display: flex; align-items: center; gap: 5px; height: 36px; padding: 0 10px 0 6px;
-  border: 0; border-radius: var(--r-sm); background: rgba(30, 22, 16, .6); color: #FFF4C8; font-family: var(--font-ui); font-size: 12px; font-weight: 900; cursor: pointer;
+  border: 0; border-radius: var(--r-sm); background: rgba(var(--island-glass-rgb), .6); color: var(--buttons-trip-ink); font-family: var(--font-ui); font-size: 12px; font-weight: 900; cursor: pointer;
 }
 .world__chest-badge {
   position: absolute; right: -5px; top: -5px; min-width: 20px; height: 20px; padding: 0 5px; border-radius: var(--r-pill);
-  background: #D2453A; color: #fff; font-family: var(--font-ui); font-size: 12px; font-weight: 900; line-height: 20px;
+  background: var(--buttons-badge); color: #fff; font-family: var(--font-ui); font-size: 12px; font-weight: 900; line-height: 20px;
 }
 @media (prefers-reduced-motion: reduce) {
   .world__chest-btn.is-ready { animation: none; }
@@ -28,7 +33,7 @@
 .world__zoom { position: absolute; right: 10px; top: calc(var(--world-top) + 8px); display: flex; flex-direction: column; gap: 6px; }
 .world__zoom button {
   width: 38px; height: 38px; border: 0; border-radius: var(--r-sm);
-  background: rgba(251, 246, 234, .92); color: var(--ink-900);
+  background: rgba(var(--island-paper-rgb), .92); color: var(--ink-900);
   font-size: 22px; font-weight: 900; line-height: 1; cursor: pointer;
   box-shadow: 0 3px 8px rgba(0, 0, 0, .25);
 }

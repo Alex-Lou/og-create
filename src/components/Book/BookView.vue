@@ -804,7 +804,7 @@ export default {
   display: inline-flex; align-items: center; gap: 10px;
   border-radius: var(--r-pill);
   background: var(--rc); color: var(--ri);
-  box-shadow: inset 0 0 0 1px rgba(74, 52, 38, .12), 0 3px 0 rgba(74, 52, 38, .18);
+  box-shadow: inset 0 0 0 1px rgba(var(--shade-rgb), .12), 0 3px 0 rgba(var(--shade-rgb), .18);
   touch-action: manipulation; -webkit-tap-highlight-color: transparent;
   transition: transform var(--oc-fast) var(--oc-ease-out);
 }

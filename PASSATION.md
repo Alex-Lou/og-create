@@ -161,13 +161,18 @@ chronométrer 20 appels. Comparer à zoom égal, au même endroit.
   **base** (`styles/base/` : remise à zéro et primitives `g-*`, dans un ordre qui compte), puis le **style de chaque
   composant**, à côté de lui. `main.js` n'importe que `styles/index.css`.
 - **Refonte en cours, par petites PR, sans rien changer à l'écran** (choix de l'auteur : un dossier par composant,
-  `.vue` et `.css` côte à côte ; des jetons pour couleurs, polices, arrondis, ombres, profondeurs et durées ; les marges
-  restent des nombres) : 1) jetons et base découpés (fait) ; 2) chaque composant de l'île reprend ses styles (fait :
+  `.vue` et `.css` côte à côte ; des jetons pour les couleurs, la typographie, les formes et la profondeur ; les
+  marges, tailles et durées restent des nombres) : 1) jetons et base découpés (fait) ; 2) chaque composant de l'île reprend ses styles (fait :
   `X.css` à côté de chaque composant, en `<style scoped src>` ; les primitives partagées des fiches de l'île dans
   `components/World/island-ui.css`, global, chargé par `WorldView`) ; 3) les valeurs en dur deviennent des jetons,
   sur trois niveaux (la palette ; des rôles globaux pour ce que plusieurs composants partagent ; des jetons locaux
   nommés en tête du CSS de chaque composant) : 3a-1 formes, profondeurs (`tokens/depth.css`, l'ordre des couches),
-  police IM Fell et durées (fait), 3a-2 couleurs partagées, puis les jetons locaux (île, Grimoire, le reste) ;
+  police IM Fell et durées (fait), 3a-2 couleurs partagées (fait : succès, manque, or vif, halo des illustrations,
+  pièce d'or, `--gold-100`, et `--shade-rgb` pour le brun des liserés à toute transparence), 3b-1 l'île (fait :
+  `tokens/island.css` pour ce que ses composants partagent, adopté partout ; `--oc-gold-ink`, `--oc-night-ink` ;
+  jetons locaux du décor de l'île, en tête de chaque CSS, sur la racine du composant), 3b-2 les fiches et les
+  mini-jeux de l'île (fait : plus aucune valeur en dur dans `components/World`, hors noir et blanc), puis les jetons
+  locaux du Grimoire et du reste ;
   4) les dossiers rangés par domaine ; 5) `App.vue` et `BookView.vue` découpés.
 - **Piège du passage en scoped** : une règle scoped gagne un attribut de spécificité. Si elle vise aussi la racine d'un
   composant enfant (un glyphe `img.glyph` dans un portrait, par exemple), elle peut l'emporter sur le style propre de
@@ -176,6 +181,8 @@ chronométrer 20 appels. Comparer à zoom égal, au même endroit.
   ordre ; quand des valeurs deviennent des jetons, chaque `var()` remplacé par sa valeur, en clair puis en Veillée,
   doit redonner la valeur d'avant) et un banc de captures (23 écrans, sur téléphone, PC et téléphone en Veillée, même
   compte, horloges de la page figées) comparé pixel par pixel ; en plus du lint, des tests et du build.
+- **Banc** : les délais que le serveur calcule à son heure réelle (« encore 23 h » dans la fiche d'un habitant)
+  sont neutralisés à la capture ; refaire la référence sur master quand le compte du banc a vieilli.
 - **Jeton et Veillée** : une valeur en dur ne devient un jeton de la palette que si ce jeton garde la même valeur en
   Veillée (`tokens/dark.css` redéfinit les vélins : un `#fffcf5` écrit en dur n'est pas `--vellum-50`).
 

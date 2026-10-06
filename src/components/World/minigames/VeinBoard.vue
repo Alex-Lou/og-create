@@ -122,6 +122,19 @@ export default {
 </script>
 
 <style scoped>
+/* Ses jetons : la paroi, les pierres selon leur dureté, leurs fissures (en canaux), le trou, l'éclat d'une gemme */
+.vein {
+  --vein-wall: linear-gradient(#5e5850, #3e3934);
+  --vein-block-radius: 9px;
+  --vein-stone-1: linear-gradient(145deg, #c2b8a8, #a39887);
+  --vein-stone-2: linear-gradient(145deg, #9e958a, #7e766c);
+  --vein-stone-3: linear-gradient(145deg, #77716b, #57524d);
+  --vein-crack-rgb: 30, 22, 16;
+  --vein-hole: radial-gradient(circle at 50% 40%, #2e2a26, #1a1714);
+  --vein-gem-glow: rgba(255, 240, 200, .55);
+  --vein-glint: #ffe07a;
+  --vein-glint-glow: rgba(255, 210, 90, .8);
+}
 .vein { display: grid; gap: 10px; font-family: var(--font-ui); }
 .vein__bar { display: flex; align-items: center; justify-content: space-between; gap: 10px; min-height: 34px; }
 .vein__strokes { display: inline-flex; align-items: center; gap: 6px; font-size: 14px; font-weight: 800; color: var(--ink-700); white-space: nowrap; }
@@ -131,34 +144,34 @@ export default {
 .vein__none { font-size: 12px; font-weight: 700; color: var(--ink-500); animation: none !important; }
 .vein__wall {
   display: grid; grid-template-columns: repeat(var(--cols), 1fr); gap: 3px; padding: 6px; border-radius: var(--r-board);
-  background: linear-gradient(#5E5850, #3E3934); box-shadow: inset 0 3px 8px rgba(0, 0, 0, .35);
+  background: var(--vein-wall); box-shadow: inset 0 3px 8px rgba(0, 0, 0, .35);
   touch-action: manipulation; user-select: none; -webkit-user-select: none;
 }
 .vein__block {
-  position: relative; aspect-ratio: 1; border: 0; border-radius: 9px; padding: 0; cursor: pointer;
+  position: relative; aspect-ratio: 1; border: 0; border-radius: var(--vein-block-radius); padding: 0; cursor: pointer;
   display: grid; place-items: center; overflow: hidden; -webkit-tap-highlight-color: transparent;
   background: var(--stone); box-shadow: inset 0 -3px 0 rgba(0, 0, 0, .22), inset 0 2px 0 rgba(255, 255, 255, .22);
   transition: filter .15s ease, transform .1s ease;
 }
-.vein__block.is-h1 { --stone: linear-gradient(145deg, #C2B8A8, #A39887); }
-.vein__block.is-h2 { --stone: linear-gradient(145deg, #9E958A, #7E766C); }
-.vein__block.is-h3 { --stone: linear-gradient(145deg, #77716B, #57524D); }
+.vein__block.is-h1 { --stone: var(--vein-stone-1); }
+.vein__block.is-h2 { --stone: var(--vein-stone-2); }
+.vein__block.is-h3 { --stone: var(--vein-stone-3); }
 /* Fissures selon les coups déjà portés */
 .vein__block::after {
   content: ''; position: absolute; inset: 0; opacity: calc(var(--crack) * 1.4); pointer-events: none;
   background:
-    linear-gradient(118deg, transparent 46%, rgba(30, 22, 16, .7) 47%, transparent 50%),
-    linear-gradient(62deg, transparent 58%, rgba(30, 22, 16, .6) 59%, transparent 61%),
-    linear-gradient(170deg, transparent 30%, rgba(30, 22, 16, .5) 31%, transparent 33%);
+    linear-gradient(118deg, transparent 46%, rgba(var(--vein-crack-rgb), .7) 47%, transparent 50%),
+    linear-gradient(62deg, transparent 58%, rgba(var(--vein-crack-rgb), .6) 59%, transparent 61%),
+    linear-gradient(170deg, transparent 30%, rgba(var(--vein-crack-rgb), .5) 31%, transparent 33%);
 }
 .vein__block:not(.is-reach):not(.is-open) { filter: brightness(.72) saturate(.8); }
-.vein__block.is-reach { box-shadow: inset 0 -3px 0 rgba(0, 0, 0, .22), inset 0 2px 0 rgba(255, 255, 255, .3), 0 0 0 2px rgba(242, 192, 75, .55); }
-.vein__block.is-open { background: radial-gradient(circle at 50% 40%, #2E2A26, #1A1714); box-shadow: inset 0 3px 6px rgba(0, 0, 0, .6); cursor: default; }
+.vein__block.is-reach { box-shadow: inset 0 -3px 0 rgba(0, 0, 0, .22), inset 0 2px 0 rgba(255, 255, 255, .3), 0 0 0 2px var(--island-hint); }
+.vein__block.is-open { background: var(--vein-hole); box-shadow: inset 0 3px 6px rgba(0, 0, 0, .6); cursor: default; }
 .vein__block.is-hit { animation: vein-hit .2s ease; }
 .vein__block.is-no { animation: vein-no .3s ease; }
 .vein__block:disabled { cursor: default; }
-.vein__gem { animation: vein-pop .4s cubic-bezier(.3, 1.6, .5, 1); filter: drop-shadow(0 0 6px rgba(255, 240, 200, .55)); }
-.vein__glint { position: absolute; right: 3px; bottom: 2px; color: #FFE07A; font-size: 10px; font-weight: 900; letter-spacing: -.05em; text-shadow: 0 0 4px rgba(255, 210, 90, .8); }
+.vein__gem { animation: vein-pop .4s cubic-bezier(.3, 1.6, .5, 1); filter: drop-shadow(0 0 6px var(--vein-gem-glow)); }
+.vein__glint { position: absolute; right: 3px; bottom: 2px; color: var(--vein-glint); font-size: 10px; font-weight: 900; letter-spacing: -.05em; text-shadow: 0 0 4px var(--vein-glint-glow); }
 .vein__hint { margin: 0; text-align: center; font-size: 13px; font-weight: 700; color: var(--ink-500); }
 @keyframes vein-hit { 0%, 100% { transform: none; } 30% { transform: translate(-2px, 1px) rotate(-2deg); } 60% { transform: translate(2px, -1px) rotate(2deg); } }
 @keyframes vein-no { 0%, 100% { transform: none; } 25% { transform: translateX(-3px); } 75% { transform: translateX(3px); } }

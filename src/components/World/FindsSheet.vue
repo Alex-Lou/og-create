@@ -65,7 +65,7 @@ export default {
 .finds__list { margin: 0; padding: 0; list-style: none; display: flex; flex-direction: column; gap: 6px; }
 .finds__row {
   display: grid; grid-template-columns: 44px minmax(0, 1fr) auto; gap: 10px; align-items: center;
-  padding: 8px 12px 8px 8px; border-radius: var(--r-tile); background: var(--vellum-50); box-shadow: inset 0 0 0 1px rgba(74, 52, 38, .1);
+  padding: 8px 12px 8px 8px; border-radius: var(--r-tile); background: var(--vellum-50); box-shadow: inset 0 0 0 1px rgba(var(--shade-rgb), .1);
 }
 .finds__icon { display: grid; place-items: center; width: 44px; height: 44px; border-radius: var(--r-sm); background: var(--vellum-200); font-size: 28px; }
 .finds__row.is-empty .finds__icon { filter: grayscale(.6) opacity(.65); }

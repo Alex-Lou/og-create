@@ -1,10 +1,12 @@
 /* SiteSheet : ses styles (repris de WorldView, qui les gardait pour lui). */
+/* Ses jetons */
+.world__sheet-backdrop { --sheet-pip-radius: 3px; }
 /* Fiche d'un bâtiment : vignette, quartier, niveau en pastilles, onglets */
 .world__site-head { display: flex; align-items: center; gap: 12px; margin-bottom: 10px; }
-.world__site-art { width: 76px; height: 84px; flex: none; object-fit: contain; object-position: center bottom; border-radius: var(--r-md); background: radial-gradient(circle at 50% 70%, #CFE8B8, var(--vellum-200) 70%); }
+.world__site-art { width: 76px; height: 84px; flex: none; object-fit: contain; object-position: center bottom; border-radius: var(--r-md); background: radial-gradient(circle at 50% 70%, var(--oc-art-halo), var(--vellum-200) 70%); }
 .world__site-id { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 2px; }
 .world__pips { display: flex; gap: 5px; margin-top: 4px; }
-.world__pip { width: 16px; height: 6px; border-radius: 3px; background: var(--vellum-300); }
+.world__pip { width: 16px; height: 6px; border-radius: var(--sheet-pip-radius); background: var(--vellum-300); }
 .world__pip.is-on { background: linear-gradient(90deg, var(--gold-400), var(--gold-600)); }
 .world__tabs { display: flex; gap: 6px; padding: 4px; margin-bottom: 12px; border-radius: var(--r-pill); background: var(--vellum-200); }
 .world__tab { flex: 1; min-height: 40px; border: 0; border-radius: var(--r-pill); background: transparent; color: var(--ink-700); font-family: var(--font-ui); font-weight: 900; font-size: 14px; cursor: pointer; position: relative; touch-action: manipulation; }
@@ -13,7 +15,7 @@
 .world__named { display: inline-flex; align-items: center; gap: 6px; }
 .world__pen {
   flex: none; display: inline-grid; place-items: center; width: 30px; height: 30px; padding: 0; border: 0; border-radius: var(--r-round);
-  background: var(--vellum-200); color: var(--ink-700); cursor: pointer; box-shadow: inset 0 0 0 1px rgba(74, 52, 38, .15);
+  background: var(--vellum-200); color: var(--ink-700); cursor: pointer; box-shadow: inset 0 0 0 1px rgba(var(--shade-rgb), .15);
 }
 .world__pen--small { width: 24px; height: 24px; }
 .world__pen--small svg { width: 12px; height: 12px; }

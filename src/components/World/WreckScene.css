@@ -1,7 +1,9 @@
 /* WreckScene : ses styles (repris de WorldView, qui les gardait pour lui). */
+/* Ses jetons : la nuit du naufrage */
+.world__wreck { --wreck-night: #0b1630; }
 .world__wreck {
   position: absolute; inset: 0; z-index: var(--z-wreck); display: flex; flex-direction: column; align-items: center; justify-content: flex-end;
-  padding: 0 20px 18%; background: #0B1630; color: #F4EEDC; cursor: pointer; text-align: center;
+  padding: 0 20px 18%; background: var(--wreck-night); color: var(--oc-night-ink); cursor: pointer; text-align: center;
 }
 .world__wreck-scene { position: absolute; inset: 0; width: 100%; height: 100%; }
 .world__wreck-text {

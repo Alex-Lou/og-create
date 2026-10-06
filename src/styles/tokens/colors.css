@@ -21,6 +21,7 @@
   --walnut-800: #33241b;
   --walnut-900: #221812;
   /* Feuille d'or (précieux, action principale) */
+  --gold-100: #fff4d6;
   --gold-200: #fbebc0;
   --gold-300: #f7dc93;
   --gold-400: #efc163;
@@ -32,6 +33,9 @@
   --verdigris-100: #dcefe8;
   --wax-500: #c0483a;
   --wax-700: #8e2f25;
+  /* Le brun des liserés et des ombres posés sur le papier, en canaux pour l'écrire à toute transparence :
+     rgba(var(--shade-rgb), .1) */
+  --shade-rgb: 74, 52, 38;
 
   /* Fond : le bureau clair, une lumière douce venue d'en haut */
   --bg: #ede0c4;

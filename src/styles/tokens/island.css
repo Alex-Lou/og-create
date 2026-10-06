@@ -1,0 +1,53 @@
+/* L'île (components/World) : les valeurs que plusieurs de ses composants partagent. Une valeur propre à un seul
+   composant est un jeton local, en tête de son CSS. */
+:root {
+  /* Le verre sombre des bulles et des boutons posés sur l'île, et le papier translucide de ses pastilles, en canaux
+     pour l'écrire à toute transparence : rgba(var(--island-glass-rgb), .55) */
+  --island-glass-rgb: 30, 22, 16;
+  --island-paper-rgb: 251, 246, 234;
+  /* Le haut de l'île s'assombrit sous la barre (horloge, écus, réserves) */
+  --island-top-veil: linear-gradient(rgba(24, 17, 12, .5), rgba(24, 17, 12, .22) 72%, rgba(24, 17, 12, 0));
+  /* Les voiles derrière une fiche, et derrière un mini-jeu ou la Récolte */
+  --island-sheet-backdrop: rgba(10, 8, 6, .55);
+  --island-game-backdrop: rgba(10, 8, 6, .72);
+  /* Une fiche monte du bas : ses coins du haut ; la carte d'un mini-jeu ou de la Récolte */
+  --island-sheet-radius: 24px 24px 0 0;
+  --island-game-radius: 26px;
+  /* Récolte : sans partie à jouer */
+  --island-play-off: #6e6253;
+  --island-play-off-ink: #d8ccba;
+  /* Mini-jeux et Récolte : ce qui n'a pas marché */
+  --island-game-error: #a2412b;
+  /* Une case à portée, un indice : l'or vif voilé */
+  --island-hint: rgba(242, 192, 75, .55);
+  /* Le palier rare (boutique) */
+  --island-rare: linear-gradient(135deg, var(--oc-gold-bright), #c9952a);
+  /* Ce qui va bien (production heureuse, demande remplie) */
+  --island-happy: #eaf6e2;
+
+  /* Habitants : le rose des cœurs, l'orangé des besoins, le halo du portrait, l'ombre de la pastille d'humeur */
+  --island-villager-heart: #e8566a;
+  --island-villager-need: #f0a84a;
+  --island-villager-need-bg: #fff4e5;
+  --island-villager-portrait: radial-gradient(circle at 50% 75%, #ffe9c4, var(--vellum-200) 74%);
+  --island-badge-shadow: rgba(60, 40, 25, .25);
+  /* Visiteurs : le bleu */
+  --island-visitor-bg: #f1f8fd;
+  --island-visitor-ring: rgba(62, 110, 156, .25);
+
+  /* Coffres, selon leur rareté : bois, ferrure, serrure ; et le trait du bois et de la serrure */
+  --island-chest-commun-wood: #9a6a3e;
+  --island-chest-commun-band: #6e6a64;
+  --island-chest-commun-lock: #c9a04a;
+  --island-chest-rare-wood: #9a6a3e;
+  --island-chest-rare-band: #3e78c8;
+  --island-chest-rare-lock: #dde7f4;
+  --island-chest-epique-wood: #6c3fa2;
+  --island-chest-epique-band: #e2b546;
+  --island-chest-epique-lock: #f4d67a;
+  --island-chest-legendaire-wood: #e2ae3a;
+  --island-chest-legendaire-band: #b23a48;
+  --island-chest-legendaire-lock: #fff1c2;
+  --island-chest-line: rgba(40, 24, 12, .55);
+  --island-chest-lock-line: rgba(40, 24, 12, .5);
+}

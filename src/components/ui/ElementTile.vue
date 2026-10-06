@@ -123,7 +123,7 @@ export default {
   border-radius: var(--r-round);
   background: radial-gradient(circle at 38% 32%, #fff 0 18%, var(--tc) 100%);
   /* Liseré clair : le médaillon se détache du carton teinté */
-  box-shadow: 0 0 0 1.5px rgba(255, 255, 255, .8), 0 1px 2px rgba(74, 52, 38, .12);
+  box-shadow: 0 0 0 1.5px rgba(255, 255, 255, .8), 0 1px 2px rgba(var(--shade-rgb), .12);
   font-size: 27px;
   line-height: 1;
 }

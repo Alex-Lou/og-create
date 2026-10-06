@@ -161,64 +161,77 @@ export default {
 </script>
 
 <style scoped>
+/* Ses jetons (couleurs des habitants partagées : tokens/island.css) */
+.friend {
+  --friend-heart-line: #a3283a;      /* le contour d'un cœur plein */
+  --friend-meter-from: #f39aa8;      /* la jauge d'amitié commence rose pâle */
+  --friend-sad-ink: #4a5a7a;
+  --friend-fill-ink: #3a2410;        /* « Donner » : texte et tranche */
+  --friend-fill-edge: #b87420;
+  --friend-need-ink: #b86a10;
+  --friend-rose-bg: #fff0f1;         /* cadeau adoré, palier obtenu */
+  --friend-liked-ring: #f3a8b4;
+  --friend-taste-ink: #c2394e;
+  --friend-step-radius: 10px;
+}
 .friend { display: grid; gap: 12px; font-family: var(--font-ui); text-align: left; }
 .friend__top { display: grid; grid-template-columns: auto 1fr; align-items: center; gap: 14px; }
-.friend__portrait { position: relative; display: block; width: 96px; height: 110px; border-radius: var(--r-board); background: radial-gradient(circle at 50% 75%, #FFE9C4, var(--vellum-200) 74%); }
+.friend__portrait { position: relative; display: block; width: 96px; height: 110px; border-radius: var(--r-board); background: var(--island-villager-portrait); }
 .friend__portrait img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; padding: 6px; box-sizing: border-box; }
 .friend__love { display: grid; gap: 6px; }
 .friend__hearts { display: flex; gap: 4px; }
-.friend__heart { width: 26px; height: 24px; fill: var(--vellum-300); stroke: rgba(74, 52, 38, .35); stroke-width: 1.2; }
-.friend__heart.is-full { fill: #E8566A; stroke: #A3283A; }
+.friend__heart { width: 26px; height: 24px; fill: var(--vellum-300); stroke: rgba(var(--shade-rgb), .35); stroke-width: 1.2; }
+.friend__heart.is-full { fill: var(--island-villager-heart); stroke: var(--friend-heart-line); }
 .friend__heart.is-new { animation: friend-pop .6s cubic-bezier(.3, 1.8, .5, 1); }
-.friend__meter { height: 8px; border-radius: var(--r-pill); background: rgba(74, 52, 38, .14); overflow: hidden; }
-.friend__meter span { display: block; height: 100%; border-radius: inherit; background: linear-gradient(90deg, #F39AA8, #E8566A); transition: width .5s ease; }
+.friend__meter { height: 8px; border-radius: var(--r-pill); background: rgba(var(--shade-rgb), .14); overflow: hidden; }
+.friend__meter span { display: block; height: 100%; border-radius: inherit; background: linear-gradient(90deg, var(--friend-meter-from), var(--island-villager-heart)); transition: width .5s ease; }
 .friend__points { font-size: 12px; font-weight: 800; color: var(--ink-500); }
 .friend__say {
   position: relative; margin: 0; padding: 10px 14px; border-radius: var(--r-md); background: var(--vellum-50);
-  box-shadow: inset 0 0 0 1px rgba(74, 52, 38, .1); font-family: var(--font-display); font-style: italic; font-size: 15px; line-height: 1.4;
+  box-shadow: inset 0 0 0 1px rgba(var(--shade-rgb), .1); font-family: var(--font-display); font-style: italic; font-size: 15px; line-height: 1.4;
 }
 .friend__talk { width: 100%; }
 .friend__grimoire { justify-self: center; }
 .friend__art { margin: -4px 0 0; font-size: 12.5px; font-weight: 700; color: var(--ink-500); text-align: center; }
-.friend__mood-badge { position: absolute; right: -6px; bottom: -6px; display: grid; place-items: center; width: 34px; height: 34px; border-radius: var(--r-round); background: var(--vellum-50); box-shadow: 0 2px 6px rgba(60, 40, 25, .25); font-size: 24px; }
+.friend__mood-badge { position: absolute; right: -6px; bottom: -6px; display: grid; place-items: center; width: 34px; height: 34px; border-radius: var(--r-round); background: var(--vellum-50); box-shadow: 0 2px 6px var(--island-badge-shadow); font-size: 24px; }
 .friend__mood { text-transform: none; letter-spacing: 0; }
-.friend__mood.is-heureux { color: #4E8A3A; }
-.friend__mood.is-triste { color: #4A5A7A; }
+.friend__mood.is-heureux { color: var(--oc-success); }
+.friend__mood.is-triste { color: var(--friend-sad-ink); }
 .friend__mood-effect { margin: -2px 0 6px; font-size: 13px; font-weight: 700; color: var(--ink-700); }
 .friend__need-list { display: grid; gap: 6px; margin: 0; padding: 0; list-style: none; }
-.friend__need { display: grid; grid-template-columns: 34px 1fr auto; align-items: center; gap: 10px; padding: 8px 10px; border-radius: var(--r-tile); background: var(--vellum-50); box-shadow: inset 0 0 0 1px rgba(74, 52, 38, .1); }
-.friend__need.is-missing { background: #FFF4E5; box-shadow: inset 0 0 0 2px #F0A84A; }
+.friend__need { display: grid; grid-template-columns: 34px 1fr auto; align-items: center; gap: 10px; padding: 8px 10px; border-radius: var(--r-tile); background: var(--vellum-50); box-shadow: inset 0 0 0 1px rgba(var(--shade-rgb), .1); }
+.friend__need.is-missing { background: var(--island-villager-need-bg); box-shadow: inset 0 0 0 2px var(--island-villager-need); }
 .friend__need-glyph { font-size: 28px; line-height: 1; }
 .friend__need-body { display: grid; gap: 1px; min-width: 0; font-size: 12px; font-weight: 700; color: var(--ink-500); }
 .friend__need-body strong { font-size: 14px; font-weight: 900; color: var(--ink-900); }
 .friend__fill {
   display: inline-flex; align-items: center; gap: 6px; min-height: 36px; padding: 0 12px; border: 0; border-radius: var(--r-pill);
-  background: #F0A84A; color: #3A2410; font-family: var(--font-ui); font-size: 13px; font-weight: 900; cursor: pointer;
-  box-shadow: 0 2px 0 #B87420;
+  background: var(--island-villager-need); color: var(--friend-fill-ink); font-family: var(--font-ui); font-size: 13px; font-weight: 900; cursor: pointer;
+  box-shadow: 0 2px 0 var(--friend-fill-edge);
 }
 .friend__fill:disabled { background: var(--vellum-200); color: var(--ink-500); box-shadow: none; cursor: default; }
 .friend__fill-cost { display: inline-flex; align-items: center; gap: 2px; }
-.friend__need-tag { font-size: 12px; font-weight: 900; color: #B86A10; }
-.friend__need-tag.is-done { color: #4E8A3A; }
+.friend__need-tag { font-size: 12px; font-weight: 900; color: var(--friend-need-ink); }
+.friend__need-tag.is-done { color: var(--oc-success); }
 .friend__title { margin: 0 0 6px; font-size: 12px; font-weight: 800; text-transform: uppercase; letter-spacing: .05em; color: var(--ink-500); }
-.friend__done { text-transform: none; letter-spacing: 0; color: #4E8A3A; }
+.friend__done { text-transform: none; letter-spacing: 0; color: var(--oc-success); }
 .friend__gifts { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; margin: 0; padding: 0; list-style: none; }
 .friend__give {
   width: 100%; min-height: 66px; display: grid; justify-items: center; align-content: center; gap: 1px; padding: 6px 2px;
-  border: 0; border-radius: var(--r-tile); background: var(--vellum-50); box-shadow: inset 0 0 0 1px rgba(74, 52, 38, .12);
+  border: 0; border-radius: var(--r-tile); background: var(--vellum-50); box-shadow: inset 0 0 0 1px rgba(var(--shade-rgb), .12);
   font-family: var(--font-ui); color: var(--ink-900); cursor: pointer;
 }
-.friend__give.is-loved { box-shadow: inset 0 0 0 2px #E8566A; background: #FFF0F1; }
-.friend__give.is-liked { box-shadow: inset 0 0 0 2px #F3A8B4; }
+.friend__give.is-loved { box-shadow: inset 0 0 0 2px var(--island-villager-heart); background: var(--friend-rose-bg); }
+.friend__give.is-liked { box-shadow: inset 0 0 0 2px var(--friend-liked-ring); }
 .friend__give:disabled { opacity: .45; cursor: default; }
 .friend__glyph { font-size: 22px; line-height: 1; }
-.friend__taste { min-height: 13px; font-size: 10px; font-weight: 900; text-transform: uppercase; letter-spacing: .03em; color: #C2394E; }
+.friend__taste { min-height: 13px; font-size: 10px; font-weight: 900; text-transform: uppercase; letter-spacing: .03em; color: var(--friend-taste-ink); }
 .friend__gain { font-size: 13px; font-weight: 900; }
 .friend__steps { display: grid; gap: 4px; margin: 0; padding: 0; list-style: none; }
-.friend__steps li { display: grid; grid-template-columns: 44px 1fr auto; align-items: center; gap: 8px; padding: 6px 10px; border-radius: 10px; background: var(--vellum-50); font-size: 13px; font-weight: 700; }
-.friend__steps li.is-got { background: #FFF0F1; }
-.friend__step-heart { color: #E8566A; font-weight: 900; }
-.friend__check { color: #4E8A3A; font-size: 12px; font-weight: 900; }
+.friend__steps li { display: grid; grid-template-columns: 44px 1fr auto; align-items: center; gap: 8px; padding: 6px 10px; border-radius: var(--friend-step-radius); background: var(--vellum-50); font-size: 13px; font-weight: 700; }
+.friend__steps li.is-got { background: var(--friend-rose-bg); }
+.friend__step-heart { color: var(--island-villager-heart); font-weight: 900; }
+.friend__check { color: var(--oc-success); font-size: 12px; font-weight: 900; }
 @keyframes friend-pop { 0% { transform: scale(.4); } 60% { transform: scale(1.35); } 100% { transform: none; } }
 @media (prefers-reduced-motion: reduce) { .friend__heart.is-new { animation: none; } }
 </style>

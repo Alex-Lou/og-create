@@ -116,7 +116,7 @@ export default {
   background: var(--ink-900); color: var(--vellum-50); font-family: var(--font-ui); font-weight: 900; font-size: 14px;
   touch-action: manipulation;
 }
-.guide__btn--quiet { background: transparent; color: #8A5A1C; box-shadow: inset 0 0 0 1.5px currentColor; }
+.guide__btn--quiet { background: transparent; color: var(--oc-gold-ink); box-shadow: inset 0 0 0 1.5px currentColor; }
 .guide__btn:focus-visible { outline: 3px solid var(--oc-gold); outline-offset: 2px; }
 
 /* Naissance : les volutes se resserrent sur Brume, qui prend forme dans un flou, puis la bulle paraît */

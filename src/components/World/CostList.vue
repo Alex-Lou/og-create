@@ -45,7 +45,7 @@ export default {
 
 <style scoped>
 /* (la marge est celle du parent : .bench__cost, .annexes__cost) */
-.cost { padding: 0; list-style: none; display: flex; flex-wrap: wrap; gap: 4px 10px; font-size: 13px; font-weight: 900; color: #4E8A3A; }
+.cost { padding: 0; list-style: none; display: flex; flex-wrap: wrap; gap: 4px 10px; font-size: 13px; font-weight: 900; color: var(--oc-success); }
 .cost li { display: inline-flex; align-items: center; gap: 3px; }
-.cost li.is-missing { color: #B0503A; }
+.cost li.is-missing { color: var(--oc-missing); }
 </style>

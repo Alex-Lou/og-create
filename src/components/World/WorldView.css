@@ -1,7 +1,17 @@
 /* L'île (WorldView) : son cadre, sa scène, ses bulles, son menu, ses transitions. */
+/* Ses jetons (ceux que d'autres composants partagent sont dans tokens/island.css) */
+.world {
+  --world-sea: #5fb0dd;               /* sous le dessin de l'île */
+  --world-glass-ink: #f6eedd;         /* le texte posé sur le verre sombre */
+  --world-tip-text: #e8dcc4;
+  --world-tip-btn-ink: #3a2a1e;
+  --world-perf-bg: rgba(20, 14, 10, .7); /* le compteur d'images (outil de développement) */
+  --world-perf-ink: #f6eedf;
+  --world-perf-font: ui-monospace, monospace;
+}
 .world {
   /* De bord à bord : tout l'écran au-dessus de la barre d'onglets (à droite du rail sur PC) ; en plein écran, tout */
-  position: fixed; z-index: var(--z-world); top: 0; left: 0; right: 0; bottom: var(--oc-tabbar-h); background: #5FB0DD;
+  position: fixed; z-index: var(--z-world); top: 0; left: 0; right: 0; bottom: var(--oc-tabbar-h); background: var(--world-sea);
 }
 @media (min-width: 860px) {
   .world { left: var(--oc-rail-w); bottom: 0; }
@@ -12,27 +22,27 @@
 .world__canvas { display: block; width: 100%; touch-action: none; cursor: grab; }
 .world__perf {
   position: absolute; left: 10px; top: calc(var(--world-top) + 60px); max-width: calc(100% - 80px); margin: 0; padding: 3px 8px; border-radius: var(--r-xs); white-space: nowrap;
-  background: rgba(20, 14, 10, .7); color: #F6EEDF; font: 600 11px/1.3 ui-monospace, monospace; pointer-events: none;
+  background: var(--world-perf-bg); color: var(--world-perf-ink); font: 600 11px/1.3 var(--world-perf-font); pointer-events: none;
 }
 .world__banner, .world__error {
   position: absolute; left: 50%; bottom: 10px; transform: translateX(-50%);
   width: max-content; max-width: 92%; margin: 0; padding: 8px 14px; border-radius: var(--r-tile);
-  background: rgba(30, 22, 16, .82); color: #F6EEDD;
+  background: rgba(var(--island-glass-rgb), .82); color: var(--world-glass-ink);
   font-family: var(--font-ui); font-size: 13px; font-weight: 700; text-align: center;
 }
 .world__tip {
   position: absolute; z-index: 3; transform: translate(-50%, -100%); pointer-events: none;
   display: flex; flex-direction: column; gap: 2px; max-width: 220px; padding: 8px 12px; border-radius: var(--r-tile);
-  background: rgba(30, 22, 16, .9); color: #F6EEDD; font-family: var(--font-ui); text-align: center;
+  background: rgba(var(--island-glass-rgb), .9); color: var(--world-glass-ink); font-family: var(--font-ui); text-align: center;
   box-shadow: 0 8px 22px rgba(0, 0, 0, .35);
 }
 .world__tip.is-below { transform: translate(-50%, 0); }
 .world__tip-title { font-weight: 900; font-size: 14px; }
-.world__tip-text { font-size: 12px; font-weight: 700; line-height: 1.3; color: #E8DCC4; }
-.world__tip-hint { margin-top: 2px; font-size: 11px; font-weight: 800; color: #F2C04B; }
+.world__tip-text { font-size: 12px; font-weight: 700; line-height: 1.3; color: var(--world-tip-text); }
+.world__tip-hint { margin-top: 2px; font-size: 11px; font-weight: 800; color: var(--oc-gold-bright); }
 .world__tip-btn {
   pointer-events: auto; align-self: center; min-height: 32px; margin-top: 6px; padding: 4px 14px; border: 0; border-radius: var(--r-pill);
-  background: #F2C04B; color: #3A2A1E; font: inherit; font-size: 13px; font-weight: 900; cursor: pointer;
+  background: var(--oc-gold-bright); color: var(--world-tip-btn-ink); font: inherit; font-size: 13px; font-weight: 900; cursor: pointer;
 }
 .world-tip-enter-active, .world-tip-leave-active { transition: opacity .18s ease, margin .18s ease; }
 .world-tip-enter-from, .world-tip-leave-to { opacity: 0; margin-top: 6px; }

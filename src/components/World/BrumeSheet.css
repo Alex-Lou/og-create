@@ -1,4 +1,6 @@
 /* BrumeSheet : ses styles (repris de WorldView, qui les gardait pour lui). */
+/* Ses jetons */
+.world__sheet-backdrop { --quest-input-bg: #fffdf6; }
 /* Fiche de Brume : sa réplique, puis l'objectif, son avancée et la récompense */
 .world__quest-eyebrow { color: var(--ink-500); margin-bottom: 6px; }
 .world__brume-title { display: inline-flex; align-items: center; gap: 8px; }
@@ -6,13 +8,13 @@
 .world__brume-art { margin: 0 0 8px; font-size: 13px; font-weight: 700; color: var(--ink-500); }
 .world__quest { display: grid; grid-template-columns: 1fr auto; gap: 6px 10px; padding: 10px 12px; border-radius: var(--r-tile); background: var(--vellum-200); }
 .world__quest-label { font-weight: 900; }
-.world__quest-lock { margin: 10px 0 0; font-size: 14px; font-weight: 700; color: var(--oc-text-muted, #7A6A58); }
+.world__quest-lock { margin: 10px 0 0; font-size: 14px; font-weight: 700; color: var(--oc-text-muted); }
 .world__people { display: flex; gap: 8px; width: 100%; }
 .world__people-input {
-  flex: 1; min-width: 0; padding: 10px 12px; border: 2px solid var(--vellum-300, #E6D8B8); border-radius: var(--r-sm);
-  font: inherit; font-weight: 700; background: #FFFDF6; color: inherit;
+  flex: 1; min-width: 0; padding: 10px 12px; border: 2px solid var(--vellum-300); border-radius: var(--r-sm);
+  font: inherit; font-weight: 700; background: var(--quest-input-bg); color: inherit;
 }
 .world__quest-count { font-family: var(--oc-font-mono); font-weight: 800; }
-.world__quest-bar { grid-column: 1 / -1; height: 8px; border-radius: var(--r-pill); background: var(--vellum-300, #E6D8B8); overflow: hidden; }
+.world__quest-bar { grid-column: 1 / -1; height: 8px; border-radius: var(--r-pill); background: var(--vellum-300); overflow: hidden; }
 .world__quest-bar i { display: block; height: 100%; border-radius: inherit; background: var(--oc-gold); transition: width var(--oc-fast) var(--oc-ease-out); }
 .world__quest-reward { grid-column: 1 / -1; font-size: 14px; color: var(--ink-500); }
