@@ -22,6 +22,7 @@ troupe. Relancer ces scripts redonne la bibliothèque à l'octet près : c'est v
 | `brume.js`, `anya.js`, `cerf.js`, `passeur.js` | Les vivants |
 | `betes.js`, `betes3.js` | Les animaux de profil ; les bêtes qui marchent de trois quarts avant et de dos |
 | `crafts.js`, `deco.js`, `decor2.js`, `landmarks.js` | Décor : créations, annexes, lieux, gisements, îlots |
+| `arbres.js` | Les arbres refaits au niveau des PNJ, un par un : l'arbre et ses 8 variantes (grand ou petit, vert doux ou profond, pied sobre ou fleuri). Le pommier et l'arbre d'automne gardent l'ancien dessin de `deco.js` jusqu'à leur tour |
 | `camp.mjs`, `ruines.mjs` | Le camp des naufragés, les ruines des Anciens |
 | `meteo.js` | Météo, ciel, moments du jour |
 | `coffres.mjs` | Les coffres des quatre raretés (fenêtre d'ouverture) |
