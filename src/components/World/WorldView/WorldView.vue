@@ -412,37 +412,28 @@ import SiteOverview from '../Sites/SiteOverview/SiteOverview.vue';
 import SiteSheet from '../Sites/SiteSheet/SiteSheet.vue';
 import IslandHud from '../Hud/IslandHud/IslandHud.vue';
 import IslandButtons from '../Hud/IslandButtons/IslandButtons.vue';
-import { villagerSprite, ROLES } from '@/world/villagers';
-import { talkLine, giftLine } from '@/world/friends';
-import { heardPages, keepSavoir, savoirLine, artOf as savoirOf } from '@/game/savoirs';
-import { THANKS, missingOf, askOr } from '@/world/needs';
-import { visitorLook, THANKS as VISITOR_THANKS } from '@/world/visitors';
+import { missingOf } from '@/world/needs';
 import { landmarkTop, landmarkScale } from '@/world/landmarkSprites';
 import { landmarksShown, landmarksWaiting, landmarkTip } from '@/world/landmarks';
 import { depositsShown, depositsReady, depositWait } from '@/world/finds';
 import { CLIMATE_NAMES } from '@/world/climates';
 import { annexReady, variantsOf } from '@/world/annexes';
-import { noteOf, openableOf } from '@/world/chest';
 import GModal from '@/components/ui/GModal/GModal.vue';
 import { guideOf, guideKind } from '@/world/itemGuide';
 import { villageOf } from '@/world/village';
-import { ANIMAL_SPRITES } from '@/world/animals';
 import { clearDrawings } from '@/book/painter';
 import { burst, ring, vibrate, center, reducedMotion } from '@/utils/fx';
 import { LABEL, RESOURCES } from '@/game/resources';
 import { itemArt, itemLock, itemBuyable } from '@/world/shop';
 import { levelAffordable, levelReady } from '@/world/levels';
-import { drawSprite, spriteUrl, clearSprites } from '@/world/spriteCache';
+import { drawSprite, clearSprites } from '@/world/spriteCache';
 import { islandOf, liveOf, TerrainCache, HS } from '@/world/terrain';
 import { FLOATING_ZONE, COLONY_ZONE, isletsOf } from '@/world/islets';
 import { seaOf, spread } from '@/world/sea';
 import { stageOf as civilizationOf } from '@/game/vigils';
 import { brumeLook, opusOf, secretDue, secretOf } from '@/game/opus';
-import { PRESENTIMENTS, BREATH_LINE } from '@/game/anya';
-import { BEASTS } from '@/world/bestiary';
 import { faceHref } from '@/world/faces';
 import { guide } from '@/game/guide';
-import { TIPS } from '@/game/guideTips';
 import { roman } from '@/utils/roman';
 import { phaseAt, forcedPhase, hash } from '@/world/scene';
 import { perfWanted, perfMeter } from '@/world/perf';
@@ -452,7 +443,10 @@ import drawMethods from '@/world/view/draw';
 import gestureMethods from '@/world/view/gestures';
 import { TW } from '@/world/view/constants';
 import { memory } from '@/world/view/memory';
-import { moveSpots } from '@/world/crafts';
+import folk from './folk';
+import games from './games';
+import chests from './chests';
+import workshop from './workshop';
 
 // Sortes d'articles dont le mode d'emploi a déjà été montré (une fois par sorte, sur cet appareil)
 const GUIDES_KEY = 'oc_item_guides';
@@ -490,6 +484,9 @@ const FOREST_HIGH = ['pine', 'pine', 'tree'];
 // d'animation sont non réactifs et s'arrêtent quand l'onglet est caché ou le composant démonté.
 export default {
   name: 'WorldView',
+  // Les gens, les jeux, les coffres et l'établi vivent chacun dans leur fichier, à côté (mixins) ; le moteur du canvas
+  // (caméra, dessin, gestes) dans world/view/
+  mixins: [folk, games, chests, workshop],
   components: { HarvestGame, ShopItemSheet, GModal, ChestList, ChestReveal, ChestHaul, AnnexPanel, AnnexSheet, MiniGame, VillagerSheet, BeastSheet, VisitorSheet, RenameSheet, CraftBench, CraftPuzzle, ExplorerLog, FindsSheet, WreckScene, BrumeSheet, ZoneSheet, SiteShop, SiteSteps, SiteOverview, SiteSheet, IslandHud, IslandButtons },
   props: {
     // Glyphes des éléments du Livre (savoir-faire demandé à l'établi)
@@ -520,47 +517,17 @@ export default {
       guide: null,
       // Bulle d'info de l'appui long : { x, y, below, title, text, hint }
       tip: null,
-      menuPos: { x: 0, y: 0 },
-      run: null,
-      sending: false,
-      runResult: null,
-      runError: '',
       // Texte du compteur d'images (« ?perf »)
       perfText: '',
       // Plein écran : l'île seule, sans la barre du haut ni la barre d'onglets
       immersive: false,
-      // Coffre tombé pendant la Récolte (ouvert au retour sur l'île) ; liste des coffres ouverte ; coffre en cours
-      // d'ouverture : { chest, streak, note, art, wearable } ; coffres ouverts d'un coup (« Tout ouvrir »)
-      runChest: null,
-      chestsOpen: false,
       // Carnet d'explorateur ouvert, et la page qu'il montre d'emblée (identifiant d'un lieu)
       logOpen: false,
       logFocus: null,
       // Réserve des trouvailles de climat ouverte
       findsOpen: false,
-      reveal: null,
-      haul: null,
-      // Mini-jeu ouvert (id), sa partie, son envoi, son résultat
-      gameId: null,
-      gameRun: null,
-      gameStarting: false,
-      gameSending: false,
-      gameResult: null,
-      gameError: '',
       // Bâtiment ou quartier en train d'être renommé : { kind: 'site' | 'zone', id }
       renaming: null,
-      // Habitant dont la fiche est ouverte, sa dernière réplique, le cœur tout juste gagné
-      villagerId: null,
-      beastId: null,
-      villagerSaid: '',
-      villagerPopped: 0,
-      // Savoir que le maître vient de souffler (bible, § 6.4) : { page, chapter, ingredient | family } ou null
-      villagerSavoir: null,
-      // Le Savoir de Brume, après le Phare : sa réplique et l'indice soufflé
-      brumeSaid: '',
-      brumeHint: null,
-      visitorOpen: false,
-      visitorSaid: '',
       clock: Date.now(),
       // Horloge de l'en-tête (heure, moment, temps, soleil) ; journée en accéléré
       skyClock: null,
@@ -575,19 +542,7 @@ export default {
       // attente de confirmation : { x, y, px, py } ; fiche d'une annexe posée ouverte : { x, y }
       annexPlacing: null,
       annexConfirm: null,
-      annexSheet: null,
-      // Créations d'île : établi ouvert ; assemblage en cours ({ id, craft, shape, pieces, turned }), son envoi, son refus,
-      // sa réussite ; pose ou déplacement en cours ({ craft, from: { x, y } | null }) et case dorée choisie ({ x, y, px,
-      // py }) ; menu d'une création posée ({ x, y, craft })
-      benchOpen: false,
-      craftRun: null,
-      craftStarting: false,
-      craftSending: false,
-      craftError: '',
-      craftMade: false,
-      craftPlacing: null,
-      craftConfirm: null,
-      craftMenu: null
+      annexSheet: null
     };
   },
   computed: {
@@ -630,25 +585,6 @@ export default {
       if (!place) return null;
       return { eyebrow: kind === 'site' ? 'Bâtiment' : 'Quartier', title: `Renommer ${place.name}`, current: place.name, base: place.baseName || place.name };
     },
-    // Habitant dont la fiche est ouverte (vue du serveur, à jour) et le nom de son lieu de travail
-    villagerView() {
-      return this.villagerId && this.state ? (this.state.villagers || []).find(v => v.id === this.villagerId) || null : null;
-    },
-    villagerSiteName() {
-      return this.villagerView ? this.siteName(this.villagerView.site || this.villagerView.id) : '';
-    },
-    // Bête de ferme dont la fiche est ouverte (vue du serveur, à jour)
-    beastView() {
-      return this.beastId && this.state && this.state.beasts ? this.state.beasts.list.find(b => b.id === this.beastId) || null : null;
-    },
-    // Mini-jeu ouvert : sa vue (réserve de parties à jour) et le nom de son bâtiment
-    gameView() {
-      return this.gameId && this.state ? (this.state.games || []).find(g => g.id === this.gameId) || null : null;
-    },
-    gameSiteName() {
-      const site = this.gameView && this.state.sites.find(s => s.id === this.gameView.site);
-      return site ? site.name : '';
-    },
     // « Tout ramasser » : ce qui attend dans les bâtiments, écus puis ressources : [{ id, glyph, n, label }]
     harvestable() {
       if (!this.state) return [];
@@ -656,15 +592,6 @@ export default {
       return [{ id: 'coins', glyph: 'ui:coin', n: this.state.pending, label: 'écus' }, ...RESOURCES.map(r => ({ id: r.id, glyph: r.glyph, n: stock[r.id], label: r.label }))]
         .map(g => ({ ...g, n: Math.floor(g.n || 0) }))
         .filter(g => g.n > 0);
-    },
-    // Lots de « Tout ouvrir », avec l'aperçu et l'état de leur bâtiment (porté ou non) selon la vue du moment
-    haulItems() {
-      return (this.haul || []).map(chest => ({ chest, ...this.prizeLook(chest) }));
-    },
-    // Coffres à ouvrir (ceux que « Tout ouvrir » ouvre) : du jour, des chapitres et des quêtes, bouteille échouée
-    chestCount() {
-      const chests = this.state && this.state.chests;
-      return chests ? openableOf(chests) : 0;
     },
     // Lieux remarquables des quartiers connus ; ceux d'un quartier à soi qui attendent d'être découverts
     shownLandmarks() {
@@ -742,11 +669,6 @@ export default {
     brumeState() {
       return brumeLook({ acts: this.actsDone, quest: this.quest, elements: this.elements });
     },
-    // Un mot d'Héliane dans la bouteille ouverte par « Tout ouvrir » (bible, § 6.13)
-    haulNote() {
-      const bottle = (this.haul || []).find(chest => chest.story);
-      return bottle ? noteOf(bottle.source, bottle.story) : '';
-    },
     // Expédition en route : temps avant son retour, en clair (« 1 h 40 », « 12 min »)
     tripLeft() {
       const trip = this.state && this.state.expedition;
@@ -754,31 +676,6 @@ export default {
       const ms = Math.max(0, trip.endsIn - (this.clock - this.loadedAt));
       const minutes = Math.max(1, Math.ceil(ms / 60000));
       return minutes >= 60 ? `${Math.floor(minutes / 60)} h${minutes % 60 ? ` ${String(minutes % 60).padStart(2, '0')}` : ''}` : `${minutes} min`;
-    },
-    // Créations d'île posées ([{ x, y, craft }])
-    crafted() {
-      return this.state && this.state.crafts ? this.state.crafts.placed : [];
-    },
-    // Création en cours de pose : sa carte du catalogue ; ses cases dorées (sans la sienne, si on la déplace)
-    placingCraft() {
-      return this.craftPlacing && this.state ? this.state.crafts.catalog.find(c => c.id === this.craftPlacing.craft) || null : null;
-    },
-    craftSpots() {
-      const from = this.craftPlacing && this.craftPlacing.from;
-      if (!this.placingCraft) return [];
-      return from ? moveSpots(this.placingCraft.spots, from, this.placedAt(from).keeps) : this.placingCraft.spots;
-    },
-    craftBanner() {
-      const name = this.placingCraft ? this.placingCraft.name : '';
-      return this.craftPlacing && this.craftPlacing.from ? `Touche une case dorée pour y déplacer : ${name}.` : `Touche une case dorée pour poser : ${name}.`;
-    },
-    craftConfirmStyle() {
-      const c = this.craftConfirm;
-      if (!c || !this.geo) return {};
-      return { left: `${Math.max(110, Math.min(this.geo.width - 110, c.px))}px`, top: `${Math.max(56, c.py - 24)}px` };
-    },
-    menuStyle() {
-      return { left: `${this.menuPos.x}px`, top: `${this.menuPos.y}px` };
     },
     chargesText() {
       if (!this.state) return '';
@@ -1378,346 +1275,10 @@ export default {
         this.busy = false;
       }
     },
-    async startHarvest() {
-      this.busy = true;
-      try {
-        this.site = null;
-        this.runResult = null;
-        this.runError = '';
-        this.runChest = null;
-        this.run = await playService.harvestStart();
-        this.syncLoop();
-      } catch (error) {
-        this.$emit('show-alert', messageOf(error, 'La Récolte n’a pas pu commencer.'));
-        this.load();
-      } finally {
-        this.busy = false;
-      }
-    },
-    async finishHarvest(moves) {
-      this.sending = true;
-      try {
-        const { gains, coins, chest, world } = await playService.harvestFinish(this.run.id, moves);
-        this.runResult = gains;
-        this.runChest = chest || null;
-        this.apply(world);
-        if (coins !== undefined) this.$emit('coins-updated', coins);
-        vibrate([12, 40, 18]);
-      } catch (error) {
-        this.runError = messageOf(error, 'Le serveur n’a pas pu peser ta récolte.');
-        this.load();
-      } finally {
-        this.sending = false;
-      }
-    },
-    // Habitants : celui qu'on touche (who : { kind: 'villager', id: 'vil:<bâtiment>' }) dans la vue du serveur
-    friendOf(who) {
-      if (!who || who.kind !== 'villager' || !this.state) return null;
-      return (this.state.villagers || []).find(v => `vil:${v.id}` === who.id) || null;
-    },
-    // La bête de ferme qu'on touche (who.beast : son nom au serveur), vue du serveur, ou null (variante du Bestiaire,
-    // serveur d'avant les bêtes)
-    beastOf(who) {
-      if (!who || !who.beast || !this.state || !this.state.beasts) return null;
-      return this.state.beasts.list.find(b => b.id === who.beast) || null;
-    },
-    // Le visiteur qu'on touche (who : { kind: 'villager', id: 'vis:<id>' }), ou null
-    guestOf(who) {
-      const v = this.state && this.state.visitor;
-      return v && who && who.id === `vis:${v.id}` ? v : null;
-    },
-    // Case de mer où s'amarre le bateau du visiteur : la plus proche du Ponton, et d'où il arrive (vers le large)
-    dockOf(state, M) {
-      const site = state.sites.find(s => s.id === 'ponton');
-      if (!site) return null;
-      const cx = site.x + site.w / 2;
-      const cy = site.y + site.h / 2;
-      let best = null;
-      for (let y = site.y - 3; y < site.y + site.h + 3; y++) {
-        for (let x = site.x - 3; x < site.x + site.w + 3; x++) {
-          if (M.ground(x, y) !== '~') continue;
-          const d = Math.hypot(x + 0.5 - cx, y + 0.5 - cy) - (x + y) * 0.01;
-          if (!best || d < best.d) best = { x: x + 0.5, y: y + 0.5, d };
-        }
-      }
-      if (!best) return null;
-      const len = Math.hypot(best.x - cx, best.y - cy) || 1;
-      const dx = (best.x - cx) / len;
-      const dy = (best.y - cy) / len;
-      return { x: best.x, y: best.y, dx, dy, flip: dx - dy > 0 };
-    },
-    visitorPortrait(v) {
-      return spriteUrl(`portrait-vis-${v.seed}`, () => villagerSprite(visitorLook(v.seed, v.role)));
-    },
-    openVisitor() {
-      if (!this.state || !this.state.visitor) return;
-      this.site = null;
-      this.villagerId = null;
-      this.visitorSaid = '';
-      this.visitorOpen = true;
-    },
-    // Combler la demande du visiteur : le serveur vérifie, prend les ressources et verse les écus
-    async satisfyVisitor() {
-      const guest = this.state && this.state.visitor;
-      if (this.busy || !guest) return;
-      this.busy = true;
-      try {
-        const { reward, coins, world } = await playService.visitorSatisfy(guest.id);
-        this.apply(world);
-        this.$emit('coins-updated', coins);
-        this.visitorSaid = VISITOR_THANKS;
-        vibrate([12, 40, 18]);
-        this.$emit('show-alert', `${guest.name} te remercie : +${reward} écus !`);
-      } catch (error) {
-        this.$emit('show-alert', messageOf(error, 'Le visiteur n’a pas pu être comblé.'));
-      } finally {
-        this.busy = false;
-      }
-    },
-    // Un visiteur comblé reste dans une maison libre : il devient habitant
-    async settleVisitor() {
-      const guest = this.state && this.state.visitor;
-      if (this.busy || !guest) return;
-      this.busy = true;
-      try {
-        const { settled, coins, world } = await playService.visitorSettle(guest.id);
-        this.apply(world);
-        if (coins !== undefined) this.$emit('coins-updated', coins);
-        this.visitorOpen = false;
-        vibrate([12, 40, 18]);
-        this.$emit('show-alert', `${settled} s’installe sur ton île : bienvenue !`);
-      } catch (error) {
-        this.$emit('show-alert', messageOf(error, 'Le visiteur n’a pas pu s’installer.'));
-      } finally {
-        this.busy = false;
-      }
-    },
-    // Demande de Récoltes : on ferme sa fiche et on lance une partie
-    visitorHarvest() {
-      this.visitorOpen = false;
-      this.startHarvest();
-    },
-    // Habitant d'un bâtiment (vue du serveur), ou null
-    friendAt(siteId) {
-      return (this.state.villagers || []).find(v => v.id === siteId) || null;
-    },
-    // Bulle d'un habitant : son prénom et son métier ; l'appui long ouvre sa fiche. ask : quand on lui parle, il dit
-    // d'abord ce qui lui manque
-    named(info, who, ask = false) {
-      const friend = this.friendOf(who);
-      if (!info || !friend) return info;
-      return { ...info, title: `${friend.name} · ${friend.role}`, text: ask ? askOr(friend, info.text) : info.text, hint: 'Appui long : sa fiche' };
-    },
     // Nom d'un bâtiment de l'île (celui que le joueur lui a donné)
     siteName(id) {
       const site = this.state && this.state.sites.find(s => s.id === id);
       return site ? site.name : '';
-    },
-    // Portrait d'un habitant : son allure sur l'île (teint, cheveux), de face ; un visiteur installé, d'après sa graine
-    // Portraits des habitants pour l'Aperçu du Foyer : refaits à chaque rendu de l'île, comme quand le gabarit appelait
-    // portraitOf (le village, d'où vient l'apparence, n'est pas réactif)
-    villagerPortraits() {
-      return Object.fromEntries((this.state.villagers || []).map(v => [v.id, this.portraitOf(v.id)]));
-    },
-    portraitOf(id) {
-      const settler = (this.state.villagers || []).find(v => v.id === id && v.seed !== undefined);
-      if (settler) return this.visitorPortrait(settler);
-      const resident = this.village && this.village.residents.find(r => r.role === id);
-      const look = resident ? resident.look : { skin: '#F6D3B3', hair: '#7A4E2C', ...ROLES[id] };
-      return spriteUrl(`portrait-${id}-${look.skin}-${look.hair}`, () => villagerSprite(look));
-    },
-    openBeast(id) {
-      this.site = null;
-      this.villagerId = null;
-      this.beastId = id;
-    },
-    // Portrait d'une bête de ferme : son dessin, de la race que montre la ferme
-    beastPortrait(id) {
-      const a = this.village && this.village.farm.find(f => f.beast === id);
-      const species = a ? a.species : this.beastView.species;
-      const variant = a ? a.variant : '';
-      return spriteUrl(`portrait-beast-${species}-${variant}`, () => ANIMAL_SPRITES[species](0, variant));
-    },
-    openVillager(id) {
-      this.site = null;
-      this.villagerId = id;
-      this.villagerSaid = '';
-      this.villagerPopped = 0;
-      this.villagerSavoir = null;
-    },
-    savoirOf,
-    // Les Savoirs et le Bestiaire, dits une fois (bible, § 6.4 et § 6.5) : un maître à qui bavarder ; Bulle revenu dans
-    // le bocal d'Ondin ; une bête écrite qui vit sur l'île (Sylve la présente, si elle est là)
-    bestiaryTips(state) {
-      const troupe = new Set((state.villagers || []).map(v => v.id));
-      if (troupe.size) guide.tip('savoirs');
-      const written = new Set(this.elements);
-      if (troupe.has('puits') && written.has('Poisson')) guide.tip('bulle');
-      if (BEASTS.some(name => name !== 'Poisson' && written.has(name))) {
-        const sylve = troupe.has('bosquet');
-        guide.say({ id: 'bestiaire', ...(sylve ? { text: TIPS.bestiaireSylve, who: 'Sylve', face: faceHref('bosquet') } : { text: TIPS.bestiaire }) });
-        // Le troisième pressentiment d'Anya (bible, § 10, acte IV) : les bêtes se tournent vers la Lande aux Menhirs
-        // (plus de pressentiment une fois Anya éveillée)
-        if (!(state.anya && state.anya.awake)) PRESENTIMENTS.betes.forEach(line => guide.say(line));
-      }
-      // Le deuxième (acte III) : au Cercle de menhirs, la rune de Celle-qui-donne-souffle
-      if ((state.landmarks || []).some(l => l.id === 'menhirs' && l.found) && !(state.anya && state.anya.awake)) {
-        PRESENTIMENTS.rune.forEach(line => guide.say({ id: line.id, text: line.text, who: line.who, face: faceHref(line.face) }));
-      }
-    },
-    // Bavarder : au premier bavardage du jour, un maître souffle un Savoir sur une page de son Art ; l'appareil le
-    // garde (comme l'Encre) et dit au serveur les pages dont il a déjà un indice
-    async talkVillager() {
-      await this.befriend(() => playService.villagerTalk(this.villagerId, heardPages()), (v, hearts, { savoir }) => {
-        if (!savoir) return talkLine(v.id, hearts);
-        keepSavoir(savoir, v.name);
-        this.villagerSavoir = savoir;
-        return savoirLine(v.id, savoir);
-      });
-    },
-    // Le Souffle d'Anya (bible, § 6.14) : une fois par passage, un ingrédient sur n'importe quelle page à portée, gardé
-    // comme un Savoir
-    async breatheAnya(px, py) {
-      if (this.busy) return;
-      if (this.state.anya && this.state.anya.breathed) {
-        this.showTip(px, py, { title: 'Anya', text: 'Va. La terre se repose aussi. Je repasserai.' });
-        return;
-      }
-      this.busy = true;
-      try {
-        const { savoir, world } = await playService.villagerTalk('anya', heardPages());
-        this.apply(world);
-        if (savoir) keepSavoir(savoir, 'Anya');
-        const text = savoir ? `${BREATH_LINE} Sur une page du chapitre ${savoir.chapter}, il faut « ${savoir.ingredient} ».` : 'Le Grimoire n’a pas de page qui m’attende. Écris encore.';
-        this.showTip(px, py, { title: 'Anya', text });
-        vibrate([8, 30, 8]);
-      } catch (error) {
-        this.$emit('show-alert', messageOf(error, 'Anya n’a pas pu souffler.'));
-      } finally {
-        this.busy = false;
-      }
-    },
-    // Bavarder avec Brume, le Phare allumé : un Savoir par jour sur les Légendes ; s'il n'y a pas de page, rien n'est compté
-    async talkBrume() {
-      if (this.busy) return;
-      this.busy = true;
-      try {
-        const { savoir, world } = await playService.villagerTalk('brume', heardPages());
-        this.apply(world);
-        this.brumeHint = savoir;
-        if (savoir) keepSavoir(savoir, 'Brume');
-        this.brumeSaid = savoir ? savoirLine('brume', savoir) : 'Aucune page des Légendes n’est encore à portée : écris encore, et reviens me voir.';
-        vibrate(8);
-      } catch (error) {
-        this.$emit('show-alert', messageOf(error, 'Brume n’a pas pu répondre.'));
-      } finally {
-        this.busy = false;
-      }
-    },
-    openBrumeSavoir() {
-      const { page } = this.brumeHint;
-      this.questOpen = false;
-      this.$emit('go', 'infinite', page);
-    },
-    // « Voir dans le Grimoire » : le Grimoire s'ouvre sur la page soufflée
-    openSavoir() {
-      const { page } = this.villagerSavoir;
-      this.villagerId = null;
-      this.$emit('go', 'infinite', page);
-    },
-    async giftVillager(resource) {
-      await this.befriend(() => playService.villagerGift(this.villagerId, resource), v => giftLine(v.id, v, resource));
-    },
-    // Bavarder ou offrir : le serveur compte les points ; la réplique s'affiche, un cœur gagné pulse et sa récompense
-    // arrive (écus annoncés, coffre ouvert par-dessus la fiche)
-    async befriend(call, lineOf) {
-      if (this.busy) return;
-      const friend = this.villagerView;
-      this.busy = true;
-      try {
-        const reply = await call();
-        const { hearts, rewards, coins, world } = reply;
-        this.apply(world);
-        this.$emit('coins-updated', coins);
-        this.villagerSaid = lineOf(friend, hearts, reply);
-        this.villagerPopped = hearts > friend.hearts ? hearts : 0;
-        vibrate(hearts > friend.hearts ? [12, 40, 18] : 8);
-        const gained = rewards.filter(r => r.kind === 'coins').reduce((sum, r) => sum + r.amount, 0);
-        if (gained) this.$emit('show-alert', `${friend.name} t’offre ${gained} écus pour votre amitié !`);
-        const chests = rewards.filter(r => r.chest).map(r => r.chest);
-        if (chests.length === 1) this.showChest(chests[0]);
-        else if (chests.length > 1) this.haul = chests;
-      } catch (error) {
-        this.$emit('show-alert', messageOf(error, 'L’habitant n’a pas pu répondre.'));
-      } finally {
-        this.busy = false;
-      }
-    },
-    // Combler un besoin depuis la fiche (le serveur prend les ressources du stock) : l'habitant remercie
-    async fillNeed(need) {
-      if (this.busy || !this.villagerView) return;
-      this.busy = true;
-      try {
-        const { coins, world } = await playService.villagerNeed(this.villagerView.id, need);
-        this.apply(world);
-        if (coins !== undefined) this.$emit('coins-updated', coins);
-        this.villagerSaid = THANKS[need] || '';
-        vibrate(10);
-      } catch (error) {
-        this.$emit('show-alert', messageOf(error, 'Ce besoin n’a pas pu être comblé.'));
-      } finally {
-        this.busy = false;
-      }
-    },
-    // Nourrir la bête dont la fiche est ouverte (2 vivres du stock ; sa bulle est ramassée d'abord)
-    async feedBeast() {
-      if (this.busy || !this.beastView) return;
-      this.busy = true;
-      try {
-        const { collected, world } = await playService.beastFeed(this.beastView.id);
-        this.apply(world);
-        vibrate(10);
-        if (collected) this.$emit('show-alert', `Sa bulle, ramassée d’abord : +${collected} ${LABEL.food}`);
-      } catch (error) {
-        this.$emit('show-alert', messageOf(error, 'La bête n’a pas pu être nourrie.'));
-      } finally {
-        this.busy = false;
-      }
-    },
-    // Ramasser les bulles de toutes les bêtes ; at : point de l'écran d'où partent les éclats
-    async collectBeasts(at = null) {
-      if (this.busy) return;
-      this.busy = true;
-      try {
-        const { food, world } = await playService.beastsCollect();
-        this.apply(world);
-        if (food) {
-          if (at) burst(at, 14, 60);
-          vibrate([10, 30, 14]);
-          this.$emit('show-alert', `Bulles ramassées : +${food} ${LABEL.food}`);
-        }
-      } catch (error) {
-        this.$emit('show-alert', messageOf(error, 'Les bulles n’ont pas pu être ramassées.'));
-      } finally {
-        this.busy = false;
-      }
-    },
-    // « Tout combler » (fiche du Foyer) : tout ce qui peut l'être, tant que le stock suffit
-    async fillAllNeeds() {
-      if (this.busy) return;
-      this.busy = true;
-      try {
-        const { filled, coins, world } = await playService.villagersNeeds();
-        this.apply(world);
-        if (coins !== undefined) this.$emit('coins-updated', coins);
-        vibrate([10, 30, 10]);
-        const n = filled.length;
-        this.$emit('show-alert', `${n} besoin${n > 1 ? 's' : ''} comblé${n > 1 ? 's' : ''} : tes habitants te remercient !`);
-      } catch (error) {
-        this.$emit('show-alert', messageOf(error, 'Les besoins n’ont pas pu être comblés.'));
-      } finally {
-        this.busy = false;
-      }
     },
     // Renommer : un bâtiment dès son palier III (avant, on dit quand), un quartier à soi
     startRename(kind, id) {
@@ -1740,360 +1301,6 @@ export default {
         vibrate(8);
       } catch (error) {
         this.$emit('show-alert', messageOf(error, 'Le nom n’a pas pu changer.'));
-      } finally {
-        this.busy = false;
-      }
-    },
-    // Mini-jeux : la fiche du bâtiment se ferme, la fenêtre du jeu s'ouvre sur sa règle
-    openGame(id) {
-      this.site = null;
-      this.gameId = id;
-      this.gameRun = null;
-      this.gameResult = null;
-      this.gameError = '';
-      this.syncLoop();
-    },
-    // Une partie : prise sur la réserve par le serveur, qui donne la graine (Rejouer : une nouvelle)
-    async startGame() {
-      if (this.gameStarting) return;
-      this.gameStarting = true;
-      this.gameError = '';
-      try {
-        const { run, world } = await playService.gameStart(this.gameId);
-        this.gameResult = null;
-        this.apply(world);
-        this.gameRun = run;
-      } catch (error) {
-        this.gameError = messageOf(error, 'La partie n’a pas pu commencer.');
-        this.gameRun = null;
-        this.load();
-      } finally {
-        this.gameStarting = false;
-      }
-    },
-    async finishGame(input) {
-      this.gameSending = true;
-      try {
-        const { earned, raw, detail, coins, world } = await playService.gameFinish(this.gameRun.id, input);
-        this.gameResult = { earned, raw, detail };
-        this.apply(world);
-        this.$emit('coins-updated', coins);
-        vibrate(earned ? [12, 40, 18] : 8);
-      } catch (error) {
-        this.gameError = messageOf(error, 'Le serveur n’a pas pu compter tes prises.');
-        this.load();
-      } finally {
-        this.gameSending = false;
-      }
-    },
-    closeGame() {
-      this.gameId = null;
-      this.gameRun = null;
-      this.syncLoop();
-    },
-    closeHarvest() {
-      this.run = null;
-      this.syncLoop();
-      // Un coffre est tombé pendant la partie : il s'ouvre au retour sur l'île
-      if (this.runChest) this.showChest(this.runChest);
-      this.runChest = null;
-    },
-    // Ouvre un coffre qui attend (jour, bouteille, chapitre, quête) : le serveur tire et donne le lot, l'île le montre
-    async openChest(source) {
-      if (this.busy) return;
-      this.busy = true;
-      // Le coffre va s'ouvrir : ni naufrage ni scène par-dessus (ils attendent qu'il se referme)
-      const held = this.holdWreck;
-      this.holdWreck = true;
-      try {
-        const { chest, coins, world } = await playService.worldChest(source);
-        this.apply(world);
-        this.$emit('coins-updated', coins);
-        this.chestsOpen = false;
-        this.showChest(chest);
-      } catch (error) {
-        this.$emit('show-alert', messageOf(error, 'Le coffre ne s’est pas ouvert.'));
-        this.load();
-      } finally {
-        this.busy = false;
-        this.holdWreck = held;
-        this.emitQuest();
-      }
-    },
-    // « Tout ouvrir » : le serveur ouvre tout ce qui attend (jour, chapitres, quêtes, bouteille), l'île montre la rafale
-    async openAllChests() {
-      if (this.busy) return;
-      this.busy = true;
-      const held = this.holdWreck;
-      this.holdWreck = true;
-      try {
-        const { chests, coins, world } = await playService.worldChestsAll();
-        this.apply(world);
-        this.$emit('coins-updated', coins);
-        this.chestsOpen = false;
-        this.haul = chests;
-        vibrate([10, 40, 14, 40, 18]);
-      } catch (error) {
-        this.$emit('show-alert', messageOf(error, 'Les coffres ne se sont pas ouverts.'));
-        this.load();
-      } finally {
-        this.busy = false;
-        this.holdWreck = held;
-        this.emitQuest();
-      }
-    },
-    // Ce qu'un lot montre de son bâtiment (teinte, pièce rare) : l'aperçu paré, s'il peut s'y porter, s'il y est porté
-    prizeLook({ prize }) {
-      const site = prize.site ? this.state.sites.find(s => s.id === prize.site) : null;
-      const item = site ? site.shop.find(i => i.id === prize.item) : null;
-      return {
-        art: item ? this.itemArt(site, item) : '',
-        wearable: Boolean(item && site.level && site.skin !== item.id),
-        worn: Boolean(item && site.skin === item.id)
-      };
-    },
-    // Montre un coffre ouvert : sa série (coffre du jour), le mot de la bouteille, l'aperçu du bâtiment paré
-    showChest(chest) {
-      const { source } = chest;
-      const { art, wearable } = this.prizeLook(chest);
-      this.reveal = {
-        chest,
-        streak: source.startsWith('jour:') ? this.state.chests.daily.streak : 0,
-        note: source.startsWith('bouteille:') ? noteOf(source, chest.story) : '',
-        art,
-        wearable
-      };
-      vibrate([10, 40, 14]);
-    },
-    // « Porter » à l'ouverture : la teinte ou la pièce rare va tout de suite sur son bâtiment
-    async wearRevealed() {
-      const { prize } = this.reveal.chest;
-      await this.wearSkin(this.state.sites.find(s => s.id === prize.site), prize.item);
-      this.reveal = null;
-    },
-    // Enseigne : un style porté (acheté au passage s'il ne l'est pas : le solde suit), ou le nom écrit dessus
-    async chooseSign(site, look) {
-      this.busy = true;
-      try {
-        const { coins, world } = await playService.worldSign(site.id, look.id);
-        this.apply(world);
-        if (coins !== undefined) this.$emit('coins-updated', coins);
-        vibrate([8, 30, 12]);
-      } catch (error) {
-        this.$emit('show-alert', messageOf(error, 'L’enseigne n’a pas pu changer.'));
-      } finally {
-        this.busy = false;
-      }
-    },
-    async renameSigns(name) {
-      this.busy = true;
-      try {
-        this.apply(await playService.worldSignName(name));
-        vibrate(8);
-      } catch (error) {
-        this.$emit('show-alert', messageOf(error, 'Le nom n’a pas pu changer.'));
-      } finally {
-        this.busy = false;
-      }
-    },
-    // Appui long sur une enseigne : la boutique de son bâtiment, à la section Enseigne
-    openNameSign(site) {
-      this.site = site;
-      this.siteTab = 'shop';
-      this.$nextTick(() => {
-        if (this.$refs.shop) this.$refs.shop.showSign(this.reduced());
-      });
-    },
-    // « Porter » dans la rafale : la fenêtre reste ouverte, le lot passe à « Porté »
-    wearHauled(index) {
-      const { prize } = this.haul[index];
-      return this.wearSkin(this.state.sites.find(s => s.id === prize.site), prize.item);
-    },
-    /* ---------- Créations d'île : établi, assemblage, pose ---------- */
-    craftName(id) {
-      const c = this.state && this.state.crafts ? this.state.crafts.catalog.find(k => k.id === id) : null;
-      return c ? c.name : id;
-    },
-    openBench() {
-      this.site = null;
-      this.questOpen = false;
-      this.benchOpen = true;
-    },
-    // « Assembler » (ou Recommencer) : le serveur tire les pièces ; rien n'est payé avant la réussite
-    async assemble(craftId) {
-      if (this.craftStarting) return;
-      this.craftStarting = true;
-      try {
-        const { run } = await playService.craftStart(craftId);
-        this.craftRun = run;
-        this.craftError = '';
-        this.craftMade = false;
-      } catch (error) {
-        const message = messageOf(error, 'L’assemblage n’a pas pu commencer.');
-        if (this.craftRun) this.craftError = message;
-        else this.$emit('show-alert', message);
-      } finally {
-        this.craftStarting = false;
-      }
-    },
-    // Gabarit rempli : le serveur vérifie la disposition, prend les ressources, met la création en réserve
-    async finishCraft(layout) {
-      if (!this.craftRun || this.craftSending) return;
-      this.craftSending = true;
-      try {
-        const { world } = await playService.craftFinish(this.craftRun.id, layout);
-        this.apply(world);
-        this.craftMade = true;
-        vibrate([10, 30, 10]);
-      } catch (error) {
-        // Refusé : cet assemblage est rendu ; « Recommencer » en tire un autre
-        this.craftError = messageOf(error, 'L’assemblage n’a pas pu être vérifié.');
-      } finally {
-        this.craftSending = false;
-      }
-    },
-    closePuzzle() {
-      this.craftRun = null;
-      this.craftError = '';
-      this.craftMade = false;
-    },
-    // « Poser » (établi, ou juste après l'assemblage) : les cases permises s'allument sur l'île
-    startCraftPlace(craftId, from = null) {
-      this.benchOpen = false;
-      this.closePuzzle();
-      this.craftMenu = null;
-      this.craftConfirm = null;
-      this.craftPlacing = { craft: craftId, from };
-      if (!this.craftSpots.length) {
-        this.craftPlacing = null;
-        // Une création qui en garde une autre à portée le dit (règle « près de »)
-        this.$emit('show-alert', (from && this.placedAt(from).keepText) || 'Aucune case libre ne convient pour l’instant : sa règle de pose est dans l’établi.');
-        return;
-      }
-      vibrate(8);
-      this.focusOnSpots();
-      this.draw(performance.now());
-    },
-    placeFromBench(craftId) {
-      this.startCraftPlace(craftId);
-    },
-    placeFromPuzzle() {
-      this.startCraftPlace(this.craftRun.craft);
-    },
-    // La caméra va vers la case dorée la plus proche du centre de la vue
-    focusOnSpots() {
-      if (!this.craftSpots.length) return;
-      const near = this.craftSpots.map(sp => ({ sp, c: this.ground(sp.x, sp.y) }))
-        .reduce((a, b) => (Math.hypot(b.c.x - this.cam.x, b.c.y - this.cam.y) < Math.hypot(a.c.x - this.cam.x, a.c.y - this.cam.y) ? b : a));
-      this.cam.x = near.c.x;
-      this.cam.y = near.c.y - 10;
-      this.cam.s = Math.max(this.cam.s, 1.15);
-      this.clampCam();
-    },
-    cancelCraft() {
-      this.craftPlacing = null;
-      this.craftConfirm = null;
-      this.draw(performance.now());
-    },
-    // Toucher pendant la pose : une case dorée demande confirmation (déplacement : elle s'y pose aussitôt)
-    tapCraftSpot(px, py) {
-      const cell = this.tileAt(px, py);
-      if (!cell || !this.craftSpots.some(sp => sp.x === cell.x && sp.y === cell.y)) {
-        this.craftConfirm = null;
-        this.$emit('show-alert', this.placingCraft ? `Choisis une case dorée : ${this.placingCraft.place.toLowerCase()}` : 'Choisis une case dorée.');
-        this.draw(performance.now());
-        return;
-      }
-      vibrate(6);
-      if (this.craftPlacing.from) this.moveCraftTo(cell);
-      else this.craftConfirm = { x: cell.x, y: cell.y, px, py };
-      this.draw(performance.now());
-    },
-    // Pose confirmée : le serveur vérifie la règle ; la création surgit dans un nuage d'éclats
-    async confirmCraft() {
-      const target = this.craftConfirm;
-      const craft = this.placingCraft;
-      if (!target || !craft || this.busy) return;
-      this.busy = true;
-      const key = `craft:${target.x},${target.y}`;
-      try {
-        this.pops.set(key, performance.now());
-        const { coins, world } = await playService.craftPlace(craft.id, target.x, target.y);
-        this.craftPlacing = null;
-        this.craftConfirm = null;
-        this.apply(world);
-        if (coins !== undefined) this.$emit('coins-updated', coins);
-        this.$nextTick(() => {
-          const at = center(this.screenRectOf(target.x, target.y));
-          ring(at, 80);
-          burst(at, 18, 60);
-          vibrate([12, 40, 18]);
-        });
-      } catch (error) {
-        this.pops.delete(key);
-        this.craftConfirm = null;
-        this.$emit('show-alert', messageOf(error, 'La création n’a pas pu être posée.'));
-        this.load();
-      } finally {
-        this.busy = false;
-      }
-    },
-    // Déplacement gratuit vers la case dorée touchée
-    async moveCraftTo(cell) {
-      const { from } = this.craftPlacing;
-      const key = `craft:${cell.x},${cell.y}`;
-      this.craftPlacing = null;
-      this.busy = true;
-      try {
-        this.pops.set(key, performance.now());
-        const { coins, world } = await playService.craftMove(from.x, from.y, cell.x, cell.y);
-        this.apply(world);
-        if (coins !== undefined) this.$emit('coins-updated', coins);
-        this.$nextTick(() => {
-          burst(center(this.screenRectOf(cell.x, cell.y)), 14, 50);
-          vibrate([10, 30, 10]);
-        });
-      } catch (error) {
-        this.pops.delete(key);
-        this.$emit('show-alert', messageOf(error, 'La création n’a pas pu être déplacée.'));
-        this.load();
-      } finally {
-        this.busy = false;
-      }
-    },
-    // Menu d'une création posée (appui long) : déplacer, ranger
-    openCraftMenu(craft) {
-      const c = this.ground(craft.x, craft.y);
-      const sp = this.toScreen(c.x, c.y);
-      // Le menu tient au-dessus de la création, sans sortir de la vue par le haut
-      this.menuPos = { x: Math.max(80, Math.min(this.geo.width - 80, sp.x)), y: Math.max(56, sp.y - TW * this.cam.s * 1.15) };
-      this.craftMenu = { x: craft.x, y: craft.y, craft: craft.craft };
-    },
-    moveFromMenu() {
-      const { x, y, craft } = this.craftMenu;
-      this.startCraftPlace(craft, { x, y });
-    },
-    // Création posée à cette case ({ x, y, craft, keeps?, keepText? }), ou un objet vide
-    placedAt(cell) {
-      return this.crafted.find(c => c.x === cell.x && c.y === cell.y) || {};
-    },
-    // Rangée dans la réserve de l'établi : elle se repose plus tard, sans rien payer ; pas si une autre compte sur elle
-    async storeFromMenu() {
-      const { x, y, craft } = this.craftMenu;
-      this.craftMenu = null;
-      const { keepText } = this.placedAt({ x, y });
-      if (keepText) {
-        this.$emit('show-alert', keepText);
-        return;
-      }
-      this.busy = true;
-      try {
-        const { coins, world } = await playService.craftStore(x, y);
-        this.apply(world);
-        if (coins !== undefined) this.$emit('coins-updated', coins);
-        this.$emit('show-alert', `${this.craftName(craft)} rangée dans la réserve de l’établi.`);
-      } catch (error) {
-        this.$emit('show-alert', messageOf(error, 'La création n’a pas pu être rangée.'));
       } finally {
         this.busy = false;
       }

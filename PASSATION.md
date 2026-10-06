@@ -188,8 +188,14 @@ chronométrer 20 appels. Comparer à zoom égal, au même endroit.
   `trial.js` l'Épreuve ; `App.vue` garde les modes, l'Athanor, l'ère et les familles, le cycle de vie), `BookView.vue`
   fait (`shelf.js` l'étagère « Tes éléments », `pages.js` les modèles de pages tirés du Livre du serveur, `effects.js`
   les effets d'une découverte, `hangman.js` le pendu ; `BookView.vue` garde le chargement, le moteur, la navigation,
-  l'Encre, le cycle de vie, et les deux variables de module `openedOnce` et `lastKey`). Preuve d'un tel découpage : le relevé des membres du composant vivant (données, calculées, méthodes,
-  observateurs, crochets, et le texte de chaque fonction) est le même avant et après.
+  l'Encre, le cycle de vie, et les deux variables de module `openedOnce` et `lastKey`) ; 6) `WorldView.vue` de la même
+  façon, en deux lots (choix de l'auteur : mixins à côté du composant ; le moteur du canvas, déjà sorti dans
+  `world/view/` — caméra, dessin, gestes —, n'y bouge pas) : 6a fait (`folk.js` les habitants, les bêtes, les
+  visiteurs, Brume et Anya, `games.js` la Récolte et les mini-jeux, `chests.js` les coffres, `workshop.js` les créations
+  d'île), 6b à suivre (bâtiments, annexes, exploration, carte, ciel). Les observateurs et les crochets restent dans le
+  composant (l'ordre de création des observateurs ne change pas). Preuve d'un tel découpage : le relevé des membres du
+  composant vivant (données, calculées, méthodes, observateurs, crochets, et le texte de chaque fonction) est le même
+  avant et après.
 - **Piège du passage en scoped** : une règle scoped gagne un attribut de spécificité. Si elle vise aussi la racine d'un
   composant enfant (un glyphe `img.glyph` dans un portrait, par exemple), elle peut l'emporter sur le style propre de
   l'enfant : garder la spécificité d'avant avec `:where()` sur l'ancêtre (`SiteOverview.css`, le portrait).
