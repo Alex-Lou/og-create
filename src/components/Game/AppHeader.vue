@@ -47,6 +47,8 @@ export default {
 </script>
 
 <style scoped>
+/* Ses jetons : le reflet du sceau d'ère et celui de la pièce */
+.hud { --header-seal-hi: #d9705c; --header-coin-hi: #fff4c8; }
 .hud {
   position: relative;
   z-index: var(--z-header);
@@ -89,7 +91,7 @@ export default {
   font-weight: 700;
   font-size: 13px;
   color: var(--vellum-50);
-  background: radial-gradient(circle at 35% 30%, #d9705c 0 20%, var(--wax-500) 55%, var(--wax-700) 100%);
+  background: radial-gradient(circle at 35% 30%, var(--header-seal-hi) 0 20%, var(--wax-500) 55%, var(--wax-700) 100%);
   box-shadow: inset 0 0 0 2px rgba(0, 0, 0, 0.12);
   /* Nouvelle ère : le sceau se pose */
   animation: seal-in var(--oc-slow) var(--oc-ease-spring);
@@ -104,10 +106,10 @@ export default {
   width: 24px;
   height: 24px;
   border-radius: var(--r-round);
-  background: radial-gradient(circle at 35% 30%, #fff4c8 0 18%, var(--gold-400) 40%, var(--gold-600) 100%);
-  box-shadow: inset 0 0 0 2px rgba(140, 94, 24, 0.55), inset 0 -2px 0 rgba(140, 94, 24, 0.35);
+  background: radial-gradient(circle at 35% 30%, var(--header-coin-hi) 0 18%, var(--gold-400) 40%, var(--gold-600) 100%);
+  box-shadow: inset 0 0 0 2px rgba(var(--gold-700-rgb), 0.55), inset 0 -2px 0 rgba(var(--gold-700-rgb), 0.35);
 }
-.hud__coin::after { content: ''; position: absolute; inset: 6px; border-radius: var(--r-round); border: 1.5px solid rgba(140, 94, 24, 0.5); }
+.hud__coin::after { content: ''; position: absolute; inset: 6px; border-radius: var(--r-round); border: 1.5px solid rgba(var(--gold-700-rgb), 0.5); }
 .hud__value {
   font-weight: 900;
   font-size: 16px;

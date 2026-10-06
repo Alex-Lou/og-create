@@ -89,6 +89,15 @@ export default {
 </script>
 
 <style scoped>
+/* Ses jetons : sa lueur bleue, sa bulle, son nom, la brume d'où il naît */
+.guide {
+  --guide-glow: rgba(92, 200, 240, .45);
+  --guide-bubble-radius: 18px 18px 18px 6px;
+  --guide-bubble-shadow: rgba(40, 28, 18, .28);
+  --guide-name: #3e9bc4;
+  --guide-mist: radial-gradient(closest-side, rgba(232, 242, 250, .98), rgba(206, 228, 244, .5) 60%, rgba(206, 228, 244, 0));
+  --guide-birth: radial-gradient(closest-side, rgba(170, 230, 255, .9), rgba(170, 230, 255, 0));
+}
 .guide {
   position: fixed; z-index: var(--z-guide);
   left: 12px; right: 12px; bottom: calc(var(--oc-tabbar-h) + 12px + env(safe-area-inset-bottom));
@@ -101,14 +110,14 @@ export default {
 /* Un autre que Brume parle (le tutoriel) : son portrait à la place du feu follet */
 .guide__face { width: 48px; height: 67px; filter: drop-shadow(0 3px 6px rgba(0, 0, 0, .3)); }
 .guide__spirit { position: relative; flex: none; width: 56px; height: 64px; display: grid; place-items: end center; pointer-events: auto; }
-.guide__wisp { filter: drop-shadow(0 4px 10px rgba(92, 200, 240, .45)); animation: guide-float 3.2s ease-in-out infinite; }
+.guide__wisp { filter: drop-shadow(0 4px 10px var(--guide-glow)); animation: guide-float 3.2s ease-in-out infinite; }
 .guide__bubble {
   position: relative; pointer-events: auto;
-  padding: 10px 14px 10px; border-radius: 18px 18px 18px 6px;
+  padding: 10px 14px 10px; border-radius: var(--guide-bubble-radius);
   background: var(--vellum-50); color: var(--ink-900);
-  box-shadow: 0 10px 28px rgba(40, 28, 18, .28), inset 0 0 0 1px var(--oc-line);
+  box-shadow: 0 10px 28px var(--guide-bubble-shadow), inset 0 0 0 1px var(--oc-line);
 }
-.guide__name { display: block; font-family: var(--oc-font-mono); font-size: 11px; font-weight: 800; letter-spacing: .14em; text-transform: uppercase; color: #3E9BC4; }
+.guide__name { display: block; font-family: var(--oc-font-mono); font-size: 11px; font-weight: 800; letter-spacing: .14em; text-transform: uppercase; color: var(--guide-name); }
 .guide__text { margin: 4px 0 8px; font-family: var(--oc-font-display); font-style: italic; font-size: 16px; line-height: 1.4; }
 .guide__actions { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: 8px; }
 .guide__btn {
@@ -122,13 +131,13 @@ export default {
 /* Naissance : les volutes se resserrent sur Brume, qui prend forme dans un flou, puis la bulle paraît */
 .guide__mist {
   position: absolute; left: 50%; bottom: 12px; width: 64px; height: 42px; margin-left: -32px; border-radius: var(--r-round);
-  background: radial-gradient(closest-side, rgba(232, 242, 250, .98), rgba(206, 228, 244, .5) 60%, rgba(206, 228, 244, 0));
+  background: var(--guide-mist);
   animation: guide-mist 1.6s cubic-bezier(.45, 0, .25, 1) var(--d) both;
 }
 /* Éclat quand la flamme naît */
 .guide.is-birth .guide__spirit::after {
   content: ''; position: absolute; left: 50%; bottom: 18px; width: 60px; height: 60px; margin-left: -30px; border-radius: var(--r-round);
-  background: radial-gradient(closest-side, rgba(170, 230, 255, .9), rgba(170, 230, 255, 0));
+  background: var(--guide-birth);
   animation: guide-bloom .9s ease-out 1.05s both; pointer-events: none;
 }
 .guide.is-birth .guide__wisp { animation: guide-born 1.3s cubic-bezier(.3, 1.3, .5, 1) .9s both, guide-float 3.2s ease-in-out 2.2s infinite; }
@@ -142,7 +151,7 @@ export default {
 @keyframes guide-born {
   0% { opacity: 0; transform: scale(.2); filter: blur(8px); }
   60% { opacity: 1; filter: blur(1px); }
-  100% { opacity: 1; transform: scale(1); filter: drop-shadow(0 4px 10px rgba(92, 200, 240, .45)); }
+  100% { opacity: 1; transform: scale(1); filter: drop-shadow(0 4px 10px var(--guide-glow)); }
 }
 @keyframes guide-bubble { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
 @keyframes guide-float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-5px); } }

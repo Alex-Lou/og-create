@@ -85,38 +85,47 @@ export default {
 </script>
 
 <style scoped>
+/* Ses jetons (l'encre et le bleu du prologue : tokens/prologue.css) : la nuit, la bulle, la pensée, les choix */
+.ps {
+  --ps-night: #05080f;
+  --ps-bubble-bg: rgba(250, 244, 228, .96);
+  --ps-thought-bg: rgba(20, 30, 48, .82);
+  --ps-thought-ink: #e8eef8;
+  --ps-thought-ring: rgba(200, 220, 240, .25);
+  --ps-choice-rgb: 232, 238, 248;
+}
 .ps {
   position: fixed; inset: 0; z-index: var(--z-prologue); overflow: hidden; cursor: pointer; outline: none;
-  background: #05080F; color: var(--oc-night-ink);
+  background: var(--ps-night); color: var(--oc-night-ink);
   -webkit-tap-highlight-color: transparent; user-select: none;
 }
 .ps__caption {
   position: absolute; left: 0; right: 0; top: max(70px, calc(env(safe-area-inset-top) + 56px)); margin: 0; padding: 0 16px; text-align: center;
-  font-family: var(--font-fell); font-style: italic; font-size: 20px; color: rgba(244, 238, 220, .85);
+  font-family: var(--font-fell); font-style: italic; font-size: 20px; color: rgba(var(--oc-night-ink-rgb), .85);
   text-shadow: 0 2px 8px rgba(0, 0, 0, .8);
 }
 .ps__bubble {
   position: absolute; left: 50%; bottom: max(28px, calc(env(safe-area-inset-bottom) + 18px)); transform: translateX(-50%);
   width: min(560px, calc(100% - 32px)); padding: 14px 18px 12px; border-radius: var(--r-board);
-  background: rgba(250, 244, 228, .96); color: #3E2A1E;
+  background: var(--ps-bubble-bg); color: var(--prologue-ink);
   box-shadow: 0 10px 30px rgba(0, 0, 0, .45), inset 0 0 0 1px rgba(var(--oc-gilt-rgb), .6);
 }
-.ps__bubble.is-thought { background: rgba(20, 30, 48, .82); color: #E8EEF8; box-shadow: 0 10px 30px rgba(0, 0, 0, .45), inset 0 0 0 1px rgba(200, 220, 240, .25); }
-.ps__who { display: block; margin-bottom: 2px; font-family: var(--font-fell-sc); font-size: 15px; letter-spacing: .06em; color: #2F6286; }
+.ps__bubble.is-thought { background: var(--ps-thought-bg); color: var(--ps-thought-ink); box-shadow: 0 10px 30px rgba(0, 0, 0, .45), inset 0 0 0 1px var(--ps-thought-ring); }
+.ps__who { display: block; margin-bottom: 2px; font-family: var(--font-fell-sc); font-size: 15px; letter-spacing: .06em; color: var(--prologue-blue); }
 .ps__text { margin: 0; font-family: var(--font-fell); font-size: 20px; line-height: 1.3; }
 .is-thought .ps__text { font-style: italic; }
 .ps__hint { display: block; margin-top: 8px; font-family: var(--font-ui); font-size: 12px; font-weight: 800; letter-spacing: .08em; text-transform: uppercase; opacity: .6; }
-.ps__hint--alone { position: absolute; left: 0; right: 0; bottom: max(30px, calc(env(safe-area-inset-bottom) + 20px)); text-align: center; color: rgba(244, 238, 220, .7); }
+.ps__hint--alone { position: absolute; left: 0; right: 0; bottom: max(30px, calc(env(safe-area-inset-bottom) + 20px)); text-align: center; color: rgba(var(--oc-night-ink-rgb), .7); }
 .ps__choices { display: flex; gap: 10px; margin-top: 12px; }
 .ps__choice {
   flex: 1; min-height: 44px; border: 0; border-radius: var(--r-pill); cursor: pointer;
-  background: rgba(232, 238, 248, .14); color: inherit; box-shadow: inset 0 0 0 1px rgba(232, 238, 248, .35);
+  background: rgba(var(--ps-choice-rgb), .14); color: inherit; box-shadow: inset 0 0 0 1px rgba(var(--ps-choice-rgb), .35);
   font-family: var(--font-fell); font-size: 18px;
 }
 .ps__skip {
   position: absolute; top: max(14px, env(safe-area-inset-top)); right: 14px; min-height: 40px; padding: 8px 16px;
   border: 0; border-radius: var(--r-pill); cursor: pointer;
-  background: rgba(0, 0, 0, .35); color: rgba(244, 238, 220, .85); box-shadow: inset 0 0 0 1px rgba(244, 238, 220, .3);
+  background: rgba(0, 0, 0, .35); color: rgba(var(--oc-night-ink-rgb), .85); box-shadow: inset 0 0 0 1px rgba(var(--oc-night-ink-rgb), .3);
   font-family: var(--font-ui); font-size: 13px; font-weight: 800;
 }
 .ps__skip:focus-visible, .ps__choice:focus-visible { outline: 3px solid var(--oc-aim); outline-offset: 2px; }
