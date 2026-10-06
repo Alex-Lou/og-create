@@ -46377,10 +46377,129 @@
   {
    "id": "plantes/bruyere",
    "rubrique": "plantes",
-   "titre": "Bruyère",
+   "titre": "Bruyère (grande, mauve)",
    "images": 1,
    "fichiers": [
     "svg/plantes/bruyere.svg"
+   ],
+   "cadre": [
+    -50,
+    -115,
+    100,
+    140
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "plantes/bruyere_papillon",
+   "rubrique": "plantes",
+   "titre": "Bruyère (grande, mauve, un papillon posé)",
+   "images": 1,
+   "fichiers": [
+    "svg/plantes/bruyere_papillon.svg"
+   ],
+   "cadre": [
+    -50,
+    -115,
+    100,
+    140
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "plantes/bruyere_petite",
+   "rubrique": "plantes",
+   "titre": "Bruyère (petite, mauve)",
+   "images": 1,
+   "fichiers": [
+    "svg/plantes/bruyere_petite.svg"
+   ],
+   "cadre": [
+    -50,
+    -115,
+    100,
+    140
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "plantes/bruyere_petite_papillon",
+   "rubrique": "plantes",
+   "titre": "Bruyère (petite, mauve, un papillon posé)",
+   "images": 1,
+   "fichiers": [
+    "svg/plantes/bruyere_petite_papillon.svg"
+   ],
+   "cadre": [
+    -50,
+    -115,
+    100,
+    140
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "plantes/bruyere_petite_rose",
+   "rubrique": "plantes",
+   "titre": "Bruyère (petite, rose)",
+   "images": 1,
+   "fichiers": [
+    "svg/plantes/bruyere_petite_rose.svg"
+   ],
+   "cadre": [
+    -50,
+    -115,
+    100,
+    140
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "plantes/bruyere_petite_rose_papillon",
+   "rubrique": "plantes",
+   "titre": "Bruyère (petite, rose, un papillon posé)",
+   "images": 1,
+   "fichiers": [
+    "svg/plantes/bruyere_petite_rose_papillon.svg"
+   ],
+   "cadre": [
+    -50,
+    -115,
+    100,
+    140
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "plantes/bruyere_rose",
+   "rubrique": "plantes",
+   "titre": "Bruyère (grande, rose)",
+   "images": 1,
+   "fichiers": [
+    "svg/plantes/bruyere_rose.svg"
+   ],
+   "cadre": [
+    -50,
+    -115,
+    100,
+    140
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "plantes/bruyere_rose_papillon",
+   "rubrique": "plantes",
+   "titre": "Bruyère (grande, rose, un papillon posé)",
+   "images": 1,
+   "fichiers": [
+    "svg/plantes/bruyere_rose_papillon.svg"
    ],
    "cadre": [
     -50,
