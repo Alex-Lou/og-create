@@ -385,7 +385,6 @@
 </template>
 
 <script>
-import { messageOf } from '@/utils/errors';
 import playService from '@/services/playService';
 import HarvestGame from '../Games/HarvestGame/HarvestGame.vue';
 import ShopItemSheet from '../Sites/ShopItemSheet/ShopItemSheet.vue';
@@ -413,80 +412,48 @@ import SiteSheet from '../Sites/SiteSheet/SiteSheet.vue';
 import IslandHud from '../Hud/IslandHud/IslandHud.vue';
 import IslandButtons from '../Hud/IslandButtons/IslandButtons.vue';
 import { missingOf } from '@/world/needs';
-import { landmarkTop, landmarkScale } from '@/world/landmarkSprites';
-import { landmarksShown, landmarksWaiting, landmarkTip } from '@/world/landmarks';
-import { depositsShown, depositsReady, depositWait } from '@/world/finds';
+import { landmarksShown, landmarksWaiting } from '@/world/landmarks';
+import { depositsShown, depositsReady } from '@/world/finds';
 import { CLIMATE_NAMES } from '@/world/climates';
-import { annexReady, variantsOf } from '@/world/annexes';
+import { variantsOf } from '@/world/annexes';
 import GModal from '@/components/ui/GModal/GModal.vue';
-import { guideOf, guideKind } from '@/world/itemGuide';
 import { villageOf } from '@/world/village';
 import { clearDrawings } from '@/book/painter';
-import { burst, ring, vibrate, center, reducedMotion } from '@/utils/fx';
-import { LABEL, RESOURCES } from '@/game/resources';
-import { itemArt, itemLock, itemBuyable } from '@/world/shop';
-import { levelAffordable, levelReady } from '@/world/levels';
-import { drawSprite, clearSprites } from '@/world/spriteCache';
-import { islandOf, liveOf, TerrainCache, HS } from '@/world/terrain';
-import { FLOATING_ZONE, COLONY_ZONE, isletsOf } from '@/world/islets';
-import { seaOf, spread } from '@/world/sea';
+import { reducedMotion } from '@/utils/fx';
+import { clearSprites } from '@/world/spriteCache';
+import { islandOf, liveOf, TerrainCache } from '@/world/terrain';
+import { FLOATING_ZONE, isletsOf } from '@/world/islets';
+import { seaOf } from '@/world/sea';
 import { stageOf as civilizationOf } from '@/game/vigils';
-import { brumeLook, opusOf, secretDue, secretOf } from '@/game/opus';
+import { brumeLook, secretDue, secretOf } from '@/game/opus';
 import { faceHref } from '@/world/faces';
 import { guide } from '@/game/guide';
-import { roman } from '@/utils/roman';
-import { phaseAt, forcedPhase, hash } from '@/world/scene';
+import { forcedPhase } from '@/world/scene';
 import { perfWanted, perfMeter } from '@/world/perf';
-import { clockText } from '@/world/sky';
 import cameraMethods from '@/world/view/camera';
 import drawMethods from '@/world/view/draw';
 import gestureMethods from '@/world/view/gestures';
-import { TW } from '@/world/view/constants';
 import { memory } from '@/world/view/memory';
 import folk from './folk';
 import games from './games';
 import chests from './chests';
 import workshop from './workshop';
-
-// Sortes d'articles dont le mode d'emploi a déjà été montré (une fois par sorte, sur cet appareil)
-const GUIDES_KEY = 'oc_item_guides';
-function guidesSeen() {
-  try {
-    return JSON.parse(localStorage.getItem(GUIDES_KEY) || '[]');
-  } catch (error) {
-    return [];
-  }
-}
-const guideSeen = kind => guidesSeen().includes(kind);
-function markGuideSeen(kind) {
-  try {
-    localStorage.setItem(GUIDES_KEY, JSON.stringify([...new Set([...guidesSeen(), kind])]));
-  } catch (error) {
-    // Stockage indisponible : le mode d'emploi reviendra au prochain achat
-  }
-}
-// Journée en accéléré (toucher sur l'horloge) : 24 h de l'île en 30 s
-const WARP_MS = 30000;
-const DAY_MS = 86400000;
-// Achat d'un quartier : la brume se dissipe (ms)
-const UNVEIL_MS = 1600;
-// Achat en un toucher : « Annuler » reste proposé 4 s (le serveur accepte l'annulation un peu plus longtemps)
-const UNDO_MS = 4000;
-const BEACH_MIX = [['palm', 0.1], ['mossy', 0.15], ['shells', 0.2], ['driftwood', 0.23]];
-const ROCK_MIX = [['rock', 0.3], ['rocks', 0.55], ['crag', 0.72], ['mossy', 1]];
-const GRASS_MIX = [['tuft', 0.1], ['flowers', 0.16], ['bush', 0.185], ['mushrooms', 0.205], ['stump', 0.22], ['birch', 0.235], ['apple', 0.245], ['autumn', 0.255], ['log', 0.265]];
-// Forêt : deux arbres par case (sapins en hauteur) ; au bord de l'eau douce, roseaux et nénuphars
-const FOREST_LOW = ['tree', 'birch', 'pine', 'autumn'];
-const FOREST_HIGH = ['pine', 'pine', 'tree'];
+import sites from './sites';
+import annexes from './annexes';
+import explore from './explore';
+import terrain from './terrain';
+import sky from './sky';
 
 // Le Monde : l'île du joueur en isométrique (Canvas 2D), avec une caméra qu'on fait glisser et zoomer.
 // L'état vient du serveur (chantiers, réserves, parties, créations d'île) ; le dessin, la caméra et la boucle
 // d'animation sont non réactifs et s'arrêtent quand l'onglet est caché ou le composant démonté.
 export default {
   name: 'WorldView',
-  // Les gens, les jeux, les coffres et l'établi vivent chacun dans leur fichier, à côté (mixins) ; le moteur du canvas
-  // (caméra, dessin, gestes) dans world/view/
-  mixins: [folk, games, chests, workshop],
+  // Chaque sujet de l'île vit dans son fichier, à côté (mixins) : les gens, les jeux, les coffres, l'établi, les
+  // bâtiments, les annexes, l'exploration, la carte, le ciel ; le moteur du canvas (caméra, dessin, gestes) dans
+  // world/view/. L'île garde ce qui les relie : le chargement, la quête, le plein écran, les observateurs, le cycle
+  // de vie
+  mixins: [folk, games, chests, workshop, sites, annexes, explore, terrain, sky],
   components: { HarvestGame, ShopItemSheet, GModal, ChestList, ChestReveal, ChestHaul, AnnexPanel, AnnexSheet, MiniGame, VillagerSheet, BeastSheet, VisitorSheet, RenameSheet, CraftBench, CraftPuzzle, ExplorerLog, FindsSheet, WreckScene, BrumeSheet, ZoneSheet, SiteShop, SiteSteps, SiteOverview, SiteSheet, IslandHud, IslandButtons },
   props: {
     // Glyphes des éléments du Livre (savoir-faire demandé à l'établi)
@@ -504,45 +471,17 @@ export default {
       guest: false,
       loadError: false,
       busy: false,
-      site: null,
-      // Onglet de la fiche d'un bâtiment : aperçu ou évolution
-      siteTab: 'overview',
-      // Quartier dont la fiche d'achat est ouverte
-      zone: null,
-      // Dernier achat de la boutique, encore annulable : { id, name }
-      undoable: null,
-      // Article de la boutique dont la fiche est ouverte (id, dans la boutique du bâtiment ouvert)
-      // Fiche d'un article ouverte : { siteId, itemId } ; mode d'emploi après un premier achat (même forme)
-      sheet: null,
-      guide: null,
       // Bulle d'info de l'appui long : { x, y, below, title, text, hint }
       tip: null,
       // Texte du compteur d'images (« ?perf »)
       perfText: '',
       // Plein écran : l'île seule, sans la barre du haut ni la barre d'onglets
       immersive: false,
-      // Carnet d'explorateur ouvert, et la page qu'il montre d'emblée (identifiant d'un lieu)
-      logOpen: false,
-      logFocus: null,
-      // Réserve des trouvailles de climat ouverte
-      findsOpen: false,
-      // Bâtiment ou quartier en train d'être renommé : { kind: 'site' | 'zone', id }
-      renaming: null,
       clock: Date.now(),
-      // Horloge de l'en-tête (heure, moment, temps, soleil) ; journée en accéléré
-      skyClock: null,
-      warping: false,
       // Fiche de Brume (quête active) ouverte
       questOpen: false,
       // Nom du peuple en cours de saisie (quête « peuple »)
-      peopleName: '',
-      // Naufrage annoncé (bible, § 6.7) : { id, zone, wreck, text } ou null
-      wreck: null,
-      // Annexe en cours de pose ou de déplacement : { siteId, annexId, from: { x, y } | null } ; case dorée choisie, en
-      // attente de confirmation : { x, y, px, py } ; fiche d'une annexe posée ouverte : { x, y }
-      annexPlacing: null,
-      annexConfirm: null,
-      annexSheet: null
+      peopleName: ''
     };
   },
   computed: {
@@ -577,82 +516,9 @@ export default {
       if (quest.kind === 'gather') return look('Montrer un gisement', depositsReady(state)[0]);
       return quest.target ? { label: 'Montrer', run: () => this.showQuestTarget() } : null;
     },
-    // Ce qu'on renomme : son nom actuel et celui d'origine
-    renameTarget() {
-      if (!this.renaming || !this.state) return null;
-      const { kind, id } = this.renaming;
-      const place = kind === 'site' ? this.state.sites.find(s => s.id === id) : this.state.map.zones.find(z => z.id === id);
-      if (!place) return null;
-      return { eyebrow: kind === 'site' ? 'Bâtiment' : 'Quartier', title: `Renommer ${place.name}`, current: place.name, base: place.baseName || place.name };
-    },
-    // « Tout ramasser » : ce qui attend dans les bâtiments, écus puis ressources : [{ id, glyph, n, label }]
-    harvestable() {
-      if (!this.state) return [];
-      const stock = this.state.pendingStock || {};
-      return [{ id: 'coins', glyph: 'ui:coin', n: this.state.pending, label: 'écus' }, ...RESOURCES.map(r => ({ id: r.id, glyph: r.glyph, n: stock[r.id], label: r.label }))]
-        .map(g => ({ ...g, n: Math.floor(g.n || 0) }))
-        .filter(g => g.n > 0);
-    },
-    // Lieux remarquables des quartiers connus ; ceux d'un quartier à soi qui attendent d'être découverts
-    shownLandmarks() {
-      return landmarksShown(this.state);
-    },
-    waitingLandmarks() {
-      return landmarksWaiting(this.state).length;
-    },
-    // Gisements des quartiers connus ; ceux d'un quartier à soi qui sont prêts ; des trouvailles en réserve
-    shownDeposits() {
-      return depositsShown(this.state);
-    },
-    readyDeposits() {
-      return depositsReady(this.state, this.clock - this.loadedAt).length;
-    },
-    ownedFinds() {
-      return Boolean(this.state && (this.state.finds || []).some(f => f.amount > 0));
-    },
     // Ressources et trouvailles de climat ensemble (ce que coûtent créations et annexes de climat)
     stockAll() {
       return this.state ? { ...this.state.stock, ...Object.fromEntries((this.state.finds || []).map(f => [f.id, f.amount])) } : {};
-    },
-    sheetSite() {
-      return this.sheet && this.state ? this.state.sites.find(s => s.id === this.sheet.siteId) || null : null;
-    },
-    sheetItem() {
-      return this.sheetSite ? this.sheetSite.shop.find(item => item.id === this.sheet.itemId) || null : null;
-    },
-    guideSite() {
-      return this.guide && this.state ? this.state.sites.find(s => s.id === this.guide.siteId) || null : null;
-    },
-    guideItem() {
-      return this.guideSite ? this.guideSite.shop.find(item => item.id === this.guide.itemId) || null : null;
-    },
-    guideText() {
-      return guideOf(this.guideItem, this.guideSite);
-    },
-    // Annexe en cours de pose : son bâtiment et sa carte du catalogue
-    placingSite() {
-      return this.annexPlacing && this.state ? this.state.sites.find(s => s.id === this.annexPlacing.siteId) || null : null;
-    },
-    placingAnnex() {
-      return this.placingSite ? this.placingSite.annexes.find(a => a.id === this.annexPlacing.annexId) || null : null;
-    },
-    annexBanner() {
-      const name = this.placingAnnex ? this.placingAnnex.name : '';
-      return this.annexPlacing && this.annexPlacing.from ? `Touche une case dorée pour y déplacer : ${name}.` : `Touche une case dorée pour poser : ${name}.`;
-    },
-    annexConfirmStyle() {
-      const c = this.annexConfirm;
-      if (!c || !this.geo) return {};
-      return { left: `${Math.max(110, Math.min(this.geo.width - 110, c.px))}px`, top: `${Math.max(56, c.py - 24)}px` };
-    },
-    // Fiche d'une annexe posée : sa carte du catalogue, son bâtiment, son n° d'exemplaire
-    sheetAnnex() {
-      if (!this.annexSheet || !this.state) return null;
-      const { x, y } = this.annexSheet;
-      const row = (this.state.annexes || []).find(a => a.x === x && a.y === y);
-      const site = row && this.state.sites.find(s => s.id === row.site);
-      const annex = site && site.annexes.find(a => a.id === row.annex);
-      return annex ? { annex, site, variant: this.annexVariants.get(`${x},${y}`) || 0 } : null;
     },
     // Quête active de Brume (null : toutes faites)
     // L'étape de civilisation (bible, § 6.10) : déduite des actes finis et du nom du peuple
@@ -668,14 +534,6 @@ export default {
     },
     brumeState() {
       return brumeLook({ acts: this.actsDone, quest: this.quest, elements: this.elements });
-    },
-    // Expédition en route : temps avant son retour, en clair (« 1 h 40 », « 12 min »)
-    tripLeft() {
-      const trip = this.state && this.state.expedition;
-      if (!trip) return '';
-      const ms = Math.max(0, trip.endsIn - (this.clock - this.loadedAt));
-      const minutes = Math.max(1, Math.ceil(ms / 60000));
-      return minutes >= 60 ? `${Math.floor(minutes / 60)} h${minutes % 60 ? ` ${String(minutes % 60).padStart(2, '0')}` : ''}` : `${minutes} min`;
     },
     chargesText() {
       if (!this.state) return '';
@@ -992,218 +850,6 @@ export default {
         this.syncLoop();
       });
     },
-    // Date du ciel : imposée (essais), jouée en accéléré (horloge), ou l'heure réelle
-    skyDate(now = performance.now()) {
-      if (this.forced && this.forced.date) return this.forced.date;
-      if (this.warp) {
-        const elapsed = now - this.warp.start;
-        if (elapsed < WARP_MS) return new Date(this.warp.from + elapsed * (DAY_MS / WARP_MS));
-        this.warp = null;
-        this.warping = false;
-      }
-      return new Date();
-    },
-    skyAt(date) {
-      // La lumière suit le Grand Œuvre (?oeuvre= pour l'imposer pendant les essais)
-      return phaseAt(date, { weather: this.forced ? this.forced.weather : null, opus: (this.forced && this.forced.opus) || opusOf(this.actsDone) });
-    },
-    // Horloge de l'en-tête : remise à jour quand la minute, le moment ou le temps changent (10 fois par seconde au plus
-    // pendant l'accéléré)
-    syncClock(phase, date, now) {
-      const time = clockText(date);
-      const clock = this.skyClock;
-      if (clock && clock.time === time && clock.label === phase.label && clock.weather === phase.weather.kind) return;
-      if (this.warp && now - this.clockAt < 100) return;
-      this.clockAt = now;
-      const night = phase.sun.up <= 0;
-      const progress = night ? ((phase.hour - phase.set + 24) % 24) / (24 - (phase.set - phase.rise)) : phase.sun.progress;
-      this.skyClock = { time, label: phase.label, weather: phase.weather.kind, weatherLabel: phase.weather.label, progress, night };
-    },
-    syncPhase() {
-      const now = performance.now();
-      const date = this.skyDate(now);
-      this.syncClock(this.skyAt(date), date, now);
-    },
-    // Toucher sur l'horloge : la journée entière défile en 30 s, puis l'île revient à l'heure ; un autre toucher l'arrête
-    toggleWarp() {
-      if (this.warp || this.reduced()) {
-        this.warp = null;
-        this.warping = false;
-      } else {
-        this.warp = { start: performance.now(), from: Date.now() };
-        this.warping = true;
-      }
-      this.syncLoop();
-      this.draw(performance.now());
-    },
-    // Cases autour de ce qui se tient debout (bâtiments, créations, annexes, lieux remarquables, gisements), jusqu'à deux cases
-    // devant : le décor qui s'y trouve n'est jamais cuit dans le sol (il passe devant eux). Set des clés y * n + x
-    liveCellsOf(state) {
-      const n = state.size;
-      const cells = new Set();
-      const around = (x0, y0, w, h) => {
-        for (let y = y0 - 1; y <= y0 + h + 1; y++) for (let x = x0 - 1; x <= x0 + w + 1; x++) cells.add(y * n + x);
-      };
-      state.sites.forEach(site => around(site.x, site.y, site.w, site.h));
-      [...(state.crafts ? state.crafts.placed : []), ...(state.annexes || []), ...landmarksShown(state), ...depositsShown(state)].forEach(o => around(o.x, o.y, 1, 1));
-      return cells;
-    },
-    // Décor naturel, fixe pour une île donnée, selon le sol : arbres des forêts, arbres isolés, rochers, touffes des
-    // dunes ; roseaux et nénuphars au bord de l'eau douce ; palmiers et coquillages sur le sable, touffes et fleurs
-    // dans l'herbe libre ; dans les climats, pins enneigés, bruyère, cactus et arbres morts. Une création posée le
-    // remplace, et il ne gêne aucun toucher.
-    natureOf(state) {
-      const n = state.size;
-      const M = this.M;
-      const taken = new Set([...(state.crafts ? state.crafts.placed : []), ...(state.annexes || []), ...landmarksShown(state)].map(t => t.y * n + t.x));
-      // Une clairière autour de chaque gisement : rien ne le cache, même au cœur de la jungle
-      for (const d of depositsShown(state)) for (let dy = -1; dy <= 1; dy++) for (let dx = -1; dx <= 1; dx++) taken.add((d.y + dy) * n + d.x + dx);
-      state.sites.forEach(site => {
-        for (let dy = 0; dy < site.h; dy++) for (let dx = 0; dx < site.w; dx++) taken.add((site.y + dy) * n + site.x + dx);
-      });
-      const props = [];
-      const add = (kind, x, y, dx = 0, dy = 0) => {
-        const c = this.world(x + dx, y + dy);
-        props.push({ kind, x, y, dx, dy, depth: x + y + (dx + dy) * 0.5, wx: c.x, wy: c.y - this.liftAt(x, y) });
-      };
-      const wet = (x, y) => [[1, 0], [-1, 0], [0, 1], [0, -1]].some(([a, b]) => M.ground(x + a, y + b) === 'w');
-      // Sable des Dunes : des cactus plutôt que des coquillages
-      const dunes = (x, y) => (state.map.zones[M.zone(x, y)] || {}).climate === 'dunes';
-      for (let y = 0; y < n; y++) {
-        for (let x = 0; x < n; x++) {
-          if (taken.has(y * n + x)) continue;
-          const g = M.ground(x, y);
-          const roll = hash(x, y);
-          if (g === 'f') {
-            const kinds = M.height(x, y) >= 2 ? FOREST_HIGH : FOREST_LOW;
-            add(kinds[Math.floor(roll * kinds.length)], x, y, -0.2, -0.16);
-            add(kinds[Math.floor(hash(y, x) * kinds.length)], x, y, 0.18, 0.22);
-          } else if (g === 't') add(roll < 0.55 ? 'tree' : roll < 0.8 ? 'apple' : 'birch', x, y);
-          else if (g === 'r') add(ROCK_MIX.find(([, upTo]) => roll < upTo)[0], x, y);
-          else if (g === 'd') add('tuft', x, y);
-          else if (g === 'j') {
-            // Jungle : deux arbres par case, palmiers et feuillus
-            add(roll < 0.5 ? 'palm' : 'tree', x, y, -0.2, -0.16);
-            add(hash(y, x) < 0.4 ? 'palm' : 'tree', x, y, 0.18, 0.22);
-          } else if (g === 'x') { if (roll < 0.6) add(roll < 0.35 ? 'reeds' : roll < 0.48 ? 'lily' : 'stump', x, y); }
-          else if (g === 'l') { if (roll < 0.32) add(roll < 0.12 ? 'heather' : roll < 0.2 ? 'bush' : roll < 0.27 ? 'tuft' : 'rocks', x, y); }
-          else if (g === 'n') { if (roll < 0.14) add(M.height(x, y) <= 5 && roll < 0.09 ? 'snowpine' : 'crag', x, y); }
-          else if (g === 'a') { if (roll < 0.2) add(roll < 0.1 ? 'deadtree' : 'rocks', x, y); }
-          else if (g === 's' && dunes(x, y)) { if (roll < 0.12) add(roll < 0.09 ? 'cactus' : 'rocks', x, y); }
-          else if ((g === 'g' || g === 'm') && wet(x, y) && roll < 0.45) add(roll < 0.3 ? 'reeds' : 'lily', x, y);
-          else if (g === 's' || g === 'g' || g === 'm') {
-            const kind = ((g === 's' ? BEACH_MIX : GRASS_MIX).find(([, upTo]) => roll < upTo) || [null])[0];
-            if (kind) add(kind, x, y);
-          }
-        }
-      }
-      // Îlot aux Mouettes acheté : les nids de la colonie, sur l'herbe libre
-      if (this.owns(state, COLONY_ZONE)) {
-        const free = this.islets.colony.filter(c => M.ground(c.x, c.y) === 'g' && !taken.has(c.y * n + c.x) && !props.some(p => p.x === c.x && p.y === c.y));
-        spread(free, 2, 3).forEach(c => add('nest', c.x, c.y, 0.08, -0.06));
-      }
-      return props;
-    },
-    owns(state, zoneId) {
-      return Boolean(state.map.zones.find(z => z.id === zoneId && z.owned));
-    },
-    /* ---------- Carte : terre, plage, quartiers ---------- */
-    // Case de terre (calques du serveur : sol, relief, quartier)
-    landAt(x, y) {
-      return Boolean(this.M) && this.M.land(x, y);
-    },
-    zoneAt(x, y) {
-      return this.M && this.state ? this.state.map.zones[this.M.zone(x, y)] || null : null;
-    },
-    // Voile de brume d'une case (quartier à acheter), peint dans les carrés du sol
-    veilAt(x, y) {
-      const zone = this.state && this.state.map.zones[this.M.zone(x, y)];
-      return zone && !zone.owned ? (zone.known === false ? 0.35 : 0.62) : 0;
-    },
-    // Hauteur (unités du monde) du sol d'une case : ce qui s'y tient debout est remonté d'autant
-    liftAt(x, y) {
-      return this.M ? Math.max(0, this.M.surface(Math.round(x), Math.round(y))) * HS : 0;
-    },
-    // Point du monde au sol d'une case (ou d'un point fractionnaire), relief compris
-    ground(x, y) {
-      const c = this.world(x, y);
-      c.y -= this.liftAt(x, y);
-      return c;
-    },
-    lockedAt(x, y) {
-      const zone = this.zoneAt(x, y);
-      return Boolean(zone && !zone.owned);
-    },
-    // Opacité de la brume d'un quartier : pleine s'il est à acheter, qui s'efface juste après l'achat
-    mistOf(zone, now) {
-      if (!zone) return 0;
-      if (!zone.owned) return 1;
-      const start = this.unveils.get(zone.id);
-      if (start === undefined) return 0;
-      const k = (now - start) / UNVEIL_MS;
-      if (k >= 1) {
-        this.unveils.delete(zone.id);
-        return 0;
-      }
-      return 1 - k;
-    },
-    // Cases de mer au bord de la terre (devant elle) : le poisson saute là
-    shoreOf(state) {
-      const out = [];
-      for (let y = 0; y < state.size; y++) {
-        for (let x = 0; x < state.size; x++) {
-          if (this.M.ground(x, y) === '~' && [[1, 0], [0, 1]].some(([dx, dy]) => this.landAt(x - dx, y - dy))) out.push({ x, y });
-        }
-      }
-      return out;
-    },
-    // Place du panneau d'un quartier : choisie par le serveur (sol libre, au bord d'un chemin, près du centre)
-    signPlaceOf(zone) {
-      return zone.anchor || null;
-    },
-    // Chantier : 0 = plan à trouver, 1 = plan trouvé, 2 = tout est prêt
-    stageOf(site) {
-      if (!site.next || !site.next.planOwned) return 0;
-      return this.affordable(site) ? 2 : 1;
-    },
-    // Vent : rafales lentes et frémissement, différents d'un point à l'autre de l'île
-    windAt(t, x) {
-      const gust = 0.55 + 0.45 * Math.sin(t * 0.21);
-      return (Math.sin(t * 1.1 + x * 0.35) * 0.65 + Math.sin(t * 2.6 + x) * 0.25) * gust;
-    },
-    // Dessine un sprite ancré en (x, y) du monde, plié par le vent (cisaillement depuis sa base)
-    swayed(ctx, key, make, x, y, skew, repaint) {
-      if (!skew) {
-        drawSprite(ctx, key, make, x, y, repaint);
-        return;
-      }
-      ctx.save();
-      ctx.translate(x, y);
-      ctx.transform(1, 0, -skew, 1, 0, 0);
-      drawSprite(ctx, key, make, 0, 0, repaint);
-      ctx.restore();
-    },
-    // Bouffées de poussière autour d'une emprise de chantier, k de 0 à 1 ; span : demi-largeur de l'emprise en cases
-    dust(ctx, x, y, k, count = 9, span = 1) {
-      for (let i = 0; i < count; i++) {
-        const a = (i / count) * Math.PI * 2 + hash(i, 3);
-        const d = TW * (0.45 + 0.5 * k) * span;
-        const px = x + Math.cos(a) * d;
-        const py = y + Math.sin(a) * d * 0.5 - k * 14;
-        const r = 7 + k * 16 * (0.6 + hash(i, 9));
-        ctx.fillStyle = `rgba(214,190,150,${(0.55 * (1 - k)).toFixed(3)})`;
-        ctx.beginPath();
-        ctx.arc(px, py, r, 0, Math.PI * 2);
-        ctx.fill();
-      }
-    },
-    // Ressources du palier suivant réunies ; palier suivant prêt à bâtir (world/levels.js)
-    affordable(site) {
-      return levelAffordable(site, this.state.stock);
-    },
-    canBuild(site) {
-      return levelReady(site, this.state.stock, this.coins);
-    },
 
     /* ---------- Plein écran ---------- */
     toggleImmersive() {
@@ -1232,447 +878,11 @@ export default {
     ...drawMethods,
 
     ...gestureMethods,
-    /* ---------- Boutique d'un atelier (règles : world/shop.js ; onglet : SiteShop) ---------- */
-    itemArt,
-    // Raison pour laquelle un article ne s'achète pas encore (texte du bouton), ou ''
-    lockOf(site, item) {
-      return itemLock(site, item, this.coins);
-    },
-    canBuy(site, item) {
-      return itemBuyable(site, item, this.coins);
-    },
-    zoneName(id) {
-      return this.state.map.zones.find(z => z.id === id)?.name || '';
-    },
-    sitesIn(zone) {
-      return this.state.sites.filter(s => s.zone === zone.id).map(s => s.name);
-    },
     screenRectOf(x, y) {
       const rect = this.$refs.canvas.getBoundingClientRect();
       const c = this.ground(x, y);
       const sp = this.toScreen(c.x, c.y);
       return { left: rect.left + sp.x - 30, top: rect.top + sp.y - 40, width: 60, height: 60 };
-    },
-
-    /* ---------- Actions ---------- */
-    async build(site) {
-      this.busy = true;
-      try {
-        const { built, coins, world } = await playService.worldBuild(site.id);
-        this.apply(world);
-        if (coins !== undefined) this.$emit('coins-updated', coins);
-        this.site = null;
-        this.$nextTick(() => {
-          const at = center(this.screenRectOf(site.x + (site.w - 1) / 2, site.y + (site.h - 1) / 2));
-          ring(at, 120);
-          burst(at, 26, 90);
-          vibrate([14, 40, 20]);
-        });
-        this.$emit('show-alert', `Nouveau sur ton île : ${built}\u00a0!`);
-      } catch (error) {
-        this.$emit('show-alert', messageOf(error, 'Le chantier n’a pas pu être bâti.'));
-      } finally {
-        this.busy = false;
-      }
-    },
-    // Nom d'un bâtiment de l'île (celui que le joueur lui a donné)
-    siteName(id) {
-      const site = this.state && this.state.sites.find(s => s.id === id);
-      return site ? site.name : '';
-    },
-    // Renommer : un bâtiment dès son palier III (avant, on dit quand), un quartier à soi
-    startRename(kind, id) {
-      if (kind === 'site') {
-        const site = this.state.sites.find(s => s.id === id);
-        if (site.level < site.renameLevel) {
-          this.$emit('show-alert', `${site.name} se renommera au palier ${roman(site.renameLevel)}.`);
-          return;
-        }
-      }
-      this.renaming = { kind, id };
-    },
-    // Nouveau nom (vide : celui d'origine), gardé par le serveur ; l'île et ses étiquettes suivent
-    async saveName(name) {
-      const { kind, id } = this.renaming;
-      this.busy = true;
-      try {
-        this.apply(await playService.worldName(kind, id, name));
-        this.renaming = null;
-        vibrate(8);
-      } catch (error) {
-        this.$emit('show-alert', messageOf(error, 'Le nom n’a pas pu changer.'));
-      } finally {
-        this.busy = false;
-      }
-    },
-    // Ramassage de la production des bâtiments ; at = point de l'écran d'où partent les éclats
-    async collect(at = null) {
-      if (this.busy) return;
-      const from = at && at.currentTarget ? center(at.currentTarget.getBoundingClientRect()) : at;
-      this.busy = true;
-      try {
-        const { gained, stock, coins, world } = await playService.worldCollect();
-        this.apply(world);
-        this.$emit('coins-updated', coins);
-        const goods = Object.entries(stock || {}).filter(([, n]) => n > 0).map(([r, n]) => `+${n} ${LABEL[r]}`);
-        if (gained > 0 || goods.length) {
-          if (from) {
-            ring(from, 90);
-            burst(from, 20, 70);
-          }
-          vibrate([12, 40, 18]);
-          this.$emit('show-alert', `Production ramassée : ${[...goods, ...(gained ? [`+${gained} écu${gained > 1 ? 's' : ''}`] : [])].join(' · ')}`);
-        }
-      } catch (error) {
-        this.$emit('show-alert', messageOf(error, 'La production n’a pas pu être ramassée.'));
-      } finally {
-        this.busy = false;
-      }
-    },
-    // Achat d'un quartier : la brume se dissipe, le panneau éclate
-    async buyZone(zone) {
-      this.busy = true;
-      try {
-        const sign = this.signs.find(sg => sg.zone.id === zone.id);
-        const { bought, coins, world } = await playService.worldZone(zone.id);
-        this.unveils.set(zone.id, performance.now());
-        this.zone = null;
-        this.apply(world);
-        this.$emit('coins-updated', coins);
-        if (sign) {
-          const sp = this.toScreen(sign.x, sign.y);
-          const at = this.canvasPoint(sp.x, sp.y);
-          ring(at, 140);
-          burst(at, 30, 110);
-        }
-        vibrate([14, 40, 20]);
-        this.$emit('show-alert', `Nouveau quartier : ${bought}\u00a0!`);
-      } catch (error) {
-        this.$emit('show-alert', messageOf(error, 'Le quartier n’a pas pu être acheté.'));
-      } finally {
-        this.busy = false;
-      }
-    },
-    // Expédition vers un quartier inconnu : le serveur prend vivres, bois et une partie de Récolte ; elle revient après
-    // zone.trip heures (l'île se recharge alors, le quartier se dévoile)
-    async explore(zone) {
-      if (this.busy) return;
-      this.busy = true;
-      try {
-        const { world } = await playService.worldExpedition(zone.id);
-        this.apply(world);
-        this.zone = null;
-        vibrate([10, 30, 10]);
-        this.$emit('show-alert', `L’expédition est partie ! Retour dans ${zone.trip} h.`);
-        guide.tip('expedition');
-      } catch (error) {
-        this.$emit('show-alert', messageOf(error, 'L’expédition n’a pas pu partir.'));
-      } finally {
-        this.busy = false;
-      }
-    },
-    // La pastille de l'expédition : la caméra va vers le quartier qu'elle explore, sa fiche s'ouvre
-    showExpedition() {
-      const zone = this.state.map.zones.find(z => z.id === this.state.expedition.zone);
-      if (!zone) return;
-      if (zone.anchor) {
-        const c = this.ground(zone.anchor.x, zone.anchor.y);
-        this.cam.x = c.x;
-        this.cam.y = c.y;
-        this.clampCam();
-        this.draw(performance.now());
-      }
-      this.zone = zone;
-    },
-    // Lieu remarquable touché : à découvrir dans un quartier à soi, le serveur l'inscrit ; sinon il sautille et dit ce
-    // qu'il fait, ou comment l'atteindre
-    tapLandmark(landmark, px, py) {
-      const zone = this.state.map.zones.find(z => z.id === landmark.zone);
-      this.scared.set(`landmark:${landmark.id}`, { at: performance.now() / 1000 });
-      if (!landmark.found && zone && zone.owned) {
-        this.findLandmark(landmark, px, py);
-        return;
-      }
-      this.showTip(px, py, this.tipOf({ landmark }));
-      vibrate(6);
-    },
-    // Découverte d'un lieu : le serveur l'inscrit (effet durable, coffre qui attend) ; l'île le fête, Brume en parle,
-    // puis son coffre s'ouvre
-    async findLandmark(landmark, px, py) {
-      if (this.busy) return;
-      this.busy = true;
-      let fresh = false;
-      try {
-        const { fresh: first, world } = await playService.worldLandmark(landmark.id);
-        fresh = first;
-        this.apply(world);
-        const found = (world.landmarks || []).find(l => l.id === landmark.id) || landmark;
-        if (fresh) {
-          const at = this.canvasPoint(px, py);
-          ring(at, 110);
-          burst(at, 32, 120);
-          vibrate([14, 40, 20, 40, 26]);
-          this.pops.set(`landmark:${landmark.id}`, performance.now());
-          this.$emit('show-alert', `Lieu découvert : ${found.name}\u00a0! ${found.effect}.`);
-          guide.say(landmarkTip(found));
-        }
-      } catch (error) {
-        this.$emit('show-alert', messageOf(error, 'Ce lieu n’a pas pu être découvert.'));
-      } finally {
-        this.busy = false;
-      }
-      if (fresh) this.openChest(`lieu:${landmark.id}`);
-    },
-    // Gisement touché : prêt dans un quartier à soi, il se ramasse ; sinon il sautille et dit quand il repousse, ou
-    // comment l'atteindre
-    tapDeposit(deposit, px, py) {
-      const zone = this.state.map.zones.find(z => z.id === deposit.zone);
-      this.scared.set(`deposit:${deposit.id}`, { at: performance.now() / 1000 });
-      if (zone && zone.owned && !depositWait(deposit, this.clock - this.loadedAt)) {
-        this.gatherDeposit(deposit, px, py);
-        return;
-      }
-      this.showTip(px, py, this.tipOf({ deposit }));
-      vibrate(6);
-    },
-    // Ramassage : le serveur donne quelques trouvailles (une seule fois) ; le gisement repousse
-    async gatherDeposit(deposit, px, py) {
-      if (this.busy) return;
-      this.busy = true;
-      try {
-        const { find, amount, world } = await playService.worldDeposit(deposit.id);
-        this.apply(world);
-        burst(this.canvasPoint(px, py), 16, 60);
-        vibrate([8, 30, 10]);
-        this.pops.set(`deposit:${deposit.id}`, performance.now());
-        const stock = (world.finds || []).find(f => f.id === find);
-        this.$emit('show-alert', `Trouvaille : +${amount} ${stock ? stock.name.toLowerCase() : find}${stock ? ` (${stock.amount} en réserve)` : ''}`);
-        guide.tip('finds');
-      } catch (error) {
-        this.$emit('show-alert', messageOf(error, 'Ce gisement n’a pas pu être ramassé.'));
-        this.load();
-      } finally {
-        this.busy = false;
-      }
-    },
-    // Carnet d'explorateur, ouvert à la page d'un lieu (ou au début)
-    openLog(id = null) {
-      this.logFocus = id;
-      this.logOpen = true;
-    },
-    // « Voir sur l'île » : la caméra va vers le lieu, le carnet se ferme
-    showLandmark(id) {
-      const landmark = this.shownLandmarks.find(l => l.id === id);
-      this.logOpen = false;
-      if (!landmark) return;
-      const c = this.ground(landmark.x, landmark.y);
-      this.cam.x = c.x;
-      this.cam.y = c.y + (landmarkTop(landmark.id) * landmarkScale(landmark.id)) / 2;
-      this.clampCam();
-      this.draw(performance.now());
-    },
-    // Achat d'un article en un toucher ; « Annuler » reste proposé UNDO_MS
-    async buyItem(site, item, event) {
-      // Pas encore achetable : sa fiche dit pourquoi (palier, écus, butins)
-      if (!this.canBuy(site, item)) {
-        this.describeItem(site, item);
-        return;
-      }
-      const from = event && event.currentTarget ? center(event.currentTarget.getBoundingClientRect()) : null;
-      this.busy = true;
-      try {
-        const { bought, coins, world } = await playService.worldItem(item.id);
-        this.apply(world);
-        this.$emit('coins-updated', coins);
-        if (from) {
-          ring(from, 80);
-          burst(from, 18, 60);
-        }
-        vibrate([12, 40, 18]);
-        this.$emit('show-alert', item.kind === 'skin' ? `Skin porté : ${bought}\u00a0!` : `Nouveau sur ton île : ${bought}\u00a0!`);
-        clearTimeout(this.undoTimer);
-        this.undoable = { id: item.id, name: bought };
-        // Premier achat de cette sorte : son mode d'emploi, une fois l'achat devenu définitif
-        const firstOfKind = !guideSeen(guideKind(item)) ? { siteId: site.id, itemId: item.id } : null;
-        this.undoTimer = setTimeout(() => {
-          this.undoable = null;
-          if (firstOfKind && !this.gone) this.guide = firstOfKind;
-        }, UNDO_MS);
-      } catch (error) {
-        this.$emit('show-alert', messageOf(error, 'L’achat n’a pas pu se faire.'));
-      } finally {
-        this.busy = false;
-      }
-    },
-    // « Annuler » juste après un achat : l'article est rendu, ses écus remboursés par le serveur
-    async undoItem() {
-      const item = this.undoable;
-      if (!item || this.busy) return;
-      clearTimeout(this.undoTimer);
-      this.undoable = null;
-      this.busy = true;
-      try {
-        const { undone, coins, world } = await playService.worldItemUndo(item.id);
-        this.apply(world);
-        this.$emit('coins-updated', coins);
-        this.$emit('show-alert', `Achat annulé : ${undone}.`);
-      } catch (error) {
-        this.$emit('show-alert', messageOf(error, 'L’achat n’a pas pu être annulé.'));
-      } finally {
-        this.busy = false;
-      }
-    },
-    // Fiche d'un article (toucher sur son dessin, appui long sur son prix)
-    describeItem(site, item) {
-      vibrate(10);
-      this.sheet = { siteId: site.id, itemId: item.id };
-    },
-    // Achat depuis la fiche : elle se ferme, l'achat reste annulable depuis la boutique
-    buyFromSheet(event) {
-      const [site, item] = [this.sheetSite, this.sheetItem];
-      this.sheet = null;
-      if (item) this.buyItem(site, item, event);
-    },
-    // Mode d'emploi du premier achat d'une sorte : « Voir sur l'île » ferme les fiches et montre l'article, qui sautille
-    closeGuide() {
-      if (this.guideItem) markGuideSeen(guideKind(this.guideItem));
-      this.guide = null;
-    },
-    showGuideOnIsland() {
-      const [site, item] = [this.guideSite, this.guideItem];
-      this.closeGuide();
-      if (!site) return;
-      this.site = null;
-      const c = this.centerOf(site);
-      this.cam.x = c.x;
-      this.cam.y = c.y - 20;
-      this.cam.s = Math.max(this.cam.s, 1.3);
-      this.clampCam();
-      if (item && item.kind !== 'skin') this.scared.set(`item:${site.id}:${item.id}`, { at: performance.now() / 1000 });
-      this.draw(performance.now());
-    },
-    /* ---------- Annexes ---------- */
-    annexReady,
-    // Ce que dit la bulle d'une annexe touchée
-    annexTip(annex) {
-      const site = this.state.sites.find(s => s.id === annex.site);
-      const entry = site && site.annexes.find(a => a.id === annex.annex);
-      return entry ? { title: entry.name, text: `${entry.effect} · ${site.name}`, hint: 'Appui long : sa fiche' } : null;
-    },
-    // La carte se recentre sur un bâtiment, assez près pour voir ses cases autour
-    focusOn(site) {
-      const c = this.centerOf(site);
-      this.cam.x = c.x;
-      this.cam.y = c.y - 10;
-      this.cam.s = Math.max(this.cam.s, 1.15);
-      this.clampCam();
-      this.draw(performance.now());
-    },
-    // « Poser » dans l'onglet Annexes : la fiche se ferme, les cases autorisées s'allument autour du bâtiment
-    startAnnex(site, annex) {
-      this.site = null;
-      this.annexSheet = null;
-      this.annexConfirm = null;
-      this.annexPlacing = { siteId: site.id, annexId: annex.id, from: null };
-      vibrate(8);
-      this.$nextTick(() => this.focusOn(site));
-    },
-    cancelAnnex() {
-      this.annexPlacing = null;
-      this.annexConfirm = null;
-      this.draw(performance.now());
-    },
-    // Toucher pendant la pose : une case dorée demande confirmation (déplacement : elle s'y pose aussitôt)
-    tapAnnexSpot(px, py) {
-      const cell = this.tileAt(px, py);
-      const site = this.placingSite;
-      if (!site || !cell || !site.spots.some(spot => spot.x === cell.x && spot.y === cell.y)) {
-        this.annexConfirm = null;
-        this.$emit('show-alert', `Choisis une case dorée autour de ${site ? site.name : 'son bâtiment'}.`);
-        this.draw(performance.now());
-        return;
-      }
-      vibrate(6);
-      if (this.annexPlacing.from) this.moveAnnex(cell);
-      else this.annexConfirm = { x: cell.x, y: cell.y, px, py };
-      this.draw(performance.now());
-    },
-    // Pose confirmée : le serveur vérifie et débite ; l'annexe surgit dans un nuage d'éclats
-    async confirmAnnex() {
-      const target = this.annexConfirm;
-      const annex = this.placingAnnex;
-      if (!target || !annex || this.busy) return;
-      this.busy = true;
-      try {
-        const { built, coins, world } = await playService.worldAnnex(annex.id, target.x, target.y);
-        this.annexPlacing = null;
-        this.annexConfirm = null;
-        this.pops.set(`annex:${target.x},${target.y}`, performance.now());
-        this.apply(world);
-        this.$emit('coins-updated', coins);
-        this.$nextTick(() => {
-          const at = center(this.screenRectOf(target.x, target.y));
-          ring(at, 90);
-          burst(at, 20, 70);
-          vibrate([12, 40, 18]);
-        });
-        this.$emit('show-alert', `Nouvelle annexe : ${built}\u00a0!`);
-      } catch (error) {
-        this.annexConfirm = null;
-        this.$emit('show-alert', messageOf(error, 'L’annexe n’a pas pu être posée.'));
-        this.load();
-      } finally {
-        this.busy = false;
-      }
-    },
-    // Déplacement gratuit vers la case dorée touchée
-    async moveAnnex(cell) {
-      const { from } = this.annexPlacing;
-      const key = `annex:${cell.x},${cell.y}`;
-      this.annexPlacing = null;
-      this.busy = true;
-      try {
-        this.pops.set(key, performance.now());
-        this.apply(await playService.worldAnnexMove(from.x, from.y, cell.x, cell.y));
-        this.$nextTick(() => {
-          burst(center(this.screenRectOf(cell.x, cell.y)), 14, 50);
-          vibrate([10, 30, 10]);
-        });
-      } catch (error) {
-        this.pops.delete(key);
-        this.$emit('show-alert', messageOf(error, 'L’annexe n’a pas pu être déplacée.'));
-        this.load();
-      } finally {
-        this.busy = false;
-      }
-    },
-    // Fiche d'une annexe : « Déplacer » allume les cases libres autour de son bâtiment ; « Bâtiment » ouvre sa fiche
-    moveFromSheet() {
-      const info = this.sheetAnnex;
-      if (!info) return;
-      const { x, y } = this.annexSheet;
-      this.annexSheet = null;
-      this.annexPlacing = { siteId: info.site.id, annexId: info.annex.id, from: { x, y } };
-      this.focusOn(info.site);
-    },
-    siteFromSheet() {
-      const info = this.sheetAnnex;
-      this.annexSheet = null;
-      if (!info) return;
-      this.site = info.site;
-      this.siteTab = 'annexes';
-    },
-    // Skin porté par un bâtiment ('' : apparence d'origine)
-    async wearSkin(site, skin) {
-      this.busy = true;
-      try {
-        this.apply(await playService.worldSkin(site.id, skin));
-        vibrate(8);
-      } catch (error) {
-        this.$emit('show-alert', messageOf(error, 'Le skin n’a pas pu être changé.'));
-      } finally {
-        this.busy = false;
-      }
     }
   }
 };
