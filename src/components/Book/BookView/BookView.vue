@@ -169,26 +169,23 @@ import ElementTile from '@/components/ui/ElementTile/ElementTile.vue';
 import HangmanSheet from '../HangmanSheet/HangmanSheet.vue';
 import ChapterSheet from '../ChapterSheet/ChapterSheet.vue';
 import GrimoireBinding from '../GrimoireBinding/GrimoireBinding.vue';
-import { BOOK_TITLE, chapterOfFamily } from '@/book/chapters';
-import { search } from '@/utils/search';
-import { familyIndex } from '@/utils/eras';
+import { BOOK_TITLE } from '@/book/chapters';
 import * as storage from '@/utils/storage';
 import { createBook } from '@/book/curlBook';
 import { sideOf } from '@/book/spread';
 import { paintPage, paintEndpaper, clearDrawings, bookFontsReady, CHAPTER_STYLE } from '@/book/painter';
 import { burst, ring, vibrate, center, reducedMotion, HAPTIC } from '@/utils/fx';
-import { unlockCinematic } from '@/book/fx';
 import { guide } from '@/game/guide';
 import GModal from '@/components/ui/GModal/GModal.vue';
 import ElementGlyph from '@/components/ui/ElementGlyph/ElementGlyph.vue';
 import longpress from '@/directives/longpress';
 import { loadSavoirs } from '@/game/savoirs';
+import shelf from './shelf';
+import pages from './pages';
+import effects from './effects';
+import hangman from './hangman';
 
 const INK_PRICE = 50;
-// Rejouer un pendu perdu sans attendre le lendemain (le serveur fixe le prix : services/bookLetters.js)
-const RETRY_PRICE = 20;
-// Pages par feuille de table de chapitre (deux colonnes de 8)
-const INDEX_SIZE = 16;
 const INK_KEY = 'oc_book_ink';
 // Les deux pages côte à côte dès que le Livre a la place (largeur du composant, hauteur de la fenêtre) ;
 // sinon (téléphone) la double page lue de près, une page à la fois
@@ -204,6 +201,9 @@ let lastKey = null;
 // interactive (spots), l'en-tête et l'étagère passent par Vue.
 export default {
   name: 'BookView',
+  // L'étagère, les pages, les effets d'une découverte et le pendu vivent chacun dans leur fichier, à côté (mixins) ;
+  // le Livre garde ce qui les relie : le chargement, le moteur, la navigation, l'Encre, le cycle de vie
+  mixins: [shelf, pages, effects, hangman],
   components: { ElementTile, HangmanSheet, ChapterSheet, GrimoireBinding, GModal, ElementGlyph },
   directives: { longpress },
   props: {
@@ -234,10 +234,6 @@ export default {
   data() {
     return {
       spots: [],
-      // Pendu ouvert : { page, chapter, style, verdict, inscribed } ; une lettre envoyée attend le verdict du serveur
-      guess: null,
-      guessBusy: false,
-      RETRY_PRICE,
       BOOK_TITLE,
       showChapters: false,
       // Pages de chaque chapitre pour la feuille, figées à son ouverture
@@ -250,19 +246,10 @@ export default {
       // Les pages (non réactives) changent à chaque chargement : ce compteur fait suivre ce qui en dépend
       modelsVersion: 0,
       chapterState: [],
-      query: '',
-      // Filtre de l'étagère : « auto » suit la page (familles de l'indice), sinon « all » ou une famille
-      filter: 'auto',
-      // Recherche et filtres, repliés par défaut sous la ligne « Tes éléments »
-      showFilters: false,
-      // Page à portée ouverte : familles de ses ingrédients et ingrédient révélé par l'Encre
-      pageClue: null,
       loadError: false,
       // Grimoire : une page à la fois (téléphone), ouverture en cours, pages prêtes, avancée (tranches), éclat des
       // sigles, page visée sur la double page
       single: false,
-      // Fiche d'un élément ouverte par un appui long : { name, family, chapter, fertile, rect }
-      info: null,
       opening: false,
       engineReady: false,
       leaf: 0,
@@ -290,64 +277,6 @@ export default {
     chipStyle() {
       const style = this.currentChapter ? CHAPTER_STYLE[this.currentChapter.id] : null;
       return style ? { '--rc': style.color, '--ri': style.ink } : { '--rc': '#FFFDF8', '--ri': '#4A3426' };
-    },
-    familyOf() {
-      return familyIndex(this.categories);
-    },
-    pageHint() {
-      return this.pageClue ? this.pageClue.revealed : null;
-    },
-    // Ingrédients proposés pour la page : le plateau du serveur (bons ingrédients et leurres), sinon ses familles
-    pageList() {
-      if (!this.pageClue) return [];
-      if (this.pageClue.tray) {
-        const owned = new Set(this.discoveredElements);
-        return this.pageClue.tray.filter(name => owned.has(name));
-      }
-      const wanted = new Set(this.pageClue.families);
-      return [...this.discoveredElements].reverse().filter(name => wanted.has(this.familyOf[name]));
-    },
-    activeFilter() {
-      if (this.filter !== 'auto') return this.filter;
-      return this.pageClue ? 'page' : 'all';
-    },
-    filters() {
-      const owned = this.discoveredElements;
-      const counts = {};
-      owned.forEach(name => {
-        const family = this.familyOf[name];
-        if (family) counts[family] = (counts[family] || 0) + 1;
-      });
-      const pills = [];
-      if (this.pageClue) pills.push({ id: 'page', label: '✦ Pour cette page', count: this.pageList.length });
-      pills.push({ id: 'all', label: 'Tout', count: owned.length });
-      const fertile = owned.filter(name => this.unexplored[name] > 0).length;
-      if (fertile) pills.push({ id: 'fertile', glyph: 'ui:sprout', label: 'Fertiles', count: fertile });
-      Object.keys(this.categories).forEach(family => {
-        if (counts[family]) pills.push({ id: family, label: family === 'Elements Fondamentaux' ? 'Éléments premiers' : family, count: counts[family] });
-      });
-      return pills;
-    },
-    // Libellé du bouton des filtres : le filtre en cours
-    activeLabel() {
-      return this.filters.find(pill => pill.id === this.activeFilter)?.label || 'Tout';
-    },
-    shelf() {
-      const newestFirst = [...this.discoveredElements].reverse();
-      if (this.query.trim()) return search(newestFirst, this.query);
-      const active = this.activeFilter;
-      if (active === 'all') return newestFirst;
-      // Les plus prometteurs d'abord : ceux qui entrent dans le plus de mélanges inexplorés
-      if (active === 'fertile') {
-        return newestFirst.filter(name => this.unexplored[name] > 0).sort((a, b) => this.unexplored[b] - this.unexplored[a]);
-      }
-      if (active === 'page' && this.pageClue) {
-        const list = this.pageList;
-        // L'ingrédient révélé (encre ou offert) passe en tête
-        const hint = this.pageClue.revealed;
-        return hint && list.includes(hint) ? [hint, ...list.filter(n => n !== hint)] : list;
-      }
-      return newestFirst.filter(name => this.familyOf[name] === active);
     }
   },
   watch: {
@@ -407,65 +336,8 @@ export default {
     this.engine = null;
   },
   methods: {
-    // Choisir un filtre efface la recherche et replie le panneau
-    pickFilter(id) {
-      this.filter = id;
-      this.query = '';
-      this.showFilters = false;
-    },
-    toggleFilters() {
-      this.showFilters = !this.showFilters;
-    },
     spotStyle(spot) {
       return { left: `${spot.x}%`, top: `${spot.y * 0.75}%`, width: `${spot.w}%`, height: `${spot.h * 0.75}%` };
-    },
-    chapterOfKey(key) {
-      const model = this.models.find(m => m.key === key);
-      return model && model.chapter ? model.chapter.id : null;
-    },
-    buildModels(data) {
-      const chapterIndex = {};
-      const models = [{ type: 'toc', key: 'toc', chapters: data.chapters, chapterIndex }];
-      for (const chapter of data.chapters) {
-        chapterIndex[chapter.id] = models.length;
-        models.push({ type: 'chapter', key: `ch-${chapter.id}`, chapter });
-        // Chapitre scellé : seule la page marquée du fil d'Ariane s'y ouvre
-        if (!chapter.open) {
-          chapter.pages.filter(page => page.marked).forEach(page => models.push(this.reachModel(chapter, page)));
-          continue;
-        }
-        // Table du chapitre, sur autant de feuilles qu'il faut : pages à trouver d'abord, puis inscrites
-        const listed = [...chapter.pages.filter(p => p.status !== 'found'), ...chapter.pages.filter(p => p.status === 'found')];
-        const parts = Math.ceil(listed.length / INDEX_SIZE);
-        for (let part = 0; part < parts; part++) {
-          const entries = listed.slice(part * INDEX_SIZE, (part + 1) * INDEX_SIZE).map(page => ({ key: page.id, page, index: -1 }));
-          models.push({ type: 'index', key: `idx-${chapter.id}-${part + 1}`, chapter, entries, part: part + 1, parts });
-        }
-        for (const page of chapter.pages) {
-          models.push(page.status === 'found'
-            ? { type: 'found', key: page.id, chapter, page }
-            : this.reachModel(chapter, page));
-        }
-        if (chapter.far || chapter.sealed) models.push({ type: 'far', key: `far-${chapter.id}`, chapter, count: chapter.far, waiting: chapter.sealed || 0 });
-      }
-      // Chaque case d'une table connaît la page où elle mène
-      const at = new Map(models.map((model, index) => [model.key, index]));
-      models.forEach(model => {
-        if (model.type === 'index') model.entries.forEach(entry => { entry.index = at.get(entry.key) ?? -1; });
-      });
-      return models;
-    },
-    reachModel(chapter, page) {
-      const aim = this.aims[page.id] || null;
-      const need = page.freeInkAfter;
-      const freeInk = Boolean(aim && aim.freeInk) || (need > 0 && page.misses >= need);
-      // Ingrédient révélé par l'Encre : retenu par le serveur (ink) ; l'appareil garde les achats d'avant
-      const revealed = page.ink || this.revealed[page.id] || null;
-      // Un premier essai sur la page (compté par le serveur, ou fait pendant la session) dévoile les familles
-      const tried = Boolean(aim) || page.misses > 0;
-      // Ce qu'un maître a soufflé sur la page : { who, ingredient } ou { who, family }
-      const whisper = this.savoirs[page.id] || null;
-      return { type: 'reach', key: page.id, chapter, page, revealed, aim, freeInk, tried, whisper };
     },
     // Verdict d'un mélange visé sur cette page (transmis par l'Athanor)
     onAim(aim) {
@@ -545,18 +417,6 @@ export default {
       if (previous) this.queueEffects(previous, data, previousKey);
       this.$emit('loaded');
     },
-    // Appui long sur une tuile : la fiche de l'élément (le toucher, lui, l'envoie dans l'Athanor)
-    openInfo(name, event) {
-      const family = this.familyOf[name] || '';
-      const tile = event.target && event.target.closest ? event.target.closest('.tile') : null;
-      this.info = { name, family: family.replace(/_/g, ' '), chapter: chapterOfFamily(family), fertile: this.unexplored[name] || 0, rect: tile ? tile.getBoundingClientRect() : null };
-      vibrate(10);
-    },
-    selectInfo() {
-      const { name, rect } = this.info;
-      this.info = null;
-      this.$emit('select', name, rect);
-    },
     wantsSingle() {
       return !(this.$el.clientWidth >= SPREAD_MIN_WIDTH && window.innerHeight >= SPREAD_MIN_HEIGHT);
     },
@@ -628,47 +488,6 @@ export default {
       else guide.tip('welcome');
       this.engineReady = true;
     },
-    // Ce qui a changé depuis le dernier chargement : page inscrite, chapitre ouvert
-    queueEffects(previous, data, previousKey) {
-      const before = new Map(previous.chapters.flatMap(c => c.pages).map(p => [p.id, p.status]));
-      const opened = data.chapters.filter(c => c.open && !previous.chapters.find(p => p.id === c.id)?.open);
-      for (const chapter of data.chapters) {
-        for (const page of chapter.pages) {
-          if (page.status !== 'found' || before.get(page.id) === 'found') continue;
-          this.pendingEffects.push({ kind: page.id === previousKey ? 'inscribed-here' : 'inscribed', chapter: chapter.id, name: page.name });
-        }
-      }
-      for (const chapter of opened) this.pendingEffects.push({ kind: 'opened', chapter: chapter.id, name: chapter.name });
-      if (!this.revealing) this.flushEffects();
-    },
-    async flushEffects() {
-      const effects = this.pendingEffects.splice(0);
-      for (const effect of effects) {
-        if (effect.kind === 'inscribed-here' || effect.kind === 'inscribed') this.runeFlash++;
-        if (effect.kind === 'inscribed-here') {
-          const rect = this.engine && this.engine.rectOf('vignette');
-          if (rect) {
-            ring(center(rect), rect.width * 1.5);
-            burst(center(rect), 22, rect.width * 1.1);
-          }
-          vibrate([12, 40, 18]);
-        } else if (effect.kind === 'inscribed') {
-          // Page inscrite ailleurs : la puce de chapitre salue la découverte
-          const chip = this.$refs.chapterChip;
-          if (chip) {
-            chip.classList.remove('is-ping');
-            void chip.offsetWidth;
-            chip.classList.add('is-ping');
-            burst(center(chip.getBoundingClientRect()), 10, 36);
-          }
-        } else if (effect.kind === 'opened') {
-          await unlockCinematic({ id: effect.chapter, name: effect.name }, CHAPTER_STYLE[effect.chapter].wax);
-          guide.tip(`chapter-${effect.chapter}`);
-          const index = this.chapterState.find(c => c.id === effect.chapter)?.index;
-          if (this.engine && index > 0) await this.engine.go(index);
-        }
-      }
-    },
     openChapters() {
       const pages = {};
       this.models.forEach(model => {
@@ -724,62 +543,6 @@ export default {
         vibrate(10);
       } catch (error) {
         this.$emit('show-alert', messageOf(error, 'L’Encre n’a pas pu être utilisée.'));
-      }
-    },
-
-    // ----- Pendu -----
-    openGuess(id) {
-      const model = this.models.find(m => m.type === 'reach' && m.key === id);
-      if (!model || !model.page.hangman) return;
-      this.guess = { page: { ...model.page }, chapter: { id: model.chapter.id, name: model.chapter.name }, style: CHAPTER_STYLE[model.chapter.id], verdict: null, inscribed: '' };
-    },
-    // Nouvel état d'un pendu (réponse du serveur) : la page peinte et la feuille ouverte suivent
-    applyHangman(id, hangman) {
-      const page = this.bookData && this.bookData.chapters.flatMap(c => c.pages).find(p => p.id === id);
-      if (!page) return;
-      page.hangman = hangman;
-      this.models = this.buildModels(this.bookData);
-      this.modelsVersion++;
-      if (this.engine) this.engine.refresh();
-      if (this.guess && this.guess.page.id === id) this.guess = { ...this.guess, page: { ...page } };
-    },
-    // Une lettre posée dans une case ; mot complet : le serveur inscrit l'élément (comme un mélange)
-    async onGuess({ position, letter }) {
-      if (!this.guess || this.guessBusy) return;
-      const id = this.guess.page.id;
-      this.guessBusy = true;
-      try {
-        const { hangman, verdict, inscribed } = await playService.letter(id, position, letter);
-        this.applyHangman(id, hangman);
-        if (this.guess && this.guess.page.id === id) this.guess = { ...this.guess, verdict: { position, letter, verdict } };
-        if (inscribed) {
-          if (this.guess && this.guess.page.id === id) this.guess = { ...this.guess, inscribed: inscribed.result };
-          vibrate(HAPTIC.discovery);
-          burst({ x: window.innerWidth / 2, y: window.innerHeight * 0.3 }, 22, 150);
-          this.$emit('inscribed', inscribed);
-        } else {
-          vibrate(verdict === 'miss' ? HAPTIC.fail : HAPTIC.tap);
-        }
-      } catch (error) {
-        // Partie perdue entre-temps : le serveur renvoie l'état à montrer
-        if (error.response?.data?.hangman) this.applyHangman(id, error.response.data.hangman);
-        else this.$emit('show-alert', messageOf(error, 'Cette lettre n’a pas pu être jouée.'));
-      } finally {
-        this.guessBusy = false;
-      }
-    },
-    async onRetry() {
-      if (!this.guess || this.guessBusy) return;
-      const id = this.guess.page.id;
-      this.guessBusy = true;
-      try {
-        const { hangman, coins } = await playService.retryLetters(id);
-        this.applyHangman(id, hangman);
-        this.$emit('coins-updated', coins);
-      } catch (error) {
-        this.$emit('show-alert', messageOf(error, 'Impossible de rejouer pour l’instant.'));
-      } finally {
-        this.guessBusy = false;
       }
     }
   }
