@@ -459,7 +459,8 @@ export default {
       const aim = this.aims[page.id] || null;
       const need = page.freeInkAfter;
       const freeInk = Boolean(aim && aim.freeInk) || (need > 0 && page.misses >= need);
-      const revealed = this.revealed[page.id] || null;
+      // Ingrédient révélé par l'Encre : retenu par le serveur (ink) ; l'appareil garde les achats d'avant
+      const revealed = page.ink || this.revealed[page.id] || null;
       // Un premier essai sur la page (compté par le serveur, ou fait pendant la session) dévoile les familles
       const tried = Boolean(aim) || page.misses > 0;
       // Ce qu'un maître a soufflé sur la page : { who, ingredient } ou { who, family }
