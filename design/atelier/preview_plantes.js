@@ -7,7 +7,7 @@ const { arbre, ARBRES, pommier, POMMIERS, automne, AUTOMNES, bouleau, BOULEAUX, 
 const { touffe, TOUFFES } = require('./herbes');
 const { rocher, ROCHERS, rochers, ROCHERS_TAS, aiguille, AIGUILLES, rochersMoussus, ROCHERS_MOUSSUS } = require('./rochers');
 const { coquillages, COQUILLAGES, boisFlotte, BOIS_FLOTTES } = require('./plage');
-const { nid, NIDS } = require('./objets');
+const { nid, NIDS, lanterne, LANTERNES } = require('./objets');
 const { buisson, BUISSONS, bruyere, BRUYERES, fleurs, FLEURS, cactus, CACTUS_LISTE, souche, SOUCHES, rondin, RONDINS, champignons, CHAMPIGNONS, roseaux, ROSEAUX, nenuphars, NENUPHARS } = require('./plantes');
 
 const LIB = path.join(__dirname, 'lib', 'plantes');
@@ -45,9 +45,9 @@ const LIST = [
   // les coquillages et le bois flotté refaits (plage.js) et leurs 8 variantes chacun
   ...COQUILLAGES.map(([fichier, libelle, o]) => [fichier, libelle, 'shells', () => coquillages(o)]),
   ...BOIS_FLOTTES.map(([fichier, libelle, o]) => [fichier, libelle, 'driftwood', () => boisFlotte(o)]),
-  // le nid refait (objets.js) et ses 8 variantes
+  // le nid et la lanterne refaits (objets.js) et leurs 8 variantes chacun
   ...NIDS.map(([fichier, libelle, o]) => [fichier, libelle, 'nest', () => nid(o)]),
-  ['lanterne', 'Lanterne (éteinte)', 'lantern', () => D.lantern(false)], ['lanterne_allumee', 'Lanterne (allumée)', 'lantern', () => D.lantern(true)],
+  ...LANTERNES.map(([fichier, libelle, o]) => [fichier, libelle, 'lantern', () => lanterne(o)]),
   ['banc', 'Banc', 'bench', () => D.bench()]
 ];
 const svgOf = (body, scale = 1, withCell = false) => {

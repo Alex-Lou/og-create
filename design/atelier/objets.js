@@ -1,5 +1,5 @@
-// Les objets du décor refaits au niveau des PNJ, un par un, avec le trait et la lumière des arbres (arbres.js) : le nid.
-// Cadre et ancrage des décors de deco.js (PROP, centre de la case en (0, 0)).
+// Les objets du décor refaits au niveau des PNJ, un par un, avec le trait et la lumière des arbres (arbres.js) : le nid,
+// la lanterne. Cadre et ancrage des décors de deco.js (PROP, centre de la case en (0, 0)).
 const { OUT, E, r2 } = require('./troupe');
 
 const ombre = (x, y, rx, ry) => E(x, y, rx, ry, 'rgba(40,55,20,0.22)', 0);
@@ -64,4 +64,54 @@ for (const petit of [false, true]) for (const po of [false, true]) for (const pl
   NIDS.push([fichier, libelle, { petit, poussins: po, plume: pl }]);
 }
 
-module.exports = { nid, NIDS };
+// ——— La lanterne : un poteau, sa potence, la lanterne vitrée pendue ; de fer ou de bois, du lierre, éteinte ou allumée ———
+const POTEAUX = {
+  bois: { light: '#C98E58', mid: '#9C6638', dark: '#6E4424' },
+  fer: { light: '#6A7078', mid: '#454B53', dark: '#2C3036' }
+};
+const FER = { mid: '#3E4248', light: '#5C626A' };
+// la feuille de lierre : un cœur pointu détouré, la nervure
+const feuilleLierre = (x, y, a) => groupe(x, y, 0.8, `<path d="M0,0 Q-2.4,-1.2 -1.8,-3 Q-0.8,-3.8 0,-2.8 Q0.8,-3.8 1.8,-3 Q2.4,-1.2 0,0 Z" fill="#5E9E48" stroke="${OUT}" stroke-width="0.55" stroke-linejoin="round"/>` + trait('M0,-0.4 L0,-2.4', '#3E7A34', 0.4), a);
+const LIERRE = [[-2.4, -6, -40], [2.4, -11, 35], [-2.4, -16, -30], [2.2, -21, 40], [-2.2, -26, -35], [2, -31, 30]];
+
+// poteau : 'bois' ou 'fer' ; lierre : du lierre grimpe au poteau ; allumee : la flamme brûle, la lanterne luit
+function lanterne({ poteau = 'bois', lierre = false, allumee = false } = {}) {
+  const c = POTEAUX[poteau], fer = poteau === 'fer';
+  const id = `lan${poteau[0]}${lierre ? 'l' : ''}${allumee ? 'a' : ''}`;
+  const w = fer ? 1.6 : 2.2;
+  // le poteau, son pied, la potence et sa jambe de force (une volute pour le fer)
+  const pied = fer ? `<path d="M-4,0.6 Q-3.6,-2.4 -${w},-4 L${w},-4 Q3.6,-2.4 4,0.6 Z" fill="${c.mid}" stroke="${OUT}" stroke-width="1" stroke-linejoin="round"/>`
+    : `<path d="M-3.6,0.8 L-3,-1.6 L3,-1.6 L3.6,0.8 Z" fill="#9A9488" stroke="${OUT}" stroke-width="1" stroke-linejoin="round"/>`;
+  const poteauSvg = `<rect x="${-w}" y="-41" width="${2 * w}" height="${fer ? 37 : 39.4}" rx="${fer ? 0.8 : 1}" fill="${c.mid}" stroke="${OUT}" stroke-width="1"/>`
+    + `<rect x="${r2(w * 0.25)}" y="-40.4" width="${r2(w * 0.65)}" height="${fer ? 36 : 38.6}" fill="${c.dark}"/>` + `<rect x="${r2(-w * 0.7)}" y="-40.4" width="${r2(w * 0.4)}" height="${fer ? 36 : 38.6}" fill="${c.light}"/>`
+    + (fer ? '' : trait('M-0.6,-34 l0,4 M0.4,-20 l0,5 M-0.4,-9 l0,3', c.dark, 0.5));
+  const potence = trait('M0,-41 L9.4,-41', OUT, 3.4) + trait('M0,-41 L9.4,-41', c.mid, 1.8)
+    + (fer ? trait('M0,-35 Q5.4,-35.4 5.4,-41 Q2.6,-41 3,-38.4', OUT, 2.2) + trait('M0,-35 Q5.4,-35.4 5.4,-41 Q2.6,-41 3,-38.4', c.mid, 0.9)
+      : trait('M0,-35 L5.4,-41', OUT, 2.6) + trait('M0,-35 L5.4,-41', c.mid, 1.2))
+    + E(0, -41.6, w * 0.9, 1, c.mid, 0.9);
+  // la lanterne : crochet, chapeau, vitres et croisillons, plateau, la flamme quand elle brûle
+  const vitre = allumee ? '#FFE27A' : '#DCE7EB';
+  const lumiere = allumee ? `<defs><radialGradient id="${id}g"><stop offset="0" stop-color="#FFE08A" stop-opacity="0.7"/><stop offset="0.5" stop-color="#FFE08A" stop-opacity="0.26"/><stop offset="1" stop-color="#FFE08A" stop-opacity="0"/></radialGradient></defs>`
+    + `<circle cx="8.6" cy="-31.6" r="17" fill="url(#${id}g)"/>` + E(8.6, 1.4, 9, 3, 'rgba(255,224,138,0.32)', 0) : '';
+  const lanterneSvg = trait('M8.6,-41 L8.6,-38.4', OUT, 0.9)
+    + `<path d="M5.4,-35.6 L6.6,-38.6 L10.6,-38.6 L11.8,-35.6 Z" fill="${FER.mid}" stroke="${OUT}" stroke-width="0.9" stroke-linejoin="round"/>` + E(8.6, -39.2, 1, 0.8, FER.mid, 0.7)
+    + `<rect x="5.6" y="-35.6" width="6" height="7.8" fill="${vitre}" stroke="${OUT}" stroke-width="0.9"/>`
+    + (allumee ? `<path d="M8.6,-30 Q6.8,-31.6 8.6,-34.4 Q10.4,-31.6 8.6,-30 Z" fill="#F29A4A"/>` + `<path d="M8.6,-30.4 Q7.8,-31.4 8.6,-32.8 Q9.4,-31.4 8.6,-30.4 Z" fill="#FFF6C8"/>`
+      : `<path d="M6.4,-29.2 L8.4,-34.8" stroke="#FFFFFF" stroke-width="0.8" stroke-linecap="round" opacity="0.8"/>`)
+    + trait('M8.6,-35.6 L8.6,-27.8 M5.6,-31.7 L11.6,-31.7', FER.mid, 0.6)
+    + `<path d="M5,-27.8 L12.2,-27.8 L11,-26.4 L6.2,-26.4 Z" fill="${FER.mid}" stroke="${OUT}" stroke-width="0.8" stroke-linejoin="round"/>`;
+  return ombre(1, 0.8, 8, 3) + lumiere + pied + poteauSvg
+    + (lierre ? trait('M0.6,-1 Q-2.6,-6 0.4,-11 Q3,-16 -0.4,-21 Q-2.8,-26 0.4,-31', '#3E7A34', 0.8) + LIERRE.map(([x, y, a]) => feuilleLierre(x, y, a)).join('') : '')
+    + potence + lanterneSvg;
+}
+
+// Les 8 lanternes : [fichier, libellé, options] ; « lanterne » (poteau de bois, sans lierre, éteinte) est celle par défaut,
+// « lanterne_allumee » la même allumée, comme avant
+const LANTERNES = [];
+for (const poteau of ['bois', 'fer']) for (const li of [false, true]) for (const al of [false, true]) {
+  const fichier = ['lanterne', poteau === 'fer' && 'fer', li && 'lierre', al && 'allumee'].filter(Boolean).join('_');
+  const libelle = `Lanterne sur pied (${[poteau === 'fer' ? 'poteau de fer' : 'poteau de bois', li && 'du lierre', al ? 'allumée' : 'éteinte'].filter(Boolean).join(', ')})`;
+  LANTERNES.push([fichier, libelle, { poteau, lierre: li, allumee: al }]);
+}
+
+module.exports = { nid, NIDS, lanterne, LANTERNES };
