@@ -7924,28 +7924,6 @@
    "statut": "ok"
   },
   {
-   "id": "personnages/naufrages/cannelle/cannelle-naufrage_arrivee",
-   "rubrique": "personnages",
-   "sujet": "cannelle-naufrage",
-   "pose": "arrivee",
-   "titre": "Cannelle naufragée, arrivée",
-   "images": 2,
-   "fichiers": [
-    "svg/personnages/naufrages/cannelle/cannelle-naufrage_arrivee_1.svg",
-    "svg/personnages/naufrages/cannelle/cannelle-naufrage_arrivee_2.svg"
-   ],
-   "cadre": [
-    0,
-    0,
-    80,
-    64
-   ],
-   "ms_par_image": 450,
-   "parcours": "tuto-2",
-   "statut": "a-revoir",
-   "note": "Plan d'entrée de l'ancien tutoriel : les scènes v6 le remplacent (lot J2)."
-  },
-  {
    "id": "personnages/naufrages/cannelle/cannelle-naufrage_avant_marche",
    "rubrique": "personnages",
    "sujet": "cannelle-naufrage",
@@ -8577,28 +8555,6 @@
    ],
    "parcours": "tuto-2",
    "statut": "ok"
-  },
-  {
-   "id": "personnages/naufrages/rivet/rivet-naufrage_arrivee",
-   "rubrique": "personnages",
-   "sujet": "rivet-naufrage",
-   "pose": "arrivee",
-   "titre": "Rivet naufragé, arrivée",
-   "images": 2,
-   "fichiers": [
-    "svg/personnages/naufrages/rivet/rivet-naufrage_arrivee_1.svg",
-    "svg/personnages/naufrages/rivet/rivet-naufrage_arrivee_2.svg"
-   ],
-   "cadre": [
-    0,
-    0,
-    80,
-    64
-   ],
-   "ms_par_image": 450,
-   "parcours": "tuto-2",
-   "statut": "a-revoir",
-   "note": "Plan d'entrée de l'ancien tutoriel : les scènes v6 le remplacent (lot J2)."
   },
   {
    "id": "personnages/naufrages/rivet/rivet-naufrage_avant_lanterne",
@@ -11200,28 +11156,6 @@
    "statut": "ok"
   },
   {
-   "id": "personnages/naufrages/aster/aster-naufrage_arrivee",
-   "rubrique": "personnages",
-   "sujet": "aster-naufrage",
-   "pose": "arrivee",
-   "titre": "Aster naufragée, arrivée",
-   "images": 2,
-   "fichiers": [
-    "svg/personnages/naufrages/aster/aster-naufrage_arrivee_1.svg",
-    "svg/personnages/naufrages/aster/aster-naufrage_arrivee_2.svg"
-   ],
-   "cadre": [
-    0,
-    0,
-    80,
-    64
-   ],
-   "ms_par_image": 450,
-   "parcours": "tuto-3",
-   "statut": "a-revoir",
-   "note": "Plan d'entrée de l'ancien tutoriel : les scènes v6 le remplacent (lot J2)."
-  },
-  {
    "id": "personnages/naufrages/aster/aster-naufrage_avant_lanterne",
    "rubrique": "personnages",
    "sujet": "aster-naufrage",
@@ -11958,28 +11892,6 @@
    ],
    "parcours": "tuto-3",
    "statut": "ok"
-  },
-  {
-   "id": "personnages/naufrages/ondin/ondin-naufrage_arrivee",
-   "rubrique": "personnages",
-   "sujet": "ondin-naufrage",
-   "pose": "arrivee",
-   "titre": "Ondin naufragé, arrivée",
-   "images": 2,
-   "fichiers": [
-    "svg/personnages/naufrages/ondin/ondin-naufrage_arrivee_1.svg",
-    "svg/personnages/naufrages/ondin/ondin-naufrage_arrivee_2.svg"
-   ],
-   "cadre": [
-    0,
-    0,
-    80,
-    64
-   ],
-   "ms_par_image": 450,
-   "parcours": "tuto-3",
-   "statut": "a-revoir",
-   "note": "Plan d'entrée de l'ancien tutoriel : les scènes v6 le remplacent (lot J2)."
   },
   {
    "id": "personnages/naufrages/ondin/ondin-naufrage_avant_marche",

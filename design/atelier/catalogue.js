@@ -55,7 +55,6 @@ function renommer(rel) {
   if (top === 'personnages') {
     if (a === 'naufrages') {
       if (base.startsWith(b + '_naufrage_')) return out([top, a, b], `${b}-naufrage_${base.slice(b.length + 10)}`);
-      if (base.startsWith(b + '_arrivee_')) return out([top, a, b], `${b}-naufrage_${base.slice(b.length + 1)}`);
       throw new Error('naufragé inattendu : ' + rel);
     }
   }
@@ -220,7 +219,6 @@ const A_REVOIR = [
   [/^vivants\/cerf-blanc\//, 'Le cerf blanc n\'a que le profil ; il lui faut le trois quarts avant et dos, comme Anya.'],
   [/^personnages\/naufrages\/galet\/galet-naufrage_face_rune$/, 'Un naufragé a oublié son don (§ 6.2) : la rune qui chante revient au maître.'],
   [/^personnages\/naufrages\/sylve\/sylve-naufrage_face_chant$/, 'Un naufragé a oublié son don (§ 6.2) : le chant aux graines revient au maître.'],
-  [/^personnages\/naufrages\/[a-z]+\/[a-z]+-naufrage_arrivee$/, 'Plan d\'entrée de l\'ancien tutoriel : les scènes v6 le remplacent (lot J2).'],
   [/^decor\/camp\/epave\/hirondelle$/, 'L\'Hirondelle est un petit navire de croisière (v6) : épave à redessiner.'],
   [/^decor\/camp\/epave\/feu_debris$/, 'Le feu de camp est le Foyer au palier I, bâti par le joueur (§ 9, étape 5) : ce feu fait double emploi.'],
   [/^decor\/camp\/coins\/(ondin|sylve|galet|melisse)\//, 'Seuls Aster et Rivet vivent au camp : ce coin va près du bâtiment de son maître (Ondin à La Source, Sylve à La Lisière, Galet à La Colline, Mélisse aux Jardins).'],
@@ -328,7 +326,6 @@ function vitesse(id, pose, images) {
     if (pose === 'repos') return [900, 160];
     if (pose === 'salut') return 260;
     if (pose === 'dort' || pose === 'couche') return 900;
-    if (pose === 'arrivee') return 450;
     if (pose === 'expr') return 800;
     if (pose === 'grelotter') return 140; // un frisson
     if (pose === 'lire') return [1400, 900];
