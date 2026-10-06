@@ -117,6 +117,8 @@ export default {
 </script>
 
 <style scoped>
+/* Ses jetons : un savoir qui manque */
+.bench { --bench-missing-bg: #f8e3dc; }
 .bench { display: flex; flex-direction: column; gap: 10px; font-family: var(--font-ui); }
 .bench__note { margin: 0; padding: 8px 12px; border-radius: var(--r-sm); background: var(--vellum-200); font-weight: 700; font-size: 13px; line-height: 1.4; }
 .bench__tabs { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 4px; padding: 4px; border-radius: var(--r-pill); background: var(--vellum-200); }
@@ -150,7 +152,7 @@ export default {
 .bench__cost { margin: 2px 0 0; }
 .bench__know { margin: 2px 0 0; padding: 0; list-style: none; display: flex; flex-wrap: wrap; gap: 4px; font-size: 12px; font-weight: 900; color: var(--ink-700); }
 .bench__know li { display: inline-flex; align-items: center; gap: 3px; padding: 1px 8px 1px 4px; border-radius: var(--r-pill); background: var(--vellum-200); }
-.bench__know li.is-missing { background: #F8E3DC; color: var(--oc-missing); }
+.bench__know li.is-missing { background: var(--bench-missing-bg); color: var(--oc-missing); }
 .bench__block { color: var(--oc-missing); font-size: 12px; font-weight: 800; line-height: 1.3; }
 .bench__actions { grid-column: 2; display: flex; flex-wrap: wrap; justify-content: flex-end; gap: 6px; }
 .bench__btn {

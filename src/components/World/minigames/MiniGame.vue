@@ -168,7 +168,7 @@ export default {
   padding: 16px; background: var(--island-game-backdrop); font-family: var(--font-ui);
 }
 .mini__card {
-  width: min(100%, 440px); max-height: 100%; overflow-y: auto; padding: 16px; border-radius: 26px;
+  width: min(100%, 440px); max-height: 100%; overflow-y: auto; padding: 16px; border-radius: var(--island-game-radius);
   background: var(--vellum-100); color: var(--ink-900); box-shadow: 0 24px 60px rgba(0, 0, 0, .5);
 }
 .mini__head { display: flex; align-items: flex-end; justify-content: space-between; gap: 10px; margin-bottom: 12px; }

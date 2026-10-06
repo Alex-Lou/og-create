@@ -279,23 +279,35 @@ export default {
 </script>
 
 <style scoped>
+/* Ses jetons, sur sa racine et sur la pièce qu'on fait glisser (rendue dans la page) */
+.puzzle, .puzzle__drag {
+  --puzzle-radius: 6px;              /* une case, une pièce */
+  --puzzle-bit-radius: 5px;
+  --puzzle-cell-bg: rgba(255, 252, 240, .75);
+  --puzzle-hint-ring: #e2a53a;
+  --puzzle-bad-bg: rgba(214, 96, 74, .35);
+  --puzzle-bad-ring: #c9473a;
+  --puzzle-glow: rgba(226, 165, 58, .95);
+  --puzzle-bit-line: rgba(60, 40, 25, .35);
+  --puzzle-drag-shadow: rgba(40, 30, 20, .35);
+}
 .puzzle { display: flex; flex-direction: column; align-items: center; gap: 12px; font-family: var(--font-ui); }
 .puzzle__hint { margin: 0; align-self: stretch; padding: 8px 12px; border-radius: var(--r-sm); background: var(--vellum-200); font-size: 13px; font-weight: 700; line-height: 1.4; text-align: left; }
 .puzzle__board { position: relative; margin: 4px 0; touch-action: none; }
 .puzzle__ghost-art { position: absolute; inset: -18%; display: block; opacity: .16; pointer-events: none; }
 .puzzle__ghost-art img { width: 100%; height: 100%; object-fit: contain; }
 .puzzle__cell {
-  position: absolute; width: 44px; height: 44px; padding: 0; border: 0; border-radius: 6px; box-sizing: border-box;
-  background: rgba(255, 252, 240, .75); box-shadow: inset 0 0 0 1.5px rgba(var(--shade-rgb), .28); cursor: pointer; touch-action: none;
+  position: absolute; width: 44px; height: 44px; padding: 0; border: 0; border-radius: var(--puzzle-radius); box-sizing: border-box;
+  background: var(--puzzle-cell-bg); box-shadow: inset 0 0 0 1.5px rgba(var(--shade-rgb), .28); cursor: pointer; touch-action: none;
 }
-.puzzle__cell.is-hint { background: var(--island-hint); box-shadow: inset 0 0 0 2px #E2A53A; }
-.puzzle__cell.is-bad { background: rgba(214, 96, 74, .35); box-shadow: inset 0 0 0 2px #C9473A; }
+.puzzle__cell.is-hint { background: var(--island-hint); box-shadow: inset 0 0 0 2px var(--puzzle-hint-ring); }
+.puzzle__cell.is-bad { background: var(--puzzle-bad-bg); box-shadow: inset 0 0 0 2px var(--puzzle-bad-ring); }
 .puzzle__placed, .puzzle__piece { position: absolute; padding: 0; border: 0; background: none; cursor: grab; touch-action: none; }
 .puzzle__placed { z-index: 1; }
-.puzzle__piece { position: relative; border-radius: 6px; outline-offset: 3px; }
-.puzzle__piece.is-on { filter: drop-shadow(0 0 4px rgba(226, 165, 58, .95)); transform: scale(1.06); }
+.puzzle__piece { position: relative; border-radius: var(--puzzle-radius); outline-offset: 3px; }
+.puzzle__piece.is-on { filter: drop-shadow(0 0 4px var(--puzzle-glow)); transform: scale(1.06); }
 .puzzle__piece.is-dragged { opacity: .3; }
-.puzzle__bit { position: absolute; box-sizing: border-box; border-radius: 5px; box-shadow: inset 0 -3px 0 rgba(0, 0, 0, .14), inset 0 0 0 1.5px rgba(60, 40, 25, .35); }
+.puzzle__bit { position: absolute; box-sizing: border-box; border-radius: var(--puzzle-bit-radius); box-shadow: inset 0 -3px 0 rgba(0, 0, 0, .14), inset 0 0 0 1.5px var(--puzzle-bit-line); }
 .puzzle__tray {
   align-self: stretch; display: flex; flex-wrap: wrap; justify-content: center; align-items: center; gap: 14px; min-height: 70px;
   padding: 12px; border-radius: var(--r-md); background: var(--vellum-50); box-shadow: inset 0 0 0 1px rgba(var(--shade-rgb), .1);
@@ -312,5 +324,5 @@ export default {
 .puzzle__art { position: relative; display: block; width: 140px; height: 150px; }
 .puzzle__art img { width: 100%; height: 100%; object-fit: contain; }
 .puzzle__done { margin: 0; font-size: 15px; font-weight: 800; text-align: center; line-height: 1.4; }
-.puzzle__drag { position: fixed; z-index: var(--z-drag); pointer-events: none; filter: drop-shadow(0 6px 8px rgba(40, 30, 20, .35)); }
+.puzzle__drag { position: fixed; z-index: var(--z-drag); pointer-events: none; filter: drop-shadow(0 6px 8px var(--puzzle-drag-shadow)); }
 </style>

@@ -113,6 +113,8 @@ export default {
 </script>
 
 <style scoped>
+/* Ses jetons : le palier atteint */
+.item-sheet { --item-ok-bg: #e3f1d6; --item-ok-ink: #3e6e2e; }
 .item-sheet { display: flex; flex-direction: column; gap: 12px; }
 .item-sheet__art {
   position: relative; display: grid; place-items: center; height: 168px; border-radius: var(--r-md);
@@ -126,7 +128,7 @@ export default {
 }
 .item-sheet__chip--rare { background: var(--island-rare); color: var(--ink-900); }
 .item-sheet__palier { margin: 0; padding: 8px 12px; border-radius: var(--r-sm); font-weight: 800; font-size: 14px; }
-.item-sheet__palier.is-ok { background: #E3F1D6; color: #3E6E2E; }
+.item-sheet__palier.is-ok { background: var(--item-ok-bg); color: var(--item-ok-ink); }
 .item-sheet__palier.is-missing { background: var(--vellum-200); color: var(--ink-700); }
 .item-sheet__facts { margin: 0; display: grid; gap: 6px; }
 .item-sheet__fact { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; padding: 6px 2px; border-bottom: 1px dashed rgba(var(--shade-rgb), .18); }

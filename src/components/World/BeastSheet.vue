@@ -64,12 +64,14 @@ export default {
 </script>
 
 <style scoped>
+/* Ses jetons : le portrait, et la bête qui a faim */
+.beast { --beast-portrait-radius: 24px; --beast-hungry-bg: #fce3c4; --beast-hungry-ink: #8a4b12; }
 .beast { display: flex; flex-direction: column; align-items: center; gap: 10px; font-family: var(--font-ui); text-align: center; }
-.beast__portrait { display: grid; place-items: center; width: 96px; height: 96px; border-radius: 24px; background: var(--vellum-200); }
+.beast__portrait { display: grid; place-items: center; width: 96px; height: 96px; border-radius: var(--beast-portrait-radius); background: var(--vellum-200); }
 .beast__portrait img { width: 76px; height: 76px; object-fit: contain; }
 .beast__likes, .beast__gives { margin: 0; font-weight: 700; font-size: 14px; line-height: 1.4; }
 .beast__mood { margin: 0; padding: 4px 12px; border-radius: var(--r-pill); background: var(--vellum-200); font-weight: 900; font-size: 13px; }
-.beast__mood.is-hungry { background: #FCE3C4; color: #8A4B12; }
+.beast__mood.is-hungry { background: var(--beast-hungry-bg); color: var(--beast-hungry-ink); }
 .beast__bubble {
   display: flex; align-items: center; justify-content: space-between; gap: 10px; width: 100%;
   padding: 8px 8px 8px 12px; border-radius: var(--r-tile); background: var(--vellum-50); box-shadow: inset 0 0 0 1px rgba(var(--shade-rgb), .1);

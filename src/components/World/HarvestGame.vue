@@ -244,6 +244,19 @@ export default {
 </script>
 
 <style scoped>
+/* Ses jetons : le bonus, le plateau, les tuiles de chaque ressource, la tuile prise et le chemin */
+.harvest {
+  --harvest-boost: #e7b648;
+  --harvest-board: #e9ddc4;
+  --harvest-stone: #d9d2c5;
+  --harvest-wood: #e2bd8c;
+  --harvest-water: #a9dbf1;
+  --harvest-food: #f7c1a5;
+  --harvest-fish: #9ccbe6;
+  --harvest-picked: #f2b53c;
+  --harvest-picked-glow: rgba(242, 181, 60, .5);
+  --harvest-path: rgba(242, 181, 60, .85);
+}
 .harvest {
   position: fixed; inset: 0; z-index: var(--z-game);
   display: flex; align-items: center; justify-content: center;
@@ -252,7 +265,7 @@ export default {
 }
 .harvest__card {
   width: min(100%, 440px); max-height: 100%; overflow-y: auto;
-  padding: 16px; border-radius: 26px;
+  padding: 16px; border-radius: var(--island-game-radius);
   background: var(--vellum-100); color: var(--ink-900);
   box-shadow: 0 24px 60px rgba(0, 0, 0, .5);
 }
@@ -271,13 +284,13 @@ export default {
   box-shadow: inset 0 0 0 1px rgba(var(--shade-rgb), .08); font-size: 18px;
 }
 .harvest__res strong { font-size: 16px; font-weight: 900; font-variant-numeric: tabular-nums; }
-.harvest__res.is-boost { box-shadow: inset 0 0 0 2px #E7B648; }
-.harvest__boost { position: absolute; top: -7px; right: -4px; padding: 0 5px; border-radius: var(--r-xs); background: #E7B648; color: var(--ink-900); font-size: 10px; font-style: normal; font-weight: 900; }
+.harvest__res.is-boost { box-shadow: inset 0 0 0 2px var(--harvest-boost); }
+.harvest__boost { position: absolute; top: -7px; right: -4px; padding: 0 5px; border-radius: var(--r-xs); background: var(--harvest-boost); color: var(--ink-900); font-size: 10px; font-style: normal; font-weight: 900; }
 .harvest__hint { min-height: 22px; margin-bottom: 8px; text-align: center; font-size: 14px; font-weight: 800; color: var(--oc-gold-ink); }
 
 .harvest__board {
   position: relative; width: 100%; aspect-ratio: 1;
-  border-radius: var(--r-board); background: #E9DDC4;
+  border-radius: var(--r-board); background: var(--harvest-board);
   box-shadow: inset 0 2px 6px rgba(var(--shade-rgb), .18);
   touch-action: none; user-select: none; -webkit-user-select: none;
   overflow: hidden;
@@ -296,19 +309,19 @@ export default {
   transition: transform .12s ease, box-shadow .12s ease;
 }
 .harvest__tile span { position: relative; transition: transform .12s ease; }
-.harvest__tile.is-stone { --tile: #D9D2C5; }
-.harvest__tile.is-wood { --tile: #E2BD8C; }
-.harvest__tile.is-water { --tile: #A9DBF1; }
-.harvest__tile.is-food { --tile: #F7C1A5; }
-.harvest__tile.is-fish { --tile: #9CCBE6; }
-.harvest__tile.is-picked::before { transform: scale(1.08); box-shadow: 0 0 0 3px #F2B53C, 0 4px 10px rgba(242, 181, 60, .5); }
+.harvest__tile.is-stone { --tile: var(--harvest-stone); }
+.harvest__tile.is-wood { --tile: var(--harvest-wood); }
+.harvest__tile.is-water { --tile: var(--harvest-water); }
+.harvest__tile.is-food { --tile: var(--harvest-food); }
+.harvest__tile.is-fish { --tile: var(--harvest-fish); }
+.harvest__tile.is-picked::before { transform: scale(1.08); box-shadow: 0 0 0 3px var(--harvest-picked), 0 4px 10px var(--harvest-picked-glow); }
 .harvest__tile.is-picked span { transform: scale(1.12); }
 .harvest__tile.is-gone { animation: harvest-gone .17s ease-in forwards; }
 .harvest__tile.is-fresh { animation: harvest-drop .34s cubic-bezier(.3, 1.25, .55, 1); }
 @keyframes harvest-gone { to { opacity: 0; transform: translate(calc(var(--x) * 100%), calc(var(--y) * 100%)) scale(.2); } }
 @keyframes harvest-drop { from { transform: translate(calc(var(--x) * 100%), calc(var(--from) * 100%)); } }
 .harvest__path { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; }
-.harvest__path polyline { fill: none; stroke: rgba(242, 181, 60, .85); stroke-width: .12; stroke-linecap: round; stroke-linejoin: round; }
+.harvest__path polyline { fill: none; stroke: var(--harvest-path); stroke-width: .12; stroke-linecap: round; stroke-linejoin: round; }
 
 .harvest__result { padding: 18px 4px 6px; text-align: center; }
 .harvest__done, .harvest__wait { margin: 0 0 14px; color: var(--ink-500); font-style: italic; }
