@@ -915,15 +915,36 @@ C.hamac = { n: 2, draw: f => {
   const [hx, hy] = at(-0.3, 0.3, 0);
   return s + [[-8, -6, -30], [-3, -9, -8], [3, -8, 14], [7, -5, 34]].map(([dx, dy, r]) => `<g transform="translate(${r2(hx + 1)} ${r2(hy + 1)}) rotate(${r})">${P(`M0,0 Q-2.4,${dy * 0.5} 0,${dy} Q2.4,${dy * 0.5} 0,0 Z`, '#6FAE4E', 0.6)}</g>`).join('');
 } };
+// Totem : un mât rond de bois sculpté sur son tertre de terre et ses cailloux ; trois visages empilés et peints de
+// couleurs vives (l'ours aux oreilles rondes et au museau, la grenouille aux gros yeux cerclés et au large sourire,
+// l'oiseau-tonnerre au bec crochu et aux sourcils fiers), le flanc droit dans l'ombre ; les ailes déployées au sommet,
+// leurs plumes peintes, qui battent d'une image à l'autre (2 images)
 C.totem = { n: 2, draw: f => {
-  const [x, y] = at(0, 0);
-  let s = shadow(0, 0, 0.26, 0.14);
-  const faces = [[0, '#D9824A', '#E8566A'], [-14, '#5C8FD0', '#F2C04B'], [-28, '#7EC45B', '#E8566A']];
-  for (const [dy, c1, c2] of faces) {
-    s += `<rect x="${x - 8}" y="${y + dy - 14}" width="16" height="14" rx="2" fill="${c1}" stroke="${OUT}" stroke-width="1"/>` + E(x - 3.4, y + dy - 9, 2, 2, '#FFFFFF', 0.6) + E(x + 3.4, y + dy - 9, 2, 2, '#FFFFFF', 0.6) + E(x - 3.4, y + dy - 9, 0.9, 0.9, OUT, 0) + E(x + 3.4, y + dy - 9, 0.9, 0.9, OUT, 0) + `<rect x="${x - 3.6}" y="${y + dy - 5}" width="7.2" height="2.6" rx="1" fill="${c2}" stroke="${OUT}" stroke-width="0.6"/>`;
-  }
-  const flap = f ? -2 : 0;
-  return s + P(`M${x - 8},${y - 38} L${x - 20},${y - 44 + flap} L${x - 16},${y - 36} Z`, '#F2C04B', 0.9) + P(`M${x + 8},${y - 38} L${x + 20},${y - 44 + flap} L${x + 16},${y - 36} Z`, '#F2C04B', 0.9) + P(`M${x - 4},${y - 42} L${x},${y - 48} L${x + 4},${y - 42} Z`, '#E8566A', 0.8);
+  const [x, y] = at(0, 0), w = 8.4, h = 13, y0 = y - 3;
+  let s = shadow(0, 0, 0.28, 0.12) + E(x, y + 1, 12, 4.6, '#9A7048', 0.8) + E(x - 3, y, 6, 2, '#B48A5E', 0)
+    + [[-10, 2.6, 1.6], [9, 3, 1.4], [-6, 4.4, 1.2]].map(([dx, dy, r]) => E(x + dx, y + dy, r * 1.3, r * 0.8, '#A9A69F', 0.5)).join('');
+  // un tronçon peint : le bois arrondi, la lumière à gauche, l'ombre à droite
+  const troncon = (i, c) => { const t = y0 - h * (i + 1); return `<rect x="${x - w}" y="${r2(t)}" width="${w * 2}" height="${h}" rx="3" fill="${c}" stroke="${OUT}" stroke-width="1"/>` + `<rect x="${x + w * 0.45}" y="${r2(t + 1)}" width="${r2(w * 0.5)}" height="${h - 2}" rx="2" fill="#000000" opacity="0.14"/>` + `<rect x="${x - w + 1.4}" y="${r2(t + 1.6)}" width="1.6" height="${h - 3.2}" rx="0.8" fill="#FFFFFF" opacity="0.35"/>`; };
+  const oeil = (ex, ey, r, c = '#FFFFFF') => E(ex, ey, r, r * 0.9, c, 0.7) + E(ex, ey, r * 0.45, r * 0.45, OUT, 0) + E(ex - r * 0.15, ey - r * 0.2, r * 0.15, r * 0.15, '#FFFFFF', 0);
+  // l'ours, en bas : oreilles rondes, sourcils, museau et truffe
+  const t0 = y0 - h * 0.5;
+  s += E(x - w, t0 - 5.4, 2.6, 2.4, '#B8402E', 0.8) + E(x + w, t0 - 5.4, 2.6, 2.4, '#B8402E', 0.8) + troncon(0, '#C8503A');
+  s += `<path d="M${x - 6},${t0 - 4.6} q2.4,-1.6 4.4,0 M${x + 1.6},${t0 - 4.6} q2.4,-1.6 4.4,0" stroke="${OUT}" stroke-width="0.9" fill="none" stroke-linecap="round"/>` + oeil(x - 3.6, t0 - 2.2, 1.6) + oeil(x + 3.6, t0 - 2.2, 1.6)
+    + E(x, t0 + 2.6, 4.2, 2.8, '#F2C27A', 0.8) + E(x, t0 + 1.6, 1.6, 1.1, OUT, 0) + `<path d="M${x - 2},${t0 + 3.6} q2,1.6 4,0" stroke="${OUT}" stroke-width="0.7" fill="none"/>`;
+  // la grenouille, au milieu : gros yeux cerclés de jaune, large sourire
+  const t1 = y0 - h * 1.5;
+  s += troncon(1, '#3FA7A0') + E(x - 4, t1 - 2.4, 3.2, 3, '#F2C04B', 0.8) + E(x + 4, t1 - 2.4, 3.2, 3, '#F2C04B', 0.8) + oeil(x - 4, t1 - 2.4, 2) + oeil(x + 4, t1 - 2.4, 2)
+    + P(`M${x - 6},${t1 + 2.4} Q${x},${t1 + 6.6} ${x + 6},${t1 + 2.4} Q${x},${t1 + 4.4} ${x - 6},${t1 + 2.4} Z`, '#E8566A', 0.7);
+  // l'oiseau-tonnerre, en haut : sourcils fiers, bec crochu
+  const t2 = y0 - h * 2.5;
+  s += troncon(2, '#F2C04B') + `<path d="M${x - 6.4},${t2 - 4.4} L${x - 1.4},${t2 - 2.6} M${x + 6.4},${t2 - 4.4} L${x + 1.4},${t2 - 2.6}" stroke="${OUT}" stroke-width="1.4" stroke-linecap="round"/>`
+    + oeil(x - 3.6, t2 - 1, 1.7) + oeil(x + 3.6, t2 - 1, 1.7)
+    + P(`M${x - 2.6},${t2 + 0.6} L${x + 2.6},${t2 + 0.6} Q${x + 3},${t2 + 5.4} ${x},${t2 + 7} Q${x + 0.6},${t2 + 4} ${x - 2.6},${t2 + 0.6} Z`, '#E8803A', 0.8);
+  // les ailes déployées au sommet, leurs plumes peintes ; elles battent
+  const ya = y0 - h * 3 + 2.6, ang = f ? -10 : 4;
+  const aile = k => `<g transform="rotate(${ang * k} ${x + w * k} ${ya})">` + P(`M${x + w * k},${ya + 4} L${x + (w + 15) * k},${ya - 8} L${x + (w + 12) * k},${ya - 3} L${x + (w + 14) * k},${ya - 1} L${x + (w + 10) * k},${ya + 2} L${x + (w + 11) * k},${ya + 4.4} Z`, '#F7EBD0', 0.9)
+    + `<path d="M${x + (w + 2) * k},${ya + 2.4} L${x + (w + 13) * k},${ya - 6} M${x + (w + 2) * k},${ya + 3.4} L${x + (w + 11) * k},${ya - 0.4}" stroke="#E8566A" stroke-width="1.1"/>` + E(x + (w + 3) * k, ya + 1.6, 1.6, 1.4, OUT, 0) + '</g>';
+  return s + aile(-1) + aile(1) + P(`M${x - 5},${ya + 0.4} Q${x},${ya - 7} ${x + 5},${ya + 0.4} Z`, '#E8566A', 0.8);
 } };
 C.obelisque = { n: 2, draw: f => {
   const [x, y] = at(0, 0);
