@@ -221,97 +221,30 @@
               </button>
             </div>
 
-            <div v-if="siteTab === 'overview'" class="world__panel">
-              <p v-if="site.effect" class="world__site-effect">{{ site.effect }}</p>
-              <p v-else class="world__site-effect">{{ site.levels[0].effect }}</p>
-              <div v-if="site.produce && site.level" class="world__prod">
-                <div class="world__prod-row">
-                  <span>Par heure</span>
-                  <strong>+{{ num(perHourOf(site).amount) }} <ElementGlyph :glyph="GLYPH[site.produce]" /> · +{{ num(perHourOf(site).coins) }} écus</strong>
-                </div>
-                <div v-if="site.bonus" class="world__prod-row">
-                  <span>Bonus de la boutique</span>
-                  <strong>+{{ site.bonus }} % de production</strong>
-                </div>
-                <div v-if="site.moodBonus && friendAt(site.id)" :class="['world__prod-row', site.moodBonus > 0 ? 'is-happy' : 'is-sad']">
-                  <span>Humeur de {{ friendAt(site.id).name }}</span>
-                  <strong>{{ site.moodBonus > 0 ? '+' : '−' }}{{ Math.abs(site.moodBonus) }} % de production</strong>
-                </div>
-                <div v-if="site.landmarkBonus" class="world__prod-row">
-                  <span>Lieux remarquables</span>
-                  <strong>+{{ site.landmarkBonus }} % de production</strong>
-                </div>
-                <div v-if="annexYield(site).count" class="world__prod-row">
-                  <span>Annexes · {{ annexYield(site).count }}</span>
-                  <strong v-if="annexYield(site).rate">+{{ annexYield(site).rate }} <ElementGlyph :glyph="GLYPH[site.produce]" /> · +{{ annexYield(site).earn }} écus par heure</strong>
-                  <strong v-else>Réserve agrandie</strong>
-                </div>
-                <div class="world__prod-row">
-                  <span>Réserve</span>
-                  <strong>{{ site.capHours || state.capHours }} h de production au plus</strong>
-                </div>
-                <div class="world__prod-row is-pending">
-                  <span>À ramasser</span>
-                  <strong>+{{ site.pending ? site.pending[site.produce] : 0 }} <ElementGlyph :glyph="GLYPH[site.produce]" /> · +{{ site.pending ? site.pending.coins : 0 }} écus</strong>
-                </div>
-                <button type="button" class="world__btn" :disabled="busy || !state.pending" @click="collect">Ramasser la production</button>
-              </div>
-              <!-- Foyer : les habitants de l'île, leurs cœurs, leur humeur ; le besoin qui manque, sinon un point quand l'un
-                   attend une visite aujourd'hui ; « Tout combler » donne ce qu'il faut à tous, tant que le stock suffit -->
-              <p v-if="site.id === 'foyer' && civStage" class="world__civ world__civ--site">Étape : {{ civStage }}</p>
-              <section v-if="site.id === 'foyer' && state.villagers && state.villagers.length" class="world__friends" aria-label="Habitants">
-                <h3 class="world__friends-title">Habitants</h3>
-                <ul class="world__friends-list">
-                  <li v-for="v in state.villagers" :key="v.id">
-                    <button type="button" class="world__friend" :aria-label="friendLabel(v)" @click="openVillager(v.id)">
-                      <span class="world__friend-face">
-                        <img :src="portraitOf(v.id)" alt="" />
-                        <span v-if="v.mood" class="world__friend-mood" aria-hidden="true"><ElementGlyph :glyph="MOOD_GLYPH[v.mood]" /></span>
-                      </span>
-                      <span class="world__friend-name">{{ v.name }}</span>
-                      <span class="world__friend-hearts" aria-hidden="true">{{ '♥'.repeat(v.hearts) }}<span>{{ '♥'.repeat(5 - v.hearts) }}</span></span>
-                      <span v-if="missingOf(v).length" class="world__friend-need" aria-hidden="true"><ElementGlyph :glyph="NEED_GLYPH[missingOf(v)[0].id]" /></span>
-                      <span v-else-if="awaits(v)" class="world__friend-dot" aria-hidden="true"></span>
-                    </button>
-                  </li>
-                  <li v-if="state.visitor">
-                    <button type="button" class="world__friend is-guest" :aria-label="`${state.visitor.name}, ${state.visitor.role}, de passage`" @click="openVisitor">
-                      <span class="world__friend-face"><img :src="visitorPortrait(state.visitor)" alt="" /></span>
-                      <span class="world__friend-name">{{ state.visitor.name }}</span>
-                      <span class="world__friend-guest">de passage</span>
-                      <span v-if="!state.visitor.satisfied" class="world__friend-need is-quest" aria-hidden="true"><ElementGlyph glyph="ui:spark" /></span>
-                    </button>
-                  </li>
-                </ul>
-                <button v-if="fillAll.count" type="button" class="world__btn world__fill-all" :disabled="busy" @click="fillAllNeeds">
-                  Tout combler
-                  <span v-for="(n, r) in fillAll.cost" :key="r" class="world__fill-cost"><ElementGlyph :glyph="GLYPH[r]" />{{ n }}</span>
-                </button>
-              </section>
-              <!-- Foyer : l'établi des créations d'île -->
-              <div v-if="site.id === 'foyer' && state.crafts" class="world__game">
-                <span class="world__game-art" aria-hidden="true"><img :src="benchArt" alt="" /></span>
-                <span class="world__game-body">
-                  <span class="world__game-kind">Établi</span>
-                  <span class="world__game-name">Créations d’île</span>
-                  <span class="world__game-text">{{ benchText }}</span>
-                </span>
-                <button type="button" class="world__game-btn" aria-label="Ouvrir l’établi" :disabled="busy" @click="openBench">Ouvrir</button>
-              </div>
-              <!-- Mini-jeu du bâtiment (Ponton, Carrière, Bosquet), ouvert au palier III -->
-              <div v-if="gameOf(site)" :class="['world__game', { 'is-locked': !gameOf(site).open }]">
-                <span class="world__game-art" aria-hidden="true"><GameIcon :kind="GAME_ICONS[gameOf(site).id]" :size="40" /></span>
-                <span class="world__game-body">
-                  <span class="world__game-kind">Mini-jeu</span>
-                  <span class="world__game-name">{{ gameOf(site).name }}</span>
-                  <span class="world__game-text">{{ gameOf(site).open ? `${gameOf(site).plays} / ${gameOf(site).max} parties · jusqu’à ${gameOf(site).cap} écus` : `S’ouvre au palier ${roman(gameOf(site).level)}` }}</span>
-                </span>
-                <button type="button" class="world__game-btn" :disabled="busy || !gameOf(site).open" @click="openGame(gameOf(site).id)">{{ gameOf(site).open ? 'Jouer' : `Palier ${roman(gameOf(site).level)}` }}</button>
-              </div>
-              <div v-else-if="!site.level" class="world__sheet-actions">
-                <button type="button" class="world__btn" @click="siteTab = 'evolution'">Voir ce qu’il faut pour bâtir</button>
-              </div>
-            </div>
+            <SiteOverview
+              v-if="siteTab === 'overview'"
+              :site="site"
+              :rates="state.rates"
+              :cap-hours="state.capHours"
+              :pending="state.pending"
+              :friend="friendAt(site.id)"
+              :civ-stage="civStage"
+              :villagers="state.villagers || []"
+              :needs="state.needs || null"
+              :portraits="villagerPortraits()"
+              :visitor="state.visitor || null"
+              :visitor-art="state.visitor ? visitorPortrait(state.visitor) : ''"
+              :crafts="state.crafts || null"
+              :games="state.games || []"
+              :busy="busy"
+              @collect="collect"
+              @villager="openVillager"
+              @visitor="openVisitor"
+              @fill-all="fillAllNeeds"
+              @bench="openBench"
+              @game="openGame"
+              @evolution="siteTab = 'evolution'"
+            />
 
             <!-- Boutique : outils et objets (effets), pièces rares, skins et teintes (apparence), rangés par palier ; un toucher
                  sur le prix achète (annulable 4 s), un toucher sur le dessin ou un appui long sur le prix ouvre la fiche -->
@@ -549,7 +482,6 @@ import ChestHaul from './ChestHaul.vue';
 import AnnexPanel from './AnnexPanel.vue';
 import AnnexSheet from './AnnexSheet.vue';
 import MiniGame from './minigames/MiniGame.vue';
-import GameIcon from './minigames/GameIcon.vue';
 import VillagerSheet from './VillagerSheet.vue';
 import VisitorSheet from './VisitorSheet.vue';
 import RenameSheet from './RenameSheet.vue';
@@ -562,17 +494,17 @@ import BrumeSheet from './BrumeSheet.vue';
 import ZoneSheet from './ZoneSheet.vue';
 import SiteShop from './SiteShop.vue';
 import SiteSteps from './SiteSteps.vue';
+import SiteOverview from './SiteOverview.vue';
 import { villagerSprite, ROLES } from '@/world/villagers';
-import { talkLine, giftLine, awaits } from '@/world/friends';
+import { talkLine, giftLine } from '@/world/friends';
 import { heardPages, keepSavoir, savoirLine, artOf as savoirOf } from '@/game/savoirs';
-import { NEED_GLYPH, MOOD_GLYPH, MOOD_LABEL, THANKS, missingOf, fillAllOf, askOr } from '@/world/needs';
+import { THANKS, missingOf, askOr } from '@/world/needs';
 import { visitorLook, THANKS as VISITOR_THANKS } from '@/world/visitors';
-import { craftThumb } from '@/world/craftSprites';
 import { landmarkTop, landmarkScale } from '@/world/landmarkSprites';
 import { landmarksShown, landmarksWaiting, landmarkTip } from '@/world/landmarks';
 import { depositsShown, depositsReady, depositWait } from '@/world/finds';
 import { CLIMATE_NAMES } from '@/world/climates';
-import { annexReady, annexYield, variantsOf } from '@/world/annexes';
+import { annexReady, variantsOf } from '@/world/annexes';
 import { noteOf, openableOf } from '@/world/chest';
 import GModal from '@/components/ui/GModal.vue';
 import { guideOf, guideKind } from '@/world/itemGuide';
@@ -627,8 +559,6 @@ const DAY_MS = 86400000;
 const UNVEIL_MS = 1600;
 // Achat en un toucher : « Annuler » reste proposé 4 s (le serveur accepte l'annulation un peu plus longtemps)
 const UNDO_MS = 4000;
-// Mini-jeux : l'icône de chaque jeu dans la fiche de son bâtiment
-const GAME_ICONS = { peche: 'dore', filon: 'diamant', cueillette: 'fraise' };
 const BEACH_MIX = [['palm', 0.1], ['mossy', 0.15], ['shells', 0.2], ['driftwood', 0.23]];
 const ROCK_MIX = [['rock', 0.3], ['rocks', 0.55], ['crag', 0.72], ['mossy', 1]];
 const GRASS_MIX = [['tuft', 0.1], ['flowers', 0.16], ['bush', 0.185], ['mushrooms', 0.205], ['stump', 0.22], ['birch', 0.235], ['apple', 0.245], ['autumn', 0.255], ['log', 0.265]];
@@ -641,7 +571,7 @@ const FOREST_HIGH = ['pine', 'pine', 'tree'];
 // d'animation sont non réactifs et s'arrêtent quand l'onglet est caché ou le composant démonté.
 export default {
   name: 'WorldView',
-  components: { ElementGlyph, HarvestGame, ShopItemSheet, IslandClock, GModal, ChestList, ChestReveal, ChestHaul, AnnexPanel, AnnexSheet, MiniGame, GameIcon, VillagerSheet, VisitorSheet, RenameSheet, CraftBench, CraftPuzzle, ExplorerLog, FindsSheet, WreckScene, BrumeSheet, ZoneSheet, SiteShop, SiteSteps },
+  components: { ElementGlyph, HarvestGame, ShopItemSheet, IslandClock, GModal, ChestList, ChestReveal, ChestHaul, AnnexPanel, AnnexSheet, MiniGame, VillagerSheet, VisitorSheet, RenameSheet, CraftBench, CraftPuzzle, ExplorerLog, FindsSheet, WreckScene, BrumeSheet, ZoneSheet, SiteShop, SiteSteps, SiteOverview },
   props: {
     // Glyphes des éléments du Livre (savoir-faire demandé à l'établi)
     elementEmojis: { type: Object, required: true },
@@ -654,7 +584,7 @@ export default {
   emits: ['coins-updated', 'show-alert', 'login', 'go', 'quest', 'replay-vigil', 'replay-anya'],
   data() {
     return {
-      GLYPH, RESOURCES, GAME_ICONS, NEED_GLYPH, MOOD_GLYPH,
+      GLYPH, RESOURCES,
       state: null,
       guest: false,
       loadError: false,
@@ -784,10 +714,6 @@ export default {
     // Habitant dont la fiche est ouverte (vue du serveur, à jour) et le nom de son lieu de travail
     villagerView() {
       return this.villagerId && this.state ? (this.state.villagers || []).find(v => v.id === this.villagerId) || null : null;
-    },
-    // « Tout combler » : besoins renouvelables de tous les habitants et leur prix
-    fillAll() {
-      return fillAllOf(this.state ? this.state.villagers || [] : []);
     },
     villagerSiteName() {
       return this.villagerView ? this.siteName(this.villagerView.site || this.villagerView.id) : '';
@@ -926,16 +852,6 @@ export default {
       const c = this.craftConfirm;
       if (!c || !this.geo) return {};
       return { left: `${Math.max(110, Math.min(this.geo.width - 110, c.px))}px`, top: `${Math.max(56, c.py - 24)}px` };
-    },
-    // Établi (fiche du Foyer) : son dessin, ce qui attend
-    benchArt() {
-      return spriteUrl('craft-thumb-cloture', () => craftThumb('cloture'));
-    },
-    benchText() {
-      const { catalog } = this.state.crafts;
-      const ready = catalog.filter(c => !c.block).length;
-      const reserve = catalog.reduce((n, c) => n + c.reserve, 0);
-      return [`${this.crafted.length} sur l’île`, reserve ? `${reserve} en réserve` : '', ready ? `${ready} à assembler` : ''].filter(Boolean).join(' · ');
     },
     menuStyle() {
       return { left: `${this.menuPos.x}px`, top: `${this.menuPos.y}px` };
@@ -1508,12 +1424,6 @@ export default {
     canBuy(site, item) {
       return itemBuyable(site, item, this.coins);
     },
-    perHourOf(site) {
-      return site.perHour || { amount: this.state.rates.produce * site.level, coins: this.state.rates.coins * site.level };
-    },
-    num(n) {
-      return Number(n).toLocaleString('fr-FR', { maximumFractionDigits: 1 });
-    },
     zoneName(id) {
       return this.state.map.zones.find(z => z.id === id)?.name || '';
     },
@@ -1585,8 +1495,6 @@ export default {
       if (!who || who.kind !== 'villager' || !this.state) return null;
       return (this.state.villagers || []).find(v => `vil:${v.id}` === who.id) || null;
     },
-    awaits,
-    missingOf,
     // Le visiteur qu'on touche (who : { kind: 'villager', id: 'vis:<id>' }), ou null
     guestOf(who) {
       const v = this.state && this.state.visitor;
@@ -1666,10 +1574,6 @@ export default {
     friendAt(siteId) {
       return (this.state.villagers || []).find(v => v.id === siteId) || null;
     },
-    friendLabel(v) {
-      const missing = missingOf(v).map(n => this.state.needs?.kinds?.[n.id]?.label || n.id);
-      return `${v.name}, ${v.role} : ${v.hearts} cœur${v.hearts > 1 ? 's' : ''}, ${MOOD_LABEL[v.mood] || ''}${missing.length ? `, besoin : ${missing.join(', ')}` : ''}`;
-    },
     // Bulle d'un habitant : son prénom et son métier ; l'appui long ouvre sa fiche. ask : quand on lui parle, il dit
     // d'abord ce qui lui manque
     named(info, who, ask = false) {
@@ -1683,6 +1587,11 @@ export default {
       return site ? site.name : '';
     },
     // Portrait d'un habitant : son allure sur l'île (teint, cheveux), de face ; un visiteur installé, d'après sa graine
+    // Portraits des habitants pour l'Aperçu du Foyer : refaits à chaque rendu de l'île, comme quand le gabarit appelait
+    // portraitOf (le village, d'où vient l'apparence, n'est pas réactif)
+    villagerPortraits() {
+      return Object.fromEntries((this.state.villagers || []).map(v => [v.id, this.portraitOf(v.id)]));
+    },
     portraitOf(id) {
       const settler = (this.state.villagers || []).find(v => v.id === id && v.seed !== undefined);
       if (settler) return this.visitorPortrait(settler);
@@ -1862,9 +1771,6 @@ export default {
       }
     },
     // Mini-jeux : la fiche du bâtiment se ferme, la fenêtre du jeu s'ouvre sur sa règle
-    gameOf(site) {
-      return (this.state.games || []).find(g => g.site === site.id) || null;
-    },
     openGame(id) {
       this.site = null;
       this.gameId = id;
@@ -2453,7 +2359,6 @@ export default {
     },
     /* ---------- Annexes ---------- */
     annexReady,
-    annexYield,
     // Ce que dit la bulle d'une annexe touchée
     annexTip(annex) {
       const site = this.state.sites.find(s => s.id === annex.site);
