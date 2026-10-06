@@ -970,11 +970,33 @@ C.obelisque = { n: 2, draw: f => {
   s += signes.map(d => `<path d="${d}" stroke="${g}" stroke-width="0.9" fill="none" stroke-linecap="round" stroke-linejoin="round"/>`).join('') + E(gx - 2.8, y - 20, 0.5, 0.5, g, 0);
   return s + (f ? glow(x - 1, y - 24, 12, '255,120,60', 0.22) : '');
 } };
+// Bassin chaud : une source chaude cerclée de pierres volcaniques arrondies (éclairées dessus, de tailles variées, celles
+// du fond derrière l'eau, celles de devant par-dessus), une croûte minérale claire au bord de l'eau turquoise, plus
+// profonde au milieu ; des bulles qui montent et des nuages de vapeur qui s'élèvent et s'effacent ; un seau de bois
+// et une serviette pliée sur une pierre, un brin de fougère (3 images)
+const PIERRE_VOLC = { mid: '#4A4452', light: '#6A6276', dark: '#2E2A36' };
 C.bassinchaud = { n: 3, draw: f => {
-  let s = shadow(0, 0, 0.5, 0.1) + disc(0, 0, 0.42, 0, OBSIDIAN.left, 1) + disc(0, 0, 0.32, 1, '#5FD0C8', 0.8) + disc(-0.05, -0.04, 0.2, 1, '#9AE8E0', 0);
-  for (let i = 0; i < 8; i++) { const a = (i / 8) * TAU; const [x, y] = at(Math.cos(a) * 0.38, Math.sin(a) * 0.38, 1); s += E(x, y - 1.6, 4, 2.6, OBSIDIAN.top, 0.9); }
-  const [x, y] = at(0, 0, 2);
-  for (let i = 0; i < 3; i++) { const p = ((f / 3) + i / 3) % 1; s += thick(`M${x - 8 + i * 8},${y - 2 - p * 20} q-3,-4 0,-8 q3,-4 0,-8`, 1.4, '#FFFFFF').replace(/stroke="#FFFFFF"/, `stroke="#FFFFFF" opacity="${r2(1 - p)}"`).replace(/stroke="#3C2819"/, `stroke="#3C2819" opacity="${r2((1 - p) * 0.4)}"`); }
+  const [x, y] = at(0, 0, 1);
+  const pierre = (px, py, r) => E(px, py, r, r * 0.66, PIERRE_VOLC.mid, 0.9) + E(px + r * 0.15, py + r * 0.22, r * 0.75, r * 0.36, PIERRE_VOLC.dark, 0) + E(px - r * 0.3, py - r * 0.24, r * 0.4, r * 0.2, PIERRE_VOLC.light, 0);
+  const anneau = Array.from({ length: 11 }, (_, i) => { const t = (i / 11) * TAU + 0.2; return [x + Math.cos(t) * 23, y + Math.sin(t) * 10.4, 4.2 + (i % 3) * 0.9, Math.sin(t)]; });
+  let s = shadow(0, 0, 0.5, 0.1) + E(x, y + 1, 27, 12.4, PIERRE_VOLC.dark, 0.9);
+  s += anneau.filter(([, , , sn]) => sn < 0).map(([px, py, r]) => pierre(px, py, r)).join('');
+  // l'eau : la croûte claire au bord, le turquoise, le bleu plus profond au milieu, un reflet
+  s += E(x, y + 0.6, 21, 9.2, '#E9E4C8', 0.8) + E(x, y + 0.8, 19, 8.2, '#7FE0D6', 0) + E(x + 1, y + 1.4, 12, 5, '#3FB8B0', 0) + E(x - 6, y - 2, 6, 1.6, '#C8F4EE', 0);
+  // les bulles qui montent
+  for (let i = 0; i < 5; i++) { const p = ((f / 3) + i * 0.21) % 1, bx = x - 9 + i * 4.6, by = y + 3 - (i % 2) * 3; s += E(bx, by - p * 2, 0.7 + p * 0.6, 0.6 + p * 0.5, 'none', 0).replace('stroke="none"', `stroke="#FFFFFF" stroke-width="0.5" opacity="${r2(1 - p * 0.6)}"`); }
+  s += anneau.filter(([, , , sn]) => sn >= 0).map(([px, py, r]) => pierre(px, py, r)).join('');
+  // le seau de bois et la serviette pliée, sur les pierres de devant à droite ; la fougère à gauche
+  const [sx, sy] = [x + 22, y + 4];
+  s += P(`M${sx - 3.4},${sy - 6} L${sx + 3.4},${sy - 6} L${sx + 2.8},${sy} L${sx - 2.8},${sy} Z`, WOOD.left, 0.8) + E(sx, sy - 6, 3.4, 1.2, '#7FE0D6', 0.7)
+    + L([sx - 3.1, sy - 3.4], [sx + 3.1, sy - 3.4], '#6E757E', 0.8) + L([sx - 1.2, sy - 5.6], [sx - 1.1, sy - 0.2], WOOD.right, 0.5) + L([sx + 1.2, sy - 5.6], [sx + 1.1, sy - 0.2], WOOD.right, 0.5);
+  s += P(`M${x + 11},${y + 10.2} L${x + 17},${y + 9.2} L${x + 17},${y + 11.2} L${x + 11},${y + 12.2} Z`, '#E2D8CA', 0.7) + P(`M${x + 8.6},${y + 8.8} L${x + 14.6},${y + 7.8} L${x + 17},${y + 9.2} L${x + 11},${y + 10.2} Z`, '#F7F1E8', 0.7) + L([x + 10.4, y + 8.5], [x + 12.8, y + 9.9], '#E8566A', 0.9) + L([x + 12.8, y + 9.9], [x + 12.8, y + 11.9], '#E8566A', 0.9);
+  s += [[-30, -3.2], [-34, -1.4], [-38, 0.6]].map(([r, dy], i) => `<g transform="translate(${r2(x - 25)} ${r2(y + 2)}) rotate(${r + i * 22})">${P(`M0,0 Q-2,${-4 - i} 0,${-8 - i} Q2,${-4 - i} 0,0 Z`, '#6FAE4E', 0.6)}</g>`).join('');
+  // les nuages de vapeur qui s'élèvent et s'effacent
+  for (let i = 0; i < 3; i++) {
+    const p = ((f / 3) + i / 3) % 1, vx = x - 8 + i * 8 + Math.sin(p * TAU + i) * 2, vy = y - 4 - p * 22, k = 0.7 + p * 0.8, o = r2(0.95 - p * 0.75);
+    s += [[0, 0, 3], [-2.6, 1, 2.2], [2.6, 1, 2.2]].map(([dx, dy, r]) => E(vx + dx * k, vy + dy * k, r * k * 1.2, r * k, '#FFFFFF', 0).replace('stroke="none"', `stroke="#D6E6EA" stroke-width="0.6" opacity="${o}"`)).join('');
+  }
   return s;
 } };
 
