@@ -96,6 +96,24 @@ export function drawSprite(ctx, key, make, x, y, onReady) {
   return true;
 }
 
+// La partie d'un sprite ancré en (x, y) qui tombe dans un rectangle du monde ({ x, y, w, h }) : seuls ces pixels sont
+// dessinés ; rien tant que son image n'est pas prête
+export function drawSpriteIn(ctx, key, make, x, y, rect) {
+  const entry = imageOf(key, make);
+  if (!entry.img) return false;
+  const { box } = entry;
+  const x0 = Math.max(x + box.x, rect.x);
+  const y0 = Math.max(y + box.y, rect.y);
+  const x1 = Math.min(x + box.x + box.w, rect.x + rect.w);
+  const y1 = Math.min(y + box.y + box.h, rect.y + rect.h);
+  if (x1 <= x0 || y1 <= y0) return true;
+  const img = mipOf(entry, detail);
+  const kx = img.width / box.w;
+  const ky = img.height / box.h;
+  ctx.drawImage(img, (x0 - x - box.x) * kx, (y0 - y - box.y) * ky, (x1 - x0) * kx, (y1 - y0) * ky, x0, y0, x1 - x0, y1 - y0);
+  return true;
+}
+
 // Adresse d'image d'un sprite, pour l'afficher hors du canvas (vignette d'une fiche)
 const urls = new Map();
 export function spriteUrl(key, make) {

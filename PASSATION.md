@@ -228,6 +228,9 @@ chronométrer 20 appels. Comparer à zoom égal, au même endroit.
     seulement de près.
   - Clé d'un carré : `${res}${bake ? 'b' : ''}:${tx},${ty}`.
   - Le décor proche de ce qui se tient debout (`liveCellsOf`) n'est jamais cuit, pour pouvoir passer devant.
+  - Ce qui marche (habitants, bêtes) passe partout : au zoom moyen, le décor cuit des cases devant lui qui le
+    recouvre est repeint par-dessus, dans sa boîte seulement (`standInFront`, `drawSpriteIn`) ; ≈ 0,8 ms par image
+    pour une vingtaine de bêtes, mesuré en rendu logiciel.
   - `occlude()` repeint les cases de relief devant un objet, ainsi que leur décor cuit.
 - **Les dessins** sont des SVG **générés par le code** (repère isométrique `iso.js` : `P(u, v, z)`, `box`,
   `gable`, `boulder` ; outils `tools()` de `shopSprites.js`). Ils sont rastérisés et mis en cache par
@@ -440,7 +443,8 @@ familiers (H6) et aux créatures d'Anya (H8).
    - ~~**Étiquettes des bâtiments** dessinées sur la tête des habitants~~ : corrigé (le nom s'efface à demi quand un
      habitant passe dessous).
    - **Humeur rétroactive** au ramassage de la production.
-   - **Zoom moyen** : un habitant qui marche peut passer devant un arbre cuit qui devrait le cacher (rare).
+   - ~~**Zoom moyen** : un habitant qui marche peut passer devant un arbre cuit qui devrait le cacher~~ : corrigé (le
+     décor cuit devant lui est repeint par-dessus, § 5).
    - **`DECO_PRICES`** et la table `world_tiles` (`world.js`) : à garder tant que des joueurs peuvent avoir
      d'anciennes décorations à rembourser. Toute suppression en base attend **le feu vert explicite** de l'auteur.
 

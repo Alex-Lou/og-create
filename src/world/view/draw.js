@@ -1,7 +1,7 @@
 // La boucle d'animation et le dessin de l'île : sol, mer, ce qui se tient debout, lumières, météo, bulles. Méthodes de
 // WorldView.vue (this : le composant), extraites telles quelles (lot santé).
 import { drawSea, drawCloudShadows, drawClouds, drawTint, drawWeather, hash, glow, fireflies } from '@/world/scene';
-import { setSpriteDetail, drawSprite, imageOf } from '@/world/spriteCache';
+import { setSpriteDetail, drawSprite, drawSpriteIn, imageOf } from '@/world/spriteCache';
 import { drawSparkles, drawWaves, drawSchools, schoolFish, drawShallows, drawRings, drawGullShadow, drawFlyingGull, drawPlankton, drawJellies, drawSpout, seaGuests, DOLPHIN_EVERY, DOLPHIN_FOR, podAt, WHALE_EVERY, WHALE_FOR, whaleAt, jelliesAt, circling, crossing, nearestOpen, spread } from '@/world/sea';
 import { drawFloatBelow, FLOATING_ZONE, drawSpring, COLONY_ZONE, ferryPose } from '@/world/islets';
 import { drawLive, drawCell, SEA_Z, HS, worldOf, lampGlowOf } from '@/world/terrain';
@@ -275,7 +275,10 @@ export default {
       else if (item.ferry) this.drawFerry(ctx, item.ferry, repaint);
       else {
         this.drawCritter(ctx, item.critter, repaint);
-        if (!far && !SEA_KINDS.has(item.critter.kind)) this.occlude(ctx, Math.round(item.critter.x), Math.round(item.critter.y), baked);
+        if (!far && !SEA_KINDS.has(item.critter.kind)) {
+          this.occlude(ctx, Math.round(item.critter.x), Math.round(item.critter.y), baked);
+          if (baked) this.standInFront(ctx, item.critter);
+        }
       }
     }
     // Volutes de brume qui dérivent au-dessus des quartiers à acheter
@@ -320,6 +323,38 @@ export default {
       drawCell(ctx, M, nx, ny, this.veilAt(nx, ny));
       // (le décor cuit dans cette case est repeint avec elle)
       if (baked) this.standAt(ctx, nx, ny);
+    }
+  },
+  // Zoom moyen (décor cuit dans le sol) : ce qui marche se dessine par-dessus le sol, donc par-dessus un arbre ou des
+  // fleurs cuits devant lui. Le décor cuit des cases devant lui (plus proches) qui le recouvre à l'écran est repeint
+  // par-dessus, comme de près où tout se dessine dans l'ordre du relief ; seulement dans sa boîte, pour ne pas doubler
+  // ailleurs ce qui est transparent (l'ombre au pied d'un arbre). Sous la brume, le décor à demi effacé reste tel quel
+  standInFront(ctx, critter) {
+    const [key, make] = this.critterSprite(critter);
+    const box = imageOf(key, make).box;
+    const c = this.ground(critter.x, critter.y);
+    const top = c.y - critter.z + box.y;
+    const bottom = top + box.h;
+    // (retourné, le dessin passe de l'autre côté de son pied)
+    const left = c.x + Math.min(box.x, -box.x - box.w);
+    const right = c.x + Math.max(box.x + box.w, -box.x);
+    const rect = { x: left, y: top, w: right - left, h: bottom - top };
+    const depth = critter.depth ?? critter.x + critter.y;
+    const n = this.state.size;
+    const x0 = Math.round(critter.x), y0 = Math.round(critter.y);
+    for (let y = y0 - 1; y <= y0 + 3; y++) {
+      for (let x = x0 - 1; x <= x0 + 3; x++) {
+        const props = this.propsAt && this.propsAt.get(y * n + x);
+        if (!props) continue;
+        const zone = this.zoneAt(x, y);
+        if (!zone || !zone.owned) continue;
+        for (const prop of props) {
+          if (prop.depth <= depth) continue;
+          const pb = imageOf(`nature-${prop.kind}`, ALL_NATURE[prop.kind]).box;
+          if (prop.wx + pb.x >= right || prop.wx + pb.x + pb.w <= left || prop.wy + pb.y >= bottom || prop.wy + pb.y + pb.h <= top) continue;
+          drawSpriteIn(ctx, `nature-${prop.kind}`, ALL_NATURE[prop.kind], prop.wx, prop.wy, rect);
+        }
+      }
     }
   },
   drawSite(ctx, site, t, now, repaint) {
