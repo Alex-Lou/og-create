@@ -11,7 +11,9 @@
   background: var(--vellum-50); box-shadow: inset 0 0 0 1px rgba(74, 52, 38, .1); font-family: var(--font-ui); color: var(--ink-900); cursor: pointer;
 }
 .world__friend-face { position: relative; display: block; width: 52px; height: 58px; border-radius: 12px; background: radial-gradient(circle at 50% 75%, #FFE9C4, var(--vellum-200) 74%); }
-.world__friend-face img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; padding: 3px; box-sizing: border-box; }
+/* Le portrait, et aussi le glyphe d'humeur posé dessus (sa propre règle .glyph garde la main sur sa taille) : la
+   spécificité reste celle d'avant le passage en scoped grâce à :where() */
+:where(.world__friend-face) img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; padding: 3px; box-sizing: border-box; }
 .world__friend-name { font-family: var(--font-display); font-weight: 700; font-size: 14px; }
 .world__friend-hearts { color: #E8566A; font-size: 11px; letter-spacing: .04em; }
 .world__friend-hearts span { color: var(--vellum-300); }
