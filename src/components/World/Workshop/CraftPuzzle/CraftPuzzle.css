@@ -13,7 +13,7 @@
 .puzzle { display: flex; flex-direction: column; align-items: center; gap: 12px; font-family: var(--font-ui); }
 .puzzle__hint { margin: 0; align-self: stretch; padding: 8px 12px; border-radius: var(--r-sm); background: var(--vellum-200); font-size: 13px; font-weight: 700; line-height: 1.4; text-align: left; }
 .puzzle__board { position: relative; margin: 4px 0; touch-action: none; }
-.puzzle__ghost-art { position: absolute; inset: -18%; display: block; opacity: .16; pointer-events: none; }
+.puzzle__ghost-art { position: absolute; inset: 0; display: block; opacity: .16; pointer-events: none; }
 .puzzle__ghost-art img { width: 100%; height: 100%; object-fit: contain; }
 .puzzle__cell {
   position: absolute; width: 44px; height: 44px; padding: 0; border: 0; border-radius: var(--puzzle-radius); box-sizing: border-box;
