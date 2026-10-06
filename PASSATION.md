@@ -430,7 +430,8 @@ familiers (H6) et aux créatures d'Anya (H8).
      coûts de 8 à 15), effets des lieux, annexes de climat (+5/+4 par heure, palier III, 500 écus).
    - **Règle « près de »** des créations : vérifiée seulement à la pose.
    - **Création cachée** derrière un bâtiment (l'appui long est capté par le bâtiment).
-   - **Étiquettes des bâtiments** dessinées sur la tête des habitants.
+   - ~~**Étiquettes des bâtiments** dessinées sur la tête des habitants~~ : corrigé (le nom s'efface à demi quand un
+     habitant passe dessous).
    - **Humeur rétroactive** au ramassage de la production.
    - **Zoom moyen** : un habitant qui marche peut passer devant un arbre cuit qui devrait le cacher (rare).
    - **`DECO_PRICES`** et la table `world_tiles` (`world.js`) : à garder tant que des joueurs peuvent avoir

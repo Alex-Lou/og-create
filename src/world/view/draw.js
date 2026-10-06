@@ -1217,6 +1217,12 @@ export default {
     const w = ctx.measureText(site.name).width + 14 * k;
     const h = 18 * k;
     const y = c.y + TH * (0.62 + (site.w - 2) * 0.5);
+    // Un habitant passe sous le nom (sa zone de toucher, de la tête aux pieds) : le nom s'efface à demi, pour ne pas lui
+    // cacher la tête
+    const under = (this.landHits || []).some(hit => hit.kind === 'villager' && Math.abs(hit.x - c.x) < w / 2 + hit.r
+      && hit.y - hit.r - 14 < y + h / 2 && hit.y + hit.r > y - h / 2);
+    ctx.save();
+    if (under) ctx.globalAlpha = 0.3;
     ctx.fillStyle = site.level ? 'rgba(251, 246, 234, .92)' : 'rgba(74, 52, 38, .82)';
     ctx.beginPath();
     if (ctx.roundRect) ctx.roundRect(c.x - w / 2, y - h / 2, w, h, h / 2);
@@ -1227,6 +1233,7 @@ export default {
     ctx.textBaseline = 'middle';
     ctx.fillText(site.name, c.x, y + 0.5);
     ctx.textBaseline = 'alphabetic';
+    ctx.restore();
   },
   // Lieu remarquable, un peu plus grand que sa case (landmarkScale) : il surgit à sa découverte, sautille au toucher ;
   // sous la brume d'un quartier à acheter, à demi effacé
