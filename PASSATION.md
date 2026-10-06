@@ -435,7 +435,10 @@ familiers (H6) et aux créatures d'Anya (H8).
        (bulle d'appui long, menu d'une création, confirmations de pose), liés aux gestes ;
    - composants réutilisables : ~~une **`CostList**`~~ : fait pour l'établi et les annexes (`CostList.vue`) ; les
      fiches de palier et de quartier de `WorldView` gardent leur présentation en lignes ; une carte de catalogue
-     commune reste à faire ;
+     commune a été étudiée et **déconseillée** : la boutique est une tuile en grille (prix, appui long, Porté/Rare),
+     les annexes et l'établi des lignes (coût ; savoir-faire et deux boutons pour l'établi). Ce qui leur était
+     commun, le coût, est déjà partagé (`CostList`) ; une carte commune demanderait un emplacement par zone, pour
+     une vingtaine de lignes évitées. À reprendre seulement si un quatrième catalogue arrive ;
    - ~~serveur : découper `world.js` par domaine~~ : fait (§ 5) ;
    - ~~passer de **vue-cli** à **Vite**~~ : fait. Le build garde les dossiers `js/`, `css/`, `img/`, `fonts/` (le
      service worker les met en cache) et lit toujours `VUE_APP_API_URL` ;
@@ -456,6 +459,11 @@ familiers (H6) et aux créatures d'Anya (H8).
      moment ; combler un besoin ou toucher aux créations encaisse d'abord quand la production en change, § 5).
    - ~~**Zoom moyen** : un habitant qui marche peut passer devant un arbre cuit qui devrait le cacher~~ : corrigé (le
      décor cuit devant lui est repeint par-dessus, § 5).
+   - **Épreuve** : le palier I de l'établi lit encore les questions réussies **envoyées par le navigateur**
+     (`timer_progress.completedQuestions`, 10 questions). Les points, eux, sont jugés et payés par le serveur, une
+     fois par question (`coin_ledger`, `timer-question`). Risque faible : le palier I s'ouvre aussi à 10 découvertes,
+     et rien ne se gagne en écus. Compter plutôt les questions payées ferait reculer un joueur dont les réussites ne sont
+     pas toutes au grand livre (réussies en invité : seul un compte est payé) : à décider avec l'auteur.
    - **`DECO_PRICES`** et la table `world_tiles` (`world.js`) : à garder tant que des joueurs peuvent avoir
      d'anciennes décorations à rembourser. Toute suppression en base attend **le feu vert explicite** de l'auteur.
 
