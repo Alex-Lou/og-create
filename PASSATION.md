@@ -491,6 +491,9 @@ familiers (H6) et aux créatures d'Anya (H8).
 - **Tests serveur et limites de requêtes** : toutes les requêtes d'un fichier de tests viennent de 127.0.0.1, dans un
   même serveur. La limite de jeu par adresse (600 par minute) est relevée pour eux par `PLAY_ADDRESS_RATE_LIMIT`
   (`test/helpers.js`) ; un 429 « Doucement ! » dans un test qui passe seul vient de là.
+- **Changer une version des outils du front** (Vite, Vitest) : `npm install` de npm 10 (Node 22) s'arrête sur
+  « Cannot read properties of null (reading 'edgesOut') », un bug de npm. `npx npm@11 install` passe ; le lockfile
+  obtenu s'installe ensuite normalement avec npm 10 (`npm ci`, comme la CI).
 - **Coordonnées** : la carte v4 décale le cœur de `OFFSET = (34, 26)`. Les tests utilisent `X(x)` et `Y(y)` pour
   écrire des coordonnées du cœur.
 - **Quartiers inconnus** : la vue envoie leur relief et leur sol masqués (`'1'` et `'u'`), sans nom ni climat. Leurs
