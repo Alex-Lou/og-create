@@ -578,13 +578,31 @@ C.bassin = { n: 2, draw: f => {
     + thick(`M${r2(jx + 0.6)},${r2(jy - 2)} q0,-6 -0.6,-11`, 0.5, '#6E8A44') + E(jx, jy - 14, 1.1, 2.6, '#8A5A34', 0.7);
 } };
 
-// Longue-vue : trépied, lunette de laiton pointée vers le large ; un éclat glisse (2 images)
+// Longue-vue : un trépied de bois aux pieds ferrés de laiton, sa rotule ; une lunette de marine à trois tubes (laiton,
+// gainage de cuir vert, laiton), ses bagues, son pare-soleil et sa lentille, pointée vers le large ; un cageot pour
+// les petits ; un éclat glisse sur le laiton (2 images)
+const CUIR = { light: '#5E9070', mid: '#3F6B4E', dark: '#2C4E38' };
 C.longuevue = { n: 2, draw: f => {
-  const [x, y] = at(0, 0, 26);
-  let s = shadow(0, 0, 0.3, 0.14) + [[-0.16, 0.1], [0.16, 0.1], [0, -0.16]].map(([u, v]) => { const p = at(u, v, 0); return thick(`M${p[0]},${p[1]} L${x},${y}`, 1.4, WOOD_DARK.left); }).join('');
-  s += `<g transform="translate(${x} ${y}) rotate(-18)">` + `<rect x="-12" y="-2.6" width="24" height="5.2" rx="1.4" fill="${BRASS.left}" stroke="${OUT}" stroke-width="1"/>` + `<rect x="10" y="-3.6" width="4.6" height="7.2" rx="1" fill="${BRASS.right}" stroke="${OUT}" stroke-width="0.9"/>`
-    + `<rect x="-16" y="-1.8" width="4.4" height="3.6" rx="0.8" fill="${BRASS.right}" stroke="${OUT}" stroke-width="0.8"/>` + `<rect x="${f ? 2 : -8}" y="-2" width="3" height="1.2" rx="0.6" fill="#FFFFFF" opacity="0.85"/>` + '</g>';
-  return s + E(x, y, 1.6, 1.6, IRON.left, 0.7);
+  const [x, y] = at(0, 0, 25);
+  const pied = (u, v) => { const [px, py] = at(u, v, 0); return thick(`M${r2(px)},${r2(py)} L${r2(x)},${r2(y + 1)}`, 1.5, WOOD.left) + `<path d="M${r2(px + (x - px) * 0.1)},${r2(py + (y - py) * 0.1)} L${r2(x)},${r2(y + 1)}" stroke="${WOOD.top}" stroke-width="0.5"/>` + E(px, py - 0.6, 1.5, 1, BRASS.left, 0.6); };
+  let s = shadow(0, 0, 0.32, 0.14) + pied(0.02, -0.2);
+  // le cageot pour les petits, devant à gauche
+  s += box(-0.36, 0.06, -0.18, 0.24, 0, 6, WOOD, 0.8);
+  const [kx, ky] = at(-0.36, 0.24, 3);
+  s += L([kx + 0.6, ky], at(-0.18, 0.24, 3), WOOD.right, 0.6) + L(at(-0.18, 0.24, 3), at(-0.18, 0.06, 3), '#7A4A24', 0.6);
+  s += pied(-0.18, 0.12) + pied(0.18, 0.1);
+  // la lunette, inclinée vers le large : oculaire, tube de laiton, gainage de cuir, gros tube, pare-soleil, lentille
+  const sec = (x0, x1, h, c, top) => `<rect x="${x0}" y="${-h / 2}" width="${x1 - x0}" height="${h}" rx="0.8" fill="${c}" stroke="${OUT}" stroke-width="0.8"/>` + `<rect x="${x0 + 0.6}" y="${r2(-h / 2 + 0.7)}" width="${r2(x1 - x0 - 1.2)}" height="${r2(h * 0.2)}" rx="0.4" fill="${top}"/>`;
+  const bague = (bx, h) => `<rect x="${bx - 0.7}" y="${r2(-h / 2)}" width="1.4" height="${h}" rx="0.5" fill="${BRASS.top}" stroke="${OUT}" stroke-width="0.6"/>`;
+  s += `<g transform="translate(${x} ${y - 2}) rotate(-17)">`
+    + sec(-18, -14, 3, BRASS.right, BRASS.left) + sec(-14, -5, 4.4, BRASS.left, BRASS.top) + sec(-5, 6, 5.6, CUIR.mid, CUIR.light)
+    + `<path d="M-3,-2.8 L-1,2.8 M1,-2.8 L3,2.8" stroke="${CUIR.dark}" stroke-width="0.5"/>`
+    + sec(6, 15, 7, BRASS.left, BRASS.top) + sec(15, 19, 8.2, BRASS.right, BRASS.left)
+    + bague(-5, 5.2) + bague(6, 7.6) + bague(15, 8.6)
+    + E(19, 0, 1.4, 3.6, '#BFE7F7', 0.7) + E(19.2, f ? -1.6 : 1, 0.5, 0.9, '#FFFFFF', 0)
+    + `<rect x="${f ? 10 : 7.6}" y="-3" width="2.6" height="1" rx="0.5" fill="#FFFFFF" opacity="0.9"/>` + '</g>';
+  // la rotule de laiton qui tient la lunette
+  return s + `<path d="M${x - 3},${y + 1} L${x - 2.6},${y - 3.4} L${x + 2.6},${y - 4.4} L${x + 3},${y + 0.2} Z" fill="${BRASS.right}" stroke="${OUT}" stroke-width="0.7" stroke-linejoin="round"/>` + E(x, y - 2.6, 1.6, 1.6, BRASS.top, 0.6);
 } };
 
 // ——— Créations de climat ———
