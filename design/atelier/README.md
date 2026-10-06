@@ -18,7 +18,7 @@ troupe. Relancer ces scripts redonne la bibliothèque à l'octet près : c'est v
 | `troupe.js`, `aster2.js`, `cannelle.js`… | Renvois vers le kit de la troupe (`design/personnages/`), qui n'existe qu'en un exemplaire |
 | `naufrage.js`, `naufrages.js` | La transformation en naufragé, et la tenue propre à chaque maître |
 | `avatar_naufrage.js`, `preview_avatar.mjs`, `verif_avatar.mjs` | L'avatar du joueur en naufragé ; les exemples d'avatar et leur version naufragée, les planches (formes, nuanciers, accessoires, exemples) ; le test de fiabilité (aucun choix ne casse le dessin ni ne sort du cadre) |
-| `dormeurs.js`, `arrivees.js` | Les maîtres endormis, les plans d'entrée du tutoriel |
+| `dormeurs.js` | Les maîtres endormis |
 | `brume.js`, `anya.js`, `cerf.js`, `passeur.js` | Les vivants |
 | `betes.js`, `betes3.js` | Les animaux de profil ; les bêtes qui marchent de trois quarts avant et de dos |
 | `crafts.js`, `deco.js`, `decor2.js`, `landmarks.js` | Décor : créations, annexes, lieux, gisements, îlots |
@@ -48,7 +48,7 @@ node preview_plantes.js              # plantes et rochers
 node preview_decor.mjs               # décor
 node preview_batiments.mjs           # bâtiments
 node preview_meteo.js                # météo
-node preview_naufrages.js            # naufragés (grand format), endormis, plans d'entrée, expressions en marche
+node preview_naufrages.js            # naufragés (grand format), endormis, expressions en marche
 node preview_quotidien.mjs           # le quotidien au grand format : maîtres, naufragés, visiteurs, nouveaux venus
 node preview_camp.mjs                # le camp
 node preview_ruines.mjs              # les ruines

@@ -55,7 +55,6 @@ function renommer(rel) {
   if (top === 'personnages') {
     if (a === 'naufrages') {
       if (base.startsWith(b + '_naufrage_')) return out([top, a, b], `${b}-naufrage_${base.slice(b.length + 10)}`);
-      if (base.startsWith(b + '_arrivee_')) return out([top, a, b], `${b}-naufrage_${base.slice(b.length + 1)}`);
       throw new Error('naufragé inattendu : ' + rel);
     }
   }
@@ -220,7 +219,6 @@ const A_REVOIR = [
   [/^vivants\/cerf-blanc\//, 'Le cerf blanc n\'a que le profil ; il lui faut le trois quarts avant et dos, comme Anya.'],
   [/^personnages\/naufrages\/galet\/galet-naufrage_face_rune$/, 'Un naufragé a oublié son don (§ 6.2) : la rune qui chante revient au maître.'],
   [/^personnages\/naufrages\/sylve\/sylve-naufrage_face_chant$/, 'Un naufragé a oublié son don (§ 6.2) : le chant aux graines revient au maître.'],
-  [/^personnages\/naufrages\/[a-z]+\/[a-z]+-naufrage_arrivee$/, 'Plan d\'entrée de l\'ancien tutoriel : les scènes v6 le remplacent (lot J2).'],
   [/^decor\/camp\/epave\/hirondelle$/, 'L\'Hirondelle est un petit navire de croisière (v6) : épave à redessiner.'],
   [/^decor\/camp\/epave\/feu_debris$/, 'Le feu de camp est le Foyer au palier I, bâti par le joueur (§ 9, étape 5) : ce feu fait double emploi.'],
   [/^decor\/camp\/coins\/(ondin|sylve|galet|melisse)\//, 'Seuls Aster et Rivet vivent au camp : ce coin va près du bâtiment de son maître (Ondin à La Source, Sylve à La Lisière, Galet à La Colline, Mélisse aux Jardins).'],
@@ -232,8 +230,7 @@ const A_REVOIR = [
 const statut = id => { for (const [rx, note] of A_REVOIR) if (rx.test(id)) return { statut: 'a-revoir', note }; return { statut: 'ok' }; };
 
 const MANQUANTS = [
-  ['tuto-2', 'L\'établi de Rivet au camp (une porte de cabine sur deux caisses) et sa voile tendue sur un aviron.'],
-  ['tuto-3', 'La caisse d\'Aster au bout de sa corde.'],
+  ['tuto-2', 'L\'établi de Rivet au camp (une porte de cabine sur deux caisses).'],
   ['acte-1', 'L\'éclat du souvenir retrouvé (le sceau s\'allume, le maître se lève outil en main).'],
   ['acte-4', 'L\'amie de Tic-Tac (quand on écrit Abeille).'],
   ['revelation', 'Le bol de soupe « pour la Dame », au bord du Foyer, le soir.']
@@ -329,7 +326,6 @@ function vitesse(id, pose, images) {
     if (pose === 'repos') return [900, 160];
     if (pose === 'salut') return 260;
     if (pose === 'dort' || pose === 'couche') return 900;
-    if (pose === 'arrivee') return 450;
     if (pose === 'expr') return 800;
     if (pose === 'grelotter') return 140; // un frisson
     if (pose === 'lire') return [1400, 900];
