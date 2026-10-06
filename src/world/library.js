@@ -12,6 +12,9 @@ export function librarySprite(loader, box) {
   return () => ({ box, load: () => loader().then(svg => fitTo(svg, box)) });
 }
 
+// Image vide, pour une vignette en cours de lecture
+export const BLANK = `data:image/svg+xml;charset=utf-8,${encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" width="1" height="1"/>')}`;
+
 // Le même SVG cadré sur box (unités du dessin) : il ne montre plus que cette partie
 export function cropTo(svg, box) {
   const { x, y, w, h } = box;

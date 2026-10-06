@@ -55,8 +55,9 @@ export default {
     }
     const look = lookAt(site.id, site.level);
     const skin = site.skin || '';
-    // Sans skin, le dessin de la bibliothèque (partie fixe, bloc qui bouge, voilier) ; avec un skin, celui du jeu
-    const art = !skin && buildingArt(site.id, site.level);
+    // Le dessin de la bibliothèque (partie fixe, bloc qui bouge, voilier), sous un skin dessiné ou une teinte ; une pièce
+    // rare garde celui du jeu
+    const art = buildingArt(site.id, site.level, skin);
     const body = this.siteBody(site.id, site.level, skin);
     const span = site.w / 2;
     if (k < 1) {
@@ -112,10 +113,10 @@ export default {
     this.drawItems(ctx, site, c, t, repaint, false);
   },
   // Corps d'un bâtiment à un palier (0 : le chantier tout prêt), { key, make } pour le cache des sprites : la partie fixe
-  // du dessin de la bibliothèque sans skin, sinon le dessin du jeu
+  // du dessin de la bibliothèque (sous un skin dessiné ou une teinte), sinon le dessin du jeu (pièce rare)
   siteBody(siteId, level, skin) {
     if (!level) return chantierArt(2) || { key: 'chantier-2', make: BUILDINGS.chantier[2] };
-    const art = !skin && buildingArt(siteId, level);
+    const art = buildingArt(siteId, level, skin);
     if (art) return art.base;
     return { key: `${siteId}-${level}-${skin}`, make: () => lookAt(siteId, level).make(skin || undefined) };
   },
