@@ -606,23 +606,48 @@ C.longuevue = { n: 2, draw: f => {
 } };
 
 // ——— Créations de climat ———
+// Igloo : un tapis de neige, un dôme de blocs taillés (quatre rangs aux joints décalés, l'ombre en croissant à droite,
+// des blocs plus clairs et des éclats de givre), une entrée en tunnel avec ses glaçons ; la vapeur qui sort du trou
+// d'aération ; un trou de pêche dans la glace, sa canne et un poisson ; la porte s'éclaire la nuit (image 2, même lueur
+// au même endroit qu'avant, cf. ART_LIGHTS de src/world/creations.js)
+const givre = (x, y, r) => `<path d="M${r2(x)},${r2(y - r)} L${r2(x + r * 0.25)},${r2(y - r * 0.25)} L${r2(x + r)},${r2(y)} L${r2(x + r * 0.25)},${r2(y + r * 0.25)} L${r2(x)},${r2(y + r)} L${r2(x - r * 0.25)},${r2(y + r * 0.25)} L${r2(x - r)},${r2(y)} L${r2(x - r * 0.25)},${r2(y - r * 0.25)} Z" fill="#FFFFFF"/>`;
 C.igloo = { n: 2, draw: f => {
   const [x, y] = at(0, 0);
+  // le tapis de neige et l'ombre douce du dôme
+  // le bord du tapis de neige : une courbe douce et bosselée (des points sur une ellipse, lissés par leurs milieux)
+  const bord = Array.from({ length: 14 }, (_, i) => { const t = (i / 14) * TAU, r = 1 + (i % 2 ? 0.06 : -0.03) + (i % 3 ? 0 : 0.04); return [x + Math.cos(t) * 35 * r, y + 3 + Math.sin(t) * 12.6 * r]; });
+  const mil = i => { const p = bord[i % 14], q = bord[(i + 1) % 14]; return `${r2((p[0] + q[0]) / 2)},${r2((p[1] + q[1]) / 2)}`; };
+  let neige = `M${mil(13)}`;
+  for (let i = 0; i < 14; i++) neige += ` Q${r2(bord[i][0])},${r2(bord[i][1])} ${mil(i)}`;
+  let s = `<path d="${neige}Z" fill="#F4FBFF" stroke="#CFE3EF" stroke-width="1.2" stroke-linejoin="round"/>` + E(x + 6, y + 4, 26, 8, '#DCEEF8', 0) + shadow(0, 0, 0.46, 0.1);
   // dôme de blocs de neige : ombre en croissant à droite (découpée dans le dôme), joints des blocs, un seul trait autour
   const dome = `M${x - 30},${y} Q${x - 31},${y - 34} ${x},${y - 37} Q${x + 31},${y - 34} ${x + 30},${y} Q${x},${y + 9} ${x - 30},${y} Z`;
   const id = `igloo-dome-${f}`;
-  let s = shadow(0, 0, 0.5, 0.12) + `<defs><clipPath id="${id}"><path d="${dome}"/></clipPath></defs>`
+  s += `<defs><clipPath id="${id}"><path d="${dome}"/></clipPath></defs>`
     + `<path d="${dome}" fill="${ICE.right}"/>`
     + `<g clip-path="url(#${id})"><path d="${dome}" fill="${ICE.left}" transform="translate(-4 -2)"/><path d="${dome}" fill="${ICE.top}" transform="translate(-9 -4)"/>`;
-  const rows = [-8, -17, -26];
+  // des blocs plus clairs, puis les rangs et leurs joints décalés, penchés comme le dôme
+  s += [[-17, -10, 8], [-2, -18, 7], [-12, -26, 6], [6, -10, 6]].map(([dx, dy, w]) => `<rect x="${x + dx}" y="${y + dy}" width="${w}" height="5" rx="1.6" fill="#FFFFFF" opacity="0.55"/>`).join('');
+  const rows = [-7, -15, -23, -30];
   for (const yy of rows) s += `<path d="M${x - 32},${y + yy + 2} Q${x},${y + yy + 7} ${x + 32},${y + yy + 2}" fill="none" stroke="#9FC9E2" stroke-width="0.8"/>`;
-  [[-20, -4], [-6, -3], [8, -3], [22, -4], [-14, -13], [2, -12], [16, -13], [-6, -22], [10, -22]].forEach(([dx, dy]) => { s += `<path d="M${x + dx},${y + dy} l0.6,-6" stroke="#9FC9E2" stroke-width="0.8"/>`; });
+  [[-24, -2], [-12, -1], [12, -1], [24, -2], [-19, -10], [-6, -9], [6, -9], [19, -10], [-13, -18], [0, -17], [13, -18], [-7, -25], [7, -25]].forEach(([dx, dy]) => { s += `<path d="M${x + dx},${y + dy} l${r2(dx * 0.035)},-6" stroke="#9FC9E2" stroke-width="0.8"/>`; });
   s += `</g><path d="${dome}" fill="none" stroke="${OUT}" stroke-width="1.1" stroke-linejoin="round"/>`;
-  // entrée en tunnel, lueur dorée la nuit (image 2)
+  s += givre(x - 20, y - 22, 1.8) + givre(x - 8, y - 31, 1.3) + givre(x + 4, y - 14, 1.1);
+  // la vapeur qui monte du trou d'aération (plus haut d'une image à l'autre)
+  const [vx, vy] = [x + 3, y - 36.4];
+  s += E(vx, vy, 2.6, 1, '#9FC9E2', 0.6) + [[0, -4 - f * 3, 2.2], [2 + f, -9 - f * 3, 1.7], [-1 + f, -13 - f * 2.6, 1.2]].map(([dx, dy, r], i) => E(vx + dx, vy + dy, r * 1.3, r, '#FFFFFF', 0).replace('stroke="none"', `stroke="#C9DCE6" stroke-width="0.6" opacity="${r2(0.9 - i * 0.2)}"`)).join('');
+  // entrée en tunnel : sa face avant aux blocs, son flanc à droite, ses glaçons ; la porte (lueur dorée la nuit)
   s += `<path d="M${x - 13},${y + 5} L${x - 13},${y - 8} Q${x - 4},${y - 17} ${x + 5},${y - 8} L${x + 5},${y + 7} Q${x - 4},${y + 9} ${x - 13},${y + 5} Z" fill="${ICE.top}" stroke="${OUT}" stroke-width="1"/>`
-    + `<path d="M${x + 5},${y - 8} L${x + 5},${y + 7} L${x + 1},${y + 7.4} L${x + 1},${y - 9} Z" fill="${ICE.left}"/>`;
+    + `<path d="M${x + 5},${y - 8} L${x + 5},${y + 7} L${x + 1},${y + 7.4} L${x + 1},${y - 9} Z" fill="${ICE.left}"/>`
+    + `<path d="M${x - 13},${y - 1} L${x - 9},${y - 1} M${x - 12},${y - 8.6} L${x - 8.4},${y - 7.4} M${x + 0.6},${y - 7.4} L${x + 4.4},${y - 8.6} M${x - 7},${y - 12.6} l1,3 M${x - 1},${y - 12.6} l-1,3" stroke="#9FC9E2" stroke-width="0.7"/>`;
   s += `<path d="M${x - 9},${y + 5.5} L${x - 9},${y - 6} Q${x - 4},${y - 11} ${x + 1},${y - 6} L${x + 1},${y + 6.5} Z" fill="${f ? '#FFD27A' : '#3A4A5A'}" stroke="${OUT}" stroke-width="0.8"/>` + (f ? glow(x - 4, y - 1, 12, '255,210,120', 0.35) : '');
-  return s;
+  s += (f ? `<path d="M${x - 7.6},${y + 5} L${x - 7.6},${y - 4.6} Q${x - 4},${y - 8.6} ${x - 0.4},${y - 4.6}" stroke="#FFF1C4" stroke-width="0.8" fill="none"/>` : '')
+    + [[-7.4, -8.4, 2], [-4.6, -9.6, 2.6], [-1.6, -8.8, 1.8]].map(([dx, dy, h]) => P(`M${r2(x + dx - 0.8)},${r2(y + dy)} L${r2(x + dx + 0.8)},${r2(y + dy)} L${r2(x + dx)},${r2(y + dy + h)} Z`, '#E9F8FF', 0.45)).join('');
+  // le trou de pêche dans la glace, la canne plantée dans la neige, son fil et un poisson
+  const [hx, hy] = at(0.36, 0.16, 0);
+  return s + E(hx, hy, 5, 2.2, '#E9F8FF', 0.7) + E(hx, hy + 0.2, 3.6, 1.5, '#3E6FA8', 0) + E(hx - 1, hy - 0.2, 1.4, 0.4, '#7FB2E6', 0)
+    + L([hx + 6, hy + 2], [hx + 3, hy - 13], WOOD.left, 1.1) + `<path d="M${r2(hx + 3)},${r2(hy - 13)} Q${r2(hx + 0.6)},${r2(hy - 8)} ${r2(hx + 0.4)},${r2(hy)}" stroke="${OUT}" stroke-width="0.4" fill="none"/>`
+    + `<g transform="translate(${r2(hx - 9)} ${r2(hy + 3.4)}) rotate(-12)">` + P('M2.4,0 L4.4,-1.6 L4,0 L4.4,1.6 Z', '#9FC9E2', 0.5) + E(0, 0, 2.8, 1.3, '#BFD7E8', 0.6) + E(-1.6, -0.3, 0.3, 0.3, OUT, 0) + '</g>';
 } };
 C.sculpture = { n: 2, draw: f => {
   const [x, y] = at(0, 0, 10);
