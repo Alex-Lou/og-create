@@ -8,7 +8,7 @@ import { drawSparkles, drawWaves, drawSchools, schoolFish, drawShallows, drawRin
 import { drawFloatBelow, FLOATING_ZONE, drawSpring } from '@/world/islets';
 import { drawLive, drawCell, SEA_Z, HS } from '@/world/terrain';
 import { mixToward, climateAt, drawClimate } from '@/world/climates';
-import { TW, TH, SEA_KINDS, ALL_NATURE } from '../constants';
+import { TW, TH, SEA_KINDS } from '../constants';
 
 const FRAME_MS = 33; // ~30 images/s : l'île respire, sans user la batterie
 // Vue de loin (zoom sous FAR_SCALE) : ni masquage par le relief devant ce qui se tient debout (invisible à cette
@@ -308,9 +308,9 @@ export default {
         if (!zone || !zone.owned) continue;
         for (const prop of props) {
           if (prop.depth <= depth) continue;
-          const pb = imageOf(`nature-${prop.kind}`, ALL_NATURE[prop.kind]).box;
+          const pb = imageOf(prop.key, prop.make).box;
           if (prop.wx + pb.x >= right || prop.wx + pb.x + pb.w <= left || prop.wy + pb.y >= bottom || prop.wy + pb.y + pb.h <= top) continue;
-          drawSpriteIn(ctx, `nature-${prop.kind}`, ALL_NATURE[prop.kind], prop.wx, prop.wy, rect);
+          drawSpriteIn(ctx, prop.key, prop.make, prop.wx, prop.wy, rect);
         }
       }
     }
