@@ -171,7 +171,8 @@ chronométrer 20 appels. Comparer à zoom égal, au même endroit.
     - `reads.js` : lectures de l'état d'un joueur en base ;
     - `migrate.js` : passage des cartes v1 → v4 ;
     - `chests.js` : les coffres (vue et ouverture) ;
-    - `people.js` : habitants (présence, humeurs, besoins, amitié), visiteurs ;
+    - `people.js` : habitants (présence, humeurs, besoins, amitié), visiteurs ; il appelle `produce.gatherBefore`
+      seulement à l'exécution (`require` différé : `produce.js` lit déjà `people.js`) ;
     - `produce.js` : bonus et récolte de la production ;
     - `anyaBrume.js` : Anya (éveil, Révélation, Souffle) et le Savoir de Brume ;
     - `lands.js` : expéditions, lieux remarquables, gisements ;
@@ -184,6 +185,15 @@ chronométrer 20 appels. Comparer à zoom égal, au même endroit.
     4. `withLandmarks` (lieux remarquables).
 
     Le résultat est lu par `effectsOf` (réserve de parties, coups, retour des parties) et `productionAll`.
+  - **Production juste** : chaque heure produite compte avec l'humeur de son moment.
+    - L'humeur change d'elle-même quand un besoin arrive à échéance. `prodSteps` (`people.js`) donne la part en plus
+      de chaque bâtiment à chaque échéance depuis la dernière récolte ; `productionAll` s'en sert, pour la vue comme
+      pour le ramassage.
+    - Quand le joueur change une humeur (besoin comblé, création posée, déplacée ou rangée, visiteur installé),
+      `gatherBefore` (`produce.js`) encaisse d'abord la production, si la part d'un bâtiment en change sur la
+      fenêtre. La réponse porte alors `coins` (le solde), que le front transmet.
+    - Encore comptées à l'instant du ramassage : la Bénédiction d'Anya et la fin du prologue (une seule fois dans une
+      partie, sur une seule récolte).
 - **Catalogues** :
 
   | Fichier | Contenu |
@@ -442,7 +452,8 @@ familiers (H6) et aux créatures d'Anya (H8).
      atteint la création sous le doigt ; le toucher court reste au bâtiment).
    - ~~**Étiquettes des bâtiments** dessinées sur la tête des habitants~~ : corrigé (le nom s'efface à demi quand un
      habitant passe dessous).
-   - **Humeur rétroactive** au ramassage de la production.
+   - ~~**Humeur rétroactive** au ramassage de la production~~ : corrigé (chaque heure compte avec l'humeur de son
+     moment ; combler un besoin ou toucher aux créations encaisse d'abord quand la production en change, § 5).
    - ~~**Zoom moyen** : un habitant qui marche peut passer devant un arbre cuit qui devrait le cacher~~ : corrigé (le
      décor cuit devant lui est repeint par-dessus, § 5).
    - **`DECO_PRICES`** et la table `world_tiles` (`world.js`) : à garder tant que des joueurs peuvent avoir

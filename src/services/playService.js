@@ -58,7 +58,8 @@ export default {
     return http.get('/play/world').then(response => response.data);
   },
   // Créations d'île : assemblage (début → { run: { id, craft, shape, pieces, turned } } ; fin → { made, craft, world }),
-  // pose, déplacement, rangement dans la réserve → { world }
+  // pose, déplacement, rangement dans la réserve → { coins?, world } (coins : le solde, quand la production a d'abord
+  // été encaissée parce que l'humeur d'un habitant en change)
   craftStart(craft) {
     return http.post('/play/world/craft/start', { craft }).then(response => response.data);
   },
@@ -182,7 +183,8 @@ export default {
   villagerGift(villager, resource) {
     return http.post('/play/world/villager/gift', { villager, resource }).then(response => response.data);
   },
-  // Besoins : en combler un ('manger', 'outils') avec le stock, ou tout ce qui peut l'être → { filled, world }
+  // Besoins : en combler un ('manger', 'outils') avec le stock, ou tout ce qui peut l'être → { filled, coins?, world }
+  // (coins : le solde, quand la production a d'abord été encaissée)
   villagerNeed(villager, need) {
     return http.post('/play/world/villager/need', { villager, need }).then(response => response.data);
   },
@@ -193,7 +195,7 @@ export default {
   visitorSatisfy(id) {
     return http.post('/play/world/visitor', { id }).then(response => response.data);
   },
-  // Visiteur comblé : il reste dans une maison libre → { settled, world }
+  // Visiteur comblé : il reste dans une maison libre → { settled, coins?, world } (coins : comme pour les besoins)
   visitorSettle(id) {
     return http.post('/play/world/visitor/settle', { id }).then(response => response.data);
   },
