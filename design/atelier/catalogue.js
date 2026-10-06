@@ -279,7 +279,7 @@ const PLANTES = {
   bois_flotte: 'Bois flotté',
   rochers_moussus: 'Rochers moussus', lanterne: 'Lanterne sur pied, éteinte',
   lanterne_allumee: 'Lanterne sur pied, allumée', banc: 'Banc de bois (décor)', aiguille: 'Aiguille de roche',
-  nid: 'Nid d\'oiseau', nenuphars: 'Nénuphars',
+  nid: 'Nid d\'oiseau',
   arbre: 'Arbre (grand, vert doux)', arbre_fleuri: 'Arbre (grand, vert doux, pied fleuri)', arbre_profond: 'Arbre (grand, vert profond)',
   arbre_profond_fleuri: 'Arbre (grand, vert profond, pied fleuri)', arbre_petit: 'Arbre (petit, vert doux)', arbre_petit_fleuri: 'Arbre (petit, vert doux, pied fleuri)',
   arbre_petit_profond: 'Arbre (petit, vert profond)', arbre_petit_profond_fleuri: 'Arbre (petit, vert profond, pied fleuri)'
@@ -339,6 +339,10 @@ for (const petits of ['', '_petits']) for (const bruns of ['', '_bruns']) for (c
 // les 8 roseaux refaits (plantes.js) : roseaux[_petits][_rive][_libellule]
 for (const petits of ['', '_petits']) for (const rive of ['', '_rive']) for (const lib of ['', '_libellule']) {
   PLANTES[`roseaux${petits}${rive}${lib}`] = `Roseaux (${[petits ? 'petits' : 'grands', rive ? 'sur la rive' : 'dans une mare', lib && 'une libellule'].filter(Boolean).join(', ')})`;
+}
+// les 8 nénuphars refaits (plantes.js) : nenuphars[_petits][_blancs][_grenouille]
+for (const petits of ['', '_petits']) for (const blancs of ['', '_blancs']) for (const gr of ['', '_grenouille']) {
+  PLANTES[`nenuphars${petits}${blancs}${gr}`] = `Nénuphars (${[petits ? 'petits' : 'grands', `fleurs ${blancs ? 'blanches' : 'roses'}`, gr && 'une grenouille'].filter(Boolean).join(', ')})`;
 }
 // les 16 touffes d'herbe refaites (herbes.js) : touffe[_motte][_petite][_profond][_fleurie]
 for (const motte of ['', '_motte']) for (const petite of ['', '_petite']) for (const vert of ['', '_profond']) for (const fleurie of ['', '_fleurie']) {

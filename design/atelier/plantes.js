@@ -1,5 +1,6 @@
 // Les autres plantes refaites au niveau des PNJ, une par une, avec le trait, la lumière et les verts des arbres
-// (arbres.js) : le buisson, la bruyère, les fleurs, le cactus, la souche, le rondin, les champignons, les roseaux. Cadre et ancrage des plantes de deco.js (PROP, centre de la case en (0, 0)) ; le jeu fait
+// (arbres.js) : le buisson, la bruyère, les fleurs, le cactus, la souche, le rondin, les champignons, les roseaux, les
+// nénuphars. Cadre et ancrage des plantes de deco.js (PROP, centre de la case en (0, 0)) ; le jeu fait
 // balancer le dessin entier depuis sa base, il n'y a donc qu'une image.
 const { OUT, E, r2 } = require('./troupe');
 const { VERTS, fleurette, feuillage, champignon, herbe } = require('./arbres');
@@ -324,4 +325,51 @@ for (const petits of [false, true]) for (const eau of [true, false]) for (const 
   ROSEAUX.push([fichier, libelle, { petits, eau, libellule: lib }]);
 }
 
-module.exports = { buisson, BUISSONS, bruyere, BRUYERES, fleurs, FLEURS, cactus, CACTUS_LISTE, souche, SOUCHES, rondin, RONDINS, champignons, CHAMPIGNONS, roseaux, ROSEAUX };
+// ——— Les nénuphars : des feuilles rondes encochées sur une mare, des fleurs en étoile ; une grenouille s'y assoit ———
+// une feuille vue de biais : disque aplati avec son encoche, plus claire en haut à gauche, nervures
+function feuilleNenuphar(id, x, y, rx, a) {
+  const ry = rx * 0.52, t = a * Math.PI / 180;
+  const d = `M${r2(x)},${r2(y)} L${r2(x + rx * Math.cos(t - 0.22))},${r2(y + ry * Math.sin(t - 0.22))} A${r2(rx)} ${r2(ry)} 0 1 0 ${r2(x + rx * Math.cos(t + 0.22))},${r2(y + ry * Math.sin(t + 0.22))} Z`;
+  return `<path d="${d}" fill="#79B85A" stroke="${OUT}" stroke-width="0.9" stroke-linejoin="round"/>`
+    + `<defs><clipPath id="${id}"><path d="${d}"/></clipPath></defs><g clip-path="url(#${id})">${E(x - rx * 0.25, y - ry * 0.3, rx * 0.7, ry * 0.6, '#A2D27A', 0)}${E(x + rx * 0.4, y + ry * 0.5, rx * 0.7, ry * 0.5, '#5C9A47', 0)}</g>`
+    + [0.9, 1.6, 2.4, 3.2, 4, 4.8].map(b => `<path d="M${r2(x)},${r2(y)} L${r2(x + rx * 0.75 * Math.cos(t + b))},${r2(y + ry * 0.75 * Math.sin(t + b))}" stroke="#5C9A47" stroke-width="0.5" stroke-linecap="round"/>`).join('');
+}
+// une fleur de nénuphar, vue de profil : pétales en pointe en éventail sur deux rangs, le cœur jaune entre les deux
+function fleurNenuphar(x, y, c, s) {
+  const petale = (a, rx, ry, col) => `<path d="M0,0 Q${r2(rx * s)},${r2(-ry * 0.55 * s)} 0,${r2(-ry * s)} Q${r2(-rx * s)},${r2(-ry * 0.55 * s)} 0,0 Z" fill="${col}" stroke="${OUT}" stroke-width="0.6" stroke-linejoin="round" transform="translate(${r2(x)} ${r2(y)}) rotate(${a})"/>`;
+  return [-62, -32, 0, 32, 62].map(a => petale(a, 2.3, 6.4, c.fond)).join('')
+    + E(x, y - 2.6 * s, 1.8 * s, 1.1 * s, '#F2C94C', 0.5)
+    + [-40, -13, 13, 40].map(a => petale(a, 2, 5, c.devant)).join('');
+}
+// la grenouille : ronde, deux gros yeux, un sourire, les joues roses
+const grenouille = (x, y) => `<g transform="translate(${r2(x)} ${r2(y)})">`
+  + E(0, -2.4, 4.4, 3.2, '#8CC45A', 0.9) + E(-1.2, -2.6, 2.2, 1.4, '#B7DE86', 0) + E(-3.4, -0.2, 1.6, 0.8, '#7BB34C', 0.7) + E(3.4, -0.2, 1.6, 0.8, '#7BB34C', 0.7)
+  + E(-2.1, -5.4, 1.6, 1.5, '#8CC45A', 0.9) + E(2.1, -5.4, 1.6, 1.5, '#8CC45A', 0.9)
+  + E(-2.1, -5.5, 0.95, 0.95, '#FFFFFF', 0) + E(2.1, -5.5, 0.95, 0.95, '#FFFFFF', 0) + E(-1.9, -5.4, 0.55, 0.6, OUT, 0) + E(2.3, -5.4, 0.55, 0.6, OUT, 0)
+  + `<path d="M-1.4,-2.6 Q0,-1.6 1.4,-2.6" stroke="${OUT}" stroke-width="0.6" fill="none" stroke-linecap="round"/>` + E(-2.6, -2.4, 0.7, 0.4, '#F7A8B8', 0) + E(2.6, -2.4, 0.7, 0.4, '#F7A8B8', 0) + '</g>';
+const FLEURS_EAU = { roses: { fond: '#F49AB8', devant: '#FBCADB' }, blancs: { fond: '#E8EEF0', devant: '#FFFFFF' } };
+// [x, y, rayon, orientation de l'encoche]
+const FEUILLES_N = [[-14, 1, 7, 20], [6, -4, 6.4, 150], [13, 5, 6, 60], [-3, 7, 5.4, 260]];
+
+// teinte : fleurs 'roses' ou 'blancs' ; petits : × 0,75 ; grenouille : une grenouille assise sur une feuille
+function nenuphars({ teinte = 'roses', petits = false, grenouille: avecGrenouille = false } = {}) {
+  const k = petits ? 0.75 : 1, c = FLEURS_EAU[teinte];
+  const id = `nen${petits ? 'p' : 'g'}${teinte[0]}${avecGrenouille ? 'r' : ''}`;
+  return mare(k, 28, 12)
+    + FEUILLES_N.map(([x, y, r, a], i) => feuilleNenuphar(`${id}${i}`, x * k, y * k, r * k, a)).join('')
+    + fleurNenuphar(6 * k, -4.6 * k, c, k) + fleurNenuphar(-3 * k, 6.4 * k, c, 0.75 * k)
+    + (avecGrenouille ? grenouille(-14 * k, 1.4 * k) : '');
+}
+
+// Les 8 nénuphars : [fichier, libellé, options] ; « nenuphars » (grands, fleurs roses, sans grenouille) est celui par défaut
+const NENUPHARS = [];
+for (const petits of [false, true]) for (const teinte of ['roses', 'blancs']) for (const gr of [false, true]) {
+  const fichier = ['nenuphars', petits && 'petits', teinte === 'blancs' && 'blancs', gr && 'grenouille'].filter(Boolean).join('_');
+  const libelle = `Nénuphars (${[petits ? 'petits' : 'grands', `fleurs ${teinte}`, gr && 'une grenouille'].filter(Boolean).join(', ')})`;
+  NENUPHARS.push([fichier, libelle, { teinte, petits, grenouille: gr }]);
+}
+
+module.exports = {
+  buisson, BUISSONS, bruyere, BRUYERES, fleurs, FLEURS, cactus, CACTUS_LISTE, souche, SOUCHES, rondin, RONDINS, champignons, CHAMPIGNONS,
+  roseaux, ROSEAUX, nenuphars, NENUPHARS
+};
