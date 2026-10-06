@@ -29,6 +29,7 @@ describe('les plantes de la bibliothèque', () => {
     expect(VARIANTS.deadtree.every(name => name.startsWith('arbre_mort'))).toBe(true);
     expect(VARIANTS.rocks).not.toContain('rochers_moussus');
     expect(VARIANTS.mushrooms).not.toContain('champignons_nuit');
+    expect(VARIANTS.mushrooms.some(name => name.includes('nuit'))).toBe(false);
   });
 
   it('un dessin redessiné en variantes dans la bibliothèque varie sur l\'île', () => {
