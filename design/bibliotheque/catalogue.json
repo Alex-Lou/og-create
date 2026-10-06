@@ -15373,10 +15373,129 @@
   {
    "id": "plantes/souche",
    "rubrique": "plantes",
-   "titre": "Souche",
+   "titre": "Souche (grande, écorce brune, une pousse)",
    "images": 1,
    "fichiers": [
     "svg/plantes/souche.svg"
+   ],
+   "cadre": [
+    -50,
+    -115,
+    100,
+    140
+   ],
+   "parcours": "acte-1",
+   "statut": "ok"
+  },
+  {
+   "id": "plantes/souche_champignons",
+   "rubrique": "plantes",
+   "titre": "Souche (grande, écorce brune, des champignons)",
+   "images": 1,
+   "fichiers": [
+    "svg/plantes/souche_champignons.svg"
+   ],
+   "cadre": [
+    -50,
+    -115,
+    100,
+    140
+   ],
+   "parcours": "acte-1",
+   "statut": "ok"
+  },
+  {
+   "id": "plantes/souche_grise",
+   "rubrique": "plantes",
+   "titre": "Souche (grande, écorce grise, une pousse)",
+   "images": 1,
+   "fichiers": [
+    "svg/plantes/souche_grise.svg"
+   ],
+   "cadre": [
+    -50,
+    -115,
+    100,
+    140
+   ],
+   "parcours": "acte-1",
+   "statut": "ok"
+  },
+  {
+   "id": "plantes/souche_grise_champignons",
+   "rubrique": "plantes",
+   "titre": "Souche (grande, écorce grise, des champignons)",
+   "images": 1,
+   "fichiers": [
+    "svg/plantes/souche_grise_champignons.svg"
+   ],
+   "cadre": [
+    -50,
+    -115,
+    100,
+    140
+   ],
+   "parcours": "acte-1",
+   "statut": "ok"
+  },
+  {
+   "id": "plantes/souche_petite",
+   "rubrique": "plantes",
+   "titre": "Souche (petite, écorce brune, une pousse)",
+   "images": 1,
+   "fichiers": [
+    "svg/plantes/souche_petite.svg"
+   ],
+   "cadre": [
+    -50,
+    -115,
+    100,
+    140
+   ],
+   "parcours": "acte-1",
+   "statut": "ok"
+  },
+  {
+   "id": "plantes/souche_petite_champignons",
+   "rubrique": "plantes",
+   "titre": "Souche (petite, écorce brune, des champignons)",
+   "images": 1,
+   "fichiers": [
+    "svg/plantes/souche_petite_champignons.svg"
+   ],
+   "cadre": [
+    -50,
+    -115,
+    100,
+    140
+   ],
+   "parcours": "acte-1",
+   "statut": "ok"
+  },
+  {
+   "id": "plantes/souche_petite_grise",
+   "rubrique": "plantes",
+   "titre": "Souche (petite, écorce grise, une pousse)",
+   "images": 1,
+   "fichiers": [
+    "svg/plantes/souche_petite_grise.svg"
+   ],
+   "cadre": [
+    -50,
+    -115,
+    100,
+    140
+   ],
+   "parcours": "acte-1",
+   "statut": "ok"
+  },
+  {
+   "id": "plantes/souche_petite_grise_champignons",
+   "rubrique": "plantes",
+   "titre": "Souche (petite, écorce grise, des champignons)",
+   "images": 1,
+   "fichiers": [
+    "svg/plantes/souche_petite_grise_champignons.svg"
    ],
    "cadre": [
     -50,

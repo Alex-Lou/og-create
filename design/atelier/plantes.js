@@ -1,8 +1,8 @@
 // Les autres plantes refaites au niveau des PNJ, une par une, avec le trait, la lumière et les verts des arbres
-// (arbres.js) : le buisson, la bruyère, les fleurs, le cactus. Cadre et ancrage des plantes de deco.js (PROP, centre de la case en (0, 0)) ; le jeu fait
+// (arbres.js) : le buisson, la bruyère, les fleurs, le cactus, la souche. Cadre et ancrage des plantes de deco.js (PROP, centre de la case en (0, 0)) ; le jeu fait
 // balancer le dessin entier depuis sa base, il n'y a donc qu'une image.
 const { OUT, E, r2 } = require('./troupe');
-const { VERTS, fleurette, feuillage } = require('./arbres');
+const { VERTS, fleurette, feuillage, champignon } = require('./arbres');
 
 // ——— Le buisson : trois touffes basses (celle du fond plus sombre) et une au milieu, des fleurettes ou des baies ———
 // baies : grappe de trois, rouges, reflet
@@ -176,4 +176,35 @@ for (const forme of ['cierge', 'boule']) for (const petit of [false, true]) for 
   CACTUS_LISTE.push([fichier, libelle, { forme, petit, fleur: fl }]);
 }
 
-module.exports = { buisson, BUISSONS, bruyere, BRUYERES, fleurs, FLEURS, cactus, CACTUS_LISTE };
+// ——— La souche : une coupe aux cernes du bois, l'écorce, les racines au pied ; une pousse ou des champignons ———
+const ECORCES = {
+  brune: { left: '#9C6A43', right: '#74492C', bark: '#55331E', coupe: '#E8C08A', cerne: '#C9965E' },
+  grise: { left: '#A69B8F', right: '#7C7268', bark: '#5E554C', coupe: '#D9CDB8', cerne: '#B3A58C' }
+};
+function souche({ ecorce = 'brune', petite = false, champignons = false } = {}) {
+  const c = ECORCES[ecorce], k = petite ? 0.75 : 1;
+  const id = `sou${petite ? 'p' : 'g'}${ecorce[0]}${champignons ? 'c' : ''}`;
+  const d = sc2('M-12.5,1.6 Q-9.2,0.6 -8.8,-3 L-9,-12 L9,-12 L8.8,-3 Q9.4,0.6 13,2 Q8.4,3.6 5.2,2.1 Q2,4.2 -1,2.8 Q-4.2,4.2 -6.6,2.3 Q-9.8,3.2 -12.5,1.6 Z', k);
+  const flancs = `<path d="${d}" fill="${c.left}" stroke="${OUT}" stroke-width="1.1" stroke-linejoin="round"/>`
+    + `<defs><clipPath id="${id}"><path d="${d}"/></clipPath></defs><g clip-path="url(#${id})">`
+    + `<path d="${sc2('M2.4,4 L3,-13 L14,-13 L14,4 Z', k)}" fill="${c.right}"/>`
+    + `<path d="${sc2('M-5.6,-2 L-6,-9.4 M-1.4,0 L-1.6,-8 M5.6,-1 L6,-8.6', k)}" stroke="${c.bark}" stroke-width="0.7" fill="none" stroke-linecap="round"/></g>`;
+  // la coupe : ellipse claire, trois cernes, une fente
+  const coupe = E(0, -12 * k, 9 * k, 3.8 * k, c.coupe, 1.1) + E(0, -12 * k, 6 * k, 2.4 * k, 'none', 0).replace('stroke="none"', `stroke="${c.cerne}" stroke-width="0.7"`)
+    + E(0, -12 * k, 3 * k, 1.2 * k, 'none', 0).replace('stroke="none"', `stroke="${c.cerne}" stroke-width="0.7"`)
+    + `<path d="${sc2('M1,-12 L5.6,-13.6', k)}" stroke="${c.cerne}" stroke-width="0.7" stroke-linecap="round"/>`;
+  const pousse = `<path d="${sc2('M-5,-12.6 Q-5.6,-17 -4,-20', k)}" stroke="${OUT}" stroke-width="2.2" fill="none" stroke-linecap="round"/><path d="${sc2('M-5,-12.6 Q-5.6,-17 -4,-20', k)}" stroke="#6FA84A" stroke-width="0.9" fill="none" stroke-linecap="round"/>`
+    + `<path d="${sc2('M-4,-19.6 Q-1,-22.6 1.6,-20.4 Q-1,-18.4 -4,-19.6 Z M-4.6,-17 Q-8,-19.4 -9.6,-16.6 Q-7,-15.2 -4.6,-17 Z', k)}" fill="#86C15A" stroke="${OUT}" stroke-width="0.7" stroke-linejoin="round"/>`;
+  return E(1, 1.5, 15 * k, 5.5 * k, 'rgba(40,55,20,0.22)', 0) + flancs + coupe
+    + (champignons ? champignon(-11 * k, 4.4) + champignon(11.5 * k, 4.8) + champignon(7.5 * k, 5.6) : pousse);
+}
+
+// Les 8 souches : [fichier, libellé, options] ; « souche » (grande, écorce brune, une pousse) est celle par défaut
+const SOUCHES = [];
+for (const petite of [false, true]) for (const ecorce of ['brune', 'grise']) for (const ch of [false, true]) {
+  const fichier = ['souche', petite && 'petite', ecorce === 'grise' && 'grise', ch && 'champignons'].filter(Boolean).join('_');
+  const libelle = `Souche (${[petite ? 'petite' : 'grande', `écorce ${ecorce}`, ch ? 'des champignons' : 'une pousse'].join(', ')})`;
+  SOUCHES.push([fichier, libelle, { ecorce, petite, champignons: ch }]);
+}
+
+module.exports = { buisson, BUISSONS, bruyere, BRUYERES, fleurs, FLEURS, cactus, CACTUS_LISTE, souche, SOUCHES };
