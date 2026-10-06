@@ -42,7 +42,7 @@
 </template>
 
 <script>
-import GModal from '@/components/ui/GModal.vue';
+import GModal from '@/components/ui/GModal/GModal.vue';
 import { roman } from '@/utils/roman';
 import { tintOf } from '@/world/tints';
 import { guideOf } from '@/world/itemGuide';

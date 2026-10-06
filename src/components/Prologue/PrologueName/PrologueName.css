@@ -1,0 +1,58 @@
+/* Ses jetons (l'encre et le bleu du prologue : tokens/prologue.css) : le voile, la page (papier, cadre, coins),
+   les encres, le trait de la plume, le champ, l'erreur, le bouton pour signer */
+.pn {
+  --pn-veil: radial-gradient(circle at 50% 40%, rgba(40, 26, 18, .82), rgba(12, 8, 6, .94));
+  --pn-radius: 10px;
+  --pn-paper: radial-gradient(circle at 50% 28%, #fbf3df, #ecdcb6);
+  --pn-frame-outer: #c9a86a;
+  --pn-frame-inner: #f3e6c6;
+  --pn-frame-line: #b99556;
+  --pn-brume-ink: #523b2c;
+  --pn-muted: #6e5646;
+  --pn-input-line: #8a6a3a;
+  --pn-input-ink: #2a1a10;
+  --pn-field-bg: rgba(255, 253, 248, .85);
+  --pn-field-ring: rgba(138, 106, 58, .45);
+  --pn-error: #9a2a1e;
+  --pn-sign-ink: #fff8e8;
+  --pn-sign-edge: #1e120a;
+}
+.pn {
+  position: fixed; inset: 0; z-index: var(--z-prologue); display: grid; place-items: center; padding: 16px; overflow-y: auto;
+  background: var(--pn-veil);
+}
+.pn__page {
+  position: relative; width: min(440px, 100%); padding: 22px 24px 18px; border-radius: var(--pn-radius);
+  background: var(--pn-paper);
+  box-shadow: inset 0 0 0 2px var(--pn-frame-outer), inset 0 0 0 7px var(--pn-frame-inner), inset 0 0 0 8px var(--pn-frame-line), 0 18px 50px rgba(0, 0, 0, .55);
+  color: var(--prologue-ink); text-align: center;
+}
+.pn__brume { display: flex; align-items: center; gap: 8px; margin: 0 0 12px; text-align: left; font-family: var(--font-fell); font-style: italic; font-size: 17px; color: var(--pn-brume-ink); }
+.pn__ex { margin: 0; font-family: var(--font-fell); font-style: italic; font-size: 16px; color: var(--pn-muted); }
+.pn__title { margin: 0 0 14px; font-family: var(--font-fell); font-weight: 400; font-size: 34px; }
+.pn__name { position: relative; display: block; margin: 0 auto 14px; max-width: 320px; }
+.pn__label { display: block; font-family: var(--font-fell-sc); font-size: 15px; letter-spacing: .06em; color: var(--prologue-blue); }
+.pn__name input {
+  width: 100%; padding: 6px 32px 4px; border: 0; border-bottom: 2px solid var(--pn-input-line); background: transparent; text-align: center;
+  font-family: var(--font-fell); font-size: 30px; color: var(--pn-input-ink); outline: none;
+}
+.pn__name input:focus { border-bottom-color: var(--prologue-blue); }
+.pn__quill { position: absolute; right: 2px; bottom: 8px; width: 24px; height: 24px; color: var(--pn-muted); }
+.pn__lead { margin: 4px 0 8px; font-family: var(--font-fell); font-style: italic; font-size: 16px; color: var(--pn-brume-ink); }
+.pn__field { display: block; margin: 0 0 10px; text-align: left; font-family: var(--font-ui); font-size: 12px; font-weight: 800; color: var(--pn-muted); }
+.pn__field input {
+  display: block; width: 100%; margin-top: 4px; padding: 10px 12px; border: 0; border-radius: var(--pn-radius);
+  background: var(--pn-field-bg); box-shadow: inset 0 0 0 1px var(--pn-field-ring);
+  font: inherit; font-size: 15px; font-weight: 700; color: var(--pn-input-ink);
+}
+.pn__field input:focus-visible { outline: 2px solid var(--prologue-blue); }
+.pn__error { margin: 6px 0; font-family: var(--font-ui); font-size: 13px; font-weight: 800; color: var(--pn-error); }
+.pn__sign {
+  width: 100%; min-height: 48px; margin-top: 6px; border: 0; border-radius: var(--r-pill); cursor: pointer;
+  background: var(--prologue-ink); color: var(--pn-sign-ink); box-shadow: 0 4px 0 var(--pn-sign-edge);
+  font-family: var(--font-fell); font-size: 20px;
+}
+.pn__sign:disabled { opacity: .7; cursor: default; }
+.pn__links { display: flex; justify-content: space-between; margin-top: 12px; }
+.pn__link { border: 0; background: none; cursor: pointer; padding: 6px 4px; font-family: var(--font-ui); font-size: 13px; font-weight: 800; color: var(--pn-muted); text-decoration: underline; }
+.pn__sign:focus-visible, .pn__link:focus-visible { outline: 3px solid var(--oc-aim); outline-offset: 2px; }

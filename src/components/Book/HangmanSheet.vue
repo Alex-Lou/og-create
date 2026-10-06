@@ -62,8 +62,8 @@
 </template>
 
 <script>
-import GModal from '@/components/ui/GModal.vue';
-import ElementGlyph from '@/components/ui/ElementGlyph.vue';
+import GModal from '@/components/ui/GModal/GModal.vue';
+import ElementGlyph from '@/components/ui/ElementGlyph/ElementGlyph.vue';
 import { shownPatches } from '@/book/patchwork';
 import { FAMILY_WORDS } from '@/book/painter';
 

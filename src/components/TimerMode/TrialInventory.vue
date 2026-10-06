@@ -48,7 +48,7 @@
 
 <script>
 import { familyIndex } from '@/utils/eras';
-import ElementTile from '@/components/ui/ElementTile.vue';
+import ElementTile from '@/components/ui/ElementTile/ElementTile.vue';
 import { search, suggest } from '@/utils/search';
 
 // Glisser une planche vers l'Athanor : seulement à la souris (au doigt, le glisser gênerait le défilement)

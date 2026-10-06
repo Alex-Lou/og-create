@@ -36,7 +36,7 @@
 <script>
 import { messageOf } from '@/utils/errors';
 import http from '@/services/http';
-import GModal from '@/components/ui/GModal.vue';
+import GModal from '@/components/ui/GModal/GModal.vue';
 
 // Formulaire de contact : envoi à l'API, puis fermeture 2 s après le succès
 export default {

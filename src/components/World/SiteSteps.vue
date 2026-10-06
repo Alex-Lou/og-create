@@ -40,7 +40,7 @@
 </template>
 
 <script>
-import ElementGlyph from '@/components/ui/ElementGlyph.vue';
+import ElementGlyph from '@/components/ui/ElementGlyph/ElementGlyph.vue';
 import { GLYPH, LABEL } from '@/game/resources';
 import { stepState, levelAffordable, coinsEnough, levelReady } from '@/world/levels';
 // Onglet « Évolution » de la fiche d'un bâtiment : tous ses paliers, ce que demande le suivant (chapitre, plan,

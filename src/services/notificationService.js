@@ -1,6 +1,6 @@
 // Bulles d'information empilées en bas de l'écran (une seule fois le même message à la fois)
 import { createApp } from 'vue';
-import ToastNotification from '@/components/ui/ToastNotification.vue';
+import ToastNotification from '@/components/ui/ToastNotification/ToastNotification.vue';
 
 // Messages actuellement affichés (évite d'empiler plusieurs fois le même)
 const visibleMessages = new Set();

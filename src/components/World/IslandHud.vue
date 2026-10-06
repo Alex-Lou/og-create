@@ -39,7 +39,7 @@
 </template>
 
 <script>
-import ElementGlyph from '@/components/ui/ElementGlyph.vue';
+import ElementGlyph from '@/components/ui/ElementGlyph/ElementGlyph.vue';
 import IslandClock from './IslandClock.vue';
 import { RESOURCES } from '@/game/resources';
 // Barre du haut de l'île (dans .world__top, que l'île mesure) : horloge, écus, « Tout ramasser », réserves et Récolte.

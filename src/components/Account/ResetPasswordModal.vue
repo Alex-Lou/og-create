@@ -26,7 +26,7 @@
 <script>
 import { messageOf } from '@/utils/errors';
 import AuthService from '@/services/authService';
-import GModal from '@/components/ui/GModal.vue';
+import GModal from '@/components/ui/GModal/GModal.vue';
 
 // Ouvert par le lien reçu par e-mail (?reset=…) : le jeton n'est valable qu'une fois
 export default {

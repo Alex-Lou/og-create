@@ -1,0 +1,14 @@
+.wisp { display: inline-block; vertical-align: middle; overflow: visible; }
+.wisp__flame { transform-box: fill-box; transform-origin: 50% 100%; animation: wisp-flicker 1.7s ease-in-out infinite; }
+.wisp__eyes ellipse { transform-box: fill-box; transform-origin: 50% 50%; animation: wisp-blink 4s steps(1, end) infinite; }
+@keyframes wisp-flicker {
+  0%, 100% { transform: skewX(0deg) scaleY(1); }
+  30% { transform: skewX(-6deg) scaleY(1.05); }
+  60% { transform: skewX(5deg) scaleY(.97); }
+}
+@keyframes wisp-blink { 0%, 96% { transform: scaleY(1); } 97% { transform: scaleY(.2); } }
+.wisp.is-waking .wisp__eyes ellipse { animation: wisp-wake 2.4s ease-out both, wisp-blink 4s steps(1, end) 2.4s infinite; }
+@keyframes wisp-wake { 0%, 82% { transform: scaleY(0); } 100% { transform: scaleY(1); } }
+@media (prefers-reduced-motion: reduce) {
+  .wisp__flame, .wisp__eyes ellipse { animation: none; }
+}

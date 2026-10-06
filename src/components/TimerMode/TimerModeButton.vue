@@ -29,7 +29,7 @@
 </template>
 
 <script>
-import GModal from '@/components/ui/GModal.vue';
+import GModal from '@/components/ui/GModal/GModal.vue';
   
 export default {
   name: 'TimerModeButton',

@@ -34,8 +34,11 @@ dépendre d'aucun composant. `base/index.css` lit les fichiers dans un ordre qui
 
 ## 3. Le style d'un composant
 
-Il vit à côté de son composant, dans son dossier, et ne s'applique qu'à lui (`<style scoped>`). Il ne lit que des
-jetons pour les couleurs (celles des ombres comprises), polices, arrondis et profondeurs ; les marges, tailles et
+Chaque composant a son dossier, rangé par domaine (`components/<Domaine>/<Composant>/`) : `<Composant>.vue`, et à côté
+`<Composant>.css`, ses styles, qui ne s'appliquent qu'à lui (`<style scoped src="./<Composant>.css">`). Ce qu'il pose
+hors de lui (une fenêtre rendue dans la page, une police) va dans `<Composant>.global.css` (`<style src>`, non scoped).
+
+Ce style ne lit que des jetons pour les couleurs (celles des ombres comprises), polices, arrondis et profondeurs ; les marges, tailles et
 durées restent des nombres (une durée de l'échelle de mouvement s'écrit avec son jeton). Un composant ne stylise
 jamais l'intérieur d'un autre.
 

@@ -93,7 +93,7 @@
 </template>
 
 <script>
-import ElementGlyph from '@/components/ui/ElementGlyph.vue';
+import ElementGlyph from '@/components/ui/ElementGlyph/ElementGlyph.vue';
 import GameIcon from './minigames/GameIcon.vue';
 import { GLYPH } from '@/game/resources';
 import { roman } from '@/utils/roman';

@@ -423,7 +423,7 @@ import { depositsShown, depositsReady, depositWait } from '@/world/finds';
 import { CLIMATE_NAMES } from '@/world/climates';
 import { annexReady, variantsOf } from '@/world/annexes';
 import { noteOf, openableOf } from '@/world/chest';
-import GModal from '@/components/ui/GModal.vue';
+import GModal from '@/components/ui/GModal/GModal.vue';
 import { guideOf, guideKind } from '@/world/itemGuide';
 import { villageOf } from '@/world/village';
 import { ANIMAL_SPRITES } from '@/world/animals';

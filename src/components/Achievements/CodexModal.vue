@@ -19,8 +19,8 @@
 </template>
 
 <script>
-import GModal from '@/components/ui/GModal.vue';
-import GSeal from '@/components/ui/GSeal.vue';
+import GModal from '@/components/ui/GModal/GModal.vue';
+import GSeal from '@/components/ui/GSeal/GSeal.vue';
 
 // Écriture inconnue pour les succès encore scellés (même longueur que le vrai nom)
 const GLYPHS = '⟟⌇⍀⊑⏃⋏⟒⌰⍜⏁⎍⋔⟊⍙';

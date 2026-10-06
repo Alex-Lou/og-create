@@ -38,7 +38,7 @@
 <script>
 import { messageOf } from '@/utils/errors';
 import AuthService from '@/services/authService';
-import GModal from '@/components/ui/GModal.vue';
+import GModal from '@/components/ui/GModal/GModal.vue';
 
 // Connexion / inscription ; en cas de succès, AuthService recharge la page
 export default {
