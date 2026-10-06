@@ -7,6 +7,7 @@ const { up, M } = require('./decor2');
 const { arbre, ARBRES, pommier, POMMIERS, automne, AUTOMNES, bouleau, BOULEAUX, sapin, SAPINS, palmier, PALMIERS, arbreMort, ARBRES_MORTS } = require('./arbres');
 const { touffe, TOUFFES } = require('./herbes');
 const { rocher, ROCHERS, rochers, ROCHERS_TAS, aiguille, AIGUILLES, rochersMoussus, ROCHERS_MOUSSUS } = require('./rochers');
+const { coquillages, COQUILLAGES } = require('./plage');
 const { buisson, BUISSONS, bruyere, BRUYERES, fleurs, FLEURS, cactus, CACTUS_LISTE, souche, SOUCHES, rondin, RONDINS, champignons, CHAMPIGNONS, roseaux, ROSEAUX, nenuphars, NENUPHARS } = require('./plantes');
 
 const LIB = path.join(__dirname, 'lib', 'plantes');
@@ -41,7 +42,9 @@ const LIST = [
   ...ROCHERS_TAS.map(([fichier, libelle, o]) => [fichier, libelle, 'rocks', () => rochers(o)]),
   ...AIGUILLES.map(([fichier, libelle, o]) => [fichier, libelle, 'crag', () => aiguille(o)]),
   ...ROCHERS_MOUSSUS.map(([fichier, libelle, o]) => [fichier, libelle, 'mossy', () => rochersMoussus(o)]),
-  ['coquillages', 'Coquillages', 'shells', () => D.shells()], ['bois_flotte', 'Bois flotté', 'driftwood', () => D.driftwood()],
+  // les coquillages refaits (plage.js) et leurs 8 variantes
+  ...COQUILLAGES.map(([fichier, libelle, o]) => [fichier, libelle, 'shells', () => coquillages(o)]),
+  ['bois_flotte', 'Bois flotté', 'driftwood', () => D.driftwood()],
   ['nid', 'Nid de mouettes', 'nest', () => up(M.nid.draw())], ['lanterne', 'Lanterne (éteinte)', 'lantern', () => D.lantern(false)], ['lanterne_allumee', 'Lanterne (allumée)', 'lantern', () => D.lantern(true)],
   ['banc', 'Banc', 'bench', () => D.bench()]
 ];
