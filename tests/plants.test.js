@@ -26,8 +26,15 @@ describe('les plantes de la bibliothèque', () => {
   it('les variantes restent dans leur sorte (l\'arbre ne prend ni l\'automne ni l\'arbre mort)', () => {
     expect(VARIANTS.tree.every(name => !/automne|mort/.test(name))).toBe(true);
     expect(VARIANTS.pine.every(name => !name.includes('neige'))).toBe(true);
-    expect(VARIANTS.mushrooms).toEqual(['champignons']);
-    expect(VARIANTS.rocks).toEqual(['rochers']);
+    expect(VARIANTS.deadtree.every(name => name.startsWith('arbre_mort'))).toBe(true);
+    expect(VARIANTS.rocks).not.toContain('rochers_moussus');
+    expect(VARIANTS.mushrooms).not.toContain('champignons_nuit');
+  });
+
+  it('un dessin redessiné en variantes dans la bibliothèque varie sur l\'île', () => {
+    expect(VARIANTS.cactus).toContain('cactus_boule');
+    expect(VARIANTS.stump).toContain('souche_grise_champignons');
+    expect(VARIANTS.log).toContain('rondin_petit_gris');
   });
 
   it('chaque dessin est calé sur le cadre du jeu × 1,25 et se ramène à sa taille', () => {
