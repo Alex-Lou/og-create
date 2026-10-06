@@ -19,10 +19,14 @@
 //   les arbres, papillons et abeilles le jour, lucioles la nuit, grenouille et tortue au bord de l'eau douce, une
 //   variante de plus à la ferme). Les familiers suivent leur maître, un pas derrière lui ; le bocal d'Ondin attend
 //   près de lui, vide tant que Poisson n'est pas écrit.
+// - Anya (bible, § 6.14), une fois révélée : au Cercle de menhirs à l'aube et au crépuscule, son grand cerf blanc et un
+//   halo de lucioles ; ses créatures (les loutres) jouent au bord de l'eau douce. Avant même la Révélation, Cannelle
+//   pose chaque soir un bol de soupe « pour la Dame » au bord du Foyer.
 import { villagerSprite, ROLES, SKINS, HAIRS } from './villagers';
 import { visitorLook } from './visitors';
 import { ANIMAL_SPRITES } from './animals';
 import { bestiaryOf, FAMILIARS } from './bestiary';
+import { anyaHere } from '@/game/anya';
 
 const SPEED = 0.8; // cases par seconde, à pied
 const WALK = 'gsmdpkb';
@@ -63,6 +67,7 @@ export const BEAST_NAMES = {
   fennec: ['Fennec', 'Il dort le jour et trotte la nuit dans les Dunes.'], camel: ['Dromadaire', 'Il traverse les Dunes à pas lents.'],
   chameleon: ['Caméléon', 'Il change de teinte sous les feuilles de la Jungle.'], toucan: ['Toucan', 'Il penche la tête sous les feuilles de la Jungle.'],
   salamander: ['Salamandre', 'Elle sort la nuit et sous la pluie, sur les cendres du Volcan.'], crow: ['Corbeau des cendres', 'Il croasse sur les pentes du Volcan.'],
+  otter: ['Loutre', 'Une créature d’Anya : elle joue au bord de l’eau douce.'],
   bird: ['Mésange', 'Elle sautille dans les arbres, le jour.'], butterfly: ['Papillon', 'Il volette au bord des bois, le jour.'],
   firefly: ['Luciole', 'Elle s’allume la nuit, près de l’eau.'], bee: ['Abeille', 'Elle butine autour du Potager.'], owl: ['Hibou', 'Il veille la nuit, perché dans un arbre.']
 };
@@ -79,7 +84,7 @@ const CLIMATE_BEASTS = {
 // Sols où se posent les bêtes des climats (ni eau, ni lac gelé, ni lave, ni pont, ni forêt, ni roche)
 const BEAST_GROUND = 'gmsdpnlxja';
 const WILD = new Set(['deer', 'fox', 'rabbit', 'hedgehog', 'squirrel', 'heron', ...Object.values(CLIMATE_BEASTS).flat().map(([s]) => s),
-  'bird', 'butterfly', 'firefly', 'bee', 'owl']);
+  'bird', 'butterfly', 'firefly', 'bee', 'owl', 'otter']);
 
 /* ---------- Chemins ---------- */
 // Grille où l'on marche : sol praticable des quartiers à soi, ni bâtiment, ni création, ni annexe, ni arbre ou
@@ -165,8 +170,9 @@ function doorOf(grid, site) {
 // visitor : visiteur du moment (vue du serveur) ou null ; settlers : visiteurs installés ({ id, seed, role, site, home }) ;
 // climates : climat de chaque quartier (par indice) ; avoid : cases à laisser libres autour (gisements, lieux remarquables) ;
 // troupe : la troupe rencontrée, vue du serveur ({ id, built, asleep } : bible, § 6.6), ou null (un par bâtiment bâti) ;
-// written : les éléments écrits dans le Grimoire (le Bestiaire et les familiers), ou null
-export function villageOf({ n, M, sites, owned, crafts = [], props, annexes = [], visitor = null, settlers = [], climates = [], avoid = [], troupe = null, written = null }) {
+// written : les éléments écrits dans le Grimoire (le Bestiaire et les familiers), ou null ; anya : la case du Cercle de
+// menhirs une fois Anya révélée, ou null ; dame : le bol de soupe du soir « pour la Dame »
+export function villageOf({ n, M, sites, owned, crafts = [], props, annexes = [], visitor = null, settlers = [], climates = [], avoid = [], troupe = null, written = null, anya = null, dame = false }) {
   const grid = gridOf({ n, M, sites, owned, crafts, props, annexes });
   const bestiary = bestiaryOf(written);
   const built = sites.filter(s => s.level > 0 && !s.locked);
@@ -585,6 +591,24 @@ export function villageOf({ n, M, sites, owned, crafts = [], props, annexes = []
         return dayTime ? { x: c.x + Math.sin(a) * 0.3, y: c.y, frame: Math.floor(t * 1.2) % 2, flip: Math.cos(a) < 0 } : { ...c, frame: 'rest', flip: false };
       });
     }
+    // Anya, une fois révélée : au Cercle à l'aube et au crépuscule, son cerf blanc, ses lucioles ; ses loutres le jour
+    if (anya && anyaHere(h, phase.rise, phase.set)) {
+      const hop = tapped('anya:dame', 0.8);
+      out.push(beast('anya:dame', 'anya', '', anya.x + 0.5, anya.y + 0.5, hop === null ? 0 : Math.sin(hop * Math.PI) * 3, false, Math.floor(t * 0.5) % 2));
+      out.push(beast('anya:cerf', 'deer', 'blanc', anya.x + 1.3, anya.y + 0.9, 0, true, Math.floor(t / 5) % 2));
+      for (let k = 0; k < 6; k++) {
+        const a = t * 0.3 + k * 1.05;
+        out.push(beast(`anya:luciole:${k}`, 'firefly', '', anya.x + 0.5 + Math.cos(a) * 0.9, anya.y + 0.5 + Math.sin(a) * 0.6, 18 + k * 4 + Math.sin(t + k) * 3, false, Math.floor(t * 1.4 + k) % 2));
+      }
+    }
+    if (anya && banks.length) {
+      [0, 1].forEach(k => wild(`anya:otter:${k}`, 'otter', k ? banks.slice().reverse() : banks, dayTime && rain < 0.6, c => {
+        const up = (t + k * 2) % 6 < 1.2;
+        return { x: c.x + Math.sin(t * 0.2 + k) * 0.3, y: c.y, frame: up ? 1 : 0, flip: Math.cos(t * 0.2 + k) < 0 };
+      }));
+    }
+    // Le bol de soupe « pour la Dame », posé chaque soir au bord du Foyer
+    if (dame && home && (night || h >= phase.set + 0.4)) out.push(beast('dame:bol', 'soup', '', home.x + 0.45, home.y + 0.35, 0, false, Math.floor(t * 1.5) % 2));
     // Carpes koï : trois qui tournent dans l'eau douce
     if (water.length >= 3) {
       const pond = water[Math.floor(hash(day, 41) * water.length)];
@@ -606,9 +630,18 @@ export function villageOf({ n, M, sites, owned, crafts = [], props, annexes = []
     const f = FAMILIARS[id];
     return { title: long ? `${f.name} · familier` : f.name, text: long ? f.text : f.says };
   }
+  // Anya, son cerf, ses lucioles, ses loutres ; le bol de la Dame (toucher : ce qu'ils disent ; appui long : leur fiche)
+  function storyInfo(who, long) {
+    if (who.id === 'anya:dame') return { title: 'Anya', text: long ? 'L’Âme de l’Île. Au Cercle, à l’aube et au crépuscule.' : 'La forêt se souvient de toi.', ...(long ? { hint: 'Toucher : son Souffle, une fois par jour' } : {}) };
+    if (who.id === 'anya:cerf') return { title: 'Le cerf blanc', text: long ? 'Le grand cerf blanc d’Anya. Il ne quitte pas sa Dame.' : 'Il incline ses bois.', ...(long ? { hint: 'Toucher : il incline ses bois' } : {}) };
+    if (who.id === 'dame:bol') return { title: 'Un bol de soupe', text: '« Pour la Dame. » Cannelle le pose chaque soir au bord du Foyer.', ...(long ? { hint: 'Toucher : le regarder' } : {}) };
+    if (who.id.startsWith('anya:otter')) return long ? { title: 'Loutre', text: BEAST_NAMES.otter[1], hint: 'Toucher : elle s’enfuit' } : null;
+    return long ? { title: 'Luciole', text: 'Le halo d’Anya.', hint: 'Toucher : elle clignote' } : null;
+  }
   // Ce que dit un habitant ou une bête de la ferme qu'on touche ; null pour les bêtes sauvages (elles s'enfuient)
   function say(who, phase) {
     if (who.id && who.id.startsWith('fam:')) return petInfo(who, false);
+    if (who.id && (who.id.startsWith('anya:') || who.id === 'dame:bol')) return storyInfo(who, false);
     if (who.kind === 'villager') {
       const r = residents.find(v => v.id === who.id);
       if (!r) return null;
@@ -639,6 +672,7 @@ export function villageOf({ n, M, sites, owned, crafts = [], props, annexes = []
       return r ? { title: r.look.label, text: `Travaille à « ${r.site} » le jour, rentre au Foyer le soir.`, hint: 'Toucher : lui parler' } : null;
     }
     if (who.id && who.id.startsWith('fam:')) return { ...petInfo(who, true), hint: 'Toucher : le saluer' };
+    if (who.id && (who.id.startsWith('anya:') || who.id === 'dame:bol')) return storyInfo(who, true);
     const [title, text] = BEAST_NAMES[who.species] || ['Une bête', ''];
     return { title, text, hint: WILD.has(who.species) ? 'Toucher : il s’enfuit' : 'Toucher : la faire réagir' };
   }

@@ -175,6 +175,10 @@ export default {
   villagerTalk(villager, pages = {}) {
     return http.post('/play/world/villager/talk', { villager, ...pages }).then(response => response.data);
   },
+  // Anya (bible, § 6.14) : la Révélation vue, une fois → { anya, world } ; son Souffle passe par villagerTalk('anya')
+  anyaReveal() {
+    return http.post('/play/world/anya/reveal').then(response => response.data);
+  },
   villagerGift(villager, resource) {
     return http.post('/play/world/villager/gift', { villager, resource }).then(response => response.data);
   },
