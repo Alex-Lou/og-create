@@ -170,8 +170,9 @@ chronométrer 20 appels. Comparer à zoom égal, au même endroit.
   police IM Fell et durées (fait), 3a-2 couleurs partagées (fait : succès, manque, or vif, halo des illustrations,
   pièce d'or, `--gold-100`, et `--shade-rgb` pour le brun des liserés à toute transparence), 3b-1 l'île (fait :
   `tokens/island.css` pour ce que ses composants partagent, adopté partout ; `--oc-gold-ink`, `--oc-night-ink` ;
-  jetons locaux du décor de l'île, en tête de chaque CSS, sur la racine du composant), puis les jetons locaux des
-  fiches de l'île, de ses mini-jeux, du Grimoire et du reste ;
+  jetons locaux du décor de l'île, en tête de chaque CSS, sur la racine du composant), 3b-2 les fiches et les
+  mini-jeux de l'île (fait : plus aucune valeur en dur dans `components/World`, hors noir et blanc), puis les jetons
+  locaux du Grimoire et du reste ;
   4) les dossiers rangés par domaine ; 5) `App.vue` et `BookView.vue` découpés.
 - **Piège du passage en scoped** : une règle scoped gagne un attribut de spécificité. Si elle vise aussi la racine d'un
   composant enfant (un glyphe `img.glyph` dans un portrait, par exemple), elle peut l'emporter sur le style propre de

@@ -10,8 +10,9 @@
   /* Les voiles derrière une fiche, et derrière un mini-jeu ou la Récolte */
   --island-sheet-backdrop: rgba(10, 8, 6, .55);
   --island-game-backdrop: rgba(10, 8, 6, .72);
-  /* Une fiche monte du bas : ses coins du haut */
+  /* Une fiche monte du bas : ses coins du haut ; la carte d'un mini-jeu ou de la Récolte */
   --island-sheet-radius: 24px 24px 0 0;
+  --island-game-radius: 26px;
   /* Récolte : sans partie à jouer */
   --island-play-off: #6e6253;
   --island-play-off-ink: #d8ccba;

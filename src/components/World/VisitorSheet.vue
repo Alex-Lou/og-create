@@ -84,9 +84,15 @@ export default {
 </script>
 
 <style scoped>
+/* Ses jetons (couleurs des visiteurs partagées : tokens/island.css) */
+.guest {
+  --guest-portrait: radial-gradient(circle at 50% 75%, #d8eefa, var(--vellum-200) 74%);
+  --guest-done-ring: rgba(78, 138, 58, .35);  /* demande remplie */
+  --guest-meter-to: #e09a2e;
+}
 .guest { display: grid; gap: 12px; font-family: var(--font-ui); text-align: left; }
 .guest__top { display: grid; grid-template-columns: auto 1fr; align-items: center; gap: 14px; }
-.guest__portrait { position: relative; display: block; width: 96px; height: 110px; border-radius: var(--r-board); background: radial-gradient(circle at 50% 75%, #D8EEFA, var(--vellum-200) 74%); }
+.guest__portrait { position: relative; display: block; width: 96px; height: 110px; border-radius: var(--r-board); background: var(--guest-portrait); }
 .guest__portrait img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; padding: 6px; box-sizing: border-box; }
 .guest__about { display: grid; gap: 6px; }
 .guest__story { margin: 0; font-size: 14px; font-weight: 700; line-height: 1.35; color: var(--ink-700); }
@@ -96,13 +102,13 @@ export default {
   box-shadow: inset 0 0 0 1px rgba(var(--shade-rgb), .1); font-family: var(--font-display); font-style: italic; font-size: 15px; line-height: 1.4;
 }
 .guest__request { display: grid; gap: 8px; padding: 12px 14px; border-radius: var(--r-md); background: linear-gradient(135deg, var(--gold-100), var(--vellum-100)); box-shadow: inset 0 0 0 2px var(--gold-300); }
-.guest__request.is-done { background: var(--island-happy); box-shadow: inset 0 0 0 1px rgba(78, 138, 58, .35); }
+.guest__request.is-done { background: var(--island-happy); box-shadow: inset 0 0 0 1px var(--guest-done-ring); }
 .guest__title { margin: 0; font-size: 12px; font-weight: 800; text-transform: uppercase; letter-spacing: .05em; color: var(--ink-500); }
 .guest__ask { display: grid; grid-template-columns: auto 1fr; align-items: center; gap: 10px; }
 .guest__glyph { font-size: 30px; line-height: 1; }
 .guest__ask-text { font-size: 15px; font-weight: 900; color: var(--ink-900); }
 .guest__meter { height: 8px; border-radius: var(--r-pill); background: rgba(var(--shade-rgb), .14); overflow: hidden; }
-.guest__meter span { display: block; height: 100%; border-radius: inherit; background: linear-gradient(90deg, var(--oc-gold-bright), #E09A2E); transition: width .5s ease; }
+.guest__meter span { display: block; height: 100%; border-radius: inherit; background: linear-gradient(90deg, var(--oc-gold-bright), var(--guest-meter-to)); transition: width .5s ease; }
 .guest__reward { margin: 0; font-size: 13px; font-weight: 800; color: var(--ink-700); }
 .guest__btn { width: 100%; display: inline-flex; justify-content: center; align-items: center; gap: 6px; }
 .guest__done { margin: 0; font-size: 14px; font-weight: 900; color: var(--oc-success); }

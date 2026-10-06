@@ -421,7 +421,9 @@ export default {
 </script>
 
 <style scoped>
-.fishing { position: relative; width: 100%; aspect-ratio: 4 / 5; border-radius: var(--r-board); overflow: hidden; touch-action: none; user-select: none; -webkit-user-select: none; background: #5FAED6; }
+/* Ses jetons : l'eau sous le dessin */
+.fishing { --fishing-water: #5faed6; }
+.fishing { position: relative; width: 100%; aspect-ratio: 4 / 5; border-radius: var(--r-board); overflow: hidden; touch-action: none; user-select: none; -webkit-user-select: none; background: var(--fishing-water); }
 .fishing__canvas { position: absolute; inset: 0; width: 100%; height: 100%; }
 .fishing__lane { position: absolute; left: 0; width: 100%; border: 0; background: transparent; cursor: pointer; -webkit-tap-highlight-color: transparent; }
 .fishing__lane:focus-visible { outline: 3px solid var(--oc-gold-bright); outline-offset: -3px; }

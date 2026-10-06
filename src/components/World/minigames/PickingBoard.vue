@@ -142,20 +142,28 @@ export default {
 </script>
 
 <style scoped>
+/* Ses jetons : la jauge, le carré de terre et son ombre, la piqûre, l'éclat d'un cèpe */
+.picking {
+  --picking-meter-from: #7fbf55;
+  --picking-patch: radial-gradient(circle at 50% 40%, #b9dc8f, #8fbf62);
+  --picking-patch-shade: rgba(40, 70, 20, .3);
+  --picking-sting: rgba(226, 87, 74, .7);
+  --picking-cepe-glow: rgba(255, 220, 110, .95);
+}
 .picking { display: grid; gap: 10px; font-family: var(--font-ui); }
 .picking__bar { display: grid; grid-template-columns: auto 1fr auto; align-items: center; gap: 10px; min-height: 34px; }
 .picking__time { font-size: 13px; font-weight: 800; color: var(--ink-700); }
 .picking__time strong { font-size: 18px; font-weight: 900; color: var(--ink-900); font-variant-numeric: tabular-nums; }
 .picking__meter { height: 8px; border-radius: var(--r-pill); background: rgba(var(--shade-rgb), .15); overflow: hidden; }
-.picking__meter span { display: block; height: 100%; border-radius: inherit; background: linear-gradient(90deg, #7FBF55, var(--oc-gold-bright)); }
+.picking__meter span { display: block; height: 100%; border-radius: inherit; background: linear-gradient(90deg, var(--picking-meter-from), var(--oc-gold-bright)); }
 .picking__basket { font-size: 13px; font-weight: 800; color: var(--ink-700); }
 .picking__basket strong { font-size: 18px; font-weight: 900; color: var(--ink-900); font-variant-numeric: tabular-nums; }
 .picking__patch {
   display: grid; grid-template-columns: repeat(var(--cols), 1fr); gap: 6px; padding: 10px; border-radius: var(--r-board);
-  background: radial-gradient(circle at 50% 40%, #B9DC8F, #8FBF62); box-shadow: inset 0 3px 8px rgba(40, 70, 20, .3);
+  background: var(--picking-patch); box-shadow: inset 0 3px 8px var(--picking-patch-shade);
   touch-action: none; user-select: none; -webkit-user-select: none; transition: filter .2s ease;
 }
-.picking.is-stung .picking__patch { filter: saturate(.4) brightness(.85); box-shadow: inset 0 0 0 4px rgba(226, 87, 74, .7); }
+.picking.is-stung .picking__patch { filter: saturate(.4) brightness(.85); box-shadow: inset 0 0 0 4px var(--picking-sting); }
 .picking.is-slip .picking__patch { filter: brightness(.94); }
 .picking__bush {
   position: relative; aspect-ratio: 1; padding: 0; border: 0; background: transparent; cursor: pointer;
@@ -165,7 +173,7 @@ export default {
 .picking__leaves { position: absolute; inset: 0; width: 100%; height: 100%; transition: transform .15s ease; }
 .picking__bush:active .picking__leaves { transform: scale(.94) rotate(-2deg); }
 .picking__fruit { position: relative; margin-top: 6%; animation: picking-grow .3s cubic-bezier(.3, 1.6, .5, 1); filter: drop-shadow(0 2px 2px rgba(0, 0, 0, .25)); }
-.picking__bush.has-cepe .picking__fruit { filter: drop-shadow(0 0 8px rgba(255, 220, 110, .95)); }
+.picking__bush.has-cepe .picking__fruit { filter: drop-shadow(0 0 8px var(--picking-cepe-glow)); }
 .picking__bush.has-guepes .picking__fruit { animation: picking-grow .3s cubic-bezier(.3, 1.6, .5, 1), picking-buzz .18s linear infinite; }
 .picking__bush.is-late .picking__fruit { animation: picking-wobble .22s ease-in-out infinite; opacity: .8; }
 .picking__bush.is-picked .picking__leaves { animation: picking-shake .26s ease; }
