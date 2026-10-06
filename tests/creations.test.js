@@ -4,7 +4,8 @@ import { describe, it, expect, vi } from 'vitest';
 import { readFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import { CRAFT_SPRITES, craftLayers, craftLight } from '@/world/craftSprites';
-import { creationLayer, ART_LIGHTS, cropTo, creationThumb } from '@/world/creations';
+import { creationLayer, ART_LIGHTS, creationThumb } from '@/world/creations';
+import { cropTo } from '@/world/library';
 import { PROP_BOX } from '@/world/palette';
 import DECOR from '../design/bibliotheque/svg/decor/decor.json';
 
