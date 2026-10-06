@@ -1,5 +1,5 @@
 // Les rochers refaits au niveau des PNJ, un par un, avec le trait et la lumière des arbres (arbres.js) : le rocher, les
-// rochers.
+// rochers, l'aiguille.
 // Cadre et ancrage des décors de deco.js (PROP, centre de la case en (0, 0)).
 const { OUT, E, r2 } = require('./troupe');
 
@@ -106,4 +106,42 @@ for (const petits of [false, true]) for (const teinte of ['gris', 'sombre']) for
   ROCHERS_TAS.push([fichier, libelle, { teinte, petits, galets: ga }]);
 }
 
-module.exports = { rocher, ROCHERS, rochers, ROCHERS_TAS };
+// ——— L'aiguille : une flèche de pierre dressée, un bloc plat et un caillou au pied ; double, ou un oiseau à la pointe ———
+const AIGUILLE = {
+  d: 'M-11,0 Q-12,-9 -9.6,-17 L-6.4,-27 Q-5,-33 -1.6,-37 L3.4,-35.4 Q6.4,-30 7.4,-24 L9.2,-15 Q11,-7 10.4,-2 Q9.4,1.6 3,1.8 Q-5,2 -11,0 Z',
+  haut: 'M-16,-12 Q-10,-16 -7,-25 Q-4.4,-31 -1,-33.4 Q2,-33.4 4,-35 L4,-44 L-16,-44 Z',
+  flanc: 'M2.4,-44 Q3,-30 4.2,-20 Q5.4,-8 4.4,4 L16,4 L16,-44 Z',
+  fentes: 'M-9,-17 Q-6,-15.6 -3,-16.4 M-1.4,-31 Q0.4,-27.4 -1.8,-24 M5.4,-13 Q7.4,-10 6.8,-6 M-7,-6 l2.4,0.8',
+  reflet: 'M-8.4,-18.6 L-5.8,-26.4'
+};
+// l'oiseau perché, tourné vers la gauche : rond, brun au ventre clair, l'aile, la queue, le bec orange, la joue rose
+const oiseau = (x, y, s) => `<g transform="translate(${r2(x)} ${r2(y)}) scale(${r2(s)})">`
+  + `<path d="M-0.6,-0.4 l-0.4,0.8 M1,-0.4 l0.4,0.8" stroke="${OUT}" stroke-width="0.5" stroke-linecap="round"/>`
+  + `<path d="M2.6,-3 L6.6,-5.6 L6.4,-3 Z" fill="#8C6343" stroke="${OUT}" stroke-width="0.5" stroke-linejoin="round"/>`
+  + E(0, -3.2, 3.6, 2.9, '#B98A5E', 0.7) + E(-0.9, -2.5, 2.2, 1.8, '#F1DDBF', 0)
+  + `<path d="M-0.2,-4.4 Q2.6,-5.4 4,-3 Q2,-1.6 -0.2,-2.6 Z" fill="#8C6343" stroke="${OUT}" stroke-width="0.5" stroke-linejoin="round"/>`
+  + E(-2.4, -6.2, 2.2, 2, '#B98A5E', 0.7) + E(-3.4, -5.4, 0.7, 0.4, '#F7A8B8', 0)
+  + E(-3, -6.7, 0.55, 0.6, OUT, 0) + E(-3.15, -6.9, 0.18, 0.18, '#FFFFFF', 0)
+  + `<path d="M-4.4,-6.5 L-6,-6 L-4.4,-5.5 Z" fill="#F2A33A" stroke="${OUT}" stroke-width="0.4" stroke-linejoin="round"/>` + '</g>';
+
+// petite : × 0,75 ; double : une seconde aiguille, plus basse, derrière à droite ; oiseau : un oiseau perché à la pointe
+function aiguille({ petite = false, double = false, oiseau: avecOiseau = false } = {}) {
+  const c = PIERRES.gris, k = petite ? 0.75 : 1;
+  const id = `aig${petite ? 'p' : 'g'}${double ? 'd' : ''}${avecOiseau ? 'o' : ''}`;
+  return E(1, 2.5, 22 * k, 7 * k, 'rgba(40,55,20,0.22)', 0)
+    + (double ? pose(10, -1.5, k, bloc(`${id}d`, AIGUILLE, c, k * 0.62)) : '')
+    + pose(-2, 0, k, bloc(`${id}a`, AIGUILLE, c, k))
+    + pose(-13, 4.4, k, bloc(`${id}b`, CAILLOU, c, k))
+    + pose(10, 5, k, bloc(`${id}c`, BLOC_PLAT, c, k * 0.6))
+    + (avecOiseau ? oiseau(-1.4 * k, -36.2 * k, Math.max(k, 0.85)) : '');
+}
+
+// Les 8 aiguilles : [fichier, libellé, options] ; « aiguille » (grande, seule, sans oiseau) est celle par défaut
+const AIGUILLES = [];
+for (const petite of [false, true]) for (const double of [false, true]) for (const oi of [false, true]) {
+  const fichier = ['aiguille', petite && 'petite', double && 'double', oi && 'oiseau'].filter(Boolean).join('_');
+  const libelle = `Aiguille de roche (${[petite ? 'petite' : 'grande', double ? 'double' : 'seule', oi && 'un oiseau perché'].filter(Boolean).join(', ')})`;
+  AIGUILLES.push([fichier, libelle, { petite, double, oiseau: oi }]);
+}
+
+module.exports = { rocher, ROCHERS, rochers, ROCHERS_TAS, aiguille, AIGUILLES };

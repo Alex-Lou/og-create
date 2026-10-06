@@ -46683,10 +46683,129 @@
   {
    "id": "plantes/aiguille",
    "rubrique": "plantes",
-   "titre": "Aiguille de roche",
+   "titre": "Aiguille de roche (grande, seule)",
    "images": 1,
    "fichiers": [
     "svg/plantes/aiguille.svg"
+   ],
+   "cadre": [
+    -50,
+    -115,
+    100,
+    140
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "plantes/aiguille_double",
+   "rubrique": "plantes",
+   "titre": "Aiguille de roche (grande, double)",
+   "images": 1,
+   "fichiers": [
+    "svg/plantes/aiguille_double.svg"
+   ],
+   "cadre": [
+    -50,
+    -115,
+    100,
+    140
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "plantes/aiguille_double_oiseau",
+   "rubrique": "plantes",
+   "titre": "Aiguille de roche (grande, double, un oiseau perché)",
+   "images": 1,
+   "fichiers": [
+    "svg/plantes/aiguille_double_oiseau.svg"
+   ],
+   "cadre": [
+    -50,
+    -115,
+    100,
+    140
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "plantes/aiguille_oiseau",
+   "rubrique": "plantes",
+   "titre": "Aiguille de roche (grande, seule, un oiseau perché)",
+   "images": 1,
+   "fichiers": [
+    "svg/plantes/aiguille_oiseau.svg"
+   ],
+   "cadre": [
+    -50,
+    -115,
+    100,
+    140
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "plantes/aiguille_petite",
+   "rubrique": "plantes",
+   "titre": "Aiguille de roche (petite, seule)",
+   "images": 1,
+   "fichiers": [
+    "svg/plantes/aiguille_petite.svg"
+   ],
+   "cadre": [
+    -50,
+    -115,
+    100,
+    140
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "plantes/aiguille_petite_double",
+   "rubrique": "plantes",
+   "titre": "Aiguille de roche (petite, double)",
+   "images": 1,
+   "fichiers": [
+    "svg/plantes/aiguille_petite_double.svg"
+   ],
+   "cadre": [
+    -50,
+    -115,
+    100,
+    140
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "plantes/aiguille_petite_double_oiseau",
+   "rubrique": "plantes",
+   "titre": "Aiguille de roche (petite, double, un oiseau perché)",
+   "images": 1,
+   "fichiers": [
+    "svg/plantes/aiguille_petite_double_oiseau.svg"
+   ],
+   "cadre": [
+    -50,
+    -115,
+    100,
+    140
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "plantes/aiguille_petite_oiseau",
+   "rubrique": "plantes",
+   "titre": "Aiguille de roche (petite, seule, un oiseau perché)",
+   "images": 1,
+   "fichiers": [
+    "svg/plantes/aiguille_petite_oiseau.svg"
    ],
    "cadre": [
     -50,
