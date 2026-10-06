@@ -232,8 +232,7 @@ const A_REVOIR = [
 const statut = id => { for (const [rx, note] of A_REVOIR) if (rx.test(id)) return { statut: 'a-revoir', note }; return { statut: 'ok' }; };
 
 const MANQUANTS = [
-  ['tuto-2', 'L\'établi de Rivet au camp (une porte de cabine sur deux caisses) et sa voile tendue sur un aviron.'],
-  ['tuto-3', 'La caisse d\'Aster au bout de sa corde.'],
+  ['tuto-2', 'L\'établi de Rivet au camp (une porte de cabine sur deux caisses).'],
   ['acte-1', 'L\'éclat du souvenir retrouvé (le sceau s\'allume, le maître se lève outil en main).'],
   ['acte-4', 'L\'amie de Tic-Tac (quand on écrit Abeille).'],
   ['revelation', 'Le bol de soupe « pour la Dame », au bord du Foyer, le soir.']

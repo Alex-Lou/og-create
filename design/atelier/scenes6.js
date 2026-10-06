@@ -11,6 +11,7 @@ const { OUT, P, E, L, r2, frame } = require('./troupe');
 const { brumeFrame } = require('./brume');
 const { sleepFrame } = require('./dormeurs');
 const { CAST } = require('./naufrages');
+const { ZEDS } = require('./gestes');
 
 const W = 400;
 // les quatre fondateurs, en tenue (base) et en naufragés (nau)
@@ -357,10 +358,10 @@ S('11_ondin', {
   fond: f => source(f) + poser(sleepFrame(T.Ondin.nau, f), 150, 368, 3.2),
   avatar: { x: 334, y: 394, echelle: 3, vue: 'avant', miroir: true, pose: 'repos', naufrage: true }
 });
-// Étape 11b — Ondin s'étire, les yeux lourds
+// Étape 11b — Ondin s'étire, les yeux lourds : réveillé, il n'a plus ses « z »
 S('11_reveil', {
   titre: 'Ondin s’étire', etapes: ['11b'], images: 2, ms: 600,
-  fond: f => source(f) + poser(frame(T.Ondin.nau, 'front', 'salut', f, 'endormi'), 160, 364, 3),
+  fond: f => source(f) + poser(frame(T.Ondin.nau, 'front', 'salut', f, 'endormi').replace(ZEDS, ''), 160, 364, 3),
   avatar: { x: 334, y: 394, echelle: 3, vue: 'avant', miroir: true, pose: 'repos', naufrage: true }
 });
 // Étape 12k — la nuit, autour du feu : l'avatar (habits recousus), Cannelle, Rivet, Aster, Ondin ; Brume au-dessus ;
