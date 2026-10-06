@@ -1,11 +1,13 @@
-// Les bâtiments de la bibliothèque (design/bibliotheque/svg/batiments) dans le jeu : chantier et paliers par défaut.
-// Chaque image d'un palier se coupe, sans rien perdre, en partie fixe, bloc qui bouge et voilier ; les lumières et les
-// fumées de la bibliothèque sont celles du jeu.
-import { describe, it, expect } from 'vitest';
+// Les bâtiments de la bibliothèque (design/bibliotheque/svg/batiments) dans le jeu : chantier, paliers, skins dessinés,
+// teintes. Chaque image d'un palier se coupe, sans rien perdre, en partie fixe, bloc qui bouge et voilier ; un skin
+// dessiné reprend le bloc qui bouge du palier ; les lumières et les fumées de la bibliothèque sont celles du jeu.
+import { describe, it, expect, vi } from 'vitest';
 import { readFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import { piecesOf, splitFrames, buildingArt, chantierArt, buildingThumb } from '@/world/buildingArt';
 import { lookAt } from '@/world/looks';
+import { BLANK } from '@/world/library';
+import { tintSvg } from '../design/bibliotheque/svg/batiments/teintes/teinter.mjs';
 import DATA from '../design/bibliotheque/svg/batiments/batiments.json';
 
 const ROOT = fileURLToPath(new URL('../design/bibliotheque/svg/batiments/', import.meta.url));
@@ -90,5 +92,77 @@ describe('les bâtiments de la bibliothèque', () => {
     expect(buildingThumb('foyer', 4)).toMatch(/foyer_palier4_1\.svg$/);
     [0, 1, 2].forEach(stage => expect(shows(buildingThumb('foyer', 0, stage), DATA.chantier.fichiers[stage]), `chantier ${stage}`).toBe(true));
     expect(buildingThumb('foyer', 9)).toBe(null);
+  });
+
+  const SKIN_FILES = Object.entries(DATA.skins).flatMap(([skin, e]) => e.fichiers.map((file, k) => ({ skin, site: e.batiment, file, cadre: e.cadres[k], level: Number(file.match(/palier(\d)/)[1]) })));
+
+  it('un skin dessiné est le palier, sa partie fixe changée : le bloc qui bouge et ce qui suit sont ceux du palier', () => {
+    for (const { skin, site, file, cadre, level } of SKIN_FILES) {
+      const svg = read(file);
+      expect(svg.match(/viewBox="([^"]+)"/)[1], file).toBe(cadre.join(' '));
+      const { head, items, tail } = piecesOf(svg);
+      expect(head + items.join('') + tail, file).toBe(svg);
+      const boat = site === 'ponton';
+      const art = DATA.paliers[`${site}_palier${level}`];
+      const split = splitFrames(art.fichiers.map(read), boat);
+      const mine = boat ? items.slice(0, -1) : items;
+      if (boat) expect(items[items.length - 1], file).toMatch(/^<g transform="translate\(/);
+      // Le jeu anime ce palier sous ce skin : le skin finit par le bloc de la première image ; sinon (kiosque du Puits),
+      // il ne l'a pas
+      const block = [...split.moving[0], ...split.after];
+      const skipped = lookAt(site, level).anims.some(a => a.skip && a.skip(skin));
+      if (art.fichiers.length > 1 && !skipped) expect(mine.slice(mine.length - block.length), file).toEqual(block);
+      if (skipped) expect(mine.join(''), file).not.toContain(split.moving[0].join(''));
+    }
+  });
+
+  it('chaque skin a son dessin à chaque palier ; sans fichier, le jeu n\'y dessine pas le skin : le dessin par défaut vaut', () => {
+    for (const [skin, e] of Object.entries(DATA.skins)) {
+      for (let level = 1; level <= 7; level++) {
+        const art = buildingArt(e.batiment, level, skin);
+        const own = e.fichiers.some(file => file.endsWith(`_palier${level}.svg`));
+        if (!own) {
+          expect(art, `${skin} ${level}`).toBe(buildingArt(e.batiment, level));
+          expect(lookAt(e.batiment, level).make(skin).svg, `${skin} ${level}`).toBe(lookAt(e.batiment, level).make().svg);
+          continue;
+        }
+        expect(art.base.key, `${skin} ${level}`).toBe(`lib-${e.batiment}-${level}-${skin}-base`);
+        const plain = buildingArt(e.batiment, level);
+        const skipped = lookAt(e.batiment, level).anims.some(a => a.skip && a.skip(skin));
+        // Même bloc qui bouge que le palier : mêmes images (même mémoire)
+        expect(art.anim && art.anim.frame(0).key, `${skin} ${level}`).toBe(plain.anim && !skipped ? plain.anim.frame(0).key : null);
+      }
+    }
+    expect(buildingArt('foyer', 3, 'roche-ocre')).toBe(null);
+    expect(buildingArt('potager', 3, 'papillons')).toBe(null);
+  });
+
+  it('une teinte recolore la partie fixe et le voilier (le trait reste brun), le bloc qui bouge là où le jeu le teinte', async () => {
+    const plain = await buildingArt('foyer', 4).base.make().load();
+    const tinted = await buildingArt('foyer', 4, 'sakura-foyer').base.make().load();
+    expect(tinted).toBe(tintSvg(plain, 'sakura'));
+    expect(tinted).not.toBe(plain);
+    expect(tinted).toContain('#3C2819');
+    for (const id of ['foyer', 'carriere', 'bosquet', 'puits', 'potager', 'atelier', 'ponton']) {
+      for (let level = 1; level <= 7; level++) {
+        const art = buildingArt(id, level, `craie-${id}`);
+        const plainArt = buildingArt(id, level);
+        const tintedAnim = lookAt(id, level).anims.some(a => a.skinned);
+        if (plainArt.anim) expect(art.anim.frame(0).key, `${id} ${level}`).toBe(tintedAnim ? `lib-${id}-${level}-craie-a0` : plainArt.anim.frame(0).key);
+      }
+    }
+    const boat = await buildingArt('ponton', 2, 'ocean-ponton').boat.make().load();
+    const plainBoat = await buildingArt('ponton', 2).boat.make().load();
+    expect(boat.svg).toBe(tintSvg(plainBoat.svg, 'ocean'));
+  });
+
+  it('vignettes : le fichier du skin dessiné, la première image teinte à la lecture ; rien pour une pièce rare', async () => {
+    expect(buildingThumb('foyer', 4, 0, 'toit-rouge')).toMatch(/foyer_toit-rouge_palier4\.svg$/);
+    expect(buildingThumb('foyer', 1, 0, 'toit-rouge')).toBe(buildingThumb('foyer', 1));
+    expect(buildingThumb('potager', 3, 0, 'papillons')).toBe(null);
+    expect(buildingThumb('atelier', 2, 0, 'lavande-atelier')).toBe(BLANK);
+    await vi.waitFor(() => expect(buildingThumb('atelier', 2, 0, 'lavande-atelier')).not.toBe(BLANK));
+    const svg = decodeURIComponent(buildingThumb('atelier', 2, 0, 'lavande-atelier').split(',')[1]);
+    expect(svg).toBe(tintSvg(read(DATA.paliers.atelier_palier2.fichiers[0]), 'lavande'));
   });
 });
