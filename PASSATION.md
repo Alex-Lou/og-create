@@ -162,9 +162,13 @@ chronométrer 20 appels. Comparer à zoom égal, au même endroit.
   composant**, à côté de lui. `main.js` n'importe que `styles/index.css`.
 - **Refonte en cours, par petites PR, sans rien changer à l'écran** (choix de l'auteur : un dossier par composant,
   `.vue` et `.css` côte à côte ; des jetons pour couleurs, polices, arrondis, ombres, profondeurs et durées ; les marges
-  restent des nombres) : 1) jetons et base découpés (fait) ; 2) chaque composant reprend ses styles (ceux que
-  `WorldView` garde pour ses fiches) ; 3) les couleurs en dur deviennent des jetons ; 4) les dossiers rangés par
-  domaine ; 5) `App.vue` et `BookView.vue` découpés.
+  restent des nombres) : 1) jetons et base découpés (fait) ; 2) chaque composant de l'île reprend ses styles (fait :
+  `X.css` à côté de chaque composant, en `<style scoped src>` ; les primitives partagées des fiches de l'île dans
+  `components/World/island-ui.css`, global, chargé par `WorldView`) ; 3) les couleurs en dur deviennent des jetons ;
+  4) les dossiers rangés par domaine ; 5) `App.vue` et `BookView.vue` découpés.
+- **Piège du passage en scoped** : une règle scoped gagne un attribut de spécificité. Si elle vise aussi la racine d'un
+  composant enfant (un glyphe `img.glyph` dans un portrait, par exemple), elle peut l'emporter sur le style propre de
+  l'enfant : garder la spécificité d'avant avec `:where()` sur l'ancêtre (`SiteOverview.css`, le portrait).
 - **Preuve « rien de cassé »** pour chaque étape : le CSS compilé comparé avant/après (mêmes variables, mêmes règles
   dans le même ordre, quand rien ne doit bouger) et un banc de captures (une vingtaine d'écrans, téléphone et PC, même
   compte, horloges de la page figées) comparé pixel par pixel ; en plus du lint, des tests et du build.

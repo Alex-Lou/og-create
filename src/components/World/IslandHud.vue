@@ -74,3 +74,5 @@ export default {
   }
 };
 </script>
+
+<style scoped src="./IslandHud.css"></style>

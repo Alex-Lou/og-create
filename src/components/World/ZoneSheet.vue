@@ -84,3 +84,5 @@ export default {
   }
 };
 </script>
+
+<style scoped src="./ZoneSheet.css"></style>

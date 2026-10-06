@@ -101,3 +101,5 @@ export default {
   }
 };
 </script>
+
+<style scoped src="./BrumeSheet.css"></style>
