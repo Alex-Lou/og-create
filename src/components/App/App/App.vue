@@ -229,7 +229,7 @@ import AppHeader from '../AppHeader/AppHeader.vue';
 import CraftZone from '../../Craft/CraftZone/CraftZone.vue';
 import LivingBackground from '../LivingBackground/LivingBackground.vue';
 import BookView from '../../Book/BookView/BookView.vue';
-import WorldView from '../../World/WorldView.vue';
+import WorldView from '../../World/WorldView/WorldView.vue';
 import SceauView from '../../Account/SceauView/SceauView.vue';
 import SeuilModal from '../../Account/SeuilModal/SeuilModal.vue';
 import ResetPasswordModal from '../../Account/ResetPasswordModal/ResetPasswordModal.vue';

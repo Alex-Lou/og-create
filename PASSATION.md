@@ -181,8 +181,8 @@ chronométrer 20 appels. Comparer à zoom égal, au même endroit.
   tutoriel), `Prologue`, `Craft` (l'athanor), `Book`, `World` (sous-domaines `Hud`, `Sites`, `Folk`, `Chests`,
   `Workshop`, `Explore`, `Games`), `Trial` (l'Épreuve), `Account`, `Codex`, `Settings` ; chaque composant
   `<Domaine>/<Composant>/<Composant>.vue`, ses styles dans `<Composant>.css` (scoped) et `<Composant>.global.css`
-  (non scoped) ; 4a fait (App, ui, Guide, Prologue, Craft), 4b fait (Book, Trial, Account, Codex, Settings), 4c
-  à suivre ; 5) `App.vue` et `BookView.vue`
+  (non scoped) ; fait en trois lots (4a, 4b, 4c) ; les primitives partagées des fiches de l'île restent dans
+  `components/World/island-ui.css`, chargé par `WorldView` ; 5) `App.vue` et `BookView.vue`
   découpés.
 - **Piège du passage en scoped** : une règle scoped gagne un attribut de spécificité. Si elle vise aussi la racine d'un
   composant enfant (un glyphe `img.glyph` dans un portrait, par exemple), elle peut l'emporter sur le style propre de

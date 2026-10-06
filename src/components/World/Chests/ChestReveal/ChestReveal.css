@@ -1,0 +1,39 @@
+.chest { display: grid; justify-items: center; gap: 10px; text-align: center; font-family: var(--font-ui); }
+.chest.is-commun { --wood: var(--island-chest-commun-wood); --band: var(--island-chest-commun-band); --lock: var(--island-chest-commun-lock); }
+.chest.is-rare { --wood: var(--island-chest-rare-wood); --band: var(--island-chest-rare-band); --lock: var(--island-chest-rare-lock); }
+.chest.is-epique { --wood: var(--island-chest-epique-wood); --band: var(--island-chest-epique-band); --lock: var(--island-chest-epique-lock); }
+.chest.is-legendaire { --wood: var(--island-chest-legendaire-wood); --band: var(--island-chest-legendaire-band); --lock: var(--island-chest-legendaire-lock); }
+.chest__note { margin: 0; max-width: 300px; color: var(--ink-500); font-style: italic; font-size: 14px; line-height: 1.4; }
+.chest__stage { position: relative; display: grid; place-items: center; width: 220px; height: 170px; }
+.chest__box { position: relative; width: 168px; height: 140px; overflow: visible; animation: chest-shake .7s ease-in-out both; }
+.chest__wood { fill: var(--wood); stroke: var(--island-chest-line); stroke-width: 1.4; }
+.chest__band { fill: var(--band); }
+.chest__lock { fill: var(--lock); stroke: var(--island-chest-lock-line); stroke-width: 1; }
+.chest__lid { transform-box: view-box; transform-origin: 102px 46px; animation: chest-lid .45s .7s cubic-bezier(.3, 1.6, .5, 1) both; }
+.chest__glow, .chest__rays { position: absolute; inset: 0; margin: auto; border-radius: var(--r-round); opacity: 0; }
+.chest__glow { width: 150px; height: 150px; background: radial-gradient(circle, var(--rarity) 0%, transparent 68%); animation: chest-glow .6s .75s ease-out both; }
+.chest__rays {
+  width: 230px; height: 230px;
+  background: repeating-conic-gradient(from 0deg, var(--rarity) 0deg 9deg, transparent 9deg 30deg);
+  -webkit-mask: radial-gradient(circle, #000 18%, transparent 70%); mask: radial-gradient(circle, #000 18%, transparent 70%);
+  animation: chest-glow .6s .8s ease-out both, chest-spin 9s .8s linear infinite;
+}
+.chest__prize { display: grid; justify-items: center; gap: 4px; animation: chest-prize .4s 1s cubic-bezier(.3, 1.5, .5, 1) both; }
+.chest__art { width: 120px; height: 120px; object-fit: contain; filter: drop-shadow(0 6px 10px rgba(0, 0, 0, .25)); }
+.chest__icons { display: flex; gap: 6px; font-size: 44px; line-height: 1; }
+.chest__name { font-size: 20px; font-weight: 900; color: var(--ink-900); }
+.chest__kind { font-size: 13px; font-weight: 700; color: var(--ink-500); }
+@keyframes chest-shake {
+  0%, 100% { transform: none; }
+  15% { transform: rotate(-4deg); } 30% { transform: rotate(4deg); } 45% { transform: rotate(-5deg) translateY(-2px); }
+  60% { transform: rotate(5deg) translateY(-2px); } 80% { transform: translateY(2px) scale(1.04, .96); }
+}
+@keyframes chest-lid { from { transform: none; } to { transform: translate(-4px, -18px) rotate(-16deg); } }
+@keyframes chest-glow { from { opacity: 0; transform: scale(.4); } to { opacity: .85; transform: none; } }
+@keyframes chest-spin { to { rotate: 360deg; } }
+@keyframes chest-prize { from { opacity: 0; transform: translateY(14px) scale(.7); } to { opacity: 1; transform: none; } }
+@media (prefers-reduced-motion: reduce) {
+  .chest__box, .chest__prize { animation: none; }
+  .chest__lid { animation: none; transform: translate(-4px, -18px) rotate(-16deg); }
+  .chest__glow, .chest__rays { animation: none; opacity: .7; }
+}

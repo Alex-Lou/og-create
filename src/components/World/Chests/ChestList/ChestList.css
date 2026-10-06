@@ -1,0 +1,20 @@
+/* Ses jetons : la case d'un jour, celle d'aujourd'hui */
+.chests { --chests-day-radius: 10px; --chests-today-ring: rgba(242, 192, 75, .45); }
+.chests { display: grid; gap: 18px; font-family: var(--font-ui); }
+.chests__title { margin: 0 0 8px; font-size: 12px; font-weight: 800; text-transform: uppercase; letter-spacing: .05em; color: var(--ink-500); }
+.chests__week { display: grid; grid-template-columns: repeat(7, 1fr); gap: 6px; margin: 0 0 10px; padding: 0; list-style: none; }
+.chests__day {
+  display: grid; place-items: center; aspect-ratio: 1; border-radius: var(--chests-day-radius);
+  border: 2px solid var(--rarity); color: var(--ink-700); font-weight: 900; font-size: 13px; background: var(--vellum-50);
+}
+.chests__day.is-done { background: var(--rarity); color: var(--ink-900); }
+.chests__day.is-today { box-shadow: 0 0 0 3px var(--chests-today-ring); }
+.chests__line { margin: 0; font-size: 14px; font-weight: 700; line-height: 1.4; }
+.chests__open { margin-top: 10px; width: 100%; }
+.chests__list { display: grid; gap: 8px; margin: 0; padding: 0; list-style: none; }
+.chests__item { display: grid; grid-template-columns: auto 1fr auto; align-items: center; gap: 10px; }
+.chests__chip { padding: 2px 8px; border-radius: var(--r-pill); background: var(--rarity); color: var(--ink-900); font-size: 11px; font-weight: 900; }
+.chests__label { font-size: 14px; font-weight: 700; }
+.chests__item-btn { min-height: 36px; padding: 4px 14px; }
+.chests__all { width: 100%; }
+.chests__hint { margin: 0; font-size: 13px; color: var(--ink-500); font-style: italic; line-height: 1.4; }
