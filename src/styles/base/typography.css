@@ -1,0 +1,36 @@
+/* Primitives de texte (g-*) : titres, italique, sur-titre, or, glyphe en valeur. */
+.g-display {
+  font-family: var(--oc-font-display);
+  font-weight: 600;
+  color: var(--oc-text-strong);
+}
+.g-title {
+  margin: 0;
+  font-family: var(--oc-font-display);
+  font-weight: 600;
+  font-size: 28px;
+  line-height: 1.1;
+  color: var(--oc-text-strong);
+}
+.g-italic {
+  font-family: var(--oc-font-italic);
+  font-style: italic;
+  color: var(--oc-text-muted);
+}
+/* Sur-titre : petites capitales espacées */
+.g-mono {
+  font-family: var(--oc-font-mono);
+  font-weight: 800;
+  font-size: 11px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--oc-text-faint);
+}
+.g-gold {
+  color: var(--oc-gold);
+}
+
+/* ---------- Glyphe mis en valeur (nouvelle découverte) ---------- */
+.g-ink--glow {
+  filter: drop-shadow(0 0 10px rgba(239, 193, 99, 0.65));
+}

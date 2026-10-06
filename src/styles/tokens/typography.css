@@ -1,0 +1,5 @@
+/* Typographie : deux familles. Fraunces (titres, noms, indices), Nunito (interface, compteurs) */
+:root {
+  --font-display: 'Fraunces', 'Iowan Old Style', Georgia, serif;
+  --font-ui: 'Nunito', ui-rounded, 'SF Pro Rounded', system-ui, sans-serif;
+}
