@@ -315,107 +315,26 @@
 
             <!-- Boutique : outils et objets (effets), pièces rares, skins et teintes (apparence), rangés par palier ; un toucher
                  sur le prix achète (annulable 4 s), un toucher sur le dessin ou un appui long sur le prix ouvre la fiche -->
-            <div v-else-if="siteTab === 'shop'" class="world__panel">
-              <p v-if="!site.level" class="world__site-effect">Bâtis d’abord ce bâtiment pour ouvrir sa boutique.</p>
-              <p v-else-if="site.produce" class="world__shop-note">
-                Bonus de production : <strong>+{{ site.bonus || 0 }} %</strong> <span>(jusqu’à +100 %)</span>
-              </p>
-              <NameSignPanel
-                v-if="site.level && state.signs"
-                ref="nameSign"
-                :site="site"
-                :signs="state.signs"
-                :coins="coins"
-                :busy="busy"
-                @choose="look => chooseSign(site, look)"
-                @rename="renameSigns"
-              />
-              <section v-for="group in shopGroups(site)" :key="group.kind" class="world__shop-group" :aria-label="group.label">
-                <h3 class="world__shop-title">{{ group.label }}</h3>
-                <ul class="world__cards">
-                  <li
-                    v-for="item in group.items"
-                    :key="item.id"
-                    :class="['world__card', { 'is-owned': item.owned, 'is-worn': site.skin === item.id, 'is-locked': !item.owned && site.level < item.minLevel, 'is-rare': item.rare }]"
-                  >
-                    <button type="button" class="world__card-open" :aria-label="`Fiche : ${item.name}`" @click="describeItem(site, item)">
-                      <span class="world__card-art">
-                        <img :src="itemArt(site, item)" alt="" />
-                        <span v-if="item.rare" class="world__card-palier world__card-palier--rare">Rare</span>
-                        <span v-else class="world__card-palier" :aria-label="`Palier ${roman(item.minLevel)}`">{{ roman(item.minLevel) }}</span>
-                        <span v-if="site.skin === item.id" class="world__card-badge">Porté</span>
-                        <span v-else-if="item.owned && item.kind !== 'skin'" class="world__card-badge">✓</span>
-                      </span>
-                      <span class="world__card-name">{{ item.name }}</span>
-                    </button>
-                    <span class="world__card-effect">{{ itemNote(site, item) }}</span>
-                    <button
-                      v-if="!item.owned"
-                      v-longpress="() => describeItem(site, item)"
-                      type="button"
-                      :class="['world__card-btn', { 'is-off': !canBuy(site, item) }]"
-                      :disabled="busy"
-                      :aria-label="buyLabel(site, item)"
-                      @click="buyItem(site, item, $event)"
-                    >
-                      <template v-if="lockOf(site, item)">{{ lockOf(site, item) }}</template>
-                      <template v-else>{{ item.price }}<span class="world__coin world__coin--small" aria-hidden="true"></span></template>
-                    </button>
-                    <button v-else-if="item.kind === 'skin' && site.skin !== item.id" type="button" class="world__card-btn world__card-btn--quiet" :disabled="busy" @click="wearSkin(site, item.id)">Porter</button>
-                    <button v-else-if="item.kind === 'skin'" type="button" class="world__card-btn world__card-btn--quiet" :disabled="busy" @click="wearSkin(site, '')">Ôter</button>
-                    <span v-else class="world__card-owned">Sur ton île</span>
-                  </li>
-                </ul>
-              </section>
-              <transition name="world-undo">
-                <div v-if="undoable" class="world__undo" role="status">
-                  <span>{{ undoable.name }} : acheté</span>
-                  <button type="button" class="world__undo-btn" :disabled="busy" @click="undoItem">Annuler</button>
-                </div>
-              </transition>
-            </div>
+            <SiteShop
+              v-else-if="siteTab === 'shop'"
+              ref="shop"
+              :site="site"
+              :signs="state.signs || null"
+              :coins="coins"
+              :busy="busy"
+              :undoable="undoable"
+              @describe="item => describeItem(site, item)"
+              @buy="(item, event) => buyItem(site, item, event)"
+              @wear="skin => wearSkin(site, skin)"
+              @sign="look => chooseSign(site, look)"
+              @rename="renameSigns"
+              @undo="undoItem"
+            />
 
             <!-- Annexes : champs, filons, viviers… à poser autour du bâtiment (la case se choisit sur la carte) -->
             <AnnexPanel v-else-if="siteTab === 'annexes'" :site="site" :stock="stockAll" :coins="coins" :busy="busy" @place="annex => startAnnex(site, annex)" />
 
-            <ol v-else class="world__steps">
-              <li v-for="(step, i) in site.levels" :key="step.name" :class="['world__step', `is-${stepState(site, i)}`]">
-                <span class="world__step-mark" aria-hidden="true">{{ stepState(site, i) === 'done' ? '✓' : i + 1 }}</span>
-                <div class="world__step-body">
-                  <span class="world__step-name">{{ step.name }}</span>
-                  <span class="world__step-effect">{{ step.effect }}</span>
-                  <ul v-if="stepState(site, i) !== 'done'" class="world__needs">
-                    <li v-if="step.chapter" :class="['world__need', step.chapterOpen ? 'is-ok' : 'is-missing']">
-                      <span class="world__need-glyph" aria-hidden="true"><ElementGlyph glyph="ui:book" /></span>
-                      <span>Chapitre <strong>{{ step.chapter }}</strong> du Grimoire</span>
-                      <em>{{ step.chapterOpen ? 'ouvert' : 'encore scellé' }}</em>
-                    </li>
-                    <li v-if="step.plan" :class="['world__need', step.planOwned ? 'is-ok' : 'is-missing']">
-                      <span class="world__need-glyph" aria-hidden="true"><ElementGlyph :glyph="step.planEmoji || 'ui:plan'" /></span>
-                      <span>Plan : <strong>{{ step.plan }}</strong></span>
-                      <em>{{ step.planOwned ? 'trouvé' : 'à découvrir dans le Grimoire' }}</em>
-                    </li>
-                    <li v-for="(n, r) in step.cost" :key="r" :class="['world__need', state.stock[r] >= n ? 'is-ok' : 'is-missing']">
-                      <span class="world__need-glyph" aria-hidden="true"><ElementGlyph :glyph="GLYPH[r]" /></span>
-                      <span><strong>{{ state.stock[r] }}</strong> / {{ n }} {{ LABEL[r] }}</span>
-                    </li>
-                    <li v-if="step.coins" :class="['world__need', coinsOk(step.coins) ? 'is-ok' : 'is-missing']">
-                      <span class="world__need-glyph" aria-hidden="true"><ElementGlyph glyph="ui:coin" /></span>
-                      <span><strong>{{ step.coins }}</strong> écus</span>
-                      <em v-if="!coinsOk(step.coins)">il en manque {{ step.coins - coins }}</em>
-                    </li>
-                  </ul>
-                  <div v-if="stepState(site, i) === 'next'" class="world__sheet-actions">
-                    <button type="button" class="world__btn" :disabled="!canBuild(site) || busy" @click="build(site)">
-                      {{ site.level ? `Faire évoluer : ${step.name}` : `Bâtir : ${step.name}` }}
-                    </button>
-                    <button v-if="!affordable(site) && state.charges.count" type="button" class="world__btn world__btn--quiet" :disabled="busy" @click="startHarvest">
-                      Jouer une Récolte
-                    </button>
-                  </div>
-                </div>
-              </li>
-            </ol>
+            <SiteSteps v-else :site="site" :stock="state.stock" :charges="state.charges.count" :coins="coins" :busy="busy" @build="build(site)" @harvest="startHarvest" />
           </div>
         </div>
       </transition>
@@ -629,7 +548,6 @@ import ChestReveal from './ChestReveal.vue';
 import ChestHaul from './ChestHaul.vue';
 import AnnexPanel from './AnnexPanel.vue';
 import AnnexSheet from './AnnexSheet.vue';
-import NameSignPanel from './NameSignPanel.vue';
 import MiniGame from './minigames/MiniGame.vue';
 import GameIcon from './minigames/GameIcon.vue';
 import VillagerSheet from './VillagerSheet.vue';
@@ -642,6 +560,8 @@ import FindsSheet from './FindsSheet.vue';
 import WreckScene from './WreckScene.vue';
 import BrumeSheet from './BrumeSheet.vue';
 import ZoneSheet from './ZoneSheet.vue';
+import SiteShop from './SiteShop.vue';
+import SiteSteps from './SiteSteps.vue';
 import { villagerSprite, ROLES } from '@/world/villagers';
 import { talkLine, giftLine, awaits } from '@/world/friends';
 import { heardPages, keepSavoir, savoirLine, artOf as savoirOf } from '@/game/savoirs';
@@ -660,9 +580,8 @@ import { villageOf } from '@/world/village';
 import { clearDrawings } from '@/book/painter';
 import { burst, ring, vibrate, center, reducedMotion } from '@/utils/fx';
 import { GLYPH, LABEL, RESOURCES } from '@/game/resources';
-import { artMake } from '@/world/looks';
-import { itemThumb } from '@/world/shopSprites';
-import { tintOf } from '@/world/tints';
+import { itemArt, itemLock, itemBuyable } from '@/world/shop';
+import { levelAffordable, levelReady } from '@/world/levels';
 import { drawSprite, spriteUrl, clearSprites } from '@/world/spriteCache';
 import { islandOf, liveOf, TerrainCache, HS } from '@/world/terrain';
 import { FLOATING_ZONE, COLONY_ZONE, isletsOf } from '@/world/islets';
@@ -674,7 +593,6 @@ import { BEASTS } from '@/world/bestiary';
 import { faceHref } from '@/world/faces';
 import { guide } from '@/game/guide';
 import { TIPS } from '@/game/guideTips';
-import longpress from '@/directives/longpress';
 import { roman } from '@/utils/roman';
 import { phaseAt, forcedPhase, hash } from '@/world/scene';
 import { perfWanted, perfMeter } from '@/world/perf';
@@ -707,10 +625,6 @@ const WARP_MS = 30000;
 const DAY_MS = 86400000;
 // Achat d'un quartier : la brume se dissipe (ms)
 const UNVEIL_MS = 1600;
-// Boutique d'un atelier : rubriques dans l'ordre de la fiche
-const SHOP_GROUPS = [['outil', 'Outils'], ['objet', 'Objets'], ['rare', 'Pièces rares'], ['skin', 'Skins'], ['teinte', 'Teintes']];
-// Rubrique d'un article : les skins se partagent entre pièces rares, skins dessinés et teintes
-const groupOf = item => (item.rare ? 'rare' : item.kind === 'skin' && tintOf(item.id) ? 'teinte' : item.kind);
 // Achat en un toucher : « Annuler » reste proposé 4 s (le serveur accepte l'annulation un peu plus longtemps)
 const UNDO_MS = 4000;
 // Mini-jeux : l'icône de chaque jeu dans la fiche de son bâtiment
@@ -727,8 +641,7 @@ const FOREST_HIGH = ['pine', 'pine', 'tree'];
 // d'animation sont non réactifs et s'arrêtent quand l'onglet est caché ou le composant démonté.
 export default {
   name: 'WorldView',
-  components: { ElementGlyph, HarvestGame, ShopItemSheet, IslandClock, GModal, ChestList, ChestReveal, ChestHaul, AnnexPanel, AnnexSheet, NameSignPanel, MiniGame, GameIcon, VillagerSheet, VisitorSheet, RenameSheet, CraftBench, CraftPuzzle, ExplorerLog, FindsSheet, WreckScene, BrumeSheet, ZoneSheet },
-  directives: { longpress },
+  components: { ElementGlyph, HarvestGame, ShopItemSheet, IslandClock, GModal, ChestList, ChestReveal, ChestHaul, AnnexPanel, AnnexSheet, MiniGame, GameIcon, VillagerSheet, VisitorSheet, RenameSheet, CraftBench, CraftPuzzle, ExplorerLog, FindsSheet, WreckScene, BrumeSheet, ZoneSheet, SiteShop, SiteSteps },
   props: {
     // Glyphes des éléments du Livre (savoir-faire demandé à l'établi)
     elementEmojis: { type: Object, required: true },
@@ -741,7 +654,7 @@ export default {
   emits: ['coins-updated', 'show-alert', 'login', 'go', 'quest', 'replay-vigil', 'replay-anya'],
   data() {
     return {
-      GLYPH, LABEL, RESOURCES, GAME_ICONS, NEED_GLYPH, MOOD_GLYPH,
+      GLYPH, RESOURCES, GAME_ICONS, NEED_GLYPH, MOOD_GLYPH,
       state: null,
       guest: false,
       loadError: false,
@@ -1550,17 +1463,12 @@ export default {
         ctx.fill();
       }
     },
-    // Ressources du palier suivant réunies
+    // Ressources du palier suivant réunies ; palier suivant prêt à bâtir (world/levels.js)
     affordable(site) {
-      return Boolean(site.next) && Object.entries(site.next.cost).every(([r, n]) => this.state.stock[r] >= n);
-    },
-    // Écus suffisants (solde inconnu : le serveur tranchera)
-    coinsOk(price) {
-      return !price || this.coins === null || this.coins >= price;
+      return levelAffordable(site, this.state.stock);
     },
     canBuild(site) {
-      const next = site.next;
-      return Boolean(next) && next.planOwned && next.chapterOpen !== false && this.affordable(site) && this.coinsOk(next.coins);
+      return levelReady(site, this.state.stock, this.coins);
     },
 
     /* ---------- Plein écran ---------- */
@@ -1590,42 +1498,15 @@ export default {
     ...drawMethods,
 
     ...gestureMethods,
-    /* ---------- Boutique d'un atelier ---------- */
+    /* ---------- Boutique d'un atelier (règles : world/shop.js ; onglet : SiteShop) ---------- */
     roman,
-    // Rubriques de la boutique ; dans chacune, les articles du premier palier au dernier
-    shopGroups(site) {
-      const byPalier = (a, b) => a.minLevel - b.minLevel || a.price - b.price;
-      return SHOP_GROUPS.map(([kind, label]) => ({ kind, label, items: site.shop.filter(item => groupOf(item) === kind).sort(byPalier) })).filter(group => group.items.length);
-    },
-    // Niveau auquel montrer un article ou un skin : celui du bâtiment, ou celui qu'il demande (le toit du Foyer se voit dès l’Abri)
-    previewLevel(site, item) {
-      const level = Math.max(site.level, item.minLevel, 1);
-      return site.id === 'foyer' && groupOf(item) === 'skin' ? Math.max(level, 2) : level;
-    },
-    itemArt(site, item) {
-      const level = this.previewLevel(site, item);
-      if (item.kind === 'skin') return spriteUrl(`art-${site.id}-${level}-${item.id}`, artMake(site.id, level, item.id));
-      return spriteUrl(`thumb-${item.id}-${level}`, () => itemThumb(item.id, level));
-    },
-    itemNote(site, item) {
-      if (groupOf(item) === 'skin' && site.id === 'foyer' && site.level < 2) return 'Se voit dès l’Abri.';
-      return item.effect;
-    },
+    itemArt,
     // Raison pour laquelle un article ne s'achète pas encore (texte du bouton), ou ''
     lockOf(site, item) {
-      if (item.rare) return 'Dans les butins';
-      if (!site.level) return 'Bâtis d’abord';
-      if (site.level < item.minLevel) return `Palier ${roman(item.minLevel)}`;
-      if (this.coins !== null && this.coins < item.price) return `Il manque ${item.price - this.coins}`;
-      return '';
+      return itemLock(site, item, this.coins);
     },
     canBuy(site, item) {
-      return !item.owned && !this.lockOf(site, item);
-    },
-    buyLabel(site, item) {
-      const lock = this.lockOf(site, item);
-      if (lock) return `${item.name} : ${lock} (toucher : sa fiche)`;
-      return `Acheter ${item.name} pour ${item.price} écus (appui long : sa fiche)`;
+      return itemBuyable(site, item, this.coins);
     },
     perHourOf(site) {
       return site.perHour || { amount: this.state.rates.produce * site.level, coins: this.state.rates.coins * site.level };
@@ -1638,11 +1519,6 @@ export default {
     },
     sitesIn(zone) {
       return this.state.sites.filter(s => s.zone === zone.id).map(s => s.name);
-    },
-    // Palier i (0 = premier niveau) d'un bâtiment : atteint, prochain ou à venir
-    stepState(site, i) {
-      if (i < site.level) return 'done';
-      return i === site.level ? 'next' : 'later';
     },
     screenRectOf(x, y) {
       const rect = this.$refs.canvas.getBoundingClientRect();
@@ -2145,8 +2021,7 @@ export default {
       this.site = site;
       this.siteTab = 'shop';
       this.$nextTick(() => {
-        const panel = this.$refs.nameSign;
-        if (panel && panel.$el && panel.$el.scrollIntoView) panel.$el.scrollIntoView({ block: 'start', behavior: this.reduced() ? 'auto' : 'smooth' });
+        if (this.$refs.shop) this.$refs.shop.showSign(this.reduced());
       });
     },
     // « Porter » dans la rafale : la fenêtre reste ouverte, le lot passe à « Porté »
