@@ -1,8 +1,8 @@
 // Les autres plantes refaites au niveau des PNJ, une par une, avec le trait, la lumière et les verts des arbres
-// (arbres.js) : le buisson, la bruyère, les fleurs, le cactus, la souche, le rondin. Cadre et ancrage des plantes de deco.js (PROP, centre de la case en (0, 0)) ; le jeu fait
+// (arbres.js) : le buisson, la bruyère, les fleurs, le cactus, la souche, le rondin, les champignons. Cadre et ancrage des plantes de deco.js (PROP, centre de la case en (0, 0)) ; le jeu fait
 // balancer le dessin entier depuis sa base, il n'y a donc qu'une image.
 const { OUT, E, r2 } = require('./troupe');
-const { VERTS, fleurette, feuillage, champignon } = require('./arbres');
+const { VERTS, fleurette, feuillage, champignon, herbe } = require('./arbres');
 
 // ——— Le buisson : trois touffes basses (celle du fond plus sombre) et une au milieu, des fleurettes ou des baies ———
 // baies : grappe de trois, rouges, reflet
@@ -242,4 +242,43 @@ for (const petit of [false, true]) for (const ecorce of ['brune', 'grise']) for 
   RONDINS.push([fichier, libelle, { ecorce, petit, champignons: ch }]);
 }
 
-module.exports = { buisson, BUISSONS, bruyere, BRUYERES, fleurs, FLEURS, cactus, CACTUS_LISTE, souche, SOUCHES, rondin, RONDINS };
+// ——— Les champignons : une famille de trois, amanites rouges à pois ou cèpes bruns ; la nuit, ils luisent ———
+const CHAPEAUX = {
+  rouges: { mid: '#E2574C', dark: '#B03A33', light: '#F59A86', pois: true },
+  bruns: { mid: '#B7804C', dark: '#8A5A31', light: '#D9A876', pois: false },
+  nuit: { mid: '#7FE0C0', dark: '#4FB59A', light: '#C8FFE8' }
+};
+// un champignon : pied clair un peu renflé, chapeau en dôme (ombre en bas à droite, reflet), lamelles dessous, pois
+function champi(id, x, y, s, c, pois, nuit) {
+  const pied = `M${r2(x - 1.6 * s)},${r2(y)} Q${r2(x - 2.1 * s)},${r2(y - 2.4 * s)} ${r2(x - 1.2 * s)},${r2(y - 4.4 * s)} L${r2(x + 1.2 * s)},${r2(y - 4.4 * s)} Q${r2(x + 2.1 * s)},${r2(y - 2.4 * s)} ${r2(x + 1.6 * s)},${r2(y)} Q${r2(x)},${r2(y + 0.8 * s)} ${r2(x - 1.6 * s)},${r2(y)} Z`;
+  const ch = `M${r2(x - 4.6 * s)},${r2(y - 4 * s)} Q${r2(x - 4.4 * s)},${r2(y - 9.4 * s)} ${r2(x)},${r2(y - 9.8 * s)} Q${r2(x + 4.4 * s)},${r2(y - 9.4 * s)} ${r2(x + 4.6 * s)},${r2(y - 4 * s)} Q${r2(x)},${r2(y - 2.6 * s)} ${r2(x - 4.6 * s)},${r2(y - 4 * s)} Z`;
+  return (nuit ? E(x, y - 6.4 * s, 7.4 * s, 6 * s, 'rgb(150,255,210)', 0).replace('/>', ' opacity="0.2"/>') + E(x, y - 6.6 * s, 5.4 * s, 4.4 * s, 'rgb(170,255,220)', 0).replace('/>', ' opacity="0.3"/>') : '')
+    + `<path d="${pied}" fill="#F6EEDC" stroke="${OUT}" stroke-width="0.9" stroke-linejoin="round"/>`
+    + `<path d="M${r2(x + 0.2 * s)},${r2(y - 0.2)} Q${r2(x + 1.4 * s)},${r2(y - 2.4 * s)} ${r2(x + 0.6 * s)},${r2(y - 4.2 * s)} L${r2(x + 1.2 * s)},${r2(y - 4.4 * s)} Q${r2(x + 2.1 * s)},${r2(y - 2.4 * s)} ${r2(x + 1.6 * s)},${r2(y)} Z" fill="#DCCFB4"/>`
+    + `<path d="${ch}" fill="${c.mid}" stroke="${OUT}" stroke-width="1" stroke-linejoin="round"/>`
+    + `<defs><clipPath id="${id}"><path d="${ch}"/></clipPath></defs><g clip-path="url(#${id})">`
+    + E(x + 2.2 * s, y - 4.4 * s, 4.6 * s, 3 * s, c.dark, 0) + E(x - 1.6 * s, y - 8.2 * s, 2 * s, 1.1 * s, c.light, 0) + '</g>'
+    + `<path d="M${r2(x - 3.6 * s)},${r2(y - 3.9 * s)} Q${r2(x)},${r2(y - 2.9 * s)} ${r2(x + 3.6 * s)},${r2(y - 3.9 * s)}" stroke="${OUT}" stroke-width="0.5" fill="none" opacity="0.5"/>`
+    + (pois ? [[-1.8, -7.4, 0.8], [1.4, -8.2, 0.6], [2.6, -6, 0.65], [-0.2, -5.6, 0.5]].map(([dx, dy, r]) => E(x + dx * s, y + dy * s, r * s * 1.2, r * s, '#FFFFFF', 0)).join('') : '');
+}
+// [x, y, taille] : le grand, le moyen, le petit
+const FAMILLE = [[-5, 2, 1.25], [6, 4, 0.95], [11.5, 0, 0.7]];
+
+// sorte : 'rouges' (amanites à pois) ou 'bruns' (cèpes) ; petits : × 0,75 ; nuit : ils luisent
+function champignons({ sorte = 'rouges', petits = false, nuit = false } = {}) {
+  const k = petits ? 0.75 : 1, c = nuit ? CHAPEAUX.nuit : CHAPEAUX[sorte];
+  const id = `chp${petits ? 'p' : 'g'}${sorte[0]}${nuit ? 'n' : ''}`;
+  return E(2 * k, 2, 14 * k, 5 * k, 'rgba(40,55,20,0.22)', 0) + herbe(-13 * k, 3.4, '#86B852', 0.7)
+    + FAMILLE.map(([x, y, t], i) => champi(`${id}${i}`, x * k, y * k, t * k, c, CHAPEAUX[sorte].pois, nuit)).join('');
+}
+
+// Les 8 champignons : [fichier, libellé, options] ; « champignons » (rouges, grands, de jour) et « champignons_nuit »
+// (rouges, grands, qui luisent) gardent leurs noms
+const CHAMPIGNONS = [];
+for (const petits of [false, true]) for (const sorte of ['rouges', 'bruns']) for (const nuit of [false, true]) {
+  const fichier = ['champignons', petits && 'petits', sorte === 'bruns' && 'bruns', nuit && 'nuit'].filter(Boolean).join('_');
+  const libelle = `Champignons (${[sorte === 'bruns' ? 'cèpes bruns' : 'amanites rouges', petits ? 'petits' : 'grands', nuit && 'la nuit, ils luisent'].filter(Boolean).join(', ')})`;
+  CHAMPIGNONS.push([fichier, libelle, { sorte, petits, nuit }]);
+}
+
+module.exports = { buisson, BUISSONS, bruyere, BRUYERES, fleurs, FLEURS, cactus, CACTUS_LISTE, souche, SOUCHES, rondin, RONDINS, champignons, CHAMPIGNONS };
