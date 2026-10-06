@@ -27,6 +27,15 @@ export function traceDue(traces, seen) {
 }
 export const traceFrames = (land, count) => [{ art: 'trace', caption: `Traces d’Anya : ${count} / ${TRACE_COUNT}`, text: TRACES[land] }];
 
+// La scène d'Anya à jouer sur l'île : la trace d'une terre tout juste explorée (la douzième passe avant la Révélation),
+// puis la Révélation, une seule fois ; sinon null. anya : { traces, awake, revealed } (serveur) ; seen : traces vues ici
+export function anyaSceneOf(anya, seen) {
+  if (!anya) return null;
+  const trace = traceDue(anya.traces, seen);
+  if (trace) return `trace-${trace}`;
+  return anya.awake && !anya.revealed ? 'revelation' : null;
+}
+
 // Les pressentiments (§ 10) : la voix quand la Vie s'écrit (acte I), la rune de Galet au Cercle de menhirs (acte III),
 // les bêtes qui se tournent vers la Lande (acte IV) ; le quatrième, l'aveu de Brume, est dans game/opus.js
 export const PRESENTIMENTS = {

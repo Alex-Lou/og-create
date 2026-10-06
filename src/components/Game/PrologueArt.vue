@@ -171,10 +171,6 @@
       </g>
     </g>
 
-    <!-- Veillée : ceux du premier rang, devant le feu -->
-    <g v-if="art === 'veillee' || art === 'rite' || (art === 'lien' && cast.length > 2)">
-      <image v-for="m in ring.front" :key="`f${m.id}`" :href="person(m.id, 'se')" :x="m.x" :y="m.y" :width="m.w" :height="m.h" :transform="m.transform" />
-    </g>
     <!-- La recette du rite ou du lien, écrite en lumière au-dessus du feu -->
     <g v-if="recipe && (art === 'rite' || art === 'lien')" class="pa__recipe" filter="url(#pa-light)">
       <text x="200" y="138" text-anchor="middle" class="pa__recipe-name">{{ recipeParts[0] }}</text>
@@ -453,7 +449,7 @@ export default {
         const flip = x + w / 2 > 212;
         return { id, w, h: w * 1.4, x: flip ? 0 : x, y: flip ? 0 : y, transform: flip ? `translate(${(x + w).toFixed(1)} ${y.toFixed(1)}) scale(-1 1)` : null };
       });
-      return { back, front: [] };
+      return { back };
     },
     saturn() {
       return this.seals.find(seal => seal.id === 'II');

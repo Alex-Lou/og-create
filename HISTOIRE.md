@@ -51,6 +51,11 @@
 >   - les créatures : les lapins, hérons, koïs et mouettes, déjà là pour tous, ne changent pas (personne ne perd rien) ; Anya ajoute les loutres, son cerf blanc et son halo de lucioles ;
 >   - Anya est au Cercle autour du lever et du coucher du soleil ; un toucher donne son Souffle ; le Cercle fleurit ;
 >   - le bol de soupe « pour la Dame » apparaît le soir au bord du Foyer dès que le Cercle est découvert ou qu'une trace est trouvée.
+> - **Relecture des lots H5 à H8** :
+>   - une veillée ou une scène d'Anya ne se joue jamais par-dessus un coffre : à la fin d'un acte, le coffre d'abord, puis la veillée, puis le naufrage de l'acte suivant ;
+>   - la douzième trace (« un cœur qui s'éveille ») se montre avant la Révélation ; l'île montre Anya et le Cercle fleuri dès la fin de la scène ;
+>   - plus de pressentiment une fois Anya éveillée ; une veillée ou la Révélation revue depuis la Chronique peut se passer ;
+>   - le Souffle d'Anya ne compte que s'il y a une page à souffler (sinon on peut revenir plus tard dans la journée), et seulement après la Révélation.
 
 **Ce que les versions 4 et 5 changent.**
 1. **Une nouvelle troupe** : nouveaux noms, vraies personnalités, chacun avec une magie, une voix, un familier, un secret et un arc.
