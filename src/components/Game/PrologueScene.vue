@@ -99,7 +99,7 @@ export default {
   position: absolute; left: 50%; bottom: max(28px, calc(env(safe-area-inset-bottom) + 18px)); transform: translateX(-50%);
   width: min(560px, calc(100% - 32px)); padding: 14px 18px 12px; border-radius: var(--r-board);
   background: rgba(250, 244, 228, .96); color: #3E2A1E;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, .45), inset 0 0 0 1px rgba(201, 162, 74, .6);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, .45), inset 0 0 0 1px rgba(var(--oc-gilt-rgb), .6);
 }
 .ps__bubble.is-thought { background: rgba(20, 30, 48, .82); color: #E8EEF8; box-shadow: 0 10px 30px rgba(0, 0, 0, .45), inset 0 0 0 1px rgba(200, 220, 240, .25); }
 .ps__who { display: block; margin-bottom: 2px; font-family: var(--font-fell-sc); font-size: 15px; letter-spacing: .06em; color: #2F6286; }
@@ -119,7 +119,7 @@ export default {
   background: rgba(0, 0, 0, .35); color: rgba(244, 238, 220, .85); box-shadow: inset 0 0 0 1px rgba(244, 238, 220, .3);
   font-family: var(--font-ui); font-size: 13px; font-weight: 800;
 }
-.ps__skip:focus-visible, .ps__choice:focus-visible { outline: 3px solid #E3A93B; outline-offset: 2px; }
+.ps__skip:focus-visible, .ps__choice:focus-visible { outline: 3px solid var(--oc-aim); outline-offset: 2px; }
 .ps-art-enter-active, .ps-art-leave-active { transition: opacity .5s ease; }
 .ps-art-enter-from, .ps-art-leave-to { opacity: 0; }
 .ps-bubble-enter-active, .ps-bubble-leave-active { transition: opacity .25s ease, transform .25s ease; }

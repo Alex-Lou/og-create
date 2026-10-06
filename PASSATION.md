@@ -171,8 +171,9 @@ chronométrer 20 appels. Comparer à zoom égal, au même endroit.
   pièce d'or, `--gold-100`, et `--shade-rgb` pour le brun des liserés à toute transparence), 3b-1 l'île (fait :
   `tokens/island.css` pour ce que ses composants partagent, adopté partout ; `--oc-gold-ink`, `--oc-night-ink` ;
   jetons locaux du décor de l'île, en tête de chaque CSS, sur la racine du composant), 3b-2 les fiches et les
-  mini-jeux de l'île (fait : plus aucune valeur en dur dans `components/World`, hors noir et blanc), puis les jetons
-  locaux du Grimoire et du reste ;
+  mini-jeux de l'île (fait : plus aucune valeur en dur dans `components/World`, hors noir et blanc), 3c-1 les teintes
+  partagées entre domaines (fait : canaux `-rgb` de l'or et de l'encre, `--oc-aim`, `--oc-glow-*`, `--oc-gilt-rgb` ;
+  `tests/tokens.test.js`), puis les jetons locaux du Grimoire et du reste ;
   4) les dossiers rangés par domaine ; 5) `App.vue` et `BookView.vue` découpés.
 - **Piège du passage en scoped** : une règle scoped gagne un attribut de spécificité. Si elle vise aussi la racine d'un
   composant enfant (un glyphe `img.glyph` dans un portrait, par exemple), elle peut l'emporter sur le style propre de

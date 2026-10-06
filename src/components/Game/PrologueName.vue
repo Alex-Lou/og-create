@@ -124,5 +124,5 @@ export default {
 .pn__sign:disabled { opacity: .7; cursor: default; }
 .pn__links { display: flex; justify-content: space-between; margin-top: 12px; }
 .pn__link { border: 0; background: none; cursor: pointer; padding: 6px 4px; font-family: var(--font-ui); font-size: 13px; font-weight: 800; color: #6E5646; text-decoration: underline; }
-.pn__sign:focus-visible, .pn__link:focus-visible { outline: 3px solid #E3A93B; outline-offset: 2px; }
+.pn__sign:focus-visible, .pn__link:focus-visible { outline: 3px solid var(--oc-aim); outline-offset: 2px; }
 </style>

@@ -11,6 +11,8 @@
   --ink-700: #574131;
   --ink-500: #85705f;
   --ink-300: #b9a691;
+  --ink-900-rgb: 52, 36, 26;
+  --ink-700-rgb: 87, 65, 49;
   /* Cuir (chrome du jeu) */
   --leather-500: #a34a36;
   --leather-600: #8a3b2c;
@@ -28,6 +30,9 @@
   --gold-500: #e0a93a;
   --gold-600: #b9832a;
   --gold-700: #8c5e18;
+  /* Les mêmes, en canaux, pour les écrire à toute transparence : rgba(var(--gold-400-rgb), .55)
+     (tests/tokens.test.js vérifie qu'un canal garde la valeur de sa couleur) */
+  --gold-400-rgb: 239, 193, 99;
   /* Encres secondaires */
   --verdigris-500: #4f9a86;
   --verdigris-100: #dcefe8;

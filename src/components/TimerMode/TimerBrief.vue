@@ -105,7 +105,7 @@ export default {
     padding: 8px 16px;
     border-radius: var(--r-lg) var(--r-lg) 0 0;
     background: var(--vellum-50);
-    box-shadow: 0 -1px 0 var(--oc-line), 0 -8px 20px rgba(52, 36, 26, 0.1);
+    box-shadow: 0 -1px 0 var(--oc-line), 0 -8px 20px rgba(var(--ink-900-rgb), 0.1);
   }
   .brief__goal > .g-mono { display: none; }
   .brief__text { font-size: 24px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 100%; }
