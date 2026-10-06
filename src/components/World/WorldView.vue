@@ -1452,8 +1452,9 @@ export default {
       if (this.busy || !guest) return;
       this.busy = true;
       try {
-        const { settled, world } = await playService.visitorSettle(guest.id);
+        const { settled, coins, world } = await playService.visitorSettle(guest.id);
         this.apply(world);
+        if (coins !== undefined) this.$emit('coins-updated', coins);
         this.visitorOpen = false;
         vibrate([12, 40, 18]);
         this.$emit('show-alert', `${settled} s’installe sur ton île : bienvenue !`);
@@ -1617,8 +1618,9 @@ export default {
       if (this.busy || !this.villagerView) return;
       this.busy = true;
       try {
-        const { world } = await playService.villagerNeed(this.villagerView.id, need);
+        const { coins, world } = await playService.villagerNeed(this.villagerView.id, need);
         this.apply(world);
+        if (coins !== undefined) this.$emit('coins-updated', coins);
         this.villagerSaid = THANKS[need] || '';
         vibrate(10);
       } catch (error) {
@@ -1632,8 +1634,9 @@ export default {
       if (this.busy) return;
       this.busy = true;
       try {
-        const { filled, world } = await playService.villagersNeeds();
+        const { filled, coins, world } = await playService.villagersNeeds();
         this.apply(world);
+        if (coins !== undefined) this.$emit('coins-updated', coins);
         vibrate([10, 30, 10]);
         const n = filled.length;
         this.$emit('show-alert', `${n} besoin${n > 1 ? 's' : ''} comblé${n > 1 ? 's' : ''} : tes habitants te remercient !`);
@@ -1941,10 +1944,11 @@ export default {
       const key = `craft:${target.x},${target.y}`;
       try {
         this.pops.set(key, performance.now());
-        const { world } = await playService.craftPlace(craft.id, target.x, target.y);
+        const { coins, world } = await playService.craftPlace(craft.id, target.x, target.y);
         this.craftPlacing = null;
         this.craftConfirm = null;
         this.apply(world);
+        if (coins !== undefined) this.$emit('coins-updated', coins);
         this.$nextTick(() => {
           const at = center(this.screenRectOf(target.x, target.y));
           ring(at, 80);
@@ -1968,8 +1972,9 @@ export default {
       this.busy = true;
       try {
         this.pops.set(key, performance.now());
-        const { world } = await playService.craftMove(from.x, from.y, cell.x, cell.y);
+        const { coins, world } = await playService.craftMove(from.x, from.y, cell.x, cell.y);
         this.apply(world);
+        if (coins !== undefined) this.$emit('coins-updated', coins);
         this.$nextTick(() => {
           burst(center(this.screenRectOf(cell.x, cell.y)), 14, 50);
           vibrate([10, 30, 10]);
@@ -2000,8 +2005,9 @@ export default {
       this.craftMenu = null;
       this.busy = true;
       try {
-        const { world } = await playService.craftStore(x, y);
+        const { coins, world } = await playService.craftStore(x, y);
         this.apply(world);
+        if (coins !== undefined) this.$emit('coins-updated', coins);
         this.$emit('show-alert', `${this.craftName(craft)} rangée dans la réserve de l’établi.`);
       } catch (error) {
         this.$emit('show-alert', messageOf(error, 'La création n’a pas pu être rangée.'));
