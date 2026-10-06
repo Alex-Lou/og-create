@@ -4,7 +4,7 @@
 import { reactive } from 'vue';
 import DECOR from '../../design/bibliotheque/svg/decor/decor.json';
 import { PROP_BOX } from './palette';
-import { librarySprite, cropTo, paintedBox } from './library';
+import { librarySprite, cropTo, paintedBox, BLANK } from './library';
 
 // Chargés à la demande, un fichier à la fois (le jeu ne lit que ce qui est posé sur l'île)
 const FILES = import.meta.glob('/design/bibliotheque/svg/decor/creations/*.svg', { query: '?raw', import: 'default' });
@@ -42,7 +42,6 @@ export function creationLayer(id, t = 0) {
 // Vignette d'une création (établi, gabarit, aperçu du Foyer) : la première image de son dessin, recadrée sur ce
 // qu'elle peint. Lue et mesurée une fois, à la première demande ; une image vide pendant ce temps (l'ancienne vignette
 // ne passe pas en éclair). null si la bibliothèque ne l'a pas ou si la lecture échoue : l'ancienne vignette reste
-const BLANK = `data:image/svg+xml;charset=utf-8,${encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" width="1" height="1"/>')}`;
 const started = new Set();
 const thumbs = reactive({});
 export function creationThumb(id) {
