@@ -9,7 +9,7 @@ import DECOR from '../../design/bibliotheque/svg/decor/decor.json';
 import { librarySprite, cropTo, paintedBox, BLANK, frameAt } from './library';
 
 // Chargés à la demande, un fichier à la fois (le jeu ne lit que ce qui est posé sur l'île)
-const FILES = import.meta.glob('/design/bibliotheque/svg/decor/{annexes,gisements,enseignes,ilots}/**/*.svg', { query: '?raw', import: 'default' });
+const FILES = import.meta.glob('/design/bibliotheque/svg/decor/{annexes,gisements,enseignes,ilots,lieux}/**/*.svg', { query: '?raw', import: 'default' });
 const ROOT = '/design/bibliotheque/svg/decor/';
 const SCALE = 1.25;
 
@@ -72,20 +72,38 @@ export function isletFrameAt(name, t) {
   return art ? frameAt(art, t) : 0;
 }
 
-// Vignette d'une annexe (sa fiche, le choix des annexes d'un bâtiment) : la première image de son dessin, recadrée sur
-// ce qu'elle peint. Lue et mesurée une fois, à la première demande ; une image vide pendant ce temps. null si la
-// bibliothèque ne l'a pas ou si la lecture échoue : l'ancienne vignette reste
+// Les lieux remarquables (decor.json, lieux) : le calque d'un lieu à l'instant t (secondes) ; le Cercle de menhirs
+// fleuri une fois Anya révélée (bloom). null si la bibliothèque ne l'a pas. Même cadre pour tous ; l'île les agrandit
+// à son échelle (landmarkScale : echelle_jeu)
+export function landmarkArtLayer(id, t = 0, bloom = false) {
+  const name = bloom && id === 'menhirs' ? 'menhirs_fleuri' : id;
+  const art = DECOR.lieux[name];
+  return art ? layerOf(`lieu-${name}`, art, t) : null;
+}
+
+// Vignette d'un dessin (la fiche d'une annexe, le Carnet d'explorateur) : sa première image, recadrée sur ce qu'elle
+// peint. Lue et mesurée une fois, à la première demande ; une image vide pendant ce temps. null si la lecture échoue :
+// l'ancienne vignette reste
 const started = new Set();
 const thumbs = reactive({});
+function thumbOf(name, load) {
+  if (!started.has(name)) {
+    started.add(name);
+    load()
+      .then(svg => paintedBox(svg).then(box => cropTo(svg, box)))
+      .then(svg => { thumbs[name] = `data:image/svg+xml;charset=utf-8,${encodeURIComponent(svg)}`; }, () => { thumbs[name] = null; });
+  }
+  return name in thumbs ? thumbs[name] : BLANK;
+}
+// Vignette d'une annexe (sa fiche, le choix des annexes d'un bâtiment), ou null si la bibliothèque ne l'a pas
 export function annexArtThumb(id, variant = 0) {
   const entry = annexEntry(id, variant);
   const load = entry && FILES[ROOT + entry.art.fichiers[0]];
-  if (!load) return null;
-  if (!started.has(entry.name)) {
-    started.add(entry.name);
-    load()
-      .then(svg => paintedBox(svg).then(box => cropTo(svg, box)))
-      .then(svg => { thumbs[entry.name] = `data:image/svg+xml;charset=utf-8,${encodeURIComponent(svg)}`; }, () => { thumbs[entry.name] = null; });
-  }
-  return entry.name in thumbs ? thumbs[entry.name] : BLANK;
+  return load ? thumbOf(entry.name, load) : null;
+}
+// Vignette d'un lieu remarquable (Carnet d'explorateur), ou null si la bibliothèque ne l'a pas
+export function landmarkArtThumb(id) {
+  const art = DECOR.lieux[id];
+  const load = art && FILES[ROOT + art.fichiers[0]];
+  return load ? thumbOf(`lieu-${id}`, load) : null;
 }

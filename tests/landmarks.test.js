@@ -13,11 +13,13 @@ describe('lieux remarquables : dessins', () => {
       for (const t of [0, 0.37, 1.9, 3.3]) {
         const layers = landmarkLayers(id, t);
         expect(layers.length).toBeGreaterThan(0);
+        // Le dessin de la bibliothèque (lu à la demande : load, decorArt.js), sinon les calques du code (svg)
         for (const layer of layers) {
-          const { svg, box } = layer.make();
-          expect(svg).not.toMatch(/NaN|undefined|Infinity/);
+          const { svg, load, box } = layer.make();
+          expect(Boolean(svg || load)).toBe(true);
+          if (svg) expect(svg).not.toMatch(/NaN|undefined|Infinity/);
           expect(box.w).toBeGreaterThan(0);
-          expect(layer.key).toContain(`landmark-${id}`);
+          expect(layer.key).toMatch(new RegExp(`landmark-${id}|lieu-${id}`));
           keys.add(layer.key);
         }
       }
