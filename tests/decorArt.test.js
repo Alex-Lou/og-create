@@ -6,7 +6,11 @@ import { readFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import { ANNEX_SPRITES, annexLayers, annexLight } from '@/world/annexSprites';
 import { DEPOSIT_SPRITES, depositLayer } from '@/world/depositSprites';
-import { annexArtLayer, depositArtLayer, annexArtThumb, signArtLayer } from '@/world/decorArt';
+import { annexArtLayer, depositArtLayer, annexArtThumb, signArtLayer, isletArtLayer, isletFrameAt } from '@/world/decorArt';
+import { ISLET_SPRITES } from '@/world/isletSprites';
+import { visitorBoat } from '@/world/visitors';
+import { BOTTLE } from '@/world/chest';
+import { SIGN } from '@/world/nature';
 import { NAME_SIGNS, NAME_SIGN_FRAME, nameSignSwing, nameSignLight } from '@/world/nameSigns';
 import DECOR from '../design/bibliotheque/svg/decor/decor.json';
 
@@ -99,5 +103,28 @@ describe('les enseignes de la bibliothèque', () => {
     expect([0.1, 0.3, 0.5, 0.7].map(t => signArtLayer('fer', t).frame)).toEqual([0, 1, 2, 3]);
     expect([0.1, 0.3, 0.5, 0.7].map(t => round(nameSignSwing('fer', t).angle))).toEqual([0, 0.06, 0, -0.06]);
     expect(nameSignSwing('fer', 0.3).pivot.map(v => v * 1.25)).toEqual(DECOR.enseignes.fer.cadre_du_nom.pivot);
+  });
+});
+
+describe('les îlots et les objets de la mer de la bibliothèque', () => {
+  // Le dessin par code que chacun remplace
+  const GAME = { ponton: ISLET_SPRITES.landing, barque_volante: ISLET_SPRITES.ferry[0], bateau_visiteur: () => visitorBoat(0), bouteille: BOTTLE[0], panneau_quartier: SIGN };
+  it('au cadre du dessin par code qu’il remplace, × 1,25, et le fichier a ce cadre', () => {
+    for (const [name, game] of Object.entries(GAME)) {
+      const art = DECOR.ilots[name];
+      const { box } = game();
+      expect(art.cadre, name).toEqual([box.x, box.y, box.w, box.h].map(v => round(v * 1.25)));
+      for (const file of art.fichiers) expect(readFileSync(ROOT + file, 'utf8').match(/viewBox="([^"]+)"/)[1], file).toBe(art.cadre.join(' '));
+      const lib = isletArtLayer(name).make().box;
+      expect([lib.x, lib.y, lib.w, lib.h].map(round), name).toEqual([box.x, box.y, box.w, box.h].map(round));
+    }
+    expect(isletArtLayer('nulle-part')).toBe(null);
+  });
+
+  it('à leur cadence : la bouteille 700 ms, la barque et le bateau des visiteurs 300 ms', () => {
+    expect([0, 0.69, 0.71, 1.41].map(t => isletFrameAt('bouteille', t))).toEqual([0, 0, 1, 0]);
+    expect([0, 0.31, 0.61].map(t => isletFrameAt('barque_volante', t))).toEqual([0, 1, 0]);
+    expect(isletArtLayer('bateau_visiteur', 1).key).toBe('lib-bateau_visiteur-1');
+    expect(isletFrameAt('ponton', 5)).toBe(0);
   });
 });

@@ -1,5 +1,5 @@
-// Les annexes, les gisements et les enseignes dessinés dans la bibliothèque (design/bibliotheque/svg/decor : annexes/,
-// gisements/, enseignes/, decor.json), au cadre du jeu × 1,25 et autour de la même ancre : chaque annexe prend son dessin et son animation (et
+// Les annexes, les gisements, les enseignes et les îlots dessinés dans la bibliothèque (design/bibliotheque/svg/decor :
+// annexes/, gisements/, enseignes/, ilots/, decor.json), au cadre du jeu × 1,25 et autour de la même ancre : chaque annexe prend son dessin et son animation (et
 // sa variante : le blé, les carottes ou les citrouilles d'un champ, les toits d'une maison…, dans l'ordre du jeu :
 // variante_jeu), chaque gisement son dessin prêt (animé) ou ramassé. Ce que la bibliothèque n'a pas garde son dessin
 // par code (annexSprites.js, depositSprites.js). Les lumières de nuit restent celles du jeu : la bibliothèque les a
@@ -9,7 +9,7 @@ import DECOR from '../../design/bibliotheque/svg/decor/decor.json';
 import { librarySprite, cropTo, paintedBox, BLANK, frameAt } from './library';
 
 // Chargés à la demande, un fichier à la fois (le jeu ne lit que ce qui est posé sur l'île)
-const FILES = import.meta.glob('/design/bibliotheque/svg/decor/{annexes,gisements,enseignes}/**/*.svg', { query: '?raw', import: 'default' });
+const FILES = import.meta.glob('/design/bibliotheque/svg/decor/{annexes,gisements,enseignes,ilots}/**/*.svg', { query: '?raw', import: 'default' });
 const ROOT = '/design/bibliotheque/svg/decor/';
 const SCALE = 1.25;
 
@@ -30,12 +30,13 @@ function annexEntry(id, variant) {
 
 const makes = new Map();
 // Le calque d'un dessin à l'instant t : { key, make }, ou null si son fichier manque
-function layerOf(name, art, t) {
-  const f = frameAt(art, t);
-  const path = ROOT + art.fichiers[f];
+const layerOf = (name, art, t) => frameLayer(name, art, frameAt(art, t));
+// Le calque de l'image f d'un dessin
+function frameLayer(name, art, f) {
+  const path = ROOT + art.fichiers[f % art.fichiers.length];
   if (!FILES[path]) return null;
   if (!makes.has(path)) makes.set(path, librarySprite(FILES[path], boxOf(art.cadre)));
-  return { key: `lib-${name}-${f}`, make: makes.get(path) };
+  return { key: `lib-${name}-${f % art.fichiers.length}`, make: makes.get(path) };
 }
 
 // Le calque d'une annexe (sa variante) à l'instant t (secondes), ou null si la bibliothèque ne l'a pas
@@ -57,6 +58,18 @@ export function signArtLayer(style, t = 0) {
   const art = DECOR.enseignes[style];
   const layer = art && layerOf(`enseigne-${style}`, art, t);
   return layer ? { ...layer, frame: frameAt(art, t), frames: art.fichiers.length } : null;
+}
+
+// Les îlots et les objets de la mer (decor.json, ilots : ponton d'amarrage, barque volante du passeur, bateau des
+// visiteurs, bouteille à la mer, panneau de quartier) : le calque de l'image f, ou null si la bibliothèque ne l'a pas
+export function isletArtLayer(name, f = 0) {
+  const art = DECOR.ilots[name];
+  return art ? frameLayer(name, art, f) : null;
+}
+// Son image à l'instant t (secondes), à sa cadence
+export function isletFrameAt(name, t) {
+  const art = DECOR.ilots[name];
+  return art ? frameAt(art, t) : 0;
 }
 
 // Vignette d'une annexe (sa fiche, le choix des annexes d'un bâtiment) : la première image de son dessin, recadrée sur

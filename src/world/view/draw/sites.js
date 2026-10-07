@@ -12,6 +12,7 @@ import { P } from '@/world/iso';
 import { itemLayers } from '@/world/shopSprites';
 import { objectLayers } from '@/world/objectArt';
 import { SIGN } from '@/world/nature';
+import { isletArtLayer } from '@/world/decorArt';
 import { nameSignLayers, paintName } from '@/world/nameSigns';
 import { landmarksWaiting } from '@/world/landmarks';
 import { annexLayers } from '@/world/annexSprites';
@@ -156,7 +157,9 @@ export default {
     ctx.save();
     ctx.translate(c.x, c.y);
     ctx.rotate(Math.sin(t * 1.3 + at.x) * 0.02);
-    drawSprite(ctx, 'sign', SIGN, 0, 0, repaint);
+    // (le panneau de la bibliothèque, sinon celui du code ; le prix s'écrit au même endroit)
+    const lib = isletArtLayer('panneau_quartier');
+    drawSprite(ctx, lib ? lib.key : 'sign', lib ? lib.make : SIGN, 0, 0, repaint);
     ctx.font = '900 7.5px Nunito, system-ui, sans-serif';
     ctx.textAlign = 'center';
     ctx.textBaseline = 'middle';
