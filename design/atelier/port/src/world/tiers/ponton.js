@@ -1,7 +1,7 @@
 // Ponton, paliers III à VII : Chantier naval, Grand port, Criée, Port à vapeur, Port du Kraken.
 // Même anse et même appontement à z = 10 qu'aux paliers I-II (× 1.5 dès le palier IV) : la canne au bout de la
 // jetée en L, le filet sur l'appontement, le casier et le crabe sur le sable, la barque derrière l'appontement.
-import { BLUE_ROOF, BUILDING_BOX } from '../palette.js';
+import { BLUE_ROOF, BUILDING_BOX, cove } from '../palette.js';
 import { sprite } from '../iso.js';
 import {
   big, P, box, face, gable, cylinder, disc, f2, ln, dot, ell, OUT, STONE, WOOD, WOOD_DARK, IRON, GOLD,
@@ -20,8 +20,7 @@ function harbor(k, under = '') {
   }
   let planks = '';
   for (let u = -0.85 * k + 0.13; u < 0.9 * k; u += 0.13) planks += ln(P(u, -0.25 * k, 10), P(u, 0.25 * k, 10), 'rgba(90,55,25,.35)', 0.8);
-  return disc(0, 0.05 * k, 0, 0.92 * k, WATER_LIGHT) + disc(0, 0.05 * k, 0, 0.78 * k, WATER)
-    + [0.3, 0.55].map(r => disc(-0.2 * k, 0.4 * k, 0.1, r * 0.4 * k, 'none', ' stroke="rgba(255,255,255,.35)" stroke-width="0.8"')).join('')
+  return cove(0, 0.05 * k, 0.92 * k, WATER_LIGHT, WATER)
     + under
     + posts
     + box(-0.85 * k, -0.25 * k, 0.9 * k, 0.25 * k, 7, 10, DECK) + planks

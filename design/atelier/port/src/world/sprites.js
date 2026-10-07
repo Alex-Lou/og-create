@@ -6,7 +6,7 @@ import { P, TW, TH, face, box, gable, pyramid, disc, cylinder, shadow, foliage, 
 import {
   WOOD, WOOD_DARK, STONE, BRICK, SOIL, ROOF_RED, THATCH, LEAVES, PINE, INK, BUILDING_BOX, PROP_BOX,
   pebble, doorLeft, windowRight, planksLeft, planksRight, roundTree,
-  WHITE_STONE, WHITE_WOOD, ROCKS, FOLIAGE, SAILS, roofOf, roofTexture, stoneCourses, seasonDots, crystals, rockBox, stoneRing, pool
+  WHITE_STONE, WHITE_WOOD, ROCKS, FOLIAGE, SAILS, roofOf, roofTexture, stoneCourses, seasonDots, crystals, rockBox, stoneRing, pool, cove
 } from './palette.js';
 
 const f2 = n => Math.round(n * 100) / 100;
@@ -311,7 +311,7 @@ function pier() {
     deck += `<polyline points="${[P(u, -0.25, 10), P(u, 0.25, 10)].map(p => p.join(',')).join(' ')}" stroke="rgba(90,55,25,.35)" stroke-width="0.8"/>`;
   }
   // L'anse reste dans l'emprise (cercle inscrit au losange 2 × 2)
-  const water = disc(0, 0.05, 0, 0.92, '#6FC0E4') + disc(0, 0.05, 0, 0.78, '#5AAED7');
+  const water = cove(0, 0.05, 0.92);
   const rope = `<path d="M${P(0.8, 0.2, 9).join(',')} Q${P(0.75, 0.45, 2).join(',')} ${P(0.55, 0.6, 5).join(',')}" stroke="#C9A16A" stroke-width="1.2" fill="none"/>`;
   return sprite(water + posts + deck + box(0.6, -0.15, 0.85, 0.12, 10, 18, WOOD_DARK) + rope, BUILDING_BOX);
 }

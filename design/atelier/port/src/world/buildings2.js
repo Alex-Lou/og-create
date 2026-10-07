@@ -4,7 +4,7 @@ import { P, TW, face, box, gable, pyramid, disc, cylinder, shadow, sprite, EDGE 
 import {
   WOOD, WOOD_DARK, STONE, WALL, BRICK, SOIL, ROOF_RED, PINE, BUILDING_BOX,
   pebble, doorLeft, windowLeft, windowRight, planksLeft, planksRight, roundTree,
-  WHITE_STONE, ROCKS, FOLIAGE, roofOf, roofTexture, stoneCourses, seasonDots, crystals, rockBox, stoneRing, pool
+  WHITE_STONE, ROCKS, FOLIAGE, roofOf, roofTexture, stoneCourses, seasonDots, crystals, rockBox, stoneRing, pool, cove
 } from './palette.js';
 import { gardenFence, goldenSign } from './sprites.js';
 
@@ -332,7 +332,7 @@ function forge(skin) {
 function bigPier() {
   let posts = '';
   for (const u of [-0.75, -0.25, 0.25, 0.75]) posts += box(u - 0.04, 0.12, u + 0.04, 0.2, -4, 7, WOOD_DARK) + box(u - 0.04, -0.2, u + 0.04, -0.12, -4, 7, WOOD_DARK);
-  const water = disc(0, 0.05, 0, 0.92, '#6FC0E4') + disc(0, 0.05, 0, 0.78, '#5AAED7');
+  const water = cove(0, 0.05, 0.92);
   return sprite(
     water + posts
     + box(-0.85, -0.25, 0.9, 0.25, 7, 10, WOOD) + box(0.45, 0.25, 0.75, 0.75, 7, 10, WOOD)
