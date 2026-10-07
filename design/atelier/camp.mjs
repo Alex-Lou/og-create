@@ -337,27 +337,33 @@ function asterCabin(n = 0) {
 }
 
 /* ---------- le coin de Cannelle (T3, derrière l'épave) : avant le feu de camp du Foyer ---------- */
-// Un pan de coque de l'Hirondelle dressé en coupe-vent (bordages courbes, membrures), un trépied de bois flotté et la
-// marmite cabossée au-dessus d'un petit feu, deux caisses pour s'asseoir, la louche posée, des poissons séchant
-function hullWall(pts3, h0, h1, c = { a: '#8E6A48', b: '#86633F' }) {
-  // pan de coque debout le long d'une courbe au sol (liste [u, v]) ; hauteur de h0 (bouts) à h1 (milieu), bord cassé
+// Un pan de coque de l'Hirondelle dressé en coupe-vent (tôle blanche, carène rouge, liseré bleu, un hublot,
+// membrures), un trépied de bois flotté et la marmite cabossée au-dessus d'un petit feu, deux caisses pour s'asseoir,
+// la louche posée, des poissons séchant
+function hullWall(pts3, h0, h1) {
+  // pan de coque debout le long d'une courbe au sol (liste [u, v]) ; hauteur de h0 (bouts) à h1 (milieu), bord cassé ;
+  // aux couleurs de l'épave : tôle blanche, carène rouge en bas, liseré bleu sous le bord
   let o = '';
   const n = pts3.length - 1;
   for (let i = 0; i < n; i++) {
     const [ua, va] = pts3[i], [ub, vb] = pts3[i + 1];
     const ha = h0 + (h1 - h0) * Math.sin((i / n) * Math.PI), hb = h0 + (h1 - h0) * Math.sin(((i + 1) / n) * Math.PI);
-    const jag = i % 2 ? -2.4 : 1.6;
-    o += face([[ua, va, 0], [ub, vb, 0], [ub, vb, hb + jag], [ua, va, ha]], i % 2 ? c.a : c.b, EDGE);
-    for (const k of [0.33, 0.66]) o += ln(P(ua, va, ha * k), P(ub, vb, hb * k), 'rgba(40,25,10,.35)', 0.7);
+    const jag = i % 2 ? -2.4 : 1.6, top = Math.min(ha, hb + jag);
+    o += face([[ua, va, 0], [ub, vb, 0], [ub, vb, hb + jag], [ua, va, ha]], i % 2 ? HULL.white2 : HULL.white, EDGE);
+    o += face([[ua, va, 0], [ub, vb, 0], [ub, vb, 4.6], [ua, va, 4.6]], HULL.red);
+    o += face([[ua, va, top - 5], [ub, vb, top - 5], [ub, vb, top - 3.6], [ua, va, top - 3.6]], HULL.navy);
+    o += ln(P(ua, va, ha * 0.5), P(ub, vb, hb * 0.5), 'rgba(40,25,10,.3)', 0.6);
   }
   return o;
 }
 function cannelleKitchen(n = 0) {
   let o = ground('sable');
-  // le pan de coque derrière, courbe ; deux membrures qui dépassent
+  // le pan de coque derrière, courbe ; deux membrures d'acier qui dépassent
   const curve = [[-0.78, -0.2], [-0.66, -0.52], [-0.4, -0.72], [-0.06, -0.8], [0.3, -0.76], [0.6, -0.58]];
-  o += stick(-0.5, -0.66, 0, -0.52, -0.66, 30, 2.4, '#7A5A3E') + stick(0.18, -0.8, 0, 0.18, -0.8, 27, 2.4, '#7A5A3E');
+  o += stick(-0.5, -0.66, 0, -0.52, -0.66, 30, 2.4, '#7E8088') + stick(0.18, -0.8, 0, 0.18, -0.8, 27, 2.4, '#7E8088');
   o += hullWall(curve, 10, 24);
+  // un hublot sur le pan de coque, une coulure de rouille dessous
+  { const [x, y] = P(0.1, -0.785, 7.8); o += ln([x + 0.4, y + 2.6], [x + 0.9, y + 7.2], 'rgba(160,90,40,.35)', 1.1) + ell(x, y, 2.3, 2.5, '#C9A24A', ` stroke="${OUT}" stroke-width="0.6"`) + ell(x, y, 1.5, 1.7, HULL.glass) + ell(x - 0.5, y - 0.6, 0.5, 0.5, '#FFFFFF', ' opacity=".8"'); }
   o += [[-0.6, -0.58, 10], [0.4, -0.7, 14]].map(([u, v, z]) => { const [x, y] = P(u, v, z); return ell(x, y, 1, 0.7, '#D9D2C2', ` stroke="${OUT}" stroke-width="0.4"`); }).join('');
   // des poissons qui sèchent sur une corde tendue entre les membrures
   { const a = P(-0.5, -0.64, 26), b = P(0.18, -0.78, 23); o += rope(a, b, 4, 0.5);
