@@ -333,13 +333,22 @@ M.ponton = { frame: BUILDING_BOX, n: 1, draw: () => {
 // porte, en volutes lumineuses et en étincelles ; vers la droite
 M.barque_volante = { frame: [-32, -56, 64, 68], n: 2, draw: f => {
   const belly = f ? 6 : 3;
-  return E(0, 6, 22, 5, 'rgba(120,210,255,.3)', 0) + E(-4, 8, 14, 2.6, 'rgba(191,240,255,.45)', 0)
-    + P('M-22,-6 L22,-6 Q19,5 9,6 L-12,6 Q-20,4 -22,-6 Z', WOOD.left) + pg([[-22, -6], [22, -6], [19, -2], [-20, -2]], WOOD.top, W * 0.7)
-    + L([-14, -1], [12, -1], WOOD_DARK.right, 0.8)
-    + tk('M-1,-6 L-1,-46', 1.4, WOOD_DARK.right)
-    + P(`M0,-44 Q${16 + belly},-30 0,-12 Z`, '#FFFDF8') + E(5 + belly / 3, -28, 3.2, 3.2, '#5CC8F0', 0.6) + E(5 + belly / 3, -28, 1.4, 1.4, '#FFFFFF', 0)
+  const coque = 'M-22,-6 L20,-6 Q24,-7 25,-12 Q27,-14 26,-9 Q24,4 9,6 L-12,6 Q-20,4 -22,-6 Z';
+  const volute = (x, y, r, a) => `<path d="M${r2(x - r)},${y} a${r},${r} 0 1 1 ${r2(r * 0.9)},${r2(r * 0.6)} a${r2(r * 0.5)},${r2(r * 0.5)} 0 1 1 ${r2(-r * 0.4)},${r2(-r * 0.7)}" fill="none" stroke="rgba(214,244,255,${a})" stroke-width="1.2" stroke-linecap="round"/>`;
+  return E(0, 7, 23, 5, 'rgba(120,210,255,.28)', 0) + E(-4, 8.6, 15, 2.6, 'rgba(191,240,255,.45)', 0)
+    + volute(-14 + (f ? 2 : 0), 8, 2.4, 0.75) + volute(6 - (f ? 2 : 0), 8.6, 2, 0.6) + volute(16, 7 + (f ? 1 : 0), 1.7, 0.5)
+    + star(-20 + (f ? 3 : 0), 9.4, 1.3, 0.9) + star(13 - (f ? 2 : 0), 10, 1.1, 0.8)
+    + line('M-1,-45 L-20,-6.6 M-1,-45 L23,-9', 0.5, WOOD_DARK.right)
+    + `<defs><clipPath id="barque-coque"><path d="${coque}"/></clipPath></defs><path d="${coque}" fill="${WOOD.left}"/><g clip-path="url(#barque-coque)">`
+    + '<path d="M-24,1.4 Q0,4.4 28,0 L28,10 L-24,10 Z" fill="' + WOOD.right + '"/>' + line('M-22,-1.8 Q0,-0.4 25,-3', 0.6, WOOD.right) + '</g>'
+    + `<path d="${coque}" fill="none" stroke="${OUT}" stroke-width="${W}" stroke-linejoin="round"/>`
+    + pg([[-22, -6], [20, -6], [19, -3], [-20.6, -2.6]], WOOD.top, W * 0.7) + `<path d="M24.6,-11 a1.6,1.6 0 1 1 1.4,1.6" fill="none" stroke="${WOOD_DARK.right}" stroke-width="0.8"/>`
+    + tk('M-1,-6 L-1,-47', 1.4, WOOD_DARK.right)
+    + P(`M0,-44 Q${16 + belly},-30 0,-12 Z`, '#FFFDF8') + line(`M0,-36 Q${r2(7 + belly / 2)},-33 ${r2(9 + belly / 2)},-31 M0,-19 Q${r2(8 + belly / 2)},-20 ${r2(10 + belly / 2)},-21`, 0.5, '#D8D0BE')
+    + E(5 + belly / 3, -28, 3.4, 3.4, '#5CC8F0', 0.6) + E(5 + belly / 3, -28, 1.5, 1.5, '#1E5A7A', 0) + E(4.4 + belly / 3, -28.8, 0.6, 0.6, '#FFFFFF', 0)
     + P('M-2,-40 Q-12,-26 -2,-14 Z', '#F2E4C0', W * 0.8)
-    + L([-19, -6], [-19, -16], '#3D3A36', 1.2) + rr(-22, -22, 6, 7, 1, '#FFE08A', 0.8, '#3D3A36') + E(-19, -18.4, 1, 1.8, '#FFF4C8', 0);
+    + L([-19, -6], [-19, -16], '#3D3A36', 1.2) + pg([[-22.6, -22], [-15.4, -22], [-16.4, -23.6], [-21.6, -23.6]], '#3D3A36', 0.5)
+    + rr(-22, -22, 6, 7, 1, '#FFE08A', 0.8, '#3D3A36') + E(-19, -18.4, 1 + f * 0.3, 1.8 + f * 0.5, '#FFF4C8', 0) + E(-19, -18.6, 5 + f, 5 + f, 'rgba(255,224,138,.22)', 0);
 } };
 // Bateau du visiteur : une coque bordée de planches, son liseré blanc, sa bande bleue et ses hublots ; la cabine, sa
 // porte, son hublot et son toit rouge, la cheminée qui fume ; la malle sanglée ; le mât, sa vergue, la grand-voile
@@ -400,7 +409,8 @@ M.bouteille = { frame: [-16, -28, 32, 32], n: 2, draw: f => E(0, 0, 9, 2.4, 'rgb
   + rr(-6, -2.6, 9, 4.4, 1.6, '#F3E6C4', 0.4) + L([-4.6, -0.4], [1.4, -0.4], '#C9A87A', 0.5)
   + line('M-8,-3.6 Q-2,-5.2 4,-3.8', 1.1, 'rgba(255,255,255,.65)') + '</g>'
   + line(`M-13,${f ? 2 : 3} q3,-1.6 6,0 M7,${f ? 3 : 2} q3,-1.6 6,0`, 0.9, 'rgba(255,255,255,.8)') };
-// Panneau d'un quartier à acheter : poteau, planche (le prix y est écrit par l'île), cadenas
+// Panneau d'un quartier à acheter : poteau planté dans une touffe, planche au liseré foncé (même place : le prix y est
+// écrit par l'île), ses clous et son fil du bois ; le cadenas doré suspendu à sa chaînette
 M.panneau_quartier = { frame: PROP_BOX, n: 1, draw: () => shade(0, 0, 14, 7, 0.2) + gbox(-0.03, -0.03, 0.03, 0.03, 0, 26, WOOD_DARK)
   + framed(-17, -40, 34, 17, 3, WOOD.top, '#7A4E2C', 1.2) + L([-13, -34], [13, -34], 'rgba(122,78,44,.3)', 0.8)
   + line('M-2.8,-50 v-3 a2.8,2.8 0 0 1 5.6,0 v3', 2.6, OUT) + line('M-2.8,-50 v-3 a2.8,2.8 0 0 1 5.6,0 v3', 1.2, '#8A6A22')
