@@ -42,6 +42,8 @@ export default {
       // Un coffre est ouvert sur l'île (ou va s'ouvrir) : les veillées et les scènes attendent qu'il se referme
       islandHold: false,
       people: null,
+      // L'avatar gardé par le compte (serveur), ou null tant qu'il n'y est pas
+      islandAvatar: null,
       // Les maîtres dont le bâtiment est fondé (les autres paraissent en naufragés : bulles, veillées)
       islandBuilt: [],
       vigilsSeen: storage.load(VIGILS_KEY, [])
@@ -72,9 +74,10 @@ export default {
     brumeStage() {
       return this.actsKnown ? brumeLook({ acts: this.islandActs, quest: this.islandQuest, elements: this.discoveredElements }).stage : null;
     },
-    // L'avatar du joueur dans les scènes : celui de sa carte d'embarquement
+    // L'avatar du joueur dans les scènes : celui que garde son compte, sinon celui de sa carte d'embarquement (avant le
+    // compte, il n'est que sur l'appareil)
     prologueLook() {
-      return this.prologue.look || DEFAULT_LOOK;
+      return this.islandAvatar || this.prologue.look || DEFAULT_LOOK;
     },
     // Le tutoriel est en cours : les succès attendent sa fin pour s'afficher (un « Sceau rompu » ne coupe pas le vent
     // qui se lève)
@@ -150,12 +153,24 @@ export default {
         this.islandActs = brume.acts || [];
         this.people = brume.people || null;
         this.islandBuilt = brume.built || [];
+        this.islandAvatar = brume.avatar || null;
+        if (!brume.avatar) this.keepAvatar();
         // La Révélation vue reste vue, même si une réponse du serveur partie avant son envoi arrive après
         this.anya = brume.anya ? { ...brume.anya, revealed: brume.anya.revealed || Boolean(this.anya && this.anya.revealed) } : this.anya;
         this.actsKnown = true;
         this.checkEarlyWisp();
       }
       this.runIsland();
+    },
+    // L'avatar de la carte d'embarquement, choisi avant le compte (gardé sur l'appareil), rejoint le compte créé par la
+    // page de garde : une tentative par chargement ; en cas d'échec, l'appareil le garde et le prochain chargement réessaie
+    keepAvatar() {
+      const { look, registered } = this.prologue;
+      if (!look || !registered || !this.isLoggedIn || this.avatarSent) return;
+      this.avatarSent = true;
+      playService.worldAvatar(look).then(world => {
+        this.islandAvatar = world.avatar || null;
+      }).catch(() => {});
     },
     // Feu follet écrit avant l'acte VII (bible, § 10) : Brume se reconnaît, une seule fois ; la finale reste au Phare.
     // La Vie écrite : le premier pressentiment d'Anya (§ 10, acte I), une voix sans visage
