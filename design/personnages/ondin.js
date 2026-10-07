@@ -3,6 +3,8 @@
 // Action : baguette tenue à deux mains, pointe en l'air ; image 2 : elle plonge vers le sol et il se réveille d'un coup.
 const { OUT, P, E, L, limb, clip, expression, arm, bareFoot, r2 } = require('./troupe');
 const { capucheRabattue, reperes } = require('./avatar_accessoires');
+// la capuche de son ciré relevée sous la pluie (tenues.js : la coiffe marquée capuche) : elle remplace le bonnet de nuit
+const relevee = c => !!(c.coiffe && c.coiffe.capuche);
 
 const C = {
   skin: '#F5CFA8', skinS: '#E0AE86',
@@ -60,7 +62,7 @@ const ondin = {
   hold(c, h) { return rod(h, 1); },
 
   // derrière le corps : la capuche rabattue de son ciré, qui dépasse derrière le cou (de face, de trois quarts)
-  backItems(c, { view }) { return view === 'ne' ? '' : capucheRabattue(c.uid, view, reperes(c), C.coat, C.coatS); },
+  backItems(c, { view }) { return view === 'ne' || relevee(c) ? '' : capucheRabattue(c.uid, view, reperes(c), C.coat, C.coatS); },
 
   body(c, { view }) {
     const se = view === 'se';
@@ -68,9 +70,10 @@ const ondin = {
       + `<path d="M12,52 Q24,54.8 36,52 L36,57 L12,57 Z" fill="${C.coatS}"/>`
       + `<rect x="14.6" y="39" width="1.3" height="11" rx="0.65" fill="${C.coatH}"/>`) + P(COAT, 'none');
     if (view === 'ne') {
-      // de dos : couture, capuche rabattue (la même pour tous : avatar_accessoires.js), ceinture de corde
-      s += P('M24,42.4 L24,53.8', 'none', 0.7);
-      s += capucheRabattue(c.uid, view, reperes(c), C.coat, C.coatS);
+      // de dos : couture, capuche rabattue (la même pour tous : avatar_accessoires.js ; sauf relevée sous la pluie), ceinture
+      // de corde
+      s += P(`M24,${relevee(c) ? 38 : 42.4} L24,53.8`, 'none', 0.7);
+      if (!relevee(c)) s += capucheRabattue(c.uid, view, reperes(c), C.coat, C.coatS);
       return s + cord('M13.9,46.4 Q24,48.6 34.1,46.4', 1.1, C.rope);
     }
     const k = se ? -1.6 : 0;
@@ -100,11 +103,14 @@ const ondin = {
       // la nuque se voit entre celles du milieu (elle est dessinée sous le col : neck)
       const back = 'M11,21 Q10,8.6 24,8.4 Q38,8.6 37,21 Q37.4,28 36,31 L35.6,33.2 L34,32 L33,34 L31.4,32.4 L30,34 L28.6,32.4 L27.2,33.8 Q25.8,30.4 24,29.2 Q22.2,30.4 20.8,33.8 L19.4,32.4 L18,34 L16.6,32.4 L15,34 L14,32 L12.4,33.2 L12,31 Q10.6,28 11,21 Z';
       s += E(12.6, 23, 1.6, 2.2, C.skin);
-      s += P(back, C.hair) + clip(`${c.uid}h`, back, `<rect x="8" y="6" width="34" height="30" fill="${C.hairS}"/><ellipse cx="22.4" cy="19.4" rx="13.8" ry="12" fill="${C.hair}"/>`) + P(back, 'none');
-      s += P('M18.4,19 Q17.8,25.4 19.2,31.4', 'none', 0.6) + P('M28.8,19 Q29.8,25.4 28.6,31.4', 'none', 0.6);
-      // bonnet vu de dos : le revers fait le tour du crâne, la pointe retombe à gauche de l'écran
-      s += `<g transform="translate(48 0) scale(-1 1)">${cap(c.uid, CAP_DOS)}</g>`;
-      s += P('M11.2,13.4 Q24,16.8 36.8,13.4 L37,15.6 Q24,19 11,15.6 Z', C.cream, 0.9);
+      // (la capuche relevée couvre toute la chevelure : ses boucles ne dépasseraient que par leurs pointes)
+      if (!relevee(c)) {
+        s += P(back, C.hair) + clip(`${c.uid}h`, back, `<rect x="8" y="6" width="34" height="30" fill="${C.hairS}"/><ellipse cx="22.4" cy="19.4" rx="13.8" ry="12" fill="${C.hair}"/>`) + P(back, 'none');
+        s += P('M18.4,19 Q17.8,25.4 19.2,31.4', 'none', 0.6) + P('M28.8,19 Q29.8,25.4 28.6,31.4', 'none', 0.6);
+      }
+      // bonnet vu de dos : le revers fait le tour du crâne, la pointe retombe à gauche de l'écran ; ou la coiffe
+      if (c.coiffe) s += c.coiffe(c, ctx, 'tete');
+      else s += `<g transform="translate(48 0) scale(-1 1)">${cap(c.uid, CAP_DOS)}</g>` + P('M11.2,13.4 Q24,16.8 36.8,13.4 L37,15.6 Q24,19 11,15.6 Z', C.cream, 0.9);
       return `<g transform="translate(0 ${HY})">${s}</g>`;
     }
     const se = view === 'se';
@@ -116,7 +122,7 @@ const ondin = {
     const face = `M${fx - rx},21.6 a${rx},10.4 0 1,0 ${2 * rx},0 a${rx},10.4 0 1,0 ${-2 * rx},0 Z`;
     // frange en boucles douces sous le revers du bonnet ; mèches qui s'échappent sur les côtés
     const bangs = sx('M12,19.4 Q11.8,12.4 24,12.2 Q36.2,12.4 36,19.4 Q34.4,15.8 31.6,15.8 Q30,18 27.6,17.6 Q26.4,15.4 24,15.6 Q21.6,15.4 20.4,17.6 Q18,18 16.4,15.8 Q13.6,15.8 12,19.4 Z');
-    s += (se ? '' : P('M11.8,17.4 Q8.4,18 8.8,21.2 Q10.2,19.6 11.8,19.8 Z', C.hair)) + P(sx('M36.2,17.4 Q39.6,18 39.2,21.2 Q37.8,19.6 36.2,19.8 Z'), C.hair);
+    if (!c.coiffe) s += (se ? '' : P('M11.8,17.4 Q8.4,18 8.8,21.2 Q10.2,19.6 11.8,19.8 Z', C.hair)) + P(sx('M36.2,17.4 Q39.6,18 39.2,21.2 Q37.8,19.6 36.2,19.8 Z'), C.hair);
     s += P(back, C.hair) + clip(`${c.uid}h`, back, `<rect x="8" y="24.2" width="32" height="6" fill="${C.hairS}"/>`) + P(back, 'none');
     if (se) s += E(35, 23.2, 1.5, 2.1, C.skin);
     const cheeks = se ? [[15, 2], [28.2, 1.6]] : [[16.4, 2.2], [31.6, 2.2]];
@@ -125,7 +131,7 @@ const ondin = {
       + cheeks.map(([x, r]) => E(x, 26.2, r * (ctx.expr === 'gene' ? 1.3 : 1), ctx.expr === 'gene' ? 1.6 : 1.2, C.cheek, 0)).join(''));
     s += P(face, 'none');
     s += P(bangs, C.hair) + L([16.4 + k, 14.6], [21.2 + k, 13.9], C.hairH, 1);
-    s += `<g transform="translate(${k} 0)">${cap(c.uid)}${P('M11.6,13 Q24,8.6 36.4,13 L36.6,15.2 Q24,10.8 11.4,15.2 Z', C.cream, 0.9)}</g>`;
+    s += c.coiffe ? c.coiffe(c, ctx, 'tete') : `<g transform="translate(${k} 0)">${cap(c.uid)}${P('M11.6,13 Q24,8.6 36.4,13 L36.6,15.2 Q24,10.8 11.4,15.2 Z', C.cream, 0.9)}</g>`;
     s += expression({
       eyes: se ? [[17.2, 22.6, 1.65], [25.2, 22.6, 1.45]] : [[19.4, 22.6, 1.7], [28.6, 22.6, 1.7]], ry: 2.5,
       brow: C.brow, browY: -4.3, browW: 1,

@@ -419,6 +419,16 @@ function cire(c, ctx, [col]) {
   if (view === 'ne') return s + P(`M24,${Y(9.2)} L${r2(24 + w)},${r2(H + 0.6)}`, 'none', 0.5) + capucheRabattue(c.uid, view, R, col, S);
   // de face, de trois quarts : la patte et ses pressions, le col pointu, deux poches à rabat
   const o = view === 'se' ? 21.6 : 24, sh = y + 3.2;
+  // ouvert (habiller : { id: 'cire', ouvert: true }, la troupe sous la pluie) : le même ciré, ses deux pans écartés du col
+  // à l'ourlet laissent voir la tenue ; les pressions le long du pan gauche
+  if ((c.o.accessoires.dessus || {}).ouvert) {
+    const coin = `M${r2(o - 2.6)},${Y(2)} L${r2(o + 2.6)},${Y(2)} L${r2(o + 3 + w)},${r2(H + 2)} L${r2(o - 3 + w)},${r2(H + 2)} Z`;
+    s = `<clipPath id="${c.uid}cro${view}"><path d="M0,0 L48,0 L48,64 L0,64 Z ${coin}" clip-rule="evenodd"/></clipPath><g clip-path="url(#${c.uid}cro${view})">${s}</g>`;
+    s += P(`M${r2(o - 2.6)},${Y(2)} L${r2(o - 3 + w)},${r2(H + 0.4)} M${r2(o + 2.6)},${Y(2)} L${r2(o + 3 + w)},${r2(H + 0.4)}`, 'none');
+    s += [6, 10, 14].map(d => y + d).filter(yy => yy < H - 2).map(yy => E(o - 4.2 + w * (yy - sh) / (H - sh), yy, 0.55, 0.55, tone(col, 0.5), 0.4)).join('');
+    s += P(`M${r2(o - 6.4)},${Y(0.8)} L${r2(o - 2.4)},${Y(4.4)} L${r2(o - 3.6)},${Y(5.8)} Z`, col, 0.8) + P(`M${r2(o + 6.4)},${Y(0.8)} L${r2(o + 2.4)},${Y(4.4)} L${r2(o + 3.6)},${Y(5.8)} Z`, S, 0.8);
+    return s + poches(c, ctx, S);
+  }
   s += P(`M${r2(o + 0.8)},${Y(3)} L${r2(o + 0.8 + w)},${r2(H + 0.8)}`, 'none', 0.9);
   s += [5.6, 9.2, 12.8, 16.4].map(d => y + d).filter(yy => yy < H - 1.4).map(yy => E(o + 2.2 + w * (yy - sh) / (H - sh), yy, 0.6, 0.6, tone(col, 0.5), 0.4)).join('');
   s += P(`M${r2(o - 5.2)},${Y(0.4)} L${r2(o + 0.4)},${Y(4.6)} L${r2(o - 1.6)},${Y(6)} Z`, col, 0.8) + P(`M${r2(o + 5.2)},${Y(0.4)} L${r2(o + 0.4)},${Y(4.6)} L${r2(o + 2.4)},${Y(6)} Z`, S, 0.8);
@@ -531,7 +541,8 @@ function couche(c, nom, ctx, extra) {
 // range ce qui dépasserait) ; les manches, les mains, les pieds (PORTE, c.foot)
 function habiller(m, objets, suffixe) {
   const c = { ...m, uid: `${m.uid}${suffixe}`, o: { accessoires: {} }, acc: {} };
-  for (const [place, { id, couleurs }] of Object.entries(objets)) { c.o.accessoires[place] = { id }; c.acc[place] = couleurs; }
+  // (les options d'un objet, comme le ciré ouvert, suivent son id : { id, couleurs, ouvert })
+  for (const [place, { id, couleurs, ...options }] of Object.entries(objets)) { c.o.accessoires[place] = { id, ...options }; c.acc[place] = couleurs; }
   const puis = (f, nom) => function (cc, ctx) { return (f ? f.call(this, cc, ctx) : '') + couche(cc, nom, ctx); };
   Object.assign(c, { backItems: puis(m.backItems, 'derriere'), body: puis(m.body, 'dessus'), neck: puis(m.neck, 'cou'), overArms: puis(m.overArms, 'surBras') });
   if (objets.tete || objets.cheveux) c.coiffe = (cc, ctx, nom) => couche(cc, nom, ctx);
