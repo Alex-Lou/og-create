@@ -4,6 +4,7 @@ import path from 'path';
 import { createRequire } from 'module';
 import { fileURLToPath } from 'url';
 import { RARITIES, closed, opening, open, glow, icon } from './coffres.mjs';
+import { coffre, coffreIcone } from './generateur_coffres.mjs';
 
 const require = createRequire(import.meta.url);
 const DIR = path.dirname(fileURLToPath(import.meta.url));
@@ -30,8 +31,9 @@ for (const [key, r] of Object.entries(RARITIES)) {
     rayons: [0, 1].map(n => glow(key, n))
   };
   const files = {};
-  for (const [state, frames] of Object.entries(sets)) files[state] = frames.map((b, n) => { const rel = `${key}/coffre_${key}_${state}_${n + 1}.svg`; write(path.join(LIB, rel), big(b)); count++; return rel; });
-  files.icone = `${key}/coffre_${key}_icone.svg`; write(path.join(LIB, files.icone), small(icon(key))); count++;
+  // les fichiers sortent du générateur des coffres : le jeu dessine les mêmes
+  for (const [state, frames] of Object.entries(sets)) files[state] = frames.map((b, n) => { const rel = `${key}/coffre_${key}_${state}_${n + 1}.svg`; write(path.join(LIB, rel), coffre(key, state, n + 1).svg); count++; return rel; });
+  files.icone = `${key}/coffre_${key}_icone.svg`; write(path.join(LIB, files.icone), coffreIcone(key).svg); count++;
   index.coffres[key] = { nom: r.label, couleur: r.glow, cadre: [0, 0, 120, 100], fichiers: files };
   cells.push(row(r.label, [...sets.ferme.map((b, n) => [big(unique(b), 1.3), `fermé ${n + 1}`]), ...sets.ouverture.map((b, n) => [big(unique(b), 1.3), `ouverture ${n + 1}`]), ...sets.ouvert.map((b, n) => [big(unique(b), 1.3), `ouvert ${n + 1}`]), [big(unique(sets.rayons[0] + sets.ouvert[0]), 1.3), 'rayons + ouvert'], [small(unique(icon(key)), 3), 'icône']]));
   // la page : fermé, puis l'ouverture enchaînée, puis ouvert en boucle (une séquence complète)

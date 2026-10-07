@@ -87,7 +87,7 @@ fs.copyFileSync(path.join(__dirname, 'bundle_README.md'), path.join(OUT, 'README
 // d'après le nom du geste, qu'esbuild renommerait
 // Puis un module par famille (generateur_<famille>.mjs → generateur/<famille>.mjs) : chaque fonction rend le SVG complet
 // du fichier de la bibliothèque ; verif_generateurs.mjs le vérifie, generer.mjs s'en sert en ligne de commande
-const GENERATEURS = [['generateur.mjs', 'avatar'], ['generateur_chantiers.mjs', 'chantiers'], ['generateur_betes.mjs', 'betes'], ['generateur_interface.mjs', 'interface'], ['generateur_objets.mjs', 'objets'], ['generateur_plantes.mjs', 'plantes'], ['generateur_meteo.mjs', 'meteo']];
+const GENERATEURS = [['generateur.mjs', 'avatar'], ['generateur_chantiers.mjs', 'chantiers'], ['generateur_betes.mjs', 'betes'], ['generateur_interface.mjs', 'interface'], ['generateur_objets.mjs', 'objets'], ['generateur_plantes.mjs', 'plantes'], ['generateur_meteo.mjs', 'meteo'], ['generateur_coffres.mjs', 'coffres']];
 for (const [source, famille] of GENERATEURS) {
   esbuild.buildSync({
     entryPoints: [path.join(__dirname, source)], bundle: true, format: 'esm', platform: 'browser', charset: 'utf8', keepNames: true,
