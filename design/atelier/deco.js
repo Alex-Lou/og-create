@@ -38,7 +38,6 @@ function crown(blobs, c, id) {
 }
 // Rocher arrondi et bosselé : silhouette douce, côté clair en haut à gauche, ombre en bas à droite, reflet
 // (u, v : centre au sol ; ru, rv : demi-taille en cases ; h : hauteur ; seed : forme)
-let rockN = 0;
 function boulder(u, v, ru, rv, h, c, seed = 1) {
   const [x, y] = pt(u, v);
   const w = ru * TW * 0.78, d = rv * TH * 0.7, H = h * K;
@@ -46,7 +45,8 @@ function boulder(u, v, ru, rv, h, c, seed = 1) {
   const path = `M${r2(x - w)},${r2(y)} Q${r2(x - w * 1.02)},${r2(y - H * 0.7 * j(1))} ${r2(x - w * 0.45)},${r2(y - H * j(2))} `
     + `Q${r2(x + w * 0.1)},${r2(y - H * 1.12 * j(3))} ${r2(x + w * 0.62)},${r2(y - H * 0.78 * j(4))} Q${r2(x + w * 1.04)},${r2(y - H * 0.42)} ${r2(x + w)},${r2(y)} `
     + `Q${x},${r2(y + d)} ${r2(x - w)},${r2(y)} Z`;
-  const id = `rk${seed}_${rockN++}`;
+  // le nom de la découpe vient des réglages du rocher (pas d'un compteur), comme celui des lueurs
+  const id = `rk${seed}_${[u, v, ru, rv, h].map(r2).join('_')}`.replace(/-/g, 'm').replace(/\./g, 'p');
   return `<path d="${path}" fill="${c.left}" stroke="${OUT}" stroke-width="1.1" stroke-linejoin="round"/>`
     + `<defs><clipPath id="${id}"><path d="${path}"/></clipPath></defs><g clip-path="url(#${id})">`
     + `<ellipse cx="${r2(x + w * 0.55)}" cy="${r2(y - H * 0.1)}" rx="${r2(w * 0.8)}" ry="${r2(H * 0.75)}" fill="${c.right}"/>`
@@ -94,8 +94,8 @@ function flame(x, y, h, w, k) {
   return `<path d="${tip(1, sway)}" fill="#E8573A" stroke="${OUT}" stroke-width="0.9" stroke-linejoin="round"/><path d="${tip(0.72, sway * 0.6)}" fill="#F59A3C"/><path d="${tip(0.42, sway * 0.3)}" fill="#FFE08A"/>`;
 }
 // Lueur : un dégradé qui s'efface vers le bord (pas un disque plat) ; identifiant propre à chaque lueur
-let glowN = 0;
-const glow = (x, y, r, rgb = '255,224,138', a = 0.38) => { const id = `lueur${glowN++}`; return `<defs><radialGradient id="${id}"><stop offset="0" stop-color="rgb(${rgb})" stop-opacity="${r2(Math.min(0.9, a * 1.8))}"/><stop offset="0.45" stop-color="rgb(${rgb})" stop-opacity="${r2(a * 0.8)}"/><stop offset="1" stop-color="rgb(${rgb})" stop-opacity="0"/></radialGradient></defs><circle cx="${r2(x)}" cy="${r2(y)}" r="${r2(r * 1.25)}" fill="url(#${id})"/>`; };
+// son nom vient de ses réglages (pas d'un compteur) : un même dessin porte le même nom, dans quelque ordre qu'on dessine
+const glow = (x, y, r, rgb = '255,224,138', a = 0.38) => { const id = `lueur_${[x, y, r, a].map(r2).join('_')}_${rgb}`.replace(/,/g, '-').replace(/\./g, 'p'); return `<defs><radialGradient id="${id}"><stop offset="0" stop-color="rgb(${rgb})" stop-opacity="${r2(Math.min(0.9, a * 1.8))}"/><stop offset="0.45" stop-color="rgb(${rgb})" stop-opacity="${r2(a * 0.8)}"/><stop offset="1" stop-color="rgb(${rgb})" stop-opacity="0"/></radialGradient></defs><circle cx="${r2(x)}" cy="${r2(y)}" r="${r2(r * 1.25)}" fill="url(#${id})"/>`; };
 const STONE = { top: '#E6E1D4', left: '#C3BBA9', right: '#9B927F' };
 const WHITE_STONE = { top: '#FBF8F1', left: '#E7E1D3', right: '#C9C0AC' };
 const ROOF_RED = { back: '#B9503B', front: '#E06E52', gable: '#F3E4C4', right: '#B9503B' };
