@@ -458,6 +458,261 @@
    "statut": "ok"
   },
   {
+   "id": "interface/bois_icone",
+   "rubrique": "interface",
+   "titre": "Bois (icône)",
+   "images": 1,
+   "fichiers": [
+    "svg/interface/bois_icone.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    32,
+    32
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "interface/defis_icone",
+   "rubrique": "interface",
+   "titre": "Défis (icône)",
+   "images": 1,
+   "fichiers": [
+    "svg/interface/defis_icone.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    32,
+    32
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "interface/eau_icone",
+   "rubrique": "interface",
+   "titre": "Eau (icône)",
+   "images": 1,
+   "fichiers": [
+    "svg/interface/eau_icone.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    32,
+    32
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "interface/ecu_icone",
+   "rubrique": "interface",
+   "titre": "Écu (icône)",
+   "images": 1,
+   "fichiers": [
+    "svg/interface/ecu_icone.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    32,
+    32
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "interface/grimoire_icone",
+   "rubrique": "interface",
+   "titre": "Grimoire (icône)",
+   "images": 1,
+   "fichiers": [
+    "svg/interface/grimoire_icone.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    32,
+    32
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "interface/ile_icone",
+   "rubrique": "interface",
+   "titre": "Île (icône)",
+   "images": 1,
+   "fichiers": [
+    "svg/interface/ile_icone.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    32,
+    32
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "interface/menu_icone",
+   "rubrique": "interface",
+   "titre": "Menu (icône)",
+   "images": 1,
+   "fichiers": [
+    "svg/interface/menu_icone.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    32,
+    32
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "interface/nourriture_icone",
+   "rubrique": "interface",
+   "titre": "Nourriture (icône)",
+   "images": 1,
+   "fichiers": [
+    "svg/interface/nourriture_icone.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    32,
+    32
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "interface/pierre_icone",
+   "rubrique": "interface",
+   "titre": "Pierre (icône)",
+   "images": 1,
+   "fichiers": [
+    "svg/interface/pierre_icone.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    32,
+    32
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "interface/poisson_icone",
+   "rubrique": "interface",
+   "titre": "Poisson (icône)",
+   "images": 1,
+   "fichiers": [
+    "svg/interface/poisson_icone.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    32,
+    32
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "interface/ramasser_icone",
+   "rubrique": "interface",
+   "titre": "Tout ramasser (icône)",
+   "images": 1,
+   "fichiers": [
+    "svg/interface/ramasser_icone.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    32,
+    32
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "interface/recolte_icone",
+   "rubrique": "interface",
+   "titre": "Récolte (icône)",
+   "images": 1,
+   "fichiers": [
+    "svg/interface/recolte_icone.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    32,
+    32
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "interface/sac_icone",
+   "rubrique": "interface",
+   "titre": "Sac (icône)",
+   "images": 1,
+   "fichiers": [
+    "svg/interface/sac_icone.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    32,
+    32
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "interface/sceau_icone",
+   "rubrique": "interface",
+   "titre": "Sceau (icône)",
+   "images": 1,
+   "fichiers": [
+    "svg/interface/sceau_icone.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    32,
+    32
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "interface/taches_icone",
+   "rubrique": "interface",
+   "titre": "Tâches (icône)",
+   "images": 1,
+   "fichiers": [
+    "svg/interface/taches_icone.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    32,
+    32
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
    "id": "personnages/avatar/avatar-01-naufrage/avatar-01-naufrage_avant_applaudir",
    "rubrique": "personnages",
    "sujet": "avatar-01-naufrage",
@@ -41422,6 +41677,40 @@
    "statut": "ok"
   },
   {
+   "id": "interface/carnet_icone",
+   "rubrique": "interface",
+   "titre": "Carnet d'explorateur (icône)",
+   "images": 1,
+   "fichiers": [
+    "svg/interface/carnet_icone.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    32,
+    32
+   ],
+   "parcours": "tuto-3",
+   "statut": "ok"
+  },
+  {
+   "id": "interface/expedition_icone",
+   "rubrique": "interface",
+   "titre": "Expédition (icône)",
+   "images": 1,
+   "fichiers": [
+    "svg/interface/expedition_icone.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    32,
+    32
+   ],
+   "parcours": "tuto-3",
+   "statut": "ok"
+  },
+  {
    "id": "personnages/maitres/ondin/ondin_avant_applaudir",
    "rubrique": "personnages",
    "sujet": "ondin",
@@ -70398,6 +70687,23 @@
    "cadre": [
     -16,
     -26,
+    32,
+    32
+   ],
+   "parcours": "acte-4",
+   "statut": "ok"
+  },
+  {
+   "id": "interface/trouvailles_icone",
+   "rubrique": "interface",
+   "titre": "Trouvailles (icône)",
+   "images": 1,
+   "fichiers": [
+    "svg/interface/trouvailles_icone.svg"
+   ],
+   "cadre": [
+    0,
+    0,
     32,
     32
    ],

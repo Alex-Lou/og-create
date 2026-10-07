@@ -1,0 +1,243 @@
+{
+ "_lisez_moi": [
+  "Les icônes de l'interface, au trait de la bibliothèque : la barre du bas (Grimoire, Île, Défis, Sceau, et le sac, les tâches et le menu de la v6, HISTOIRE.md § 9, étapes 4 et 6), l'écu, les ressources, les boutons de l'île.",
+  "Carré 32 × 32, sans marge à retirer : les afficher de 16 à 32 px (en <img>, ou en SVG en ligne). Elles se lisent sur le papier clair comme sur le verre sombre des boutons de l'île. Pour un onglet inactif, les éteindre en CSS (opacity, ou filter: saturate(.4)) plutôt que de les redessiner.",
+  "sert : où le jeu s'en sert. Les petites commandes (fermer, flèches, zoom, plein écran) restent des pictos au trait du jeu. L'heure et la météo ont déjà leurs icônes : svg/meteo/icones (temps, moments)."
+ ],
+ "icones": {
+  "grimoire": {
+   "nom": "Grimoire (icône)",
+   "sert": "l'onglet du Grimoire",
+   "cadre": [
+    0,
+    0,
+    32,
+    32
+   ],
+   "fichiers": [
+    "grimoire_icone.svg"
+   ]
+  },
+  "ile": {
+   "nom": "Île (icône)",
+   "sert": "l'onglet de l'île",
+   "cadre": [
+    0,
+    0,
+    32,
+    32
+   ],
+   "fichiers": [
+    "ile_icone.svg"
+   ]
+  },
+  "defis": {
+   "nom": "Défis (icône)",
+   "sert": "l'onglet des Défis",
+   "cadre": [
+    0,
+    0,
+    32,
+    32
+   ],
+   "fichiers": [
+    "defis_icone.svg"
+   ]
+  },
+  "sceau": {
+   "nom": "Sceau (icône)",
+   "sert": "l'onglet du Sceau (le compte, les succès)",
+   "cadre": [
+    0,
+    0,
+    32,
+    32
+   ],
+   "fichiers": [
+    "sceau_icone.svg"
+   ]
+  },
+  "sac": {
+   "nom": "Sac (icône)",
+   "sert": "le sac de la v6 (étape 4) : ce que le joueur a ramassé",
+   "cadre": [
+    0,
+    0,
+    32,
+    32
+   ],
+   "fichiers": [
+    "sac_icone.svg"
+   ]
+  },
+  "taches": {
+   "nom": "Tâches (icône)",
+   "sert": "les tâches de Brume (v6, étape 6)",
+   "cadre": [
+    0,
+    0,
+    32,
+    32
+   ],
+   "fichiers": [
+    "taches_icone.svg"
+   ]
+  },
+  "menu": {
+   "nom": "Menu (icône)",
+   "sert": "le menu de la v6 (étape 6) : l'avatar, les réglages",
+   "cadre": [
+    0,
+    0,
+    32,
+    32
+   ],
+   "fichiers": [
+    "menu_icone.svg"
+   ]
+  },
+  "ecu": {
+   "nom": "Écu (icône)",
+   "sert": "le compteur d'écus, les prix, les gains",
+   "cadre": [
+    0,
+    0,
+    32,
+    32
+   ],
+   "fichiers": [
+    "ecu_icone.svg"
+   ]
+  },
+  "pierre": {
+   "nom": "Pierre (icône)",
+   "sert": "la ressource pierre (stock, Récolte, prix)",
+   "cadre": [
+    0,
+    0,
+    32,
+    32
+   ],
+   "fichiers": [
+    "pierre_icone.svg"
+   ]
+  },
+  "bois": {
+   "nom": "Bois (icône)",
+   "sert": "la ressource bois",
+   "cadre": [
+    0,
+    0,
+    32,
+    32
+   ],
+   "fichiers": [
+    "bois_icone.svg"
+   ]
+  },
+  "eau": {
+   "nom": "Eau (icône)",
+   "sert": "la ressource eau",
+   "cadre": [
+    0,
+    0,
+    32,
+    32
+   ],
+   "fichiers": [
+    "eau_icone.svg"
+   ]
+  },
+  "nourriture": {
+   "nom": "Nourriture (icône)",
+   "sert": "la ressource nourriture, le besoin « manger »",
+   "cadre": [
+    0,
+    0,
+    32,
+    32
+   ],
+   "fichiers": [
+    "nourriture_icone.svg"
+   ]
+  },
+  "poisson": {
+   "nom": "Poisson (icône)",
+   "sert": "le poisson (ce que produit le Ponton)",
+   "cadre": [
+    0,
+    0,
+    32,
+    32
+   ],
+   "fichiers": [
+    "poisson_icone.svg"
+   ]
+  },
+  "recolte": {
+   "nom": "Récolte (icône)",
+   "sert": "le bouton de la Récolte",
+   "cadre": [
+    0,
+    0,
+    32,
+    32
+   ],
+   "fichiers": [
+    "recolte_icone.svg"
+   ]
+  },
+  "ramasser": {
+   "nom": "Tout ramasser (icône)",
+   "sert": "le bouton « Tout ramasser »",
+   "cadre": [
+    0,
+    0,
+    32,
+    32
+   ],
+   "fichiers": [
+    "ramasser_icone.svg"
+   ]
+  },
+  "carnet": {
+   "nom": "Carnet d'explorateur (icône)",
+   "sert": "le bouton du carnet d'explorateur",
+   "cadre": [
+    0,
+    0,
+    32,
+    32
+   ],
+   "fichiers": [
+    "carnet_icone.svg"
+   ]
+  },
+  "trouvailles": {
+   "nom": "Trouvailles (icône)",
+   "sert": "le bouton des trouvailles des climats",
+   "cadre": [
+    0,
+    0,
+    32,
+    32
+   ],
+   "fichiers": [
+    "trouvailles_icone.svg"
+   ]
+  },
+  "expedition": {
+   "nom": "Expédition (icône)",
+   "sert": "une expédition en cours",
+   "cadre": [
+    0,
+    0,
+    32,
+    32
+   ],
+   "fichiers": [
+    "expedition_icone.svg"
+   ]
+  }
+ }
+}
