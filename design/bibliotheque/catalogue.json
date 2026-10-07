@@ -599,6 +599,33 @@
    "statut": "ok"
   },
   {
+   "id": "personnages/avatar/avatar-01-naufrage/avatar-01-naufrage_avant_pecher",
+   "rubrique": "personnages",
+   "sujet": "avatar-01-naufrage",
+   "vue": "avant",
+   "pose": "pecher",
+   "titre": "Avatar, exemple 1 (naufragé), trois quarts avant, pecher",
+   "regarde": "bas-droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/avatar/avatar-01-naufrage/avatar-01-naufrage_avant_pecher_1.svg",
+    "svg/personnages/avatar/avatar-01-naufrage/avatar-01-naufrage_avant_pecher_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    700,
+    1100
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
    "id": "personnages/avatar/avatar-01-naufrage/avatar-01-naufrage_avant_ramasser",
    "rubrique": "personnages",
    "sujet": "avatar-01-naufrage",
@@ -787,6 +814,33 @@
    "statut": "ok"
   },
   {
+   "id": "personnages/avatar/avatar-01-naufrage/avatar-01-naufrage_dos_pecher",
+   "rubrique": "personnages",
+   "sujet": "avatar-01-naufrage",
+   "vue": "dos",
+   "pose": "pecher",
+   "titre": "Avatar, exemple 1 (naufragé), trois quarts dos, pecher",
+   "regarde": "haut-droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/avatar/avatar-01-naufrage/avatar-01-naufrage_dos_pecher_1.svg",
+    "svg/personnages/avatar/avatar-01-naufrage/avatar-01-naufrage_dos_pecher_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    700,
+    1100
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
    "id": "personnages/avatar/avatar-01-naufrage/avatar-01-naufrage_face_applaudir",
    "rubrique": "personnages",
    "sujet": "avatar-01-naufrage",
@@ -951,6 +1005,32 @@
    "fichiers": [
     "svg/personnages/avatar/avatar-01-naufrage/avatar-01-naufrage_face_mains-tendues_1.svg",
     "svg/personnages/avatar/avatar-01-naufrage/avatar-01-naufrage_face_mains-tendues_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    700,
+    1100
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "personnages/avatar/avatar-01-naufrage/avatar-01-naufrage_face_pecher",
+   "rubrique": "personnages",
+   "sujet": "avatar-01-naufrage",
+   "vue": "face",
+   "pose": "pecher",
+   "titre": "Avatar, exemple 1 (naufragé), de face, pecher",
+   "regarde": "face",
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/avatar/avatar-01-naufrage/avatar-01-naufrage_face_pecher_1.svg",
+    "svg/personnages/avatar/avatar-01-naufrage/avatar-01-naufrage_face_pecher_2.svg"
    ],
    "cadre": [
     0,
@@ -1176,6 +1256,33 @@
    "statut": "ok"
   },
   {
+   "id": "personnages/avatar/avatar-01/avatar-01_avant_pecher",
+   "rubrique": "personnages",
+   "sujet": "avatar-01",
+   "vue": "avant",
+   "pose": "pecher",
+   "titre": "Avatar, exemple 1, trois quarts avant, pecher",
+   "regarde": "bas-droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/avatar/avatar-01/avatar-01_avant_pecher_1.svg",
+    "svg/personnages/avatar/avatar-01/avatar-01_avant_pecher_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    700,
+    1100
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
    "id": "personnages/avatar/avatar-01/avatar-01_avant_ramasser",
    "rubrique": "personnages",
    "sujet": "avatar-01",
@@ -1360,6 +1467,33 @@
     64
    ],
    "ms_par_image": 170,
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "personnages/avatar/avatar-01/avatar-01_dos_pecher",
+   "rubrique": "personnages",
+   "sujet": "avatar-01",
+   "vue": "dos",
+   "pose": "pecher",
+   "titre": "Avatar, exemple 1, trois quarts dos, pecher",
+   "regarde": "haut-droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/avatar/avatar-01/avatar-01_dos_pecher_1.svg",
+    "svg/personnages/avatar/avatar-01/avatar-01_dos_pecher_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    700,
+    1100
+   ],
    "parcours": "tuto-1",
    "statut": "ok"
   },
@@ -1719,6 +1853,32 @@
    "statut": "ok"
   },
   {
+   "id": "personnages/avatar/avatar-01/avatar-01_face_pecher",
+   "rubrique": "personnages",
+   "sujet": "avatar-01",
+   "vue": "face",
+   "pose": "pecher",
+   "titre": "Avatar, exemple 1, de face, pecher",
+   "regarde": "face",
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/avatar/avatar-01/avatar-01_face_pecher_1.svg",
+    "svg/personnages/avatar/avatar-01/avatar-01_face_pecher_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    700,
+    1100
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
    "id": "personnages/avatar/avatar-01/avatar-01_face_repos",
    "rubrique": "personnages",
    "sujet": "avatar-01",
@@ -1929,6 +2089,33 @@
    "statut": "ok"
   },
   {
+   "id": "personnages/avatar/avatar-02-naufrage/avatar-02-naufrage_avant_pecher",
+   "rubrique": "personnages",
+   "sujet": "avatar-02-naufrage",
+   "vue": "avant",
+   "pose": "pecher",
+   "titre": "Avatar, exemple 2 (naufragé), trois quarts avant, pecher",
+   "regarde": "bas-droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/avatar/avatar-02-naufrage/avatar-02-naufrage_avant_pecher_1.svg",
+    "svg/personnages/avatar/avatar-02-naufrage/avatar-02-naufrage_avant_pecher_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    700,
+    1100
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
    "id": "personnages/avatar/avatar-02-naufrage/avatar-02-naufrage_avant_ramasser",
    "rubrique": "personnages",
    "sujet": "avatar-02-naufrage",
@@ -2117,6 +2304,33 @@
    "statut": "ok"
   },
   {
+   "id": "personnages/avatar/avatar-02-naufrage/avatar-02-naufrage_dos_pecher",
+   "rubrique": "personnages",
+   "sujet": "avatar-02-naufrage",
+   "vue": "dos",
+   "pose": "pecher",
+   "titre": "Avatar, exemple 2 (naufragé), trois quarts dos, pecher",
+   "regarde": "haut-droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/avatar/avatar-02-naufrage/avatar-02-naufrage_dos_pecher_1.svg",
+    "svg/personnages/avatar/avatar-02-naufrage/avatar-02-naufrage_dos_pecher_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    700,
+    1100
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
    "id": "personnages/avatar/avatar-02-naufrage/avatar-02-naufrage_face_applaudir",
    "rubrique": "personnages",
    "sujet": "avatar-02-naufrage",
@@ -2281,6 +2495,32 @@
    "fichiers": [
     "svg/personnages/avatar/avatar-02-naufrage/avatar-02-naufrage_face_mains-tendues_1.svg",
     "svg/personnages/avatar/avatar-02-naufrage/avatar-02-naufrage_face_mains-tendues_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    700,
+    1100
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "personnages/avatar/avatar-02-naufrage/avatar-02-naufrage_face_pecher",
+   "rubrique": "personnages",
+   "sujet": "avatar-02-naufrage",
+   "vue": "face",
+   "pose": "pecher",
+   "titre": "Avatar, exemple 2 (naufragé), de face, pecher",
+   "regarde": "face",
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/avatar/avatar-02-naufrage/avatar-02-naufrage_face_pecher_1.svg",
+    "svg/personnages/avatar/avatar-02-naufrage/avatar-02-naufrage_face_pecher_2.svg"
    ],
    "cadre": [
     0,
@@ -2506,6 +2746,33 @@
    "statut": "ok"
   },
   {
+   "id": "personnages/avatar/avatar-02/avatar-02_avant_pecher",
+   "rubrique": "personnages",
+   "sujet": "avatar-02",
+   "vue": "avant",
+   "pose": "pecher",
+   "titre": "Avatar, exemple 2, trois quarts avant, pecher",
+   "regarde": "bas-droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/avatar/avatar-02/avatar-02_avant_pecher_1.svg",
+    "svg/personnages/avatar/avatar-02/avatar-02_avant_pecher_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    700,
+    1100
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
    "id": "personnages/avatar/avatar-02/avatar-02_avant_ramasser",
    "rubrique": "personnages",
    "sujet": "avatar-02",
@@ -2694,6 +2961,33 @@
    "statut": "ok"
   },
   {
+   "id": "personnages/avatar/avatar-02/avatar-02_dos_pecher",
+   "rubrique": "personnages",
+   "sujet": "avatar-02",
+   "vue": "dos",
+   "pose": "pecher",
+   "titre": "Avatar, exemple 2, trois quarts dos, pecher",
+   "regarde": "haut-droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/avatar/avatar-02/avatar-02_dos_pecher_1.svg",
+    "svg/personnages/avatar/avatar-02/avatar-02_dos_pecher_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    700,
+    1100
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
    "id": "personnages/avatar/avatar-02/avatar-02_face_applaudir",
    "rubrique": "personnages",
    "sujet": "avatar-02",
@@ -2858,6 +3152,32 @@
    "fichiers": [
     "svg/personnages/avatar/avatar-02/avatar-02_face_mains-tendues_1.svg",
     "svg/personnages/avatar/avatar-02/avatar-02_face_mains-tendues_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    700,
+    1100
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "personnages/avatar/avatar-02/avatar-02_face_pecher",
+   "rubrique": "personnages",
+   "sujet": "avatar-02",
+   "vue": "face",
+   "pose": "pecher",
+   "titre": "Avatar, exemple 2, de face, pecher",
+   "regarde": "face",
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/avatar/avatar-02/avatar-02_face_pecher_1.svg",
+    "svg/personnages/avatar/avatar-02/avatar-02_face_pecher_2.svg"
    ],
    "cadre": [
     0,
@@ -3083,6 +3403,33 @@
    "statut": "ok"
   },
   {
+   "id": "personnages/avatar/avatar-03-naufrage/avatar-03-naufrage_avant_pecher",
+   "rubrique": "personnages",
+   "sujet": "avatar-03-naufrage",
+   "vue": "avant",
+   "pose": "pecher",
+   "titre": "Avatar, exemple 3 (naufragé), trois quarts avant, pecher",
+   "regarde": "bas-droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/avatar/avatar-03-naufrage/avatar-03-naufrage_avant_pecher_1.svg",
+    "svg/personnages/avatar/avatar-03-naufrage/avatar-03-naufrage_avant_pecher_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    700,
+    1100
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
    "id": "personnages/avatar/avatar-03-naufrage/avatar-03-naufrage_avant_ramasser",
    "rubrique": "personnages",
    "sujet": "avatar-03-naufrage",
@@ -3271,6 +3618,33 @@
    "statut": "ok"
   },
   {
+   "id": "personnages/avatar/avatar-03-naufrage/avatar-03-naufrage_dos_pecher",
+   "rubrique": "personnages",
+   "sujet": "avatar-03-naufrage",
+   "vue": "dos",
+   "pose": "pecher",
+   "titre": "Avatar, exemple 3 (naufragé), trois quarts dos, pecher",
+   "regarde": "haut-droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/avatar/avatar-03-naufrage/avatar-03-naufrage_dos_pecher_1.svg",
+    "svg/personnages/avatar/avatar-03-naufrage/avatar-03-naufrage_dos_pecher_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    700,
+    1100
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
    "id": "personnages/avatar/avatar-03-naufrage/avatar-03-naufrage_face_applaudir",
    "rubrique": "personnages",
    "sujet": "avatar-03-naufrage",
@@ -3435,6 +3809,32 @@
    "fichiers": [
     "svg/personnages/avatar/avatar-03-naufrage/avatar-03-naufrage_face_mains-tendues_1.svg",
     "svg/personnages/avatar/avatar-03-naufrage/avatar-03-naufrage_face_mains-tendues_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    700,
+    1100
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "personnages/avatar/avatar-03-naufrage/avatar-03-naufrage_face_pecher",
+   "rubrique": "personnages",
+   "sujet": "avatar-03-naufrage",
+   "vue": "face",
+   "pose": "pecher",
+   "titre": "Avatar, exemple 3 (naufragé), de face, pecher",
+   "regarde": "face",
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/avatar/avatar-03-naufrage/avatar-03-naufrage_face_pecher_1.svg",
+    "svg/personnages/avatar/avatar-03-naufrage/avatar-03-naufrage_face_pecher_2.svg"
    ],
    "cadre": [
     0,
@@ -3660,6 +4060,33 @@
    "statut": "ok"
   },
   {
+   "id": "personnages/avatar/avatar-03/avatar-03_avant_pecher",
+   "rubrique": "personnages",
+   "sujet": "avatar-03",
+   "vue": "avant",
+   "pose": "pecher",
+   "titre": "Avatar, exemple 3, trois quarts avant, pecher",
+   "regarde": "bas-droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/avatar/avatar-03/avatar-03_avant_pecher_1.svg",
+    "svg/personnages/avatar/avatar-03/avatar-03_avant_pecher_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    700,
+    1100
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
    "id": "personnages/avatar/avatar-03/avatar-03_avant_ramasser",
    "rubrique": "personnages",
    "sujet": "avatar-03",
@@ -3848,6 +4275,33 @@
    "statut": "ok"
   },
   {
+   "id": "personnages/avatar/avatar-03/avatar-03_dos_pecher",
+   "rubrique": "personnages",
+   "sujet": "avatar-03",
+   "vue": "dos",
+   "pose": "pecher",
+   "titre": "Avatar, exemple 3, trois quarts dos, pecher",
+   "regarde": "haut-droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/avatar/avatar-03/avatar-03_dos_pecher_1.svg",
+    "svg/personnages/avatar/avatar-03/avatar-03_dos_pecher_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    700,
+    1100
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
    "id": "personnages/avatar/avatar-03/avatar-03_face_applaudir",
    "rubrique": "personnages",
    "sujet": "avatar-03",
@@ -4012,6 +4466,32 @@
    "fichiers": [
     "svg/personnages/avatar/avatar-03/avatar-03_face_mains-tendues_1.svg",
     "svg/personnages/avatar/avatar-03/avatar-03_face_mains-tendues_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    700,
+    1100
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "personnages/avatar/avatar-03/avatar-03_face_pecher",
+   "rubrique": "personnages",
+   "sujet": "avatar-03",
+   "vue": "face",
+   "pose": "pecher",
+   "titre": "Avatar, exemple 3, de face, pecher",
+   "regarde": "face",
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/avatar/avatar-03/avatar-03_face_pecher_1.svg",
+    "svg/personnages/avatar/avatar-03/avatar-03_face_pecher_2.svg"
    ],
    "cadre": [
     0,
@@ -4237,6 +4717,33 @@
    "statut": "ok"
   },
   {
+   "id": "personnages/avatar/avatar-04-naufrage/avatar-04-naufrage_avant_pecher",
+   "rubrique": "personnages",
+   "sujet": "avatar-04-naufrage",
+   "vue": "avant",
+   "pose": "pecher",
+   "titre": "Avatar, exemple 4 (naufragé), trois quarts avant, pecher",
+   "regarde": "bas-droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/avatar/avatar-04-naufrage/avatar-04-naufrage_avant_pecher_1.svg",
+    "svg/personnages/avatar/avatar-04-naufrage/avatar-04-naufrage_avant_pecher_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    700,
+    1100
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
    "id": "personnages/avatar/avatar-04-naufrage/avatar-04-naufrage_avant_ramasser",
    "rubrique": "personnages",
    "sujet": "avatar-04-naufrage",
@@ -4425,6 +4932,33 @@
    "statut": "ok"
   },
   {
+   "id": "personnages/avatar/avatar-04-naufrage/avatar-04-naufrage_dos_pecher",
+   "rubrique": "personnages",
+   "sujet": "avatar-04-naufrage",
+   "vue": "dos",
+   "pose": "pecher",
+   "titre": "Avatar, exemple 4 (naufragé), trois quarts dos, pecher",
+   "regarde": "haut-droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/avatar/avatar-04-naufrage/avatar-04-naufrage_dos_pecher_1.svg",
+    "svg/personnages/avatar/avatar-04-naufrage/avatar-04-naufrage_dos_pecher_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    700,
+    1100
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
    "id": "personnages/avatar/avatar-04-naufrage/avatar-04-naufrage_face_applaudir",
    "rubrique": "personnages",
    "sujet": "avatar-04-naufrage",
@@ -4589,6 +5123,32 @@
    "fichiers": [
     "svg/personnages/avatar/avatar-04-naufrage/avatar-04-naufrage_face_mains-tendues_1.svg",
     "svg/personnages/avatar/avatar-04-naufrage/avatar-04-naufrage_face_mains-tendues_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    700,
+    1100
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "personnages/avatar/avatar-04-naufrage/avatar-04-naufrage_face_pecher",
+   "rubrique": "personnages",
+   "sujet": "avatar-04-naufrage",
+   "vue": "face",
+   "pose": "pecher",
+   "titre": "Avatar, exemple 4 (naufragé), de face, pecher",
+   "regarde": "face",
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/avatar/avatar-04-naufrage/avatar-04-naufrage_face_pecher_1.svg",
+    "svg/personnages/avatar/avatar-04-naufrage/avatar-04-naufrage_face_pecher_2.svg"
    ],
    "cadre": [
     0,
@@ -4814,6 +5374,33 @@
    "statut": "ok"
   },
   {
+   "id": "personnages/avatar/avatar-04/avatar-04_avant_pecher",
+   "rubrique": "personnages",
+   "sujet": "avatar-04",
+   "vue": "avant",
+   "pose": "pecher",
+   "titre": "Avatar, exemple 4, trois quarts avant, pecher",
+   "regarde": "bas-droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/avatar/avatar-04/avatar-04_avant_pecher_1.svg",
+    "svg/personnages/avatar/avatar-04/avatar-04_avant_pecher_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    700,
+    1100
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
    "id": "personnages/avatar/avatar-04/avatar-04_avant_ramasser",
    "rubrique": "personnages",
    "sujet": "avatar-04",
@@ -5002,6 +5589,33 @@
    "statut": "ok"
   },
   {
+   "id": "personnages/avatar/avatar-04/avatar-04_dos_pecher",
+   "rubrique": "personnages",
+   "sujet": "avatar-04",
+   "vue": "dos",
+   "pose": "pecher",
+   "titre": "Avatar, exemple 4, trois quarts dos, pecher",
+   "regarde": "haut-droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/avatar/avatar-04/avatar-04_dos_pecher_1.svg",
+    "svg/personnages/avatar/avatar-04/avatar-04_dos_pecher_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    700,
+    1100
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
    "id": "personnages/avatar/avatar-04/avatar-04_face_applaudir",
    "rubrique": "personnages",
    "sujet": "avatar-04",
@@ -5166,6 +5780,32 @@
    "fichiers": [
     "svg/personnages/avatar/avatar-04/avatar-04_face_mains-tendues_1.svg",
     "svg/personnages/avatar/avatar-04/avatar-04_face_mains-tendues_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    700,
+    1100
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "personnages/avatar/avatar-04/avatar-04_face_pecher",
+   "rubrique": "personnages",
+   "sujet": "avatar-04",
+   "vue": "face",
+   "pose": "pecher",
+   "titre": "Avatar, exemple 4, de face, pecher",
+   "regarde": "face",
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/avatar/avatar-04/avatar-04_face_pecher_1.svg",
+    "svg/personnages/avatar/avatar-04/avatar-04_face_pecher_2.svg"
    ],
    "cadre": [
     0,
@@ -5391,6 +6031,33 @@
    "statut": "ok"
   },
   {
+   "id": "personnages/avatar/avatar-05-naufrage/avatar-05-naufrage_avant_pecher",
+   "rubrique": "personnages",
+   "sujet": "avatar-05-naufrage",
+   "vue": "avant",
+   "pose": "pecher",
+   "titre": "Avatar, exemple 5 (naufragé), trois quarts avant, pecher",
+   "regarde": "bas-droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/avatar/avatar-05-naufrage/avatar-05-naufrage_avant_pecher_1.svg",
+    "svg/personnages/avatar/avatar-05-naufrage/avatar-05-naufrage_avant_pecher_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    700,
+    1100
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
    "id": "personnages/avatar/avatar-05-naufrage/avatar-05-naufrage_avant_ramasser",
    "rubrique": "personnages",
    "sujet": "avatar-05-naufrage",
@@ -5579,6 +6246,33 @@
    "statut": "ok"
   },
   {
+   "id": "personnages/avatar/avatar-05-naufrage/avatar-05-naufrage_dos_pecher",
+   "rubrique": "personnages",
+   "sujet": "avatar-05-naufrage",
+   "vue": "dos",
+   "pose": "pecher",
+   "titre": "Avatar, exemple 5 (naufragé), trois quarts dos, pecher",
+   "regarde": "haut-droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/avatar/avatar-05-naufrage/avatar-05-naufrage_dos_pecher_1.svg",
+    "svg/personnages/avatar/avatar-05-naufrage/avatar-05-naufrage_dos_pecher_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    700,
+    1100
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
    "id": "personnages/avatar/avatar-05-naufrage/avatar-05-naufrage_face_applaudir",
    "rubrique": "personnages",
    "sujet": "avatar-05-naufrage",
@@ -5743,6 +6437,32 @@
    "fichiers": [
     "svg/personnages/avatar/avatar-05-naufrage/avatar-05-naufrage_face_mains-tendues_1.svg",
     "svg/personnages/avatar/avatar-05-naufrage/avatar-05-naufrage_face_mains-tendues_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    700,
+    1100
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "personnages/avatar/avatar-05-naufrage/avatar-05-naufrage_face_pecher",
+   "rubrique": "personnages",
+   "sujet": "avatar-05-naufrage",
+   "vue": "face",
+   "pose": "pecher",
+   "titre": "Avatar, exemple 5 (naufragé), de face, pecher",
+   "regarde": "face",
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/avatar/avatar-05-naufrage/avatar-05-naufrage_face_pecher_1.svg",
+    "svg/personnages/avatar/avatar-05-naufrage/avatar-05-naufrage_face_pecher_2.svg"
    ],
    "cadre": [
     0,
@@ -5968,6 +6688,33 @@
    "statut": "ok"
   },
   {
+   "id": "personnages/avatar/avatar-05/avatar-05_avant_pecher",
+   "rubrique": "personnages",
+   "sujet": "avatar-05",
+   "vue": "avant",
+   "pose": "pecher",
+   "titre": "Avatar, exemple 5, trois quarts avant, pecher",
+   "regarde": "bas-droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/avatar/avatar-05/avatar-05_avant_pecher_1.svg",
+    "svg/personnages/avatar/avatar-05/avatar-05_avant_pecher_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    700,
+    1100
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
    "id": "personnages/avatar/avatar-05/avatar-05_avant_ramasser",
    "rubrique": "personnages",
    "sujet": "avatar-05",
@@ -6156,6 +6903,33 @@
    "statut": "ok"
   },
   {
+   "id": "personnages/avatar/avatar-05/avatar-05_dos_pecher",
+   "rubrique": "personnages",
+   "sujet": "avatar-05",
+   "vue": "dos",
+   "pose": "pecher",
+   "titre": "Avatar, exemple 5, trois quarts dos, pecher",
+   "regarde": "haut-droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/avatar/avatar-05/avatar-05_dos_pecher_1.svg",
+    "svg/personnages/avatar/avatar-05/avatar-05_dos_pecher_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    700,
+    1100
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
    "id": "personnages/avatar/avatar-05/avatar-05_face_applaudir",
    "rubrique": "personnages",
    "sujet": "avatar-05",
@@ -6320,6 +7094,32 @@
    "fichiers": [
     "svg/personnages/avatar/avatar-05/avatar-05_face_mains-tendues_1.svg",
     "svg/personnages/avatar/avatar-05/avatar-05_face_mains-tendues_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    700,
+    1100
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "personnages/avatar/avatar-05/avatar-05_face_pecher",
+   "rubrique": "personnages",
+   "sujet": "avatar-05",
+   "vue": "face",
+   "pose": "pecher",
+   "titre": "Avatar, exemple 5, de face, pecher",
+   "regarde": "face",
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/avatar/avatar-05/avatar-05_face_pecher_1.svg",
+    "svg/personnages/avatar/avatar-05/avatar-05_face_pecher_2.svg"
    ],
    "cadre": [
     0,
@@ -6545,6 +7345,33 @@
    "statut": "ok"
   },
   {
+   "id": "personnages/avatar/avatar-06-naufrage/avatar-06-naufrage_avant_pecher",
+   "rubrique": "personnages",
+   "sujet": "avatar-06-naufrage",
+   "vue": "avant",
+   "pose": "pecher",
+   "titre": "Avatar, exemple 6 (naufragé), trois quarts avant, pecher",
+   "regarde": "bas-droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/avatar/avatar-06-naufrage/avatar-06-naufrage_avant_pecher_1.svg",
+    "svg/personnages/avatar/avatar-06-naufrage/avatar-06-naufrage_avant_pecher_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    700,
+    1100
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
    "id": "personnages/avatar/avatar-06-naufrage/avatar-06-naufrage_avant_ramasser",
    "rubrique": "personnages",
    "sujet": "avatar-06-naufrage",
@@ -6733,6 +7560,33 @@
    "statut": "ok"
   },
   {
+   "id": "personnages/avatar/avatar-06-naufrage/avatar-06-naufrage_dos_pecher",
+   "rubrique": "personnages",
+   "sujet": "avatar-06-naufrage",
+   "vue": "dos",
+   "pose": "pecher",
+   "titre": "Avatar, exemple 6 (naufragé), trois quarts dos, pecher",
+   "regarde": "haut-droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/avatar/avatar-06-naufrage/avatar-06-naufrage_dos_pecher_1.svg",
+    "svg/personnages/avatar/avatar-06-naufrage/avatar-06-naufrage_dos_pecher_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    700,
+    1100
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
    "id": "personnages/avatar/avatar-06-naufrage/avatar-06-naufrage_face_applaudir",
    "rubrique": "personnages",
    "sujet": "avatar-06-naufrage",
@@ -6897,6 +7751,32 @@
    "fichiers": [
     "svg/personnages/avatar/avatar-06-naufrage/avatar-06-naufrage_face_mains-tendues_1.svg",
     "svg/personnages/avatar/avatar-06-naufrage/avatar-06-naufrage_face_mains-tendues_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    700,
+    1100
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "personnages/avatar/avatar-06-naufrage/avatar-06-naufrage_face_pecher",
+   "rubrique": "personnages",
+   "sujet": "avatar-06-naufrage",
+   "vue": "face",
+   "pose": "pecher",
+   "titre": "Avatar, exemple 6 (naufragé), de face, pecher",
+   "regarde": "face",
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/avatar/avatar-06-naufrage/avatar-06-naufrage_face_pecher_1.svg",
+    "svg/personnages/avatar/avatar-06-naufrage/avatar-06-naufrage_face_pecher_2.svg"
    ],
    "cadre": [
     0,
@@ -7122,6 +8002,33 @@
    "statut": "ok"
   },
   {
+   "id": "personnages/avatar/avatar-06/avatar-06_avant_pecher",
+   "rubrique": "personnages",
+   "sujet": "avatar-06",
+   "vue": "avant",
+   "pose": "pecher",
+   "titre": "Avatar, exemple 6, trois quarts avant, pecher",
+   "regarde": "bas-droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/avatar/avatar-06/avatar-06_avant_pecher_1.svg",
+    "svg/personnages/avatar/avatar-06/avatar-06_avant_pecher_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    700,
+    1100
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
    "id": "personnages/avatar/avatar-06/avatar-06_avant_ramasser",
    "rubrique": "personnages",
    "sujet": "avatar-06",
@@ -7310,6 +8217,33 @@
    "statut": "ok"
   },
   {
+   "id": "personnages/avatar/avatar-06/avatar-06_dos_pecher",
+   "rubrique": "personnages",
+   "sujet": "avatar-06",
+   "vue": "dos",
+   "pose": "pecher",
+   "titre": "Avatar, exemple 6, trois quarts dos, pecher",
+   "regarde": "haut-droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/avatar/avatar-06/avatar-06_dos_pecher_1.svg",
+    "svg/personnages/avatar/avatar-06/avatar-06_dos_pecher_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    700,
+    1100
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
    "id": "personnages/avatar/avatar-06/avatar-06_face_applaudir",
    "rubrique": "personnages",
    "sujet": "avatar-06",
@@ -7474,6 +8408,32 @@
    "fichiers": [
     "svg/personnages/avatar/avatar-06/avatar-06_face_mains-tendues_1.svg",
     "svg/personnages/avatar/avatar-06/avatar-06_face_mains-tendues_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    700,
+    1100
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "personnages/avatar/avatar-06/avatar-06_face_pecher",
+   "rubrique": "personnages",
+   "sujet": "avatar-06",
+   "vue": "face",
+   "pose": "pecher",
+   "titre": "Avatar, exemple 6, de face, pecher",
+   "regarde": "face",
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/avatar/avatar-06/avatar-06_face_pecher_1.svg",
+    "svg/personnages/avatar/avatar-06/avatar-06_face_pecher_2.svg"
    ],
    "cadre": [
     0,
@@ -7699,6 +8659,33 @@
    "statut": "ok"
   },
   {
+   "id": "personnages/avatar/avatar-07-naufrage/avatar-07-naufrage_avant_pecher",
+   "rubrique": "personnages",
+   "sujet": "avatar-07-naufrage",
+   "vue": "avant",
+   "pose": "pecher",
+   "titre": "Avatar, exemple 7 (naufragé), trois quarts avant, pecher",
+   "regarde": "bas-droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/avatar/avatar-07-naufrage/avatar-07-naufrage_avant_pecher_1.svg",
+    "svg/personnages/avatar/avatar-07-naufrage/avatar-07-naufrage_avant_pecher_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    700,
+    1100
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
    "id": "personnages/avatar/avatar-07-naufrage/avatar-07-naufrage_avant_ramasser",
    "rubrique": "personnages",
    "sujet": "avatar-07-naufrage",
@@ -7887,6 +8874,33 @@
    "statut": "ok"
   },
   {
+   "id": "personnages/avatar/avatar-07-naufrage/avatar-07-naufrage_dos_pecher",
+   "rubrique": "personnages",
+   "sujet": "avatar-07-naufrage",
+   "vue": "dos",
+   "pose": "pecher",
+   "titre": "Avatar, exemple 7 (naufragé), trois quarts dos, pecher",
+   "regarde": "haut-droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/avatar/avatar-07-naufrage/avatar-07-naufrage_dos_pecher_1.svg",
+    "svg/personnages/avatar/avatar-07-naufrage/avatar-07-naufrage_dos_pecher_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    700,
+    1100
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
    "id": "personnages/avatar/avatar-07-naufrage/avatar-07-naufrage_face_applaudir",
    "rubrique": "personnages",
    "sujet": "avatar-07-naufrage",
@@ -8051,6 +9065,32 @@
    "fichiers": [
     "svg/personnages/avatar/avatar-07-naufrage/avatar-07-naufrage_face_mains-tendues_1.svg",
     "svg/personnages/avatar/avatar-07-naufrage/avatar-07-naufrage_face_mains-tendues_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    700,
+    1100
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "personnages/avatar/avatar-07-naufrage/avatar-07-naufrage_face_pecher",
+   "rubrique": "personnages",
+   "sujet": "avatar-07-naufrage",
+   "vue": "face",
+   "pose": "pecher",
+   "titre": "Avatar, exemple 7 (naufragé), de face, pecher",
+   "regarde": "face",
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/avatar/avatar-07-naufrage/avatar-07-naufrage_face_pecher_1.svg",
+    "svg/personnages/avatar/avatar-07-naufrage/avatar-07-naufrage_face_pecher_2.svg"
    ],
    "cadre": [
     0,
@@ -8276,6 +9316,33 @@
    "statut": "ok"
   },
   {
+   "id": "personnages/avatar/avatar-07/avatar-07_avant_pecher",
+   "rubrique": "personnages",
+   "sujet": "avatar-07",
+   "vue": "avant",
+   "pose": "pecher",
+   "titre": "Avatar, exemple 7, trois quarts avant, pecher",
+   "regarde": "bas-droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/avatar/avatar-07/avatar-07_avant_pecher_1.svg",
+    "svg/personnages/avatar/avatar-07/avatar-07_avant_pecher_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    700,
+    1100
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
    "id": "personnages/avatar/avatar-07/avatar-07_avant_ramasser",
    "rubrique": "personnages",
    "sujet": "avatar-07",
@@ -8464,6 +9531,33 @@
    "statut": "ok"
   },
   {
+   "id": "personnages/avatar/avatar-07/avatar-07_dos_pecher",
+   "rubrique": "personnages",
+   "sujet": "avatar-07",
+   "vue": "dos",
+   "pose": "pecher",
+   "titre": "Avatar, exemple 7, trois quarts dos, pecher",
+   "regarde": "haut-droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/avatar/avatar-07/avatar-07_dos_pecher_1.svg",
+    "svg/personnages/avatar/avatar-07/avatar-07_dos_pecher_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    700,
+    1100
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
    "id": "personnages/avatar/avatar-07/avatar-07_face_applaudir",
    "rubrique": "personnages",
    "sujet": "avatar-07",
@@ -8628,6 +9722,32 @@
    "fichiers": [
     "svg/personnages/avatar/avatar-07/avatar-07_face_mains-tendues_1.svg",
     "svg/personnages/avatar/avatar-07/avatar-07_face_mains-tendues_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    700,
+    1100
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "personnages/avatar/avatar-07/avatar-07_face_pecher",
+   "rubrique": "personnages",
+   "sujet": "avatar-07",
+   "vue": "face",
+   "pose": "pecher",
+   "titre": "Avatar, exemple 7, de face, pecher",
+   "regarde": "face",
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/avatar/avatar-07/avatar-07_face_pecher_1.svg",
+    "svg/personnages/avatar/avatar-07/avatar-07_face_pecher_2.svg"
    ],
    "cadre": [
     0,
@@ -8853,6 +9973,33 @@
    "statut": "ok"
   },
   {
+   "id": "personnages/avatar/avatar-08-naufrage/avatar-08-naufrage_avant_pecher",
+   "rubrique": "personnages",
+   "sujet": "avatar-08-naufrage",
+   "vue": "avant",
+   "pose": "pecher",
+   "titre": "Avatar, exemple 8 (naufragé), trois quarts avant, pecher",
+   "regarde": "bas-droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/avatar/avatar-08-naufrage/avatar-08-naufrage_avant_pecher_1.svg",
+    "svg/personnages/avatar/avatar-08-naufrage/avatar-08-naufrage_avant_pecher_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    700,
+    1100
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
    "id": "personnages/avatar/avatar-08-naufrage/avatar-08-naufrage_avant_ramasser",
    "rubrique": "personnages",
    "sujet": "avatar-08-naufrage",
@@ -9041,6 +10188,33 @@
    "statut": "ok"
   },
   {
+   "id": "personnages/avatar/avatar-08-naufrage/avatar-08-naufrage_dos_pecher",
+   "rubrique": "personnages",
+   "sujet": "avatar-08-naufrage",
+   "vue": "dos",
+   "pose": "pecher",
+   "titre": "Avatar, exemple 8 (naufragé), trois quarts dos, pecher",
+   "regarde": "haut-droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/avatar/avatar-08-naufrage/avatar-08-naufrage_dos_pecher_1.svg",
+    "svg/personnages/avatar/avatar-08-naufrage/avatar-08-naufrage_dos_pecher_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    700,
+    1100
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
    "id": "personnages/avatar/avatar-08-naufrage/avatar-08-naufrage_face_applaudir",
    "rubrique": "personnages",
    "sujet": "avatar-08-naufrage",
@@ -9205,6 +10379,32 @@
    "fichiers": [
     "svg/personnages/avatar/avatar-08-naufrage/avatar-08-naufrage_face_mains-tendues_1.svg",
     "svg/personnages/avatar/avatar-08-naufrage/avatar-08-naufrage_face_mains-tendues_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    700,
+    1100
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "personnages/avatar/avatar-08-naufrage/avatar-08-naufrage_face_pecher",
+   "rubrique": "personnages",
+   "sujet": "avatar-08-naufrage",
+   "vue": "face",
+   "pose": "pecher",
+   "titre": "Avatar, exemple 8 (naufragé), de face, pecher",
+   "regarde": "face",
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/avatar/avatar-08-naufrage/avatar-08-naufrage_face_pecher_1.svg",
+    "svg/personnages/avatar/avatar-08-naufrage/avatar-08-naufrage_face_pecher_2.svg"
    ],
    "cadre": [
     0,
@@ -9430,6 +10630,33 @@
    "statut": "ok"
   },
   {
+   "id": "personnages/avatar/avatar-08/avatar-08_avant_pecher",
+   "rubrique": "personnages",
+   "sujet": "avatar-08",
+   "vue": "avant",
+   "pose": "pecher",
+   "titre": "Avatar, exemple 8, trois quarts avant, pecher",
+   "regarde": "bas-droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/avatar/avatar-08/avatar-08_avant_pecher_1.svg",
+    "svg/personnages/avatar/avatar-08/avatar-08_avant_pecher_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    700,
+    1100
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
    "id": "personnages/avatar/avatar-08/avatar-08_avant_ramasser",
    "rubrique": "personnages",
    "sujet": "avatar-08",
@@ -9618,6 +10845,33 @@
    "statut": "ok"
   },
   {
+   "id": "personnages/avatar/avatar-08/avatar-08_dos_pecher",
+   "rubrique": "personnages",
+   "sujet": "avatar-08",
+   "vue": "dos",
+   "pose": "pecher",
+   "titre": "Avatar, exemple 8, trois quarts dos, pecher",
+   "regarde": "haut-droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/avatar/avatar-08/avatar-08_dos_pecher_1.svg",
+    "svg/personnages/avatar/avatar-08/avatar-08_dos_pecher_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    700,
+    1100
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
    "id": "personnages/avatar/avatar-08/avatar-08_face_applaudir",
    "rubrique": "personnages",
    "sujet": "avatar-08",
@@ -9782,6 +11036,32 @@
    "fichiers": [
     "svg/personnages/avatar/avatar-08/avatar-08_face_mains-tendues_1.svg",
     "svg/personnages/avatar/avatar-08/avatar-08_face_mains-tendues_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    700,
+    1100
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "personnages/avatar/avatar-08/avatar-08_face_pecher",
+   "rubrique": "personnages",
+   "sujet": "avatar-08",
+   "vue": "face",
+   "pose": "pecher",
+   "titre": "Avatar, exemple 8, de face, pecher",
+   "regarde": "face",
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/avatar/avatar-08/avatar-08_face_pecher_1.svg",
+    "svg/personnages/avatar/avatar-08/avatar-08_face_pecher_2.svg"
    ],
    "cadre": [
     0,
@@ -10007,6 +11287,33 @@
    "statut": "ok"
   },
   {
+   "id": "personnages/avatar/avatar-09-naufrage/avatar-09-naufrage_avant_pecher",
+   "rubrique": "personnages",
+   "sujet": "avatar-09-naufrage",
+   "vue": "avant",
+   "pose": "pecher",
+   "titre": "Avatar, exemple 9 (naufragé), trois quarts avant, pecher",
+   "regarde": "bas-droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/avatar/avatar-09-naufrage/avatar-09-naufrage_avant_pecher_1.svg",
+    "svg/personnages/avatar/avatar-09-naufrage/avatar-09-naufrage_avant_pecher_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    700,
+    1100
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
    "id": "personnages/avatar/avatar-09-naufrage/avatar-09-naufrage_avant_ramasser",
    "rubrique": "personnages",
    "sujet": "avatar-09-naufrage",
@@ -10195,6 +11502,33 @@
    "statut": "ok"
   },
   {
+   "id": "personnages/avatar/avatar-09-naufrage/avatar-09-naufrage_dos_pecher",
+   "rubrique": "personnages",
+   "sujet": "avatar-09-naufrage",
+   "vue": "dos",
+   "pose": "pecher",
+   "titre": "Avatar, exemple 9 (naufragé), trois quarts dos, pecher",
+   "regarde": "haut-droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/avatar/avatar-09-naufrage/avatar-09-naufrage_dos_pecher_1.svg",
+    "svg/personnages/avatar/avatar-09-naufrage/avatar-09-naufrage_dos_pecher_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    700,
+    1100
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
    "id": "personnages/avatar/avatar-09-naufrage/avatar-09-naufrage_face_applaudir",
    "rubrique": "personnages",
    "sujet": "avatar-09-naufrage",
@@ -10359,6 +11693,32 @@
    "fichiers": [
     "svg/personnages/avatar/avatar-09-naufrage/avatar-09-naufrage_face_mains-tendues_1.svg",
     "svg/personnages/avatar/avatar-09-naufrage/avatar-09-naufrage_face_mains-tendues_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    700,
+    1100
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "personnages/avatar/avatar-09-naufrage/avatar-09-naufrage_face_pecher",
+   "rubrique": "personnages",
+   "sujet": "avatar-09-naufrage",
+   "vue": "face",
+   "pose": "pecher",
+   "titre": "Avatar, exemple 9 (naufragé), de face, pecher",
+   "regarde": "face",
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/avatar/avatar-09-naufrage/avatar-09-naufrage_face_pecher_1.svg",
+    "svg/personnages/avatar/avatar-09-naufrage/avatar-09-naufrage_face_pecher_2.svg"
    ],
    "cadre": [
     0,
@@ -10584,6 +11944,33 @@
    "statut": "ok"
   },
   {
+   "id": "personnages/avatar/avatar-09/avatar-09_avant_pecher",
+   "rubrique": "personnages",
+   "sujet": "avatar-09",
+   "vue": "avant",
+   "pose": "pecher",
+   "titre": "Avatar, exemple 9, trois quarts avant, pecher",
+   "regarde": "bas-droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/avatar/avatar-09/avatar-09_avant_pecher_1.svg",
+    "svg/personnages/avatar/avatar-09/avatar-09_avant_pecher_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    700,
+    1100
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
    "id": "personnages/avatar/avatar-09/avatar-09_avant_ramasser",
    "rubrique": "personnages",
    "sujet": "avatar-09",
@@ -10772,6 +12159,33 @@
    "statut": "ok"
   },
   {
+   "id": "personnages/avatar/avatar-09/avatar-09_dos_pecher",
+   "rubrique": "personnages",
+   "sujet": "avatar-09",
+   "vue": "dos",
+   "pose": "pecher",
+   "titre": "Avatar, exemple 9, trois quarts dos, pecher",
+   "regarde": "haut-droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/avatar/avatar-09/avatar-09_dos_pecher_1.svg",
+    "svg/personnages/avatar/avatar-09/avatar-09_dos_pecher_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    700,
+    1100
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
    "id": "personnages/avatar/avatar-09/avatar-09_face_applaudir",
    "rubrique": "personnages",
    "sujet": "avatar-09",
@@ -10936,6 +12350,32 @@
    "fichiers": [
     "svg/personnages/avatar/avatar-09/avatar-09_face_mains-tendues_1.svg",
     "svg/personnages/avatar/avatar-09/avatar-09_face_mains-tendues_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    700,
+    1100
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "personnages/avatar/avatar-09/avatar-09_face_pecher",
+   "rubrique": "personnages",
+   "sujet": "avatar-09",
+   "vue": "face",
+   "pose": "pecher",
+   "titre": "Avatar, exemple 9, de face, pecher",
+   "regarde": "face",
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/avatar/avatar-09/avatar-09_face_pecher_1.svg",
+    "svg/personnages/avatar/avatar-09/avatar-09_face_pecher_2.svg"
    ],
    "cadre": [
     0,
@@ -11161,6 +12601,33 @@
    "statut": "ok"
   },
   {
+   "id": "personnages/avatar/avatar-10-naufrage/avatar-10-naufrage_avant_pecher",
+   "rubrique": "personnages",
+   "sujet": "avatar-10-naufrage",
+   "vue": "avant",
+   "pose": "pecher",
+   "titre": "Avatar, exemple 10 (naufragé), trois quarts avant, pecher",
+   "regarde": "bas-droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/avatar/avatar-10-naufrage/avatar-10-naufrage_avant_pecher_1.svg",
+    "svg/personnages/avatar/avatar-10-naufrage/avatar-10-naufrage_avant_pecher_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    700,
+    1100
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
    "id": "personnages/avatar/avatar-10-naufrage/avatar-10-naufrage_avant_ramasser",
    "rubrique": "personnages",
    "sujet": "avatar-10-naufrage",
@@ -11349,6 +12816,33 @@
    "statut": "ok"
   },
   {
+   "id": "personnages/avatar/avatar-10-naufrage/avatar-10-naufrage_dos_pecher",
+   "rubrique": "personnages",
+   "sujet": "avatar-10-naufrage",
+   "vue": "dos",
+   "pose": "pecher",
+   "titre": "Avatar, exemple 10 (naufragé), trois quarts dos, pecher",
+   "regarde": "haut-droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/avatar/avatar-10-naufrage/avatar-10-naufrage_dos_pecher_1.svg",
+    "svg/personnages/avatar/avatar-10-naufrage/avatar-10-naufrage_dos_pecher_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    700,
+    1100
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
    "id": "personnages/avatar/avatar-10-naufrage/avatar-10-naufrage_face_applaudir",
    "rubrique": "personnages",
    "sujet": "avatar-10-naufrage",
@@ -11513,6 +13007,32 @@
    "fichiers": [
     "svg/personnages/avatar/avatar-10-naufrage/avatar-10-naufrage_face_mains-tendues_1.svg",
     "svg/personnages/avatar/avatar-10-naufrage/avatar-10-naufrage_face_mains-tendues_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    700,
+    1100
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "personnages/avatar/avatar-10-naufrage/avatar-10-naufrage_face_pecher",
+   "rubrique": "personnages",
+   "sujet": "avatar-10-naufrage",
+   "vue": "face",
+   "pose": "pecher",
+   "titre": "Avatar, exemple 10 (naufragé), de face, pecher",
+   "regarde": "face",
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/avatar/avatar-10-naufrage/avatar-10-naufrage_face_pecher_1.svg",
+    "svg/personnages/avatar/avatar-10-naufrage/avatar-10-naufrage_face_pecher_2.svg"
    ],
    "cadre": [
     0,
@@ -11738,6 +13258,33 @@
    "statut": "ok"
   },
   {
+   "id": "personnages/avatar/avatar-10/avatar-10_avant_pecher",
+   "rubrique": "personnages",
+   "sujet": "avatar-10",
+   "vue": "avant",
+   "pose": "pecher",
+   "titre": "Avatar, exemple 10, trois quarts avant, pecher",
+   "regarde": "bas-droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/avatar/avatar-10/avatar-10_avant_pecher_1.svg",
+    "svg/personnages/avatar/avatar-10/avatar-10_avant_pecher_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    700,
+    1100
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
    "id": "personnages/avatar/avatar-10/avatar-10_avant_ramasser",
    "rubrique": "personnages",
    "sujet": "avatar-10",
@@ -11926,6 +13473,33 @@
    "statut": "ok"
   },
   {
+   "id": "personnages/avatar/avatar-10/avatar-10_dos_pecher",
+   "rubrique": "personnages",
+   "sujet": "avatar-10",
+   "vue": "dos",
+   "pose": "pecher",
+   "titre": "Avatar, exemple 10, trois quarts dos, pecher",
+   "regarde": "haut-droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/avatar/avatar-10/avatar-10_dos_pecher_1.svg",
+    "svg/personnages/avatar/avatar-10/avatar-10_dos_pecher_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    700,
+    1100
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
    "id": "personnages/avatar/avatar-10/avatar-10_face_applaudir",
    "rubrique": "personnages",
    "sujet": "avatar-10",
@@ -12090,6 +13664,32 @@
    "fichiers": [
     "svg/personnages/avatar/avatar-10/avatar-10_face_mains-tendues_1.svg",
     "svg/personnages/avatar/avatar-10/avatar-10_face_mains-tendues_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    700,
+    1100
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "personnages/avatar/avatar-10/avatar-10_face_pecher",
+   "rubrique": "personnages",
+   "sujet": "avatar-10",
+   "vue": "face",
+   "pose": "pecher",
+   "titre": "Avatar, exemple 10, de face, pecher",
+   "regarde": "face",
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/avatar/avatar-10/avatar-10_face_pecher_1.svg",
+    "svg/personnages/avatar/avatar-10/avatar-10_face_pecher_2.svg"
    ],
    "cadre": [
     0,
@@ -12315,6 +13915,33 @@
    "statut": "ok"
   },
   {
+   "id": "personnages/avatar/avatar-11-naufrage/avatar-11-naufrage_avant_pecher",
+   "rubrique": "personnages",
+   "sujet": "avatar-11-naufrage",
+   "vue": "avant",
+   "pose": "pecher",
+   "titre": "Avatar, exemple 11 (naufragé), trois quarts avant, pecher",
+   "regarde": "bas-droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/avatar/avatar-11-naufrage/avatar-11-naufrage_avant_pecher_1.svg",
+    "svg/personnages/avatar/avatar-11-naufrage/avatar-11-naufrage_avant_pecher_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    700,
+    1100
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
    "id": "personnages/avatar/avatar-11-naufrage/avatar-11-naufrage_avant_ramasser",
    "rubrique": "personnages",
    "sujet": "avatar-11-naufrage",
@@ -12503,6 +14130,33 @@
    "statut": "ok"
   },
   {
+   "id": "personnages/avatar/avatar-11-naufrage/avatar-11-naufrage_dos_pecher",
+   "rubrique": "personnages",
+   "sujet": "avatar-11-naufrage",
+   "vue": "dos",
+   "pose": "pecher",
+   "titre": "Avatar, exemple 11 (naufragé), trois quarts dos, pecher",
+   "regarde": "haut-droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/avatar/avatar-11-naufrage/avatar-11-naufrage_dos_pecher_1.svg",
+    "svg/personnages/avatar/avatar-11-naufrage/avatar-11-naufrage_dos_pecher_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    700,
+    1100
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
    "id": "personnages/avatar/avatar-11-naufrage/avatar-11-naufrage_face_applaudir",
    "rubrique": "personnages",
    "sujet": "avatar-11-naufrage",
@@ -12667,6 +14321,32 @@
    "fichiers": [
     "svg/personnages/avatar/avatar-11-naufrage/avatar-11-naufrage_face_mains-tendues_1.svg",
     "svg/personnages/avatar/avatar-11-naufrage/avatar-11-naufrage_face_mains-tendues_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    700,
+    1100
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "personnages/avatar/avatar-11-naufrage/avatar-11-naufrage_face_pecher",
+   "rubrique": "personnages",
+   "sujet": "avatar-11-naufrage",
+   "vue": "face",
+   "pose": "pecher",
+   "titre": "Avatar, exemple 11 (naufragé), de face, pecher",
+   "regarde": "face",
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/avatar/avatar-11-naufrage/avatar-11-naufrage_face_pecher_1.svg",
+    "svg/personnages/avatar/avatar-11-naufrage/avatar-11-naufrage_face_pecher_2.svg"
    ],
    "cadre": [
     0,
@@ -12892,6 +14572,33 @@
    "statut": "ok"
   },
   {
+   "id": "personnages/avatar/avatar-11/avatar-11_avant_pecher",
+   "rubrique": "personnages",
+   "sujet": "avatar-11",
+   "vue": "avant",
+   "pose": "pecher",
+   "titre": "Avatar, exemple 11, trois quarts avant, pecher",
+   "regarde": "bas-droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/avatar/avatar-11/avatar-11_avant_pecher_1.svg",
+    "svg/personnages/avatar/avatar-11/avatar-11_avant_pecher_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    700,
+    1100
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
    "id": "personnages/avatar/avatar-11/avatar-11_avant_ramasser",
    "rubrique": "personnages",
    "sujet": "avatar-11",
@@ -13080,6 +14787,33 @@
    "statut": "ok"
   },
   {
+   "id": "personnages/avatar/avatar-11/avatar-11_dos_pecher",
+   "rubrique": "personnages",
+   "sujet": "avatar-11",
+   "vue": "dos",
+   "pose": "pecher",
+   "titre": "Avatar, exemple 11, trois quarts dos, pecher",
+   "regarde": "haut-droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/avatar/avatar-11/avatar-11_dos_pecher_1.svg",
+    "svg/personnages/avatar/avatar-11/avatar-11_dos_pecher_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    700,
+    1100
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
    "id": "personnages/avatar/avatar-11/avatar-11_face_applaudir",
    "rubrique": "personnages",
    "sujet": "avatar-11",
@@ -13244,6 +14978,32 @@
    "fichiers": [
     "svg/personnages/avatar/avatar-11/avatar-11_face_mains-tendues_1.svg",
     "svg/personnages/avatar/avatar-11/avatar-11_face_mains-tendues_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    700,
+    1100
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "personnages/avatar/avatar-11/avatar-11_face_pecher",
+   "rubrique": "personnages",
+   "sujet": "avatar-11",
+   "vue": "face",
+   "pose": "pecher",
+   "titre": "Avatar, exemple 11, de face, pecher",
+   "regarde": "face",
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/avatar/avatar-11/avatar-11_face_pecher_1.svg",
+    "svg/personnages/avatar/avatar-11/avatar-11_face_pecher_2.svg"
    ],
    "cadre": [
     0,
@@ -13469,6 +15229,33 @@
    "statut": "ok"
   },
   {
+   "id": "personnages/avatar/avatar-12-naufrage/avatar-12-naufrage_avant_pecher",
+   "rubrique": "personnages",
+   "sujet": "avatar-12-naufrage",
+   "vue": "avant",
+   "pose": "pecher",
+   "titre": "Avatar, exemple 12 (naufragé), trois quarts avant, pecher",
+   "regarde": "bas-droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/avatar/avatar-12-naufrage/avatar-12-naufrage_avant_pecher_1.svg",
+    "svg/personnages/avatar/avatar-12-naufrage/avatar-12-naufrage_avant_pecher_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    700,
+    1100
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
    "id": "personnages/avatar/avatar-12-naufrage/avatar-12-naufrage_avant_ramasser",
    "rubrique": "personnages",
    "sujet": "avatar-12-naufrage",
@@ -13657,6 +15444,33 @@
    "statut": "ok"
   },
   {
+   "id": "personnages/avatar/avatar-12-naufrage/avatar-12-naufrage_dos_pecher",
+   "rubrique": "personnages",
+   "sujet": "avatar-12-naufrage",
+   "vue": "dos",
+   "pose": "pecher",
+   "titre": "Avatar, exemple 12 (naufragé), trois quarts dos, pecher",
+   "regarde": "haut-droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/avatar/avatar-12-naufrage/avatar-12-naufrage_dos_pecher_1.svg",
+    "svg/personnages/avatar/avatar-12-naufrage/avatar-12-naufrage_dos_pecher_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    700,
+    1100
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
    "id": "personnages/avatar/avatar-12-naufrage/avatar-12-naufrage_face_applaudir",
    "rubrique": "personnages",
    "sujet": "avatar-12-naufrage",
@@ -13821,6 +15635,32 @@
    "fichiers": [
     "svg/personnages/avatar/avatar-12-naufrage/avatar-12-naufrage_face_mains-tendues_1.svg",
     "svg/personnages/avatar/avatar-12-naufrage/avatar-12-naufrage_face_mains-tendues_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    700,
+    1100
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "personnages/avatar/avatar-12-naufrage/avatar-12-naufrage_face_pecher",
+   "rubrique": "personnages",
+   "sujet": "avatar-12-naufrage",
+   "vue": "face",
+   "pose": "pecher",
+   "titre": "Avatar, exemple 12 (naufragé), de face, pecher",
+   "regarde": "face",
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/avatar/avatar-12-naufrage/avatar-12-naufrage_face_pecher_1.svg",
+    "svg/personnages/avatar/avatar-12-naufrage/avatar-12-naufrage_face_pecher_2.svg"
    ],
    "cadre": [
     0,
@@ -14046,6 +15886,33 @@
    "statut": "ok"
   },
   {
+   "id": "personnages/avatar/avatar-12/avatar-12_avant_pecher",
+   "rubrique": "personnages",
+   "sujet": "avatar-12",
+   "vue": "avant",
+   "pose": "pecher",
+   "titre": "Avatar, exemple 12, trois quarts avant, pecher",
+   "regarde": "bas-droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/avatar/avatar-12/avatar-12_avant_pecher_1.svg",
+    "svg/personnages/avatar/avatar-12/avatar-12_avant_pecher_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    700,
+    1100
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
    "id": "personnages/avatar/avatar-12/avatar-12_avant_ramasser",
    "rubrique": "personnages",
    "sujet": "avatar-12",
@@ -14234,6 +16101,33 @@
    "statut": "ok"
   },
   {
+   "id": "personnages/avatar/avatar-12/avatar-12_dos_pecher",
+   "rubrique": "personnages",
+   "sujet": "avatar-12",
+   "vue": "dos",
+   "pose": "pecher",
+   "titre": "Avatar, exemple 12, trois quarts dos, pecher",
+   "regarde": "haut-droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/avatar/avatar-12/avatar-12_dos_pecher_1.svg",
+    "svg/personnages/avatar/avatar-12/avatar-12_dos_pecher_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    700,
+    1100
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
    "id": "personnages/avatar/avatar-12/avatar-12_face_applaudir",
    "rubrique": "personnages",
    "sujet": "avatar-12",
@@ -14398,6 +16292,32 @@
    "fichiers": [
     "svg/personnages/avatar/avatar-12/avatar-12_face_mains-tendues_1.svg",
     "svg/personnages/avatar/avatar-12/avatar-12_face_mains-tendues_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    700,
+    1100
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "personnages/avatar/avatar-12/avatar-12_face_pecher",
+   "rubrique": "personnages",
+   "sujet": "avatar-12",
+   "vue": "face",
+   "pose": "pecher",
+   "titre": "Avatar, exemple 12, de face, pecher",
+   "regarde": "face",
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/avatar/avatar-12/avatar-12_face_pecher_1.svg",
+    "svg/personnages/avatar/avatar-12/avatar-12_face_pecher_2.svg"
    ],
    "cadre": [
     0,
@@ -17624,6 +19544,33 @@
    "statut": "ok"
   },
   {
+   "id": "personnages/maitres/cannelle/cannelle_avant_pecher",
+   "rubrique": "personnages",
+   "sujet": "cannelle",
+   "vue": "avant",
+   "pose": "pecher",
+   "titre": "Cannelle, trois quarts avant, pecher",
+   "regarde": "bas-droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/maitres/cannelle/cannelle_avant_pecher_1.svg",
+    "svg/personnages/maitres/cannelle/cannelle_avant_pecher_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    700,
+    1100
+   ],
+   "parcours": "tuto-2",
+   "statut": "ok"
+  },
+  {
    "id": "personnages/maitres/cannelle/cannelle_avant_repos",
    "rubrique": "personnages",
    "sujet": "cannelle",
@@ -17953,6 +19900,33 @@
     82
    ],
    "ms_par_image": 170,
+   "parcours": "tuto-2",
+   "statut": "ok"
+  },
+  {
+   "id": "personnages/maitres/cannelle/cannelle_dos_pecher",
+   "rubrique": "personnages",
+   "sujet": "cannelle",
+   "vue": "dos",
+   "pose": "pecher",
+   "titre": "Cannelle, trois quarts dos, pecher",
+   "regarde": "haut-droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/maitres/cannelle/cannelle_dos_pecher_1.svg",
+    "svg/personnages/maitres/cannelle/cannelle_dos_pecher_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    700,
+    1100
+   ],
    "parcours": "tuto-2",
    "statut": "ok"
   },
@@ -18392,6 +20366,32 @@
    "statut": "ok"
   },
   {
+   "id": "personnages/maitres/cannelle/cannelle_face_pecher",
+   "rubrique": "personnages",
+   "sujet": "cannelle",
+   "vue": "face",
+   "pose": "pecher",
+   "titre": "Cannelle, de face, pecher",
+   "regarde": "face",
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/maitres/cannelle/cannelle_face_pecher_1.svg",
+    "svg/personnages/maitres/cannelle/cannelle_face_pecher_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    700,
+    1100
+   ],
+   "parcours": "tuto-2",
+   "statut": "ok"
+  },
+  {
    "id": "personnages/maitres/cannelle/cannelle_face_repos",
    "rubrique": "personnages",
    "sujet": "cannelle",
@@ -18709,6 +20709,33 @@
    "statut": "ok"
   },
   {
+   "id": "personnages/naufrages/cannelle/cannelle-naufrage_avant_pecher",
+   "rubrique": "personnages",
+   "sujet": "cannelle-naufrage",
+   "vue": "avant",
+   "pose": "pecher",
+   "titre": "Cannelle naufragée, trois quarts avant, pecher",
+   "regarde": "bas-droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/naufrages/cannelle/cannelle-naufrage_avant_pecher_1.svg",
+    "svg/personnages/naufrages/cannelle/cannelle-naufrage_avant_pecher_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    700,
+    1100
+   ],
+   "parcours": "tuto-2",
+   "statut": "ok"
+  },
+  {
    "id": "personnages/naufrages/cannelle/cannelle-naufrage_avant_repos",
    "rubrique": "personnages",
    "sujet": "cannelle-naufrage",
@@ -18986,6 +21013,33 @@
     64
    ],
    "ms_par_image": 170,
+   "parcours": "tuto-2",
+   "statut": "ok"
+  },
+  {
+   "id": "personnages/naufrages/cannelle/cannelle-naufrage_dos_pecher",
+   "rubrique": "personnages",
+   "sujet": "cannelle-naufrage",
+   "vue": "dos",
+   "pose": "pecher",
+   "titre": "Cannelle naufragée, trois quarts dos, pecher",
+   "regarde": "haut-droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/naufrages/cannelle/cannelle-naufrage_dos_pecher_1.svg",
+    "svg/personnages/naufrages/cannelle/cannelle-naufrage_dos_pecher_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    700,
+    1100
+   ],
    "parcours": "tuto-2",
    "statut": "ok"
   },
@@ -19425,6 +21479,32 @@
    "statut": "ok"
   },
   {
+   "id": "personnages/naufrages/cannelle/cannelle-naufrage_face_pecher",
+   "rubrique": "personnages",
+   "sujet": "cannelle-naufrage",
+   "vue": "face",
+   "pose": "pecher",
+   "titre": "Cannelle naufragée, de face, pecher",
+   "regarde": "face",
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/naufrages/cannelle/cannelle-naufrage_face_pecher_1.svg",
+    "svg/personnages/naufrages/cannelle/cannelle-naufrage_face_pecher_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    700,
+    1100
+   ],
+   "parcours": "tuto-2",
+   "statut": "ok"
+  },
+  {
    "id": "personnages/naufrages/cannelle/cannelle-naufrage_face_repos",
    "rubrique": "personnages",
    "sujet": "cannelle-naufrage",
@@ -19794,6 +21874,33 @@
    "statut": "ok"
   },
   {
+   "id": "personnages/naufrages/rivet/rivet-naufrage_avant_pecher",
+   "rubrique": "personnages",
+   "sujet": "rivet-naufrage",
+   "vue": "avant",
+   "pose": "pecher",
+   "titre": "Rivet naufragé, trois quarts avant, pecher",
+   "regarde": "bas-droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/naufrages/rivet/rivet-naufrage_avant_pecher_1.svg",
+    "svg/personnages/naufrages/rivet/rivet-naufrage_avant_pecher_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    700,
+    1100
+   ],
+   "parcours": "tuto-2",
+   "statut": "ok"
+  },
+  {
    "id": "personnages/naufrages/rivet/rivet-naufrage_avant_repos",
    "rubrique": "personnages",
    "sujet": "rivet-naufrage",
@@ -20123,6 +22230,33 @@
     82
    ],
    "ms_par_image": 170,
+   "parcours": "tuto-2",
+   "statut": "ok"
+  },
+  {
+   "id": "personnages/naufrages/rivet/rivet-naufrage_dos_pecher",
+   "rubrique": "personnages",
+   "sujet": "rivet-naufrage",
+   "vue": "dos",
+   "pose": "pecher",
+   "titre": "Rivet naufragé, trois quarts dos, pecher",
+   "regarde": "haut-droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/naufrages/rivet/rivet-naufrage_dos_pecher_1.svg",
+    "svg/personnages/naufrages/rivet/rivet-naufrage_dos_pecher_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    700,
+    1100
+   ],
    "parcours": "tuto-2",
    "statut": "ok"
   },
@@ -20558,6 +22692,32 @@
     64
    ],
    "ms_par_image": 170,
+   "parcours": "tuto-2",
+   "statut": "ok"
+  },
+  {
+   "id": "personnages/naufrages/rivet/rivet-naufrage_face_pecher",
+   "rubrique": "personnages",
+   "sujet": "rivet-naufrage",
+   "vue": "face",
+   "pose": "pecher",
+   "titre": "Rivet naufragé, de face, pecher",
+   "regarde": "face",
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/naufrages/rivet/rivet-naufrage_face_pecher_1.svg",
+    "svg/personnages/naufrages/rivet/rivet-naufrage_face_pecher_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    700,
+    1100
+   ],
    "parcours": "tuto-2",
    "statut": "ok"
   },
@@ -22056,6 +24216,33 @@
    "statut": "ok"
   },
   {
+   "id": "personnages/maitres/ondin/ondin_avant_pecher",
+   "rubrique": "personnages",
+   "sujet": "ondin",
+   "vue": "avant",
+   "pose": "pecher",
+   "titre": "Ondin, trois quarts avant, pecher",
+   "regarde": "bas-droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/maitres/ondin/ondin_avant_pecher_1.svg",
+    "svg/personnages/maitres/ondin/ondin_avant_pecher_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    700,
+    1100
+   ],
+   "parcours": "tuto-3",
+   "statut": "ok"
+  },
+  {
    "id": "personnages/maitres/ondin/ondin_avant_repos",
    "rubrique": "personnages",
    "sujet": "ondin",
@@ -22385,6 +24572,33 @@
     82
    ],
    "ms_par_image": 170,
+   "parcours": "tuto-3",
+   "statut": "ok"
+  },
+  {
+   "id": "personnages/maitres/ondin/ondin_dos_pecher",
+   "rubrique": "personnages",
+   "sujet": "ondin",
+   "vue": "dos",
+   "pose": "pecher",
+   "titre": "Ondin, trois quarts dos, pecher",
+   "regarde": "haut-droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/maitres/ondin/ondin_dos_pecher_1.svg",
+    "svg/personnages/maitres/ondin/ondin_dos_pecher_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    700,
+    1100
+   ],
    "parcours": "tuto-3",
    "statut": "ok"
   },
@@ -22824,6 +25038,32 @@
    "statut": "ok"
   },
   {
+   "id": "personnages/maitres/ondin/ondin_face_pecher",
+   "rubrique": "personnages",
+   "sujet": "ondin",
+   "vue": "face",
+   "pose": "pecher",
+   "titre": "Ondin, de face, pecher",
+   "regarde": "face",
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/maitres/ondin/ondin_face_pecher_1.svg",
+    "svg/personnages/maitres/ondin/ondin_face_pecher_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    700,
+    1100
+   ],
+   "parcours": "tuto-3",
+   "statut": "ok"
+  },
+  {
    "id": "personnages/maitres/ondin/ondin_face_repos",
    "rubrique": "personnages",
    "sujet": "ondin",
@@ -23220,6 +25460,33 @@
    "statut": "ok"
   },
   {
+   "id": "personnages/naufrages/aster/aster-naufrage_avant_pecher",
+   "rubrique": "personnages",
+   "sujet": "aster-naufrage",
+   "vue": "avant",
+   "pose": "pecher",
+   "titre": "Aster naufragée, trois quarts avant, pecher",
+   "regarde": "bas-droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/naufrages/aster/aster-naufrage_avant_pecher_1.svg",
+    "svg/personnages/naufrages/aster/aster-naufrage_avant_pecher_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    700,
+    1100
+   ],
+   "parcours": "tuto-3",
+   "statut": "ok"
+  },
+  {
    "id": "personnages/naufrages/aster/aster-naufrage_avant_repos",
    "rubrique": "personnages",
    "sujet": "aster-naufrage",
@@ -23549,6 +25816,33 @@
     82
    ],
    "ms_par_image": 170,
+   "parcours": "tuto-3",
+   "statut": "ok"
+  },
+  {
+   "id": "personnages/naufrages/aster/aster-naufrage_dos_pecher",
+   "rubrique": "personnages",
+   "sujet": "aster-naufrage",
+   "vue": "dos",
+   "pose": "pecher",
+   "titre": "Aster naufragée, trois quarts dos, pecher",
+   "regarde": "haut-droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/naufrages/aster/aster-naufrage_dos_pecher_1.svg",
+    "svg/personnages/naufrages/aster/aster-naufrage_dos_pecher_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    700,
+    1100
+   ],
    "parcours": "tuto-3",
    "statut": "ok"
   },
@@ -23962,6 +26256,32 @@
    "statut": "ok"
   },
   {
+   "id": "personnages/naufrages/aster/aster-naufrage_face_pecher",
+   "rubrique": "personnages",
+   "sujet": "aster-naufrage",
+   "vue": "face",
+   "pose": "pecher",
+   "titre": "Aster naufragée, de face, pecher",
+   "regarde": "face",
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/naufrages/aster/aster-naufrage_face_pecher_1.svg",
+    "svg/personnages/naufrages/aster/aster-naufrage_face_pecher_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    700,
+    1100
+   ],
+   "parcours": "tuto-3",
+   "statut": "ok"
+  },
+  {
    "id": "personnages/naufrages/aster/aster-naufrage_face_repos",
    "rubrique": "personnages",
    "sujet": "aster-naufrage",
@@ -24279,6 +26599,33 @@
    "statut": "ok"
   },
   {
+   "id": "personnages/naufrages/ondin/ondin-naufrage_avant_pecher",
+   "rubrique": "personnages",
+   "sujet": "ondin-naufrage",
+   "vue": "avant",
+   "pose": "pecher",
+   "titre": "Ondin naufragé, trois quarts avant, pecher",
+   "regarde": "bas-droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/naufrages/ondin/ondin-naufrage_avant_pecher_1.svg",
+    "svg/personnages/naufrages/ondin/ondin-naufrage_avant_pecher_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    700,
+    1100
+   ],
+   "parcours": "tuto-3",
+   "statut": "ok"
+  },
+  {
    "id": "personnages/naufrages/ondin/ondin-naufrage_avant_repos",
    "rubrique": "personnages",
    "sujet": "ondin-naufrage",
@@ -24556,6 +26903,33 @@
     64
    ],
    "ms_par_image": 170,
+   "parcours": "tuto-3",
+   "statut": "ok"
+  },
+  {
+   "id": "personnages/naufrages/ondin/ondin-naufrage_dos_pecher",
+   "rubrique": "personnages",
+   "sujet": "ondin-naufrage",
+   "vue": "dos",
+   "pose": "pecher",
+   "titre": "Ondin naufragé, trois quarts dos, pecher",
+   "regarde": "haut-droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/naufrages/ondin/ondin-naufrage_dos_pecher_1.svg",
+    "svg/personnages/naufrages/ondin/ondin-naufrage_dos_pecher_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    700,
+    1100
+   ],
    "parcours": "tuto-3",
    "statut": "ok"
   },
@@ -24991,6 +27365,32 @@
     64
    ],
    "ms_par_image": 170,
+   "parcours": "tuto-3",
+   "statut": "ok"
+  },
+  {
+   "id": "personnages/naufrages/ondin/ondin-naufrage_face_pecher",
+   "rubrique": "personnages",
+   "sujet": "ondin-naufrage",
+   "vue": "face",
+   "pose": "pecher",
+   "titre": "Ondin naufragé, de face, pecher",
+   "regarde": "face",
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/naufrages/ondin/ondin-naufrage_face_pecher_1.svg",
+    "svg/personnages/naufrages/ondin/ondin-naufrage_face_pecher_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    700,
+    1100
+   ],
    "parcours": "tuto-3",
    "statut": "ok"
   },
@@ -26152,6 +28552,33 @@
    "statut": "ok"
   },
   {
+   "id": "personnages/maitres/sylve/sylve_avant_pecher",
+   "rubrique": "personnages",
+   "sujet": "sylve",
+   "vue": "avant",
+   "pose": "pecher",
+   "titre": "Sylve, trois quarts avant, pecher",
+   "regarde": "bas-droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/maitres/sylve/sylve_avant_pecher_1.svg",
+    "svg/personnages/maitres/sylve/sylve_avant_pecher_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    700,
+    1100
+   ],
+   "parcours": "acte-1",
+   "statut": "ok"
+  },
+  {
    "id": "personnages/maitres/sylve/sylve_avant_repos",
    "rubrique": "personnages",
    "sujet": "sylve",
@@ -26481,6 +28908,33 @@
     82
    ],
    "ms_par_image": 170,
+   "parcours": "acte-1",
+   "statut": "ok"
+  },
+  {
+   "id": "personnages/maitres/sylve/sylve_dos_pecher",
+   "rubrique": "personnages",
+   "sujet": "sylve",
+   "vue": "dos",
+   "pose": "pecher",
+   "titre": "Sylve, trois quarts dos, pecher",
+   "regarde": "haut-droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/maitres/sylve/sylve_dos_pecher_1.svg",
+    "svg/personnages/maitres/sylve/sylve_dos_pecher_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    700,
+    1100
+   ],
    "parcours": "acte-1",
    "statut": "ok"
   },
@@ -26920,6 +29374,32 @@
    "statut": "ok"
   },
   {
+   "id": "personnages/maitres/sylve/sylve_face_pecher",
+   "rubrique": "personnages",
+   "sujet": "sylve",
+   "vue": "face",
+   "pose": "pecher",
+   "titre": "Sylve, de face, pecher",
+   "regarde": "face",
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/maitres/sylve/sylve_face_pecher_1.svg",
+    "svg/personnages/maitres/sylve/sylve_face_pecher_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    700,
+    1100
+   ],
+   "parcours": "acte-1",
+   "statut": "ok"
+  },
+  {
    "id": "personnages/maitres/sylve/sylve_face_repos",
    "rubrique": "personnages",
    "sujet": "sylve",
@@ -27237,6 +29717,33 @@
    "statut": "ok"
   },
   {
+   "id": "personnages/naufrages/sylve/sylve-naufrage_avant_pecher",
+   "rubrique": "personnages",
+   "sujet": "sylve-naufrage",
+   "vue": "avant",
+   "pose": "pecher",
+   "titre": "Sylve naufragée, trois quarts avant, pecher",
+   "regarde": "bas-droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/naufrages/sylve/sylve-naufrage_avant_pecher_1.svg",
+    "svg/personnages/naufrages/sylve/sylve-naufrage_avant_pecher_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    700,
+    1100
+   ],
+   "parcours": "acte-1",
+   "statut": "ok"
+  },
+  {
    "id": "personnages/naufrages/sylve/sylve-naufrage_avant_repos",
    "rubrique": "personnages",
    "sujet": "sylve-naufrage",
@@ -27487,6 +29994,33 @@
     64
    ],
    "ms_par_image": 170,
+   "parcours": "acte-1",
+   "statut": "ok"
+  },
+  {
+   "id": "personnages/naufrages/sylve/sylve-naufrage_dos_pecher",
+   "rubrique": "personnages",
+   "sujet": "sylve-naufrage",
+   "vue": "dos",
+   "pose": "pecher",
+   "titre": "Sylve naufragée, trois quarts dos, pecher",
+   "regarde": "haut-droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/naufrages/sylve/sylve-naufrage_dos_pecher_1.svg",
+    "svg/personnages/naufrages/sylve/sylve-naufrage_dos_pecher_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    700,
+    1100
+   ],
    "parcours": "acte-1",
    "statut": "ok"
   },
@@ -27869,6 +30403,32 @@
     64
    ],
    "ms_par_image": 170,
+   "parcours": "acte-1",
+   "statut": "ok"
+  },
+  {
+   "id": "personnages/naufrages/sylve/sylve-naufrage_face_pecher",
+   "rubrique": "personnages",
+   "sujet": "sylve-naufrage",
+   "vue": "face",
+   "pose": "pecher",
+   "titre": "Sylve naufragée, de face, pecher",
+   "regarde": "face",
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/naufrages/sylve/sylve-naufrage_face_pecher_1.svg",
+    "svg/personnages/naufrages/sylve/sylve-naufrage_face_pecher_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    700,
+    1100
+   ],
    "parcours": "acte-1",
    "statut": "ok"
   },
@@ -29552,6 +32112,33 @@
    "statut": "ok"
   },
   {
+   "id": "personnages/maitres/galet/galet_avant_pecher",
+   "rubrique": "personnages",
+   "sujet": "galet",
+   "vue": "avant",
+   "pose": "pecher",
+   "titre": "Galet, trois quarts avant, pecher",
+   "regarde": "bas-droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/maitres/galet/galet_avant_pecher_1.svg",
+    "svg/personnages/maitres/galet/galet_avant_pecher_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    700,
+    1100
+   ],
+   "parcours": "acte-2",
+   "statut": "ok"
+  },
+  {
    "id": "personnages/maitres/galet/galet_avant_repos",
    "rubrique": "personnages",
    "sujet": "galet",
@@ -29881,6 +32468,33 @@
     82
    ],
    "ms_par_image": 170,
+   "parcours": "acte-2",
+   "statut": "ok"
+  },
+  {
+   "id": "personnages/maitres/galet/galet_dos_pecher",
+   "rubrique": "personnages",
+   "sujet": "galet",
+   "vue": "dos",
+   "pose": "pecher",
+   "titre": "Galet, trois quarts dos, pecher",
+   "regarde": "haut-droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/maitres/galet/galet_dos_pecher_1.svg",
+    "svg/personnages/maitres/galet/galet_dos_pecher_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    700,
+    1100
+   ],
    "parcours": "acte-2",
    "statut": "ok"
   },
@@ -30294,6 +32908,32 @@
    "statut": "ok"
   },
   {
+   "id": "personnages/maitres/galet/galet_face_pecher",
+   "rubrique": "personnages",
+   "sujet": "galet",
+   "vue": "face",
+   "pose": "pecher",
+   "titre": "Galet, de face, pecher",
+   "regarde": "face",
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/maitres/galet/galet_face_pecher_1.svg",
+    "svg/personnages/maitres/galet/galet_face_pecher_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    700,
+    1100
+   ],
+   "parcours": "acte-2",
+   "statut": "ok"
+  },
+  {
    "id": "personnages/maitres/galet/galet_face_repos",
    "rubrique": "personnages",
    "sujet": "galet",
@@ -30637,6 +33277,33 @@
    "statut": "ok"
   },
   {
+   "id": "personnages/naufrages/galet/galet-naufrage_avant_pecher",
+   "rubrique": "personnages",
+   "sujet": "galet-naufrage",
+   "vue": "avant",
+   "pose": "pecher",
+   "titre": "Galet naufragé, trois quarts avant, pecher",
+   "regarde": "bas-droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/naufrages/galet/galet-naufrage_avant_pecher_1.svg",
+    "svg/personnages/naufrages/galet/galet-naufrage_avant_pecher_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    700,
+    1100
+   ],
+   "parcours": "acte-2",
+   "statut": "ok"
+  },
+  {
    "id": "personnages/naufrages/galet/galet-naufrage_avant_repos",
    "rubrique": "personnages",
    "sujet": "galet-naufrage",
@@ -30887,6 +33554,33 @@
     64
    ],
    "ms_par_image": 170,
+   "parcours": "acte-2",
+   "statut": "ok"
+  },
+  {
+   "id": "personnages/naufrages/galet/galet-naufrage_dos_pecher",
+   "rubrique": "personnages",
+   "sujet": "galet-naufrage",
+   "vue": "dos",
+   "pose": "pecher",
+   "titre": "Galet naufragé, trois quarts dos, pecher",
+   "regarde": "haut-droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/naufrages/galet/galet-naufrage_dos_pecher_1.svg",
+    "svg/personnages/naufrages/galet/galet-naufrage_dos_pecher_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    700,
+    1100
+   ],
    "parcours": "acte-2",
    "statut": "ok"
   },
@@ -31269,6 +33963,32 @@
     64
    ],
    "ms_par_image": 170,
+   "parcours": "acte-2",
+   "statut": "ok"
+  },
+  {
+   "id": "personnages/naufrages/galet/galet-naufrage_face_pecher",
+   "rubrique": "personnages",
+   "sujet": "galet-naufrage",
+   "vue": "face",
+   "pose": "pecher",
+   "titre": "Galet naufragé, de face, pecher",
+   "regarde": "face",
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/naufrages/galet/galet-naufrage_face_pecher_1.svg",
+    "svg/personnages/naufrages/galet/galet-naufrage_face_pecher_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    700,
+    1100
+   ],
    "parcours": "acte-2",
    "statut": "ok"
   },
@@ -34203,6 +36923,33 @@
    "statut": "ok"
   },
   {
+   "id": "personnages/maitres/melisse/melisse_avant_pecher",
+   "rubrique": "personnages",
+   "sujet": "melisse",
+   "vue": "avant",
+   "pose": "pecher",
+   "titre": "Mélisse, trois quarts avant, pecher",
+   "regarde": "bas-droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/maitres/melisse/melisse_avant_pecher_1.svg",
+    "svg/personnages/maitres/melisse/melisse_avant_pecher_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    700,
+    1100
+   ],
+   "parcours": "acte-3",
+   "statut": "ok"
+  },
+  {
    "id": "personnages/maitres/melisse/melisse_avant_repos",
    "rubrique": "personnages",
    "sujet": "melisse",
@@ -34532,6 +37279,33 @@
     82
    ],
    "ms_par_image": 170,
+   "parcours": "acte-3",
+   "statut": "ok"
+  },
+  {
+   "id": "personnages/maitres/melisse/melisse_dos_pecher",
+   "rubrique": "personnages",
+   "sujet": "melisse",
+   "vue": "dos",
+   "pose": "pecher",
+   "titre": "Mélisse, trois quarts dos, pecher",
+   "regarde": "haut-droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/maitres/melisse/melisse_dos_pecher_1.svg",
+    "svg/personnages/maitres/melisse/melisse_dos_pecher_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    700,
+    1100
+   ],
    "parcours": "acte-3",
    "statut": "ok"
   },
@@ -34971,6 +37745,32 @@
    "statut": "ok"
   },
   {
+   "id": "personnages/maitres/melisse/melisse_face_pecher",
+   "rubrique": "personnages",
+   "sujet": "melisse",
+   "vue": "face",
+   "pose": "pecher",
+   "titre": "Mélisse, de face, pecher",
+   "regarde": "face",
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/maitres/melisse/melisse_face_pecher_1.svg",
+    "svg/personnages/maitres/melisse/melisse_face_pecher_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    700,
+    1100
+   ],
+   "parcours": "acte-3",
+   "statut": "ok"
+  },
+  {
    "id": "personnages/maitres/melisse/melisse_face_repos",
    "rubrique": "personnages",
    "sujet": "melisse",
@@ -35340,6 +38140,33 @@
    "statut": "ok"
   },
   {
+   "id": "personnages/maitres/rivet/rivet_avant_pecher",
+   "rubrique": "personnages",
+   "sujet": "rivet",
+   "vue": "avant",
+   "pose": "pecher",
+   "titre": "Rivet, trois quarts avant, pecher",
+   "regarde": "bas-droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/maitres/rivet/rivet_avant_pecher_1.svg",
+    "svg/personnages/maitres/rivet/rivet_avant_pecher_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    700,
+    1100
+   ],
+   "parcours": "acte-3",
+   "statut": "ok"
+  },
+  {
    "id": "personnages/maitres/rivet/rivet_avant_repos",
    "rubrique": "personnages",
    "sujet": "rivet",
@@ -35669,6 +38496,33 @@
     82
    ],
    "ms_par_image": 170,
+   "parcours": "acte-3",
+   "statut": "ok"
+  },
+  {
+   "id": "personnages/maitres/rivet/rivet_dos_pecher",
+   "rubrique": "personnages",
+   "sujet": "rivet",
+   "vue": "dos",
+   "pose": "pecher",
+   "titre": "Rivet, trois quarts dos, pecher",
+   "regarde": "haut-droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/maitres/rivet/rivet_dos_pecher_1.svg",
+    "svg/personnages/maitres/rivet/rivet_dos_pecher_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    700,
+    1100
+   ],
    "parcours": "acte-3",
    "statut": "ok"
   },
@@ -36108,6 +38962,32 @@
    "statut": "ok"
   },
   {
+   "id": "personnages/maitres/rivet/rivet_face_pecher",
+   "rubrique": "personnages",
+   "sujet": "rivet",
+   "vue": "face",
+   "pose": "pecher",
+   "titre": "Rivet, de face, pecher",
+   "regarde": "face",
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/maitres/rivet/rivet_face_pecher_1.svg",
+    "svg/personnages/maitres/rivet/rivet_face_pecher_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    700,
+    1100
+   ],
+   "parcours": "acte-3",
+   "statut": "ok"
+  },
+  {
    "id": "personnages/maitres/rivet/rivet_face_repos",
    "rubrique": "personnages",
    "sujet": "rivet",
@@ -36425,6 +39305,33 @@
    "statut": "ok"
   },
   {
+   "id": "personnages/naufrages/melisse/melisse-naufrage_avant_pecher",
+   "rubrique": "personnages",
+   "sujet": "melisse-naufrage",
+   "vue": "avant",
+   "pose": "pecher",
+   "titre": "Mélisse naufragée, trois quarts avant, pecher",
+   "regarde": "bas-droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/naufrages/melisse/melisse-naufrage_avant_pecher_1.svg",
+    "svg/personnages/naufrages/melisse/melisse-naufrage_avant_pecher_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    700,
+    1100
+   ],
+   "parcours": "acte-3",
+   "statut": "ok"
+  },
+  {
    "id": "personnages/naufrages/melisse/melisse-naufrage_avant_repos",
    "rubrique": "personnages",
    "sujet": "melisse-naufrage",
@@ -36702,6 +39609,33 @@
     64
    ],
    "ms_par_image": 170,
+   "parcours": "acte-3",
+   "statut": "ok"
+  },
+  {
+   "id": "personnages/naufrages/melisse/melisse-naufrage_dos_pecher",
+   "rubrique": "personnages",
+   "sujet": "melisse-naufrage",
+   "vue": "dos",
+   "pose": "pecher",
+   "titre": "Mélisse naufragée, trois quarts dos, pecher",
+   "regarde": "haut-droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/naufrages/melisse/melisse-naufrage_dos_pecher_1.svg",
+    "svg/personnages/naufrages/melisse/melisse-naufrage_dos_pecher_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    700,
+    1100
+   ],
    "parcours": "acte-3",
    "statut": "ok"
   },
@@ -37137,6 +40071,32 @@
     64
    ],
    "ms_par_image": 170,
+   "parcours": "acte-3",
+   "statut": "ok"
+  },
+  {
+   "id": "personnages/naufrages/melisse/melisse-naufrage_face_pecher",
+   "rubrique": "personnages",
+   "sujet": "melisse-naufrage",
+   "vue": "face",
+   "pose": "pecher",
+   "titre": "Mélisse naufragée, de face, pecher",
+   "regarde": "face",
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/naufrages/melisse/melisse-naufrage_face_pecher_1.svg",
+    "svg/personnages/naufrages/melisse/melisse-naufrage_face_pecher_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    700,
+    1100
+   ],
    "parcours": "acte-3",
    "statut": "ok"
   },
@@ -42929,6 +45889,33 @@
    "statut": "ok"
   },
   {
+   "id": "personnages/maitres/aster/aster_avant_pecher",
+   "rubrique": "personnages",
+   "sujet": "aster",
+   "vue": "avant",
+   "pose": "pecher",
+   "titre": "Aster, trois quarts avant, pecher",
+   "regarde": "bas-droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/maitres/aster/aster_avant_pecher_1.svg",
+    "svg/personnages/maitres/aster/aster_avant_pecher_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    700,
+    1100
+   ],
+   "parcours": "acte-4",
+   "statut": "ok"
+  },
+  {
    "id": "personnages/maitres/aster/aster_avant_repos",
    "rubrique": "personnages",
    "sujet": "aster",
@@ -43258,6 +46245,33 @@
     82
    ],
    "ms_par_image": 170,
+   "parcours": "acte-4",
+   "statut": "ok"
+  },
+  {
+   "id": "personnages/maitres/aster/aster_dos_pecher",
+   "rubrique": "personnages",
+   "sujet": "aster",
+   "vue": "dos",
+   "pose": "pecher",
+   "titre": "Aster, trois quarts dos, pecher",
+   "regarde": "haut-droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/maitres/aster/aster_dos_pecher_1.svg",
+    "svg/personnages/maitres/aster/aster_dos_pecher_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    700,
+    1100
+   ],
    "parcours": "acte-4",
    "statut": "ok"
   },
@@ -43671,6 +46685,32 @@
    "statut": "ok"
   },
   {
+   "id": "personnages/maitres/aster/aster_face_pecher",
+   "rubrique": "personnages",
+   "sujet": "aster",
+   "vue": "face",
+   "pose": "pecher",
+   "titre": "Aster, de face, pecher",
+   "regarde": "face",
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/maitres/aster/aster_face_pecher_1.svg",
+    "svg/personnages/maitres/aster/aster_face_pecher_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    700,
+    1100
+   ],
+   "parcours": "acte-4",
+   "statut": "ok"
+  },
+  {
    "id": "personnages/maitres/aster/aster_face_repos",
    "rubrique": "personnages",
    "sujet": "aster",
@@ -43955,6 +46995,33 @@
     82
    ],
    "ms_par_image": 170,
+   "parcours": "acte-4",
+   "statut": "ok"
+  },
+  {
+   "id": "personnages/visiteurs/visiteur-01/visiteur-01_avant_pecher",
+   "rubrique": "personnages",
+   "sujet": "visiteur-01",
+   "vue": "avant",
+   "pose": "pecher",
+   "titre": "Visiteur 1, trois quarts avant, pecher",
+   "regarde": "bas-droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/visiteurs/visiteur-01/visiteur-01_avant_pecher_1.svg",
+    "svg/personnages/visiteurs/visiteur-01/visiteur-01_avant_pecher_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    700,
+    1100
+   ],
    "parcours": "acte-4",
    "statut": "ok"
   },
@@ -44244,6 +47311,33 @@
    "statut": "ok"
   },
   {
+   "id": "personnages/visiteurs/visiteur-01/visiteur-01_dos_pecher",
+   "rubrique": "personnages",
+   "sujet": "visiteur-01",
+   "vue": "dos",
+   "pose": "pecher",
+   "titre": "Visiteur 1, trois quarts dos, pecher",
+   "regarde": "haut-droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/visiteurs/visiteur-01/visiteur-01_dos_pecher_1.svg",
+    "svg/personnages/visiteurs/visiteur-01/visiteur-01_dos_pecher_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    700,
+    1100
+   ],
+   "parcours": "acte-4",
+   "statut": "ok"
+  },
+  {
    "id": "personnages/visiteurs/visiteur-01/visiteur-01_dos_repos",
    "rubrique": "personnages",
    "sujet": "visiteur-01",
@@ -44446,6 +47540,32 @@
     64
    ],
    "ms_par_image": 170,
+   "parcours": "acte-4",
+   "statut": "ok"
+  },
+  {
+   "id": "personnages/visiteurs/visiteur-01/visiteur-01_face_pecher",
+   "rubrique": "personnages",
+   "sujet": "visiteur-01",
+   "vue": "face",
+   "pose": "pecher",
+   "titre": "Visiteur 1, de face, pecher",
+   "regarde": "face",
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/visiteurs/visiteur-01/visiteur-01_face_pecher_1.svg",
+    "svg/personnages/visiteurs/visiteur-01/visiteur-01_face_pecher_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    700,
+    1100
+   ],
    "parcours": "acte-4",
    "statut": "ok"
   },
@@ -44708,6 +47828,33 @@
     82
    ],
    "ms_par_image": 170,
+   "parcours": "acte-4",
+   "statut": "ok"
+  },
+  {
+   "id": "personnages/visiteurs/visiteur-02/visiteur-02_avant_pecher",
+   "rubrique": "personnages",
+   "sujet": "visiteur-02",
+   "vue": "avant",
+   "pose": "pecher",
+   "titre": "Visiteur 2, trois quarts avant, pecher",
+   "regarde": "bas-droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/visiteurs/visiteur-02/visiteur-02_avant_pecher_1.svg",
+    "svg/personnages/visiteurs/visiteur-02/visiteur-02_avant_pecher_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    700,
+    1100
+   ],
    "parcours": "acte-4",
    "statut": "ok"
   },
@@ -44997,6 +48144,33 @@
    "statut": "ok"
   },
   {
+   "id": "personnages/visiteurs/visiteur-02/visiteur-02_dos_pecher",
+   "rubrique": "personnages",
+   "sujet": "visiteur-02",
+   "vue": "dos",
+   "pose": "pecher",
+   "titre": "Visiteur 2, trois quarts dos, pecher",
+   "regarde": "haut-droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/visiteurs/visiteur-02/visiteur-02_dos_pecher_1.svg",
+    "svg/personnages/visiteurs/visiteur-02/visiteur-02_dos_pecher_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    700,
+    1100
+   ],
+   "parcours": "acte-4",
+   "statut": "ok"
+  },
+  {
    "id": "personnages/visiteurs/visiteur-02/visiteur-02_dos_repos",
    "rubrique": "personnages",
    "sujet": "visiteur-02",
@@ -45199,6 +48373,32 @@
     64
    ],
    "ms_par_image": 170,
+   "parcours": "acte-4",
+   "statut": "ok"
+  },
+  {
+   "id": "personnages/visiteurs/visiteur-02/visiteur-02_face_pecher",
+   "rubrique": "personnages",
+   "sujet": "visiteur-02",
+   "vue": "face",
+   "pose": "pecher",
+   "titre": "Visiteur 2, de face, pecher",
+   "regarde": "face",
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/visiteurs/visiteur-02/visiteur-02_face_pecher_1.svg",
+    "svg/personnages/visiteurs/visiteur-02/visiteur-02_face_pecher_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    700,
+    1100
+   ],
    "parcours": "acte-4",
    "statut": "ok"
   },
@@ -45461,6 +48661,33 @@
     82
    ],
    "ms_par_image": 170,
+   "parcours": "acte-4",
+   "statut": "ok"
+  },
+  {
+   "id": "personnages/visiteurs/visiteur-03/visiteur-03_avant_pecher",
+   "rubrique": "personnages",
+   "sujet": "visiteur-03",
+   "vue": "avant",
+   "pose": "pecher",
+   "titre": "Visiteur 3, trois quarts avant, pecher",
+   "regarde": "bas-droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/visiteurs/visiteur-03/visiteur-03_avant_pecher_1.svg",
+    "svg/personnages/visiteurs/visiteur-03/visiteur-03_avant_pecher_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    700,
+    1100
+   ],
    "parcours": "acte-4",
    "statut": "ok"
   },
@@ -45750,6 +48977,33 @@
    "statut": "ok"
   },
   {
+   "id": "personnages/visiteurs/visiteur-03/visiteur-03_dos_pecher",
+   "rubrique": "personnages",
+   "sujet": "visiteur-03",
+   "vue": "dos",
+   "pose": "pecher",
+   "titre": "Visiteur 3, trois quarts dos, pecher",
+   "regarde": "haut-droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/visiteurs/visiteur-03/visiteur-03_dos_pecher_1.svg",
+    "svg/personnages/visiteurs/visiteur-03/visiteur-03_dos_pecher_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    700,
+    1100
+   ],
+   "parcours": "acte-4",
+   "statut": "ok"
+  },
+  {
    "id": "personnages/visiteurs/visiteur-03/visiteur-03_dos_repos",
    "rubrique": "personnages",
    "sujet": "visiteur-03",
@@ -45952,6 +49206,32 @@
     64
    ],
    "ms_par_image": 170,
+   "parcours": "acte-4",
+   "statut": "ok"
+  },
+  {
+   "id": "personnages/visiteurs/visiteur-03/visiteur-03_face_pecher",
+   "rubrique": "personnages",
+   "sujet": "visiteur-03",
+   "vue": "face",
+   "pose": "pecher",
+   "titre": "Visiteur 3, de face, pecher",
+   "regarde": "face",
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/visiteurs/visiteur-03/visiteur-03_face_pecher_1.svg",
+    "svg/personnages/visiteurs/visiteur-03/visiteur-03_face_pecher_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    700,
+    1100
+   ],
    "parcours": "acte-4",
    "statut": "ok"
   },
@@ -46214,6 +49494,33 @@
     82
    ],
    "ms_par_image": 170,
+   "parcours": "acte-4",
+   "statut": "ok"
+  },
+  {
+   "id": "personnages/visiteurs/visiteur-04/visiteur-04_avant_pecher",
+   "rubrique": "personnages",
+   "sujet": "visiteur-04",
+   "vue": "avant",
+   "pose": "pecher",
+   "titre": "Visiteur 4, trois quarts avant, pecher",
+   "regarde": "bas-droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/visiteurs/visiteur-04/visiteur-04_avant_pecher_1.svg",
+    "svg/personnages/visiteurs/visiteur-04/visiteur-04_avant_pecher_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    700,
+    1100
+   ],
    "parcours": "acte-4",
    "statut": "ok"
   },
@@ -46503,6 +49810,33 @@
    "statut": "ok"
   },
   {
+   "id": "personnages/visiteurs/visiteur-04/visiteur-04_dos_pecher",
+   "rubrique": "personnages",
+   "sujet": "visiteur-04",
+   "vue": "dos",
+   "pose": "pecher",
+   "titre": "Visiteur 4, trois quarts dos, pecher",
+   "regarde": "haut-droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/visiteurs/visiteur-04/visiteur-04_dos_pecher_1.svg",
+    "svg/personnages/visiteurs/visiteur-04/visiteur-04_dos_pecher_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    700,
+    1100
+   ],
+   "parcours": "acte-4",
+   "statut": "ok"
+  },
+  {
    "id": "personnages/visiteurs/visiteur-04/visiteur-04_dos_repos",
    "rubrique": "personnages",
    "sujet": "visiteur-04",
@@ -46705,6 +50039,32 @@
     64
    ],
    "ms_par_image": 170,
+   "parcours": "acte-4",
+   "statut": "ok"
+  },
+  {
+   "id": "personnages/visiteurs/visiteur-04/visiteur-04_face_pecher",
+   "rubrique": "personnages",
+   "sujet": "visiteur-04",
+   "vue": "face",
+   "pose": "pecher",
+   "titre": "Visiteur 4, de face, pecher",
+   "regarde": "face",
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/visiteurs/visiteur-04/visiteur-04_face_pecher_1.svg",
+    "svg/personnages/visiteurs/visiteur-04/visiteur-04_face_pecher_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    700,
+    1100
+   ],
    "parcours": "acte-4",
    "statut": "ok"
   },
@@ -46967,6 +50327,33 @@
     82
    ],
    "ms_par_image": 170,
+   "parcours": "acte-4",
+   "statut": "ok"
+  },
+  {
+   "id": "personnages/visiteurs/visiteur-05/visiteur-05_avant_pecher",
+   "rubrique": "personnages",
+   "sujet": "visiteur-05",
+   "vue": "avant",
+   "pose": "pecher",
+   "titre": "Visiteur 5, trois quarts avant, pecher",
+   "regarde": "bas-droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/visiteurs/visiteur-05/visiteur-05_avant_pecher_1.svg",
+    "svg/personnages/visiteurs/visiteur-05/visiteur-05_avant_pecher_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    700,
+    1100
+   ],
    "parcours": "acte-4",
    "statut": "ok"
   },
@@ -47256,6 +50643,33 @@
    "statut": "ok"
   },
   {
+   "id": "personnages/visiteurs/visiteur-05/visiteur-05_dos_pecher",
+   "rubrique": "personnages",
+   "sujet": "visiteur-05",
+   "vue": "dos",
+   "pose": "pecher",
+   "titre": "Visiteur 5, trois quarts dos, pecher",
+   "regarde": "haut-droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/visiteurs/visiteur-05/visiteur-05_dos_pecher_1.svg",
+    "svg/personnages/visiteurs/visiteur-05/visiteur-05_dos_pecher_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    700,
+    1100
+   ],
+   "parcours": "acte-4",
+   "statut": "ok"
+  },
+  {
    "id": "personnages/visiteurs/visiteur-05/visiteur-05_dos_repos",
    "rubrique": "personnages",
    "sujet": "visiteur-05",
@@ -47458,6 +50872,32 @@
     64
    ],
    "ms_par_image": 170,
+   "parcours": "acte-4",
+   "statut": "ok"
+  },
+  {
+   "id": "personnages/visiteurs/visiteur-05/visiteur-05_face_pecher",
+   "rubrique": "personnages",
+   "sujet": "visiteur-05",
+   "vue": "face",
+   "pose": "pecher",
+   "titre": "Visiteur 5, de face, pecher",
+   "regarde": "face",
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/visiteurs/visiteur-05/visiteur-05_face_pecher_1.svg",
+    "svg/personnages/visiteurs/visiteur-05/visiteur-05_face_pecher_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    700,
+    1100
+   ],
    "parcours": "acte-4",
    "statut": "ok"
   },
@@ -47720,6 +51160,33 @@
     82
    ],
    "ms_par_image": 170,
+   "parcours": "acte-4",
+   "statut": "ok"
+  },
+  {
+   "id": "personnages/visiteurs/visiteur-06/visiteur-06_avant_pecher",
+   "rubrique": "personnages",
+   "sujet": "visiteur-06",
+   "vue": "avant",
+   "pose": "pecher",
+   "titre": "Visiteur 6, trois quarts avant, pecher",
+   "regarde": "bas-droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/visiteurs/visiteur-06/visiteur-06_avant_pecher_1.svg",
+    "svg/personnages/visiteurs/visiteur-06/visiteur-06_avant_pecher_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    700,
+    1100
+   ],
    "parcours": "acte-4",
    "statut": "ok"
   },
@@ -48009,6 +51476,33 @@
    "statut": "ok"
   },
   {
+   "id": "personnages/visiteurs/visiteur-06/visiteur-06_dos_pecher",
+   "rubrique": "personnages",
+   "sujet": "visiteur-06",
+   "vue": "dos",
+   "pose": "pecher",
+   "titre": "Visiteur 6, trois quarts dos, pecher",
+   "regarde": "haut-droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/visiteurs/visiteur-06/visiteur-06_dos_pecher_1.svg",
+    "svg/personnages/visiteurs/visiteur-06/visiteur-06_dos_pecher_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    700,
+    1100
+   ],
+   "parcours": "acte-4",
+   "statut": "ok"
+  },
+  {
    "id": "personnages/visiteurs/visiteur-06/visiteur-06_dos_repos",
    "rubrique": "personnages",
    "sujet": "visiteur-06",
@@ -48211,6 +51705,32 @@
     64
    ],
    "ms_par_image": 170,
+   "parcours": "acte-4",
+   "statut": "ok"
+  },
+  {
+   "id": "personnages/visiteurs/visiteur-06/visiteur-06_face_pecher",
+   "rubrique": "personnages",
+   "sujet": "visiteur-06",
+   "vue": "face",
+   "pose": "pecher",
+   "titre": "Visiteur 6, de face, pecher",
+   "regarde": "face",
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/visiteurs/visiteur-06/visiteur-06_face_pecher_1.svg",
+    "svg/personnages/visiteurs/visiteur-06/visiteur-06_face_pecher_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    700,
+    1100
+   ],
    "parcours": "acte-4",
    "statut": "ok"
   },
@@ -48473,6 +51993,33 @@
     82
    ],
    "ms_par_image": 170,
+   "parcours": "acte-4",
+   "statut": "ok"
+  },
+  {
+   "id": "personnages/visiteurs/visiteur-07/visiteur-07_avant_pecher",
+   "rubrique": "personnages",
+   "sujet": "visiteur-07",
+   "vue": "avant",
+   "pose": "pecher",
+   "titre": "Visiteur 7, trois quarts avant, pecher",
+   "regarde": "bas-droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/visiteurs/visiteur-07/visiteur-07_avant_pecher_1.svg",
+    "svg/personnages/visiteurs/visiteur-07/visiteur-07_avant_pecher_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    700,
+    1100
+   ],
    "parcours": "acte-4",
    "statut": "ok"
   },
@@ -48762,6 +52309,33 @@
    "statut": "ok"
   },
   {
+   "id": "personnages/visiteurs/visiteur-07/visiteur-07_dos_pecher",
+   "rubrique": "personnages",
+   "sujet": "visiteur-07",
+   "vue": "dos",
+   "pose": "pecher",
+   "titre": "Visiteur 7, trois quarts dos, pecher",
+   "regarde": "haut-droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/visiteurs/visiteur-07/visiteur-07_dos_pecher_1.svg",
+    "svg/personnages/visiteurs/visiteur-07/visiteur-07_dos_pecher_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    700,
+    1100
+   ],
+   "parcours": "acte-4",
+   "statut": "ok"
+  },
+  {
    "id": "personnages/visiteurs/visiteur-07/visiteur-07_dos_repos",
    "rubrique": "personnages",
    "sujet": "visiteur-07",
@@ -48964,6 +52538,32 @@
     64
    ],
    "ms_par_image": 170,
+   "parcours": "acte-4",
+   "statut": "ok"
+  },
+  {
+   "id": "personnages/visiteurs/visiteur-07/visiteur-07_face_pecher",
+   "rubrique": "personnages",
+   "sujet": "visiteur-07",
+   "vue": "face",
+   "pose": "pecher",
+   "titre": "Visiteur 7, de face, pecher",
+   "regarde": "face",
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/visiteurs/visiteur-07/visiteur-07_face_pecher_1.svg",
+    "svg/personnages/visiteurs/visiteur-07/visiteur-07_face_pecher_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    700,
+    1100
+   ],
    "parcours": "acte-4",
    "statut": "ok"
   },
@@ -49226,6 +52826,33 @@
     82
    ],
    "ms_par_image": 170,
+   "parcours": "acte-4",
+   "statut": "ok"
+  },
+  {
+   "id": "personnages/visiteurs/visiteur-08/visiteur-08_avant_pecher",
+   "rubrique": "personnages",
+   "sujet": "visiteur-08",
+   "vue": "avant",
+   "pose": "pecher",
+   "titre": "Visiteur 8, trois quarts avant, pecher",
+   "regarde": "bas-droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/visiteurs/visiteur-08/visiteur-08_avant_pecher_1.svg",
+    "svg/personnages/visiteurs/visiteur-08/visiteur-08_avant_pecher_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    700,
+    1100
+   ],
    "parcours": "acte-4",
    "statut": "ok"
   },
@@ -49515,6 +53142,33 @@
    "statut": "ok"
   },
   {
+   "id": "personnages/visiteurs/visiteur-08/visiteur-08_dos_pecher",
+   "rubrique": "personnages",
+   "sujet": "visiteur-08",
+   "vue": "dos",
+   "pose": "pecher",
+   "titre": "Visiteur 8, trois quarts dos, pecher",
+   "regarde": "haut-droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/visiteurs/visiteur-08/visiteur-08_dos_pecher_1.svg",
+    "svg/personnages/visiteurs/visiteur-08/visiteur-08_dos_pecher_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    700,
+    1100
+   ],
+   "parcours": "acte-4",
+   "statut": "ok"
+  },
+  {
    "id": "personnages/visiteurs/visiteur-08/visiteur-08_dos_repos",
    "rubrique": "personnages",
    "sujet": "visiteur-08",
@@ -49717,6 +53371,32 @@
     64
    ],
    "ms_par_image": 170,
+   "parcours": "acte-4",
+   "statut": "ok"
+  },
+  {
+   "id": "personnages/visiteurs/visiteur-08/visiteur-08_face_pecher",
+   "rubrique": "personnages",
+   "sujet": "visiteur-08",
+   "vue": "face",
+   "pose": "pecher",
+   "titre": "Visiteur 8, de face, pecher",
+   "regarde": "face",
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/visiteurs/visiteur-08/visiteur-08_face_pecher_1.svg",
+    "svg/personnages/visiteurs/visiteur-08/visiteur-08_face_pecher_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    700,
+    1100
+   ],
    "parcours": "acte-4",
    "statut": "ok"
   },
@@ -49979,6 +53659,33 @@
     82
    ],
    "ms_par_image": 170,
+   "parcours": "acte-4",
+   "statut": "ok"
+  },
+  {
+   "id": "personnages/visiteurs/visiteur-09/visiteur-09_avant_pecher",
+   "rubrique": "personnages",
+   "sujet": "visiteur-09",
+   "vue": "avant",
+   "pose": "pecher",
+   "titre": "Visiteur 9, trois quarts avant, pecher",
+   "regarde": "bas-droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/visiteurs/visiteur-09/visiteur-09_avant_pecher_1.svg",
+    "svg/personnages/visiteurs/visiteur-09/visiteur-09_avant_pecher_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    700,
+    1100
+   ],
    "parcours": "acte-4",
    "statut": "ok"
   },
@@ -50268,6 +53975,33 @@
    "statut": "ok"
   },
   {
+   "id": "personnages/visiteurs/visiteur-09/visiteur-09_dos_pecher",
+   "rubrique": "personnages",
+   "sujet": "visiteur-09",
+   "vue": "dos",
+   "pose": "pecher",
+   "titre": "Visiteur 9, trois quarts dos, pecher",
+   "regarde": "haut-droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/visiteurs/visiteur-09/visiteur-09_dos_pecher_1.svg",
+    "svg/personnages/visiteurs/visiteur-09/visiteur-09_dos_pecher_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    700,
+    1100
+   ],
+   "parcours": "acte-4",
+   "statut": "ok"
+  },
+  {
    "id": "personnages/visiteurs/visiteur-09/visiteur-09_dos_repos",
    "rubrique": "personnages",
    "sujet": "visiteur-09",
@@ -50470,6 +54204,32 @@
     64
    ],
    "ms_par_image": 170,
+   "parcours": "acte-4",
+   "statut": "ok"
+  },
+  {
+   "id": "personnages/visiteurs/visiteur-09/visiteur-09_face_pecher",
+   "rubrique": "personnages",
+   "sujet": "visiteur-09",
+   "vue": "face",
+   "pose": "pecher",
+   "titre": "Visiteur 9, de face, pecher",
+   "regarde": "face",
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/visiteurs/visiteur-09/visiteur-09_face_pecher_1.svg",
+    "svg/personnages/visiteurs/visiteur-09/visiteur-09_face_pecher_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    700,
+    1100
+   ],
    "parcours": "acte-4",
    "statut": "ok"
   },
@@ -50732,6 +54492,33 @@
     82
    ],
    "ms_par_image": 170,
+   "parcours": "acte-4",
+   "statut": "ok"
+  },
+  {
+   "id": "personnages/visiteurs/visiteur-10/visiteur-10_avant_pecher",
+   "rubrique": "personnages",
+   "sujet": "visiteur-10",
+   "vue": "avant",
+   "pose": "pecher",
+   "titre": "Visiteur 10, trois quarts avant, pecher",
+   "regarde": "bas-droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/visiteurs/visiteur-10/visiteur-10_avant_pecher_1.svg",
+    "svg/personnages/visiteurs/visiteur-10/visiteur-10_avant_pecher_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    700,
+    1100
+   ],
    "parcours": "acte-4",
    "statut": "ok"
   },
@@ -51021,6 +54808,33 @@
    "statut": "ok"
   },
   {
+   "id": "personnages/visiteurs/visiteur-10/visiteur-10_dos_pecher",
+   "rubrique": "personnages",
+   "sujet": "visiteur-10",
+   "vue": "dos",
+   "pose": "pecher",
+   "titre": "Visiteur 10, trois quarts dos, pecher",
+   "regarde": "haut-droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/visiteurs/visiteur-10/visiteur-10_dos_pecher_1.svg",
+    "svg/personnages/visiteurs/visiteur-10/visiteur-10_dos_pecher_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    700,
+    1100
+   ],
+   "parcours": "acte-4",
+   "statut": "ok"
+  },
+  {
    "id": "personnages/visiteurs/visiteur-10/visiteur-10_dos_repos",
    "rubrique": "personnages",
    "sujet": "visiteur-10",
@@ -51223,6 +55037,32 @@
     64
    ],
    "ms_par_image": 170,
+   "parcours": "acte-4",
+   "statut": "ok"
+  },
+  {
+   "id": "personnages/visiteurs/visiteur-10/visiteur-10_face_pecher",
+   "rubrique": "personnages",
+   "sujet": "visiteur-10",
+   "vue": "face",
+   "pose": "pecher",
+   "titre": "Visiteur 10, de face, pecher",
+   "regarde": "face",
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/visiteurs/visiteur-10/visiteur-10_face_pecher_1.svg",
+    "svg/personnages/visiteurs/visiteur-10/visiteur-10_face_pecher_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    700,
+    1100
+   ],
    "parcours": "acte-4",
    "statut": "ok"
   },
@@ -51485,6 +55325,33 @@
     82
    ],
    "ms_par_image": 170,
+   "parcours": "acte-4",
+   "statut": "ok"
+  },
+  {
+   "id": "personnages/visiteurs/visiteur-11/visiteur-11_avant_pecher",
+   "rubrique": "personnages",
+   "sujet": "visiteur-11",
+   "vue": "avant",
+   "pose": "pecher",
+   "titre": "Visiteur 11, trois quarts avant, pecher",
+   "regarde": "bas-droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/visiteurs/visiteur-11/visiteur-11_avant_pecher_1.svg",
+    "svg/personnages/visiteurs/visiteur-11/visiteur-11_avant_pecher_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    700,
+    1100
+   ],
    "parcours": "acte-4",
    "statut": "ok"
   },
@@ -51774,6 +55641,33 @@
    "statut": "ok"
   },
   {
+   "id": "personnages/visiteurs/visiteur-11/visiteur-11_dos_pecher",
+   "rubrique": "personnages",
+   "sujet": "visiteur-11",
+   "vue": "dos",
+   "pose": "pecher",
+   "titre": "Visiteur 11, trois quarts dos, pecher",
+   "regarde": "haut-droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/visiteurs/visiteur-11/visiteur-11_dos_pecher_1.svg",
+    "svg/personnages/visiteurs/visiteur-11/visiteur-11_dos_pecher_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    700,
+    1100
+   ],
+   "parcours": "acte-4",
+   "statut": "ok"
+  },
+  {
    "id": "personnages/visiteurs/visiteur-11/visiteur-11_dos_repos",
    "rubrique": "personnages",
    "sujet": "visiteur-11",
@@ -51976,6 +55870,32 @@
     64
    ],
    "ms_par_image": 170,
+   "parcours": "acte-4",
+   "statut": "ok"
+  },
+  {
+   "id": "personnages/visiteurs/visiteur-11/visiteur-11_face_pecher",
+   "rubrique": "personnages",
+   "sujet": "visiteur-11",
+   "vue": "face",
+   "pose": "pecher",
+   "titre": "Visiteur 11, de face, pecher",
+   "regarde": "face",
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/visiteurs/visiteur-11/visiteur-11_face_pecher_1.svg",
+    "svg/personnages/visiteurs/visiteur-11/visiteur-11_face_pecher_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    700,
+    1100
+   ],
    "parcours": "acte-4",
    "statut": "ok"
   },
@@ -52238,6 +56158,33 @@
     82
    ],
    "ms_par_image": 170,
+   "parcours": "acte-4",
+   "statut": "ok"
+  },
+  {
+   "id": "personnages/visiteurs/visiteur-12/visiteur-12_avant_pecher",
+   "rubrique": "personnages",
+   "sujet": "visiteur-12",
+   "vue": "avant",
+   "pose": "pecher",
+   "titre": "Visiteur 12, trois quarts avant, pecher",
+   "regarde": "bas-droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/visiteurs/visiteur-12/visiteur-12_avant_pecher_1.svg",
+    "svg/personnages/visiteurs/visiteur-12/visiteur-12_avant_pecher_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    700,
+    1100
+   ],
    "parcours": "acte-4",
    "statut": "ok"
   },
@@ -52527,6 +56474,33 @@
    "statut": "ok"
   },
   {
+   "id": "personnages/visiteurs/visiteur-12/visiteur-12_dos_pecher",
+   "rubrique": "personnages",
+   "sujet": "visiteur-12",
+   "vue": "dos",
+   "pose": "pecher",
+   "titre": "Visiteur 12, trois quarts dos, pecher",
+   "regarde": "haut-droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/visiteurs/visiteur-12/visiteur-12_dos_pecher_1.svg",
+    "svg/personnages/visiteurs/visiteur-12/visiteur-12_dos_pecher_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    700,
+    1100
+   ],
+   "parcours": "acte-4",
+   "statut": "ok"
+  },
+  {
    "id": "personnages/visiteurs/visiteur-12/visiteur-12_dos_repos",
    "rubrique": "personnages",
    "sujet": "visiteur-12",
@@ -52729,6 +56703,32 @@
     64
    ],
    "ms_par_image": 170,
+   "parcours": "acte-4",
+   "statut": "ok"
+  },
+  {
+   "id": "personnages/visiteurs/visiteur-12/visiteur-12_face_pecher",
+   "rubrique": "personnages",
+   "sujet": "visiteur-12",
+   "vue": "face",
+   "pose": "pecher",
+   "titre": "Visiteur 12, de face, pecher",
+   "regarde": "face",
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/visiteurs/visiteur-12/visiteur-12_face_pecher_1.svg",
+    "svg/personnages/visiteurs/visiteur-12/visiteur-12_face_pecher_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    700,
+    1100
+   ],
    "parcours": "acte-4",
    "statut": "ok"
   },
@@ -54787,6 +58787,33 @@
    "statut": "ok"
   },
   {
+   "id": "personnages/epilogue/arrivant-01/arrivant-01_avant_pecher",
+   "rubrique": "personnages",
+   "sujet": "arrivant-01",
+   "vue": "avant",
+   "pose": "pecher",
+   "titre": "Nouveau venu 1 (épilogue), trois quarts avant, pecher",
+   "regarde": "bas-droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/epilogue/arrivant-01/arrivant-01_avant_pecher_1.svg",
+    "svg/personnages/epilogue/arrivant-01/arrivant-01_avant_pecher_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    700,
+    1100
+   ],
+   "parcours": "epilogue",
+   "statut": "ok"
+  },
+  {
    "id": "personnages/epilogue/arrivant-01/arrivant-01_avant_repos",
    "rubrique": "personnages",
    "sujet": "arrivant-01",
@@ -54999,6 +59026,33 @@
    "statut": "ok"
   },
   {
+   "id": "personnages/epilogue/arrivant-01/arrivant-01_dos_pecher",
+   "rubrique": "personnages",
+   "sujet": "arrivant-01",
+   "vue": "dos",
+   "pose": "pecher",
+   "titre": "Nouveau venu 1 (épilogue), trois quarts dos, pecher",
+   "regarde": "haut-droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/epilogue/arrivant-01/arrivant-01_dos_pecher_1.svg",
+    "svg/personnages/epilogue/arrivant-01/arrivant-01_dos_pecher_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    700,
+    1100
+   ],
+   "parcours": "epilogue",
+   "statut": "ok"
+  },
+  {
    "id": "personnages/epilogue/arrivant-01/arrivant-01_dos_repos",
    "rubrique": "personnages",
    "sujet": "arrivant-01",
@@ -55201,6 +59255,32 @@
     64
    ],
    "ms_par_image": 170,
+   "parcours": "epilogue",
+   "statut": "ok"
+  },
+  {
+   "id": "personnages/epilogue/arrivant-01/arrivant-01_face_pecher",
+   "rubrique": "personnages",
+   "sujet": "arrivant-01",
+   "vue": "face",
+   "pose": "pecher",
+   "titre": "Nouveau venu 1 (épilogue), de face, pecher",
+   "regarde": "face",
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/epilogue/arrivant-01/arrivant-01_face_pecher_1.svg",
+    "svg/personnages/epilogue/arrivant-01/arrivant-01_face_pecher_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    700,
+    1100
+   ],
    "parcours": "epilogue",
    "statut": "ok"
   },
@@ -55411,6 +59491,33 @@
     64
    ],
    "ms_par_image": 170,
+   "parcours": "epilogue",
+   "statut": "ok"
+  },
+  {
+   "id": "personnages/epilogue/arrivant-02/arrivant-02_avant_pecher",
+   "rubrique": "personnages",
+   "sujet": "arrivant-02",
+   "vue": "avant",
+   "pose": "pecher",
+   "titre": "Nouveau venu 2 (épilogue), trois quarts avant, pecher",
+   "regarde": "bas-droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/epilogue/arrivant-02/arrivant-02_avant_pecher_1.svg",
+    "svg/personnages/epilogue/arrivant-02/arrivant-02_avant_pecher_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    700,
+    1100
+   ],
    "parcours": "epilogue",
    "statut": "ok"
   },
@@ -55627,6 +59734,33 @@
    "statut": "ok"
   },
   {
+   "id": "personnages/epilogue/arrivant-02/arrivant-02_dos_pecher",
+   "rubrique": "personnages",
+   "sujet": "arrivant-02",
+   "vue": "dos",
+   "pose": "pecher",
+   "titre": "Nouveau venu 2 (épilogue), trois quarts dos, pecher",
+   "regarde": "haut-droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/epilogue/arrivant-02/arrivant-02_dos_pecher_1.svg",
+    "svg/personnages/epilogue/arrivant-02/arrivant-02_dos_pecher_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    700,
+    1100
+   ],
+   "parcours": "epilogue",
+   "statut": "ok"
+  },
+  {
    "id": "personnages/epilogue/arrivant-02/arrivant-02_dos_repos",
    "rubrique": "personnages",
    "sujet": "arrivant-02",
@@ -55829,6 +59963,32 @@
     64
    ],
    "ms_par_image": 170,
+   "parcours": "epilogue",
+   "statut": "ok"
+  },
+  {
+   "id": "personnages/epilogue/arrivant-02/arrivant-02_face_pecher",
+   "rubrique": "personnages",
+   "sujet": "arrivant-02",
+   "vue": "face",
+   "pose": "pecher",
+   "titre": "Nouveau venu 2 (épilogue), de face, pecher",
+   "regarde": "face",
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/epilogue/arrivant-02/arrivant-02_face_pecher_1.svg",
+    "svg/personnages/epilogue/arrivant-02/arrivant-02_face_pecher_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    700,
+    1100
+   ],
    "parcours": "epilogue",
    "statut": "ok"
   },
@@ -56039,6 +60199,33 @@
     64
    ],
    "ms_par_image": 170,
+   "parcours": "epilogue",
+   "statut": "ok"
+  },
+  {
+   "id": "personnages/epilogue/arrivant-03/arrivant-03_avant_pecher",
+   "rubrique": "personnages",
+   "sujet": "arrivant-03",
+   "vue": "avant",
+   "pose": "pecher",
+   "titre": "Nouveau venu 3 (épilogue), trois quarts avant, pecher",
+   "regarde": "bas-droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/epilogue/arrivant-03/arrivant-03_avant_pecher_1.svg",
+    "svg/personnages/epilogue/arrivant-03/arrivant-03_avant_pecher_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    700,
+    1100
+   ],
    "parcours": "epilogue",
    "statut": "ok"
   },
@@ -56255,6 +60442,33 @@
    "statut": "ok"
   },
   {
+   "id": "personnages/epilogue/arrivant-03/arrivant-03_dos_pecher",
+   "rubrique": "personnages",
+   "sujet": "arrivant-03",
+   "vue": "dos",
+   "pose": "pecher",
+   "titre": "Nouveau venu 3 (épilogue), trois quarts dos, pecher",
+   "regarde": "haut-droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/epilogue/arrivant-03/arrivant-03_dos_pecher_1.svg",
+    "svg/personnages/epilogue/arrivant-03/arrivant-03_dos_pecher_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    700,
+    1100
+   ],
+   "parcours": "epilogue",
+   "statut": "ok"
+  },
+  {
    "id": "personnages/epilogue/arrivant-03/arrivant-03_dos_repos",
    "rubrique": "personnages",
    "sujet": "arrivant-03",
@@ -56457,6 +60671,32 @@
     64
    ],
    "ms_par_image": 170,
+   "parcours": "epilogue",
+   "statut": "ok"
+  },
+  {
+   "id": "personnages/epilogue/arrivant-03/arrivant-03_face_pecher",
+   "rubrique": "personnages",
+   "sujet": "arrivant-03",
+   "vue": "face",
+   "pose": "pecher",
+   "titre": "Nouveau venu 3 (épilogue), de face, pecher",
+   "regarde": "face",
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/epilogue/arrivant-03/arrivant-03_face_pecher_1.svg",
+    "svg/personnages/epilogue/arrivant-03/arrivant-03_face_pecher_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    700,
+    1100
+   ],
    "parcours": "epilogue",
    "statut": "ok"
   },
@@ -56667,6 +60907,33 @@
     64
    ],
    "ms_par_image": 170,
+   "parcours": "epilogue",
+   "statut": "ok"
+  },
+  {
+   "id": "personnages/epilogue/arrivant-04/arrivant-04_avant_pecher",
+   "rubrique": "personnages",
+   "sujet": "arrivant-04",
+   "vue": "avant",
+   "pose": "pecher",
+   "titre": "Nouveau venu 4 (épilogue), trois quarts avant, pecher",
+   "regarde": "bas-droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/epilogue/arrivant-04/arrivant-04_avant_pecher_1.svg",
+    "svg/personnages/epilogue/arrivant-04/arrivant-04_avant_pecher_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    700,
+    1100
+   ],
    "parcours": "epilogue",
    "statut": "ok"
   },
@@ -56883,6 +61150,33 @@
    "statut": "ok"
   },
   {
+   "id": "personnages/epilogue/arrivant-04/arrivant-04_dos_pecher",
+   "rubrique": "personnages",
+   "sujet": "arrivant-04",
+   "vue": "dos",
+   "pose": "pecher",
+   "titre": "Nouveau venu 4 (épilogue), trois quarts dos, pecher",
+   "regarde": "haut-droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/epilogue/arrivant-04/arrivant-04_dos_pecher_1.svg",
+    "svg/personnages/epilogue/arrivant-04/arrivant-04_dos_pecher_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    700,
+    1100
+   ],
+   "parcours": "epilogue",
+   "statut": "ok"
+  },
+  {
    "id": "personnages/epilogue/arrivant-04/arrivant-04_dos_repos",
    "rubrique": "personnages",
    "sujet": "arrivant-04",
@@ -57085,6 +61379,32 @@
     64
    ],
    "ms_par_image": 170,
+   "parcours": "epilogue",
+   "statut": "ok"
+  },
+  {
+   "id": "personnages/epilogue/arrivant-04/arrivant-04_face_pecher",
+   "rubrique": "personnages",
+   "sujet": "arrivant-04",
+   "vue": "face",
+   "pose": "pecher",
+   "titre": "Nouveau venu 4 (épilogue), de face, pecher",
+   "regarde": "face",
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/epilogue/arrivant-04/arrivant-04_face_pecher_1.svg",
+    "svg/personnages/epilogue/arrivant-04/arrivant-04_face_pecher_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    700,
+    1100
+   ],
    "parcours": "epilogue",
    "statut": "ok"
   },
@@ -57295,6 +61615,33 @@
     64
    ],
    "ms_par_image": 170,
+   "parcours": "epilogue",
+   "statut": "ok"
+  },
+  {
+   "id": "personnages/epilogue/arrivant-05/arrivant-05_avant_pecher",
+   "rubrique": "personnages",
+   "sujet": "arrivant-05",
+   "vue": "avant",
+   "pose": "pecher",
+   "titre": "Nouveau venu 5 (épilogue), trois quarts avant, pecher",
+   "regarde": "bas-droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/epilogue/arrivant-05/arrivant-05_avant_pecher_1.svg",
+    "svg/personnages/epilogue/arrivant-05/arrivant-05_avant_pecher_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    700,
+    1100
+   ],
    "parcours": "epilogue",
    "statut": "ok"
   },
@@ -57511,6 +61858,33 @@
    "statut": "ok"
   },
   {
+   "id": "personnages/epilogue/arrivant-05/arrivant-05_dos_pecher",
+   "rubrique": "personnages",
+   "sujet": "arrivant-05",
+   "vue": "dos",
+   "pose": "pecher",
+   "titre": "Nouveau venu 5 (épilogue), trois quarts dos, pecher",
+   "regarde": "haut-droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/epilogue/arrivant-05/arrivant-05_dos_pecher_1.svg",
+    "svg/personnages/epilogue/arrivant-05/arrivant-05_dos_pecher_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    700,
+    1100
+   ],
+   "parcours": "epilogue",
+   "statut": "ok"
+  },
+  {
    "id": "personnages/epilogue/arrivant-05/arrivant-05_dos_repos",
    "rubrique": "personnages",
    "sujet": "arrivant-05",
@@ -57713,6 +62087,32 @@
     64
    ],
    "ms_par_image": 170,
+   "parcours": "epilogue",
+   "statut": "ok"
+  },
+  {
+   "id": "personnages/epilogue/arrivant-05/arrivant-05_face_pecher",
+   "rubrique": "personnages",
+   "sujet": "arrivant-05",
+   "vue": "face",
+   "pose": "pecher",
+   "titre": "Nouveau venu 5 (épilogue), de face, pecher",
+   "regarde": "face",
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/epilogue/arrivant-05/arrivant-05_face_pecher_1.svg",
+    "svg/personnages/epilogue/arrivant-05/arrivant-05_face_pecher_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    700,
+    1100
+   ],
    "parcours": "epilogue",
    "statut": "ok"
   },
@@ -57923,6 +62323,33 @@
     64
    ],
    "ms_par_image": 170,
+   "parcours": "epilogue",
+   "statut": "ok"
+  },
+  {
+   "id": "personnages/epilogue/arrivant-06/arrivant-06_avant_pecher",
+   "rubrique": "personnages",
+   "sujet": "arrivant-06",
+   "vue": "avant",
+   "pose": "pecher",
+   "titre": "Nouveau venu 6 (épilogue), trois quarts avant, pecher",
+   "regarde": "bas-droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/epilogue/arrivant-06/arrivant-06_avant_pecher_1.svg",
+    "svg/personnages/epilogue/arrivant-06/arrivant-06_avant_pecher_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    700,
+    1100
+   ],
    "parcours": "epilogue",
    "statut": "ok"
   },
@@ -58139,6 +62566,33 @@
    "statut": "ok"
   },
   {
+   "id": "personnages/epilogue/arrivant-06/arrivant-06_dos_pecher",
+   "rubrique": "personnages",
+   "sujet": "arrivant-06",
+   "vue": "dos",
+   "pose": "pecher",
+   "titre": "Nouveau venu 6 (épilogue), trois quarts dos, pecher",
+   "regarde": "haut-droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/epilogue/arrivant-06/arrivant-06_dos_pecher_1.svg",
+    "svg/personnages/epilogue/arrivant-06/arrivant-06_dos_pecher_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    700,
+    1100
+   ],
+   "parcours": "epilogue",
+   "statut": "ok"
+  },
+  {
    "id": "personnages/epilogue/arrivant-06/arrivant-06_dos_repos",
    "rubrique": "personnages",
    "sujet": "arrivant-06",
@@ -58341,6 +62795,32 @@
     64
    ],
    "ms_par_image": 170,
+   "parcours": "epilogue",
+   "statut": "ok"
+  },
+  {
+   "id": "personnages/epilogue/arrivant-06/arrivant-06_face_pecher",
+   "rubrique": "personnages",
+   "sujet": "arrivant-06",
+   "vue": "face",
+   "pose": "pecher",
+   "titre": "Nouveau venu 6 (épilogue), de face, pecher",
+   "regarde": "face",
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/epilogue/arrivant-06/arrivant-06_face_pecher_1.svg",
+    "svg/personnages/epilogue/arrivant-06/arrivant-06_face_pecher_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    700,
+    1100
+   ],
    "parcours": "epilogue",
    "statut": "ok"
   },
@@ -58551,6 +63031,33 @@
     64
    ],
    "ms_par_image": 170,
+   "parcours": "epilogue",
+   "statut": "ok"
+  },
+  {
+   "id": "personnages/epilogue/arrivant-07/arrivant-07_avant_pecher",
+   "rubrique": "personnages",
+   "sujet": "arrivant-07",
+   "vue": "avant",
+   "pose": "pecher",
+   "titre": "Nouveau venu 7 (épilogue), trois quarts avant, pecher",
+   "regarde": "bas-droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/epilogue/arrivant-07/arrivant-07_avant_pecher_1.svg",
+    "svg/personnages/epilogue/arrivant-07/arrivant-07_avant_pecher_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    700,
+    1100
+   ],
    "parcours": "epilogue",
    "statut": "ok"
   },
@@ -58767,6 +63274,33 @@
    "statut": "ok"
   },
   {
+   "id": "personnages/epilogue/arrivant-07/arrivant-07_dos_pecher",
+   "rubrique": "personnages",
+   "sujet": "arrivant-07",
+   "vue": "dos",
+   "pose": "pecher",
+   "titre": "Nouveau venu 7 (épilogue), trois quarts dos, pecher",
+   "regarde": "haut-droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/epilogue/arrivant-07/arrivant-07_dos_pecher_1.svg",
+    "svg/personnages/epilogue/arrivant-07/arrivant-07_dos_pecher_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    700,
+    1100
+   ],
+   "parcours": "epilogue",
+   "statut": "ok"
+  },
+  {
    "id": "personnages/epilogue/arrivant-07/arrivant-07_dos_repos",
    "rubrique": "personnages",
    "sujet": "arrivant-07",
@@ -58969,6 +63503,32 @@
     64
    ],
    "ms_par_image": 170,
+   "parcours": "epilogue",
+   "statut": "ok"
+  },
+  {
+   "id": "personnages/epilogue/arrivant-07/arrivant-07_face_pecher",
+   "rubrique": "personnages",
+   "sujet": "arrivant-07",
+   "vue": "face",
+   "pose": "pecher",
+   "titre": "Nouveau venu 7 (épilogue), de face, pecher",
+   "regarde": "face",
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/epilogue/arrivant-07/arrivant-07_face_pecher_1.svg",
+    "svg/personnages/epilogue/arrivant-07/arrivant-07_face_pecher_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    700,
+    1100
+   ],
    "parcours": "epilogue",
    "statut": "ok"
   },
@@ -59179,6 +63739,33 @@
     64
    ],
    "ms_par_image": 170,
+   "parcours": "epilogue",
+   "statut": "ok"
+  },
+  {
+   "id": "personnages/epilogue/arrivant-08/arrivant-08_avant_pecher",
+   "rubrique": "personnages",
+   "sujet": "arrivant-08",
+   "vue": "avant",
+   "pose": "pecher",
+   "titre": "Nouveau venu 8 (épilogue), trois quarts avant, pecher",
+   "regarde": "bas-droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/epilogue/arrivant-08/arrivant-08_avant_pecher_1.svg",
+    "svg/personnages/epilogue/arrivant-08/arrivant-08_avant_pecher_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    700,
+    1100
+   ],
    "parcours": "epilogue",
    "statut": "ok"
   },
@@ -59395,6 +63982,33 @@
    "statut": "ok"
   },
   {
+   "id": "personnages/epilogue/arrivant-08/arrivant-08_dos_pecher",
+   "rubrique": "personnages",
+   "sujet": "arrivant-08",
+   "vue": "dos",
+   "pose": "pecher",
+   "titre": "Nouveau venu 8 (épilogue), trois quarts dos, pecher",
+   "regarde": "haut-droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/epilogue/arrivant-08/arrivant-08_dos_pecher_1.svg",
+    "svg/personnages/epilogue/arrivant-08/arrivant-08_dos_pecher_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    700,
+    1100
+   ],
+   "parcours": "epilogue",
+   "statut": "ok"
+  },
+  {
    "id": "personnages/epilogue/arrivant-08/arrivant-08_dos_repos",
    "rubrique": "personnages",
    "sujet": "arrivant-08",
@@ -59597,6 +64211,32 @@
     64
    ],
    "ms_par_image": 170,
+   "parcours": "epilogue",
+   "statut": "ok"
+  },
+  {
+   "id": "personnages/epilogue/arrivant-08/arrivant-08_face_pecher",
+   "rubrique": "personnages",
+   "sujet": "arrivant-08",
+   "vue": "face",
+   "pose": "pecher",
+   "titre": "Nouveau venu 8 (épilogue), de face, pecher",
+   "regarde": "face",
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/epilogue/arrivant-08/arrivant-08_face_pecher_1.svg",
+    "svg/personnages/epilogue/arrivant-08/arrivant-08_face_pecher_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    700,
+    1100
+   ],
    "parcours": "epilogue",
    "statut": "ok"
   },

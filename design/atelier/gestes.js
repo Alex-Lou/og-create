@@ -167,4 +167,58 @@ function applaudir({ view, n }) {
 // Debout : frame(avecApplaudir(c), vue, 'action', n) ; assis : assis(c, vue, n, null, applaudir)
 const avecApplaudir = c => ({ ...c, uid: `${c.uid}ap`, pose: applaudir });
 
-module.exports = { lanterne, parapluie, valise, avecLanterne, avecParapluie, avecValise, couche, CADRE_PARAPLUIE, CADRE_COUCHE, ZEDS, paume, tranche, tendre, avecMainsTendues, applaudir, avecApplaudir };
+// ---- les gestes du travail (les mini-jeux, HISTOIRE.md) ----
+// La canne à pêche : une gaule de bambou de b (le talon) à t (le scion, plus fin), la poignée gainée, le moulinet
+// (côté k : -1 ou 1), le fil qui pend du scion jusqu'au bouchon rouge et blanc posé sur un rond d'eau (f, en (x, y)) ;
+// plonge : le bouchon s'enfonce un peu, l'eau fait deux ronds
+function canne(b, t, f, k, plonge) {
+  const len = Math.hypot(t[0] - b[0], t[1] - b[1]), ux = (t[0] - b[0]) / len, uy = (t[1] - b[1]) / len;
+  const at = d => [b[0] + ux * d, b[1] + uy * d];
+  const m = at(len * 0.62), g = at(3.2), r = at(5.4), rk = [r[0] - uy * k * 1.5, r[1] + ux * k * 1.5];
+  const [x, y] = f, yb = y + (plonge ? 0.7 : 0);
+  return L(b, m, OUT, 2.4) + L(m, t, OUT, 1.8) + L(b, m, '#D8AE6E', 1.15) + L(m, t, '#D8AE6E', 0.65)
+    + [0.3, 0.5].map(q => L(at(len * q - 0.35), at(len * q + 0.35), '#A8794A', 0.9)).join('') // les nœuds du bambou
+    + L(b, g, OUT, 2.8) + L(b, g, '#7A4E2A', 1.6) // la poignée gainée
+    + L(r, rk, OUT, 1) + E(rk[0], rk[1], 1.15, 1.15, '#9AA2AD', 0.6) + E(rk[0] - 0.3, rk[1] - 0.3, 0.4, 0.4, '#E2E8EE', 0) // le moulinet
+    + trait(`M${r2(t[0])},${r2(t[1])} Q${r2(t[0] + (x - t[0]) * 0.2 + (plonge ? 0 : 0.8))},${r2((t[1] + yb) / 2)} ${r2(x)},${r2(yb - 1.5)}`, OUT, 0.35)
+    + E(x, y + 1.2, 4.2, 1.35, 'rgba(120,190,226,.55)', 0) + (plonge ? E(x, y + 1.2, 3.6, 1.1, 'none', 0).replace('stroke="none"', 'stroke="#FFFFFF" stroke-width="0.45"') : '')
+    + E(x, y + 1.2, 2.4, 0.75, 'none', 0).replace('stroke="none"', 'stroke="#FFFFFF" stroke-width="0.5"')
+    + `<g transform="translate(0 ${plonge ? 0.7 : 0})">${E(x, y, 1.65, 1.65, '#FFFFFF', 0.7)}${P(`M${r2(x - 1.65)},${r2(y)} A1.65,1.65 0 0 1 ${r2(x + 1.65)},${r2(y)} Z`, '#E2463A', 0)}${E(x, y, 1.65, 1.65, 'none', 0.7)}${E(x - 0.6, y - 0.7, 0.45, 0.3, '#FFFFFF', 0)}${L([x, y - 1.65], [x, y - 2.5], OUT, 0.5)}</g>`;
+}
+// Pêcher (le mini-jeu de la pêche), content ; 2 images : le bouchon danse (il s'enfonce un peu, le scion s'incline).
+//   - de face, la canne tenue à deux mains en travers du corps, le scion monte à droite, le bouchon sur l'eau à droite ;
+//   - de trois quarts avant, la canne part vers le regard, à gauche ;
+//   - de dos, les mains (devant le buste, cachées) tiennent la canne qui monte à droite vers l'eau, au loin.
+function pecher({ view, n }) {
+  const [a, b] = this.shoulders;
+  const d = n ? 1.6 : 0;
+  // un point de la canne, à q du talon vers le scion (les poings sont posés dessus)
+  const sur = (talon, scion, q) => { const l = Math.hypot(scion[0] - talon[0], scion[1] - talon[1]); return [talon[0] + (scion[0] - talon[0]) * q / l, talon[1] + (scion[1] - talon[1]) * q / l]; };
+  if (view === 'front') {
+    // la canne part assez à plat pour longer la tête, sans passer derrière elle
+    const talon = [a[0] + 1.6, a[1] + 11.4], scion = [Math.min(45.6, b[0] + 13.6), a[1] - 8 + d];
+    return {
+      expr: 'content',
+      left: canne(talon, scion, [Math.min(43, b[0] + 11), 54.4], 1, n) + arm(this, a, sur(talon, scion, 3), [a[0] - 0.6, a[1] + 7]),
+      right: arm(this, b, sur(talon, scion, 9), [b[0] + 1.6, b[1] + 6.2])
+    };
+  }
+  if (view === 'se') {
+    const talon = [b[0] - 4, b[1] + 11.4], scion = [Math.max(2.4, a[0] - 13.6), a[1] - 8 + d];
+    return {
+      expr: 'content',
+      right: arm(this, b, sur(talon, scion, 3), [b[0] - 0.6, b[1] + 7.6]),
+      left: canne(talon, scion, [Math.max(5, a[0] - 11), 54.4], -1, n) + arm(this, a, sur(talon, scion, 9.5), [a[0] - 1, a[1] + 6])
+    };
+  }
+  const talon = [26, a[1] + 8], scion = [Math.min(45.4, b[0] + 13), a[1] - 10 + d];
+  return {
+    left: '', right: '',
+    under: canne(talon, scion, [Math.min(43.4, b[0] + 11.4), a[1] + 4], 1, n)
+      + arm(this, a, sur(talon, scion, 2), [a[0] - 2.4, a[1] + 6.4]) + arm(this, b, sur(talon, scion, 7), [b[0] + 2.8, b[1] + 6.4])
+  };
+}
+// Debout : frame(avecPecher(c), vue, 'action', n)
+const avecPecher = c => ({ ...c, uid: `${c.uid}pe`, pose: pecher });
+
+module.exports = { lanterne, parapluie, valise, avecLanterne, avecParapluie, avecValise, couche, CADRE_PARAPLUIE, CADRE_COUCHE, ZEDS, paume, tranche, tendre, avecMainsTendues, applaudir, avecApplaudir, pecher, avecPecher };
