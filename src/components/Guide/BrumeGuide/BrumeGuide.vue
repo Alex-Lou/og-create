@@ -80,9 +80,11 @@ export default {
       guide.dismiss();
     },
     act() {
-      const { mode } = this.entry.action;
+      const { mode, reload } = this.entry.action;
       guide.dismiss();
-      this.$emit('go', mode);
+      // Une nouvelle version du jeu : la page se recharge et arrive dans cette version (App/update.js)
+      if (reload) window.location.reload();
+      else this.$emit('go', mode);
     }
   }
 };

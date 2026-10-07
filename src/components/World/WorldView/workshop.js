@@ -69,7 +69,9 @@ export default {
       if (this.craftStarting) return;
       this.craftStarting = true;
       try {
-        const { run } = await playService.craftStart(craftId);
+        const { run, coins } = await playService.craftStart(craftId);
+        // Les écus qui attendaient ont pu être encaissés au passage (le serveur ramasse avant de payer)
+        if (coins !== undefined) this.$emit('coins-updated', coins);
         this.craftRun = run;
         this.craftError = '';
         this.craftMade = false;

@@ -97,8 +97,9 @@ export default {
       if (this.busy) return;
       this.busy = true;
       try {
-        const { world } = await playService.worldExpedition(zone.id);
+        const { world, coins } = await playService.worldExpedition(zone.id);
         this.apply(world);
+        if (coins !== undefined) this.$emit('coins-updated', coins);
         this.zone = null;
         vibrate([10, 30, 10]);
         this.$emit('show-alert', `L’expédition est partie ! Retour dans ${zone.trip} h.`);
