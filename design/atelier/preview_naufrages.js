@@ -7,6 +7,7 @@ const { frame, svg, POSES, EXPRS } = require('./troupe');
 const { CAST } = require('./naufrages');
 const { sleepFrame, isCurled } = require('./dormeurs');
 const { unique, row, sheet, animated, write, shoot } = require('./planche');
+const { MOODS } = require('./troupe_liste'); // les expressions en marche de chacun
 
 const LIB = path.join(__dirname, 'lib', 'personnages');
 const PNG = path.join(__dirname, 'planches');
@@ -14,16 +15,6 @@ const slug = n => n.normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase();
 const box = (w, h) => (body, s = 1) => `<svg xmlns="http://www.w3.org/2000/svg" width="${w * s}" height="${h * s}" viewBox="0 0 ${w} ${h}">${body}</svg>`;
 const SV = { std: box(48, 64), curl: box(64, 48) };
 const sleepSvg = c => (isCurled(c) ? SV.curl : SV.std);
-// Expressions en marche (trois quarts avant), propres au caractère de chacun (bible § 8)
-const MOODS = {
-  Aster: ['content', 'surpris', 'triste'], // sûre d'elle, le large, et sa culpabilité
-  Cannelle: ['rire', 'triste', 'fache'], // la bonne humeur, l'inquiétude pour Ondin, elle gronde
-  Rivet: ['content', 'surpris', 'fache'], // absorbé, « Si ! Si ! », la pièce qui résiste
-  Ondin: ['endormi', 'surpris', 'content'], // il dort debout, réveillé d'un coup, rêveur
-  Sylve: ['fache', 'gene', 'content'], // sur ses gardes, farouche, un sourire rare
-  Galet: ['fache', 'triste', 'content'], // « Hm. », la mémoire des Anciens, un sourire dans la barbe
-  'Mélisse': ['content', 'rire', 'triste'] // tranquille, les lunes, le chagrin caché
-};
 const STEP = { Aster: 'tutoriel, étape 10', Cannelle: 'tutoriel, étape 7', Rivet: 'tutoriel, étape 9', Ondin: 'tutoriel, étape 11', Sylve: 'acte I (La Lisière)', Galet: 'acte II (La Colline)', 'Mélisse': 'acte III (Les Jardins)' };
 
 const index = {
