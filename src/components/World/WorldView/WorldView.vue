@@ -636,6 +636,8 @@ export default {
     this.terrain = null;
     this.live = null;
     this.zoneTiles = new Map();
+    // Clé de la carte d'où viennent M, live, zoneTiles, shore… (apply ne les refait que si elle change)
+    this.geoKey = null;
     this.mistKey = null;
     // Climat(s) visé(s) par la caméra et leur poids (fondu d'un climat à l'autre), instant du dernier dessin
     this.climateMix = {};
@@ -734,6 +736,7 @@ export default {
     this.terrain = null;
     this.props = [];
     this.live = null;
+    this.geoKey = null;
     clearSprites();
     clearDrawings();
   },
@@ -799,26 +802,33 @@ export default {
           if (from !== undefined && site.level > from) this.raises.set(site.id, { at: performance.now(), from });
         });
       }
-      // Calques du sol ; la brume est peinte dans les carrés du sol : un quartier acheté fait refaire les siens
-      const M = islandOf(state.map, state.size, state.map.zones.findIndex(z => z.id === FLOATING_ZONE));
-      if (!this.terrain) this.terrain = new TerrainCache(M, (x, y) => this.veilAt(x, y), (ctx, x, y) => this.standAt(ctx, x, y));
-      this.M = M;
-      this.live = liveOf(M);
-      // Cases de lave : elles luisent la nuit
-      this.lavaCells = [];
-      for (let y = 0; y < state.size; y++) for (let x = 0; x < state.size; x++) if (M.ground(x, y) === 'o') this.lavaCells.push(this.ground(x, y));
-      // Îlots des chapitres VI et VII : île flottante, colonie de mouettes, barque du passeur, lanternes du pont
-      this.islets = isletsOf(M, (x, y) => (state.map.zones[M.zone(x, y)] || {}).id);
-      if (!this.sea) this.sea = seaOf(M);
-      // (ajoutées en place : recopier la liste à chaque case coûtait le carré de la taille du quartier)
-      this.zoneTiles = new Map();
-      for (let y = 0; y < state.size; y++) {
-        for (let x = 0; x < state.size; x++) {
-          const zone = state.map.zones[M.zone(x, y)];
-          if (!zone) continue;
-          if (!this.zoneTiles.has(zone.id)) this.zoneTiles.set(zone.id, []);
-          this.zoneTiles.get(zone.id).push([x, y]);
+      // Ce qui ne dépend que de la carte (relief, eaux, lave, îlots, cases des quartiers, rivage) : refait seulement
+      // quand ses calques changent (state.map.key : la carte et ce qui reste voilé), pas à chaque action
+      const geoKey = state.map.key ? `${state.map.key}:${state.size}` : null;
+      if (!geoKey || geoKey !== this.geoKey) {
+        // Calques du sol ; la brume est peinte dans les carrés du sol : un quartier acheté fait refaire les siens
+        const M = islandOf(state.map, state.size, state.map.zones.findIndex(z => z.id === FLOATING_ZONE));
+        if (!this.terrain) this.terrain = new TerrainCache(M, (x, y) => this.veilAt(x, y), (ctx, x, y) => this.standAt(ctx, x, y));
+        this.M = M;
+        this.live = liveOf(M);
+        // Cases de lave : elles luisent la nuit
+        this.lavaCells = [];
+        for (let y = 0; y < state.size; y++) for (let x = 0; x < state.size; x++) if (M.ground(x, y) === 'o') this.lavaCells.push(this.ground(x, y));
+        // Îlots des chapitres VI et VII : île flottante, colonie de mouettes, barque du passeur, lanternes du pont
+        this.islets = isletsOf(M, (x, y) => (state.map.zones[M.zone(x, y)] || {}).id);
+        if (!this.sea) this.sea = seaOf(M);
+        // (ajoutées en place : recopier la liste à chaque case coûtait le carré de la taille du quartier)
+        this.zoneTiles = new Map();
+        for (let y = 0; y < state.size; y++) {
+          for (let x = 0; x < state.size; x++) {
+            const zone = state.map.zones[M.zone(x, y)];
+            if (!zone) continue;
+            if (!this.zoneTiles.has(zone.id)) this.zoneTiles.set(zone.id, []);
+            this.zoneTiles.get(zone.id).push([x, y]);
+          }
         }
+        this.shore = this.shoreOf(state);
+        this.geoKey = geoKey;
       }
       // Retour sur l'île : la fiche qui était ouverte se rouvre
       if (!this.state && memory.view && memory.view.site) {
@@ -842,10 +852,9 @@ export default {
       this.propsKey = propsKey;
       this.perches = this.perchesOf(state);
       this.bottleSpot = this.bottleSpotOf(state);
-      this.shore = this.shoreOf(state);
       // Habitants et bêtes : ils vivent dans les quartiers à soi, autour des bâtiments bâtis
       this.village = villageOf({
-        n: state.size, M, sites: state.sites, crafts: state.crafts ? state.crafts.placed : [], props: this.props, annexes: state.annexes || [],
+        n: state.size, M: this.M, sites: state.sites, crafts: state.crafts ? state.crafts.placed : [], props: this.props, annexes: state.annexes || [],
         owned: new Set(state.map.zones.map((z, i) => (z.owned ? i : -1)).filter(i => i >= 0)), visitor: state.visitor || null,
         settlers: (state.villagers || []).filter(v => v.seed !== undefined),
         climates: state.map.zones.map(z => z.climate || null), avoid: [...landmarksShown(state), ...depositsShown(state)],
@@ -858,7 +867,7 @@ export default {
         dame: Boolean((state.landmarks || []).some(l => l.id === 'menhirs' && l.found) || (state.anya && state.anya.traces.length))
       });
       // Visiteur : son bateau s'amarre près du Ponton ; un visiteur jamais vu sur cet appareil arrive sous les yeux
-      this.visitorDock = state.visitor ? this.dockOf(state, M) : null;
+      this.visitorDock = state.visitor ? this.dockOf(state, this.M) : null;
       if (state.visitor && this.visitorDock && !this.reduced()) {
         let seen = null;
         try { seen = localStorage.getItem('oc_visitor_seen'); } catch (e) { seen = null; }

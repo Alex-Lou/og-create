@@ -31,6 +31,22 @@ async function retried(request, error) {
   return http(request);
 }
 
+// Les calques de la carte (relief, sol, quartiers, grille : 85 Ko) restent en mémoire : le navigateur envoie leur clé
+// (X-Map-Key) et le serveur ne les renvoie plus tant qu'elle ne change pas ; ils sont remis dans chaque vue reçue sans
+// eux. Une vue de l'île arrive seule ({ map }) ou dans une réponse d'action ({ world })
+const MAP_LAYERS = ['grid', 'height', 'ground', 'region'];
+let mapLayers = null;
+function fillMap(view) {
+  const map = view && view.map;
+  if (!map || !map.key) return;
+  if (map.ground) mapLayers = { key: map.key, layers: Object.fromEntries(MAP_LAYERS.map(k => [k, map[k]])) };
+  else if (mapLayers && mapLayers.key === map.key) Object.assign(map, mapLayers.layers);
+}
+http.interceptors.request.use(config => {
+  if (mapLayers) config.headers['X-Map-Key'] = mapLayers.key;
+  return config;
+});
+
 // Un seul renouvellement à la fois, partagé par toutes les requêtes en 401.
 // 409 : un autre onglet vient de renouveler la session, le navigateur a déjà le nouveau cookie.
 let refreshing = null;
@@ -46,7 +62,14 @@ export function refreshSession() {
 }
 
 http.interceptors.response.use(
-  response => response,
+  response => {
+    const data = response.data;
+    if (data && typeof data === 'object') {
+      fillMap(data);
+      fillMap(data.world);
+    }
+    return response;
+  },
   async error => {
     const request = error.config;
     if (request && request.method === 'get' && unreachable(error)) return retried(request, error);
