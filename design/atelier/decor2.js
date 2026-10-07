@@ -376,15 +376,22 @@ M.bateau_visiteur = { frame: [-30, -56, 62, 64], n: 2, draw: f => {
 const SAILS = { blanche: ['#FFFDF8', '#F2E4C0'], rouge: ['#E2574C', '#B13A31'], bleue: ['#6FA3D9', '#4C7FB5'], rayee: ['stripes', '#E2574C'] };
 M.voilier = { frame: BUILDING_BOX, n: 1, variants: Object.keys(SAILS), draw: (_, sail = 'blanche') => {
   const [x, y] = gp(0.05, 0.5, 0);
-  const s = SAILS[sail];
+  const s = SAILS[sail], X = n => r2(x + n), Y = n => r2(y + n);
   const main = s[0] === 'stripes' ? '#FFFDF8' : s[0], jib = s[0] === 'stripes' ? '#F2E4C0' : s[1];
-  const stripes = s[0] === 'stripes' ? [0, 1, 2].map(k => `<path d="M${x + 1},${y - 40 + k * 10} L${x + 1},${y - 35 + k * 10} L${r2(x + 6 + k * 4.5)},${r2(y - 35.5 + k * 10)} L${r2(x + 4 + k * 4.5)},${r2(y - 40.5 + k * 10)} Z" fill="${s[1]}"/>`).join('') : '';
-  return E(x, y + 6, 22, 5, 'rgba(30,70,110,.25)', 0)
-    + P(`M${x - 22},${y - 6} L${x + 22},${y - 6} Q${x + 18},${y + 5} ${x + 8},${y + 6} L${x - 12},${y + 6} Q${x - 20},${y + 4} ${x - 22},${y - 6} Z`, WOOD.left)
-    + pg([[x - 22, y - 6], [x + 22, y - 6], [x + 19, y - 2], [x - 20, y - 2]], '#FBF6EA', W * 0.7)
-    + tk(`M${x},${y - 6} L${x},${y - 46}`, 1.4, WOOD_DARK.right)
-    + P(`M${x + 1},${y - 44} L${x + 1},${y - 10} L${x + 20},${y - 12} Z`, main) + stripes + (stripes ? P(`M${x + 1},${y - 44} L${x + 1},${y - 10} L${x + 20},${y - 12} Z`, 'none') : '')
-    + P(`M${x - 1},${y - 38} L${x - 1},${y - 12} L${x - 14},${y - 13} Z`, jib, W * 0.8);
+  const voile = `M${X(1)},${Y(-44)} Q${X(13)},${Y(-30)} ${X(20)},${Y(-12)} L${X(1)},${Y(-10)} Z`;
+  const stripes = s[0] === 'stripes' ? `<defs><clipPath id="voilier-voile"><path d="${voile}"/></clipPath></defs><g clip-path="url(#voilier-voile)">${[0, 1, 2].map(k => `<path d="M${X(-2)},${Y(-40 + k * 10)} L${X(24)},${Y(-37 + k * 10)} L${X(24)},${Y(-32 + k * 10)} L${X(-2)},${Y(-35 + k * 10)} Z" fill="${s[1]}"/>`).join('')}</g>` : '';
+  const coque = `M${X(-23)},${Y(-6)} L${X(23)},${Y(-7)} Q${X(21)},${Y(4)} ${X(10)},${Y(6)} L${X(-12)},${Y(6)} Q${X(-21)},${Y(4)} ${X(-23)},${Y(-6)} Z`;
+  return E(x, y + 6, 24, 5, 'rgba(30,70,110,.25)', 0) + line(`M${X(-27)},${Y(5)} q3,-1.4 6,0 M${X(21)},${Y(4.6)} q3,-1.4 6,0`, 0.9, 'rgba(255,255,255,.85)')
+    + line(`M${X(0)},${Y(-47)} L${X(-21)},${Y(-6.6)} M${X(0)},${Y(-47)} L${X(22)},${Y(-7)}`, 0.5, '#5A3A20')
+    + `<defs><clipPath id="voilier-coque"><path d="${coque}"/></clipPath></defs><path d="${coque}" fill="${WOOD.left}"/><g clip-path="url(#voilier-coque)">`
+    + `<path d="M${X(-26)},${Y(1.6)} Q${x},${Y(4.4)} ${X(26)},${Y(0.6)} L${X(26)},${Y(10)} L${X(-26)},${Y(10)} Z" fill="${WOOD.right}"/>` + line(`M${X(-23)},${Y(-2)} Q${x},${Y(-0.4)} ${X(23)},${Y(-3)}`, 0.6, WOOD.right) + '</g>'
+    + `<path d="${coque}" fill="none" stroke="${OUT}" stroke-width="${W}" stroke-linejoin="round"/>`
+    + [-9, 3].map(n => E(x + n, y - 2.4, 1.2, 1.2, '#A8D8F0', W * 0.7) + E(x + n - 0.4, y - 2.8, 0.4, 0.4, '#FFFFFF', 0)).join('')
+    + pg([[x - 23, y - 6], [x + 23, y - 7], [x + 21.4, y - 4], [x - 21.6, y - 3.4]], '#FBF6EA', W * 0.7)
+    + tk(`M${x},${Y(-6)} L${x},${Y(-48)}`, 1.4, WOOD_DARK.right) + tk(`M${x},${Y(-41)} L${X(17)},${Y(-39.8)}`, 0.8, WOOD_DARK.right)
+    + P(voile, main) + stripes + (stripes ? P(voile, 'none') : '') + line(`M${X(1)},${Y(-34)} Q${X(9)},${Y(-32)} ${X(15)},${Y(-30.6)} M${X(1)},${Y(-18)} Q${X(10)},${Y(-18.4)} ${X(18)},${Y(-18.4)}`, 0.5, 'rgba(120,100,80,.35)')
+    + P(`M${X(-1)},${Y(-38)} Q${X(-8)},${Y(-25)} ${X(-14)},${Y(-13)} L${X(-1)},${Y(-12)} Z`, jib, W * 0.8)
+    + P(`M${X(0.4)},${Y(-48.4)} Q${X(6)},${Y(-49.4)} ${X(10)},${Y(-46.6)} Q${X(5.6)},${Y(-45.2)} ${X(0.4)},${Y(-44.6)} Z`, s[0] === 'stripes' ? s[1] : jib, W * 0.6) + E(x, y - 48.6, 1.1, 1.1, '#E2B347', 0.5);
 } };
 // Bouteille échouée : verre vert, bouchon, rouleau de papier ; image 2 : penchée par la vague
 M.bouteille = { frame: [-16, -28, 32, 32], n: 2, draw: f => E(0, 0, 9, 2.4, 'rgba(30,50,60,.25)', 0)
@@ -398,7 +405,8 @@ M.panneau_quartier = { frame: PROP_BOX, n: 1, draw: () => shade(0, 0, 14, 7, 0.2
   + framed(-17, -40, 34, 17, 3, WOOD.top, '#7A4E2C', 1.2) + L([-13, -34], [13, -34], 'rgba(122,78,44,.3)', 0.8)
   + line('M-2.8,-50 v-3 a2.8,2.8 0 0 1 5.6,0 v3', 2.6, OUT) + line('M-2.8,-50 v-3 a2.8,2.8 0 0 1 5.6,0 v3', 1.2, '#8A6A22')
   + rr(-4.5, -50, 9, 8, 1.6, '#E9BF4E', W * 0.9) + E(0, -46.6, 0.9, 1.1, '#5A4214', 0) };
-// Pont de planches sur la mer : une case, le long de u ; lanterne au bout côté terre (bout_avant / bout_arriere)
+// Pont de planches sur la mer : une case, le long de u ; ses piles et leurs ronds dans l'eau, son tablier aux planches
+// clouées, ses garde-corps de corde ; lanterne au bout côté terre, avec son halo (bout_avant / bout_arriere)
 const HS = 22;
 M.pont = { frame: [-40, -46, 80, 86], n: 1, variants: ['segment', 'bout_avant', 'bout_arriere'], draw: (_, kind = 'segment') => {
   const z = 0.15 * HS;
