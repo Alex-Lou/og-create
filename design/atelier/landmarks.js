@@ -2,7 +2,7 @@
 // un lieu déborde de sa case comme un monument. Cadre LAND (le jeu les affiche × 1,35, la cascade × 1).
 const { OUT, P, E, L, r2 } = require('./troupe');
 const Dk = require('./deco');
-const { feuillage, herbe, fleurette, palmier } = require('./arbres');
+const { feuillage, herbe, fleurette, palmier, champignon } = require('./arbres');
 const { pt, poly, face, shadow, box, crown, boulder, flower, stroke, thick, cylinder, disc, post, rail, glow, LEAVES, PINE, WOOD, WOOD_DARK, GRANITE, STONE, WATER, WATER_LIGHT } = Dk;
 
 const LAND = [-75, -150, 150, 190];
@@ -395,16 +395,66 @@ LM.pyramide = { n: 2, draw: f => {
   s += [0, 1, 2].map(i => `<path d="M${x + 14 + i * 8 + f * 6},${y - 20 + i * 4} q6,-2 12,0" stroke="#FFF4D8" stroke-width="1" fill="none" stroke-linecap="round" opacity="0.8"/>`).join('');
   return s;
 } };
+// Arbre-géant : un sol de jungle aux bords bosselés, fougères, champignons et fleurs ; un tronc énorme à l'écorce
+// cannelée, sa mousse et son creux ; cinq racines-contreforts ; deux maîtresses branches ; une canopée en deux étages
+// de touffes ; des lianes feuillues qui se balancent ; un perroquet sur la branche qui ouvre les ailes (2 images)
+const JUNGLE = { devant: { light: '#BCE27E', mid: '#6FB24E', dark: '#3F7F3A' }, fond: { light: '#7CBF5A', mid: '#4E9442', dark: '#2F6634' } };
 LM.arbre = { n: 2, draw: f => {
-  const [x, y] = at(0, 0);
-  let s = shadow(0, 0, 0.75, 0.15);
-  s += `<path d="M${x - 30},${y + 6} Q${x - 16},${y - 4} ${x - 14},${y - 30} L${x - 12},${y - 70} L${x + 12},${y - 70} L${x + 14},${y - 30} Q${x + 18},${y - 4} ${x + 32},${y + 6} Q${x},${y + 14} ${x - 30},${y + 6} Z" fill="${WOOD_DARK.left}" stroke="${OUT}" stroke-width="1.3"/>`;
-  s += `<path d="M${x + 4},${y - 70} L${x + 12},${y - 70} L${x + 14},${y - 30} Q${x + 18},${y - 4} ${x + 32},${y + 6} Q${x + 14},${y + 11} ${x + 6},${y + 12} Z" fill="${WOOD_DARK.right}"/>`;
-  s += `<path d="M${x - 4},${y + 10} L${x - 3},${y - 4} Q${x + 3},${y - 10} ${x + 7},${y - 4} L${x + 8},${y + 10} Z" fill="#3A2412" stroke="${OUT}" stroke-width="0.9"/>`;
-  s += crown([[-34, -82, 22], [32, -84, 23], [0, -102, 26], [-14, -74, 20], [16, -74, 20]], { light: '#9CD06E', mid: '#5FA04A', dark: '#3F7A34' }, 'ag' + f);
-  for (const [dx, len] of [[-26, 36], [-8, 46], [22, 40]]) s += thick(`M${x + dx},${y - 68} q${f ? 2 : -2},${len * 0.5} 0,${len}`, 1, '#4F8F3A') + E(x + dx, y - 68 + len, 1.6, 1.6, '#4F8F3A', 0.6);
-  const [px, py] = [x + 24, y - 64];
-  return s + E(px, py, 3.6, 4.6, '#E8483C', 0.9) + E(px + 2.4, py - 4, 2.4, 2.4, '#E8483C', 0.8) + P(`M${px + 4.4},${py - 4.6} l2,1 l-2,1 Z`, '#F2C94C', 0.5) + P(`M${px - 2},${py + 3} L${px - 4},${py + 10} L${px},${py + 4} Z`, '#5C8FD0', 0.7) + E(px + 2.8, py - 4.6, 0.5, 0.5, OUT, 0);
+  const [x, y] = at(0, 0), BOIS = { left: '#8A623F', right: '#6A4730', bark: '#4A3020', light: '#A57A52' };
+  const bosses = (cx, cy, rx, ry, n) => { const pts = Array.from({ length: n }, (_, i) => { const t = (i / n) * TAU, r = 1 + (i % 2 ? 0.05 : -0.03); return [cx + Math.cos(t) * rx * r, cy + Math.sin(t) * ry * r]; }); const mil = i => { const p = pts[i % n], q = pts[(i + 1) % n]; return `${r2((p[0] + q[0]) / 2)},${r2((p[1] + q[1]) / 2)}`; }; let d = `M${mil(n - 1)}`; for (let i = 0; i < n; i++) d += ` Q${r2(pts[i][0])},${r2(pts[i][1])} ${mil(i)}`; return d + ' Z'; };
+  const T = (lobes, marques, c, id) => feuillage(`arbre-${id}-${f}`, lobes.map(([a, b, r, h]) => [x + a, y + b, r, h]), c, marques.map(([a, b, k]) => [x + a, y + b, k]), 1);
+  // une liane : un fil cerné qui pend et se balance, ses paires de feuilles, une fleur au bout pour certaines
+  const liane = (lx, ly, len, ph, fleur) => {
+    const sw = (f ? 2.4 : -1.8) * (ph % 2 ? 1 : 0.7), ex = lx + sw * 1.4, ey = ly + len, cx = lx + sw * 0.4, cy = ly + len * 0.5, d = `M${lx},${ly} Q${r2(cx)},${r2(cy)} ${r2(ex)},${r2(ey)}`;
+    const Q = t => [(1 - t) ** 2 * lx + 2 * t * (1 - t) * cx + t * t * ex, (1 - t) ** 2 * ly + 2 * t * (1 - t) * cy + t * t * ey];
+    return `<path d="${d}" stroke="${OUT}" stroke-width="2.4" fill="none" stroke-linecap="round"/><path d="${d}" stroke="#4E8A3A" stroke-width="1.1" fill="none" stroke-linecap="round"/>`
+      + [0.3, 0.55, 0.8].map(t => { const [px, py] = Q(t); return P(`M${r2(px)},${r2(py)} q-2.6,-2.4 -5,-0.6 q2.2,2 5,0.6 Z`, JUNGLE.devant.mid, 0.6) + P(`M${r2(px)},${r2(py + 1)} q2.6,-2.4 5,-0.6 q-2.2,2 -5,0.6 Z`, JUNGLE.devant.light, 0.6); }).join('')
+      + (fleur ? E(ex, ey + 1, 2, 2, '#F27A9A', 0.6) + E(ex, ey + 1, 0.8, 0.8, '#F2C94C', 0) : E(ex, ey + 1, 1.8, 1.2, JUNGLE.devant.light, 0.6));
+  };
+  // une touffe de grandes feuilles de jungle : amandes cernées et arquées, leur nervure
+  const feuilles = (fx, fy, angles, len) => angles.map((ang, i) => `<g transform="translate(${fx} ${fy}) rotate(${ang})"><path d="M0,0 Q${r2(len * 0.5)},${r2(-len * 0.38)} ${len},0 Q${r2(len * 0.5)},${r2(len * 0.3)} 0,0 Z" fill="${i % 2 ? '#7DBE58' : '#5FA244'}" stroke="${OUT}" stroke-width="0.9" stroke-linejoin="round"/><path d="M1,0 Q${r2(len * 0.5)},${r2(-len * 0.08)} ${r2(len - 1.5)},0" stroke="#3F7F3A" stroke-width="0.7" fill="none"/></g>`).join('');
+  // le sol de la jungle
+  let s = shadow(0, 0, 0.8, 0.12) + P(bosses(x, y + 4, 64, 28, 22), '#78B356', 1.1) + E(x - 6, y + 2, 46, 18, '#8CC466', 0)
+    + [[-44, 16], [38, 18], [-10, 26], [50, 6]].map(([dx, dy]) => E(x + dx, y + dy, 2.4, 1.2, '#6AA34A', 0)).join('');
+  // l'étage du fond de la canopée, les lianes du fond
+  s += T([[-46, -100, 17], [46, -102, 17], [-28, -118, 21], [26, -120, 21], [0, -128, 22], [-60, -90, 12], [60, -92, 12]], [[-30, -112], [10, -122, 0.9], [40, -104, 0.9], [-52, -94, 0.8]], JUNGLE.fond, 'a');
+  s += liane(x - 30, y - 92, 34, 1, false) + liane(x + 20, y - 94, 30, 2, false);
+  // une racine-contrefort : une lame qui part du flanc du tronc et s'étale jusqu'au sol en pointe, son arête claire
+  const racine = ([dx, dy, sd, h]) => { const T0 = [x + sd * 13, y - h], Pt = [x + dx, y + dy], B0 = [x + sd * 3, y + 4];
+    return P(`M${T0[0]},${T0[1]} Q${r2(x + dx * 0.62)},${r2(y - h * 0.18)} ${Pt[0]},${Pt[1]} Q${r2(x + dx * 0.5)},${r2(y + dy + 0.6)} ${B0[0]},${B0[1]} L${x + sd * 9},${y - h * 0.4} Z`, sd < 0 ? BOIS.left : BOIS.right, 1.1)
+      + `<path d="M${r2(T0[0] + sd * 0.6)},${r2(T0[1] + 2)} Q${r2(x + dx * 0.6)},${r2(y - h * 0.12)} ${r2(Pt[0] - sd * 1.6)},${r2(Pt[1] - 1.2)}" stroke="${sd < 0 ? BOIS.light : BOIS.bark}" stroke-width="0.9" fill="none" stroke-linecap="round"/>`; };
+  // les racines-contreforts du fond, que le tronc recouvre
+  s += [[-44, 1, -1, 30], [44, 3, 1, 28]].map(racine).join('');
+  // le tronc : écorce cannelée, pan d'ombre, mousse, creux
+  const d = `M${x - 17},${y - 2} Q${x - 11},${y - 48} ${x - 15},${y - 94} L${x + 15},${y - 94} Q${x + 11},${y - 48} ${x + 17},${y - 2} Q${x},${y + 4} ${x - 17},${y - 2} Z`, idT = `arbre-tronc-${f}`;
+  s += `<path d="${d}" fill="${BOIS.left}" stroke="${OUT}" stroke-width="1.2" stroke-linejoin="round"/><defs><clipPath id="${idT}"><path d="${d}"/></clipPath></defs><g clip-path="url(#${idT})">`
+    + `<path d="M${x + 4},${y + 4} Q${x + 7},${y - 48} ${x + 4},${y - 96} L${x + 20},${y - 96} L${x + 20},${y + 4} Z" fill="${BOIS.right}"/>` + E(x, y - 88, 20, 8, BOIS.right, 0)
+    + [-10, -5, 0, 9, 13].map((dx, i) => `<path d="M${x + dx},${y} Q${x + dx * 0.7 + (i % 2 ? 1.5 : -1.5)},${y - 46} ${x + dx * 0.9},${y - 92}" stroke="${BOIS.bark}" stroke-width="0.9" fill="none" stroke-linecap="round"/>`).join('')
+    + `<path d="M${x - 12},${y - 8} Q${x - 9},${y - 46} ${x - 12},${y - 86}" stroke="${BOIS.light}" stroke-width="1.4" fill="none" stroke-linecap="round" opacity="0.8"/>`
+    + `<path d="M${x - 18},${y - 40} q5,-5 10,-2 q4,3 0,7 q-5,3 -10,0 Z" fill="#6FA84A"/><path d="M${x - 16},${y - 41} q4,-3 7,-1.6" stroke="#9CCB6A" stroke-width="1" fill="none" stroke-linecap="round"/></g>`
+    + E(x + 2, y - 58, 4, 5.6, BOIS.bark, 0.9) + E(x + 2, y - 57.4, 2.6, 4, '#2E1E12', 0);
+  // les racines-contreforts de devant
+  s += [[-27, 11, -1, 22], [25, 11, 1, 20]].map(racine).join('');
+  // les maîtresses branches
+  s += P(`M${x - 12},${y - 82} Q${x - 30},${y - 94} ${x - 52},${y - 92} L${x - 52},${y - 86} Q${x - 30},${y - 86} ${x - 11},${y - 72} Z`, BOIS.left, 1.1)
+    + P(`M${x + 12},${y - 80} Q${x + 30},${y - 90} ${x + 52},${y - 88} L${x + 52},${y - 82} Q${x + 30},${y - 82} ${x + 11},${y - 70} Z`, BOIS.right, 1.1);
+  // l'étage de devant de la canopée
+  s += T([[-46, -98, 14], [-58, -92, 9, 0], [-34, -94, 10, 0]], [[-46, -92], [-56, -88, 0.8]], JUNGLE.devant, 'b')
+    + T([[48, -102, 14], [60, -96, 9, 0], [36, -98, 10, 0]], [[48, -96], [58, -92, 0.8]], JUNGLE.devant, 'c')
+    + T([[-12, -114, 15], [13, -116, 15], [0, -106, 12, 0]], [[-12, -108], [12, -110, 0.9], [0, -102, 0.8]], JUNGLE.devant, 'd');
+  // les lianes de devant
+  s += liane(x - 48, y - 88, 44, 0, true) + liane(x - 38, y - 88, 28, 1, false) + liane(x + 42, y - 88, 46, 3, true) + liane(x + 54, y - 90, 30, 2, false);
+  // le perroquet sur la branche droite : il ouvre les ailes sur la 2e image
+  const [px, py] = [x + 28, y - 84];
+  s += (f ? P(`M${px - 1},${py - 7} q-9,-9 -14,-4 q5,2 10,7 Z`, '#3D7FD0', 0.8) + P(`M${px + 1},${py - 7} q9,-9 14,-4 q-5,2 -10,7 Z`, '#3D7FD0', 0.8) : '')
+    + P(`M${px - 1},${py - 1} l-1.6,8 l3,-1 l1,-7 Z`, '#3D7FD0', 0.8) + E(px, py - 5, 3.4, 5, '#E2402F', 0.9)
+    + (f ? '' : P(`M${px - 2.6},${py - 7} q-1.6,4 0.6,8 q2,-3 1.4,-7 Z`, '#3D7FD0', 0.6))
+    + E(px + 1, py - 11, 2.8, 2.8, '#E2402F', 0.9) + P(`M${px + 3.4},${py - 12} q3.2,0.6 1.6,4 q-1,-1.6 -2,-1.6 Z`, '#F2C04B', 0.6)
+    + E(px + 1.8, py - 11.6, 0.9, 0.9, '#FFFFFF', 0) + E(px + 2, py - 11.6, 0.5, 0.5, '#2A2420', 0) + E(px - 0.6, py - 3.6, 1.2, 1.6, '#F2C04B', 0);
+  // les fougères, les champignons et les fleurs au pied
+  s += feuilles(x - 44, y + 14, [-160, -125, -95, -55], 12) + feuilles(x + 44, y + 14, [-125, -85, -55, -20], 12)
+    + champignon(x - 22, y + 14) + champignon(x - 16, y + 16) + fleurette(x + 24, y + 18, '#F27A9A') + fleurette(x + 30, y + 16, '#F2C94C') + fleurette(x - 30, y + 22, '#F27A9A') + herbe(x + 8, y + 20, '#86B852', 0.8);
+  return s;
 } };
 LM.cascade = { n: 2, draw: f => {
   const [x, y] = at(0, 0);
