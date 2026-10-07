@@ -517,15 +517,37 @@ LM.geyser = { n: 2, draw: f => {
   else s += puff(x - 2, y - 8, 6, 0.75) + puff(x + 4, y - 18, 5, 0.6);
   return s;
 } };
+// Lac de lave : un sol de cendre aux bords bosselés, ses fissures rougeoyantes ; un anneau de blocs de basalte, éclairés
+// d'orange côté lave ; le bassin qui bouillonne en quatre teintes, ses plaques de croûte ; des bulles qui crèvent d'une
+// image à l'autre ; la lueur (une seule, comme avant), la fumée qui monte et des escarbilles (2 images)
 LM.cratere = { n: 2, draw: f => {
-  let s = Dk.cylinder(0, 0, 0.7, 0, 9, BASALT, 1.2) + disc(0, 0, 0.52, 9, '#E8573A', 1) + disc(-0.05, -0.04, 0.34, 9, '#F7A23B', 0) + disc(-0.08, -0.06, 0.16, 9, '#FFE08A', 0);
-  const [x, y] = at(0, 0, 9);
-  s += glow(x, y - 4, 40, '255,140,60', 0.25);
-  s += (f ? [[-10, 2, 3], [12, -3, 2.4]] : [[4, 4, 2.6], [-14, -2, 2]]).map(([dx, dy, r]) => E(x + dx, y + dy, r, r * 0.7, '#FFB04A', 0.8)).join('');
-  for (let i = 0; i < 9; i++) { const a = (i / 9) * TAU; const [bx, by] = at(Math.cos(a) * 0.62, Math.sin(a) * 0.62, 9); s += E(bx, by - 1.6, 5, 3, BASALT.top, 0.9); }
-  const smoke = (cx, cy, r, a) => `<g opacity="${a}">${E(cx, cy, r, r * 0.72, 'rgba(120,112,124,.7)', 0)}${E(cx + r * 0.6, cy - r * 0.3, r * 0.7, r * 0.55, 'rgba(150,142,152,.7)', 0)}${E(cx - r * 0.5, cy - r * 0.25, r * 0.6, r * 0.5, 'rgba(165,158,168,.6)', 0)}</g>`;
-  s += smoke(x - 6, y - 22 - f * 6, 7, 0.75) + smoke(x + 3, y - 36 - f * 6, 6, 0.5);
-  return s;
+  const [x, y] = at(0, 0), B = { lit: '#77707E', mid: '#524C5C', dark: '#36313F' };
+  const bosses = (cx, cy, rx, ry, n) => { const pts = Array.from({ length: n }, (_, i) => { const t = (i / n) * TAU, r = 1 + (i % 2 ? 0.05 : -0.03); return [cx + Math.cos(t) * rx * r, cy + Math.sin(t) * ry * r]; }); const mil = i => { const p = pts[i % n], q = pts[(i + 1) % n]; return `${r2((p[0] + q[0]) / 2)},${r2((p[1] + q[1]) / 2)}`; }; let d = `M${mil(n - 1)}`; for (let i = 0; i < n; i++) d += ` Q${r2(pts[i][0])},${r2(pts[i][1])} ${mil(i)}`; return d + ' Z'; };
+  // un bloc de basalte bosselé ; côté lave, un liseré orangé
+  const bloc = (bx, by, r, k, chaud) => P(bosses(bx, by, r, r * 0.72, 7 + (k % 3)), B.mid, 1) + E(bx - r * 0.18, by - r * 0.26, r * 0.66, r * 0.36, B.lit, 0) + E(bx - r * 0.34, by - r * 0.36, r * 0.26, r * 0.12, '#9C96A4', 0)
+    + (chaud ? `<path d="M${r2(bx - r * 0.7)},${r2(by + r * 0.3)} Q${bx},${r2(by + r * 0.75)} ${r2(bx + r * 0.7)},${r2(by + r * 0.3)}" stroke="#F0843A" stroke-width="1.4" fill="none" stroke-linecap="round"/>` : '');
+  // le sol de cendre et ses fissures rougeoyantes
+  let s = shadow(0, 0, 0.8, 0.14) + P(bosses(x, y + 4, 64, 28, 22), '#6E6460', 1.1) + E(x - 6, y + 4, 46, 17, '#7C726C', 0)
+    + `<path d="M${x - 50},${y + 10} l7,3 l4,-2 l6,4 M${x + 38},${y + 16} l6,-3 l5,2 M${x - 14},${y + 24} l5,-2 l6,2" stroke="#E0602E" stroke-width="1.6" fill="none" stroke-linecap="round" stroke-linejoin="round"/>`
+    + `<path d="M${x - 50},${y + 10} l7,3 l4,-2 l6,4 M${x + 38},${y + 16} l6,-3 l5,2 M${x - 14},${y + 24} l5,-2 l6,2" stroke="#FFC46A" stroke-width="0.6" fill="none" stroke-linecap="round" stroke-linejoin="round"/>`
+    + [[-40, 20, 2.4], [46, 6, 2], [22, 24, 1.8]].map(([dx, dy, r]) => E(x + dx, y + dy, r, r * 0.6, B.dark, 0.6)).join('');
+  // l'anneau de basalte : la moitié du fond, puis le bassin, puis la moitié de devant
+  const blocs = Array.from({ length: 14 }, (_, k) => { const a = (k / 14) * TAU + 0.2; return { k, bx: x + Math.cos(a) * 38, by: y - 2 + Math.sin(a) * 16.5, r: 7 + (k * 5) % 4, fond: Math.sin(a) < 0 }; });
+  s += blocs.filter(b => b.fond).map(b => bloc(b.bx, b.by - 2, b.r, b.k, true)).join('');
+  // le bassin de lave en quatre teintes, ses plaques de croûte aux fentes vives
+  s += E(x, y - 2, 33, 13.4, '#B83A28', 1) + E(x, y - 2.6, 29, 11.4, '#EE7430', 0) + E(x - 3, y - 3.4, 21, 7.8, '#FFB040', 0) + E(x - 5, y - 4, 11, 4, '#FFE39A', 0);
+  s += [[-16, 2, 0], [14, -6, 1], [6, 5, 2]].map(([dx, dy, k]) => { const cx = x + dx + (f ? (k - 1) * 1.2 : 0), cy = y + dy; return P(`M${cx - 6},${cy} L${cx - 3},${cy - 3} L${cx + 4},${cy - 2.6} L${cx + 7},${cy + 0.4} L${cx + 2},${cy + 2.6} L${cx - 4},${cy + 2.2} Z`, '#4A3A36', 0.6) + L([cx - 2, cy - 2.4], [cx + 1, cy + 2.2], '#FF9A44', 0.7); }).join('');
+  // les bulles qui gonflent et qui crèvent
+  s += (f ? [[-6, -6, 2.6, 1], [18, 0, 2, 0], [-22, -2, 1.6, 0]] : [[8, -8, 2.2, 0], [-14, -5, 2.8, 1], [20, 2, 1.6, 0]]).map(([dx, dy, r, crev]) => crev
+    ? `<ellipse cx="${x + dx}" cy="${y + dy}" rx="${r * 1.8}" ry="${r * 0.7}" fill="none" stroke="#FFE39A" stroke-width="0.9"/>` + [[-1, -1], [1, -1.2], [0, -1.6]].map(([gx, gy]) => E(x + dx + gx * r * 1.4, y + dy + gy * r * 1.6, 0.8, 1, '#FFC24A', 0)).join('')
+    : E(x + dx, y + dy, r, r * 0.8, '#FFC24A', 0.7) + E(x + dx - r * 0.3, y + dy - r * 0.3, r * 0.35, r * 0.25, '#FFF1C0', 0)).join('');
+  // la lueur du bassin
+  s += glow(x, y - 6, 40, '255,140,60', f ? 0.3 : 0.24);
+  s += blocs.filter(b => !b.fond).map(b => bloc(b.bx, b.by, b.r, b.k, false)).join('');
+  // la fumée qui monte et les escarbilles
+  const fumee = (cx, cy, r, a) => `<g opacity="${a}">${E(cx, cy, r, r * 0.72, '#8A8290', 0)}${E(cx + r * 0.6, cy - r * 0.3, r * 0.7, r * 0.55, '#A29AA6', 0)}${E(cx - r * 0.5, cy - r * 0.25, r * 0.6, r * 0.5, '#B4AEB8', 0)}</g>`;
+  s += fumee(x - 6, y - 24 - f * 6, 8, 0.75) + fumee(x + 4, y - 40 - f * 6, 7, 0.55) + fumee(x - 2, y - 56 - f * 4, 6, 0.35);
+  return s + (f ? [[-14, -22], [12, -30], [4, -16]] : [[-10, -30], [16, -20], [-2, -38]]).map(([dx, dy]) => E(x + dx, y + dy, 1, 1, '#FFB040', 0) + E(x + dx, y + dy, 0.4, 0.4, '#FFF1C0', 0)).join('');
 } };
 
 module.exports = { LM, LAND };
