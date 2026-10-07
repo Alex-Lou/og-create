@@ -15,7 +15,7 @@ import { LABEL } from '@/game/resources';
 import { spriteUrl } from '@/world/spriteCache';
 import { PRESENTIMENTS, BREATH_LINE } from '@/game/anya';
 import { BEASTS } from '@/world/bestiary';
-import { faceHref } from '@/world/faces';
+import { faceHref, builtOf } from '@/world/faces';
 import { masterPortrait } from '@/world/masterArt';
 import { guide } from '@/game/guide';
 import { TIPS } from '@/game/guideTips';
@@ -194,14 +194,15 @@ export default {
       if (troupe.has('puits') && written.has('Poisson')) guide.tip('bulle');
       if (BEASTS.some(name => name !== 'Poisson' && written.has(name))) {
         const sylve = troupe.has('bosquet');
-        guide.say({ id: 'bestiaire', ...(sylve ? { text: TIPS.bestiaireSylve, who: 'Sylve', face: faceHref('bosquet') } : { text: TIPS.bestiaire }) });
+        guide.say({ id: 'bestiaire', ...(sylve ? { text: TIPS.bestiaireSylve, who: 'Sylve', face: faceHref('bosquet', { castaway: !builtOf(state.villagers).includes('bosquet') }) } : { text: TIPS.bestiaire }) });
         // Le troisième pressentiment d'Anya (bible, § 10, acte IV) : les bêtes se tournent vers la Lande aux Menhirs
         // (plus de pressentiment une fois Anya éveillée)
         if (!(state.anya && state.anya.awake)) PRESENTIMENTS.betes.forEach(line => guide.say(line));
       }
       // Le deuxième (acte III) : au Cercle de menhirs, la rune de Celle-qui-donne-souffle
       if ((state.landmarks || []).some(l => l.id === 'menhirs' && l.found) && !(state.anya && state.anya.awake)) {
-        PRESENTIMENTS.rune.forEach(line => guide.say({ id: line.id, text: line.text, who: line.who, face: faceHref(line.face) }));
+        const built = builtOf(state.villagers);
+        PRESENTIMENTS.rune.forEach(line => guide.say({ id: line.id, text: line.text, who: line.who, face: faceHref(line.face, { castaway: !built.includes(line.face) }) }));
       }
     },
     // Bavarder : au premier bavardage du jour, un maître souffle un Savoir sur une page de son Art ; l'appareil le

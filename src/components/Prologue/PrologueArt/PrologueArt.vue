@@ -1,7 +1,7 @@
 <template>
   <svg class="pa" :class="`pa--${art}`" viewBox="0 0 400 400" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
-    <!-- Les images des scènes du tutoriel (HISTOIRE.md, § 9), en SVG : nuit, brume, la troupe dessinée par le
-         générateur de l'île (world/villagers.js), Brume comme sur l'île. Le joueur n'est jamais montré (D11). Le cadre
+    <!-- Les images des scènes du tutoriel (HISTOIRE.md, § 9), en SVG : nuit, brume, la troupe dessinée par la
+         bibliothèque (world/masterArt.js), Brume comme sur l'île. Le joueur n'est jamais montré (D11). Le cadre
          se recadre sur l'écran (slice) : l'essentiel tient au centre. Une seule racine : la scène l'anime en fondu -->
     <defs>
       <linearGradient id="pa-night" x1="0" y1="0" x2="0" y2="1">
@@ -365,6 +365,12 @@ const FLIES = [[-60, -120], [-48, -60], [52, -140], [64, -80], [-70, -30], [40, 
 // Les sept pierres du Cercle (le sigle de son chapitre au-dessus), et la troupe devant (Sylve et Mélisse se partagent ♀)
 const MASTERS = ['ponton', 'carriere', 'puits', 'bosquet', 'foyer', 'atelier', 'potager'];
 
+// Les naufragés de chaque scène du tutoriel : le souvenir revient à Cannelle devant le feu (cannelle-feu) et à Ondin
+// quand son Puits est fondé (avant le Campement) ; Aster et Rivet restent naufragés. Sur l'Hirondelle (storm), la
+// troupe est en habits de bord ; à la finale, tous sont maîtres. Aux veillées, les naufragés sont ceux de l'île
+const CASTAWAYS = { aster: ['ponton'], cannelle: ['foyer'], rivet: ['atelier'], ondin: ['puits'], campement: ['ponton', 'atelier'] };
+const VIGILS = ['veillee', 'rite', 'lien'];
+
 // Le Phare de Brume dans les images de la finale (pied du phare, échelle) ; sur un écran en hauteur, seul le milieu du
 // cadre (x de 100 à 300) se voit
 const LIGHTHOUSES = { phare: [206, 336, 1.05], soleil: [200, 344, 1.05], flammeche: [262, 296, 0.5] };
@@ -378,7 +384,9 @@ export default {
     art: { type: String, required: true },
     // Veillées : qui est là (bâtiments de la troupe), et la recette écrite en lumière
     cast: { type: Array, default: () => [] },
-    recipe: { type: String, default: '' }
+    recipe: { type: String, default: '' },
+    // Les maîtres dont le bâtiment est fondé (aux veillées, les autres paraissent en naufragés)
+    built: { type: Array, default: () => [] }
   },
   data() {
     return { WISP, GOLD: STAGES[7], STARS, MIST, BLOOM, CROWN, FLIES };
@@ -457,7 +465,8 @@ export default {
   },
   methods: {
     person(id, view, pose = 'idle') {
-      return faceHref(id, { view, pose });
+      const castaway = VIGILS.includes(this.art) ? !this.built.includes(id) : (CASTAWAYS[this.art] || []).includes(id);
+      return faceHref(id, { view, pose, castaway });
     }
   }
 };

@@ -40,6 +40,8 @@ export default {
       // Un coffre est ouvert sur l'île (ou va s'ouvrir) : les veillées et les scènes attendent qu'il se referme
       islandHold: false,
       people: null,
+      // Les maîtres dont le bâtiment est fondé (les autres paraissent en naufragés : bulles, veillées)
+      islandBuilt: [],
       vigilsSeen: storage.load(VIGILS_KEY, [])
     };
   },
@@ -126,6 +128,7 @@ export default {
       if (brume) {
         this.islandActs = brume.acts || [];
         this.people = brume.people || null;
+        this.islandBuilt = brume.built || [];
         // La Révélation vue reste vue, même si une réponse du serveur partie avant son envoi arrive après
         this.anya = brume.anya ? { ...brume.anya, revealed: brume.anya.revealed || Boolean(this.anya && this.anya.revealed) } : this.anya;
         this.actsKnown = true;
@@ -173,7 +176,7 @@ export default {
     sayPrologue(line) {
       const entry = PROLOGUE_LINES[line];
       const { who, text } = typeof entry === 'string' ? { text: entry } : entry;
-      guide.say({ id: `prologue-${line}`, text, ...(who ? { who: NAMES[who], face: faceHref(who) } : {}) });
+      guide.say({ id: `prologue-${line}`, text, ...(who ? { who: NAMES[who], face: faceHref(who, { castaway: !this.islandBuilt.includes(who) }) } : {}) });
     },
     onBookLoaded() {
       if (!this.prologueOpenReach) return;

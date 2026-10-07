@@ -3,7 +3,7 @@
        prologue » arrête tout le tutoriel (en revoir les scènes, depuis le Sceau, n'a pas ce bouton) -->
   <div ref="root" class="ps" role="dialog" aria-modal="true" :aria-label="label" tabindex="-1" @click="advance" @keydown.enter.prevent="advance" @keydown.space.prevent="advance">
     <transition name="ps-art" mode="out-in">
-      <PrologueArt :key="frame.art" :art="frame.art" :cast="frame.cast || []" :recipe="frame.recipe || ''" />
+      <PrologueArt :key="frame.art" :art="frame.art" :cast="frame.cast || []" :recipe="frame.recipe || ''" :built="built" />
     </transition>
     <p v-if="frame.caption" class="ps__caption">{{ frame.caption }}</p>
     <transition name="ps-bubble" mode="out-in">
@@ -35,7 +35,9 @@ export default {
     frames: { type: Array, default: null },
     // Revoir le prologue (le Sceau) : pas de « Passer »
     skippable: { type: Boolean, default: true },
-    skipLabel: { type: String, default: 'Passer le prologue' }
+    skipLabel: { type: String, default: 'Passer le prologue' },
+    // Les maîtres dont le bâtiment est fondé (PrologueArt : les autres paraissent en naufragés aux veillées)
+    built: { type: Array, default: () => [] }
   },
   emits: ['done', 'skip'],
   data() {

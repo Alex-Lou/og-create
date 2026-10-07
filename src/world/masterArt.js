@@ -10,7 +10,7 @@ import DATA from '../../design/bibliotheque/svg/personnages/quotidien.json';
 import { fitTo } from './library';
 
 const FILES = import.meta.glob('/design/bibliotheque/svg/personnages/{maitres,naufrages}/**/*.svg', { query: '?raw', import: 'default' });
-const URLS = import.meta.glob('/design/bibliotheque/svg/personnages/{maitres,naufrages}/*/*_face_repos_1.svg', { query: '?url', import: 'default', eager: true });
+const URLS = import.meta.glob('/design/bibliotheque/svg/personnages/{maitres,naufrages}/*/*_{face,avant}_{repos,travail,marche}_1.svg', { query: '?url', import: 'default', eager: true });
 const ROOT = '/design/bibliotheque/svg/personnages/';
 const SCALE = 1.25;
 
@@ -77,9 +77,12 @@ export function masterSprite(role, castaway, { pose = 'idle', view = 'se', frame
   };
 }
 
-// Portrait d'un maître (sa fiche) : de face, au repos, en naufragé ou en maître ; l'adresse du fichier, ou null
-export function masterPortrait(role, castaway) {
+// Portrait d'un maître hors de l'île (sa fiche, les bulles du guide, les scènes) : de face ou de trois quarts avant, au
+// repos, au travail ou en marche (la première image ; sans geste, au repos), en naufragé ou en maître ; l'adresse du
+// fichier, ou null
+export function masterPortrait(role, castaway, { view = 'front', pose = 'idle' } = {}) {
   const set = setOf(role, castaway);
-  const file = set && set.fichiers.face_repos && set.fichiers.face_repos[0];
-  return (file && URLS[ROOT + file]) || null;
+  const drawn = VIEWS[view];
+  const files = set && (set.fichiers[`${drawn}_${POSES[pose]}`] || set.fichiers[`${drawn}_repos`]);
+  return (files && URLS[ROOT + files[0]]) || null;
 }
