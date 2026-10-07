@@ -423,9 +423,12 @@ M.bouteille = { frame: [-16, -28, 32, 32], n: 2, draw: f => E(0, 0, 9, 2.4, 'rgb
 // Panneau d'un quartier à acheter : poteau planté dans une touffe, planche au liseré foncé (même place : le prix y est
 // écrit par l'île), ses clous et son fil du bois ; le cadenas doré suspendu à sa chaînette
 M.panneau_quartier = { frame: PROP_BOX, n: 1, draw: () => shade(0, 0, 14, 7, 0.2) + gbox(-0.03, -0.03, 0.03, 0.03, 0, 26, WOOD_DARK)
+  + tuft(-5, 1) + tuft(3.4, 1.6)
   + framed(-17, -40, 34, 17, 3, WOOD.top, '#7A4E2C', 1.2) + L([-13, -34], [13, -34], 'rgba(122,78,44,.3)', 0.8)
-  + line('M-2.8,-50 v-3 a2.8,2.8 0 0 1 5.6,0 v3', 2.6, OUT) + line('M-2.8,-50 v-3 a2.8,2.8 0 0 1 5.6,0 v3', 1.2, '#8A6A22')
-  + rr(-4.5, -50, 9, 8, 1.6, '#E9BF4E', W * 0.9) + E(0, -46.6, 0.9, 1.1, '#5A4214', 0) };
+  + line('M-14,-37.4 q6,-0.8 10,0.2 M5,-26 q5,0.6 9,-0.4', 0.5, 'rgba(122,78,44,.35)')
+  + [[-14.6, -37.6], [14.6, -37.6], [-14.6, -25.4], [14.6, -25.4]].map(([x, y]) => E(x, y, 0.8, 0.8, '#5A3A20', 0) + E(x - 0.25, y - 0.25, 0.3, 0.3, '#B88A5A', 0)).join('')
+  + line('M0,-40 L0,-42', 0.8, '#8A6A22') + line('M-2.8,-50 v-3 a2.8,2.8 0 0 1 5.6,0 v3', 2.6, OUT) + line('M-2.8,-50 v-3 a2.8,2.8 0 0 1 5.6,0 v3', 1.2, '#8A6A22')
+  + rr(-4.5, -50, 9, 8, 1.6, '#E9BF4E', W * 0.9) + L([-3.4, -48.6], [-3.4, -43.4], '#FFE39A', 0.8) + E(0, -46.6, 0.9, 1.1, '#5A4214', 0) + L([0, -46], [0, -44.4], '#5A4214', 0.8) };
 // Pont de planches sur la mer : une case, le long de u ; ses piles et leurs ronds dans l'eau, son tablier aux planches
 // clouées, ses garde-corps de corde ; lanterne au bout côté terre, avec son halo (bout_avant / bout_arriere)
 const HS = 22;
