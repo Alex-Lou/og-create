@@ -16,42 +16,17 @@ const path = require('path');
 const { ACCESSOIRES } = require('../personnages/avatar_choix');
 
 const { nomBete, vitesseBete } = require('./noms_betes');
+const { nomPersonnage, MIROIR_KIT, miroir, vitessePersonnage } = require('./noms_personnages');
 
 // --- 1. Les noms -------------------------------------------------------------------------------
 
-// Chemin d'un SVG dans lib/ (posix, sans « ./ ») -> chemin rangé dans la bibliothèque
+// Chemin d'un SVG dans lib/ (posix, sans « ./ ») -> chemin rangé dans la bibliothèque. Les règles sont dans noms_betes.js
+// (les bêtes et les égarés) et noms_personnages.js (les vivants et les personnages, avec le miroir du trois quarts avant
+// du kit, MIROIR_KIT) : les générateurs s'en servent aussi.
 function renommer(rel) {
-  const parts = rel.split('/');
-  const base = parts.pop().replace(/\.svg$/, '');
-  const [top, a, b] = parts;
-  const out = (dirs, name) => [...dirs, name + '.svg'].join('/');
-
-  // Les bêtes et les égarés : la règle est dans noms_betes.js (le générateur des bêtes s'en sert aussi)
+  const top = rel.split('/')[0];
   if (top === 'animaux' || top === 'egares') return nomBete(rel);
-
-  if (top === 'vivants' && a === 'cerf') {
-    const m = base.match(/^cerf_(?:(avant|dos)_)?([a-z]+)(?:_(\d+))?$/);
-    return out([top, 'cerf-blanc'], ['cerf-blanc', m[1] || 'profil', m[2], m[3]].filter(Boolean).join('_'));
-  }
-
-  if (top === 'personnages') {
-    if (a === 'naufrages') {
-      if (base.startsWith(b + '_naufrage_')) return out([top, a, b], `${b}-naufrage_${base.slice(b.length + 10)}`);
-      throw new Error('naufragé inattendu : ' + rel);
-    }
-  }
-  return rel;
-}
-
-// Le kit du grand format (design/personnages/troupe.js, Anya, le Passeur) dessine son trois quarts avant tourné vers
-// le bas à gauche ; le petit format, les bêtes et le jeu (vue « se ») le tournent vers le bas à droite. La bibliothèque
-// publie donc ces vues-là en miroir : « avant » veut dire « vers le bas à droite » partout.
-const MIROIR_KIT = /^(personnages\/maitres\/[a-z]+|personnages\/naufrages\/[a-z]+|personnages\/avatar\/avatar-\d+(?:-naufrage)?|personnages\/visiteurs\/visiteur-\d+|personnages\/epilogue\/arrivant-\d+|vivants\/(anya|passeur))\/[a-z0-9-]+_avant_/;
-function miroir(svg) {
-  const m = svg.match(/^(<svg[^>]*viewBox="([^"]+)"[^>]*>)([\s\S]*)(<\/svg>\s*)$/);
-  if (!m) throw new Error('SVG inattendu pour le miroir');
-  const [x, , w] = m[2].trim().split(/[\s,]+/).map(Number);
-  return `${m[1]}<g transform="translate(${2 * x + w} 0) scale(-1 1)">${m[3]}</g>${m[4]}`;
+  return nomPersonnage(rel);
 }
 
 // Liste des fichiers d'un dossier (posix, relatifs)
@@ -426,25 +401,9 @@ function titreObjet(id, meta) {
 // Vitesse par défaut, quand l'index du lot ne la donne pas (vitesses des pages animées de l'atelier)
 function vitesse(id, pose, images) {
   if (images < 2) return undefined;
-  const [top, a] = id.split('/');
+  const top = id.split('/')[0];
   if (top === 'animaux' || top === 'egares') return vitesseBete(id, pose);
-  if (top === 'vivants') {
-    if (a === 'brume') return /expr/.test(id) ? 600 : 220;
-    if (a === 'cerf-blanc') return pose === 'repos' ? [1800, 180] : 300;
-    if (pose === 'marche') return a === 'anya' ? 260 : 200;
-    return pose === 'repos' ? (a === 'anya' ? 1200 : [900, 160]) : [700, 900];
-  }
-  if (top === 'personnages') {
-    if (/^(marche|lanterne|parapluie)$/.test(pose)) return 170;
-    if (pose === 'repos') return [900, 160];
-    if (pose === 'salut') return 260;
-    if (pose === 'dort' || pose === 'couche') return 900;
-    if (pose === 'expr') return 800;
-    if (pose === 'grelotter') return 140; // un frisson
-    if (pose === 'lire') return [1400, 900];
-    if (pose === 'ramasser') return [500, 800];
-    return [700, 1100];
-  }
+  if (top === 'vivants' || top === 'personnages') return vitessePersonnage(id, pose);
   return undefined;
 }
 
