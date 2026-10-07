@@ -4,7 +4,7 @@ import { P, TW, face, box, gable, pyramid, disc, cylinder, shadow, sprite, EDGE 
 import {
   WOOD, WOOD_DARK, STONE, WALL, BRICK, ROOF_RED, PINE, BUILDING_BOX,
   pebble, doorLeft, windowLeft, windowRight, planksLeft, planksRight, roundTree,
-  WHITE_STONE, ROCKS, FOLIAGE, roofOf, roofTexture, stoneCourses, seasonDots, crystals, rockBox, stoneRing, pool, cove, soilBed, leafPair
+  WHITE_STONE, ROCKS, FOLIAGE, roofOf, roofTexture, stoneCourses, seasonDots, crystals, rockBox, stoneRing, pool, cove, soilBed, leafPair, roofTextureOf
 } from './palette.js';
 import { gardenFence, goldenSign } from './sprites.js';
 import { courseLeft, courseRight } from './tiers/kit.js';
@@ -315,7 +315,7 @@ function forge(skin) {
     + box(u0, v0, u1, v1, 22, 40, WOOD) + planksLeft(u0, u1, v1, 22, 40) + planksRight(u1, v0, v1, 22, 40)
     + windowLeft(-0.6, -0.35, v1, 27, 36) + windowRight(u1, -0.3, -0.05, 27, 36)
     + gable(u0, v0, u1, v1, 40, 18, { front: roof.front, back: roof.back, gable: WOOD.right }, 0.1)
-    + roofTexture(skin, u0, v0, u1, v1, 40, 18, 0.1)
+    + roofTextureOf(skin, 'toit-rouge', u0, v0, u1, v1, 40, 18, 0.1)
     + (skin === 'enseigne-doree' ? goldenSign(-0.3, v1, 44) : '')
     // Four agrandi et cheminée haute, en briques à assises
     + box(0.25, -0.45, 0.88, 0.3, 0, 22, BRICK) + courseLeft(0.25, 0.88, 0.3, 0, 22, 4, 'rgba(90,40,25,.32)') + courseRight(0.88, -0.45, 0.3, 0, 22, 4, 'rgba(70,30,20,.32)')

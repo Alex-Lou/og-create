@@ -1,7 +1,7 @@
 // Potager, paliers III à VII : Verger, Ferme, Moulin, Domaine, Jardin de la Licorne.
 // Places laissées libres pour la boutique : pelle et arrosoir dans les planches de devant, poulailler au coin droit
 // (derrière), poules à l'avant, ruche au coin gauche (× 1.5 dès le palier IV).
-import { BUILDING_BOX, ROOF_RED, roundTree, roofOf, roofTexture, soilBed, furrow, leafPair } from '../palette.js';
+import { BUILDING_BOX, ROOF_RED, roundTree, roofOf, roofTextureOf, soilBed, furrow, leafPair } from '../palette.js';
 import { gardenFence } from '../sprites.js';
 import { sprite, shadow } from '../iso.js';
 import {
@@ -151,7 +151,7 @@ function estate(skin) {
     + face([[-0.98, v1, 0], [-0.86, v1, 0], [-0.86, v1, 14], [-0.98, v1, 14]], '#8C4B32')
     + chimney(-1.2, -1.2, 36, 66)
     + gable(u0, v0, u1, v1, 32, 22, { front: roof.front, back: roof.back, gable: PLASTER.right }, 0.08)
-    + roofTexture(skin, u0, v0, u1, v1, 32, 22, 0.08)
+    + roofTextureOf(skin, 'toit-rouge', u0, v0, u1, v1, 32, 22, 0.08)
     // Silo à coupole et grange
     + cylinder(0.15, -1.15, 0, 64, 0.22, { top: '#D7DDE3', left: '#C2CAD2', right: '#8E99A4' }, 'es-silo')
     + [12, 26, 40, 54].map(z => { const [x, y] = P(0.15, -1.15, z); return `<path d="M${f2(x - 14)},${f2(y)} A14,7 0 0 0 ${f2(x + 14)},${f2(y)}" fill="none" stroke="#7C8894" stroke-width="0.7"/>`; }).join('')

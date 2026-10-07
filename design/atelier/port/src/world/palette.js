@@ -307,6 +307,11 @@ export function roofTexture(skin, u0, v0, u1, v1, z, h, o = 0.08) {
   }
   return out;
 }
+// Texture du toit d'un bâtiment : celle du skin de toit porté, sinon celle de son toit d'origine (base : un skin de
+// toit, « toit-rouge » pour les tuiles rouges d'origine)
+export function roofTextureOf(skin, base, ...geo) {
+  return roofTexture(ROOF_KIND[skin] ? skin : base, ...geo);
+}
 // Assises de pierre sur la face avant d'un cylindre (puits, bassin) : joints horizontaux et verticaux décalés
 export function stoneCourses(u, v, z0, z1, r, n = 2, color = 'rgba(120,110,95,.4)') {
   const [x, y] = P(u, v, 0);

@@ -1,7 +1,7 @@
 // Atelier, paliers III à VII : Fonderie, Grande forge, Manufacture, Usine, Atelier de l'Alchimiste.
 // Places laissées libres pour la boutique : établi au coin droit, enclume devant, soufflet contre la face avant du
 // four (à droite) — × 1.5 dès le palier IV.
-import { ROOF_RED, BUILDING_BOX, roofOf, roofTexture, doorLeft, windowLeft, windowRight, planksLeft, planksRight } from '../palette.js';
+import { ROOF_RED, BUILDING_BOX, roofOf, roofTextureOf, doorLeft, windowLeft, windowRight, planksLeft, planksRight } from '../palette.js';
 import { goldenSign } from '../sprites.js';
 import { sprite, pyramid } from '../iso.js';
 import {
@@ -43,7 +43,7 @@ function foundry(skin) {
     + box(u0, v0, u1, v1, 22, 40, WOOD) + planksLeft(u0, u1, v1, 22, 40) + planksRight(u1, v0, v1, 22, 40)
     + windowLeft(-0.6, -0.35, v1, 27, 36) + windowRight(u1, -0.3, -0.05, 27, 36)
     + gable(u0, v0, u1, v1, 40, 18, { front: roof.front, back: roof.back, gable: WOOD.right }, 0.1)
-    + roofTexture(skin, u0, v0, u1, v1, 40, 18, 0.1)
+    + roofTextureOf(skin, 'toit-rouge', u0, v0, u1, v1, 40, 18, 0.1)
     + (skin === 'enseigne-doree' ? goldenSign(-0.3, v1, 44) : '')
     // Fourneau à creuset : base de briques, creuset de métal en fusion, coulée vers les moules, deux cheminées
     + box(0.25, -0.45, 0.88, 0.3, 0, 22, BRICK) + courseLeft(0.25, 0.88, 0.3, 0, 22, 4, 'rgba(90,40,25,.3)')
@@ -70,7 +70,7 @@ function greatForge(skin) {
     + [-1.15, 0.0].map(u => archLeft(u + 0.1, 0.08, v1, 14, 14, '#FFE6A3', ' stroke="#FFFFFF" stroke-width="0.8"')).join('')
     + [-1.05, -0.45].map(v => face([[u1, v, 14], [u1, v + 0.2, 14], [u1, v + 0.2, 26], [u1, v, 26]], '#FFE6A3', ' stroke="#FFFFFF" stroke-width="0.8"')).join('')
     + gable(u0, v0, u1, v1, 34, 26, { front: roof.front, back: roof.back, gable: STONE.right }, 0.1)
-    + roofTexture(skin, u0, v0, u1, v1, 34, 26, 0.1)
+    + roofTextureOf(skin, 'toit-rouge', u0, v0, u1, v1, 34, 26, 0.1)
     + (skin === 'enseigne-doree' ? goldenSign(-0.1, v1, 46) : '')
     + furnace(0.42, -0.72, 1.4, 0.42, 26, 58, 1.5)
     + barrel(0.62, 0.95, 'gf-b1') + crate(-1.12, 1.0, 0.12, 10) + crate(-0.92, 1.12, 0.1, 8)
