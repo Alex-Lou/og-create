@@ -5,6 +5,9 @@
 import { P, face, box, gable, disc, cylinder, boulder, shadow, sprite, EDGE, mixHex } from './port/src/world/iso.js';
 import { WOOD, WOOD_DARK, STONE, THATCH, LEAVES, BUILDING_BOX, PROP_BOX, pebble, planksLeft, planksRight } from './port/src/world/palette.js';
 import { flameFrames } from './port/src/world/sprites.js';
+import torcheJs from './torche.js';
+const { torche } = torcheJs;
+const K_CAMP = 1.25; // l'échelle de la bibliothèque par rapport au jeu (preview_camp.mjs l'applique en écrivant)
 
 const OUT = '#3C2819';
 const f2 = n => Math.round(n * 100) / 100;
@@ -983,17 +986,9 @@ function strawBed() {
   { const [x, y] = P(u0 + 0.1, 0, h + 2.6); o += ell(x, y, 6.4, 3.4, '#E6DCC3', EDGE) + `<path d="M${f2(x - 4)},${f2(y - 1.6)} Q${f2(x - 1)},${f2(y + 0.4)} ${f2(x + 3)},${f2(y - 2)}" fill="none" stroke="#C2B494" stroke-width="0.6"/>` + ell(x + 5.4, y - 1.4, 1.4, 1, '#C2B494', EDGE); }
   return o;
 }
-// Torche de bois flotté plantée : tête d'étoupe goudronnée liée de corde, la flamme du jeu posée dessus (3 images)
-function torch(n = 0) {
-  let o = shadow(0, 0, 0.14, 0.16) + stick(0, 0, 0, 0, 0, 21, 2.2, DRIFT.left);
-  const [x, y] = P(0, 0, 22);
-  o += ell(x, y - 6, 7, 6, 'rgba(255,214,120,.22)');
-  o += `<path d="M${f2(x - 2.4)},${f2(y + 2.2)} L${f2(x - 3.2)},${f2(y - 2.4)} Q${f2(x)},${f2(y - 3.6)} ${f2(x + 3.2)},${f2(y - 2.4)} L${f2(x + 2.4)},${f2(y + 2.2)} Q${f2(x)},${f2(y + 3)} ${f2(x - 2.4)},${f2(y + 2.2)} Z" fill="#5E4630"${EDGE}/>`
-    + ln([x - 2.8, y - 0.4], [x + 2.8, y - 0.4], ROPE, 0.8) + ln([x - 2.5, y + 1.2], [x + 2.5, y + 1.2], ROPE, 0.6);
-  // la base de la flamme (y = -4 dans flameFrames) posée sur le haut de la tête
-  const flame = flameFrames(0, 0, 0.6)[n % 3].svg.replace(/^<svg[^>]*>/, '').replace(/<\/svg>$/, '');
-  return o + `<g transform="translate(0 ${f2(y - 2.6 + 4)})">${flame}</g>`;
-}
+// Torche de bois flotté plantée : le dessin de torche.js (le même que la torche de la boutique et celle de la veillée),
+// dessiné à l'échelle de la bibliothèque, ramené ici à celle du jeu (up() le remet à × 1,25)
+const torch = (n = 0) => `<g transform="scale(${1 / K_CAMP})">${torche('allumee', n)}</g>`;
 // « SOS » écrit en galets sur le sable, lisible depuis la caméra : lettres alignées sur l'écran, écrasées comme posées
 // au sol (hauteur à moitié), un galet tous les ~2,6 px le long du tracé
 function sos() {
