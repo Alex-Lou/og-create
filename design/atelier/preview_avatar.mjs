@@ -16,6 +16,7 @@ const { frame, EXPRS } = require('./troupe.js');
 const A = require('../personnages/avatar.js');
 const { avatar, CHOIX, FORMES, NUANCIERS, NOMS_NUANCIERS, TEINTURES_GAINS, EMPLACEMENTS, ACCESSOIRES, DEFAUT, libelle, verifier } = A;
 const { avatarNaufrage } = require('./avatar_naufrage.js');
+const { assis } = require('./assis.js');
 const { unique, row, sheet, animated, write, shoot } = require('./planche.js');
 
 const LIB = path.join(DIR, 'lib', 'personnages', 'avatar');
@@ -42,7 +43,8 @@ const nom = i => `avatar-${String(i + 1).padStart(2, '0')}`;
 
 // Poses de la troupe et gestes du tutoriel (et les expressions pour le premier exemple)
 const POSES = [['face_repos', 'front', 'repos', 2], ['avant_marche', 'se', 'marche', 4], ['dos_marche', 'ne', 'marche', 4], ['face_salut', 'front', 'salut', 2],
-  ['avant_ramasser', 'se', 'action', 2, 'ramasser'], ['face_grelotter', 'front', 'action', 2, 'grelotter'], ['face_lire', 'front', 'action', 2, 'lire']];
+  ['avant_ramasser', 'se', 'action', 2, 'ramasser'], ['face_grelotter', 'front', 'action', 2, 'grelotter'], ['face_lire', 'front', 'action', 2, 'lire'],
+  ['face_assis', 'front', 'assis', 2], ['avant_assis', 'se', 'assis', 2], ['dos_assis', 'ne', 'assis', 2]];
 let count = 0;
 const options = k => Object.keys(CHOIX[k] === 'formes' ? FORMES[k] : NUANCIERS[CHOIX[k]]);
 const index = {
@@ -53,7 +55,7 @@ const index = {
     'Les nuanciers de peau, d\'yeux, de cheveux et de tissus sont libres dès la création ; la peau et les yeux ne se gagnent jamais. Se gagnent pour toujours, à la boutique (écus) ou dans les coffres : les accessoires « boutique » ou « coffre » et les teintures rares. Tout est cosmétique.',
     'Raretés : celles des coffres du jeu (commun, rare, epique, legendaire). La source d\'un accessoire : gratuit (dès la création), boutique ou coffre. garde : ce que la mer laisse au naufragé.',
     'auHasard(graine, { gratuit }) tire un avatar harmonieux (le bouton « Au hasard », et plus tard les visiteurs). verifier(choix) refuse tout choix inconnu.',
-    'Poses : repos (2), marche (4), salut (2), et les gestes du tutoriel : ramasser (trois quarts avant), grelotter et lire le Grimoire (face), 2 images chacun. Le premier exemple a aussi les 8 expressions.',
+    'Poses : repos (2), marche (4), salut (2), les gestes du tutoriel : ramasser (trois quarts avant), grelotter et lire le Grimoire (face), 2 images chacun, et assis à la veillée (face, trois quarts avant, dos ; 2 images ; le siège n\'est pas dessiné, son dessus est à y = 53,6 du cadre). Le premier exemple a aussi les 8 expressions.',
     'L\'avatar est naufragé du naufrage jusqu\'au Campement (fin du tutoriel), où Cannelle recoud ses habits.'
   ],
   choix: Object.fromEntries(Object.keys(CHOIX).map(k => [k, { dans: CHOIX[k], options: options(k) }])),
@@ -73,7 +75,7 @@ function grandFormat(c, dir, key, withExpr) {
     const cc = geste ? { ...c, geste } : c;
     files[`${key}_${pose}`] = Array.from({ length: nImg }, (_, n) => {
       const rel = `${dir}/${key}_${pose}_${n + 1}.svg`;
-      write(path.join(LIB, rel), grand(frame(cc, view, p, n)));
+      write(path.join(LIB, rel), grand(p === 'assis' ? assis(cc, view, n) : frame(cc, view, p, n)));
       count++;
       return rel;
     });
@@ -106,6 +108,7 @@ EXEMPLES.forEach((o, i) => {
   cells.push(row(`Exemple ${i + 1}`, [
     [g(c, 'front', 'repos', 0, G), 'face'], [g(c, 'se', 'marche', 1, G), 'avant'], [g(c, 'ne', 'marche', 0, G), 'dos'], [g(c, 'front', 'salut', 0, G), 'salut'],
     [g(c, 'se', 'action', 1, G, 'ramasser'), 'ramasser'], [g(c, 'front', 'action', 0, G, 'grelotter'), 'grelotter'], [g(c, 'front', 'action', 0, G, 'lire'), 'lire'],
+    [grand(unique(assis(c, 'front', 0)), G), 'assis'], [grand(unique(`<g transform="translate(48 0) scale(-1 1)">${assis(c, 'se', 0)}</g>`), G), ''],
     [g(n, 'front', 'repos', 0, G), 'naufragé'], [g(n, 'se', 'marche', 1, G), '']
   ]));
   const walk = cc => [0, 1, 2, 3].map(f => grand(unique(frame(cc, 'se', 'marche', f)), 2.4));

@@ -438,6 +438,33 @@
    "statut": "ok"
   },
   {
+   "id": "personnages/avatar/avatar-01-naufrage/avatar-01-naufrage_avant_assis",
+   "rubrique": "personnages",
+   "sujet": "avatar-01-naufrage",
+   "vue": "avant",
+   "pose": "assis",
+   "titre": "Avatar, exemple 1 (naufragé), trois quarts avant, assis",
+   "regarde": "bas-droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/avatar/avatar-01-naufrage/avatar-01-naufrage_avant_assis_1.svg",
+    "svg/personnages/avatar/avatar-01-naufrage/avatar-01-naufrage_avant_assis_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    700,
+    1100
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
    "id": "personnages/avatar/avatar-01-naufrage/avatar-01-naufrage_avant_marche",
    "rubrique": "personnages",
    "sujet": "avatar-01-naufrage",
@@ -491,6 +518,33 @@
    "statut": "ok"
   },
   {
+   "id": "personnages/avatar/avatar-01-naufrage/avatar-01-naufrage_dos_assis",
+   "rubrique": "personnages",
+   "sujet": "avatar-01-naufrage",
+   "vue": "dos",
+   "pose": "assis",
+   "titre": "Avatar, exemple 1 (naufragé), trois quarts dos, assis",
+   "regarde": "haut-droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/avatar/avatar-01-naufrage/avatar-01-naufrage_dos_assis_1.svg",
+    "svg/personnages/avatar/avatar-01-naufrage/avatar-01-naufrage_dos_assis_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    700,
+    1100
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
    "id": "personnages/avatar/avatar-01-naufrage/avatar-01-naufrage_dos_marche",
    "rubrique": "personnages",
    "sujet": "avatar-01-naufrage",
@@ -513,6 +567,32 @@
     64
    ],
    "ms_par_image": 170,
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "personnages/avatar/avatar-01-naufrage/avatar-01-naufrage_face_assis",
+   "rubrique": "personnages",
+   "sujet": "avatar-01-naufrage",
+   "vue": "face",
+   "pose": "assis",
+   "titre": "Avatar, exemple 1 (naufragé), de face, assis",
+   "regarde": "face",
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/avatar/avatar-01-naufrage/avatar-01-naufrage_face_assis_1.svg",
+    "svg/personnages/avatar/avatar-01-naufrage/avatar-01-naufrage_face_assis_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    700,
+    1100
+   ],
    "parcours": "tuto-1",
    "statut": "ok"
   },
@@ -615,6 +695,33 @@
    "statut": "ok"
   },
   {
+   "id": "personnages/avatar/avatar-01/avatar-01_avant_assis",
+   "rubrique": "personnages",
+   "sujet": "avatar-01",
+   "vue": "avant",
+   "pose": "assis",
+   "titre": "Avatar, exemple 1, trois quarts avant, assis",
+   "regarde": "bas-droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/avatar/avatar-01/avatar-01_avant_assis_1.svg",
+    "svg/personnages/avatar/avatar-01/avatar-01_avant_assis_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    700,
+    1100
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
    "id": "personnages/avatar/avatar-01/avatar-01_avant_marche",
    "rubrique": "personnages",
    "sujet": "avatar-01",
@@ -663,6 +770,33 @@
    "ms_par_image": [
     500,
     800
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "personnages/avatar/avatar-01/avatar-01_dos_assis",
+   "rubrique": "personnages",
+   "sujet": "avatar-01",
+   "vue": "dos",
+   "pose": "assis",
+   "titre": "Avatar, exemple 1, trois quarts dos, assis",
+   "regarde": "haut-droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/avatar/avatar-01/avatar-01_dos_assis_1.svg",
+    "svg/personnages/avatar/avatar-01/avatar-01_dos_assis_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    700,
+    1100
    ],
    "parcours": "tuto-1",
    "statut": "ok"
@@ -870,6 +1004,32 @@
    "statut": "ok"
   },
   {
+   "id": "personnages/avatar/avatar-01/avatar-01_face_assis",
+   "rubrique": "personnages",
+   "sujet": "avatar-01",
+   "vue": "face",
+   "pose": "assis",
+   "titre": "Avatar, exemple 1, de face, assis",
+   "regarde": "face",
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/avatar/avatar-01/avatar-01_face_assis_1.svg",
+    "svg/personnages/avatar/avatar-01/avatar-01_face_assis_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    700,
+    1100
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
    "id": "personnages/avatar/avatar-01/avatar-01_face_grelotter",
    "rubrique": "personnages",
    "sujet": "avatar-01",
@@ -968,6 +1128,33 @@
    "statut": "ok"
   },
   {
+   "id": "personnages/avatar/avatar-02-naufrage/avatar-02-naufrage_avant_assis",
+   "rubrique": "personnages",
+   "sujet": "avatar-02-naufrage",
+   "vue": "avant",
+   "pose": "assis",
+   "titre": "Avatar, exemple 2 (naufragé), trois quarts avant, assis",
+   "regarde": "bas-droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/avatar/avatar-02-naufrage/avatar-02-naufrage_avant_assis_1.svg",
+    "svg/personnages/avatar/avatar-02-naufrage/avatar-02-naufrage_avant_assis_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    700,
+    1100
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
    "id": "personnages/avatar/avatar-02-naufrage/avatar-02-naufrage_avant_marche",
    "rubrique": "personnages",
    "sujet": "avatar-02-naufrage",
@@ -1021,6 +1208,33 @@
    "statut": "ok"
   },
   {
+   "id": "personnages/avatar/avatar-02-naufrage/avatar-02-naufrage_dos_assis",
+   "rubrique": "personnages",
+   "sujet": "avatar-02-naufrage",
+   "vue": "dos",
+   "pose": "assis",
+   "titre": "Avatar, exemple 2 (naufragé), trois quarts dos, assis",
+   "regarde": "haut-droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/avatar/avatar-02-naufrage/avatar-02-naufrage_dos_assis_1.svg",
+    "svg/personnages/avatar/avatar-02-naufrage/avatar-02-naufrage_dos_assis_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    700,
+    1100
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
    "id": "personnages/avatar/avatar-02-naufrage/avatar-02-naufrage_dos_marche",
    "rubrique": "personnages",
    "sujet": "avatar-02-naufrage",
@@ -1043,6 +1257,32 @@
     64
    ],
    "ms_par_image": 170,
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "personnages/avatar/avatar-02-naufrage/avatar-02-naufrage_face_assis",
+   "rubrique": "personnages",
+   "sujet": "avatar-02-naufrage",
+   "vue": "face",
+   "pose": "assis",
+   "titre": "Avatar, exemple 2 (naufragé), de face, assis",
+   "regarde": "face",
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/avatar/avatar-02-naufrage/avatar-02-naufrage_face_assis_1.svg",
+    "svg/personnages/avatar/avatar-02-naufrage/avatar-02-naufrage_face_assis_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    700,
+    1100
+   ],
    "parcours": "tuto-1",
    "statut": "ok"
   },
@@ -1145,6 +1385,33 @@
    "statut": "ok"
   },
   {
+   "id": "personnages/avatar/avatar-02/avatar-02_avant_assis",
+   "rubrique": "personnages",
+   "sujet": "avatar-02",
+   "vue": "avant",
+   "pose": "assis",
+   "titre": "Avatar, exemple 2, trois quarts avant, assis",
+   "regarde": "bas-droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/avatar/avatar-02/avatar-02_avant_assis_1.svg",
+    "svg/personnages/avatar/avatar-02/avatar-02_avant_assis_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    700,
+    1100
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
    "id": "personnages/avatar/avatar-02/avatar-02_avant_marche",
    "rubrique": "personnages",
    "sujet": "avatar-02",
@@ -1198,6 +1465,33 @@
    "statut": "ok"
   },
   {
+   "id": "personnages/avatar/avatar-02/avatar-02_dos_assis",
+   "rubrique": "personnages",
+   "sujet": "avatar-02",
+   "vue": "dos",
+   "pose": "assis",
+   "titre": "Avatar, exemple 2, trois quarts dos, assis",
+   "regarde": "haut-droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/avatar/avatar-02/avatar-02_dos_assis_1.svg",
+    "svg/personnages/avatar/avatar-02/avatar-02_dos_assis_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    700,
+    1100
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
    "id": "personnages/avatar/avatar-02/avatar-02_dos_marche",
    "rubrique": "personnages",
    "sujet": "avatar-02",
@@ -1220,6 +1514,32 @@
     64
    ],
    "ms_par_image": 170,
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "personnages/avatar/avatar-02/avatar-02_face_assis",
+   "rubrique": "personnages",
+   "sujet": "avatar-02",
+   "vue": "face",
+   "pose": "assis",
+   "titre": "Avatar, exemple 2, de face, assis",
+   "regarde": "face",
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/avatar/avatar-02/avatar-02_face_assis_1.svg",
+    "svg/personnages/avatar/avatar-02/avatar-02_face_assis_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    700,
+    1100
+   ],
    "parcours": "tuto-1",
    "statut": "ok"
   },
@@ -1322,6 +1642,33 @@
    "statut": "ok"
   },
   {
+   "id": "personnages/avatar/avatar-03-naufrage/avatar-03-naufrage_avant_assis",
+   "rubrique": "personnages",
+   "sujet": "avatar-03-naufrage",
+   "vue": "avant",
+   "pose": "assis",
+   "titre": "Avatar, exemple 3 (naufragé), trois quarts avant, assis",
+   "regarde": "bas-droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/avatar/avatar-03-naufrage/avatar-03-naufrage_avant_assis_1.svg",
+    "svg/personnages/avatar/avatar-03-naufrage/avatar-03-naufrage_avant_assis_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    700,
+    1100
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
    "id": "personnages/avatar/avatar-03-naufrage/avatar-03-naufrage_avant_marche",
    "rubrique": "personnages",
    "sujet": "avatar-03-naufrage",
@@ -1375,6 +1722,33 @@
    "statut": "ok"
   },
   {
+   "id": "personnages/avatar/avatar-03-naufrage/avatar-03-naufrage_dos_assis",
+   "rubrique": "personnages",
+   "sujet": "avatar-03-naufrage",
+   "vue": "dos",
+   "pose": "assis",
+   "titre": "Avatar, exemple 3 (naufragé), trois quarts dos, assis",
+   "regarde": "haut-droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/avatar/avatar-03-naufrage/avatar-03-naufrage_dos_assis_1.svg",
+    "svg/personnages/avatar/avatar-03-naufrage/avatar-03-naufrage_dos_assis_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    700,
+    1100
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
    "id": "personnages/avatar/avatar-03-naufrage/avatar-03-naufrage_dos_marche",
    "rubrique": "personnages",
    "sujet": "avatar-03-naufrage",
@@ -1397,6 +1771,32 @@
     64
    ],
    "ms_par_image": 170,
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "personnages/avatar/avatar-03-naufrage/avatar-03-naufrage_face_assis",
+   "rubrique": "personnages",
+   "sujet": "avatar-03-naufrage",
+   "vue": "face",
+   "pose": "assis",
+   "titre": "Avatar, exemple 3 (naufragé), de face, assis",
+   "regarde": "face",
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/avatar/avatar-03-naufrage/avatar-03-naufrage_face_assis_1.svg",
+    "svg/personnages/avatar/avatar-03-naufrage/avatar-03-naufrage_face_assis_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    700,
+    1100
+   ],
    "parcours": "tuto-1",
    "statut": "ok"
   },
@@ -1499,6 +1899,33 @@
    "statut": "ok"
   },
   {
+   "id": "personnages/avatar/avatar-03/avatar-03_avant_assis",
+   "rubrique": "personnages",
+   "sujet": "avatar-03",
+   "vue": "avant",
+   "pose": "assis",
+   "titre": "Avatar, exemple 3, trois quarts avant, assis",
+   "regarde": "bas-droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/avatar/avatar-03/avatar-03_avant_assis_1.svg",
+    "svg/personnages/avatar/avatar-03/avatar-03_avant_assis_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    700,
+    1100
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
    "id": "personnages/avatar/avatar-03/avatar-03_avant_marche",
    "rubrique": "personnages",
    "sujet": "avatar-03",
@@ -1552,6 +1979,33 @@
    "statut": "ok"
   },
   {
+   "id": "personnages/avatar/avatar-03/avatar-03_dos_assis",
+   "rubrique": "personnages",
+   "sujet": "avatar-03",
+   "vue": "dos",
+   "pose": "assis",
+   "titre": "Avatar, exemple 3, trois quarts dos, assis",
+   "regarde": "haut-droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/avatar/avatar-03/avatar-03_dos_assis_1.svg",
+    "svg/personnages/avatar/avatar-03/avatar-03_dos_assis_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    700,
+    1100
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
    "id": "personnages/avatar/avatar-03/avatar-03_dos_marche",
    "rubrique": "personnages",
    "sujet": "avatar-03",
@@ -1574,6 +2028,32 @@
     64
    ],
    "ms_par_image": 170,
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "personnages/avatar/avatar-03/avatar-03_face_assis",
+   "rubrique": "personnages",
+   "sujet": "avatar-03",
+   "vue": "face",
+   "pose": "assis",
+   "titre": "Avatar, exemple 3, de face, assis",
+   "regarde": "face",
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/avatar/avatar-03/avatar-03_face_assis_1.svg",
+    "svg/personnages/avatar/avatar-03/avatar-03_face_assis_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    700,
+    1100
+   ],
    "parcours": "tuto-1",
    "statut": "ok"
   },
@@ -1676,6 +2156,33 @@
    "statut": "ok"
   },
   {
+   "id": "personnages/avatar/avatar-04-naufrage/avatar-04-naufrage_avant_assis",
+   "rubrique": "personnages",
+   "sujet": "avatar-04-naufrage",
+   "vue": "avant",
+   "pose": "assis",
+   "titre": "Avatar, exemple 4 (naufragé), trois quarts avant, assis",
+   "regarde": "bas-droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/avatar/avatar-04-naufrage/avatar-04-naufrage_avant_assis_1.svg",
+    "svg/personnages/avatar/avatar-04-naufrage/avatar-04-naufrage_avant_assis_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    700,
+    1100
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
    "id": "personnages/avatar/avatar-04-naufrage/avatar-04-naufrage_avant_marche",
    "rubrique": "personnages",
    "sujet": "avatar-04-naufrage",
@@ -1729,6 +2236,33 @@
    "statut": "ok"
   },
   {
+   "id": "personnages/avatar/avatar-04-naufrage/avatar-04-naufrage_dos_assis",
+   "rubrique": "personnages",
+   "sujet": "avatar-04-naufrage",
+   "vue": "dos",
+   "pose": "assis",
+   "titre": "Avatar, exemple 4 (naufragé), trois quarts dos, assis",
+   "regarde": "haut-droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/avatar/avatar-04-naufrage/avatar-04-naufrage_dos_assis_1.svg",
+    "svg/personnages/avatar/avatar-04-naufrage/avatar-04-naufrage_dos_assis_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    700,
+    1100
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
    "id": "personnages/avatar/avatar-04-naufrage/avatar-04-naufrage_dos_marche",
    "rubrique": "personnages",
    "sujet": "avatar-04-naufrage",
@@ -1751,6 +2285,32 @@
     64
    ],
    "ms_par_image": 170,
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "personnages/avatar/avatar-04-naufrage/avatar-04-naufrage_face_assis",
+   "rubrique": "personnages",
+   "sujet": "avatar-04-naufrage",
+   "vue": "face",
+   "pose": "assis",
+   "titre": "Avatar, exemple 4 (naufragé), de face, assis",
+   "regarde": "face",
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/avatar/avatar-04-naufrage/avatar-04-naufrage_face_assis_1.svg",
+    "svg/personnages/avatar/avatar-04-naufrage/avatar-04-naufrage_face_assis_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    700,
+    1100
+   ],
    "parcours": "tuto-1",
    "statut": "ok"
   },
@@ -1853,6 +2413,33 @@
    "statut": "ok"
   },
   {
+   "id": "personnages/avatar/avatar-04/avatar-04_avant_assis",
+   "rubrique": "personnages",
+   "sujet": "avatar-04",
+   "vue": "avant",
+   "pose": "assis",
+   "titre": "Avatar, exemple 4, trois quarts avant, assis",
+   "regarde": "bas-droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/avatar/avatar-04/avatar-04_avant_assis_1.svg",
+    "svg/personnages/avatar/avatar-04/avatar-04_avant_assis_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    700,
+    1100
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
    "id": "personnages/avatar/avatar-04/avatar-04_avant_marche",
    "rubrique": "personnages",
    "sujet": "avatar-04",
@@ -1906,6 +2493,33 @@
    "statut": "ok"
   },
   {
+   "id": "personnages/avatar/avatar-04/avatar-04_dos_assis",
+   "rubrique": "personnages",
+   "sujet": "avatar-04",
+   "vue": "dos",
+   "pose": "assis",
+   "titre": "Avatar, exemple 4, trois quarts dos, assis",
+   "regarde": "haut-droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/avatar/avatar-04/avatar-04_dos_assis_1.svg",
+    "svg/personnages/avatar/avatar-04/avatar-04_dos_assis_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    700,
+    1100
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
    "id": "personnages/avatar/avatar-04/avatar-04_dos_marche",
    "rubrique": "personnages",
    "sujet": "avatar-04",
@@ -1928,6 +2542,32 @@
     64
    ],
    "ms_par_image": 170,
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "personnages/avatar/avatar-04/avatar-04_face_assis",
+   "rubrique": "personnages",
+   "sujet": "avatar-04",
+   "vue": "face",
+   "pose": "assis",
+   "titre": "Avatar, exemple 4, de face, assis",
+   "regarde": "face",
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/avatar/avatar-04/avatar-04_face_assis_1.svg",
+    "svg/personnages/avatar/avatar-04/avatar-04_face_assis_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    700,
+    1100
+   ],
    "parcours": "tuto-1",
    "statut": "ok"
   },
@@ -2030,6 +2670,33 @@
    "statut": "ok"
   },
   {
+   "id": "personnages/avatar/avatar-05-naufrage/avatar-05-naufrage_avant_assis",
+   "rubrique": "personnages",
+   "sujet": "avatar-05-naufrage",
+   "vue": "avant",
+   "pose": "assis",
+   "titre": "Avatar, exemple 5 (naufragé), trois quarts avant, assis",
+   "regarde": "bas-droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/avatar/avatar-05-naufrage/avatar-05-naufrage_avant_assis_1.svg",
+    "svg/personnages/avatar/avatar-05-naufrage/avatar-05-naufrage_avant_assis_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    700,
+    1100
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
    "id": "personnages/avatar/avatar-05-naufrage/avatar-05-naufrage_avant_marche",
    "rubrique": "personnages",
    "sujet": "avatar-05-naufrage",
@@ -2083,6 +2750,33 @@
    "statut": "ok"
   },
   {
+   "id": "personnages/avatar/avatar-05-naufrage/avatar-05-naufrage_dos_assis",
+   "rubrique": "personnages",
+   "sujet": "avatar-05-naufrage",
+   "vue": "dos",
+   "pose": "assis",
+   "titre": "Avatar, exemple 5 (naufragé), trois quarts dos, assis",
+   "regarde": "haut-droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/avatar/avatar-05-naufrage/avatar-05-naufrage_dos_assis_1.svg",
+    "svg/personnages/avatar/avatar-05-naufrage/avatar-05-naufrage_dos_assis_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    700,
+    1100
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
    "id": "personnages/avatar/avatar-05-naufrage/avatar-05-naufrage_dos_marche",
    "rubrique": "personnages",
    "sujet": "avatar-05-naufrage",
@@ -2105,6 +2799,32 @@
     64
    ],
    "ms_par_image": 170,
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "personnages/avatar/avatar-05-naufrage/avatar-05-naufrage_face_assis",
+   "rubrique": "personnages",
+   "sujet": "avatar-05-naufrage",
+   "vue": "face",
+   "pose": "assis",
+   "titre": "Avatar, exemple 5 (naufragé), de face, assis",
+   "regarde": "face",
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/avatar/avatar-05-naufrage/avatar-05-naufrage_face_assis_1.svg",
+    "svg/personnages/avatar/avatar-05-naufrage/avatar-05-naufrage_face_assis_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    700,
+    1100
+   ],
    "parcours": "tuto-1",
    "statut": "ok"
   },
@@ -2207,6 +2927,33 @@
    "statut": "ok"
   },
   {
+   "id": "personnages/avatar/avatar-05/avatar-05_avant_assis",
+   "rubrique": "personnages",
+   "sujet": "avatar-05",
+   "vue": "avant",
+   "pose": "assis",
+   "titre": "Avatar, exemple 5, trois quarts avant, assis",
+   "regarde": "bas-droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/avatar/avatar-05/avatar-05_avant_assis_1.svg",
+    "svg/personnages/avatar/avatar-05/avatar-05_avant_assis_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    700,
+    1100
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
    "id": "personnages/avatar/avatar-05/avatar-05_avant_marche",
    "rubrique": "personnages",
    "sujet": "avatar-05",
@@ -2260,6 +3007,33 @@
    "statut": "ok"
   },
   {
+   "id": "personnages/avatar/avatar-05/avatar-05_dos_assis",
+   "rubrique": "personnages",
+   "sujet": "avatar-05",
+   "vue": "dos",
+   "pose": "assis",
+   "titre": "Avatar, exemple 5, trois quarts dos, assis",
+   "regarde": "haut-droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/avatar/avatar-05/avatar-05_dos_assis_1.svg",
+    "svg/personnages/avatar/avatar-05/avatar-05_dos_assis_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    700,
+    1100
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
    "id": "personnages/avatar/avatar-05/avatar-05_dos_marche",
    "rubrique": "personnages",
    "sujet": "avatar-05",
@@ -2282,6 +3056,32 @@
     64
    ],
    "ms_par_image": 170,
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "personnages/avatar/avatar-05/avatar-05_face_assis",
+   "rubrique": "personnages",
+   "sujet": "avatar-05",
+   "vue": "face",
+   "pose": "assis",
+   "titre": "Avatar, exemple 5, de face, assis",
+   "regarde": "face",
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/avatar/avatar-05/avatar-05_face_assis_1.svg",
+    "svg/personnages/avatar/avatar-05/avatar-05_face_assis_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    700,
+    1100
+   ],
    "parcours": "tuto-1",
    "statut": "ok"
   },
@@ -2384,6 +3184,33 @@
    "statut": "ok"
   },
   {
+   "id": "personnages/avatar/avatar-06-naufrage/avatar-06-naufrage_avant_assis",
+   "rubrique": "personnages",
+   "sujet": "avatar-06-naufrage",
+   "vue": "avant",
+   "pose": "assis",
+   "titre": "Avatar, exemple 6 (naufragé), trois quarts avant, assis",
+   "regarde": "bas-droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/avatar/avatar-06-naufrage/avatar-06-naufrage_avant_assis_1.svg",
+    "svg/personnages/avatar/avatar-06-naufrage/avatar-06-naufrage_avant_assis_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    700,
+    1100
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
    "id": "personnages/avatar/avatar-06-naufrage/avatar-06-naufrage_avant_marche",
    "rubrique": "personnages",
    "sujet": "avatar-06-naufrage",
@@ -2437,6 +3264,33 @@
    "statut": "ok"
   },
   {
+   "id": "personnages/avatar/avatar-06-naufrage/avatar-06-naufrage_dos_assis",
+   "rubrique": "personnages",
+   "sujet": "avatar-06-naufrage",
+   "vue": "dos",
+   "pose": "assis",
+   "titre": "Avatar, exemple 6 (naufragé), trois quarts dos, assis",
+   "regarde": "haut-droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/avatar/avatar-06-naufrage/avatar-06-naufrage_dos_assis_1.svg",
+    "svg/personnages/avatar/avatar-06-naufrage/avatar-06-naufrage_dos_assis_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    700,
+    1100
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
    "id": "personnages/avatar/avatar-06-naufrage/avatar-06-naufrage_dos_marche",
    "rubrique": "personnages",
    "sujet": "avatar-06-naufrage",
@@ -2459,6 +3313,32 @@
     64
    ],
    "ms_par_image": 170,
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "personnages/avatar/avatar-06-naufrage/avatar-06-naufrage_face_assis",
+   "rubrique": "personnages",
+   "sujet": "avatar-06-naufrage",
+   "vue": "face",
+   "pose": "assis",
+   "titre": "Avatar, exemple 6 (naufragé), de face, assis",
+   "regarde": "face",
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/avatar/avatar-06-naufrage/avatar-06-naufrage_face_assis_1.svg",
+    "svg/personnages/avatar/avatar-06-naufrage/avatar-06-naufrage_face_assis_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    700,
+    1100
+   ],
    "parcours": "tuto-1",
    "statut": "ok"
   },
@@ -2561,6 +3441,33 @@
    "statut": "ok"
   },
   {
+   "id": "personnages/avatar/avatar-06/avatar-06_avant_assis",
+   "rubrique": "personnages",
+   "sujet": "avatar-06",
+   "vue": "avant",
+   "pose": "assis",
+   "titre": "Avatar, exemple 6, trois quarts avant, assis",
+   "regarde": "bas-droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/avatar/avatar-06/avatar-06_avant_assis_1.svg",
+    "svg/personnages/avatar/avatar-06/avatar-06_avant_assis_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    700,
+    1100
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
    "id": "personnages/avatar/avatar-06/avatar-06_avant_marche",
    "rubrique": "personnages",
    "sujet": "avatar-06",
@@ -2614,6 +3521,33 @@
    "statut": "ok"
   },
   {
+   "id": "personnages/avatar/avatar-06/avatar-06_dos_assis",
+   "rubrique": "personnages",
+   "sujet": "avatar-06",
+   "vue": "dos",
+   "pose": "assis",
+   "titre": "Avatar, exemple 6, trois quarts dos, assis",
+   "regarde": "haut-droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/avatar/avatar-06/avatar-06_dos_assis_1.svg",
+    "svg/personnages/avatar/avatar-06/avatar-06_dos_assis_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    700,
+    1100
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
    "id": "personnages/avatar/avatar-06/avatar-06_dos_marche",
    "rubrique": "personnages",
    "sujet": "avatar-06",
@@ -2636,6 +3570,32 @@
     64
    ],
    "ms_par_image": 170,
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "personnages/avatar/avatar-06/avatar-06_face_assis",
+   "rubrique": "personnages",
+   "sujet": "avatar-06",
+   "vue": "face",
+   "pose": "assis",
+   "titre": "Avatar, exemple 6, de face, assis",
+   "regarde": "face",
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/avatar/avatar-06/avatar-06_face_assis_1.svg",
+    "svg/personnages/avatar/avatar-06/avatar-06_face_assis_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    700,
+    1100
+   ],
    "parcours": "tuto-1",
    "statut": "ok"
   },
@@ -2738,6 +3698,33 @@
    "statut": "ok"
   },
   {
+   "id": "personnages/avatar/avatar-07-naufrage/avatar-07-naufrage_avant_assis",
+   "rubrique": "personnages",
+   "sujet": "avatar-07-naufrage",
+   "vue": "avant",
+   "pose": "assis",
+   "titre": "Avatar, exemple 7 (naufragé), trois quarts avant, assis",
+   "regarde": "bas-droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/avatar/avatar-07-naufrage/avatar-07-naufrage_avant_assis_1.svg",
+    "svg/personnages/avatar/avatar-07-naufrage/avatar-07-naufrage_avant_assis_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    700,
+    1100
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
    "id": "personnages/avatar/avatar-07-naufrage/avatar-07-naufrage_avant_marche",
    "rubrique": "personnages",
    "sujet": "avatar-07-naufrage",
@@ -2791,6 +3778,33 @@
    "statut": "ok"
   },
   {
+   "id": "personnages/avatar/avatar-07-naufrage/avatar-07-naufrage_dos_assis",
+   "rubrique": "personnages",
+   "sujet": "avatar-07-naufrage",
+   "vue": "dos",
+   "pose": "assis",
+   "titre": "Avatar, exemple 7 (naufragé), trois quarts dos, assis",
+   "regarde": "haut-droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/avatar/avatar-07-naufrage/avatar-07-naufrage_dos_assis_1.svg",
+    "svg/personnages/avatar/avatar-07-naufrage/avatar-07-naufrage_dos_assis_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    700,
+    1100
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
    "id": "personnages/avatar/avatar-07-naufrage/avatar-07-naufrage_dos_marche",
    "rubrique": "personnages",
    "sujet": "avatar-07-naufrage",
@@ -2813,6 +3827,32 @@
     64
    ],
    "ms_par_image": 170,
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "personnages/avatar/avatar-07-naufrage/avatar-07-naufrage_face_assis",
+   "rubrique": "personnages",
+   "sujet": "avatar-07-naufrage",
+   "vue": "face",
+   "pose": "assis",
+   "titre": "Avatar, exemple 7 (naufragé), de face, assis",
+   "regarde": "face",
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/avatar/avatar-07-naufrage/avatar-07-naufrage_face_assis_1.svg",
+    "svg/personnages/avatar/avatar-07-naufrage/avatar-07-naufrage_face_assis_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    700,
+    1100
+   ],
    "parcours": "tuto-1",
    "statut": "ok"
   },
@@ -2915,6 +3955,33 @@
    "statut": "ok"
   },
   {
+   "id": "personnages/avatar/avatar-07/avatar-07_avant_assis",
+   "rubrique": "personnages",
+   "sujet": "avatar-07",
+   "vue": "avant",
+   "pose": "assis",
+   "titre": "Avatar, exemple 7, trois quarts avant, assis",
+   "regarde": "bas-droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/avatar/avatar-07/avatar-07_avant_assis_1.svg",
+    "svg/personnages/avatar/avatar-07/avatar-07_avant_assis_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    700,
+    1100
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
    "id": "personnages/avatar/avatar-07/avatar-07_avant_marche",
    "rubrique": "personnages",
    "sujet": "avatar-07",
@@ -2968,6 +4035,33 @@
    "statut": "ok"
   },
   {
+   "id": "personnages/avatar/avatar-07/avatar-07_dos_assis",
+   "rubrique": "personnages",
+   "sujet": "avatar-07",
+   "vue": "dos",
+   "pose": "assis",
+   "titre": "Avatar, exemple 7, trois quarts dos, assis",
+   "regarde": "haut-droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/avatar/avatar-07/avatar-07_dos_assis_1.svg",
+    "svg/personnages/avatar/avatar-07/avatar-07_dos_assis_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    700,
+    1100
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
    "id": "personnages/avatar/avatar-07/avatar-07_dos_marche",
    "rubrique": "personnages",
    "sujet": "avatar-07",
@@ -2990,6 +4084,32 @@
     64
    ],
    "ms_par_image": 170,
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "personnages/avatar/avatar-07/avatar-07_face_assis",
+   "rubrique": "personnages",
+   "sujet": "avatar-07",
+   "vue": "face",
+   "pose": "assis",
+   "titre": "Avatar, exemple 7, de face, assis",
+   "regarde": "face",
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/avatar/avatar-07/avatar-07_face_assis_1.svg",
+    "svg/personnages/avatar/avatar-07/avatar-07_face_assis_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    700,
+    1100
+   ],
    "parcours": "tuto-1",
    "statut": "ok"
   },
@@ -3092,6 +4212,33 @@
    "statut": "ok"
   },
   {
+   "id": "personnages/avatar/avatar-08-naufrage/avatar-08-naufrage_avant_assis",
+   "rubrique": "personnages",
+   "sujet": "avatar-08-naufrage",
+   "vue": "avant",
+   "pose": "assis",
+   "titre": "Avatar, exemple 8 (naufragé), trois quarts avant, assis",
+   "regarde": "bas-droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/avatar/avatar-08-naufrage/avatar-08-naufrage_avant_assis_1.svg",
+    "svg/personnages/avatar/avatar-08-naufrage/avatar-08-naufrage_avant_assis_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    700,
+    1100
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
    "id": "personnages/avatar/avatar-08-naufrage/avatar-08-naufrage_avant_marche",
    "rubrique": "personnages",
    "sujet": "avatar-08-naufrage",
@@ -3145,6 +4292,33 @@
    "statut": "ok"
   },
   {
+   "id": "personnages/avatar/avatar-08-naufrage/avatar-08-naufrage_dos_assis",
+   "rubrique": "personnages",
+   "sujet": "avatar-08-naufrage",
+   "vue": "dos",
+   "pose": "assis",
+   "titre": "Avatar, exemple 8 (naufragé), trois quarts dos, assis",
+   "regarde": "haut-droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/avatar/avatar-08-naufrage/avatar-08-naufrage_dos_assis_1.svg",
+    "svg/personnages/avatar/avatar-08-naufrage/avatar-08-naufrage_dos_assis_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    700,
+    1100
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
    "id": "personnages/avatar/avatar-08-naufrage/avatar-08-naufrage_dos_marche",
    "rubrique": "personnages",
    "sujet": "avatar-08-naufrage",
@@ -3167,6 +4341,32 @@
     64
    ],
    "ms_par_image": 170,
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "personnages/avatar/avatar-08-naufrage/avatar-08-naufrage_face_assis",
+   "rubrique": "personnages",
+   "sujet": "avatar-08-naufrage",
+   "vue": "face",
+   "pose": "assis",
+   "titre": "Avatar, exemple 8 (naufragé), de face, assis",
+   "regarde": "face",
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/avatar/avatar-08-naufrage/avatar-08-naufrage_face_assis_1.svg",
+    "svg/personnages/avatar/avatar-08-naufrage/avatar-08-naufrage_face_assis_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    700,
+    1100
+   ],
    "parcours": "tuto-1",
    "statut": "ok"
   },
@@ -3269,6 +4469,33 @@
    "statut": "ok"
   },
   {
+   "id": "personnages/avatar/avatar-08/avatar-08_avant_assis",
+   "rubrique": "personnages",
+   "sujet": "avatar-08",
+   "vue": "avant",
+   "pose": "assis",
+   "titre": "Avatar, exemple 8, trois quarts avant, assis",
+   "regarde": "bas-droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/avatar/avatar-08/avatar-08_avant_assis_1.svg",
+    "svg/personnages/avatar/avatar-08/avatar-08_avant_assis_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    700,
+    1100
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
    "id": "personnages/avatar/avatar-08/avatar-08_avant_marche",
    "rubrique": "personnages",
    "sujet": "avatar-08",
@@ -3322,6 +4549,33 @@
    "statut": "ok"
   },
   {
+   "id": "personnages/avatar/avatar-08/avatar-08_dos_assis",
+   "rubrique": "personnages",
+   "sujet": "avatar-08",
+   "vue": "dos",
+   "pose": "assis",
+   "titre": "Avatar, exemple 8, trois quarts dos, assis",
+   "regarde": "haut-droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/avatar/avatar-08/avatar-08_dos_assis_1.svg",
+    "svg/personnages/avatar/avatar-08/avatar-08_dos_assis_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    700,
+    1100
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
    "id": "personnages/avatar/avatar-08/avatar-08_dos_marche",
    "rubrique": "personnages",
    "sujet": "avatar-08",
@@ -3344,6 +4598,32 @@
     64
    ],
    "ms_par_image": 170,
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "personnages/avatar/avatar-08/avatar-08_face_assis",
+   "rubrique": "personnages",
+   "sujet": "avatar-08",
+   "vue": "face",
+   "pose": "assis",
+   "titre": "Avatar, exemple 8, de face, assis",
+   "regarde": "face",
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/avatar/avatar-08/avatar-08_face_assis_1.svg",
+    "svg/personnages/avatar/avatar-08/avatar-08_face_assis_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    700,
+    1100
+   ],
    "parcours": "tuto-1",
    "statut": "ok"
   },
@@ -3446,6 +4726,33 @@
    "statut": "ok"
   },
   {
+   "id": "personnages/avatar/avatar-09-naufrage/avatar-09-naufrage_avant_assis",
+   "rubrique": "personnages",
+   "sujet": "avatar-09-naufrage",
+   "vue": "avant",
+   "pose": "assis",
+   "titre": "Avatar, exemple 9 (naufragé), trois quarts avant, assis",
+   "regarde": "bas-droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/avatar/avatar-09-naufrage/avatar-09-naufrage_avant_assis_1.svg",
+    "svg/personnages/avatar/avatar-09-naufrage/avatar-09-naufrage_avant_assis_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    700,
+    1100
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
    "id": "personnages/avatar/avatar-09-naufrage/avatar-09-naufrage_avant_marche",
    "rubrique": "personnages",
    "sujet": "avatar-09-naufrage",
@@ -3499,6 +4806,33 @@
    "statut": "ok"
   },
   {
+   "id": "personnages/avatar/avatar-09-naufrage/avatar-09-naufrage_dos_assis",
+   "rubrique": "personnages",
+   "sujet": "avatar-09-naufrage",
+   "vue": "dos",
+   "pose": "assis",
+   "titre": "Avatar, exemple 9 (naufragé), trois quarts dos, assis",
+   "regarde": "haut-droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/avatar/avatar-09-naufrage/avatar-09-naufrage_dos_assis_1.svg",
+    "svg/personnages/avatar/avatar-09-naufrage/avatar-09-naufrage_dos_assis_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    700,
+    1100
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
    "id": "personnages/avatar/avatar-09-naufrage/avatar-09-naufrage_dos_marche",
    "rubrique": "personnages",
    "sujet": "avatar-09-naufrage",
@@ -3521,6 +4855,32 @@
     64
    ],
    "ms_par_image": 170,
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "personnages/avatar/avatar-09-naufrage/avatar-09-naufrage_face_assis",
+   "rubrique": "personnages",
+   "sujet": "avatar-09-naufrage",
+   "vue": "face",
+   "pose": "assis",
+   "titre": "Avatar, exemple 9 (naufragé), de face, assis",
+   "regarde": "face",
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/avatar/avatar-09-naufrage/avatar-09-naufrage_face_assis_1.svg",
+    "svg/personnages/avatar/avatar-09-naufrage/avatar-09-naufrage_face_assis_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    700,
+    1100
+   ],
    "parcours": "tuto-1",
    "statut": "ok"
   },
@@ -3623,6 +4983,33 @@
    "statut": "ok"
   },
   {
+   "id": "personnages/avatar/avatar-09/avatar-09_avant_assis",
+   "rubrique": "personnages",
+   "sujet": "avatar-09",
+   "vue": "avant",
+   "pose": "assis",
+   "titre": "Avatar, exemple 9, trois quarts avant, assis",
+   "regarde": "bas-droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/avatar/avatar-09/avatar-09_avant_assis_1.svg",
+    "svg/personnages/avatar/avatar-09/avatar-09_avant_assis_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    700,
+    1100
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
    "id": "personnages/avatar/avatar-09/avatar-09_avant_marche",
    "rubrique": "personnages",
    "sujet": "avatar-09",
@@ -3676,6 +5063,33 @@
    "statut": "ok"
   },
   {
+   "id": "personnages/avatar/avatar-09/avatar-09_dos_assis",
+   "rubrique": "personnages",
+   "sujet": "avatar-09",
+   "vue": "dos",
+   "pose": "assis",
+   "titre": "Avatar, exemple 9, trois quarts dos, assis",
+   "regarde": "haut-droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/avatar/avatar-09/avatar-09_dos_assis_1.svg",
+    "svg/personnages/avatar/avatar-09/avatar-09_dos_assis_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    700,
+    1100
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
    "id": "personnages/avatar/avatar-09/avatar-09_dos_marche",
    "rubrique": "personnages",
    "sujet": "avatar-09",
@@ -3698,6 +5112,32 @@
     64
    ],
    "ms_par_image": 170,
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "personnages/avatar/avatar-09/avatar-09_face_assis",
+   "rubrique": "personnages",
+   "sujet": "avatar-09",
+   "vue": "face",
+   "pose": "assis",
+   "titre": "Avatar, exemple 9, de face, assis",
+   "regarde": "face",
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/avatar/avatar-09/avatar-09_face_assis_1.svg",
+    "svg/personnages/avatar/avatar-09/avatar-09_face_assis_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    700,
+    1100
+   ],
    "parcours": "tuto-1",
    "statut": "ok"
   },
@@ -3800,6 +5240,33 @@
    "statut": "ok"
   },
   {
+   "id": "personnages/avatar/avatar-10-naufrage/avatar-10-naufrage_avant_assis",
+   "rubrique": "personnages",
+   "sujet": "avatar-10-naufrage",
+   "vue": "avant",
+   "pose": "assis",
+   "titre": "Avatar, exemple 10 (naufragé), trois quarts avant, assis",
+   "regarde": "bas-droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/avatar/avatar-10-naufrage/avatar-10-naufrage_avant_assis_1.svg",
+    "svg/personnages/avatar/avatar-10-naufrage/avatar-10-naufrage_avant_assis_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    700,
+    1100
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
    "id": "personnages/avatar/avatar-10-naufrage/avatar-10-naufrage_avant_marche",
    "rubrique": "personnages",
    "sujet": "avatar-10-naufrage",
@@ -3853,6 +5320,33 @@
    "statut": "ok"
   },
   {
+   "id": "personnages/avatar/avatar-10-naufrage/avatar-10-naufrage_dos_assis",
+   "rubrique": "personnages",
+   "sujet": "avatar-10-naufrage",
+   "vue": "dos",
+   "pose": "assis",
+   "titre": "Avatar, exemple 10 (naufragé), trois quarts dos, assis",
+   "regarde": "haut-droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/avatar/avatar-10-naufrage/avatar-10-naufrage_dos_assis_1.svg",
+    "svg/personnages/avatar/avatar-10-naufrage/avatar-10-naufrage_dos_assis_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    700,
+    1100
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
    "id": "personnages/avatar/avatar-10-naufrage/avatar-10-naufrage_dos_marche",
    "rubrique": "personnages",
    "sujet": "avatar-10-naufrage",
@@ -3875,6 +5369,32 @@
     64
    ],
    "ms_par_image": 170,
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "personnages/avatar/avatar-10-naufrage/avatar-10-naufrage_face_assis",
+   "rubrique": "personnages",
+   "sujet": "avatar-10-naufrage",
+   "vue": "face",
+   "pose": "assis",
+   "titre": "Avatar, exemple 10 (naufragé), de face, assis",
+   "regarde": "face",
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/avatar/avatar-10-naufrage/avatar-10-naufrage_face_assis_1.svg",
+    "svg/personnages/avatar/avatar-10-naufrage/avatar-10-naufrage_face_assis_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    700,
+    1100
+   ],
    "parcours": "tuto-1",
    "statut": "ok"
   },
@@ -3977,6 +5497,33 @@
    "statut": "ok"
   },
   {
+   "id": "personnages/avatar/avatar-10/avatar-10_avant_assis",
+   "rubrique": "personnages",
+   "sujet": "avatar-10",
+   "vue": "avant",
+   "pose": "assis",
+   "titre": "Avatar, exemple 10, trois quarts avant, assis",
+   "regarde": "bas-droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/avatar/avatar-10/avatar-10_avant_assis_1.svg",
+    "svg/personnages/avatar/avatar-10/avatar-10_avant_assis_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    700,
+    1100
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
    "id": "personnages/avatar/avatar-10/avatar-10_avant_marche",
    "rubrique": "personnages",
    "sujet": "avatar-10",
@@ -4030,6 +5577,33 @@
    "statut": "ok"
   },
   {
+   "id": "personnages/avatar/avatar-10/avatar-10_dos_assis",
+   "rubrique": "personnages",
+   "sujet": "avatar-10",
+   "vue": "dos",
+   "pose": "assis",
+   "titre": "Avatar, exemple 10, trois quarts dos, assis",
+   "regarde": "haut-droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/avatar/avatar-10/avatar-10_dos_assis_1.svg",
+    "svg/personnages/avatar/avatar-10/avatar-10_dos_assis_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    700,
+    1100
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
    "id": "personnages/avatar/avatar-10/avatar-10_dos_marche",
    "rubrique": "personnages",
    "sujet": "avatar-10",
@@ -4052,6 +5626,32 @@
     64
    ],
    "ms_par_image": 170,
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "personnages/avatar/avatar-10/avatar-10_face_assis",
+   "rubrique": "personnages",
+   "sujet": "avatar-10",
+   "vue": "face",
+   "pose": "assis",
+   "titre": "Avatar, exemple 10, de face, assis",
+   "regarde": "face",
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/avatar/avatar-10/avatar-10_face_assis_1.svg",
+    "svg/personnages/avatar/avatar-10/avatar-10_face_assis_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    700,
+    1100
+   ],
    "parcours": "tuto-1",
    "statut": "ok"
   },
@@ -4154,6 +5754,33 @@
    "statut": "ok"
   },
   {
+   "id": "personnages/avatar/avatar-11-naufrage/avatar-11-naufrage_avant_assis",
+   "rubrique": "personnages",
+   "sujet": "avatar-11-naufrage",
+   "vue": "avant",
+   "pose": "assis",
+   "titre": "Avatar, exemple 11 (naufragé), trois quarts avant, assis",
+   "regarde": "bas-droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/avatar/avatar-11-naufrage/avatar-11-naufrage_avant_assis_1.svg",
+    "svg/personnages/avatar/avatar-11-naufrage/avatar-11-naufrage_avant_assis_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    700,
+    1100
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
    "id": "personnages/avatar/avatar-11-naufrage/avatar-11-naufrage_avant_marche",
    "rubrique": "personnages",
    "sujet": "avatar-11-naufrage",
@@ -4207,6 +5834,33 @@
    "statut": "ok"
   },
   {
+   "id": "personnages/avatar/avatar-11-naufrage/avatar-11-naufrage_dos_assis",
+   "rubrique": "personnages",
+   "sujet": "avatar-11-naufrage",
+   "vue": "dos",
+   "pose": "assis",
+   "titre": "Avatar, exemple 11 (naufragé), trois quarts dos, assis",
+   "regarde": "haut-droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/avatar/avatar-11-naufrage/avatar-11-naufrage_dos_assis_1.svg",
+    "svg/personnages/avatar/avatar-11-naufrage/avatar-11-naufrage_dos_assis_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    700,
+    1100
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
    "id": "personnages/avatar/avatar-11-naufrage/avatar-11-naufrage_dos_marche",
    "rubrique": "personnages",
    "sujet": "avatar-11-naufrage",
@@ -4229,6 +5883,32 @@
     64
    ],
    "ms_par_image": 170,
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "personnages/avatar/avatar-11-naufrage/avatar-11-naufrage_face_assis",
+   "rubrique": "personnages",
+   "sujet": "avatar-11-naufrage",
+   "vue": "face",
+   "pose": "assis",
+   "titre": "Avatar, exemple 11 (naufragé), de face, assis",
+   "regarde": "face",
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/avatar/avatar-11-naufrage/avatar-11-naufrage_face_assis_1.svg",
+    "svg/personnages/avatar/avatar-11-naufrage/avatar-11-naufrage_face_assis_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    700,
+    1100
+   ],
    "parcours": "tuto-1",
    "statut": "ok"
   },
@@ -4331,6 +6011,33 @@
    "statut": "ok"
   },
   {
+   "id": "personnages/avatar/avatar-11/avatar-11_avant_assis",
+   "rubrique": "personnages",
+   "sujet": "avatar-11",
+   "vue": "avant",
+   "pose": "assis",
+   "titre": "Avatar, exemple 11, trois quarts avant, assis",
+   "regarde": "bas-droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/avatar/avatar-11/avatar-11_avant_assis_1.svg",
+    "svg/personnages/avatar/avatar-11/avatar-11_avant_assis_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    700,
+    1100
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
    "id": "personnages/avatar/avatar-11/avatar-11_avant_marche",
    "rubrique": "personnages",
    "sujet": "avatar-11",
@@ -4384,6 +6091,33 @@
    "statut": "ok"
   },
   {
+   "id": "personnages/avatar/avatar-11/avatar-11_dos_assis",
+   "rubrique": "personnages",
+   "sujet": "avatar-11",
+   "vue": "dos",
+   "pose": "assis",
+   "titre": "Avatar, exemple 11, trois quarts dos, assis",
+   "regarde": "haut-droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/avatar/avatar-11/avatar-11_dos_assis_1.svg",
+    "svg/personnages/avatar/avatar-11/avatar-11_dos_assis_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    700,
+    1100
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
    "id": "personnages/avatar/avatar-11/avatar-11_dos_marche",
    "rubrique": "personnages",
    "sujet": "avatar-11",
@@ -4406,6 +6140,32 @@
     64
    ],
    "ms_par_image": 170,
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "personnages/avatar/avatar-11/avatar-11_face_assis",
+   "rubrique": "personnages",
+   "sujet": "avatar-11",
+   "vue": "face",
+   "pose": "assis",
+   "titre": "Avatar, exemple 11, de face, assis",
+   "regarde": "face",
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/avatar/avatar-11/avatar-11_face_assis_1.svg",
+    "svg/personnages/avatar/avatar-11/avatar-11_face_assis_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    700,
+    1100
+   ],
    "parcours": "tuto-1",
    "statut": "ok"
   },
@@ -4508,6 +6268,33 @@
    "statut": "ok"
   },
   {
+   "id": "personnages/avatar/avatar-12-naufrage/avatar-12-naufrage_avant_assis",
+   "rubrique": "personnages",
+   "sujet": "avatar-12-naufrage",
+   "vue": "avant",
+   "pose": "assis",
+   "titre": "Avatar, exemple 12 (naufragé), trois quarts avant, assis",
+   "regarde": "bas-droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/avatar/avatar-12-naufrage/avatar-12-naufrage_avant_assis_1.svg",
+    "svg/personnages/avatar/avatar-12-naufrage/avatar-12-naufrage_avant_assis_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    700,
+    1100
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
    "id": "personnages/avatar/avatar-12-naufrage/avatar-12-naufrage_avant_marche",
    "rubrique": "personnages",
    "sujet": "avatar-12-naufrage",
@@ -4561,6 +6348,33 @@
    "statut": "ok"
   },
   {
+   "id": "personnages/avatar/avatar-12-naufrage/avatar-12-naufrage_dos_assis",
+   "rubrique": "personnages",
+   "sujet": "avatar-12-naufrage",
+   "vue": "dos",
+   "pose": "assis",
+   "titre": "Avatar, exemple 12 (naufragé), trois quarts dos, assis",
+   "regarde": "haut-droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/avatar/avatar-12-naufrage/avatar-12-naufrage_dos_assis_1.svg",
+    "svg/personnages/avatar/avatar-12-naufrage/avatar-12-naufrage_dos_assis_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    700,
+    1100
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
    "id": "personnages/avatar/avatar-12-naufrage/avatar-12-naufrage_dos_marche",
    "rubrique": "personnages",
    "sujet": "avatar-12-naufrage",
@@ -4583,6 +6397,32 @@
     64
    ],
    "ms_par_image": 170,
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "personnages/avatar/avatar-12-naufrage/avatar-12-naufrage_face_assis",
+   "rubrique": "personnages",
+   "sujet": "avatar-12-naufrage",
+   "vue": "face",
+   "pose": "assis",
+   "titre": "Avatar, exemple 12 (naufragé), de face, assis",
+   "regarde": "face",
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/avatar/avatar-12-naufrage/avatar-12-naufrage_face_assis_1.svg",
+    "svg/personnages/avatar/avatar-12-naufrage/avatar-12-naufrage_face_assis_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    700,
+    1100
+   ],
    "parcours": "tuto-1",
    "statut": "ok"
   },
@@ -4685,6 +6525,33 @@
    "statut": "ok"
   },
   {
+   "id": "personnages/avatar/avatar-12/avatar-12_avant_assis",
+   "rubrique": "personnages",
+   "sujet": "avatar-12",
+   "vue": "avant",
+   "pose": "assis",
+   "titre": "Avatar, exemple 12, trois quarts avant, assis",
+   "regarde": "bas-droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/avatar/avatar-12/avatar-12_avant_assis_1.svg",
+    "svg/personnages/avatar/avatar-12/avatar-12_avant_assis_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    700,
+    1100
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
    "id": "personnages/avatar/avatar-12/avatar-12_avant_marche",
    "rubrique": "personnages",
    "sujet": "avatar-12",
@@ -4738,6 +6605,33 @@
    "statut": "ok"
   },
   {
+   "id": "personnages/avatar/avatar-12/avatar-12_dos_assis",
+   "rubrique": "personnages",
+   "sujet": "avatar-12",
+   "vue": "dos",
+   "pose": "assis",
+   "titre": "Avatar, exemple 12, trois quarts dos, assis",
+   "regarde": "haut-droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/avatar/avatar-12/avatar-12_dos_assis_1.svg",
+    "svg/personnages/avatar/avatar-12/avatar-12_dos_assis_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    700,
+    1100
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
    "id": "personnages/avatar/avatar-12/avatar-12_dos_marche",
    "rubrique": "personnages",
    "sujet": "avatar-12",
@@ -4760,6 +6654,32 @@
     64
    ],
    "ms_par_image": 170,
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "personnages/avatar/avatar-12/avatar-12_face_assis",
+   "rubrique": "personnages",
+   "sujet": "avatar-12",
+   "vue": "face",
+   "pose": "assis",
+   "titre": "Avatar, exemple 12, de face, assis",
+   "regarde": "face",
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/avatar/avatar-12/avatar-12_face_assis_1.svg",
+    "svg/personnages/avatar/avatar-12/avatar-12_face_assis_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    700,
+    1100
+   ],
    "parcours": "tuto-1",
    "statut": "ok"
   },
@@ -7730,6 +9650,33 @@
    "statut": "ok"
   },
   {
+   "id": "personnages/maitres/cannelle/cannelle_avant_assis",
+   "rubrique": "personnages",
+   "sujet": "cannelle",
+   "vue": "avant",
+   "pose": "assis",
+   "titre": "Cannelle, trois quarts avant, assis",
+   "regarde": "bas-droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/maitres/cannelle/cannelle_avant_assis_1.svg",
+    "svg/personnages/maitres/cannelle/cannelle_avant_assis_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    700,
+    1100
+   ],
+   "parcours": "tuto-2",
+   "statut": "ok"
+  },
+  {
    "id": "personnages/maitres/cannelle/cannelle_avant_lanterne",
    "rubrique": "personnages",
    "sujet": "cannelle",
@@ -8005,6 +9952,33 @@
     64
    ],
    "ms_par_image": 900,
+   "parcours": "tuto-2",
+   "statut": "ok"
+  },
+  {
+   "id": "personnages/maitres/cannelle/cannelle_dos_assis",
+   "rubrique": "personnages",
+   "sujet": "cannelle",
+   "vue": "dos",
+   "pose": "assis",
+   "titre": "Cannelle, trois quarts dos, assis",
+   "regarde": "haut-droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/maitres/cannelle/cannelle_dos_assis_1.svg",
+    "svg/personnages/maitres/cannelle/cannelle_dos_assis_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    700,
+    1100
+   ],
    "parcours": "tuto-2",
    "statut": "ok"
   },
@@ -8341,6 +10315,32 @@
    "statut": "ok"
   },
   {
+   "id": "personnages/maitres/cannelle/cannelle_face_assis",
+   "rubrique": "personnages",
+   "sujet": "cannelle",
+   "vue": "face",
+   "pose": "assis",
+   "titre": "Cannelle, de face, assis",
+   "regarde": "face",
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/maitres/cannelle/cannelle_face_assis_1.svg",
+    "svg/personnages/maitres/cannelle/cannelle_face_assis_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    700,
+    1100
+   ],
+   "parcours": "tuto-2",
+   "statut": "ok"
+  },
+  {
    "id": "personnages/maitres/cannelle/cannelle_face_louche",
    "rubrique": "personnages",
    "sujet": "cannelle",
@@ -8452,6 +10452,33 @@
    "fichiers": [
     "svg/personnages/maitres/cannelle/cannelle_face_travail_1.svg",
     "svg/personnages/maitres/cannelle/cannelle_face_travail_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    700,
+    1100
+   ],
+   "parcours": "tuto-2",
+   "statut": "ok"
+  },
+  {
+   "id": "personnages/naufrages/cannelle/cannelle-naufrage_avant_assis",
+   "rubrique": "personnages",
+   "sujet": "cannelle-naufrage",
+   "vue": "avant",
+   "pose": "assis",
+   "titre": "Cannelle naufragée, trois quarts avant, assis",
+   "regarde": "bas-droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/naufrages/cannelle/cannelle-naufrage_avant_assis_1.svg",
+    "svg/personnages/naufrages/cannelle/cannelle-naufrage_avant_assis_2.svg"
    ],
    "cadre": [
     0,
@@ -8690,6 +10717,33 @@
     64
    ],
    "ms_par_image": 900,
+   "parcours": "tuto-2",
+   "statut": "ok"
+  },
+  {
+   "id": "personnages/naufrages/cannelle/cannelle-naufrage_dos_assis",
+   "rubrique": "personnages",
+   "sujet": "cannelle-naufrage",
+   "vue": "dos",
+   "pose": "assis",
+   "titre": "Cannelle naufragée, trois quarts dos, assis",
+   "regarde": "haut-droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/naufrages/cannelle/cannelle-naufrage_dos_assis_1.svg",
+    "svg/personnages/naufrages/cannelle/cannelle-naufrage_dos_assis_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    700,
+    1100
+   ],
    "parcours": "tuto-2",
    "statut": "ok"
   },
@@ -8974,6 +11028,32 @@
    "statut": "ok"
   },
   {
+   "id": "personnages/naufrages/cannelle/cannelle-naufrage_face_assis",
+   "rubrique": "personnages",
+   "sujet": "cannelle-naufrage",
+   "vue": "face",
+   "pose": "assis",
+   "titre": "Cannelle naufragée, de face, assis",
+   "regarde": "face",
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/naufrages/cannelle/cannelle-naufrage_face_assis_1.svg",
+    "svg/personnages/naufrages/cannelle/cannelle-naufrage_face_assis_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    700,
+    1100
+   ],
+   "parcours": "tuto-2",
+   "statut": "ok"
+  },
+  {
    "id": "personnages/naufrages/cannelle/cannelle-naufrage_face_louche",
    "rubrique": "personnages",
    "sujet": "cannelle-naufrage",
@@ -9085,6 +11165,33 @@
    "fichiers": [
     "svg/personnages/naufrages/cannelle/cannelle-naufrage_face_travail_1.svg",
     "svg/personnages/naufrages/cannelle/cannelle-naufrage_face_travail_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    700,
+    1100
+   ],
+   "parcours": "tuto-2",
+   "statut": "ok"
+  },
+  {
+   "id": "personnages/naufrages/rivet/rivet-naufrage_avant_assis",
+   "rubrique": "personnages",
+   "sujet": "rivet-naufrage",
+   "vue": "avant",
+   "pose": "assis",
+   "titre": "Rivet naufragé, trois quarts avant, assis",
+   "regarde": "bas-droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/naufrages/rivet/rivet-naufrage_avant_assis_1.svg",
+    "svg/personnages/naufrages/rivet/rivet-naufrage_avant_assis_2.svg"
    ],
    "cadre": [
     0,
@@ -9375,6 +11482,33 @@
     64
    ],
    "ms_par_image": 900,
+   "parcours": "tuto-2",
+   "statut": "ok"
+  },
+  {
+   "id": "personnages/naufrages/rivet/rivet-naufrage_dos_assis",
+   "rubrique": "personnages",
+   "sujet": "rivet-naufrage",
+   "vue": "dos",
+   "pose": "assis",
+   "titre": "Rivet naufragé, trois quarts dos, assis",
+   "regarde": "haut-droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/naufrages/rivet/rivet-naufrage_dos_assis_1.svg",
+    "svg/personnages/naufrages/rivet/rivet-naufrage_dos_assis_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    700,
+    1100
+   ],
    "parcours": "tuto-2",
    "statut": "ok"
   },
@@ -9707,6 +11841,32 @@
     64
    ],
    "ms_par_image": 800,
+   "parcours": "tuto-2",
+   "statut": "ok"
+  },
+  {
+   "id": "personnages/naufrages/rivet/rivet-naufrage_face_assis",
+   "rubrique": "personnages",
+   "sujet": "rivet-naufrage",
+   "vue": "face",
+   "pose": "assis",
+   "titre": "Rivet naufragé, de face, assis",
+   "regarde": "face",
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/naufrages/rivet/rivet-naufrage_face_assis_1.svg",
+    "svg/personnages/naufrages/rivet/rivet-naufrage_face_assis_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    700,
+    1100
+   ],
    "parcours": "tuto-2",
    "statut": "ok"
   },
@@ -10962,6 +13122,33 @@
    "statut": "ok"
   },
   {
+   "id": "personnages/maitres/ondin/ondin_avant_assis",
+   "rubrique": "personnages",
+   "sujet": "ondin",
+   "vue": "avant",
+   "pose": "assis",
+   "titre": "Ondin, trois quarts avant, assis",
+   "regarde": "bas-droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/maitres/ondin/ondin_avant_assis_1.svg",
+    "svg/personnages/maitres/ondin/ondin_avant_assis_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    700,
+    1100
+   ],
+   "parcours": "tuto-3",
+   "statut": "ok"
+  },
+  {
    "id": "personnages/maitres/ondin/ondin_avant_lanterne",
    "rubrique": "personnages",
    "sujet": "ondin",
@@ -11237,6 +13424,33 @@
     64
    ],
    "ms_par_image": 900,
+   "parcours": "tuto-3",
+   "statut": "ok"
+  },
+  {
+   "id": "personnages/maitres/ondin/ondin_dos_assis",
+   "rubrique": "personnages",
+   "sujet": "ondin",
+   "vue": "dos",
+   "pose": "assis",
+   "titre": "Ondin, trois quarts dos, assis",
+   "regarde": "haut-droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/maitres/ondin/ondin_dos_assis_1.svg",
+    "svg/personnages/maitres/ondin/ondin_dos_assis_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    700,
+    1100
+   ],
    "parcours": "tuto-3",
    "statut": "ok"
   },
@@ -11573,6 +13787,32 @@
    "statut": "ok"
   },
   {
+   "id": "personnages/maitres/ondin/ondin_face_assis",
+   "rubrique": "personnages",
+   "sujet": "ondin",
+   "vue": "face",
+   "pose": "assis",
+   "titre": "Ondin, de face, assis",
+   "regarde": "face",
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/maitres/ondin/ondin_face_assis_1.svg",
+    "svg/personnages/maitres/ondin/ondin_face_assis_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    700,
+    1100
+   ],
+   "parcours": "tuto-3",
+   "statut": "ok"
+  },
+  {
    "id": "personnages/maitres/ondin/ondin_face_baguette",
    "rubrique": "personnages",
    "sujet": "ondin",
@@ -11684,6 +13924,33 @@
    "fichiers": [
     "svg/personnages/maitres/ondin/ondin_face_travail_1.svg",
     "svg/personnages/maitres/ondin/ondin_face_travail_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    700,
+    1100
+   ],
+   "parcours": "tuto-3",
+   "statut": "ok"
+  },
+  {
+   "id": "personnages/naufrages/aster/aster-naufrage_avant_assis",
+   "rubrique": "personnages",
+   "sujet": "aster-naufrage",
+   "vue": "avant",
+   "pose": "assis",
+   "titre": "Aster naufragée, trois quarts avant, assis",
+   "regarde": "bas-droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/naufrages/aster/aster-naufrage_avant_assis_1.svg",
+    "svg/personnages/naufrages/aster/aster-naufrage_avant_assis_2.svg"
    ],
    "cadre": [
     0,
@@ -12001,6 +14268,33 @@
     64
    ],
    "ms_par_image": 900,
+   "parcours": "tuto-3",
+   "statut": "ok"
+  },
+  {
+   "id": "personnages/naufrages/aster/aster-naufrage_dos_assis",
+   "rubrique": "personnages",
+   "sujet": "aster-naufrage",
+   "vue": "dos",
+   "pose": "assis",
+   "titre": "Aster naufragée, trois quarts dos, assis",
+   "regarde": "haut-droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/naufrages/aster/aster-naufrage_dos_assis_1.svg",
+    "svg/personnages/naufrages/aster/aster-naufrage_dos_assis_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    700,
+    1100
+   ],
    "parcours": "tuto-3",
    "statut": "ok"
   },
@@ -12337,6 +14631,32 @@
    "statut": "ok"
   },
   {
+   "id": "personnages/naufrages/aster/aster-naufrage_face_assis",
+   "rubrique": "personnages",
+   "sujet": "aster-naufrage",
+   "vue": "face",
+   "pose": "assis",
+   "titre": "Aster naufragée, de face, assis",
+   "regarde": "face",
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/naufrages/aster/aster-naufrage_face_assis_1.svg",
+    "svg/personnages/naufrages/aster/aster-naufrage_face_assis_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    700,
+    1100
+   ],
+   "parcours": "tuto-3",
+   "statut": "ok"
+  },
+  {
    "id": "personnages/naufrages/aster/aster-naufrage_face_marche",
    "rubrique": "personnages",
    "sujet": "aster-naufrage",
@@ -12422,6 +14742,33 @@
    "fichiers": [
     "svg/personnages/naufrages/aster/aster-naufrage_face_travail_1.svg",
     "svg/personnages/naufrages/aster/aster-naufrage_face_travail_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    700,
+    1100
+   ],
+   "parcours": "tuto-3",
+   "statut": "ok"
+  },
+  {
+   "id": "personnages/naufrages/ondin/ondin-naufrage_avant_assis",
+   "rubrique": "personnages",
+   "sujet": "ondin-naufrage",
+   "vue": "avant",
+   "pose": "assis",
+   "titre": "Ondin naufragé, trois quarts avant, assis",
+   "regarde": "bas-droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/naufrages/ondin/ondin-naufrage_avant_assis_1.svg",
+    "svg/personnages/naufrages/ondin/ondin-naufrage_avant_assis_2.svg"
    ],
    "cadre": [
     0,
@@ -12660,6 +15007,33 @@
     64
    ],
    "ms_par_image": 900,
+   "parcours": "tuto-3",
+   "statut": "ok"
+  },
+  {
+   "id": "personnages/naufrages/ondin/ondin-naufrage_dos_assis",
+   "rubrique": "personnages",
+   "sujet": "ondin-naufrage",
+   "vue": "dos",
+   "pose": "assis",
+   "titre": "Ondin naufragé, trois quarts dos, assis",
+   "regarde": "haut-droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/naufrages/ondin/ondin-naufrage_dos_assis_1.svg",
+    "svg/personnages/naufrages/ondin/ondin-naufrage_dos_assis_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    700,
+    1100
+   ],
    "parcours": "tuto-3",
    "statut": "ok"
   },
@@ -12940,6 +15314,32 @@
     64
    ],
    "ms_par_image": 800,
+   "parcours": "tuto-3",
+   "statut": "ok"
+  },
+  {
+   "id": "personnages/naufrages/ondin/ondin-naufrage_face_assis",
+   "rubrique": "personnages",
+   "sujet": "ondin-naufrage",
+   "vue": "face",
+   "pose": "assis",
+   "titre": "Ondin naufragé, de face, assis",
+   "regarde": "face",
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/naufrages/ondin/ondin-naufrage_face_assis_1.svg",
+    "svg/personnages/naufrages/ondin/ondin-naufrage_face_assis_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    700,
+    1100
+   ],
    "parcours": "tuto-3",
    "statut": "ok"
   },
@@ -13858,6 +16258,33 @@
    "statut": "ok"
   },
   {
+   "id": "personnages/maitres/sylve/sylve_avant_assis",
+   "rubrique": "personnages",
+   "sujet": "sylve",
+   "vue": "avant",
+   "pose": "assis",
+   "titre": "Sylve, trois quarts avant, assis",
+   "regarde": "bas-droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/maitres/sylve/sylve_avant_assis_1.svg",
+    "svg/personnages/maitres/sylve/sylve_avant_assis_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    700,
+    1100
+   ],
+   "parcours": "acte-1",
+   "statut": "ok"
+  },
+  {
    "id": "personnages/maitres/sylve/sylve_avant_lanterne",
    "rubrique": "personnages",
    "sujet": "sylve",
@@ -14133,6 +16560,33 @@
     48
    ],
    "ms_par_image": 900,
+   "parcours": "acte-1",
+   "statut": "ok"
+  },
+  {
+   "id": "personnages/maitres/sylve/sylve_dos_assis",
+   "rubrique": "personnages",
+   "sujet": "sylve",
+   "vue": "dos",
+   "pose": "assis",
+   "titre": "Sylve, trois quarts dos, assis",
+   "regarde": "haut-droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/maitres/sylve/sylve_dos_assis_1.svg",
+    "svg/personnages/maitres/sylve/sylve_dos_assis_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    700,
+    1100
+   ],
    "parcours": "acte-1",
    "statut": "ok"
   },
@@ -14469,6 +16923,32 @@
    "statut": "ok"
   },
   {
+   "id": "personnages/maitres/sylve/sylve_face_assis",
+   "rubrique": "personnages",
+   "sujet": "sylve",
+   "vue": "face",
+   "pose": "assis",
+   "titre": "Sylve, de face, assis",
+   "regarde": "face",
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/maitres/sylve/sylve_face_assis_1.svg",
+    "svg/personnages/maitres/sylve/sylve_face_assis_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    700,
+    1100
+   ],
+   "parcours": "acte-1",
+   "statut": "ok"
+  },
+  {
    "id": "personnages/maitres/sylve/sylve_face_chant",
    "rubrique": "personnages",
    "sujet": "sylve",
@@ -14580,6 +17060,33 @@
    "fichiers": [
     "svg/personnages/maitres/sylve/sylve_face_travail_1.svg",
     "svg/personnages/maitres/sylve/sylve_face_travail_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    700,
+    1100
+   ],
+   "parcours": "acte-1",
+   "statut": "ok"
+  },
+  {
+   "id": "personnages/naufrages/sylve/sylve-naufrage_avant_assis",
+   "rubrique": "personnages",
+   "sujet": "sylve-naufrage",
+   "vue": "avant",
+   "pose": "assis",
+   "titre": "Sylve naufragée, trois quarts avant, assis",
+   "regarde": "bas-droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/naufrages/sylve/sylve-naufrage_avant_assis_1.svg",
+    "svg/personnages/naufrages/sylve/sylve-naufrage_avant_assis_2.svg"
    ],
    "cadre": [
     0,
@@ -14791,6 +17298,33 @@
     48
    ],
    "ms_par_image": 900,
+   "parcours": "acte-1",
+   "statut": "ok"
+  },
+  {
+   "id": "personnages/naufrages/sylve/sylve-naufrage_dos_assis",
+   "rubrique": "personnages",
+   "sujet": "sylve-naufrage",
+   "vue": "dos",
+   "pose": "assis",
+   "titre": "Sylve naufragée, trois quarts dos, assis",
+   "regarde": "haut-droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/naufrages/sylve/sylve-naufrage_dos_assis_1.svg",
+    "svg/personnages/naufrages/sylve/sylve-naufrage_dos_assis_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    700,
+    1100
+   ],
    "parcours": "acte-1",
    "statut": "ok"
   },
@@ -15044,6 +17578,32 @@
     64
    ],
    "ms_par_image": 800,
+   "parcours": "acte-1",
+   "statut": "ok"
+  },
+  {
+   "id": "personnages/naufrages/sylve/sylve-naufrage_face_assis",
+   "rubrique": "personnages",
+   "sujet": "sylve-naufrage",
+   "vue": "face",
+   "pose": "assis",
+   "titre": "Sylve naufragée, de face, assis",
+   "regarde": "face",
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/naufrages/sylve/sylve-naufrage_face_assis_1.svg",
+    "svg/personnages/naufrages/sylve/sylve-naufrage_face_assis_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    700,
+    1100
+   ],
    "parcours": "acte-1",
    "statut": "ok"
   },
@@ -16458,6 +19018,33 @@
    "statut": "ok"
   },
   {
+   "id": "personnages/maitres/galet/galet_avant_assis",
+   "rubrique": "personnages",
+   "sujet": "galet",
+   "vue": "avant",
+   "pose": "assis",
+   "titre": "Galet, trois quarts avant, assis",
+   "regarde": "bas-droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/maitres/galet/galet_avant_assis_1.svg",
+    "svg/personnages/maitres/galet/galet_avant_assis_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    700,
+    1100
+   ],
+   "parcours": "acte-2",
+   "statut": "ok"
+  },
+  {
    "id": "personnages/maitres/galet/galet_avant_lanterne",
    "rubrique": "personnages",
    "sujet": "galet",
@@ -16733,6 +19320,33 @@
     64
    ],
    "ms_par_image": 900,
+   "parcours": "acte-2",
+   "statut": "ok"
+  },
+  {
+   "id": "personnages/maitres/galet/galet_dos_assis",
+   "rubrique": "personnages",
+   "sujet": "galet",
+   "vue": "dos",
+   "pose": "assis",
+   "titre": "Galet, trois quarts dos, assis",
+   "regarde": "haut-droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/maitres/galet/galet_dos_assis_1.svg",
+    "svg/personnages/maitres/galet/galet_dos_assis_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    700,
+    1100
+   ],
    "parcours": "acte-2",
    "statut": "ok"
   },
@@ -17069,6 +19683,32 @@
    "statut": "ok"
   },
   {
+   "id": "personnages/maitres/galet/galet_face_assis",
+   "rubrique": "personnages",
+   "sujet": "galet",
+   "vue": "face",
+   "pose": "assis",
+   "titre": "Galet, de face, assis",
+   "regarde": "face",
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/maitres/galet/galet_face_assis_1.svg",
+    "svg/personnages/maitres/galet/galet_face_assis_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    700,
+    1100
+   ],
+   "parcours": "acte-2",
+   "statut": "ok"
+  },
+  {
    "id": "personnages/maitres/galet/galet_face_marche",
    "rubrique": "personnages",
    "sujet": "galet",
@@ -17180,6 +19820,33 @@
    "fichiers": [
     "svg/personnages/maitres/galet/galet_face_travail_1.svg",
     "svg/personnages/maitres/galet/galet_face_travail_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    700,
+    1100
+   ],
+   "parcours": "acte-2",
+   "statut": "ok"
+  },
+  {
+   "id": "personnages/naufrages/galet/galet-naufrage_avant_assis",
+   "rubrique": "personnages",
+   "sujet": "galet-naufrage",
+   "vue": "avant",
+   "pose": "assis",
+   "titre": "Galet naufragé, trois quarts avant, assis",
+   "regarde": "bas-droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/naufrages/galet/galet-naufrage_avant_assis_1.svg",
+    "svg/personnages/naufrages/galet/galet-naufrage_avant_assis_2.svg"
    ],
    "cadre": [
     0,
@@ -17391,6 +20058,33 @@
     64
    ],
    "ms_par_image": 900,
+   "parcours": "acte-2",
+   "statut": "ok"
+  },
+  {
+   "id": "personnages/naufrages/galet/galet-naufrage_dos_assis",
+   "rubrique": "personnages",
+   "sujet": "galet-naufrage",
+   "vue": "dos",
+   "pose": "assis",
+   "titre": "Galet naufragé, trois quarts dos, assis",
+   "regarde": "haut-droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/naufrages/galet/galet-naufrage_dos_assis_1.svg",
+    "svg/personnages/naufrages/galet/galet-naufrage_dos_assis_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    700,
+    1100
+   ],
    "parcours": "acte-2",
    "statut": "ok"
   },
@@ -17644,6 +20338,32 @@
     64
    ],
    "ms_par_image": 800,
+   "parcours": "acte-2",
+   "statut": "ok"
+  },
+  {
+   "id": "personnages/naufrages/galet/galet-naufrage_face_assis",
+   "rubrique": "personnages",
+   "sujet": "galet-naufrage",
+   "vue": "face",
+   "pose": "assis",
+   "titre": "Galet naufragé, de face, assis",
+   "regarde": "face",
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/naufrages/galet/galet-naufrage_face_assis_1.svg",
+    "svg/personnages/naufrages/galet/galet-naufrage_face_assis_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    700,
+    1100
+   ],
    "parcours": "acte-2",
    "statut": "ok"
   },
@@ -20309,6 +23029,33 @@
    "statut": "ok"
   },
   {
+   "id": "personnages/maitres/melisse/melisse_avant_assis",
+   "rubrique": "personnages",
+   "sujet": "melisse",
+   "vue": "avant",
+   "pose": "assis",
+   "titre": "Mélisse, trois quarts avant, assis",
+   "regarde": "bas-droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/maitres/melisse/melisse_avant_assis_1.svg",
+    "svg/personnages/maitres/melisse/melisse_avant_assis_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    700,
+    1100
+   ],
+   "parcours": "acte-3",
+   "statut": "ok"
+  },
+  {
    "id": "personnages/maitres/melisse/melisse_avant_lanterne",
    "rubrique": "personnages",
    "sujet": "melisse",
@@ -20584,6 +23331,33 @@
     64
    ],
    "ms_par_image": 900,
+   "parcours": "acte-3",
+   "statut": "ok"
+  },
+  {
+   "id": "personnages/maitres/melisse/melisse_dos_assis",
+   "rubrique": "personnages",
+   "sujet": "melisse",
+   "vue": "dos",
+   "pose": "assis",
+   "titre": "Mélisse, trois quarts dos, assis",
+   "regarde": "haut-droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/maitres/melisse/melisse_dos_assis_1.svg",
+    "svg/personnages/maitres/melisse/melisse_dos_assis_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    700,
+    1100
+   ],
    "parcours": "acte-3",
    "statut": "ok"
   },
@@ -20920,6 +23694,32 @@
    "statut": "ok"
   },
   {
+   "id": "personnages/maitres/melisse/melisse_face_assis",
+   "rubrique": "personnages",
+   "sujet": "melisse",
+   "vue": "face",
+   "pose": "assis",
+   "titre": "Mélisse, de face, assis",
+   "regarde": "face",
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/maitres/melisse/melisse_face_assis_1.svg",
+    "svg/personnages/maitres/melisse/melisse_face_assis_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    700,
+    1100
+   ],
+   "parcours": "acte-3",
+   "statut": "ok"
+  },
+  {
    "id": "personnages/maitres/melisse/melisse_face_graines",
    "rubrique": "personnages",
    "sujet": "melisse",
@@ -21031,6 +23831,33 @@
    "fichiers": [
     "svg/personnages/maitres/melisse/melisse_face_travail_1.svg",
     "svg/personnages/maitres/melisse/melisse_face_travail_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    700,
+    1100
+   ],
+   "parcours": "acte-3",
+   "statut": "ok"
+  },
+  {
+   "id": "personnages/maitres/rivet/rivet_avant_assis",
+   "rubrique": "personnages",
+   "sujet": "rivet",
+   "vue": "avant",
+   "pose": "assis",
+   "titre": "Rivet, trois quarts avant, assis",
+   "regarde": "bas-droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/maitres/rivet/rivet_avant_assis_1.svg",
+    "svg/personnages/maitres/rivet/rivet_avant_assis_2.svg"
    ],
    "cadre": [
     0,
@@ -21321,6 +24148,33 @@
     64
    ],
    "ms_par_image": 900,
+   "parcours": "acte-3",
+   "statut": "ok"
+  },
+  {
+   "id": "personnages/maitres/rivet/rivet_dos_assis",
+   "rubrique": "personnages",
+   "sujet": "rivet",
+   "vue": "dos",
+   "pose": "assis",
+   "titre": "Rivet, trois quarts dos, assis",
+   "regarde": "haut-droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/maitres/rivet/rivet_dos_assis_1.svg",
+    "svg/personnages/maitres/rivet/rivet_dos_assis_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    700,
+    1100
+   ],
    "parcours": "acte-3",
    "statut": "ok"
   },
@@ -21657,6 +24511,32 @@
    "statut": "ok"
   },
   {
+   "id": "personnages/maitres/rivet/rivet_face_assis",
+   "rubrique": "personnages",
+   "sujet": "rivet",
+   "vue": "face",
+   "pose": "assis",
+   "titre": "Rivet, de face, assis",
+   "regarde": "face",
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/maitres/rivet/rivet_face_assis_1.svg",
+    "svg/personnages/maitres/rivet/rivet_face_assis_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    700,
+    1100
+   ],
+   "parcours": "acte-3",
+   "statut": "ok"
+  },
+  {
    "id": "personnages/maitres/rivet/rivet_face_loupe",
    "rubrique": "personnages",
    "sujet": "rivet",
@@ -21768,6 +24648,33 @@
    "fichiers": [
     "svg/personnages/maitres/rivet/rivet_face_travail_1.svg",
     "svg/personnages/maitres/rivet/rivet_face_travail_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    700,
+    1100
+   ],
+   "parcours": "acte-3",
+   "statut": "ok"
+  },
+  {
+   "id": "personnages/naufrages/melisse/melisse-naufrage_avant_assis",
+   "rubrique": "personnages",
+   "sujet": "melisse-naufrage",
+   "vue": "avant",
+   "pose": "assis",
+   "titre": "Mélisse naufragée, trois quarts avant, assis",
+   "regarde": "bas-droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/naufrages/melisse/melisse-naufrage_avant_assis_1.svg",
+    "svg/personnages/naufrages/melisse/melisse-naufrage_avant_assis_2.svg"
    ],
    "cadre": [
     0,
@@ -22006,6 +24913,33 @@
     64
    ],
    "ms_par_image": 900,
+   "parcours": "acte-3",
+   "statut": "ok"
+  },
+  {
+   "id": "personnages/naufrages/melisse/melisse-naufrage_dos_assis",
+   "rubrique": "personnages",
+   "sujet": "melisse-naufrage",
+   "vue": "dos",
+   "pose": "assis",
+   "titre": "Mélisse naufragée, trois quarts dos, assis",
+   "regarde": "haut-droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/naufrages/melisse/melisse-naufrage_dos_assis_1.svg",
+    "svg/personnages/naufrages/melisse/melisse-naufrage_dos_assis_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    700,
+    1100
+   ],
    "parcours": "acte-3",
    "statut": "ok"
   },
@@ -22286,6 +25220,32 @@
     64
    ],
    "ms_par_image": 800,
+   "parcours": "acte-3",
+   "statut": "ok"
+  },
+  {
+   "id": "personnages/naufrages/melisse/melisse-naufrage_face_assis",
+   "rubrique": "personnages",
+   "sujet": "melisse-naufrage",
+   "vue": "face",
+   "pose": "assis",
+   "titre": "Mélisse naufragée, de face, assis",
+   "regarde": "face",
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/naufrages/melisse/melisse-naufrage_face_assis_1.svg",
+    "svg/personnages/naufrages/melisse/melisse-naufrage_face_assis_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    700,
+    1100
+   ],
    "parcours": "acte-3",
    "statut": "ok"
   },
@@ -27808,6 +30768,33 @@
    "statut": "ok"
   },
   {
+   "id": "personnages/maitres/aster/aster_avant_assis",
+   "rubrique": "personnages",
+   "sujet": "aster",
+   "vue": "avant",
+   "pose": "assis",
+   "titre": "Aster, trois quarts avant, assis",
+   "regarde": "bas-droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/maitres/aster/aster_avant_assis_1.svg",
+    "svg/personnages/maitres/aster/aster_avant_assis_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    700,
+    1100
+   ],
+   "parcours": "acte-4",
+   "statut": "ok"
+  },
+  {
    "id": "personnages/maitres/aster/aster_avant_lanterne",
    "rubrique": "personnages",
    "sujet": "aster",
@@ -28110,6 +31097,33 @@
     64
    ],
    "ms_par_image": 900,
+   "parcours": "acte-4",
+   "statut": "ok"
+  },
+  {
+   "id": "personnages/maitres/aster/aster_dos_assis",
+   "rubrique": "personnages",
+   "sujet": "aster",
+   "vue": "dos",
+   "pose": "assis",
+   "titre": "Aster, trois quarts dos, assis",
+   "regarde": "haut-droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/maitres/aster/aster_dos_assis_1.svg",
+    "svg/personnages/maitres/aster/aster_dos_assis_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    700,
+    1100
+   ],
    "parcours": "acte-4",
    "statut": "ok"
   },
@@ -28446,6 +31460,32 @@
    "statut": "ok"
   },
   {
+   "id": "personnages/maitres/aster/aster_face_assis",
+   "rubrique": "personnages",
+   "sujet": "aster",
+   "vue": "face",
+   "pose": "assis",
+   "titre": "Aster, de face, assis",
+   "regarde": "face",
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/maitres/aster/aster_face_assis_1.svg",
+    "svg/personnages/maitres/aster/aster_face_assis_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    700,
+    1100
+   ],
+   "parcours": "acte-4",
+   "statut": "ok"
+  },
+  {
    "id": "personnages/maitres/aster/aster_face_marche",
    "rubrique": "personnages",
    "sujet": "aster",
@@ -28531,6 +31571,33 @@
    "fichiers": [
     "svg/personnages/maitres/aster/aster_face_travail_1.svg",
     "svg/personnages/maitres/aster/aster_face_travail_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    700,
+    1100
+   ],
+   "parcours": "acte-4",
+   "statut": "ok"
+  },
+  {
+   "id": "personnages/visiteurs/visiteur-01/visiteur-01_avant_assis",
+   "rubrique": "personnages",
+   "sujet": "visiteur-01",
+   "vue": "avant",
+   "pose": "assis",
+   "titre": "Visiteur 1, trois quarts avant, assis",
+   "regarde": "bas-droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/visiteurs/visiteur-01/visiteur-01_avant_assis_1.svg",
+    "svg/personnages/visiteurs/visiteur-01/visiteur-01_avant_assis_2.svg"
    ],
    "cadre": [
     0,
@@ -28696,6 +31763,33 @@
    "statut": "ok"
   },
   {
+   "id": "personnages/visiteurs/visiteur-01/visiteur-01_dos_assis",
+   "rubrique": "personnages",
+   "sujet": "visiteur-01",
+   "vue": "dos",
+   "pose": "assis",
+   "titre": "Visiteur 1, trois quarts dos, assis",
+   "regarde": "haut-droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/visiteurs/visiteur-01/visiteur-01_dos_assis_1.svg",
+    "svg/personnages/visiteurs/visiteur-01/visiteur-01_dos_assis_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    700,
+    1100
+   ],
+   "parcours": "acte-4",
+   "statut": "ok"
+  },
+  {
    "id": "personnages/visiteurs/visiteur-01/visiteur-01_dos_lanterne",
    "rubrique": "personnages",
    "sujet": "visiteur-01",
@@ -28825,6 +31919,32 @@
    "statut": "ok"
   },
   {
+   "id": "personnages/visiteurs/visiteur-01/visiteur-01_face_assis",
+   "rubrique": "personnages",
+   "sujet": "visiteur-01",
+   "vue": "face",
+   "pose": "assis",
+   "titre": "Visiteur 1, de face, assis",
+   "regarde": "face",
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/visiteurs/visiteur-01/visiteur-01_face_assis_1.svg",
+    "svg/personnages/visiteurs/visiteur-01/visiteur-01_face_assis_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    700,
+    1100
+   ],
+   "parcours": "acte-4",
+   "statut": "ok"
+  },
+  {
    "id": "personnages/visiteurs/visiteur-01/visiteur-01_face_marche",
    "rubrique": "personnages",
    "sujet": "visiteur-01",
@@ -28895,6 +32015,33 @@
     64
    ],
    "ms_par_image": 260,
+   "parcours": "acte-4",
+   "statut": "ok"
+  },
+  {
+   "id": "personnages/visiteurs/visiteur-02/visiteur-02_avant_assis",
+   "rubrique": "personnages",
+   "sujet": "visiteur-02",
+   "vue": "avant",
+   "pose": "assis",
+   "titre": "Visiteur 2, trois quarts avant, assis",
+   "regarde": "bas-droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/visiteurs/visiteur-02/visiteur-02_avant_assis_1.svg",
+    "svg/personnages/visiteurs/visiteur-02/visiteur-02_avant_assis_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    700,
+    1100
+   ],
    "parcours": "acte-4",
    "statut": "ok"
   },
@@ -29049,6 +32196,33 @@
    "statut": "ok"
   },
   {
+   "id": "personnages/visiteurs/visiteur-02/visiteur-02_dos_assis",
+   "rubrique": "personnages",
+   "sujet": "visiteur-02",
+   "vue": "dos",
+   "pose": "assis",
+   "titre": "Visiteur 2, trois quarts dos, assis",
+   "regarde": "haut-droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/visiteurs/visiteur-02/visiteur-02_dos_assis_1.svg",
+    "svg/personnages/visiteurs/visiteur-02/visiteur-02_dos_assis_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    700,
+    1100
+   ],
+   "parcours": "acte-4",
+   "statut": "ok"
+  },
+  {
    "id": "personnages/visiteurs/visiteur-02/visiteur-02_dos_lanterne",
    "rubrique": "personnages",
    "sujet": "visiteur-02",
@@ -29178,6 +32352,32 @@
    "statut": "ok"
   },
   {
+   "id": "personnages/visiteurs/visiteur-02/visiteur-02_face_assis",
+   "rubrique": "personnages",
+   "sujet": "visiteur-02",
+   "vue": "face",
+   "pose": "assis",
+   "titre": "Visiteur 2, de face, assis",
+   "regarde": "face",
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/visiteurs/visiteur-02/visiteur-02_face_assis_1.svg",
+    "svg/personnages/visiteurs/visiteur-02/visiteur-02_face_assis_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    700,
+    1100
+   ],
+   "parcours": "acte-4",
+   "statut": "ok"
+  },
+  {
    "id": "personnages/visiteurs/visiteur-02/visiteur-02_face_marche",
    "rubrique": "personnages",
    "sujet": "visiteur-02",
@@ -29248,6 +32448,33 @@
     64
    ],
    "ms_par_image": 260,
+   "parcours": "acte-4",
+   "statut": "ok"
+  },
+  {
+   "id": "personnages/visiteurs/visiteur-03/visiteur-03_avant_assis",
+   "rubrique": "personnages",
+   "sujet": "visiteur-03",
+   "vue": "avant",
+   "pose": "assis",
+   "titre": "Visiteur 3, trois quarts avant, assis",
+   "regarde": "bas-droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/visiteurs/visiteur-03/visiteur-03_avant_assis_1.svg",
+    "svg/personnages/visiteurs/visiteur-03/visiteur-03_avant_assis_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    700,
+    1100
+   ],
    "parcours": "acte-4",
    "statut": "ok"
   },
@@ -29402,6 +32629,33 @@
    "statut": "ok"
   },
   {
+   "id": "personnages/visiteurs/visiteur-03/visiteur-03_dos_assis",
+   "rubrique": "personnages",
+   "sujet": "visiteur-03",
+   "vue": "dos",
+   "pose": "assis",
+   "titre": "Visiteur 3, trois quarts dos, assis",
+   "regarde": "haut-droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/visiteurs/visiteur-03/visiteur-03_dos_assis_1.svg",
+    "svg/personnages/visiteurs/visiteur-03/visiteur-03_dos_assis_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    700,
+    1100
+   ],
+   "parcours": "acte-4",
+   "statut": "ok"
+  },
+  {
    "id": "personnages/visiteurs/visiteur-03/visiteur-03_dos_lanterne",
    "rubrique": "personnages",
    "sujet": "visiteur-03",
@@ -29531,6 +32785,32 @@
    "statut": "ok"
   },
   {
+   "id": "personnages/visiteurs/visiteur-03/visiteur-03_face_assis",
+   "rubrique": "personnages",
+   "sujet": "visiteur-03",
+   "vue": "face",
+   "pose": "assis",
+   "titre": "Visiteur 3, de face, assis",
+   "regarde": "face",
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/visiteurs/visiteur-03/visiteur-03_face_assis_1.svg",
+    "svg/personnages/visiteurs/visiteur-03/visiteur-03_face_assis_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    700,
+    1100
+   ],
+   "parcours": "acte-4",
+   "statut": "ok"
+  },
+  {
    "id": "personnages/visiteurs/visiteur-03/visiteur-03_face_marche",
    "rubrique": "personnages",
    "sujet": "visiteur-03",
@@ -29601,6 +32881,33 @@
     64
    ],
    "ms_par_image": 260,
+   "parcours": "acte-4",
+   "statut": "ok"
+  },
+  {
+   "id": "personnages/visiteurs/visiteur-04/visiteur-04_avant_assis",
+   "rubrique": "personnages",
+   "sujet": "visiteur-04",
+   "vue": "avant",
+   "pose": "assis",
+   "titre": "Visiteur 4, trois quarts avant, assis",
+   "regarde": "bas-droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/visiteurs/visiteur-04/visiteur-04_avant_assis_1.svg",
+    "svg/personnages/visiteurs/visiteur-04/visiteur-04_avant_assis_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    700,
+    1100
+   ],
    "parcours": "acte-4",
    "statut": "ok"
   },
@@ -29755,6 +33062,33 @@
    "statut": "ok"
   },
   {
+   "id": "personnages/visiteurs/visiteur-04/visiteur-04_dos_assis",
+   "rubrique": "personnages",
+   "sujet": "visiteur-04",
+   "vue": "dos",
+   "pose": "assis",
+   "titre": "Visiteur 4, trois quarts dos, assis",
+   "regarde": "haut-droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/visiteurs/visiteur-04/visiteur-04_dos_assis_1.svg",
+    "svg/personnages/visiteurs/visiteur-04/visiteur-04_dos_assis_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    700,
+    1100
+   ],
+   "parcours": "acte-4",
+   "statut": "ok"
+  },
+  {
    "id": "personnages/visiteurs/visiteur-04/visiteur-04_dos_lanterne",
    "rubrique": "personnages",
    "sujet": "visiteur-04",
@@ -29884,6 +33218,32 @@
    "statut": "ok"
   },
   {
+   "id": "personnages/visiteurs/visiteur-04/visiteur-04_face_assis",
+   "rubrique": "personnages",
+   "sujet": "visiteur-04",
+   "vue": "face",
+   "pose": "assis",
+   "titre": "Visiteur 4, de face, assis",
+   "regarde": "face",
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/visiteurs/visiteur-04/visiteur-04_face_assis_1.svg",
+    "svg/personnages/visiteurs/visiteur-04/visiteur-04_face_assis_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    700,
+    1100
+   ],
+   "parcours": "acte-4",
+   "statut": "ok"
+  },
+  {
    "id": "personnages/visiteurs/visiteur-04/visiteur-04_face_marche",
    "rubrique": "personnages",
    "sujet": "visiteur-04",
@@ -29954,6 +33314,33 @@
     64
    ],
    "ms_par_image": 260,
+   "parcours": "acte-4",
+   "statut": "ok"
+  },
+  {
+   "id": "personnages/visiteurs/visiteur-05/visiteur-05_avant_assis",
+   "rubrique": "personnages",
+   "sujet": "visiteur-05",
+   "vue": "avant",
+   "pose": "assis",
+   "titre": "Visiteur 5, trois quarts avant, assis",
+   "regarde": "bas-droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/visiteurs/visiteur-05/visiteur-05_avant_assis_1.svg",
+    "svg/personnages/visiteurs/visiteur-05/visiteur-05_avant_assis_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    700,
+    1100
+   ],
    "parcours": "acte-4",
    "statut": "ok"
   },
@@ -30108,6 +33495,33 @@
    "statut": "ok"
   },
   {
+   "id": "personnages/visiteurs/visiteur-05/visiteur-05_dos_assis",
+   "rubrique": "personnages",
+   "sujet": "visiteur-05",
+   "vue": "dos",
+   "pose": "assis",
+   "titre": "Visiteur 5, trois quarts dos, assis",
+   "regarde": "haut-droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/visiteurs/visiteur-05/visiteur-05_dos_assis_1.svg",
+    "svg/personnages/visiteurs/visiteur-05/visiteur-05_dos_assis_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    700,
+    1100
+   ],
+   "parcours": "acte-4",
+   "statut": "ok"
+  },
+  {
    "id": "personnages/visiteurs/visiteur-05/visiteur-05_dos_lanterne",
    "rubrique": "personnages",
    "sujet": "visiteur-05",
@@ -30237,6 +33651,32 @@
    "statut": "ok"
   },
   {
+   "id": "personnages/visiteurs/visiteur-05/visiteur-05_face_assis",
+   "rubrique": "personnages",
+   "sujet": "visiteur-05",
+   "vue": "face",
+   "pose": "assis",
+   "titre": "Visiteur 5, de face, assis",
+   "regarde": "face",
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/visiteurs/visiteur-05/visiteur-05_face_assis_1.svg",
+    "svg/personnages/visiteurs/visiteur-05/visiteur-05_face_assis_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    700,
+    1100
+   ],
+   "parcours": "acte-4",
+   "statut": "ok"
+  },
+  {
    "id": "personnages/visiteurs/visiteur-05/visiteur-05_face_marche",
    "rubrique": "personnages",
    "sujet": "visiteur-05",
@@ -30307,6 +33747,33 @@
     64
    ],
    "ms_par_image": 260,
+   "parcours": "acte-4",
+   "statut": "ok"
+  },
+  {
+   "id": "personnages/visiteurs/visiteur-06/visiteur-06_avant_assis",
+   "rubrique": "personnages",
+   "sujet": "visiteur-06",
+   "vue": "avant",
+   "pose": "assis",
+   "titre": "Visiteur 6, trois quarts avant, assis",
+   "regarde": "bas-droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/visiteurs/visiteur-06/visiteur-06_avant_assis_1.svg",
+    "svg/personnages/visiteurs/visiteur-06/visiteur-06_avant_assis_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    700,
+    1100
+   ],
    "parcours": "acte-4",
    "statut": "ok"
   },
@@ -30461,6 +33928,33 @@
    "statut": "ok"
   },
   {
+   "id": "personnages/visiteurs/visiteur-06/visiteur-06_dos_assis",
+   "rubrique": "personnages",
+   "sujet": "visiteur-06",
+   "vue": "dos",
+   "pose": "assis",
+   "titre": "Visiteur 6, trois quarts dos, assis",
+   "regarde": "haut-droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/visiteurs/visiteur-06/visiteur-06_dos_assis_1.svg",
+    "svg/personnages/visiteurs/visiteur-06/visiteur-06_dos_assis_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    700,
+    1100
+   ],
+   "parcours": "acte-4",
+   "statut": "ok"
+  },
+  {
    "id": "personnages/visiteurs/visiteur-06/visiteur-06_dos_lanterne",
    "rubrique": "personnages",
    "sujet": "visiteur-06",
@@ -30590,6 +34084,32 @@
    "statut": "ok"
   },
   {
+   "id": "personnages/visiteurs/visiteur-06/visiteur-06_face_assis",
+   "rubrique": "personnages",
+   "sujet": "visiteur-06",
+   "vue": "face",
+   "pose": "assis",
+   "titre": "Visiteur 6, de face, assis",
+   "regarde": "face",
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/visiteurs/visiteur-06/visiteur-06_face_assis_1.svg",
+    "svg/personnages/visiteurs/visiteur-06/visiteur-06_face_assis_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    700,
+    1100
+   ],
+   "parcours": "acte-4",
+   "statut": "ok"
+  },
+  {
    "id": "personnages/visiteurs/visiteur-06/visiteur-06_face_marche",
    "rubrique": "personnages",
    "sujet": "visiteur-06",
@@ -30660,6 +34180,33 @@
     64
    ],
    "ms_par_image": 260,
+   "parcours": "acte-4",
+   "statut": "ok"
+  },
+  {
+   "id": "personnages/visiteurs/visiteur-07/visiteur-07_avant_assis",
+   "rubrique": "personnages",
+   "sujet": "visiteur-07",
+   "vue": "avant",
+   "pose": "assis",
+   "titre": "Visiteur 7, trois quarts avant, assis",
+   "regarde": "bas-droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/visiteurs/visiteur-07/visiteur-07_avant_assis_1.svg",
+    "svg/personnages/visiteurs/visiteur-07/visiteur-07_avant_assis_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    700,
+    1100
+   ],
    "parcours": "acte-4",
    "statut": "ok"
   },
@@ -30814,6 +34361,33 @@
    "statut": "ok"
   },
   {
+   "id": "personnages/visiteurs/visiteur-07/visiteur-07_dos_assis",
+   "rubrique": "personnages",
+   "sujet": "visiteur-07",
+   "vue": "dos",
+   "pose": "assis",
+   "titre": "Visiteur 7, trois quarts dos, assis",
+   "regarde": "haut-droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/visiteurs/visiteur-07/visiteur-07_dos_assis_1.svg",
+    "svg/personnages/visiteurs/visiteur-07/visiteur-07_dos_assis_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    700,
+    1100
+   ],
+   "parcours": "acte-4",
+   "statut": "ok"
+  },
+  {
    "id": "personnages/visiteurs/visiteur-07/visiteur-07_dos_lanterne",
    "rubrique": "personnages",
    "sujet": "visiteur-07",
@@ -30943,6 +34517,32 @@
    "statut": "ok"
   },
   {
+   "id": "personnages/visiteurs/visiteur-07/visiteur-07_face_assis",
+   "rubrique": "personnages",
+   "sujet": "visiteur-07",
+   "vue": "face",
+   "pose": "assis",
+   "titre": "Visiteur 7, de face, assis",
+   "regarde": "face",
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/visiteurs/visiteur-07/visiteur-07_face_assis_1.svg",
+    "svg/personnages/visiteurs/visiteur-07/visiteur-07_face_assis_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    700,
+    1100
+   ],
+   "parcours": "acte-4",
+   "statut": "ok"
+  },
+  {
    "id": "personnages/visiteurs/visiteur-07/visiteur-07_face_marche",
    "rubrique": "personnages",
    "sujet": "visiteur-07",
@@ -31013,6 +34613,33 @@
     64
    ],
    "ms_par_image": 260,
+   "parcours": "acte-4",
+   "statut": "ok"
+  },
+  {
+   "id": "personnages/visiteurs/visiteur-08/visiteur-08_avant_assis",
+   "rubrique": "personnages",
+   "sujet": "visiteur-08",
+   "vue": "avant",
+   "pose": "assis",
+   "titre": "Visiteur 8, trois quarts avant, assis",
+   "regarde": "bas-droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/visiteurs/visiteur-08/visiteur-08_avant_assis_1.svg",
+    "svg/personnages/visiteurs/visiteur-08/visiteur-08_avant_assis_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    700,
+    1100
+   ],
    "parcours": "acte-4",
    "statut": "ok"
   },
@@ -31167,6 +34794,33 @@
    "statut": "ok"
   },
   {
+   "id": "personnages/visiteurs/visiteur-08/visiteur-08_dos_assis",
+   "rubrique": "personnages",
+   "sujet": "visiteur-08",
+   "vue": "dos",
+   "pose": "assis",
+   "titre": "Visiteur 8, trois quarts dos, assis",
+   "regarde": "haut-droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/visiteurs/visiteur-08/visiteur-08_dos_assis_1.svg",
+    "svg/personnages/visiteurs/visiteur-08/visiteur-08_dos_assis_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    700,
+    1100
+   ],
+   "parcours": "acte-4",
+   "statut": "ok"
+  },
+  {
    "id": "personnages/visiteurs/visiteur-08/visiteur-08_dos_lanterne",
    "rubrique": "personnages",
    "sujet": "visiteur-08",
@@ -31296,6 +34950,32 @@
    "statut": "ok"
   },
   {
+   "id": "personnages/visiteurs/visiteur-08/visiteur-08_face_assis",
+   "rubrique": "personnages",
+   "sujet": "visiteur-08",
+   "vue": "face",
+   "pose": "assis",
+   "titre": "Visiteur 8, de face, assis",
+   "regarde": "face",
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/visiteurs/visiteur-08/visiteur-08_face_assis_1.svg",
+    "svg/personnages/visiteurs/visiteur-08/visiteur-08_face_assis_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    700,
+    1100
+   ],
+   "parcours": "acte-4",
+   "statut": "ok"
+  },
+  {
    "id": "personnages/visiteurs/visiteur-08/visiteur-08_face_marche",
    "rubrique": "personnages",
    "sujet": "visiteur-08",
@@ -31366,6 +35046,33 @@
     64
    ],
    "ms_par_image": 260,
+   "parcours": "acte-4",
+   "statut": "ok"
+  },
+  {
+   "id": "personnages/visiteurs/visiteur-09/visiteur-09_avant_assis",
+   "rubrique": "personnages",
+   "sujet": "visiteur-09",
+   "vue": "avant",
+   "pose": "assis",
+   "titre": "Visiteur 9, trois quarts avant, assis",
+   "regarde": "bas-droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/visiteurs/visiteur-09/visiteur-09_avant_assis_1.svg",
+    "svg/personnages/visiteurs/visiteur-09/visiteur-09_avant_assis_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    700,
+    1100
+   ],
    "parcours": "acte-4",
    "statut": "ok"
   },
@@ -31520,6 +35227,33 @@
    "statut": "ok"
   },
   {
+   "id": "personnages/visiteurs/visiteur-09/visiteur-09_dos_assis",
+   "rubrique": "personnages",
+   "sujet": "visiteur-09",
+   "vue": "dos",
+   "pose": "assis",
+   "titre": "Visiteur 9, trois quarts dos, assis",
+   "regarde": "haut-droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/visiteurs/visiteur-09/visiteur-09_dos_assis_1.svg",
+    "svg/personnages/visiteurs/visiteur-09/visiteur-09_dos_assis_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    700,
+    1100
+   ],
+   "parcours": "acte-4",
+   "statut": "ok"
+  },
+  {
    "id": "personnages/visiteurs/visiteur-09/visiteur-09_dos_lanterne",
    "rubrique": "personnages",
    "sujet": "visiteur-09",
@@ -31649,6 +35383,32 @@
    "statut": "ok"
   },
   {
+   "id": "personnages/visiteurs/visiteur-09/visiteur-09_face_assis",
+   "rubrique": "personnages",
+   "sujet": "visiteur-09",
+   "vue": "face",
+   "pose": "assis",
+   "titre": "Visiteur 9, de face, assis",
+   "regarde": "face",
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/visiteurs/visiteur-09/visiteur-09_face_assis_1.svg",
+    "svg/personnages/visiteurs/visiteur-09/visiteur-09_face_assis_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    700,
+    1100
+   ],
+   "parcours": "acte-4",
+   "statut": "ok"
+  },
+  {
    "id": "personnages/visiteurs/visiteur-09/visiteur-09_face_marche",
    "rubrique": "personnages",
    "sujet": "visiteur-09",
@@ -31719,6 +35479,33 @@
     64
    ],
    "ms_par_image": 260,
+   "parcours": "acte-4",
+   "statut": "ok"
+  },
+  {
+   "id": "personnages/visiteurs/visiteur-10/visiteur-10_avant_assis",
+   "rubrique": "personnages",
+   "sujet": "visiteur-10",
+   "vue": "avant",
+   "pose": "assis",
+   "titre": "Visiteur 10, trois quarts avant, assis",
+   "regarde": "bas-droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/visiteurs/visiteur-10/visiteur-10_avant_assis_1.svg",
+    "svg/personnages/visiteurs/visiteur-10/visiteur-10_avant_assis_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    700,
+    1100
+   ],
    "parcours": "acte-4",
    "statut": "ok"
   },
@@ -31873,6 +35660,33 @@
    "statut": "ok"
   },
   {
+   "id": "personnages/visiteurs/visiteur-10/visiteur-10_dos_assis",
+   "rubrique": "personnages",
+   "sujet": "visiteur-10",
+   "vue": "dos",
+   "pose": "assis",
+   "titre": "Visiteur 10, trois quarts dos, assis",
+   "regarde": "haut-droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/visiteurs/visiteur-10/visiteur-10_dos_assis_1.svg",
+    "svg/personnages/visiteurs/visiteur-10/visiteur-10_dos_assis_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    700,
+    1100
+   ],
+   "parcours": "acte-4",
+   "statut": "ok"
+  },
+  {
    "id": "personnages/visiteurs/visiteur-10/visiteur-10_dos_lanterne",
    "rubrique": "personnages",
    "sujet": "visiteur-10",
@@ -32002,6 +35816,32 @@
    "statut": "ok"
   },
   {
+   "id": "personnages/visiteurs/visiteur-10/visiteur-10_face_assis",
+   "rubrique": "personnages",
+   "sujet": "visiteur-10",
+   "vue": "face",
+   "pose": "assis",
+   "titre": "Visiteur 10, de face, assis",
+   "regarde": "face",
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/visiteurs/visiteur-10/visiteur-10_face_assis_1.svg",
+    "svg/personnages/visiteurs/visiteur-10/visiteur-10_face_assis_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    700,
+    1100
+   ],
+   "parcours": "acte-4",
+   "statut": "ok"
+  },
+  {
    "id": "personnages/visiteurs/visiteur-10/visiteur-10_face_marche",
    "rubrique": "personnages",
    "sujet": "visiteur-10",
@@ -32072,6 +35912,33 @@
     64
    ],
    "ms_par_image": 260,
+   "parcours": "acte-4",
+   "statut": "ok"
+  },
+  {
+   "id": "personnages/visiteurs/visiteur-11/visiteur-11_avant_assis",
+   "rubrique": "personnages",
+   "sujet": "visiteur-11",
+   "vue": "avant",
+   "pose": "assis",
+   "titre": "Visiteur 11, trois quarts avant, assis",
+   "regarde": "bas-droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/visiteurs/visiteur-11/visiteur-11_avant_assis_1.svg",
+    "svg/personnages/visiteurs/visiteur-11/visiteur-11_avant_assis_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    700,
+    1100
+   ],
    "parcours": "acte-4",
    "statut": "ok"
   },
@@ -32226,6 +36093,33 @@
    "statut": "ok"
   },
   {
+   "id": "personnages/visiteurs/visiteur-11/visiteur-11_dos_assis",
+   "rubrique": "personnages",
+   "sujet": "visiteur-11",
+   "vue": "dos",
+   "pose": "assis",
+   "titre": "Visiteur 11, trois quarts dos, assis",
+   "regarde": "haut-droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/visiteurs/visiteur-11/visiteur-11_dos_assis_1.svg",
+    "svg/personnages/visiteurs/visiteur-11/visiteur-11_dos_assis_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    700,
+    1100
+   ],
+   "parcours": "acte-4",
+   "statut": "ok"
+  },
+  {
    "id": "personnages/visiteurs/visiteur-11/visiteur-11_dos_lanterne",
    "rubrique": "personnages",
    "sujet": "visiteur-11",
@@ -32355,6 +36249,32 @@
    "statut": "ok"
   },
   {
+   "id": "personnages/visiteurs/visiteur-11/visiteur-11_face_assis",
+   "rubrique": "personnages",
+   "sujet": "visiteur-11",
+   "vue": "face",
+   "pose": "assis",
+   "titre": "Visiteur 11, de face, assis",
+   "regarde": "face",
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/visiteurs/visiteur-11/visiteur-11_face_assis_1.svg",
+    "svg/personnages/visiteurs/visiteur-11/visiteur-11_face_assis_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    700,
+    1100
+   ],
+   "parcours": "acte-4",
+   "statut": "ok"
+  },
+  {
    "id": "personnages/visiteurs/visiteur-11/visiteur-11_face_marche",
    "rubrique": "personnages",
    "sujet": "visiteur-11",
@@ -32425,6 +36345,33 @@
     64
    ],
    "ms_par_image": 260,
+   "parcours": "acte-4",
+   "statut": "ok"
+  },
+  {
+   "id": "personnages/visiteurs/visiteur-12/visiteur-12_avant_assis",
+   "rubrique": "personnages",
+   "sujet": "visiteur-12",
+   "vue": "avant",
+   "pose": "assis",
+   "titre": "Visiteur 12, trois quarts avant, assis",
+   "regarde": "bas-droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/visiteurs/visiteur-12/visiteur-12_avant_assis_1.svg",
+    "svg/personnages/visiteurs/visiteur-12/visiteur-12_avant_assis_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    700,
+    1100
+   ],
    "parcours": "acte-4",
    "statut": "ok"
   },
@@ -32579,6 +36526,33 @@
    "statut": "ok"
   },
   {
+   "id": "personnages/visiteurs/visiteur-12/visiteur-12_dos_assis",
+   "rubrique": "personnages",
+   "sujet": "visiteur-12",
+   "vue": "dos",
+   "pose": "assis",
+   "titre": "Visiteur 12, trois quarts dos, assis",
+   "regarde": "haut-droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/visiteurs/visiteur-12/visiteur-12_dos_assis_1.svg",
+    "svg/personnages/visiteurs/visiteur-12/visiteur-12_dos_assis_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    700,
+    1100
+   ],
+   "parcours": "acte-4",
+   "statut": "ok"
+  },
+  {
    "id": "personnages/visiteurs/visiteur-12/visiteur-12_dos_lanterne",
    "rubrique": "personnages",
    "sujet": "visiteur-12",
@@ -32704,6 +36678,32 @@
     64
    ],
    "ms_par_image": 260,
+   "parcours": "acte-4",
+   "statut": "ok"
+  },
+  {
+   "id": "personnages/visiteurs/visiteur-12/visiteur-12_face_assis",
+   "rubrique": "personnages",
+   "sujet": "visiteur-12",
+   "vue": "face",
+   "pose": "assis",
+   "titre": "Visiteur 12, de face, assis",
+   "regarde": "face",
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/visiteurs/visiteur-12/visiteur-12_face_assis_1.svg",
+    "svg/personnages/visiteurs/visiteur-12/visiteur-12_face_assis_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    700,
+    1100
+   ],
    "parcours": "acte-4",
    "statut": "ok"
   },
@@ -34626,6 +38626,33 @@
    "statut": "ok"
   },
   {
+   "id": "personnages/epilogue/arrivant-01/arrivant-01_avant_assis",
+   "rubrique": "personnages",
+   "sujet": "arrivant-01",
+   "vue": "avant",
+   "pose": "assis",
+   "titre": "Nouveau venu 1 (épilogue), trois quarts avant, assis",
+   "regarde": "bas-droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/epilogue/arrivant-01/arrivant-01_avant_assis_1.svg",
+    "svg/personnages/epilogue/arrivant-01/arrivant-01_avant_assis_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    700,
+    1100
+   ],
+   "parcours": "epilogue",
+   "statut": "ok"
+  },
+  {
    "id": "personnages/epilogue/arrivant-01/arrivant-01_avant_marche",
    "rubrique": "personnages",
    "sujet": "arrivant-01",
@@ -34699,6 +38726,33 @@
     64
    ],
    "ms_par_image": 260,
+   "parcours": "epilogue",
+   "statut": "ok"
+  },
+  {
+   "id": "personnages/epilogue/arrivant-01/arrivant-01_dos_assis",
+   "rubrique": "personnages",
+   "sujet": "arrivant-01",
+   "vue": "dos",
+   "pose": "assis",
+   "titre": "Nouveau venu 1 (épilogue), trois quarts dos, assis",
+   "regarde": "haut-droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/epilogue/arrivant-01/arrivant-01_dos_assis_1.svg",
+    "svg/personnages/epilogue/arrivant-01/arrivant-01_dos_assis_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    700,
+    1100
+   ],
    "parcours": "epilogue",
    "statut": "ok"
   },
@@ -34780,6 +38834,32 @@
    "statut": "ok"
   },
   {
+   "id": "personnages/epilogue/arrivant-01/arrivant-01_face_assis",
+   "rubrique": "personnages",
+   "sujet": "arrivant-01",
+   "vue": "face",
+   "pose": "assis",
+   "titre": "Nouveau venu 1 (épilogue), de face, assis",
+   "regarde": "face",
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/epilogue/arrivant-01/arrivant-01_face_assis_1.svg",
+    "svg/personnages/epilogue/arrivant-01/arrivant-01_face_assis_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    700,
+    1100
+   ],
+   "parcours": "epilogue",
+   "statut": "ok"
+  },
+  {
    "id": "personnages/epilogue/arrivant-01/arrivant-01_face_marche",
    "rubrique": "personnages",
    "sujet": "arrivant-01",
@@ -34850,6 +38930,33 @@
     64
    ],
    "ms_par_image": 260,
+   "parcours": "epilogue",
+   "statut": "ok"
+  },
+  {
+   "id": "personnages/epilogue/arrivant-02/arrivant-02_avant_assis",
+   "rubrique": "personnages",
+   "sujet": "arrivant-02",
+   "vue": "avant",
+   "pose": "assis",
+   "titre": "Nouveau venu 2 (épilogue), trois quarts avant, assis",
+   "regarde": "bas-droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/epilogue/arrivant-02/arrivant-02_avant_assis_1.svg",
+    "svg/personnages/epilogue/arrivant-02/arrivant-02_avant_assis_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    700,
+    1100
+   ],
    "parcours": "epilogue",
    "statut": "ok"
   },
@@ -34931,6 +39038,33 @@
    "statut": "ok"
   },
   {
+   "id": "personnages/epilogue/arrivant-02/arrivant-02_dos_assis",
+   "rubrique": "personnages",
+   "sujet": "arrivant-02",
+   "vue": "dos",
+   "pose": "assis",
+   "titre": "Nouveau venu 2 (épilogue), trois quarts dos, assis",
+   "regarde": "haut-droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/epilogue/arrivant-02/arrivant-02_dos_assis_1.svg",
+    "svg/personnages/epilogue/arrivant-02/arrivant-02_dos_assis_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    700,
+    1100
+   ],
+   "parcours": "epilogue",
+   "statut": "ok"
+  },
+  {
    "id": "personnages/epilogue/arrivant-02/arrivant-02_dos_marche",
    "rubrique": "personnages",
    "sujet": "arrivant-02",
@@ -35008,6 +39142,32 @@
    "statut": "ok"
   },
   {
+   "id": "personnages/epilogue/arrivant-02/arrivant-02_face_assis",
+   "rubrique": "personnages",
+   "sujet": "arrivant-02",
+   "vue": "face",
+   "pose": "assis",
+   "titre": "Nouveau venu 2 (épilogue), de face, assis",
+   "regarde": "face",
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/epilogue/arrivant-02/arrivant-02_face_assis_1.svg",
+    "svg/personnages/epilogue/arrivant-02/arrivant-02_face_assis_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    700,
+    1100
+   ],
+   "parcours": "epilogue",
+   "statut": "ok"
+  },
+  {
    "id": "personnages/epilogue/arrivant-02/arrivant-02_face_marche",
    "rubrique": "personnages",
    "sujet": "arrivant-02",
@@ -35078,6 +39238,33 @@
     64
    ],
    "ms_par_image": 260,
+   "parcours": "epilogue",
+   "statut": "ok"
+  },
+  {
+   "id": "personnages/epilogue/arrivant-03/arrivant-03_avant_assis",
+   "rubrique": "personnages",
+   "sujet": "arrivant-03",
+   "vue": "avant",
+   "pose": "assis",
+   "titre": "Nouveau venu 3 (épilogue), trois quarts avant, assis",
+   "regarde": "bas-droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/epilogue/arrivant-03/arrivant-03_avant_assis_1.svg",
+    "svg/personnages/epilogue/arrivant-03/arrivant-03_avant_assis_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    700,
+    1100
+   ],
    "parcours": "epilogue",
    "statut": "ok"
   },
@@ -35159,6 +39346,33 @@
    "statut": "ok"
   },
   {
+   "id": "personnages/epilogue/arrivant-03/arrivant-03_dos_assis",
+   "rubrique": "personnages",
+   "sujet": "arrivant-03",
+   "vue": "dos",
+   "pose": "assis",
+   "titre": "Nouveau venu 3 (épilogue), trois quarts dos, assis",
+   "regarde": "haut-droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/epilogue/arrivant-03/arrivant-03_dos_assis_1.svg",
+    "svg/personnages/epilogue/arrivant-03/arrivant-03_dos_assis_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    700,
+    1100
+   ],
+   "parcours": "epilogue",
+   "statut": "ok"
+  },
+  {
    "id": "personnages/epilogue/arrivant-03/arrivant-03_dos_marche",
    "rubrique": "personnages",
    "sujet": "arrivant-03",
@@ -35236,6 +39450,32 @@
    "statut": "ok"
   },
   {
+   "id": "personnages/epilogue/arrivant-03/arrivant-03_face_assis",
+   "rubrique": "personnages",
+   "sujet": "arrivant-03",
+   "vue": "face",
+   "pose": "assis",
+   "titre": "Nouveau venu 3 (épilogue), de face, assis",
+   "regarde": "face",
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/epilogue/arrivant-03/arrivant-03_face_assis_1.svg",
+    "svg/personnages/epilogue/arrivant-03/arrivant-03_face_assis_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    700,
+    1100
+   ],
+   "parcours": "epilogue",
+   "statut": "ok"
+  },
+  {
    "id": "personnages/epilogue/arrivant-03/arrivant-03_face_marche",
    "rubrique": "personnages",
    "sujet": "arrivant-03",
@@ -35306,6 +39546,33 @@
     64
    ],
    "ms_par_image": 260,
+   "parcours": "epilogue",
+   "statut": "ok"
+  },
+  {
+   "id": "personnages/epilogue/arrivant-04/arrivant-04_avant_assis",
+   "rubrique": "personnages",
+   "sujet": "arrivant-04",
+   "vue": "avant",
+   "pose": "assis",
+   "titre": "Nouveau venu 4 (épilogue), trois quarts avant, assis",
+   "regarde": "bas-droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/epilogue/arrivant-04/arrivant-04_avant_assis_1.svg",
+    "svg/personnages/epilogue/arrivant-04/arrivant-04_avant_assis_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    700,
+    1100
+   ],
    "parcours": "epilogue",
    "statut": "ok"
   },
@@ -35387,6 +39654,33 @@
    "statut": "ok"
   },
   {
+   "id": "personnages/epilogue/arrivant-04/arrivant-04_dos_assis",
+   "rubrique": "personnages",
+   "sujet": "arrivant-04",
+   "vue": "dos",
+   "pose": "assis",
+   "titre": "Nouveau venu 4 (épilogue), trois quarts dos, assis",
+   "regarde": "haut-droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/epilogue/arrivant-04/arrivant-04_dos_assis_1.svg",
+    "svg/personnages/epilogue/arrivant-04/arrivant-04_dos_assis_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    700,
+    1100
+   ],
+   "parcours": "epilogue",
+   "statut": "ok"
+  },
+  {
    "id": "personnages/epilogue/arrivant-04/arrivant-04_dos_marche",
    "rubrique": "personnages",
    "sujet": "arrivant-04",
@@ -35464,6 +39758,32 @@
    "statut": "ok"
   },
   {
+   "id": "personnages/epilogue/arrivant-04/arrivant-04_face_assis",
+   "rubrique": "personnages",
+   "sujet": "arrivant-04",
+   "vue": "face",
+   "pose": "assis",
+   "titre": "Nouveau venu 4 (épilogue), de face, assis",
+   "regarde": "face",
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/epilogue/arrivant-04/arrivant-04_face_assis_1.svg",
+    "svg/personnages/epilogue/arrivant-04/arrivant-04_face_assis_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    700,
+    1100
+   ],
+   "parcours": "epilogue",
+   "statut": "ok"
+  },
+  {
    "id": "personnages/epilogue/arrivant-04/arrivant-04_face_marche",
    "rubrique": "personnages",
    "sujet": "arrivant-04",
@@ -35534,6 +39854,33 @@
     64
    ],
    "ms_par_image": 260,
+   "parcours": "epilogue",
+   "statut": "ok"
+  },
+  {
+   "id": "personnages/epilogue/arrivant-05/arrivant-05_avant_assis",
+   "rubrique": "personnages",
+   "sujet": "arrivant-05",
+   "vue": "avant",
+   "pose": "assis",
+   "titre": "Nouveau venu 5 (épilogue), trois quarts avant, assis",
+   "regarde": "bas-droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/epilogue/arrivant-05/arrivant-05_avant_assis_1.svg",
+    "svg/personnages/epilogue/arrivant-05/arrivant-05_avant_assis_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    700,
+    1100
+   ],
    "parcours": "epilogue",
    "statut": "ok"
   },
@@ -35615,6 +39962,33 @@
    "statut": "ok"
   },
   {
+   "id": "personnages/epilogue/arrivant-05/arrivant-05_dos_assis",
+   "rubrique": "personnages",
+   "sujet": "arrivant-05",
+   "vue": "dos",
+   "pose": "assis",
+   "titre": "Nouveau venu 5 (épilogue), trois quarts dos, assis",
+   "regarde": "haut-droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/epilogue/arrivant-05/arrivant-05_dos_assis_1.svg",
+    "svg/personnages/epilogue/arrivant-05/arrivant-05_dos_assis_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    700,
+    1100
+   ],
+   "parcours": "epilogue",
+   "statut": "ok"
+  },
+  {
    "id": "personnages/epilogue/arrivant-05/arrivant-05_dos_marche",
    "rubrique": "personnages",
    "sujet": "arrivant-05",
@@ -35692,6 +40066,32 @@
    "statut": "ok"
   },
   {
+   "id": "personnages/epilogue/arrivant-05/arrivant-05_face_assis",
+   "rubrique": "personnages",
+   "sujet": "arrivant-05",
+   "vue": "face",
+   "pose": "assis",
+   "titre": "Nouveau venu 5 (épilogue), de face, assis",
+   "regarde": "face",
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/epilogue/arrivant-05/arrivant-05_face_assis_1.svg",
+    "svg/personnages/epilogue/arrivant-05/arrivant-05_face_assis_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    700,
+    1100
+   ],
+   "parcours": "epilogue",
+   "statut": "ok"
+  },
+  {
    "id": "personnages/epilogue/arrivant-05/arrivant-05_face_marche",
    "rubrique": "personnages",
    "sujet": "arrivant-05",
@@ -35762,6 +40162,33 @@
     64
    ],
    "ms_par_image": 260,
+   "parcours": "epilogue",
+   "statut": "ok"
+  },
+  {
+   "id": "personnages/epilogue/arrivant-06/arrivant-06_avant_assis",
+   "rubrique": "personnages",
+   "sujet": "arrivant-06",
+   "vue": "avant",
+   "pose": "assis",
+   "titre": "Nouveau venu 6 (épilogue), trois quarts avant, assis",
+   "regarde": "bas-droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/epilogue/arrivant-06/arrivant-06_avant_assis_1.svg",
+    "svg/personnages/epilogue/arrivant-06/arrivant-06_avant_assis_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    700,
+    1100
+   ],
    "parcours": "epilogue",
    "statut": "ok"
   },
@@ -35843,6 +40270,33 @@
    "statut": "ok"
   },
   {
+   "id": "personnages/epilogue/arrivant-06/arrivant-06_dos_assis",
+   "rubrique": "personnages",
+   "sujet": "arrivant-06",
+   "vue": "dos",
+   "pose": "assis",
+   "titre": "Nouveau venu 6 (épilogue), trois quarts dos, assis",
+   "regarde": "haut-droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/epilogue/arrivant-06/arrivant-06_dos_assis_1.svg",
+    "svg/personnages/epilogue/arrivant-06/arrivant-06_dos_assis_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    700,
+    1100
+   ],
+   "parcours": "epilogue",
+   "statut": "ok"
+  },
+  {
    "id": "personnages/epilogue/arrivant-06/arrivant-06_dos_marche",
    "rubrique": "personnages",
    "sujet": "arrivant-06",
@@ -35920,6 +40374,32 @@
    "statut": "ok"
   },
   {
+   "id": "personnages/epilogue/arrivant-06/arrivant-06_face_assis",
+   "rubrique": "personnages",
+   "sujet": "arrivant-06",
+   "vue": "face",
+   "pose": "assis",
+   "titre": "Nouveau venu 6 (épilogue), de face, assis",
+   "regarde": "face",
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/epilogue/arrivant-06/arrivant-06_face_assis_1.svg",
+    "svg/personnages/epilogue/arrivant-06/arrivant-06_face_assis_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    700,
+    1100
+   ],
+   "parcours": "epilogue",
+   "statut": "ok"
+  },
+  {
    "id": "personnages/epilogue/arrivant-06/arrivant-06_face_marche",
    "rubrique": "personnages",
    "sujet": "arrivant-06",
@@ -35990,6 +40470,33 @@
     64
    ],
    "ms_par_image": 260,
+   "parcours": "epilogue",
+   "statut": "ok"
+  },
+  {
+   "id": "personnages/epilogue/arrivant-07/arrivant-07_avant_assis",
+   "rubrique": "personnages",
+   "sujet": "arrivant-07",
+   "vue": "avant",
+   "pose": "assis",
+   "titre": "Nouveau venu 7 (épilogue), trois quarts avant, assis",
+   "regarde": "bas-droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/epilogue/arrivant-07/arrivant-07_avant_assis_1.svg",
+    "svg/personnages/epilogue/arrivant-07/arrivant-07_avant_assis_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    700,
+    1100
+   ],
    "parcours": "epilogue",
    "statut": "ok"
   },
@@ -36071,6 +40578,33 @@
    "statut": "ok"
   },
   {
+   "id": "personnages/epilogue/arrivant-07/arrivant-07_dos_assis",
+   "rubrique": "personnages",
+   "sujet": "arrivant-07",
+   "vue": "dos",
+   "pose": "assis",
+   "titre": "Nouveau venu 7 (épilogue), trois quarts dos, assis",
+   "regarde": "haut-droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/epilogue/arrivant-07/arrivant-07_dos_assis_1.svg",
+    "svg/personnages/epilogue/arrivant-07/arrivant-07_dos_assis_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    700,
+    1100
+   ],
+   "parcours": "epilogue",
+   "statut": "ok"
+  },
+  {
    "id": "personnages/epilogue/arrivant-07/arrivant-07_dos_marche",
    "rubrique": "personnages",
    "sujet": "arrivant-07",
@@ -36148,6 +40682,32 @@
    "statut": "ok"
   },
   {
+   "id": "personnages/epilogue/arrivant-07/arrivant-07_face_assis",
+   "rubrique": "personnages",
+   "sujet": "arrivant-07",
+   "vue": "face",
+   "pose": "assis",
+   "titre": "Nouveau venu 7 (épilogue), de face, assis",
+   "regarde": "face",
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/epilogue/arrivant-07/arrivant-07_face_assis_1.svg",
+    "svg/personnages/epilogue/arrivant-07/arrivant-07_face_assis_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    700,
+    1100
+   ],
+   "parcours": "epilogue",
+   "statut": "ok"
+  },
+  {
    "id": "personnages/epilogue/arrivant-07/arrivant-07_face_marche",
    "rubrique": "personnages",
    "sujet": "arrivant-07",
@@ -36218,6 +40778,33 @@
     64
    ],
    "ms_par_image": 260,
+   "parcours": "epilogue",
+   "statut": "ok"
+  },
+  {
+   "id": "personnages/epilogue/arrivant-08/arrivant-08_avant_assis",
+   "rubrique": "personnages",
+   "sujet": "arrivant-08",
+   "vue": "avant",
+   "pose": "assis",
+   "titre": "Nouveau venu 8 (épilogue), trois quarts avant, assis",
+   "regarde": "bas-droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/epilogue/arrivant-08/arrivant-08_avant_assis_1.svg",
+    "svg/personnages/epilogue/arrivant-08/arrivant-08_avant_assis_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    700,
+    1100
+   ],
    "parcours": "epilogue",
    "statut": "ok"
   },
@@ -36299,6 +40886,33 @@
    "statut": "ok"
   },
   {
+   "id": "personnages/epilogue/arrivant-08/arrivant-08_dos_assis",
+   "rubrique": "personnages",
+   "sujet": "arrivant-08",
+   "vue": "dos",
+   "pose": "assis",
+   "titre": "Nouveau venu 8 (épilogue), trois quarts dos, assis",
+   "regarde": "haut-droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/epilogue/arrivant-08/arrivant-08_dos_assis_1.svg",
+    "svg/personnages/epilogue/arrivant-08/arrivant-08_dos_assis_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    700,
+    1100
+   ],
+   "parcours": "epilogue",
+   "statut": "ok"
+  },
+  {
    "id": "personnages/epilogue/arrivant-08/arrivant-08_dos_marche",
    "rubrique": "personnages",
    "sujet": "arrivant-08",
@@ -36372,6 +40986,32 @@
     64
    ],
    "ms_par_image": 260,
+   "parcours": "epilogue",
+   "statut": "ok"
+  },
+  {
+   "id": "personnages/epilogue/arrivant-08/arrivant-08_face_assis",
+   "rubrique": "personnages",
+   "sujet": "arrivant-08",
+   "vue": "face",
+   "pose": "assis",
+   "titre": "Nouveau venu 8 (épilogue), de face, assis",
+   "regarde": "face",
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/epilogue/arrivant-08/arrivant-08_face_assis_1.svg",
+    "svg/personnages/epilogue/arrivant-08/arrivant-08_face_assis_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    700,
+    1100
+   ],
    "parcours": "epilogue",
    "statut": "ok"
   },
