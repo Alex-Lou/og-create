@@ -43,6 +43,16 @@ export default {
     }
     this.syncLoop();
   },
+  // Un dessin vient d'arriver : l'île sera redessinée à l'image suivante, une seule fois pour tous ceux qui arrivent
+  // ensemble, et seulement si la boucle ne tourne pas déjà (mouvement réduit). Un redessin complet par dessin lu, tout
+  // de suite, faisait des centaines de dessins de l'île pendant son chargement
+  repaintSoon() {
+    if (this.raf || this.repaintRaf) return;
+    this.repaintRaf = requestAnimationFrame(() => {
+      this.repaintRaf = 0;
+      this.draw(performance.now());
+    });
+  },
   diamond(ctx, cx, cy, w, h) {
     ctx.beginPath();
     ctx.moveTo(cx, cy - h / 2);
@@ -210,7 +220,7 @@ export default {
         .filter(sign => sign.at && seen(sign.at.x, sign.at.y)).map(sign => ({ depth: sign.at.x + sign.at.y, sign }))
     ].sort((p, q) => p.depth - q.depth);
     this.signs = [];
-    const repaint = () => this.draw(performance.now());
+    const repaint = this.repaintSoon;
     for (const item of standing) {
       if (item.site) this.drawSite(ctx, item.site, t, now, repaint);
       else if (item.craft) {
