@@ -535,8 +535,9 @@ const reservoir = {
     }
   }]
 };
-// Éolienne de pompage : pylône de bois croisé, roue à pales qui tourne au vent, gouvernail ; la tige pompe l'eau
-// dans l'abreuvoir
+// Éolienne de pompage : pylône de bois aux croisillons, échelle et plateforme ; la roue à pales rouges et crème cerclée
+// qui tourne au vent, son gouvernail étoilé ; la tige pompe l'eau qui coule du bec dans l'abreuvoir, où boit un mouton ;
+// l'herbe fleurie
 const eolienne = {
   layers: [{
     frame: [-34, -108, 68, 126],
@@ -544,32 +545,57 @@ const eolienne = {
     fps: 8,
     draw: (T, f, n) => {
       const top = 64;
+      const [x, y] = T.p(0, 0, 0);
+      // l'herbe et ses fleurs
+      let out = ell(x, y + 1, 30, 12.6, '#9CC46A', ` stroke="${OUT}" stroke-width="0.5"`) + ell(x - 4, y, 20, 7.6, '#ADD27A')
+        + [[-18, 6, '#F2C04B'], [-14, 8, '#FFFFFF'], [16, 7, '#E89AC0'], [22, 3, '#F2C04B'], [8, 10, '#FFFFFF'], [-24, 1, '#E89AC0']].map(([dx, dy, c]) => ln([x + dx, y + dy], [x + dx, y + dy - 2.6], '#6F8C46', 0.5) + dot(x + dx, y + dy - 2.8, 0.9, c)).join('')
+        + T.shadow(0, 0, 0.38, 0.18);
+      // le pylône : quatre pieds, des ceintures et des croisillons sur les faces visibles
       const legs = [[-0.2, -0.2], [0.2, -0.2], [-0.2, 0.2], [0.2, 0.2]];
-      let tower = legs.map(([a, b]) => ln(T.p(a, b, 0), T.p(a * 0.25, b * 0.25, top), WOOD_DARK.right, 1.6)).join('');
-      for (const z of [12, 26, 40, 52]) {
-        const k = 1 - (z / top) * 0.75;
-        const ring = legs.map(([a, b]) => T.p(a * k, b * k, z));
-        tower += ln(ring[0], ring[1], WOOD.left, 0.9) + ln(ring[1], ring[3], WOOD.left, 0.9) + ln(ring[3], ring[2], WOOD.left, 0.9);
-      }
+      const ringAt = z => { const k = 1 - (z / top) * 0.75; return legs.map(([a, b]) => T.p(a * k, b * k, z)); };
+      out += legs.map(([a, b]) => ln(T.p(a, b, 0), T.p(a * 0.25, b * 0.25, top), WOOD_DARK.right, 1.7)).join('');
+      const zs = [0, 12, 26, 40, 52];
+      zs.forEach((z, i) => {
+        const r = ringAt(z);
+        if (i) out += ln(r[0], r[1], WOOD.left, 0.9) + ln(r[1], r[3], WOOD.left, 1) + ln(r[3], r[2], WOOD.left, 1) + ln(r[2], r[0], WOOD.left, 0.9);
+        if (i < zs.length - 1) { const s = ringAt(zs[i + 1]); out += ln(r[2], s[3], 'rgba(110,74,44,.8)', 0.6) + ln(r[3], s[2], 'rgba(110,74,44,.8)', 0.6) + ln(r[1], s[3], 'rgba(110,74,44,.8)', 0.6) + ln(r[3], s[1], 'rgba(110,74,44,.8)', 0.6); }
+      });
+      // l'échelle le long du pied de devant, la plateforme et sa rambarde
+      out += ln(T.p(-0.17, 0.23, 0), T.p(-0.06, 0.1, 57), WOOD.right, 0.9) + ln(T.p(-0.23, 0.17, 0), T.p(-0.1, 0.06, 57), WOOD.right, 0.9)
+        + [6, 14, 22, 30, 38, 46, 54].map(z => { const k = z / 57; return ln(T.p(-0.17 + 0.11 * k, 0.23 - 0.13 * k, z), T.p(-0.23 + 0.13 * k, 0.17 - 0.11 * k, z), WOOD.top, 0.7); }).join('')
+        + T.box(-0.11, -0.11, 0.11, 0.11, 57, 58.6, WOOD)
+        + [[-0.11, 0.11], [0.11, 0.11], [0.11, -0.11]].map(([a, b]) => ln(T.p(a, b, 58.6), T.p(a, b, 62), WOOD_DARK.right, 0.8)).join('')
+        + ln(T.p(-0.11, 0.11, 62), T.p(0.11, 0.11, 62), WOOD.top, 0.8) + ln(T.p(0.11, 0.11, 62), T.p(0.11, -0.11, 62), WOOD.top, 0.8);
+      // la tige de pompe, la tête de pompe et son bec, le filet d'eau, l'abreuvoir
+      const k = f / n;
+      out += ln(T.p(0, 0, 4), T.p(0, 0, top), IRON.right, 0.9)
+        + T.box(-0.04, -0.04, 0.04, 0.04, 0, 9, DARK_IRON) + ln(T.p(0, 0.04, 7), T.p(-0.1, 0.16, 6.6), DARK_IRON.left, 1.6) + ln(T.p(0.06, 0, 9), T.p(0.12, 0, 11 + Math.sin(k * TAU) * 1.4), DARK_IRON.right, 1);
+      const [sx, sy] = T.p(-0.1, 0.16, 6.2), [wx, wy] = T.p(-0.14, 0.2, 4);
+      out += `<path d="M${f2(sx)},${f2(sy)} L${f2(wx)},${f2(wy)}" stroke="#7FC2EA" stroke-width="1.2" stroke-dasharray="1.6 1.2" stroke-dashoffset="${f2(-k * 6)}"/>`
+        + T.box(-0.34, 0.12, -0.04, 0.34, 0, 4, WOOD_DARK) + T.face([[-0.32, 0.14, 4], [-0.06, 0.14, 4], [-0.06, 0.32, 4], [-0.32, 0.32, 4]], '#4C9CC8')
+        + ln(T.p(-0.34, 0.34, 2), T.p(-0.04, 0.34, 2), 'rgba(40,25,15,.35)', 0.6)
+        + `<ellipse cx="${f2(wx)}" cy="${f2(wy)}" rx="${f2(1.4 + k * 3.4)}" ry="${f2(0.7 + k * 1.7)}" fill="none" stroke="rgba(255,255,255,${f2(0.8 * (1 - k))})" stroke-width="0.6"/>`
+        + ell(...T.p(-0.24, 0.26, 4), 2.6, 0.6, 'rgba(255,255,255,.55)');
+      // le mouton qui boit à l'abreuvoir
+      const [mx, my] = T.p(-0.46, 0.34, 0);
+      out += sheep(mx, my, false, f % 4 < 2);
+      // le chapeau de la roue, le gouvernail étoilé
       const [hx, hy] = T.p(0.02, 0.08, top + 6);
-      const turn = (f / n) * (TAU / 12);
-      let blades = '';
-      for (let k = 0; k < 12; k++) {
-        const a = turn + (k / 12) * TAU;
-        const pt = (r, da) => [hx + Math.cos(a + da) * r * 0.82, hy + Math.sin(a + da) * r];
-        blades += poly([pt(4, -0.12), pt(19, -0.16), pt(19, 0.16), pt(4, 0.12)], k % 2 ? '#F4ECDC' : '#E2574C', ` stroke="${OUT}" stroke-width="0.4"`);
-      }
-      return T.shadow(0, 0, 0.38, 0.18)
-        + T.box(-0.32, 0.12, -0.04, 0.34, 0, 4, WOOD_DARK) + T.face([[-0.3, 0.14, 4], [-0.06, 0.14, 4], [-0.06, 0.32, 4], [-0.3, 0.32, 4]], '#4C9CC8')
-        + tower
-        + ln(T.p(0, 0, 4), T.p(0, 0, top), IRON.right, 0.9) + ln(T.p(0, 0, 6), T.p(-0.16, 0.2, 6), IRON.right, 1.4)
-        + T.box(-0.05, -0.05, 0.05, 0.05, top, top + 3, WOOD)
-        // Gouvernail derrière la roue
+      out += T.box(-0.05, -0.05, 0.05, 0.05, top, top + 3, WOOD)
         + poly([T.p(-0.02, -0.04, top + 7), T.p(-0.3, -0.34, top + 12), T.p(-0.3, -0.34, top + 2)], '#F4ECDC', ` stroke="${OUT}" stroke-width="0.5"`)
-        + ln(T.p(0, 0, top + 6), T.p(-0.24, -0.28, top + 7), WOOD_DARK.right, 1.2)
-        + `<circle cx="${f2(hx)}" cy="${f2(hy)}" r="19.5" fill="none" stroke="rgba(60,40,25,.5)" stroke-width="0.6" transform="matrix(0.82 0 0 1 ${f2(hx * 0.18)} 0)"/>`
-        + blades
-        + dot(hx, hy, 2.2, DARK_IRON.right);
+        + star(...T.p(-0.22, -0.25, top + 7), 2.4, '#E2574C')
+        + ln(T.p(0, 0, top + 6), T.p(-0.24, -0.28, top + 7), WOOD_DARK.right, 1.2);
+      // la roue : pales rouges et crème, son cercle de fer, son moyeu
+      const turn = k * (TAU / 12);
+      const pt = (a, r) => [hx + Math.cos(a) * r * 0.82, hy + Math.sin(a) * r];
+      for (let i = 0; i < 12; i++) {
+        const a = turn + (i / 12) * TAU;
+        out += poly([pt(a - 0.12, 4), pt(a - 0.16, 19), pt(a + 0.16, 19), pt(a + 0.12, 4)], i % 2 ? '#F4ECDC' : '#E2574C', ` stroke="${OUT}" stroke-width="0.4"`);
+      }
+      out += `<ellipse cx="${f2(hx)}" cy="${f2(hy)}" rx="${f2(19.4 * 0.82)}" ry="19.4" fill="none" stroke="${OUT}" stroke-width="1.6"/><ellipse cx="${f2(hx)}" cy="${f2(hy)}" rx="${f2(19.4 * 0.82)}" ry="19.4" fill="none" stroke="${IRON.left}" stroke-width="0.8"/>`
+        + `<ellipse cx="${f2(hx)}" cy="${f2(hy)}" rx="${f2(10 * 0.82)}" ry="10" fill="none" stroke="rgba(60,40,25,.45)" stroke-width="0.6"/>`
+        + dot(hx, hy, 2.6, DARK_IRON.right) + dot(hx - 0.7, hy - 0.8, 0.8, IRON.top);
+      return out;
     }
   }]
 };
