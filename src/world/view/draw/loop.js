@@ -271,7 +271,7 @@ export default {
     this.climateT = t;
     drawClimate(ctx, width, height, t, this.climateMix, this.reduced());
     ctx.setTransform(worldTransform);
-    this.drawLights(ctx, t, phase);
+    this.drawLights(ctx, t, phase, view);
     // La nuit, le plancton s'allume dans l'écume et les méduses luisent
     ctx.save();
     ctx.globalCompositeOperation = 'lighter';

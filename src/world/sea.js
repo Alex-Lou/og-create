@@ -305,9 +305,11 @@ export function drawSpout(ctx, spout) {
 
 /* ---------- Méduses ---------- */
 
-// Méduses qui dérivent en eau libre, la nuit
+// Méduses qui dérivent en eau libre, la nuit (leurs places, choisies une fois par mer)
+const JELLY_SPOTS = new WeakMap();
 export function jelliesAt(open, t) {
-  return spread(open.filter(o => o.d >= 4), 5, 5).map((o, k) => ({
+  if (!JELLY_SPOTS.has(open)) JELLY_SPOTS.set(open, spread(open.filter(o => o.d >= 4), 5, 5));
+  return JELLY_SPOTS.get(open).map((o, k) => ({
     x: o.x + Math.sin(t * 0.05 + k * 2) * 0.7,
     y: o.y + Math.cos(t * 0.04 + k * 3) * 0.7,
     pulse: 0.5 + 0.5 * Math.sin(t * 1.6 + k * 2.3),
