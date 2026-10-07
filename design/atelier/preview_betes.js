@@ -39,6 +39,7 @@ const LIST = [
   ['bestiaire', 'hibou', 'Hibou (de face)', 'OWL', WALK, p => Bt.owl(p)],
   ['bestiaire', 'meduse', 'Méduse', 'JELLY', ['0', '1'], p => Bt.jelly(+p)],
   ['familiers', 'tictac', 'Tic-Tac (abeille mécanique de Rivet)', 'TICTAC', FLY, p => Bt.bee(p, true)],
+  ['familiers', 'amie_tictac', 'L\'amie de Tic-Tac (Rivet la fabrique quand on écrit Abeille)', 'TICTAC', FLY, p => Bt.beeFriend(p)],
   ['familiers', 'mousse', 'Mousse (renardeau de Sylve)', ...q('kit')],
   ['familiers', 'bocal_vide', 'Bocal d\'Ondin (vide)', 'BOWL', ['0'], () => Bt.bowl('vide', 0)],
   ['familiers', 'bocal_bulle', 'Bocal d\'Ondin (Bulle revenu)', 'BOWL', ['0', '1'], p => Bt.bowl('bulle', +p)],

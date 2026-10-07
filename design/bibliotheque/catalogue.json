@@ -87,10 +87,6 @@
   {
    "parcours": "acte-1",
    "quoi": "L'éclat du souvenir retrouvé (le sceau s'allume, le maître se lève outil en main)."
-  },
-  {
-   "parcours": "acte-4",
-   "quoi": "L'amie de Tic-Tac (quand on écrit Abeille)."
   }
  ],
  "entrees": [
@@ -25767,6 +25763,74 @@
     30,
     25
    ],
+   "parcours": "acte-4",
+   "statut": "ok"
+  },
+  {
+   "id": "animaux/familiers/amie-tictac/amie-tictac_profil_joie",
+   "rubrique": "animaux",
+   "sujet": "amie-tictac",
+   "vue": "profil",
+   "pose": "joie",
+   "titre": "L'amie de Tic-Tac, que Rivet lui fabrique, de profil, joie",
+   "regarde": "droite",
+   "miroir": true,
+   "images": 1,
+   "fichiers": [
+    "svg/animaux/familiers/amie-tictac/amie-tictac_profil_joie.svg"
+   ],
+   "cadre": [
+    -7.5,
+    -12.5,
+    15,
+    13.75
+   ],
+   "parcours": "acte-4",
+   "statut": "ok"
+  },
+  {
+   "id": "animaux/familiers/amie-tictac/amie-tictac_profil_repos",
+   "rubrique": "animaux",
+   "sujet": "amie-tictac",
+   "vue": "profil",
+   "pose": "repos",
+   "titre": "L'amie de Tic-Tac, que Rivet lui fabrique, de profil, repos",
+   "regarde": "droite",
+   "miroir": true,
+   "images": 1,
+   "fichiers": [
+    "svg/animaux/familiers/amie-tictac/amie-tictac_profil_repos.svg"
+   ],
+   "cadre": [
+    -7.5,
+    -12.5,
+    15,
+    13.75
+   ],
+   "parcours": "acte-4",
+   "statut": "ok"
+  },
+  {
+   "id": "animaux/familiers/amie-tictac/amie-tictac_profil_vol",
+   "rubrique": "animaux",
+   "sujet": "amie-tictac",
+   "vue": "profil",
+   "pose": "vol",
+   "titre": "L'amie de Tic-Tac, que Rivet lui fabrique, de profil, vol",
+   "regarde": "droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/animaux/familiers/amie-tictac/amie-tictac_profil_vol_1.svg",
+    "svg/animaux/familiers/amie-tictac/amie-tictac_profil_vol_2.svg"
+   ],
+   "cadre": [
+    -7.5,
+    -12.5,
+    15,
+    13.75
+   ],
+   "ms_par_image": 120,
    "parcours": "acte-4",
    "statut": "ok"
   },

@@ -559,6 +559,32 @@ function bee(pose, meca = false) {
   if (pose === 'joie') s += heartIcon(2.6, y - 4, 0.8);
   return `<g transform="translate(0 ${pose === 'repos' ? 1.2 : 1.6})">${s}</g>`;
 }
+// L'amie de Tic-Tac (acte IV, quand on écrit Abeille, Rivet la fabrique) : une abeille mécanique plus ronde, en cuivre
+// rosé rayé de cuivre sombre, ailes de verre rosé, grand œil à cil, une antenne fleurie, clé de remontoir en cœur
+function beeFriend(pose) {
+  const flap = pose === 'vol2' ? 0.4 : pose === 'repos' ? 0.55 : 1;
+  const y = pose === 'repos' ? -2.8 : -4.2;
+  const glass = (d) => P(d, '#F6DDE6', 0.5).replace('fill=', 'fill-opacity="0.85" fill=');
+  let s = '';
+  s += `<g transform="translate(-0.6 ${y - 1.6}) scale(1 ${flap})">${glass('M0,0 Q-2.6,-4 0.2,-4.4 Q1.8,-2.6 0.6,0 Z')}${glass('M-0.6,0.2 Q-3.6,-2.2 -2.6,-3.4 Q-1,-2.8 -0.2,0 Z')}</g>`;
+  // la clé de remontoir en cœur, sur le dos
+  s += limb([-0.8, y - 2], [-1.4, y - 3.8], 0.5, '#C9A24A') + heartIcon(-1.6, y - 4.6, 0.75).replace('#F27A8A', '#E2C26A');
+  // le corps rond, ses rayures, un reflet, deux rivets, la pointe de laiton
+  s += E(0, y, 2.9, 2.4, '#D98B5F');
+  s += clip(`amie${pose}`, `M-2.9,${y} a2.9,2.4 0 1,0 5.8,0 a2.9,2.4 0 1,0 -5.8,0 Z`, [-1.3, 0.4].map(x => `<rect x="${x}" y="${y - 3}" width="0.85" height="6" fill="#A85A3A"/>`).join('') + `<ellipse cx="-0.6" cy="${y - 1.3}" rx="1.4" ry="0.6" fill="#FFFFFF" fill-opacity="0.45"/>`);
+  s += E(0, y, 2.9, 2.4, 'none') + E(-2, y + 0.8, 0.28, 0.28, '#F0D58A', 0) + E(1.2, y + 1.5, 0.28, 0.28, '#F0D58A', 0);
+  s += P(`M-2.8,${r2(y + 0.2)} L-3.9,${r2(y + 0.6)} L-2.8,${r2(y + 1)} Z`, '#C9A24A', 0.5);
+  // la tête, l'œil à cil (fermé de joie), la joue, les antennes (l'une fleurie)
+  const hx = 2.7, hy = y - 0.7;
+  s += stroke(`M${hx - 0.2},${r2(hy - 1.3)} Q${hx - 0.6},${r2(hy - 3)} ${hx - 1.6},${r2(hy - 3.2)}`, 0.35, OUT) + stroke(`M${hx + 0.4},${r2(hy - 1.3)} Q${hx + 1},${r2(hy - 2.8)} ${hx + 1.8},${r2(hy - 2.8)}`, 0.35, OUT);
+  s += E(hx - 1.7, hy - 3.2, 0.4, 0.4, '#E2C26A', 0.3) + [0, 72, 144, 216, 288].map(a => E(hx + 1.8 + Math.cos(a * Math.PI / 180) * 0.55, hy - 2.8 + Math.sin(a * Math.PI / 180) * 0.55, 0.42, 0.42, '#F7C6D9', 0.25)).join('') + E(hx + 1.8, hy - 2.8, 0.25, 0.25, '#F2C94C', 0);
+  s += E(hx, hy, 1.65, 1.5, '#EBB08A', 0.8);
+  s += pose === 'joie' ? P(`M${hx - 0.2},${r2(hy - 0.1)} Q${hx + 0.45},${r2(hy - 0.8)} ${hx + 1.1},${r2(hy - 0.1)}`, 'none', 0.45)
+    : E(hx + 0.45, hy - 0.2, 0.55, 0.7, EYE, 0) + E(hx + 0.6, hy - 0.45, 0.22, 0.22, '#FFFFFF', 0) + L([hx + 0.95, hy - 0.8], [hx + 1.35, hy - 1.15], OUT, 0.25);
+  s += E(hx + 0.1, hy + 0.75, 0.5, 0.25, '#F7A8B0', 0);
+  if (pose === 'joie') s += heartIcon(2.8, y - 4.6, 0.8);
+  return `<g transform="translate(0 ${pose === 'repos' ? 1.2 : 1.6})">${s}</g>`;
+}
 // Hibou de face (comme le jeu) ; marche1/2 : tête penchée ; repos : endormi
 function owl(pose) {
   const tilt = pose === 'marche1' ? -6 : pose === 'marche2' ? 6 : 0;
@@ -652,4 +678,4 @@ function jelly(n) {
   return s;
 }
 
-Object.assign(module.exports, { butterfly, firefly, bee, owl, koi, fish, dolphin, whaleBack, whaleFluke, bowl, jelly });
+Object.assign(module.exports, { butterfly, firefly, bee, beeFriend, owl, koi, fish, dolphin, whaleBack, whaleFluke, bowl, jelly });
