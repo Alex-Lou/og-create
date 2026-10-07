@@ -2,9 +2,9 @@
 // Emprise de 2 × 2 cases (u, v ∈ [-1, 1]), ancrage au centre de l'emprise.
 import { P, TW, face, box, gable, pyramid, disc, cylinder, shadow, sprite, EDGE } from './iso.js';
 import {
-  WOOD, WOOD_DARK, STONE, WALL, BRICK, SOIL, ROOF_RED, PINE, BUILDING_BOX,
+  WOOD, WOOD_DARK, STONE, WALL, BRICK, ROOF_RED, PINE, BUILDING_BOX,
   pebble, doorLeft, windowLeft, windowRight, planksLeft, planksRight, roundTree,
-  WHITE_STONE, ROCKS, FOLIAGE, roofOf, roofTexture, stoneCourses, seasonDots, crystals, rockBox, stoneRing, pool, cove
+  WHITE_STONE, ROCKS, FOLIAGE, roofOf, roofTexture, stoneCourses, seasonDots, crystals, rockBox, stoneRing, pool, cove, soilBed, leafPair
 } from './palette.js';
 import { gardenFence, goldenSign } from './sprites.js';
 
@@ -282,7 +282,7 @@ function greenhouseGarden(skin) {
   for (let j = 0; j < 4; j++) {
     for (let k = 0; k < 2; k++) {
       const [x, y] = P(-0.6 + j * 0.38, 0.25 + k * 0.38, 4);
-      plants += `<ellipse cx="${x - 3}" cy="${y - 3}" rx="3.6" ry="2.1" fill="#86CB5E" transform="rotate(-30 ${x - 3} ${y - 3})"/><ellipse cx="${x + 3}" cy="${y - 3}" rx="3.6" ry="2.1" fill="#6DB64C" transform="rotate(30 ${x + 3} ${y - 3})"/><circle cx="${x}" cy="${y - 5}" r="2" fill="#E2574C"/>`;
+      plants += leafPair(x, y, 3.6, 2.1, 3) + `<circle cx="${x}" cy="${y - 5}" r="2" fill="#E2574C" stroke="#3C2819" stroke-width="0.5"/>`;
     }
   }
   const glass = 'rgba(205,235,245,.55)';
@@ -290,7 +290,7 @@ function greenhouseGarden(skin) {
   return sprite(
     shadow(0, 0, 1.15, 0.14)
     + (skin ? gardenFence(skin) : '')
-    + box(-0.85, 0.05, 0.85, 0.85, 0, 4, SOIL) + plants
+    + soilBed(-0.85, 0.05, 0.85, 0.85, 4) + plants
     // Serre : armature et vitres
     + box(-0.8, -0.85, 0.3, -0.2, 0, 22, { top: glass, left: glass, right: 'rgba(170,205,220,.6)' }, ' stroke="#FFFFFF" stroke-width="1.2" stroke-linejoin="round"')
     + gable(-0.8, -0.85, 0.3, -0.2, 22, 14, { front: 'rgba(220,245,255,.7)', back: 'rgba(170,205,220,.7)', gable: glass }, 0.03, ' stroke="#FFFFFF" stroke-width="1.2" stroke-linejoin="round"')

@@ -1,7 +1,7 @@
 // Potager, paliers III à VII : Verger, Ferme, Moulin, Domaine, Jardin de la Licorne.
 // Places laissées libres pour la boutique : pelle et arrosoir dans les planches de devant, poulailler au coin droit
 // (derrière), poules à l'avant, ruche au coin gauche (× 1.5 dès le palier IV).
-import { SOIL, BUILDING_BOX, ROOF_RED, roundTree, roofOf, roofTexture } from '../palette.js';
+import { BUILDING_BOX, ROOF_RED, roundTree, roofOf, roofTexture, soilBed, furrow, leafPair } from '../palette.js';
 import { gardenFence } from '../sprites.js';
 import { sprite, shadow } from '../iso.js';
 import {
@@ -20,16 +20,16 @@ function appleTree(u, v, s) {
 }
 // Planche cultivée de [u0, u1] × [v0, v1] : terre, sillons le long de u, plants (kind : légumes, blé, fleurs)
 function bed(u0, v0, u1, v1, kind = 'veg', rows = 3) {
-  let out = box(u0, v0, u1, v1, 0, 3, SOIL);
+  let out = soilBed(u0, v0, u1, v1, 3);
   const dv = (v1 - v0) / rows;
   for (let r = 0; r < rows; r++) {
     const v = v0 + dv * (r + 0.5);
-    out += face([[u0 + 0.04, v - dv * 0.18, 3.1], [u1 - 0.04, v - dv * 0.18, 3.1], [u1 - 0.04, v + dv * 0.18, 3.1], [u0 + 0.04, v + dv * 0.18, 3.1]], '#6B4329');
+    out += furrow(u0 + 0.04, u1 - 0.04, v, dv * 0.18, 3.1);
     for (let u = u0 + 0.1; u < u1 - 0.05; u += 0.16) {
       const [x, y] = P(u, v, 3);
       if (kind === 'wheat') out += [-2, 0, 2].map(dx => ln([x + dx, y], [x + dx * 1.4, y - 9], '#D9AE45', 0.9) + ell(x + dx * 1.5, y - 10, 1, 2.2, WHEAT)).join('');
-      else if (kind === 'flowers') out += dot(x, y - 4, 2.2, ['#F7A8C8', '#FFD45E', '#A98ADB', '#FFFFFF'][((Math.round((u + v) * 13) % 4) + 4) % 4]) + ln([x, y], [x, y - 3], '#6DB04F', 0.8);
-      else out += `<ellipse cx="${f2(x - 2.6)}" cy="${f2(y - 2.6)}" rx="3.2" ry="1.9" fill="#86CB5E" transform="rotate(-30 ${f2(x - 2.6)} ${f2(y - 2.6)})"/><ellipse cx="${f2(x + 2.6)}" cy="${f2(y - 2.6)}" rx="3.2" ry="1.9" fill="#6DB04F" transform="rotate(30 ${f2(x + 2.6)} ${f2(y - 2.6)})"/>` + dot(x, y - 4.6, 1.8, (Math.round(u * 10) % 2) ? '#E2463A' : '#F08A3A');
+      else if (kind === 'flowers') out += ln([x, y], [x, y - 3], '#6DB04F', 0.8) + `<circle cx="${f2(x)}" cy="${f2(y - 4)}" r="2.2" fill="${['#F7A8C8', '#FFD45E', '#A98ADB', '#FFFFFF'][((Math.round((u + v) * 13) % 4) + 4) % 4]}" stroke="${OUT}" stroke-width="0.5"/>` + dot(x, y - 4, 0.7, '#FFE07A');
+      else out += leafPair(x, y, 3.2, 1.9, 2.6, '#86CB5E', '#6DB04F') + `<circle cx="${f2(x)}" cy="${f2(y - 4.6)}" r="1.8" fill="${(Math.round(u * 10) % 2) ? '#E2463A' : '#F08A3A'}" stroke="${OUT}" stroke-width="0.5"/>`;
     }
   }
   return out;

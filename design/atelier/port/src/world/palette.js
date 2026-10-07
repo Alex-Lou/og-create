@@ -115,6 +115,32 @@ export function cove(u, v, r, light = '#6FC0E4', deep = '#5AAED7') {
     + [[-0.55, 0.3], [0.5, 0.45], [-0.15, 0.62], [0.62, -0.2], [-0.62, -0.3]].map(([a, b]) => wave(a, b, k)).join('')
     + star(x - rx * 0.4, y + ry * 0.45, 1.8 * k) + star(x + rx * 0.3, y + ry * 0.7, 1.3 * k);
 }
+// Planche de terre du Potager de [u0, u1] × [v0, v1], haute de h : la boîte de terre, l'arête avant du dessus éclairée,
+// des grumeaux sur les flancs et quelques mottes sur le dessus (places fixes)
+export function soilBed(u0, v0, u1, v1, h) {
+  const du = u1 - u0, dv = v1 - v0;
+  const pt = q => P(...q).map(n => rnd2(n)).join(',');
+  const speck = (q, rx, c) => { const [x, y] = P(...q); return `<ellipse cx="${rnd2(x)}" cy="${rnd2(y)}" rx="${rx}" ry="${rnd2(rx * 0.6)}" fill="${c}"/>`; };
+  return box(u0, v0, u1, v1, 0, h, SOIL)
+    + `<polyline points="${pt([u0 + 0.02, v1 - 0.02, h])} ${pt([u1 - 0.02, v1 - 0.02, h])} ${pt([u1 - 0.02, v0 + 0.02, h])}" fill="none" stroke="#B07A50" stroke-width="1" opacity=".9"/>`
+    + [0.12, 0.31, 0.5, 0.66, 0.84].map((a, k) => speck([u0 + du * a, v1, h * (k % 2 ? 0.35 : 0.62)], 1, k % 2 ? '#4E301C' : '#946240')).join('')
+    + [0.2, 0.45, 0.72].map((a, k) => speck([u1, v0 + dv * a, h * (k % 2 ? 0.6 : 0.35)], 0.9, k % 2 ? '#946240' : '#3F2716')).join('')
+    + [[0.08, 0.92], [0.5, 0.95], [0.93, 0.5], [0.95, 0.12]].map(([a, b], k) => speck([u0 + du * a, v0 + dv * b, h], 1.4, k % 2 ? '#7A4E30' : '#A87445')).join('');
+}
+// Sillon de terre le long de u, de u0 à u1, centré en v, demi-largeur w, à la hauteur z : creux sombre, la pente
+// éclairée de la butte suivante
+export function furrow(u0, u1, v, w, z) {
+  const pt = q => P(...q).map(n => rnd2(n)).join(',');
+  return face([[u0, v - w, z], [u1, v - w, z], [u1, v + w, z], [u0, v + w, z]], '#6B4329')
+    + `<polyline points="${pt([u0, v - w * 0.4, z])} ${pt([u1, v - w * 0.4, z])}" fill="none" stroke="#5A3820" stroke-width="0.9"/>`
+    + `<polyline points="${pt([u0, v + w, z])} ${pt([u1, v + w, z])}" fill="none" stroke="#B07A50" stroke-width="0.9" opacity=".85"/>`;
+}
+// Paire de feuilles détourées en V au pied (x, y) d'un plant : demi-axes rx × ry, écart d ; nervure claire
+export function leafPair(x, y, rx, ry, d, c1 = '#86CB5E', c2 = '#6DB64C') {
+  const leaf = (cx, a, c) => `<g transform="rotate(${a} ${rnd2(cx)} ${rnd2(y - d)})"><ellipse cx="${rnd2(cx)}" cy="${rnd2(y - d)}" rx="${rx}" ry="${ry}" fill="${c}" stroke="${INK_OUT}" stroke-width="0.5"/>`
+    + `<line x1="${rnd2(cx - rx * 0.7)}" y1="${rnd2(y - d)}" x2="${rnd2(cx + rx * 0.7)}" y2="${rnd2(y - d)}" stroke="#C8EBA0" stroke-width="0.5" opacity=".8"/></g>`;
+  return leaf(x - d, -30, c1) + leaf(x + d, 30, c2);
+}
 // Porte sur la face gauche (côté v = vf) : u de ua à ub, hauteur h
 export function doorLeft(ua, ub, vf, h, color = WOOD_DARK.right) {
   return face([[ua, vf, 0], [ub, vf, 0], [ub, vf, h], [ua, vf, h]], color, EDGE)
