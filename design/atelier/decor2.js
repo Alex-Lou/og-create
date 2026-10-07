@@ -433,12 +433,12 @@ M.pont = { frame: [-40, -46, 80, 86], n: 1, variants: ['segment', 'bout_avant', 
   const z = 0.15 * HS;
   let o = E(0, 22, 30, 7, 'rgba(255,255,255,.3)', 0);
   // piles qui plongent dans la mer, puis tablier (une bande le long de u) et planches en travers
-  for (const [u, v] of [[0.4, -0.26], [-0.4, 0.26], [0.4, 0.26]]) { const p = gp(u, v, z - 2.4); o += rr(p[0] - 2, p[1] - 1, 4, HS * 1.2, 0.6, '#6B4A2A', W * 0.8); }
+  for (const [u, v] of [[0.4, -0.26], [-0.4, 0.26], [0.4, 0.26]]) { const p = gp(u, v, z - 2.4); o += `<ellipse cx="${r2(p[0])}" cy="${r2(p[1] - 1 + HS * 1.2)}" rx="4.6" ry="1.6" fill="none" stroke="rgba(255,255,255,.8)" stroke-width="0.7"/>` + rr(p[0] - 2, p[1] - 1, 4, HS * 1.2, 0.6, '#6B4A2A', W * 0.8) + L([p[0] - 0.8, p[1]], [p[0] - 0.8, p[1] - 2 + HS * 1.2], '#8A6238', 0.6); }
   o += gbox(-0.5, -0.3, 0.5, 0.3, z - 2.4, z, { top: '#A47A4A', left: '#8A6238', right: '#7A5530' });
-  for (let k = -4; k <= 4; k++) o += L(gp(k * 0.11, -0.3, z), gp(k * 0.11, 0.3, z), 'rgba(90,55,25,.5)', 0.7);
+  for (let k = -4; k <= 4; k++) o += L(gp(k * 0.11, -0.3, z), gp(k * 0.11, 0.3, z), 'rgba(90,55,25,.5)', 0.7) + E(...gp(k * 0.11 - 0.055, 0.24, z), 0.45, 0.3, '#5A3A20', 0) + E(...gp(k * 0.11 - 0.055, -0.24, z), 0.45, 0.3, '#5A3A20', 0);
   const post = (u, v, h) => { const p = gp(u, v, z); return { s: rr(p[0] - 1.2, p[1] - h, 2.4, h, 0.6, '#5C3F24', 0.6), x: p[0], y: p[1] - h }; };
   const rope = (a, b) => tk(`M${r2(a.x)},${r2(a.y + 1)} Q${r2((a.x + b.x) / 2)},${r2((a.y + b.y) / 2 + 4)} ${r2(b.x)},${r2(b.y + 1)}`, 0.9, '#D9C08A');
-  const lamp = u => { const t = post(u, 0.27, 24); return t.s + rr(t.x - 3.4, t.y - 8, 6.8, 2, 0.6, '#3D3A36', 0.5) + rr(t.x - 2.6, t.y - 6, 5.2, 6, 0.8, '#FFE08A', 0.8, '#3D3A36') + E(t.x, t.y - 3, 1, 1.8, '#FFF4C8', 0); };
+  const lamp = u => { const t = post(u, 0.27, 24); return t.s + E(t.x, t.y - 3, 7, 7, 'rgba(255,224,138,.22)', 0) + rr(t.x - 3.4, t.y - 8, 6.8, 2, 0.6, '#3D3A36', 0.5) + rr(t.x - 2.6, t.y - 6, 5.2, 6, 0.8, '#FFE08A', 0.8, '#3D3A36') + E(t.x, t.y - 3, 1, 1.8, '#FFF4C8', 0) + L([t.x, t.y - 6], [t.x, t.y], '#3D3A36', 0.4); };
   for (const v of [-0.27, 0.27]) {
     const a = post(-0.46, v, 12), b = post(0.46, v, 12);
     if (v > 0 && kind === 'bout_arriere') o += lamp(-0.46);
