@@ -74,7 +74,8 @@ const rivet = {
   },
 
   neck(c, { view }) {
-    if (view === 'ne') return P('M18.6,31.4 Q24,33.6 29.4,31.4 L29.4,33 Q24,35 18.6,33 Z', C.collar, 0.8);
+    // de dos : la nuque (dans l'ombre) entre les mèches, rentrée sous le col
+    if (view === 'ne') return P('M19.8,24 L28.2,24 L28.6,32.4 Q24,34.4 19.4,32.4 Z', C.skinS, 0) + P('M18.6,31.4 Q24,33.6 29.4,31.4 L29.4,33 Q24,35 18.6,33 Z', C.collar, 0.8);
     const k = view === 'se' ? -1.6 : 0;
     return P(`M${20.2 + k},31.6 L${23.8 + k},32.8 L${21.4 + k},34.8 Z`, C.collar, 0.8) + P(`M${27.8 + k},31.6 L${24.2 + k},32.8 L${26.6 + k},34.8 Z`, C.collar, 0.8);
   },
@@ -85,10 +86,12 @@ const rivet = {
     const cowlick = P('M22.6,8.4 Q21.6,3.6 25.6,2.4 Q24.4,4.8 26.6,8 Z', C.grey, 0.9) + L([23.4, 7], [24.2, 4.2], C.greyS, 0.5);
     let s = '';
     if (view === 'ne') {
-      const back = 'M11,21 Q10,6.6 24,6.4 Q38,6.6 37,21 Q37.2,26.6 35.2,28 L33.6,27 L32.4,29.4 L30.4,28 L28.6,30 L26.6,28.4 L24.4,30.4 L22.4,28.4 L20.2,30 L18.4,28 L16.4,29.4 L15,27.2 L12.8,28 Q10.8,26 11,21 Z';
+      // la tête descend aussi bas que de face : les mèches en bataille couvrent le haut des bras et le col,
+      // la nuque se voit entre celles du milieu
+      const back = 'M11,21 Q10,6.6 24,6.4 Q38,6.6 37,21 Q37.4,27.4 36.2,30.4 L35.8,32.8 L34.2,31.6 L33.2,33.8 L31.6,32 L30.2,33.8 L28.8,31.9 L27.2,33.4 Q25.6,31.2 24,30.2 Q22.4,31.2 20.8,33.4 L19.2,31.9 L18,33.8 L16.6,32 L15,33.8 L13.8,31.6 L12.2,32.8 L11.8,30.4 Q10.6,27.4 11,21 Z';
       s += cowlick + E(12.6, 23, 1.6, 2.2, C.skin);
-      s += P(back, C.hair) + clip(`${c.uid}h`, back, `<rect x="8" y="4" width="34" height="30" fill="${C.hairS}"/><ellipse cx="22.4" cy="17" rx="13.6" ry="11.6" fill="${C.hair}"/>`) + P(back, 'none');
-      s += P('M17.6,15 Q16.8,20 18.6,25.6', 'none', 0.6) + P('M24.6,15 Q25.4,20 24,26.4', 'none', 0.6) + L([16.6, 10.2], [21.6, 8.6], C.hairH, 1.2);
+      s += P(back, C.hair) + clip(`${c.uid}h`, back, `<rect x="8" y="4" width="34" height="30" fill="${C.hairS}"/><ellipse cx="22.4" cy="18.4" rx="13.8" ry="12.8" fill="${C.hair}"/>`) + P(back, 'none');
+      s += P('M17.6,15 Q16.8,21 18.4,28.6', 'none', 0.6) + P('M24.6,15 Q25.4,21 24.2,28.4', 'none', 0.6) + P('M31,16.4 Q32,22 30.6,29.2', 'none', 0.6) + L([16.6, 10.2], [21.6, 8.6], C.hairH, 1.2);
       // sangle des lunettes autour du crâne, boucle de laiton
       s += P('M11.2,12.2 Q24,15.8 36.8,12.2 L37,14 Q24,17.6 11,14 Z', C.strap, 0.8) + `<rect x="22.6" y="14.6" width="2.8" height="2" rx="0.4" fill="${C.brass}" stroke="#3C2819" stroke-width="0.6"/>`;
       s += pencil([15.4, 20.6], [9.2, 19.2]);
