@@ -825,7 +825,9 @@ const charbon = {
     }
   }]
 };
-// Hangar : abri ouvert sous un toit d'ardoise, outils pendus au mur, établi, caisses et roue de charrette
+// Hangar : abri ouvert sous un toit d'ardoises (rangs, mousse, faîtière), contrefiches aux poteaux ; l'établi, son étau,
+// la scie et le marteau posés, les copeaux ; la corde pendue au poteau ; la lanterne pendue ; caisses, tonneau et sac,
+// le chat roulé en boule sur la caisse du haut ; la roue de charrette appuyée dehors
 const hangar = {
   light: () => [0.02, 0.18, 21, 15],
   layers: [{
@@ -833,19 +835,69 @@ const hangar = {
     draw: T => {
       const crate = (du, dv, z, s) => T.box(du - s, dv - s, du + s, dv + s, z, z + s * 64, WOOD)
         + ln(T.p(du - s, dv + s, z), T.p(du + s, dv + s, z + s * 64), WOOD.right, 0.7) + ln(T.p(du + s, dv - s, z), T.p(du + s, dv + s, z + s * 64), WOOD.right, 0.7);
-      const [wx, wy] = T.p(-0.2, -0.24, 16);
-      return T.shadow(0, 0, 0.42, 0.2)
-        + T.box(-0.34, -0.28, 0.34, -0.23, 0, 26, WOOD) + planksLeft(T.u - 0.34, T.u + 0.34, T.v - 0.23, 0, 26, 4.6)
-        // Outils au mur : scie, marteau, corde
-        + poly([[wx - 6, wy], [wx + 4, wy - 2], [wx + 4, wy + 2]], '#C9D0D8', ` stroke="${IRON.right}" stroke-width="0.5"`)
-        + ln([wx + 9, wy - 3], [wx + 9, wy + 5], WOOD.right, 1.2) + poly([[wx + 7, wy - 4], [wx + 11, wy - 4], [wx + 11, wy - 2], [wx + 7, wy - 2]], IRON.right)
-        + `<circle cx="${f2(wx + 18)}" cy="${f2(wy + 1)}" r="3.2" fill="none" stroke="#B08850" stroke-width="1.4"/>`
-        + T.box(-0.3, -0.22, 0.3, -0.08, 9, 11, WOOD) + post(T, -0.28, -0.1, 0, 9, WOOD_DARK, 0.015) + post(T, 0.28, -0.1, 0, 9, WOOD_DARK, 0.015)
-        + [[-0.32, -0.26], [0.32, -0.26], [-0.32, 0.26], [0.32, 0.26]].map(([a, b]) => post(T, a, b, 0, 26, WOOD_DARK, 0.025)).join('')
-        + T.gable(-0.34, -0.28, 0.34, 0.28, 26, 11, { front: SLATE_ROOF.front, back: SLATE_ROOF.back, gable: WOOD.right }, 0.06)
-        + ln(T.p(0.02, 0.18, 26), T.p(0.02, 0.18, 23), '#3D3A36', 0.5) + T.box(0, 0.16, 0.04, 0.2, 19, 23, { top: '#5A606A', left: GLASS, right: '#E9C878' })
-        + crate(0.28, 0.36, 0, 0.07) + crate(0.16, 0.38, 0, 0.06) + crate(0.26, 0.34, 9, 0.055)
-        + (() => { const T2 = tools(T.u - 0.38, T.v + 0.24, 'roue'); return wheelOf(T2); })();
+      const [x, y] = T.p(0, 0, 0);
+      // la terre battue, des brins de paille
+      let out = ell(x, y + 1, 34, 14.4, '#B89A6E', ` stroke="${OUT}" stroke-width="0.5"`) + ell(x - 4, y, 23, 8.6, '#C8AC80')
+        + [[-22, 4, 0.5], [14, 9, -0.4], [24, 1, 0.3], [-6, 11, -0.6]].map(([dx, dy, a]) => ln([x + dx, y + dy], [x + dx + 4, y + dy + a * 4], '#E2C66E', 0.7)).join('')
+        + T.shadow(0, 0, 0.42, 0.2);
+      // le mur de planches du fond
+      out += T.box(-0.34, -0.28, 0.34, -0.23, 0, 26, WOOD) + planksLeft(T.u - 0.34, T.u + 0.34, T.v - 0.23, 0, 26, 4.6)
+        + [-0.22, 0.04, 0.26].map(du => ln(T.p(du, -0.23, 2), T.p(du, -0.23, 24), 'rgba(70,40,20,.18)', 0.6)).join('');
+      // l'établi, son étau, sa planche et ses copeaux
+      out += T.box(-0.3, -0.22, 0.3, -0.08, 9, 11, WOOD) + post(T, -0.28, -0.1, 0, 9, WOOD_DARK, 0.015) + post(T, 0.28, -0.1, 0, 9, WOOD_DARK, 0.015)
+        + ln(T.p(-0.28, -0.1, 3), T.p(0.28, -0.1, 3), WOOD_DARK.right, 1)
+        + T.box(-0.24, -0.12, -0.16, -0.08, 11, 14, DARK_IRON) + ln(T.p(-0.2, -0.06, 12.4), T.p(-0.2, -0.02, 12.4), IRON.top, 0.9)
+        + T.box(-0.08, -0.2, 0.2, -0.13, 11, 12.2, { top: '#E4C08A', left: WOOD.left, right: WOOD.right });
+      const [sx, sy] = T.p(0.12, -0.04, 0);
+      out += [[-4, 0], [-1, 1.6], [3, 0.4], [6, 2]].map(([dx, dy]) => `<path d="M${f2(sx + dx)},${f2(sy + dy)} q1.4,-1.6 2.4,0 q-0.6,1 -1.4,0.4" stroke="#E4C08A" stroke-width="0.6" fill="none"/>`).join('');
+      // la scie et le marteau posés sur l'établi
+      const [wx, wy] = T.p(0.0, -0.15, 11.2);
+      out += poly([[wx - 6, wy + 1.6], [wx + 3, wy - 1.2], [wx + 3.6, wy + 1], [wx - 5.4, wy + 2.6]], '#D4DAE2', ` stroke="${OUT}" stroke-width="0.5" stroke-linejoin="round"`)
+        + `<path d="M${f2(wx + 3)},${f2(wy - 1.4)} l3,-1 l0.8,2.4 l-3,1 Z" fill="${WOOD.left}" stroke="${OUT}" stroke-width="0.5"/>`
+        + ln([wx - 9, wy - 1.6], [wx - 4, wy - 3.6], WOOD.right, 1.2) + poly([[wx - 4.8, wy - 5], [wx - 3, wy - 2.2], [wx - 1.8, wy - 2.8], [wx - 3.6, wy - 5.6]], DARK_IRON.left, ` stroke="${OUT}" stroke-width="0.4"`);
+      // les poteaux, leurs contrefiches, le toit d'ardoises
+      out += [[-0.32, -0.26], [0.32, -0.26], [-0.32, 0.26], [0.32, 0.26]].map(([a, b]) => post(T, a, b, 0, 26, WOOD_DARK, 0.025)).join('')
+        + ln(T.p(0.32, 0.26, 19), T.p(0.32, 0.12, 26), WOOD_DARK.right, 1.1) + ln(T.p(-0.32, 0.26, 19), T.p(-0.18, 0.26, 26), WOOD_DARK.right, 1.1)
+        + ln(T.p(0.32, 0.26, 19), T.p(0.18, 0.26, 26), WOOD_DARK.right, 1.1)
+        + T.gable(-0.34, -0.28, 0.34, 0.28, 26, 11, { front: SLATE_ROOF.front, back: SLATE_ROOF.back, gable: WOOD.right }, 0.06);
+      const a0 = -0.4, b0 = 0.4, vm = 0, v1 = 0.34;
+      for (const t of [0.25, 0.5, 0.75]) {
+        const v = vm + (v1 - vm) * t, z = 37 - 11 * t;
+        out += ln(T.p(a0, v, z), T.p(b0, v, z), 'rgba(40,48,66,.55)', 0.6);
+        for (let i = 0; i < 8; i++) { const u = a0 + 0.05 + i * 0.1 + (t === 0.5 ? 0.05 : 0); if (u < b0 - 0.02) out += ln(T.p(u, v, z), T.p(u, v + (v1 - vm) * 0.25, z - 11 * 0.25), 'rgba(40,48,66,.35)', 0.5); }
+      }
+      out += ln(T.p(a0, 0, 37), T.p(b0, 0, 37), '#4A5468', 1.8) + ln(T.p(a0, 0.005, 37.6), T.p(b0, 0.005, 37.6), '#A4B0C4', 0.6)
+        + [[-0.26, 0.24, 1.8], [-0.2, 0.28, 1.2], [0.22, 0.1, 1.1]].map(([u, v, r]) => { const [mx, my] = T.p(u, v, 37 - 11 * (v / v1)); return ell(mx, my, r * 1.4, r * 0.7, '#7E9A52') + ell(mx - r * 0.3, my - r * 0.2, r * 0.6, r * 0.3, '#9DB86A'); }).join('');
+      // la corde enroulée pendue au poteau de droite
+      const [rx, ry] = T.p(0.32, 0.26, 15);
+      out += ln([rx, ry - 4.6], [rx + 2.6, ry - 3.4], '#3D3A36', 0.6)
+        + `<circle cx="${f2(rx + 3)}" cy="${f2(ry)}" r="3.2" fill="none" stroke="#8A6A3A" stroke-width="2"/><circle cx="${f2(rx + 3)}" cy="${f2(ry)}" r="3.2" fill="none" stroke="#C9A46A" stroke-width="1.1"/>`;
+      // la lanterne pendue sous le toit
+      const [lx, ly] = T.p(0.02, 0.18, 23);
+      out += ln(T.p(0.02, 0.18, 27), [lx, ly], '#3D3A36', 0.5)
+        + poly([[lx - 2.2, ly], [lx + 2.2, ly], [lx + 1.6, ly - 1.6], [lx - 1.6, ly - 1.6]], DARK_IRON.left, ` stroke="${OUT}" stroke-width="0.4"`)
+        + `<rect x="${f2(lx - 1.8)}" y="${f2(ly)}" width="3.6" height="4" rx="0.6" fill="#F6D27A" stroke="${OUT}" stroke-width="0.5"/>`
+        + ln([lx, ly], [lx, ly + 4], DARK_IRON.left, 0.4) + ell(lx, ly + 2, 1, 1.2, '#FFF3C4')
+        + poly([[lx - 2.2, ly + 4], [lx + 2.2, ly + 4], [lx + 1.4, ly + 5.2], [lx - 1.4, ly + 5.2]], DARK_IRON.left, ` stroke="${OUT}" stroke-width="0.4"`);
+      // le tonneau, le sac, les caisses et le chat qui dort dessus
+      out += T.cyl(0.04, 0.38, 0, 11, 0.06, { top: '#B98552', left: WOOD.left, right: WOOD.right }, 'tonneau')
+        + [3, 8].map(z => { const [bx, by] = T.p(0.04, 0.38, z); return `<path d="M${f2(bx - 3.9)},${f2(by)} A3.9,1.9 0 0 0 ${f2(bx + 3.9)},${f2(by)}" fill="none" stroke="${DARK_IRON.right}" stroke-width="0.8"/>`; }).join('');
+      const [kx, ky] = T.p(0.4, 0.16, 0);
+      out += `<path d="M${f2(kx - 4)},${f2(ky)} C${f2(kx - 5)},${f2(ky - 4.6)} ${f2(kx - 3.4)},${f2(ky - 7.6)} ${f2(kx - 1.6)},${f2(ky - 8.6)} L${f2(kx + 1.8)},${f2(ky - 8.6)} C${f2(kx + 3.6)},${f2(ky - 7.6)} ${f2(kx + 5)},${f2(ky - 4.6)} ${f2(kx + 4)},${f2(ky)} Z" fill="#D8C08E" stroke="${OUT}" stroke-width="0.5"/>`
+        + ln([kx - 1.8, ky - 8], [kx + 1.8, ky - 8], '#8A6A3A', 0.9);
+      out += crate(0.28, 0.36, 0, 0.07) + crate(0.16, 0.38, 0, 0.06) + crate(0.26, 0.34, 9, 0.055);
+      const [cx, cy] = T.p(0.26, 0.34, 12.6);
+      out += `<path d="M${f2(cx - 4.4)},${f2(cy - 1)} q-1.6,2.2 2.4,2.6 q5,0.4 6.4,-1" stroke="${OUT}" stroke-width="2.6" fill="none" stroke-linecap="round"/>`
+        + `<path d="M${f2(cx - 4.4)},${f2(cy - 1)} q-1.6,2.2 2.4,2.6 q5,0.4 6.4,-1" stroke="#E08A3A" stroke-width="1.6" fill="none" stroke-linecap="round"/>`
+        + ell(cx, cy - 2.4, 4.6, 2.6, '#F2A65A', ` stroke="${OUT}" stroke-width="0.5"`)
+        + [-2, 0, 2].map(o => `<path d="M${f2(cx + o - 0.6)},${f2(cy - 4.8)} q0.6,1.2 0,2.4" stroke="#D07A34" stroke-width="0.6" fill="none"/>`).join('')
+        + `<circle cx="${f2(cx + 3.4)}" cy="${f2(cy - 3.2)}" r="2.2" fill="#F2A65A" stroke="${OUT}" stroke-width="0.5"/>`
+        + poly([[cx + 1.8, cy - 4.6], [cx + 2.2, cy - 6.6], [cx + 3.4, cy - 5.2]], '#F2A65A', ` stroke="${OUT}" stroke-width="0.4" stroke-linejoin="round"`)
+        + poly([[cx + 3.8, cy - 5.2], [cx + 5, cy - 6.6], [cx + 5.2, cy - 4.4]], '#F2A65A', ` stroke="${OUT}" stroke-width="0.4" stroke-linejoin="round"`)
+        + `<path d="M${f2(cx + 2.4)},${f2(cy - 3.2)} q0.5,0.5 1,0 M${f2(cx + 3.9)},${f2(cy - 3)} q0.5,0.5 1,0" stroke="#3D2A1E" stroke-width="0.4" fill="none"/>` + dot(cx + 4, cy - 2.2, 0.35, '#E58A8F')
+        + `<text x="${f2(cx + 5)}" y="${f2(cy - 7)}" font-family="sans-serif" font-size="2.6" font-weight="700" fill="#5A6A80">z</text>`;
+      // la roue de charrette appuyée dehors, à gauche
+      return out + (() => { const T2 = tools(T.u - 0.38, T.v + 0.24, 'roue'); return wheelOf(T2); })();
     }
   }]
 };
