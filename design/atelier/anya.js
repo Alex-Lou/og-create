@@ -1,7 +1,8 @@
 // Anya, l'Âme de l'Île (HISTOIRE.md § 8) : deux fois la taille d'un naufragé, élancée et lumineuse. Couronne en bois de
 // cerf fleuris où niche un petit oiseau, chevelure de feuilles en cascade, veines dorées, gemme verte au front (la Terre
-// du Grimoire), yeux d'or vert, manteau vivant de fourrure, de plumes et de papillons, pieds nus qui font éclore des
-// fleurs, halo de lucioles. Repère 80 × 128, pieds en bas au centre (40, 125). Vues face, trois quarts avant et dos.
+// du Grimoire), yeux d'or vert, manteau vivant or et vert (une grande feuille aux nervures d'or qui luisent, un col
+// de fourrure dorée, des plumes et des papillons), pieds nus qui font éclore des fleurs, halo de lucioles.
+// Repère 80 × 128, pieds en bas au centre (40, 125). Vues face, trois quarts avant et dos.
 const { OUT, P, E, L, clip, expression, arm, r2 } = require('./troupe');
 
 const C = {
@@ -9,8 +10,8 @@ const C = {
   hair: '#79C267', hairS: '#4F9A4C', hairH: '#C8EE9A',
   antler: '#9C7350', antlerS: '#76543A', petal: '#F7C6D9', white: '#FFFFFF', heart: '#F2C94C',
   dress: '#FBF4E2', dressS: '#E8DABA', gold: '#E8B84A',
-  fur: '#E6D2AE', furS: '#C9B28A', teal: '#4FA3A5', ochre: '#D99A3E', brown: '#8A6440',
-  wingO: '#F29A3B', wingB: '#5CA8E8', bird: '#5C9CE0', eye: '#4E6B18',
+  fur: '#4E8F4C', furS: '#3D7440', mvein: '#F7D774', collar: '#EBC66E', collarS: '#C99A45', paleG: '#C8EE9A', paleGold: '#F7E3A1',
+  wingO: '#F2B53B', wingB: '#FFF3C4', bird: '#5C9CE0', eye: '#4E6B18',
   cheek: '#F2B0A8', mouth: '#7A4A3A', tongue: '#E07A72', glow: '255,225,140'
 };
 const AR = { armW: 3.8, sleeve: C.skin, cuff: null, skin: C.skin };
@@ -63,12 +64,22 @@ function anyaFrame(view, pose, n, expr) {
     : 'M28.6,24 Q27.6,40 28.4,56 L51.6,56 Q52.4,40 51.4,24 Z';
   // manteau vivant
   const cloak = `M29,45.4 Q40,40.6 51,45.4 Q60,70 ${r2(66 + sway)},119.6 Q${r2(53 + sway)},126 40,124.8 Q${r2(27 + sway)},126 ${r2(14 + sway)},119.6 Q20,70 29,45.4 Z`;
-  const feathers = [15.6, 20.2, 24.8, 29.4, 34, 38.6, 43.2, 47.8, 52.4, 57, 61.6].map((x, i) => feather(x + sway * 0.8, 111.4 + (i % 2) * 1.6, (i - 5) * 4, [C.teal, C.ochre, C.brown][i % 3])).join('')
-    + [18.4, 23, 27.6, 52.4, 57, 61.6].map((x, i) => feather(x + sway * 0.6, 101 + (i % 2) * 1.4, (i < 3 ? -8 : 8), [C.ochre, C.teal, C.brown][i % 3])).join('')
-    + [[19, 70], [24, 82], [58, 66], [61, 90]].map(([x, y], i) => leaf(x, y, 4, 1.6, i % 2 ? 30 : -30, i % 2 ? C.hairH : C.hair)).join('')
+  const feathers = [15.6, 20.2, 24.8, 29.4, 34, 38.6, 43.2, 47.8, 52.4, 57, 61.6].map((x, i) => feather(x + sway * 0.8, 111.4 + (i % 2) * 1.6, (i - 5) * 4, [C.gold, C.paleG, C.paleGold][i % 3])).join('')
+    + [18.4, 23, 27.6, 52.4, 57, 61.6].map((x, i) => feather(x + sway * 0.6, 101 + (i % 2) * 1.4, (i < 3 ? -8 : 8), [C.paleGold, C.gold, C.paleG][i % 3])).join('')
+    + [[19, 70], [24, 82], [58, 66], [61, 90]].map(([x, y], i) => leaf(x, y, 4, 1.6, i % 2 ? 30 : -30, i % 2 ? C.paleG : C.gold)).join('')
     + [[22.4, 62], [59.6, 78], [17.6, 92]].map(([x, y]) => flower(x, y, 1.1, C.white)).join('');
   const wing = 0.6 + 0.4 * Math.abs(Math.sin((n / 4) * Math.PI * 2 + 1));
-  const cloakTex = clip(`${uid}c`, cloak, `<rect x="49" y="40" width="20" height="90" fill="${C.furS}"/>${feathers}`)
+  // manteau de feuille : vert, l'ombre à droite, des nervures d'or qui luisent (une perche de chaque côté, des
+  // nervures qui s'en écartent vers l'ourlet), un ourlet doré sous les plumes
+  const veinD = [-1, 1].map(m => {
+    const X = (x, lo) => r2(40 + m * (x - 40) + (lo ? sway * 0.6 : 0));
+    let d = `M${X(30)},50 Q${X(23)},80 ${X(18.6, 1)},114`;
+    for (const [y, x, dx, dy] of [[62, 26.6, -4.2, 6], [76, 23.6, -5, 7.4], [90, 21.2, -5.2, 8], [103, 19.6, -4.6, 7.6], [70, 25, 3.4, 6.4], [86, 22, 3.8, 7]]) d += ` M${X(x, y > 95)},${y} Q${X(x + dx * 0.3, y > 95)},${r2(y + dy * 0.7)} ${X(x + dx, y + dy > 95)},${r2(y + dy)}`;
+    return d;
+  }).join(' ') + (view === 'ne' ? ` M40,46 L${r2(40 + sway * 0.4)},118` : '');
+  const cloakVeins = `<path d="${veinD}" fill="none" stroke="rgb(255,220,120)" stroke-width="2.2" stroke-linecap="round" opacity="0.35"/><path d="${veinD}" fill="none" stroke="${C.mvein}" stroke-width="0.75" stroke-linecap="round"/>`
+    + `<path d="M${r2(12 + sway)},118.6 Q40,128.4 ${r2(68 + sway)},118.6" fill="none" stroke="${C.gold}" stroke-width="2.4"/>`;
+  const cloakTex = clip(`${uid}c`, cloak, `<rect x="49" y="40" width="20" height="90" fill="${C.furS}"/>${cloakVeins}${feathers}`)
     + (view === 'ne' ? butterfly(30, 86, wing, C.wingO) + butterfly(51, 74, 1.2 - wing * 0.5, C.wingB) + butterfly(46, 98, wing, C.wingO)
       : butterfly(20.6, 78, wing, C.wingO) + butterfly(60, 72, 1.2 - wing * 0.5, C.wingB) + butterfly(62.4, 102, wing, C.wingO) + butterfly(18.4, 104, 1.2 - wing * 0.5, C.wingB));
   // bras : au repos le long du manteau ; bénédiction : main droite levée ; éveil : bras ouverts
@@ -120,7 +131,7 @@ function anyaFrame(view, pose, n, expr) {
       + `<path d="M${40 + k * 0.4},52 Q${38 + k * 0.4},70 ${41 + k * 0.4},90 Q${39 + k * 0.4},104 ${40 + k * 0.4},116" fill="none" stroke="${C.gold}" stroke-width="0.6" opacity="0.8"/>`
       + leaf(36 + k * 0.4, 70, 3, 1.1, 40, C.hairH) + leaf(44 + k * 0.4, 84, 3, 1.1, -40, C.hairH)) + P(dress, 'none');
     // col de fourrure festonné
-    g += P(`M27.6,45 Q40,39.6 52.4,45 L53.6,51.4 Q50.6,54.4 47.6,52 Q44,55.2 40,52.6 Q36,55.2 32.4,52 Q29.4,54.4 26.4,51.4 Z`, C.fur)
+    g += P(`M27.6,45 Q40,39.6 52.4,45 L53.6,51.4 Q50.6,54.4 47.6,52 Q44,55.2 40,52.6 Q36,55.2 32.4,52 Q29.4,54.4 26.4,51.4 Z`, C.collar)
       + P(`M30,47.6 Q33,50 36,48.6 M44,48.6 Q47,50 50,47.6`, 'none', 0.6);
     g += armL + armR + veinsArm;
     g += `<rect x="${37.6 + k * 0.5}" y="38" width="4.8" height="8.4" fill="${C.skin}"/>` + L([37.6 + k * 0.5, 38], [37.6 + k * 0.5, 45], OUT, 1) + L([42.4 + k * 0.5, 38], [42.4 + k * 0.5, 45], OUT, 1);
