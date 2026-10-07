@@ -1044,7 +1044,7 @@ const glaciere = {
   }]
 };
 
-// Métier à tisser (landes) : sous un auvent de tuiles, un vrai métier de bois (fils de chaîne, lisse qui monte et
+// Métier à tisser (Foyer) : sous un auvent de tuiles, un vrai métier de bois (fils de chaîne, lisse qui monte et
 // descend, navette qui court, toile à rayures qui s'enroule) et son tabouret ; le panier de pelotes dont un fil file au
 // métier ; des écheveaux qui sèchent sur un fil ; la bruyère autour
 const metier = {
