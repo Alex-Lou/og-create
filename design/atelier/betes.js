@@ -8,6 +8,8 @@ const box = (x, y, w, h) => [x * K, y * K, w * K, h * K];
 const BOX = { SMALL: box(-12, -18, 24, 20), MID: box(-16, -24, 32, 26), TALL: box(-16, -34, 32, 36), BIG: box(-24, -46, 48, 48) };
 
 const EYE = '#2A2420';
+// un ton plus sombre ou plus clair d'une couleur #RRGGBB (k < 1 : plus sombre)
+const tone = (hex, k) => '#' + [1, 3, 5].map(i => Math.max(0, Math.min(255, Math.round(parseInt(hex.slice(i, i + 2), 16) * k))).toString(16).padStart(2, '0')).join('').toUpperCase();
 const heartIcon = (x, y, s = 1.4) => P(`M${r2(x)},${r2(y + s * 1.1)} C${r2(x - s * 1.8)},${r2(y - s * 0.1)} ${r2(x - s * 0.9)},${r2(y - s * 1.4)} ${r2(x)},${r2(y - s * 0.5)} C${r2(x + s * 0.9)},${r2(y - s * 1.4)} ${r2(x + s * 1.8)},${r2(y - s * 0.1)} ${r2(x)},${r2(y + s * 1.1)} Z`, '#F27A8A', 0.6);
 const line = (a, b, w, color) => `<path d="M${r2(a[0])},${r2(a[1])} L${r2(b[0])},${r2(b[1])}" stroke="${color}" stroke-width="${r2(w)}" stroke-linecap="round"/>`;
 const limb = (a, b, w, fill) => line(a, b, w + 2.2, OUT) + line(a, b, w, fill);
@@ -18,8 +20,15 @@ const thick = (d, w, fill) => stroke(d, w + 2.2, OUT) + stroke(d, w, fill);
 function eye(x, y, r, mode) {
   if (mode === 'blink') return P(`M${r2(x - r)},${r2(y)} Q${x},${r2(y + r * 0.9)} ${r2(x + r)},${r2(y)}`, 'none', 0.8);
   if (mode === 'joy') return P(`M${r2(x - r)},${r2(y + r * 0.4)} Q${x},${r2(y - r * 0.9)} ${r2(x + r)},${r2(y + r * 0.4)}`, 'none', 0.9);
-  return E(x, y, r * 0.8, r, EYE, 0) + E(x + r * 0.3, y - r * 0.4, r * 0.32, r * 0.32, '#FFFFFF', 0);
+  // ouvert : grand ovale sombre, un gros reflet en haut et un petit en bas (les yeux de la troupe)
+  return E(x, y, r * 0.86, r * 1.12, EYE, 0) + E(x + r * 0.3, y - r * 0.44, r * 0.38, r * 0.38, '#FFFFFF', 0)
+    + E(x - r * 0.3, y + r * 0.5, r * 0.17, r * 0.17, '#FFFFFF', 0);
 }
+
+// Bouts de pattes : sabot (ovale sombre, un reflet) ; patte à deux doigts (deux petits traits sur le devant)
+const hoof = (x, y, rx, col) => E(x, y, rx, 0.9, col, 0.8) + E(x - rx * 0.35, y - 0.2, rx * 0.3, 0.22, '#FFFFFF', 0).replace('fill=', 'fill-opacity="0.45" fill=');
+const toes = (x, y, rx) => [0.15, 0.55].map(k => line([x + rx * k, y + 0.05], [x + rx * k, y + 0.75], 0.42, OUT)).join('');
+const paw = (x, y, rx, col) => E(x, y, rx, 0.9, col, 0.8) + toes(x, y - 0.1, rx);
 
 // ——— Quadrupèdes ———
 // cfg : body [cx, cy, rx, ry], head [hx, hy, r], legs { back, front, top, w, len?, paw, hoof }, snout, nose, eye [dx, dy, r],
@@ -46,17 +55,26 @@ function quad(c, pose) {
   const leg = (x, dx, near) => {
     if (rest) return '';
     const foot = [x + dx, -(lg.paw ? 0.9 : 0.6)];
-    return limb([x, top], foot, lg.w, near ? (lg.color || c.fur) : (lg.colorS || c.furS)) + (lg.hoof ? E(foot[0], foot[1] + 0.2, lg.w * 0.62, 0.9, lg.hoof, 0.8) : lg.paw ? E(foot[0] + 0.4, foot[1] + 0.2, lg.w * 0.7, 0.9, lg.paw, 0.8) : '');
+    // patte proche : un reflet le long du devant ; sabot luisant, ou patte à deux doigts
+    const shine = near ? line([x - lg.w * 0.2, top + 1.2], [foot[0] - lg.w * 0.2, foot[1] - 1.6], lg.w * 0.26, 'rgba(255,255,255,.35)') : '';
+    return limb([x, top], foot, lg.w, near ? (lg.color || c.fur) : (lg.colorS || c.furS)) + shine + (lg.hoof ? hoof(foot[0], foot[1] + 0.2, lg.w * 0.62, lg.hoof) : lg.paw ? paw(foot[0] + 0.4, foot[1] + 0.2, lg.w * 0.7, lg.paw) : '');
   };
   s += leg(lg.back + 1.4, -a, false) + leg(lg.front + 1.4, a, false);
   s += c.parts?.back ? c.parts.back(ctx) : '';
   s += tail(c, ctx);
   // corps, ventre, ombre du bas
   const bd = `M${r2(bx - brx)},${r2(by)} a${brx},${bry} 0 1,0 ${2 * brx},0 a${brx},${bry} 0 1,0 ${-2 * brx},0 Z`;
-  s += P(bd, c.fur) + clip(`q${c.id}${pose}b`, bd, `<ellipse cx="${bx}" cy="${r2(by + bry * 0.95)}" rx="${r2(brx * 0.9)}" ry="${r2(bry * 0.45)}" fill="${c.belly || c.furS}"/>`
+  s += P(bd, c.fur) + clip(`q${c.id}${pose}b`, bd, `<rect x="${r2(bx - brx - 1)}" y="${r2(by - bry - 1)}" width="${r2(brx * 2 + 2)}" height="${r2(bry * 2 + 2)}" fill="${c.furS}"/>`
+    + `<ellipse cx="${r2(bx - brx * 0.1)}" cy="${r2(by - bry * 0.16)}" rx="${r2(brx * 0.98)}" ry="${r2(bry * 0.9)}" fill="${c.fur}"/>`
+    + `<ellipse cx="${bx}" cy="${r2(by + bry * 0.95)}" rx="${r2(brx * 0.9)}" ry="${r2(bry * 0.45)}" fill="${c.belly || c.furS}"/>`
     + (c.parts?.coat ? c.parts.coat(ctx) : '') + `<path d="M${r2(bx - brx * 0.6)},${r2(by - bry * 0.62)} Q${bx},${r2(by - bry * 0.95)} ${r2(bx + brx * 0.4)},${r2(by - bry * 0.7)}" fill="none" stroke="#FFFFFF" stroke-width="0.9" stroke-linecap="round" opacity="0.5"/>`) + P(bd, 'none');
   // pattes proches ; au repos, pattes repliées
-  if (rest) s += E(bx - brx * 0.55, -0.9, lg.w * 0.9, 1, lg.color || c.fur, 0.9) + E(bx + brx * 0.6, -0.9, lg.w * 0.9, 1, lg.color || c.fur, 0.9);
+  // au repos, pattes repliées sous le corps : on n'en voit que le bout (doigts ou sabot)
+  if (rest) for (const px of [bx - brx * 0.55, bx + brx * 0.6]) {
+    s += E(px, -0.9, lg.w * 0.9, 1, lg.color || c.fur, 0.9);
+    if (lg.hoof) s += hoof(px + lg.w * 0.55, -0.7, lg.w * 0.42, lg.hoof);
+    else s += toes(px + lg.w * 0.15, -0.9, lg.w * 0.9);
+  }
   else s += leg(lg.back, a, true) + leg(lg.front, -a, true);
   s += c.parts?.body ? c.parts.body(ctx) : '';
   s += headQuad(c, ctx);
@@ -97,13 +115,15 @@ function headQuad(c, ctx) {
   s += ear(c, e, hx, hy, hr, true);
   s += c.parts?.neck ? c.parts.neck(ctx) : '';
   s += c.parts?.behindHead ? c.parts.behindHead(ctx) : '';
-  s += E(hx, hy, hr * (c.headW || 1), hr, c.headC || c.fur);
+  const hw = hr * (c.headW || 1), hd = `M${r2(hx - hw)},${r2(hy)} a${r2(hw)},${r2(hr)} 0 1,0 ${r2(2 * hw)},0 a${r2(hw)},${r2(hr)} 0 1,0 ${r2(-2 * hw)},0 Z`;
+  s += P(hd, c.headC || c.fur) + clip(`q${c.id}${ctx.pose}h`, hd, `<rect x="${r2(hx - hw - 1)}" y="${r2(hy - hr - 1)}" width="${r2(hw * 2 + 2)}" height="${r2(hr * 2 + 2)}" fill="${c.headCS || c.furS}"/>`
+    + `<ellipse cx="${r2(hx - hw * 0.12)}" cy="${r2(hy - hr * 0.14)}" rx="${r2(hw * 0.97)}" ry="${r2(hr * 0.92)}" fill="${c.headC || c.fur}"/>`) + P(hd, 'none');
   s += c.parts?.face ? c.parts.face(ctx) : '';
   if (c.snout) { const [dx, dy, rx, ry, col] = c.snout; s += E(hx + dx, hy + dy, rx, ry, col || c.belly, 0.9); }
   if (c.nose) { const [dx, dy, r, col] = c.nose; s += E(hx + dx, hy + dy, r * 1.1, r * 0.85, col || OUT, 0.6); }
   const [edx, edy, er] = c.eye;
   s += eye(hx + edx, hy + edy, er, mode);
-  if (c.blush !== false) s += E(hx + edx - er * 0.4, hy + edy + er * 1.5, er * 0.9, er * 0.45, '#F7A8B0', 0);
+  if (c.blush !== false) s += E(hx + edx - er * 0.4, hy + edy + er * 1.6, er * 1.05, er * 0.55, '#F7A8B0', 0);
   s += ear(c, e, hx, hy, hr, false);
   s += c.parts?.head ? c.parts.head(ctx) : '';
   return s;
@@ -371,7 +391,7 @@ Q.frog = () => ({
   }
 });
 
-module.exports = { BOX, K, quad, Q, eye, heartIcon, limb, thick, stroke, line };
+module.exports = { BOX, K, quad, Q, eye, heartIcon, limb, thick, stroke, line, hoof, paw };
 
 // ——— Oiseaux (profil, tournés vers la droite) ———
 // cfg : body [cx, cy, rx, ry], head [hx, hy, r], beak { kind, len, color }, eye [dx, dy, r], colors body, wing, belly, head,
@@ -414,7 +434,10 @@ function bird(c, pose) {
   if (t.kind === 'long') s += P(`M${r2(tx + 1)},${r2(ty - 0.6)} L${r2(tx - (t.len || 4))},${r2(ty + 0.6)} L${r2(tx + 1)},${r2(ty + 1.8)} Z`, t.color || c.wing);
   // corps, ventre, aile
   const bd = `M${r2(bx - brx)},${r2(by)} a${brx},${bry} 0 1,0 ${2 * brx},0 a${brx},${bry} 0 1,0 ${-2 * brx},0 Z`;
-  s += P(bd, c.color) + clip(`b${c.id}${pose}`, bd, `<ellipse cx="${r2(bx + brx * 0.35)}" cy="${r2(by + bry * 0.4)}" rx="${r2(brx * 0.75)}" ry="${r2(bry * 0.75)}" fill="${c.belly || c.color}"/>`
+  // volume : ombre propre en bas et à droite, la lumière vient d'en haut à gauche
+  s += P(bd, c.color) + clip(`b${c.id}${pose}`, bd, `<rect x="${r2(bx - brx - 1)}" y="${r2(by - bry - 1)}" width="${r2(brx * 2 + 2)}" height="${r2(bry * 2 + 2)}" fill="${tone(c.color, 0.86)}"/>`
+    + `<ellipse cx="${r2(bx - brx * 0.1)}" cy="${r2(by - bry * 0.16)}" rx="${r2(brx * 0.98)}" ry="${r2(bry * 0.9)}" fill="${c.color}"/>`
+    + `<ellipse cx="${r2(bx + brx * 0.35)}" cy="${r2(by + bry * 0.4)}" rx="${r2(brx * 0.75)}" ry="${r2(bry * 0.75)}" fill="${c.belly || c.color}"/>`
     + (c.parts?.coat ? c.parts.coat(ctx) : '')) + P(bd, 'none');
   const wingUp = walk && ph < 0 ? -0.6 : 0;
   s += P(`M${r2(bx - brx * 0.6)},${r2(by - bry * 0.35 + wingUp)} Q${r2(bx + brx * 0.2)},${r2(by - bry * 0.75 + wingUp)} ${r2(bx + brx * 0.45)},${r2(by - bry * 0.05)} Q${r2(bx)},${r2(by + bry * 0.65)} ${r2(bx - brx * 0.95)},${r2(by + bry * 0.25)} Z`, c.wing, 0.9);
@@ -422,7 +445,9 @@ function bird(c, pose) {
   // tête
   if (c.neck) s += thick(c.neck(ctx), c.neckW || 2.4, c.headColor || c.color);
   s += c.parts?.behindHead ? c.parts.behindHead(ctx) : '';
-  s += E(hx, hy, hr, hr, c.headColor || c.color);
+  const hcol = c.headColor || c.color, hd = `M${r2(hx - hr)},${r2(hy)} a${r2(hr)},${r2(hr)} 0 1,0 ${r2(2 * hr)},0 a${r2(hr)},${r2(hr)} 0 1,0 ${r2(-2 * hr)},0 Z`;
+  s += P(hd, hcol) + clip(`b${c.id}${pose}h`, hd, `<rect x="${r2(hx - hr - 1)}" y="${r2(hy - hr - 1)}" width="${r2(hr * 2 + 2)}" height="${r2(hr * 2 + 2)}" fill="${tone(hcol, 0.88)}"/>`
+    + `<ellipse cx="${r2(hx - hr * 0.12)}" cy="${r2(hy - hr * 0.14)}" rx="${r2(hr * 0.97)}" ry="${r2(hr * 0.92)}" fill="${hcol}"/>`) + P(hd, 'none');
   s += c.parts?.face ? c.parts.face(ctx) : '';
   s += beakOf(c.beak, hx, hy, hr);
   const [edx, edy, er] = c.eye;
