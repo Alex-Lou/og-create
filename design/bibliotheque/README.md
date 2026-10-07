@@ -76,7 +76,7 @@ détails propres à un lot : places des objets de boutique, lumières des palier
 | `svg/coffres/` | Les coffres des 4 raretés pour la fenêtre d'ouverture (cadre 120 × 100) : fermé, ouverture en 4 images, ouvert, rayons (calque facultatif), icône 32 × 32 (`coffres.json`) | 44 |
 | `svg/batiments/` | 7 bâtiments × 7 paliers (images animées), chantier, 20 skins, 48 objets de la boutique (un fichier par calque), 14 pièces rares à chaque palier, outil de teintes (`batiments.json`) | 659 |
 | `svg/scenes/tutoriel/` | Les 27 scènes plein écran du tutoriel v6 (`HISTOIRE.md` § 9, étapes 0 à 12) : la carte d'embarquement, le naufrage, Brume, le Grimoire, le feu, la silhouette, l'arrivée de Cannelle, Rivet, Aster et Ondin, la veillée. Carré 400 × 400, un fond et parfois un devant, en boucle ; la place de l'avatar dans `scenes.json` | 105 |
-| `svg/meteo/` | Calques d'écran sans couture en boucle, nuages, arc-en-ciel, éclair, soleil bas, lumières, teintes des moments du jour ; les saisons : flocons, feuilles qui tombent, pétales, pollen, plein soleil, teintes, et le sol d'une case (neige, neige fondante, givre, flaques) ; 23 icônes (`meteo.json`) | 262 |
+| `svg/meteo/` | Calques d'écran sans couture en boucle, nuages, arc-en-ciel, éclair, soleil bas, lumières, teintes des moments du jour ; les saisons : flocons, feuilles qui tombent, pétales, pollen, plein soleil, teintes, et le sol d'une case (neige, neige fondante, givre, flaques, eau gelée) ; 23 icônes (`meteo.json`) | 267 |
 
 ## Mode d'emploi rapide
 

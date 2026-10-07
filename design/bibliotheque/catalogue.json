@@ -112302,6 +112302,23 @@
    "statut": "ok"
   },
   {
+   "id": "meteo/sol/flaque_gelee",
+   "rubrique": "meteo",
+   "titre": "Flaque gelée",
+   "images": 1,
+   "fichiers": [
+    "svg/meteo/sol/flaque_gelee.svg"
+   ],
+   "cadre": [
+    -40,
+    -20,
+    80,
+    40
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
    "id": "meteo/sol/flaque_grande",
    "rubrique": "meteo",
    "titre": "Grande flaque",
@@ -112363,6 +112380,74 @@
    "images": 1,
    "fichiers": [
     "svg/meteo/sol/givre.svg"
+   ],
+   "cadre": [
+    -40,
+    -20,
+    80,
+    40
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "meteo/sol/glace_a",
+   "rubrique": "meteo",
+   "titre": "Eau gelée (a)",
+   "images": 1,
+   "fichiers": [
+    "svg/meteo/sol/glace_a.svg"
+   ],
+   "cadre": [
+    -40,
+    -20,
+    80,
+    40
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "meteo/sol/glace_b",
+   "rubrique": "meteo",
+   "titre": "Eau gelée (b)",
+   "images": 1,
+   "fichiers": [
+    "svg/meteo/sol/glace_b.svg"
+   ],
+   "cadre": [
+    -40,
+    -20,
+    80,
+    40
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "meteo/sol/glace_c",
+   "rubrique": "meteo",
+   "titre": "Eau gelée (c)",
+   "images": 1,
+   "fichiers": [
+    "svg/meteo/sol/glace_c.svg"
+   ],
+   "cadre": [
+    -40,
+    -20,
+    80,
+    40
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "meteo/sol/glace_neige",
+   "rubrique": "meteo",
+   "titre": "Eau gelée sous la neige",
+   "images": 1,
+   "fichiers": [
+    "svg/meteo/sol/glace_neige.svg"
    ],
    "cadre": [
     -40,
