@@ -456,10 +456,6 @@
      "naufrages/sylve/sylve-naufrage_face_salut_1.svg",
      "naufrages/sylve/sylve-naufrage_face_salut_2.svg"
     ],
-    "naufrage_face_chant": [
-     "naufrages/sylve/sylve-naufrage_face_chant_1.svg",
-     "naufrages/sylve/sylve-naufrage_face_chant_2.svg"
-    ],
     "naufrage_expr_neutre": [
      "naufrages/sylve/sylve-naufrage_expr_neutre_1.svg",
      "naufrages/sylve/sylve-naufrage_expr_neutre_2.svg"
@@ -561,10 +557,6 @@
     "naufrage_face_salut": [
      "naufrages/galet/galet-naufrage_face_salut_1.svg",
      "naufrages/galet/galet-naufrage_face_salut_2.svg"
-    ],
-    "naufrage_face_rune": [
-     "naufrages/galet/galet-naufrage_face_rune_1.svg",
-     "naufrages/galet/galet-naufrage_face_rune_2.svg"
     ],
     "naufrage_expr_neutre": [
      "naufrages/galet/galet-naufrage_expr_neutre_1.svg",

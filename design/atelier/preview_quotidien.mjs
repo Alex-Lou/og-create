@@ -50,7 +50,7 @@ function poses(c, { travail = false, lanterne = false, couche = true, valise = n
 const index = {
   _lisez_moi: [
     'Lot L4 : tout le monde au grand format (le petit format est abandonné). Mêmes vues que la troupe : face, avant (vient vers le bas à droite), dos (s\'éloigne vers le haut à droite) ; le miroir donne les deux autres directions. Pieds en (24, 62) dans le cadre 48 × 64.',
-    'Poses : marche (4 images, ~170 ms), repos (2 images : clignement), salut (2), travail (2, le geste du métier : maîtres et naufragés), lanterne et parapluie (avant et dos, 4 images, en marchant), couche (dormir couché, 2 images ~900 ms).',
+    'Poses : marche (4 images, ~170 ms), repos (2 images : clignement), salut (2), travail (2, le geste du métier : maîtres et naufragés, sauf Galet et Sylve naufragés qui ont oublié leur don), lanterne et parapluie (avant et dos, 4 images, en marchant), couche (dormir couché, 2 images ~900 ms).',
     'Cadres à part : parapluie [0, -18, 48, 82] (la toile passe au-dessus de la tête ; pieds toujours en (24, 62)) ; couche [0, 0, 64, 48] (allongé la tête à gauche, sous une couverture).',
     'Naufragés : lanterne et parapluie seulement pour Aster et Rivet, qui restent naufragés après la première lanterne. Visiteurs et nouveaux venus : tirés du générateur de l\'avatar (choix notés ici, pour en refaire d\'autres avec design/personnages/avatar.js) ; les nouveaux venus de l\'épilogue arrivent en habits de voyage, une valise à la main, et n\'ont pas de pose endormie.'
   ],
@@ -88,7 +88,7 @@ for (const { base, nau } of CAST) {
   publier('maitres', s, base.name, `maitres/${s}`, s, lm, {}, DEJA);
   planches.maitres.push(row(base.name, cellules(lm, MONTRER)));
   const avec = s === 'aster' || s === 'rivet';
-  const ln = poses(nau, { travail: true, lanterne: avec, couverture: VOILE, parapluie: '#8E8A80' });
+  const ln = poses(nau, { travail: !nau.sansDon, lanterne: avec, couverture: VOILE, parapluie: '#8E8A80' });
   publier('naufrages', s, `${base.name} naufragé${['aster', 'cannelle', 'sylve', 'melisse'].includes(s) ? 'e' : ''}`, `naufrages/${s}`, `${s}_naufrage`, ln, {}, DEJA);
   planches.naufrages.push(row(`${base.name} (naufragé)`, cellules(ln, MONTRER)));
   const box = (lab, l, mirror) => { const [, v, vb, images] = l; return { label: lab, frames: images.map(b => montre(vb, b, v, 2)), timings: [170], w: r2(vb[2] * 2), h: r2(vb[3] * 2), mirror }; };

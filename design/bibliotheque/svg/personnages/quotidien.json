@@ -1,7 +1,7 @@
 {
  "_lisez_moi": [
   "Lot L4 : tout le monde au grand format (le petit format est abandonné). Mêmes vues que la troupe : face, avant (vient vers le bas à droite), dos (s'éloigne vers le haut à droite) ; le miroir donne les deux autres directions. Pieds en (24, 62) dans le cadre 48 × 64.",
-  "Poses : marche (4 images, ~170 ms), repos (2 images : clignement), salut (2), travail (2, le geste du métier : maîtres et naufragés), lanterne et parapluie (avant et dos, 4 images, en marchant), couche (dormir couché, 2 images ~900 ms).",
+  "Poses : marche (4 images, ~170 ms), repos (2 images : clignement), salut (2), travail (2, le geste du métier : maîtres et naufragés, sauf Galet et Sylve naufragés qui ont oublié leur don), lanterne et parapluie (avant et dos, 4 images, en marchant), couche (dormir couché, 2 images ~900 ms).",
   "Cadres à part : parapluie [0, -18, 48, 82] (la toile passe au-dessus de la tête ; pieds toujours en (24, 62)) ; couche [0, 0, 64, 48] (allongé la tête à gauche, sous une couverture).",
   "Naufragés : lanterne et parapluie seulement pour Aster et Rivet, qui restent naufragés après la première lanterne. Visiteurs et nouveaux venus : tirés du générateur de l'avatar (choix notés ici, pour en refaire d'autres avec design/personnages/avatar.js) ; les nouveaux venus de l'épilogue arrivent en habits de voyage, une valise à la main, et n'ont pas de pose endormie.",
   "Noms rangés à l'assemblage (README, catalogue.json) : <sujet>_<vue>_<pose>_<n>.svg, vues face, avant (l'ancien « trois_quarts »), dos, profil ; les chemins ci-dessous suivent ces noms."
@@ -935,10 +935,6 @@
      "naufrages/sylve/sylve-naufrage_face_salut_1.svg",
      "naufrages/sylve/sylve-naufrage_face_salut_2.svg"
     ],
-    "face_travail": [
-     "naufrages/sylve/sylve-naufrage_face_travail_1.svg",
-     "naufrages/sylve/sylve-naufrage_face_travail_2.svg"
-    ],
     "avant_marche": [
      "naufrages/sylve/sylve-naufrage_avant_marche_1.svg",
      "naufrages/sylve/sylve-naufrage_avant_marche_2.svg",
@@ -953,10 +949,6 @@
      "naufrages/sylve/sylve-naufrage_avant_salut_1.svg",
      "naufrages/sylve/sylve-naufrage_avant_salut_2.svg"
     ],
-    "avant_travail": [
-     "naufrages/sylve/sylve-naufrage_avant_travail_1.svg",
-     "naufrages/sylve/sylve-naufrage_avant_travail_2.svg"
-    ],
     "dos_marche": [
      "naufrages/sylve/sylve-naufrage_dos_marche_1.svg",
      "naufrages/sylve/sylve-naufrage_dos_marche_2.svg",
@@ -970,10 +962,6 @@
     "dos_salut": [
      "naufrages/sylve/sylve-naufrage_dos_salut_1.svg",
      "naufrages/sylve/sylve-naufrage_dos_salut_2.svg"
-    ],
-    "dos_travail": [
-     "naufrages/sylve/sylve-naufrage_dos_travail_1.svg",
-     "naufrages/sylve/sylve-naufrage_dos_travail_2.svg"
     ],
     "couche": [
      "naufrages/sylve/sylve-naufrage_couche_1.svg",
@@ -998,10 +986,6 @@
      "naufrages/galet/galet-naufrage_face_salut_1.svg",
      "naufrages/galet/galet-naufrage_face_salut_2.svg"
     ],
-    "face_travail": [
-     "naufrages/galet/galet-naufrage_face_travail_1.svg",
-     "naufrages/galet/galet-naufrage_face_travail_2.svg"
-    ],
     "avant_marche": [
      "naufrages/galet/galet-naufrage_avant_marche_1.svg",
      "naufrages/galet/galet-naufrage_avant_marche_2.svg",
@@ -1016,10 +1000,6 @@
      "naufrages/galet/galet-naufrage_avant_salut_1.svg",
      "naufrages/galet/galet-naufrage_avant_salut_2.svg"
     ],
-    "avant_travail": [
-     "naufrages/galet/galet-naufrage_avant_travail_1.svg",
-     "naufrages/galet/galet-naufrage_avant_travail_2.svg"
-    ],
     "dos_marche": [
      "naufrages/galet/galet-naufrage_dos_marche_1.svg",
      "naufrages/galet/galet-naufrage_dos_marche_2.svg",
@@ -1033,10 +1013,6 @@
     "dos_salut": [
      "naufrages/galet/galet-naufrage_dos_salut_1.svg",
      "naufrages/galet/galet-naufrage_dos_salut_2.svg"
-    ],
-    "dos_travail": [
-     "naufrages/galet/galet-naufrage_dos_travail_1.svg",
-     "naufrages/galet/galet-naufrage_dos_travail_2.svg"
     ],
     "couche": [
      "naufrages/galet/galet-naufrage_couche_1.svg",

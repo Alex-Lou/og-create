@@ -14753,33 +14753,6 @@
    "statut": "ok"
   },
   {
-   "id": "personnages/naufrages/sylve/sylve-naufrage_avant_travail",
-   "rubrique": "personnages",
-   "sujet": "sylve-naufrage",
-   "vue": "avant",
-   "pose": "travail",
-   "titre": "Sylve naufragée, trois quarts avant, travail",
-   "regarde": "bas-droite",
-   "miroir": true,
-   "images": 2,
-   "fichiers": [
-    "svg/personnages/naufrages/sylve/sylve-naufrage_avant_travail_1.svg",
-    "svg/personnages/naufrages/sylve/sylve-naufrage_avant_travail_2.svg"
-   ],
-   "cadre": [
-    0,
-    0,
-    48,
-    64
-   ],
-   "ms_par_image": [
-    700,
-    1100
-   ],
-   "parcours": "acte-1",
-   "statut": "ok"
-  },
-  {
    "id": "personnages/naufrages/sylve/sylve-naufrage_couche",
    "rubrique": "personnages",
    "sujet": "sylve-naufrage",
@@ -14895,33 +14868,6 @@
     64
    ],
    "ms_par_image": 260,
-   "parcours": "acte-1",
-   "statut": "ok"
-  },
-  {
-   "id": "personnages/naufrages/sylve/sylve-naufrage_dos_travail",
-   "rubrique": "personnages",
-   "sujet": "sylve-naufrage",
-   "vue": "dos",
-   "pose": "travail",
-   "titre": "Sylve naufragée, trois quarts dos, travail",
-   "regarde": "haut-droite",
-   "miroir": true,
-   "images": 2,
-   "fichiers": [
-    "svg/personnages/naufrages/sylve/sylve-naufrage_dos_travail_1.svg",
-    "svg/personnages/naufrages/sylve/sylve-naufrage_dos_travail_2.svg"
-   ],
-   "cadre": [
-    0,
-    0,
-    48,
-    64
-   ],
-   "ms_par_image": [
-    700,
-    1100
-   ],
    "parcours": "acte-1",
    "statut": "ok"
   },
@@ -15102,33 +15048,6 @@
    "statut": "ok"
   },
   {
-   "id": "personnages/naufrages/sylve/sylve-naufrage_face_chant",
-   "rubrique": "personnages",
-   "sujet": "sylve-naufrage",
-   "vue": "face",
-   "pose": "chant",
-   "titre": "Sylve naufragée, de face, chant",
-   "regarde": "face",
-   "images": 2,
-   "fichiers": [
-    "svg/personnages/naufrages/sylve/sylve-naufrage_face_chant_1.svg",
-    "svg/personnages/naufrages/sylve/sylve-naufrage_face_chant_2.svg"
-   ],
-   "cadre": [
-    0,
-    0,
-    48,
-    64
-   ],
-   "ms_par_image": [
-    700,
-    1100
-   ],
-   "parcours": "acte-1",
-   "statut": "a-revoir",
-   "note": "Un naufragé a oublié son don (§ 6.2) : le chant aux graines revient au maître."
-  },
-  {
    "id": "personnages/naufrages/sylve/sylve-naufrage_face_marche",
    "rubrique": "personnages",
    "sujet": "sylve-naufrage",
@@ -15199,32 +15118,6 @@
     64
    ],
    "ms_par_image": 260,
-   "parcours": "acte-1",
-   "statut": "ok"
-  },
-  {
-   "id": "personnages/naufrages/sylve/sylve-naufrage_face_travail",
-   "rubrique": "personnages",
-   "sujet": "sylve-naufrage",
-   "vue": "face",
-   "pose": "travail",
-   "titre": "Sylve naufragée, de face, travail",
-   "regarde": "face",
-   "images": 2,
-   "fichiers": [
-    "svg/personnages/naufrages/sylve/sylve-naufrage_face_travail_1.svg",
-    "svg/personnages/naufrages/sylve/sylve-naufrage_face_travail_2.svg"
-   ],
-   "cadre": [
-    0,
-    0,
-    48,
-    64
-   ],
-   "ms_par_image": [
-    700,
-    1100
-   ],
    "parcours": "acte-1",
    "statut": "ok"
   },
@@ -17460,33 +17353,6 @@
    "statut": "ok"
   },
   {
-   "id": "personnages/naufrages/galet/galet-naufrage_avant_travail",
-   "rubrique": "personnages",
-   "sujet": "galet-naufrage",
-   "vue": "avant",
-   "pose": "travail",
-   "titre": "Galet naufragé, trois quarts avant, travail",
-   "regarde": "bas-droite",
-   "miroir": true,
-   "images": 2,
-   "fichiers": [
-    "svg/personnages/naufrages/galet/galet-naufrage_avant_travail_1.svg",
-    "svg/personnages/naufrages/galet/galet-naufrage_avant_travail_2.svg"
-   ],
-   "cadre": [
-    0,
-    0,
-    48,
-    64
-   ],
-   "ms_par_image": [
-    700,
-    1100
-   ],
-   "parcours": "acte-2",
-   "statut": "ok"
-  },
-  {
    "id": "personnages/naufrages/galet/galet-naufrage_couche",
    "rubrique": "personnages",
    "sujet": "galet-naufrage",
@@ -17602,33 +17468,6 @@
     64
    ],
    "ms_par_image": 260,
-   "parcours": "acte-2",
-   "statut": "ok"
-  },
-  {
-   "id": "personnages/naufrages/galet/galet-naufrage_dos_travail",
-   "rubrique": "personnages",
-   "sujet": "galet-naufrage",
-   "vue": "dos",
-   "pose": "travail",
-   "titre": "Galet naufragé, trois quarts dos, travail",
-   "regarde": "haut-droite",
-   "miroir": true,
-   "images": 2,
-   "fichiers": [
-    "svg/personnages/naufrages/galet/galet-naufrage_dos_travail_1.svg",
-    "svg/personnages/naufrages/galet/galet-naufrage_dos_travail_2.svg"
-   ],
-   "cadre": [
-    0,
-    0,
-    48,
-    64
-   ],
-   "ms_par_image": [
-    700,
-    1100
-   ],
    "parcours": "acte-2",
    "statut": "ok"
   },
@@ -17860,33 +17699,6 @@
    "statut": "ok"
   },
   {
-   "id": "personnages/naufrages/galet/galet-naufrage_face_rune",
-   "rubrique": "personnages",
-   "sujet": "galet-naufrage",
-   "vue": "face",
-   "pose": "rune",
-   "titre": "Galet naufragé, de face, rune",
-   "regarde": "face",
-   "images": 2,
-   "fichiers": [
-    "svg/personnages/naufrages/galet/galet-naufrage_face_rune_1.svg",
-    "svg/personnages/naufrages/galet/galet-naufrage_face_rune_2.svg"
-   ],
-   "cadre": [
-    0,
-    0,
-    48,
-    64
-   ],
-   "ms_par_image": [
-    700,
-    1100
-   ],
-   "parcours": "acte-2",
-   "statut": "a-revoir",
-   "note": "Un naufragé a oublié son don (§ 6.2) : la rune qui chante revient au maître."
-  },
-  {
    "id": "personnages/naufrages/galet/galet-naufrage_face_salut",
    "rubrique": "personnages",
    "sujet": "galet-naufrage",
@@ -17906,32 +17718,6 @@
     64
    ],
    "ms_par_image": 260,
-   "parcours": "acte-2",
-   "statut": "ok"
-  },
-  {
-   "id": "personnages/naufrages/galet/galet-naufrage_face_travail",
-   "rubrique": "personnages",
-   "sujet": "galet-naufrage",
-   "vue": "face",
-   "pose": "travail",
-   "titre": "Galet naufragé, de face, travail",
-   "regarde": "face",
-   "images": 2,
-   "fichiers": [
-    "svg/personnages/naufrages/galet/galet-naufrage_face_travail_1.svg",
-    "svg/personnages/naufrages/galet/galet-naufrage_face_travail_2.svg"
-   ],
-   "cadre": [
-    0,
-    0,
-    48,
-    64
-   ],
-   "ms_par_image": [
-    700,
-    1100
-   ],
    "parcours": "acte-2",
    "statut": "ok"
   },
