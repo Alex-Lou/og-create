@@ -1,15 +1,15 @@
 # Brumelune sur le VPS OVH (Ubuntu 24.04, 4 Go)
 
-Le jeu sur **https://brumelune.eu**, sur le même VPS que l'autre app (MemoCat, dépôt Usy2), chacune sur son domaine,
-derrière un seul Nginx.
+Le jeu sur **https://brumelune.eu**, sur le même VPS que MemoCat (**memocat.fr**, dépôt Usy2), chacun sur son
+domaine, derrière un seul Nginx.
 
 | Quoi | Où | Mémoire |
 |---|---|---|
 | Nginx, la porte d'entrée (ports 80 et 443) | les deux domaines | ~20 Mo |
 | Le jeu (fichiers du build) | `/var/www/brumelune` | — |
 | L'API de Brumelune (service `brumelune-api`) | `127.0.0.1:3000` | 512 Mo au plus (~100 Mo réels) |
-| PostgreSQL 16 | `localhost:5432`, bases `brumelune` (et `memocat`) | ~150 Mo |
-| MemoCat (Docker) | port 8080, fermé à l'extérieur | 768 Mo au plus |
+| PostgreSQL | `localhost:5432`, base `brumelune` | ~150 Mo |
+| MemoCat (Java) | port 8080, fermé à l'extérieur | 768 Mo au plus conseillés |
 | Construction du jeu, pendant `deploy.sh` seulement | — | ~1,7 Go quelques minutes |
 
 Environ 1,2 Go en continu ; 2 Go de swap servent de filet pendant la construction.
@@ -17,50 +17,103 @@ Environ 1,2 Go en continu ; 2 Go de swap servent de filet pendant la constructio
 Les fichiers de ce dossier :
 
 - `nginx/brumelune.eu.conf` : le site (HTTPS, `www` → sans `www`, l'API sous `/api`, cache et compression) ;
-- `nginx/memocat.conf.example` : le modèle pour l'autre app ;
+- `nginx/memocat.fr.conf` : MemoCat derrière le même Nginx, si ce n'est pas déjà le cas ;
 - `systemd/brumelune-api.service` : l'API, relancée seule si elle tombe ;
 - `api.env.example` : les réglages et secrets de l'API ;
 - `deploy.sh` : la mise à jour du jeu ;
 - `backup.sh` : la sauvegarde quotidienne de la base.
 
-Toutes les commandes se lancent en SSH sur le VPS, avec l'utilisateur d'administration (`ubuntu` chez OVH).
+Toutes les commandes se lancent en SSH sur le VPS (Termius), avec l'utilisateur d'administration (`ubuntu` chez
+OVH), jamais en root directement.
 
-## 0. Regarder ce qui tourne déjà
+## 0. L'état du VPS (lecture seule)
+
+Coller ce bloc en entier. Il ne modifie rien, n'affiche aucun secret, et garde tout dans `~/diagnostic-vps.txt` :
 
 ```bash
-sudo ss -ltnp | grep -E ':(80|443|3000|5432|8080) '
-docker ps 2>/dev/null
-ip -6 addr show scope global
+{
+echo "== système"; . /etc/os-release; echo "$PRETTY_NAME"; free -h | head -2; df -h / | tail -1; swapon --show; nproc
+echo "== ip"; ip -4 addr show scope global | grep inet; ip -6 addr show scope global | grep inet6; ip -6 route | grep default
+echo "== ports"; sudo ss -ltnp
+echo "== docker"
+if command -v docker > /dev/null; then
+  sudo docker ps -a --format '{{.Names}} | {{.Image}} | {{.Status}} | {{.Ports}}'
+  for c in $(sudo docker ps -q); do sudo docker inspect --format '{{.Name}} réseau={{.HostConfig.NetworkMode}} mémoire={{.HostConfig.Memory}} redémarrage={{.HostConfig.RestartPolicy.Name}} ports={{json .HostConfig.PortBindings}} volumes={{range .Mounts}}{{.Source}}->{{.Destination}} {{end}}' "$c"; done
+  sudo docker compose ls 2>/dev/null
+else echo "pas de docker"; fi
+echo "== serveurs web"; for s in nginx caddy apache2 traefik; do echo "$s : $(systemctl is-active $s 2>/dev/null)"; done
+ls -l /etc/nginx/sites-enabled/ 2>/dev/null
+sudo grep -rn -E "server_name|listen|proxy_pass|ssl_certificate |default_server" /etc/nginx/sites-enabled/ /etc/nginx/conf.d/ 2>/dev/null
+[ -f /etc/caddy/Caddyfile ] && sudo grep -v -i -E "basic|password|secret|token" /etc/caddy/Caddyfile
+echo "== certificats"; sudo certbot certificates 2>/dev/null | grep -E "Certificate Name|Domains|Expiry"; systemctl list-timers 2>/dev/null | grep -i certbot
+echo "== services"; systemctl list-units --type=service --state=running --no-pager --no-legend | awk '{print $1}' | grep -i -E "memo|java|docker|nginx|caddy|apache|postgres|node|pm2"
+echo "== postgresql"; command -v psql > /dev/null && psql --version; sudo -u postgres psql -Atc "select datname from pg_database where not datistemplate" 2>/dev/null; pg_lsclusters 2>/dev/null
+echo "== pare-feu"; sudo ufw status verbose 2>/dev/null | head -25
+echo "== netplan"; ls -l /etc/netplan/
+echo "== dns"; for d in memocat.fr www.memocat.fr brumelune.eu www.brumelune.eu; do echo "$d : $(getent ahosts $d | awk '{print $1}' | sort -u | tr '\n' ' ')"; done
+echo "== node"; node -v 2>/dev/null || echo "pas de node"
+} 2>&1 | tee ~/diagnostic-vps.txt
 ```
 
-- Si les ports 80 ou 443 sont pris par autre chose que `nginx` (MemoCat publiée directement, Caddy, Apache) : passer
-  d'abord par « L'autre app » plus bas. Nginx doit être seul sur 80 et 443.
-- Si la dernière commande n'affiche rien (pas d'IPv6) : retirer les lignes `listen [::]…` des fichiers Nginx.
+Le relire (ou me l'envoyer) : il dit comment MemoCat est servie aujourd'hui (voir « MemoCat » plus bas, cas A, B ou
+C) et ce qui occupe déjà les ports 80, 443, 3000, 5432 et 8080.
 
 ## 1. Le domaine brumelune.eu
 
 OVH Manager → Web Cloud → Noms de domaine → brumelune.eu → **Zone DNS** :
 
 1. supprimer les entrées **A** et **AAAA** de `brumelune.eu` et de `www` (elles pointent vers la page d'attente d'OVH) ;
-2. ajouter une entrée **A**, sous-domaine vide, vers l'IPv4 du VPS (`ip -4 addr show scope global`) ;
-3. ajouter une entrée **AAAA**, sous-domaine vide, vers l'IPv6 du VPS (s'il en a une) ;
+2. ajouter une entrée **A**, sous-domaine vide, vers l'IPv4 du VPS (ligne `inet` de « == ip » dans le diagnostic) ;
+3. ajouter une entrée **AAAA**, sous-domaine vide, vers `2001:41d0:801:2000::3834` (après l'étape 2, si l'IPv6 n'est
+   pas encore active) ;
 4. ajouter une entrée **CNAME**, sous-domaine `www`, vers `brumelune.eu.`
 
-Attendre que ce soit pris en compte (de quelques minutes à quelques heures) :
-`dig +short brumelune.eu` et `dig +short www.brumelune.eu` doivent afficher l'adresse du VPS.
+Attendre que ce soit pris en compte (de quelques minutes à quelques heures) : `getent ahosts brumelune.eu` doit
+afficher les adresses du VPS.
 
-## 2. Paquets, pare-feu, swap
+## 2. L'IPv6 du VPS
+
+Si la ligne `inet6 2001:41d0:801:2000::3834/…` apparaît déjà dans « == ip » du diagnostic : rien à faire. Sinon,
+regarder le nom de l'interface réseau dans le fichier d'OVH (souvent `ens3` ou `eth0`, la clé sous `ethernets:`) :
+
+```bash
+sudo cat /etc/netplan/50-cloud-init.yaml
+```
+
+Puis, en remplaçant `ens3` par ce nom :
+
+```bash
+sudo tee /etc/netplan/51-ipv6.yaml > /dev/null <<'EOF'
+network:
+  version: 2
+  ethernets:
+    ens3:
+      addresses:
+        - "2001:41d0:801:2000::3834/128"
+      routes:
+        - to: "::/0"
+          via: "2001:41d0:801:2000::1"
+          on-link: true
+EOF
+sudo chmod 600 /etc/netplan/51-ipv6.yaml
+sudo netplan try
+```
+
+`netplan try` applique la configuration et attend Entrée : sans réponse dans les 120 secondes (connexion perdue),
+tout revient comme avant. Vérifier : `ping -6 -c 3 2606:4700:4700::1111`.
+
+## 3. Paquets, pare-feu, swap
 
 ```bash
 sudo apt update && sudo apt upgrade -y
-sudo apt install -y nginx postgresql certbot git rsync dnsutils
+sudo apt install -y nginx postgresql certbot git rsync
 # Node 22, comme la CI
 curl -fsSL https://deb.nodesource.com/setup_22.x | sudo -E bash -
 sudo apt install -y nodejs
 node -v
 ```
 
-Pare-feu : SSH d'abord, sinon la connexion se coupe.
+Pare-feu (si « == pare-feu » le dit inactif) : SSH d'abord, sinon la connexion se coupe.
 
 ```bash
 sudo ufw allow OpenSSH
@@ -68,7 +121,10 @@ sudo ufw allow 'Nginx Full'
 sudo ufw enable
 ```
 
-Swap de 2 Go (sauter si `swapon --show` en affiche déjà un) :
+Attention : un port publié par Docker (`-p 8080:8080`, `0.0.0.0:8080` dans « == docker ») est ouvert à tout internet
+**malgré** le pare-feu. Voir « MemoCat ».
+
+Swap de 2 Go (sauter si « == système » en montre déjà un) :
 
 ```bash
 sudo fallocate -l 2G /swapfile && sudo chmod 600 /swapfile
@@ -76,18 +132,22 @@ sudo mkswap /swapfile && sudo swapon /swapfile
 echo '/swapfile none swap sw 0 0' | sudo tee -a /etc/fstab
 ```
 
-## 3. La base de données
+## 4. La base de données
 
 ```bash
+pg_lsclusters      # le port de PostgreSQL : 5432 en principe
 openssl rand -hex 24      # le mot de passe de la base : le noter
 sudo -u postgres createuser --pwprompt brumelune
 sudo -u postgres createdb --owner=brumelune brumelune
 ```
 
-Les joueurs actuels (Render + Neon) ne suivent pas tout seuls : voir « Reprendre les joueurs actuels » **avant**
-l'étape 6.
+Si le port 5432 était déjà pris avant (la base de MemoCat dans un conteneur Docker, par exemple), PostgreSQL s'est
+installé sur le suivant (5433) : `pg_lsclusters` l'indique, et ce port va dans `DATABASE_URL` (étape 6).
 
-## 4. Les dépôts (privés)
+Les joueurs actuels (Render + Neon) ne suivent pas tout seuls : voir « Reprendre les joueurs actuels » **avant**
+l'étape 7.
+
+## 5. Les dépôts (privés)
 
 GitHub n'accepte une clé de déploiement que sur un seul dépôt : une clé par dépôt, en lecture seule.
 
@@ -120,7 +180,7 @@ git clone github-brumelune-jeu:Alex-Lou/og-create.git /srv/brumelune/og-create
 git clone github-brumelune-api:Alex-Lou/Og-create-backend.git /srv/brumelune/og-create-backend
 ```
 
-## 5. L'API
+## 6. L'API
 
 ```bash
 sudo cp /srv/brumelune/og-create/deploy/ovh/api.env.example /etc/brumelune/api.env
@@ -131,7 +191,7 @@ sudo cp /srv/brumelune/og-create/deploy/ovh/systemd/brumelune-api.service /etc/s
 sudo systemctl daemon-reload && sudo systemctl enable brumelune-api
 ```
 
-## 6. Premier déploiement
+## 7. Premier déploiement
 
 ```bash
 /srv/brumelune/og-create/deploy/ovh/deploy.sh
@@ -140,9 +200,10 @@ sudo systemctl daemon-reload && sudo systemctl enable brumelune-api
 Le script construit le jeu (quelques minutes), le publie, prépare la base et démarre l'API. Il finit par
 « ✓ Brumelune est à jour ».
 
-## 7. Le certificat HTTPS, puis le site
+## 8. Le certificat HTTPS, puis le site
 
-Le domaine doit déjà pointer vers le VPS (étape 1). D'abord un site qui ne répond qu'à la preuve de Let's Encrypt :
+Le domaine doit déjà pointer vers le VPS (étape 1), et Nginx tenir les ports 80 et 443 (cas A ou C de « MemoCat »,
+ou cas B une fois MemoCat passée derrière Nginx). D'abord un site qui ne répond qu'à la preuve de Let's Encrypt :
 
 ```bash
 sudo tee /etc/nginx/sites-available/brumelune.eu.conf > /dev/null <<'EOF'
@@ -169,7 +230,7 @@ sudo certbot renew --dry-run      # le renouvellement automatique marche
 
 **https://brumelune.eu** ouvre le jeu.
 
-## 8. Sauvegarde quotidienne
+## 9. Sauvegarde quotidienne
 
 ```bash
 sudo install -m 750 /srv/brumelune/og-create/deploy/ovh/backup.sh /usr/local/sbin/brumelune-backup
@@ -190,11 +251,30 @@ Après une fusion sur `master` (le jeu) ou `main` (l'API) :
 
 Les anciens fichiers du jeu restent 14 jours : une partie encore ouverte les trouve toujours. Le script ne touche pas à
 la configuration du système : une modification des fichiers `nginx/` ou `systemd/` se recopie à la main, comme aux
-étapes 5 et 7.
+étapes 6 et 8.
+
+## MemoCat (memocat.fr), déjà sur le VPS
+
+Le diagnostic (étape 0) dit dans quel cas elle est :
+
+- **A. Nginx sert déjà memocat.fr** (`nginx : active`, et `server_name memocat.fr` dans « == serveurs web ») : ne rien
+  changer pour elle. Brumelune s'installe à côté ; `nginx/memocat.fr.conf` ne sert pas.
+- **B. Autre chose tient les ports 80 et 443** (Caddy, Apache, ou un conteneur Docker publié sur `0.0.0.0:80` /
+  `0.0.0.0:443` dans « == ports ») : il faut d'abord la passer derrière Nginx. Cela coupe MemoCat quelques minutes, et
+  les commandes exactes dépendent de son installation : m'envoyer `~/diagnostic-vps.txt` avant.
+- **C. Elle écoute sur 8080 et rien ne tient 80 ni 443** : lui donner son site, comme à l'étape 8, avec
+  `memocat.fr` à la place de `brumelune.eu` et `nginx/memocat.fr.conf` comme vrai site.
+
+Dans tous les cas :
+
+- si « == docker » montre `0.0.0.0:8080` (ou `8080:8080`), le port de MemoCat est ouvert à tout internet malgré le
+  pare-feu : le republier sur `127.0.0.1:8080` seulement ;
+- si `mémoire=0` dans « == docker », son Java peut prendre jusqu'à 60 % des 4 Go (2,4 Go) : lui donner une limite de
+  768 Mo (`--memory 768m`, ou `mem_limit: 768m` avec docker compose).
 
 ## Reprendre les joueurs actuels (Render + Neon) : à décider
 
-La base du VPS part vide. Pour garder les comptes, la copier depuis Neon **avant** l'étape 6 :
+La base du VPS part vide. Pour garder les comptes, la copier depuis Neon **avant** l'étape 7 :
 
 ```bash
 pg_dump "postgres://…(la chaîne Neon)…?sslmode=require" --format=custom --no-owner --no-acl -f neon.dump
@@ -209,38 +289,11 @@ sudo -u postgres pg_restore --no-owner --role=brumelune -d brumelune < neon.dump
 - Après la copie, ce qui se joue encore sur Render est perdu : basculer d'un coup (par exemple, rediriger
   og-create.onrender.com vers brumelune.eu).
 
-## L'autre app (MemoCat, dépôt Usy2)
-
-À vérifier avec le dépôt Usy2 : ce passage n'a pas été essayé. Dans Docker, derrière le même Nginx, sur son domaine,
-avec sa base dans le même PostgreSQL :
-
-```bash
-sudo -u postgres createuser --pwprompt memocat
-sudo -u postgres createdb --owner=memocat memocat
-# Dans un clone d'Usy2
-docker build -t memocat .
-sudo mkdir -p /etc/memocat && sudo nano /etc/memocat/env
-docker run -d --name memocat --restart unless-stopped --network host --memory 768m \
-  --env-file /etc/memocat/env -v memocat-uploads:/data/uploads memocat
-```
-
-`/etc/memocat/env` : `MEMOCAT_DB_HOST=localhost`, `MEMOCAT_DB_PORT=5432`, `MEMOCAT_DB_NAME=memocat`,
-`MEMOCAT_DB_USER=memocat`, `MEMOCAT_DB_PASSWORD=…`, `MEMOCAT_JWT_SECRET=…` (`openssl rand -hex 32`),
-`MEMOCAT_CORS_ORIGINS=https://AUTRE-DOMAINE.fr`, `MEMOCAT_STORAGE_PATH=/data/uploads`, et les six `MEMOCAT_USER1_*` /
-`MEMOCAT_USER2_*`.
-
-- `--network host` : elle joint PostgreSQL sur `localhost`, et son port 8080 reste fermé à l'extérieur par le
-  pare-feu. Jamais `-p 8080:8080` : Docker ouvrirait ce port à tout internet, en passant outre le pare-feu.
-- `--memory 768m` : son Java prend 60 % de la mémoire qu'il voit ; sans limite, il prendrait jusqu'à 2,4 Go des 4.
-- Les fichiers envoyés vivent dans le volume `memocat-uploads` et survivent aux redémarrages (sur Render, ils
-  disparaissaient).
-
-Puis comme à l'étape 7, avec `nginx/memocat.conf.example` (remplacer `AUTRE-DOMAINE.fr` partout) et un certificat à
-son nom.
-
 ## En cas de souci
 
 - L'API : `sudo systemctl status brumelune-api`, `sudo journalctl -u brumelune-api -n 50`
 - Nginx : `sudo nginx -t`, `sudo tail -n 50 /var/log/nginx/error.log`
 - « 502 Bad Gateway » sur le jeu : l'API ne tourne pas (voir ci-dessus).
 - Le jeu affiche « Le serveur se réveille… » longtemps : même chose.
+- Nginx refuse de démarrer avec « Address family not supported » : l'IPv6 est coupée sur la machine ; retirer les
+  lignes `listen [::]…` des fichiers Nginx.
