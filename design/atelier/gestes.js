@@ -3,9 +3,10 @@
 // - lanterne : marcher une lanterne à la main (le soir, dès la première lanterne de l'acte I) ;
 // - parapluie : marcher sous un parapluie (la pluie) ; la toile passe au-dessus de la tête : cadre CADRE_PARAPLUIE ;
 // - valise : les nouveaux venus de l'épilogue arrivent avec leur bagage ;
-// - couché : dormir allongé sous une couverture (la nuit), la tête à gauche ; cadre CADRE_COUCHE.
+// - couché : dormir allongé sous une couverture (la nuit), la tête à gauche ; cadre CADRE_COUCHE ;
+// - mains tendues vers le feu (la veillée, HISTOIRE.md § 10), debout ou assis (design/atelier/assis.js).
 // Le travail est le geste du métier de chaque maître (sa pose « action »), dans les trois vues : rien à ajouter ici.
-const { OUT, P, E, L, limb, zee, r2, frame } = require('./troupe');
+const { OUT, P, E, L, limb, zee, r2, frame, arm } = require('./troupe');
 
 const CADRE_PARAPLUIE = [0, -18, 48, 82];
 const CADRE_COUCHE = [0, 0, 64, 48];
@@ -75,4 +76,54 @@ function couche(c, n = 0, couverture = { fond: '#C98F5A', motif: '#E8C07A' }) {
     + (n ? zee(30.6, 6.4, 2) + zee(34, 2.4, 2.6) : zee(30, 7.4, 1.8) + zee(33, 3.6, 2.4));
 }
 
-module.exports = { lanterne, parapluie, valise, avecLanterne, avecParapluie, avecValise, couche, CADRE_PARAPLUIE, CADRE_COUCHE, ZEDS };
+// ---- les gestes de la veillée : la pose « action » du kit, remplacée ----
+// Mains ouvertes, à la place du poing rond (arm(c, épaule, main, coude, dessin)) ; k : côté du pouce (-1 : vers la
+// gauche de l'écran, 1 : vers la droite) ; s : échelle
+// - paume : paume vers nous, doigts en haut (le pouce vers le milieu du corps) ;
+// - tranche : la main vue de côté, doigts en haut (paume vers l'avant, vue de trois quarts ou de dos)
+function paume(c, [x, y], k, s = 1) {
+  const f = c.hand || c.skin, w = 1.85 * s, h = 2.5 * s;
+  return E(x + k * w * 0.95, y + 0.5 * s, 0.95 * s, 1.35 * s, f, 0.9)
+    + P(`M${r2(x - w)},${r2(y + h * 0.55)} L${r2(x - w)},${r2(y - h * 0.35)} Q${r2(x - w)},${r2(y - h)} ${r2(x)},${r2(y - h)} Q${r2(x + w)},${r2(y - h)} ${r2(x + w)},${r2(y - h * 0.35)} L${r2(x + w)},${r2(y + h * 0.55)} Q${r2(x)},${r2(y + h * 1.05)} ${r2(x - w)},${r2(y + h * 0.55)} Z`, f, 0.9)
+    + [-0.6, 0.6].map(d => L([x + d * s, y - h + 0.35], [x + d * s, y - h * 0.35], OUT, 0.42)).join('');
+}
+function tranche(c, [x, y], k, s = 1) {
+  const f = c.hand || c.skin, w = 1.3 * s, h = 2.5 * s;
+  return P(`M${r2(x - w)},${r2(y + h * 0.6)} L${r2(x - w)},${r2(y - h * 0.4)} Q${r2(x - w)},${r2(y - h)} ${r2(x)},${r2(y - h)} Q${r2(x + w)},${r2(y - h)} ${r2(x + w)},${r2(y - h * 0.4)} L${r2(x + w)},${r2(y + h * 0.6)} Q${r2(x)},${r2(y + h)} ${r2(x - w)},${r2(y + h * 0.6)} Z`, f, 0.9)
+    + E(x + k * w * 0.9, y + 0.6 * s, 0.8 * s, 1.1 * s, f, 0.8);
+}
+
+// Mains tendues vers le feu, content d'être au chaud ; 2 images : les doigts se réchauffent (les mains bougent d'un
+// demi-pixel). Le feu est devant le personnage :
+//   - de face, il est entre lui et nous : les paumes nous font face, à hauteur du ventre ;
+//   - de trois quarts avant, les deux bras avancent vers le regard, les mains de côté ;
+//   - de dos, les bras passent devant le buste (derrière lui, pour nous) : le coude gauche sort, la main droite dépasse
+//     sur le côté, vers le feu.
+function tendre({ view, n }) {
+  const [a, b] = this.shoulders;
+  const w = n ? 0.45 : 0;
+  if (view === 'front') {
+    const y = a[1] + 7, l = [a[0] + 1.7 - w, y + w], r = [b[0] - 1.7 + w, y + w];
+    return {
+      expr: 'content',
+      left: arm(this, a, l, [a[0] - 1.5, a[1] + 8.4], paume(this, [l[0], l[1] - 0.5], 1, 1.08)),
+      right: arm(this, b, r, [b[0] + 1.5, b[1] + 8.4], paume(this, [r[0], r[1] - 0.5], -1, 1.08))
+    };
+  }
+  if (view === 'se') {
+    return {
+      expr: 'content',
+      left: arm(this, a, [a[0] - 6.4 - w, a[1] + 5.4], [a[0] - 2.2, a[1] + 7], tranche(this, [a[0] - 6.6 - w, a[1] + 4.8], 1)),
+      right: arm(this, b, [b[0] - 9.6 - w, b[1] + 4.8], [b[0] - 4.4, b[1] + 7], tranche(this, [b[0] - 9.8 - w, b[1] + 4.2], 1, 0.95))
+    };
+  }
+  return {
+    left: '', right: '',
+    under: arm(this, a, [a[0] + 3.6, a[1] + 4.6 - w], [a[0] - 2.6, a[1] + 5.8])
+      + arm(this, b, [b[0] + 2.4, b[1] + 4.6 - w], [b[0] + 2, b[1] + 7.2], tranche(this, [b[0] + 2.5, b[1] + 4 - w], 1, 0.95))
+  };
+}
+// Debout : frame(avecMainsTendues(c), vue, 'action', n) ; assis : assis(c, vue, n, null, tendre)
+const avecMainsTendues = c => ({ ...c, uid: `${c.uid}mt`, pose: tendre });
+
+module.exports = { lanterne, parapluie, valise, avecLanterne, avecParapluie, avecValise, couche, CADRE_PARAPLUIE, CADRE_COUCHE, ZEDS, paume, tranche, tendre, avecMainsTendues };
