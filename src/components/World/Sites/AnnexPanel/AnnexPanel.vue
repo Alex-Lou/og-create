@@ -9,7 +9,8 @@
       <li v-for="annex in site.annexes" :key="annex.id" :class="['annexes__card', `is-${stateOf(annex).state}`]">
         <span class="annexes__art">
           <img :src="artOf(annex)" alt="" />
-          <span class="annexes__palier" :aria-label="`Palier ${roman(annex.levels[0])}`">{{ roman(annex.levels[0]) }}</span>
+          <!-- Palier du prochain exemplaire (le dernier, quand tous sont posés) -->
+          <span class="annexes__palier" :aria-label="`Palier ${roman(palierOf(annex))}`">{{ roman(palierOf(annex)) }}</span>
           <span v-if="annex.built" class="annexes__badge">{{ annex.max > 1 ? `${annex.built}/${annex.max}` : '✓' }}</span>
         </span>
         <span class="annexes__body">
@@ -61,6 +62,9 @@ export default {
     roman,
     stateOf(annex) {
       return annexState(annex, this.site, this.stock, this.coins);
+    },
+    palierOf(annex) {
+      return annex.next ? annex.next.level : annex.levels[annex.levels.length - 1];
     },
     // Vignette : l'exemplaire suivant (ce qui y poussera), ou le premier si tout est posé
     artOf(annex) {

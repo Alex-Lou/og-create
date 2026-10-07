@@ -21,3 +21,4 @@
 .chests__item-btn { min-height: 36px; padding: 4px 14px; }
 .chests__all { width: 100%; }
 .chests__hint { margin: 0; font-size: 13px; color: var(--ink-500); font-style: italic; line-height: 1.4; }
+.chests__bottle { margin-top: 10px; width: 100%; }

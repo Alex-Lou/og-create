@@ -51,6 +51,7 @@
           :finds="Boolean(shownDeposits.length || ownedFinds)"
           :ready-deposits="readyDeposits"
           :trip-left="state.expedition ? tripLeft : ''"
+          :explore="Boolean(explorableZone)"
           :immersive="immersive"
           @chests="chestsOpen = true"
           @log="openLog()"
@@ -120,7 +121,7 @@
           :art="artOf(site)"
           :zone-name="zoneName(site.zone)"
           :build-ready="Boolean(canBuild(site))"
-          :annex-ready="annexReady(site, stockAll, coins)"
+          :annex-ready="annexReady(site, stockPaid, coinsPaid)"
           @tab="tab => (siteTab = tab)"
           @rename="startRename"
           @close="site = null"
@@ -130,7 +131,8 @@
             :site="site"
             :rates="state.rates"
             :cap-hours="state.capHours"
-            :pending="state.pending"
+            :pending="harvestable.length"
+            :elapsed="clock - loadedAt"
             :friend="friendAt(site.id)"
             :civ-stage="civStage"
             :villagers="state.villagers || []"
@@ -169,9 +171,9 @@
           />
 
           <!-- Annexes : champs, filons, viviers… à poser autour du bâtiment (la case se choisit sur la carte) -->
-          <AnnexPanel v-else-if="siteTab === 'annexes'" :site="site" :stock="stockAll" :coins="coins" :busy="busy" @place="annex => startAnnex(site, annex)" />
+          <AnnexPanel v-else-if="siteTab === 'annexes'" :site="site" :stock="stockPaid" :coins="coinsPaid" :busy="busy" @place="annex => startAnnex(site, annex)" />
 
-          <SiteSteps v-else :site="site" :stock="state.stock" :charges="state.charges.count" :coins="coins" :busy="busy" @build="build(site)" @harvest="startHarvest" />
+          <SiteSteps v-else :site="site" :stock="stockPaid" :charges="state.charges.count" :coins="coinsPaid" :busy="busy" @build="build(site)" @harvest="startHarvest" />
         </SiteSheet>
       </transition>
 
@@ -295,7 +297,8 @@
       :villager="villagerView"
       :rules="state.friendship"
       :need-rules="state.needs"
-      :stock="state.stock"
+      :elapsed="clock - loadedAt"
+      :stock="stockPaid"
       :site-name="villagerSiteName"
       :portrait="portraitOf(villagerView.id)"
       :said="villagerSaid"
@@ -325,6 +328,7 @@
     <VisitorSheet
       v-if="visitorOpen && state && state.visitor"
       :visitor="state.visitor"
+      :elapsed="clock - loadedAt"
       :stock="state.stock"
       :charges="state.charges.count"
       :houses="state.houses || undefined"
@@ -361,6 +365,7 @@
     <MiniGame
       v-if="gameId && gameView"
       :game="gameView"
+      :elapsed="clock - loadedAt"
       :site-name="gameSiteName"
       :run="gameRun"
       :starting="gameStarting"
@@ -376,6 +381,7 @@
       :run="run"
       :sending="sending"
       :result="runResult"
+      :earned="runEarned"
       :error="runError"
       :chest="runChest ? runChest.rarity : ''"
       @finish="finishHarvest"
@@ -416,6 +422,7 @@ import { landmarksShown, landmarksWaiting } from '@/world/landmarks';
 import { depositsShown, depositsReady } from '@/world/finds';
 import { CLIMATE_NAMES } from '@/world/climates';
 import { variantsOf } from '@/world/annexes';
+import { dueIn } from '@/world/due';
 import GModal from '@/components/ui/GModal/GModal.vue';
 import { villageOf } from '@/world/village';
 import { clearDrawings } from '@/book/painter';
@@ -513,12 +520,25 @@ export default {
         return look('Montrer une terre à explorer', zone && zone.anchor);
       }
       if (quest.kind === 'landmark' && !target.landmark) return look('Montrer un lieu', landmarksWaiting(state)[0]);
+      // Un lieu d'un quartier encore inconnu : sa fiche (l'expédition qui le découvrira)
+      const hidden = target.landmark && (state.landmarks || []).find(l => l.id === target.landmark && l.known === false);
+      const far = hidden && state.map.zones.find(z => z.id === hidden.zone);
+      if (far) return { label: 'Montrer la terre à explorer', run: () => this.showZone(far) };
       if (quest.kind === 'gather') return look('Montrer un gisement', depositsReady(state)[0]);
       return quest.target ? { label: 'Montrer', run: () => this.showQuestTarget() } : null;
     },
     // Ressources et trouvailles de climat ensemble (ce que coûtent créations et annexes de climat)
     stockAll() {
       return this.state ? { ...this.state.stock, ...Object.fromEntries((this.state.finds || []).map(f => [f.id, f.amount])) } : {};
+    },
+    // Ce qui paie un chantier, une annexe ou un besoin : les réserves et ce qui attend dans les bâtiments, que le
+    // serveur encaisse d'abord ; les écus de même (solde inconnu : null)
+    stockPaid() {
+      const pending = (this.state && this.state.pendingStock) || {};
+      return Object.fromEntries(Object.entries(this.stockAll).map(([k, n]) => [k, n + (pending[k] || 0)]));
+    },
+    coinsPaid() {
+      return this.coins === null || !this.state ? this.coins : this.coins + (this.state.pending || 0);
     },
     // Quête active de Brume (null : toutes faites)
     // L'étape de civilisation (bible, § 6.10) : déduite des actes finis et du nom du peuple
@@ -647,6 +667,9 @@ export default {
     this.ac = null;
     this.observer = null;
     this.loadedAt = Date.now();
+    // Dans combien de temps l'île change d'elle-même depuis loadedAt (world/due.js) ; rechargement en cours
+    this.dueIn = null;
+    this.reloading = false;
     this.tick = 0;
     // L'île peut quitter l'écran pendant un chargement (changement d'onglet) : la réponse est alors ignorée
     this.gone = false;
@@ -667,10 +690,14 @@ export default {
     this.tick = setInterval(() => {
       this.clock = Date.now();
       this.syncPhase();
-      const charges = this.state && this.state.charges;
-      const trip = this.state && this.state.expedition;
-      const due = (charges && charges.nextIn !== null && this.clock - this.loadedAt > charges.nextIn + 2000) || (trip && this.clock - this.loadedAt > trip.endsIn + 2000);
-      if (due && !this.busy && !this.run) this.load();
+      // L'île a changé d'elle-même (une partie revient, un besoin, la production…) : elle se recharge, à l'écran
+      const due = this.dueIn !== null && this.clock - this.loadedAt > this.dueIn + 2000;
+      if (due && !this.busy && !this.run && !this.reloading && !document.hidden) {
+        this.reloading = true;
+        this.load().finally(() => {
+          this.reloading = false;
+        });
+      }
     }, 20000);
     // Arrivée sur l'île : App.vue montre où en est la première vue tant qu'elle n'est pas prête (draw/loading.js)
     this.startLoading();
@@ -845,6 +872,7 @@ export default {
       this.mistKey = mistKey;
       this.loadedAt = Date.now();
       this.clock = this.loadedAt;
+      this.dueIn = dueIn(state, this.loadedAt);
       if (this.site) this.site = state.sites.find(s => s.id === this.site.id) || null;
       // Pose d'annexe en cours : abandonnée si le bâtiment n'a plus de case libre ; de même pour une création
       if (this.annexPlacing && !(this.placingSite && this.placingSite.spots.length)) this.cancelAnnex();

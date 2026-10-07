@@ -25,6 +25,12 @@ describe('besoins des habitants', () => {
     expect(needState(deco({ met: true, have: 3 }), 'Carrière')).toBe('3 créations d’île autour de « Carrière »');
   });
 
+  it('dit quand un besoin comblé pourra se renouveler (à mi-durée)', () => {
+    expect(needState(manger(), 'Carrière', 24)).toBe('Le ventre plein encore 14 h · à renouveler dans 2 h');
+    expect(needState(manger({ left: 10 * H, refill: true }), 'Carrière', 24)).toBe('Le ventre plein encore 10 h · tu peux déjà le renouveler');
+    expect(needState(manger({ met: false, left: 0, refill: true }), 'Carrière', 24)).toBe('A faim');
+  });
+
   it('sait ce qui manque, ce qui se paie, et ce que « Tout combler » coûterait', () => {
     const rose = { id: 'potager', needs: [manger({ met: false, refill: true }), outils({ refill: true }), deco()] };
     const paulette = { id: 'foyer', needs: [manger(), deco({ met: true })] };

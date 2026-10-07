@@ -24,10 +24,11 @@
         <strong v-if="annexYield(site).rate">+{{ annexYield(site).rate }} <ElementGlyph :glyph="GLYPH[site.produce]" /> · +{{ annexYield(site).earn }} écus par heure</strong>
         <strong v-else>Réserve agrandie</strong>
       </div>
-      <div class="world__prod-row">
+      <div :class="['world__prod-row', { 'is-full': full }]">
         <span>Réserve</span>
-        <strong>{{ site.capHours || capHours }} h de production au plus</strong>
+        <strong>{{ site.capHours || capHours }} h de production au plus<template v-if="fullText"> · {{ fullText }}</template></strong>
       </div>
+      <p v-if="full" class="world__prod-full" role="status">Sa réserve est pleine : ramasse pour que la production reprenne.</p>
       <div class="world__prod-row is-pending">
         <span>À ramasser</span>
         <strong>+{{ site.pending ? site.pending[site.produce] : 0 }} <ElementGlyph :glyph="GLYPH[site.produce]" /> · +{{ site.pending ? site.pending.coins : 0 }} écus</strong>
@@ -98,7 +99,7 @@ import GameIcon from '../../Games/GameIcon/GameIcon.vue';
 import { GLYPH } from '@/game/resources';
 import { roman } from '@/utils/roman';
 import { awaits } from '@/world/friends';
-import { NEED_GLYPH, MOOD_GLYPH, MOOD_LABEL, missingOf, fillAllOf } from '@/world/needs';
+import { NEED_GLYPH, MOOD_GLYPH, MOOD_LABEL, missingOf, fillAllOf, leftText } from '@/world/needs';
 import { annexYield } from '@/world/annexes';
 import { spriteUrl } from '@/world/spriteCache';
 import { craftThumb } from '@/world/craftSprites';
@@ -119,8 +120,10 @@ export default {
     // Production de base par palier ({ produce, coins }) et réserve par défaut (heures), de la vue du serveur
     rates: { type: Object, required: true },
     capHours: { type: Number, default: 0 },
-    // Écus en attente dans tous les bâtiments (« Ramasser » s'éteint à zéro)
+    // Ce qui attend dans tous les bâtiments, écus ou ressources (« Ramasser » s'éteint quand il n'y a rien)
     pending: { type: Number, default: 0 },
+    // Temps passé depuis cette vue du serveur (ms) : la réserve se remplit
+    elapsed: { type: Number, default: 0 },
     // L'habitant qui travaille ici (son humeur change la production), ou null
     friend: { type: Object, default: null },
     // Étape de civilisation (bible, § 6.10), ou null
@@ -141,6 +144,14 @@ export default {
     return { GLYPH, GAME_ICONS, NEED_GLYPH, MOOD_GLYPH };
   },
   computed: {
+    // Réserve de production : pleine (elle attend le ramassage), ou pleine dans tant de temps
+    full() {
+      return this.site.fullIn !== null && this.site.fullIn !== undefined && this.site.fullIn - this.elapsed <= 0;
+    },
+    fullText() {
+      if (this.site.fullIn === null || this.site.fullIn === undefined) return '';
+      return this.full ? 'pleine' : `pleine dans ${leftText(this.site.fullIn - this.elapsed)}`;
+    },
     // « Tout combler » : besoins renouvelables de tous les habitants et leur prix
     fillAll() {
       return fillAllOf(this.villagers);
