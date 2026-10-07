@@ -59,7 +59,7 @@ détails propres à un lot : places des objets de boutique, lumières des palier
 
 | Dossier | Contenu | SVG |
 | --- | --- | ---: |
-| `svg/personnages/maitres/` | Les 7 maîtres : Aster, Cannelle, Rivet, Ondin, Sylve, Galet, Mélisse. 3 vues : marche, repos, salut, travail (le geste du métier), action, 8 expressions, expressions en marche ; lanterne et parapluie (avant et dos) ; endormis assis (`dort`) et couchés (`couche`) ; en hiver, chacun à son style, repos et marche dans les 3 vues (`<prénom>_<vue>_<pose>_hiver_<n>`) | 1274 |
+| `svg/personnages/maitres/` | Les 7 maîtres : Aster, Cannelle, Rivet, Ondin, Sylve, Galet, Mélisse. 3 vues : marche, repos, salut, travail (le geste du métier), action, 8 expressions, expressions en marche ; lanterne et parapluie (avant et dos) ; endormis assis (`dort`) et couchés (`couche`) ; en hiver, chacun à son style, et sous la pluie (le ciré du catalogue, ouvert ; Aster et Ondin relèvent la capuche du leur ; bottes de pluie), repos et marche dans les 3 vues (`<prénom>_<vue>_<pose>_<hiver\|pluie>_<n>`) | 1400 |
 | `svg/personnages/visiteurs/` | 12 visiteurs tirés du générateur de l'avatar (leurs choix dans `quotidien.json`) : 3 vues, marche, repos, salut, lanterne, parapluie, couchés | 504 |
 | `svg/personnages/naufrages/<prénom>/` | Les maîtres tels qu'ils arrivent sur l'île (`<prénom>-naufrage_…`) : une tenue de naufragé à chacun, mêmes vues, poses et expressions, endormis assis et couchés ; lanterne et parapluie pour Aster et Rivet (`naufrages.json`, `quotidien.json`) | 480 |
 | `svg/personnages/avatar/` | L'avatar du joueur : 12 exemples tirés du générateur et leur version naufragée, poses, gestes du tutoriel (ramasser, grelotter, lire), expressions ; dans `avatar.json` : les formes, les nuanciers, les 45 accessoires (rareté, source, prix ; saison des tenues de saison ; leur icône) et les teintures rares (avec leur prix) | 2464 |
@@ -136,7 +136,8 @@ détails propres à un lot : places des objets de boutique, lumières des palier
   travail, lanterne et parapluie (avant et dos), dormir couché. Le parapluie a un cadre plus haut (`[0, -18, 48, 82]`,
   pieds toujours en (24, 62)), le couché un cadre 64 × 48 (la tête à gauche). Pour d'autres visiteurs : `avatar(choix)`
   et `auHasard(graine)` (`design/personnages/avatar.js`), les gestes dans `design/atelier/gestes.js`. L'hiver, les maîtres
-  ont leur tenue (`tenues.hiver`) : on échange le fichier de repos ou de marche contre son `_hiver`, même cadre, même vitesse.
+  ont leur tenue (`tenues.hiver`), et sous la pluie aussi (`tenues.pluie`) : on échange le fichier de repos ou de marche
+  contre son `_hiver` ou son `_pluie`, même cadre, même vitesse.
 - **Scènes du tutoriel** (`svg/scenes/tutoriel/scenes.json`) : dans le carré 400 × 400 de PrologueArt (recadré au
   centre), peindre le fond, puis l'avatar du joueur à la place notée dans `avatar` (ses pieds en x, y ; son cadre
   48 × 64 agrandi `echelle` fois ; `vue`, `miroir`, `pose`, tenue naufragée ou non ; `cadre` : la photo de la carte

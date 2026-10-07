@@ -5,6 +5,7 @@
   "Cadres à part : parapluie [0, -18, 48, 82] (la toile passe au-dessus de la tête ; pieds toujours en (24, 62)) ; couche [0, 0, 64, 48] (allongé la tête à gauche, sous une couverture).",
   "Naufragés : lanterne et parapluie seulement pour Aster et Rivet, qui restent naufragés après la première lanterne. Visiteurs et nouveaux venus : tirés du générateur de l'avatar (choix notés ici, pour en refaire d'autres avec design/personnages/avatar.js) ; les nouveaux venus de l'épilogue arrivent en habits de voyage, une valise à la main, et n'ont pas de pose endormie.",
   "Tenues d'hiver des maîtres (tenues.hiver, tenues.js) : chacun à son style (écharpe, bonnet ou cache-oreilles, châle, pèlerine ou étole, moufles, bottes fourrées pour qui va pieds nus), en repos et en marche dans les trois vues : <maître>_<vue>_<pose>_hiver_<n>, dans le dossier du maître. Mêmes cadres, mêmes vitesses que les poses d'été : on échange le fichier.",
+  "Tenues de pluie des maîtres (tenues.pluie, tenues.js) : le ciré du catalogue, ouvert par-dessus la tenue, et les bottes de pluie ; Aster et Ondin, qui portent déjà un ciré, en relèvent la capuche. Repos et marche dans les trois vues : <maître>_<vue>_<pose>_pluie_<n>, dans le dossier du maître. Mêmes cadres, mêmes vitesses que les poses d'été : on échange le fichier.",
   "Noms rangés à l'assemblage (README, catalogue.json) : <sujet>_<vue>_<pose>_<n>.svg, vues face, avant (l'ancien « trois_quarts »), dos, profil ; les chemins ci-dessous suivent ces noms."
  ],
  "maitres": {
@@ -9023,6 +9024,253 @@
       "maitres/melisse/melisse_dos_marche_hiver_2.svg",
       "maitres/melisse/melisse_dos_marche_hiver_3.svg",
       "maitres/melisse/melisse_dos_marche_hiver_4.svg"
+     ]
+    }
+   }
+  },
+  "pluie": {
+   "aster": {
+    "nom": "Aster sous la pluie",
+    "fichiers": {
+     "face_repos": [
+      "maitres/aster/aster_face_repos_pluie_1.svg",
+      "maitres/aster/aster_face_repos_pluie_2.svg"
+     ],
+     "face_marche": [
+      "maitres/aster/aster_face_marche_pluie_1.svg",
+      "maitres/aster/aster_face_marche_pluie_2.svg",
+      "maitres/aster/aster_face_marche_pluie_3.svg",
+      "maitres/aster/aster_face_marche_pluie_4.svg"
+     ],
+     "avant_repos": [
+      "maitres/aster/aster_avant_repos_pluie_1.svg",
+      "maitres/aster/aster_avant_repos_pluie_2.svg"
+     ],
+     "avant_marche": [
+      "maitres/aster/aster_avant_marche_pluie_1.svg",
+      "maitres/aster/aster_avant_marche_pluie_2.svg",
+      "maitres/aster/aster_avant_marche_pluie_3.svg",
+      "maitres/aster/aster_avant_marche_pluie_4.svg"
+     ],
+     "dos_repos": [
+      "maitres/aster/aster_dos_repos_pluie_1.svg",
+      "maitres/aster/aster_dos_repos_pluie_2.svg"
+     ],
+     "dos_marche": [
+      "maitres/aster/aster_dos_marche_pluie_1.svg",
+      "maitres/aster/aster_dos_marche_pluie_2.svg",
+      "maitres/aster/aster_dos_marche_pluie_3.svg",
+      "maitres/aster/aster_dos_marche_pluie_4.svg"
+     ]
+    }
+   },
+   "cannelle": {
+    "nom": "Cannelle sous la pluie",
+    "fichiers": {
+     "face_repos": [
+      "maitres/cannelle/cannelle_face_repos_pluie_1.svg",
+      "maitres/cannelle/cannelle_face_repos_pluie_2.svg"
+     ],
+     "face_marche": [
+      "maitres/cannelle/cannelle_face_marche_pluie_1.svg",
+      "maitres/cannelle/cannelle_face_marche_pluie_2.svg",
+      "maitres/cannelle/cannelle_face_marche_pluie_3.svg",
+      "maitres/cannelle/cannelle_face_marche_pluie_4.svg"
+     ],
+     "avant_repos": [
+      "maitres/cannelle/cannelle_avant_repos_pluie_1.svg",
+      "maitres/cannelle/cannelle_avant_repos_pluie_2.svg"
+     ],
+     "avant_marche": [
+      "maitres/cannelle/cannelle_avant_marche_pluie_1.svg",
+      "maitres/cannelle/cannelle_avant_marche_pluie_2.svg",
+      "maitres/cannelle/cannelle_avant_marche_pluie_3.svg",
+      "maitres/cannelle/cannelle_avant_marche_pluie_4.svg"
+     ],
+     "dos_repos": [
+      "maitres/cannelle/cannelle_dos_repos_pluie_1.svg",
+      "maitres/cannelle/cannelle_dos_repos_pluie_2.svg"
+     ],
+     "dos_marche": [
+      "maitres/cannelle/cannelle_dos_marche_pluie_1.svg",
+      "maitres/cannelle/cannelle_dos_marche_pluie_2.svg",
+      "maitres/cannelle/cannelle_dos_marche_pluie_3.svg",
+      "maitres/cannelle/cannelle_dos_marche_pluie_4.svg"
+     ]
+    }
+   },
+   "rivet": {
+    "nom": "Rivet sous la pluie",
+    "fichiers": {
+     "face_repos": [
+      "maitres/rivet/rivet_face_repos_pluie_1.svg",
+      "maitres/rivet/rivet_face_repos_pluie_2.svg"
+     ],
+     "face_marche": [
+      "maitres/rivet/rivet_face_marche_pluie_1.svg",
+      "maitres/rivet/rivet_face_marche_pluie_2.svg",
+      "maitres/rivet/rivet_face_marche_pluie_3.svg",
+      "maitres/rivet/rivet_face_marche_pluie_4.svg"
+     ],
+     "avant_repos": [
+      "maitres/rivet/rivet_avant_repos_pluie_1.svg",
+      "maitres/rivet/rivet_avant_repos_pluie_2.svg"
+     ],
+     "avant_marche": [
+      "maitres/rivet/rivet_avant_marche_pluie_1.svg",
+      "maitres/rivet/rivet_avant_marche_pluie_2.svg",
+      "maitres/rivet/rivet_avant_marche_pluie_3.svg",
+      "maitres/rivet/rivet_avant_marche_pluie_4.svg"
+     ],
+     "dos_repos": [
+      "maitres/rivet/rivet_dos_repos_pluie_1.svg",
+      "maitres/rivet/rivet_dos_repos_pluie_2.svg"
+     ],
+     "dos_marche": [
+      "maitres/rivet/rivet_dos_marche_pluie_1.svg",
+      "maitres/rivet/rivet_dos_marche_pluie_2.svg",
+      "maitres/rivet/rivet_dos_marche_pluie_3.svg",
+      "maitres/rivet/rivet_dos_marche_pluie_4.svg"
+     ]
+    }
+   },
+   "ondin": {
+    "nom": "Ondin sous la pluie",
+    "fichiers": {
+     "face_repos": [
+      "maitres/ondin/ondin_face_repos_pluie_1.svg",
+      "maitres/ondin/ondin_face_repos_pluie_2.svg"
+     ],
+     "face_marche": [
+      "maitres/ondin/ondin_face_marche_pluie_1.svg",
+      "maitres/ondin/ondin_face_marche_pluie_2.svg",
+      "maitres/ondin/ondin_face_marche_pluie_3.svg",
+      "maitres/ondin/ondin_face_marche_pluie_4.svg"
+     ],
+     "avant_repos": [
+      "maitres/ondin/ondin_avant_repos_pluie_1.svg",
+      "maitres/ondin/ondin_avant_repos_pluie_2.svg"
+     ],
+     "avant_marche": [
+      "maitres/ondin/ondin_avant_marche_pluie_1.svg",
+      "maitres/ondin/ondin_avant_marche_pluie_2.svg",
+      "maitres/ondin/ondin_avant_marche_pluie_3.svg",
+      "maitres/ondin/ondin_avant_marche_pluie_4.svg"
+     ],
+     "dos_repos": [
+      "maitres/ondin/ondin_dos_repos_pluie_1.svg",
+      "maitres/ondin/ondin_dos_repos_pluie_2.svg"
+     ],
+     "dos_marche": [
+      "maitres/ondin/ondin_dos_marche_pluie_1.svg",
+      "maitres/ondin/ondin_dos_marche_pluie_2.svg",
+      "maitres/ondin/ondin_dos_marche_pluie_3.svg",
+      "maitres/ondin/ondin_dos_marche_pluie_4.svg"
+     ]
+    }
+   },
+   "sylve": {
+    "nom": "Sylve sous la pluie",
+    "fichiers": {
+     "face_repos": [
+      "maitres/sylve/sylve_face_repos_pluie_1.svg",
+      "maitres/sylve/sylve_face_repos_pluie_2.svg"
+     ],
+     "face_marche": [
+      "maitres/sylve/sylve_face_marche_pluie_1.svg",
+      "maitres/sylve/sylve_face_marche_pluie_2.svg",
+      "maitres/sylve/sylve_face_marche_pluie_3.svg",
+      "maitres/sylve/sylve_face_marche_pluie_4.svg"
+     ],
+     "avant_repos": [
+      "maitres/sylve/sylve_avant_repos_pluie_1.svg",
+      "maitres/sylve/sylve_avant_repos_pluie_2.svg"
+     ],
+     "avant_marche": [
+      "maitres/sylve/sylve_avant_marche_pluie_1.svg",
+      "maitres/sylve/sylve_avant_marche_pluie_2.svg",
+      "maitres/sylve/sylve_avant_marche_pluie_3.svg",
+      "maitres/sylve/sylve_avant_marche_pluie_4.svg"
+     ],
+     "dos_repos": [
+      "maitres/sylve/sylve_dos_repos_pluie_1.svg",
+      "maitres/sylve/sylve_dos_repos_pluie_2.svg"
+     ],
+     "dos_marche": [
+      "maitres/sylve/sylve_dos_marche_pluie_1.svg",
+      "maitres/sylve/sylve_dos_marche_pluie_2.svg",
+      "maitres/sylve/sylve_dos_marche_pluie_3.svg",
+      "maitres/sylve/sylve_dos_marche_pluie_4.svg"
+     ]
+    }
+   },
+   "galet": {
+    "nom": "Galet sous la pluie",
+    "fichiers": {
+     "face_repos": [
+      "maitres/galet/galet_face_repos_pluie_1.svg",
+      "maitres/galet/galet_face_repos_pluie_2.svg"
+     ],
+     "face_marche": [
+      "maitres/galet/galet_face_marche_pluie_1.svg",
+      "maitres/galet/galet_face_marche_pluie_2.svg",
+      "maitres/galet/galet_face_marche_pluie_3.svg",
+      "maitres/galet/galet_face_marche_pluie_4.svg"
+     ],
+     "avant_repos": [
+      "maitres/galet/galet_avant_repos_pluie_1.svg",
+      "maitres/galet/galet_avant_repos_pluie_2.svg"
+     ],
+     "avant_marche": [
+      "maitres/galet/galet_avant_marche_pluie_1.svg",
+      "maitres/galet/galet_avant_marche_pluie_2.svg",
+      "maitres/galet/galet_avant_marche_pluie_3.svg",
+      "maitres/galet/galet_avant_marche_pluie_4.svg"
+     ],
+     "dos_repos": [
+      "maitres/galet/galet_dos_repos_pluie_1.svg",
+      "maitres/galet/galet_dos_repos_pluie_2.svg"
+     ],
+     "dos_marche": [
+      "maitres/galet/galet_dos_marche_pluie_1.svg",
+      "maitres/galet/galet_dos_marche_pluie_2.svg",
+      "maitres/galet/galet_dos_marche_pluie_3.svg",
+      "maitres/galet/galet_dos_marche_pluie_4.svg"
+     ]
+    }
+   },
+   "melisse": {
+    "nom": "Mélisse sous la pluie",
+    "fichiers": {
+     "face_repos": [
+      "maitres/melisse/melisse_face_repos_pluie_1.svg",
+      "maitres/melisse/melisse_face_repos_pluie_2.svg"
+     ],
+     "face_marche": [
+      "maitres/melisse/melisse_face_marche_pluie_1.svg",
+      "maitres/melisse/melisse_face_marche_pluie_2.svg",
+      "maitres/melisse/melisse_face_marche_pluie_3.svg",
+      "maitres/melisse/melisse_face_marche_pluie_4.svg"
+     ],
+     "avant_repos": [
+      "maitres/melisse/melisse_avant_repos_pluie_1.svg",
+      "maitres/melisse/melisse_avant_repos_pluie_2.svg"
+     ],
+     "avant_marche": [
+      "maitres/melisse/melisse_avant_marche_pluie_1.svg",
+      "maitres/melisse/melisse_avant_marche_pluie_2.svg",
+      "maitres/melisse/melisse_avant_marche_pluie_3.svg",
+      "maitres/melisse/melisse_avant_marche_pluie_4.svg"
+     ],
+     "dos_repos": [
+      "maitres/melisse/melisse_dos_repos_pluie_1.svg",
+      "maitres/melisse/melisse_dos_repos_pluie_2.svg"
+     ],
+     "dos_marche": [
+      "maitres/melisse/melisse_dos_marche_pluie_1.svg",
+      "maitres/melisse/melisse_dos_marche_pluie_2.svg",
+      "maitres/melisse/melisse_dos_marche_pluie_3.svg",
+      "maitres/melisse/melisse_dos_marche_pluie_4.svg"
      ]
     }
    }

@@ -2,6 +2,8 @@
 // ruban, taches de rousseur, longue-vue en laiton. Action : elle regarde dans sa longue-vue (trois quarts avant).
 const { P, E, L, clip, expression, arm, r2 } = require('./troupe');
 const { capucheRabattue, reperes } = require('./avatar_accessoires');
+// la capuche de son ciré relevée sous la pluie (tenues.js : la coiffe marquée capuche) : elle range la queue de cheval
+const relevee = c => !!(c.coiffe && c.coiffe.capuche);
 
 const C = {
   skin: '#F2C9A0', skinS: '#DDA982',
@@ -50,7 +52,7 @@ const aster = {
   // derrière le corps : capuche (face, trois quarts) ; longue-vue (de dos)
   backItems(c, { view }) {
     if (view === 'ne') return spyglass(15.4, 44, 18);
-    return capucheRabattue(c.uid, view, reperes(c), C.coat, C.coatS);
+    return relevee(c) ? '' : capucheRabattue(c.uid, view, reperes(c), C.coat, C.coatS);
   },
 
   body(c, { view, pose }) {
@@ -62,8 +64,8 @@ const aster = {
     s += P(COAT, 'none');
     if (view === 'ne') {
       s += P('M24,34 L24,49.4', 'none', 0.7);
-      // capuche rabattue sur le dos (la même pour tous : avatar_accessoires.js)
-      s += capucheRabattue(c.uid, view, reperes(c), C.coat, C.coatS);
+      // capuche rabattue sur le dos (la même pour tous : avatar_accessoires.js), sauf relevée sous la pluie
+      if (!relevee(c)) s += capucheRabattue(c.uid, view, reperes(c), C.coat, C.coatS);
       return s;
     }
     const o = view === 'front' ? 24 : 21.5;
@@ -96,7 +98,7 @@ const aster = {
       s += P(back, C.hair) + clip(`${c.uid}h`, back, `<rect x="8" y="4" width="34" height="32" fill="${C.hairS}"/><ellipse cx="22.4" cy="17.4" rx="14" ry="12.8" fill="${C.hair}"/>`) + P(back, 'none');
       s += P('M17,11 Q24,7.6 31,11', 'none', 0.8) + P('M19.6,12.6 Q18.8,20 20.4,27.6', 'none', 0.6) + P('M24.4,11.8 Q25.2,19.4 24.2,28.4', 'none', 0.6);
       s += L([18, 9.6], [23.4, 8.8], C.hairH, 1.3);
-      s += P('M14.6,11.6 Q6.6,10.8 6.4,19 Q8.6,16.8 12.6,17.8 Z', C.hair) + E(13.4, 13.4, 1.5, 1.4, C.scarf, 0.9);
+      if (!relevee(c)) s += P('M14.6,11.6 Q6.6,10.8 6.4,19 Q8.6,16.8 12.6,17.8 Z', C.hair) + E(13.4, 13.4, 1.5, 1.4, C.scarf, 0.9);
       if (c.coiffe) s += c.coiffe(c, ctx, 'tete');
       return s;
     }
@@ -108,7 +110,7 @@ const aster = {
     const bangs = se ? 'M11.6,19 Q12,8.6 23,8 Q34.6,7.8 35.4,17.6 L32.6,14.8 L31,18.6 L27.6,13.8 L24.4,18 L21.4,13.6 L18.2,17.8 L15.6,14.2 L13.4,19.4 Z'
       : 'M12,18.6 Q13,8 24,8 Q35,8 36,18.6 L33,15 L31,19 L28,14 L25,18.4 L22,14 L19,18 L16,14.4 L14,19.2 Z';
     // queue de cheval (côté gauche du personnage), mèches, cheveux de derrière ombrés
-    s += P('M33.4,11.6 Q41.4,10.8 41.6,19 Q39.4,16.8 35.4,17.8 Z', C.hair) + E(34.6, 13.4, 1.5, 1.4, C.scarf, 0.9);
+    if (!relevee(c)) s += P('M33.4,11.6 Q41.4,10.8 41.6,19 Q39.4,16.8 35.4,17.8 Z', C.hair) + E(34.6, 13.4, 1.5, 1.4, C.scarf, 0.9);
     if (!c.coiffe) s += tufts;
     s += P(back, C.hair) + clip(`${c.uid}h`, back, `<rect x="8" y="25" width="32" height="8" fill="${C.hairS}"/>`) + P(back, 'none');
     if (se) s += E(35, 23.2, 1.5, 2.1, C.skin);
