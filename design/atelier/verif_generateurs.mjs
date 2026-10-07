@@ -31,5 +31,11 @@ for (const f of FAMILLES) {
     if (vb.join(' ') !== r.cadre.join(' ')) erreurs.push(`${f} : ${rel}, cadre ${r.cadre} au lieu de ${vb}`);
   }
 }
+// La couverture : la part des SVG de la bibliothèque que les générateurs par famille savent redessiner
+const lister = d => fs.readdirSync(d, { withFileTypes: true }).flatMap(e => (e.isDirectory() ? lister(path.join(d, e.name)) : e.name.endsWith('.svg') ? [path.join(d, e.name)] : []));
+const couverts = new Set();
+for (const f of FAMILLES) for (const { fichier } of (await import(pathToFileURL(path.join(BIB, 'generateur', `${f}.mjs`)).href)).liste()) couverts.add(fichier);
+const total = lister(path.join(BIB, 'svg')).length;
 if (erreurs.length) { console.error(`${erreurs.length} écarts sur ${n} dessins :\n` + erreurs.slice(0, 40).join('\n')); process.exit(1); }
 console.log(`générateurs : ${FAMILLES.join(', ')} — ${n} dessins identiques à la bibliothèque`);
+console.log(`couverture : ${couverts.size} des ${total} SVG de la bibliothèque (sans l'avatar, qui se compose : verif_generateur.mjs)`);

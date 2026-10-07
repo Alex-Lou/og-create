@@ -1121,4 +1121,7 @@ export const CAMP = {
   etabli: { frame: PROP_BOX, n: 1, label: 'Établi de Rivet', step: 'T4', draw: () => workbench() },
   bol: { frame: PROP_BOX, n: 3, label: 'Bol de soupe « pour la Dame »', step: 'III', draw: n => soupBowl(n) }
 };
+// Chaque dessin repart de zéro pour nommer ses dégradés (id) : ses noms ne dépendent plus de ce qu'on a dessiné avant, et
+// le jeu (le générateur du décor) retrouve les fichiers à l'octet près
+for (const a of Object.values(CAMP)) { const dessin = a.draw; a.draw = n => { uid = 0; return dessin(n); }; }
 export { crate, plank, stick, rope, stone, dune, kelp, shell, logLying, driftFire, DRIFT, CRATE, CANVAS, SAND, ROPE, IRON, ln, tk, pathTk, ell, iso, dOf, id, OUT, f2, pts };
