@@ -258,4 +258,4 @@ function frame(c, view, pose, n, expr) {
 const svg = (body, scale = 1) => `<svg xmlns="http://www.w3.org/2000/svg" width="${48 * scale}" height="${64 * scale}" viewBox="0 0 48 64">${body}</svg>`;
 const POSES = [['face_repos', 'front', 'repos', 2], ['avant_marche', 'se', 'marche', 4], ['dos_marche', 'ne', 'marche', 4], ['face_salut', 'front', 'salut', 2]];
 
-module.exports = { OUT, W, r2, st, P, E, L, limb, clip, eyes, expression, EXPRS, drop, zee, arm, bareFoot, shoe, frame, svg, POSES };
+module.exports = { OUT, W, r2, st, P, E, L, limb, clip, eyes, expression, EXPRS, drop, zee, arm, bareFoot, shoe, leg, frame, svg, POSES };
