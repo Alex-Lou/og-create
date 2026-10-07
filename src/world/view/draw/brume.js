@@ -6,6 +6,7 @@ import { ring, burst, vibrate } from '@/utils/fx';
 import { landmarksShown } from '@/world/landmarks';
 import { floatOf, BRUME_ALT, drawBrume, BRUME_REACH } from '@/world/brume';
 import { wreckOf, memoryOf } from '@/world/story';
+import { builtOf } from '@/world/faces';
 import playService from '@/services/playService';
 import { messageOf } from '@/utils/errors';
 import { TW, TH } from '../constants';
@@ -63,12 +64,13 @@ export default {
     else this.questOpen = true;
   },
   // Brume (quête active, actes finis), le nom du peuple et Anya : le tutoriel et les veillées (App.vue) y lisent où en
-  // est le joueur. hold : un coffre est ouvert, ou va s'ouvrir (une veillée ou une scène l'attend)
+  // est le joueur. hold : un coffre est ouvert, ou va s'ouvrir (une veillée ou une scène l'attend) ; built : les maîtres
+  // dont le bâtiment est fondé (les autres paraissent en naufragés)
   emitQuest() {
     const state = this.state;
     if (!state) return;
     const hold = Boolean(this.holdWreck || this.reveal || this.haul);
-    this.$emit('quest', state.brume ? { ...state.brume, people: state.people || null, anya: state.anya || null, hold } : null);
+    this.$emit('quest', state.brume ? { ...state.brume, people: state.people || null, anya: state.anya || null, hold, built: builtOf(state.villagers) } : null);
   },
   // Naufrage à annoncer pour la quête active (déjà vus : retenus sur l'appareil)
   checkWreck() {

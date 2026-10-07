@@ -426,7 +426,7 @@ import { FLOATING_ZONE, isletsOf } from '@/world/islets';
 import { seaOf } from '@/world/sea';
 import { stageOf as civilizationOf } from '@/game/vigils';
 import { brumeLook, secretDue, secretOf } from '@/game/opus';
-import { faceHref } from '@/world/faces';
+import { faceHref, builtOf } from '@/world/faces';
 import { guide } from '@/game/guide';
 import { forcedPhase } from '@/world/scene';
 import { perfWanted, perfMeter } from '@/world/perf';
@@ -720,7 +720,8 @@ export default {
         this.bestiaryTips(state);
         // Acte VI : Galet a lu la dernière rune ; Brume comprend (dit une fois)
         if (secretDue(state.brume && state.brume.acts, state.brume && state.brume.quest)) {
-          secretOf(Boolean(state.anya && state.anya.awake)).forEach(line => guide.say({ id: line.id, text: line.text, ...(line.who ? { who: line.who, face: faceHref(line.face) } : {}) }));
+          const built = builtOf(state.villagers);
+          secretOf(Boolean(state.anya && state.anya.awake)).forEach(line => guide.say({ id: line.id, text: line.text, ...(line.who ? { who: line.who, face: faceHref(line.face, { castaway: !built.includes(line.face) }) } : {}) }));
         }
       } catch (error) {
         if (this.gone) return;

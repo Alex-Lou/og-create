@@ -126,6 +126,7 @@
       :key="prologueScene"
       :scene="prologueScene"
       :frames="sceneFrames"
+      :built="islandBuilt"
       :skippable="!prologueReplay || isVigil || isStory"
       :skip-label="isVigil ? 'Passer la veillée' : isStory ? 'Passer' : 'Passer le prologue'"
       @done="prologueSceneDone"

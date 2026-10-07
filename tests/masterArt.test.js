@@ -97,4 +97,21 @@ describe('les maîtres de la bibliothèque', () => {
     expect(masterPortrait('bosquet', false)).toMatch(/sylve_face_repos_1\.svg$|^data:image\/svg\+xml/);
     expect(masterPortrait('phare', false)).toBe(null);
   });
+
+  it('le portrait d\'une scène : de face ou de trois quarts, au repos, au travail, en marche ou assis ; sans geste, au repos', () => {
+    expect(masterPortrait('atelier', true, { view: 'se', pose: 'work' })).toMatch(/rivet-naufrage_avant_travail_1\.svg$/);
+    expect(masterPortrait('foyer', false, { view: 'front', pose: 'walk' })).toMatch(/cannelle_face_marche_1\.svg$/);
+    expect(masterPortrait('ponton', false, { view: 'se' })).toMatch(/aster_avant_repos_1\.svg$/);
+    expect(masterPortrait('carriere', true, { view: 'se', pose: 'work' })).toMatch(/galet-naufrage_avant_repos_1\.svg$/);
+    // Assis, à la veillée (le siège n'est pas dessiné : PrologueArt pose une souche dessous)
+    expect(masterPortrait('ponton', true, { view: 'se', pose: 'sit' })).toMatch(/aster-naufrage_avant_assis_1\.svg$/);
+    // Chaque maître a son portrait dans chaque vue et pose des scènes, en naufragé et en maître
+    for (const role of Object.keys(MASTERS)) {
+      for (const castaway of [false, true]) {
+        for (const view of ['front', 'se']) {
+          for (const pose of ['idle', 'work', 'walk', 'sit']) expect(masterPortrait(role, castaway, { view, pose }), `${role} ${castaway} ${view} ${pose}`).toBeTruthy();
+        }
+      }
+    }
+  });
 });

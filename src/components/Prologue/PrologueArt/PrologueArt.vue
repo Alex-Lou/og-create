@@ -1,7 +1,7 @@
 <template>
   <svg class="pa" :class="`pa--${art}`" viewBox="0 0 400 400" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
-    <!-- Les images des scènes du tutoriel (HISTOIRE.md, § 9), en SVG : nuit, brume, la troupe dessinée par le
-         générateur de l'île (world/villagers.js), Brume comme sur l'île. Le joueur n'est jamais montré (D11). Le cadre
+    <!-- Les images des scènes du tutoriel (HISTOIRE.md, § 9), en SVG : nuit, brume, la troupe dessinée par la
+         bibliothèque (world/masterArt.js), Brume comme sur l'île. Le joueur n'est jamais montré (D11). Le cadre
          se recadre sur l'écran (slice) : l'essentiel tient au centre. Une seule racine : la scène l'anime en fondu -->
     <defs>
       <linearGradient id="pa-night" x1="0" y1="0" x2="0" y2="1">
@@ -141,9 +141,17 @@
       <image :href="person('foyer', 'front', 'walk')" x="236" y="208" width="60" height="84" />
     </g>
 
-    <!-- Veillée : la troupe en cercle autour du feu (ceux du fond derrière les flammes) -->
+    <!-- Veillée : la troupe assise en cercle autour du feu (ceux du fond derrière les flammes), chacun sur sa souche (la
+         pose assise de la bibliothèque ne dessine pas le siège ; son dessus est à y = 53,6 du cadre 48 × 64) -->
     <g v-if="art === 'veillee' || art === 'rite' || (art === 'lien' && cast.length > 2)">
-      <image v-for="m in ring.back" :key="`b${m.id}`" :href="person(m.id, 'se')" :x="m.x" :y="m.y" :width="m.w" :height="m.h" :transform="m.transform" />
+      <g v-for="m in ring.back" :key="`b${m.id}`" :transform="m.transform">
+        <g :transform="m.seat" stroke="#3C2819" stroke-width="1.1" stroke-linejoin="round">
+          <path d="M14.5 54 V61 Q23 63.6 31.5 61 V54 Z" fill="#8F5B30" />
+          <ellipse cx="23" cy="54" rx="8.5" ry="2.4" fill="#D6A066" />
+          <ellipse cx="23" cy="54" rx="4.2" ry="1.1" fill="none" stroke="#A8743F" stroke-width=".7" />
+        </g>
+        <image :href="person(m.id, 'se', 'sit')" :width="m.w" :height="m.h" />
+      </g>
     </g>
 
     <!-- Un lien : deux naufragés face à face, la recette de leurs Arts en lumière -->
@@ -365,6 +373,12 @@ const FLIES = [[-60, -120], [-48, -60], [52, -140], [64, -80], [-70, -30], [40, 
 // Les sept pierres du Cercle (le sigle de son chapitre au-dessus), et la troupe devant (Sylve et Mélisse se partagent ♀)
 const MASTERS = ['ponton', 'carriere', 'puits', 'bosquet', 'foyer', 'atelier', 'potager'];
 
+// Les naufragés de chaque scène du tutoriel : le souvenir revient à Cannelle devant le feu (cannelle-feu) et à Ondin
+// quand son Puits est fondé (avant le Campement) ; Aster et Rivet restent naufragés. Sur l'Hirondelle (storm), la
+// troupe est en habits de bord ; à la finale, tous sont maîtres. Aux veillées, les naufragés sont ceux de l'île
+const CASTAWAYS = { aster: ['ponton'], cannelle: ['foyer'], rivet: ['atelier'], ondin: ['puits'], campement: ['ponton', 'atelier'] };
+const VIGILS = ['veillee', 'rite', 'lien'];
+
 // Le Phare de Brume dans les images de la finale (pied du phare, échelle) ; sur un écran en hauteur, seul le milieu du
 // cadre (x de 100 à 300) se voit
 const LIGHTHOUSES = { phare: [206, 336, 1.05], soleil: [200, 344, 1.05], flammeche: [262, 296, 0.5] };
@@ -378,7 +392,9 @@ export default {
     art: { type: String, required: true },
     // Veillées : qui est là (bâtiments de la troupe), et la recette écrite en lumière
     cast: { type: Array, default: () => [] },
-    recipe: { type: String, default: '' }
+    recipe: { type: String, default: '' },
+    // Les maîtres dont le bâtiment est fondé (aux veillées, les autres paraissent en naufragés)
+    built: { type: Array, default: () => [] }
   },
   data() {
     return { WISP, GOLD: STAGES[7], STARS, MIST, BLOOM, CROWN, FLIES };
@@ -437,18 +453,22 @@ export default {
       return this.recipe.split('=').map(part => part.trim());
     },
     // La troupe en arc de cercle derrière le feu (centre 212, 290), tournée vers lui, en deux groupes de part et d'autre
-    // des flammes : ceux de gauche de trois quarts, ceux de droite en miroir
+    // des flammes : ceux de gauche de trois quarts, ceux de droite en miroir ; ceux du fond d'abord. seat : le repère du
+    // dessin (48 × 64, posé dans le cadre w × h), où se pose sa souche
     ring() {
       const n = this.cast.length;
       const w = n > 5 ? 38 : 46;
+      const h = w * 1.4;
+      const k48 = w / 48;
+      const seat = `translate(0 ${((h - 64 * k48) / 2).toFixed(2)}) scale(${k48.toFixed(4)})`;
       const left = Math.ceil(n / 2);
       const back = this.cast.map((id, k) => {
         const side = k < left ? k / Math.max(1, left - 1) : (k - left) / Math.max(1, n - left - 1);
         const a = Math.PI * (k < left ? 1.1 + 0.3 * side : 1.6 + 0.3 * side);
-        const x = 208 + Math.cos(a) * 76 - w / 2, y = 290 + Math.sin(a) * 24 - w * 1.4;
+        const x = 208 + Math.cos(a) * 76 - w / 2, y = 290 + Math.sin(a) * 24 - h;
         const flip = x + w / 2 > 212;
-        return { id, w, h: w * 1.4, x: flip ? 0 : x, y: flip ? 0 : y, transform: flip ? `translate(${(x + w).toFixed(1)} ${y.toFixed(1)}) scale(-1 1)` : null };
-      });
+        return { id, w, h, y, seat, transform: flip ? `translate(${(x + w).toFixed(1)} ${y.toFixed(1)}) scale(-1 1)` : `translate(${x.toFixed(1)} ${y.toFixed(1)})` };
+      }).sort((p, q) => p.y - q.y);
       return { back };
     },
     saturn() {
@@ -457,7 +477,8 @@ export default {
   },
   methods: {
     person(id, view, pose = 'idle') {
-      return faceHref(id, { view, pose });
+      const castaway = VIGILS.includes(this.art) ? !this.built.includes(id) : (CASTAWAYS[this.art] || []).includes(id);
+      return faceHref(id, { view, pose, castaway });
     }
   }
 };
