@@ -392,6 +392,10 @@ for (const petite of ['', '_petite']) {
   PLANTES[`touffe_automne${petite}`] = `Touffe d'herbe d'automne (${t}, herbe blonde, épis de graines)`;
   PLANTES[`touffe_hiver${petite}`] = `Touffe d'herbe d'hiver (${t}, neige sur les pointes, congère au pied)`;
 }
+// les 8 bonshommes de neige (objets.js) : bonhomme_de_neige[_petit][_bleu][_rouge_gorge]
+for (const petit of ['', '_petit']) for (const bleu of ['', '_bleu']) for (const oiseau of ['', '_rouge_gorge']) {
+  PLANTES[`bonhomme_de_neige${petit}${bleu}${oiseau}`] = `Bonhomme de neige (${[petit ? 'petit' : 'grand', bleu ? 'écharpe bleue et bonnet tricoté' : 'écharpe rouge et haut-de-forme', oiseau && 'un rouge-gorge sur le bras'].filter(Boolean).join(', ')})`;
+}
 const PIECES = { 'arc-en-ciel': 'Arc-en-ciel', 'coeur-lave': 'Cœur de lave', 'filon-or': 'Filon d\'or' };
 const ROMAIN = ['', 'I', 'II', 'III', 'IV', 'V', 'VI', 'VII'];
 const ETAT_COFFRE = { ferme: 'fermé', ouverture: 'ouverture', ouvert: 'ouvert', rayons: 'rayons (calque)', icone: 'icône' };

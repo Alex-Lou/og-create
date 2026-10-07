@@ -1,5 +1,5 @@
 // Les objets du décor refaits au niveau des PNJ, un par un, avec le trait et la lumière des arbres (arbres.js) : le nid,
-// la lanterne, le banc. Cadre et ancrage des décors de deco.js (PROP, centre de la case en (0, 0)).
+// la lanterne, le banc, le bonhomme de neige. Cadre et ancrage des décors de deco.js (PROP, centre de la case en (0, 0)).
 const { OUT, E, r2 } = require('./troupe');
 const { box } = require('./deco');
 
@@ -151,4 +151,80 @@ for (const petit of [false, true]) for (const peint of [false, true]) for (const
   BANCS_LISTE.push([fichier, libelle, { petit, peint, chat: ch }]);
 }
 
-module.exports = { nid, NIDS, lanterne, LANTERNES, banc, BANCS_LISTE };
+// ——— Le bonhomme de neige (l'hiver) : deux boules de neige détourées et ombrées comme la troupe, un visage chibi
+// (yeux de charbon, joues roses, nez-carotte, sourire), des bras de brindilles, des boutons de charbon, une écharpe
+// rayée à franges, un haut-de-forme ou un bonnet tricoté ; un rouge-gorge se pose parfois sur son bras ———
+const NEIGE = { light: '#FFFFFF', mid: '#EEF4FA', dark: '#CFDDEB', creux: '#B7C9DC' };
+// une boule de neige détourée : l'aplat, l'ombre en croissant en bas à droite, le reflet en haut à gauche
+function bouleDeNeige(id, x, y, r) {
+  return `<circle cx="${r2(x)}" cy="${r2(y)}" r="${r2(r)}" fill="${NEIGE.mid}" stroke="${OUT}" stroke-width="1.1"/>`
+    + `<defs><clipPath id="${id}"><circle cx="${r2(x)}" cy="${r2(y)}" r="${r2(r)}"/></clipPath></defs><g clip-path="url(#${id})">`
+    + `<circle cx="${r2(x + r * 0.32)}" cy="${r2(y + r * 0.36)}" r="${r2(r * 0.95)}" fill="${NEIGE.dark}"/>`
+    + `<circle cx="${r2(x - r * 0.06)}" cy="${r2(y - r * 0.06)}" r="${r2(r * 0.9)}" fill="${NEIGE.mid}"/>`
+    + `<circle cx="${r2(x - r * 0.36)}" cy="${r2(y - r * 0.42)}" r="${r2(r * 0.36)}" fill="${NEIGE.light}"/></g>`;
+}
+// bras de brindille : du corps vers le bout, une fourche à deux doigts
+const brasBrindille = (x0, y0, x1, y1, s) => {
+  const fx = x0 + (x1 - x0) * 0.62, fy = y0 + (y1 - y0) * 0.62;
+  const d = `M${r2(x0)},${r2(y0)} L${r2(x1)},${r2(y1)} M${r2(fx)},${r2(fy)} l${r2(2.4 * s)},${r2(-3.2)} M${r2(x1)},${r2(y1)} l${r2(-0.6 * s)},-2.6 M${r2(x1)},${r2(y1)} l${r2(2.4 * s)},-0.6`;
+  return trait(d, OUT, 2.9) + trait(d, '#8A5A32', 1.2);
+};
+// l'écharpe : le tour du cou (bande rayée), un pan qui tombe sur le côté, ses franges
+function echarpe(id, y, couleur, raie) {
+  const tour = `M-11,${y - 1.6} Q0,${y + 2.4} 11,${y - 1.6} L11.2,${y + 2.2} Q0,${y + 6.4} -11.2,${y + 2.2} Z`;
+  const pan = `M4,${y + 2} L9.4,${y + 1} L11.6,${y + 11} L6.4,${y + 12} Z`;
+  return `<path d="${pan}" fill="${couleur}" stroke="${OUT}" stroke-width="1" stroke-linejoin="round"/>`
+    + [0.35, 0.7].map(t => trait(`M${r2(4.6 + 2.1 * t)},${r2(y + 2 + 10 * t)} L${r2(9.8 + 2.1 * t)},${r2(y + 1 + 10 * t)}`, raie, 1.1)).join('')
+    + [6.8, 8.4, 10, 11.4].map(x => trait(`M${x},${r2(y + 12 - (x - 6.4) * 0.2)} l0.3,2`, couleur, 1)).join('')
+    + `<path d="${tour}" fill="${couleur}" stroke="${OUT}" stroke-width="1" stroke-linejoin="round"/>`
+    + `<defs><clipPath id="${id}"><path d="${tour}"/></clipPath></defs><g clip-path="url(#${id})">`
+    + [-7, -2.5, 2, 6.5].map(x => trait(`M${x},${y - 3} l1.4,10`, raie, 1.2)).join('')
+    + `<path d="M-12,${y + 3.6} Q0,${y + 7.6} 12,${y + 3.6} L12,${y + 8} L-12,${y + 8} Z" fill="rgba(0,0,0,.18)"/></g>`;
+}
+// le haut-de-forme noir au ruban, posé un peu de travers ; le bonnet tricoté à pompon
+const hautDeForme = (y, ruban) => `<g transform="rotate(-8 0 ${y})">`
+  + E(0, y, 9.6, 2.6, '#3A3440', 1) + `<path d="M-6,${y} L-5.4,${y - 11} Q0,${y - 12.4} 5.4,${y - 11} L6,${y} Q0,${y + 1.8} -6,${y} Z" fill="#3A3440" stroke="${OUT}" stroke-width="1" stroke-linejoin="round"/>`
+  + `<path d="M-5.9,${y - 2.6} Q0,${y - 1} 5.9,${y - 2.6} L5.8,${y - 4.6} Q0,${y - 3} -5.8,${y - 4.6} Z" fill="${ruban}"/>` + trait(`M-3.6,${y - 9.6} L-3.8,${y - 5.4}`, '#5E5868', 1) + '</g>';
+const bonnetTricote = (y, c, revers) => `<path d="M-9.4,${y} Q-9.6,${y - 11} 0,${y - 12.4} Q9.6,${y - 11} 9.4,${y} Z" fill="${c}" stroke="${OUT}" stroke-width="1" stroke-linejoin="round"/>`
+  + [-5, -1.6, 1.8, 5.2].map(x => trait(`M${x},${y - 1} Q${x * 1.05},${y - 6} ${x * 0.8},${y - 10.4}`, 'rgba(0,0,0,.16)', 0.8)).join('')
+  + `<path d="M-10.2,${y + 0.6} Q0,${y - 2.6} 10.2,${y + 0.6} L10,${y - 3.2} Q0,${y - 6.2} -10,${y - 3.2} Z" fill="${revers}" stroke="${OUT}" stroke-width="1" stroke-linejoin="round"/>`
+  + [-7, -3.5, 0, 3.5, 7].map(x => trait(`M${x},${y - 0.6 - Math.abs(x) * 0.02} l0,-3`, 'rgba(0,0,0,.14)', 0.7)).join('')
+  + E(1, y - 13.4, 3.2, 3, revers, 1) + E(0.1, y - 14.4, 1.2, 1, '#FFFFFF', 0);
+// le visage : deux yeux de charbon et leur reflet, les joues roses, le nez-carotte, un sourire de charbon
+const visageBonhomme = y => E(-3.7, y - 1.2, 1.35, 1.75, '#2A2420', 0) + E(3.3, y - 1.2, 1.35, 1.75, '#2A2420', 0)
+  + E(-4.1, y - 1.9, 0.5, 0.55, '#FFFFFF', 0) + E(2.9, y - 1.9, 0.5, 0.55, '#FFFFFF', 0)
+  + E(-6.4, y + 2.4, 1.9, 1.1, '#F7B6C8', 0) + E(6.4, y + 4, 1.7, 1, '#F7B6C8', 0)
+  + `<path d="M-0.6,${y + 0.4} Q3.6,${y + 0.6} 8.2,${y + 2.2} Q3.4,${y + 2.8} -0.6,${y + 2.6} Z" fill="#F08A3A" stroke="${OUT}" stroke-width="0.8" stroke-linejoin="round"/>`
+  + trait(`M2.2,${y + 0.9} l0.3,1.3 M4.6,${y + 1.3} l0.3,1.1`, '#C8622A', 0.5)
+  + [-3.2, -1.6, 0.2, 2, 3.6].map((x, i) => E(x, y + 4.6 + [0.2, 0.9, 1.2, 0.9, 0.2][i], 0.55, 0.55, '#2A2420', 0)).join('');
+// le rouge-gorge posé sur une brindille, tourné vers la gauche
+const rougeGorge = (x, y) => `<g transform="translate(${r2(x)} ${r2(y)})">`
+  + `<path d="M3.4,-1.6 L6.6,-0.6 L4,0.8 Z" fill="#7A5236" stroke="${OUT}" stroke-width="0.6" stroke-linejoin="round"/>`
+  + E(0.6, -2.6, 3.6, 2.9, '#9C6B44', 0.8) + E(-0.6, -1.8, 2.2, 2, '#F08A3A', 0) + E(-2.2, -4.6, 2.2, 2.1, '#9C6B44', 0.8)
+  + E(-2.8, -4.2, 1.2, 1.1, '#F08A3A', 0) + E(-2.6, -5.4, 0.5, 0.55, '#2A2420', 0) + `<path d="M-4.2,-4.8 L-5.8,-4.4 L-4.2,-4 Z" fill="#E8B24A" stroke="${OUT}" stroke-width="0.4"/>`
+  + trait('M-0.6,0 l-0.4,1.2 M1,0.2 l0.2,1.2', OUT, 0.5) + '</g>';
+// le tas de neige au pied
+const tasDeNeige = s => `<path d="M${r2(-16 * s)},1.6 Q${r2(-14 * s)},-2.6 ${r2(-8 * s)},-1.4 Q${r2(-3 * s)},-3.2 ${r2(2 * s)},-1.6 Q${r2(8 * s)},-3.4 ${r2(13 * s)},-1 Q${r2(17 * s)},0 ${r2(16 * s)},2.4 Q0,5.6 ${r2(-16 * s)},1.6 Z" fill="#FFFFFF" stroke="${OUT}" stroke-width="0.9"/>`
+  + trait(`M${r2(2 * s)},2.6 Q${r2(8 * s)},3.4 ${r2(13 * s)},1.8`, '#D6E4EE', 1.2);
+
+// petit : × 0,78 ; bleu : écharpe bleue et bonnet tricoté (sinon écharpe rouge et haut-de-forme) ; oiseau : un
+// rouge-gorge posé sur le bras
+function bonhommeDeNeige({ petit = false, bleu = false, oiseau = false } = {}) {
+  const s = petit ? 0.78 : 1;
+  const id = `bdn${petit ? 'p' : 'g'}${bleu ? 'b' : 'r'}${oiseau ? 'o' : ''}`;
+  const corps = bouleDeNeige(`${id}a`, 0, -14, 14.5) + [-19, -13, -7].map(y => E(-1.6, y, 1.2, 1.15, '#2A2420', 0) + E(-1.9, y - 0.4, 0.4, 0.35, '#7A7480', 0)).join('');
+  const brasG = brasBrindille(-12.6, -21, -24, -29.5, -1), brasD = brasBrindille(12.4, -21, 23.6, -30, 1);
+  const tete = bouleDeNeige(`${id}b`, 0, -37, 10.4) + visageBonhomme(-37);
+  const coiffe = bleu ? bonnetTricote(-44.6, '#5C8FD6', '#F2EDE4') : hautDeForme(-45.4, '#D9443A');
+  const ech = echarpe(`${id}c`, -28.6, bleu ? '#5C8FD6' : '#D9443A', '#F2EDE4');
+  const body = brasG + brasD + corps + tete + ech + coiffe + (oiseau ? rougeGorge(21.4, -29.6) : '');
+  return E(3, 1.5, 19 * s, 6.5 * s, 'rgba(60,80,110,0.22)', 0) + groupe(0, 0, s, tasDeNeige(1) + body);
+}
+const BONSHOMMES = [];
+for (const petit of [false, true]) for (const bleu of [false, true]) for (const oiseau of [false, true]) {
+  const fichier = ['bonhomme_de_neige', petit && 'petit', bleu && 'bleu', oiseau && 'rouge_gorge'].filter(Boolean).join('_');
+  const libelle = `Bonhomme de neige (${[petit ? 'petit' : 'grand', bleu ? 'écharpe bleue et bonnet tricoté' : 'écharpe rouge et haut-de-forme', oiseau && 'un rouge-gorge sur le bras'].filter(Boolean).join(', ')})`;
+  BONSHOMMES.push([fichier, libelle, { petit, bleu, oiseau }]);
+}
+
+module.exports = { nid, NIDS, lanterne, LANTERNES, banc, BANCS_LISTE, bonhommeDeNeige, BONSHOMMES };
