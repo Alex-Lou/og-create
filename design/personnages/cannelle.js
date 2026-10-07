@@ -61,7 +61,8 @@ const cannelle = {
   },
 
   neck(c, { view }) {
-    if (view === 'ne') return '';
+    // de dos : la nuque (dans l'ombre) sous le chignon, jusqu'à l'encolure de la robe
+    if (view === 'ne') return P('M19.8,25 L28.2,25 L28.4,31.95 Q24,31.25 19.6,31.95 Z', C.skinS, 0) + P('M19.6,31.95 Q24,31.25 28.4,31.95', 'none');
     return P('M18.2,32.4 Q24,36.2 29.8,32.4 Q24,34.4 18.2,32.4 Z', C.apron, 0.9);
   },
 
@@ -72,10 +73,14 @@ const cannelle = {
     const bun = E(24, 8.6, 5.4, 4.3, C.hair) + P('M20.4,8.2 Q24,5.6 27.6,8.2', 'none', 0.6);
     let s = '';
     if (view === 'ne') {
-      const back = 'M12,22 Q11,8.6 24,8.6 Q37,8.6 36,22 Q36.4,28.6 33,30 Q24,31.6 15,30 Q11.6,28.6 12,22 Z';
-      s += P(back, C.hair) + clip(`${c.uid}h`, back, `<rect x="8" y="6" width="34" height="30" fill="${C.hairS}"/><ellipse cx="22.6" cy="18.8" rx="13.6" ry="11.6" fill="${C.hair}"/>`) + P(back, 'none');
+      // la tête descend aussi bas que de face : les cheveux tirés couvrent le haut des bras, la nuque se voit au milieu
+      const back = 'M12,22 Q11,8.6 24,8.6 Q37,8.6 36,22 Q36.8,30 35.8,32.8 Q32.6,34 28.6,32.8 Q27,28.4 24,28.4 Q21,28.4 19.4,32.8 Q15.4,34 12.2,32.8 Q11.2,30 12,22 Z';
+      s += P(back, C.hair) + clip(`${c.uid}h`, back, `<rect x="8" y="6" width="34" height="30" fill="${C.hairS}"/><ellipse cx="22.6" cy="19.8" rx="13.8" ry="12.4" fill="${C.hair}"/>`) + P(back, 'none');
       // cheveux tirés vers le chignon : mèches qui remontent de la nuque, reflet en haut à gauche
-      s += P('M17.4,28.6 Q16.6,20.4 20.6,14.4', 'none', 0.6) + P('M24,30 Q23.4,21.6 24,15.4', 'none', 0.6) + P('M30.6,28.6 Q31.4,20.4 27.4,14.4', 'none', 0.6);
+      s += P('M16.6,31.6 Q15.8,21.4 20.6,14.4', 'none', 0.6) + P('M24,26.4 Q23.4,21 24,15.4', 'none', 0.6) + P('M31.4,31.6 Q32.2,21.4 27.4,14.4', 'none', 0.6);
+      // une frisette échappée du chignon, au creux de la nuque
+      const curl = d => `<path d="${d}" fill="none" stroke="#3C2819" stroke-width="1.7" stroke-linecap="round"/><path d="${d}" fill="none" stroke="${C.hair}" stroke-width="0.7" stroke-linecap="round"/>`;
+      s += curl('M26.4,29.2 Q27.4,30.6 26.6,31.4 Q25.8,31.8 25.7,31');
       s += L([14.6, 17.6], [16.8, 13.6], C.hairH, 1.2);
       s += limb([26.6, 9.6], [31.2, 3.8], 1.1, C.spoon) + `<g transform="rotate(40 32 3)">${E(32, 3, 1.3, 1.75, C.spoon, 0.9)}${E(31.7, 2.7, 0.5, 0.8, '#F2F4F7', 0)}</g>`;
       s += E(24, 10.4, 5.4, 4.4, C.hair) + P('M20.4,10.4 Q24,7.6 27.6,10.4', 'none', 0.6) + L([21, 8.8], [23.6, 7.9], C.hairH, 1.1);

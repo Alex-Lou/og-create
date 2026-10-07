@@ -146,20 +146,23 @@ const SENS_FRANGE = {
 const sensFrange = coupe => (coupe === 'carre' || coupe === 'deuxChignons' ? SENS_FRANGE.carre : SENS_FRANGE[coupe] || SENS_FRANGE.defaut);
 // De dos : la silhouette des cheveux (d'un seul tenant), et les mèches qui suivent leur sens (vers l'élastique, le
 // chignon, la raie, ou tout droit vers les pointes)
-const TIRES = 'M11,21 Q10,6.6 24,6.4 Q38,6.6 37,21 Q37.2,26.4 35,28.4 Q24,30.8 13,28.4 Q10.8,26.4 11,21 Z'; // cheveux tirés, nuque nette
-const NUQUE = 'M11,21 Q10,6.6 24,6.4 Q38,6.6 37,21 Q37.2,25.6 35.4,27.6 L34,27.2 L33.2,29.4 L31.2,28.4 L29.8,30.4 L27.8,29.2 L26,31 L24,29.6 L22,31 L20.2,29.2 L18.2,30.4 L16.8,28.4 L14.8,29.4 L14,27.2 L12.6,27.6 Q10.8,25.6 11,21 Z';
+// de dos, la tête descend aussi bas que de face : les cheveux couvrent le haut des bras, la nuque se voit au milieu
+const TIRES = 'M11,21 Q10,6.6 24,6.4 Q38,6.6 37,21 Q37.2,29.8 36.2,32.6 Q32.6,34 28.6,32.8 Q27,28.6 24,28.6 Q21,28.6 19.4,32.8 Q15.4,34 11.8,32.6 Q10.8,29.8 11,21 Z'; // cheveux tirés, nuque nette en arche
+// les locks tombent sur la nuque : pas d'arche, le bas suit leurs racines
+const TIRES_PLEIN = 'M11,21 Q10,6.6 24,6.4 Q38,6.6 37,21 Q37.2,29.8 36.2,32.6 Q24,35 11.8,32.6 Q10.8,29.8 11,21 Z';
+const NUQUE = 'M11,21 Q10,6.6 24,6.4 Q38,6.6 37,21 Q37.4,27.4 36.2,30.4 L35.8,32.8 L34.2,31.6 L33.2,33.8 L31.6,32 L30.2,33.8 L28.8,31.9 L27.2,33.4 Q25.8,30.4 24,29.2 Q22.2,30.4 20.8,33.4 L19.2,31.9 L18,33.8 L16.6,32 L15,33.8 L13.8,31.6 L12.2,32.8 L11.8,30.4 Q10.6,27.4 11,21 Z'; // courte : mèches, nuque en V
 const RAIE = 'M24,7.4 L24,29.4';
 const DOS = {
   courte: { forme: NUQUE, sens: 'M23.4,9.6 Q18.6,15 17.6,27.6 M25.2,9.4 Q24.6,18 24,29.4 M27,9.8 Q31,15.6 31,27.4' },
   meche: { forme: NUQUE, sens: 'M20.6,9.8 Q17,16 17.6,27.6 M24,9.2 Q25,18 24,29.4 M27.6,9.6 Q32.4,14 31.2,27.4' },
   bataille: {
-    forme: 'M11,21 Q10,6.6 24,6.4 Q38,6.6 37,21 Q37.6,25.4 36.2,28 L34.2,26.8 L33.8,30 L31,28.2 L30.2,31.4 L27.6,29 L25.6,32 L23.6,29.4 L21.4,31.8 L19.6,28.8 L17.4,31 L16.6,28 L13.8,29.6 L13.6,26.8 L11.8,28 Q10.4,25.4 11,21 Z',
+    forme: 'M11,21 Q10,6.6 24,6.4 Q38,6.6 37,21 Q37.6,26 36.6,29.4 L36.8,32.6 L34.4,31 L33.8,34 L31.2,32 L30.4,34.4 L28.4,31.8 L27.4,33.8 Q25.8,30.6 24,29.2 Q22.2,30.6 20.6,33.8 L19.6,31.8 L17.6,34.4 L16.8,32 L14.2,34 L13.6,31 L11.2,32.6 L11.4,29.4 Q10.4,26 11,21 Z',
     sens: 'M22.6,9.6 Q18.4,16 17.6,28.6 M25,9.2 Q25,19 25.2,30.4 M27.4,9.8 Q31.6,16 31,28.4'
   },
   carre: {
-    forme: 'M10.8,21 Q10,6.6 24,6.4 Q38,6.6 37.2,21 L37.6,29 Q37.6,30.8 35.6,31 Q24,32.2 12.4,31 Q10.4,30.8 10.4,29 Z',
+    forme: 'M10.8,21 Q10,6.6 24,6.4 Q38,6.6 37.2,21 L37.8,30.8 Q37.8,32.6 35.6,32.8 Q24,34 12.4,32.8 Q10.2,32.6 10.2,30.8 Z',
     sens: 'M21.6,9.8 Q17,17 16.6,30.6 M24.6,9.4 Q25,19 24.4,31.4 M27.6,9.8 Q32,17 32,30.8',
-    detail: 'M12.8,29.2 Q24,30.6 35.2,29.2' // le bas du carré, qui rentre
+    detail: 'M12.8,31 Q24,32.4 35.2,31' // le bas du carré, qui rentre
   },
   milongue: {
     forme: 'M10.8,21 Q10,6.6 24,6.4 Q38,6.6 37.2,21 Q37.4,28.8 39.4,32.8 Q36.6,34.2 34.4,32.6 Q24,34.4 13.6,32.6 Q11.4,34.2 8.6,32.8 Q10.6,28.8 10.8,21 Z',
@@ -181,7 +184,7 @@ const DOS = {
   deuxChignons: { forme: TIRES, sens: RAIE + ' M23.2,25.6 Q18.6,20 17.4,13.2 M23,18 Q19.8,15 18.6,12.4 M24.8,25.6 Q29.4,20 30.6,13.2 M25,18 Q28.2,15 29.4,12.4' },
   couronne: { forme: TIRES, sens: 'M17.6,17.8 Q17,23 18.6,28.4 M24,16.6 Q24.4,23 24,29.6 M30.4,17.8 Q31,23 29.4,28.4' },
   tresses: { forme: TIRES, sens: RAIE + ' M23.2,10.6 Q18.8,15 17.4,25.4 M23,18 Q20.2,21 18.4,25.6 M24.8,10.6 Q29.2,15 30.6,25.4 M25,18 Q27.8,21 29.6,25.6' },
-  locks: { forme: TIRES, sens: 'M17.4,10.4 Q15.4,18 15.8,27.6 M21,8.8 Q20,18 20.4,29.2 M24.4,8.4 Q24.6,18 24.4,29.6 M28,8.8 Q29,18 28.4,29.2 M31.4,10.6 Q33.2,18 32.6,27.6' }
+  locks: { forme: TIRES_PLEIN, sens: 'M17.4,10.4 Q15.4,18 15.8,27.6 M21,8.8 Q20,18 20.4,29.2 M24.4,8.4 Q24.6,18 24.4,29.6 M28,8.8 Q29,18 28.4,29.2 M31.4,10.6 Q33.2,18 32.6,27.6' }
 };
 // Les locks de dos : elles pendent de sous la masse des cheveux (dessinées avant elle), de longueurs inégales
 const LOCKS_DOS = [[14.4, 35.6], [18.6, 38.4], [22.6, 37], [26.6, 39], [30.4, 37.4], [34, 35.4]];
@@ -310,7 +313,7 @@ function levres(c, ctx, mx, my) {
 
 // De dos, le cou relie la tête au buste : la nuque se voit sous les cheveux courts ou tirés (derrière le col)
 function nuque(c) {
-  const d = 'M20,24.6 L28,24.6 L28.4,33.6 L19.6,33.6 Z';
+  const d = 'M19.2,24.6 L28.8,24.6 L29.2,33.6 L18.8,33.6 Z';
   return P(d, c.skinS);
 }
 
@@ -325,12 +328,12 @@ function head(c0, ctx) {
   if (view === 'ne') {
     // ombre de la masse : plus sombre vers la nuque et à droite ; la zone claire descend avec les cheveux longs
     const longs = coupe === 'longue' || coupe === 'ondulee' || coupe === 'milongue';
-    const ombre = forme => clip(`${c.uid}h`, forme, `<rect x="8" y="4" width="34" height="40" fill="${S}"/><ellipse cx="22.4" cy="${longs ? 21 : 17.2}" rx="13.8" ry="${longs ? 16.4 : 12}" fill="${H}"/>`);
+    const ombre = forme => clip(`${c.uid}h`, forme, `<rect x="8" y="4" width="34" height="40" fill="${S}"/><ellipse cx="22.4" cy="${longs ? 21 : 18.4}" rx="13.8" ry="${longs ? 16.4 : 12.8}" fill="${H}"/>`);
     if (coupe === 'rasee') {
       // crâne rasé : un duvet de la couleur des cheveux sur la peau, la nuque dégagée, les oreilles de chaque côté
-      const tete = 'M11.6,21 Q10.8,8 24,7.6 Q37.2,8 36.4,21 Q36.4,26.6 33.4,28.4 Q24,30.4 14.6,28.4 Q11.6,26.6 11.6,21 Z';
-      const duvet = 'M8,4 L40,4 L40,24.4 Q34.6,26.4 31,25.4 Q27.6,27 24,26.4 Q20.4,27 17,25.4 Q13.4,26.4 8,24.4 Z';
-      s += P(tete, c.skin) + clip(`${c.uid}rz`, tete, `<path d="${duvet}" fill="${c.buzz}"/>` + P('M14,25.6 Q17.4,26.8 20.4,26.2 M27.6,26.2 Q30.6,26.8 34,25.6', 'none', 0.45)
+      const tete = 'M11.6,21 Q10.8,8 24,7.6 Q37.2,8 36.4,21 Q36.8,29.6 35.2,32.2 Q24,35.4 12.8,32.2 Q11.2,29.6 11.6,21 Z';
+      const duvet = 'M8,4 L40,4 L40,27.4 Q34.6,29.6 31,28.6 Q27.6,30.4 24,29.8 Q20.4,30.4 17,28.6 Q13.4,29.6 8,27.4 Z';
+      s += P(tete, c.skin) + clip(`${c.uid}rz`, tete, `<path d="M8,31.6 Q24,34.4 40,31.6 L40,40 L8,40 Z" fill="${c.skinS}"/><path d="${duvet}" fill="${c.buzz}"/>` + P('M14,28.8 Q17.4,30 20.4,29.4 M27.6,29.4 Q30.6,30 34,28.8', 'none', 0.45)
         + [[17.4, 12], [21.4, 10.4], [26.6, 10.6], [30.6, 12.4], [19, 17], [24, 16.2], [29, 17.2], [16.4, 21.4], [31.6, 21.4]].map(([x, y]) => L([x, y], [x + 0.4, y + 1], c.buzzS, 0.5)).join('')
         + L([17, 10.6], [21.4, 8.8], tone(c.buzz, 1.25), 1.1)) + P(tete, 'none');
       s += E(11.6, 22.6, 1.5, 2.1, c.skin) + E(36.4, 22.6, 1.5, 2.1, c.skin);
@@ -339,6 +342,9 @@ function head(c0, ctx) {
     s += E(12.6, 23, 1.6, 2.2, c.skin) + E(35.4, 23, 1.6, 2.2, c.skin);
     if (coupe === 'bouclee') {
       // un nuage de boucles, plus sombre vers la nuque, de petites boucles dessinées dessus
+      // une rangée de boucles à la nuque, dans l'ombre du nuage : elle pose la tête sur les épaules
+      const bas = curls(24, 27.8, 13.4, 6, 10, 1.7);
+      s += P(bas, S) + P(bas, 'none');
       const cl = curls(24, 17.6, 15.4, 11.6, 14);
       s += P(cl, H) + ombre(cl) + P(cl, 'none')
         + `<path d="${[[18, 12], [24, 10.4], [30, 12], [15.4, 18], [21.4, 17], [27, 17.4], [32.6, 18.6], [18.4, 23.6], [24.4, 24.4], [30.2, 23.4]].map(([x, y]) => `M${r2(x + 1.2)},${r2(y - 0.7)} Q${r2(x - 0.9)},${r2(y - 1.4)} ${r2(x - 0.9)},${y} Q${r2(x - 0.5)},${r2(y + 1.2)} ${r2(x + 0.9)},${r2(y + 0.6)}`).join(' ')}" fill="none" stroke="${tone(c0.hair, 0.66)}" stroke-width="0.7" stroke-linecap="round"/>`
@@ -348,7 +354,7 @@ function head(c0, ctx) {
     }
     const dos = DOS[coupe === 'chignon' && couvert ? 'chignonBas' : coupe];
     if (coupe === 'locks') s += LOCKS_DOS.map(([x, y1]) => lock([x, 24], [x + (x - 24) * 0.04, y1], c)).join('');
-    s += P(dos.forme, H) + ombre(dos.forme) + P(dos.forme, 'none') + P(dos.sens + (dos.detail ? ' ' + dos.detail : ''), 'none', 0.55) + L([16.4, 10.6], [21.6, 8.6], HI, 1.3);
+    s += P(dos.forme, H) + ombre(dos.forme) + P(dos.forme, 'none') + clip(`${c.uid}hs`, dos.forme, P(dos.sens + (dos.detail ? ' ' + dos.detail : ''), 'none', 0.55)) + L([16.4, 10.6], [21.6, 8.6], HI, 1.3);
     if (avecMeches) s += meches(c0, view, dos.forme, dos.sens);
     if (coupe === 'bataille' && !couvert) s += P(EPIS.ne[0], H, 0) + P(EPIS.ne[1], 'none', 1) + L([16.6, 7.4], [21.4, 6.6], HI, 1.1);
     if (coupe === 'queue') {

@@ -80,18 +80,22 @@ const ondin = {
     return s;
   },
 
+  // de dos : la nuque (dans l'ombre) entre les boucles, rentrée sous le col du ciré
+  neck(c, { view }) {
+    if (view !== 'ne') return '';
+    return P('M19.8,30.4 L28.2,30.4 L28.4,36.55 Q24,35.85 19.6,36.55 Z', C.skinS, 0) + P('M19.6,36.55 Q24,35.85 28.4,36.55', 'none');
+  },
+
   head(c, ctx) {
     const { view } = ctx;
     let s = '';
     if (view === 'ne') {
-      // de dos, la tête descend aussi bas que de face (le menton touche le col) : les boucles couvrent la nuque
-      const back = 'M11,21 Q10,8.6 24,8.4 Q38,8.6 37,21 Q37.4,28.4 34.6,30.4 L33,29.8 L31.6,31.4 L29.8,30.4 L28.2,32 L26.2,30.8 L24.2,32.4 L22.2,30.8 L20.2,32 L18.4,30.6 L16.8,31.6 L15.2,30 L13.4,30.6 Q10.6,28.4 11,21 Z';
+      // de dos, la tête descend aussi bas que de face : les boucles couvrent le haut des bras et le col du ciré,
+      // la nuque se voit entre celles du milieu (elle est dessinée sous le col : neck)
+      const back = 'M11,21 Q10,8.6 24,8.4 Q38,8.6 37,21 Q37.4,28 36,31 L35.6,33.2 L34,32 L33,34 L31.4,32.4 L30,34 L28.6,32.4 L27.2,33.8 Q25.8,30.4 24,29.2 Q22.2,30.4 20.8,33.8 L19.4,32.4 L18,34 L16.6,32.4 L15,34 L14,32 L12.4,33.2 L12,31 Q10.6,28 11,21 Z';
       s += E(12.6, 23, 1.6, 2.2, C.skin);
-      // la nuque entre les boucles, jusqu'au col du ciré
-      const nape = 'M20.4,26 L27.6,26 L27.8,32.1 Q24,31.5 20.2,32.1 Z';
-      s += P(nape, C.skinS) + P(nape, 'none');
-      s += P(back, C.hair) + clip(`${c.uid}h`, back, `<rect x="8" y="6" width="34" height="26" fill="${C.hairS}"/><ellipse cx="22.4" cy="18" rx="13.6" ry="10.6" fill="${C.hair}"/>`) + P(back, 'none');
-      s += P('M18.4,19 Q18,24.4 19.6,29.6', 'none', 0.6) + P('M28.8,19 Q29.6,24.4 28.4,29.6', 'none', 0.6);
+      s += P(back, C.hair) + clip(`${c.uid}h`, back, `<rect x="8" y="6" width="34" height="30" fill="${C.hairS}"/><ellipse cx="22.4" cy="19.4" rx="13.8" ry="12" fill="${C.hair}"/>`) + P(back, 'none');
+      s += P('M18.4,19 Q17.8,25.4 19.2,31.4', 'none', 0.6) + P('M28.8,19 Q29.8,25.4 28.6,31.4', 'none', 0.6);
       // bonnet vu de dos : le revers fait le tour du crâne, la pointe retombe à gauche de l'écran
       s += `<g transform="translate(48 0) scale(-1 1)">${cap(c.uid)}</g>`;
       s += P('M11.2,13.4 Q24,16.8 36.8,13.4 L37,15.6 Q24,19 11,15.6 Z', C.cream, 0.9);
