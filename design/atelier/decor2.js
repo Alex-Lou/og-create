@@ -94,8 +94,35 @@ const G = {
   // broutent au milieu des flocons de laine tombés
   laine: {
     frames: [[-30, -26, 60, 34], [-30, -24, 60, 32]],
-    draw: (spent, f) => spent ? sheep(-11, -2, false, 1) + sheep(6, 4, false, 0) : sheep(-11, -2, true, f ? 0 : 1) + sheep(6, 4, true, f ? 1 : 0)
+    draw: (spent, f) => {
+      const pre = () => { const n = 16, rx = 25, ry = 6.4, pts = Array.from({ length: n }, (_, i) => { const t = (i / n) * TAU, r = 1 + (i % 2 ? 0.05 : -0.03); return [Math.cos(t) * rx * r, 0.4 + Math.sin(t) * ry * r]; }); const m = i => { const p = pts[i % n], q = pts[(i + 1) % n]; return `${r2((p[0] + q[0]) / 2)},${r2((p[1] + q[1]) / 2)}`; }; let d = `M${m(n - 1)}`; for (let i = 0; i < n; i++) d += ` Q${r2(pts[i][0])},${r2(pts[i][1])} ${m(i)}`; return P(d + ' Z', '#9CC874', W) + E(-3, 0.2, 18, 4, '#AED486', 0); };
+      const brebis = (x, y, laineux, broute, flip = false) => {
+        const s = flip ? -1 : 1, Lc = laineux ? '#F7F2E6' : '#EFDCCF', LS = laineux ? '#E2D8C4' : '#DCC4B6';
+        let o = shade(x, y + 1.4, 8.6, 2.2) + E(x - s * 7.4, y - 6, 1.7, 1.6, Lc, W * 0.8)
+          + [-4.4, -1.8, 2, 4.6].map((dx, i) => line(`M${r2(x + s * dx)},${r2(y - 2.6)} L${r2(x + s * dx)},${r2(y + 1.2)}`, 1.8, OUT) + line(`M${r2(x + s * dx)},${r2(y - 2.6)} L${r2(x + s * dx)},${r2(y + 0.8)}`, 1, i % 2 ? '#4A3E36' : '#3D342E')).join('');
+        if (laineux) {
+          const B = [[-6, -6.4, 3.1], [-3.4, -9.2, 3.3], [0.4, -9.8, 3.5], [4, -8.8, 3.2], [6.2, -6.2, 2.9], [3.4, -4.6, 3.3], [-1, -4.4, 3.5], [-5, -4.6, 2.9]];
+          o += B.map(([dx, dy, r]) => E(x + s * dx, y + dy, r + W, r + W, OUT, 0)).join('') + B.map(([dx, dy, r]) => E(x + s * dx, y + dy, r, r, Lc, 0)).join('')
+            + E(x + s * 0.5, y - 3.4, 6, 1.5, LS, 0) + [[-3.6, -7.2], [0.6, -7.8], [3.8, -6.6], [-1.6, -4.8], [2.6, -4.4], [-5, -5]].map(([dx, dy]) => line(`M${r2(x + s * dx - 1)},${r2(y + dy)} q1,-1.2 2,0`, 0.6, LS)).join('')
+            + E(x - s * 1.4, y - 9.6, 2, 0.8, '#FFFFFF', 0);
+        } else {
+          o += P(`M${r2(x - 6.8)},${r2(y - 4)} Q${r2(x - 7.2)},${r2(y - 8.6)} ${r2(x - 2)},${r2(y - 8.8)} L${r2(x + 3)},${r2(y - 9)} Q${r2(x + 7.4)},${r2(y - 8.6)} ${r2(x + 6.8)},${r2(y - 4)} Q${r2(x + 6)},${r2(y - 1.6)} ${x},${r2(y - 1.8)} Q${r2(x - 6.2)},${r2(y - 1.6)} ${r2(x - 6.8)},${r2(y - 4)} Z`, Lc, W)
+            + [[-3.6, -6.8], [0.4, -7.4], [3.8, -6.6], [-1.6, -4.4], [2.4, -4.2]].map(([dx, dy]) => E(x + s * dx, y + dy, 0.9, 0.7, '#F8EAE0', 0)).join('') + E(x + s, y - 2.8, 5.2, 0.9, LS, 0);
+        }
+        const hx = x + s * 8.6, hy = y - 7 + (broute ? 4.4 : 0);
+        return o + E(hx - s * 2, hy - 1.2, 1.9, 0.9, '#3D342E', 0.6) + E(hx, hy, 2.9, 2.3, '#3D342E', W) + E(hx + s * 1.3, hy + 0.7, 1.3, 0.95, '#6B5A50', 0)
+          + E(hx + s * 0.3, hy - 0.8, 0.75, 0.75, '#FFFFFF', 0) + E(hx + s * 0.45, hy - 0.8, 0.38, 0.38, '#1E1814', 0) + E(hx + s * 1.9, hy - 1.7, 1.3, 0.6, '#3D342E', 0.5)
+          + (laineux ? E(hx - s * 0.6, hy - 2.2, 1.9, 1.2, Lc, 0.6) : '')
+          + (broute ? line(`M${r2(hx + s * 1.6)},${r2(hy + 3.2)} l${-s * 0.6},-2.6 M${r2(hx + s * 2.6)},${r2(hy + 3.2)} l${s * 0.6},-2.2`, 0.8, '#5F8F3C') : '');
+      };
+      const deco = tuft(-23, 3) + tuft(19, 4.6) + tuft(-4, 5.6) + flower(-17, 4.6, 1.1, '#FFFFFF') + flower(21, 0.6, 1.1, '#F7B6C8') + flower(12, 5.6, 1, '#FFFFFF');
+      if (spent) return pre() + deco + [[-20, 0], [-2, 5], [16, -1], [0, -4]].map(([x, y]) => E(x, y, 1.6, 1.1, '#F7F2E6', 0.6) + E(x + 1.2, y - 0.4, 1, 0.8, '#F7F2E6', 0.5)).join('') + brebis(-11, -2, false, 1) + brebis(6, 4, false, 0);
+      return pre() + deco + brebis(-11, -2, true, f ? 0 : 1) + brebis(6, 4, true, f ? 1 : 0);
+    }
   },
+  // Roseaux : une petite mare à la berge herbue, ses reflets et ses ronds ; une touffe de massettes cernées aux épis
+  // bruns éclairés et à la pointe fine, de longues feuilles en lame, un nénuphar fleuri ; elles ondulent ; coupés, des
+  // tiges courtes au biseau clair
   roseau: {
     frames: [[-24, -44, 48, 52], [-20, -14, 40, 22]],
     draw: (spent, f) => {
