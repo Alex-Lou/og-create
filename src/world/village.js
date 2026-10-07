@@ -25,6 +25,7 @@
 //   Révélation, Cannelle pose chaque soir un bol de soupe « pour la Dame » au bord du Foyer.
 import { villagerSprite, ROLES, SKINS, HAIRS } from './villagers';
 import { visitorLook } from './visitors';
+import { masterSprite } from './masterArt';
 import { ANIMAL_SPRITES } from './animals';
 import { bestiaryOf, FAMILIARS } from './bestiary';
 import { anyaHere } from '@/game/anya';
@@ -215,6 +216,8 @@ export function villageOf({ n, M, sites, owned, crafts = [], props, annexes = []
       residents.push({
         id: `vil:${id}`, k, key: `vil-${k}`, role: id, site: camp && foyer ? foyer.name : site.name,
         camp, waiting: !who.built && !camp && !asleep, asleep,
+        // Naufragé tant que son bâtiment n'est pas fondé (dessin de la bibliothèque : masterArt.js)
+        castaway: !who.built,
         look: { skin: SKINS[Math.floor(hash(k, 3) * SKINS.length)], hair: HAIRS[Math.floor(hash(k, 5) * HAIRS.length)], ...ROLES[id] },
         work, wake: 6.4 + (k % 3) * 0.25, bed: 21.6 + (k % 3) * 0.3,
         // Son familier, s'il est venu (bestiary.js)
@@ -441,9 +444,10 @@ export function villageOf({ n, M, sites, owned, crafts = [], props, annexes = []
       // familier dort à côté de lui
       if (r.asleep) {
         const frame = Math.floor(t * 0.8 + r.k) % 2;
+        const art = masterSprite(r.role, r.castaway, { pose: 'sleep', frame });
         out.push({
-          id: r.id, kind: 'villager', role: r.role, x: r.work.x, y: r.work.y, z: 0, flip: false,
-          sprite: [`${r.key}-sleep-${frame}`, () => villagerSprite(r.look, { pose: 'sleep', view: 'se', frame })]
+          id: r.id, kind: 'villager', role: r.role, x: r.work.x, y: r.work.y, z: 0, flip: false, pose: 'sleep',
+          sprite: art ? [art.key, art.make] : [`${r.key}-sleep-${frame}`, () => villagerSprite(r.look, { pose: 'sleep', view: 'se', frame })]
         });
         if (pet) out.push(familiar(r, r.work.x + 0.34, r.work.y + 0.28, 0, false, 'rest'));
         continue;
@@ -463,12 +467,14 @@ export function villageOf({ n, M, sites, owned, crafts = [], props, annexes = []
       const glance = IDLE_VIEWS[Math.floor(hash(r.k, Math.floor(t / 9)) * IDLE_VIEWS.length)];
       const view = hop !== null ? 'front' : walking ? (p.back ? 'ne' : 'se') : p.pose === 'work' ? 'se' : glance;
       const opts = { pose: hop !== null ? 'wave' : p.pose, view, frame: hop !== null ? Math.floor(t * 5) % 2 : frame, lantern, umbrella };
-      const flip = hop !== null ? false : walking ? p.flip : hash(r.k, Math.floor(t / 20)) < 0.5;
+      // Un maître : son dessin de la bibliothèque (jamais en miroir de face ; la lanterne luit où il la tient)
+      const art = r.key.startsWith('vil-') ? masterSprite(r.role, r.castaway, opts) : null;
+      const flip = hop !== null || (art && art.view === 'face') ? false : walking ? p.flip : hash(r.k, Math.floor(t / 20)) < 0.5;
       out.push({
-        id: r.id, kind: 'villager', role: r.role, x: p.x, y: p.y, z: hop === null ? 0 : Math.sin(hop * Math.PI) * 6, flip,
-        sprite: [`${r.key}-${opts.pose}-${view}-${opts.frame}-${lantern ? 1 : 0}-${umbrella ? 1 : 0}`, () => villagerSprite(r.look, opts)]
+        id: r.id, kind: 'villager', role: r.role, x: p.x, y: p.y, z: hop === null ? 0 : Math.sin(hop * Math.PI) * 6, flip, pose: opts.pose,
+        sprite: art ? [art.key, art.make] : [`${r.key}-${opts.pose}-${view}-${opts.frame}-${lantern ? 1 : 0}-${umbrella ? 1 : 0}`, () => villagerSprite(r.look, opts)]
       });
-      if (lantern) lights.push({ x: p.x, y: p.y, dx: flip ? 5.8 : -5.8, dy: -3 });
+      if (art ? art.lantern : lantern) lights.push(art ? { x: p.x, y: p.y, dx: flip ? -art.lantern[0] : art.lantern[0], dy: art.lantern[1] } : { x: p.x, y: p.y, dx: flip ? 5.8 : -5.8, dy: -3 });
       if (pet) follow(r, pet, plan, p, flip, t);
     }
     // Ferme

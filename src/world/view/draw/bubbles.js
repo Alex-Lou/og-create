@@ -65,7 +65,7 @@ export default {
       if (guest && !guest.satisfied) {
         const k = 1 / Math.min(1, this.cam.s);
         const r = 11 * k;
-        const y = h.y - 16 - r + Math.sin(t * 2.6 + h.x) * 1.5;
+        const y = h.y - h.head - r + Math.sin(t * 2.6 + h.x) * 1.5;
         this.bubbleAt(ctx, h.x, y, r, k, '#FFF6D8', '#E2A72E');
         glyph(ctx, guest.request.kind === 'livrer' ? GLYPH[guest.request.resource] : 'ui:spark', h.x, y + 0.5, 14 * k, repaint);
         this.needBubbles.push({ id: guest.id, visitor: true, x: h.x, y, r });
@@ -95,7 +95,7 @@ export default {
       const r = 11 * k;
       const x = h.x;
       // Juste au-dessus de la tête (le point touché est au milieu du corps)
-      const y = h.y - 16 - r + Math.sin(t * 2.6 + h.x) * 1.5;
+      const y = h.y - h.head - r + Math.sin(t * 2.6 + h.x) * 1.5;
       this.bubbleAt(ctx, x, y, r, k, '#FFF4E5', '#F0A84A');
       glyph(ctx, NEED_GLYPH[first.id], x, y + 0.5, 14 * k, repaint);
       this.needBubbles.push({ id: friend.id, need: first.id, x, y, r });

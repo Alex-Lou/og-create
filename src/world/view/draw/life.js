@@ -117,9 +117,13 @@ export default {
       out.push(who);
       const c = this.ground(who.x, who.y);
       const person = who.kind === 'villager';
-      // Anya est grande (96 de haut) : on la touche au corps, pas seulement aux pieds
+      // Anya est grande (96 de haut) : on la touche au corps, pas seulement aux pieds ; un maître dessiné par la
+      // bibliothèque (grand format, 51 de haut) aussi, tête comprise
       const tall = who.species === 'anya';
-      hits.push({ key: who.id, kind: person ? 'villager' : who.species, who, x: c.x, y: c.y - who.z - (person ? 16 : tall ? 44 : 6), r: person ? 15 : tall ? 34 : 12 });
+      const big = person && who.sprite[0].startsWith('lib-');
+      // head : du point touché au-dessus de la tête (et de la toile du parapluie), où se pose la bulle d'un besoin
+      const head = big ? (who.sprite[0].includes('_parapluie_') ? 41 : 27) : 16;
+      hits.push({ key: who.id, kind: person ? 'villager' : who.species, who, x: c.x, y: c.y - who.z - (big ? 24 : person ? 16 : tall ? 44 : 6), r: big ? 20 : person ? 15 : tall ? 34 : 12, head });
     }
     this.villageLights = life.lights;
     this.landHits = hits;

@@ -16,6 +16,7 @@ import { spriteUrl } from '@/world/spriteCache';
 import { PRESENTIMENTS, BREATH_LINE } from '@/game/anya';
 import { BEASTS } from '@/world/bestiary';
 import { faceHref } from '@/world/faces';
+import { masterPortrait } from '@/world/masterArt';
 import { guide } from '@/game/guide';
 import { TIPS } from '@/game/guideTips';
 
@@ -158,6 +159,9 @@ export default {
       const settler = (this.state.villagers || []).find(v => v.id === id && v.seed !== undefined);
       if (settler) return this.visitorPortrait(settler);
       const resident = this.village && this.village.residents.find(r => r.role === id);
+      // Un maître : son portrait de la bibliothèque, en naufragé tant que son bâtiment n'est pas fondé
+      const art = masterPortrait(id, resident ? resident.castaway : false);
+      if (art) return art;
       const look = resident ? resident.look : { skin: '#F6D3B3', hair: '#7A4E2C', ...ROLES[id] };
       return spriteUrl(`portrait-${id}-${look.skin}-${look.hair}`, () => villagerSprite(look));
     },
