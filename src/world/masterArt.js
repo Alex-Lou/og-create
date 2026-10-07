@@ -6,10 +6,15 @@
 // parapluie se portent de trois quarts, en marchant (4 images) ; à l'arrêt, l'image où les pieds se rejoignent (la 2e) :
 // lanterne ou parapluie en main, on ne travaille pas et on ne salue pas.
 // L'ombre au sol, absente des dessins debout, est celle du jeu.
-import DATA from '../../design/bibliotheque/svg/personnages/quotidien.json';
+import { maitres, naufrages } from '../../design/bibliotheque/svg/personnages/quotidien.json';
 import { fitTo } from './library';
 
-const FILES = import.meta.glob('/design/bibliotheque/svg/personnages/{maitres,naufrages}/**/*.svg', { query: '?raw', import: 'default' });
+// Seules les poses que l'île montre sont référencées (la bibliothèque en a bien d'autres : veillée, métiers,
+// expressions) : la liste de tous les fichiers alourdissait de plusieurs centaines de Ko le code chargé au démarrage
+const FILES = import.meta.glob([
+  '/design/bibliotheque/svg/personnages/{maitres,naufrages}/*/*_{face,avant,dos}_{marche,repos,travail,salut,assis,lanterne,parapluie}_[0-9].svg',
+  '/design/bibliotheque/svg/personnages/{maitres,naufrages}/*/*_couche_[0-9].svg'
+], { query: '?raw', import: 'default' });
 const URLS = import.meta.glob('/design/bibliotheque/svg/personnages/{maitres,naufrages}/*/*_{face,avant}_{repos,travail,marche,assis}_1.svg', { query: '?url', import: 'default', eager: true });
 const ROOT = '/design/bibliotheque/svg/personnages/';
 const SCALE = 1.25;
@@ -27,7 +32,7 @@ const SHADOW = '<ellipse cx="24.5" cy="62" rx="8.5" ry="2.75" fill="rgba(40,55,2
 // dos, la lanterne est dans l'autre main
 const LANTERNS = { aster: [-7.9, -7.6], cannelle: [-9.1, -6.5], galet: [-7.4, -5.2], melisse: [-7.8, -7.5], ondin: [-7.4, -5.2], rivet: [-7.8, -7.8], sylve: [-7.5, -7.8] };
 
-const setOf = (role, castaway) => (MASTERS[role] ? (castaway ? DATA.naufrages : DATA.maitres)[MASTERS[role]] : null);
+const setOf = (role, castaway) => (MASTERS[role] ? (castaway ? naufrages : maitres)[MASTERS[role]] : null);
 
 // Cadre du jeu d'un dessin : son viewBox autour de l'ancre, ramené à l'échelle du jeu
 function boxOf(svgViewBox, [ax, ay]) {

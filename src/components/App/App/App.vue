@@ -210,6 +210,7 @@
 </template>
 
 <script>
+import { defineAsyncComponent } from 'vue';
 import notificationService from '@/services/notificationService';
 import * as storage from '@/utils/storage';
 import { readCarnet } from '@/utils/carnet';
@@ -226,7 +227,6 @@ import AppHeader from '../AppHeader/AppHeader.vue';
 import CraftZone from '../../Craft/CraftZone/CraftZone.vue';
 import LivingBackground from '../LivingBackground/LivingBackground.vue';
 import BookView from '../../Book/BookView/BookView.vue';
-import WorldView from '../../World/WorldView/WorldView.vue';
 import SceauView from '../../Account/SceauView/SceauView.vue';
 import SeuilModal from '../../Account/SeuilModal/SeuilModal.vue';
 import ResetPasswordModal from '../../Account/ResetPasswordModal/ResetPasswordModal.vue';
@@ -245,6 +245,11 @@ import PrologueScene from '../../Prologue/PrologueScene/PrologueScene.vue';
 import PrologueName from '../../Prologue/PrologueName/PrologueName.vue';
 import PrologueAvatar from '../../Prologue/PrologueAvatar/PrologueAvatar.vue';
 import TutorialHand from '../../Guide/TutorialHand/TutorialHand.vue';
+
+// L'île et tout ce qu'elle dessine (bâtiments, boutique, décor, terrain) : chargés à part, pour que le Grimoire
+// s'ouvre sans les attendre ; préchargés dès que l'application est au repos (mounted), l'île s'ouvre sans délai
+const loadWorld = () => import('../../World/WorldView/WorldView.vue');
+const WorldView = defineAsyncComponent(loadWorld);
 
 export default {
   name: 'App',
@@ -407,6 +412,9 @@ export default {
     this.overlays = new ResizeObserver(() => this.measureOverlays());
     this.trackOverlays();
     document.addEventListener('visibilitychange', this.handleVisibility);
+    // Le code de l'île, préchargé au repos (le navigateur le garde : l'île s'ouvre ensuite sans l'attendre)
+    const idle = window.requestIdleCallback || (cb => setTimeout(cb, 2000));
+    idle(() => loadWorld().catch(() => {}));
   },
   beforeUnmount() {
     this.overlays?.disconnect();
