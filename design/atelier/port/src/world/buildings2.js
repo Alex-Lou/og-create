@@ -4,7 +4,7 @@ import { P, TW, face, box, gable, pyramid, disc, cylinder, shadow, sprite, EDGE 
 import {
   WOOD, WOOD_DARK, STONE, WALL, BRICK, SOIL, ROOF_RED, PINE, BUILDING_BOX,
   pebble, doorLeft, windowLeft, windowRight, planksLeft, planksRight, roundTree,
-  WHITE_STONE, ROCKS, FOLIAGE, roofOf, roofTexture, stoneCourses, seasonDots, crystals
+  WHITE_STONE, ROCKS, FOLIAGE, roofOf, roofTexture, stoneCourses, seasonDots, crystals, rockBox
 } from './palette.js';
 import { gardenFence, goldenSign } from './sprites.js';
 
@@ -179,10 +179,9 @@ function mine(skin) {
   const lantern = box(0.02, -0.25, 0.06, -0.21, 0, 30, WOOD_DARK) + box(-0.02, -0.29, 0.1, -0.17, 30, 38, { top: '#3D3A36', left: '#FFE08A', right: '#E9BF4E' });
   return sprite(
     shadow(0, 0, 1.15, 0.18)
-    + box(-0.95, -0.95, 0.9, -0.2, 0, 44, rockColor)
-    + box(0.3, -0.2, 0.9, 0.3, 0, 26, rockColor)
+    + rockBox(-0.95, -0.95, 0.9, -0.2, 0, 44, rockColor)
+    + rockBox(0.3, -0.2, 0.9, 0.3, 0, 26, rockColor)
     + (skin === 'roche-cristal' ? crystals(0.1, -0.6, 44, 1.2) + crystals(0.6, 0.05, 26) : '')
-    + `<polyline points="${[P(-0.95, -0.2, 34), P(-0.3, -0.2, 40), P(0.3, -0.2, 30)].map(p => p.join(',')).join(' ')}" stroke="rgba(90,80,65,.4)" stroke-width="1" fill="none"/>`
     + portal + frame + rails
     + box(-0.5, 0.45, -0.2, 0.72, 2, 12, WOOD_DARK) + pebble(-0.38, 0.55, 3.4, DARK_STONE) + pebble(-0.3, 0.62, 3, DARK_STONE)
     + lantern
