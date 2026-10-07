@@ -1,11 +1,12 @@
 // Le générateur des chantiers, pour le jeu et pour l'outil (generer.mjs) : build_bundle.js en fait un module ESM,
 // publié dans la bibliothèque (generateur/chantiers.mjs). Chaque fonction rend { svg, cadre, ms_par_image } : le SVG
 // complet, identique à l'octet au fichier de la bibliothèque (le fichier y ajoute un saut de ligne ; verif_generateurs.mjs
-// le vérifie), son cadre et sa vitesse. preview_montage.mjs, preview_cultures.mjs et preview_verger.mjs écrivent la
-// bibliothèque avec ces mêmes fonctions.
+// le vérifie), son cadre et sa vitesse. preview_montage.mjs, preview_cultures.mjs, preview_verger.mjs et
+// preview_lunaire.mjs écrivent la bibliothèque avec ces mêmes fonctions.
 import { montage, devoilement, echafaudage, ETAPES } from './montage.mjs';
 import * as C from './cultures.mjs';
 import * as V from './verger.mjs';
+import * as L from './lunaire.mjs';
 
 const K = 1.25; // la bibliothèque est à l'échelle du jeu × 1,25
 const svgOf = (cadre, body) => `<svg xmlns="http://www.w3.org/2000/svg" width="${cadre[2]}" height="${cadre[3]}" viewBox="${cadre.join(' ')}"><g transform="scale(${K})">${body}</g></svg>`;
@@ -75,9 +76,24 @@ export function etapeDuVerger(arbre, etape, n = 1) {
   return { svg: `<svg xmlns="http://www.w3.org/2000/svg" width="${c[2]}" height="${c[3]}" viewBox="${c.join(' ')}">${V.etape(arbre, etape, n - 1)}</svg>`, cadre: c, ms_par_image: MS_VERGER.etape };
 }
 
+// Le jardin lunaire de Mélisse (lunaire.mjs) : un carré rond sur une case, une étape par phase de la lune, de la nouvelle
+// lune (le semis) à la pleine lune (la floraison) ; le cadre des cultures
+export const LUNAIRE = { plantes: L.PLANTES, etapes: L.ETAPES, cadre: L.CADRE.map(v => v * K), images: L.IMAGES };
+export const PART_LUNAIRE = { nouvelle_lune: 0, croissant: 0.25, quartier: 0.5, gibbeuse: 0.75, pleine_lune: 1 };
+export const MS_LUNAIRE = { etape: 320, spectacle: 500 };
+// Une étape d'une plante lunaire : plante (melisse, lunaire, fleur_de_lune, herbe_des_anciens), étape (nouvelle_lune,
+// croissant, quartier, gibbeuse, pleine_lune), image n de 1 à 3
+export function etapeLunaire(plante, etape, n = 1) {
+  if (!L.PLANTES.includes(plante)) throw new Error(`plante inconnue : ${plante} (${L.PLANTES.join(', ')})`);
+  if (!L.ETAPES.includes(etape)) throw new Error(`étape inconnue : ${etape} (${L.ETAPES.join(', ')})`);
+  if (!(+n >= 1 && +n <= L.IMAGES)) throw new Error(`image ${n} : de 1 à ${L.IMAGES}`);
+  return { svg: svgOf(LUNAIRE.cadre, L.etape(plante, etape, n - 1)), cadre: LUNAIRE.cadre, ms_par_image: MS_LUNAIRE.etape };
+}
+
 // Tout ce que la famille sait dessiner, avec le fichier de la bibliothèque qui lui correspond (sous svg/)
 export function liste() {
   const out = [];
+  for (const p of L.PLANTES) for (const e of L.ETAPES) for (let n = 1; n <= L.IMAGES; n++) out.push({ fichier: `decor/lunaire/${p}/lunaire_${p}_${e}_${n}.svg`, fonction: 'etapeLunaire', args: [p, e, n] });
   for (const a of V.ARBRES) for (const e of V.ETAPES) for (let n = 1; n <= V.IMAGES; n++) out.push({ fichier: `decor/verger/${a}/verger_${a}_${e}_${n}.svg`, fonction: 'etapeDuVerger', args: [a, e, n] });
   for (const c of C.CULTURES) for (const e of C.etapesDe(c)) for (let n = 1; n <= C.IMAGES; n++) out.push({ fichier: `decor/cultures/${c}/culture_${c}_${e}_${n}.svg`, fonction: 'etapeDeCulture', args: [c, e, n] });
   for (const em of Object.keys(EMPRISES)) {

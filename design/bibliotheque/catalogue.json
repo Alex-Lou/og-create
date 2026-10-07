@@ -60694,6 +60694,406 @@
    "statut": "ok"
   },
   {
+   "id": "decor/lunaire/fleur_de_lune/lunaire_fleur_de_lune_croissant",
+   "rubrique": "decor",
+   "titre": "La fleur de lune : premier croissant, les pousses",
+   "images": 3,
+   "fichiers": [
+    "svg/decor/lunaire/fleur_de_lune/lunaire_fleur_de_lune_croissant_1.svg",
+    "svg/decor/lunaire/fleur_de_lune/lunaire_fleur_de_lune_croissant_2.svg",
+    "svg/decor/lunaire/fleur_de_lune/lunaire_fleur_de_lune_croissant_3.svg"
+   ],
+   "cadre": [
+    -42.5,
+    -37.5,
+    85,
+    60
+   ],
+   "ms_par_image": 320,
+   "parcours": "acte-3",
+   "statut": "ok"
+  },
+  {
+   "id": "decor/lunaire/fleur_de_lune/lunaire_fleur_de_lune_gibbeuse",
+   "rubrique": "decor",
+   "titre": "La fleur de lune : lune gibbeuse, les boutons gonflent (la rosée brille)",
+   "images": 3,
+   "fichiers": [
+    "svg/decor/lunaire/fleur_de_lune/lunaire_fleur_de_lune_gibbeuse_1.svg",
+    "svg/decor/lunaire/fleur_de_lune/lunaire_fleur_de_lune_gibbeuse_2.svg",
+    "svg/decor/lunaire/fleur_de_lune/lunaire_fleur_de_lune_gibbeuse_3.svg"
+   ],
+   "cadre": [
+    -42.5,
+    -37.5,
+    85,
+    60
+   ],
+   "ms_par_image": 320,
+   "parcours": "acte-3",
+   "statut": "ok"
+  },
+  {
+   "id": "decor/lunaire/fleur_de_lune/lunaire_fleur_de_lune_nouvelle_lune",
+   "rubrique": "decor",
+   "titre": "La fleur de lune : nouvelle lune, le semis (les graines dans le carré)",
+   "images": 3,
+   "fichiers": [
+    "svg/decor/lunaire/fleur_de_lune/lunaire_fleur_de_lune_nouvelle_lune_1.svg",
+    "svg/decor/lunaire/fleur_de_lune/lunaire_fleur_de_lune_nouvelle_lune_2.svg",
+    "svg/decor/lunaire/fleur_de_lune/lunaire_fleur_de_lune_nouvelle_lune_3.svg"
+   ],
+   "cadre": [
+    -42.5,
+    -37.5,
+    85,
+    60
+   ],
+   "ms_par_image": 320,
+   "parcours": "acte-3",
+   "statut": "ok"
+  },
+  {
+   "id": "decor/lunaire/fleur_de_lune/lunaire_fleur_de_lune_pleine_lune",
+   "rubrique": "decor",
+   "titre": "La fleur de lune : pleine lune, la floraison lumineuse (Lunette vient la voir)",
+   "images": 3,
+   "fichiers": [
+    "svg/decor/lunaire/fleur_de_lune/lunaire_fleur_de_lune_pleine_lune_1.svg",
+    "svg/decor/lunaire/fleur_de_lune/lunaire_fleur_de_lune_pleine_lune_2.svg",
+    "svg/decor/lunaire/fleur_de_lune/lunaire_fleur_de_lune_pleine_lune_3.svg"
+   ],
+   "cadre": [
+    -42.5,
+    -37.5,
+    85,
+    60
+   ],
+   "ms_par_image": 320,
+   "parcours": "acte-3",
+   "statut": "ok"
+  },
+  {
+   "id": "decor/lunaire/fleur_de_lune/lunaire_fleur_de_lune_quartier",
+   "rubrique": "decor",
+   "titre": "La fleur de lune : premier quartier, la plante grandit",
+   "images": 3,
+   "fichiers": [
+    "svg/decor/lunaire/fleur_de_lune/lunaire_fleur_de_lune_quartier_1.svg",
+    "svg/decor/lunaire/fleur_de_lune/lunaire_fleur_de_lune_quartier_2.svg",
+    "svg/decor/lunaire/fleur_de_lune/lunaire_fleur_de_lune_quartier_3.svg"
+   ],
+   "cadre": [
+    -42.5,
+    -37.5,
+    85,
+    60
+   ],
+   "ms_par_image": 320,
+   "parcours": "acte-3",
+   "statut": "ok"
+  },
+  {
+   "id": "decor/lunaire/herbe_des_anciens/lunaire_herbe_des_anciens_croissant",
+   "rubrique": "decor",
+   "titre": "L'herbe des Anciens : premier croissant, les pousses",
+   "images": 3,
+   "fichiers": [
+    "svg/decor/lunaire/herbe_des_anciens/lunaire_herbe_des_anciens_croissant_1.svg",
+    "svg/decor/lunaire/herbe_des_anciens/lunaire_herbe_des_anciens_croissant_2.svg",
+    "svg/decor/lunaire/herbe_des_anciens/lunaire_herbe_des_anciens_croissant_3.svg"
+   ],
+   "cadre": [
+    -42.5,
+    -37.5,
+    85,
+    60
+   ],
+   "ms_par_image": 320,
+   "parcours": "acte-3",
+   "statut": "ok"
+  },
+  {
+   "id": "decor/lunaire/herbe_des_anciens/lunaire_herbe_des_anciens_gibbeuse",
+   "rubrique": "decor",
+   "titre": "L'herbe des Anciens : lune gibbeuse, les boutons gonflent (la rosée brille)",
+   "images": 3,
+   "fichiers": [
+    "svg/decor/lunaire/herbe_des_anciens/lunaire_herbe_des_anciens_gibbeuse_1.svg",
+    "svg/decor/lunaire/herbe_des_anciens/lunaire_herbe_des_anciens_gibbeuse_2.svg",
+    "svg/decor/lunaire/herbe_des_anciens/lunaire_herbe_des_anciens_gibbeuse_3.svg"
+   ],
+   "cadre": [
+    -42.5,
+    -37.5,
+    85,
+    60
+   ],
+   "ms_par_image": 320,
+   "parcours": "acte-3",
+   "statut": "ok"
+  },
+  {
+   "id": "decor/lunaire/herbe_des_anciens/lunaire_herbe_des_anciens_nouvelle_lune",
+   "rubrique": "decor",
+   "titre": "L'herbe des Anciens : nouvelle lune, le semis (les graines dans le carré)",
+   "images": 3,
+   "fichiers": [
+    "svg/decor/lunaire/herbe_des_anciens/lunaire_herbe_des_anciens_nouvelle_lune_1.svg",
+    "svg/decor/lunaire/herbe_des_anciens/lunaire_herbe_des_anciens_nouvelle_lune_2.svg",
+    "svg/decor/lunaire/herbe_des_anciens/lunaire_herbe_des_anciens_nouvelle_lune_3.svg"
+   ],
+   "cadre": [
+    -42.5,
+    -37.5,
+    85,
+    60
+   ],
+   "ms_par_image": 320,
+   "parcours": "acte-3",
+   "statut": "ok"
+  },
+  {
+   "id": "decor/lunaire/herbe_des_anciens/lunaire_herbe_des_anciens_pleine_lune",
+   "rubrique": "decor",
+   "titre": "L'herbe des Anciens : pleine lune, la floraison lumineuse (Lunette vient la voir)",
+   "images": 3,
+   "fichiers": [
+    "svg/decor/lunaire/herbe_des_anciens/lunaire_herbe_des_anciens_pleine_lune_1.svg",
+    "svg/decor/lunaire/herbe_des_anciens/lunaire_herbe_des_anciens_pleine_lune_2.svg",
+    "svg/decor/lunaire/herbe_des_anciens/lunaire_herbe_des_anciens_pleine_lune_3.svg"
+   ],
+   "cadre": [
+    -42.5,
+    -37.5,
+    85,
+    60
+   ],
+   "ms_par_image": 320,
+   "parcours": "acte-3",
+   "statut": "ok"
+  },
+  {
+   "id": "decor/lunaire/herbe_des_anciens/lunaire_herbe_des_anciens_quartier",
+   "rubrique": "decor",
+   "titre": "L'herbe des Anciens : premier quartier, la plante grandit",
+   "images": 3,
+   "fichiers": [
+    "svg/decor/lunaire/herbe_des_anciens/lunaire_herbe_des_anciens_quartier_1.svg",
+    "svg/decor/lunaire/herbe_des_anciens/lunaire_herbe_des_anciens_quartier_2.svg",
+    "svg/decor/lunaire/herbe_des_anciens/lunaire_herbe_des_anciens_quartier_3.svg"
+   ],
+   "cadre": [
+    -42.5,
+    -37.5,
+    85,
+    60
+   ],
+   "ms_par_image": 320,
+   "parcours": "acte-3",
+   "statut": "ok"
+  },
+  {
+   "id": "decor/lunaire/lunaire/lunaire_lunaire_croissant",
+   "rubrique": "decor",
+   "titre": "La lunaire : premier croissant, les pousses",
+   "images": 3,
+   "fichiers": [
+    "svg/decor/lunaire/lunaire/lunaire_lunaire_croissant_1.svg",
+    "svg/decor/lunaire/lunaire/lunaire_lunaire_croissant_2.svg",
+    "svg/decor/lunaire/lunaire/lunaire_lunaire_croissant_3.svg"
+   ],
+   "cadre": [
+    -42.5,
+    -37.5,
+    85,
+    60
+   ],
+   "ms_par_image": 320,
+   "parcours": "acte-3",
+   "statut": "ok"
+  },
+  {
+   "id": "decor/lunaire/lunaire/lunaire_lunaire_gibbeuse",
+   "rubrique": "decor",
+   "titre": "La lunaire : lune gibbeuse, les boutons gonflent (la rosée brille)",
+   "images": 3,
+   "fichiers": [
+    "svg/decor/lunaire/lunaire/lunaire_lunaire_gibbeuse_1.svg",
+    "svg/decor/lunaire/lunaire/lunaire_lunaire_gibbeuse_2.svg",
+    "svg/decor/lunaire/lunaire/lunaire_lunaire_gibbeuse_3.svg"
+   ],
+   "cadre": [
+    -42.5,
+    -37.5,
+    85,
+    60
+   ],
+   "ms_par_image": 320,
+   "parcours": "acte-3",
+   "statut": "ok"
+  },
+  {
+   "id": "decor/lunaire/lunaire/lunaire_lunaire_nouvelle_lune",
+   "rubrique": "decor",
+   "titre": "La lunaire : nouvelle lune, le semis (les graines dans le carré)",
+   "images": 3,
+   "fichiers": [
+    "svg/decor/lunaire/lunaire/lunaire_lunaire_nouvelle_lune_1.svg",
+    "svg/decor/lunaire/lunaire/lunaire_lunaire_nouvelle_lune_2.svg",
+    "svg/decor/lunaire/lunaire/lunaire_lunaire_nouvelle_lune_3.svg"
+   ],
+   "cadre": [
+    -42.5,
+    -37.5,
+    85,
+    60
+   ],
+   "ms_par_image": 320,
+   "parcours": "acte-3",
+   "statut": "ok"
+  },
+  {
+   "id": "decor/lunaire/lunaire/lunaire_lunaire_pleine_lune",
+   "rubrique": "decor",
+   "titre": "La lunaire : pleine lune, la floraison lumineuse (Lunette vient la voir)",
+   "images": 3,
+   "fichiers": [
+    "svg/decor/lunaire/lunaire/lunaire_lunaire_pleine_lune_1.svg",
+    "svg/decor/lunaire/lunaire/lunaire_lunaire_pleine_lune_2.svg",
+    "svg/decor/lunaire/lunaire/lunaire_lunaire_pleine_lune_3.svg"
+   ],
+   "cadre": [
+    -42.5,
+    -37.5,
+    85,
+    60
+   ],
+   "ms_par_image": 320,
+   "parcours": "acte-3",
+   "statut": "ok"
+  },
+  {
+   "id": "decor/lunaire/lunaire/lunaire_lunaire_quartier",
+   "rubrique": "decor",
+   "titre": "La lunaire : premier quartier, la plante grandit",
+   "images": 3,
+   "fichiers": [
+    "svg/decor/lunaire/lunaire/lunaire_lunaire_quartier_1.svg",
+    "svg/decor/lunaire/lunaire/lunaire_lunaire_quartier_2.svg",
+    "svg/decor/lunaire/lunaire/lunaire_lunaire_quartier_3.svg"
+   ],
+   "cadre": [
+    -42.5,
+    -37.5,
+    85,
+    60
+   ],
+   "ms_par_image": 320,
+   "parcours": "acte-3",
+   "statut": "ok"
+  },
+  {
+   "id": "decor/lunaire/melisse/lunaire_melisse_croissant",
+   "rubrique": "decor",
+   "titre": "La mélisse : premier croissant, les pousses",
+   "images": 3,
+   "fichiers": [
+    "svg/decor/lunaire/melisse/lunaire_melisse_croissant_1.svg",
+    "svg/decor/lunaire/melisse/lunaire_melisse_croissant_2.svg",
+    "svg/decor/lunaire/melisse/lunaire_melisse_croissant_3.svg"
+   ],
+   "cadre": [
+    -42.5,
+    -37.5,
+    85,
+    60
+   ],
+   "ms_par_image": 320,
+   "parcours": "acte-3",
+   "statut": "ok"
+  },
+  {
+   "id": "decor/lunaire/melisse/lunaire_melisse_gibbeuse",
+   "rubrique": "decor",
+   "titre": "La mélisse : lune gibbeuse, les boutons gonflent (la rosée brille)",
+   "images": 3,
+   "fichiers": [
+    "svg/decor/lunaire/melisse/lunaire_melisse_gibbeuse_1.svg",
+    "svg/decor/lunaire/melisse/lunaire_melisse_gibbeuse_2.svg",
+    "svg/decor/lunaire/melisse/lunaire_melisse_gibbeuse_3.svg"
+   ],
+   "cadre": [
+    -42.5,
+    -37.5,
+    85,
+    60
+   ],
+   "ms_par_image": 320,
+   "parcours": "acte-3",
+   "statut": "ok"
+  },
+  {
+   "id": "decor/lunaire/melisse/lunaire_melisse_nouvelle_lune",
+   "rubrique": "decor",
+   "titre": "La mélisse : nouvelle lune, le semis (les graines dans le carré)",
+   "images": 3,
+   "fichiers": [
+    "svg/decor/lunaire/melisse/lunaire_melisse_nouvelle_lune_1.svg",
+    "svg/decor/lunaire/melisse/lunaire_melisse_nouvelle_lune_2.svg",
+    "svg/decor/lunaire/melisse/lunaire_melisse_nouvelle_lune_3.svg"
+   ],
+   "cadre": [
+    -42.5,
+    -37.5,
+    85,
+    60
+   ],
+   "ms_par_image": 320,
+   "parcours": "acte-3",
+   "statut": "ok"
+  },
+  {
+   "id": "decor/lunaire/melisse/lunaire_melisse_pleine_lune",
+   "rubrique": "decor",
+   "titre": "La mélisse : pleine lune, la floraison lumineuse (Lunette vient la voir)",
+   "images": 3,
+   "fichiers": [
+    "svg/decor/lunaire/melisse/lunaire_melisse_pleine_lune_1.svg",
+    "svg/decor/lunaire/melisse/lunaire_melisse_pleine_lune_2.svg",
+    "svg/decor/lunaire/melisse/lunaire_melisse_pleine_lune_3.svg"
+   ],
+   "cadre": [
+    -42.5,
+    -37.5,
+    85,
+    60
+   ],
+   "ms_par_image": 320,
+   "parcours": "acte-3",
+   "statut": "ok"
+  },
+  {
+   "id": "decor/lunaire/melisse/lunaire_melisse_quartier",
+   "rubrique": "decor",
+   "titre": "La mélisse : premier quartier, la plante grandit",
+   "images": 3,
+   "fichiers": [
+    "svg/decor/lunaire/melisse/lunaire_melisse_quartier_1.svg",
+    "svg/decor/lunaire/melisse/lunaire_melisse_quartier_2.svg",
+    "svg/decor/lunaire/melisse/lunaire_melisse_quartier_3.svg"
+   ],
+   "cadre": [
+    -42.5,
+    -37.5,
+    85,
+    60
+   ],
+   "ms_par_image": 320,
+   "parcours": "acte-3",
+   "statut": "ok"
+  },
+  {
    "id": "decor/ruines/colonnade",
    "rubrique": "decor",
    "titre": "Colonnade des Anciens",
