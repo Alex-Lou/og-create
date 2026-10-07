@@ -122,10 +122,14 @@ describe('Anya sur l’île', () => {
     expect(ids(island({}), 23)).not.toContain('dame:bol');
   });
   it('le Cercle fleuri, et les dessins d’Anya', () => {
-    expect(landmarkLayers('menhirs', 0)).toHaveLength(1);
-    expect(landmarkLayers('menhirs', 0, true)).toHaveLength(2);
-    expect(landmarkLayers('lac', 0, true)).toHaveLength(landmarkLayers('lac', 0).length);
-    expect(landmarkLayers('menhirs', 0, true)[1].make().svg).not.toMatch(/NaN|undefined/);
+    // Le Cercle fleuri a son dessin (bibliothèque : menhirs_fleuri ; code : un calque de fleurs de plus) ; pas le lac
+    const keys = (id, bloom) => landmarkLayers(id, 0, bloom).map(l => l.key);
+    expect(keys('menhirs', true)).not.toEqual(keys('menhirs', false));
+    expect(keys('lac', true)).toEqual(keys('lac', false));
+    for (const layer of landmarkLayers('menhirs', 0, true)) {
+      const { svg, load } = layer.make();
+      expect(Boolean(load) || !/NaN|undefined/.test(svg)).toBe(true);
+    }
     for (const species of ['anya', 'otter', 'soup']) for (const frame of [0, 1, 'rest']) expect(ANIMAL_SPRITES[species](frame, '').svg).toMatch(/^<svg/);
     expect(ANIMAL_SPRITES.deer(0, 'blanc').svg).not.toBe(ANIMAL_SPRITES.deer(0, '').svg);
   });

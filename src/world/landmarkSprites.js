@@ -6,6 +6,7 @@ import { boulder, pyramid, sprite, mixHex, EDGE } from './iso';
 import { HS } from './terrain';
 import { WOOD, WOOD_DARK, THATCH, GLASS } from './palette';
 import { tools, ln, poly, ell, dot, wave, star, OUT, f2 } from './shopSprites';
+import { landmarkArtLayer } from './decorArt';
 
 const TAU = Math.PI * 2;
 const SNOW = { top: '#F7FAFD', left: '#DCE8F2', right: '#B9CCDD' };
@@ -594,6 +595,9 @@ const BLOOM = {
 export function landmarkLayers(id, t = 0, bloom = false) {
   const place = LANDMARK_SPRITES[id];
   if (!place) return [];
+  // Le dessin de la bibliothèque d'abord (decorArt.js), sinon ces calques
+  const art = landmarkArtLayer(id, t, bloom);
+  if (art) return [art];
   return [...place.layers, ...(bloom && id === 'menhirs' ? [BLOOM] : [])].map((layer, k) => {
     const f = layer.n ? Math.floor(t * layer.fps) % layer.n : 0;
     const [x, y, w, h] = layer.frame;
