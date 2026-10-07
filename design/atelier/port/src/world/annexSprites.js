@@ -664,8 +664,9 @@ const vivier = {
     }
   }]
 };
-// Fumoir : cabane de planches, poissons pendus à sécher sur le côté ; la fumée monte du lanterneau, les braises
-// rougeoient la nuit
+// Fumoir : cabane de planches à couvre-joints sous un toit d'ardoises, porte basse où rougeoient les braises, fumée qui
+// s'échappe du lanterneau et de la lucarne ; séchoir où pendent des poissons dorés et argentés qui se balancent, un
+// chat assis dessous qui les guette ; la réserve de bûches, le panier de poissons, les copeaux
 const fumoir = {
   light: () => [0, 0.2, 5, 11, '255,140,70'],
   layers: [{
@@ -673,28 +674,61 @@ const fumoir = {
     n: 8,
     fps: 3,
     draw: (T, f, n) => {
-      const [vx, vy] = T.p(-0.01, 0, 39);
-      const smoke = [0, 1, 2].map(k => {
-        const p = ((f + k * (n / 3)) % n) / n;
-        return puff(vx - 2 + p * 6 + Math.sin(p * 6 + k) * 2, vy - 4 - p * 26, 2.6 + p * 4.6, 0.7 * (1 - p));
-      }).join('');
-      const fish = [-0.1, 0, 0.1].map(dv => {
-        const [x, y] = T.p(0.36, dv, 16);
-        return ln([x, y], [x, y + 2], '#8A6A40', 0.5) + `<path d="M${f2(x)},${f2(y + 2)} q2.4,4 0,8.4 q-2.4,-4.4 0,-8.4 Z" fill="#C7D0DA" stroke="#7E8A98" stroke-width="0.4"/>` + poly([[x, y + 10], [x - 1.8, y + 12.6], [x + 1.8, y + 12.6]], '#AEB8C4');
-      }).join('');
-      return T.shadow(0, 0, 0.38, 0.2)
-        + T.box(-0.24, -0.22, 0.18, 0.2, 0, 22, WOOD_DARK)
+      const [x, y] = T.p(0, 0, 0);
+      // la terre battue et les copeaux
+      let out = ell(x, y + 1, 31, 13, '#B89A6E', ` stroke="${OUT}" stroke-width="0.5"`) + ell(x - 4, y, 21, 8, '#C8AC80')
+        + [[-16, 8], [12, 9], [20, 3], [-24, 3]].map(([dx, dy]) => `<path d="M${x + dx},${y + dy} q1.4,-1.6 2.4,0 q-0.6,1 -1.4,0.4" stroke="#E4C08A" stroke-width="0.6" fill="none"/>`).join('')
+        + T.shadow(0, 0, 0.38, 0.2);
+      // la réserve de bûches, à gauche
+      const [lx, ly] = T.p(-0.44, 0.12, 0);
+      out += [[-3.6, -2.2], [0, -2.2], [3.6, -2.2], [-1.8, -5.6], [1.8, -5.6]].map(([dx, dy]) => logEnd(lx + dx, ly + dy, 1.9)).join('');
+      // la cabane : planches, couvre-joints, porte et braises, lucarne
+      out += T.box(-0.24, -0.22, 0.18, 0.2, 0, 22, WOOD_DARK)
         + planksLeft(T.u - 0.24, T.u + 0.18, T.v + 0.2, 0, 22, 4) + planksRight(T.u + 0.18, T.v - 0.22, T.v + 0.2, 0, 22, 4)
-        + T.face([[-0.06, 0.2, 0], [0.06, 0.2, 0], [0.06, 0.2, 14], [-0.06, 0.2, 14]], '#2E1E14')
+        + [-0.16, 0.1].map(u => ln(T.p(u, 0.2, 0.5), T.p(u, 0.2, 21.5), WOOD.left, 1.2)).join('')
+        + [-0.12, 0.08].map(v => ln(T.p(0.18, v, 0.5), T.p(0.18, v, 21.5), WOOD_DARK.left, 1.2)).join('')
+        + T.face([[-0.06, 0.2, 0], [0.06, 0.2, 0], [0.06, 0.2, 14], [-0.06, 0.2, 14]], '#2E1E14', ` stroke="${OUT}" stroke-width="0.6"`)
         + T.face([[-0.04, 0.2, 1], [0.04, 0.2, 1], [0.04, 0.2, 4], [-0.04, 0.2, 4]], f % 2 ? '#FF9A4A' : '#E8743A')
-        + T.gable(-0.24, -0.22, 0.18, 0.2, 22, 11, { front: SLATE_ROOF.front, back: SLATE_ROOF.back, gable: WOOD_DARK.right }, 0.05)
-        // Lanterneau sur le faîtage
-        + T.box(-0.06, -0.05, 0.04, 0.05, 31, 37, WOOD_DARK) + T.gable(-0.06, -0.05, 0.04, 0.05, 37, 3, { front: SLATE_ROOF.front, back: SLATE_ROOF.back, gable: WOOD_DARK.right }, 0.03)
-        // Séchoir à poissons sur le côté
-        + post(T, 0.36, -0.18, 0, 20, WOOD, 0.018) + post(T, 0.36, 0.18, 0, 20, WOOD, 0.018)
-        + ln(T.p(0.36, -0.18, 19), T.p(0.36, 0.18, 19), WOOD.right, 1.4)
-        + fish
-        + smoke;
+        + dot(...T.p(-0.02, 0.2, 2.4), 0.6, '#FFE08A') + dot(...T.p(0.02, 0.2, 2), 0.5, '#FFD070')
+        + T.face([[0.18, -0.08, 13], [0.18, 0.02, 13], [0.18, 0.02, 18], [0.18, -0.08, 18]], '#2E1E14', ` stroke="${OUT}" stroke-width="0.5"`)
+        + ln(T.p(0.18, -0.03, 13), T.p(0.18, -0.03, 18), WOOD.left, 0.7);
+      // le toit d'ardoises et ses rangs, le lanterneau
+      out += T.gable(-0.24, -0.22, 0.18, 0.2, 22, 11, { front: SLATE_ROOF.front, back: SLATE_ROOF.back, gable: WOOD_DARK.right }, 0.05);
+      for (const t of [0.33, 0.66]) out += ln(T.p(-0.29, 0.25 * t, 33 - 11 * t), T.p(0.23, 0.25 * t, 33 - 11 * t), 'rgba(40,48,66,.5)', 0.6);
+      out += T.box(-0.06, -0.05, 0.04, 0.05, 31, 37, WOOD_DARK) + T.gable(-0.06, -0.05, 0.04, 0.05, 37, 3, { front: SLATE_ROOF.front, back: SLATE_ROOF.back, gable: WOOD_DARK.right }, 0.03)
+        + ln(T.p(-0.06, 0.05, 33), T.p(0.04, 0.05, 33), 'rgba(0,0,0,.4)', 0.6) + ln(T.p(-0.06, 0.05, 35), T.p(0.04, 0.05, 35), 'rgba(0,0,0,.4)', 0.6);
+      // la fumée du lanterneau et un filet par la lucarne
+      const [vx, vy] = T.p(-0.01, 0, 39);
+      out += [0, 1, 2].map(i => { const p = ((f + i * (n / 3)) % n) / n; return puff(vx - 2 + p * 6 + Math.sin(p * 6 + i) * 2, vy - 4 - p * 26, 2.6 + p * 4.6, 0.7 * (1 - p)); }).join('');
+      const [wx, wy] = T.p(0.18, -0.03, 18);
+      out += [0, 0.5].map(o => { const p = ((f / n) + o) % 1; return puff(wx + 2 + p * 5, wy - 1 - p * 8, 1.2 + p * 1.8, 0.5 * (1 - p)); }).join('');
+      // le séchoir et ses poissons qui se balancent
+      out += post(T, 0.36, -0.18, 0, 20, WOOD, 0.018) + post(T, 0.36, 0.18, 0, 20, WOOD, 0.018)
+        + ln(T.p(0.36, -0.18, 19), T.p(0.36, 0.18, 19), WOOD.right, 1.4) + ln(T.p(0.36, -0.18, 19.6), T.p(0.36, 0.18, 19.6), WOOD.top, 0.5);
+      [[-0.12, '#E2B860', '#B8862E'], [-0.04, '#C7D0DA', '#7E8A98'], [0.04, '#E2B860', '#B8862E'], [0.12, '#C7D0DA', '#7E8A98']].forEach(([dv, c, d], i) => {
+        const [fx, fy] = T.p(0.36, dv, 19), s = wave(f, n, 1.2, i * 0.9);
+        out += ln([fx, fy], [fx + s * 0.3, fy + 2], '#8A6A40', 0.5)
+          + `<g transform="rotate(${f2(s * 6)} ${f2(fx)} ${f2(fy)})"><path d="M${f2(fx)},${f2(fy + 2)} q2.6,4 0,8.6 q-2.6,-4.6 0,-8.6 Z" fill="${c}" stroke="${d}" stroke-width="0.5"/>`
+          + ln([fx - 0.8, fy + 5], [fx + 0.8, fy + 5], 'rgba(0,0,0,.18)', 0.4) + dot(fx + 0.6, fy + 3.6, 0.45, '#2A2024')
+          + poly([[fx, fy + 10.4], [fx - 2, fy + 13], [fx + 2, fy + 13]], d) + '</g>';
+      });
+      // le chat assis sous le séchoir, la tête levée vers les poissons
+      const [cx, cy] = T.p(0.5, 0.2, 0), look = f % 4 === 0 ? -0.6 : 0;
+      out += ell(cx, cy + 0.4, 4, 1.2, 'rgba(40,55,20,.22)')
+        + `<path d="M${f2(cx + 2.6)},${f2(cy - 0.6)} q4,0.4 3.4,-3.4" stroke="${OUT}" stroke-width="2.4" fill="none" stroke-linecap="round"/><path d="M${f2(cx + 2.6)},${f2(cy - 0.6)} q4,0.4 3.4,-3.4" stroke="#9AA0A8" stroke-width="1.4" fill="none" stroke-linecap="round"/>`
+        + `<path d="M${f2(cx - 3.4)},${f2(cy)} Q${f2(cx - 3.8)},${f2(cy - 6.4)} ${f2(cx)},${f2(cy - 7)} Q${f2(cx + 3.8)},${f2(cy - 6.4)} ${f2(cx + 3.4)},${f2(cy)} Z" fill="#9AA0A8" stroke="${OUT}" stroke-width="0.5"/>`
+        + [-1.4, 0, 1.4].map(o => ln([cx + o - 0.4, cy - 5.6], [cx + o, cy - 4.2], '#6E747C', 0.5)).join('')
+        + ell(cx - 0.6, cy - 1.6, 1.6, 2.4, '#E8E4DC')
+        + `<circle cx="${f2(cx)}" cy="${f2(cy - 9 + look)}" r="2.6" fill="#9AA0A8" stroke="${OUT}" stroke-width="0.5"/>`
+        + poly([[cx - 2.4, cy - 10 + look], [cx - 2.2, cy - 12.8 + look], [cx - 0.6, cy - 11.2 + look]], '#9AA0A8', ` stroke="${OUT}" stroke-width="0.4" stroke-linejoin="round"`)
+        + poly([[cx + 0.8, cy - 11.4 + look], [cx + 2.4, cy - 12.8 + look], [cx + 2.6, cy - 10 + look]], '#9AA0A8', ` stroke="${OUT}" stroke-width="0.4" stroke-linejoin="round"`)
+        + dot(cx - 0.9, cy - 9.6 + look, 0.5, '#2A2024') + dot(cx + 0.9, cy - 9.6 + look, 0.5, '#2A2024') + dot(cx, cy - 8.4 + look, 0.35, '#E58A8F');
+      // le panier de poissons, devant à gauche
+      const [bx, by] = T.p(-0.16, 0.42, 0);
+      return out + ell(bx + 1, by + 0.5, 6, 1.8, 'rgba(40,55,20,.22)')
+        + [[-2, -5.4, '#C7D0DA'], [1.6, -5.8, '#E2B860'], [0, -6.6, '#C7D0DA']].map(([dx, dy, c]) => ell(bx + dx, by + dy, 2.6, 1, c, ` stroke="${OUT}" stroke-width="0.4"`)).join('')
+        + `<path d="M${f2(bx - 5.4)},${f2(by - 5)} L${f2(bx - 4.2)},${f2(by)} Q${f2(bx)},${f2(by + 1.6)} ${f2(bx + 4.2)},${f2(by)} L${f2(bx + 5.4)},${f2(by - 5)} Q${f2(bx)},${f2(by - 3)} ${f2(bx - 5.4)},${f2(by - 5)} Z" fill="#C9A060" stroke="${OUT}" stroke-width="0.6"/>`
+        + `<path d="M${f2(bx - 4.8)},${f2(by - 2.4)} Q${f2(bx)},${f2(by - 0.6)} ${f2(bx + 4.8)},${f2(by - 2.4)}" stroke="#A07838" stroke-width="0.6" fill="none"/>`;
     }
   }]
 };
