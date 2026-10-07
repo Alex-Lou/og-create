@@ -27,6 +27,9 @@ export default defineConfig(({ command }) => ({
   build: {
     outDir: 'dist',
     chunkSizeWarningLimit: 4096,
+    // Les dessins de la bibliothèque restent des fichiers, lus à la demande (et gardés par le service worker) : intégrés
+    // en base64 dans le code, ils l'alourdissaient de plusieurs centaines de Ko au démarrage
+    assetsInlineLimit: file => (file.includes('/design/bibliotheque/') ? false : undefined),
     rollupOptions: {
       output: {
         entryFileNames: 'js/[name].[hash].js',

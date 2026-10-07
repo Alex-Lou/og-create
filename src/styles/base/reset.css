@@ -31,7 +31,9 @@ textarea {
   user-select: text;
 }
 
-/* Grain de vélin, par-dessus tout, discret, sans jamais capter la souris */
+/* Grain de vélin, par-dessus tout, discret, sans jamais capter la souris. Simplement posé (sans mode de fusion) : à
+   cette opacité, l'œil n'y voit pas de différence, et une fusion sur tout l'écran se recalculait à chaque image de
+   l'île (30 par seconde) */
 body::after {
   content: '';
   position: fixed;
@@ -39,7 +41,6 @@ body::after {
   z-index: var(--z-grain);
   pointer-events: none;
   opacity: 0.35;
-  mix-blend-mode: multiply;
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .55  0 0 0 0 .45  0 0 0 0 .35  0 0 0 .10 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
 }
 
