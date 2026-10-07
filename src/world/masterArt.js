@@ -10,14 +10,14 @@ import DATA from '../../design/bibliotheque/svg/personnages/quotidien.json';
 import { fitTo } from './library';
 
 const FILES = import.meta.glob('/design/bibliotheque/svg/personnages/{maitres,naufrages}/**/*.svg', { query: '?raw', import: 'default' });
-const URLS = import.meta.glob('/design/bibliotheque/svg/personnages/{maitres,naufrages}/*/*_face_repos_1.svg', { query: '?url', import: 'default', eager: true });
+const URLS = import.meta.glob('/design/bibliotheque/svg/personnages/{maitres,naufrages}/*/*_{face,avant}_{repos,travail,marche,assis}_1.svg', { query: '?url', import: 'default', eager: true });
 const ROOT = '/design/bibliotheque/svg/personnages/';
 const SCALE = 1.25;
 
 // Le maître de chaque bâtiment
 export const MASTERS = { ponton: 'aster', foyer: 'cannelle', atelier: 'rivet', puits: 'ondin', bosquet: 'sylve', carriere: 'galet', potager: 'melisse' };
 const VIEWS = { front: 'face', se: 'avant', ne: 'dos' };
-const POSES = { walk: 'marche', idle: 'repos', work: 'travail', wave: 'salut' };
+const POSES = { walk: 'marche', idle: 'repos', work: 'travail', wave: 'salut', sit: 'assis' };
 // Ancres : les pieds d'un personnage debout ; le centre de l'ombre d'un dormeur couché (cadre 64 × 48)
 const FEET = [24, 62];
 const BED = [32, 26];
@@ -77,9 +77,12 @@ export function masterSprite(role, castaway, { pose = 'idle', view = 'se', frame
   };
 }
 
-// Portrait d'un maître (sa fiche) : de face, au repos, en naufragé ou en maître ; l'adresse du fichier, ou null
-export function masterPortrait(role, castaway) {
+// Portrait d'un maître hors de l'île (sa fiche, les bulles du guide, les scènes) : de face ou de trois quarts avant, au
+// repos, au travail, en marche ou assis (la première image ; sans geste, au repos), en naufragé ou en maître ; l'adresse
+// du fichier, ou null
+export function masterPortrait(role, castaway, { view = 'front', pose = 'idle' } = {}) {
   const set = setOf(role, castaway);
-  const file = set && set.fichiers.face_repos && set.fichiers.face_repos[0];
-  return (file && URLS[ROOT + file]) || null;
+  const drawn = VIEWS[view];
+  const files = set && (set.fichiers[`${drawn}_${POSES[pose]}`] || set.fichiers[`${drawn}_repos`]);
+  return (files && URLS[ROOT + files[0]]) || null;
 }
