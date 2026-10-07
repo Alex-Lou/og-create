@@ -216,6 +216,7 @@ const VEINS = [
   { rock: { top: '#D9C3A8', left: '#B49678', right: '#8C6F55' }, vein: '#E8873A', ore: '#F2A35A' },
   { rock: { top: '#BAC1CD', left: '#8F98A7', right: '#6B7383' }, vein: '#7FC7F0', ore: '#B6E6FF' }
 ];
+// … sur une aire de gravier, des cristaux (ou du vert-de-cuivre) qui percent le rocher, et le wagonnet chargé sur ses rails
 const filon = {
   layers: [{
     frame: [-34, -40, 68, 56],
@@ -223,22 +224,48 @@ const filon = {
     fps: 4,
     draw: (T, f, n, variant) => {
       const look = VEINS[variant % 3];
+      const kind = variant % 3;
       const [x, y] = T.p(-0.04, -0.02, 0);
-      // Veines et pépites sur la face avant du gros rocher (dans sa silhouette)
+      const [cx0, cy0] = T.p(0, 0, 0);
+      // l'aire de gravier et ses cailloux
+      let out = ell(cx0, cy0 + 1, 31, 12.6, '#C9BFAE', ` stroke="${OUT}" stroke-width="0.5"`) + ell(cx0 - 4, cy0, 21, 7.6, '#D6CDBE')
+        + [[-22, 5], [18, 8], [-6, 10], [24, 0], [10, -7]].map(([dx, dy], i) => ell(cx0 + dx, cy0 + dy, 1.2 + (i % 2) * 0.4, 0.8, look.rock.left, ` stroke="${OUT}" stroke-width="0.3"`)).join('');
+      // veines et pépites sur la face avant du gros rocher
       const veins = [[[-12, -5], [-7, -9], [-2, -7], [2, -11]], [[-6, -2], [-1, -5], [5, -3]], [[4, -8], [9, -6]]]
         .map(pts => `<polyline points="${pts.map(([a, b]) => `${f2(x + a)},${f2(y + b)}`).join(' ')}" fill="none" stroke="${look.vein}" stroke-width="1.2" stroke-linejoin="round" stroke-linecap="round" opacity=".9"/>`).join('');
       const nuggets = [[-7, -9], [3, -4], [-11, -4], [2, -11], [8, -7]].map(([a, b], k) => poly([[x + a, y + b - 1.7], [x + a + 1.7, y + b], [x + a, y + b + 1.5], [x + a - 1.6, y + b]], k % 2 ? look.ore : look.vein, ` stroke="${OUT}" stroke-width="0.3"`)).join('');
-      const glints = [[-7, -9], [3, -4], [2, -11], [-11, -4], [8, -7], [-2, -7]];
-      const [gx, gy] = glints[f % glints.length];
-      return T.shadow(0.02, 0, 0.4, 0.22)
+      out += T.shadow(0.02, 0, 0.4, 0.22)
         + boulder(T.u - 0.04, T.v - 0.02, 0.32, 0.28, 17, look.rock, 3 + variant, 0.22, 0.78)
-        + veins + nuggets
-        + boulder(T.u - 0.06, T.v + 0.32, 0.1, 0.09, 5, look.rock, 7 + variant, 0.25, 0.85)
-        // Pioche appuyée sur le flanc droit, éclats au sol
+        + veins + nuggets;
+      // ce qui perce le haut du rocher : aiguilles de quartz, vert-de-cuivre, ou grandes aiguilles bleues
+      const [tx, ty] = T.p(-0.08, -0.06, 15);
+      if (kind === 1) {
+        out += [[-5, 1, 2.6], [-1, -1, 3.2], [3.4, 0.6, 2.4], [1, 2, 2]].map(([dx, dy, r]) => ell(tx + dx, ty + dy, r, r * 0.7, '#5FAE7A', ` stroke="${OUT}" stroke-width="0.4"`) + ell(tx + dx - r * 0.3, ty + dy - r * 0.25, r * 0.4, r * 0.25, '#9FE0B0')).join('')
+          + [[-3, 1.4], [2, -0.6]].map(([dx, dy]) => ell(tx + dx, ty + dy, 1.4, 1, '#E8873A', ` stroke="${OUT}" stroke-width="0.3"`)).join('');
+      } else {
+        const big = kind === 2 ? 1.35 : 1;
+        const c = kind === 2 ? { l: '#9ED8F6', r: '#5FA8D8' } : { l: '#FFFFFF', r: '#D8DCE4' };
+        out += [[-5, 1, 7, -1.6, 1.8], [0, -1, 10, 0.6, 2.2], [4.4, 1.2, 6, 2, 1.6]].map(([dx, dy, h, lean, w]) => {
+          const bx = tx + dx, by = ty + dy, H = h * big, W = w * big;
+          return poly([[bx - W, by], [bx, by + W * 0.45], [bx + W, by], [bx + lean, by - H]], c.l, ` stroke="${OUT}" stroke-width="0.5" stroke-linejoin="round"`)
+            + poly([[bx, by + W * 0.45], [bx + W, by], [bx + lean, by - H]], c.r) + ln([bx - W * 0.4, by - H * 0.15], [bx + lean * 0.7 - W * 0.1, by - H * 0.75], 'rgba(255,255,255,.85)', 0.6);
+        }).join('');
+      }
+      // le petit rocher, la pioche appuyée sur le flanc droit, les éclats
+      out += boulder(T.u - 0.06, T.v + 0.32, 0.1, 0.09, 5, look.rock, 7 + variant, 0.25, 0.85)
         + ln(T.p(0.4, 0.04, 0), T.p(0.3, -0.06, 15), WOOD.right, 1.8) + ln(T.p(0.4, 0.04, 0.6), T.p(0.3, -0.06, 15.6), WOOD.top, 0.6)
         + `<path d="M${f2(T.p(0.24, -0.04, 13)[0])},${f2(T.p(0.24, -0.04, 13)[1])} Q${f2(T.p(0.3, -0.06, 18)[0])},${f2(T.p(0.3, -0.06, 18)[1] - 2)} ${f2(T.p(0.38, -0.1, 13)[0])},${f2(T.p(0.38, -0.1, 13)[1])}" stroke="${IRON.right}" stroke-width="2" fill="none" stroke-linecap="round"/>`
-        + T.pebble(-0.36, 0.26, 0.55, look.rock) + T.pebble(-0.18, 0.38, 0.42, look.rock) + T.pebble(0.06, 0.4, 0.35, look.rock)
-        + star(x + gx, y + gy, 2.6 + (f % 2), '#FFFFFF', 0.95);
+        + T.pebble(-0.36, 0.26, 0.55, look.rock) + T.pebble(-0.18, 0.38, 0.42, look.rock);
+      // les rails et le wagonnet chargé de minerai, devant à droite
+      out += [0.17, 0.29].map(v => ln(T.p(0.16, v, 0.4), T.p(0.5, v, 0.4), DARK_IRON.left, 0.9)).join('')
+        + [0.2, 0.3, 0.4].map(u => ln(T.p(u, 0.14, 0.2), T.p(u, 0.32, 0.2), WOOD_DARK.left, 1.2)).join('')
+        + T.box(0.25, 0.17, 0.43, 0.29, 1.6, 7, WOOD_DARK)
+        + ln(T.p(0.25, 0.29, 4.4), T.p(0.43, 0.29, 4.4), DARK_IRON.right, 0.8) + ln(T.p(0.43, 0.29, 4.4), T.p(0.43, 0.17, 4.4), DARK_IRON.right, 0.8)
+        + [[0.29, 0.29], [0.39, 0.29]].map(([u, v]) => { const [wx, wy] = T.p(u, v, 1.6); return ell(wx, wy, 1.4, 1.8, DARK_IRON.right, ` stroke="${OUT}" stroke-width="0.4"`) + dot(wx, wy, 0.4, IRON.top); }).join('')
+        + [[0.3, 0.21], [0.37, 0.24], [0.33, 0.25], [0.39, 0.2], [0.34, 0.21]].map(([u, v], i) => { const [ox, oy] = T.p(u, v, 7.6 + (i === 4 ? 1.6 : 0)); return poly([[ox - 1.8, oy], [ox - 0.6, oy - 1.6], [ox + 1.6, oy - 0.8], [ox + 1, oy + 0.6]], i % 2 ? look.ore : look.rock.left, ` stroke="${OUT}" stroke-width="0.4"`); }).join('');
+      const glints = [[-7, -9], [3, -4], [2, -11], [-11, -4], [8, -7], [-2, -7]];
+      const [gx, gy] = glints[f % glints.length];
+      return out + star(x + gx, y + gy, 2.6 + (f % 2), '#FFFFFF', 0.95);
     }
   }]
 };
