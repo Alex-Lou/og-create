@@ -120,21 +120,24 @@
     </div>
     <TabBar :current="currentMode" :dots="isLoggedIn ? [] : ['sceau']" @select="handleModeSelect" />
     <BrumeGuide :stage="brumeStage" @go="handleModeSelect" />
-    <!-- Le tutoriel (HISTOIRE.md, § 9) : scènes, page de garde du Grimoire, main qui montre où toucher -->
+    <!-- Le tutoriel (HISTOIRE.md, § 9) : scènes, carte d'embarquement, page de garde du Grimoire, main qui montre où toucher -->
     <PrologueScene
       v-if="prologueScene"
       :key="prologueScene"
       :scene="prologueScene"
       :frames="sceneFrames"
       :built="islandBuilt"
+      :look="prologueLook"
       :skippable="!prologueReplay || isVigil || isStory"
       :skip-label="isVigil ? 'Passer la veillée' : isStory ? 'Passer' : 'Passer le prologue'"
       @done="prologueSceneDone"
       @skip="isVigil || isStory ? prologueSceneDone(prologueScene) : skipPrologue()"
     />
+    <PrologueAvatar v-if="prologueAvatar" @chosen="chooseLook" @skip="skipPrologue" />
     <PrologueName
       v-if="prologueName"
       :account="prologueName.account"
+      :initial-name="prologue.name || ''"
       @named="namePlayer"
       @signing="prologueSigning"
       @unsigned="prologueUnsigned"
@@ -143,7 +146,7 @@
     />
     <TutorialHand v-if="prologueHand && currentMode === prologueHand.mode && !prologueScene" :key="prologueHand.target" :target="prologueHand.target" />
     <GameAchievementsPopup
-      v-if="achievementQueue.length && !isRevealing"
+      v-if="achievementQueue.length && !isRevealing && !prologueRunning"
       :key="achievementQueue[0].name"
       :achievement="achievementQueue[0]"
       @close="closeAchievementPopup"
@@ -240,6 +243,7 @@ import TabBar from '../TabBar/TabBar.vue';
 import BrumeGuide from '../../Guide/BrumeGuide/BrumeGuide.vue';
 import PrologueScene from '../../Prologue/PrologueScene/PrologueScene.vue';
 import PrologueName from '../../Prologue/PrologueName/PrologueName.vue';
+import PrologueAvatar from '../../Prologue/PrologueAvatar/PrologueAvatar.vue';
 import TutorialHand from '../../Guide/TutorialHand/TutorialHand.vue';
 
 export default {
@@ -269,6 +273,7 @@ export default {
     BrumeGuide,
     PrologueScene,
     PrologueName,
+    PrologueAvatar,
     TutorialHand
   },
   data() {

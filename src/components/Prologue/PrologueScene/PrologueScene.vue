@@ -2,8 +2,9 @@
   <!-- Une scène du tutoriel (game/prologueScenes.js), plein écran : un toucher avance d'une image ; « Passer le
        prologue » arrête tout le tutoriel (en revoir les scènes, depuis le Sceau, n'a pas ce bouton) -->
   <div ref="root" class="ps" role="dialog" aria-modal="true" :aria-label="label" tabindex="-1" @click="advance" @keydown.enter.prevent="advance" @keydown.space.prevent="advance">
-    <transition name="ps-art" mode="out-in">
-      <PrologueArt :key="frame.art" :art="frame.art" :cast="frame.cast || []" :recipe="frame.recipe || ''" :built="built" />
+    <transition name="ps-art">
+      <SceneArt v-if="frame.scene" :key="`${frame.scene}${frame.alone ? '-seul' : ''}${frame.still ? '-fixe' : ''}`" :scene="frame.scene" :look="look" :alone="frame.alone" :pose="frame.avatar || null" :still="frame.still" />
+      <PrologueArt v-else :key="frame.art" :art="frame.art" :cast="frame.cast || []" :recipe="frame.recipe || ''" :built="built" />
     </transition>
     <p v-if="frame.caption" class="ps__caption">{{ frame.caption }}</p>
     <transition name="ps-bubble" mode="out-in">
@@ -23,12 +24,13 @@
 
 <script>
 import PrologueArt from '../PrologueArt/PrologueArt.vue';
+import SceneArt from '../SceneArt/SceneArt.vue';
 import { SCENES } from '@/game/prologueScenes';
 import { reducedMotion } from '@/utils/fx';
 
 export default {
   name: 'PrologueScene',
-  components: { PrologueArt },
+  components: { PrologueArt, SceneArt },
   props: {
     scene: { type: String, required: true },
     // Images données directement (une veillée, game/vigils.js) ; sinon celles de la scène (game/prologueScenes.js)
@@ -37,7 +39,9 @@ export default {
     skippable: { type: Boolean, default: true },
     skipLabel: { type: String, default: 'Passer le prologue' },
     // Les maîtres dont le bâtiment est fondé (PrologueArt : les autres paraissent en naufragés aux veillées)
-    built: { type: Array, default: () => [] }
+    built: { type: Array, default: () => [] },
+    // L'avatar du joueur dans les scènes de la bibliothèque (game/sceneArt.js)
+    look: { type: String, default: '' }
   },
   emits: ['done', 'skip'],
   data() {
@@ -54,7 +58,7 @@ export default {
       if (this.scene.startsWith('veillee-')) return `Veillée ${this.scene.slice(8)}`;
       if (this.scene === 'revelation') return 'La Révélation';
       if (this.scene.startsWith('trace-')) return 'Une trace d’Anya';
-      return this.scene === 'arrivee' ? 'Le naufrage de l’Hirondelle' : 'La Grève';
+      return this.scene === 'naufrage' || this.scene === 'arrivee' ? 'Le naufrage de l’Hirondelle' : 'La Grève';
     }
   },
   watch: {

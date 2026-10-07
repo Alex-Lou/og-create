@@ -1,65 +1,118 @@
-// Les scènes du tutoriel (HISTOIRE.md, § 9), image par image : art (le dessin de PrologueArt.vue), qui parle (null :
-// personne ; thought : une pensée du joueur, qu'on ne voit jamais, D11), le texte, un geste suggéré (hint), des choix
-// qui font tous avancer (choices), et une image qui avance seule (auto, en ms).
+// Les scènes du tutoriel (HISTOIRE.md, § 9), image par image : le dessin (scene : une scène de la bibliothèque,
+// game/sceneArt.js ; art : un dessin de PrologueArt.vue), alone (le joueur n'est pas encore à l'écran : on voit par ses
+// yeux), avatar (une autre vue ou pose que celle de la scène : il grelotte quand il a peur ou froid), still (la scène
+// reste sur sa première image), qui parle (null : personne ; thought : une pensée du joueur, qui ne parle jamais), le texte, un geste suggéré
+// (hint), des choix qui font tous avancer (choices), et une image qui avance seule (auto, en ms).
+// L'ordre : seul sur la Grève, on se relève, on se découvre (la carte d'embarquement : l'avatar et le nom, entre
+// « naufrage » et « arrivee »), Brume, le Grimoire ; puis la troupe dans l'ordre des quêtes du serveur : Aster,
+// Cannelle, Rivet, Ondin.
+// Le joueur grelotte, de face (de peur ou de froid)
+const SHIVER = { vue: 'face', pose: 'grelotter' };
+
 export const SCENES = {
-  // Étape 1 : la tempête, la Grève, Brume, le Grimoire
+  // Étape 1 : la tempête, le noir, la Grève. Le joueur se relève seul et trouve sa carte d'embarquement
+  naufrage: [
+    { scene: '01_pont', alone: true, caption: 'L’Hirondelle, troisième nuit de croisière.', auto: 4200 },
+    { scene: '01_pont', alone: true, who: 'Le haut-parleur', text: 'Mesdames et messieurs, le commandant vous prie de regagner… krrr… vos cabines…' },
+    { scene: '01_vague', auto: 2600 },
+    { scene: '01_noir', auto: 3000 },
+    { scene: '01_greve', alone: true, thought: true, text: 'Du sable dans la bouche. La mer. Rien d’autre.', hint: 'Toucher pour te relever' },
+    { scene: '01_gilet', alone: true, thought: true, text: 'Ohé ? … Quelqu’un ?' },
+    { scene: '01_gilet', alone: true, thought: true, text: 'Seule la mer répond. Dans ma poche, un carton trempé : ma carte d’embarquement.', hint: 'Toucher la carte' }
+  ],
+  // Étapes 2 et 3 : on se voit enfin, Brume a aussi peur que nous, la Grève d'avant, l'épave, puis le livre qu'elle garde
   arrivee: [
-    { art: 'storm', caption: 'L’Hirondelle, dans la tempête.', auto: 7000 },
-    { art: 'beach', thought: true, text: 'Froid… Où sont les autres ?', hint: 'Toucher pour te relever' },
-    { art: 'wisp', thought: true, text: 'Un feu follet… Les marins disent qu’ils égarent les voyageurs.', choices: ['Reculer', 'Attendre'] },
-    { art: 'rock', who: 'Brume', text: 'Ah ! Tu… tu me vois ? Personne ne m’a vue depuis si longtemps.' },
-    { art: 'fire', who: 'Brume', text: 'Voilà, il fait moins froid. Je suis Brume.' },
-    { art: 'book', who: 'Brume', text: 'Je le garde depuis toujours. Personne n’a su le lire. Toi, tu le peux.' },
-    { art: 'book', who: 'Brume', text: 'Ce qu’on y écrit renaît sur l’île. C’est le secret de tout.', hint: 'Toucher le livre' }
+    { scene: '01_greve', thought: true, text: 'Pieds nus, trempé jusqu’aux os. Mais entier.' },
+    { scene: '02_lueur', thought: true, text: 'Une lumière, là-bas ! Une lanterne… On me cherche !' },
+    { scene: '02_approche', avatar: SHIVER, thought: true, text: 'Ce n’est pas une lanterne. Les marins disent que les feux follets égarent les voyageurs.', choices: ['Reculer', 'Ne pas bouger'] },
+    { scene: '02_rocher', avatar: SHIVER, who: 'Brume', text: 'Tu me vois. … Tu me vois vraiment ?' },
+    { scene: '02_examine', who: 'Brume', text: 'Tu trembles. Vous tremblez tous comme ça ? J’ai oublié comment vous étiez faits.' },
+    { scene: '02_yeux', who: 'Brume', text: 'Brume. C’est ainsi qu’ils m’appelaient, ceux d’avant.' },
+    { scene: '02_yeux', who: 'Brume', text: 'Je crois que c’est mon nom. Personne ne l’a dit depuis longtemps.' },
+    { scene: '02_village', who: 'Brume', text: 'Là, il y avait un village. Des rires, le soir. De la soupe.' },
+    { scene: '02_village', who: 'Brume', text: 'Puis ils ont cessé d’écrire, et la brume a tout pris.' },
+    { scene: '02_epave', who: 'Brume', text: 'Ton bateau… Pardon. La brume est épaisse, ces temps-ci.' },
+    { scene: '02_proche', who: 'Brume', text: 'Reste près de moi. Je ne suis pas bien chaude, mais je brille.' },
+    { scene: '02_proche', who: 'Brume', text: 'Et demain, on cherchera les autres. La mer rend parfois ce qu’elle prend.' },
+    { scene: '03_livre', who: 'Brume', text: 'Je le garde depuis toujours. Je n’ai jamais su le lire. Eux savaient.' },
+    { scene: '03_livre', who: 'Brume', text: 'Il ne s’est jamais ouvert pour moi. Jamais. … Toi, peut-être ?', hint: 'Toucher le livre' }
   ],
-  // Étape 2 : le premier sceau brisé, puis Aster dans les vagues
-  aster: [
-    { art: 'seal', who: 'Brume', text: 'Le Grimoire te fait confiance. Le sceau de Saturne attend son gardien.' },
-    { art: 'aster', who: 'Aster', text: 'Toi aussi, tu étais sur l’Hirondelle ? Comment tu t’appelles ?' }
+  // Étape 3, après la première page : le vent se lève pour de vrai et chasse la brume de la Grève
+  souffle: [
+    { scene: '03_vent', who: 'Brume', text: '… Qu’est-ce que tu as écrit ?' },
+    { scene: '03_vent', who: 'Brume', text: 'Ils faisaient ça, ceux d’avant. Ils écrivaient, et l’île répondait.' },
+    { scene: '03_vent', who: 'Brume', text: 'Tout ce que tu écriras reviendra. Les arbres, les bêtes… tout ce que la brume a pris.' }
   ],
-  // Étape 2, sur l'île : la première Récolte
+  // Étapes 5 et 6, après la 3e page : un sceau se brise ; le feu, qui se voit de loin ; quelqu'un sur les rochers
+  sceau: [
+    { scene: '03_livre', who: 'Brume', text: 'Un sceau s’est brisé… Celui-là attend son gardien. Quelqu’un, quelque part.' },
+    { scene: '02_proche', avatar: SHIVER, who: 'Brume', text: 'Tu grelottes. Ceux d’avant faisaient un cercle de galets, et le bois flotté au milieu.', hint: 'Toucher pour rassembler le bois' },
+    { scene: '05_feu', still: true, who: 'Brume', text: 'Moi, je ne brûle rien. Je n’ai jamais rien réchauffé. … Je souffle quand même ?' },
+    { scene: '05_feu', thought: true, text: 'Ça prend. Enfin.' },
+    { scene: '05_feu', who: 'Brume', text: 'On le verra de loin, ton feu.' },
+    { scene: '06_silhouette', who: 'Brume', text: 'Tu as vu ? Là-bas, sur les rochers. Quelqu’un.' }
+  ],
+  // Le matin, sur l'île : Aster tire une caisse des vagues ; la première Récolte
   recolte: [
-    { art: 'aster', who: 'Aster', text: 'La mer rend ce qu’elle a pris. Ramasse ce qui se ressemble, vite, avant la marée !' }
+    { scene: '10_aster', who: 'Aster', text: 'Ho, toi ! Tu étais sur l’Hirondelle ? Alors tire, elle pèse un âne mort !' },
+    { scene: '10_aster', who: 'Aster', text: 'Aster, navigatrice. Officier de quart, pour être exacte. J’ai nagé vers ton feu toute la nuit.' },
+    { scene: '10_aster', who: 'Aster', text: 'La mer rend ce qu’elle a pris. Ramasse ce qui se ressemble, vite, avant la marée !' }
   ],
-  // Étape 3 : Cannelle grelotte derrière l'épave, puis se redresse devant le feu
+  // Cannelle a regardé le feu toute la nuit ; son souvenir revient devant lui (son petit-neveu, elle en parle plus
+  // tard, sur l'île : LINES.souci)
   cannelle: [
-    { art: 'cannelle', who: 'Cannelle', text: 'Un feu follet ! … Oh. Il est mignon.' },
-    { art: 'cannelle', who: 'Cannelle', text: 'Où est mon Ondin ? Mon petit-neveu !' },
-    { art: 'cannelle-feu', who: 'Cannelle', text: 'Du feu… Je me souviens ! Cuisinière du bord, et fière de l’être !' }
+    { scene: '07_cannelle', who: 'Cannelle', text: 'Un feu ! J’ai cru que je rêvais. Toute la nuit, je l’ai regardé depuis les rochers.' },
+    { scene: '07_cannelle', who: 'Cannelle', text: 'Je peux ? Je ne prends pas de place. Enfin, si. Mais je cuisine.' },
+    { scene: '07_souvenir', who: 'Cannelle', text: 'Les marmites, la cuisine du bord… Cannelle ! Je m’appelle Cannelle. Cuisinière, et pas des pires.' },
+    { scene: '07_souvenir', who: 'Cannelle', text: 'Un feu follet ! … Oh. Il a des yeux de chiot, celui-là.' },
+    { scene: '07_souvenir', who: 'Brume', text: 'Elle.' }
   ],
-  // Étape 4 : Rivet sous une voile échouée
+  // Rivet sous une voile échouée : l'homme qui répare tout n'ose plus rien construire de grand
   rivet: [
-    { art: 'rivet', who: 'Rivet', text: 'Montre-moi tes mains. Hum. On va arranger ça.' },
-    { art: 'rivet', who: 'Rivet', text: 'Un établi, et tout devient possible. Attends… Non. Si ! Commençons simple.' }
+    { scene: '09_rivet', who: 'Rivet', text: 'Une soupe. Je sens une soupe. Sur une île déserte.' },
+    { scene: '09_rivet', who: 'Rivet', text: 'Soit j’ai pris un coup sur la tête, soit… Non. J’ai pris un coup sur la tête.' },
+    { scene: '09_rivet', who: 'Rivet', text: 'Rivet. Horloger. Je répare ce qui se répare. Ton feu tousse : le vent entre par là, et par là.' },
+    { scene: '09_rivet', who: 'Rivet', text: 'Un établi, et tout devient possible. Attends… Non. Si !' },
+    { scene: '09_rivet', who: 'Rivet', text: 'Commençons petit : une clôture. Le petit, je sais encore faire.' }
   ],
-  // Étape 5 : Ondin réveillé à La Source
+  // Ondin réveillé à La Source, Cannelle qui accourt (sa baguette, il en parle ensuite, sur l'île : LINES.baguette)
   ondin: [
-    { art: 'ondin', who: 'Ondin', text: 'J’ai dormi combien de temps ? L’eau a un goût de nuage.' },
-    { art: 'ondin', who: 'Cannelle', text: 'Mon caneton !' },
-    { art: 'ondin', who: 'Ondin', text: 'Ma baguette ne trouve plus rien…' }
+    { scene: '11_ondin', who: 'Brume', text: 'Chut. Celui-là, la brume l’a bercé longtemps.' },
+    { scene: '11_reveil', who: 'Ondin', text: 'J’ai dormi combien de temps ? L’eau a un goût de nuage.' },
+    { scene: '11_reveil', who: 'Cannelle', text: 'Mon caneton ! Mon caneton !' },
+    { scene: '11_reveil', who: 'Ondin', text: 'Tatie ? … C’est toi, Tatie ?' }
   ],
-  // Fin du tutoriel : l'étape « Le Campement »
+  // Fin du tutoriel : l'étape « Le Campement » ; Cannelle a recousu tes habits, Brume compte
   campement: [
-    { art: 'campement', who: 'Brume', text: 'Le feu, l’eau… Il manque un toit. Et le bois flotté s’épuise déjà.' }
+    { scene: '12_habits', who: 'Cannelle', text: 'Tiens. On ne reconstruit pas une île en guenilles.' },
+    { scene: '12_veillee', who: 'Brume', text: 'Un, deux, trois, quatre, cinq…' },
+    { scene: '12_veillee', who: 'Brume', text: 'Je n’avais jamais compté plus loin qu’un.' },
+    { scene: '12_veillee', who: 'Brume', text: 'Le feu, l’eau… Il manque un toit. Et le bois flotté s’épuise déjà.' }
   ]
 };
 
-// Répliques de Brume pendant le jeu (la file du guide : chacune n'est dite qu'une fois)
+// Le Grimoire, quand on lit ce qui est écrit sur sa page (un petit livre de cuir et sa gemme, pour la bulle)
+const BOOK_FACE = `data:image/svg+xml;charset=utf-8,${encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48"><rect x="10" y="5" width="28" height="38" rx="3" fill="#6B2228" stroke="#2A0E0E" stroke-width="2"/><rect x="13" y="8" width="22" height="32" rx="2" fill="none" stroke="#D6AA5A" stroke-width="1.2"/><circle cx="24" cy="24" r="7" fill="none" stroke="#D6AA5A" stroke-width="1.2"/><circle cx="24" cy="24" r="2.6" fill="#C2475A" stroke="#7A5A1E"/></svg>')}`;
+
+// Répliques pendant le jeu (la file du guide : chacune n'est dite qu'une fois). who : le bâtiment de qui parle (son
+// portrait) ; ou name et face : un autre que la troupe ; sans rien, Brume
 export const LINES = {
-  vent: 'Il ne reste que quatre Souffles. Mets deux fois l’Air ici.',
-  pluie: 'Lis l’énigme, puis devine.',
-  seul: 'À toi, sans moi.',
-  nom: 'Écris-le dans le Grimoire : l’île saura qui la rebâtit.',
-  greve: 'Aster t’attend sur la Grève, ton île : la mer y a rendu des caisses.',
-  // Sur l'île (who : le bâtiment de qui parle ; sans lui, Brume)
-  claim: 'Quand je brille, touche-moi : ce que tu as accompli t’attend.',
+  vent: { name: 'Le Grimoire', face: BOOK_FACE, text: '« Mêle l’Air à l’Air, et nomme ce qui naît. »' },
+  pluie: 'Cette page a perdu son nom. Il ne reste qu’une devinette… Tu la lis, toi ?',
+  seul: 'Encore une. Je ne dis rien : je regarde.',
+  nom: 'Signe. Le livre se souviendra de toi, même si tu pars. … Tu ne pars pas, hein ?',
+  greve: 'Le jour se lève… Quelqu’un se débat dans les vagues, sur la Grève !',
+  // Sur l'île
+  claim: 'Je brille ! Touche-moi : ce que tu as fait mérite quelque chose.',
   chaine: { who: 'ponton', text: 'Longue chaîne, mer généreuse. Par tous les alizés !' },
-  bulle: 'Sa bulle dit ce qui lui manque. Comblé, on travaille mieux.',
+  bulle: { who: 'foyer', text: 'Des coquillages crus ? Ma brindille, on n’est pas des sauvages. Donne : je te fais une soupe.' },
   soupe: { who: 'foyer', text: 'Une soupe… Une cuillère pour le corps, une pour l’âme.' },
   puzzle: { who: 'atelier', text: 'Chaque pièce a sa place. Tourne, essaie. Clic !' },
   or: { who: 'atelier', text: 'Le vent veut éteindre le feu. Pose-la là où l’île brille d’or : elle le protégera.' },
-  source: 'J’entends de l’eau… et quelqu’un qui ronfle.',
-  ruban: 'Le Grimoire s’en souvient pour lui. Suis le ruban.',
+  souci: { who: 'foyer', text: 'Mon Ondin… Mon petit-neveu. Il était à côté de moi sur le pont, quand la vague… Il sait nager, hein ?' },
+  source: { who: 'ponton', text: 'De l’eau douce ? Cap au nord-ouest : ça brille, dans la brume. Et ça ronfle. Une source qui ronfle !' },
+  baguette: { who: 'puits', text: 'Avant, ma baguette tirait vers l’eau. Là, plus rien. Comme si on avait éteint la lumière, dedans.' },
+  ruban: 'La mer lui a pris son savoir. Le livre, lui, s’en souvient.',
   chut: { who: 'puits', text: 'Chut… l’eau arrive.' },
-  produit: 'Ce qu’un bâtiment produit t’attend. Et il rend la Récolte plus généreuse.'
+  produit: { who: 'foyer', text: 'Ça, mon caneton, c’est de l’eau.' }
 };

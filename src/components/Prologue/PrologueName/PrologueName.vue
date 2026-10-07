@@ -41,13 +41,15 @@ export default {
   components: { BrumeWisp },
   props: {
     // Invité : la page crée aussi le compte ; sinon, seulement le nom
-    account: { type: Boolean, default: true }
+    account: { type: Boolean, default: true },
+    // Le nom déjà écrit sur la carte d'embarquement
+    initialName: { type: String, default: '' }
   },
   // named : le nom (compte déjà ouvert) ; signing : le nom, juste avant l'inscription (la page se recharge ensuite) ;
   // signed-in : un compte existant retrouvé
   emits: ['named', 'signing', 'unsigned', 'signed-in', 'skip'],
   data() {
-    return { LINES, NAME_MAX, name: '', email: '', password: '', login: false, error: '', busy: false };
+    return { LINES, NAME_MAX, name: this.initialName, email: '', password: '', login: false, error: '', busy: false };
   },
   mounted() {
     this.$refs.name.focus();
