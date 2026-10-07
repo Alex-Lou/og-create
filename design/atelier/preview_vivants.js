@@ -4,7 +4,7 @@ const path = require('path');
 const { unique, row, sheet, animated, write, shoot } = require('./planche');
 const { frame, svg, POSES, EXPRS } = require('./troupe');
 const { STAGES, brumeFrame, brumeEyes, svgB } = require('./brume');
-const { anyaFrame, POSES_A, EXPR_OF, svgA } = require('./anya');
+const { anyaFrame, POSES_A, EXPR_OF, svgA, SAISONS_A } = require('./anya');
 const { cerfFrame, svgC } = require('./cerf');
 const passeur = require('./passeur');
 
@@ -50,13 +50,27 @@ const anim = [];
     if (pose === 'marche') boxes.push({ label: LABEL[name] + ' (miroir)', frames: frames.map(b => svgA(unique(b), 2.4)), timings: t, w: 192, h: 307, mirror: true });
   }
   const xr = [];
-  for (const x of EXPRS.filter(x => !['fache', 'gene', 'rire', 'endormi'].includes(x))) { // Anya est calme et n'élève jamais la voix (§ 8)
+  const XA = EXPRS.filter(x => !['fache', 'gene', 'rire', 'endormi'].includes(x)); // Anya est calme et n'élève jamais la voix (§ 8)
+  for (const x of XA) {
     const frames = [0, 1].map(n => anyaFrame('front', 'repos', n, x));
     frames.forEach((b, n) => write(path.join(LIB, 'anya', `anya_expr_${x}_${n + 1}.svg`), svgA(b)));
     xr.push([svgA(unique(frames[0]), 1.6), XL[x]]);
   }
   rows.push(row('Expressions', xr));
-  shots.push([path.join(OUT, 'planche_anya.png'), sheet('Anya — l\'Âme de l\'Île', 'Repère 80 × 128 (deux fois un naufragé), pieds en (40, 125). Halo de lucioles, fleurs à chaque pas.', rows), 1300]);
+  // le manteau vivant change avec les saisons : l'été est le manteau d'origine (ci-dessus) ; les trois autres saisons dans
+  // toutes les poses et les expressions (anya_<vue>_<pose>_<saison>_<n>, anya_expr_<expression>_<saison>_<n>)
+  for (const saison of SAISONS_A.filter(x => x !== 'ete')) {
+    const cells = [];
+    for (const [name, view, pose, count] of POSES_A) {
+      const frames = [...Array(count).keys()].map(n => anyaFrame(view, pose, n, EXPR_OF[pose], saison));
+      frames.forEach((b, n) => write(path.join(LIB, 'anya', `anya_${name}_${saison}_${n + 1}.svg`), svgA(b)));
+      cells.push([svgA(unique(frames[0]), 1.6), LABEL[name]]);
+      if (name === 'avant_marche') boxes.push({ label: `${LABEL[name]} · ${saison}`, frames: frames.map(b => svgA(unique(b), 2.4)), timings: [260, 260, 260, 260], w: 192, h: 307 });
+    }
+    for (const x of XA) [0, 1].forEach(n => write(path.join(LIB, 'anya', `anya_expr_${x}_${saison}_${n + 1}.svg`), svgA(anyaFrame('front', 'repos', n, x, saison))));
+    rows.push(row(`Manteau · ${saison}`, cells));
+  }
+  shots.push([path.join(OUT, 'planche_anya.png'), sheet('Anya — l\'Âme de l\'Île', 'Repère 80 × 128 (deux fois un naufragé), pieds en (40, 125). Halo de lucioles, fleurs à chaque pas. Le manteau vivant change avec les saisons : l\'été (la feuille verte aux nervures d\'or), le printemps (fleurs de cerisier, papillons), l\'automne (feuilles rousses, glands, plumes de chouette), l\'hiver (fourrure blanche, givre, flocons).', rows), 1300]);
   anim.push(['Anya', boxes]);
 }
 
