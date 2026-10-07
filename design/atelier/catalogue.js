@@ -182,6 +182,7 @@ function moment(id, meta) {
       if (b === 'coins') return { aster: 'tuto-3', rivet: 'tuto-2', cannelle: 'tuto-2', ondin: 'tuto-3', sylve: 'acte-1', galet: 'acte-2', melisse: 'acte-3' }[p[3]];
       if (/torche|caisses|tonneau/.test(nom)) return 'tuto-3';
       if (/^etabli/.test(nom)) return 'tuto-2'; // l'établi que Rivet monte à l'étape 9
+      if (/^bol/.test(nom)) return 'revelation'; // le bol « pour la Dame », dès le Cercle découvert
       return 'tuto-1';
     }
     if (a === 'creations') { const c = nom.split('_')[0]; return c === 'cloture' ? 'tuto-2' : c === 'lanterne' ? 'acte-1' : /\((cimes|landes|marais|dunes|jungle|volcan)\)/.test(meta.nom || '') ? 'acte-4' : 'evolutions'; }
@@ -244,8 +245,7 @@ const statut = id => { for (const [rx, note] of A_REVOIR) if (rx.test(id)) retur
 
 const MANQUANTS = [
   ['acte-1', 'L\'éclat du souvenir retrouvé (le sceau s\'allume, le maître se lève outil en main).'],
-  ['acte-4', 'L\'amie de Tic-Tac (quand on écrit Abeille).'],
-  ['revelation', 'Le bol de soupe « pour la Dame », au bord du Foyer, le soir.']
+  ['acte-4', 'L\'amie de Tic-Tac (quand on écrit Abeille).']
 ];
 
 // --- 4. Le catalogue ---------------------------------------------------------------------------

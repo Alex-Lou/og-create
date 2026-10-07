@@ -897,6 +897,42 @@ function workbench() {
   return o;
 }
 
+// Le bol de soupe « pour la Dame » (acte III : Cannelle le pose chaque soir au bord du Foyer dès que le Cercle est
+// découvert) : une pierre plate, le bol de bois fumant (soupe de courge, un trait de crème, des herbes), la cuillère,
+// une fleur des champs en offrande, une bougie qui le fait voir la nuit ; la vapeur ondule et la flamme vacille (3 images)
+function soupBowl(n = 0) {
+  let o = shadow(0, 0, 0.42, 0.16);
+  // la pierre plate (épaisseur, dessus clair)
+  const [sx, sy] = P(0, 0, 0);
+  o += ell(sx, sy + 0.4, 19.6, 9.6, OUT) + ell(sx, sy, 18.8, 8.8, STONE.right) + ell(sx - 0.4, sy - 2.2, 18.2, 8.2, STONE.top, EDGE)
+    + ell(sx - 6, sy - 3.6, 5, 1.6, 'rgba(255,255,255,.35)');
+  // la bougie à droite : sa lueur, la cire, la flamme qui vacille
+  {
+    const [x, y] = P(0.26, -0.04, 3), g = id('bolg'), fl = [0, 0.6, -0.5][n % 3], h = [4.2, 4.8, 3.8][n % 3];
+    o += `<defs><radialGradient id="${g}"><stop offset="0" stop-color="#FFD98A" stop-opacity="0.55"/><stop offset="1" stop-color="#FFD98A" stop-opacity="0"/></radialGradient></defs><ellipse cx="${f2(x)}" cy="${f2(y - 9)}" rx="14" ry="12" fill="url(#${g})"/>`;
+    o += `<rect x="${f2(x - 1.5)}" y="${f2(y - 6.4)}" width="3" height="6.4" rx="0.8" fill="#F4ECD6"${EDGE}/>` + ell(x, y - 6.4, 1.5, 0.6, '#E6DCC4', EDGE) + ln([x, y - 6.6], [x, y - 7.6], OUT, 0.5);
+    o += `<path d="M${f2(x - 1)},${f2(y - 7.4)} Q${f2(x - 1.2 + fl)},${f2(y - 7.4 - h * 0.6)} ${f2(x + fl)},${f2(y - 7.4 - h)} Q${f2(x + 1.2 + fl)},${f2(y - 7.4 - h * 0.6)} ${f2(x + 1)},${f2(y - 7.4)} Z" fill="#FFB347"${EDGE}/>` + ell(x + fl * 0.4, y - 8.4, 0.5, 1, '#FFF3B0');
+  }
+  // le bol de bois : le corps arrondi, le bord, la soupe, la crème, les herbes, la cuillère
+  const [x, y0] = P(-0.02, 0.06, 3), rx = 8, ry = 4, yr = y0 - 7;
+  o += `<path d="M${f2(x - rx)},${f2(yr)} C${f2(x - rx)},${f2(yr + 5.6)} ${f2(x - rx * 0.45)},${f2(yr + 7.6)} ${f2(x)},${f2(yr + 7.6)} C${f2(x + rx * 0.45)},${f2(yr + 7.6)} ${f2(x + rx)},${f2(yr + 5.6)} ${f2(x + rx)},${f2(yr)} Z" fill="#A8743F"${EDGE}/>`
+    + `<path d="M${f2(x + rx * 0.2)},${f2(yr + 7.4)} C${f2(x + rx * 0.6)},${f2(yr + 7)} ${f2(x + rx)},${f2(yr + 5.2)} ${f2(x + rx)},${f2(yr)} L${f2(x + rx * 0.62)},${f2(yr + 1)} Z" fill="rgba(70,40,20,.22)"/>`
+    + ln([x - rx * 0.7, yr + 2.6], [x - rx * 0.5, yr + 5], 'rgba(255,255,255,.3)', 0.8);
+  o += ell(x, yr, rx, ry, '#C9935A', EDGE) + ell(x, yr + 0.5, rx * 0.8, ry * 0.7, '#E8A04A', ` stroke="${OUT}" stroke-width="0.5"`);
+  o += `<path d="M${f2(x - 2.4)},${f2(yr + 0.6)} Q${f2(x - 0.6)},${f2(yr - 0.8)} ${f2(x + 0.8)},${f2(yr + 0.4)} Q${f2(x + 1.6)},${f2(yr + 1.4)} ${f2(x + 0.2)},${f2(yr + 1.4)}" fill="none" stroke="#FFF2D6" stroke-width="0.8" stroke-linecap="round"/>`
+    + [[-3.6, 0.2], [2.8, -0.4], [-1, 1.6]].map(([dx, dy]) => ell(x + dx, yr + 0.5 + dy, 0.6, 0.35, '#6E9E50')).join('');
+  o += tk([x + 2.4, yr + 0.4], [x + 9.6, yr - 5.4], '#C9935A', 1.1) + ell(x + 2, yr + 0.6, 1.6, 0.9, '#C9935A', EDGE);
+  // la fleur des champs posée devant, à gauche
+  { const [x, y] = P(-0.12, 0.26, 3); o += pathTk(`M${f2(x + 3)},${f2(y + 1.6)} Q${f2(x + 1)},${f2(y + 0.4)} ${f2(x - 1)},${f2(y - 1.2)}`, '#5C8A45', 0.6)
+      + [0, 72, 144, 216, 288].map(a => ell(x - 1 + Math.cos(a * Math.PI / 180) * 1.6, y - 1.2 + Math.sin(a * Math.PI / 180) * 0.9, 1.1, 0.7, '#FFFFFF', ` stroke="${OUT}" stroke-width="0.35"`)).join('') + ell(x - 1, y - 1.2, 0.8, 0.55, '#F2C94C', ` stroke="${OUT}" stroke-width="0.35"`); }
+  // la vapeur : trois volutes qui montent en ondulant
+  for (const [i, dx] of [-3, 0.4, 3.6].entries()) {
+    const ph = ((n + i) % 3) - 1, top = yr - 13 - (i % 2) * 3;
+    o += `<path d="M${f2(x + dx)},${f2(yr - 1.4)} Q${f2(x + dx + 2.4 * ph)},${f2(yr - 5)} ${f2(x + dx)},${f2(yr - 8.4)} Q${f2(x + dx - 2.4 * ph)},${f2(yr - 11.4)} ${f2(x + dx + 0.6 * ph)},${f2(top)}" fill="none" stroke="#FFFFFF" stroke-width="1.3" stroke-linecap="round" opacity="${[0.75, 0.6, 0.7][i]}"/>`;
+  }
+  return o;
+}
+
 export const CAMP = {
   feu_debris: { frame: PROP_BOX, n: 3, label: 'Feu de débris', step: 'T1', draw: n => driftFire(0, 0, 1, n) },
   hirondelle: { frame: { x: -88, y: -100, w: 176, h: 150 }, n: 1, label: 'Épave de l\'Hirondelle', step: 'T1', draw: () => hirondelle() },
@@ -927,6 +963,7 @@ export const CAMP = {
   torche: { frame: PROP_BOX, n: 3, label: 'Torche de bois flotté', step: 'I', draw: n => torch(n) },
   sos: { frame: PROP_BOX, n: 1, label: 'SOS en galets', step: 'T2', draw: () => sos() },
   caisses: { frame: PROP_BOX, n: 1, label: 'Pile de caisses', step: 'T2', draw: () => crateStack() },
-  etabli: { frame: PROP_BOX, n: 1, label: 'Établi de Rivet', step: 'T4', draw: () => workbench() }
+  etabli: { frame: PROP_BOX, n: 1, label: 'Établi de Rivet', step: 'T4', draw: () => workbench() },
+  bol: { frame: PROP_BOX, n: 3, label: 'Bol de soupe « pour la Dame »', step: 'III', draw: n => soupBowl(n) }
 };
 export { crate, plank, stick, rope, stone, dune, kelp, shell, logLying, driftFire, DRIFT, CRATE, CANVAS, SAND, ROPE, IRON, ln, tk, pathTk, ell, iso, dOf, id, OUT, f2, pts };

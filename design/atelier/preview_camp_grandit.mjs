@@ -32,7 +32,8 @@ const AT = {
   feu_debris: [0, 0], hirondelle: BIG(212),
   galet: BIG(248), cannelle: BIG(288), ondin: BIG(330), rivet: BIG(14), melisse: BIG(66), sylve: BIG(114), aster: BIG(160),
   tente: BIG(38, 1.28), hamac: BIG(90, 1.18),
-  caisses: SMALL(205), sos: SMALL(250), etendoir: SMALL(296), tonneau: SMALL(336), rondins: SMALL(18), torche: SMALL(72), filet: SMALL(122), paillasse: SMALL(166), etabli: SMALL(44)
+  caisses: SMALL(205), sos: SMALL(250), etendoir: SMALL(296), tonneau: SMALL(336), rondins: SMALL(18), torche: SMALL(72), filet: SMALL(122), paillasse: SMALL(166), etabli: SMALL(44),
+  bol: ring(28, 46, 24) // au bord du feu
 };
 // ce qui s'efface (remplacé par un bâtiment du jeu, ou par l'établi de l'abri de Rivet), à partir de quelle étape
 const GONE = { cannelle_debris: 'II', galet_debris: 'III', etabli: 'I' };
