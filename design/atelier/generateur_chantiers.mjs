@@ -42,17 +42,19 @@ export function echafaudageDEvolution(emprise, couche, n = 1) {
   return { svg: svgOf(cadre, echafaudage(emprise, couche, n - 1)), cadre, ms_par_image: MS.etape };
 }
 
-// Les cultures par étapes (cultures.mjs) : une parcelle d'une case, du bêchage à la croissance ; à la fin, le champ mûr
-// de l'annexe (decor/annexes/champ/champ_<culture>) prend le relais, dans le même cadre
-export const CULTURES = { cultures: C.CULTURES, etapes: C.ETAPES, cadre: C.CADRE.map(v => v * K), images: C.IMAGES };
-// Les parts du temps d'une culture qui pousse : chaque étape commence à cette part ; à 1, le champ est mûr
-export const PART_CULTURE = { bechage: 0, sillons: 0.15, semis: 0.3, pousses: 0.5, croissance: 0.7 };
+// Les cultures par étapes (cultures.mjs) : une parcelle d'une case, du bêchage à la croissance ; à la fin, pour le blé,
+// les carottes et les citrouilles, le champ mûr de l'annexe (decor/annexes/champ/champ_<culture>) prend le relais dans le
+// même cadre ; les cultures du potager (laitues, choux, tomates, haricots, fraises, pommes de terre) ont leur étape « mur »
+export const CULTURES = { cultures: C.CULTURES, etapes: Object.fromEntries(C.CULTURES.map(c => [c, C.etapesDe(c)])), cadre: C.CADRE.map(v => v * K), images: C.IMAGES };
+// Les parts du temps d'une culture qui pousse : chaque étape commence à cette part ; à 1, la culture est mûre (le champ de
+// l'annexe, ou l'étape « mur »)
+export const PART_CULTURE = { bechage: 0, sillons: 0.15, semis: 0.3, pousses: 0.5, croissance: 0.7, mur: 1 };
 export const MS_CULTURE = { etape: 280, spectacle: 450 };
-// Une étape d'une culture : culture (ble, carottes, citrouilles), étape (bechage, sillons, semis, pousses, croissance), image n
-// de 1 à 3
+// Une étape d'une culture : culture (CULTURES.cultures), étape (bechage, sillons, semis, pousses, croissance, et mur pour
+// les cultures du potager), image n de 1 à 3
 export function etapeDeCulture(culture, etape, n = 1) {
   if (!C.CULTURES.includes(culture)) throw new Error(`culture inconnue : ${culture} (${C.CULTURES.join(', ')})`);
-  if (!C.ETAPES.includes(etape)) throw new Error(`étape inconnue : ${etape} (${C.ETAPES.join(', ')})`);
+  if (!C.etapesDe(culture).includes(etape)) throw new Error(`étape inconnue : ${etape} (${C.etapesDe(culture).join(', ')})`);
   if (!(+n >= 1 && +n <= C.IMAGES)) throw new Error(`image ${n} : de 1 à ${C.IMAGES}`);
   return { svg: svgOf(CULTURES.cadre, C.etape(culture, etape, n - 1)), cadre: CULTURES.cadre, ms_par_image: MS_CULTURE.etape };
 }
@@ -60,7 +62,7 @@ export function etapeDeCulture(culture, etape, n = 1) {
 // Tout ce que la famille sait dessiner, avec le fichier de la bibliothèque qui lui correspond (sous svg/)
 export function liste() {
   const out = [];
-  for (const c of C.CULTURES) for (const e of C.ETAPES) for (let n = 1; n <= C.IMAGES; n++) out.push({ fichier: `decor/cultures/${c}/culture_${c}_${e}_${n}.svg`, fonction: 'etapeDeCulture', args: [c, e, n] });
+  for (const c of C.CULTURES) for (const e of C.etapesDe(c)) for (let n = 1; n <= C.IMAGES; n++) out.push({ fichier: `decor/cultures/${c}/culture_${c}_${e}_${n}.svg`, fonction: 'etapeDeCulture', args: [c, e, n] });
   for (const em of Object.keys(EMPRISES)) {
     const d = `batiments/montage/${em}`;
     for (const e of ETAPES) for (let n = 1; n <= IMAGES.etape; n++) out.push({ fichier: `${d}/montage_${em}_${e}_${n}.svg`, fonction: 'etapeDuMontage', args: [em, e, n] });

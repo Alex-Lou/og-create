@@ -114316,6 +114316,126 @@
    "statut": "ok"
   },
   {
+   "id": "decor/cultures/choux/culture_choux_bechage",
+   "rubrique": "decor",
+   "titre": "Les choux : le bêchage (la terre retournée en mottes, la bêche plantée, un ver de terre)",
+   "images": 3,
+   "fichiers": [
+    "svg/decor/cultures/choux/culture_choux_bechage_1.svg",
+    "svg/decor/cultures/choux/culture_choux_bechage_2.svg",
+    "svg/decor/cultures/choux/culture_choux_bechage_3.svg"
+   ],
+   "cadre": [
+    -42.5,
+    -37.5,
+    85,
+    60
+   ],
+   "ms_par_image": 280,
+   "parcours": "evolutions",
+   "statut": "ok"
+  },
+  {
+   "id": "decor/cultures/choux/culture_choux_croissance",
+   "rubrique": "decor",
+   "titre": "Les choux : la croissance (les plants grandissent, encore verts)",
+   "images": 3,
+   "fichiers": [
+    "svg/decor/cultures/choux/culture_choux_croissance_1.svg",
+    "svg/decor/cultures/choux/culture_choux_croissance_2.svg",
+    "svg/decor/cultures/choux/culture_choux_croissance_3.svg"
+   ],
+   "cadre": [
+    -42.5,
+    -37.5,
+    85,
+    60
+   ],
+   "ms_par_image": 280,
+   "parcours": "evolutions",
+   "statut": "ok"
+  },
+  {
+   "id": "decor/cultures/choux/culture_choux_mur",
+   "rubrique": "decor",
+   "titre": "Les choux : mûrs (une piéride)",
+   "images": 3,
+   "fichiers": [
+    "svg/decor/cultures/choux/culture_choux_mur_1.svg",
+    "svg/decor/cultures/choux/culture_choux_mur_2.svg",
+    "svg/decor/cultures/choux/culture_choux_mur_3.svg"
+   ],
+   "cadre": [
+    -42.5,
+    -37.5,
+    85,
+    60
+   ],
+   "ms_par_image": 280,
+   "parcours": "evolutions",
+   "statut": "ok"
+  },
+  {
+   "id": "decor/cultures/choux/culture_choux_pousses",
+   "rubrique": "decor",
+   "titre": "Les choux : les pousses",
+   "images": 3,
+   "fichiers": [
+    "svg/decor/cultures/choux/culture_choux_pousses_1.svg",
+    "svg/decor/cultures/choux/culture_choux_pousses_2.svg",
+    "svg/decor/cultures/choux/culture_choux_pousses_3.svg"
+   ],
+   "cadre": [
+    -42.5,
+    -37.5,
+    85,
+    60
+   ],
+   "ms_par_image": 280,
+   "parcours": "evolutions",
+   "statut": "ok"
+  },
+  {
+   "id": "decor/cultures/choux/culture_choux_semis",
+   "rubrique": "decor",
+   "titre": "Les choux : le semis (les graines dans les sillons, le sachet, un moineau qui picore)",
+   "images": 3,
+   "fichiers": [
+    "svg/decor/cultures/choux/culture_choux_semis_1.svg",
+    "svg/decor/cultures/choux/culture_choux_semis_2.svg",
+    "svg/decor/cultures/choux/culture_choux_semis_3.svg"
+   ],
+   "cadre": [
+    -42.5,
+    -37.5,
+    85,
+    60
+   ],
+   "ms_par_image": 280,
+   "parcours": "evolutions",
+   "statut": "ok"
+  },
+  {
+   "id": "decor/cultures/choux/culture_choux_sillons",
+   "rubrique": "decor",
+   "titre": "Les choux : les sillons (tracés, le râteau posé au bord)",
+   "images": 3,
+   "fichiers": [
+    "svg/decor/cultures/choux/culture_choux_sillons_1.svg",
+    "svg/decor/cultures/choux/culture_choux_sillons_2.svg",
+    "svg/decor/cultures/choux/culture_choux_sillons_3.svg"
+   ],
+   "cadre": [
+    -42.5,
+    -37.5,
+    85,
+    60
+   ],
+   "ms_par_image": 280,
+   "parcours": "evolutions",
+   "statut": "ok"
+  },
+  {
    "id": "decor/cultures/citrouilles/culture_citrouilles_bechage",
    "rubrique": "decor",
    "titre": "Les citrouilles : le bêchage (la terre retournée en mottes, la bêche plantée, un ver de terre)",
@@ -114404,6 +114524,606 @@
     "svg/decor/cultures/citrouilles/culture_citrouilles_sillons_1.svg",
     "svg/decor/cultures/citrouilles/culture_citrouilles_sillons_2.svg",
     "svg/decor/cultures/citrouilles/culture_citrouilles_sillons_3.svg"
+   ],
+   "cadre": [
+    -42.5,
+    -37.5,
+    85,
+    60
+   ],
+   "ms_par_image": 280,
+   "parcours": "evolutions",
+   "statut": "ok"
+  },
+  {
+   "id": "decor/cultures/fraises/culture_fraises_bechage",
+   "rubrique": "decor",
+   "titre": "Les fraises : le bêchage (la terre retournée en mottes, la bêche plantée, un ver de terre)",
+   "images": 3,
+   "fichiers": [
+    "svg/decor/cultures/fraises/culture_fraises_bechage_1.svg",
+    "svg/decor/cultures/fraises/culture_fraises_bechage_2.svg",
+    "svg/decor/cultures/fraises/culture_fraises_bechage_3.svg"
+   ],
+   "cadre": [
+    -42.5,
+    -37.5,
+    85,
+    60
+   ],
+   "ms_par_image": 280,
+   "parcours": "evolutions",
+   "statut": "ok"
+  },
+  {
+   "id": "decor/cultures/fraises/culture_fraises_croissance",
+   "rubrique": "decor",
+   "titre": "Les fraises : la croissance (les plants grandissent, encore verts)",
+   "images": 3,
+   "fichiers": [
+    "svg/decor/cultures/fraises/culture_fraises_croissance_1.svg",
+    "svg/decor/cultures/fraises/culture_fraises_croissance_2.svg",
+    "svg/decor/cultures/fraises/culture_fraises_croissance_3.svg"
+   ],
+   "cadre": [
+    -42.5,
+    -37.5,
+    85,
+    60
+   ],
+   "ms_par_image": 280,
+   "parcours": "evolutions",
+   "statut": "ok"
+  },
+  {
+   "id": "decor/cultures/fraises/culture_fraises_mur",
+   "rubrique": "decor",
+   "titre": "Les fraises : mûres (sur la paille)",
+   "images": 3,
+   "fichiers": [
+    "svg/decor/cultures/fraises/culture_fraises_mur_1.svg",
+    "svg/decor/cultures/fraises/culture_fraises_mur_2.svg",
+    "svg/decor/cultures/fraises/culture_fraises_mur_3.svg"
+   ],
+   "cadre": [
+    -42.5,
+    -37.5,
+    85,
+    60
+   ],
+   "ms_par_image": 280,
+   "parcours": "evolutions",
+   "statut": "ok"
+  },
+  {
+   "id": "decor/cultures/fraises/culture_fraises_pousses",
+   "rubrique": "decor",
+   "titre": "Les fraises : les pousses",
+   "images": 3,
+   "fichiers": [
+    "svg/decor/cultures/fraises/culture_fraises_pousses_1.svg",
+    "svg/decor/cultures/fraises/culture_fraises_pousses_2.svg",
+    "svg/decor/cultures/fraises/culture_fraises_pousses_3.svg"
+   ],
+   "cadre": [
+    -42.5,
+    -37.5,
+    85,
+    60
+   ],
+   "ms_par_image": 280,
+   "parcours": "evolutions",
+   "statut": "ok"
+  },
+  {
+   "id": "decor/cultures/fraises/culture_fraises_semis",
+   "rubrique": "decor",
+   "titre": "Les fraises : le repiquage (les petits plants dans les sillons, les godets)",
+   "images": 3,
+   "fichiers": [
+    "svg/decor/cultures/fraises/culture_fraises_semis_1.svg",
+    "svg/decor/cultures/fraises/culture_fraises_semis_2.svg",
+    "svg/decor/cultures/fraises/culture_fraises_semis_3.svg"
+   ],
+   "cadre": [
+    -42.5,
+    -37.5,
+    85,
+    60
+   ],
+   "ms_par_image": 280,
+   "parcours": "evolutions",
+   "statut": "ok"
+  },
+  {
+   "id": "decor/cultures/fraises/culture_fraises_sillons",
+   "rubrique": "decor",
+   "titre": "Les fraises : les sillons (tracés, le râteau posé au bord)",
+   "images": 3,
+   "fichiers": [
+    "svg/decor/cultures/fraises/culture_fraises_sillons_1.svg",
+    "svg/decor/cultures/fraises/culture_fraises_sillons_2.svg",
+    "svg/decor/cultures/fraises/culture_fraises_sillons_3.svg"
+   ],
+   "cadre": [
+    -42.5,
+    -37.5,
+    85,
+    60
+   ],
+   "ms_par_image": 280,
+   "parcours": "evolutions",
+   "statut": "ok"
+  },
+  {
+   "id": "decor/cultures/haricots/culture_haricots_bechage",
+   "rubrique": "decor",
+   "titre": "Les haricots : le bêchage (la terre retournée en mottes, la bêche plantée, un ver de terre)",
+   "images": 3,
+   "fichiers": [
+    "svg/decor/cultures/haricots/culture_haricots_bechage_1.svg",
+    "svg/decor/cultures/haricots/culture_haricots_bechage_2.svg",
+    "svg/decor/cultures/haricots/culture_haricots_bechage_3.svg"
+   ],
+   "cadre": [
+    -42.5,
+    -37.5,
+    85,
+    60
+   ],
+   "ms_par_image": 280,
+   "parcours": "evolutions",
+   "statut": "ok"
+  },
+  {
+   "id": "decor/cultures/haricots/culture_haricots_croissance",
+   "rubrique": "decor",
+   "titre": "Les haricots : la croissance (les plants grandissent, encore verts)",
+   "images": 3,
+   "fichiers": [
+    "svg/decor/cultures/haricots/culture_haricots_croissance_1.svg",
+    "svg/decor/cultures/haricots/culture_haricots_croissance_2.svg",
+    "svg/decor/cultures/haricots/culture_haricots_croissance_3.svg"
+   ],
+   "cadre": [
+    -42.5,
+    -37.5,
+    85,
+    60
+   ],
+   "ms_par_image": 280,
+   "parcours": "evolutions",
+   "statut": "ok"
+  },
+  {
+   "id": "decor/cultures/haricots/culture_haricots_mur",
+   "rubrique": "decor",
+   "titre": "Les haricots : mûrs (les gousses, une abeille)",
+   "images": 3,
+   "fichiers": [
+    "svg/decor/cultures/haricots/culture_haricots_mur_1.svg",
+    "svg/decor/cultures/haricots/culture_haricots_mur_2.svg",
+    "svg/decor/cultures/haricots/culture_haricots_mur_3.svg"
+   ],
+   "cadre": [
+    -42.5,
+    -37.5,
+    85,
+    60
+   ],
+   "ms_par_image": 280,
+   "parcours": "evolutions",
+   "statut": "ok"
+  },
+  {
+   "id": "decor/cultures/haricots/culture_haricots_pousses",
+   "rubrique": "decor",
+   "titre": "Les haricots : les pousses",
+   "images": 3,
+   "fichiers": [
+    "svg/decor/cultures/haricots/culture_haricots_pousses_1.svg",
+    "svg/decor/cultures/haricots/culture_haricots_pousses_2.svg",
+    "svg/decor/cultures/haricots/culture_haricots_pousses_3.svg"
+   ],
+   "cadre": [
+    -42.5,
+    -37.5,
+    85,
+    60
+   ],
+   "ms_par_image": 280,
+   "parcours": "evolutions",
+   "statut": "ok"
+  },
+  {
+   "id": "decor/cultures/haricots/culture_haricots_semis",
+   "rubrique": "decor",
+   "titre": "Les haricots : le semis (les graines dans les sillons, le sachet, un moineau qui picore)",
+   "images": 3,
+   "fichiers": [
+    "svg/decor/cultures/haricots/culture_haricots_semis_1.svg",
+    "svg/decor/cultures/haricots/culture_haricots_semis_2.svg",
+    "svg/decor/cultures/haricots/culture_haricots_semis_3.svg"
+   ],
+   "cadre": [
+    -42.5,
+    -37.5,
+    85,
+    60
+   ],
+   "ms_par_image": 280,
+   "parcours": "evolutions",
+   "statut": "ok"
+  },
+  {
+   "id": "decor/cultures/haricots/culture_haricots_sillons",
+   "rubrique": "decor",
+   "titre": "Les haricots : les sillons (tracés, le râteau posé au bord)",
+   "images": 3,
+   "fichiers": [
+    "svg/decor/cultures/haricots/culture_haricots_sillons_1.svg",
+    "svg/decor/cultures/haricots/culture_haricots_sillons_2.svg",
+    "svg/decor/cultures/haricots/culture_haricots_sillons_3.svg"
+   ],
+   "cadre": [
+    -42.5,
+    -37.5,
+    85,
+    60
+   ],
+   "ms_par_image": 280,
+   "parcours": "evolutions",
+   "statut": "ok"
+  },
+  {
+   "id": "decor/cultures/laitues/culture_laitues_bechage",
+   "rubrique": "decor",
+   "titre": "Les laitues : le bêchage (la terre retournée en mottes, la bêche plantée, un ver de terre)",
+   "images": 3,
+   "fichiers": [
+    "svg/decor/cultures/laitues/culture_laitues_bechage_1.svg",
+    "svg/decor/cultures/laitues/culture_laitues_bechage_2.svg",
+    "svg/decor/cultures/laitues/culture_laitues_bechage_3.svg"
+   ],
+   "cadre": [
+    -42.5,
+    -37.5,
+    85,
+    60
+   ],
+   "ms_par_image": 280,
+   "parcours": "evolutions",
+   "statut": "ok"
+  },
+  {
+   "id": "decor/cultures/laitues/culture_laitues_croissance",
+   "rubrique": "decor",
+   "titre": "Les laitues : la croissance (les plants grandissent, encore verts)",
+   "images": 3,
+   "fichiers": [
+    "svg/decor/cultures/laitues/culture_laitues_croissance_1.svg",
+    "svg/decor/cultures/laitues/culture_laitues_croissance_2.svg",
+    "svg/decor/cultures/laitues/culture_laitues_croissance_3.svg"
+   ],
+   "cadre": [
+    -42.5,
+    -37.5,
+    85,
+    60
+   ],
+   "ms_par_image": 280,
+   "parcours": "evolutions",
+   "statut": "ok"
+  },
+  {
+   "id": "decor/cultures/laitues/culture_laitues_mur",
+   "rubrique": "decor",
+   "titre": "Les laitues : mûres (un escargot)",
+   "images": 3,
+   "fichiers": [
+    "svg/decor/cultures/laitues/culture_laitues_mur_1.svg",
+    "svg/decor/cultures/laitues/culture_laitues_mur_2.svg",
+    "svg/decor/cultures/laitues/culture_laitues_mur_3.svg"
+   ],
+   "cadre": [
+    -42.5,
+    -37.5,
+    85,
+    60
+   ],
+   "ms_par_image": 280,
+   "parcours": "evolutions",
+   "statut": "ok"
+  },
+  {
+   "id": "decor/cultures/laitues/culture_laitues_pousses",
+   "rubrique": "decor",
+   "titre": "Les laitues : les pousses",
+   "images": 3,
+   "fichiers": [
+    "svg/decor/cultures/laitues/culture_laitues_pousses_1.svg",
+    "svg/decor/cultures/laitues/culture_laitues_pousses_2.svg",
+    "svg/decor/cultures/laitues/culture_laitues_pousses_3.svg"
+   ],
+   "cadre": [
+    -42.5,
+    -37.5,
+    85,
+    60
+   ],
+   "ms_par_image": 280,
+   "parcours": "evolutions",
+   "statut": "ok"
+  },
+  {
+   "id": "decor/cultures/laitues/culture_laitues_semis",
+   "rubrique": "decor",
+   "titre": "Les laitues : le semis (les graines dans les sillons, le sachet, un moineau qui picore)",
+   "images": 3,
+   "fichiers": [
+    "svg/decor/cultures/laitues/culture_laitues_semis_1.svg",
+    "svg/decor/cultures/laitues/culture_laitues_semis_2.svg",
+    "svg/decor/cultures/laitues/culture_laitues_semis_3.svg"
+   ],
+   "cadre": [
+    -42.5,
+    -37.5,
+    85,
+    60
+   ],
+   "ms_par_image": 280,
+   "parcours": "evolutions",
+   "statut": "ok"
+  },
+  {
+   "id": "decor/cultures/laitues/culture_laitues_sillons",
+   "rubrique": "decor",
+   "titre": "Les laitues : les sillons (tracés, le râteau posé au bord)",
+   "images": 3,
+   "fichiers": [
+    "svg/decor/cultures/laitues/culture_laitues_sillons_1.svg",
+    "svg/decor/cultures/laitues/culture_laitues_sillons_2.svg",
+    "svg/decor/cultures/laitues/culture_laitues_sillons_3.svg"
+   ],
+   "cadre": [
+    -42.5,
+    -37.5,
+    85,
+    60
+   ],
+   "ms_par_image": 280,
+   "parcours": "evolutions",
+   "statut": "ok"
+  },
+  {
+   "id": "decor/cultures/pommes_de_terre/culture_pommes_de_terre_bechage",
+   "rubrique": "decor",
+   "titre": "Les pommes de terre : le bêchage (la terre retournée en mottes, la bêche plantée, un ver de terre)",
+   "images": 3,
+   "fichiers": [
+    "svg/decor/cultures/pommes_de_terre/culture_pommes_de_terre_bechage_1.svg",
+    "svg/decor/cultures/pommes_de_terre/culture_pommes_de_terre_bechage_2.svg",
+    "svg/decor/cultures/pommes_de_terre/culture_pommes_de_terre_bechage_3.svg"
+   ],
+   "cadre": [
+    -42.5,
+    -37.5,
+    85,
+    60
+   ],
+   "ms_par_image": 280,
+   "parcours": "evolutions",
+   "statut": "ok"
+  },
+  {
+   "id": "decor/cultures/pommes_de_terre/culture_pommes_de_terre_croissance",
+   "rubrique": "decor",
+   "titre": "Les pommes de terre : la croissance (les plants grandissent, encore verts)",
+   "images": 3,
+   "fichiers": [
+    "svg/decor/cultures/pommes_de_terre/culture_pommes_de_terre_croissance_1.svg",
+    "svg/decor/cultures/pommes_de_terre/culture_pommes_de_terre_croissance_2.svg",
+    "svg/decor/cultures/pommes_de_terre/culture_pommes_de_terre_croissance_3.svg"
+   ],
+   "cadre": [
+    -42.5,
+    -37.5,
+    85,
+    60
+   ],
+   "ms_par_image": 280,
+   "parcours": "evolutions",
+   "statut": "ok"
+  },
+  {
+   "id": "decor/cultures/pommes_de_terre/culture_pommes_de_terre_mur",
+   "rubrique": "decor",
+   "titre": "Les pommes de terre : mûres (le feuillage jaunit, des pommes de terre affleurent)",
+   "images": 3,
+   "fichiers": [
+    "svg/decor/cultures/pommes_de_terre/culture_pommes_de_terre_mur_1.svg",
+    "svg/decor/cultures/pommes_de_terre/culture_pommes_de_terre_mur_2.svg",
+    "svg/decor/cultures/pommes_de_terre/culture_pommes_de_terre_mur_3.svg"
+   ],
+   "cadre": [
+    -42.5,
+    -37.5,
+    85,
+    60
+   ],
+   "ms_par_image": 280,
+   "parcours": "evolutions",
+   "statut": "ok"
+  },
+  {
+   "id": "decor/cultures/pommes_de_terre/culture_pommes_de_terre_pousses",
+   "rubrique": "decor",
+   "titre": "Les pommes de terre : les pousses",
+   "images": 3,
+   "fichiers": [
+    "svg/decor/cultures/pommes_de_terre/culture_pommes_de_terre_pousses_1.svg",
+    "svg/decor/cultures/pommes_de_terre/culture_pommes_de_terre_pousses_2.svg",
+    "svg/decor/cultures/pommes_de_terre/culture_pommes_de_terre_pousses_3.svg"
+   ],
+   "cadre": [
+    -42.5,
+    -37.5,
+    85,
+    60
+   ],
+   "ms_par_image": 280,
+   "parcours": "evolutions",
+   "statut": "ok"
+  },
+  {
+   "id": "decor/cultures/pommes_de_terre/culture_pommes_de_terre_semis",
+   "rubrique": "decor",
+   "titre": "Les pommes de terre : la plantation (les pommes de terre germées dans les sillons, le panier)",
+   "images": 3,
+   "fichiers": [
+    "svg/decor/cultures/pommes_de_terre/culture_pommes_de_terre_semis_1.svg",
+    "svg/decor/cultures/pommes_de_terre/culture_pommes_de_terre_semis_2.svg",
+    "svg/decor/cultures/pommes_de_terre/culture_pommes_de_terre_semis_3.svg"
+   ],
+   "cadre": [
+    -42.5,
+    -37.5,
+    85,
+    60
+   ],
+   "ms_par_image": 280,
+   "parcours": "evolutions",
+   "statut": "ok"
+  },
+  {
+   "id": "decor/cultures/pommes_de_terre/culture_pommes_de_terre_sillons",
+   "rubrique": "decor",
+   "titre": "Les pommes de terre : les sillons (tracés, le râteau posé au bord)",
+   "images": 3,
+   "fichiers": [
+    "svg/decor/cultures/pommes_de_terre/culture_pommes_de_terre_sillons_1.svg",
+    "svg/decor/cultures/pommes_de_terre/culture_pommes_de_terre_sillons_2.svg",
+    "svg/decor/cultures/pommes_de_terre/culture_pommes_de_terre_sillons_3.svg"
+   ],
+   "cadre": [
+    -42.5,
+    -37.5,
+    85,
+    60
+   ],
+   "ms_par_image": 280,
+   "parcours": "evolutions",
+   "statut": "ok"
+  },
+  {
+   "id": "decor/cultures/tomates/culture_tomates_bechage",
+   "rubrique": "decor",
+   "titre": "Les tomates : le bêchage (la terre retournée en mottes, la bêche plantée, un ver de terre)",
+   "images": 3,
+   "fichiers": [
+    "svg/decor/cultures/tomates/culture_tomates_bechage_1.svg",
+    "svg/decor/cultures/tomates/culture_tomates_bechage_2.svg",
+    "svg/decor/cultures/tomates/culture_tomates_bechage_3.svg"
+   ],
+   "cadre": [
+    -42.5,
+    -37.5,
+    85,
+    60
+   ],
+   "ms_par_image": 280,
+   "parcours": "evolutions",
+   "statut": "ok"
+  },
+  {
+   "id": "decor/cultures/tomates/culture_tomates_croissance",
+   "rubrique": "decor",
+   "titre": "Les tomates : la croissance (les plants grandissent, encore verts)",
+   "images": 3,
+   "fichiers": [
+    "svg/decor/cultures/tomates/culture_tomates_croissance_1.svg",
+    "svg/decor/cultures/tomates/culture_tomates_croissance_2.svg",
+    "svg/decor/cultures/tomates/culture_tomates_croissance_3.svg"
+   ],
+   "cadre": [
+    -42.5,
+    -37.5,
+    85,
+    60
+   ],
+   "ms_par_image": 280,
+   "parcours": "evolutions",
+   "statut": "ok"
+  },
+  {
+   "id": "decor/cultures/tomates/culture_tomates_mur",
+   "rubrique": "decor",
+   "titre": "Les tomates : mûres (une coccinelle)",
+   "images": 3,
+   "fichiers": [
+    "svg/decor/cultures/tomates/culture_tomates_mur_1.svg",
+    "svg/decor/cultures/tomates/culture_tomates_mur_2.svg",
+    "svg/decor/cultures/tomates/culture_tomates_mur_3.svg"
+   ],
+   "cadre": [
+    -42.5,
+    -37.5,
+    85,
+    60
+   ],
+   "ms_par_image": 280,
+   "parcours": "evolutions",
+   "statut": "ok"
+  },
+  {
+   "id": "decor/cultures/tomates/culture_tomates_pousses",
+   "rubrique": "decor",
+   "titre": "Les tomates : les pousses",
+   "images": 3,
+   "fichiers": [
+    "svg/decor/cultures/tomates/culture_tomates_pousses_1.svg",
+    "svg/decor/cultures/tomates/culture_tomates_pousses_2.svg",
+    "svg/decor/cultures/tomates/culture_tomates_pousses_3.svg"
+   ],
+   "cadre": [
+    -42.5,
+    -37.5,
+    85,
+    60
+   ],
+   "ms_par_image": 280,
+   "parcours": "evolutions",
+   "statut": "ok"
+  },
+  {
+   "id": "decor/cultures/tomates/culture_tomates_semis",
+   "rubrique": "decor",
+   "titre": "Les tomates : le semis (les graines dans les sillons, le sachet, un moineau qui picore)",
+   "images": 3,
+   "fichiers": [
+    "svg/decor/cultures/tomates/culture_tomates_semis_1.svg",
+    "svg/decor/cultures/tomates/culture_tomates_semis_2.svg",
+    "svg/decor/cultures/tomates/culture_tomates_semis_3.svg"
+   ],
+   "cadre": [
+    -42.5,
+    -37.5,
+    85,
+    60
+   ],
+   "ms_par_image": 280,
+   "parcours": "evolutions",
+   "statut": "ok"
+  },
+  {
+   "id": "decor/cultures/tomates/culture_tomates_sillons",
+   "rubrique": "decor",
+   "titre": "Les tomates : les sillons (tracés, le râteau posé au bord)",
+   "images": 3,
+   "fichiers": [
+    "svg/decor/cultures/tomates/culture_tomates_sillons_1.svg",
+    "svg/decor/cultures/tomates/culture_tomates_sillons_2.svg",
+    "svg/decor/cultures/tomates/culture_tomates_sillons_3.svg"
    ],
    "cadre": [
     -42.5,
