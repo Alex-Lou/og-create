@@ -6,7 +6,8 @@ import path from 'path';
 import { createRequire } from 'module';
 import { fileURLToPath } from 'url';
 import { LOOKS, lookAt, artMake, boatOf, boatOffset } from './port/src/world/looks.js';
-import { SHOP_SPRITES, itemLayers, itemLight, tools } from './port/src/world/shopSprites.js';
+import { SHOP_SPRITES, itemLayers, itemLight } from './port/src/world/shopSprites.js';
+import { SHOP_ITEMS, paliers, calques } from './objets_boutique.mjs';
 import { RARE_SPRITES } from './port/src/world/rareSprites.js';
 import { BUILDINGS } from './port/src/world/sprites.js';
 import { TINTS, RARE_TINTS, tintSvg } from './port/src/world/tints.js';
@@ -37,16 +38,6 @@ const SKIN_LABEL = {
   'roche-cristal': 'veines de cristal', printemps: 'printemps', automne: 'automne', givre: 'givre', 'toit-bleu': 'kiosque bleu', 'toit-chaume': 'kiosque de chaume',
   'pierre-blanche': 'pierre blanche', 'cloture-blanche': 'clôture blanche', 'cloture-pierre': 'muret de pierre', 'cloture-fleurie': 'clôture fleurie',
   'enseigne-doree': 'enseigne dorée', 'toit-ardoise': 'toit d\'ardoise', 'voile-rouge': 'voile rouge', 'voile-rayee': 'voile rayée', 'voile-bleue': 'voile bleue'
-};
-// Articles de la boutique par bâtiment (les trois derniers ne se montrent qu'aux paliers V à VII)
-const SHOP_ITEMS = {
-  potager: ['pelle', 'arrosoir', 'poulailler', 'ruche', 'brouette', 'epouvantail', 'citrouille'],
-  carriere: ['pioche', 'wagonnet', 'lanterne-mine', 'rails', 'casque', 'geode', 'golem'],
-  bosquet: ['hache', 'scie', 'nichoir', 'charrette', 'passe-partout', 'ecureuil', 'cerf'],
-  puits: ['seau-cuivre', 'poulie', 'abreuvoir', 'pompe', 'sourcier', 'canards', 'naiade'],
-  ponton: ['canne', 'filet', 'casier', 'barque', 'harpon', 'pelican', 'sirene'],
-  atelier: ['etabli', 'enclume', 'soufflet', 'marteau-pilon', 'automate', 'athanor'],
-  foyer: ['cuisine', 'lit', 'chat', 'chien', 'sablier', 'hibou', 'grimoire']
 };
 const RARE_OF = {
   potager: ['papillons', 'tournesols'], carriere: ['filon-or', 'coeur-lave'], bosquet: ['fees', 'petales'], puits: ['arc-en-ciel', 'nenuphars'],
@@ -112,27 +103,16 @@ for (const [site, skins] of Object.entries(SKINS_OF)) {
 /* ---------- Objets de la boutique : un fichier par calque (et par image), ancré à sa place ---------- */
 const itemCells = [], itemAnim = [];
 for (const [site, ids] of Object.entries(SHOP_ITEMS)) {
-  for (const [rank, id] of ids.entries()) {
-    const late = rank >= ids.length - 3 && ids.length === 7 ? true : rank >= ids.length - 3;
-    const levels = late ? [5, 6, 7] : [1, 2, 3, 4, 5, 6, 7];
+  for (const id of ids) {
+    const { late, levels } = paliers(site, id);
     const item = SHOP_SPRITES[id];
     const layers = [];
-    for (const [k, layer] of item.layers.entries()) {
-      const seen = new Map();
-      for (const lv of levels) {
-        const frames = Array.from({ length: layer.n || 1 }, (_, f) => (layer.n ? layer.draw(tools(0, 0, `${id}-${k}`), lv, f, layer.n) : layer.draw(tools(0, 0, `${id}-${k}`), lv)));
-        const key = frames.join('|');
-        if (!seen.has(key)) seen.set(key, { from: lv, frames, frame: typeof layer.frame === 'function' ? layer.frame(lv) : layer.frame });
-      }
-      const variants = [...seen.values()];
+    for (const { layer, variantes: variants, nom } of calques(site, id)) {
       const files = [], cadres = [];
       for (const vr of variants) {
         const fr = await fitFrame(vr.frame.map(n => r2(n * K)), vr.frames.map(body => up(body)));
         cadres.push(fr);
-        vr.frames.forEach((body, f) => {
-          const name = id + (item.layers.length > 1 ? `_calque${k + 1}` : '') + (variants.length > 1 ? `_des_palier${vr.from}` : '') + (vr.frames.length > 1 ? `_${f + 1}` : '');
-          files.push(put(`objets/${site}/${id}/${name}.svg`, fr, up(body)));
-        });
+        vr.frames.forEach((body, f) => files.push(put(`objets/${site}/${id}/${nom(vr, f)}.svg`, fr, up(body))));
       }
       const place = {};
       for (const lv of levels) {

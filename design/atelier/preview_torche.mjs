@@ -5,6 +5,7 @@ import fs from 'fs';
 import path from 'path';
 import { createRequire } from 'module';
 import { fileURLToPath } from 'url';
+import { torche as torcheSvg, torcheIcone as iconeSvg } from './generateur_objets.mjs';
 
 const require = createRequire(import.meta.url);
 const DIR = path.dirname(fileURLToPath(import.meta.url));
@@ -21,9 +22,10 @@ const inner = f => fs.readFileSync(path.join(BIB, f), 'utf8').replace(/^<svg[^>]
 const allumee = [0, 1, 2].map(n => torche('allumee', n));
 const eteinte = torche('eteinte');
 const icone = torcheIcone();
-allumee.forEach((b, n) => write(path.join(LIB, `torche_allumee_${n + 1}.svg`), svgOf(CADRE, b)));
-write(path.join(LIB, 'torche_eteinte.svg'), svgOf(CADRE, eteinte));
-write(path.join(LIB, 'torche_icone.svg'), svgOf([0, 0, 32, 32], icone));
+// les fichiers sortent du générateur des objets : le jeu dessine les mêmes
+allumee.forEach((b, n) => write(path.join(LIB, `torche_allumee_${n + 1}.svg`), torcheSvg('allumee', n + 1).svg));
+write(path.join(LIB, 'torche_eteinte.svg'), torcheSvg('eteinte').svg);
+write(path.join(LIB, 'torche_icone.svg'), iconeSvg().svg);
 const [u, v, z, rayon, couleur] = LUMIERE;
 write(path.join(LIB, 'defenses.json'), JSON.stringify({ _lisez_moi: [
   'Les défenses de la nuit (HISTOIRE.md § 6.15, § 14) : la torche de bois flotté. Elle s\'achète à la boutique (étape 12e) et se pose librement sur une case, comme une création : sur le chemin des égarés, sur les cases dorées (étape 12f). Sa lumière les repousse et les change en lucioles.',
