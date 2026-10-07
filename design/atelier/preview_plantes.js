@@ -7,7 +7,7 @@ const { arbre, ARBRES, arbreSaison, ARBRES_SAISONS, pommier, POMMIERS, automne, 
 const { touffe, TOUFFES, touffeSaison, TOUFFES_SAISONS } = require('./herbes');
 const { rocher, ROCHERS, rocherSaison, ROCHERS_SAISONS, rochers, ROCHERS_TAS, aiguille, AIGUILLES, rochersMoussus, ROCHERS_MOUSSUS } = require('./rochers');
 const { coquillages, COQUILLAGES, boisFlotte, BOIS_FLOTTES } = require('./plage');
-const { nid, NIDS, lanterne, LANTERNES, banc, BANCS_LISTE } = require('./objets');
+const { nid, NIDS, lanterne, LANTERNES, banc, BANCS_LISTE, bonhommeDeNeige, BONSHOMMES } = require('./objets');
 const { buisson, BUISSONS, buissonSaison, BUISSONS_SAISONS, bruyere, BRUYERES, fleurs, FLEURS, cactus, CACTUS_LISTE, souche, SOUCHES, rondin, RONDINS, champignons, CHAMPIGNONS, roseaux, ROSEAUX, nenuphars, NENUPHARS } = require('./plantes');
 
 const LIB = path.join(__dirname, 'lib', 'plantes');
@@ -53,10 +53,12 @@ const LIST = [
   // les coquillages et le bois flotté refaits (plage.js) et leurs 8 variantes chacun
   ...COQUILLAGES.map(([fichier, libelle, o]) => [fichier, libelle, 'shells', () => coquillages(o)]),
   ...BOIS_FLOTTES.map(([fichier, libelle, o]) => [fichier, libelle, 'driftwood', () => boisFlotte(o)]),
-  // le nid, la lanterne et le banc refaits (objets.js) et leurs 8 variantes chacun
+  // le nid, la lanterne et le banc refaits (objets.js) et leurs 8 variantes chacun ; le bonhomme de neige
   ...NIDS.map(([fichier, libelle, o]) => [fichier, libelle, 'nest', () => nid(o)]),
   ...LANTERNES.map(([fichier, libelle, o]) => [fichier, libelle, 'lantern', () => lanterne(o)]),
-  ...BANCS_LISTE.map(([fichier, libelle, o]) => [fichier, libelle, 'bench', () => banc(o)])
+  ...BANCS_LISTE.map(([fichier, libelle, o]) => [fichier, libelle, 'bench', () => banc(o)]),
+  // le bonhomme de neige (l'hiver) et ses 8 variantes
+  ...BONSHOMMES.map(([fichier, libelle, o]) => [fichier, libelle, 'snowman', () => bonhommeDeNeige(o)])
 ];
 const svgOf = (body, scale = 1, withCell = false) => {
   const cell = withCell ? `<polygon points="${[pt(-0.5, -0.5), pt(0.5, -0.5), pt(0.5, 0.5), pt(-0.5, 0.5)].map(q => q.join(',')).join(' ')}" fill="#BFD99A" stroke="#A8C680" stroke-width="0.6"/>` : '';
