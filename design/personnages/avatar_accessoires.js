@@ -393,8 +393,13 @@ function botte(fourree) {
         + `<rect x="${r2(x - w / 2)}" y="${r2(top)}" width="${r2(w)}" height="1.5" rx="0.7" fill="${tone(col, 0.82)}" stroke="${OUT}" stroke-width="0.8"/>`;
     }
     s += shoe({ ...c, uid: `${c.uid}b`, shoe: col, shoeS: tone(col, 0.68), shoeH: fourree ? tone(col, 1.22) : 'rgba(255,255,255,.75)' }, x, y, dir, tilt);
-    // bottes fourrées : un revers de fourrure, en bourrelets
-    if (fourree) s += [0, 1, 2, 3].map(i => E(x - w / 2 + 0.5 + i * (w - 1) / 3, top + 0.4, 1.35, 1.2, i % 2 ? tone(fourrure, 0.94) : fourrure, 0.7)).join('');
+    // bottes fourrées : un revers de fourrure, un bourrelet plus large que la tige, festonné en bas
+    if (fourree) {
+      const a = x - w / 2 - 0.8, b = x + w / 2 + 0.8, t0 = top - 1.2, t1 = top + 1.6, l = (b - a) / 3;
+      let d = `M${r2(a)},${r2(t1)} Q${r2(a - 0.3)},${r2(t0 + 0.5)} ${r2(a + 0.9)},${r2(t0)} Q${r2(x)},${r2(t0 - 0.6)} ${r2(b - 0.9)},${r2(t0)} Q${r2(b + 0.3)},${r2(t0 + 0.5)} ${r2(b)},${r2(t1)}`;
+      for (let i = 2; i >= 0; i--) d += ` Q${r2(a + l * (i + 0.5))},${r2(t1 + 1.1)} ${r2(a + l * i)},${r2(t1)}`;
+      s += P(`${d} Z`, fourrure, 0.8) + [0.3, 0.7].map(f => P(`M${r2(a + (b - a) * f - 0.7)},${r2(t0 + 1)} q0.7,0.9 1.4,0`, 'none', 0.5).replace(`stroke="${OUT}"`, `stroke="${tone(fourrure, 0.82)}"`)).join('');
+    }
     return s;
   };
 }

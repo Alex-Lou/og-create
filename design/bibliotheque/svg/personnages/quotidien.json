@@ -4,6 +4,7 @@
   "Poses : marche (4 images, ~170 ms), repos (2 images : clignement), salut (2), travail (2, le geste du métier : maîtres et naufragés, sauf Galet et Sylve naufragés qui ont oublié leur don), assis (la veillée, 3 vues, 2 images : clignement ; le siège n'est pas dessiné, son dessus est à y = 53,6 du cadre, 8,4 au-dessus du bas des pieds, la même hauteur pour tous), mains-tendues et assis-mains-tendues (les mains tendues vers le feu, debout ou assis, 3 vues, 2 images : les doigts se réchauffent ; le feu est devant le personnage), applaudir et assis-applaudir (en riant, 3 vues, 2 images : mains écartées, puis le claquement), pecher (le mini-jeu de la pêche, debout, 3 vues, 2 images : le bouchon danse ; la canne, le fil et le bouchon restent dans le cadre), piocher (le mini-jeu de la mine, debout, 3 vues, 2 images : la pioche levée sur le côté, puis le coup sur la pierre posée au sol, éclats et étincelle), cueillir (le mini-jeu de la cueillette, debout, 3 vues, 2 images : un panier d'osier à la main, l'autre main cueille un fruit en haut, puis le dépose dans le panier), porter (debout, 3 vues, 2 images : une caisse de bois sur l'épaule droite à l'écran, la main dessous, l'autre bras ballant ; elle remonte d'un cran à l'image 2), reparer et assis-reparer (debout ou assis, 3 vues, 2 images : une planche tenue en travers, posée sur les genoux quand on est assis, le marteau levé puis le coup sur le clou), repousser (debout, 3 vues, 2 images : la main ouverte tendue vers une créature de la brume, devant le personnage, une onde claire et deux étincelles ; la main pousse un peu plus loin et l'onde s'élargit à l'image 2 ; jamais de coup), ecrire et assis-ecrire (debout ou assis, 3 vues, 2 images : un carnet ouvert tenu devant soi, au-dessus des genoux quand on est assis, et un crayon ; une ligne de plus s'écrit à l'image 2 ; de dos, on voit les coudes), lanterne et parapluie (avant et dos, 4 images, en marchant), couche (dormir couché, 2 images ~900 ms).",
   "Cadres à part : parapluie [0, -18, 48, 82] (la toile passe au-dessus de la tête ; pieds toujours en (24, 62)) ; couche [0, 0, 64, 48] (allongé la tête à gauche, sous une couverture).",
   "Naufragés : lanterne et parapluie seulement pour Aster et Rivet, qui restent naufragés après la première lanterne. Visiteurs et nouveaux venus : tirés du générateur de l'avatar (choix notés ici, pour en refaire d'autres avec design/personnages/avatar.js) ; les nouveaux venus de l'épilogue arrivent en habits de voyage, une valise à la main, et n'ont pas de pose endormie.",
+  "Tenues d'hiver des maîtres (tenues.hiver, tenues.js) : chacun à son style (écharpe, bonnet ou cache-oreilles, châle, pèlerine ou étole, moufles, bottes fourrées pour qui va pieds nus), en repos et en marche dans les trois vues : <maître>_<vue>_<pose>_hiver_<n>, dans le dossier du maître. Mêmes cadres, mêmes vitesses que les poses d'été : on échange le fichier.",
   "Noms rangés à l'assemblage (README, catalogue.json) : <sujet>_<vue>_<pose>_<n>.svg, vues face, avant (l'ancien « trois_quarts »), dos, profil ; les chemins ci-dessous suivent ces noms."
  ],
  "maitres": {
@@ -8773,6 +8774,255 @@
      "epilogue/arrivant-08/arrivant-08_dos_assis-ecrire_1.svg",
      "epilogue/arrivant-08/arrivant-08_dos_assis-ecrire_2.svg"
     ]
+   }
+  }
+ },
+ "tenues": {
+  "hiver": {
+   "aster": {
+    "nom": "Aster en hiver",
+    "fichiers": {
+     "face_repos": [
+      "maitres/aster/aster_face_repos_hiver_1.svg",
+      "maitres/aster/aster_face_repos_hiver_2.svg"
+     ],
+     "face_marche": [
+      "maitres/aster/aster_face_marche_hiver_1.svg",
+      "maitres/aster/aster_face_marche_hiver_2.svg",
+      "maitres/aster/aster_face_marche_hiver_3.svg",
+      "maitres/aster/aster_face_marche_hiver_4.svg"
+     ],
+     "avant_repos": [
+      "maitres/aster/aster_avant_repos_hiver_1.svg",
+      "maitres/aster/aster_avant_repos_hiver_2.svg"
+     ],
+     "avant_marche": [
+      "maitres/aster/aster_avant_marche_hiver_1.svg",
+      "maitres/aster/aster_avant_marche_hiver_2.svg",
+      "maitres/aster/aster_avant_marche_hiver_3.svg",
+      "maitres/aster/aster_avant_marche_hiver_4.svg"
+     ],
+     "dos_repos": [
+      "maitres/aster/aster_dos_repos_hiver_1.svg",
+      "maitres/aster/aster_dos_repos_hiver_2.svg"
+     ],
+     "dos_marche": [
+      "maitres/aster/aster_dos_marche_hiver_1.svg",
+      "maitres/aster/aster_dos_marche_hiver_2.svg",
+      "maitres/aster/aster_dos_marche_hiver_3.svg",
+      "maitres/aster/aster_dos_marche_hiver_4.svg"
+     ]
+    }
+   },
+   "cannelle": {
+    "nom": "Cannelle en hiver",
+    "fichiers": {
+     "face_repos": [
+      "maitres/cannelle/cannelle_face_repos_hiver_1.svg",
+      "maitres/cannelle/cannelle_face_repos_hiver_2.svg"
+     ],
+     "face_marche": [
+      "maitres/cannelle/cannelle_face_marche_hiver_1.svg",
+      "maitres/cannelle/cannelle_face_marche_hiver_2.svg",
+      "maitres/cannelle/cannelle_face_marche_hiver_3.svg",
+      "maitres/cannelle/cannelle_face_marche_hiver_4.svg"
+     ],
+     "avant_repos": [
+      "maitres/cannelle/cannelle_avant_repos_hiver_1.svg",
+      "maitres/cannelle/cannelle_avant_repos_hiver_2.svg"
+     ],
+     "avant_marche": [
+      "maitres/cannelle/cannelle_avant_marche_hiver_1.svg",
+      "maitres/cannelle/cannelle_avant_marche_hiver_2.svg",
+      "maitres/cannelle/cannelle_avant_marche_hiver_3.svg",
+      "maitres/cannelle/cannelle_avant_marche_hiver_4.svg"
+     ],
+     "dos_repos": [
+      "maitres/cannelle/cannelle_dos_repos_hiver_1.svg",
+      "maitres/cannelle/cannelle_dos_repos_hiver_2.svg"
+     ],
+     "dos_marche": [
+      "maitres/cannelle/cannelle_dos_marche_hiver_1.svg",
+      "maitres/cannelle/cannelle_dos_marche_hiver_2.svg",
+      "maitres/cannelle/cannelle_dos_marche_hiver_3.svg",
+      "maitres/cannelle/cannelle_dos_marche_hiver_4.svg"
+     ]
+    }
+   },
+   "rivet": {
+    "nom": "Rivet en hiver",
+    "fichiers": {
+     "face_repos": [
+      "maitres/rivet/rivet_face_repos_hiver_1.svg",
+      "maitres/rivet/rivet_face_repos_hiver_2.svg"
+     ],
+     "face_marche": [
+      "maitres/rivet/rivet_face_marche_hiver_1.svg",
+      "maitres/rivet/rivet_face_marche_hiver_2.svg",
+      "maitres/rivet/rivet_face_marche_hiver_3.svg",
+      "maitres/rivet/rivet_face_marche_hiver_4.svg"
+     ],
+     "avant_repos": [
+      "maitres/rivet/rivet_avant_repos_hiver_1.svg",
+      "maitres/rivet/rivet_avant_repos_hiver_2.svg"
+     ],
+     "avant_marche": [
+      "maitres/rivet/rivet_avant_marche_hiver_1.svg",
+      "maitres/rivet/rivet_avant_marche_hiver_2.svg",
+      "maitres/rivet/rivet_avant_marche_hiver_3.svg",
+      "maitres/rivet/rivet_avant_marche_hiver_4.svg"
+     ],
+     "dos_repos": [
+      "maitres/rivet/rivet_dos_repos_hiver_1.svg",
+      "maitres/rivet/rivet_dos_repos_hiver_2.svg"
+     ],
+     "dos_marche": [
+      "maitres/rivet/rivet_dos_marche_hiver_1.svg",
+      "maitres/rivet/rivet_dos_marche_hiver_2.svg",
+      "maitres/rivet/rivet_dos_marche_hiver_3.svg",
+      "maitres/rivet/rivet_dos_marche_hiver_4.svg"
+     ]
+    }
+   },
+   "ondin": {
+    "nom": "Ondin en hiver",
+    "fichiers": {
+     "face_repos": [
+      "maitres/ondin/ondin_face_repos_hiver_1.svg",
+      "maitres/ondin/ondin_face_repos_hiver_2.svg"
+     ],
+     "face_marche": [
+      "maitres/ondin/ondin_face_marche_hiver_1.svg",
+      "maitres/ondin/ondin_face_marche_hiver_2.svg",
+      "maitres/ondin/ondin_face_marche_hiver_3.svg",
+      "maitres/ondin/ondin_face_marche_hiver_4.svg"
+     ],
+     "avant_repos": [
+      "maitres/ondin/ondin_avant_repos_hiver_1.svg",
+      "maitres/ondin/ondin_avant_repos_hiver_2.svg"
+     ],
+     "avant_marche": [
+      "maitres/ondin/ondin_avant_marche_hiver_1.svg",
+      "maitres/ondin/ondin_avant_marche_hiver_2.svg",
+      "maitres/ondin/ondin_avant_marche_hiver_3.svg",
+      "maitres/ondin/ondin_avant_marche_hiver_4.svg"
+     ],
+     "dos_repos": [
+      "maitres/ondin/ondin_dos_repos_hiver_1.svg",
+      "maitres/ondin/ondin_dos_repos_hiver_2.svg"
+     ],
+     "dos_marche": [
+      "maitres/ondin/ondin_dos_marche_hiver_1.svg",
+      "maitres/ondin/ondin_dos_marche_hiver_2.svg",
+      "maitres/ondin/ondin_dos_marche_hiver_3.svg",
+      "maitres/ondin/ondin_dos_marche_hiver_4.svg"
+     ]
+    }
+   },
+   "sylve": {
+    "nom": "Sylve en hiver",
+    "fichiers": {
+     "face_repos": [
+      "maitres/sylve/sylve_face_repos_hiver_1.svg",
+      "maitres/sylve/sylve_face_repos_hiver_2.svg"
+     ],
+     "face_marche": [
+      "maitres/sylve/sylve_face_marche_hiver_1.svg",
+      "maitres/sylve/sylve_face_marche_hiver_2.svg",
+      "maitres/sylve/sylve_face_marche_hiver_3.svg",
+      "maitres/sylve/sylve_face_marche_hiver_4.svg"
+     ],
+     "avant_repos": [
+      "maitres/sylve/sylve_avant_repos_hiver_1.svg",
+      "maitres/sylve/sylve_avant_repos_hiver_2.svg"
+     ],
+     "avant_marche": [
+      "maitres/sylve/sylve_avant_marche_hiver_1.svg",
+      "maitres/sylve/sylve_avant_marche_hiver_2.svg",
+      "maitres/sylve/sylve_avant_marche_hiver_3.svg",
+      "maitres/sylve/sylve_avant_marche_hiver_4.svg"
+     ],
+     "dos_repos": [
+      "maitres/sylve/sylve_dos_repos_hiver_1.svg",
+      "maitres/sylve/sylve_dos_repos_hiver_2.svg"
+     ],
+     "dos_marche": [
+      "maitres/sylve/sylve_dos_marche_hiver_1.svg",
+      "maitres/sylve/sylve_dos_marche_hiver_2.svg",
+      "maitres/sylve/sylve_dos_marche_hiver_3.svg",
+      "maitres/sylve/sylve_dos_marche_hiver_4.svg"
+     ]
+    }
+   },
+   "galet": {
+    "nom": "Galet en hiver",
+    "fichiers": {
+     "face_repos": [
+      "maitres/galet/galet_face_repos_hiver_1.svg",
+      "maitres/galet/galet_face_repos_hiver_2.svg"
+     ],
+     "face_marche": [
+      "maitres/galet/galet_face_marche_hiver_1.svg",
+      "maitres/galet/galet_face_marche_hiver_2.svg",
+      "maitres/galet/galet_face_marche_hiver_3.svg",
+      "maitres/galet/galet_face_marche_hiver_4.svg"
+     ],
+     "avant_repos": [
+      "maitres/galet/galet_avant_repos_hiver_1.svg",
+      "maitres/galet/galet_avant_repos_hiver_2.svg"
+     ],
+     "avant_marche": [
+      "maitres/galet/galet_avant_marche_hiver_1.svg",
+      "maitres/galet/galet_avant_marche_hiver_2.svg",
+      "maitres/galet/galet_avant_marche_hiver_3.svg",
+      "maitres/galet/galet_avant_marche_hiver_4.svg"
+     ],
+     "dos_repos": [
+      "maitres/galet/galet_dos_repos_hiver_1.svg",
+      "maitres/galet/galet_dos_repos_hiver_2.svg"
+     ],
+     "dos_marche": [
+      "maitres/galet/galet_dos_marche_hiver_1.svg",
+      "maitres/galet/galet_dos_marche_hiver_2.svg",
+      "maitres/galet/galet_dos_marche_hiver_3.svg",
+      "maitres/galet/galet_dos_marche_hiver_4.svg"
+     ]
+    }
+   },
+   "melisse": {
+    "nom": "Mélisse en hiver",
+    "fichiers": {
+     "face_repos": [
+      "maitres/melisse/melisse_face_repos_hiver_1.svg",
+      "maitres/melisse/melisse_face_repos_hiver_2.svg"
+     ],
+     "face_marche": [
+      "maitres/melisse/melisse_face_marche_hiver_1.svg",
+      "maitres/melisse/melisse_face_marche_hiver_2.svg",
+      "maitres/melisse/melisse_face_marche_hiver_3.svg",
+      "maitres/melisse/melisse_face_marche_hiver_4.svg"
+     ],
+     "avant_repos": [
+      "maitres/melisse/melisse_avant_repos_hiver_1.svg",
+      "maitres/melisse/melisse_avant_repos_hiver_2.svg"
+     ],
+     "avant_marche": [
+      "maitres/melisse/melisse_avant_marche_hiver_1.svg",
+      "maitres/melisse/melisse_avant_marche_hiver_2.svg",
+      "maitres/melisse/melisse_avant_marche_hiver_3.svg",
+      "maitres/melisse/melisse_avant_marche_hiver_4.svg"
+     ],
+     "dos_repos": [
+      "maitres/melisse/melisse_dos_repos_hiver_1.svg",
+      "maitres/melisse/melisse_dos_repos_hiver_2.svg"
+     ],
+     "dos_marche": [
+      "maitres/melisse/melisse_dos_marche_hiver_1.svg",
+      "maitres/melisse/melisse_dos_marche_hiver_2.svg",
+      "maitres/melisse/melisse_dos_marche_hiver_3.svg",
+      "maitres/melisse/melisse_dos_marche_hiver_4.svg"
+     ]
+    }
    }
   }
  }

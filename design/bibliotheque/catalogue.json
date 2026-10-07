@@ -34952,6 +34952,33 @@
    "statut": "ok"
   },
   {
+   "id": "personnages/maitres/cannelle/cannelle_avant_marche_hiver",
+   "rubrique": "personnages",
+   "sujet": "cannelle",
+   "vue": "avant",
+   "pose": "marche",
+   "variante": "hiver",
+   "titre": "Cannelle, trois quarts avant, marche, hiver",
+   "regarde": "bas-droite",
+   "miroir": true,
+   "images": 4,
+   "fichiers": [
+    "svg/personnages/maitres/cannelle/cannelle_avant_marche_hiver_1.svg",
+    "svg/personnages/maitres/cannelle/cannelle_avant_marche_hiver_2.svg",
+    "svg/personnages/maitres/cannelle/cannelle_avant_marche_hiver_3.svg",
+    "svg/personnages/maitres/cannelle/cannelle_avant_marche_hiver_4.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": 170,
+   "parcours": "tuto-2",
+   "statut": "ok"
+  },
+  {
    "id": "personnages/maitres/cannelle/cannelle_avant_marche_rire",
    "rubrique": "personnages",
    "sujet": "cannelle",
@@ -35152,6 +35179,34 @@
    "fichiers": [
     "svg/personnages/maitres/cannelle/cannelle_avant_repos_1.svg",
     "svg/personnages/maitres/cannelle/cannelle_avant_repos_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    900,
+    160
+   ],
+   "parcours": "tuto-2",
+   "statut": "ok"
+  },
+  {
+   "id": "personnages/maitres/cannelle/cannelle_avant_repos_hiver",
+   "rubrique": "personnages",
+   "sujet": "cannelle",
+   "vue": "avant",
+   "pose": "repos",
+   "variante": "hiver",
+   "titre": "Cannelle, trois quarts avant, repos, hiver",
+   "regarde": "bas-droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/maitres/cannelle/cannelle_avant_repos_hiver_1.svg",
+    "svg/personnages/maitres/cannelle/cannelle_avant_repos_hiver_2.svg"
    ],
    "cadre": [
     0,
@@ -35582,6 +35637,33 @@
    "statut": "ok"
   },
   {
+   "id": "personnages/maitres/cannelle/cannelle_dos_marche_hiver",
+   "rubrique": "personnages",
+   "sujet": "cannelle",
+   "vue": "dos",
+   "pose": "marche",
+   "variante": "hiver",
+   "titre": "Cannelle, trois quarts dos, marche, hiver",
+   "regarde": "haut-droite",
+   "miroir": true,
+   "images": 4,
+   "fichiers": [
+    "svg/personnages/maitres/cannelle/cannelle_dos_marche_hiver_1.svg",
+    "svg/personnages/maitres/cannelle/cannelle_dos_marche_hiver_2.svg",
+    "svg/personnages/maitres/cannelle/cannelle_dos_marche_hiver_3.svg",
+    "svg/personnages/maitres/cannelle/cannelle_dos_marche_hiver_4.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": 170,
+   "parcours": "tuto-2",
+   "statut": "ok"
+  },
+  {
    "id": "personnages/maitres/cannelle/cannelle_dos_parapluie",
    "rubrique": "personnages",
    "sujet": "cannelle",
@@ -35728,6 +35810,34 @@
    "fichiers": [
     "svg/personnages/maitres/cannelle/cannelle_dos_repos_1.svg",
     "svg/personnages/maitres/cannelle/cannelle_dos_repos_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    900,
+    160
+   ],
+   "parcours": "tuto-2",
+   "statut": "ok"
+  },
+  {
+   "id": "personnages/maitres/cannelle/cannelle_dos_repos_hiver",
+   "rubrique": "personnages",
+   "sujet": "cannelle",
+   "vue": "dos",
+   "pose": "repos",
+   "variante": "hiver",
+   "titre": "Cannelle, trois quarts dos, repos, hiver",
+   "regarde": "haut-droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/maitres/cannelle/cannelle_dos_repos_hiver_1.svg",
+    "svg/personnages/maitres/cannelle/cannelle_dos_repos_hiver_2.svg"
    ],
    "cadre": [
     0,
@@ -36282,6 +36392,32 @@
    "statut": "ok"
   },
   {
+   "id": "personnages/maitres/cannelle/cannelle_face_marche_hiver",
+   "rubrique": "personnages",
+   "sujet": "cannelle",
+   "vue": "face",
+   "pose": "marche",
+   "variante": "hiver",
+   "titre": "Cannelle, de face, marche, hiver",
+   "regarde": "face",
+   "images": 4,
+   "fichiers": [
+    "svg/personnages/maitres/cannelle/cannelle_face_marche_hiver_1.svg",
+    "svg/personnages/maitres/cannelle/cannelle_face_marche_hiver_2.svg",
+    "svg/personnages/maitres/cannelle/cannelle_face_marche_hiver_3.svg",
+    "svg/personnages/maitres/cannelle/cannelle_face_marche_hiver_4.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": 170,
+   "parcours": "tuto-2",
+   "statut": "ok"
+  },
+  {
    "id": "personnages/maitres/cannelle/cannelle_face_pecher",
    "rubrique": "personnages",
    "sujet": "cannelle",
@@ -36397,6 +36533,33 @@
    "fichiers": [
     "svg/personnages/maitres/cannelle/cannelle_face_repos_1.svg",
     "svg/personnages/maitres/cannelle/cannelle_face_repos_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    900,
+    160
+   ],
+   "parcours": "tuto-2",
+   "statut": "ok"
+  },
+  {
+   "id": "personnages/maitres/cannelle/cannelle_face_repos_hiver",
+   "rubrique": "personnages",
+   "sujet": "cannelle",
+   "vue": "face",
+   "pose": "repos",
+   "variante": "hiver",
+   "titre": "Cannelle, de face, repos, hiver",
+   "regarde": "face",
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/maitres/cannelle/cannelle_face_repos_hiver_1.svg",
+    "svg/personnages/maitres/cannelle/cannelle_face_repos_hiver_2.svg"
    ],
    "cadre": [
     0,
@@ -41608,6 +41771,33 @@
    "statut": "ok"
   },
   {
+   "id": "personnages/maitres/ondin/ondin_avant_marche_hiver",
+   "rubrique": "personnages",
+   "sujet": "ondin",
+   "vue": "avant",
+   "pose": "marche",
+   "variante": "hiver",
+   "titre": "Ondin, trois quarts avant, marche, hiver",
+   "regarde": "bas-droite",
+   "miroir": true,
+   "images": 4,
+   "fichiers": [
+    "svg/personnages/maitres/ondin/ondin_avant_marche_hiver_1.svg",
+    "svg/personnages/maitres/ondin/ondin_avant_marche_hiver_2.svg",
+    "svg/personnages/maitres/ondin/ondin_avant_marche_hiver_3.svg",
+    "svg/personnages/maitres/ondin/ondin_avant_marche_hiver_4.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": 170,
+   "parcours": "tuto-3",
+   "statut": "ok"
+  },
+  {
    "id": "personnages/maitres/ondin/ondin_avant_marche_surpris",
    "rubrique": "personnages",
    "sujet": "ondin",
@@ -41781,6 +41971,34 @@
    "fichiers": [
     "svg/personnages/maitres/ondin/ondin_avant_repos_1.svg",
     "svg/personnages/maitres/ondin/ondin_avant_repos_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    900,
+    160
+   ],
+   "parcours": "tuto-3",
+   "statut": "ok"
+  },
+  {
+   "id": "personnages/maitres/ondin/ondin_avant_repos_hiver",
+   "rubrique": "personnages",
+   "sujet": "ondin",
+   "vue": "avant",
+   "pose": "repos",
+   "variante": "hiver",
+   "titre": "Ondin, trois quarts avant, repos, hiver",
+   "regarde": "bas-droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/maitres/ondin/ondin_avant_repos_hiver_1.svg",
+    "svg/personnages/maitres/ondin/ondin_avant_repos_hiver_2.svg"
    ],
    "cadre": [
     0,
@@ -42211,6 +42429,33 @@
    "statut": "ok"
   },
   {
+   "id": "personnages/maitres/ondin/ondin_dos_marche_hiver",
+   "rubrique": "personnages",
+   "sujet": "ondin",
+   "vue": "dos",
+   "pose": "marche",
+   "variante": "hiver",
+   "titre": "Ondin, trois quarts dos, marche, hiver",
+   "regarde": "haut-droite",
+   "miroir": true,
+   "images": 4,
+   "fichiers": [
+    "svg/personnages/maitres/ondin/ondin_dos_marche_hiver_1.svg",
+    "svg/personnages/maitres/ondin/ondin_dos_marche_hiver_2.svg",
+    "svg/personnages/maitres/ondin/ondin_dos_marche_hiver_3.svg",
+    "svg/personnages/maitres/ondin/ondin_dos_marche_hiver_4.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": 170,
+   "parcours": "tuto-3",
+   "statut": "ok"
+  },
+  {
    "id": "personnages/maitres/ondin/ondin_dos_parapluie",
    "rubrique": "personnages",
    "sujet": "ondin",
@@ -42357,6 +42602,34 @@
    "fichiers": [
     "svg/personnages/maitres/ondin/ondin_dos_repos_1.svg",
     "svg/personnages/maitres/ondin/ondin_dos_repos_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    900,
+    160
+   ],
+   "parcours": "tuto-3",
+   "statut": "ok"
+  },
+  {
+   "id": "personnages/maitres/ondin/ondin_dos_repos_hiver",
+   "rubrique": "personnages",
+   "sujet": "ondin",
+   "vue": "dos",
+   "pose": "repos",
+   "variante": "hiver",
+   "titre": "Ondin, trois quarts dos, repos, hiver",
+   "regarde": "haut-droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/maitres/ondin/ondin_dos_repos_hiver_1.svg",
+    "svg/personnages/maitres/ondin/ondin_dos_repos_hiver_2.svg"
    ],
    "cadre": [
     0,
@@ -42911,6 +43184,32 @@
    "statut": "ok"
   },
   {
+   "id": "personnages/maitres/ondin/ondin_face_marche_hiver",
+   "rubrique": "personnages",
+   "sujet": "ondin",
+   "vue": "face",
+   "pose": "marche",
+   "variante": "hiver",
+   "titre": "Ondin, de face, marche, hiver",
+   "regarde": "face",
+   "images": 4,
+   "fichiers": [
+    "svg/personnages/maitres/ondin/ondin_face_marche_hiver_1.svg",
+    "svg/personnages/maitres/ondin/ondin_face_marche_hiver_2.svg",
+    "svg/personnages/maitres/ondin/ondin_face_marche_hiver_3.svg",
+    "svg/personnages/maitres/ondin/ondin_face_marche_hiver_4.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": 170,
+   "parcours": "tuto-3",
+   "statut": "ok"
+  },
+  {
    "id": "personnages/maitres/ondin/ondin_face_pecher",
    "rubrique": "personnages",
    "sujet": "ondin",
@@ -43026,6 +43325,33 @@
    "fichiers": [
     "svg/personnages/maitres/ondin/ondin_face_repos_1.svg",
     "svg/personnages/maitres/ondin/ondin_face_repos_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    900,
+    160
+   ],
+   "parcours": "tuto-3",
+   "statut": "ok"
+  },
+  {
+   "id": "personnages/maitres/ondin/ondin_face_repos_hiver",
+   "rubrique": "personnages",
+   "sujet": "ondin",
+   "vue": "face",
+   "pose": "repos",
+   "variante": "hiver",
+   "titre": "Ondin, de face, repos, hiver",
+   "regarde": "face",
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/maitres/ondin/ondin_face_repos_hiver_1.svg",
+    "svg/personnages/maitres/ondin/ondin_face_repos_hiver_2.svg"
    ],
    "cadre": [
     0,
@@ -47908,6 +48234,33 @@
    "statut": "ok"
   },
   {
+   "id": "personnages/maitres/sylve/sylve_avant_marche_hiver",
+   "rubrique": "personnages",
+   "sujet": "sylve",
+   "vue": "avant",
+   "pose": "marche",
+   "variante": "hiver",
+   "titre": "Sylve, trois quarts avant, marche, hiver",
+   "regarde": "bas-droite",
+   "miroir": true,
+   "images": 4,
+   "fichiers": [
+    "svg/personnages/maitres/sylve/sylve_avant_marche_hiver_1.svg",
+    "svg/personnages/maitres/sylve/sylve_avant_marche_hiver_2.svg",
+    "svg/personnages/maitres/sylve/sylve_avant_marche_hiver_3.svg",
+    "svg/personnages/maitres/sylve/sylve_avant_marche_hiver_4.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": 170,
+   "parcours": "acte-1",
+   "statut": "ok"
+  },
+  {
    "id": "personnages/maitres/sylve/sylve_avant_parapluie",
    "rubrique": "personnages",
    "sujet": "sylve",
@@ -48054,6 +48407,34 @@
    "fichiers": [
     "svg/personnages/maitres/sylve/sylve_avant_repos_1.svg",
     "svg/personnages/maitres/sylve/sylve_avant_repos_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    900,
+    160
+   ],
+   "parcours": "acte-1",
+   "statut": "ok"
+  },
+  {
+   "id": "personnages/maitres/sylve/sylve_avant_repos_hiver",
+   "rubrique": "personnages",
+   "sujet": "sylve",
+   "vue": "avant",
+   "pose": "repos",
+   "variante": "hiver",
+   "titre": "Sylve, trois quarts avant, repos, hiver",
+   "regarde": "bas-droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/maitres/sylve/sylve_avant_repos_hiver_1.svg",
+    "svg/personnages/maitres/sylve/sylve_avant_repos_hiver_2.svg"
    ],
    "cadre": [
     0,
@@ -48484,6 +48865,33 @@
    "statut": "ok"
   },
   {
+   "id": "personnages/maitres/sylve/sylve_dos_marche_hiver",
+   "rubrique": "personnages",
+   "sujet": "sylve",
+   "vue": "dos",
+   "pose": "marche",
+   "variante": "hiver",
+   "titre": "Sylve, trois quarts dos, marche, hiver",
+   "regarde": "haut-droite",
+   "miroir": true,
+   "images": 4,
+   "fichiers": [
+    "svg/personnages/maitres/sylve/sylve_dos_marche_hiver_1.svg",
+    "svg/personnages/maitres/sylve/sylve_dos_marche_hiver_2.svg",
+    "svg/personnages/maitres/sylve/sylve_dos_marche_hiver_3.svg",
+    "svg/personnages/maitres/sylve/sylve_dos_marche_hiver_4.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": 170,
+   "parcours": "acte-1",
+   "statut": "ok"
+  },
+  {
    "id": "personnages/maitres/sylve/sylve_dos_parapluie",
    "rubrique": "personnages",
    "sujet": "sylve",
@@ -48630,6 +49038,34 @@
    "fichiers": [
     "svg/personnages/maitres/sylve/sylve_dos_repos_1.svg",
     "svg/personnages/maitres/sylve/sylve_dos_repos_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    900,
+    160
+   ],
+   "parcours": "acte-1",
+   "statut": "ok"
+  },
+  {
+   "id": "personnages/maitres/sylve/sylve_dos_repos_hiver",
+   "rubrique": "personnages",
+   "sujet": "sylve",
+   "vue": "dos",
+   "pose": "repos",
+   "variante": "hiver",
+   "titre": "Sylve, trois quarts dos, repos, hiver",
+   "regarde": "haut-droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/maitres/sylve/sylve_dos_repos_hiver_1.svg",
+    "svg/personnages/maitres/sylve/sylve_dos_repos_hiver_2.svg"
    ],
    "cadre": [
     0,
@@ -49184,6 +49620,32 @@
    "statut": "ok"
   },
   {
+   "id": "personnages/maitres/sylve/sylve_face_marche_hiver",
+   "rubrique": "personnages",
+   "sujet": "sylve",
+   "vue": "face",
+   "pose": "marche",
+   "variante": "hiver",
+   "titre": "Sylve, de face, marche, hiver",
+   "regarde": "face",
+   "images": 4,
+   "fichiers": [
+    "svg/personnages/maitres/sylve/sylve_face_marche_hiver_1.svg",
+    "svg/personnages/maitres/sylve/sylve_face_marche_hiver_2.svg",
+    "svg/personnages/maitres/sylve/sylve_face_marche_hiver_3.svg",
+    "svg/personnages/maitres/sylve/sylve_face_marche_hiver_4.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": 170,
+   "parcours": "acte-1",
+   "statut": "ok"
+  },
+  {
    "id": "personnages/maitres/sylve/sylve_face_pecher",
    "rubrique": "personnages",
    "sujet": "sylve",
@@ -49299,6 +49761,33 @@
    "fichiers": [
     "svg/personnages/maitres/sylve/sylve_face_repos_1.svg",
     "svg/personnages/maitres/sylve/sylve_face_repos_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    900,
+    160
+   ],
+   "parcours": "acte-1",
+   "statut": "ok"
+  },
+  {
+   "id": "personnages/maitres/sylve/sylve_face_repos_hiver",
+   "rubrique": "personnages",
+   "sujet": "sylve",
+   "vue": "face",
+   "pose": "repos",
+   "variante": "hiver",
+   "titre": "Sylve, de face, repos, hiver",
+   "regarde": "face",
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/maitres/sylve/sylve_face_repos_hiver_1.svg",
+    "svg/personnages/maitres/sylve/sylve_face_repos_hiver_2.svg"
    ],
    "cadre": [
     0,
@@ -52758,6 +53247,33 @@
    "statut": "ok"
   },
   {
+   "id": "personnages/maitres/galet/galet_avant_marche_hiver",
+   "rubrique": "personnages",
+   "sujet": "galet",
+   "vue": "avant",
+   "pose": "marche",
+   "variante": "hiver",
+   "titre": "Galet, trois quarts avant, marche, hiver",
+   "regarde": "bas-droite",
+   "miroir": true,
+   "images": 4,
+   "fichiers": [
+    "svg/personnages/maitres/galet/galet_avant_marche_hiver_1.svg",
+    "svg/personnages/maitres/galet/galet_avant_marche_hiver_2.svg",
+    "svg/personnages/maitres/galet/galet_avant_marche_hiver_3.svg",
+    "svg/personnages/maitres/galet/galet_avant_marche_hiver_4.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": 170,
+   "parcours": "acte-2",
+   "statut": "ok"
+  },
+  {
    "id": "personnages/maitres/galet/galet_avant_marche_triste",
    "rubrique": "personnages",
    "sujet": "galet",
@@ -52931,6 +53447,34 @@
    "fichiers": [
     "svg/personnages/maitres/galet/galet_avant_repos_1.svg",
     "svg/personnages/maitres/galet/galet_avant_repos_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    900,
+    160
+   ],
+   "parcours": "acte-2",
+   "statut": "ok"
+  },
+  {
+   "id": "personnages/maitres/galet/galet_avant_repos_hiver",
+   "rubrique": "personnages",
+   "sujet": "galet",
+   "vue": "avant",
+   "pose": "repos",
+   "variante": "hiver",
+   "titre": "Galet, trois quarts avant, repos, hiver",
+   "regarde": "bas-droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/maitres/galet/galet_avant_repos_hiver_1.svg",
+    "svg/personnages/maitres/galet/galet_avant_repos_hiver_2.svg"
    ],
    "cadre": [
     0,
@@ -53361,6 +53905,33 @@
    "statut": "ok"
   },
   {
+   "id": "personnages/maitres/galet/galet_dos_marche_hiver",
+   "rubrique": "personnages",
+   "sujet": "galet",
+   "vue": "dos",
+   "pose": "marche",
+   "variante": "hiver",
+   "titre": "Galet, trois quarts dos, marche, hiver",
+   "regarde": "haut-droite",
+   "miroir": true,
+   "images": 4,
+   "fichiers": [
+    "svg/personnages/maitres/galet/galet_dos_marche_hiver_1.svg",
+    "svg/personnages/maitres/galet/galet_dos_marche_hiver_2.svg",
+    "svg/personnages/maitres/galet/galet_dos_marche_hiver_3.svg",
+    "svg/personnages/maitres/galet/galet_dos_marche_hiver_4.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": 170,
+   "parcours": "acte-2",
+   "statut": "ok"
+  },
+  {
    "id": "personnages/maitres/galet/galet_dos_parapluie",
    "rubrique": "personnages",
    "sujet": "galet",
@@ -53507,6 +54078,34 @@
    "fichiers": [
     "svg/personnages/maitres/galet/galet_dos_repos_1.svg",
     "svg/personnages/maitres/galet/galet_dos_repos_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    900,
+    160
+   ],
+   "parcours": "acte-2",
+   "statut": "ok"
+  },
+  {
+   "id": "personnages/maitres/galet/galet_dos_repos_hiver",
+   "rubrique": "personnages",
+   "sujet": "galet",
+   "vue": "dos",
+   "pose": "repos",
+   "variante": "hiver",
+   "titre": "Galet, trois quarts dos, repos, hiver",
+   "regarde": "haut-droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/maitres/galet/galet_dos_repos_hiver_1.svg",
+    "svg/personnages/maitres/galet/galet_dos_repos_hiver_2.svg"
    ],
    "cadre": [
     0,
@@ -54035,6 +54634,32 @@
    "statut": "ok"
   },
   {
+   "id": "personnages/maitres/galet/galet_face_marche_hiver",
+   "rubrique": "personnages",
+   "sujet": "galet",
+   "vue": "face",
+   "pose": "marche",
+   "variante": "hiver",
+   "titre": "Galet, de face, marche, hiver",
+   "regarde": "face",
+   "images": 4,
+   "fichiers": [
+    "svg/personnages/maitres/galet/galet_face_marche_hiver_1.svg",
+    "svg/personnages/maitres/galet/galet_face_marche_hiver_2.svg",
+    "svg/personnages/maitres/galet/galet_face_marche_hiver_3.svg",
+    "svg/personnages/maitres/galet/galet_face_marche_hiver_4.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": 170,
+   "parcours": "acte-2",
+   "statut": "ok"
+  },
+  {
    "id": "personnages/maitres/galet/galet_face_pecher",
    "rubrique": "personnages",
    "sujet": "galet",
@@ -54150,6 +54775,33 @@
    "fichiers": [
     "svg/personnages/maitres/galet/galet_face_repos_1.svg",
     "svg/personnages/maitres/galet/galet_face_repos_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    900,
+    160
+   ],
+   "parcours": "acte-2",
+   "statut": "ok"
+  },
+  {
+   "id": "personnages/maitres/galet/galet_face_repos_hiver",
+   "rubrique": "personnages",
+   "sujet": "galet",
+   "vue": "face",
+   "pose": "repos",
+   "variante": "hiver",
+   "titre": "Galet, de face, repos, hiver",
+   "regarde": "face",
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/maitres/galet/galet_face_repos_hiver_1.svg",
+    "svg/personnages/maitres/galet/galet_face_repos_hiver_2.svg"
    ],
    "cadre": [
     0,
@@ -58856,6 +59508,33 @@
    "statut": "ok"
   },
   {
+   "id": "personnages/maitres/melisse/melisse_avant_marche_hiver",
+   "rubrique": "personnages",
+   "sujet": "melisse",
+   "vue": "avant",
+   "pose": "marche",
+   "variante": "hiver",
+   "titre": "Mélisse, trois quarts avant, marche, hiver",
+   "regarde": "bas-droite",
+   "miroir": true,
+   "images": 4,
+   "fichiers": [
+    "svg/personnages/maitres/melisse/melisse_avant_marche_hiver_1.svg",
+    "svg/personnages/maitres/melisse/melisse_avant_marche_hiver_2.svg",
+    "svg/personnages/maitres/melisse/melisse_avant_marche_hiver_3.svg",
+    "svg/personnages/maitres/melisse/melisse_avant_marche_hiver_4.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": 170,
+   "parcours": "acte-3",
+   "statut": "ok"
+  },
+  {
    "id": "personnages/maitres/melisse/melisse_avant_marche_rire",
    "rubrique": "personnages",
    "sujet": "melisse",
@@ -59056,6 +59735,34 @@
    "fichiers": [
     "svg/personnages/maitres/melisse/melisse_avant_repos_1.svg",
     "svg/personnages/maitres/melisse/melisse_avant_repos_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    900,
+    160
+   ],
+   "parcours": "acte-3",
+   "statut": "ok"
+  },
+  {
+   "id": "personnages/maitres/melisse/melisse_avant_repos_hiver",
+   "rubrique": "personnages",
+   "sujet": "melisse",
+   "vue": "avant",
+   "pose": "repos",
+   "variante": "hiver",
+   "titre": "Mélisse, trois quarts avant, repos, hiver",
+   "regarde": "bas-droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/maitres/melisse/melisse_avant_repos_hiver_1.svg",
+    "svg/personnages/maitres/melisse/melisse_avant_repos_hiver_2.svg"
    ],
    "cadre": [
     0,
@@ -59486,6 +60193,33 @@
    "statut": "ok"
   },
   {
+   "id": "personnages/maitres/melisse/melisse_dos_marche_hiver",
+   "rubrique": "personnages",
+   "sujet": "melisse",
+   "vue": "dos",
+   "pose": "marche",
+   "variante": "hiver",
+   "titre": "Mélisse, trois quarts dos, marche, hiver",
+   "regarde": "haut-droite",
+   "miroir": true,
+   "images": 4,
+   "fichiers": [
+    "svg/personnages/maitres/melisse/melisse_dos_marche_hiver_1.svg",
+    "svg/personnages/maitres/melisse/melisse_dos_marche_hiver_2.svg",
+    "svg/personnages/maitres/melisse/melisse_dos_marche_hiver_3.svg",
+    "svg/personnages/maitres/melisse/melisse_dos_marche_hiver_4.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": 170,
+   "parcours": "acte-3",
+   "statut": "ok"
+  },
+  {
    "id": "personnages/maitres/melisse/melisse_dos_parapluie",
    "rubrique": "personnages",
    "sujet": "melisse",
@@ -59632,6 +60366,34 @@
    "fichiers": [
     "svg/personnages/maitres/melisse/melisse_dos_repos_1.svg",
     "svg/personnages/maitres/melisse/melisse_dos_repos_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    900,
+    160
+   ],
+   "parcours": "acte-3",
+   "statut": "ok"
+  },
+  {
+   "id": "personnages/maitres/melisse/melisse_dos_repos_hiver",
+   "rubrique": "personnages",
+   "sujet": "melisse",
+   "vue": "dos",
+   "pose": "repos",
+   "variante": "hiver",
+   "titre": "Mélisse, trois quarts dos, repos, hiver",
+   "regarde": "haut-droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/maitres/melisse/melisse_dos_repos_hiver_1.svg",
+    "svg/personnages/maitres/melisse/melisse_dos_repos_hiver_2.svg"
    ],
    "cadre": [
     0,
@@ -60186,6 +60948,32 @@
    "statut": "ok"
   },
   {
+   "id": "personnages/maitres/melisse/melisse_face_marche_hiver",
+   "rubrique": "personnages",
+   "sujet": "melisse",
+   "vue": "face",
+   "pose": "marche",
+   "variante": "hiver",
+   "titre": "Mélisse, de face, marche, hiver",
+   "regarde": "face",
+   "images": 4,
+   "fichiers": [
+    "svg/personnages/maitres/melisse/melisse_face_marche_hiver_1.svg",
+    "svg/personnages/maitres/melisse/melisse_face_marche_hiver_2.svg",
+    "svg/personnages/maitres/melisse/melisse_face_marche_hiver_3.svg",
+    "svg/personnages/maitres/melisse/melisse_face_marche_hiver_4.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": 170,
+   "parcours": "acte-3",
+   "statut": "ok"
+  },
+  {
    "id": "personnages/maitres/melisse/melisse_face_pecher",
    "rubrique": "personnages",
    "sujet": "melisse",
@@ -60301,6 +61089,33 @@
    "fichiers": [
     "svg/personnages/maitres/melisse/melisse_face_repos_1.svg",
     "svg/personnages/maitres/melisse/melisse_face_repos_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    900,
+    160
+   ],
+   "parcours": "acte-3",
+   "statut": "ok"
+  },
+  {
+   "id": "personnages/maitres/melisse/melisse_face_repos_hiver",
+   "rubrique": "personnages",
+   "sujet": "melisse",
+   "vue": "face",
+   "pose": "repos",
+   "variante": "hiver",
+   "titre": "Mélisse, de face, repos, hiver",
+   "regarde": "face",
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/maitres/melisse/melisse_face_repos_hiver_1.svg",
+    "svg/personnages/maitres/melisse/melisse_face_repos_hiver_2.svg"
    ],
    "cadre": [
     0,
@@ -60740,6 +61555,33 @@
    "statut": "ok"
   },
   {
+   "id": "personnages/maitres/rivet/rivet_avant_marche_hiver",
+   "rubrique": "personnages",
+   "sujet": "rivet",
+   "vue": "avant",
+   "pose": "marche",
+   "variante": "hiver",
+   "titre": "Rivet, trois quarts avant, marche, hiver",
+   "regarde": "bas-droite",
+   "miroir": true,
+   "images": 4,
+   "fichiers": [
+    "svg/personnages/maitres/rivet/rivet_avant_marche_hiver_1.svg",
+    "svg/personnages/maitres/rivet/rivet_avant_marche_hiver_2.svg",
+    "svg/personnages/maitres/rivet/rivet_avant_marche_hiver_3.svg",
+    "svg/personnages/maitres/rivet/rivet_avant_marche_hiver_4.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": 170,
+   "parcours": "acte-3",
+   "statut": "ok"
+  },
+  {
    "id": "personnages/maitres/rivet/rivet_avant_marche_surpris",
    "rubrique": "personnages",
    "sujet": "rivet",
@@ -60913,6 +61755,34 @@
    "fichiers": [
     "svg/personnages/maitres/rivet/rivet_avant_repos_1.svg",
     "svg/personnages/maitres/rivet/rivet_avant_repos_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    900,
+    160
+   ],
+   "parcours": "acte-3",
+   "statut": "ok"
+  },
+  {
+   "id": "personnages/maitres/rivet/rivet_avant_repos_hiver",
+   "rubrique": "personnages",
+   "sujet": "rivet",
+   "vue": "avant",
+   "pose": "repos",
+   "variante": "hiver",
+   "titre": "Rivet, trois quarts avant, repos, hiver",
+   "regarde": "bas-droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/maitres/rivet/rivet_avant_repos_hiver_1.svg",
+    "svg/personnages/maitres/rivet/rivet_avant_repos_hiver_2.svg"
    ],
    "cadre": [
     0,
@@ -61343,6 +62213,33 @@
    "statut": "ok"
   },
   {
+   "id": "personnages/maitres/rivet/rivet_dos_marche_hiver",
+   "rubrique": "personnages",
+   "sujet": "rivet",
+   "vue": "dos",
+   "pose": "marche",
+   "variante": "hiver",
+   "titre": "Rivet, trois quarts dos, marche, hiver",
+   "regarde": "haut-droite",
+   "miroir": true,
+   "images": 4,
+   "fichiers": [
+    "svg/personnages/maitres/rivet/rivet_dos_marche_hiver_1.svg",
+    "svg/personnages/maitres/rivet/rivet_dos_marche_hiver_2.svg",
+    "svg/personnages/maitres/rivet/rivet_dos_marche_hiver_3.svg",
+    "svg/personnages/maitres/rivet/rivet_dos_marche_hiver_4.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": 170,
+   "parcours": "acte-3",
+   "statut": "ok"
+  },
+  {
    "id": "personnages/maitres/rivet/rivet_dos_parapluie",
    "rubrique": "personnages",
    "sujet": "rivet",
@@ -61489,6 +62386,34 @@
    "fichiers": [
     "svg/personnages/maitres/rivet/rivet_dos_repos_1.svg",
     "svg/personnages/maitres/rivet/rivet_dos_repos_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    900,
+    160
+   ],
+   "parcours": "acte-3",
+   "statut": "ok"
+  },
+  {
+   "id": "personnages/maitres/rivet/rivet_dos_repos_hiver",
+   "rubrique": "personnages",
+   "sujet": "rivet",
+   "vue": "dos",
+   "pose": "repos",
+   "variante": "hiver",
+   "titre": "Rivet, trois quarts dos, repos, hiver",
+   "regarde": "haut-droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/maitres/rivet/rivet_dos_repos_hiver_1.svg",
+    "svg/personnages/maitres/rivet/rivet_dos_repos_hiver_2.svg"
    ],
    "cadre": [
     0,
@@ -62043,6 +62968,32 @@
    "statut": "ok"
   },
   {
+   "id": "personnages/maitres/rivet/rivet_face_marche_hiver",
+   "rubrique": "personnages",
+   "sujet": "rivet",
+   "vue": "face",
+   "pose": "marche",
+   "variante": "hiver",
+   "titre": "Rivet, de face, marche, hiver",
+   "regarde": "face",
+   "images": 4,
+   "fichiers": [
+    "svg/personnages/maitres/rivet/rivet_face_marche_hiver_1.svg",
+    "svg/personnages/maitres/rivet/rivet_face_marche_hiver_2.svg",
+    "svg/personnages/maitres/rivet/rivet_face_marche_hiver_3.svg",
+    "svg/personnages/maitres/rivet/rivet_face_marche_hiver_4.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": 170,
+   "parcours": "acte-3",
+   "statut": "ok"
+  },
+  {
    "id": "personnages/maitres/rivet/rivet_face_pecher",
    "rubrique": "personnages",
    "sujet": "rivet",
@@ -62158,6 +63109,33 @@
    "fichiers": [
     "svg/personnages/maitres/rivet/rivet_face_repos_1.svg",
     "svg/personnages/maitres/rivet/rivet_face_repos_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    900,
+    160
+   ],
+   "parcours": "acte-3",
+   "statut": "ok"
+  },
+  {
+   "id": "personnages/maitres/rivet/rivet_face_repos_hiver",
+   "rubrique": "personnages",
+   "sujet": "rivet",
+   "vue": "face",
+   "pose": "repos",
+   "variante": "hiver",
+   "titre": "Rivet, de face, repos, hiver",
+   "regarde": "face",
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/maitres/rivet/rivet_face_repos_hiver_1.svg",
+    "svg/personnages/maitres/rivet/rivet_face_repos_hiver_2.svg"
    ],
    "cadre": [
     0,
@@ -69776,6 +70754,33 @@
    "statut": "ok"
   },
   {
+   "id": "personnages/maitres/aster/aster_avant_marche_hiver",
+   "rubrique": "personnages",
+   "sujet": "aster",
+   "vue": "avant",
+   "pose": "marche",
+   "variante": "hiver",
+   "titre": "Aster, trois quarts avant, marche, hiver",
+   "regarde": "bas-droite",
+   "miroir": true,
+   "images": 4,
+   "fichiers": [
+    "svg/personnages/maitres/aster/aster_avant_marche_hiver_1.svg",
+    "svg/personnages/maitres/aster/aster_avant_marche_hiver_2.svg",
+    "svg/personnages/maitres/aster/aster_avant_marche_hiver_3.svg",
+    "svg/personnages/maitres/aster/aster_avant_marche_hiver_4.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": 170,
+   "parcours": "acte-4",
+   "statut": "ok"
+  },
+  {
    "id": "personnages/maitres/aster/aster_avant_marche_surpris",
    "rubrique": "personnages",
    "sujet": "aster",
@@ -69976,6 +70981,34 @@
    "fichiers": [
     "svg/personnages/maitres/aster/aster_avant_repos_1.svg",
     "svg/personnages/maitres/aster/aster_avant_repos_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    900,
+    160
+   ],
+   "parcours": "acte-4",
+   "statut": "ok"
+  },
+  {
+   "id": "personnages/maitres/aster/aster_avant_repos_hiver",
+   "rubrique": "personnages",
+   "sujet": "aster",
+   "vue": "avant",
+   "pose": "repos",
+   "variante": "hiver",
+   "titre": "Aster, trois quarts avant, repos, hiver",
+   "regarde": "bas-droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/maitres/aster/aster_avant_repos_hiver_1.svg",
+    "svg/personnages/maitres/aster/aster_avant_repos_hiver_2.svg"
    ],
    "cadre": [
     0,
@@ -70406,6 +71439,33 @@
    "statut": "ok"
   },
   {
+   "id": "personnages/maitres/aster/aster_dos_marche_hiver",
+   "rubrique": "personnages",
+   "sujet": "aster",
+   "vue": "dos",
+   "pose": "marche",
+   "variante": "hiver",
+   "titre": "Aster, trois quarts dos, marche, hiver",
+   "regarde": "haut-droite",
+   "miroir": true,
+   "images": 4,
+   "fichiers": [
+    "svg/personnages/maitres/aster/aster_dos_marche_hiver_1.svg",
+    "svg/personnages/maitres/aster/aster_dos_marche_hiver_2.svg",
+    "svg/personnages/maitres/aster/aster_dos_marche_hiver_3.svg",
+    "svg/personnages/maitres/aster/aster_dos_marche_hiver_4.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": 170,
+   "parcours": "acte-4",
+   "statut": "ok"
+  },
+  {
    "id": "personnages/maitres/aster/aster_dos_parapluie",
    "rubrique": "personnages",
    "sujet": "aster",
@@ -70552,6 +71612,34 @@
    "fichiers": [
     "svg/personnages/maitres/aster/aster_dos_repos_1.svg",
     "svg/personnages/maitres/aster/aster_dos_repos_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    900,
+    160
+   ],
+   "parcours": "acte-4",
+   "statut": "ok"
+  },
+  {
+   "id": "personnages/maitres/aster/aster_dos_repos_hiver",
+   "rubrique": "personnages",
+   "sujet": "aster",
+   "vue": "dos",
+   "pose": "repos",
+   "variante": "hiver",
+   "titre": "Aster, trois quarts dos, repos, hiver",
+   "regarde": "haut-droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/maitres/aster/aster_dos_repos_hiver_1.svg",
+    "svg/personnages/maitres/aster/aster_dos_repos_hiver_2.svg"
    ],
    "cadre": [
     0,
@@ -71080,6 +72168,32 @@
    "statut": "ok"
   },
   {
+   "id": "personnages/maitres/aster/aster_face_marche_hiver",
+   "rubrique": "personnages",
+   "sujet": "aster",
+   "vue": "face",
+   "pose": "marche",
+   "variante": "hiver",
+   "titre": "Aster, de face, marche, hiver",
+   "regarde": "face",
+   "images": 4,
+   "fichiers": [
+    "svg/personnages/maitres/aster/aster_face_marche_hiver_1.svg",
+    "svg/personnages/maitres/aster/aster_face_marche_hiver_2.svg",
+    "svg/personnages/maitres/aster/aster_face_marche_hiver_3.svg",
+    "svg/personnages/maitres/aster/aster_face_marche_hiver_4.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": 170,
+   "parcours": "acte-4",
+   "statut": "ok"
+  },
+  {
    "id": "personnages/maitres/aster/aster_face_pecher",
    "rubrique": "personnages",
    "sujet": "aster",
@@ -71195,6 +72309,33 @@
    "fichiers": [
     "svg/personnages/maitres/aster/aster_face_repos_1.svg",
     "svg/personnages/maitres/aster/aster_face_repos_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    900,
+    160
+   ],
+   "parcours": "acte-4",
+   "statut": "ok"
+  },
+  {
+   "id": "personnages/maitres/aster/aster_face_repos_hiver",
+   "rubrique": "personnages",
+   "sujet": "aster",
+   "vue": "face",
+   "pose": "repos",
+   "variante": "hiver",
+   "titre": "Aster, de face, repos, hiver",
+   "regarde": "face",
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/maitres/aster/aster_face_repos_hiver_1.svg",
+    "svg/personnages/maitres/aster/aster_face_repos_hiver_2.svg"
    ],
    "cadre": [
     0,

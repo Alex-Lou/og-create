@@ -91,11 +91,12 @@ const aster = {
     let s = '';
     if (view === 'ne') {
       const back = 'M11,21 Q10,6 24,6 Q38,6 37,21 Q37.4,30.4 34.2,32.4 Q24,34.6 13.8,32.4 Q10.6,30.4 11,21 Z';
-      s += tufts + E(12.6, 23, 1.6, 2.2, C.skin);
+      s += (c.coiffe ? '' : tufts) + E(12.6, 23, 1.6, 2.2, C.skin);
       s += P(back, C.hair) + clip(`${c.uid}h`, back, `<rect x="8" y="4" width="34" height="32" fill="${C.hairS}"/><ellipse cx="22.4" cy="17.4" rx="14" ry="12.8" fill="${C.hair}"/>`) + P(back, 'none');
       s += P('M17,11 Q24,7.6 31,11', 'none', 0.8) + P('M19.6,12.6 Q18.8,20 20.4,27.6', 'none', 0.6) + P('M24.4,11.8 Q25.2,19.4 24.2,28.4', 'none', 0.6);
       s += L([18, 9.6], [23.4, 8.8], C.hairH, 1.3);
       s += P('M14.6,11.6 Q6.6,10.8 6.4,19 Q8.6,16.8 12.6,17.8 Z', C.hair) + E(13.4, 13.4, 1.5, 1.4, C.scarf, 0.9);
+      if (c.coiffe) s += c.coiffe(c, ctx, 'dessus');
       return s;
     }
     const se = view === 'se';
@@ -107,7 +108,7 @@ const aster = {
       : 'M12,18.6 Q13,8 24,8 Q35,8 36,18.6 L33,15 L31,19 L28,14 L25,18.4 L22,14 L19,18 L16,14.4 L14,19.2 Z';
     // queue de cheval (côté gauche du personnage), mèches, cheveux de derrière ombrés
     s += P('M33.4,11.6 Q41.4,10.8 41.6,19 Q39.4,16.8 35.4,17.8 Z', C.hair) + E(34.6, 13.4, 1.5, 1.4, C.scarf, 0.9);
-    s += tufts;
+    if (!c.coiffe) s += tufts;
     s += P(back, C.hair) + clip(`${c.uid}h`, back, `<rect x="8" y="25" width="32" height="8" fill="${C.hairS}"/>`) + P(back, 'none');
     if (se) s += E(35, 23.2, 1.5, 2.1, C.skin);
     // visage : ombre sous la frange, joues et taches de rousseur découpées par le visage (rien ne dépasse)
@@ -120,6 +121,7 @@ const aster = {
       + fr.map(([x, y]) => E(x, y, 0.38, 0.38, C.freckle, 0)).join(''));
     s += P(face, 'none');
     s += P(bangs, C.hair) + L(se ? [15.6, 11.4] : [17, 11.2], se ? [22.6, 9.6] : [24, 9.6], C.hairH, 1.3);
+    if (c.coiffe) s += c.coiffe(c, ctx, 'dessus');
     // expression : sourcils par-dessus la frange ; au repos, petit sourire en coin (sûre d'elle)
     s += expression({
       eyes: se ? [[17.2, 22.6, 1.55], [25.2, 22.6, 1.35]] : [[19.4, 22.6, 1.6], [28.6, 22.6, 1.6]], ry: 2.35,
