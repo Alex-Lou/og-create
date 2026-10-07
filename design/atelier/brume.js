@@ -38,20 +38,15 @@ const heart = (x, y, s) => P(`M${r2(x)},${r2(y + s * 1.1)} C${r2(x - s * 1.8)},$
 const crown = (x, y, rot) => `<g transform="translate(${r2(x)} ${r2(y)}) rotate(${rot})">`
   + P('M-4,1.4 L-4.4,-2.2 L-2,-0.4 L0,-3 L2,-0.4 L4.4,-2.2 L4,1.4 Z', '#F6C744', 0.8) + E(0, -3, 0.7, 0.7, '#E8584A', 0.5) + E(-4.4, -2.2, 0.5, 0.5, '#FFFFFF', 0.4) + E(4.4, -2.2, 0.5, 0.5, '#FFFFFF', 0.4) + '</g>';
 
-// Le visage : deux yeux bleu nuit et leurs signes (joues, larme, goutte, colère, sommeil), rien d'autre
+// Le visage : deux yeux bleu nuit et leurs signes (joues, larme, goutte, sommeil), rien d'autre ; Brume ne gronde jamais (§ 8)
 function faceOf(x, y, r, n, expr) {
   const ey = y - r * 0.05;
   const list = [[x - 3.2, ey, 1.35], [x + 3.2, ey, 1.35]];
-  const mode = { neutre: n === 3 ? 'blink' : 'open', content: 'open', rire: 'joy', surpris: 'big', triste: 'sad', fache: 'angry', gene: 'squeeze', endormi: 'blink' }[expr];
+  const mode = { neutre: n === 3 ? 'blink' : 'open', content: 'open', rire: 'joy', surpris: 'big', triste: 'sad', gene: 'squeeze', endormi: 'blink' }[expr];
   let face = eyes(list, mode, 1.9, NAVY).replace(/stroke="#3C2819"/g, `stroke="${NAVY}"`);
   if (['content', 'rire', 'gene'].includes(expr)) face = E(x - 5.4, ey + 2.6, 1.4, 0.8, '#F7A8B0', 0) + E(x + 5.4, ey + 2.6, 1.4, 0.8, '#F7A8B0', 0) + face;
   if (expr === 'gene') face += drop(x + r + 2.6, y - r * 0.9 + (n % 2) * 0.8, 1.4, '#A9DCFF');
   if (expr === 'triste') face += drop(x - 4.2, ey + 3 + (n % 2) * 1.2, 0.9, '#A9DCFF');
-  if (expr === 'fache') {
-    const ax = x + 9.6, ay = y - r * 1.7, a = 0.5, b = n % 2 ? 2 : 1.7;
-    const d = [[-1, -1], [1, -1], [-1, 1], [1, 1]].map(([i, j]) => `M${r2(ax + i * a)},${r2(ay + j * b)} Q${r2(ax + i * a)},${r2(ay + j * a)} ${r2(ax + i * b)},${r2(ay + j * a)}`).join(' ');
-    face += `<path d="${d}" fill="none" stroke="#FFFFFF" stroke-width="2.2" stroke-linecap="round"/><path d="${d}" fill="none" stroke="#E0483C" stroke-width="1" stroke-linecap="round"/>`;
-  }
   if (expr === 'endormi') face += n % 2 ? zee(x + 7, y - r * 2, 2) + zee(x + 10, y - r * 2.5, 2.6) : zee(x + 6.4, y - r * 1.8, 1.8) + zee(x + 9.2, y - r * 2.3, 2.4);
   return face;
 }
