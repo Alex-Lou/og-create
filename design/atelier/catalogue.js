@@ -150,6 +150,7 @@ function moment(id, meta) {
     if (a === 'cultures') return 'evolutions'; // les étapes du champ, une annexe des évolutions
     if (a === 'verger') return 'evolutions'; // les arbres fruitiers par étapes
     if (a === 'lunaire') return 'acte-3'; // le jardin lunaire de Mélisse, aux Jardins
+    if (a === 'climats') return 'acte-4'; // une culture par climat, à l'acte des climats
     if (a === 'signes') return 'revelation';
     if (a === 'souvenir') return 'acte-1';
     if (a === 'ruines') return /cle_du_phare|phare_eteint/.test(nom) ? 'acte-6' : 'acte-3';

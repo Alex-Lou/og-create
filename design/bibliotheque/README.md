@@ -83,6 +83,7 @@ détails propres à un lot : places des objets de boutique, lumières des palier
 | `svg/decor/cultures/` | Les cultures par étapes, une case : le bêchage, les sillons, le semis, les pousses et la croissance, 3 images en boucle chacune ; puis le champ mûr de l'annexe (blé, carottes, citrouilles) ou l'étape mûre (laitues, choux, tomates, haricots, fraises, pommes de terre) (`cultures.json`) | 153 |
 | `svg/decor/verger/` | Le verger par étapes, un arbre sur une case (pommier, poirier, cerisier, prunier, abricotier) : le trou, la plantation, le jeune arbre, la floraison, les fruits verts, les fruits mûrs, 3 images en boucle chacune (`verger.json`) | 90 |
 | `svg/decor/lunaire/` | Le jardin lunaire de Mélisse, un carré rond sur une case (la mélisse, la lunaire, la fleur de lune, l'herbe des Anciens) : une étape par phase de la lune, de la nouvelle lune à la pleine lune, 3 images en boucle chacune (`lunaire.json`) | 60 |
+| `svg/decor/climats/` | Une culture par climat, une case : myrtilles (cimes), sarrasin (landes), riz (marais), pastèques (dunes), ananas (jungle), piments (volcan), chacune son sol et son aménagement ; préparation, plantation, pousses, croissance, mûre, 3 images en boucle chacune (`climats.json`) | 90 |
 | `svg/scenes/tutoriel/` | Les 27 scènes plein écran du tutoriel v6 (`HISTOIRE.md` § 9, étapes 0 à 12) : la carte d'embarquement, le naufrage, Brume, le Grimoire, le feu, la silhouette, l'arrivée de Cannelle, Rivet, Aster et Ondin, la veillée. Carré 400 × 400, un fond et parfois un devant, en boucle ; la place de l'avatar dans `scenes.json` | 105 |
 | `svg/meteo/` | Calques d'écran sans couture en boucle, nuages, arc-en-ciel, éclair, soleil bas, lumières, teintes des moments du jour ; les saisons : flocons, feuilles qui tombent, pétales, pollen, plein soleil, teintes, et le sol d'une case (neige, neige fondante, givre, flaques, eau gelée) ; 23 icônes (`meteo.json`) | 267 |
 
@@ -127,7 +128,8 @@ détails propres à un lot : places des objets de boutique, lumières des palier
   `etapeDuMontage('2x2', 'toit', 1).svg` ; les cultures : `etapeDeCulture(culture, etape, n)` (ex.
   `etapeDeCulture('citrouilles', 'croissance', 2)`), `CULTURES`, `PART_CULTURE` ; le verger : `etapeDuVerger(arbre, etape, n)`
   (ex. `etapeDuVerger('cerisier', 'floraison', 1)`), `VERGER`, `PART_VERGER` ; le jardin lunaire :
-  `etapeLunaire(plante, etape, n)` (ex. `etapeLunaire('fleur_de_lune', 'pleine_lune', 2)`), `LUNAIRE`, `PART_LUNAIRE`. `liste()` donne tout ce que la famille dessine, avec son fichier. Vérifiés à
+  `etapeLunaire(plante, etape, n)` (ex. `etapeLunaire('fleur_de_lune', 'pleine_lune', 2)`), `LUNAIRE`, `PART_LUNAIRE` ; les cultures des
+  climats : `etapeDeClimat(climat, etape, n)` (ex. `etapeDeClimat('marais', 'mur', 1)`), `CLIMATS`, `PART_CLIMAT`. `liste()` donne tout ce que la famille dessine, avec son fichier. Vérifiés à
   l'octet près (`design/atelier/verif_generateurs.mjs`). En ligne de commande, depuis `design/atelier/` :
   Les bêtes : `profil(bete, pose)`, `orientee(bete, vue, pose)` (vue `avant` ou `dos`), `egare(sujet, vue, pose)`, les noms
   et poses dans `BETES` (ex. `profil('renard', 'marche1')`, `egare('fantome', 'avant', 'luciole2')`).
@@ -183,6 +185,8 @@ détails propres à un lot : places des objets de boutique, lumières des palier
 - **Le jardin lunaire** (`svg/decor/lunaire/`, `lunaire.json`) : le cadre des cultures. Une étape par phase de la lune ; la
   pierre de lune, au fond du carré, montre la phase. Le jeu peut suivre la vraie lune de l'île (la phase donne l'étape) ou
   les parts du temps (`pousse_qui_dure`), comme les cultures.
+- **Une culture par climat** (`svg/decor/climats/`, `climats.json`) : le cadre des cultures ; la culture de chaque climat
+  dans `culture`. Le spectacle et la culture qui pousse comme les cultures ; à 1, la culture mûre.
 - **La torche** (`svg/decor/defenses/`, `defenses.json`) : elle s'achète à la boutique et se pose sur une case, comme une
   création (ancre au centre de la case, le cadre des créations). La nuit, `torche_allumee` en boucle et sa `lumiere`
   (les valeurs de la lumière d'une création du jeu : `u`, `v`, `z`, `rayon`, `couleur`) ; le jour, `torche_eteinte`.

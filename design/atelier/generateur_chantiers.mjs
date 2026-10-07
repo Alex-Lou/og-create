@@ -1,12 +1,13 @@
 // Le générateur des chantiers, pour le jeu et pour l'outil (generer.mjs) : build_bundle.js en fait un module ESM,
 // publié dans la bibliothèque (generateur/chantiers.mjs). Chaque fonction rend { svg, cadre, ms_par_image } : le SVG
 // complet, identique à l'octet au fichier de la bibliothèque (le fichier y ajoute un saut de ligne ; verif_generateurs.mjs
-// le vérifie), son cadre et sa vitesse. preview_montage.mjs, preview_cultures.mjs, preview_verger.mjs et
-// preview_lunaire.mjs écrivent la bibliothèque avec ces mêmes fonctions.
+// le vérifie), son cadre et sa vitesse. preview_montage.mjs, preview_cultures.mjs, preview_verger.mjs,
+// preview_lunaire.mjs et preview_climats.mjs écrivent la bibliothèque avec ces mêmes fonctions.
 import { montage, devoilement, echafaudage, ETAPES } from './montage.mjs';
 import * as C from './cultures.mjs';
 import * as V from './verger.mjs';
 import * as L from './lunaire.mjs';
+import * as CL from './cultures_climat.mjs';
 
 const K = 1.25; // la bibliothèque est à l'échelle du jeu × 1,25
 const svgOf = (cadre, body) => `<svg xmlns="http://www.w3.org/2000/svg" width="${cadre[2]}" height="${cadre[3]}" viewBox="${cadre.join(' ')}"><g transform="scale(${K})">${body}</g></svg>`;
@@ -90,9 +91,24 @@ export function etapeLunaire(plante, etape, n = 1) {
   return { svg: svgOf(LUNAIRE.cadre, L.etape(plante, etape, n - 1)), cadre: LUNAIRE.cadre, ms_par_image: MS_LUNAIRE.etape };
 }
 
+// Une culture par climat (cultures_climat.mjs) : sur une case, chaque climat sa culture, son sol et son aménagement, de la
+// préparation du terrain à la culture mûre ; le cadre des cultures
+export const CLIMATS = { climats: CL.CLIMATS, culture: CL.CULTURE, etapes: CL.ETAPES, cadre: CL.CADRE.map(v => v * K), images: CL.IMAGES };
+export const PART_CLIMAT = { preparation: 0, plantation: 0.15, pousses: 0.35, croissance: 0.6, mur: 1 };
+export const MS_CLIMAT = { etape: 300, spectacle: 450 };
+// Une étape de la culture d'un climat : climat (cimes, landes, marais, dunes, jungle, volcan), étape (preparation,
+// plantation, pousses, croissance, mur), image n de 1 à 3
+export function etapeDeClimat(climat, etape, n = 1) {
+  if (!CL.CLIMATS.includes(climat)) throw new Error(`climat inconnu : ${climat} (${CL.CLIMATS.join(', ')})`);
+  if (!CL.ETAPES.includes(etape)) throw new Error(`étape inconnue : ${etape} (${CL.ETAPES.join(', ')})`);
+  if (!(+n >= 1 && +n <= CL.IMAGES)) throw new Error(`image ${n} : de 1 à ${CL.IMAGES}`);
+  return { svg: svgOf(CLIMATS.cadre, CL.etape(climat, etape, n - 1)), cadre: CLIMATS.cadre, ms_par_image: MS_CLIMAT.etape };
+}
+
 // Tout ce que la famille sait dessiner, avec le fichier de la bibliothèque qui lui correspond (sous svg/)
 export function liste() {
   const out = [];
+  for (const c of CL.CLIMATS) for (const e of CL.ETAPES) for (let n = 1; n <= CL.IMAGES; n++) out.push({ fichier: `decor/climats/${c}/climat_${c}_${e}_${n}.svg`, fonction: 'etapeDeClimat', args: [c, e, n] });
   for (const p of L.PLANTES) for (const e of L.ETAPES) for (let n = 1; n <= L.IMAGES; n++) out.push({ fichier: `decor/lunaire/${p}/lunaire_${p}_${e}_${n}.svg`, fonction: 'etapeLunaire', args: [p, e, n] });
   for (const a of V.ARBRES) for (const e of V.ETAPES) for (let n = 1; n <= V.IMAGES; n++) out.push({ fichier: `decor/verger/${a}/verger_${a}_${e}_${n}.svg`, fonction: 'etapeDuVerger', args: [a, e, n] });
   for (const c of C.CULTURES) for (const e of C.etapesDe(c)) for (let n = 1; n <= C.IMAGES; n++) out.push({ fichier: `decor/cultures/${c}/culture_${c}_${e}_${n}.svg`, fonction: 'etapeDeCulture', args: [c, e, n] });
