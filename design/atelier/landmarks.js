@@ -540,14 +540,37 @@ LM.cascade = { n: 2, draw: f => {
   // des touffes au bord du bassin
   return s + herbe(x - 30, y + 16, '#86B852', 0.9) + herbe(x + 28, y + 17, '#94C25C', 0.8) + fleurette(x - 22, y + 18, '#FFFFFF') + fleurette(x + 36, y + 17, '#F7B6C8');
 } };
+// Geyser : trois terrasses de concrétions blanches aux bords festonnés, leurs petites vasques d'eau bleue ; sur la plus
+// haute, l'œil d'eau bleue profonde cerclé de vert, de jaune et d'orangé ; image 1 : un filet de vapeur ; image 2 : la
+// colonne jaillit, son panache, ses gouttes qui retombent (2 images)
 LM.geyser = { n: 2, draw: f => {
-  let s = '';
-  for (const [r, z] of [[0.7, 0], [0.54, 4], [0.38, 8]]) s += Dk.cylinder(0, 0, r, z, z + 4, SALT, 1);
-  s += disc(0, 0, 0.22, 12, '#4FB8E0', 1) + disc(-0.03, -0.02, 0.12, 12, '#9AE0F8', 0);
-  const [x, y] = at(0, 0, 12);
-  if (f) s += `<path d="M${x - 5},${y} Q${x - 7},${y - 40} ${x - 2},${y - 70} L${x + 2},${y - 70} Q${x + 7},${y - 40} ${x + 5},${y} Z" fill="#E8F6FF" stroke="${OUT}" stroke-width="0.9"/>` + puff(x, y - 72, 9, 0.9) + puff(x - 10, y - 60, 6, 0.8) + puff(x + 10, y - 62, 6, 0.8);
-  else s += puff(x - 2, y - 8, 6, 0.75) + puff(x + 4, y - 18, 5, 0.6);
-  return s;
+  const [x, y] = at(0, 0), K = 1.25;
+  const festons = (cx, cy, rx, ry, n) => { const pts = Array.from({ length: n }, (_, i) => { const t = (i / n) * TAU, r = 1 + (i % 2 ? 0.04 : -0.03); return [cx + Math.cos(t) * rx * r, cy + Math.sin(t) * ry * r]; }); const mil = i => { const p = pts[i % n], q = pts[(i + 1) % n]; return `${r2((p[0] + q[0]) / 2)},${r2((p[1] + q[1]) / 2)}`; }; let d = `M${mil(n - 1)}`; for (let i = 0; i < n; i++) d += ` Q${r2(pts[i][0])},${r2(pts[i][1])} ${mil(i)}`; return d + ' Z'; };
+  const terrasse = (rx, ry, z, top, mur) => {
+    const cy = y - z * K, h = 4.4 * K;
+    // le mur de concrétions : son bas festonné de petites coulures
+    const bas = i => { const t = Math.PI - (i / 16) * Math.PI; return [x + Math.cos(t) * rx, cy + Math.sin(t) * ry + h]; };
+    let wall = `M${x - rx},${r2(cy)} L${r2(bas(0)[0])},${r2(bas(0)[1])}`;
+    for (let i = 1; i <= 16; i++) { const [px, py] = bas(i), [qx, qy] = bas(i - 1); wall += ` Q${r2((px + qx) / 2)},${r2((py + qy) / 2 + 2.2)} ${r2(px)},${r2(py)}`; }
+    wall += ` L${x + rx},${r2(cy)} Z`;
+    return P(wall, mur, 1) + P(festons(x, cy, rx, ry, 30), top, 1);
+  };
+  let s = shadow(0, 0, 0.7, 0.08) + E(x, y + 4, 62, 24, '#E9E1C8', 0.8) + E(x - 6, y + 4, 44, 15, '#F2EBD6', 0);
+  s += terrasse(54, 21, 0, '#FBF6EA', '#E2D6BC') + terrasse(40, 15.6, 4.4, '#FFFBF2', '#E6DCC4') + terrasse(27, 10.6, 8.8, '#FFFDF7', '#EAE1CB');
+  // les petites vasques d'eau sur les terrasses
+  s += [[-34, 6, 7, 2.6], [28, 8, 6, 2.2], [-20, -3, 5, 1.8], [18, -2, 4.6, 1.6], [-8, 12, 6, 2]].map(([dx, dy, rx, ry]) => E(x + dx, y + dy - (dy < 0 ? 5.5 : 0), rx, ry, '#7FCBEA', 0.6) + E(x + dx - rx * 0.3, y + dy - (dy < 0 ? 5.5 : 0) - ry * 0.3, rx * 0.4, ry * 0.3, '#C8EEFA', 0)).join('');
+  // l'œil : les anneaux orangé, jaune, vert, puis le bleu profond
+  const [ex, ey] = [x, y - 13.2 * K];
+  s += E(ex, ey, 20, 7.8, '#F2A65A', 0) + E(ex, ey, 16, 6.2, '#F2D267', 0) + E(ex, ey, 12.4, 4.8, '#9ACB6A', 0) + E(ex, ey, 9.6, 3.7, '#3E8FC8', 0.9) + E(ex, ey, 6, 2.2, '#2E6FB0', 0) + E(ex - 2.6, ey - 0.8, 2.8, 0.8, '#9AE0F8', 0);
+  // les cailloux sombres au pied
+  s += [[-56, 10, 3.4], [50, 14, 3], [12, 26, 2.6]].map(([dx, dy, r]) => E(x + dx, y + dy, r, r * 0.6, '#7E786E', 0.7) + E(x + dx - r * 0.3, y + dy - r * 0.2, r * 0.4, r * 0.2, '#A9A39A', 0)).join('');
+  if (!f) return s + puff(ex - 2, ey - 9, 5.4, 0.8) + puff(ex + 4, ey - 19, 4.4, 0.6) + puff(ex - 1, ey - 27, 3.4, 0.45);
+  // la colonne qui jaillit, son panache et les gouttes qui retombent
+  s += `<path d="M${ex - 4.6},${ey} Q${ex - 6},${ey - 40} ${ex - 3},${ey - 74} L${ex + 3},${ey - 74} Q${ex + 6},${ey - 40} ${ex + 4.6},${ey} Z" fill="#E8F6FF" stroke="${OUT}" stroke-width="0.9"/>`
+    + `<path d="M${ex - 1.4},${ey - 4} Q${ex - 2.4},${ey - 36} ${ex - 1},${ey - 68}" stroke="#FFFFFF" stroke-width="1.4" fill="none" stroke-linecap="round"/>`
+    + `<path d="M${ex + 2.6},${ey - 8} Q${ex + 3.4},${ey - 36} ${ex + 1.6},${ey - 60}" stroke="#B8DCF0" stroke-width="0.8" fill="none"/>`;
+  s += puff(ex, ey - 78, 10, 0.92) + puff(ex - 12, ey - 66, 6.4, 0.85) + puff(ex + 12, ey - 68, 6.4, 0.85) + puff(ex - 9, ey - 6, 6, 0.7) + puff(ex + 10, ey - 4, 5, 0.6);
+  return s + [[-18, -50], [20, -46], [-24, -30], [26, -26], [-14, -16], [16, -12]].map(([dx, dy]) => E(ex + dx, ey + dy, 1, 1.4, '#9AD6F0', 0.5)).join('');
 } };
 // Lac de lave : un sol de cendre aux bords bosselés, ses fissures rougeoyantes ; un anneau de blocs de basalte, éclairés
 // d'orange côté lave ; le bassin qui bouillonne en quatre teintes, ses plaques de croûte ; des bulles qui crèvent d'une
