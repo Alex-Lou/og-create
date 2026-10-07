@@ -1,10 +1,11 @@
 // Le générateur des chantiers, pour le jeu et pour l'outil (generer.mjs) : build_bundle.js en fait un module ESM,
 // publié dans la bibliothèque (generateur/chantiers.mjs). Chaque fonction rend { svg, cadre, ms_par_image } : le SVG
 // complet, identique à l'octet au fichier de la bibliothèque (le fichier y ajoute un saut de ligne ; verif_generateurs.mjs
-// le vérifie), son cadre et sa vitesse. preview_montage.mjs et preview_cultures.mjs écrivent la bibliothèque avec ces
-// mêmes fonctions.
+// le vérifie), son cadre et sa vitesse. preview_montage.mjs, preview_cultures.mjs et preview_verger.mjs écrivent la
+// bibliothèque avec ces mêmes fonctions.
 import { montage, devoilement, echafaudage, ETAPES } from './montage.mjs';
 import * as C from './cultures.mjs';
+import * as V from './verger.mjs';
 
 const K = 1.25; // la bibliothèque est à l'échelle du jeu × 1,25
 const svgOf = (cadre, body) => `<svg xmlns="http://www.w3.org/2000/svg" width="${cadre[2]}" height="${cadre[3]}" viewBox="${cadre.join(' ')}"><g transform="scale(${K})">${body}</g></svg>`;
@@ -59,9 +60,25 @@ export function etapeDeCulture(culture, etape, n = 1) {
   return { svg: svgOf(CULTURES.cadre, C.etape(culture, etape, n - 1)), cadre: CULTURES.cadre, ms_par_image: MS_CULTURE.etape };
 }
 
+// Le verger par étapes (verger.mjs) : un arbre fruitier sur une case, du trou au grand arbre chargé de fruits mûrs ; à
+// l'échelle de la troupe, dans le cadre d'un décor d'une case (comme les arbres de la bibliothèque)
+export const VERGER = { arbres: V.ARBRES, etapes: V.ETAPES, cadre: V.CADRE, images: V.IMAGES };
+export const PART_VERGER = { trou: 0, plantation: 0.1, jeune: 0.25, floraison: 0.5, fruits_verts: 0.7, mur: 1 };
+export const MS_VERGER = { etape: 300, spectacle: 450 };
+// Une étape d'un arbre du verger : arbre (pommier, poirier, cerisier, prunier, abricotier), étape (trou, plantation,
+// jeune, floraison, fruits_verts, mur), image n de 1 à 3
+export function etapeDuVerger(arbre, etape, n = 1) {
+  if (!V.ARBRES.includes(arbre)) throw new Error(`arbre inconnu : ${arbre} (${V.ARBRES.join(', ')})`);
+  if (!V.ETAPES.includes(etape)) throw new Error(`étape inconnue : ${etape} (${V.ETAPES.join(', ')})`);
+  if (!(+n >= 1 && +n <= V.IMAGES)) throw new Error(`image ${n} : de 1 à ${V.IMAGES}`);
+  const c = V.CADRE;
+  return { svg: `<svg xmlns="http://www.w3.org/2000/svg" width="${c[2]}" height="${c[3]}" viewBox="${c.join(' ')}">${V.etape(arbre, etape, n - 1)}</svg>`, cadre: c, ms_par_image: MS_VERGER.etape };
+}
+
 // Tout ce que la famille sait dessiner, avec le fichier de la bibliothèque qui lui correspond (sous svg/)
 export function liste() {
   const out = [];
+  for (const a of V.ARBRES) for (const e of V.ETAPES) for (let n = 1; n <= V.IMAGES; n++) out.push({ fichier: `decor/verger/${a}/verger_${a}_${e}_${n}.svg`, fonction: 'etapeDuVerger', args: [a, e, n] });
   for (const c of C.CULTURES) for (const e of C.etapesDe(c)) for (let n = 1; n <= C.IMAGES; n++) out.push({ fichier: `decor/cultures/${c}/culture_${c}_${e}_${n}.svg`, fonction: 'etapeDeCulture', args: [c, e, n] });
   for (const em of Object.keys(EMPRISES)) {
     const d = `batiments/montage/${em}`;

@@ -81,6 +81,7 @@ détails propres à un lot : places des objets de boutique, lumières des palier
 | `svg/batiments/` | 7 bâtiments × 7 paliers (images animées), les mêmes l'hiver (toits enneigés), chantier, 20 skins, 48 objets de la boutique (un fichier par calque), 14 pièces rares à chaque palier, outil de teintes (`batiments.json`) | 793 |
 | `svg/batiments/montage/` | Le montage d'un bâtiment, en 2 × 2 et 3 × 3 cases : six étapes en boucle (piquets, terrassement, fondations, charpente, murs, toit), le dévoilement par-dessus le bâtiment fini, l'échafaudage des évolutions en deux calques (`montage.json`) | 56 |
 | `svg/decor/cultures/` | Les cultures par étapes, une case : le bêchage, les sillons, le semis, les pousses et la croissance, 3 images en boucle chacune ; puis le champ mûr de l'annexe (blé, carottes, citrouilles) ou l'étape mûre (laitues, choux, tomates, haricots, fraises, pommes de terre) (`cultures.json`) | 153 |
+| `svg/decor/verger/` | Le verger par étapes, un arbre sur une case (pommier, poirier, cerisier, prunier, abricotier) : le trou, la plantation, le jeune arbre, la floraison, les fruits verts, les fruits mûrs, 3 images en boucle chacune (`verger.json`) | 90 |
 | `svg/scenes/tutoriel/` | Les 27 scènes plein écran du tutoriel v6 (`HISTOIRE.md` § 9, étapes 0 à 12) : la carte d'embarquement, le naufrage, Brume, le Grimoire, le feu, la silhouette, l'arrivée de Cannelle, Rivet, Aster et Ondin, la veillée. Carré 400 × 400, un fond et parfois un devant, en boucle ; la place de l'avatar dans `scenes.json` | 105 |
 | `svg/meteo/` | Calques d'écran sans couture en boucle, nuages, arc-en-ciel, éclair, soleil bas, lumières, teintes des moments du jour ; les saisons : flocons, feuilles qui tombent, pétales, pollen, plein soleil, teintes, et le sol d'une case (neige, neige fondante, givre, flaques, eau gelée) ; 23 icônes (`meteo.json`) | 267 |
 
@@ -123,7 +124,8 @@ détails propres à un lot : places des objets de boutique, lumières des palier
   `{ svg, cadre, ms_par_image }`, le SVG complet, identique à l'octet au fichier de la bibliothèque (le fichier y ajoute
   un saut de ligne) : `import { etapeDuMontage } from '…/design/bibliotheque/generateur/chantiers.mjs'`, puis
   `etapeDuMontage('2x2', 'toit', 1).svg` ; les cultures : `etapeDeCulture(culture, etape, n)` (ex.
-  `etapeDeCulture('citrouilles', 'croissance', 2)`), `CULTURES`, `PART_CULTURE`. `liste()` donne tout ce que la famille dessine, avec son fichier. Vérifiés à
+  `etapeDeCulture('citrouilles', 'croissance', 2)`), `CULTURES`, `PART_CULTURE` ; le verger : `etapeDuVerger(arbre, etape, n)`
+  (ex. `etapeDuVerger('cerisier', 'floraison', 1)`), `VERGER`, `PART_VERGER`. `liste()` donne tout ce que la famille dessine, avec son fichier. Vérifiés à
   l'octet près (`design/atelier/verif_generateurs.mjs`). En ligne de commande, depuis `design/atelier/` :
   Les bêtes : `profil(bete, pose)`, `orientee(bete, vue, pose)` (vue `avant` ou `dos`), `egare(sujet, vue, pose)`, les noms
   et poses dans `BETES` (ex. `profil('renard', 'marche1')`, `egare('fantome', 'avant', 'luciole2')`).
@@ -173,6 +175,9 @@ détails propres à un lot : places des objets de boutique, lumières des palier
   (`spectacle.ms_par_etape`), puis le champ mûr (`decor/annexes/champ/champ_<culture>`) paraît ; les cultures du potager
   n'ont pas de champ dans les annexes (`mur` vaut `null`) : leur étape `mur` est la culture mûre, prête à cueillir. Une
   culture qui pousse : la dernière étape dont la `part` est atteinte ; à 1, le champ ou l'étape mûre.
+- **Le verger par étapes** (`svg/decor/verger/`, `verger.json`) : à l'échelle de la troupe, dans le cadre d'un décor d'une
+  case, comme les arbres de `svg/plantes/` (ancre au centre de la case). Le spectacle : les six étapes défilent
+  (`spectacle.ms_par_etape`). Un arbre qui pousse : la dernière étape dont la `part` est atteinte ; à 1, les fruits mûrs.
 - **La torche** (`svg/decor/defenses/`, `defenses.json`) : elle s'achète à la boutique et se pose sur une case, comme une
   création (ancre au centre de la case, le cadre des créations). La nuit, `torche_allumee` en boucle et sa `lumiere`
   (les valeurs de la lumière d'une création du jeu : `u`, `v`, `z`, `rayon`, `couleur`) ; le jour, `torche_eteinte`.
