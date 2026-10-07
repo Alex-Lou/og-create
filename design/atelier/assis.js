@@ -8,16 +8,18 @@
 //   - de face : les cuisses viennent vers nous (cachées par le buste), les mains se posent sur elles, l'une près de l'autre ;
 //   - de trois quarts avant : les cuisses avancent vers le regard (bas-gauche), les genoux dépassent du buste, les mains dessus ;
 //   - de dos : les jambes passent devant le siège (on ne les voit pas), les mains se posent sur le siège.
+// geste : facultatif, un geste de design/atelier/gestes.js (mains tendues vers le feu…) fait assis : il place les bras
+// (et ce qu'il passe derrière le buste ou par-dessus) à partir des épaules descendues ; plus de clignement.
 const { arm, leg, limb, r2 } = require('./troupe');
 
 const KNEE = 53; // le haut des tibias, à hauteur d'assise
 const SEAT = 53.6; // le dessus du siège
 const dyOf = c => r2(KNEE - c.hip);
 
-function assis(c, view, n, expr) {
-  const id = `${c.uid}${view}assis${n}`;
+function assis(c, view, n, expr, geste) {
+  const id = `${c.uid}${view}assis${geste ? geste.name : ''}${n}`;
   const cc = { ...c, uid: id, view };
-  const ctx = { view, pose: 'repos', n, ph: 0, id, walk: false, expr: expr || 'neutre', eyeMode: null, open: false, blink: n === 1 };
+  const ctx = { view, pose: 'repos', n, ph: 0, id, walk: false, expr: expr || 'neutre', eyeMode: null, open: false, blink: !geste && n === 1 };
   const dy = dyOf(c);
   const knee = KNEE;
   const dir = view === 'se' ? -1 : view === 'ne' ? 1 : 0;
@@ -37,17 +39,21 @@ function assis(c, view, n, expr) {
   } else {
     hands = [[c.hands[0][0] - 0.6, c.hands[0][1] + dy - 1.2], [c.hands[1][0] + 0.6, c.hands[1][1] + dy - 1.2]];
   }
-  const armL = arm(cc, sh[0], hands[0]);
-  const armR = arm(cc, sh[1], hands[1]);
+  const act = geste ? geste.call({ ...cc, shoulders: sh }, ctx) : null;
+  if (act) { ctx.expr = expr || act.expr || 'neutre'; ctx.eyeMode = expr ? null : act.eyeMode || null; ctx.open = !expr && !!act.open; }
+  const armL = act && act.left != null ? act.left : arm(cc, sh[0], hands[0]);
+  const armR = act && act.right != null ? act.right : arm(cc, sh[1], hands[1]);
   let s = up(c.backItems ? c.backItems(cc, ctx) : '');
+  s += act && act.under ? act.under : '';
   s += legs;
   s += up(c.body(cc, ctx));
   if (view !== 'front') s += armR;
   s += up(c.neck ? c.neck(cc, ctx) : '');
   s += view === 'front' ? armL + armR : armL;
   s += up(c.overArms ? c.overArms(cc, ctx) : '');
-  s += up(c.head(cc, ctx, {}));
+  s += up(c.head(cc, ctx, act || {}));
   s += up(c.overHead ? c.overHead(cc, ctx) : '');
+  s += act && act.over ? act.over : '';
   return s;
 }
 

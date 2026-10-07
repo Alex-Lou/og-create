@@ -143,10 +143,11 @@ function leg(c, x, y, dir, tilt) {
     + (c.foot ? c.foot(c, x, y, dir, tilt) : shoe(c, x, y, dir, tilt));
 }
 // Bras : épaule a → main b, avec un coude facultatif (deux segments d'un seul trait, sans couture au coude) ;
-// le revers éventuel est posé juste avant la main
-function arm(c, a, b, elbow) {
+// le revers éventuel est posé juste avant la main ; main : facultatif, un autre dessin à la place du poing rond
+// (une main ouverte : design/atelier/gestes.js)
+function arm(c, a, b, elbow, main) {
   const pts = elbow ? [a, elbow, b] : [a, b];
-  if (c.sleeves || c.bandage) return armOf(c, pts); // naufragés : manche retroussée ou arrachée, bandage
+  if (c.sleeves || c.bandage) return armOf(c, pts, main); // naufragés : manche retroussée ou arrachée, bandage
   const d = 'M' + pts.map(p => `${r2(p[0])},${r2(p[1])}`).join(' L');
   const line = (color, w) => `<path d="${d}" fill="none" stroke="${color}" stroke-width="${r2(w)}" stroke-linecap="round" stroke-linejoin="round"/>`;
   let s = line(OUT, c.armW + W * 2) + line(c.sleeve, c.armW);
@@ -156,13 +157,13 @@ function arm(c, a, b, elbow) {
     const at = k => [b[0] - (b[0] - f[0]) * k / len, b[1] - (b[1] - f[1]) * k / len];
     s += limb(at(2.5), at(0.9), c.armW, c.cuff);
   }
-  return s + E(b[0], b[1], 2.1, 2.1, c.hand || c.skin); // main (c.hand : mains terreuses, gants…)
+  return s + (main != null ? main : E(b[0], b[1], 2.1, 2.1, c.hand || c.skin)); // main (c.hand : mains terreuses, gants…)
 }
 
 // Bras d'un naufragé : c.sleeves 'roll' (manche retroussée : bourrelet, avant-bras nu) ou 'torn' (arrachée au coude :
 // bord en dents, avant-bras nu) ; c.bandage 'left' ou 'right' : un bandage de chiffon sur l'avant-bras de ce côté
 // du personnage (de face et de trois quarts, son bras gauche est à droite de l'écran ; de dos, à gauche)
-function armOf(c, pts) {
+function armOf(c, pts, main) {
   const b = pts[pts.length - 1], f = pts[pts.length - 2];
   const len = Math.hypot(b[0] - f[0], b[1] - f[1]) || 1;
   const ux = (b[0] - f[0]) / len, uy = (b[1] - f[1]) / len, nx = -uy, ny = ux;
@@ -203,7 +204,7 @@ function armOf(c, pts) {
       const t = at(4); s += L(t, [t[0] + nx * 2.2 - ux * 0.4, t[1] + ny * 2.2 - uy * 0.4], OUT, 1.5) + L(t, [t[0] + nx * 2.2 - ux * 0.4, t[1] + ny * 2.2 - uy * 0.4], '#F4EEDF', 0.7);
     }
   }
-  return s + E(b[0], b[1], 2.1, 2.1, c.hand || c.skin);
+  return s + (main != null ? main : E(b[0], b[1], 2.1, 2.1, c.hand || c.skin));
 }
 
 // Une image d'un personnage
@@ -242,6 +243,7 @@ function frame(c, view, pose, n, expr) {
   ctx.blink = pose === 'repos' && n === 1;
   let s = '';
   s += c.backItems ? c.backItems(cc, ctx) : '';
+  s += act && act.under ? act.under : ''; // facultatif : ce que la pose passe derrière le buste (bras tendus devant soi, vus de dos)
   s += legs.join('');
   s += c.body(cc, ctx);
   if (view !== 'front') s += armRight; // bras éloigné (à droite de l'écran), le long du flanc
