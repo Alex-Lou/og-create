@@ -1,10 +1,12 @@
 // Lot J2 : les scènes plein écran du tutoriel v6 (scenes6.js). Pour chaque scène, ses calques en SVG 400 × 400 dans
 // lib/scenes/tutoriel/<id>/ : <id>_fond_<n> (derrière l'avatar) et <id>_devant_<n> (devant lui, s'il y en a) ; l'index
 // scenes.json donne l'étape, la vitesse et la place de l'avatar. Deux planches et une page animée montrent les scènes avec
-// un avatar d'exemple posé à sa place (le jeu y pose celui du joueur).
+// un avatar d'exemple posé à sa place (le jeu y pose celui du joueur). Les fichiers sortent du générateur des scènes
+// (generateur_scenes.mjs) : le jeu dessine les mêmes.
 import path from 'path';
 import { createRequire } from 'module';
 import { fileURLToPath } from 'url';
+import { scene } from './generateur_scenes.mjs';
 
 const require = createRequire(import.meta.url);
 const DIR = path.dirname(fileURLToPath(import.meta.url));
@@ -48,7 +50,7 @@ for (const [id, sc] of Object.entries(SCENES)) {
   const n = sc.images;
   const fichiers = calque => Array.from({ length: n }, (_, f) => {
     const rel = `${id}/${id}_${calque}_${f + 1}.svg`;
-    write(path.join(LIB, rel), svgOf(sc[calque](f))); count++;
+    write(path.join(LIB, rel), scene(id, calque, f + 1).svg); count++;
     return rel;
   });
   const calques = { fond: { nom: `${nom} (fond)`, fichiers: fichiers('fond') } };
