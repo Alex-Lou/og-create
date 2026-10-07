@@ -470,10 +470,18 @@ M.epave_bateau = { frame: [-54, -72, 108, 90], n: 1, draw: () => {
     + rr(-26, -18, 12, 8, 1, '#BDB5A8', W * 0.8) + rr(-10, -18, 10, 8, 1, '#A39B8E', W * 0.8) + rr(8, -16, 8, 6, 1, '#BDB5A8', W * 0.8)
     + L([-24, -15.6], [-16, -15.6], '#D3CCC0', 0.6) + L([-8, -15.4], [-2, -15.4], '#BDB5A8', 0.6) + '</g>';
 } };
-M.epave_barque = { frame: [-40, -32, 80, 44], n: 1, draw: () => `<g transform="rotate(-16)">`
-  + P('M-30,-8 Q0,6 30,-8 L24,2 Q0,12 -24,2 Z', WOOD.left) + line('M-27,-5 Q0,8 27,-5', 0.8, WOOD.top)
-  + E(-8, -3.8, 2.4, 2.4, '#C9A45A', W * 0.7) + E(2, -3, 2, 2, '#8A5A2E', W * 0.7) + E(10, -4, 2.2, 2.2, '#E2C27A', W * 0.7) + E(-3, -2.6, 1.4, 1.4, '#7FA65A', 0.5) + E(6, -2.4, 1.3, 1.3, '#C9A45A', 0.5)
-  + line('M-27,-5 Q0,8 27,-5', 1.4, WOOD.left) + '</g>' };
+M.epave_barque = { frame: [-40, -32, 80, 44], n: 1, draw: () => {
+  const coque = 'M-30,-8 Q0,6 30,-8 L24,2 Q0,12 -24,2 Z';
+  const sac = (x, y, c) => P(`M${x - 4},${y + 2} Q${x - 4.6},${y - 3} ${x - 1.6},${y - 4.4} L${x - 2.2},${y - 6} L${x + 2.2},${y - 6} L${x + 1.6},${y - 4.4} Q${x + 4.6},${y - 3} ${x + 4},${y + 2} Q${x},${y + 3.4} ${x - 4},${y + 2} Z`, c, W * 0.8) + L([x - 1.8, y - 4.6], [x + 1.8, y - 4.6], '#8A6A3A', 0.8);
+  return `<g transform="rotate(-16)">`
+    + `<defs><clipPath id="epave-barque"><path d="${coque}"/></clipPath></defs><path d="${coque}" fill="${WOOD.left}"/><g clip-path="url(#epave-barque)">`
+    + `<path d="M-32,1 Q0,10 32,-1 L32,14 L-32,14 Z" fill="${WOOD.right}"/>` + line('M-28,-3 Q0,9 28,-3', 0.6, WOOD.right) + P('M6,1 L12,0 L13,5 L7,6 Z', '#2E2218', 0.5) + '</g>'
+    + `<path d="${coque}" fill="none" stroke="${OUT}" stroke-width="${W}" stroke-linejoin="round"/>`
+    + sac(-10, -2, '#D9C08A') + sac(-1, 0, '#E2CC98') + P('M8,-4 L14,-7 L16,-3 L10,0 Z', '#C9AE78', W * 0.8)
+    + E(-8, -3.8, 2.2, 2.2, '#C9A45A', W * 0.7) + E(2, -3, 1.8, 1.8, '#8A5A2E', W * 0.7) + E(12, -6.4, 1.6, 1.6, '#E2C27A', W * 0.6) + E(16, -4.6, 1.2, 1.2, '#7FA65A', 0.5) + E(19, -2.4, 1, 1, '#C9A45A', 0.5) + E(-3, -2.6, 1.2, 1.2, '#7FA65A', 0.5)
+    + tk('M-26,-10 L-6,2', 1, WOOD_DARK.left) + P('M-6,1 L-2,4 L-1,2.4 L-4,-0.6 Z', WOOD_DARK.left, W * 0.6)
+    + line('M-27,-5 Q0,8 27,-5', 1.4, WOOD.top) + '</g>';
+} };
 const silhouette = body => body.replace(/fill="(?!none)[^"]*"/g, 'fill="#070E1E"').replace(/stroke="(?!none)[^"]*"/g, 'stroke="#070E1E"');
 
 module.exports = { K, up, big, G, S, SIGN_TEXT, SIGN_FRAME, M, silhouette };
