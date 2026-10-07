@@ -16,6 +16,9 @@ const FILES = import.meta.glob([
   '/design/bibliotheque/svg/personnages/{maitres,naufrages}/*/*_couche_[0-9].svg'
 ], { query: '?raw', import: 'default' });
 const URLS = import.meta.glob('/design/bibliotheque/svg/personnages/{maitres,naufrages}/*/*_{face,avant}_{repos,travail,marche,assis}_1.svg', { query: '?url', import: 'default', eager: true });
+// Les gestes des mini-jeux (quotidien.json : pecher, piocher, cueillir), de trois quarts avant, en maître (le jeu s'ouvre
+// au palier III : le bâtiment est fondé)
+const GESTURES = import.meta.glob('/design/bibliotheque/svg/personnages/maitres/*/*_avant_{pecher,piocher,cueillir}_[12].svg', { query: '?url', import: 'default', eager: true });
 const ROOT = '/design/bibliotheque/svg/personnages/';
 const SCALE = 1.25;
 
@@ -80,6 +83,14 @@ export function masterSprite(role, castaway, { pose = 'idle', view = 'se', frame
     view: drawn,
     lantern: flame ? (drawn === 'dos' ? [-flame[0], flame[1]] : flame) : null
   };
+}
+
+// Le geste d'un maître dans le mini-jeu de son bâtiment (pecher, piocher, cueillir), de trois quarts avant : les adresses
+// de ses deux images, ou null
+export function masterGesture(role, gesture) {
+  const set = setOf(role, false);
+  const urls = set && (set.fichiers[`avant_${gesture}`] || []).map(file => GESTURES[ROOT + file]);
+  return urls && urls.length === 2 && urls.every(Boolean) ? urls : null;
 }
 
 // Portrait d'un maître hors de l'île (sa fiche, les bulles du guide, les scènes) : de face ou de trois quarts avant, au

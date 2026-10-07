@@ -13,6 +13,9 @@
       <!-- Avant la partie : la règle, les parties en réserve, ce que la partie peut rapporter -->
       <div v-if="phase === 'intro'" class="mini__intro">
         <div class="mini__art" aria-hidden="true">
+          <span v-if="gesture" class="mini__master">
+            <img v-for="(src, k) in gesture" :key="src" :src="src" alt="" :class="{ 'is-off': k !== gestureFrame }" />
+          </span>
           <GameIcon v-for="(kind, k) in ART[game.id]" :key="kind" :kind="kind" :size="k === 1 ? 64 : 46" />
         </div>
         <p class="mini__rule">{{ game.text }}</p>
@@ -66,6 +69,7 @@ import PickingBoard from '../PickingBoard/PickingBoard.vue';
 import { earnedOf, multOf } from '@/game/minigames';
 import { roman } from '@/utils/roman';
 import { reducedMotion } from '@/utils/fx';
+import { masterGesture } from '@/world/masterArt';
 
 const BOARDS = { peche: FishingBoard, filon: VeinBoard, cueillette: PickingBoard };
 const TIMED = new Set(['peche', 'cueillette']);
@@ -76,6 +80,9 @@ const RULES = {
   cueillette: ['40 secondes, seize buissons.', 'Mûre 1, fraise et myrtille 2, cèpe doré 6.', 'Un buisson vide fait perdre un instant, les guêpes bien plus.']
 };
 const COUNT_MS = 650;
+// Le maître du bâtiment fait le geste du jeu (bibliothèque, quotidien.json) : ses deux images, 700 puis 1 100 ms
+const GESTURE = { peche: ['ponton', 'pecher'], filon: ['carriere', 'piocher'], cueillette: ['bosquet', 'cueillir'] };
+const GESTURE_MS = [700, 1100];
 
 // Mini-jeu d'un bâtiment : la règle, puis la partie (graine du serveur, plateau du jeu), puis le gain que le serveur a
 // pesé en rejouant les gestes. L'île lance (start) et rend (finish) la partie ; cette fenêtre ne fait que jouer et montrer.
@@ -94,9 +101,13 @@ export default {
   },
   emits: ['start', 'finish', 'close'],
   data() {
-    return { BOARDS, ART, RULES, phase: 'intro', count: 3, tally: { raw: 0, detail: [] } };
+    return { BOARDS, ART, RULES, phase: 'intro', count: 3, tally: { raw: 0, detail: [] }, gestureFrame: 0 };
   },
   computed: {
+    gesture() {
+      const g = GESTURE[this.game.id];
+      return g ? masterGesture(...g) : null;
+    },
     multText() {
       return String(this.run ? multOf(this.run.level) : this.game.mult).replace('.', ',');
     },
@@ -143,8 +154,18 @@ export default {
       this.countTimer = setTimeout(tick, COUNT_MS);
     }
   },
+  mounted() {
+    // (en mouvement réduit, il reste sur sa première image)
+    if (!this.gesture || reducedMotion()) return;
+    const tick = () => {
+      this.gestureFrame = 1 - this.gestureFrame;
+      this.gestureTimer = setTimeout(tick, GESTURE_MS[this.gestureFrame]);
+    };
+    this.gestureTimer = setTimeout(tick, GESTURE_MS[0]);
+  },
   beforeUnmount() {
     clearTimeout(this.countTimer);
+    clearTimeout(this.gestureTimer);
   },
   methods: {
     roman,

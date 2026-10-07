@@ -4,7 +4,7 @@
 import { describe, it, expect } from 'vitest';
 import { readFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
-import { masterSprite, masterPortrait, MASTERS } from '@/world/masterArt';
+import { masterSprite, masterPortrait, masterGesture, MASTERS } from '@/world/masterArt';
 import { ROLES } from '@/world/villagers';
 import DATA from '../design/bibliotheque/svg/personnages/quotidien.json';
 
@@ -113,5 +113,14 @@ describe('les maîtres de la bibliothèque', () => {
         }
       }
     }
+  });
+  it('le geste du mini-jeu de son bâtiment : pêcher au Ponton, piocher à la Carrière, cueillir au Bosquet (deux images)', () => {
+    for (const [role, gesture, name] of [['ponton', 'pecher', 'aster'], ['carriere', 'piocher', 'galet'], ['bosquet', 'cueillir', 'sylve']]) {
+      const urls = masterGesture(role, gesture);
+      expect(urls, role).toHaveLength(2);
+      urls.forEach((url, k) => expect(url).toContain(`${name}_avant_${gesture}_${k + 1}`));
+    }
+    expect(masterGesture('ponton', 'voler')).toBe(null);
+    expect(masterGesture('nulle-part', 'pecher')).toBe(null);
   });
 });

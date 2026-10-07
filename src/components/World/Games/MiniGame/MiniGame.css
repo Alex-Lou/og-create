@@ -17,6 +17,10 @@
 .mini__end:disabled { opacity: .5; cursor: default; }
 .mini__intro { display: grid; gap: 12px; }
 .mini__art { display: flex; align-items: flex-end; justify-content: center; gap: 4px; padding: 14px 0 10px; border-radius: var(--r-board); background: radial-gradient(circle at 50% 70%, var(--gold-100), var(--vellum-200) 72%); }
+/* Le maître du bâtiment fait le geste du jeu : ses deux images superposées, l'une après l'autre */
+.mini__master { position: relative; width: 66px; height: 88px; margin-right: 8px; }
+.mini__master img { position: absolute; inset: 0; width: 100%; height: 100%; }
+.mini__master img.is-off { visibility: hidden; }
 .mini__rule { margin: 0; font-weight: 800; font-size: 15px; line-height: 1.4; text-align: center; }
 .mini__rules { margin: 0; padding-left: 18px; display: grid; gap: 4px; color: var(--ink-700); font-size: 13px; font-weight: 700; line-height: 1.4; }
 .mini__facts { margin: 0; padding: 0; list-style: none; display: grid; gap: 6px; }
