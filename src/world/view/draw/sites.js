@@ -46,7 +46,7 @@ export default {
       // Chantier, dans sa phase ; tout prêt, un peu de poussière de temps en temps
       const stage = this.stageOf(site);
       const lib = chantierArt(stage);
-      drawSprite(ctx, lib ? lib.key : `chantier-${stage}`, lib ? lib.make : BUILDINGS.chantier[stage], c.x, c.y, repaint);
+      drawSprite(ctx, lib ? lib.key : `chantier-${stage}`, lib ? lib.make : BUILDINGS.chantier[stage], c.x, c.y, repaint, `site:${site.id}`);
       if (stage === 2 && !site.locked) {
         const puff = (t * 0.5) % 1;
         if (puff < 0.4) this.dust(ctx, c.x, c.y + 6, puff / 0.4, 3);
@@ -87,17 +87,17 @@ export default {
     }
     // Articles de la boutique : ceux de derrière avant le bâtiment, les autres après lui
     this.drawItems(ctx, site, c, t, repaint, true);
-    this.swayed(ctx, body.key, body.make, c.x, c.y, look.sway * this.windAt(t, site.x + site.y), repaint);
+    this.swayed(ctx, body.key, body.make, c.x, c.y, look.sway * this.windAt(t, site.x + site.y), repaint, `site:${site.id}`);
     // Parties vivantes du palier (flamme, jets d'eau, ailes de moulin, roue…), puis le voilier bercé du Ponton
     if (art && art.anim) {
       const frame = art.anim.frame(Math.floor((t * 1000) / art.anim.ms) % art.anim.n);
-      drawSprite(ctx, frame.key, frame.make, c.x, c.y, repaint);
+      drawSprite(ctx, frame.key, frame.make, c.x, c.y, repaint, `site:${site.id}:anim`);
     }
     if (!art) {
       look.anims.forEach((anim, i) => {
         if (anim.skip && anim.skip(skin)) return;
         const frame = Math.floor(t * anim.fps) % anim.n;
-        drawSprite(ctx, `${site.id}-${site.level}-a${i}-${frame}-${anim.skinned ? skin : ''}`, () => anim.frame(frame, skin || undefined), c.x, c.y, repaint);
+        drawSprite(ctx, `${site.id}-${site.level}-a${i}-${frame}-${anim.skinned ? skin : ''}`, () => anim.frame(frame, skin || undefined), c.x, c.y, repaint, `site:${site.id}:a${i}`);
       });
     }
     if (look.boat) {
@@ -236,7 +236,7 @@ export default {
     if (mist) ctx.globalAlpha = 1 - 0.5 * mist;
     // Le Cercle de menhirs fleurit une fois Anya révélée
     const bloom = landmark.id === 'menhirs' && Boolean(this.state.anya && this.state.anya.revealed);
-    for (const layer of landmarkLayers(landmark.id, this.reduced() ? 0 : t, bloom)) drawSprite(ctx, layer.key, layer.make, 0, 0, repaint);
+    landmarkLayers(landmark.id, this.reduced() ? 0 : t, bloom).forEach((layer, i) => drawSprite(ctx, layer.key, layer.make, 0, 0, repaint, `landmark:${landmark.id}:${i}`));
     ctx.restore();
   },
   // Gisement de trouvailles, un peu plus grand que sa case : plein (animé) ou ramassé ; prêt dans un quartier à soi,
@@ -278,7 +278,7 @@ export default {
     ctx.translate(c.x, c.y - hop);
     ctx.scale(scale, scale);
     if (mist) ctx.globalAlpha = 1 - 0.5 * mist;
-    drawSprite(ctx, layer.key, layer.make, 0, 0, repaint);
+    drawSprite(ctx, layer.key, layer.make, 0, 0, repaint, key);
     ctx.restore();
   },
   // Étoile dorée qui bat au-dessus de chaque lieu d'un quartier à soi encore à découvrir (seen : case à l'écran)
@@ -327,7 +327,7 @@ export default {
     ctx.translate(c.x, c.y - hop);
     if (scale !== 1) ctx.scale(scale, scale);
     if (from && from.x === craft.x && from.y === craft.y) ctx.globalAlpha = 0.45;
-    for (const layer of craftLayers(craft.craft, t)) drawSprite(ctx, layer.key, layer.make, 0, 0, repaint);
+    craftLayers(craft.craft, t).forEach((layer, i) => drawSprite(ctx, layer.key, layer.make, 0, 0, repaint, `craft:${craft.x},${craft.y}:${i}`));
     ctx.restore();
   },
 
@@ -350,7 +350,7 @@ export default {
     ctx.translate(c.x, c.y - hop);
     if (scale !== 1) ctx.scale(scale, scale);
     if (from && from.x === annex.x && from.y === annex.y) ctx.globalAlpha = 0.45;
-    for (const layer of annexLayers(annex.annex, this.annexVariants.get(`${annex.x},${annex.y}`) || 0, t)) drawSprite(ctx, layer.key, layer.make, 0, 0, repaint);
+    annexLayers(annex.annex, this.annexVariants.get(`${annex.x},${annex.y}`) || 0, t).forEach((layer, i) => drawSprite(ctx, layer.key, layer.make, 0, 0, repaint, `${key}:${i}`));
     ctx.restore();
   }
 };

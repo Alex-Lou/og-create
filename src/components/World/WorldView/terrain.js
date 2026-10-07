@@ -159,16 +159,17 @@ export default {
       const gust = 0.55 + 0.45 * Math.sin(t * 0.21);
       return (Math.sin(t * 1.1 + x * 0.35) * 0.65 + Math.sin(t * 2.6 + x) * 0.25) * gust;
     },
-    // Dessine un sprite ancré en (x, y) du monde, plié par le vent (cisaillement depuis sa base)
-    swayed(ctx, key, make, x, y, skew, repaint) {
+    // Dessine un sprite ancré en (x, y) du monde, plié par le vent (cisaillement depuis sa base) ; hold : comme
+    // drawSprite
+    swayed(ctx, key, make, x, y, skew, repaint, hold) {
       if (!skew) {
-        drawSprite(ctx, key, make, x, y, repaint);
+        drawSprite(ctx, key, make, x, y, repaint, hold);
         return;
       }
       ctx.save();
       ctx.translate(x, y);
       ctx.transform(1, 0, -skew, 1, 0, 0);
-      drawSprite(ctx, key, make, 0, 0, repaint);
+      drawSprite(ctx, key, make, 0, 0, repaint, hold);
       ctx.restore();
     },
     // Bouffées de poussière autour d'une emprise de chantier, k de 0 à 1 ; span : demi-largeur de l'emprise en cases
