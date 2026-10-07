@@ -90532,8 +90532,88 @@
    ],
    "ms_par_image": 260,
    "parcours": "revelation",
-   "statut": "a-revoir",
-   "note": "Le manteau change avec les saisons (§ 8) : variantes à dessiner quand le jeu aura des saisons."
+   "statut": "ok"
+  },
+  {
+   "id": "vivants/anya/anya_avant_marche_automne",
+   "rubrique": "vivants",
+   "sujet": "anya",
+   "vue": "avant",
+   "pose": "marche",
+   "variante": "automne",
+   "titre": "Anya, trois quarts avant, marche, automne",
+   "regarde": "bas-droite",
+   "miroir": true,
+   "images": 4,
+   "fichiers": [
+    "svg/vivants/anya/anya_avant_marche_automne_1.svg",
+    "svg/vivants/anya/anya_avant_marche_automne_2.svg",
+    "svg/vivants/anya/anya_avant_marche_automne_3.svg",
+    "svg/vivants/anya/anya_avant_marche_automne_4.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    80,
+    128
+   ],
+   "ms_par_image": 260,
+   "parcours": "revelation",
+   "statut": "ok"
+  },
+  {
+   "id": "vivants/anya/anya_avant_marche_hiver",
+   "rubrique": "vivants",
+   "sujet": "anya",
+   "vue": "avant",
+   "pose": "marche",
+   "variante": "hiver",
+   "titre": "Anya, trois quarts avant, marche, hiver",
+   "regarde": "bas-droite",
+   "miroir": true,
+   "images": 4,
+   "fichiers": [
+    "svg/vivants/anya/anya_avant_marche_hiver_1.svg",
+    "svg/vivants/anya/anya_avant_marche_hiver_2.svg",
+    "svg/vivants/anya/anya_avant_marche_hiver_3.svg",
+    "svg/vivants/anya/anya_avant_marche_hiver_4.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    80,
+    128
+   ],
+   "ms_par_image": 260,
+   "parcours": "revelation",
+   "statut": "ok"
+  },
+  {
+   "id": "vivants/anya/anya_avant_marche_printemps",
+   "rubrique": "vivants",
+   "sujet": "anya",
+   "vue": "avant",
+   "pose": "marche",
+   "variante": "printemps",
+   "titre": "Anya, trois quarts avant, marche, printemps",
+   "regarde": "bas-droite",
+   "miroir": true,
+   "images": 4,
+   "fichiers": [
+    "svg/vivants/anya/anya_avant_marche_printemps_1.svg",
+    "svg/vivants/anya/anya_avant_marche_printemps_2.svg",
+    "svg/vivants/anya/anya_avant_marche_printemps_3.svg",
+    "svg/vivants/anya/anya_avant_marche_printemps_4.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    80,
+    128
+   ],
+   "ms_par_image": 260,
+   "parcours": "revelation",
+   "statut": "ok"
   },
   {
    "id": "vivants/anya/anya_dos_marche",
@@ -90559,8 +90639,88 @@
    ],
    "ms_par_image": 260,
    "parcours": "revelation",
-   "statut": "a-revoir",
-   "note": "Le manteau change avec les saisons (§ 8) : variantes à dessiner quand le jeu aura des saisons."
+   "statut": "ok"
+  },
+  {
+   "id": "vivants/anya/anya_dos_marche_automne",
+   "rubrique": "vivants",
+   "sujet": "anya",
+   "vue": "dos",
+   "pose": "marche",
+   "variante": "automne",
+   "titre": "Anya, trois quarts dos, marche, automne",
+   "regarde": "haut-droite",
+   "miroir": true,
+   "images": 4,
+   "fichiers": [
+    "svg/vivants/anya/anya_dos_marche_automne_1.svg",
+    "svg/vivants/anya/anya_dos_marche_automne_2.svg",
+    "svg/vivants/anya/anya_dos_marche_automne_3.svg",
+    "svg/vivants/anya/anya_dos_marche_automne_4.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    80,
+    128
+   ],
+   "ms_par_image": 260,
+   "parcours": "revelation",
+   "statut": "ok"
+  },
+  {
+   "id": "vivants/anya/anya_dos_marche_hiver",
+   "rubrique": "vivants",
+   "sujet": "anya",
+   "vue": "dos",
+   "pose": "marche",
+   "variante": "hiver",
+   "titre": "Anya, trois quarts dos, marche, hiver",
+   "regarde": "haut-droite",
+   "miroir": true,
+   "images": 4,
+   "fichiers": [
+    "svg/vivants/anya/anya_dos_marche_hiver_1.svg",
+    "svg/vivants/anya/anya_dos_marche_hiver_2.svg",
+    "svg/vivants/anya/anya_dos_marche_hiver_3.svg",
+    "svg/vivants/anya/anya_dos_marche_hiver_4.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    80,
+    128
+   ],
+   "ms_par_image": 260,
+   "parcours": "revelation",
+   "statut": "ok"
+  },
+  {
+   "id": "vivants/anya/anya_dos_marche_printemps",
+   "rubrique": "vivants",
+   "sujet": "anya",
+   "vue": "dos",
+   "pose": "marche",
+   "variante": "printemps",
+   "titre": "Anya, trois quarts dos, marche, printemps",
+   "regarde": "haut-droite",
+   "miroir": true,
+   "images": 4,
+   "fichiers": [
+    "svg/vivants/anya/anya_dos_marche_printemps_1.svg",
+    "svg/vivants/anya/anya_dos_marche_printemps_2.svg",
+    "svg/vivants/anya/anya_dos_marche_printemps_3.svg",
+    "svg/vivants/anya/anya_dos_marche_printemps_4.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    80,
+    128
+   ],
+   "ms_par_image": 260,
+   "parcours": "revelation",
+   "statut": "ok"
   },
   {
    "id": "vivants/anya/anya_expr_content",
@@ -90585,8 +90745,82 @@
     900
    ],
    "parcours": "revelation",
-   "statut": "a-revoir",
-   "note": "Le manteau change avec les saisons (§ 8) : variantes à dessiner quand le jeu aura des saisons."
+   "statut": "ok"
+  },
+  {
+   "id": "vivants/anya/anya_expr_content_automne",
+   "rubrique": "vivants",
+   "sujet": "anya",
+   "pose": "expr",
+   "variante": "content_automne",
+   "titre": "Anya, expression, content automne",
+   "images": 2,
+   "fichiers": [
+    "svg/vivants/anya/anya_expr_content_automne_1.svg",
+    "svg/vivants/anya/anya_expr_content_automne_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    80,
+    128
+   ],
+   "ms_par_image": [
+    700,
+    900
+   ],
+   "parcours": "revelation",
+   "statut": "ok"
+  },
+  {
+   "id": "vivants/anya/anya_expr_content_hiver",
+   "rubrique": "vivants",
+   "sujet": "anya",
+   "pose": "expr",
+   "variante": "content_hiver",
+   "titre": "Anya, expression, content hiver",
+   "images": 2,
+   "fichiers": [
+    "svg/vivants/anya/anya_expr_content_hiver_1.svg",
+    "svg/vivants/anya/anya_expr_content_hiver_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    80,
+    128
+   ],
+   "ms_par_image": [
+    700,
+    900
+   ],
+   "parcours": "revelation",
+   "statut": "ok"
+  },
+  {
+   "id": "vivants/anya/anya_expr_content_printemps",
+   "rubrique": "vivants",
+   "sujet": "anya",
+   "pose": "expr",
+   "variante": "content_printemps",
+   "titre": "Anya, expression, content printemps",
+   "images": 2,
+   "fichiers": [
+    "svg/vivants/anya/anya_expr_content_printemps_1.svg",
+    "svg/vivants/anya/anya_expr_content_printemps_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    80,
+    128
+   ],
+   "ms_par_image": [
+    700,
+    900
+   ],
+   "parcours": "revelation",
+   "statut": "ok"
   },
   {
    "id": "vivants/anya/anya_expr_neutre",
@@ -90611,8 +90845,82 @@
     900
    ],
    "parcours": "revelation",
-   "statut": "a-revoir",
-   "note": "Le manteau change avec les saisons (§ 8) : variantes à dessiner quand le jeu aura des saisons."
+   "statut": "ok"
+  },
+  {
+   "id": "vivants/anya/anya_expr_neutre_automne",
+   "rubrique": "vivants",
+   "sujet": "anya",
+   "pose": "expr",
+   "variante": "neutre_automne",
+   "titre": "Anya, expression, neutre automne",
+   "images": 2,
+   "fichiers": [
+    "svg/vivants/anya/anya_expr_neutre_automne_1.svg",
+    "svg/vivants/anya/anya_expr_neutre_automne_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    80,
+    128
+   ],
+   "ms_par_image": [
+    700,
+    900
+   ],
+   "parcours": "revelation",
+   "statut": "ok"
+  },
+  {
+   "id": "vivants/anya/anya_expr_neutre_hiver",
+   "rubrique": "vivants",
+   "sujet": "anya",
+   "pose": "expr",
+   "variante": "neutre_hiver",
+   "titre": "Anya, expression, neutre hiver",
+   "images": 2,
+   "fichiers": [
+    "svg/vivants/anya/anya_expr_neutre_hiver_1.svg",
+    "svg/vivants/anya/anya_expr_neutre_hiver_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    80,
+    128
+   ],
+   "ms_par_image": [
+    700,
+    900
+   ],
+   "parcours": "revelation",
+   "statut": "ok"
+  },
+  {
+   "id": "vivants/anya/anya_expr_neutre_printemps",
+   "rubrique": "vivants",
+   "sujet": "anya",
+   "pose": "expr",
+   "variante": "neutre_printemps",
+   "titre": "Anya, expression, neutre printemps",
+   "images": 2,
+   "fichiers": [
+    "svg/vivants/anya/anya_expr_neutre_printemps_1.svg",
+    "svg/vivants/anya/anya_expr_neutre_printemps_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    80,
+    128
+   ],
+   "ms_par_image": [
+    700,
+    900
+   ],
+   "parcours": "revelation",
+   "statut": "ok"
   },
   {
    "id": "vivants/anya/anya_expr_surpris",
@@ -90637,8 +90945,82 @@
     900
    ],
    "parcours": "revelation",
-   "statut": "a-revoir",
-   "note": "Le manteau change avec les saisons (§ 8) : variantes à dessiner quand le jeu aura des saisons."
+   "statut": "ok"
+  },
+  {
+   "id": "vivants/anya/anya_expr_surpris_automne",
+   "rubrique": "vivants",
+   "sujet": "anya",
+   "pose": "expr",
+   "variante": "surpris_automne",
+   "titre": "Anya, expression, surpris automne",
+   "images": 2,
+   "fichiers": [
+    "svg/vivants/anya/anya_expr_surpris_automne_1.svg",
+    "svg/vivants/anya/anya_expr_surpris_automne_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    80,
+    128
+   ],
+   "ms_par_image": [
+    700,
+    900
+   ],
+   "parcours": "revelation",
+   "statut": "ok"
+  },
+  {
+   "id": "vivants/anya/anya_expr_surpris_hiver",
+   "rubrique": "vivants",
+   "sujet": "anya",
+   "pose": "expr",
+   "variante": "surpris_hiver",
+   "titre": "Anya, expression, surpris hiver",
+   "images": 2,
+   "fichiers": [
+    "svg/vivants/anya/anya_expr_surpris_hiver_1.svg",
+    "svg/vivants/anya/anya_expr_surpris_hiver_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    80,
+    128
+   ],
+   "ms_par_image": [
+    700,
+    900
+   ],
+   "parcours": "revelation",
+   "statut": "ok"
+  },
+  {
+   "id": "vivants/anya/anya_expr_surpris_printemps",
+   "rubrique": "vivants",
+   "sujet": "anya",
+   "pose": "expr",
+   "variante": "surpris_printemps",
+   "titre": "Anya, expression, surpris printemps",
+   "images": 2,
+   "fichiers": [
+    "svg/vivants/anya/anya_expr_surpris_printemps_1.svg",
+    "svg/vivants/anya/anya_expr_surpris_printemps_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    80,
+    128
+   ],
+   "ms_par_image": [
+    700,
+    900
+   ],
+   "parcours": "revelation",
+   "statut": "ok"
   },
   {
    "id": "vivants/anya/anya_expr_triste",
@@ -90663,8 +91045,82 @@
     900
    ],
    "parcours": "revelation",
-   "statut": "a-revoir",
-   "note": "Le manteau change avec les saisons (§ 8) : variantes à dessiner quand le jeu aura des saisons."
+   "statut": "ok"
+  },
+  {
+   "id": "vivants/anya/anya_expr_triste_automne",
+   "rubrique": "vivants",
+   "sujet": "anya",
+   "pose": "expr",
+   "variante": "triste_automne",
+   "titre": "Anya, expression, triste automne",
+   "images": 2,
+   "fichiers": [
+    "svg/vivants/anya/anya_expr_triste_automne_1.svg",
+    "svg/vivants/anya/anya_expr_triste_automne_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    80,
+    128
+   ],
+   "ms_par_image": [
+    700,
+    900
+   ],
+   "parcours": "revelation",
+   "statut": "ok"
+  },
+  {
+   "id": "vivants/anya/anya_expr_triste_hiver",
+   "rubrique": "vivants",
+   "sujet": "anya",
+   "pose": "expr",
+   "variante": "triste_hiver",
+   "titre": "Anya, expression, triste hiver",
+   "images": 2,
+   "fichiers": [
+    "svg/vivants/anya/anya_expr_triste_hiver_1.svg",
+    "svg/vivants/anya/anya_expr_triste_hiver_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    80,
+    128
+   ],
+   "ms_par_image": [
+    700,
+    900
+   ],
+   "parcours": "revelation",
+   "statut": "ok"
+  },
+  {
+   "id": "vivants/anya/anya_expr_triste_printemps",
+   "rubrique": "vivants",
+   "sujet": "anya",
+   "pose": "expr",
+   "variante": "triste_printemps",
+   "titre": "Anya, expression, triste printemps",
+   "images": 2,
+   "fichiers": [
+    "svg/vivants/anya/anya_expr_triste_printemps_1.svg",
+    "svg/vivants/anya/anya_expr_triste_printemps_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    80,
+    128
+   ],
+   "ms_par_image": [
+    700,
+    900
+   ],
+   "parcours": "revelation",
+   "statut": "ok"
   },
   {
    "id": "vivants/anya/anya_face_benediction",
@@ -90690,8 +91146,88 @@
     900
    ],
    "parcours": "revelation",
-   "statut": "a-revoir",
-   "note": "Le manteau change avec les saisons (§ 8) : variantes à dessiner quand le jeu aura des saisons."
+   "statut": "ok"
+  },
+  {
+   "id": "vivants/anya/anya_face_benediction_automne",
+   "rubrique": "vivants",
+   "sujet": "anya",
+   "vue": "face",
+   "pose": "benediction",
+   "variante": "automne",
+   "titre": "Anya, de face, bénédiction, automne",
+   "regarde": "face",
+   "images": 2,
+   "fichiers": [
+    "svg/vivants/anya/anya_face_benediction_automne_1.svg",
+    "svg/vivants/anya/anya_face_benediction_automne_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    80,
+    128
+   ],
+   "ms_par_image": [
+    700,
+    900
+   ],
+   "parcours": "revelation",
+   "statut": "ok"
+  },
+  {
+   "id": "vivants/anya/anya_face_benediction_hiver",
+   "rubrique": "vivants",
+   "sujet": "anya",
+   "vue": "face",
+   "pose": "benediction",
+   "variante": "hiver",
+   "titre": "Anya, de face, bénédiction, hiver",
+   "regarde": "face",
+   "images": 2,
+   "fichiers": [
+    "svg/vivants/anya/anya_face_benediction_hiver_1.svg",
+    "svg/vivants/anya/anya_face_benediction_hiver_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    80,
+    128
+   ],
+   "ms_par_image": [
+    700,
+    900
+   ],
+   "parcours": "revelation",
+   "statut": "ok"
+  },
+  {
+   "id": "vivants/anya/anya_face_benediction_printemps",
+   "rubrique": "vivants",
+   "sujet": "anya",
+   "vue": "face",
+   "pose": "benediction",
+   "variante": "printemps",
+   "titre": "Anya, de face, bénédiction, printemps",
+   "regarde": "face",
+   "images": 2,
+   "fichiers": [
+    "svg/vivants/anya/anya_face_benediction_printemps_1.svg",
+    "svg/vivants/anya/anya_face_benediction_printemps_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    80,
+    128
+   ],
+   "ms_par_image": [
+    700,
+    900
+   ],
+   "parcours": "revelation",
+   "statut": "ok"
   },
   {
    "id": "vivants/anya/anya_face_eveil",
@@ -90717,8 +91253,88 @@
     900
    ],
    "parcours": "revelation",
-   "statut": "a-revoir",
-   "note": "Le manteau change avec les saisons (§ 8) : variantes à dessiner quand le jeu aura des saisons."
+   "statut": "ok"
+  },
+  {
+   "id": "vivants/anya/anya_face_eveil_automne",
+   "rubrique": "vivants",
+   "sujet": "anya",
+   "vue": "face",
+   "pose": "eveil",
+   "variante": "automne",
+   "titre": "Anya, de face, éveil, automne",
+   "regarde": "face",
+   "images": 2,
+   "fichiers": [
+    "svg/vivants/anya/anya_face_eveil_automne_1.svg",
+    "svg/vivants/anya/anya_face_eveil_automne_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    80,
+    128
+   ],
+   "ms_par_image": [
+    700,
+    900
+   ],
+   "parcours": "revelation",
+   "statut": "ok"
+  },
+  {
+   "id": "vivants/anya/anya_face_eveil_hiver",
+   "rubrique": "vivants",
+   "sujet": "anya",
+   "vue": "face",
+   "pose": "eveil",
+   "variante": "hiver",
+   "titre": "Anya, de face, éveil, hiver",
+   "regarde": "face",
+   "images": 2,
+   "fichiers": [
+    "svg/vivants/anya/anya_face_eveil_hiver_1.svg",
+    "svg/vivants/anya/anya_face_eveil_hiver_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    80,
+    128
+   ],
+   "ms_par_image": [
+    700,
+    900
+   ],
+   "parcours": "revelation",
+   "statut": "ok"
+  },
+  {
+   "id": "vivants/anya/anya_face_eveil_printemps",
+   "rubrique": "vivants",
+   "sujet": "anya",
+   "vue": "face",
+   "pose": "eveil",
+   "variante": "printemps",
+   "titre": "Anya, de face, éveil, printemps",
+   "regarde": "face",
+   "images": 2,
+   "fichiers": [
+    "svg/vivants/anya/anya_face_eveil_printemps_1.svg",
+    "svg/vivants/anya/anya_face_eveil_printemps_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    80,
+    128
+   ],
+   "ms_par_image": [
+    700,
+    900
+   ],
+   "parcours": "revelation",
+   "statut": "ok"
   },
   {
    "id": "vivants/anya/anya_face_repos",
@@ -90741,8 +91357,79 @@
    ],
    "ms_par_image": 1200,
    "parcours": "revelation",
-   "statut": "a-revoir",
-   "note": "Le manteau change avec les saisons (§ 8) : variantes à dessiner quand le jeu aura des saisons."
+   "statut": "ok"
+  },
+  {
+   "id": "vivants/anya/anya_face_repos_automne",
+   "rubrique": "vivants",
+   "sujet": "anya",
+   "vue": "face",
+   "pose": "repos",
+   "variante": "automne",
+   "titre": "Anya, de face, repos, automne",
+   "regarde": "face",
+   "images": 2,
+   "fichiers": [
+    "svg/vivants/anya/anya_face_repos_automne_1.svg",
+    "svg/vivants/anya/anya_face_repos_automne_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    80,
+    128
+   ],
+   "ms_par_image": 1200,
+   "parcours": "revelation",
+   "statut": "ok"
+  },
+  {
+   "id": "vivants/anya/anya_face_repos_hiver",
+   "rubrique": "vivants",
+   "sujet": "anya",
+   "vue": "face",
+   "pose": "repos",
+   "variante": "hiver",
+   "titre": "Anya, de face, repos, hiver",
+   "regarde": "face",
+   "images": 2,
+   "fichiers": [
+    "svg/vivants/anya/anya_face_repos_hiver_1.svg",
+    "svg/vivants/anya/anya_face_repos_hiver_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    80,
+    128
+   ],
+   "ms_par_image": 1200,
+   "parcours": "revelation",
+   "statut": "ok"
+  },
+  {
+   "id": "vivants/anya/anya_face_repos_printemps",
+   "rubrique": "vivants",
+   "sujet": "anya",
+   "vue": "face",
+   "pose": "repos",
+   "variante": "printemps",
+   "titre": "Anya, de face, repos, printemps",
+   "regarde": "face",
+   "images": 2,
+   "fichiers": [
+    "svg/vivants/anya/anya_face_repos_printemps_1.svg",
+    "svg/vivants/anya/anya_face_repos_printemps_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    80,
+    128
+   ],
+   "ms_par_image": 1200,
+   "parcours": "revelation",
+   "statut": "ok"
   },
   {
    "id": "vivants/cerf-blanc/cerf-blanc_avant_clignement",

@@ -16,6 +16,38 @@ const C = {
 };
 const AR = { armW: 3.8, sleeve: C.skin, cuff: null, skin: C.skin };
 
+// Le manteau vivant change avec les saisons (HISTOIRE.md § 8) : l'été, la grande feuille verte aux nervures d'or (le
+// manteau d'origine) ; le printemps, un vert tendre en fleurs (cerisier) et des papillons ; l'automne, des feuilles
+// rousses et des plumes de chouette ; l'hiver, une fourrure blanche, des nervures de givre et des flocons.
+// fur, furS : le manteau et son ombre ; vein, glow : les nervures et leur lueur ; hem : l'ourlet ; collar : le col ;
+// plumes, plumesHaut : les plumes de l'ourlet ; feuilles, fleur, ailes : ce qui pousse et vole sur le manteau ;
+// orne : ce que la saison ajoute (découpé dans le manteau)
+const MANTEAUX = {
+  ete: { fur: C.fur, furS: C.furS, vein: C.mvein, glow: '255,220,120', hem: C.gold, collar: C.collar,
+    plumes: [C.gold, C.paleG, C.paleGold], plumesHaut: [C.paleGold, C.gold, C.paleG], feuilles: [C.gold, C.paleG], fleur: C.white, ailes: [C.wingO, C.wingB] },
+  printemps: { fur: '#7CBF5C', furS: '#5E9E48', vein: '#FCE3EC', glow: '255,205,225', hem: '#F29BB8', collar: '#F7C6D9',
+    plumes: [C.white, C.petal, C.paleG], plumesHaut: [C.petal, C.white, C.paleG], feuilles: [C.paleG, '#A6DC7E'], fleur: C.petal, ailes: ['#8EC5EE', '#FBE38A'] },
+  automne: { fur: '#C8642F', furS: '#A24C24', vein: '#F7C66A', glow: '255,190,110', hem: '#E8A23A', collar: '#D98B4A',
+    plumes: ['#8A5A36', '#D9A55A', '#F2D3A0'], plumesHaut: ['#F2D3A0', '#8A5A36', '#D9A55A'], feuilles: ['#E8A23A', '#D2452E'], fleur: '#F2C94C', ailes: ['#E07A2E', '#F2D3A0'] },
+  hiver: { fur: '#EEF2F6', furS: '#C9D6E3', vein: '#A9D8F0', glow: '170,220,255', hem: '#9CC7E0', collar: '#FFFFFF',
+    plumes: ['#FFFFFF', '#DDE7F0', '#B9CCDC'], plumesHaut: ['#DDE7F0', '#FFFFFF', '#B9CCDC'], feuilles: ['#DDEFF8', '#B9DDF0'], fleur: C.white, ailes: ['#BFE3F7', '#FFFFFF'] }
+};
+const SAISONS_A = Object.keys(MANTEAUX);
+// Ce que chaque saison ajoute sur le manteau : des fleurs de cerisier ; des glands et des feuilles d'érable ; des touffes
+// de fourrure et des flocons
+const glandA = (x, y, r) => `<g transform="translate(${r2(x)} ${r2(y)}) rotate(${r})">${E(0, 1.1, 1.3, 1.6, '#B07A48', 0.5)}${P('M-1.6,0.2 Q0,-1.8 1.6,0.2 Z', '#7A5236', 0.5)}${L([0, -1.2], [0.3, -2.2], OUT, 0.5)}</g>`;
+const flocon = (x, y, r, col = '#FFFFFF') => [0, 60, 120].map(a => { const c = Math.cos(a * Math.PI / 180) * r, sn = Math.sin(a * Math.PI / 180) * r; return L([x - c, y - sn], [x + c, y + sn], '#7FA8C8', 1.3) + L([x - c, y - sn], [x + c, y + sn], col, 0.6); }).join('');
+const touffe = (x, y, col) => `<path d="M${r2(x - 1.4)},${r2(y)} Q${r2(x - 0.6)},${r2(y + 1.6)} ${r2(x)},${r2(y + 0.4)} Q${r2(x + 0.6)},${r2(y + 1.6)} ${r2(x + 1.4)},${r2(y)}" fill="none" stroke="${col}" stroke-width="0.75" stroke-linecap="round"/>`;
+function orne(saison, sway) {
+  const dx = y => (y > 95 ? sway * 0.6 : 0); // le bas du manteau suit la marche
+  if (saison === 'printemps') return [[26, 60], [22, 76], [20, 92], [25, 86], [54, 60], [58, 76], [60, 92], [55, 86]].map(([x, y], i) => flower(x + dx(y), y, i % 3 ? 1.1 : 1.4, i % 2 ? C.white : C.petal)).join('');
+  if (saison === 'automne') return [[25, 64, 20], [56, 66, -30], [21, 90, 60], [59, 88, -50]].map(([x, y, r]) => glandA(x + dx(y), y, r)).join('')
+    + [[23, 78, 40, '#D2452E'], [57, 80, -40, '#E8A23A'], [19, 98, 70, '#B5532A'], [61, 97, -60, '#D2452E']].map(([x, y, r, c]) => leaf(x + dx(y), y, 4.4, 1.8, r, c)).join('');
+  if (saison === 'hiver') return [[24, 58], [26, 70], [56, 58], [54, 70], [21, 82], [59, 84], [19, 94], [61, 94], [25, 92], [55, 92], [28, 62], [52, 62], [23, 76], [57, 72], [34, 96], [46, 96], [40, 92]].map(([x, y], i) => touffe(x + dx(y), y, i % 2 ? '#AFC3D6' : '#C3D2E0')).join('')
+    + [[23, 66, 2], [57, 64, 1.8], [21, 88, 1.7], [59, 78, 2], [26, 80, 1.4]].map(([x, y, r]) => flocon(x + dx(y), y, r)).join('');
+  return '';
+}
+
 const flower = (x, y, r, petal = C.petal) => [0, 72, 144, 216, 288].map(a => E(x + Math.cos(a * Math.PI / 180) * r, y + Math.sin(a * Math.PI / 180) * r, r * 0.75, r * 0.75, petal, 0.5)).join('') + E(x, y, r * 0.55, r * 0.55, C.heart, 0.4);
 const firefly = (x, y, k = 1) => `<circle cx="${r2(x)}" cy="${r2(y)}" r="${r2(2.6 * k)}" fill="rgb(255,236,150)" fill-opacity="0.35"/>` + E(x, y, 0.9 * k, 0.9 * k, '#FFF3A8', 0.4);
 const branch = (d, w) => `<path d="${d}" fill="none" stroke="${OUT}" stroke-width="${w + 1.6}" stroke-linecap="round" stroke-linejoin="round"/><path d="${d}" fill="none" stroke="${C.antler}" stroke-width="${w}" stroke-linecap="round" stroke-linejoin="round"/>`;
@@ -37,13 +69,14 @@ function antlers(k, birdSide = 1) {
 }
 
 // Une image d'Anya. view : front | se | ne ; pose : repos | marche | salut (bénédiction) | action (éveil) ; n ; expr
-function anyaFrame(view, pose, n, expr) {
+function anyaFrame(view, pose, n, expr, saison = 'ete') {
+  const M = MANTEAUX[saison];
   const walk = pose === 'marche';
   const bob = walk && n % 2 ? -1 : 0;
   const sway = walk ? [1.4, 0, -1.4, 0][n] : 0;
   const glowK = pose === 'action' ? (n ? 1.25 : 1.1) : pose === 'repos' && n === 1 ? 1.05 : 1;
   const k = view === 'se' ? -2.4 : 0;
-  const uid = `an${view}${pose}${n}`;
+  const uid = `an${view}${pose}${n}${saison === 'ete' ? '' : saison}`;
   let s = '';
   // halo doré
   s += `<defs><radialGradient id="${uid}g"><stop offset="0" stop-color="rgb(${C.glow})" stop-opacity="${r2(0.6 * glowK)}"/><stop offset="1" stop-color="rgb(${C.glow})" stop-opacity="0"/></radialGradient></defs>`
@@ -64,10 +97,10 @@ function anyaFrame(view, pose, n, expr) {
     : 'M28.6,24 Q27.6,40 28.4,56 L51.6,56 Q52.4,40 51.4,24 Z';
   // manteau vivant
   const cloak = `M29,45.4 Q40,40.6 51,45.4 Q60,70 ${r2(66 + sway)},119.6 Q${r2(53 + sway)},126 40,124.8 Q${r2(27 + sway)},126 ${r2(14 + sway)},119.6 Q20,70 29,45.4 Z`;
-  const feathers = [15.6, 20.2, 24.8, 29.4, 34, 38.6, 43.2, 47.8, 52.4, 57, 61.6].map((x, i) => feather(x + sway * 0.8, 111.4 + (i % 2) * 1.6, (i - 5) * 4, [C.gold, C.paleG, C.paleGold][i % 3])).join('')
-    + [18.4, 23, 27.6, 52.4, 57, 61.6].map((x, i) => feather(x + sway * 0.6, 101 + (i % 2) * 1.4, (i < 3 ? -8 : 8), [C.paleGold, C.gold, C.paleG][i % 3])).join('')
-    + [[19, 70], [24, 82], [58, 66], [61, 90]].map(([x, y], i) => leaf(x, y, 4, 1.6, i % 2 ? 30 : -30, i % 2 ? C.paleG : C.gold)).join('')
-    + [[22.4, 62], [59.6, 78], [17.6, 92]].map(([x, y]) => flower(x, y, 1.1, C.white)).join('');
+  const feathers = [15.6, 20.2, 24.8, 29.4, 34, 38.6, 43.2, 47.8, 52.4, 57, 61.6].map((x, i) => feather(x + sway * 0.8, 111.4 + (i % 2) * 1.6, (i - 5) * 4, M.plumes[i % 3])).join('')
+    + [18.4, 23, 27.6, 52.4, 57, 61.6].map((x, i) => feather(x + sway * 0.6, 101 + (i % 2) * 1.4, (i < 3 ? -8 : 8), M.plumesHaut[i % 3])).join('')
+    + [[19, 70], [24, 82], [58, 66], [61, 90]].map(([x, y], i) => leaf(x, y, 4, 1.6, i % 2 ? 30 : -30, M.feuilles[i % 2])).join('')
+    + [[22.4, 62], [59.6, 78], [17.6, 92]].map(([x, y]) => flower(x, y, 1.1, M.fleur)).join('') + orne(saison, sway);
   const wing = 0.6 + 0.4 * Math.abs(Math.sin((n / 4) * Math.PI * 2 + 1));
   // manteau de feuille : vert, l'ombre à droite, des nervures d'or qui luisent (une perche de chaque côté, des
   // nervures qui s'en écartent vers l'ourlet), un ourlet doré sous les plumes
@@ -77,11 +110,11 @@ function anyaFrame(view, pose, n, expr) {
     for (const [y, x, dx, dy] of [[62, 26.6, -4.2, 6], [76, 23.6, -5, 7.4], [90, 21.2, -5.2, 8], [103, 19.6, -4.6, 7.6], [70, 25, 3.4, 6.4], [86, 22, 3.8, 7]]) d += ` M${X(x, y > 95)},${y} Q${X(x + dx * 0.3, y > 95)},${r2(y + dy * 0.7)} ${X(x + dx, y + dy > 95)},${r2(y + dy)}`;
     return d;
   }).join(' ') + (view === 'ne' ? ` M40,46 L${r2(40 + sway * 0.4)},118` : '');
-  const cloakVeins = `<path d="${veinD}" fill="none" stroke="rgb(255,220,120)" stroke-width="2.2" stroke-linecap="round" opacity="0.35"/><path d="${veinD}" fill="none" stroke="${C.mvein}" stroke-width="0.75" stroke-linecap="round"/>`
-    + `<path d="M${r2(12 + sway)},118.6 Q40,128.4 ${r2(68 + sway)},118.6" fill="none" stroke="${C.gold}" stroke-width="2.4"/>`;
-  const cloakTex = clip(`${uid}c`, cloak, `<rect x="49" y="40" width="20" height="90" fill="${C.furS}"/>${cloakVeins}${feathers}`)
-    + (view === 'ne' ? butterfly(30, 86, wing, C.wingO) + butterfly(51, 74, 1.2 - wing * 0.5, C.wingB) + butterfly(46, 98, wing, C.wingO)
-      : butterfly(20.6, 78, wing, C.wingO) + butterfly(60, 72, 1.2 - wing * 0.5, C.wingB) + butterfly(62.4, 102, wing, C.wingO) + butterfly(18.4, 104, 1.2 - wing * 0.5, C.wingB));
+  const cloakVeins = `<path d="${veinD}" fill="none" stroke="rgb(${M.glow})" stroke-width="2.2" stroke-linecap="round" opacity="0.35"/><path d="${veinD}" fill="none" stroke="${M.vein}" stroke-width="0.75" stroke-linecap="round"/>`
+    + `<path d="M${r2(12 + sway)},118.6 Q40,128.4 ${r2(68 + sway)},118.6" fill="none" stroke="${M.hem}" stroke-width="2.4"/>`;
+  const cloakTex = clip(`${uid}c`, cloak, `<rect x="49" y="40" width="20" height="90" fill="${M.furS}"/>${cloakVeins}${feathers}`)
+    + (view === 'ne' ? butterfly(30, 86, wing, M.ailes[0]) + butterfly(51, 74, 1.2 - wing * 0.5, M.ailes[1]) + butterfly(46, 98, wing, M.ailes[0])
+      : butterfly(20.6, 78, wing, M.ailes[0]) + butterfly(60, 72, 1.2 - wing * 0.5, M.ailes[1]) + butterfly(62.4, 102, wing, M.ailes[0]) + butterfly(18.4, 104, 1.2 - wing * 0.5, M.ailes[1]));
   // bras : au repos le long du manteau ; bénédiction : main droite levée ; éveil : bras ouverts
   const swing = walk ? [1, 0, -1, 0][n] : 0;
   let armL = arm(AR, [31.6, 48.4], [27.6 + swing, 84 - swing * 1.4], [29.2, 66]);
@@ -102,7 +135,7 @@ function anyaFrame(view, pose, n, expr) {
   if (view === 'ne') {
     // de dos : manteau, puis la cascade de feuilles par-dessus, la couronne
     g += `<g transform="translate(0 -2)">${antlers(0, -1)}</g>`;
-    g += P(cloak, C.fur) + cloakTex + P(cloak, 'none') + ground;
+    g += P(cloak, M.fur) + cloakTex + P(cloak, 'none') + ground;
     g += [36, 44].map((x, i) => E(x + (walk ? (i ? -sway : sway) * 0.6 : 0), 123.4, 2.4, 1.6, C.skin, 0.8)).join('');
     g += armL + armR;
     // longue chevelure vue de dos : elle s'affine en trois mèches ondulées ; mèches dessinées par des traits, ombre à droite
@@ -118,7 +151,7 @@ function anyaFrame(view, pose, n, expr) {
     g += [[40.4, 19, 1], [33, 60, 0.8]].map(([x, y, r]) => flower(x, y, r, C.white)).join('');
   } else {
     g += P(hairBack, C.hair) + P(hairBack, 'none');
-    g += P(cloak, C.fur) + cloakTex + P(cloak, 'none') + ground;
+    g += P(cloak, M.fur) + cloakTex + P(cloak, 'none') + ground;
     // pieds nus sous l'ourlet
     g += [[36, 0], [44, 1]].map(([x, i]) => {
       const fwd = walk ? ((n < 2) === !i ? 1 : -0.6) : 0;
@@ -131,7 +164,7 @@ function anyaFrame(view, pose, n, expr) {
       + `<path d="M${40 + k * 0.4},52 Q${38 + k * 0.4},70 ${41 + k * 0.4},90 Q${39 + k * 0.4},104 ${40 + k * 0.4},116" fill="none" stroke="${C.gold}" stroke-width="0.6" opacity="0.8"/>`
       + leaf(36 + k * 0.4, 70, 3, 1.1, 40, C.hairH) + leaf(44 + k * 0.4, 84, 3, 1.1, -40, C.hairH)) + P(dress, 'none');
     // col de fourrure festonné
-    g += P(`M27.6,45 Q40,39.6 52.4,45 L53.6,51.4 Q50.6,54.4 47.6,52 Q44,55.2 40,52.6 Q36,55.2 32.4,52 Q29.4,54.4 26.4,51.4 Z`, C.collar)
+    g += P(`M27.6,45 Q40,39.6 52.4,45 L53.6,51.4 Q50.6,54.4 47.6,52 Q44,55.2 40,52.6 Q36,55.2 32.4,52 Q29.4,54.4 26.4,51.4 Z`, M.collar)
       + P(`M30,47.6 Q33,50 36,48.6 M44,48.6 Q47,50 50,47.6`, 'none', 0.6);
     g += armL + armR + veinsArm;
     g += `<rect x="${37.6 + k * 0.5}" y="38" width="4.8" height="8.4" fill="${C.skin}"/>` + L([37.6 + k * 0.5, 38], [37.6 + k * 0.5, 45], OUT, 1) + L([42.4 + k * 0.5, 38], [42.4 + k * 0.5, 45], OUT, 1);
@@ -165,4 +198,4 @@ function anyaFrame(view, pose, n, expr) {
 const POSES_A = [['face_repos', 'front', 'repos', 2], ['avant_marche', 'se', 'marche', 4], ['dos_marche', 'ne', 'marche', 4], ['face_benediction', 'front', 'salut', 2], ['face_eveil', 'front', 'action', 2]];
 const EXPR_OF = { repos: 'neutre', marche: 'neutre', salut: 'content', action: 'content' };
 const svgA = (body, scale = 1) => `<svg xmlns="http://www.w3.org/2000/svg" width="${80 * scale}" height="${128 * scale}" viewBox="0 0 80 128">${body}</svg>`;
-module.exports = { anyaFrame, POSES_A, EXPR_OF, svgA };
+module.exports = { anyaFrame, POSES_A, EXPR_OF, svgA, SAISONS_A };

@@ -226,7 +226,6 @@ function moment(id, meta) {
 // --- 3. Ce qui reste à revoir (audit du 6 octobre et HISTOIRE.md v6) -------------------------------
 
 const A_REVOIR = [
-  [/^vivants\/anya\//, 'Le manteau change avec les saisons (§ 8) : variantes à dessiner quand le jeu aura des saisons.'],
   [/^decor\/camp\/coins\/(ondin|sylve|galet|melisse)\//, 'Seuls Aster et Rivet vivent au camp : ce coin va près du bâtiment de son maître (Ondin à La Source, Sylve à La Lisière, Galet à La Colline, Mélisse aux Jardins).'],
   [/^decor\/camp\/coins\/[a-z]+\/[a-z]+_cabanon$/, 'Pas de cabanon avant l\'Abri (fin de l\'acte II).'],
   [/^decor\/camp\/objets\/sos$/, 'À retirer quand les voyageurs arrivent (acte IV).'],
