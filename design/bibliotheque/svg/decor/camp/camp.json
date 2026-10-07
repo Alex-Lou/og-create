@@ -527,6 +527,24 @@
    "fichiers": [
     "objets/etabli_1.svg"
    ]
+  },
+  "bol": {
+   "nom": "Bol de soupe « pour la Dame »",
+   "categorie": "objets",
+   "etape": "III",
+   "cadre": [
+    -50,
+    -115,
+    100,
+    140
+   ],
+   "images": 3,
+   "ms": 400,
+   "fichiers": [
+    "objets/bol_1.svg",
+    "objets/bol_2.svg",
+    "objets/bol_3.svg"
+   ]
   }
  }
 }
