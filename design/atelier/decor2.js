@@ -346,15 +346,31 @@ M.barque_volante = { frame: [-32, -56, 64, 68], n: 2, draw: f => {
 // bombée et ses coutures, les haubans ; le fanion qui claque ; l'écume à la proue et à la poupe. Il tangue un
 // peu d'une image à l'autre. Ancre : ligne de flottaison ; vers la droite
 M.bateau_visiteur = { frame: [-30, -56, 62, 64], n: 2, draw: f => {
-  const flag = f ? 'M3,-50 L13,-47.6 L3,-45.2 Z' : 'M3,-50 L12,-48.6 L13,-46 L3,-45.2 Z';
-  return E(0, 3.6, 27, 3.6, 'rgba(30,70,110,.25)', 0)
-    + P('M-26,-6 L26,-6 Q22,4 10,6 L-14,6 Q-24,4 -26,-6 Z', '#8C5A34') + pg([[-26, -6], [26, -6], [23, -2], [-23, -2]], '#FBF6EA', W * 0.7)
-    + L([-24, 0.5], [24, 0.5], '#3E6E9C', 1.4)
-    + pg([[-18, -6], [-18, -15], [-6, -15], [-6, -6]], '#E9D3A8', W * 0.8) + pg([[-19.5, -15], [-12, -19], [-4.5, -15]], '#C9473A', W * 0.8)
-    + rr(-15.6, -12.6, 3.6, 3.4, 0.6, '#7FC4E8', 0.5)
-    + rr(9, -11, 9, 5, 1, '#6B4A2E', W * 0.8) + L([9.4, -8.6], [17.6, -8.6], '#E2B347', 1)
-    + tk('M2,-6 L2,-50', 1.4, '#5A3A20')
-    + P('M3,-44 L3,-9 L22,-11 Z', '#FFFDF8') + `<path d="M3,-30 L14.6,-29 L17,-21 L3,-21 Z" fill="#6FA3D9" opacity=".55"/>` + P(flag, '#E2483A', W * 0.7);
+  const flag = f ? 'M3,-50.4 Q8,-51.4 13.4,-48 Q8,-46.6 3,-45.6 Z' : 'M3,-50.4 Q7,-49 10,-50 L12.6,-46.8 Q8,-45.6 3,-45.6 Z';
+  const coque = 'M-27,-7 L27,-8 Q25.4,3 13,6 L-14,6 Q-25,3.4 -27,-7 Z';
+  const bob = f ? -0.5 : 0.3;
+  return E(0, 3.6, 28, 3.6, 'rgba(30,70,110,.25)', 0) + line(`M-30,${f ? 4 : 3.4} q3,-1.4 6,0 M24,${f ? 3 : 3.6} q3,-1.6 6,0`, 0.9, 'rgba(255,255,255,.85)')
+    + `<g transform="translate(0 ${bob})">`
+    // les haubans, derrière les voiles
+    + line('M2,-49 L-24,-7.6 M2,-49 L26,-8', 0.5, '#5A3A20')
+    // la coque, ses planches, son ombre basse, ses hublots ; le liseré blanc et la bande bleue
+    + `<defs><clipPath id="visiteur-coque"><path d="${coque}"/></clipPath></defs><path d="${coque}" fill="#8C5A34"/><g clip-path="url(#visiteur-coque)">`
+    + '<path d="M-30,1.4 Q0,4.4 30,0.4 L30,10 L-30,10 Z" fill="#6E4428"/>' + line('M-27,-2.8 Q0,-1 27,-3.8 M-25,1.2 Q0,3 25,-0.4', 0.6, '#6E4428') + '</g>'
+    + `<path d="${coque}" fill="none" stroke="${OUT}" stroke-width="${W}" stroke-linejoin="round"/>`
+    + [-12, 0, 12].map(x => E(x, -3, 1.3, 1.3, '#A8D8F0', W * 0.7) + E(x - 0.4, -3.4, 0.4, 0.4, '#FFFFFF', 0)).join('')
+    + pg([[-27, -7], [27, -8], [25.4, -4.6], [-25.6, -3.8]], '#FBF6EA', W * 0.7) + L([-25, -4.4], [25, -5.3], '#3E6E9C', 1.3)
+    // la cabine : face avant, côté, porte, hublot, toit rouge, cheminée
+    + pg([[-19, -7], [-19, -16], [-8, -16], [-8, -7]], '#E9D3A8', W * 0.8) + pg([[-8, -7], [-8, -16], [-5.6, -17.4], [-5.6, -7.6]], '#CDB385', W * 0.8)
+    + rr(-17.4, -14.4, 3.6, 7.2, 1.4, '#7A5236', 0.6) + E(-12, -12, 1.6, 1.6, '#7FC4E8', 0.6) + E(-12.4, -12.4, 0.5, 0.5, '#FFFFFF', 0)
+    + pg([[-20.6, -16], [-13, -20.6], [-4.4, -17.4], [-6.4, -16]], '#C9473A', W * 0.8) + L([-13, -20.4], [-5.4, -17.2], '#E06A5A', 0.8)
+    + rr(-17, -23.6, 2.6, 5, 0.6, '#5A4A40', 0.6) + E(-15.6 + (f ? 1 : 0), -26.4 - (f ? 1.4 : 0), 2 + f * 0.5, 1.5 + f * 0.4, '#F4F1EA', 0.5) + E(-13.6 + f * 1.6, -29 - f * 1.6, 1.4, 1.1, '#F4F1EA', 0.4)
+    // la malle sanglée
+    + rr(9, -12, 9.4, 5.4, 1.2, '#6B4A2E', W * 0.8) + L([9.4, -9.4], [18, -9.4], '#E2B347', 1) + L([12, -12], [12, -6.6], '#4A321E', 0.8) + L([15.6, -12], [15.6, -6.6], '#4A321E', 0.8)
+    // le mât, la vergue, la grand-voile bombée et ses coutures
+    + tk('M2,-7 L2,-50', 1.4, '#5A3A20') + tk('M2,-43 L19,-41.6', 0.8, '#5A3A20')
+    + P('M3,-42.6 Q14,-30 21,-11 L3,-9 Z', '#FFFDF8', W) + `<path d="M3,-30 Q11,-27 15.6,-26 L18.2,-20 Q10,-21 3,-21 Z" fill="#6FA3D9" opacity=".6"/>`
+    + line('M3,-36 Q10,-34 16,-32.6 M3,-15 Q12,-15.6 20,-15.6', 0.5, '#D8D0BE')
+    + P(flag, '#E2483A', W * 0.7) + E(2, -50.6, 1.2, 1.2, '#E2B347', 0.5) + '</g>';
 } };
 // Voilier amarré au Ponton, dans le cadre du bâtiment, ancré comme dans le jeu ; voile d'origine ou skin
 const SAILS = { blanche: ['#FFFDF8', '#F2E4C0'], rouge: ['#E2574C', '#B13A31'], bleue: ['#6FA3D9', '#4C7FB5'], rayee: ['stripes', '#E2574C'] };
