@@ -3,20 +3,27 @@
 // plus petit qui reste net au zoom et à la densité de l'écran, que l'île donne à chaque image : setSpriteDetail). Vu de
 // loin, un dessin pèse seize fois moins que de près : la mémoire des images reste dans le budget d'un téléphone (garder
 // tout à 4 fois la taille du monde la faisait déborder, et le navigateur recopiait alors les images à chaque dessin).
-// Un détail pas encore prêt est remplacé par un autre déjà rendu, le temps de sa lecture. Les images gardées tiennent
-// dans BUDGET_PX : celles d'un autre détail que celui de l'écran partent d'abord, puis les moins récemment dessinées ;
-// elles se refont si l'île les redemande.
+// Un détail pas encore prêt est remplacé par un autre déjà rendu, le temps de sa lecture ; un dessin pas encore lu du
+// tout, par la dernière image du même sujet (drawSprite : hold), pour qu'un habitant qui change de pose ou une
+// animation qui passe à l'image suivante ne disparaisse pas un instant. Les images gardées tiennent dans BUDGET_PX :
+// seules partent celles qui n'ont pas servi depuis KEEP_MS (d'un autre détail que celui de l'écran d'abord, puis les
+// plus anciennes), en laissant une copie légère (trim) ; elles se refont si l'île les redemande. Ce qui a servi
+// récemment reste, même au-delà du budget : libérer une image encore à l'écran, ou l'image suivante d'une animation, la
+// faisait clignoter.
 // Lectures par paquets (LOADS à la fois, les autres attendent leur tour), peintes dans leur canvas quelques-unes par
 // image de l'écran (RASTER_MS) : un SVG se peint sur le fil principal, et une arrivée en nombre (un zoom, une zone
 // découverte en glissant) arrêtait l'île. clearSprites() vide tout à la sortie de l'île.
 const LEVELS = [4, 2, 1, 0.5, 0.25];
 const LOADS = 6;
 const RASTER_MS = 6;
-// Pixels gardés au plus (≈ 64 Mo) ; ceux dessinés à l'image en cours ou à la précédente ne partent jamais
+// Pixels gardés (≈ 64 Mo) au-delà desquels les images qui n'ont pas servi depuis KEEP_MS partent
 const BUDGET_PX = 16e6;
+const KEEP_MS = 10000;
+const FLOOR = 1;
 let detail = LEVELS[0];
-// Numéro de l'image de l'île en cours (setSpriteDetail), pour savoir ce qui a servi récemment
+// Numéro et heure de l'image de l'île en cours (setSpriteDetail) : budget des réductions, ce qui a servi récemment
 let tick = 0;
+let stamp = 0;
 let kept = 0;
 const cache = new Map();
 const queue = [];
@@ -72,6 +79,8 @@ function rasterize() {
     // Vidé entre-temps (sortie de l'île, ou détail parti du budget) : l'image ne sert plus
     if (cache.get(key) !== entry || entry.levels.get(level) !== slot) continue;
     slot.canvas = bitmapOf(img);
+    // (demandée il y a peut-être longtemps : elle compte d'aujourd'hui, sans quoi elle partirait aussitôt arrivée)
+    slot.at = stamp;
     kept += slot.canvas.width * slot.canvas.height;
     trim();
     // (vidée d'abord : un redessin peut redemander ce dessin)
@@ -99,17 +108,36 @@ function bitmapOf(img) {
   return canvas;
 }
 
-// Au-delà du budget : les images qui n'ont servi ni à cette image de l'île ni à la précédente partent, celles d'un
-// autre détail que celui de l'écran d'abord, puis les plus anciennes, jusqu'à un peu sous le budget
+// La seule image prête d'un dessin
+const lastOf = (entry, level) => ![...entry.levels].some(([other, slot]) => other !== level && slot.canvas);
+
+// Au-delà du budget : les images qui n'ont pas servi depuis KEEP_MS partent, celles d'un autre détail que celui de
+// l'écran d'abord, puis les plus anciennes, jusqu'à un peu sous le budget (ou jusqu'à ce qu'il n'en reste plus d'aussi
+// anciennes). La dernière image d'un dessin laisse une copie au détail FLOOR (seize fois plus légère qu'au détail 4) :
+// redemandé, il se montre flou un instant, le temps d'être relu, plutôt que pas du tout
+let trimAt = -Infinity;
 function trim() {
-  if (kept <= BUDGET_PX) return;
+  // (une fois par seconde au plus : au-delà du budget, ce qui vient de servir reste, et chaque image lue referait le
+  // tour de toutes les autres pour rien)
+  if (kept <= BUDGET_PX || stamp - trimAt < 1000) return;
+  trimAt = stamp;
   const old = [];
   for (const entry of cache.values()) {
-    for (const [level, slot] of entry.levels) if (slot.canvas && slot.at < tick - 1) old.push({ entry, level, slot });
+    for (const [level, slot] of entry.levels) {
+      if (!slot.canvas || slot.at >= stamp - KEEP_MS || (level <= FLOOR && lastOf(entry, level))) continue;
+      old.push({ entry, level, slot });
+    }
   }
   old.sort((a, b) => (a.level === detail) - (b.level === detail) || a.slot.at - b.slot.at);
   for (const { entry, level, slot } of old) {
     if (kept <= BUDGET_PX * 0.85) break;
+    if (lastOf(entry, level)) {
+      // (devenue la dernière en route, déjà légère : elle reste)
+      if (level <= FLOOR) continue;
+      const canvas = reduce(slot.canvas, level, FLOOR);
+      entry.levels.set(FLOOR, { canvas, at: slot.at });
+      kept += canvas.width * canvas.height;
+    }
     kept -= slot.canvas.width * slot.canvas.height;
     if (slot.canvas.getContext) slot.canvas.width = slot.canvas.height = 0;
     entry.levels.delete(level);
@@ -153,13 +181,13 @@ function want(key, entry, level, onReady) {
     const start = performance.now();
     const canvas = reduce(entry.levels.get(finer).canvas, finer, level);
     reduceSpent += performance.now() - start;
-    entry.levels.set(level, { canvas, at: tick });
+    entry.levels.set(level, { canvas, at: stamp });
     kept += canvas.width * canvas.height;
     trim();
     return;
   }
   if (onReady) entry.waiting.add(onReady);
-  entry.levels.set(level, { canvas: null, at: tick });
+  entry.levels.set(level, { canvas: null, at: stamp });
   queue.push({ key, entry, level });
   pump();
 }
@@ -180,7 +208,7 @@ function pick(entry) {
     }
   }
   if (!slot) return null;
-  slot.at = tick;
+  slot.at = stamp;
   return slot.canvas;
 }
 
@@ -205,6 +233,8 @@ export function clearSprites() {
     for (const slot of entry.levels.values()) if (slot.canvas && slot.canvas.getContext) slot.canvas.width = slot.canvas.height = 0;
   }
   cache.clear();
+  holds.clear();
+  trimAt = -Infinity;
   queue.length = 0;
   rasters.length = 0;
   kept = 0;
@@ -215,16 +245,29 @@ export function clearSprites() {
 export function setSpriteDetail(px) {
   detail = [...LEVELS].reverse().find(level => level >= px) || LEVELS[0];
   tick++;
+  stamp = performance.now();
 }
 
-// Dessine un sprite ancré en (x, y) du monde ; rien tant qu'aucune de ses images n'est prête
-export function drawSprite(ctx, key, make, x, y, onReady) {
-  const entry = imageOf(key, make, onReady);
-  const img = pick(entry);
+// La dernière image dessinée de chaque sujet (drawSprite : hold)
+const holds = new Map();
+
+// Dessine un sprite ancré en (x, y) du monde ; vrai s'il était prêt. hold : le sujet qu'il montre (un habitant, une
+// annexe…), qui garde sa dernière image tant que celle-ci n'est pas prête ; sans lui, rien n'est dessiné d'ici là
+export function drawSprite(ctx, key, make, x, y, onReady, hold) {
+  let entry = imageOf(key, make, onReady);
+  let img = pick(entry);
+  const ready = Boolean(img);
+  if (hold !== undefined) {
+    if (img) holds.set(hold, entry);
+    else if (holds.has(hold)) {
+      entry = holds.get(hold);
+      img = pick(entry);
+    }
+  }
   if (!img) return false;
   const { box } = entry;
   ctx.drawImage(img, x + box.x, y + box.y, box.w, box.h);
-  return true;
+  return ready;
 }
 
 // La partie d'un sprite ancré en (x, y) qui tombe dans un rectangle du monde ({ x, y, w, h }) : seuls ces pixels sont

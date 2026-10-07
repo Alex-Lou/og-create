@@ -147,7 +147,8 @@ export default {
       ctx.translate(0, (1 - critter.e) * 8);
     }
     const [key, make] = this.critterSprite(critter);
-    drawSprite(ctx, key, make, 0, 0, repaint);
+    // (sa dernière image le temps que la suivante se lise : son identité, sinon une autre image de son espèce)
+    drawSprite(ctx, key, make, 0, 0, repaint, critter.id ?? `${critter.kind}:${critter.species || ''}`);
     ctx.restore();
   },
   // Barque du passeur et son ponton (Îlot aux Mouettes à soi) : elle fait la navette une fois l'île flottante à soi
@@ -169,7 +170,7 @@ export default {
     if (item.landing) drawSprite(ctx, 'islet-landing', ISLET_SPRITES.landing, 0, 0, repaint);
     else {
       if (item.flip) ctx.scale(-1, 1);
-      drawSprite(ctx, `islet-ferry-${item.frame}`, ISLET_SPRITES.ferry[item.frame], 0, 0, repaint);
+      drawSprite(ctx, `islet-ferry-${item.frame}`, ISLET_SPRITES.ferry[item.frame], 0, 0, repaint, 'islet-ferry');
     }
     ctx.restore();
   },
