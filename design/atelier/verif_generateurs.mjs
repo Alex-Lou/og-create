@@ -12,7 +12,7 @@ const BIB = path.join(ici, '..', 'bibliotheque');
 // La vitesse de chaque fichier, d'après le catalogue (la règle de catalogue.js, ou l'index du lot)
 const VITESSE = new Map();
 for (const e of JSON.parse(fs.readFileSync(path.join(BIB, 'catalogue.json'), 'utf8')).entrees) for (const x of e.fichiers) VITESSE.set(x.replace(/^svg\//, ''), e.ms_par_image ?? null);
-const FAMILLES = ['chantiers', 'betes', 'interface', 'objets', 'plantes', 'meteo', 'coffres', 'decor', 'batiments', 'vivants', 'scenes', 'personnages'];
+const FAMILLES = ['chantiers', 'betes', 'interface', 'objets', 'plantes', 'meteo', 'coffres', 'decor', 'batiments', 'vivants', 'scenes', 'personnages', 'exemples'];
 const erreurs = [];
 let n = 0;
 for (const f of FAMILLES) {
@@ -47,4 +47,4 @@ for (const f of FAMILLES) for (const { fichier } of (await import(pathToFileURL(
 const total = lister(path.join(BIB, 'svg')).length;
 if (erreurs.length) { console.error(`${erreurs.length} écarts sur ${n} dessins :\n` + erreurs.slice(0, 40).join('\n')); process.exit(1); }
 console.log(`générateurs : ${FAMILLES.join(', ')} — ${n} dessins identiques à la bibliothèque`);
-console.log(`couverture : ${couverts.size} des ${total} SVG de la bibliothèque (sans l'avatar, qui se compose : verif_generateur.mjs)`);
+console.log(`couverture : ${couverts.size} des ${total} SVG de la bibliothèque (l'avatar composé à partir de choix se vérifie à part : verif_generateur.mjs)`);
