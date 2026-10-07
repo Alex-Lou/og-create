@@ -181,7 +181,8 @@ const grenier = {
     }
   }]
 };
-// Enclos : clôture de bois autour d'une mare de boue, abreuvoir ; un cochon trottine, un mouton broute
+// Enclos : clôture de bois autour d'une mare de boue qui luit, abreuvoir, botte de foin entamée, touffes et fleurs au
+// pied des piquets ; un cochon trottine, un mouton broute
 const enclos = {
   layers: [{
     frame: [-36, -42, 72, 60],
@@ -199,9 +200,19 @@ const enclos = {
       const [sx, sy] = T.p(-0.16, -0.12, 0);
       const sheepBody = sheep(sx, sy, false, f % 4 < 2);
       const beasts = Math.sin(a) * 0.08 + 0.12 > -0.12 ? sheepBody + pigBody : pigBody + sheepBody;
+      const tuft = (du, dv, c) => { const [tx, ty] = T.p(du, dv, 0); return [-1.6, -0.5, 0.6, 1.6].map((o, i) => ln([tx + o * 0.4, ty], [tx + o, ty - (3.2 + (i % 2) * 1.4)], i % 2 ? '#8FB85A' : '#6F9A44', 0.7)).join('') + (c ? dot(tx + 0.6, ty - 4.6, 0.9, c) : ''); };
+      const [hx, hy] = T.p(-0.3, -0.3, 0);
+      const shine = (f % n) / n;
       return patch(T, 0.45, '#A9B86A', '') + patch(T, 0.38, '#B79E6E', '')
+        + [[-0.47, 0.1, '#F2C04B'], [0.1, 0.47, '#FFFFFF'], [0.47, -0.2, null], [-0.2, 0.47, '#E89AC0']].map(([du, dv, c]) => tuft(du, dv, c)).join('')
         + back
-        + T.disc(0.16, -0.14, 0, 0.13, MUD) + T.disc(0.14, -0.15, 0.2, 0.06, 'rgba(255,255,255,.18)')
+        // la botte de foin entamée, dans le coin du fond
+        + T.box(-0.38, -0.36, -0.22, -0.24, 0, 6, STRAW) + [1.5, 3, 4.5].map(z => ln(T.p(-0.38, -0.24, z), T.p(-0.22, -0.24, z), 'rgba(160,120,50,.5)', 0.5)).join('')
+        + ln(T.p(-0.38, -0.24, 2), T.p(-0.22, -0.24, 2), '#8A6A3A', 0.6) + ln(T.p(-0.38, -0.24, 4.6), T.p(-0.22, -0.24, 4.6), '#8A6A3A', 0.6)
+        + [[-6, 1], [-3, 2.4], [2, 1.6]].map(([dx, dy]) => ln([hx + dx, hy + dy + 4], [hx + dx + 2, hy + dy + 3], '#E2C66E', 0.6)).join('')
+        // la mare de boue, son reflet qui glisse, des éclaboussures
+        + T.disc(0.16, -0.14, 0, 0.13, MUD) + T.disc(0.12 + shine * 0.06, -0.16, 0.2, 0.05, 'rgba(255,255,255,.22)')
+        + [[0.02, -0.04], [0.3, -0.06], [0.2, 0.0]].map(([du, dv]) => dot(...T.p(du, dv, 0), 0.8, MUD)).join('')
         + T.box(-0.3, 0.12, -0.22, 0.32, 0, 4, WOOD_DARK) + T.face([[-0.29, 0.14, 4], [-0.23, 0.14, 4], [-0.23, 0.3, 4], [-0.29, 0.3, 4]], '#4C9CC8')
         + beasts
         + front;
