@@ -98,6 +98,23 @@ export function pool(u, v, z, r, deep = '#4C9CC8', light = '#7CC4E8') {
     + ripple(0.36) + ripple(0.2)
     + star(x + rx * 0.5, y - ry * 0.12, k) + star(x - rx * 0.52, y + ry * 0.36, k * 0.7);
 }
+// Anse du Ponton, ronde, de rayon r autour de (u, v) : rive de sable détourée, haut-fond clair, eau plus profonde au
+// centre, liseré d'écume, vaguelettes et deux éclats
+export function cove(u, v, r, light = '#6FC0E4', deep = '#5AAED7') {
+  const [x, y] = P(u, v, 0);
+  const rx = r * 45.25, ry = r * 22.63;
+  const el = (cx, cy, ax, ay, extra) => `<ellipse cx="${rnd2(cx)}" cy="${rnd2(cy)}" rx="${rnd2(ax)}" ry="${rnd2(ay)}"${extra}/>`;
+  const wave = (a, b, k) => { const wx = x + rx * a, wy = y + ry * b; return `<path d="M${rnd2(wx - 3 * k)},${rnd2(wy)} q${rnd2(1.5 * k)},${rnd2(-1.6 * k)} ${rnd2(3 * k)},0 q${rnd2(1.5 * k)},${rnd2(1.6 * k)} ${rnd2(3 * k)},0" fill="none" stroke="#FFFFFF" stroke-width="0.9" stroke-linecap="round" opacity=".7"/>`; };
+  const star = (sx, sy, k) => `<path d="M${rnd2(sx)},${rnd2(sy - k)} L${rnd2(sx + k * 0.3)},${rnd2(sy - k * 0.3)} L${rnd2(sx + k)},${rnd2(sy)} L${rnd2(sx + k * 0.3)},${rnd2(sy + k * 0.3)} L${rnd2(sx)},${rnd2(sy + k)} L${rnd2(sx - k * 0.3)},${rnd2(sy + k * 0.3)} L${rnd2(sx - k)},${rnd2(sy)} L${rnd2(sx - k * 0.3)},${rnd2(sy - k * 0.3)} Z" fill="#FFFFFF"/>`;
+  const k = Math.min(1.6, Math.max(1, r));
+  return el(x, y, rx * 1.02, ry * 1.02, ` fill="#EAD9A6" stroke="${INK_OUT}" stroke-width="0.7"`)
+    + el(x, y, rx * 0.93, ry * 0.91, ` fill="${light}"`)
+    + el(x, y - ry * 0.04, rx * 0.8, ry * 0.76, ` fill="${deep}"`)
+    + el(x, y - ry * 0.1, rx * 0.58, ry * 0.48, ` fill="${mixHex(deep, '#2F7FB0', 0.4)}" opacity=".55"`)
+    + el(x, y, rx * 0.87, ry * 0.84, ' fill="none" stroke="#FFFFFF" stroke-width="0.9" stroke-dasharray="7 5" opacity=".55"')
+    + [[-0.55, 0.3], [0.5, 0.45], [-0.15, 0.62], [0.62, -0.2], [-0.62, -0.3]].map(([a, b]) => wave(a, b, k)).join('')
+    + star(x - rx * 0.4, y + ry * 0.45, 1.8 * k) + star(x + rx * 0.3, y + ry * 0.7, 1.3 * k);
+}
 // Porte sur la face gauche (côté v = vf) : u de ua à ub, hauteur h
 export function doorLeft(ua, ub, vf, h, color = WOOD_DARK.right) {
   return face([[ua, vf, 0], [ub, vf, 0], [ub, vf, h], [ua, vf, h]], color, EDGE)
