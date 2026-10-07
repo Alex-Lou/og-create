@@ -8,6 +8,7 @@ import { drawSpout, seaGuests, DOLPHIN_EVERY, DOLPHIN_FOR, podAt, WHALE_EVERY, W
 import { FLOATING_ZONE, COLONY_ZONE, ferryPose } from '@/world/islets';
 import { SEA_Z, HS, worldOf } from '@/world/terrain';
 import { CRITTERS } from '@/world/nature';
+import { beastSprite, lookOf } from '@/world/beastArt';
 import { vibrate } from '@/utils/fx';
 import { FISH_SPECIES, SEA_SPRITES } from '@/world/seaSprites';
 import { BOTTLE } from '@/world/chest';
@@ -21,6 +22,17 @@ const BOAT_FAR = 7;
 // Mouettes posées effrayées : envol (s), puis retour
 const FLY_OFF = 2.6;
 const GULL_BACK = 30;
+
+// Les petites bêtes et la mer prises dans la bibliothèque : [sorte de beastArt, variante (sinon l'espèce), pose selon
+// l'image du jeu]. Le dauphin a ses trois images (il sort de l'eau, au sommet, il replonge) ; la baleine nage (deux
+// images) ; un poisson en l'air est la plus haute de ses deux images, celui qui replonge l'autre
+const LIBRARY = {
+  chicken: ['hen', 'blanche'], bee: ['bee', ''], frog: ['frog', ''], gull: ['gull', ''],
+  dolphin: ['dolphin', '', frame => ({ pose: 'marche', n: frame + 1 })],
+  whale: ['whaleBack', '', frame => ({ pose: 'marche', n: (frame || 0) + 1 })],
+  fluke: ['whaleFluke', '', frame => ({ pose: 'marche', n: (frame || 0) + 1 })],
+  fish: ['fish', null, frame => ({ pose: 'marche', n: frame === 0 ? 2 : 1 })]
+};
 
 export default {
   // Petite vie de l'île, déterministe dans le temps : où est chaque animal, dans quelle image, de quel côté il regarde.
@@ -176,6 +188,10 @@ export default {
   },
   critterSprite(c) {
     if (c.sprite) return c.sprite;
+    // Le dessin de la bibliothèque (beastArt.js) d'abord : les poules, abeilles et grenouilles du Foyer, la mer
+    const lib = LIBRARY[c.kind];
+    const art = lib && beastSprite(lib[0], lib[1] ?? c.species, lib[2] ? lib[2](c.frame) : lookOf(c.frame));
+    if (art) return [art.key, art.make];
     if (c.kind === 'fish') return [`fish-${c.species}-${c.frame}`, SEA_SPRITES.fish[c.species][c.frame]];
     if (c.kind === 'dolphin') return [`dolphin-${c.frame}`, SEA_SPRITES.dolphin[c.frame]];
     if (c.kind === 'whale') return ['whale-back', SEA_SPRITES.whaleBack];
@@ -215,12 +231,13 @@ export default {
         out.rings.push(...w.rings);
         if (w.back) {
           const depth = w.back.x + w.back.y;
-          out.standing.push({ kind: 'whale', x: w.back.x, y: w.back.y, z: 0, e: w.back.e, flip: w.flip });
+          // (deux images de nage dans la bibliothèque, 420 ms chacune)
+          out.standing.push({ kind: 'whale', x: w.back.x, y: w.back.y, z: 0, e: w.back.e, flip: w.flip, frame: Math.floor(t / 0.42) % 2 });
           w.spouts.forEach(sp => out.standing.push({ kind: 'spout', ...sp, depth: depth + 0.5 }));
           const c = surface(w.back.x, w.back.y);
           hits.push({ key: go.key, kind: 'whale', x: c.x, y: c.y - 6, r: 44, at: { x: w.back.x, y: w.back.y } });
         }
-        if (w.fluke) out.standing.push({ kind: 'fluke', x: w.fluke.x, y: w.fluke.y, z: 0, e: w.fluke.e, flip: w.flip });
+        if (w.fluke) out.standing.push({ kind: 'fluke', x: w.fluke.x, y: w.fluke.y, z: 0, e: w.fluke.e, flip: w.flip, frame: Math.floor(t / 0.42) % 2 });
       }
     }
     if (guests.jellies && phase.night > 0.3) out.jellies = jelliesAt(this.sea.open, t);

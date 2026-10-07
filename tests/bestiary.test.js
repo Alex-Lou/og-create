@@ -47,13 +47,14 @@ describe('le Bestiaire vivant', () => {
     expect(noon.filter(id => id.startsWith('best:'))).toEqual([]);
     expect(noon).toContain('fam:atelier');
     const bowl = island.at(30, at(13)).list.find(c => c.id === 'fam:puits');
-    expect(bowl.sprite[0]).toMatch(/^beast-bowl--/);
+    // (par code, ou de la bibliothèque)
+    expect(bowl.sprite[0]).toMatch(/^beast-bowl--|^lib-bocal-vide_/);
     expect(island.say(bowl, at(13)).text).toBe('« Bulle est retourné dans la mer. »');
   });
   it('Bulle revient quand on écrit Poisson', () => {
     const island = islandOf(['Poisson']);
     const bowl = island.at(30, at(13)).list.find(c => c.id === 'fam:puits');
-    expect(bowl.sprite[0]).toMatch(/^beast-bowl-bulle-/);
+    expect(bowl.sprite[0]).toMatch(/^beast-bowl-bulle-|^lib-bocal-bulle_/);
     expect(island.say(bowl, at(13)).title).toBe('Bulle');
     // De nuit aussi, le bocal reste près d'Ondin
     expect(ids(island, 2)).toContain('fam:puits');
@@ -66,6 +67,11 @@ describe('le Bestiaire vivant', () => {
     const night = ids(island, 23.5);
     expect(night).toContain('best:owl');
     expect(night.filter(id => id.startsWith('best:firefly'))).toHaveLength(5);
+    // Chaque luciole luit la nuit (une lumière à sa place, plus forte quand elle s'allume)
+    const { list, lights } = island.at(30, at(23.5));
+    const flies = list.filter(c => c.id.startsWith('best:firefly'));
+    expect(flies.map(f => lights.filter(l => l.r === 9 && l.x === f.x && l.y === f.y && l.dy === -f.z).length)).toEqual([1, 1, 1, 1, 1]);
+    expect(flies.every(f => f.glow === 1 || f.glow === 0.55)).toBe(true);
     // Elles sont toutes sur des cases de l'île (ni hors carte, ni NaN) et se dessinent
     for (const h of [6, 13, 19, 23.5]) {
       for (const c of island.at(40, at(h)).list.filter(c => c.kind === 'beast')) {

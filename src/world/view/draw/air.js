@@ -131,10 +131,11 @@ export default {
       const at = this.nameSignAt(site);
       for (const [dx, dy, r] of lights) glow(ctx, at.x + dx * NAME_SIGN_SCALE, at.y + dy * NAME_SIGN_SCALE, r * NAME_SIGN_SCALE, Math.max(0.3, lit) * (0.85 + 0.15 * Math.sin(t * 11 + dx) * Math.sin(t * 6.1)));
     }
-    // Lanternes des habitants qui rentrent le soir
+    // Lanternes des habitants qui rentrent le soir, lucioles du Bestiaire (leur rayon, leur couleur et leur éclat : r,
+    // color, a)
     for (const l of this.villageLights) {
       const p = this.ground(l.x, l.y);
-      glow(ctx, p.x + l.dx, p.y + l.dy, 14, lit * (0.9 + 0.1 * Math.sin(t * 5 + l.x)), '255,214,130');
+      glow(ctx, p.x + l.dx, p.y + l.dy, l.r || 14, lit * (l.a ?? 0.9 + 0.1 * Math.sin(t * 5 + l.x)), l.color || '255,214,130');
     }
     // Lanternes du pont de l'Îlot aux Mouettes, lanterne de la barque du passeur
     for (const lamp of this.islets.lamps) {

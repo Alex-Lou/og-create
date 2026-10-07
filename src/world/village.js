@@ -420,7 +420,7 @@ export function villageOf({ n, M, sites, owned, crafts = [], props, annexes = []
         const a = now * 1.4;
         out.push(familiar(r, p.x + Math.cos(a) * 0.32, p.y + Math.sin(a) * 0.22, stop ? 0 : 13 + Math.sin(now * 3.2) * 2 + lift, Math.sin(a) > 0, stop ? 'rest' : Math.floor(now * 12) % 2));
         // Abeille écrite : Rivet lui a fabriqué une amie
-        if (bestiary.friend) out.push(beast('fam:atelier:amie', 'bee', '', p.x + Math.cos(a + 2.6) * 0.38, p.y + Math.sin(a + 2.6) * 0.26, 12 + Math.cos(now * 2.8) * 2, Math.sin(a + 2.6) > 0, Math.floor(now * 12 + 1) % 2));
+        if (bestiary.friend) out.push(beast('fam:atelier:amie', 'bee', 'amie', p.x + Math.cos(a + 2.6) * 0.38, p.y + Math.sin(a + 2.6) * 0.26, 12 + Math.cos(now * 2.8) * 2, Math.sin(a + 2.6) > 0, Math.floor(now * 12 + 1) % 2));
         return;
       }
       if (pet === 'potager') {
@@ -678,6 +678,8 @@ export function villageOf({ n, M, sites, owned, crafts = [], props, annexes = []
         b.flip = (here.x - b.x) - (here.y - b.y) < 0;
       }
     }
+    // La lueur des lucioles, la nuit (la teinte de la nuit éteindrait le halo de leur dessin)
+    for (const b of out) if (b.glow) lights.push({ x: b.x, y: b.y, dx: 0, dy: -b.z, r: 9, color: '255,236,140', a: b.glow });
     return { list: out, lights };
   }
   // Ce que dit un familier qu'on touche, ou sa fiche courte (appui long)
@@ -742,8 +744,15 @@ export function villageOf({ n, M, sites, owned, crafts = [], props, annexes = []
 
 // Une bête prête à dessiner : le dessin de la bibliothèque (beastArt.js ; look : sa vue, sa pose et son image, sinon
 // déduits de l'image du jeu, de profil), sinon celui du code (clé d'image par sorte, variante et image)
+// (dessinée de face, le hibou ou un papillon, elle ne se retourne jamais)
+// (dessinée de face, le hibou ou un papillon, elle ne se retourne jamais ; une luciole luit, plus fort quand elle
+// s'allume : glow)
 function beast(id, species, variant, x, y, z, flip, frame, look = null) {
-  const art = beastSprite(species, variant, look || lookOf(frame));
-  return { id, kind: 'beast', species, x, y, z, flip, sprite: art ? [art.key, art.make] : [`beast-${species}-${variant}-${frame}`, () => ANIMAL_SPRITES[species](frame, variant)] };
+  const art = beastSprite(species, variant, look || lookOf(frame, species));
+  return {
+    id, kind: 'beast', species, x, y, z, flip: art && art.face ? false : flip,
+    sprite: art ? [art.key, art.make] : [`beast-${species}-${variant}-${frame}`, () => ANIMAL_SPRITES[species](frame, variant)],
+    ...(species === 'firefly' ? { glow: frame === 1 ? 1 : 0.55 } : {})
+  };
 }
 export const isWild = species => WILD.has(species);
