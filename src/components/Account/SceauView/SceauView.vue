@@ -17,6 +17,9 @@
     <!-- Tout ce qui touche au joueur, au même endroit -->
     <nav class="sceau__actions" aria-label="Ton compte">
       <button v-if="!isLoggedIn" type="button" class="g-btn sceau__login" @click="$emit('login')">Se connecter · créer un compte</button>
+      <button v-if="isLoggedIn" type="button" class="sceau__row" @click="$emit('open-account')">
+        <span class="sceau__row-title">Mon compte</span><span class="sceau__row-note">Nom, photo, adresse, mot de passe, mes données</span>
+      </button>
       <button v-if="isLoggedIn" type="button" class="sceau__row" @click="$emit('open-cabinet')">
         <span class="sceau__row-title">Le Cabinet</span><span class="sceau__row-note">Cadres et emblèmes de ton sceau</span>
       </button>
@@ -55,7 +58,7 @@ import GSigil from '@/components/ui/GSigil/GSigil.vue';
 import { roman } from '@/utils/roman';
 import { LEVELS } from '@/utils/trialProgress';
 
-// Onglet Sceau : le sceau vivant du joueur, ce qui le façonne, et son compte (Cabinet, Succès, contact)
+// Onglet Sceau : le sceau vivant du joueur, ce qui le façonne, et son compte (Mon compte, Cabinet, Succès, contact)
 export default {
   name: 'SceauView',
   components: { GSigil },
@@ -74,7 +77,7 @@ export default {
     achievementsTotal: { type: Number, default: 0 },
     bestScores: { type: Object, default: () => ({}) }
   },
-  emits: ['open-cabinet', 'open-codex', 'open-contact', 'replay-prologue', 'login', 'logout'],
+  emits: ['open-account', 'open-cabinet', 'open-codex', 'open-contact', 'replay-prologue', 'login', 'logout'],
   computed: {
     records() {
       return LEVELS.map(level => this.bestScores[level] || 0).join(' · ');

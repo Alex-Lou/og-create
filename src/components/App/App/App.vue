@@ -31,6 +31,7 @@
             :unlocked="unlockedAchievements"
             :achievementsTotal="achievements.length"
             :bestScores="timerProgress.bestScores || {}"
+            @open-account="showAccount = true"
             @open-cabinet="isCustomizeModalOpen = true"
             @open-codex="showCodex = true"
             @open-contact="showContact = true"
@@ -183,6 +184,7 @@
       @close="resetToken = null"
       @login="resetToken = null; showSeuil = true"
     />
+    <AccountModal v-if="showAccount" @close="showAccount = false" @look="islandAvatar = $event" @left="handleLogout" />
     <ContactModal v-if="showContact" @close="showContact = false" />
     <CodexModal v-if="showCodex" :achievements="achievements" @close="showCodex = false" />
     <SeuilModal v-if="showSeuil" @close="showSeuil = false" />
@@ -241,6 +243,7 @@ import SceauView from '../../Account/SceauView/SceauView.vue';
 import SeuilModal from '../../Account/SeuilModal/SeuilModal.vue';
 import ResetPasswordModal from '../../Account/ResetPasswordModal/ResetPasswordModal.vue';
 import ContactModal from '../../Settings/ContactModal/ContactModal.vue';
+import AccountModal from '../../Account/AccountModal/AccountModal.vue';
 import CustomizeModal from '../../Settings/CustomizeModal/CustomizeModal.vue';
 import CodexModal from '../../Codex/CodexModal/CodexModal.vue';
 import GameAchievementsPopup from '../../Codex/GameAchievementsPopup/GameAchievementsPopup.vue';
@@ -280,6 +283,7 @@ export default {
     SeuilModal,
     ResetPasswordModal,
     ContactModal,
+    AccountModal,
     CustomizeModal,
     CodexModal,
     GameAchievementsPopup,
@@ -314,6 +318,7 @@ export default {
       progressReady: false,
       showCodex: false,
       showContact: false,
+      showAccount: false,
       showSeuil: false,
       isCustomizeModalOpen: false,
       // Le Monde (île du joueur) et le Sceau (le joueur, son compte) remplacent le Livre et l'Athanor
