@@ -11,18 +11,13 @@ const require = createRequire(import.meta.url);
 const DIR = path.dirname(fileURLToPath(import.meta.url));
 const { unique, row, sheet, animated, write, shoot } = require('./planche.js');
 const G = require('./egares.js');
+const { EGARES: LIST } = require('./betes_liste.js');
 const LIB = path.join(DIR, 'lib', 'egares');
 const PNG = path.join(DIR, 'planches');
 const r2 = n => Math.round(n * 100) / 100;
 const svgOf = (frame, body, s = 1) => `<svg xmlns="http://www.w3.org/2000/svg" width="${r2(frame[2] * s)}" height="${r2(frame[3] * s)}" viewBox="${frame.join(' ')}">${body}</svg>`;
 const BASE = [-16, -26, 32, 30];
 
-// [sujet, nom, dessin(vue, pose)]
-const LIST = [
-  ['fantome', 'Petit fantôme', (v, p) => G.fantome(v, p)],
-  ['zombie', 'Petit zombie tout mou', (v, p) => G.zombie(v, p)],
-  ...Object.entries(G.BETES).map(([climat, b]) => [`${b.nom.split(' (')[0].toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '').replace(/ /g, '-')}`, b.nom, (v, p) => G.bete(climat, v, p), climat])
-];
 const index = {
   _lisez_moi: [
     'Les égarés (HISTOIRE.md § 6.15) : les petites créatures que la brume laisse sortir la nuit. Grognons plus que méchants : ni coup, ni mal. Trait bleu nuit (#3B4763) pour toute la famille de la brume, au lieu du brun de l\'île.',

@@ -15,8 +15,7 @@ const fs = require('fs');
 const path = require('path');
 const { ACCESSOIRES } = require('../personnages/avatar_choix');
 
-const hyph = s => s.replace(/_/g, '-');
-const SANS_SENS = new Set(['hibou', 'meduse', 'papillon_bleu', 'papillon_jaune', 'papillon_lune']);
+const { nomBete, vitesseBete } = require('./noms_betes');
 
 // --- 1. Les noms -------------------------------------------------------------------------------
 
@@ -27,26 +26,8 @@ function renommer(rel) {
   const [top, a, b] = parts;
   const out = (dirs, name) => [...dirs, name + '.svg'].join('/');
 
-  if (top === 'animaux') {
-    const sujet = b;
-    const rest = base.slice(sujet.length + 1);
-    if (!base.startsWith(sujet + '_')) throw new Error('bête inattendue : ' + rel);
-    const S = hyph(sujet);
-    const m = rest.match(/^(?:(avant|dos)_)?([a-z]+?)(\d+)?$/);
-    if (!m) throw new Error('bête inattendue : ' + rel);
-    const [, vue, pose, n] = m;
-    if (pose === 'image' && a === 'familiers') return out([top, a, S], n ? `${S}_${n}` : S);
-    const v = vue || (SANS_SENS.has(sujet) || a === 'familiers' && sujet.startsWith('bocal') ? 'face' : 'profil');
-    const p = pose === 'image' ? 'nage' : pose;
-    return out([top, a, S], [S, v, p, n].filter(Boolean).join('_'));
-  }
-
-  // Les égarés (lot M) : egares/<sujet>/<sujet>_<vue>_<pose><n> -> <sujet>_<vue>_<pose>_<n>
-  if (top === 'egares') {
-    const m = base.match(/^([a-z-]+)_(avant|dos)_([a-z]+?)(\d+)?$/);
-    if (!m || m[1] !== a) throw new Error('égaré inattendu : ' + rel);
-    return out([top, a], [m[1], m[2], m[3], m[4]].filter(Boolean).join('_'));
-  }
+  // Les bêtes et les égarés : la règle est dans noms_betes.js (le générateur des bêtes s'en sert aussi)
+  if (top === 'animaux' || top === 'egares') return nomBete(rel);
 
   if (top === 'vivants' && a === 'cerf') {
     const m = base.match(/^cerf_(?:(avant|dos)_)?([a-z]+)(?:_(\d+))?$/);
@@ -446,8 +427,7 @@ function titreObjet(id, meta) {
 function vitesse(id, pose, images) {
   if (images < 2) return undefined;
   const [top, a] = id.split('/');
-  if (top === 'animaux') return pose === 'vol' ? 120 : pose === 'nage' && /mer|familiers/.test(a) ? 420 : 260;
-  if (top === 'egares') return { marche: 240, fuite: 160, bouderie: [500, 700], luciole: [300, 200, 200, 1000], brume: [220, 220, 900] }[pose];
+  if (top === 'animaux' || top === 'egares') return vitesseBete(id, pose);
   if (top === 'vivants') {
     if (a === 'brume') return /expr/.test(id) ? 600 : 220;
     if (a === 'cerf-blanc') return pose === 'repos' ? [1800, 180] : 300;

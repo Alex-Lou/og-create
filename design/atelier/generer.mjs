@@ -20,35 +20,41 @@ const charger = async f => {
 // Les nombres passés en texte redeviennent des nombres (une image, une taille)
 const arg = a => (/^-?\d+(\.\d+)?$/.test(a) ? Number(a) : a);
 
-const [famille, commande, ...reste] = process.argv.slice(2);
-if (!famille) {
-  for (const f of familles) {
-    const M = await charger(f);
-    console.log(`${f} : ${Object.keys(M).filter(k => typeof M[k] === 'function').join(', ')}${M.liste ? ` (${M.liste().length} dessins)` : ''}`);
-  }
-} else {
-  const M = await charger(famille);
-  if (!commande || commande === 'liste') {
-    if (!M.liste) throw new Error(`${famille} n'a pas de liste`);
-    for (const { fichier, fonction, args } of M.liste()) console.log(`${fichier}  ←  ${fonction}(${args.map(a => JSON.stringify(a)).join(', ')})`);
-  } else if (commande === 'tout') {
-    const dossier = reste[0];
-    if (!dossier) throw new Error('tout : il faut un dossier');
-    let n = 0;
-    for (const { fichier, fonction, args } of M.liste()) {
-      const f = path.join(dossier, fichier);
-      fs.mkdirSync(path.dirname(f), { recursive: true });
-      fs.writeFileSync(f, M[fonction](...args).svg + '\n');
-      n++;
+try {
+  const [famille, commande, ...reste] = process.argv.slice(2);
+  if (!famille) {
+    for (const f of familles) {
+      const M = await charger(f);
+      console.log(`${f} : ${Object.keys(M).filter(k => typeof M[k] === 'function').join(', ')}${M.liste ? ` (${M.liste().length} dessins)` : ''}`);
     }
-    console.log(`${famille} : ${n} dessins dans ${dossier}`);
   } else {
-    if (typeof M[commande] !== 'function') throw new Error(`${famille} n'exporte pas ${commande}`);
-    const i = reste.indexOf('--sortie'), sortie = i >= 0 ? reste[i + 1] : null;
-    const args = (i >= 0 ? reste.slice(0, i) : reste).map(arg);
-    const r = M[commande](...args);
-    if (!r || typeof r.svg !== 'string') throw new Error(`${commande} ne rend pas de dessin`);
-    if (sortie) { fs.writeFileSync(sortie, r.svg + '\n'); console.log(`${sortie} : cadre ${r.cadre.join(' ')}${r.ms_par_image ? `, ${r.ms_par_image} ms par image` : ''}`); }
-    else process.stdout.write(r.svg + '\n');
+    const M = await charger(famille);
+    if (!commande || commande === 'liste') {
+      if (!M.liste) throw new Error(`${famille} n'a pas de liste`);
+      for (const { fichier, fonction, args } of M.liste()) console.log(`${fichier}  ←  ${fonction}(${args.map(a => JSON.stringify(a)).join(', ')})`);
+    } else if (commande === 'tout') {
+      const dossier = reste[0];
+      if (!dossier) throw new Error('tout : il faut un dossier');
+      let n = 0;
+      for (const { fichier, fonction, args } of M.liste()) {
+        const f = path.join(dossier, fichier);
+        fs.mkdirSync(path.dirname(f), { recursive: true });
+        fs.writeFileSync(f, M[fonction](...args).svg + '\n');
+        n++;
+      }
+      console.log(`${famille} : ${n} dessins dans ${dossier}`);
+    } else {
+      if (typeof M[commande] !== 'function') throw new Error(`${famille} n'exporte pas ${commande}`);
+      const i = reste.indexOf('--sortie'), sortie = i >= 0 ? reste[i + 1] : null;
+      const args = (i >= 0 ? reste.slice(0, i) : reste).map(arg);
+      const r = M[commande](...args);
+      if (!r || typeof r.svg !== 'string') throw new Error(`${commande} ne rend pas de dessin`);
+      if (sortie) { fs.writeFileSync(sortie, r.svg + '\n'); console.log(`${sortie} : cadre ${r.cadre.join(' ')}${r.ms_par_image ? `, ${r.ms_par_image} ms par image` : ''}`); }
+      else process.stdout.write(r.svg + '\n');
+    }
   }
+} catch (e) {
+  // une erreur de l'utilisateur (famille, fonction, argument) : son message seul
+  console.error(e.message);
+  process.exit(1);
 }

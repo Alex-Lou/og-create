@@ -587,8 +587,8 @@ Object.assign(BOX, {
   KOI: box(-10, -4, 20, 8), FISH: box(-16, -28, 32, 32), DOLPHIN: box(-26, -22, 52, 36), WHALE_BACK: box(-50, -18, 100, 27), WHALE_FLUKE: box(-26, -30, 52, 38),
   BOWL: box(-6, -10, 12, 11), JELLY: box(-8, -12, 16, 16)
 });
-let glowN = 0;
-const glowDot = (x, y, r, rgb, a = 0.45) => { const id = `lueur-bete${glowN++}`; return `<defs><radialGradient id="${id}"><stop offset="0" stop-color="rgb(${rgb})" stop-opacity="${r2(Math.min(0.9, a * 1.7))}"/><stop offset="1" stop-color="rgb(${rgb})" stop-opacity="0"/></radialGradient></defs><circle cx="${r2(x)}" cy="${r2(y)}" r="${r2(r)}" fill="url(#${id})"/>`; };
+// son nom vient de ses réglages (pas d'un compteur) : un même dessin porte le même nom, dans quelque ordre qu'on dessine
+const glowDot = (x, y, r, rgb, a = 0.45) => { const id = `lueur-bete_${[x, y, r, a].map(r2).join('_')}_${rgb}`.replace(/,/g, '-').replace(/\./g, 'p'); return `<defs><radialGradient id="${id}"><stop offset="0" stop-color="rgb(${rgb})" stop-opacity="${r2(Math.min(0.9, a * 1.7))}"/><stop offset="1" stop-color="rgb(${rgb})" stop-opacity="0"/></radialGradient></defs><circle cx="${r2(x)}" cy="${r2(y)}" r="${r2(r)}" fill="url(#${id})"/>`; };
 const water = (x, y, w) => `<path d="M${r2(x - w)},${r2(y)} Q${r2(x - w / 2)},${r2(y - 1.2)} ${x},${r2(y)} Q${r2(x + w / 2)},${r2(y + 1.2)} ${r2(x + w)},${r2(y)}" fill="none" stroke="#FFFFFF" stroke-width="1" stroke-linecap="round" opacity="0.85"/>`;
 const splash = (x, y, k = 1) => [[-3, -2.6], [0, -3.6], [3, -2.4]].map(([dx, dy]) => E(x + dx * k, y + dy * k, 0.7 * k, 0.9 * k, '#BFE6FF', 0.5)).join('');
 
