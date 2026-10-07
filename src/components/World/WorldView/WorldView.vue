@@ -810,11 +810,14 @@ export default {
       // Îlots des chapitres VI et VII : île flottante, colonie de mouettes, barque du passeur, lanternes du pont
       this.islets = isletsOf(M, (x, y) => (state.map.zones[M.zone(x, y)] || {}).id);
       if (!this.sea) this.sea = seaOf(M);
+      // (ajoutées en place : recopier la liste à chaque case coûtait le carré de la taille du quartier)
       this.zoneTiles = new Map();
       for (let y = 0; y < state.size; y++) {
         for (let x = 0; x < state.size; x++) {
           const zone = state.map.zones[M.zone(x, y)];
-          if (zone) this.zoneTiles.set(zone.id, [...(this.zoneTiles.get(zone.id) || []), [x, y]]);
+          if (!zone) continue;
+          if (!this.zoneTiles.has(zone.id)) this.zoneTiles.set(zone.id, []);
+          this.zoneTiles.get(zone.id).push([x, y]);
         }
       }
       // Retour sur l'île : la fiche qui était ouverte se rouvre

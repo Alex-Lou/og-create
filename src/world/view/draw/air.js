@@ -60,7 +60,7 @@ export default {
   },
   // Lumières : fenêtres et feux s'allument une à une quand la scène s'assombrit (soir, nuit, gros temps) ; lucioles
   // la nuit, par temps sec
-  drawLights(ctx, t, phase) {
+  drawLights(ctx, t, phase, view) {
     const lit = phase.lit;
     // Chaque fenêtre a son seuil : les lumières s'allument l'une après l'autre
     const litFor = key => Math.min(1, Math.max(0, (lit - hash(key, 17) * 0.4) / 0.3));
@@ -98,9 +98,11 @@ export default {
       const flicker = fire ? 0.85 + 0.15 * Math.sin(t * 13 + annex.x) * Math.sin(t * 7.3) : 0.95 + 0.05 * Math.sin(t * 2 + annex.y);
       glow(ctx, c.x + lx, c.y + ly, r, (fire ? Math.max(0.3, lit) : litFor(annex.x * 13 + annex.y)) * flicker, color);
     }
-    // Lave : elle luit dans la nuit, en palpitant
+    // Lave : elle luit dans la nuit, en palpitant (seulement à l'écran : il y en a beaucoup sur la grande carte)
+    const R = 30;
     for (const c of this.lavaCells || []) {
-      glow(ctx, c.x, c.y, 30, (0.08 + 0.92 * lit) * (0.8 + 0.2 * Math.sin(t * 1.7 + c.x * 0.05) * Math.sin(t * 2.9 + c.y * 0.07)), '255,110,40');
+      if (view && (c.x < view.x - R || c.x > view.x + view.w + R || c.y < view.y - R || c.y > view.y + view.h + R)) continue;
+      glow(ctx, c.x, c.y, R, (0.08 + 0.92 * lit) * (0.8 + 0.2 * Math.sin(t * 1.7 + c.x * 0.05) * Math.sin(t * 2.9 + c.y * 0.07)), '255,110,40');
     }
     // Lieux remarquables : bouche de la grotte, gravures des menhirs, lanterne des pilotis, lave (elle luit même de jour)
     for (const landmark of this.shownLandmarks) {
