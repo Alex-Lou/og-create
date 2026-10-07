@@ -221,6 +221,9 @@ function moment(id, meta) {
     .replace(/^banc(_petit)?(_peint)?(_chat)?$/, 'banc'); return PLANTES_GREVE.has(n) ? 'tuto-1' : PLANTES_ACTE1.has(n) ? 'acte-1' : 'partout'; }
   // les scènes du tutoriel (lot J2) : scenes/tutoriel/<étape>_<nom>/…, la partie suit le numéro de l'étape
   if (top === 'scenes') { const n = parseInt(b, 10); return n <= 6 ? 'tuto-1' : n <= 9 ? 'tuto-2' : 'tuto-3'; }
+  // les icônes de l'interface : dès les étapes 4 à 6 ; le carnet et l'expédition avec la carte (étape 10), les trouvailles
+  // avec les climats
+  if (top === 'interface') return /^(carnet|expedition)_/.test(nom) ? 'tuto-3' : /^trouvailles_/.test(nom) ? 'acte-4' : 'tuto-1';
   return 'partout';
 }
 
