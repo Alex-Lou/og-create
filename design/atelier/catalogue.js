@@ -232,7 +232,6 @@ const A_REVOIR = [
   [/^vivants\/cerf-blanc\//, 'Le cerf blanc n\'a que le profil ; il lui faut le trois quarts avant et dos, comme Anya.'],
   [/^personnages\/naufrages\/galet\/galet-naufrage_face_rune$/, 'Un naufragé a oublié son don (§ 6.2) : la rune qui chante revient au maître.'],
   [/^personnages\/naufrages\/sylve\/sylve-naufrage_face_chant$/, 'Un naufragé a oublié son don (§ 6.2) : le chant aux graines revient au maître.'],
-  [/^decor\/camp\/epave\/hirondelle$/, 'L\'Hirondelle est un petit navire de croisière (v6) : épave à redessiner.'],
   [/^decor\/camp\/epave\/feu_debris$/, 'Le feu de camp est le Foyer au palier I, bâti par le joueur (§ 9, étape 5) : ce feu fait double emploi.'],
   [/^decor\/camp\/coins\/(ondin|sylve|galet|melisse)\//, 'Seuls Aster et Rivet vivent au camp : ce coin va près du bâtiment de son maître (Ondin à La Source, Sylve à La Lisière, Galet à La Colline, Mélisse aux Jardins).'],
   [/^decor\/camp\/coins\/[a-z]+\/[a-z]+_cabanon$/, 'Pas de cabanon avant l\'Abri (fin de l\'acte II).'],

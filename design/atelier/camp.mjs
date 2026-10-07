@@ -75,76 +75,149 @@ function driftFire(u = 0, v = 0, s = 1, n = 0) {
 }
 
 /* ---------- l'épave de l'Hirondelle (T1, la Grève) ---------- */
-// La coque échouée, gîtée vers le joueur et ensablée, le long de u (la proue vers +u) : bordé rayé de bernacles, pont
-// crevé, cabine arrière effondrée, mât cassé net ; le haut du mât est tombé dans le sable avec sa voile déchirée
+// L'avant du petit navire de croisière, échoué dans le sable le long de u (la proue vers +u), gîté vers le joueur ;
+// l'arrière s'est arraché dans la brume. Coque blanche, carène rouge à moitié ensablée, liseré bleu, hublots qui
+// rouillent, l'hirondelle peinte à la proue, l'ancre qui pend ; pont de bois, bastingage blanc (crevé côté joueur), le
+// salon-passerelle aux vitres bleues (une fendue), la bouée, la cheminée jaune à bande bleue qui penche, le mât de
+// proue et sa guirlande d'ampoules ; dans le sable : la bouée, la chaise longue rayée retournée, une valise, une caisse
+const HULL = { white: '#ECE8DE', white2: '#E4DFD3', dark: '#BDB7AA', red: '#B8483A', redD: '#8E352B', navy: '#2E4E8C', glass: '#5E7A9E', deck: '#C49C6E', cabin: '#F4F0E6', cabinS: '#D6D0C2', roof: '#DCD6C8', funnel: '#F2C04B', funnelS: '#D4A23A', band: '#3E5A8C' };
+const SWALLOW = 'M-3.2,-0.6 Q-1.6,-1.8 0,-0.2 Q1.6,-1.8 3.2,-0.6 Q1.4,-0.4 0.6,0.6 L1.4,2.4 L0,1.4 L-1.4,2.4 L-0.6,0.6 Q-1.4,-0.4 -3.2,-0.6 Z';
+// Bouée rouge et blanche à plat (x, y écran), rayon r
+const lifebuoy = (x, y, r, flat = 0.5) => ell(x, y, r + 1.3, r * flat + 1.3, OUT)
+  + `<ellipse cx="${f2(x)}" cy="${f2(y)}" rx="${f2(r)}" ry="${f2(r * flat)}" fill="none" stroke="${HULL.cabin}" stroke-width="${f2(r * 0.5)}"/>`
+  + `<ellipse cx="${f2(x)}" cy="${f2(y)}" rx="${f2(r)}" ry="${f2(r * flat)}" fill="none" stroke="#D8483A" stroke-width="${f2(r * 0.5)}" stroke-dasharray="${f2(r * 0.79)} ${f2(r * 0.79)}"/>`
+  + ell(x, y, r * 0.72, r * flat * 0.72, 'none', ` stroke="${OUT}" stroke-width="0.6"`);
 function hirondelle() {
-  const Z = u => 19 + (u + 1.3) * 2.6; // hauteur du plat-bord (la tonture remonte vers la proue)
-  const D = (u, v) => Z(u) - v * 12; // le pont penche vers le joueur (côté +v plus bas)
-  const side = [[-1.3, 0.42], [-0.9, 0.5], [-0.2, 0.52], [0.5, 0.48], [1.0, 0.34], [1.35, 0.16], [1.55, 0]];
+  const Z = u => 20 + (u + 1.25) * 2.4; // hauteur du plat-bord (la tonture remonte vers la proue)
+  const D = (u, v) => Z(u) - v * 10; // le pont penche vers le joueur (côté +v plus bas)
+  const side = [[-1.25, 0.44], [-0.9, 0.48], [-0.2, 0.5], [0.5, 0.47], [1.0, 0.34], [1.35, 0.16], [1.58, 0]];
   const far = side.slice(0, -1).reverse().map(([u, v]) => [u, -v]);
+  const hullAt = u => { for (let i = 0; i < side.length - 1; i++) { const [ua, va] = side[i], [ub, vb] = side[i + 1]; if (u >= ua && u <= ub) return va + (vb - va) * (u - ua) / (ub - ua); } return 0; };
+  // point du bordé côté joueur à la hauteur z (le bordé rentre un peu vers le bas)
+  const onSide = (u, z) => { const v = hullAt(u), d = D(u, v); return [u, v * (0.84 + 0.16 * Math.min(1, z / d)), z]; };
+  const band = (ua, ub, z0, z1, fill) => face([onSide(ua, z0), onSide(ub, z0), onSide(ub, Math.min(z1, D(ub, hullAt(ub)))), onSide(ua, Math.min(z1, D(ua, hullAt(ua))))], fill);
   let o = shadow(0.15, 0.15, 1.45, 0.2);
   o += dune(-0.3, -0.72, 0.85, 0.3, 4) + dune(0.9, -0.5, 0.5, 0.25, 3);
-  // bordé visible : côté +v (éclairé) et, à la proue, côté -v (sombre)
+  // bordé visible : côté +v (éclairé) blanc, carène rouge, liseré bleu sous le plat-bord ; à la proue, côté -v (ombre)
   for (let i = 0; i < side.length - 1; i++) {
     const [ua, va] = side[i], [ub, vb] = side[i + 1];
-    o += face([[ua, va * 0.82, 0], [ub, vb * 0.82, 0], [ub, vb, D(ub, vb)], [ua, va, D(ua, va)]], i % 2 ? '#8E6A48' : '#86633F', EDGE);
+    o += face([[ua, va * 0.84, 0], [ub, vb * 0.84, 0], [ub, vb, D(ub, vb)], [ua, va, D(ua, va)]], i % 2 ? HULL.white2 : HULL.white, EDGE);
+    o += band(ua, ub, 0, 6.5, HULL.red) + band(ua, ub, D(ua, va) - 4.2, D(ua, va) - 2.6, HULL.navy);
   }
-  for (const [ua, va, ub, vb] of [[1.0, -0.34, 1.35, -0.16], [1.35, -0.16, 1.55, 0]]) o += face([[ua, va * 0.82, 0], [ub, vb * 0.82, 0], [ub, vb, D(ub, vb)], [ua, va, D(ua, va)]], '#5E4630', EDGE);
-  for (const k of [0.3, 0.55, 0.78]) o += `<polyline points="${pts(side.map(([u, v]) => P(u, v * (0.82 + 0.18 * k), D(u, v) * k)))}" fill="none" stroke="rgba(40,25,10,.4)" stroke-width="0.8"/>`;
+  for (const [ua, va, ub, vb] of [[1.0, -0.34, 1.35, -0.16], [1.35, -0.16, 1.58, 0]]) {
+    o += face([[ua, va * 0.84, 0], [ub, vb * 0.84, 0], [ub, vb, D(ub, vb)], [ua, va, D(ua, va)]], HULL.dark, EDGE)
+      + face([[ua, va * 0.84, 0], [ub, vb * 0.84, 0], [ub, vb * 0.86, 6.5], [ua, va * 0.86, 6.5]], HULL.redD);
+  }
+  o += `<polyline points="${pts([P(1.0, -0.34 * 0.84, 6.5), P(1.35, -0.16 * 0.86, 6.5), P(1.58, 0, 6.5)])}" fill="none" stroke="rgba(40,25,10,.45)" stroke-width="0.7"/>`;
+  o += `<polyline points="${pts(side.map(([u]) => P(...onSide(u, 6.5))))}" fill="none" stroke="rgba(40,25,10,.45)" stroke-width="0.7"/>`;
+  // l'arrière arraché : le bordé déchiqueté laisse voir l'intérieur sombre de la coque
+  o += `<polygon points="${pts([[-1.25, 0], [-1.25, 4], [-1.16, 6], [-1.22, 10.5], [-1.12, 13], [-1.2, 17], [-1.13, 19.6], [-1.25, 23]].map(([u, z]) => P(...onSide(u, Math.min(z, D(u, hullAt(u)))))))}" fill="#2E2218"${EDGE}/>`;
+  o += ln(P(...onSide(-1.2, 8.6)), P(...onSide(-1.25, 8.6)), '#6E6A62', 1) + ln(P(...onSide(-1.17, 15.4)), P(...onSide(-1.25, 15.4)), '#6E6A62', 1);
+  // hublots (cerclés de laiton), coulures de rouille dessous
+  for (const u of [-0.98, -0.74, -0.5, 0.06, 0.3, 0.54, 0.78]) {
+    const [x, y] = P(...onSide(u, D(u, hullAt(u)) - 9.4));
+    o += ln([x + 0.4, y + 2.6], [x + 0.9, y + 7.4], 'rgba(160,90,40,.35)', 1.1)
+      + ell(x, y, 2.3, 2.5, '#C9A24A', ` stroke="${OUT}" stroke-width="0.6"`) + ell(x, y, 1.5, 1.7, HULL.glass) + ell(x - 0.5, y - 0.6, 0.5, 0.5, '#FFFFFF', ' opacity=".8"');
+  }
+  // la déchirure dans le bordé : tôles tordues, l'entrepont dans l'ombre
+  const gash = [[-0.38, 7.5], [-0.16, 5.6], [0.0, 10], [-0.08, 14.6], [-0.22, 12.4], [-0.34, 15.2]];
+  o += `<polygon points="${pts(gash.map(([u, z]) => P(...onSide(u, z))))}" fill="#2E2218"${EDGE}/>`;
+  o += ln(P(...onSide(-0.3, 11.6)), P(...onSide(-0.12, 11.2)), '#6E6A62', 1.2);
+  for (const [u, z, dx, dy] of [[-0.16, 5.8, 2, 1.6], [0, 10, 2.2, -0.6], [-0.34, 15, -1.6, -1.8]]) { const [x, y] = P(...onSide(u, z)); o += `<path d="M${f2(x)},${f2(y)} l${dx},${dy} l${f2(-dx * 0.4)},${f2(dy * 0.9 + 1)} Z" fill="${HULL.white2}"${EDGE}/>`; }
+  // l'hirondelle peinte à la proue, l'écubier et l'ancre qui pend
+  { const [x, y] = P(...onSide(1.02, 15)); o += `<g transform="translate(${f2(x)} ${f2(y)}) matrix(1.5 -0.55 0 1.5 0 0)"><path d="${SWALLOW}" fill="${HULL.navy}"/></g>`; }
+  { const [x, y] = P(...onSide(1.3, 19.6)); o += ell(x, y, 1.9, 1.5, '#2E2218', EDGE) + tk([x, y + 1.2], [x + 0.6, y + 9], IRON.left, 1.4)
+      + pathTk(`M${f2(x - 2.6)},${f2(y + 8)} Q${f2(x + 0.6)},${f2(y + 11.6)} ${f2(x + 3.8)},${f2(y + 8)}`, IRON.top, 1.2) + tk([x - 1.4, y + 3], [x + 2.6, y + 3], IRON.left, 1); }
   // le sable qui ensevelit le pied de la coque, devant : un banc continu qui remonte contre le bordé
-  // (bord extérieur ondulé, bouts arrondis qui rejoignent la coque)
-  const hullAt = u => { for (let i = 0; i < side.length - 1; i++) { const [ua, va] = side[i], [ub, vb] = side[i + 1]; if (u >= ua && u <= ub) return va + (vb - va) * (u - ua) / (ub - ua); } return 0; };
-  const us = Array.from({ length: 15 }, (_, i) => -1.24 + i * (2.7 / 14));
-  const tOf = u => Math.sin(((u + 1.24) / 2.7) * Math.PI);
+  const us = Array.from({ length: 15 }, (_, i) => -1.2 + i * (2.7 / 14));
+  const tOf = u => Math.sin(((u + 1.2) / 2.7) * Math.PI);
   const inner = us.map(u => P(u, hullAt(u) * 0.96, 0.5 + 4.5 * Math.sqrt(tOf(u))));
   const outer = us.slice().reverse().map((u, i) => P(u + 0.03, hullAt(u) + tOf(u) * (0.22 + 0.06 * Math.sin(i * 1.9)) + 0.01, 0));
   o += `<polygon points="${pts([...inner, ...outer])}" fill="${SAND.light}" stroke="${OUT}" stroke-width="0.6" stroke-linejoin="round"/>`
     + `<polyline points="${pts(us.slice(2, -2).map((u, i) => P(u + 0.04, hullAt(u) + 0.1 + 0.03 * Math.sin(i * 2.3), 1.6)))}" fill="none" stroke="${SAND.dark}" stroke-width="0.9" opacity="0.6"/>`;
-  // bernacles et algue sèche sur le bordé
-  for (const [u, k] of [[-1.0, 0.3], [-0.85, 0.42], [0.62, 0.26], [0.75, 0.38], [0.9, 0.3]]) { const v = 0.5 - Math.abs(u) * 0.06; const [x, y] = P(u, v, 12 * k); o += ell(x, y, 1, 0.7, '#D9D2C2', ` stroke="${OUT}" stroke-width="0.4"`); }
-  o += pathTk(`M${pts([P(0.3, 0.5, 9)])} Q${pts([P(0.4, 0.5, 5)])} ${pts([P(0.36, 0.5, 1)])}`, '#5C8A45', 1);
-  // le trou dans le bordé, les membrures derrière
-  const hole = [[-0.5, 0.51, 5], [-0.12, 0.52, 3], [0.08, 0.52, 9], [-0.06, 0.52, 13], [-0.3, 0.52, 11], [-0.46, 0.51, 12]];
-  o += `<polygon points="${pts(iso(hole))}" fill="#2E2218"${EDGE}/>`;
-  for (const u of [-0.36, -0.22, -0.08]) o += ln(P(u, 0.515, 4.5), P(u + 0.02, 0.515, 11.5), '#7A5A3E', 1.6);
-  // le pont penché, planches le long de u
-  const deck = [...side, ...far].map(([u, v]) => P(u, v, D(u, v)));
-  o += `<polygon points="${pts(deck)}" fill="#C49C6E"${EDGE}/>`;
-  for (const k of [-0.32, -0.16, 0, 0.16, 0.32]) { const ue = 1.12 - Math.abs(k) * 1.2; o += ln(P(-1.26, k, D(-1.26, k)), P(ue, k, D(ue, k)), 'rgba(90,60,30,.35)', 0.7); }
-  // le pont crevé vers la proue : un trou sombre, des bouts de planches cassées
-  const breach = [[0.48, -0.16], [0.7, -0.22], [0.86, -0.06], [0.8, 0.12], [0.6, 0.18], [0.5, 0.04]];
-  o += `<polygon points="${pts(breach.map(([u, v]) => P(u, v, D(u, v))))}" fill="#2E2218"${EDGE}/>`;
-  for (const [u, v, du] of [[0.5, -0.08, 0.1], [0.52, 0.1, 0.08], [0.84, 0.02, -0.08]]) o += ln(P(u, v, D(u, v)), P(u + du, v, D(u, v) + 1.2), '#B08A5A', 2) + ln(P(u, v, D(u, v)), P(u + du, v, D(u, v) + 1.2), OUT, 0.5);
-  // plat-bord côté joueur
-  o += `<polyline points="${pts(side.map(([u, v]) => P(u, v, D(u, v))))}" fill="none" stroke="${OUT}" stroke-width="2.4" stroke-linejoin="round"/>`
-    + `<polyline points="${pts(side.map(([u, v]) => P(u, v, D(u, v))))}" fill="none" stroke="#A8825A" stroke-width="1.2" stroke-linejoin="round"/>`;
-  // la cabine arrière effondrée : deux murs aux bords cassés, l'intérieur dans l'ombre, le toit tombé en travers
-  const zc = D(-1.0, 0.3), cu0 = -1.2, cu1 = -0.82, cv0 = -0.26, cv1 = 0.26;
-  o += face([[cu0, cv0, D(cu0, cv0) + 10], [cu1, cv0, D(cu1, cv0) + 6], [cu1, cv1, D(cu1, cv1)], [cu0, cv1, D(cu0, cv1)]], '#2E2218', EDGE);
-  o += face([[cu0, cv1, D(cu0, cv1)], [cu1, cv1, D(cu1, cv1)], [cu1, cv1, D(cu1, cv1) + 5], [-0.92, cv1, D(-0.92, cv1) + 8], [-1.02, cv1, D(-1.02, cv1) + 4], [-1.12, cv1, D(-1.12, cv1) + 10], [cu0, cv1, D(cu0, cv1) + 9]], WOOD_DARK.left, EDGE);
-  o += face([[cu1, cv0, D(cu1, cv0)], [cu1, cv1, D(cu1, cv1)], [cu1, cv1, D(cu1, cv1) + 5], [cu1, 0.06, D(cu1, 0.06) + 3], [cu1, cv0, D(cu1, cv0) + 7]], WOOD_DARK.right, EDGE);
-  o += face([[-1.16, -0.18, zc + 15], [-0.86, -0.3, zc + 12], [-0.84, 0.16, zc + 3], [-1.14, 0.28, zc + 6]], '#6A4A30', EDGE)
-    + ln(P(-1.15, 0.05, zc + 10), P(-0.85, -0.07, zc + 7.5), 'rgba(40,25,10,.4)', 0.7);
-  // le nom à la poupe, une planchette claire
-  o += face([[-1.3, 0.1, D(-1.3, 0.1) - 7], [-1.3, 0.36, D(-1.3, 0.36) - 7], [-1.3, 0.36, D(-1.3, 0.36) - 3], [-1.3, 0.1, D(-1.3, 0.1) - 3]], '#E9D8B0', EDGE);
-  // le mât cassé net (bout déchiqueté)
-  const [mx, my] = P(0.22, -0.04, D(0.22, -0.04));
-  o += `<path d="M${f2(mx - 3)},${f2(my)} L${f2(mx - 2.8)},${f2(my - 22)} L${f2(mx - 1.4)},${f2(my - 25.5)} L${f2(mx - 0.2)},${f2(my - 22.4)} L${f2(mx + 1.2)},${f2(my - 26.6)} L${f2(mx + 2.8)},${f2(my - 21)} L${f2(mx + 3)},${f2(my)} Z" fill="${WOOD_DARK.left}"${EDGE}/>`
-    + ln([mx - 1.6, my - 3], [mx - 1.6, my - 20], 'rgba(255,255,255,.22)', 0.9) + ell(mx, my, 4, 1.8, 'none', ` stroke="${OUT}" stroke-width="0.6"`);
-  o += rope([mx + 1, my - 20], P(0.95, 0.33, D(0.95, 0.33)), 6, 0.6) + rope([mx - 1, my - 18], P(-0.55, 0.5, D(-0.55, 0.5)), 5, 0.6);
-  // la voile tombée : drapée sur le plat-bord, étalée dans le sable, bord déchiré, un accroc
-  const sail = [P(-0.25, 0.52, D(-0.25, 0.52)), P(0.5, 0.48, D(0.5, 0.48)), P(0.72, 0.9, 0), P(0.56, 0.98, 0), P(0.46, 0.92, 0), P(0.3, 1.04, 0), P(0.12, 0.96, 0), P(-0.06, 1.06, 0), P(-0.28, 0.94, 0)];
-  o += `<polygon points="${pts(sail)}" fill="${CANVAS.light}"${EDGE}/>`
-    + `<polygon points="${pts([sail[1], sail[2], sail[3], sail[4]])}" fill="${CANVAS.mid}"/>`
-    + [[0.0, 0.5, 0.05], [0.28, 0.49, 0.38]].map(([u0, v0, u1]) => `<polyline points="${pts([P(u0, v0, D(u0, v0)), P(u1, 0.98, 0)])}" stroke="${CANVAS.seam}" stroke-width="0.7" stroke-dasharray="1.6 1.2" fill="none"/>`).join('')
-    + `<polygon points="${pts([P(0.16, 0.86, 0), P(0.24, 0.84, 0), P(0.22, 0.9, 0), P(0.14, 0.92, 0)])}" fill="#2E2218"${EDGE}/>`;
-  // le haut du mât et sa vergue, dans le sable
-  o += stick(-0.6, 1.14, 1.5, 0.9, 0.94, 1.5, 3.4, WOOD_DARK.left) + stick(0.02, 0.86, 1.4, 0.38, 1.3, 1.4, 2, WOOD_DARK.right);
-  // algues ; un tonneau et une caisse échoués
+  o += pathTk(`M${pts([P(...onSide(0.42, 9))])} Q${pts([P(...onSide(0.5, 5))])} ${pts([P(...onSide(0.46, 1.4))])}`, '#5C8A45', 1);
+  // le pont penché, planches le long de u ; l'arrière arraché (bord déchiqueté, trou sombre, planches cassées)
+  const stern = [[-1.25, -0.3], [-1.16, -0.18], [-1.27, -0.06], [-1.14, 0.08], [-1.24, 0.2], [-1.15, 0.32]];
+  const deck = [...side.slice(1), ...far.slice(0, -1), [-0.9, -0.48], ...stern, [-1.25, 0.44]].map(([u, v]) => P(u, v, D(u, v)));
+  o += `<polygon points="${pts(deck)}" fill="${HULL.deck}"${EDGE}/>`;
+  for (const k of [-0.32, -0.16, 0, 0.16, 0.32]) { const ue = 1.12 - Math.abs(k) * 1.2; o += ln(P(-1.12, k, D(-1.12, k)), P(ue, k, D(ue, k)), 'rgba(90,60,30,.35)', 0.7); }
+  const hole = [[-1.12, -0.22], [-0.96, -0.3], [-0.9, -0.1], [-0.98, 0.1], [-1.1, 0.06]];
+  o += `<polygon points="${pts(hole.map(([u, v]) => P(u, v, D(u, v))))}" fill="#2E2218"${EDGE}/>`;
+  for (const [u, v, du] of [[-0.96, -0.22, 0.08], [-0.94, 0.02, 0.09]]) o += ln(P(u, v, D(u, v)), P(u - du, v, D(u, v) + 1.4), '#B08A5A', 2) + ln(P(u, v, D(u, v)), P(u - du, v, D(u, v) + 1.4), OUT, 0.5);
+  // bastingage du fond (côté -v) : poteaux et main courante blancs
+  const rail = (list, broken = []) => {
+    let r = '';
+    const ok = u => !broken.some(([a, b]) => u > a && u < b);
+    for (const [u, v] of list) if (ok(u)) r += tk(P(u, v, D(u, v)), P(u, v, D(u, v) + 5.2), HULL.cabin, 0.8);
+    let run = [];
+    const flush = () => { if (run.length > 1) r += pathTk('M' + pts(run.map(([u, v]) => P(u, v, D(u, v) + 5.2))).split(' ').join(' L'), HULL.cabin, 1); run = []; };
+    for (const p of list) { if (ok(p[0])) run.push(p); else flush(); }
+    flush();
+    return r;
+  };
+  const along = (pts0, n) => Array.from({ length: n + 1 }, (_, i) => { const u = pts0[0] + (pts0[1] - pts0[0]) * i / n; return u; });
+  o += rail(along([-1.0, 1.3], 13).map(u => [u, -hullAt(u) * 0.94]));
+  // le salon-passerelle : murs blancs, vitres bleues (une fendue), porte bleue, toit ; il suit la gîte du pont
+  const cu0 = -0.78, cu1 = -0.08, cv0 = -0.26, cv1 = 0.2, H = 13;
+  o += face([[cu0, cv1, D(cu0, cv1)], [cu1, cv1, D(cu1, cv1)], [cu1, cv1, D(cu1, cv1) + H], [cu0, cv1, D(cu0, cv1) + H]], HULL.cabin, EDGE);
+  o += face([[cu1, cv0, D(cu1, cv0)], [cu1, cv1, D(cu1, cv1)], [cu1, cv1, D(cu1, cv1) + H], [cu1, cv0, D(cu1, cv0) + H]], HULL.cabinS, EDGE);
+  o += face([[cu0 - 0.03, cv0 - 0.03, D(cu0, cv0) + H], [cu1 + 0.04, cv0 - 0.03, D(cu1, cv0) + H], [cu1 + 0.04, cv1 + 0.04, D(cu1, cv1) + H], [cu0 - 0.03, cv1 + 0.04, D(cu0, cv1) + H]], HULL.roof, EDGE)
+    + face([[cu0 - 0.03, cv1 + 0.04, D(cu0, cv1) + H], [cu1 + 0.04, cv1 + 0.04, D(cu1, cv1) + H], [cu1 + 0.04, cv1 + 0.04, D(cu1, cv1) + H - 1.6], [cu0 - 0.03, cv1 + 0.04, D(cu0, cv1) + H - 1.6]], HULL.navy, EDGE);
+  for (const [i, u] of [-0.72, -0.6, -0.48].entries()) {
+    const q = [[u, cv1, D(u, cv1) + 5], [u + 0.08, cv1, D(u + 0.08, cv1) + 5], [u + 0.08, cv1, D(u + 0.08, cv1) + 10], [u, cv1, D(u, cv1) + 10]];
+    o += face(q, i === 1 ? '#3E4E66' : HULL.glass, EDGE);
+    if (i === 1) o += `<polyline points="${pts([P(u + 0.02, cv1, D(u, cv1) + 9.4), P(u + 0.05, cv1, D(u, cv1) + 7.2), P(u + 0.03, cv1, D(u, cv1) + 5.6)])}" fill="none" stroke="#DCE6F0" stroke-width="0.6"/>`;
+    else o += ln(P(u + 0.015, cv1, D(u, cv1) + 9.2), P(u + 0.045, cv1, D(u, cv1) + 6.4), 'rgba(255,255,255,.55)', 0.7);
+  }
+  o += face([[-0.18, cv1, D(-0.18, cv1)], [-0.12, cv1, D(-0.12, cv1)], [-0.12, cv1, D(-0.12, cv1) + 10.4], [-0.18, cv1, D(-0.18, cv1) + 10.4]], HULL.navy, EDGE);
+  for (const v of [-0.18, -0.04, 0.1]) o += face([[cu1, v, D(cu1, v) + 5.6], [cu1, v + 0.08, D(cu1, v + 0.08) + 5.6], [cu1, v + 0.08, D(cu1, v + 0.08) + 10.4], [cu1, v, D(cu1, v) + 10.4]], '#4E6A8E', EDGE);
+  // la cheminée jaune à bande bleue, qui penche vers le joueur, sur le toit
+  {
+    const fu = -0.5, fv = -0.04, z0 = D(fu, fv) + H, h = 15, r = 6.2;
+    const [bx, by] = P(fu, fv, z0), [tx, ty] = P(fu, fv + 0.09, z0 + h);
+    const at = k => [bx + (tx - bx) * k, by + (ty - by) * k];
+    const body = (k0, k1, fill) => { const [ax, ay] = at(k0), [cx, cy] = at(k1); return `<path d="M${f2(ax - r)},${f2(ay)} L${f2(cx - r)},${f2(cy)} A${r},${f2(r * 0.5)} 0 0 0 ${f2(cx + r)},${f2(cy)} L${f2(ax + r)},${f2(ay)} A${r},${f2(r * 0.5)} 0 0 1 ${f2(ax - r)},${f2(ay)} Z" fill="${fill}"/>`; };
+    o += body(0, 1, HULL.funnel) + body(0.5, 0.72, HULL.band) + body(0.88, 1, '#2E2E36');
+    const [sx, sy] = at(0.61); o += `<g transform="translate(${f2(sx - 1)} ${f2(sy + 1)}) scale(0.62)"><path d="${SWALLOW}" fill="#F4EEDF"/></g>`;
+    o += `<path d="M${f2(bx + r * 0.25)},${f2(by + r * 0.48)} L${f2(tx + r * 0.25)},${f2(ty + r * 0.48)} L${f2(tx + r)},${f2(ty)} L${f2(bx + r)},${f2(by)} Z" fill="rgba(60,30,10,.16)"/>`;
+    o += `<path d="M${f2(bx - r)},${f2(by)} L${f2(tx - r)},${f2(ty)} M${f2(bx + r)},${f2(by)} L${f2(tx + r)},${f2(ty)} M${f2(bx - r)},${f2(by)} A${r},${f2(r * 0.5)} 0 0 0 ${f2(bx + r)},${f2(by)}" fill="none" stroke="${OUT}" stroke-width="0.8"/>`;
+    o += ell(tx, ty, r, r * 0.5, '#4A3A30', EDGE) + ell(tx, ty + 0.4, r * 0.7, r * 0.32, '#1E1814');
+  }
+  // la bouée accrochée au mur du salon
+  { const [x, y] = P(-0.29, cv1 + 0.01, D(-0.29, cv1) + 7.4); o += `<g transform="translate(${f2(x)} ${f2(y)}) rotate(-12)">${lifebuoy(0, 0, 3.4, 0.95)}</g>`; }
+  // le mât de proue (blanc, une lanterne), la guirlande d'ampoules qui pend jusqu'à la cheminée et au plat-bord
+  const [m0x, m0y] = P(1.04, 0, D(1.04, 0)), [m1x, m1y] = P(1.04, 0.07, D(1.04, 0) + 26);
+  o += tk([m0x, m0y], [m1x, m1y], HULL.cabin, 1.6) + tk([m1x - 4, m1y + 5], [m1x + 4, m1y + 5.6], HULL.cabin, 1) + ell(m1x, m1y - 1.2, 1.8, 2, '#FFD15A', EDGE);
+  const [fx, fy] = (() => { const [x, y] = P(-0.5, 0.05, D(-0.5, -0.04) + H + 12.6); return [x + 5.4, y + 1]; })();
+  const garland = (a, b, sag, n) => {
+    let g = `<path d="M${f2(a[0])},${f2(a[1])} Q${f2((a[0] + b[0]) / 2)},${f2((a[1] + b[1]) / 2 + sag * 2)} ${f2(b[0])},${f2(b[1])}" fill="none" stroke="#3A3A40" stroke-width="0.7"/>`;
+    const cols = ['#F2584A', '#FFD15A', '#5EA8E8', '#7EC45B'];
+    for (let i = 1; i < n; i++) { const t = i / n, x = (1 - t) * (1 - t) * a[0] + 2 * t * (1 - t) * (a[0] + b[0]) / 2 + t * t * b[0], y = (1 - t) * (1 - t) * a[1] + 2 * t * (1 - t) * ((a[1] + b[1]) / 2 + sag * 2) + t * t * b[1]; g += ell(x, y + 1, 1.1, 1.4, i % 5 === 3 ? '#5A5450' : cols[i % 4], ` stroke="${OUT}" stroke-width="0.4"`); }
+    return g;
+  };
+  o += garland([m1x, m1y + 4], [fx, fy], 8, 9) + garland([m1x, m1y + 5], P(1.3, 0.16, D(1.3, 0.16) + 5), 4, 4);
+  // bastingage côté joueur, crevé au milieu (un bout tordu)
+  o += rail(along([-1.0, 1.32], 13).map(u => [u, hullAt(u)]), [[0.05, 0.5]]);
+  { const a = P(0.04, hullAt(0.04), D(0.04, hullAt(0.04)) + 5.2), b = P(...onSide(0.1, D(0.1, hullAt(0.1)) - 5)); o += pathTk(`M${pts([a])} Q${f2(a[0] + 3.2)},${f2(a[1] + 1)} ${pts([b])}`, HULL.cabin, 1); }
+  // dans le sable : algues, la bouée tombée, la chaise longue rayée retournée, une valise, une caisse
   o += kelp(-0.35, 1.25, 8) + kelp(1.05, 0.72, -14);
-  o += cylinder(1.14, 1.1, 0, 9, 0.11, { top: '#C9A274', left: '#A8825A', right: '#7A5A3E' }, id('hirt'))
-    + [3, 6.4].map(z => { const [x, y] = P(1.14, 1.1, z); return `<path d="M${f2(x - 5)},${f2(y)} A5,2.5 0 0 0 ${f2(x + 5)},${f2(y)}" fill="none" stroke="#5E4630" stroke-width="0.9"/>`; }).join('');
+  { const [x, y] = P(0.62, 1.08, 0.6); o += lifebuoy(x, y, 4.6, 0.5); }
+  {
+    const c = [[-0.72, 0.98], [-0.42, 0.86], [-0.34, 1.06], [-0.64, 1.18]];
+    o += face(c.map(([u, v]) => [u, v, 1.2]), '#F4F0E6', EDGE);
+    for (const k of [0.2, 0.47, 0.74]) { const a = [c[0][0] + (c[1][0] - c[0][0]) * k, c[0][1] + (c[1][1] - c[0][1]) * k], b = [c[3][0] + (c[2][0] - c[3][0]) * k, c[3][1] + (c[2][1] - c[3][1]) * k], d = 0.05; o += face([[a[0], a[1], 1.2], [a[0] + d * 0.9, a[1] - d * 0.4, 1.2], [b[0] + d * 0.9, b[1] - d * 0.4, 1.2], [b[0], b[1], 1.2]], '#D8483A'); }
+    o += stick(-0.7, 1.02, 1.2, -0.66, 1.0, 7.6, 1.4, WOOD.left) + stick(-0.4, 0.9, 1.2, -0.44, 0.92, 7.2, 1.4, WOOD.left) + tk(P(-0.66, 1.0, 7.6), P(-0.44, 0.92, 7.2), WOOD.top, 1.2);
+  }
+  {
+    const vu = 1.14, vv = 0.98;
+    o += shadow(vu, vv, 0.16, 0.16) + box(vu - 0.1, vv - 0.07, vu + 0.1, vv + 0.07, 0, 7, { top: '#B0743E', left: '#96602F', right: '#7A4C24' });
+    o += face([[vu - 0.02, vv + 0.07, 0], [vu + 0.02, vv + 0.07, 0], [vu + 0.02, vv + 0.07, 7], [vu - 0.02, vv + 0.07, 7]], '#5A3A1C') + face([[vu - 0.02, vv - 0.07, 7], [vu + 0.02, vv - 0.07, 7], [vu + 0.02, vv + 0.07, 7], [vu - 0.02, vv + 0.07, 7]], '#5A3A1C');
+    const [x1, y1] = P(vu - 0.06, vv + 0.07, 3.6), [x2, y2] = P(vu + 0.06, vv + 0.07, 4.4);
+    o += ell(x1, y1, 1.6, 1.4, '#F2C04B', EDGE) + ell(x2, y2, 1.4, 1.2, '#5EA8E8', EDGE);
+    const [hx, hy] = P(vu, vv, 7); o += pathTk(`M${f2(hx - 2.4)},${f2(hy)} Q${f2(hx)},${f2(hy - 3)} ${f2(hx + 2.4)},${f2(hy)}`, '#5A3A1C', 0.8);
+  }
   o += crate(-1.0, 0.98, 0.12, 8);
+  id('hirt'); // l'ancienne épave prenait un identifiant (son tonneau) : on le consomme pour que ceux des autres dessins ne bougent pas
   return o;
 }
 
