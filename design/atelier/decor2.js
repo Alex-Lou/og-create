@@ -319,14 +319,25 @@ M.nid = { frame: PROP_BOX, n: 1, draw: () => {
 } };
 // Ponton d'amarrage au ras de l'eau : pilotis, plancher, bitte et cordage
 M.ponton = { frame: BUILDING_BOX, n: 1, draw: () => {
-  let posts = '';
-  for (const [u, v] of [[0.38, -0.18], [-0.38, 0.18], [0.38, 0.18]]) posts += gbox(u - 0.035, v - 0.035, u + 0.035, v + 0.035, -10, 2, WOOD_DARK);
-  let planks = '';
-  for (let k = -3; k <= 3; k++) planks += L(gp(k * 0.12, -0.2, 5), gp(k * 0.12, 0.2, 5), 'rgba(90,55,25,.45)', 0.8);
-  const [cx, cy] = gp(0.3, 0.05, 5);
   const [wx, wy] = gp(0, 0.05, -1);
-  return E(wx, wy, 34, 15, 'rgba(255,255,255,.35)', 0) + posts + gbox(-0.42, -0.2, 0.42, 0.2, 2, 5, WOOD) + planks
-    + gbox(0.26, 0.01, 0.34, 0.09, 5, 11, WOOD_DARK) + tk(`M${r2(cx)},${r2(cy - 4)} q-6,4 -14,2`, 1, '#D9C08A');
+  let o = E(wx, wy, 36, 15, 'rgba(255,255,255,.32)', 0) + E(wx - 4, wy - 1, 24, 8, 'rgba(255,255,255,.22)', 0);
+  // les pieux qui plongent, chacun avec son rond dans l'eau
+  for (const [u, v] of [[0.38, -0.18], [-0.38, 0.18], [0.38, 0.18], [0, 0.18]]) { const [px, py] = gp(u, v, -10); o += `<ellipse cx="${r2(px)}" cy="${r2(py + 1)}" rx="4.4" ry="1.6" fill="none" stroke="rgba(255,255,255,.8)" stroke-width="0.7"/>` + gbox(u - 0.035, v - 0.035, u + 0.035, v + 0.035, -10, 2, WOOD_DARK); }
+  // le tablier : ses planches en travers, leurs joints et leurs clous
+  o += gbox(-0.42, -0.2, 0.42, 0.2, 2, 5, WOOD);
+  for (let k = -3; k <= 3; k++) o += L(gp(k * 0.12 + 0.06, -0.2, 5), gp(k * 0.12 + 0.06, 0.2, 5), 'rgba(90,55,25,.5)', 0.8) + E(...gp(k * 0.12, 0.16, 5), 0.5, 0.35, '#5A3A20', 0) + E(...gp(k * 0.12, -0.16, 5), 0.5, 0.35, '#5A3A20', 0);
+  o += L(gp(-0.42, 0.2, 3.5), gp(0.42, 0.2, 3.5), 'rgba(90,55,25,.35)', 0.6);
+  // l'échelle qui descend dans l'eau
+  const [l0x, l0y] = gp(-0.1, 0.21, 4), [l1x, l1y] = gp(-0.1, 0.21, -9);
+  o += tk(`M${r2(l0x - 3)},${r2(l0y)} L${r2(l1x - 3)},${r2(l1y)} M${r2(l0x + 3)},${r2(l0y)} L${r2(l1x + 3)},${r2(l1y)}`, 0.9, WOOD_DARK.left) + [3, 7, 11].map(d => L([l0x - 3, l0y + d], [l0x + 3, l0y + d], WOOD_DARK.left, 0.9)).join('');
+  // la bitte d'amarrage, sa corde enroulée et la corde qui file à l'eau
+  const [cx, cy] = gp(0.3, 0.05, 5);
+  o += gbox(0.26, 0.01, 0.34, 0.09, 5, 11, WOOD_DARK) + E(cx, cy - 6.4, 3.2, 1.4, WOOD_DARK.top, W * 0.7)
+    + E(cx - 1, cy - 2.4, 4, 1.6, 'none', 0).replace('fill="none" stroke="none"', `fill="none" stroke="#D9C08A" stroke-width="1.2"`)
+    + tk(`M${r2(cx + 2)},${r2(cy - 4)} q6,2 9,8 q2,5 6,9`, 1, '#D9C08A');
+  // un seau sur les planches
+  const [bx, by] = gp(-0.28, -0.05, 5);
+  return o + P(`M${r2(bx - 3)},${r2(by - 6)} L${r2(bx + 3)},${r2(by - 6)} L${r2(bx + 2.4)},${r2(by)} L${r2(bx - 2.4)},${r2(by)} Z`, '#8A9AA8', W * 0.8) + E(bx, by - 6, 3, 1, '#5E6E7A', W * 0.6);
 } };
 // Barque volante du passeur : une coque bordée à la proue enroulée en volute, son liseré clair ; le mât, la voile
 // gonflée selon l'image avec son œil bleu, le foc ; la lanterne de poupe et sa flamme ; sous la coque, la brume qui la
