@@ -158,8 +158,7 @@
     187.5
    ],
    "parcours": "tuto-1",
-   "statut": "a-revoir",
-   "note": "L'Hirondelle est un petit navire de croisière (v6) : épave à redessiner."
+   "statut": "ok"
   },
   {
    "id": "decor/camp/objets/etendoir",
