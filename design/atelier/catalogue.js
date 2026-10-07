@@ -221,9 +221,14 @@ function moment(id, meta) {
     .replace(/^banc(_petit)?(_peint)?(_chat)?$/, 'banc'); return PLANTES_GREVE.has(n) ? 'tuto-1' : PLANTES_ACTE1.has(n) ? 'acte-1' : 'partout'; }
   // les scènes du tutoriel (lot J2) : scenes/tutoriel/<étape>_<nom>/…, la partie suit le numéro de l'étape
   if (top === 'scenes') { const n = parseInt(b, 10); return n <= 6 ? 'tuto-1' : n <= 9 ? 'tuto-2' : 'tuto-3'; }
-  // les icônes de l'interface : dès les étapes 4 à 6 ; le carnet et l'expédition avec la carte (étape 10), les trouvailles
-  // avec les climats
-  if (top === 'interface') return /^(carnet|expedition)_/.test(nom) ? 'tuto-3' : /^trouvailles_/.test(nom) ? 'acte-4' : 'tuto-1';
+  // les icônes de l'interface : dès les étapes 4 à 6 ; les fiches des camarades avec Cannelle (étape 7) ; le carnet,
+  // l'expédition, le plan et la carte avec la carte de l'île (étape 10) ; les trouvailles avec les climats
+  if (top === 'interface') {
+    if (/^(humeur|outils|fleur|coeur)_/.test(nom)) return 'tuto-2';
+    if (/^(carnet|expedition|plan|carte)_/.test(nom)) return 'tuto-3';
+    if (/^(trouvailles|glace|laine|roseau|sel|fruits|obsidienne)_/.test(nom)) return 'acte-4';
+    return 'tuto-1';
+  }
   return 'partout';
 }
 

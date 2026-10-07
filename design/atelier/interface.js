@@ -274,6 +274,178 @@ function expedition() {
   return s;
 }
 
+// ---- les fiches : besoins, humeurs, amitié ----
+
+// un trait de couleur aux bouts ronds, et le même cerné de brun (manche, tige, ficelle)
+const trait = (d, color, w) => P(d, 'none', 0).replace('stroke="none"', `stroke="${color}" stroke-width="${w}" stroke-linecap="round" stroke-linejoin="round"`);
+const cerne = (d, color, w) => trait(d, OUT, w + 2 * WO * 0.85) + trait(d, color, w);
+
+// Les outils (le besoin « travailler ») : le marteau et la clé croisés
+function outils() {
+  let s = cerne('M8.6,24.6 L22,10.6', '#9AA4B4', 2.6) + P('M19.6,6.4 Q23.4,3 27,5.4 L24.2,8.2 L25,10.2 L27,11 L29.6,8.2 Q31.2,12 28,15 Q25.2,17 22.2,15.4 Z', '#9AA4B4', WO) + rond(9, 24.2, 2.2, '#9AA4B4');
+  s += rond(9, 24.2, 0.9, '#5E6676', 0) + L([20.6, 9.6], [24.6, 13.2], '#D6DCE6', 0.8);
+  // le marteau, par-dessus : le manche de bois, la tête de fer
+  s += cerne('M23.6,25.6 L11,12.4', BOIS.corps, 2.8) + L([22.8, 24], [13, 13.6], BOIS.clair, 0.9);
+  s += `<g transform="rotate(-46 9.6 10.6)">${P(rr(3.6, 7.8, 12, 5.8, 1.4), '#8E96A6', WO)}${P(rr(4.6, 8.6, 4.4, 1.4, 0.6), '#C8CED8', 0)}</g>`;
+  return s;
+}
+
+// La fleur (le besoin « se distraire ») : cinq pétales roses, un cœur doré, une feuille
+function fleur() {
+  let s = cerne('M16,18 Q15.4,24 16.4,29', '#5E9A3C', 1.6) + P('M16.2,25 Q20.6,20.6 25,22.6 Q21.4,27 16.2,25 Z', '#7DB852', WI) + L([17.4, 24.8], [22.4, 22.8], '#5E9A3C', 0.6);
+  const petales = Array.from({ length: 5 }, (_, i) => { const a = -Math.PI / 2 + i * 2 * Math.PI / 5; return [16 + 5.8 * Math.cos(a), 12.4 + 5.8 * Math.sin(a), 4.4]; });
+  s += boules(petales, '#F6A6C0') + petales.map(([x, y]) => reflet(x - 1.2, y - 1.2, 1, 0.7, 0.55)).join('');
+  s += rond(16, 12.4, 3.4, OR.corps, WI) + rond(15, 11.4, 1, OR.clair, 0);
+  return s;
+}
+
+// Les humeurs : un petit visage rond (joie, calme, bouderie), les joues roses, les yeux de la troupe
+const visage = (bouche, yeux, extra = '') => rond(16, 16.6, 12, '#FFD978') + clip('vis', 'M4,16.6 A12,12 0 1 0 28,16.6 A12,12 0 1 0 4,16.6 Z', '<circle cx="20" cy="21" r="12" fill="#F2BF52"/>') + rond(16, 16.6, 12, 'none')
+  + E(8.8, 20.2, 2.2, 1.3, 'rgba(240,120,110,.55)', 0) + E(23.2, 20.2, 2.2, 1.3, 'rgba(240,120,110,.55)', 0) + yeux + bouche + extra + reflet(10.6, 9.6, 2, 1.1, 0.6);
+const oeil = (x, y) => E(x, y, 1.6, 2.2, '#2A2420', 0) + rond(x - 0.5, y - 0.8, 0.6, '#FFFFFF', 0);
+function humeurJoie() {
+  return visage(P('M11.6,19.6 Q16,25.6 20.4,19.6 Q16,21.2 11.6,19.6 Z', '#B8483A', WI), trait('M9.4,15.6 Q11,13.4 12.6,15.6', OUT, 1.3) + trait('M19.4,15.6 Q21,13.4 22.6,15.6', OUT, 1.3));
+}
+function humeurCalme() {
+  return visage(trait('M12.8,21 Q16,23 19.2,21', OUT, 1.2), oeil(11, 15.2) + oeil(21, 15.2));
+}
+function humeurBouderie() {
+  // les sourcils tristes (relevés au milieu), la moue, un petit nuage gris : il lui manque quelque chose
+  return visage(trait('M13.2,22.4 Q16,20.6 18.8,22.4', OUT, 1.2), oeil(11, 16.2) + oeil(21, 16.2) + trait('M8.4,13.4 Q10.6,13.4 12.6,12', OUT, 1.1) + trait('M23.6,13.4 Q21.4,13.4 19.4,12', OUT, 1.1),
+    `<g opacity=".95">${boules([[24.6, 5.4, 2.4], [27.6, 6.2, 2], [22.2, 6.8, 1.6]], '#CCD4E1', '#6E7890', 1)}</g>`);
+}
+
+// Le cœur de l'amitié : rouge, son reflet
+function coeur() {
+  const D = 'M16,27.4 Q4.4,19.6 4,11.4 Q4,5 9.8,4.6 Q14,4.6 16,9 Q18,4.6 22.2,4.6 Q28,5 28,11.4 Q27.6,19.6 16,27.4 Z';
+  let s = P(D, '#E8566A', 0) + clip('coe', D, '<path d="M16,28 Q27,20 28,12 L30,12 L30,30 Z" fill="#C83C52"/>') + P(D, 'none', WO);
+  return s + E(10.2, 10.4, 2, 2.8, 'rgba(255,255,255,.75)', 0) + rond(13, 7.6, 0.8, 'rgba(255,255,255,.75)', 0);
+}
+
+// ---- le Grimoire et l'île ----
+
+// Le verrou (scellé, pas encore ouvert) : un cadenas doré, son trou de serrure
+function verrou() {
+  let s = cerne('M10.4,15 L10.4,10.6 Q10.4,4.4 16,4.4 Q21.6,4.4 21.6,10.6 L21.6,15', '#B4BCC8', 2.4);
+  const C = rr(6, 13.6, 20, 15, 3);
+  s += P(C, OR.corps, 0) + clip('ver', C, `<rect x="6" y="23" width="20" height="6" fill="${OR.ombre}"/><rect x="20.4" y="13" width="6" height="16" fill="${OR.ombre}" opacity=".6"/>`) + P(C, 'none', WO);
+  s += rond(16, 19.6, 2, '#5A3A1C', 0) + P('M15,20.6 L14.4,24.6 L17.6,24.6 L17,20.6 Z', '#5A3A1C', 0);
+  return s + P('M8.4,17.4 Q8.6,15.2 10.8,15', 'none', 0).replace('stroke="none"', 'stroke="#FFF2C0" stroke-width="1.3" stroke-linecap="round"');
+}
+
+// L'inconnu (un élément pas encore trouvé) : une bouffée de brume et son point d'interrogation
+function inconnu() {
+  let s = boules([[10, 18, 6], [17, 13, 7.4], [23, 18.6, 5.6], [16, 21.4, 6]], '#E4E9F1', '#6E7890', WO);
+  s += clip('inc', 'M2,30 L30,30 L30,20 Q16,26 2,20 Z', boules([[10, 18, 6], [17, 13, 7.4], [23, 18.6, 5.6], [16, 21.4, 6]], '#C4CDDC', 'rgba(0,0,0,0)', WO));
+  s += reflet(13.4, 9.6, 2, 1.2, 0.8);
+  s += trait('M13.4,12.6 Q13.6,9.4 16.6,9.4 Q19.6,9.6 19.4,12.4 Q19.2,14.2 17,15 Q16.2,15.4 16.2,17.2', '#5A6680', 2.2) + rond(16.2, 20.6, 1.3, '#5A6680', 0);
+  return s;
+}
+
+// L'étincelle (une quête, une chose à faire, le dessin par défaut) : une grande étoile à quatre branches et deux petites
+function etincelleIcone() {
+  const quatre = (x, y, R, r) => `M${x},${r2(y - R)} Q${r2(x + r)},${r2(y - r)} ${r2(x + R)},${y} Q${r2(x + r)},${r2(y + r)} ${x},${r2(y + R)} Q${r2(x - r)},${r2(y + r)} ${r2(x - R)},${y} Q${r2(x - r)},${r2(y - r)} ${x},${r2(y - R)} Z`;
+  let s = P(quatre(14, 17, 11.6, 1.8), OR.corps, WO) + P(quatre(14, 17, 6.4, 1), OR.clair, 0);
+  s += P(quatre(25, 7.4, 4.6, 0.8), '#FFF0B0', WI) + P(quatre(25.4, 24.6, 3, 0.6), '#FFF0B0', WI);
+  return s;
+}
+
+// Le chapitre du Grimoire (ce qu'il faut avoir ouvert) : un livre ouvert, ses lignes, le signet rouge
+function chapitre() {
+  let s = P('M3,9.6 Q9.6,6.4 16,9.6 Q22.4,6.4 29,9.6 L29,25.4 Q22.4,22.6 16,25.4 Q9.6,22.6 3,25.4 Z', '#A2432F', WO); // la couverture
+  const G = 'M4.6,8.4 Q10.4,5.6 16,8.6 L16,24 Q10.4,21.4 4.6,23.4 Z', D = 'M16,8.6 Q21.6,5.6 27.4,8.4 L27.4,23.4 Q21.6,21.4 16,24 Z';
+  s += P(G, PAGE.corps, WI) + P(D, PAGE.corps, WI) + clip('chd', D, `<path d="M16,8 L28,8 L28,25 L22,25 Q20,16 16,8 Z" fill="${PAGE.ombre}" opacity=".6"/>`);
+  s += [12, 15, 18].map(y => L([6.6, y], [13.8, y - 0.6], '#C9B48E', 0.8) + L([18.2, y - 0.6], [25.4, y], '#C9B48E', 0.8)).join('');
+  s += P('M21,6.4 L21,13.6 L22.6,12.2 L24.2,13.6 L24.2,6.4 Z', '#C9483A', WI);
+  return s + L([16, 8.6], [16, 24], OUT, WI);
+}
+
+// Le plan d'un bâtiment : un rouleau de papier ouvert, une petite maison dessinée à l'encre bleue
+function plan() {
+  const papier = '#F4EBD2';
+  let s = P('M6.4,7.2 L26,7.2 L26,25.6 L6.4,25.6 Z', papier, WO) + clip('pla', 'M6.4,7.2 L26,7.2 L26,25.6 L6.4,25.6 Z', `<rect x="21" y="7" width="5" height="19" fill="${PAGE.ombre}"/>`);
+  s += trait('M10.6,21.4 L10.6,15.6 L16,11.2 L21.4,15.6 L21.4,21.4 Z M14.4,21.4 L14.4,17.6 L17.6,17.6 L17.6,21.4', '#3E78C8', 1);
+  s += trait('M9.6,23.4 L22.4,23.4', '#8CB4E0', 0.7);
+  // les deux rouleaux
+  s += P(rr(4.2, 5, 4.4, 22.8, 2.2), '#E6D6B4', WO) + P(rr(23.8, 5, 4.4, 22.8, 2.2), '#E6D6B4', WO) + L([5.8, 7], [5.8, 25.8], '#FFF8E6', 0.8);
+  return s;
+}
+
+// La carte (un quartier, une expédition) : pliée en trois, une route en pointillés jusqu'à la croix
+function carte() {
+  const D = 'M3,8 L11,5 L21,8 L29,5 L29,24 L21,27 L11,24 L3,27 Z';
+  let s = P(D, '#F1E2BC', 0) + clip('car', D, '<path d="M11,5 L21,8 L21,27 L11,24 Z" fill="#E4D2A6"/><path d="M5,22 Q8,17 12,18 Q15,19 16,14" fill="none" stroke="#9CC97A" stroke-width="4" stroke-linecap="round"/><ellipse cx="25" cy="20" rx="3.4" ry="2.4" fill="#9ED0EE"/>') + P(D, 'none', WO);
+  s += L([11, 5], [11, 24], OUT, WI) + L([21, 8], [21, 27], OUT, WI);
+  s += trait('M6.6,22.4 Q9,15 14.6,14.6 Q19.6,14.4 21,11', '#9A5A34', 1.1).replace('stroke-linecap', 'stroke-dasharray="1.6 1.4" stroke-linecap');
+  s += trait('M22.4,8.6 L26,12.2 M26,8.6 L22.4,12.2', '#C9483A', 1.6);
+  return s;
+}
+
+// La pousse (les éléments « fertiles ») : deux feuilles qui sortent d'une motte
+function pousse() {
+  let s = P('M5.4,27 Q6.6,20.6 16,20.4 Q25.4,20.6 26.6,27 Q16,29.4 5.4,27 Z', '#9A6A3E', WO) + E(11.4, 23.2, 1.2, 0.6, '#B88458', 0) + E(20.4, 24.6, 1, 0.5, '#7A5030', 0);
+  s += cerne('M16,21.4 Q15.6,16 16.4,11.6', '#6EA448', 1.6);
+  s += P('M16.2,15.4 Q9.6,16.4 6.4,10.6 Q12.6,8.2 16.2,15.4 Z', '#8CC060', WO) + L([15.2, 14.6], [9.4, 11], '#5E9A3C', 0.7);
+  s += P('M16.4,12 Q19.6,4.2 27,4.8 Q26,12.4 16.4,12 Z', '#8CC060', WO) + L([17.6, 11.2], [24.6, 6.4], '#5E9A3C', 0.7);
+  return s + reflet(10.6, 11.4, 1, 0.5, 0.6) + reflet(22.4, 6.6, 1.2, 0.5, 0.6);
+}
+
+// ---- les trouvailles des climats ----
+
+// La glace (les Cimes) : un cristal hexagonal, ses facettes
+function glace() {
+  const D = 'M16,3.4 L26.6,9.6 L26.6,22.4 L16,28.6 L5.4,22.4 L5.4,9.6 Z';
+  let s = P(D, '#CDEBF8', 0) + clip('gla', D, '<path d="M16,16 L26.6,9.6 L26.6,22.4 L16,28.6 Z" fill="#9CD2EC"/><path d="M16,16 L16,28.6 L5.4,22.4 Z" fill="#B6E0F4"/>') + P(D, 'none', WO);
+  s += P('M16,3.4 L16,16 L26.6,9.6 M16,16 L5.4,22.4 M16,16 L16,28.6', 'none', WI);
+  return s + P('M8.4,10.8 L13.6,7.8', 'none', 0).replace('stroke="none"', 'stroke="#FFFFFF" stroke-width="1.4" stroke-linecap="round"') + etincelle(25.6, 4.6, 1.4);
+}
+
+// La laine (les Landes) : une pelote, ses brins, deux aiguilles à tricoter plantées dedans
+function laine() {
+  const fil = '#E7C2C8', filS = '#C99AA2';
+  // les aiguilles, derrière la pelote (leurs pointes et leurs boutons dépassent)
+  let s = cerne('M5,6.4 L27.6,25.4', BOIS.clair, 1.4) + cerne('M27,4.4 L6.6,27.6', BOIS.clair, 1.4) + rond(5, 6.4, 1.6, '#C9483A', WI) + rond(27, 4.4, 1.6, '#C9483A', WI);
+  s += rond(15.4, 15.6, 11.2, fil) + clip('lai', 'M4.2,15.6 A11.2,11.2 0 1 0 26.6,15.6 A11.2,11.2 0 1 0 4.2,15.6 Z', `<circle cx="20" cy="20" r="11" fill="${filS}" opacity=".55"/>`
+    + ['M6,10 Q16,14 24,6', 'M5,16 Q15,20 25,10', 'M6,22 Q16,25 26,16', 'M10,5 Q14,16 10,26', 'M17,4.6 Q22,15 18,26.8'].map(d => `<path d="${d}" fill="none" stroke="${filS}" stroke-width="0.9" stroke-linecap="round"/>`).join('')) + rond(15.4, 15.6, 11.2, 'none');
+  return s + reflet(10.4, 9.6, 2.2, 1.2, 0.6);
+}
+
+// Le roseau (le Marais) : trois roseaux noués, leurs épis bruns
+function roseau() {
+  let s = cerne('M10.4,29 L12,9.4', '#7DA850', 1.6) + cerne('M16,29 L16,6.4', '#7DA850', 1.6) + cerne('M21.6,29 L20.2,10.4', '#7DA850', 1.6);
+  s += [[12, 9.4, -5], [16, 6.4, 0], [20.2, 10.4, 5]].map(([x, y, a]) => `<g transform="rotate(${a} ${x} ${y})">${P(rr(x - 1.8, y - 1, 3.6, 8.6, 1.8), '#9A6A3E', WO)}${L([x - 0.6, y + 1], [x - 0.6, y + 6], '#B88458', 0.7)}</g>`).join('');
+  s += P('M16.4,23 Q22,18.6 25.4,20.4 Q21.6,24.4 16.4,23 Z', '#8CC060', WI);
+  // le lien de raphia
+  return s + P(rr(9.6, 21.6, 12.8, 2.6, 1.2), '#E2C083', WI);
+}
+
+// Le sel (les Dunes) : un petit tas blanc dans une coupelle de bois, ses grains
+function sel() {
+  const tas = 'M7.6,15.6 Q7.8,10.2 11.6,9.4 Q12.6,4.2 16.6,4 Q20.8,4.4 21.6,9.4 Q24.6,10.4 24.4,15.6 Z';
+  let s = P(tas, '#FBFBF6', WO) + clip('sel', tas, '<ellipse cx="21.4" cy="15" rx="6" ry="6" fill="#E2E6EA"/>');
+  s += [[13, 11.6], [17.2, 8.2], [19.8, 12], [10.2, 12.8], [15.4, 13.6]].map(([x, y]) => `<rect x="${x}" y="${y}" width="1.7" height="1.7" rx="0.2" fill="#FFFFFF" stroke="#9AA4B0" stroke-width="0.5" transform="rotate(20 ${x} ${y})"/>`).join('');
+  s += P('M3.6,15 L28.4,15 Q27.4,25.6 16,26 Q4.6,25.6 3.6,15 Z', BOIS.corps, WO) + clip('sco', 'M3.6,15 L28.4,15 Q27.4,25.6 16,26 Q4.6,25.6 3.6,15 Z', `<path d="M18,26 Q27,24 28.4,15 L30,15 L30,27 Z" fill="${BOIS.ombre}"/>`);
+  s += E(16, 15, 12.4, 1.8, BOIS.clair, WO) + E(16, 14.6, 8.6, 1, '#FBFBF6', 0);
+  return s + etincelle(25.4, 7, 1.4);
+}
+
+// Les fruits (la Jungle) : un ananas, sa couronne de feuilles
+function fruits() {
+  let s = P('M16,12.4 L12,3.4 L15,6.6 L16.2,2.2 L17.6,6.8 L21,3.6 L18,12.4 Z', '#6EA448', WO) + L([16.2, 5], [16.2, 11.4], '#4E7A3A', 0.6);
+  const D = 'M16,11.4 Q24,11.6 24.4,20 Q24.2,28.8 16,29 Q7.8,28.8 7.6,20 Q8,11.6 16,11.4 Z';
+  s += P(D, '#F2B640', 0) + clip('fru', D, '<path d="M19,29 Q25,25 24.6,15 L27,15 L27,30 Z" fill="#D4902A"/>'
+    + ['M8,16 L21,29', 'M10,12.6 L24.6,27', 'M14,11.4 L25,22', 'M24,16 L11,29', 'M22,12.6 L7.4,27', 'M18,11.4 L7.4,22'].map(d => `<path d="${d}" stroke="#B8761E" stroke-width="0.8"/>`).join('')) + P(D, 'none', WO);
+  return s + reflet(11.6, 16.4, 1.2, 2, 0.5);
+}
+
+// L'obsidienne (le Volcan) : une pierre noire et brillante, ses facettes, un reflet violet
+function obsidienne() {
+  const D = 'M6.6,22.6 L5.4,12.4 L13,4.4 L23.6,6.4 L27.4,15.6 L23.4,26.4 L12.4,28 Z';
+  let s = P(D, '#4C4160', 0) + clip('obs', D, '<path d="M13,4.4 L23.6,6.4 L27.4,15.6 L17,15 Z" fill="#76669A"/><path d="M27.4,15.6 L23.4,26.4 L12.4,28 L17,15 Z" fill="#342A42"/><path d="M5.4,12.4 L13,4.4 L17,15 L6.6,22.6 Z" fill="#5C4F72"/>') + P(D, 'none', WO);
+  s += P('M13,4.4 L17,15 L27.4,15.6 M17,15 L6.6,22.6 M17,15 L12.4,28', 'none', WI).replace(`stroke="${OUT}"`, 'stroke="#1E1824"');
+  return s + P('M9,11.6 L12.6,7.6', 'none', 0).replace('stroke="none"', 'stroke="#B8A6D8" stroke-width="1.4" stroke-linecap="round"') + etincelle(24.8, 9.6, 1.3);
+}
+
 // L'ordre de publication, le nom, et où le jeu s'en sert
 const ICONES = [
   ['grimoire', 'Grimoire', grimoire, 'l\'onglet du Grimoire'],
@@ -293,7 +465,26 @@ const ICONES = [
   ['ramasser', 'Tout ramasser', ramasser, 'le bouton « Tout ramasser »'],
   ['carnet', 'Carnet d\'explorateur', carnet, 'le bouton du carnet d\'explorateur'],
   ['trouvailles', 'Trouvailles', trouvailles, 'le bouton des trouvailles des climats'],
-  ['expedition', 'Expédition', expedition, 'une expédition en cours']
+  ['expedition', 'Expédition', expedition, 'une expédition en cours'],
+  ['outils', 'Outils', outils, 'le besoin « travailler » (fiche d\'un camarade, bulle de besoin)'],
+  ['fleur', 'Fleur', fleur, 'le besoin « se distraire »'],
+  ['humeur_joie', 'Humeur : joie', humeurJoie, 'l\'humeur d\'un camarade : content'],
+  ['humeur_calme', 'Humeur : calme', humeurCalme, 'l\'humeur d\'un camarade : tranquille'],
+  ['humeur_bouderie', 'Humeur : bouderie', humeurBouderie, 'l\'humeur d\'un camarade : il lui manque quelque chose'],
+  ['coeur', 'Cœur', coeur, 'l\'amitié d\'un camarade (cœurs de la fiche, récompenses)'],
+  ['verrou', 'Verrou', verrou, 'ce qui est scellé : un chapitre, un rang de l\'établi'],
+  ['inconnu', 'Inconnu', inconnu, 'un élément pas encore trouvé'],
+  ['etincelle', 'Étincelle', etincelleIcone, 'une quête, une chose à faire, le dessin par défaut'],
+  ['chapitre', 'Chapitre', chapitre, 'le chapitre du Grimoire qu\'il faut avoir ouvert'],
+  ['plan', 'Plan', plan, 'le plan d\'un bâtiment (au-dessus d\'un chantier, étapes d\'un bâtiment)'],
+  ['carte', 'Carte', carte, 'un quartier, une expédition'],
+  ['pousse', 'Pousse', pousse, 'le filtre « fertiles » du Grimoire'],
+  ['glace', 'Glace', glace, 'la trouvaille des Cimes'],
+  ['laine', 'Laine', laine, 'la trouvaille des Landes'],
+  ['roseau', 'Roseau', roseau, 'la trouvaille du Marais'],
+  ['sel', 'Sel', sel, 'la trouvaille des Dunes'],
+  ['fruits', 'Fruits', fruits, 'la trouvaille de la Jungle'],
+  ['obsidienne', 'Obsidienne', obsidienne, 'la trouvaille du Volcan']
 ];
 
 module.exports = { ICONES };

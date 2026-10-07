@@ -475,6 +475,23 @@
    "statut": "ok"
   },
   {
+   "id": "interface/chapitre_icone",
+   "rubrique": "interface",
+   "titre": "Chapitre (icône)",
+   "images": 1,
+   "fichiers": [
+    "svg/interface/chapitre_icone.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    32,
+    32
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
    "id": "interface/defis_icone",
    "rubrique": "interface",
    "titre": "Défis (icône)",
@@ -526,6 +543,23 @@
    "statut": "ok"
   },
   {
+   "id": "interface/etincelle_icone",
+   "rubrique": "interface",
+   "titre": "Étincelle (icône)",
+   "images": 1,
+   "fichiers": [
+    "svg/interface/etincelle_icone.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    32,
+    32
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
    "id": "interface/grimoire_icone",
    "rubrique": "interface",
    "titre": "Grimoire (icône)",
@@ -549,6 +583,23 @@
    "images": 1,
    "fichiers": [
     "svg/interface/ile_icone.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    32,
+    32
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "interface/inconnu_icone",
+   "rubrique": "interface",
+   "titre": "Inconnu (icône)",
+   "images": 1,
+   "fichiers": [
+    "svg/interface/inconnu_icone.svg"
    ],
    "cadre": [
     0,
@@ -617,6 +668,23 @@
    "images": 1,
    "fichiers": [
     "svg/interface/poisson_icone.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    32,
+    32
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "interface/pousse_icone",
+   "rubrique": "interface",
+   "titre": "Pousse (icône)",
+   "images": 1,
+   "fichiers": [
+    "svg/interface/pousse_icone.svg"
    ],
    "cadre": [
     0,
@@ -702,6 +770,23 @@
    "images": 1,
    "fichiers": [
     "svg/interface/taches_icone.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    32,
+    32
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "interface/verrou_icone",
+   "rubrique": "interface",
+   "titre": "Verrou (icône)",
+   "images": 1,
+   "fichiers": [
+    "svg/interface/verrou_icone.svg"
    ],
    "cadre": [
     0,
@@ -34885,6 +34970,108 @@
    "statut": "ok"
   },
   {
+   "id": "interface/coeur_icone",
+   "rubrique": "interface",
+   "titre": "Cœur (icône)",
+   "images": 1,
+   "fichiers": [
+    "svg/interface/coeur_icone.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    32,
+    32
+   ],
+   "parcours": "tuto-2",
+   "statut": "ok"
+  },
+  {
+   "id": "interface/fleur_icone",
+   "rubrique": "interface",
+   "titre": "Fleur (icône)",
+   "images": 1,
+   "fichiers": [
+    "svg/interface/fleur_icone.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    32,
+    32
+   ],
+   "parcours": "tuto-2",
+   "statut": "ok"
+  },
+  {
+   "id": "interface/humeur_bouderie_icone",
+   "rubrique": "interface",
+   "titre": "Humeur : bouderie (icône)",
+   "images": 1,
+   "fichiers": [
+    "svg/interface/humeur_bouderie_icone.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    32,
+    32
+   ],
+   "parcours": "tuto-2",
+   "statut": "ok"
+  },
+  {
+   "id": "interface/humeur_calme_icone",
+   "rubrique": "interface",
+   "titre": "Humeur : calme (icône)",
+   "images": 1,
+   "fichiers": [
+    "svg/interface/humeur_calme_icone.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    32,
+    32
+   ],
+   "parcours": "tuto-2",
+   "statut": "ok"
+  },
+  {
+   "id": "interface/humeur_joie_icone",
+   "rubrique": "interface",
+   "titre": "Humeur : joie (icône)",
+   "images": 1,
+   "fichiers": [
+    "svg/interface/humeur_joie_icone.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    32,
+    32
+   ],
+   "parcours": "tuto-2",
+   "statut": "ok"
+  },
+  {
+   "id": "interface/outils_icone",
+   "rubrique": "interface",
+   "titre": "Outils (icône)",
+   "images": 1,
+   "fichiers": [
+    "svg/interface/outils_icone.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    32,
+    32
+   ],
+   "parcours": "tuto-2",
+   "statut": "ok"
+  },
+  {
    "id": "personnages/maitres/cannelle/cannelle_avant_applaudir",
    "rubrique": "personnages",
    "sujet": "cannelle",
@@ -41694,12 +41881,46 @@
    "statut": "ok"
   },
   {
+   "id": "interface/carte_icone",
+   "rubrique": "interface",
+   "titre": "Carte (icône)",
+   "images": 1,
+   "fichiers": [
+    "svg/interface/carte_icone.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    32,
+    32
+   ],
+   "parcours": "tuto-3",
+   "statut": "ok"
+  },
+  {
    "id": "interface/expedition_icone",
    "rubrique": "interface",
    "titre": "Expédition (icône)",
    "images": 1,
    "fichiers": [
     "svg/interface/expedition_icone.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    32,
+    32
+   ],
+   "parcours": "tuto-3",
+   "statut": "ok"
+  },
+  {
+   "id": "interface/plan_icone",
+   "rubrique": "interface",
+   "titre": "Plan (icône)",
+   "images": 1,
+   "fichiers": [
+    "svg/interface/plan_icone.svg"
    ],
    "cadre": [
     0,
@@ -70687,6 +70908,108 @@
    "cadre": [
     -16,
     -26,
+    32,
+    32
+   ],
+   "parcours": "acte-4",
+   "statut": "ok"
+  },
+  {
+   "id": "interface/fruits_icone",
+   "rubrique": "interface",
+   "titre": "Fruits (icône)",
+   "images": 1,
+   "fichiers": [
+    "svg/interface/fruits_icone.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    32,
+    32
+   ],
+   "parcours": "acte-4",
+   "statut": "ok"
+  },
+  {
+   "id": "interface/glace_icone",
+   "rubrique": "interface",
+   "titre": "Glace (icône)",
+   "images": 1,
+   "fichiers": [
+    "svg/interface/glace_icone.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    32,
+    32
+   ],
+   "parcours": "acte-4",
+   "statut": "ok"
+  },
+  {
+   "id": "interface/laine_icone",
+   "rubrique": "interface",
+   "titre": "Laine (icône)",
+   "images": 1,
+   "fichiers": [
+    "svg/interface/laine_icone.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    32,
+    32
+   ],
+   "parcours": "acte-4",
+   "statut": "ok"
+  },
+  {
+   "id": "interface/obsidienne_icone",
+   "rubrique": "interface",
+   "titre": "Obsidienne (icône)",
+   "images": 1,
+   "fichiers": [
+    "svg/interface/obsidienne_icone.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    32,
+    32
+   ],
+   "parcours": "acte-4",
+   "statut": "ok"
+  },
+  {
+   "id": "interface/roseau_icone",
+   "rubrique": "interface",
+   "titre": "Roseau (icône)",
+   "images": 1,
+   "fichiers": [
+    "svg/interface/roseau_icone.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    32,
+    32
+   ],
+   "parcours": "acte-4",
+   "statut": "ok"
+  },
+  {
+   "id": "interface/sel_icone",
+   "rubrique": "interface",
+   "titre": "Sel (icône)",
+   "images": 1,
+   "fichiers": [
+    "svg/interface/sel_icone.svg"
+   ],
+   "cadre": [
+    0,
+    0,
     32,
     32
    ],
