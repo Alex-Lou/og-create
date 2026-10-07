@@ -6,6 +6,10 @@
 .chest__note { margin: 0; max-width: 300px; color: var(--ink-500); font-style: italic; font-size: 14px; line-height: 1.4; }
 .chest__stage { position: relative; display: grid; place-items: center; width: 220px; height: 170px; }
 .chest__box { position: relative; width: 168px; height: 140px; overflow: visible; animation: chest-shake .7s ease-in-out both; }
+/* Le coffre de la bibliothèque : ses images superposées, une seule visible (il tremble dans ses propres images) */
+.chest__box--art { display: block; animation: none; }
+.chest__box--art img { position: absolute; inset: 0; width: 100%; height: 100%; }
+.chest__box--art img.is-off { visibility: hidden; }
 .chest__wood { fill: var(--wood); stroke: var(--island-chest-line); stroke-width: 1.4; }
 .chest__band { fill: var(--band); }
 .chest__lock { fill: var(--lock); stroke: var(--island-chest-lock-line); stroke-width: 1; }

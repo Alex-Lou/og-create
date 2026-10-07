@@ -5,7 +5,11 @@
       <div class="chest__stage" aria-hidden="true">
         <span class="chest__rays"></span>
         <span class="chest__glow"></span>
-        <svg class="chest__box" viewBox="0 0 120 100">
+        <!-- Le coffre de la bibliothèque (son ouverture, puis ouvert), sinon celui du jeu -->
+        <span v-if="frames" class="chest__box chest__box--art">
+          <img v-for="(frame, k) in frames" :key="frame.src" :src="frame.src" alt="" :class="{ 'is-off': k !== shown }" />
+        </span>
+        <svg v-else class="chest__box" viewBox="0 0 120 100">
           <ellipse cx="60" cy="90" rx="44" ry="6" fill="rgba(40,26,16,.25)" />
           <g class="chest__body">
             <rect x="18" y="46" width="84" height="40" rx="5" class="chest__wood" />
@@ -45,6 +49,8 @@
 import GModal from '@/components/ui/GModal/GModal.vue';
 import ElementGlyph from '@/components/ui/ElementGlyph/ElementGlyph.vue';
 import { RARITY, prizeText, sourceText, stockOf } from '@/world/chest';
+import { chestFrames } from '@/world/chestArt';
+import { reducedMotion } from '@/utils/fx';
 
 // Ouverture d'un coffre : il tremble, s'ouvre dans la couleur de sa rareté, puis montre son lot (aperçu du bâtiment
 // pour une teinte ou une pièce rare). Le lot est déjà acquis : la fenêtre ne fait que le montrer.
@@ -61,7 +67,18 @@ export default {
     busy: { type: Boolean, default: false }
   },
   emits: ['close', 'wear'],
+  data() {
+    return { shown: 0 };
+  },
   computed: {
+    // Le coffre de la bibliothèque ({ opening, open }), ou null
+    chestArt() {
+      return chestFrames(this.chest.rarity);
+    },
+    // Toutes ses images, toutes posées d'avance (aucune n'attend son chargement) : l'ouverture, puis ouvert
+    frames() {
+      return this.chestArt ? [...this.chestArt.opening, ...this.chestArt.open] : null;
+    },
     rarity() {
       return RARITY[this.chest.rarity] || RARITY.commun;
     },
@@ -80,6 +97,24 @@ export default {
       if (kind === 'tint') return 'Teinte, à porter sur son bâtiment';
       return kind === 'stock' ? 'Dans les réserves de l’île' : '';
     }
+  },
+  // L'ouverture s'enchaîne une fois, à la cadence de la bibliothèque, puis le coffre ouvert respire (ses deux images en
+  // boucle) ; en mouvement réduit, il est ouvert d'emblée
+  mounted() {
+    if (!this.frames) return;
+    const first = this.chestArt.opening.length;
+    if (reducedMotion()) {
+      this.shown = first;
+      return;
+    }
+    const next = () => {
+      this.shown = this.shown + 1 < this.frames.length ? this.shown + 1 : first;
+      this.timer = setTimeout(next, this.frames[this.shown].ms);
+    };
+    this.timer = setTimeout(next, this.frames[0].ms);
+  },
+  beforeUnmount() {
+    clearTimeout(this.timer);
   }
 };
 </script>

@@ -27,6 +27,7 @@
         <h3 class="chests__title">En attente</h3>
         <ul class="chests__list">
           <li v-for="chest in pending" :key="chest.source" class="chests__item">
+            <img v-if="iconOf(chest.rarity)" class="chests__icon" :src="iconOf(chest.rarity)" alt="" />
             <span class="chests__chip" :style="{ '--rarity': RARITY[chest.rarity].color }">{{ RARITY[chest.rarity].label }}</span>
             <span class="chests__label">{{ chest.label }}</span>
             <button type="button" class="g-btn g-btn--ghost chests__item-btn" :disabled="busy" @click="$emit('open', chest.source)">Ouvrir</button>
@@ -49,6 +50,7 @@
 <script>
 import GModal from '@/components/ui/GModal/GModal.vue';
 import { RARITY, openableOf } from '@/world/chest';
+import { chestIcon } from '@/world/chestArt';
 
 // Les coffres de l'île : celui du jour (série), ceux qui attendent d'être ouverts, et où trouver les autres ; « Tout
 // ouvrir » les ouvre tous d'un coup
@@ -84,6 +86,10 @@ export default {
     first() {
       return this.daily.streak - this.today;
     }
+  },
+  methods: {
+    // L'icône d'un coffre de cette rareté (bibliothèque), ou null
+    iconOf: chestIcon
   }
 };
 </script>
