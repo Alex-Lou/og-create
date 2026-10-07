@@ -1044,26 +1044,62 @@ const glaciere = {
   }]
 };
 
-// Métier à tisser (Foyer) : un métier de bois sous un auvent, une toile de laine à rayures qui avance, des pelotes
+// Métier à tisser (landes) : sous un auvent de tuiles, un vrai métier de bois (fils de chaîne, lisse qui monte et
+// descend, navette qui court, toile à rayures qui s'enroule) et son tabouret ; le panier de pelotes dont un fil file au
+// métier ; des écheveaux qui sèchent sur un fil ; la bruyère autour
 const metier = {
   layers: [{
     frame: [-34, -52, 68, 66],
     n: 4,
     fps: 2,
-    draw: (T, f) => {
-      let out = T.shadow(0, 0, 0.38, 0.18);
-      for (const [u, v] of [[-0.24, -0.16], [0.24, -0.16], [-0.24, 0.16], [0.24, 0.16]]) out += post(T, u, v, 0, 24, WOOD_DARK, 0.025);
-      out += T.gable(-0.3, -0.22, 0.3, 0.22, 24, 10, { front: ROOF_RED.front, back: ROOF_RED.back, gable: WOOD.right }, 0.06);
-      // La toile : rayures de laine qui défilent
+    draw: (T, f, n) => {
+      const [x, y] = T.p(0, 0, 0);
+      const sway = wave(f, n, 1);
+      // la lande et ses touffes de bruyère
+      const heather = (du, dv, s) => { const [hx, hy] = T.p(du, dv, 0); return [-2.4, -0.8, 0.8, 2.4].map((o, i) => ln([hx + o * 0.5 * s, hy], [hx + o * s, hy - (4 + (i % 2) * 1.6) * s], '#6F8C46', 0.7)).join('') + [[-2.2, -4.4], [-0.6, -5.8], [1, -4.8], [2.4, -5.2], [0, -3.6]].map(([dx, dy], i) => dot(hx + dx * s, hy + dy * s, 0.9 * s, i % 2 ? '#B57BC4' : '#D49ADB')).join(''); };
+      let out = ell(x, y + 1, 31, 13, '#B9B47C', ` stroke="${OUT}" stroke-width="0.5"`) + ell(x - 4, y, 21, 8, '#C8C48E')
+        + heather(-0.44, -0.06, 1) + heather(-0.12, -0.44, 0.9) + T.shadow(0, 0, 0.36, 0.18);
+      // les écheveaux qui sèchent sur un fil, au fond à droite
+      const [ax, ay] = T.p(0.42, -0.36, 15), [bx, by] = T.p(0.42, 0, 15);
+      out += post(T, 0.42, -0.36, 0, 16, WOOD_DARK, 0.012) + post(T, 0.42, 0, 0, 16, WOOD_DARK, 0.012)
+        + `<path d="M${f2(ax)},${f2(ay)} Q${f2((ax + bx) / 2)},${f2((ay + by) / 2 + 2.4)} ${f2(bx)},${f2(by)}" stroke="#7A5A2A" stroke-width="0.6" fill="none"/>`
+        + [[0.25, '#E2574C'], [0.5, '#6FA3D9'], [0.75, '#F2C04B']].map(([t, c], i) => { const sx = ax + (bx - ax) * t, sy = ay + (by - ay) * t + Math.sin(t * Math.PI) * 2.4, d = sway * (0.6 + i * 0.2); return `<path d="M${f2(sx - 1.4)},${f2(sy)} Q${f2(sx - 2 + d)},${f2(sy + 5)} ${f2(sx + d)},${f2(sy + 7.4)} Q${f2(sx + 2 + d)},${f2(sy + 5)} ${f2(sx + 1.4)},${f2(sy)}" stroke="${c}" stroke-width="1.6" fill="none" stroke-linecap="round"/>` + ln([sx - 1, sy + 0.6], [sx + 1, sy + 0.6], 'rgba(0,0,0,.25)', 0.5); }).join('');
+      // les poteaux du fond, le métier
+      out += post(T, -0.24, -0.16, 0, 24, WOOD_DARK, 0.025) + post(T, 0.24, -0.16, 0, 24, WOOD_DARK, 0.025)
+        + post(T, -0.3, 0.02, 0, 22, WOOD, 0.018) + post(T, 0.1, 0.02, 0, 22, WOOD, 0.018);
+      // la toile tissée qui avance, rayure après rayure
       const rows = ['#E2574C', '#F4ECDC', '#6FA3D9', '#F2C04B'];
-      for (let k = 0; k < 4; k++) {
-        const c = rows[(k + f) % rows.length];
-        out += T.face([[-0.2, 0.02, 6 + k * 3.5], [0.2, 0.02, 6 + k * 3.5], [0.2, 0.02, 9.5 + k * 3.5], [-0.2, 0.02, 9.5 + k * 3.5]], c, EDGE);
-      }
-      out += ln(T.p(-0.22, 0.02, 20), T.p(0.22, 0.02, 20), WOOD.top, 1.6) + ln(T.p(-0.22, 0.02, 5), T.p(0.22, 0.02, 5), WOOD.top, 1.6);
-      for (let k = 0; k < 6; k++) out += ln(T.p(-0.18 + k * 0.072, 0.02, 20), T.p(-0.18 + k * 0.072, 0.02, 20 - 2), 'rgba(80,60,40,.5)', 0.5);
-      const ball = (du, dv, c) => { const [bx, by] = T.p(du, dv, 0); return dot(bx, by - 3, 3.4, c) + ln([bx - 2.4, by - 4], [bx + 2.4, by - 2], 'rgba(0,0,0,.2)', 0.6); };
-      return out + ball(0.32, 0.3, '#E2574C') + ball(0.38, 0.18, '#F4ECDC') + ball(-0.34, 0.3, '#6FA3D9');
+      for (let k = 0; k < 4; k++) out += T.face([[-0.28, 0.02, 6 + k * 1.75], [0.08, 0.02, 6 + k * 1.75], [0.08, 0.02, 7.75 + k * 1.75], [-0.28, 0.02, 7.75 + k * 1.75]], rows[(k + f) % rows.length], ` stroke="rgba(60,40,25,.35)" stroke-width="0.3"`);
+      // les fils de chaîne, la lisse qui monte et descend, l'ensouple du haut
+      for (let i = 0; i <= 10; i++) { const u = -0.27 + i * 0.034; out += ln(T.p(u, 0.02, 20.4), T.p(u, 0.02, 13), 'rgba(250,245,230,.95)', 0.4); }
+      const zl = 16.6 + (f % 2 ? 1.2 : -1.2);
+      out += ln(T.p(-0.29, 0.02, zl), T.p(0.09, 0.02, zl), WOOD_DARK.right, 1.3)
+        + ln(T.p(-0.32, 0.02, 21), T.p(0.12, 0.02, 21), WOOD.right, 2.2) + ln(T.p(-0.32, 0.02, 21.6), T.p(0.12, 0.02, 21.6), WOOD.top, 0.6)
+        // l'ensouple du bas où s'enroule la toile
+        + ln(T.p(-0.32, 0.03, 5.4), T.p(0.12, 0.03, 5.4), '#C9564A', 3) + ln(T.p(-0.32, 0.03, 6.2), T.p(0.12, 0.03, 6.2), 'rgba(255,255,255,.3)', 0.6);
+      // la navette qui court d'un bord à l'autre, son fil
+      const su = [-0.23, -0.1, 0.03, -0.1][f];
+      const [nx, ny] = T.p(su, 0.05, 13.2);
+      out += ln(T.p(-0.28, 0.02, 13.2), [nx, ny], '#E2574C', 0.5)
+        + `<path d="M${f2(nx - 3.4)},${f2(ny)} Q${f2(nx)},${f2(ny - 1.6)} ${f2(nx + 3.4)},${f2(ny)} Q${f2(nx)},${f2(ny + 1.2)} ${f2(nx - 3.4)},${f2(ny)} Z" fill="${WOOD.top}" stroke="${OUT}" stroke-width="0.5"/>` + dot(nx, ny - 0.2, 0.6, '#E2574C');
+      // les poteaux de devant et l'auvent de tuiles
+      out += post(T, -0.24, 0.16, 0, 24, WOOD_DARK, 0.025) + post(T, 0.24, 0.16, 0, 24, WOOD_DARK, 0.025)
+        + T.gable(-0.3, -0.22, 0.3, 0.22, 24, 10, { front: ROOF_RED.front, back: ROOF_RED.back, gable: WOOD.right }, 0.06);
+      for (const t of [0.33, 0.66]) out += ln(T.p(-0.36, 0.28 * t, 34 - 10 * t), T.p(0.36, 0.28 * t, 34 - 10 * t), 'rgba(110,40,30,.45)', 0.7);
+      for (let i = 0; i < 7; i++) { const u = -0.31 + i * 0.1; out += ln(T.p(u, 0, 34), T.p(u, 0.28, 24), 'rgba(110,40,30,.25)', 0.5); }
+      out += ln(T.p(-0.36, 0, 34), T.p(0.36, 0, 34), '#8A3A2C', 1.6) + ln(T.p(-0.36, 0.004, 34.6), T.p(0.36, 0.004, 34.6), 'rgba(255,220,200,.6)', 0.5);
+      // le tabouret de la tisserande
+      out += [[-0.14, 0.22], [-0.06, 0.22], [-0.14, 0.3], [-0.06, 0.3]].map(([u, v]) => post(T, u, v, 0, 4.6, WOOD_DARK, 0.008)).join('')
+        + T.box(-0.16, 0.2, -0.04, 0.32, 4.6, 5.8, WOOD);
+      // le panier de pelotes, et le fil rouge qui file jusqu'au métier
+      const [kx, ky] = T.p(-0.34, 0.28, 0);
+      const ball = (dx, dy, c) => dot(kx + dx, ky + dy, 2.6, c) + `<path d="M${f2(kx + dx - 2)},${f2(ky + dy - 1)} q2,-1.2 4,0.6 M${f2(kx + dx - 1.6)},${f2(ky + dy + 0.6)} q2,-1 3.4,0.6" stroke="rgba(0,0,0,.2)" stroke-width="0.5" fill="none"/>`;
+      out += ell(kx + 1, ky + 0.6, 7, 2.2, 'rgba(40,55,20,.22)')
+        + ball(-2.4, -5.4, '#6FA3D9') + ball(2.2, -5.6, '#F2C04B') + ball(0, -7.2, '#E2574C')
+        + `<path d="M${f2(kx - 6)},${f2(ky - 5)} L${f2(kx - 4.8)},${f2(ky)} Q${f2(kx)},${f2(ky + 1.8)} ${f2(kx + 4.8)},${f2(ky)} L${f2(kx + 6)},${f2(ky - 5)} Q${f2(kx)},${f2(ky - 2.8)} ${f2(kx - 6)},${f2(ky - 5)} Z" fill="#C9A060" stroke="${OUT}" stroke-width="0.6"/>`
+        + `<path d="M${f2(kx - 5.4)},${f2(ky - 2.4)} Q${f2(kx)},${f2(ky - 0.4)} ${f2(kx + 5.4)},${f2(ky - 2.4)}" stroke="#A07838" stroke-width="0.6" fill="none"/>`;
+      const [tx, ty] = T.p(-0.28, 0.04, 8);
+      return out + `<path d="M${f2(kx)},${f2(ky - 8)} Q${f2((kx + tx) / 2)},${f2(ky - 3 + sway)} ${f2(tx)},${f2(ty)}" stroke="#E2574C" stroke-width="0.5" fill="none"/>`;
     }
   }]
 };
