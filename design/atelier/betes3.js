@@ -544,7 +544,9 @@ P3.heron = (c) => ({
       : `M${r2(nx)},${r2(ny)} Q${r2(nx + 3)},${r2(ny - 4.4)} ${r2(hx - 0.4)},${r2(hy + 6)} Q${r2(hx - 1.6)},${r2(hy + 3)} ${r2(hx)},${r2(hy + 1)}`;
     return thick(d, 2.2, c.headColor);
   },
-  head: ({ se, hx, hy, hr }) => E(hx - hr * 0.05, hy - hr * 0.45, hr * 0.85, hr * 0.45, '#3A3A48', 0)
+  // de trois quarts avant, la calotte passe sous les yeux ; de dos, il n'y a pas d'yeux
+  face: ({ hx, hy, hr }) => E(hx - hr * 0.05, hy - hr * 0.55, hr * 0.82, hr * 0.38, '#3A3A48', 0),
+  head: ({ se, hx, hy, hr }) => (se ? '' : E(hx - hr * 0.05, hy - hr * 0.45, hr * 0.85, hr * 0.45, '#3A3A48', 0))
     + thick(`M${r2(hx - hr * 0.6)},${r2(hy - hr * 0.4)} Q${r2(hx - hr * 1.8)},${r2(hy - hr * 0.6)} ${r2(hx - hr * 2.3)},${r2(hy + hr * 0.3)}`, 0.6, '#3A3A48')
 });
 P3.puffin = (c) => ({

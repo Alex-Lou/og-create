@@ -505,11 +505,16 @@ B.chick = () => ({
 });
 B.heron = () => ({
   id: 'heron', size: 'TALL', color: '#A8B4C2', wing: '#7E8C9E', belly: '#E8EEF4', headColor: '#E8EEF4',
-  body: [-1, -17, 6, 4], head: [4.2, -31, 2.2],
-  beak: { kind: 'long', len: 5.4, color: '#F2C94C', dy: 0.2 }, eye: [0.5, -0.4, 0.7], blush: false,
+  // chibi : grosse tête ronde au bout du long cou
+  body: [-1, -17, 6, 4], head: [4.4, -30, 3.3],
+  beak: { kind: 'long', len: 4.8, color: '#F2C94C', dy: 0.5 }, eye: [0.7, -0.4, 1],
   legs: { xs: [-1.6, 0.6], top: -13, color: '#C8A85A', w: 0.8 }, tail: { kind: 'long', len: 3.4 },
   neck: ({ bx, by, hx, hy }) => `M${r2(bx + 4)},${r2(by - 2)} Q${r2(bx + 9)},${r2(by - 6)} ${r2(hx - 1)},${r2(hy + 6)} Q${r2(hx - 2.4)},${r2(hy + 3)} ${r2(hx)},${r2(hy + 1)}`, neckW: 2.2,
-  parts: { head: ({ hx, hy }) => thick(`M${r2(hx - 1.4)},${r2(hy - 1)} Q${r2(hx - 4)},${r2(hy - 1.4)} ${r2(hx - 5)},${r2(hy + 0.6)}`, 0.6, '#3A3A48') + E(hx + 0.2, hy - 0.9, 1.6, 0.8, '#3A3A48', 0) }
+  parts: {
+    // la calotte noire passe sous l'œil, l'aigrette par-dessus la tête
+    face: ({ hx, hy, hr }) => E(hx + hr * 0.05, hy - hr * 0.55, hr * 0.78, hr * 0.36, '#3A3A48', 0),
+    head: ({ hx, hy, hr }) => thick(`M${r2(hx - hr * 0.6)},${r2(hy - hr * 0.42)} Q${r2(hx - hr * 1.7)},${r2(hy - hr * 0.6)} ${r2(hx - hr * 2.2)},${r2(hy + hr * 0.25)}`, 0.6, '#3A3A48')
+  }
 });
 B.puffin = () => ({
   id: 'puffin', size: 'SMALL', color: '#2E2E38', wing: '#22222A', belly: '#FFFFFF',
@@ -541,17 +546,19 @@ B.crow = () => ({
 });
 B.bird = () => ({
   id: 'bird', size: 'SMALL', color: '#5C9CE0', wing: '#4A84C8', belly: '#FFE16A', headColor: '#FFFFFF',
-  body: [-0.2, -4.2, 3.4, 2.8], head: [2.6, -6.8, 2.3],
-  beak: { kind: 'cone', len: 1.1, color: '#3A3A44' }, eye: [0.6, -0.2, 0.62],
+  // chibi : grosse tête ronde sur un corps dodu
+  body: [-0.2, -4, 3.2, 3], head: [2.3, -7.5, 3],
+  beak: { kind: 'cone', len: 1.1, color: '#3A3A44' }, eye: [0.8, -0.25, 0.85],
   legs: { xs: [-0.6, 0.8], top: -1.4, color: '#7E7E8A', w: 0.55 }, tail: { kind: 'long', len: 2.6, color: '#4A84C8' },
-  parts: { head: ({ hx, hy, hr }) => P(`M${r2(hx - hr)},${r2(hy - 0.4)} Q${r2(hx - hr * 0.6)},${r2(hy - hr)} ${r2(hx + hr * 0.8)},${r2(hy - hr * 0.55)} Q${r2(hx)},${r2(hy - hr * 0.35)} ${r2(hx - hr)},${r2(hy - 0.4)} Z`, '#5C9CE0', 0) + `<path d="M${r2(hx - 1.6)},${r2(hy + 0.2)} L${r2(hx + 1.2)},${r2(hy - 0.4)}" stroke="#2A3A5A" stroke-width="0.5"/>` }
+  parts: { head: ({ hx, hy, hr }) => P(`M${r2(hx - hr)},${r2(hy - 0.4)} Q${r2(hx - hr * 0.6)},${r2(hy - hr)} ${r2(hx + hr * 0.8)},${r2(hy - hr * 0.55)} Q${r2(hx)},${r2(hy - hr * 0.35)} ${r2(hx - hr)},${r2(hy - 0.4)} Z`, '#5C9CE0', 0) + `<path d="M${r2(hx - hr * 0.7)},${r2(hy + hr * 0.09)} L${r2(hx + hr * 0.52)},${r2(hy - hr * 0.17)}" stroke="#2A3A5A" stroke-width="0.5"/>` }
 });
 B.gull = () => ({
   id: 'gull', size: 'SMALL', color: '#FFFFFF', wing: '#A8B4C2', belly: '#FFFFFF',
-  body: [-0.8, -6.4, 5, 3.6], head: [3.4, -10.4, 2.6],
-  beak: { kind: 'long', len: 2.8, color: '#F2C94C' }, eye: [0.6, -0.4, 0.7],
+  // chibi : grosse tête ronde sur un corps dodu
+  body: [-0.8, -6.2, 4.6, 3.9], head: [3.2, -11, 3.5],
+  beak: { kind: 'long', len: 2.6, color: '#F2C94C' }, eye: [0.85, -0.5, 0.95],
   legs: { xs: [-1.6, 0.6], top: -2.6, color: '#F2B33B' }, tail: { kind: 'long', len: 3, color: '#3A3A44' },
-  parts: { head: ({ hx, hy, hr }) => E(hx + hr * 0.85 + 2.2, hy + 0.7, 0.4, 0.35, '#E8483C', 0) }
+  parts: { head: ({ hx, hy, hr }) => E(hx + hr * 0.85 + 2.1, hy + 0.7, 0.4, 0.35, '#E8483C', 0) }
 });
 
 module.exports.bird = bird;
@@ -570,7 +577,7 @@ const splash = (x, y, k = 1) => [[-3, -2.6], [0, -3.6], [3, -2.4]].map(([dx, dy]
 
 // Papillon (vu de profil-dessus) ; v : jaune | bleu | lune ; pose : vol1 | vol2 | repos | joie
 function butterfly(v, pose) {
-  const col = { jaune: ['#F6D04A', '#E8A83A'], bleu: ['#6AB4F0', '#3E7FC1'], lune: ['#CFF2D8', '#8ACB9E'] }[v];
+  const col = { jaune: ['#F6D04A', '#E8A83A', '#FFE9A8'], bleu: ['#6AB4F0', '#3E7FC1', '#D2E8FC'], lune: ['#CFF2D8', '#8ACB9E'] }[v];
   const open = pose === 'vol2' ? 0.45 : pose === 'repos' ? 0.25 : 1;
   const y = pose === 'repos' ? -3.6 : -5;
   const wing = (m) => `<g transform="translate(0 ${y}) scale(${r2(m * open)} 1)">${P('M0,0 Q2.6,-5.4 5.6,-3.6 Q6.6,-1 2.4,0.4 Q5.2,1.6 4,3.6 Q1.6,4.4 0,1 Z', col[0])}${E(3.4, -2.6, 0.9, 0.7, col[1], 0)}${v === 'lune' ? E(3, -2.4, 0.5, 0.5, '#FFFFFF', 0) : ''}</g>`;
@@ -582,7 +589,9 @@ function butterfly(v, pose) {
         // Lunette, de côté : corps duveteux, tête ronde, un œil, une joue, l'antenne en plume
         ? limb([-0.6, -2.4], [0.6, -4.2], 1.1, '#EDE5D2') + stroke('M1.2,-5.4 Q2,-6.6 3,-6.8', 0.35, OUT) + stroke('M1.7,-6.1 l0.3,0.4 M2.3,-6.6 l0.2,0.45', 0.3, OUT)
           + E(1, -4.9, 1.05, 0.95, '#F4EEDF', 0.7) + eye(1.35, -5, 0.38, 'open') + E(1.05, -4.3, 0.3, 0.16, '#F7A8B0', 0)
-        : limb([-0.6, -2.4], [0.8, -4.6], 0.6, '#3A2A24') + stroke('M0.8,-4.6 Q1.6,-6 2.6,-6.2', 0.35, OUT)) + '</g>';
+        // de côté : corps dodu, tête ronde, un œil, une joue, l'antenne
+        : limb([-0.6, -2.4], [0.6, -4.2], 1, '#4A3A30') + stroke('M1.2,-5.5 Q2,-6.8 3,-6.9', 0.35, OUT) + E(3, -6.9, 0.3, 0.3, OUT, 0)
+          + E(1, -4.9, 1, 0.92, col[2], 0.7) + eye(1.35, -5, 0.38, 'open') + E(1.05, -4.3, 0.3, 0.16, '#F7A8B0', 0)) + '</g>';
   }
   let s = wing(-1) + wing(1);
   if (v === 'lune') {
@@ -592,7 +601,14 @@ function butterfly(v, pose) {
     s += feather(-1) + feather(1) + E(0, y + 0.4, 1, 2.4, '#EDE5D2', 0.7) + L([-0.7, y + 0.6], [0.7, y + 0.6], '#C9BFA8', 0.35) + L([-0.6, y + 1.6], [0.6, y + 1.6], '#C9BFA8', 0.35)
       + E(0, y - 2.5, 1.45, 1.3, '#F4EEDF', 0.7) + eye(-0.55, y - 2.55, 0.42, pose === 'joie' ? 'joy' : 'open') + eye(0.55, y - 2.55, 0.42, pose === 'joie' ? 'joy' : 'open')
       + E(-0.95, y - 1.85, 0.32, 0.17, '#F7A8B0', 0) + E(0.95, y - 1.85, 0.32, 0.17, '#F7A8B0', 0);
-  } else s += limb([0, y - 2.4], [0, y + 2.4], 0.6, '#3A2A24') + stroke(`M0,${r2(y - 2.4)} Q-1,${r2(y - 4.6)} -1.8,${r2(y - 5)} M0,${r2(y - 2.4)} Q1,${r2(y - 4.6)} 1.8,${r2(y - 5)}`, 0.4, OUT);
+  } else {
+    // chibi : corps dodu, tête ronde, deux yeux de la troupe, deux joues, antennes à boule
+    const m = pose === 'joie' ? 'joy' : 'open';
+    s += stroke(`M-0.3,${r2(y - 3.2)} Q-1,${r2(y - 4.8)} -1.8,${r2(y - 5.2)} M0.3,${r2(y - 3.2)} Q1,${r2(y - 4.8)} 1.8,${r2(y - 5.2)}`, 0.4, OUT)
+      + E(-1.8, y - 5.2, 0.32, 0.32, OUT, 0) + E(1.8, y - 5.2, 0.32, 0.32, OUT, 0)
+      + E(0, y + 0.5, 0.8, 2.2, '#4A3A30', 0.6) + E(0, y - 2.4, 1.3, 1.15, col[2], 0.6) + E(-0.45, y - 2.95, 0.5, 0.28, '#FFFFFF', 0).replace('fill=', 'fill-opacity="0.6" fill=')
+      + eye(-0.5, y - 2.45, 0.38, m) + eye(0.5, y - 2.45, 0.38, m) + E(-0.9, y - 1.8, 0.3, 0.16, '#F7A8B0', 0) + E(0.9, y - 1.8, 0.3, 0.16, '#F7A8B0', 0);
+  }
   if (pose === 'joie') s += heartIcon(4.6, y - 4.4, 0.9);
   return s;
 }
@@ -600,7 +616,11 @@ function butterfly(v, pose) {
 function firefly(pose) {
   const on = pose !== 'vol2';
   let s = on ? glowDot(-1.6, -3, 4.4, '255,236,150', 0.4) : glowDot(-1.6, -3, 2.6, '255,236,150', 0.25);
-  s += E(-1.6, -3, 1.8, 1.4, on ? '#FFF3A0' : '#E8D880', 0.7) + E(0.6, -3.4, 1.4, 1.2, '#4A3A30', 0.7) + E(1.8, -3.8, 0.9, 0.9, '#2A2420', 0.6);
+  s += E(-1.6, -3, 1.8, 1.4, on ? '#FFF3A0' : '#E8D880', 0.7) + E(0.6, -3.4, 1.4, 1.2, '#4A3A30', 0.7);
+  // chibi : grosse tête ronde, deux antennes, un grand œil à reflets, une joue
+  // antennes courtes : la luciole des égarés (image luciole 4) reste dans le cadre du petit fantôme
+  s += stroke('M1.6,-4.9 Q1.3,-5.7 0.5,-5.8 M2.6,-5 Q3,-5.7 3.9,-5.75', 0.35, OUT);
+  s += E(2.1, -3.9, 1.35, 1.25, '#F2B48A', 0.6) + E(1.6, -4.5, 0.5, 0.3, '#FFD8BC', 0) + eye(2.55, -4, 0.52, pose === 'joie' ? 'joy' : 'open') + E(2.3, -3.05, 0.42, 0.22, '#F7A8B0', 0);
   s += P('M-0.4,-4 Q-1.6,-6.6 -3.4,-5.4 Q-2,-4.4 -0.4,-3.8 Z', '#E8F2FA', 0.5).replace('fill=', 'fill-opacity="0.8" fill=');
   if (pose === 'joie') s += heartIcon(3.2, -6, 0.8);
   return `<g transform="translate(0 1)">${s}</g>`;
@@ -618,10 +638,16 @@ function bee(pose, meca = false) {
     // Tic-Tac (familier) : grosse tête ronde d'acier, un grand œil à reflets, une joue, un rivet sur le front
     s += E(2.7, y - 0.8, 1.95, 1.8, '#B8C0C8', 0.8) + E(2.1, y - 1.5, 0.7, 0.45, '#E2E8EE', 0)
       + eye(3.2, y - 0.95, 0.72, pose === 'joie' ? 'joy' : 'open') + E(2.8, y + 0.35, 0.55, 0.3, '#F7A8B0', 0) + E(1.5, y - 2.1, 0.28, 0.28, '#F0D58A', 0.3);
-  } else s += E(2.6, y - 0.6, 1.5, 1.4, '#3A2A24', 0.8) + E(3, y - 1, 0.45, 0.45, '#FFFFFF', 0);
+  } else {
+    // chibi : grosse tête ronde, deux antennes, un grand œil à reflets, une joue
+    s += stroke(`M2.3,${r2(y - 2.3)} Q2.1,${r2(y - 3.7)} 1.2,${r2(y - 4)} M3.1,${r2(y - 2.4)} Q3.5,${r2(y - 3.6)} 4.4,${r2(y - 3.8)}`, 0.35, OUT);
+    s += E(2.7, y - 0.8, 1.9, 1.8, '#FFE07A', 0.8) + E(2.1, y - 1.55, 0.65, 0.4, '#FFF2C0', 0)
+      + eye(3.25, y - 0.95, 0.72, pose === 'joie' ? 'joy' : 'open') + E(2.85, y + 0.35, 0.55, 0.3, '#F7A8B0', 0);
+  }
   if (meca) s += limb([-1, y - 2.2], [-1.6, y - 4], 0.5, '#C9A24A') + E(-2.4, y - 4.4, 1, 0.6, '#C9A24A', 0.5) + E(-0.8, y - 4.4, 1, 0.6, '#C9A24A', 0.5) + E(0.9, y + 0.6, 0.3, 0.3, '#F0D58A', 0);
   else s += P(`M-3.2,${r2(y + 0.4)} L-4.2,${r2(y + 0.8)} L-3.2,${r2(y + 1.2)} Z`, '#3A2A24', 0);
-  if (pose === 'joie') s += heartIcon(2.6, y - 4, 0.8);
+  // le cœur de l'abeille passe au-dessus de ses antennes
+  if (pose === 'joie') s += meca ? heartIcon(2.6, y - 4, 0.8) : heartIcon(2.8, y - 4.9, 0.8);
   return `<g transform="translate(0 ${pose === 'repos' ? 1.2 : 1.6})">${s}</g>`;
 }
 // L'amie de Tic-Tac (acte IV, quand on écrit Abeille, Rivet la fabrique) : une abeille mécanique plus ronde, en cuivre
@@ -671,7 +697,7 @@ function koi(v, pose) {
   let s = `<ellipse cx="0" cy="0" rx="11" ry="3.6" fill="#7FC4E8" fill-opacity="0.25"/>`;
   s += P(`M-6,0 Q${-9},${-2.8 * sw} ${-10.4},${-3 * sw} Q${-9.6},0 ${-10.4},${3 * sw} Q${-9},${2.8 * sw} -6,0 Z`.replace(/-?\d+\.?\d*e?-?\d*/g, n => r2(+n)), base, 0.8);
   s += P(`M-6.4,0 Q-4,${r2(-2.6 + sw * 0.3)} 1.6,-2.2 Q6.6,-1.4 7.4,0 Q6.6,1.4 1.6,2.2 Q-4,${r2(2.6 + sw * 0.3)} -6.4,0 Z`, base);
-  s += E(-1, -0.6, 1.6, 1, spot, 0) + E(3.6, 0.6, 1.2, 0.8, spot, 0) + E(5.6, -1.2, 0.5, 0.5, EYE, 0) + E(5.6, 1.2, 0.5, 0.5, EYE, 0);
+  s += E(-1, -0.6, 1.6, 1, spot, 0) + E(3.6, 0.6, 1.2, 0.8, spot, 0) + eye(5.4, -1, 0.58, 'open') + eye(5.4, 1, 0.58, 'open');
   s += P('M1.6,-2.1 Q0.4,-4.6 -1.4,-4.2 Q-0.4,-3 0,-2.2 Z', base, 0.6) + P('M1.6,2.1 Q0.4,4.6 -1.4,4.2 Q-0.4,3 0,2.2 Z', base, 0.6);
   if (pose === 'joie') s += E(9.4, -1.6, 0.7, 0.7, '#E8F6FF', 0.4) + E(11, -3.4, 0.45, 0.45, '#E8F6FF', 0.4) + heartIcon(10.6, 2.2, 0.8);
   return s;
@@ -686,7 +712,7 @@ function fish(v, n) {
   s += P('M-6,0 L-10,-3.4 L-9.2,0 L-10,3.4 Z', colS, 0.8);
   s += E(0, 0, 6.6, v === 'dorade' ? 3.8 : 2.6, col);
   s += P(`M-5.4,0.8 Q0,${v === 'dorade' ? 3.6 : 2.4} 5.4,0.8`, 'none', 0).replace('stroke="none"', `stroke="${colS}" stroke-width="1"`);
-  s += P('M-1,-2.4 L1,-4 L2.2,-2 Z', fin, 0.6) + E(4, -0.6, 0.8, 0.8, EYE, 0) + E(4.2, -0.9, 0.3, 0.3, '#FFFFFF', 0);
+  s += P('M-1,-2.4 L1,-4 L2.2,-2 Z', fin, 0.6) + eye(3.8, -0.5, 1.05, 'open') + E(3.4, 0.9, 0.8, 0.4, '#F7A8B0', 0);
   s += '</g>';
   return s;
 }
@@ -699,7 +725,7 @@ function dolphin(n) {
   s += P('M-12,0 Q-8,-6.6 2,-6 Q10,-5.4 13,-1.6 L16.6,-0.6 Q15.6,1 13,1.2 Q8,5.2 -2,4.8 Q-9,4 -12,0 Z', '#7EAEE0');
   s += clip(`dol${n}`, 'M-12,0 Q-8,-6.6 2,-6 Q10,-5.4 13,-1.6 L16.6,-0.6 Q15.6,1 13,1.2 Q8,5.2 -2,4.8 Q-9,4 -12,0 Z', '<ellipse cx="2" cy="4.4" rx="12" ry="3" fill="#E8F2FA"/>');
   s += P('M-1,-5.8 L-4,-10.4 L3,-5.8 Z', '#5A8AC0', 0.9) + P('M1,2.6 L-2,6.4 L4,3.4 Z', '#5A8AC0', 0.8);
-  s += E(9, -2, 0.9, 1.1, EYE, 0) + E(9.3, -2.4, 0.35, 0.35, '#FFFFFF', 0) + P('M11.4,0.6 Q13,1.4 14.6,0.6', 'none', 0.6) + E(8.4, 0.4, 1, 0.5, '#F7A8B0', 0);
+  s += eye(8.8, -2, 1.3, 'open') + P('M11.4,0.6 Q13,1.4 14.6,0.6', 'none', 0.6) + E(8.1, 0.5, 1.1, 0.55, '#F7A8B0', 0);
   s += '</g>';
   return s;
 }
@@ -707,7 +733,7 @@ function dolphin(n) {
 function whaleBack(n) {
   let s = `<ellipse cx="0" cy="-1" rx="56" ry="4" fill="#5E8EC0" fill-opacity="0.25"/>`;
   s += P('M-52,0 Q-30,-11.4 0,-12.4 Q34,-11.4 54,0 Z', '#4A6E9E') + clip(`wb${n}`, 'M-52,0 Q-30,-11.4 0,-12.4 Q34,-11.4 54,0 Z', '<ellipse cx="-6" cy="-10.8" rx="40" ry="3.4" fill="#6A8EBE"/>' + [-20, -6, 10].map(x => `<ellipse cx="${x}" cy="-6.4" rx="2" ry="1.2" fill="#3A5A86"/>`).join(''));
-  s += E(30, -6.2, 1.3, 1.5, EYE, 0) + E(30.4, -6.7, 0.5, 0.5, '#FFFFFF', 0) + P('M34,-3.6 Q38,-2.4 42,-3.6', 'none', 0.7);
+  s += eye(30, -5.4, 1.6, 'open') + E(28.6, -2.8, 1.7, 0.8, '#F7A8B0', 0) + P('M34,-3.6 Q38,-2.4 42,-3.6', 'none', 0.7);
   s += water(-40, -0.4, 10) + water(40, -0.4, 10);
   const h = n ? 7.4 : 5;
   s += [-3, 0, 3].map((dx, i) => thick(`M${16 + dx * 0.3},-11.6 Q${16 + dx},${r2(-11.6 - h * 0.6)} ${16 + dx * 2.2},${r2(-11.6 - h + i % 2)}`, 1.4, '#E8F6FF')).join('') + E(16, -11.6 - h, 3, 1.6, '#E8F6FF', 0.7);
