@@ -335,7 +335,9 @@ const taille = {
 };
 
 /* ---------- Bosquet ---------- */
-// Coupe : selon l'exemplaire, une pile de rondins, des souches et leurs jeunes pousses, ou un chevalet de sciage
+// Coupe : selon l'exemplaire, une pile de rondins moussus où sautille un rouge-gorge, le billot et sa hache ; des
+// souches à champignons, leurs jeunes pousses et un lapin qui bondit ; ou un chevalet où la scie va et vient dans le
+// rondin, la sciure qui tombe et les rondelles sciées. Sol de sous-bois : herbe, feuilles mortes, fougères, copeaux
 const coupe = {
   layers: [{
     frame: [-34, -40, 68, 56],
@@ -343,27 +345,53 @@ const coupe = {
     fps: 3,
     draw: (T, f, n, variant) => {
       const kind = variant % 3;
-      let out = patch(T, 0.42, '#B5A06A', '') + T.shadow(0, 0, 0.34, 0.16);
+      const [x, y] = T.p(0, 0, 0);
+      const fern = (du, dv, s, ph) => { const [fx, fy] = T.p(du, dv, 0); return [-1, 0, 1].map(i => { const a = i * 0.7 + wave(f, n, 0.08, ph); const ex = fx + Math.sin(a) * 7 * s, ey = fy - Math.cos(a) * 6 * s; let d = `M${f2(fx)},${f2(fy)} Q${f2((fx + ex) / 2 - i)},${f2((fy + ey) / 2 - 1)} ${f2(ex)},${f2(ey)}`; for (let j = 1; j < 4; j++) { const t = j / 4, px = fx + (ex - fx) * t, py = fy + (ey - fy) * t; d += ` M${f2(px)},${f2(py)} l${f2(-1.6 * s)},${f2(0.6 * s)} M${f2(px)},${f2(py)} l${f2(1.6 * s)},${f2(0.4 * s)}`; } return `<path d="${d}" stroke="${i ? '#5E8C3A' : '#7FAE4E'}" stroke-width="0.8" fill="none" stroke-linecap="round"/>`; }).join(''); };
+      const shroom = (sx, sy, s) => ln([sx, sy], [sx, sy - 2.4 * s], '#F2E8D4', 1.2 * s) + `<path d="M${f2(sx - 2.2 * s)},${f2(sy - 2.2 * s)} Q${f2(sx)},${f2(sy - 5 * s)} ${f2(sx + 2.2 * s)},${f2(sy - 2.2 * s)} Z" fill="#D9473A" stroke="${OUT}" stroke-width="0.4"/>` + dot(sx - 0.8 * s, sy - 3.2 * s, 0.4 * s, '#FFFFFF') + dot(sx + 0.8 * s, sy - 3.6 * s, 0.35 * s, '#FFFFFF');
+      // le sous-bois : herbe, feuilles mortes, copeaux
+      let out = ell(x, y + 1, 31, 12.6, '#8FB45E', ` stroke="${OUT}" stroke-width="0.5"`) + ell(x - 3, y, 21, 7.6, '#A7C66E')
+        + [[-20, 4, '#D9963A'], [16, 8, '#C8642E'], [22, -2, '#E2B347'], [-8, 9, '#C8642E'], [6, -8, '#D9963A']].map(([dx, dy, c], i) => `<path d="M${x + dx},${y + dy} q1.6,-1.6 3.2,0 q-1.6,1.4 -3.2,0 Z" fill="${c}" transform="rotate(${i * 40} ${x + dx + 1.6} ${y + dy})"/>`).join('')
+        + T.shadow(0, 0, 0.34, 0.16);
       for (const [du, dv] of [[-0.3, 0.22], [0.26, 0.3], [-0.1, -0.32], [0.32, -0.12]]) out += dot(...T.p(du, dv, 0), 0.9, '#E7C08A');
       if (kind === 0) {
-        out += log(T, -0.14, -0.26, 0.2, 3.6, 3.6) + log(T, 0.02, -0.26, 0.2, 3.6, 3.6) + log(T, 0.18, -0.26, 0.2, 3.6, 3.6)
+        out += fern(-0.4, -0.12, 0.9, 0)
+          + log(T, -0.14, -0.26, 0.2, 3.6, 3.6) + log(T, 0.02, -0.26, 0.2, 3.6, 3.6) + log(T, 0.18, -0.26, 0.2, 3.6, 3.6)
           + log(T, -0.06, -0.24, 0.18, 10.4, 3.5) + log(T, 0.1, -0.24, 0.18, 10.4, 3.5) + log(T, 0.02, -0.22, 0.16, 17, 3.4)
-          + stumpAt(T, 0.3, 0.28, 5, 0.07, 'st0')
-          + ln(T.p(0.3, 0.28, 5), T.p(0.27, 0.32, 14), WOOD.right, 1.4)
-          + poly([T.p(0.25, 0.3, 12), T.p(0.31, 0.3, 14), T.p(0.31, 0.3, 10)].map(([a, b]) => [a, b]), IRON.left);
+          + [[-0.12, -0.1, 6.6], [0.08, -0.06, 13.4], [0.2, 0.02, 6.4]].map(([du, dv, z]) => { const [mx, my] = T.p(du, dv, z); return ell(mx, my, 2.6, 1, '#7E9A52') + ell(mx - 0.6, my - 0.3, 1.2, 0.5, '#9DB86A'); }).join('')
+          + stumpAt(T, 0.3, 0.28, 5, 0.07, 'st0');
+        const [hx, hy] = T.p(0.3, 0.28, 5);
+        out += ln([hx + 0.6, hy - 1], [hx + 5.4, hy - 8.6], WOOD.right, 1.4)
+          + poly([[hx - 2.4, hy + 0.4], [hx + 1.6, hy - 2.2], [hx + 2.4, hy - 0.4], [hx - 1, hy + 1.6]], IRON.left, ` stroke="${OUT}" stroke-width="0.5" stroke-linejoin="round"`);
         const hop = f === 2 ? 1.5 : 0;
         const [rx, ry] = T.p(0.02, 0.16, 20.6);
-        out += bird(rx - 2, ry - hop, { body: '#8B5A3C', breast: '#E86A3A', wing: '#6E4428', peck: f === 4 ? 1 : 0 });
+        out += `<g transform="translate(${f2(rx - 2)} ${f2(ry)}) scale(.7) translate(${f2(2 - rx)} ${f2(-ry)})">` + bird(rx - 2, ry - hop, { body: '#8B5A3C', breast: '#E86A3A', wing: '#6E4428', peck: f === 4 ? 1 : 0 }) + '</g>';
       } else if (kind === 1) {
-        out += stumpAt(T, -0.2, -0.14, 6, 0.09, 'st1') + stumpAt(T, 0.18, -0.2, 4, 0.08, 'st2') + stumpAt(T, 0.06, 0.2, 5, 0.085, 'st3');
+        out += fern(0.38, -0.3, 0.8, 1) + fern(-0.42, 0.04, 0.9, 2)
+          + stumpAt(T, -0.2, -0.14, 6, 0.09, 'st1') + stumpAt(T, 0.18, -0.2, 4, 0.08, 'st2') + stumpAt(T, 0.06, 0.2, 5, 0.085, 'st3');
+        const [s1x, s1y] = T.p(-0.2, -0.04, 1.5), [s3x, s3y] = T.p(0.14, 0.26, 1);
+        out += shroom(s1x + 3, s1y, 0.9) + shroom(s1x + 5.6, s1y + 0.8, 0.7) + shroom(s3x + 2, s3y, 0.8);
         const sway = wave(f, n, 1.4);
         out += sapling(...T.p(-0.24, 0.2, 0), 0.9, sway) + sapling(...T.p(0.28, 0.06, 0), 0.75, wave(f, n, 1.2, 1.7));
+        // le lapin qui bondit d'une image sur deux
+        const [lx, ly] = T.p(-0.02 + (f % 3) * 0.04, 0.42, 0), up = f % 2 ? 2.4 : 0;
+        out += ell(lx, ly + 0.4, 3.6, 1, 'rgba(40,55,20,.22)')
+          + ell(lx, ly - 2.6 - up, 3.6, 2.6, '#C8B49A', ` stroke="${OUT}" stroke-width="0.5"`) + dot(lx - 3.4, ly - 3 - up, 1.2, '#FFFFFF')
+          + `<circle cx="${f2(lx + 3)}" cy="${f2(ly - 4.8 - up)}" r="2" fill="#C8B49A" stroke="${OUT}" stroke-width="0.5"/>`
+          + `<ellipse cx="${f2(lx + 2.2)}" cy="${f2(ly - 8.2 - up)}" rx="0.9" ry="2.4" fill="#C8B49A" stroke="${OUT}" stroke-width="0.4" transform="rotate(-12 ${f2(lx + 2.2)} ${f2(ly - 8.2 - up)})"/>`
+          + `<ellipse cx="${f2(lx + 3.6)}" cy="${f2(ly - 8)}" rx="0.9" ry="2.4" fill="#C8B49A" stroke="${OUT}" stroke-width="0.4" transform="rotate(14 ${f2(lx + 3.6)} ${f2(ly - 8)}) translate(0 ${f2(-up)})"/>`
+          + dot(lx + 3.8, ly - 5 - up, 0.4, '#2A2024') + dot(lx + 4.9, ly - 4.4 - up, 0.35, '#E58A8F');
       } else {
-        // Chevalet en X, rondin dessus, sciure et scie
+        // le chevalet en X, le rondin, la scie qui va et vient, la sciure, les rondelles sciées
+        out += fern(-0.4, 0.2, 0.9, 1.4);
         const legs = [-0.16, 0.16].map(dv => ln(T.p(-0.12, dv, 0), T.p(0.12, dv, 14), WOOD_DARK.right, 1.6) + ln(T.p(0.12, dv, 0), T.p(-0.12, dv, 14), WOOD_DARK.right, 1.6)).join('');
-        out += T.disc(0.18, 0.2, 0, 0.1, '#E9C990') + legs + log(T, 0, -0.3, 0.26, 14, 3.8)
-          + poly([T.p(0.24, 0.02, 2), T.p(0.36, -0.08, 2), T.p(0.36, -0.08, 7)], '#C9D0D8', ` stroke="${IRON.right}" stroke-width="0.5"`)
-          + dot(...T.p(0.18, 0.22, 2 + (f % 3)), 0.8, '#E7C08A');
+        out += T.disc(0.18, 0.2, 0, 0.1, '#E9C990') + legs + log(T, 0, -0.3, 0.26, 14, 3.8);
+        const s = Math.sin((f / n) * TAU) * 0.08;
+        const [ax, ay] = T.p(0.03, 0.1 + s, 15), [bx, by] = T.p(0.03, 0.34 + s, 22);
+        out += poly([[ax - 1, ay + 1.6], [bx - 1, by - 0.4], [bx + 1, by - 2.4], [ax + 1, ay - 0.4]], '#D4DAE2', ` stroke="${OUT}" stroke-width="0.5" stroke-linejoin="round"`)
+          + `<path d="M${f2(bx - 1)},${f2(by - 0.6)} l2.6,-4 l2,2.2 l-2.4,3.4 Z" fill="${WOOD.left}" stroke="${OUT}" stroke-width="0.5"/>`
+          + [0.2, 0.35, 0.5, 0.65, 0.8].map(t => { const px = ax - 1 + (bx - ax) * t, py = ay + 1.6 + (by - 0.4 - ay - 1.6) * t; return ln([px, py], [px + 0.5, py + 0.9], IRON.right, 0.5); }).join('')
+          + [0, 1, 2].map(i => { const t = ((f + i * 2) % n) / n; const [dx, dy] = T.p(0.04, 0.1, 13 - t * 12); return dot(dx + i - 1, dy, 0.6, '#E7C08A'); }).join('');
+        out += [[0.3, -0.24, 0], [0.36, -0.12, 0], [0.33, -0.18, 2.4]].map(([du, dv, z]) => { const [rx, ry] = T.p(du, dv, z); return ell(rx, ry - 1.2, 2.8, 1.4, '#E7C08A', ` stroke="${WOOD.right}" stroke-width="0.6"`) + ell(rx, ry - 1.2, 1.4, 0.7, 'none', ` stroke="rgba(150,92,48,.5)" stroke-width="0.4"`); }).join('');
       }
       return out;
     }
