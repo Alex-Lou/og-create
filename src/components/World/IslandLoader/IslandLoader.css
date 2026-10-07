@@ -1,0 +1,24 @@
+/* L'arrivée sur l'île : un voile de vélin et de brume par-dessus l'île, sous la barre d'onglets (on peut repartir) */
+.island-loader {
+  position: fixed; inset: 0; z-index: var(--z-loading);
+  display: grid; place-content: center; justify-items: center; gap: 12px; padding: 24px 16px;
+  background: radial-gradient(circle at 50% 38%, var(--vellum-50), var(--vellum-200) 62%, var(--vellum-300));
+  color: var(--ink-900); font-family: var(--font-ui); text-align: center;
+}
+.island-loader__wisp { filter: drop-shadow(0 6px 14px rgba(92, 200, 240, .35)); animation: island-loader-float 2.6s ease-in-out infinite; }
+.island-loader__title { margin: 0; font-family: var(--font-display); font-size: 20px; font-weight: 700; }
+.island-loader__bar { width: min(260px, 72vw); height: 8px; border-radius: var(--r-pill); background: rgba(var(--ink-900-rgb), .12); overflow: hidden; }
+.island-loader__bar span { display: block; height: 100%; border-radius: inherit; background: linear-gradient(90deg, #5cc8f0, #bff0ff); transition: width .25s ease-out; }
+.island-loader__steps { margin: 4px 0 0; padding: 0; list-style: none; display: grid; gap: 5px; width: min(300px, 84vw); }
+.island-loader__step { display: flex; justify-content: space-between; gap: 12px; color: var(--ink-500); font-size: 13px; font-weight: 700; transition: color .2s; }
+.island-loader__step.is-done { color: var(--ink-900); }
+.island-loader__count, .island-loader__mark { font-variant-numeric: tabular-nums; font-weight: 900; }
+.island-loader__step.is-done .island-loader__mark { color: #3f8a4a; }
+@keyframes island-loader-float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-6px); } }
+@media (prefers-reduced-motion: reduce) {
+  .island-loader__wisp { animation: none; }
+  .island-loader__bar span { transition: none; }
+}
+/* Entrée et sortie en fondu (App.vue : transition « island-loader ») */
+.island-loader-enter-active, .island-loader-leave-active { transition: opacity .3s ease; }
+.island-loader-enter-from, .island-loader-leave-to { opacity: 0; }

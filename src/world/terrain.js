@@ -547,6 +547,7 @@ export class TerrainCache {
     const b = this.bounds;
     if (res <= OVERVIEW_RES) {
       ctx.drawImage(this.overviewOf().canvas, b.x, b.y, b.w, b.h);
+      this.seen = 0;
       return 0;
     }
     const size = TILE_PX / res;
@@ -585,6 +586,8 @@ export class TerrainCache {
       if (tile.canvas) tile.canvas.width = tile.canvas.height = 0;
       this.tiles.delete(key);
     }
+    // (carrés à l'écran : le chargement de l'île compte ceux qui sont prêts)
+    this.seen = seen.size;
     return missing;
   }
 
