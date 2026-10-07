@@ -1,7 +1,7 @@
 // Carrière, paliers III à VII : Mine, Galerie, Puits de mine, Mine de cristal, Cité minière.
 // Places laissées libres pour la boutique : voie de la galerie le long de u ≈ −0.35 (× 1.5 dès le palier IV, le
 // wagonnet des Rails y roule), butoir au bout, lanterne à gauche, pioche et wagonnet devant.
-import { ROCKS, BUILDING_BOX, pebble, crystals, rockBox } from '../palette.js';
+import { ROCKS, BUILDING_BOX, pebble, crystals, rockBox, roofTexture } from '../palette.js';
 import { UPGRADES } from '../buildings2.js';
 import { sprite } from '../iso.js';
 import {
@@ -156,7 +156,8 @@ function cottage(u0, v0, u1, v1, z, roof, wall = PLASTER) {
     + face([[um - 0.06, v1, z], [um + 0.04, v1, z], [um + 0.04, v1, z + 10], [um - 0.06, v1, z + 10]], '#7A4E2C')
     + face([[u1, (v0 + v1) / 2 - 0.05, z + 6], [u1, (v0 + v1) / 2 + 0.05, z + 6], [u1, (v0 + v1) / 2 + 0.05, z + 12], [u1, (v0 + v1) / 2 - 0.05, z + 12]], '#FFE6A3')
     + box(u0 + 0.06, v0 + 0.04, u0 + 0.13, v0 + 0.11, z + h, z + h + 14, BRICK)
-    + gable(u0, v0, u1, v1, z + h, 11, { front: roof.front, back: roof.back, gable: wall.right }, 0.05);
+    + gable(u0, v0, u1, v1, z + h, 11, { front: roof.front, back: roof.back, gable: wall.right }, 0.05)
+    + roofTexture(roof === MINER_ROOF_2 ? 'toit-ardoise' : 'toit-rouge', u0, v0, u1, v1, z + h, 11, 0.05);
 }
 // Clocher des mineurs sur la falaise : tour carrée, abat-sons, cloche, toit pointu
 function belfry(u, v, z, roof) {
