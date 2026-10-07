@@ -1027,14 +1027,66 @@ const saline = {
     n: 6,
     fps: 2,
     draw: (T, f, n) => {
-      let out = T.shadow(0, 0, 0.42, 0.12);
-      for (const [u, v, c] of [[-0.22, -0.18, '#9AD6F0'], [0.18, -0.18, '#C9E9F5'], [-0.22, 0.18, '#E6F4FA'], [0.18, 0.18, '#9AD6F0']]) {
-        out += T.box(u - 0.17, v - 0.15, u + 0.17, v + 0.15, 0, 2.5, SALT) + T.face([[u - 0.14, v - 0.12, 2.6], [u + 0.14, v - 0.12, 2.6], [u + 0.14, v + 0.12, 2.6], [u - 0.14, v + 0.12, 2.6]], c);
-      }
-      const shine = Math.max(0, Math.sin((f / n) * TAU));
-      const heap = (du, dv, h) => { const [hx, hy] = T.p(du, dv, 2.6); return `<path d="M${hx - 7},${hy} Q${hx},${hy - h * 2} ${hx + 7},${hy} Z" fill="#FFFFFF" stroke="${SALT.right}" stroke-width="0.6"/>`; };
-      return out + heap(0.16, -0.16, 5) + heap(0.22, -0.2, 4) + star(...T.p(0.16, -0.16, 12), 2, '#FFFFFF', 0.3 + 0.7 * shine)
-        + ln(T.p(-0.3, 0.38, 0), T.p(-0.06, 0.2, 16), WOOD.right, 1.2) + ln(T.p(-0.08, 0.18, 16), T.p(-0.02, 0.24, 15), WOOD.right, 2);
+      const LEVEE = { top: '#DCCBA6', left: '#C2AC84', right: '#9E8864' };
+      const [x, y] = T.p(0, 0, 0);
+      // le sable des dunes et ses touffes d'oyat qui plient au vent
+      const oyat = (du, dv, s, ph) => { const [ox, oy] = T.p(du, dv, 0); return [-3, -1.5, 0, 1.6, 3].map((o, i) => `<path d="M${f2(ox + o * 0.4)},${f2(oy)} q${f2(o * 0.5)},${f2(-5 * s)} ${f2(o * 1.3 + wave(f, n, 0.7, ph + i * 0.5))},${f2(-(8 + (i % 2) * 2.5) * s)}" stroke="${i % 2 ? '#B7C27A' : '#8FA45A'}" stroke-width="0.9" fill="none" stroke-linecap="round"/>`).join(''); };
+      let out = ell(x, y - 1, 33, 12, '#EAD6A2', ` stroke="${OUT}" stroke-width="0.5"`) + ell(x - 5, y - 3, 22, 7, '#F3E4BC')
+        + [[-20, 5, 1], [24, 2, 0.9], [8, 9, 0.8]].map(([dx, dy, r]) => ell(x + dx, y + dy, r * 1.6, r, '#CDB27A')).join('')
+        + oyat(-0.46, -0.02, 0.9, 0);
+      // le mulon de sel au fond, la pelle plantée dedans, un grain qui scintille
+      const [hx, hy] = T.p(-0.36, -0.34, 0);
+      out += T.shadow(-0.36, -0.34, 0.13, 0.18)
+        + `<g transform="translate(${f2(hx)} ${f2(hy)}) scale(.72) translate(${f2(-hx)} ${f2(-hy)})">`
+        + ln([hx + 4, hy - 10], [hx + 9.6, hy - 27], WOOD.right, 1.7) + ln([hx + 7.6, hy - 27.6], [hx + 11.6, hy - 26.4], WOOD.right, 1.7)
+        + `<path d="M${hx - 15},${hy + 1} Q${hx - 9},${hy - 12} ${hx - 1},${hy - 21.6} Q${hx + 1},${hy - 23.2} ${hx + 3},${hy - 21.4} Q${hx + 10},${hy - 12} ${hx + 15},${hy + 1} Q${hx},${hy + 6} ${hx - 15},${hy + 1} Z" fill="#FFFFFF" stroke="${OUT}" stroke-width="0.7"/>`
+        + `<path d="M${hx + 3},${hy - 21.4} Q${hx + 10},${hy - 12} ${hx + 15},${hy + 1} Q${hx + 9},${hy + 4} ${hx + 4},${hy + 4.6} Q${hx + 6.6},${hy - 8} ${hx + 3},${hy - 21.4} Z" fill="#DDE5EE"/>`
+        + [[-9, -4], [-5, -10], [1, -6], [-11, -1], [6, -2], [-2, -15], [-6, 1]].map(([dx, dy]) => ln([hx + dx, hy + dy], [hx + dx + 1.4, hy + dy + 0.6], 'rgba(140,160,185,.55)', 0.5)).join('')
+        + `<path d="M${hx - 6},${hy - 14} q2,-2.6 4.4,-4.6" stroke="#FFFFFF" stroke-width="1.4" fill="none" stroke-linecap="round" opacity="0.9"/>`
+        + (([sx, sy]) => star(hx + sx, hy + sy, 2.4, '#FFFFFF', 0.5 + 0.5 * Math.abs(wave(f, n)) ) + star(hx + sx, hy + sy, 1.2, '#BFE6FF', 0.9))([[-5, -12], [3, -17], [8, -5]][f % 3]) + '</g>';
+      // le panier de sel du saunier et le las (râteau plat) appuyé dessus
+      const [bx, by] = T.p(-0.36, 0.14, 0);
+      out += `<g transform="translate(${f2(bx)} ${f2(by)}) scale(.8) translate(${f2(-bx)} ${f2(-by)})">` + ell(bx + 1, by + 0.6, 7, 2.4, 'rgba(40,55,20,.2)')
+        + `<path d="M${bx - 6},${by - 8} L${bx - 4.6},${by} Q${bx},${by + 2} ${bx + 4.6},${by} L${bx + 6},${by - 8} Z" fill="#C9A060" stroke="${OUT}" stroke-width="0.6"/>`
+        + [2.6, 5.2].map(d => `<path d="M${f2(bx - 6 + d * 0.27)},${f2(by - 8 + d)} Q${bx},${f2(by - 6 + d)} ${f2(bx + 6 - d * 0.27)},${f2(by - 8 + d)}" stroke="#A07838" stroke-width="0.6" fill="none"/>`).join('')
+        + [-3, 0, 3].map(o => ln([bx + o * 1.1, by - 7], [bx + o * 0.9, by + 0.8], 'rgba(120,85,40,.5)', 0.5)).join('')
+        + ell(bx, by - 8, 6, 2.2, '#A87C40', ` stroke="${OUT}" stroke-width="0.6"`)
+        + `<path d="M${bx - 5.2},${by - 8.4} Q${bx - 1},${by - 14.4} ${bx + 5.2},${by - 8.4} Q${bx},${by - 6.6} ${bx - 5.2},${by - 8.4} Z" fill="#FFFFFF" stroke="${SALT.right}" stroke-width="0.5"/>`
+        + ln([bx - 10, by + 2.4], [bx + 1.4, by - 16], WOOD.right, 1.3) + ln([bx - 9.6, by + 2], [bx + 1.6, by - 15.6], WOOD.top, 0.5)
+        + ln([bx - 14, by + 3.6], [bx - 6, by + 1.2], WOOD_DARK.right, 2.2) + '</g>';
+      // les bassins : un talus d'argile, quatre bassins creusés, de plus en plus salés
+      out += T.shadow(0.08, 0.08, 0.34, 0.12) + T.box(-0.2, -0.2, 0.36, 0.36, 0, 2.4, LEVEE);
+      const a = 0.12, z = 1.1;
+      [[-0.06, -0.06, '#7CC6EA'], [0.22, -0.06, '#A8DDE8'], [-0.06, 0.22, '#F1C3CB'], [0.22, 0.22, '#F4EFE6']].forEach(([u, v, c], k) => {
+        out += T.face([[u - a, v - a, 2.4], [u + a, v - a, 2.4], [u + a, v - a, z], [u - a, v - a, z]], LEVEE.left)
+          + T.face([[u - a, v - a, 2.4], [u - a, v + a, 2.4], [u - a, v + a, z], [u - a, v - a, z]], LEVEE.right)
+          + T.face([[u - a, v - a, z], [u + a, v - a, z], [u + a, v + a, z], [u - a, v + a, z]], c, ` stroke="rgba(60,40,25,.35)" stroke-width="0.4"`);
+        if (k < 3) {
+          // un reflet qui glisse sur l'eau
+          const t = ((f + k * 2) % n) / n, dv = -a * 0.6 + t * a * 1.2;
+          out += ln(T.p(u - a * 0.55, v + dv, z), T.p(u + a * 0.15, v + dv, z), 'rgba(255,255,255,.8)', 0.8)
+            + ln(T.p(u - a * 0.1, v + dv + a * 0.35, z), T.p(u + a * 0.4, v + dv + a * 0.35, z), 'rgba(255,255,255,.45)', 0.6);
+        } else {
+          // la croûte de sel : des cristaux et un petit tas ramassé au milieu
+          out += [[-0.06, -0.05], [0.05, -0.06], [-0.05, 0.05], [0.06, 0.04], [0, -0.02]].map(([du, dv]) => { const [cx, cy] = T.p(u + du, v + dv, z); return poly([[cx - 1.1, cy], [cx, cy - 0.6], [cx + 1.1, cy], [cx, cy + 0.6]], '#FFFFFF'); }).join('');
+          const [mx, my] = T.p(u + 0.01, v + 0.01, z);
+          out += `<path d="M${f2(mx - 4.4)},${f2(my + 0.6)} Q${f2(mx - 0.6)},${f2(my - 5.6)} ${f2(mx + 4.4)},${f2(my + 0.6)} Z" fill="#FFFFFF" stroke="${SALT.right}" stroke-width="0.5"/>`
+            + star(mx + 1, my - 3.6, 1.6, '#FFFFFF', f % 2 ? 1 : 0.4);
+        }
+      });
+      // la mouette sur le coin du talus ; elle picore une fois
+      const [gx, gy] = T.p(0.33, -0.17, 2.4);
+      const pk = f === 3 ? 1 : 0, hxg = gx + 4.2 + pk * 1.4, hyg = gy - 9.6 + pk * 4.6;
+      out += `<g transform="translate(${f2(gx)} ${f2(gy)}) scale(.62) translate(${f2(-gx)} ${f2(-gy)})">` + ell(gx, gy + 0.4, 4.6, 1.2, 'rgba(40,55,20,.2)')
+        + ln([gx - 0.8, gy - 3], [gx - 1, gy], '#E8923A', 0.7) + ln([gx + 1, gy - 3], [gx + 1.2, gy], '#E8923A', 0.7)
+        + `<path d="M${f2(gx - 6.4)},${f2(gy - 6.2)} Q${f2(gx - 3)},${f2(gy - 9.4)} ${f2(gx + 2)},${f2(gy - 8.6)} Q${f2(gx + 5)},${f2(gy - 7.6)} ${f2(gx + 3.6)},${f2(gy - 4.4)} Q${f2(gx)},${f2(gy - 2.4)} ${f2(gx - 3.6)},${f2(gy - 4)} Z" fill="#FFFFFF" stroke="${OUT}" stroke-width="0.5"/>`
+        + `<path d="M${f2(gx - 7.6)},${f2(gy - 6.6)} Q${f2(gx - 3)},${f2(gy - 9.2)} ${f2(gx + 2)},${f2(gy - 7.4)} Q${f2(gx - 1)},${f2(gy - 4.6)} ${f2(gx - 5)},${f2(gy - 5)} Z" fill="#AEB8C4" stroke="${OUT}" stroke-width="0.4"/>`
+        + `<path d="M${f2(gx - 7.6)},${f2(gy - 6.6)} l2.4,0.1 l-0.8,1.3 Z" fill="#2E3238"/>`
+        + ln([gx + 2.4, gy - 7.4], [hxg - 0.6, hyg + 1], OUT, 3.4) + ln([gx + 2.4, gy - 7.4], [hxg - 0.6, hyg + 1], '#FFFFFF', 2.4)
+        + `<circle cx="${f2(hxg)}" cy="${f2(hyg)}" r="2.2" fill="#FFFFFF" stroke="${OUT}" stroke-width="0.5"/>`
+        + `<path d="M${f2(hxg + 1.8)},${f2(hyg - 0.5)} l3,0.8 l-3,0.8 Z" fill="#F2C443" stroke="${OUT}" stroke-width="0.3"/>` + dot(hxg + 4, hyg + 0.6, 0.45, '#E2463A')
+        + dot(hxg + 0.7, hyg - 0.6, 0.5, '#2A2420') + '</g>';
+      return out + oyat(0.45, -0.4, 0.8, 1.6) + oyat(-0.44, 0.38, 1, 3);
     }
   }]
 };
