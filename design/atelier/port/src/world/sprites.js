@@ -6,7 +6,7 @@ import { P, TW, TH, face, box, gable, pyramid, disc, cylinder, shadow, foliage, 
 import {
   WOOD, WOOD_DARK, STONE, BRICK, ROOF_RED, THATCH, LEAVES, PINE, INK, BUILDING_BOX, PROP_BOX,
   pebble, doorLeft, windowRight, planksLeft, planksRight, roundTree,
-  WHITE_STONE, WHITE_WOOD, ROCKS, FOLIAGE, SAILS, roofOf, roofTexture, stoneCourses, seasonDots, crystals, rockBox, stoneRing, pool, cove, soilBed, furrow, leafPair, shingles
+  WHITE_STONE, WHITE_WOOD, ROCKS, FOLIAGE, SAILS, roofOf, roofTexture, stoneCourses, seasonDots, crystals, rockBox, stoneRing, pool, cove, soilBed, furrow, leafPair, shingles, roofTextureOf
 } from './palette.js';
 import { courseLeft, courseRight } from './tiers/kit.js';
 
@@ -214,7 +214,7 @@ function well(skin) {
     + `<line x1="${P(0, 0, 32)[0]}" y1="${P(0, 0, 32)[1]}" x2="${P(0, 0, 22)[0]}" y2="${P(0, 0, 22)[1]}" stroke="#7A5A3A" stroke-width="1.2"/>`
     + cylinder(0, 0, 16, 22, 0.08, { top: '#B98552', left: WOOD.left, right: WOOD.right }, 'bucketg')
     + gable(-0.5, -0.28, 0.5, 0.28, 40, 14, { front: roof.front, back: roof.back, gable: WOOD_DARK.right }, 0.06)
-    + roofTexture(skin, -0.5, -0.28, 0.5, 0.28, 40, 14, 0.06),
+    + roofTextureOf(skin, 'toit-rouge', -0.5, -0.28, 0.5, 0.28, 40, 14, 0.06),
     BUILDING_BOX
   );
 }

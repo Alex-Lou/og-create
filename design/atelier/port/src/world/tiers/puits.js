@@ -1,7 +1,7 @@
 // Puits, paliers III à VII : Lavoir, Bassin, Aqueduc, Moulin à eau, Fontaine de jouvence.
 // Places laissées libres pour la boutique : seau devant, potence à poulie sur le flanc droit au bord de l'eau,
 // abreuvoir et chèvre à l'avant gauche, pompe au coin droit (× 1.5 dès le palier IV).
-import { ROOF_RED, WHITE_STONE, BUILDING_BOX, roofOf, roofTexture, stoneCourses, stoneRing, pool } from '../palette.js';
+import { ROOF_RED, WHITE_STONE, BUILDING_BOX, roofOf, roofTextureOf, stoneCourses, stoneRing, pool } from '../palette.js';
 import { sprite } from '../iso.js';
 import {
   big, bigShadow, P, box, face, gable, cylinder, disc, f2, ln, dot, ell, OUT, STONE, WOOD, WOOD_DARK, GOLD,
@@ -60,7 +60,7 @@ function washhouse(skin) {
     + posts.slice(2).map(([u, v]) => box(u - 0.035, v - 0.035, u + 0.035, v + 0.035, 0, 32, WOOD_DARK)).join('')
     + box(u0 - 0.03, v0 - 0.03, u1 + 0.03, v1 + 0.03, 30, 32, WOOD)
     + gable(u0, v0, u1, v1, 32, 16, { front: roof.front, back: roof.back, gable: WOOD.right }, 0.08)
-    + roofTexture(skin, u0, v0, u1, v1, 32, 16, 0.08)
+    + roofTextureOf(skin, 'toit-rouge', u0, v0, u1, v1, 32, 16, 0.08)
     // Corde à linge à gauche (le linge est animé à part)
     + box(-0.93, -0.63, -0.89, -0.59, 0, 24, WOOD_DARK) + box(-0.93, 0.17, -0.89, 0.21, 0, 24, WOOD_DARK)
     + ln(P(-0.91, -0.61, 23), P(-0.91, 0.19, 23), '#C9A16A', 0.6),
@@ -160,7 +160,7 @@ function watermill(skin) {
     + [-1.15, -0.2].map(u => face([[u, v1, 34], [u + 0.18, v1, 34], [u + 0.18, v1, 44], [u, v1, 44]], '#FFE6A3', ' stroke="#FFFFFF" stroke-width="0.8"')).join('')
     + chimney(-1.05, -1.05, 52, 82)
     + gable(u0, v0, u1, v1, 50, 26, { front: roof.front, back: roof.back, gable: PLASTER.right }, 0.1)
-    + roofTexture(skin, u0, v0, u1, v1, 50, 26, 0.1)
+    + roofTextureOf(skin, 'toit-rouge', u0, v0, u1, v1, 50, 26, 0.1)
     // Canal de fuite et mare devant
     + face([[0.22, -0.55, 0.3], [0.62, -0.55, 0.3], [0.62, 0.2, 0.3], [0.22, 0.2, 0.3]], WATER)
     + basin(0.7, 8, stone, skin === 'pierre-blanche')
