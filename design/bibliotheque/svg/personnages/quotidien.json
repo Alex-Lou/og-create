@@ -1,7 +1,7 @@
 {
  "_lisez_moi": [
   "Lot L4 : tout le monde au grand format (le petit format est abandonné). Mêmes vues que la troupe : face, avant (vient vers le bas à droite), dos (s'éloigne vers le haut à droite) ; le miroir donne les deux autres directions. Pieds en (24, 62) dans le cadre 48 × 64.",
-  "Poses : marche (4 images, ~170 ms), repos (2 images : clignement), salut (2), travail (2, le geste du métier : maîtres et naufragés, sauf Galet et Sylve naufragés qui ont oublié leur don), assis (la veillée, 3 vues, 2 images : clignement ; le siège n'est pas dessiné, son dessus est à y = 53,6 du cadre, 8,4 au-dessus du bas des pieds, la même hauteur pour tous), mains-tendues et assis-mains-tendues (les mains tendues vers le feu, debout ou assis, 3 vues, 2 images : les doigts se réchauffent ; le feu est devant le personnage), applaudir et assis-applaudir (en riant, 3 vues, 2 images : mains écartées, puis le claquement), pecher (le mini-jeu de la pêche, debout, 3 vues, 2 images : le bouchon danse ; la canne, le fil et le bouchon restent dans le cadre), piocher (le mini-jeu de la mine, debout, 3 vues, 2 images : la pioche levée sur le côté, puis le coup sur la pierre posée au sol, éclats et étincelle), cueillir (le mini-jeu de la cueillette, debout, 3 vues, 2 images : un panier d'osier à la main, l'autre main cueille un fruit en haut, puis le dépose dans le panier), porter (debout, 3 vues, 2 images : une caisse de bois sur l'épaule droite à l'écran, la main dessous, l'autre bras ballant ; elle remonte d'un cran à l'image 2), reparer et assis-reparer (debout ou assis, 3 vues, 2 images : une planche tenue en travers, posée sur les genoux quand on est assis, le marteau levé puis le coup sur le clou), lanterne et parapluie (avant et dos, 4 images, en marchant), couche (dormir couché, 2 images ~900 ms).",
+  "Poses : marche (4 images, ~170 ms), repos (2 images : clignement), salut (2), travail (2, le geste du métier : maîtres et naufragés, sauf Galet et Sylve naufragés qui ont oublié leur don), assis (la veillée, 3 vues, 2 images : clignement ; le siège n'est pas dessiné, son dessus est à y = 53,6 du cadre, 8,4 au-dessus du bas des pieds, la même hauteur pour tous), mains-tendues et assis-mains-tendues (les mains tendues vers le feu, debout ou assis, 3 vues, 2 images : les doigts se réchauffent ; le feu est devant le personnage), applaudir et assis-applaudir (en riant, 3 vues, 2 images : mains écartées, puis le claquement), pecher (le mini-jeu de la pêche, debout, 3 vues, 2 images : le bouchon danse ; la canne, le fil et le bouchon restent dans le cadre), piocher (le mini-jeu de la mine, debout, 3 vues, 2 images : la pioche levée sur le côté, puis le coup sur la pierre posée au sol, éclats et étincelle), cueillir (le mini-jeu de la cueillette, debout, 3 vues, 2 images : un panier d'osier à la main, l'autre main cueille un fruit en haut, puis le dépose dans le panier), porter (debout, 3 vues, 2 images : une caisse de bois sur l'épaule droite à l'écran, la main dessous, l'autre bras ballant ; elle remonte d'un cran à l'image 2), reparer et assis-reparer (debout ou assis, 3 vues, 2 images : une planche tenue en travers, posée sur les genoux quand on est assis, le marteau levé puis le coup sur le clou), repousser (debout, 3 vues, 2 images : la main ouverte tendue vers une créature de la brume, devant le personnage, une onde claire et deux étincelles ; la main pousse un peu plus loin et l'onde s'élargit à l'image 2 ; jamais de coup), lanterne et parapluie (avant et dos, 4 images, en marchant), couche (dormir couché, 2 images ~900 ms).",
   "Cadres à part : parapluie [0, -18, 48, 82] (la toile passe au-dessus de la tête ; pieds toujours en (24, 62)) ; couche [0, 0, 64, 48] (allongé la tête à gauche, sous une couverture).",
   "Naufragés : lanterne et parapluie seulement pour Aster et Rivet, qui restent naufragés après la première lanterne. Visiteurs et nouveaux venus : tirés du générateur de l'avatar (choix notés ici, pour en refaire d'autres avec design/personnages/avatar.js) ; les nouveaux venus de l'épilogue arrivent en habits de voyage, une valise à la main, et n'ont pas de pose endormie.",
   "Noms rangés à l'assemblage (README, catalogue.json) : <sujet>_<vue>_<pose>_<n>.svg, vues face, avant (l'ancien « trois_quarts »), dos, profil ; les chemins ci-dessous suivent ces noms."
@@ -72,6 +72,10 @@
      "maitres/aster/aster_face_assis-reparer_1.svg",
      "maitres/aster/aster_face_assis-reparer_2.svg"
     ],
+    "face_repousser": [
+     "maitres/aster/aster_face_repousser_1.svg",
+     "maitres/aster/aster_face_repousser_2.svg"
+    ],
     "avant_marche": [
      "maitres/aster/aster_avant_marche_1.svg",
      "maitres/aster/aster_avant_marche_2.svg",
@@ -134,6 +138,10 @@
      "maitres/aster/aster_avant_assis-reparer_1.svg",
      "maitres/aster/aster_avant_assis-reparer_2.svg"
     ],
+    "avant_repousser": [
+     "maitres/aster/aster_avant_repousser_1.svg",
+     "maitres/aster/aster_avant_repousser_2.svg"
+    ],
     "dos_marche": [
      "maitres/aster/aster_dos_marche_1.svg",
      "maitres/aster/aster_dos_marche_2.svg",
@@ -195,6 +203,10 @@
     "dos_assis-reparer": [
      "maitres/aster/aster_dos_assis-reparer_1.svg",
      "maitres/aster/aster_dos_assis-reparer_2.svg"
+    ],
+    "dos_repousser": [
+     "maitres/aster/aster_dos_repousser_1.svg",
+     "maitres/aster/aster_dos_repousser_2.svg"
     ],
     "avant_lanterne": [
      "maitres/aster/aster_avant_lanterne_1.svg",
@@ -291,6 +303,10 @@
      "maitres/cannelle/cannelle_face_assis-reparer_1.svg",
      "maitres/cannelle/cannelle_face_assis-reparer_2.svg"
     ],
+    "face_repousser": [
+     "maitres/cannelle/cannelle_face_repousser_1.svg",
+     "maitres/cannelle/cannelle_face_repousser_2.svg"
+    ],
     "avant_marche": [
      "maitres/cannelle/cannelle_avant_marche_1.svg",
      "maitres/cannelle/cannelle_avant_marche_2.svg",
@@ -353,6 +369,10 @@
      "maitres/cannelle/cannelle_avant_assis-reparer_1.svg",
      "maitres/cannelle/cannelle_avant_assis-reparer_2.svg"
     ],
+    "avant_repousser": [
+     "maitres/cannelle/cannelle_avant_repousser_1.svg",
+     "maitres/cannelle/cannelle_avant_repousser_2.svg"
+    ],
     "dos_marche": [
      "maitres/cannelle/cannelle_dos_marche_1.svg",
      "maitres/cannelle/cannelle_dos_marche_2.svg",
@@ -414,6 +434,10 @@
     "dos_assis-reparer": [
      "maitres/cannelle/cannelle_dos_assis-reparer_1.svg",
      "maitres/cannelle/cannelle_dos_assis-reparer_2.svg"
+    ],
+    "dos_repousser": [
+     "maitres/cannelle/cannelle_dos_repousser_1.svg",
+     "maitres/cannelle/cannelle_dos_repousser_2.svg"
     ],
     "avant_lanterne": [
      "maitres/cannelle/cannelle_avant_lanterne_1.svg",
@@ -510,6 +534,10 @@
      "maitres/rivet/rivet_face_assis-reparer_1.svg",
      "maitres/rivet/rivet_face_assis-reparer_2.svg"
     ],
+    "face_repousser": [
+     "maitres/rivet/rivet_face_repousser_1.svg",
+     "maitres/rivet/rivet_face_repousser_2.svg"
+    ],
     "avant_marche": [
      "maitres/rivet/rivet_avant_marche_1.svg",
      "maitres/rivet/rivet_avant_marche_2.svg",
@@ -572,6 +600,10 @@
      "maitres/rivet/rivet_avant_assis-reparer_1.svg",
      "maitres/rivet/rivet_avant_assis-reparer_2.svg"
     ],
+    "avant_repousser": [
+     "maitres/rivet/rivet_avant_repousser_1.svg",
+     "maitres/rivet/rivet_avant_repousser_2.svg"
+    ],
     "dos_marche": [
      "maitres/rivet/rivet_dos_marche_1.svg",
      "maitres/rivet/rivet_dos_marche_2.svg",
@@ -633,6 +665,10 @@
     "dos_assis-reparer": [
      "maitres/rivet/rivet_dos_assis-reparer_1.svg",
      "maitres/rivet/rivet_dos_assis-reparer_2.svg"
+    ],
+    "dos_repousser": [
+     "maitres/rivet/rivet_dos_repousser_1.svg",
+     "maitres/rivet/rivet_dos_repousser_2.svg"
     ],
     "avant_lanterne": [
      "maitres/rivet/rivet_avant_lanterne_1.svg",
@@ -729,6 +765,10 @@
      "maitres/ondin/ondin_face_assis-reparer_1.svg",
      "maitres/ondin/ondin_face_assis-reparer_2.svg"
     ],
+    "face_repousser": [
+     "maitres/ondin/ondin_face_repousser_1.svg",
+     "maitres/ondin/ondin_face_repousser_2.svg"
+    ],
     "avant_marche": [
      "maitres/ondin/ondin_avant_marche_1.svg",
      "maitres/ondin/ondin_avant_marche_2.svg",
@@ -791,6 +831,10 @@
      "maitres/ondin/ondin_avant_assis-reparer_1.svg",
      "maitres/ondin/ondin_avant_assis-reparer_2.svg"
     ],
+    "avant_repousser": [
+     "maitres/ondin/ondin_avant_repousser_1.svg",
+     "maitres/ondin/ondin_avant_repousser_2.svg"
+    ],
     "dos_marche": [
      "maitres/ondin/ondin_dos_marche_1.svg",
      "maitres/ondin/ondin_dos_marche_2.svg",
@@ -852,6 +896,10 @@
     "dos_assis-reparer": [
      "maitres/ondin/ondin_dos_assis-reparer_1.svg",
      "maitres/ondin/ondin_dos_assis-reparer_2.svg"
+    ],
+    "dos_repousser": [
+     "maitres/ondin/ondin_dos_repousser_1.svg",
+     "maitres/ondin/ondin_dos_repousser_2.svg"
     ],
     "avant_lanterne": [
      "maitres/ondin/ondin_avant_lanterne_1.svg",
@@ -948,6 +996,10 @@
      "maitres/sylve/sylve_face_assis-reparer_1.svg",
      "maitres/sylve/sylve_face_assis-reparer_2.svg"
     ],
+    "face_repousser": [
+     "maitres/sylve/sylve_face_repousser_1.svg",
+     "maitres/sylve/sylve_face_repousser_2.svg"
+    ],
     "avant_marche": [
      "maitres/sylve/sylve_avant_marche_1.svg",
      "maitres/sylve/sylve_avant_marche_2.svg",
@@ -1010,6 +1062,10 @@
      "maitres/sylve/sylve_avant_assis-reparer_1.svg",
      "maitres/sylve/sylve_avant_assis-reparer_2.svg"
     ],
+    "avant_repousser": [
+     "maitres/sylve/sylve_avant_repousser_1.svg",
+     "maitres/sylve/sylve_avant_repousser_2.svg"
+    ],
     "dos_marche": [
      "maitres/sylve/sylve_dos_marche_1.svg",
      "maitres/sylve/sylve_dos_marche_2.svg",
@@ -1071,6 +1127,10 @@
     "dos_assis-reparer": [
      "maitres/sylve/sylve_dos_assis-reparer_1.svg",
      "maitres/sylve/sylve_dos_assis-reparer_2.svg"
+    ],
+    "dos_repousser": [
+     "maitres/sylve/sylve_dos_repousser_1.svg",
+     "maitres/sylve/sylve_dos_repousser_2.svg"
     ],
     "avant_lanterne": [
      "maitres/sylve/sylve_avant_lanterne_1.svg",
@@ -1167,6 +1227,10 @@
      "maitres/galet/galet_face_assis-reparer_1.svg",
      "maitres/galet/galet_face_assis-reparer_2.svg"
     ],
+    "face_repousser": [
+     "maitres/galet/galet_face_repousser_1.svg",
+     "maitres/galet/galet_face_repousser_2.svg"
+    ],
     "avant_marche": [
      "maitres/galet/galet_avant_marche_1.svg",
      "maitres/galet/galet_avant_marche_2.svg",
@@ -1229,6 +1293,10 @@
      "maitres/galet/galet_avant_assis-reparer_1.svg",
      "maitres/galet/galet_avant_assis-reparer_2.svg"
     ],
+    "avant_repousser": [
+     "maitres/galet/galet_avant_repousser_1.svg",
+     "maitres/galet/galet_avant_repousser_2.svg"
+    ],
     "dos_marche": [
      "maitres/galet/galet_dos_marche_1.svg",
      "maitres/galet/galet_dos_marche_2.svg",
@@ -1290,6 +1358,10 @@
     "dos_assis-reparer": [
      "maitres/galet/galet_dos_assis-reparer_1.svg",
      "maitres/galet/galet_dos_assis-reparer_2.svg"
+    ],
+    "dos_repousser": [
+     "maitres/galet/galet_dos_repousser_1.svg",
+     "maitres/galet/galet_dos_repousser_2.svg"
     ],
     "avant_lanterne": [
      "maitres/galet/galet_avant_lanterne_1.svg",
@@ -1386,6 +1458,10 @@
      "maitres/melisse/melisse_face_assis-reparer_1.svg",
      "maitres/melisse/melisse_face_assis-reparer_2.svg"
     ],
+    "face_repousser": [
+     "maitres/melisse/melisse_face_repousser_1.svg",
+     "maitres/melisse/melisse_face_repousser_2.svg"
+    ],
     "avant_marche": [
      "maitres/melisse/melisse_avant_marche_1.svg",
      "maitres/melisse/melisse_avant_marche_2.svg",
@@ -1448,6 +1524,10 @@
      "maitres/melisse/melisse_avant_assis-reparer_1.svg",
      "maitres/melisse/melisse_avant_assis-reparer_2.svg"
     ],
+    "avant_repousser": [
+     "maitres/melisse/melisse_avant_repousser_1.svg",
+     "maitres/melisse/melisse_avant_repousser_2.svg"
+    ],
     "dos_marche": [
      "maitres/melisse/melisse_dos_marche_1.svg",
      "maitres/melisse/melisse_dos_marche_2.svg",
@@ -1509,6 +1589,10 @@
     "dos_assis-reparer": [
      "maitres/melisse/melisse_dos_assis-reparer_1.svg",
      "maitres/melisse/melisse_dos_assis-reparer_2.svg"
+    ],
+    "dos_repousser": [
+     "maitres/melisse/melisse_dos_repousser_1.svg",
+     "maitres/melisse/melisse_dos_repousser_2.svg"
     ],
     "avant_lanterne": [
      "maitres/melisse/melisse_avant_lanterne_1.svg",
@@ -1607,6 +1691,10 @@
      "naufrages/aster/aster-naufrage_face_assis-reparer_1.svg",
      "naufrages/aster/aster-naufrage_face_assis-reparer_2.svg"
     ],
+    "face_repousser": [
+     "naufrages/aster/aster-naufrage_face_repousser_1.svg",
+     "naufrages/aster/aster-naufrage_face_repousser_2.svg"
+    ],
     "avant_marche": [
      "naufrages/aster/aster-naufrage_avant_marche_1.svg",
      "naufrages/aster/aster-naufrage_avant_marche_2.svg",
@@ -1669,6 +1757,10 @@
      "naufrages/aster/aster-naufrage_avant_assis-reparer_1.svg",
      "naufrages/aster/aster-naufrage_avant_assis-reparer_2.svg"
     ],
+    "avant_repousser": [
+     "naufrages/aster/aster-naufrage_avant_repousser_1.svg",
+     "naufrages/aster/aster-naufrage_avant_repousser_2.svg"
+    ],
     "dos_marche": [
      "naufrages/aster/aster-naufrage_dos_marche_1.svg",
      "naufrages/aster/aster-naufrage_dos_marche_2.svg",
@@ -1730,6 +1822,10 @@
     "dos_assis-reparer": [
      "naufrages/aster/aster-naufrage_dos_assis-reparer_1.svg",
      "naufrages/aster/aster-naufrage_dos_assis-reparer_2.svg"
+    ],
+    "dos_repousser": [
+     "naufrages/aster/aster-naufrage_dos_repousser_1.svg",
+     "naufrages/aster/aster-naufrage_dos_repousser_2.svg"
     ],
     "avant_lanterne": [
      "naufrages/aster/aster-naufrage_avant_lanterne_1.svg",
@@ -1826,6 +1922,10 @@
      "naufrages/cannelle/cannelle-naufrage_face_assis-reparer_1.svg",
      "naufrages/cannelle/cannelle-naufrage_face_assis-reparer_2.svg"
     ],
+    "face_repousser": [
+     "naufrages/cannelle/cannelle-naufrage_face_repousser_1.svg",
+     "naufrages/cannelle/cannelle-naufrage_face_repousser_2.svg"
+    ],
     "avant_marche": [
      "naufrages/cannelle/cannelle-naufrage_avant_marche_1.svg",
      "naufrages/cannelle/cannelle-naufrage_avant_marche_2.svg",
@@ -1888,6 +1988,10 @@
      "naufrages/cannelle/cannelle-naufrage_avant_assis-reparer_1.svg",
      "naufrages/cannelle/cannelle-naufrage_avant_assis-reparer_2.svg"
     ],
+    "avant_repousser": [
+     "naufrages/cannelle/cannelle-naufrage_avant_repousser_1.svg",
+     "naufrages/cannelle/cannelle-naufrage_avant_repousser_2.svg"
+    ],
     "dos_marche": [
      "naufrages/cannelle/cannelle-naufrage_dos_marche_1.svg",
      "naufrages/cannelle/cannelle-naufrage_dos_marche_2.svg",
@@ -1949,6 +2053,10 @@
     "dos_assis-reparer": [
      "naufrages/cannelle/cannelle-naufrage_dos_assis-reparer_1.svg",
      "naufrages/cannelle/cannelle-naufrage_dos_assis-reparer_2.svg"
+    ],
+    "dos_repousser": [
+     "naufrages/cannelle/cannelle-naufrage_dos_repousser_1.svg",
+     "naufrages/cannelle/cannelle-naufrage_dos_repousser_2.svg"
     ],
     "couche": [
      "naufrages/cannelle/cannelle-naufrage_couche_1.svg",
@@ -2021,6 +2129,10 @@
      "naufrages/rivet/rivet-naufrage_face_assis-reparer_1.svg",
      "naufrages/rivet/rivet-naufrage_face_assis-reparer_2.svg"
     ],
+    "face_repousser": [
+     "naufrages/rivet/rivet-naufrage_face_repousser_1.svg",
+     "naufrages/rivet/rivet-naufrage_face_repousser_2.svg"
+    ],
     "avant_marche": [
      "naufrages/rivet/rivet-naufrage_avant_marche_1.svg",
      "naufrages/rivet/rivet-naufrage_avant_marche_2.svg",
@@ -2083,6 +2195,10 @@
      "naufrages/rivet/rivet-naufrage_avant_assis-reparer_1.svg",
      "naufrages/rivet/rivet-naufrage_avant_assis-reparer_2.svg"
     ],
+    "avant_repousser": [
+     "naufrages/rivet/rivet-naufrage_avant_repousser_1.svg",
+     "naufrages/rivet/rivet-naufrage_avant_repousser_2.svg"
+    ],
     "dos_marche": [
      "naufrages/rivet/rivet-naufrage_dos_marche_1.svg",
      "naufrages/rivet/rivet-naufrage_dos_marche_2.svg",
@@ -2144,6 +2260,10 @@
     "dos_assis-reparer": [
      "naufrages/rivet/rivet-naufrage_dos_assis-reparer_1.svg",
      "naufrages/rivet/rivet-naufrage_dos_assis-reparer_2.svg"
+    ],
+    "dos_repousser": [
+     "naufrages/rivet/rivet-naufrage_dos_repousser_1.svg",
+     "naufrages/rivet/rivet-naufrage_dos_repousser_2.svg"
     ],
     "avant_lanterne": [
      "naufrages/rivet/rivet-naufrage_avant_lanterne_1.svg",
@@ -2240,6 +2360,10 @@
      "naufrages/ondin/ondin-naufrage_face_assis-reparer_1.svg",
      "naufrages/ondin/ondin-naufrage_face_assis-reparer_2.svg"
     ],
+    "face_repousser": [
+     "naufrages/ondin/ondin-naufrage_face_repousser_1.svg",
+     "naufrages/ondin/ondin-naufrage_face_repousser_2.svg"
+    ],
     "avant_marche": [
      "naufrages/ondin/ondin-naufrage_avant_marche_1.svg",
      "naufrages/ondin/ondin-naufrage_avant_marche_2.svg",
@@ -2302,6 +2426,10 @@
      "naufrages/ondin/ondin-naufrage_avant_assis-reparer_1.svg",
      "naufrages/ondin/ondin-naufrage_avant_assis-reparer_2.svg"
     ],
+    "avant_repousser": [
+     "naufrages/ondin/ondin-naufrage_avant_repousser_1.svg",
+     "naufrages/ondin/ondin-naufrage_avant_repousser_2.svg"
+    ],
     "dos_marche": [
      "naufrages/ondin/ondin-naufrage_dos_marche_1.svg",
      "naufrages/ondin/ondin-naufrage_dos_marche_2.svg",
@@ -2363,6 +2491,10 @@
     "dos_assis-reparer": [
      "naufrages/ondin/ondin-naufrage_dos_assis-reparer_1.svg",
      "naufrages/ondin/ondin-naufrage_dos_assis-reparer_2.svg"
+    ],
+    "dos_repousser": [
+     "naufrages/ondin/ondin-naufrage_dos_repousser_1.svg",
+     "naufrages/ondin/ondin-naufrage_dos_repousser_2.svg"
     ],
     "couche": [
      "naufrages/ondin/ondin-naufrage_couche_1.svg",
@@ -2431,6 +2563,10 @@
      "naufrages/sylve/sylve-naufrage_face_assis-reparer_1.svg",
      "naufrages/sylve/sylve-naufrage_face_assis-reparer_2.svg"
     ],
+    "face_repousser": [
+     "naufrages/sylve/sylve-naufrage_face_repousser_1.svg",
+     "naufrages/sylve/sylve-naufrage_face_repousser_2.svg"
+    ],
     "avant_marche": [
      "naufrages/sylve/sylve-naufrage_avant_marche_1.svg",
      "naufrages/sylve/sylve-naufrage_avant_marche_2.svg",
@@ -2489,6 +2625,10 @@
      "naufrages/sylve/sylve-naufrage_avant_assis-reparer_1.svg",
      "naufrages/sylve/sylve-naufrage_avant_assis-reparer_2.svg"
     ],
+    "avant_repousser": [
+     "naufrages/sylve/sylve-naufrage_avant_repousser_1.svg",
+     "naufrages/sylve/sylve-naufrage_avant_repousser_2.svg"
+    ],
     "dos_marche": [
      "naufrages/sylve/sylve-naufrage_dos_marche_1.svg",
      "naufrages/sylve/sylve-naufrage_dos_marche_2.svg",
@@ -2546,6 +2686,10 @@
     "dos_assis-reparer": [
      "naufrages/sylve/sylve-naufrage_dos_assis-reparer_1.svg",
      "naufrages/sylve/sylve-naufrage_dos_assis-reparer_2.svg"
+    ],
+    "dos_repousser": [
+     "naufrages/sylve/sylve-naufrage_dos_repousser_1.svg",
+     "naufrages/sylve/sylve-naufrage_dos_repousser_2.svg"
     ],
     "couche": [
      "naufrages/sylve/sylve-naufrage_couche_1.svg",
@@ -2614,6 +2758,10 @@
      "naufrages/galet/galet-naufrage_face_assis-reparer_1.svg",
      "naufrages/galet/galet-naufrage_face_assis-reparer_2.svg"
     ],
+    "face_repousser": [
+     "naufrages/galet/galet-naufrage_face_repousser_1.svg",
+     "naufrages/galet/galet-naufrage_face_repousser_2.svg"
+    ],
     "avant_marche": [
      "naufrages/galet/galet-naufrage_avant_marche_1.svg",
      "naufrages/galet/galet-naufrage_avant_marche_2.svg",
@@ -2672,6 +2820,10 @@
      "naufrages/galet/galet-naufrage_avant_assis-reparer_1.svg",
      "naufrages/galet/galet-naufrage_avant_assis-reparer_2.svg"
     ],
+    "avant_repousser": [
+     "naufrages/galet/galet-naufrage_avant_repousser_1.svg",
+     "naufrages/galet/galet-naufrage_avant_repousser_2.svg"
+    ],
     "dos_marche": [
      "naufrages/galet/galet-naufrage_dos_marche_1.svg",
      "naufrages/galet/galet-naufrage_dos_marche_2.svg",
@@ -2729,6 +2881,10 @@
     "dos_assis-reparer": [
      "naufrages/galet/galet-naufrage_dos_assis-reparer_1.svg",
      "naufrages/galet/galet-naufrage_dos_assis-reparer_2.svg"
+    ],
+    "dos_repousser": [
+     "naufrages/galet/galet-naufrage_dos_repousser_1.svg",
+     "naufrages/galet/galet-naufrage_dos_repousser_2.svg"
     ],
     "couche": [
      "naufrages/galet/galet-naufrage_couche_1.svg",
@@ -2801,6 +2957,10 @@
      "naufrages/melisse/melisse-naufrage_face_assis-reparer_1.svg",
      "naufrages/melisse/melisse-naufrage_face_assis-reparer_2.svg"
     ],
+    "face_repousser": [
+     "naufrages/melisse/melisse-naufrage_face_repousser_1.svg",
+     "naufrages/melisse/melisse-naufrage_face_repousser_2.svg"
+    ],
     "avant_marche": [
      "naufrages/melisse/melisse-naufrage_avant_marche_1.svg",
      "naufrages/melisse/melisse-naufrage_avant_marche_2.svg",
@@ -2863,6 +3023,10 @@
      "naufrages/melisse/melisse-naufrage_avant_assis-reparer_1.svg",
      "naufrages/melisse/melisse-naufrage_avant_assis-reparer_2.svg"
     ],
+    "avant_repousser": [
+     "naufrages/melisse/melisse-naufrage_avant_repousser_1.svg",
+     "naufrages/melisse/melisse-naufrage_avant_repousser_2.svg"
+    ],
     "dos_marche": [
      "naufrages/melisse/melisse-naufrage_dos_marche_1.svg",
      "naufrages/melisse/melisse-naufrage_dos_marche_2.svg",
@@ -2924,6 +3088,10 @@
     "dos_assis-reparer": [
      "naufrages/melisse/melisse-naufrage_dos_assis-reparer_1.svg",
      "naufrages/melisse/melisse-naufrage_dos_assis-reparer_2.svg"
+    ],
+    "dos_repousser": [
+     "naufrages/melisse/melisse-naufrage_dos_repousser_1.svg",
+     "naufrages/melisse/melisse-naufrage_dos_repousser_2.svg"
     ],
     "couche": [
      "naufrages/melisse/melisse-naufrage_couche_1.svg",
@@ -3032,6 +3200,10 @@
      "visiteurs/visiteur-01/visiteur-01_face_assis-reparer_1.svg",
      "visiteurs/visiteur-01/visiteur-01_face_assis-reparer_2.svg"
     ],
+    "face_repousser": [
+     "visiteurs/visiteur-01/visiteur-01_face_repousser_1.svg",
+     "visiteurs/visiteur-01/visiteur-01_face_repousser_2.svg"
+    ],
     "avant_marche": [
      "visiteurs/visiteur-01/visiteur-01_avant_marche_1.svg",
      "visiteurs/visiteur-01/visiteur-01_avant_marche_2.svg",
@@ -3090,6 +3262,10 @@
      "visiteurs/visiteur-01/visiteur-01_avant_assis-reparer_1.svg",
      "visiteurs/visiteur-01/visiteur-01_avant_assis-reparer_2.svg"
     ],
+    "avant_repousser": [
+     "visiteurs/visiteur-01/visiteur-01_avant_repousser_1.svg",
+     "visiteurs/visiteur-01/visiteur-01_avant_repousser_2.svg"
+    ],
     "dos_marche": [
      "visiteurs/visiteur-01/visiteur-01_dos_marche_1.svg",
      "visiteurs/visiteur-01/visiteur-01_dos_marche_2.svg",
@@ -3147,6 +3323,10 @@
     "dos_assis-reparer": [
      "visiteurs/visiteur-01/visiteur-01_dos_assis-reparer_1.svg",
      "visiteurs/visiteur-01/visiteur-01_dos_assis-reparer_2.svg"
+    ],
+    "dos_repousser": [
+     "visiteurs/visiteur-01/visiteur-01_dos_repousser_1.svg",
+     "visiteurs/visiteur-01/visiteur-01_dos_repousser_2.svg"
     ],
     "avant_lanterne": [
      "visiteurs/visiteur-01/visiteur-01_avant_lanterne_1.svg",
@@ -3271,6 +3451,10 @@
      "visiteurs/visiteur-02/visiteur-02_face_assis-reparer_1.svg",
      "visiteurs/visiteur-02/visiteur-02_face_assis-reparer_2.svg"
     ],
+    "face_repousser": [
+     "visiteurs/visiteur-02/visiteur-02_face_repousser_1.svg",
+     "visiteurs/visiteur-02/visiteur-02_face_repousser_2.svg"
+    ],
     "avant_marche": [
      "visiteurs/visiteur-02/visiteur-02_avant_marche_1.svg",
      "visiteurs/visiteur-02/visiteur-02_avant_marche_2.svg",
@@ -3329,6 +3513,10 @@
      "visiteurs/visiteur-02/visiteur-02_avant_assis-reparer_1.svg",
      "visiteurs/visiteur-02/visiteur-02_avant_assis-reparer_2.svg"
     ],
+    "avant_repousser": [
+     "visiteurs/visiteur-02/visiteur-02_avant_repousser_1.svg",
+     "visiteurs/visiteur-02/visiteur-02_avant_repousser_2.svg"
+    ],
     "dos_marche": [
      "visiteurs/visiteur-02/visiteur-02_dos_marche_1.svg",
      "visiteurs/visiteur-02/visiteur-02_dos_marche_2.svg",
@@ -3386,6 +3574,10 @@
     "dos_assis-reparer": [
      "visiteurs/visiteur-02/visiteur-02_dos_assis-reparer_1.svg",
      "visiteurs/visiteur-02/visiteur-02_dos_assis-reparer_2.svg"
+    ],
+    "dos_repousser": [
+     "visiteurs/visiteur-02/visiteur-02_dos_repousser_1.svg",
+     "visiteurs/visiteur-02/visiteur-02_dos_repousser_2.svg"
     ],
     "avant_lanterne": [
      "visiteurs/visiteur-02/visiteur-02_avant_lanterne_1.svg",
@@ -3510,6 +3702,10 @@
      "visiteurs/visiteur-03/visiteur-03_face_assis-reparer_1.svg",
      "visiteurs/visiteur-03/visiteur-03_face_assis-reparer_2.svg"
     ],
+    "face_repousser": [
+     "visiteurs/visiteur-03/visiteur-03_face_repousser_1.svg",
+     "visiteurs/visiteur-03/visiteur-03_face_repousser_2.svg"
+    ],
     "avant_marche": [
      "visiteurs/visiteur-03/visiteur-03_avant_marche_1.svg",
      "visiteurs/visiteur-03/visiteur-03_avant_marche_2.svg",
@@ -3568,6 +3764,10 @@
      "visiteurs/visiteur-03/visiteur-03_avant_assis-reparer_1.svg",
      "visiteurs/visiteur-03/visiteur-03_avant_assis-reparer_2.svg"
     ],
+    "avant_repousser": [
+     "visiteurs/visiteur-03/visiteur-03_avant_repousser_1.svg",
+     "visiteurs/visiteur-03/visiteur-03_avant_repousser_2.svg"
+    ],
     "dos_marche": [
      "visiteurs/visiteur-03/visiteur-03_dos_marche_1.svg",
      "visiteurs/visiteur-03/visiteur-03_dos_marche_2.svg",
@@ -3625,6 +3825,10 @@
     "dos_assis-reparer": [
      "visiteurs/visiteur-03/visiteur-03_dos_assis-reparer_1.svg",
      "visiteurs/visiteur-03/visiteur-03_dos_assis-reparer_2.svg"
+    ],
+    "dos_repousser": [
+     "visiteurs/visiteur-03/visiteur-03_dos_repousser_1.svg",
+     "visiteurs/visiteur-03/visiteur-03_dos_repousser_2.svg"
     ],
     "avant_lanterne": [
      "visiteurs/visiteur-03/visiteur-03_avant_lanterne_1.svg",
@@ -3755,6 +3959,10 @@
      "visiteurs/visiteur-04/visiteur-04_face_assis-reparer_1.svg",
      "visiteurs/visiteur-04/visiteur-04_face_assis-reparer_2.svg"
     ],
+    "face_repousser": [
+     "visiteurs/visiteur-04/visiteur-04_face_repousser_1.svg",
+     "visiteurs/visiteur-04/visiteur-04_face_repousser_2.svg"
+    ],
     "avant_marche": [
      "visiteurs/visiteur-04/visiteur-04_avant_marche_1.svg",
      "visiteurs/visiteur-04/visiteur-04_avant_marche_2.svg",
@@ -3813,6 +4021,10 @@
      "visiteurs/visiteur-04/visiteur-04_avant_assis-reparer_1.svg",
      "visiteurs/visiteur-04/visiteur-04_avant_assis-reparer_2.svg"
     ],
+    "avant_repousser": [
+     "visiteurs/visiteur-04/visiteur-04_avant_repousser_1.svg",
+     "visiteurs/visiteur-04/visiteur-04_avant_repousser_2.svg"
+    ],
     "dos_marche": [
      "visiteurs/visiteur-04/visiteur-04_dos_marche_1.svg",
      "visiteurs/visiteur-04/visiteur-04_dos_marche_2.svg",
@@ -3870,6 +4082,10 @@
     "dos_assis-reparer": [
      "visiteurs/visiteur-04/visiteur-04_dos_assis-reparer_1.svg",
      "visiteurs/visiteur-04/visiteur-04_dos_assis-reparer_2.svg"
+    ],
+    "dos_repousser": [
+     "visiteurs/visiteur-04/visiteur-04_dos_repousser_1.svg",
+     "visiteurs/visiteur-04/visiteur-04_dos_repousser_2.svg"
     ],
     "avant_lanterne": [
      "visiteurs/visiteur-04/visiteur-04_avant_lanterne_1.svg",
@@ -3987,6 +4203,10 @@
      "visiteurs/visiteur-05/visiteur-05_face_assis-reparer_1.svg",
      "visiteurs/visiteur-05/visiteur-05_face_assis-reparer_2.svg"
     ],
+    "face_repousser": [
+     "visiteurs/visiteur-05/visiteur-05_face_repousser_1.svg",
+     "visiteurs/visiteur-05/visiteur-05_face_repousser_2.svg"
+    ],
     "avant_marche": [
      "visiteurs/visiteur-05/visiteur-05_avant_marche_1.svg",
      "visiteurs/visiteur-05/visiteur-05_avant_marche_2.svg",
@@ -4045,6 +4265,10 @@
      "visiteurs/visiteur-05/visiteur-05_avant_assis-reparer_1.svg",
      "visiteurs/visiteur-05/visiteur-05_avant_assis-reparer_2.svg"
     ],
+    "avant_repousser": [
+     "visiteurs/visiteur-05/visiteur-05_avant_repousser_1.svg",
+     "visiteurs/visiteur-05/visiteur-05_avant_repousser_2.svg"
+    ],
     "dos_marche": [
      "visiteurs/visiteur-05/visiteur-05_dos_marche_1.svg",
      "visiteurs/visiteur-05/visiteur-05_dos_marche_2.svg",
@@ -4102,6 +4326,10 @@
     "dos_assis-reparer": [
      "visiteurs/visiteur-05/visiteur-05_dos_assis-reparer_1.svg",
      "visiteurs/visiteur-05/visiteur-05_dos_assis-reparer_2.svg"
+    ],
+    "dos_repousser": [
+     "visiteurs/visiteur-05/visiteur-05_dos_repousser_1.svg",
+     "visiteurs/visiteur-05/visiteur-05_dos_repousser_2.svg"
     ],
     "avant_lanterne": [
      "visiteurs/visiteur-05/visiteur-05_avant_lanterne_1.svg",
@@ -4219,6 +4447,10 @@
      "visiteurs/visiteur-06/visiteur-06_face_assis-reparer_1.svg",
      "visiteurs/visiteur-06/visiteur-06_face_assis-reparer_2.svg"
     ],
+    "face_repousser": [
+     "visiteurs/visiteur-06/visiteur-06_face_repousser_1.svg",
+     "visiteurs/visiteur-06/visiteur-06_face_repousser_2.svg"
+    ],
     "avant_marche": [
      "visiteurs/visiteur-06/visiteur-06_avant_marche_1.svg",
      "visiteurs/visiteur-06/visiteur-06_avant_marche_2.svg",
@@ -4277,6 +4509,10 @@
      "visiteurs/visiteur-06/visiteur-06_avant_assis-reparer_1.svg",
      "visiteurs/visiteur-06/visiteur-06_avant_assis-reparer_2.svg"
     ],
+    "avant_repousser": [
+     "visiteurs/visiteur-06/visiteur-06_avant_repousser_1.svg",
+     "visiteurs/visiteur-06/visiteur-06_avant_repousser_2.svg"
+    ],
     "dos_marche": [
      "visiteurs/visiteur-06/visiteur-06_dos_marche_1.svg",
      "visiteurs/visiteur-06/visiteur-06_dos_marche_2.svg",
@@ -4334,6 +4570,10 @@
     "dos_assis-reparer": [
      "visiteurs/visiteur-06/visiteur-06_dos_assis-reparer_1.svg",
      "visiteurs/visiteur-06/visiteur-06_dos_assis-reparer_2.svg"
+    ],
+    "dos_repousser": [
+     "visiteurs/visiteur-06/visiteur-06_dos_repousser_1.svg",
+     "visiteurs/visiteur-06/visiteur-06_dos_repousser_2.svg"
     ],
     "avant_lanterne": [
      "visiteurs/visiteur-06/visiteur-06_avant_lanterne_1.svg",
@@ -4451,6 +4691,10 @@
      "visiteurs/visiteur-07/visiteur-07_face_assis-reparer_1.svg",
      "visiteurs/visiteur-07/visiteur-07_face_assis-reparer_2.svg"
     ],
+    "face_repousser": [
+     "visiteurs/visiteur-07/visiteur-07_face_repousser_1.svg",
+     "visiteurs/visiteur-07/visiteur-07_face_repousser_2.svg"
+    ],
     "avant_marche": [
      "visiteurs/visiteur-07/visiteur-07_avant_marche_1.svg",
      "visiteurs/visiteur-07/visiteur-07_avant_marche_2.svg",
@@ -4509,6 +4753,10 @@
      "visiteurs/visiteur-07/visiteur-07_avant_assis-reparer_1.svg",
      "visiteurs/visiteur-07/visiteur-07_avant_assis-reparer_2.svg"
     ],
+    "avant_repousser": [
+     "visiteurs/visiteur-07/visiteur-07_avant_repousser_1.svg",
+     "visiteurs/visiteur-07/visiteur-07_avant_repousser_2.svg"
+    ],
     "dos_marche": [
      "visiteurs/visiteur-07/visiteur-07_dos_marche_1.svg",
      "visiteurs/visiteur-07/visiteur-07_dos_marche_2.svg",
@@ -4566,6 +4814,10 @@
     "dos_assis-reparer": [
      "visiteurs/visiteur-07/visiteur-07_dos_assis-reparer_1.svg",
      "visiteurs/visiteur-07/visiteur-07_dos_assis-reparer_2.svg"
+    ],
+    "dos_repousser": [
+     "visiteurs/visiteur-07/visiteur-07_dos_repousser_1.svg",
+     "visiteurs/visiteur-07/visiteur-07_dos_repousser_2.svg"
     ],
     "avant_lanterne": [
      "visiteurs/visiteur-07/visiteur-07_avant_lanterne_1.svg",
@@ -4683,6 +4935,10 @@
      "visiteurs/visiteur-08/visiteur-08_face_assis-reparer_1.svg",
      "visiteurs/visiteur-08/visiteur-08_face_assis-reparer_2.svg"
     ],
+    "face_repousser": [
+     "visiteurs/visiteur-08/visiteur-08_face_repousser_1.svg",
+     "visiteurs/visiteur-08/visiteur-08_face_repousser_2.svg"
+    ],
     "avant_marche": [
      "visiteurs/visiteur-08/visiteur-08_avant_marche_1.svg",
      "visiteurs/visiteur-08/visiteur-08_avant_marche_2.svg",
@@ -4741,6 +4997,10 @@
      "visiteurs/visiteur-08/visiteur-08_avant_assis-reparer_1.svg",
      "visiteurs/visiteur-08/visiteur-08_avant_assis-reparer_2.svg"
     ],
+    "avant_repousser": [
+     "visiteurs/visiteur-08/visiteur-08_avant_repousser_1.svg",
+     "visiteurs/visiteur-08/visiteur-08_avant_repousser_2.svg"
+    ],
     "dos_marche": [
      "visiteurs/visiteur-08/visiteur-08_dos_marche_1.svg",
      "visiteurs/visiteur-08/visiteur-08_dos_marche_2.svg",
@@ -4798,6 +5058,10 @@
     "dos_assis-reparer": [
      "visiteurs/visiteur-08/visiteur-08_dos_assis-reparer_1.svg",
      "visiteurs/visiteur-08/visiteur-08_dos_assis-reparer_2.svg"
+    ],
+    "dos_repousser": [
+     "visiteurs/visiteur-08/visiteur-08_dos_repousser_1.svg",
+     "visiteurs/visiteur-08/visiteur-08_dos_repousser_2.svg"
     ],
     "avant_lanterne": [
      "visiteurs/visiteur-08/visiteur-08_avant_lanterne_1.svg",
@@ -4922,6 +5186,10 @@
      "visiteurs/visiteur-09/visiteur-09_face_assis-reparer_1.svg",
      "visiteurs/visiteur-09/visiteur-09_face_assis-reparer_2.svg"
     ],
+    "face_repousser": [
+     "visiteurs/visiteur-09/visiteur-09_face_repousser_1.svg",
+     "visiteurs/visiteur-09/visiteur-09_face_repousser_2.svg"
+    ],
     "avant_marche": [
      "visiteurs/visiteur-09/visiteur-09_avant_marche_1.svg",
      "visiteurs/visiteur-09/visiteur-09_avant_marche_2.svg",
@@ -4980,6 +5248,10 @@
      "visiteurs/visiteur-09/visiteur-09_avant_assis-reparer_1.svg",
      "visiteurs/visiteur-09/visiteur-09_avant_assis-reparer_2.svg"
     ],
+    "avant_repousser": [
+     "visiteurs/visiteur-09/visiteur-09_avant_repousser_1.svg",
+     "visiteurs/visiteur-09/visiteur-09_avant_repousser_2.svg"
+    ],
     "dos_marche": [
      "visiteurs/visiteur-09/visiteur-09_dos_marche_1.svg",
      "visiteurs/visiteur-09/visiteur-09_dos_marche_2.svg",
@@ -5037,6 +5309,10 @@
     "dos_assis-reparer": [
      "visiteurs/visiteur-09/visiteur-09_dos_assis-reparer_1.svg",
      "visiteurs/visiteur-09/visiteur-09_dos_assis-reparer_2.svg"
+    ],
+    "dos_repousser": [
+     "visiteurs/visiteur-09/visiteur-09_dos_repousser_1.svg",
+     "visiteurs/visiteur-09/visiteur-09_dos_repousser_2.svg"
     ],
     "avant_lanterne": [
      "visiteurs/visiteur-09/visiteur-09_avant_lanterne_1.svg",
@@ -5154,6 +5430,10 @@
      "visiteurs/visiteur-10/visiteur-10_face_assis-reparer_1.svg",
      "visiteurs/visiteur-10/visiteur-10_face_assis-reparer_2.svg"
     ],
+    "face_repousser": [
+     "visiteurs/visiteur-10/visiteur-10_face_repousser_1.svg",
+     "visiteurs/visiteur-10/visiteur-10_face_repousser_2.svg"
+    ],
     "avant_marche": [
      "visiteurs/visiteur-10/visiteur-10_avant_marche_1.svg",
      "visiteurs/visiteur-10/visiteur-10_avant_marche_2.svg",
@@ -5212,6 +5492,10 @@
      "visiteurs/visiteur-10/visiteur-10_avant_assis-reparer_1.svg",
      "visiteurs/visiteur-10/visiteur-10_avant_assis-reparer_2.svg"
     ],
+    "avant_repousser": [
+     "visiteurs/visiteur-10/visiteur-10_avant_repousser_1.svg",
+     "visiteurs/visiteur-10/visiteur-10_avant_repousser_2.svg"
+    ],
     "dos_marche": [
      "visiteurs/visiteur-10/visiteur-10_dos_marche_1.svg",
      "visiteurs/visiteur-10/visiteur-10_dos_marche_2.svg",
@@ -5269,6 +5553,10 @@
     "dos_assis-reparer": [
      "visiteurs/visiteur-10/visiteur-10_dos_assis-reparer_1.svg",
      "visiteurs/visiteur-10/visiteur-10_dos_assis-reparer_2.svg"
+    ],
+    "dos_repousser": [
+     "visiteurs/visiteur-10/visiteur-10_dos_repousser_1.svg",
+     "visiteurs/visiteur-10/visiteur-10_dos_repousser_2.svg"
     ],
     "avant_lanterne": [
      "visiteurs/visiteur-10/visiteur-10_avant_lanterne_1.svg",
@@ -5386,6 +5674,10 @@
      "visiteurs/visiteur-11/visiteur-11_face_assis-reparer_1.svg",
      "visiteurs/visiteur-11/visiteur-11_face_assis-reparer_2.svg"
     ],
+    "face_repousser": [
+     "visiteurs/visiteur-11/visiteur-11_face_repousser_1.svg",
+     "visiteurs/visiteur-11/visiteur-11_face_repousser_2.svg"
+    ],
     "avant_marche": [
      "visiteurs/visiteur-11/visiteur-11_avant_marche_1.svg",
      "visiteurs/visiteur-11/visiteur-11_avant_marche_2.svg",
@@ -5444,6 +5736,10 @@
      "visiteurs/visiteur-11/visiteur-11_avant_assis-reparer_1.svg",
      "visiteurs/visiteur-11/visiteur-11_avant_assis-reparer_2.svg"
     ],
+    "avant_repousser": [
+     "visiteurs/visiteur-11/visiteur-11_avant_repousser_1.svg",
+     "visiteurs/visiteur-11/visiteur-11_avant_repousser_2.svg"
+    ],
     "dos_marche": [
      "visiteurs/visiteur-11/visiteur-11_dos_marche_1.svg",
      "visiteurs/visiteur-11/visiteur-11_dos_marche_2.svg",
@@ -5501,6 +5797,10 @@
     "dos_assis-reparer": [
      "visiteurs/visiteur-11/visiteur-11_dos_assis-reparer_1.svg",
      "visiteurs/visiteur-11/visiteur-11_dos_assis-reparer_2.svg"
+    ],
+    "dos_repousser": [
+     "visiteurs/visiteur-11/visiteur-11_dos_repousser_1.svg",
+     "visiteurs/visiteur-11/visiteur-11_dos_repousser_2.svg"
     ],
     "avant_lanterne": [
      "visiteurs/visiteur-11/visiteur-11_avant_lanterne_1.svg",
@@ -5631,6 +5931,10 @@
      "visiteurs/visiteur-12/visiteur-12_face_assis-reparer_1.svg",
      "visiteurs/visiteur-12/visiteur-12_face_assis-reparer_2.svg"
     ],
+    "face_repousser": [
+     "visiteurs/visiteur-12/visiteur-12_face_repousser_1.svg",
+     "visiteurs/visiteur-12/visiteur-12_face_repousser_2.svg"
+    ],
     "avant_marche": [
      "visiteurs/visiteur-12/visiteur-12_avant_marche_1.svg",
      "visiteurs/visiteur-12/visiteur-12_avant_marche_2.svg",
@@ -5689,6 +5993,10 @@
      "visiteurs/visiteur-12/visiteur-12_avant_assis-reparer_1.svg",
      "visiteurs/visiteur-12/visiteur-12_avant_assis-reparer_2.svg"
     ],
+    "avant_repousser": [
+     "visiteurs/visiteur-12/visiteur-12_avant_repousser_1.svg",
+     "visiteurs/visiteur-12/visiteur-12_avant_repousser_2.svg"
+    ],
     "dos_marche": [
      "visiteurs/visiteur-12/visiteur-12_dos_marche_1.svg",
      "visiteurs/visiteur-12/visiteur-12_dos_marche_2.svg",
@@ -5746,6 +6054,10 @@
     "dos_assis-reparer": [
      "visiteurs/visiteur-12/visiteur-12_dos_assis-reparer_1.svg",
      "visiteurs/visiteur-12/visiteur-12_dos_assis-reparer_2.svg"
+    ],
+    "dos_repousser": [
+     "visiteurs/visiteur-12/visiteur-12_dos_repousser_1.svg",
+     "visiteurs/visiteur-12/visiteur-12_dos_repousser_2.svg"
     ],
     "avant_lanterne": [
      "visiteurs/visiteur-12/visiteur-12_avant_lanterne_1.svg",
@@ -5884,6 +6196,10 @@
      "epilogue/arrivant-01/arrivant-01_face_assis-reparer_1.svg",
      "epilogue/arrivant-01/arrivant-01_face_assis-reparer_2.svg"
     ],
+    "face_repousser": [
+     "epilogue/arrivant-01/arrivant-01_face_repousser_1.svg",
+     "epilogue/arrivant-01/arrivant-01_face_repousser_2.svg"
+    ],
     "avant_marche": [
      "epilogue/arrivant-01/arrivant-01_avant_marche_1.svg",
      "epilogue/arrivant-01/arrivant-01_avant_marche_2.svg",
@@ -5942,6 +6258,10 @@
      "epilogue/arrivant-01/arrivant-01_avant_assis-reparer_1.svg",
      "epilogue/arrivant-01/arrivant-01_avant_assis-reparer_2.svg"
     ],
+    "avant_repousser": [
+     "epilogue/arrivant-01/arrivant-01_avant_repousser_1.svg",
+     "epilogue/arrivant-01/arrivant-01_avant_repousser_2.svg"
+    ],
     "dos_marche": [
      "epilogue/arrivant-01/arrivant-01_dos_marche_1.svg",
      "epilogue/arrivant-01/arrivant-01_dos_marche_2.svg",
@@ -5999,6 +6319,10 @@
     "dos_assis-reparer": [
      "epilogue/arrivant-01/arrivant-01_dos_assis-reparer_1.svg",
      "epilogue/arrivant-01/arrivant-01_dos_assis-reparer_2.svg"
+    ],
+    "dos_repousser": [
+     "epilogue/arrivant-01/arrivant-01_dos_repousser_1.svg",
+     "epilogue/arrivant-01/arrivant-01_dos_repousser_2.svg"
     ]
    }
   },
@@ -6101,6 +6425,10 @@
      "epilogue/arrivant-02/arrivant-02_face_assis-reparer_1.svg",
      "epilogue/arrivant-02/arrivant-02_face_assis-reparer_2.svg"
     ],
+    "face_repousser": [
+     "epilogue/arrivant-02/arrivant-02_face_repousser_1.svg",
+     "epilogue/arrivant-02/arrivant-02_face_repousser_2.svg"
+    ],
     "avant_marche": [
      "epilogue/arrivant-02/arrivant-02_avant_marche_1.svg",
      "epilogue/arrivant-02/arrivant-02_avant_marche_2.svg",
@@ -6159,6 +6487,10 @@
      "epilogue/arrivant-02/arrivant-02_avant_assis-reparer_1.svg",
      "epilogue/arrivant-02/arrivant-02_avant_assis-reparer_2.svg"
     ],
+    "avant_repousser": [
+     "epilogue/arrivant-02/arrivant-02_avant_repousser_1.svg",
+     "epilogue/arrivant-02/arrivant-02_avant_repousser_2.svg"
+    ],
     "dos_marche": [
      "epilogue/arrivant-02/arrivant-02_dos_marche_1.svg",
      "epilogue/arrivant-02/arrivant-02_dos_marche_2.svg",
@@ -6216,6 +6548,10 @@
     "dos_assis-reparer": [
      "epilogue/arrivant-02/arrivant-02_dos_assis-reparer_1.svg",
      "epilogue/arrivant-02/arrivant-02_dos_assis-reparer_2.svg"
+    ],
+    "dos_repousser": [
+     "epilogue/arrivant-02/arrivant-02_dos_repousser_1.svg",
+     "epilogue/arrivant-02/arrivant-02_dos_repousser_2.svg"
     ]
    }
   },
@@ -6324,6 +6660,10 @@
      "epilogue/arrivant-03/arrivant-03_face_assis-reparer_1.svg",
      "epilogue/arrivant-03/arrivant-03_face_assis-reparer_2.svg"
     ],
+    "face_repousser": [
+     "epilogue/arrivant-03/arrivant-03_face_repousser_1.svg",
+     "epilogue/arrivant-03/arrivant-03_face_repousser_2.svg"
+    ],
     "avant_marche": [
      "epilogue/arrivant-03/arrivant-03_avant_marche_1.svg",
      "epilogue/arrivant-03/arrivant-03_avant_marche_2.svg",
@@ -6382,6 +6722,10 @@
      "epilogue/arrivant-03/arrivant-03_avant_assis-reparer_1.svg",
      "epilogue/arrivant-03/arrivant-03_avant_assis-reparer_2.svg"
     ],
+    "avant_repousser": [
+     "epilogue/arrivant-03/arrivant-03_avant_repousser_1.svg",
+     "epilogue/arrivant-03/arrivant-03_avant_repousser_2.svg"
+    ],
     "dos_marche": [
      "epilogue/arrivant-03/arrivant-03_dos_marche_1.svg",
      "epilogue/arrivant-03/arrivant-03_dos_marche_2.svg",
@@ -6439,6 +6783,10 @@
     "dos_assis-reparer": [
      "epilogue/arrivant-03/arrivant-03_dos_assis-reparer_1.svg",
      "epilogue/arrivant-03/arrivant-03_dos_assis-reparer_2.svg"
+    ],
+    "dos_repousser": [
+     "epilogue/arrivant-03/arrivant-03_dos_repousser_1.svg",
+     "epilogue/arrivant-03/arrivant-03_dos_repousser_2.svg"
     ]
    }
   },
@@ -6553,6 +6901,10 @@
      "epilogue/arrivant-04/arrivant-04_face_assis-reparer_1.svg",
      "epilogue/arrivant-04/arrivant-04_face_assis-reparer_2.svg"
     ],
+    "face_repousser": [
+     "epilogue/arrivant-04/arrivant-04_face_repousser_1.svg",
+     "epilogue/arrivant-04/arrivant-04_face_repousser_2.svg"
+    ],
     "avant_marche": [
      "epilogue/arrivant-04/arrivant-04_avant_marche_1.svg",
      "epilogue/arrivant-04/arrivant-04_avant_marche_2.svg",
@@ -6611,6 +6963,10 @@
      "epilogue/arrivant-04/arrivant-04_avant_assis-reparer_1.svg",
      "epilogue/arrivant-04/arrivant-04_avant_assis-reparer_2.svg"
     ],
+    "avant_repousser": [
+     "epilogue/arrivant-04/arrivant-04_avant_repousser_1.svg",
+     "epilogue/arrivant-04/arrivant-04_avant_repousser_2.svg"
+    ],
     "dos_marche": [
      "epilogue/arrivant-04/arrivant-04_dos_marche_1.svg",
      "epilogue/arrivant-04/arrivant-04_dos_marche_2.svg",
@@ -6668,6 +7024,10 @@
     "dos_assis-reparer": [
      "epilogue/arrivant-04/arrivant-04_dos_assis-reparer_1.svg",
      "epilogue/arrivant-04/arrivant-04_dos_assis-reparer_2.svg"
+    ],
+    "dos_repousser": [
+     "epilogue/arrivant-04/arrivant-04_dos_repousser_1.svg",
+     "epilogue/arrivant-04/arrivant-04_dos_repousser_2.svg"
     ]
    }
   },
@@ -6770,6 +7130,10 @@
      "epilogue/arrivant-05/arrivant-05_face_assis-reparer_1.svg",
      "epilogue/arrivant-05/arrivant-05_face_assis-reparer_2.svg"
     ],
+    "face_repousser": [
+     "epilogue/arrivant-05/arrivant-05_face_repousser_1.svg",
+     "epilogue/arrivant-05/arrivant-05_face_repousser_2.svg"
+    ],
     "avant_marche": [
      "epilogue/arrivant-05/arrivant-05_avant_marche_1.svg",
      "epilogue/arrivant-05/arrivant-05_avant_marche_2.svg",
@@ -6828,6 +7192,10 @@
      "epilogue/arrivant-05/arrivant-05_avant_assis-reparer_1.svg",
      "epilogue/arrivant-05/arrivant-05_avant_assis-reparer_2.svg"
     ],
+    "avant_repousser": [
+     "epilogue/arrivant-05/arrivant-05_avant_repousser_1.svg",
+     "epilogue/arrivant-05/arrivant-05_avant_repousser_2.svg"
+    ],
     "dos_marche": [
      "epilogue/arrivant-05/arrivant-05_dos_marche_1.svg",
      "epilogue/arrivant-05/arrivant-05_dos_marche_2.svg",
@@ -6885,6 +7253,10 @@
     "dos_assis-reparer": [
      "epilogue/arrivant-05/arrivant-05_dos_assis-reparer_1.svg",
      "epilogue/arrivant-05/arrivant-05_dos_assis-reparer_2.svg"
+    ],
+    "dos_repousser": [
+     "epilogue/arrivant-05/arrivant-05_dos_repousser_1.svg",
+     "epilogue/arrivant-05/arrivant-05_dos_repousser_2.svg"
     ]
    }
   },
@@ -6993,6 +7365,10 @@
      "epilogue/arrivant-06/arrivant-06_face_assis-reparer_1.svg",
      "epilogue/arrivant-06/arrivant-06_face_assis-reparer_2.svg"
     ],
+    "face_repousser": [
+     "epilogue/arrivant-06/arrivant-06_face_repousser_1.svg",
+     "epilogue/arrivant-06/arrivant-06_face_repousser_2.svg"
+    ],
     "avant_marche": [
      "epilogue/arrivant-06/arrivant-06_avant_marche_1.svg",
      "epilogue/arrivant-06/arrivant-06_avant_marche_2.svg",
@@ -7051,6 +7427,10 @@
      "epilogue/arrivant-06/arrivant-06_avant_assis-reparer_1.svg",
      "epilogue/arrivant-06/arrivant-06_avant_assis-reparer_2.svg"
     ],
+    "avant_repousser": [
+     "epilogue/arrivant-06/arrivant-06_avant_repousser_1.svg",
+     "epilogue/arrivant-06/arrivant-06_avant_repousser_2.svg"
+    ],
     "dos_marche": [
      "epilogue/arrivant-06/arrivant-06_dos_marche_1.svg",
      "epilogue/arrivant-06/arrivant-06_dos_marche_2.svg",
@@ -7108,6 +7488,10 @@
     "dos_assis-reparer": [
      "epilogue/arrivant-06/arrivant-06_dos_assis-reparer_1.svg",
      "epilogue/arrivant-06/arrivant-06_dos_assis-reparer_2.svg"
+    ],
+    "dos_repousser": [
+     "epilogue/arrivant-06/arrivant-06_dos_repousser_1.svg",
+     "epilogue/arrivant-06/arrivant-06_dos_repousser_2.svg"
     ]
    }
   },
@@ -7216,6 +7600,10 @@
      "epilogue/arrivant-07/arrivant-07_face_assis-reparer_1.svg",
      "epilogue/arrivant-07/arrivant-07_face_assis-reparer_2.svg"
     ],
+    "face_repousser": [
+     "epilogue/arrivant-07/arrivant-07_face_repousser_1.svg",
+     "epilogue/arrivant-07/arrivant-07_face_repousser_2.svg"
+    ],
     "avant_marche": [
      "epilogue/arrivant-07/arrivant-07_avant_marche_1.svg",
      "epilogue/arrivant-07/arrivant-07_avant_marche_2.svg",
@@ -7274,6 +7662,10 @@
      "epilogue/arrivant-07/arrivant-07_avant_assis-reparer_1.svg",
      "epilogue/arrivant-07/arrivant-07_avant_assis-reparer_2.svg"
     ],
+    "avant_repousser": [
+     "epilogue/arrivant-07/arrivant-07_avant_repousser_1.svg",
+     "epilogue/arrivant-07/arrivant-07_avant_repousser_2.svg"
+    ],
     "dos_marche": [
      "epilogue/arrivant-07/arrivant-07_dos_marche_1.svg",
      "epilogue/arrivant-07/arrivant-07_dos_marche_2.svg",
@@ -7331,6 +7723,10 @@
     "dos_assis-reparer": [
      "epilogue/arrivant-07/arrivant-07_dos_assis-reparer_1.svg",
      "epilogue/arrivant-07/arrivant-07_dos_assis-reparer_2.svg"
+    ],
+    "dos_repousser": [
+     "epilogue/arrivant-07/arrivant-07_dos_repousser_1.svg",
+     "epilogue/arrivant-07/arrivant-07_dos_repousser_2.svg"
     ]
    }
   },
@@ -7433,6 +7829,10 @@
      "epilogue/arrivant-08/arrivant-08_face_assis-reparer_1.svg",
      "epilogue/arrivant-08/arrivant-08_face_assis-reparer_2.svg"
     ],
+    "face_repousser": [
+     "epilogue/arrivant-08/arrivant-08_face_repousser_1.svg",
+     "epilogue/arrivant-08/arrivant-08_face_repousser_2.svg"
+    ],
     "avant_marche": [
      "epilogue/arrivant-08/arrivant-08_avant_marche_1.svg",
      "epilogue/arrivant-08/arrivant-08_avant_marche_2.svg",
@@ -7491,6 +7891,10 @@
      "epilogue/arrivant-08/arrivant-08_avant_assis-reparer_1.svg",
      "epilogue/arrivant-08/arrivant-08_avant_assis-reparer_2.svg"
     ],
+    "avant_repousser": [
+     "epilogue/arrivant-08/arrivant-08_avant_repousser_1.svg",
+     "epilogue/arrivant-08/arrivant-08_avant_repousser_2.svg"
+    ],
     "dos_marche": [
      "epilogue/arrivant-08/arrivant-08_dos_marche_1.svg",
      "epilogue/arrivant-08/arrivant-08_dos_marche_2.svg",
@@ -7548,6 +7952,10 @@
     "dos_assis-reparer": [
      "epilogue/arrivant-08/arrivant-08_dos_assis-reparer_1.svg",
      "epilogue/arrivant-08/arrivant-08_dos_assis-reparer_2.svg"
+    ],
+    "dos_repousser": [
+     "epilogue/arrivant-08/arrivant-08_dos_repousser_1.svg",
+     "epilogue/arrivant-08/arrivant-08_dos_repousser_2.svg"
     ]
    }
   }
