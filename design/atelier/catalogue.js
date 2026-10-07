@@ -226,7 +226,6 @@ function moment(id, meta) {
 
 const A_REVOIR = [
   [/^vivants\/brume\/brume_expr_fache$/, 'Brume ne gronde jamais (§ 8) : expression à retirer.'],
-  [/^vivants\/brume\/brume_s[1-7]/, 'Les ornements des stades doivent s\'additionner (§ 13) ; le stade 6 doit être ambré, le soleil du stade 7 une petite flamme dorée à rayons.'],
   [/^vivants\/brume\/brume_expr_/, 'Les expressions doivent être les yeux seuls, à poser sur n\'importe quel stade (aujourd\'hui le corps du stade 1).'],
   [/^vivants\/anya\/anya_expr_(fache|gene|rire|endormi)$/, 'Anya est calme et n\'élève jamais la voix (§ 8) : expression à retirer.'],
   [/^vivants\/anya\//, 'Le manteau change avec les saisons (§ 8) : variantes à dessiner quand le jeu aura des saisons.'],

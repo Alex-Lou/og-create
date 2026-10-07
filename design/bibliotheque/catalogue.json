@@ -16228,8 +16228,7 @@
    ],
    "ms_par_image": 220,
    "parcours": "acte-1",
-   "statut": "a-revoir",
-   "note": "Les ornements des stades doivent s'additionner (§ 13) ; le stade 6 doit être ambré, le soleil du stade 7 une petite flamme dorée à rayons."
+   "statut": "ok"
   },
   {
    "id": "batiments/paliers/carriere/carriere_palier1",
@@ -17712,8 +17711,7 @@
    ],
    "ms_par_image": 220,
    "parcours": "acte-2",
-   "statut": "a-revoir",
-   "note": "Les ornements des stades doivent s'additionner (§ 13) ; le stade 6 doit être ambré, le soleil du stade 7 une petite flamme dorée à rayons."
+   "statut": "ok"
   },
   {
    "id": "animaux/ferme/chevre-brune/chevre-brune_avant_clignement",
@@ -22407,8 +22405,7 @@
    ],
    "ms_par_image": 220,
    "parcours": "acte-3",
-   "statut": "a-revoir",
-   "note": "Les ornements des stades doivent s'additionner (§ 13) ; le stade 6 doit être ambré, le soleil du stade 7 une petite flamme dorée à rayons."
+   "statut": "ok"
   },
   {
    "id": "animaux/bestiaire/abeille/abeille_profil_joie",
@@ -32774,8 +32771,7 @@
    ],
    "ms_par_image": 220,
    "parcours": "acte-4",
-   "statut": "a-revoir",
-   "note": "Les ornements des stades doivent s'additionner (§ 13) ; le stade 6 doit être ambré, le soleil du stade 7 une petite flamme dorée à rayons."
+   "statut": "ok"
   },
   {
    "id": "batiments/paliers/foyer/foyer_palier3",
@@ -33167,8 +33163,7 @@
    ],
    "ms_par_image": 220,
    "parcours": "acte-5",
-   "statut": "a-revoir",
-   "note": "Les ornements des stades doivent s'additionner (§ 13) ; le stade 6 doit être ambré, le soleil du stade 7 une petite flamme dorée à rayons."
+   "statut": "ok"
   },
   {
    "id": "batiments/paliers/carriere/carriere_palier6",
@@ -33391,8 +33386,7 @@
    ],
    "ms_par_image": 220,
    "parcours": "acte-6",
-   "statut": "a-revoir",
-   "note": "Les ornements des stades doivent s'additionner (§ 13) ; le stade 6 doit être ambré, le soleil du stade 7 une petite flamme dorée à rayons."
+   "statut": "ok"
   },
   {
    "id": "vivants/brume/brume_s6pale",
@@ -33415,8 +33409,7 @@
    ],
    "ms_par_image": 220,
    "parcours": "acte-6",
-   "statut": "a-revoir",
-   "note": "Les ornements des stades doivent s'additionner (§ 13) ; le stade 6 doit être ambré, le soleil du stade 7 une petite flamme dorée à rayons."
+   "statut": "ok"
   },
   {
    "id": "vivants/brume/brume_s6phenix",
@@ -33439,8 +33432,7 @@
    ],
    "ms_par_image": 220,
    "parcours": "acte-6",
-   "statut": "a-revoir",
-   "note": "Les ornements des stades doivent s'additionner (§ 13) ; le stade 6 doit être ambré, le soleil du stade 7 une petite flamme dorée à rayons."
+   "statut": "ok"
   },
   {
    "id": "batiments/paliers/foyer/foyer_palier7",
@@ -33507,8 +33499,7 @@
    ],
    "ms_par_image": 220,
    "parcours": "acte-7",
-   "statut": "a-revoir",
-   "note": "Les ornements des stades doivent s'additionner (§ 13) ; le stade 6 doit être ambré, le soleil du stade 7 une petite flamme dorée à rayons."
+   "statut": "ok"
   },
   {
    "id": "vivants/brume/brume_s7soleil",
@@ -33531,8 +33522,7 @@
    ],
    "ms_par_image": 220,
    "parcours": "acte-7",
-   "statut": "a-revoir",
-   "note": "Les ornements des stades doivent s'additionner (§ 13) ; le stade 6 doit être ambré, le soleil du stade 7 une petite flamme dorée à rayons."
+   "statut": "ok"
   },
   {
    "id": "vivants/passeur/passeur_avant_marche",

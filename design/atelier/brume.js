@@ -1,22 +1,24 @@
 // Brume, l'esprit de la brume : un feu follet, deux yeux et rien d'autre (fidèle à src/world/brume.js), au trait de la
 // troupe. Repère 40 × 48 : le bas rond de la flamme est centré en (20, 32), l'ombre au sol est dessinée par le jeu.
-// Huit stades (HISTOIRE.md § 13) et leurs variantes ; flottement en 4 images ; expressions par les yeux seulement.
+// Huit stades (HISTOIRE.md § 13) et leurs variantes ; les ornements s'additionnent d'un stade à l'autre ; flottement en
+// 4 images ; expressions par les yeux seulement.
 const { P, E, L, eyes, drop, zee, r2 } = require('./troupe');
 
 const NAVY = '#1D3557';
-// Couleurs par stade : cœur, flamme, bord, trait, halo (r,g,b)
+// Couleurs par stade : cœur, flamme, bord, trait, halo (r,g,b) ; orn : les ornements s'additionnent d'un stade à
+// l'autre (3 : étoiles, 4 : + feuille, 5 : + cœur ambré, 6 : + runes, 7 : + couronne dorée)
 const STAGES = {
   s0: { label: 'Stade 0 · pâle et tremblante', core: '#FFFFFF', flame: '#EEF5F7', edge: '#B8CDD6', line: '#6E8792', halo: '200,220,230', r: 8, tremble: true },
   s1: { label: 'Stade 1 · bleu clair', core: '#FFFFFF', flame: '#BFF0FF', edge: '#5CC8F0', line: '#23647F', halo: '120,210,255' },
   s2: { label: 'Stade 2 · turquoise', core: '#FFFFFF', flame: '#B4F5E6', edge: '#2EC4B6', line: '#16685F', halo: '90,220,200' },
-  s3: { label: 'Stade 3 · étoiles', core: '#FFFFFF', flame: '#E6F1FF', edge: '#93B6E6', line: '#40618F', halo: '190,210,255', orbit: 'star' },
-  s4: { label: 'Stade 4 · feuille', core: '#FFFFFF', flame: '#E2F6E8', edge: '#7FCB9A', line: '#2F7048', halo: '170,230,190', inner: 'leaf' },
-  s5: { label: 'Stade 5 · cœur ambré', core: '#FFFDF2', flame: '#FFE7A3', edge: '#F2B23B', line: '#8A5A12', halo: '255,200,90', inner: 'heart' },
-  s6: { label: 'Stade 6 · runes', core: '#FFF8F0', flame: '#FFD6B0', edge: '#E8845A', line: '#8A3A1E', halo: '255,170,120', orbit: 'rune' },
-  s6pale: { label: 'Stade 6 · pâlie', core: '#F4F4F4', flame: '#DCDDE0', edge: '#A6A8AE', line: '#5E6066', halo: '190,190,195', orbit: 'rune', dim: true, r: 8.4 },
-  s6phenix: { label: 'Stade 6 · Phénix', core: '#FFFBEA', flame: '#FFCF6E', edge: '#F0622E', line: '#8A2410', halo: '255,150,70', wings: true },
-  s7: { label: 'Stade 7 · couronne dorée', core: '#FFFDF2', flame: '#FFE08A', edge: '#F2A33B', line: '#8A5212', halo: '255,205,110', crown: true },
-  s7soleil: { label: 'Stade 7 · soleil du phare', core: '#FFFFF4', flame: '#FFEB99', edge: '#FFB734', line: '#9A5A0A', halo: '255,215,120', sun: true },
+  s3: { label: 'Stade 3 · étoiles', core: '#FFFFFF', flame: '#E6F1FF', edge: '#93B6E6', line: '#40618F', halo: '190,210,255', orn: 3 },
+  s4: { label: 'Stade 4 · feuille', core: '#FFFFFF', flame: '#E2F6E8', edge: '#7FCB9A', line: '#2F7048', halo: '170,230,190', orn: 4 },
+  s5: { label: 'Stade 5 · cœur ambré', core: '#FFFDF2', flame: '#FFE7A3', edge: '#F2B23B', line: '#8A5A12', halo: '255,200,90', orn: 5 },
+  s6: { label: 'Stade 6 · runes', core: '#FFF8E8', flame: '#FFD98A', edge: '#E8992E', line: '#7E4A10', halo: '255,185,80', orn: 6 },
+  s6pale: { label: 'Stade 6 · pâlie', core: '#F4F4F4', flame: '#DCDDE0', edge: '#A6A8AE', line: '#5E6066', halo: '190,190,195', orn: 6, dim: true, r: 8.4 },
+  s6phenix: { label: 'Stade 6 · Phénix', core: '#FFFBEA', flame: '#FFCF6E', edge: '#F0622E', line: '#8A2410', halo: '255,150,70', orn: 6, wings: true },
+  s7: { label: 'Stade 7 · couronne dorée', core: '#FFFDF2', flame: '#FFE08A', edge: '#F2A33B', line: '#8A5212', halo: '255,205,110', orn: 7 },
+  s7soleil: { label: 'Stade 7 · soleil du phare', core: '#FFFFF4', flame: '#FFEB99', edge: '#FFB734', line: '#9A5A0A', halo: '255,215,120', orn: 7, sun: true },
   pret: { label: 'Récompense prête (« ! »)', core: '#FFFDF2', flame: '#FFE7A3', edge: '#F2B23B', line: '#8A5A12', halo: '255,200,90', badge: true }
 };
 
@@ -31,7 +33,7 @@ const star4 = (x, y, s, fill) => P(`M${r2(x)},${r2(y - s)} Q${r2(x + s * 0.22)},
 const RUNES = ['M-1,-1.6 L-1,1.6 M-1,-1.6 L1,-0.4 L-1,0.6 L1,1.6', 'M0,-1.6 L0,1.6 M-1.2,-1.4 L0,-0.2 L1.2,-1.4', 'M-1.2,1.6 L0,-1.6 L1.2,1.6 M-0.7,0.2 L0.7,0.2'];
 const rune = (x, y, i, color) => `<path d="${RUNES[i % 3]}" transform="translate(${r2(x)} ${r2(y)})" fill="none" stroke="${color}" stroke-width="0.8" stroke-linecap="round" stroke-linejoin="round"/>`;
 // Petite feuille, petit cœur, couronne
-const leaf = (x, y, rot) => `<g transform="translate(${r2(x)} ${r2(y)}) rotate(${rot})">${P('M0,-3.6 Q2.4,0 0,3.6 Q-2.4,0 0,-3.6 Z', '#4FB062', 0.7)}${L([0, -2.6], [0, 2.6], '#2F7A3F', 0.5)}</g>`;
+const leaf = (x, y, rot, s = 1) => `<g transform="translate(${r2(x)} ${r2(y)}) rotate(${rot})${s === 1 ? '' : ` scale(${s})`}">${P('M0,-3.6 Q2.4,0 0,3.6 Q-2.4,0 0,-3.6 Z', '#4FB062', 0.7)}${L([0, -2.6], [0, 2.6], '#2F7A3F', 0.5)}</g>`;
 const heart = (x, y, s) => P(`M${r2(x)},${r2(y + s * 1.1)} C${r2(x - s * 1.8)},${r2(y - s * 0.1)} ${r2(x - s * 0.9)},${r2(y - s * 1.4)} ${r2(x)},${r2(y - s * 0.5)} C${r2(x + s * 0.9)},${r2(y - s * 1.4)} ${r2(x + s * 1.8)},${r2(y - s * 0.1)} ${r2(x)},${r2(y + s * 1.1)} Z`, '#F29A3B', 0.7);
 const crown = (x, y, rot) => `<g transform="translate(${r2(x)} ${r2(y)}) rotate(${rot})">`
   + P('M-4,1.4 L-4.4,-2.2 L-2,-0.4 L0,-3 L2,-0.4 L4.4,-2.2 L4,1.4 Z', '#F6C744', 0.8) + E(0, -3, 0.7, 0.7, '#E8584A', 0.5) + E(-4.4, -2.2, 0.5, 0.5, '#FFFFFF', 0.4) + E(4.4, -2.2, 0.5, 0.5, '#FFFFFF', 0.4) + '</g>';
@@ -57,36 +59,41 @@ function brumeFrame(stageKey, n, expr = 'neutre') {
     back += P(`M${r2(x - 2)},${r2(y + r - 1)} Q${r2(x - 4)},${r2(y + r + 4.6)} ${r2(x - 1)},${r2(y + r + 6.2)} Q${x},${r2(y + r + 3.2)} ${r2(x + 1)},${r2(y + r + 6.2)} Q${r2(x + 4)},${r2(y + r + 4.6)} ${r2(x + 2)},${r2(y + r - 1)} Z`, st.edge, 1);
   }
   if (st.sun) {
-    const rot = n * 11.25;
+    // des rayons dorés autour de la petite flamme (ils tournent doucement), sauf vers le bas, où passe l'anneau
+    const rot = n * 11.25, cx = x, cy0 = y - r * 0.55;
     for (let i = 0; i < 12; i++) {
-      const a = ((i * 30 + rot) * Math.PI) / 180, rr = i % 2 ? 13.5 : 15.5;
-      back += P(`M${r2(x + Math.cos(a - 0.12) * 10)},${r2(y - 4 + Math.sin(a - 0.12) * 10)} L${r2(x + Math.cos(a) * rr)},${r2(y - 4 + Math.sin(a) * rr)} L${r2(x + Math.cos(a + 0.12) * 10)},${r2(y - 4 + Math.sin(a + 0.12) * 10)} Z`, st.edge, 0.8);
+      const a = ((i * 30 + rot) * Math.PI) / 180, r0 = r * 1.15, rr = r * (i % 2 ? 1.55 : 1.8);
+      if (Math.sin(a) > 0.6) continue;
+      back += P(`M${r2(cx + Math.cos(a - 0.14) * r0)},${r2(cy0 + Math.sin(a - 0.14) * r0)} L${r2(cx + Math.cos(a) * rr)},${r2(cy0 + Math.sin(a) * rr)} L${r2(cx + Math.cos(a + 0.14) * r0)},${r2(cy0 + Math.sin(a + 0.14) * r0)} Z`, i % 2 ? st.flame : st.edge, 0.8).replace(/stroke="[^"]+"/, `stroke="${st.line}"`);
     }
   }
   // orbite (étoiles, runes) : la moitié arrière passe derrière la flamme
-  if (st.orbit) {
-    for (let i = 0; i < 3; i++) {
-      const a = (ph + i / 3) * Math.PI * 2;
-      const ox = x + Math.cos(a) * 14, oy = y - 6 + Math.sin(a) * 4.4;
-      const g = st.orbit === 'star' ? star4(ox, oy, 2.5, '#FFF6C8') : `<g opacity="${st.dim ? 0.45 : 1}">${E(ox, oy, 2.1, 2.1, `rgb(${st.halo})`, 0).replace('fill=', 'fill-opacity="0.35" fill=')}${rune(ox, oy, i, st.line)}</g>`;
+  const orn = st.orn || 0;
+  if (orn >= 3) {
+    const count = orn >= 6 ? 6 : 3;
+    for (let i = 0; i < count; i++) {
+      const a = (ph + i / count) * Math.PI * 2;
+      // un anneau penché autour du bas de la flamme : devant, il passe sous les yeux ; derrière, la flamme le cache
+      const ox = x + Math.cos(a) * 14, oy = y - 1.5 + Math.sin(a) * 5.5;
+      const isRune = count === 6 && i % 2 === 1;
+      let g = isRune ? `${E(ox, oy, 2.1, 2.1, `rgb(${st.halo})`, 0).replace('fill=', 'fill-opacity="0.35" fill=')}${rune(ox, oy, (i - 1) / 2, st.line)}` : star4(ox, oy, count === 6 ? 2.1 : 2.5, '#FFF6C8');
+      if (st.dim) g = `<g opacity="0.45">${g}</g>`;
       if (Math.sin(a) < 0) back += g; else front += g;
     }
   }
   // flamme : bord, flamme, cœur clair (aplats), contour du stade
-  let body;
-  if (st.sun) {
-    body = E(x, y - 4, 10, 10, st.edge, 1.1).replace(/stroke="[^"]+"/, `stroke="${st.line}"`) + E(x, y - 4, 8, 8, st.flame, 0) + E(x - 1, y - 2, 5, 5, st.core, 0);
-  } else {
-    const outer = flamePath(x, y, r, sway);
-    body = P(outer, st.edge, 1.1).replace(/stroke="[^"]+"/, `stroke="${st.line}"`)
-      + P(flamePath(x, y + r * 0.12, r * 0.8, sway * 0.8, 0.95), st.flame, 0)
-      + P(flamePath(x, y + r * 0.38, r * 0.5, sway * 0.6, 0.85), st.core, 0);
-  }
-  // ce qui vit dans la flamme
-  const cy = st.sun ? y - 9 : y - r * 0.95;
-  if (st.inner === 'leaf') body += leaf(x + sway * 0.3, cy, [-18, 0, 18, 0][n % 4]);
-  if (st.inner === 'heart') body += heart(x + sway * 0.25, cy, 2.1 + (n % 2) * 0.2);
-  if (st.crown) body += crown(x + sway * 0.4, y - r * 1.2, sway * 1.6);
+  const outer = flamePath(x, y, r, sway);
+  let body = P(outer, st.edge, 1.1).replace(/stroke="[^"]+"/, `stroke="${st.line}"`)
+    + P(flamePath(x, y + r * 0.12, r * 0.8, sway * 0.8, 0.95), st.flame, 0)
+    + P(flamePath(x, y + r * 0.38, r * 0.5, sway * 0.6, 0.85), st.core, 0);
+  // ce qui vit dans la flamme : la feuille (seule, au milieu ; avec le cœur, plus haut et plus petite), le cœur ambré ;
+  // la couronne posée sur la pointe
+  const cy = y - r * 0.95;
+  let inner = '';
+  if (orn >= 4) inner += orn >= 5 ? leaf(x + sway * 0.55, y - r * 1.5, [-18, 0, 18, 0][n % 4], 0.7) : leaf(x + sway * 0.3, cy, [-18, 0, 18, 0][n % 4]);
+  if (orn >= 5) inner += heart(x + sway * 0.25, cy, 2.1 + (n % 2) * 0.2);
+  if (orn >= 7) inner += crown(x + sway * 0.9, y - r * 1.92, sway * 2);
+  body += st.dim && inner ? `<g opacity="0.55">${inner}</g>` : inner;
   // étincelles qui montent
   let sparks = '';
   for (let i = 0; i < 3; i++) {
@@ -94,7 +101,7 @@ function brumeFrame(stageKey, n, expr = 'neutre') {
     sparks += E(x + Math.sin((ph + i) * 4.2) * r * 0.9, y - r * (1.3 + p * 1.8), 0.9 - p * 0.5, 0.9 - p * 0.5, `rgb(${st.halo})`, 0).replace('fill=', `fill-opacity="${r2(0.95 - p * 0.7)}" fill=`);
   }
   // yeux (bleu nuit) et signes : deux yeux, rien d'autre
-  const ey = st.sun ? y - 4 : y - r * 0.05;
+  const ey = y - r * 0.05;
   const list = [[x - 3.2, ey, 1.35], [x + 3.2, ey, 1.35]];
   const mode = { neutre: n === 3 ? 'blink' : 'open', content: 'open', rire: 'joy', surpris: 'big', triste: 'sad', fache: 'angry', gene: 'squeeze', endormi: 'blink' }[expr];
   let face = eyes(list, mode, 1.9, NAVY).replace(/stroke="#3C2819"/g, `stroke="${NAVY}"`);
