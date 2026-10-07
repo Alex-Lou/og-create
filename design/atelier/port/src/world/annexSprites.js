@@ -506,8 +506,8 @@ const remise = {
     }
   }]
 };
-// Pépinière : petite serre de verre, semis en pots sur leurs étagères, arrosoir ; un reflet glisse sur les vitres,
-// une lueur chaude la nuit
+// Pépinière : petite serre de verre sur l'herbe, semis en pots étiquetés sur leurs étagères, arrosoir, sac de terreau
+// et transplantoir, jeunes plants devant ; un reflet glisse sur les vitres, une lueur chaude la nuit
 const pepiniere = {
   light: () => [0, 0, 12, 20, '255,236,170'],
   layers: [{
@@ -520,12 +520,16 @@ const pepiniere = {
         for (const du of [-0.18, -0.06, 0.06, 0.18]) {
           const [x, y] = T.p(du, -0.08, z);
           pots.push(`<path d="M${f2(x - 2)},${f2(y - 3)} L${f2(x - 1.5)},${f2(y)} L${f2(x + 1.5)},${f2(y)} L${f2(x + 2)},${f2(y - 3)} Z" fill="#D9844E" stroke="${OUT}" stroke-width="0.4"/>`
-            + `<circle cx="${f2(x)}" cy="${f2(y - 5)}" r="2.1" fill="${(du * 10) % 2 ? LEAF_LIGHT : LEAF}"/><circle cx="${f2(x - 1)}" cy="${f2(y - 5.6)}" r="0.9" fill="#B3E386"/>`);
+            + `<circle cx="${f2(x)}" cy="${f2(y - 5)}" r="2.1" fill="${(du * 10) % 2 ? LEAF_LIGHT : LEAF}"/><circle cx="${f2(x - 1)}" cy="${f2(y - 5.6)}" r="0.9" fill="#B3E386"/>`
+            + ln([x + 1.2, y - 2.6], [x + 1.8, y - 6.4], '#E8DCC0', 0.5) + `<rect x="${f2(x + 1.1)}" y="${f2(y - 7.6)}" width="1.6" height="1.2" fill="#F4ECDC"/>`);
         }
       }
       const g = (f / n) * 1.4 - 0.2;
       const glint = g > 0 && g < 1 ? T.face([[-0.28 + g * 0.5, 0.26, 2], [-0.22 + g * 0.5, 0.26, 2], [-0.12 + g * 0.5, 0.26, 21], [-0.18 + g * 0.5, 0.26, 21]], 'rgba(255,255,255,.55)') : '';
-      return T.shadow(0, 0, 0.38, 0.18)
+      const [gx, gy] = T.p(0, 0, 0);
+      return ell(gx, gy + 1, 32, 13, '#9CC46A', ` stroke="${OUT}" stroke-width="0.5"`) + ell(gx - 4, gy, 22, 8, '#ADD27A')
+        + ell(...T.p(-0.3, 0.36, 0), 7, 2.6, '#8A6A46')
+        + T.shadow(0, 0, 0.38, 0.18)
         + T.box(-0.3, -0.26, 0.3, 0.26, 0, 3, STONE)
         // Étagères et semis (vus à travers le verre)
         + T.box(-0.25, -0.16, 0.25, -0.02, 9, 10.5, WOOD)
@@ -539,6 +543,10 @@ const pepiniere = {
         // Arrosoir et pots devant
         + bucket(T, 0.34, 0.32, 0, 6, 3, 3.6, { top: '#9ACB8A', left: '#7DB46E', right: '#5D9A50' }, 'arr', false)
         + ln(T.p(0.3, 0.3, 5), T.p(0.22, 0.34, 9), '#5D9A50', 1.1)
+        + (() => { const [kx, ky] = T.p(0.4, 0.06, 0); return ell(kx + 1, ky + 0.4, 4.6, 1.4, 'rgba(40,55,20,.22)')
+          + `<path d="M${f2(kx - 3.6)},${f2(ky)} C${f2(kx - 4.4)},${f2(ky - 4)} ${f2(kx - 3)},${f2(ky - 7)} ${f2(kx - 1.4)},${f2(ky - 7.6)} L${f2(kx + 1.6)},${f2(ky - 7.6)} C${f2(kx + 3)},${f2(ky - 7)} ${f2(kx + 4.4)},${f2(ky - 4)} ${f2(kx + 3.6)},${f2(ky)} Z" fill="#B88A5A" stroke="${OUT}" stroke-width="0.5"/>`
+          + ell(kx, ky - 7.6, 1.8, 0.7, '#5A3A22') + ln([kx - 2, ky - 4], [kx + 2, ky - 3.6], '#7FAE4E', 1.2) + dot(kx, ky - 4.6, 0.8, '#E2574C')
+          + poly([[kx - 6.4, ky + 0.6], [kx - 4.6, ky + 0.6], [kx - 4.8, ky - 2.2], [kx - 6.2, ky - 2.2]], IRON.left, ` stroke="${OUT}" stroke-width="0.4"`) + ln([kx - 5.5, ky - 2.2], [kx - 5.2, ky - 5.6], WOOD.right, 1.1); })()
         + [[-0.22, 0.36], [-0.32, 0.3]].map(([a, b]) => { const [x, y] = T.p(a, b, 0); return `<path d="M${f2(x - 2.4)},${f2(y - 3.4)} L${f2(x - 1.8)},${f2(y)} L${f2(x + 1.8)},${f2(y)} L${f2(x + 2.4)},${f2(y - 3.4)} Z" fill="#D9844E" stroke="${OUT}" stroke-width="0.4"/>${sapling(x, y - 3, 0.45, wave(f, n, 0.6, a * 9))}`; }).join('');
     }
   }]
