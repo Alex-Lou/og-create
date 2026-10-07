@@ -94,7 +94,7 @@ const rivet = {
       s += P('M17.6,15 Q16.8,21 18.4,28.6', 'none', 0.6) + P('M24.6,15 Q25.4,21 24.2,28.4', 'none', 0.6) + P('M31,16.4 Q32,22 30.6,29.2', 'none', 0.6) + L([16.6, 10.2], [21.6, 8.6], C.hairH, 1.2);
       // sangle des lunettes autour du crâne, boucle de laiton
       s += P('M11.2,12.2 Q24,15.8 36.8,12.2 L37,14 Q24,17.6 11,14 Z', C.strap, 0.8) + `<rect x="22.6" y="14.6" width="2.8" height="2" rx="0.4" fill="${C.brass}" stroke="#3C2819" stroke-width="0.6"/>`;
-      s += pencil([15.4, 20.6], [9.2, 19.2]);
+      s += c.coiffe ? c.coiffe(c, ctx, 'arceau') + c.coiffe(c, ctx, 'oreilles') : pencil([15.4, 20.6], [9.2, 19.2]);
       return s;
     }
     const se = view === 'se';
@@ -109,14 +109,15 @@ const rivet = {
     const grey = sx('M25,10 Q33.6,9.8 35.8,16.4 Q34.4,14.4 31.6,14 L32.2,17.4 Q29.4,13.6 26,13.8 L26.6,17 Q25.4,14.6 23.6,13.4 Q23.8,11 25,10 Z');
     // crayons glissés derrière les oreilles (on n'en voit que le bout et la gomme)
     s += cowlick + P(back, C.hair) + clip(`${c.uid}h`, back, `<rect x="8" y="24.6" width="32" height="6" fill="${C.hairS}"/>`) + P(back, 'none');
-    s += se ? E(35, 23.2, 1.5, 2.1, C.skin) + pencil([33.4, 20.8], [39.2, 19.2])
-      : E(11.8, 22.8, 1.5, 2.1, C.skin) + E(36.2, 22.8, 1.5, 2.1, C.skin) + pencil([14, 20.8], [7.8, 19.4]) + pencil([34, 20.8], [40.2, 19.4]);
+    s += se ? E(35, 23.2, 1.5, 2.1, C.skin) + (c.coiffe ? '' : pencil([33.4, 20.8], [39.2, 19.2]))
+      : E(11.8, 22.8, 1.5, 2.1, C.skin) + E(36.2, 22.8, 1.5, 2.1, C.skin) + (c.coiffe ? '' : pencil([14, 20.8], [7.8, 19.4]) + pencil([34, 20.8], [40.2, 19.4]));
     const cheeks = se ? [[15.2, 1.7], [28.2, 1.4]] : [[16.6, 1.8], [31.4, 1.8]];
     s += P(face, C.skin);
     s += clip(`${c.uid}f`, face, `<path d="${bangs}" fill="${C.skinS}" transform="translate(0 1.4)"/>`
       + cheeks.map(([x, r]) => E(x, 26.2, r * (ctx.expr === 'gene' ? 1.3 : 1), ctx.expr === 'gene' ? 1.5 : 1.05, C.cheek, 0)).join(''));
     s += P(face, 'none');
     s += P(bangs, C.hair) + P(grey, C.grey, 0.8) + L([15 + k, 12.6], [20 + k, 11], C.hairH, 1.2) + L([26.4 + k, 12.2], [29.4 + k, 12.6], '#F2EFEA', 0.9);
+    if (c.coiffe) s += c.coiffe(c, ctx, 'arceau');
     // lunettes relevées sur le crâne : sangle, deux grandes loupes et une petite empilée sur chacune
     // (pendant l'action, celle de droite est baissée sur l'œil)
     s += P(se ? 'M12.2,14.6 Q24,6.4 36.8,14.2 L37,16.4 Q24,8.6 12,16.8 Z' : 'M11.8,14.6 Q24,6.6 36.2,14.6 L36.4,16.8 Q24,8.8 11.6,16.8 Z', C.strap, 0.8);
@@ -126,6 +127,7 @@ const rivet = {
       if (act.lensDown && i === 1) return;
       s += lens(x, y, r) + lens(small[i][0], small[i][1], small[i][2]);
     });
+    if (c.coiffe) s += c.coiffe(c, ctx, 'oreilles');
     s += expression({
       eyes: se ? [[17.2, 22.6, 1.55], [25.2, 22.6, 1.35]] : [[19.4, 22.6, 1.6], [28.6, 22.6, 1.6]], ry: 2.35,
       brow: '#3B271B', browY: -4, browW: 1.3,
