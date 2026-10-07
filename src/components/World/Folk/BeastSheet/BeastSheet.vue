@@ -21,7 +21,7 @@
           <span v-for="(n, r) in cost" :key="r" class="beast__cost"><ElementGlyph :glyph="GLYPH[r]" />{{ n }}</span>
         </template>
       </button>
-      <p v-if="beast.refill && !canPay" class="beast__short">Il te faut {{ costText }} : ramasse la production du Potager.</p>
+      <p v-if="beast.refill && !canPay" class="beast__short">Il te faut {{ costText }} : le Potager en produit, la Récolte aussi.</p>
     </div>
   </GModal>
 </template>

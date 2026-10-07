@@ -159,7 +159,7 @@
             ref="shop"
             :site="site"
             :signs="state.signs || null"
-            :coins="coins"
+            :coins="coinsPaid"
             :busy="busy"
             :undoable="undoable"
             @describe="item => describeItem(site, item)"
@@ -212,7 +212,7 @@
           v-if="zone"
           :zone="zone"
           :sites="sitesIn(zone)"
-          :stock="state.stock"
+          :stock="stockPaid"
           :charges="state.charges.count"
           :expedition="state.expedition || null"
           :trip-left="tripLeft"
@@ -243,7 +243,7 @@
     <CraftBench
       v-if="benchOpen && state && state.crafts"
       :crafts="state.crafts"
-      :stock="stockAll"
+      :stock="stockPaid"
       :element-emojis="elementEmojis"
       :busy="busy || craftStarting"
       @assemble="assemble"
@@ -317,7 +317,7 @@
       v-if="beastView && state"
       :beast="beastView"
       :cost="state.beasts.cost"
-      :stock="state.stock"
+      :stock="stockPaid"
       :portrait="beastPortrait(beastView.id)"
       :busy="busy"
       @feed="feedBeast"
@@ -329,7 +329,7 @@
       v-if="visitorOpen && state && state.visitor"
       :visitor="state.visitor"
       :elapsed="clock - loadedAt"
-      :stock="state.stock"
+      :stock="stockPaid"
       :charges="state.charges.count"
       :houses="state.houses || undefined"
       :work-name="siteName(state.visitor.site)"
@@ -423,6 +423,7 @@ import { depositsShown, depositsReady } from '@/world/finds';
 import { CLIMATE_NAMES } from '@/world/climates';
 import { variantsOf } from '@/world/annexes';
 import { dueIn } from '@/world/due';
+import { gatheredBetween, gatheredText } from '@/world/pending';
 import GModal from '@/components/ui/GModal/GModal.vue';
 import { villageOf } from '@/world/village';
 import { clearDrawings } from '@/book/painter';
@@ -531,8 +532,9 @@ export default {
     stockAll() {
       return this.state ? { ...this.state.stock, ...Object.fromEntries((this.state.finds || []).map(f => [f.id, f.amount])) } : {};
     },
-    // Ce qui paie un chantier, une annexe ou un besoin : les réserves et ce qui attend dans les bâtiments, que le
-    // serveur encaisse d'abord ; les écus de même (solde inconnu : null)
+    // Ce qui paie une dépense (chantier, annexe, besoin, expédition, création, bête, cadeau, voyageur, boutique) : les
+    // réserves et ce qui attend dans les bâtiments, que le serveur encaisse d'abord ; les écus de même (solde inconnu :
+    // null)
     stockPaid() {
       const pending = (this.state && this.state.pendingStock) || {};
       return Object.fromEntries(Object.entries(this.stockAll).map(([k, n]) => [k, n + (pending[k] || 0)]));
@@ -733,7 +735,7 @@ export default {
       try {
         const state = await playService.world();
         if (this.gone) return;
-        this.apply(state);
+        this.apply(state, { quiet: true });
         this.guest = false;
         this.loadError = false;
         guide.tip('island');
@@ -766,7 +768,8 @@ export default {
         this.loadError = true;
       }
     },
-    apply(state) {
+    // quiet : une simple relecture de l'île (rien n'a été ramassé en passant), ou « Tout ramasser », qui le dit lui-même
+    apply(state, { quiet = false } = {}) {
       // Les décorations de l'ancienne règle viennent d'être remboursées (une seule fois) : le solde suit, l'île le dit
       if (state.refund) {
         const { count, coins, balance } = state.refund;
@@ -859,6 +862,11 @@ export default {
           found.forEach(z => this.unveils.set(z.id, performance.now()));
           this.$emit('show-alert', found.map(z => `Expédition revenue : ${z.name} découvert (${CLIMATE_NAMES[z.climate] || 'climat inconnu'}) !`).join(' '));
         }
+      }
+      // Une action a ramassé en passant ce qui attendait (le serveur encaisse avant de payer) : l'île le dit
+      if (this.state && !quiet) {
+        const got = gatheredText(gatheredBetween(this.state, state));
+        if (got) this.$emit('show-alert', `Ramassé en passant : ${got}`);
       }
       this.state = state;
       this.emitQuest();
