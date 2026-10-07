@@ -1,6 +1,6 @@
 // Kit commun des paliers III à VII : cadre des grandes emprises, petits volumes récurrents (tour, toit conique,
 // cheminée, chemin dallé, lanterne) sur la même géométrie et la même lumière que le reste.
-import { P, box, face, gable, disc, cylinder, sprite, EDGE } from '../iso.js';
+import { P, box, face, gable, disc, cylinder, sprite, EDGE, HIVER, NEIGE, snowPan } from '../iso.js';
 import { WOOD, WOOD_DARK, STONE, BRICK } from '../palette.js';
 
 // Cadre d'un bâtiment de 3 × 3 cases (losange de ±96 px en largeur), assez haut pour un château
@@ -32,7 +32,10 @@ export function cone(u, v, z, r, h, colors, id) {
   const tx = h > ry ? rx * Math.sqrt(Math.max(0, 1 - ((y - ty) / ry) ** 2)) : rx;
   return `<defs><linearGradient id="${id}" x1="0" x2="1"><stop offset="0" stop-color="${colors.light}"/><stop offset="1" stop-color="${colors.dark}"/></linearGradient></defs>`
     + `<path d="M${f2(x)},${f2(apex)} L${f2(x + tx)},${f2(ty)} A${f2(rx)},${f2(ry)} 0 1 1 ${f2(x - tx)},${f2(ty)} Z" fill="url(#${id})" stroke="${OUT}" stroke-width="0.8" stroke-linejoin="round"/>`
-    + `<path d="M${f2(x - rx)},${f2(y)} A${f2(rx)},${f2(ry)} 0 0 0 ${f2(x + rx)},${f2(y)}" fill="none" stroke="rgba(40,30,50,.35)" stroke-width="1.2"/>`;
+    + `<path d="M${f2(x - rx)},${f2(y)} A${f2(rx)},${f2(ry)} 0 0 0 ${f2(x + rx)},${f2(y)}" fill="none" stroke="rgba(40,30,50,.35)" stroke-width="1.2"/>`
+    // l'hiver : une calotte de neige sur la pointe (une ellipse découpée dans le cône : on n'en voit que le bord du bas)
+    + (HIVER ? `<defs><clipPath id="${id}-neige"><path d="M${f2(x)},${f2(apex)} L${f2(x + tx)},${f2(ty)} A${f2(rx)},${f2(ry)} 0 1 1 ${f2(x - tx)},${f2(ty)} Z"/></clipPath></defs>`
+      + `<g clip-path="url(#${id}-neige)"><ellipse cx="${f2(x + 1)}" cy="${f2(apex + h * 0.12)}" rx="${f2(rx * 0.8)}" ry="${f2(h * 0.5)}" fill="${NEIGE.shade}"/><ellipse cx="${f2(x)}" cy="${f2(apex)}" rx="${f2(rx * 0.8)}" ry="${f2(h * 0.5)}" fill="${NEIGE.light}"${EDGE}/></g>` : '');
 }
 // Tour ronde : fût de pierre, meurtrières, toit conique et épi
 export function tower(u, v, r, z0, z1, { stone = STONE, roof = { light: '#86B6E6', dark: '#3F6FA3' }, roofH = 26, id = 't' } = {}) {
@@ -50,7 +53,10 @@ export function tower(u, v, r, z0, z1, { stone = STONE, roof = { light: '#86B6E6
 }
 // Cheminée de briques posée à (u, v), du toit z0 jusqu'à z1
 export function chimney(u, v, z0, z1, s = 0.08, colors = BRICK) {
-  return box(u - s, v - s, u + s, v + s, z0, z1, colors) + box(u - s - 0.02, v - s - 0.02, u + s + 0.02, v + s + 0.02, z1, z1 + 2.5, DARK_STONE);
+  const c = s + 0.02, [cx, cy] = P(u, v, z1 + 2.5);
+  return box(u - s, v - s, u + s, v + s, z0, z1, colors) + box(u - s - 0.02, v - s - 0.02, u + s + 0.02, v + s + 0.02, z1, z1 + 2.5, DARK_STONE)
+    // l'hiver : un petit chapeau de neige sur la cheminée
+    + (HIVER ? `<path d="M${f2(cx - c * 32 - 1)},${f2(cy)} Q${f2(cx - c * 32)},${f2(cy - c * 16 - 3)} ${f2(cx)},${f2(cy - c * 16 - 3.4)} Q${f2(cx + c * 32)},${f2(cy - c * 16 - 3)} ${f2(cx + c * 32 + 1)},${f2(cy)} Q${f2(cx)},${f2(cy + c * 16 + 0.6)} ${f2(cx - c * 32 - 1)},${f2(cy)} Z" fill="${NEIGE.light}"${EDGE}/>` : '');
 }
 // Chemin dallé posé au sol, du point a au point b (en cases), largeur w
 export function pavedPath(a, b, w = 0.22) {
@@ -177,7 +183,9 @@ export function dormer(u, w, vm, ve, zr, ze, k, roof) {
     + face([[u - w * 0.6, v, z0 + 1.5], [u + w * 0.6, v, z0 + 1.5], [u + w * 0.6, v, z0 + h - 1.5], [u - w * 0.6, v, z0 + h - 1.5]], '#FFE6A3', ' stroke="#FFFFFF" stroke-width="0.8"')
     + face([[u + w, v, z0], [u + w, v - 0.12, z0 + 4], [u + w, v - 0.12, z0 + h], [u + w, v, z0 + h]], PLASTER.right, EDGE)
     + face([[u - w - 0.03, v + 0.02, z0 + h], [u, v + 0.02, z0 + h + 7], [u, v - 0.14, z0 + h + 7], [u - w - 0.03, v - 0.14, z0 + h]], roof.back, EDGE)
-    + face([[u + w + 0.03, v + 0.02, z0 + h], [u, v + 0.02, z0 + h + 7], [u, v - 0.14, z0 + h + 7], [u + w + 0.03, v - 0.14, z0 + h]], roof.front, EDGE);
+    + (HIVER ? snowPan(P(u, v - 0.14, z0 + h + 7), P(u, v + 0.02, z0 + h + 7), P(u - w - 0.03, v + 0.02, z0 + h), P(u - w - 0.03, v - 0.14, z0 + h), 0.8) : '')
+    + face([[u + w + 0.03, v + 0.02, z0 + h], [u, v + 0.02, z0 + h + 7], [u, v - 0.14, z0 + h + 7], [u + w + 0.03, v - 0.14, z0 + h]], roof.front, EDGE)
+    + (HIVER ? snowPan(P(u, v - 0.14, z0 + h + 7), P(u, v + 0.02, z0 + h + 7), P(u + w + 0.03, v + 0.02, z0 + h), P(u + w + 0.03, v - 0.14, z0 + h), 0.8) : '');
 }
 // Ombre douce au sol d'un grand bâtiment (3 × 3), décalée à l'opposé de la lumière
 export const bigShadow = (rx = 82, ry = 38) => `<ellipse cx="8" cy="${f2(P(0, 0, 0)[1] + 6)}" rx="${rx}" ry="${ry}" fill="rgba(40,55,20,.12)"/>`;

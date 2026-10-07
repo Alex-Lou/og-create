@@ -168,7 +168,7 @@ function moment(id, meta) {
     return 'partout';
   }
   if (top === 'batiments') {
-    if (a === 'paliers') { const n = +(nom.match(/palier(\d)/) || [])[1]; return (PALIERS_DU_RECIT[b] || {})[n] || 'evolutions'; }
+    if (a === 'paliers' || a === 'paliers_hiver') { const n = +(nom.match(/palier(\d)/) || [])[1]; return (PALIERS_DU_RECIT[b] || {})[n] || 'evolutions'; }
     if (a === 'chantier') return 'tuto-3';
     return 'evolutions';
   }

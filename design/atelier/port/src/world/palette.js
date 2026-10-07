@@ -1,5 +1,5 @@
 // Palette et petits motifs communs aux sprites de l'île : mêmes matières, même lumière, partout.
-import { P, face, box, shadow, cylinder, mixHex, EDGE } from './iso.js';
+import { P, face, box, shadow, cylinder, mixHex, EDGE, HIVER } from './iso.js';
 
 // Palette « Vélin & Veillée », version île : chaque matière a son dessus, sa face gauche (éclairée) et sa face droite
 export const WOOD = { top: '#E0A96C', left: '#BF8049', right: '#965C30' };
@@ -143,6 +143,7 @@ export function leafPair(x, y, rx, ry, d, c1 = '#86CB5E', c2 = '#6DB64C') {
 }
 // Bardeaux de bois sur le pan avant d'un toit à deux pans (même géométrie que gable) : rangs, joints décalés, reflet
 export function shingles(u0, v0, u1, v1, z, h, o = 0.08) {
+  if (HIVER) return ''; // l'hiver, la neige cache les bardeaux
   const vm = (v0 + v1) / 2, a = u0 - o, b = u1 + o, ve = v1 + o;
   const at = (u, k) => P(u, vm + (ve - vm) * k, z + h * (1 - k)).map(n => rnd2(n)).join(',');
   return [0.2, 0.4, 0.6, 0.8].map((k, r) => {
@@ -269,6 +270,7 @@ const ROOF_KIND = {
   'toit-chaume': 'thatch', 'toit-chaume-foyer': 'thatch'
 };
 export function roofTexture(skin, u0, v0, u1, v1, z, h, o = 0.08) {
+  if (HIVER) return ''; // l'hiver, la neige cache les tuiles, l'ardoise et le chaume
   const kind = ROOF_KIND[skin];
   if (!kind) return '';
   const vm = (v0 + v1) / 2;

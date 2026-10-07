@@ -2,7 +2,7 @@
 // Même anse et même appontement à z = 10 qu'aux paliers I-II (× 1.5 dès le palier IV) : la canne au bout de la
 // jetée en L, le filet sur l'appontement, le casier et le crabe sur le sable, la barque derrière l'appontement.
 import { BLUE_ROOF, BUILDING_BOX, cove } from '../palette.js';
-import { sprite } from '../iso.js';
+import { sprite, HIVER, snowPan, snowCap } from '../iso.js';
 import {
   big, P, box, face, gable, cylinder, disc, f2, ln, dot, ell, OUT, STONE, WOOD, WOOD_DARK, IRON, GOLD,
   courseRight
@@ -77,7 +77,9 @@ function jettyLight(lamp = '#FFE08A') {
     + box(u - 0.035, v - 0.035, u + 0.035, v + 0.035, 8, h, { top: '#55504A', left: '#55504A', right: '#3D3A36' })
     + box(u - 0.09, v - 0.09, u + 0.09, v + 0.09, h, h + 12, { top: '#3D3A36', left: lamp, right: '#E9BF4E' })
     + ln(P(u, v + 0.09, h), P(u, v + 0.09, h + 12), '#3D3A36', 0.8)
-    + `<path d="M${f2(tx - 7)},${f2(ty + 2)} L${f2(tx)},${f2(ty - 8)} L${f2(tx + 7)},${f2(ty + 2)} Z" fill="#E2463A" stroke="${OUT}" stroke-width="0.7"/>` + dot(tx, ty - 9, 1.4, GOLD.left);
+    + `<path d="M${f2(tx - 7)},${f2(ty + 2)} L${f2(tx)},${f2(ty - 8)} L${f2(tx + 7)},${f2(ty + 2)} Z" fill="#E2463A" stroke="${OUT}" stroke-width="0.7"/>`
+    + (HIVER ? snowCap('jl-neige', `M${f2(tx - 7)},${f2(ty + 2)} L${f2(tx)},${f2(ty - 8)} L${f2(tx + 7)},${f2(ty + 2)} Z`, tx, ty - 8, 6, 5) : '')
+    + dot(tx, ty - 9, 1.4, GOLD.left);
 }
 // Caisse posée sur l'appontement
 const deckCrate = (u, v, s = 0.08) => box(u - s, v - s, u + s, v + s, 10, 10 + s * 100, { top: '#E0B47A', left: '#C99359', right: '#A06F3C' });
@@ -111,6 +113,8 @@ function fishMarket() {
     + stalls
     + [[u0, v1], [u1, v1]].map(([u, v]) => box(u - 0.03, v - 0.03, u + 0.03, v + 0.03, 10, 32, WOOD_DARK)).join('')
     + gable(u0, v0, u1, v1, 32, 12, roof, 0.06) + stripes
+    // l'hiver, la neige repasse sur les rayures
+    + (HIVER ? snowPan(P(u0 - 0.06, 0, 44), P(u1 + 0.06, 0, 44), P(u1 + 0.06, v1 + 0.06, 32), P(u0 - 0.06, v1 + 0.06, 32), 0.8) : '')
     + deckCrate(-0.15, 0.1, 0.07);
 }
 const market = () => port(fishMarket());

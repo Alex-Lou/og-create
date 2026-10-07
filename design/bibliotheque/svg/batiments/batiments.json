@@ -1,5 +1,5 @@
 {
- "_lisez_moi": "Cadres en pixels (x, y, largeur, hauteur) autour de l'ancre (0, 0), centre de l'emprise au sol (2 × 2 cases aux paliers I-III, 3 × 3 ensuite), à l'échelle du jeu × 1,25 (case de 80 × 40). Paliers : images composées (bâtiment + parties animées + voilier du Ponton) ; lumieres [u, v, z, rayon] et fumees [u, v, z] en cases et pixels × 1,25. Objets : un fichier par calque, ancré à sa place au sol ; place = [u, v] en cases autour du centre du bâtiment, par palier ; derriere = à peindre avant le bâtiment ; mouvement = le jeu le déplace en plus. Teintes : recolorations (teintes/teinter.mjs). Quand un dessin du jeu dépasse un peu de son cadre (faisceau du phare, ombre d'un objet), le cadre est élargi juste ce qu'il faut, l'ancre ne bouge pas : prendre le cadre noté ici.",
+ "_lisez_moi": "Cadres en pixels (x, y, largeur, hauteur) autour de l'ancre (0, 0), centre de l'emprise au sol (2 × 2 cases aux paliers I-III, 3 × 3 ensuite), à l'échelle du jeu × 1,25 (case de 80 × 40). Paliers : images composées (bâtiment + parties animées + voilier du Ponton) ; lumieres [u, v, z, rayon] et fumees [u, v, z] en cases et pixels × 1,25. Paliers d'hiver (paliers_hiver) : les mêmes images, les toits sous la neige, même ancre ; ete = le palier d'été qu'il remplace. Objets : un fichier par calque, ancré à sa place au sol ; place = [u, v] en cases autour du centre du bâtiment, par palier ; derriere = à peindre avant le bâtiment ; mouvement = le jeu le déplace en plus. Teintes : recolorations (teintes/teinter.mjs). Quand un dessin du jeu dépasse un peu de son cadre (faisceau du phare, ombre d'un objet), le cadre est élargi juste ce qu'il faut, l'ancre ne bouge pas : prendre le cadre noté ici.",
  "paliers": {
   "foyer_palier1": {
    "nom": "Foyer — palier I",
@@ -1590,6 +1590,1686 @@
     "paliers/ponton/ponton_palier7_4.svg",
     "paliers/ponton/ponton_palier7_5.svg",
     "paliers/ponton/ponton_palier7_6.svg"
+   ],
+   "cadre": [
+    -140,
+    -250,
+    280,
+    330
+   ],
+   "emprise": "3 × 3",
+   "ms_par_image": 200,
+   "animations": [
+    "kraken (6 images, 5/s)"
+   ],
+   "lumieres": [
+    {
+     "u": -1.12,
+     "v": -1.12,
+     "z": 57.5,
+     "rayon": 27.5
+    },
+    {
+     "u": 1.24,
+     "v": 0.22,
+     "z": 51.25,
+     "rayon": 20
+    },
+    {
+     "u": 0.95,
+     "v": -0.12,
+     "z": 27.5,
+     "rayon": 20
+    },
+    {
+     "u": -0.6,
+     "v": 0.95,
+     "z": 5,
+     "rayon": 20
+    }
+   ],
+   "voilier": "compris dans l'image (le jeu le berce à part : décor/ilots/voilier)"
+  }
+ },
+ "paliers_hiver": {
+  "foyer_palier1_hiver": {
+   "nom": "Foyer — palier I, l'hiver",
+   "ete": "foyer_palier1",
+   "fichiers": [
+    "paliers_hiver/foyer/foyer_palier1_hiver_1.svg",
+    "paliers_hiver/foyer/foyer_palier1_hiver_2.svg",
+    "paliers_hiver/foyer/foyer_palier1_hiver_3.svg"
+   ],
+   "cadre": [
+    -95,
+    -155,
+    190,
+    210
+   ],
+   "emprise": "2 × 2",
+   "ms_par_image": 111,
+   "animations": [
+    "flame (3 images, 9/s)"
+   ],
+   "lumieres": [
+    {
+     "u": 0,
+     "v": 0,
+     "z": 12.5,
+     "rayon": 67.5
+    }
+   ],
+   "fumees": [
+    {
+     "u": 0,
+     "v": 0,
+     "z": 30
+    }
+   ]
+  },
+  "foyer_palier2_hiver": {
+   "nom": "Foyer — palier II, l'hiver",
+   "ete": "foyer_palier2",
+   "fichiers": [
+    "paliers_hiver/foyer/foyer_palier2_hiver_1.svg",
+    "paliers_hiver/foyer/foyer_palier2_hiver_2.svg",
+    "paliers_hiver/foyer/foyer_palier2_hiver_3.svg"
+   ],
+   "cadre": [
+    -95,
+    -155,
+    190,
+    210
+   ],
+   "emprise": "2 × 2",
+   "ms_par_image": 111,
+   "animations": [
+    "flame (3 images, 9/s)"
+   ],
+   "lumieres": [
+    {
+     "u": 0.5,
+     "v": 0.36,
+     "z": 10,
+     "rayon": 50
+    }
+   ],
+   "fumees": [
+    {
+     "u": 0.5,
+     "v": 0.36,
+     "z": 22.5
+    }
+   ]
+  },
+  "foyer_palier3_hiver": {
+   "nom": "Foyer — palier III, l'hiver",
+   "ete": "foyer_palier3",
+   "fichiers": [
+    "paliers_hiver/foyer/foyer_palier3_hiver.svg"
+   ],
+   "cadre": [
+    -95,
+    -155,
+    190,
+    210
+   ],
+   "emprise": "2 × 2",
+   "lumieres": [
+    {
+     "u": 0.55,
+     "v": -0.07,
+     "z": 17.5,
+     "rayon": 27.5
+    }
+   ],
+   "fumees": [
+    {
+     "u": 0.3,
+     "v": -0.27,
+     "z": 77.5
+    }
+   ]
+  },
+  "foyer_palier4_hiver": {
+   "nom": "Foyer — palier IV, l'hiver",
+   "ete": "foyer_palier4",
+   "fichiers": [
+    "paliers_hiver/foyer/foyer_palier4_hiver_1.svg",
+    "paliers_hiver/foyer/foyer_palier4_hiver_2.svg",
+    "paliers_hiver/foyer/foyer_palier4_hiver_3.svg",
+    "paliers_hiver/foyer/foyer_palier4_hiver_4.svg"
+   ],
+   "cadre": [
+    -140,
+    -250,
+    280,
+    330
+   ],
+   "emprise": "3 × 3",
+   "ms_par_image": 333,
+   "animations": [
+    "vapor (4 images, 3/s)"
+   ],
+   "lumieres": [
+    {
+     "u": -0.81,
+     "v": 0.42,
+     "z": 16.25,
+     "rayon": 17.5
+    },
+    {
+     "u": -0.79,
+     "v": 0.42,
+     "z": 40,
+     "rayon": 17.5
+    },
+    {
+     "u": 0.17,
+     "v": 0.42,
+     "z": 40,
+     "rayon": 17.5
+    },
+    {
+     "u": 0.42,
+     "v": -0.56,
+     "z": 40,
+     "rayon": 17.5
+    },
+    {
+     "u": 0.19,
+     "v": 0.42,
+     "z": 16.25,
+     "rayon": 17.5
+    },
+    {
+     "u": 0.78,
+     "v": 0.06,
+     "z": 7.5,
+     "rayon": 22.5
+    }
+   ]
+  },
+  "foyer_palier5_hiver": {
+   "nom": "Foyer — palier V, l'hiver",
+   "ete": "foyer_palier5",
+   "fichiers": [
+    "paliers_hiver/foyer/foyer_palier5_hiver_1.svg",
+    "paliers_hiver/foyer/foyer_palier5_hiver_2.svg",
+    "paliers_hiver/foyer/foyer_palier5_hiver_3.svg",
+    "paliers_hiver/foyer/foyer_palier5_hiver_4.svg"
+   ],
+   "cadre": [
+    -140,
+    -250,
+    280,
+    330
+   ],
+   "emprise": "3 × 3",
+   "ms_par_image": 333,
+   "animations": [
+    "vapor (4 images, 3/s)"
+   ],
+   "lumieres": [
+    {
+     "u": -0.84,
+     "v": 0.42,
+     "z": 16.25,
+     "rayon": 17.5
+    },
+    {
+     "u": -0.82,
+     "v": 0.42,
+     "z": 40,
+     "rayon": 17.5
+    },
+    {
+     "u": -0.03,
+     "v": 0.42,
+     "z": 40,
+     "rayon": 17.5
+    },
+    {
+     "u": 0.22,
+     "v": -0.42,
+     "z": 40,
+     "rayon": 17.5
+    },
+    {
+     "u": -0.01,
+     "v": 0.42,
+     "z": 16.25,
+     "rayon": 17.5
+    },
+    {
+     "u": 0.9,
+     "v": -0.38,
+     "z": 40,
+     "rayon": 17.5
+    },
+    {
+     "u": 0.9,
+     "v": -0.38,
+     "z": 76.25,
+     "rayon": 17.5
+    }
+   ]
+  },
+  "foyer_palier6_hiver": {
+   "nom": "Foyer — palier VI, l'hiver",
+   "ete": "foyer_palier6",
+   "fichiers": [
+    "paliers_hiver/foyer/foyer_palier6_hiver_1.svg",
+    "paliers_hiver/foyer/foyer_palier6_hiver_2.svg",
+    "paliers_hiver/foyer/foyer_palier6_hiver_3.svg",
+    "paliers_hiver/foyer/foyer_palier6_hiver_4.svg"
+   ],
+   "cadre": [
+    -140,
+    -250,
+    280,
+    330
+   ],
+   "emprise": "3 × 3",
+   "ms_par_image": 333,
+   "animations": [
+    "vapor (4 images, 3/s)"
+   ],
+   "lumieres": [
+    {
+     "u": -0.87,
+     "v": 0.5,
+     "z": 16.25,
+     "rayon": 17.5
+    },
+    {
+     "u": -0.85,
+     "v": 0.5,
+     "z": 40,
+     "rayon": 17.5
+    },
+    {
+     "u": -0.27,
+     "v": 0.5,
+     "z": 40,
+     "rayon": 17.5
+    },
+    {
+     "u": -0.02,
+     "v": -0.1,
+     "z": 40,
+     "rayon": 17.5
+    },
+    {
+     "u": 0.74,
+     "v": -0.3,
+     "z": 52.5,
+     "rayon": 17.5
+    },
+    {
+     "u": 0.74,
+     "v": -0.3,
+     "z": 118.75,
+     "rayon": 17.5
+    },
+    {
+     "u": -0.2,
+     "v": 0.75,
+     "z": 31.25,
+     "rayon": 20
+    }
+   ]
+  },
+  "foyer_palier7_hiver": {
+   "nom": "Foyer — palier VII, l'hiver",
+   "ete": "foyer_palier7",
+   "fichiers": [
+    "paliers_hiver/foyer/foyer_palier7_hiver_1.svg",
+    "paliers_hiver/foyer/foyer_palier7_hiver_2.svg",
+    "paliers_hiver/foyer/foyer_palier7_hiver_3.svg",
+    "paliers_hiver/foyer/foyer_palier7_hiver_4.svg",
+    "paliers_hiver/foyer/foyer_palier7_hiver_5.svg",
+    "paliers_hiver/foyer/foyer_palier7_hiver_6.svg",
+    "paliers_hiver/foyer/foyer_palier7_hiver_7.svg",
+    "paliers_hiver/foyer/foyer_palier7_hiver_8.svg"
+   ],
+   "cadre": [
+    -140,
+    -250,
+    282.5,
+    330
+   ],
+   "emprise": "3 × 3",
+   "ms_par_image": 250,
+   "animations": [
+    "beam (8 images, 4/s)",
+    "vapor (4 images, 3/s)"
+   ],
+   "lumieres": [
+    {
+     "u": -0.87,
+     "v": 0.48,
+     "z": 16.25,
+     "rayon": 17.5
+    },
+    {
+     "u": -0.85,
+     "v": 0.48,
+     "z": 40,
+     "rayon": 17.5
+    },
+    {
+     "u": -0.29,
+     "v": 0.48,
+     "z": 40,
+     "rayon": 17.5
+    },
+    {
+     "u": -0.04,
+     "v": -0.12,
+     "z": 40,
+     "rayon": 17.5
+    },
+    {
+     "u": 0.42,
+     "v": -0.5,
+     "z": 180,
+     "rayon": 42.5
+    },
+    {
+     "u": -0.24,
+     "v": 0.76,
+     "z": 31.25,
+     "rayon": 20
+    }
+   ]
+  },
+  "carriere_palier1_hiver": {
+   "nom": "Carrière — palier I, l'hiver",
+   "ete": "carriere_palier1",
+   "fichiers": [
+    "paliers_hiver/carriere/carriere_palier1_hiver.svg"
+   ],
+   "cadre": [
+    -95,
+    -155,
+    190,
+    210
+   ],
+   "emprise": "2 × 2"
+  },
+  "carriere_palier2_hiver": {
+   "nom": "Carrière — palier II, l'hiver",
+   "ete": "carriere_palier2",
+   "fichiers": [
+    "paliers_hiver/carriere/carriere_palier2_hiver.svg"
+   ],
+   "cadre": [
+    -95,
+    -155,
+    190,
+    210
+   ],
+   "emprise": "2 × 2"
+  },
+  "carriere_palier3_hiver": {
+   "nom": "Carrière — palier III, l'hiver",
+   "ete": "carriere_palier3",
+   "fichiers": [
+    "paliers_hiver/carriere/carriere_palier3_hiver.svg"
+   ],
+   "cadre": [
+    -95,
+    -155,
+    190,
+    210
+   ],
+   "emprise": "2 × 2",
+   "lumieres": [
+    {
+     "u": 0.04,
+     "v": -0.23,
+     "z": 42.5,
+     "rayon": 22.5
+    },
+    {
+     "u": -0.35,
+     "v": -0.16,
+     "z": 32.5,
+     "rayon": 25
+    }
+   ]
+  },
+  "carriere_palier4_hiver": {
+   "nom": "Carrière — palier IV, l'hiver",
+   "ete": "carriere_palier4",
+   "fichiers": [
+    "paliers_hiver/carriere/carriere_palier4_hiver.svg"
+   ],
+   "cadre": [
+    -140,
+    -250,
+    280,
+    330
+   ],
+   "emprise": "3 × 3",
+   "lumieres": [
+    {
+     "u": -0.53,
+     "v": -0.3,
+     "z": 22.5,
+     "rayon": 30
+    },
+    {
+     "u": 0.12,
+     "v": -0.3,
+     "z": 15,
+     "rayon": 20
+    },
+    {
+     "u": -0.12,
+     "v": 0.02,
+     "z": 38.75,
+     "rayon": 20
+    }
+   ]
+  },
+  "carriere_palier5_hiver": {
+   "nom": "Carrière — palier V, l'hiver",
+   "ete": "carriere_palier5",
+   "fichiers": [
+    "paliers_hiver/carriere/carriere_palier5_hiver.svg"
+   ],
+   "cadre": [
+    -140,
+    -250,
+    280,
+    330
+   ],
+   "emprise": "3 × 3",
+   "lumieres": [
+    {
+     "u": -0.53,
+     "v": -0.3,
+     "z": 22.5,
+     "rayon": 30
+    },
+    {
+     "u": 1.15,
+     "v": 0.62,
+     "z": 12.5,
+     "rayon": 17.5
+    }
+   ]
+  },
+  "carriere_palier6_hiver": {
+   "nom": "Carrière — palier VI, l'hiver",
+   "ete": "carriere_palier6",
+   "fichiers": [
+    "paliers_hiver/carriere/carriere_palier6_hiver.svg"
+   ],
+   "cadre": [
+    -140,
+    -250,
+    280,
+    330
+   ],
+   "emprise": "3 × 3",
+   "lumieres": [
+    {
+     "u": -0.53,
+     "v": -0.3,
+     "z": 22.5,
+     "rayon": 30
+    },
+    {
+     "u": -1.1,
+     "v": -0.3,
+     "z": 32.5,
+     "rayon": 20
+    },
+    {
+     "u": -0.05,
+     "v": -0.3,
+     "z": 42.5,
+     "rayon": 17.5
+    },
+    {
+     "u": 1.4,
+     "v": -0.9,
+     "z": 50,
+     "rayon": 20
+    },
+    {
+     "u": 0.12,
+     "v": 0.62,
+     "z": 10,
+     "rayon": 20
+    },
+    {
+     "u": -1,
+     "v": 0.3,
+     "z": 10,
+     "rayon": 17.5
+    }
+   ]
+  },
+  "carriere_palier7_hiver": {
+   "nom": "Carrière — palier VII, l'hiver",
+   "ete": "carriere_palier7",
+   "fichiers": [
+    "paliers_hiver/carriere/carriere_palier7_hiver.svg"
+   ],
+   "cadre": [
+    -140,
+    -250,
+    280,
+    330
+   ],
+   "emprise": "3 × 3",
+   "lumieres": [
+    {
+     "u": -0.53,
+     "v": -0.3,
+     "z": 22.5,
+     "rayon": 30
+    },
+    {
+     "u": -0.12,
+     "v": 0.02,
+     "z": 38.75,
+     "rayon": 20
+    },
+    {
+     "u": 0.55,
+     "v": 0.85,
+     "z": 33.75,
+     "rayon": 20
+    },
+    {
+     "u": 1.06,
+     "v": 0.49,
+     "z": 11.25,
+     "rayon": 15
+    },
+    {
+     "u": 1.42,
+     "v": 0.49,
+     "z": 11.25,
+     "rayon": 15
+    },
+    {
+     "u": 1.32,
+     "v": -0.08,
+     "z": 48.75,
+     "rayon": 15
+    },
+    {
+     "u": -1,
+     "v": -1.22,
+     "z": 88.75,
+     "rayon": 12.5
+    },
+    {
+     "u": -0.05,
+     "v": -1.24,
+     "z": 88.75,
+     "rayon": 12.5
+    }
+   ],
+   "fumees": [
+    {
+     "u": 0.89,
+     "v": -0.17,
+     "z": 77.5
+    },
+    {
+     "u": 0.81,
+     "v": 0.39,
+     "z": 40
+    },
+    {
+     "u": 1.19,
+     "v": 0.39,
+     "z": 40
+    }
+   ]
+  },
+  "bosquet_palier1_hiver": {
+   "nom": "Bosquet — palier I, l'hiver",
+   "ete": "bosquet_palier1",
+   "fichiers": [
+    "paliers_hiver/bosquet/bosquet_palier1_hiver.svg"
+   ],
+   "cadre": [
+    -95,
+    -155,
+    190,
+    210
+   ],
+   "emprise": "2 × 2",
+   "souplesse_au_vent": 0.03
+  },
+  "bosquet_palier2_hiver": {
+   "nom": "Bosquet — palier II, l'hiver",
+   "ete": "bosquet_palier2",
+   "fichiers": [
+    "paliers_hiver/bosquet/bosquet_palier2_hiver.svg"
+   ],
+   "cadre": [
+    -95,
+    -155,
+    190,
+    210
+   ],
+   "emprise": "2 × 2",
+   "souplesse_au_vent": 0.03
+  },
+  "bosquet_palier3_hiver": {
+   "nom": "Bosquet — palier III, l'hiver",
+   "ete": "bosquet_palier3",
+   "fichiers": [
+    "paliers_hiver/bosquet/bosquet_palier3_hiver.svg"
+   ],
+   "cadre": [
+    -95,
+    -155,
+    190,
+    210
+   ],
+   "emprise": "2 × 2",
+   "lumieres": [
+    {
+     "u": 0.42,
+     "v": -0.04,
+     "z": 15,
+     "rayon": 15
+    }
+   ],
+   "fumees": [
+    {
+     "u": -0.04,
+     "v": -0.2,
+     "z": 55
+    }
+   ],
+   "souplesse_au_vent": 0.015
+  },
+  "bosquet_palier4_hiver": {
+   "nom": "Bosquet — palier IV, l'hiver",
+   "ete": "bosquet_palier4",
+   "fichiers": [
+    "paliers_hiver/bosquet/bosquet_palier4_hiver.svg"
+   ],
+   "cadre": [
+    -140,
+    -250,
+    280,
+    330
+   ],
+   "emprise": "3 × 3",
+   "lumieres": [
+    {
+     "u": 0.45,
+     "v": 0.12,
+     "z": 17.5,
+     "rayon": 16.25
+    }
+   ],
+   "fumees": [
+    {
+     "u": -0.27,
+     "v": -0.12,
+     "z": 65
+    }
+   ],
+   "souplesse_au_vent": 0.012
+  },
+  "bosquet_palier5_hiver": {
+   "nom": "Bosquet — palier V, l'hiver",
+   "ete": "bosquet_palier5",
+   "fichiers": [
+    "paliers_hiver/bosquet/bosquet_palier5_hiver_1.svg",
+    "paliers_hiver/bosquet/bosquet_palier5_hiver_2.svg",
+    "paliers_hiver/bosquet/bosquet_palier5_hiver_3.svg",
+    "paliers_hiver/bosquet/bosquet_palier5_hiver_4.svg",
+    "paliers_hiver/bosquet/bosquet_palier5_hiver_5.svg",
+    "paliers_hiver/bosquet/bosquet_palier5_hiver_6.svg"
+   ],
+   "cadre": [
+    -140,
+    -250,
+    280,
+    330
+   ],
+   "emprise": "3 × 3",
+   "ms_par_image": 83,
+   "animations": [
+    "saw (6 images, 12/s)"
+   ]
+  },
+  "bosquet_palier6_hiver": {
+   "nom": "Bosquet — palier VI, l'hiver",
+   "ete": "bosquet_palier6",
+   "fichiers": [
+    "paliers_hiver/bosquet/bosquet_palier6_hiver_1.svg",
+    "paliers_hiver/bosquet/bosquet_palier6_hiver_2.svg",
+    "paliers_hiver/bosquet/bosquet_palier6_hiver_3.svg",
+    "paliers_hiver/bosquet/bosquet_palier6_hiver_4.svg",
+    "paliers_hiver/bosquet/bosquet_palier6_hiver_5.svg",
+    "paliers_hiver/bosquet/bosquet_palier6_hiver_6.svg"
+   ],
+   "cadre": [
+    -140,
+    -250,
+    280,
+    330
+   ],
+   "emprise": "3 × 3",
+   "ms_par_image": 83,
+   "animations": [
+    "saw (6 images, 12/s)",
+    "log (6 images, 3/s)"
+   ]
+  },
+  "bosquet_palier7_hiver": {
+   "nom": "Bosquet — palier VII, l'hiver",
+   "ete": "bosquet_palier7",
+   "fichiers": [
+    "paliers_hiver/bosquet/bosquet_palier7_hiver_1.svg",
+    "paliers_hiver/bosquet/bosquet_palier7_hiver_2.svg",
+    "paliers_hiver/bosquet/bosquet_palier7_hiver_3.svg",
+    "paliers_hiver/bosquet/bosquet_palier7_hiver_4.svg",
+    "paliers_hiver/bosquet/bosquet_palier7_hiver_5.svg",
+    "paliers_hiver/bosquet/bosquet_palier7_hiver_6.svg"
+   ],
+   "cadre": [
+    -140,
+    -250,
+    280,
+    330
+   ],
+   "emprise": "3 × 3",
+   "ms_par_image": 200,
+   "animations": [
+    "dust (6 images, 5/s)"
+   ],
+   "lumieres": [
+    {
+     "u": 0.05,
+     "v": -0.25,
+     "z": 15,
+     "rayon": 27.5
+    },
+    {
+     "u": -0.07,
+     "v": -0.25,
+     "z": 50,
+     "rayon": 17.5
+    },
+    {
+     "u": 0.17,
+     "v": -0.25,
+     "z": 60,
+     "rayon": 17.5
+    },
+    {
+     "u": -0.8,
+     "v": 0.6,
+     "z": 12.5,
+     "rayon": 17.5
+    },
+    {
+     "u": 0.75,
+     "v": 0.55,
+     "z": 12.5,
+     "rayon": 17.5
+    }
+   ]
+  },
+  "puits_palier1_hiver": {
+   "nom": "Puits — palier I, l'hiver",
+   "ete": "puits_palier1",
+   "fichiers": [
+    "paliers_hiver/puits/puits_palier1_hiver.svg"
+   ],
+   "cadre": [
+    -95,
+    -155,
+    190,
+    210
+   ],
+   "emprise": "2 × 2"
+  },
+  "puits_palier2_hiver": {
+   "nom": "Puits — palier II, l'hiver",
+   "ete": "puits_palier2",
+   "fichiers": [
+    "paliers_hiver/puits/puits_palier2_hiver_1.svg",
+    "paliers_hiver/puits/puits_palier2_hiver_2.svg",
+    "paliers_hiver/puits/puits_palier2_hiver_3.svg"
+   ],
+   "cadre": [
+    -95,
+    -155,
+    190,
+    210
+   ],
+   "emprise": "2 × 2",
+   "ms_par_image": 167,
+   "animations": [
+    "fountain (3 images, 6/s)"
+   ]
+  },
+  "puits_palier3_hiver": {
+   "nom": "Puits — palier III, l'hiver",
+   "ete": "puits_palier3",
+   "fichiers": [
+    "paliers_hiver/puits/puits_palier3_hiver_1.svg",
+    "paliers_hiver/puits/puits_palier3_hiver_2.svg",
+    "paliers_hiver/puits/puits_palier3_hiver_3.svg",
+    "paliers_hiver/puits/puits_palier3_hiver_4.svg"
+   ],
+   "cadre": [
+    -95,
+    -155,
+    190,
+    210
+   ],
+   "emprise": "2 × 2",
+   "ms_par_image": 333,
+   "animations": [
+    "laundry (4 images, 3/s)"
+   ]
+  },
+  "puits_palier4_hiver": {
+   "nom": "Puits — palier IV, l'hiver",
+   "ete": "puits_palier4",
+   "fichiers": [
+    "paliers_hiver/puits/puits_palier4_hiver_1.svg",
+    "paliers_hiver/puits/puits_palier4_hiver_2.svg",
+    "paliers_hiver/puits/puits_palier4_hiver_3.svg",
+    "paliers_hiver/puits/puits_palier4_hiver_4.svg"
+   ],
+   "cadre": [
+    -140,
+    -250,
+    280,
+    330
+   ],
+   "emprise": "3 × 3",
+   "ms_par_image": 167,
+   "animations": [
+    "jets (4 images, 6/s)"
+   ]
+  },
+  "puits_palier5_hiver": {
+   "nom": "Puits — palier V, l'hiver",
+   "ete": "puits_palier5",
+   "fichiers": [
+    "paliers_hiver/puits/puits_palier5_hiver_1.svg",
+    "paliers_hiver/puits/puits_palier5_hiver_2.svg",
+    "paliers_hiver/puits/puits_palier5_hiver_3.svg",
+    "paliers_hiver/puits/puits_palier5_hiver_4.svg"
+   ],
+   "cadre": [
+    -140,
+    -250,
+    280,
+    330
+   ],
+   "emprise": "3 × 3",
+   "ms_par_image": 125,
+   "animations": [
+    "fall (4 images, 8/s)"
+   ]
+  },
+  "puits_palier6_hiver": {
+   "nom": "Puits — palier VI, l'hiver",
+   "ete": "puits_palier6",
+   "fichiers": [
+    "paliers_hiver/puits/puits_palier6_hiver_1.svg",
+    "paliers_hiver/puits/puits_palier6_hiver_2.svg",
+    "paliers_hiver/puits/puits_palier6_hiver_3.svg",
+    "paliers_hiver/puits/puits_palier6_hiver_4.svg",
+    "paliers_hiver/puits/puits_palier6_hiver_5.svg",
+    "paliers_hiver/puits/puits_palier6_hiver_6.svg",
+    "paliers_hiver/puits/puits_palier6_hiver_7.svg",
+    "paliers_hiver/puits/puits_palier6_hiver_8.svg"
+   ],
+   "cadre": [
+    -140,
+    -250,
+    280,
+    330
+   ],
+   "emprise": "3 × 3",
+   "ms_par_image": 125,
+   "animations": [
+    "wheel (8 images, 8/s)"
+   ],
+   "lumieres": [
+    {
+     "u": -1.06,
+     "v": -0.25,
+     "z": 48.75,
+     "rayon": 17.5
+    },
+    {
+     "u": -0.11,
+     "v": -0.25,
+     "z": 48.75,
+     "rayon": 17.5
+    }
+   ],
+   "fumees": [
+    {
+     "u": -1.05,
+     "v": -1.05,
+     "z": 105
+    }
+   ]
+  },
+  "puits_palier7_hiver": {
+   "nom": "Puits — palier VII, l'hiver",
+   "ete": "puits_palier7",
+   "fichiers": [
+    "paliers_hiver/puits/puits_palier7_hiver_1.svg",
+    "paliers_hiver/puits/puits_palier7_hiver_2.svg",
+    "paliers_hiver/puits/puits_palier7_hiver_3.svg",
+    "paliers_hiver/puits/puits_palier7_hiver_4.svg",
+    "paliers_hiver/puits/puits_palier7_hiver_5.svg",
+    "paliers_hiver/puits/puits_palier7_hiver_6.svg"
+   ],
+   "cadre": [
+    -140,
+    -250,
+    280,
+    330
+   ],
+   "emprise": "3 × 3",
+   "ms_par_image": 167,
+   "animations": [
+    "magic (6 images, 6/s)"
+   ],
+   "lumieres": [
+    {
+     "u": 0,
+     "v": 0,
+     "z": 17.5,
+     "rayon": 50
+    },
+    {
+     "u": 0,
+     "v": 0,
+     "z": 50,
+     "rayon": 22.5
+    }
+   ]
+  },
+  "potager_palier1_hiver": {
+   "nom": "Potager — palier I, l'hiver",
+   "ete": "potager_palier1",
+   "fichiers": [
+    "paliers_hiver/potager/potager_palier1_hiver.svg"
+   ],
+   "cadre": [
+    -95,
+    -155,
+    190,
+    210
+   ],
+   "emprise": "2 × 2"
+  },
+  "potager_palier2_hiver": {
+   "nom": "Potager — palier II, l'hiver",
+   "ete": "potager_palier2",
+   "fichiers": [
+    "paliers_hiver/potager/potager_palier2_hiver.svg"
+   ],
+   "cadre": [
+    -95,
+    -155,
+    190,
+    210
+   ],
+   "emprise": "2 × 2"
+  },
+  "potager_palier3_hiver": {
+   "nom": "Potager — palier III, l'hiver",
+   "ete": "potager_palier3",
+   "fichiers": [
+    "paliers_hiver/potager/potager_palier3_hiver.svg"
+   ],
+   "cadre": [
+    -95,
+    -155,
+    190,
+    210
+   ],
+   "emprise": "2 × 2"
+  },
+  "potager_palier4_hiver": {
+   "nom": "Potager — palier IV, l'hiver",
+   "ete": "potager_palier4",
+   "fichiers": [
+    "paliers_hiver/potager/potager_palier4_hiver.svg"
+   ],
+   "cadre": [
+    -140,
+    -250,
+    280,
+    330
+   ],
+   "emprise": "3 × 3"
+  },
+  "potager_palier5_hiver": {
+   "nom": "Potager — palier V, l'hiver",
+   "ete": "potager_palier5",
+   "fichiers": [
+    "paliers_hiver/potager/potager_palier5_hiver_1.svg",
+    "paliers_hiver/potager/potager_palier5_hiver_2.svg",
+    "paliers_hiver/potager/potager_palier5_hiver_3.svg",
+    "paliers_hiver/potager/potager_palier5_hiver_4.svg",
+    "paliers_hiver/potager/potager_palier5_hiver_5.svg",
+    "paliers_hiver/potager/potager_palier5_hiver_6.svg",
+    "paliers_hiver/potager/potager_palier5_hiver_7.svg",
+    "paliers_hiver/potager/potager_palier5_hiver_8.svg"
+   ],
+   "cadre": [
+    -140,
+    -250,
+    280,
+    330
+   ],
+   "emprise": "3 × 3",
+   "ms_par_image": 167,
+   "animations": [
+    "sails (8 images, 6/s)"
+   ]
+  },
+  "potager_palier6_hiver": {
+   "nom": "Potager — palier VI, l'hiver",
+   "ete": "potager_palier6",
+   "fichiers": [
+    "paliers_hiver/potager/potager_palier6_hiver.svg"
+   ],
+   "cadre": [
+    -140,
+    -250,
+    280,
+    330
+   ],
+   "emprise": "3 × 3",
+   "lumieres": [
+    {
+     "u": -1.16,
+     "v": -0.55,
+     "z": 16.25,
+     "rayon": 17.5
+    },
+    {
+     "u": -0.71,
+     "v": -0.55,
+     "z": 16.25,
+     "rayon": 17.5
+    }
+   ],
+   "fumees": [
+    {
+     "u": -1.2,
+     "v": -1.2,
+     "z": 86.25
+    }
+   ]
+  },
+  "potager_palier7_hiver": {
+   "nom": "Potager — palier VII, l'hiver",
+   "ete": "potager_palier7",
+   "fichiers": [
+    "paliers_hiver/potager/potager_palier7_hiver_1.svg",
+    "paliers_hiver/potager/potager_palier7_hiver_2.svg",
+    "paliers_hiver/potager/potager_palier7_hiver_3.svg",
+    "paliers_hiver/potager/potager_palier7_hiver_4.svg",
+    "paliers_hiver/potager/potager_palier7_hiver_5.svg",
+    "paliers_hiver/potager/potager_palier7_hiver_6.svg"
+   ],
+   "cadre": [
+    -140,
+    -250,
+    280,
+    330
+   ],
+   "emprise": "3 × 3",
+   "ms_par_image": 333,
+   "animations": [
+    "unicorn (6 images, 3/s)",
+    "sparkles (6 images, 5/s)"
+   ],
+   "lumieres": [
+    {
+     "u": -1.05,
+     "v": -0.95,
+     "z": 37.5,
+     "rayon": 27.5
+    }
+   ]
+  },
+  "atelier_palier1_hiver": {
+   "nom": "Atelier — palier I, l'hiver",
+   "ete": "atelier_palier1",
+   "fichiers": [
+    "paliers_hiver/atelier/atelier_palier1_hiver.svg"
+   ],
+   "cadre": [
+    -95,
+    -155,
+    190,
+    210
+   ],
+   "emprise": "2 × 2",
+   "lumieres": [
+    {
+     "u": 0.85,
+     "v": -0.05,
+     "z": 7.5,
+     "rayon": 37.5
+    }
+   ],
+   "fumees": [
+    {
+     "u": 0.55,
+     "v": -0.05,
+     "z": 55
+    }
+   ]
+  },
+  "atelier_palier2_hiver": {
+   "nom": "Atelier — palier II, l'hiver",
+   "ete": "atelier_palier2",
+   "fichiers": [
+    "paliers_hiver/atelier/atelier_palier2_hiver.svg"
+   ],
+   "cadre": [
+    -95,
+    -155,
+    190,
+    210
+   ],
+   "emprise": "2 × 2",
+   "lumieres": [
+    {
+     "u": 0.88,
+     "v": -0.05,
+     "z": 8.75,
+     "rayon": 37.5
+    }
+   ],
+   "fumees": [
+    {
+     "u": 0.55,
+     "v": -0.2,
+     "z": 72.5
+    }
+   ]
+  },
+  "atelier_palier3_hiver": {
+   "nom": "Atelier — palier III, l'hiver",
+   "ete": "atelier_palier3",
+   "fichiers": [
+    "paliers_hiver/atelier/atelier_palier3_hiver.svg"
+   ],
+   "cadre": [
+    -95,
+    -155,
+    190,
+    210
+   ],
+   "emprise": "2 × 2",
+   "lumieres": [
+    {
+     "u": 0.88,
+     "v": -0.05,
+     "z": 8.75,
+     "rayon": 32.5
+    },
+    {
+     "u": 0.56,
+     "v": -0.08,
+     "z": 35,
+     "rayon": 22.5
+    },
+    {
+     "u": 0.42,
+     "v": 0.6,
+     "z": 6.25,
+     "rayon": 15
+    }
+   ],
+   "fumees": [
+    {
+     "u": 0.7,
+     "v": -0.34,
+     "z": 80
+    },
+    {
+     "u": 0.36,
+     "v": -0.36,
+     "z": 65
+    }
+   ]
+  },
+  "atelier_palier4_hiver": {
+   "nom": "Atelier — palier IV, l'hiver",
+   "ete": "atelier_palier4",
+   "fichiers": [
+    "paliers_hiver/atelier/atelier_palier4_hiver.svg"
+   ],
+   "cadre": [
+    -140,
+    -250,
+    280,
+    330
+   ],
+   "emprise": "3 × 3",
+   "lumieres": [
+    {
+     "u": 1.4,
+     "v": -0.15,
+     "z": 10,
+     "rayon": 42.5
+    },
+    {
+     "u": -0.55,
+     "v": 0.6,
+     "z": 12.5,
+     "rayon": 32.5
+    },
+    {
+     "u": -1.05,
+     "v": 0.6,
+     "z": 25,
+     "rayon": 17.5
+    },
+    {
+     "u": 0.1,
+     "v": 0.6,
+     "z": 25,
+     "rayon": 17.5
+    }
+   ],
+   "fumees": [
+    {
+     "u": 0.91,
+     "v": -0.15,
+     "z": 120
+    }
+   ]
+  },
+  "atelier_palier5_hiver": {
+   "nom": "Atelier — palier V, l'hiver",
+   "ete": "atelier_palier5",
+   "fichiers": [
+    "paliers_hiver/atelier/atelier_palier5_hiver.svg"
+   ],
+   "cadre": [
+    -140,
+    -250,
+    280,
+    330
+   ],
+   "emprise": "3 × 3",
+   "lumieres": [
+    {
+     "u": 1.4,
+     "v": -0.15,
+     "z": 10,
+     "rayon": 42.5
+    },
+    {
+     "u": -1.09,
+     "v": 0.45,
+     "z": 27.5,
+     "rayon": 17.5
+    },
+    {
+     "u": -0.74,
+     "v": 0.45,
+     "z": 27.5,
+     "rayon": 17.5
+    },
+    {
+     "u": -0.39,
+     "v": 0.45,
+     "z": 27.5,
+     "rayon": 17.5
+    },
+    {
+     "u": -0.04,
+     "v": 0.45,
+     "z": 27.5,
+     "rayon": 17.5
+    }
+   ],
+   "fumees": [
+    {
+     "u": 0.93,
+     "v": -0.15,
+     "z": 125
+    }
+   ]
+  },
+  "atelier_palier6_hiver": {
+   "nom": "Atelier — palier VI, l'hiver",
+   "ete": "atelier_palier6",
+   "fichiers": [
+    "paliers_hiver/atelier/atelier_palier6_hiver_1.svg",
+    "paliers_hiver/atelier/atelier_palier6_hiver_2.svg",
+    "paliers_hiver/atelier/atelier_palier6_hiver_3.svg",
+    "paliers_hiver/atelier/atelier_palier6_hiver_4.svg",
+    "paliers_hiver/atelier/atelier_palier6_hiver_5.svg",
+    "paliers_hiver/atelier/atelier_palier6_hiver_6.svg"
+   ],
+   "cadre": [
+    -140,
+    -250,
+    280,
+    330
+   ],
+   "emprise": "3 × 3",
+   "ms_par_image": 167,
+   "animations": [
+    "gear (6 images, 6/s)"
+   ],
+   "lumieres": [
+    {
+     "u": 1.4,
+     "v": -0.15,
+     "z": 11.25,
+     "rayon": 45
+    },
+    {
+     "u": -1.12,
+     "v": 0.45,
+     "z": 25,
+     "rayon": 17.5
+    },
+    {
+     "u": -0.87,
+     "v": 0.45,
+     "z": 25,
+     "rayon": 17.5
+    },
+    {
+     "u": -0.12,
+     "v": 0.45,
+     "z": 25,
+     "rayon": 17.5
+    },
+    {
+     "u": 0.13,
+     "v": 0.45,
+     "z": 25,
+     "rayon": 17.5
+    }
+   ],
+   "fumees": [
+    {
+     "u": -1.05,
+     "v": -1.05,
+     "z": 142.5
+    },
+    {
+     "u": -0.45,
+     "v": -1.1,
+     "z": 127.5
+    },
+    {
+     "u": 0.93,
+     "v": -0.15,
+     "z": 135
+    }
+   ]
+  },
+  "atelier_palier7_hiver": {
+   "nom": "Atelier — palier VII, l'hiver",
+   "ete": "atelier_palier7",
+   "fichiers": [
+    "paliers_hiver/atelier/atelier_palier7_hiver_1.svg",
+    "paliers_hiver/atelier/atelier_palier7_hiver_2.svg",
+    "paliers_hiver/atelier/atelier_palier7_hiver_3.svg",
+    "paliers_hiver/atelier/atelier_palier7_hiver_4.svg",
+    "paliers_hiver/atelier/atelier_palier7_hiver_5.svg",
+    "paliers_hiver/atelier/atelier_palier7_hiver_6.svg"
+   ],
+   "cadre": [
+    -140,
+    -250,
+    280,
+    330
+   ],
+   "emprise": "3 × 3",
+   "ms_par_image": 167,
+   "animations": [
+    "bubbles (6 images, 6/s)"
+   ],
+   "lumieres": [
+    {
+     "u": -0.75,
+     "v": -0.12,
+     "z": 32.5,
+     "rayon": 17.5
+    },
+    {
+     "u": -0.38,
+     "v": -0.14,
+     "z": 60,
+     "rayon": 17.5
+    },
+    {
+     "u": -0.62,
+     "v": -0.1,
+     "z": 82.5,
+     "rayon": 17.5
+    },
+    {
+     "u": 0.9,
+     "v": -0.15,
+     "z": 45,
+     "rayon": 30
+    },
+    {
+     "u": 1.4,
+     "v": -0.15,
+     "z": 10,
+     "rayon": 37.5
+    }
+   ],
+   "fumees": [
+    {
+     "u": 0.91,
+     "v": -0.15,
+     "z": 82.5
+    }
+   ]
+  },
+  "ponton_palier1_hiver": {
+   "nom": "Ponton — palier I, l'hiver",
+   "ete": "ponton_palier1",
+   "fichiers": [
+    "paliers_hiver/ponton/ponton_palier1_hiver.svg"
+   ],
+   "cadre": [
+    -95,
+    -155,
+    190,
+    210
+   ],
+   "emprise": "2 × 2",
+   "voilier": "compris dans l'image (le jeu le berce à part : décor/ilots/voilier)"
+  },
+  "ponton_palier2_hiver": {
+   "nom": "Ponton — palier II, l'hiver",
+   "ete": "ponton_palier2",
+   "fichiers": [
+    "paliers_hiver/ponton/ponton_palier2_hiver.svg"
+   ],
+   "cadre": [
+    -95,
+    -155,
+    190,
+    210
+   ],
+   "emprise": "2 × 2",
+   "lumieres": [
+    {
+     "u": 0.82,
+     "v": 0.14,
+     "z": 46.25,
+     "rayon": 20
+    }
+   ],
+   "voilier": "compris dans l'image (le jeu le berce à part : décor/ilots/voilier)"
+  },
+  "ponton_palier3_hiver": {
+   "nom": "Ponton — palier III, l'hiver",
+   "ete": "ponton_palier3",
+   "fichiers": [
+    "paliers_hiver/ponton/ponton_palier3_hiver.svg"
+   ],
+   "cadre": [
+    -95,
+    -155,
+    190,
+    210
+   ],
+   "emprise": "2 × 2",
+   "lumieres": [
+    {
+     "u": 0.82,
+     "v": 0.14,
+     "z": 46.25,
+     "rayon": 20
+    }
+   ],
+   "voilier": "compris dans l'image (le jeu le berce à part : décor/ilots/voilier)"
+  },
+  "ponton_palier4_hiver": {
+   "nom": "Ponton — palier IV, l'hiver",
+   "ete": "ponton_palier4",
+   "fichiers": [
+    "paliers_hiver/ponton/ponton_palier4_hiver.svg"
+   ],
+   "cadre": [
+    -140,
+    -250,
+    280,
+    330
+   ],
+   "emprise": "3 × 3",
+   "lumieres": [
+    {
+     "u": -1.12,
+     "v": -1.12,
+     "z": 57.5,
+     "rayon": 25
+    },
+    {
+     "u": 1.24,
+     "v": 0.22,
+     "z": 51.25,
+     "rayon": 20
+    }
+   ],
+   "voilier": "compris dans l'image (le jeu le berce à part : décor/ilots/voilier)"
+  },
+  "ponton_palier5_hiver": {
+   "nom": "Ponton — palier V, l'hiver",
+   "ete": "ponton_palier5",
+   "fichiers": [
+    "paliers_hiver/ponton/ponton_palier5_hiver.svg"
+   ],
+   "cadre": [
+    -140,
+    -250,
+    280,
+    330
+   ],
+   "emprise": "3 × 3",
+   "lumieres": [
+    {
+     "u": -1.12,
+     "v": -1.12,
+     "z": 57.5,
+     "rayon": 25
+    },
+    {
+     "u": 1.24,
+     "v": 0.22,
+     "z": 51.25,
+     "rayon": 20
+    },
+    {
+     "u": -0.75,
+     "v": 0.2,
+     "z": 37.5,
+     "rayon": 22.5
+    }
+   ],
+   "voilier": "compris dans l'image (le jeu le berce à part : décor/ilots/voilier)"
+  },
+  "ponton_palier6_hiver": {
+   "nom": "Ponton — palier VI, l'hiver",
+   "ete": "ponton_palier6",
+   "fichiers": [
+    "paliers_hiver/ponton/ponton_palier6_hiver.svg"
+   ],
+   "cadre": [
+    -140,
+    -250,
+    280,
+    330
+   ],
+   "emprise": "3 × 3",
+   "lumieres": [
+    {
+     "u": -1.12,
+     "v": -1.12,
+     "z": 57.5,
+     "rayon": 25
+    },
+    {
+     "u": 1.24,
+     "v": 0.22,
+     "z": 51.25,
+     "rayon": 20
+    },
+    {
+     "u": -0.25,
+     "v": -0.74,
+     "z": 12.5,
+     "rayon": 22.5
+    }
+   ],
+   "fumees": [
+    {
+     "u": -0.1,
+     "v": -0.82,
+     "z": 50
+    }
+   ],
+   "voilier": "compris dans l'image (le jeu le berce à part : décor/ilots/voilier)"
+  },
+  "ponton_palier7_hiver": {
+   "nom": "Ponton — palier VII, l'hiver",
+   "ete": "ponton_palier7",
+   "fichiers": [
+    "paliers_hiver/ponton/ponton_palier7_hiver_1.svg",
+    "paliers_hiver/ponton/ponton_palier7_hiver_2.svg",
+    "paliers_hiver/ponton/ponton_palier7_hiver_3.svg",
+    "paliers_hiver/ponton/ponton_palier7_hiver_4.svg",
+    "paliers_hiver/ponton/ponton_palier7_hiver_5.svg",
+    "paliers_hiver/ponton/ponton_palier7_hiver_6.svg"
    ],
    "cadre": [
     -140,

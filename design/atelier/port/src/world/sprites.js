@@ -2,7 +2,7 @@
 // Bâtiments : emprise de 2 × 2 cases (u, v ∈ [-1, 1]), ancrés au centre de l'emprise.
 // Nature : emprise d'une case (u, v ∈ [-0.5, 0.5]), ancrée au centre de la case.
 // Les parties animées (flamme, fumée, eau, voile) sont des sprites à part, peints image par image par l'île.
-import { P, TW, TH, face, box, gable, pyramid, disc, cylinder, shadow, foliage, sprite, boulder, EDGE } from './iso.js';
+import { P, TW, TH, face, box, gable, pyramid, disc, cylinder, shadow, foliage, sprite, boulder, EDGE, HIVER, snowPan } from './iso.js';
 import {
   WOOD, WOOD_DARK, STONE, BRICK, ROOF_RED, THATCH, LEAVES, PINE, INK, BUILDING_BOX, PROP_BOX,
   pebble, doorLeft, windowRight, planksLeft, planksRight, roundTree,
@@ -91,12 +91,13 @@ function shelter(skin) {
     shadow(-0.1, -0.3, 1.0, 0.18) + disc(0.05, 0.1, 0, 0.75, 'rgba(150,120,80,.18)')
     + poles(a)
     + face([[a, v0 - o, z], [b, v0 - o, z], [b, vm, z + h], [a, vm, z + h]], roof.back, EDGE)
+    + (HIVER ? snowPan(P(a, vm, z + h), P(b, vm, z + h), P(b, v0 - o, z), P(a, v0 - o, z), 0.9) : '')
     // Pignon ouvert : l'intérieur dans l'ombre, la couche de fourrures, un ballot
     + face([[u1, v0, z], [u1, v1, z], [u1, vm, z + h]], '#3B2A1C', EDGE)
     + ell(fx, fy, 11, 4.2, '#C9A27A') + ell(fx - 2, fy - 1, 7, 2.6, '#E3C9A4')
     + ell(fx + 6, fy - 4, 4, 3, '#8C5A3C')
     + face([[a, vm, z + h], [b, vm, z + h], [b, v1 + o, z], [a, v1 + o, z]], roof.front, EDGE)
-    + brush
+    + (HIVER ? snowPan(P(a, vm, z + h), P(b, vm, z + h), P(b, v1 + o, z), P(a, v1 + o, z), 0.8, true) : brush)
     + ln(P(a - 0.06, vm, z + h + 1), P(b + 0.06, vm, z + h + 1), WOOD_DARK.left, 2.2)
     + poles(b)
     // Bûche pour s'asseoir

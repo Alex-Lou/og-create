@@ -3,7 +3,7 @@
 // four (à droite) — × 1.5 dès le palier IV.
 import { ROOF_RED, BUILDING_BOX, roofOf, roofTextureOf, doorLeft, windowLeft, windowRight, planksLeft, planksRight } from '../palette.js';
 import { goldenSign } from '../sprites.js';
-import { sprite, pyramid } from '../iso.js';
+import { sprite, pyramid, HIVER, snowPan } from '../iso.js';
 import {
   big, bigShadow, P, box, face, gable, cylinder, f2, ln, dot, ell, OUT, STONE, WOOD, WOOD_DARK, BRICK, IRON, GOLD, PLASTER,
   DARK_STONE, archLeft, courseLeft, courseRight, crate, barrel, cone
@@ -88,6 +88,7 @@ function manufacture(skin) {
     const b = a + (u1 - u0) / 3;
     sheds += face([[a, v0, 36], [a, v1, 36], [a, v1, 54], [a, v0, 54]], 'rgba(200,230,245,.9)', ` stroke="${OUT}" stroke-width="0.7"`)
       + face([[a, v0, 54], [b, v0, 36], [b, v1, 36], [a, v1, 54]], roof.front, ` stroke="${OUT}" stroke-width="0.7"`)
+      + (HIVER ? snowPan(P(a, v0, 54), P(a, v1, 54), P(b, v1, 36), P(b, v0, 36), 0.8, k === 2) : '')
       + face([[a, v1, 54], [b, v1, 36], [a, v1, 36]], PLASTER.left, ` stroke="${OUT}" stroke-width="0.7"`);
   }
   return big(
@@ -114,6 +115,7 @@ function factory(skin) {
     + box(u0, v0, u1, v1, 0, 40, BRICK) + courseLeft(u0, u1, v1, 0, 40, 8, 'rgba(90,40,25,.3)') + courseRight(u1, v0, v1, 0, 40, 8, 'rgba(70,30,20,.3)')
     + [-1.2, -0.95, -0.2, 0.05].map(u => archLeft(u + 0.08, 0.08, v1, 12, 18, '#FFE6A3', ' stroke="#FFFFFF" stroke-width="0.8"')).join('')
     + face([[u0 - 0.04, v0 - 0.04, 40], [u1 + 0.04, v0 - 0.04, 40], [u1 + 0.04, v1 + 0.04, 40], [u0 - 0.04, v1 + 0.04, 40]], roof.back, ` stroke="${OUT}" stroke-width="0.7"`)
+    + (HIVER ? snowPan(P(u0 - 0.04, v0 - 0.04, 40), P(u1 + 0.04, v0 - 0.04, 40), P(u1 + 0.04, v1 + 0.04, 40), P(u0 - 0.04, v1 + 0.04, 40), 0.9) : '')
     + box(u0, v1 - 0.04, u1, v1 + 0.04, 40, 44, DARK_STONE)
     // Tuyaux de cuivre vers le four
     + ln(P(u1, 0.2, 30), P(0.45, 0.2, 30), COPPER.right, 3.4) + ln(P(u1, 0.2, 31), P(0.45, 0.2, 31), COPPER.top, 1)

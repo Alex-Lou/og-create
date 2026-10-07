@@ -5,7 +5,7 @@
 import { roofOf, roofTextureOf } from '../palette.js';
 import { dome } from '../buildings2.js';
 import { WISP } from '../brume.js';
-import { sprite } from '../iso.js';
+import { sprite, HIVER, snowCap } from '../iso.js';
 import {
   big, P, box, face, gable, cylinder, f2, ln, dot, ell, OUT, PLASTER, DARK_STONE, STONE, WOOD_DARK, BRICK, GOLD, IRON,
   dormer, shuttered, windowR, timberLeft, timberRight, courseLeft, courseRight, flowerBed, pavedPath, lampPost, tower, bigShadow
@@ -212,6 +212,7 @@ function mistLighthouse(skin) {
     + [-1, 0, 1].map(k => ln([tx + k * w1 * 0.5, ty - 3], [tx + k * w1 * 0.5, ty - 22], '#3D3A36', 0.7)).join('')
     + `<path d="M${f2(tx - w1 - 3)},${f2(ty - 22)} L${f2(tx)},${f2(ty - 40)} L${f2(tx + w1 + 3)},${f2(ty - 22)} Z" fill="${roof.front}" stroke="${OUT}" stroke-width="0.7"/>`
     + `<path d="M${f2(tx)},${f2(ty - 40)} L${f2(tx + w1 + 3)},${f2(ty - 22)} L${f2(tx + 4)},${f2(ty - 21)} Z" fill="${roof.back}"/>`
+    + (HIVER ? snowCap('pb-neige', `M${f2(tx - w1 - 3)},${f2(ty - 22)} L${f2(tx)},${f2(ty - 40)} L${f2(tx + w1 + 3)},${f2(ty - 22)} Z`, tx, ty - 40, w1 + 3, 10) : '')
     + dot(tx, ty - 42, 1.8, GOLD.left)
     + mist
     + alchemistHouse(skin, HOUSE_VII)

@@ -1,4 +1,4 @@
-// Lot E — les bâtiments : 7 bâtiments × 7 paliers (images animées), 20 skins, 48 objets de la boutique (calques), 14
+// Lot E — les bâtiments : 7 bâtiments × 7 paliers (images animées, et les mêmes l'hiver), 20 skins, 48 objets de la boutique (calques), 14
 // pièces rares, chantier, teintes. Dessins du jeu portés au trait de la troupe (port/src/world, aides restylées),
 // dans les cadres du jeu × 1,25. SVG dans lib/batiments/, index batiments.json, planches, page animée.
 import fs from 'fs';
@@ -10,6 +10,7 @@ import { SHOP_SPRITES, itemLayers, itemLight, tools } from './port/src/world/sho
 import { RARE_SPRITES } from './port/src/world/rareSprites.js';
 import { BUILDINGS } from './port/src/world/sprites.js';
 import { TINTS, RARE_TINTS, tintSvg } from './port/src/world/tints.js';
+import { setHiver } from './port/src/world/iso.js';
 import { fitFrame, closeFit } from './fit.mjs';
 
 const require = createRequire(import.meta.url);
@@ -53,15 +54,17 @@ const RARE_OF = {
 };
 const NAME = s => s.replace(/-/g, ' ');
 
-const index = { _lisez_moi: 'Cadres en pixels (x, y, largeur, hauteur) autour de l\'ancre (0, 0), centre de l\'emprise au sol (2 × 2 cases aux paliers I-III, 3 × 3 ensuite), à l\'échelle du jeu × 1,25 (case de 80 × 40). Paliers : images composées (bâtiment + parties animées + voilier du Ponton) ; lumieres [u, v, z, rayon] et fumees [u, v, z] en cases et pixels × 1,25. Objets : un fichier par calque, ancré à sa place au sol ; place = [u, v] en cases autour du centre du bâtiment, par palier ; derriere = à peindre avant le bâtiment ; mouvement = le jeu le déplace en plus. Teintes : recolorations (teintes/teinter.mjs). Quand un dessin du jeu dépasse un peu de son cadre (faisceau du phare, ombre d\'un objet), le cadre est élargi juste ce qu\'il faut, l\'ancre ne bouge pas : prendre le cadre noté ici.', paliers: {}, chantier: {}, skins: {}, objets: {}, pieces_rares: {}, teintes: {} };
+const index = { _lisez_moi: 'Cadres en pixels (x, y, largeur, hauteur) autour de l\'ancre (0, 0), centre de l\'emprise au sol (2 × 2 cases aux paliers I-III, 3 × 3 ensuite), à l\'échelle du jeu × 1,25 (case de 80 × 40). Paliers : images composées (bâtiment + parties animées + voilier du Ponton) ; lumieres [u, v, z, rayon] et fumees [u, v, z] en cases et pixels × 1,25. Paliers d\'hiver (paliers_hiver) : les mêmes images, les toits sous la neige, même ancre ; ete = le palier d\'été qu\'il remplace. Objets : un fichier par calque, ancré à sa place au sol ; place = [u, v] en cases autour du centre du bâtiment, par palier ; derriere = à peindre avant le bâtiment ; mouvement = le jeu le déplace en plus. Teintes : recolorations (teintes/teinter.mjs). Quand un dessin du jeu dépasse un peu de son cadre (faisceau du phare, ombre d\'un objet), le cadre est élargi juste ce qu\'il faut, l\'ancre ne bouge pas : prendre le cadre noté ici.', paliers: {}, paliers_hiver: {}, chantier: {}, skins: {}, objets: {}, pieces_rares: {}, teintes: {} };
 let count = 0;
 const put = (rel, frame, body) => { write(path.join(LIB, rel), svgOf(frame, body)); count++; return rel; };
 const light = l => ({ u: r2(l[0]), v: r2(l[1]), z: r2(l[2] * K), rayon: r2(l[3] * K) });
 
-/* ---------- Paliers ---------- */
+/* ---------- Paliers (l'été, puis les mêmes l'hiver, les toits sous la neige) ---------- */
 const tierAnim = [];
 const tierCells = [];
-for (const site of Object.keys(SITES)) {
+const winterCells = [];
+for (const [hiver, site] of [false, true].flatMap(h => Object.keys(SITES).map(s => [h, s]))) {
+  setHiver(hiver);
   for (let lv = 1; lv <= 7; lv++) {
     const look = lookAt(site, lv);
     const b = look.make(undefined);
@@ -71,17 +74,18 @@ for (const site of Object.keys(SITES)) {
     if (look.boat) { const [dx, dy] = boatOffset(look.boat); boat = `<g transform="translate(${dx} ${dy})">${inner(boatOf(undefined))}</g>`; }
     const frames = Array.from({ length: n }, (_, k) => up(inner(b) + look.anims.map(a => inner(a.frame(k % a.n))).join('') + boat));
     const frame = await fitFrame(big(b.box), frames);
-    const base = `${site}_palier${lv}`;
-    const files = frames.map((body, k) => put(`paliers/${site}/${n > 1 ? `${base}_${k + 1}` : base}.svg`, frame, body));
-    index.paliers[base] = {
-      nom: `${SITES[site]} — palier ${ROMAN[lv - 1]}`, fichiers: files, cadre: frame, emprise: lv >= 4 ? '3 × 3' : '2 × 2',
+    const ete = `${site}_palier${lv}`, base = hiver ? `${ete}_hiver` : ete;
+    const files = frames.map((body, k) => put(`${hiver ? 'paliers_hiver' : 'paliers'}/${site}/${n > 1 ? `${base}_${k + 1}` : base}.svg`, frame, body));
+    index[hiver ? 'paliers_hiver' : 'paliers'][base] = {
+      nom: `${SITES[site]} — palier ${ROMAN[lv - 1]}${hiver ? ', l\'hiver' : ''}`, ...(hiver ? { ete } : {}), fichiers: files, cadre: frame, emprise: lv >= 4 ? '3 × 3' : '2 × 2',
       ...(n > 1 ? { ms_par_image: Math.round(1000 / lead.fps), animations: look.anims.map(a => `${a.key} (${a.n} images, ${a.fps}/s)`) } : {}),
       ...(look.lights.length ? { lumieres: look.lights.map(light) } : {}), ...(look.smoke.length ? { fumees: look.smoke.map(s => ({ u: r2(s[0]), v: r2(s[1]), z: r2(s[2] * K) })) } : {}),
       ...(look.sway ? { souplesse_au_vent: look.sway } : {}), ...(look.boat ? { voilier: 'compris dans l\'image (le jeu le berce à part : décor/ilots/voilier)' } : {})
     };
-    tierCells.push({ site, lv, frame, frames, ms: n > 1 ? Math.round(1000 / lead.fps) : 0 });
+    (hiver ? winterCells : tierCells).push({ site, lv, frame, frames, ms: n > 1 ? Math.round(1000 / lead.fps) : 0 });
   }
 }
+setHiver(false);
 
 /* ---------- Chantier ---------- */
 const chantier = [];
@@ -190,6 +194,8 @@ const scale = f => Math.min(1, 210 / Math.max(f[2], f[3]));
 const tierRows = Object.keys(SITES).map(site => row(SITES[site], tierCells.filter(t => t.site === site).map(t => cell(t.frame, t.frames[0], `palier ${ROMAN[t.lv - 1]}${t.frames.length > 1 ? ` · ${t.frames.length} images` : ''}`, 0.62))));
 tierRows.push(row('Chantier', chantier.map((c, k) => cell(c.frame, c.body, `phase ${k + 1}`, 0.62))));
 shots.push([path.join(PNG, 'batiments_paliers.png'), sheet('Bâtiments — les 7 paliers', 'Dessins du jeu au trait de la troupe. Paliers I-III : cadre BUILDING_BOX × 1,25 (2 × 2 cases) ; IV-VII : BIG_BOX × 1,25 (3 × 3). Ancre au centre de l\'emprise.', tierRows), 1500]);
+const winterRows = Object.keys(SITES).map(site => row(SITES[site], winterCells.filter(t => t.site === site).map(t => cell(t.frame, t.frames[0], `palier ${ROMAN[t.lv - 1]}`, 0.62))));
+shots.push([path.join(PNG, 'batiments_hiver.png'), sheet('Bâtiments — l\'hiver', 'Les 7 paliers, les toits sous la neige : une calotte de neige sur chaque toit, son ombre bleutée, des glaçons sous l\'égout, un chapeau de neige sur les cheminées. Même ancre que l\'été.', winterRows), 1500]);
 shots.push([path.join(PNG, 'batiments_skins.png'), sheet('Bâtiments — les 20 skins', 'Chaque skin à tous les paliers où il change le dessin (ici paliers III et VII).', [row('', skinCells.map(c => cell(c.frame, c.body, c.label, scale(c.frame) * 0.8)))]), 1500]);
 shots.push([path.join(PNG, 'batiments_objets.png'), sheet('Bâtiments — les 48 objets de la boutique', 'Calques composés à leur place (palier III, ou V pour les trois derniers de chaque boutique). Les SVG : un fichier par calque, ancré à sa place au sol.', [row('', itemCells.map(c => cell(c.frame, c.body, c.label, Math.min(2, 120 / Math.max(c.frame[2], c.frame[3])))))]), 1500]);
 shots.push([path.join(PNG, 'batiments_pieces_rares.png'), sheet('Bâtiments — les 14 pièces rares', 'Bâtiment teinté et accessoire, au palier VII (tous les paliers dans les SVG).', [row('', rareCells.map(c => cell(c.frame, c.body, c.label, 0.75)))]), 1500]);

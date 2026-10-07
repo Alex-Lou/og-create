@@ -74,7 +74,7 @@ détails propres à un lot : places des objets de boutique, lumières des palier
 | `svg/decor/ruines/` | Ce qui reste des Anciens : maison en ruine, colonnade, pierre à runes (jour, nuit), colonne brisée, la clé du phare, le phare éteint (`ruines.json`) | 9 |
 | `svg/egares/` | Les égarés, la nuit (`HISTOIRE.md` § 6.15) : petit fantôme, petit zombie tout mou, 7 bêtes de brume (une par climat) ; trois quarts avant et dos, marche, bouderie au toucher, fuite devant Anya, passage en luciole, retour dans la brume ; trait bleu nuit, celui de la famille de la brume (`egares.json`) | 171 |
 | `svg/coffres/` | Les coffres des 4 raretés pour la fenêtre d'ouverture (cadre 120 × 100) : fermé, ouverture en 4 images, ouvert, rayons (calque facultatif), icône 32 × 32 (`coffres.json`) | 44 |
-| `svg/batiments/` | 7 bâtiments × 7 paliers (images animées), chantier, 20 skins, 48 objets de la boutique (un fichier par calque), 14 pièces rares à chaque palier, outil de teintes (`batiments.json`) | 659 |
+| `svg/batiments/` | 7 bâtiments × 7 paliers (images animées), les mêmes l'hiver (toits enneigés), chantier, 20 skins, 48 objets de la boutique (un fichier par calque), 14 pièces rares à chaque palier, outil de teintes (`batiments.json`) | 793 |
 | `svg/scenes/tutoriel/` | Les 27 scènes plein écran du tutoriel v6 (`HISTOIRE.md` § 9, étapes 0 à 12) : la carte d'embarquement, le naufrage, Brume, le Grimoire, le feu, la silhouette, l'arrivée de Cannelle, Rivet, Aster et Ondin, la veillée. Carré 400 × 400, un fond et parfois un devant, en boucle ; la place de l'avatar dans `scenes.json` | 105 |
 | `svg/meteo/` | Calques d'écran sans couture en boucle, nuages, arc-en-ciel, éclair, soleil bas, lumières, teintes des moments du jour ; les saisons : flocons, feuilles qui tombent, pétales, pollen, plein soleil, teintes, et le sol d'une case (neige, neige fondante, givre, flaques, eau gelée) ; 23 icônes (`meteo.json`) | 267 |
 
@@ -91,6 +91,8 @@ détails propres à un lot : places des objets de boutique, lumières des palier
   hauteur max, corps et couleur de police du jeu).
 - **Objets de la boutique** : chaque calque est ancré à sa place au sol. Sa `place` par palier (en cases, autour du
   centre du bâtiment) est dans `batiments.json`. Les calques marqués `derriere` se peignent avant le bâtiment.
+- **L'hiver** : chaque palier a son double sous la neige (`svg/batiments/paliers_hiver/`, `paliers_hiver` dans
+  `batiments.json`, son `ete` nomme le palier qu'il remplace). Même cadre, même ancre, mêmes images : on échange le fichier.
 - **L'avatar** : il se compose à partir des choix du joueur, il ne se dessine pas à l'avance : `design/personnages/avatar.js`
   (`avatar(choix)`, à passer à `troupe.frame`), ses choix et ses accessoires dans `avatar_choix.js` (nuanciers, formes,
   accessoires avec leur rareté et leur source, teintures rares, `auHasard`, `verifier`) ; naufragé :
