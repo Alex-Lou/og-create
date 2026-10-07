@@ -443,7 +443,9 @@ const pepiniere = {
 };
 
 /* ---------- Puits ---------- */
-// Citerne : tonneau sur son chevalet, cuve de pierre et sa pompe, ou réservoir de cuivre ; l'eau goutte dans le seau
+// Citerne : tonneau cerclé sur son chevalet croisé, avec couvercle, robinet et louche ; cuve de pierre appareillée et
+// moussue, sa pompe dont le levier monte et descend ; ou réservoir de cuivre riveté, son dôme, sa vanne et son vert-de-
+// gris. L'eau goutte dans le seau et fait des ronds ; l'herbe, une flaque sous le bec, des touffes
 const citerne = {
   layers: [{
     frame: [-30, -62, 60, 78],
@@ -451,32 +453,62 @@ const citerne = {
     fps: 6,
     draw: (T, f, n, variant) => {
       const kind = variant % 3;
-      let out = T.shadow(0, 0, 0.32, 0.2);
+      const [x, y] = T.p(0, 0, 0);
+      const tuft = (du, dv) => { const [tx, ty] = T.p(du, dv, 0); return [-1.6, -0.5, 0.6, 1.6].map((o, i) => ln([tx + o * 0.4, ty], [tx + o, ty - (3.4 + (i % 2) * 1.4)], i % 2 ? '#8FB85A' : '#6F9A44', 0.7)).join(''); };
+      let out = ell(x, y + 1, 27, 11.4, '#9CC46A', ` stroke="${OUT}" stroke-width="0.5"`) + ell(x - 3, y, 18, 7, '#ADD27A')
+        + ell(...T.p(0.22, 0.3, 0), 7.4, 2.8, 'rgba(90,120,60,.35)') + ell(...T.p(0.22, 0.32, 0), 5, 1.6, 'rgba(110,180,220,.5)')
+        + tuft(-0.38, 0.1) + tuft(0.36, -0.3) + T.shadow(0, 0, 0.32, 0.2);
       let spout;
       if (kind === 0) {
+        // le chevalet croisé, le tonneau, ses douelles et ses cercles, le couvercle, le robinet, la louche
         out += [[-0.14, -0.14], [0.14, -0.14], [-0.14, 0.14], [0.14, 0.14]].map(([a, b]) => post(T, a, b, 0, 12, WOOD_DARK, 0.02)).join('')
+          + ln(T.p(-0.14, 0.14, 1), T.p(0.14, 0.14, 11), WOOD_DARK.right, 0.9) + ln(T.p(0.14, 0.14, 1), T.p(-0.14, 0.14, 11), WOOD_DARK.right, 0.9)
+          + ln(T.p(0.14, 0.14, 1), T.p(0.14, -0.14, 11), WOOD_DARK.right, 0.9) + ln(T.p(0.14, -0.14, 1), T.p(0.14, 0.14, 11), WOOD_DARK.right, 0.9)
           + T.box(-0.17, -0.17, 0.17, 0.17, 12, 14, WOOD)
-          + T.cyl(0, 0, 14, 38, 0.2, { top: '#C99560', left: WOOD.left, right: WOOD.right }, 'tonneau')
-          + [17, 26, 35].map(z => { const [x, y] = T.p(0, 0, z); return `<path d="M${f2(x - 9)},${f2(y)} A9,4.5 0 0 0 ${f2(x + 9)},${f2(y)}" stroke="${DARK_IRON.right}" stroke-width="1.2" fill="none"/>`; }).join('');
+          + T.cyl(0, 0, 14, 38, 0.2, { top: '#C99560', left: WOOD.left, right: WOOD.right }, 'tonneau');
+        const [cx, cy] = T.p(0, 0, 14);
+        for (let i = 1; i < 6; i++) { const a = (i / 6) * Math.PI; out += ln([cx + 9 * Math.cos(a), cy + 4.5 * Math.sin(a)], [cx + 9 * Math.cos(a), cy + 4.5 * Math.sin(a) - 24], 'rgba(90,55,30,.35)', 0.5); }
+        out += [17, 26, 35].map(z => { const [hx, hy] = T.p(0, 0, z); return `<path d="M${f2(hx - 9)},${f2(hy)} A9,4.5 0 0 0 ${f2(hx + 9)},${f2(hy)}" stroke="${DARK_IRON.right}" stroke-width="1.3" fill="none"/>`; }).join('');
+        const [lx, ly] = T.p(0, 0, 38);
+        out += ell(lx, ly, 7.4, 3.7, WOOD.top, ` stroke="${OUT}" stroke-width="0.6"`) + ln([lx - 5, ly - 0.4], [lx + 5, ly + 0.4], 'rgba(90,55,30,.4)', 0.5)
+          + `<path d="M${f2(lx - 2.6)},${f2(ly)} q2.6,-3 5.2,0" stroke="${WOOD_DARK.right}" stroke-width="1" fill="none"/>`;
         spout = T.p(0.1, 0.18, 16);
-        out += ln(T.p(0.06, 0.12, 17), spout, IRON.right, 1.6);
+        out += ln(T.p(0.06, 0.12, 17), spout, IRON.right, 1.8) + ln([spout[0] - 1, spout[1] - 2.6], [spout[0] + 1.4, spout[1] - 2.6], IRON.left, 1.2);
+        const [kx, ky] = T.p(-0.1, 0.17, 35);
+        out += `<path d="M${f2(kx)},${f2(ky - 1.6)} q1.4,0 1.2,1.6" stroke="${DARK_IRON.right}" stroke-width="0.6" fill="none"/>` + ln([kx + 1.2, ky], [kx + 0.6, ky + 8], WOOD_DARK.right, 1) + ell(kx + 0.5, ky + 9.6, 2.2, 1.4, IRON.left, ` stroke="${OUT}" stroke-width="0.5"`);
       } else if (kind === 1) {
-        out += T.cyl(0, -0.04, 0, 16, 0.24, STONE, 'cuve') + T.disc(0, -0.04, 16, 0.2, WOOD.top, EDGE)
-          + ln(T.p(-0.12, -0.04, 16.4), T.p(0.12, -0.04, 16.4), WOOD.right, 0.8)
-          + T.box(0.12, 0.1, 0.18, 0.16, 0, 26, IRON) + ln(T.p(0.15, 0.13, 26), T.p(0.02, 0.2, 32), IRON.right, 1.4);
+        // la cuve de pierre appareillée, sa mousse, son couvercle de planches ; la pompe et son levier qui pompe
+        out += T.cyl(0, -0.04, 0, 16, 0.24, STONE, 'cuve');
+        const [cx, cy] = T.p(0, -0.04, 0), R = 10.9;
+        [5.3, 10.6].forEach((z, i) => { out += `<path d="M${f2(cx - R)},${f2(cy - z)} A${R},${R / 2} 0 0 0 ${f2(cx + R)},${f2(cy - z)}" stroke="rgba(120,110,95,.45)" stroke-width="0.6" fill="none"/>`; });
+        for (const [z0, off] of [[0, 0], [5.3, 0.5], [10.6, 0]]) for (let j = 0; j < 4; j++) { const a = (j + 0.5 + off) / 4.5 * Math.PI; if (a < Math.PI) out += ln([cx + R * Math.cos(a), cy - z0 + (R / 2) * Math.sin(a)], [cx + R * Math.cos(a), cy - z0 - 5.3 + (R / 2) * Math.sin(a)], 'rgba(120,110,95,.4)', 0.5); }
+        out += ell(...T.p(-0.18, 0.1, 2), 3.4, 1.4, '#7E9A52') + ell(...T.p(0.04, 0.2, 1.6), 2.6, 1, '#9DB86A')
+          + T.disc(0, -0.04, 16, 0.2, WOOD.top, EDGE)
+          + [-0.08, 0, 0.08].map(o => ln(T.p(-0.14, -0.04 + o, 16.4), T.p(0.14, -0.04 + o, 16.4), 'rgba(90,55,30,.45)', 0.6)).join('');
+        const lever = Math.sin((f / n) * TAU) * 4;
+        out += T.box(0.12, 0.1, 0.18, 0.16, 0, 26, IRON) + ln(T.p(0.12, 0.16, 2), T.p(0.12, 0.16, 25), 'rgba(255,255,255,.3)', 0.6)
+          + T.box(0.11, 0.09, 0.19, 0.17, 26, 27.6, DARK_IRON)
+          + `<path d="M${f2(T.p(0.15, 0.13, 27)[0])},${f2(T.p(0.15, 0.13, 27)[1])} Q${f2(T.p(0.06, 0.18, 31)[0])},${f2(T.p(0.06, 0.18, 31)[1] - lever * 0.5)} ${f2(T.p(-0.04, 0.22, 30)[0])},${f2(T.p(-0.04, 0.22, 30)[1] - lever)}" stroke="${IRON.right}" stroke-width="1.5" fill="none" stroke-linecap="round"/>`
+          + dot(T.p(-0.04, 0.22, 30)[0], T.p(-0.04, 0.22, 30)[1] - lever, 1.2, WOOD.left);
         spout = T.p(0.15, 0.2, 18);
-        out += ln(T.p(0.15, 0.15, 19), spout, IRON.right, 1.8);
+        out += ln(T.p(0.15, 0.15, 19), spout, IRON.right, 1.9);
       } else {
+        // le socle, le réservoir de cuivre riveté et son vert-de-gris, le dôme, le bouchon, la vanne
         const [dx0, dy0] = T.p(0, -0.02, 26);
         out += T.box(-0.24, -0.24, 0.22, 0.2, 0, 4, STONE)
           + T.cyl(0, -0.02, 4, 26, 0.23, COPPER, 'cuivre')
-          + [9, 18].map(z => { const [x, y] = T.p(0, -0.02, z); return `<path d="M${f2(x - 10.4)},${f2(y)} A10.4,5.2 0 0 0 ${f2(x + 10.4)},${f2(y)}" stroke="#8A4A22" stroke-width="0.6" fill="none"/>` + [-7, 0, 7].map(dx => dot(x + dx, y + 4.6 - Math.abs(dx) * 0.3, 0.6, '#8A4A22')).join(''); }).join('')
+          + [9, 18].map(z => { const [hx, hy] = T.p(0, -0.02, z); return `<path d="M${f2(hx - 10.4)},${f2(hy)} A10.4,5.2 0 0 0 ${f2(hx + 10.4)},${f2(hy)}" stroke="#8A4A22" stroke-width="0.6" fill="none"/>` + [-7, 0, 7].map(dx => dot(hx + dx, hy + 4.6 - Math.abs(dx) * 0.3, 0.6, '#8A4A22')).join(''); }).join('')
+          + [[-5, 8, 2.4], [4, 15, 1.8], [-1, 20, 1.4]].map(([dx, dz, r]) => { const [hx, hy] = T.p(0, -0.02, 4); return ell(hx + dx, hy - dz, r, r * 0.6, 'rgba(110,190,160,.55)'); }).join('')
+          + ln(T.p(-0.1, 0.14, 6), T.p(-0.1, 0.14, 24), 'rgba(255,255,255,.35)', 1.6)
           + `<path d="M${f2(dx0 - 10.4)},${f2(dy0)} C${f2(dx0 - 10.4)},${f2(dy0 - 10)} ${f2(dx0 + 10.4)},${f2(dy0 - 10)} ${f2(dx0 + 10.4)},${f2(dy0)} A10.4,5.2 0 0 1 ${f2(dx0 - 10.4)},${f2(dy0)} Z" fill="${COPPER.top}" stroke="${OUT}" stroke-width="0.5"/>`
           + ell(dx0 - 3, dy0 - 5, 3, 1.4, 'rgba(255,255,255,.35)') + T.cyl(0, -0.02, 33, 36, 0.03, COPPER, 'bouchon');
         spout = T.p(0.1, 0.17, 10);
-        out += ln(T.p(0.06, 0.12, 11), spout, COPPER.right, 1.8);
+        const [vx, vy] = T.p(0.2, 0.06, 15);
+        out += ln(T.p(0.06, 0.12, 11), spout, COPPER.right, 1.9)
+          + ln(T.p(0.16, 0.06, 15), [vx, vy], DARK_IRON.right, 1.2) + `<circle cx="${f2(vx + 1.6)}" cy="${f2(vy)}" r="2.2" fill="none" stroke="#C9302A" stroke-width="1"/>`
+          + ln([vx - 0.6, vy], [vx + 3.8, vy], '#C9302A', 0.6) + ln([vx + 1.6, vy - 2.2], [vx + 1.6, vy + 2.2], '#C9302A', 0.6);
       }
-      // Seau sous le bec, gouttes qui tombent, rond dans l'eau
+      // le seau sous le bec, les gouttes, le rond dans l'eau
       const [bx, by] = T.p(0.2, 0.3, 0);
       out += bucket(T, 0.2, 0.3, 0, 7, 3.4, 4.2, { top: '#B98552', left: WOOD.left, right: WOOD.right }, 'seau');
       const p = (f % n) / n;
