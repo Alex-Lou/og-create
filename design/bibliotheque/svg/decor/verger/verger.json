@@ -1,0 +1,567 @@
+{
+ "_lisez_moi": [
+  "Le verger par étapes : un arbre fruitier sur une case, du trou qu'on creuse au grand arbre chargé de fruits mûrs. Pommier, poirier, cerisier, prunier, abricotier.",
+  "Ancre (0, 0) au centre de la case, à l'échelle de la troupe (case de 80 × 40), le cadre d'un décor d'une case, comme les arbres de la bibliothèque (plantes/) : toutes les étapes ont le même cadre, on passe de l'une à l'autre sans rien déplacer.",
+  "Chaque étape : 3 images en boucle (ms_par_image) ; la motte roule, l'arrosoir goutte, le scion bouge, les pétales tombent, l'abeille butine, les fruits se balancent.",
+  "spectacle : quand on plante, les étapes défilent dans l'ordre (ms_par_etape chacune), jusqu'à l'arbre mûr.",
+  "pousse_qui_dure : part, de 0 à 1, où chaque étape commence ; à 1, l'arbre porte ses fruits mûrs (l'étape mur)."
+ ],
+ "spectacle": {
+  "ordre": [
+   "trou",
+   "plantation",
+   "jeune",
+   "floraison",
+   "fruits_verts",
+   "mur"
+  ],
+  "ms_par_etape": 450
+ },
+ "pousse_qui_dure": {
+  "part": {
+   "trou": 0,
+   "plantation": 0.1,
+   "jeune": 0.25,
+   "floraison": 0.5,
+   "fruits_verts": 0.7,
+   "mur": 1
+  }
+ },
+ "arbres": {
+  "pommier": {
+   "nom": "Verger par étapes : le pommier",
+   "cadre": [
+    -50,
+    -115,
+    100,
+    140
+   ],
+   "etapes": {
+    "trou": {
+     "nom": "Le pommier : le trou (creusé dans l'herbe, le tas de terre, la bêche)",
+     "cadre": [
+      -50,
+      -115,
+      100,
+      140
+     ],
+     "ms_par_image": 300,
+     "part": 0,
+     "fichiers": [
+      "pommier/verger_pommier_trou_1.svg",
+      "pommier/verger_pommier_trou_2.svg",
+      "pommier/verger_pommier_trou_3.svg"
+     ]
+    },
+    "plantation": {
+     "nom": "Le pommier : la plantation (le scion attaché au tuteur, la cuvette, l'arrosoir qui goutte)",
+     "cadre": [
+      -50,
+      -115,
+      100,
+      140
+     ],
+     "ms_par_image": 300,
+     "part": 0.1,
+     "fichiers": [
+      "pommier/verger_pommier_plantation_1.svg",
+      "pommier/verger_pommier_plantation_2.svg",
+      "pommier/verger_pommier_plantation_3.svg"
+     ]
+    },
+    "jeune": {
+     "nom": "Le pommier : le jeune arbre, au tuteur",
+     "cadre": [
+      -50,
+      -115,
+      100,
+      140
+     ],
+     "ms_par_image": 300,
+     "part": 0.25,
+     "fichiers": [
+      "pommier/verger_pommier_jeune_1.svg",
+      "pommier/verger_pommier_jeune_2.svg",
+      "pommier/verger_pommier_jeune_3.svg"
+     ]
+    },
+    "floraison": {
+     "nom": "Le pommier : la floraison (des pétales tombent, une abeille butine)",
+     "cadre": [
+      -50,
+      -115,
+      100,
+      140
+     ],
+     "ms_par_image": 300,
+     "part": 0.5,
+     "fichiers": [
+      "pommier/verger_pommier_floraison_1.svg",
+      "pommier/verger_pommier_floraison_2.svg",
+      "pommier/verger_pommier_floraison_3.svg"
+     ]
+    },
+    "fruits_verts": {
+     "nom": "Le pommier : les pommes encore vertes",
+     "cadre": [
+      -50,
+      -115,
+      100,
+      140
+     ],
+     "ms_par_image": 300,
+     "part": 0.7,
+     "fichiers": [
+      "pommier/verger_pommier_fruits_verts_1.svg",
+      "pommier/verger_pommier_fruits_verts_2.svg",
+      "pommier/verger_pommier_fruits_verts_3.svg"
+     ]
+    },
+    "mur": {
+     "nom": "Le pommier : les pommes mûres (deux tombées au pied, une abeille)",
+     "cadre": [
+      -50,
+      -115,
+      100,
+      140
+     ],
+     "ms_par_image": 300,
+     "part": 1,
+     "fichiers": [
+      "pommier/verger_pommier_mur_1.svg",
+      "pommier/verger_pommier_mur_2.svg",
+      "pommier/verger_pommier_mur_3.svg"
+     ]
+    }
+   }
+  },
+  "poirier": {
+   "nom": "Verger par étapes : le poirier",
+   "cadre": [
+    -50,
+    -115,
+    100,
+    140
+   ],
+   "etapes": {
+    "trou": {
+     "nom": "Le poirier : le trou (creusé dans l'herbe, le tas de terre, la bêche)",
+     "cadre": [
+      -50,
+      -115,
+      100,
+      140
+     ],
+     "ms_par_image": 300,
+     "part": 0,
+     "fichiers": [
+      "poirier/verger_poirier_trou_1.svg",
+      "poirier/verger_poirier_trou_2.svg",
+      "poirier/verger_poirier_trou_3.svg"
+     ]
+    },
+    "plantation": {
+     "nom": "Le poirier : la plantation (le scion attaché au tuteur, la cuvette, l'arrosoir qui goutte)",
+     "cadre": [
+      -50,
+      -115,
+      100,
+      140
+     ],
+     "ms_par_image": 300,
+     "part": 0.1,
+     "fichiers": [
+      "poirier/verger_poirier_plantation_1.svg",
+      "poirier/verger_poirier_plantation_2.svg",
+      "poirier/verger_poirier_plantation_3.svg"
+     ]
+    },
+    "jeune": {
+     "nom": "Le poirier : le jeune arbre, au tuteur",
+     "cadre": [
+      -50,
+      -115,
+      100,
+      140
+     ],
+     "ms_par_image": 300,
+     "part": 0.25,
+     "fichiers": [
+      "poirier/verger_poirier_jeune_1.svg",
+      "poirier/verger_poirier_jeune_2.svg",
+      "poirier/verger_poirier_jeune_3.svg"
+     ]
+    },
+    "floraison": {
+     "nom": "Le poirier : la floraison (des pétales tombent, une abeille butine)",
+     "cadre": [
+      -50,
+      -115,
+      100,
+      140
+     ],
+     "ms_par_image": 300,
+     "part": 0.5,
+     "fichiers": [
+      "poirier/verger_poirier_floraison_1.svg",
+      "poirier/verger_poirier_floraison_2.svg",
+      "poirier/verger_poirier_floraison_3.svg"
+     ]
+    },
+    "fruits_verts": {
+     "nom": "Le poirier : les poires encore vertes",
+     "cadre": [
+      -50,
+      -115,
+      100,
+      140
+     ],
+     "ms_par_image": 300,
+     "part": 0.7,
+     "fichiers": [
+      "poirier/verger_poirier_fruits_verts_1.svg",
+      "poirier/verger_poirier_fruits_verts_2.svg",
+      "poirier/verger_poirier_fruits_verts_3.svg"
+     ]
+    },
+    "mur": {
+     "nom": "Le poirier : les poires mûres (deux tombées au pied, une abeille)",
+     "cadre": [
+      -50,
+      -115,
+      100,
+      140
+     ],
+     "ms_par_image": 300,
+     "part": 1,
+     "fichiers": [
+      "poirier/verger_poirier_mur_1.svg",
+      "poirier/verger_poirier_mur_2.svg",
+      "poirier/verger_poirier_mur_3.svg"
+     ]
+    }
+   }
+  },
+  "cerisier": {
+   "nom": "Verger par étapes : le cerisier",
+   "cadre": [
+    -50,
+    -115,
+    100,
+    140
+   ],
+   "etapes": {
+    "trou": {
+     "nom": "Le cerisier : le trou (creusé dans l'herbe, le tas de terre, la bêche)",
+     "cadre": [
+      -50,
+      -115,
+      100,
+      140
+     ],
+     "ms_par_image": 300,
+     "part": 0,
+     "fichiers": [
+      "cerisier/verger_cerisier_trou_1.svg",
+      "cerisier/verger_cerisier_trou_2.svg",
+      "cerisier/verger_cerisier_trou_3.svg"
+     ]
+    },
+    "plantation": {
+     "nom": "Le cerisier : la plantation (le scion attaché au tuteur, la cuvette, l'arrosoir qui goutte)",
+     "cadre": [
+      -50,
+      -115,
+      100,
+      140
+     ],
+     "ms_par_image": 300,
+     "part": 0.1,
+     "fichiers": [
+      "cerisier/verger_cerisier_plantation_1.svg",
+      "cerisier/verger_cerisier_plantation_2.svg",
+      "cerisier/verger_cerisier_plantation_3.svg"
+     ]
+    },
+    "jeune": {
+     "nom": "Le cerisier : le jeune arbre, au tuteur",
+     "cadre": [
+      -50,
+      -115,
+      100,
+      140
+     ],
+     "ms_par_image": 300,
+     "part": 0.25,
+     "fichiers": [
+      "cerisier/verger_cerisier_jeune_1.svg",
+      "cerisier/verger_cerisier_jeune_2.svg",
+      "cerisier/verger_cerisier_jeune_3.svg"
+     ]
+    },
+    "floraison": {
+     "nom": "Le cerisier : la floraison (des pétales tombent, une abeille butine)",
+     "cadre": [
+      -50,
+      -115,
+      100,
+      140
+     ],
+     "ms_par_image": 300,
+     "part": 0.5,
+     "fichiers": [
+      "cerisier/verger_cerisier_floraison_1.svg",
+      "cerisier/verger_cerisier_floraison_2.svg",
+      "cerisier/verger_cerisier_floraison_3.svg"
+     ]
+    },
+    "fruits_verts": {
+     "nom": "Le cerisier : les cerises encore vertes",
+     "cadre": [
+      -50,
+      -115,
+      100,
+      140
+     ],
+     "ms_par_image": 300,
+     "part": 0.7,
+     "fichiers": [
+      "cerisier/verger_cerisier_fruits_verts_1.svg",
+      "cerisier/verger_cerisier_fruits_verts_2.svg",
+      "cerisier/verger_cerisier_fruits_verts_3.svg"
+     ]
+    },
+    "mur": {
+     "nom": "Le cerisier : les cerises mûres (deux tombées au pied, une abeille)",
+     "cadre": [
+      -50,
+      -115,
+      100,
+      140
+     ],
+     "ms_par_image": 300,
+     "part": 1,
+     "fichiers": [
+      "cerisier/verger_cerisier_mur_1.svg",
+      "cerisier/verger_cerisier_mur_2.svg",
+      "cerisier/verger_cerisier_mur_3.svg"
+     ]
+    }
+   }
+  },
+  "prunier": {
+   "nom": "Verger par étapes : le prunier",
+   "cadre": [
+    -50,
+    -115,
+    100,
+    140
+   ],
+   "etapes": {
+    "trou": {
+     "nom": "Le prunier : le trou (creusé dans l'herbe, le tas de terre, la bêche)",
+     "cadre": [
+      -50,
+      -115,
+      100,
+      140
+     ],
+     "ms_par_image": 300,
+     "part": 0,
+     "fichiers": [
+      "prunier/verger_prunier_trou_1.svg",
+      "prunier/verger_prunier_trou_2.svg",
+      "prunier/verger_prunier_trou_3.svg"
+     ]
+    },
+    "plantation": {
+     "nom": "Le prunier : la plantation (le scion attaché au tuteur, la cuvette, l'arrosoir qui goutte)",
+     "cadre": [
+      -50,
+      -115,
+      100,
+      140
+     ],
+     "ms_par_image": 300,
+     "part": 0.1,
+     "fichiers": [
+      "prunier/verger_prunier_plantation_1.svg",
+      "prunier/verger_prunier_plantation_2.svg",
+      "prunier/verger_prunier_plantation_3.svg"
+     ]
+    },
+    "jeune": {
+     "nom": "Le prunier : le jeune arbre, au tuteur",
+     "cadre": [
+      -50,
+      -115,
+      100,
+      140
+     ],
+     "ms_par_image": 300,
+     "part": 0.25,
+     "fichiers": [
+      "prunier/verger_prunier_jeune_1.svg",
+      "prunier/verger_prunier_jeune_2.svg",
+      "prunier/verger_prunier_jeune_3.svg"
+     ]
+    },
+    "floraison": {
+     "nom": "Le prunier : la floraison (des pétales tombent, une abeille butine)",
+     "cadre": [
+      -50,
+      -115,
+      100,
+      140
+     ],
+     "ms_par_image": 300,
+     "part": 0.5,
+     "fichiers": [
+      "prunier/verger_prunier_floraison_1.svg",
+      "prunier/verger_prunier_floraison_2.svg",
+      "prunier/verger_prunier_floraison_3.svg"
+     ]
+    },
+    "fruits_verts": {
+     "nom": "Le prunier : les prunes encore vertes",
+     "cadre": [
+      -50,
+      -115,
+      100,
+      140
+     ],
+     "ms_par_image": 300,
+     "part": 0.7,
+     "fichiers": [
+      "prunier/verger_prunier_fruits_verts_1.svg",
+      "prunier/verger_prunier_fruits_verts_2.svg",
+      "prunier/verger_prunier_fruits_verts_3.svg"
+     ]
+    },
+    "mur": {
+     "nom": "Le prunier : les prunes mûres (deux tombées au pied, une abeille)",
+     "cadre": [
+      -50,
+      -115,
+      100,
+      140
+     ],
+     "ms_par_image": 300,
+     "part": 1,
+     "fichiers": [
+      "prunier/verger_prunier_mur_1.svg",
+      "prunier/verger_prunier_mur_2.svg",
+      "prunier/verger_prunier_mur_3.svg"
+     ]
+    }
+   }
+  },
+  "abricotier": {
+   "nom": "Verger par étapes : l'abricotier",
+   "cadre": [
+    -50,
+    -115,
+    100,
+    140
+   ],
+   "etapes": {
+    "trou": {
+     "nom": "L'abricotier : le trou (creusé dans l'herbe, le tas de terre, la bêche)",
+     "cadre": [
+      -50,
+      -115,
+      100,
+      140
+     ],
+     "ms_par_image": 300,
+     "part": 0,
+     "fichiers": [
+      "abricotier/verger_abricotier_trou_1.svg",
+      "abricotier/verger_abricotier_trou_2.svg",
+      "abricotier/verger_abricotier_trou_3.svg"
+     ]
+    },
+    "plantation": {
+     "nom": "L'abricotier : la plantation (le scion attaché au tuteur, la cuvette, l'arrosoir qui goutte)",
+     "cadre": [
+      -50,
+      -115,
+      100,
+      140
+     ],
+     "ms_par_image": 300,
+     "part": 0.1,
+     "fichiers": [
+      "abricotier/verger_abricotier_plantation_1.svg",
+      "abricotier/verger_abricotier_plantation_2.svg",
+      "abricotier/verger_abricotier_plantation_3.svg"
+     ]
+    },
+    "jeune": {
+     "nom": "L'abricotier : le jeune arbre, au tuteur",
+     "cadre": [
+      -50,
+      -115,
+      100,
+      140
+     ],
+     "ms_par_image": 300,
+     "part": 0.25,
+     "fichiers": [
+      "abricotier/verger_abricotier_jeune_1.svg",
+      "abricotier/verger_abricotier_jeune_2.svg",
+      "abricotier/verger_abricotier_jeune_3.svg"
+     ]
+    },
+    "floraison": {
+     "nom": "L'abricotier : la floraison (des pétales tombent, une abeille butine)",
+     "cadre": [
+      -50,
+      -115,
+      100,
+      140
+     ],
+     "ms_par_image": 300,
+     "part": 0.5,
+     "fichiers": [
+      "abricotier/verger_abricotier_floraison_1.svg",
+      "abricotier/verger_abricotier_floraison_2.svg",
+      "abricotier/verger_abricotier_floraison_3.svg"
+     ]
+    },
+    "fruits_verts": {
+     "nom": "L'abricotier : les abricots encore verts",
+     "cadre": [
+      -50,
+      -115,
+      100,
+      140
+     ],
+     "ms_par_image": 300,
+     "part": 0.7,
+     "fichiers": [
+      "abricotier/verger_abricotier_fruits_verts_1.svg",
+      "abricotier/verger_abricotier_fruits_verts_2.svg",
+      "abricotier/verger_abricotier_fruits_verts_3.svg"
+     ]
+    },
+    "mur": {
+     "nom": "L'abricotier : les abricots mûrs (deux tombés au pied, une abeille)",
+     "cadre": [
+      -50,
+      -115,
+      100,
+      140
+     ],
+     "ms_par_image": 300,
+     "part": 1,
+     "fichiers": [
+      "abricotier/verger_abricotier_mur_1.svg",
+      "abricotier/verger_abricotier_mur_2.svg",
+      "abricotier/verger_abricotier_mur_3.svg"
+     ]
+    }
+   }
+  }
+ }
+}
