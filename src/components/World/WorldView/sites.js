@@ -92,11 +92,12 @@ export default {
     /* ---------- Boutique d'un atelier (règles : world/shop.js ; onglet : SiteShop) ---------- */
     itemArt,
     // Raison pour laquelle un article ne s'achète pas encore (texte du bouton), ou ''
+    // (les écus qui attendent dans les bâtiments comptent : le serveur les encaisse avant l'achat)
     lockOf(site, item) {
-      return itemLock(site, item, this.coins);
+      return itemLock(site, item, this.coinsPaid);
     },
     canBuy(site, item) {
-      return itemBuyable(site, item, this.coins);
+      return itemBuyable(site, item, this.coinsPaid);
     },
 
     /* ---------- Actions ---------- */
@@ -157,7 +158,7 @@ export default {
       this.busy = true;
       try {
         const { gained, stock, coins, world } = await playService.worldCollect();
-        this.apply(world);
+        this.apply(world, { quiet: true });
         this.$emit('coins-updated', coins);
         const goods = Object.entries(stock || {}).filter(([, n]) => n > 0).map(([r, n]) => `+${n} ${LABEL[r]}`);
         if (gained > 0 || goods.length) {

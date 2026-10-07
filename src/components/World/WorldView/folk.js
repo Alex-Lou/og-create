@@ -316,8 +316,9 @@ export default {
       if (this.busy || !this.beastView) return;
       this.busy = true;
       try {
-        const { collected, world } = await playService.beastFeed(this.beastView.id);
+        const { collected, coins, world } = await playService.beastFeed(this.beastView.id);
         this.apply(world);
+        if (coins !== undefined) this.$emit('coins-updated', coins);
         vibrate(10);
         if (collected) this.$emit('show-alert', `Sa bulle, ramassée d’abord : +${collected} ${LABEL.food}`);
       } catch (error) {
