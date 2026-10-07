@@ -486,31 +486,52 @@ const citerne = {
     }
   }]
 };
-// Réservoir : cuve de pierre ronde sur quatre piliers, eau qui miroite, échelle ; le trop-plein coule dans un bac
+// Réservoir : cuve ronde en pierres appareillées sur quatre piliers reliés par des arches, sa margelle et son eau qui
+// miroite, de la mousse ; l'échelle ; le trop-plein coule en filet dans une auge de pierre où boit une mésange
 const reservoir = {
   layers: [{
     frame: [-32, -78, 64, 96],
     n: 6,
     fps: 3,
     draw: (T, f, n) => {
+      const k = f / n;
+      const [x, y] = T.p(0, 0, 0);
+      // l'herbe, des cailloux, la flaque de l'auge
+      let out = ell(x, y + 1, 30, 12.6, '#9CC46A', ` stroke="${OUT}" stroke-width="0.5"`) + ell(x - 4, y, 20, 7.6, '#ADD27A')
+        + [[-22, 4], [20, 8], [-10, 9]].map(([dx, dy]) => ell(x + dx, y + dy, 1.6, 1, '#B8B0A0', ` stroke="${OUT}" stroke-width="0.4"`)).join('')
+        + ell(...T.p(0.36, 0.3, 0), 7, 2.4, 'rgba(110,180,220,.55)') + T.shadow(0, 0, 0.36, 0.2);
+      // les quatre piliers, les arches de devant, le linteau
+      out += [[-0.17, -0.15], [0.17, -0.15], [-0.17, 0.15], [0.17, 0.15]].map(([a, b]) => T.box(a - 0.04, b - 0.04, a + 0.04, b + 0.04, 0, 23, STONE)
+        + [5, 11, 17].map(z => ln(T.p(a - 0.04, b + 0.04, z), T.p(a + 0.04, b + 0.04, z), 'rgba(120,110,95,.4)', 0.5)).join('')).join('');
+      const arch = (p0, p1) => { const [ax, ay] = p0, [bx, by] = p1; return `<path d="M${f2(ax)},${f2(ay)} Q${f2((ax + bx) / 2)},${f2((ay + by) / 2 - 9)} ${f2(bx)},${f2(by)}" stroke="${OUT}" stroke-width="4.4" fill="none"/><path d="M${f2(ax)},${f2(ay)} Q${f2((ax + bx) / 2)},${f2((ay + by) / 2 - 9)} ${f2(bx)},${f2(by)}" stroke="${STONE.left}" stroke-width="2.8" fill="none"/>`; };
+      out += arch(T.p(-0.13, 0.19, 17), T.p(0.13, 0.19, 17)) + arch(T.p(0.21, 0.11, 17), T.p(0.21, -0.11, 17))
+        + T.box(-0.24, -0.22, 0.24, 0.22, 23, 26, STONE);
+      // la cuve en pierres appareillées
+      out += T.cyl(0, 0, 26, 47, 0.27, STONE, 'cuve-r');
+      const R = 12.2;
+      [26, 31, 36, 41].forEach((z, i) => {
+        const [cx, cy] = T.p(0, 0, z);
+        if (i) out += `<path d="M${f2(cx - R)},${f2(cy)} A${R},${R / 2} 0 0 0 ${f2(cx + R)},${f2(cy)}" stroke="rgba(120,110,95,.45)" stroke-width="0.6" fill="none"/>`;
+        for (let j = 0; j < 5; j++) { const a = (j + 0.5 + (i % 2) * 0.5) / 5.5 * Math.PI; if (a >= Math.PI) continue; const px = cx + R * Math.cos(a), py = cy + (R / 2) * Math.sin(a); out += ln([px, py], [px, py - 5], 'rgba(120,110,95,.4)', 0.5); }
+      });
+      out += [[-0.2, 0.12, 27, 3], [0.06, 0.24, 27, 2.4], [0.24, 0.02, 33, 1.8]].map(([u, v, z, r]) => { const [mx, my] = T.p(u, v, z); return ell(mx, my, r * 1.3, r * 0.6, '#7E9A52') + ell(mx - r * 0.3, my - r * 0.2, r * 0.6, r * 0.3, '#9DB86A'); }).join('');
+      // la margelle et l'eau qui miroite
       const [wx, wy] = T.p(0, 0, 47);
-      const shimmer = [0, 1, 2].map(k => {
-        const a = (f / n) * TAU + k * 2.1;
-        return ell(wx + Math.cos(a) * 6, wy + Math.sin(a) * 2, 2.6, 0.7, 'rgba(255,255,255,.6)');
-      }).join('');
-      return T.shadow(0, 0, 0.36, 0.2)
-        + [[-0.17, -0.15], [0.17, -0.15], [-0.17, 0.15], [0.17, 0.15]].map(([a, b]) => T.box(a - 0.04, b - 0.04, a + 0.04, b + 0.04, 0, 23, STONE)).join('')
-        + T.box(-0.24, -0.22, 0.24, 0.22, 23, 26, STONE)
-        + T.cyl(0, 0, 26, 47, 0.27, STONE, 'cuve-r')
-        + [32, 38, 44].map(z => { const [x, y] = T.p(0, 0, z); return `<path d="M${f2(x - 12.2)},${f2(y)} A12.2,6.1 0 0 0 ${f2(x + 12.2)},${f2(y)}" stroke="rgba(120,110,95,.4)" stroke-width="0.6" fill="none"/>`; }).join('')
-        + ell(wx, wy, 10.6, 5.3, '#4C9CC8') + shimmer
-        // Échelle sur le devant
-        + ln(T.p(-0.1, 0.3, 0), T.p(-0.1, 0.27, 47), WOOD.right, 1) + ln(T.p(0.02, 0.3, 0), T.p(0.02, 0.27, 47), WOOD.right, 1)
-        + [6, 14, 22, 30, 38].map(z => ln(T.p(-0.1, 0.3 - z * 0.0006, z), T.p(0.02, 0.3 - z * 0.0006, z), WOOD.top, 0.8)).join('')
-        // Trop-plein et bac
-        + ln(T.p(0.26, 0.05, 30), T.p(0.36, 0.1, 30), IRON.right, 1.6)
-        + T.box(0.26, 0.04, 0.42, 0.26, 0, 4, WOOD_DARK) + T.face([[0.28, 0.06, 4], [0.4, 0.06, 4], [0.4, 0.24, 4], [0.28, 0.24, 4]], '#4C9CC8')
-        + dot(...T.p(0.36, 0.1, 29 - ((f % n) / n) * 24), 1, '#7FC2EA');
+      out += ell(wx, wy, R + 1.4, (R + 1.4) / 2, STONE.top, ` stroke="${OUT}" stroke-width="0.7"`) + ell(wx, wy + 0.4, R - 1.4, (R - 1.4) / 2, '#4C9CC8', ` stroke="${STONE.right}" stroke-width="0.6"`)
+        + [0, 1, 2].map(i => { const a = k * TAU + i * 2.1; return ell(wx + Math.cos(a) * 5.6, wy + 0.4 + Math.sin(a) * 1.8, 2.4, 0.6, 'rgba(255,255,255,.6)'); }).join('');
+      // l'échelle sur le devant
+      out += ln(T.p(-0.12, 0.31, 0), T.p(-0.12, 0.28, 48), WOOD.right, 1.2) + ln(T.p(0.0, 0.31, 0), T.p(0.0, 0.28, 48), WOOD.right, 1.2)
+        + [5, 12, 19, 26, 33, 40].map(z => ln(T.p(-0.12, 0.31 - z * 0.0006, z), T.p(0.0, 0.31 - z * 0.0006, z), WOOD.top, 0.9)).join('');
+      // le trop-plein, son filet d'eau, l'auge et ses ronds
+      const [ox, oy] = T.p(0.36, 0.1, 30);
+      const [tx, ty] = T.p(0.36, 0.3, 5);
+      out += ln(T.p(0.26, 0.05, 30), [ox, oy], DARK_IRON.right, 1.8) + ln(T.p(0.26, 0.05, 30.4), [ox, oy - 0.4], IRON.top, 0.5)
+        + `<path d="M${f2(ox)},${f2(oy + 0.6)} Q${f2(ox + 1.6)},${f2(oy + 6)} ${f2(tx)},${f2(ty)}" stroke="#7FC2EA" stroke-width="1.4" fill="none" stroke-dasharray="3 2" stroke-dashoffset="${f2(-k * 10)}"/>`
+        + T.box(0.26, 0.2, 0.46, 0.4, 0, 5, STONE) + T.face([[0.28, 0.22, 5], [0.44, 0.22, 5], [0.44, 0.38, 5], [0.28, 0.38, 5]], '#4C9CC8')
+        + `<ellipse cx="${f2(tx)}" cy="${f2(ty)}" rx="${f2(1.6 + k * 4)}" ry="${f2(0.8 + k * 2)}" fill="none" stroke="rgba(255,255,255,${f2(0.8 * (1 - k))})" stroke-width="0.6"/>`;
+      // la mésange au bord de l'auge, elle boit une image sur deux
+      const [bx, by] = T.p(0.45, 0.24, 5);
+      return out + `<g transform="translate(${f2(bx)} ${f2(by)}) scale(.7) translate(${f2(-bx)} ${f2(-by)})">` + bird(bx, by, { body: '#5E8CC8', breast: '#F2D25A', wing: '#3E6AA0', flip: true, peck: f % 2 }) + '</g>';
     }
   }]
 };
