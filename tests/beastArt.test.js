@@ -59,8 +59,44 @@ describe('les bêtes de la bibliothèque', () => {
 
   it('ce que la bibliothèque n’a pas garde son dessin par code', () => {
     expect(beastSprite('deer', 'blanc')).toBe(null);
-    for (const species of ['koi', 'bird', 'butterfly', 'firefly', 'bee', 'owl', 'tictac', 'bowl', 'soup', 'anya']) expect(beastSprite(species, '')).toBe(null);
+    for (const species of ['soup', 'anya']) expect(beastSprite(species, '')).toBe(null);
+    expect(beastSprite('koi', '#123456')).toBe(null);
     expect(beastSprite('hen', '').key).toBe('lib-poule-blanche_profil_marche_1');
+  });
+
+  // Les bêtes à une seule vue : [sorte, variante, fichier sans son image]
+  const SINGLE = [['bee', '', 'bestiaire/abeille/abeille_profil_vol'], ['bee', 'amie', 'familiers/amie-tictac/amie-tictac_profil_vol'],
+    ['firefly', '', 'bestiaire/luciole/luciole_profil_vol'], ['owl', '', 'bestiaire/hibou/hibou_face_marche'],
+    ['butterfly', 'jaune', 'bestiaire/papillon-jaune/papillon-jaune_face_vol'], ['butterfly', 'bleu', 'bestiaire/papillon-bleu/papillon-bleu_face_vol'],
+    ['butterfly', 'lune', 'bestiaire/papillon-lune/papillon-lune_face_vol'], ['tictac', '', 'familiers/tictac/tictac_profil_vol'],
+    ['bowl', 'bulle', 'familiers/bocal-bulle/bocal-bulle'], ['bowl', '', 'familiers/bocal-vide/bocal-vide'],
+    ['koi', '#F08A3A', 'eau/koi-orange/koi-orange_profil_nage'], ['koi', '#FFFFFF', 'eau/koi-blanc/koi-blanc_profil_nage'],
+    ['koi', '#F2C04B', 'eau/koi-or/koi-or_profil_nage'], ['dolphin', '', 'mer/dauphin/dauphin_profil_nage'],
+    ['whaleBack', '', 'mer/baleine-dos/baleine-dos_profil_nage'], ['whaleFluke', '', 'mer/baleine-queue/baleine-queue_profil_nage'],
+    ['fish', 'sardine', 'mer/poisson-sardine/poisson-sardine_profil_nage'], ['fish', 'dorade', 'mer/poisson-dorade/poisson-dorade_profil_nage'],
+    ['fish', 'volant', 'mer/poisson-volant/poisson-volant_profil_nage']];
+
+  it('les bêtes à une seule vue (vol, face, nage, bocal) : leur dessin, au cadre de leurs fichiers', () => {
+    for (const [species, variant, file] of SINGLE) {
+      const art = beastSprite(species, variant, { pose: 'marche', n: 1 });
+      expect(art.key, file).toBe(`lib-${file.split('/').pop()}_1`);
+      const { box } = art.make();
+      expect([box.x, box.y, box.w, box.h].map(v => round(v * 1.25)), file).toEqual(viewBox(`${ROOT}${file}_1.svg`));
+      expect(art.face).toBe(file.includes('_face_'));
+    }
+    // La mésange et la mouette marchent (trois vues)
+    expect(beastSprite('bird', '').key).toBe('lib-mesange_profil_marche_1');
+    expect(beastSprite('gull', '', { view: 'avant', pose: 'joie' }).key).toBe('lib-mouette_avant_joie');
+  });
+
+  it('ce qui manque à une bête à une seule vue se remplace au plus proche', () => {
+    // Le hibou cligne des yeux ; Tic-Tac, arrêté, tombe (repos) ; le bocal vide n'a qu'une image ; le dauphin en a trois
+    expect(beastSprite('owl', '', lookOf(1, 'owl')).key).toBe('lib-hibou_face_clignement');
+    expect(beastSprite('tictac', '', lookOf('rest')).key).toBe('lib-tictac_profil_repos');
+    expect(beastSprite('firefly', '', lookOf('rest')).key).toBe('lib-luciole_profil_vol_1');
+    expect(beastSprite('bowl', '', { n: 2 }).key).toBe('lib-bocal-vide_1');
+    expect(beastSprite('bowl', 'bulle', { n: 2 }).key).toBe('lib-bocal-bulle_2');
+    expect(beastSprite('dolphin', '', { n: 3 }).key).toBe('lib-dauphin_profil_nage_3');
   });
 
   it('vue selon la direction, pose selon l’image du jeu ; de dos, ni clignement ni joie', () => {
