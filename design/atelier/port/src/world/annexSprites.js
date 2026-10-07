@@ -886,34 +886,62 @@ const huitres = {
 };
 
 /* ---------- Foyer ---------- */
-// Jardin d'herbes : carré surélevé de lavande, basilic, romarin et thym, son petit écriteau ; deux papillons
+// Jardin d'herbes : carré surélevé à poteaux d'angle, garni de lavande, basilic, romarin et thym bien touffus, son
+// écriteau et le transplantoir planté ; l'arrosoir, des pas japonais dans l'herbe, un escargot sur le rebord ; deux
+// papillons qui volent
 const jardin = {
   layers: [{
     frame: [-32, -48, 64, 64],
     n: 8,
     fps: 6,
     draw: (T, f, n) => {
+      const [gx, gy] = T.p(0, 0, 0);
+      // l'herbe, les pas japonais
+      let out = ell(gx, gy + 1, 30, 12.4, '#9CC46A', ` stroke="${OUT}" stroke-width="0.5"`) + ell(gx - 4, gy, 20, 7.4, '#ADD27A')
+        + [[-0.38, 0.3], [-0.24, 0.4], [-0.08, 0.46]].map(([du, dv]) => { const [px, py] = T.p(du, dv, 0); return ell(px, py, 3, 1.5, '#C9C2B4', ` stroke="${OUT}" stroke-width="0.5"`) + ell(px - 0.6, py - 0.4, 1.6, 0.6, '#DDD7CB'); }).join('')
+        + T.shadow(0, 0, 0.36, 0.2);
+      // le carré surélevé, ses planches, ses poteaux d'angle, sa terre
+      out += T.box(-0.32, -0.2, 0.32, 0.2, 0, 9, WOOD) + planksLeft(T.u - 0.32, T.u + 0.32, T.v + 0.2, 0, 9, 4.5) + planksRight(T.u + 0.32, T.v - 0.2, T.v + 0.2, 0, 9, 4.5)
+        + [[-0.32, 0.2], [0.32, 0.2], [0.32, -0.2]].map(([a, b]) => post(T, a, b, 0, 10.4, WOOD_DARK, 0.022)).join('')
+        + T.face([[-0.29, -0.17, 9], [0.29, -0.17, 9], [0.29, 0.17, 9], [-0.29, 0.17, 9]], SOIL_TOP)
+        + [[-0.1, -0.02], [0.14, 0.0], [0.02, 0.12]].map(([du, dv]) => dot(...T.p(du, dv, 9), 0.5, '#5A3A22')).join('');
+      // les herbes, bien touffues
       const herbs = [];
       for (const [du, dv, kind] of [[-0.22, -0.1, 0], [-0.08, -0.1, 1], [0.08, -0.1, 2], [0.22, -0.1, 3], [-0.22, 0.08, 1], [-0.08, 0.08, 3], [0.08, 0.08, 0], [0.22, 0.08, 2]]) {
         const [x, y] = T.p(du, dv, 9);
-        if (kind === 0) herbs.push([-1.6, 0, 1.6].map(o => ln([x + o * 0.5, y], [x + o, y - 7], '#6FA35A', 0.7) + ell(x + o, y - 8, 0.9, 2.2, '#A98ADB')).join(''));
-        else if (kind === 1) herbs.push(`<circle cx="${f2(x - 1.4)}" cy="${f2(y - 2)}" r="2.2" fill="${LEAF}"/><circle cx="${f2(x + 1.4)}" cy="${f2(y - 2.4)}" r="2.2" fill="${LEAF_LIGHT}"/><circle cx="${f2(x)}" cy="${f2(y - 3.6)}" r="1.8" fill="#9ED87A"/>`);
-        else if (kind === 2) herbs.push([-2, -0.7, 0.7, 2].map(o => ln([x, y], [x + o, y - 6.4], '#3F6E3A', 0.8)).join(''));
-        else herbs.push(`<ellipse cx="${f2(x)}" cy="${f2(y - 1.6)}" rx="3" ry="1.8" fill="#7AA866"/>` + [-1.4, 0, 1.4].map(o => dot(x + o, y - 2.6, 0.5, '#E6D2F2')).join(''));
+        const sw = wave(f, n, 0.6, du * 9);
+        if (kind === 0) herbs.push([-2.4, -1.2, 0, 1.2, 2.4].map((o, i) => ln([x + o * 0.4, y], [x + o + sw, y - 7 - (i % 2) * 1.4], '#6FA35A', 0.7) + ell(x + o + sw, y - 8.2 - (i % 2) * 1.4, 0.8, 2.2, i % 2 ? '#9A7ACF' : '#B79AE6')).join(''));
+        else if (kind === 1) herbs.push([[-1.8, -2], [1.8, -2.4], [0, -4], [-0.6, -1.2], [1.2, -3.6]].map(([dx, dy], i) => `<path d="M${f2(x + dx)},${f2(y + dy + 1.6)} q-2,-1.6 0,-3.4 q2,1.6 0,3.4 Z" fill="${i % 2 ? LEAF_LIGHT : LEAF}" stroke="#3F6E3A" stroke-width="0.3"/>`).join(''));
+        else if (kind === 2) herbs.push([-2.4, -1.2, 0, 1.2, 2.4].map(o => { const ex = x + o + sw, ey = y - 7; return ln([x, y], [ex, ey], '#3F6E3A', 0.8) + [0.3, 0.55, 0.8].map(t => ln([x + (ex - x) * t, y + (ey - y) * t], [x + (ex - x) * t + 1, y + (ey - y) * t - 0.6], '#5E8C4A', 0.5)).join(''); }).join(''));
+        else herbs.push(`<ellipse cx="${f2(x)}" cy="${f2(y - 1.6)}" rx="3.2" ry="2" fill="#7AA866" stroke="#4E7A3E" stroke-width="0.3"/>` + [-1.6, -0.4, 0.8, 1.8].map((o, i) => dot(x + o, y - 2.4 - (i % 2) * 0.8, 0.55, '#E6D2F2')).join(''));
       }
+      out += herbs.join('');
+      // le transplantoir planté dans la terre
+      const [tx, ty] = T.p(0.0, 0.0, 9);
+      out += poly([[tx - 1, ty], [tx + 1, ty], [tx + 0.6, ty - 3], [tx - 0.6, ty - 3]], IRON.left, ` stroke="${OUT}" stroke-width="0.4"`) + ln([tx, ty - 3], [tx + 0.6, ty - 7], WOOD.right, 1.3);
+      // l'escargot sur le rebord de devant
+      const [ex, ey] = T.p(-0.12 + (f % n) * 0.006, 0.2, 9);
+      out += `<path d="M${f2(ex - 2.6)},${f2(ey)} q2.6,-0.6 5,0 q0.6,0.3 1.2,-1.2" stroke="#C8B48A" stroke-width="1.2" fill="none" stroke-linecap="round"/>`
+        + `<circle cx="${f2(ex)}" cy="${f2(ey - 1.8)}" r="1.9" fill="#C8864A" stroke="${OUT}" stroke-width="0.4"/>` + `<path d="M${f2(ex)},${f2(ey - 1.8)} m-0.9,0 a0.9,0.9 0 1 1 0.9,0.9" stroke="#8A5226" stroke-width="0.4" fill="none"/>`
+        + ln([ex + 3.6, ey - 1.2], [ex + 3.8, ey - 2.8], '#C8B48A', 0.4) + dot(ex + 3.8, ey - 2.9, 0.35, '#3D3A36');
+      // l'écriteau, l'arrosoir
+      const [sx, sy] = T.p(0.34, 0.26, 0);
+      out += ln([sx, sy], [sx, sy - 12], WOOD.right, 1.2) + poly([[sx - 5, sy - 15], [sx + 5, sy - 13], [sx + 5, sy - 9], [sx - 5, sy - 11]], WALL.top, ` stroke="${OUT}" stroke-width="0.5"`)
+        + ln([sx - 3, sy - 12.4], [sx + 3, sy - 11], '#6FA35A', 0.8) + dot(sx + 3.4, sy - 11.2, 0.7, '#A98ADB');
+      const [ax, ay] = T.p(0.42, -0.04, 0);
+      out += ell(ax, ay + 0.4, 4.4, 1.2, 'rgba(40,55,20,.22)')
+        + `<path d="M${f2(ax - 3.4)},${f2(ay)} L${f2(ax - 3)},${f2(ay - 6)} L${f2(ax + 3)},${f2(ay - 6)} L${f2(ax + 3.4)},${f2(ay)} Z" fill="#7FA8B8" stroke="${OUT}" stroke-width="0.5"/>`
+        + ell(ax, ay - 6, 3, 1, '#9CC4D2', ` stroke="${OUT}" stroke-width="0.4"`)
+        + `<path d="M${f2(ax + 3)},${f2(ay - 2)} L${f2(ax + 7.6)},${f2(ay - 7)}" stroke="${OUT}" stroke-width="1.6" stroke-linecap="round"/><path d="M${f2(ax + 3)},${f2(ay - 2)} L${f2(ax + 7.6)},${f2(ay - 7)}" stroke="#7FA8B8" stroke-width="0.9" stroke-linecap="round"/>`
+        + ell(ax + 8, ay - 7.4, 1.2, 0.8, '#9CC4D2', ` stroke="${OUT}" stroke-width="0.4"`)
+        + `<path d="M${f2(ax - 2.4)},${f2(ay - 6)} q2.4,-4.4 4.8,0" stroke="${OUT}" stroke-width="1.4" fill="none"/><path d="M${f2(ax - 2.4)},${f2(ay - 6)} q2.4,-4.4 4.8,0" stroke="#7FA8B8" stroke-width="0.7" fill="none"/>`;
+      // les deux papillons
       const fly = k => {
         const a = (f / n) * TAU + k * 2.6;
         const [x, y] = T.p(Math.cos(a) * 0.22, Math.sin(a) * 0.16, 20 + Math.sin(a * 2) * 4);
         return butterfly(x, y, (f + k) % 2 === 0, k ? '#F2C04B' : '#F6A8C8');
       };
-      const [sx, sy] = T.p(0.34, 0.26, 0);
-      return T.shadow(0, 0, 0.36, 0.2)
-        + T.box(-0.32, -0.2, 0.32, 0.2, 0, 9, WOOD) + planksLeft(T.u - 0.32, T.u + 0.32, T.v + 0.2, 0, 9, 4.5)
-        + T.face([[-0.29, -0.17, 9], [0.29, -0.17, 9], [0.29, 0.17, 9], [-0.29, 0.17, 9]], SOIL_TOP)
-        + herbs.join('')
-        + ln([sx, sy], [sx, sy - 12], WOOD.right, 1.2) + poly([[sx - 5, sy - 15], [sx + 5, sy - 13], [sx + 5, sy - 9], [sx - 5, sy - 11]], WALL.top, ` stroke="${OUT}" stroke-width="0.5"`)
-        + ln([sx - 3, sy - 12.4], [sx + 3, sy - 11], '#6FA35A', 0.8)
-        + fly(0) + fly(1);
+      return out + fly(0) + fly(1);
     }
   }]
 };
