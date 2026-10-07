@@ -1,7 +1,7 @@
 // Puits, paliers III à VII : Lavoir, Bassin, Aqueduc, Moulin à eau, Fontaine de jouvence.
 // Places laissées libres pour la boutique : seau devant, potence à poulie sur le flanc droit au bord de l'eau,
 // abreuvoir et chèvre à l'avant gauche, pompe au coin droit (× 1.5 dès le palier IV).
-import { ROOF_RED, WHITE_STONE, BUILDING_BOX, roofOf, roofTexture, stoneCourses } from '../palette.js';
+import { ROOF_RED, WHITE_STONE, BUILDING_BOX, roofOf, roofTexture, stoneCourses, stoneRing, pool } from '../palette.js';
 import { sprite } from '../iso.js';
 import {
   big, bigShadow, P, box, face, gable, cylinder, disc, f2, ln, dot, ell, OUT, STONE, WOOD, WOOD_DARK, GOLD,
@@ -39,9 +39,8 @@ function kiosk(skin, r, z, h = 28) {
 }
 // Bassin rond (cylindre de pierre et son eau) en (0, 0), rayon r, hauteur h
 function basin(r, h, stone, white) {
-  return cylinder(0, 0, 0, h, r, stone, `bs-${Math.round(r * 100)}`)
-    + (white ? stoneCourses(0, 0, 0, h, r, 1) : '')
-    + disc(0, 0, h, r * 0.86, WATER) + disc(-r * 0.15, -r * 0.15, h, r * 0.4, '#7CC4E8', ' opacity=".7"');
+  return stoneRing(0, 0, 0, h, r, stone, `bs-${Math.round(r * 100)}`)
+    + pool(0, 0, h, r * 0.86, WATER);
 }
 
 /* ---------- Palier III : Lavoir ---------- */
@@ -91,9 +90,9 @@ function bigBasin(skin) {
     + basin(1.0, 11, stone, white)
     // Fontaine à trois vasques
     + cylinder(0, 0, 11, 34, 0.1, PLASTER, 'bb-col')
-    + cylinder(0, 0, 30, 35, 0.42, stone, 'bb-v1') + disc(0, 0, 35, 0.35, WATER)
+    + stoneRing(0, 0, 30, 35, 0.42, stone, 'bb-v1', 0) + pool(0, 0, 35, 0.35, WATER)
     + cylinder(0, 0, 35, 50, 0.06, PLASTER, 'bb-col2')
-    + cylinder(0, 0, 48, 52, 0.22, stone, 'bb-v2') + disc(0, 0, 52, 0.17, WATER)
+    + stoneRing(0, 0, 48, 52, 0.22, stone, 'bb-v2', 0) + pool(0, 0, 52, 0.17, WATER)
     + cylinder(0, 0, 52, 60, 0.035, PLASTER, 'bb-tip')
     + (k ? k.front : '')
   );
@@ -197,7 +196,7 @@ function youth(skin) {
     + (k ? k.back : '')
     + cylinder(0, 0, 0, 12, 1.02, MARBLE, 'yj-basin') + stoneCourses(0, 0, 0, 12, 1.02, 1, 'rgba(150,140,170,.35)')
     + `<path d="M${f2(-46.2)},${f2(P(0, 0, 12)[1])} A46.2,23.1 0 0 0 46.2,${f2(P(0, 0, 12)[1])}" fill="none" stroke="${GOLD.left}" stroke-width="2"/>`
-    + disc(0, 0, 12, 0.88, '#5FD3D0') + disc(-0.2, -0.2, 12, 0.4, '#A8F0EA', ' opacity=".8"')
+    + pool(0, 0, 12, 0.88, '#5FD3D0', '#A8F0EA')
     // Socle, statue ailée qui verse l'eau d'une urne
     + cylinder(0, 0, 12, 30, 0.16, MARBLE, 'yj-ped') + cylinder(0, 0, 30, 33, 0.22, MARBLE, 'yj-ped2')
     + `<path d="M${f2(sx - 4)},${f2(sy + 7)} L${f2(sx - 3)},${f2(sy - 12)} Q${f2(sx)},${f2(sy - 16)} ${f2(sx + 3)},${f2(sy - 12)} L${f2(sx + 4)},${f2(sy + 7)} Z" fill="${MARBLE.left}" stroke="${MARBLE.right}" stroke-width="0.6"/>`

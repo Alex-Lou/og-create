@@ -6,7 +6,7 @@ import { P, TW, TH, face, box, gable, pyramid, disc, cylinder, shadow, foliage, 
 import {
   WOOD, WOOD_DARK, STONE, BRICK, SOIL, ROOF_RED, THATCH, LEAVES, PINE, INK, BUILDING_BOX, PROP_BOX,
   pebble, doorLeft, windowRight, planksLeft, planksRight, roundTree,
-  WHITE_STONE, WHITE_WOOD, ROCKS, FOLIAGE, SAILS, roofOf, roofTexture, stoneCourses, seasonDots, crystals, rockBox
+  WHITE_STONE, WHITE_WOOD, ROCKS, FOLIAGE, SAILS, roofOf, roofTexture, stoneCourses, seasonDots, crystals, rockBox, stoneRing, pool
 } from './palette.js';
 
 const f2 = n => Math.round(n * 100) / 100;
@@ -177,9 +177,8 @@ function well(skin) {
   return sprite(
     shadow(0, 0, 0.75)
     + box(-0.42, -0.06, -0.34, 0.06, 0, 40, WOOD_DARK)
-    + cylinder(0, 0, 0, 16, 0.36, skin === 'pierre-blanche' ? WHITE_STONE : STONE, 'wellg')
-    + (skin === 'pierre-blanche' ? stoneCourses(0, 0, 0, 16, 0.36, 2) : '')
-    + disc(0, 0, 16, 0.26, '#2F5E7A') + disc(-0.04, -0.04, 16, 0.14, '#4C8DB0', ' opacity=".7"')
+    + stoneRing(0, 0, 0, 16, 0.36, skin === 'pierre-blanche' ? WHITE_STONE : STONE, 'wellg', 2)
+    + pool(0, 0, 16, 0.26, '#2F5E7A', '#4C8DB0')
     + box(0.34, -0.06, 0.42, 0.06, 0, 40, WOOD_DARK)
     // Treuil (axe le long de u) et corde
     + box(-0.38, -0.025, 0.38, 0.025, 31, 34, WOOD)

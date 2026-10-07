@@ -4,7 +4,7 @@ import { P, TW, face, box, gable, pyramid, disc, cylinder, shadow, sprite, EDGE 
 import {
   WOOD, WOOD_DARK, STONE, WALL, BRICK, SOIL, ROOF_RED, PINE, BUILDING_BOX,
   pebble, doorLeft, windowLeft, windowRight, planksLeft, planksRight, roundTree,
-  WHITE_STONE, ROCKS, FOLIAGE, roofOf, roofTexture, stoneCourses, seasonDots, crystals, rockBox
+  WHITE_STONE, ROCKS, FOLIAGE, roofOf, roofTexture, stoneCourses, seasonDots, crystals, rockBox, stoneRing, pool
 } from './palette.js';
 import { gardenFence, goldenSign } from './sprites.js';
 
@@ -244,12 +244,11 @@ function fountain(skin) {
   return sprite(
     shadow(0, 0, kiosk ? 1.05 : 0.95)
     + (kiosk ? kioskPost(-r, 0) + kioskPost(0, -r) : '')
-    + cylinder(0, 0, 0, 10, 0.72, stone, 'fobasin')
-    + (skin === 'pierre-blanche' ? stoneCourses(0, 0, 0, 10, 0.72, 1) : '')
-    + disc(0, 0, 10, 0.62, '#4C9CC8') + disc(-0.1, -0.1, 10, 0.3, '#7CC4E8', ' opacity=".7"')
+    + stoneRing(0, 0, 0, 10, 0.72, stone, 'fobasin')
+    + pool(0, 0, 10, 0.62)
     + cylinder(0, 0, 10, 30, 0.08, WALL, 'focol')
-    + cylinder(0, 0, 30, 34, 0.3, stone, 'fobowl')
-    + disc(0, 0, 34, 0.24, '#4C9CC8')
+    + stoneRing(0, 0, 30, 34, 0.3, stone, 'fobowl', 0)
+    + pool(0, 0, 34, 0.24)
     + cylinder(0, 0, 34, 42, 0.04, WALL, 'fotip')
     + (kiosk ? kioskPost(r, 0) + kioskPost(0, r) + kioskRoof(skin) : ''),
     BUILDING_BOX

@@ -1,5 +1,5 @@
 // Palette et petits motifs communs aux sprites de l'île : mêmes matières, même lumière, partout.
-import { P, face, box, shadow, mixHex, EDGE } from './iso.js';
+import { P, face, box, shadow, cylinder, mixHex, EDGE } from './iso.js';
 
 // Palette « Vélin & Veillée », version île : chaque matière a son dessus, sa face gauche (éclairée) et sa face droite
 export const WOOD = { top: '#E0A96C', left: '#BF8049', right: '#965C30' };
@@ -72,6 +72,31 @@ export function rockBox(u0, v0, u1, v1, z0, z1, c) {
     out += (du >= 0.5 ? moss(u0 + du * 0.24, 0, 'L') : '') + (dv >= 0.5 ? moss(0, v0 + dv * 0.68, 'R') : '');
   }
   return out;
+}
+// Margelle ronde de pierre (puits, bassins, vasques) : le cylindre, ses assises, l'arête avant du dessus éclairée et un
+// pied plus sombre au ras du sol. Pierre blanche : assises plus pâles.
+export function stoneRing(u, v, z0, z1, r, stone, id, n = 1) {
+  const [x, y0] = P(u, v, z0), [, y1] = P(u, v, z1);
+  const rx = r * 45.25, ry = r * 22.63;
+  const arc = (yc, k) => `M${rnd2(x - rx * k)},${rnd2(yc)} A${rnd2(rx * k)},${rnd2(ry * k)} 0 0 0 ${rnd2(x + rx * k)},${rnd2(yc)}`;
+  return cylinder(u, v, z0, z1, r, stone, id)
+    + stoneCourses(u, v, z0, z1, r, n, stone.top === '#FFFFFF' ? 'rgba(120,110,95,.4)' : 'rgba(95,85,70,.45)')
+    + `<path d="${arc(y0 - 1.2, 0.99)}" fill="none" stroke="rgba(40,30,20,.2)" stroke-width="2.2"/>`
+    + `<path d="${arc(y1, 0.95)}" fill="none" stroke="${mixHex(stone.top, '#FFFFFF', 0.6)}" stroke-width="1.1"/>`;
+}
+// Eau d'un bassin rond de rayon r à la hauteur z : le bord arrière reste sombre (l'ombre de la margelle), le centre
+// s'éclaircit vers l'avant, un reflet, deux rides et deux éclats
+export function pool(u, v, z, r, deep = '#4C9CC8', light = '#7CC4E8') {
+  const [x, y] = P(u, v, z);
+  const rx = r * 45.25, ry = r * 22.63;
+  const ripple = k => `<path d="M${rnd2(x + rx * (0.15 - k))},${rnd2(y + ry * 0.18)} A${rnd2(rx * k)},${rnd2(ry * k)} 0 0 0 ${rnd2(x + rx * (0.15 + k))},${rnd2(y + ry * 0.18)}" fill="none" stroke="#FFFFFF" stroke-width="0.7" opacity=".6"/>`;
+  const star = (sx, sy, k) => `<path d="M${rnd2(sx)},${rnd2(sy - k)} L${rnd2(sx + k * 0.3)},${rnd2(sy - k * 0.3)} L${rnd2(sx + k)},${rnd2(sy)} L${rnd2(sx + k * 0.3)},${rnd2(sy + k * 0.3)} L${rnd2(sx)},${rnd2(sy + k)} L${rnd2(sx - k * 0.3)},${rnd2(sy + k * 0.3)} L${rnd2(sx - k)},${rnd2(sy)} L${rnd2(sx - k * 0.3)},${rnd2(sy - k * 0.3)} Z" fill="#FFFFFF"/>`;
+  const k = Math.min(2.6, Math.max(1.2, r * 4));
+  return `<ellipse cx="${rnd2(x)}" cy="${rnd2(y)}" rx="${rnd2(rx)}" ry="${rnd2(ry)}" fill="${deep}"/>`
+    + `<ellipse cx="${rnd2(x)}" cy="${rnd2(y + ry * 0.12)}" rx="${rnd2(rx * 0.92)}" ry="${rnd2(ry * 0.8)}" fill="${mixHex(deep, light, 0.45)}"/>`
+    + `<ellipse cx="${rnd2(x - rx * 0.3)}" cy="${rnd2(y - ry * 0.08)}" rx="${rnd2(rx * 0.36)}" ry="${rnd2(ry * 0.3)}" fill="${light}" opacity=".75"/>`
+    + ripple(0.36) + ripple(0.2)
+    + star(x + rx * 0.5, y - ry * 0.12, k) + star(x - rx * 0.52, y + ry * 0.36, k * 0.7);
 }
 // Porte sur la face gauche (côté v = vf) : u de ua à ub, hauteur h
 export function doorLeft(ua, ub, vf, h, color = WOOD_DARK.right) {
