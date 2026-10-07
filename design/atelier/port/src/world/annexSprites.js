@@ -1234,7 +1234,9 @@ const saline = {
   }]
 };
 
-// Serre tropicale (Potager) : une serre de verre aux montants de fer, pleine de palmes et de fruits dorés ; de la buée
+// Serre tropicale (Potager) : sur un muret de pierre, une serre de verre aux montants de fer (carreaux, reflets, porte,
+// lucarne entrouverte, épi de faîtage) ; dedans un bananier, des palmes, des hibiscus et des fruits dorés ; la buée
+// perle et glisse sur le verre, la vapeur sort de la lucarne ; un perroquet sur le faîte ; de grandes feuilles autour
 const serre = {
   light: () => [0, 0, 16, 18, '190,255,170'],
   layers: [{
@@ -1242,17 +1244,55 @@ const serre = {
     n: 6,
     fps: 2,
     draw: (T, f, n) => {
-      const GLASS_FACES = { top: 'rgba(225,243,255,.45)', left: 'rgba(196,228,246,.4)', right: 'rgba(160,205,232,.48)' };
-      let out = T.shadow(0, 0, 0.42, 0.16) + T.box(-0.3, -0.24, 0.3, 0.24, 0, 3, STONE);
-      // Plantes à l'intérieur (derrière le verre)
-      const [x, y] = T.p(0, 0, 3);
-      out += [-12, 0, 12].map((dx, k) => `<path d="M${x + dx},${y} q-6,-10 -12,-12 q6,0 12,6 q0,-12 6,-18 q-2,10 0,18 q6,-8 12,-8 q-6,4 -12,14 Z" fill="${k % 2 ? '#3E8A48' : '#5FAE5A'}"/>`).join('')
-        + [[-8, -14], [6, -18], [14, -10]].map(([dx, dy]) => ell(x + dx, y + dy, 2.2, 2.8, '#F2B23C', ` stroke="#8A5A14" stroke-width="0.4"`)).join('');
-      out += T.box(-0.3, -0.24, 0.3, 0.24, 3, 22, GLASS_FACES, ' stroke="rgba(255,255,255,.85)" stroke-width="0.8"');
-      out += T.gable(-0.3, -0.24, 0.3, 0.24, 22, 10, { front: 'rgba(210,236,250,.55)', back: 'rgba(190,220,240,.5)', gable: 'rgba(170,210,235,.5)' }, 0.02, ' stroke="rgba(255,255,255,.85)" stroke-width="0.8"');
-      for (let k = 0; k <= 4; k++) out += ln(T.p(-0.3 + k * 0.15, 0.24, 3), T.p(-0.3 + k * 0.15, 0.24, 22), DARK_IRON.left, 0.8);
-      const p = f / n;
-      return out + `<circle cx="${f2(x + 10)}" cy="${f2(y - 24 - p * 10)}" r="${f2(3 + p * 3)}" fill="rgba(255,255,255,${f2(0.4 * (1 - p))})"/>`;
+      const GF = { top: 'rgba(225,243,255,.3)', left: 'rgba(196,228,246,.24)', right: 'rgba(160,205,232,.34)' };
+      const k = f / n;
+      const [x, y] = T.p(0, 0, 0);
+      // une grande feuille fendue (monstera), posée au sol, tournée de a degrés
+      const leaf = (lx, ly, s, a, c) => `<g transform="translate(${f2(lx)} ${f2(ly)}) rotate(${a}) scale(${s})"><path d="M0,0 Q-6,-3 -6,-9 Q-5,-14 0,-15 Q5,-14 6,-9 Q6,-3 0,0 Z" fill="${c}" stroke="${OUT}" stroke-width="0.5"/>`
+        + `<path d="M0,0 L0,-14 M0,-5 L-4.6,-7 M0,-9 L-4.4,-11.4 M0,-5 L4.6,-7 M0,-9 L4.4,-11.4" stroke="rgba(20,60,30,.5)" stroke-width="0.6" fill="none"/></g>`;
+      // le sol de la jungle et ses feuilles
+      let out = ell(x, y + 1, 32, 13, '#6E8A48', ` stroke="${OUT}" stroke-width="0.5"`) + ell(x - 4, y, 22, 8, '#7E9C54')
+        + leaf(x - 24, y - 2, 0.9, -40, '#3E8A48') + leaf(x - 20, y + 1, 0.7, -10, '#5FAE5A')
+        + T.shadow(0, 0, 0.42, 0.16) + T.box(-0.3, -0.24, 0.3, 0.24, 0, 3, STONE);
+      // dedans, derrière le verre : bananier, palmes, hibiscus, fruits dorés
+      const [px, py] = T.p(0, 0, 3);
+      out += ln([px - 6, py], [px - 7, py - 16], '#8A6A3A', 1.6)
+        + [[-20, -24, '#3E8A48'], [8, -24, '#5FAE5A'], [-14, -14, '#5FAE5A'], [2, -12, '#3E8A48']].map(([dx, dy, c], i) => `<path d="M${f2(px - 7)},${f2(py - 16)} Q${f2(px - 7 + dx * 0.4)},${f2(py - 16 + dy * 0.6)} ${f2(px - 7 + dx * 0.9)},${f2(py - 16 + dy * 0.35 + (i % 2) * 2)} Q${f2(px - 7 + dx * 0.5)},${f2(py - 16 + dy * 0.2)} ${f2(px - 7)},${f2(py - 16)} Z" fill="${c}" stroke="#2E6A38" stroke-width="0.4"/>`).join('')
+        + [-2, 10].map((dx, i) => `<path d="M${px + dx},${py} q-6,-10 -12,-12 q6,0 12,6 q0,-12 6,-18 q-2,10 0,18 q6,-8 12,-8 q-6,4 -12,14 Z" fill="${i ? '#3E8A48' : '#5FAE5A'}"/>`).join('')
+        + [[-12, -8], [6, -16], [14, -8]].map(([dx, dy]) => ell(px + dx, py + dy, 2.2, 2.8, '#F2B23C', ` stroke="#8A5A14" stroke-width="0.4"`)).join('')
+        + [[-2, -6], [12, -14]].map(([dx, dy]) => [0, 72, 144, 216, 288].map(a => ell(px + dx + Math.cos(a * Math.PI / 180) * 1.6, py + dy + Math.sin(a * Math.PI / 180) * 1.6, 1.4, 1.4, '#E2463A')).join('') + dot(px + dx, py + dy, 0.8, '#FFD24E')).join('');
+      // la serre de verre, ses montants de fer, ses reflets
+      out += T.box(-0.3, -0.24, 0.3, 0.24, 3, 22, GF, GLASS_EDGE);
+      for (let i = 1; i < 4; i++) out += ln(T.p(-0.3 + i * 0.15, 0.24, 3), T.p(-0.3 + i * 0.15, 0.24, 22), DARK_IRON.left, 0.8);
+      for (let i = 1; i < 4; i++) out += ln(T.p(0.3, -0.24 + i * 0.12, 3), T.p(0.3, -0.24 + i * 0.12, 22), DARK_IRON.left, 0.8);
+      out += ln(T.p(-0.3, 0.24, 13), T.p(0.3, 0.24, 13), DARK_IRON.left, 0.7) + ln(T.p(0.3, 0.24, 13), T.p(0.3, -0.24, 13), DARK_IRON.left, 0.7)
+        + [[-0.27, -0.18], [0.03, 0.12]].map(([u0, u1]) => ln(T.p(u0, 0.24, 6), T.p(u1, 0.24, 20), 'rgba(255,255,255,.55)', 1.2)).join('')
+        + ln(T.p(0.3, 0.16, 6), T.p(0.3, 0.04, 19), 'rgba(255,255,255,.45)', 1.2);
+      // la porte vitrée, sa poignée
+      out += T.face([[-0.1, 0.241, 3], [0.03, 0.241, 3], [0.03, 0.241, 15], [-0.1, 0.241, 15]], 'rgba(200,236,250,.25)', ` stroke="${DARK_IRON.right}" stroke-width="1"`)
+        + dot(...T.p(0.015, 0.241, 9), 0.7, '#E2B347');
+      // la buée qui perle et une goutte qui glisse
+      out += [[-0.24, 0.24, 18], [-0.16, 0.24, 9], [0.18, 0.24, 17], [0.3, -0.08, 10], [0.3, 0.1, 19]].map(([u, v, z]) => dot(...T.p(u, v, z), 0.55, 'rgba(255,255,255,.75)')).join('')
+        + (([gx, gy]) => dot(gx, gy, 0.8, 'rgba(255,255,255,.9)') + ln([gx, gy - 0.6], [gx, gy - 3], 'rgba(255,255,255,.5)', 0.5))(T.p(0.21, 0.24, 20 - k * 12));
+      // le toit de verre, ses montants, la lucarne entrouverte qui fume, l'épi de faîtage
+      out += T.gable(-0.3, -0.24, 0.3, 0.24, 22, 10, { front: 'rgba(210,236,250,.42)', back: 'rgba(190,220,240,.4)', gable: 'rgba(170,210,235,.34)' }, 0.02, GLASS_EDGE);
+      for (let i = 1; i < 6; i++) out += ln(T.p(-0.32 + i * 0.107, 0, 32), T.p(-0.32 + i * 0.107, 0.26, 22), DARK_IRON.left, 0.6);
+      out += ln(T.p(-0.32, 0, 32), T.p(0.32, 0, 32), DARK_IRON.right, 1.4)
+        + T.face([[-0.2, 0.02, 31.2], [-0.06, 0.02, 31.2], [-0.06, 0.1, 33.6], [-0.2, 0.1, 33.6]], 'rgba(220,240,255,.7)', ` stroke="${DARK_IRON.right}" stroke-width="0.7"`);
+      const [vx, vy] = T.p(-0.13, 0.06, 33);
+      out += [0, 0.5].map(o => { const t = (k + o) % 1; return puff(vx + t * 3, vy - 2 - t * 9, 1.8 + t * 2.4, 0.65 * (1 - t)); }).join('');
+      const [ex, ey] = T.p(0.32, 0, 32);
+      out += ln([ex, ey], [ex, ey - 4], DARK_IRON.right, 0.9) + dot(ex, ey - 4.6, 1.1, '#E2B347');
+      // le perroquet sur le faîte, qui hoche la tête
+      const [qx, qy] = T.p(0.16, 0, 32), bob = f % 3 === 1 ? 1 : 0;
+      out += ln([qx - 0.6, qy], [qx - 0.8, qy - 1.6], '#3D3A36', 0.6) + ln([qx + 0.8, qy], [qx + 0.8, qy - 1.6], '#3D3A36', 0.6)
+        + `<path d="M${f2(qx - 1.6)},${f2(qy - 2)} L${f2(qx - 4.6)},${f2(qy + 3)} L${f2(qx - 2.6)},${f2(qy + 3.4)} L${f2(qx - 0.4)},${f2(qy - 1.4)} Z" fill="#3FA0D8" stroke="${OUT}" stroke-width="0.4"/>`
+        + ell(qx, qy - 4, 2.6, 3.2, '#E2463A', ` stroke="${OUT}" stroke-width="0.5"`)
+        + `<path d="M${f2(qx - 2.4)},${f2(qy - 4.6)} Q${f2(qx - 3)},${f2(qy - 1.6)} ${f2(qx - 1)},${f2(qy - 1)} Q${f2(qx)},${f2(qy - 3)} ${f2(qx - 2.4)},${f2(qy - 4.6)} Z" fill="#5FBF5A" stroke="${OUT}" stroke-width="0.4"/>`
+        + `<circle cx="${f2(qx + 1)}" cy="${f2(qy - 7.4 + bob)}" r="2" fill="#E2463A" stroke="${OUT}" stroke-width="0.5"/>` + ell(qx + 1.6, qy - 7.4 + bob, 1, 1.2, '#FFF3C4')
+        + `<path d="M${f2(qx + 2.6)},${f2(qy - 8.2 + bob)} q1.8,0.2 1.4,2 q-0.6,-0.8 -1.4,-0.6 Z" fill="#3D3A36"/>` + dot(qx + 1.7, qy - 7.8 + bob, 0.45, '#2A2024');
+      // de grandes feuilles devant, à droite
+      return out + leaf(x + 22, y + 4, 0.9, 30, '#3E8A48') + leaf(x + 26, y, 0.7, 60, '#5FAE5A');
     }
   }]
 };
