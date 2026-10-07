@@ -6,7 +6,8 @@ import { readFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import { ANNEX_SPRITES, annexLayers, annexLight } from '@/world/annexSprites';
 import { DEPOSIT_SPRITES, depositLayer } from '@/world/depositSprites';
-import { annexArtLayer, depositArtLayer, annexArtThumb, signArtLayer, isletArtLayer, isletFrameAt } from '@/world/decorArt';
+import { annexArtLayer, depositArtLayer, annexArtThumb, signArtLayer, isletArtLayer, isletFrameAt, landmarkArtLayer, landmarkArtThumb } from '@/world/decorArt';
+import { LANDMARK_SPRITES, landmarkScale, landmarkLayers } from '@/world/landmarkSprites';
 import { ISLET_SPRITES } from '@/world/isletSprites';
 import { visitorBoat } from '@/world/visitors';
 import { BOTTLE } from '@/world/chest';
@@ -126,5 +127,27 @@ describe('les îlots et les objets de la mer de la bibliothèque', () => {
     expect([0, 0.31, 0.61].map(t => isletFrameAt('barque_volante', t))).toEqual([0, 1, 0]);
     expect(isletArtLayer('bateau_visiteur', 1).key).toBe('lib-bateau_visiteur-1');
     expect(isletFrameAt('ponton', 5)).toBe(0);
+  });
+});
+
+describe('les lieux remarquables de la bibliothèque', () => {
+  it('chaque lieu du jeu a son dessin (deux images de 520 ms), à son échelle d’île, et le fichier a son cadre', () => {
+    for (const id of Object.keys(LANDMARK_SPRITES)) {
+      const art = DECOR.lieux[id];
+      expect(art, id).toBeTruthy();
+      expect(art.echelle_jeu, id).toBe(landmarkScale(id));
+      for (const file of art.fichiers) expect(readFileSync(ROOT + file, 'utf8').match(/viewBox="([^"]+)"/)[1], file).toBe(art.cadre.join(' '));
+      expect([0, 0.53].map(t => landmarkArtLayer(id, t).key)).toEqual([`lib-lieu-${id}-0`, `lib-lieu-${id}-1`]);
+      const { box } = landmarkArtLayer(id).make();
+      expect([box.x, box.y, box.w, box.h].map(round), id).toEqual(art.cadre.map(v => round(v / 1.25)));
+      expect(landmarkLayers(id, 0)[0].key).toBe(`lib-lieu-${id}-0`);
+    }
+  });
+
+  it('le Cercle de menhirs fleurit une fois Anya révélée ; la vignette attend sa lecture', () => {
+    expect(landmarkArtLayer('menhirs', 0, true).key).toBe('lib-lieu-menhirs_fleuri-0');
+    expect(landmarkArtLayer('lac', 0, true).key).toBe('lib-lieu-lac-0');
+    expect(landmarkArtThumb('grotte')).toMatch(/^data:image\/svg\+xml/);
+    expect(landmarkArtThumb('nulle-part')).toBe(null);
   });
 });

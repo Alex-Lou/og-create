@@ -116,6 +116,7 @@
 import GModal from '@/components/ui/GModal/GModal.vue';
 import { spriteUrl } from '@/world/spriteCache';
 import { landmarkThumb } from '@/world/landmarkSprites';
+import { landmarkArtThumb } from '@/world/decorArt';
 import { CLIMATE_NAMES } from '@/world/climates';
 import { ACTS, stageOf, linksOf, peopleOf } from '@/game/vigils';
 import { MEMORIES } from '@/world/story';
@@ -208,7 +209,8 @@ export default {
       return Boolean(zone && zone.owned);
     },
     artOf(id) {
-      return spriteUrl(`landmark-thumb-${id}`, () => landmarkThumb(id));
+      // (le dessin de la bibliothèque, recadré, sinon celui du code)
+      return landmarkArtThumb(id) ?? spriteUrl(`landmark-thumb-${id}`, () => landmarkThumb(id));
     },
     dateOf(at) {
       return new Date(at).toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric' });
