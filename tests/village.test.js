@@ -41,7 +41,10 @@ describe('village : habitants', () => {
       expect(people).toHaveLength(3);
       for (const p of people) {
         expect(M.ground(Math.round(p.x), Math.round(p.y))).toMatch(/[gp]/);
-        expect(p.sprite[1]().svg).not.toMatch(/NaN|undefined/);
+        // Dessin du jeu (svg tout de suite) ou de la bibliothèque (un maître : cadre tout de suite, dessin à la lecture)
+        const drawn = p.sprite[1]();
+        expect(drawn.box.w).toBeGreaterThan(0);
+        if (drawn.svg) expect(drawn.svg).not.toMatch(/NaN|undefined/);
       }
     }
     // Ils bougent : deux instants, deux places
@@ -57,7 +60,7 @@ describe('village : habitants', () => {
   it('sous la pluie, un sur deux reste à l’abri, les autres ont un parapluie', () => {
     const people = village.at(30, at(13, 'pluie')).list.filter(c => c.kind === 'villager');
     expect(people).toHaveLength(2);
-    expect(people.every(p => p.sprite[0].endsWith('-1'))).toBe(true);
+    expect(people.every(p => p.sprite[0].endsWith('-1') || p.sprite[0].includes('_parapluie_'))).toBe(true);
   });
   it('touchés, ils parlent selon leur métier et le temps ; appui long : leur fiche', () => {
     const who = village.at(30, at(13)).list.find(c => c.id === 'vil:ponton');
@@ -82,7 +85,7 @@ describe('village : la troupe envoyée par le serveur (bible, § 6.6 et § 6.7)'
   it('le dormeur reste couché jour et nuit, et ronfle quand on le touche', () => {
     for (const h of [3, 13, 22]) {
       const sleeper = life.at(5, at(h)).list.find(c => c.id === 'vil:potager');
-      expect(sleeper.sprite[0]).toMatch(/-sleep-[01]$/);
+      expect(sleeper.sprite[0]).toMatch(/-sleep-[01]$|_couche_[12]$/);
     }
     expect(life.say({ kind: 'villager', id: 'vil:potager' }, at(13)).text).toBe('Zzz…');
     expect(life.describe({ kind: 'villager', id: 'vil:potager' }).text).toMatch(/réveiller/);
