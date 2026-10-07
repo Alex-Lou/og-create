@@ -413,13 +413,32 @@ M.voilier = { frame: BUILDING_BOX, n: 1, variants: Object.keys(SAILS), draw: (_,
     + P(`M${X(-1)},${Y(-38)} Q${X(-8)},${Y(-25)} ${X(-14)},${Y(-13)} L${X(-1)},${Y(-12)} Z`, jib, W * 0.8)
     + P(`M${X(0.4)},${Y(-48.4)} Q${X(6)},${Y(-49.4)} ${X(10)},${Y(-46.6)} Q${X(5.6)},${Y(-45.2)} ${X(0.4)},${Y(-44.6)} Z`, s[0] === 'stripes' ? s[1] : jib, W * 0.6) + E(x, y - 48.6, 1.1, 1.1, '#E2B347', 0.5);
 } };
-// Bouteille échouée : verre vert, bouchon, rouleau de papier ; image 2 : penchée par la vague
-M.bouteille = { frame: [-16, -28, 32, 32], n: 2, draw: f => E(0, 0, 9, 2.4, 'rgba(30,50,60,.25)', 0)
-  + `<g transform="rotate(${f ? -14 : -6}) translate(0,-4)">`
-  + rr(-9, -5, 15, 9, 4.2, '#5FA77A', W * 0.9) + rr(5.5, -2.4, 5, 3.8, 1, '#5FA77A', W * 0.8) + rr(10, -2.2, 3.2, 3.4, 0.8, '#B8875A', 0.6)
-  + rr(-6, -2.6, 9, 4.4, 1.6, '#F3E6C4', 0.4) + L([-4.6, -0.4], [1.4, -0.4], '#C9A87A', 0.5)
-  + line('M-8,-3.6 Q-2,-5.2 4,-3.8', 1.1, 'rgba(255,255,255,.65)') + '</g>'
-  + line(`M-13,${f ? 2 : 3} q3,-1.6 6,0 M7,${f ? 3 : 2} q3,-1.6 6,0`, 0.9, 'rgba(255,255,255,.8)') };
+// Bouteille échouée qui flotte : un vrai goulot, verre vert translucide où l'on voit le message roulé, son ruban rouge
+// et son cachet ; l'eau monte dans le bas du verre, des ronds autour ; image 2 : penchée par la vague, un éclat
+M.bouteille = { frame: [-16, -28, 32, 32], n: 2, draw: f => {
+  const a = f ? -14 : -6, id = `bouteille-verre-${f}`, rx = f ? 13.4 : 12.4;
+  const body = 'M-9,-5 L4,-5 Q7.4,-5 8.6,-2.1 L12,-2.1 L12,2.1 L8.6,2.1 Q7.4,5 4,5 L-9,5 Q-12.4,5 -12.4,0 Q-12.4,-5 -9,-5 Z';
+  return E(0, 0.8, 14, 2.6, 'rgba(30,60,80,.22)', 0)
+    + line(`M${-rx},0 A${rx},2.4 0 0 1 ${rx},0`, 0.7, 'rgba(255,255,255,.45)')
+    + `<g transform="translate(-1.4,-2.4) rotate(${a}) scale(.84)"><defs><clipPath id="${id}"><path d="${body}"/></clipPath></defs>`
+    // le message roulé, son ruban rouge et son cachet de cire
+    + rr(-8.4, -2.8, 11, 5.6, 2.6, '#F5E8C6', 0.5) + E(2.6, 0, 1.2, 2.8, '#E6D2A4', 0.4) + line('M2.6,-1.6 q-0.8,1.6 0,3.2', 0.4, '#C9A87A')
+    + line('M-4.4,-0.9 L1,-0.9 M-4.4,0.8 L-0.4,0.8', 0.4, 'rgba(150,120,80,.6)')
+    + line('M-6.4,-2.6 L-6.4,2.6', 1.1, '#D9534A') + E(-6.4, 3.2, 1, 1, '#B8302A', 0) + E(-6.7, 2.9, 0.35, 0.35, 'rgba(255,255,255,.6)', 0)
+    // le verre : vert translucide, plus épais en bas, l'eau de mer qui monte dedans
+    + P(body, 'rgba(96,180,132,.44)', 0)
+    + `<g clip-path="url(#${id})"><path d="M-14,2.6 Q-4,1.4 4,3 L14,3.2 L14,8 L-14,8 Z" fill="rgba(40,110,80,.4)"/>`
+    + `<path d="M-24,2.6 q5,-1 10,0 t10,0 t10,0 t10,0 L26,16 L-24,16 Z" fill="rgba(120,190,226,.55)" transform="rotate(${-a})"/></g>`
+    + P(body, 'none', W / 0.84)
+    + rr(11.6, -2.7, 1.7, 5.4, 0.7, '#8FD0AA', W * 0.7) + rr(13.1, -1.8, 3.4, 3.6, 0.9, '#C08A58', W * 0.7) + line('M14.6,-1.4 L14.6,1.4', 0.4, 'rgba(90,55,30,.5)')
+    + line('M-9,-3.6 Q-2,-4.6 4,-3.8', 1.1, 'rgba(255,255,255,.75)') + line('M8.8,-1.4 L11.4,-1.4', 0.6, 'rgba(255,255,255,.6)')
+    + E(-10.6, -1.2, 0.5, 1.2, 'rgba(255,255,255,.55)', 0) + '</g>'
+    // les ronds de l'eau devant, l'écume, l'éclat
+    + line(`M${-rx},0 A${rx},2.4 0 0 0 ${rx},0`, 0.9, 'rgba(255,255,255,.85)')
+    + line(`M${-rx - 3},${f ? 1.4 : 2.2} q2,-1.2 4,0 M${rx - 1},${f ? 2.2 : 1.4} q2,-1.2 4,0`, 0.8, 'rgba(255,255,255,.7)')
+    + E(-rx + 2, -0.6, 0.7, 0.5, '#FFFFFF', 0) + E(rx - 2.4, -0.4, 0.6, 0.45, '#FFFFFF', 0)
+    + (f ? star(-2, -10.4, 2.2) : '');
+} };
 // Panneau d'un quartier à acheter : poteau planté dans une touffe, planche au liseré foncé (même place : le prix y est
 // écrit par l'île), ses clous et son fil du bois ; le cadenas doré suspendu à sa chaînette
 M.panneau_quartier = { frame: PROP_BOX, n: 1, draw: () => shade(0, 0, 14, 7, 0.2) + gbox(-0.03, -0.03, 0.03, 0.03, 0, 26, WOOD_DARK)
