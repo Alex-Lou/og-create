@@ -745,6 +745,8 @@ const eolienne = {
 /* ---------- Ponton ---------- */
 // Vivier : bassin rond bordé de pierres, carpes (orange, argent ou bleu-or selon l'exemplaire) qui tournent, nénuphar
 const FISH = [['#F08A3A', '#FFFFFF'], ['#C7D0DA', '#8E9AA8'], ['#5A8FD8', '#F2C04B']];
+// … dans l'herbe : l'eau plus profonde au centre et ses reflets, deux nénuphars dont l'un porte une grenouille, des
+// massettes, une libellule qui vole
 const vivier = {
   layers: [{
     frame: [-34, -30, 68, 48],
@@ -753,24 +755,37 @@ const vivier = {
     draw: (T, f, n, variant) => {
       const [base, spot] = FISH[variant % 3];
       const [cx, cy] = T.p(0, 0, 0);
-      let rim = '';
+      const k8 = f / n;
+      // l'herbe autour, le bassin, sa profondeur, ses reflets
+      let out = ell(cx, cy + 1, 32, 13, '#9CC46A', ` stroke="${OUT}" stroke-width="0.5"`) + ell(cx - 4, cy, 24, 9, '#ADD27A')
+        + ell(cx + 1, cy + 1.2, 24, 12.4, 'rgba(40,55,20,.2)')
+        + ell(cx, cy, 21, 10.6, '#3E86B5') + ell(cx - 2, cy - 1, 17, 7.6, '#5FAFD6') + ell(cx + 1, cy + 0.6, 9, 4, '#4C9CC8')
+        + [[-8, -3], [6, 2]].map(([dx, dy], i) => ln([cx + dx - 3 + (i ? -k8 : k8) * 2, cy + dy], [cx + dx + 2 + (i ? -k8 : k8) * 2, cy + dy - 0.4], 'rgba(255,255,255,.55)', 0.7)).join('');
+      // les carpes qui tournent, un rond
+      out += [0, 1, 2].map(k => { const a = k8 * TAU + (k * TAU) / 3; return fishTop(cx + Math.cos(a) * 10, cy + Math.sin(a) * 4.6, a + Math.PI / 2, base, k === 1 ? null : spot); }).join('')
+        + ell(cx + Math.cos(k8 * TAU) * 10, cy + Math.sin(k8 * TAU) * 4.6, 3 + (f % 2), 1.2, 'none', ' stroke="rgba(255,255,255,.5)" stroke-width="0.5"');
+      // deux nénuphars, la grenouille sur le premier
+      const pad = (px, py, r) => ell(px, py, r, r / 2, '#5FA04A', ` stroke="#3E7A34" stroke-width="0.4"`) + poly([[px, py], [px + r, py - r * 0.18], [px + r * 0.9, py + r * 0.14]], '#3E86B5');
+      out += pad(cx + 9, cy - 3, 4) + dot(cx + 7.6, cy - 4.2, 1.2, '#F6A8C8') + dot(cx + 7.6, cy - 4.2, 0.5, '#FFE08A')
+        + pad(cx - 7, cy + 3.6, 3.4);
+      const jump = f === 5 ? 1.6 : 0;
+      out += ell(cx - 7.4, cy + 2.4 - jump, 2.2, 1.5, '#7FBF4A', ` stroke="${OUT}" stroke-width="0.4"`)
+        + dot(cx - 8.6, cy + 1.2 - jump, 0.9, '#7FBF4A') + dot(cx - 6.4, cy + 1.2 - jump, 0.9, '#7FBF4A')
+        + dot(cx - 8.6, cy + 1.1 - jump, 0.4, '#2A2024') + dot(cx - 6.4, cy + 1.1 - jump, 0.4, '#2A2024')
+        + `<path d="M${f2(cx - 8.4)},${f2(cy + 2.6 - jump)} q0.9,0.6 1.8,0" stroke="#3E7A34" stroke-width="0.4" fill="none"/>`;
+      // la bordure de pierres
       for (let k = 0; k < 14; k++) {
         const a = (k / 14) * TAU;
-        const [x, y] = [cx + Math.cos(a) * 21, cy + Math.sin(a) * 10.6];
-        rim += ell(x, y, 3.6, 2.4, k % 2 ? STONE.left : STONE.top, ` stroke="${OUT}" stroke-width="0.4"`);
+        out += ell(cx + Math.cos(a) * 21, cy + Math.sin(a) * 10.6, 3.6, 2.4, k % 2 ? STONE.left : STONE.top, ` stroke="${OUT}" stroke-width="0.4"`);
       }
-      const fish = [0, 1, 2].map(k => {
-        const a = (f / n) * TAU + (k * TAU) / 3;
-        return fishTop(cx + Math.cos(a) * 10, cy + Math.sin(a) * 4.6, a + Math.PI / 2, base, k === 1 ? null : spot);
-      }).join('');
-      const ripple = ell(cx + Math.cos((f / n) * TAU) * 10, cy + Math.sin((f / n) * TAU) * 4.6, 3 + (f % 2), 1.2, 'none', ' stroke="rgba(255,255,255,.5)" stroke-width="0.5"');
-      return ell(cx + 1, cy + 1.2, 24, 12.4, 'rgba(40,55,20,.2)')
-        + ell(cx, cy, 21, 10.6, '#3E86B5') + ell(cx - 2, cy - 1, 17, 7.6, '#5FAFD6')
-        + fish + ripple
-        + ell(cx + 9, cy - 3, 4, 2, '#5FA04A') + poly([[cx + 9, cy - 3], [cx + 13, cy - 3.6], [cx + 12.6, cy - 2.2]], '#3E86B5') + dot(cx + 8, cy - 4, 1.2, '#F6A8C8')
-        + rim
-        + [-2, 0, 2].map(k => ln([cx - 17 + k, cy - 6], [cx - 17 + k * 1.6, cy - 16 - (k ? 0 : 3)], k ? LEAF_LIGHT : LEAF, 0.9)).join('')
-        + ell(cx - 17, cy - 18, 0.9, 2.2, '#7A4E2C');
+      // les massettes, à gauche et à droite
+      out += [[-17, -6, 0], [-14, -7, 1], [-19.4, -5, 2], [18, -4, 3]].map(([dx, dy, i]) => { const s = wave(f, n, 0.8, i); return ln([cx + dx, cy + dy], [cx + dx + s, cy + dy - 10 - (i % 2) * 2], i % 2 ? LEAF_LIGHT : LEAF, 0.9) + ell(cx + dx + s, cy + dy - 11 - (i % 2) * 2, 0.9, 2.2, '#7A4E2C', ` stroke="${OUT}" stroke-width="0.3"`); }).join('')
+        + [-1.6, 1.6].map(o => `<path d="M${f2(cx - 16)},${f2(cy - 6)} q${f2(o)},-4 ${f2(o * 2)},-7" stroke="${LEAF}" stroke-width="0.8" fill="none"/>`).join('');
+      // la libellule qui vole au-dessus de l'eau
+      const la = k8 * TAU, [dx2, dy2] = [cx + Math.cos(la) * 8, cy - 12 + Math.sin(la * 2) * 2];
+      out += ln([dx2 - 3, dy2], [dx2 + 3, dy2], '#3A7AB8', 0.9)
+        + [-1, 1].map(s => ell(dx2 + 0.6, dy2 + s * (f % 2 ? 1.2 : 0.6), 1.6, 0.5, 'rgba(220,240,255,.85)')).join('') + dot(dx2 + 3, dy2, 0.6, '#3A7AB8');
+      return out;
     }
   }]
 };
