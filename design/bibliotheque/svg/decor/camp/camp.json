@@ -16,24 +16,6 @@
   "IV": "acte IV — la première barque de voyageurs"
  },
  "objets": {
-  "feu_debris": {
-   "nom": "Feu de débris",
-   "categorie": "epave",
-   "etape": "T1",
-   "cadre": [
-    -50,
-    -115,
-    100,
-    140
-   ],
-   "images": 3,
-   "ms": 111,
-   "fichiers": [
-    "epave/feu_debris_1.svg",
-    "epave/feu_debris_2.svg",
-    "epave/feu_debris_3.svg"
-   ]
-  },
   "hirondelle": {
    "nom": "Épave de l'Hirondelle",
    "categorie": "epave",
