@@ -1,5 +1,5 @@
 {
- "_lisez_moi": "Calques d'écran : les tuiles se répètent sans couture (background-repeat) et leurs images bouclent ; « étirer » = à poser sur tout l'écran (preserveAspectRatio none). Teintes des moments : en multiplication (mix-blend-mode: multiply) sur toute la scène. Soleil bas : en « screen ». Couleurs et densités du jeu (sky.js, scene.js, climates.js).",
+ "_lisez_moi": "Calques d'écran : les tuiles se répètent sans couture (background-repeat) et leurs images bouclent ; « étirer » = à poser sur tout l'écran (preserveAspectRatio none). Teintes des moments : en multiplication (mix-blend-mode: multiply) sur toute la scène. Soleil bas et plein soleil : en « screen ». Sol des saisons (sol/) : une case iso de 80 × 40, ancre au centre de la case, à poser sur les cases sous le reste ; les variantes a, b, c s'alternent d'une case à l'autre. Couleurs et densités du jeu (sky.js, scene.js, climates.js).",
  "tuiles": {
   "pluie_jour": {
    "nom": "Pluie (jour)",
@@ -198,6 +198,118 @@
     256
    ],
    "ms_par_image": 400
+  },
+  "flocons": {
+   "nom": "Flocons — l'hiver",
+   "fichiers": [
+    "saisons/flocons_1.svg",
+    "saisons/flocons_2.svg",
+    "saisons/flocons_3.svg",
+    "saisons/flocons_4.svg",
+    "saisons/flocons_5.svg",
+    "saisons/flocons_6.svg",
+    "saisons/flocons_7.svg",
+    "saisons/flocons_8.svg",
+    "saisons/flocons_9.svg",
+    "saisons/flocons_10.svg",
+    "saisons/flocons_11.svg",
+    "saisons/flocons_12.svg",
+    "saisons/flocons_13.svg",
+    "saisons/flocons_14.svg",
+    "saisons/flocons_15.svg",
+    "saisons/flocons_16.svg"
+   ],
+   "tuile": [
+    256,
+    256
+   ],
+   "ms_par_image": 200
+  },
+  "feuilles": {
+   "nom": "Feuilles qui tombent — l'automne",
+   "fichiers": [
+    "saisons/feuilles_1.svg",
+    "saisons/feuilles_2.svg",
+    "saisons/feuilles_3.svg",
+    "saisons/feuilles_4.svg",
+    "saisons/feuilles_5.svg",
+    "saisons/feuilles_6.svg",
+    "saisons/feuilles_7.svg",
+    "saisons/feuilles_8.svg",
+    "saisons/feuilles_9.svg",
+    "saisons/feuilles_10.svg",
+    "saisons/feuilles_11.svg",
+    "saisons/feuilles_12.svg",
+    "saisons/feuilles_13.svg",
+    "saisons/feuilles_14.svg",
+    "saisons/feuilles_15.svg",
+    "saisons/feuilles_16.svg"
+   ],
+   "tuile": [
+    256,
+    256
+   ],
+   "ms_par_image": 200
+  },
+  "petales": {
+   "nom": "Pétales de cerisier — le printemps",
+   "fichiers": [
+    "saisons/petales_1.svg",
+    "saisons/petales_2.svg",
+    "saisons/petales_3.svg",
+    "saisons/petales_4.svg",
+    "saisons/petales_5.svg",
+    "saisons/petales_6.svg",
+    "saisons/petales_7.svg",
+    "saisons/petales_8.svg",
+    "saisons/petales_9.svg",
+    "saisons/petales_10.svg",
+    "saisons/petales_11.svg",
+    "saisons/petales_12.svg",
+    "saisons/petales_13.svg",
+    "saisons/petales_14.svg",
+    "saisons/petales_15.svg",
+    "saisons/petales_16.svg"
+   ],
+   "tuile": [
+    256,
+    256
+   ],
+   "ms_par_image": 180
+  },
+  "pollen": {
+   "nom": "Pollen — le printemps et l'été",
+   "fichiers": [
+    "saisons/pollen_1.svg",
+    "saisons/pollen_2.svg",
+    "saisons/pollen_3.svg",
+    "saisons/pollen_4.svg",
+    "saisons/pollen_5.svg",
+    "saisons/pollen_6.svg",
+    "saisons/pollen_7.svg",
+    "saisons/pollen_8.svg",
+    "saisons/pollen_9.svg",
+    "saisons/pollen_10.svg",
+    "saisons/pollen_11.svg",
+    "saisons/pollen_12.svg",
+    "saisons/pollen_13.svg",
+    "saisons/pollen_14.svg",
+    "saisons/pollen_15.svg",
+    "saisons/pollen_16.svg",
+    "saisons/pollen_17.svg",
+    "saisons/pollen_18.svg",
+    "saisons/pollen_19.svg",
+    "saisons/pollen_20.svg",
+    "saisons/pollen_21.svg",
+    "saisons/pollen_22.svg",
+    "saisons/pollen_23.svg",
+    "saisons/pollen_24.svg"
+   ],
+   "tuile": [
+    256,
+    256
+   ],
+   "ms_par_image": 250
   }
  },
  "sprites": {
@@ -466,6 +578,140 @@
     120
    ],
    "ancre": "centre (0, 0)"
+  },
+  "plein_soleil": {
+   "nom": "Plein soleil d'été (écran, screen)",
+   "fichiers": [
+    "ciel/plein_soleil.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    640,
+    360
+   ],
+   "etirer": true
+  },
+  "neige_sol_a": {
+   "nom": "Neige au sol (a)",
+   "fichiers": [
+    "sol/neige_sol_a.svg"
+   ],
+   "cadre": [
+    -40,
+    -20,
+    80,
+    40
+   ],
+   "ancre": "centre (0, 0)"
+  },
+  "neige_sol_b": {
+   "nom": "Neige au sol (b)",
+   "fichiers": [
+    "sol/neige_sol_b.svg"
+   ],
+   "cadre": [
+    -40,
+    -20,
+    80,
+    40
+   ],
+   "ancre": "centre (0, 0)"
+  },
+  "neige_sol_c": {
+   "nom": "Neige au sol (c)",
+   "fichiers": [
+    "sol/neige_sol_c.svg"
+   ],
+   "cadre": [
+    -40,
+    -20,
+    80,
+    40
+   ],
+   "ancre": "centre (0, 0)"
+  },
+  "neige_fondante_a": {
+   "nom": "Neige fondante (a)",
+   "fichiers": [
+    "sol/neige_fondante_a.svg"
+   ],
+   "cadre": [
+    -40,
+    -20,
+    80,
+    40
+   ],
+   "ancre": "centre (0, 0)"
+  },
+  "neige_fondante_b": {
+   "nom": "Neige fondante (b)",
+   "fichiers": [
+    "sol/neige_fondante_b.svg"
+   ],
+   "cadre": [
+    -40,
+    -20,
+    80,
+    40
+   ],
+   "ancre": "centre (0, 0)"
+  },
+  "givre": {
+   "nom": "Givre",
+   "fichiers": [
+    "sol/givre.svg"
+   ],
+   "cadre": [
+    -40,
+    -20,
+    80,
+    40
+   ],
+   "ancre": "centre (0, 0)"
+  },
+  "flaque_petite": {
+   "nom": "Petite flaque",
+   "fichiers": [
+    "sol/flaque_petite.svg"
+   ],
+   "cadre": [
+    -40,
+    -20,
+    80,
+    40
+   ],
+   "ancre": "centre (0, 0)"
+  },
+  "flaque_grande": {
+   "nom": "Grande flaque",
+   "fichiers": [
+    "sol/flaque_grande.svg"
+   ],
+   "cadre": [
+    -40,
+    -20,
+    80,
+    40
+   ],
+   "ancre": "centre (0, 0)"
+  },
+  "flaque_pluie": {
+   "nom": "Flaque sous la pluie",
+   "fichiers": [
+    "sol/flaque_pluie_1.svg",
+    "sol/flaque_pluie_2.svg",
+    "sol/flaque_pluie_3.svg",
+    "sol/flaque_pluie_4.svg"
+   ],
+   "cadre": [
+    -40,
+    -20,
+    80,
+    40
+   ],
+   "ancre": "centre (0, 0)",
+   "ms_par_image": 220
   }
  },
  "moments": {
@@ -751,6 +997,70 @@
    ]
   }
  },
+ "saisons": {
+  "printemps": {
+   "nom": "Printemps",
+   "teinte": "rgba(255,214,226,.1)",
+   "air": [
+    "saisons/petales_*",
+    "saisons/pollen_*"
+   ],
+   "sol": [
+    "sol/flaque_petite",
+    "sol/flaque_grande",
+    "sol/flaque_pluie"
+   ],
+   "fichiers": [
+    "saisons/teinte_printemps.svg"
+   ]
+  },
+  "ete": {
+   "nom": "Été",
+   "teinte": "rgba(255,228,150,.12)",
+   "air": [
+    "saisons/pollen_*"
+   ],
+   "ciel": [
+    "ciel/plein_soleil"
+   ],
+   "fichiers": [
+    "saisons/teinte_ete.svg"
+   ]
+  },
+  "automne": {
+   "nom": "Automne",
+   "teinte": "rgba(226,142,72,.14)",
+   "air": [
+    "saisons/feuilles_*"
+   ],
+   "sol": [
+    "sol/flaque_petite",
+    "sol/flaque_grande",
+    "sol/flaque_pluie"
+   ],
+   "fichiers": [
+    "saisons/teinte_automne.svg"
+   ]
+  },
+  "hiver": {
+   "nom": "Hiver",
+   "teinte": "rgba(196,216,255,.18)",
+   "air": [
+    "saisons/flocons_*"
+   ],
+   "sol": [
+    "sol/neige_sol_a",
+    "sol/neige_sol_b",
+    "sol/neige_sol_c",
+    "sol/neige_fondante_a",
+    "sol/neige_fondante_b",
+    "sol/givre"
+   ],
+   "fichiers": [
+    "saisons/teinte_hiver.svg"
+   ]
+  }
+ },
  "icones": {
   "temps": [
    "icones/temps/clair.svg",
@@ -776,6 +1086,12 @@
    "icones/climats/dunes.svg",
    "icones/climats/jungle.svg",
    "icones/climats/volcan.svg"
+  ],
+  "saisons": [
+   "icones/saisons/printemps.svg",
+   "icones/saisons/ete.svg",
+   "icones/saisons/automne.svg",
+   "icones/saisons/hiver.svg"
   ]
  }
 }

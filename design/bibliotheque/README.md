@@ -76,16 +76,17 @@ détails propres à un lot : places des objets de boutique, lumières des palier
 | `svg/coffres/` | Les coffres des 4 raretés pour la fenêtre d'ouverture (cadre 120 × 100) : fermé, ouverture en 4 images, ouvert, rayons (calque facultatif), icône 32 × 32 (`coffres.json`) | 44 |
 | `svg/batiments/` | 7 bâtiments × 7 paliers (images animées), chantier, 20 skins, 48 objets de la boutique (un fichier par calque), 14 pièces rares à chaque palier, outil de teintes (`batiments.json`) | 659 |
 | `svg/scenes/tutoriel/` | Les 27 scènes plein écran du tutoriel v6 (`HISTOIRE.md` § 9, étapes 0 à 12) : la carte d'embarquement, le naufrage, Brume, le Grimoire, le feu, la silhouette, l'arrivée de Cannelle, Rivet, Aster et Ondin, la veillée. Carré 400 × 400, un fond et parfois un devant, en boucle ; la place de l'avatar dans `scenes.json` | 105 |
-| `svg/meteo/` | Calques d'écran sans couture en boucle, nuages, arc-en-ciel, éclair, soleil bas, lumières, teintes des moments du jour, 19 icônes (`meteo.json`) | 169 |
+| `svg/meteo/` | Calques d'écran sans couture en boucle, nuages, arc-en-ciel, éclair, soleil bas, lumières, teintes des moments du jour ; les saisons : flocons, feuilles qui tombent, pétales, pollen, plein soleil, teintes, et le sol d'une case (neige, neige fondante, givre, flaques) ; 23 icônes (`meteo.json`) | 262 |
 
 ## Mode d'emploi rapide
 
 - **Un dessin** : `<img src="svg/plantes/arbre.svg">`, ou le SVG en ligne. Au canvas, `drawImage` d'une `Image` pointant
   vers le fichier, à la position de l'ancre moins le coin du `viewBox`.
 - **Une animation** : prendre `fichiers` et `ms_par_image` dans `catalogue.json`, et enchaîner les images en boucle.
-- **Calques météo** (`svg/meteo/temps|climats|ciel`) : ce sont des tuiles. Les poser en `background-repeat`, puis
+- **Calques météo** (`svg/meteo/temps|climats|saisons|ciel`) : ce sont des tuiles. Les poser en `background-repeat`, puis
   enchaîner les images. Les fichiers marqués « étirer » se posent sur tout l'écran. Les teintes des moments se posent en
-  `mix-blend-mode: multiply`, le soleil bas en `screen`.
+  `mix-blend-mode: multiply`, le soleil bas et le plein soleil en `screen`. Le sol des saisons (`svg/meteo/sol`) se pose
+  case par case, ancre au centre de la case, sous le reste ; alterner les variantes a, b, c d'une case à l'autre.
 - **Enseignes** : le nom du joueur n'est pas dessiné. Il s'écrit dans `cadre_du_nom` (`decor.json` : centre, largeur et
   hauteur max, corps et couleur de police du jeu).
 - **Objets de la boutique** : chaque calque est ancré à sa place au sol. Sa `place` par palier (en cases, autour du

@@ -110877,6 +110877,23 @@
    "statut": "ok"
   },
   {
+   "id": "meteo/ciel/plein_soleil",
+   "rubrique": "meteo",
+   "titre": "Plein soleil d'été (écran, screen)",
+   "images": 1,
+   "fichiers": [
+    "svg/meteo/ciel/plein_soleil.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    640,
+    360
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
    "id": "meteo/ciel/soleil_bas_matin",
    "rubrique": "meteo",
    "titre": "Soleil bas du matin (écran, screen)",
@@ -111391,6 +111408,74 @@
    "images": 1,
    "fichiers": [
     "svg/meteo/icones/moments/nuit.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    48
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "meteo/icones/saisons/automne",
+   "rubrique": "meteo",
+   "titre": "Automne (icône)",
+   "images": 1,
+   "fichiers": [
+    "svg/meteo/icones/saisons/automne.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    48
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "meteo/icones/saisons/ete",
+   "rubrique": "meteo",
+   "titre": "Ete",
+   "images": 1,
+   "fichiers": [
+    "svg/meteo/icones/saisons/ete.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    48
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "meteo/icones/saisons/hiver",
+   "rubrique": "meteo",
+   "titre": "Hiver (icône)",
+   "images": 1,
+   "fichiers": [
+    "svg/meteo/icones/saisons/hiver.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    48
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "meteo/icones/saisons/printemps",
+   "rubrique": "meteo",
+   "titre": "Printemps (icône)",
+   "images": 1,
+   "fichiers": [
+    "svg/meteo/icones/saisons/printemps.svg"
    ],
    "cadre": [
     0,
@@ -112004,6 +112089,371 @@
     -38,
     160,
     66
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "meteo/saisons/feuilles",
+   "rubrique": "meteo",
+   "titre": "Feuilles qui tombent — l'automne",
+   "images": 16,
+   "fichiers": [
+    "svg/meteo/saisons/feuilles_1.svg",
+    "svg/meteo/saisons/feuilles_2.svg",
+    "svg/meteo/saisons/feuilles_3.svg",
+    "svg/meteo/saisons/feuilles_4.svg",
+    "svg/meteo/saisons/feuilles_5.svg",
+    "svg/meteo/saisons/feuilles_6.svg",
+    "svg/meteo/saisons/feuilles_7.svg",
+    "svg/meteo/saisons/feuilles_8.svg",
+    "svg/meteo/saisons/feuilles_9.svg",
+    "svg/meteo/saisons/feuilles_10.svg",
+    "svg/meteo/saisons/feuilles_11.svg",
+    "svg/meteo/saisons/feuilles_12.svg",
+    "svg/meteo/saisons/feuilles_13.svg",
+    "svg/meteo/saisons/feuilles_14.svg",
+    "svg/meteo/saisons/feuilles_15.svg",
+    "svg/meteo/saisons/feuilles_16.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    256,
+    256
+   ],
+   "ms_par_image": 200,
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "meteo/saisons/flocons",
+   "rubrique": "meteo",
+   "titre": "Flocons — l'hiver",
+   "images": 16,
+   "fichiers": [
+    "svg/meteo/saisons/flocons_1.svg",
+    "svg/meteo/saisons/flocons_2.svg",
+    "svg/meteo/saisons/flocons_3.svg",
+    "svg/meteo/saisons/flocons_4.svg",
+    "svg/meteo/saisons/flocons_5.svg",
+    "svg/meteo/saisons/flocons_6.svg",
+    "svg/meteo/saisons/flocons_7.svg",
+    "svg/meteo/saisons/flocons_8.svg",
+    "svg/meteo/saisons/flocons_9.svg",
+    "svg/meteo/saisons/flocons_10.svg",
+    "svg/meteo/saisons/flocons_11.svg",
+    "svg/meteo/saisons/flocons_12.svg",
+    "svg/meteo/saisons/flocons_13.svg",
+    "svg/meteo/saisons/flocons_14.svg",
+    "svg/meteo/saisons/flocons_15.svg",
+    "svg/meteo/saisons/flocons_16.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    256,
+    256
+   ],
+   "ms_par_image": 200,
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "meteo/saisons/petales",
+   "rubrique": "meteo",
+   "titre": "Pétales de cerisier — le printemps",
+   "images": 16,
+   "fichiers": [
+    "svg/meteo/saisons/petales_1.svg",
+    "svg/meteo/saisons/petales_2.svg",
+    "svg/meteo/saisons/petales_3.svg",
+    "svg/meteo/saisons/petales_4.svg",
+    "svg/meteo/saisons/petales_5.svg",
+    "svg/meteo/saisons/petales_6.svg",
+    "svg/meteo/saisons/petales_7.svg",
+    "svg/meteo/saisons/petales_8.svg",
+    "svg/meteo/saisons/petales_9.svg",
+    "svg/meteo/saisons/petales_10.svg",
+    "svg/meteo/saisons/petales_11.svg",
+    "svg/meteo/saisons/petales_12.svg",
+    "svg/meteo/saisons/petales_13.svg",
+    "svg/meteo/saisons/petales_14.svg",
+    "svg/meteo/saisons/petales_15.svg",
+    "svg/meteo/saisons/petales_16.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    256,
+    256
+   ],
+   "ms_par_image": 180,
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "meteo/saisons/pollen",
+   "rubrique": "meteo",
+   "titre": "Pollen — le printemps et l'été",
+   "images": 24,
+   "fichiers": [
+    "svg/meteo/saisons/pollen_1.svg",
+    "svg/meteo/saisons/pollen_2.svg",
+    "svg/meteo/saisons/pollen_3.svg",
+    "svg/meteo/saisons/pollen_4.svg",
+    "svg/meteo/saisons/pollen_5.svg",
+    "svg/meteo/saisons/pollen_6.svg",
+    "svg/meteo/saisons/pollen_7.svg",
+    "svg/meteo/saisons/pollen_8.svg",
+    "svg/meteo/saisons/pollen_9.svg",
+    "svg/meteo/saisons/pollen_10.svg",
+    "svg/meteo/saisons/pollen_11.svg",
+    "svg/meteo/saisons/pollen_12.svg",
+    "svg/meteo/saisons/pollen_13.svg",
+    "svg/meteo/saisons/pollen_14.svg",
+    "svg/meteo/saisons/pollen_15.svg",
+    "svg/meteo/saisons/pollen_16.svg",
+    "svg/meteo/saisons/pollen_17.svg",
+    "svg/meteo/saisons/pollen_18.svg",
+    "svg/meteo/saisons/pollen_19.svg",
+    "svg/meteo/saisons/pollen_20.svg",
+    "svg/meteo/saisons/pollen_21.svg",
+    "svg/meteo/saisons/pollen_22.svg",
+    "svg/meteo/saisons/pollen_23.svg",
+    "svg/meteo/saisons/pollen_24.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    256,
+    256
+   ],
+   "ms_par_image": 250,
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "meteo/saisons/teinte_automne",
+   "rubrique": "meteo",
+   "titre": "Automne (teinte automne)",
+   "images": 1,
+   "fichiers": [
+    "svg/meteo/saisons/teinte_automne.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    640,
+    360
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "meteo/saisons/teinte_ete",
+   "rubrique": "meteo",
+   "titre": "Été",
+   "images": 1,
+   "fichiers": [
+    "svg/meteo/saisons/teinte_ete.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    640,
+    360
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "meteo/saisons/teinte_hiver",
+   "rubrique": "meteo",
+   "titre": "Hiver (teinte hiver)",
+   "images": 1,
+   "fichiers": [
+    "svg/meteo/saisons/teinte_hiver.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    640,
+    360
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "meteo/saisons/teinte_printemps",
+   "rubrique": "meteo",
+   "titre": "Printemps (teinte printemps)",
+   "images": 1,
+   "fichiers": [
+    "svg/meteo/saisons/teinte_printemps.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    640,
+    360
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "meteo/sol/flaque_grande",
+   "rubrique": "meteo",
+   "titre": "Grande flaque",
+   "images": 1,
+   "fichiers": [
+    "svg/meteo/sol/flaque_grande.svg"
+   ],
+   "cadre": [
+    -40,
+    -20,
+    80,
+    40
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "meteo/sol/flaque_petite",
+   "rubrique": "meteo",
+   "titre": "Petite flaque",
+   "images": 1,
+   "fichiers": [
+    "svg/meteo/sol/flaque_petite.svg"
+   ],
+   "cadre": [
+    -40,
+    -20,
+    80,
+    40
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "meteo/sol/flaque_pluie",
+   "rubrique": "meteo",
+   "titre": "Flaque sous la pluie",
+   "images": 4,
+   "fichiers": [
+    "svg/meteo/sol/flaque_pluie_1.svg",
+    "svg/meteo/sol/flaque_pluie_2.svg",
+    "svg/meteo/sol/flaque_pluie_3.svg",
+    "svg/meteo/sol/flaque_pluie_4.svg"
+   ],
+   "cadre": [
+    -40,
+    -20,
+    80,
+    40
+   ],
+   "ms_par_image": 220,
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "meteo/sol/givre",
+   "rubrique": "meteo",
+   "titre": "Givre",
+   "images": 1,
+   "fichiers": [
+    "svg/meteo/sol/givre.svg"
+   ],
+   "cadre": [
+    -40,
+    -20,
+    80,
+    40
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "meteo/sol/neige_fondante_a",
+   "rubrique": "meteo",
+   "titre": "Neige fondante (a)",
+   "images": 1,
+   "fichiers": [
+    "svg/meteo/sol/neige_fondante_a.svg"
+   ],
+   "cadre": [
+    -40,
+    -20,
+    80,
+    40
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "meteo/sol/neige_fondante_b",
+   "rubrique": "meteo",
+   "titre": "Neige fondante (b)",
+   "images": 1,
+   "fichiers": [
+    "svg/meteo/sol/neige_fondante_b.svg"
+   ],
+   "cadre": [
+    -40,
+    -20,
+    80,
+    40
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "meteo/sol/neige_sol_a",
+   "rubrique": "meteo",
+   "titre": "Neige au sol (a)",
+   "images": 1,
+   "fichiers": [
+    "svg/meteo/sol/neige_sol_a.svg"
+   ],
+   "cadre": [
+    -40,
+    -20,
+    80,
+    40
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "meteo/sol/neige_sol_b",
+   "rubrique": "meteo",
+   "titre": "Neige au sol (b)",
+   "images": 1,
+   "fichiers": [
+    "svg/meteo/sol/neige_sol_b.svg"
+   ],
+   "cadre": [
+    -40,
+    -20,
+    80,
+    40
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "meteo/sol/neige_sol_c",
+   "rubrique": "meteo",
+   "titre": "Neige au sol (c)",
+   "images": 1,
+   "fichiers": [
+    "svg/meteo/sol/neige_sol_c.svg"
+   ],
+   "cadre": [
+    -40,
+    -20,
+    80,
+    40
    ],
    "parcours": "partout",
    "statut": "ok"

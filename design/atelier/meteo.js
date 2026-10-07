@@ -1,6 +1,8 @@
 // Lot F — météo et ciel, d'après src/world/sky.js, scene.js et climates.js (le jeu les peint au canvas). Ici en SVG :
 // calques d'écran qui se répètent sans couture (tuiles) et bouclent (images), nuages, arc-en-ciel, éclair, soleil bas,
 // teintes des moments du jour, lumières, et icônes au trait de la troupe. Mêmes couleurs et densités que le jeu.
+// Les saisons : flocons, feuilles qui tombent, pétales, pollen, plein soleil, teinte de chaque saison, et le sol d'une
+// case iso (neige, neige fondante, givre, flaques).
 const { OUT, P, E, L, r2 } = require('./troupe');
 
 const TAU = Math.PI * 2;
@@ -115,6 +117,83 @@ TILES.etoiles = { w: T, h: T, n: 4, ms: 400, draw: k => {
   return o;
 } };
 
+// Paillette douce (neige au sol) : une petite étoile à quatre branches, blanche, sans contour sombre
+const twinkleSoft = (x, y, s) => `<path d="M${r2(x)},${r2(y - s)} Q${r2(x)},${r2(y)} ${r2(x + s)},${r2(y)} Q${r2(x)},${r2(y)} ${r2(x)},${r2(y + s)} Q${r2(x)},${r2(y)} ${r2(x - s)},${r2(y)} Q${r2(x)},${r2(y)} ${r2(x)},${r2(y - s)} Z" fill="#FFFFFF" stroke="rgba(150,175,210,.6)" stroke-width="0.3"/>`;
+/* ================= Saisons : calques d'écran (mêmes règles : sans couture, en boucle) ================= */
+// Flocons de l'hiver : de gros flocons étoilés (six branches et leurs ramilles) qui tournent doucement, et des petits
+// flocons ronds ; ils tombent en se balançant, une tuile par boucle. Liseré bleuté pour qu'on les voie sur la neige.
+// Un flocon a six branches : un sixième de tour par boucle, et la boucle ne se voit pas.
+function flake(x, y, R, a) {
+  let d = '';
+  for (let b = 0; b < 6; b++) {
+    const t = a + (b * TAU) / 6, c = Math.cos(t), s = Math.sin(t);
+    d += `M${r2(x)},${r2(y)} L${r2(x + c * R)},${r2(y + s * R)} `;
+    for (const side of [-1, 1]) {
+      const m = 0.55, l = R * 0.32, u = t + side * 0.8;
+      d += `M${r2(x + c * R * m)},${r2(y + s * R * m)} l${r2(Math.cos(u) * l)},${r2(Math.sin(u) * l)} `;
+    }
+  }
+  return line(d, 2.6, 'rgba(120,150,195,.45)') + line(d, 1.2, 'rgba(255,255,255,.95)') + E(x, y, R * 0.16, R * 0.16, '#FFFFFF', 0);
+}
+TILES.flocons = { w: T, h: T, n: 16, ms: 200, draw: k => {
+  let o = '';
+  for (let i = 0; i < 18; i++) {
+    const big = i % 3 === 0, R = big ? (5 + hash(i, 34) * 3) * 1.25 : (1.2 + hash(i, 34) * 1.4) * 1.25;
+    const x = hash(i, 31) * T + Math.sin((TAU * k) / 16 + i) * 12, y = hash(i, 32) * T + (T * k) / 16;
+    o += wrapped(x, y, R + 4, (px, py) => big ? flake(px, py, R, hash(i, 33) * TAU + (TAU / 6) * (k / 16))
+      : E(px, py, R + 0.8, R + 0.8, 'rgba(120,150,195,.35)', 0) + E(px, py, R, R, 'rgba(255,255,255,.95)', 0));
+  }
+  return o;
+} };
+// Feuilles d'automne : des feuilles rousses, rouges, jaunes, brunes qui tombent en tournoyant (elles se retournent :
+// la feuille s'amincit, puis montre son revers plus pâle), une tuile par boucle
+const LEAF = [['#E2703A', '#F2A06A', '#A8481E'], ['#C8463A', '#E07A6A', '#8E2E24'], ['#E8B04A', '#F4D27E', '#A87A22'], ['#A86A3A', '#C9935E', '#6E4424']];
+function fallingLeaf(x, y, l, rot, sx, c) {
+  const [face, revers, nerf] = c, f = sx < 0 ? revers : face;
+  const leaf = `M0,${r2(-l / 2)} Q${r2(l * 0.42)},${r2(-l * 0.15)} ${r2(l * 0.12)},${r2(l * 0.38)} L0,${r2(l / 2)} L${r2(-l * 0.12)},${r2(l * 0.38)} Q${r2(-l * 0.42)},${r2(-l * 0.15)} 0,${r2(-l / 2)} Z`;
+  return `<g transform="translate(${r2(x)} ${r2(y)}) rotate(${r2(rot)}) scale(${r2(sx)} 1)"><path d="${leaf}" fill="${f}" stroke="${nerf}" stroke-width="0.9" stroke-linejoin="round"/>`
+    + `<path d="M0,${r2(-l / 2 + 1.4)} L0,${r2(l / 2 + 2.2)}" stroke="${nerf}" stroke-width="0.8" stroke-linecap="round"/>`
+    + `<path d="M0,${r2(-l * 0.05)} l${r2(l * 0.2)},${r2(-l * 0.16)} M0,${r2(l * 0.16)} l${r2(-l * 0.2)},${r2(-l * 0.16)}" stroke="${nerf}" stroke-width="0.6" stroke-linecap="round" fill="none"/></g>`;
+}
+TILES.feuilles = { w: T, h: T, n: 16, ms: 200, draw: k => {
+  let o = '';
+  for (let i = 0; i < 9; i++) {
+    const ph = (TAU * k) / 16 + i * 1.7, l = (13 + hash(i, 44) * 5) * 1.25;
+    const x = hash(i, 41) * T + Math.sin(ph) * 18, y = hash(i, 42) * T + (T * k) / 16;
+    const cs = Math.cos(ph * (i % 2 ? 1 : 2)), sx = Math.sign(cs || 1) * Math.max(0.35, Math.abs(cs));
+    o += wrapped(x, y, l + 6, (px, py) => fallingLeaf(px, py, l, hash(i, 43) * 360 + Math.sin(ph) * 40, sx, LEAF[i % 4]));
+  }
+  return o;
+} };
+// Pétales du printemps : des pétales roses (cerisier) qui volent en biais avec le vent, une tuile vers la droite et une
+// vers le bas par boucle ; ils se retournent en volant
+function petal(x, y, l, rot, sx) {
+  const d = `M0,${r2(l / 2)} Q${r2(-l * 0.5)},${r2(l * 0.05)} ${r2(-l * 0.18)},${r2(-l * 0.42)} L0,${r2(-l * 0.3)} L${r2(l * 0.18)},${r2(-l * 0.42)} Q${r2(l * 0.5)},${r2(l * 0.05)} 0,${r2(l / 2)} Z`;
+  return `<g transform="translate(${r2(x)} ${r2(y)}) rotate(${r2(rot)}) scale(${r2(sx)} 1)"><path d="${d}" fill="${sx < 0 ? '#F9D3DE' : '#F4A9BF'}" stroke="rgba(176,86,112,.75)" stroke-width="0.7" stroke-linejoin="round"/>`
+    + `<path d="M0,${r2(l * 0.32)} Q${r2(-l * 0.06)},0 0,${r2(-l * 0.18)}" fill="none" stroke="rgba(255,255,255,.75)" stroke-width="0.7" stroke-linecap="round"/></g>`;
+}
+TILES.petales = { w: T, h: T, n: 16, ms: 180, draw: k => {
+  let o = '';
+  for (let i = 0; i < 14; i++) {
+    const ph = (TAU * k) / 16 + i * 2.1, l = (7 + hash(i, 54) * 3) * 1.25;
+    const x = hash(i, 51) * T + (T * k) / 16 + Math.sin(ph) * 6, y = hash(i, 52) * T + (T * k) / 16 + Math.cos(ph) * 6;
+    const cs = Math.cos(ph), sx = Math.sign(cs || 1) * Math.max(0.3, Math.abs(cs));
+    o += wrapped(x, y, l + 6, (px, py) => petal(px, py, l, hash(i, 53) * 360 + (360 * k) / 16, sx));
+  }
+  return o;
+} };
+// Pollen : des grains dorés, très légers, qui montent lentement en dérivant et scintillent (printemps et été)
+TILES.pollen = { w: T, h: T, n: 24, ms: 250, draw: k => {
+  let o = '';
+  for (let i = 0; i < 16; i++) {
+    const ph = (TAU * k) / 24 + i * 2.3, r = (0.9 + hash(i, 64) * 0.9) * 1.25, a = 0.55 + 0.45 * Math.sin(ph * 2);
+    const x = hash(i, 61) * T + Math.sin(ph) * 10, y = hash(i, 62) * T - (T * k) / 24;
+    o += wrapped(x, y, r * 4, (px, py) => E(px, py, r * 3.2, r * 3.2, `rgba(255,226,120,${r2(0.16 * a)})`, 0) + E(px, py, r, r, `rgba(255,232,140,${r2(0.6 + 0.4 * a)})`, 0)
+      + E(px - r * 0.3, py - r * 0.3, r * 0.4, r * 0.4, `rgba(255,255,235,${r2(0.8 * a)})`, 0));
+  }
+  return o;
+} };
+
 /* ================= Sprites : { frame, n, ms, draw(k) } ================= */
 const SPR = {};
 // Nuage du jeu (4 ellipses, échelle s) en ombre de cel : dessous ombré, liseré de la troupe adouci
@@ -154,6 +233,69 @@ SPR.luciole = { group: 'lumieres', frame: [-12, -12, 24, 24], n: 4, ms: 180, dra
   return `<defs><radialGradient id="luciole-halo"><stop offset="0" stop-color="rgb(230,255,140)" stop-opacity="${r2(0.45 + 0.4 * a)}"/><stop offset="1" stop-color="rgb(230,255,140)" stop-opacity="0"/></radialGradient></defs><circle r="${r2(8 + 3 * a)}" fill="url(#luciole-halo)"/>` + E(0, 0, 2, 2, `rgba(250,255,190,${r2(0.6 + 0.4 * a)})`, 0);
 } };
 SPR.halo_chaud = { group: 'lumieres', frame: [-60, -60, 120, 120], n: 1, draw: () => '<defs><radialGradient id="h"><stop offset="0" stop-color="rgb(255,196,110)" stop-opacity=".55"/><stop offset=".4" stop-color="rgb(255,196,110)" stop-opacity=".22"/><stop offset="1" stop-color="rgb(255,196,110)" stop-opacity="0"/></radialGradient></defs><circle r="60" fill="url(#h)"/>' };
+
+// Plein soleil d'été : une lueur blanche et dorée qui tombe d'en haut à droite et cinq longs rayons doux (mode « screen »)
+SPR.plein_soleil = { group: 'ciel', frame: [0, 0, 640, 360], stretch: true, n: 1, draw: () => {
+  const sx = 520, sy = -40;
+  // les rayons partent du soleil (hors de l'écran, en haut à droite) vers le bas et la gauche
+  const rays = [[2.0, 0.05], [2.2, 0.07], [2.4, 0.05], [2.6, 0.08], [2.8, 0.05]].map(([a, w], i) => {
+    const L = 560, p1 = [sx + Math.cos(a - w) * L, sy + Math.sin(a - w) * L], p2 = [sx + Math.cos(a + w) * L, sy + Math.sin(a + w) * L];
+    return `<path d="M${sx},${sy} L${r2(p1[0])},${r2(p1[1])} L${r2(p2[0])},${r2(p2[1])} Z" fill="url(#plein-soleil-rai)" opacity="${[0.5, 0.35, 0.45, 0.3, 0.4][i]}"/>`;
+  }).join('');
+  return `<defs><radialGradient id="plein-soleil" cx="${r2(sx / 640)}" cy="${r2(sy / 360)}" r="0.95" gradientTransform="translate(${r2(sx / 640)} ${r2(sy / 360)}) scale(0.5625 1) translate(${r2(-sx / 640)} ${r2(-sy / 360)})"><stop offset="0" stop-color="rgb(255,250,225)" stop-opacity=".55"/><stop offset=".35" stop-color="rgb(255,232,160)" stop-opacity=".22"/><stop offset="1" stop-color="rgb(255,232,160)" stop-opacity="0"/></radialGradient>`
+    + `<radialGradient id="plein-soleil-rai" cx="${sx}" cy="${sy}" r="520" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="rgb(255,248,210)" stop-opacity=".5"/><stop offset="1" stop-color="rgb(255,248,210)" stop-opacity="0"/></radialGradient></defs>`
+    + `<rect width="640" height="360" fill="url(#plein-soleil)"/>${rays}`;
+} };
+// Le sol des saisons, une case iso (80 × 40, ancre au centre de la case) : à poser sur les cases du jeu, sous le reste
+const CASE = [-40, -20, 80, 40];
+const diamond = (k = 1) => `M0,${r2(-20 * k)} L${r2(40 * k)},0 L0,${r2(20 * k)} L${r2(-40 * k)},0 Z`;
+// Points tirés dans la case (hasard déterministe), assez loin du bord pour ne pas déborder : graine g, n points
+const inCase = (g, n, m = 0.62) => { const out = []; for (let i = 0; out.length < n && i < 200; i++) { const x = (hash(g, i * 2) - 0.5) * 80, y = (hash(g, i * 2 + 1) - 0.5) * 40; if (Math.abs(x) / 40 + Math.abs(y) / 20 < m) out.push([x, y, i]); } return out; };
+// Neige au sol : la case couverte d'un manteau blanc, des creux bleutés à peine marqués, des bosses plus claires, des
+// paillettes. Le bord est uni : deux cases voisines se raccordent sans couture. Trois variantes (a, b, c) à alterner
+// d'une case à l'autre, pour que la grille ne se voie pas.
+const snowCover = g => `<path d="${diamond()}" fill="#EEF4FA"/>`
+  + inCase(g, 4, 0.55).map(([x, y, i]) => { const rx = 6 + hash(g, i + 50) * 6, ry = rx * 0.33; return E(x, y + ry * 0.2, rx, ry, '#E2EAF4', 0) + E(x - rx * 0.12, y - ry * 0.3, rx * 0.82, ry * 0.62, '#FBFDFF', 0); }).join('')
+  + inCase(g + 7, 4, 0.7).map(([x, y]) => twinkleSoft(x, y, 1.5)).join('');
+SPR.neige_sol_a = { group: 'sol', frame: CASE, n: 1, draw: () => snowCover(71) };
+SPR.neige_sol_b = { group: 'sol', frame: CASE, n: 1, draw: () => snowCover(72) };
+SPR.neige_sol_c = { group: 'sol', frame: CASE, n: 1, draw: () => snowCover(73) };
+// Neige fondante : des plaques de neige éparses, le sol se voit entre elles ; deux variantes
+const snowPatches = g => inCase(g, 4, 0.56).map(([x, y, i]) => { const rx = 6 + hash(g, i + 30) * 7, ry = rx * 0.42;
+  return `<path d="M${r2(x - rx)},${r2(y)} Q${r2(x - rx * 0.8)},${r2(y - ry)} ${r2(x)},${r2(y - ry * 0.9)} Q${r2(x + rx * 0.9)},${r2(y - ry * 1.1)} ${r2(x + rx)},${r2(y)} Q${r2(x + rx * 0.6)},${r2(y + ry)} ${r2(x - rx * 0.1)},${r2(y + ry * 0.85)} Q${r2(x - rx * 0.9)},${r2(y + ry * 0.9)} ${r2(x - rx)},${r2(y)} Z" fill="#EAF1F8" stroke="rgba(170,190,215,.7)" stroke-width="0.7"/>`
+    + E(x - rx * 0.2, y - ry * 0.3, rx * 0.55, ry * 0.4, '#FAFCFF', 0); }).join('') + inCase(g + 3, 2, 0.5).map(([x, y]) => twinkleSoft(x, y, 1.3)).join('');
+SPR.neige_fondante_a = { group: 'sol', frame: CASE, n: 1, draw: () => snowPatches(81) };
+SPR.neige_fondante_b = { group: 'sol', frame: CASE, n: 1, draw: () => snowPatches(82) };
+// Givre : un voile blanc translucide sur la case, des cristaux étoilés et des aiguilles de glace
+SPR.givre = { group: 'sol', frame: CASE, n: 1, draw: () => `<path d="${diamond()}" fill="rgba(236,244,255,.38)"/>`
+  + [[-20, -1, 3.2], [-6, -8, 2.4], [8, 6, 3.4], [22, -2, 2.6], [-8, 8, 2.2], [4, -3, 1.8]].map(([x, y, r], i) => {
+    let d = ''; for (let b = 0; b < 6; b++) { const a = (b * TAU) / 6 + i * 0.4; d += `M${x},${y} l${r2(Math.cos(a) * r)},${r2(Math.sin(a) * r * 0.55)} `; }
+    return line(d, 0.7, 'rgba(255,255,255,.95)');
+  }).join('') + line('M-30,2 l5,-1.6 M-26,4 l4,-2.2 M26,6 l-5,-1.4 M30,1 l-4,-2', 0.6, 'rgba(255,255,255,.8)') };
+// Flaques (après la pluie) : de l'eau claire en creux, un bord mouillé plus sombre, le reflet du ciel ; et sous la pluie,
+// des ronds qui s'élargissent (4 images)
+function puddle(rx, ry, rings = -1) {
+  const d = `M${r2(-rx)},0 Q${r2(-rx * 0.9)},${r2(-ry * 1.05)} ${r2(-rx * 0.1)},${r2(-ry)} Q${r2(rx * 0.7)},${r2(-ry * 1.15)} ${r2(rx)},${r2(-ry * 0.1)} Q${r2(rx * 0.95)},${r2(ry * 0.95)} ${r2(rx * 0.1)},${r2(ry)} Q${r2(-rx * 0.8)},${r2(ry * 1.05)} ${r2(-rx)},0 Z`;
+  let o = `<path d="${d}" transform="scale(1.12 1.18)" fill="rgba(70,90,80,.28)"/><path d="${d}" fill="#8DB8D4" stroke="rgba(60,80,90,.55)" stroke-width="0.8"/>`
+    + `<path d="M${r2(-rx * 0.55)},${r2(-ry * 0.35)} Q${r2(-rx * 0.1)},${r2(-ry * 0.6)} ${r2(rx * 0.35)},${r2(-ry * 0.45)}" fill="none" stroke="rgba(235,248,255,.85)" stroke-width="1.2" stroke-linecap="round"/>`
+    + `<path d="M${r2(rx * 0.1)},${r2(ry * 0.35)} L${r2(rx * 0.45)},${r2(ry * 0.25)}" fill="none" stroke="rgba(235,248,255,.6)" stroke-width="0.9" stroke-linecap="round"/>`;
+  if (rings >= 0) for (const [x, y, ph] of [[-rx * 0.4, ry * 0.1, 0], [rx * 0.35, -ry * 0.2, 2], [rx * 0.05, ry * 0.4, 1]]) {
+    const t = ((rings + ph) % 4) / 4, R = 1 + t * rx * 0.35;
+    o += E(x, y, R, R * 0.45, 'none', 0).replace('stroke="none"', `stroke="rgba(240,250,255,${r2(0.9 * (1 - t))})" stroke-width="0.8"`);
+  }
+  return o;
+}
+SPR.flaque_petite = { group: 'sol', frame: CASE, n: 1, draw: () => puddle(13, 5.5) };
+SPR.flaque_grande = { group: 'sol', frame: CASE, n: 1, draw: () => puddle(24, 9.5) };
+SPR.flaque_pluie = { group: 'sol', frame: CASE, n: 4, ms: 220, draw: k => puddle(24, 9.5, k) };
+
+/* ================= Saisons : teinte de la scène, air, sol ================= */
+const SAISONS = {
+  printemps: { nom: 'Printemps', teinte: 'rgba(255,214,226,.1)', air: ['petales', 'pollen'], sol: ['flaque_petite', 'flaque_grande', 'flaque_pluie'] },
+  ete: { nom: 'Été', teinte: 'rgba(255,228,150,.12)', air: ['pollen'], ciel: ['plein_soleil'] },
+  automne: { nom: 'Automne', teinte: 'rgba(226,142,72,.14)', air: ['feuilles'], sol: ['flaque_petite', 'flaque_grande', 'flaque_pluie'] },
+  hiver: { nom: 'Hiver', teinte: 'rgba(196,216,255,.18)', air: ['flocons'], sol: ['neige_sol_a', 'neige_sol_b', 'neige_sol_c', 'neige_fondante_a', 'neige_fondante_b', 'givre'] }
+};
 
 /* ================= Moments du jour (sky.js) : teinte de la scène (multiplier) et mer ================= */
 const NIGHT = { tint: '#5A68A6', sea: ['#1D3557', '#13263F'], night: 1, warm: 0 };
@@ -221,6 +363,21 @@ const ICONS = {
   volcan: () => P('M4,44 L18,16 L30,16 L44,44 Z', '#6E625A') + P('M18,16 L21,24 L24,19 L27,25 L30,16 Z', '#E8573A', 1) + P('M22,19 L24,30 L26,19', '#F2A35A', 0)
     + E(20, 9, 4, 3, 'rgba(120,112,108,.8)', 0.9) + E(27, 6, 3.4, 2.6, 'rgba(150,142,138,.8)', 0.9)
 };
-const ICON_GROUPS = { temps: ['clair', 'voile', 'brume', 'pluie', 'orage', 'arc_en_ciel'], moments: ['nuit', 'aube', 'matin', 'midi', 'apres_midi', 'couchant', 'crepuscule'], climats: ['cimes', 'landes', 'marais', 'dunes', 'jungle', 'volcan'] };
+// Saisons : une fleur de cerisier, le soleil sur la mer, une feuille d'érable, un flocon
+const blossom = (x, y, r) => Array.from({ length: 5 }, (_, i) => { const a = (i / 5) * TAU - Math.PI / 2, cx = x + Math.cos(a) * r * 0.62, cy = y + Math.sin(a) * r * 0.62;
+  return `<g transform="translate(${r2(cx)} ${r2(cy)}) rotate(${r2((a * 180) / Math.PI + 90)})">${P(`M0,${r2(r * 0.5)} Q${r2(-r * 0.62)},${r2(r * 0.1)} ${r2(-r * 0.26)},${r2(-r * 0.5)} L0,${r2(-r * 0.36)} L${r2(r * 0.26)},${r2(-r * 0.5)} Q${r2(r * 0.62)},${r2(r * 0.1)} 0,${r2(r * 0.5)} Z`, '#F6B6C8', 1.1)}</g>`; }).join('')
+  + E(x, y, r * 0.3, r * 0.3, '#F2C04B', 1) + [0, 1, 2, 3, 4].map(i => { const a = (i / 5) * TAU - Math.PI / 2 + 0.6; return E(x + Math.cos(a) * r * 0.42, y + Math.sin(a) * r * 0.42, 0.9, 0.9, '#E2703A', 0); }).join('');
+const maple = (x, y, s, c, d) => P(`M${x},${r2(y - 16 * s)} L${r2(x + 3 * s)},${r2(y - 9 * s)} L${r2(x + 9 * s)},${r2(y - 12 * s)} L${r2(x + 7 * s)},${r2(y - 5 * s)} L${r2(x + 14 * s)},${r2(y - 4 * s)} L${r2(x + 9 * s)},${r2(y + 1 * s)} L${r2(x + 11 * s)},${r2(y + 5 * s)} L${r2(x + 2 * s)},${r2(y + 3 * s)} L${x},${r2(y + 7 * s)} L${r2(x - 2 * s)},${r2(y + 3 * s)} L${r2(x - 11 * s)},${r2(y + 5 * s)} L${r2(x - 9 * s)},${r2(y + 1 * s)} L${r2(x - 14 * s)},${r2(y - 4 * s)} L${r2(x - 7 * s)},${r2(y - 5 * s)} L${r2(x - 9 * s)},${r2(y - 12 * s)} L${r2(x - 3 * s)},${r2(y - 9 * s)} Z`, c, 1.2)
+  + line(`M${x},${r2(y + 13 * s)} L${x},${r2(y - 12 * s)} M${x},${r2(y - 1 * s)} L${r2(x + 9 * s)},${r2(y - 3.5 * s)} M${x},${r2(y - 1 * s)} L${r2(x - 9 * s)},${r2(y - 3.5 * s)} M${x},${r2(y - 6 * s)} L${r2(x + 5 * s)},${r2(y - 10 * s)} M${x},${r2(y - 6 * s)} L${r2(x - 5 * s)},${r2(y - 10 * s)}`, 1, d);
+const snowIcon = (x, y, R) => { let dd = ''; for (let b = 0; b < 6; b++) { const t = (b * TAU) / 6 - Math.PI / 2, c = Math.cos(t), s = Math.sin(t); dd += `M${x},${y} L${r2(x + c * R)},${r2(y + s * R)} `;
+  for (const side of [-1, 1]) { const u = t + side * 0.75; dd += `M${r2(x + c * R * 0.58)},${r2(y + s * R * 0.58)} l${r2(Math.cos(u) * R * 0.3)},${r2(Math.sin(u) * R * 0.3)} `; } }
+  return tk(dd, 2, '#E8F2FC') + E(x, y, 2.4, 2.4, '#FFFFFF', 1); };
+Object.assign(ICONS, {
+  printemps: () => blossom(24, 22, 15) + P('M30,40 Q36,33 44,34 Q40,42 30,40 Z', '#7EC45B', 1.1) + line('M31,39.5 Q37,36 42,35.5', 0.8, '#4F8F3A'),
+  ete: () => sun(24, 18, 8) + P('M2,34 Q8,30 14,34 Q20,38 26,34 Q32,30 38,34 Q42,37 46,34 L46,46 L2,46 Z', '#5AAED7', 1.2) + line('M8,40 Q12,38 16,40 M28,41 Q32,39 36,41', 1, '#BFE3F4'),
+  automne: () => maple(24, 23, 1.25, '#E2703A', '#A8481E'),
+  hiver: () => snowIcon(24, 24, 17)
+});
+const ICON_GROUPS = { temps: ['clair', 'voile', 'brume', 'pluie', 'orage', 'arc_en_ciel'], moments: ['nuit', 'aube', 'matin', 'midi', 'apres_midi', 'couchant', 'crepuscule'], climats: ['cimes', 'landes', 'marais', 'dunes', 'jungle', 'volcan'], saisons: ['printemps', 'ete', 'automne', 'hiver'] };
 
-module.exports = { TILES, SPR, MOMENTS, WEATHERS, CLIMATES, ICONS, ICON_GROUPS, T };
+module.exports = { TILES, SPR, MOMENTS, WEATHERS, CLIMATES, SAISONS, ICONS, ICON_GROUPS, T };
