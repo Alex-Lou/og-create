@@ -10,6 +10,7 @@ import { lookAt, boatOffset, boatOf } from '@/world/looks';
 import { buildingArt, chantierArt } from '@/world/buildingArt';
 import { P } from '@/world/iso';
 import { itemLayers } from '@/world/shopSprites';
+import { objectLayers } from '@/world/objectArt';
 import { SIGN } from '@/world/nature';
 import { nameSignLayers, paintName } from '@/world/nameSigns';
 import { landmarksWaiting } from '@/world/landmarks';
@@ -136,7 +137,8 @@ export default {
       // Toucher : l'article sautille (0,5 s)
       const tapped = this.scared.get(`item:${site.id}:${item.id}`);
       const hop = tapped && t - tapped.at < 0.5 ? Math.sin(((t - tapped.at) / 0.5) * Math.PI) * 6 : 0;
-      for (const layer of itemLayers(item.id, site.level, t)) {
+      // Dessin de la bibliothèque, sinon celui du jeu (pièce rare)
+      for (const layer of objectLayers(item.id, site.level, t) || itemLayers(item.id, site.level, t)) {
         if (layer.back !== back) continue;
         const [x, y] = [c.x + layer.offset[0], c.y + layer.offset[1] - hop];
         drawSprite(ctx, layer.key, layer.make, x, y, repaint);

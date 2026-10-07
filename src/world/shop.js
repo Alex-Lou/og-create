@@ -5,6 +5,7 @@ import { spriteUrl } from '@/world/spriteCache';
 import { artMake } from '@/world/looks';
 import { buildingThumb } from '@/world/buildingArt';
 import { itemThumb } from '@/world/shopSprites';
+import { objectThumb } from '@/world/objectArt';
 import { tintOf } from '@/world/tints';
 
 // Rubriques dans l'ordre de la fiche
@@ -24,12 +25,12 @@ function previewLevel(site, item) {
   return site.id === 'foyer' && groupOf(item) === 'skin' ? Math.max(level, 2) : level;
 }
 
-// Aperçu d'un article : un skin ou une teinte sur le dessin de la bibliothèque (une pièce rare sur celui du jeu), un
-// outil ou un objet dessiné par le jeu
+// Aperçu d'un article : un skin, une teinte, un outil ou un objet dessinés par la bibliothèque ; une pièce rare dessinée
+// par le jeu
 export function itemArt(site, item) {
   const level = previewLevel(site, item);
   if (item.kind === 'skin') return buildingThumb(site.id, level, 0, item.id) || spriteUrl(`art-${site.id}-${level}-${item.id}`, artMake(site.id, level, item.id));
-  return spriteUrl(`thumb-${item.id}-${level}`, () => itemThumb(item.id, level));
+  return objectThumb(item.id, level) || spriteUrl(`thumb-${item.id}-${level}`, () => itemThumb(item.id, level));
 }
 
 export function itemNote(site, item) {
