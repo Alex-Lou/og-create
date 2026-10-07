@@ -1346,6 +1346,8 @@ const HOUSE_LOOKS = [
   { roof: THATCH, door: '#4F8A3A' },
   { roof: SLATE_ROOF, door: '#B5772F' }
 ];
+// … dans l'herbe : pas japonais jusqu'à la marche de la porte, volets à la couleur de la porte, rangs du toit, fleurs
+// au pied des murs
 const maison = {
   light: () => [0.27, 0.06, 13, 12],
   layers: [{
@@ -1360,20 +1362,28 @@ const maison = {
         return puff(chx + p * 5, chy - 4 - p * 16, 1.8 + p * 3.2, 0.55 * (1 - p));
       }).join('');
       const pane = (pts, fill) => T.face(pts, fill, ` stroke="${WOOD_DARK.right}" stroke-width="0.9"`);
-      return T.shadow(0, 0, 0.36, 0.2)
+      const [gx, gy] = T.p(0, 0, 0);
+      return ell(gx, gy + 1, 31, 12.6, '#9CC46A', ` stroke="${OUT}" stroke-width="0.5"`) + ell(gx - 4, gy, 21, 7.6, '#ADD27A')
+        + [[0.02, 0.32], [0.06, 0.42], [0.1, 0.52]].map(([du, dv]) => { const [px, py] = T.p(du, dv, 0); return ell(px, py, 2.8, 1.4, '#C9C2B4', ` stroke="${OUT}" stroke-width="0.4"`); }).join('')
+        + [[0.32, 0.12, '#E8566A'], [0.34, -0.04, '#F2C04B'], [-0.32, 0.26, '#B48AE0']].map(([du, dv, c]) => { const [fx, fy] = T.p(du, dv, 0); return [-1.4, 0, 1.4].map((o, i) => ln([fx + o * 0.4, fy], [fx + o, fy - 3.4 - (i % 2)], '#6F9A44', 0.6) + dot(fx + o, fy - 3.8 - (i % 2), 0.8, c)).join(''); }).join('')
+        + T.shadow(0, 0, 0.36, 0.2)
         + T.box(-0.26, -0.22, 0.26, 0.22, 0, 4, STONE)
+        + T.box(-0.07, 0.22, 0.09, 0.28, 0, 2, STONE)
         + T.box(-0.24, -0.2, 0.24, 0.2, 4, 21, WALL)
         // Porte (face avant) et fenêtre (pignon), linteaux de bois
         + pane([[-0.05, 0.2, 4], [0.07, 0.2, 4], [0.07, 0.2, 15], [-0.05, 0.2, 15]], look.door)
         + dot(...T.p(0.05, 0.2, 9.5), 0.6, '#F2C04B')
         + pane([[0.24, -0.06, 10], [0.24, 0.07, 10], [0.24, 0.07, 16], [0.24, -0.06, 16]], GLASS)
         + ln(T.p(0.24, 0.005, 10), T.p(0.24, 0.005, 16), WOOD_DARK.right, 0.7)
+        + [[-0.11, -0.065], [0.075, 0.12]].map(([v0, v1]) => T.face([[0.241, v0, 10], [0.241, v1, 10], [0.241, v1, 16], [0.241, v0, 16]], look.door, ` stroke="${WOOD_DARK.right}" stroke-width="0.5"`)).join('')
         + pane([[-0.16, 0.2, 10], [-0.1, 0.2, 10], [-0.1, 0.2, 15], [-0.16, 0.2, 15]], GLASS)
         // Jardinière fleurie sous la fenêtre de façade
         + T.box(-0.18, 0.2, -0.08, 0.25, 8, 10, WOOD)
         + [-0.165, -0.13, -0.095].map((du, k) => dot(...T.p(du, 0.23, 11.2), 1.3, ['#E8566A', '#F2C04B', '#B48AE0'][k])).join('')
         + T.cyl(-0.12, -0.1, 24, 36, 0.035, BRICK, 'chem')
         + T.gable(-0.27, -0.23, 0.27, 0.23, 21, 11, { front: look.roof.front, back: look.roof.back, gable: WALL.right }, 0.05)
+        + [0.33, 0.66].map(t => ln(T.p(-0.32, 0.28 * t, 32 - 11 * t), T.p(0.32, 0.28 * t, 32 - 11 * t), 'rgba(40,30,20,.3)', 0.6)).join('')
+        + ln(T.p(-0.32, 0, 32), T.p(0.32, 0, 32), 'rgba(40,30,20,.45)', 1.2)
         + smoke;
     }
   }]
