@@ -2,7 +2,7 @@
 // rochers, l'aiguille, les rochers moussus.
 // Cadre et ancrage des décors de deco.js (PROP, centre de la case en (0, 0)).
 const { OUT, E, r2 } = require('./troupe');
-const { fleurette } = require('./arbres');
+const { fleurette, herbe, congere, feuilleMorte, ROUSSES } = require('./arbres');
 
 // les teintes de la pierre : clair (le dessus, au soleil), moyen, sombre (le flanc droit), les fentes
 const PIERRES = {
@@ -59,6 +59,29 @@ function rocher({ teinte = 'gris', petit = false, lezard: avecLezard = false } =
     + bloc(`${id}a`, ROCHER, c, k)
     + `<g transform="translate(${r2(-21 * k)} ${r2(3.4 * k)})">${bloc(`${id}b`, CAILLOU, c, k)}</g>`
     + (avecLezard ? lezard(-1 * k, -18.6 * k, -12, Math.max(k, 0.85)) : '');
+}
+
+// ——— Le rocher au fil des saisons (en été, c'est le rocher au lézard) ———
+// printemps : des touffes d'herbe neuve et des fleurettes au pied ; automne : des feuilles mortes sur le dessus et au
+// pied ; hiver : une calotte de neige au bord ondulé sur le dessus (ombrée de bleu), une congère au pied
+const NEIGE_ROCHER = 'M-22,-8.6 Q-17,-7.4 -13,-10.2 Q-8,-8 -3,-11.2 Q3,-9.4 7.6,-13 Q11.6,-10.4 15.6,-11.6 Q19,-9 22,-9.4 L22,-26 L-22,-26 Z';
+const NEIGE_CAILLOU = 'M-6,-0.6 Q-3,0.4 -1,-1.6 Q1.4,-0.2 3,-1.8 Q4.6,-0.6 6,-0.8 L6,-6 L-6,-6 Z';
+const neigeSur = (d, k) => `<path d="${sc(d.replace(/-?\d+(\.\d+)?,(-?\d+(\.\d+)?)/g, (m, x, y) => `${x},${r2(+y + 1.3)}`), k)}" fill="#D6E4EE"/><path d="${sc(d, k)}" fill="#FFFFFF"/>`;
+function rocherSaison({ saison = 'hiver', petit = false } = {}) {
+  const c = PIERRES.gris, k = petit ? 0.75 : 1, hiver = saison === 'hiver';
+  const id = `rocs${saison[0]}${petit ? 'p' : 'g'}`;
+  let o = E(1, 1.5, 22 * k, 6.5 * k, hiver ? 'rgba(60,80,110,0.22)' : 'rgba(40,55,20,0.22)', 0)
+    + bloc(`${id}a`, ROCHER, c, k, hiver ? neigeSur(NEIGE_ROCHER, k) : '')
+    + `<g transform="translate(${r2(-21 * k)} ${r2(3.4 * k)})">${bloc(`${id}b`, CAILLOU, c, k, hiver ? neigeSur(NEIGE_CAILLOU, k) : '')}</g>`;
+  if (hiver) o += congere(k * 0.9);
+  else if (saison === 'automne') o += [[-8, -17.6, 30, 0, 1], [3, -18.6, -40, 1, 0.95], [10, -14, 70, 2, 0.9]].map(([x, y, a, i, s]) => feuilleMorte(x * k, y * k, a, ROUSSES[i], s)).join('')
+    + [[-14, 4.6, 50, 1], [8, 5.4, -20, 0], [15, 3.4, 80, 2], [-2, 6.2, 10, 2]].map(([x, y, a, i]) => feuilleMorte(x * k, y, a, ROUSSES[i])).join('');
+  else o += herbe(-12 * k, 4.6, '#9ACD5E', 0.8) + herbe(14 * k, 3.6, '#8CC152', 0.75) + [[-6, 5.4, '#FFFFFF'], [9, 5.8, '#F7B6C8'], [18, 4.2, '#FFFFFF'], [-17, 6.4, '#F2C04B']].map(([x, y, col]) => fleurette(x * k, y, col)).join('');
+  return o;
+}
+const ROCHERS_SAISONS = [];
+for (const saison of ['printemps', 'automne', 'hiver']) for (const petit of [false, true]) {
+  ROCHERS_SAISONS.push([['rocher', saison, petit && 'petit'].filter(Boolean).join('_'), `Rocher ${{ printemps: 'de printemps', automne: 'd\'automne', hiver: 'd\'hiver' }[saison]} (${petit ? 'petit' : 'grand'}, ${{ printemps: 'herbe neuve et fleurettes au pied', automne: 'feuilles mortes dessus et au pied', hiver: 'calotte de neige, congère au pied' }[saison]})`, { saison, petit }]);
 }
 
 // Les 8 rochers : [fichier, libellé, options] ; « rocher » (grand, gris, sans lézard) est celui par défaut
@@ -187,4 +210,4 @@ for (const petits of [false, true]) for (const fleuris of [false, true]) for (co
   ROCHERS_MOUSSUS.push([fichier, libelle, { petits, fleuris, escargot: es }]);
 }
 
-module.exports = { rocher, ROCHERS, rochers, ROCHERS_TAS, aiguille, AIGUILLES, rochersMoussus, ROCHERS_MOUSSUS };
+module.exports = { rocherSaison, ROCHERS_SAISONS, rocher, ROCHERS, rochers, ROCHERS_TAS, aiguille, AIGUILLES, rochersMoussus, ROCHERS_MOUSSUS };

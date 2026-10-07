@@ -375,6 +375,23 @@ for (const petit of ['', '_petit']) for (const peint of ['', '_peint']) for (con
 for (const motte of ['', '_motte']) for (const petite of ['', '_petite']) for (const vert of ['', '_profond']) for (const fleurie of ['', '_fleurie']) {
   PLANTES[`touffe${motte}${petite}${vert}${fleurie}`] = `Touffe d'herbe (${[motte && 'avec motte', petite ? 'petite' : 'grande', `vert ${vert ? 'profond' : 'doux'}`, fleurie && 'fleurie'].filter(Boolean).join(', ')})`;
 }
+// les plantes et rochers de saison (arbres.js, plantes.js, rochers.js, herbes.js) : arbre_printemps|hiver[_petit],
+// buisson_automne|hiver[_petit], rocher_printemps|automne|hiver[_petit], touffe_automne|hiver[_petite]
+for (const petit of ['', '_petit']) {
+  const t = petit ? 'petit' : 'grand';
+  PLANTES[`arbre_printemps${petit}`] = `Arbre de printemps (${t}, vert tendre, en fleurs, pied fleuri)`;
+  PLANTES[`arbre_hiver${petit}`] = `Arbre d'hiver (${t}, sous la neige, congère au pied)`;
+  PLANTES[`buisson_automne${petit}`] = `Buisson d'automne (${t}, roux, chargé de baies, feuilles mortes au pied)`;
+  PLANTES[`buisson_hiver${petit}`] = `Buisson d'hiver (${t}, sous la neige, congère au pied)`;
+  PLANTES[`rocher_printemps${petit}`] = `Rocher de printemps (${t}, herbe neuve et fleurettes au pied)`;
+  PLANTES[`rocher_automne${petit}`] = `Rocher d'automne (${t}, feuilles mortes dessus et au pied)`;
+  PLANTES[`rocher_hiver${petit}`] = `Rocher d'hiver (${t}, calotte de neige, congère au pied)`;
+}
+for (const petite of ['', '_petite']) {
+  const t = petite ? 'petite' : 'grande';
+  PLANTES[`touffe_automne${petite}`] = `Touffe d'herbe d'automne (${t}, herbe blonde, épis de graines)`;
+  PLANTES[`touffe_hiver${petite}`] = `Touffe d'herbe d'hiver (${t}, neige sur les pointes, congère au pied)`;
+}
 const PIECES = { 'arc-en-ciel': 'Arc-en-ciel', 'coeur-lave': 'Cœur de lave', 'filon-or': 'Filon d\'or' };
 const ROMAIN = ['', 'I', 'II', 'III', 'IV', 'V', 'VI', 'VII'];
 const ETAT_COFFRE = { ferme: 'fermé', ouverture: 'ouverture', ouvert: 'ouvert', rayons: 'rayons (calque)', icone: 'icône' };

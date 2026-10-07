@@ -17,7 +17,12 @@ const AUTOMNE = {
   orange: { devant: { light: '#FFD98A', mid: '#F5A04A', dark: '#D06A2E' }, fond: { light: '#F2B562', mid: '#DB7F3A', dark: '#A9502A' } },
   rouge: { devant: { light: '#FFB38A', mid: '#E8664A', dark: '#B8402F' }, fond: { light: '#E58A5E', mid: '#C4503A', dark: '#8E3328' } }
 };
-const TEINTES = { ...VERTS, ...AUTOMNE };
+// les teintes des saisons : le vert tendre du printemps, le vert froid de l'hiver (sous la neige)
+const SAISON = {
+  tendre: { devant: { light: '#F0FABE', mid: '#BFE47C', dark: '#7DB653' }, fond: { light: '#BBE08A', mid: '#8EC160', dark: '#5E9447' } },
+  hiver: { devant: { light: '#CADDB4', mid: '#86AE78', dark: '#557F5E' }, fond: { light: '#9DC090', mid: '#6A9468', dark: '#466A52' } }
+};
+const TEINTES = { ...VERTS, ...AUTOMNE, ...SAISON };
 const BOIS = { left: '#9C6A43', right: '#74492C', bark: '#55331E', light: '#B98458' };
 const W = 1.1;
 
@@ -27,7 +32,8 @@ const sc = (d, k) => d.replace(/-?\d+(\.\d+)?/g, n => r2(n * k));
 
 // Une touffe : union de lobes [x, y, r, reflet ?] sous un contour commun ; lobes sombres, aplat décalé en haut à gauche
 // (il laisse un croissant d'ombre sous chaque lobe), reflet en croissant sur les lobes du haut, marques de feuilles
-function touffe(id, lobes, c, marques, k) {
+// neige : une calotte de neige sur les lobes du haut (blanche, ombrée de bleu dessous), comme le sapin enneigé
+function touffe(id, lobes, c, marques, k, neige = false) {
   const L = lobes.map(([x, y, r, f]) => [x * k, y * k, r * k, f]);
   const contour = L.map(([x, y, r]) => rond(x, y, r + W, OUT)).join('');
   const zone = `<clipPath id="${id}">${L.map(([x, y, r]) => rond(x, y, r, '#000')).join('')}</clipPath>`;
@@ -39,7 +45,9 @@ function touffe(id, lobes, c, marques, k) {
     + marques.map(([x, y, s = 1]) => {
       const X = x * k, Y = y * k, S = s * Math.max(k, 0.85);
       return `<path d="M${r2(X - 2.6 * S)},${r2(Y)} Q${r2(X - 1.3 * S)},${r2(Y + 1.8 * S)} ${r2(X)},${r2(Y)} Q${r2(X + 1.3 * S)},${r2(Y + 1.8 * S)} ${r2(X + 2.6 * S)},${r2(Y)}" fill="none" stroke="${c.dark}" stroke-width="0.8" stroke-linecap="round"/>`;
-    }).join('');
+    }).join('')
+    + (neige ? hauts.map(([x, y, r]) => rond(x + r * 0.04, y - r * 0.46, r * 0.8, '#D6E4EE')).join('') + hauts.map(([x, y, r]) => rond(x - r * 0.04, y - r * 0.58, r * 0.78, '#FFFFFF')).join('')
+      + hauts.map(([x, y, r]) => rond(x - r * 0.3, y - r * 0.82, r * 0.16, '#F2F7FC')).join('') : '');
   return contour + `<defs>${zone}</defs><g clip-path="url(#${id})">${dedans}</g>`;
 }
 
@@ -79,15 +87,16 @@ const MILIEU = [[-2, -62, 11.5], [-9, -51, 7.5, 0], [5, -52, 8, 0]];
 
 // vert : 'doux' ou 'profond' (ou une teinte d'automne) ; petit : à la hauteur de l'ancien arbre (à peine plus grand qu'un
 // PNJ) ; fleuri : le pied fleuri
-function arbre({ vert = 'doux', petit = false, fleuri = false } = {}) {
+// neige : le houppier sous la neige et une congère au pied (l'arbre d'hiver)
+function arbre({ vert = 'doux', petit = false, fleuri = false, neige = false } = {}) {
   const c = TEINTES[vert], k = petit ? 0.76 : 1;
-  const id = `arb${petit ? 'p' : 'g'}${vert[0]}${fleuri ? 'f' : ''}`;
-  return E(3 * k, 1.5, 27 * k, 12 * k, 'rgba(40,55,20,0.22)', 0) + tronc(`${id}t`, k)
-    + touffe(`${id}a`, FOND, c.fond, [[-6, -69], [13, -66, 0.9], [24, -74, 0.8]], k)
-    + touffe(`${id}b`, DROITE, c.devant, [[15, -47], [25, -52, 0.9]], k)
-    + touffe(`${id}c`, GAUCHE, c.devant, [[-23, -46], [-15, -52, 0.9], [-31, -55, 0.8]], k)
-    + touffe(`${id}d`, MILIEU, c.devant, [[-3, -54], [3, -60, 0.8]], k)
-    + (fleuri ? pied(k) : '');
+  const id = `arb${petit ? 'p' : 'g'}${vert[0]}${fleuri ? 'f' : ''}${neige ? 'n' : ''}`;
+  return E(3 * k, 1.5, 27 * k, 12 * k, neige ? 'rgba(60,80,110,0.22)' : 'rgba(40,55,20,0.22)', 0) + tronc(`${id}t`, k)
+    + touffe(`${id}a`, FOND, c.fond, [[-6, -69], [13, -66, 0.9], [24, -74, 0.8]], k, neige)
+    + touffe(`${id}b`, DROITE, c.devant, [[15, -47], [25, -52, 0.9]], k, neige)
+    + touffe(`${id}c`, GAUCHE, c.devant, [[-23, -46], [-15, -52, 0.9], [-31, -55, 0.8]], k, neige)
+    + touffe(`${id}d`, MILIEU, c.devant, [[-3, -54], [3, -60, 0.8]], k, neige)
+    + (fleuri ? pied(k) : '') + (neige ? congere(k) : '');
 }
 
 // Les 8 variantes : [fichier, libellé, options] ; « arbre » (grand, vert doux, pied sobre) est l'arbre par défaut
@@ -96,6 +105,20 @@ for (const petit of [false, true]) for (const vert of ['doux', 'profond']) for (
   const fichier = ['arbre', petit && 'petit', vert === 'profond' && 'profond', fleuri && 'fleuri'].filter(Boolean).join('_');
   const libelle = `Arbre (${[petit ? 'petit' : 'grand', `vert ${vert}`, fleuri && 'pied fleuri'].filter(Boolean).join(', ')})`;
   ARBRES.push([fichier, libelle, { vert, petit, fleuri }]);
+}
+
+// ——— L'arbre au fil des saisons (l'automne a son propre arbre, plus bas) ———
+// printemps : le vert tendre des jeunes feuilles, quelques fleurs blanches et roses dans le houppier, le pied fleuri ;
+// hiver : le vert froid sous la neige, une congère au pied
+const FLEURS_PRINTEMPS = [[-27, -52], [-8, -50], [2, -67], [21, -47], [27, -57], [-4, -78], [-18, -72], [12, -75]];
+function arbreSaison({ saison = 'printemps', petit = false } = {}) {
+  const k = petit ? 0.76 : 1;
+  if (saison === 'hiver') return arbre({ vert: 'hiver', petit, neige: true });
+  return arbre({ vert: 'tendre', petit, fleuri: true }) + FLEURS_PRINTEMPS.map(([x, y], i) => fleurette(x * k, y * k, i % 3 === 1 ? '#F7B6C8' : '#FFFFFF')).join('');
+}
+const ARBRES_SAISONS = [];
+for (const saison of ['printemps', 'hiver']) for (const petit of [false, true]) {
+  ARBRES_SAISONS.push([['arbre', saison, petit && 'petit'].filter(Boolean).join('_'), `Arbre ${saison === 'hiver' ? 'd\'hiver' : 'de printemps'} (${petit ? 'petit' : 'grand'}, ${saison === 'hiver' ? 'sous la neige, congère au pied' : 'vert tendre, en fleurs, pied fleuri'})`, { saison, petit }]);
 }
 
 // ——— Le pommier : l'arbre, ses pommes (ou ses fleurs) et, au pied, les pommes (ou les pétales) tombées ———
@@ -396,7 +419,7 @@ for (const petit of [false, true]) for (const teinte of ['gris', 'brun']) for (c
 }
 
 module.exports = {
-  arbre, ARBRES, pommier, POMMIERS, automne, AUTOMNES, bouleau, BOULEAUX, sapin, SAPINS, palmier, PALMIERS, arbreMort, ARBRES_MORTS,
+  arbre, ARBRES, arbreSaison, ARBRES_SAISONS, pommier, POMMIERS, automne, AUTOMNES, bouleau, BOULEAUX, sapin, SAPINS, palmier, PALMIERS, arbreMort, ARBRES_MORTS,
   // pour les autres plantes (plantes.js) : les verts, la touffe de feuillage, la fleurette, le champignon, l'herbe
-  VERTS, fleurette, feuillage: touffe, champignon, herbe
+  VERTS, TEINTES, fleurette, feuillage: touffe, champignon, herbe, congere, feuilleMorte, ROUSSES
 };

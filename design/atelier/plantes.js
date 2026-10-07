@@ -3,7 +3,7 @@
 // nénuphars. Cadre et ancrage des plantes de deco.js (PROP, centre de la case en (0, 0)) ; le jeu fait
 // balancer le dessin entier depuis sa base, il n'y a donc qu'une image.
 const { OUT, E, r2 } = require('./troupe');
-const { VERTS, fleurette, feuillage, champignon, herbe } = require('./arbres');
+const { VERTS, TEINTES, fleurette, feuillage, champignon, herbe, congere, feuilleMorte, ROUSSES } = require('./arbres');
 
 // ——— Le buisson : trois touffes basses (celle du fond plus sombre) et une au milieu, des fleurettes ou des baies ———
 // baies : grappe de trois, rouges, reflet
@@ -34,6 +34,24 @@ for (const petit of [false, true]) for (const vert of ['doux', 'profond']) for (
   const fichier = ['buisson', petit && 'petit', vert === 'profond' && 'profond', baies && 'baies'].filter(Boolean).join('_');
   const libelle = `Buisson (${[petit ? 'petit' : 'grand', `vert ${vert}`, baies ? 'à baies' : 'fleuri'].join(', ')})`;
   BUISSONS.push([fichier, libelle, { vert, petit, baies }]);
+}
+
+// ——— Le buisson au fil des saisons (au printemps, c'est le buisson fleuri) ———
+// automne : roux, chargé de baies, des feuilles mortes au pied ; hiver : vert froid sous la neige, une congère au pied
+const FEUILLES_B = [[-15, 3.4, 40, 0], [-9, 6, -30, 1], [10, 5.6, 70, 2], [16, 2.8, -15, 0]];
+function buissonSaison({ saison = 'automne', petit = false } = {}) {
+  const k = petit ? 0.75 : 1, neige = saison === 'hiver', c = TEINTES[neige ? 'hiver' : 'orange'];
+  const id = `buis${saison[0]}${petit ? 'p' : 'g'}`;
+  return E(1.5 * k, 1, 21 * k, 8 * k, neige ? 'rgba(60,80,110,0.22)' : 'rgba(40,55,20,0.22)', 0)
+    + feuillage(`${id}a`, B_FOND, c.fond, [[-3, -20, 0.8], [10, -18, 0.7]], k, neige)
+    + feuillage(`${id}b`, B_DROITE, c.devant, [[9, -6, 0.7]], k, neige)
+    + feuillage(`${id}c`, B_GAUCHE, c.devant, [[-12, -7, 0.7]], k, neige)
+    + feuillage(`${id}d`, B_MILIEU, c.devant, [[-2, -12, 0.7]], k, neige)
+    + (neige ? congere(k * 0.8) : GRAPPES.map(([x, y]) => grappe(x * k, y * k)).join('') + FEUILLES_B.map(([x, y, a, i]) => feuilleMorte(x * k, y, a, ROUSSES[i])).join(''));
+}
+const BUISSONS_SAISONS = [];
+for (const saison of ['automne', 'hiver']) for (const petit of [false, true]) {
+  BUISSONS_SAISONS.push([['buisson', saison, petit && 'petit'].filter(Boolean).join('_'), `Buisson ${saison === 'hiver' ? 'd\'hiver' : 'd\'automne'} (${petit ? 'petit' : 'grand'}, ${saison === 'hiver' ? 'sous la neige, congère au pied' : 'roux, chargé de baies, feuilles mortes au pied'})`, { saison, petit }]);
 }
 
 // ——— La bruyère : un coussin de clochettes sur une base de feuillage, quelques épis ; un papillon s'y pose parfois ———
@@ -370,6 +388,7 @@ for (const petits of [false, true]) for (const teinte of ['roses', 'blancs']) fo
 }
 
 module.exports = {
+  buissonSaison, BUISSONS_SAISONS,
   buisson, BUISSONS, bruyere, BRUYERES, fleurs, FLEURS, cactus, CACTUS_LISTE, souche, SOUCHES, rondin, RONDINS, champignons, CHAMPIGNONS,
   roseaux, ROSEAUX, nenuphars, NENUPHARS
 };
