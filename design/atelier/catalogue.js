@@ -48,8 +48,8 @@ function renommer(rel) {
   }
 
   if (top === 'vivants' && a === 'cerf') {
-    const m = base.match(/^cerf_([a-z]+)(?:_(\d+))?$/);
-    return out([top, 'cerf-blanc'], ['cerf-blanc', 'profil', m[1], m[2]].filter(Boolean).join('_'));
+    const m = base.match(/^cerf_(?:(avant|dos)_)?([a-z]+)(?:_(\d+))?$/);
+    return out([top, 'cerf-blanc'], ['cerf-blanc', m[1] || 'profil', m[2], m[3]].filter(Boolean).join('_'));
   }
 
   if (top === 'personnages') {
@@ -231,7 +231,6 @@ const A_REVOIR = [
   [/^vivants\/anya\/anya_expr_(fache|gene|rire|endormi)$/, 'Anya est calme et n\'élève jamais la voix (§ 8) : expression à retirer.'],
   [/^vivants\/anya\//, 'Manteau à passer en or et vert (§ 14), avec les veines lumineuses ; il change avec les saisons.'],
   [/^vivants\/passeur\//, 'Le Passeur est grand (§ 8) : cadre plus haut à prévoir.'],
-  [/^vivants\/cerf-blanc\//, 'Le cerf blanc n\'a que le profil ; il lui faut le trois quarts avant et dos, comme Anya.'],
   [/^personnages\/naufrages\/galet\/galet-naufrage_face_rune$/, 'Un naufragé a oublié son don (§ 6.2) : la rune qui chante revient au maître.'],
   [/^personnages\/naufrages\/sylve\/sylve-naufrage_face_chant$/, 'Un naufragé a oublié son don (§ 6.2) : le chant aux graines revient au maître.'],
   [/^decor\/camp\/epave\/feu_debris$/, 'Le feu de camp est le Foyer au palier I, bâti par le joueur (§ 9, étape 5) : ce feu fait double emploi.'],
