@@ -1021,8 +1021,9 @@ const four = {
     }
   }]
 };
-// Belvédère : kiosque rond sur sa terrasse de pierre, toit hexagonal, banc ; un fanion flotte au sommet, une lanterne
-// éclaire la nuit
+// Belvédère : kiosque rond sur sa terrasse de pierre à marche, dans l'herbe au bout d'une allée ; colonnes blanches,
+// garde-corps à balustres, rosier grimpant ; toit hexagonal à arêtiers, bordure festonnée et épi doré ; un banc, des
+// pots fleuris ; un fanion flotte au sommet, une lanterne éclaire la nuit
 const belvedere = {
   light: () => [0, 0, 29, 15],
   layers: [{
@@ -1039,23 +1040,45 @@ const belvedere = {
       const column = ([a, b]) => T.box(a - 0.018, b - 0.018, a + 0.018, b + 0.018, 5, 32, { top: '#FFFFFF', left: '#F4F0E8', right: '#D6CFC2' });
       const eave = pts.map(([a, b]) => [a * 1.3, b * 1.3, 32]);
       const apex = [0, 0, 50];
-      let roof = '';
+      const [gx, gy] = T.p(0, 0, 0);
+      // l'herbe, l'allée de gravier
+      let out = ell(gx, gy + 1, 34, 14, '#9CC46A', ` stroke="${OUT}" stroke-width="0.5"`) + ell(gx - 4, gy, 24, 9, '#ADD27A')
+        + T.face([[0.26, 0.36, 0], [0.36, 0.26, 0], [0.52, 0.42, 0], [0.42, 0.52, 0]], '#DCD3C2', ` stroke="rgba(60,40,25,.4)" stroke-width="0.4"`)
+        + T.shadow(0, 0, 0.42, 0.18)
+        + T.cyl(0, 0, 0, 5, 0.36, STONE, 'terrasse') + T.box(0.2, 0.2, 0.34, 0.34, 0, 2.4, STONE);
+      // les colonnes du fond, le banc, le garde-corps du fond
+      out += back.map(column).join('')
+        + T.box(-0.12, -0.04, 0.12, 0.04, 5, 9, WOOD) + T.box(-0.12, -0.06, 0.12, -0.04, 9, 14, WOOD)
+        + ln(T.p(-0.1, -0.05, 12), T.p(0.1, -0.05, 12), 'rgba(90,55,25,.4)', 0.5);
+      // les colonnes de devant, leur garde-corps à balustres (ouvert sur la marche), le rosier
+      const rail = (p, q) => { let o = ln(T.p(p[0], p[1], 12), T.p(q[0], q[1], 12), '#F4F0E8', 1.6) + ln(T.p(p[0], p[1], 12.4), T.p(q[0], q[1], 12.4), '#FFFFFF', 0.6); for (let s = 1; s < 5; s++) { const u = p[0] + (q[0] - p[0]) * s / 5, v = p[1] + (q[1] - p[1]) * s / 5; o += ln(T.p(u, v, 5), T.p(u, v, 12), '#D6CFC2', 0.9); } return o; };
+      const fr = pts.map((p, k) => [p, pts[(k + 1) % 6]]).filter(([p, q]) => (p[0] + p[1] + q[0] + q[1]) / 2 >= -0.05);
+      out += fr.filter(([p, q]) => !((p[0] + q[0]) / 2 > 0.1 && (p[1] + q[1]) / 2 > 0.1)).map(([p, q]) => rail(p, q)).join('')
+        + front.map(column).join('');
+      const [rx, ry] = T.p(pts[2][0], pts[2][1], 5);
+      out += `<path d="M${f2(rx)},${f2(ry)} q2,-5 -0.6,-9 q-2,-4 1,-9 q2,-4 -0.4,-8" stroke="#4E8A3A" stroke-width="0.9" fill="none"/>`
+        + [[0.6, -4], [-1.2, -8], [1, -12.6], [-0.6, -17], [0.8, -21]].map(([dx, dy], i) => ell(rx + dx, ry + dy, 1.4, 0.9, '#5FA04A') + (i % 2 ? '' : dot(rx + dx + 0.8, ry + dy - 0.6, 1, '#F07AA0'))).join('');
+      // les pots fleuris au bord de la terrasse
+      out += [[-0.3, 0.16], [0.32, -0.12]].map(([u, v], i) => { const [px, py] = T.p(u, v, 5); return `<path d="M${f2(px - 2.2)},${f2(py - 3)} L${f2(px - 1.6)},${f2(py)} L${f2(px + 1.6)},${f2(py)} L${f2(px + 2.2)},${f2(py - 3)} Z" fill="#D9844E" stroke="${OUT}" stroke-width="0.4"/>` + dot(px, py - 4.4, 2, LEAF) + [-1, 0.6, 1.4].map((o, j) => dot(px + o, py - 5 - (j % 2), 0.8, i ? '#F2C04B' : '#E2574C')).join(''); }).join('');
+      // le toit : pans, arêtiers, bordure festonnée, épi doré
       for (let k = 0; k < 6; k++) {
         const p = eave[k], q = eave[(k + 1) % 6];
         const nu = (p[0] + q[0]) / 2, nv = (p[1] + q[1]) / 2;
         if (nu + nv <= 0) continue;
-        roof += T.face([p, q, apex], nu > nv ? TEAL_ROOF.right : TEAL_ROOF.left, EDGE);
+        out += T.face([p, q, apex], nu > nv ? TEAL_ROOF.right : TEAL_ROOF.left, EDGE);
+        for (let s = 0; s < 4; s++) { const a = T.p(p[0] + (q[0] - p[0]) * s / 4, p[1] + (q[1] - p[1]) * s / 4, 32), b = T.p(p[0] + (q[0] - p[0]) * (s + 1) / 4, p[1] + (q[1] - p[1]) * (s + 1) / 4, 32); out += `<path d="M${f2(a[0])},${f2(a[1])} Q${f2((a[0] + b[0]) / 2)},${f2((a[1] + b[1]) / 2 + 2.2)} ${f2(b[0])},${f2(b[1])}" stroke="${OUT}" stroke-width="0.6" fill="#3E7672"/>`; }
+        out += ln(T.p(p[0], p[1], 32), T.p(0, 0, 50), 'rgba(30,60,58,.6)', 0.9);
       }
       const [tx, ty] = T.p(0, 0, 56);
-      return T.shadow(0, 0, 0.42, 0.18)
-        + T.cyl(0, 0, 0, 5, 0.36, STONE, 'terrasse')
-        + back.map(column).join('')
-        + T.box(-0.12, -0.04, 0.12, 0.04, 5, 9, WOOD) + T.box(-0.12, -0.06, 0.12, -0.04, 9, 14, WOOD)
-        + front.map(column).join('')
-        + roof
+      out += dot(...T.p(0, 0, 51), 1.8, '#E2B347') + dot(...T.p(0, 0, 51.6), 0.6, '#FFF3C4')
         + ln(T.p(0, 0, 50), [tx, ty], DARK_IRON.right, 1)
-        + poly([[tx, ty], [tx + 9, ty + 1.8 + wave(f, n, 1.2)], [tx + 0.4, ty + 4]], '#E2574C')
-        + ln(T.p(0, 0, 32), T.p(0, 0, 30), '#3D3A36', 0.5) + T.box(-0.02, -0.02, 0.02, 0.02, 26, 30, { top: '#5A606A', left: GLASS, right: '#E9C878' });
+        + poly([[tx, ty], [tx + 9, ty + 1.8 + wave(f, n, 1.2)], [tx + 0.4, ty + 4]], '#E2574C');
+      // la lanterne pendue au centre
+      const [lx, ly] = T.p(0, 0, 30);
+      out += ln(T.p(0, 0, 32), [lx, ly - 1.6], '#3D3A36', 0.5)
+        + poly([[lx - 2, ly], [lx + 2, ly], [lx + 1.4, ly - 1.4], [lx - 1.4, ly - 1.4]], DARK_IRON.left, ` stroke="${OUT}" stroke-width="0.4"`)
+        + `<rect x="${f2(lx - 1.6)}" y="${f2(ly)}" width="3.2" height="3.6" rx="0.6" fill="#F6D27A" stroke="${OUT}" stroke-width="0.5"/>` + ell(lx, ly + 1.8, 0.9, 1.1, '#FFF3C4');
+      return out;
     }
   }]
 };
