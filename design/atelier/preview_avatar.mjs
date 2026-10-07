@@ -17,7 +17,7 @@ const A = require('../personnages/avatar.js');
 const { avatar, CHOIX, FORMES, NUANCIERS, NOMS_NUANCIERS, TEINTURES_GAINS, EMPLACEMENTS, ACCESSOIRES, DEFAUT, libelle, verifier } = A;
 const { avatarNaufrage } = require('./avatar_naufrage.js');
 const { assis } = require('./assis.js');
-const { tendre, avecMainsTendues, applaudir, avecApplaudir, avecPecher, avecPiocher, avecCueillir } = require('./gestes.js');
+const { tendre, avecMainsTendues, applaudir, avecApplaudir, avecPecher, avecPiocher, avecCueillir, avecPorter } = require('./gestes.js');
 const { unique, row, sheet, animated, write, shoot } = require('./planche.js');
 
 const LIB = path.join(DIR, 'lib', 'personnages', 'avatar');
@@ -52,11 +52,12 @@ const POSES = [['face_repos', 'front', 'repos', 2], ['avant_marche', 'se', 'marc
   ['face_assis-applaudir', 'front', 'assis-applaudir', 2], ['avant_assis-applaudir', 'se', 'assis-applaudir', 2], ['dos_assis-applaudir', 'ne', 'assis-applaudir', 2],
   ['face_pecher', 'front', 'pecher', 2], ['avant_pecher', 'se', 'pecher', 2], ['dos_pecher', 'ne', 'pecher', 2],
   ['face_piocher', 'front', 'piocher', 2], ['avant_piocher', 'se', 'piocher', 2], ['dos_piocher', 'ne', 'piocher', 2],
-  ['face_cueillir', 'front', 'cueillir', 2], ['avant_cueillir', 'se', 'cueillir', 2], ['dos_cueillir', 'ne', 'cueillir', 2]];
+  ['face_cueillir', 'front', 'cueillir', 2], ['avant_cueillir', 'se', 'cueillir', 2], ['dos_cueillir', 'ne', 'cueillir', 2],
+  ['face_porter', 'front', 'porter', 2], ['avant_porter', 'se', 'porter', 2], ['dos_porter', 'ne', 'porter', 2]];
 // une image d'une pose : celles du kit, assis, et les gestes de la veillée (debout ou assis)
 const dessin = (cc, view, p, n) => p === 'assis' ? assis(cc, view, n) : p === 'assis-tendre' ? assis(cc, view, n, null, tendre)
   : p === 'assis-applaudir' ? assis(cc, view, n, null, applaudir) : p === 'tendre' ? frame(avecMainsTendues(cc), view, 'action', n)
-  : p === 'applaudir' ? frame(avecApplaudir(cc), view, 'action', n) : p === 'pecher' ? frame(avecPecher(cc), view, 'action', n) : p === 'piocher' ? frame(avecPiocher(cc), view, 'action', n) : p === 'cueillir' ? frame(avecCueillir(cc), view, 'action', n) : frame(cc, view, p, n);
+  : p === 'applaudir' ? frame(avecApplaudir(cc), view, 'action', n) : p === 'pecher' ? frame(avecPecher(cc), view, 'action', n) : p === 'piocher' ? frame(avecPiocher(cc), view, 'action', n) : p === 'cueillir' ? frame(avecCueillir(cc), view, 'action', n) : p === 'porter' ? frame(avecPorter(cc), view, 'action', n) : frame(cc, view, p, n);
 let count = 0;
 const options = k => Object.keys(CHOIX[k] === 'formes' ? FORMES[k] : NUANCIERS[CHOIX[k]]);
 const index = {
@@ -67,7 +68,7 @@ const index = {
     'Les nuanciers de peau, d\'yeux, de cheveux et de tissus sont libres dès la création ; la peau et les yeux ne se gagnent jamais. Se gagnent pour toujours, à la boutique (écus) ou dans les coffres : les accessoires « boutique » ou « coffre » et les teintures rares. Tout est cosmétique.',
     'Raretés : celles des coffres du jeu (commun, rare, epique, legendaire). La source d\'un accessoire : gratuit (dès la création), boutique ou coffre. garde : ce que la mer laisse au naufragé.',
     'auHasard(graine, { gratuit }) tire un avatar harmonieux (le bouton « Au hasard », et plus tard les visiteurs). verifier(choix) refuse tout choix inconnu.',
-    'Poses : repos (2), marche (4), salut (2), les gestes du tutoriel : ramasser (trois quarts avant), grelotter et lire le Grimoire (face), 2 images chacun, et assis à la veillée (face, trois quarts avant, dos ; 2 images ; le siège n\'est pas dessiné, son dessus est à y = 53,6 du cadre), et les mains tendues vers le feu, debout ou assis (mains-tendues, assis-mains-tendues ; 3 vues, 2 images), et applaudir en riant, debout ou assis (applaudir, assis-applaudir ; 3 vues, 2 images : mains écartées, puis le claquement), et pêcher (pecher ; debout, 3 vues, 2 images : le bouchon danse), et piocher (piocher ; debout, 3 vues, 2 images : la pioche levée, puis le coup sur la pierre), et cueillir (cueillir ; debout, 3 vues, 2 images : un fruit cueilli en haut, puis déposé dans le panier). Le premier exemple a aussi les 8 expressions.',
+    'Poses : repos (2), marche (4), salut (2), les gestes du tutoriel : ramasser (trois quarts avant), grelotter et lire le Grimoire (face), 2 images chacun, et assis à la veillée (face, trois quarts avant, dos ; 2 images ; le siège n\'est pas dessiné, son dessus est à y = 53,6 du cadre), et les mains tendues vers le feu, debout ou assis (mains-tendues, assis-mains-tendues ; 3 vues, 2 images), et applaudir en riant, debout ou assis (applaudir, assis-applaudir ; 3 vues, 2 images : mains écartées, puis le claquement), et pêcher (pecher ; debout, 3 vues, 2 images : le bouchon danse), et piocher (piocher ; debout, 3 vues, 2 images : la pioche levée, puis le coup sur la pierre), et cueillir (cueillir ; debout, 3 vues, 2 images : un fruit cueilli en haut, puis déposé dans le panier), et porter (porter ; debout, 3 vues, 2 images : une caisse sur l\'épaule). Le premier exemple a aussi les 8 expressions.',
     'L\'avatar est naufragé du naufrage jusqu\'au Campement (fin du tutoriel), où Cannelle recoud ses habits.'
   ],
   choix: Object.fromEntries(Object.keys(CHOIX).map(k => [k, { dans: CHOIX[k], options: options(k) }])),
@@ -123,7 +124,7 @@ EXEMPLES.forEach((o, i) => {
     [grand(unique(assis(c, 'front', 0)), G), 'assis'], [grand(unique(`<g transform="translate(48 0) scale(-1 1)">${assis(c, 'se', 0)}</g>`), G), ''],
     [grand(unique(dessin(c, 'front', 'tendre', 0)), G), 'mains tendues'], [grand(unique(`<g transform="translate(48 0) scale(-1 1)">${dessin(c, 'se', 'assis-tendre', 0)}</g>`), G), ''],
     [grand(unique(dessin(c, 'front', 'applaudir', 1)), G), 'applaudir'], [grand(unique(`<g transform="translate(48 0) scale(-1 1)">${dessin(c, 'se', 'assis-applaudir', 1)}</g>`), G), ''],
-    [grand(unique(`<g transform="translate(48 0) scale(-1 1)">${dessin(c, 'se', 'pecher', 0)}</g>`), G), 'pêcher'], [grand(unique(dessin(c, 'front', 'piocher', 1)), G), 'piocher'], [grand(unique(dessin(c, 'front', 'cueillir', 0)), G), 'cueillir'],
+    [grand(unique(`<g transform="translate(48 0) scale(-1 1)">${dessin(c, 'se', 'pecher', 0)}</g>`), G), 'pêcher'], [grand(unique(dessin(c, 'front', 'piocher', 1)), G), 'piocher'], [grand(unique(dessin(c, 'front', 'cueillir', 0)), G), 'cueillir'], [grand(unique(dessin(c, 'ne', 'porter', 0)), G), 'porter'],
     [g(n, 'front', 'repos', 0, G), 'naufragé'], [g(n, 'se', 'marche', 1, G), '']
   ]));
   const walk = cc => [0, 1, 2, 3].map(f => grand(unique(frame(cc, 'se', 'marche', f)), 2.4));
