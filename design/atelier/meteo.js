@@ -201,7 +201,7 @@ const ICONS = {
   brume: () => sun(24, 17, 7, false) + tk('M7,28 H33 M13,34 H41 M7,40 H29', 2.4, '#C6CDD6'),
   pluie: () => cloudIcon(24, 19, 1.25, '#E6EAF0', '#BFC6D0') + tk('M15,33 l-2,6 M24,33 l-2,6 M33,33 l-2,6', 1.6, '#5AAED7'),
   orage: () => cloudIcon(24, 18, 1.25, '#9AA2B2', '#7D8696') + P('M25,26 L18,37 H24 L20,46 L31,33 H25 L29,26 Z', '#F2C04B', 1.2),
-  arc_en_ciel: () => ['#E2463A', '#F2C04B', '#7EC45B', '#5AAED7', '#9C6FD0'].map((c, i) => line(`M${6 + i * 2.6},36 A${18 - i * 2.6},${18 - i * 2.6} 0 0 1 ${42 - i * 2.6},36`, 2.6, c)).join('') + cloudIcon(9, 37, 0.55) + cloudIcon(39, 37, 0.55),
+  arc_en_ciel: () => ['#E2463A', '#F2C04B', '#7EC45B', '#5AAED7', '#9C6FD0'].map((c, i) => line(`M${6 + i * 2.6},36 A${18 - i * 2.6},${18 - i * 2.6} 0 0 1 ${42 - i * 2.6},36`, 2.6, c)).join('') + cloudIcon(10.4, 37, 0.55) + cloudIcon(37.2, 37, 0.55),
   // Moments
   nuit: () => panel('ic-nuit', '#2B3566', moon(22, 22, 10) + twinkle(36, 12, 3.4) + twinkle(36, 32, 2.4) + twinkle(10, 38, 2)),
   aube: () => panel('ic-aube', '#B9A6D2', sun(24, 34, 8) + horizon(35, '#6E9F72') + twinkle(39, 10, 2.4)),

@@ -391,7 +391,7 @@ M.voilier = { frame: BUILDING_BOX, n: 1, variants: Object.keys(SAILS), draw: (_,
 // Bouteille échouée qui flotte : un vrai goulot, verre vert translucide où l'on voit le message roulé, son ruban rouge
 // et son cachet ; l'eau monte dans le bas du verre, des ronds autour ; image 2 : penchée par la vague, un éclat
 M.bouteille = { frame: [-16, -28, 32, 32], n: 2, draw: f => {
-  const a = f ? -14 : -6, id = `bouteille-verre-${f}`, rx = f ? 13.4 : 12.4;
+  const a = f ? -14 : -6, id = `bouteille-verre-${f}`, rx = f ? 12.6 : 11.8; // l'écume reste dans le cadre
   const body = 'M-9,-5 L4,-5 Q7.4,-5 8.6,-2.1 L12,-2.1 L12,2.1 L8.6,2.1 Q7.4,5 4,5 L-9,5 Q-12.4,5 -12.4,0 Q-12.4,-5 -9,-5 Z';
   return E(0, 0.8, 14, 2.6, 'rgba(30,60,80,.22)', 0)
     + line(`M${-rx},0 A${rx},2.4 0 0 1 ${rx},0`, 0.7, 'rgba(255,255,255,.45)')
