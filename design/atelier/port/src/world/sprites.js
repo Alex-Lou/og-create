@@ -319,13 +319,39 @@ function pier() {
 // Chantier, en trois phases qui suivent l'avancée du joueur :
 // 0 = piquets et cordeau (plan pas encore trouvé), 1 = planches et panneau (plan trouvé), 2 = échafaudage (prêt à bâtir)
 function worksite(stage) {
+  const corners = [[-0.85, -0.85], [0.85, -0.85], [0.85, 0.85], [-0.85, 0.85]];
+  // Piquets taillés en pointe, fanion rouge noué en haut
   let stakes = '';
-  for (const [u, v] of [[-0.85, -0.85], [0.85, -0.85], [-0.85, 0.85], [0.85, 0.85]]) {
-    stakes += box(u - 0.035, v - 0.035, u + 0.035, v + 0.035, 0, 14, WOOD);
+  for (const [u, v] of corners) {
+    const [tx, ty] = P(u, v, 14);
+    stakes += box(u - 0.035, v - 0.035, u + 0.035, v + 0.035, 0, 13, WOOD)
+      + `<path d="M${f2(tx - 2.3)},${f2(ty + 1)} L${f2(tx)},${f2(ty - 3)} L${f2(tx + 2.3)},${f2(ty + 1)} Z" fill="${WOOD.top}" stroke="#3C2819" stroke-width="0.6" stroke-linejoin="round"/>`
+      + `<path d="M${f2(tx + 0.6)},${f2(ty + 3)} l6,1.6 l-6,2 Z" fill="#E2574C" stroke="#3C2819" stroke-width="0.5" stroke-linejoin="round"/>`;
   }
-  const line = [[-0.85, -0.85], [0.85, -0.85], [0.85, 0.85], [-0.85, 0.85], [-0.85, -0.85]].map(([u, v]) => P(u, v, 11).join(',')).join(' ');
-  // Terre retournée au centre
-  const dug = disc(0, 0, 0, 0.62, 'rgba(150,105,60,.35)') + pebble(0.3, -0.2, 2.6) + pebble(-0.25, 0.3, 2.2);
+  // Corde qui pend d'un piquet à l'autre
+  const rope = corners.map((c, k) => {
+    const d = corners[(k + 1) % 4];
+    const a = P(c[0], c[1], 11), b = P(d[0], d[1], 11), m = P((c[0] + d[0]) / 2, (c[1] + d[1]) / 2, 7.5);
+    return `M${f2(a[0])},${f2(a[1])} Q${f2(2 * m[0] - (a[0] + b[0]) / 2)},${f2(2 * m[1] - (a[1] + b[1]) / 2)} ${f2(b[0])},${f2(b[1])}`;
+  }).join(' ');
+  // Terre retournée : tache irrégulière, mottes, cailloux ; tas de terre et pelle plantée devant à gauche
+  const blob = Array.from({ length: 28 }, (_, k) => {
+    const t = (k / 28) * Math.PI * 2, r = 0.62 * (1 + 0.07 * Math.sin(t * 3 + 0.6) + 0.04 * Math.sin(t * 5));
+    return P(Math.cos(t) * r, Math.sin(t) * r, 0).map(f2).join(',');
+  }).join(' ');
+  const clod = (u, v, r, c) => { const [x, y] = P(u, v, 0); return `<ellipse cx="${f2(x)}" cy="${f2(y)}" rx="${r}" ry="${f2(r * 0.6)}" fill="${c}"/>`; };
+  const stone = (u, v, r) => { const [x, y] = P(u, v, 0); return `<ellipse cx="${f2(x)}" cy="${f2(y)}" rx="${r}" ry="${f2(r * 0.66)}" fill="${STONE.right}" stroke="#3C2819" stroke-width="0.6"/><ellipse cx="${f2(x - r * 0.25)}" cy="${f2(y - r * 0.25)}" rx="${f2(r * 0.5)}" ry="${f2(r * 0.3)}" fill="${STONE.top}"/>`; };
+  const [hx, hy] = P(-0.42, 0.55, 0);
+  const dug = `<polygon points="${blob}" fill="rgba(150,105,60,.42)"/>`
+    + [[-0.3, -0.2, 4.4], [0.2, 0.25, 3.6], [0.35, -0.3, 3], [-0.15, 0.38, 2.6], [0.05, -0.45, 2.8]].map(([u, v, r], k) => clod(u, v, r, k % 2 ? '#8B5A34' : '#A87445')).join('')
+    + stone(0.3, -0.2, 2.6) + stone(-0.25, 0.3, 2.2) + stone(0.45, 0.1, 1.8);
+  const heap = `<path d="M${f2(hx - 13)},${f2(hy + 2)} Q${f2(hx - 9)},${f2(hy - 8)} ${f2(hx)},${f2(hy - 9)} Q${f2(hx + 9)},${f2(hy - 8)} ${f2(hx + 13)},${f2(hy + 2)} Q${f2(hx)},${f2(hy + 6)} ${f2(hx - 13)},${f2(hy + 2)} Z" fill="#A87445" stroke="#3C2819" stroke-width="0.7"/>`
+    + `<path d="M${f2(hx - 6)},${f2(hy - 5)} q4,-3 8,-1" stroke="#C99A62" stroke-width="1.2" fill="none" stroke-linecap="round"/>`
+    + clod(-0.36, 0.66, 2, '#8B5A34')
+    // Pelle plantée dans le tas : lame grise, manche et poignée
+    + `<path d="M${f2(hx + 2)},${f2(hy - 4)} l4.2,0.8 l-0.6,5.6 q-2,1.6 -4.2,-0.6 Z" fill="#9AA6B2" stroke="#3C2819" stroke-width="0.6" stroke-linejoin="round"/>`
+    + `<line x1="${f2(hx + 4)}" y1="${f2(hy - 3.6)}" x2="${f2(hx + 8)}" y2="${f2(hy - 21)}" stroke="#3C2819" stroke-width="2.6" stroke-linecap="round"/><line x1="${f2(hx + 4)}" y1="${f2(hy - 3.6)}" x2="${f2(hx + 8)}" y2="${f2(hy - 21)}" stroke="${WOOD.left}" stroke-width="1.4" stroke-linecap="round"/>`
+    + `<path d="M${f2(hx + 5.6)},${f2(hy - 22)} h5" stroke="#3C2819" stroke-width="2.4" stroke-linecap="round"/><path d="M${f2(hx + 5.6)},${f2(hy - 22)} h5" stroke="${WOOD.top}" stroke-width="1.2" stroke-linecap="round"/>`;
   let body = shadow(0, 0, 1.1, 0.1) + dug;
   if (stage >= 2) {
     // Échafaudage : quatre montants, un plancher, une échelle appuyée sur la face avant
@@ -337,16 +363,19 @@ function worksite(stage) {
       + [0, 1, 2, 3].map(k => `<line x1="${P(-0.3, -0.04, 4 + k * 6)[0]}" y1="${P(-0.3, -0.04, 4 + k * 6)[1]}" x2="${P(-0.12, -0.04, 4 + k * 6)[0]}" y2="${P(-0.12, -0.04, 4 + k * 6)[1]}" stroke="${WOOD.left}" stroke-width="1.6"/>`).join('')
       + `<line x1="${P(-0.3, -0.04, 0)[0]}" y1="${P(-0.3, -0.04, 0)[1]}" x2="${P(-0.3, -0.04, 27)[0]}" y2="${P(-0.3, -0.04, 27)[1]}" stroke="${WOOD.right}" stroke-width="1.8"/>`
       + `<line x1="${P(-0.12, -0.04, 0)[0]}" y1="${P(-0.12, -0.04, 0)[1]}" x2="${P(-0.12, -0.04, 27)[0]}" y2="${P(-0.12, -0.04, 27)[1]}" stroke="${WOOD.right}" stroke-width="1.8"/>`
-      // Seau de mortier au pied
-      + cylinder(0.32, -0.45, 0, 7, 0.09, { top: '#CFC6B4', left: '#9AA6B2', right: '#6F7A85' }, 'mortarg');
+      // Seau de mortier au pied, sa truelle
+      + cylinder(0.32, -0.45, 0, 7, 0.09, { top: '#CFC6B4', left: '#9AA6B2', right: '#6F7A85' }, 'mortarg')
+      + (() => { const [mx, my] = P(0.32, -0.45, 7); return `<path d="M${f2(mx - 1)},${f2(my)} l3.4,-6" stroke="${WOOD.right}" stroke-width="1.4" stroke-linecap="round"/><path d="M${f2(mx - 3)},${f2(my + 0.6)} l4,-1.4 l1,1.6 Z" fill="#7C8A96" stroke="#3C2819" stroke-width="0.5"/>`; })();
   }
-  body += `<polyline points="${line}" stroke="#F2E4C0" stroke-width="1" fill="none" stroke-dasharray="3 2"/>` + stakes;
+  body += `<path d="${rope}" stroke="#3C2819" stroke-width="1.7" fill="none" opacity=".55"/><path d="${rope}" stroke="#F2E4C0" stroke-width="0.9" fill="none"/>` + stakes + heap;
   if (stage >= 1) {
-    // Pile de planches et panneau du chantier
+    // Pile de planches et panneau du chantier (une maisonnette y est dessinée)
+    const [sx, sy] = P(0.48, 0.47, 19);
     body += box(-0.4, 0.15, 0.2, 0.32, 0, 3, WOOD) + box(-0.36, 0.17, 0.24, 0.34, 3, 6, WOOD) + box(-0.42, 0.14, 0.18, 0.31, 6, 9, WOOD)
       + box(0.45, 0.42, 0.5, 0.47, 0, 18, WOOD_DARK)
       + face([[0.3, 0.47, 14], [0.66, 0.47, 14], [0.66, 0.47, 24], [0.3, 0.47, 24]], '#F3D27A', EDGE)
-      + face([[0.4, 0.47, 17], [0.56, 0.47, 17], [0.56, 0.47, 21], [0.4, 0.47, 21]], INK, ' opacity=".55"');
+      + `<path d="M${f2(sx - 4)},${f2(sy + 3.6)} L${f2(sx - 4)},${f2(sy - 0.4)} L${f2(sx)},${f2(sy - 3.6)} L${f2(sx + 4)},${f2(sy - 0.4)} L${f2(sx + 4)},${f2(sy + 3.6)} Z" fill="none" stroke="${INK}" stroke-width="0.9" stroke-linejoin="round" opacity=".75"/>`
+      + `<rect x="${f2(sx - 1)}" y="${f2(sy + 0.8)}" width="2" height="2.8" fill="${INK}" opacity=".75"/>`;
   }
   if (stage >= 2) {
     // Pierres de taille prêtes
