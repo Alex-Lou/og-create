@@ -1,6 +1,7 @@
 // Lot M (suite) : le bâtiment embrumé, l'icône « Réparer », la cage aux poules et l'œuf, le crabe de la Grève, les signes
-// d'Anya (lot_m.js). SVG dans lib/decor/embrume/, lib/decor/camp/poules/, lib/animaux/mer/crabe/, lib/decor/signes/,
-// chacun avec son index ; cadres ajustés (fitFrame, l'ancre ne bouge pas) ; une planche, une page animée.
+// d'Anya, l'éclat du souvenir retrouvé et les sept sceaux (lot_m.js). SVG dans lib/decor/embrume/, lib/decor/camp/poules/,
+// lib/animaux/mer/crabe/, lib/decor/signes/, lib/decor/souvenir/, chacun avec son index ; cadres ajustés (fitFrame,
+// l'ancre ne bouge pas) ; une planche, une page animée.
 import fs from 'fs';
 import path from 'path';
 import { createRequire } from 'module';
@@ -11,6 +12,9 @@ const require = createRequire(import.meta.url);
 const DIR = path.dirname(fileURLToPath(import.meta.url));
 const { unique, row, sheet, animated, write, shoot } = require('./planche.js');
 const M = require('./lot_m.js');
+const { frame } = require('./troupe.js');
+const { sleepFrame } = require('./dormeurs.js');
+const { CAST } = require('./naufrages.js');
 const LIB = path.join(DIR, 'lib');
 const PNG = path.join(DIR, 'planches');
 const BIB = path.join(DIR, '..', 'bibliotheque', 'svg');
@@ -97,7 +101,43 @@ write(path.join(LIB, 'decor/signes/signes.json'), JSON.stringify(signes, null, 1
 cells.push(row('Signes d\'Anya', [...fl.frames.map((b, i) => [svgOf(fl.frame, unique(b), 2.6), `fleurs ${i + 1}`]), ...lu.frames.map((b, i) => [`<div style="background:#2E3A50;border-radius:6px">${svgOf(lu.frame, unique(b), 2.6)}</div>`, `lucioles ${i + 1}`])]));
 anim.push(box('Les fleurs s\'ouvrent', fl, [600, 300, 300, 1500], 2.6), box('Les lucioles se rassemblent', lu, [220], 2.6));
 
-write(path.join(DIR, 'lot_m_apercu.html'), animated('Lot M : la nuit et le tutoriel', 'Le bâtiment embrumé puis réparé, le petit nuage, la cage aux poules, le crabe, les signes d\'Anya.', [['Lot M', anim]]));
-await shoot([[path.join(PNG, 'lot_m.png'), sheet('Lot M : le bâtiment embrumé, la cage aux poules, le crabe, les signes d\'Anya', 'Le jeu grise le bâtiment embrumé et pose par-dessus le calque de son emprise ; la réparation (ou Anya) le guérit. Échelle du jeu × 1,25.', cells), 1500]]);
+// ---- 5. l'éclat du souvenir retrouvé, les sept sceaux ----
+const souvenir = { _lisez_moi: [
+  'Le souvenir retrouvé (HISTOIRE.md § 14) : un éclat doré part du Grimoire vers le naufragé ; à l\'arrivée, une gerbe de lumière l\'enveloppe ; son sceau s\'allume au-dessus de sa tête ; il se lève, outil en main.',
+  'eclat : 4 images en boucle (~90 ms), ancre au centre de l\'éclat ; le jeu le fait glisser du Grimoire jusqu\'à la poitrine du naufragé.',
+  'arrivee : 5 images, une fois (~120, 160, 200, 220, 260 ms), ancre aux pieds du naufragé, posée par-dessus lui ; le jeu remplace le naufragé (pose endormi) par le maître (pose « action », l\'outil en main) sous l\'éclair de l\'image 1.',
+  'sceaux : un par chapitre, ancre au centre ; éteint (1 image), allumé (2 images en boucle, ~500 ms), posé au-dessus de la tête du maître (centre ~8 au-dessus du haut de sa tête). Sigles de src/book/grimoire.js.'
+], souvenir: {} };
+const ec = await groupe('decor/souvenir', 'eclat', [-14, -14, 28, 28], [0, 1, 2, 3].map(f => M.eclat(f)));
+const ar = await groupe('decor/souvenir', 'arrivee', [-24, -72, 48, 76], [0, 1, 2, 3, 4].map(f => M.arrivee(f)));
+souvenir.souvenir.eclat = { nom: 'L\'éclat doré du souvenir (du Grimoire au naufragé)', cadre: ec.frame, ms_par_image: 90, fichiers: ec.files };
+souvenir.souvenir.arrivee = { nom: 'La gerbe de lumière sur le naufragé', cadre: ar.frame, ms_par_image: [120, 160, 200, 220, 260], fichiers: ar.files };
+const sceauxG = [];
+for (const [i, [cle, nom]] of M.SCEAUX.entries()) {
+  const off = await groupe('decor/souvenir', `sceau_${cle}_eteint`, [-15, -15, 30, 30], [M.sceau(i, false)]);
+  const on = await groupe('decor/souvenir', `sceau_${cle}_allume`, [-15, -15, 30, 30], [0, 1].map(f => M.sceau(i, true, f)));
+  souvenir.souvenir[`sceau_${cle}`] = { nom: `Sceau de ${nom}`, cadre: on.frame, ms_par_image: 500, fichiers: { eteint: off.files, allume: on.files } };
+  sceauxG.push({ nom, off, on });
+}
+write(path.join(LIB, 'decor/souvenir/souvenir.json'), JSON.stringify(souvenir, null, 1));
+{
+  // la planche : l'éclat ; la gerbe posée sur Ondin ; les sceaux éteints puis allumés ; la séquence complète
+  const O = CAST.find(c => c.base.name === 'Ondin');
+  const at = (b, x, y) => `<g transform="translate(${x} ${y})">${b}</g>`;
+  const VB = [0, -16, 48, 80];
+  const seq = [sleepFrame(O.nau, 0) + at(ec.frames[1], 6, 4), sleepFrame(O.nau, 1) + at(ar.frames[0], 24, 62),
+    frame(O.base, 'front', 'action', 0) + at(ar.frames[2], 24, 62) + at(sceauxG[2].on.frames[0], 24, -2), frame(O.base, 'front', 'action', 1) + at(sceauxG[2].on.frames[1], 24, -2)];
+  cells.push(row('Souvenir : l\'éclat', ec.frames.map((b, i) => [svgOf(ec.frame, unique(b), 3), `éclat ${i + 1}`])));
+  cells.push(row('La gerbe (sur Ondin)', ar.frames.map((b, i) => [svgOf(VB, unique(frame(i < 2 ? O.nau : O.base, 'front', i < 2 ? 'repos' : 'action', 0) + at(b, 24, 62)), 2.4), `arrivée ${i + 1}`])));
+  cells.push(row('Les sept sceaux éteints', sceauxG.map(g => [svgOf(g.off.frame, unique(g.off.frames[0]), 2.6), g.nom])));
+  cells.push(row('Les sept sceaux allumés', sceauxG.map(g => [svgOf(g.on.frame, unique(g.on.frames[0]), 2.6), g.nom])));
+  cells.push(row('La séquence', seq.map((b, i) => [svgOf(VB, unique(b), 2.4), ['l\'éclat arrive', 'la gerbe', 'il se lève', 'outil en main, sceau allumé'][i]])));
+  anim.push(box('L\'éclat du souvenir', ec, [90], 3));
+  anim.push({ label: 'Le souvenir d\'Ondin revient', frames: [sleepFrame(O.nau, 0), sleepFrame(O.nau, 1), ...ar.frames.map((b, i) => (i < 1 ? sleepFrame(O.nau, 0) : frame(O.base, 'front', 'action', 0)) + at(b, 24, 62) + (i >= 2 ? at(sceauxG[2].on.frames[i % 2], 24, -2) : '')), frame(O.base, 'front', 'action', 1) + at(sceauxG[2].on.frames[1], 24, -2)].map(b => svgOf(VB, unique(b), 3)), timings: [700, 700, 120, 160, 200, 220, 260, 1400], w: 144, h: 240 });
+  anim.push(box('Le sceau de la Lune s\'allume', sceauxG[2].on, [500], 3));
+}
+
+write(path.join(DIR, 'lot_m_apercu.html'), animated('Lot M : la nuit et le tutoriel', 'Le bâtiment embrumé puis réparé, le petit nuage, la cage aux poules, le crabe, les signes d\'Anya, l\'éclat du souvenir retrouvé.', [['Lot M', anim]]));
+await shoot([[path.join(PNG, 'lot_m.png'), sheet('Lot M : le bâtiment embrumé, la cage aux poules, le crabe, les signes d\'Anya, l\'éclat du souvenir', 'Le jeu grise le bâtiment embrumé et pose par-dessus le calque de son emprise ; la réparation (ou Anya) le guérit. Échelle du jeu × 1,25.', cells), 1500]]);
 await closeFit();
 console.log('ok', count, 'SVG');

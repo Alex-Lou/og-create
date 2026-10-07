@@ -215,4 +215,76 @@ function lucioles(f) {
   return s;
 }
 
-module.exports = { embrume, guerison, nuage, reparerIcone, cage, oeuf, oeufIcone, crabe, fleurs, lucioles };
+// ---- 5. L'éclat du souvenir retrouvé (HISTOIRE.md § 14) : un éclat doré part du Grimoire vers le naufragé ; à
+// l'arrivée, une gerbe de lumière l'enveloppe (le jeu le change en maître sous l'éclair) ; son sceau s'allume au-dessus
+// de sa tête ; il se lève, outil en main (la pose « action » du maître). Ancre (0, 0) : le centre de l'éclat, les pieds
+// du naufragé, le centre du sceau.
+const OR = { clair: '#FFF6C8', vif: '#F6D25A', base: '#E8B23A', ambre: '#E8A93A', trait: '#9A6A1A' };
+// étoile à n branches (rayons r1 et r2), tournée de rot degrés
+function etoileD(x, y, r1, r2_, n, rot) {
+  const pts = [];
+  for (let i = 0; i < n * 2; i++) { const a = (rot + i * 180 / n) * Math.PI / 180, r = i % 2 ? r2_ : r1; pts.push(`${r2(x + Math.cos(a) * r)},${r2(y + Math.sin(a) * r)}`); }
+  return `M${pts.join(' L')} Z`;
+}
+// L'éclat qui voyage du Grimoire au naufragé : une étoile dorée à quatre branches qui tourne et pulse, une plus petite
+// croisée dessus, un cœur blanc, trois étincelles en orbite (4 images en boucle ; le jeu le fait glisser)
+function eclat(f) {
+  const k = [1, 1.12, 1, 0.9][f % 4], rot = f * 11.25;
+  let s = halo(0, 0, 11 * k, '255,226,130', 0.42);
+  s += P(etoileD(0, 0, 8 * k, 2.3 * k, 4, rot - 90), OR.vif, 0.9).replace(`stroke="${OUT}"`, `stroke="${OR.trait}"`);
+  s += P(etoileD(0, 0, 4.8 * k, 1.6 * k, 4, rot - 45), OR.clair, 0);
+  s += E(0, 0, 1.9 * k, 1.9 * k, '#FFFFFF', 0);
+  for (let i = 0; i < 3; i++) { const a = f * Math.PI / 4 + i * Math.PI * 2 / 3; s += etincelle(Math.cos(a) * 9, Math.sin(a) * 5.4, 0.75); }
+  return s;
+}
+// La gerbe d'arrivée, posée sur le naufragé (pieds en (0, 0), un naufragé fait ~60 de haut) : 5 images, une fois.
+// 0 : l'éclat frappe la poitrine ; 1-2 : une colonne de lumière monte, un anneau s'étale au sol ; 3-4 : elle s'éteint en
+// étincelles qui montent
+function arrivee(f) {
+  let s = '';
+  const col = (w, a, top) => `<path d="M${-w},0 L${-w},${top + w} Q${-w},${top} 0,${top} Q${w},${top} ${w},${top + w} L${w},0 Z" fill="rgba(255,230,140,${a})"/>`;
+  if (f === 0) {
+    s += halo(0, -30, 24, '255,226,130', 0.5);
+    s += P(etoileD(0, -30, 15, 3.4, 4, -90), OR.vif, 0.9).replace(`stroke="${OUT}"`, `stroke="${OR.trait}"`) + P(etoileD(0, -30, 9, 2.4, 4, -45), OR.clair, 0) + E(0, -30, 3.2, 3.2, '#FFFFFF', 0);
+  }
+  if (f === 1 || f === 2) {
+    const big = f === 2;
+    s += `<ellipse cx="0" cy="0" rx="${big ? 22 : 15}" ry="${big ? 6.8 : 4.8}" fill="none" stroke="${OR.vif}" stroke-width="${big ? 1.2 : 1.8}" opacity="${big ? 0.55 : 0.9}"/>`;
+    s += col(big ? 13 : 10, big ? 0.32 : 0.26, -66) + col(big ? 7 : 5, big ? 0.38 : 0.3, -62);
+    s += halo(0, -30, big ? 20 : 16, '255,236,160', big ? 0.32 : 0.42);
+  }
+  if (f === 3) s += col(11, 0.14, -66) + col(5, 0.16, -60);
+  // étincelles qui montent le long de la colonne
+  const SP = [[-9, -14], [8, -22], [-6, -36], [10, -44], [-11, -52], [4, -60], [-2, -68], [12, -64]];
+  const from = [0, 0, 2, 4, 5][f], to = [3, 5, 7, 8, 8][f];
+  SP.slice(from, to).forEach(([x, y], i) => { s += etincelle(x, y - f * 2, [1.3, 1.1, 0.9][i % 3] * (f === 4 ? 0.7 : 1)); });
+  return s;
+}
+// Les sept sceaux du Grimoire (sigles de src/book/grimoire.js, viewBox 24 × 24 ; un par chapitre, chacun a son maître)
+const SCEAUX = [
+  ['mercure', 'Mercure ☿ (Aster)', 'M8 2.5a4 4 0 0 0 8 0M16 9.5a4 4 0 1 1-8 0a4 4 0 1 1 8 0M12 13.5v8M8.8 18h6.4'],
+  ['saturne', 'Saturne ♄ (Galet)', 'M9 2.5v12M5.8 5.6h6.4M9 11.5c1.6-2.8 6.6-2.6 6.6 1.6c0 2.6-3 3.6-3 6.2c0 1.2.8 2.2 2.2 2.2'],
+  ['lune', 'Lune ☾ (Ondin)', 'M15.5 3.2a8.8 8.8 0 1 0 0 17.6a7.2 7.2 0 1 1 0-17.6z'],
+  ['venus', 'Vénus ♀ (Sylve et Mélisse)', 'M17 8.5a5 5 0 1 1-10 0a5 5 0 1 1 10 0M12 13.5v8.5M8.5 18.2h7'],
+  ['mars', 'Mars ♂ (Cannelle)', 'M14.5 14.5a5 5 0 1 1-10 0a5 5 0 1 1 10 0M13.2 10.8L20 4M14.6 4H20v5.4'],
+  ['jupiter', 'Jupiter ♃ (Rivet)', 'M5.5 7c1.4-2.6 5.6-3 6.6-.4c1 2.6-2 6.4-6.4 10.4h13.6M16 11.5v10'],
+  ['soleil', 'Soleil ☉ (Brume)', 'M20 12a8 8 0 1 1-16 0a8 8 0 1 1 16 0M13.7 12a1.7 1.7 0 1 1-3.4 0a1.7 1.7 0 1 1 3.4 0']
+];
+// Un sceau : médaillon rond (éteint : bronze terni ; allumé : ambre, le sigle luit, un halo qui respire en 2 images)
+function sceau(i, allume, f = 0) {
+  const d = SCEAUX[i][2], k = 0.6;
+  const sig = (color, w, extra = '') => `<path d="${d}" transform="translate(${-12 * k} ${-12 * k}) scale(${k})" fill="none" stroke="${color}" stroke-width="${r2(w / k)}" stroke-linecap="round" stroke-linejoin="round"${extra}/>`;
+  let s = '';
+  if (allume) {
+    s += halo(0, 0, f ? 15 : 13, '255,220,120', f ? 0.48 : 0.4);
+    s += E(0, 0, 9.6, 9.6, OR.ambre) + E(-0.8, -0.9, 7.4, 7.4, OR.vif, 0) + `<circle cx="0" cy="0" r="7.8" fill="none" stroke="${OR.trait}" stroke-width="0.6"/>`;
+    s += sig('rgb(255,248,210)', 3.4, ' opacity="0.6"') + sig('#FFFBEA', 1.5);
+    s += f ? etincelle(8.6, -8.4, 1) + etincelle(-9.4, 6.4, 0.7) : etincelle(-8.2, -8.8, 0.8);
+  } else {
+    s += E(0, 0, 9.6, 9.6, '#B2A282') + E(-0.8, -0.9, 7.4, 7.4, '#C6B898', 0) + `<circle cx="0" cy="0" r="7.8" fill="none" stroke="#8E7E60" stroke-width="0.6"/>`;
+    s += sig('#7A6A4E', 1.5);
+  }
+  return s;
+}
+
+module.exports = { embrume, guerison, nuage, reparerIcone, cage, oeuf, oeufIcone, crabe, fleurs, lucioles, eclat, arrivee, SCEAUX, sceau };
