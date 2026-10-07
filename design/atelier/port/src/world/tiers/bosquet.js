@@ -1,7 +1,7 @@
 // Bosquet, paliers III à VII : Clairière du bûcheron, Chênaie, Scierie, Exploitation forestière, Forêt enchantée.
 // Places laissées libres pour la boutique : billot à l'avant gauche, chevalet de sciage au coin droit, nichoir sur le
 // flanc droit, oiseaux devant lui, charrette à l'avant (× 1.5 dès le palier IV).
-import { LEAVES, PINE, FOLIAGE, BUILDING_BOX, roundTree, seasonDots, roofOf, touffe, treeTrunk, backLeaves, treeId } from '../palette.js';
+import { LEAVES, PINE, FOLIAGE, BUILDING_BOX, roundTree, seasonDots, roofOf, roofTexture, shingles, touffe, treeTrunk, backLeaves, treeId } from '../palette.js';
 import { sprite, shadow, mixHex } from '../iso.js';
 import {
   big, bigShadow, P, box, face, gable, f2, ln, dot, ell, OUT, WOOD, WOOD_DARK, STONE, GOLD,
@@ -54,7 +54,8 @@ function logCabin(u0, v0, u1, v1, h, roofH, skin) {
     + face([[u0 + (u1 - u0) * 0.35, v1, 0], [u0 + (u1 - u0) * 0.6, v1, 0], [u0 + (u1 - u0) * 0.6, v1, h * 0.75], [u0 + (u1 - u0) * 0.35, v1, h * 0.75]], '#4A2E1A')
     + face([[u1, v0 + (v1 - v0) * 0.3, h * 0.35], [u1, v0 + (v1 - v0) * 0.62, h * 0.35], [u1, v0 + (v1 - v0) * 0.62, h * 0.75], [u1, v0 + (v1 - v0) * 0.3, h * 0.75]], '#FFE6A3', ' stroke="#7E5230" stroke-width="1"')
     + chimney(u0 + 0.08, v0 + 0.08, h, h + roofH + 6, 0.06, STONE)
-    + gable(u0, v0, u1, v1, h, roofH, { front: roof.front, back: roof.back, gable: '#7E5230' }, 0.07);
+    + gable(u0, v0, u1, v1, h, roofH, { front: roof.front, back: roof.back, gable: '#7E5230' }, 0.07)
+    + (roofTexture(skin, u0, v0, u1, v1, h, roofH, 0.07) || shingles(u0, v0, u1, v1, h, roofH, 0.07));
 }
 // Pile de bûches couchées le long de v (bouts coupés visibles côté +u)
 function logPile(u, v, n = 3, s = 1) {
@@ -115,6 +116,7 @@ function sawmill(skin) {
     + box(-0.6, 0.05, 0.45, 0.25, 0, 10, WOOD) + box(-0.55, 0.08, 0.05, 0.22, 10, 17, LOG)
     + ell(...P(0.05, 0.15, 13.5), 2.6, 3.6, LOG.right, ' stroke="#C9935E" stroke-width="0.6"')
     + gable(-0.75, -0.5, 0.6, 0.5, 34, 16, { front: roof.front, back: roof.back, gable: '#8E5E30' }, 0.08)
+    + (roofTexture(skin, -0.75, -0.5, 0.6, 0.5, 34, 16, 0.08) || shingles(-0.75, -0.5, 0.6, 0.5, 34, 16, 0.08))
     + plankStack(0.95, 0.3, 6) + plankStack(0.95, 0.75, 4)
     + logPile(-1.05, 0.55, 4, 1.15)
     + ell(...P(0.25, 0.5, 0), 12, 4, '#EBCB93') + [[-6, 1], [4, 2], [8, -1]].map(([dx, dy]) => dot(P(0.25, 0.5, 0)[0] + dx, P(0.25, 0.5, 0)[1] + dy, 0.8, '#C9A16A')).join('')

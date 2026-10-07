@@ -6,7 +6,7 @@ import { P, TW, TH, face, box, gable, pyramid, disc, cylinder, shadow, foliage, 
 import {
   WOOD, WOOD_DARK, STONE, BRICK, ROOF_RED, THATCH, LEAVES, PINE, INK, BUILDING_BOX, PROP_BOX,
   pebble, doorLeft, windowRight, planksLeft, planksRight, roundTree,
-  WHITE_STONE, WHITE_WOOD, ROCKS, FOLIAGE, SAILS, roofOf, roofTexture, stoneCourses, seasonDots, crystals, rockBox, stoneRing, pool, cove, soilBed, furrow, leafPair
+  WHITE_STONE, WHITE_WOOD, ROCKS, FOLIAGE, SAILS, roofOf, roofTexture, stoneCourses, seasonDots, crystals, rockBox, stoneRing, pool, cove, soilBed, furrow, leafPair, shingles
 } from './palette.js';
 import { courseLeft, courseRight } from './tiers/kit.js';
 
@@ -274,17 +274,6 @@ export function goldenSign(u, v, z) {
   return `<line x1="${x}" y1="${y}" x2="${x - 9}" y2="${y + 4.5}" stroke="#5E3A22" stroke-width="1.6"/>`
     + `<path d="M${x - 16},${y + 5} h12 v9 q-6,5 -12,0 Z" fill="#F2C04B" stroke="#8A6A22" stroke-width="1"/>`
     + `<path d="M${x - 13},${y + 8} l3,3 l4,-4" stroke="#8A6A22" stroke-width="1.2" fill="none"/>`;
-}
-// Bardeaux de bois sur le pan avant d'un toit à deux pans (même géométrie que gable) : rangs, joints décalés, reflet
-function shingles(u0, v0, u1, v1, z, h, o = 0.08) {
-  const vm = (v0 + v1) / 2, a = u0 - o, b = u1 + o, ve = v1 + o;
-  const at = (u, k) => P(u, vm + (ve - vm) * k, z + h * (1 - k)).map(f2).join(',');
-  return [0.2, 0.4, 0.6, 0.8].map((k, r) => {
-    let out = `<polyline points="${at(a, k)} ${at(b, k)}" stroke="rgba(60,35,20,.45)" stroke-width="0.8"/>`
-      + `<polyline points="${at(a, k - 0.16)} ${at(b, k - 0.16)}" stroke="rgba(255,235,210,.2)" stroke-width="0.6"/>`;
-    for (let u = a + (r % 2 ? 0.07 : 0.14); u < b - 0.03; u += 0.14) out += `<polyline points="${at(u, k - 0.2)} ${at(u, k)}" stroke="rgba(60,35,20,.35)" stroke-width="0.6"/>`;
-    return out;
-  }).join('');
 }
 // Enclume de fer sur son billot à cernes en (u, v) : pied, taille, table, bigorne pointée vers +u
 function anvil(u, v) {
