@@ -221,4 +221,58 @@ function pecher({ view, n }) {
 // Debout : frame(avecPecher(c), vue, 'action', n)
 const avecPecher = c => ({ ...c, uid: `${c.uid}pe`, pose: pecher });
 
-module.exports = { lanterne, parapluie, valise, avecLanterne, avecParapluie, avecValise, couche, CADRE_PARAPLUIE, CADRE_COUCHE, ZEDS, paume, tranche, tendre, avecMainsTendues, applaudir, avecApplaudir, pecher, avecPecher };
+// La pioche : le manche de bois de m (le bas, dans les mains) à h (le fer) ; le fer d'acier courbe, deux pointes,
+// perpendiculaire au manche (côté k), un reflet
+function pioche(m, h, k = 1) {
+  const len = Math.hypot(h[0] - m[0], h[1] - m[1]), ux = (h[0] - m[0]) / len, uy = (h[1] - m[1]) / len, nx = -uy * k, ny = ux * k;
+  const pt = (a, b) => [h[0] + ux * a + nx * b, h[1] + uy * a + ny * b];
+  const fer = [pt(0.4, -5.6), pt(1.6, -2.6), pt(1.9, 0), pt(1.6, 2.4), pt(0.6, 6.2), pt(-0.6, 2.4), pt(-1.1, 0), pt(-0.6, -2.6)];
+  const d = `M${fer.map(p => `${r2(p[0])},${r2(p[1])}`).join(' L')} Z`;
+  return L(m, h, OUT, 3.4) + L(m, h, '#B07A45', 1.6) + L(m, [m[0] + ux * len * 0.55, m[1] + uy * len * 0.55], '#C99A62', 0.5)
+    + P(d, '#A9B1BB', 1) + L(pt(0.9, -4), pt(1.2, -1.2), '#E2E8EE', 0.6) + E(h[0], h[1], 1.1, 1.1, '#6E747E', 0.7);
+}
+// des éclats de pierre et une étincelle là où la pioche frappe (x, y)
+const eclats = (x, y) => [[-3.6, -2.6, 0.9], [-1.6, -4.6, 0.7], [2.6, -3.4, 0.8], [3.8, -1.4, 0.6]].map(([dx, dy, r]) => E(x + dx, y + dy, r, r * 0.8, '#9A8E80', 0.5)).join('')
+  + [[0, -1], [0.7, -0.7], [-0.7, -0.7]].map(([dx, dy]) => L([x + dx * 1.4, y + dy * 1.4], [x + dx * 3, y + dy * 3], OUT, 1.4) + L([x + dx * 1.4, y + dy * 1.4], [x + dx * 3, y + dy * 3], '#FFF2B0', 0.6)).join('')
+  + E(x, y + 0.6, 4.4, 1.2, 'rgba(110,90,70,.35)', 0);
+// la pierre à casser, posée au sol en (x, y) (le bas de la pierre) : un galet gris, son ombre, un reflet, une fente
+const pierre = (x, y) => E(x, y - 0.2, 4.6, 1.3, 'rgba(40,55,20,.22)', 0) + P(`M${r2(x - 4.2)},${r2(y)} Q${r2(x - 4.6)},${r2(y - 3.6)} ${r2(x - 1)},${r2(y - 4.4)} Q${r2(x + 3.4)},${r2(y - 4.8)} ${r2(x + 4.2)},${r2(y - 1.4)} Q${r2(x + 4.4)},${r2(y + 0.2)} ${r2(x)},${r2(y + 0.3)} Z`, '#A79E92')
+  + P(`M${r2(x - 2.8)},${r2(y - 2.6)} Q${r2(x - 1.6)},${r2(y - 3.8)} ${r2(x + 0.4)},${r2(y - 3.8)}`, 'none', 0).replace('stroke="none"', 'stroke="#D2CBC0" stroke-width="0.8" stroke-linecap="round"')
+  + P(`M${r2(x + 1.4)},${r2(y - 4.2)} L${r2(x + 0.8)},${r2(y - 2.4)} L${r2(x + 1.6)},${r2(y - 1.2)}`, 'none', 0.5);
+// un point de la ligne m → h, à q de m
+const surLigne = (m, h, q) => { const l = Math.hypot(h[0] - m[0], h[1] - m[1]); return [m[0] + (h[0] - m[0]) * q / l, m[1] + (h[1] - m[1]) * q / l]; };
+// Piocher (le mini-jeu de la mine) ; 2 images : la pioche levée sur le côté, puis le coup sur la pierre (éclats,
+// étincelle), en riant.
+function piocher({ view, n }) {
+  const [a, b] = this.shoulders;
+  if (view === 'front') {
+    const p = [b[0] + 9, 61];
+    if (!n) {
+      const m = [b[0] - 1.4, b[1] + 5], h = [Math.min(42, b[0] + 10.4), a[1] - 8.4];
+      return { expr: 'content', under: pierre(...p), left: pioche(m, h, 1) + arm(this, a, m, [a[0] + 0.6, a[1] + 7.4]), right: arm(this, b, surLigne(m, h, 4.6), [b[0] + 3, b[1] + 4.4]) };
+    }
+    const m = [24 + 0.6, a[1] + 9.6], h = [p[0] - 0.4, p[1] - 4.4];
+    return { expr: 'rire', under: pierre(...p), left: pioche(m, h, -1) + arm(this, a, m, [a[0] - 0.6, a[1] + 6.4]), right: arm(this, b, surLigne(m, h, 4.2), [b[0] + 1.4, b[1] + 6.8]), over: eclats(h[0] + 0.6, h[1] + 0.4) };
+  }
+  if (view === 'se') {
+    const p = [a[0] - 9, 61];
+    if (!n) {
+      const m = [b[0] - 4.4, b[1] + 4.6], h = [Math.min(43, b[0] + 10), a[1] - 9];
+      return { expr: 'content', under: pierre(...p), right: pioche(m, h, -1) + arm(this, b, surLigne(m, h, 4.6), [b[0] + 2.6, b[1] + 4.6]), left: arm(this, a, m, [a[0] - 0.6, a[1] + 6.6]) };
+    }
+    const m = [a[0] + 2.6, a[1] + 9], h = [p[0] + 0.4, p[1] - 4.4];
+    return { expr: 'rire', under: pierre(...p), right: arm(this, b, surLigne(m, h, 4.2), [b[0] - 0.6, b[1] + 7]), left: pioche(m, h, 1) + arm(this, a, m, [a[0] - 1.4, a[1] + 5.8]), over: eclats(h[0] - 0.6, h[1] + 0.4) };
+  }
+  // de dos : la pierre est devant, un peu à droite (plus loin, donc plus haut que les pieds)
+  const p = [b[0] + 7, a[1] + 18];
+  if (!n) {
+    const m = [b[0] - 2, b[1] + 1], h = [b[0] + 6, a[1] - 18];
+    return { left: '', right: '', under: pierre(...p) + arm(this, a, [b[0] - 4, b[1] + 2], [a[0] - 2.4, a[1] + 5.6]), over: pioche(m, h, 1) + arm(this, b, [b[0] - 1, b[1] - 1.4], [b[0] + 3, b[1] + 4.4]) };
+  }
+  const m = [24 + 2, a[1] + 7], h = [p[0] - 0.4, p[1] - 4.4];
+  return { expr: 'rire', left: '', right: '', under: pierre(...p) + pioche(m, h, 1) + arm(this, a, [24 - 1, a[1] + 7.4], [a[0] - 2.4, a[1] + 6]) + arm(this, b, surLigne(m, h, 3), [b[0] + 2.4, b[1] + 6]), over: eclats(h[0] + 0.4, h[1] + 0.4) };
+}
+// Debout : frame(avecPiocher(c), vue, 'action', n)
+const avecPiocher = c => ({ ...c, uid: `${c.uid}pi`, pose: piocher });
+
+module.exports = { lanterne, parapluie, valise, avecLanterne, avecParapluie, avecValise, couche, CADRE_PARAPLUIE, CADRE_COUCHE, ZEDS, paume, tranche, tendre, avecMainsTendues, applaudir, avecApplaudir, pecher, avecPecher, piocher, avecPiocher };
