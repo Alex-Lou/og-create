@@ -6,6 +6,7 @@
 import { sprite } from './iso';
 import { ln, dot, ell, poly, f2, OUT } from './shopSprites';
 import { cleanName } from '@/utils/names';
+import { signArtLayer } from './decorArt';
 
 const TAU = Math.PI * 2;
 const FRAME = [-32, -56, 64, 62];
@@ -209,8 +210,11 @@ export const NAME_SIGNS = {
 export const NAME_SIGN_STYLES = Object.keys(NAME_SIGNS);
 const styleOf = style => NAME_SIGNS[style] || NAME_SIGNS.bois;
 
-// Image de chaque calque à l'instant t : [{ key, make }] (même image pour tous les noms : le nom s'écrit par-dessus)
+// Image de chaque calque à l'instant t : [{ key, make }] (même image pour tous les noms : le nom s'écrit par-dessus).
+// Le dessin de la bibliothèque d'abord (decorArt.js : une seule image, animée à sa cadence), sinon ces calques
 export function nameSignLayers(style, t = 0) {
+  const art = signArtLayer(style, t);
+  if (art) return [{ key: art.key, make: art.make }];
   const look = styleOf(style);
   return look.layers.map((layer, k) => {
     const f = layer.n ? Math.floor(t * layer.fps) % layer.n : 0;
@@ -223,6 +227,9 @@ export function nameSignLayers(style, t = 0) {
 export function nameSignSwing(style, t = 0) {
   const { swing, layers } = styleOf(style);
   if (!swing) return null;
+  // (la bibliothèque balance sa plaque de fer du même angle, sur ses images : le nom suit celle qui est montrée)
+  const art = signArtLayer(style, t);
+  if (art) return { pivot: swing.pivot, angle: swing.angle(art.frame, art.frames) };
   const layer = layers[swing.layer];
   return { pivot: swing.pivot, angle: swing.angle(Math.floor(t * layer.fps) % layer.n, layer.n) };
 }

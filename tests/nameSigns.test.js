@@ -8,9 +8,11 @@ describe('enseignes', () => {
       for (const t of [0, 0.37, 1.9]) {
         const layers = nameSignLayers(style, t);
         expect(layers.length).toBeGreaterThan(0);
+        // Le dessin de la bibliothèque (lu à la demande : load, decorArt.js), sinon les calques du code (svg)
         for (const layer of layers) {
-          expect(layer.key).toMatch(new RegExp(`^name-sign-${style}-\\d+-\\d+$`));
-          expect(layer.make().svg).toMatch(/^<svg/);
+          expect(layer.key).toMatch(new RegExp(`^name-sign-${style}-\\d+-\\d+$|^lib-enseigne-${style}-\\d+$`));
+          const { svg, load } = layer.make();
+          expect(Boolean(load) || /^<svg/.test(svg)).toBe(true);
         }
       }
       const { text } = NAME_SIGNS[style];

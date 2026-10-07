@@ -1,5 +1,5 @@
-// Les annexes et les gisements dessinés dans la bibliothèque (design/bibliotheque/svg/decor : annexes/ et gisements/,
-// decor.json), au cadre du jeu × 1,25 et autour de la même ancre : chaque annexe prend son dessin et son animation (et
+// Les annexes, les gisements et les enseignes dessinés dans la bibliothèque (design/bibliotheque/svg/decor : annexes/,
+// gisements/, enseignes/, decor.json), au cadre du jeu × 1,25 et autour de la même ancre : chaque annexe prend son dessin et son animation (et
 // sa variante : le blé, les carottes ou les citrouilles d'un champ, les toits d'une maison…, dans l'ordre du jeu :
 // variante_jeu), chaque gisement son dessin prêt (animé) ou ramassé. Ce que la bibliothèque n'a pas garde son dessin
 // par code (annexSprites.js, depositSprites.js). Les lumières de nuit restent celles du jeu : la bibliothèque les a
@@ -9,7 +9,7 @@ import DECOR from '../../design/bibliotheque/svg/decor/decor.json';
 import { librarySprite, cropTo, paintedBox, BLANK, frameAt } from './library';
 
 // Chargés à la demande, un fichier à la fois (le jeu ne lit que ce qui est posé sur l'île)
-const FILES = import.meta.glob('/design/bibliotheque/svg/decor/{annexes,gisements}/**/*.svg', { query: '?raw', import: 'default' });
+const FILES = import.meta.glob('/design/bibliotheque/svg/decor/{annexes,gisements,enseignes}/**/*.svg', { query: '?raw', import: 'default' });
 const ROOT = '/design/bibliotheque/svg/decor/';
 const SCALE = 1.25;
 
@@ -49,6 +49,14 @@ export function depositArtLayer(find, ready, t = 0) {
   const name = `${find}_${ready ? 'pret' : 'ramasse'}`;
   const art = DECOR.gisements[name];
   return art ? layerOf(name, art, t) : null;
+}
+
+// Le dessin d'une enseigne (decor.json, enseignes : la planche, la plaque ou le panneau, sans le nom) à l'instant t
+// (secondes) : { key, make, frame, frames } (frame : son image parmi frames), ou null si la bibliothèque ne l'a pas
+export function signArtLayer(style, t = 0) {
+  const art = DECOR.enseignes[style];
+  const layer = art && layerOf(`enseigne-${style}`, art, t);
+  return layer ? { ...layer, frame: frameAt(art, t), frames: art.fichiers.length } : null;
 }
 
 // Vignette d'une annexe (sa fiche, le choix des annexes d'un bâtiment) : la première image de son dessin, recadrée sur
