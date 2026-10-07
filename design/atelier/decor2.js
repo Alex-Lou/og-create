@@ -142,13 +142,17 @@ const G = {
   obsidienne: {
     frames: [[-28, -38, 56, 48], [-22, -12, 44, 20]],
     draw: (spent, f) => {
-      const stone = (x, y, rx, ry) => E(x, y, rx, ry, '#2E2B36', W) + E(x - rx * 0.3, y - ry * 0.35, rx * 0.45, ry * 0.3, '#4A4258', 0);
-      if (spent) return stone(-4, 1.4, 4.6, 3) + stone(6, 2.4, 3.8, 2.6) + stone(1, 4.8, 3, 2);
-      const g = f ? 1 : 0.45;
-      return shade(0, 1, 14, 5, 0.2) + E(0, 1, 15, 5, 'rgba(255,120,50,.28)', 0)
-        + spire(-8, 0, 16, 5, OBSIDIAN, -3) + spire(7, 1, 20, 5.5, OBSIDIAN, 2) + stone(7, 6, 4, 2.6) + spire(0, 4, 26, 6, OBSIDIAN)
-        + L([-1, -18], [1.5, -6], `rgba(185,166,232,${g})`, 1.2) + L([7, -14], [8, -6], `rgba(185,166,232,${r2(g * 0.7)})`, 1)
-        + E(-5, 3, 1.4, 0.8, f ? '#FF8A4A' : '#E8573A', 0) + (f ? star(0, -24, 2.4) : '');
+      const cendre = (rx, ry) => { const n = 14, pts = Array.from({ length: n }, (_, i) => { const t = (i / n) * TAU, r = 1 + (i % 2 ? 0.06 : -0.03); return [Math.cos(t) * rx * r, 1 + Math.sin(t) * ry * r]; }); const m = i => { const p = pts[i % n], q = pts[(i + 1) % n]; return `${r2((p[0] + q[0]) / 2)},${r2((p[1] + q[1]) / 2)}`; }; let d = `M${m(n - 1)}`; for (let i = 0; i < n; i++) d += ` Q${r2(pts[i][0])},${r2(pts[i][1])} ${m(i)}`; return P(d + ' Z', '#6E6460', W) + E(rx * 0.1, 1.6, rx * 0.7, ry * 0.5, '#7C726C', 0); };
+      const caillou = (x, y, rx, ry) => E(x, y, rx, ry, '#2E2B36', W) + E(x - rx * 0.3, y - ry * 0.35, rx * 0.45, ry * 0.3, '#4A4258', 0) + E(x - rx * 0.4, y - ry * 0.45, rx * 0.15, ry * 0.12, '#B9A6E8', 0);
+      const lame = (x, y, h, w, lean = 0) => { const tip = [x + lean, y - h], bl = [x - w, y], br = [x + w, y], fb = [x, y + w * 0.45];
+        return pg([bl, tip, fb], '#3A3644', 0) + pg([fb, tip, br], '#1E1C24', 0) + pg([tip, [bl[0] + (tip[0] - bl[0]) * 0.7, bl[1] + (tip[1] - bl[1]) * 0.7], [fb[0] + (tip[0] - fb[0]) * 0.7, fb[1] + (tip[1] - fb[1]) * 0.7]], '#5A5068', 0)
+          + L([x - w * 0.45, y - h * 0.1], [x - w * 0.12 + lean * 0.6, y - h * 0.62], `rgba(185,166,232,${f ? 0.95 : 0.55})`, 0.9) + pg([bl, tip, br, fb], 'none', W * 0.9); };
+      const braises = line('M-12,3 l3,1.4 l3,-1 M6,4 l3,-1.2 l3,1', 1.2, '#E0602E') + line('M-12,3 l3,1.4 l3,-1 M6,4 l3,-1.2 l3,1', 0.5, '#FFC46A');
+      if (spent) return cendre(14, 5) + caillou(-4, 1.4, 4.6, 3) + caillou(6, 2.4, 3.8, 2.6) + caillou(1, 4.8, 3, 2);
+      return shade(0, 2, 16, 5, 0.18) + cendre(17, 6) + braises + E(0, 2, 13, 3.6, `rgba(255,120,50,${f ? 0.3 : 0.18})`, 0)
+        + lame(-10, 0, 13, 4, -3) + lame(-6, -1, 19, 4.6, -1.4) + lame(8, 0, 17, 4.6, 2.4) + lame(12, 2, 9, 3, 2.6)
+        + caillou(7, 6, 4, 2.6) + lame(0, 3.4, 26, 5.8, 0.4) + lame(-4, 5, 10, 3.2, -1)
+        + E(-5, 4, 1.4, 0.8, f ? '#FF8A4A' : '#E8573A', 0) + E(4, 6.4, 1, 0.6, f ? '#FFB04A' : '#E8573A', 0) + (f ? star(0, -24, 2.4) + star(-7, -17, 1.6) : star(9, -15, 1.8));
     }
   }
 };
@@ -297,7 +301,9 @@ M.ponton = { frame: BUILDING_BOX, n: 1, draw: () => {
   return E(wx, wy, 34, 15, 'rgba(255,255,255,.35)', 0) + posts + gbox(-0.42, -0.2, 0.42, 0.2, 2, 5, WOOD) + planks
     + gbox(0.26, 0.01, 0.34, 0.09, 5, 11, WOOD_DARK) + tk(`M${r2(cx)},${r2(cy - 4)} q-6,4 -14,2`, 1, '#D9C08A');
 } };
-// Barque volante du passeur : coque, mât, voile gonflée selon l'image, lanterne de poupe, lueur de la brume ; vers la droite
+// Barque volante du passeur : une coque bordée à la proue enroulée en volute, son liseré clair ; le mât, la voile
+// gonflée selon l'image avec son œil bleu, le foc ; la lanterne de poupe et sa flamme ; sous la coque, la brume qui la
+// porte, en volutes lumineuses et en étincelles ; vers la droite
 M.barque_volante = { frame: [-32, -56, 64, 68], n: 2, draw: f => {
   const belly = f ? 6 : 3;
   return E(0, 6, 22, 5, 'rgba(120,210,255,.3)', 0) + E(-4, 8, 14, 2.6, 'rgba(191,240,255,.45)', 0)
