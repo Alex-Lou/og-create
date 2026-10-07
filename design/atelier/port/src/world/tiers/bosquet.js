@@ -1,7 +1,7 @@
 // Bosquet, paliers III à VII : Clairière du bûcheron, Chênaie, Scierie, Exploitation forestière, Forêt enchantée.
 // Places laissées libres pour la boutique : billot à l'avant gauche, chevalet de sciage au coin droit, nichoir sur le
 // flanc droit, oiseaux devant lui, charrette à l'avant (× 1.5 dès le palier IV).
-import { LEAVES, PINE, FOLIAGE, BUILDING_BOX, roundTree, seasonDots, roofOf } from '../palette.js';
+import { LEAVES, PINE, FOLIAGE, BUILDING_BOX, roundTree, seasonDots, roofOf, touffe, treeTrunk, backLeaves, treeId } from '../palette.js';
 import { sprite, foliage, shadow } from '../iso.js';
 import {
   big, bigShadow, P, box, face, gable, f2, ln, dot, ell, OUT, WOOD, WOOD_DARK, STONE, GOLD,
@@ -12,26 +12,33 @@ const leavesOf = skin => FOLIAGE[skin] || LEAVES;
 const LOG = { top: '#A8743F', left: '#8B5631', right: '#F1D3A1' };
 const SHINGLE = { front: '#8E6A4A', back: '#6F5038' };
 
-// Sapin en trois étages (s : échelle), neige si givre
+// Sapin en trois étages festonnés et détourés, ombre à droite, reflet à gauche (s : échelle), neige si givre
 function pine(u, v, s, skin) {
   const [x, y] = P(u, v, 0);
-  let out = shadow(u, v, 0.28 * s) + box(u - 0.05 * s, v - 0.05 * s, u + 0.05 * s, v + 0.05 * s, 0, 12 * s, WOOD_DARK);
-  [[-8, 15, 22], [-20, 12, 20], [-31, 9, 18]].forEach(([dy, w, h], k) => {
-    out += `<path d="M${f2(x - w * s)},${f2(y + dy * s)} L${f2(x)},${f2(y + (dy - h) * s)} L${f2(x + w * s)},${f2(y + dy * s)} Z" fill="${PINE.dark}"/>`
-      + `<path d="M${f2(x - (w - 2) * s)},${f2(y + (dy - 1) * s)} L${f2(x)},${f2(y + (dy - h) * s)} L${f2(x + s)},${f2(y + (dy - 1) * s)} Z" fill="${k === 2 ? PINE.light : PINE.mid}"/>`;
+  const X = dx => f2(x + dx * s), Y = dy => f2(y + dy * s);
+  let out = shadow(u, v, 0.28 * s)
+    + `<path d="M${X(-2)},${Y(1)} L${X(-1.6)},${Y(-10)} L${X(1.6)},${Y(-10)} L${X(2)},${Y(1)} Z" fill="${WOOD_DARK.left}" stroke="${OUT}" stroke-width="0.8"/>`;
+  [[-6, 17, 20], [-17, 13.6, 19], [-27, 10.4, 18]].forEach(([dy, w, h]) => {
+    const top = dy - h;
+    let edge = '';
+    for (let i = 0; i < 4; i++) { const a = -w + (2 * w * i) / 4, b = -w + (2 * w * (i + 1)) / 4; edge += ` Q${X((a + b) / 2)},${Y(dy + 3)} ${X(b)},${Y(dy)}`; }
+    out += `<path d="M${X(-w)},${Y(dy)}${edge} L${X(0)},${Y(top)} Z" fill="${PINE.mid}" stroke="${OUT}" stroke-width="0.9" stroke-linejoin="round"/>`
+      + `<path d="M${X(0)},${Y(top)} L${X(w)},${Y(dy)} Q${X(w * 0.75)},${Y(dy + 3)} ${X(w * 0.5)},${Y(dy)} Q${X(w * 0.25)},${Y(dy + 3)} ${X(0.6)},${Y(dy + 0.6)} Z" fill="${PINE.dark}"/>`
+      + `<path d="M${X(-1.4)},${Y(top + 3)} L${X(-w * 0.62)},${Y(dy - 1.4)}" stroke="${PINE.light}" stroke-width="${f2(1.4 * s)}" stroke-linecap="round" opacity="0.9"/>`;
+    if (skin === 'givre') out += `<path d="M${X(-w * 0.5)},${Y(top + h * 0.5)} L${X(0)},${Y(top)} L${X(w * 0.5)},${Y(top + h * 0.5)} Q${X(0)},${Y(top + h * 0.38)} ${X(-w * 0.5)},${Y(top + h * 0.5)} Z" fill="#FFFFFF" stroke="${OUT}" stroke-width="0.5"/>`;
   });
-  if (skin === 'givre') out += `<path d="M${f2(x - 6 * s)},${f2(y - 46 * s)} L${f2(x)},${f2(y - 49 * s)} L${f2(x + 6 * s)},${f2(y - 46 * s)} L${f2(x)},${f2(y - 43 * s)} Z" fill="#FFFFFF"/>`;
   return out;
 }
-// Grand chêne : tronc épais et branches, houppier en six boules (couleurs du skin)
+// Grand chêne : tronc épais à racines et branches, houppier en quatre touffes détourées (couleurs du skin)
 function oak(u, v, s, skin) {
   const colors = leavesOf(skin);
   const [x, y] = P(u, v, 0);
-  const trunk = box(u - 0.08 * s, v - 0.08 * s, u + 0.08 * s, v + 0.08 * s, 0, 18 * s, WOOD_DARK)
-    + ln([x, y - 16 * s], [x - 9 * s, y - 27 * s], WOOD_DARK.right, 2.6 * s) + ln([x, y - 16 * s], [x + 10 * s, y - 26 * s], WOOD_DARK.left, 2.4 * s);
-  const blobs = [[-12, -28, 10], [12, -28, 10.5], [0, -26, 11], [-7, -40, 11], [8, -40, 11.5], [0, -50, 10]];
-  return shadow(u, v, 0.42 * s) + trunk
-    + blobs.map(([dx, dy, r]) => foliage(x + dx * s, y + dy * s, r * s, colors)).join('')
+  const id = treeId('ok', u, v, s);
+  return shadow(u, v, 0.42 * s) + treeTrunk(x, y, s, 3.4, 18)
+    + touffe(id + 'f', x, y, s, [[-9, -50, 10], [8, -52, 11], [19, -40, 9], [-20, -40, 8.5]], backLeaves(colors))
+    + touffe(id + 'm', x, y, s, [[0, -40, 10.5], [0, -30, 8, 0]], colors)
+    + touffe(id + 'g', x, y, s, [[-14, -33, 10], [-22, -26, 7], [-7, -25, 7, 0]], colors)
+    + touffe(id + 'd', x, y, s, [[13, -32, 10], [21, -25, 7], [6, -24, 7, 0]], colors)
     + seasonDots(skin, x - 4 * s, y - 42 * s, 13 * s) + seasonDots(skin, x + 8 * s, y - 30 * s, 10 * s);
 }
 // Cabane de rondins : murs de rondins couchés, toit de bardeaux, porte, fenêtre, cheminée de pierre

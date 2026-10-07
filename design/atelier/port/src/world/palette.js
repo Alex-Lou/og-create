@@ -1,5 +1,5 @@
 // Palette et petits motifs communs aux sprites de l'île : mêmes matières, même lumière, partout.
-import { P, face, box, shadow, foliage, EDGE } from './iso.js';
+import { P, face, box, shadow, mixHex, EDGE } from './iso.js';
 
 // Palette « Vélin & Veillée », version île : chaque matière a son dessus, sa face gauche (éclairée) et sa face droite
 export const WOOD = { top: '#E0A96C', left: '#BF8049', right: '#965C30' };
@@ -14,6 +14,7 @@ export const LEAVES = { light: '#B3E386', mid: '#7EC45B', dark: '#4F8F3A' };
 export const PINE = { light: '#86C774', mid: '#4F9A4C', dark: '#2F6E3A' };
 export const GLASS = '#FFE6A3';
 export const INK = '#4A3426';
+const INK_OUT = '#3C2819';
 
 export const BUILDING_BOX = { x: -76, y: -124, w: 152, h: 168 };
 export const PROP_BOX = { x: -40, y: -92, w: 80, h: 112 };
@@ -61,15 +62,40 @@ export function planksRight(uf, v0, v1, z0, z1, step = 6) {
   }
   return out;
 }
-// Arbre rond : tronc, houppier en trois boules
+// Touffe de feuillage au trait des PNJ : lobes [dx, dy, r, reflet ?] autour de (x, y) à l'échelle s, sous un contour
+// commun ; chaque lobe a son ombre en bas à droite, les lobes du haut un reflet en croissant et une marque de feuilles
+const rnd2 = n => Math.round(n * 100) / 100;
+const disc2 = (x, y, r, fill) => `<circle cx="${rnd2(x)}" cy="${rnd2(y)}" r="${rnd2(r)}" fill="${fill}"/>`;
+export const treeId = (p, u, v, s) => `${p}${rnd2(u * 100)}_${rnd2(v * 100)}_${rnd2(s * 100)}`.replace(/[.-]/g, m => (m === '.' ? 'p' : 'm'));
+export function touffe(id, x, y, s, lobes, c) {
+  const L = lobes.map(([dx, dy, r, hi]) => [x + dx * s, y + dy * s, r * s, hi]);
+  const hi = L.filter(l => l[3] !== 0);
+  return L.map(([cx, cy, r]) => disc2(cx, cy, r + 0.9, INK_OUT)).join('')
+    + `<defs><clipPath id="${id}">${L.map(([cx, cy, r]) => disc2(cx, cy, r, '#000')).join('')}</clipPath></defs><g clip-path="url(#${id})">`
+    + L.map(([cx, cy, r]) => disc2(cx, cy, r, c.dark)).join('')
+    + L.map(([cx, cy, r]) => disc2(cx - r * 0.18, cy - r * 0.3, r * 0.86, c.mid)).join('')
+    + hi.map(([cx, cy, r]) => disc2(cx - r * 0.34, cy - r * 0.46, r * 0.46, c.light) + disc2(cx - r * 0.22, cy - r * 0.3, r * 0.46, c.mid)).join('')
+    + hi.map(([cx, cy, r]) => `<path d="M${rnd2(cx + r * 0.05)},${rnd2(cy + r * 0.2)} q${rnd2(r * 0.12)},${rnd2(r * 0.16)} ${rnd2(r * 0.24)},0 q${rnd2(r * 0.12)},${rnd2(r * 0.16)} ${rnd2(r * 0.24)},0" fill="none" stroke="${c.dark}" stroke-width="${rnd2(0.5 + 0.3 * s)}" stroke-linecap="round"/>`).join('')
+    + '</g>';
+}
+// La touffe du fond, plus froide et plus sombre que celles de devant
+export const backLeaves = c => ({ light: c.mid, mid: mixHex(c.mid, c.dark, 0.55), dark: mixHex(c.dark, '#1E3A22', 0.35) });
+// Tronc à racines et deux branches qui filent sous le houppier, en (x, y) : demi-largeur w, hauteur h avant les branches
+export function treeTrunk(x, y, s, w = 2.4, h = 15) {
+  const X = dx => rnd2(x + dx * s), Y = dy => rnd2(y + dy * s);
+  const d = `M${X(-w - 2.2)},${Y(1.4)} Q${X(-w - 0.2)},${Y(0.2)} ${X(-w)},${Y(-4)} L${X(-w + 0.2)},${Y(-h)} Q${X(-w - 2.6)},${Y(-h - 4)} ${X(-w - 5.2)},${Y(-h - 7)} L${X(-w - 3.2)},${Y(-h - 8.4)} Q${X(-w)},${Y(-h - 5.6)} ${X(0)},${Y(-h - 3.6)} Q${X(w)},${Y(-h - 6)} ${X(w + 3)},${Y(-h - 8.6)} L${X(w + 4.8)},${Y(-h - 6.8)} Q${X(w + 2.2)},${Y(-h - 4)} ${X(w)},${Y(-h)} L${X(w + 0.2)},${Y(-4)} Q${X(w + 0.4)},${Y(0.2)} ${X(w + 2.6)},${Y(1.6)} Q${X(w * 1.1)},${Y(2.6)} ${X(0)},${Y(1.8)} Q${X(-w * 1.1)},${Y(2.6)} ${X(-w - 2.2)},${Y(1.4)} Z`;
+  return `<path d="${d}" fill="${WOOD_DARK.left}" stroke="${INK_OUT}" stroke-width="0.9" stroke-linejoin="round"/>`
+    + `<path d="M${X(w * 0.25)},${Y(1.6)} L${X(w * 0.4)},${Y(-h)} L${X(w)},${Y(-h)} L${X(w + 0.2)},${Y(-4)} Q${X(w + 0.4)},${Y(0.2)} ${X(w + 2.6)},${Y(1.6)} Q${X(w * 1.1)},${Y(2.6)} ${X(w * 0.25)},${Y(1.6)} Z" fill="${WOOD_DARK.right}"/>`
+    + `<path d="M${X(-w * 0.4)},${Y(-4)} q-0.3,-3 0,-6 M${X(w * 0.55)},${Y(-7)} q0.3,-2.6 0,-5" stroke="rgba(40,22,12,.5)" stroke-width="0.6" fill="none" stroke-linecap="round"/>`;
+}
+// Arbre rond : tronc à racines, houppier en deux touffes détourées (celle du fond plus sombre)
 export function roundTree(u, v, scale = 1, colors = LEAVES) {
   const s = scale;
   const [x, y] = P(u, v, 0);
-  return shadow(u, v, 0.34 * s)
-    + box(u - 0.06 * s, v - 0.06 * s, u + 0.06 * s, v + 0.06 * s, 0, 16 * s, WOOD_DARK)
-    + foliage(x - 7 * s, y - 24 * s, 10 * s, colors)
-    + foliage(x + 7 * s, y - 25 * s, 10.5 * s, colors)
-    + foliage(x, y - 34 * s, 12 * s, colors);
+  const id = treeId('rt', u, v, s);
+  return shadow(u, v, 0.34 * s) + treeTrunk(x, y, s)
+    + touffe(id + 'f', x, y, s, [[-8, -34, 9], [6, -37, 10], [14, -27, 7.5], [-15, -26, 7]], backLeaves(colors))
+    + touffe(id + 'a', x, y, s, [[-9, -23, 8.4], [9, -22, 8.4], [0, -29, 9.6], [-1, -18.6, 6.6, 0]], colors);
 }
 
 
