@@ -141,9 +141,17 @@
       <image :href="person('foyer', 'front', 'walk')" x="236" y="208" width="60" height="84" />
     </g>
 
-    <!-- Veillée : la troupe en cercle autour du feu (ceux du fond derrière les flammes) -->
+    <!-- Veillée : la troupe assise en cercle autour du feu (ceux du fond derrière les flammes), chacun sur sa souche (la
+         pose assise de la bibliothèque ne dessine pas le siège ; son dessus est à y = 53,6 du cadre 48 × 64) -->
     <g v-if="art === 'veillee' || art === 'rite' || (art === 'lien' && cast.length > 2)">
-      <image v-for="m in ring.back" :key="`b${m.id}`" :href="person(m.id, 'se')" :x="m.x" :y="m.y" :width="m.w" :height="m.h" :transform="m.transform" />
+      <g v-for="m in ring.back" :key="`b${m.id}`" :transform="m.transform">
+        <g :transform="m.seat" stroke="#3C2819" stroke-width="1.1" stroke-linejoin="round">
+          <path d="M14.5 54 V61 Q23 63.6 31.5 61 V54 Z" fill="#8F5B30" />
+          <ellipse cx="23" cy="54" rx="8.5" ry="2.4" fill="#D6A066" />
+          <ellipse cx="23" cy="54" rx="4.2" ry="1.1" fill="none" stroke="#A8743F" stroke-width=".7" />
+        </g>
+        <image :href="person(m.id, 'se', 'sit')" :width="m.w" :height="m.h" />
+      </g>
     </g>
 
     <!-- Un lien : deux naufragés face à face, la recette de leurs Arts en lumière -->
@@ -445,18 +453,22 @@ export default {
       return this.recipe.split('=').map(part => part.trim());
     },
     // La troupe en arc de cercle derrière le feu (centre 212, 290), tournée vers lui, en deux groupes de part et d'autre
-    // des flammes : ceux de gauche de trois quarts, ceux de droite en miroir
+    // des flammes : ceux de gauche de trois quarts, ceux de droite en miroir ; ceux du fond d'abord. seat : le repère du
+    // dessin (48 × 64, posé dans le cadre w × h), où se pose sa souche
     ring() {
       const n = this.cast.length;
       const w = n > 5 ? 38 : 46;
+      const h = w * 1.4;
+      const k48 = w / 48;
+      const seat = `translate(0 ${((h - 64 * k48) / 2).toFixed(2)}) scale(${k48.toFixed(4)})`;
       const left = Math.ceil(n / 2);
       const back = this.cast.map((id, k) => {
         const side = k < left ? k / Math.max(1, left - 1) : (k - left) / Math.max(1, n - left - 1);
         const a = Math.PI * (k < left ? 1.1 + 0.3 * side : 1.6 + 0.3 * side);
-        const x = 208 + Math.cos(a) * 76 - w / 2, y = 290 + Math.sin(a) * 24 - w * 1.4;
+        const x = 208 + Math.cos(a) * 76 - w / 2, y = 290 + Math.sin(a) * 24 - h;
         const flip = x + w / 2 > 212;
-        return { id, w, h: w * 1.4, x: flip ? 0 : x, y: flip ? 0 : y, transform: flip ? `translate(${(x + w).toFixed(1)} ${y.toFixed(1)}) scale(-1 1)` : null };
-      });
+        return { id, w, h, y, seat, transform: flip ? `translate(${(x + w).toFixed(1)} ${y.toFixed(1)}) scale(-1 1)` : `translate(${x.toFixed(1)} ${y.toFixed(1)})` };
+      }).sort((p, q) => p.y - q.y);
       return { back };
     },
     saturn() {
