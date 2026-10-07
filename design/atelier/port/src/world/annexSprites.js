@@ -764,8 +764,7 @@ function coalPile(x, y) {
   }
   return `<path d="M${f2(x - 18)},${f2(y)} C${f2(x - 16)},${f2(y - 14)} ${f2(x + 16)},${f2(y - 14)} ${f2(x + 18)},${f2(y)} A18,7 0 0 1 ${f2(x - 18)},${f2(y)} Z" fill="${COAL.right}"/>` + lumps;
 }
-// Charbonnière : la meule de bois couverte de terre et de mottes qui fume par ses évents, ses bûches au pied, la
-// gueule où rougeoient les braises ; l'échelle du charbonnier, la réserve de bûches, le tas de charbon fini et son sac
+// Tas de charbon : monticule noir aux éclats bleutés, pelle plantée, sac de jute ; des braises rougeoient à sa base
 const charbon = {
   light: () => [0, 0.1, 3, 12, '255,110,50'],
   layers: [{
