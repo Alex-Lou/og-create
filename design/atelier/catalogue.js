@@ -147,6 +147,7 @@ function moment(id, meta) {
     if (a === 'lieux') return nom.startsWith('menhirs_fleuri') ? 'revelation' : 'acte-3';
     if (a === 'embrume') return 'tuto-3';
     if (a === 'defenses') return 'tuto-3'; // la torche, achetée et posée à l'étape 12
+    if (a === 'cultures') return 'evolutions'; // les étapes du champ, une annexe des évolutions
     if (a === 'signes') return 'revelation';
     if (a === 'souvenir') return 'acte-1';
     if (a === 'ruines') return /cle_du_phare|phare_eteint/.test(nom) ? 'acte-6' : 'acte-3';

@@ -45,9 +45,10 @@ troupe. Relancer ces scripts redonne la bibliothèque à l'octet près : c'est v
 | `generateur_meteo.mjs` | Le générateur de la météo : calques d'écran, ciel, nuages, lumières, sol des saisons, teintes, mer, icônes ; `preview_meteo.js` écrit la bibliothèque avec lui |
 | `generateur_plantes.mjs`, `plantes_liste.js` | Le générateur des plantes, des rochers et des petits décors d'une case ; leur liste (une seule source pour `preview_plantes.js`, qui écrit la bibliothèque avec le générateur) |
 | `generateur_betes.mjs` | Le générateur des bêtes : de profil, orientées (trois quarts avant et dos), les égarés ; chaque fonction rend le SVG complet du fichier de la bibliothèque, avec son cadre et sa vitesse ; `build_bundle.js` en fait `generateur/betes.mjs` |
-| `generateur_chantiers.mjs` | Le générateur des chantiers (le montage) : chaque fonction rend le SVG complet du fichier de la bibliothèque ; `preview_montage.mjs` écrit la bibliothèque avec elles, `build_bundle.js` en fait `generateur/chantiers.mjs` |
+| `generateur_chantiers.mjs` | Le générateur des chantiers (le montage, les cultures par étapes) : chaque fonction rend le SVG complet du fichier de la bibliothèque ; `preview_montage.mjs` et `preview_cultures.mjs` écrivent la bibliothèque avec elles, `build_bundle.js` en fait `generateur/chantiers.mjs` |
 | `generer.mjs`, `verif_generateurs.mjs` | L'outil du générateur en ligne de commande (lister, dessiner un fichier, toute une famille), avec les modules publiés ; la vérification qu'ils dessinent la bibliothèque à l'octet près |
 | `montage.mjs`, `preview_montage.mjs` | Le montage d'un bâtiment par étapes (les chantiers) : piquets, terrassement, fondations, charpente, murs, toit, en 2 × 2 et 3 × 3 cases ; le dévoilement ; l'échafaudage des évolutions (derrière, devant) |
+| `cultures.mjs`, `preview_cultures.mjs` | Les cultures par étapes (les chantiers du potager) : pour le blé, les carottes et les citrouilles, une parcelle d'une case bêchée, les sillons, le semis, les pousses, la croissance (3 images chacune) ; à la fin, le champ mûr de l'annexe prend le relais dans le même cadre |
 | `torche.js`, `preview_torche.mjs` | La torche de bois flotté (objet de la boutique, posé sur une case) : allumée, éteinte, son icône, sa lumière de nuit ; le même dessin sert le camp (`camp.mjs`) et la veillée (`scenes6.js`) |
 | `interface.js`, `preview_interface.mjs` | Les icônes de l'interface (32 × 32) : la barre du bas, l'écu, les ressources, les boutons de l'île, les fiches, les trouvailles des climats ; une planche en vraie taille sur trois fonds, et en situation |
 | `egares.js`, `preview_egares.mjs` | Les égarés (lot M, la nuit) : le petit fantôme, le petit zombie tout mou, une bête de brume par climat ; marche, bouderie au toucher, fuite devant Anya, passage en luciole, retour dans la brume |
@@ -84,6 +85,7 @@ node verif_avatar.mjs                # l'avatar : 8 400 images au hasard et acce
 node preview_interface.mjs           # les icônes de l'interface
 node preview_torche.mjs              # la torche de bois flotté (objet de la boutique)
 node preview_montage.mjs             # le montage des bâtiments (les chantiers par étapes)
+node preview_cultures.mjs            # les cultures par étapes (le champ, du bêchage à la croissance)
 for d in svg2/*/; do mkdir -p lib/personnages/maitres/$(basename $d) && cp $d*.svg lib/personnages/maitres/$(basename $d)/; done
 node build_bundle.js                 # assemble ../bibliotheque/
 node verif_generateurs.mjs           # les générateurs par famille dessinent la bibliothèque à l'octet près
