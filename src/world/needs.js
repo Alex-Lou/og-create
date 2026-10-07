@@ -16,13 +16,16 @@ export function leftText(ms) {
   return hours >= 1 ? `${hours} h` : `${Math.max(1, Math.ceil(ms / 60000))} min`;
 }
 
-// Où en est un besoin (fiche de l'habitant) ; place : nom du bâtiment de l'habitant
-export function needState(need, place) {
+// Où en est un besoin (fiche de l'habitant) ; place : nom du bâtiment de l'habitant ; hours : sa durée (règles du
+// serveur), pour dire quand on pourra le renouveler (à mi-durée)
+export function needState(need, place, hours = 0) {
   if (need.id === 'deco') {
     return need.met ? `${need.need} créations d’île autour de « ${place} »` : `${need.have} / ${need.need} créations d’île à ${need.reach} cases au plus de « ${place} »`;
   }
   if (!need.met) return need.id === 'manger' ? 'A faim' : 'Outils usés';
-  return `${need.id === 'manger' ? 'Le ventre plein' : 'Outils en bon état'} encore ${leftText(need.left)}`;
+  const full = `${need.id === 'manger' ? 'Le ventre plein' : 'Outils en bon état'} encore ${leftText(need.left)}`;
+  if (need.refill) return `${full} · tu peux déjà le renouveler`;
+  return hours ? `${full} · à renouveler dans ${leftText(need.left - (hours * 3600000) / 2)}` : full;
 }
 
 // Besoins qui manquent

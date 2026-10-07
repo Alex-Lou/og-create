@@ -81,12 +81,13 @@ export default {
     }
   },
   methods: {
-    // Ressources du palier suivant réunies ; palier suivant prêt à bâtir (world/levels.js)
+    // Ressources du palier suivant réunies ; palier suivant prêt à bâtir (world/levels.js). Ce qui attend dans les
+    // bâtiments compte : le serveur l'encaisse avant de bâtir
     affordable(site) {
-      return levelAffordable(site, this.state.stock);
+      return levelAffordable(site, this.stockPaid);
     },
     canBuild(site) {
-      return levelReady(site, this.state.stock, this.coins);
+      return levelReady(site, this.stockPaid, this.coinsPaid);
     },
     /* ---------- Boutique d'un atelier (règles : world/shop.js ; onglet : SiteShop) ---------- */
     itemArt,

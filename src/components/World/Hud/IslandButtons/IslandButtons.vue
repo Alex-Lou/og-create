@@ -48,15 +48,21 @@
     </svg>
     <span v-if="readyDeposits" class="world__chest-badge" aria-hidden="true">{{ readyDeposits }}</span>
   </button>
-  <!-- Expédition en route : une boussole et le temps avant son retour -->
-  <button v-if="tripLeft" type="button" class="world__trip-btn" :aria-label="`Expédition en route : retour dans ${tripLeft}`" @click="$emit('trip')">
+  <!-- La boussole : l'expédition en route et le temps avant son retour ; sans expédition, une terre à explorer -->
+  <button
+    v-if="tripLeft || explore"
+    type="button"
+    class="world__trip-btn"
+    :aria-label="tripLeft ? `Expédition en route : retour dans ${tripLeft}` : 'Boussole : envoyer une expédition'"
+    @click="$emit('trip')"
+  >
     <svg viewBox="0 0 32 32" width="24" height="24" aria-hidden="true">
       <circle cx="16" cy="16" r="12" fill="#F6EEDD" stroke="#5A3A1E" stroke-width="1.6" />
       <path d="M16,6 L19,16 L16,26 L13,16 Z" fill="#C9473A" stroke="#5A3A1E" stroke-width="0.8" />
       <path d="M16,16 L19,16 L16,26 L13,16 Z" fill="#E9DCC4" />
       <circle cx="16" cy="16" r="1.6" fill="#5A3A1E" />
     </svg>
-    <span class="world__trip-left">{{ tripLeft }}</span>
+    <span v-if="tripLeft" class="world__trip-left">{{ tripLeft }}</span>
   </button>
   <div class="world__zoom">
     <button type="button" aria-label="Zoomer" @click="$emit('zoom', 1.25)">+</button>
@@ -89,6 +95,8 @@ export default {
     readyDeposits: { type: Number, default: 0 },
     // Expédition en route : le temps avant son retour, en clair ('' : aucune)
     tripLeft: { type: String, default: '' },
+    // Une expédition peut partir (une terre inconnue touche un quartier à soi) : la boussole y mène
+    explore: { type: Boolean, default: false },
     immersive: { type: Boolean, default: false }
   },
   emits: ['chests', 'log', 'finds', 'trip', 'zoom', 'immersive']

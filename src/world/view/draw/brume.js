@@ -12,11 +12,13 @@ import { messageOf } from '@/utils/errors';
 import { TW, TH } from '../constants';
 
 export default {
-  // Où flotte Brume (point au sol) : à côté du bâtiment ou du panneau du quartier que vise la quête active, sinon près
-  // du Foyer
+  // Où flotte Brume (point au sol) : à côté du bâtiment, du lieu ou du panneau du quartier que vise la quête active (un
+  // lieu d'un quartier encore inconnu : devant ce quartier, à explorer d'abord), sinon près du Foyer
   brumeSpot() {
     const target = this.quest && this.quest.target;
-    const zone = target && target.zone && this.state.map.zones.find(z => z.id === target.zone);
+    const hidden = target && target.landmark && (this.state.landmarks || []).find(l => l.id === target.landmark && l.known === false);
+    const zoneId = target && (target.zone || (hidden && hidden.zone));
+    const zone = zoneId && this.state.map.zones.find(z => z.id === zoneId);
     if (zone && zone.anchor) {
       const g = this.ground(zone.anchor.x, zone.anchor.y);
       return { x: g.x + TW * 0.45, y: g.y - TH * 0.2 };

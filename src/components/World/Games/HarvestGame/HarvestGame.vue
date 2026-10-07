@@ -6,10 +6,19 @@
           <span class="harvest__eyebrow">Récolte</span>
           <span class="harvest__title">{{ finished ? 'Récolte rentrée' : `${movesLeft} coup${movesLeft > 1 ? 's' : ''}` }}</span>
         </div>
-        <button v-if="!finished" type="button" class="harvest__end" :disabled="sending || animating" @click="finish">
+        <button v-if="!finished" type="button" class="harvest__end" :disabled="sending || animating || quitting" @click="end">
           {{ moves.length ? 'Rentrer la récolte' : 'Quitter' }}
         </button>
       </header>
+
+      <!-- Quitter sans un coup : la partie est perdue (elle ne compte ni pour les quêtes ni pour les visiteurs) -->
+      <div v-if="quitting" class="harvest__quit" role="alertdialog" aria-label="Quitter la Récolte">
+        <p>Quitter sans jouer ? La partie est perdue et ne compte pas.</p>
+        <div class="harvest__quit-actions">
+          <button type="button" class="harvest__btn harvest__btn--ghost" @click="quitting = false">Jouer</button>
+          <button type="button" class="harvest__btn" @click="finish">Quitter quand même</button>
+        </div>
+      </div>
 
       <!-- Gains de la partie : estimés pendant le jeu, ceux du serveur à la fin -->
       <ul class="harvest__tally" aria-label="Gains">
@@ -52,7 +61,11 @@
       <div v-else class="harvest__result">
         <p v-if="error" class="harvest__error" role="alert">{{ error }}</p>
         <p v-else-if="sending" class="harvest__wait">Le serveur pèse ta récolte…</p>
+        <p v-else-if="!moves.length" class="harvest__done">Partie quittée sans jouer : elle est perdue.</p>
         <p v-else class="harvest__done">Ta récolte rejoint les réserves de l’île.</p>
+        <p v-if="earned && !error && !sending" class="harvest__coins">
+          +{{ earned }} <ElementGlyph glyph="ui:coin" /> <span>{{ earned > 1 ? 'écus' : 'écu' }} : un pour chaque dizaine de ressources</span>
+        </p>
         <p v-if="chest && !error && !sending" class="harvest__chest">Un coffre {{ chestLabel }} est tombé ! Il s’ouvre au retour sur l’île.</p>
         <button type="button" class="harvest__btn" :disabled="sending" @click="$emit('close')">Retour à l’île</button>
       </div>
@@ -80,6 +93,8 @@ export default {
     // Rareté du coffre tombé pendant la partie ('' : aucun)
     chest: { type: String, default: '' },
     result: { type: Object, default: null },
+    // Écus de la partie (1 par tranche de 10 ressources), donnés par le serveur à la fin
+    earned: { type: Number, default: 0 },
     error: { type: String, default: '' }
   },
   emits: ['finish', 'close'],
@@ -92,7 +107,9 @@ export default {
       moves: [],
       gains: { stone: 0, wood: 0, water: 0, food: 0 },
       animating: false,
-      finished: false
+      finished: false,
+      // « Quitter » touché sans avoir joué : on demande d'abord
+      quitting: false
     };
   },
   computed: {
@@ -234,9 +251,15 @@ export default {
         }, 300);
       }, GONE_MS);
     },
+    // Rentrer la récolte ; sans un coup joué, on demande d'abord (la partie serait perdue)
+    end() {
+      if (this.moves.length) this.finish();
+      else this.quitting = true;
+    },
     finish() {
       if (this.finished) return;
       this.finished = true;
+      this.quitting = false;
       this.$emit('finish', this.moves);
     }
   }

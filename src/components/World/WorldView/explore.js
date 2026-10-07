@@ -42,6 +42,15 @@ export default {
     ownedFinds() {
       return Boolean(this.state && (this.state.finds || []).some(f => f.amount > 0));
     },
+    // Terre inconnue d'où une expédition peut partir (la boussole y mène), quand aucune n'est en route ; celle du lieu
+    // que vise la quête active d'abord
+    explorableZone() {
+      if (!this.state || this.state.expedition) return null;
+      const zones = this.state.map.zones.filter(z => z.known === false && z.explorable && z.anchor);
+      const target = this.quest && this.quest.target;
+      const hidden = target && target.landmark && (this.state.landmarks || []).find(l => l.id === target.landmark && l.known === false);
+      return (hidden && zones.find(z => z.id === hidden.zone)) || zones[0] || null;
+    },
     // Expédition en route : temps avant son retour, en clair (« 1 h 40 », « 12 min »)
     tripLeft() {
       const trip = this.state && this.state.expedition;
@@ -100,9 +109,13 @@ export default {
         this.busy = false;
       }
     },
-    // La pastille de l'expédition : la caméra va vers le quartier qu'elle explore, sa fiche s'ouvre
+    // La boussole : la caméra va vers le quartier qu'explore l'expédition en route, sinon vers une terre à explorer, et
+    // sa fiche s'ouvre
     showExpedition() {
-      const zone = this.state.map.zones.find(z => z.id === this.state.expedition.zone);
+      const id = this.state.expedition ? this.state.expedition.zone : this.explorableZone && this.explorableZone.id;
+      this.showZone(this.state.map.zones.find(z => z.id === id));
+    },
+    showZone(zone) {
       if (!zone) return;
       if (zone.anchor) {
         const c = this.ground(zone.anchor.x, zone.anchor.y);

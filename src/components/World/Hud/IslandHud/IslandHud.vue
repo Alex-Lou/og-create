@@ -6,7 +6,7 @@
       <span class="world__purse" :aria-label="`${coins} écus`"><span class="world__coin" aria-hidden="true"></span>{{ coinsText }}</span>
     </div>
     <!-- « Tout ramasser » : ce que tous les bâtiments ont produit (écus et ressources), d'un toucher ; le solde reste
-         dans l'en-tête. (« Récolte » ne désigne que les mini-jeux, joués un par un.) -->
+         dans l'en-tête. (« Récolte » désigne le jeu de tuiles, pas ce ramassage.) -->
     <button
       v-if="harvestable.length"
       type="button"

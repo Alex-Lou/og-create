@@ -36,9 +36,10 @@
       </section>
 
       <p class="chests__hint">
-        <template v-if="bottle">Une bouteille s’est échouée sur une plage de ton île : touche-la pour l’ouvrir<template v-if="openable > 1">, ou ouvre tout d’un coup</template>.</template>
-        <template v-else>Les Récoltes lâchent parfois un coffre, sûr avec une chaîne de 8 tuiles. Une bouteille s’échoue sur tes plages toutes les 6 heures.</template>
+        <template v-if="bottle">Une bouteille s’est échouée sur une plage de ton île : touche-la pour l’ouvrir, ou ouvre-la d’ici<template v-if="openable > 1"> (ou tout d’un coup)</template>.</template>
+        <template v-else>Une Récolte d’au moins 5 coups lâche parfois un coffre, sûr avec une chaîne de 8 tuiles. Une bouteille s’échoue sur tes plages toutes les 6 heures.</template>
       </p>
+      <button v-if="bottle" type="button" class="g-btn g-btn--ghost chests__bottle" :disabled="busy" @click="$emit('open', 'bouteille')">Ouvrir la bouteille</button>
     </div>
     <!-- « Tout ouvrir » : dès deux coffres (bouteille comprise), en plus des boutons de chacun -->
     <template v-if="openable > 1" #actions>
