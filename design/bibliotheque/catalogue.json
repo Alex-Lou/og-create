@@ -33536,13 +33536,12 @@
    "cadre": [
     0,
     0,
-    48,
-    64
+    60,
+    80
    ],
    "ms_par_image": 200,
    "parcours": "acte-7",
-   "statut": "a-revoir",
-   "note": "Le Passeur est grand (§ 8) : cadre plus haut à prévoir."
+   "statut": "ok"
   },
   {
    "id": "vivants/passeur/passeur_dos_marche",
@@ -33563,13 +33562,12 @@
    "cadre": [
     0,
     0,
-    48,
-    64
+    60,
+    80
    ],
    "ms_par_image": 200,
    "parcours": "acte-7",
-   "statut": "a-revoir",
-   "note": "Le Passeur est grand (§ 8) : cadre plus haut à prévoir."
+   "statut": "ok"
   },
   {
    "id": "vivants/passeur/passeur_expr_content",
@@ -33586,16 +33584,15 @@
    "cadre": [
     0,
     0,
-    48,
-    64
+    60,
+    80
    ],
    "ms_par_image": [
     700,
     900
    ],
    "parcours": "acte-7",
-   "statut": "a-revoir",
-   "note": "Le Passeur est grand (§ 8) : cadre plus haut à prévoir."
+   "statut": "ok"
   },
   {
    "id": "vivants/passeur/passeur_expr_endormi",
@@ -33612,16 +33609,15 @@
    "cadre": [
     0,
     0,
-    48,
-    64
+    60,
+    80
    ],
    "ms_par_image": [
     700,
     900
    ],
    "parcours": "acte-7",
-   "statut": "a-revoir",
-   "note": "Le Passeur est grand (§ 8) : cadre plus haut à prévoir."
+   "statut": "ok"
   },
   {
    "id": "vivants/passeur/passeur_expr_fache",
@@ -33638,16 +33634,15 @@
    "cadre": [
     0,
     0,
-    48,
-    64
+    60,
+    80
    ],
    "ms_par_image": [
     700,
     900
    ],
    "parcours": "acte-7",
-   "statut": "a-revoir",
-   "note": "Le Passeur est grand (§ 8) : cadre plus haut à prévoir."
+   "statut": "ok"
   },
   {
    "id": "vivants/passeur/passeur_expr_gene",
@@ -33664,16 +33659,15 @@
    "cadre": [
     0,
     0,
-    48,
-    64
+    60,
+    80
    ],
    "ms_par_image": [
     700,
     900
    ],
    "parcours": "acte-7",
-   "statut": "a-revoir",
-   "note": "Le Passeur est grand (§ 8) : cadre plus haut à prévoir."
+   "statut": "ok"
   },
   {
    "id": "vivants/passeur/passeur_expr_neutre",
@@ -33690,16 +33684,15 @@
    "cadre": [
     0,
     0,
-    48,
-    64
+    60,
+    80
    ],
    "ms_par_image": [
     700,
     900
    ],
    "parcours": "acte-7",
-   "statut": "a-revoir",
-   "note": "Le Passeur est grand (§ 8) : cadre plus haut à prévoir."
+   "statut": "ok"
   },
   {
    "id": "vivants/passeur/passeur_expr_rire",
@@ -33716,16 +33709,15 @@
    "cadre": [
     0,
     0,
-    48,
-    64
+    60,
+    80
    ],
    "ms_par_image": [
     700,
     900
    ],
    "parcours": "acte-7",
-   "statut": "a-revoir",
-   "note": "Le Passeur est grand (§ 8) : cadre plus haut à prévoir."
+   "statut": "ok"
   },
   {
    "id": "vivants/passeur/passeur_expr_surpris",
@@ -33742,16 +33734,15 @@
    "cadre": [
     0,
     0,
-    48,
-    64
+    60,
+    80
    ],
    "ms_par_image": [
     700,
     900
    ],
    "parcours": "acte-7",
-   "statut": "a-revoir",
-   "note": "Le Passeur est grand (§ 8) : cadre plus haut à prévoir."
+   "statut": "ok"
   },
   {
    "id": "vivants/passeur/passeur_expr_triste",
@@ -33768,16 +33759,15 @@
    "cadre": [
     0,
     0,
-    48,
-    64
+    60,
+    80
    ],
    "ms_par_image": [
     700,
     900
    ],
    "parcours": "acte-7",
-   "statut": "a-revoir",
-   "note": "Le Passeur est grand (§ 8) : cadre plus haut à prévoir."
+   "statut": "ok"
   },
   {
    "id": "vivants/passeur/passeur_face_lanterne",
@@ -33795,16 +33785,15 @@
    "cadre": [
     0,
     0,
-    48,
-    64
+    60,
+    80
    ],
    "ms_par_image": [
     700,
     900
    ],
    "parcours": "acte-7",
-   "statut": "a-revoir",
-   "note": "Le Passeur est grand (§ 8) : cadre plus haut à prévoir."
+   "statut": "ok"
   },
   {
    "id": "vivants/passeur/passeur_face_repos",
@@ -33822,16 +33811,15 @@
    "cadre": [
     0,
     0,
-    48,
-    64
+    60,
+    80
    ],
    "ms_par_image": [
     900,
     160
    ],
    "parcours": "acte-7",
-   "statut": "a-revoir",
-   "note": "Le Passeur est grand (§ 8) : cadre plus haut à prévoir."
+   "statut": "ok"
   },
   {
    "id": "vivants/passeur/passeur_face_salut",
@@ -33849,16 +33837,15 @@
    "cadre": [
     0,
     0,
-    48,
-    64
+    60,
+    80
    ],
    "ms_par_image": [
     700,
     900
    ],
    "parcours": "acte-7",
-   "statut": "a-revoir",
-   "note": "Le Passeur est grand (§ 8) : cadre plus haut à prévoir."
+   "statut": "ok"
   },
   {
    "id": "animaux/bois/loutre/loutre_avant_clignement",

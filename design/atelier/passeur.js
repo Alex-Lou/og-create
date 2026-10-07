@@ -1,5 +1,6 @@
 // Le Passeur (HISTOIRE.md § 8, acte VII) : grand et silencieux, cape de plumes grises et capuche, visage dans l'ombre où
-// luisent deux yeux pâles, lanterne au bout d'une longue perche. Il parle en énigmes.
+// luisent deux yeux pâles, lanterne au bout d'une longue perche. Il parle en énigmes. Plus grand que les naufragés :
+// repère 60 × 80, pieds en (30, 78) (voir svgP en bas).
 // Action : il lève sa lanterne, la lumière s'agrandit ; image 2 : des volutes de brume s'enroulent autour.
 const { OUT, P, E, L, limb, clip, expression, arm, r2 } = require('./troupe');
 
@@ -97,4 +98,10 @@ const passeur = {
   }
 };
 passeur.pose = passeur.pose.bind(passeur);
+
+// Le Passeur est grand (§ 8) : l'image du kit (repère 48 × 64, pieds en (24, 62)) agrandie 1,25 fois depuis les pieds,
+// dans un repère 60 × 80 (pieds en (30, 78)) ; les traits sont divisés d'autant, pour garder l'épaisseur de la troupe
+const TALL = 1.25;
+const tall = body => `<g transform="translate(30 78) scale(${TALL}) translate(-24 -62)">${body.replace(/stroke-width="([\d.]+)"/g, (m, w) => `stroke-width="${r2(+w / TALL)}"`)}</g>`;
+passeur.svgP = (body, scale = 1) => `<svg xmlns="http://www.w3.org/2000/svg" width="${60 * scale}" height="${80 * scale}" viewBox="0 0 60 80">${tall(body)}</svg>`;
 module.exports = passeur;

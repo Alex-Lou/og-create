@@ -228,7 +228,6 @@ const A_REVOIR = [
   [/^vivants\/brume\/brume_expr_fache$/, 'Brume ne gronde jamais (§ 8) : expression à retirer.'],
   [/^vivants\/anya\/anya_expr_(fache|gene|rire|endormi)$/, 'Anya est calme et n\'élève jamais la voix (§ 8) : expression à retirer.'],
   [/^vivants\/anya\//, 'Le manteau change avec les saisons (§ 8) : variantes à dessiner quand le jeu aura des saisons.'],
-  [/^vivants\/passeur\//, 'Le Passeur est grand (§ 8) : cadre plus haut à prévoir.'],
   [/^personnages\/naufrages\/galet\/galet-naufrage_face_rune$/, 'Un naufragé a oublié son don (§ 6.2) : la rune qui chante revient au maître.'],
   [/^personnages\/naufrages\/sylve\/sylve-naufrage_face_chant$/, 'Un naufragé a oublié son don (§ 6.2) : le chant aux graines revient au maître.'],
   [/^decor\/camp\/epave\/feu_debris$/, 'Le feu de camp est le Foyer au palier I, bâti par le joueur (§ 9, étape 5) : ce feu fait double emploi.'],

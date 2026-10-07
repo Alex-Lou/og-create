@@ -79,16 +79,17 @@ const anim = [];
   ]]);
 }
 
-// ——— Le Passeur (kit de la troupe)
+// ——— Le Passeur (kit de la troupe, agrandi : il est plus grand que les naufragés)
 {
   const rows = [], boxes = [];
+  const svg = passeur.svgP;
   const LABEL = { face_repos: 'Face · repos', avant_marche: 'Trois quarts avant · marche', dos_marche: 'Trois quarts dos · marche', face_salut: 'Face · salut', face_lanterne: 'Action · lanterne levée' };
   for (const [name, view, pose, count] of [...POSES, [passeur.action[0], passeur.action[1], 'action', 2]]) {
     const frames = [...Array(count).keys()].map(n => frame(passeur, view, pose, n));
     frames.forEach((b, n) => write(path.join(LIB, 'passeur', `passeur_${name}_${n + 1}.svg`), svg(b)));
     rows.push(row(LABEL[name], frames.map((b, n) => [svg(unique(b), 4), n + 1])));
     const t = pose === 'marche' ? [200, 200, 200, 200] : pose === 'repos' ? [900, 160] : [700, 900];
-    boxes.push({ label: LABEL[name], frames: frames.map(b => svg(unique(b), 4)), timings: t, w: 192, h: 256 });
+    boxes.push({ label: LABEL[name], frames: frames.map(b => svg(unique(b), 4)), timings: t, w: 240, h: 320 });
   }
   const xr = [];
   for (const x of EXPRS) {
@@ -97,7 +98,7 @@ const anim = [];
     xr.push([svg(unique(frames[0]), 3), XL[x]]);
   }
   rows.push(row('Expressions (yeux qui luisent)', xr));
-  shots.push([path.join(OUT, 'planche_passeur.png'), sheet('Le Passeur', 'Repère 48 × 64 de la troupe, pieds en (24, 62). La perche passe devant la capuche.', rows), 1100]);
+  shots.push([path.join(OUT, 'planche_passeur.png'), sheet('Le Passeur', 'Repère 60 × 80, pieds en (30, 78) : 1,25 fois un naufragé, au même trait. La perche passe devant la capuche.', rows), 1100]);
   anim.push(['Le Passeur', boxes]);
 }
 
