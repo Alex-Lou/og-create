@@ -35,6 +35,18 @@ const LIBRARY = {
   fish: ['fish', null, frame => ({ pose: 'marche', n: frame === 0 ? 2 : 1 })]
 };
 
+// Les fleurs des papillons et la mare de la grenouille, cherchées une fois par décor (pas à chaque image)
+const PROPS_FOR = new WeakMap();
+function propsFor(props) {
+  if (!PROPS_FOR.has(props)) {
+    PROPS_FOR.set(props, {
+      flowers: props.filter(p => p.kind === 'flowers' || p.kind === 'bush').slice(0, 4),
+      pond: props.find(p => p.kind === 'lily' || p.kind === 'reeds')
+    });
+  }
+  return PROPS_FOR.get(props);
+}
+
 export default {
   // Petite vie de l'île, déterministe dans le temps : où est chaque animal, dans quelle image, de quel côté il regarde.
   // Poules autour du Foyer, papillons et abeilles sur les fleurs (le jour), grenouille aux nénuphars, poisson près de la côte.
@@ -73,7 +85,7 @@ export default {
     }
     // Papillons et abeilles : de jour, par temps sec
     if (phase.night < 0.5 && rain < 0.2) {
-      const flowers = this.props.filter(p => p.kind === 'flowers' || p.kind === 'bush').slice(0, 4);
+      const flowers = propsFor(this.props).flowers;
       flowers.forEach((p, k) => {
         const a = t * (0.6 + k * 0.1) + k;
         const kind = k % 2 ? 'bee' : 'butterfly';
@@ -87,7 +99,7 @@ export default {
         touchable(`fly:${k}`, kind, x, y, z);
       });
     }
-    const pond = this.props.find(p => p.kind === 'lily' || p.kind === 'reeds');
+    const pond = propsFor(this.props).pond;
     // La grenouille saute plus souvent sous la pluie
     if (pond) {
       const leap = fright('frog', 0.6);
