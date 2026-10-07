@@ -5,7 +5,7 @@
 // quarts (deux yeux, le museau qui pointe vers nous) ou de dos (la nuque, les oreilles).
 const { OUT, P, E, clip, r2 } = require('./troupe');
 const Bt = require('./betes');
-const { eye, heartIcon, limb, thick, stroke } = Bt;
+const { eye, heartIcon, limb, thick, stroke, line, hoof, paw } = Bt;
 
 const SH = 'rgba(40,55,20,.18)';
 const DEPTH = 0.62; // tassement de la profondeur au sol (pieds avant et arrière)
@@ -93,7 +93,9 @@ function quad3(c, view, pose) {
     if (rest) return '';
     const col = l.near ? (lg.color || c.fur) : (lg.colorS || c.furS);
     const [fx, fy] = l.foot;
-    return limb(l.hip, [fx, fy], lg.w, col) + (lg.hoof ? E(fx, fy + 0.2, lg.w * 0.62, 0.85, lg.hoof, 0.8) : lg.paw ? E(fx + F[0] * 0.3, fy + 0.2, lg.w * 0.72, 0.85, lg.paw, 0.8) : '');
+    // patte proche : un reflet le long du devant ; sabot luisant, ou patte à deux doigts (comme de profil)
+    const shine = l.near ? line([l.hip[0] - lg.w * 0.2, l.hip[1] + 1.2], [fx - lg.w * 0.2, fy - 1.6], lg.w * 0.26, 'rgba(255,255,255,.35)') : '';
+    return limb(l.hip, [fx, fy], lg.w, col) + shine + (lg.hoof ? hoof(fx, fy + 0.2, lg.w * 0.62, lg.hoof) : lg.paw ? paw(fx + F[0] * 0.3, fy + 0.2, lg.w * 0.72, lg.paw) : '');
   };
   let s = '';
   // ombre au sol : un ovale allongé dans le sens de la marche

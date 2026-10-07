@@ -67,11 +67,17 @@ const galet = {
       // de dos, le crâne descend aussi bas que de face (la couronne de cheveux blancs touche le col)
       const back = 'M11.2,21 Q10.6,10 24,9.8 Q37.4,10 36.8,21 Q37,28.4 34.2,30.4 Q24,32.6 13.8,30.4 Q11,28.4 11.2,21 Z';
       s += E(12.4, 23, 1.7, 2.3, C.skin) + E(35.6, 23, 1.7, 2.3, C.skin);
+      // la barbe de lichen dépasse des deux côtés du cou : deux touffes bouffantes qui sortent de sous la tête
+      const tuft = m => {
+        const d = 'M13.4,26 Q11.2,29 11.8,31.8 Q11.2,34 13,35 Q13.4,36.8 15.4,36.6 Q17,37.6 18.2,36.2 Q19.6,35.4 18.8,33.4 L17.4,28.4 Z';
+        const g = inner => `<g transform="translate(${m < 0 ? 48 : 0} 0) scale(${m} 1)">${inner}</g>`;
+        return g(P(d, C.beard) + clip(`${ctx.id}t${m}`, d, `<rect x="15.4" y="24" width="6" height="14" fill="${C.beardS}"/><path d="M8,34.6 Q14,36.4 22,34 L22,40 L8,40 Z" fill="${C.beardS}"/>`)
+          + P(d, 'none') + P('M13.6,30.6 Q13.4,33 14.6,34.6 M16,30.4 Q16.2,33 16.8,35', 'none', 0.5) + L([12.8, 31], [13.2, 33.2], C.beardH, 0.7));
+      };
+      s += tuft(1) + tuft(-1);
       s += P(back, C.skin) + clip(`${c.uid}h`, back, `<rect x="27" y="8" width="12" height="22" fill="${C.skinS}"/>`
         + `<path d="M8,24.4 Q24,28.2 40,24.4 L40,34 L8,34 Z" fill="${C.white}"/><path d="M8,28.6 Q24,31.8 40,28.6 L40,34 L8,34 Z" fill="${C.whiteS}"/>`) + P(back, 'none');
       s += P('M11.2,24.8 Q24,28.6 36.8,24.8', 'none', 0.6) + P('M16,27.4 Q16.6,29 18.2,29.6', 'none', 0.5) + P('M30.4,27.4 Q30,29 28.6,29.6', 'none', 0.5);
-      // la barbe dépasse des deux côtés du cou
-      s += P('M13.6,26.4 Q12,31 14.4,35.4 L16.6,33.6 Z', C.beard, 0.8) + P('M34.4,26.4 Q36,31 33.6,35.4 L31.4,33.6 Z', C.beard, 0.8);
       s += P('M24.6,5.2 Q25.2,2.4 22.8,1.8 Q23,3.6 21.8,5 Z', C.wool, 0.8)
         + P('M11.6,16.4 Q11,5.4 24,4.8 Q37,5.4 36.4,16.4 Q24,19 11.6,16.4 Z', C.wool) + P('M11.2,14.6 Q24,17.4 36.8,14.6 L36.8,17.8 Q24,20.6 11.2,17.8 Z', C.wool, 0.9)
         + E(26.6, 9.6, 1.1, 0.85, '#5E2A15', 0.6) + P('M26,9.9 Q26.6,8 27.3,9.8', C.white, 0.5);
