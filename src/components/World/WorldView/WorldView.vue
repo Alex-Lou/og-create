@@ -464,7 +464,7 @@ export default {
     // Solde d'écus (en-tête) : grise les articles hors de portée ; le serveur reste seul juge
     coins: { type: Number, default: null }
   },
-  emits: ['coins-updated', 'show-alert', 'login', 'go', 'quest', 'replay-vigil', 'replay-anya'],
+  emits: ['coins-updated', 'show-alert', 'login', 'go', 'quest', 'replay-vigil', 'replay-anya', 'loading', 'loaded'],
   data() {
     return {
       state: null,
@@ -672,10 +672,13 @@ export default {
       const due = (charges && charges.nextIn !== null && this.clock - this.loadedAt > charges.nextIn + 2000) || (trip && this.clock - this.loadedAt > trip.endsIn + 2000);
       if (due && !this.busy && !this.run) this.load();
     }, 20000);
+    // Arrivée sur l'île : App.vue montre où en est la première vue tant qu'elle n'est pas prête (draw/loading.js)
+    this.startLoading();
     await this.load();
   },
   beforeUnmount() {
     this.gone = true;
+    this.endLoading();
     if (this.immersive) this.setImmersive(false);
     clearTimeout(this.undoTimer);
     clearTimeout(this.holdTimer);
@@ -725,6 +728,8 @@ export default {
         }
       } catch (error) {
         if (this.gone) return;
+        // (rien à attendre : l'île montre son invitation ou son erreur)
+        this.endLoading();
         if ([401, 402].includes(error.response?.status)) {
           this.guest = true;
           this.state = null;

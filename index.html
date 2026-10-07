@@ -16,8 +16,54 @@
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400..800;1,9..144,400..600&family=Nunito:wght@600;700;800;900&display=swap" rel="stylesheet" />
+    <!-- L'écran de démarrage (#splash, src/utils/splash.js) : visible dès les premiers octets, avant le code du jeu -->
+    <style>
+      .splash { position: fixed; inset: 0; z-index: 10000; display: grid; place-content: center; justify-items: center; gap: 12px; padding: 24px 16px; background: radial-gradient(circle at 50% 38%, #fffcf5, #f4ead5 62%, #e8d8b8); color: #34241a; font-family: 'Nunito', ui-rounded, system-ui, sans-serif; text-align: center; transition: opacity .35s ease; }
+      .splash.is-gone { opacity: 0; pointer-events: none; }
+      .splash__wisp { filter: drop-shadow(0 6px 14px rgba(92, 200, 240, .35)); animation: splash-float 2.6s ease-in-out infinite; }
+      .splash__flame { transform-box: fill-box; transform-origin: 50% 100%; animation: splash-flicker 1.7s ease-in-out infinite; }
+      .splash__eyes ellipse { transform-box: fill-box; transform-origin: 50% 50%; animation: splash-blink 4s steps(1, end) infinite; }
+      .splash__title { margin: 0; font-family: 'Fraunces', 'Iowan Old Style', Georgia, serif; font-size: 26px; font-weight: 700; }
+      .splash__bar { width: min(240px, 70vw); height: 8px; border-radius: 999px; background: rgba(52, 36, 26, .12); overflow: hidden; }
+      .splash__bar span { display: block; width: var(--splash-p, 12%); height: 100%; border-radius: inherit; background: linear-gradient(90deg, #5cc8f0, #bff0ff); transition: width .3s ease-out; }
+      .splash__steps { margin: 4px 0 0; padding: 0; list-style: none; display: grid; gap: 5px; width: min(260px, 80vw); }
+      .splash__steps li { display: flex; justify-content: space-between; gap: 12px; color: #85705f; font-size: 13px; font-weight: 700; }
+      .splash__steps li.is-done { color: #34241a; }
+      .splash__steps li.is-done b { color: #3f8a4a; }
+      @keyframes splash-float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-6px); } }
+      @keyframes splash-flicker { 0%, 100% { transform: skewX(0deg) scaleY(1); } 30% { transform: skewX(-6deg) scaleY(1.05); } 60% { transform: skewX(5deg) scaleY(.97); } }
+      @keyframes splash-blink { 0%, 96% { transform: scaleY(1); } 97% { transform: scaleY(.2); } }
+      @media (prefers-color-scheme: dark) {
+        .splash { background: radial-gradient(circle at 50% 38%, #4a3324, #2c1f16 62%, #221812); color: #f6e6b8; }
+        .splash__bar { background: rgba(251, 235, 192, .16); }
+        .splash__steps li { color: rgba(251, 235, 192, .62); }
+        .splash__steps li.is-done { color: #f6e6b8; }
+      }
+      @media (prefers-reduced-motion: reduce) {
+        .splash__wisp, .splash__flame, .splash__eyes ellipse { animation: none; }
+        .splash, .splash__bar span { transition: none; }
+      }
+    </style>
   </head>
   <body>
+    <div id="splash" class="splash" role="status" aria-live="polite" aria-label="Brumelune se prépare">
+      <svg class="splash__wisp" width="64" height="80" viewBox="-14 -26 28 35" aria-hidden="true">
+        <defs>
+          <radialGradient id="splash-body" gradientUnits="userSpaceOnUse" cx="0" cy="-2.4" r="17.6" fx="0" fy="1.6"><stop offset="0" stop-color="#FFFFFF" /><stop offset=".45" stop-color="#BFF0FF" /><stop offset="1" stop-color="#5CC8F0" /></radialGradient>
+          <radialGradient id="splash-halo"><stop offset="0" stop-color="rgba(120,210,255,.45)" /><stop offset="1" stop-color="rgba(120,210,255,0)" /></radialGradient>
+        </defs>
+        <circle cx="0" cy="-5" r="13.5" fill="url(#splash-halo)" />
+        <g class="splash__flame"><path d="M0,8 C10.4,8 9.2,-3.6 0,-16.4 C-9.2,-3.6 -10.4,8 0,8 Z" fill="url(#splash-body)" /><path d="M0,8.4 C5.7,8.4 5.1,2 0,-4.4 C-5.1,2 -5.7,8.4 0,8.4 Z" fill="rgba(255,255,255,.75)" /></g>
+        <g class="splash__eyes" fill="#1D3557"><ellipse cx="-2.9" cy="-0.8" rx="1.25" ry="1.75" /><ellipse cx="2.9" cy="-0.8" rx="1.25" ry="1.75" /></g>
+      </svg>
+      <p class="splash__title">Brumelune</p>
+      <div class="splash__bar" aria-hidden="true"><span></span></div>
+      <ul class="splash__steps">
+        <li data-step="code"><span>Le Grimoire s’éveille</span><b>…</b></li>
+        <li data-step="fonts"><span>L’encre sèche</span><b>…</b></li>
+        <li data-step="carnet"><span>Ta partie revient</span><b>…</b></li>
+      </ul>
+    </div>
     <div id="app"></div>
     <script type="module" src="/src/main.js"></script>
   </body>

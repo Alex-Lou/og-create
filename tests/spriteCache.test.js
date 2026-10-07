@@ -141,4 +141,31 @@ describe('le cache des dessins', () => {
     await settle();
     expect(island.draws).toBe(1);
   });
+  it('compte, pendant le chargement de l’île, les dessins demandés et prêts de chaque groupe (image par image)', async () => {
+    const cache = await import('@/world/spriteCache');
+    cache.setSpriteDetail(1);
+    cache.drawSprite(ctx(), 'deja', make, 0, 0);
+    await settle();
+    // Coupé par défaut : rien n'est compté
+    cache.setSpriteDetail(1);
+    cache.drawSprite(ctx(), 'deja', make, 0, 0);
+    cache.setSpriteDetail(1);
+    expect(cache.spriteCount()).toEqual({});
+    cache.countSprites(true);
+    cache.setSpriteDetail(1);
+    cache.spriteGroup('decor');
+    cache.drawSprite(ctx(), 'deja', make, 0, 0);
+    cache.drawSprite(ctx(), 'deja', make, 0, 0);
+    cache.drawSprite(ctx(), 'nouveau', make, 0, 0);
+    cache.spriteGroup('vivants');
+    cache.drawSprite(ctx(), 'deja', make, 0, 0);
+    expect(cache.spriteCount()).toEqual({ decor: [1, 2], vivants: [1, 1] });
+    // Une nouvelle image repart de zéro
+    cache.setSpriteDetail(1);
+    expect(cache.spriteCount()).toEqual({});
+    cache.countSprites(false);
+    expect(cache.spriteCount()).toEqual({});
+    // (le dessin demandé finit sa lecture avant la fin du test)
+    await settle();
+  });
 });

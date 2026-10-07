@@ -9,5 +9,6 @@ import bubbles from './draw/bubbles';
 import life from './draw/life';
 import air from './draw/air';
 import brume from './draw/brume';
+import loading from './draw/loading';
 
-export default { ...loop, ...sites, ...nature, ...bubbles, ...life, ...air, ...brume };
+export default { ...loop, ...sites, ...nature, ...bubbles, ...life, ...air, ...brume, ...loading };

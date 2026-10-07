@@ -3,7 +3,7 @@
 // par draw.js.
 
 import { drawSea, drawCloudShadows, drawClouds, drawTint, drawWeather } from '@/world/scene';
-import { setSpriteDetail, drawSpriteIn, imageOf } from '@/world/spriteCache';
+import { setSpriteDetail, drawSpriteIn, imageOf, spriteGroup } from '@/world/spriteCache';
 import { drawSparkles, drawWaves, drawSchools, schoolFish, drawShallows, drawRings, drawGullShadow, drawFlyingGull, drawPlankton, drawJellies } from '@/world/sea';
 import { drawFloatBelow, FLOATING_ZONE, drawSpring } from '@/world/islets';
 import { drawLive, drawCell, SEA_Z, HS } from '@/world/terrain';
@@ -11,6 +11,10 @@ import { mixToward, climateAt, drawClimate } from '@/world/climates';
 import { TW, TH, SEA_KINDS } from '../constants';
 
 const FRAME_MS = 33; // ~30 images/s : l'île respire, sans user la batterie
+// Pendant son chargement (loading.js), l'île, cachée par l'écran de chargement, ne se dessine que pour compter ses
+// dessins : quatre fois par seconde, et le fil principal va à la lecture des dessins (redessiner l'île cachée à chaque
+// image en prenait près de la moitié sur un téléphone lent)
+const LOADING_FRAME_MS = 250;
 // Vue de loin (zoom sous FAR_SCALE) : ni masquage par le relief devant ce qui se tient debout (invisible à cette
 // taille), ni petits détails du décor ; la très grande île reste fluide
 const FAR_SCALE = 0.45;
@@ -31,7 +35,7 @@ export default {
   },
   frame(now) {
     this.raf = 0;
-    if (now - this.lastFrame >= FRAME_MS) {
+    if (now - this.lastFrame >= (this.loadingSince ? LOADING_FRAME_MS : FRAME_MS)) {
       this.lastFrame = now;
       const start = this.perf ? performance.now() : 0;
       this.draw(now);
@@ -99,6 +103,8 @@ export default {
     // (avec le décor fixe cuit dedans, sauf de près)
     const near = s >= NEAR_SCALE;
     const baked = !near;
+    // (le décor cuit dans le sol compte avec le décor, pendant le chargement de l'île)
+    spriteGroup('decor');
     const missing = this.terrain.draw(ctx, view, s * dpr, 8, baked);
     drawLive(ctx, this.M, this.live, view, t);
     if (this.owns(this.state, FLOATING_ZONE)) drawSpring(ctx, this.islets.spring, view, t);
@@ -222,6 +228,8 @@ export default {
     this.signs = [];
     const repaint = this.repaintSoon;
     for (const item of standing) {
+      // (groupe de ses dessins, pour le chargement de l'île)
+      spriteGroup(item.critter || item.ferry ? 'vivants' : item.prop ? 'decor' : 'batiments');
       if (item.site) this.drawSite(ctx, item.site, t, now, repaint);
       else if (item.craft) {
         this.drawCraft(ctx, item.craft, t, now, repaint);
@@ -280,6 +288,8 @@ export default {
     this.drawBubbles(ctx, t, repaint);
     // Ce qui est choisi (premier toucher) : un contour doré qui bat
     this.drawPick(ctx, t);
+    // Arrivée sur l'île : où en est la première vue
+    this.watchLoading(missing, this.terrain.seen || 0);
   },
   // Ce qui se tient derrière une case plus haute : cette case est repeinte par-dessus (le relief cache le pied)
   occlude(ctx, x, y, baked = false) {
