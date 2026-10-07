@@ -417,15 +417,37 @@ LM.oasis = { n: 2, draw: f => {
   s += herbe(x + 44, y + 6, '#9CC86A', 0.9) + herbe(x - 44, y + 12, '#8CBF5C', 0.8) + herbe(x + 30, y + 20, '#9CC86A', 0.7) + fleurette(x + 50, y + 10, '#F7B6C8') + fleurette(x - 38, y + 18, '#FFFFFF');
   return s + palme(-0.5, 0.34, 0.86, 'c');
 } };
+// Pyramide ensablée : la pointe d'une pyramide à degrés dépasse des dunes, ses assises de blocs (le pan au soleil, le pan
+// à l'ombre), une porte à demi enfouie ; coiffée d'un pyramidion d'or qui accroche le soleil (image 2, même lueur
+// qu'avant) ; des dunes aux crêtes nettes et à rides de vent, des touffes sèches ; le sable file au vent (2 images)
+const GRES = { lit: '#EDCB8A', shade: '#C99E5C', joint: '#B98C4E', jointO: '#A27A40' };
 LM.pyramide = { n: 2, draw: f => {
-  const [x, y] = at(0, 0);
-  let s = `<path d="M${x - 62},${y + 6} Q${x - 30},${y - 14} ${x},${y - 6} Q${x + 34},${y - 18} ${x + 62},${y + 4} Q${x},${y + 22} ${x - 62},${y + 6} Z" fill="${SAND.top}" stroke="${OUT}" stroke-width="1.1"/>`;
-  s += poly([[x - 34, y - 6], [x, y - 64], [x + 34, y - 8], [x, y + 4]], SAND.left, 1.2) + poly([[x, y - 64], [x + 34, y - 8], [x, y + 4]], SAND.right, 0);
-  for (let i = 1; i < 6; i++) { const t = i / 6; s += `<path d="M${r2(x - 34 * (1 - t))},${r2(y - 6 - 58 * t + 10 * t * 0)} L${x},${r2(y + 4 - 68 * t)} L${r2(x + 34 * (1 - t))},${r2(y - 8 - 56 * t)}" stroke="${SAND.right}" stroke-width="0.6" fill="none"/>`; }
-  s += poly([[x - 7, y - 52], [x, y - 64], [x + 7, y - 52], [x, y - 49]], '#F6C744', 1) + (f ? sparkle(x - 2, y - 60, 4) + glow(x, y - 58, 10, '255,220,120', 0.3) : '');
-  s += `<path d="M${x - 62},${y + 6} Q${x - 30},${y - 2} ${x},${y + 6} Q${x + 34},${y - 4} ${x + 62},${y + 4} Q${x},${y + 22} ${x - 62},${y + 6} Z" fill="${SAND.top}" stroke="${OUT}" stroke-width="1.1"/>`;
-  s += [0, 1, 2].map(i => `<path d="M${x + 14 + i * 8 + f * 6},${y - 20 + i * 4} q6,-2 12,0" stroke="#FFF4D8" stroke-width="1" fill="none" stroke-linecap="round" opacity="0.8"/>`).join('');
-  return s;
+  const [x, y] = at(0, 0), c = GRES;
+  // la dune du fond, à rides
+  let s = `<path d="M${x - 66},${y + 2} Q${x - 40},${y - 22} ${x - 8},${y - 14} Q${x + 30},${y - 26} ${x + 66},${y} Q${x},${y + 22} ${x - 66},${y + 2} Z" fill="${SAND.top}" stroke="${OUT}" stroke-width="1.1"/>`
+    + `<path d="M${x - 8},${y - 14} Q${x + 30},${y - 26} ${x + 66},${y} Q${x + 30},${y - 10} ${x - 8},${y - 14} Z" fill="${SAND.left}"/>`;
+  // la pyramide à degrés : le pan au soleil, le pan à l'ombre, les assises et leurs joints décalés
+  const tip = [x, y - 64], L0 = [x - 36, y - 4], R0 = [x + 36, y - 6], B0 = [x, y + 8];
+  s += poly([L0, tip, B0], c.lit, 1.2) + poly([tip, R0, B0], c.shade, 1.2);
+  for (let i = 1; i < 7; i++) {
+    const t = i / 7, l = [L0[0] + (tip[0] - L0[0]) * t, L0[1] + (tip[1] - L0[1]) * t], b = [B0[0] + (tip[0] - B0[0]) * t, B0[1] + (tip[1] - B0[1]) * t], r = [R0[0] + (tip[0] - R0[0]) * t, R0[1] + (tip[1] - R0[1]) * t];
+    s += `<path d="M${r2(l[0])},${r2(l[1])} L${r2(b[0])},${r2(b[1])}" stroke="${c.joint}" stroke-width="0.8"/><path d="M${r2(b[0])},${r2(b[1])} L${r2(r[0])},${r2(r[1])}" stroke="${c.jointO}" stroke-width="0.8"/>`;
+    const tp = (i - 1) / 7, lp = [L0[0] + (tip[0] - L0[0]) * tp, L0[1] + (tip[1] - L0[1]) * tp], bp = [B0[0] + (tip[0] - B0[0]) * tp, B0[1] + (tip[1] - B0[1]) * tp], rp = [R0[0] + (tip[0] - R0[0]) * tp, R0[1] + (tip[1] - R0[1]) * tp];
+    for (const k of (i % 2 ? [0.3, 0.7] : [0.5])) { const p0 = [lp[0] + (bp[0] - lp[0]) * k, lp[1] + (bp[1] - lp[1]) * k], p1 = [l[0] + (b[0] - l[0]) * k, l[1] + (b[1] - l[1]) * k]; s += L(p0, p1, c.joint, 0.6); const q0 = [bp[0] + (rp[0] - bp[0]) * k, bp[1] + (rp[1] - bp[1]) * k], q1 = [b[0] + (r[0] - b[0]) * k, b[1] + (r[1] - b[1]) * k]; s += L(q0, q1, c.jointO, 0.6); }
+  }
+  // les signes oubliés gravés sur le pan au soleil : un soleil, une crosse, un triangle
+  s += `<g stroke="#8A5E2E" stroke-width="0.9" fill="none" stroke-linecap="round" stroke-linejoin="round"><circle cx="${x - 22}" cy="${y - 25}" r="2.6"/><path d="M${x - 14},${y - 17} l0,-8 q0,-2.4 2.4,-2.2 q1.6,0.3 1,2"/><path d="M${x - 8},${y - 15} l3,-6 l3,6 Z"/></g>`;
+  // le pyramidion d'or
+  s += poly([[x - 7, y - 52], [x, y - 64], [x, y - 49]], '#F6C744', 1) + poly([[x, y - 64], [x + 7, y - 52], [x, y - 49]], '#D9A12E', 1) + L([x - 3, y - 55], [x - 0.6, y - 61], '#FFF1B0', 0.9);
+  s += f ? sparkle(x - 2, y - 60, 4) + glow(x, y - 58, 10, '255,220,120', 0.3) : '';
+  // la dune de devant qui enfouit la base, ses rides et ses touffes sèches
+  s += `<path d="M${x - 66},${y + 6} Q${x - 34},${y - 18} ${x - 4},${y + 2} Q${x + 30},${y - 20} ${x + 66},${y + 4} Q${x},${y + 24} ${x - 66},${y + 6} Z" fill="${SAND.top}" stroke="${OUT}" stroke-width="1.1"/>`
+    + `<path d="M${x - 4},${y + 2} Q${x + 30},${y - 20} ${x + 66},${y + 4} Q${x + 30},${y - 4} ${x - 4},${y + 2} Z" fill="${SAND.left}"/>`
+    + [[-46, 4], [-30, 8], [-12, 10], [10, 8], [32, 4]].map(([dx, dy]) => `<path d="M${x + dx},${y + dy} q4,-1.6 8,0" stroke="${SAND.right}" stroke-width="0.6" fill="none"/>`).join('')
+    + [[-52, 8], [46, 6]].map(([dx, dy]) => `<path d="M${x + dx - 2},${y + dy} q-1,-3 -3,-4 M${x + dx},${y + dy} q0,-4 1,-5 M${x + dx + 2},${y + dy} q1,-3 3,-3.6" stroke="#B89A5A" stroke-width="0.9" fill="none" stroke-linecap="round"/>`).join('');
+  // le sable qui file au vent depuis les crêtes
+  return s + [0, 1, 2].map(i => `<path d="M${x + 40 + i * 4 + f * 6},${y - 12 - i * 5} q6,-2 12,0" stroke="#FFF4D8" stroke-width="1" fill="none" stroke-linecap="round" stroke-dasharray="2 2" opacity="0.85"/>`).join('')
+    + `<path d="M${x - 64 + f * 5},${y - 12} q7,-2 14,0" stroke="#FFF4D8" stroke-width="0.9" fill="none" stroke-linecap="round" stroke-dasharray="2 2" opacity="0.8"/>`;
 } };
 // Arbre-géant : un sol de jungle aux bords bosselés, fougères, champignons et fleurs ; un tronc énorme à l'écorce
 // cannelée, sa mousse et son creux ; cinq racines-contreforts ; deux maîtresses branches ; une canopée en deux étages
