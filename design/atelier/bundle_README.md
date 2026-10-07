@@ -62,7 +62,7 @@ détails propres à un lot : places des objets de boutique, lumières des palier
 | `svg/personnages/maitres/` | Les 7 maîtres : Aster, Cannelle, Rivet, Ondin, Sylve, Galet, Mélisse. 3 vues : marche, repos, salut, travail (le geste du métier), action, 8 expressions, expressions en marche ; lanterne et parapluie (avant et dos) ; endormis assis (`dort`) et couchés (`couche`) | 560 |
 | `svg/personnages/visiteurs/` | 12 visiteurs tirés du générateur de l'avatar (leurs choix dans `quotidien.json`) : 3 vues, marche, repos, salut, lanterne, parapluie, couchés | 504 |
 | `svg/personnages/naufrages/<prénom>/` | Les maîtres tels qu'ils arrivent sur l'île (`<prénom>-naufrage_…`) : une tenue de naufragé à chacun, mêmes vues, poses et expressions, endormis assis et couchés ; lanterne et parapluie pour Aster et Rivet (`naufrages.json`, `quotidien.json`) | 480 |
-| `svg/personnages/avatar/` | L'avatar du joueur : 12 exemples tirés du générateur et leur version naufragée, poses, gestes du tutoriel (ramasser, grelotter, lire), expressions ; dans `avatar.json` : les formes, les nuanciers, les 36 accessoires (rareté, source) et les teintures rares | 448 |
+| `svg/personnages/avatar/` | L'avatar du joueur : 12 exemples tirés du générateur et leur version naufragée, poses, gestes du tutoriel (ramasser, grelotter, lire), expressions ; dans `avatar.json` : les formes, les nuanciers, les 41 accessoires (rareté, source ; saison des tenues de saison) et les teintures rares | 2464 |
 | `svg/personnages/epilogue/` | 8 nouveaux venus de l'épilogue, tirés du générateur de l'avatar, en habits de voyage (valise à la main, bagage sur le dos) : 3 vues, marche, repos, salut | 192 |
 | `svg/vivants/` | Brume (8 stades et ses variantes), Anya, le cerf blanc, le Passeur | 128 |
 | `svg/animaux/` | Ferme, bois, eau douce, climats, bestiaire, familiers, mer : de profil, et de trois quarts avant et dos pour les 37 bêtes qui marchent (`orientees.json`) ; le crabe de la Grève (`mer/crabe/crabe.json`) | 541 |
@@ -99,7 +99,9 @@ détails propres à un lot : places des objets de boutique, lumières des palier
   `design/atelier/avatar_naufrage.js` (la mer garde les chapeaux, les sacs et ce qu'on tient). Les nuanciers sont libres ;
   les accessoires « boutique » ou « coffre » et les teintures rares se gagnent pour toujours ; tout est cosmétique. Les
   fichiers de `svg/personnages/avatar/` sont des exemples. `design/atelier/verif_avatar.mjs` vérifie qu'aucun choix ne
-  casse le dessin ni ne sort du cadre.
+  casse le dessin ni ne sort du cadre. Les tenues de saison (manteau d'hiver et ciré « par-dessus », bottes « aux pieds »,
+  moufles « aux mains » ; leur `saison` dans le catalogue : `hiver` ou `pluie`) se mettent par-dessus la tenue choisie ;
+  elles ne se tirent pas au hasard.
 - **Égarés** : en marche, `marche` en boucle (avant ou dos, le miroir pour les deux autres directions). Touché : `bouderie`
   (une fois), puis `brume` (une fois) : il retourne dans la brume. Une lumière à 2 cases : `luciole` (une fois) ; la
   luciole peut ensuite rejoindre les lumières de la nuit. Anya passe : `fuite` en boucle, en s'éloignant d'elle. La bête de

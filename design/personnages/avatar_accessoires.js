@@ -3,10 +3,12 @@
 //   derriere : derrière le corps (cape, ailes, sac de trois quarts) ;   cou : sur le buste, sous les bras (bretelles, colliers) ;
 //   surBras : par-dessus les bras (cape et ailes de dos) ;              tete : par-dessus la tête (chapeaux) ;
 //   cheveux : sur les cheveux, sous les chapeaux ;                     joues, oreilles, visage : sur le visage ;
-//   main : tenu dans la main droite (troupe.frame, c.hold).
+//   main : tenu dans la main droite (troupe.frame, c.hold) ;          dessus : par-dessus le haut (manteau, ciré) ;
+//   pieds : le pied de la troupe (c.foot : les bottes, sur le bas de la jambe).
 // dessin(c, ctx, cols) : c, le personnage (c.o : les choix, c.k : la corpulence) ; ctx.view : front, se ou ne ; cols : les
 // couleurs choisies, en hexadécimal.
-const { OUT, P, E, L, limb, clip, r2 } = require('./troupe');
+// Les tenues de saison changent aussi le personnage lui-même (PORTE) : les manches du manteau ou du ciré, les moufles.
+const { OUT, P, E, L, limb, clip, r2, shoe } = require('./troupe');
 const { tone, mix } = require('./avatar_choix');
 
 const sx = (d, k) => (k ? d.replace(/(-?\d+\.?\d*),(-?\d+\.?\d*)/g, (m, x, y) => `${r2(+x + k)},${y}`) : d);
@@ -296,6 +298,115 @@ function ombrelle(c, ctx, [col], h) {
     + `<g transform="translate(${r2(tip[0])} ${r2(tip[1] + 1.6)}) rotate(16)">${P(canopy, col)}${ribs}${E(0, -6.9, 0.6, 0.6, tone(col, 0.8), 0.5)}</g>`;
 }
 
+// ---- par-dessus : le manteau d'hiver, le ciré ----
+// Le pan (d'un seul tenant) : des épaules, un peu plus large que le buste, jusqu'au-dessus du genou (c.coatHem) ; il
+// s'évase et suit la marche d'un rien, comme la jupe
+const balance = ctx => (ctx.walk ? [0.5, 0, -0.5, 0][ctx.n] : 0);
+function pan(c, ctx) {
+  const { sw, hw, b } = c.k, H = c.coatHem, w = balance(ctx);
+  const mx = (sw + hw) / 2 + b + 0.6;
+  return `M${r2(24 - sw - 0.5)},32.4 Q24,29.6 ${r2(24 + sw + 0.5)},32.4 Q${r2(24 + mx)},39.6 ${r2(24 + hw + 0.9)},45.4`
+    + ` L${r2(24 + hw + 2.4 + w)},${H} Q${r2(24 + w)},${r2(H + 1.8)} ${r2(24 - hw - 2.4 + w)},${H} L${r2(24 - hw - 0.9)},45.4 Q${r2(24 - mx)},39.6 ${r2(24 - sw - 0.5)},32.4 Z`;
+}
+// Le pan peint : l'aplat, l'ombre du côté droit et du bas, un reflet à gauche (sauf de dos), puis le contour
+function panPeint(c, ctx, id, col, S, reflets = '') {
+  const { view } = ctx, d = pan(c, ctx), H = c.coatHem;
+  const ombre = `<rect x="${view === 'se' ? 25.4 : 27.2}" y="29" width="16" height="30" fill="${S}"/>`
+    + `<path d="M6,${r2(H - 1.6)} Q24,${r2(H + 1.4)} 42,${r2(H - 1.6)} L42,${r2(H + 4)} L6,${r2(H + 4)} Z" fill="${S}"/>`;
+  const clair = view === 'ne' ? '' : `<rect x="${r2(24 - c.k.sw + 0.6)}" y="34.4" width="1.3" height="10" rx="0.6" fill="${tone(col, 1.28)}"/>`;
+  return P(d, col) + clip(`${c.uid}${id}${view}`, d, ombre + clair + reflets) + P(d, 'none');
+}
+// Deux poches à rabat, à hauteur des hanches (de trois quarts, celle du fond est plus étroite)
+function poches(c, { view }, S) {
+  const { hw } = c.k, se = view === 'se';
+  const one = (x, l) => P(`M${r2(x)},45.6 L${r2(x + l)},45.6 L${r2(x + l - 0.2)},47.2 L${r2(x + 0.2)},47.2 Z`, S, 0.6);
+  return one(24 - hw - 0.4 - (se ? 0.6 : 0), 4.4) + one(24 + hw - (se ? 3.4 : 4), se ? 3 : 4.4);
+}
+// Le col de fourrure : une bande moelleuse autour du cou, festonnée (de dos, sous les cheveux)
+function colFourrure(o, view, col) {
+  const S = tone(col, 0.86);
+  if (view === 'ne') {
+    return P('M15.4,30.8 Q24,34 32.6,30.8 L33.2,33.2 Q24,37 14.8,33.2 Z', col, 0.9) + P('M17.4,33.6 Q24,36 30.6,33.6', 'none', 0.5).replace(`stroke="${OUT}"`, `stroke="${S}"`);
+  }
+  // le bord du bas en festons : des bosses le long d'un arc, de l'épaule droite à l'épaule gauche
+  const pts = Array.from({ length: 7 }, (_, i) => { const t = i / 6; return [(1 - t) ** 2 * (o + 8.4) + 2 * t * (1 - t) * o + t * t * (o - 8.4), (1 - t) ** 2 * 32.6 + 2 * t * (1 - t) * 39.2 + t * t * 32.6]; });
+  let d = `M${r2(o - 6.8)},30.6 Q${o},33.8 ${r2(o + 6.8)},30.6 L${r2(pts[0][0])},${r2(pts[0][1])}`;
+  for (let i = 1; i < pts.length; i++) { const [x0, y0] = pts[i - 1], [x1, y1] = pts[i]; d += ` Q${r2((x0 + x1) / 2)},${r2((y0 + y1) / 2 + 1.5)} ${r2(x1)},${r2(y1)}`; }
+  d += ' Z';
+  return P(d, col, 0.9) + P(`M${r2(o - 5)},34.2 Q${o},37.2 ${r2(o + 5)},34.2`, 'none', 0.5).replace(`stroke="${OUT}"`, `stroke="${S}"`);
+}
+const BOIS = '#D9B27C';
+function manteau(c, ctx, [col, fourrure]) {
+  if (ctx.couche !== 'dessus') return '';
+  const { view } = ctx, H = c.coatHem, S = tone(col, 0.8), w = balance(ctx);
+  let s = panPeint(c, ctx, 'mt', col, S);
+  if (view === 'ne') {
+    // de dos : la couture du milieu, la fente, la martingale à deux boutons
+    s += P(`M24,33.8 L${r2(24 + w * 0.6)},${r2(H - 3.6)}`, 'none', 0.5) + P(`M${r2(24 + w * 0.6)},${r2(H - 3.6)} L${r2(24 + w)},${r2(H + 0.6)}`, 'none', 0.8)
+      + `<rect x="19.2" y="41.6" width="9.6" height="1.8" rx="0.8" fill="${S}" stroke="${OUT}" stroke-width="0.7"/>` + E(20.5, 42.5, 0.55, 0.55, BOIS, 0.45) + E(27.5, 42.5, 0.55, 0.55, BOIS, 0.45);
+    return s + colFourrure(24, view, fourrure);
+  }
+  // de face, de trois quarts : le croisé, trois brandebourgs (une bûchette de bois, sa ganse), deux poches
+  const o = view === 'se' ? 21.6 : 24;
+  s += P(`M${r2(o + 1.2)},34.4 L${r2(o + 1.2 + w)},${r2(H + 0.8)}`, 'none', 0.8);
+  for (const y of [37, 40.4, 43.8]) {
+    const x = o + 1.2 + w * (y - 34) / (H - 34);
+    s += L([x - 2.6, y], [x + 2.6, y], tone(col, 0.55), 0.55)
+      + `<rect x="${r2(x - 1.5)}" y="${r2(y - 0.55)}" width="3" height="1.1" rx="0.55" fill="${BOIS}" stroke="${OUT}" stroke-width="0.5"/>`;
+  }
+  return s + poches(c, ctx, S) + colFourrure(o, view, fourrure);
+}
+function cire(c, ctx, [col]) {
+  const { view } = ctx, S = tone(col, 0.82);
+  // la capuche rabattue : de face et de trois quarts, elle dépasse derrière le cou
+  if (ctx.couche === 'derriere') return view === 'ne' ? '' : P('M16.4,31.6 Q24,27 31.6,31.6 L31.6,33.8 L16.4,33.8 Z', S);
+  if (ctx.couche !== 'dessus') return '';
+  const H = c.coatHem, w = balance(ctx), { sw, hw } = c.k;
+  // le reflet du tissu ciré : deux traits blancs, sur la poitrine et sur le pan
+  const gl = 'rgba(255,255,255,.55)';
+  const reflets = view === 'ne' ? L([24 - sw + 2.2, 35], [24 - sw + 1.8, 39.6], gl, 0.9) : L([24 - sw + 3, 35.4], [24 - sw + 2.6, 40], gl, 0.9) + L([24 - hw + 0.6, 47], [24 - hw + 0.2 + w, 49.4], gl, 0.8);
+  let s = panPeint(c, ctx, 'cr', col, S, reflets);
+  if (view === 'ne') {
+    // de dos : la couture, la capuche rabattue sur les épaules
+    return s + P(`M24,40 L${r2(24 + w)},${r2(H + 0.6)}`, 'none', 0.5)
+      + P('M16.4,33 Q24,37.6 31.6,33 L32.6,38.6 Q24,42.4 15.4,38.6 Z', col) + P('M17.6,37.4 Q24,40.4 30.4,37.4', 'none', 0.7)
+      + P('M15.4,38.6 Q24,42.4 32.6,38.6', 'none', 0).replace('stroke="none"', `stroke="${S}" stroke-width="0.8"`);
+  }
+  // de face, de trois quarts : la patte et ses pressions, le col pointu, deux poches à rabat
+  const o = view === 'se' ? 21.6 : 24;
+  s += P(`M${r2(o + 0.8)},33.8 L${r2(o + 0.8 + w)},${r2(H + 0.8)}`, 'none', 0.9);
+  s += [36.4, 40, 43.6, 47.2].filter(y => y < H - 1.4).map(y => E(o + 2.2 + w * (y - 34) / (H - 34), y, 0.6, 0.6, tone(col, 0.5), 0.4)).join('');
+  s += P(`M${r2(o - 5.2)},31.2 L${r2(o + 0.4)},35.4 L${r2(o - 1.6)},36.8 Z`, col, 0.8) + P(`M${r2(o + 5.2)},31.2 L${r2(o + 0.4)},35.4 L${r2(o + 2.4)},36.8 Z`, S, 0.8);
+  return s + poches(c, ctx, S);
+}
+
+// ---- aux pieds : les bottes, par-dessus le bas de la jambe ; le pied est celui de la troupe, à leur couleur ----
+// extra : [x, y, dir, tilt] du pied (troupe.leg) ; assis, la tige s'arrête au genou (c.hip : le haut du tibia)
+function botte(fourree) {
+  return (c, ctx, [col, fourrure], [x, y, dir, tilt]) => {
+    const w = c.legW + 1.4, top = Math.max(y - 5.4, c.hip + 0.4), S = tone(col, 0.76);
+    let s = `<rect x="${r2(x - w / 2)}" y="${r2(top)}" width="${r2(w)}" height="${r2(y - top + 1.6)}" rx="1.3" fill="${col}" stroke="${OUT}" stroke-width="1.1"/>`
+      + `<rect x="${r2(x + w / 2 - 1.8)}" y="${r2(top + 0.8)}" width="1.1" height="${r2(y - top)}" rx="0.5" fill="${S}"/>`;
+    // bottes de pluie : le caoutchouc qui brille, un liseré en haut
+    if (!fourree) {
+      s += `<rect x="${r2(x - w / 2 + 0.9)}" y="${r2(top + 1.8)}" width="0.9" height="${r2(Math.max(0.8, y - top - 2.4))}" rx="0.45" fill="rgba(255,255,255,.6)"/>`
+        + `<rect x="${r2(x - w / 2)}" y="${r2(top)}" width="${r2(w)}" height="1.5" rx="0.7" fill="${tone(col, 0.82)}" stroke="${OUT}" stroke-width="0.8"/>`;
+    }
+    s += shoe({ ...c, uid: `${c.uid}b`, shoe: col, shoeS: tone(col, 0.68), shoeH: fourree ? tone(col, 1.22) : 'rgba(255,255,255,.75)' }, x, y, dir, tilt);
+    // bottes fourrées : un revers de fourrure, en bourrelets
+    if (fourree) s += [0, 1, 2, 3].map(i => E(x - w / 2 + 0.5 + i * (w - 1) / 3, top + 0.4, 1.35, 1.2, i % 2 ? tone(fourrure, 0.94) : fourrure, 0.7)).join('');
+    return s;
+  };
+}
+
+// Ce que les tenues de saison changent au personnage lui-même : les manches du manteau ou du ciré (jusqu'au poignet,
+// même sous un t-shirt), les moufles (les mains de leur couleur ; le revers tricoté au poignet, sur une manche longue)
+const PORTE = {
+  manteau: ([col, fourrure]) => ({ sleeve: col, cuff: fourrure, sleeves: undefined }),
+  cire: ([col]) => ({ sleeve: col, cuff: tone(col, 0.82), sleeves: undefined }),
+  moufles: ([col, revers], c) => ({ hand: col, ...(c.sleeves ? {} : { cuff: revers }) })
+};
+
 // ---- le catalogue des dessins : par accessoire, les couches où il apparaît ----
 const DESSINS = {
   bonnet: { tete: bonnet }, paille: { tete: paille }, casquette: { tete: casquette }, bandana: { tete: bandana }, couronneFleurs: { tete: couronneFleurs },
@@ -307,7 +418,8 @@ const DESSINS = {
   puces: { oreilles: boucles('puces') }, anneaux: { oreilles: boucles('anneaux') }, pendantsEtoile: { oreilles: boucles('etoile') },
   foulard: { cou: foulard }, echarpe: { cou: echarpe }, perles: { cou: perles }, coquillage: { cou: coquillage }, papillon: { cou: papillon },
   sacDos: { derriere: sacDos, cou: sacDos }, besace: { cou: besace }, cape: { derriere: cape, cou: cape, surBras: cape }, ailes: { derriere: ailes, surBras: ailes },
-  peluche: { main: peluche }, panier: { main: panier }, ombrelle: { main: ombrelle }
+  peluche: { main: peluche }, panier: { main: panier }, ombrelle: { main: ombrelle },
+  manteau: { dessus: manteau }, cire: { derriere: cire, dessus: cire }, bottesPluie: { pieds: botte(false) }, bottesFourrees: { pieds: botte(true) }
 };
 
 // Ce que les accessoires portés dessinent dans une couche (couleurs : c.acc[emplacement])
@@ -320,4 +432,4 @@ function couche(c, nom, ctx, extra) {
   return s;
 }
 
-module.exports = { DESSINS, couche };
+module.exports = { DESSINS, PORTE, couche };
