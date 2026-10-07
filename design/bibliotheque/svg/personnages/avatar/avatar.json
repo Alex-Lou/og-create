@@ -6,7 +6,7 @@
   "Les nuanciers de peau, d'yeux, de cheveux et de tissus sont libres dès la création ; la peau et les yeux ne se gagnent jamais. Se gagnent pour toujours, à la boutique (écus) ou dans les coffres : les accessoires « boutique » ou « coffre » et les teintures rares. Tout est cosmétique.",
   "Raretés : celles des coffres du jeu (commun, rare, epique, legendaire). La source d'un accessoire : gratuit (dès la création), boutique ou coffre. garde : ce que la mer laisse au naufragé.",
   "auHasard(graine, { gratuit }) tire un avatar harmonieux (le bouton « Au hasard », et plus tard les visiteurs). verifier(choix) refuse tout choix inconnu.",
-  "Poses : repos (2), marche (4), salut (2), les gestes du tutoriel : ramasser (trois quarts avant), grelotter et lire le Grimoire (face), 2 images chacun, et assis à la veillée (face, trois quarts avant, dos ; 2 images ; le siège n'est pas dessiné, son dessus est à y = 53,6 du cadre), et les mains tendues vers le feu, debout ou assis (mains-tendues, assis-mains-tendues ; 3 vues, 2 images), et applaudir en riant, debout ou assis (applaudir, assis-applaudir ; 3 vues, 2 images : mains écartées, puis le claquement), et pêcher (pecher ; debout, 3 vues, 2 images : le bouchon danse). Le premier exemple a aussi les 8 expressions.",
+  "Poses : repos (2), marche (4), salut (2), les gestes du tutoriel : ramasser (trois quarts avant), grelotter et lire le Grimoire (face), 2 images chacun, et assis à la veillée (face, trois quarts avant, dos ; 2 images ; le siège n'est pas dessiné, son dessus est à y = 53,6 du cadre), et les mains tendues vers le feu, debout ou assis (mains-tendues, assis-mains-tendues ; 3 vues, 2 images), et applaudir en riant, debout ou assis (applaudir, assis-applaudir ; 3 vues, 2 images : mains écartées, puis le claquement), et pêcher (pecher ; debout, 3 vues, 2 images : le bouchon danse), et piocher (piocher ; debout, 3 vues, 2 images : la pioche levée, puis le coup sur la pierre). Le premier exemple a aussi les 8 expressions.",
   "L'avatar est naufragé du naufrage jusqu'au Campement (fin du tutoriel), où Cannelle recoud ses habits."
  ],
  "choix": {
@@ -1358,6 +1358,18 @@
      "avatar-01/avatar-01_dos_pecher_1.svg",
      "avatar-01/avatar-01_dos_pecher_2.svg"
     ],
+    "avatar-01_face_piocher": [
+     "avatar-01/avatar-01_face_piocher_1.svg",
+     "avatar-01/avatar-01_face_piocher_2.svg"
+    ],
+    "avatar-01_avant_piocher": [
+     "avatar-01/avatar-01_avant_piocher_1.svg",
+     "avatar-01/avatar-01_avant_piocher_2.svg"
+    ],
+    "avatar-01_dos_piocher": [
+     "avatar-01/avatar-01_dos_piocher_1.svg",
+     "avatar-01/avatar-01_dos_piocher_2.svg"
+    ],
     "avatar-01_expr_neutre": [
      "avatar-01/avatar-01_expr_neutre_1.svg",
      "avatar-01/avatar-01_expr_neutre_2.svg"
@@ -1493,6 +1505,18 @@
     "avatar-01-naufrage_dos_pecher": [
      "avatar-01-naufrage/avatar-01-naufrage_dos_pecher_1.svg",
      "avatar-01-naufrage/avatar-01-naufrage_dos_pecher_2.svg"
+    ],
+    "avatar-01-naufrage_face_piocher": [
+     "avatar-01-naufrage/avatar-01-naufrage_face_piocher_1.svg",
+     "avatar-01-naufrage/avatar-01-naufrage_face_piocher_2.svg"
+    ],
+    "avatar-01-naufrage_avant_piocher": [
+     "avatar-01-naufrage/avatar-01-naufrage_avant_piocher_1.svg",
+     "avatar-01-naufrage/avatar-01-naufrage_avant_piocher_2.svg"
+    ],
+    "avatar-01-naufrage_dos_piocher": [
+     "avatar-01-naufrage/avatar-01-naufrage_dos_piocher_1.svg",
+     "avatar-01-naufrage/avatar-01-naufrage_dos_piocher_2.svg"
     ]
    }
   },
@@ -1641,6 +1665,18 @@
      "avatar-02/avatar-02_dos_pecher_1.svg",
      "avatar-02/avatar-02_dos_pecher_2.svg"
     ],
+    "avatar-02_face_piocher": [
+     "avatar-02/avatar-02_face_piocher_1.svg",
+     "avatar-02/avatar-02_face_piocher_2.svg"
+    ],
+    "avatar-02_avant_piocher": [
+     "avatar-02/avatar-02_avant_piocher_1.svg",
+     "avatar-02/avatar-02_avant_piocher_2.svg"
+    ],
+    "avatar-02_dos_piocher": [
+     "avatar-02/avatar-02_dos_piocher_1.svg",
+     "avatar-02/avatar-02_dos_piocher_2.svg"
+    ],
     "avatar-02-naufrage_face_repos": [
      "avatar-02-naufrage/avatar-02-naufrage_face_repos_1.svg",
      "avatar-02-naufrage/avatar-02-naufrage_face_repos_2.svg"
@@ -1744,6 +1780,18 @@
     "avatar-02-naufrage_dos_pecher": [
      "avatar-02-naufrage/avatar-02-naufrage_dos_pecher_1.svg",
      "avatar-02-naufrage/avatar-02-naufrage_dos_pecher_2.svg"
+    ],
+    "avatar-02-naufrage_face_piocher": [
+     "avatar-02-naufrage/avatar-02-naufrage_face_piocher_1.svg",
+     "avatar-02-naufrage/avatar-02-naufrage_face_piocher_2.svg"
+    ],
+    "avatar-02-naufrage_avant_piocher": [
+     "avatar-02-naufrage/avatar-02-naufrage_avant_piocher_1.svg",
+     "avatar-02-naufrage/avatar-02-naufrage_avant_piocher_2.svg"
+    ],
+    "avatar-02-naufrage_dos_piocher": [
+     "avatar-02-naufrage/avatar-02-naufrage_dos_piocher_1.svg",
+     "avatar-02-naufrage/avatar-02-naufrage_dos_piocher_2.svg"
     ]
    }
   },
@@ -1892,6 +1940,18 @@
      "avatar-03/avatar-03_dos_pecher_1.svg",
      "avatar-03/avatar-03_dos_pecher_2.svg"
     ],
+    "avatar-03_face_piocher": [
+     "avatar-03/avatar-03_face_piocher_1.svg",
+     "avatar-03/avatar-03_face_piocher_2.svg"
+    ],
+    "avatar-03_avant_piocher": [
+     "avatar-03/avatar-03_avant_piocher_1.svg",
+     "avatar-03/avatar-03_avant_piocher_2.svg"
+    ],
+    "avatar-03_dos_piocher": [
+     "avatar-03/avatar-03_dos_piocher_1.svg",
+     "avatar-03/avatar-03_dos_piocher_2.svg"
+    ],
     "avatar-03-naufrage_face_repos": [
      "avatar-03-naufrage/avatar-03-naufrage_face_repos_1.svg",
      "avatar-03-naufrage/avatar-03-naufrage_face_repos_2.svg"
@@ -1995,6 +2055,18 @@
     "avatar-03-naufrage_dos_pecher": [
      "avatar-03-naufrage/avatar-03-naufrage_dos_pecher_1.svg",
      "avatar-03-naufrage/avatar-03-naufrage_dos_pecher_2.svg"
+    ],
+    "avatar-03-naufrage_face_piocher": [
+     "avatar-03-naufrage/avatar-03-naufrage_face_piocher_1.svg",
+     "avatar-03-naufrage/avatar-03-naufrage_face_piocher_2.svg"
+    ],
+    "avatar-03-naufrage_avant_piocher": [
+     "avatar-03-naufrage/avatar-03-naufrage_avant_piocher_1.svg",
+     "avatar-03-naufrage/avatar-03-naufrage_avant_piocher_2.svg"
+    ],
+    "avatar-03-naufrage_dos_piocher": [
+     "avatar-03-naufrage/avatar-03-naufrage_dos_piocher_1.svg",
+     "avatar-03-naufrage/avatar-03-naufrage_dos_piocher_2.svg"
     ]
    }
   },
@@ -2143,6 +2215,18 @@
      "avatar-04/avatar-04_dos_pecher_1.svg",
      "avatar-04/avatar-04_dos_pecher_2.svg"
     ],
+    "avatar-04_face_piocher": [
+     "avatar-04/avatar-04_face_piocher_1.svg",
+     "avatar-04/avatar-04_face_piocher_2.svg"
+    ],
+    "avatar-04_avant_piocher": [
+     "avatar-04/avatar-04_avant_piocher_1.svg",
+     "avatar-04/avatar-04_avant_piocher_2.svg"
+    ],
+    "avatar-04_dos_piocher": [
+     "avatar-04/avatar-04_dos_piocher_1.svg",
+     "avatar-04/avatar-04_dos_piocher_2.svg"
+    ],
     "avatar-04-naufrage_face_repos": [
      "avatar-04-naufrage/avatar-04-naufrage_face_repos_1.svg",
      "avatar-04-naufrage/avatar-04-naufrage_face_repos_2.svg"
@@ -2246,6 +2330,18 @@
     "avatar-04-naufrage_dos_pecher": [
      "avatar-04-naufrage/avatar-04-naufrage_dos_pecher_1.svg",
      "avatar-04-naufrage/avatar-04-naufrage_dos_pecher_2.svg"
+    ],
+    "avatar-04-naufrage_face_piocher": [
+     "avatar-04-naufrage/avatar-04-naufrage_face_piocher_1.svg",
+     "avatar-04-naufrage/avatar-04-naufrage_face_piocher_2.svg"
+    ],
+    "avatar-04-naufrage_avant_piocher": [
+     "avatar-04-naufrage/avatar-04-naufrage_avant_piocher_1.svg",
+     "avatar-04-naufrage/avatar-04-naufrage_avant_piocher_2.svg"
+    ],
+    "avatar-04-naufrage_dos_piocher": [
+     "avatar-04-naufrage/avatar-04-naufrage_dos_piocher_1.svg",
+     "avatar-04-naufrage/avatar-04-naufrage_dos_piocher_2.svg"
     ]
    }
   },
@@ -2394,6 +2490,18 @@
      "avatar-05/avatar-05_dos_pecher_1.svg",
      "avatar-05/avatar-05_dos_pecher_2.svg"
     ],
+    "avatar-05_face_piocher": [
+     "avatar-05/avatar-05_face_piocher_1.svg",
+     "avatar-05/avatar-05_face_piocher_2.svg"
+    ],
+    "avatar-05_avant_piocher": [
+     "avatar-05/avatar-05_avant_piocher_1.svg",
+     "avatar-05/avatar-05_avant_piocher_2.svg"
+    ],
+    "avatar-05_dos_piocher": [
+     "avatar-05/avatar-05_dos_piocher_1.svg",
+     "avatar-05/avatar-05_dos_piocher_2.svg"
+    ],
     "avatar-05-naufrage_face_repos": [
      "avatar-05-naufrage/avatar-05-naufrage_face_repos_1.svg",
      "avatar-05-naufrage/avatar-05-naufrage_face_repos_2.svg"
@@ -2497,6 +2605,18 @@
     "avatar-05-naufrage_dos_pecher": [
      "avatar-05-naufrage/avatar-05-naufrage_dos_pecher_1.svg",
      "avatar-05-naufrage/avatar-05-naufrage_dos_pecher_2.svg"
+    ],
+    "avatar-05-naufrage_face_piocher": [
+     "avatar-05-naufrage/avatar-05-naufrage_face_piocher_1.svg",
+     "avatar-05-naufrage/avatar-05-naufrage_face_piocher_2.svg"
+    ],
+    "avatar-05-naufrage_avant_piocher": [
+     "avatar-05-naufrage/avatar-05-naufrage_avant_piocher_1.svg",
+     "avatar-05-naufrage/avatar-05-naufrage_avant_piocher_2.svg"
+    ],
+    "avatar-05-naufrage_dos_piocher": [
+     "avatar-05-naufrage/avatar-05-naufrage_dos_piocher_1.svg",
+     "avatar-05-naufrage/avatar-05-naufrage_dos_piocher_2.svg"
     ]
    }
   },
@@ -2645,6 +2765,18 @@
      "avatar-06/avatar-06_dos_pecher_1.svg",
      "avatar-06/avatar-06_dos_pecher_2.svg"
     ],
+    "avatar-06_face_piocher": [
+     "avatar-06/avatar-06_face_piocher_1.svg",
+     "avatar-06/avatar-06_face_piocher_2.svg"
+    ],
+    "avatar-06_avant_piocher": [
+     "avatar-06/avatar-06_avant_piocher_1.svg",
+     "avatar-06/avatar-06_avant_piocher_2.svg"
+    ],
+    "avatar-06_dos_piocher": [
+     "avatar-06/avatar-06_dos_piocher_1.svg",
+     "avatar-06/avatar-06_dos_piocher_2.svg"
+    ],
     "avatar-06-naufrage_face_repos": [
      "avatar-06-naufrage/avatar-06-naufrage_face_repos_1.svg",
      "avatar-06-naufrage/avatar-06-naufrage_face_repos_2.svg"
@@ -2748,6 +2880,18 @@
     "avatar-06-naufrage_dos_pecher": [
      "avatar-06-naufrage/avatar-06-naufrage_dos_pecher_1.svg",
      "avatar-06-naufrage/avatar-06-naufrage_dos_pecher_2.svg"
+    ],
+    "avatar-06-naufrage_face_piocher": [
+     "avatar-06-naufrage/avatar-06-naufrage_face_piocher_1.svg",
+     "avatar-06-naufrage/avatar-06-naufrage_face_piocher_2.svg"
+    ],
+    "avatar-06-naufrage_avant_piocher": [
+     "avatar-06-naufrage/avatar-06-naufrage_avant_piocher_1.svg",
+     "avatar-06-naufrage/avatar-06-naufrage_avant_piocher_2.svg"
+    ],
+    "avatar-06-naufrage_dos_piocher": [
+     "avatar-06-naufrage/avatar-06-naufrage_dos_piocher_1.svg",
+     "avatar-06-naufrage/avatar-06-naufrage_dos_piocher_2.svg"
     ]
    }
   },
@@ -2896,6 +3040,18 @@
      "avatar-07/avatar-07_dos_pecher_1.svg",
      "avatar-07/avatar-07_dos_pecher_2.svg"
     ],
+    "avatar-07_face_piocher": [
+     "avatar-07/avatar-07_face_piocher_1.svg",
+     "avatar-07/avatar-07_face_piocher_2.svg"
+    ],
+    "avatar-07_avant_piocher": [
+     "avatar-07/avatar-07_avant_piocher_1.svg",
+     "avatar-07/avatar-07_avant_piocher_2.svg"
+    ],
+    "avatar-07_dos_piocher": [
+     "avatar-07/avatar-07_dos_piocher_1.svg",
+     "avatar-07/avatar-07_dos_piocher_2.svg"
+    ],
     "avatar-07-naufrage_face_repos": [
      "avatar-07-naufrage/avatar-07-naufrage_face_repos_1.svg",
      "avatar-07-naufrage/avatar-07-naufrage_face_repos_2.svg"
@@ -2999,6 +3155,18 @@
     "avatar-07-naufrage_dos_pecher": [
      "avatar-07-naufrage/avatar-07-naufrage_dos_pecher_1.svg",
      "avatar-07-naufrage/avatar-07-naufrage_dos_pecher_2.svg"
+    ],
+    "avatar-07-naufrage_face_piocher": [
+     "avatar-07-naufrage/avatar-07-naufrage_face_piocher_1.svg",
+     "avatar-07-naufrage/avatar-07-naufrage_face_piocher_2.svg"
+    ],
+    "avatar-07-naufrage_avant_piocher": [
+     "avatar-07-naufrage/avatar-07-naufrage_avant_piocher_1.svg",
+     "avatar-07-naufrage/avatar-07-naufrage_avant_piocher_2.svg"
+    ],
+    "avatar-07-naufrage_dos_piocher": [
+     "avatar-07-naufrage/avatar-07-naufrage_dos_piocher_1.svg",
+     "avatar-07-naufrage/avatar-07-naufrage_dos_piocher_2.svg"
     ]
    }
   },
@@ -3148,6 +3316,18 @@
      "avatar-08/avatar-08_dos_pecher_1.svg",
      "avatar-08/avatar-08_dos_pecher_2.svg"
     ],
+    "avatar-08_face_piocher": [
+     "avatar-08/avatar-08_face_piocher_1.svg",
+     "avatar-08/avatar-08_face_piocher_2.svg"
+    ],
+    "avatar-08_avant_piocher": [
+     "avatar-08/avatar-08_avant_piocher_1.svg",
+     "avatar-08/avatar-08_avant_piocher_2.svg"
+    ],
+    "avatar-08_dos_piocher": [
+     "avatar-08/avatar-08_dos_piocher_1.svg",
+     "avatar-08/avatar-08_dos_piocher_2.svg"
+    ],
     "avatar-08-naufrage_face_repos": [
      "avatar-08-naufrage/avatar-08-naufrage_face_repos_1.svg",
      "avatar-08-naufrage/avatar-08-naufrage_face_repos_2.svg"
@@ -3251,6 +3431,18 @@
     "avatar-08-naufrage_dos_pecher": [
      "avatar-08-naufrage/avatar-08-naufrage_dos_pecher_1.svg",
      "avatar-08-naufrage/avatar-08-naufrage_dos_pecher_2.svg"
+    ],
+    "avatar-08-naufrage_face_piocher": [
+     "avatar-08-naufrage/avatar-08-naufrage_face_piocher_1.svg",
+     "avatar-08-naufrage/avatar-08-naufrage_face_piocher_2.svg"
+    ],
+    "avatar-08-naufrage_avant_piocher": [
+     "avatar-08-naufrage/avatar-08-naufrage_avant_piocher_1.svg",
+     "avatar-08-naufrage/avatar-08-naufrage_avant_piocher_2.svg"
+    ],
+    "avatar-08-naufrage_dos_piocher": [
+     "avatar-08-naufrage/avatar-08-naufrage_dos_piocher_1.svg",
+     "avatar-08-naufrage/avatar-08-naufrage_dos_piocher_2.svg"
     ]
    }
   },
@@ -3399,6 +3591,18 @@
      "avatar-09/avatar-09_dos_pecher_1.svg",
      "avatar-09/avatar-09_dos_pecher_2.svg"
     ],
+    "avatar-09_face_piocher": [
+     "avatar-09/avatar-09_face_piocher_1.svg",
+     "avatar-09/avatar-09_face_piocher_2.svg"
+    ],
+    "avatar-09_avant_piocher": [
+     "avatar-09/avatar-09_avant_piocher_1.svg",
+     "avatar-09/avatar-09_avant_piocher_2.svg"
+    ],
+    "avatar-09_dos_piocher": [
+     "avatar-09/avatar-09_dos_piocher_1.svg",
+     "avatar-09/avatar-09_dos_piocher_2.svg"
+    ],
     "avatar-09-naufrage_face_repos": [
      "avatar-09-naufrage/avatar-09-naufrage_face_repos_1.svg",
      "avatar-09-naufrage/avatar-09-naufrage_face_repos_2.svg"
@@ -3502,6 +3706,18 @@
     "avatar-09-naufrage_dos_pecher": [
      "avatar-09-naufrage/avatar-09-naufrage_dos_pecher_1.svg",
      "avatar-09-naufrage/avatar-09-naufrage_dos_pecher_2.svg"
+    ],
+    "avatar-09-naufrage_face_piocher": [
+     "avatar-09-naufrage/avatar-09-naufrage_face_piocher_1.svg",
+     "avatar-09-naufrage/avatar-09-naufrage_face_piocher_2.svg"
+    ],
+    "avatar-09-naufrage_avant_piocher": [
+     "avatar-09-naufrage/avatar-09-naufrage_avant_piocher_1.svg",
+     "avatar-09-naufrage/avatar-09-naufrage_avant_piocher_2.svg"
+    ],
+    "avatar-09-naufrage_dos_piocher": [
+     "avatar-09-naufrage/avatar-09-naufrage_dos_piocher_1.svg",
+     "avatar-09-naufrage/avatar-09-naufrage_dos_piocher_2.svg"
     ]
    }
   },
@@ -3650,6 +3866,18 @@
      "avatar-10/avatar-10_dos_pecher_1.svg",
      "avatar-10/avatar-10_dos_pecher_2.svg"
     ],
+    "avatar-10_face_piocher": [
+     "avatar-10/avatar-10_face_piocher_1.svg",
+     "avatar-10/avatar-10_face_piocher_2.svg"
+    ],
+    "avatar-10_avant_piocher": [
+     "avatar-10/avatar-10_avant_piocher_1.svg",
+     "avatar-10/avatar-10_avant_piocher_2.svg"
+    ],
+    "avatar-10_dos_piocher": [
+     "avatar-10/avatar-10_dos_piocher_1.svg",
+     "avatar-10/avatar-10_dos_piocher_2.svg"
+    ],
     "avatar-10-naufrage_face_repos": [
      "avatar-10-naufrage/avatar-10-naufrage_face_repos_1.svg",
      "avatar-10-naufrage/avatar-10-naufrage_face_repos_2.svg"
@@ -3753,6 +3981,18 @@
     "avatar-10-naufrage_dos_pecher": [
      "avatar-10-naufrage/avatar-10-naufrage_dos_pecher_1.svg",
      "avatar-10-naufrage/avatar-10-naufrage_dos_pecher_2.svg"
+    ],
+    "avatar-10-naufrage_face_piocher": [
+     "avatar-10-naufrage/avatar-10-naufrage_face_piocher_1.svg",
+     "avatar-10-naufrage/avatar-10-naufrage_face_piocher_2.svg"
+    ],
+    "avatar-10-naufrage_avant_piocher": [
+     "avatar-10-naufrage/avatar-10-naufrage_avant_piocher_1.svg",
+     "avatar-10-naufrage/avatar-10-naufrage_avant_piocher_2.svg"
+    ],
+    "avatar-10-naufrage_dos_piocher": [
+     "avatar-10-naufrage/avatar-10-naufrage_dos_piocher_1.svg",
+     "avatar-10-naufrage/avatar-10-naufrage_dos_piocher_2.svg"
     ]
    }
   },
@@ -3901,6 +4141,18 @@
      "avatar-11/avatar-11_dos_pecher_1.svg",
      "avatar-11/avatar-11_dos_pecher_2.svg"
     ],
+    "avatar-11_face_piocher": [
+     "avatar-11/avatar-11_face_piocher_1.svg",
+     "avatar-11/avatar-11_face_piocher_2.svg"
+    ],
+    "avatar-11_avant_piocher": [
+     "avatar-11/avatar-11_avant_piocher_1.svg",
+     "avatar-11/avatar-11_avant_piocher_2.svg"
+    ],
+    "avatar-11_dos_piocher": [
+     "avatar-11/avatar-11_dos_piocher_1.svg",
+     "avatar-11/avatar-11_dos_piocher_2.svg"
+    ],
     "avatar-11-naufrage_face_repos": [
      "avatar-11-naufrage/avatar-11-naufrage_face_repos_1.svg",
      "avatar-11-naufrage/avatar-11-naufrage_face_repos_2.svg"
@@ -4004,6 +4256,18 @@
     "avatar-11-naufrage_dos_pecher": [
      "avatar-11-naufrage/avatar-11-naufrage_dos_pecher_1.svg",
      "avatar-11-naufrage/avatar-11-naufrage_dos_pecher_2.svg"
+    ],
+    "avatar-11-naufrage_face_piocher": [
+     "avatar-11-naufrage/avatar-11-naufrage_face_piocher_1.svg",
+     "avatar-11-naufrage/avatar-11-naufrage_face_piocher_2.svg"
+    ],
+    "avatar-11-naufrage_avant_piocher": [
+     "avatar-11-naufrage/avatar-11-naufrage_avant_piocher_1.svg",
+     "avatar-11-naufrage/avatar-11-naufrage_avant_piocher_2.svg"
+    ],
+    "avatar-11-naufrage_dos_piocher": [
+     "avatar-11-naufrage/avatar-11-naufrage_dos_piocher_1.svg",
+     "avatar-11-naufrage/avatar-11-naufrage_dos_piocher_2.svg"
     ]
    }
   },
@@ -4152,6 +4416,18 @@
      "avatar-12/avatar-12_dos_pecher_1.svg",
      "avatar-12/avatar-12_dos_pecher_2.svg"
     ],
+    "avatar-12_face_piocher": [
+     "avatar-12/avatar-12_face_piocher_1.svg",
+     "avatar-12/avatar-12_face_piocher_2.svg"
+    ],
+    "avatar-12_avant_piocher": [
+     "avatar-12/avatar-12_avant_piocher_1.svg",
+     "avatar-12/avatar-12_avant_piocher_2.svg"
+    ],
+    "avatar-12_dos_piocher": [
+     "avatar-12/avatar-12_dos_piocher_1.svg",
+     "avatar-12/avatar-12_dos_piocher_2.svg"
+    ],
     "avatar-12-naufrage_face_repos": [
      "avatar-12-naufrage/avatar-12-naufrage_face_repos_1.svg",
      "avatar-12-naufrage/avatar-12-naufrage_face_repos_2.svg"
@@ -4255,6 +4531,18 @@
     "avatar-12-naufrage_dos_pecher": [
      "avatar-12-naufrage/avatar-12-naufrage_dos_pecher_1.svg",
      "avatar-12-naufrage/avatar-12-naufrage_dos_pecher_2.svg"
+    ],
+    "avatar-12-naufrage_face_piocher": [
+     "avatar-12-naufrage/avatar-12-naufrage_face_piocher_1.svg",
+     "avatar-12-naufrage/avatar-12-naufrage_face_piocher_2.svg"
+    ],
+    "avatar-12-naufrage_avant_piocher": [
+     "avatar-12-naufrage/avatar-12-naufrage_avant_piocher_1.svg",
+     "avatar-12-naufrage/avatar-12-naufrage_avant_piocher_2.svg"
+    ],
+    "avatar-12-naufrage_dos_piocher": [
+     "avatar-12-naufrage/avatar-12-naufrage_dos_piocher_1.svg",
+     "avatar-12-naufrage/avatar-12-naufrage_dos_piocher_2.svg"
     ]
    }
   }
