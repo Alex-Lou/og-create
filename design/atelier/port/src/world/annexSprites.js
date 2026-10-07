@@ -369,38 +369,65 @@ const coupe = {
     }
   }]
 };
-// Remise à bois : appentis ouvert, bûches rangées en pile, billot et hache ; lanterne pendue au bord du toit
+// Remise à bois : appentis ouvert au toit de bardeaux moussu, bûches rangées en pile ; le billot et sa hache plantée,
+// des bûches fendues, un fagot lié où se pose un rouge-gorge ; la lanterne pendue au bord du toit ; les copeaux
 const remise = {
   light: () => [0.22, 0.27, 16, 14],
   layers: [{
     frame: [-36, -60, 72, 78],
     draw: T => {
+      const [x, y] = T.p(0, 0, 0);
+      // la terre battue, les copeaux
+      let out = ell(x, y + 1, 33, 13.6, '#B89A6E', ` stroke="${OUT}" stroke-width="0.5"`) + ell(x - 4, y, 22, 8, '#C8AC80')
+        + [[-20, 6], [8, 10], [22, 4], [14, 11], [-8, 10]].map(([dx, dy]) => `<path d="M${x + dx},${y + dy} q1.4,-1.6 2.4,0 q-0.6,1 -1.4,0.4" stroke="#E4C08A" stroke-width="0.6" fill="none"/>`).join('')
+        + T.shadow(0, 0, 0.38, 0.2);
+      // le mur du fond, le flanc, la pile de bûches
       let pile = '';
       for (let row = 0; row < 5; row++) {
         for (let k = 0; k < 6; k++) {
           const du = -0.24 + k * 0.095 + (row % 2) * 0.045;
           if (du > 0.27) continue;
-          const [x, y] = T.p(du, 0.08, 2.6 + row * 4.4);
-          pile += logEnd(x, y, 2.4);
+          const [px, py] = T.p(du, 0.08, 2.6 + row * 4.4);
+          pile += logEnd(px, py, 2.4) + ((row + k) % 4 === 0 ? `<path d="M${f2(px - 1.6)},${f2(py - 1.6)} l3.2,3.2" stroke="rgba(150,92,48,.5)" stroke-width="0.4"/>` : '');
         }
       }
-      return T.shadow(0, 0, 0.38, 0.2)
-        + T.box(-0.33, -0.3, 0.33, -0.25, 0, 26, WOOD) + planksLeft(T.u - 0.33, T.u + 0.33, T.v - 0.25, 0, 26, 4.6)
+      out += T.box(-0.33, -0.3, 0.33, -0.25, 0, 26, WOOD) + planksLeft(T.u - 0.33, T.u + 0.33, T.v - 0.25, 0, 26, 4.6)
         + T.box(-0.33, -0.25, -0.28, 0.2, 0, 24, WOOD)
-        + pile
-        + post(T, 0.3, 0.24, 0, 31) + post(T, -0.3, 0.24, 0, 31)
-        // Toit en appentis, bas derrière, relevé sur le devant ouvert
-        + T.face([[-0.38, -0.34, 27], [0.38, -0.34, 27], [0.38, 0.3, 32], [-0.38, 0.3, 32]], '#A9703F', EDGE)
-        + [-0.24, -0.08, 0.08, 0.24].map(du => ln(T.p(du, -0.32, 27.2), T.p(du, 0.28, 31.8), 'rgba(90,55,25,.4)', 0.7)).join('')
+        + pile;
+      // les poteaux et le toit de bardeaux en appentis, sa mousse
+      out += post(T, 0.3, 0.24, 0, 31) + post(T, -0.3, 0.24, 0, 31)
+        + T.face([[-0.38, -0.34, 27], [0.38, -0.34, 27], [0.38, 0.3, 32], [-0.38, 0.3, 32]], '#A9703F', EDGE);
+      for (const t of [0.2, 0.4, 0.6, 0.8]) {
+        const v = -0.34 + 0.64 * t, z = 27 + 5 * t;
+        out += ln(T.p(-0.38, v, z), T.p(0.38, v, z), 'rgba(90,55,25,.45)', 0.6);
+        for (let i = 0; i < 7; i++) { const u = -0.34 + i * 0.11 + (Math.round(t * 5) % 2 ? 0.055 : 0); if (u < 0.36) out += ln(T.p(u, v, z), T.p(u, v + 0.128, z + 1), 'rgba(90,55,25,.3)', 0.5); }
+      }
+      out += [[-0.26, 0.2, 2.6], [-0.14, 0.26, 1.8], [0.24, -0.1, 1.6]].map(([u, v, r]) => { const [mx, my] = T.p(u, v, 27 + 5 * ((v + 0.34) / 0.64)); return ell(mx, my, r * 1.4, r * 0.7, '#7E9A52') + ell(mx - r * 0.3, my - r * 0.2, r * 0.6, r * 0.3, '#9DB86A'); }).join('')
         + T.face([[0.38, -0.34, 27], [0.38, 0.3, 32], [0.38, 0.3, 30.4], [0.38, -0.34, 25.4]], '#7A4E2C', EDGE)
-        + T.face([[-0.38, 0.3, 32], [0.38, 0.3, 32], [0.38, 0.3, 30.4], [-0.38, 0.3, 30.4]], '#8B5A32', EDGE)
-        + ln(T.p(0.22, 0.27, 30.4), T.p(0.22, 0.27, 17.6), '#3D3A36', 0.6)
-        + T.box(0.2, 0.25, 0.24, 0.29, 13.6, 17.6, { top: '#5A606A', left: GLASS, right: '#E9C878' })
-        // Billot, hache et bûches fendues
-        + stumpAt(T, 0.24, 0.38, 6, 0.06, 'bil')
-        + ln(T.p(0.24, 0.38, 6), T.p(0.21, 0.42, 14), WOOD.right, 1.3)
-        + poly([T.p(0.19, 0.4, 12), T.p(0.25, 0.4, 14), T.p(0.25, 0.4, 10)], IRON.left)
-        + log(T, 0.06, 0.32, 0.42, 1.8, 1.8) + log(T, -0.06, 0.34, 0.44, 1.8, 1.8);
+        + T.face([[-0.38, 0.3, 32], [0.38, 0.3, 32], [0.38, 0.3, 30.4], [-0.38, 0.3, 30.4]], '#8B5A32', EDGE);
+      // la lanterne pendue au bord du toit
+      const [lx, ly] = T.p(0.22, 0.27, 17.6);
+      out += ln(T.p(0.22, 0.27, 30.4), [lx, ly - 1.6], '#3D3A36', 0.5)
+        + poly([[lx - 2.2, ly], [lx + 2.2, ly], [lx + 1.6, ly - 1.6], [lx - 1.6, ly - 1.6]], DARK_IRON.left, ` stroke="${OUT}" stroke-width="0.4"`)
+        + `<rect x="${f2(lx - 1.8)}" y="${f2(ly)}" width="3.6" height="4" rx="0.6" fill="#F6D27A" stroke="${OUT}" stroke-width="0.5"/>`
+        + ln([lx, ly], [lx, ly + 4], DARK_IRON.left, 0.4) + ell(lx, ly + 2, 1, 1.2, '#FFF3C4')
+        + poly([[lx - 2.2, ly + 4], [lx + 2.2, ly + 4], [lx + 1.4, ly + 5.2], [lx - 1.4, ly + 5.2]], DARK_IRON.left, ` stroke="${OUT}" stroke-width="0.4"`);
+      // le fagot lié, à gauche devant
+      const [gx, gy] = T.p(-0.3, 0.38, 0);
+      out += ell(gx, gy + 0.4, 7, 1.8, 'rgba(40,55,20,.22)')
+        + [-2, -1, 0, 1, 2].map(i => ln([gx - 6, gy - 2.4 + i * 0.6], [gx + 6, gy - 3.4 + i * 0.7], i % 2 ? '#8A6A40' : '#A07A4A', 1)).join('')
+        + ln([gx - 1, gy - 5], [gx - 0.6, gy - 0.4], '#C9A46A', 1.1) + ln([gx + 2.4, gy - 5.4], [gx + 2.8, gy - 0.8], '#C9A46A', 1.1);
+      // le rouge-gorge posé sur le fagot
+      out += `<g transform="translate(${f2(gx + 1)} ${f2(gy - 4.6)}) scale(.65) translate(${f2(-gx - 1)} ${f2(-gy + 4.6)})">` + bird(gx + 1, gy - 4.6, { body: '#8B6A4A', breast: '#E2703A', wing: '#6E5236' }) + '</g>';
+      // le billot, sa hache plantée, les bûches fendues
+      out += stumpAt(T, 0.24, 0.38, 6, 0.06, 'bil');
+      const [hx, hy] = T.p(0.24, 0.38, 6);
+      out += ln([hx + 0.6, hy - 1], [hx + 6, hy - 9], WOOD.right, 1.4) + ln([hx + 0.9, hy - 1.2], [hx + 6.2, hy - 9.2], WOOD.top, 0.5)
+        + poly([[hx - 2.4, hy + 0.4], [hx + 1.6, hy - 2.2], [hx + 2.4, hy - 0.4], [hx - 1, hy + 1.6]], IRON.left, ` stroke="${OUT}" stroke-width="0.5" stroke-linejoin="round"`)
+        + ln([hx - 2, hy + 0.6], [hx - 0.6, hy + 1.4], IRON.top, 0.5)
+        + log(T, 0.06, 0.32, 0.42, 1.8, 1.8) + log(T, -0.06, 0.34, 0.44, 1.8, 1.8)
+        + [[0.34, 0.3], [0.14, 0.46]].map(([du, dv]) => { const [cx, cy] = T.p(du, dv, 0); return poly([[cx - 2.2, cy], [cx, cy - 2.6], [cx + 2.2, cy - 0.4], [cx + 0.4, cy + 0.6]], STUMP.top, ` stroke="${OUT}" stroke-width="0.4"`); }).join('');
+      return out;
     }
   }]
 };
