@@ -62,7 +62,8 @@ détails propres à un lot : places des objets de boutique, lumières des palier
 | `svg/personnages/maitres/` | Les 7 maîtres : Aster, Cannelle, Rivet, Ondin, Sylve, Galet, Mélisse. 3 vues : marche, repos, salut, travail (le geste du métier), action, 8 expressions, expressions en marche ; lanterne et parapluie (avant et dos) ; endormis assis (`dort`) et couchés (`couche`) ; en hiver, chacun à son style, repos et marche dans les 3 vues (`<prénom>_<vue>_<pose>_hiver_<n>`) | 1274 |
 | `svg/personnages/visiteurs/` | 12 visiteurs tirés du générateur de l'avatar (leurs choix dans `quotidien.json`) : 3 vues, marche, repos, salut, lanterne, parapluie, couchés | 504 |
 | `svg/personnages/naufrages/<prénom>/` | Les maîtres tels qu'ils arrivent sur l'île (`<prénom>-naufrage_…`) : une tenue de naufragé à chacun, mêmes vues, poses et expressions, endormis assis et couchés ; lanterne et parapluie pour Aster et Rivet (`naufrages.json`, `quotidien.json`) | 480 |
-| `svg/personnages/avatar/` | L'avatar du joueur : 12 exemples tirés du générateur et leur version naufragée, poses, gestes du tutoriel (ramasser, grelotter, lire), expressions ; dans `avatar.json` : les formes, les nuanciers, les 41 accessoires (rareté, source ; saison des tenues de saison) et les teintures rares | 2464 |
+| `svg/personnages/avatar/` | L'avatar du joueur : 12 exemples tirés du générateur et leur version naufragée, poses, gestes du tutoriel (ramasser, grelotter, lire), expressions ; dans `avatar.json` : les formes, les nuanciers, les 45 accessoires (rareté, source, prix ; saison des tenues de saison ; leur icône) et les teintures rares (avec leur prix) | 2464 |
+| `svg/personnages/objets/` | Les icônes des objets de l'avatar, pour la boutique et l'inventaire (32 × 32, couleurs par défaut) : `<objet>_icone`, le chemin dans `avatar.json` (`icone`). Pour l'instant les tenues de saison, le bonnet et l'écharpe | 11 |
 | `svg/personnages/epilogue/` | 8 nouveaux venus de l'épilogue, tirés du générateur de l'avatar, en habits de voyage (valise à la main, bagage sur le dos) : 3 vues, marche, repos, salut | 192 |
 | `svg/vivants/` | Brume (8 stades et ses variantes), Anya (son manteau vivant aux quatre saisons : `anya_<vue>_<pose>_<printemps\|automne\|hiver>_<n>`, l'été sans suffixe), le cerf blanc, le Passeur | 191 |
 | `svg/animaux/` | Ferme, bois, eau douce, climats, bestiaire, familiers, mer : de profil, et de trois quarts avant et dos pour les 37 bêtes qui marchent (`orientees.json`) ; le crabe de la Grève (`mer/crabe/crabe.json`) | 541 |
@@ -101,7 +102,10 @@ détails propres à un lot : places des objets de boutique, lumières des palier
   fichiers de `svg/personnages/avatar/` sont des exemples. `design/atelier/verif_avatar.mjs` vérifie qu'aucun choix ne
   casse le dessin ni ne sort du cadre. Les tenues de saison (manteau d'hiver et ciré « par-dessus », bottes « aux pieds »,
   moufles « aux mains » ; leur `saison` dans le catalogue : `hiver` ou `pluie`) se mettent par-dessus la tenue choisie ;
-  elles ne se tirent pas au hasard.
+  elles ne se tirent pas au hasard. Le prix d'un objet ou d'une teinture (`prix`, en écus) suit sa rareté : commun 80,
+  rare 200, épique 500, légendaire 1200 à la boutique ; 0 s'il est gratuit ; pas de prix s'il vient des coffres. Un seul
+  dessin par objet : les maîtres portent les mêmes (`habiller`, dans `avatar_accessoires.js`). L'icône d'un objet aux
+  couleurs choisies : `icone(id, couleurs)` (`design/personnages/avatar_icones.js`).
 - **Égarés** : en marche, `marche` en boucle (avant ou dos, le miroir pour les deux autres directions). Touché : `bouderie`
   (une fois), puis `brume` (une fois) : il retourne dans la brume. Une lumière à 2 cases : `luciole` (une fois) ; la
   luciole peut ensuite rejoindre les lumières de la nuit. Anya passe : `fuite` en boucle, en s'éloignant d'elle. La bête de

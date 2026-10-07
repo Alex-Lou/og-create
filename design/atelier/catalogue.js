@@ -13,6 +13,7 @@
 // Les autres rubriques (décor, bâtiments, météo, coffres, plantes) gardent leurs noms : <sujet>_<état>_<n>.
 const fs = require('fs');
 const path = require('path');
+const { ACCESSOIRES } = require('../personnages/avatar_choix');
 
 const hyph = s => s.replace(/_/g, '-');
 const SANS_SENS = new Set(['hibou', 'meduse', 'papillon_bleu', 'papillon_jaune', 'papillon_lune']);
@@ -504,6 +505,8 @@ function construire(svgRoot, metas) {
       e.titre = t.join(', ');
       if (e.vue) { e.regarde = REGARDE[e.vue]; if (e.vue !== 'face') e.miroir = true; }
       if (e.sujet === 'brume' && STADE_TITRE[e.pose]) e.titre = `Brume, ${STADE_TITRE[e.pose]}`;
+      // les icônes des objets de l'avatar (personnages/objets/<id>_icone) : le nom de l'objet dans le catalogue
+      if (id.startsWith('personnages/objets/') && ACCESSOIRES[e.sujet]) e.titre = `${ACCESSOIRES[e.sujet].nom}, icône`;
     } else {
       e.titre = titreObjet(id, meta);
       if (meta.batiment) e.batiment = meta.batiment;

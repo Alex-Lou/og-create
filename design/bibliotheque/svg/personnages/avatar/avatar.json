@@ -5,6 +5,8 @@
   "Pas de petit format : dans le jeu, l'avatar, les maîtres, les habitants et les visiteurs sont dessinés en détaillé (choix de l'auteur, 6 octobre).",
   "Les nuanciers de peau, d'yeux, de cheveux et de tissus sont libres dès la création ; la peau et les yeux ne se gagnent jamais. Se gagnent pour toujours, à la boutique (écus) ou dans les coffres : les accessoires « boutique » ou « coffre » et les teintures rares. Tout est cosmétique.",
   "Raretés : celles des coffres du jeu (commun, rare, epique, legendaire). La source d'un accessoire : gratuit (dès la création), boutique ou coffre. garde : ce que la mer laisse au naufragé.",
+  "Prix (prix, en écus), selon la rareté : commun 80, rare 200, épique 500, légendaire 1200, pour ce qui s'achète à la boutique (accessoires et teintures) ; 0 pour ce qui est gratuit ; pas de prix pour ce qui vient des coffres.",
+  "Un seul dessin par accessoire : l'avatar et les maîtres le portent pareil (avatar_accessoires.js, habiller). Les icônes (la boutique, l'inventaire) : icone, le chemin depuis svg/ (personnages/objets/<id>_icone.svg, 32 × 32, aux couleurs par défaut) ; aux couleurs choisies, le générateur les dessine : icone(id, couleurs) dans design/personnages/avatar_icones.js.",
   "auHasard(graine, { gratuit }) tire un avatar harmonieux (le bouton « Au hasard », et plus tard les visiteurs). verifier(choix) refuse tout choix inconnu.",
   "Poses : repos (2), marche (4), salut (2), les gestes du tutoriel : ramasser (trois quarts avant), grelotter et lire le Grimoire (face), 2 images chacun, et assis à la veillée (face, trois quarts avant, dos ; 2 images ; le siège n'est pas dessiné, son dessus est à y = 53,6 du cadre), et les mains tendues vers le feu, debout ou assis (mains-tendues, assis-mains-tendues ; 3 vues, 2 images), et applaudir en riant, debout ou assis (applaudir, assis-applaudir ; 3 vues, 2 images : mains écartées, puis le claquement), et pêcher (pecher ; debout, 3 vues, 2 images : le bouchon danse), et piocher (piocher ; debout, 3 vues, 2 images : la pioche levée, puis le coup sur la pierre), et cueillir (cueillir ; debout, 3 vues, 2 images : un fruit cueilli en haut, puis déposé dans le panier), et porter (porter ; debout, 3 vues, 2 images : une caisse sur l'épaule), et réparer, debout ou assis (reparer, assis-reparer ; 3 vues, 2 images : le marteau levé, puis le coup sur le clou), et repousser une créature de la brume d'un toucher (repousser ; debout, 3 vues, 2 images : la main ouverte, une onde claire qui s'élargit, jamais de coup), et écrire, debout ou assis (ecrire, assis-ecrire ; 3 vues, 2 images : un carnet ouvert et un crayon, une ligne de plus s'écrit). Le premier exemple a aussi les 8 expressions.",
   "L'avatar est naufragé du naufrage jusqu'au Campement (fin du tutoriel), où Cannelle recoud ses habits."
@@ -679,7 +681,8 @@
  "teintures": {
   "nacre": {
    "rarete": "rare",
-   "source": "boutique"
+   "source": "boutique",
+   "prix": 200
   },
   "opale": {
    "rarete": "rare",
@@ -691,7 +694,8 @@
   },
   "argent": {
    "rarete": "rare",
-   "source": "boutique"
+   "source": "boutique",
+   "prix": 200
   },
   "rubis": {
    "rarete": "epique",
@@ -699,7 +703,8 @@
   },
   "saphir": {
    "rarete": "epique",
-   "source": "boutique"
+   "source": "boutique",
+   "prix": 500
   },
   "emeraude": {
    "rarete": "epique",
@@ -711,7 +716,8 @@
   },
   "onyx": {
    "rarete": "rare",
-   "source": "boutique"
+   "source": "boutique",
+   "prix": 200
   },
   "aurore": {
    "rarete": "legendaire",
@@ -736,14 +742,18 @@
    "nom": "Bonnet",
    "emplacement": "tete",
    "zones": [
+    "tissu",
     "tissu"
    ],
    "defaut": [
-    "marine"
+    "marine",
+    "creme"
    ],
    "rarete": "commun",
    "source": "gratuit",
-   "garde": false
+   "prix": 0,
+   "garde": false,
+   "icone": "personnages/objets/bonnet_icone.svg"
   },
   "paille": {
    "nom": "Chapeau de paille",
@@ -756,6 +766,7 @@
    ],
    "rarete": "commun",
    "source": "gratuit",
+   "prix": 0,
    "garde": false
   },
   "casquette": {
@@ -769,6 +780,7 @@
    ],
    "rarete": "commun",
    "source": "gratuit",
+   "prix": 0,
    "garde": false
   },
   "bandana": {
@@ -782,6 +794,7 @@
    ],
    "rarete": "commun",
    "source": "gratuit",
+   "prix": 0,
    "garde": true
   },
   "couronneFleurs": {
@@ -795,6 +808,7 @@
    ],
    "rarete": "commun",
    "source": "gratuit",
+   "prix": 0,
    "garde": false
   },
   "beret": {
@@ -808,6 +822,7 @@
    ],
    "rarete": "commun",
    "source": "boutique",
+   "prix": 80,
    "garde": false
   },
   "oreillesChat": {
@@ -821,6 +836,7 @@
    ],
    "rarete": "rare",
    "source": "boutique",
+   "prix": 200,
    "garde": false
   },
   "oreillesLapin": {
@@ -860,6 +876,7 @@
    ],
    "rarete": "commun",
    "source": "gratuit",
+   "prix": 0,
    "garde": true
   },
   "barrettes": {
@@ -873,6 +890,7 @@
    ],
    "rarete": "commun",
    "source": "gratuit",
+   "prix": 0,
    "garde": true
   },
   "fleur": {
@@ -886,6 +904,7 @@
    ],
    "rarete": "commun",
    "source": "boutique",
+   "prix": 80,
    "garde": true
   },
   "etoile": {
@@ -912,6 +931,7 @@
    ],
    "rarete": "commun",
    "source": "gratuit",
+   "prix": 0,
    "garde": true
   },
   "lunettesCarrees": {
@@ -925,6 +945,7 @@
    ],
    "rarete": "commun",
    "source": "gratuit",
+   "prix": 0,
    "garde": true
   },
   "lunettesPapillon": {
@@ -938,6 +959,7 @@
    ],
    "rarete": "commun",
    "source": "boutique",
+   "prix": 80,
    "garde": true
   },
   "lunettesSoleil": {
@@ -951,6 +973,7 @@
    ],
    "rarete": "commun",
    "source": "boutique",
+   "prix": 80,
    "garde": false
   },
   "lunettesCoeur": {
@@ -977,6 +1000,7 @@
    ],
    "rarete": "commun",
    "source": "gratuit",
+   "prix": 0,
    "garde": false
   },
   "etoiles": {
@@ -990,6 +1014,7 @@
    ],
    "rarete": "commun",
    "source": "boutique",
+   "prix": 80,
    "garde": false
   },
   "pansement": {
@@ -1003,6 +1028,7 @@
    ],
    "rarete": "commun",
    "source": "gratuit",
+   "prix": 0,
    "garde": true
   },
   "puces": {
@@ -1016,6 +1042,7 @@
    ],
    "rarete": "commun",
    "source": "gratuit",
+   "prix": 0,
    "garde": true
   },
   "anneaux": {
@@ -1029,6 +1056,7 @@
    ],
    "rarete": "commun",
    "source": "gratuit",
+   "prix": 0,
    "garde": true
   },
   "pendantsEtoile": {
@@ -1042,6 +1070,7 @@
    ],
    "rarete": "rare",
    "source": "boutique",
+   "prix": 200,
    "garde": true
   },
   "foulard": {
@@ -1055,6 +1084,7 @@
    ],
    "rarete": "commun",
    "source": "gratuit",
+   "prix": 0,
    "garde": true
   },
   "echarpe": {
@@ -1070,7 +1100,9 @@
    ],
    "rarete": "commun",
    "source": "boutique",
-   "garde": true
+   "prix": 80,
+   "garde": true,
+   "icone": "personnages/objets/echarpe_icone.svg"
   },
   "perles": {
    "nom": "Collier de perles",
@@ -1096,6 +1128,7 @@
    ],
    "rarete": "commun",
    "source": "gratuit",
+   "prix": 0,
    "garde": true
   },
   "papillon": {
@@ -1109,6 +1142,7 @@
    ],
    "rarete": "commun",
    "source": "boutique",
+   "prix": 80,
    "garde": true
   },
   "sacDos": {
@@ -1122,6 +1156,7 @@
    ],
    "rarete": "commun",
    "source": "gratuit",
+   "prix": 0,
    "garde": false
   },
   "besace": {
@@ -1135,6 +1170,7 @@
    ],
    "rarete": "commun",
    "source": "gratuit",
+   "prix": 0,
    "garde": false
   },
   "cape": {
@@ -1148,6 +1184,7 @@
    ],
    "rarete": "rare",
    "source": "boutique",
+   "prix": 200,
    "garde": false
   },
   "ailes": {
@@ -1174,6 +1211,7 @@
    ],
    "rarete": "rare",
    "source": "boutique",
+   "prix": 200,
    "garde": false
   },
   "panier": {
@@ -1187,6 +1225,7 @@
    ],
    "rarete": "commun",
    "source": "boutique",
+   "prix": 80,
    "garde": false
   },
   "ombrelle": {
@@ -1215,8 +1254,10 @@
    ],
    "rarete": "commun",
    "source": "gratuit",
+   "prix": 0,
    "garde": false,
-   "saison": "hiver"
+   "saison": "hiver",
+   "icone": "personnages/objets/manteau_icone.svg"
   },
   "cire": {
    "nom": "Ciré",
@@ -1229,8 +1270,10 @@
    ],
    "rarete": "commun",
    "source": "gratuit",
+   "prix": 0,
    "garde": false,
-   "saison": "pluie"
+   "saison": "pluie",
+   "icone": "personnages/objets/cire_icone.svg"
   },
   "bottesPluie": {
    "nom": "Bottes de pluie",
@@ -1243,8 +1286,10 @@
    ],
    "rarete": "commun",
    "source": "gratuit",
+   "prix": 0,
    "garde": false,
-   "saison": "pluie"
+   "saison": "pluie",
+   "icone": "personnages/objets/bottesPluie_icone.svg"
   },
   "bottesFourrees": {
    "nom": "Bottes fourrées",
@@ -1259,8 +1304,10 @@
    ],
    "rarete": "commun",
    "source": "gratuit",
+   "prix": 0,
    "garde": false,
-   "saison": "hiver"
+   "saison": "hiver",
+   "icone": "personnages/objets/bottesFourrees_icone.svg"
   },
   "moufles": {
    "nom": "Moufles",
@@ -1275,8 +1322,80 @@
    ],
    "rarete": "commun",
    "source": "gratuit",
+   "prix": 0,
    "garde": false,
-   "saison": "hiver"
+   "saison": "hiver",
+   "icone": "personnages/objets/moufles_icone.svg"
+  },
+  "cacheOreilles": {
+   "nom": "Cache-oreilles",
+   "emplacement": "tete",
+   "zones": [
+    "tissu",
+    "tissu"
+   ],
+   "defaut": [
+    "rouge",
+    "rouge"
+   ],
+   "rarete": "commun",
+   "source": "gratuit",
+   "prix": 0,
+   "garde": false,
+   "saison": "hiver",
+   "icone": "personnages/objets/cacheOreilles_icone.svg"
+  },
+  "chale": {
+   "nom": "Châle",
+   "emplacement": "dessus",
+   "zones": [
+    "tissu",
+    "tissu"
+   ],
+   "defaut": [
+    "prune",
+    "creme"
+   ],
+   "rarete": "commun",
+   "source": "gratuit",
+   "prix": 0,
+   "garde": false,
+   "saison": "hiver",
+   "icone": "personnages/objets/chale_icone.svg"
+  },
+  "pelerine": {
+   "nom": "Pèlerine",
+   "emplacement": "dessus",
+   "zones": [
+    "tissu",
+    "tissu"
+   ],
+   "defaut": [
+    "marine",
+    "creme"
+   ],
+   "rarete": "commun",
+   "source": "gratuit",
+   "prix": 0,
+   "garde": false,
+   "saison": "hiver",
+   "icone": "personnages/objets/pelerine_icone.svg"
+  },
+  "etole": {
+   "nom": "Étole de fourrure",
+   "emplacement": "dessus",
+   "zones": [
+    "tissu"
+   ],
+   "defaut": [
+    "creme"
+   ],
+   "rarete": "commun",
+   "source": "gratuit",
+   "prix": 0,
+   "garde": false,
+   "saison": "hiver",
+   "icone": "personnages/objets/etole_icone.svg"
   }
  },
  "defaut": {
@@ -4454,7 +4573,8 @@
      "tete": {
       "id": "bonnet",
       "couleurs": [
-       "rouge"
+       "rouge",
+       "creme"
       ]
      },
      "cou": {

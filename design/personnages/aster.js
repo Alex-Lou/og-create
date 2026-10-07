@@ -1,6 +1,7 @@
 // Aster, la navigatrice : ciré jaune, foulard rouge, cheveux roux au vent, queue de cheval à
 // ruban, taches de rousseur, longue-vue en laiton. Action : elle regarde dans sa longue-vue (trois quarts avant).
 const { P, E, L, clip, expression, arm, r2 } = require('./troupe');
+const { capucheRabattue, reperes } = require('./avatar_accessoires');
 
 const C = {
   skin: '#F2C9A0', skinS: '#DDA982',
@@ -49,7 +50,7 @@ const aster = {
   // derrière le corps : capuche (face, trois quarts) ; longue-vue (de dos)
   backItems(c, { view }) {
     if (view === 'ne') return spyglass(15.4, 44, 18);
-    return P('M17,31.8 Q24,27.4 31,31.8 L31,33.6 L17,33.6 Z', C.coatS);
+    return capucheRabattue(c.uid, view, reperes(c), C.coat, C.coatS);
   },
 
   body(c, { view, pose }) {
@@ -61,8 +62,8 @@ const aster = {
     s += P(COAT, 'none');
     if (view === 'ne') {
       s += P('M24,34 L24,49.4', 'none', 0.7);
-      // capuche rabattue sur le dos
-      s += P('M16.4,33 Q24,37.6 31.6,33 L32.6,38.6 Q24,42.2 15.4,38.6 Z', C.coat) + P('M17.6,37.4 Q24,40.4 30.4,37.4', 'none', 0.7);
+      // capuche rabattue sur le dos (la même pour tous : avatar_accessoires.js)
+      s += capucheRabattue(c.uid, view, reperes(c), C.coat, C.coatS);
       return s;
     }
     const o = view === 'front' ? 24 : 21.5;
@@ -96,7 +97,7 @@ const aster = {
       s += P('M17,11 Q24,7.6 31,11', 'none', 0.8) + P('M19.6,12.6 Q18.8,20 20.4,27.6', 'none', 0.6) + P('M24.4,11.8 Q25.2,19.4 24.2,28.4', 'none', 0.6);
       s += L([18, 9.6], [23.4, 8.8], C.hairH, 1.3);
       s += P('M14.6,11.6 Q6.6,10.8 6.4,19 Q8.6,16.8 12.6,17.8 Z', C.hair) + E(13.4, 13.4, 1.5, 1.4, C.scarf, 0.9);
-      if (c.coiffe) s += c.coiffe(c, ctx, 'dessus');
+      if (c.coiffe) s += c.coiffe(c, ctx, 'tete');
       return s;
     }
     const se = view === 'se';
@@ -121,7 +122,7 @@ const aster = {
       + fr.map(([x, y]) => E(x, y, 0.38, 0.38, C.freckle, 0)).join(''));
     s += P(face, 'none');
     s += P(bangs, C.hair) + L(se ? [15.6, 11.4] : [17, 11.2], se ? [22.6, 9.6] : [24, 9.6], C.hairH, 1.3);
-    if (c.coiffe) s += c.coiffe(c, ctx, 'dessus');
+    if (c.coiffe) s += c.coiffe(c, ctx, 'tete');
     // expression : sourcils par-dessus la frange ; au repos, petit sourire en coin (sûre d'elle)
     s += expression({
       eyes: se ? [[17.2, 22.6, 1.55], [25.2, 22.6, 1.35]] : [[19.4, 22.6, 1.6], [28.6, 22.6, 1.6]], ry: 2.35,

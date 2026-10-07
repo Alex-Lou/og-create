@@ -1,12 +1,13 @@
-// Les accessoires de l'avatar (catalogue : avatar_choix.js), dessinés dans le repère de la troupe (48 × 64).
+// Les accessoires de l'avatar (catalogue : avatar_choix.js), dessinés dans le repère de la troupe (48 × 64). Un seul
+// dessin par accessoire : l'avatar et les maîtres le portent pareil (habiller), posé sur les repères de qui le porte.
 // Chaque accessoire se dessine dans une ou plusieurs couches de l'image :
 //   derriere : derrière le corps (cape, ailes, sac de trois quarts) ;   cou : sur le buste, sous les bras (bretelles, colliers) ;
 //   surBras : par-dessus les bras (cape et ailes de dos) ;              tete : par-dessus la tête (chapeaux) ;
 //   cheveux : sur les cheveux, sous les chapeaux ;                     joues, oreilles, visage : sur le visage ;
 //   main : tenu dans la main droite (troupe.frame, c.hold) ;          dessus : par-dessus le haut (manteau, ciré) ;
 //   pieds : le pied de la troupe (c.foot : les bottes, sur le bas de la jambe).
-// dessin(c, ctx, cols) : c, le personnage (c.o : les choix, c.k : la corpulence) ; ctx.view : front, se ou ne ; cols : les
-// couleurs choisies, en hexadécimal.
+// dessin(c, ctx, cols) : c, le personnage (c.o : les choix ; ses repères : reperes(c)) ; ctx.view : front, se ou ne ;
+// cols : les couleurs choisies, en hexadécimal.
 // Les tenues de saison changent aussi le personnage lui-même (PORTE) : les manches du manteau ou du ciré, les moufles.
 const { OUT, P, E, L, limb, clip, r2, shoe } = require('./troupe');
 const { tone, mix } = require('./avatar_choix');
@@ -30,13 +31,54 @@ const etoile = (x, y, r, col, w = 0.6) => {
 const coeur = (x, y, s, col, w = 0.5) => P(`M${r2(x)},${r2(y + s * 0.9)} C${r2(x - s * 1.5)},${r2(y)} ${r2(x - s * 0.9)},${r2(y - s * 1.1)} ${r2(x)},${r2(y - s * 0.35)} C${r2(x + s * 0.9)},${r2(y - s * 1.1)} ${r2(x + s * 1.5)},${r2(y)} ${r2(x)},${r2(y + s * 0.9)} Z`, col, w);
 const scintille = (x, y, s, col) => P(`M${r2(x)},${r2(y - s)} Q${r2(x + s * 0.18)},${r2(y - s * 0.18)} ${r2(x + s)},${r2(y)} Q${r2(x + s * 0.18)},${r2(y + s * 0.18)} ${r2(x)},${r2(y + s)} Q${r2(x - s * 0.18)},${r2(y + s * 0.18)} ${r2(x - s)},${r2(y)} Q${r2(x - s * 0.18)},${r2(y - s * 0.18)} ${r2(x)},${r2(y - s)} Z`, col, 0.45);
 
+// ---- les repères du porteur ----
+// Chaque dessin se pose sur les repères de qui le porte (l'avatar ou un maître), dans le repère où il est dessiné
+// (l'avatar dessine son buste décalé de sa taille, c.dy) : le haut du cou (cou), la demi-largeur aux épaules (e), la
+// carrure (sw, hw, b : celle de l'avatar ; pour un maître, d'après ses épaules, ou c.porte), le haut des jambes
+// (hanche), l'ourlet d'un manteau (ourlet : au-dessus du genou)
+function reperes(c) {
+  const [[x0, y0], [x1]] = c.shoulders, dy = c.dy || 0, e = (x1 - x0) / 2;
+  const k = c.k || { sw: e + 0.5, hw: e + 2.2, b: 0, ...c.porte };
+  const hanche = r2(c.hip - dy);
+  return { cou: r2(y0 - dy - 3.2), e, sw: k.sw, hw: k.hw, b: k.b, hanche, ourlet: c.coatHem !== undefined ? c.coatHem : r2(hanche + (c.ground - c.hip) * 0.45) };
+}
+
+// ---- la capuche rabattue : la même pour tous (le ciré, le sweat, la pèlerine, les cirés d'Aster et d'Ondin) ----
+// De face et de trois quarts, elle dépasse derrière le cou, dans l'ombre (couche de derrière) ; de dos, elle est posée
+// pliée sur les épaules, ombrée à droite comme le vêtement. R : les repères ; col, S : la couleur et son ombre
+function capucheRabattue(uid, view, R, col, S) {
+  const { cou: y, e } = R, a = r2(24 - e + 0.4), b = r2(24 + e - 0.4);
+  if (view !== 'ne') return P(`M${a},${r2(y + 0.8)} Q24,${r2(y - 3.8)} ${b},${r2(y + 0.8)} L${b},${r2(y + 3)} L${a},${r2(y + 3)} Z`, S);
+  const d = `M${a},${r2(y + 2.2)} Q24,${r2(y + 6.8)} ${b},${r2(y + 2.2)} L${r2(24 + e + 0.6)},${r2(y + 7.8)} Q24,${r2(y + 11.4)} ${r2(24 - e - 0.6)},${r2(y + 7.8)} Z`;
+  return P(d, col) + clip(`${uid}cap`, d, `<rect x="27.2" y="${r2(y)}" width="16" height="14" fill="${S}"/>`) + P(d, 'none')
+    + P(`M${r2(24 - e + 1.6)},${r2(y + 6.6)} Q24,${r2(y + 9.6)} ${r2(24 + e - 1.6)},${r2(y + 6.6)}`, 'none', 0.7);
+}
+
 // ---- tête ----
-function bonnet(c, { view }, [col]) {
-  const k = decale(view);
-  const d = sx('M11.2,15.4 Q10.8,4.6 24,4.4 Q37.2,4.6 36.8,15.4 Z', k);
-  return P(d, col) + clip(`${c.uid}bn${view}`, d, [14, 18.6, 23.2, 27.8, 32.4].map(x => L([x + k, 5], [x + k, 15], tone(col, 0.82), 0.6)).join(''))
-    + P(d, 'none') + `<rect x="${r2(10.6 + k)}" y="13.4" width="26.8" height="3.4" rx="1.6" fill="${tone(col, 0.85)}" stroke="${OUT}" stroke-width="1"/>`
-    + E(24 + k, 6.2, 2.4, 1.9, '#F1E6CC');
+// Bonnet tricoté ajusté : il coiffe le crâne jusqu'au-dessus des oreilles ; son revers est une bande courbe qui suit le
+// front (au-dessus des sourcils) ; côtes de tricot, pompon de la couleur du revers. Le dôme épouse le crâne et le pompon
+// reste petit : tout reste dans le cadre, même sur un grand avatar, au rebond de la marche (verif_avatar.mjs). Chez un
+// maître, les mèches du dessus se rangent dessous (crochet c.coiffe) ; la frange dépasse
+function bonnet(c, { view }, [col, revers]) {
+  const k = view === 'se' ? -0.8 : 0, X = x => r2(x + k);
+  const dome = `M${X(10.4)},15.6 Q${X(9.8)},5.6 ${X(24)},5.4 Q${X(38.2)},5.6 ${X(37.6)},15.6 Z`;
+  const rim = `M${X(10)},12.8 Q${X(24)},15.4 ${X(38)},12.8 L${X(37.8)},16.8 Q${X(24)},19.2 ${X(10.2)},16.8 Z`;
+  const cotes = [-11, -6.6, -2.2, 2.2, 6.6, 11].map(d => `<path d="M${X(24 + d * 0.55)},6 Q${X(24 + d * 1.05)},9.2 ${X(24 + d * 1.1)},15.4" fill="none" stroke="${tone(col, 0.8)}" stroke-width="0.6"/>`).join('');
+  const mailles = [-12, -8, -4, 0, 4, 8, 12].map(d => L([24 + d + k, 13.6 + (Math.abs(d) < 6 ? 1 : 0.4) - Math.abs(d) * 0.05], [24 + d * 1.01 + k, 16.4 + (Math.abs(d) < 6 ? 1.1 : 0.4) - Math.abs(d) * 0.05], tone(revers, 0.84), 0.5)).join('');
+  return P(dome, col) + clip(`${c.uid}bn${view}`, dome, cotes + `<rect x="${X(27.6)}" y="2" width="12" height="15" fill="${tone(col, 0.86)}" opacity="0.7"/>`) + P(dome, 'none')
+    + P(rim, revers) + clip(`${c.uid}rv${view}`, rim, mailles) + P(rim, 'none')
+    + E(X(24), 5.7, 2.3, 1.55, revers, 0.85) + E(X(23.4), 5.2, 0.8, 0.55, '#FFFFFF', 0);
+}
+// Cache-oreilles [pompons, arceau] : l'arceau posé sur les cheveux (couche « cheveux » ; chez Rivet, sous la sangle de
+// ses loupes), puis les pompons de fourrure sur les oreilles (couche « tete »)
+function arceau(c, { view }, [, col]) {
+  const d = view === 'se' ? 'M13.4,20.4 Q12.6,8.6 24.2,8.2 Q36.2,8.6 35.8,20.4' : 'M12.6,20.4 Q12,7.6 24,7.4 Q36,7.6 35.4,20.4';
+  return `<path d="${d}" fill="none" stroke="${OUT}" stroke-width="2.6" stroke-linecap="round"/><path d="${d}" fill="none" stroke="${col}" stroke-width="1.2" stroke-linecap="round"/>`;
+}
+function cacheOreilles(c, { view }, [col]) {
+  const muffs = view === 'se' ? [[35.4, 22.6]] : view === 'ne' ? [[12.2, 22.6], [35.8, 22.6]] : [[11.8, 22.6], [36.2, 22.6]];
+  return muffs.map(([x, y]) => E(x, y, 2.7, 3.1, col) + P(`M${r2(x - 1.7)},${r2(y + 1.3)} Q${x},${r2(y + 2.6)} ${r2(x + 1.7)},${r2(y + 1.3)}`, 'none', 0.5).replace(`stroke="${OUT}"`, `stroke="${tone(col, 0.82)}"`)
+    + E(x - 0.7, y - 1.2, 0.9, 0.8, '#FFFFFF', 0)).join('');
 }
 function paille(c, { view }, [col]) {
   const k = decale(view);
@@ -185,17 +227,24 @@ function foulard(c, { view }, [col]) {
   const kx = view === 'se' ? 18.6 : 20.8;
   return P('M16.8,31 Q24,34.6 31.2,31 L31.6,33.6 Q24,37.4 16.4,33.6 Z', col) + P(`M${kx},35 L${kx - 1.6},40.4 L${kx + 1.4},39.8 L${kx + 1.6},35.6 Z`, col) + E(kx + 0.6, 35.4, 1.7, 1.3, tone(col, 0.8), 0.9);
 }
-function echarpe(c, { view }, [col, col2]) {
-  const band = 'M15.6,30.6 Q24,35.4 32.4,30.6 L33.2,33.8 Q24,39.2 14.8,33.8 Z';
-  const stripes = (id, d) => clip(id, d, [0, 1, 2, 3, 4, 5].map(i => `<rect x="${8 + i * 6}" y="20" width="2.6" height="30" fill="${col2}" transform="rotate(20 24 36)"/>`).join(''));
-  let s = P(band, col) + stripes(`${c.uid}ec${view}`, band) + P(band, 'none');
-  if (view !== 'ne') {
-    const ex = view === 'se' ? 25 : 27.6;
-    const end = `M${ex},34.6 L${r2(ex + 2.6)},34.2 L${r2(ex + 3.2)},43 L${r2(ex + 0.2)},43.4 Z`;
-    s += P(end, col) + clip(`${c.uid}ee${view}`, end, [36.6, 39.6].map(y => `<rect x="${ex - 1}" y="${y}" width="6" height="1.4" fill="${col2}"/>`).join('')) + P(end, 'none')
-      + [0.6, 1.4, 2.2].map(d => L([ex + d, 43.4], [ex + d + 0.1, 44.6], col, 0.5)).join('');
+// Grosse écharpe tricotée, rayée, au cou ; un pan qui tombe devant (de dos : dans le dos), frangé ; un nœud sous le menton
+function echarpe(c, { view }, [col, raie]) {
+  const y = reperes(c).cou, uid = c.uid, Y = d => r2(y + d);
+  const band = `M15.2,${Y(-0.4)} Q24,${Y(4.6)} 32.8,${Y(-0.4)} L33.6,${Y(3.2)} Q24,${Y(9)} 14.4,${Y(3.2)} Z`;
+  const rayures = (id, d) => clip(id, d, [0, 1, 2, 3, 4, 5].map(i => `<rect x="${8 + i * 6}" y="${Y(-10)}" width="2.6" height="30" fill="${raie}" transform="rotate(20 24 ${Y(5)})"/>`).join(''));
+  let s = '';
+  if (view === 'ne') {
+    const pan = `M28,${Y(3.4)} L31.2,${Y(2.8)} L32.6,${Y(13)} L29.2,${Y(13.4)} Z`;
+    s += P(band, col) + rayures(`${uid}e${view}`, band) + P(band, 'none');
+    return s + P(pan, col) + clip(`${uid}p${view}`, pan, [6, 9.4].map(d => `<rect x="27" y="${Y(d)}" width="7" height="1.5" fill="${raie}"/>`).join('')) + P(pan, 'none')
+      + [0.7, 1.6, 2.5].map(d => L([29.4 + d, y + 13.4], [29.5 + d, y + 14.8], col, 0.6)).join('');
   }
-  return s;
+  const ex = view === 'se' ? 24.6 : 27.4;
+  const pan = `M${ex},${Y(3.6)} L${r2(ex + 3)},${Y(3.2)} L${r2(ex + 3.6)},${Y(13.4)} L${r2(ex + 0.2)},${Y(13.8)} Z`;
+  s += P(pan, col) + clip(`${uid}p${view}`, pan, [6.2, 9.6].map(d => `<rect x="${r2(ex - 1)}" y="${Y(d)}" width="7" height="1.5" fill="${raie}"/>`).join('')) + P(pan, 'none')
+    + [0.7, 1.6, 2.5].map(d => L([ex + d, y + 13.8], [ex + d + 0.1, y + 15.2], col, 0.6)).join('');
+  s += P(band, col) + rayures(`${uid}e${view}`, band) + P(band, 'none');
+  return s + E(view === 'se' ? 22.4 : 24.6, y + 4, 2.4, 1.7, tone(col, 0.9), 0.9);
 }
 function perles(c, { view }, [col]) {
   if (view === 'ne') return '';
@@ -298,86 +347,123 @@ function ombrelle(c, ctx, [col], h) {
     + `<g transform="translate(${r2(tip[0])} ${r2(tip[1] + 1.6)}) rotate(16)">${P(canopy, col)}${ribs}${E(0, -6.9, 0.6, 0.6, tone(col, 0.8), 0.5)}</g>`;
 }
 
-// ---- par-dessus : le manteau d'hiver, le ciré ----
-// Le pan (d'un seul tenant) : des épaules, un peu plus large que le buste, jusqu'au-dessus du genou (c.coatHem) ; il
+// ---- par-dessus : le manteau d'hiver, le ciré ; le châle, la pèlerine, l'étole ----
+// Le pan (d'un seul tenant) : des épaules, un peu plus large que le buste, jusqu'au-dessus du genou (l'ourlet) ; il
 // s'évase et suit la marche d'un rien, comme la jupe
 const balance = ctx => (ctx.walk ? [0.5, 0, -0.5, 0][ctx.n] : 0);
 function pan(c, ctx) {
-  const { sw, hw, b } = c.k, H = c.coatHem, w = balance(ctx);
+  const { sw, hw, b, cou: y, hanche, ourlet: H } = reperes(c), w = balance(ctx);
   const mx = (sw + hw) / 2 + b + 0.6;
-  return `M${r2(24 - sw - 0.5)},32.4 Q24,29.6 ${r2(24 + sw + 0.5)},32.4 Q${r2(24 + mx)},39.6 ${r2(24 + hw + 0.9)},45.4`
-    + ` L${r2(24 + hw + 2.4 + w)},${H} Q${r2(24 + w)},${r2(H + 1.8)} ${r2(24 - hw - 2.4 + w)},${H} L${r2(24 - hw - 0.9)},45.4 Q${r2(24 - mx)},39.6 ${r2(24 - sw - 0.5)},32.4 Z`;
+  return `M${r2(24 - sw - 0.5)},${r2(y + 1.6)} Q24,${r2(y - 1.2)} ${r2(24 + sw + 0.5)},${r2(y + 1.6)} Q${r2(24 + mx)},${r2(y + 8.8)} ${r2(24 + hw + 0.9)},${r2(hanche + 0.9)}`
+    + ` L${r2(24 + hw + 2.4 + w)},${H} Q${r2(24 + w)},${r2(H + 1.8)} ${r2(24 - hw - 2.4 + w)},${H} L${r2(24 - hw - 0.9)},${r2(hanche + 0.9)} Q${r2(24 - mx)},${r2(y + 8.8)} ${r2(24 - sw - 0.5)},${r2(y + 1.6)} Z`;
 }
 // Le pan peint : l'aplat, l'ombre du côté droit et du bas, un reflet à gauche (sauf de dos), puis le contour
 function panPeint(c, ctx, id, col, S, reflets = '') {
-  const { view } = ctx, d = pan(c, ctx), H = c.coatHem;
-  const ombre = `<rect x="${view === 'se' ? 25.4 : 27.2}" y="29" width="16" height="30" fill="${S}"/>`
+  const { view } = ctx, d = pan(c, ctx), { sw, cou: y, ourlet: H } = reperes(c);
+  const ombre = `<rect x="${view === 'se' ? 25.4 : 27.2}" y="${r2(y - 1.8)}" width="16" height="30" fill="${S}"/>`
     + `<path d="M6,${r2(H - 1.6)} Q24,${r2(H + 1.4)} 42,${r2(H - 1.6)} L42,${r2(H + 4)} L6,${r2(H + 4)} Z" fill="${S}"/>`;
-  const clair = view === 'ne' ? '' : `<rect x="${r2(24 - c.k.sw + 0.6)}" y="34.4" width="1.3" height="10" rx="0.6" fill="${tone(col, 1.28)}"/>`;
+  const clair = view === 'ne' ? '' : `<rect x="${r2(24 - sw + 0.6)}" y="${r2(y + 3.6)}" width="1.3" height="10" rx="0.6" fill="${tone(col, 1.28)}"/>`;
   return P(d, col) + clip(`${c.uid}${id}${view}`, d, ombre + clair + reflets) + P(d, 'none');
 }
 // Deux poches à rabat, à hauteur des hanches (de trois quarts, celle du fond est plus étroite)
 function poches(c, { view }, S) {
-  const { hw } = c.k, se = view === 'se';
-  const one = (x, l) => P(`M${r2(x)},45.6 L${r2(x + l)},45.6 L${r2(x + l - 0.2)},47.2 L${r2(x + 0.2)},47.2 Z`, S, 0.6);
+  const { hw, hanche } = reperes(c), se = view === 'se';
+  const one = (x, l) => P(`M${r2(x)},${r2(hanche + 1.1)} L${r2(x + l)},${r2(hanche + 1.1)} L${r2(x + l - 0.2)},${r2(hanche + 2.7)} L${r2(x + 0.2)},${r2(hanche + 2.7)} Z`, S, 0.6);
   return one(24 - hw - 0.4 - (se ? 0.6 : 0), 4.4) + one(24 + hw - (se ? 3.4 : 4), se ? 3 : 4.4);
 }
-// Le col de fourrure : une bande moelleuse autour du cou, festonnée (de dos, sous les cheveux)
-function colFourrure(o, view, col) {
-  const S = tone(col, 0.86);
+// Le col de fourrure : une bande moelleuse autour du cou, festonnée (de dos, sous les cheveux) ; y : le haut du cou
+function colFourrure(o, view, col, y) {
+  const S = tone(col, 0.86), Y = d => r2(y + d);
   if (view === 'ne') {
-    return P('M15.4,30.8 Q24,34 32.6,30.8 L33.2,33.2 Q24,37 14.8,33.2 Z', col, 0.9) + P('M17.4,33.6 Q24,36 30.6,33.6', 'none', 0.5).replace(`stroke="${OUT}"`, `stroke="${S}"`);
+    return P(`M15.4,${Y(0)} Q24,${Y(3.2)} 32.6,${Y(0)} L33.2,${Y(2.4)} Q24,${Y(6.2)} 14.8,${Y(2.4)} Z`, col, 0.9) + P(`M17.4,${Y(2.8)} Q24,${Y(5.2)} 30.6,${Y(2.8)}`, 'none', 0.5).replace(`stroke="${OUT}"`, `stroke="${S}"`);
   }
   // le bord du bas en festons : des bosses le long d'un arc, de l'épaule droite à l'épaule gauche
-  const pts = Array.from({ length: 7 }, (_, i) => { const t = i / 6; return [(1 - t) ** 2 * (o + 8.4) + 2 * t * (1 - t) * o + t * t * (o - 8.4), (1 - t) ** 2 * 32.6 + 2 * t * (1 - t) * 39.2 + t * t * 32.6]; });
-  let d = `M${r2(o - 6.8)},30.6 Q${o},33.8 ${r2(o + 6.8)},30.6 L${r2(pts[0][0])},${r2(pts[0][1])}`;
+  const pts = Array.from({ length: 7 }, (_, i) => { const t = i / 6; return [(1 - t) ** 2 * (o + 8.4) + 2 * t * (1 - t) * o + t * t * (o - 8.4), (1 - t) ** 2 * (y + 1.8) + 2 * t * (1 - t) * (y + 8.4) + t * t * (y + 1.8)]; });
+  let d = `M${r2(o - 6.8)},${Y(-0.2)} Q${o},${Y(3)} ${r2(o + 6.8)},${Y(-0.2)} L${r2(pts[0][0])},${r2(pts[0][1])}`;
   for (let i = 1; i < pts.length; i++) { const [x0, y0] = pts[i - 1], [x1, y1] = pts[i]; d += ` Q${r2((x0 + x1) / 2)},${r2((y0 + y1) / 2 + 1.5)} ${r2(x1)},${r2(y1)}`; }
   d += ' Z';
-  return P(d, col, 0.9) + P(`M${r2(o - 5)},34.2 Q${o},37.2 ${r2(o + 5)},34.2`, 'none', 0.5).replace(`stroke="${OUT}"`, `stroke="${S}"`);
+  return P(d, col, 0.9) + P(`M${r2(o - 5)},${Y(3.4)} Q${o},${Y(6.4)} ${r2(o + 5)},${Y(3.4)}`, 'none', 0.5).replace(`stroke="${OUT}"`, `stroke="${S}"`);
 }
 const BOIS = '#D9B27C';
 function manteau(c, ctx, [col, fourrure]) {
   if (ctx.couche !== 'dessus') return '';
-  const { view } = ctx, H = c.coatHem, S = tone(col, 0.8), w = balance(ctx);
+  const { view } = ctx, { cou: y, ourlet: H } = reperes(c), S = tone(col, 0.8), w = balance(ctx), Y = d => r2(y + d);
   let s = panPeint(c, ctx, 'mt', col, S);
   if (view === 'ne') {
     // de dos : la couture du milieu, la fente, la martingale à deux boutons
-    s += P(`M24,33.8 L${r2(24 + w * 0.6)},${r2(H - 3.6)}`, 'none', 0.5) + P(`M${r2(24 + w * 0.6)},${r2(H - 3.6)} L${r2(24 + w)},${r2(H + 0.6)}`, 'none', 0.8)
-      + `<rect x="19.2" y="41.6" width="9.6" height="1.8" rx="0.8" fill="${S}" stroke="${OUT}" stroke-width="0.7"/>` + E(20.5, 42.5, 0.55, 0.55, BOIS, 0.45) + E(27.5, 42.5, 0.55, 0.55, BOIS, 0.45);
-    return s + colFourrure(24, view, fourrure);
+    s += P(`M24,${Y(3)} L${r2(24 + w * 0.6)},${r2(H - 3.6)}`, 'none', 0.5) + P(`M${r2(24 + w * 0.6)},${r2(H - 3.6)} L${r2(24 + w)},${r2(H + 0.6)}`, 'none', 0.8)
+      + `<rect x="19.2" y="${Y(10.8)}" width="9.6" height="1.8" rx="0.8" fill="${S}" stroke="${OUT}" stroke-width="0.7"/>` + E(20.5, y + 11.7, 0.55, 0.55, BOIS, 0.45) + E(27.5, y + 11.7, 0.55, 0.55, BOIS, 0.45);
+    return s + colFourrure(24, view, fourrure, y);
   }
   // de face, de trois quarts : le croisé, trois brandebourgs (une bûchette de bois, sa ganse), deux poches
-  const o = view === 'se' ? 21.6 : 24;
-  s += P(`M${r2(o + 1.2)},34.4 L${r2(o + 1.2 + w)},${r2(H + 0.8)}`, 'none', 0.8);
-  for (const y of [37, 40.4, 43.8]) {
-    const x = o + 1.2 + w * (y - 34) / (H - 34);
-    s += L([x - 2.6, y], [x + 2.6, y], tone(col, 0.55), 0.55)
-      + `<rect x="${r2(x - 1.5)}" y="${r2(y - 0.55)}" width="3" height="1.1" rx="0.55" fill="${BOIS}" stroke="${OUT}" stroke-width="0.5"/>`;
+  const o = view === 'se' ? 21.6 : 24, sh = y + 3.2;
+  s += P(`M${r2(o + 1.2)},${Y(3.6)} L${r2(o + 1.2 + w)},${r2(H + 0.8)}`, 'none', 0.8);
+  for (const d of [6.2, 9.6, 13]) {
+    const yy = y + d, x = o + 1.2 + w * (yy - sh) / (H - sh);
+    s += L([x - 2.6, yy], [x + 2.6, yy], tone(col, 0.55), 0.55)
+      + `<rect x="${r2(x - 1.5)}" y="${r2(yy - 0.55)}" width="3" height="1.1" rx="0.55" fill="${BOIS}" stroke="${OUT}" stroke-width="0.5"/>`;
   }
-  return s + poches(c, ctx, S) + colFourrure(o, view, fourrure);
+  return s + poches(c, ctx, S) + colFourrure(o, view, fourrure, y);
 }
 function cire(c, ctx, [col]) {
-  const { view } = ctx, S = tone(col, 0.82);
-  // la capuche rabattue : de face et de trois quarts, elle dépasse derrière le cou
-  if (ctx.couche === 'derriere') return view === 'ne' ? '' : P('M16.4,31.6 Q24,27 31.6,31.6 L31.6,33.8 L16.4,33.8 Z', S);
+  const { view } = ctx, S = tone(col, 0.82), R = reperes(c);
+  // la capuche rabattue : de face et de trois quarts, elle dépasse derrière le cou ; de dos, sur les épaules
+  if (ctx.couche === 'derriere') return view === 'ne' ? '' : capucheRabattue(c.uid, view, R, col, S);
   if (ctx.couche !== 'dessus') return '';
-  const H = c.coatHem, w = balance(ctx), { sw, hw } = c.k;
+  const { cou: y, ourlet: H, sw, hw, hanche } = R, w = balance(ctx), Y = d => r2(y + d);
   // le reflet du tissu ciré : deux traits blancs, sur la poitrine et sur le pan
   const gl = 'rgba(255,255,255,.55)';
-  const reflets = view === 'ne' ? L([24 - sw + 2.2, 35], [24 - sw + 1.8, 39.6], gl, 0.9) : L([24 - sw + 3, 35.4], [24 - sw + 2.6, 40], gl, 0.9) + L([24 - hw + 0.6, 47], [24 - hw + 0.2 + w, 49.4], gl, 0.8);
+  const reflets = view === 'ne' ? L([24 - sw + 2.2, y + 4.2], [24 - sw + 1.8, y + 8.8], gl, 0.9) : L([24 - sw + 3, y + 4.6], [24 - sw + 2.6, y + 9.2], gl, 0.9) + L([24 - hw + 0.6, hanche + 2.5], [24 - hw + 0.2 + w, hanche + 4.9], gl, 0.8);
   let s = panPeint(c, ctx, 'cr', col, S, reflets);
-  if (view === 'ne') {
-    // de dos : la couture, la capuche rabattue sur les épaules
-    return s + P(`M24,40 L${r2(24 + w)},${r2(H + 0.6)}`, 'none', 0.5)
-      + P('M16.4,33 Q24,37.6 31.6,33 L32.6,38.6 Q24,42.4 15.4,38.6 Z', col) + P('M17.6,37.4 Q24,40.4 30.4,37.4', 'none', 0.7)
-      + P('M15.4,38.6 Q24,42.4 32.6,38.6', 'none', 0).replace('stroke="none"', `stroke="${S}" stroke-width="0.8"`);
-  }
+  // de dos : la couture, la capuche rabattue sur les épaules
+  if (view === 'ne') return s + P(`M24,${Y(9.2)} L${r2(24 + w)},${r2(H + 0.6)}`, 'none', 0.5) + capucheRabattue(c.uid, view, R, col, S);
   // de face, de trois quarts : la patte et ses pressions, le col pointu, deux poches à rabat
-  const o = view === 'se' ? 21.6 : 24;
-  s += P(`M${r2(o + 0.8)},33.8 L${r2(o + 0.8 + w)},${r2(H + 0.8)}`, 'none', 0.9);
-  s += [36.4, 40, 43.6, 47.2].filter(y => y < H - 1.4).map(y => E(o + 2.2 + w * (y - 34) / (H - 34), y, 0.6, 0.6, tone(col, 0.5), 0.4)).join('');
-  s += P(`M${r2(o - 5.2)},31.2 L${r2(o + 0.4)},35.4 L${r2(o - 1.6)},36.8 Z`, col, 0.8) + P(`M${r2(o + 5.2)},31.2 L${r2(o + 0.4)},35.4 L${r2(o + 2.4)},36.8 Z`, S, 0.8);
+  const o = view === 'se' ? 21.6 : 24, sh = y + 3.2;
+  s += P(`M${r2(o + 0.8)},${Y(3)} L${r2(o + 0.8 + w)},${r2(H + 0.8)}`, 'none', 0.9);
+  s += [5.6, 9.2, 12.8, 16.4].map(d => y + d).filter(yy => yy < H - 1.4).map(yy => E(o + 2.2 + w * (yy - sh) / (H - sh), yy, 0.6, 0.6, tone(col, 0.5), 0.4)).join('');
+  s += P(`M${r2(o - 5.2)},${Y(0.4)} L${r2(o + 0.4)},${Y(4.6)} L${r2(o - 1.6)},${Y(6)} Z`, col, 0.8) + P(`M${r2(o + 5.2)},${Y(0.4)} L${r2(o + 0.4)},${Y(4.6)} L${r2(o + 2.4)},${Y(6)} Z`, S, 0.8);
   return s + poches(c, ctx, S);
+}
+// Châle tricoté [laine, frange], drapé sur les épaules et le haut des bras (par-dessus les bras), ses deux pans croisés
+// et noués sur la poitrine, des franges ; de dos, une grande pointe frangée
+function chale(c, { view }, [col, frange]) {
+  const { cou: y, e } = reperes(c), uid = c.uid, Y = d => r2(y + d);
+  const S = tone(col, 0.82), L0 = r2(24 - e - 3.6), R0 = r2(24 + e + 3.6);
+  const tricot = () => [0, 1, 2, 3, 4, 5].map(i => L([8 + i * 6, y - 2], [14 + i * 6, y + 18], tone(col, 0.86), 0.5)).join('') + [0, 1, 2, 3, 4, 5].map(i => L([14 + i * 6, y - 2], [8 + i * 6, y + 18], tone(col, 0.9), 0.4)).join('');
+  if (view === 'ne') {
+    const d = `M${L0},${Y(5.4)} Q${r2(24 - e - 1)},${Y(0.4)} 24,${Y(-0.2)} Q${r2(24 + e + 1)},${Y(0.4)} ${R0},${Y(5.4)} Q${r2(R0 + 0.2)},${Y(8.4)} ${r2(R0 - 1.2)},${Y(9.6)} L24,${Y(17.6)} L${r2(L0 + 1.2)},${Y(9.6)} Q${r2(L0 - 0.2)},${Y(8.4)} ${L0},${Y(5.4)} Z`;
+    return P(d, col) + clip(`${uid}ch${view}`, d, tricot() + `<rect x="25.6" y="${Y(-2)}" width="16" height="22" fill="${S}" opacity="0.55"/>`) + P(d, 'none')
+      + [-1.6, -0.5, 0.6, 1.7].map(dx => L([24 + dx * 0.6, y + 17.2], [24 + dx, y + 19.4], frange, 0.7)).join('');
+  }
+  const o = view === 'se' ? 22 : 24;
+  const d = `M${r2(o - 5.6)},${Y(0.6)} L${o},${Y(8.6)} L${r2(o + 5.6)},${Y(0.6)} Q${r2(R0 - 2.4)},${Y(1.4)} ${R0},${Y(4.6)} Q${r2(R0 + 0.6)},${Y(7.6)} ${r2(R0 - 0.2)},${Y(10)} Q${r2(o + 6)},${Y(11.4)} ${r2(o + 1.6)},${Y(10.2)} L${o},${Y(11.6)} L${r2(o - 1.6)},${Y(10.2)} Q${r2(o - 6)},${Y(11.4)} ${r2(L0 + 0.2)},${Y(10)} Q${r2(L0 - 0.6)},${Y(7.6)} ${L0},${Y(4.6)} Q${r2(L0 + 2.4)},${Y(1.4)} ${r2(o - 5.6)},${Y(0.6)} Z`;
+  let s = P(d, col) + clip(`${uid}ch${view}`, d, tricot() + `<rect x="${r2(o + 3.4)}" y="${Y(-2)}" width="18" height="16" fill="${S}" opacity="0.6"/>`) + P(d, 'none');
+  // le nœud et les deux pans qui pendent, frangés
+  const pan = (dx, sg) => `M${r2(o + dx)},${Y(10.4)} L${r2(o + dx + sg * 2.4)},${Y(10.6)} L${r2(o + dx + sg * 2.8)},${Y(15)} L${r2(o + dx + sg * 0.4)},${Y(15.2)} Z`;
+  s += P(pan(0.2, 1), S) + P(pan(-0.2, -1), col) + E(o, y + 10.4, 1.9, 1.4, S, 0.8);
+  return s + [0.6, 1.5, 2.4].map(t => L([o + t, y + 15.1], [o + t + 0.1, y + 16.6], frange, 0.6) + L([o - t, y + 15.1], [o - t - 0.1, y + 16.6], frange, 0.6)).join('');
+}
+// Pèlerine de laine [laine, bord] : une courte cape sur les épaules et le haut des bras (par-dessus les bras), un bord
+// en feston de laine ; sa capuche rabattue (la même que les autres) dépasse derrière le cou, ou se pose dans le dos
+function pelerine(c, ctx, [col, bord]) {
+  const { view } = ctx, R = reperes(c), { cou: y, e } = R, S = tone(col, 0.8);
+  if (ctx.couche === 'derriere') return view === 'ne' ? '' : capucheRabattue(c.uid, view, R, col, S);
+  const L0 = r2(24 - e - 3.8), R0 = r2(24 + e + 3.8), B = r2(y + 10.6), Y = d => r2(y + d);
+  const d = `M${r2(24 - e - 0.4)},${Y(0.8)} Q24,${Y(-1.4)} ${r2(24 + e + 0.4)},${Y(0.8)} Q${r2(R0 - 0.6)},${Y(3)} ${R0},${B} Q24,${r2(B + 3.4)} ${L0},${B} Q${r2(L0 + 0.6)},${Y(3)} ${r2(24 - e - 0.4)},${Y(0.8)} Z`;
+  let s = P(d, col) + clip(`${c.uid}pl${view}`, d, `<rect x="${view === 'se' ? 25.4 : 27.2}" y="${Y(-2)}" width="18" height="18" fill="${S}"/>`
+    + `<path d="M0,${r2(B - 1.2)} Q24,${r2(B + 2.2)} 48,${r2(B - 1.2)} L48,${r2(B + 6)} L0,${r2(B + 6)} Z" fill="${bord}"/>`
+    + [-10, -6, -2, 2, 6, 10].map(x => L([24 + x, B - 0.6 + Math.abs(x) * -0.06], [24 + x, B + 2.4], tone(bord, 0.82), 0.5)).join('')) + P(d, 'none');
+  if (view === 'ne') s += capucheRabattue(`${c.uid}pl`, view, R, col, S);
+  return s;
+}
+// Étole de fourrure : une large pèlerine de fourrure sur les épaules et le haut des bras (par-dessus les bras), au bord
+// festonné, des touffes ; de dos, plus longue, elle dépasse sous les cheveux
+function etole(c, { view }, [col]) {
+  const { cou: y, e } = reperes(c), S = tone(col, 0.84), L0 = 24 - e - 3.6, R0 = 24 + e + 3.6, B = y + (view === 'ne' ? 9.4 : 7.6), n = 6;
+  const festons = (x0, x1, yb) => { let d = ''; const l = (x1 - x0) / n; for (let i = n - 1; i >= 0; i--) d += ` Q${r2(x0 + l * (i + 0.5))},${r2(yb + 1.6)} ${r2(x0 + l * i)},${r2(yb)}`; return d; };
+  const d = `M${r2(24 - e - 0.4)},${r2(y + 0.6)} Q24,${r2(y - 1.8)} ${r2(24 + e + 0.4)},${r2(y + 0.6)} Q${r2(R0 - 0.6)},${r2(y + 2)} ${r2(R0)},${r2(B)}${festons(L0, R0, B)} Q${r2(L0 + 0.6)},${r2(y + 2)} ${r2(24 - e - 0.4)},${r2(y + 0.6)} Z`;
+  const touffes = [-9, -5, -1, 3, 7, 10].map((dx, i) => `<path d="M${r2(24 + dx - 1)},${r2(y + 3 + (i % 2) * 2)} q1,1.2 2,0" fill="none" stroke="${S}" stroke-width="0.6" stroke-linecap="round"/>`).join('');
+  return P(d, col, 0.9) + clip(`${c.uid}et${view}`, d, touffes + `<rect x="${view === 'se' ? 25.6 : 27.4}" y="${r2(y - 2)}" width="16" height="16" fill="${S}" opacity="0.6"/>`) + P(d, 'none', 0.9);
 }
 
 // ---- aux pieds : les bottes, par-dessus le bas de la jambe ; le pied est celui de la troupe, à leur couleur ----
@@ -405,16 +491,17 @@ function botte(fourree) {
 }
 
 // Ce que les tenues de saison changent au personnage lui-même : les manches du manteau ou du ciré (jusqu'au poignet,
-// même sous un t-shirt), les moufles (les mains de leur couleur ; le revers tricoté au poignet, sur une manche longue)
+// même sous un t-shirt), les moufles (les mains de leur couleur, le pouce à part : c.moufle ; le revers tricoté au
+// poignet, sur une manche longue)
 const PORTE = {
   manteau: ([col, fourrure]) => ({ sleeve: col, cuff: fourrure, sleeves: undefined }),
   cire: ([col]) => ({ sleeve: col, cuff: tone(col, 0.82), sleeves: undefined }),
-  moufles: ([col, revers], c) => ({ hand: col, ...(c.sleeves ? {} : { cuff: revers }) })
+  moufles: ([col, revers], c) => ({ hand: col, moufle: true, ...(c.sleeves ? {} : { cuff: revers }) })
 };
 
 // ---- le catalogue des dessins : par accessoire, les couches où il apparaît ----
 const DESSINS = {
-  bonnet: { tete: bonnet }, paille: { tete: paille }, casquette: { tete: casquette }, bandana: { tete: bandana }, couronneFleurs: { tete: couronneFleurs },
+  bonnet: { tete: bonnet }, cacheOreilles: { cheveux: arceau, tete: cacheOreilles }, paille: { tete: paille }, casquette: { tete: casquette }, bandana: { tete: bandana }, couronneFleurs: { tete: couronneFleurs },
   beret: { tete: beret }, oreillesChat: { tete: oreillesChat }, oreillesLapin: { tete: oreillesLapin }, diademe: { tete: diademe },
   noeud: { cheveux: noeud }, barrettes: { cheveux: barrettes }, fleur: { cheveux: fleur }, etoile: { cheveux: etoileCheveux },
   lunettesRondes: { visage: lunettes('rondes') }, lunettesCarrees: { visage: lunettes('carrees') }, lunettesPapillon: { visage: lunettes('papillon') },
@@ -424,7 +511,8 @@ const DESSINS = {
   foulard: { cou: foulard }, echarpe: { cou: echarpe }, perles: { cou: perles }, coquillage: { cou: coquillage }, papillon: { cou: papillon },
   sacDos: { derriere: sacDos, cou: sacDos }, besace: { cou: besace }, cape: { derriere: cape, cou: cape, surBras: cape }, ailes: { derriere: ailes, surBras: ailes },
   peluche: { main: peluche }, panier: { main: panier }, ombrelle: { main: ombrelle },
-  manteau: { dessus: manteau }, cire: { derriere: cire, dessus: cire }, bottesPluie: { pieds: botte(false) }, bottesFourrees: { pieds: botte(true) }
+  manteau: { dessus: manteau }, cire: { derriere: cire, dessus: cire }, bottesPluie: { pieds: botte(false) }, bottesFourrees: { pieds: botte(true) },
+  chale: { surBras: chale }, pelerine: { derriere: pelerine, surBras: pelerine }, etole: { surBras: etole }
 };
 
 // Ce que les accessoires portés dessinent dans une couche (couleurs : c.acc[emplacement])
@@ -437,4 +525,19 @@ function couche(c, nom, ctx, extra) {
   return s;
 }
 
-module.exports = { DESSINS, PORTE, couche };
+// Habiller un porteur qui n'est pas l'avatar (un maître) : objets = { emplacement: { id, couleurs: [hex…] } }. Mêmes
+// dessins, mêmes couches que l'avatar : derrière le corps, par-dessus le haut, au cou, par-dessus les bras ; la tête par
+// le crochet c.coiffe du maître (il appelle c.coiffe(c, ctx, couche) là où se posent les « cheveux » et la « tete », et
+// range ce qui dépasserait) ; les manches, les mains, les pieds (PORTE, c.foot)
+function habiller(m, objets, suffixe) {
+  const c = { ...m, uid: `${m.uid}${suffixe}`, o: { accessoires: {} }, acc: {} };
+  for (const [place, { id, couleurs }] of Object.entries(objets)) { c.o.accessoires[place] = { id }; c.acc[place] = couleurs; }
+  const puis = (f, nom) => function (cc, ctx) { return (f ? f.call(this, cc, ctx) : '') + couche(cc, nom, ctx); };
+  Object.assign(c, { backItems: puis(m.backItems, 'derriere'), body: puis(m.body, 'dessus'), neck: puis(m.neck, 'cou'), overArms: puis(m.overArms, 'surBras') });
+  if (objets.tete || objets.cheveux) c.coiffe = (cc, ctx, nom) => couche(cc, nom, ctx);
+  for (const place of ['dessus', 'mains']) { const a = objets[place]; if (a && PORTE[a.id]) Object.assign(c, PORTE[a.id](a.couleurs, c)); }
+  if (objets.pieds) c.foot = (cc, x, y, dir, tilt) => couche(cc, 'pieds', {}, [x, y, dir, tilt]);
+  return c;
+}
+
+module.exports = { DESSINS, PORTE, couche, reperes, capucheRabattue, habiller };

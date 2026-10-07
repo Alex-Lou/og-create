@@ -85,7 +85,7 @@ function paume(c, [x, y], k, s = 1) {
   const f = c.hand || c.skin, w = 1.85 * s, h = 2.5 * s;
   return E(x + k * w * 0.95, y + 0.5 * s, 0.95 * s, 1.35 * s, f, 0.9)
     + P(`M${r2(x - w)},${r2(y + h * 0.55)} L${r2(x - w)},${r2(y - h * 0.35)} Q${r2(x - w)},${r2(y - h)} ${r2(x)},${r2(y - h)} Q${r2(x + w)},${r2(y - h)} ${r2(x + w)},${r2(y - h * 0.35)} L${r2(x + w)},${r2(y + h * 0.55)} Q${r2(x)},${r2(y + h * 1.05)} ${r2(x - w)},${r2(y + h * 0.55)} Z`, f, 0.9)
-    + [-0.6, 0.6].map(d => L([x + d * s, y - h + 0.35], [x + d * s, y - h * 0.35], OUT, 0.42)).join('');
+    + (c.moufle ? '' : [-0.6, 0.6].map(d => L([x + d * s, y - h + 0.35], [x + d * s, y - h * 0.35], OUT, 0.42)).join('')); // des moufles : pas de doigts
 }
 function tranche(c, [x, y], k, s = 1) {
   const f = c.hand || c.skin, w = 1.3 * s, h = 2.5 * s;
