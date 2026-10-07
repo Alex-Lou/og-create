@@ -2,7 +2,7 @@
 // La maison de l'alchimiste reste d'un palier à l'autre (rapetissée quand la tour grandit) ; sa cheminée de cuivre
 // lâche des vapeurs colorées. Places laissées libres pour la boutique (repère 3 × 3) : four à l'avant gauche, chien et
 // chat devant la porte, hamac sur le flanc droit (u ≈ 1.35).
-import { roofOf, roofTexture } from '../palette.js';
+import { roofOf, roofTextureOf } from '../palette.js';
 import { dome } from '../buildings2.js';
 import { WISP } from '../brume.js';
 import { sprite } from '../iso.js';
@@ -64,7 +64,7 @@ function alchemistHouse(skin, rect) {
     // Cheminée de cuivre derrière le faîtage (le toit en cache le bas)
     + cylinder(cu, cv, 42, 92, 0.07, COPPER, `ah-ch-${f2(u0)}`) + cylinder(cu, cv, 92, 96, 0.1, COPPER, `ah-cap-${f2(u0)}`)
     + gable(u0, v0, u1, v1, 42, 28, { front: roof.front, back: roof.back, gable: PLASTER.right }, 0.12)
-    + roofTexture(skin, u0, v0, u1, v1, 42, 28, 0.12)
+    + roofTextureOf(skin, 'toit-ardoise', u0, v0, u1, v1, 42, 28, 0.12)
     + dormer(u0 + 0.36, 0.11, vm, v1 + 0.12, 70, 42, 0.62, roof)
     + (wide ? dormer(u1 - 0.34, 0.11, vm, v1 + 0.12, 70, 42, 0.62, roof) : '');
 }

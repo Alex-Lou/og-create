@@ -342,6 +342,7 @@ function bigPier() {
     + box(-0.75, -0.22, -0.25, 0.2, 10, 30, WOOD_DARK) + planksLeft(-0.75, -0.25, 0.2, 10, 30, 5)
     + face([[-0.6, 0.2, 10], [-0.42, 0.2, 10], [-0.42, 0.2, 23], [-0.6, 0.2, 23]], '#3A2A1E')
     + gable(-0.75, -0.22, -0.25, 0.2, 30, 12, { front: BLUE_ROOF.front, back: BLUE_ROOF.back, gable: WOOD_DARK.right }, 0.05)
+    + roofTexture('toit-bleu', -0.75, -0.22, -0.25, 0.2, 30, 12, 0.05)
     // Filet séché et lanterne
     + `<path d="M${P(0.1, -0.24, 22).join(',')} Q${P(0.25, -0.24, 12).join(',')} ${P(0.4, -0.24, 22).join(',')}" stroke="#C9A16A" stroke-width="1" fill="rgba(201,161,106,.25)" stroke-dasharray="1.5 1.5"/>`
     + box(0.08, -0.26, 0.12, -0.22, 10, 26, WOOD_DARK) + box(0.38, -0.26, 0.42, -0.22, 10, 26, WOOD_DARK)
