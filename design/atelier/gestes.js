@@ -409,4 +409,36 @@ function reparer({ view, n }) {
 // Debout : frame(avecReparer(c), vue, 'action', n) ; assis : assis(c, vue, n, null, reparer)
 const avecReparer = c => ({ ...c, uid: `${c.uid}re`, pose: reparer });
 
-module.exports = { lanterne, parapluie, valise, avecLanterne, avecParapluie, avecValise, couche, CADRE_PARAPLUIE, CADRE_COUCHE, ZEDS, paume, tranche, tendre, avecMainsTendues, applaudir, avecApplaudir, pecher, avecPecher, piocher, avecPiocher, cueillir, avecCueillir, porter, avecPorter, reparer, avecReparer };
+// L'onde qui repousse, douce et claire : deux anneaux autour de la paume en (x, y), un peu décalés vers la créature
+// (dx, dy), plus larges à l'image 2, et deux étincelles
+function onde(x, y, dx, dy, n) {
+  const k = n ? 1.2 : 1;
+  const anneau = (r, o) => {
+    const e = (color, w) => `<ellipse cx="${r2(x + dx * o)}" cy="${r2(y + dy * o)}" rx="${r2(r)}" ry="${r2(r * 0.9)}" fill="none" stroke="${color}" stroke-width="${w}"/>`;
+    return e(OUT, 1.5) + e('#EAF6FF', 0.7);
+  };
+  const etoile = (sx, sy, s) => `<path d="M${r2(sx)},${r2(sy - s)} Q${r2(sx + s * 0.2)},${r2(sy - s * 0.2)} ${r2(sx + s)},${r2(sy)} Q${r2(sx + s * 0.2)},${r2(sy + s * 0.2)} ${r2(sx)},${r2(sy + s)} Q${r2(sx - s * 0.2)},${r2(sy + s * 0.2)} ${r2(sx - s)},${r2(sy)} Q${r2(sx - s * 0.2)},${r2(sy - s * 0.2)} ${r2(sx)},${r2(sy - s)} Z" fill="#FFF2B0" stroke="${OUT}" stroke-width="0.4"/>`;
+  return `<g opacity="0.9">${anneau(3.4 * k, 0.8) + anneau(5 * k, 1.8)}</g>` + etoile(x + dx * 3 + 4.4 * k, y + dy * 3 - 4.6 * k, n ? 1.2 : 0.9) + etoile(x + dx * 3 - 4.6 * k, y + dy * 3 + 3.6 * k, n ? 0.8 : 1.1);
+}
+// Repousser une créature de la brume d'un toucher (HISTOIRE.md § 6.15 : jamais de coup) : la main ouverte tendue vers
+// elle, une onde claire et deux étincelles ; 2 images : la main pousse un peu plus loin, l'onde s'élargit.
+// L'air décidé mais gentil (« Ouste ! »). La créature est devant le personnage.
+function repousser({ view, n }) {
+  const [a, b] = this.shoulders;
+  const d = n ? 1.4 : 0;
+  if (view === 'front') {
+    const h = [Math.min(b[0] + 4.6 + d, 38.2), a[1] + 3.6 - d * 0.4]; // bornée : l'onde reste dans le cadre
+    return { expr: 'content', right: arm(this, b, h, [b[0] + 3.4, b[1] + 6.6]) + paume(this, [h[0], h[1] - 0.6], -1, 1.1), over: onde(h[0], h[1] - 0.8, 0.6, -0.3, n) + paume(this, [h[0], h[1] - 0.6], -1, 1.1) };
+  }
+  if (view === 'se') {
+    const h = [Math.max(a[0] - 6 - d * 0.8, 9.6), a[1] + 3.4];
+    return { expr: 'content', left: arm(this, a, h, [a[0] - 2.6, a[1] + 6.4]) + tranche(this, [h[0] - 0.2, h[1] - 0.6], 1, 1.05), over: onde(h[0] - 0.4, h[1] - 0.8, -1, 0, n) + tranche(this, [h[0] - 0.2, h[1] - 0.6], 1, 1.05) };
+  }
+  // de dos : la créature est devant ; la main se lève au-dessus de l'épaule, paume vers elle (on voit la tranche)
+  const h = [Math.min(b[0] + 4.6 + d * 0.6, 38), a[1] - 3.6 - d * 0.4];
+  return { left: '', right: '', over: arm(this, b, h, [b[0] + 4.4, b[1] + 4.6]) + onde(h[0], h[1] - 0.8, 0.4, -0.8, n) + tranche(this, [h[0], h[1] - 0.6], 1, 1.05) };
+}
+// Debout : frame(avecRepousser(c), vue, 'action', n)
+const avecRepousser = c => ({ ...c, uid: `${c.uid}rp`, pose: repousser });
+
+module.exports = { lanterne, parapluie, valise, avecLanterne, avecParapluie, avecValise, couche, CADRE_PARAPLUIE, CADRE_COUCHE, ZEDS, paume, tranche, tendre, avecMainsTendues, applaudir, avecApplaudir, pecher, avecPecher, piocher, avecPiocher, cueillir, avecCueillir, porter, avecPorter, reparer, avecReparer, repousser, avecRepousser };
