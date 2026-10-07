@@ -1,6 +1,8 @@
-// Assemble la bibliothèque complète : svg/ (noms rangés), catalogue.json, planches/, apercus/, README.md, index.html
+// Assemble la bibliothèque complète : svg/ (noms rangés), catalogue.json, planches/, apercus/, generateur/, README.md,
+// index.html
 const fs = require('fs');
 const path = require('path');
+const esbuild = require('esbuild');
 const C = require('./catalogue.js');
 
 const LIB = path.join(__dirname, 'lib');
@@ -79,6 +81,15 @@ for (const [d, f] of pngs) fs.copyFileSync(path.join(__dirname, d, f), path.join
 const PAGES = [['troupe_apercu.html', 'Les 7 maîtres'], ['vivants_apercu.html', 'Brume, Anya, le cerf, le Passeur'], ['animaux_apercu.html', 'Animaux'], ['decor_apercu.html', 'Décor'], ['batiments_apercu.html', 'Bâtiments'], ['meteo_apercu.html', 'Météo'], ['naufrages_apercu.html', 'Les naufragés'], ['camp_apercu.html', 'Le camp'], ['ruines_apercu.html', 'Ruines des Anciens'], ['betes_orientees_apercu.html', 'Bêtes orientées'], ['coffres_apercu.html', 'Coffres'], ['avatar_apercu.html', 'L\'avatar du joueur'], ['egares_apercu.html', 'Les égarés'], ['lot_m_apercu.html', 'Le bâtiment embrumé, la cage aux poules, le crabe, les signes d\'Anya, l\'éclat du souvenir'], ['scenes_apercu.html', 'Les scènes du tutoriel']];
 for (const [f] of PAGES) fs.copyFileSync(path.join(__dirname, f), path.join(OUT, 'apercus', f));
 fs.copyFileSync(path.join(__dirname, 'bundle_README.md'), path.join(OUT, 'README.md'));
+
+// 3 bis. Le générateur d'avatar en un module ESM, pour le jeu (ce qu'il exporte : generateur.mjs). esbuild est celui
+// qu'installe Vite ; verif_generateur.mjs compare le module aux sources. keepNames : assis.js nomme ses découpes
+// d'après le nom du geste, qu'esbuild renommerait
+esbuild.buildSync({
+  entryPoints: [path.join(__dirname, 'generateur.mjs')], bundle: true, format: 'esm', platform: 'browser', charset: 'utf8', keepNames: true,
+  absWorkingDir: path.join(__dirname, '..'), outfile: path.join(OUT, 'generateur', 'avatar.mjs'), logLevel: 'warning',
+  banner: { js: '// Assemblé par design/atelier/build_bundle.js à partir de design/atelier/generateur.mjs : ne pas modifier à la main.' }
+});
 
 // 4. La page : le catalogue, chapitre après chapitre ; un toucher (ou le survol) anime un dessin
 const esc = s => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/"/g, '&quot;');
