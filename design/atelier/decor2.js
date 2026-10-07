@@ -99,12 +99,21 @@ const G = {
   roseau: {
     frames: [[-24, -44, 48, 52], [-20, -14, 40, 22]],
     draw: (spent, f) => {
-      if (spent) return E(0, 1, 12, 4, 'rgba(60,90,50,.3)', 0) + [-8, -4, 0, 4, 8].map((dx, k) => { const yb = (k % 2) * 2, h = 5 + (k % 3) * 1.6; return line(`M${dx},${yb} L${dx + 0.3},${r2(yb - h)}`, 2.6, OUT) + line(`M${dx},${yb} L${dx + 0.3},${r2(yb - h)}`, 1.2, '#5F8F3C') + E(dx + 0.3, yb - h, 0.9, 0.5, '#C8DC8A', 0.5); }).join('') + [-6, 2, 6].map(dx => P(`M${dx - 1},2 Q${dx - 1.6},-1 ${dx - 0.4},-4 Q${dx + 0.4},-1 ${dx + 1},2 Z`, '#7FA45A', 0.5)).join('');
-      let o = E(0, 1, 14, 4.5, 'rgba(60,90,50,.3)', 0);
-      [[-12, 20], [-9, 26], [-5, 32], [-1, 36], [3, 30], [7, 34], [11, 24]].forEach(([dx, h], k) => { o += cattail(dx, (k % 2) * 2, h, (f ? 1.6 : -1.4) * (0.6 + (k % 3) * 0.3)); });
-      return o + [-7, 0, 6].map(dx => P(`M${dx - 1.2},2 Q${r2(dx * 1.5 - 1.6)},-3 ${r2(dx * 1.5)},-9 Q${r2(dx * 1.5 + 0.6)},-3 ${dx + 1.2},2 Z`, '#7FA45A', 0.6)).join('');
+      const mare = (rx, ry) => E(0, 1.4, rx + 2.4, ry + 1.6, '#86B852', W) + E(0, 1.4, rx, ry, '#7FC0E2', W) + E(-rx * 0.25, 0.8, rx * 0.55, ry * 0.45, '#A6D8F0', 0) + line(`M${r2(-rx * 0.5)},${r2(ry * 0.5)} l4,-0.5 M${r2(rx * 0.2)},${r2(ry * 0.8)} l3,-0.4`, 0.8, '#FFFFFF');
+      const lame = (x, y, h, sw, c) => { const d = `M${r2(x - 1.1)},${y} Q${r2(x + sw * 0.4 - 1)},${r2(y - h * 0.55)} ${r2(x + sw)},${r2(y - h)} Q${r2(x + sw * 0.4 + 1.2)},${r2(y - h * 0.5)} ${r2(x + 1.1)},${y} Z`; return P(d, c, W * 0.8) + line(`M${x},${y - 1} Q${r2(x + sw * 0.4)},${r2(y - h * 0.5)} ${r2(x + sw * 0.9)},${r2(y - h * 0.92)}`, 0.5, '#4E7A30'); };
+      const massette = (x, y, h, sw) => { const tx = x + sw, ty = y - h; return tk(`M${r2(x)},${r2(y)} q${r2(sw * 0.3)},${r2(-h * 0.5)} ${r2(sw)},${r2(-h)}`, 1.1, '#5F8F3C')
+        + rr(tx - 1.8, ty + 1.5, 3.6, 7.4, 1.8, '#8A5A2E', W * 0.8) + line(`M${r2(tx - 0.7)},${r2(ty + 2.8)} L${r2(tx - 0.7)},${r2(ty + 7.6)}`, 0.7, '#B88552') + line(`M${r2(tx)},${r2(ty + 1.5)} l${r2(sw * 0.08)},-3.4`, 0.7, '#5F8F3C'); };
+      if (spent) return mare(12, 4) + [-8, -4, 0, 4, 8].map((dx, k) => { const yb = (k % 2) * 2, h = 5 + (k % 3) * 1.6; return tk(`M${dx},${yb} L${r2(dx + 0.3)},${r2(yb - h)}`, 1.2, '#5F8F3C') + pg([[dx - 0.8, yb - h + 0.6], [dx + 1.4, yb - h - 0.6], [dx + 1.4, yb - h + 0.4]], '#C8DC8A', 0); }).join('') + lame(-6, 2, 5, -1.4, '#7FA45A') + lame(6, 2.4, 6, 1.6, '#8FB866');
+      const sw = k => (f ? 1.6 : -1.4) * (0.6 + (k % 3) * 0.3);
+      let o = shade(0, 2, 17, 5, 0.12) + mare(14, 4.6);
+      o += lame(-11, 1, 16, -4 + sw(0) * 0.5, '#7FA45A') + lame(9, 1.4, 18, 4 + sw(1) * 0.5, '#7FA45A');
+      [[-12, 20], [-9, 26], [-5, 32], [-1, 36], [3, 30], [7, 34], [11, 24]].forEach(([dx, h], k) => { o += massette(dx, (k % 2) * 2, h, sw(k)); });
+      o += lame(-7, 2.4, 12, -2.4 + sw(2) * 0.4, '#8FB866') + lame(1, 3, 14, 1.4 + sw(3) * 0.4, '#8FB866') + lame(6, 2.6, 10, 2.6 + sw(4) * 0.4, '#9CC470');
+      return o + P('M8,4.4 a3.4,1.3 0 1 1 1,1 Z', '#6FAE4E', W * 0.7) + E(8.6, 3.6, 1.1, 0.8, '#F7B6CE', 0.5) + `<ellipse cx="-6" cy="5" rx="${2.4 + f}" ry="${0.8 + f * 0.3}" fill="none" stroke="#E2F4FC" stroke-width="0.6"/>`;
     }
   },
+  // Croûte de sel : une plaque blanche aux bords bosselés, craquelée en alvéoles, une flaque de saumure rosée ; des cubes de
+  // sel empilés qui accrochent le soleil ; ramassée, une croûte grise grattée, ses fentes et quelques grains
   sel: {
     frames: [[-30, -26, 60, 36], [-26, -10, 52, 20]],
     draw: (spent, f) => spent
@@ -293,7 +302,10 @@ M.barque_volante = { frame: [-32, -56, 64, 68], n: 2, draw: f => {
     + P('M-2,-40 Q-12,-26 -2,-14 Z', '#F2E4C0', W * 0.8)
     + L([-19, -6], [-19, -16], '#3D3A36', 1.2) + rr(-22, -22, 6, 7, 1, '#FFE08A', 0.8, '#3D3A36') + E(-19, -18.4, 1, 1.8, '#FFF4C8', 0);
 } };
-// Bateau du visiteur : coque, cabine, malle, voile, fanion qui claque ; ancre : ligne de flottaison ; vers la droite
+// Bateau du visiteur : une coque bordée de planches, son liseré blanc, sa bande bleue et ses hublots ; la cabine, sa
+// porte, son hublot et son toit rouge, la cheminée qui fume ; la malle sanglée ; le mât, sa vergue, la grand-voile
+// bombée et ses coutures, les haubans ; le fanion qui claque ; l'écume à la proue et à la poupe. Il tangue un
+// peu d'une image à l'autre. Ancre : ligne de flottaison ; vers la droite
 M.bateau_visiteur = { frame: [-30, -56, 62, 64], n: 2, draw: f => {
   const flag = f ? 'M3,-50 L13,-47.6 L3,-45.2 Z' : 'M3,-50 L12,-48.6 L13,-46 L3,-45.2 Z';
   return E(0, 3.6, 27, 3.6, 'rgba(30,70,110,.25)', 0)
