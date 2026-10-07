@@ -764,7 +764,8 @@ function coalPile(x, y) {
   }
   return `<path d="M${f2(x - 18)},${f2(y)} C${f2(x - 16)},${f2(y - 14)} ${f2(x + 16)},${f2(y - 14)} ${f2(x + 18)},${f2(y)} A18,7 0 0 1 ${f2(x - 18)},${f2(y)} Z" fill="${COAL.right}"/>` + lumps;
 }
-// Tas de charbon : monticule noir aux éclats bleutés, pelle plantée, sac de jute ; des braises rougeoient à sa base
+// Charbonnière : la meule de bois couverte de terre et de mottes qui fume par ses évents, ses bûches au pied, la
+// gueule où rougeoient les braises ; l'échelle du charbonnier, la réserve de bûches, le tas de charbon fini et son sac
 const charbon = {
   light: () => [0, 0.1, 3, 12, '255,110,50'],
   layers: [{
@@ -964,13 +965,34 @@ const hutte = {
   layers: [{
     frame: [-34, -56, 68, 70],
     draw: T => {
-      let out = T.shadow(0, 0, 0.38, 0.18) + T.box(-0.24, -0.2, 0.24, 0.2, 0, 18, { top: '#D8C27A', left: '#C2A65A', right: '#9E8440' });
-      for (let k = 0; k < 9; k++) out += ln(T.p(-0.24 + k * 0.06, 0.2, 0), T.p(-0.24 + k * 0.06, 0.2, 18), 'rgba(110,80,30,.35)', 0.6);
-      for (let k = 0; k < 7; k++) out += ln(T.p(0.24, -0.2 + k * 0.066, 0), T.p(0.24, -0.2 + k * 0.066, 18), 'rgba(80,60,20,.4)', 0.6);
-      out += T.face([[-0.04, 0.2, 0], [0.08, 0.2, 0], [0.08, 0.2, 12], [-0.04, 0.2, 12]], '#4A3420');
-      out += T.gable(-0.24, -0.2, 0.24, 0.2, 18, 16, REEDS, 0.1);
-      const bundle = du => { const [bx, by] = T.p(du, 0.34, 0); return [-2, 0, 2].map(d => ln([bx + d, by], [bx + d * 0.4, by - 14], '#B49A52', 1.4)).join('') + ln([bx - 3, by - 6], [bx + 3, by - 6], '#7A5A2A', 1.2); };
-      return out + bundle(-0.3) + bundle(0.34);
+      const [x, y] = T.p(0, 0, 0);
+      const R = { light: '#E2CD88', mid: '#C9AE62', dark: '#9E8440', line: 'rgba(110,80,30,.45)' };
+      // le sol de vase, une flaque et son nénuphar, des massettes
+      let out = ell(x, y + 1, 28, 12, '#8C7A52', ` stroke="${OUT}" stroke-width="0.5"`) + ell(x - 3, y, 19, 7, '#9C8A60')
+        + ell(x + 15, y + 6, 8, 3, '#7FB2C8', ` stroke="${OUT}" stroke-width="0.4"`) + ell(x + 13.6, y + 5.4, 3, 1, 'rgba(255,255,255,.6)')
+        + `<path d="M${f2(x + 17)},${f2(y + 6)} a2.6,1 0 1 1 0.8,0.8 Z" fill="#6FAE4E" stroke="${OUT}" stroke-width="0.4"/>`
+        + [[-24, 2], [-21, 5], [22, -2]].map(([dx, dy]) => ln([x + dx, y + dy], [x + dx - 1, y + dy - 12], '#5E8C3A', 1) + ell(x + dx - 1, y + dy - 12.6, 1, 2.4, '#8A5A2E', ` stroke="${OUT}" stroke-width="0.3"`)).join('')
+        + T.shadow(0, 0, 0.32, 0.2);
+      // le mur rond de roseaux en bottes, ses deux liens
+      const wr = 15, wh = 18;
+      out += `<path d="M${x - wr},${y} L${x - wr},${y - wh} A${wr},${wr * 0.5} 0 0 0 ${x + wr},${y - wh} L${x + wr},${y} A${wr},${wr * 0.5} 0 0 1 ${x - wr},${y} Z" fill="${R.mid}" stroke="${OUT}" stroke-width="0.7"/>`
+        + `<path d="M${x + 4},${y + wr * 0.48} L${x + 4},${y - wh + wr * 0.48} A${wr},${wr * 0.5} 0 0 0 ${x + wr},${y - wh} L${x + wr},${y} A${wr},${wr * 0.5} 0 0 1 ${x + 4},${y + wr * 0.48} Z" fill="${R.dark}"/>`;
+      for (let k = 1; k < 10; k++) { const t = -1 + (k / 10) * 2, bx = x + t * wr, by = y + Math.sqrt(1 - t * t) * wr * 0.5; out += ln([bx, by], [bx, by - wh], R.line, 0.6); }
+      for (const z of [5, 11]) out += `<path d="M${x - wr},${y - z} A${wr},${wr * 0.5} 0 0 0 ${x + wr},${y - z}" fill="none" stroke="#7A5A2A" stroke-width="1"/>`;
+      // la porte et son rideau de roseaux
+      const [dx, dy] = T.p(0.02, 0.24, 0);
+      out += `<path d="M${f2(dx - 4.4)},${f2(dy)} L${f2(dx - 4.4)},${f2(dy - 9)} Q${f2(dx)},${f2(dy - 13)} ${f2(dx + 4.4)},${f2(dy - 9)} L${f2(dx + 4.4)},${f2(dy)} Z" fill="#3E2C1C" stroke="${OUT}" stroke-width="0.5"/>`
+        + [-3, -1.5, 0, 1.5, 3].map(o => ln([dx + o, dy - 10.6 + Math.abs(o) * 0.4], [dx + o * 1.1, dy - 4], R.light, 0.7)).join('');
+      // le toit conique de chaume en trois franges, son nœud au sommet
+      const top = y - wh - 22, rr = wr + 5;
+      const frange = (y0, r, c) => { let d = `M${f2(x - r)},${f2(y0)}`; for (let k = 0; k < 8; k++) { const x0 = x - r + (k / 8) * 2 * r, x1 = x - r + ((k + 1) / 8) * 2 * r, cy = y0 + Math.sqrt(Math.max(0, 1 - (((x0 + x1) / 2 - x) / r) ** 2)) * r * 0.5; d += ` Q${f2((x0 + x1) / 2)},${f2(cy + 3.4)} ${f2(x1)},${f2(y0 + Math.sqrt(Math.max(0, 1 - ((x1 - x) / r) ** 2)) * r * 0.5)}`; } return `<path d="${d} L${x},${f2(top)} Z" fill="${c}" stroke="${OUT}" stroke-width="0.7" stroke-linejoin="round"/>`; };
+      out += frange(y - wh + 1, rr, R.mid) + `<path d="M${x + 3},${f2(top + 2)} L${f2(x + rr)},${f2(y - wh + 1)} Q${f2(x + rr * 0.6)},${f2(y - wh + rr * 0.42)} ${f2(x + 4)},${f2(y - wh + rr * 0.5)} Z" fill="${R.dark}" opacity="0.8"/>`
+        + frange(y - wh - 7, rr - 5, R.light) + frange(y - wh - 14, rr - 10, R.mid)
+        + [-0.6, -0.3, 0, 0.3, 0.6].map(t => ln([x + t * rr * 0.9, y - wh + 2], [x + t * 4, top + 6], R.line, 0.5)).join('')
+        + ell(x, top + 1, 3, 1.6, '#7A5A2A', ` stroke="${OUT}" stroke-width="0.5"`) + ln([x, top + 1], [x + 1, top - 4], R.dark, 1.6) + ln([x, top + 1], [x - 2, top - 3], R.dark, 1.2);
+      // les bottes de roseaux qui sèchent, liées
+      const bundle = (du, dv) => { const [bx, by] = T.p(du, dv, 0); return [-2, -0.7, 0.7, 2].map(d => ln([bx + d, by], [bx + d * 0.4, by - 14], d < 0 ? R.mid : R.light, 1.4)).join('') + ln([bx - 2.6, by - 6], [bx + 2.6, by - 6], '#7A5A2A', 1.2) + ell(bx, by - 14.6, 1.6, 0.9, R.dark); };
+      return out + bundle(-0.1, 0.38) + bundle(0.38, -0.08);
     }
   }]
 };
