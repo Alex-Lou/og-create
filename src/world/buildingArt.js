@@ -4,19 +4,20 @@
 // fixe (peinte une fois), le petit bloc qui bouge (avec ce qui se peint juste après lui : moyeu d'une roue, d'ailes de
 // moulin), et le voilier, que le jeu berce. Le bloc et le voilier sont recadrés sur ce qu'ils peignent (mesuré à la
 // lecture). Un skin dessiné est une image fixe : sa partie fixe se pose sous le même bloc qui bouge (le kiosque du
-// Puits n'a pas de jets d'eau, comme dans le jeu). Une teinte recolore le dessin avec l'outil de la bibliothèque (le
-// trait garde sa couleur), le bloc qui bouge seulement là où le jeu teinte l'animation. Une pièce rare garde son dessin
-// par code (looks.js). Les lumières et les fumées sont celles du jeu, les mêmes que celles de la bibliothèque.
+// Puits n'a pas de jets d'eau, comme dans le jeu). Une teinte (vendue, ou celle d'une pièce rare) recolore le dessin
+// avec l'outil de la bibliothèque (le trait garde sa couleur), le bloc qui bouge seulement là où le jeu teinte
+// l'animation ; l'accessoire animé d'une pièce rare reste celui du jeu (rareSprites.js, posé sur la crête du dessin,
+// la même). Les lumières et les fumées sont celles du jeu, les mêmes que celles de la bibliothèque.
 import { reactive } from 'vue';
 import DATA from '../../design/bibliotheque/svg/batiments/batiments.json';
-import { TINTS, tintOf, tintSvg } from '../../design/bibliotheque/svg/batiments/teintes/teinter.mjs';
+import { tintOf, tintSvg } from '../../design/bibliotheque/svg/batiments/teintes/teinter.mjs';
 import { fitTo, cropTo, paintedBox, BLANK } from './library';
 import { lookAt } from './looks';
 
-// Chargés à la demande ; la première image de chaque palier, le chantier et les skins servent aussi de vignettes
-// (adresse du fichier)
+// Chargés à la demande ; la première image de chaque palier, le chantier, les skins et les aperçus des pièces rares
+// servent aussi de vignettes (adresse du fichier)
 const FILES = import.meta.glob('/design/bibliotheque/svg/batiments/{paliers,chantier,skins}/**/*.svg', { query: '?raw', import: 'default' });
-const URLS = import.meta.glob(['/design/bibliotheque/svg/batiments/paliers/*/*_palier[1-7]{,_1}.svg', '/design/bibliotheque/svg/batiments/{chantier,skins}/**/*.svg'], { query: '?url', import: 'default', eager: true });
+const URLS = import.meta.glob(['/design/bibliotheque/svg/batiments/paliers/*/*_palier[1-7]{,_1}.svg', '/design/bibliotheque/svg/batiments/{chantier,skins,pieces_rares}/**/*.svg'], { query: '?url', import: 'default', eager: true });
 const ROOT = '/design/bibliotheque/svg/batiments/';
 // La bibliothèque est à l'échelle du jeu × 1,25
 const SCALE = 1.25;
@@ -70,11 +71,6 @@ const svgOf = ({ head, tail }, items) => head + items.join('') + tail;
 const blockOf = (split, f) => [...split.moving[f], ...split.after];
 const isPonton = key => key.startsWith('ponton_');
 
-// Teinte vendue portée par un skin (« sakura-foyer » : sakura), ou null (skin dessiné, pièce rare)
-function soldTint(skin) {
-  const tint = tintOf(skin);
-  return tint && TINTS[tint] ? tint : null;
-}
 // Fichier d'un skin dessiné à un palier ; null si le jeu ne dessine pas ce skin à ce palier (le dessin par défaut vaut)
 function skinFile(skin, level) {
   return DATA.skins[skin].fichiers.find(file => file.endsWith(`_palier${level}.svg`)) || null;
@@ -162,14 +158,14 @@ function artOf(siteId, level, skin, tint, file) {
 }
 
 const looks = new Map();
-// Le dessin d'un palier pour l'île, sous un skin (rien, skin dessiné, teinte vendue) : { base, anim, boat } ; base,
-// boat et anim.frame(f) sont des { key, make } pour le cache des sprites ; anim : { n, ms } (null : pas d'animation),
-// boat : null hors du Ponton ; null si la bibliothèque n'a pas ce palier ou ce skin (pièce rare : le dessin du jeu)
+// Le dessin d'un palier pour l'île, sous un skin (rien, skin dessiné, teinte vendue ou d'une pièce rare) : { base, anim,
+// boat } ; base, boat et anim.frame(f) sont des { key, make } pour le cache des sprites ; anim : { n, ms } (null : pas
+// d'animation), boat : null hors du Ponton ; null si la bibliothèque n'a pas ce palier ou ce skin
 export function buildingArt(siteId, level, skin = '') {
   const key = `${siteId}_palier${level}`;
   const art = DATA.paliers[key];
   if (!art || !art.fichiers.every(file => FILES[ROOT + file])) return null;
-  const tint = skin ? soldTint(skin) : null;
+  const tint = skin ? tintOf(skin) : null;
   if (skin && !tint && DATA.skins[skin]?.batiment !== siteId) return null;
   const file = skin && !tint ? skinFile(skin, level) : null;
   if (skin && !tint && !file) return buildingArt(siteId, level);
@@ -208,7 +204,8 @@ function tintedThumb(siteId, level, tint) {
 }
 
 // Vignette d'un bâtiment (sa fiche, la boutique) : la première image de son palier, sous son skin (level 0 : le
-// chantier dans sa phase) ; l'adresse du fichier, ou l'image teinte ; null si la bibliothèque ne l'a pas (pièce rare)
+// chantier dans sa phase ; une pièce rare : son aperçu, accessoire compris) ; l'adresse du fichier, ou l'image teinte ;
+// null si la bibliothèque ne l'a pas
 export function buildingThumb(siteId, level, stage = 0, skin = '') {
   if (!level) {
     const file = DATA.chantier.fichiers[stage];
@@ -216,7 +213,9 @@ export function buildingThumb(siteId, level, stage = 0, skin = '') {
   }
   const art = DATA.paliers[`${siteId}_palier${level}`];
   if (!art) return null;
-  const tint = skin ? soldTint(skin) : null;
+  const rare = DATA.pieces_rares[skin];
+  if (rare) return (rare.batiment === siteId && URLS[ROOT + rare.fichiers[level - 1]]) || null;
+  const tint = skin ? tintOf(skin) : null;
   if (tint) return tintedThumb(siteId, level, tint);
   if (skin && DATA.skins[skin]?.batiment !== siteId) return null;
   const file = (skin && skinFile(skin, level)) || art.fichiers[0];

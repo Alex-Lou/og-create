@@ -56,8 +56,8 @@ export default {
     }
     const look = lookAt(site.id, site.level);
     const skin = site.skin || '';
-    // Le dessin de la bibliothèque (partie fixe, bloc qui bouge, voilier), sous un skin dessiné ou une teinte ; une pièce
-    // rare garde celui du jeu
+    // Le dessin de la bibliothèque (partie fixe, bloc qui bouge, voilier), sous un skin dessiné, une teinte ou celle
+    // d'une pièce rare (son accessoire animé : drawItems)
     const art = buildingArt(site.id, site.level, skin);
     const body = this.siteBody(site.id, site.level, skin);
     const span = site.w / 2;
@@ -114,7 +114,7 @@ export default {
     this.drawItems(ctx, site, c, t, repaint, false);
   },
   // Corps d'un bâtiment à un palier (0 : le chantier tout prêt), { key, make } pour le cache des sprites : la partie fixe
-  // du dessin de la bibliothèque (sous un skin dessiné ou une teinte), sinon le dessin du jeu (pièce rare)
+  // du dessin de la bibliothèque (sous un skin dessiné, une teinte ou celle d'une pièce rare), sinon le dessin du jeu
   siteBody(siteId, level, skin) {
     if (!level) return chantierArt(2) || { key: 'chantier-2', make: BUILDINGS.chantier[2] };
     const art = buildingArt(siteId, level, skin);
@@ -137,7 +137,7 @@ export default {
       // Toucher : l'article sautille (0,5 s)
       const tapped = this.scared.get(`item:${site.id}:${item.id}`);
       const hop = tapped && t - tapped.at < 0.5 ? Math.sin(((t - tapped.at) / 0.5) * Math.PI) * 6 : 0;
-      // Dessin de la bibliothèque, sinon celui du jeu (pièce rare)
+      // Dessin de la bibliothèque, sinon celui du jeu (accessoire d'une pièce rare)
       for (const layer of objectLayers(item.id, site.level, t) || itemLayers(item.id, site.level, t)) {
         if (layer.back !== back) continue;
         const [x, y] = [c.x + layer.offset[0], c.y + layer.offset[1] - hop];
