@@ -449,10 +449,14 @@ M.pont = { frame: [-40, -46, 80, 86], n: 1, variants: ['segment', 'bout_avant', 
 } };
 // Épaves du prologue (la nuit du naufrage) : radeau de bois flotté, caboteur chargé de pierres, barque pleine de graines.
 // En couleur ; le jeu les montre en silhouette (variante « silhouette », #070E1E)
-M.epave_radeau = { frame: [-40, -56, 80, 64], n: 1, draw: () => `<g transform="rotate(-9)">`
-  + rr(-30, -5, 60, 6, 3, WOOD.left) + [-20, -8, 4, 16].map(x => L([x, -4.6], [x, 0.6], WOOD.right, 0.7)).join('')
-  + rr(-26, -11, 52, 6, 3, WOOD.top) + [-14, -2, 10].map(x => L([x, -10.6], [x, -5.4], WOOD.left, 0.7)).join('')
-  + tk('M-22,-8 L22,-2', 0.6, '#D9C08A') + P('M-4,-11 L4,-44 L7,-43 L1,-11 Z', WOOD_DARK.left) + P('M5,-40 L22,-30 L6,-26 Z', '#E8E2D2', W * 0.8) + '</g>' };
+M.epave_radeau = { frame: [-40, -56, 80, 64], n: 1, draw: () => {
+  const rondin = (y, x0, x1, c) => rr(x0, y, x1 - x0, 6, 3, c.left, W) + E(x1 - 2.6, y + 3, 2, 2.6, c.top, W * 0.7) + E(x1 - 2.6, y + 3, 0.9, 1.3, c.right, 0) + L([x0 + 4, y + 1.6], [x1 - 7, y + 1.4], c.top, 0.7);
+  return `<g transform="rotate(-9)">` + rondin(-5, -30, 30, WOOD) + rondin(-11, -26, 27, { left: '#C99A62', top: '#E0B47A', right: '#8A5A32' })
+    + [-16, 0, 16].map(x => rr(x - 1.4, -11.6, 2.8, 13, 0.8, '#D9C08A', W * 0.7)).join('')
+    + P('M-4,-11 L3,-40 L5.4,-39.4 L1.4,-11 Z', WOOD_DARK.left) + P('M3.6,-41 L5.6,-44 L6.4,-39.8 Z', WOOD_DARK.right, W * 0.6)
+    + P('M4.6,-37 Q14,-36 21,-30 L17,-28.6 L19,-26 Q12,-25.4 5.6,-24.6 Z', '#E8E2D2', W * 0.8) + line('M7,-33 l6,0.6 M7,-28.6 l5,0.2', 0.5, '#C8BFA8')
+    + line('M-24,-5 q-3,4 -1,8 M22,-4 q4,3 2,7', 0.9, '#D9C08A') + '</g>';
+} };
 M.epave_bateau = { frame: [-54, -72, 108, 90], n: 1, draw: () => `<g transform="rotate(12)">`
   + P('M-46,-10 L46,-10 L34,6 L-36,6 Z', '#7A5A3E') + L([-42, -5], [40, -5], '#5A3E28', 0.8) + pg([[-46, -10], [46, -10], [44, -7.4], [-44, -7.4]], '#A8825A', W * 0.7)
   + P('M-6,-10 L-2,-58 L2,-58 L2,-10 Z', WOOD_DARK.left) + P('M2,-52 L-30,-40 L2,-34 Z', '#E8E2D2', W * 0.8)
