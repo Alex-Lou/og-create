@@ -53,7 +53,7 @@ for (const { base, nau } of CAST) {
     return bodies;
   };
   // debout : les poses de la troupe, puis les expressions
-  const poses = [...POSES, [base.action[0], base.action[1], 'action', 2]];
+  const poses = [...POSES, ...(nau.sansDon ? [] : [[base.action[0], base.action[1], 'action', 2]])]; // Galet et Sylve : don oublié
   const shown = {};
   for (const [name, view, pose, k] of poses) shown[name] = put(`naufrage_${name}`, Array.from({ length: k }, (_, n) => frame(nau, view, pose, n)), b => SV.std(b));
   const exprs = EXPRS.map(x => put(`naufrage_expr_${x}`, [0, 1].map(n => frame(nau, 'front', 'repos', n, x)), b => SV.std(b)));
@@ -72,7 +72,7 @@ for (const { base, nau } of CAST) {
   index.naufrages[s] = { nom: base.name, arrivee: STEP[base.name], fichiers: files, dort_du_maitre: mFiles };
 
   // planches
-  const pick = [['face_repos', 0, 'face'], ['avant_marche', 1, 'marche'], ['dos_marche', 0, 'dos'], ['face_salut', 0, 'salut'], [base.action[0], 1, 'action']];
+  const pick = [['face_repos', 0, 'face'], ['avant_marche', 1, 'marche'], ['dos_marche', 0, 'dos'], ['face_salut', 0, 'salut'], ...(nau.sansDon ? [] : [[base.action[0], 1, 'action']])];
   cells.debout.push(row(`${base.name}`, [
     [SV.std(unique(frame(base, 'front', 'repos', 0)), 2.6), 'maître'],
     ...pick.map(([k, n, lab]) => [SV.std(unique(shown[k][n]), 2.6), lab])
@@ -91,7 +91,7 @@ for (const { base, nau } of CAST) {
 write(path.join(LIB, 'naufrages', 'naufrages.json'), JSON.stringify(index, null, 1));
 write(path.join(__dirname, 'naufrages_apercu.html'), animated('Les naufragés', 'Les maîtres tels qu\'ils arrivent sur l\'île, endormis, et leurs expressions en marche.', anim));
 shoot([
-  [path.join(PNG, 'naufrages_debout.png'), sheet('Naufragés — debout', 'Le maître, puis son naufragé : face, marche de trois quarts, dos, salut, geste. 48 × 64, pieds en bas au centre.', cells.debout), 1150],
+  [path.join(PNG, 'naufrages_debout.png'), sheet('Naufragés — debout', 'Le maître, puis son naufragé : face, marche de trois quarts, dos, salut, geste (Galet et Sylve naufragés ont oublié leur don : pas de geste). 48 × 64, pieds en bas au centre.', cells.debout), 1150],
   [path.join(PNG, 'naufrages_expressions.png'), sheet('Naufragés — expressions', 'Les 8 expressions de la troupe, sur le look du naufragé.', cells.expr), 1150],
   [path.join(PNG, 'expressions_en_marche.png'), sheet('Expressions en marche', 'Trois quarts avant, 4 images : pour chacun les expressions de son caractère, maître et naufragé (image 2 de la marche).', cells.moods), 1150],
   [path.join(PNG, 'naufrages_endormis.png'), sheet('Endormis', 'Pose « endormi » (bible § 6.7 et § 14), naufragé puis maître. Sylve roulée en boule : 64 × 48.', cells.endormis), 1150]

@@ -258,4 +258,7 @@ const BASE = { Aster: require('./aster2'), Cannelle: require('./cannelle'), Rive
 const CAST = Object.entries(BASE).map(([k, c]) => ({ base: c, nau: castaway(c, SPECS[k]) }));
 // Sylve naufragée, endormie : roulée dans sa tunique délavée (sa cape est perdue), quelques feuilles flétries
 CAST.find(x => x.base.name === 'Sylve').nau.nauMound = { fill: fade('#A88655'), shade: fade('#86683E'), hi: fade('#C2A274'), leaf: '#8C9A4E' };
+// Galet et Sylve naufragés ont oublié leur don (HISTOIRE.md § 6.2) : la rune qui chante et le chant aux graines reviennent
+// au maître ; le naufragé n'a pas ce geste (ni pose d'action, ni pose de travail)
+for (const n of ['Galet', 'Sylve']) CAST.find(x => x.base.name === n).nau.sansDon = true;
 module.exports = { CAST, SPECS };
