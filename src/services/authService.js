@@ -1,5 +1,9 @@
 import http from './http';
 import { getSession, saveSession, clearSession } from './session';
+import * as storage from '@/utils/storage';
+
+// Retour d'un compte en pause ou en partance (réponse de connexion : back) : Brume l'accueille après le rechargement
+export const BACK_KEY = 'oc_back';
 
 class AuthService {
   async login(email, password) {
@@ -14,6 +18,7 @@ class AuthService {
     const response = await http.post(`/auth/${endpoint}`, { email, password });
     if (response.data.userId) {
       saveSession(response.data);
+      if (response.data.back) storage.save(BACK_KEY, response.data.back);
       // Recharger la page pour repartir sur un état connecté propre
       window.location.reload();
     }
