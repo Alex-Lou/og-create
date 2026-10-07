@@ -684,10 +684,14 @@ function mouton(x, y, k, dir, broute) {
   o += [[-3.4, 0.2], [-1.4, 0.8], [1.6, 0.2], [3.4, 0.8]].map(([a, b]) => L([a * k, -2 * k], [a * k, b * k], LAINE.tete, 1.2 * k)).join('');
   o += bl.map(([a, b, r]) => E(a, b, r + 0.8, r * 0.92 + 0.8, OUT, 0)).join('') + bl.map(([a, b, r]) => E(a, b, r, r * 0.92, LAINE.fond, 0)).join('')
     + bl.slice(3).map(([a, b, r]) => E(a + r * 0.25, b + r * 0.35, r * 0.6, r * 0.35, LAINE.ombre, 0)).join('') + E(-2 * k, -8 * k, 1.6 * k, 0.8 * k, '#FFFFFF', 0);
-  const hx = 5.4 * k, hy = (broute ? -1.4 : -6.6) * k;
-  o += E(hx - 1.8 * k, hy - 1 * k, 1.3 * k, 0.6 * k, LAINE.tete, 0.6) + E(hx, hy, 2.3 * k, 2 * k, LAINE.tete, 0.8) + E(hx - 0.7 * k, hy - 1.7 * k, 1.4 * k, 0.9 * k, LAINE.fond, 0.6)
-    + E(hx + 0.9 * k, hy - 0.2 * k, 0.5 * k, 0.5 * k, '#FFFFFF', 0) + E(hx + 1 * k, hy - 0.15 * k, 0.26 * k, 0.26 * k, OUT, 0);
-  return o + (broute ? herbe(hx + 1.6 * k, hy + 2 * k, '#86B852', 0.4 * k) : '') + '</g>';
+  // chibi, comme le mouton de la ferme : grosse tête ronde, oreille au creux rosé, museau, l'œil de la troupe (ovale
+  // sombre, deux reflets), une joue, la touffe de laine sur le front
+  const hx = 5.2 * k, hy = (broute ? -1.6 : -6.8) * k, ex = hx + 0.75 * k, ey = hy - 0.45 * k, r = 0.75 * k;
+  o += E(hx - 2.1 * k, hy - 1 * k, 1.6 * k, 0.75 * k, LAINE.tete, 0.6) + E(hx - 2.35 * k, hy - 1 * k, 0.8 * k, 0.35 * k, '#8A7A80', 0) + E(hx, hy, 2.9 * k, 2.7 * k, LAINE.tete, 0.8)
+    + E(hx + 1.3 * k, hy + 0.95 * k, 1.35 * k, 1 * k, '#4E4650', 0)
+    + E(ex, ey, r * 0.86, r * 1.12, '#2A2420', 0) + E(ex + r * 0.3, ey - r * 0.44, r * 0.38, r * 0.38, '#FFFFFF', 0) + E(ex - r * 0.3, ey + r * 0.5, r * 0.17, r * 0.17, '#FFFFFF', 0)
+    + E(hx + 0.1 * k, hy + 1.05 * k, 0.7 * k, 0.35 * k, '#F7A8B0', 0) + E(hx - 0.7 * k, hy - 2.2 * k, 1.7 * k, 1.05 * k, LAINE.fond, 0.6);
+  return o + (broute ? herbe(hx + 1.7 * k, hy + 2.6 * k, '#86B852', 0.4 * k) : '') + '</g>';
 }
 C.parc = { n: 2, draw: f => {
   const R = 0.42, H = 9, cos = Math.cos, sin = Math.sin;
