@@ -4,6 +4,7 @@
 import { boulder, sprite, EDGE } from './iso';
 import { WOOD_DARK } from './palette';
 import { tools, ln, poly, ell, dot, wave, star, OUT, f2 } from './shopSprites';
+import { depositArtLayer } from './decorArt';
 
 const TAU = Math.PI * 2;
 const ICE = { top: '#E9F8FF', left: '#BFE7F7', right: '#8CCBE8' };
@@ -161,8 +162,11 @@ const obsidienne = {
 
 export const DEPOSIT_SPRITES = { glace, laine, roseau, sel, fruits, obsidienne };
 
-// Calque d'un gisement prêt à peindre à l'instant t (secondes) : clé d'image et dessin
+// Calque d'un gisement prêt à peindre à l'instant t (secondes) : clé d'image et dessin. Le dessin de la bibliothèque
+// d'abord (decorArt.js), sinon celui-ci
 export function depositLayer(find, ready, t = 0) {
+  const art = depositArtLayer(find, ready, t);
+  if (art) return art;
   const kind = DEPOSIT_SPRITES[find];
   if (!kind) return null;
   const layer = ready ? kind.ready : kind.spent;

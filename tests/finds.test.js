@@ -15,17 +15,19 @@ describe('trouvailles de climat : dessins et icônes', () => {
       expect(FIND_GLYPH[id]).toBe(`ui:${id}`);
       expect(DEPOSIT_NAMES[id]).toHaveLength(2);
       const keys = new Set();
-      for (const t of [0, 0.4, 1.3, 2.9]) {
+      // Le dessin de la bibliothèque (lu à la demande : load, decorArt.js), sinon celui du code (svg)
+      for (const t of [0, 0.4, 0.5, 1.3, 2.9]) {
         const layer = depositLayer(id, true, t);
-        const { svg, box } = layer.make();
-        expect(svg).not.toMatch(/NaN|undefined|Infinity/);
+        const { svg, load, box } = layer.make();
+        expect(Boolean(svg || load)).toBe(true);
+        if (svg) expect(svg).not.toMatch(/NaN|undefined|Infinity/);
         expect(box.w).toBeGreaterThan(0);
         keys.add(layer.key);
       }
       expect(keys.size).toBeGreaterThan(1);
       const spent = depositLayer(id, false, 1.3);
-      expect(spent.key).toContain(`deposit-${id}-s`);
-      expect(spent.make().svg).not.toMatch(/NaN|undefined/);
+      expect(spent.key).toMatch(new RegExp(`deposit-${id}-s|lib-${id}_ramasse`));
+      expect(spent.make().box.w).toBeGreaterThan(0);
     }
     expect(depositLayer('nulle', true)).toBeNull();
   });

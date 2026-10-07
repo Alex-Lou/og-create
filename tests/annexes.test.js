@@ -17,11 +17,13 @@ describe('annexes : dessins', () => {
         for (const t of [0, 0.37, 1.9]) {
           const layers = annexLayers(id, variant, t);
           expect(layers.length).toBeGreaterThan(0);
+          // Le dessin de la bibliothèque (lu à la demande : load, decorArt.js), sinon celui du code (svg)
           for (const layer of layers) {
-            const { svg, box } = layer.make();
-            expect(svg).not.toMatch(/NaN|undefined|Infinity/);
+            const { svg, load, box } = layer.make();
+            expect(Boolean(svg || load)).toBe(true);
+            if (svg) expect(svg).not.toMatch(/NaN|undefined|Infinity/);
             expect(box.w).toBeGreaterThan(0);
-            expect(layer.key).toContain(`annex-${id}-${variant}`);
+            expect(layer.key).toMatch(new RegExp(`annex-${id}-${variant}|lib-${id}`));
           }
         }
       }
@@ -31,8 +33,10 @@ describe('annexes : dessins', () => {
     expect(annexThumb('nulle-part')).toBeNull();
   });
   it('les petites annexes changent selon l’exemplaire ; les animations ont plusieurs images', () => {
-    expect(annexLayers('champ', 0, 0)[0].make().svg).not.toBe(annexLayers('champ', 1, 0)[0].make().svg);
-    expect(annexLayers('vivier', 0, 0)[0].make().svg).not.toBe(annexLayers('vivier', 2, 0)[0].make().svg);
+    expect(annexLayers('champ', 0, 0)[0].key).not.toBe(annexLayers('champ', 1, 0)[0].key);
+    expect(annexLayers('vivier', 0, 0)[0].key).not.toBe(annexLayers('vivier', 2, 0)[0].key);
+    // (le dessin par code, qui reste pour les vignettes, change aussi)
+    expect(annexThumb('champ', 0).svg).not.toBe(annexThumb('champ', 1).svg);
     expect(annexLayers('eolienne', 0, 0)[0].key).not.toBe(annexLayers('eolienne', 0, 0.2)[0].key);
   });
   it('lumières de nuit : lanternes, braises et feux (le four et le haut fourneau vacillent)', () => {

@@ -20,6 +20,7 @@
 import GModal from '@/components/ui/GModal/GModal.vue';
 import { spriteUrl } from '@/world/spriteCache';
 import { annexThumb } from '@/world/annexSprites';
+import { annexArtThumb } from '@/world/decorArt';
 import { KIND_LABEL } from '@/world/annexes';
 
 // Fiche d'une annexe posée (appui long sur elle) : ce qu'elle fait, pour quel bâtiment ; la déplacer, ou ouvrir le bâtiment
@@ -39,7 +40,7 @@ export default {
   },
   computed: {
     art() {
-      return spriteUrl(`annex-thumb-${this.annex.id}-${this.variant}`, () => annexThumb(this.annex.id, this.variant));
+      return annexArtThumb(this.annex.id, this.variant) ?? spriteUrl(`annex-thumb-${this.annex.id}-${this.variant}`, () => annexThumb(this.annex.id, this.variant));
     }
   }
 };

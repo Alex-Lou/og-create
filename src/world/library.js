@@ -12,6 +12,20 @@ export function librarySprite(loader, box) {
   return () => ({ box, load: () => loader().then(svg => fitTo(svg, box)) });
 }
 
+// L'image d'une animation de la bibliothèque à l'instant t (secondes) : ms_par_image est une durée, ou une durée par
+// image (catalogue.json, decor.json)
+export function frameAt(art, t) {
+  const n = art.fichiers.length;
+  if (n < 2) return 0;
+  const durations = Array.isArray(art.ms_par_image) ? art.ms_par_image : Array(n).fill(art.ms_par_image);
+  let r = (t * 1000) % durations.reduce((a, b) => a + b, 0);
+  for (let f = 0; f < n; f++) {
+    if (r < durations[f]) return f;
+    r -= durations[f];
+  }
+  return n - 1;
+}
+
 // Image vide, pour une vignette en cours de lecture
 export const BLANK = `data:image/svg+xml;charset=utf-8,${encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" width="1" height="1"/>')}`;
 

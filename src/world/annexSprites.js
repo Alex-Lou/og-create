@@ -7,6 +7,7 @@
 import { box, gable, sprite, boulder, EDGE } from './iso';
 import { WOOD, WOOD_DARK, STONE, WALL, BRICK, THATCH, GLASS, SLATE_ROOF, ROOF_RED, BLUE_ROOF, planksLeft, planksRight } from './palette';
 import { tools, ln, poly, ell, dot, wave, star, bird, bucket, IRON, DARK_IRON, COPPER, STRAW, STUMP, BARN, OUT, f2 } from './shopSprites';
+import { annexArtLayer } from './decorArt';
 
 const TAU = Math.PI * 2;
 const CLAY = { top: '#E8A884', left: '#D58C66', right: '#B06A47' };
@@ -1026,8 +1027,11 @@ export const ANNEX_SPRITES = {
   glaciere, metier, hutte, saline, serre, fonderie
 };
 
-// Calques d'une annexe prêts à peindre à l'instant t (secondes) : clé d'image et dessin
+// Calques d'une annexe prêts à peindre à l'instant t (secondes) : clé d'image et dessin. Le dessin de la bibliothèque
+// d'abord (decorArt.js), sinon celui-ci
 export function annexLayers(id, variant = 0, t = 0) {
+  const art = annexArtLayer(id, variant, t);
+  if (art) return [art];
   const annex = ANNEX_SPRITES[id];
   if (!annex) return [];
   return annex.layers.map((layer, k) => {
