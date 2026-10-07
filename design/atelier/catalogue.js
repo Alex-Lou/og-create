@@ -189,6 +189,7 @@ function moment(id, meta) {
     if (a === 'lieux') return nom.startsWith('menhirs_fleuri') ? 'revelation' : 'acte-3';
     if (a === 'embrume') return 'tuto-3';
     if (a === 'signes') return 'revelation';
+    if (a === 'souvenir') return 'acte-1';
     if (a === 'ruines') return /cle_du_phare|phare_eteint/.test(nom) ? 'acte-6' : 'acte-3';
     if (a === 'gisements') return 'acte-4';
     if (a === 'enseignes') return 'acte-5';
@@ -240,7 +241,6 @@ const A_REVOIR = [
 const statut = id => { for (const [rx, note] of A_REVOIR) if (rx.test(id)) return { statut: 'a-revoir', note }; return { statut: 'ok' }; };
 
 const MANQUANTS = [
-  ['acte-1', 'L\'éclat du souvenir retrouvé (le sceau s\'allume, le maître se lève outil en main).']
 ];
 
 // --- 4. Le catalogue ---------------------------------------------------------------------------

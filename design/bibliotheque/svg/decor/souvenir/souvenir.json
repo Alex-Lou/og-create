@@ -1,0 +1,182 @@
+{
+ "_lisez_moi": [
+  "Le souvenir retrouvé (HISTOIRE.md § 14) : un éclat doré part du Grimoire vers le naufragé ; à l'arrivée, une gerbe de lumière l'enveloppe ; son sceau s'allume au-dessus de sa tête ; il se lève, outil en main.",
+  "eclat : 4 images en boucle (~90 ms), ancre au centre de l'éclat ; le jeu le fait glisser du Grimoire jusqu'à la poitrine du naufragé.",
+  "arrivee : 5 images, une fois (~120, 160, 200, 220, 260 ms), ancre aux pieds du naufragé, posée par-dessus lui ; le jeu remplace le naufragé (pose endormi) par le maître (pose « action », l'outil en main) sous l'éclair de l'image 1.",
+  "sceaux : un par chapitre, ancre au centre ; éteint (1 image), allumé (2 images en boucle, ~500 ms), posé au-dessus de la tête du maître (centre ~8 au-dessus du haut de sa tête). Sigles de src/book/grimoire.js."
+ ],
+ "souvenir": {
+  "eclat": {
+   "nom": "L'éclat doré du souvenir (du Grimoire au naufragé)",
+   "cadre": [
+    -14,
+    -14,
+    28,
+    28
+   ],
+   "ms_par_image": 90,
+   "fichiers": [
+    "eclat_1.svg",
+    "eclat_2.svg",
+    "eclat_3.svg",
+    "eclat_4.svg"
+   ]
+  },
+  "arrivee": {
+   "nom": "La gerbe de lumière sur le naufragé",
+   "cadre": [
+    -24.5,
+    -78,
+    49.5,
+    86.5
+   ],
+   "ms_par_image": [
+    120,
+    160,
+    200,
+    220,
+    260
+   ],
+   "fichiers": [
+    "arrivee_1.svg",
+    "arrivee_2.svg",
+    "arrivee_3.svg",
+    "arrivee_4.svg",
+    "arrivee_5.svg"
+   ]
+  },
+  "sceau_mercure": {
+   "nom": "Sceau de Mercure ☿ (Aster)",
+   "cadre": [
+    -15.5,
+    -15.5,
+    31,
+    31
+   ],
+   "ms_par_image": 500,
+   "fichiers": {
+    "eteint": [
+     "sceau_mercure_eteint.svg"
+    ],
+    "allume": [
+     "sceau_mercure_allume_1.svg",
+     "sceau_mercure_allume_2.svg"
+    ]
+   }
+  },
+  "sceau_saturne": {
+   "nom": "Sceau de Saturne ♄ (Galet)",
+   "cadre": [
+    -15.5,
+    -15.5,
+    31,
+    31
+   ],
+   "ms_par_image": 500,
+   "fichiers": {
+    "eteint": [
+     "sceau_saturne_eteint.svg"
+    ],
+    "allume": [
+     "sceau_saturne_allume_1.svg",
+     "sceau_saturne_allume_2.svg"
+    ]
+   }
+  },
+  "sceau_lune": {
+   "nom": "Sceau de Lune ☾ (Ondin)",
+   "cadre": [
+    -15.5,
+    -15.5,
+    31,
+    31
+   ],
+   "ms_par_image": 500,
+   "fichiers": {
+    "eteint": [
+     "sceau_lune_eteint.svg"
+    ],
+    "allume": [
+     "sceau_lune_allume_1.svg",
+     "sceau_lune_allume_2.svg"
+    ]
+   }
+  },
+  "sceau_venus": {
+   "nom": "Sceau de Vénus ♀ (Sylve et Mélisse)",
+   "cadre": [
+    -15.5,
+    -15.5,
+    31,
+    31
+   ],
+   "ms_par_image": 500,
+   "fichiers": {
+    "eteint": [
+     "sceau_venus_eteint.svg"
+    ],
+    "allume": [
+     "sceau_venus_allume_1.svg",
+     "sceau_venus_allume_2.svg"
+    ]
+   }
+  },
+  "sceau_mars": {
+   "nom": "Sceau de Mars ♂ (Cannelle)",
+   "cadre": [
+    -15.5,
+    -15.5,
+    31,
+    31
+   ],
+   "ms_par_image": 500,
+   "fichiers": {
+    "eteint": [
+     "sceau_mars_eteint.svg"
+    ],
+    "allume": [
+     "sceau_mars_allume_1.svg",
+     "sceau_mars_allume_2.svg"
+    ]
+   }
+  },
+  "sceau_jupiter": {
+   "nom": "Sceau de Jupiter ♃ (Rivet)",
+   "cadre": [
+    -15.5,
+    -15.5,
+    31,
+    31
+   ],
+   "ms_par_image": 500,
+   "fichiers": {
+    "eteint": [
+     "sceau_jupiter_eteint.svg"
+    ],
+    "allume": [
+     "sceau_jupiter_allume_1.svg",
+     "sceau_jupiter_allume_2.svg"
+    ]
+   }
+  },
+  "sceau_soleil": {
+   "nom": "Sceau de Soleil ☉ (Brume)",
+   "cadre": [
+    -15.5,
+    -15.5,
+    31,
+    31
+   ],
+   "ms_par_image": 500,
+   "fichiers": {
+    "eteint": [
+     "sceau_soleil_eteint.svg"
+    ],
+    "allume": [
+     "sceau_soleil_allume_1.svg",
+     "sceau_soleil_allume_2.svg"
+    ]
+   }
+  }
+ }
+}

@@ -83,12 +83,7 @@
    "resume": "Météo, ciel et moments du jour, plantes et rochers, bêtes déjà là pour tous."
   }
  ],
- "manquants": [
-  {
-   "parcours": "acte-1",
-   "quoi": "L'éclat du souvenir retrouvé (le sceau s'allume, le maître se lève outil en main)."
-  }
- ],
+ "manquants": [],
  "entrees": [
   {
    "id": "batiments/paliers/foyer/foyer_palier1",
@@ -13601,6 +13596,307 @@
     -70,
     100,
     80
+   ],
+   "parcours": "acte-1",
+   "statut": "ok"
+  },
+  {
+   "id": "decor/souvenir/arrivee",
+   "rubrique": "decor",
+   "titre": "La gerbe de lumière sur le naufragé",
+   "images": 5,
+   "fichiers": [
+    "svg/decor/souvenir/arrivee_1.svg",
+    "svg/decor/souvenir/arrivee_2.svg",
+    "svg/decor/souvenir/arrivee_3.svg",
+    "svg/decor/souvenir/arrivee_4.svg",
+    "svg/decor/souvenir/arrivee_5.svg"
+   ],
+   "cadre": [
+    -24.5,
+    -78,
+    49.5,
+    86.5
+   ],
+   "ms_par_image": [
+    120,
+    160,
+    200,
+    220,
+    260
+   ],
+   "parcours": "acte-1",
+   "statut": "ok"
+  },
+  {
+   "id": "decor/souvenir/eclat",
+   "rubrique": "decor",
+   "titre": "L'éclat doré du souvenir (du Grimoire au naufragé)",
+   "images": 4,
+   "fichiers": [
+    "svg/decor/souvenir/eclat_1.svg",
+    "svg/decor/souvenir/eclat_2.svg",
+    "svg/decor/souvenir/eclat_3.svg",
+    "svg/decor/souvenir/eclat_4.svg"
+   ],
+   "cadre": [
+    -14,
+    -14,
+    28,
+    28
+   ],
+   "ms_par_image": 90,
+   "parcours": "acte-1",
+   "statut": "ok"
+  },
+  {
+   "id": "decor/souvenir/sceau_jupiter_allume",
+   "rubrique": "decor",
+   "titre": "Sceau de Jupiter ♃ (Rivet) (sceau jupiter allume)",
+   "images": 2,
+   "fichiers": [
+    "svg/decor/souvenir/sceau_jupiter_allume_1.svg",
+    "svg/decor/souvenir/sceau_jupiter_allume_2.svg"
+   ],
+   "cadre": [
+    -15.5,
+    -15.5,
+    31,
+    31
+   ],
+   "ms_par_image": 500,
+   "parcours": "acte-1",
+   "statut": "ok"
+  },
+  {
+   "id": "decor/souvenir/sceau_jupiter_eteint",
+   "rubrique": "decor",
+   "titre": "Sceau de Jupiter ♃ (Rivet) (sceau jupiter eteint)",
+   "images": 1,
+   "fichiers": [
+    "svg/decor/souvenir/sceau_jupiter_eteint.svg"
+   ],
+   "cadre": [
+    -15,
+    -15,
+    30,
+    30
+   ],
+   "parcours": "acte-1",
+   "statut": "ok"
+  },
+  {
+   "id": "decor/souvenir/sceau_lune_allume",
+   "rubrique": "decor",
+   "titre": "Sceau de Lune ☾ (Ondin) (sceau lune allume)",
+   "images": 2,
+   "fichiers": [
+    "svg/decor/souvenir/sceau_lune_allume_1.svg",
+    "svg/decor/souvenir/sceau_lune_allume_2.svg"
+   ],
+   "cadre": [
+    -15.5,
+    -15.5,
+    31,
+    31
+   ],
+   "ms_par_image": 500,
+   "parcours": "acte-1",
+   "statut": "ok"
+  },
+  {
+   "id": "decor/souvenir/sceau_lune_eteint",
+   "rubrique": "decor",
+   "titre": "Sceau de Lune ☾ (Ondin) (sceau lune eteint)",
+   "images": 1,
+   "fichiers": [
+    "svg/decor/souvenir/sceau_lune_eteint.svg"
+   ],
+   "cadre": [
+    -15,
+    -15,
+    30,
+    30
+   ],
+   "parcours": "acte-1",
+   "statut": "ok"
+  },
+  {
+   "id": "decor/souvenir/sceau_mars_allume",
+   "rubrique": "decor",
+   "titre": "Sceau de Mars ♂ (Cannelle) (sceau mars allume)",
+   "images": 2,
+   "fichiers": [
+    "svg/decor/souvenir/sceau_mars_allume_1.svg",
+    "svg/decor/souvenir/sceau_mars_allume_2.svg"
+   ],
+   "cadre": [
+    -15.5,
+    -15.5,
+    31,
+    31
+   ],
+   "ms_par_image": 500,
+   "parcours": "acte-1",
+   "statut": "ok"
+  },
+  {
+   "id": "decor/souvenir/sceau_mars_eteint",
+   "rubrique": "decor",
+   "titre": "Sceau de Mars ♂ (Cannelle) (sceau mars eteint)",
+   "images": 1,
+   "fichiers": [
+    "svg/decor/souvenir/sceau_mars_eteint.svg"
+   ],
+   "cadre": [
+    -15,
+    -15,
+    30,
+    30
+   ],
+   "parcours": "acte-1",
+   "statut": "ok"
+  },
+  {
+   "id": "decor/souvenir/sceau_mercure_allume",
+   "rubrique": "decor",
+   "titre": "Sceau de Mercure ☿ (Aster) (sceau mercure allume)",
+   "images": 2,
+   "fichiers": [
+    "svg/decor/souvenir/sceau_mercure_allume_1.svg",
+    "svg/decor/souvenir/sceau_mercure_allume_2.svg"
+   ],
+   "cadre": [
+    -15.5,
+    -15.5,
+    31,
+    31
+   ],
+   "ms_par_image": 500,
+   "parcours": "acte-1",
+   "statut": "ok"
+  },
+  {
+   "id": "decor/souvenir/sceau_mercure_eteint",
+   "rubrique": "decor",
+   "titre": "Sceau de Mercure ☿ (Aster) (sceau mercure eteint)",
+   "images": 1,
+   "fichiers": [
+    "svg/decor/souvenir/sceau_mercure_eteint.svg"
+   ],
+   "cadre": [
+    -15,
+    -15,
+    30,
+    30
+   ],
+   "parcours": "acte-1",
+   "statut": "ok"
+  },
+  {
+   "id": "decor/souvenir/sceau_saturne_allume",
+   "rubrique": "decor",
+   "titre": "Sceau de Saturne ♄ (Galet) (sceau saturne allume)",
+   "images": 2,
+   "fichiers": [
+    "svg/decor/souvenir/sceau_saturne_allume_1.svg",
+    "svg/decor/souvenir/sceau_saturne_allume_2.svg"
+   ],
+   "cadre": [
+    -15.5,
+    -15.5,
+    31,
+    31
+   ],
+   "ms_par_image": 500,
+   "parcours": "acte-1",
+   "statut": "ok"
+  },
+  {
+   "id": "decor/souvenir/sceau_saturne_eteint",
+   "rubrique": "decor",
+   "titre": "Sceau de Saturne ♄ (Galet) (sceau saturne eteint)",
+   "images": 1,
+   "fichiers": [
+    "svg/decor/souvenir/sceau_saturne_eteint.svg"
+   ],
+   "cadre": [
+    -15,
+    -15,
+    30,
+    30
+   ],
+   "parcours": "acte-1",
+   "statut": "ok"
+  },
+  {
+   "id": "decor/souvenir/sceau_soleil_allume",
+   "rubrique": "decor",
+   "titre": "Sceau de Soleil ☉ (Brume) (sceau soleil allume)",
+   "images": 2,
+   "fichiers": [
+    "svg/decor/souvenir/sceau_soleil_allume_1.svg",
+    "svg/decor/souvenir/sceau_soleil_allume_2.svg"
+   ],
+   "cadre": [
+    -15.5,
+    -15.5,
+    31,
+    31
+   ],
+   "ms_par_image": 500,
+   "parcours": "acte-1",
+   "statut": "ok"
+  },
+  {
+   "id": "decor/souvenir/sceau_soleil_eteint",
+   "rubrique": "decor",
+   "titre": "Sceau de Soleil ☉ (Brume) (sceau soleil eteint)",
+   "images": 1,
+   "fichiers": [
+    "svg/decor/souvenir/sceau_soleil_eteint.svg"
+   ],
+   "cadre": [
+    -15,
+    -15,
+    30,
+    30
+   ],
+   "parcours": "acte-1",
+   "statut": "ok"
+  },
+  {
+   "id": "decor/souvenir/sceau_venus_allume",
+   "rubrique": "decor",
+   "titre": "Sceau de Vénus ♀ (Sylve et Mélisse) (sceau venus allume)",
+   "images": 2,
+   "fichiers": [
+    "svg/decor/souvenir/sceau_venus_allume_1.svg",
+    "svg/decor/souvenir/sceau_venus_allume_2.svg"
+   ],
+   "cadre": [
+    -15.5,
+    -15.5,
+    31,
+    31
+   ],
+   "ms_par_image": 500,
+   "parcours": "acte-1",
+   "statut": "ok"
+  },
+  {
+   "id": "decor/souvenir/sceau_venus_eteint",
+   "rubrique": "decor",
+   "titre": "Sceau de Vénus ♀ (Sylve et Mélisse) (sceau venus eteint)",
+   "images": 1,
+   "fichiers": [
+    "svg/decor/souvenir/sceau_venus_eteint.svg"
+   ],
+   "cadre": [
+    -15,
+    -15,
+    30,
+    30
    ],
    "parcours": "acte-1",
    "statut": "ok"
