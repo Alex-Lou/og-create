@@ -512,6 +512,21 @@
    "fichiers": [
     "objets/caisses_1.svg"
    ]
+  },
+  "etabli": {
+   "nom": "Établi de Rivet",
+   "categorie": "objets",
+   "etape": "T4",
+   "cadre": [
+    -50,
+    -115,
+    100,
+    140
+   ],
+   "images": 1,
+   "fichiers": [
+    "objets/etabli_1.svg"
+   ]
   }
  }
 }

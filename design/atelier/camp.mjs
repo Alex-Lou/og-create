@@ -384,9 +384,9 @@ function gear(u, v, r, z = 0, rot = 0) {
   const ptsG = Array.from({ length: 16 }, (_, i) => { const a = (i * Math.PI) / 8 + rot, rr = i % 2 ? r * 0.76 : r; return [x + Math.cos(a) * rr * 1.4, y + Math.sin(a) * rr * 0.7]; });
   return `<polygon points="${pts(ptsG)}" fill="${IRON.top}"${EDGE}/>` + ell(x, y, r * 0.55, r * 0.28, IRON.right) + ell(x, y, r * 0.2, r * 0.1, OUT);
 }
-function screwTin(u, v) {
-  const [x, y] = P(u, v, 0);
-  return box(u - 0.08, v - 0.06, u + 0.08, v + 0.06, 0, 4, { top: '#C9CED6', left: '#AEB4BC', right: '#868C94' })
+function screwTin(u, v, z = 0) {
+  const [x, y] = P(u, v, z);
+  return box(u - 0.08, v - 0.06, u + 0.08, v + 0.06, z, z + 4, { top: '#C9CED6', left: '#AEB4BC', right: '#868C94' })
     + [[-3, -4.6], [-1, -4.8], [1.2, -4.4], [3, -4.8]].map(([dx, dy]) => ell(x + dx, y + dy, 0.8, 0.5, '#D9C27A', ` stroke="${OUT}" stroke-width="0.4"`)).join('');
 }
 function brokenClock(u, v) {
@@ -861,6 +861,42 @@ function sos() {
 const crateStack = () => shadow(0, 0, 0.3, 0.16) + crate(-0.06, -0.06, 0.15, 12) + crate(0.2, 0.14, 0.12, 9) + crate(-0.04, -0.08, 0.11, 8, 12)
   + (() => { const [x, y] = P(0.2, 0.26, 4.6); return `<g transform="translate(${f2(x)} ${f2(y)}) matrix(1 0.5 0 1 0 0)"><path d="M-3.2,-0.6 Q-1.6,-1.8 0,-0.2 Q1.6,-1.8 3.2,-0.6 Q1.4,-0.4 0.6,0.6 L1.4,2.4 L0,1.4 L-1.4,2.4 L-0.6,0.6 Q-1.4,-0.4 -3.2,-0.6 Z" fill="#F4EEDF" opacity=".85"/></g>`; })();
 
+// L'établi de Rivet (T4, tutoriel étape 9) : une porte de cabine de l'Hirondelle (peinte en blanc, deux panneaux en
+// creux, le hublot, la plaque du « 7 », la poignée et les gonds de laiton, la peinture écaillée) posée à plat sur deux
+// caisses ; dessus, une roue dentée et le marteau ; au pied, la boîte de vis et des vis tombées
+function workbench() {
+  const z = 11, t = 2.2, zt = z + t; // haut des caisses, épaisseur de la porte, dessus de la porte
+  const u0 = -0.46, u1 = 0.46, v0 = -0.17, v1 = 0.17;
+  let o = shadow(0, 0, 0.55, 0.18);
+  o += crate(-0.27, 0, 0.13, z) + crate(0.27, 0, 0.13, z);
+  // la porte : ses deux chants visibles, puis le dessus
+  o += face([[u0, v1, z], [u1, v1, z], [u1, v1, zt], [u0, v1, zt]], HULL.cabinS, EDGE)
+    + face([[u1, v0, z], [u1, v1, z], [u1, v1, zt], [u1, v0, zt]], HULL.dark, EDGE)
+    + face([[u0, v0, zt], [u1, v0, zt], [u1, v1, zt], [u0, v1, zt]], HULL.cabin, EDGE);
+  // deux panneaux en creux (ombre du haut, lumière du bas)
+  for (const [a, b] of [[-0.4, -0.04], [0.04, 0.4]]) {
+    o += face([[a, -0.11, zt], [b, -0.11, zt], [b, 0.11, zt], [a, 0.11, zt]], '#EAE5D9', ' stroke="rgba(60,40,20,.4)" stroke-width="0.6" stroke-linejoin="round"')
+      + ln(P(a + 0.01, 0.105, zt), P(b - 0.01, 0.105, zt), 'rgba(255,255,255,.9)', 0.7);
+  }
+  // la peinture écaillée : le bois dessous
+  for (const [u, v, k] of [[-0.43, 0.13, 1], [0.12, -0.15, 0.8], [0.44, 0.06, 0.7]]) o += face([[u, v, zt], [u + 0.05 * k, v - 0.01, zt], [u + 0.04 * k, v + 0.03 * k, zt], [u - 0.01, v + 0.025 * k, zt]], HULL.deck);
+  // les gonds (côté -v), la poignée de laiton qui dépasse du chant (côté +v)
+  for (const u of [-0.3, 0.3]) o += face([[u - 0.04, v0 + 0.01, zt], [u + 0.04, v0 + 0.01, zt], [u + 0.04, v0 + 0.04, zt], [u - 0.04, v0 + 0.04, zt]], '#C9A24A', EDGE);
+  { const [x, y] = P(-0.02, v1, z + t / 2); o += ell(x, y, 1.6, 1.1, '#C9A24A', EDGE) + tk([x - 0.4, y + 0.6], [x - 2.2, y + 2.4], '#C9A24A', 0.9) + ell(x - 2.6, y + 2.8, 1.5, 1.1, '#E2C26A', EDGE); }
+  // le hublot de la porte (cerclé de laiton) et, au-dessus, la plaque du « 7 »
+  o += disc(0.22, 0, zt, 0.085, '#C9A24A', EDGE) + disc(0.22, 0, zt, 0.06, HULL.glass, EDGE);
+  { const [x, y] = P(0.2, -0.02, zt); o += ln([x - 1.2, y - 1], [x + 0.4, y - 1.4], 'rgba(255,255,255,.75)', 0.7); }
+  { const [x, y] = P(0.37, 0, zt); o += ell(x, y, 2.2, 1.3, '#C9A24A', EDGE) + `<polyline points="${pts([[x - 0.8, y - 0.6], [x + 0.8, y - 0.6], [x - 0.3, y + 0.7]])}" fill="none" stroke="${OUT}" stroke-width="0.6" stroke-linecap="round" stroke-linejoin="round"/>`; }
+  // dessus : une roue dentée et le marteau, posés sur le panneau du bas
+  o += gear(-0.3, -0.03, 2.8, zt + 0.4, 0.3);
+  { const a = P(-0.2, 0.08, zt + 1), b = P(-0.06, -0.08, zt + 1); o += tk(a, b, '#A8743F', 1.2) + `<rect x="${f2(b[0] - 1.4)}" y="${f2(b[1] - 3)}" width="2.8" height="5.4" rx="0.6" fill="${IRON.left}"${EDGE}/>`; }
+  // dans le sable : la boîte de vis, des vis tombées
+  o += screwTin(0.12, 0.36);
+  // au pied : des vis tombées dans le sable
+  for (const [u, v] of [[-0.14, 0.3], [-0.04, 0.4], [0.5, 0.22]]) { const [x, y] = P(u, v, 0); o += ell(x, y, 1, 0.6, '#B8C0C8', ` stroke="${OUT}" stroke-width="0.4"`); }
+  return o;
+}
+
 export const CAMP = {
   feu_debris: { frame: PROP_BOX, n: 3, label: 'Feu de débris', step: 'T1', draw: n => driftFire(0, 0, 1, n) },
   hirondelle: { frame: { x: -88, y: -100, w: 176, h: 150 }, n: 1, label: 'Épave de l\'Hirondelle', step: 'T1', draw: () => hirondelle() },
@@ -890,6 +926,7 @@ export const CAMP = {
   paillasse: { frame: PROP_BOX, n: 1, label: 'Paillasse', step: 'T5', draw: () => strawBed() },
   torche: { frame: PROP_BOX, n: 3, label: 'Torche de bois flotté', step: 'I', draw: n => torch(n) },
   sos: { frame: PROP_BOX, n: 1, label: 'SOS en galets', step: 'T2', draw: () => sos() },
-  caisses: { frame: PROP_BOX, n: 1, label: 'Pile de caisses', step: 'T2', draw: () => crateStack() }
+  caisses: { frame: PROP_BOX, n: 1, label: 'Pile de caisses', step: 'T2', draw: () => crateStack() },
+  etabli: { frame: PROP_BOX, n: 1, label: 'Établi de Rivet', step: 'T4', draw: () => workbench() }
 };
 export { crate, plank, stick, rope, stone, dune, kelp, shell, logLying, driftFire, DRIFT, CRATE, CANVAS, SAND, ROPE, IRON, ln, tk, pathTk, ell, iso, dOf, id, OUT, f2, pts };
