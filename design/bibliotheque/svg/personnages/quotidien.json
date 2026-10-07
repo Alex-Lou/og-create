@@ -1,7 +1,7 @@
 {
  "_lisez_moi": [
   "Lot L4 : tout le monde au grand format (le petit format est abandonné). Mêmes vues que la troupe : face, avant (vient vers le bas à droite), dos (s'éloigne vers le haut à droite) ; le miroir donne les deux autres directions. Pieds en (24, 62) dans le cadre 48 × 64.",
-  "Poses : marche (4 images, ~170 ms), repos (2 images : clignement), salut (2), travail (2, le geste du métier : maîtres et naufragés, sauf Galet et Sylve naufragés qui ont oublié leur don), assis (la veillée, 3 vues, 2 images : clignement ; le siège n'est pas dessiné, son dessus est à y = 53,6 du cadre, 8,4 au-dessus du bas des pieds, la même hauteur pour tous), mains-tendues et assis-mains-tendues (les mains tendues vers le feu, debout ou assis, 3 vues, 2 images : les doigts se réchauffent ; le feu est devant le personnage), applaudir et assis-applaudir (en riant, 3 vues, 2 images : mains écartées, puis le claquement), lanterne et parapluie (avant et dos, 4 images, en marchant), couche (dormir couché, 2 images ~900 ms).",
+  "Poses : marche (4 images, ~170 ms), repos (2 images : clignement), salut (2), travail (2, le geste du métier : maîtres et naufragés, sauf Galet et Sylve naufragés qui ont oublié leur don), assis (la veillée, 3 vues, 2 images : clignement ; le siège n'est pas dessiné, son dessus est à y = 53,6 du cadre, 8,4 au-dessus du bas des pieds, la même hauteur pour tous), mains-tendues et assis-mains-tendues (les mains tendues vers le feu, debout ou assis, 3 vues, 2 images : les doigts se réchauffent ; le feu est devant le personnage), applaudir et assis-applaudir (en riant, 3 vues, 2 images : mains écartées, puis le claquement), pecher (le mini-jeu de la pêche, debout, 3 vues, 2 images : le bouchon danse ; la canne, le fil et le bouchon restent dans le cadre), lanterne et parapluie (avant et dos, 4 images, en marchant), couche (dormir couché, 2 images ~900 ms).",
   "Cadres à part : parapluie [0, -18, 48, 82] (la toile passe au-dessus de la tête ; pieds toujours en (24, 62)) ; couche [0, 0, 64, 48] (allongé la tête à gauche, sous une couverture).",
   "Naufragés : lanterne et parapluie seulement pour Aster et Rivet, qui restent naufragés après la première lanterne. Visiteurs et nouveaux venus : tirés du générateur de l'avatar (choix notés ici, pour en refaire d'autres avec design/personnages/avatar.js) ; les nouveaux venus de l'épilogue arrivent en habits de voyage, une valise à la main, et n'ont pas de pose endormie.",
   "Noms rangés à l'assemblage (README, catalogue.json) : <sujet>_<vue>_<pose>_<n>.svg, vues face, avant (l'ancien « trois_quarts »), dos, profil ; les chemins ci-dessous suivent ces noms."
@@ -48,6 +48,10 @@
      "maitres/aster/aster_face_assis-applaudir_1.svg",
      "maitres/aster/aster_face_assis-applaudir_2.svg"
     ],
+    "face_pecher": [
+     "maitres/aster/aster_face_pecher_1.svg",
+     "maitres/aster/aster_face_pecher_2.svg"
+    ],
     "avant_marche": [
      "maitres/aster/aster_avant_marche_1.svg",
      "maitres/aster/aster_avant_marche_2.svg",
@@ -86,6 +90,10 @@
      "maitres/aster/aster_avant_assis-applaudir_1.svg",
      "maitres/aster/aster_avant_assis-applaudir_2.svg"
     ],
+    "avant_pecher": [
+     "maitres/aster/aster_avant_pecher_1.svg",
+     "maitres/aster/aster_avant_pecher_2.svg"
+    ],
     "dos_marche": [
      "maitres/aster/aster_dos_marche_1.svg",
      "maitres/aster/aster_dos_marche_2.svg",
@@ -123,6 +131,10 @@
     "dos_assis-applaudir": [
      "maitres/aster/aster_dos_assis-applaudir_1.svg",
      "maitres/aster/aster_dos_assis-applaudir_2.svg"
+    ],
+    "dos_pecher": [
+     "maitres/aster/aster_dos_pecher_1.svg",
+     "maitres/aster/aster_dos_pecher_2.svg"
     ],
     "avant_lanterne": [
      "maitres/aster/aster_avant_lanterne_1.svg",
@@ -195,6 +207,10 @@
      "maitres/cannelle/cannelle_face_assis-applaudir_1.svg",
      "maitres/cannelle/cannelle_face_assis-applaudir_2.svg"
     ],
+    "face_pecher": [
+     "maitres/cannelle/cannelle_face_pecher_1.svg",
+     "maitres/cannelle/cannelle_face_pecher_2.svg"
+    ],
     "avant_marche": [
      "maitres/cannelle/cannelle_avant_marche_1.svg",
      "maitres/cannelle/cannelle_avant_marche_2.svg",
@@ -233,6 +249,10 @@
      "maitres/cannelle/cannelle_avant_assis-applaudir_1.svg",
      "maitres/cannelle/cannelle_avant_assis-applaudir_2.svg"
     ],
+    "avant_pecher": [
+     "maitres/cannelle/cannelle_avant_pecher_1.svg",
+     "maitres/cannelle/cannelle_avant_pecher_2.svg"
+    ],
     "dos_marche": [
      "maitres/cannelle/cannelle_dos_marche_1.svg",
      "maitres/cannelle/cannelle_dos_marche_2.svg",
@@ -270,6 +290,10 @@
     "dos_assis-applaudir": [
      "maitres/cannelle/cannelle_dos_assis-applaudir_1.svg",
      "maitres/cannelle/cannelle_dos_assis-applaudir_2.svg"
+    ],
+    "dos_pecher": [
+     "maitres/cannelle/cannelle_dos_pecher_1.svg",
+     "maitres/cannelle/cannelle_dos_pecher_2.svg"
     ],
     "avant_lanterne": [
      "maitres/cannelle/cannelle_avant_lanterne_1.svg",
@@ -342,6 +366,10 @@
      "maitres/rivet/rivet_face_assis-applaudir_1.svg",
      "maitres/rivet/rivet_face_assis-applaudir_2.svg"
     ],
+    "face_pecher": [
+     "maitres/rivet/rivet_face_pecher_1.svg",
+     "maitres/rivet/rivet_face_pecher_2.svg"
+    ],
     "avant_marche": [
      "maitres/rivet/rivet_avant_marche_1.svg",
      "maitres/rivet/rivet_avant_marche_2.svg",
@@ -380,6 +408,10 @@
      "maitres/rivet/rivet_avant_assis-applaudir_1.svg",
      "maitres/rivet/rivet_avant_assis-applaudir_2.svg"
     ],
+    "avant_pecher": [
+     "maitres/rivet/rivet_avant_pecher_1.svg",
+     "maitres/rivet/rivet_avant_pecher_2.svg"
+    ],
     "dos_marche": [
      "maitres/rivet/rivet_dos_marche_1.svg",
      "maitres/rivet/rivet_dos_marche_2.svg",
@@ -417,6 +449,10 @@
     "dos_assis-applaudir": [
      "maitres/rivet/rivet_dos_assis-applaudir_1.svg",
      "maitres/rivet/rivet_dos_assis-applaudir_2.svg"
+    ],
+    "dos_pecher": [
+     "maitres/rivet/rivet_dos_pecher_1.svg",
+     "maitres/rivet/rivet_dos_pecher_2.svg"
     ],
     "avant_lanterne": [
      "maitres/rivet/rivet_avant_lanterne_1.svg",
@@ -489,6 +525,10 @@
      "maitres/ondin/ondin_face_assis-applaudir_1.svg",
      "maitres/ondin/ondin_face_assis-applaudir_2.svg"
     ],
+    "face_pecher": [
+     "maitres/ondin/ondin_face_pecher_1.svg",
+     "maitres/ondin/ondin_face_pecher_2.svg"
+    ],
     "avant_marche": [
      "maitres/ondin/ondin_avant_marche_1.svg",
      "maitres/ondin/ondin_avant_marche_2.svg",
@@ -527,6 +567,10 @@
      "maitres/ondin/ondin_avant_assis-applaudir_1.svg",
      "maitres/ondin/ondin_avant_assis-applaudir_2.svg"
     ],
+    "avant_pecher": [
+     "maitres/ondin/ondin_avant_pecher_1.svg",
+     "maitres/ondin/ondin_avant_pecher_2.svg"
+    ],
     "dos_marche": [
      "maitres/ondin/ondin_dos_marche_1.svg",
      "maitres/ondin/ondin_dos_marche_2.svg",
@@ -564,6 +608,10 @@
     "dos_assis-applaudir": [
      "maitres/ondin/ondin_dos_assis-applaudir_1.svg",
      "maitres/ondin/ondin_dos_assis-applaudir_2.svg"
+    ],
+    "dos_pecher": [
+     "maitres/ondin/ondin_dos_pecher_1.svg",
+     "maitres/ondin/ondin_dos_pecher_2.svg"
     ],
     "avant_lanterne": [
      "maitres/ondin/ondin_avant_lanterne_1.svg",
@@ -636,6 +684,10 @@
      "maitres/sylve/sylve_face_assis-applaudir_1.svg",
      "maitres/sylve/sylve_face_assis-applaudir_2.svg"
     ],
+    "face_pecher": [
+     "maitres/sylve/sylve_face_pecher_1.svg",
+     "maitres/sylve/sylve_face_pecher_2.svg"
+    ],
     "avant_marche": [
      "maitres/sylve/sylve_avant_marche_1.svg",
      "maitres/sylve/sylve_avant_marche_2.svg",
@@ -674,6 +726,10 @@
      "maitres/sylve/sylve_avant_assis-applaudir_1.svg",
      "maitres/sylve/sylve_avant_assis-applaudir_2.svg"
     ],
+    "avant_pecher": [
+     "maitres/sylve/sylve_avant_pecher_1.svg",
+     "maitres/sylve/sylve_avant_pecher_2.svg"
+    ],
     "dos_marche": [
      "maitres/sylve/sylve_dos_marche_1.svg",
      "maitres/sylve/sylve_dos_marche_2.svg",
@@ -711,6 +767,10 @@
     "dos_assis-applaudir": [
      "maitres/sylve/sylve_dos_assis-applaudir_1.svg",
      "maitres/sylve/sylve_dos_assis-applaudir_2.svg"
+    ],
+    "dos_pecher": [
+     "maitres/sylve/sylve_dos_pecher_1.svg",
+     "maitres/sylve/sylve_dos_pecher_2.svg"
     ],
     "avant_lanterne": [
      "maitres/sylve/sylve_avant_lanterne_1.svg",
@@ -783,6 +843,10 @@
      "maitres/galet/galet_face_assis-applaudir_1.svg",
      "maitres/galet/galet_face_assis-applaudir_2.svg"
     ],
+    "face_pecher": [
+     "maitres/galet/galet_face_pecher_1.svg",
+     "maitres/galet/galet_face_pecher_2.svg"
+    ],
     "avant_marche": [
      "maitres/galet/galet_avant_marche_1.svg",
      "maitres/galet/galet_avant_marche_2.svg",
@@ -821,6 +885,10 @@
      "maitres/galet/galet_avant_assis-applaudir_1.svg",
      "maitres/galet/galet_avant_assis-applaudir_2.svg"
     ],
+    "avant_pecher": [
+     "maitres/galet/galet_avant_pecher_1.svg",
+     "maitres/galet/galet_avant_pecher_2.svg"
+    ],
     "dos_marche": [
      "maitres/galet/galet_dos_marche_1.svg",
      "maitres/galet/galet_dos_marche_2.svg",
@@ -858,6 +926,10 @@
     "dos_assis-applaudir": [
      "maitres/galet/galet_dos_assis-applaudir_1.svg",
      "maitres/galet/galet_dos_assis-applaudir_2.svg"
+    ],
+    "dos_pecher": [
+     "maitres/galet/galet_dos_pecher_1.svg",
+     "maitres/galet/galet_dos_pecher_2.svg"
     ],
     "avant_lanterne": [
      "maitres/galet/galet_avant_lanterne_1.svg",
@@ -930,6 +1002,10 @@
      "maitres/melisse/melisse_face_assis-applaudir_1.svg",
      "maitres/melisse/melisse_face_assis-applaudir_2.svg"
     ],
+    "face_pecher": [
+     "maitres/melisse/melisse_face_pecher_1.svg",
+     "maitres/melisse/melisse_face_pecher_2.svg"
+    ],
     "avant_marche": [
      "maitres/melisse/melisse_avant_marche_1.svg",
      "maitres/melisse/melisse_avant_marche_2.svg",
@@ -968,6 +1044,10 @@
      "maitres/melisse/melisse_avant_assis-applaudir_1.svg",
      "maitres/melisse/melisse_avant_assis-applaudir_2.svg"
     ],
+    "avant_pecher": [
+     "maitres/melisse/melisse_avant_pecher_1.svg",
+     "maitres/melisse/melisse_avant_pecher_2.svg"
+    ],
     "dos_marche": [
      "maitres/melisse/melisse_dos_marche_1.svg",
      "maitres/melisse/melisse_dos_marche_2.svg",
@@ -1005,6 +1085,10 @@
     "dos_assis-applaudir": [
      "maitres/melisse/melisse_dos_assis-applaudir_1.svg",
      "maitres/melisse/melisse_dos_assis-applaudir_2.svg"
+    ],
+    "dos_pecher": [
+     "maitres/melisse/melisse_dos_pecher_1.svg",
+     "maitres/melisse/melisse_dos_pecher_2.svg"
     ],
     "avant_lanterne": [
      "maitres/melisse/melisse_avant_lanterne_1.svg",
@@ -1079,6 +1163,10 @@
      "naufrages/aster/aster-naufrage_face_assis-applaudir_1.svg",
      "naufrages/aster/aster-naufrage_face_assis-applaudir_2.svg"
     ],
+    "face_pecher": [
+     "naufrages/aster/aster-naufrage_face_pecher_1.svg",
+     "naufrages/aster/aster-naufrage_face_pecher_2.svg"
+    ],
     "avant_marche": [
      "naufrages/aster/aster-naufrage_avant_marche_1.svg",
      "naufrages/aster/aster-naufrage_avant_marche_2.svg",
@@ -1117,6 +1205,10 @@
      "naufrages/aster/aster-naufrage_avant_assis-applaudir_1.svg",
      "naufrages/aster/aster-naufrage_avant_assis-applaudir_2.svg"
     ],
+    "avant_pecher": [
+     "naufrages/aster/aster-naufrage_avant_pecher_1.svg",
+     "naufrages/aster/aster-naufrage_avant_pecher_2.svg"
+    ],
     "dos_marche": [
      "naufrages/aster/aster-naufrage_dos_marche_1.svg",
      "naufrages/aster/aster-naufrage_dos_marche_2.svg",
@@ -1154,6 +1246,10 @@
     "dos_assis-applaudir": [
      "naufrages/aster/aster-naufrage_dos_assis-applaudir_1.svg",
      "naufrages/aster/aster-naufrage_dos_assis-applaudir_2.svg"
+    ],
+    "dos_pecher": [
+     "naufrages/aster/aster-naufrage_dos_pecher_1.svg",
+     "naufrages/aster/aster-naufrage_dos_pecher_2.svg"
     ],
     "avant_lanterne": [
      "naufrages/aster/aster-naufrage_avant_lanterne_1.svg",
@@ -1226,6 +1322,10 @@
      "naufrages/cannelle/cannelle-naufrage_face_assis-applaudir_1.svg",
      "naufrages/cannelle/cannelle-naufrage_face_assis-applaudir_2.svg"
     ],
+    "face_pecher": [
+     "naufrages/cannelle/cannelle-naufrage_face_pecher_1.svg",
+     "naufrages/cannelle/cannelle-naufrage_face_pecher_2.svg"
+    ],
     "avant_marche": [
      "naufrages/cannelle/cannelle-naufrage_avant_marche_1.svg",
      "naufrages/cannelle/cannelle-naufrage_avant_marche_2.svg",
@@ -1264,6 +1364,10 @@
      "naufrages/cannelle/cannelle-naufrage_avant_assis-applaudir_1.svg",
      "naufrages/cannelle/cannelle-naufrage_avant_assis-applaudir_2.svg"
     ],
+    "avant_pecher": [
+     "naufrages/cannelle/cannelle-naufrage_avant_pecher_1.svg",
+     "naufrages/cannelle/cannelle-naufrage_avant_pecher_2.svg"
+    ],
     "dos_marche": [
      "naufrages/cannelle/cannelle-naufrage_dos_marche_1.svg",
      "naufrages/cannelle/cannelle-naufrage_dos_marche_2.svg",
@@ -1301,6 +1405,10 @@
     "dos_assis-applaudir": [
      "naufrages/cannelle/cannelle-naufrage_dos_assis-applaudir_1.svg",
      "naufrages/cannelle/cannelle-naufrage_dos_assis-applaudir_2.svg"
+    ],
+    "dos_pecher": [
+     "naufrages/cannelle/cannelle-naufrage_dos_pecher_1.svg",
+     "naufrages/cannelle/cannelle-naufrage_dos_pecher_2.svg"
     ],
     "couche": [
      "naufrages/cannelle/cannelle-naufrage_couche_1.svg",
@@ -1349,6 +1457,10 @@
      "naufrages/rivet/rivet-naufrage_face_assis-applaudir_1.svg",
      "naufrages/rivet/rivet-naufrage_face_assis-applaudir_2.svg"
     ],
+    "face_pecher": [
+     "naufrages/rivet/rivet-naufrage_face_pecher_1.svg",
+     "naufrages/rivet/rivet-naufrage_face_pecher_2.svg"
+    ],
     "avant_marche": [
      "naufrages/rivet/rivet-naufrage_avant_marche_1.svg",
      "naufrages/rivet/rivet-naufrage_avant_marche_2.svg",
@@ -1387,6 +1499,10 @@
      "naufrages/rivet/rivet-naufrage_avant_assis-applaudir_1.svg",
      "naufrages/rivet/rivet-naufrage_avant_assis-applaudir_2.svg"
     ],
+    "avant_pecher": [
+     "naufrages/rivet/rivet-naufrage_avant_pecher_1.svg",
+     "naufrages/rivet/rivet-naufrage_avant_pecher_2.svg"
+    ],
     "dos_marche": [
      "naufrages/rivet/rivet-naufrage_dos_marche_1.svg",
      "naufrages/rivet/rivet-naufrage_dos_marche_2.svg",
@@ -1424,6 +1540,10 @@
     "dos_assis-applaudir": [
      "naufrages/rivet/rivet-naufrage_dos_assis-applaudir_1.svg",
      "naufrages/rivet/rivet-naufrage_dos_assis-applaudir_2.svg"
+    ],
+    "dos_pecher": [
+     "naufrages/rivet/rivet-naufrage_dos_pecher_1.svg",
+     "naufrages/rivet/rivet-naufrage_dos_pecher_2.svg"
     ],
     "avant_lanterne": [
      "naufrages/rivet/rivet-naufrage_avant_lanterne_1.svg",
@@ -1496,6 +1616,10 @@
      "naufrages/ondin/ondin-naufrage_face_assis-applaudir_1.svg",
      "naufrages/ondin/ondin-naufrage_face_assis-applaudir_2.svg"
     ],
+    "face_pecher": [
+     "naufrages/ondin/ondin-naufrage_face_pecher_1.svg",
+     "naufrages/ondin/ondin-naufrage_face_pecher_2.svg"
+    ],
     "avant_marche": [
      "naufrages/ondin/ondin-naufrage_avant_marche_1.svg",
      "naufrages/ondin/ondin-naufrage_avant_marche_2.svg",
@@ -1534,6 +1658,10 @@
      "naufrages/ondin/ondin-naufrage_avant_assis-applaudir_1.svg",
      "naufrages/ondin/ondin-naufrage_avant_assis-applaudir_2.svg"
     ],
+    "avant_pecher": [
+     "naufrages/ondin/ondin-naufrage_avant_pecher_1.svg",
+     "naufrages/ondin/ondin-naufrage_avant_pecher_2.svg"
+    ],
     "dos_marche": [
      "naufrages/ondin/ondin-naufrage_dos_marche_1.svg",
      "naufrages/ondin/ondin-naufrage_dos_marche_2.svg",
@@ -1571,6 +1699,10 @@
     "dos_assis-applaudir": [
      "naufrages/ondin/ondin-naufrage_dos_assis-applaudir_1.svg",
      "naufrages/ondin/ondin-naufrage_dos_assis-applaudir_2.svg"
+    ],
+    "dos_pecher": [
+     "naufrages/ondin/ondin-naufrage_dos_pecher_1.svg",
+     "naufrages/ondin/ondin-naufrage_dos_pecher_2.svg"
     ],
     "couche": [
      "naufrages/ondin/ondin-naufrage_couche_1.svg",
@@ -1615,6 +1747,10 @@
      "naufrages/sylve/sylve-naufrage_face_assis-applaudir_1.svg",
      "naufrages/sylve/sylve-naufrage_face_assis-applaudir_2.svg"
     ],
+    "face_pecher": [
+     "naufrages/sylve/sylve-naufrage_face_pecher_1.svg",
+     "naufrages/sylve/sylve-naufrage_face_pecher_2.svg"
+    ],
     "avant_marche": [
      "naufrages/sylve/sylve-naufrage_avant_marche_1.svg",
      "naufrages/sylve/sylve-naufrage_avant_marche_2.svg",
@@ -1649,6 +1785,10 @@
      "naufrages/sylve/sylve-naufrage_avant_assis-applaudir_1.svg",
      "naufrages/sylve/sylve-naufrage_avant_assis-applaudir_2.svg"
     ],
+    "avant_pecher": [
+     "naufrages/sylve/sylve-naufrage_avant_pecher_1.svg",
+     "naufrages/sylve/sylve-naufrage_avant_pecher_2.svg"
+    ],
     "dos_marche": [
      "naufrages/sylve/sylve-naufrage_dos_marche_1.svg",
      "naufrages/sylve/sylve-naufrage_dos_marche_2.svg",
@@ -1682,6 +1822,10 @@
     "dos_assis-applaudir": [
      "naufrages/sylve/sylve-naufrage_dos_assis-applaudir_1.svg",
      "naufrages/sylve/sylve-naufrage_dos_assis-applaudir_2.svg"
+    ],
+    "dos_pecher": [
+     "naufrages/sylve/sylve-naufrage_dos_pecher_1.svg",
+     "naufrages/sylve/sylve-naufrage_dos_pecher_2.svg"
     ],
     "couche": [
      "naufrages/sylve/sylve-naufrage_couche_1.svg",
@@ -1726,6 +1870,10 @@
      "naufrages/galet/galet-naufrage_face_assis-applaudir_1.svg",
      "naufrages/galet/galet-naufrage_face_assis-applaudir_2.svg"
     ],
+    "face_pecher": [
+     "naufrages/galet/galet-naufrage_face_pecher_1.svg",
+     "naufrages/galet/galet-naufrage_face_pecher_2.svg"
+    ],
     "avant_marche": [
      "naufrages/galet/galet-naufrage_avant_marche_1.svg",
      "naufrages/galet/galet-naufrage_avant_marche_2.svg",
@@ -1760,6 +1908,10 @@
      "naufrages/galet/galet-naufrage_avant_assis-applaudir_1.svg",
      "naufrages/galet/galet-naufrage_avant_assis-applaudir_2.svg"
     ],
+    "avant_pecher": [
+     "naufrages/galet/galet-naufrage_avant_pecher_1.svg",
+     "naufrages/galet/galet-naufrage_avant_pecher_2.svg"
+    ],
     "dos_marche": [
      "naufrages/galet/galet-naufrage_dos_marche_1.svg",
      "naufrages/galet/galet-naufrage_dos_marche_2.svg",
@@ -1793,6 +1945,10 @@
     "dos_assis-applaudir": [
      "naufrages/galet/galet-naufrage_dos_assis-applaudir_1.svg",
      "naufrages/galet/galet-naufrage_dos_assis-applaudir_2.svg"
+    ],
+    "dos_pecher": [
+     "naufrages/galet/galet-naufrage_dos_pecher_1.svg",
+     "naufrages/galet/galet-naufrage_dos_pecher_2.svg"
     ],
     "couche": [
      "naufrages/galet/galet-naufrage_couche_1.svg",
@@ -1841,6 +1997,10 @@
      "naufrages/melisse/melisse-naufrage_face_assis-applaudir_1.svg",
      "naufrages/melisse/melisse-naufrage_face_assis-applaudir_2.svg"
     ],
+    "face_pecher": [
+     "naufrages/melisse/melisse-naufrage_face_pecher_1.svg",
+     "naufrages/melisse/melisse-naufrage_face_pecher_2.svg"
+    ],
     "avant_marche": [
      "naufrages/melisse/melisse-naufrage_avant_marche_1.svg",
      "naufrages/melisse/melisse-naufrage_avant_marche_2.svg",
@@ -1879,6 +2039,10 @@
      "naufrages/melisse/melisse-naufrage_avant_assis-applaudir_1.svg",
      "naufrages/melisse/melisse-naufrage_avant_assis-applaudir_2.svg"
     ],
+    "avant_pecher": [
+     "naufrages/melisse/melisse-naufrage_avant_pecher_1.svg",
+     "naufrages/melisse/melisse-naufrage_avant_pecher_2.svg"
+    ],
     "dos_marche": [
      "naufrages/melisse/melisse-naufrage_dos_marche_1.svg",
      "naufrages/melisse/melisse-naufrage_dos_marche_2.svg",
@@ -1916,6 +2080,10 @@
     "dos_assis-applaudir": [
      "naufrages/melisse/melisse-naufrage_dos_assis-applaudir_1.svg",
      "naufrages/melisse/melisse-naufrage_dos_assis-applaudir_2.svg"
+    ],
+    "dos_pecher": [
+     "naufrages/melisse/melisse-naufrage_dos_pecher_1.svg",
+     "naufrages/melisse/melisse-naufrage_dos_pecher_2.svg"
     ],
     "couche": [
      "naufrages/melisse/melisse-naufrage_couche_1.svg",
@@ -2000,6 +2168,10 @@
      "visiteurs/visiteur-01/visiteur-01_face_assis-applaudir_1.svg",
      "visiteurs/visiteur-01/visiteur-01_face_assis-applaudir_2.svg"
     ],
+    "face_pecher": [
+     "visiteurs/visiteur-01/visiteur-01_face_pecher_1.svg",
+     "visiteurs/visiteur-01/visiteur-01_face_pecher_2.svg"
+    ],
     "avant_marche": [
      "visiteurs/visiteur-01/visiteur-01_avant_marche_1.svg",
      "visiteurs/visiteur-01/visiteur-01_avant_marche_2.svg",
@@ -2034,6 +2206,10 @@
      "visiteurs/visiteur-01/visiteur-01_avant_assis-applaudir_1.svg",
      "visiteurs/visiteur-01/visiteur-01_avant_assis-applaudir_2.svg"
     ],
+    "avant_pecher": [
+     "visiteurs/visiteur-01/visiteur-01_avant_pecher_1.svg",
+     "visiteurs/visiteur-01/visiteur-01_avant_pecher_2.svg"
+    ],
     "dos_marche": [
      "visiteurs/visiteur-01/visiteur-01_dos_marche_1.svg",
      "visiteurs/visiteur-01/visiteur-01_dos_marche_2.svg",
@@ -2067,6 +2243,10 @@
     "dos_assis-applaudir": [
      "visiteurs/visiteur-01/visiteur-01_dos_assis-applaudir_1.svg",
      "visiteurs/visiteur-01/visiteur-01_dos_assis-applaudir_2.svg"
+    ],
+    "dos_pecher": [
+     "visiteurs/visiteur-01/visiteur-01_dos_pecher_1.svg",
+     "visiteurs/visiteur-01/visiteur-01_dos_pecher_2.svg"
     ],
     "avant_lanterne": [
      "visiteurs/visiteur-01/visiteur-01_avant_lanterne_1.svg",
@@ -2167,6 +2347,10 @@
      "visiteurs/visiteur-02/visiteur-02_face_assis-applaudir_1.svg",
      "visiteurs/visiteur-02/visiteur-02_face_assis-applaudir_2.svg"
     ],
+    "face_pecher": [
+     "visiteurs/visiteur-02/visiteur-02_face_pecher_1.svg",
+     "visiteurs/visiteur-02/visiteur-02_face_pecher_2.svg"
+    ],
     "avant_marche": [
      "visiteurs/visiteur-02/visiteur-02_avant_marche_1.svg",
      "visiteurs/visiteur-02/visiteur-02_avant_marche_2.svg",
@@ -2201,6 +2385,10 @@
      "visiteurs/visiteur-02/visiteur-02_avant_assis-applaudir_1.svg",
      "visiteurs/visiteur-02/visiteur-02_avant_assis-applaudir_2.svg"
     ],
+    "avant_pecher": [
+     "visiteurs/visiteur-02/visiteur-02_avant_pecher_1.svg",
+     "visiteurs/visiteur-02/visiteur-02_avant_pecher_2.svg"
+    ],
     "dos_marche": [
      "visiteurs/visiteur-02/visiteur-02_dos_marche_1.svg",
      "visiteurs/visiteur-02/visiteur-02_dos_marche_2.svg",
@@ -2234,6 +2422,10 @@
     "dos_assis-applaudir": [
      "visiteurs/visiteur-02/visiteur-02_dos_assis-applaudir_1.svg",
      "visiteurs/visiteur-02/visiteur-02_dos_assis-applaudir_2.svg"
+    ],
+    "dos_pecher": [
+     "visiteurs/visiteur-02/visiteur-02_dos_pecher_1.svg",
+     "visiteurs/visiteur-02/visiteur-02_dos_pecher_2.svg"
     ],
     "avant_lanterne": [
      "visiteurs/visiteur-02/visiteur-02_avant_lanterne_1.svg",
@@ -2334,6 +2526,10 @@
      "visiteurs/visiteur-03/visiteur-03_face_assis-applaudir_1.svg",
      "visiteurs/visiteur-03/visiteur-03_face_assis-applaudir_2.svg"
     ],
+    "face_pecher": [
+     "visiteurs/visiteur-03/visiteur-03_face_pecher_1.svg",
+     "visiteurs/visiteur-03/visiteur-03_face_pecher_2.svg"
+    ],
     "avant_marche": [
      "visiteurs/visiteur-03/visiteur-03_avant_marche_1.svg",
      "visiteurs/visiteur-03/visiteur-03_avant_marche_2.svg",
@@ -2368,6 +2564,10 @@
      "visiteurs/visiteur-03/visiteur-03_avant_assis-applaudir_1.svg",
      "visiteurs/visiteur-03/visiteur-03_avant_assis-applaudir_2.svg"
     ],
+    "avant_pecher": [
+     "visiteurs/visiteur-03/visiteur-03_avant_pecher_1.svg",
+     "visiteurs/visiteur-03/visiteur-03_avant_pecher_2.svg"
+    ],
     "dos_marche": [
      "visiteurs/visiteur-03/visiteur-03_dos_marche_1.svg",
      "visiteurs/visiteur-03/visiteur-03_dos_marche_2.svg",
@@ -2401,6 +2601,10 @@
     "dos_assis-applaudir": [
      "visiteurs/visiteur-03/visiteur-03_dos_assis-applaudir_1.svg",
      "visiteurs/visiteur-03/visiteur-03_dos_assis-applaudir_2.svg"
+    ],
+    "dos_pecher": [
+     "visiteurs/visiteur-03/visiteur-03_dos_pecher_1.svg",
+     "visiteurs/visiteur-03/visiteur-03_dos_pecher_2.svg"
     ],
     "avant_lanterne": [
      "visiteurs/visiteur-03/visiteur-03_avant_lanterne_1.svg",
@@ -2507,6 +2711,10 @@
      "visiteurs/visiteur-04/visiteur-04_face_assis-applaudir_1.svg",
      "visiteurs/visiteur-04/visiteur-04_face_assis-applaudir_2.svg"
     ],
+    "face_pecher": [
+     "visiteurs/visiteur-04/visiteur-04_face_pecher_1.svg",
+     "visiteurs/visiteur-04/visiteur-04_face_pecher_2.svg"
+    ],
     "avant_marche": [
      "visiteurs/visiteur-04/visiteur-04_avant_marche_1.svg",
      "visiteurs/visiteur-04/visiteur-04_avant_marche_2.svg",
@@ -2541,6 +2749,10 @@
      "visiteurs/visiteur-04/visiteur-04_avant_assis-applaudir_1.svg",
      "visiteurs/visiteur-04/visiteur-04_avant_assis-applaudir_2.svg"
     ],
+    "avant_pecher": [
+     "visiteurs/visiteur-04/visiteur-04_avant_pecher_1.svg",
+     "visiteurs/visiteur-04/visiteur-04_avant_pecher_2.svg"
+    ],
     "dos_marche": [
      "visiteurs/visiteur-04/visiteur-04_dos_marche_1.svg",
      "visiteurs/visiteur-04/visiteur-04_dos_marche_2.svg",
@@ -2574,6 +2786,10 @@
     "dos_assis-applaudir": [
      "visiteurs/visiteur-04/visiteur-04_dos_assis-applaudir_1.svg",
      "visiteurs/visiteur-04/visiteur-04_dos_assis-applaudir_2.svg"
+    ],
+    "dos_pecher": [
+     "visiteurs/visiteur-04/visiteur-04_dos_pecher_1.svg",
+     "visiteurs/visiteur-04/visiteur-04_dos_pecher_2.svg"
     ],
     "avant_lanterne": [
      "visiteurs/visiteur-04/visiteur-04_avant_lanterne_1.svg",
@@ -2667,6 +2883,10 @@
      "visiteurs/visiteur-05/visiteur-05_face_assis-applaudir_1.svg",
      "visiteurs/visiteur-05/visiteur-05_face_assis-applaudir_2.svg"
     ],
+    "face_pecher": [
+     "visiteurs/visiteur-05/visiteur-05_face_pecher_1.svg",
+     "visiteurs/visiteur-05/visiteur-05_face_pecher_2.svg"
+    ],
     "avant_marche": [
      "visiteurs/visiteur-05/visiteur-05_avant_marche_1.svg",
      "visiteurs/visiteur-05/visiteur-05_avant_marche_2.svg",
@@ -2701,6 +2921,10 @@
      "visiteurs/visiteur-05/visiteur-05_avant_assis-applaudir_1.svg",
      "visiteurs/visiteur-05/visiteur-05_avant_assis-applaudir_2.svg"
     ],
+    "avant_pecher": [
+     "visiteurs/visiteur-05/visiteur-05_avant_pecher_1.svg",
+     "visiteurs/visiteur-05/visiteur-05_avant_pecher_2.svg"
+    ],
     "dos_marche": [
      "visiteurs/visiteur-05/visiteur-05_dos_marche_1.svg",
      "visiteurs/visiteur-05/visiteur-05_dos_marche_2.svg",
@@ -2734,6 +2958,10 @@
     "dos_assis-applaudir": [
      "visiteurs/visiteur-05/visiteur-05_dos_assis-applaudir_1.svg",
      "visiteurs/visiteur-05/visiteur-05_dos_assis-applaudir_2.svg"
+    ],
+    "dos_pecher": [
+     "visiteurs/visiteur-05/visiteur-05_dos_pecher_1.svg",
+     "visiteurs/visiteur-05/visiteur-05_dos_pecher_2.svg"
     ],
     "avant_lanterne": [
      "visiteurs/visiteur-05/visiteur-05_avant_lanterne_1.svg",
@@ -2827,6 +3055,10 @@
      "visiteurs/visiteur-06/visiteur-06_face_assis-applaudir_1.svg",
      "visiteurs/visiteur-06/visiteur-06_face_assis-applaudir_2.svg"
     ],
+    "face_pecher": [
+     "visiteurs/visiteur-06/visiteur-06_face_pecher_1.svg",
+     "visiteurs/visiteur-06/visiteur-06_face_pecher_2.svg"
+    ],
     "avant_marche": [
      "visiteurs/visiteur-06/visiteur-06_avant_marche_1.svg",
      "visiteurs/visiteur-06/visiteur-06_avant_marche_2.svg",
@@ -2861,6 +3093,10 @@
      "visiteurs/visiteur-06/visiteur-06_avant_assis-applaudir_1.svg",
      "visiteurs/visiteur-06/visiteur-06_avant_assis-applaudir_2.svg"
     ],
+    "avant_pecher": [
+     "visiteurs/visiteur-06/visiteur-06_avant_pecher_1.svg",
+     "visiteurs/visiteur-06/visiteur-06_avant_pecher_2.svg"
+    ],
     "dos_marche": [
      "visiteurs/visiteur-06/visiteur-06_dos_marche_1.svg",
      "visiteurs/visiteur-06/visiteur-06_dos_marche_2.svg",
@@ -2894,6 +3130,10 @@
     "dos_assis-applaudir": [
      "visiteurs/visiteur-06/visiteur-06_dos_assis-applaudir_1.svg",
      "visiteurs/visiteur-06/visiteur-06_dos_assis-applaudir_2.svg"
+    ],
+    "dos_pecher": [
+     "visiteurs/visiteur-06/visiteur-06_dos_pecher_1.svg",
+     "visiteurs/visiteur-06/visiteur-06_dos_pecher_2.svg"
     ],
     "avant_lanterne": [
      "visiteurs/visiteur-06/visiteur-06_avant_lanterne_1.svg",
@@ -2987,6 +3227,10 @@
      "visiteurs/visiteur-07/visiteur-07_face_assis-applaudir_1.svg",
      "visiteurs/visiteur-07/visiteur-07_face_assis-applaudir_2.svg"
     ],
+    "face_pecher": [
+     "visiteurs/visiteur-07/visiteur-07_face_pecher_1.svg",
+     "visiteurs/visiteur-07/visiteur-07_face_pecher_2.svg"
+    ],
     "avant_marche": [
      "visiteurs/visiteur-07/visiteur-07_avant_marche_1.svg",
      "visiteurs/visiteur-07/visiteur-07_avant_marche_2.svg",
@@ -3021,6 +3265,10 @@
      "visiteurs/visiteur-07/visiteur-07_avant_assis-applaudir_1.svg",
      "visiteurs/visiteur-07/visiteur-07_avant_assis-applaudir_2.svg"
     ],
+    "avant_pecher": [
+     "visiteurs/visiteur-07/visiteur-07_avant_pecher_1.svg",
+     "visiteurs/visiteur-07/visiteur-07_avant_pecher_2.svg"
+    ],
     "dos_marche": [
      "visiteurs/visiteur-07/visiteur-07_dos_marche_1.svg",
      "visiteurs/visiteur-07/visiteur-07_dos_marche_2.svg",
@@ -3054,6 +3302,10 @@
     "dos_assis-applaudir": [
      "visiteurs/visiteur-07/visiteur-07_dos_assis-applaudir_1.svg",
      "visiteurs/visiteur-07/visiteur-07_dos_assis-applaudir_2.svg"
+    ],
+    "dos_pecher": [
+     "visiteurs/visiteur-07/visiteur-07_dos_pecher_1.svg",
+     "visiteurs/visiteur-07/visiteur-07_dos_pecher_2.svg"
     ],
     "avant_lanterne": [
      "visiteurs/visiteur-07/visiteur-07_avant_lanterne_1.svg",
@@ -3147,6 +3399,10 @@
      "visiteurs/visiteur-08/visiteur-08_face_assis-applaudir_1.svg",
      "visiteurs/visiteur-08/visiteur-08_face_assis-applaudir_2.svg"
     ],
+    "face_pecher": [
+     "visiteurs/visiteur-08/visiteur-08_face_pecher_1.svg",
+     "visiteurs/visiteur-08/visiteur-08_face_pecher_2.svg"
+    ],
     "avant_marche": [
      "visiteurs/visiteur-08/visiteur-08_avant_marche_1.svg",
      "visiteurs/visiteur-08/visiteur-08_avant_marche_2.svg",
@@ -3181,6 +3437,10 @@
      "visiteurs/visiteur-08/visiteur-08_avant_assis-applaudir_1.svg",
      "visiteurs/visiteur-08/visiteur-08_avant_assis-applaudir_2.svg"
     ],
+    "avant_pecher": [
+     "visiteurs/visiteur-08/visiteur-08_avant_pecher_1.svg",
+     "visiteurs/visiteur-08/visiteur-08_avant_pecher_2.svg"
+    ],
     "dos_marche": [
      "visiteurs/visiteur-08/visiteur-08_dos_marche_1.svg",
      "visiteurs/visiteur-08/visiteur-08_dos_marche_2.svg",
@@ -3214,6 +3474,10 @@
     "dos_assis-applaudir": [
      "visiteurs/visiteur-08/visiteur-08_dos_assis-applaudir_1.svg",
      "visiteurs/visiteur-08/visiteur-08_dos_assis-applaudir_2.svg"
+    ],
+    "dos_pecher": [
+     "visiteurs/visiteur-08/visiteur-08_dos_pecher_1.svg",
+     "visiteurs/visiteur-08/visiteur-08_dos_pecher_2.svg"
     ],
     "avant_lanterne": [
      "visiteurs/visiteur-08/visiteur-08_avant_lanterne_1.svg",
@@ -3314,6 +3578,10 @@
      "visiteurs/visiteur-09/visiteur-09_face_assis-applaudir_1.svg",
      "visiteurs/visiteur-09/visiteur-09_face_assis-applaudir_2.svg"
     ],
+    "face_pecher": [
+     "visiteurs/visiteur-09/visiteur-09_face_pecher_1.svg",
+     "visiteurs/visiteur-09/visiteur-09_face_pecher_2.svg"
+    ],
     "avant_marche": [
      "visiteurs/visiteur-09/visiteur-09_avant_marche_1.svg",
      "visiteurs/visiteur-09/visiteur-09_avant_marche_2.svg",
@@ -3348,6 +3616,10 @@
      "visiteurs/visiteur-09/visiteur-09_avant_assis-applaudir_1.svg",
      "visiteurs/visiteur-09/visiteur-09_avant_assis-applaudir_2.svg"
     ],
+    "avant_pecher": [
+     "visiteurs/visiteur-09/visiteur-09_avant_pecher_1.svg",
+     "visiteurs/visiteur-09/visiteur-09_avant_pecher_2.svg"
+    ],
     "dos_marche": [
      "visiteurs/visiteur-09/visiteur-09_dos_marche_1.svg",
      "visiteurs/visiteur-09/visiteur-09_dos_marche_2.svg",
@@ -3381,6 +3653,10 @@
     "dos_assis-applaudir": [
      "visiteurs/visiteur-09/visiteur-09_dos_assis-applaudir_1.svg",
      "visiteurs/visiteur-09/visiteur-09_dos_assis-applaudir_2.svg"
+    ],
+    "dos_pecher": [
+     "visiteurs/visiteur-09/visiteur-09_dos_pecher_1.svg",
+     "visiteurs/visiteur-09/visiteur-09_dos_pecher_2.svg"
     ],
     "avant_lanterne": [
      "visiteurs/visiteur-09/visiteur-09_avant_lanterne_1.svg",
@@ -3474,6 +3750,10 @@
      "visiteurs/visiteur-10/visiteur-10_face_assis-applaudir_1.svg",
      "visiteurs/visiteur-10/visiteur-10_face_assis-applaudir_2.svg"
     ],
+    "face_pecher": [
+     "visiteurs/visiteur-10/visiteur-10_face_pecher_1.svg",
+     "visiteurs/visiteur-10/visiteur-10_face_pecher_2.svg"
+    ],
     "avant_marche": [
      "visiteurs/visiteur-10/visiteur-10_avant_marche_1.svg",
      "visiteurs/visiteur-10/visiteur-10_avant_marche_2.svg",
@@ -3508,6 +3788,10 @@
      "visiteurs/visiteur-10/visiteur-10_avant_assis-applaudir_1.svg",
      "visiteurs/visiteur-10/visiteur-10_avant_assis-applaudir_2.svg"
     ],
+    "avant_pecher": [
+     "visiteurs/visiteur-10/visiteur-10_avant_pecher_1.svg",
+     "visiteurs/visiteur-10/visiteur-10_avant_pecher_2.svg"
+    ],
     "dos_marche": [
      "visiteurs/visiteur-10/visiteur-10_dos_marche_1.svg",
      "visiteurs/visiteur-10/visiteur-10_dos_marche_2.svg",
@@ -3541,6 +3825,10 @@
     "dos_assis-applaudir": [
      "visiteurs/visiteur-10/visiteur-10_dos_assis-applaudir_1.svg",
      "visiteurs/visiteur-10/visiteur-10_dos_assis-applaudir_2.svg"
+    ],
+    "dos_pecher": [
+     "visiteurs/visiteur-10/visiteur-10_dos_pecher_1.svg",
+     "visiteurs/visiteur-10/visiteur-10_dos_pecher_2.svg"
     ],
     "avant_lanterne": [
      "visiteurs/visiteur-10/visiteur-10_avant_lanterne_1.svg",
@@ -3634,6 +3922,10 @@
      "visiteurs/visiteur-11/visiteur-11_face_assis-applaudir_1.svg",
      "visiteurs/visiteur-11/visiteur-11_face_assis-applaudir_2.svg"
     ],
+    "face_pecher": [
+     "visiteurs/visiteur-11/visiteur-11_face_pecher_1.svg",
+     "visiteurs/visiteur-11/visiteur-11_face_pecher_2.svg"
+    ],
     "avant_marche": [
      "visiteurs/visiteur-11/visiteur-11_avant_marche_1.svg",
      "visiteurs/visiteur-11/visiteur-11_avant_marche_2.svg",
@@ -3668,6 +3960,10 @@
      "visiteurs/visiteur-11/visiteur-11_avant_assis-applaudir_1.svg",
      "visiteurs/visiteur-11/visiteur-11_avant_assis-applaudir_2.svg"
     ],
+    "avant_pecher": [
+     "visiteurs/visiteur-11/visiteur-11_avant_pecher_1.svg",
+     "visiteurs/visiteur-11/visiteur-11_avant_pecher_2.svg"
+    ],
     "dos_marche": [
      "visiteurs/visiteur-11/visiteur-11_dos_marche_1.svg",
      "visiteurs/visiteur-11/visiteur-11_dos_marche_2.svg",
@@ -3701,6 +3997,10 @@
     "dos_assis-applaudir": [
      "visiteurs/visiteur-11/visiteur-11_dos_assis-applaudir_1.svg",
      "visiteurs/visiteur-11/visiteur-11_dos_assis-applaudir_2.svg"
+    ],
+    "dos_pecher": [
+     "visiteurs/visiteur-11/visiteur-11_dos_pecher_1.svg",
+     "visiteurs/visiteur-11/visiteur-11_dos_pecher_2.svg"
     ],
     "avant_lanterne": [
      "visiteurs/visiteur-11/visiteur-11_avant_lanterne_1.svg",
@@ -3807,6 +4107,10 @@
      "visiteurs/visiteur-12/visiteur-12_face_assis-applaudir_1.svg",
      "visiteurs/visiteur-12/visiteur-12_face_assis-applaudir_2.svg"
     ],
+    "face_pecher": [
+     "visiteurs/visiteur-12/visiteur-12_face_pecher_1.svg",
+     "visiteurs/visiteur-12/visiteur-12_face_pecher_2.svg"
+    ],
     "avant_marche": [
      "visiteurs/visiteur-12/visiteur-12_avant_marche_1.svg",
      "visiteurs/visiteur-12/visiteur-12_avant_marche_2.svg",
@@ -3841,6 +4145,10 @@
      "visiteurs/visiteur-12/visiteur-12_avant_assis-applaudir_1.svg",
      "visiteurs/visiteur-12/visiteur-12_avant_assis-applaudir_2.svg"
     ],
+    "avant_pecher": [
+     "visiteurs/visiteur-12/visiteur-12_avant_pecher_1.svg",
+     "visiteurs/visiteur-12/visiteur-12_avant_pecher_2.svg"
+    ],
     "dos_marche": [
      "visiteurs/visiteur-12/visiteur-12_dos_marche_1.svg",
      "visiteurs/visiteur-12/visiteur-12_dos_marche_2.svg",
@@ -3874,6 +4182,10 @@
     "dos_assis-applaudir": [
      "visiteurs/visiteur-12/visiteur-12_dos_assis-applaudir_1.svg",
      "visiteurs/visiteur-12/visiteur-12_dos_assis-applaudir_2.svg"
+    ],
+    "dos_pecher": [
+     "visiteurs/visiteur-12/visiteur-12_dos_pecher_1.svg",
+     "visiteurs/visiteur-12/visiteur-12_dos_pecher_2.svg"
     ],
     "avant_lanterne": [
      "visiteurs/visiteur-12/visiteur-12_avant_lanterne_1.svg",
@@ -3988,6 +4300,10 @@
      "epilogue/arrivant-01/arrivant-01_face_assis-applaudir_1.svg",
      "epilogue/arrivant-01/arrivant-01_face_assis-applaudir_2.svg"
     ],
+    "face_pecher": [
+     "epilogue/arrivant-01/arrivant-01_face_pecher_1.svg",
+     "epilogue/arrivant-01/arrivant-01_face_pecher_2.svg"
+    ],
     "avant_marche": [
      "epilogue/arrivant-01/arrivant-01_avant_marche_1.svg",
      "epilogue/arrivant-01/arrivant-01_avant_marche_2.svg",
@@ -4022,6 +4338,10 @@
      "epilogue/arrivant-01/arrivant-01_avant_assis-applaudir_1.svg",
      "epilogue/arrivant-01/arrivant-01_avant_assis-applaudir_2.svg"
     ],
+    "avant_pecher": [
+     "epilogue/arrivant-01/arrivant-01_avant_pecher_1.svg",
+     "epilogue/arrivant-01/arrivant-01_avant_pecher_2.svg"
+    ],
     "dos_marche": [
      "epilogue/arrivant-01/arrivant-01_dos_marche_1.svg",
      "epilogue/arrivant-01/arrivant-01_dos_marche_2.svg",
@@ -4055,6 +4375,10 @@
     "dos_assis-applaudir": [
      "epilogue/arrivant-01/arrivant-01_dos_assis-applaudir_1.svg",
      "epilogue/arrivant-01/arrivant-01_dos_assis-applaudir_2.svg"
+    ],
+    "dos_pecher": [
+     "epilogue/arrivant-01/arrivant-01_dos_pecher_1.svg",
+     "epilogue/arrivant-01/arrivant-01_dos_pecher_2.svg"
     ]
    }
   },
@@ -4133,6 +4457,10 @@
      "epilogue/arrivant-02/arrivant-02_face_assis-applaudir_1.svg",
      "epilogue/arrivant-02/arrivant-02_face_assis-applaudir_2.svg"
     ],
+    "face_pecher": [
+     "epilogue/arrivant-02/arrivant-02_face_pecher_1.svg",
+     "epilogue/arrivant-02/arrivant-02_face_pecher_2.svg"
+    ],
     "avant_marche": [
      "epilogue/arrivant-02/arrivant-02_avant_marche_1.svg",
      "epilogue/arrivant-02/arrivant-02_avant_marche_2.svg",
@@ -4167,6 +4495,10 @@
      "epilogue/arrivant-02/arrivant-02_avant_assis-applaudir_1.svg",
      "epilogue/arrivant-02/arrivant-02_avant_assis-applaudir_2.svg"
     ],
+    "avant_pecher": [
+     "epilogue/arrivant-02/arrivant-02_avant_pecher_1.svg",
+     "epilogue/arrivant-02/arrivant-02_avant_pecher_2.svg"
+    ],
     "dos_marche": [
      "epilogue/arrivant-02/arrivant-02_dos_marche_1.svg",
      "epilogue/arrivant-02/arrivant-02_dos_marche_2.svg",
@@ -4200,6 +4532,10 @@
     "dos_assis-applaudir": [
      "epilogue/arrivant-02/arrivant-02_dos_assis-applaudir_1.svg",
      "epilogue/arrivant-02/arrivant-02_dos_assis-applaudir_2.svg"
+    ],
+    "dos_pecher": [
+     "epilogue/arrivant-02/arrivant-02_dos_pecher_1.svg",
+     "epilogue/arrivant-02/arrivant-02_dos_pecher_2.svg"
     ]
    }
   },
@@ -4284,6 +4620,10 @@
      "epilogue/arrivant-03/arrivant-03_face_assis-applaudir_1.svg",
      "epilogue/arrivant-03/arrivant-03_face_assis-applaudir_2.svg"
     ],
+    "face_pecher": [
+     "epilogue/arrivant-03/arrivant-03_face_pecher_1.svg",
+     "epilogue/arrivant-03/arrivant-03_face_pecher_2.svg"
+    ],
     "avant_marche": [
      "epilogue/arrivant-03/arrivant-03_avant_marche_1.svg",
      "epilogue/arrivant-03/arrivant-03_avant_marche_2.svg",
@@ -4318,6 +4658,10 @@
      "epilogue/arrivant-03/arrivant-03_avant_assis-applaudir_1.svg",
      "epilogue/arrivant-03/arrivant-03_avant_assis-applaudir_2.svg"
     ],
+    "avant_pecher": [
+     "epilogue/arrivant-03/arrivant-03_avant_pecher_1.svg",
+     "epilogue/arrivant-03/arrivant-03_avant_pecher_2.svg"
+    ],
     "dos_marche": [
      "epilogue/arrivant-03/arrivant-03_dos_marche_1.svg",
      "epilogue/arrivant-03/arrivant-03_dos_marche_2.svg",
@@ -4351,6 +4695,10 @@
     "dos_assis-applaudir": [
      "epilogue/arrivant-03/arrivant-03_dos_assis-applaudir_1.svg",
      "epilogue/arrivant-03/arrivant-03_dos_assis-applaudir_2.svg"
+    ],
+    "dos_pecher": [
+     "epilogue/arrivant-03/arrivant-03_dos_pecher_1.svg",
+     "epilogue/arrivant-03/arrivant-03_dos_pecher_2.svg"
     ]
    }
   },
@@ -4441,6 +4789,10 @@
      "epilogue/arrivant-04/arrivant-04_face_assis-applaudir_1.svg",
      "epilogue/arrivant-04/arrivant-04_face_assis-applaudir_2.svg"
     ],
+    "face_pecher": [
+     "epilogue/arrivant-04/arrivant-04_face_pecher_1.svg",
+     "epilogue/arrivant-04/arrivant-04_face_pecher_2.svg"
+    ],
     "avant_marche": [
      "epilogue/arrivant-04/arrivant-04_avant_marche_1.svg",
      "epilogue/arrivant-04/arrivant-04_avant_marche_2.svg",
@@ -4475,6 +4827,10 @@
      "epilogue/arrivant-04/arrivant-04_avant_assis-applaudir_1.svg",
      "epilogue/arrivant-04/arrivant-04_avant_assis-applaudir_2.svg"
     ],
+    "avant_pecher": [
+     "epilogue/arrivant-04/arrivant-04_avant_pecher_1.svg",
+     "epilogue/arrivant-04/arrivant-04_avant_pecher_2.svg"
+    ],
     "dos_marche": [
      "epilogue/arrivant-04/arrivant-04_dos_marche_1.svg",
      "epilogue/arrivant-04/arrivant-04_dos_marche_2.svg",
@@ -4508,6 +4864,10 @@
     "dos_assis-applaudir": [
      "epilogue/arrivant-04/arrivant-04_dos_assis-applaudir_1.svg",
      "epilogue/arrivant-04/arrivant-04_dos_assis-applaudir_2.svg"
+    ],
+    "dos_pecher": [
+     "epilogue/arrivant-04/arrivant-04_dos_pecher_1.svg",
+     "epilogue/arrivant-04/arrivant-04_dos_pecher_2.svg"
     ]
    }
   },
@@ -4586,6 +4946,10 @@
      "epilogue/arrivant-05/arrivant-05_face_assis-applaudir_1.svg",
      "epilogue/arrivant-05/arrivant-05_face_assis-applaudir_2.svg"
     ],
+    "face_pecher": [
+     "epilogue/arrivant-05/arrivant-05_face_pecher_1.svg",
+     "epilogue/arrivant-05/arrivant-05_face_pecher_2.svg"
+    ],
     "avant_marche": [
      "epilogue/arrivant-05/arrivant-05_avant_marche_1.svg",
      "epilogue/arrivant-05/arrivant-05_avant_marche_2.svg",
@@ -4620,6 +4984,10 @@
      "epilogue/arrivant-05/arrivant-05_avant_assis-applaudir_1.svg",
      "epilogue/arrivant-05/arrivant-05_avant_assis-applaudir_2.svg"
     ],
+    "avant_pecher": [
+     "epilogue/arrivant-05/arrivant-05_avant_pecher_1.svg",
+     "epilogue/arrivant-05/arrivant-05_avant_pecher_2.svg"
+    ],
     "dos_marche": [
      "epilogue/arrivant-05/arrivant-05_dos_marche_1.svg",
      "epilogue/arrivant-05/arrivant-05_dos_marche_2.svg",
@@ -4653,6 +5021,10 @@
     "dos_assis-applaudir": [
      "epilogue/arrivant-05/arrivant-05_dos_assis-applaudir_1.svg",
      "epilogue/arrivant-05/arrivant-05_dos_assis-applaudir_2.svg"
+    ],
+    "dos_pecher": [
+     "epilogue/arrivant-05/arrivant-05_dos_pecher_1.svg",
+     "epilogue/arrivant-05/arrivant-05_dos_pecher_2.svg"
     ]
    }
   },
@@ -4737,6 +5109,10 @@
      "epilogue/arrivant-06/arrivant-06_face_assis-applaudir_1.svg",
      "epilogue/arrivant-06/arrivant-06_face_assis-applaudir_2.svg"
     ],
+    "face_pecher": [
+     "epilogue/arrivant-06/arrivant-06_face_pecher_1.svg",
+     "epilogue/arrivant-06/arrivant-06_face_pecher_2.svg"
+    ],
     "avant_marche": [
      "epilogue/arrivant-06/arrivant-06_avant_marche_1.svg",
      "epilogue/arrivant-06/arrivant-06_avant_marche_2.svg",
@@ -4771,6 +5147,10 @@
      "epilogue/arrivant-06/arrivant-06_avant_assis-applaudir_1.svg",
      "epilogue/arrivant-06/arrivant-06_avant_assis-applaudir_2.svg"
     ],
+    "avant_pecher": [
+     "epilogue/arrivant-06/arrivant-06_avant_pecher_1.svg",
+     "epilogue/arrivant-06/arrivant-06_avant_pecher_2.svg"
+    ],
     "dos_marche": [
      "epilogue/arrivant-06/arrivant-06_dos_marche_1.svg",
      "epilogue/arrivant-06/arrivant-06_dos_marche_2.svg",
@@ -4804,6 +5184,10 @@
     "dos_assis-applaudir": [
      "epilogue/arrivant-06/arrivant-06_dos_assis-applaudir_1.svg",
      "epilogue/arrivant-06/arrivant-06_dos_assis-applaudir_2.svg"
+    ],
+    "dos_pecher": [
+     "epilogue/arrivant-06/arrivant-06_dos_pecher_1.svg",
+     "epilogue/arrivant-06/arrivant-06_dos_pecher_2.svg"
     ]
    }
   },
@@ -4888,6 +5272,10 @@
      "epilogue/arrivant-07/arrivant-07_face_assis-applaudir_1.svg",
      "epilogue/arrivant-07/arrivant-07_face_assis-applaudir_2.svg"
     ],
+    "face_pecher": [
+     "epilogue/arrivant-07/arrivant-07_face_pecher_1.svg",
+     "epilogue/arrivant-07/arrivant-07_face_pecher_2.svg"
+    ],
     "avant_marche": [
      "epilogue/arrivant-07/arrivant-07_avant_marche_1.svg",
      "epilogue/arrivant-07/arrivant-07_avant_marche_2.svg",
@@ -4922,6 +5310,10 @@
      "epilogue/arrivant-07/arrivant-07_avant_assis-applaudir_1.svg",
      "epilogue/arrivant-07/arrivant-07_avant_assis-applaudir_2.svg"
     ],
+    "avant_pecher": [
+     "epilogue/arrivant-07/arrivant-07_avant_pecher_1.svg",
+     "epilogue/arrivant-07/arrivant-07_avant_pecher_2.svg"
+    ],
     "dos_marche": [
      "epilogue/arrivant-07/arrivant-07_dos_marche_1.svg",
      "epilogue/arrivant-07/arrivant-07_dos_marche_2.svg",
@@ -4955,6 +5347,10 @@
     "dos_assis-applaudir": [
      "epilogue/arrivant-07/arrivant-07_dos_assis-applaudir_1.svg",
      "epilogue/arrivant-07/arrivant-07_dos_assis-applaudir_2.svg"
+    ],
+    "dos_pecher": [
+     "epilogue/arrivant-07/arrivant-07_dos_pecher_1.svg",
+     "epilogue/arrivant-07/arrivant-07_dos_pecher_2.svg"
     ]
    }
   },
@@ -5033,6 +5429,10 @@
      "epilogue/arrivant-08/arrivant-08_face_assis-applaudir_1.svg",
      "epilogue/arrivant-08/arrivant-08_face_assis-applaudir_2.svg"
     ],
+    "face_pecher": [
+     "epilogue/arrivant-08/arrivant-08_face_pecher_1.svg",
+     "epilogue/arrivant-08/arrivant-08_face_pecher_2.svg"
+    ],
     "avant_marche": [
      "epilogue/arrivant-08/arrivant-08_avant_marche_1.svg",
      "epilogue/arrivant-08/arrivant-08_avant_marche_2.svg",
@@ -5067,6 +5467,10 @@
      "epilogue/arrivant-08/arrivant-08_avant_assis-applaudir_1.svg",
      "epilogue/arrivant-08/arrivant-08_avant_assis-applaudir_2.svg"
     ],
+    "avant_pecher": [
+     "epilogue/arrivant-08/arrivant-08_avant_pecher_1.svg",
+     "epilogue/arrivant-08/arrivant-08_avant_pecher_2.svg"
+    ],
     "dos_marche": [
      "epilogue/arrivant-08/arrivant-08_dos_marche_1.svg",
      "epilogue/arrivant-08/arrivant-08_dos_marche_2.svg",
@@ -5100,6 +5504,10 @@
     "dos_assis-applaudir": [
      "epilogue/arrivant-08/arrivant-08_dos_assis-applaudir_1.svg",
      "epilogue/arrivant-08/arrivant-08_dos_assis-applaudir_2.svg"
+    ],
+    "dos_pecher": [
+     "epilogue/arrivant-08/arrivant-08_dos_pecher_1.svg",
+     "epilogue/arrivant-08/arrivant-08_dos_pecher_2.svg"
     ]
    }
   }
