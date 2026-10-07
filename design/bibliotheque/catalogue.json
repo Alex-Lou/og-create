@@ -6131,29 +6131,6 @@
    "statut": "ok"
   },
   {
-   "id": "vivants/brume/brume_expr_fache",
-   "rubrique": "vivants",
-   "sujet": "brume",
-   "pose": "expr",
-   "variante": "fache",
-   "titre": "Brume, expression, fâché",
-   "images": 2,
-   "fichiers": [
-    "svg/vivants/brume/brume_expr_fache_1.svg",
-    "svg/vivants/brume/brume_expr_fache_2.svg"
-   ],
-   "cadre": [
-    0,
-    0,
-    40,
-    48
-   ],
-   "ms_par_image": 600,
-   "parcours": "tuto-1",
-   "statut": "a-revoir",
-   "note": "Brume ne gronde jamais (§ 8) : expression à retirer."
-  },
-  {
    "id": "vivants/brume/brume_expr_gene",
    "rubrique": "vivants",
    "sujet": "brume",
@@ -34546,84 +34523,6 @@
    "note": "Le manteau change avec les saisons (§ 8) : variantes à dessiner quand le jeu aura des saisons."
   },
   {
-   "id": "vivants/anya/anya_expr_endormi",
-   "rubrique": "vivants",
-   "sujet": "anya",
-   "pose": "expr",
-   "variante": "endormi",
-   "titre": "Anya, expression, endormi",
-   "images": 2,
-   "fichiers": [
-    "svg/vivants/anya/anya_expr_endormi_1.svg",
-    "svg/vivants/anya/anya_expr_endormi_2.svg"
-   ],
-   "cadre": [
-    0,
-    0,
-    80,
-    128
-   ],
-   "ms_par_image": [
-    700,
-    900
-   ],
-   "parcours": "revelation",
-   "statut": "a-revoir",
-   "note": "Anya est calme et n'élève jamais la voix (§ 8) : expression à retirer."
-  },
-  {
-   "id": "vivants/anya/anya_expr_fache",
-   "rubrique": "vivants",
-   "sujet": "anya",
-   "pose": "expr",
-   "variante": "fache",
-   "titre": "Anya, expression, fâché",
-   "images": 2,
-   "fichiers": [
-    "svg/vivants/anya/anya_expr_fache_1.svg",
-    "svg/vivants/anya/anya_expr_fache_2.svg"
-   ],
-   "cadre": [
-    0,
-    0,
-    80,
-    128
-   ],
-   "ms_par_image": [
-    700,
-    900
-   ],
-   "parcours": "revelation",
-   "statut": "a-revoir",
-   "note": "Anya est calme et n'élève jamais la voix (§ 8) : expression à retirer."
-  },
-  {
-   "id": "vivants/anya/anya_expr_gene",
-   "rubrique": "vivants",
-   "sujet": "anya",
-   "pose": "expr",
-   "variante": "gene",
-   "titre": "Anya, expression, gêné",
-   "images": 2,
-   "fichiers": [
-    "svg/vivants/anya/anya_expr_gene_1.svg",
-    "svg/vivants/anya/anya_expr_gene_2.svg"
-   ],
-   "cadre": [
-    0,
-    0,
-    80,
-    128
-   ],
-   "ms_par_image": [
-    700,
-    900
-   ],
-   "parcours": "revelation",
-   "statut": "a-revoir",
-   "note": "Anya est calme et n'élève jamais la voix (§ 8) : expression à retirer."
-  },
-  {
    "id": "vivants/anya/anya_expr_neutre",
    "rubrique": "vivants",
    "sujet": "anya",
@@ -34648,32 +34547,6 @@
    "parcours": "revelation",
    "statut": "a-revoir",
    "note": "Le manteau change avec les saisons (§ 8) : variantes à dessiner quand le jeu aura des saisons."
-  },
-  {
-   "id": "vivants/anya/anya_expr_rire",
-   "rubrique": "vivants",
-   "sujet": "anya",
-   "pose": "expr",
-   "variante": "rire",
-   "titre": "Anya, expression, rire",
-   "images": 2,
-   "fichiers": [
-    "svg/vivants/anya/anya_expr_rire_1.svg",
-    "svg/vivants/anya/anya_expr_rire_2.svg"
-   ],
-   "cadre": [
-    0,
-    0,
-    80,
-    128
-   ],
-   "ms_par_image": [
-    700,
-    900
-   ],
-   "parcours": "revelation",
-   "statut": "a-revoir",
-   "note": "Anya est calme et n'élève jamais la voix (§ 8) : expression à retirer."
   },
   {
    "id": "vivants/anya/anya_expr_surpris",

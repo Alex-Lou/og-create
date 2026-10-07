@@ -24,7 +24,7 @@ const anim = [];
     boxes.push({ label: st.label, frames: frames.map(b => svgB(unique(b), 4)), timings: [220, 220, 220, 220], w: 160, h: 192 });
   }
   const xr = [], x1 = [], x7 = [], xb = [];
-  for (const x of EXPRS) {
+  for (const x of EXPRS.filter(x => x !== 'fache')) { // Brume ne gronde jamais (§ 8)
     // le fichier : le calque seul ; la planche le montre aussi posé sur le stade 1 et sur le stade 7 (dessinés sans visage)
     [0, 1].forEach(n => write(path.join(LIB, 'brume', `brume_expr_${x}_${n + 1}.svg`), svgB(brumeEyes(n, x))));
     xr.push([svgB(brumeEyes(0, x), 3), XL[x]]);
@@ -50,7 +50,7 @@ const anim = [];
     if (pose === 'marche') boxes.push({ label: LABEL[name] + ' (miroir)', frames: frames.map(b => svgA(unique(b), 2.4)), timings: t, w: 192, h: 307, mirror: true });
   }
   const xr = [];
-  for (const x of EXPRS) {
+  for (const x of EXPRS.filter(x => !['fache', 'gene', 'rire', 'endormi'].includes(x))) { // Anya est calme et n'élève jamais la voix (§ 8)
     const frames = [0, 1].map(n => anyaFrame('front', 'repos', n, x));
     frames.forEach((b, n) => write(path.join(LIB, 'anya', `anya_expr_${x}_${n + 1}.svg`), svgA(b)));
     xr.push([svgA(unique(frames[0]), 1.6), XL[x]]);
