@@ -68,8 +68,9 @@ const cannelle = {
 
   head(c, ctx) {
     const { view } = ctx;
-    const spoon = limb([26.6, 8.6], [31.2, 3.4], 1.1, C.spoon)
-      + `<g transform="rotate(40 32 2.6)">${E(32, 2.6, 1.3, 1.75, C.spoon, 0.9)}${E(31.7, 2.3, 0.5, 0.8, '#F2F4F7', 0)}</g>`;
+    // un peu plus bas dans le chignon : quand la tête remonte (marche), le cuilleron reste dans le cadre
+    const spoon = limb([26.6, 9.2], [31.2, 4], 1.1, C.spoon)
+      + `<g transform="rotate(40 32 3.2)">${E(32, 3.2, 1.3, 1.75, C.spoon, 0.9)}${E(31.7, 2.9, 0.5, 0.8, '#F2F4F7', 0)}</g>`;
     const bun = E(24, 8.6, 5.4, 4.3, C.hair) + P('M20.4,8.2 Q24,5.6 27.6,8.2', 'none', 0.6);
     let s = '';
     if (view === 'ne') {

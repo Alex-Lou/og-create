@@ -142,7 +142,8 @@ function castaway(c, spec) {
       let s = F(c.body(cc, ctx));
       for (const [x, y, w, sc] of (spec.holes && spec.holes[v]) || []) s += hole(x + sway, y, w, F(sc));
       for (const [x, y, len] of (spec.rips && spec.rips[v]) || []) s += rip(x + sway, y, len);
-      for (const [x, y, col, w, k] of (spec.tatters && spec.tatters[v]) || []) s += tatter(x + sway, y, F(col), w, k);
+      // assis, le corps descend de ctx.seatDy : un lambeau qui sortirait par le bas du cadre (64) remonte juste assez
+      for (const [x, y, col, w, k] of (spec.tatters && spec.tatters[v]) || []) s += tatter(x + sway, ctx.seatDy ? Math.min(y, 63.5 - ctx.seatDy - 3 * (k ?? 1) - 0.45) : y, F(col), w, k);
       return s + (spec.over ? spec.over(ctx, cc) : '');
     },
     neck: c.neck ? (cc, ctx) => F(c.neck(cc, ctx)) : undefined,
