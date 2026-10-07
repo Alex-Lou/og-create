@@ -77,12 +77,21 @@ const G = {
   // pointe éclairée, reflet) qui scintillent ; ramassés, des moignons dans la neige
   glace: {
     frames: [[-30, -46, 60, 56], [-24, -16, 48, 26]],
-    draw: (spent, f) => spent
-      ? E(0, 1, 14, 5, 'rgba(255,255,255,.65)', 0) + spire(-6, 0, 5, 4, ICE) + spire(5, 1, 6, 4, ICE) + spire(0, 3, 4, 3.5, ICE)
-      : shade(0, 1, 16, 7, 0.14) + E(0, 1, 18, 7, 'rgba(255,255,255,.75)', 0)
-        + spire(-9, -1, 20, 5, ICE, -2) + spire(8, 0, 24, 5.5, ICE, 2) + spire(-1, 3, 34, 6.5, ICE) + spire(3, 6, 16, 4.5, ICE, 1)
-        + (f ? star(9, -20, 2.6) + star(-9, -16, 2.2) : star(-1, -31, 3.2))
+    draw: (spent, f) => {
+      const neige = (rx, ry) => { const n = 14, pts = Array.from({ length: n }, (_, i) => { const t = (i / n) * TAU, r = 1 + (i % 2 ? 0.06 : -0.03); return [Math.cos(t) * rx * r, 1 + Math.sin(t) * ry * r]; }); const m = i => { const p = pts[i % n], q = pts[(i + 1) % n]; return `${r2((p[0] + q[0]) / 2)},${r2((p[1] + q[1]) / 2)}`; }; let d = `M${m(n - 1)}`; for (let i = 0; i < n; i++) d += ` Q${r2(pts[i][0])},${r2(pts[i][1])} ${m(i)}`; return P(d + ' Z', '#FFFFFF', W) + E(rx * 0.15, 2, rx * 0.7, ry * 0.5, '#E2EEF6', 0); };
+      const facette = (x, y, h, w, lean = 0) => { const tip = [x + lean, y - h], bl = [x - w, y], br = [x + w, y], fb = [x, y + w * 0.45];
+        return pg([bl, tip, fb], '#C9ECFA', 0) + pg([fb, tip, br], '#8CCBE8', 0) + pg([tip, [bl[0] + (tip[0] - bl[0]) * 0.72, bl[1] + (tip[1] - bl[1]) * 0.72], [fb[0] + (tip[0] - fb[0]) * 0.72, fb[1] + (tip[1] - fb[1]) * 0.72]], '#F6FDFF', 0)
+          + L([x - w * 0.45, y - h * 0.12], [x - w * 0.15 + lean * 0.6, y - h * 0.6], 'rgba(255,255,255,.9)', 0.7) + pg([bl, tip, br, fb], 'none', W * 0.9); };
+      if (spent) return neige(14, 5) + facette(-6, 1, 5, 3.4, -1) + facette(5, 1.6, 6, 3.6, 1) + facette(0, 3.4, 4, 3);
+      return shade(0, 2, 18, 6, 0.12) + neige(19, 7)
+        + facette(-12, 0, 13, 3.6, -3) + facette(-7, -1, 21, 4.6, -1.5) + facette(9, -1, 15, 4, 2.6) + facette(13, 1.4, 9, 3, 3)
+        + facette(-1, 2.4, 33, 6.2, 0.6) + facette(5, 4.6, 18, 4.4, 1.6) + facette(-5, 5, 10, 3.2, -1)
+        + E(-1, 6.4, 9, 1.8, '#FFFFFF', 0) + (f ? star(9, -17, 2.6) + star(-8, -22, 2.2) : star(0, -31, 3.2) + star(14, -8, 1.8));
+    }
   },
+  // Moutons à tondre : un pré aux bords bosselés, ses touffes et ses fleurettes ; deux brebis laineuses en bouclettes
+  // cernées d'un seul trait, tête noire, oreilles, œil, queue, qui broutent tour à tour ; tondues, rosées et lisses, elles
+  // broutent au milieu des flocons de laine tombés
   laine: {
     frames: [[-30, -26, 60, 34], [-30, -24, 60, 32]],
     draw: (spent, f) => spent ? sheep(-11, -2, false, 1) + sheep(6, 4, false, 0) : sheep(-11, -2, true, f ? 0 : 1) + sheep(6, 4, true, f ? 1 : 0)
