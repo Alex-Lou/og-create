@@ -764,30 +764,64 @@ function coalPile(x, y) {
   }
   return `<path d="M${f2(x - 18)},${f2(y)} C${f2(x - 16)},${f2(y - 14)} ${f2(x + 16)},${f2(y - 14)} ${f2(x + 18)},${f2(y)} A18,7 0 0 1 ${f2(x - 18)},${f2(y)} Z" fill="${COAL.right}"/>` + lumps;
 }
-// Tas de charbon : monticule noir aux éclats bleutés, pelle plantée, sac de jute ; des braises rougeoient à sa base
+// Charbonnière : la meule de bois couverte de terre et d'herbe qui fume par ses évents, ses bûches au pied, la
+// gueule où rougeoient les braises ; l'échelle du charbonnier, la réserve de bûches, le tas de charbon fini et son sac
 const charbon = {
   light: () => [0, 0.1, 3, 12, '255,110,50'],
   layers: [{
     frame: [-32, -42, 64, 58],
     n: 6,
     fps: 4,
-    draw: (T, f) => {
+    draw: (T, f, n) => {
+      const k = f / n, glow = 0.5 + 0.5 * Math.sin(k * TAU);
+      const EARTH = { light: '#8E7A60', mid: '#76634C', dark: '#5A4A38' };
       const [x, y] = T.p(0, 0, 0);
-      const glints = [[-6, -8], [3, -12], [8, -5], [-10, -3], [1, -6]].map(([a, b], k) => dot(x + a, y + b, 0.6, k % 2 ? '#C6D4EA' : '#FFFFFF')).join('');
-      const embers = [[-12, 2], [6, 4], [12, 0], [-4, 5]].map(([a, b], k) => ((f + k) % 3 === 0 ? dot(x + a, y + b, 1, '#FF8A3A') : '')).join('');
-      return T.shadow(0, 0, 0.38, 0.22)
-        + coalPile(x, y)
-        + glints + embers
-        + ln(T.p(-0.2, 0.06, 0), T.p(-0.14, 0.02, 20), WOOD.right, 1.6)
-        + poly([T.p(-0.23, 0.08, 1), T.p(-0.17, 0.08, 1), T.p(-0.19, 0.06, 7), T.p(-0.25, 0.06, 7)], IRON.left, ` stroke="${OUT}" stroke-width="0.5"`)
-        + (() => {
-          const [sx, sy] = T.p(0.32, 0.12, 0);
-          return ell(sx + 1, sy + 0.4, 6, 1.8, 'rgba(40,55,20,.22)')
-            + `<path d="M${f2(sx - 5.4)},${f2(sy)} C${f2(sx - 6.6)},${f2(sy - 6)} ${f2(sx - 4.4)},${f2(sy - 10)} ${f2(sx - 2.2)},${f2(sy - 11.4)} L${f2(sx + 2.4)},${f2(sy - 11.4)} C${f2(sx + 4.6)},${f2(sy - 10)} ${f2(sx + 6.6)},${f2(sy - 6)} ${f2(sx + 5.4)},${f2(sy)} Z" fill="#C9A46A" stroke="#8A6A3A" stroke-width="0.5"/>`
-            + `<path d="M${f2(sx - 2.4)},${f2(sy - 11.4)} q2.4,-2.6 4.8,0" fill="${COAL.top}" stroke="#8A6A3A" stroke-width="0.4"/>`
-            + ln([sx - 2.6, sy - 10.6], [sx + 2.6, sy - 10.6], '#7A5A2A', 1)
-            + ln([sx - 3, sy - 6], [sx - 1.6, sy - 2], 'rgba(138,106,58,.6)', 0.5) + ln([sx + 2.4, sy - 7], [sx + 3, sy - 3], 'rgba(138,106,58,.6)', 0.5);
-        })();
+      // le sol noirci de suie, des taches de cendre
+      let out = ell(x, y + 1, 30, 12.6, '#5E544A', ` stroke="${OUT}" stroke-width="0.5"`) + ell(x - 3, y, 20, 7.4, '#6C6157')
+        + [[-6, 9, 2.2], [17, 7, 1.8], [24, -5, 1.4]].map(([dx, dy, r]) => ell(x + dx, y + dy, r * 1.6, r * 0.7, '#7E746A')).join('');
+      // la réserve de bûches, au fond à droite
+      const [lx, ly] = T.p(0.36, -0.34, 0);
+      out += ell(lx, ly + 0.6, 8, 2.4, 'rgba(20,15,10,.3)')
+        + [[-4.2, -2.2], [0, -2.2], [4.2, -2.2], [-2.1, -5.8], [2.1, -5.8], [0, -9.4]].map(([dx, dy]) => logEnd(lx + dx, ly + dy, 2.1)).join('');
+      // la meule : ses bûches au pied, son dôme de terre et ses mottes d'herbe
+      const [cx, cy] = T.p(-0.04, -0.06, 0), rx = 15.4, top = cy - 22;
+      out += T.shadow(-0.04, -0.06, 0.3, 0.25)
+        + `<path d="M${f2(cx - rx)},${f2(cy - 1)} A${rx},6.6 0 0 0 ${f2(cx + rx)},${f2(cy - 1)} L${f2(cx + rx)},${f2(cy - 4)} A${rx},6.6 0 0 1 ${f2(cx - rx)},${f2(cy - 4)} Z" fill="${WOOD.left}" stroke="${OUT}" stroke-width="0.6"/>`;
+      for (let i = 0; i < 9; i++) { const t = -0.88 + i * 0.22; out += logEnd(cx + t * rx, cy - 2.4 + Math.sqrt(1 - t * t) * 6.4, 1.7); }
+      const dome = `M${f2(cx - rx + 0.6)},${f2(cy - 3)} C${f2(cx - rx)},${f2(cy - 17)} ${f2(cx - 8)},${f2(top)} ${f2(cx)},${f2(top)} C${f2(cx + 8)},${f2(top)} ${f2(cx + rx)},${f2(cy - 17)} ${f2(cx + rx - 0.6)},${f2(cy - 3)} Q${f2(cx)},${f2(cy + 2.4)} ${f2(cx - rx + 0.6)},${f2(cy - 3)} Z`;
+      out += `<path d="${dome}" fill="${EARTH.mid}" stroke="${OUT}" stroke-width="0.7"/>`
+        + `<path d="M${f2(cx + 3)},${f2(top + 0.4)} C${f2(cx + 10)},${f2(top + 2)} ${f2(cx + rx)},${f2(cy - 15)} ${f2(cx + rx - 0.6)},${f2(cy - 3)} Q${f2(cx + 8)},${f2(cy + 0.6)} ${f2(cx + 4)},${f2(cy + 0.4)} Q${f2(cx + 8)},${f2(cy - 10)} ${f2(cx + 3)},${f2(top + 0.4)} Z" fill="${EARTH.dark}" opacity="0.7"/>`
+        + `<path d="M${f2(cx - 9)},${f2(cy - 14)} q3,-5 8,-6.4" stroke="${EARTH.light}" stroke-width="1.6" fill="none" stroke-linecap="round"/>`
+        + [[-8, -6, 1], [6, -9, 0.9], [-2, -15, 0.8], [10, -3, 0.8], [-11, -11, 0.7], [1, -5, 0.7]].map(([dx, dy, s]) => [-1.6, -0.5, 0.6, 1.6].map((o, i) => `<path d="M${f2(cx + dx + o * 0.5)},${f2(cy + dy)} q${f2(o * 0.4)},${f2(-2 * s)} ${f2(o * 1.1)},${f2(-(3.4 + (i % 2) * 1.2) * s)}" stroke="${i % 2 ? '#9DB86A' : '#6F8C46'}" stroke-width="0.8" fill="none" stroke-linecap="round"/>`).join('')).join('')
+        + [[-4, -4], [2, -12], [8, -15], [-7, -17]].map(([dx, dy]) => ln([cx + dx - 1.4, cy + dy], [cx + dx + 1.4, cy + dy + 0.4], 'rgba(40,30,20,.45)', 0.5)).join('');
+      // les évents qui fument, l'un après l'autre
+      for (const [dx, dy, o] of [[-3, -20.4, 0], [5, -18.6, 0.33], [-9, -15.4, 0.66]]) {
+        out += ell(cx + dx, cy + dy, 1.4, 0.7, '#2A2018');
+        for (const p of [0, 0.5]) { const t = (k + o + p) % 1; out += puff(cx + dx + t * 3 + Math.sin(t * 5) * 1.2, cy + dy - 2 - t * 13, 1.6 + t * 2.6, 0.7 * (1 - t)); }
+      }
+      // la gueule au pied de la meule, ses braises
+      const [gx, gy] = T.p(0, 0.1, 0);
+      out += `<path d="M${f2(gx - 3.6)},${f2(gy)} L${f2(gx - 3.6)},${f2(gy - 3.4)} Q${f2(gx)},${f2(gy - 6.6)} ${f2(gx + 3.6)},${f2(gy - 3.4)} L${f2(gx + 3.6)},${f2(gy)} Z" fill="#2A1A12" stroke="${OUT}" stroke-width="0.6"/>`
+        + ell(gx, gy - 1.4, 2.6, 1.4, `rgba(255,${f2(110 + 60 * glow)},40,${f2(0.7 + 0.3 * glow)})`)
+        + dot(gx - 1, gy - 1.2, 0.6, '#FFE08A') + dot(gx + 1.2, gy - 1, 0.5, '#FFD070')
+        + [[-1, 0], [2, 2], [0.4, 4]].map(([dx, o]) => { const t = ((f + o) % n) / n; return t < 0.6 ? dot(gx + dx + t * 2, gy - 6 - t * 8, 0.55, '#FF9A40') : ''; }).join('');
+      // l'échelle appuyée contre la meule, à droite
+      const b0 = [cx + 17, cy + 5], b1 = [cx + 9, cy - 17], dxr = 3.2;
+      out += ln(b0, b1, WOOD.right, 1.4) + ln([b0[0] + dxr, b0[1] + 0.6], [b1[0] + dxr, b1[1] + 0.6], WOOD.right, 1.4)
+        + [0.15, 0.35, 0.55, 0.75].map(t => ln([b0[0] + (b1[0] - b0[0]) * t, b0[1] + (b1[1] - b0[1]) * t], [b0[0] + (b1[0] - b0[0]) * t + dxr, b0[1] + (b1[1] - b0[1]) * t + 0.6], WOOD.top, 1)).join('');
+      // le sac de charbon et le tas fini, devant à gauche, la pelle plantée, des éclats bleutés
+      const [sx, sy] = T.p(-0.42, 0.24, 0);
+      out += ell(sx + 1, sy + 0.4, 5, 1.6, 'rgba(20,15,10,.3)')
+        + `<path d="M${f2(sx - 4.6)},${f2(sy)} C${f2(sx - 5.6)},${f2(sy - 5)} ${f2(sx - 3.8)},${f2(sy - 8.6)} ${f2(sx - 1.9)},${f2(sy - 9.8)} L${f2(sx + 2)},${f2(sy - 9.8)} C${f2(sx + 3.9)},${f2(sy - 8.6)} ${f2(sx + 5.6)},${f2(sy - 5)} ${f2(sx + 4.6)},${f2(sy)} Z" fill="#C9A46A" stroke="${OUT}" stroke-width="0.5"/>`
+        + `<path d="M${f2(sx - 2)},${f2(sy - 9.8)} q2,-2.2 4,0" fill="${COAL.top}" stroke="${OUT}" stroke-width="0.4"/>` + ln([sx - 2.2, sy - 9], [sx + 2.2, sy - 9], '#7A5A2A', 0.9)
+        + ln([sx - 2.6, sy - 5], [sx - 1.4, sy - 1.6], 'rgba(138,106,58,.6)', 0.5) + ln([sx + 2, sy - 6], [sx + 2.6, sy - 2.6], 'rgba(138,106,58,.6)', 0.5);
+      const [px, py] = T.p(-0.18, 0.4, 0);
+      out += ell(px, py + 0.6, 10, 3, 'rgba(20,15,10,.3)')
+        + `<g transform="translate(${f2(px)} ${f2(py)}) scale(.55) translate(${f2(-px)} ${f2(-py)})">${coalPile(px, py)}</g>`
+        + ln([px + 3, py - 3], [px + 7, py - 15], WOOD.right, 1.3) + ln([px + 5.6, py - 15.4], [px + 8.6, py - 14.6], WOOD.right, 1.3)
+        + poly([[px + 1.6, py - 1], [px + 4.4, py - 0.2], [px + 4.6, py - 3.6], [px + 2.4, py - 4.2]], IRON.left, ` stroke="${OUT}" stroke-width="0.5"`)
+        + [[-4, -4], [2, -5.6], [-1, -2.6]].map(([dx, dy], i) => dot(px + dx, py + dy, 0.55, (i + f) % 3 === 0 ? '#FFFFFF' : '#C6D4EA')).join('');
+      return out;
     }
   }]
 };
