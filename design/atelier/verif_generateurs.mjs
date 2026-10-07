@@ -8,7 +8,7 @@ import { fileURLToPath, pathToFileURL } from 'url';
 
 const ici = path.dirname(fileURLToPath(import.meta.url));
 const BIB = path.join(ici, '..', 'bibliotheque');
-const FAMILLES = ['chantiers'];
+const FAMILLES = ['chantiers', 'betes'];
 const erreurs = [];
 let n = 0;
 for (const f of FAMILLES) {

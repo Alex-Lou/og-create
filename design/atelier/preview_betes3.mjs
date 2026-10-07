@@ -13,39 +13,13 @@ const DIR = path.dirname(fileURLToPath(import.meta.url));
 const { unique, row, sheet, animated, write, shoot } = require('./planche.js');
 const Bt = require('./betes.js');
 const { quad3, bird3 } = require('./betes3.js');
+const { AVANT, DOS, ORIENTEES: LIST } = require('./betes_liste.js');
 const LIB = path.join(DIR, 'lib', 'animaux');
 const PNG = path.join(DIR, 'planches');
 const r2 = n => Math.round(n * 100) / 100;
 const svgOf = (frame, body, s = 1) => `<svg xmlns="http://www.w3.org/2000/svg" width="${r2(frame[2] * s)}" height="${r2(frame[3] * s)}" viewBox="${frame.join(' ')}">${body}</svg>`;
 
-const AVANT = ['marche1', 'marche2', 'repos', 'clignement', 'joie'];
-const DOS = ['marche1', 'marche2', 'repos'];
 const POSE_FR = { marche1: 'marche1', marche2: 'marche2', repos: 'repos', clignement: 'clignement', joie: 'joie' };
-const q = (id, v) => ({ c: Bt.Q[id](v), bird: false });
-const b = (id, v) => ({ c: Bt.B[id](v), bird: true });
-// [groupe, dossier, libellé, bête] : les marcheurs du lot B
-const LIST = [
-  ['ferme', 'poule_rousse', 'Poule rousse', b('hen', 'rousse')], ['ferme', 'poule_blanche', 'Poule blanche', b('hen', 'blanche')],
-  ['ferme', 'poule_noire', 'Poule noire', b('hen', 'noire')], ['ferme', 'poule_grise', 'Poule grise', b('hen', 'grise')],
-  ['ferme', 'poussin', 'Poussin', b('chick')],
-  ['ferme', 'vache', 'Vache', q('cow')], ['ferme', 'vache_rousse', 'Vache rousse', q('cow', 'rousse')],
-  ['ferme', 'mouton', 'Mouton', q('sheep')], ['ferme', 'mouton_noir', 'Mouton noir', q('sheep', 'noir')],
-  ['ferme', 'cochon', 'Cochon', q('pig')], ['ferme', 'cochon_tachete', 'Cochon tacheté', q('pig', 'tachete')],
-  ['ferme', 'chevre', 'Chèvre', q('goat')], ['ferme', 'chevre_brune', 'Chèvre brune', q('goat', 'brune')],
-  ['ferme', 'chat', 'Chat', q('cat')], ['ferme', 'chien', 'Chien', q('dog')],
-  ['bois', 'cerf', 'Cerf', q('deer')], ['bois', 'renard', 'Renard', q('fox')], ['bois', 'lapin', 'Lapin', q('rabbit')],
-  ['bois', 'herisson', 'Hérisson', q('hedgehog')], ['bois', 'ecureuil', 'Écureuil', q('squirrel')], ['bois', 'loutre', 'Loutre', q('otter')],
-  ['eau', 'heron', 'Héron', b('heron')],
-  ['climat', 'renard_polaire', 'Renard polaire (cimes)', q('snowFox')], ['climat', 'bouquetin', 'Bouquetin (cimes)', q('ibex')],
-  ['climat', 'macareux', 'Macareux (landes)', b('puffin')], ['climat', 'poney', 'Poney (landes)', q('pony')],
-  ['climat', 'grenouille', 'Grenouille (marais)', q('frog')], ['climat', 'tortue', 'Tortue (marais)', q('tortoise')],
-  ['climat', 'fennec', 'Fennec (dunes)', q('fennec')], ['climat', 'chameau', 'Chameau (dunes)', q('camel')],
-  ['climat', 'cameleon', 'Caméléon (jungle)', q('chameleon')], ['climat', 'toucan', 'Toucan (jungle)', b('toucan')],
-  ['climat', 'salamandre', 'Salamandre (volcan)', q('salamander')], ['climat', 'corbeau', 'Corbeau (volcan)', b('crow')],
-  ['bestiaire', 'mesange', 'Mésange', b('bird')],
-  ['familiers', 'mousse', 'Mousse (renardeau de Sylve)', q('kit')],
-  ['mer', 'mouette', 'Mouette', b('gull')]
-];
 const GROUPS = { ferme: 'La ferme', bois: 'Les bois', eau: 'L\'eau douce', climat: 'Les bêtes des climats', bestiaire: 'Le Bestiaire', familiers: 'Les familiers', mer: 'La mer' };
 
 const index = {
