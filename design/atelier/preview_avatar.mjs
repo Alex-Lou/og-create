@@ -25,7 +25,9 @@ const PNG = path.join(DIR, 'planches');
 const grand = (body, s = 1) => `<svg xmlns="http://www.w3.org/2000/svg" width="${48 * s}" height="${64 * s}" viewBox="0 0 48 64">${body}</svg>`;
 const ac = (place, id, couleurs) => ({ [place]: couleurs ? { id, couleurs } : { id } });
 
-// Douze exemples, qui couvrent ensemble les formes, les nuanciers et des accessoires de chaque emplacement
+// Douze exemples, qui couvrent ensemble les formes, les nuanciers et des accessoires de chaque emplacement ; puis deux
+// en tenue de saison (l'hiver, la pluie), sur les planches seulement : le jeu prend chaque exemple de la bibliothèque
+// pour un avatar à choisir, avec sa tenue naufragée (src/game/sceneArt.js), et la mer prend les tenues de saison
 const EXEMPLES = [
   {},
   { taille: 'petite', silhouette: 'fine', coupe: 'deuxChignons', cheveux: 'bonbon', cils: 'recourbes', levres: 'rose', formeYeux: 'grands', haut: 'tshirt', couleurHaut: 'creme', bas: 'robe', couleurBas: 'framboise', chaussures: 'blanc', accessoires: { ...ac('joues', 'coeurs'), ...ac('cheveux', 'noeud', ['blanc']) } },
@@ -38,7 +40,11 @@ const EXEMPLES = [
   { coupe: 'carre', cheveux: 'chocolat', peau: 'doree', visage: 'ovale', formeYeux: 'amande', cils: 'recourbes', levres: 'framboise', haut: 'mariniere', couleurHaut: 'marine', bas: 'jupe', couleurBas: 'rouge', chaussures: 'noir', accessoires: { ...ac('visage', 'lunettesPapillon', ['noir']), ...ac('oreilles', 'puces') } },
   { taille: 'petite', coupe: 'bataille', cheveux: 'cuivre', peau: 'rosee', rousseur: 'oui', formeYeux: 'grands', bouche: 'malice', haut: 'sweat', couleurHaut: 'abricot', bas: 'short', couleurBas: 'charbon', accessoires: { ...ac('tete', 'oreillesChat', ['cuir']), ...ac('joues', 'pansement') } },
   { taille: 'grande', silhouette: 'fine', coupe: 'ondulee', cheveux: 'lilas', meches: 'pointes', couleurMeches: 'menthe', peau: 'bronze', yeux: 'violet', cils: 'legers', haut: 'chemise', couleurHaut: 'blanc', bas: 'robe', couleurBas: 'lavande', chaussures: 'creme', accessoires: { ...ac('dos', 'ailes', ['menthe']), ...ac('cheveux', 'barrettes', ['nacre']) } },
-  { silhouette: 'ronde', coupe: 'couronne', cheveux: 'roux', peau: 'porcelaine', rousseur: 'legere', yeux: 'vert', formeYeux: 'rieurs', haut: 'mariniere', couleurHaut: 'rouge', bas: 'salopette', couleurBas: 'jean', accessoires: { ...ac('main', 'peluche'), ...ac('cou', 'papillon', ['soleil']) } }
+  { silhouette: 'ronde', coupe: 'couronne', cheveux: 'roux', peau: 'porcelaine', rousseur: 'legere', yeux: 'vert', formeYeux: 'rieurs', haut: 'mariniere', couleurHaut: 'rouge', bas: 'salopette', couleurBas: 'jean', accessoires: { ...ac('main', 'peluche'), ...ac('cou', 'papillon', ['soleil']) } },
+  { coupe: 'deuxChignons', cheveux: 'chatain', peau: 'rosee', formeYeux: 'grands', haut: 'pull', couleurHaut: 'creme', bas: 'pantalon', couleurBas: 'jean',
+    accessoires: { ...ac('tete', 'bonnet', ['rouge']), ...ac('cou', 'echarpe'), ...ac('dessus', 'manteau'), ...ac('pieds', 'bottesFourrees'), ...ac('mains', 'moufles') } },
+  { taille: 'petite', coupe: 'couettes', cheveux: 'roux', rousseur: 'oui', yeux: 'vert', bouche: 'sourire', haut: 'mariniere', couleurHaut: 'marine', bas: 'short', couleurBas: 'jean',
+    accessoires: { ...ac('dessus', 'cire'), ...ac('pieds', 'bottesPluie') } }
 ];
 const nom = i => `avatar-${String(i + 1).padStart(2, '0')}`;
 
@@ -118,10 +124,13 @@ EXEMPLES.forEach((o, i) => {
   const key = nom(i);
   const c = avatar(o, { uid: `a${i}` });
   const n = avatarNaufrage(o, { uid: `a${i}` });
-  index.exemples[key] = {
-    nom: `Avatar, exemple ${i + 1}`, choix: verifier(o),
-    fichiers: { ...grandFormat(c, key, key, i === 0), ...grandFormat(n, `${key}-naufrage`, `${key}-naufrage`, false) }
-  };
+  const saison = Object.values(o.accessoires || {}).some(a => ACCESSOIRES[a.id].saison);
+  if (!saison) {
+    index.exemples[key] = {
+      nom: `Avatar, exemple ${i + 1}`, choix: verifier(o),
+      fichiers: { ...grandFormat(c, key, key, i === 0), ...grandFormat(n, `${key}-naufrage`, `${key}-naufrage`, false) }
+    };
+  }
   // en grand, pour juger les détails (2,3 fois le cadre de la troupe)
   const G = 2.3;
   cells.push(row(`Exemple ${i + 1}`, [
@@ -131,11 +140,11 @@ EXEMPLES.forEach((o, i) => {
     [grand(unique(dessin(c, 'front', 'tendre', 0)), G), 'mains tendues'], [grand(unique(`<g transform="translate(48 0) scale(-1 1)">${dessin(c, 'se', 'assis-tendre', 0)}</g>`), G), ''],
     [grand(unique(dessin(c, 'front', 'applaudir', 1)), G), 'applaudir'], [grand(unique(`<g transform="translate(48 0) scale(-1 1)">${dessin(c, 'se', 'assis-applaudir', 1)}</g>`), G), ''],
     [grand(unique(`<g transform="translate(48 0) scale(-1 1)">${dessin(c, 'se', 'pecher', 0)}</g>`), G), 'pêcher'], [grand(unique(dessin(c, 'front', 'piocher', 1)), G), 'piocher'], [grand(unique(dessin(c, 'front', 'cueillir', 0)), G), 'cueillir'], [grand(unique(dessin(c, 'ne', 'porter', 0)), G), 'porter'], [grand(unique(dessin(c, 'front', 'reparer', 1)), G), 'réparer'], [grand(unique(`<g transform="translate(48 0) scale(-1 1)">${dessin(c, 'se', 'repousser', 1)}</g>`), G), 'repousser'], [grand(unique(dessin(c, 'front', 'ecrire', 1)), G), 'écrire'],
-    [g(n, 'front', 'repos', 0, G), 'naufragé'], [g(n, 'se', 'marche', 1, G), '']
+    ...(saison ? [] : [[g(n, 'front', 'repos', 0, G), 'naufragé'], [g(n, 'se', 'marche', 1, G), '']])
   ]));
   const walk = cc => [0, 1, 2, 3].map(f => grand(unique(frame(cc, 'se', 'marche', f)), 2.4));
   anim[0][1].push({ label: `Exemple ${i + 1}`, frames: walk(c), timings: [170], w: 115, h: 154, mirror: true });
-  anim[1][1].push({ label: `Exemple ${i + 1}`, frames: walk(n), timings: [170], w: 115, h: 154, mirror: true });
+  if (!saison) anim[1][1].push({ label: `Exemple ${i + 1}`, frames: walk(n), timings: [170], w: 115, h: 154, mirror: true });
 });
 
 // Planche des choix : chaque rangée change un seul choix, à partir des réglages par défaut ; le visage en gros plan
@@ -175,10 +184,10 @@ const couleurs = [
 
 // Planche des accessoires : chacun de face, de trois quarts et de dos, avec sa rareté et sa source
 const accessoires = Object.entries(EMPLACEMENTS).map(([place, label]) => row(label, Object.entries(ACCESSOIRES).filter(([, a]) => a.emplacement === place).map(([id, a]) => {
-  const base = place === 'main' ? {} : { coupe: place === 'oreilles' ? 'queue' : 'courte' };
+  const base = place === 'main' ? {} : { coupe: place === 'oreilles' ? 'queue' : 'courte', ...(place === 'mains' ? { haut: 'pull' } : {}) };
   const c = avatar({ ...base, accessoires: { [place]: { id } } }, { uid: `x${id}` });
   const vues = [['front', 'repos', 0], ['se', 'marche', 1], ['ne', 'marche', 0]].map(([v, p, f]) => g(c, v, p, f, 1.25)).join('');
-  return [vues, `${a.nom}<br><i>${a.source === 'gratuit' ? 'gratuit' : `${RARETES[a.rarete]} · ${a.source}`}${a.garde ? '' : ' · perdu au naufrage'}</i>`];
+  return [vues, `${a.nom}<br><i>${a.source === 'gratuit' ? 'gratuit' : `${RARETES[a.rarete]} · ${a.source}`}${a.garde ? '' : ' · perdu au naufrage'}${a.saison ? ` · ${a.saison === 'hiver' ? 'l\'hiver' : 'sous la pluie'}` : ''}</i>`];
 })));
 
 write(path.join(LIB, 'avatar.json'), JSON.stringify(index, null, 1));
@@ -188,6 +197,6 @@ await shoot([
   [path.join(PNG, 'avatar_coiffures.png'), sheet('L\'avatar — les coiffures', 'Les 17 coupes de face, de trois quarts et de dos ; puis avec des pointes colorées (lilas et menthe) et des mèches (chocolat et blond), qui suivent le sens des cheveux.', coiffures), 1400],
   [path.join(PNG, 'avatar_couleurs.png'), sheet('L\'avatar — les nuanciers', 'Tous libres dès la création, sauf les teintures rares, qui se gagnent (boutique, coffres) et s\'ajoutent aux tissus et aux cheveux.', couleurs), 1400],
   [path.join(PNG, 'avatar_accessoires.png'), sheet('L\'avatar — les accessoires', 'Un par emplacement, chacun recolorable. Gratuit dès la création, ou à gagner pour toujours à la boutique ou dans les coffres (raretés des coffres du jeu).', accessoires), 1400],
-  [path.join(PNG, 'avatar_exemples.png'), sheet('L\'avatar — exemples', 'Douze avatars : les vues, le salut, les gestes du tutoriel (ramasser, grelotter, lire le Grimoire) et la version naufragée (la mer garde les chapeaux, les sacs et ce qu\'on tient).', cells), 1400]
+  [path.join(PNG, 'avatar_exemples.png'), sheet('L\'avatar — exemples', 'Quatorze avatars : les vues, le salut, les gestes du tutoriel (ramasser, grelotter, lire le Grimoire) et la version naufragée (la mer garde les chapeaux, les sacs et ce qu\'on tient) ; les deux derniers en tenue de saison, l\'hiver et sous la pluie (sur la planche seulement).', cells), 1400]
 ]);
 console.log('ok', count, 'SVG');

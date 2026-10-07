@@ -9,7 +9,7 @@
 const { OUT, P, E, L, limb, clip, expression, arm, shoe, r2 } = require('./troupe');
 const choix = require('./avatar_choix');
 const { verifier, couleur, couleursAccessoire, tone, mix, hsl, clarte } = choix;
-const { couche } = require('./avatar_accessoires');
+const { couche, PORTE } = require('./avatar_accessoires');
 
 // ---- le corps : taille et corpulence ----
 // Taille : le haut du corps monte ou descend, les pieds restent au sol (les jambes s'allongent ou raccourcissent)
@@ -570,7 +570,8 @@ function body(c, ctx) {
     s += clip(`${c.uid}rb`, T, P(d, c.bas) + `<rect x="${se ? 25.4 : 27.2}" y="36" width="14" height="12" fill="${c.basS}" opacity="0.7"/>`) + P(T, 'none')
       + bretelles(c, view, o, false);
   }
-  return s;
+  // 5. par-dessus tout le reste : le manteau ou le ciré
+  return s + couche(c, 'dessus', ctx);
 }
 // Bretelles de la salopette (avec la bavette) ou de la robe ; de dos, elles se croisent
 function bretelles(c, view, o, bavette) {
@@ -594,8 +595,9 @@ function neck(c, ctx) {
   const { view } = ctx;
   const o = view === 'se' ? 21.6 : 24;
   let s = '';
-  // la capuche du sweat, roulée autour du cou, et ses deux cordons (rentrés sous la robe ou la bavette)
-  if (c.o.haut === 'sweat' && c.o.bas !== 'robeEntiere' && view !== 'ne') {
+  // la capuche du sweat, roulée autour du cou, et ses deux cordons (rentrés sous la robe ou la bavette ; sous un manteau,
+  // on ne la voit pas)
+  if (c.o.haut === 'sweat' && c.o.bas !== 'robeEntiere' && view !== 'ne' && !c.o.accessoires.dessus) {
     const dessous = c.o.bas === 'robe' || c.o.bas === 'salopette';
     s += P(`M${o - 6.4},31 Q${o},35.6 ${o + 6.4},31 L${o + 8.2},32.6 Q${o},39 ${o - 8.2},32.6 Z`, c.topS, 0.9);
     if (!dessous) s += [-1.8, 1.8].map(d => L([o + d, 35.2], [o + d * 1.2, 40], OUT, 1.5) + L([o + d, 35.2], [o + d * 1.2, 40], c.tee, 0.6) + E(o + d * 1.2, 40.3, 0.6, 0.6, c.tee, 0.5)).join('');
@@ -676,7 +678,7 @@ function avatar(choixAvatar = {}, opts = {}) {
     sleeves: robe || o.haut === 'tshirt' || mar ? 'roll' : undefined, sleeveCut: mar ? 4.4 : 6.4,
     leg: nues ? skin : bas, legS: nues ? tone(skin, 0.88) : tone(bas, 0.78), legW: nues ? k.legW - 0.9 : k.legW,
     hip: r2(44.5 + dy), ground: 56.5,
-    skirtHem: r2(44.5 + legLen * 0.6), robeHem: r2(44.5 + legLen * 0.66), shortLen: r2(legLen * 0.64),
+    skirtHem: r2(44.5 + legLen * 0.6), robeHem: r2(44.5 + legLen * 0.66), shortLen: r2(legLen * 0.64), coatHem: r2(44.5 + legLen * 0.45),
     shoe: shoeC, shoeS: tone(shoeC, 0.72), shoeH: tone(shoeC, 1.25),
     legX: { front: [20.5 - sp, 27.5 + sp], se: [20 - sp, 27.6 + sp], ne: [21 - sp, 28 + sp] },
     shoulders: [[24 - (k.sw - 0.5), 34 + dy], [24 + (k.sw - 0.5), 34 + dy]],
@@ -686,6 +688,10 @@ function avatar(choixAvatar = {}, opts = {}) {
     body: up(body, dy), neck: up(neck, dy), head: up(head, dy), pose
   };
   if (o.bas === 'short') c.foot = (cc, x, y, dir, tilt) => shortLeg(cc, x) + shoe(cc, x, y, dir, tilt);
+  // les tenues de saison : les manches du manteau ou du ciré, puis les moufles (leur revers passe sur la manche) ;
+  // les bottes à la place des chaussures, sur le bas de la jambe (sous le short)
+  for (const place of ['dessus', 'mains']) { const a = o.accessoires[place]; if (a && PORTE[a.id]) Object.assign(c, PORTE[a.id](acc[place], c)); }
+  if (o.accessoires.pieds) c.foot = (cc, x, y, dir, tilt) => (o.bas === 'short' ? shortLeg(cc, x) : '') + couche(cc, 'pieds', {}, [x, y, dir, tilt]);
   // ce qu'on tient à la main (la main est déjà à sa place : pas de décalage de taille)
   if (o.accessoires.main) c.hold = (cc, hand, ctx) => couche(cc, 'main', ctx, hand);
   return c;

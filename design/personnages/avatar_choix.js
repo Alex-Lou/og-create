@@ -118,11 +118,14 @@ const FORMES = {
 
 // ---- les accessoires : un par emplacement ----
 const EMPLACEMENTS = {
-  tete: 'Tête', cheveux: 'Dans les cheveux', visage: 'Lunettes', joues: 'Sur les joues', oreilles: 'Oreilles', cou: 'Cou', dos: 'Dos', main: 'À la main'
+  tete: 'Tête', cheveux: 'Dans les cheveux', visage: 'Lunettes', joues: 'Sur les joues', oreilles: 'Oreilles', cou: 'Cou', dos: 'Dos', main: 'À la main',
+  dessus: 'Par-dessus', pieds: 'Aux pieds', mains: 'Aux mains'
 };
-// a : [nom, emplacement, zones de couleur (« tissu » ou « metal »), couleurs par défaut, rareté, source, garde (naufragé)]
+// a : [nom, emplacement, zones de couleur (« tissu » ou « metal »), couleurs par défaut, rareté, source, garde (naufragé),
+// saison (facultatif)]
 // garde : ce que la mer laisse au naufragé (les chapeaux, les sacs et ce qu'on tient sont perdus, le maquillage part)
-const A = (nom, emplacement, zones, defaut, rarete, source, garde) => ({ nom, emplacement, zones, defaut, rarete, source, garde });
+// saison : une tenue de saison (« hiver » ou « pluie »), qu'on met par-dessus sa tenue ; elle ne se tire pas au hasard
+const A = (nom, emplacement, zones, defaut, rarete, source, garde, saison) => ({ nom, emplacement, zones, defaut, rarete, source, garde, ...(saison ? { saison } : {}) });
 const ACCESSOIRES = {
   bonnet: A('Bonnet', 'tete', ['tissu'], ['marine'], 'commun', 'gratuit', false),
   paille: A('Chapeau de paille', 'tete', ['tissu'], ['rouge'], 'commun', 'gratuit', false),
@@ -159,7 +162,13 @@ const ACCESSOIRES = {
   ailes: A('Ailes en tissu', 'dos', ['tissu'], ['lavande'], 'epique', 'coffre', false),
   peluche: A('Peluche', 'main', ['tissu'], ['caramel'], 'rare', 'boutique', false),
   panier: A('Panier fleuri', 'main', ['tissu'], ['rose'], 'commun', 'boutique', false),
-  ombrelle: A('Ombrelle', 'main', ['tissu'], ['rosepale'], 'epique', 'coffre', false)
+  ombrelle: A('Ombrelle', 'main', ['tissu'], ['rosepale'], 'epique', 'coffre', false),
+  // les tenues de saison (la mer les prend : elles servent sur l'île, une fois la saison venue)
+  manteau: A('Manteau d\'hiver', 'dessus', ['tissu', 'tissu'], ['marine', 'creme'], 'commun', 'gratuit', false, 'hiver'),
+  cire: A('Ciré', 'dessus', ['tissu'], ['soleil'], 'commun', 'gratuit', false, 'pluie'),
+  bottesPluie: A('Bottes de pluie', 'pieds', ['tissu'], ['rouge'], 'commun', 'gratuit', false, 'pluie'),
+  bottesFourrees: A('Bottes fourrées', 'pieds', ['tissu', 'tissu'], ['caramel', 'creme'], 'commun', 'gratuit', false, 'hiver'),
+  moufles: A('Moufles', 'mains', ['tissu', 'tissu'], ['rouge', 'creme'], 'commun', 'gratuit', false, 'hiver')
 };
 
 // ---- les choix ----
@@ -237,7 +246,7 @@ function auHasard(n, { gratuit = true } = {}) {
     couleurMeches: un(cles(NUANCIERS.cheveux)), haut, couleurHaut, bas, couleurBas, chaussures: un(['cuir', 'caramel', 'noir', 'blanc', 'creme', 'rouge', 'jean', 'rose']),
     accessoires: {}
   };
-  const permis = Object.entries(ACCESSOIRES).filter(([, a]) => !gratuit || a.source === 'gratuit');
+  const permis = Object.entries(ACCESSOIRES).filter(([, a]) => !a.saison && (!gratuit || a.source === 'gratuit'));
   const nb = Math.floor(r() * 3);
   for (let i = 0; i < nb; i++) {
     const [id, a] = un(permis);

@@ -726,7 +726,10 @@
   "oreilles": "Oreilles",
   "cou": "Cou",
   "dos": "Dos",
-  "main": "À la main"
+  "main": "À la main",
+  "dessus": "Par-dessus",
+  "pieds": "Aux pieds",
+  "mains": "Aux mains"
  },
  "accessoires": {
   "bonnet": {
@@ -1198,6 +1201,82 @@
    "rarete": "epique",
    "source": "coffre",
    "garde": false
+  },
+  "manteau": {
+   "nom": "Manteau d'hiver",
+   "emplacement": "dessus",
+   "zones": [
+    "tissu",
+    "tissu"
+   ],
+   "defaut": [
+    "marine",
+    "creme"
+   ],
+   "rarete": "commun",
+   "source": "gratuit",
+   "garde": false,
+   "saison": "hiver"
+  },
+  "cire": {
+   "nom": "Ciré",
+   "emplacement": "dessus",
+   "zones": [
+    "tissu"
+   ],
+   "defaut": [
+    "soleil"
+   ],
+   "rarete": "commun",
+   "source": "gratuit",
+   "garde": false,
+   "saison": "pluie"
+  },
+  "bottesPluie": {
+   "nom": "Bottes de pluie",
+   "emplacement": "pieds",
+   "zones": [
+    "tissu"
+   ],
+   "defaut": [
+    "rouge"
+   ],
+   "rarete": "commun",
+   "source": "gratuit",
+   "garde": false,
+   "saison": "pluie"
+  },
+  "bottesFourrees": {
+   "nom": "Bottes fourrées",
+   "emplacement": "pieds",
+   "zones": [
+    "tissu",
+    "tissu"
+   ],
+   "defaut": [
+    "caramel",
+    "creme"
+   ],
+   "rarete": "commun",
+   "source": "gratuit",
+   "garde": false,
+   "saison": "hiver"
+  },
+  "moufles": {
+   "nom": "Moufles",
+   "emplacement": "mains",
+   "zones": [
+    "tissu",
+    "tissu"
+   ],
+   "defaut": [
+    "rouge",
+    "creme"
+   ],
+   "rarete": "commun",
+   "source": "gratuit",
+   "garde": false,
+   "saison": "hiver"
   }
  },
  "defaut": {
