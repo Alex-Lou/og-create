@@ -8,6 +8,7 @@ import {
   pebble, doorLeft, windowRight, planksLeft, planksRight, roundTree,
   WHITE_STONE, WHITE_WOOD, ROCKS, FOLIAGE, SAILS, roofOf, roofTexture, stoneCourses, seasonDots, crystals, rockBox, stoneRing, pool, cove, soilBed, furrow, leafPair
 } from './palette.js';
+import { courseLeft, courseRight } from './tiers/kit.js';
 
 const f2 = n => Math.round(n * 100) / 100;
 const ln = (a, b, color, w = 1.2) => `<line x1="${f2(a[0])}" y1="${f2(a[1])}" x2="${f2(b[0])}" y2="${f2(b[1])}" stroke="${color}" stroke-width="${w}" stroke-linecap="round"/>`;
@@ -274,6 +275,30 @@ export function goldenSign(u, v, z) {
     + `<path d="M${x - 16},${y + 5} h12 v9 q-6,5 -12,0 Z" fill="#F2C04B" stroke="#8A6A22" stroke-width="1"/>`
     + `<path d="M${x - 13},${y + 8} l3,3 l4,-4" stroke="#8A6A22" stroke-width="1.2" fill="none"/>`;
 }
+// Bardeaux de bois sur le pan avant d'un toit à deux pans (même géométrie que gable) : rangs, joints décalés, reflet
+function shingles(u0, v0, u1, v1, z, h, o = 0.08) {
+  const vm = (v0 + v1) / 2, a = u0 - o, b = u1 + o, ve = v1 + o;
+  const at = (u, k) => P(u, vm + (ve - vm) * k, z + h * (1 - k)).map(f2).join(',');
+  return [0.2, 0.4, 0.6, 0.8].map((k, r) => {
+    let out = `<polyline points="${at(a, k)} ${at(b, k)}" stroke="rgba(60,35,20,.45)" stroke-width="0.8"/>`
+      + `<polyline points="${at(a, k - 0.16)} ${at(b, k - 0.16)}" stroke="rgba(255,235,210,.2)" stroke-width="0.6"/>`;
+    for (let u = a + (r % 2 ? 0.07 : 0.14); u < b - 0.03; u += 0.14) out += `<polyline points="${at(u, k - 0.2)} ${at(u, k)}" stroke="rgba(60,35,20,.35)" stroke-width="0.6"/>`;
+    return out;
+  }).join('');
+}
+// Enclume de fer sur son billot à cernes en (u, v) : pied, taille, table, bigorne pointée vers +u
+function anvil(u, v) {
+  const [tx, ty] = P(u, v, 8);
+  const [hx, hy] = P(u + 0.11, v, 14.5);
+  return shadow(u, v, 0.2, 0.2)
+    + cylinder(u, v, 0, 8, 0.1, { top: '#E7C08A', left: WOOD.left, right: WOOD.right }, 'blockg')
+    + `<ellipse cx="${f2(tx)}" cy="${f2(ty)}" rx="3.4" ry="1.7" fill="none" stroke="#B98552" stroke-width="0.6"/>`
+    + box(u - 0.07, v - 0.04, u + 0.05, v + 0.04, 8, 10, IRON_C) + box(u - 0.04, v - 0.025, u + 0.02, v + 0.025, 10, 12, IRON_C)
+    + box(u - 0.1, v - 0.05, u + 0.07, v + 0.05, 12, 15, IRON_C)
+    + `<path d="M${P(u + 0.07, v - 0.05, 15).map(f2).join(',')} L${f2(hx + 6)},${f2(hy + 1.6)} L${P(u + 0.07, v + 0.05, 12).map(f2).join(',')} L${P(u + 0.07, v + 0.05, 15).map(f2).join(',')} Z" fill="${IRON_C.right}" stroke="#3C2819" stroke-width="0.6" stroke-linejoin="round"/>`
+    + `<polyline points="${P(u - 0.09, v + 0.045, 15).map(f2).join(',')} ${P(u + 0.06, v + 0.045, 15).map(f2).join(',')}" stroke="#DDE4EA" stroke-width="0.8"/>`;
+}
+const IRON_C = { top: '#9AA6B2', left: '#7C8894', right: '#5F6A75' };
 function workshop(skin) {
   const u0 = -0.8, u1 = 0.15, v0 = -0.55, v1 = 0.45, h = 28;
   const roof = roofOf(skin, { front: '#8E6A4A', back: '#6F5038' });
@@ -283,18 +308,16 @@ function workshop(skin) {
     + planksLeft(u0, u1, v1, 0, h) + planksRight(u1, v0, v1, 0, h)
     + doorLeft(-0.55, -0.15, v1, 19, WOOD_DARK.right)
     + gable(u0, v0, u1, v1, h, 18, { front: roof.front, back: roof.back, gable: WOOD.right }, 0.1)
-    + roofTexture(skin, u0, v0, u1, v1, h, 18, 0.1)
+    + (roofTexture(skin, u0, v0, u1, v1, h, 18, 0.1) || shingles(u0, v0, u1, v1, h, 18, 0.1))
     + (skin === 'enseigne-doree' ? goldenSign(0.05, v1, 24) : '')
-    // Four : socle de briques, voûte en pyramide, bouche rougeoyante, cheminée
-    + box(0.25, -0.4, 0.85, 0.3, 0, 18, BRICK)
+    // Four : socle de briques à assises, voûte en pyramide, bouche rougeoyante, cheminée
+    + box(0.25, -0.4, 0.85, 0.3, 0, 18, BRICK) + courseLeft(0.25, 0.85, 0.3, 0, 18, 3, 'rgba(90,40,25,.32)') + courseRight(0.85, -0.4, 0.3, 0, 18, 3, 'rgba(70,30,20,.32)')
     + face([[0.85, -0.18, 2], [0.85, 0.08, 2], [0.85, 0.08, 11], [0.85, -0.18, 11]], '#3A1E14')
     + face([[0.85, -0.14, 3], [0.85, 0.04, 3], [0.85, 0.04, 7], [0.85, -0.14, 7]], '#F28A3A')
     + pyramid(0.25, -0.4, 0.85, 0.3, 18, 10, { back: BRICK.right, left: BRICK.left, right: BRICK.right }, 0.02)
     + cylinder(0.55, -0.05, 26, 44, 0.08, { top: '#5E3A2A', left: BRICK.left, right: BRICK.right }, 'kilng')
     // Enclume sur billot
-    + shadow(0.35, 0.65, 0.2, 0.2)
-    + cylinder(0.35, 0.65, 0, 8, 0.1, { top: '#E7C08A', left: WOOD.left, right: WOOD.right }, 'blockg')
-    + box(0.24, 0.6, 0.46, 0.7, 8, 13, { top: '#9AA6B2', left: '#7C8894', right: '#5F6A75' }),
+    + anvil(0.35, 0.65),
     BUILDING_BOX
   );
 }

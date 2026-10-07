@@ -7,6 +7,7 @@ import {
   WHITE_STONE, ROCKS, FOLIAGE, roofOf, roofTexture, stoneCourses, seasonDots, crystals, rockBox, stoneRing, pool, cove, soilBed, leafPair
 } from './palette.js';
 import { gardenFence, goldenSign } from './sprites.js';
+import { courseLeft, courseRight } from './tiers/kit.js';
 
 const COPPER = { top: '#F4B07A', left: '#D9844E', right: '#A85C31' };
 const SLATE = { front: '#9A88CF', back: '#6F5DA6' };
@@ -309,21 +310,22 @@ function forge(skin) {
   const sign = P(0.15, 0.5, 30);
   return sprite(
     shadow(0, 0, 1.15)
-    + box(u0, v0, u1, v1, 0, 22, STONE)
+    + box(u0, v0, u1, v1, 0, 22, STONE) + courseLeft(u0, u1, v1, 0, 22, 3) + courseRight(u1, v0, v1, 0, 22, 3)
     + doorLeft(-0.55, -0.15, v1, 17, WOOD_DARK.right)
     + box(u0, v0, u1, v1, 22, 40, WOOD) + planksLeft(u0, u1, v1, 22, 40) + planksRight(u1, v0, v1, 22, 40)
     + windowLeft(-0.6, -0.35, v1, 27, 36) + windowRight(u1, -0.3, -0.05, 27, 36)
     + gable(u0, v0, u1, v1, 40, 18, { front: roof.front, back: roof.back, gable: WOOD.right }, 0.1)
     + roofTexture(skin, u0, v0, u1, v1, 40, 18, 0.1)
     + (skin === 'enseigne-doree' ? goldenSign(-0.3, v1, 44) : '')
-    // Four agrandi et cheminée haute
-    + box(0.25, -0.45, 0.88, 0.3, 0, 22, BRICK)
+    // Four agrandi et cheminée haute, en briques à assises
+    + box(0.25, -0.45, 0.88, 0.3, 0, 22, BRICK) + courseLeft(0.25, 0.88, 0.3, 0, 22, 4, 'rgba(90,40,25,.32)') + courseRight(0.88, -0.45, 0.3, 0, 22, 4, 'rgba(70,30,20,.32)')
     + face([[0.88, -0.2, 2], [0.88, 0.1, 2], [0.88, 0.1, 13], [0.88, -0.2, 13]], '#3A1E14')
     + face([[0.88, -0.16, 3], [0.88, 0.06, 3], [0.88, 0.06, 8], [0.88, -0.16, 8]], '#F28A3A')
-    + box(0.45, -0.3, 0.65, -0.1, 22, 58, BRICK)
+    + box(0.45, -0.3, 0.65, -0.1, 22, 58, BRICK) + courseLeft(0.45, 0.65, -0.1, 22, 58, 6, 'rgba(90,40,25,.32)') + courseRight(0.65, -0.3, -0.1, 22, 58, 6, 'rgba(70,30,20,.32)')
     // Enseigne : marteau sur écu
     + line(sign, [sign[0] + 10, sign[1] + 5], WOOD_DARK.right, 1.6)
     + `<rect x="${sign[0] + 4}" y="${sign[1] + 6}" width="12" height="10" rx="2" fill="#F3D27A" stroke="#7A4E2C" stroke-width="0.8"/>`
+    + `<path d="M${sign[0] + 7},${sign[1] + 14} L${sign[0] + 12},${sign[1] + 9}" stroke="#7A4E2C" stroke-width="1.2" stroke-linecap="round"/><rect x="${sign[0] + 10.4}" y="${sign[1] + 7.2}" width="4.4" height="2.4" rx="0.5" fill="#5F6A75" transform="rotate(-45 ${sign[0] + 12.6} ${sign[1] + 8.4})"/>`
     + barrel(0.55, 0.6, 'fobar1') + barrel(0.32, 0.72, 'fobar2') + crate(-0.62, 0.72),
     BUILDING_BOX
   );
