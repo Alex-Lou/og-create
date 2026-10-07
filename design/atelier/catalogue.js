@@ -161,7 +161,7 @@ function moment(id, meta) {
   if (top === 'animaux') {
     if (b.startsWith('poule')) return 'tuto-2';
     if (a === 'ferme') return b === 'chat' || b === 'chien' ? 'evolutions' : 'acte-3';
-    if (a === 'familiers') return { tictac: 'tuto-2', 'bocal-vide': 'tuto-3', 'bocal-bulle': 'acte-1', mousse: 'acte-1' }[b] || 'partout';
+    if (a === 'familiers') return { tictac: 'tuto-2', 'amie-tictac': 'acte-4', 'bocal-vide': 'tuto-3', 'bocal-bulle': 'acte-1', mousse: 'acte-1' }[b] || 'partout';
     if (a === 'bois') return b === 'loutre' ? 'revelation' : 'partout';
     if (a === 'climat' || a === 'bestiaire') return 'acte-4';
     if (b === 'mouette' || b === 'crabe') return 'tuto-2';
@@ -244,8 +244,7 @@ const A_REVOIR = [
 const statut = id => { for (const [rx, note] of A_REVOIR) if (rx.test(id)) return { statut: 'a-revoir', note }; return { statut: 'ok' }; };
 
 const MANQUANTS = [
-  ['acte-1', 'L\'éclat du souvenir retrouvé (le sceau s\'allume, le maître se lève outil en main).'],
-  ['acte-4', 'L\'amie de Tic-Tac (quand on écrit Abeille).']
+  ['acte-1', 'L\'éclat du souvenir retrouvé (le sceau s\'allume, le maître se lève outil en main).']
 ];
 
 // --- 4. Le catalogue ---------------------------------------------------------------------------
@@ -269,7 +268,7 @@ const mot = w => MOTS[w] || w;
 const humain = s => s.split(/[-_ ]+/).filter(Boolean).map(mot).join(' ').replace(/^./, c => c.toUpperCase());
 // Les sujets qui méritent mieux que leur nom de fichier (familiers, bêtes de la mer, plantes du décor)
 const SUJETS = {
-  tictac: 'Tic-Tac, l\'abeille mécanique de Rivet', mousse: 'Mousse, le renardeau de Sylve', 'bocal-vide': 'Bocal d\'Ondin, vide',
+  tictac: 'Tic-Tac, l\'abeille mécanique de Rivet', 'amie-tictac': 'L\'amie de Tic-Tac, que Rivet lui fabrique', mousse: 'Mousse, le renardeau de Sylve', 'bocal-vide': 'Bocal d\'Ondin, vide',
   'bocal-bulle': 'Bocal d\'Ondin, Bulle revenu', macareux: 'Macareux (Bosco, le familier d\'Aster)', grenouille: 'Grenouille (Bouillon, le familier de Cannelle)',
   tortue: 'Tortue (Basalte, le familier de Galet)', 'papillon-lune': 'Papillon de nuit (Lunette, le familier de Mélisse)',
   'baleine-dos': 'Baleine, le dos', 'baleine-queue': 'Baleine, la queue', 'poisson-dorade': 'Dorade', 'poisson-sardine': 'Sardine',
