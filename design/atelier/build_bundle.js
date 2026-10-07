@@ -82,14 +82,19 @@ const PAGES = [['troupe_apercu.html', 'Les 7 maîtres'], ['vivants_apercu.html',
 for (const [f] of PAGES) fs.copyFileSync(path.join(__dirname, f), path.join(OUT, 'apercus', f));
 fs.copyFileSync(path.join(__dirname, 'bundle_README.md'), path.join(OUT, 'README.md'));
 
-// 3 bis. Le générateur d'avatar en un module ESM, pour le jeu (ce qu'il exporte : generateur.mjs). esbuild est celui
+// 3 bis. Les générateurs en modules ESM, pour le jeu et pour l'outil : d'abord l'avatar (ce qu'il exporte : generateur.mjs). esbuild est celui
 // qu'installe Vite ; verif_generateur.mjs compare le module aux sources. keepNames : assis.js nomme ses découpes
 // d'après le nom du geste, qu'esbuild renommerait
-esbuild.buildSync({
-  entryPoints: [path.join(__dirname, 'generateur.mjs')], bundle: true, format: 'esm', platform: 'browser', charset: 'utf8', keepNames: true,
-  absWorkingDir: path.join(__dirname, '..'), outfile: path.join(OUT, 'generateur', 'avatar.mjs'), logLevel: 'warning',
-  banner: { js: '// Assemblé par design/atelier/build_bundle.js à partir de design/atelier/generateur.mjs : ne pas modifier à la main.' }
-});
+// Puis un module par famille (generateur_<famille>.mjs → generateur/<famille>.mjs) : chaque fonction rend le SVG complet
+// du fichier de la bibliothèque ; verif_generateurs.mjs le vérifie, generer.mjs s'en sert en ligne de commande
+const GENERATEURS = [['generateur.mjs', 'avatar'], ['generateur_chantiers.mjs', 'chantiers']];
+for (const [source, famille] of GENERATEURS) {
+  esbuild.buildSync({
+    entryPoints: [path.join(__dirname, source)], bundle: true, format: 'esm', platform: 'browser', charset: 'utf8', keepNames: true,
+    absWorkingDir: path.join(__dirname, '..'), outfile: path.join(OUT, 'generateur', `${famille}.mjs`), logLevel: 'warning',
+    banner: { js: `// Assemblé par design/atelier/build_bundle.js à partir de design/atelier/${source} : ne pas modifier à la main.` }
+  });
+}
 
 // 4. La page : le catalogue, chapitre après chapitre ; un toucher (ou le survol) anime un dessin
 const esc = s => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/"/g, '&quot;');

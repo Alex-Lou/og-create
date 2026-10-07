@@ -34,6 +34,8 @@ troupe. Relancer ces scripts redonne la bibliothèque à l'octet près : c'est v
 | `gestes.js`, `preview_quotidien.mjs` | Le quotidien au grand format (lot L4) : lanterne, parapluie, valise, dormir couché ; toutes les poses du jeu pour les maîtres, leurs naufragés, 12 visiteurs et 8 nouveaux venus tirés du générateur de l'avatar |
 | `lot_m.js`, `preview_lot_m.mjs` | La suite du lot M : le bâtiment embrumé (calque par emprise, guérison, nuage, icône « Réparer »), la cage aux poules et l'œuf, le crabe de la Grève, les signes d'Anya |
 | `scenes6.js`, `preview_scenes6.mjs` | Les scènes plein écran du tutoriel v6 (lot J2, `HISTOIRE.md` § 9) : 27 scènes des étapes 0 à 12 dans le carré 400 × 400 du jeu, un fond et parfois un devant en petites boucles, la place de l'avatar du joueur notée dans l'index (le jeu l'y pose) |
+| `generateur_chantiers.mjs` | Le générateur des chantiers (le montage) : chaque fonction rend le SVG complet du fichier de la bibliothèque ; `preview_montage.mjs` écrit la bibliothèque avec elles, `build_bundle.js` en fait `generateur/chantiers.mjs` |
+| `generer.mjs`, `verif_generateurs.mjs` | L'outil du générateur en ligne de commande (lister, dessiner un fichier, toute une famille), avec les modules publiés ; la vérification qu'ils dessinent la bibliothèque à l'octet près |
 | `montage.mjs`, `preview_montage.mjs` | Le montage d'un bâtiment par étapes (les chantiers) : piquets, terrassement, fondations, charpente, murs, toit, en 2 × 2 et 3 × 3 cases ; le dévoilement ; l'échafaudage des évolutions (derrière, devant) |
 | `torche.js`, `preview_torche.mjs` | La torche de bois flotté (objet de la boutique, posé sur une case) : allumée, éteinte, son icône, sa lumière de nuit ; le même dessin sert le camp (`camp.mjs`) et la veillée (`scenes6.js`) |
 | `interface.js`, `preview_interface.mjs` | Les icônes de l'interface (32 × 32) : la barre du bas, l'écu, les ressources, les boutons de l'île, les fiches, les trouvailles des climats ; une planche en vraie taille sur trois fonds, et en situation |
@@ -73,6 +75,7 @@ node preview_torche.mjs              # la torche de bois flotté (objet de la bo
 node preview_montage.mjs             # le montage des bâtiments (les chantiers par étapes)
 for d in svg2/*/; do mkdir -p lib/personnages/maitres/$(basename $d) && cp $d*.svg lib/personnages/maitres/$(basename $d)/; done
 node build_bundle.js                 # assemble ../bibliotheque/
+node verif_generateurs.mjs           # les générateurs par famille dessinent la bibliothèque à l'octet près
 node clipcheck.js lib/decor/camp     # (facultatif) vérifie qu'aucun dessin ne dépasse de son cadre
 ```
 
