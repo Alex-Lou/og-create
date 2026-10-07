@@ -37,6 +37,7 @@ import CostList from '@/components/World/Sites/CostList/CostList.vue';
 import { roman } from '@/utils/roman';
 import { spriteUrl } from '@/world/spriteCache';
 import { annexThumb } from '@/world/annexSprites';
+import { annexArtThumb } from '@/world/decorArt';
 import { annexState, KIND_LABEL } from '@/world/annexes';
 
 // Onglet « Annexes » de la fiche d'un bâtiment : ses trois annexes, ce qu'elles font, ce qu'elles coûtent, et le bouton
@@ -64,7 +65,7 @@ export default {
     // Vignette : l'exemplaire suivant (ce qui y poussera), ou le premier si tout est posé
     artOf(annex) {
       const variant = annex.next && annex.max > 1 ? annex.built : 0;
-      return spriteUrl(`annex-thumb-${annex.id}-${variant}`, () => annexThumb(annex.id, variant));
+      return annexArtThumb(annex.id, variant) ?? spriteUrl(`annex-thumb-${annex.id}-${variant}`, () => annexThumb(annex.id, variant));
     }
   }
 };
