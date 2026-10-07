@@ -2,7 +2,7 @@
 // calques d'écran qui se répètent sans couture (tuiles) et bouclent (images), nuages, arc-en-ciel, éclair, soleil bas,
 // teintes des moments du jour, lumières, et icônes au trait de la troupe. Mêmes couleurs et densités que le jeu.
 // Les saisons : flocons, feuilles qui tombent, pétales, pollen, plein soleil, teinte de chaque saison, et le sol d'une
-// case iso (neige, neige fondante, givre, flaques).
+// case iso (neige, neige fondante, givre, flaques, eau gelée).
 const { OUT, P, E, L, r2 } = require('./troupe');
 
 const TAU = Math.PI * 2;
@@ -289,12 +289,47 @@ SPR.flaque_petite = { group: 'sol', frame: CASE, n: 1, draw: () => puddle(13, 5.
 SPR.flaque_grande = { group: 'sol', frame: CASE, n: 1, draw: () => puddle(24, 9.5) };
 SPR.flaque_pluie = { group: 'sol', frame: CASE, n: 4, ms: 220, draw: k => puddle(24, 9.5, k) };
 
+// Eau gelée : une case d'eau prise par la glace (lac, mare, rivière en hiver). La glace bleu pâle, plus sombre au
+// centre (l'eau dessous), des fissures blanches, un long reflet, des bulles prises dedans ; le bord est uni, deux
+// cases voisines se raccordent sans couture. Trois variantes (a, b, c) à alterner, et une glace poudrée de neige.
+const ICE = { clair: '#D8EEF7', mi: '#B6DCEC', fond: '#8EC3DB', fissure: 'rgba(255,255,255,.9)' };
+function ice(g, neige = false) {
+  let o = `<path d="${diamond()}" fill="${ICE.mi}"/>`;
+  // les fissures : une ligne brisée qui part d'un point et deux branches
+  const [[cx, cy]] = inCase(g, 1, 0.3);
+  const br = [0, 1, 2].map(b => { const a = hash(g, b + 9) * TAU, l = 9 + hash(g, b + 12) * 9; let d = `M${r2(cx)},${r2(cy)}`, x = cx, y = cy;
+    for (let i = 1; i <= 3; i++) { x += Math.cos(a + (hash(g, b * 5 + i) - 0.5) * 0.9) * l / 3; y += Math.sin(a + (hash(g, b * 5 + i) - 0.5) * 0.9) * l / 6; if (Math.abs(x) / 40 + Math.abs(y) / 20 > 0.8) break; d += ` L${r2(x)},${r2(y)}`; }
+    return d; }).join(' ');
+  o += line(br, 1.6, 'rgba(120,170,200,.45)') + line(br, 0.7, ICE.fissure);
+  // le reflet : deux traits obliques clairs, ailleurs d'une variante à l'autre
+  const [[rx0, ry0]] = inCase(g + 3, 1, 0.45);
+  o += line(`M${r2(rx0 - 5)},${r2(ry0 + 3)} L${r2(rx0 + 5)},${r2(ry0 - 3)} M${r2(rx0 - 1)},${r2(ry0 + 5)} L${r2(rx0 + 5)},${r2(ry0 + 1.4)}`, 1.3, 'rgba(255,255,255,.7)');
+  // des bulles prises dans la glace
+  o += inCase(g + 5, 3, 0.55).map(([x, y], i) => E(x, y, 0.9 + (i % 2) * 0.5, 0.6 + (i % 2) * 0.3, 'rgba(255,255,255,.7)', 0)).join('');
+  if (neige) o += inCase(g + 11, 4, 0.6).map(([x, y, i]) => { const rx = 4 + hash(g, i + 40) * 5; return E(x, y, rx, rx * 0.36, 'rgba(250,252,255,.92)', 0) + E(x - rx * 0.2, y - 0.4, rx * 0.5, rx * 0.16, '#FFFFFF', 0); }).join('')
+    + [[-26, 4], [14, -10], [28, 0]].map(([x, y]) => twinkleSoft(x, y, 1.3)).join('');
+  return o;
+}
+SPR.glace_a = { group: 'sol', frame: CASE, n: 1, draw: () => ice(91) };
+SPR.glace_b = { group: 'sol', frame: CASE, n: 1, draw: () => ice(92) };
+SPR.glace_c = { group: 'sol', frame: CASE, n: 1, draw: () => ice(93) };
+SPR.glace_neige = { group: 'sol', frame: CASE, n: 1, draw: () => ice(94, true) };
+// Flaque gelée : la flaque prise par la glace, ses fissures, un bord de givre
+SPR.flaque_gelee = { group: 'sol', frame: CASE, n: 1, draw: () => {
+  const rx = 24, ry = 9.5;
+  const d = `M${r2(-rx)},0 Q${r2(-rx * 0.9)},${r2(-ry * 1.05)} ${r2(-rx * 0.1)},${r2(-ry)} Q${r2(rx * 0.7)},${r2(-ry * 1.15)} ${r2(rx)},${r2(-ry * 0.1)} Q${r2(rx * 0.95)},${r2(ry * 0.95)} ${r2(rx * 0.1)},${r2(ry)} Q${r2(-rx * 0.8)},${r2(ry * 1.05)} ${r2(-rx)},0 Z`;
+  return `<path d="${d}" transform="scale(1.12 1.18)" fill="rgba(235,244,255,.7)"/><path d="${d}" fill="${ICE.mi}" stroke="rgba(110,150,175,.6)" stroke-width="0.8"/>`
+    + E(2, 1.5, rx * 0.6, ry * 0.5, ICE.fond, 0).replace('/>', ' opacity="0.5"/>')
+    + line('M-6,-2 L0,1 L7,-1.4 M0,1 L2,6 M-6,-2 L-12,1', 1.4, 'rgba(120,170,200,.45)') + line('M-6,-2 L0,1 L7,-1.4 M0,1 L2,6 M-6,-2 L-12,1', 0.6, ICE.fissure)
+    + line(`M${r2(-rx * 0.55)},${r2(-ry * 0.35)} L${r2(-rx * 0.2)},${r2(-ry * 0.62)}`, 1.2, 'rgba(255,255,255,.85)') + twinkleSoft(rx * 0.45, -ry * 0.3, 1.4);
+} };
+
 /* ================= Saisons : teinte de la scène, air, sol ================= */
 const SAISONS = {
   printemps: { nom: 'Printemps', teinte: 'rgba(255,214,226,.1)', air: ['petales', 'pollen'], sol: ['flaque_petite', 'flaque_grande', 'flaque_pluie'] },
   ete: { nom: 'Été', teinte: 'rgba(255,228,150,.12)', air: ['pollen'], ciel: ['plein_soleil'] },
   automne: { nom: 'Automne', teinte: 'rgba(226,142,72,.14)', air: ['feuilles'], sol: ['flaque_petite', 'flaque_grande', 'flaque_pluie'] },
-  hiver: { nom: 'Hiver', teinte: 'rgba(196,216,255,.18)', air: ['flocons'], sol: ['neige_sol_a', 'neige_sol_b', 'neige_sol_c', 'neige_fondante_a', 'neige_fondante_b', 'givre'] }
+  hiver: { nom: 'Hiver', teinte: 'rgba(196,216,255,.18)', air: ['flocons'], sol: ['neige_sol_a', 'neige_sol_b', 'neige_sol_c', 'neige_fondante_a', 'neige_fondante_b', 'givre', 'flaque_gelee'], eau: ['glace_a', 'glace_b', 'glace_c', 'glace_neige'] }
 };
 
 /* ================= Moments du jour (sky.js) : teinte de la scène (multiplier) et mer ================= */

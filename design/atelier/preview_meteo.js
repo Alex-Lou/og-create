@@ -39,7 +39,8 @@ for (const [id, t] of Object.entries(TILES)) {
 
 /* ---------- Sprites ---------- */
 const SPR_LABEL = { arc_en_ciel: 'Arc-en-ciel', eclair: 'Éclair', flash: 'Flash d\'orage (écran)', soleil_bas_matin: 'Soleil bas du matin (écran, screen)', soleil_bas_soir: 'Soleil bas du soir (écran, screen)', luciole: 'Luciole', halo_chaud: 'Halo chaud (fenêtres, feux)', ombre_nuage: 'Ombre de nuage', plein_soleil: 'Plein soleil d\'été (écran, screen)',
-  neige_sol_a: 'Neige au sol (a)', neige_sol_b: 'Neige au sol (b)', neige_sol_c: 'Neige au sol (c)', neige_fondante_a: 'Neige fondante (a)', neige_fondante_b: 'Neige fondante (b)', givre: 'Givre', flaque_petite: 'Petite flaque', flaque_grande: 'Grande flaque', flaque_pluie: 'Flaque sous la pluie' };
+  neige_sol_a: 'Neige au sol (a)', neige_sol_b: 'Neige au sol (b)', neige_sol_c: 'Neige au sol (c)', neige_fondante_a: 'Neige fondante (a)', neige_fondante_b: 'Neige fondante (b)', givre: 'Givre', flaque_petite: 'Petite flaque', flaque_grande: 'Grande flaque', flaque_pluie: 'Flaque sous la pluie',
+  glace_a: 'Eau gelée (a)', glace_b: 'Eau gelée (b)', glace_c: 'Eau gelée (c)', glace_neige: 'Eau gelée sous la neige', flaque_gelee: 'Flaque gelée' };
 const sprCells = { nuages: [], ciel: [], lumieres: [], sol: [] }, sprBoxes = [];
 for (const [id, s] of Object.entries(SPR)) {
   const frames = Array.from({ length: s.n }, (_, k) => s.draw(k));
@@ -89,7 +90,7 @@ index.saisons = Object.fromEntries(Object.entries(SAISONS).map(([id, c]) => {
   const air = c.air.map(a => TILES[a].draw(0)).join('');
   saisonCells.push([svgOf([0, 0, 256, 160], unique(`<rect width="256" height="160" fill="#7CC4E6"/><g transform="translate(48 30) scale(1)"><polygon points="80,30 140,58 80,86 20,58" fill="#9FD07A"/><polygon points="20,58 80,86 80,94 20,66" fill="#B07A45"/><polygon points="80,86 140,58 140,66 80,94" fill="#8A5A32"/><polygon points="64,40 84,50 84,66 64,56" fill="#F3E4C4"/><polygon points="84,50 96,44 96,60 84,66" fill="#D8C39B"/><polygon points="60,40 74,33 88,40 74,47" fill="#E06E52"/></g>`
     + `<rect width="256" height="160" fill="${c.teinte}"/>${c.ciel ? `<g style="mix-blend-mode:screen" transform="scale(0.4 0.4444)">${SPR[c.ciel[0]].draw(0)}</g>` : ''}<g>${air}</g>`), 256, 160), c.nom]);
-  return [id, { nom: c.nom, teinte: c.teinte, air: c.air.map(a => `saisons/${a}_*`), ...(c.sol ? { sol: c.sol.map(x => `sol/${x}`) } : {}), ...(c.ciel ? { ciel: c.ciel.map(x => `ciel/${x}`) } : {}), fichiers: [f] }];
+  return [id, { nom: c.nom, teinte: c.teinte, air: c.air.map(a => `saisons/${a}_*`), ...(c.sol ? { sol: c.sol.map(x => `sol/${x}`) } : {}), ...(c.eau ? { eau_gelee: c.eau.map(x => `sol/${x}`) } : {}), ...(c.ciel ? { ciel: c.ciel.map(x => `ciel/${x}`) } : {}), fichiers: [f] }];
 }));
 
 /* ---------- Icônes ---------- */
@@ -104,7 +105,7 @@ write(path.join(LIB, 'meteo.json'), JSON.stringify(index, null, 1));
 const shots = [
   [path.join(PNG, 'meteo_calques.png'), sheet('Météo — calques d\'écran', 'Tuiles sans couture (répétées 2 × 2 ici), images en boucle : temps de l\'île, air des climats, étoiles de la nuit.', [row('', tileCells)]), 1250],
   [path.join(PNG, 'meteo_ciel.png'), sheet('Météo — ciel, nuages et lumières', 'Nuages au trait adouci (4 couleurs : jour, doré, nuit, pluie), arc-en-ciel, éclair, flash, soleil bas, lucioles, halo.', [row('Nuages', sprCells.nuages), row('Ciel', sprCells.ciel), row('Lumières', sprCells.lumieres)]), 1250],
-  [path.join(PNG, 'meteo_saisons.png'), sheet('Météo — les saisons', 'La teinte de chaque saison sur l\'île témoin, son air par-dessus (et le plein soleil de l\'été) ; puis le sol des saisons, une case iso : neige (3 variantes), neige fondante (2), givre, flaques.', [row('Saisons', saisonCells), row('Sol', sprCells.sol)]), 1250],
+  [path.join(PNG, 'meteo_saisons.png'), sheet('Météo — les saisons', 'La teinte de chaque saison sur l\'île témoin, son air par-dessus (et le plein soleil de l\'été) ; puis le sol des saisons, une case iso : neige (3 variantes), neige fondante (2), givre, flaques ; l\'eau gelée (3 variantes et sous la neige) et la flaque gelée.', [row('Saisons', saisonCells), row('Sol', sprCells.sol)]), 1250],
   [path.join(PNG, 'meteo_moments.png'), sheet('Météo — les moments du jour', 'La mer du moment et une île témoin teintée en multiplication (teinte_*.svg). Heures relatives au lever et au coucher du soleil.', [row('', momentCells)]), 1250],
   [path.join(PNG, 'meteo_icones.png'), sheet('Météo — icônes', 'Au trait de la troupe, 48 × 48.', iconRows), 1100]
 ];

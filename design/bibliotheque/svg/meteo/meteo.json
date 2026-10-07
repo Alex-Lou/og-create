@@ -712,6 +712,71 @@
    ],
    "ancre": "centre (0, 0)",
    "ms_par_image": 220
+  },
+  "glace_a": {
+   "nom": "Eau gelée (a)",
+   "fichiers": [
+    "sol/glace_a.svg"
+   ],
+   "cadre": [
+    -40,
+    -20,
+    80,
+    40
+   ],
+   "ancre": "centre (0, 0)"
+  },
+  "glace_b": {
+   "nom": "Eau gelée (b)",
+   "fichiers": [
+    "sol/glace_b.svg"
+   ],
+   "cadre": [
+    -40,
+    -20,
+    80,
+    40
+   ],
+   "ancre": "centre (0, 0)"
+  },
+  "glace_c": {
+   "nom": "Eau gelée (c)",
+   "fichiers": [
+    "sol/glace_c.svg"
+   ],
+   "cadre": [
+    -40,
+    -20,
+    80,
+    40
+   ],
+   "ancre": "centre (0, 0)"
+  },
+  "glace_neige": {
+   "nom": "Eau gelée sous la neige",
+   "fichiers": [
+    "sol/glace_neige.svg"
+   ],
+   "cadre": [
+    -40,
+    -20,
+    80,
+    40
+   ],
+   "ancre": "centre (0, 0)"
+  },
+  "flaque_gelee": {
+   "nom": "Flaque gelée",
+   "fichiers": [
+    "sol/flaque_gelee.svg"
+   ],
+   "cadre": [
+    -40,
+    -20,
+    80,
+    40
+   ],
+   "ancre": "centre (0, 0)"
   }
  },
  "moments": {
@@ -1054,7 +1119,14 @@
     "sol/neige_sol_c",
     "sol/neige_fondante_a",
     "sol/neige_fondante_b",
-    "sol/givre"
+    "sol/givre",
+    "sol/flaque_gelee"
+   ],
+   "eau_gelee": [
+    "sol/glace_a",
+    "sol/glace_b",
+    "sol/glace_c",
+    "sol/glace_neige"
    ],
    "fichiers": [
     "saisons/teinte_hiver.svg"
