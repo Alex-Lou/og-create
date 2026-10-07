@@ -21,6 +21,7 @@ function assis(c, view, n, expr, geste) {
   const cc = { ...c, uid: id, view };
   const ctx = { view, pose: 'repos', n, ph: 0, id, walk: false, expr: expr || 'neutre', eyeMode: null, open: false, blink: !geste && n === 1 };
   const dy = dyOf(c);
+  ctx.seatDy = dy; // de combien le corps descend (naufrage.js y tient les lambeaux dans le cadre)
   const knee = KNEE;
   const dir = view === 'se' ? -1 : view === 'ne' ? 1 : 0;
   const up = s => (s ? `<g transform="translate(0 ${dy})">${s}</g>` : '');

@@ -82,8 +82,10 @@ const G = {
       const pre = () => { const n = 16, rx = 25, ry = 6.4, pts = Array.from({ length: n }, (_, i) => { const t = (i / n) * TAU, r = 1 + (i % 2 ? 0.05 : -0.03); return [Math.cos(t) * rx * r, 0.4 + Math.sin(t) * ry * r]; }); const m = i => { const p = pts[i % n], q = pts[(i + 1) % n]; return `${r2((p[0] + q[0]) / 2)},${r2((p[1] + q[1]) / 2)}`; }; let d = `M${m(n - 1)}`; for (let i = 0; i < n; i++) d += ` Q${r2(pts[i][0])},${r2(pts[i][1])} ${m(i)}`; return P(d + ' Z', '#9CC874', W) + E(-3, 0.2, 18, 4, '#AED486', 0); };
       const brebis = (x, y, laineux, broute, flip = false) => {
         const s = flip ? -1 : 1, Lc = laineux ? '#F7F2E6' : '#EFDCCF', LS = laineux ? '#E2D8C4' : '#DCC4B6';
-        let o = shade(x, y + 1.4, 8.6, 2.2) + E(x - s * 7.4, y - 6, 1.7, 1.6, Lc, W * 0.8)
-          + [-4.4, -1.8, 2, 4.6].map((dx, i) => line(`M${r2(x + s * dx)},${r2(y - 2.6)} L${r2(x + s * dx)},${r2(y + 1.2)}`, 1.8, OUT) + line(`M${r2(x + s * dx)},${r2(y - 2.6)} L${r2(x + s * dx)},${r2(y + 0.8)}`, 1, i % 2 ? '#4A3E36' : '#3D342E')).join('');
+        let o = shade(x, y + 1.4, 8.6, 2.2)
+          + [-4.4, -1.8, 2, 4.6].map((dx, i) => line(`M${r2(x + s * dx)},${r2(y - 2.6)} L${r2(x + s * dx)},${r2(y + 1.2)}`, 1.8, OUT) + line(`M${r2(x + s * dx)},${r2(y - 2.6)} L${r2(x + s * dx)},${r2(y + 0.8)}`, 1, i % 2 ? '#5E5660' : '#463F48')).join('');
+        // chibi : la laine et la tête descendent un peu, les pattes paraissent plus courtes
+        o += '<g transform="translate(0 1.1)">' + E(x - s * 7.4, y - 6, 1.7, 1.6, Lc, W * 0.8);
         if (laineux) {
           const B = [[-6, -6.4, 3.1], [-3.4, -9.2, 3.3], [0.4, -9.8, 3.5], [4, -8.8, 3.2], [6.2, -6.2, 2.9], [3.4, -4.6, 3.3], [-1, -4.4, 3.5], [-5, -4.6, 2.9]];
           o += B.map(([dx, dy, r]) => E(x + s * dx, y + dy, r + W, r + W, OUT, 0)).join('') + B.map(([dx, dy, r]) => E(x + s * dx, y + dy, r, r, Lc, 0)).join('')
@@ -93,11 +95,15 @@ const G = {
           o += P(`M${r2(x - 6.8)},${r2(y - 4)} Q${r2(x - 7.2)},${r2(y - 8.6)} ${r2(x - 2)},${r2(y - 8.8)} L${r2(x + 3)},${r2(y - 9)} Q${r2(x + 7.4)},${r2(y - 8.6)} ${r2(x + 6.8)},${r2(y - 4)} Q${r2(x + 6)},${r2(y - 1.6)} ${x},${r2(y - 1.8)} Q${r2(x - 6.2)},${r2(y - 1.6)} ${r2(x - 6.8)},${r2(y - 4)} Z`, Lc, W)
             + [[-3.6, -6.8], [0.4, -7.4], [3.8, -6.6], [-1.6, -4.4], [2.4, -4.2]].map(([dx, dy]) => E(x + s * dx, y + dy, 0.9, 0.7, '#F8EAE0', 0)).join('') + E(x + s, y - 2.8, 5.2, 0.9, LS, 0);
         }
-        const hx = x + s * 8.6, hy = y - 7 + (broute ? 4.4 : 0);
-        return o + E(hx - s * 2, hy - 1.2, 1.9, 0.9, '#3D342E', 0.6) + E(hx, hy, 2.9, 2.3, '#3D342E', W) + E(hx + s * 1.3, hy + 0.7, 1.3, 0.95, '#6B5A50', 0)
-          + E(hx + s * 0.3, hy - 0.8, 0.75, 0.75, '#FFFFFF', 0) + E(hx + s * 0.45, hy - 0.8, 0.38, 0.38, '#1E1814', 0) + E(hx + s * 1.9, hy - 1.7, 1.3, 0.6, '#3D342E', 0.5)
-          + (laineux ? E(hx - s * 0.6, hy - 2.2, 1.9, 1.2, Lc, 0.6) : '')
-          + (broute ? line(`M${r2(hx + s * 1.6)},${r2(hy + 3.2)} l${-s * 0.6},-2.6 M${r2(hx + s * 2.6)},${r2(hy + 3.2)} l${s * 0.6},-2.2`, 0.8, '#5F8F3C') : '');
+        // chibi, comme le mouton de la ferme : grosse tête ronde gris prune, oreilles au creux rosé, museau, l'œil de la
+        // troupe (ovale sombre, deux reflets), une joue, la touffe de laine sur le front
+        const F = '#5E5660', hx = x + s * 8, hy = y - 7.6 + (broute ? 4.4 : 0), ex = hx + s * 0.6, ey = hy - 0.7;
+        return o + E(hx - s * 2.6, hy - 1.4, 2.1, 1, F, 0.6) + E(hx - s * 2.9, hy - 1.4, 1.1, 0.45, '#8A7A80', 0) + E(hx, hy, 3.7, 3.4, F, W)
+          + E(hx - s * 0.9, hy - 1.2, 1.6, 1, '#7A7280', 0) + E(hx + s * 1.6, hy + 1.2, 1.8, 1.35, '#4E4650', 0)
+          + E(ex, ey, 0.86, 1.12, '#2A2420', 0) + E(ex + s * 0.3, ey - 0.44, 0.38, 0.38, '#FFFFFF', 0) + E(ex - s * 0.3, ey + 0.5, 0.17, 0.17, '#FFFFFF', 0)
+          + E(hx + s * 0.1, hy + 1.3, 0.9, 0.45, '#F7A8B0', 0)
+          + (laineux ? E(hx - s * 0.8, hy - 2.9, 2.2, 1.4, Lc, 0.6) : '')
+          + (broute ? line(`M${r2(hx + s * 1.8)},${r2(hy + 3.9)} l${-s * 0.6},-2.6 M${r2(hx + s * 2.8)},${r2(hy + 3.9)} l${s * 0.6},-2.2`, 0.8, '#5F8F3C') : '') + '</g>';
       };
       const deco = tuft(-23, 3) + tuft(19, 4.6) + tuft(-4, 5.6) + flower(-17, 4.6, 1.1, '#FFFFFF') + flower(21, 0.6, 1.1, '#F7B6C8') + flower(12, 5.6, 1, '#FFFFFF');
       if (spent) return pre() + deco + [[-20, 0], [-2, 5], [16, -1], [0, -4]].map(([x, y]) => E(x, y, 1.6, 1.1, '#F7F2E6', 0.6) + E(x + 1.2, y - 0.4, 1, 0.8, '#F7F2E6', 0.5)).join('') + brebis(-11, -2, false, 1) + brebis(6, 4, false, 0);
@@ -145,7 +151,8 @@ const G = {
         + E(x + 0.7 * s, y + 1.1 * s, 1.2 * s, 0.9 * s, i % 3 ? '#F2924A' : '#EE7A5A', 0) + E(x - 0.8 * s, y - 0.9 * s, 0.45 * s, 0.7 * s, '#FFF6D0', 0)
         + line(`M${r2(x)},${r2(y - 2.3 * s)} q0.3,-1.4 1,-2`, 0.9, OUT);
       const fruits = spent ? '' : [[-20, -38], [-11, -45], [-25, -45], [-5, -36], [3, -51], [10, -39], [18, -35], [21, -43], [-2, -59], [12, -56]].map(([x, y], i) => mangue(x, y, 1.15, i)).join('');
-      return `<g transform="rotate(${spent ? 0 : f ? 1.2 : -1.2}) scale(${r2(0.87 / K)})">${arbre({ vert: 'profond', petit: true })}${fruits}</g>`;
+      // 0,86 : la couronne reste dans le cadre du jeu (à 0,87, son trait touchait le haut)
+      return `<g transform="rotate(${spent ? 0 : f ? 1.2 : -1.2}) scale(${r2(0.86 / K)})">${arbre({ vert: 'profond', petit: true })}${fruits}</g>`;
     }
   },
   // Éclats d'obsidienne : une plaque de cendre aux bords bosselés et ses fentes de braise ; des lames noires à facettes au
@@ -384,7 +391,7 @@ M.voilier = { frame: BUILDING_BOX, n: 1, variants: Object.keys(SAILS), draw: (_,
 // Bouteille échouée qui flotte : un vrai goulot, verre vert translucide où l'on voit le message roulé, son ruban rouge
 // et son cachet ; l'eau monte dans le bas du verre, des ronds autour ; image 2 : penchée par la vague, un éclat
 M.bouteille = { frame: [-16, -28, 32, 32], n: 2, draw: f => {
-  const a = f ? -14 : -6, id = `bouteille-verre-${f}`, rx = f ? 13.4 : 12.4;
+  const a = f ? -14 : -6, id = `bouteille-verre-${f}`, rx = f ? 12.6 : 11.8; // l'écume reste dans le cadre
   const body = 'M-9,-5 L4,-5 Q7.4,-5 8.6,-2.1 L12,-2.1 L12,2.1 L8.6,2.1 Q7.4,5 4,5 L-9,5 Q-12.4,5 -12.4,0 Q-12.4,-5 -9,-5 Z';
   return E(0, 0.8, 14, 2.6, 'rgba(30,60,80,.22)', 0)
     + line(`M${-rx},0 A${rx},2.4 0 0 1 ${rx},0`, 0.7, 'rgba(255,255,255,.45)')

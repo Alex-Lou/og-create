@@ -167,4 +167,319 @@ function applaudir({ view, n }) {
 // Debout : frame(avecApplaudir(c), vue, 'action', n) ; assis : assis(c, vue, n, null, applaudir)
 const avecApplaudir = c => ({ ...c, uid: `${c.uid}ap`, pose: applaudir });
 
-module.exports = { lanterne, parapluie, valise, avecLanterne, avecParapluie, avecValise, couche, CADRE_PARAPLUIE, CADRE_COUCHE, ZEDS, paume, tranche, tendre, avecMainsTendues, applaudir, avecApplaudir };
+// ---- les gestes du travail (les mini-jeux, HISTOIRE.md) ----
+// La canne à pêche : une gaule de bambou de b (le talon) à t (le scion, plus fin), la poignée gainée, le moulinet
+// (côté k : -1 ou 1), le fil qui pend du scion jusqu'au bouchon rouge et blanc posé sur un rond d'eau (f, en (x, y)) ;
+// plonge : le bouchon s'enfonce un peu, l'eau fait deux ronds
+function canne(b, t, f, k, plonge) {
+  const len = Math.hypot(t[0] - b[0], t[1] - b[1]), ux = (t[0] - b[0]) / len, uy = (t[1] - b[1]) / len;
+  const at = d => [b[0] + ux * d, b[1] + uy * d];
+  const m = at(len * 0.62), g = at(3.2), r = at(5.4), rk = [r[0] - uy * k * 1.5, r[1] + ux * k * 1.5];
+  const [x, y] = f, yb = y + (plonge ? 0.7 : 0);
+  return L(b, m, OUT, 2.4) + L(m, t, OUT, 1.8) + L(b, m, '#D8AE6E', 1.15) + L(m, t, '#D8AE6E', 0.65)
+    + [0.3, 0.5].map(q => L(at(len * q - 0.35), at(len * q + 0.35), '#A8794A', 0.9)).join('') // les nœuds du bambou
+    + L(b, g, OUT, 2.8) + L(b, g, '#7A4E2A', 1.6) // la poignée gainée
+    + L(r, rk, OUT, 1) + E(rk[0], rk[1], 1.15, 1.15, '#9AA2AD', 0.6) + E(rk[0] - 0.3, rk[1] - 0.3, 0.4, 0.4, '#E2E8EE', 0) // le moulinet
+    + trait(`M${r2(t[0])},${r2(t[1])} Q${r2(t[0] + (x - t[0]) * 0.2 + (plonge ? 0 : 0.8))},${r2((t[1] + yb) / 2)} ${r2(x)},${r2(yb - 1.5)}`, OUT, 0.35)
+    + E(x, y + 1.2, 4.2, 1.35, 'rgba(120,190,226,.55)', 0) + (plonge ? E(x, y + 1.2, 3.6, 1.1, 'none', 0).replace('stroke="none"', 'stroke="#FFFFFF" stroke-width="0.45"') : '')
+    + E(x, y + 1.2, 2.4, 0.75, 'none', 0).replace('stroke="none"', 'stroke="#FFFFFF" stroke-width="0.5"')
+    + `<g transform="translate(0 ${plonge ? 0.7 : 0})">${E(x, y, 1.65, 1.65, '#FFFFFF', 0.7)}${P(`M${r2(x - 1.65)},${r2(y)} A1.65,1.65 0 0 1 ${r2(x + 1.65)},${r2(y)} Z`, '#E2463A', 0)}${E(x, y, 1.65, 1.65, 'none', 0.7)}${E(x - 0.6, y - 0.7, 0.45, 0.3, '#FFFFFF', 0)}${L([x, y - 1.65], [x, y - 2.5], OUT, 0.5)}</g>`;
+}
+// Pêcher (le mini-jeu de la pêche), content ; 2 images : le bouchon danse (il s'enfonce un peu, le scion s'incline).
+//   - de face, la canne tenue à deux mains en travers du corps, le scion monte à droite, le bouchon sur l'eau à droite ;
+//   - de trois quarts avant, la canne part vers le regard, à gauche ;
+//   - de dos, les mains (devant le buste, cachées) tiennent la canne qui monte à droite vers l'eau, au loin.
+function pecher({ view, n }) {
+  const [a, b] = this.shoulders;
+  const d = n ? 1.6 : 0;
+  // un point de la canne, à q du talon vers le scion (les poings sont posés dessus)
+  const sur = (talon, scion, q) => { const l = Math.hypot(scion[0] - talon[0], scion[1] - talon[1]); return [talon[0] + (scion[0] - talon[0]) * q / l, talon[1] + (scion[1] - talon[1]) * q / l]; };
+  if (view === 'front') {
+    // la canne part assez à plat pour longer la tête, sans passer derrière elle
+    const talon = [a[0] + 1.6, a[1] + 11.4], scion = [Math.min(45.6, b[0] + 13.6), a[1] - 8 + d];
+    return {
+      expr: 'content',
+      left: canne(talon, scion, [Math.min(43, b[0] + 11), 54.4], 1, n) + arm(this, a, sur(talon, scion, 3), [a[0] - 0.6, a[1] + 7]),
+      right: arm(this, b, sur(talon, scion, 9), [b[0] + 1.6, b[1] + 6.2])
+    };
+  }
+  if (view === 'se') {
+    const talon = [b[0] - 4, b[1] + 11.4], scion = [Math.max(2.4, a[0] - 13.6), a[1] - 8 + d];
+    return {
+      expr: 'content',
+      right: arm(this, b, sur(talon, scion, 3), [b[0] - 0.6, b[1] + 7.6]),
+      left: canne(talon, scion, [Math.max(5, a[0] - 11), 54.4], -1, n) + arm(this, a, sur(talon, scion, 9.5), [a[0] - 1, a[1] + 6])
+    };
+  }
+  const talon = [26, a[1] + 8], scion = [Math.min(45.4, b[0] + 13), a[1] - 10 + d];
+  return {
+    left: '', right: '',
+    under: canne(talon, scion, [Math.min(43.4, b[0] + 11.4), a[1] + 4], 1, n)
+      + arm(this, a, sur(talon, scion, 2), [a[0] - 2.4, a[1] + 6.4]) + arm(this, b, sur(talon, scion, 7), [b[0] + 2.8, b[1] + 6.4])
+  };
+}
+// Debout : frame(avecPecher(c), vue, 'action', n)
+const avecPecher = c => ({ ...c, uid: `${c.uid}pe`, pose: pecher });
+
+// La pioche : le manche de bois de m (le bas, dans les mains) à h (le fer) ; le fer d'acier courbe, deux pointes,
+// perpendiculaire au manche (côté k), un reflet
+function pioche(m, h, k = 1) {
+  const len = Math.hypot(h[0] - m[0], h[1] - m[1]), ux = (h[0] - m[0]) / len, uy = (h[1] - m[1]) / len, nx = -uy * k, ny = ux * k;
+  const pt = (a, b) => [h[0] + ux * a + nx * b, h[1] + uy * a + ny * b];
+  const fer = [pt(0.4, -5.6), pt(1.6, -2.6), pt(1.9, 0), pt(1.6, 2.4), pt(0.6, 6.2), pt(-0.6, 2.4), pt(-1.1, 0), pt(-0.6, -2.6)];
+  const d = `M${fer.map(p => `${r2(p[0])},${r2(p[1])}`).join(' L')} Z`;
+  return L(m, h, OUT, 3.4) + L(m, h, '#B07A45', 1.6) + L(m, [m[0] + ux * len * 0.55, m[1] + uy * len * 0.55], '#C99A62', 0.5)
+    + P(d, '#A9B1BB', 1) + L(pt(0.9, -4), pt(1.2, -1.2), '#E2E8EE', 0.6) + E(h[0], h[1], 1.1, 1.1, '#6E747E', 0.7);
+}
+// des éclats de pierre et une étincelle là où la pioche frappe (x, y)
+const eclats = (x, y) => [[-3.6, -2.6, 0.9], [-1.6, -4.6, 0.7], [2.6, -3.4, 0.8], [3.8, -1.4, 0.6]].map(([dx, dy, r]) => E(x + dx, y + dy, r, r * 0.8, '#9A8E80', 0.5)).join('')
+  + [[0, -1], [0.7, -0.7], [-0.7, -0.7]].map(([dx, dy]) => L([x + dx * 1.4, y + dy * 1.4], [x + dx * 3, y + dy * 3], OUT, 1.4) + L([x + dx * 1.4, y + dy * 1.4], [x + dx * 3, y + dy * 3], '#FFF2B0', 0.6)).join('')
+  + E(x, y + 0.6, 4.4, 1.2, 'rgba(110,90,70,.35)', 0);
+// la pierre à casser, posée au sol en (x, y) (le bas de la pierre) : un galet gris, son ombre, un reflet, une fente
+const pierre = (x, y) => E(x, y - 0.2, 4.6, 1.3, 'rgba(40,55,20,.22)', 0) + P(`M${r2(x - 4.2)},${r2(y)} Q${r2(x - 4.6)},${r2(y - 3.6)} ${r2(x - 1)},${r2(y - 4.4)} Q${r2(x + 3.4)},${r2(y - 4.8)} ${r2(x + 4.2)},${r2(y - 1.4)} Q${r2(x + 4.4)},${r2(y + 0.2)} ${r2(x)},${r2(y + 0.3)} Z`, '#A79E92')
+  + P(`M${r2(x - 2.8)},${r2(y - 2.6)} Q${r2(x - 1.6)},${r2(y - 3.8)} ${r2(x + 0.4)},${r2(y - 3.8)}`, 'none', 0).replace('stroke="none"', 'stroke="#D2CBC0" stroke-width="0.8" stroke-linecap="round"')
+  + P(`M${r2(x + 1.4)},${r2(y - 4.2)} L${r2(x + 0.8)},${r2(y - 2.4)} L${r2(x + 1.6)},${r2(y - 1.2)}`, 'none', 0.5);
+// un point de la ligne m → h, à q de m
+const surLigne = (m, h, q) => { const l = Math.hypot(h[0] - m[0], h[1] - m[1]); return [m[0] + (h[0] - m[0]) * q / l, m[1] + (h[1] - m[1]) * q / l]; };
+// Piocher (le mini-jeu de la mine) ; 2 images : la pioche levée sur le côté, puis le coup sur la pierre (éclats,
+// étincelle), en riant.
+function piocher({ view, n }) {
+  const [a, b] = this.shoulders;
+  if (view === 'front') {
+    const p = [b[0] + 9, 61];
+    if (!n) {
+      const m = [b[0] - 1.4, b[1] + 5], h = [Math.min(42, b[0] + 10.4), a[1] - 8.4];
+      return { expr: 'content', under: pierre(...p), left: pioche(m, h, 1) + arm(this, a, m, [a[0] + 0.6, a[1] + 7.4]), right: arm(this, b, surLigne(m, h, 4.6), [b[0] + 3, b[1] + 4.4]) };
+    }
+    const m = [24 + 0.6, a[1] + 9.6], h = [p[0] - 0.4, p[1] - 4.4];
+    return { expr: 'rire', under: pierre(...p), left: pioche(m, h, -1) + arm(this, a, m, [a[0] - 0.6, a[1] + 6.4]), right: arm(this, b, surLigne(m, h, 4.2), [b[0] + 1.4, b[1] + 6.8]), over: eclats(h[0] + 0.6, h[1] + 0.4) };
+  }
+  if (view === 'se') {
+    const p = [a[0] - 9, 61];
+    if (!n) {
+      const m = [b[0] - 4.4, b[1] + 4.6], h = [Math.min(43, b[0] + 10), a[1] - 9];
+      return { expr: 'content', under: pierre(...p), right: pioche(m, h, -1) + arm(this, b, surLigne(m, h, 4.6), [b[0] + 2.6, b[1] + 4.6]), left: arm(this, a, m, [a[0] - 0.6, a[1] + 6.6]) };
+    }
+    const m = [a[0] + 2.6, a[1] + 9], h = [p[0] + 0.4, p[1] - 4.4];
+    return { expr: 'rire', under: pierre(...p), right: arm(this, b, surLigne(m, h, 4.2), [b[0] - 0.6, b[1] + 7]), left: pioche(m, h, 1) + arm(this, a, m, [a[0] - 1.4, a[1] + 5.8]), over: eclats(h[0] - 0.6, h[1] + 0.4) };
+  }
+  // de dos : la pierre est devant, un peu à droite (plus loin, donc plus haut que les pieds)
+  const p = [b[0] + 7, a[1] + 18];
+  if (!n) {
+    const m = [b[0] - 2, b[1] + 1], h = [b[0] + 6, a[1] - 18];
+    return { left: '', right: '', under: pierre(...p) + arm(this, a, [b[0] - 4, b[1] + 2], [a[0] - 2.4, a[1] + 5.6]), over: pioche(m, h, 1) + arm(this, b, [b[0] - 1, b[1] - 1.4], [b[0] + 3, b[1] + 4.4]) };
+  }
+  const m = [24 + 2, a[1] + 7], h = [p[0] - 0.4, p[1] - 4.4];
+  return { expr: 'rire', left: '', right: '', under: pierre(...p) + pioche(m, h, 1) + arm(this, a, [24 - 1, a[1] + 7.4], [a[0] - 2.4, a[1] + 6]) + arm(this, b, surLigne(m, h, 3), [b[0] + 2.4, b[1] + 6]), over: eclats(h[0] + 0.4, h[1] + 0.4) };
+}
+// Debout : frame(avecPiocher(c), vue, 'action', n)
+const avecPiocher = c => ({ ...c, uid: `${c.uid}pi`, pose: piocher });
+
+// un fruit cueilli (une pomme rouge) en (x, y) : son reflet, sa queue, sa feuille
+const fruit = (x, y, s = 1, col = '#E2463A') => E(x, y, 1.45 * s, 1.35 * s, col, 0.7) + E(x - 0.5 * s, y - 0.45 * s, 0.4 * s, 0.3 * s, '#FFFFFF', 0).replace('fill=', 'fill-opacity="0.7" fill=')
+  + L([x, y - 1.2 * s], [x + 0.3 * s, y - 2.1 * s], OUT, 0.5) + P(`M${r2(x + 0.3 * s)},${r2(y - 1.9 * s)} q1.2,-0.9 1.9,-0.1 q-1,0.7 -1.9,0.1 Z`, '#6FB24E', 0.4);
+// Le panier d'osier, l'anse dans la main h (en haut), le panier en dessous : l'anse, le fond sombre, les fruits posés
+// dedans (n : combien), la vannerie, le bord avant clair par-dessus
+function panier([x, y], n = 3) {
+  const by = y + 5, w = 5.4;
+  const anse = `M${r2(x - w * 0.8)},${r2(by)} Q${r2(x)},${r2(y - 2.6)} ${r2(x + w * 0.8)},${r2(by)}`;
+  const corps = `M${r2(x - w)},${r2(by)} L${r2(x - w * 0.78)},${r2(by + 5)} Q${r2(x)},${r2(by + 6.2)} ${r2(x + w * 0.78)},${r2(by + 5)} L${r2(x + w)},${r2(by)} Q${r2(x)},${r2(by + 1.3)} ${r2(x - w)},${r2(by)} Z`;
+  const fruits = [[-2.6, -0.1, '#E2463A'], [2.6, 0, '#E2463A'], [0, -0.5, '#F2A63A'], [-1.2, -1.5, '#C9343A']].slice(0, n).map(([dx, dy, c]) => fruit(x + dx, by + dy, 0.85, c)).join('');
+  return P(anse, 'none', 0).replace('stroke="none"', `stroke="${OUT}" stroke-width="2.4" stroke-linecap="round"`)
+    + P(anse, 'none', 0).replace('stroke="none"', 'stroke="#C99A5A" stroke-width="1" stroke-linecap="round"')
+    + E(x, by, w, 1.3, '#7A5A30', 0.8) + fruits + P(corps, '#C99A5A')
+    + [2, 3.6].map(d => `<path d="M${r2(x - w * 0.93 + d * 0.05)},${r2(by + d)} Q${r2(x)},${r2(by + d + 1.1)} ${r2(x + w * 0.93 - d * 0.05)},${r2(by + d)}" fill="none" stroke="#A67A40" stroke-width="0.5"/>`).join('')
+    + [-2.8, 0, 2.8].map(d => L([x + d, by + 1.2], [x + d * 0.85, by + 5.4], '#A67A40', 0.45)).join('')
+    + `<path d="M${r2(x - w)},${r2(by)} Q${r2(x)},${r2(by + 2.6)} ${r2(x + w)},${r2(by)}" fill="none" stroke="${OUT}" stroke-width="2.3" stroke-linecap="round"/>`
+    + `<path d="M${r2(x - w)},${r2(by)} Q${r2(x)},${r2(by + 2.6)} ${r2(x + w)},${r2(by)}" fill="none" stroke="#E2B878" stroke-width="1" stroke-linecap="round"/>`;
+}
+// Cueillir (le mini-jeu de la cueillette) ; 2 images : la main cueille un fruit en haut, à l'écart de la tête, puis le
+// dépose dans le panier (un fruit de plus), en riant.
+function cueillir({ view, n }) {
+  const [a, b] = this.shoulders;
+  if (view === 'front') {
+    const hp = [a[0] - 1.8, a[1] + 9.4]; // la main qui tient le panier
+    const pan = panier(hp, n ? 4 : 3);
+    if (!n) {
+      const h = [b[0] + 8.4, a[1] - 3.6];
+      return { expr: 'content', left: arm(this, a, hp, [a[0] - 2.4, a[1] + 5]) + pan, right: arm(this, b, h, [b[0] + 6.4, b[1] + 2.2]) + fruit(h[0] + 0.3, h[1] - 2) };
+    }
+    const h = [a[0] + 1.4, a[1] + 8.6];
+    return { expr: 'rire', left: arm(this, a, hp, [a[0] - 2.4, a[1] + 5]) + pan, right: arm(this, b, h, [b[0] + 1.6, b[1] + 6.8]) };
+  }
+  if (view === 'se') {
+    const hp = [b[0] + 1.8, b[1] + 9.4];
+    const pan = panier(hp, n ? 4 : 3);
+    if (!n) {
+      const h = [a[0] - 8.4, a[1] - 3.6];
+      return { expr: 'content', right: arm(this, b, hp, [b[0] + 2.4, b[1] + 5]) + pan, left: arm(this, a, h, [a[0] - 6.4, a[1] + 2.2]) + fruit(h[0] - 0.3, h[1] - 2) };
+    }
+    const h = [b[0] + 0.6, b[1] + 8.6];
+    return { expr: 'rire', right: arm(this, b, hp, [b[0] + 2.4, b[1] + 5]) + pan, left: arm(this, a, h, [a[0] - 1, a[1] + 7]) };
+  }
+  const hp = [b[0] + 2.4, b[1] + 9.4];
+  const pan = panier(hp, n ? 4 : 3);
+  if (!n) {
+    const h = [a[0] - 8.4, a[1] - 3.6];
+    return { left: arm(this, a, h, [a[0] - 6.4, a[1] + 2.2]) + fruit(h[0] - 0.3, h[1] - 2), right: arm(this, b, hp, [b[0] + 3, b[1] + 5]) + pan };
+  }
+  return { left: '', right: arm(this, b, hp, [b[0] + 3, b[1] + 5]) + pan, under: arm(this, a, [24 + 3, a[1] + 8], [a[0] - 2.4, a[1] + 6]) };
+}
+// Debout : frame(avecCueillir(c), vue, 'action', n)
+const avecCueillir = c => ({ ...c, uid: `${c.uid}cu`, pose: cueillir });
+
+// La caisse de bois, posée sur l'épaule : son dessus (un peu de profondeur), sa face de planches, ses traverses, ses
+// clous ; (x, y) : le milieu du bas de la face, w × h
+function caisse(x, y, w = 11, h = 8.4) {
+  const g = x - w / 2, d = x + w / 2, t = y - h, p = 2.2;
+  const face = `M${r2(g)},${r2(y)} L${r2(d)},${r2(y)} L${r2(d)},${r2(t)} L${r2(g)},${r2(t)} Z`;
+  const dessus = `M${r2(g)},${r2(t)} L${r2(g + p)},${r2(t - p * 0.7)} L${r2(d + p)},${r2(t - p * 0.7)} L${r2(d)},${r2(t)} Z`;
+  const cote = `M${r2(d)},${r2(y)} L${r2(d + p)},${r2(y - p * 0.7)} L${r2(d + p)},${r2(t - p * 0.7)} L${r2(d)},${r2(t)} Z`;
+  return P(cote, '#94683F') + P(dessus, '#D2A574') + P(face, '#B8875A')
+    + [1 / 3, 2 / 3].map(k => L([g + 0.4, t + h * k], [d - 0.4, t + h * k], '#8A5E36', 0.5)).join('')
+    + L([g + 0.6, y - 0.6], [d - 0.6, t + 0.6], '#8A5E36', 0.9) + L([g + 1.2, t + 0.9], [d - 1.6, t + 0.9], 'rgba(255,255,255,.35)', 0.6)
+    + [[g + 1, t + 1], [d - 1, t + 1], [g + 1, y - 1], [d - 1, y - 1]].map(([a, b]) => E(a, b, 0.35, 0.35, '#5A3A20', 0)).join('')
+    + P(face, 'none');
+}
+// Porter (une caisse sur l'épaule, en allant au chantier) ; 2 images : la caisse remonte d'un cran (le pas), content.
+// La caisse est sur l'épaule droite (à l'écran) dans les trois vues, à côté de la tête, par-dessus ; la main droite la
+// tient par-dessous, l'autre bras se balance.
+function porter({ view, n }) {
+  const [a, b] = this.shoulders;
+  const up = n ? -0.9 : 0;
+  // bornée : chez les carrures larges, la caisse reste dans le cadre (son côté droit, profondeur comprise, avant 47,2)
+  const x = Math.min(b[0] + 7, 39.8), y = b[1] - 0.8 + up;
+  const main = [Math.min(b[0] + 10.2, 43), b[1] - 0.2 + up];
+  const autre = view === 'ne' ? arm(this, a, [a[0] - 1.4, a[1] + 11 - up]) : arm(this, a, [a[0] - 1.6, a[1] + 10.6 + up * 0.5]);
+  return {
+    expr: 'content',
+    left: autre, right: '',
+    over: caisse(x, y, 10.4) + arm(this, b, main, [b[0] + 6.6, b[1] + 5.4])
+  };
+}
+// Debout : frame(avecPorter(c), vue, 'action', n)
+const avecPorter = c => ({ ...c, uid: `${c.uid}po`, pose: porter });
+
+// Le marteau : le manche de bois de m (la main) à t (la tête), la tête d'acier en travers (côté frappe et côté pied-de-biche)
+function marteau(m, t) {
+  const len = Math.hypot(t[0] - m[0], t[1] - m[1]), ux = (t[0] - m[0]) / len, uy = (t[1] - m[1]) / len, nx = -uy, ny = ux;
+  const q = (a, b) => [t[0] + ux * a + nx * b, t[1] + uy * a + ny * b];
+  const tete = [q(-1.3, -3.2), q(1.3, -3.2), q(1.3, 2.2), q(0.4, 3.6), q(-0.4, 3.6), q(-1.3, 2.2)];
+  return L(m, t, OUT, 3.2) + L(m, t, '#C99A62', 1.4) + L(m, [m[0] + ux * 2.4, m[1] + uy * 2.4], '#7A4E2A', 1.6)
+    + P(`M${tete.map(p => `${r2(p[0])},${r2(p[1])}`).join(' L')} Z`, '#8E96A0', 0.9) + L(q(-0.7, -2.6), q(-0.7, 1.4), '#C9CFD6', 0.5);
+}
+// La planche à réparer, tenue en travers (de g à d, à la hauteur y), son fil, un clou planté à moitié en (cx)
+const planche = (g, d, y, cx) => `<rect x="${r2(g)}" y="${r2(y - 1.5)}" width="${r2(d - g)}" height="3" rx="0.6" fill="#D2A574" stroke="${OUT}" stroke-width="0.9"/>`
+  + L([g + 1, y - 0.3], [d - 1, y - 0.3], '#B8875A', 0.45) + L([g + 2, y + 0.7], [d - 3, y + 0.7], '#B8875A', 0.4)
+  + L([cx, y - 1.4], [cx, y - 3.4], OUT, 1.3) + L([cx, y - 1.4], [cx, y - 3.4], '#C9CFD6', 0.5) + E(cx, y - 3.5, 0.9, 0.35, '#8E96A0', 0.5);
+// le « tac » : trois traits clairs autour du clou frappé
+const tac = (x, y) => [[-1, -0.6], [0, -1.1], [1, -0.6]].map(([dx, dy]) => { const p = [x + dx * 1.6, y + dy * 1.6], q = [x + dx * 3, y + dy * 3]; return L(p, q, OUT, 1.4) + L(p, q, '#FFF2B0', 0.6); }).join('');
+// Réparer (le chantier, la cabane) ; 2 images : le marteau levé, puis le coup sur le clou (« tac »), en riant.
+// Une main tient la planche en travers devant soi, l'autre le marteau. Assis (assis.js), la planche est sur les genoux.
+function reparer({ view, n }) {
+  const [a, b] = this.shoulders;
+  const y = a[1] + 9.4; // la planche
+  if (view === 'front') {
+    const cx = 25.4, pl = planche(15.4, 32.6, y, cx);
+    const hp = [16.6, y + 0.2];
+    if (!n) {
+      const m = [Math.min(b[0] + 6.4, 39.6), a[1] + 1.4], t = [Math.min(b[0] + 8.6, 41.8), a[1] - 5.4]; // bornés : le marteau reste dans le cadre
+      return { expr: 'content', left: pl + arm(this, a, hp, [a[0] - 1.6, a[1] + 6.4]), right: arm(this, b, m, [b[0] + 4.6, b[1] + 5.8]) + marteau(m, t) };
+    }
+    const m = [b[0] + 1.6, y - 3.6], t = [cx + 1.4, y - 5.6];
+    return { expr: 'rire', left: pl + arm(this, a, hp, [a[0] - 1.6, a[1] + 6.4]), right: arm(this, b, m, [b[0] + 2.6, b[1] + 6.6]) + marteau(m, t), over: tac(cx, y - 3.6) };
+  }
+  if (view === 'se') {
+    const cx = a[0] - 0.4, pl = planche(a[0] - 8.4, b[0] - 1.4, y, cx);
+    const hp = [b[0] - 3, y + 0.2];
+    if (!n) {
+      const m = [Math.max(a[0] - 5, 8.4), a[1] + 1.4], t = [Math.max(a[0] - 8.4, 5.6), a[1] - 5];
+      return { expr: 'content', right: pl + arm(this, b, hp, [b[0] + 1.4, b[1] + 6.4]), left: arm(this, a, m, [a[0] - 3.6, a[1] + 5.6]) + marteau(m, t) };
+    }
+    const m = [a[0] - 3.4, y - 4], t = [cx - 1.2, y - 5.8];
+    return { expr: 'rire', right: pl + arm(this, b, hp, [b[0] + 1.4, b[1] + 6.4]), left: arm(this, a, m, [a[0] - 2.4, a[1] + 6]) + marteau(m, t), over: tac(cx, y - 3.6) };
+  }
+  // de dos : la planche est devant (cachée) ; le marteau levé passe à droite de la tête, puis frappe (le « tac » dépasse à droite)
+  if (!n) {
+    const m = [Math.min(b[0] + 6.4, 39.6), a[1] + 0.6], t = [Math.min(b[0] + 8.2, 41.4), a[1] - 6.2];
+    return { left: '', right: '', under: arm(this, a, [24 - 2, y - 1], [a[0] - 2.4, a[1] + 6]), over: arm(this, b, m, [b[0] + 4.4, b[1] + 5.6]) + marteau(m, t) };
+  }
+  return { expr: 'rire', left: '', right: '', under: arm(this, a, [24 - 2, y - 1], [a[0] - 2.4, a[1] + 6]) + arm(this, b, [24 + 3, y - 2], [b[0] + 2.4, b[1] + 6]), over: tac(b[0] + 3.6, y - 3) };
+}
+// Debout : frame(avecReparer(c), vue, 'action', n) ; assis : assis(c, vue, n, null, reparer)
+const avecReparer = c => ({ ...c, uid: `${c.uid}re`, pose: reparer });
+
+// L'onde qui repousse, douce et claire : deux anneaux autour de la paume en (x, y), un peu décalés vers la créature
+// (dx, dy), plus larges à l'image 2, et deux étincelles
+function onde(x, y, dx, dy, n) {
+  const k = n ? 1.2 : 1;
+  const anneau = (r, o) => {
+    const e = (color, w) => `<ellipse cx="${r2(x + dx * o)}" cy="${r2(y + dy * o)}" rx="${r2(r)}" ry="${r2(r * 0.9)}" fill="none" stroke="${color}" stroke-width="${w}"/>`;
+    return e(OUT, 1.5) + e('#EAF6FF', 0.7);
+  };
+  const etoile = (sx, sy, s) => `<path d="M${r2(sx)},${r2(sy - s)} Q${r2(sx + s * 0.2)},${r2(sy - s * 0.2)} ${r2(sx + s)},${r2(sy)} Q${r2(sx + s * 0.2)},${r2(sy + s * 0.2)} ${r2(sx)},${r2(sy + s)} Q${r2(sx - s * 0.2)},${r2(sy + s * 0.2)} ${r2(sx - s)},${r2(sy)} Q${r2(sx - s * 0.2)},${r2(sy - s * 0.2)} ${r2(sx)},${r2(sy - s)} Z" fill="#FFF2B0" stroke="${OUT}" stroke-width="0.4"/>`;
+  return `<g opacity="0.9">${anneau(3.4 * k, 0.8) + anneau(5 * k, 1.8)}</g>` + etoile(x + dx * 3 + 4.4 * k, y + dy * 3 - 4.6 * k, n ? 1.2 : 0.9) + etoile(x + dx * 3 - 4.6 * k, y + dy * 3 + 3.6 * k, n ? 0.8 : 1.1);
+}
+// Repousser une créature de la brume d'un toucher (HISTOIRE.md § 6.15 : jamais de coup) : la main ouverte tendue vers
+// elle, une onde claire et deux étincelles ; 2 images : la main pousse un peu plus loin, l'onde s'élargit.
+// L'air décidé mais gentil (« Ouste ! »). La créature est devant le personnage.
+function repousser({ view, n }) {
+  const [a, b] = this.shoulders;
+  const d = n ? 1.4 : 0;
+  if (view === 'front') {
+    const h = [Math.min(b[0] + 4.6 + d, 38.2), a[1] + 3.6 - d * 0.4]; // bornée : l'onde reste dans le cadre
+    return { expr: 'content', right: arm(this, b, h, [b[0] + 3.4, b[1] + 6.6]) + paume(this, [h[0], h[1] - 0.6], -1, 1.1), over: onde(h[0], h[1] - 0.8, 0.6, -0.3, n) + paume(this, [h[0], h[1] - 0.6], -1, 1.1) };
+  }
+  if (view === 'se') {
+    const h = [Math.max(a[0] - 6 - d * 0.8, 9.6), a[1] + 3.4];
+    return { expr: 'content', left: arm(this, a, h, [a[0] - 2.6, a[1] + 6.4]) + tranche(this, [h[0] - 0.2, h[1] - 0.6], 1, 1.05), over: onde(h[0] - 0.4, h[1] - 0.8, -1, 0, n) + tranche(this, [h[0] - 0.2, h[1] - 0.6], 1, 1.05) };
+  }
+  // de dos : la créature est devant ; la main se lève au-dessus de l'épaule, paume vers elle (on voit la tranche)
+  const h = [Math.min(b[0] + 4.6 + d * 0.6, 38), a[1] - 3.6 - d * 0.4];
+  return { left: '', right: '', over: arm(this, b, h, [b[0] + 4.4, b[1] + 4.6]) + onde(h[0], h[1] - 0.8, 0.4, -0.8, n) + tranche(this, [h[0], h[1] - 0.6], 1, 1.05) };
+}
+// Debout : frame(avecRepousser(c), vue, 'action', n)
+const avecRepousser = c => ({ ...c, uid: `${c.uid}rp`, pose: repousser });
+
+// Le carnet ouvert, tourné vers nous, en (x, y) le haut de la reliure : la couverture bleue, les pages claires, les
+// lignes déjà écrites à gauche, l'écriture à l'encre bleue à droite (1 à 3 lignes), un signet rouge
+function carnet(x, y, lignes) {
+  return P(`M${r2(x - 5.4)},${r2(y)} L${r2(x + 5.4)},${r2(y)} L${r2(x + 5.4)},${r2(y + 6)} L${r2(x - 5.4)},${r2(y + 6)} Z`, '#3E5A8C', 0.9)
+    + P(`M${r2(x - 4.7)},${r2(y - 0.5)} Q${r2(x - 2.3)},${r2(y - 1.3)} ${r2(x)},${r2(y)} Q${r2(x + 2.3)},${r2(y - 1.3)} ${r2(x + 4.7)},${r2(y - 0.5)} L${r2(x + 4.7)},${r2(y + 5.1)} Q${r2(x + 2.3)},${r2(y + 4.4)} ${r2(x)},${r2(y + 5.4)} Q${r2(x - 2.3)},${r2(y + 4.4)} ${r2(x - 4.7)},${r2(y + 5.1)} Z`, '#FBF4E2', 0.8)
+    + L([x, y], [x, y + 5.4], OUT, 0.55) + L([x + 3.4, y + 5.2], [x + 3.6, y + 7.4], '#D9443A', 0.7)
+    + [1.4, 2.5, 3.6].map(d => L([x - 3.9, y + d], [x - 1, y + d], '#8A7A6A', 0.4)).join('')
+    + [1.4, 2.5, 3.6].slice(0, lignes).map(d => `<path d="M${r2(x + 1)},${r2(y + d)} q0.5,-0.4 1,0 t1,0 t1,0" fill="none" stroke="#3E5A8C" stroke-width="0.4"/>`).join('');
+}
+// Le crayon : de la mine (le bout qui écrit, en p) vers la gomme, le long de (ux, uy) ; jaune, mine taillée, gomme rose
+function crayon(p, ux, uy) {
+  const l = 6, q = [p[0] + ux * l, p[1] + uy * l], t = [p[0] + ux * 1.2, p[1] + uy * 1.2];
+  return L(t, q, OUT, 2.2) + L(t, q, '#F2C04B', 1) + L(p, t, OUT, 1.1) + L(p, [p[0] + ux * 0.6, p[1] + uy * 0.6], '#3A3A44', 0.5)
+    + L([q[0] - ux * 0.9, q[1] - uy * 0.9], q, '#F2A0B0', 1);
+}
+// Écrire (le carnet de bord, les lettres) ; 2 images : le crayon avance sur la page, une ligne de plus s'écrit.
+// Une main tient le carnet ouvert devant soi, l'autre écrit. Assis (assis.js), le carnet est tenu au-dessus des genoux.
+function ecrire({ view, n }) {
+  const [a, b] = this.shoulders;
+  const y = a[1] + 3.6; // le haut du carnet
+  if (view === 'front') {
+    const x = 24, p = [x + 2 + n * 1.6, y + 2.6 + n * 1.1]; // la mine sur la page de droite
+    const tient = arm(this, a, [x - 5.2, y + 5.6], [a[0] - 1.4, a[1] + 6.8]);
+    const ecrit = arm(this, b, [p[0] + 1.6, p[1] + 2.2], [b[0] + 2.6, b[1] + 6.6]) + crayon(p, 0.55, -0.83);
+    // le carnet et la main qui écrit passent par-dessus le manteau et la barbe
+    return { expr: 'content', left: tient, right: '', over: carnet(x, y, n ? 2 : 1) + ecrit };
+  }
+  if (view === 'se') {
+    // de trois quarts, le carnet est tenu en avant, vers le regard, par le bras éloigné ; le bras proche passe derrière
+    // le carnet (coude en arrière), seuls la main et le crayon se posent sur la page
+    const x = a[0] - 3, p = [x + 2 + n * 1.6, y + 2.6 + n * 1.1], h = [p[0] + 1.6, p[1] + 2.2];
+    const tient = arm(this, b, [x - 4.4, y + 5.8], [b[0] + 0.6, b[1] + 7]);
+    const ecrit = arm(this, a, h, [a[0] + 1.4, a[1] + 6.4], '');
+    return { expr: 'content', right: tient, left: '', over: ecrit + carnet(x, y, n ? 2 : 1) + crayon(p, 0.55, -0.83) + E(h[0], h[1], 2.1, 2.1, this.hand || this.skin) };
+  }
+  // de dos : le carnet, le crayon et les mains sont devant (cachés) ; on voit les coudes, et le droit bouge en écrivant
+  return { left: '', right: '', under: arm(this, a, [24 - 3, y + 5.6], [a[0] - 2.4, a[1] + 6]) + arm(this, b, [b[0] + 1.6, y + 4], [b[0] + 4.4 + n * 1.4, b[1] + 5.6 - n * 0.6]) };
+}
+// Debout : frame(avecEcrire(c), vue, 'action', n) ; assis : assis(c, vue, n, null, ecrire)
+const avecEcrire = c => ({ ...c, uid: `${c.uid}ec`, pose: ecrire });
+
+module.exports = { lanterne, parapluie, valise, avecLanterne, avecParapluie, avecValise, couche, CADRE_PARAPLUIE, CADRE_COUCHE, ZEDS, paume, tranche, tendre, avecMainsTendues, applaudir, avecApplaudir, pecher, avecPecher, piocher, avecPiocher, cueillir, avecCueillir, porter, avecPorter, reparer, avecReparer, repousser, avecRepousser, ecrire, avecEcrire };
