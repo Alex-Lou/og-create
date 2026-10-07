@@ -55,7 +55,31 @@ const stone = (u, v, s, c = STONE) => { const [x, y] = P(u, v, 0); return ell(x 
 // Tas de sable (dune basse) autour de (u, v)
 const dune = (u, v, ru, rv, h) => { const [x, y] = P(u, v, 0); const rx = (ru + rv) * 22, ry = (ru + rv) * 11; return ell(x, y, rx, ry, SAND.mid) + ell(x - rx * 0.15, y - h * 0.3 - ry * 0.12, rx * 0.72, ry * 0.62, SAND.light); };
 // Algue échouée
-const kelp = (u, v, rot = 0) => { const [x, y] = P(u, v, 0); return `<g transform="translate(${f2(x)} ${f2(y)}) rotate(${rot})">${pathTk('M-6,0 Q-3,-2.4 0,0 Q3,2.4 6,0', '#5C8A45', 1.2)}${ell(-3, -1.2, 1.4, 0.8, '#6E9E50', ` stroke="${OUT}" stroke-width="0.5"`)}</g>`; };
+// Algue échouée, couchée sur le sable (le varech de la Crique) : deux longs rubans olive, larges et frisés sur les
+// bords, qui se croisent, une nervure claire au milieu, trois flotteurs ronds. À plat sur le sol : dessinés de face
+// puis écrasés de moitié en hauteur.
+const KELP = { lame: '#86913F', ombre: '#66702E', nerf: '#B4BE6A', flot: '#B79D4C' };
+function ruban(a, c, b, w, vagues, fond = KELP.lame) {
+  const at = t => [(1 - t) ** 2 * a[0] + 2 * (1 - t) * t * c[0] + t * t * b[0], (1 - t) ** 2 * a[1] + 2 * (1 - t) * t * c[1] + t * t * b[1]];
+  const N = 18, g = [], d = [];
+  for (let i = 0; i <= N; i++) {
+    const t = i / N, p = at(t), q = at(Math.min(1, t + 0.02)), r = at(Math.max(0, t - 0.02));
+    const tx = q[0] - r[0], ty = q[1] - r[1], l = Math.hypot(tx, ty) || 1, nx = -ty / l, ny = tx / l;
+    const e = w * (0.35 + 0.65 * Math.sin(Math.PI * Math.min(1, t * 0.9 + 0.1))) * (t > 0.97 ? 0.4 : 1) * (1 + 0.2 * Math.sin(t * Math.PI * vagues));
+    g.push([p[0] + nx * e, (p[1] + ny * e) * 0.6]); d.push([p[0] - nx * e * 0.85, (p[1] - ny * e * 0.85) * 0.6]);
+  }
+  const contour = 'M' + [...g, ...d.reverse()].map(([x, y]) => `${f2(x)},${f2(y)}`).join(' L') + ' Z';
+  const nerf = 'M' + Array.from({ length: 9 }, (_, i) => at(0.05 + i * 0.1)).map(([x, y]) => `${f2(x)},${f2(y * 0.6)}`).join(' L');
+  return `<path d="${contour}" fill="${fond}" stroke="${OUT}" stroke-width="0.5" stroke-linejoin="round"/>`
+    + `<path d="${nerf}" fill="none" stroke="${KELP.nerf}" stroke-width="0.45" stroke-linecap="round" stroke-linejoin="round"/>`;
+}
+const kelp = (u, v, rot = 0) => {
+  const [x, y] = P(u, v, 0);
+  const flot = (fx, fy) => ell(fx, fy, 0.85, 0.55, KELP.flot, ` stroke="${OUT}" stroke-width="0.45"`) + ell(fx - 0.3, fy - 0.2, 0.35, 0.2, 'rgba(255,245,200,.7)');
+  return `<g transform="translate(${f2(x)} ${f2(y)}) rotate(${rot})">${ell(0.4, 0.8, 8, 2, 'rgba(70,60,30,.16)')}`
+    + ruban([-7.5, 2], [-1, -5], [7.5, -1], 3, 6, KELP.ombre) + ruban([-6, -3.5], [0, 4.5], [7, 3.4], 2.5, 5)
+    + flot(-3.6, -0.4) + flot(1.4, -1.6) + flot(3.8, 1.6) + `</g>`;
+};
 
 /* ---------- le petit feu de bois flotté (sous la marmite de la cuisine de Cannelle) ---------- */
 // Bouts de bois flotté qui se rejoignent au milieu (bouts charbonneux), une planche cassée, un lit de braises ; la
@@ -223,7 +247,28 @@ function hirondelle() {
 
 /* ---------- aides des coins ---------- */
 // Sol du coin : une tache de sable (grève) ou de terre battue, sous l'ombre douce du jeu
-const ground = (kind = 'sable') => shadow(0, 0.05, 1.02, 0.16) + disc(0.02, 0.05, 0, 0.92, kind === 'sable' ? 'rgba(232,212,160,.55)' : 'rgba(150,120,80,.22)');
+// Le sol du coin : une plaque de sable (la Crique, la Grève) ou de terre battue, un peu translucide pour laisser voir le
+// terrain du jeu. Du grain, pour que le sol ait une matière : sable, des grains plus sombres et deux rides de vent ;
+// terre, des mottes, deux cailloux et des touffes d'herbe au bord. Positions fixes (nombre d'or), pas de hasard.
+const GRAINS = Array.from({ length: 22 }, (_, i) => { const a = i * 2.39996, r = 0.34 + 0.52 * (((i * 7) % 11) / 10); return [0.02 + Math.cos(a) * r, 0.05 + Math.sin(a) * r, i]; });
+function tuft(u, v, k = 1) {
+  const [x, y] = P(u, v, 0);
+  const brin = (dx, h, c) => `<path d="M${f2(x + dx)},${f2(y)} Q${f2(x + dx * 1.6)},${f2(y - h * 0.6)} ${f2(x + dx * 2.4)},${f2(y - h)}" fill="none" stroke="${c}" stroke-width="${f2(1.1 * k)}" stroke-linecap="round"/>`;
+  return ell(x, y + 0.3, 3 * k, 1.1 * k, 'rgba(60,80,30,.25)') + brin(-1.2 * k, 4.4 * k, LEAVES.dark) + brin(1.1 * k, 4 * k, LEAVES.dark) + brin(0, 5.4 * k, LEAVES.mid) + brin(-0.5 * k, 3.4 * k, LEAVES.mid);
+}
+function ground(kind = 'sable') {
+  let o = shadow(0, 0.05, 1.02, 0.16) + disc(0.02, 0.05, 0, 0.92, kind === 'sable' ? 'rgba(232,212,160,.55)' : 'rgba(150,120,80,.22)');
+  if (kind === 'sable') {
+    o += disc(-0.06, -0.02, 0, 0.62, 'rgba(246,234,200,.35)');
+    for (const [u, v, i] of GRAINS) { const [x, y] = P(u, v, 0); o += ell(x, y, i % 3 ? 0.55 : 0.8, i % 3 ? 0.3 : 0.42, i % 2 ? 'rgba(170,140,90,.55)' : 'rgba(255,250,235,.7)'); }
+    for (const [u, v] of [[-0.62, 0.38], [0.5, 0.58]]) { const [x, y] = P(u, v, 0); o += `<path d="M${f2(x - 6)},${f2(y)} Q${f2(x - 3)},${f2(y - 1.2)} ${f2(x)},${f2(y)} T${f2(x + 6)},${f2(y)}" fill="none" stroke="rgba(190,160,105,.55)" stroke-width="0.6" stroke-linecap="round"/>`; }
+    return o;
+  }
+  o += disc(-0.06, -0.02, 0, 0.66, 'rgba(196,164,112,.22)');
+  for (const [u, v, i] of GRAINS) { const [x, y] = P(u, v, 0); o += ell(x, y, i % 3 ? 0.7 : 1.1, i % 3 ? 0.36 : 0.5, i % 2 ? 'rgba(110,80,50,.4)' : 'rgba(230,215,180,.45)'); }
+  o += pebble(-0.74, 0.3, 1.5) + pebble(0.66, 0.6, 1.2);
+  return o + tuft(-0.82, -0.12) + tuft(0.86, 0.02, 0.9) + tuft(-0.3, 0.86, 0.8) + tuft(0.34, 0.9);
+}
 // Rame plantée : manche du sol à z, pale en haut (u, v : pied ; lean : penchée vers +u)
 function oar(u, v, h, lean = 0.06) {
   const a = P(u, v, 0), b = P(u + lean, v, h);
@@ -260,7 +305,15 @@ function canvasHeap(u, v, ru, rv, h, seed = 3) {
     + `<path d="M${f2(x - rx * 0.8)},${f2(y - h * 0.2)} Q${f2(x - rx * 0.2)},${f2(y + ry * 0.1)} ${f2(x + rx * 0.5)},${f2(y + ry * 0.35)}" fill="none" stroke="${CANVAS.seam}" stroke-width="0.7" stroke-dasharray="1.6 1.2"/>`;
 }
 // Coquillage, étoile de mer
-const shell = (u, v) => { const [x, y] = P(u, v, 0); return `<path d="M${f2(x - 2)},${f2(y)} Q${f2(x)},${f2(y - 3.4)} ${f2(x + 2)},${f2(y)} Z" fill="#F4E4D4" stroke="${OUT}" stroke-width="0.5"/>`; };
+// Coquillage (une coquille Saint-Jacques couchée) : l'éventail nacré, ses côtes, les deux oreilles à la charnière
+const shell = (u, v) => {
+  const [x, y] = P(u, v, 0);
+  const eventail = `M${f2(x - 0.7)},${f2(y + 0.4)} L${f2(x - 2.6)},${f2(y - 1)} Q${f2(x - 2.8)},${f2(y - 3.2)} ${f2(x)},${f2(y - 3.6)} Q${f2(x + 2.8)},${f2(y - 3.2)} ${f2(x + 2.6)},${f2(y - 1)} L${f2(x + 0.7)},${f2(y + 0.4)} Z`;
+  return ell(x + 0.3, y + 0.5, 2.6, 0.8, 'rgba(70,60,30,.18)')
+    + `<path d="${eventail}" fill="#F6E2D0" stroke="${OUT}" stroke-width="0.5" stroke-linejoin="round"/>`
+    + [-1.6, -0.55, 0.55, 1.6].map(d => ln([x + d * 0.3, y + 0.1], [x + d, y - 2.9 + Math.abs(d) * 0.35], '#D9A98C', 0.4)).join('')
+    + `<path d="M${f2(x - 1.3)},${f2(y + 0.6)} L${f2(x - 0.6)},${f2(y - 0.2)} L${f2(x + 0.6)},${f2(y - 0.2)} L${f2(x + 1.3)},${f2(y + 0.6)} Z" fill="#EBC9B2" stroke="${OUT}" stroke-width="0.45" stroke-linejoin="round"/>`;
+};
 // Voile tendue (un pan de toile) : quatre coins du repère, coutures, ombre sous le pan
 function sailPanel(corners, c = CANVAS, seams = 2) {
   const q = iso(corners);
@@ -401,6 +454,55 @@ function brokenClock(u, v) {
     + ell(x, y - 10, 3.4, 3.4, '#F4EEDF', EDGE) + ln([x, y - 10], [x + 1.6, y - 12], OUT, 0.6) + ln([x, y - 10], [x - 1, y - 8], OUT, 0.6)
     + `<path d="M${f2(x - 2.6)},${f2(y - 12.4)} L${f2(x - 0.6)},${f2(y - 9.6)} L${f2(x + 0.8)},${f2(y - 11)} L${f2(x + 2.4)},${f2(y - 8.6)}" fill="none" stroke="${OUT}" stroke-width="0.45"/>`;
 }
+// Pièce cousue sur une toile (quatre coins du repère) : un carré plus clair, et ses points de couture un peu en retrait
+// du bord (chaque coin rapproché du centre)
+function patch(q4) {
+  const q = iso(q4), cx = q.reduce((a, p) => a + p[0], 0) / 4, cy = q.reduce((a, p) => a + p[1], 0) / 4;
+  const inset = q.map(([x, y]) => [x + (cx - x) * 0.2, y + (cy - y) * 0.2]);
+  return `<polygon points="${pts(q)}" fill="#F4EDDA" stroke="${CANVAS.seam}" stroke-width="0.5" stroke-linejoin="round"/>`
+    + `<polygon points="${pts(inset)}" fill="none" stroke="${CANVAS.dark}" stroke-width="0.4" stroke-dasharray="0.9 0.7"/>`;
+}
+// La scie de Rivet pendue à un mur (u fixe, de v0 à v1), sur son clou : la lame en trapèze, ses dents, la poignée
+function wallSaw(u, v0, v1) {
+  const at = (k, z) => P(u, v0 + (v1 - v0) * k, z);
+  const a = at(0.5, 12.6), b = at(0.78, 12.6), c = at(0.78, 9.4), d = at(0.5, 8.4), [nx, ny] = at(0.64, 13.2);
+  const dents = Array.from({ length: 6 }, (_, i) => { const t = (i + 0.5) / 6, x = d[0] + (c[0] - d[0]) * t, y = d[1] + (c[1] - d[1]) * t; return `M${f2(x - 0.5)},${f2(y)} L${f2(x)},${f2(y + 0.8)} L${f2(x + 0.5)},${f2(y)}`; }).join(' ');
+  const h = at(0.82, 11.2);
+  return `<path d="${dents}" fill="#8E949C" stroke="${OUT}" stroke-width="0.35"/>` + `<polygon points="${pts([a, b, c, d])}" fill="#C9CED6"${EDGE}/>`
+    + ln([a[0] + 0.8, a[1] + 0.9], [b[0] - 0.6, b[1] + 0.9], '#EEF1F4', 0.5)
+    + `<rect x="${f2(h[0] - 1.8)}" y="${f2(h[1] - 2.4)}" width="3.8" height="4.8" rx="1.1" fill="${WOOD.left}"${EDGE}/>` + ell(h[0] + 0.3, h[1], 0.7, 1.2, WOOD_DARK.right)
+    + ell(nx, ny, 0.6, 0.6, IRON.right, ` stroke="${OUT}" stroke-width="0.35"`);
+}
+// Le marteau posé à plat (du manche en a à la tête en b), la tête d'acier en travers
+function hammerLying(u, v, z) {
+  const a = P(u - 0.07, v + 0.02, z), b = P(u + 0.07, v - 0.02, z);
+  return tk(a, b, '#A8743F', 1.1) + `<g transform="translate(${f2(b[0])} ${f2(b[1])}) rotate(-62)"><rect x="-2.6" y="-1.1" width="5.2" height="2.2" rx="0.5" fill="${IRON.left}"${EDGE}/></g>`;
+}
+// Une corde lovée pendue à un poteau, en (u, v, z)
+function ropeHung(u, v, z) {
+  const [x, y] = P(u, v, z);
+  return ell(x, y + 3.2, 2.6, 3.4, 'none', ` stroke="${OUT}" stroke-width="2.3"`) + ell(x, y + 3.2, 2.6, 3.4, 'none', ` stroke="${ROPE}" stroke-width="1.1"`)
+    + ell(x + 0.3, y + 3.6, 1.7, 2.5, 'none', ` stroke="${OUT}" stroke-width="1.6"`) + ell(x + 0.3, y + 3.6, 1.7, 2.5, 'none', ` stroke="#B08850" stroke-width="0.7"`)
+    + pathTk(`M${f2(x - 1)},${f2(y - 0.4)} L${f2(x + 1)},${f2(y + 0.4)}`, ROPE, 0.6);
+}
+// La burette d'huile : un corps rond de fer-blanc, le bec long, une goutte
+function oilCan(u, v) {
+  const [x, y] = P(u, v, 0);
+  return ell(x + 0.6, y + 0.3, 3.4, 1.4, 'rgba(40,55,20,.22)')
+    + `<path d="M${f2(x - 2.6)},${f2(y)} L${f2(x - 2.6)},${f2(y - 3.4)} Q${f2(x)},${f2(y - 5.4)} ${f2(x + 2.6)},${f2(y - 3.4)} L${f2(x + 2.6)},${f2(y)} Q${f2(x)},${f2(y + 1.2)} ${f2(x - 2.6)},${f2(y)} Z" fill="#C9A24A"${EDGE}/>`
+    + ell(x, y - 3.6, 2.6, 1, '#E3C46E', ` stroke="${OUT}" stroke-width="0.5"`) + tk([x + 0.4, y - 4.6], [x + 4.6, y - 8.2], '#A8873A', 0.6)
+    + ell(x - 1.2, y - 2.2, 0.5, 1, '#F2DC9A') + `<path d="M${f2(x + 5)},${f2(y - 7)} q0.6,1 0,1.6 q-0.6,-0.6 0,-1.6 Z" fill="#3A3A44"/>`;
+}
+// Une clé plate posée par terre
+function wrenchLying(u, v) {
+  const a = P(u - 0.1, v + 0.03, 0.5), b = P(u + 0.1, v - 0.03, 0.5);
+  // la mâchoire : un C ouvert vers le bout, au bout du manche
+  const dx = b[0] - a[0], dy = b[1] - a[1], l = Math.hypot(dx, dy), ux = dx / l, uy = dy / l, r = 2.3, c = [b[0] + ux * r * 0.8, b[1] + uy * r * 0.8];
+  const ang = Math.atan2(uy, ux), p1 = [c[0] + Math.cos(ang + 0.75) * r, c[1] + Math.sin(ang + 0.75) * r * 0.7], p2 = [c[0] + Math.cos(ang - 0.75) * r, c[1] + Math.sin(ang - 0.75) * r * 0.7];
+  const C = `M${f2(p1[0])},${f2(p1[1])} A${r},${f2(r * 0.7)} 0 1 1 ${f2(p2[0])},${f2(p2[1])}`;
+  return ell((a[0] + b[0]) / 2, (a[1] + b[1]) / 2 + 1, 6, 1.4, 'rgba(40,55,20,.2)') + tk(a, b, '#AEB4BC', 1.5) + ln([a[0] + 1, a[1] - 0.5], [b[0] - 1.5, b[1] - 0.5], '#E4E8EC', 0.5)
+    + pathTk(C, '#C9CED6', 1.5);
+}
 // 1. débris : la voile échouée retombée en tas sur une rame, la ferraille triée par tas, la pendule cassée
 function rivetDebris() {
   let o = ground('sable');
@@ -435,20 +537,23 @@ function rivetCabin() {
   const u0 = -0.7, u1 = 0.4, v0 = -0.74, v1 = -0.14;
   // mur du fond et mur de côté (planches), toit de toile en pente vers l'arrière
   o += face([[u0, v0, 0], [u1, v0, 0], [u1, v0, 22], [u0, v0, 22]], WOOD_DARK.left, EDGE) + planksLeft(u0, u1, v0, 0, 22, 5);
-  o += face([[u0, v0, 0], [u0, v1, 0], [u0, v1, 26], [u0, v0, 22]], WOOD_DARK.right, EDGE);
-  // des outils pendus au mur du fond
-  for (const [u, l] of [[-0.42, 8], [-0.24, 6], [-0.06, 9]]) { const a = P(u, v0 + 0.01, 18), b = P(u, v0 + 0.01, 18 - l); o += ln(a, b, IRON.left, 1.4) + ln(a, b, OUT, 0.3); }
+  o += face([[u0, v0, 0], [u0, v1, 0], [u0, v1, 30], [u0, v0, 22]], WOOD_DARK.right, EDGE);
+  // la scie pendue au mur de gauche (l'intérieur se voit sous le toit)
+  o += wallSaw(u0 + 0.01, v0, v1);
   o += brokenClock(0.2, v0 + 0.06).replace('#8A5A36', '#A87650');
   // l'établi le long du fond, l'étau
   o += box(-0.6, v0 + 0.06, 0.1, v0 + 0.26, 0, 11, WOOD) + planksLeft(-0.6, 0.1, v0 + 0.26, 0, 11, 3.6);
-  o += box(-0.2, v0 + 0.1, -0.06, v0 + 0.2, 11, 15, IRON) + gear(-0.4, v0 + 0.16, 2.6, 11.2, 0.4);
-  // poteau avant et toit de toile
-  o += stick(u1, v1, 0, u1, v1, 26, 2.2, DRIFT.left) + stick(u0 + 0.02, v1, 0, u0 + 0.02, v1, 26, 2.2, DRIFT.left);
-  o += face([[u0 - 0.06, v1 + 0.08, 27], [u1 + 0.08, v1 + 0.08, 27], [u1 + 0.08, v0 - 0.04, 23], [u0 - 0.06, v0 - 0.04, 23]], CANVAS.light, EDGE);
-  for (const k of [0.25, 0.5, 0.75]) { const u = u0 + (u1 - u0) * k; o += ln(P(u, v1 + 0.08, 27), P(u, v0 - 0.04, 23), CANVAS.seam, 0.7); }
-  o += `<polyline points="${pts(iso([[u0 - 0.06, v1 + 0.08, 27], [u1 + 0.08, v1 + 0.08, 27]]))}" fill="none" stroke="${CANVAS.dark}" stroke-width="1.4"/>`;
+  o += box(-0.2, v0 + 0.1, -0.06, v0 + 0.2, 11, 15, IRON) + gear(-0.4, v0 + 0.16, 2.6, 11.2, 0.4) + hammerLying(0.0, v0 + 0.18, 11.4);
+  // poteaux avant (bois flotté) et toit de toile : une rive épaisse devant, une pièce cousue, les ligatures aux poteaux
+  o += stick(u1, v1, 0, u1, v1, 30, 2.8, DRIFT.left) + stick(u0 + 0.02, v1, 0, u0 + 0.02, v1, 30, 2.8, DRIFT.left) + ropeHung(u0 + 0.02, v1 + 0.01, 19);
+  o += face([[u0 - 0.06, v1 + 0.08, 31], [u1 + 0.08, v1 + 0.08, 31], [u1 + 0.08, v1 + 0.08, 29.4], [u0 - 0.06, v1 + 0.08, 29.4]], CANVAS.dark, EDGE);
+  o += face([[u0 - 0.06, v1 + 0.08, 31], [u1 + 0.08, v1 + 0.08, 31], [u1 + 0.08, v0 - 0.04, 23], [u0 - 0.06, v0 - 0.04, 23]], CANVAS.light, EDGE);
+  for (const k of [0.25, 0.5, 0.75]) { const u = u0 + (u1 - u0) * k; o += ln(P(u, v1 + 0.08, 31), P(u, v0 - 0.04, 23), CANVAS.seam, 0.7); }
+  o += patch([[-0.12, -0.24, 29.9], [0.1, -0.24, 29.9], [0.1, -0.44, 27.6], [-0.12, -0.44, 27.6]]);
+  for (const u of [u0 + 0.02, u1]) { const [x, y] = P(u, v1, 29); o += pathTk(`M${f2(x - 1.8)},${f2(y + 0.6)} L${f2(x + 1.8)},${f2(y - 0.4)} M${f2(x - 1.8)},${f2(y + 1.8)} L${f2(x + 1.8)},${f2(y + 0.8)}`, ROPE, 0.6); }
   // devant : la caisse de ferraille, des rouages, la boîte de vis
   o += crate(0.62, 0.12, 0.13, 10) + gear(0.62, 0.12, 2.8, 10.4, 0.2) + gear(0.1, 0.24, 3.6, 0, 0.5) + screwTin(-0.3, 0.3) + kelp(-0.66, 0.6, 10);
+  o += oilCan(0.34, 0.42) + wrenchLying(-0.08, 0.5);
   return o;
 }
 
@@ -560,20 +665,40 @@ function sylveDebris() {
   o += raft(0.12, -0.3) + plank([0.5, 0.08], [0.72, 0.24], 0.08, 2.6, DRIFT);
   o += stick(-0.66, 0.14, 1, -0.26, 0.36, 1, 1.8, '#A8743F') + (() => { const [x, y] = P(-0.24, 0.37, 1); return `<path d="M${f2(x)},${f2(y)} Q${f2(x + 6)},${f2(y - 1)} ${f2(x + 8)},${f2(y + 2)} Q${f2(x + 5)},${f2(y + 4)} ${f2(x)},${f2(y + 2)} Z" fill="${WOOD.top}"${EDGE}/>`; })();
   o += leafPile(-0.42, -0.22, 0.34) + kelp(0.6, 0.6, -6) + stone(0.74, -0.3, 2.6);
+  // la plume de geai tombée au bord du nid, un champignon
+  { const [x, y] = P(-0.36, -0.2, 7); o += `<path d="M${f2(x - 5)},${f2(y + 1)} Q${f2(x - 1)},${f2(y - 1.6)} ${f2(x + 4)},${f2(y - 1)} Q${f2(x)},${f2(y + 1.4)} ${f2(x - 5)},${f2(y + 1)} Z" fill="#3E7FC1" stroke="${OUT}" stroke-width="0.55"/>` + ln([x - 3.6, y + 0.6], [x + 2.6, y - 0.8], '#9CC4EC', 0.4); }
+  o += mushroom(-0.74, 0.0, 0.85);
   return o;
 }
-// 2. abri : les planches du radeau dressées en appentis contre une souche, couvertes de branchages ; dessous, la litière
+// 2. abri : les planches du radeau dressées en appentis contre une souche, couvertes de branchages feuillus ; par le
+// côté ouvert, on voit la litière de feuilles où elle dort ; au pied de la souche, des champignons et la plume de geai
 function sylveShelter() {
   let o = ground('terre');
   o += cylinder(-0.5, -0.56, 0, 12, 0.16, { top: '#C9A274', left: '#8A6440', right: '#6A4A30' }, id('syl'));
   { const [x, y] = P(-0.5, -0.56, 12); o += ell(x, y, 6, 3, 'none', ` stroke="#8A6440" stroke-width="0.7"`) + ell(x, y, 3, 1.5, 'none', ` stroke="#8A6440" stroke-width="0.6"`); }
-  o += leafPile(-0.18, -0.04, 0.3);
+  // la litière, qui dépasse du côté ouvert de l'appentis (à gauche)
+  o += leafPile(-0.5, -0.12, 0.26);
   // les planches posées en pente, de la souche jusqu'au sol devant à droite
   for (let i = 0; i < 4; i++) { const u = -0.38 + i * 0.18; o += face([[u, -0.5, 13], [u + 0.15, -0.5, 13], [u + 0.15 + 0.06, 0.06, 0], [u + 0.06, 0.06, 0]], i % 2 ? DRIFT.top : DRIFT.left, EDGE); }
-  // branchages feuillus par-dessus
-  { const a = P(-0.36, -0.5, 13), b = P(0.38, -0.46, 11); for (let i = 0; i < 7; i++) { const t = i / 6, x = a[0] + (b[0] - a[0]) * t, y = a[1] + (b[1] - a[1]) * t; o += bigLeaf(x, y + 2, 12, 70 + (i % 3) * 12, i % 2 ? '#6FAE4E' : '#86C06A'); } }
-  o += raft(0.48, 0.36).replace(/plank/g, 'plank') + kelp(-0.66, 0.5, 8);
+  // deux branches en travers, puis les branchages feuillus sur toute la pente (trois rangs, du haut vers le bas)
+  o += tk(P(-0.42, -0.36, 9.2), P(0.36, -0.32, 8.6), '#7A5634', 1.1) + tk(P(-0.36, -0.1, 4.4), P(0.42, -0.06, 3.6), '#7A5634', 1);
+  for (const [t, z, n, r0] of [[-0.5, 13, 7, 70], [-0.28, 8, 6, 82], [-0.06, 3.4, 5, 94]]) {
+    const a = P(-0.38 + (t + 0.5) * 0.1, t, z), b = P(0.36 + (t + 0.5) * 0.1, t + 0.04, z - 1);
+    for (let i = 0; i < n; i++) { const k = i / (n - 1), x = a[0] + (b[0] - a[0]) * k, y = a[1] + (b[1] - a[1]) * k; o += bigLeaf(x, y + 2, 11, r0 + (i % 3) * 12, (i + n) % 2 ? '#6FAE4E' : '#86C06A'); }
+  }
+  // champignons au pied de la souche, la plume de geai plantée dans la souche
+  o += mushroom(-0.7, -0.7, 0.75) + mushroom(-0.76, -0.6, 1);
+  { const [x, y] = P(-0.46, -0.56, 12); o += `<path d="M${f2(x + 1)},${f2(y)} Q${f2(x + 2.4)},${f2(y - 5)} ${f2(x + 6.4)},${f2(y - 8)} Q${f2(x + 5)},${f2(y - 3)} ${f2(x + 2)},${f2(y + 0.6)} Z" fill="#3E7FC1" stroke="${OUT}" stroke-width="0.6"/>` + ln([x + 2.4, y - 2], [x + 5.2, y - 6.4], '#9CC4EC', 0.4); }
+  o += raft(0.48, 0.36) + kelp(-0.66, 0.5, 8);
   return o;
+}
+// Champignon (chapeau rouge à pois blancs), échelle k
+function mushroom(u, v, k = 1) {
+  const [x, y] = P(u, v, 0);
+  return ell(x + 0.6 * k, y + 0.4 * k, 2.6 * k, 0.9 * k, 'rgba(40,55,20,.22)')
+    + `<rect x="${f2(x - 0.9 * k)}" y="${f2(y - 3.4 * k)}" width="${f2(1.8 * k)}" height="${f2(3.4 * k)}" rx="${f2(0.6 * k)}" fill="#F4ECDA" stroke="${OUT}" stroke-width="0.5"/>`
+    + `<path d="M${f2(x - 2.8 * k)},${f2(y - 3 * k)} Q${f2(x - 2.6 * k)},${f2(y - 6.4 * k)} ${f2(x)},${f2(y - 6.6 * k)} Q${f2(x + 2.6 * k)},${f2(y - 6.4 * k)} ${f2(x + 2.8 * k)},${f2(y - 3 * k)} Q${f2(x)},${f2(y - 2.2 * k)} ${f2(x - 2.8 * k)},${f2(y - 3 * k)} Z" fill="#D9503F" stroke="${OUT}" stroke-width="0.55"/>`
+    + ell(x - 1.1 * k, y - 4.8 * k, 0.55 * k, 0.4 * k, '#FFF6EA') + ell(x + 1.2 * k, y - 4.2 * k, 0.45 * k, 0.35 * k, '#FFF6EA') + ell(x + 0.1 * k, y - 5.9 * k, 0.4 * k, 0.3 * k, '#FFF6EA');
 }
 // 3. cabanon : une hutte de branches tressées au toit de feuilles, au pied d'un jeune arbre ; un fagot de bois mort
 function sylveCabin() {
@@ -597,6 +722,13 @@ function sylveCabin() {
 }
 
 /* ---------- le coin de Galet (acte II, la Fissure de La Colline) : avant la Carrière ---------- */
+// Éclat de cristal (la lueur de la Fissure) : trois prismes bleu-vert, un reflet, un halo
+function crystal(u, v, k = 1) {
+  const [x, y] = P(u, v, 0);
+  const prisme = (dx, h, w, c) => `<path d="M${f2(x + dx - w)},${f2(y)} L${f2(x + dx - w)},${f2(y - h * 0.7)} L${f2(x + dx)},${f2(y - h)} L${f2(x + dx + w)},${f2(y - h * 0.7)} L${f2(x + dx + w)},${f2(y)} Z" fill="${c}" stroke="${OUT}" stroke-width="0.5" stroke-linejoin="round"/>`;
+  return ell(x, y - 2 * k, 5 * k, 3.4 * k, '#8FE3E8', ' opacity=".25"') + prisme(-1.6 * k, 4.4 * k, 1.1 * k, '#6CC7D2') + prisme(1.5 * k, 3.6 * k, 1 * k, '#5AB4C2') + prisme(0, 6 * k, 1.3 * k, '#9BE6EC')
+    + ln([x - 0.5 * k, y - 1 * k], [x - 0.5 * k, y - 4.6 * k], '#E6FBFC', 0.45);
+}
 // Le rocher fendu (une lueur dans la fente), un muret de pierres sèches en demi-cercle devant, les blocs du caboteur,
 // le maillet et le ciseau posés sur un bloc
 function galetNook() {
@@ -608,6 +740,10 @@ function galetNook() {
     o += `<path d="${d}" fill="none" stroke="#8FE3E8" stroke-width="5" stroke-linecap="round" stroke-linejoin="round" opacity="0.28"/>`
       + `<path d="${d}" fill="none" stroke="#3C3A36" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>`
       + `<path d="${d}" fill="none" stroke="#8FE3E8" stroke-width="0.6" stroke-linecap="round" stroke-linejoin="round"/>`; }
+  // la mousse sur le dessus du rocher, des taches de lichen, deux éclats de cristal sortis de terre au pied du rocher
+  { const [x, y] = P(-0.34, -0.56, 24); o += `<path d="M${f2(x - 9)},${f2(y + 1)} Q${f2(x - 6)},${f2(y - 3.4)} ${f2(x - 1)},${f2(y - 2.4)} Q${f2(x + 4)},${f2(y - 4)} ${f2(x + 8)},${f2(y - 0.6)} Q${f2(x + 3)},${f2(y + 2.6)} ${f2(x - 2)},${f2(y + 1.6)} Q${f2(x - 6)},${f2(y + 3)} ${f2(x - 9)},${f2(y + 1)} Z" fill="#8DB35E" stroke="${OUT}" stroke-width="0.55"/>` + ell(x - 3, y - 1.4, 2.6, 0.9, '#B5D486'); }
+  for (const [u, v, z] of [[-0.6, -0.3, 12], [-0.44, -0.18, 6], [0.06, -0.4, 16]]) { const [x, y] = P(u, v, z); o += ell(x, y, 1.6, 1, '#C9C27A') + ell(x + 1.4, y + 0.6, 0.9, 0.6, '#B8B26A'); }
+  o += crystal(-0.84, -0.06, 0.7) + crystal(-0.78, 0.04, 1);
   // le muret de pierres sèches en arc devant la fente : deux rangs de pierres rondes
   const arc = k => { const a = Math.PI * 0.14 + (k / 6) * Math.PI * 0.72; return [-0.12 + Math.cos(a) * 0.44, -0.2 + Math.sin(a) * 0.34]; };
   const row1 = Array.from({ length: 7 }, (_, k) => arc(k)).sort((p, q) => p[0] + p[1] - q[0] - q[1]);
@@ -621,13 +757,32 @@ function galetNook() {
 }
 
 /* ---------- le coin de Mélisse (acte III, Les Jardins) : avant le Potager ---------- */
+// Sac de jute déchiré, couché, d'où coulent des graines : le sac, sa trame, la ficelle, la déchirure
+function seedSack(u, v) {
+  const [x, y] = P(u, v, 0);
+  const sac = `M${f2(x - 7)},${f2(y)} Q${f2(x - 8)},${f2(y - 6)} ${f2(x - 2)},${f2(y - 7)} Q${f2(x + 3)},${f2(y - 7.4)} ${f2(x + 5)},${f2(y - 4)} L${f2(x + 7)},${f2(y - 1)} Q${f2(x + 1)},${f2(y + 2.6)} ${f2(x - 7)},${f2(y)} Z`;
+  return ell(x + 1, y + 0.6, 9, 2.6, 'rgba(40,55,20,.22)') + `<path d="${sac}" fill="#C8A86E"${EDGE}/>`
+    + [-4, -1, 2].map(d => `<path d="M${f2(x + d)},${f2(y - 6.4)} Q${f2(x + d - 0.6)},${f2(y - 3)} ${f2(x + d + 0.4)},${f2(y + 0.6)}" fill="none" stroke="#A88A52" stroke-width="0.45"/>`).join('')
+    + `<path d="M${f2(x - 6.6)},${f2(y - 3.6)} Q${f2(x - 2)},${f2(y - 4.6)} ${f2(x + 3.4)},${f2(y - 2.4)}" fill="none" stroke="#A88A52" stroke-width="0.45"/>`
+    + `<path d="M${f2(x + 4.4)},${f2(y - 4.6)} L${f2(x + 5.6)},${f2(y - 3.4)} L${f2(x + 4.6)},${f2(y - 2.8)} L${f2(x + 6.4)},${f2(y - 1.6)}" fill="none" stroke="${OUT}" stroke-width="0.6"/>`
+    + pathTk(`M${f2(x - 6.4)},${f2(y - 4.4)} q-1.6,-1 -2.6,0.2`, '#E2D2A8', 0.5)
+    + [[8, -0.6, '#C9A45A'], [9.6, 0.4, '#8A5A2E'], [8.4, 1.2, '#E2C27A'], [10.8, -0.2, '#7FA65A'], [11.6, 1, '#C9A45A']].map(([dx, dy, c]) => ell(x + dx, y + dy, 0.9, 0.6, c, ` stroke="${OUT}" stroke-width="0.3"`)).join('');
+}
+// Une pousse sortie de terre : deux cotylédons sur une tige, échelle k
+function sprout(u, v, k = 1) {
+  const [x, y] = P(u, v, 0);
+  return ell(x, y + 0.2, 1.8 * k, 0.6 * k, 'rgba(90,70,40,.35)') + ln([x, y], [x, y - 3.4 * k], '#5E9E3A', 0.8)
+    + bigLeaf(x - 1.5 * k, y - 3.8 * k, 3.2 * k, -55, '#86C06A') + bigLeaf(x + 1.5 * k, y - 3.8 * k, 3.2 * k, 55, '#6FAE4E');
+}
 // 1. débris : la barque de graines échouée, les graines répandues, la boîte en fer, la rame cassée
 function melisseDebris() {
   let o = ground('terre');
   o += boatHull(0.0, -0.3, 0.9, 0.24, 9) + seedsSpill(-0.16, -0.3).replace(/<ellipse/g, '<ellipse') ;
   { const [x, y] = P(0.02, -0.3, 9); o += [[-6, 0, '#C9A45A'], [-2, 1, '#8A5A2E'], [3, -0.4, '#E2C27A'], [6, 1, '#7FA65A']].map(([dx, dy, c]) => ell(x + dx, y + dy, 1.6, 1.1, c, ` stroke="${OUT}" stroke-width="0.35"`)).join(''); }
-  o += seedsSpill(0.2, 0.2) + seedsSpill(-0.3, 0.3) + seedTin(0.46, 0.06);
+  o += seedSack(-0.5, 0.06) + seedsSpill(0.2, 0.2) + seedsSpill(-0.3, 0.3) + seedTin(0.46, 0.06);
   o += plank([-0.64, 0.4], [-0.3, 0.6], 0.07, 2, WOOD) + stone(0.7, 0.5, 2.6);
+  // déjà, quelques graines ont germé dans le sable mouillé
+  o += sprout(0.06, 0.34, 1) + sprout(-0.18, 0.46, 0.8) + sprout(0.34, 0.34, 0.9);
   return o;
 }
 // 2. abri : la barque retournée, posée sur deux pierres, sert de toit ; dessous, un lit de mousse ; devant, le
