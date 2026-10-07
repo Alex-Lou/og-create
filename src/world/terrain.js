@@ -120,7 +120,8 @@ const TOPS = {
   j: [['#3E8A48', '#46924F']],
   a: [['#6A6461', '#726C68']],
   o: [['#D9532E', '#E2603A']],
-  u: [['#E4E7EC', '#E9ECF0']]
+  // Terre inconnue : un sol pâle, sauge en bas, pierre grise en hauteur, qu'on devine sous la brume (relief compris)
+  u: [['#C9D3C6', '#CFD8CB'], ['#C5CDC3', '#CBD3C9'], ['#C3C9C6', '#C9CFCC'], ['#C8CCD1', '#CDD1D6'], ['#D2D5DA', '#D7DAE0']]
 };
 const topColor = (g, h, odd) => {
   const key = g === 't' ? 'g' : g === 'd' ? 's' : g === 'k' ? 'w' : g;
@@ -135,7 +136,8 @@ const FACES = {
   fall: ['#9AD3F0', '#86C6E8'],
   stairs: ['#CDBB94', '#B8A57D'],
   basalt: ['#4C4744', '#3B3734'],
-  fog: ['#D5D9DF', '#C8CDD4']
+  // Falaises d'une terre inconnue : assez sombres pour lire le relief sous le voile
+  fog: ['#B4BCC0', '#A0A8AF']
 };
 
 // grassy : liseré en haut de la face (true : herbe ; ou une couleur [gauche, droite] : neige, bruyère…)
@@ -419,8 +421,8 @@ export function drawCell(ctx, M, x, y, veil = 0) {
       for (let k = 0; k < 3; k++) ctx.fillRect(c.x - 13 + rnd(x, y, k + 90) * 26, c.y - 5 + rnd(x, y, k + 93) * 10, 1.6, 1.2);
     }
   } else if (g === 'u') {
-    // Terre inconnue : des volutes de brume, rien de ce qui est dessous
-    ctx.fillStyle = 'rgba(255, 255, 255, .55)';
+    // Terre inconnue : des volutes de brume légère ; on devine le relief dessous, pas ce qu'il cache
+    ctx.fillStyle = 'rgba(255, 255, 255, .4)';
     ctx.beginPath();
     ctx.arc(c.x - 7 + rnd(x, y, 14) * 6, c.y - 1, 6 + rnd(x, y, 15) * 3, 0, Math.PI * 2);
     ctx.arc(c.x + 4 + rnd(x, y, 16) * 6, c.y + 1, 5 + rnd(x, y, 17) * 3, 0, Math.PI * 2);
