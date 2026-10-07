@@ -328,4 +328,36 @@ function cueillir({ view, n }) {
 // Debout : frame(avecCueillir(c), vue, 'action', n)
 const avecCueillir = c => ({ ...c, uid: `${c.uid}cu`, pose: cueillir });
 
-module.exports = { lanterne, parapluie, valise, avecLanterne, avecParapluie, avecValise, couche, CADRE_PARAPLUIE, CADRE_COUCHE, ZEDS, paume, tranche, tendre, avecMainsTendues, applaudir, avecApplaudir, pecher, avecPecher, piocher, avecPiocher, cueillir, avecCueillir };
+// La caisse de bois, posée sur l'épaule : son dessus (un peu de profondeur), sa face de planches, ses traverses, ses
+// clous ; (x, y) : le milieu du bas de la face, w × h
+function caisse(x, y, w = 11, h = 8.4) {
+  const g = x - w / 2, d = x + w / 2, t = y - h, p = 2.2;
+  const face = `M${r2(g)},${r2(y)} L${r2(d)},${r2(y)} L${r2(d)},${r2(t)} L${r2(g)},${r2(t)} Z`;
+  const dessus = `M${r2(g)},${r2(t)} L${r2(g + p)},${r2(t - p * 0.7)} L${r2(d + p)},${r2(t - p * 0.7)} L${r2(d)},${r2(t)} Z`;
+  const cote = `M${r2(d)},${r2(y)} L${r2(d + p)},${r2(y - p * 0.7)} L${r2(d + p)},${r2(t - p * 0.7)} L${r2(d)},${r2(t)} Z`;
+  return P(cote, '#94683F') + P(dessus, '#D2A574') + P(face, '#B8875A')
+    + [1 / 3, 2 / 3].map(k => L([g + 0.4, t + h * k], [d - 0.4, t + h * k], '#8A5E36', 0.5)).join('')
+    + L([g + 0.6, y - 0.6], [d - 0.6, t + 0.6], '#8A5E36', 0.9) + L([g + 1.2, t + 0.9], [d - 1.6, t + 0.9], 'rgba(255,255,255,.35)', 0.6)
+    + [[g + 1, t + 1], [d - 1, t + 1], [g + 1, y - 1], [d - 1, y - 1]].map(([a, b]) => E(a, b, 0.35, 0.35, '#5A3A20', 0)).join('')
+    + P(face, 'none');
+}
+// Porter (une caisse sur l'épaule, en allant au chantier) ; 2 images : la caisse remonte d'un cran (le pas), content.
+// La caisse est sur l'épaule droite (à l'écran) dans les trois vues, à côté de la tête, par-dessus ; la main droite la
+// tient par-dessous, l'autre bras se balance.
+function porter({ view, n }) {
+  const [a, b] = this.shoulders;
+  const up = n ? -0.9 : 0;
+  // bornée : chez les carrures larges, la caisse reste dans le cadre (son côté droit, profondeur comprise, avant 47,2)
+  const x = Math.min(b[0] + 7, 39.8), y = b[1] - 0.8 + up;
+  const main = [Math.min(b[0] + 10.2, 43), b[1] - 0.2 + up];
+  const autre = view === 'ne' ? arm(this, a, [a[0] - 1.4, a[1] + 11 - up]) : arm(this, a, [a[0] - 1.6, a[1] + 10.6 + up * 0.5]);
+  return {
+    expr: 'content',
+    left: autre, right: '',
+    over: caisse(x, y, 10.4) + arm(this, b, main, [b[0] + 6.6, b[1] + 5.4])
+  };
+}
+// Debout : frame(avecPorter(c), vue, 'action', n)
+const avecPorter = c => ({ ...c, uid: `${c.uid}po`, pose: porter });
+
+module.exports = { lanterne, parapluie, valise, avecLanterne, avecParapluie, avecValise, couche, CADRE_PARAPLUIE, CADRE_COUCHE, ZEDS, paume, tranche, tendre, avecMainsTendues, applaudir, avecApplaudir, pecher, avecPecher, piocher, avecPiocher, cueillir, avecCueillir, porter, avecPorter };
