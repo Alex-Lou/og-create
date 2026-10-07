@@ -1,0 +1,307 @@
+{
+ "_lisez_moi": [
+  "Les cultures par étapes : une parcelle d'une case qu'on bêche, où l'on trace les sillons, qu'on sème, puis où les plants poussent et grandissent. À la fin, c'est le champ mûr de l'annexe (decor/annexes/champ/champ_<culture>, épouvantail compris) qui prend le relais.",
+  "Ancre (0, 0) au centre de la case, échelle du jeu × 1,25, le cadre du champ : toutes les étapes et le champ mûr ont le même cadre, les mêmes piquets et les mêmes rangs, on passe de l'une à l'autre sans rien déplacer.",
+  "Chaque étape : 3 images en boucle (ms_par_image) ; le ruban du piquet flotte, les plants bougent au vent, le ver ondule, le moineau picore.",
+  "spectacle : quand on plante, les étapes défilent dans l'ordre (ms_par_etape chacune), puis le champ mûr paraît.",
+  "pousse_qui_dure : part, de 0 à 1, où chaque étape commence ; à 1, le champ est mûr."
+ ],
+ "spectacle": {
+  "ordre": [
+   "bechage",
+   "sillons",
+   "semis",
+   "pousses",
+   "croissance"
+  ],
+  "ms_par_etape": 450,
+  "puis": "le champ mûr (decor/annexes/champ/champ_<culture>)"
+ },
+ "pousse_qui_dure": {
+  "part": {
+   "bechage": 0,
+   "sillons": 0.15,
+   "semis": 0.3,
+   "pousses": 0.5,
+   "croissance": 0.7
+  }
+ },
+ "cultures": {
+  "ble": {
+   "nom": "Culture par étapes : le blé",
+   "cadre": [
+    -42.5,
+    -37.5,
+    85,
+    60
+   ],
+   "mur": "decor/annexes/champ/champ_ble",
+   "etapes": {
+    "bechage": {
+     "nom": "Le blé : le bêchage (la terre retournée en mottes, la bêche plantée, un ver de terre)",
+     "cadre": [
+      -42.5,
+      -37.5,
+      85,
+      60
+     ],
+     "ms_par_image": 280,
+     "part": 0,
+     "fichiers": [
+      "ble/culture_ble_bechage_1.svg",
+      "ble/culture_ble_bechage_2.svg",
+      "ble/culture_ble_bechage_3.svg"
+     ]
+    },
+    "sillons": {
+     "nom": "Le blé : les sillons (tracés, le râteau posé au bord)",
+     "cadre": [
+      -42.5,
+      -37.5,
+      85,
+      60
+     ],
+     "ms_par_image": 280,
+     "part": 0.15,
+     "fichiers": [
+      "ble/culture_ble_sillons_1.svg",
+      "ble/culture_ble_sillons_2.svg",
+      "ble/culture_ble_sillons_3.svg"
+     ]
+    },
+    "semis": {
+     "nom": "Le blé : le semis (les graines dans les sillons, le sachet, un moineau qui picore)",
+     "cadre": [
+      -42.5,
+      -37.5,
+      85,
+      60
+     ],
+     "ms_par_image": 280,
+     "part": 0.3,
+     "fichiers": [
+      "ble/culture_ble_semis_1.svg",
+      "ble/culture_ble_semis_2.svg",
+      "ble/culture_ble_semis_3.svg"
+     ]
+    },
+    "pousses": {
+     "nom": "Le blé : les pousses",
+     "cadre": [
+      -42.5,
+      -37.5,
+      85,
+      60
+     ],
+     "ms_par_image": 280,
+     "part": 0.5,
+     "fichiers": [
+      "ble/culture_ble_pousses_1.svg",
+      "ble/culture_ble_pousses_2.svg",
+      "ble/culture_ble_pousses_3.svg"
+     ]
+    },
+    "croissance": {
+     "nom": "Le blé : la croissance (les plants grandissent, encore verts)",
+     "cadre": [
+      -42.5,
+      -37.5,
+      85,
+      60
+     ],
+     "ms_par_image": 280,
+     "part": 0.7,
+     "fichiers": [
+      "ble/culture_ble_croissance_1.svg",
+      "ble/culture_ble_croissance_2.svg",
+      "ble/culture_ble_croissance_3.svg"
+     ]
+    }
+   }
+  },
+  "carottes": {
+   "nom": "Culture par étapes : les carottes",
+   "cadre": [
+    -42.5,
+    -37.5,
+    85,
+    60
+   ],
+   "mur": "decor/annexes/champ/champ_carottes",
+   "etapes": {
+    "bechage": {
+     "nom": "Les carottes : le bêchage (la terre retournée en mottes, la bêche plantée, un ver de terre)",
+     "cadre": [
+      -42.5,
+      -37.5,
+      85,
+      60
+     ],
+     "ms_par_image": 280,
+     "part": 0,
+     "fichiers": [
+      "carottes/culture_carottes_bechage_1.svg",
+      "carottes/culture_carottes_bechage_2.svg",
+      "carottes/culture_carottes_bechage_3.svg"
+     ]
+    },
+    "sillons": {
+     "nom": "Les carottes : les sillons (tracés, le râteau posé au bord)",
+     "cadre": [
+      -42.5,
+      -37.5,
+      85,
+      60
+     ],
+     "ms_par_image": 280,
+     "part": 0.15,
+     "fichiers": [
+      "carottes/culture_carottes_sillons_1.svg",
+      "carottes/culture_carottes_sillons_2.svg",
+      "carottes/culture_carottes_sillons_3.svg"
+     ]
+    },
+    "semis": {
+     "nom": "Les carottes : le semis (les graines dans les sillons, le sachet, un moineau qui picore)",
+     "cadre": [
+      -42.5,
+      -37.5,
+      85,
+      60
+     ],
+     "ms_par_image": 280,
+     "part": 0.3,
+     "fichiers": [
+      "carottes/culture_carottes_semis_1.svg",
+      "carottes/culture_carottes_semis_2.svg",
+      "carottes/culture_carottes_semis_3.svg"
+     ]
+    },
+    "pousses": {
+     "nom": "Les carottes : les pousses",
+     "cadre": [
+      -42.5,
+      -37.5,
+      85,
+      60
+     ],
+     "ms_par_image": 280,
+     "part": 0.5,
+     "fichiers": [
+      "carottes/culture_carottes_pousses_1.svg",
+      "carottes/culture_carottes_pousses_2.svg",
+      "carottes/culture_carottes_pousses_3.svg"
+     ]
+    },
+    "croissance": {
+     "nom": "Les carottes : la croissance (les plants grandissent, encore verts)",
+     "cadre": [
+      -42.5,
+      -37.5,
+      85,
+      60
+     ],
+     "ms_par_image": 280,
+     "part": 0.7,
+     "fichiers": [
+      "carottes/culture_carottes_croissance_1.svg",
+      "carottes/culture_carottes_croissance_2.svg",
+      "carottes/culture_carottes_croissance_3.svg"
+     ]
+    }
+   }
+  },
+  "citrouilles": {
+   "nom": "Culture par étapes : les citrouilles",
+   "cadre": [
+    -42.5,
+    -37.5,
+    85,
+    60
+   ],
+   "mur": "decor/annexes/champ/champ_citrouilles",
+   "etapes": {
+    "bechage": {
+     "nom": "Les citrouilles : le bêchage (la terre retournée en mottes, la bêche plantée, un ver de terre)",
+     "cadre": [
+      -42.5,
+      -37.5,
+      85,
+      60
+     ],
+     "ms_par_image": 280,
+     "part": 0,
+     "fichiers": [
+      "citrouilles/culture_citrouilles_bechage_1.svg",
+      "citrouilles/culture_citrouilles_bechage_2.svg",
+      "citrouilles/culture_citrouilles_bechage_3.svg"
+     ]
+    },
+    "sillons": {
+     "nom": "Les citrouilles : les sillons (tracés, le râteau posé au bord)",
+     "cadre": [
+      -42.5,
+      -37.5,
+      85,
+      60
+     ],
+     "ms_par_image": 280,
+     "part": 0.15,
+     "fichiers": [
+      "citrouilles/culture_citrouilles_sillons_1.svg",
+      "citrouilles/culture_citrouilles_sillons_2.svg",
+      "citrouilles/culture_citrouilles_sillons_3.svg"
+     ]
+    },
+    "semis": {
+     "nom": "Les citrouilles : le semis (les graines dans les sillons, le sachet, un moineau qui picore)",
+     "cadre": [
+      -42.5,
+      -37.5,
+      85,
+      60
+     ],
+     "ms_par_image": 280,
+     "part": 0.3,
+     "fichiers": [
+      "citrouilles/culture_citrouilles_semis_1.svg",
+      "citrouilles/culture_citrouilles_semis_2.svg",
+      "citrouilles/culture_citrouilles_semis_3.svg"
+     ]
+    },
+    "pousses": {
+     "nom": "Les citrouilles : les pousses",
+     "cadre": [
+      -42.5,
+      -37.5,
+      85,
+      60
+     ],
+     "ms_par_image": 280,
+     "part": 0.5,
+     "fichiers": [
+      "citrouilles/culture_citrouilles_pousses_1.svg",
+      "citrouilles/culture_citrouilles_pousses_2.svg",
+      "citrouilles/culture_citrouilles_pousses_3.svg"
+     ]
+    },
+    "croissance": {
+     "nom": "Les citrouilles : la croissance (les plants grandissent, encore verts)",
+     "cadre": [
+      -42.5,
+      -37.5,
+      85,
+      60
+     ],
+     "ms_par_image": 280,
+     "part": 0.7,
+     "fichiers": [
+      "citrouilles/culture_citrouilles_croissance_1.svg",
+      "citrouilles/culture_citrouilles_croissance_2.svg",
+      "citrouilles/culture_citrouilles_croissance_3.svg"
+     ]
+    }
+   }
+  }
+ }
+}
