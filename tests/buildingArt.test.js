@@ -134,7 +134,6 @@ describe('les bâtiments de la bibliothèque', () => {
       }
     }
     expect(buildingArt('foyer', 3, 'roche-ocre')).toBe(null);
-    expect(buildingArt('potager', 3, 'papillons')).toBe(null);
   });
 
   it('une teinte recolore la partie fixe et le voilier (le trait reste brun), le bloc qui bouge là où le jeu le teinte', async () => {
@@ -156,13 +155,29 @@ describe('les bâtiments de la bibliothèque', () => {
     expect(boat.svg).toBe(tintSvg(plainBoat.svg, 'ocean'));
   });
 
-  it('vignettes : le fichier du skin dessiné, la première image teinte à la lecture ; rien pour une pièce rare', async () => {
+  it('vignettes : le fichier du skin dessiné, la première image teinte à la lecture', async () => {
     expect(buildingThumb('foyer', 4, 0, 'toit-rouge')).toMatch(/foyer_toit-rouge_palier4\.svg$/);
     expect(buildingThumb('foyer', 1, 0, 'toit-rouge')).toBe(buildingThumb('foyer', 1));
-    expect(buildingThumb('potager', 3, 0, 'papillons')).toBe(null);
+    expect(buildingThumb('foyer', 3, 0, 'papillons')).toBe(null);
     expect(buildingThumb('atelier', 2, 0, 'lavande-atelier')).toBe(BLANK);
     await vi.waitFor(() => expect(buildingThumb('atelier', 2, 0, 'lavande-atelier')).not.toBe(BLANK));
     const svg = decodeURIComponent(buildingThumb('atelier', 2, 0, 'lavande-atelier').split(',')[1]);
     expect(svg).toBe(tintSvg(read(DATA.paliers.atelier_palier2.fichiers[0]), 'lavande'));
+  });
+
+  it('une pièce rare recolore le dessin de la bibliothèque de sa teinte, à chaque palier ; sa vignette est son aperçu', async () => {
+    for (const [id, e] of Object.entries(DATA.pieces_rares)) {
+      for (let level = 1; level <= 7; level++) {
+        const art = buildingArt(e.batiment, level, id);
+        expect(art.base.key, `${id} ${level}`).toBe(`lib-${e.batiment}-${level}-${id}-base`);
+        const thumb = buildingThumb(e.batiment, level, 0, id);
+        const file = e.fichiers[level - 1].split('/').pop();
+        expect(thumb.endsWith(file) || thumb.startsWith('data:image/svg+xml'), `${id} ${level}`).toBe(true);
+      }
+    }
+    const plain = await buildingArt('potager', 3).base.make().load();
+    expect(await buildingArt('potager', 3, 'papillons').base.make().load()).toBe(tintSvg(plain, 'papillons'));
+    // Le jeu teinte la roue du Puits VI : la teinte de la pièce rare aussi
+    expect(buildingArt('puits', 6, 'nenuphars').anim.frame(0).key).toBe('lib-puits-6-nenuphars-a0');
   });
 });
