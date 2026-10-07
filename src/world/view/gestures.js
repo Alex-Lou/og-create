@@ -465,8 +465,8 @@ export default {
     const rect = this.$refs.canvas.getBoundingClientRect();
     return { x: rect.left + x, y: rect.top + y };
   },
-  // Vignette d'un bâtiment (son dessin actuel) pour sa fiche : celui de la bibliothèque (sous un skin dessiné ou une
-  // teinte), sinon celui du jeu (pièce rare)
+  // Vignette d'un bâtiment (son dessin actuel) pour sa fiche : celui de la bibliothèque (sous son skin, sa teinte ou sa
+  // pièce rare), sinon celui du jeu
   artOf(site) {
     if (!site.level) return buildingThumb(site.id, 0, this.stageOf(site)) || spriteUrl(`chantier-${this.stageOf(site)}`, BUILDINGS.chantier[this.stageOf(site)]);
     return buildingThumb(site.id, site.level, 0, site.skin || '') || spriteUrl(`art-${site.id}-${site.level}-${site.skin || ''}`, artMake(site.id, site.level, site.skin));
