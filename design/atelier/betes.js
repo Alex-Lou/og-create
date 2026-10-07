@@ -78,7 +78,7 @@ function quad(c, pose) {
   else s += leg(lg.back, a, true) + leg(lg.front, -a, true);
   s += c.parts?.body ? c.parts.body(ctx) : '';
   s += headQuad(c, ctx);
-  if (pose === 'joie') s += heartIcon(hx + hr * 0.2, hy - hr * 2 - 1.4);
+  if (pose === 'joie') s += heartIcon(hx + hr * 0.2, Math.max(hy - hr * 2 - 1.4, BOX[c.size][1] + 2));
   return s;
 }
 
@@ -169,13 +169,14 @@ Q.cow = (v) => {
   const patch = v === 'rousse' ? '#B8643A' : '#3E3A3A';
   return {
     id: 'cow' + (v || ''), size: 'MID', fur: '#FFFFFF', furS: '#E2DED6', belly: '#F2EEE6',
-    body: [-1.6, -11.6, 11.2, 7], head: [10.6, -16.2, 5.4], headW: 1.02,
-    legs: { back: -8.4, front: 5.4, top: -8, w: 2.6, hoof: '#5A5250' },
-    snout: [3.6, 2, 3.4, 2.6, '#F6BDB6'], nose: [5.2, 1.4, 0.55, '#C77A74'], eye: [1.2, -1, 1.1],
+    // chibi : grosse tête ronde, corps dodu, pattes courtes et trapues
+    body: [-2, -9.8, 9.4, 6.6], head: [8.4, -14.6, 6.9], headW: 1.02,
+    legs: { back: -6.6, front: 4.2, top: -6.2, w: 3, hoof: '#5A5250' },
+    snout: [4.2, 2.6, 3.6, 2.7, '#F6BDB6'], nose: [5.8, 2, 0.6, '#C77A74'], eye: [1.3, -1.4, 1.55],
     ears: { kind: 'side', size: 0.9 }, tail: { kind: 'tuft', color: patch },
     parts: {
       coat: ({ bx, by }) => spots([[bx - 4, by - 2.4, 3.6, 2.6], [bx + 4, by + 0.6, 2.8, 2.2], [bx - 7.6, by + 1.6, 1.8, 1.6]], patch),
-      face: ({ hx, hy, hr }) => E(hx - 1.6, hy - 2.6, 2.2, 1.6, patch, 0),
+      face: ({ hx, hy, hr }) => E(hx - hr * 0.3, hy - hr * 0.48, hr * 0.4, hr * 0.3, patch, 0),
       head: ({ hx, hy, hr }) => horn(`M${r2(hx - 1.6)},${r2(hy - hr * 0.85)} Q${r2(hx - 2.2)},${r2(hy - hr - 2)} ${r2(hx - 0.6)},${r2(hy - hr - 2.6)}`),
       body: ({ bx, by, rest }) => rest ? '' : E(bx + 2.6, by + 6.6, 1.8, 1.1, '#F6BDB6', 0.7)
     }
@@ -191,40 +192,43 @@ Q.sheep = (v) => {
   };
   return {
     id: 'sheep' + (v || ''), size: 'MID', fur: wool, furS: woolS, belly: woolS, headC: face, headCS: face,
-    body: [-1, -11, 8.4, 5.4], head: [9.4, -14.4, 4.2],
-    legs: { back: -6.4, front: 4.4, top: -7, w: 1.9, hoof: '#2E2A2E', color: face, colorS: v === 'noir' ? '#1E1A1E' : '#463F48' },
-    snout: [2.6, 1.4, 2.2, 1.6, face], nose: [3.8, 0.8, 0.4, '#1E1A1E'], eye: [0.9, -0.6, 1],
+    // chibi : grosse tête, nuage de laine dodu, pattes courtes
+    body: [-1.4, -9.4, 7.8, 5.6], head: [7.8, -13.6, 5.6],
+    legs: { back: -5.2, front: 3.6, top: -5.4, w: 2.2, hoof: '#2E2A2E', color: face, colorS: v === 'noir' ? '#1E1A1E' : '#463F48' },
+    snout: [3.4, 2, 2.8, 2.1, face], nose: [5, 1.2, 0.5, '#1E1A1E'], eye: [1.1, -0.9, 1.35],
     ears: { kind: 'side', size: 0.8, inner: '#8A7A80' }, tail: { kind: 'puff', color: wool, r: 2 },
     parts: {
-      body: ({ bx, by }) => puffs(bx, by, 8, 5.2),
+      body: ({ bx, by }) => puffs(bx, by, 7.4, 5.4),
       head: ({ hx, hy, hr }) => E(hx - 1.2, hy - hr * 0.78, 2.4, 1.8, wool, 0.9) + E(hx + 0.6, hy - hr * 0.95, 1.6, 1.3, wool, 0.9)
     }
   };
 };
 Q.pig = (v) => ({
   id: 'pig' + (v || ''), size: 'MID', fur: '#F6BCBC', furS: '#E39C9E', belly: '#FAD2D0',
-  body: [-1, -9.6, 9.6, 6.6], head: [8.6, -12.4, 5],
-  legs: { back: -6, front: 4.6, top: -5, w: 2.2, hoof: '#C77A7C' },
-  snout: [4.6, 1, 1.8, 2, '#F29EA0'], eye: [1.2, -1.2, 1], blush: true,
-  ears: { kind: 'flop', size: 1.1 }, tail: { kind: 'curly' },
+  // chibi : tout rond, grosse tête, petites pattes
+  body: [-1.4, -8.8, 8.6, 6.4], head: [7.4, -12.8, 6.4],
+  legs: { back: -5.2, front: 3.8, top: -4.4, w: 2.6, hoof: '#C77A7C' },
+  snout: [5.6, 1.4, 2.2, 2.5, '#F29EA0'], eye: [1.4, -1.6, 1.4], blush: true,
+  ears: { kind: 'flop', size: 0.85 }, tail: { kind: 'curly' },
   parts: {
     coat: ({ bx, by }) => v === 'tachete' ? spots([[bx - 3, by - 2, 2.8, 2.2], [bx + 4, by + 0.4, 2, 1.8], [bx - 6.6, by + 1.6, 1.4, 1.2]], '#8A5A5A') : '',
-    face: ({ hx, hy }) => v === 'tachete' ? E(hx - 2, hy - 1.6, 1.6, 1.3, '#8A5A5A', 0) : '',
-    head: ({ hx, hy }) => E(hx + 4.2, hy + 0.4, 0.35, 0.55, '#B8686A', 0) + E(hx + 5.1, hy + 0.4, 0.35, 0.55, '#B8686A', 0)
+    face: ({ hx, hy, hr }) => v === 'tachete' ? E(hx - hr * 0.4, hy - hr * 0.32, hr * 0.32, hr * 0.26, '#8A5A5A', 0) : '',
+    head: ({ hx, hy }) => E(hx + 5.1, hy + 1.6, 0.42, 0.66, '#B8686A', 0) + E(hx + 6.2, hy + 1.6, 0.42, 0.66, '#B8686A', 0)
   }
 });
 Q.goat = (v) => {
   const fur = v === 'brune' ? '#9A6A44' : '#F4F0E8', furS = v === 'brune' ? '#7A5232' : '#D8D2C6';
   return {
     id: 'goat' + (v || ''), size: 'MID', fur, furS, belly: v === 'brune' ? '#C49A72' : '#FFFFFF',
-    body: [-1.4, -12, 9, 5.8], head: [9.2, -17, 4.4],
-    legs: { back: -7, front: 4.6, top: -8.6, w: 1.8, hoof: '#4A3C34' },
-    snout: [2.8, 1.6, 2.4, 1.9, v === 'brune' ? '#B48660' : '#EDE6DA'], nose: [4.4, 1, 0.45, '#4A3C34'], eye: [0.8, -0.8, 1],
+    // chibi : grosse tête, corps court, pattes courtes
+    body: [-1.6, -10.2, 8, 5.6], head: [8, -15.6, 6],
+    legs: { back: -5.8, front: 3.8, top: -6.6, w: 2.2, hoof: '#4A3C34' },
+    snout: [3.8, 2.2, 3, 2.4, v === 'brune' ? '#B48660' : '#EDE6DA'], nose: [5.6, 1.4, 0.55, '#4A3C34'], eye: [1.1, -1.2, 1.35],
     ears: { kind: 'side', size: 0.8 }, tail: { kind: 'short' },
     parts: {
       neck: ({ hx, hy, bx, by }) => P(`M${r2(bx + 5.4)},${r2(by - 3.6)} L${r2(hx - 2.6)},${r2(hy - 1)} L${r2(hx + 0.6)},${r2(hy + 3.4)} L${r2(bx + 8.4)},${r2(by + 1)} Z`, fur, 0.9),
       head: ({ hx, hy, hr }) => thick(`M${r2(hx - 1)},${r2(hy - hr * 0.8)} Q${r2(hx - 2.6)},${r2(hy - hr - 2.6)} ${r2(hx - 4.6)},${r2(hy - hr - 1.4)}`, 1.1, '#B8A88C')
-        + P(`M${r2(hx + 2)},${r2(hy + 3.2)} L${r2(hx + 1.2)},${r2(hy + 6)} L${r2(hx + 3.2)},${r2(hy + 3.4)} Z`, furS, 0.7)
+        + P(`M${r2(hx + hr * 0.45)},${r2(hy + hr * 0.74)} L${r2(hx + hr * 0.27)},${r2(hy + hr * 1.36)} L${r2(hx + hr * 0.73)},${r2(hy + hr * 0.78)} Z`, furS, 0.7)
     }
   };
 };
@@ -248,7 +252,8 @@ Q.fox = () => ({
   ears: { kind: 'pointy', size: 1.1, inner: '#3A2A24' }, tail: { kind: 'bushy', len: 10, up: 0.3, tip: '#FFFFFF' },
   parts: { face: ({ hx, hy }) => E(hx + 1.4, hy + 1.6, 2.6, 2, '#FFF4E6', 0) }
 });
-Q.kit = () => ({ ...Q.fox(), id: 'kit', size: 'SMALL', body: [-0.6, -6.4, 5.4, 3.4], head: [5.6, -9.6, 3.9], legs: { back: -3.4, front: 2.8, top: -4, w: 1.3, paw: '#3A2A24' }, snout: [2.4, 1.4, 2, 1.3, '#FFF4E6'], nose: [4.2, 0.8, 0.45, OUT], eye: [0.9, -0.6, 0.95], tail: { kind: 'bushy', len: 7, up: 0.5, tip: '#FFFFFF' } });
+// Mousse, le renardeau de Sylve (familier) : chibi, grosse tête, petit corps, pattes courtes, queue en panache
+Q.kit = () => ({ ...Q.fox(), id: 'kit', size: 'SMALL', body: [-0.8, -5.6, 4.8, 3.4], head: [4.6, -9.6, 4.8], legs: { back: -3, front: 2.4, top: -3, w: 1.4, paw: '#3A2A24' }, snout: [2.6, 1.8, 2.2, 1.4, '#FFF4E6'], nose: [4.6, 1.1, 0.5, OUT], eye: [1.1, -0.8, 1.3], tail: { kind: 'bushy', len: 7, up: 0.5, tip: '#FFFFFF' } });
 Q.snowFox = () => ({ ...Q.fox(), id: 'snowFox', fur: '#F6F8FC', furS: '#C9D4E2', belly: '#FFFFFF', ears: { kind: 'round', size: 1, inner: '#C9D4E2' }, tail: { kind: 'bushy', len: 10, up: 0.4, tip: '#DCE6F2' }, nose: [5.2, 0.9, 0.55, '#3A3A48'], parts: {} });
 Q.fennec = () => ({ ...Q.fox(), id: 'fennec', size: 'SMALL', fur: '#EDCB94', furS: '#CFA870', belly: '#FFF6E6', body: [-0.6, -6.4, 5.6, 3.4], head: [5.8, -9.6, 3.8], legs: { back: -3.4, front: 3, top: -4, w: 1.2, paw: '#CFA870' }, snout: [2.4, 1.3, 2, 1.2, '#FFF6E6'], nose: [4.2, 0.8, 0.45, OUT], eye: [0.9, -0.6, 0.95], ears: { kind: 'pointy', size: 1.9, inner: '#F2C6C0' }, tail: { kind: 'bushy', len: 7, up: 0.3, tip: '#5A4232' }, parts: {} });
 Q.rabbit = () => ({
@@ -339,9 +344,10 @@ Q.salamander = () => ({
 });
 Q.tortoise = () => ({
   id: 'tortoise', size: 'SMALL', fur: '#B8B07A', furS: '#9A9260', belly: '#D8D0A0',
-  body: [-0.6, -3.4, 5.8, 2.4], head: [6, -4.6, 2.4], headW: 1.15, restDrop: 0.4, headDrop: 0.4,
+  // chibi : la tête plus grosse et ronde sous sa carapace
+  body: [-0.6, -3.4, 5.8, 2.4], head: [5.8, -5, 3.1], headW: 1.12, restDrop: 0.4, headDrop: 0.4,
   legs: { back: -3.2, front: 2.6, top: -1.6, w: 1.6, paw: '#9A9260' },
-  eye: [0.5, -0.5, 0.85], ears: {}, tail: { kind: 'short', color: '#B8B07A' },
+  eye: [0.7, -0.6, 1.08], ears: {}, tail: { kind: 'short', color: '#B8B07A' },
   parts: {
     // carapace bombée à écailles
     body: ({ bx, by }) => {
@@ -361,33 +367,36 @@ Q.otter = () => ({
 });
 Q.cat = () => ({
   id: 'cat', size: 'SMALL', fur: '#E8A050', furS: '#C8803A', belly: '#FFF2E0',
-  body: [-0.6, -6, 5.6, 3.4], head: [5, -9.4, 3.8], restDrop: 1,
-  legs: { back: -3.4, front: 3, top: -3.4, w: 1.3, paw: '#FFF2E0' },
-  snout: [1.8, 1.2, 1.6, 1.1, '#FFF2E0'], nose: [2.8, 0.5, 0.38, '#E88A90'], eye: [0.9, -0.6, 1],
+  // chibi : grosse tête ronde, petit corps, pattes courtes
+  body: [-0.8, -5.4, 5, 3.4], head: [4.4, -9.2, 4.8], restDrop: 1,
+  legs: { back: -3, front: 2.6, top: -2.8, w: 1.4, paw: '#FFF2E0' },
+  snout: [2.3, 1.6, 1.9, 1.35, '#FFF2E0'], nose: [3.5, 0.8, 0.42, '#E88A90'], eye: [1.1, -0.8, 1.3],
   ears: { kind: 'pointy', size: 0.95, inner: '#F2B0B0' }, tail: { kind: 'thin', up: 7, w: 1.3 },
   parts: {
     coat: ({ bx, by }) => [-3, -0.6, 1.8].map(x => `<path d="M${r2(bx + x)},${r2(by - 3.6)} q0.6,1.6 0,3" fill="none" stroke="#C8803A" stroke-width="0.9"/>`).join(''),
-    face: ({ hx, hy }) => L([hx + 2.6, hy + 1.4], [hx + 4.6, hy + 1], OUT, 0.35) + L([hx + 2.6, hy + 1.8], [hx + 4.6, hy + 2.2], OUT, 0.35)
+    face: ({ hx, hy }) => L([hx + 3.4, hy + 1.6], [hx + 5.8, hy + 1.1], OUT, 0.35) + L([hx + 3.4, hy + 2.1], [hx + 5.8, hy + 2.5], OUT, 0.35)
   }
 });
 Q.dog = () => ({
   id: 'dog', size: 'MID', fur: '#E0B880', furS: '#C49A62', belly: '#FFF2DE',
-  body: [-1, -8.6, 7.4, 4.6], head: [7, -12.4, 4.4], restDrop: 1.4,
-  legs: { back: -4.6, front: 4, top: -5, w: 1.8, paw: '#FFF2DE' },
-  snout: [2.8, 1.6, 2.4, 1.8, '#FFF2DE'], nose: [4.6, 0.8, 0.6, OUT], eye: [0.9, -0.9, 1.05],
+  // chibi : grosse tête, oreilles tombantes, pattes courtes
+  body: [-1.2, -7.6, 6.6, 4.6], head: [6, -12, 5.6], restDrop: 1.4,
+  legs: { back: -4, front: 3.4, top: -4, w: 2.1, paw: '#FFF2DE' },
+  snout: [3.4, 2, 2.8, 2.1, '#FFF2DE'], nose: [5.6, 1.2, 0.68, OUT], eye: [1.1, -1.1, 1.35],
   ears: { kind: 'hang', size: 1, color: '#A8784A' }, tail: { kind: 'thin', up: 5, w: 1.4 },
-  parts: { neck: ({ hx, hy }) => P(`M${r2(hx - 3.6)},${r2(hy + 2.4)} Q${r2(hx - 1)},${r2(hy + 4.8)} ${r2(hx + 1.6)},${r2(hy + 3.6)}`, 'none', 0).replace('stroke="none"', 'stroke="#E0483C" stroke-width="1.4" stroke-linecap="round"') + E(hx - 0.4, hy + 4.6, 0.7, 0.7, '#F2C94C', 0.5) }
+  parts: { neck: ({ hx, hy, hr }) => P(`M${r2(hx - hr * 0.82)},${r2(hy + hr * 0.55)} Q${r2(hx - hr * 0.22)},${r2(hy + hr * 1.1)} ${r2(hx + hr * 0.36)},${r2(hy + hr * 0.82)}`, 'none', 0).replace('stroke="none"', 'stroke="#E0483C" stroke-width="1.4" stroke-linecap="round"') + E(hx - hr * 0.1, hy + hr * 1.04, 0.7, 0.7, '#F2C94C', 0.5) }
 });
 // La grenouille : assise, saute en marchant
 Q.frog = () => ({
   id: 'frog', size: 'SMALL', fur: '#7CC46A', furS: '#5AA04C', belly: '#E8F2B0',
-  body: [-0.4, -4, 5, 3.6], head: [2.6, -7.4, 3.8], headW: 1.15, restDrop: 0,
+  // chibi : toute ronde, grosse tête, les yeux sur deux bosses
+  body: [-0.4, -3.8, 5.2, 3.8], head: [2.4, -7.6, 4.4], headW: 1.15, restDrop: 0,
   legs: { back: -3, front: 2.6, top: -1.6, w: 1.4, paw: '#5AA04C' },
-  eye: [1, -2.6, 1.1], blush: true, ears: {}, tail: {},
+  eye: [1.2, -3.1, 1.3], blush: true, ears: {}, tail: {},
   parts: {
-    behindHead: ({ hx, hy }) => E(hx - 1.6, hy - 2.8, 1.8, 1.8, '#7CC46A') + E(hx + 1.6, hy - 2.8, 1.8, 1.8, '#7CC46A'),
-    face: ({ hx, hy }) => P(`M${r2(hx - 1.4)},${r2(hy + 1)} Q${r2(hx + 1.6)},${r2(hy + 2.6)} ${r2(hx + 3.8)},${r2(hy + 0.4)}`, 'none', 0.6),
-    head: ({ hx, hy, mode }) => eye(hx - 1.6, hy - 2.8, 0.95, mode)
+    behindHead: ({ hx, hy }) => E(hx - 1.9, hy - 3.3, 2.1, 2.1, '#7CC46A') + E(hx + 1.9, hy - 3.3, 2.1, 2.1, '#7CC46A'),
+    face: ({ hx, hy }) => P(`M${r2(hx - 1.6)},${r2(hy + 1.2)} Q${r2(hx + 1.8)},${r2(hy + 3)} ${r2(hx + 4.4)},${r2(hy + 0.5)}`, 'none', 0.6),
+    head: ({ hx, hy, mode }) => eye(hx - 1.9, hy - 3.3, 1.12, mode)
   }
 });
 
@@ -454,7 +463,7 @@ function bird(c, pose) {
   s += eye(hx + edx, hy + edy, er, mode);
   if (c.blush !== false) s += E(hx + edx - er * 0.2, hy + edy + er * 1.5, er * 0.8, er * 0.4, '#F7A8B0', 0);
   s += c.parts?.head ? c.parts.head(ctx) : '';
-  if (pose === 'joie') s += heartIcon(hx, hy - hr - 2.4, 1.2);
+  if (pose === 'joie') s += heartIcon(hx, Math.max(hy - hr - 2.4, BOX[c.size][1] + 2), 1.2);
   return s;
 }
 
@@ -464,20 +473,21 @@ B.hen = (v) => {
   const wing = { blanche: '#E6E2DA', rousse: '#A84E22', noire: '#2A2A32', grise: '#8E8E94' }[v || 'rousse'];
   return {
     id: 'hen' + (v || ''), size: 'SMALL', color: col, wing, belly: v === 'noire' ? '#4A4A54' : v === 'rousse' ? '#E08A4E' : col,
-    body: [-0.6, -6.2, 5, 4.2], head: [3.6, -11, 2.8],
-    beak: { kind: 'cone', len: 1.8, color: '#F2B33B' }, eye: [0.7, -0.4, 0.75],
-    legs: { xs: [-1.4, 0.8], top: -2.4, color: '#F2B33B' }, tail: { kind: 'fan', len: 3, up: 5, color: v === 'noire' ? '#2A6A5A' : wing },
+    // chibi : grosse tête ronde sur un corps dodu
+    body: [-0.6, -5.8, 4.8, 4.2], head: [3.2, -10.6, 3.7],
+    beak: { kind: 'cone', len: 1.9, color: '#F2B33B' }, eye: [0.9, -0.5, 0.98],
+    legs: { xs: [-1.4, 0.8], top: -2, color: '#F2B33B' }, tail: { kind: 'fan', len: 3, up: 5, color: v === 'noire' ? '#2A6A5A' : wing },
     parts: {
       head: ({ hx, hy, hr }) => P(`M${r2(hx - 1.4)},${r2(hy - hr + 0.6)} Q${r2(hx - 1.2)},${r2(hy - hr - 1.6)} ${r2(hx - 0.2)},${r2(hy - hr - 0.4)} Q${r2(hx + 0.4)},${r2(hy - hr - 2)} ${r2(hx + 1.2)},${r2(hy - hr - 0.2)} Q${r2(hx + 1.8)},${r2(hy - hr - 1.2)} ${r2(hx + 1.6)},${r2(hy - hr + 0.8)} Z`, '#E8483C', 0.7)
-        + E(hx + hr * 0.9, hy + 1.8, 0.7, 1, '#E8483C', 0.6),
+        + E(hx + hr * 0.9, hy + hr * 0.62, 0.75, 1.05, '#E8483C', 0.6),
       coat: ({ bx, by }) => v === 'grise' ? [[-2, -1], [0.6, -2], [2, 0.6], [-1, 1.4]].map(([x, y]) => E(bx + x, by + y, 0.5, 0.5, '#FFFFFF', 0)).join('') : ''
     }
   };
 };
 B.chick = () => ({
   id: 'chick', size: 'SMALL', color: '#FFE16A', wing: '#F6C93E', belly: '#FFF0A0',
-  body: [-0.2, -3.6, 3.4, 3], head: [1.8, -6.8, 2.4],
-  beak: { kind: 'cone', len: 1.2, color: '#F29A3B' }, eye: [0.6, -0.3, 0.7],
+  body: [-0.3, -3.4, 3.2, 2.9], head: [1.6, -6.8, 3],
+  beak: { kind: 'cone', len: 1.2, color: '#F29A3B' }, eye: [0.75, -0.4, 0.86],
   legs: { xs: [-0.8, 0.8], top: -1.2, color: '#F29A3B', w: 0.6 }, tail: {},
   parts: { head: ({ hx, hy, hr }) => P(`M${r2(hx - 0.4)},${r2(hy - hr + 0.2)} Q${r2(hx - 0.6)},${r2(hy - hr - 1.4)} ${r2(hx + 0.6)},${r2(hy - hr - 0.6)}`, 'none', 0.6) }
 });
@@ -491,13 +501,14 @@ B.heron = () => ({
 });
 B.puffin = () => ({
   id: 'puffin', size: 'SMALL', color: '#2E2E38', wing: '#22222A', belly: '#FFFFFF',
-  body: [-0.4, -6, 4, 4.6], head: [1.6, -11.4, 3.2],
-  beak: { kind: 'puffin', len: 2.4 }, eye: [0.6, -0.4, 0.75],
+  // chibi : grosse tête ronde sur un petit corps
+  body: [-0.4, -5.6, 3.8, 4.4], head: [1.6, -10.8, 4],
+  beak: { kind: 'puffin', len: 2.6 }, eye: [0.75, -0.5, 0.95],
   legs: { xs: [-1, 0.8], top: -1.8, color: '#F07A3A', w: 0.9 }, tail: { kind: 'long', len: 2 },
   parts: {
     face: ({ hx, hy, hr }) => E(hx + 0.6, hy + 0.2, hr * 0.85, hr * 0.8, '#F4F4F4', 0),
     // Bosco est bougon : un sourcil froncé
-    head: ({ hx, hy, mode }) => mode === 'open' ? `<path d="M${r2(hx - 0.4)},${r2(hy - 1.8)} L${r2(hx + 1.8)},${r2(hy - 1.2)}" stroke="${OUT}" stroke-width="0.7" stroke-linecap="round"/>` : ''
+    head: ({ hx, hy, hr, mode }) => mode === 'open' ? `<path d="M${r2(hx - hr * 0.1)},${r2(hy - hr * 0.6)} L${r2(hx + hr * 0.58)},${r2(hy - hr * 0.4)}" stroke="${OUT}" stroke-width="0.75" stroke-linecap="round"/>` : ''
   }
 });
 B.toucan = () => ({
@@ -553,10 +564,21 @@ function butterfly(v, pose) {
     // posé sur une fleur, ailes repliées vers le haut (vu de côté)
     const fl = [0, 72, 144, 216, 288].map(a => E(Math.cos(a * Math.PI / 180) * 1.6, -1.4 + Math.sin(a * Math.PI / 180) * 0.8, 1.2, 0.8, '#F7C6D9', 0.5)).join('') + E(0, -1.4, 0.8, 0.6, '#F2C94C', 0.4);
     return '<g transform="translate(0 -1.3)">' + limb([0, -1.2], [0, 0], 0.6, '#6CAE5A') + fl + P('M0,-2.6 Q-1.4,-8.6 2.6,-9.6 Q4.6,-6.4 0.6,-2.4 Z', col[0], 0.7) + E(2, -7, 0.8, 0.6, col[1], 0)
-      + limb([-0.6, -2.4], [0.8, -4.6], 0.6, '#3A2A24') + stroke('M0.8,-4.6 Q1.6,-6 2.6,-6.2', 0.35, OUT) + '</g>';
+      + (v === 'lune'
+        // Lunette, de côté : corps duveteux, tête ronde, un œil, une joue, l'antenne en plume
+        ? limb([-0.6, -2.4], [0.6, -4.2], 1.1, '#EDE5D2') + stroke('M1.2,-5.4 Q2,-6.6 3,-6.8', 0.35, OUT) + stroke('M1.7,-6.1 l0.3,0.4 M2.3,-6.6 l0.2,0.45', 0.3, OUT)
+          + E(1, -4.9, 1.05, 0.95, '#F4EEDF', 0.7) + eye(1.35, -5, 0.38, 'open') + E(1.05, -4.3, 0.3, 0.16, '#F7A8B0', 0)
+        : limb([-0.6, -2.4], [0.8, -4.6], 0.6, '#3A2A24') + stroke('M0.8,-4.6 Q1.6,-6 2.6,-6.2', 0.35, OUT)) + '</g>';
   }
   let s = wing(-1) + wing(1);
-  s += limb([0, y - 2.4], [0, y + 2.4], 0.6, '#3A2A24') + stroke(`M0,${r2(y - 2.4)} Q-1,${r2(y - 4.6)} -1.8,${r2(y - 5)} M0,${r2(y - 2.4)} Q1,${r2(y - 4.6)} 1.8,${r2(y - 5)}`, 0.4, OUT);
+  if (v === 'lune') {
+    // Lunette (familier) : corps duveteux crème, tête ronde, deux yeux de la troupe, une joue, antennes en plumes
+    const feather = (m) => stroke(`M${r2(m * 0.4)},${r2(y - 3.6)} Q${r2(m * 1.2)},${r2(y - 5.2)} ${r2(m * 2)},${r2(y - 5.6)}`, 0.4, OUT)
+      + [0.35, 0.65].map(k => stroke(`M${r2(m * (0.4 + 1.6 * k))},${r2(y - 3.6 - 2 * k)} l${r2(m * 0.5)},0.3`, 0.3, OUT)).join('');
+    s += feather(-1) + feather(1) + E(0, y + 0.4, 1, 2.4, '#EDE5D2', 0.7) + L([-0.7, y + 0.6], [0.7, y + 0.6], '#C9BFA8', 0.35) + L([-0.6, y + 1.6], [0.6, y + 1.6], '#C9BFA8', 0.35)
+      + E(0, y - 2.5, 1.45, 1.3, '#F4EEDF', 0.7) + eye(-0.55, y - 2.55, 0.42, pose === 'joie' ? 'joy' : 'open') + eye(0.55, y - 2.55, 0.42, pose === 'joie' ? 'joy' : 'open')
+      + E(-0.95, y - 1.85, 0.32, 0.17, '#F7A8B0', 0) + E(0.95, y - 1.85, 0.32, 0.17, '#F7A8B0', 0);
+  } else s += limb([0, y - 2.4], [0, y + 2.4], 0.6, '#3A2A24') + stroke(`M0,${r2(y - 2.4)} Q-1,${r2(y - 4.6)} -1.8,${r2(y - 5)} M0,${r2(y - 2.4)} Q1,${r2(y - 4.6)} 1.8,${r2(y - 5)}`, 0.4, OUT);
   if (pose === 'joie') s += heartIcon(4.6, y - 4.4, 0.9);
   return s;
 }
@@ -578,7 +600,11 @@ function bee(pose, meca = false) {
   s += E(0, y, 3, 2.2, meca ? '#D4A84A' : '#F6C83E');
   s += clip(`bee${meca ? 'm' : ''}${pose}`, `M-3,${y} a3,2.2 0 1,0 6,0 a3,2.2 0 1,0 -6,0 Z`, [-1.2, 0.6].map(x => `<rect x="${x}" y="${y - 3}" width="0.9" height="6" fill="${meca ? '#8E6E2C' : '#3A2A24'}"/>`).join(''));
   s += E(0, y, 3, 2.2, 'none');
-  s += E(2.6, y - 0.6, 1.5, 1.4, meca ? '#B8C0C8' : '#3A2A24', 0.8) + E(3, y - 1, 0.45, 0.45, meca ? '#3A2A24' : '#FFFFFF', 0);
+  if (meca) {
+    // Tic-Tac (familier) : grosse tête ronde d'acier, un grand œil à reflets, une joue, un rivet sur le front
+    s += E(2.7, y - 0.8, 1.95, 1.8, '#B8C0C8', 0.8) + E(2.1, y - 1.5, 0.7, 0.45, '#E2E8EE', 0)
+      + eye(3.2, y - 0.95, 0.72, pose === 'joie' ? 'joy' : 'open') + E(2.8, y + 0.35, 0.55, 0.3, '#F7A8B0', 0) + E(1.5, y - 2.1, 0.28, 0.28, '#F0D58A', 0.3);
+  } else s += E(2.6, y - 0.6, 1.5, 1.4, '#3A2A24', 0.8) + E(3, y - 1, 0.45, 0.45, '#FFFFFF', 0);
   if (meca) s += limb([-1, y - 2.2], [-1.6, y - 4], 0.5, '#C9A24A') + E(-2.4, y - 4.4, 1, 0.6, '#C9A24A', 0.5) + E(-0.8, y - 4.4, 1, 0.6, '#C9A24A', 0.5) + E(0.9, y + 0.6, 0.3, 0.3, '#F0D58A', 0);
   else s += P(`M-3.2,${r2(y + 0.4)} L-4.2,${r2(y + 0.8)} L-3.2,${r2(y + 1.2)} Z`, '#3A2A24', 0);
   if (pose === 'joie') s += heartIcon(2.6, y - 4, 0.8);
@@ -603,10 +629,9 @@ function beeFriend(pose) {
   const hx = 2.7, hy = y - 0.7;
   s += stroke(`M${hx - 0.2},${r2(hy - 1.3)} Q${hx - 0.6},${r2(hy - 3)} ${hx - 1.6},${r2(hy - 3.2)}`, 0.35, OUT) + stroke(`M${hx + 0.4},${r2(hy - 1.3)} Q${hx + 1},${r2(hy - 2.8)} ${hx + 1.8},${r2(hy - 2.8)}`, 0.35, OUT);
   s += E(hx - 1.7, hy - 3.2, 0.4, 0.4, '#E2C26A', 0.3) + [0, 72, 144, 216, 288].map(a => E(hx + 1.8 + Math.cos(a * Math.PI / 180) * 0.55, hy - 2.8 + Math.sin(a * Math.PI / 180) * 0.55, 0.42, 0.42, '#F7C6D9', 0.25)).join('') + E(hx + 1.8, hy - 2.8, 0.25, 0.25, '#F2C94C', 0);
-  s += E(hx, hy, 1.65, 1.5, '#EBB08A', 0.8);
-  s += pose === 'joie' ? P(`M${hx - 0.2},${r2(hy - 0.1)} Q${hx + 0.45},${r2(hy - 0.8)} ${hx + 1.1},${r2(hy - 0.1)}`, 'none', 0.45)
-    : E(hx + 0.45, hy - 0.2, 0.55, 0.7, EYE, 0) + E(hx + 0.6, hy - 0.45, 0.22, 0.22, '#FFFFFF', 0) + L([hx + 0.95, hy - 0.8], [hx + 1.35, hy - 1.15], OUT, 0.25);
-  s += E(hx + 0.1, hy + 0.75, 0.5, 0.25, '#F7A8B0', 0);
+  s += E(hx, hy, 1.95, 1.8, '#EBB08A', 0.8) + E(hx - 0.6, hy - 0.75, 0.7, 0.42, '#F6CFB4', 0);
+  s += eye(hx + 0.5, hy - 0.15, 0.72, pose === 'joie' ? 'joy' : 'open') + (pose === 'joie' ? '' : L([hx + 1.05, hy - 0.85], [hx + 1.5, hy - 1.25], OUT, 0.3));
+  s += E(hx + 0.1, hy + 1, 0.6, 0.32, '#F7A8B0', 0);
   if (pose === 'joie') s += heartIcon(2.8, y - 4.6, 0.8);
   return `<g transform="translate(0 ${pose === 'repos' ? 1.2 : 1.6})">${s}</g>`;
 }
@@ -689,7 +714,9 @@ function bowl(v, n) {
   s += P('M-6.2,-5.6 Q0,-4.6 6.2,-5.6 Q6.4,-3.6 5.6,-2.4 Q3.8,-0.6 0,-0.6 Q-3.8,-0.6 -5.6,-2.4 Q-6.4,-3.6 -6.2,-5.6 Z', '#9ED4F0', 0).replace('fill=', 'fill-opacity="0.7" fill=');
   if (v === 'bulle') {
     const x = n ? 1 : -1;
-    s += `<g transform="translate(${x} -3.2) scale(${n ? -1 : 1} 1)">${P('M-1.6,0 L-3.2,-1.2 L-2.8,0 L-3.2,1.2 Z', '#F08A3A', 0.5)}${E(0, 0, 2, 1.4, '#F6A04A', 0.6)}${E(1, -0.3, 0.35, 0.35, EYE, 0)}</g>` + E(2.6, -7 - n, 0.5, 0.5, '#FFFFFF', 0.4);
+    // Bulle (familier) : un petit poisson tout rond, un grand œil à reflets, une joue, une nageoire
+    s += `<g transform="translate(${x} -3.2) scale(${n ? -1 : 1} 1)">${P('M-1.9,0 L-3.7,-1.4 L-3.2,0 L-3.7,1.4 Z', '#F08A3A', 0.5)}${E(0, 0, 2.3, 1.8, '#F6A04A', 0.6)}`
+      + `${E(-0.4, -0.7, 1, 0.45, '#FFC78A', 0)}${P('M-0.6,0.4 Q0.2,1.6 0.9,0.6 Z', '#F08A3A', 0.4)}${eye(1.05, -0.35, 0.62, 'open')}${E(0.75, 0.55, 0.45, 0.22, '#F7A8B0', 0)}</g>` + E(2.6, -7 - n, 0.5, 0.5, '#FFFFFF', 0.4);
   }
   s += `<path d="M-4.4,-8.6 Q-5.6,-6 -4.8,-3.6" fill="none" stroke="#FFFFFF" stroke-width="0.8" stroke-linecap="round" opacity="0.9"/>`;
   return s;
