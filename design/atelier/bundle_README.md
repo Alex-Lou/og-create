@@ -64,7 +64,7 @@ détails propres à un lot : places des objets de boutique, lumières des palier
 | `svg/personnages/naufrages/<prénom>/` | Les maîtres tels qu'ils arrivent sur l'île (`<prénom>-naufrage_…`) : une tenue de naufragé à chacun, mêmes vues, poses et expressions, endormis assis et couchés ; lanterne et parapluie pour Aster et Rivet (`naufrages.json`, `quotidien.json`) | 480 |
 | `svg/personnages/avatar/` | L'avatar du joueur : 12 exemples tirés du générateur et leur version naufragée, poses, gestes du tutoriel (ramasser, grelotter, lire), expressions ; dans `avatar.json` : les formes, les nuanciers, les 45 accessoires (rareté, source, prix ; saison des tenues de saison ; leur icône) et les teintures rares (avec leur prix) | 2464 |
 | `svg/personnages/objets/` | Les icônes des objets de l'avatar, pour la boutique et l'inventaire (32 × 32, couleurs par défaut) : `<objet>_icone`, le chemin dans `avatar.json` (`icone`). Pour l'instant les tenues de saison, le bonnet et l'écharpe | 11 |
-| `generateur/` | Les générateurs en modules ESM, pour le jeu et pour l'outil `generer.mjs` : l'avatar (`avatar.mjs`), les chantiers (`chantiers.mjs`), les bêtes (`betes.mjs`), les icônes de l'interface (`interface.mjs`), les objets de la boutique et la torche (`objets.mjs`), les plantes, rochers et petits décors (`plantes.mjs`), la météo (`meteo.mjs`), les coffres (`coffres.mjs`), le décor iso (`decor.mjs`) ; voir le mode d'emploi | — |
+| `generateur/` | Les générateurs en modules ESM, pour le jeu et pour l'outil `generer.mjs` : l'avatar (`avatar.mjs`), les chantiers (`chantiers.mjs`), les bêtes (`betes.mjs`), les icônes de l'interface (`interface.mjs`), les objets de la boutique et la torche (`objets.mjs`), les plantes, rochers et petits décors (`plantes.mjs`), la météo (`meteo.mjs`), les coffres (`coffres.mjs`), le décor iso (`decor.mjs`), les bâtiments (`batiments.mjs`) ; voir le mode d'emploi | — |
 | `svg/interface/` | Les icônes de l'interface (32 × 32) : la barre du bas (Grimoire, Île, Défis, Sceau ; le sac, les tâches et le menu de la v6), l'écu, les ressources (pierre, bois, eau, nourriture, poisson), les boutons de l'île (Récolte, Tout ramasser, carnet, trouvailles, expédition) ; les fiches (outils, fleur, trois humeurs, cœur, verrou, inconnu, étincelle, chapitre, plan, carte, pousse) ; les trouvailles des climats (glace, laine, roseau, sel, fruits, obsidienne) ; où le jeu s'en sert dans `interface.json` | 37 |
 | `svg/personnages/epilogue/` | 8 nouveaux venus de l'épilogue, tirés du générateur de l'avatar, en habits de voyage (valise à la main, bagage sur le dos) : 3 vues, marche, repos, salut | 192 |
 | `svg/vivants/` | Brume (8 stades et ses variantes), Anya (son manteau vivant aux quatre saisons : `anya_<vue>_<pose>_<printemps\|automne\|hiver>_<n>`, l'été sans suffixe), le cerf blanc, le Passeur | 191 |
@@ -118,7 +118,7 @@ détails propres à un lot : places des objets de boutique, lumières des palier
   `SEAT`, `icone` ; la liste commentée est dans `design/atelier/generateur.mjs`. En SVG en ligne, un `uid` différent pour
   chaque personnage à l'écran : les découpes portent ce nom. Assemblé avec la bibliothèque, il dessine comme les sources
   à l'octet près (`design/atelier/verif_generateur.mjs`) ; ne pas le modifier à la main.
-- **Les générateurs par famille** (`generateur/<famille>.mjs` : `chantiers.mjs`, `betes.mjs`, `interface.mjs`, `objets.mjs`, `plantes.mjs`, `meteo.mjs`, `coffres.mjs`, `decor.mjs`) : chaque fonction rend
+- **Les générateurs par famille** (`generateur/<famille>.mjs` : `chantiers.mjs`, `betes.mjs`, `interface.mjs`, `objets.mjs`, `plantes.mjs`, `meteo.mjs`, `coffres.mjs`, `decor.mjs`, `batiments.mjs`) : chaque fonction rend
   `{ svg, cadre, ms_par_image }`, le SVG complet, identique à l'octet au fichier de la bibliothèque (le fichier y ajoute
   un saut de ligne) : `import { etapeDuMontage } from '…/design/bibliotheque/generateur/chantiers.mjs'`, puis
   `etapeDuMontage('2x2', 'toit', 1).svg`. `liste()` donne tout ce que la famille dessine, avec son fichier. Vérifiés à
@@ -137,6 +137,9 @@ détails propres à un lot : places des objets de boutique, lumières des palier
   `decor('annexes', 'champ_ble', 1)`), la liste et ce que dit `decor.json` dans `decors()`.
   Et `camp(objet, n)`, `ruine(objet, n)` (les objets de `camp.json` et `ruines.json`), `element(nom, n)` (le bâtiment
   embrumé, la cage aux poules, l'œuf, les signes d'Anya, l'éclat du souvenir, les sceaux : `ELEMENTS`), `crabe(pose)`.
+  Les bâtiments : `palier(site, palier, n, hiver)` (ex. `palier('foyer', 4, 2, false)` ; `hiver` à `true`, les toits sous la
+  neige), `chantier(phase)` (1, 2 ou 3), `skin(id, palier)`, `pieceRare(id, palier)` ; ce que dit `batiments.json` dans `BATIMENTS`.
+  En ligne de commande, `true` et `false` deviennent des booléens.
   `node generer.mjs` (les familles), `node generer.mjs chantiers liste`, `node generer.mjs chantiers etapeDuMontage 2x2 toit 1
   --sortie toit.svg`, `node generer.mjs chantiers tout <dossier>`.
 - **Icônes de l'interface** (`svg/interface/`, `interface.json`) : à afficher de 16 à 32 px, en `<img>` ou en SVG en
