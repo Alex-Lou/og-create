@@ -161,7 +161,8 @@ describe('village : bêtes', () => {
     expect(species.filter(s => s === 'sheep')).toHaveLength(2);
     expect(species).not.toContain('pig');
     const cow = village.at(12, at(2)).list.find(c => c.species === 'cow');
-    expect(cow.sprite[0]).toMatch(/rest$/);
+    // (couchée : rest, ou de la bibliothèque, couchée les yeux fermés)
+    expect(cow.sprite[0]).toMatch(/rest$|_clignement$/);
     expect(village.say({ kind: 'beast', species: 'cow' }, at(13)).text).toBe('Meuh !');
     // Chaque bête du Potager porte son nom au serveur (bible, § 6.16 : on la nourrit) ; les poussins, non
     const named = village.at(12, at(13)).list.filter(c => c.beast).map(c => c.beast);
@@ -254,7 +255,7 @@ describe('village : bêtes des climats', () => {
       const list = climBeasts(dunes, 5, at(h));
       expect(list.map(c => c.species).sort()).toEqual(['camel', 'fennec']);
       // Celle qui dort est posée au centre de sa case : dans les dunes, hors du décor et de la clairière du gisement
-      const asleep = list.find(c => c.sprite[0].endsWith('rest'));
+      const asleep = list.find(c => /rest$|_clignement$/.test(c.sprite[0]));
       expect(dunesM.zone(asleep.x, asleep.y)).toBe(1);
       expect(free(asleep)).toBe(true);
     }
@@ -262,12 +263,14 @@ describe('village : bêtes des climats', () => {
   });
   it('chacune à ses heures : le fennec dort le jour et trotte la nuit, le dromadaire l’inverse', () => {
     const key = (h, s) => climBeasts(dunes, 5, at(h)).find(c => c.species === s).sprite[0];
-    expect(key(13, 'fennec')).toMatch(/rest$/);
-    expect(key(13, 'camel')).not.toMatch(/rest$/);
-    expect(key(2, 'fennec')).not.toMatch(/rest$/);
-    expect(key(2, 'camel')).toMatch(/rest$/);
+    // (couchée : rest, ou de la bibliothèque, couchée les yeux fermés)
+    const REST = /rest$|_clignement$/;
+    expect(key(13, 'fennec')).toMatch(REST);
+    expect(key(13, 'camel')).not.toMatch(REST);
+    expect(key(2, 'fennec')).not.toMatch(REST);
+    expect(key(2, 'camel')).toMatch(REST);
     // Sous la pluie, le dromadaire se couche
-    expect(climBeasts(dunes, 5, at(13, 'pluie')).find(c => c.species === 'camel').sprite[0]).toMatch(/rest$/);
+    expect(climBeasts(dunes, 5, at(13, 'pluie')).find(c => c.species === 'camel').sprite[0]).toMatch(REST);
   });
   it('touchées, elles sursautent et reviennent, sans disparaître ; appui long : leur fiche', () => {
     const id = climBeasts(dunes, 5, at(13)).find(c => c.species === 'camel').id;
