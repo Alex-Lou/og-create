@@ -22,8 +22,12 @@
         <ul class="mini__rules">
           <li v-for="line in RULES[game.id]" :key="line">{{ line }}</li>
         </ul>
+        <p class="mini__regen">Une partie revient toutes les {{ regenHours }} h, {{ game.max }} au plus.</p>
         <ul class="mini__facts">
-          <li><span>Parties</span><strong>{{ game.plays }} / {{ game.max }}</strong></li>
+          <li>
+            <span>Parties</span>
+            <strong>{{ game.plays }} / {{ game.max }}<template v-if="game.plays && nextText"> · une de plus {{ nextText }}</template></strong>
+          </li>
           <li><span>Gains du palier</span><strong>×{{ multText }} · jusqu’à {{ game.cap }} écus</strong></li>
         </ul>
         <p v-if="error" class="mini__error" role="alert">{{ error }}</p>
@@ -66,7 +70,7 @@ import GameIcon from '../GameIcon/GameIcon.vue';
 import FishingBoard from '../FishingBoard/FishingBoard.vue';
 import VeinBoard from '../VeinBoard/VeinBoard.vue';
 import PickingBoard from '../PickingBoard/PickingBoard.vue';
-import { earnedOf, multOf } from '@/game/minigames';
+import { earnedOf, multOf, PLAY_REGEN_MS } from '@/game/minigames';
 import { roman } from '@/utils/roman';
 import { reducedMotion } from '@/utils/fx';
 import { masterGesture } from '@/world/masterArt';
@@ -92,6 +96,8 @@ export default {
   props: {
     // Vue du serveur : { id, name, text, plays, max, nextIn, mult, cap }
     game: { type: Object, required: true },
+    // Temps passé depuis cette vue du serveur (ms) : le compte à rebours avance
+    elapsed: { type: Number, default: 0 },
     siteName: { type: String, default: '' },
     run: { type: Object, default: null },
     starting: { type: Boolean, default: false },
@@ -120,9 +126,12 @@ export default {
       if (this.phase === 'play') return `${this.estimate} écu${this.estimate > 1 ? 's' : ''}`;
       return this.result ? `+${this.result.earned} écus` : 'Partie finie';
     },
+    regenHours() {
+      return PLAY_REGEN_MS / 3600000;
+    },
     nextText() {
       if (this.game.nextIn === null) return '';
-      const min = Math.ceil(this.game.nextIn / 60000);
+      const min = Math.max(1, Math.ceil((this.game.nextIn - this.elapsed) / 60000));
       return min >= 60 ? `dans ${Math.floor(min / 60)} h ${String(min % 60).padStart(2, '0')}` : `dans ${min} min`;
     },
     // Prises regroupées, dans l'ordre des valeurs

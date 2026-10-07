@@ -27,7 +27,7 @@
             <span class="friend__need-glyph" aria-hidden="true"><ElementGlyph :glyph="NEED_GLYPH[need.id]" /></span>
             <span class="friend__need-body">
               <strong>{{ labelOf(need.id) }}</strong>
-              <span>{{ needState(need, siteName) }}</span>
+              <span>{{ stateText(need) }}</span>
             </span>
             <button
               v-if="need.cost"
@@ -113,6 +113,8 @@ export default {
     rules: { type: Object, required: true },
     // Besoins : { kinds: { besoin: { label, … } } }
     needRules: { type: Object, default: null },
+    // Temps passé depuis cette vue du serveur (ms) : le temps qui reste à chaque besoin avance
+    elapsed: { type: Number, default: 0 },
     stock: { type: Object, required: true },
     siteName: { type: String, default: '' },
     portrait: { type: String, default: '' },
@@ -145,12 +147,16 @@ export default {
   methods: {
     talkLine,
     rewardText,
-    needState,
     affordable,
     costText,
     askOr,
     labelOf(id) {
       return this.needRules?.kinds?.[id]?.label || id;
+    },
+    // Où en est un besoin, avec le temps passé depuis la vue du serveur, et quand on pourra le renouveler
+    stateText(need) {
+      const aged = need.left ? { ...need, left: Math.max(0, need.left - this.elapsed) } : need;
+      return needState(aged, this.siteName, this.needRules?.kinds?.[need.id]?.hours);
     },
     gainOf(resource) {
       const { gift } = this.rules;

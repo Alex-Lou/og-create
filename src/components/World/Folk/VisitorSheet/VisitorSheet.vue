@@ -5,7 +5,7 @@
         <span class="guest__portrait"><img :src="portrait" alt="" /></span>
         <div class="guest__about">
           <p class="guest__story">{{ storyOf(visitor) }}</p>
-          <span class="guest__leaves">Son bateau repart {{ leavesText(visitor.leavesIn) }}</span>
+          <span class="guest__leaves">Son bateau repart {{ leavesText(Math.max(0, visitor.leavesIn - elapsed)) }}</span>
         </div>
       </div>
 
@@ -57,6 +57,8 @@ export default {
   props: {
     // Vue du serveur : { id, seed, name, site, role, request, leavesIn, satisfied }
     visitor: { type: Object, required: true },
+    // Temps passé depuis cette vue du serveur (ms) : son départ approche
+    elapsed: { type: Number, default: 0 },
     stock: { type: Object, required: true },
     // Parties de Récolte en réserve ; maisons du Foyer ({ total, used }) ; nom du bâtiment où il travaillerait
     charges: { type: Number, default: 0 },

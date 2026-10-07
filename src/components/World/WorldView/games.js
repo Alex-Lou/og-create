@@ -11,6 +11,8 @@ export default {
       run: null,
       sending: false,
       runResult: null,
+      // Écus de la Récolte rendue (1 par tranche de 10 ressources)
+      runEarned: 0,
       runError: '',
       // Mini-jeu ouvert (id), sa partie, son envoi, son résultat
       gameId: null,
@@ -37,6 +39,7 @@ export default {
       try {
         this.site = null;
         this.runResult = null;
+        this.runEarned = 0;
         this.runError = '';
         this.runChest = null;
         this.run = await playService.harvestStart();
@@ -51,8 +54,9 @@ export default {
     async finishHarvest(moves) {
       this.sending = true;
       try {
-        const { gains, coins, chest, world } = await playService.harvestFinish(this.run.id, moves);
+        const { gains, earned, coins, chest, world } = await playService.harvestFinish(this.run.id, moves);
         this.runResult = gains;
+        this.runEarned = earned || 0;
         this.runChest = chest || null;
         this.apply(world);
         if (coins !== undefined) this.$emit('coins-updated', coins);
