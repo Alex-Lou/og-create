@@ -11,6 +11,7 @@ import { vigilFrames, vigilDue, stageOf as civilizationOf } from '@/game/vigils'
 import { brumeLook, earlyWisp, EARLY_WISP } from '@/game/opus';
 import { PRESENTIMENTS, revelationFrames, traceFrames, anyaSceneOf, tracesOf, seenOf } from '@/game/anya';
 import { LINES as PROLOGUE_LINES } from '@/game/prologueScenes';
+import { DEFAULT_LOOK } from '@/game/sceneArt';
 
 // Veillées déjà vues sur cet appareil (game/vigils.js)
 const VIGILS_KEY = 'oc_vigils';
@@ -20,10 +21,11 @@ const TRACES_KEY = 'oc_traces';
 export default {
   data() {
     return {
-      // Le tutoriel : ce que l'appareil en retient (game/prologue.js), la scène jouée, la page de garde ({ account }),
-      // l'élément montré du doigt (sélecteur), les scènes rejouées depuis le Sceau
+      // Le tutoriel : ce que l'appareil en retient (game/prologue.js), la scène jouée, la carte d'embarquement (l'avatar),
+      // la page de garde ({ account }), l'élément montré du doigt (sélecteur), les scènes rejouées depuis le Sceau
       prologue: loadPrologue(),
       prologueScene: null,
+      prologueAvatar: false,
       prologueName: null,
       prologueHand: null,
       prologueReplay: null,
@@ -70,6 +72,16 @@ export default {
     brumeStage() {
       return this.actsKnown ? brumeLook({ acts: this.islandActs, quest: this.islandQuest, elements: this.discoveredElements }).stage : null;
     },
+    // L'avatar du joueur dans les scènes : celui de sa carte d'embarquement
+    prologueLook() {
+      return this.prologue.look || DEFAULT_LOOK;
+    },
+    // Le tutoriel est en cours : les succès attendent sa fin pour s'afficher (un « Sceau rompu » ne coupe pas le vent
+    // qui se lève)
+    prologueRunning() {
+      const { started, skipped, finished, registered } = this.prologue;
+      return started && !skipped && !finished && (!this.isLoggedIn || registered);
+    },
     // La couverture du Grimoire attend la scène d'arrivée (et, pour un invité, de savoir s'il est tout neuf)
     prologueHold() {
       const { skipped, started, seen } = this.prologue;
@@ -102,14 +114,23 @@ export default {
           if (document.querySelector('.book-unlock')) this.prologueTimer = setTimeout(show, 700);
           else this.prologueScene = step.scene;
         };
-        if (step.scene === 'arrivee') show();
+        if (step.scene === 'naufrage' || step.scene === 'arrivee') show();
         else this.prologueTimer = setTimeout(show, 2500);
+      } else if (phase === 'avatar') {
+        this.prologueAvatar = true;
       } else if (phase === 'vent') {
-        guide.say({ id: 'prologue-vent', text: PROLOGUE_LINES.vent, top: true });
+        const { name, face, text } = PROLOGUE_LINES.vent;
+        guide.say({ id: 'prologue-vent', who: name, face, text, top: true });
         this.prologueHand = { target: '.book-view__shelf [data-name="Air"]', mode: 'infinite' };
       } else if (phase === 'pluie') {
-        // La page de l'énigme suivante : le Grimoire s'y ouvre une fois, ses pages rechargées (Vent inscrit)
-        if (guide.say({ id: 'prologue-pluie', text: PROLOGUE_LINES.pluie })) this.prologueOpenReach = true;
+        // La page de l'énigme suivante : le Grimoire s'y ouvre une fois, ses pages rechargées (Vent inscrit). Brume la
+        // présente à sa façon : le mode d'emploi de la page à portée n'a plus lieu d'être
+        guide.drop('reach');
+        if (guide.say({ id: 'prologue-pluie', text: PROLOGUE_LINES.pluie })) {
+          // Après la scène du vent, le Grimoire est déjà rechargé : il s'ouvre tout de suite sur l'énigme
+          if (this.$refs.book?.engine) this.$refs.book.openReach('I');
+          else this.prologueOpenReach = true;
+        }
       } else if (phase === 'seul') {
         guide.say({ id: 'prologue-seul', text: PROLOGUE_LINES.seul });
       } else if (phase === 'name') {
@@ -117,7 +138,7 @@ export default {
         if (!step.account && this.prologue.name) this.namePlayer(this.prologue.name);
         else this.prologueName = { account: step.account };
       } else if (phase === 'greve') {
-        guide.say({ id: 'prologue-greve', text: PROLOGUE_LINES.greve, action: { label: 'Aller sur l’île', mode: 'world' } });
+        guide.say({ id: 'prologue-greve', text: PROLOGUE_LINES.greve, action: { label: 'Courir sur la Grève', mode: 'world' } });
       }
     },
     // Étapes 2 (sur l'île) à 5 : la quête active de Brume
@@ -178,6 +199,12 @@ export default {
       const { who, text } = typeof entry === 'string' ? { text: entry } : entry;
       guide.say({ id: `prologue-${line}`, text, ...(who ? { who: NAMES[who], face: faceHref(who, { castaway: !this.islandBuilt.includes(who) }) } : {}) });
     },
+    // La carte d'embarquement : l'avatar et le nom, gardés sur l'appareil (le nom part au serveur avec le compte)
+    chooseLook({ look, name }) {
+      this.prologueAvatar = false;
+      this.savePrologue({ look, name });
+      this.runPrologue();
+    },
     onBookLoaded() {
       if (!this.prologueOpenReach) return;
       this.prologueOpenReach = false;
@@ -234,20 +261,22 @@ export default {
     },
     skipPrologue() {
       this.prologueScene = null;
+      this.prologueAvatar = false;
       this.prologueName = null;
       this.prologueHand = null;
       this.savePrologue({ skipped: true });
     },
     replayPrologue() {
-      this.prologueReplay = ['aster', 'recolte', 'cannelle', 'rivet', 'ondin', 'campement'];
-      this.prologueScene = 'arrivee';
+      this.prologueReplay = ['arrivee', 'souffle', 'sceau', 'recolte', 'cannelle', 'rivet', 'ondin', 'campement'];
+      this.prologueScene = 'naufrage';
     },
     // Page de garde : l'inscription recharge la page ; le nom attend sur l'appareil, puis part au serveur
     prologueSigning(name) {
       this.savePrologue({ name, registered: true });
     },
+    // L'inscription a échoué : le nom de la carte reste écrit sur la page de garde
     prologueUnsigned() {
-      this.savePrologue({ name: null, registered: false });
+      this.savePrologue({ registered: false });
     },
     // Un compte existant retrouvé : c'est un joueur qui a déjà sa partie, le tutoriel s'arrête
     prologueSignedIn() {

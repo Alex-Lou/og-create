@@ -1,6 +1,6 @@
 // Le tutoriel « Le Naufrage de l'Hirondelle » (HISTOIRE.md, § 9) : où en est le joueur, déduit de ce que le jeu sait
 // déjà (compte, éléments du Grimoire, quête de Brume) ; l'appareil ne retient que ce qui ne se déduit pas : le
-// prologue commencé ici, les scènes vues, le nom écrit avant l'inscription, « Passer ».
+// prologue commencé ici, les scènes vues, l'avatar choisi et le nom écrit avant l'inscription, « Passer ».
 // Les joueurs actuels ne le voient pas : il ne commence que pour un invité qui n'a encore que les quatre Souffles, et
 // un compte ne le poursuit que s'il a été créé par lui (sur la page de garde du Grimoire).
 import * as storage from '@/utils/storage';
@@ -10,7 +10,9 @@ const KEY = 'oc_prologue';
 // Les trois premières pages de l'étape 1 (Vent, Pluie, Brasier) ouvrent le chapitre II
 export const FIRST_PAGES = 3;
 
-const blank = () => ({ started: false, skipped: false, registered: false, named: false, finished: false, name: null, seen: [] });
+// look : l'avatar choisi sur la carte d'embarquement (game/sceneArt.js), gardé sur l'appareil en attendant le serveur
+// (H9.4)
+const blank = () => ({ started: false, skipped: false, registered: false, named: false, finished: false, name: null, look: null, seen: [] });
 
 export function loadPrologue() {
   const saved = storage.load(KEY, null);
@@ -36,14 +38,22 @@ export function prologueStep({ state, loggedIn, elements }) {
   // Un compte ouvert autrement que par la page de garde : c'est un joueur qui a déjà sa partie
   if (loggedIn && !state.registered) return null;
   const seen = new Set(state.seen);
-  // Étape 1 : la rencontre, puis les trois premières pages (Vent d'abord, avec une main qui montre l'Air)
-  if (!seen.has('arrivee')) return { phase: 'scene', scene: 'arrivee' };
+  // Étapes 1 à 3 : le naufrage, la carte d'embarquement (l'avatar et le nom), Brume et le livre. Un appareil qui a vu
+  // l'arrivée d'avant (Brume y venait d'abord) ne revient pas en arrière
+  if (!seen.has('arrivee')) {
+    if (!seen.has('naufrage')) return { phase: 'scene', scene: 'naufrage' };
+    if (!state.look) return { phase: 'avatar' };
+    return { phase: 'scene', scene: 'arrivee' };
+  }
+  // Les trois premières pages : Vent d'abord (avec une main qui montre l'Air), le vent qui se lève, puis deux pages
   if (found < FIRST_PAGES) {
     if (!elements.includes('Vent')) return { phase: 'vent' };
+    if (!seen.has('souffle')) return { phase: 'scene', scene: 'souffle' };
     return { phase: found === 1 ? 'pluie' : 'seul' };
   }
-  // Étape 2 : Aster demande ton nom ; la page de garde du Grimoire crée le compte
-  if (!seen.has('aster')) return { phase: 'scene', scene: 'aster' };
+  // Un sceau se brise, le feu, quelqu'un sur les rochers ; puis la page de garde du Grimoire crée le compte (« aster » :
+  // l'ancien nom de cette scène, déjà vue sur certains appareils)
+  if (!seen.has('sceau') && !seen.has('aster')) return { phase: 'scene', scene: 'sceau' };
   if (!loggedIn) return { phase: 'name', account: true };
   if (!state.named) return { phase: 'name', account: false };
   return { phase: 'greve' };
@@ -73,10 +83,11 @@ export function islandStep({ state, quest }) {
     if (!seen.has('rivet')) return { phase: 'scene', scene: 'rivet' };
     return { phase: 'lines', lines: quest.done ? lines : ['puzzle', 'or'] };
   }
-  if (quest.id === 'achat-source') return { phase: 'lines', lines: quest.done ? lines : ['source'] };
+  // Cannelle s'inquiète pour son petit-neveu ; Aster entend ronfler une source
+  if (quest.id === 'achat-source') return { phase: 'lines', lines: quest.done ? lines : ['souci', 'source'] };
   if (quest.id === 'souvenir-ondin') {
     if (!seen.has('ondin')) return { phase: 'scene', scene: 'ondin' };
-    return { phase: 'lines', lines: quest.done ? lines : ['ruban'] };
+    return { phase: 'lines', lines: quest.done ? lines : ['baguette', 'ruban'] };
   }
   if (quest.id === 'puits-ondin') return { phase: 'lines', lines: quest.done ? ['chut', 'produit', ...lines] : [] };
   return { phase: 'lines', lines };
