@@ -45,35 +45,67 @@ const menhir = (u, v, h, w, lit, lean, id) => {
 };
 
 const LM = {};
+// Grotte de glace : un replat de neige aux bords bosselés ; le tertre à trois bosses, ses congères ; des grappes de
+// cristaux à facettes ; la bouche bleue sous sa corniche de neige d'où pendent les stalactites, des éclats au fond,
+// une langue de glace qui en sort ; des pas qui y mènent ; le froid s'échappe en volutes (2 images)
 LM.grotte = { n: 2, draw: f => {
   const [x, y] = at(0, 0);
-  // Tertre de neige à trois bosses ; ombre en croissant côté droit (découpée dans le tertre), un seul trait autour
+  // bord bosselé : une ellipse aux petites bosses régulières
+  const bosses = (cx, cy, rx, ry, n) => { const pts = Array.from({ length: n }, (_, i) => { const t = (i / n) * TAU, r = 1 + (i % 2 ? 0.05 : -0.03); return [cx + Math.cos(t) * rx * r, cy + Math.sin(t) * ry * r]; }); const mil = i => { const p = pts[i % n], q = pts[(i + 1) % n]; return `${r2((p[0] + q[0]) / 2)},${r2((p[1] + q[1]) / 2)}`; }; let d = `M${mil(n - 1)}`; for (let i = 0; i < n; i++) d += ` Q${r2(pts[i][0])},${r2(pts[i][1])} ${mil(i)}`; return d + ' Z'; };
+  // un cristal à facettes : pan clair, pan d'ombre, pointe éclairée, un reflet, un seul trait autour
+  const crystal = (cx, cy, h, w, lean = 0) => { const tip = [cx + lean, cy - h], bl = [cx - w, cy], br = [cx + w, cy], fb = [cx, cy + w * 0.45];
+    return poly([bl, tip, fb], ICE.left, 0) + poly([fb, tip, br], ICE.right, 0)
+      + poly([tip, [bl[0] + (tip[0] - bl[0]) * 0.7, bl[1] + (tip[1] - bl[1]) * 0.7], [fb[0] + (tip[0] - fb[0]) * 0.7, fb[1] + (tip[1] - fb[1]) * 0.7]], '#F6FDFF', 0)
+      + L([cx - w * 0.45, cy - h * 0.12], [cx - w * 0.15 + lean * 0.6, cy - h * 0.62], 'rgba(255,255,255,.9)', 0.8)
+      + poly([bl, tip, br, fb], 'none', 0.9); };
+  // une grappe : deux petits cristaux qui s'écartent, le grand devant, un peu de neige au pied
+  const grappe = (cx, cy, h, w) => crystal(cx - w * 1.3, cy + 1, h * 0.55, w * 0.7, -w * 0.9) + crystal(cx + w * 1.3, cy + 1.5, h * 0.62, w * 0.75, w)
+    + crystal(cx, cy, h, w, w * 0.2) + E(cx, cy + w * 0.9, w * 2.3, w * 0.75, '#DCEAF5', 0) + P(bosses(cx, cy + w * 0.6, w * 2.1, w * 0.7, 8), SNOW.top, 0);
+  // le replat de neige, son ombre bleutée sous le tertre, quelques cailloux
+  let s = shadow(0, 0, 0.74, 0.12) + P(bosses(x, y + 8, 64, 27, 22), SNOW.top, 1.1)
+    + E(x + 6, y + 10, 50, 13, '#DCEAF5', 0)
+    + [[-50, 18, 2.8], [46, 22, 2.4], [-18, 30, 2]].map(([dx, dy, r]) => E(x + dx, y + dy, r, r * 0.65, '#8E9AA8', 0.7) + E(x + dx - r * 0.3, y + dy - r * 0.25, r * 0.45, r * 0.25, '#C8D2DC', 0)).join('');
+  // le tertre à trois bosses ; ombre en croissant côté droit (découpée dans le tertre), un seul trait autour
   const mound = `M${x - 52},${y + 6} Q${x - 56},${y - 22} ${x - 34},${y - 38} Q${x - 26},${y - 58} ${x - 2},${y - 56} Q${x + 18},${y - 66} ${x + 34},${y - 46} Q${x + 56},${y - 34} ${x + 52},${y - 4} Q${x + 50},${y + 10} ${x + 36},${y + 12} Q${x},${y + 22} ${x - 52},${y + 6} Z`;
   const id = `grotte-tertre-${f}`;
-  const crystal = (cx, cy, h, w, lean = 0) => poly([[cx - w, cy], [cx + lean, cy - h], [cx, cy + w * 0.45]], ICE.left, 0) + poly([[cx, cy + w * 0.45], [cx + lean, cy - h], [cx + w, cy]], ICE.right, 0)
-    + L([cx - w * 0.4, cy - h * 0.15], [cx - w * 0.1 + lean * 0.6, cy - h * 0.75], 'rgba(255,255,255,.85)', 0.8) + poly([[cx - w, cy], [cx + lean, cy - h], [cx + w, cy], [cx, cy + w * 0.45]], 'none', 0.9);
-  let s = shadow(0, 0, 0.72, 0.14)
-    + `<defs><clipPath id="${id}"><path d="${mound}"/></clipPath></defs>`
+  s += `<defs><clipPath id="${id}"><path d="${mound}"/></clipPath></defs>`
     + `<path d="${mound}" fill="${SNOW.right}"/>`
     + `<g clip-path="url(#${id})"><path d="${mound}" fill="${SNOW.left}" transform="translate(-6 -3)"/><path d="${mound}" fill="${SNOW.top}" transform="translate(-13 -6)"/>`
-    // congères : quelques traits bleutés qui suivent le galbe
-    + `<path d="M${x - 40},${y - 22} q10,-6 22,-4 M${x - 8},${y - 44} q10,-5 20,-2 M${x + 22},${y - 30} q9,-2 16,4 M${x - 30},${y - 2} q8,-3 14,-1" fill="none" stroke="#C9DCEB" stroke-width="1.2" stroke-linecap="round"/></g>`
+    + `<path d="M${x - 40},${y - 22} q10,-6 22,-4 M${x - 8},${y - 44} q10,-5 20,-2 M${x + 22},${y - 30} q9,-2 16,4 M${x - 36},${y - 4} q6,-3 11,-1" fill="none" stroke="#C9DCEB" stroke-width="1.2" stroke-linecap="round"/>`
+    + `<path d="M${x - 30},${y - 50} q6,-4 12,-3 M${x + 8},${y - 58} q5,-3 10,-1" fill="none" stroke="#FFFFFF" stroke-width="1.6" stroke-linecap="round"/></g>`
     + `<path d="${mound}" fill="none" stroke="${OUT}" stroke-width="1.2" stroke-linejoin="round"/>`;
-  // cristaux de glace sur le tertre
-  s += crystal(x - 22, y - 44, 22, 5, -1) + crystal(x - 10, y - 50, 15, 4, 1) + crystal(x + 26, y - 40, 18, 4.5, 2);
-  // bouche : arche au bord bleu glacé, fond sombre, lueur bleue, stalactites
+  // les grappes de cristaux sur le tertre
+  s += grappe(x - 22, y - 46, 24, 5) + crystal(x - 2, y - 52, 12, 3.4, 1) + grappe(x + 30, y - 38, 18, 4.2);
+  // la bouche : un rebord de glace en voussoirs, le fond sombre en trois bleus, des éclats tout au fond
   const mx = x + 4, my = y + 12;
-  s += `<path d="M${mx - 20},${my} Q${mx - 21},${my - 36} ${mx},${my - 38} Q${mx + 21},${my - 36} ${mx + 20},${my} Z" fill="#8CCBE8" stroke="${OUT}" stroke-width="1.1"/>`
-    + `<path d="M${mx - 15},${my} Q${mx - 15},${my - 29} ${mx},${my - 30} Q${mx + 15},${my - 29} ${mx + 15},${my} Z" fill="#2C5677"/>`
-    + `<path d="M${mx - 10},${my} Q${mx - 9},${my - 20} ${mx},${my - 21} Q${mx + 9},${my - 20} ${mx + 10},${my} Z" fill="#183A55"/>`
-    + E(mx, my - 8, 6, 3.4, `rgba(130,200,255,${f ? 0.55 : 0.35})`, 0);
-  for (let i = 0; i < 6; i++) { const xx = mx - 12 + i * 4.8, yy = my - 27 + Math.abs(i - 2.5) * 2.4; s += poly([[xx - 2, yy], [xx + 2, yy], [xx, yy + 5 + (i % 2) * 3]], '#E8F6FF', 0.6); }
-  // aiguilles de glace au pied
-  for (const [dx, dy, h] of [[-42, 4, 13], [-35, 8, 8], [36, 8, 15], [43, 10, 9]]) s += crystal(x + dx, y + dy, h, 3);
+  s += `<path d="M${mx - 21},${my} Q${mx - 22},${my - 38} ${mx},${my - 40} Q${mx + 22},${my - 38} ${mx + 21},${my} Z" fill="${ICE.left}" stroke="${OUT}" stroke-width="1.1"/>`
+    + `<path d="M${mx + 8},${my - 39} Q${mx + 22},${my - 36} ${mx + 21},${my} L${mx + 15},${my} Q${mx + 15},${my - 26} ${mx + 6},${my - 30} Z" fill="${ICE.right}"/>`
+    + `<path d="M${mx - 15},${my} Q${mx - 15},${my - 29} ${mx},${my - 30} Q${mx + 15},${my - 29} ${mx + 15},${my} Z" fill="#2C5677" stroke="${OUT}" stroke-width="0.8"/>`
+    + `<path d="M${mx - 10},${my} Q${mx - 9},${my - 20} ${mx},${my - 21} Q${mx + 9},${my - 20} ${mx + 10},${my} Z" fill="#1D4565"/>`
+    + `<path d="M${mx - 5},${my} Q${mx - 4.6},${my - 11} ${mx},${my - 11.6} Q${mx + 4.6},${my - 11} ${mx + 5},${my} Z" fill="#132F48"/>`
+    + [[-20, -10, -15, -9], [-17, -26, -12, -22], [0, -40, 0, -30], [17, -26, 12, -22], [20, -10, 15, -9]].map(([a1, b1, a2, b2]) => L([mx + a1, my + b1], [mx + a2, my + b2], '#7FB8D8', 0.8)).join('')
+    + E(mx, my - 8, 7, 3.6, `rgba(130,200,255,${f ? 0.5 : 0.32})`, 0)
+    + (f ? [[-5, -14, 1.8], [6, -8, 1.4]] : [[4, -15, 1.6], [-6, -7, 1.4]]).map(([dx, dy, r]) => P(`M${mx + dx},${my + dy - r * 1.6} l${r},${r * 1.6} l-${r},${r * 1.6} l-${r},-${r * 1.6} Z`, '#9FDCF8', 0)).join('');
+  // la langue de glace qui sort de la grotte, ses reflets
+  s += `<path d="M${mx - 15},${my} Q${mx - 20},${my + 7} ${mx - 28},${my + 11} Q${mx - 4},${my + 19} ${mx + 24},${my + 10} Q${mx + 18},${my + 5} ${mx + 15},${my} Z" fill="${ICE.top}" stroke="${ICE.right}" stroke-width="0.9"/>`
+    + `<path d="M${mx - 16},${my + 8} l7,-1.2 M${mx + 4},${my + 12} l8,-1.4" stroke="#FFFFFF" stroke-width="1.4" stroke-linecap="round"/>`;
+  // la corniche de neige posée sur la bouche, d'où pendent les stalactites
+  const bord = dx => my - 37 + (dx * dx) / 80;
+  let lip = `M${mx - 18},${r2(bord(-18))} Q${mx - 13},${my - 47} ${mx},${my - 47.5} Q${mx + 13},${my - 47} ${mx + 18},${r2(bord(18))}`;
+  for (let dx = 18; dx > -18; dx -= 4.5) lip += ` Q${r2(mx + dx - 2.25)},${r2(bord(dx - 2.25) + 2.2)} ${r2(mx + dx - 4.5)},${r2(bord(dx - 4.5))}`;
+  s += P(lip + ' Z', SNOW.top, 1.1) + `<path d="M${mx - 10},${my - 43} q6,-2 12,-1.6" stroke="#FFFFFF" stroke-width="1.4" fill="none" stroke-linecap="round"/><path d="M${mx + 6},${my - 42} q6,1 9,5" stroke="#D6E4F0" stroke-width="1.3" fill="none" stroke-linecap="round"/>`;
+  for (const [dx, len] of [[-13.5, 5], [-9, 9], [-4.5, 6], [0, 11], [4.5, 6.5], [9, 9.5], [13.5, 5]]) {
+    const yy = bord(dx) + 1.2;
+    s += P(`M${mx + dx - 1.8},${r2(yy)} L${mx + dx + 1.8},${r2(yy)} L${mx + dx + 0.2},${r2(yy + len)} Z`, '#EAF7FF', 0.6) + L([mx + dx - 0.6, yy + 1], [mx + dx - 0.1, yy + len * 0.6], '#FFFFFF', 0.6);
+  }
+  // les aiguilles de glace au pied, et des pas qui mènent à la grotte
+  s += grappe(x - 42, y + 8, 14, 3) + grappe(x + 42, y + 12, 15, 3.2);
+  s += [[-40, 30, 0], [-33, 27, 1], [-27, 31, 0], [-20, 27, 1]].map(([dx, dy, k]) => E(x + dx, y + dy, 2, 1.1, '#C9D8E6', 0) + E(x + dx + 1.6, y + dy - 1.6, 1, 0.6, '#C9D8E6', 0)).join('');
   // le froid s'échappe de la bouche : deux volutes qui glissent vers la gauche et s'effacent
-  const wisp = p => `<g opacity="${r2(0.8 * (1 - p * 0.8))}">${E(mx - 4 - p * 22, my - 9 - p * 9, 7 + p * 5, 3.2 + p * 2.4, 'rgba(234,246,255,.75)', 0)}${E(mx - p * 22, my - 12 - p * 9, 4.4 + p * 3, 2.4 + p * 1.6, 'rgba(255,255,255,.85)', 0)}${E(mx - 9 - p * 22, my - 7 - p * 9, 3.6 + p * 2, 2 + p * 1.2, 'rgba(255,255,255,.7)', 0)}</g>`;
+  const wisp = p => `<g opacity="${r2(0.85 * (1 - p * 0.8))}">${E(mx - 6 - p * 24, my - 10 - p * 10, 7 + p * 5, 3.2 + p * 2.4, 'rgba(234,246,255,.75)', 0)}${E(mx - 2 - p * 24, my - 13 - p * 10, 4.4 + p * 3, 2.4 + p * 1.6, 'rgba(255,255,255,.85)', 0)}`
+    + `<path d="M${r2(mx - 10 - p * 24)},${r2(my - 10 - p * 10)} q-6,-3 -11,-1 q-4,2 -1.4,4.4 q2.4,1.4 3.4,-1.6" fill="none" stroke="#FFFFFF" stroke-width="1.3" stroke-linecap="round"/></g>`;
   s += wisp(f ? 0.5 : 0) + wisp(f ? 0 : 0.5);
-  return s + (f ? sparkle(x + 26, y - 58, 3) + sparkle(x - 34, y - 26, 2.2) : sparkle(x - 22, y - 66, 3) + sparkle(x + 40, y - 20, 2.2));
+  return s + (f ? sparkle(x + 34, y - 60, 3) + sparkle(x - 36, y - 24, 2.2) : sparkle(x - 18, y - 74, 3) + sparkle(x + 44, y - 20, 2.2));
 } };
 // Lac gelé : une nappe de glace aux rives bosselées sous un bourrelet de neige, ses craquelures et ses reflets ; une
 // cabane de pêcheur au toit enneigé, sa cheminée qui fume, sa fenêtre chaude ; un trou de pêche, la canne posée sur sa
