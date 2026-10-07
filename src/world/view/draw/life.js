@@ -9,6 +9,7 @@ import { FLOATING_ZONE, COLONY_ZONE, ferryPose } from '@/world/islets';
 import { SEA_Z, HS, worldOf } from '@/world/terrain';
 import { CRITTERS } from '@/world/nature';
 import { beastSprite, lookOf } from '@/world/beastArt';
+import { isletArtLayer, isletFrameAt } from '@/world/decorArt';
 import { vibrate } from '@/utils/fx';
 import { FISH_SPECIES, SEA_SPRITES } from '@/world/seaSprites';
 import { BOTTLE } from '@/world/chest';
@@ -119,7 +120,9 @@ export default {
     if (this.bottleSpot) {
       const { x, y } = this.bottleSpot;
       const frame = Math.sin(t * 1.6) > 0.6 ? 1 : 0;
-      out.push({ kind: 'bottle', x: x + 0.5, y: y + 0.5, z: 0, frame, flip: false, sprite: [`bottle-${frame}`, BOTTLE[frame]] });
+      // (dessin de la bibliothèque, à sa cadence, sinon celui du code)
+      const lib = isletArtLayer('bouteille', isletFrameAt('bouteille', t));
+      out.push({ kind: 'bottle', x: x + 0.5, y: y + 0.5, z: 0, frame, flip: false, sprite: lib ? [lib.key, lib.make] : [`bottle-${frame}`, BOTTLE[frame]] });
       const c = this.ground(x + 0.5, y + 0.5);
       hits.push({ key: 'bottle', kind: 'bottle', bottle: true, x: c.x, y: c.y - 6, r: 14 });
     }
@@ -172,17 +175,22 @@ export default {
     this.ferry = pose;
     return [
       { depth: route.dock.x + route.dock.y - 0.05, ferry: { landing: true, ...route.dock } },
-      { depth: pose.x + pose.y, ferry: { ...pose, frame: pose.moving ? Math.floor(t * 2) % 2 : 0 } }
+      // (en route, sa voile se gonfle, à la cadence de la bibliothèque)
+      { depth: pose.x + pose.y, ferry: { ...pose, frame: pose.moving ? isletFrameAt('barque_volante', t) : 0 } }
     ];
   },
   drawFerry(ctx, item, repaint) {
     const c = worldOf(item.x, item.y, item.z);
     ctx.save();
     ctx.translate(c.x, c.y);
-    if (item.landing) drawSprite(ctx, 'islet-landing', ISLET_SPRITES.landing, 0, 0, repaint);
-    else {
+    // (dessins de la bibliothèque, sinon ceux du code)
+    if (item.landing) {
+      const lib = isletArtLayer('ponton');
+      drawSprite(ctx, lib ? lib.key : 'islet-landing', lib ? lib.make : ISLET_SPRITES.landing, 0, 0, repaint);
+    } else {
       if (item.flip) ctx.scale(-1, 1);
-      drawSprite(ctx, `islet-ferry-${item.frame}`, ISLET_SPRITES.ferry[item.frame], 0, 0, repaint, 'islet-ferry');
+      const lib = isletArtLayer('barque_volante', item.frame);
+      drawSprite(ctx, lib ? lib.key : `islet-ferry-${item.frame}`, lib ? lib.make : ISLET_SPRITES.ferry[item.frame], 0, 0, repaint, 'islet-ferry');
     }
     ctx.restore();
   },
@@ -275,7 +283,9 @@ export default {
       const x = dock.x + dock.dx * BOAT_FAR * (1 - ease);
       const y = dock.y + dock.dy * BOAT_FAR * (1 - ease);
       const frame = Math.floor(t * 2) % 2;
-      out.standing.push({ kind: 'vboat', x, y, z: Math.sin(t * 1.4) * 1.2, flip: dock.flip, sprite: [`vboat-${frame}`, () => visitorBoat(frame)] });
+      // (dessin de la bibliothèque, son fanion à sa cadence, sinon celui du code)
+      const lib = isletArtLayer('bateau_visiteur', isletFrameAt('bateau_visiteur', t));
+      out.standing.push({ kind: 'vboat', x, y, z: Math.sin(t * 1.4) * 1.2, flip: dock.flip, sprite: lib ? [lib.key, lib.make] : [`vboat-${frame}`, () => visitorBoat(frame)] });
       if (k < 1) out.rings.push({ x: x - dock.dx * 0.4, y: y - dock.dy * 0.4, k: (t * 1.5) % 1 });
       const c = surface(x, y);
       hits.push({ key: 'vboat', kind: 'vboat', x: c.x, y: c.y - 18, r: 26 });
