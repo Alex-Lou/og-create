@@ -34540,6 +34540,120 @@
    "note": "Manteau à passer en or et vert (§ 14), avec les veines lumineuses ; il change avec les saisons."
   },
   {
+   "id": "vivants/cerf-blanc/cerf-blanc_avant_clignement",
+   "rubrique": "vivants",
+   "sujet": "cerf-blanc",
+   "vue": "avant",
+   "pose": "clignement",
+   "titre": "Le cerf blanc, trois quarts avant, clignement",
+   "regarde": "bas-droite",
+   "miroir": true,
+   "images": 1,
+   "fichiers": [
+    "svg/vivants/cerf-blanc/cerf-blanc_avant_clignement.svg"
+   ],
+   "cadre": [
+    0,
+    -12,
+    80,
+    92
+   ],
+   "parcours": "revelation",
+   "statut": "ok"
+  },
+  {
+   "id": "vivants/cerf-blanc/cerf-blanc_avant_marche",
+   "rubrique": "vivants",
+   "sujet": "cerf-blanc",
+   "vue": "avant",
+   "pose": "marche",
+   "titre": "Le cerf blanc, trois quarts avant, marche",
+   "regarde": "bas-droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/vivants/cerf-blanc/cerf-blanc_avant_marche_1.svg",
+    "svg/vivants/cerf-blanc/cerf-blanc_avant_marche_2.svg"
+   ],
+   "cadre": [
+    0,
+    -12,
+    80,
+    92
+   ],
+   "ms_par_image": 300,
+   "parcours": "revelation",
+   "statut": "ok"
+  },
+  {
+   "id": "vivants/cerf-blanc/cerf-blanc_avant_repos",
+   "rubrique": "vivants",
+   "sujet": "cerf-blanc",
+   "vue": "avant",
+   "pose": "repos",
+   "titre": "Le cerf blanc, trois quarts avant, repos",
+   "regarde": "bas-droite",
+   "miroir": true,
+   "images": 1,
+   "fichiers": [
+    "svg/vivants/cerf-blanc/cerf-blanc_avant_repos.svg"
+   ],
+   "cadre": [
+    0,
+    -12,
+    80,
+    92
+   ],
+   "parcours": "revelation",
+   "statut": "ok"
+  },
+  {
+   "id": "vivants/cerf-blanc/cerf-blanc_dos_marche",
+   "rubrique": "vivants",
+   "sujet": "cerf-blanc",
+   "vue": "dos",
+   "pose": "marche",
+   "titre": "Le cerf blanc, trois quarts dos, marche",
+   "regarde": "haut-droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/vivants/cerf-blanc/cerf-blanc_dos_marche_1.svg",
+    "svg/vivants/cerf-blanc/cerf-blanc_dos_marche_2.svg"
+   ],
+   "cadre": [
+    0,
+    -12,
+    80,
+    92
+   ],
+   "ms_par_image": 300,
+   "parcours": "revelation",
+   "statut": "ok"
+  },
+  {
+   "id": "vivants/cerf-blanc/cerf-blanc_dos_repos",
+   "rubrique": "vivants",
+   "sujet": "cerf-blanc",
+   "vue": "dos",
+   "pose": "repos",
+   "titre": "Le cerf blanc, trois quarts dos, repos",
+   "regarde": "haut-droite",
+   "miroir": true,
+   "images": 1,
+   "fichiers": [
+    "svg/vivants/cerf-blanc/cerf-blanc_dos_repos.svg"
+   ],
+   "cadre": [
+    0,
+    -12,
+    80,
+    92
+   ],
+   "parcours": "revelation",
+   "statut": "ok"
+  },
+  {
    "id": "vivants/cerf-blanc/cerf-blanc_profil_clignement",
    "rubrique": "vivants",
    "sujet": "cerf-blanc",
@@ -34559,8 +34673,7 @@
     92
    ],
    "parcours": "revelation",
-   "statut": "a-revoir",
-   "note": "Le cerf blanc n'a que le profil ; il lui faut le trois quarts avant et dos, comme Anya."
+   "statut": "ok"
   },
   {
    "id": "vivants/cerf-blanc/cerf-blanc_profil_marche",
@@ -34584,8 +34697,7 @@
    ],
    "ms_par_image": 300,
    "parcours": "revelation",
-   "statut": "a-revoir",
-   "note": "Le cerf blanc n'a que le profil ; il lui faut le trois quarts avant et dos, comme Anya."
+   "statut": "ok"
   },
   {
    "id": "vivants/cerf-blanc/cerf-blanc_profil_repos",
@@ -34607,8 +34719,7 @@
     92
    ],
    "parcours": "revelation",
-   "statut": "a-revoir",
-   "note": "Le cerf blanc n'a que le profil ; il lui faut le trois quarts avant et dos, comme Anya."
+   "statut": "ok"
   },
   {
    "id": "personnages/epilogue/arrivant-01/arrivant-01_avant_marche",

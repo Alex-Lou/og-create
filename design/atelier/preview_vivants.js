@@ -58,16 +58,22 @@ const anim = [];
   anim.push(['Anya', boxes]);
 }
 
-// ——— Le cerf blanc (profil ; le miroir donne l'autre sens)
+// ——— Le cerf blanc (profil, trois quarts avant et dos ; le miroir donne l'autre sens)
 {
   const imgs = [['cerf_marche_1', cerfFrame('marche', 0)], ['cerf_marche_2', cerfFrame('marche', 1)], ['cerf_repos', cerfFrame('repos', 0)], ['cerf_clignement', cerfFrame('marche', 0, true)]];
-  imgs.forEach(([f, b]) => write(path.join(LIB, 'cerf', `${f}.svg`), svgC(b)));
-  const rows = [row('Profil', imgs.map(([f, b]) => [svgC(unique(b), 3), f.replace('cerf_', '')]))];
-  shots.push([path.join(OUT, 'planche_cerf.png'), sheet('Le cerf blanc', 'Repère 80 × 80, sabots en y = 77, tourné vers la droite (miroir pour la gauche).', rows), 1100]);
+  const imgsA = [['cerf_avant_marche_1', cerfFrame('marche', 0, false, 'avant')], ['cerf_avant_marche_2', cerfFrame('marche', 1, false, 'avant')], ['cerf_avant_repos', cerfFrame('repos', 0, false, 'avant')], ['cerf_avant_clignement', cerfFrame('marche', 0, true, 'avant')]];
+  const imgsD = [['cerf_dos_marche_1', cerfFrame('marche', 0, false, 'dos')], ['cerf_dos_marche_2', cerfFrame('marche', 1, false, 'dos')], ['cerf_dos_repos', cerfFrame('repos', 0, false, 'dos')]];
+  [...imgs, ...imgsA, ...imgsD].forEach(([f, b]) => write(path.join(LIB, 'cerf', `${f}.svg`), svgC(b)));
+  const rows = [['Profil', imgs, 'cerf_'], ['Trois quarts avant', imgsA, 'cerf_avant_'], ['Trois quarts dos', imgsD, 'cerf_dos_']].map(([lab, list, pre]) => row(lab, list.map(([f, b]) => [svgC(unique(b), 3), f.replace(pre, '')])));
+  shots.push([path.join(OUT, 'planche_cerf.png'), sheet('Le cerf blanc', 'Repère 80 × 80, sabots en y = 77 ; profil tourné vers la droite, trois quarts vers le bas à droite (avant) ou le haut à droite (dos) ; le miroir donne l\'autre sens.', rows), 1100]);
+  const walk = (v) => [cerfFrame('marche', 0, false, v), cerfFrame('marche', 1, false, v)].map(b => svgC(unique(b), 3));
   anim.push(['Le cerf blanc', [
-    { label: 'Marche', frames: [cerfFrame('marche', 0), cerfFrame('marche', 1)].map(b => svgC(unique(b), 3)), timings: [300, 300], w: 240, h: 276 },
-    { label: 'Marche (miroir)', frames: [cerfFrame('marche', 0), cerfFrame('marche', 1)].map(b => svgC(unique(b), 3)), timings: [300, 300], w: 240, h: 276, mirror: true },
-    { label: 'Repos', frames: [cerfFrame('repos', 0), cerfFrame('repos', 0, true)].map(b => svgC(unique(b), 3)), timings: [1800, 180], w: 240, h: 276 }
+    { label: 'Marche', frames: walk('profil'), timings: [300, 300], w: 240, h: 276 },
+    { label: 'Marche (miroir)', frames: walk('profil'), timings: [300, 300], w: 240, h: 276, mirror: true },
+    { label: 'Repos', frames: [cerfFrame('repos', 0), cerfFrame('repos', 0, true)].map(b => svgC(unique(b), 3)), timings: [1800, 180], w: 240, h: 276 },
+    { label: 'Marche trois quarts avant', frames: walk('avant'), timings: [300, 300], w: 240, h: 276 },
+    { label: 'Marche trois quarts dos', frames: walk('dos'), timings: [300, 300], w: 240, h: 276 },
+    { label: 'Repos trois quarts avant', frames: [cerfFrame('repos', 0, false, 'avant'), cerfFrame('repos', 0, true, 'avant')].map(b => svgC(unique(b), 3)), timings: [1800, 180], w: 240, h: 276 }
   ]]);
 }
 
