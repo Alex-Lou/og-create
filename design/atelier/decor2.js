@@ -2,6 +2,7 @@
 // du jeu (depositSprites.js, nameSigns.js, isletSprites.js, visitors.js, sprites.js, chest.js, nature.js, terrain.js),
 // dessinée en pixels du jeu dans un groupe agrandi × 1,25 : les cadres et les ancres du jeu × 1,25 restent justes.
 const { OUT, P, E, L, r2 } = require('./troupe');
+const { arbre } = require('./arbres');
 
 const K = 1.25;
 const W = 0.88; // trait de la troupe (1,1) une fois agrandi
@@ -72,6 +73,8 @@ function fruitTree(fruits, f) {
 }
 // frames : cadres du jeu [prêt, ramassé], × 1,25 à l'export
 const G = {
+  // Cristaux de glace : une plaque de neige aux bords bosselés, des grappes d'aiguilles à facettes (pan clair, pan d'ombre,
+  // pointe éclairée, reflet) qui scintillent ; ramassés, des moignons dans la neige
   glace: {
     frames: [[-30, -46, 60, 56], [-24, -16, 48, 26]],
     draw: (spent, f) => spent
@@ -102,8 +105,16 @@ const G = {
   },
   fruits: {
     frames: [[-24, -50, 48, 58], [-24, -50, 48, 58]],
-    draw: (spent, f) => fruitTree(!spent, f)
+    draw: (spent, f) => {
+      const mangue = (x, y, s, i) => P(`M${r2(x)},${r2(y - 2.4 * s)} Q${r2(x + 2.5 * s)},${r2(y - 2 * s)} ${r2(x + 2.1 * s)},${r2(y + 0.9 * s)} Q${r2(x + 1.3 * s)},${r2(y + 3 * s)} ${r2(x - 0.4 * s)},${r2(y + 2.7 * s)} Q${r2(x - 2.5 * s)},${r2(y + 1.7 * s)} ${r2(x - 1.9 * s)},${r2(y - 0.6 * s)} Q${r2(x - 1.3 * s)},${r2(y - 2.6 * s)} ${r2(x)},${r2(y - 2.4 * s)} Z`, '#F6C443', 0.9)
+        + E(x + 0.7 * s, y + 1.1 * s, 1.2 * s, 0.9 * s, i % 3 ? '#F2924A' : '#EE7A5A', 0) + E(x - 0.8 * s, y - 0.9 * s, 0.45 * s, 0.7 * s, '#FFF6D0', 0)
+        + line(`M${r2(x)},${r2(y - 2.3 * s)} q0.3,-1.4 1,-2`, 0.9, OUT);
+      const fruits = spent ? '' : [[-20, -38], [-11, -45], [-25, -45], [-5, -36], [3, -51], [10, -39], [18, -35], [21, -43], [-2, -59], [12, -56]].map(([x, y], i) => mangue(x, y, 1.15, i)).join('');
+      return `<g transform="rotate(${spent ? 0 : f ? 1.2 : -1.2}) scale(${r2(0.87 / K)})">${arbre({ vert: 'profond', petit: true })}${fruits}</g>`;
+    }
   },
+  // Éclats d'obsidienne : une plaque de cendre aux bords bosselés et ses fentes de braise ; des lames noires à facettes au
+  // reflet violet, qui luisent de braises au pied ; ramassés, des cailloux sombres dans la cendre
   obsidienne: {
     frames: [[-28, -38, 56, 48], [-22, -12, 44, 20]],
     draw: (spent, f) => {
