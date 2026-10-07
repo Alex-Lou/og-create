@@ -85,7 +85,6 @@ for (const [id, a] of Object.entries(ANNEX_SPRITES)) {
 }
 for (const [id, s] of Object.entries(S)) add({ cat: 'enseignes', dir: 'enseignes', base: id, label: ENSEIGNES[id], frame: big(SIGN_FRAME), frames: Array.from({ length: s.n }, (_, f) => up(s.draw(f))), ms: id === 'fer' ? 200 : id === 'laiton' ? 900 : 260, cell: false, meta: { cadre_du_nom: SIGN_TEXT[id] } });
 for (const [id, m] of Object.entries(M)) {
-  if (id === 'nid') continue; // déjà dans le lot C (plantes/nid.svg)
   for (const v of m.variants || [null]) {
     const frames = Array.from({ length: m.n }, (_, f) => up(m.draw(f, v || undefined)));
     const base = v ? `${id}_${v}` : id;

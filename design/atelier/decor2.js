@@ -39,22 +39,6 @@ function spire(x, y, h, w, c, lean = 0) {
     + L([x - w * 0.45 + lean * 0.2, y - h * 0.15], [x - w * 0.15 + lean * 0.7, y - h * 0.75], 'rgba(255,255,255,.8)', 0.8)
     + L(fr, tip, OUT, 0.35) + pg([bl, fr, br, tip], 'none');
 }
-// Mouton de trois quarts : laineux ou tondu ; head 1 : il broute. Corps près du sol, pattes courtes, tête claire au
-// museau, oreille ; tondu : laine rase rosée et quelques bouclettes
-function sheep(x, y, woolly, head = 0, flip = false) {
-  const s = flip ? -1 : 1;
-  const body = woolly ? '#F7F2E6' : '#EBD8CC';
-  const hx = x + s * 8.4, hy = y - 7 + head * 3.6;
-  let o = shade(x, y + 0.5, 8.6, 2.2) + [-4.2, -1.6, 2, 4.6].map((dx, i) => L([x + s * dx, y - 2.6], [x + s * dx, y - 0.2], i % 2 ? '#3D342E' : '#4A3E36', 1.6)).join('');
-  if (woolly) {
-    o += E(x, y - 5.6, 8, 4.6, body);
-    o += [-5, -1.4, 2.4].map(dx => E(x + s * dx, y - 8.4, 3.6, 3.2, body, W)).join('') + E(x, y - 5, 7, 3.8, body, 0) + E(x + s, y - 3, 6, 1.2, '#E6DECC', 0);
-  } else {
-    o += P(`M${r2(x - 7)},${r2(y - 4)} Q${r2(x - 7.4)},${r2(y - 9)} ${r2(x - 2)},${r2(y - 9)} L${r2(x + 3)},${r2(y - 9.2)} Q${r2(x + 7.6)},${r2(y - 8.8)} ${r2(x + 7)},${r2(y - 4)} Q${r2(x + 6)},${r2(y - 1.6)} ${r2(x)},${r2(y - 1.8)} Q${r2(x - 6.4)},${r2(y - 1.6)} ${r2(x - 7)},${r2(y - 4)} Z`, body)
-      + [[-3.6, -7], [0.4, -7.6], [3.8, -6.8], [-1.6, -4.6], [2.4, -4.4]].map(([dx, dy]) => E(x + s * dx, y + dy, 1, 0.8, '#F6E8DE', 0)).join('') + E(x + s, y - 2.8, 5.4, 0.9, '#DCC4B6', 0);
-  }
-  return o + E(hx - s * 1.8, hy - 1.6, 1.6, 0.9, '#3D342E', 0.6) + E(hx, hy, 2.8, 2.1, '#3D342E', W) + E(hx + s * 1.2, hy + 0.6, 1.3, 0.9, '#6B5A50', 0) + E(hx + s * 0.6, hy - 0.7, 0.5, 0.5, '#F4ECDC', 0);
-}
 // Massette : tige qui plie, épi brun
 const cattail = (x, y, h, sway, head = true) => line(`M${r2(x)},${r2(y)} q${r2(sway * 0.3)},${r2(-h * 0.5)} ${r2(sway)},${r2(-h)}`, 2.3, OUT) + line(`M${r2(x)},${r2(y)} q${r2(sway * 0.3)},${r2(-h * 0.5)} ${r2(sway)},${r2(-h)}`, 1.1, '#5F8F3C')
   + (head ? E(x + sway, y - h + 2.5, 1.7, 3.6, '#8A5A2E', W * 0.8) : '');
@@ -301,22 +285,6 @@ const SIGN_FRAME = [-32, -56, 64, 62];
 const PROP_BOX = [-40, -92, 80, 112];
 const BUILDING_BOX = [-76, -124, 152, 168];
 const M = {};
-// Nid de la colonie de mouettes : couronne de paille, trois œufs mouchetés
-M.nid = { frame: PROP_BOX, n: 1, draw: () => {
-  const straw = back => {
-    let o = '';
-    for (let k = 0; k < 14; k++) {
-      const a = (k / 14) * TAU;
-      if ((Math.sin(a) < 0) !== back) continue;
-      const r = 9 + (k % 3);
-      o += tk(`M${r2(Math.cos(a) * r)},${r2(Math.sin(a) * r * 0.5)} q${r2(Math.cos(a + 1.4) * 5)},${r2(Math.sin(a + 1.4) * 2)} ${r2(Math.cos(a + 2) * 7)},${r2(Math.sin(a + 2) * 3)}`, 1.3, k % 2 ? '#C9A45A' : '#E2C27A');
-    }
-    return o;
-  };
-  const egg = (dx, dy, c) => E(dx, dy, 2.7, 3.4, c, W * 0.7) + E(dx + 0.8, dy - 0.6, 0.5, 0.5, '#8C8270', 0) + E(dx - 0.9, dy + 0.9, 0.4, 0.4, '#8C8270', 0) + E(dx - 0.8, dy - 1.4, 0.7, 1, '#FFFFFF', 0);
-  return shade(1, 1.5, 13, 6, 0.18) + E(0, 0, 10.5, 5, '#B08A48') + E(0, -0.6, 7, 3.2, '#7A5A30', 0.5) + straw(true)
-    + egg(-2.6, -2.6, '#EEF3F2') + egg(2.4, -2.2, '#DCEBEE') + egg(0, -0.8, '#F4F1E6') + straw(false);
-} };
 // Ponton d'amarrage au ras de l'eau : pilotis, plancher, bitte et cordage
 M.ponton = { frame: BUILDING_BOX, n: 1, draw: () => {
   const [wx, wy] = gp(0, 0.05, -1);
