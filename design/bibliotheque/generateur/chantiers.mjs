@@ -436,8 +436,10 @@ var dot = /* @__PURE__ */ __name((x, y, r, fill) => `<circle cx="${f22(x)}" cy="
 var chemin = /* @__PURE__ */ __name((d, stroke, w, fill = "none") => `<path d="${d}" stroke="${stroke}" stroke-width="${f22(w)}" fill="${fill}" stroke-linecap="round" stroke-linejoin="round"/>`, "chemin");
 var wave = /* @__PURE__ */ __name((f, n, amp = 1, phase = 0) => Math.sin(f / n * Math.PI * 2 + phase) * amp, "wave");
 var CADRE = [-34, -30, 68, 48];
-var CULTURES = ["ble", "carottes", "citrouilles"];
+var CULTURES = ["ble", "carottes", "citrouilles", "laitues", "choux", "tomates", "haricots", "fraises", "pommes_de_terre"];
 var ETAPES2 = ["bechage", "sillons", "semis", "pousses", "croissance"];
+var ETAPES_POTAGER = [...ETAPES2, "mur"];
+var etapesDe = /* @__PURE__ */ __name((culture) => POTAGER[culture] ? ETAPES_POTAGER : ETAPES2, "etapesDe");
 var IMAGES = 3;
 var COLS = [-0.31, -0.155, 0, 0.155, 0.31];
 var ROWS = [-0.28, -0.14, 0, 0.14, 0.28];
@@ -484,9 +486,10 @@ function moineau(u, v, f) {
 }
 __name(moineau, "moineau");
 var DESSIN = { ble: "#EBC85E", carottes: "#F08A3A", citrouilles: "#E8862E" };
+var dessinDe = /* @__PURE__ */ __name((culture) => DESSIN[culture] || POTAGER[culture].dessin, "dessinDe");
 function sachet(u, v, culture) {
   const [x, y] = P(u, v, 0);
-  return `<polygon points="${f22(x - 2.6)},${f22(y)} ${f22(x + 2.6)},${f22(y - 0.6)} ${f22(x + 2.8)},${f22(y - 7)} ${f22(x - 2.4)},${f22(y - 6.6)}" fill="#F4E6C8"${EDGE}/>` + ln2([x - 2.4, y - 5.6], [x + 2.8, y - 6], "#C9B48A", 0.6) + ell2(x + 0.2, y - 3, 1.5, 1.7, DESSIN[culture], ` stroke="${OUT2}" stroke-width="0.4"`) + ln2([x + 0.2, y - 4.6], [x + 0.6, y - 5.6], LEAF, 0.7);
+  return `<polygon points="${f22(x - 2.6)},${f22(y)} ${f22(x + 2.6)},${f22(y - 0.6)} ${f22(x + 2.8)},${f22(y - 7)} ${f22(x - 2.4)},${f22(y - 6.6)}" fill="#F4E6C8"${EDGE}/>` + ln2([x - 2.4, y - 5.6], [x + 2.8, y - 6], "#C9B48A", 0.6) + ell2(x + 0.2, y - 3, 1.5, 1.7, dessinDe(culture), ` stroke="${OUT2}" stroke-width="0.4"`) + ln2([x + 0.2, y - 4.6], [x + 0.6, y - 5.6], LEAF, 0.7);
 }
 __name(sachet, "sachet");
 function graine(culture, x, y, k) {
@@ -519,10 +522,122 @@ function croissance(culture, x, y, f, k) {
   return ell2(x, y + 0.2, 4, 1.1, "rgba(40,55,20,.2)") + `<circle cx="${f22(x - 1.8)}" cy="${f22(y - 2)}" r="2" fill="${LEAF}" stroke="#3F7A2E" stroke-width="0.35"/><circle cx="${f22(x + 1.6 + s * 0.3)}" cy="${f22(y - 2.5)}" r="2.2" fill="${LEAF_LIGHT}" stroke="#4F8F3A" stroke-width="0.35"/>` + (fleur ? [0, 72, 144, 216, 288].map((a) => ell2(x + 0.2 + s * 0.3 + Math.cos(a * Math.PI / 180) * 0.9, y - 4.6 + Math.sin(a * Math.PI / 180) * 0.6, 0.8, 0.55, "#F7C83A")).join("") + dot(x + 0.2 + s * 0.3, y - 4.6, 0.45, "#E08A1E") : ell2(x + 0.4, y - 0.8, 1.6, 1.2, "#7FB24A", ' stroke="#4F7A2E" stroke-width="0.35"'));
 }
 __name(croissance, "croissance");
+var BOIS = { tuteur: "#A9794A", fonce: "#7A5232" };
+var ROUGE = "#E2453A";
+var tige = /* @__PURE__ */ __name((a, b, color = "#5E9A3E", w = 0.7) => ln2(a, b, color, w), "tige");
+var feuille = /* @__PURE__ */ __name((x, y, rx, ry, fill, rot = 0, edge = "#3F7A2E") => `<ellipse cx="${f22(x)}" cy="${f22(y)}" rx="${f22(rx)}" ry="${f22(ry)}" fill="${fill}" stroke="${edge}" stroke-width="0.35"${rot ? ` transform="rotate(${f22(rot)} ${f22(x)} ${f22(y)})"` : ""}/>`, "feuille");
+var fruit = /* @__PURE__ */ __name((x, y, r, fill, edge) => `<circle cx="${f22(x)}" cy="${f22(y)}" r="${f22(r)}" fill="${fill}" stroke="${edge}" stroke-width="0.35"/>` + dot(x - r * 0.35, y - r * 0.35, r * 0.3, "rgba(255,255,255,.55)"), "fruit");
+var piquetTuteur = /* @__PURE__ */ __name((x, y, h) => ln2([x, y + 0.4], [x + 0.4, y - h], OUT2, 1.9) + ln2([x, y + 0.4], [x + 0.4, y - h], BOIS.tuteur, 1), "piquetTuteur");
+var trefle = /* @__PURE__ */ __name((x, y, r, fill, s = 0) => [-60, 0, 60].map((a) => feuille(x + Math.sin(a * Math.PI / 180) * r * 0.9 + s * 0.2, y - r * 0.8 - Math.cos(a * Math.PI / 180) * r * 0.6, r * 0.62, r * 0.48, fill, a)).join(""), "trefle");
+var paille = /* @__PURE__ */ __name((x, y) => [[-3, 0.6, 2.6, -0.2], [-2, -0.6, 3, 0.4], [-3.2, 1.2, 1.4, 1.6]].map(([a, b, c, d]) => ln2([x + a, y + b], [x + c, y + d], "#E8C86A", 0.55)).join(""), "paille");
+var butte = /* @__PURE__ */ __name((x, y) => ell2(x, y + 0.2, 3.6, 1.6, TERRE2.motte, ` stroke="${OUT2}" stroke-width="0.35"`) + ell2(x - 0.6, y - 0.3, 2, 0.7, TERRE2.clair), "butte");
+function escargot(x, y, f) {
+  const d = f * 0.8;
+  return chemin(`M${f22(x - 3 + d)},${f22(y)} l3.6,0`, "#E8DCC8", 1.6) + `<circle cx="${f22(x - 1 + d)}" cy="${f22(y - 1.6)}" r="1.7" fill="#C98A4A" stroke="${OUT2}" stroke-width="0.4"/>` + chemin(`M${f22(x - 1.6 + d)},${f22(y - 1.6)} a0.8,0.8 0 1,1 0.8,0.6`, "#8A5A2A", 0.4) + ln2([x + 0.6 + d, y - 0.4], [x + 1.2 + d, y - 2.2], "#E8DCC8", 0.4) + ln2([x + 0.9 + d, y - 0.4], [x + 1.8 + d, y - 1.9], "#E8DCC8", 0.4);
+}
+__name(escargot, "escargot");
+function papillonBlanc(x, y, f) {
+  const o = [1, 0.35, 0.75][f % 3], h = [0, -1.2, -0.5][f % 3];
+  return [-1, 1].map((s) => `<path d="M${f22(x)},${f22(y + h - 0.4)} Q${f22(x + s * 3.2 * o)},${f22(y + h - 3.4)} ${f22(x + s * 2.6 * o)},${f22(y + h + 0.2)} Q${f22(x + s * 1.2 * o)},${f22(y + h + 1.2)} ${f22(x)},${f22(y + h - 0.4)} Z" fill="#FFFFFF" stroke="${OUT2}" stroke-width="0.35"/><path d="M${f22(x + s * 2.3 * o)},${f22(y + h - 2.6)} Q${f22(x + s * 3.1 * o)},${f22(y + h - 2.9)} ${f22(x + s * 2.9 * o)},${f22(y + h - 1.4)} Z" fill="#3D3A36"/>`).join("") + ln2([x, y + h - 1.2], [x, y + h + 0.6], OUT2, 0.7);
+}
+__name(papillonBlanc, "papillonBlanc");
+function coccinelle(x, y) {
+  return `<circle cx="${f22(x)}" cy="${f22(y)}" r="1.2" fill="${ROUGE}" stroke="${OUT2}" stroke-width="0.35"/>` + ln2([x, y - 1.2], [x, y + 1.2], OUT2, 0.3) + dot(x - 0.5, y + 0.2, 0.25, OUT2) + dot(x + 0.5, y - 0.2, 0.25, OUT2) + dot(x + 1.1, y - 0.5, 0.45, OUT2);
+}
+__name(coccinelle, "coccinelle");
+function abeille(x, y, f) {
+  const dx = [0, 2.4, 1][f % 3], dy = [0, -1, 0.8][f % 3];
+  return `<ellipse cx="${f22(x + dx)}" cy="${f22(y + dy)}" rx="1.4" ry="1" fill="#F2C04B" stroke="${OUT2}" stroke-width="0.35"/>` + ln2([x + dx - 0.2, y + dy - 0.9], [x + dx - 0.2, y + dy + 0.9], OUT2, 0.4) + ell2(x + dx - 0.2, y + dy - 1.4, 0.9, 0.6, "rgba(255,255,255,.85)", ` stroke="${OUT2}" stroke-width="0.3"`);
+}
+__name(abeille, "abeille");
+function godets(u, v) {
+  const [x, y] = P(u, v, 0);
+  return [[-2.4, 0], [2.2, -0.4]].map(([dx, dy]) => `<polygon points="${f22(x + dx - 1.6)},${f22(y + dy - 2.6)} ${f22(x + dx + 1.6)},${f22(y + dy - 2.6)} ${f22(x + dx + 1.1)},${f22(y + dy)} ${f22(x + dx - 1.1)},${f22(y + dy)}" fill="#C8704A"${EDGE}/>` + trefle(x + dx, y + dy - 2.6, 1.5, "#4F8F3A")).join("");
+}
+__name(godets, "godets");
+function panier(u, v, couleur) {
+  const [x, y] = P(u, v, 0);
+  return ell2(x, y - 2.4, 3.4, 1.2, "#7A5232", ` stroke="${OUT2}" stroke-width="0.4"`) + [[-1.4, -2.8], [0.6, -3], [1.8, -2.4], [-0.4, -2]].map(([a, b]) => fruit(x + a, y + b, 1, couleur, "#9A7040")).join("") + `<path d="M${f22(x - 3.4)},${f22(y - 2.4)} L${f22(x - 2.6)},${f22(y + 0.2)} Q${f22(x)},${f22(y + 1.2)} ${f22(x + 2.6)},${f22(y + 0.2)} L${f22(x + 3.4)},${f22(y - 2.4)} Q${f22(x)},${f22(y - 1.2)} ${f22(x - 3.4)},${f22(y - 2.4)} Z" fill="#B8864E"${EDGE}/>` + ln2([x - 3, y - 1.2], [x + 3, y - 1.2], "#8A5E32", 0.5) + chemin(`M${f22(x - 3)},${f22(y - 2.6)} Q${f22(x)},${f22(y - 8)} ${f22(x + 3)},${f22(y - 2.6)}`, "#8A5E32", 0.9);
+}
+__name(panier, "panier");
+var POTAGER = {
+  laitues: {
+    dessin: "#8FCB6A",
+    graine: /* @__PURE__ */ __name((x, y) => [-1.2, 0, 1.2].map((o, i) => dot(x + o, y - 0.3 + i % 2 * 0.3, 0.3, "#CDBB8E")).join(""), "graine"),
+    pousse: /* @__PURE__ */ __name((x, y, s) => [-1, 0, 1].map((o, i) => feuille(x + o * 0.9 + s * 0.2, y - 1 - (i === 1 ? 0.5 : 0), 0.9, 0.6, LEAF_LIGHT, o * 30)).join(""), "pousse"),
+    croissance: /* @__PURE__ */ __name((x, y, s) => [0, 72, 144, 216, 288].map((a) => feuille(x + Math.cos(a * Math.PI / 180) * 1.5 + s * 0.15, y - 1.4 + Math.sin(a * Math.PI / 180) * 0.8, 1.3, 0.9, LEAF_LIGHT, a)).join("") + feuille(x, y - 1.8, 1, 0.8, "#B8E07A"), "croissance"),
+    mur: /* @__PURE__ */ __name((x, y, s) => [0, 60, 120, 180, 240, 300].map((a) => feuille(x + Math.cos(a * Math.PI / 180) * 2.2 + s * 0.15, y - 1.6 + Math.sin(a * Math.PI / 180) * 1.1, 1.8, 1.2, "#7CC25A", a)).join("") + [0, 90, 180, 270].map((a) => feuille(x + Math.cos(a * Math.PI / 180) * 0.9, y - 2.4 + Math.sin(a * Math.PI / 180) * 0.5, 1.2, 0.9, "#A9D86E", a)).join("") + feuille(x, y - 2.8, 0.9, 0.7, "#CFEA92"), "mur"),
+    bete: /* @__PURE__ */ __name((f) => {
+      const [x, y] = P(0.08, 0.38, 0);
+      return escargot(x, y, f);
+    }, "bete")
+  },
+  choux: {
+    dessin: "#7FA894",
+    espace: true,
+    graine: /* @__PURE__ */ __name((x, y) => dot(x - 0.6, y - 0.2, 0.4, "#3A2A22") + dot(x + 0.7, y - 0.1, 0.4, "#3A2A22"), "graine"),
+    pousse: /* @__PURE__ */ __name((x, y, s) => tige([x, y], [x + s * 0.2, y - 1.8], "#6E9C88", 0.6) + feuille(x - 1.1 + s * 0.2, y - 2.2, 1.2, 0.8, "#9CC4B0", -20, "#4E7A68") + feuille(x + 1.1 + s * 0.2, y - 2.3, 1.2, 0.8, "#8FB8A0", 20, "#4E7A68"), "pousse"),
+    croissance: /* @__PURE__ */ __name((x, y, s) => [-130, -50, 30, 150].map((a) => feuille(x + Math.cos(a * Math.PI / 180) * 2.2 + s * 0.2, y - 1.8 + Math.sin(a * Math.PI / 180) * 1.2, 2, 1.3, "#7FA894", a, "#4E7A68")).join("") + feuille(x, y - 2.4, 1.3, 1.1, "#A8CDB8", 0, "#4E7A68"), "croissance"),
+    mur: /* @__PURE__ */ __name((x, y, s) => [-150, -90, -30, 30, 90, 150].map((a) => feuille(x + Math.cos(a * Math.PI / 180) * 3 + s * 0.2, y - 1.6 + Math.sin(a * Math.PI / 180) * 1.4, 2.2, 1.4, "#6E9C88", a, "#4E7A68")).join("") + `<circle cx="${f22(x)}" cy="${f22(y - 3)}" r="2.6" fill="#B5D6B0" stroke="#4E7A68" stroke-width="0.4"/>` + chemin(`M${f22(x - 1.6)},${f22(y - 3.6)} q1.6,-1 3.2,0 M${f22(x)},${f22(y - 5.4)} l0,2.6`, "#7FA894", 0.4), "mur"),
+    bete: /* @__PURE__ */ __name((f) => {
+      const [x, y] = P(0.05, 0.2, 9);
+      return papillonBlanc(x, y, f);
+    }, "bete")
+  },
+  tomates: {
+    dessin: ROUGE,
+    espace: true,
+    graine: /* @__PURE__ */ __name((x, y) => ell2(x - 0.6, y - 0.2, 0.6, 0.4, "#F0E2BE", ' stroke="#B8A47A" stroke-width="0.3"') + ell2(x + 0.7, y - 0.1, 0.6, 0.4, "#F0E2BE", ' stroke="#B8A47A" stroke-width="0.3"'), "graine"),
+    pousse: /* @__PURE__ */ __name((x, y, s) => tige([x, y], [x + s * 0.3, y - 3], "#6FA84A", 0.6) + feuille(x - 1 + s * 0.3, y - 2.6, 1, 0.55, "#6FA84A", -30) + feuille(x + 1 + s * 0.3, y - 3, 1, 0.55, LEAF, 30), "pousse"),
+    croissance: /* @__PURE__ */ __name((x, y, s) => piquetTuteur(x + 0.8, y, 11) + tige([x, y], [x + 0.6 + s * 0.2, y - 9], "#5E9A3E", 0.8) + [[-1.6, -3, -30], [1.8, -5, 30], [-1.6, -7, -30], [1.4, -8.6, 30]].map(([a, b, r]) => feuille(x + a + s * 0.3, y + b, 1.4, 0.7, LEAF, r)).join("") + [0, 72, 144, 216, 288].map((a) => ell2(x - 0.6 + Math.cos(a * Math.PI / 180) * 0.6 + s * 0.3, y - 5.8 + Math.sin(a * Math.PI / 180) * 0.4, 0.5, 0.35, "#F7C83A")).join("") + fruit(x + 1.2 + s * 0.3, y - 3.6, 0.9, "#8FC060", "#5E8A3A"), "croissance"),
+    mur: /* @__PURE__ */ __name((x, y, s) => piquetTuteur(x + 0.8, y, 11) + tige([x, y], [x + 0.6 + s * 0.2, y - 9], "#5E9A3E", 0.8) + [[-1.6, -3, -30], [1.8, -5, 30], [-1.6, -7.4, -30], [1.6, -8.8, 30]].map(([a, b, r]) => feuille(x + a + s * 0.3, y + b, 1.4, 0.7, LEAF, r)).join("") + [[1.4, -3.4, 1.2], [-1, -4.8, 1.1], [0.4, -6.2, 1], [-1.2, -2.4, 0.9]].map(([a, b, r], i) => fruit(x + a + s * 0.3, y + b, r, i === 3 ? "#F08A3A" : ROUGE, "#A8302A")).join(""), "mur"),
+    bete: /* @__PURE__ */ __name(() => {
+      const [x, y] = P(0.155, 0, 0);
+      return coccinelle(x - 1.6, y - 7.4);
+    }, "bete")
+  },
+  haricots: {
+    dessin: "#7EC45B",
+    espace: true,
+    graine: /* @__PURE__ */ __name((x, y) => ell2(x - 0.7, y - 0.3, 1.1, 0.6, "#F2EBDD", ' stroke="#A89A80" stroke-width="0.3"') + dot(x - 0.7, y - 0.3, 0.25, "#5A3A22") + ell2(x + 0.9, y - 0.1, 1.1, 0.6, "#C98A6A", ' stroke="#8A5A3A" stroke-width="0.3"'), "graine"),
+    pousse: /* @__PURE__ */ __name((x, y, s) => tige([x, y], [x + s * 0.2, y - 2.6], "#7CBF4E", 0.8) + feuille(x - 1.1 + s * 0.2, y - 2.8, 1.3, 0.9, LEAF_LIGHT, -15) + feuille(x + 1.1 + s * 0.2, y - 2.9, 1.3, 0.9, LEAF, 15), "pousse"),
+    croissance: /* @__PURE__ */ __name((x, y, s) => piquetTuteur(x, y, 13) + chemin(`M${f22(x)},${f22(y)} q2,-2 0,-4 q-2,-2 0.2,-4 q2,-2 0.2,-3.4`, "#5E9A3E", 0.7) + [[-1.6, -2.4], [1.6, -5], [-1.4, -8], [1.4, -10.4]].map(([a, b], i) => feuille(x + a + s * 0.3, y + b, 1.3, 1, i % 2 ? LEAF_LIGHT : LEAF, a * 15)).join("") + [[1.2, -7], [-1, -11]].map(([a, b]) => dot(x + a + s * 0.3, y + b, 0.7, ROUGE)).join(""), "croissance"),
+    mur: /* @__PURE__ */ __name((x, y, s) => piquetTuteur(x, y, 13) + chemin(`M${f22(x)},${f22(y)} q2,-2 0,-4 q-2,-2 0.2,-4 q2,-2 0.2,-3.4`, "#5E9A3E", 0.7) + [[-1.6, -2.4], [1.6, -5], [-1.4, -8], [1.4, -10.4]].map(([a, b], i) => feuille(x + a + s * 0.3, y + b, 1.3, 1, i % 2 ? LEAF_LIGHT : LEAF, a * 15)).join("") + [[1, -3.4], [-1.2, -6.2], [1.2, -8.4]].map(([a, b]) => chemin(`M${f22(x + a + s * 0.3)},${f22(y + b)} q0.6,1.6 0,3.2`, "#3F7A2E", 1.5) + chemin(`M${f22(x + a + s * 0.3)},${f22(y + b)} q0.6,1.6 0,3.2`, "#9AD06A", 0.8)).join(""), "mur"),
+    bete: /* @__PURE__ */ __name((f) => {
+      const [x, y] = P(0.31, -0.14, 12);
+      return abeille(x, y, f);
+    }, "bete")
+  },
+  fraises: {
+    dessin: ROUGE,
+    semoir: /* @__PURE__ */ __name((u, v) => godets(u, v), "semoir"),
+    graine: /* @__PURE__ */ __name((x, y) => trefle(x, y, 1.2, "#4F8F3A"), "graine"),
+    pousse: /* @__PURE__ */ __name((x, y, s, k) => trefle(x, y, 1.7, "#4F8F3A", s) + (k % 3 === 0 ? dot(x + 1.6, y - 1.2, 0.6, "#FFFFFF") + dot(x + 1.6, y - 1.2, 0.25, "#F2C04B") : ""), "pousse"),
+    croissance: /* @__PURE__ */ __name((x, y, s, k) => paille(x, y) + trefle(x - 1.2, y, 1.8, "#4F8F3A", s) + trefle(x + 1.3, y - 0.2, 1.8, LEAF, s) + (k % 2 ? dot(x + 0.2, y - 2.6, 0.7, "#FFFFFF") + dot(x + 0.2, y - 2.6, 0.3, "#F2C04B") : fruit(x + 0.4, y - 0.6, 0.7, "#B8D88A", "#6F9A3E")), "croissance"),
+    mur: /* @__PURE__ */ __name((x, y, s, k) => paille(x, y) + trefle(x - 1.2, y, 1.8, "#4F8F3A", s) + trefle(x + 1.3, y - 0.2, 1.8, LEAF, s) + [[0.4, -0.4], [-1.6, 0.2], ...k % 2 ? [[1.8, 0.4]] : []].map(([a, b]) => `<path d="M${f22(x + a - 0.9)},${f22(y + b - 0.6)} Q${f22(x + a)},${f22(y + b + 1.8)} ${f22(x + a + 0.9)},${f22(y + b - 0.6)} Z" fill="${ROUGE}" stroke="#A8302A" stroke-width="0.35"/>` + dot(x + a - 0.3, y + b, 0.15, "#F7E08A") + dot(x + a + 0.3, y + b + 0.3, 0.15, "#F7E08A") + ln2([x + a - 0.7, y + b - 0.7], [x + a + 0.7, y + b - 0.7], "#4F8F3A", 0.6)).join(""), "mur"),
+    bete: /* @__PURE__ */ __name(() => "", "bete")
+  },
+  pommes_de_terre: {
+    dessin: "#D9B27A",
+    semoir: /* @__PURE__ */ __name((u, v) => panier(u, v, "#D9B27A"), "semoir"),
+    graine: /* @__PURE__ */ __name((x, y, k) => k % 2 ? "" : fruit(x, y - 0.6, 1.1, "#D9B27A", "#9A7040") + ln2([x - 0.2, y - 1.6], [x - 0.6, y - 2.6], "#B07ACB", 0.6), "graine"),
+    pousse: /* @__PURE__ */ __name((x, y, s, k) => k % 2 ? "" : butte(x, y) + trefle(x, y - 0.8, 1.4, "#4F8F3A", s), "pousse"),
+    croissance: /* @__PURE__ */ __name((x, y, s, k) => k % 2 ? "" : butte(x, y) + [[-1.6, -1.2], [1.4, -1.4], [0, -2.6]].map(([a, b]) => trefle(x + a, y + b, 1.6, a ? "#5E9A3E" : LEAF, s)).join("") + (k % 4 === 0 ? [0, 120, 240].map((a) => dot(x + 0.4 + Math.cos(a * Math.PI / 180) * 0.6, y - 4.6 + Math.sin(a * Math.PI / 180) * 0.4, 0.45, "#ECE2F4")).join("") + dot(x + 0.4, y - 4.6, 0.25, "#F2C04B") : ""), "croissance"),
+    mur: /* @__PURE__ */ __name((x, y, s, k) => k % 2 ? "" : butte(x, y) + [[-1.6, -1.2], [1.4, -1.4], [0, -2.6]].map(([a, b], i) => trefle(x + a, y + b, 1.6, i === 2 ? "#B9B24A" : "#9C9A3E", s)).join("") + fruit(x + 2.4, y + 0.6, 0.9, "#D9B27A", "#9A7040") + (k % 4 === 0 ? fruit(x - 2.6, y + 0.8, 0.8, "#D9B27A", "#9A7040") : ""), "mur"),
+    bete: /* @__PURE__ */ __name(() => "", "bete")
+  }
+};
+function plantDuPotager(culture, quoi, x, y, f, k) {
+  const c = POTAGER[culture];
+  if (c.espace && k % 2 && quoi !== "semis") return "";
+  const s = wave(f, IMAGES, quoi === "pousses" ? 0.6 : 1.2, k * 0.9);
+  return quoi === "semis" ? c.graine(x, y, k) : c[quoi === "pousses" ? "pousse" : quoi](x, y, s, k);
+}
+__name(plantDuPotager, "plantDuPotager");
 function etape(culture, quoi, n) {
   if (!CULTURES.includes(culture)) throw new Error(`culture inconnue : ${culture}`);
   const f = n % IMAGES;
-  if (!ETAPES2.includes(quoi)) throw new Error(`étape inconnue : ${quoi} (${ETAPES2.join(", ")})`);
+  if (!etapesDe(culture).includes(quoi)) throw new Error(`étape inconnue : ${quoi} (${etapesDe(culture).join(", ")})`);
   let out;
   if (quoi === "bechage") {
     out = carre(0.45, HERBE.fond) + bornage(f, false) + face([[-0.41, -0.41, 0], [0.41, -0.41, 0], [0.41, 0.06, 0], [-0.41, 0.06, 0]], TERRE2.dedans, ` stroke="${TERRE2.bord}" stroke-width="0.8"`);
@@ -540,11 +655,13 @@ function etape(culture, quoi, n) {
     out = carre(0.45, TERRE2.bord) + carre(0.41, TERRE2.dedans, "") + bornage(f, false) + sillons();
     if (quoi === "sillons") out += rateau(-0.36, 0.42);
     else {
+      const pot = POTAGER[culture];
       for (const p of plants()) {
         const [x, y] = P(p.du, p.dv, 0);
-        out += quoi === "semis" ? graine(culture, x, y, p.k) : quoi === "pousses" ? pousse(culture, x, y, f, p.k) : croissance(culture, x, y, f, p.k);
+        out += pot ? plantDuPotager(culture, quoi, x, y, f, p.k) : quoi === "semis" ? graine(culture, x, y, p.k) : quoi === "pousses" ? pousse(culture, x, y, f, p.k) : croissance(culture, x, y, f, p.k);
       }
-      if (quoi === "semis") out += moineau(-0.08, 0.36, f) + sachet(0.36, 0.47, culture);
+      if (quoi === "semis") out += moineau(-0.08, 0.36, f) + (pot && pot.semoir ? pot.semoir(0.36, 0.47) : sachet(0.36, 0.47, culture));
+      if (quoi === "mur") out += pot.bete(f);
     }
   }
   return out + bornage(f, true);
@@ -580,19 +697,19 @@ function echafaudageDEvolution(emprise, couche, n = 1) {
   return { svg: svgOf(cadre, echafaudage(emprise, couche, n - 1)), cadre, ms_par_image: MS.etape };
 }
 __name(echafaudageDEvolution, "echafaudageDEvolution");
-var CULTURES2 = { cultures: CULTURES, etapes: ETAPES2, cadre: CADRE.map((v) => v * K), images: IMAGES };
-var PART_CULTURE = { bechage: 0, sillons: 0.15, semis: 0.3, pousses: 0.5, croissance: 0.7 };
+var CULTURES2 = { cultures: CULTURES, etapes: Object.fromEntries(CULTURES.map((c) => [c, etapesDe(c)])), cadre: CADRE.map((v) => v * K), images: IMAGES };
+var PART_CULTURE = { bechage: 0, sillons: 0.15, semis: 0.3, pousses: 0.5, croissance: 0.7, mur: 1 };
 var MS_CULTURE = { etape: 280, spectacle: 450 };
 function etapeDeCulture(culture, etape2, n = 1) {
   if (!CULTURES.includes(culture)) throw new Error(`culture inconnue : ${culture} (${CULTURES.join(", ")})`);
-  if (!ETAPES2.includes(etape2)) throw new Error(`étape inconnue : ${etape2} (${ETAPES2.join(", ")})`);
+  if (!etapesDe(culture).includes(etape2)) throw new Error(`étape inconnue : ${etape2} (${etapesDe(culture).join(", ")})`);
   if (!(+n >= 1 && +n <= IMAGES)) throw new Error(`image ${n} : de 1 à ${IMAGES}`);
   return { svg: svgOf(CULTURES2.cadre, etape(culture, etape2, n - 1)), cadre: CULTURES2.cadre, ms_par_image: MS_CULTURE.etape };
 }
 __name(etapeDeCulture, "etapeDeCulture");
 function liste() {
   const out = [];
-  for (const c of CULTURES) for (const e of ETAPES2) for (let n = 1; n <= IMAGES; n++) out.push({ fichier: `decor/cultures/${c}/culture_${c}_${e}_${n}.svg`, fonction: "etapeDeCulture", args: [c, e, n] });
+  for (const c of CULTURES) for (const e of etapesDe(c)) for (let n = 1; n <= IMAGES; n++) out.push({ fichier: `decor/cultures/${c}/culture_${c}_${e}_${n}.svg`, fonction: "etapeDeCulture", args: [c, e, n] });
   for (const em of Object.keys(EMPRISES)) {
     const d = `batiments/montage/${em}`;
     for (const e of ETAPES) for (let n = 1; n <= IMAGES2.etape; n++) out.push({ fichier: `${d}/montage_${em}_${e}_${n}.svg`, fonction: "etapeDuMontage", args: [em, e, n] });
