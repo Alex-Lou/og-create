@@ -150,11 +150,12 @@ const champ = {
       out += post(T, 0.44, 0.44, 0, 8, WOOD) + ln(T.p(0.44, -0.44, 7), T.p(0.44, 0.44, 7), 'rgba(235,225,200,.8)', 0.5)
         + ln(T.p(-0.44, 0.44, 7), T.p(0.44, 0.44, 7), 'rgba(235,225,200,.8)', 0.5);
       // l'épouvantail au piquet de gauche : chapeau de paille, tête de toile, chemise, bras de paille qui flottent
-      const [ex, ey] = T.p(-0.44, 0.44, 8), sw = wave(f, n, 0.8);
-      return out + ln([ex - 6, ey - 4], [ex + 6, ey - 4.6], WOOD.right, 1.2)
+      // un peu à droite du piquet et les bras un peu plus courts : sa manche gauche reste dans le cadre du jeu
+      const [px, ey] = T.p(-0.44, 0.44, 8), ex = px + 1.4, sw = wave(f, n, 0.8);
+      return out + ln([ex - 5.2, ey - 4], [ex + 5.2, ey - 4.6], WOOD.right, 1.2)
         + `<path d="M${f2(ex - 3.4)},${f2(ey - 6)} L${f2(ex + 3.4)},${f2(ey - 6.4)} L${f2(ex + 2.6)},${f2(ey + 1.6)} L${f2(ex - 2.6)},${f2(ey + 1.8)} Z" fill="#6FA3D9" stroke="${OUT}" stroke-width="0.5"/>`
         + ln([ex - 2.8, ey - 2], [ex + 2.8, ey - 2.3], '#E2574C', 0.8)
-        + [-1, 1].map(s => `<path d="M${f2(ex + s * 6)},${f2(ey - 4.4 + (s > 0 ? -0.3 : 0))} l${f2(s * 1.4)},${f2(1.6 + sw * s * 0.4)} M${f2(ex + s * 6)},${f2(ey - 4.4)} l${f2(s * 1.8)},${f2(0.4 + sw * s * 0.3)}" stroke="${STRAW.left}" stroke-width="0.8" fill="none" stroke-linecap="round"/>`).join('')
+        + [-1, 1].map(s => `<path d="M${f2(ex + s * 5.2)},${f2(ey - 4.4 + (s > 0 ? -0.3 : 0))} l${f2(s * 1.4)},${f2(1.6 + sw * s * 0.4)} M${f2(ex + s * 5.2)},${f2(ey - 4.4)} l${f2(s * 1.8)},${f2(0.4 + sw * s * 0.3)}" stroke="${STRAW.left}" stroke-width="0.8" fill="none" stroke-linecap="round"/>`).join('')
         + `<circle cx="${f2(ex)}" cy="${f2(ey - 9)}" r="2.6" fill="#E8D8B0" stroke="${OUT}" stroke-width="0.5"/>`
         + dot(ex - 0.9, ey - 9.4, 0.4, '#3D3A36') + dot(ex + 0.9, ey - 9.4, 0.4, '#3D3A36') + `<path d="M${f2(ex - 1)},${f2(ey - 8)} q1,0.8 2,0" stroke="#3D3A36" stroke-width="0.4" fill="none"/>`
         + ell(ex, ey - 11, 5, 1.4, STRAW.top, ` stroke="${OUT}" stroke-width="0.5"`) + `<path d="M${f2(ex - 2.4)},${f2(ey - 11)} Q${f2(ex)},${f2(ey - 15)} ${f2(ex + 2.4)},${f2(ey - 11)} Z" fill="${STRAW.left}" stroke="${OUT}" stroke-width="0.5"/>`
@@ -1403,7 +1404,7 @@ const glaciere = {
     draw: T => {
       const [x, y] = T.p(0, 0, 0);
       // le sol de neige et ses pas
-      let out = ell(x, y + 1, 30, 13, SNOWY.top, ` stroke="${OUT}" stroke-width="0.5"`) + ell(x + 4, y + 3, 22, 7, SNOWY.left)
+      let out = ell(x, y + 1, 30, 12.7, SNOWY.top, ` stroke="${OUT}" stroke-width="0.5"`) + ell(x + 4, y + 3, 22, 7, SNOWY.left)
         + [[-20, 8], [-15, 10], [-10, 8.6]].map(([dx, dy]) => ell(x + dx, y + dy, 1.6, 0.9, SNOWY.right)).join('')
         + T.shadow(0, 0, 0.38, 0.16);
       // le dôme de pierres sèches : rangs de pierres posées une à une, plus petites vers le haut
@@ -1450,7 +1451,7 @@ const metier = {
       const sway = wave(f, n, 1);
       // la lande et ses touffes de bruyère
       const heather = (du, dv, s) => { const [hx, hy] = T.p(du, dv, 0); return [-2.4, -0.8, 0.8, 2.4].map((o, i) => ln([hx + o * 0.5 * s, hy], [hx + o * s, hy - (4 + (i % 2) * 1.6) * s], '#6F8C46', 0.7)).join('') + [[-2.2, -4.4], [-0.6, -5.8], [1, -4.8], [2.4, -5.2], [0, -3.6]].map(([dx, dy], i) => dot(hx + dx * s, hy + dy * s, 0.9 * s, i % 2 ? '#B57BC4' : '#D49ADB')).join(''); };
-      let out = ell(x, y + 1, 31, 13, '#B9B47C', ` stroke="${OUT}" stroke-width="0.5"`) + ell(x - 4, y, 21, 8, '#C8C48E')
+      let out = ell(x, y + 1, 31, 12.7, '#B9B47C', ` stroke="${OUT}" stroke-width="0.5"`) + ell(x - 4, y, 21, 8, '#C8C48E')
         + heather(-0.44, -0.06, 1) + heather(-0.12, -0.44, 0.9) + T.shadow(0, 0, 0.36, 0.18);
       // les écheveaux qui sèchent sur un fil, au fond à droite
       const [ax, ay] = T.p(0.42, -0.36, 15), [bx, by] = T.p(0.42, 0, 15);
@@ -1623,7 +1624,7 @@ const serre = {
       const leaf = (lx, ly, s, a, c) => `<g transform="translate(${f2(lx)} ${f2(ly)}) rotate(${a}) scale(${s})"><path d="M0,0 Q-6,-3 -6,-9 Q-5,-14 0,-15 Q5,-14 6,-9 Q6,-3 0,0 Z" fill="${c}" stroke="${OUT}" stroke-width="0.5"/>`
         + `<path d="M0,0 L0,-14 M0,-5 L-4.6,-7 M0,-9 L-4.4,-11.4 M0,-5 L4.6,-7 M0,-9 L4.4,-11.4" stroke="rgba(20,60,30,.5)" stroke-width="0.6" fill="none"/></g>`;
       // le sol de la jungle et ses feuilles
-      let out = ell(x, y + 1, 32, 13, '#6E8A48', ` stroke="${OUT}" stroke-width="0.5"`) + ell(x - 4, y, 22, 8, '#7E9C54')
+      let out = ell(x, y + 1, 32, 12.7, '#6E8A48', ` stroke="${OUT}" stroke-width="0.5"`) + ell(x - 4, y, 22, 8, '#7E9C54')
         + leaf(x - 24, y - 2, 0.9, -40, '#3E8A48') + leaf(x - 20, y + 1, 0.7, -10, '#5FAE5A')
         + T.shadow(0, 0, 0.42, 0.16) + T.box(-0.3, -0.24, 0.3, 0.24, 0, 3, STONE);
       // dedans, derrière le verre : bananier, palmes, hibiscus, fruits dorés
@@ -1684,7 +1685,7 @@ const fonderie = {
       const lava = o => `rgba(255,${f2(118 + 52 * flick)},40,${o})`;
       const [x, y] = T.p(0, 0, 0);
       // le sol de basalte et ses fentes de lave
-      let out = ell(x, y + 1, 31, 13, '#6A6070', ` stroke="${OUT}" stroke-width="0.5"`) + ell(x - 4, y, 21, 8, '#7A7080')
+      let out = ell(x, y + 1, 31, 12.7, '#6A6070', ` stroke="${OUT}" stroke-width="0.5"`) + ell(x - 4, y, 21, 8, '#7A7080')
         + [[-14, 6, 1.2], [20, 5, 1], [-2, 10, 0.9], [26, -1, 0.8]].map(([dx, dy, r]) => ell(x + dx, y + dy, r * 1.6, r, '#544A5A')).join('');
       for (const d of [`M${x - 26},${y + 3} l6,-2 l4,2 l5,-1`, `M${x + 8},${y + 9} l5,-3 l6,1`, `M${x + 17},${y - 5} l4,2 l6,-1.4`]) {
         out += `<path d="${d}" stroke="${lava(0.25)}" stroke-width="2.8" fill="none" stroke-linecap="round" stroke-linejoin="round"/>`

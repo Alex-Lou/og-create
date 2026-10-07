@@ -471,7 +471,7 @@ LM.arbre = { n: 2, draw: f => {
   let s = shadow(0, 0, 0.8, 0.12) + P(bosses(x, y + 4, 64, 28, 22), '#78B356', 1.1) + E(x - 6, y + 2, 46, 18, '#8CC466', 0)
     + [[-44, 16], [38, 18], [-10, 26], [50, 6]].map(([dx, dy]) => E(x + dx, y + dy, 2.4, 1.2, '#6AA34A', 0)).join('');
   // l'étage du fond de la canopée, les lianes du fond
-  s += T([[-46, -100, 17], [46, -102, 17], [-28, -118, 21], [26, -120, 21], [0, -128, 22], [-60, -90, 12], [60, -92, 12]], [[-30, -112], [10, -122, 0.9], [40, -104, 0.9], [-52, -94, 0.8]], JUNGLE.fond, 'a');
+  s += T([[-46, -100, 17], [46, -102, 17], [-28, -118, 21], [26, -120, 21], [0, -127, 20.5], [-60, -90, 12], [60, -92, 12]], [[-30, -112], [10, -122, 0.9], [40, -104, 0.9], [-52, -94, 0.8]], JUNGLE.fond, 'a');
   s += liane(x - 30, y - 92, 34, 1, false) + liane(x + 20, y - 94, 30, 2, false);
   // une racine-contrefort : une lame qui part du flanc du tronc et s'étale jusqu'au sol en pointe, son arête claire
   const racine = ([dx, dy, sd, h]) => { const T0 = [x + sd * 13, y - h], Pt = [x + dx, y + dy], B0 = [x + sd * 3, y + 4];
