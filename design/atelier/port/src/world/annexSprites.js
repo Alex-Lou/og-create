@@ -945,8 +945,9 @@ const jardin = {
     }
   }]
 };
-// Four à pain : socle de pierre, coupole d'argile, gueule où dansent les flammes, cheminée qui fume ; pains sur leur
-// planche, bûches à côté
+// Four à pain : socle de pierre appareillé, coupole d'argile lissée à la main et noircie au-dessus de la gueule où
+// dansent les flammes, cheminée qui fume ; la pelle à enfourner appuyée, les pains farinés sur leur planche, un
+// panier de miches, les bûches ; un moineau picore les miettes
 const four = {
   light: () => [-0.04, 0.24, 13, 17, '255,150,70', true],
   layers: [{
@@ -954,28 +955,46 @@ const four = {
     n: 6,
     fps: 6,
     draw: (T, f, n) => {
+      const [gx, gy] = T.p(0, 0, 0);
       const [cx, cy] = T.p(0, -0.02, 9);
       const dome = `<path d="M${f2(cx - 17)},${f2(cy)} C${f2(cx - 17)},${f2(cy - 24)} ${f2(cx + 17)},${f2(cy - 24)} ${f2(cx + 17)},${f2(cy)} A17,8.5 0 0 1 ${f2(cx - 17)},${f2(cy)} Z" fill="url(#${T.id('dome')})" stroke="${OUT}" stroke-width="0.6"/>`;
       const [mx, my] = T.p(-0.04, 0.2, 9);
       const flick = [0.8, 1, 0.9, 1.1, 0.85, 1][f];
       const [chx, chy] = T.p(0.08, -0.12, 27);
-      const smoke = [0, 1].map(k => {
-        const p = ((f + k * 3) % n) / n;
-        return puff(chx + p * 5, chy - 6 - p * 18, 2 + p * 3.6, 0.6 * (1 - p));
-      }).join('');
-      return T.shadow(0, 0, 0.38, 0.2)
-        + `<defs><radialGradient id="${T.id('dome')}" cx="0.35" cy="0.3" r="0.8"><stop offset="0" stop-color="${CLAY.top}"/><stop offset="0.6" stop-color="${CLAY.left}"/><stop offset="1" stop-color="${CLAY.right}"/></radialGradient></defs>`
-        + T.box(-0.3, -0.26, 0.3, 0.26, 0, 9, STONE)
+      // la terre battue, la farine et les miettes
+      let out = ell(gx, gy + 1, 31, 12.6, '#C8AC80', ` stroke="${OUT}" stroke-width="0.5"`) + ell(gx - 4, gy, 21, 7.6, '#D6BC90')
+        + ell(...T.p(-0.2, 0.42, 0), 5, 1.6, 'rgba(255,255,255,.45)')
+        + [[-0.1, 0.46], [-0.06, 0.48], [-0.13, 0.5]].map(([du, dv]) => dot(...T.p(du, dv, 0), 0.5, '#E2B060')).join('')
+        + T.shadow(0, 0, 0.38, 0.2)
+        + `<defs><radialGradient id="${T.id('dome')}" cx="0.35" cy="0.3" r="0.8"><stop offset="0" stop-color="${CLAY.top}"/><stop offset="0.6" stop-color="${CLAY.left}"/><stop offset="1" stop-color="${CLAY.right}"/></radialGradient></defs>`;
+      // le socle appareillé, la cheminée, la coupole, ses traces de main et sa suie
+      out += T.box(-0.3, -0.26, 0.3, 0.26, 0, 9, STONE)
         + ln(T.p(-0.3, 0.26, 4.5), T.p(0.3, 0.26, 4.5), 'rgba(120,110,95,.4)', 0.6) + ln(T.p(0.3, -0.26, 4.5), T.p(0.3, 0.26, 4.5), 'rgba(120,110,95,.4)', 0.6)
+        + [-0.18, 0.02, 0.2].map(u => ln(T.p(u, 0.26, 0.4), T.p(u, 0.26, 4.4), 'rgba(120,110,95,.35)', 0.5)).join('') + [-0.08, 0.12].map(u => ln(T.p(u, 0.26, 4.6), T.p(u, 0.26, 8.6), 'rgba(120,110,95,.35)', 0.5)).join('')
         + T.cyl(0.08, -0.12, 18, 30, 0.045, BRICK, 'chem')
         + dome
-        + `<path d="M${f2(mx - 6)},${f2(my)} L${f2(mx - 6)},${f2(my - 6)} A6,6 0 0 1 ${f2(mx + 6)},${f2(my - 6)} L${f2(mx + 6)},${f2(my)} Z" fill="#2E1A10"/>`
-        + ell(mx, my - 2.6, 4.6 * flick, 3 * flick, '#F2862A') + ell(mx, my - 2, 3 * flick, 1.8 * flick, '#FFD24E')
-        + smoke
-        // Pains sur leur planche, bûches
-        + T.box(-0.32, 0.28, -0.08, 0.4, 0, 2, WOOD)
-        + [-0.26, -0.15].map(du => { const [x, y] = T.p(du, 0.34, 2); return ell(x, y - 2, 4, 2.4, '#D8A050', ` stroke="#9A6A2E" stroke-width="0.4"`) + ln([x - 2, y - 2.6], [x + 1, y - 3.4], '#F2D28A', 0.6) + ln([x - 0.4, y - 1.8], [x + 2.4, y - 2.6], '#F2D28A', 0.6); }).join('')
+        + [[-10, -6], [-4, -14], [6, -12], [11, -5], [0, -8]].map(([dx, dy]) => `<path d="M${f2(cx + dx - 2)},${f2(cy + dy)} q2,-1.2 4,0" stroke="rgba(150,80,50,.35)" stroke-width="0.6" fill="none"/>`).join('')
+        + `<path d="M${f2(mx - 5)},${f2(my - 6)} Q${f2(mx)},${f2(my - 16)} ${f2(mx + 5)},${f2(my - 6)} Z" fill="rgba(50,30,20,.35)"/>`
+        + `<path d="M${f2(mx - 6)},${f2(my)} L${f2(mx - 6)},${f2(my - 6)} A6,6 0 0 1 ${f2(mx + 6)},${f2(my - 6)} L${f2(mx + 6)},${f2(my)} Z" fill="#2E1A10" stroke="${OUT}" stroke-width="0.5"/>`
+        + `<path d="M${f2(mx - 7.4)},${f2(my)} L${f2(mx - 7.4)},${f2(my - 6)} A7.4,7.4 0 0 1 ${f2(mx + 7.4)},${f2(my - 6)} L${f2(mx + 7.4)},${f2(my)}" stroke="${STONE.top}" stroke-width="1.4" fill="none"/>`
+        + ell(mx, my - 2.6, 4.6 * flick, 3 * flick, '#F2862A') + ell(mx, my - 2, 3 * flick, 1.8 * flick, '#FFD24E');
+      out += [0, 1].map(k => { const p = ((f + k * 3) % n) / n; return puff(chx + p * 5, chy - 6 - p * 18, 2 + p * 3.6, 0.6 * (1 - p)); }).join('');
+      // la pelle à enfourner appuyée contre le socle, à droite
+      const [px, py] = T.p(0.34, 0.08, 0);
+      out += ln([px, py], [px - 3, py - 22], WOOD.right, 1.3) + ln([px + 0.3, py - 0.2], [px - 2.7, py - 22.2], WOOD.top, 0.4)
+        + `<path d="M${f2(px - 3.6)},${f2(py - 21)} l-2.4,-7 q2.4,-1.6 4.8,0 l-0.8,7 Z" fill="${WOOD.left}" stroke="${OUT}" stroke-width="0.5"/>`;
+      // les pains farinés sur leur planche, le panier de miches, les bûches
+      out += T.box(-0.32, 0.28, -0.08, 0.4, 0, 2, WOOD)
+        + [-0.26, -0.15].map(du => { const [x, y] = T.p(du, 0.34, 2); return ell(x, y - 2, 4, 2.4, '#D8A050', ` stroke="#9A6A2E" stroke-width="0.4"`) + ln([x - 2, y - 2.6], [x + 1, y - 3.4], '#F2D28A', 0.6) + ln([x - 0.4, y - 1.8], [x + 2.4, y - 2.6], '#F2D28A', 0.6) + ell(x - 1, y - 3.2, 1.6, 0.6, 'rgba(255,255,255,.5)'); }).join('');
+      const [bx, by] = T.p(0.12, 0.42, 0);
+      out += ell(bx + 1, by + 0.4, 6, 1.6, 'rgba(40,55,20,.2)')
+        + [[-2, -5.6], [2, -5.8], [0, -7]].map(([dx, dy]) => ell(bx + dx, by + dy, 2.6, 1.8, '#C88A3E', ` stroke="#8A5A24" stroke-width="0.4"`) + ln([bx + dx - 1, by + dy - 0.6], [bx + dx + 1, by + dy - 1], '#F2D28A', 0.5)).join('')
+        + `<path d="M${f2(bx - 5.4)},${f2(by - 5)} L${f2(bx - 4.2)},${f2(by)} Q${f2(bx)},${f2(by + 1.6)} ${f2(bx + 4.2)},${f2(by)} L${f2(bx + 5.4)},${f2(by - 5)} Q${f2(bx)},${f2(by - 3)} ${f2(bx - 5.4)},${f2(by - 5)} Z" fill="#C9A060" stroke="${OUT}" stroke-width="0.6"/>`
+        + `<path d="M${f2(bx - 4.8)},${f2(by - 2.4)} Q${f2(bx)},${f2(by - 0.6)} ${f2(bx + 4.8)},${f2(by - 2.4)}" stroke="#A07838" stroke-width="0.6" fill="none"/>`
         + log(T, 0.3, 0.14, 0.32, 2.2, 2.2) + log(T, 0.36, 0.1, 0.3, 2.2, 2.2) + log(T, 0.33, 0.12, 0.31, 6.2, 2.2);
+      // le moineau qui picore les miettes
+      const [sx, sy] = T.p(-0.08, 0.48, 0);
+      return out + `<g transform="translate(${f2(sx)} ${f2(sy)}) scale(.7) translate(${f2(-sx)} ${f2(-sy)})">` + bird(sx, sy, { body: '#8B6A4A', breast: '#D8C2A0', wing: '#6E5236', peck: f % 3 === 1 ? 1 : 0, flip: true }) + '</g>';
     }
   }]
 };
