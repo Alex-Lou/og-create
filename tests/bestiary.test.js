@@ -70,7 +70,10 @@ describe('le Bestiaire vivant', () => {
     for (const h of [6, 13, 19, 23.5]) {
       for (const c of island.at(40, at(h)).list.filter(c => c.kind === 'beast')) {
         expect(Number.isFinite(c.x) && Number.isFinite(c.y) && Number.isFinite(c.z), c.id).toBe(true);
-        expect(c.sprite[1]().svg, c.id).not.toMatch(/NaN|undefined/);
+        // (le dessin de la bibliothèque se lit à la demande : load)
+        const { svg, load } = c.sprite[1]();
+        expect(Boolean(svg || load), c.id).toBe(true);
+        if (svg) expect(svg, c.id).not.toMatch(/NaN|undefined/);
       }
     }
   });

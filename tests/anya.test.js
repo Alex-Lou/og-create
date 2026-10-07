@@ -92,7 +92,12 @@ describe('Anya sur l’île', () => {
     expect(ids(v, 21.6).some(id => id === 'anya:dame')).toBe(false);
     expect(ids(v, 13).some(id => id === 'anya:dame')).toBe(false);
     expect(ids(v, 13).some(id => id.startsWith('anya:otter'))).toBe(true);
-    for (const c of life.filter(c => c.kind === 'beast')) expect(c.sprite[1]().svg, c.id).not.toMatch(/NaN|undefined/);
+    // (le dessin de la bibliothèque se lit à la demande : load)
+    for (const c of life.filter(c => c.kind === 'beast')) {
+      const { svg, load } = c.sprite[1]();
+      expect(Boolean(svg || load), c.id).toBe(true);
+      if (svg) expect(svg, c.id).not.toMatch(/NaN|undefined/);
+    }
   });
   it('révélée mais pas de passage aujourd’hui : seulement ses loutres ; pas révélée : rien', () => {
     const away = island({ anya: { visit: null } });

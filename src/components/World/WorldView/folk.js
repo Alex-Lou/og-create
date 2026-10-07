@@ -10,6 +10,7 @@ import { heardPages, keepSavoir, savoirLine, artOf as savoirOf } from '@/game/sa
 import { THANKS, askOr } from '@/world/needs';
 import { visitorLook, THANKS as VISITOR_THANKS } from '@/world/visitors';
 import { ANIMAL_SPRITES } from '@/world/animals';
+import { beastPortraitUrl } from '@/world/beastArt';
 import { burst, vibrate } from '@/utils/fx';
 import { LABEL } from '@/game/resources';
 import { spriteUrl } from '@/world/spriteCache';
@@ -170,12 +171,13 @@ export default {
       this.villagerId = null;
       this.beastId = id;
     },
-    // Portrait d'une bête de ferme : son dessin, de la race que montre la ferme
+    // Portrait d'une bête de ferme : son dessin, de la race que montre la ferme (celui de la bibliothèque, de trois
+    // quarts avant, sinon celui du code)
     beastPortrait(id) {
       const a = this.village && this.village.farm.find(f => f.beast === id);
       const species = a ? a.species : this.beastView.species;
       const variant = a ? a.variant : '';
-      return spriteUrl(`portrait-beast-${species}-${variant}`, () => ANIMAL_SPRITES[species](0, variant));
+      return beastPortraitUrl(species, variant) || spriteUrl(`portrait-beast-${species}-${variant}`, () => ANIMAL_SPRITES[species](0, variant));
     },
     openVillager(id) {
       this.site = null;

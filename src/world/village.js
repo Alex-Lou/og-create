@@ -27,6 +27,7 @@ import { villagerSprite, ROLES, SKINS, HAIRS } from './villagers';
 import { visitorLook } from './visitors';
 import { masterSprite } from './masterArt';
 import { ANIMAL_SPRITES } from './animals';
+import { beastSprite, lookOf, viewOf, stepAt } from './beastArt';
 import { bestiaryOf, FAMILIARS } from './bestiary';
 import { anyaHere } from '@/game/anya';
 
@@ -389,10 +390,10 @@ export function villageOf({ n, M, sites, owned, crafts = [], props, annexes = []
   }
 
   // Un familier prêt à dessiner (le bocal d'Ondin : avec Bulle, ou vide)
-  const familiar = (r, x, y, z, flip, frame) => {
+  const familiar = (r, x, y, z, flip, frame, look = null) => {
     const pet = FAMILIARS[r.role];
     const variant = r.role === 'puits' ? (bestiary.bulle ? 'bulle' : '') : pet.variant || '';
-    return beast(`fam:${r.role}`, pet.species, variant, x, y, z, flip, frame);
+    return beast(`fam:${r.role}`, pet.species, variant, x, y, z, flip, frame, look);
   };
 
   // Tout ce qui vit à l'instant t (secondes) sous ce ciel : [{ id, kind, species, x, y, z, flip, sprite: [clé, dessin] }]
@@ -433,7 +434,8 @@ export function villageOf({ n, M, sites, owned, crafts = [], props, annexes = []
       if (pet === 'bosquet' && (moving || tapped(`fam:${pet}`, 20) !== null)) return;
       const jump = pet === 'foyer' && moving && Math.floor(now * 2) % 2 === 1;
       const frame = pet === 'foyer' ? (jump ? 1 : 0) : moving ? Math.floor(now * (pet === 'carriere' ? 1.5 : 5)) % 2 : 0;
-      out.push(familiar(r, q.x + 0.3, q.y + 0.22, lift + (jump ? 2.5 : 0), moving ? q.flip : flip, frame));
+      // (en marche, dans la vue de son maître : de trois quarts avant, ou de dos)
+      out.push(familiar(r, q.x + 0.3, q.y + 0.22, lift + (jump ? 2.5 : 0), moving ? q.flip : flip, frame, moving ? { view: q.back ? 'dos' : 'avant', pose: 'marche', n: frame + 1 } : null));
     };
     // Habitants
     for (const r of residents) {
@@ -485,6 +487,7 @@ export function villageOf({ n, M, sites, owned, crafts = [], props, annexes = []
       let y = rest.y;
       let frame = 0;
       let flip = hash(a.k, 2) < 0.5;
+      let look = null;
       if (phase.night > 0.6) frame = a.species === 'hen' ? 0 : 'rest';
       else if (rain <= 0.5) {
         const seg = (t + a.k * 3.7) / a.seg;
@@ -497,12 +500,19 @@ export function villageOf({ n, M, sites, owned, crafts = [], props, annexes = []
         flip = (to.x - from.x) - (to.y - from.y) < 0;
         // En marche : image 0 ; arrêtée : elle broute ou picore de temps en temps (image 1)
         frame = move < 1 ? 0 : Math.floor(t * 1.2 + a.k) % 3 === 0 ? 1 : 0;
+        // Dessin de la bibliothèque : de trois quarts selon sa direction, ses pas à sa cadence ; arrêtée, dans la même vue
+        look = { view: viewOf(to.x - from.x, to.y - from.y), pose: 'marche', n: move < 1 ? stepAt(t, a.k) : frame + 1 };
       }
       const hop = tapped(a.id, 0.6);
-      out.push({ ...beast(a.id, a.species, a.variant, x, y, hop === null ? 0 : Math.sin(hop * Math.PI) * 5, flip, frame), ...(a.beast ? { beast: a.beast } : {}) });
-      // Les poussins suivent la poule rousse
+      // Touchée, elle bondit de joie (un cœur), sauf endormie
+      const glad = hop !== null && frame !== 'rest' ? { view: look ? look.view : 'profil', pose: 'joie' } : look;
+      out.push({ ...beast(a.id, a.species, a.variant, x, y, hop === null ? 0 : Math.sin(hop * Math.PI) * 5, flip, frame, glad), ...(a.beast ? { beast: a.beast } : {}) });
+      // Les poussins suivent la poule rousse (tournés comme elle)
       if (a.species === 'hen' && a.variant === 'rousse') {
-        [[-0.32, 0.18], [-0.22, 0.4]].forEach(([dx, dy], c) => out.push(beast(`farm:chick:${c}`, 'chick', '', x + dx, y + dy, 0, flip, phase.night > 0.6 ? 0 : Math.floor(t * 2 + c) % 2)));
+        [[-0.32, 0.18], [-0.22, 0.4]].forEach(([dx, dy], c) => {
+          const step = phase.night > 0.6 ? 0 : Math.floor(t * 2 + c) % 2;
+          out.push(beast(`farm:chick:${c}`, 'chick', '', x + dx, y + dy, 0, flip, step, look && { view: look.view, pose: 'marche', n: step + 1 }));
+        });
       }
     }
     // Bois : chaque bête a ses heures ; elle change de place à chaque heure
@@ -514,18 +524,21 @@ export function villageOf({ n, M, sites, owned, crafts = [], props, annexes = []
       const jump = s < 0.15 ? Math.sin((s / 0.15) * Math.PI) * 5 : 0;
       const turned = s >= 0.6 || (aloft && s >= 0.15);
       const flip = turned ? !base.flip : base.flip;
-      if (aloft) return { ...base, z: (base.z || 0) + jump, flip, frame: jump ? 1 : base.frame === 'rest' ? 0 : base.frame };
+      if (aloft) return { ...base, z: (base.z || 0) + jump, flip, frame: jump ? 1 : base.frame === 'rest' ? 0 : base.frame, look: null };
       const away = s < 0.15 ? 0 : s < 0.5 ? smooth((s - 0.15) / 0.35) : s < 0.6 ? 1 : 1 - smooth((s - 0.6) / 0.4);
       const d = away * STARTLE_TROT * (base.flip ? -1 : 1);
       const trotting = (s > 0.15 && s < 0.5) || s > 0.6;
-      return { ...base, x: base.x + d, y: base.y - d, z: jump, flip, frame: trotting ? Math.floor(t * 8) % 2 : jump ? 1 : 0 };
+      return { ...base, x: base.x + d, y: base.y - d, z: jump, flip, frame: trotting ? Math.floor(t * 8) % 2 : jump ? 1 : 0, look: null };
     };
+    // Une bête qui va et vient le long d'une rangée de cases (x) : de trois quarts avant à l'aller (x croissant, vers le
+    // bas de l'écran), de dos au retour (flip) ; ses images 0 et 1, ses pas
+    const along = (flip, frame) => ({ view: flip ? 'dos' : 'avant', pose: 'marche', n: frame + 1 });
     const wild = (id, species, cells, when, place) => {
       if (!cells.length || !when) return;
       const base = place(spot(cells, species.length * 7));
       const s = tapped(id, STARTLE);
       const b = s === null ? base : startled(base, s, ALOFT.has(species));
-      out.push(beast(id, species, b.variant || '', b.x, b.y, b.z || 0, b.flip, b.frame));
+      out.push(beast(id, species, b.variant || '', b.x, b.y, b.z || 0, b.flip, b.frame, b.look));
     };
     const dawn = h > phase.rise - 0.6 && h < phase.rise + 1.6;
     const dusk = h > phase.set - 1.2 && h < phase.set + 0.6;
@@ -539,9 +552,15 @@ export function villageOf({ n, M, sites, owned, crafts = [], props, annexes = []
     }));
     wild('wild:fox', 'fox', edge, (dusk || night) && rain < 0.8, c => {
       const k = (Math.sin(t * 0.25) + 1) / 2;
-      return { x: c.x - 1 + k * 2, y: c.y, frame: Math.floor(t * 4) % 2, flip: Math.cos(t * 0.25) < 0 };
+      const flip = Math.cos(t * 0.25) < 0;
+      const frame = Math.floor(t * 4) % 2;
+      return { x: c.x - 1 + k * 2, y: c.y, frame, flip, look: along(flip, frame) };
     });
-    wild('wild:hedgehog', 'hedgehog', edge, night && rain < 0.5, c => ({ x: c.x + Math.sin(t * 0.2) * 0.3, y: c.y + 0.3, frame: Math.floor(t * 1.5) % 2, flip: Math.cos(t * 0.2) < 0 }));
+    wild('wild:hedgehog', 'hedgehog', edge, night && rain < 0.5, c => {
+      const flip = Math.cos(t * 0.2) < 0;
+      const frame = Math.floor(t * 1.5) % 2;
+      return { x: c.x + Math.sin(t * 0.2) * 0.3, y: c.y + 0.3, frame, flip, look: along(flip, frame) };
+    });
     if (trees.length >= 2) {
       wild('wild:squirrel', 'squirrel', trees, dayTime && rain < 0.5, c => {
         const leap = (t % 7) / 7;
@@ -560,11 +579,13 @@ export function villageOf({ n, M, sites, owned, crafts = [], props, annexes = []
           if (!awake) return { ...c, frame: 'rest', flip };
           if (move === 'trot') {
             const a = t * 0.25 + salt;
-            return { x: c.x + Math.sin(a) * 0.4, y: c.y, frame: Math.floor(t * 4) % 2, flip: Math.cos(a) < 0 };
+            const frame = Math.floor(t * 4) % 2;
+            return { x: c.x + Math.sin(a) * 0.4, y: c.y, frame, flip: Math.cos(a) < 0, look: along(Math.cos(a) < 0, frame) };
           }
           if (move === 'slow') {
             const a = t * 0.08 + salt;
-            return { x: c.x + Math.sin(a) * 0.35, y: c.y, frame: Math.floor(t * 1.2) % 2, flip: Math.cos(a) < 0 };
+            const frame = Math.floor(t * 1.2) % 2;
+            return { x: c.x + Math.sin(a) * 0.35, y: c.y, frame, flip: Math.cos(a) < 0, look: along(Math.cos(a) < 0, frame) };
           }
           if (move === 'hop') {
             const go = clamp((((t + salt) % 4) - 3.2) / 0.6);
@@ -618,7 +639,8 @@ export function villageOf({ n, M, sites, owned, crafts = [], props, annexes = []
     if (bestiary.has('Tortue')) {
       wild('best:tortoise', 'tortoise', banks, true, c => {
         const a = t * 0.08 + 3;
-        return dayTime ? { x: c.x + Math.sin(a) * 0.3, y: c.y, frame: Math.floor(t * 1.2) % 2, flip: Math.cos(a) < 0 } : { ...c, frame: 'rest', flip: false };
+        const frame = Math.floor(t * 1.2) % 2;
+        return dayTime ? { x: c.x + Math.sin(a) * 0.3, y: c.y, frame, flip: Math.cos(a) < 0, look: along(Math.cos(a) < 0, frame) } : { ...c, frame: 'rest', flip: false };
       });
     }
     // Anya, le jour de son passage, à son moment (l'aube ou le crépuscule) : son cerf blanc, ses lucioles
@@ -635,7 +657,8 @@ export function villageOf({ n, M, sites, owned, crafts = [], props, annexes = []
     if (anya && banks.length) {
       [0, 1].forEach(k => wild(`anya:otter:${k}`, 'otter', k ? banks.slice().reverse() : banks, dayTime && rain < 0.6, c => {
         const up = (t + k * 2) % 6 < 1.2;
-        return { x: c.x + Math.sin(t * 0.2 + k) * 0.3, y: c.y, frame: up ? 1 : 0, flip: Math.cos(t * 0.2 + k) < 0 };
+        const flip = Math.cos(t * 0.2 + k) < 0;
+        return { x: c.x + Math.sin(t * 0.2 + k) * 0.3, y: c.y, frame: up ? 1 : 0, flip, look: along(flip, up ? 1 : 0) };
       }));
     }
     // Le bol de soupe « pour la Dame », posé chaque soir au bord du Foyer
@@ -717,8 +740,10 @@ export function villageOf({ n, M, sites, owned, crafts = [], props, annexes = []
   return { residents, farm, at, say, describe, home, foyer };
 }
 
-// Une bête prête à dessiner (clé d'image par sorte, variante et image)
-function beast(id, species, variant, x, y, z, flip, frame) {
-  return { id, kind: 'beast', species, x, y, z, flip, sprite: [`beast-${species}-${variant}-${frame}`, () => ANIMAL_SPRITES[species](frame, variant)] };
+// Une bête prête à dessiner : le dessin de la bibliothèque (beastArt.js ; look : sa vue, sa pose et son image, sinon
+// déduits de l'image du jeu, de profil), sinon celui du code (clé d'image par sorte, variante et image)
+function beast(id, species, variant, x, y, z, flip, frame, look = null) {
+  const art = beastSprite(species, variant, look || lookOf(frame));
+  return { id, kind: 'beast', species, x, y, z, flip, sprite: art ? [art.key, art.make] : [`beast-${species}-${variant}-${frame}`, () => ANIMAL_SPRITES[species](frame, variant)] };
 }
 export const isWild = species => WILD.has(species);
