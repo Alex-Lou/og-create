@@ -923,14 +923,37 @@ const glaciere = {
     frame: [-34, -50, 68, 64],
     draw: T => {
       const [x, y] = T.p(0, 0, 0);
-      // Dôme de pierres sèches, calotte de neige, porte basse vers le joueur
-      let out = T.shadow(0, 0, 0.38, 0.18) + `<path d="M${x - 22},${y} A22,22 0 0 1 ${x + 22},${y} Q${x},${y + 9} ${x - 22},${y} Z" fill="${STONE.left}" stroke="${STONE.right}" stroke-width="0.8"/>`;
-      for (const r of [6, 12, 17]) out += `<path d="M${f2(x - Math.sqrt(484 - r * r))},${y - r} Q${x},${y - r + 4} ${f2(x + Math.sqrt(484 - r * r))},${y - r}" stroke="${STONE.right}" stroke-width="0.6" fill="none"/>`;
-      out += `<path d="M${x - 15},${y - 16} A22,22 0 0 1 ${x + 15},${y - 16} Q${x + 4},${y - 12} ${x},${y - 15} Q${x - 6},${y - 12} ${x - 15},${y - 16} Z" fill="${SNOWY.top}" stroke="${SNOWY.right}" stroke-width="0.6"/>`;
+      // le sol de neige et ses pas
+      let out = ell(x, y + 1, 30, 13, SNOWY.top, ` stroke="${OUT}" stroke-width="0.5"`) + ell(x + 4, y + 3, 22, 7, SNOWY.left)
+        + [[-20, 8], [-15, 10], [-10, 8.6]].map(([dx, dy]) => ell(x + dx, y + dy, 1.6, 0.9, SNOWY.right)).join('')
+        + T.shadow(0, 0, 0.38, 0.16);
+      // le dôme de pierres sèches : rangs de pierres posées une à une, plus petites vers le haut
+      out += `<path d="M${x - 22},${y} A22,22 0 0 1 ${x + 22},${y} Q${x},${y + 9} ${x - 22},${y} Z" fill="${STONE.left}" stroke="${OUT}" stroke-width="0.8"/>`;
+      for (const [r, n] of [[0, 9], [5.5, 8], [11, 7]]) {
+        const w = Math.sqrt(484 - r * r), y0 = y - r;
+        for (let k = 0; k < n; k++) {
+          const x0 = x - w + (k + 0.08) * (2 * w / n) + ((r / 5.5) % 2 ? w / n / 2 : 0), x1 = Math.min(x0 + 2 * w / n * 0.86, x + w);
+          if (x0 >= x + w - 1) continue;
+          const sag = (xx => (1 - ((xx - x) / w) ** 2) * 3.4)((x0 + x1) / 2);
+          out += `<path d="M${f2(x0)},${f2(y0 + sag)} Q${f2((x0 + x1) / 2)},${f2(y0 + sag - 5.6)} ${f2(x1)},${f2(y0 + sag)} Q${f2((x0 + x1) / 2)},${f2(y0 + sag + 1.2)} ${f2(x0)},${f2(y0 + sag)} Z" fill="${k % 3 ? STONE.top : STONE.left}" stroke="${STONE.right}" stroke-width="0.6"/>`;
+        }
+      }
+      out += `<path d="M${x + 6},${y + 4} Q${x + 16},${y - 4} ${x + 18},${y - 13} A22,22 0 0 1 ${x + 22},${y} Q${x + 14},${y + 5} ${x + 6},${y + 4} Z" fill="${STONE.right}" opacity="0.55"/>`;
+      // la calotte de neige, son bord bosselé et ses glaçons
+      let cap = `M${x - 15},${y - 16} A22,22 0 0 1 ${x + 15},${y - 16}`;
+      for (let k = 0; k < 6; k++) { const xa = x + 15 - k * 5, xb = xa - 5; cap += ` Q${f2((xa + xb) / 2)},${f2(y - 12.4 + (k % 2 ? 1 : -0.6))} ${f2(xb)},${f2(y - 16 + Math.abs(xb - x) * 0.02)}`; }
+      out += `<path d="${cap} Z" fill="${SNOWY.top}" stroke="${OUT}" stroke-width="0.6"/>` + `<path d="M${x - 8},${y - 19.4} q5,-2.4 10,-1.6" stroke="#FFFFFF" stroke-width="1.2" fill="none" stroke-linecap="round"/>`
+        + [[-11, 3], [-4, 4.6], [3, 3.4], [9, 4]].map(([dx, l]) => poly([[x + dx - 1, y - 14.6], [x + dx + 1, y - 14.6], [x + dx, y - 14.6 + l]], ICE_BLOCK.left, ` stroke="${OUT}" stroke-width="0.4"`)).join('');
+      // la porte basse au cadre de bois, la lueur bleutée du froid
       const [dx, dy] = T.p(0.02, 0.34, 0);
-      return out + `<path d="M${dx - 6},${dy} L${dx - 6},${dy - 10} A6,5 0 0 1 ${dx + 6},${dy - 10} L${dx + 6},${dy} Z" fill="#4A3A2E" stroke="${STONE.right}" stroke-width="0.6"/>`
-        + T.box(0.24, 0.22, 0.4, 0.38, 0, 8, ICE_BLOCK) + T.box(0.28, 0.26, 0.38, 0.36, 8, 14, ICE_BLOCK) + T.box(-0.42, 0.2, -0.28, 0.34, 0, 7, ICE_BLOCK)
+      out += `<path d="M${dx - 7},${dy} L${dx - 7},${dy - 10.4} A7,5.6 0 0 1 ${dx + 7},${dy - 10.4} L${dx + 7},${dy} Z" fill="${WOOD.right}" stroke="${OUT}" stroke-width="0.6"/>`
+        + `<path d="M${dx - 5.4},${dy} L${dx - 5.4},${dy - 9.6} A5.4,4.4 0 0 1 ${dx + 5.4},${dy - 9.6} L${dx + 5.4},${dy} Z" fill="#3A3E4A"/>`
+        + ell(dx, dy - 4, 3.4, 2.4, 'rgba(160,220,255,.45)');
+      // les blocs de glace taillés et leur reflet
+      out += T.box(0.24, 0.22, 0.4, 0.38, 0, 8, ICE_BLOCK) + T.box(0.28, 0.26, 0.38, 0.36, 8, 14, ICE_BLOCK) + T.box(-0.42, 0.2, -0.28, 0.34, 0, 7, ICE_BLOCK)
+        + ln(T.p(0.26, 0.38, 6), T.p(0.3, 0.38, 2), 'rgba(255,255,255,.85)', 0.8) + ln(T.p(-0.4, 0.34, 5.4), T.p(-0.36, 0.34, 1.6), 'rgba(255,255,255,.85)', 0.8)
         + star(...T.p(0.33, 0.31, 16), 2.2, '#FFFFFF', 0.9);
+      return out;
     }
   }]
 };
