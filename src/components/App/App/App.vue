@@ -221,7 +221,7 @@ import { defineAsyncComponent } from 'vue';
 import notificationService from '@/services/notificationService';
 import * as storage from '@/utils/storage';
 import { readCarnet } from '@/utils/carnet';
-import { splashStep } from '@/utils/splash';
+import { splashStep, splashFailed } from '@/utils/splash';
 import { failLine } from '@/utils/failLine';
 import { ringsFor } from '@/utils/sigil';
 import { roman } from '@/utils/roman';
@@ -327,11 +327,14 @@ export default {
     const cached = this.isLoggedIn && readCarnet(this.currentUser?.userId);
     if (cached && cached.families && Object.keys(cached.families).length) this.applyPlayState(cached);
     // Sans compte, le serveur tient un carnet invité
-    await Promise.all([this.loadPlayState(), this.isLoggedIn ? this.loadAccount() : null]);
+    const [carnet] = await Promise.all([this.loadPlayState(), this.isLoggedIn ? this.loadAccount() : null]);
+    // La partie n'est pas revenue (serveur injoignable, même après ses nouveaux essais) : l'écran de démarrage le dit et
+    // propose de réessayer, plutôt qu'un Grimoire vide
+    if (!carnet) splashFailed();
     await this.loadAchievements();
     this.progressReady = true;
     // La partie du joueur est revenue : l'écran de démarrage peut s'effacer (avec les polices)
-    splashStep('carnet');
+    if (carnet) splashStep('carnet');
   },
   computed: {
     currentMode() {
