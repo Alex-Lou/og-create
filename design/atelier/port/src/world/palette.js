@@ -141,6 +141,17 @@ export function leafPair(x, y, rx, ry, d, c1 = '#86CB5E', c2 = '#6DB64C') {
     + `<line x1="${rnd2(cx - rx * 0.7)}" y1="${rnd2(y - d)}" x2="${rnd2(cx + rx * 0.7)}" y2="${rnd2(y - d)}" stroke="#C8EBA0" stroke-width="0.5" opacity=".8"/></g>`;
   return leaf(x - d, -30, c1) + leaf(x + d, 30, c2);
 }
+// Bardeaux de bois sur le pan avant d'un toit à deux pans (même géométrie que gable) : rangs, joints décalés, reflet
+export function shingles(u0, v0, u1, v1, z, h, o = 0.08) {
+  const vm = (v0 + v1) / 2, a = u0 - o, b = u1 + o, ve = v1 + o;
+  const at = (u, k) => P(u, vm + (ve - vm) * k, z + h * (1 - k)).map(n => rnd2(n)).join(',');
+  return [0.2, 0.4, 0.6, 0.8].map((k, r) => {
+    let out = `<polyline points="${at(a, k)} ${at(b, k)}" stroke="rgba(60,35,20,.45)" stroke-width="0.8"/>`
+      + `<polyline points="${at(a, k - 0.16)} ${at(b, k - 0.16)}" stroke="rgba(255,235,210,.2)" stroke-width="0.6"/>`;
+    for (let u = a + (r % 2 ? 0.07 : 0.14); u < b - 0.03; u += 0.14) out += `<polyline points="${at(u, k - 0.2)} ${at(u, k)}" stroke="rgba(60,35,20,.35)" stroke-width="0.6"/>`;
+    return out;
+  }).join('');
+}
 // Porte sur la face gauche (côté v = vf) : u de ua à ub, hauteur h
 export function doorLeft(ua, ub, vf, h, color = WOOD_DARK.right) {
   return face([[ua, vf, 0], [ub, vf, 0], [ub, vf, h], [ua, vf, h]], color, EDGE)
