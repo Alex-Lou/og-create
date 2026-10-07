@@ -275,4 +275,57 @@ function piocher({ view, n }) {
 // Debout : frame(avecPiocher(c), vue, 'action', n)
 const avecPiocher = c => ({ ...c, uid: `${c.uid}pi`, pose: piocher });
 
-module.exports = { lanterne, parapluie, valise, avecLanterne, avecParapluie, avecValise, couche, CADRE_PARAPLUIE, CADRE_COUCHE, ZEDS, paume, tranche, tendre, avecMainsTendues, applaudir, avecApplaudir, pecher, avecPecher, piocher, avecPiocher };
+// un fruit cueilli (une pomme rouge) en (x, y) : son reflet, sa queue, sa feuille
+const fruit = (x, y, s = 1, col = '#E2463A') => E(x, y, 1.45 * s, 1.35 * s, col, 0.7) + E(x - 0.5 * s, y - 0.45 * s, 0.4 * s, 0.3 * s, '#FFFFFF', 0).replace('fill=', 'fill-opacity="0.7" fill=')
+  + L([x, y - 1.2 * s], [x + 0.3 * s, y - 2.1 * s], OUT, 0.5) + P(`M${r2(x + 0.3 * s)},${r2(y - 1.9 * s)} q1.2,-0.9 1.9,-0.1 q-1,0.7 -1.9,0.1 Z`, '#6FB24E', 0.4);
+// Le panier d'osier, l'anse dans la main h (en haut), le panier en dessous : l'anse, le fond sombre, les fruits posés
+// dedans (n : combien), la vannerie, le bord avant clair par-dessus
+function panier([x, y], n = 3) {
+  const by = y + 5, w = 5.4;
+  const anse = `M${r2(x - w * 0.8)},${r2(by)} Q${r2(x)},${r2(y - 2.6)} ${r2(x + w * 0.8)},${r2(by)}`;
+  const corps = `M${r2(x - w)},${r2(by)} L${r2(x - w * 0.78)},${r2(by + 5)} Q${r2(x)},${r2(by + 6.2)} ${r2(x + w * 0.78)},${r2(by + 5)} L${r2(x + w)},${r2(by)} Q${r2(x)},${r2(by + 1.3)} ${r2(x - w)},${r2(by)} Z`;
+  const fruits = [[-2.6, -0.1, '#E2463A'], [2.6, 0, '#E2463A'], [0, -0.5, '#F2A63A'], [-1.2, -1.5, '#C9343A']].slice(0, n).map(([dx, dy, c]) => fruit(x + dx, by + dy, 0.85, c)).join('');
+  return P(anse, 'none', 0).replace('stroke="none"', `stroke="${OUT}" stroke-width="2.4" stroke-linecap="round"`)
+    + P(anse, 'none', 0).replace('stroke="none"', 'stroke="#C99A5A" stroke-width="1" stroke-linecap="round"')
+    + E(x, by, w, 1.3, '#7A5A30', 0.8) + fruits + P(corps, '#C99A5A')
+    + [2, 3.6].map(d => `<path d="M${r2(x - w * 0.93 + d * 0.05)},${r2(by + d)} Q${r2(x)},${r2(by + d + 1.1)} ${r2(x + w * 0.93 - d * 0.05)},${r2(by + d)}" fill="none" stroke="#A67A40" stroke-width="0.5"/>`).join('')
+    + [-2.8, 0, 2.8].map(d => L([x + d, by + 1.2], [x + d * 0.85, by + 5.4], '#A67A40', 0.45)).join('')
+    + `<path d="M${r2(x - w)},${r2(by)} Q${r2(x)},${r2(by + 2.6)} ${r2(x + w)},${r2(by)}" fill="none" stroke="${OUT}" stroke-width="2.3" stroke-linecap="round"/>`
+    + `<path d="M${r2(x - w)},${r2(by)} Q${r2(x)},${r2(by + 2.6)} ${r2(x + w)},${r2(by)}" fill="none" stroke="#E2B878" stroke-width="1" stroke-linecap="round"/>`;
+}
+// Cueillir (le mini-jeu de la cueillette) ; 2 images : la main cueille un fruit en haut, à l'écart de la tête, puis le
+// dépose dans le panier (un fruit de plus), en riant.
+function cueillir({ view, n }) {
+  const [a, b] = this.shoulders;
+  if (view === 'front') {
+    const hp = [a[0] - 1.8, a[1] + 9.4]; // la main qui tient le panier
+    const pan = panier(hp, n ? 4 : 3);
+    if (!n) {
+      const h = [b[0] + 8.4, a[1] - 3.6];
+      return { expr: 'content', left: arm(this, a, hp, [a[0] - 2.4, a[1] + 5]) + pan, right: arm(this, b, h, [b[0] + 6.4, b[1] + 2.2]) + fruit(h[0] + 0.3, h[1] - 2) };
+    }
+    const h = [a[0] + 1.4, a[1] + 8.6];
+    return { expr: 'rire', left: arm(this, a, hp, [a[0] - 2.4, a[1] + 5]) + pan, right: arm(this, b, h, [b[0] + 1.6, b[1] + 6.8]) };
+  }
+  if (view === 'se') {
+    const hp = [b[0] + 1.8, b[1] + 9.4];
+    const pan = panier(hp, n ? 4 : 3);
+    if (!n) {
+      const h = [a[0] - 8.4, a[1] - 3.6];
+      return { expr: 'content', right: arm(this, b, hp, [b[0] + 2.4, b[1] + 5]) + pan, left: arm(this, a, h, [a[0] - 6.4, a[1] + 2.2]) + fruit(h[0] - 0.3, h[1] - 2) };
+    }
+    const h = [b[0] + 0.6, b[1] + 8.6];
+    return { expr: 'rire', right: arm(this, b, hp, [b[0] + 2.4, b[1] + 5]) + pan, left: arm(this, a, h, [a[0] - 1, a[1] + 7]) };
+  }
+  const hp = [b[0] + 2.4, b[1] + 9.4];
+  const pan = panier(hp, n ? 4 : 3);
+  if (!n) {
+    const h = [a[0] - 8.4, a[1] - 3.6];
+    return { left: arm(this, a, h, [a[0] - 6.4, a[1] + 2.2]) + fruit(h[0] - 0.3, h[1] - 2), right: arm(this, b, hp, [b[0] + 3, b[1] + 5]) + pan };
+  }
+  return { left: '', right: arm(this, b, hp, [b[0] + 3, b[1] + 5]) + pan, under: arm(this, a, [24 + 3, a[1] + 8], [a[0] - 2.4, a[1] + 6]) };
+}
+// Debout : frame(avecCueillir(c), vue, 'action', n)
+const avecCueillir = c => ({ ...c, uid: `${c.uid}cu`, pose: cueillir });
+
+module.exports = { lanterne, parapluie, valise, avecLanterne, avecParapluie, avecValise, couche, CADRE_PARAPLUIE, CADRE_COUCHE, ZEDS, paume, tranche, tendre, avecMainsTendues, applaudir, avecApplaudir, pecher, avecPecher, piocher, avecPiocher, cueillir, avecCueillir };
