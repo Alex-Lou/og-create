@@ -456,22 +456,57 @@ LM.arbre = { n: 2, draw: f => {
     + champignon(x - 22, y + 14) + champignon(x - 16, y + 16) + fleurette(x + 24, y + 18, '#F27A9A') + fleurette(x + 30, y + 16, '#F2C94C') + fleurette(x - 30, y + 22, '#F27A9A') + herbe(x + 8, y + 20, '#86B852', 0.8);
   return s;
 } };
+// Grande cascade : une falaise de roche à trois paliers, sa crête bosselée, ses couches, ses replats d'herbe et ses
+// buissons ; sur le plateau, le ruisseau qui file au bord ; le rideau d'eau blanc qui tombe jusqu'en bas, ses filets qui
+// défilent d'une image à l'autre, son écume au bord et sur les paliers ; le bassin, ses galets, ses embruns et un
+// arc-en-ciel entier devant le rideau (2 images)
 LM.cascade = { n: 2, draw: f => {
-  const [x, y] = at(0, 0);
-  // large paroi à trois paliers au fond, l'eau tombe au milieu dans un bassin, embruns et arc-en-ciel
-  const tiers = [[-6, 30], [-36, 26], [-64, 24]];
-  let s = '';
-  s += `<path d="M${x - 62},${y - 4} L${x - 62},${y - 96} L${x + 62},${y - 96} L${x + 62},${y - 4} Q${x},${y + 8} ${x - 62},${y - 4} Z" fill="#A8906E" stroke="${OUT}" stroke-width="1.2"/>`;
-  s += `<path d="M${x + 20},${y - 96} L${x + 62},${y - 96} L${x + 62},${y - 4} Q${x + 40},${y + 2} ${x + 20},${y + 3} Z" fill="#86704F"/>`;
-  for (const [dy] of tiers) s += `<path d="M${x - 62},${y + dy - 26} Q${x},${y + dy - 22} ${x + 62},${y + dy - 26}" stroke="#7A6448" stroke-width="1" fill="none"/>`;
-  s += `<path d="M${x - 66},${y - 96} Q${x},${y - 112} ${x + 66},${y - 96} Q${x},${y - 88} ${x - 66},${y - 96} Z" fill="#7EC45B" stroke="${OUT}" stroke-width="1.1"/>`;
-  s += [[-48, -100], [44, -102]].map(([dx, dy]) => crown([[dx - 5, dy, 6], [dx + 5, dy - 1, 6.4], [dx, dy - 6, 7]], LEAVES, 'cs' + dx + f)).join('');
-  s += `<path d="M${x - 12},${y - 98} L${x + 12},${y - 98} L${x + 14},${y - 8} L${x - 14},${y - 8} Z" fill="#E8F6FF" stroke="${OUT}" stroke-width="0.9"/>`;
-  for (let i = 0; i < 5; i++) { const xx = x - 9 + i * 4.6, off = (f * 11 + i * 9) % 22; s += `<path d="M${xx},${y - 96 + off} L${xx + 0.4},${y - 60 + off}" stroke="#9AD6F0" stroke-width="1.5"/>`; }
-  s += E(x, y + 2, 40, 12, WATER, 1) + E(x - 6, y + 1, 26, 6, WATER_LIGHT, 0) + puff(x - 6, y - 8, 8, 0.85) + puff(x + 9, y - 12 - f * 2, 6, 0.75);
-  // arc-en-ciel entier dans les embruns, au pied de la chute (devant le rideau d'eau, comme dans le jeu)
+  const [x, y] = at(0, 0), R = { lit: '#B49C7A', mid: '#9A8262', shade: '#7C6648', strate: '#8C7454', ledge: '#C8B290' };
+  const BUIS = { light: '#C9EC8E', mid: '#86C35C', dark: '#4F8E40' };
+  const buisson = (bx, by, k, id) => feuillage(`cascade-${id}-${f}`, [[bx - 5 * k, by, 5.4 * k], [bx + 5 * k, by - 0.6 * k, 5.8 * k], [bx, by - 4.4 * k, 6.2 * k]], BUIS, [[bx, by - 2 * k, 0.7]], 1);
+  const galet = (gx, gy, r) => E(gx, gy, r, r * 0.62, R.shade, 0.9) + E(gx - r * 0.15, gy - r * 0.16, r * 0.76, r * 0.42, R.mid, 0) + E(gx - r * 0.38, gy - r * 0.3, r * 0.32, r * 0.15, R.ledge, 0);
+  // la falaise : crête bosselée, flancs bosselés ; le pan d'ombre à droite, le reflet à gauche
+  const crete = [[-62, -94], [-48, -100], [-30, -97], [-14, -101], [14, -101], [30, -98], [46, -101], [62, -95]];
+  let face = `M${x - 60},${y - 2} Q${x - 66},${y - 30} ${x - 61},${y - 58} Q${x - 66},${y - 78} ${x + crete[0][0]},${y + crete[0][1]}`;
+  for (let i = 1; i < crete.length; i++) { const [a0, b0] = crete[i - 1], [a1, b1] = crete[i]; face += ` Q${x + (a0 + a1) / 2},${y + Math.min(b0, b1) - 3} ${x + a1},${y + b1}`; }
+  face += ` Q${x + 66},${y - 74} ${x + 61},${y - 52} Q${x + 66},${y - 26} ${x + 60},${y - 4} Q${x},${y + 6} ${x - 60},${y - 2} Z`;
+  const idF = `cascade-face-${f}`;
+  let s = `<defs><clipPath id="${idF}"><path d="${face}"/></clipPath></defs><path d="${face}" fill="${R.lit}"/><g clip-path="url(#${idF})">`
+    + `<path d="M${x + 26},${y - 110} Q${x + 34},${y - 50} ${x + 24},${y + 10} L${x + 80},${y + 10} L${x + 80},${y - 110} Z" fill="${R.shade}"/>`
+    + `<path d="M${x - 58},${y - 6} Q${x - 62},${y - 40} ${x - 57},${y - 86}" stroke="${R.ledge}" stroke-width="2" fill="none" stroke-linecap="round" opacity="0.8"/>`
+    // les couches dans chaque palier
+    + [-86, -78, -58, -50, -30, -20].map((dy, i) => `<path d="M${x - 70},${y + dy} Q${x - 30},${y + dy + (i % 2 ? 2 : -2)} ${x},${y + dy} T${x + 70},${y + dy}" stroke="${R.strate}" stroke-width="0.9" fill="none"/>`).join('')
+    // les deux replats : leur dessus clair, leur ombre portée dessous, leur frange d'herbe
+    + [-68, -40].map(dy => `<path d="M${x - 70},${y + dy + 2} Q${x - 30},${y + dy + 5} ${x},${y + dy + 3} T${x + 70},${y + dy + 2} L${x + 70},${y + dy + 6} Q${x + 30},${y + dy + 8} ${x},${y + dy + 7} T${x - 70},${y + dy + 6} Z" fill="${R.shade}" opacity="0.7"/>`
+      + `<path d="M${x - 70},${y + dy - 2} Q${x - 30},${y + dy + 1} ${x},${y + dy - 1} T${x + 70},${y + dy - 2} L${x + 70},${y + dy + 2} Q${x + 30},${y + dy + 4} ${x},${y + dy + 3} T${x - 70},${y + dy + 2} Z" fill="#8FC46A"/>`
+      + `<path d="M${x - 70},${y + dy + 2} ${Array.from({ length: 28 }, (_, k) => `q2.5,${k % 2 ? 2.2 : 3.4} 5,0`).join(' ')}" stroke="#6FA84E" stroke-width="1" fill="none"/>`).join('')
+    + `<path d="M${x - 40},${y - 14} l3,-6 l-1,-5 M${x + 40},${y - 80} l-2,6 l2,4" stroke="${R.shade}" stroke-width="0.8" fill="none" stroke-linecap="round"/></g>`
+    + `<path d="${face}" fill="none" stroke="${OUT}" stroke-width="1.2" stroke-linejoin="round"/>`;
+  // le plateau d'herbe sur la crête, ses buissons ; les buissons des replats
+  let herbeTop = `M${x + crete[0][0] - 2},${y + crete[0][1] + 1}`;
+  for (let i = 1; i < crete.length; i++) { const [a0, b0] = crete[i - 1], [a1, b1] = crete[i]; herbeTop += ` Q${x + (a0 + a1) / 2},${y + Math.min(b0, b1) - 7} ${x + a1},${y + b1 - 4}`; }
+  herbeTop += ` L${x + 63},${y - 92}`;
+  for (let i = crete.length - 1; i > 0; i--) { const [a0, b0] = crete[i], [a1, b1] = crete[i - 1]; herbeTop += ` Q${x + (a0 + a1) / 2 - 1},${y + Math.max(b0, b1) + 4} ${x + a1},${y + b1 + 2}`; }
+  s += P(herbeTop + ' Z', '#8FC46A', 1);
+  s += buisson(x - 46, y - 102, 1, 'a') + buisson(x + 44, y - 103, 0.9, 'b') + buisson(x - 52, y - 72, 0.7, 'c') + buisson(x + 50, y - 44, 0.75, 'd') + buisson(x - 34, y - 44, 0.6, 'e');
+  // le ruisseau du plateau qui file vers le bord
+  s += P(`M${x - 12},${y - 99} Q${x - 9},${y - 103} ${x - 6},${y - 106} Q${x + 1},${y - 108} ${x + 8},${y - 106} Q${x + 10},${y - 103} ${x + 12},${y - 99} Z`, '#7FC0E2', 0.9)
+    + `<path d="M${x - 4},${y - 104} l5,-0.6 M${x + 1},${y - 101} l6,-0.4" stroke="#FFFFFF" stroke-width="1" stroke-linecap="round"/>`;
+  // le rideau d'eau, ses filets qui défilent, l'écume au bord et sur les paliers
+  const rideau = `M${x - 12},${y - 99} Q${x - 14},${y - 50} ${x - 16},${y - 4} L${x + 16},${y - 4} Q${x + 14},${y - 50} ${x + 12},${y - 99} Z`, idR = `cascade-rideau-${f}`;
+  s += `<defs><clipPath id="${idR}"><path d="${rideau}"/></clipPath></defs><path d="${rideau}" fill="#CFEAF7"/><g clip-path="url(#${idR})">`
+    + `<path d="M${x + 4},${y - 100} L${x + 20},${y - 100} L${x + 20},${y} L${x + 6},${y} Z" fill="#A8D8F0"/>`
+    + Array.from({ length: 7 }, (_, j) => { const xx = x - 11 + j * 3.7, off = ((f * 0.5 + j * 0.37) % 1) * 36; return [0, 36, 72].map(o => `<path d="M${r2(xx)},${r2(y - 108 + off + o)} l${r2((xx - x) * 0.04)},20" stroke="${j % 2 ? '#FFFFFF' : '#86C6E8'}" stroke-width="1.4" stroke-linecap="round"/>`).join(''); }).join('')
+    + `</g><path d="${rideau}" fill="none" stroke="${OUT}" stroke-width="1"/>`;
+  s += puff(x - 2, y - 99, 4.4, 0.95) + puff(x + 6, y - 100, 3.6, 0.9) + puff(x - 15, y - 66, 3.4, 0.85) + puff(x + 15, y - 64, 3.2, 0.85) + puff(x - 16, y - 38, 3.4, 0.85) + puff(x + 16, y - 37, 3.2, 0.85);
+  // le bassin, ses galets, l'écume et les embruns au pied du rideau
+  s += E(x, y + 4, 46, 13, WATER, 1.1) + E(x - 6, y + 3, 30, 7, WATER_LIGHT, 0) + `<path d="M${x - 34},${y + 8} l8,-1 M${x + 22},${y + 11} l9,-1.2" stroke="#FFFFFF" stroke-width="1.2" stroke-linecap="round"/>`
+    + galet(x - 44, y + 4, 5) + galet(x - 36, y + 12, 3.6) + galet(x + 42, y + 6, 4.6) + galet(x + 34, y + 13, 3.2)
+    + puff(x - 12, y - 4, 7, 0.9) + puff(x + 10, y - 6, 6.4, 0.85) + puff(x, y + 1, 6, 0.95) + puff(x - 4 + f * 4, y - 14 - f * 3, 5, 0.6) + puff(x + 8 - f * 4, y - 20 - f * 2, 4, 0.45);
+  // l'arc-en-ciel entier dans les embruns, devant le rideau
   s += `<g opacity="0.6">${['#E8566A', '#F2A03C', '#F2D04B', '#7EC45B', '#5C8FD0', '#8C6FD0'].map((c, i) => { const r = 40 - i * 2.6; return `<path d="M${r2(x - r)},${y - 4} A${r2(r)},${r2(r * 0.85)} 0 0 1 ${r2(x + r)},${y - 4}" stroke="${c}" stroke-width="2.6" fill="none"/>`; }).join('')}</g>`;
-  return s;
+  // des touffes au bord du bassin
+  return s + herbe(x - 30, y + 16, '#86B852', 0.9) + herbe(x + 28, y + 17, '#94C25C', 0.8) + fleurette(x - 22, y + 18, '#FFFFFF') + fleurette(x + 36, y + 17, '#F7B6C8');
 } };
 LM.geyser = { n: 2, draw: f => {
   let s = '';
