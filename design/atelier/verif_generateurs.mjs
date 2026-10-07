@@ -1,14 +1,17 @@
 // Les modules du générateur par famille (bibliotheque/generateur/<famille>.mjs, sauf avatar.mjs : verif_generateur.mjs)
 // dessinent-ils la bibliothèque à l'octet près ? Pour chaque famille : chaque dessin de sa liste(), dans un ordre
 // mélangé, est rendu par le module publié et comparé au fichier de la bibliothèque (qui finit par un saut de ligne, que
-// le SVG rendu n'a pas) ; les exports sont ceux de la source ; le module ne demande rien à Node. Usage :
-// node verif_generateurs.mjs (sort en erreur au moindre écart). À lancer après build_bundle.js.
+// le SVG rendu n'a pas), sa vitesse à celle du catalogue ; les exports sont ceux de la source ; le module ne demande
+// rien à Node. Usage : node verif_generateurs.mjs (sort en erreur au moindre écart). À lancer après build_bundle.js.
 import fs from 'fs';
 import path from 'path';
 import { fileURLToPath, pathToFileURL } from 'url';
 
 const ici = path.dirname(fileURLToPath(import.meta.url));
 const BIB = path.join(ici, '..', 'bibliotheque');
+// La vitesse de chaque fichier, d'après le catalogue (la règle de catalogue.js, ou l'index du lot)
+const VITESSE = new Map();
+for (const e of JSON.parse(fs.readFileSync(path.join(BIB, 'catalogue.json'), 'utf8')).entrees) for (const x of e.fichiers) VITESSE.set(x.replace(/^svg\//, ''), e.ms_par_image ?? null);
 const FAMILLES = ['chantiers', 'betes', 'interface', 'objets', 'plantes', 'meteo', 'coffres', 'decor', 'batiments'];
 const erreurs = [];
 let n = 0;
@@ -33,6 +36,8 @@ for (const f of FAMILLES) {
     if (r.svg + '\n' !== fs.readFileSync(ou, 'utf8')) erreurs.push(`${f} : ${rel} diffère`);
     const vb = r.svg.match(/viewBox="([^"]+)"/)[1].split(' ').map(Number);
     if (vb.join(' ') !== r.cadre.join(' ')) erreurs.push(`${f} : ${rel}, cadre ${r.cadre} au lieu de ${vb}`);
+    if (!VITESSE.has(rel)) erreurs.push(`${f} : ${rel} manque dans le catalogue`);
+    else if (JSON.stringify(r.ms_par_image ?? null) !== JSON.stringify(VITESSE.get(rel))) erreurs.push(`${f} : ${rel}, vitesse ${JSON.stringify(r.ms_par_image)} au lieu de ${JSON.stringify(VITESSE.get(rel))}`);
   }
 }
 // La couverture : la part des SVG de la bibliothèque que les générateurs par famille savent redessiner

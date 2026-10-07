@@ -46,7 +46,10 @@ const fichierEgare = (sujet, vue, pose) => N.nomBete(`egares/${sujet}/${sujet}_$
 export function profil(bete, pose) {
   const b = prendre(PROFILS, 'bête inconnue', bete);
   dans(b.poses, 'pose', pose);
-  return { svg: svgOf(b.cadre, b.dessin(pose)), cadre: b.cadre, ms_par_image: vitesse(fichierProfil(b, pose)) };
+  const f = fichierProfil(b, pose);
+  // le bocal n'a pas de pose dans son nom (bocal-bulle_1) : la vitesse de sa rubrique, s'il s'anime
+  const ms = vitesse(f) ?? (/^\d+$/.test(pose) && b.poses.length > 1 ? N.vitesseBete(f) ?? null : null);
+  return { svg: svgOf(b.cadre, b.dessin(pose)), cadre: b.cadre, ms_par_image: ms };
 }
 // Une bête orientée : vue 'avant' (trois quarts avant) ou 'dos' (trois quarts dos)
 export function orientee(bete, vue, pose) {
