@@ -65,7 +65,7 @@ détails propres à un lot : places des objets de boutique, lumières des palier
 | `svg/personnages/avatar/` | L'avatar du joueur : 12 exemples tirés du générateur et leur version naufragée, poses, gestes du tutoriel (ramasser, grelotter, lire), expressions ; dans `avatar.json` : les formes, les nuanciers, les 45 accessoires (rareté, source, prix ; saison des tenues de saison ; leur icône) et les teintures rares (avec leur prix) | 2464 |
 | `svg/personnages/objets/` | Les icônes des objets de l'avatar, pour la boutique et l'inventaire (32 × 32, couleurs par défaut) : `<objet>_icone`, le chemin dans `avatar.json` (`icone`). Pour l'instant les tenues de saison, le bonnet et l'écharpe | 11 |
 | `generateur/` | Le générateur de l'avatar en un module ESM, pour le jeu (`avatar.mjs`) : voir le mode d'emploi | — |
-| `svg/interface/` | Les icônes de l'interface (32 × 32) : la barre du bas (Grimoire, Île, Défis, Sceau ; le sac, les tâches et le menu de la v6), l'écu, les ressources (pierre, bois, eau, nourriture, poisson), les boutons de l'île (Récolte, Tout ramasser, carnet, trouvailles, expédition) ; où le jeu s'en sert dans `interface.json` | 18 |
+| `svg/interface/` | Les icônes de l'interface (32 × 32) : la barre du bas (Grimoire, Île, Défis, Sceau ; le sac, les tâches et le menu de la v6), l'écu, les ressources (pierre, bois, eau, nourriture, poisson), les boutons de l'île (Récolte, Tout ramasser, carnet, trouvailles, expédition) ; les fiches (outils, fleur, trois humeurs, cœur, verrou, inconnu, étincelle, chapitre, plan, carte, pousse) ; les trouvailles des climats (glace, laine, roseau, sel, fruits, obsidienne) ; où le jeu s'en sert dans `interface.json` | 37 |
 | `svg/personnages/epilogue/` | 8 nouveaux venus de l'épilogue, tirés du générateur de l'avatar, en habits de voyage (valise à la main, bagage sur le dos) : 3 vues, marche, repos, salut | 192 |
 | `svg/vivants/` | Brume (8 stades et ses variantes), Anya (son manteau vivant aux quatre saisons : `anya_<vue>_<pose>_<printemps\|automne\|hiver>_<n>`, l'été sans suffixe), le cerf blanc, le Passeur | 191 |
 | `svg/animaux/` | Ferme, bois, eau douce, climats, bestiaire, familiers, mer : de profil, et de trois quarts avant et dos pour les 37 bêtes qui marchent (`orientees.json`) ; le crabe de la Grève (`mer/crabe/crabe.json`) | 541 |
@@ -117,8 +117,8 @@ détails propres à un lot : places des objets de boutique, lumières des palier
   chaque personnage à l'écran : les découpes portent ce nom. Assemblé avec la bibliothèque, il dessine comme les sources
   à l'octet près (`design/atelier/verif_generateur.mjs`) ; ne pas le modifier à la main.
 - **Icônes de l'interface** (`svg/interface/`, `interface.json`) : à afficher de 16 à 32 px, en `<img>` ou en SVG en
-  ligne ; elles se lisent sur le papier comme sur le verre sombre des boutons de l'île. Un onglet inactif s'éteint en CSS
-  (`opacity`, `filter: saturate(.4)`), sans autre dessin. Les petites commandes (fermer, flèches, zoom) restent des pictos
+  ligne ; elles se lisent sur le papier comme sur le verre sombre des boutons de l'île. Un onglet inactif ou un cœur pas
+  encore gagné s'éteint en CSS (`opacity`, `filter: saturate(.4)` ou `grayscale(1)`), sans autre dessin. Les petites commandes (fermer, flèches, zoom) restent des pictos
   au trait ; l'heure et la météo ont leurs icônes dans `svg/meteo/icones/`.
 - **Égarés** : en marche, `marche` en boucle (avant ou dos, le miroir pour les deux autres directions). Touché : `bouderie`
   (une fois), puis `brume` (une fois) : il retourne dans la brume. Une lumière à 2 cases : `luciole` (une fois) ; la

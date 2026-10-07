@@ -1,7 +1,7 @@
 {
  "_lisez_moi": [
-  "Les icônes de l'interface, au trait de la bibliothèque : la barre du bas (Grimoire, Île, Défis, Sceau, et le sac, les tâches et le menu de la v6, HISTOIRE.md § 9, étapes 4 et 6), l'écu, les ressources, les boutons de l'île.",
-  "Carré 32 × 32, sans marge à retirer : les afficher de 16 à 32 px (en <img>, ou en SVG en ligne). Elles se lisent sur le papier clair comme sur le verre sombre des boutons de l'île. Pour un onglet inactif, les éteindre en CSS (opacity, ou filter: saturate(.4)) plutôt que de les redessiner.",
+  "Les icônes de l'interface, au trait de la bibliothèque : la barre du bas (Grimoire, Île, Défis, Sceau, et le sac, les tâches et le menu de la v6, HISTOIRE.md § 9, étapes 4 et 6), l'écu, les ressources, les boutons de l'île ; les fiches (besoins, humeurs, amitié, verrou, inconnu, étincelle, chapitre, plan, carte, pousse) et les trouvailles des climats.",
+  "Carré 32 × 32, sans marge à retirer : les afficher de 16 à 32 px (en <img>, ou en SVG en ligne). Elles se lisent sur le papier clair comme sur le verre sombre des boutons de l'île. Pour un onglet inactif ou un cœur pas encore gagné, les éteindre en CSS (opacity, filter: saturate(.4) ou grayscale(1)) plutôt que de les redessiner.",
   "sert : où le jeu s'en sert. Les petites commandes (fermer, flèches, zoom, plein écran) restent des pictos au trait du jeu. L'heure et la météo ont déjà leurs icônes : svg/meteo/icones (temps, moments)."
  ],
  "icones": {
@@ -237,6 +237,253 @@
    ],
    "fichiers": [
     "expedition_icone.svg"
+   ]
+  },
+  "outils": {
+   "nom": "Outils (icône)",
+   "sert": "le besoin « travailler » (fiche d'un camarade, bulle de besoin)",
+   "cadre": [
+    0,
+    0,
+    32,
+    32
+   ],
+   "fichiers": [
+    "outils_icone.svg"
+   ]
+  },
+  "fleur": {
+   "nom": "Fleur (icône)",
+   "sert": "le besoin « se distraire »",
+   "cadre": [
+    0,
+    0,
+    32,
+    32
+   ],
+   "fichiers": [
+    "fleur_icone.svg"
+   ]
+  },
+  "humeur_joie": {
+   "nom": "Humeur : joie (icône)",
+   "sert": "l'humeur d'un camarade : content",
+   "cadre": [
+    0,
+    0,
+    32,
+    32
+   ],
+   "fichiers": [
+    "humeur_joie_icone.svg"
+   ]
+  },
+  "humeur_calme": {
+   "nom": "Humeur : calme (icône)",
+   "sert": "l'humeur d'un camarade : tranquille",
+   "cadre": [
+    0,
+    0,
+    32,
+    32
+   ],
+   "fichiers": [
+    "humeur_calme_icone.svg"
+   ]
+  },
+  "humeur_bouderie": {
+   "nom": "Humeur : bouderie (icône)",
+   "sert": "l'humeur d'un camarade : il lui manque quelque chose",
+   "cadre": [
+    0,
+    0,
+    32,
+    32
+   ],
+   "fichiers": [
+    "humeur_bouderie_icone.svg"
+   ]
+  },
+  "coeur": {
+   "nom": "Cœur (icône)",
+   "sert": "l'amitié d'un camarade (cœurs de la fiche, récompenses)",
+   "cadre": [
+    0,
+    0,
+    32,
+    32
+   ],
+   "fichiers": [
+    "coeur_icone.svg"
+   ]
+  },
+  "verrou": {
+   "nom": "Verrou (icône)",
+   "sert": "ce qui est scellé : un chapitre, un rang de l'établi",
+   "cadre": [
+    0,
+    0,
+    32,
+    32
+   ],
+   "fichiers": [
+    "verrou_icone.svg"
+   ]
+  },
+  "inconnu": {
+   "nom": "Inconnu (icône)",
+   "sert": "un élément pas encore trouvé",
+   "cadre": [
+    0,
+    0,
+    32,
+    32
+   ],
+   "fichiers": [
+    "inconnu_icone.svg"
+   ]
+  },
+  "etincelle": {
+   "nom": "Étincelle (icône)",
+   "sert": "une quête, une chose à faire, le dessin par défaut",
+   "cadre": [
+    0,
+    0,
+    32,
+    32
+   ],
+   "fichiers": [
+    "etincelle_icone.svg"
+   ]
+  },
+  "chapitre": {
+   "nom": "Chapitre (icône)",
+   "sert": "le chapitre du Grimoire qu'il faut avoir ouvert",
+   "cadre": [
+    0,
+    0,
+    32,
+    32
+   ],
+   "fichiers": [
+    "chapitre_icone.svg"
+   ]
+  },
+  "plan": {
+   "nom": "Plan (icône)",
+   "sert": "le plan d'un bâtiment (au-dessus d'un chantier, étapes d'un bâtiment)",
+   "cadre": [
+    0,
+    0,
+    32,
+    32
+   ],
+   "fichiers": [
+    "plan_icone.svg"
+   ]
+  },
+  "carte": {
+   "nom": "Carte (icône)",
+   "sert": "un quartier, une expédition",
+   "cadre": [
+    0,
+    0,
+    32,
+    32
+   ],
+   "fichiers": [
+    "carte_icone.svg"
+   ]
+  },
+  "pousse": {
+   "nom": "Pousse (icône)",
+   "sert": "le filtre « fertiles » du Grimoire",
+   "cadre": [
+    0,
+    0,
+    32,
+    32
+   ],
+   "fichiers": [
+    "pousse_icone.svg"
+   ]
+  },
+  "glace": {
+   "nom": "Glace (icône)",
+   "sert": "la trouvaille des Cimes",
+   "cadre": [
+    0,
+    0,
+    32,
+    32
+   ],
+   "fichiers": [
+    "glace_icone.svg"
+   ]
+  },
+  "laine": {
+   "nom": "Laine (icône)",
+   "sert": "la trouvaille des Landes",
+   "cadre": [
+    0,
+    0,
+    32,
+    32
+   ],
+   "fichiers": [
+    "laine_icone.svg"
+   ]
+  },
+  "roseau": {
+   "nom": "Roseau (icône)",
+   "sert": "la trouvaille du Marais",
+   "cadre": [
+    0,
+    0,
+    32,
+    32
+   ],
+   "fichiers": [
+    "roseau_icone.svg"
+   ]
+  },
+  "sel": {
+   "nom": "Sel (icône)",
+   "sert": "la trouvaille des Dunes",
+   "cadre": [
+    0,
+    0,
+    32,
+    32
+   ],
+   "fichiers": [
+    "sel_icone.svg"
+   ]
+  },
+  "fruits": {
+   "nom": "Fruits (icône)",
+   "sert": "la trouvaille de la Jungle",
+   "cadre": [
+    0,
+    0,
+    32,
+    32
+   ],
+   "fichiers": [
+    "fruits_icone.svg"
+   ]
+  },
+  "obsidienne": {
+   "nom": "Obsidienne (icône)",
+   "sert": "la trouvaille du Volcan",
+   "cadre": [
+    0,
+    0,
+    32,
+    32
+   ],
+   "fichiers": [
+    "obsidienne_icone.svg"
    ]
   }
  }

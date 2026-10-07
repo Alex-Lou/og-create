@@ -14,8 +14,8 @@ const PNG = path.join(DIR, 'planches');
 const svgOf = (body, px = 32) => `<svg xmlns="http://www.w3.org/2000/svg" width="${px}" height="${px}" viewBox="0 0 32 32">${body}</svg>`;
 
 const index = { _lisez_moi: [
-  'Les icônes de l\'interface, au trait de la bibliothèque : la barre du bas (Grimoire, Île, Défis, Sceau, et le sac, les tâches et le menu de la v6, HISTOIRE.md § 9, étapes 4 et 6), l\'écu, les ressources, les boutons de l\'île.',
-  'Carré 32 × 32, sans marge à retirer : les afficher de 16 à 32 px (en <img>, ou en SVG en ligne). Elles se lisent sur le papier clair comme sur le verre sombre des boutons de l\'île. Pour un onglet inactif, les éteindre en CSS (opacity, ou filter: saturate(.4)) plutôt que de les redessiner.',
+  'Les icônes de l\'interface, au trait de la bibliothèque : la barre du bas (Grimoire, Île, Défis, Sceau, et le sac, les tâches et le menu de la v6, HISTOIRE.md § 9, étapes 4 et 6), l\'écu, les ressources, les boutons de l\'île ; les fiches (besoins, humeurs, amitié, verrou, inconnu, étincelle, chapitre, plan, carte, pousse) et les trouvailles des climats.',
+  'Carré 32 × 32, sans marge à retirer : les afficher de 16 à 32 px (en <img>, ou en SVG en ligne). Elles se lisent sur le papier clair comme sur le verre sombre des boutons de l\'île. Pour un onglet inactif ou un cœur pas encore gagné, les éteindre en CSS (opacity, filter: saturate(.4) ou grayscale(1)) plutôt que de les redessiner.',
   'sert : où le jeu s\'en sert. Les petites commandes (fermer, flèches, zoom, plein écran) restent des pictos au trait du jeu. L\'heure et la météo ont déjà leurs icônes : svg/meteo/icones (temps, moments).'
 ], icones: {} };
 const cells = [];
@@ -43,6 +43,15 @@ const boutons = `<div style="display:flex;gap:8px">${['ramasser', 'carnet', 'tro
 cells.push(row('En situation', [[barre([['grimoire', 'Grimoire'], ['ile', 'Île'], ['defis', 'Défis'], ['sceau', 'Sceau']], 'ile'), 'la barre d\'aujourd\'hui, l\'île active'],
   [barre([['grimoire', 'Grimoire'], ['sac', 'Sac'], ['taches', 'Tâches'], ['menu', 'Menu']], 'grimoire'), 'la barre de la v6 (étape 6)']]));
 cells.push(row('', [[`<div style="padding:12px;border-radius:12px;background:#9CC97A;display:flex;flex-direction:column;gap:10px;align-items:flex-start">${haut}${boutons}</div>`, 'le haut de l\'île, les boutons (ceux qui attendent sont dorés)']]));
+// La fiche d'un camarade (humeur, besoins, amitié : les cœurs vides sont les mêmes, éteints en CSS) et les trouvailles
+const pastille = (id, px, bord) => `<div style="width:${px + 10}px;height:${px + 10}px;border-radius:50%;display:flex;align-items:center;justify-content:center;background:#FFF4E5;box-shadow:inset 0 0 0 2px ${bord}">${ic(id, px)}</div>`;
+const fiche = `<div style="padding:12px 14px;border-radius:14px;background:#FBF5E8;display:flex;gap:14px;align-items:center;font:700 13px system-ui;color:#3C2819">`
+  + `<div style="display:flex;flex-direction:column;gap:6px;align-items:center">${pastille('humeur_joie', 24, '#E0A93A')}<span>Cannelle</span></div>`
+  + `<div style="display:flex;flex-direction:column;gap:6px"><div style="display:flex;gap:6px">${['nourriture', 'outils', 'fleur'].map((id, i) => pastille(id, 22, i ? '#E8D8B8' : '#F0A84A')).join('')}</div>`
+  + `<div style="display:flex;gap:2px">${[1, 1, 1, 0, 0].map(on => `<span style="${on ? '' : 'filter:grayscale(1);opacity:.35'}">${ic('coeur', 18)}</span>`).join('')}</div></div>`
+  + `<div style="display:flex;gap:6px">${['humeur_calme', 'humeur_bouderie'].map(id => pastille(id, 22, '#E8D8B8')).join('')}</div></div>`;
+const tuiles = `<div style="display:flex;gap:8px;padding:12px;border-radius:14px;background:#FBF5E8">${['glace', 'laine', 'roseau', 'sel', 'fruits', 'obsidienne'].map(id => `<div style="width:44px;height:44px;border-radius:10px;display:flex;align-items:center;justify-content:center;background:#F4EAD5">${ic(id, 28)}</div>`).join('')}</div>`;
+cells.push(row('', [[fiche, 'la fiche d\'un camarade : humeur, besoins (le plus pressant cerclé d\'orange), amitié'], [tuiles, 'les trouvailles des climats']]));
 
 await shoot([[path.join(PNG, 'interface_icones.png'), sheet('Les icônes de l\'interface', 'Au trait de la bibliothèque, 32 × 32 : chacune en grand, puis à 32, 24 et 16 px sur le papier, le verre sombre des boutons de l\'île et l\'or d\'un bouton actif ; puis en situation.', cells), 1100]]);
 console.log(`${k} icônes de l'interface`);
