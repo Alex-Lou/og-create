@@ -153,6 +153,8 @@ const champ = {
 };
 // Grenier sur ses champignons de pierre, toit de chaume, botte de foin ; un pigeon se pose sur le faîtage
 const PIGEON = { body: '#9AA0AE', breast: '#C8B4CA', wing: '#7A8090' };
+// … sur l'herbe : la frange du chaume, les ferrures de la porte, les barreaux de l'échelle, deux sacs de grain et la
+// souris qui en sort le museau
 const grenier = {
   layers: [{
     frame: [-34, -62, 68, 80],
@@ -162,22 +164,34 @@ const grenier = {
       const staddle = (du, dv) => T.cyl(du, dv, 0, 5, 0.035, STONE, `pad${du}${dv}`) + T.disc(du, dv, 5, 0.065, STONE.top, EDGE);
       const [rx, ry] = T.p(0, 0, 36);
       const pigeon = f >= 1 && f <= 4 ? bird(rx + 3, ry + 1, { ...PIGEON, peck: f === 3 ? 1 : 0, flap: f === 1 ? 1 : 0 }) : '';
-      return T.shadow(0, 0, 0.36, 0.2)
+      const [gx, gy] = T.p(0, 0, 0);
+      let out = ell(gx, gy + 1, 31, 12.6, '#9CC46A', ` stroke="${OUT}" stroke-width="0.5"`) + ell(gx - 4, gy, 21, 7.6, '#ADD27A')
+        + [[-22, 4], [20, 7], [-8, 10]].map(([dx, dy]) => ln([gx + dx, gy + dy], [gx + dx + 3, gy + dy - 0.6], '#E2C66E', 0.7)).join('')
+        + T.shadow(0, 0, 0.36, 0.2)
         + staddle(-0.2, -0.17) + staddle(0.2, -0.17) + staddle(-0.2, 0.17) + staddle(0.2, 0.17)
         + T.box(-0.27, -0.23, 0.27, 0.23, 6, 25, BARN)
         + planksLeft(T.u - 0.27, T.u + 0.27, T.v + 0.23, 6, 25, 4.2) + planksRight(T.u + 0.27, T.v - 0.23, T.v + 0.23, 6, 25, 4.2)
-        // Porte de grange entrouverte, foin qui dépasse
+        // porte de grange entrouverte et ses ferrures, foin qui dépasse
         + T.face([[-0.07, 0.23, 7], [0.09, 0.23, 7], [0.09, 0.23, 20], [-0.07, 0.23, 20]], '#4A2E1A')
         + T.face([[-0.05, 0.23, 7], [0.07, 0.23, 7], [0.07, 0.23, 11], [-0.05, 0.23, 11]], STRAW.left)
         + ln(T.p(-0.07, 0.23, 20), T.p(0.09, 0.23, 7), WALL.top, 1) + ln(T.p(-0.07, 0.23, 7), T.p(0.09, 0.23, 20), WALL.top, 1)
-        // Lucarne sur le pignon
+        + [9, 18].map(z => ln(T.p(-0.09, 0.231, z), T.p(-0.04, 0.231, z), DARK_IRON.right, 1)).join('')
+        // lucarne sur le pignon
         + T.face([[0.27, -0.05, 15], [0.27, 0.05, 15], [0.27, 0.05, 21], [0.27, -0.05, 21]], '#3A2418', ` stroke="${WALL.top}" stroke-width="0.8"`)
         + T.gable(-0.27, -0.23, 0.27, 0.23, 25, 12, { front: THATCH.front, back: THATCH.back, gable: BARN.right }, 0.06)
-        + [-0.15, 0, 0.15].map(du => ln(T.p(du, 0.2, 26), T.p(du + 0.03, 0.04, 34), 'rgba(150,105,40,.45)', 0.7)).join('')
-        // Échelle et botte de foin
-        + ln(T.p(-0.05, 0.27, 0), T.p(-0.05, 0.23, 8), WOOD.right, 1) + ln(T.p(0.05, 0.27, 0), T.p(0.05, 0.23, 8), WOOD.right, 1)
-        + T.box(0.18, 0.28, 0.36, 0.4, 0, 7, STRAW) + ln(T.p(0.27, 0.4, 0), T.p(0.27, 0.4, 7), '#9A7A3A', 0.6) + ln(T.p(0.36, 0.34, 0), T.p(0.36, 0.34, 7), '#9A7A3A', 0.6)
-        + pigeon;
+        + [-0.15, 0, 0.15].map(du => ln(T.p(du, 0.2, 26), T.p(du + 0.03, 0.04, 34), 'rgba(150,105,40,.45)', 0.7)).join('');
+      // la frange du chaume au bord du toit
+      for (let k = 0; k < 7; k++) { const a = T.p(-0.33 + k * 0.094, 0.29, 25), b = T.p(-0.33 + (k + 1) * 0.094, 0.29, 25); out += `<path d="M${f2(a[0])},${f2(a[1])} Q${f2((a[0] + b[0]) / 2)},${f2((a[1] + b[1]) / 2 + 2.6)} ${f2(b[0])},${f2(b[1])}" stroke="${OUT}" stroke-width="0.6" fill="${THATCH.back}"/>`; }
+      // l'échelle et ses barreaux, la botte de foin, les sacs de grain et la souris
+      out += ln(T.p(-0.05, 0.27, 0), T.p(-0.05, 0.23, 8), WOOD.right, 1) + ln(T.p(0.05, 0.27, 0), T.p(0.05, 0.23, 8), WOOD.right, 1)
+        + [2, 4.6, 7].map(z => ln(T.p(-0.05, 0.27 - z * 0.005, z), T.p(0.05, 0.27 - z * 0.005, z), WOOD.top, 0.8)).join('')
+        + T.box(0.18, 0.28, 0.36, 0.4, 0, 7, STRAW) + ln(T.p(0.27, 0.4, 0), T.p(0.27, 0.4, 7), '#9A7A3A', 0.6) + ln(T.p(0.36, 0.34, 0), T.p(0.36, 0.34, 7), '#9A7A3A', 0.6);
+      const sack = (du, dv) => { const [sx, sy] = T.p(du, dv, 0); return ell(sx + 1, sy + 0.4, 4.6, 1.4, 'rgba(40,55,20,.22)') + `<path d="M${f2(sx - 3.6)},${f2(sy)} C${f2(sx - 4.4)},${f2(sy - 4)} ${f2(sx - 3)},${f2(sy - 7)} ${f2(sx - 1.4)},${f2(sy - 7.6)} L${f2(sx + 1.6)},${f2(sy - 7.6)} C${f2(sx + 3)},${f2(sy - 7)} ${f2(sx + 4.4)},${f2(sy - 4)} ${f2(sx + 3.6)},${f2(sy)} Z" fill="#E2CFA0" stroke="${OUT}" stroke-width="0.5"/>` + ln([sx - 1.6, sy - 7], [sx + 1.6, sy - 7], '#8A6A3A', 0.8) + ell(sx, sy - 7.8, 1.4, 0.5, '#E8C860'); };
+      out += sack(-0.34, 0.26) + sack(-0.24, 0.36);
+      const [mx, my] = T.p(-0.18, 0.4, 0), peek = f % 3 === 0 ? 0 : 1.4;
+      out += ell(mx + peek, my - 1.2, 1.8, 1.2, '#9A9094', ` stroke="${OUT}" stroke-width="0.4"`) + dot(mx + peek + 1.2, my - 2.4, 0.8, '#C8B4BA') + dot(mx + peek + 1.8, my - 1.2, 0.35, '#2A2024') + dot(mx + peek + 2.6, my - 1, 0.3, '#E58A8F')
+        + `<path d="M${f2(mx + peek - 1.6)},${f2(my - 1)} q-2,0.6 -2.6,-1.6" stroke="#9A9094" stroke-width="0.4" fill="none"/>`;
+      return out + pigeon;
     }
   }]
 };
