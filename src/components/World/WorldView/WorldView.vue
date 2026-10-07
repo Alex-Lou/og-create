@@ -472,7 +472,7 @@ export default {
     // Solde d'écus (en-tête) : grise les articles hors de portée ; le serveur reste seul juge
     coins: { type: Number, default: null }
   },
-  emits: ['coins-updated', 'show-alert', 'login', 'go', 'quest', 'replay-vigil', 'replay-anya', 'loading', 'loaded'],
+  emits: ['coins-updated', 'show-alert', 'login', 'go', 'quest', 'replay-vigil', 'replay-anya', 'loading', 'loaded', 'playing'],
   data() {
     return {
       state: null,
@@ -493,6 +493,10 @@ export default {
     };
   },
   computed: {
+    // Une partie en cours sur l'île : Récolte, mini-jeu ou assemblage à l'établi
+    playing() {
+      return Boolean(this.run || this.gameRun || this.craftRun);
+    },
     // Ce que propose Brume pour la quête active pas encore faite (hors Récolte et nom du peuple) : { label, run } ou null
     questAction() {
       const quest = this.quest;
@@ -575,6 +579,10 @@ export default {
   watch: {
     isLoggedIn() {
       this.load();
+    },
+    // Une partie en cours (Récolte, mini-jeu, assemblage à l'établi) : l'application n'y glisse aucune annonce
+    playing(now) {
+      this.$emit('playing', now);
     },
     // La quête qui ouvre un acte annonce son naufrage, une fois par appareil ; jamais par-dessus un coffre : il attend
     // que le coffre se referme
@@ -707,6 +715,7 @@ export default {
   },
   beforeUnmount() {
     this.gone = true;
+    if (this.playing) this.$emit('playing', false);
     this.endLoading();
     if (this.immersive) this.setImmersive(false);
     clearTimeout(this.undoTimer);

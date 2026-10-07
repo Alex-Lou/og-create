@@ -55,6 +55,7 @@
             @replay-anya="replayRevelation"
             @loading="onIslandLoading"
             @loaded="islandLoaded"
+            @playing="playing => (islandPlaying = playing)"
           />
           <!-- Mode principal : le Livre ; l'Épreuve garde son inventaire -->
           <BookView
@@ -231,6 +232,7 @@ import carnet from './carnet';
 import achievements from './achievements';
 import story from './story';
 import trial from './trial';
+import update from './update';
 import AppHeader from '../AppHeader/AppHeader.vue';
 import CraftZone from '../../Craft/CraftZone/CraftZone.vue';
 import LivingBackground from '../LivingBackground/LivingBackground.vue';
@@ -267,7 +269,7 @@ export default {
   name: 'App',
   // Le compte, le carnet, les succès, l'histoire et l'Épreuve vivent chacun dans leur fichier, à côté (mixins) ;
   // App garde ce qui les relie : les modes, l'Athanor, l'ère et les familles, le cycle de vie
-  mixins: [account, carnet, achievements, story, trial],
+  mixins: [account, carnet, achievements, story, trial, update],
   components: {
     AppHeader,
     CraftZone,

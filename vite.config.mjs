@@ -6,8 +6,20 @@ import vue from '@vitejs/plugin-vue';
 // en cache d'abord ce qui est sous ces préfixes, aux noms changeant à chaque version
 const folderOf = name => (/\.css$/.test(name) ? 'css' : /\.(woff2?|ttf|otf|eot)$/.test(name) ? 'fonts' : 'img');
 
+// Empreinte de cette version : écrite dans version.json à côté du build, et connue du code (import.meta.env.
+// VITE_APP_VERSION). Le jeu en ligne relit version.json : une autre empreinte veut dire qu'une mise à jour l'attend
+// (utils/newVersion.js)
+const APP_VERSION = Date.now().toString(36);
+process.env.VITE_APP_VERSION = APP_VERSION;
+const versionFile = {
+  name: 'version-file',
+  generateBundle() {
+    this.emitFile({ type: 'asset', fileName: 'version.json', source: JSON.stringify({ version: APP_VERSION }) });
+  }
+};
+
 export default defineConfig(({ command }) => ({
-  plugins: [vue()],
+  plugins: [vue(), versionFile],
   resolve: {
     alias: { '@': fileURLToPath(new URL('./src', import.meta.url)) },
     extensions: ['.mjs', '.js', '.json', '.vue']
