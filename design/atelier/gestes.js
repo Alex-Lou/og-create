@@ -441,4 +441,45 @@ function repousser({ view, n }) {
 // Debout : frame(avecRepousser(c), vue, 'action', n)
 const avecRepousser = c => ({ ...c, uid: `${c.uid}rp`, pose: repousser });
 
-module.exports = { lanterne, parapluie, valise, avecLanterne, avecParapluie, avecValise, couche, CADRE_PARAPLUIE, CADRE_COUCHE, ZEDS, paume, tranche, tendre, avecMainsTendues, applaudir, avecApplaudir, pecher, avecPecher, piocher, avecPiocher, cueillir, avecCueillir, porter, avecPorter, reparer, avecReparer, repousser, avecRepousser };
+// Le carnet ouvert, tourné vers nous, en (x, y) le haut de la reliure : la couverture bleue, les pages claires, les
+// lignes déjà écrites à gauche, l'écriture à l'encre bleue à droite (1 à 3 lignes), un signet rouge
+function carnet(x, y, lignes) {
+  return P(`M${r2(x - 5.4)},${r2(y)} L${r2(x + 5.4)},${r2(y)} L${r2(x + 5.4)},${r2(y + 6)} L${r2(x - 5.4)},${r2(y + 6)} Z`, '#3E5A8C', 0.9)
+    + P(`M${r2(x - 4.7)},${r2(y - 0.5)} Q${r2(x - 2.3)},${r2(y - 1.3)} ${r2(x)},${r2(y)} Q${r2(x + 2.3)},${r2(y - 1.3)} ${r2(x + 4.7)},${r2(y - 0.5)} L${r2(x + 4.7)},${r2(y + 5.1)} Q${r2(x + 2.3)},${r2(y + 4.4)} ${r2(x)},${r2(y + 5.4)} Q${r2(x - 2.3)},${r2(y + 4.4)} ${r2(x - 4.7)},${r2(y + 5.1)} Z`, '#FBF4E2', 0.8)
+    + L([x, y], [x, y + 5.4], OUT, 0.55) + L([x + 3.4, y + 5.2], [x + 3.6, y + 7.4], '#D9443A', 0.7)
+    + [1.4, 2.5, 3.6].map(d => L([x - 3.9, y + d], [x - 1, y + d], '#8A7A6A', 0.4)).join('')
+    + [1.4, 2.5, 3.6].slice(0, lignes).map(d => `<path d="M${r2(x + 1)},${r2(y + d)} q0.5,-0.4 1,0 t1,0 t1,0" fill="none" stroke="#3E5A8C" stroke-width="0.4"/>`).join('');
+}
+// Le crayon : de la mine (le bout qui écrit, en p) vers la gomme, le long de (ux, uy) ; jaune, mine taillée, gomme rose
+function crayon(p, ux, uy) {
+  const l = 6, q = [p[0] + ux * l, p[1] + uy * l], t = [p[0] + ux * 1.2, p[1] + uy * 1.2];
+  return L(t, q, OUT, 2.2) + L(t, q, '#F2C04B', 1) + L(p, t, OUT, 1.1) + L(p, [p[0] + ux * 0.6, p[1] + uy * 0.6], '#3A3A44', 0.5)
+    + L([q[0] - ux * 0.9, q[1] - uy * 0.9], q, '#F2A0B0', 1);
+}
+// Écrire (le carnet de bord, les lettres) ; 2 images : le crayon avance sur la page, une ligne de plus s'écrit.
+// Une main tient le carnet ouvert devant soi, l'autre écrit. Assis (assis.js), le carnet est tenu au-dessus des genoux.
+function ecrire({ view, n }) {
+  const [a, b] = this.shoulders;
+  const y = a[1] + 3.6; // le haut du carnet
+  if (view === 'front') {
+    const x = 24, p = [x + 2 + n * 1.6, y + 2.6 + n * 1.1]; // la mine sur la page de droite
+    const tient = arm(this, a, [x - 5.2, y + 5.6], [a[0] - 1.4, a[1] + 6.8]);
+    const ecrit = arm(this, b, [p[0] + 1.6, p[1] + 2.2], [b[0] + 2.6, b[1] + 6.6]) + crayon(p, 0.55, -0.83);
+    // le carnet et la main qui écrit passent par-dessus le manteau et la barbe
+    return { expr: 'content', left: tient, right: '', over: carnet(x, y, n ? 2 : 1) + ecrit };
+  }
+  if (view === 'se') {
+    // de trois quarts, le carnet est tenu en avant, vers le regard, par le bras éloigné ; le bras proche passe derrière
+    // le carnet (coude en arrière), seuls la main et le crayon se posent sur la page
+    const x = a[0] - 3, p = [x + 2 + n * 1.6, y + 2.6 + n * 1.1], h = [p[0] + 1.6, p[1] + 2.2];
+    const tient = arm(this, b, [x - 4.4, y + 5.8], [b[0] + 0.6, b[1] + 7]);
+    const ecrit = arm(this, a, h, [a[0] + 1.4, a[1] + 6.4], '');
+    return { expr: 'content', right: tient, left: '', over: ecrit + carnet(x, y, n ? 2 : 1) + crayon(p, 0.55, -0.83) + E(h[0], h[1], 2.1, 2.1, this.hand || this.skin) };
+  }
+  // de dos : le carnet, le crayon et les mains sont devant (cachés) ; on voit les coudes, et le droit bouge en écrivant
+  return { left: '', right: '', under: arm(this, a, [24 - 3, y + 5.6], [a[0] - 2.4, a[1] + 6]) + arm(this, b, [b[0] + 1.6, y + 4], [b[0] + 4.4 + n * 1.4, b[1] + 5.6 - n * 0.6]) };
+}
+// Debout : frame(avecEcrire(c), vue, 'action', n) ; assis : assis(c, vue, n, null, ecrire)
+const avecEcrire = c => ({ ...c, uid: `${c.uid}ec`, pose: ecrire });
+
+module.exports = { lanterne, parapluie, valise, avecLanterne, avecParapluie, avecValise, couche, CADRE_PARAPLUIE, CADRE_COUCHE, ZEDS, paume, tranche, tendre, avecMainsTendues, applaudir, avecApplaudir, pecher, avecPecher, piocher, avecPiocher, cueillir, avecCueillir, porter, avecPorter, reparer, avecReparer, repousser, avecRepousser, ecrire, avecEcrire };
