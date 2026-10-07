@@ -1152,8 +1152,9 @@ function wheelOf(T) {
   }
   return out + dot(cx, cy, 1.4, DARK_IRON.right);
 }
-// Haut fourneau : tour de briques qui s'affine, gueule où rougeoie la fonte, soufflet de cuir ; fumée et étincelles
-// montent du gueulard, la lueur orange éclaire la nuit
+// Haut fourneau : tour de briques qui s'affine, cerclée de fer, chaînes d'angle en pierre ; sa gueule où rougeoie la
+// fonte, qui coule dans une rigole jusqu'aux lingotières ; le soufflet de cuir et son levier ; le tas de minerai et le
+// tas de charbon ; fumée et étincelles montent du gueulard, la lueur orange éclaire la nuit
 const fourneau = {
   light: () => [-0.02, 0.3, 12, 24, '255,130,50', true],
   layers: [{
@@ -1161,36 +1162,48 @@ const fourneau = {
     n: 8,
     fps: 5,
     draw: (T, f, n) => {
-      const tiers = [[0.27, 10, 24], [0.23, 24, 38], [0.2, 38, 52], [0.17, 52, 64]];
-      let tower = '';
-      for (const [r, z0, z1] of tiers) {
-        tower += T.box(-r, -r, r, r, z0, z1, BRICK);
-        for (let z = z0 + 3.5; z < z1; z += 3.5) tower += ln(T.p(-r, r, z), T.p(r, r, z), 'rgba(90,40,25,.35)', 0.5) + ln(T.p(r, -r, z), T.p(r, r, z), 'rgba(90,40,25,.35)', 0.5);
-      }
-      const [mx, my] = T.p(-0.02, 0.27, 10);
+      const [x, y] = T.p(0, 0, 0);
       const pulse = [0.85, 1, 0.92, 1.08, 0.9, 1, 0.95, 1.05][f];
-      const [gx, gy] = T.p(0, 0, 66);
-      const smoke = [0, 1, 2].map(k => {
-        const p = ((f + k * 3) % n) / n;
-        return puff(gx - 3 + p * 8, gy - 4 - p * 30, 3 + p * 5, 0.65 * (1 - p));
-      }).join('');
-      const sparks = [0, 1, 2, 3].map(k => {
-        const p = ((f * 1.3 + k * 2) % n) / n;
-        return dot(gx + Math.sin(k * 2.3 + p * 3) * 6, gy - 2 - p * 22, 0.9, p < 0.7 ? '#FFC24A' : '#FF7A3A');
-      }).join('');
-      return T.shadow(0, 0, 0.42, 0.22)
-        + T.box(-0.32, -0.32, 0.32, 0.32, 0, 10, STONE)
-        + tower
-        + T.box(-0.19, -0.19, 0.19, 0.19, 64, 67, STONE)
-        + `<path d="M${f2(mx - 6.4)},${f2(my)} L${f2(mx - 6.4)},${f2(my - 8)} A6.4,6 0 0 1 ${f2(mx + 6.4)},${f2(my - 8)} L${f2(mx + 6.4)},${f2(my)} Z" fill="#2A140C"/>`
+      const hot = o => `rgba(255,${f2(120 + 60 * (pulse - 0.85) / 0.23)},40,${o})`;
+      // le sol roussi, des scories
+      let out = ell(x, y + 1, 33, 13.6, '#A08A70', ` stroke="${OUT}" stroke-width="0.5"`) + ell(x - 4, y, 22, 8, '#B09A7E')
+        + [[-24, 3], [22, 6], [-12, 10], [26, -2]].map(([dx, dy]) => ell(x + dx, y + dy, 1.6, 1, '#5A4A44', ` stroke="${OUT}" stroke-width="0.3"`)).join('')
+        + T.shadow(0, 0, 0.42, 0.22);
+      // le socle de pierre, la tour de briques par étages, ses cercles de fer et ses angles de pierre
+      out += T.box(-0.32, -0.32, 0.32, 0.32, 0, 10, STONE) + ln(T.p(-0.32, 0.32, 5), T.p(0.32, 0.32, 5), 'rgba(120,110,95,.4)', 0.5) + ln(T.p(0.32, 0.32, 5), T.p(0.32, -0.32, 5), 'rgba(120,110,95,.4)', 0.5);
+      const tiers = [[0.27, 10, 24], [0.23, 24, 38], [0.2, 38, 52], [0.17, 52, 64]];
+      for (const [r, z0, z1] of tiers) {
+        out += T.box(-r, -r, r, r, z0, z1, BRICK);
+        for (let z = z0 + 3.5; z < z1; z += 3.5) out += ln(T.p(-r, r, z), T.p(r, r, z), 'rgba(90,40,25,.35)', 0.5) + ln(T.p(r, -r, z), T.p(r, r, z), 'rgba(90,40,25,.35)', 0.5);
+        for (let z = z0; z < z1; z += 7) out += T.box(r - 0.035, r - 0.035, r + 0.004, r + 0.004, z, Math.min(z + 3.5, z1), { top: '#EDE6DA', left: '#E2D8C8', right: '#C8BCA8' }, ' stroke="rgba(60,40,25,.45)" stroke-width="0.4"');
+        out += ln(T.p(-r - 0.005, r + 0.005, z1 - 1), T.p(r + 0.005, r + 0.005, z1 - 1), DARK_IRON.right, 1.2) + ln(T.p(r + 0.005, r + 0.005, z1 - 1), T.p(r + 0.005, -r - 0.005, z1 - 1), DARK_IRON.right, 1.2);
+      }
+      out += T.box(-0.19, -0.19, 0.19, 0.19, 64, 67, STONE);
+      // la gueule, la fonte qui coule dans la rigole, les lingotières
+      const [mx, my] = T.p(-0.02, 0.27, 10);
+      const [ax, ay] = T.p(-0.02, 0.32, 0), [bx, by] = T.p(-0.04, 0.42, 0), [cx, cy] = T.p(-0.16, 0.46, 0);
+      out += `<path d="M${f2(mx - 6.4)},${f2(my)} L${f2(mx - 6.4)},${f2(my - 8)} A6.4,6 0 0 1 ${f2(mx + 6.4)},${f2(my - 8)} L${f2(mx + 6.4)},${f2(my)} Z" fill="#2A140C" stroke="${OUT}" stroke-width="0.6"/>`
         + ell(mx, my - 4, 5 * pulse, 3.6 * pulse, '#F2862A') + ell(mx, my - 3.4, 3.2 * pulse, 2 * pulse, '#FFD24E')
-        // Soufflet de cuir et sa tuyère
-        + T.box(0.3, -0.06, 0.42, 0.1, 3, 5, WOOD)
-        + poly([T.p(0.3, -0.04, 6), T.p(0.42, -0.04, 9 + (f % 2) * 2), T.p(0.42, 0.08, 9 + (f % 2) * 2), T.p(0.3, 0.08, 6)], '#7A4A2A', ` stroke="${OUT}" stroke-width="0.5"`)
+        + `<path d="M${f2(mx)},${f2(my - 1)} L${f2(ax)},${f2(ay)} Q${f2(bx + 2)},${f2(by - 1)} ${f2(bx)},${f2(by)} L${f2(cx)},${f2(cy)}" stroke="#3A2A20" stroke-width="3.4" fill="none" stroke-linecap="round" stroke-linejoin="round"/>`
+        + `<path d="M${f2(mx)},${f2(my - 1)} L${f2(ax)},${f2(ay)} Q${f2(bx + 2)},${f2(by - 1)} ${f2(bx)},${f2(by)} L${f2(cx)},${f2(cy)}" stroke="${hot(1)}" stroke-width="1.6" fill="none" stroke-linecap="round" stroke-linejoin="round"/>`
+        + [[-0.22, 0.42], [-0.1, 0.48]].map(([u, v]) => T.face([[u - 0.05, v - 0.03, 0.4], [u + 0.05, v - 0.03, 0.4], [u + 0.05, v + 0.03, 0.4], [u - 0.05, v + 0.03, 0.4]], '#3A2A20', ` stroke="${OUT}" stroke-width="0.5"`)
+          + T.face([[u - 0.035, v - 0.018, 0.5], [u + 0.035, v - 0.018, 0.5], [u + 0.035, v + 0.018, 0.5], [u - 0.035, v + 0.018, 0.5]], hot(0.95))).join('');
+      // le soufflet de cuir, sa tuyère et son levier qui pompe
+      const lev = f % 2 ? 2 : 0;
+      out += T.box(0.3, -0.06, 0.42, 0.1, 3, 5, WOOD)
+        + poly([T.p(0.3, -0.04, 6), T.p(0.42, -0.04, 9 + lev), T.p(0.42, 0.08, 9 + lev), T.p(0.3, 0.08, 6)], '#7A4A2A', ` stroke="${OUT}" stroke-width="0.5"`)
+        + [0.34, 0.38].map(u => ln(T.p(u, 0.08, 6.4 + (u - 0.3) * 25 * (lev ? 1.25 : 1)), T.p(u, -0.04, 6.4 + (u - 0.3) * 25 * (lev ? 1.25 : 1)), 'rgba(40,20,10,.4)', 0.5)).join('')
         + ln(T.p(0.3, 0.02, 7), T.p(0.27, 0.02, 14), IRON.right, 1.6)
-        // Tas de minerai devant
-        + boulder(T.u + 0.2, T.v + 0.36, 0.1, 0.08, 5, { top: '#B07A62', left: '#8A5A46', right: '#643E30' }, 5, 0.4, 0.5)
-        + smoke + sparks;
+        + ln(T.p(0.42, 0.02, 9 + lev), T.p(0.5, 0.02, 15 + lev * 1.5), WOOD.right, 1.3);
+      // le tas de minerai et le tas de charbon devant
+      out += boulder(T.u + 0.2, T.v + 0.36, 0.1, 0.08, 5, { top: '#B07A62', left: '#8A5A46', right: '#643E30' }, 5, 0.4, 0.5)
+        + boulder(T.u + 0.36, T.v + 0.2, 0.08, 0.07, 4, { top: '#55555C', left: '#36363C', right: '#222227' }, 9, 0.45, 0.5)
+        + [[0.36, 0.2, 4.6], [0.33, 0.24, 3]].map(([u, v, z]) => dot(...T.p(u, v, z), 0.5, '#C6D4EA')).join('');
+      // la fumée et les étincelles du gueulard
+      const [gx, gy] = T.p(0, 0, 66);
+      out += [0, 1, 2].map(k => { const p = ((f + k * 3) % n) / n; return puff(gx - 3 + p * 8, gy - 4 - p * 30, 3 + p * 5, 0.65 * (1 - p)); }).join('')
+        + [0, 1, 2, 3].map(k => { const p = ((f * 1.3 + k * 2) % n) / n; return dot(gx + Math.sin(k * 2.3 + p * 3) * 6, gy - 2 - p * 22, 0.9, p < 0.7 ? '#FFC24A' : '#FF7A3A'); }).join('');
+      return out;
     }
   }]
 };
