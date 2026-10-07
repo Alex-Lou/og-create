@@ -4,6 +4,7 @@
 import path from 'path';
 import { createRequire } from 'module';
 import { fileURLToPath } from 'url';
+import { icone } from './generateur_interface.mjs';
 
 const require = createRequire(import.meta.url);
 const DIR = path.dirname(fileURLToPath(import.meta.url));
@@ -24,7 +25,7 @@ const fonds = [['#FBF5E8', 'papier'], ['rgb(30,22,16)', 'verre'], ['#E0A93A', 'o
 for (const [id, nom, dessin, sert] of ICONES) {
   const body = dessin();
   const rel = `${id}_icone.svg`;
-  write(path.join(LIB, rel), svgOf(body));
+  write(path.join(LIB, rel), icone(id).svg); // le fichier sort du générateur des icônes : le jeu dessine le même
   k++;
   index.icones[id] = { nom: `${nom} (icône)`, sert, cadre: [0, 0, 32, 32], fichiers: [rel] };
   const petits = fonds.map(([bg, lab]) => [`<div style="display:flex;gap:6px;align-items:center;padding:6px 8px;border-radius:8px;background:${bg}">${[32, 24, 16].map(px => svgOf(unique(body), px)).join('')}</div>`, lab]);
