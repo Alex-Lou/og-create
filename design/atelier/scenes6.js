@@ -12,6 +12,7 @@ const { brumeFrame } = require('./brume');
 const { sleepFrame } = require('./dormeurs');
 const { CAST } = require('./naufrages');
 const { ZEDS } = require('./gestes');
+const { torche } = require('./torche');
 
 const W = 400;
 // les quatre fondateurs, en tenue (base) et en naufragés (nau)
@@ -368,8 +369,7 @@ S('11_reveil', {
 // les poules endormies, la torche, des lucioles au bord de la brume
 const veilleeFond = f => ciel('vc', { ciel: '#0F1630', cielBas: '#2A3758' }, 250) + mer(170, 215, f) + nappe(205, 0.16, f) + sable(215)
   + lucioles([[40, 190], [80, 176], [350, 186], [372, 200], [20, 210]], f)
-  + L([352, 330], [352, 250], OUT, 6) + L([352, 330], [352, 250], '#8A6A48', 3.6) + lueur(352, 240, 26, '255,190,90', 0.5)
-  + P(`M346,250 Q${348 + [0, 2, -2, 1][f % 4]},226 352,${222 - (f % 2) * 2} Q358,236 358,250 Z`, '#F28A2E', 1);
+  + `<g transform="translate(352 330) scale(1.6)">${torche('allumee', f % 3)}</g>`; // la torche de la boutique (torche.js)
 // une poule endormie, la tête rentrée dans les plumes (m : −1 regarde à gauche)
 const pouleEndormie = (x, y, s, [c, cs], m = 1) => `<g transform="translate(${x} ${y}) scale(${r2(s * m)} ${s})">`
   + E(0, 1, 11, 3, 'rgba(0,0,0,.18)', 0) + P('M-9,-2 Q-14,-8 -12,-12 Q-8,-9 -6,-6 Z', cs, 1) + E(0, -5, 9.6, 7, c, 1.2) + P('M-5,-6 Q0,-9 5,-5', 'none', 0.9)

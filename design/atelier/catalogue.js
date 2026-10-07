@@ -189,6 +189,7 @@ function moment(id, meta) {
     if (a === 'creations') { const c = nom.split('_')[0]; return c === 'cloture' ? 'tuto-2' : c === 'lanterne' ? 'acte-1' : /\((cimes|landes|marais|dunes|jungle|volcan)\)/.test(meta.nom || '') ? 'acte-4' : 'evolutions'; }
     if (a === 'lieux') return nom.startsWith('menhirs_fleuri') ? 'revelation' : 'acte-3';
     if (a === 'embrume') return 'tuto-3';
+    if (a === 'defenses') return 'tuto-3'; // la torche, achetée et posée à l'étape 12
     if (a === 'signes') return 'revelation';
     if (a === 'souvenir') return 'acte-1';
     if (a === 'ruines') return /cle_du_phare|phare_eteint/.test(nom) ? 'acte-6' : 'acte-3';

@@ -1,0 +1,66 @@
+{
+ "_lisez_moi": [
+  "Les défenses de la nuit (HISTOIRE.md § 6.15, § 14) : la torche de bois flotté. Elle s'achète à la boutique (étape 12e) et se pose librement sur une case, comme une création : sur le chemin des égarés, sur les cases dorées (étape 12f). Sa lumière les repousse et les change en lucioles.",
+  "Ancre (0, 0) au centre de la case, échelle du jeu × 1,25 (case de 80 × 40), le cadre des créations. allumee : 3 images en boucle (ms_par_image) ; eteinte : le jour, ou avant d'être allumée ; icone : 32 × 32, pour la boutique et l'inventaire.",
+  "lumiere : la lumière de nuit, aux valeurs des créations du jeu (craftSprites.js, craftLight : [u, v, z, rayon, couleur]) ; z, la hauteur de la flamme, et rayon sont en px du jeu.",
+  "Le même dessin sert la torche du camp (decor/camp/objets/torche) et celle de la veillée (scène 12_veillee)."
+ ],
+ "defenses": {
+  "torche": {
+   "nom": "Torche de bois flotté",
+   "cadre": [
+    -50,
+    -115,
+    100,
+    140
+   ],
+   "allumee": {
+    "nom": "Torche de bois flotté, allumée",
+    "cadre": [
+     -50,
+     -115,
+     100,
+     140
+    ],
+    "ms_par_image": 111,
+    "fichiers": [
+     "torche_allumee_1.svg",
+     "torche_allumee_2.svg",
+     "torche_allumee_3.svg"
+    ]
+   },
+   "eteinte": {
+    "nom": "Torche de bois flotté, éteinte",
+    "cadre": [
+     -50,
+     -115,
+     100,
+     140
+    ],
+    "fichiers": [
+     "torche_eteinte.svg"
+    ]
+   },
+   "icone": {
+    "nom": "Torche de bois flotté (icône)",
+    "cadre": [
+     0,
+     0,
+     32,
+     32
+    ],
+    "fichiers": [
+     "torche_icone.svg"
+    ]
+   },
+   "lumiere": {
+    "u": 0,
+    "v": 0,
+    "z": 43,
+    "rayon": 38,
+    "couleur": "255,186,96",
+    "jour": false
+   }
+  }
+ }
+}

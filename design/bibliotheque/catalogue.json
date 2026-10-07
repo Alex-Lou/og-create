@@ -41224,6 +41224,60 @@
    "statut": "ok"
   },
   {
+   "id": "decor/defenses/torche_allumee",
+   "rubrique": "decor",
+   "titre": "Torche de bois flotté, allumée",
+   "images": 3,
+   "fichiers": [
+    "svg/decor/defenses/torche_allumee_1.svg",
+    "svg/decor/defenses/torche_allumee_2.svg",
+    "svg/decor/defenses/torche_allumee_3.svg"
+   ],
+   "cadre": [
+    -50,
+    -115,
+    100,
+    140
+   ],
+   "ms_par_image": 111,
+   "parcours": "tuto-3",
+   "statut": "ok"
+  },
+  {
+   "id": "decor/defenses/torche_eteinte",
+   "rubrique": "decor",
+   "titre": "Torche de bois flotté, éteinte",
+   "images": 1,
+   "fichiers": [
+    "svg/decor/defenses/torche_eteinte.svg"
+   ],
+   "cadre": [
+    -50,
+    -115,
+    100,
+    140
+   ],
+   "parcours": "tuto-3",
+   "statut": "ok"
+  },
+  {
+   "id": "decor/defenses/torche_icone",
+   "rubrique": "decor",
+   "titre": "Torche de bois flotté (icône)",
+   "images": 1,
+   "fichiers": [
+    "svg/decor/defenses/torche_icone.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    32,
+    32
+   ],
+   "parcours": "tuto-3",
+   "statut": "ok"
+  },
+  {
    "id": "decor/embrume/embrume_1x1",
    "rubrique": "decor",
    "titre": "Brume du bâtiment embrumé, emprise 1 × 1",
