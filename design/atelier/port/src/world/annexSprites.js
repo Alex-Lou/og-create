@@ -127,6 +127,7 @@ function crop(kind, x, y, f, n, k) {
     + ell(x - 1.6, y - 3.6, 1.4, 0.8, 'rgba(255,255,255,.3)')
     + ln([x, y - 5.6], [x + 1, y - 7.4], '#6A8A3A', 1.2);
 }
+// … et l'épouvantail au piquet de gauche, ses bras de paille qui flottent au vent
 const champ = {
   layers: [{
     frame: [-34, -30, 68, 48],
@@ -146,8 +147,18 @@ const champ = {
         const [x, y] = T.p(p.du, p.dv, 0);
         out += crop(kind, x, y, f, n, p.k);
       }
-      return out + post(T, 0.44, 0.44, 0, 8, WOOD) + ln(T.p(0.44, -0.44, 7), T.p(0.44, 0.44, 7), 'rgba(235,225,200,.8)', 0.5)
+      out += post(T, 0.44, 0.44, 0, 8, WOOD) + ln(T.p(0.44, -0.44, 7), T.p(0.44, 0.44, 7), 'rgba(235,225,200,.8)', 0.5)
         + ln(T.p(-0.44, 0.44, 7), T.p(0.44, 0.44, 7), 'rgba(235,225,200,.8)', 0.5);
+      // l'épouvantail au piquet de gauche : chapeau de paille, tête de toile, chemise, bras de paille qui flottent
+      const [ex, ey] = T.p(-0.44, 0.44, 8), sw = wave(f, n, 0.8);
+      return out + ln([ex - 6, ey - 4], [ex + 6, ey - 4.6], WOOD.right, 1.2)
+        + `<path d="M${f2(ex - 3.4)},${f2(ey - 6)} L${f2(ex + 3.4)},${f2(ey - 6.4)} L${f2(ex + 2.6)},${f2(ey + 1.6)} L${f2(ex - 2.6)},${f2(ey + 1.8)} Z" fill="#6FA3D9" stroke="${OUT}" stroke-width="0.5"/>`
+        + ln([ex - 2.8, ey - 2], [ex + 2.8, ey - 2.3], '#E2574C', 0.8)
+        + [-1, 1].map(s => `<path d="M${f2(ex + s * 6)},${f2(ey - 4.4 + (s > 0 ? -0.3 : 0))} l${f2(s * 1.4)},${f2(1.6 + sw * s * 0.4)} M${f2(ex + s * 6)},${f2(ey - 4.4)} l${f2(s * 1.8)},${f2(0.4 + sw * s * 0.3)}" stroke="${STRAW.left}" stroke-width="0.8" fill="none" stroke-linecap="round"/>`).join('')
+        + `<circle cx="${f2(ex)}" cy="${f2(ey - 9)}" r="2.6" fill="#E8D8B0" stroke="${OUT}" stroke-width="0.5"/>`
+        + dot(ex - 0.9, ey - 9.4, 0.4, '#3D3A36') + dot(ex + 0.9, ey - 9.4, 0.4, '#3D3A36') + `<path d="M${f2(ex - 1)},${f2(ey - 8)} q1,0.8 2,0" stroke="#3D3A36" stroke-width="0.4" fill="none"/>`
+        + ell(ex, ey - 11, 5, 1.4, STRAW.top, ` stroke="${OUT}" stroke-width="0.5"`) + `<path d="M${f2(ex - 2.4)},${f2(ey - 11)} Q${f2(ex)},${f2(ey - 15)} ${f2(ex + 2.4)},${f2(ey - 11)} Z" fill="${STRAW.left}" stroke="${OUT}" stroke-width="0.5"/>`
+        + ln([ex - 2.3, ey - 11.6], [ex + 2.3, ey - 11.6], '#E2574C', 0.7);
     }
   }]
 };
