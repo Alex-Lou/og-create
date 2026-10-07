@@ -4,7 +4,7 @@
 // - parapluie : marcher sous un parapluie (la pluie) ; la toile passe au-dessus de la tête : cadre CADRE_PARAPLUIE ;
 // - valise : les nouveaux venus de l'épilogue arrivent avec leur bagage ;
 // - couché : dormir allongé sous une couverture (la nuit), la tête à gauche ; cadre CADRE_COUCHE ;
-// - mains tendues vers le feu (la veillée, HISTOIRE.md § 10), debout ou assis (design/atelier/assis.js).
+// - mains tendues vers le feu et applaudir (la veillée, HISTOIRE.md § 10), debout ou assis (design/atelier/assis.js).
 // Le travail est le geste du métier de chaque maître (sa pose « action »), dans les trois vues : rien à ajouter ici.
 const { OUT, P, E, L, limb, zee, r2, frame, arm } = require('./troupe');
 
@@ -126,4 +126,45 @@ function tendre({ view, n }) {
 // Debout : frame(avecMainsTendues(c), vue, 'action', n) ; assis : assis(c, vue, n, null, tendre)
 const avecMainsTendues = c => ({ ...c, uid: `${c.uid}mt`, pose: tendre });
 
-module.exports = { lanterne, parapluie, valise, avecLanterne, avecParapluie, avecValise, couche, CADRE_PARAPLUIE, CADRE_COUCHE, ZEDS, paume, tranche, tendre, avecMainsTendues };
+// le claquement : trois petits traits clairs (bordés de sombre, lisibles sur n'importe quel habit) qui partent de (x, y)
+const eclat = (x, y) => [[-0.8, -0.75], [0, -1.1], [0.8, -0.75]].map(([dx, dy]) => {
+  const p = [x + dx * 1.2, y + dy * 1.2], q = [x + dx * 2.4, y + dy * 2.4];
+  return L(p, q, OUT, 1.45) + L(p, q, '#FFF6CC', 0.55);
+}).join('');
+// Applaudir, en riant ; 2 images : les mains s'écartent, puis se rejoignent (le claquement) devant la poitrine.
+//   - de face, les mains se voient de côté, paume contre paume ;
+//   - de trois quarts avant, elles se rejoignent devant soi, vers le regard ;
+//   - de dos, les mains sont devant le buste (cachées) : les coudes s'écartent puis se resserrent, le claquement
+//     dépasse sur le côté.
+function applaudir({ view, n }) {
+  const [a, b] = this.shoulders;
+  const y = a[1] + 6.2;
+  if (view === 'front') {
+    const g = n ? 1.35 : 4;
+    return {
+      expr: 'rire',
+      left: arm(this, a, [24 - g, y], [a[0] - 1.2, a[1] + 7.6], tranche(this, [24 - g, y - 0.5], -1)),
+      right: arm(this, b, [24 + g, y], [b[0] + 1.2, b[1] + 7.6], tranche(this, [24 + g, y - 0.5], 1)),
+      over: n ? eclat(24, y - 3.2) : ''
+    };
+  }
+  if (view === 'se') {
+    const x = a[0] - 4.4, g = n ? 0.7 : 3.2;
+    return {
+      expr: 'rire',
+      right: arm(this, b, [x + g, y - 0.4], [b[0] - 2.6, b[1] + 7.2], tranche(this, [x + g, y - 0.9], -1, 0.95)),
+      left: arm(this, a, [x - g, y], [a[0] - 1.2, a[1] + 7.4], tranche(this, [x - g, y - 0.5], 1)),
+      over: n ? eclat(x - 0.2, y - 3.8) : ''
+    };
+  }
+  const k = n ? 1.4 : 0;
+  return {
+    left: '', right: '',
+    under: arm(this, a, [24 - 0.6, y - 1], [a[0] - 3.2 + k, a[1] + 5.6]) + arm(this, b, [24 + 0.6, y - 1], [b[0] + 3.2 - k, b[1] + 5.6]),
+    over: n ? eclat(b[0] + 3.4, a[1] + 1.8) : ''
+  };
+}
+// Debout : frame(avecApplaudir(c), vue, 'action', n) ; assis : assis(c, vue, n, null, applaudir)
+const avecApplaudir = c => ({ ...c, uid: `${c.uid}ap`, pose: applaudir });
+
+module.exports = { lanterne, parapluie, valise, avecLanterne, avecParapluie, avecValise, couche, CADRE_PARAPLUIE, CADRE_COUCHE, ZEDS, paume, tranche, tendre, avecMainsTendues, applaudir, avecApplaudir };
