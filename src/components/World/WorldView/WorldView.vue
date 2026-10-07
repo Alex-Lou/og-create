@@ -216,6 +216,7 @@
           :charges="state.charges.count"
           :expedition="state.expedition || null"
           :trip-left="tripLeft"
+          :core-left="state.map.coreLeft || []"
           :busy="busy"
           @explore="explore(zone)"
           @buy="buyZone(zone)"
