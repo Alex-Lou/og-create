@@ -2,6 +2,7 @@
 // baguette de noisetier fourchue, bocal vide à la ceinture de corde ; toujours à moitié endormi.
 // Action : baguette tenue à deux mains, pointe en l'air ; image 2 : elle plonge vers le sol et il se réveille d'un coup.
 const { OUT, P, E, L, limb, clip, expression, arm, bareFoot, r2 } = require('./troupe');
+const { capucheRabattue, reperes } = require('./avatar_accessoires');
 
 const C = {
   skin: '#F5CFA8', skinS: '#E0AE86',
@@ -39,10 +40,12 @@ const COAT = 'M15.8,37.4 Q24,35 32.2,37.4 L35,52.4 Q24,55 13,52.4 Z';
 
 // Bonnet de nuit rayé, la pointe retombe à droite de l'écran (miroir pour le dos)
 const CAP = 'M12,13.8 Q12.6,4.6 23.4,3.8 Q34.4,3.2 39.6,10.8 Q42.8,16 41.8,23.4 Q40.2,17 36.4,13.6 Q30,11.4 24,11.6 Q17,11.6 12,13.8 Z';
-function cap(uid) {
+// le même bonnet vu de dos : son bord du bas suit le revers, qui descend au milieu (rien ne se voit entre les deux)
+const CAP_DOS = 'M12,13.8 Q12.6,4.6 23.4,3.8 Q34.4,3.2 39.6,10.8 Q42.8,16 41.8,23.4 Q40.2,17 36.8,14.6 Q24,18 11.2,14.6 Q11.4,14.1 12,13.8 Z';
+function cap(uid, d = CAP) {
   const stripes = [20, 28, 36, 44].map(x => `<path d="M${x},0 L${x + 2.6},0 L${x - 5.4},22 L${x - 8},22 Z" fill="${C.cream}"/>`).join('');
-  return P(CAP, C.cap) + clip(`${uid}k`, CAP, `<rect x="8" y="0" width="38" height="22" fill="${C.capS}"/><ellipse cx="22" cy="5.6" rx="17" ry="9.4" fill="${C.cap}"/>${stripes}`)
-    + P(CAP, 'none') + E(41.6, 24.4, 2.2, 2.2, C.cream) + E(42.2, 25.2, 0.8, 0.7, '#DCCDB5', 0);
+  return P(d, C.cap) + clip(`${uid}k`, d, `<rect x="8" y="0" width="38" height="22" fill="${C.capS}"/><ellipse cx="22" cy="5.6" rx="17" ry="9.4" fill="${C.cap}"/>${stripes}`)
+    + P(d, 'none') + E(41.6, 24.4, 2.2, 2.2, C.cream) + E(42.2, 25.2, 0.8, 0.7, '#DCCDB5', 0);
 }
 
 const ondin = {
@@ -56,15 +59,18 @@ const ondin = {
   // la baguette ne quitte pas sa main droite (repos et marche)
   hold(c, h) { return rod(h, 1); },
 
+  // derrière le corps : la capuche rabattue de son ciré, qui dépasse derrière le cou (de face, de trois quarts)
+  backItems(c, { view }) { return view === 'ne' ? '' : capucheRabattue(c.uid, view, reperes(c), C.coat, C.coatS); },
+
   body(c, { view }) {
     const se = view === 'se';
     let s = P(COAT, C.coat) + clip(`${c.uid}c`, COAT, `<rect x="${se ? 26.2 : 27.8}" y="34" width="10" height="22" fill="${C.coatS}"/>`
       + `<path d="M12,52 Q24,54.8 36,52 L36,57 L12,57 Z" fill="${C.coatS}"/>`
       + `<rect x="14.6" y="39" width="1.3" height="11" rx="0.65" fill="${C.coatH}"/>`) + P(COAT, 'none');
     if (view === 'ne') {
-      // de dos : couture, capuche rabattue, ceinture de corde
+      // de dos : couture, capuche rabattue (la même pour tous : avatar_accessoires.js), ceinture de corde
       s += P('M24,42.4 L24,53.8', 'none', 0.7);
-      s += P('M16.8,37.6 Q24,41.6 31.2,37.6 L31.8,42.4 Q24,45.6 16.2,42.4 Z', C.coat) + P('M17.8,41.2 Q24,44 30.2,41.2', 'none', 0.7);
+      s += capucheRabattue(c.uid, view, reperes(c), C.coat, C.coatS);
       return s + cord('M13.9,46.4 Q24,48.6 34.1,46.4', 1.1, C.rope);
     }
     const k = se ? -1.6 : 0;
@@ -97,7 +103,7 @@ const ondin = {
       s += P(back, C.hair) + clip(`${c.uid}h`, back, `<rect x="8" y="6" width="34" height="30" fill="${C.hairS}"/><ellipse cx="22.4" cy="19.4" rx="13.8" ry="12" fill="${C.hair}"/>`) + P(back, 'none');
       s += P('M18.4,19 Q17.8,25.4 19.2,31.4', 'none', 0.6) + P('M28.8,19 Q29.8,25.4 28.6,31.4', 'none', 0.6);
       // bonnet vu de dos : le revers fait le tour du crâne, la pointe retombe à gauche de l'écran
-      s += `<g transform="translate(48 0) scale(-1 1)">${cap(c.uid)}</g>`;
+      s += `<g transform="translate(48 0) scale(-1 1)">${cap(c.uid, CAP_DOS)}</g>`;
       s += P('M11.2,13.4 Q24,16.8 36.8,13.4 L37,15.6 Q24,19 11,15.6 Z', C.cream, 0.9);
       return `<g transform="translate(0 ${HY})">${s}</g>`;
     }

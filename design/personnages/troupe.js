@@ -157,8 +157,10 @@ function arm(c, a, b, elbow, main) {
     const at = k => [b[0] - (b[0] - f[0]) * k / len, b[1] - (b[1] - f[1]) * k / len];
     s += limb(at(2.5), at(0.9), c.armW, c.cuff);
   }
-  return s + (main != null ? main : E(b[0], b[1], 2.1, 2.1, c.hand || c.skin)); // main (c.hand : mains terreuses, gants…)
+  return s + (main != null ? main : poing(c, b)); // main (c.hand : mains terreuses, gants…)
 }
+// Le poing rond ; avec des moufles (c.moufle), le pouce se pose par-dessus, du côté du corps
+const poing = (c, b) => E(b[0], b[1], 2.1, 2.1, c.hand || c.skin) + (c.moufle ? E(b[0] + (b[0] < 24 ? 2.1 : -2.1), b[1] - 0.5, 0.95, 1.2, c.hand, 0.85) : '');
 
 // Bras d'un naufragé : c.sleeves 'roll' (manche retroussée : bourrelet, avant-bras nu) ou 'torn' (arrachée au coude :
 // bord en dents, avant-bras nu) ; c.bandage 'left' ou 'right' : un bandage de chiffon sur l'avant-bras de ce côté
@@ -204,7 +206,7 @@ function armOf(c, pts, main) {
       const t = at(4); s += L(t, [t[0] + nx * 2.2 - ux * 0.4, t[1] + ny * 2.2 - uy * 0.4], OUT, 1.5) + L(t, [t[0] + nx * 2.2 - ux * 0.4, t[1] + ny * 2.2 - uy * 0.4], '#F4EEDF', 0.7);
     }
   }
-  return s + (main != null ? main : E(b[0], b[1], 2.1, 2.1, c.hand || c.skin));
+  return s + (main != null ? main : poing(c, b));
 }
 
 // Une image d'un personnage
@@ -260,4 +262,4 @@ function frame(c, view, pose, n, expr) {
 const svg = (body, scale = 1) => `<svg xmlns="http://www.w3.org/2000/svg" width="${48 * scale}" height="${64 * scale}" viewBox="0 0 48 64">${body}</svg>`;
 const POSES = [['face_repos', 'front', 'repos', 2], ['avant_marche', 'se', 'marche', 4], ['dos_marche', 'ne', 'marche', 4], ['face_salut', 'front', 'salut', 2]];
 
-module.exports = { OUT, W, r2, st, P, E, L, limb, clip, eyes, expression, EXPRS, drop, zee, arm, bareFoot, shoe, leg, frame, svg, POSES };
+module.exports = { OUT, W, r2, st, P, E, L, limb, clip, eyes, expression, EXPRS, drop, zee, arm, poing, bareFoot, shoe, leg, frame, svg, POSES };

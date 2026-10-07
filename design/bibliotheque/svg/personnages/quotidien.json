@@ -7269,7 +7269,8 @@
      "tete": {
       "id": "bonnet",
       "couleurs": [
-       "marine"
+       "marine",
+       "creme"
       ]
      }
     }
@@ -8299,7 +8300,8 @@
      "tete": {
       "id": "bonnet",
       "couleurs": [
-       "marine"
+       "marine",
+       "creme"
       ]
      },
      "dos": {

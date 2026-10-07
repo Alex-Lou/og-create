@@ -91,7 +91,11 @@ const NUANCIERS = {
 const NOMS_NUANCIERS = {
   peau: noms(PEAU), cheveux: noms(CHEVEUX), yeux: noms(YEUX), tissus: noms(TISSUS), metaux: noms(METAUX), levres: noms(LEVRES), teintures: noms(TEINTURES)
 };
-const TEINTURES_GAINS = Object.fromEntries(TEINTURES.map(([k, , , rarete, source]) => [k, { rarete, source }]));
+// Les prix en écus, à la boutique, selon la rareté. Ce qui vient des coffres ne s'achète pas (pas de prix) ; ce qui est
+// gratuit vaut 0.
+const PRIX = { commun: 80, rare: 200, epique: 500, legendaire: 1200 };
+const prix = (rarete, source) => (source === 'boutique' ? { prix: PRIX[rarete] } : source === 'gratuit' ? { prix: 0 } : {});
+const TEINTURES_GAINS = Object.fromEntries(TEINTURES.map(([k, , , rarete, source]) => [k, { rarete, source, ...prix(rarete, source) }]));
 
 // ---- les formes ----
 const FORMES = {
@@ -122,12 +126,12 @@ const EMPLACEMENTS = {
   dessus: 'Par-dessus', pieds: 'Aux pieds', mains: 'Aux mains'
 };
 // a : [nom, emplacement, zones de couleur (« tissu » ou « metal »), couleurs par défaut, rareté, source, garde (naufragé),
-// saison (facultatif)]
+// saison (facultatif)] ; le prix suit la rareté et la source (PRIX)
 // garde : ce que la mer laisse au naufragé (les chapeaux, les sacs et ce qu'on tient sont perdus, le maquillage part)
 // saison : une tenue de saison (« hiver » ou « pluie »), qu'on met par-dessus sa tenue ; elle ne se tire pas au hasard
-const A = (nom, emplacement, zones, defaut, rarete, source, garde, saison) => ({ nom, emplacement, zones, defaut, rarete, source, garde, ...(saison ? { saison } : {}) });
+const A = (nom, emplacement, zones, defaut, rarete, source, garde, saison) => ({ nom, emplacement, zones, defaut, rarete, source, ...prix(rarete, source), garde, ...(saison ? { saison } : {}) });
 const ACCESSOIRES = {
-  bonnet: A('Bonnet', 'tete', ['tissu'], ['marine'], 'commun', 'gratuit', false),
+  bonnet: A('Bonnet', 'tete', ['tissu', 'tissu'], ['marine', 'creme'], 'commun', 'gratuit', false),
   paille: A('Chapeau de paille', 'tete', ['tissu'], ['rouge'], 'commun', 'gratuit', false),
   casquette: A('Casquette', 'tete', ['tissu'], ['ciel'], 'commun', 'gratuit', false),
   bandana: A('Bandana', 'tete', ['tissu'], ['rouge'], 'commun', 'gratuit', true),
@@ -168,7 +172,11 @@ const ACCESSOIRES = {
   cire: A('Ciré', 'dessus', ['tissu'], ['soleil'], 'commun', 'gratuit', false, 'pluie'),
   bottesPluie: A('Bottes de pluie', 'pieds', ['tissu'], ['rouge'], 'commun', 'gratuit', false, 'pluie'),
   bottesFourrees: A('Bottes fourrées', 'pieds', ['tissu', 'tissu'], ['caramel', 'creme'], 'commun', 'gratuit', false, 'hiver'),
-  moufles: A('Moufles', 'mains', ['tissu', 'tissu'], ['rouge', 'creme'], 'commun', 'gratuit', false, 'hiver')
+  moufles: A('Moufles', 'mains', ['tissu', 'tissu'], ['rouge', 'creme'], 'commun', 'gratuit', false, 'hiver'),
+  cacheOreilles: A('Cache-oreilles', 'tete', ['tissu', 'tissu'], ['rouge', 'rouge'], 'commun', 'gratuit', false, 'hiver'),
+  chale: A('Châle', 'dessus', ['tissu', 'tissu'], ['prune', 'creme'], 'commun', 'gratuit', false, 'hiver'),
+  pelerine: A('Pèlerine', 'dessus', ['tissu', 'tissu'], ['marine', 'creme'], 'commun', 'gratuit', false, 'hiver'),
+  etole: A('Étole de fourrure', 'dessus', ['tissu'], ['creme'], 'commun', 'gratuit', false, 'hiver')
 };
 
 // ---- les choix ----
@@ -207,8 +215,9 @@ function verifier(choix = {}) {
     const def = ACCESSOIRES[a.id];
     if (!def) throw new Error(`accessoire inconnu : ${a.id}`);
     if (def.emplacement !== place) throw new Error(`accessoire ${a.id} : il se porte en « ${def.emplacement} », pas en « ${place} »`);
-    const cs = a.couleurs || def.defaut;
-    if (cs.length !== def.zones.length) throw new Error(`accessoire ${a.id} : ${def.zones.length} couleur(s) attendue(s)`);
+    // une couleur qui manque prend celle par défaut (un choix enregistré avant que l'accessoire gagne une zone de couleur)
+    if (a.couleurs && a.couleurs.length > def.zones.length) throw new Error(`accessoire ${a.id} : ${def.zones.length} couleur(s) attendue(s)`);
+    const cs = def.zones.map((z, i) => (a.couleurs && a.couleurs[i]) || def.defaut[i]);
     cs.forEach((cle, i) => { if (!accepte(def.zones[i] === 'metal' ? 'metaux' : 'tissus', cle)) throw new Error(`accessoire ${a.id} : couleur inconnue ${cle}`); });
     o.accessoires[place] = { id: a.id, couleurs: cs };
   }
@@ -257,7 +266,7 @@ function auHasard(n, { gratuit = true } = {}) {
 }
 
 module.exports = {
-  NUANCIERS, NOMS_NUANCIERS, TEINTURES_GAINS, FORMES, EMPLACEMENTS, ACCESSOIRES, CHOIX, DEFAUT,
+  NUANCIERS, NOMS_NUANCIERS, TEINTURES_GAINS, PRIX, FORMES, EMPLACEMENTS, ACCESSOIRES, CHOIX, DEFAUT,
   verifier, libelle, couleur, couleursAccessoire, naufrageChoix, auHasard, graine,
   hsl, hex, mix, tone, delave, clarte
 };

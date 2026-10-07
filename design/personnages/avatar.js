@@ -9,7 +9,7 @@
 const { OUT, P, E, L, limb, clip, expression, arm, shoe, r2 } = require('./troupe');
 const choix = require('./avatar_choix');
 const { verifier, couleur, couleursAccessoire, tone, mix, hsl, clarte } = choix;
-const { couche, PORTE } = require('./avatar_accessoires');
+const { couche, PORTE, capucheRabattue, reperes } = require('./avatar_accessoires');
 
 // ---- le corps : taille et corpulence ----
 // Taille : le haut du corps monte ou descend, les pieds restent au sol (les jambes s'allongent ou raccourcissent)
@@ -532,7 +532,8 @@ function body(c, ctx) {
   if (ne) {
     s += P('M24,33.8 L24,47.4', 'none', 0.5);
     if (haut === 'chemise' || haut === 'veste') s += P('M17.6,31.4 Q24,34.4 30.4,31.4 L30,33.6 Q24,36.2 18,33.6 Z', topS, 0.8);
-    if (haut === 'sweat') s += P('M16.4,30.8 Q24,29.2 31.6,30.8 Q32.8,37.6 24,40.2 Q15.2,37.6 16.4,30.8 Z', topS, 0.9) + P('M19.6,32.6 Q24,37.6 28.4,32.6', 'none', 0.6);
+    // la capuche du sweat, posée dans le dos (la même pour tous) ; sous un manteau, on ne la voit pas
+    if (haut === 'sweat' && !c.o.accessoires.dessus) s += capucheRabattue(c.uid, view, reperes(c), top, topS);
     if (robeE) s += P('M17.6,31.4 Q24,34 30.4,31.4 L30,33.2 Q24,35.8 18,33.2 Z', '#FFFDF6', 0.8);
   } else if (robeE) {
     // col Claudine : deux pans arrondis, blancs

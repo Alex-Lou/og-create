@@ -115389,6 +115389,215 @@
    "statut": "ok"
   },
   {
+   "id": "personnages/objets/bonnet_icone",
+   "rubrique": "personnages",
+   "sujet": "bonnet",
+   "pose": "icone",
+   "titre": "Bonnet, icône",
+   "images": 1,
+   "fichiers": [
+    "svg/personnages/objets/bonnet_icone.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    32,
+    32
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "personnages/objets/bottesFourrees_icone",
+   "rubrique": "personnages",
+   "sujet": "bottesFourrees",
+   "pose": "icone",
+   "titre": "Bottes fourrées, icône",
+   "images": 1,
+   "fichiers": [
+    "svg/personnages/objets/bottesFourrees_icone.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    32,
+    32
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "personnages/objets/bottesPluie_icone",
+   "rubrique": "personnages",
+   "sujet": "bottesPluie",
+   "pose": "icone",
+   "titre": "Bottes de pluie, icône",
+   "images": 1,
+   "fichiers": [
+    "svg/personnages/objets/bottesPluie_icone.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    32,
+    32
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "personnages/objets/cacheOreilles_icone",
+   "rubrique": "personnages",
+   "sujet": "cacheOreilles",
+   "pose": "icone",
+   "titre": "Cache-oreilles, icône",
+   "images": 1,
+   "fichiers": [
+    "svg/personnages/objets/cacheOreilles_icone.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    32,
+    32
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "personnages/objets/chale_icone",
+   "rubrique": "personnages",
+   "sujet": "chale",
+   "pose": "icone",
+   "titre": "Châle, icône",
+   "images": 1,
+   "fichiers": [
+    "svg/personnages/objets/chale_icone.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    32,
+    32
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "personnages/objets/cire_icone",
+   "rubrique": "personnages",
+   "sujet": "cire",
+   "pose": "icone",
+   "titre": "Ciré, icône",
+   "images": 1,
+   "fichiers": [
+    "svg/personnages/objets/cire_icone.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    32,
+    32
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "personnages/objets/echarpe_icone",
+   "rubrique": "personnages",
+   "sujet": "echarpe",
+   "pose": "icone",
+   "titre": "Écharpe rayée, icône",
+   "images": 1,
+   "fichiers": [
+    "svg/personnages/objets/echarpe_icone.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    32,
+    32
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "personnages/objets/etole_icone",
+   "rubrique": "personnages",
+   "sujet": "etole",
+   "pose": "icone",
+   "titre": "Étole de fourrure, icône",
+   "images": 1,
+   "fichiers": [
+    "svg/personnages/objets/etole_icone.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    32,
+    32
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "personnages/objets/manteau_icone",
+   "rubrique": "personnages",
+   "sujet": "manteau",
+   "pose": "icone",
+   "titre": "Manteau d'hiver, icône",
+   "images": 1,
+   "fichiers": [
+    "svg/personnages/objets/manteau_icone.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    32,
+    32
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "personnages/objets/moufles_icone",
+   "rubrique": "personnages",
+   "sujet": "moufles",
+   "pose": "icone",
+   "titre": "Moufles, icône",
+   "images": 1,
+   "fichiers": [
+    "svg/personnages/objets/moufles_icone.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    32,
+    32
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "personnages/objets/pelerine_icone",
+   "rubrique": "personnages",
+   "sujet": "pelerine",
+   "pose": "icone",
+   "titre": "Pèlerine, icône",
+   "images": 1,
+   "fichiers": [
+    "svg/personnages/objets/pelerine_icone.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    32,
+    32
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
    "id": "plantes/aiguille",
    "rubrique": "plantes",
    "titre": "Aiguille de roche (grande, seule)",
