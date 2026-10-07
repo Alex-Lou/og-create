@@ -338,3 +338,6 @@ export const RUINES = {
   cle_du_phare: { frame: PROP_BOX, n: 2, label: 'La clé du phare sous sa pierre', step: 'VI', draw: n => lighthouseKey(n) },
   phare_eteint: { frame: { x: -72, y: -176, w: 144, h: 208 }, n: 2, label: 'Le phare éteint des Anciens', step: 'VI', draw: n => deadLighthouse(n) }
 };
+// Chaque dessin repart de zéro pour nommer ses dégradés (id) : ses noms ne dépendent plus de ce qu'on a dessiné avant, et
+// le jeu (le générateur du décor) retrouve les fichiers à l'octet près
+for (const a of Object.values(RUINES)) { const dessin = a.draw; a.draw = n => { uid = 0; return dessin(n); }; }

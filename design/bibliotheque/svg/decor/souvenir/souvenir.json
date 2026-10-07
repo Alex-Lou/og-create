@@ -3,7 +3,7 @@
   "Le souvenir retrouvé (HISTOIRE.md § 14) : un éclat doré part du Grimoire vers le naufragé ; à l'arrivée, une gerbe de lumière l'enveloppe ; son sceau s'allume au-dessus de sa tête ; il se lève, outil en main.",
   "eclat : 4 images en boucle (~90 ms), ancre au centre de l'éclat ; le jeu le fait glisser du Grimoire jusqu'à la poitrine du naufragé.",
   "arrivee : 5 images, une fois (~120, 160, 200, 220, 260 ms), ancre aux pieds du naufragé, posée par-dessus lui ; le jeu remplace le naufragé (pose endormi) par le maître (pose « action », l'outil en main) sous l'éclair de l'image 1.",
-  "sceaux : un par chapitre, ancre au centre ; éteint (1 image), allumé (2 images en boucle, ~500 ms), posé au-dessus de la tête du maître (centre ~8 au-dessus du haut de sa tête). Sigles de src/book/grimoire.js."
+  "sceaux : un par chapitre, ancre au centre ; éteint (1 image), allumé (2 images en boucle, ~500 ms), posé au-dessus de la tête du maître (centre ~8 au-dessus du haut de sa tête) ; cadre : celui de l'allumé, cadre_eteint : celui de l'éteint. Sigles de src/book/grimoire.js."
  ],
  "souvenir": {
   "eclat": {
@@ -53,6 +53,12 @@
     31,
     31
    ],
+   "cadre_eteint": [
+    -15,
+    -15,
+    30,
+    30
+   ],
    "ms_par_image": 500,
    "fichiers": {
     "eteint": [
@@ -71,6 +77,12 @@
     -15.5,
     31,
     31
+   ],
+   "cadre_eteint": [
+    -15,
+    -15,
+    30,
+    30
    ],
    "ms_par_image": 500,
    "fichiers": {
@@ -91,6 +103,12 @@
     31,
     31
    ],
+   "cadre_eteint": [
+    -15,
+    -15,
+    30,
+    30
+   ],
    "ms_par_image": 500,
    "fichiers": {
     "eteint": [
@@ -109,6 +127,12 @@
     -15.5,
     31,
     31
+   ],
+   "cadre_eteint": [
+    -15,
+    -15,
+    30,
+    30
    ],
    "ms_par_image": 500,
    "fichiers": {
@@ -129,6 +153,12 @@
     31,
     31
    ],
+   "cadre_eteint": [
+    -15,
+    -15,
+    30,
+    30
+   ],
    "ms_par_image": 500,
    "fichiers": {
     "eteint": [
@@ -148,6 +178,12 @@
     31,
     31
    ],
+   "cadre_eteint": [
+    -15,
+    -15,
+    30,
+    30
+   ],
    "ms_par_image": 500,
    "fichiers": {
     "eteint": [
@@ -166,6 +202,12 @@
     -15.5,
     31,
     31
+   ],
+   "cadre_eteint": [
+    -15,
+    -15,
+    30,
+    30
    ],
    "ms_par_image": 500,
    "fichiers": {

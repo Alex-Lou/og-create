@@ -135,6 +135,8 @@ détails propres à un lot : places des objets de boutique, lumières des palier
   Les coffres : `coffre(rarete, etat, n)` (`ferme`, `ouverture`, `ouvert`, `rayons`), `coffreIcone(rarete)`, `COFFRES`.
   Le décor : `decor(categorie, nom, n)` (`creations`, `lieux`, `gisements`, `annexes`, `enseignes`, `ilots` ; ex.
   `decor('annexes', 'champ_ble', 1)`), la liste et ce que dit `decor.json` dans `decors()`.
+  Et `camp(objet, n)`, `ruine(objet, n)` (les objets de `camp.json` et `ruines.json`), `element(nom, n)` (le bâtiment
+  embrumé, la cage aux poules, l'œuf, les signes d'Anya, l'éclat du souvenir, les sceaux : `ELEMENTS`), `crabe(pose)`.
   `node generer.mjs` (les familles), `node generer.mjs chantiers liste`, `node generer.mjs chantiers etapeDuMontage 2x2 toit 1
   --sortie toit.svg`, `node generer.mjs chantiers tout <dossier>`.
 - **Icônes de l'interface** (`svg/interface/`, `interface.json`) : à afficher de 16 à 32 px, en `<img>` ou en SVG en

@@ -29,15 +29,15 @@ var __toESM = (mod, isNodeMode, target) => (target = mod != null ? __create(__ge
 // personnages/troupe.js
 var require_troupe = __commonJS({
   "personnages/troupe.js"(exports, module) {
-    var OUT2 = "#3C2819";
+    var OUT3 = "#3C2819";
     var W = 1.1;
     var r23 = /* @__PURE__ */ __name((n) => Math.round(n * 100) / 100, "r2");
-    var st = /* @__PURE__ */ __name((w = W) => `stroke="${OUT2}" stroke-width="${w}" stroke-linejoin="round" stroke-linecap="round"`, "st");
+    var st = /* @__PURE__ */ __name((w = W) => `stroke="${OUT3}" stroke-width="${w}" stroke-linejoin="round" stroke-linecap="round"`, "st");
     var P2 = /* @__PURE__ */ __name((d, fill, w = W) => `<path d="${d}" fill="${fill}" ${w ? st(w) : 'stroke="none"'}/>`, "P");
     var E = /* @__PURE__ */ __name((cx, cy, rx, ry, fill, w = W) => `<ellipse cx="${r23(cx)}" cy="${r23(cy)}" rx="${r23(rx)}" ry="${r23(ry)}" fill="${fill}" ${w ? st(w) : 'stroke="none"'}/>`, "E");
     var L = /* @__PURE__ */ __name((a, b, color, w) => `<line x1="${r23(a[0])}" y1="${r23(a[1])}" x2="${r23(b[0])}" y2="${r23(b[1])}" stroke="${color}" stroke-width="${r23(w)}" stroke-linecap="round"/>`, "L");
-    var limb = /* @__PURE__ */ __name((a, b, w, fill) => L(a, b, OUT2, w + W * 2) + L(a, b, fill, w), "limb");
-    var clip = /* @__PURE__ */ __name((id, d, inner) => `<clipPath id="${id}"><path d="${d}"/></clipPath><g clip-path="url(#${id})">${inner}</g>`, "clip");
+    var limb = /* @__PURE__ */ __name((a, b, w, fill) => L(a, b, OUT3, w + W * 2) + L(a, b, fill, w), "limb");
+    var clip = /* @__PURE__ */ __name((id3, d, inner) => `<clipPath id="${id3}"><path d="${d}"/></clipPath><g clip-path="url(#${id3})">${inner}</g>`, "clip");
     var EYE_DARK = "#2A2420";
     var WHITE = "#FFFFFF";
     function eyes(list, mode, ry = 2.35, EYE = EYE_DARK) {
@@ -78,7 +78,7 @@ var require_troupe = __commonJS({
     var drop = /* @__PURE__ */ __name((x, y, r, fill, w = 0.7) => P2(`M${r23(x)},${r23(y - r * 1.7)} Q${r23(x + r * 1.5)},${r23(y + r * 0.2)} ${r23(x)},${r23(y + r)} Q${r23(x - r * 1.5)},${r23(y + r * 0.2)} ${r23(x)},${r23(y - r * 1.7)} Z`, fill, w) + E(x - r * 0.3, y - r * 0.1, r * 0.22, r * 0.35, WHITE, 0), "drop");
     var zee = /* @__PURE__ */ __name((x, y, z) => {
       const d = `M${r23(x)},${r23(y)} L${r23(x + z)},${r23(y)} L${r23(x)},${r23(y + z)} L${r23(x + z)},${r23(y + z)}`;
-      return `<path d="${d}" fill="none" stroke="${OUT2}" stroke-width="${r23(z * 0.5 + 0.8)}" stroke-linejoin="round" stroke-linecap="round"/><path d="${d}" fill="none" stroke="${WHITE}" stroke-width="${r23(z * 0.5)}" stroke-linejoin="round" stroke-linecap="round"/>`;
+      return `<path d="${d}" fill="none" stroke="${OUT3}" stroke-width="${r23(z * 0.5 + 0.8)}" stroke-linejoin="round" stroke-linecap="round"/><path d="${d}" fill="none" stroke="${WHITE}" stroke-width="${r23(z * 0.5)}" stroke-linejoin="round" stroke-linecap="round"/>`;
     }, "zee");
     function expression(g, ctx) {
       const { expr, n } = ctx;
@@ -138,7 +138,7 @@ var require_troupe = __commonJS({
       const toe = dir < 0 ? 1.4 : 0;
       const d = `M${r23(x - 2.3)},${r23(y)} L${r23(x + 2.3)},${r23(y)} Q${r23(x + 2.9)},${r23(y + 3.4)} ${r23(x + 1.4)},${r23(y + 4.3)} L${r23(x - 1.4 - toe)},${r23(y + 4.3)} Q${r23(x - 3.1 - toe)},${r23(y + 3.8)} ${r23(x - 2.3)},${r23(y)} Z`;
       let s = P2(d, c.skin) + E(x + 1.1, y + 1.4, 0.7, 1.1, c.skinS || c.skin, 0);
-      if (dir <= 0) for (const t of dir < 0 ? [-3, -1.9] : [-1, 0.4]) s += L([x + t, y + 3.5], [x + t, y + 4.1], OUT2, 0.45);
+      if (dir <= 0) for (const t of dir < 0 ? [-3, -1.9] : [-1, 0.4]) s += L([x + t, y + 3.5], [x + t, y + 4.1], OUT3, 0.45);
       return tilt ? `<g transform="rotate(${tilt} ${r23(x - (dir < 0 ? 3 : -3))} ${r23(y + 4.5)})">${s}</g>` : s;
     }
     __name(bareFoot, "bareFoot");
@@ -148,13 +148,13 @@ var require_troupe = __commonJS({
     }
     __name(leg, "leg");
     function arm(c, a, b, elbow, main) {
-      const pts2 = elbow ? [a, elbow, b] : [a, b];
-      if (c.sleeves || c.bandage) return armOf(c, pts2, main);
-      const d = "M" + pts2.map((p) => `${r23(p[0])},${r23(p[1])}`).join(" L");
+      const pts3 = elbow ? [a, elbow, b] : [a, b];
+      if (c.sleeves || c.bandage) return armOf(c, pts3, main);
+      const d = "M" + pts3.map((p) => `${r23(p[0])},${r23(p[1])}`).join(" L");
       const line = /* @__PURE__ */ __name((color, w) => `<path d="${d}" fill="none" stroke="${color}" stroke-width="${r23(w)}" stroke-linecap="round" stroke-linejoin="round"/>`, "line");
-      let s = line(OUT2, c.armW + W * 2) + line(c.sleeve, c.armW);
+      let s = line(OUT3, c.armW + W * 2) + line(c.sleeve, c.armW);
       if (c.cuff) {
-        const f = pts2[pts2.length - 2];
+        const f = pts3[pts3.length - 2];
         const len = Math.hypot(b[0] - f[0], b[1] - f[1]);
         const at = /* @__PURE__ */ __name((k) => [b[0] - (b[0] - f[0]) * k / len, b[1] - (b[1] - f[1]) * k / len], "at");
         s += limb(at(2.5), at(0.9), c.armW, c.cuff);
@@ -163,8 +163,8 @@ var require_troupe = __commonJS({
     }
     __name(arm, "arm");
     var poing = /* @__PURE__ */ __name((c, b) => E(b[0], b[1], 2.1, 2.1, c.hand || c.skin) + (c.moufle ? E(b[0] + (b[0] < 24 ? 2.1 : -2.1), b[1] - 0.5, 0.95, 1.2, c.hand, 0.85) : ""), "poing");
-    function armOf(c, pts2, main) {
-      const b = pts2[pts2.length - 1], f = pts2[pts2.length - 2];
+    function armOf(c, pts3, main) {
+      const b = pts3[pts3.length - 1], f = pts3[pts3.length - 2];
       const len = Math.hypot(b[0] - f[0], b[1] - f[1]) || 1;
       const ux = (b[0] - f[0]) / len, uy = (b[1] - f[1]) / len, nx = -uy, ny = ux;
       const at = /* @__PURE__ */ __name((k) => [b[0] - ux * k, b[1] - uy * k], "at");
@@ -176,24 +176,24 @@ var require_troupe = __commonJS({
       if (c.sleeves) {
         const k = Math.min(c.sleeveCut || 5, len * 0.62);
         cut = at(k);
-        const d = path([...pts2.slice(0, -1), cut]);
-        s += stroke(d, OUT2, c.armW + W * 2) + stroke(d, c.sleeve, c.armW);
+        const d = path([...pts3.slice(0, -1), cut]);
+        s += stroke(d, OUT3, c.armW + W * 2) + stroke(d, c.sleeve, c.armW);
         const fd = path([cut, b]);
-        s += stroke(fd, OUT2, fw + W * 2) + stroke(fd, c.skin, fw);
+        s += stroke(fd, OUT3, fw + W * 2) + stroke(fd, c.skin, fw);
         const h = c.armW / 2 + 0.5, P22 = /* @__PURE__ */ __name((k1, k2) => [cut[0] + nx * k1 + ux * k2, cut[1] + ny * k1 + uy * k2], "P2");
         if (c.sleeves === "torn") {
           const zig = [P22(h, -0.5), P22(h * 0.45, 1.5), P22(0, 0.4), P22(-h * 0.5, 1.6), P22(-h, -0.5)];
-          s += `<path d="${path([P22(h, -1.8), ...zig, P22(-h, -1.8)])} Z" fill="${c.sleeve}"/>` + stroke(path(zig), OUT2, 0.85);
+          s += `<path d="${path([P22(h, -1.8), ...zig, P22(-h, -1.8)])} Z" fill="${c.sleeve}"/>` + stroke(path(zig), OUT3, 0.85);
         } else {
           const r = h + 0.3, band = [P22(r, -0.7), P22(r, 0.75), P22(-r, 0.75), P22(-r, -0.7)];
-          s += `<path d="${path(band)} Z" fill="${c.cuff || c.sleeve}" stroke="${OUT2}" stroke-width="0.85" stroke-linejoin="round"/>` + L(P22(r * 0.7, -0.1), P22(-r * 0.7, -0.1), "rgba(255,255,255,.35)", 0.45);
+          s += `<path d="${path(band)} Z" fill="${c.cuff || c.sleeve}" stroke="${OUT3}" stroke-width="0.85" stroke-linejoin="round"/>` + L(P22(r * 0.7, -0.1), P22(-r * 0.7, -0.1), "rgba(255,255,255,.35)", 0.45);
         }
       } else {
-        const d = path(pts2);
-        s += stroke(d, OUT2, c.armW + W * 2) + stroke(d, c.sleeve, c.armW);
+        const d = path(pts3);
+        s += stroke(d, OUT3, c.armW + W * 2) + stroke(d, c.sleeve, c.armW);
       }
       if (c.bandage) {
-        const screenLeft = pts2[0][0] < 24;
+        const screenLeft = pts3[0][0] < 24;
         const charLeft = c.view === "ne" ? screenLeft : !screenLeft;
         if (c.bandage === "left" === charLeft) {
           const w = (cut ? fw : c.armW) + 0.7;
@@ -203,20 +203,20 @@ var require_troupe = __commonJS({
             s += L([p[0] + nx * w * 0.48, p[1] + ny * w * 0.48], [p[0] - nx * w * 0.48 + ux * 0.5, p[1] - ny * w * 0.48 + uy * 0.5], "#C9BFA8", 0.45);
           }
           const t = at(4);
-          s += L(t, [t[0] + nx * 2.2 - ux * 0.4, t[1] + ny * 2.2 - uy * 0.4], OUT2, 1.5) + L(t, [t[0] + nx * 2.2 - ux * 0.4, t[1] + ny * 2.2 - uy * 0.4], "#F4EEDF", 0.7);
+          s += L(t, [t[0] + nx * 2.2 - ux * 0.4, t[1] + ny * 2.2 - uy * 0.4], OUT3, 1.5) + L(t, [t[0] + nx * 2.2 - ux * 0.4, t[1] + ny * 2.2 - uy * 0.4], "#F4EEDF", 0.7);
         }
       }
       return s + (main != null ? main : poing(c, b));
     }
     __name(armOf, "armOf");
     function frame(c, view, pose, n, expr) {
-      const id = `${c.uid}${view}${pose}${n}`;
-      const cc = { ...c, uid: id, view };
+      const id3 = `${c.uid}${view}${pose}${n}`;
+      const cc = { ...c, uid: id3, view };
       const walk = pose === "marche";
       const ph = walk ? [1, 0, -1, 0][n] : 0;
       const bob = walk && n % 2 === 1 ? -1 : 0;
       const dir = view === "se" ? -1 : view === "ne" ? 1 : 0;
-      const ctx = { view, pose, n, ph, id, walk };
+      const ctx = { view, pose, n, ph, id: id3, walk };
       const [lx, rx] = c.legX[view];
       const ly = c.ground + (walk ? ph > 0 ? 1 : ph < 0 ? -1.4 : 0 : 0);
       const ry = c.ground + (walk ? ph < 0 ? 1 : ph > 0 ? -1.4 : 0 : 0);
@@ -257,7 +257,7 @@ var require_troupe = __commonJS({
     __name(frame, "frame");
     var svg = /* @__PURE__ */ __name((body, scale = 1) => `<svg xmlns="http://www.w3.org/2000/svg" width="${48 * scale}" height="${64 * scale}" viewBox="0 0 48 64">${body}</svg>`, "svg");
     var POSES = [["face_repos", "front", "repos", 2], ["avant_marche", "se", "marche", 4], ["dos_marche", "ne", "marche", 4], ["face_salut", "front", "salut", 2]];
-    module.exports = { OUT: OUT2, W, r2: r23, st, P: P2, E, L, limb, clip, eyes, expression, EXPRS, drop, zee, arm, poing, bareFoot, shoe, leg, frame, svg, POSES };
+    module.exports = { OUT: OUT3, W, r2: r23, st, P: P2, E, L, limb, clip, eyes, expression, EXPRS, drop, zee, arm, poing, bareFoot, shoe, leg, frame, svg, POSES };
   }
 });
 
@@ -271,20 +271,20 @@ var require_troupe2 = __commonJS({
 // atelier/deco.js
 var require_deco = __commonJS({
   "atelier/deco.js"(exports, module) {
-    var { OUT: OUT2, E, r2: r23 } = require_troupe2();
-    var K = 1.25;
-    var TW2 = 64 * K;
-    var TH2 = 32 * K;
-    var PROP2 = [-40 * K, -92 * K, 80 * K, 112 * K];
-    var BUILDING = [-76 * K, -124 * K, 152 * K, 168 * K];
-    var BIG = [-112 * K, -200 * K, 224 * K, 264 * K];
-    var pt = /* @__PURE__ */ __name((u, v, z = 0) => [(u - v) * TW2 / 2, (u + v) * TH2 / 2 - z * K], "pt");
-    var LEAVES = { light: "#B3E386", mid: "#7EC45B", dark: "#4F8F3A" };
-    var PINE = { light: "#86C774", mid: "#4F9A4C", dark: "#2F6E3A" };
+    var { OUT: OUT3, E, r2: r23 } = require_troupe2();
+    var K2 = 1.25;
+    var TW2 = 64 * K2;
+    var TH2 = 32 * K2;
+    var PROP2 = [-40 * K2, -92 * K2, 80 * K2, 112 * K2];
+    var BUILDING = [-76 * K2, -124 * K2, 152 * K2, 168 * K2];
+    var BIG = [-112 * K2, -200 * K2, 224 * K2, 264 * K2];
+    var pt = /* @__PURE__ */ __name((u, v, z = 0) => [(u - v) * TW2 / 2, (u + v) * TH2 / 2 - z * K2], "pt");
+    var LEAVES2 = { light: "#B3E386", mid: "#7EC45B", dark: "#4F8F3A" };
+    var PINE2 = { light: "#86C774", mid: "#4F9A4C", dark: "#2F6E3A" };
     var WOOD2 = { top: "#E0A96C", left: "#BF8049", right: "#965C30" };
     var WOOD_DARK2 = { top: "#A9703F", left: "#8B5631", right: "#6A3F22" };
     var GRANITE = { top: "#CBC6BA", left: "#A6A094", right: "#7E786E" };
-    var poly3 = /* @__PURE__ */ __name((points, fill, w = 0.9) => `<polygon points="${points.map((p) => `${r23(p[0])},${r23(p[1])}`).join(" ")}" fill="${fill}" stroke="${OUT2}" stroke-width="${w}" stroke-linejoin="round"/>`, "poly");
+    var poly3 = /* @__PURE__ */ __name((points, fill, w = 0.9) => `<polygon points="${points.map((p) => `${r23(p[0])},${r23(p[1])}`).join(" ")}" fill="${fill}" stroke="${OUT3}" stroke-width="${w}" stroke-linejoin="round"/>`, "poly");
     var face2 = /* @__PURE__ */ __name((pts3, fill, w) => poly3(pts3.map((p) => pt(...p)), fill, w), "face");
     var shadow2 = /* @__PURE__ */ __name((u, v, r, a = 0.22) => {
       const [x, y] = pt(u, v);
@@ -294,10 +294,10 @@ var require_deco = __commonJS({
       return face2([[u0, v1, z0], [u1, v1, z0], [u1, v1, z1], [u0, v1, z1]], c.left, w) + face2([[u1, v0, z0], [u1, v1, z0], [u1, v1, z1], [u1, v0, z1]], c.right, w) + face2([[u0, v0, z1], [u1, v0, z1], [u1, v1, z1], [u0, v1, z1]], c.top, w);
     }
     __name(box2, "box");
-    function crown(blobs, c, id) {
-      const out = blobs.map(([x, y, r]) => `<circle cx="${r23(x)}" cy="${r23(y)}" r="${r23(r + 1.1)}" fill="${OUT2}"/>`).join("");
+    function crown(blobs, c, id3) {
+      const out = blobs.map(([x, y, r]) => `<circle cx="${r23(x)}" cy="${r23(y)}" r="${r23(r + 1.1)}" fill="${OUT3}"/>`).join("");
       const base = blobs.map(([x, y, r]) => `<circle cx="${r23(x)}" cy="${r23(y)}" r="${r23(r)}" fill="${c.mid}"/>`).join("");
-      const clipId = `cr${id}`;
+      const clipId = `cr${id3}`;
       const clipPath = `<clipPath id="${clipId}">${blobs.map(([x, y, r]) => `<circle cx="${r23(x)}" cy="${r23(y)}" r="${r23(r)}"/>`).join("")}</clipPath>`;
       const shade = blobs.map(([x, y, r]) => `<circle cx="${r23(x + r * 0.35)}" cy="${r23(y + r * 0.45)}" r="${r23(r * 0.85)}" fill="${c.dark}"/>`).join("");
       const lite = blobs.map(([x, y, r]) => `<circle cx="${r23(x - r * 0.25)}" cy="${r23(y - r * 0.3)}" r="${r23(r * 0.62)}" fill="${c.mid}"/>`).join("") + blobs.map(([x, y, r]) => `<circle cx="${r23(x - r * 0.4)}" cy="${r23(y - r * 0.45)}" r="${r23(r * 0.32)}" fill="${c.light}"/>`).join("");
@@ -306,22 +306,22 @@ var require_deco = __commonJS({
     __name(crown, "crown");
     function boulder2(u, v, ru, rv, h, c, seed = 1) {
       const [x, y] = pt(u, v);
-      const w = ru * TW2 * 0.78, d = rv * TH2 * 0.7, H = h * K;
+      const w = ru * TW2 * 0.78, d = rv * TH2 * 0.7, H = h * K2;
       const j = /* @__PURE__ */ __name((k) => 1 + 0.14 * Math.sin(seed * 12.9898 + k * 78.233), "j");
       const path = `M${r23(x - w)},${r23(y)} Q${r23(x - w * 1.02)},${r23(y - H * 0.7 * j(1))} ${r23(x - w * 0.45)},${r23(y - H * j(2))} Q${r23(x + w * 0.1)},${r23(y - H * 1.12 * j(3))} ${r23(x + w * 0.62)},${r23(y - H * 0.78 * j(4))} Q${r23(x + w * 1.04)},${r23(y - H * 0.42)} ${r23(x + w)},${r23(y)} Q${x},${r23(y + d)} ${r23(x - w)},${r23(y)} Z`;
-      const id = `rk${seed}_${[u, v, ru, rv, h].map(r23).join("_")}`.replace(/-/g, "m").replace(/\./g, "p");
-      return `<path d="${path}" fill="${c.left}" stroke="${OUT2}" stroke-width="1.1" stroke-linejoin="round"/><defs><clipPath id="${id}"><path d="${path}"/></clipPath></defs><g clip-path="url(#${id})"><ellipse cx="${r23(x + w * 0.55)}" cy="${r23(y - H * 0.1)}" rx="${r23(w * 0.8)}" ry="${r23(H * 0.75)}" fill="${c.right}"/><ellipse cx="${r23(x - w * 0.25)}" cy="${r23(y - H * 0.95)}" rx="${r23(w * 0.7)}" ry="${r23(H * 0.38)}" fill="${c.top}"/></g><path d="M${r23(x - w * 0.6)},${r23(y - H * 0.7)} Q${r23(x - w * 0.35)},${r23(y - H * 0.98)} ${r23(x + w * 0.05)},${r23(y - H * 1.02)}" stroke="#FFFFFF" stroke-width="1" fill="none" stroke-linecap="round" opacity="0.6"/>`;
+      const id3 = `rk${seed}_${[u, v, ru, rv, h].map(r23).join("_")}`.replace(/-/g, "m").replace(/\./g, "p");
+      return `<path d="${path}" fill="${c.left}" stroke="${OUT3}" stroke-width="1.1" stroke-linejoin="round"/><defs><clipPath id="${id3}"><path d="${path}"/></clipPath></defs><g clip-path="url(#${id3})"><ellipse cx="${r23(x + w * 0.55)}" cy="${r23(y - H * 0.1)}" rx="${r23(w * 0.8)}" ry="${r23(H * 0.75)}" fill="${c.right}"/><ellipse cx="${r23(x - w * 0.25)}" cy="${r23(y - H * 0.95)}" rx="${r23(w * 0.7)}" ry="${r23(H * 0.38)}" fill="${c.top}"/></g><path d="M${r23(x - w * 0.6)},${r23(y - H * 0.7)} Q${r23(x - w * 0.35)},${r23(y - H * 0.98)} ${r23(x + w * 0.05)},${r23(y - H * 1.02)}" stroke="#FFFFFF" stroke-width="1" fill="none" stroke-linecap="round" opacity="0.6"/>`;
     }
     __name(boulder2, "boulder");
     var flower = /* @__PURE__ */ __name((x, y, r, petal2, heart = "#E8A13A") => [0, 72, 144, 216, 288].map((a) => E(x + Math.cos(a * Math.PI / 180) * r, y + Math.sin(a * Math.PI / 180) * r, r * 0.78, r * 0.78, petal2, 0.5)).join("") + E(x, y, r * 0.55, r * 0.55, heart, 0.4), "flower");
     var stroke = /* @__PURE__ */ __name((d, w, color) => `<path d="${d}" fill="none" stroke="${color}" stroke-width="${r23(w)}" stroke-linecap="round" stroke-linejoin="round"/>`, "stroke");
-    var thick = /* @__PURE__ */ __name((d, w, color) => stroke(d, w + 2.2, OUT2) + stroke(d, w, color), "thick");
-    module.exports = { K, TW: TW2, TH: TH2, PROP: PROP2, BUILDING, BIG, pt, poly: poly3, face: face2, shadow: shadow2, box: box2, crown, boulder: boulder2, flower, stroke, thick, LEAVES, PINE, WOOD: WOOD2, WOOD_DARK: WOOD_DARK2, GRANITE };
+    var thick = /* @__PURE__ */ __name((d, w, color) => stroke(d, w + 2.2, OUT3) + stroke(d, w, color), "thick");
+    module.exports = { K: K2, TW: TW2, TH: TH2, PROP: PROP2, BUILDING, BIG, pt, poly: poly3, face: face2, shadow: shadow2, box: box2, crown, boulder: boulder2, flower, stroke, thick, LEAVES: LEAVES2, PINE: PINE2, WOOD: WOOD2, WOOD_DARK: WOOD_DARK2, GRANITE };
     function cylinder2(u, v, r, z0, z1, c, w = 1) {
       const [x, y0] = pt(u, v, z0), [, y1] = pt(u, v, z1);
       const rx = r * TW2 * 0.7, ry = r * TH2 * 0.7;
       const side = `M${r23(x - rx)},${r23(y1)} L${r23(x - rx)},${r23(y0)} A${r23(rx)} ${r23(ry)} 0 0 0 ${r23(x + rx)},${r23(y0)} L${r23(x + rx)},${r23(y1)} Z`;
-      return `<path d="${side}" fill="${c.left}" stroke="${OUT2}" stroke-width="${w}" stroke-linejoin="round"/><path d="M${r23(x + rx * 0.15)},${r23(y1 + ry)} L${r23(x + rx * 0.15)},${r23(y0 + ry)} A${r23(rx)} ${r23(ry)} 0 0 0 ${r23(x + rx)},${r23(y0)} L${r23(x + rx)},${r23(y1)} Z" fill="${c.right}"/><path d="${side}" fill="none" stroke="${OUT2}" stroke-width="${w}" stroke-linejoin="round"/>` + E(x, y1, rx, ry, c.top, w);
+      return `<path d="${side}" fill="${c.left}" stroke="${OUT3}" stroke-width="${w}" stroke-linejoin="round"/><path d="M${r23(x + rx * 0.15)},${r23(y1 + ry)} L${r23(x + rx * 0.15)},${r23(y0 + ry)} A${r23(rx)} ${r23(ry)} 0 0 0 ${r23(x + rx)},${r23(y0)} L${r23(x + rx)},${r23(y1)} Z" fill="${c.right}"/><path d="${side}" fill="none" stroke="${OUT3}" stroke-width="${w}" stroke-linejoin="round"/>` + E(x, y1, rx, ry, c.top, w);
     }
     __name(cylinder2, "cylinder");
     var disc2 = /* @__PURE__ */ __name((u, v, r, z, fill, w = 1) => {
@@ -333,45 +333,45 @@ var require_deco = __commonJS({
       return face2([[a, v0 - o, z], [b, v0 - o, z], [b, vm, z + h], [a, vm, z + h]], c.back, 1) + face2([[u1, v0, z], [u1, v1, z], [u1, vm, z + h]], c.gable, 1) + face2([[a, vm, z + h], [b, vm, z + h], [b, v1 + o, z], [a, v1 + o, z]], c.front, 1);
     }
     __name(gable2, "gable");
-    function pyramid(u0, v0, u1, v1, z, h, c, o = 0.06) {
+    function pyramid2(u0, v0, u1, v1, z, h, c, o = 0.06) {
       const A = [u0 - o, v0 - o, z], B = [u1 + o, v0 - o, z], Cc = [u1 + o, v1 + o, z], Dd = [u0 - o, v1 + o, z], T = [(u0 + u1) / 2, (v0 + v1) / 2, z + h];
       return face2([A, B, T], c.back, 1) + face2([Dd, A, T], c.back, 1) + face2([B, Cc, T], c.right, 1) + face2([Cc, Dd, T], c.front, 1);
     }
-    __name(pyramid, "pyramid");
+    __name(pyramid2, "pyramid");
     var post2 = /* @__PURE__ */ __name((u, v, z0, z1, c = WOOD_DARK2, w = 0.03) => box2(u - w, v - w, u + w, v + w, z0, z1, c, 0.7), "post");
     var rail2 = /* @__PURE__ */ __name((a, b, z, w = 2, c = WOOD_DARK2.left) => {
       const p = pt(a[0], a[1], z), q = pt(b[0], b[1], z);
-      return `<path d="M${r23(p[0])},${r23(p[1])} L${r23(q[0])},${r23(q[1])}" stroke="${OUT2}" stroke-width="${w + 1.6}" stroke-linecap="round"/><path d="M${r23(p[0])},${r23(p[1])} L${r23(q[0])},${r23(q[1])}" stroke="${c}" stroke-width="${w}" stroke-linecap="round"/>`;
+      return `<path d="M${r23(p[0])},${r23(p[1])} L${r23(q[0])},${r23(q[1])}" stroke="${OUT3}" stroke-width="${w + 1.6}" stroke-linecap="round"/><path d="M${r23(p[0])},${r23(p[1])} L${r23(q[0])},${r23(q[1])}" stroke="${c}" stroke-width="${w}" stroke-linecap="round"/>`;
     }, "rail");
     function flame(x, y, h, w, k) {
       const sway = Math.sin(k * Math.PI * 2) * w * 0.35;
       const tip = /* @__PURE__ */ __name((s, dx) => `M${r23(x - w * s)},${r23(y)} Q${r23(x - w * s * 1.1)},${r23(y - h * s * 0.55)} ${r23(x + dx)},${r23(y - h * s)} Q${r23(x + w * s * 1.1)},${r23(y - h * s * 0.55)} ${r23(x + w * s)},${r23(y)} Z`, "tip");
-      return `<path d="${tip(1, sway)}" fill="#E8573A" stroke="${OUT2}" stroke-width="0.9" stroke-linejoin="round"/><path d="${tip(0.72, sway * 0.6)}" fill="#F59A3C"/><path d="${tip(0.42, sway * 0.3)}" fill="#FFE08A"/>`;
+      return `<path d="${tip(1, sway)}" fill="#E8573A" stroke="${OUT3}" stroke-width="0.9" stroke-linejoin="round"/><path d="${tip(0.72, sway * 0.6)}" fill="#F59A3C"/><path d="${tip(0.42, sway * 0.3)}" fill="#FFE08A"/>`;
     }
     __name(flame, "flame");
     var glow = /* @__PURE__ */ __name((x, y, r, rgb = "255,224,138", a = 0.38) => {
-      const id = `lueur_${[x, y, r, a].map(r23).join("_")}_${rgb}`.replace(/,/g, "-").replace(/\./g, "p");
-      return `<defs><radialGradient id="${id}"><stop offset="0" stop-color="rgb(${rgb})" stop-opacity="${r23(Math.min(0.9, a * 1.8))}"/><stop offset="0.45" stop-color="rgb(${rgb})" stop-opacity="${r23(a * 0.8)}"/><stop offset="1" stop-color="rgb(${rgb})" stop-opacity="0"/></radialGradient></defs><circle cx="${r23(x)}" cy="${r23(y)}" r="${r23(r * 1.25)}" fill="url(#${id})"/>`;
+      const id3 = `lueur_${[x, y, r, a].map(r23).join("_")}_${rgb}`.replace(/,/g, "-").replace(/\./g, "p");
+      return `<defs><radialGradient id="${id3}"><stop offset="0" stop-color="rgb(${rgb})" stop-opacity="${r23(Math.min(0.9, a * 1.8))}"/><stop offset="0.45" stop-color="rgb(${rgb})" stop-opacity="${r23(a * 0.8)}"/><stop offset="1" stop-color="rgb(${rgb})" stop-opacity="0"/></radialGradient></defs><circle cx="${r23(x)}" cy="${r23(y)}" r="${r23(r * 1.25)}" fill="url(#${id3})"/>`;
     }, "glow");
     var STONE2 = { top: "#E6E1D4", left: "#C3BBA9", right: "#9B927F" };
-    var WHITE_STONE = { top: "#FBF8F1", left: "#E7E1D3", right: "#C9C0AC" };
+    var WHITE_STONE2 = { top: "#FBF8F1", left: "#E7E1D3", right: "#C9C0AC" };
     var ROOF_RED2 = { back: "#B9503B", front: "#E06E52", gable: "#F3E4C4", right: "#B9503B" };
     var ROOF_BLUE = { back: "#3E6FA8", front: "#5C8FD0", gable: "#F3E4C4", right: "#3E6FA8" };
     var THATCH2 = { back: "#C99A45", front: "#EBC46F", gable: "#F3E4C4", right: "#C99A45" };
     var WALL2 = { top: "#FCF4E2", left: "#F3E4C4", right: "#D8C39B" };
     var SOIL = { top: "#946240", left: "#784C2E", right: "#5E3A22" };
-    var WATER = "#5BAFD8";
+    var WATER2 = "#5BAFD8";
     var WATER_LIGHT = "#9AD6F0";
     var BRASS2 = { top: "#F4D67A", left: "#E2B546", right: "#B88A2E" };
-    var IRON2 = { top: "#9AA2AD", left: "#7E8691", right: "#5E6670" };
-    Object.assign(module.exports, { cylinder: cylinder2, disc: disc2, gable: gable2, pyramid, post: post2, rail: rail2, flame, glow, STONE: STONE2, WHITE_STONE, ROOF_RED: ROOF_RED2, ROOF_BLUE, THATCH: THATCH2, WALL: WALL2, SOIL, WATER, WATER_LIGHT, BRASS: BRASS2, IRON: IRON2 });
+    var IRON3 = { top: "#9AA2AD", left: "#7E8691", right: "#5E6670" };
+    Object.assign(module.exports, { cylinder: cylinder2, disc: disc2, gable: gable2, pyramid: pyramid2, post: post2, rail: rail2, flame, glow, STONE: STONE2, WHITE_STONE: WHITE_STONE2, ROOF_RED: ROOF_RED2, ROOF_BLUE, THATCH: THATCH2, WALL: WALL2, SOIL, WATER: WATER2, WATER_LIGHT, BRASS: BRASS2, IRON: IRON3 });
   }
 });
 
 // atelier/arbres.js
 var require_arbres = __commonJS({
   "atelier/arbres.js"(exports, module) {
-    var { OUT: OUT2, P: P2, E, r2: r23 } = require_troupe2();
+    var { OUT: OUT3, P: P2, E, r2: r23 } = require_troupe2();
     var VERTS = {
       // devant : touffes de devant (plus chaudes) ; fond : touffe du fond (plus froide et plus sombre)
       doux: { devant: { light: "#DFF3A8", mid: "#A5D466", dark: "#68A64B" }, fond: { light: "#A3D172", mid: "#77AF50", dark: "#4F8744" } },
@@ -390,28 +390,28 @@ var require_arbres = __commonJS({
     var W = 1.1;
     var rond = /* @__PURE__ */ __name((x, y, r, fill) => `<circle cx="${r23(x)}" cy="${r23(y)}" r="${r23(r)}" fill="${fill}"/>`, "rond");
     var sc = /* @__PURE__ */ __name((d, k) => d.replace(/-?\d+(\.\d+)?/g, (n) => r23(n * k)), "sc");
-    function touffe(id, lobes, c, marques, k, neige = false) {
+    function touffe(id3, lobes, c, marques, k, neige = false) {
       const L = lobes.map(([x, y, r, f]) => [x * k, y * k, r * k, f]);
-      const contour = L.map(([x, y, r]) => rond(x, y, r + W, OUT2)).join("");
-      const zone = `<clipPath id="${id}">${L.map(([x, y, r]) => rond(x, y, r, "#000")).join("")}</clipPath>`;
+      const contour = L.map(([x, y, r]) => rond(x, y, r + W, OUT3)).join("");
+      const zone = `<clipPath id="${id3}">${L.map(([x, y, r]) => rond(x, y, r, "#000")).join("")}</clipPath>`;
       const hauts = L.filter((l) => l[3] !== 0);
       const dedans = L.map(([x, y, r]) => rond(x, y, r, c.dark)).join("") + L.map(([x, y, r]) => rond(x - r * 0.2, y - r * 0.32, r * 0.86, c.mid)).join("") + hauts.map(([x, y, r]) => rond(x - r * 0.34, y - r * 0.48, r * 0.5, c.light)).join("") + hauts.map(([x, y, r]) => rond(x - r * 0.22, y - r * 0.3, r * 0.5, c.mid)).join("") + marques.map(([x, y, s = 1]) => {
         const X = x * k, Y = y * k, S2 = s * Math.max(k, 0.85);
         return `<path d="M${r23(X - 2.6 * S2)},${r23(Y)} Q${r23(X - 1.3 * S2)},${r23(Y + 1.8 * S2)} ${r23(X)},${r23(Y)} Q${r23(X + 1.3 * S2)},${r23(Y + 1.8 * S2)} ${r23(X + 2.6 * S2)},${r23(Y)}" fill="none" stroke="${c.dark}" stroke-width="0.8" stroke-linecap="round"/>`;
       }).join("") + (neige ? hauts.map(([x, y, r]) => rond(x + r * 0.04, y - r * 0.46, r * 0.8, "#D6E4EE")).join("") + hauts.map(([x, y, r]) => rond(x - r * 0.04, y - r * 0.58, r * 0.78, "#FFFFFF")).join("") + hauts.map(([x, y, r]) => rond(x - r * 0.3, y - r * 0.82, r * 0.16, "#F2F7FC")).join("") : "");
-      return contour + `<defs>${zone}</defs><g clip-path="url(#${id})">${dedans}</g>`;
+      return contour + `<defs>${zone}</defs><g clip-path="url(#${id3})">${dedans}</g>`;
     }
     __name(touffe, "touffe");
-    function tronc(id, k) {
+    function tronc(id3, k) {
       const d = sc("M-13,2.2 Q-8,0.6 -6.4,-5 Q-5,-16 -5,-26 Q-5.4,-34 -12,-44 L-5,-46 Q-1.4,-40 0,-36 Q1.6,-41 7,-47 L13,-43 Q5.6,-34 5.2,-26 Q5,-16 6.2,-6 Q7.6,0.4 13,2.6 Q8.6,4 5.2,2.4 Q2.6,5 -0.6,3.4 Q-3.6,4.8 -6,2.6 Q-9.4,3.6 -13,2.2 Z", k);
       const dedans = `<path d="${sc("M1.6,4 Q2.6,-14 2,-27 Q4,-36 9,-46 L16,-46 L16,4 Z", k)}" fill="${BOIS.right}"/><path d="${sc("M5.2,2.4 Q8,2.8 13,2.6 L14,6 L4,6 Z", k)}" fill="${BOIS.right}"/><ellipse cx="0" cy="${r23(-38 * k)}" rx="${r23(16 * k)}" ry="${r23(8 * k)}" fill="${BOIS.right}"/><path d="${sc("M-2.6,-7 Q-3.2,-13 -2.4,-19 M2.8,-11 Q3.4,-16 2.8,-22 M-3.4,-21 q0.4,-3 -0.2,-5", k)}" fill="none" stroke="${BOIS.bark}" stroke-width="0.7" stroke-linecap="round"/><path d="${sc("M-4.6,-4 Q-4,-12 -4.2,-20", k)}" fill="none" stroke="${BOIS.light}" stroke-width="1" stroke-linecap="round" opacity="0.7"/>`;
-      return `<path d="${d}" fill="${BOIS.left}" stroke="${OUT2}" stroke-width="${W}" stroke-linejoin="round"/><defs><clipPath id="${id}"><path d="${d}"/></clipPath></defs><g clip-path="url(#${id})">${dedans}</g>`;
+      return `<path d="${d}" fill="${BOIS.left}" stroke="${OUT3}" stroke-width="${W}" stroke-linejoin="round"/><defs><clipPath id="${id3}"><path d="${d}"/></clipPath></defs><g clip-path="url(#${id3})">${dedans}</g>`;
     }
     __name(tronc, "tronc");
-    var herbe = /* @__PURE__ */ __name((x, y, col, s = 1) => `<path d="${sc("M-3,0 Q-3.2,-3 -4.6,-4.6 Q-1.6,-3.6 -0.8,-1.4 Q-0.6,-4.8 0.4,-6.2 Q1.6,-3.6 1,-1.2 Q2.2,-3.6 4.4,-4.4 Q3,-2 3,0 Q0,1.2 -3,0 Z", s)}" transform="translate(${r23(x)} ${r23(y)})" fill="${col}" stroke="${OUT2}" stroke-width="0.8" stroke-linejoin="round"/>`, "herbe");
+    var herbe = /* @__PURE__ */ __name((x, y, col, s = 1) => `<path d="${sc("M-3,0 Q-3.2,-3 -4.6,-4.6 Q-1.6,-3.6 -0.8,-1.4 Q-0.6,-4.8 0.4,-6.2 Q1.6,-3.6 1,-1.2 Q2.2,-3.6 4.4,-4.4 Q3,-2 3,0 Q0,1.2 -3,0 Z", s)}" transform="translate(${r23(x)} ${r23(y)})" fill="${col}" stroke="${OUT3}" stroke-width="0.8" stroke-linejoin="round"/>`, "herbe");
     var champignon = /* @__PURE__ */ __name((x, y) => `<g transform="translate(${r23(x)} ${r23(y)})">` + P2("M-1,0 L-0.8,-2.2 L0.8,-2.2 L1,0 Z", "#F6EBD6", 0.7) + P2("M-2.9,-2 Q-2.6,-5.2 0,-5.4 Q2.6,-5.2 2.9,-2 Q0,-1.3 -2.9,-2 Z", "#E2574C", 0.8) + E(-1, -3.8, 0.6, 0.5, "#FFFFFF", 0) + E(1.1, -3.1, 0.45, 0.4, "#FFFFFF", 0) + "</g>", "champignon");
     var PETALES = [0, 72, 144, 216, 288].map((a) => [Math.cos((a - 90) * Math.PI / 180) * 1.2, Math.sin((a - 90) * Math.PI / 180) * 1.2]);
-    var fleurette = /* @__PURE__ */ __name((x, y, col) => PETALES.map(([dx, dy]) => rond(x + dx, y + dy, 1.4, OUT2)).join("") + PETALES.map(([dx, dy]) => rond(x + dx, y + dy, 0.95, col)).join("") + rond(x, y, 0.7, "#F2B33D"), "fleurette");
+    var fleurette = /* @__PURE__ */ __name((x, y, col) => PETALES.map(([dx, dy]) => rond(x + dx, y + dy, 1.4, OUT3)).join("") + PETALES.map(([dx, dy]) => rond(x + dx, y + dy, 0.95, col)).join("") + rond(x, y, 0.7, "#F2B33D"), "fleurette");
     function pied(k) {
       return herbe(-15 * k, 3, "#86B852", 0.85) + champignon(-7.5 * k, 5.2) + herbe(10.5 * k, 5.6, "#94C25C", 0.7) + fleurette(15 * k, 4.4, "#FFFFFF") + fleurette(19 * k, 2.6, "#F7B6C8") + fleurette(18.6 * k, 6.6, "#FFFFFF");
     }
@@ -422,8 +422,8 @@ var require_arbres = __commonJS({
     var MILIEU = [[-2, -62, 11.5], [-9, -51, 7.5, 0], [5, -52, 8, 0]];
     function arbre({ vert = "doux", petit = false, fleuri = false, neige = false } = {}) {
       const c = TEINTES[vert], k = petit ? 0.76 : 1;
-      const id = `arb${petit ? "p" : "g"}${vert[0]}${fleuri ? "f" : ""}${neige ? "n" : ""}`;
-      return E(3 * k, 1.5, 27 * k, 12 * k, neige ? "rgba(60,80,110,0.22)" : "rgba(40,55,20,0.22)", 0) + tronc(`${id}t`, k) + touffe(`${id}a`, FOND, c.fond, [[-6, -69], [13, -66, 0.9], [24, -74, 0.8]], k, neige) + touffe(`${id}b`, DROITE, c.devant, [[15, -47], [25, -52, 0.9]], k, neige) + touffe(`${id}c`, GAUCHE, c.devant, [[-23, -46], [-15, -52, 0.9], [-31, -55, 0.8]], k, neige) + touffe(`${id}d`, MILIEU, c.devant, [[-3, -54], [3, -60, 0.8]], k, neige) + (fleuri ? pied(k) : "") + (neige ? congere(k) : "");
+      const id3 = `arb${petit ? "p" : "g"}${vert[0]}${fleuri ? "f" : ""}${neige ? "n" : ""}`;
+      return E(3 * k, 1.5, 27 * k, 12 * k, neige ? "rgba(60,80,110,0.22)" : "rgba(40,55,20,0.22)", 0) + tronc(`${id3}t`, k) + touffe(`${id3}a`, FOND, c.fond, [[-6, -69], [13, -66, 0.9], [24, -74, 0.8]], k, neige) + touffe(`${id3}b`, DROITE, c.devant, [[15, -47], [25, -52, 0.9]], k, neige) + touffe(`${id3}c`, GAUCHE, c.devant, [[-23, -46], [-15, -52, 0.9], [-31, -55, 0.8]], k, neige) + touffe(`${id3}d`, MILIEU, c.devant, [[-3, -54], [3, -60, 0.8]], k, neige) + (fleuri ? pied(k) : "") + (neige ? congere(k) : "");
     }
     __name(arbre, "arbre");
     var ARBRES = [];
@@ -443,23 +443,23 @@ var require_arbres = __commonJS({
     for (const saison of ["printemps", "hiver"]) for (const petit of [false, true]) {
       ARBRES_SAISONS.push([["arbre", saison, petit && "petit"].filter(Boolean).join("_"), `Arbre ${saison === "hiver" ? "d'hiver" : "de printemps"} (${petit ? "petit" : "grand"}, ${saison === "hiver" ? "sous la neige, congère au pied" : "vert tendre, en fleurs, pied fleuri"})`, { saison, petit }]);
     }
-    function pomme(id, x, y, s, feuille) {
+    function pomme(id3, x, y, s, feuille) {
       const r = 2.7 * s;
       const d = `M${r23(x)},${r23(y - r * 0.7)} Q${r23(x + r * 1.1)},${r23(y - r * 1.25)} ${r23(x + r * 1.05)},${r23(y + r * 0.05)} Q${r23(x + r * 0.9)},${r23(y + r * 1.05)} ${r23(x)},${r23(y + r * 0.95)} Q${r23(x - r * 0.9)},${r23(y + r * 1.05)} ${r23(x - r * 1.05)},${r23(y + r * 0.05)} Q${r23(x - r * 1.1)},${r23(y - r * 1.25)} ${r23(x)},${r23(y - r * 0.7)} Z`;
-      return `<path d="${d}" fill="#E2574C" stroke="${OUT2}" stroke-width="0.9" stroke-linejoin="round"/><defs><clipPath id="${id}"><path d="${d}"/></clipPath></defs><g clip-path="url(#${id})">${E(x + r * 0.55, y + r * 0.55, r * 0.95, r * 0.8, "#B83A35", 0)}</g><ellipse cx="${r23(x - r * 0.42)}" cy="${r23(y - r * 0.2)}" rx="${r23(r * 0.3)}" ry="${r23(r * 0.38)}" fill="#FFFFFF" opacity="0.85"/><path d="M${r23(x)},${r23(y - r * 0.6)} q${r23(0.2 * s)},${r23(-1.3 * s)} ${r23(0.9 * s)},${r23(-1.8 * s)}" stroke="${OUT2}" stroke-width="${r23(0.9 * Math.max(s, 0.8))}" fill="none" stroke-linecap="round"/>` + (feuille ? `<path d="M${r23(x + 0.7 * s)},${r23(y - r * 0.85)} q${r23(1.6 * s)},${r23(-1.6 * s)} ${r23(3.2 * s)},${r23(-0.9 * s)} q${r23(-1.2 * s)},${r23(1.4 * s)} ${r23(-3.2 * s)},${r23(0.9 * s)} Z" fill="#8CC152" stroke="${OUT2}" stroke-width="0.7" stroke-linejoin="round"/>` : "");
+      return `<path d="${d}" fill="#E2574C" stroke="${OUT3}" stroke-width="0.9" stroke-linejoin="round"/><defs><clipPath id="${id3}"><path d="${d}"/></clipPath></defs><g clip-path="url(#${id3})">${E(x + r * 0.55, y + r * 0.55, r * 0.95, r * 0.8, "#B83A35", 0)}</g><ellipse cx="${r23(x - r * 0.42)}" cy="${r23(y - r * 0.2)}" rx="${r23(r * 0.3)}" ry="${r23(r * 0.38)}" fill="#FFFFFF" opacity="0.85"/><path d="M${r23(x)},${r23(y - r * 0.6)} q${r23(0.2 * s)},${r23(-1.3 * s)} ${r23(0.9 * s)},${r23(-1.8 * s)}" stroke="${OUT3}" stroke-width="${r23(0.9 * Math.max(s, 0.8))}" fill="none" stroke-linecap="round"/>` + (feuille ? `<path d="M${r23(x + 0.7 * s)},${r23(y - r * 0.85)} q${r23(1.6 * s)},${r23(-1.6 * s)} ${r23(3.2 * s)},${r23(-0.9 * s)} q${r23(-1.2 * s)},${r23(1.4 * s)} ${r23(-3.2 * s)},${r23(0.9 * s)} Z" fill="#8CC152" stroke="${OUT3}" stroke-width="0.7" stroke-linejoin="round"/>` : "");
     }
     __name(pomme, "pomme");
-    var petale = /* @__PURE__ */ __name((x, y, a, col) => `<path d="M0,-1.9 Q1.5,0 0,1.9 Q-1.5,0 0,-1.9 Z" fill="${col}" stroke="${OUT2}" stroke-width="0.5" transform="translate(${r23(x)} ${r23(y)}) rotate(${a})"/>`, "petale");
+    var petale = /* @__PURE__ */ __name((x, y, a, col) => `<path d="M0,-1.9 Q1.5,0 0,1.9 Q-1.5,0 0,-1.9 Z" fill="${col}" stroke="${OUT3}" stroke-width="0.5" transform="translate(${r23(x)} ${r23(y)}) rotate(${a})"/>`, "petale");
     var POMMES = [[-26, -49, 1, true], [-15, -58, 1], [-31, -57, 0.9], [-7, -46, 1], [3, -66, 1, true], [13, -50, 1], [23, -45, 1, true], [27, -55, 0.9], [-3, -76, 0.9], [14, -73, 0.9]];
     var TOMBEES = [[12, 5, 1], [-17, 6, 0.95, true]];
     var FLEURS = [[-27, -52], [-17, -60], [-31, -45], [-8, -50], [2, -67], [-4, -58], [12, -52], [21, -47], [27, -57], [16, -60], [-4, -78], [12, -75], [-18, -72], [24, -68], [6, -84]];
     var PETALES_SOL = [[-16, 4.5, 30, "#F7B6C8"], [-12, 7, -40, "#FFFFFF"], [9, 6, 70, "#FFFFFF"], [14, 3.5, -20, "#F7B6C8"], [18, 6.5, 50, "#FFFFFF"], [-20, 2.5, 80, "#FFFFFF"]];
     function pommier({ vert = "doux", petit = false, fleurs = false, tombees = false } = {}) {
       const k = petit ? 0.76 : 1, s = 1.12 * Math.max(k, 0.85);
-      const id = `pom${petit ? "p" : "g"}${vert[0]}${fleurs ? "f" : ""}${tombees ? "t" : ""}`;
+      const id3 = `pom${petit ? "p" : "g"}${vert[0]}${fleurs ? "f" : ""}${tombees ? "t" : ""}`;
       let o = arbre({ vert, petit });
       if (fleurs) o += FLEURS.map(([x, y], i) => fleurette(x * k, y * k, i % 3 ? "#FFFFFF" : "#F7B6C8")).join("") + (tombees ? PETALES_SOL.map(([x, y, a, col]) => petale(x * k, y, a, col)).join("") : "");
-      else o += POMMES.map(([x, y, t, f], i) => pomme(`${id}${i}`, x * k, y * k, t * s, f)).join("") + (tombees ? TOMBEES.map(([x, y, t, f], i) => pomme(`${id}s${i}`, x * k, y, t * 1.05, f)).join("") : "");
+      else o += POMMES.map(([x, y, t, f], i) => pomme(`${id3}${i}`, x * k, y * k, t * s, f)).join("") + (tombees ? TOMBEES.map(([x, y, t, f], i) => pomme(`${id3}s${i}`, x * k, y, t * 1.05, f)).join("") : "");
       return o;
     }
     __name(pommier, "pommier");
@@ -469,7 +469,7 @@ var require_arbres = __commonJS({
       const libelle = `Pommier (${[petit ? "petit" : "grand", `vert ${vert}`, fleurs ? "en fleurs" : "en pommes", tombees && (fleurs ? "pétales tombés" : "pommes tombées")].filter(Boolean).join(", ")})`;
       POMMIERS.push([fichier2, libelle, { vert, petit, fleurs, tombees }]);
     }
-    var feuilleMorte = /* @__PURE__ */ __name((x, y, a, col, s = 1) => `<g transform="translate(${r23(x)} ${r23(y)}) rotate(${a}) scale(${s})"><path d="M0,-2.8 Q2.2,-0.6 0,2.8 Q-2.2,-0.6 0,-2.8 Z" fill="${col}" stroke="${OUT2}" stroke-width="0.6" stroke-linejoin="round"/><path d="M0,-1.8 L0,2.2" stroke="${OUT2}" stroke-width="0.4" stroke-linecap="round" opacity="0.6"/></g>`, "feuilleMorte");
+    var feuilleMorte = /* @__PURE__ */ __name((x, y, a, col, s = 1) => `<g transform="translate(${r23(x)} ${r23(y)}) rotate(${a}) scale(${s})"><path d="M0,-2.8 Q2.2,-0.6 0,2.8 Q-2.2,-0.6 0,-2.8 Z" fill="${col}" stroke="${OUT3}" stroke-width="0.6" stroke-linejoin="round"/><path d="M0,-1.8 L0,2.2" stroke="${OUT3}" stroke-width="0.4" stroke-linecap="round" opacity="0.6"/></g>`, "feuilleMorte");
     var FEUILLES_SOL = [[-18, 3.5, 30, 0], [-12, 7, -50, 1], [-21, 7, 80, 2], [10, 6.5, 60, 1], [16, 3, -20, 0], [19, 7.5, 40, 2], [3, 8, -70, 0]];
     var FEUILLES_AIR = [[-31, -30, 25, 1], [30, -22, -35, 0]];
     var ROUSSES = ["#F5A04A", "#E8664A", "#F2C14E"];
@@ -489,11 +489,11 @@ var require_arbres = __commonJS({
       profond: { devant: { light: "#D9EE9A", mid: "#A6D262", dark: "#6FA545" }, fond: { light: "#A4CC70", mid: "#7AAE4D", dark: "#527F3E" } }
     };
     var ECORCE = { left: "#F4F1EA", right: "#CFC8BA", marque: "#3A3A3A" };
-    function troncBouleau(id, k) {
+    function troncBouleau(id3, k) {
       const d = sc("M-8,1.8 Q-4.5,0.6 -3.6,-4 Q-3,-20 -3.4,-36 Q-4,-44 -9,-52 L-5.4,-54.4 Q-1.6,-48 0,-44 Q1.4,-49 6,-55.4 L9.4,-52.4 Q4,-44 3.4,-36 Q3,-20 3.8,-5 Q5,0.6 8.5,2 Q5,3.2 2.6,2 Q0,3.6 -2.6,2.2 Q-5,3.4 -8,1.8 Z", k);
       const marques = [[-2.2, -9, 2.4], [1.4, -15, 2], [-2.4, -22, 2.2], [1.2, -28, 2.6], [-1.8, -34, 1.8], [-5.6, -46, 1.6], [4.6, -47, 1.6]];
       const dedans = `<path d="${sc("M1.2,4 Q1.8,-20 1.6,-36 Q3,-44 8,-56 L14,-56 L14,4 Z", k)}" fill="${ECORCE.right}"/><path d="${sc("M-9,4 L-9,-1.5 Q-4,-3.5 0,-3 Q4,-3.5 9,-1.5 L9,4 Z", k)}" fill="#8E877C"/><ellipse cx="0" cy="${r23(-44 * k)}" rx="${r23(12 * k)}" ry="${r23(6 * k)}" fill="${ECORCE.right}"/>` + marques.map(([x, y, w]) => `<path d="M${r23((x - w / 2) * k)},${r23(y * k)} Q${r23(x * k)},${r23((y - 0.9) * k)} ${r23((x + w / 2) * k)},${r23(y * k)} Q${r23(x * k)},${r23((y + 0.6) * k)} ${r23((x - w / 2) * k)},${r23(y * k)} Z" fill="${ECORCE.marque}"/>`).join("");
-      return `<path d="${d}" fill="${ECORCE.left}" stroke="${OUT2}" stroke-width="${W}" stroke-linejoin="round"/><defs><clipPath id="${id}"><path d="${d}"/></clipPath></defs><g clip-path="url(#${id})">${dedans}</g>`;
+      return `<path d="${d}" fill="${ECORCE.left}" stroke="${OUT3}" stroke-width="${W}" stroke-linejoin="round"/><defs><clipPath id="${id3}"><path d="${d}"/></clipPath></defs><g clip-path="url(#${id3})">${dedans}</g>`;
     }
     __name(troncBouleau, "troncBouleau");
     var B_FOND = [[-10, -84, 10], [6, -90, 10.5], [17, -78, 9], [-19, -72, 8.5], [1, -75, 10]];
@@ -502,8 +502,8 @@ var require_arbres = __commonJS({
     var B_MILIEU = [[-1, -71, 9], [-6, -61, 6.5, 0], [5, -62, 6.5, 0]];
     function bouleau({ vert = "doux", petit = false, fleuri = false } = {}) {
       const c = VERTS_BOULEAU[vert], k = petit ? 0.76 : 1;
-      const id = `bou${petit ? "p" : "g"}${vert[0]}${fleuri ? "f" : ""}`;
-      return E(2 * k, 1.5, 21 * k, 9.5 * k, "rgba(40,55,20,0.22)", 0) + troncBouleau(`${id}t`, k) + touffe(`${id}a`, B_FOND, c.fond, [[-4, -80], [12, -76, 0.8]], k) + touffe(`${id}b`, B_DROITE, c.devant, [[13, -55, 0.8], [20, -60, 0.7]], k) + touffe(`${id}c`, B_GAUCHE, c.devant, [[-17, -53, 0.8], [-10, -58, 0.7]], k) + touffe(`${id}d`, B_MILIEU, c.devant, [[-2, -64, 0.8]], k) + (fleuri ? pied(k * 0.85) : "");
+      const id3 = `bou${petit ? "p" : "g"}${vert[0]}${fleuri ? "f" : ""}`;
+      return E(2 * k, 1.5, 21 * k, 9.5 * k, "rgba(40,55,20,0.22)", 0) + troncBouleau(`${id3}t`, k) + touffe(`${id3}a`, B_FOND, c.fond, [[-4, -80], [12, -76, 0.8]], k) + touffe(`${id3}b`, B_DROITE, c.devant, [[13, -55, 0.8], [20, -60, 0.7]], k) + touffe(`${id3}c`, B_GAUCHE, c.devant, [[-17, -53, 0.8], [-10, -58, 0.7]], k) + touffe(`${id3}d`, B_MILIEU, c.devant, [[-2, -64, 0.8]], k) + (fleuri ? pied(k * 0.85) : "");
     }
     __name(bouleau, "bouleau");
     var BOULEAUX = [];
@@ -526,39 +526,39 @@ var require_arbres = __commonJS({
       return d + ` Q${r23(w * 0.3)},${r23(top + h * 0.6)} 0,${r23(top)} Z`;
     }
     __name(etageD, "etageD");
-    function etage(id, y, w, h, n, c, neige, yNeige) {
+    function etage(id3, y, w, h, n, c, neige, yNeige) {
       const d = etageD(y, w, h, n), top = y - h, pas = 2 * w / n;
       let dedans = `<path d="M${r23(w * 0.08)},${r23(top)} Q${r23(w * 0.45)},${r23(top + h * 0.6)} ${r23(w + 2)},${r23(y + 4)} L${r23(w * 0.12)},${r23(y + 4)} Z" fill="${c.dark}"/>`;
       for (let i = 0; i < n; i++) dedans += `<ellipse cx="${r23(-w + (i + 0.5) * pas)}" cy="${r23(y + 1.6)}" rx="${r23(pas * 0.42)}" ry="2" fill="${c.dark}" opacity="0.55"/>`;
       dedans += `<path d="M-1.2,${r23(top + 3)} Q${r23(-w * 0.32)},${r23(top + h * 0.6)} ${r23(-w + 3)},${r23(y - 1.2)}" stroke="${c.light}" stroke-width="1.6" fill="none" stroke-linecap="round"/>` + [[-w * 0.45, y - h * 0.35], [w * 0.15, y - h * 0.55], [-w * 0.1, y - h * 0.2], [w * 0.5, y - h * 0.25]].map(([x, yy]) => `<path d="M${r23(x - 1.8)},${r23(yy - 1.2)} L${r23(x)},${r23(yy + 0.6)} L${r23(x + 1.8)},${r23(yy - 1.2)}" stroke="${c.dark}" stroke-width="0.8" fill="none" stroke-linecap="round" stroke-linejoin="round"/>`).join("");
       if (neige) {
         const yc = yNeige, xc = w * (yc - top) / h * 1.08;
-        dedans += `<path d="M0,${r23(top - 0.4)} Q${r23(-w * 0.18)},${r23(top + h * 0.3)} ${r23(-xc - 1)},${r23(yc)} Q${r23(-xc * 0.6)},${r23(yc + 3)} ${r23(-xc * 0.3)},${r23(yc + 0.6)} Q0,${r23(yc + 3.2)} ${r23(xc * 0.3)},${r23(yc + 0.4)} Q${r23(xc * 0.65)},${r23(yc + 2.8)} ${r23(xc + 1)},${r23(yc - 0.4)} Q${r23(w * 0.18)},${r23(top + h * 0.3)} 0,${r23(top - 0.4)} Z" fill="#FFFFFF" stroke="${OUT2}" stroke-width="0.8" stroke-linejoin="round"/><path d="M${r23(w * 0.06)},${r23(top + 1.5)} Q${r23(w * 0.2)},${r23(top + h * 0.3)} ${r23(xc * 0.9)},${r23(yc)}" stroke="#D6E4EE" stroke-width="1.4" fill="none" stroke-linecap="round"/>`;
+        dedans += `<path d="M0,${r23(top - 0.4)} Q${r23(-w * 0.18)},${r23(top + h * 0.3)} ${r23(-xc - 1)},${r23(yc)} Q${r23(-xc * 0.6)},${r23(yc + 3)} ${r23(-xc * 0.3)},${r23(yc + 0.6)} Q0,${r23(yc + 3.2)} ${r23(xc * 0.3)},${r23(yc + 0.4)} Q${r23(xc * 0.65)},${r23(yc + 2.8)} ${r23(xc + 1)},${r23(yc - 0.4)} Q${r23(w * 0.18)},${r23(top + h * 0.3)} 0,${r23(top - 0.4)} Z" fill="#FFFFFF" stroke="${OUT3}" stroke-width="0.8" stroke-linejoin="round"/><path d="M${r23(w * 0.06)},${r23(top + 1.5)} Q${r23(w * 0.2)},${r23(top + h * 0.3)} ${r23(xc * 0.9)},${r23(yc)}" stroke="#D6E4EE" stroke-width="1.4" fill="none" stroke-linecap="round"/>`;
       }
-      let o = `<path d="${d}" fill="${c.mid}" stroke="${OUT2}" stroke-width="${W}" stroke-linejoin="round"/><defs><clipPath id="${id}"><path d="${d}"/></clipPath></defs><g clip-path="url(#${id})">${dedans}</g>`;
+      let o = `<path d="${d}" fill="${c.mid}" stroke="${OUT3}" stroke-width="${W}" stroke-linejoin="round"/><defs><clipPath id="${id3}"><path d="${d}"/></clipPath></defs><g clip-path="url(#${id3})">${dedans}</g>`;
       if (neige) {
         let f = `M${r23(-w + 1)},${r23(y - 0.2)}`;
         for (let i = 0; i < n; i++) {
           const x0 = -w + i * pas;
           f += ` Q${r23(x0 + pas / 2)},${r23(y + 3.4)} ${r23(Math.min(x0 + pas, w - 1))},${r23(y - 0.2)}`;
         }
-        o += `<path d="${f}" stroke="${OUT2}" stroke-width="2.8" fill="none" stroke-linecap="round" stroke-linejoin="round"/><path d="${f}" stroke="#FFFFFF" stroke-width="1.1" fill="none" stroke-linecap="round" stroke-linejoin="round"/>`;
+        o += `<path d="${f}" stroke="${OUT3}" stroke-width="2.8" fill="none" stroke-linecap="round" stroke-linejoin="round"/><path d="${f}" stroke="#FFFFFF" stroke-width="1.1" fill="none" stroke-linecap="round" stroke-linejoin="round"/>`;
       }
       return o;
     }
     __name(etage, "etage");
-    function troncSapin(id, k) {
+    function troncSapin(id3, k) {
       const d = sc("M-7.5,1.8 Q-4,0.6 -3.4,-4 L-3,-16 L3,-16 L3.4,-4 Q4,0.6 8,2 Q4.4,3.2 2,2 Q0,3.4 -2.2,2.2 Q-4.6,3.2 -7.5,1.8 Z", k);
-      return `<path d="${d}" fill="${BOIS.left}" stroke="${OUT2}" stroke-width="${W}" stroke-linejoin="round"/><defs><clipPath id="${id}"><path d="${d}"/></clipPath></defs><g clip-path="url(#${id})"><path d="${sc("M0.8,4 L1,-17 L9,-17 L9,4 Z", k)}" fill="${BOIS.right}"/><path d="${sc("M-1.6,-4 L-1.4,-11", k)}" stroke="${BOIS.bark}" stroke-width="0.7" stroke-linecap="round"/></g>`;
+      return `<path d="${d}" fill="${BOIS.left}" stroke="${OUT3}" stroke-width="${W}" stroke-linejoin="round"/><defs><clipPath id="${id3}"><path d="${d}"/></clipPath></defs><g clip-path="url(#${id3})"><path d="${sc("M0.8,4 L1,-17 L9,-17 L9,4 Z", k)}" fill="${BOIS.right}"/><path d="${sc("M-1.6,-4 L-1.4,-11", k)}" stroke="${BOIS.bark}" stroke-width="0.7" stroke-linecap="round"/></g>`;
     }
     __name(troncSapin, "troncSapin");
-    var pommeDePin = /* @__PURE__ */ __name((x, y, a) => `<g transform="translate(${r23(x)} ${r23(y)}) rotate(${a})"><path d="M0,-2.6 Q2.2,-1 1.8,1.2 Q0,3 -1.8,1.2 Q-2.2,-1 0,-2.6 Z" fill="#A0703F" stroke="${OUT2}" stroke-width="0.7" stroke-linejoin="round"/><path d="M-1.4,-0.6 Q0,0.4 1.4,-0.6 M-1.5,1 Q0,2 1.5,1" stroke="#6E4A28" stroke-width="0.5" fill="none"/></g>`, "pommeDePin");
-    var congere = /* @__PURE__ */ __name((k) => `<path d="M${r23(-17 * k)},4 Q${r23(-14 * k)},-1 ${r23(-8 * k)},1.5 Q${r23(-5 * k)},-0.5 ${r23(-2 * k)},3 Q${r23(4 * k)},0 ${r23(8 * k)},3 Q${r23(13 * k)},0 ${r23(18 * k)},4.5 Q0,9 ${r23(-17 * k)},4 Z" fill="#FFFFFF" stroke="${OUT2}" stroke-width="0.9" stroke-linejoin="round"/><path d="M${r23(3 * k)},5.5 Q${r23(10 * k)},6.6 ${r23(15 * k)},5" stroke="#D6E4EE" stroke-width="1.2" fill="none" stroke-linecap="round"/>`, "congere");
+    var pommeDePin = /* @__PURE__ */ __name((x, y, a) => `<g transform="translate(${r23(x)} ${r23(y)}) rotate(${a})"><path d="M0,-2.6 Q2.2,-1 1.8,1.2 Q0,3 -1.8,1.2 Q-2.2,-1 0,-2.6 Z" fill="#A0703F" stroke="${OUT3}" stroke-width="0.7" stroke-linejoin="round"/><path d="M-1.4,-0.6 Q0,0.4 1.4,-0.6 M-1.5,1 Q0,2 1.5,1" stroke="#6E4A28" stroke-width="0.5" fill="none"/></g>`, "pommeDePin");
+    var congere = /* @__PURE__ */ __name((k) => `<path d="M${r23(-17 * k)},4 Q${r23(-14 * k)},-1 ${r23(-8 * k)},1.5 Q${r23(-5 * k)},-0.5 ${r23(-2 * k)},3 Q${r23(4 * k)},0 ${r23(8 * k)},3 Q${r23(13 * k)},0 ${r23(18 * k)},4.5 Q0,9 ${r23(-17 * k)},4 Z" fill="#FFFFFF" stroke="${OUT3}" stroke-width="0.9" stroke-linejoin="round"/><path d="M${r23(3 * k)},5.5 Q${r23(10 * k)},6.6 ${r23(15 * k)},5" stroke="#D6E4EE" stroke-width="1.2" fill="none" stroke-linecap="round"/>`, "congere");
     var ETAGES = [[-10, 25, 28, 5], [-27, 20.5, 27, 4], [-44, 16, 25, 4], [-60, 11, 24, 3]];
     function sapin({ vert = "doux", petit = false, neige = false, pied: pied2 = false } = {}) {
       const c = PINS[vert], k = petit ? 0.76 : 1;
-      const id = `sap${neige ? "n" : ""}${petit ? "p" : "g"}${vert[0]}${pied2 ? "x" : ""}`;
-      return E(2 * k, 1.5, 24 * k, 10.5 * k, neige ? "rgba(60,80,110,0.22)" : "rgba(40,55,20,0.22)", 0) + troncSapin(`${id}t`, k) + ETAGES.map(([y, w, h, n], i) => etage(`${id}${i}`, y * k, w * k, h * k, n, c, neige, (i < ETAGES.length - 1 ? ETAGES[i + 1][0] + 6.5 : y - h * 0.55) * k)).join("") + (pied2 ? neige ? congere(k) : pommeDePin(-12 * k, 5, -20) + pommeDePin(11 * k, 6, 30) + pommeDePin(15 * k, 3.4, 80) : "");
+      const id3 = `sap${neige ? "n" : ""}${petit ? "p" : "g"}${vert[0]}${pied2 ? "x" : ""}`;
+      return E(2 * k, 1.5, 24 * k, 10.5 * k, neige ? "rgba(60,80,110,0.22)" : "rgba(40,55,20,0.22)", 0) + troncSapin(`${id3}t`, k) + ETAGES.map(([y, w, h, n], i) => etage(`${id3}${i}`, y * k, w * k, h * k, n, c, neige, (i < ETAGES.length - 1 ? ETAGES[i + 1][0] + 6.5 : y - h * 0.55) * k)).join("") + (pied2 ? neige ? congere(k) : pommeDePin(-12 * k, 5, -20) + pommeDePin(11 * k, 6, 30) + pommeDePin(15 * k, 3.4, 80) : "");
     }
     __name(sapin, "sapin");
     var SAPINS = [];
@@ -574,12 +574,12 @@ var require_arbres = __commonJS({
     var STIPE = { left: "#C08A55", right: "#946339", light: "#D9A976" };
     var qPt = /* @__PURE__ */ __name((a, c, b, t) => [(1 - t) ** 2 * a[0] + 2 * (1 - t) * t * c[0] + t * t * b[0], (1 - t) ** 2 * a[1] + 2 * (1 - t) * t * c[1] + t * t * b[1]], "qPt");
     var qTan = /* @__PURE__ */ __name((a, c, b, t) => [2 * (1 - t) * (c[0] - a[0]) + 2 * t * (b[0] - c[0]), 2 * (1 - t) * (c[1] - a[1]) + 2 * t * (b[1] - c[1])], "qTan");
-    var pts2 = /* @__PURE__ */ __name((l) => l.map((p) => `${r23(p[0])},${r23(p[1])}`).join(" L"), "pts");
-    function palme(id, o, dx, dy, larg, c, k) {
+    var pts3 = /* @__PURE__ */ __name((l) => l.map((p) => `${r23(p[0])},${r23(p[1])}`).join(" L"), "pts");
+    function palme(id3, o, dx, dy, larg, c, k) {
       const b = [o[0] + dx * k, o[1] + dy * k], ctl = [o[0] + dx * k * 0.5, o[1] + dy * k * 0.5 - Math.abs(dx) * 0.38 * k];
-      const N = 14, axe = [], haut = [], bas = [];
-      for (let i = 0; i <= N; i++) {
-        const t = i / N, p = qPt(o, ctl, b, t), d2 = qTan(o, ctl, b, t), L = Math.hypot(d2[0], d2[1]) || 1;
+      const N2 = 14, axe = [], haut = [], bas = [];
+      for (let i = 0; i <= N2; i++) {
+        const t = i / N2, p = qPt(o, ctl, b, t), d2 = qTan(o, ctl, b, t), L = Math.hypot(d2[0], d2[1]) || 1;
         let nx = -d2[1] / L, ny = d2[0] / L;
         if (ny > 0) {
           nx = -nx;
@@ -590,22 +590,22 @@ var require_arbres = __commonJS({
         haut.push([p[0] + nx * w * 0.55, p[1] + ny * w * 0.55]);
         bas.push([p[0] - nx * w * cran, p[1] - ny * w * cran]);
       }
-      const d = `M${pts2(haut.concat(bas.slice().reverse()))} Z`;
-      return `<path d="${d}" fill="${c.mid}" stroke="${OUT2}" stroke-width="${W}" stroke-linejoin="round"/><defs><clipPath id="${id}"><path d="${d}"/></clipPath></defs><g clip-path="url(#${id})"><path d="M${pts2(axe.concat(bas.slice().reverse()))} Z" fill="${c.dark}"/><path d="M${r23(o[0])},${r23(o[1] - 0.8)} Q${r23(ctl[0])},${r23(ctl[1] - 0.8)} ${r23(b[0])},${r23(b[1] - 0.8)}" stroke="${c.light}" stroke-width="1" fill="none" stroke-linecap="round"/></g>`;
+      const d = `M${pts3(haut.concat(bas.slice().reverse()))} Z`;
+      return `<path d="${d}" fill="${c.mid}" stroke="${OUT3}" stroke-width="${W}" stroke-linejoin="round"/><defs><clipPath id="${id3}"><path d="${d}"/></clipPath></defs><g clip-path="url(#${id3})"><path d="M${pts3(axe.concat(bas.slice().reverse()))} Z" fill="${c.dark}"/><path d="M${r23(o[0])},${r23(o[1] - 0.8)} Q${r23(ctl[0])},${r23(ctl[1] - 0.8)} ${r23(b[0])},${r23(b[1] - 0.8)}" stroke="${c.light}" stroke-width="1" fill="none" stroke-linecap="round"/></g>`;
     }
     __name(palme, "palme");
-    function stipe(id, k) {
-      const a = [0, 0], ctl = [-7 * k, -32 * k], b = [8 * k, -62 * k], N = 8;
+    function stipe(id3, k) {
+      const a = [0, 0], ctl = [-7 * k, -32 * k], b = [8 * k, -62 * k], N2 = 8;
       let o = "";
-      for (let i = 0; i < N; i++) {
-        const t0 = i / N, t1 = (i + 1) / N, p0 = qPt(a, ctl, b, t0), p1 = qPt(a, ctl, b, t1);
+      for (let i = 0; i < N2; i++) {
+        const t0 = i / N2, t1 = (i + 1) / N2, p0 = qPt(a, ctl, b, t0), p1 = qPt(a, ctl, b, t1);
         const w0 = (5 - 1.8 * t0) * k, w1 = (5 - 1.8 * t1) * k * 1.12;
         const d0 = qTan(a, ctl, b, t0), L0 = Math.hypot(d0[0], d0[1]), n0 = [-d0[1] / L0, d0[0] / L0];
         const d1 = qTan(a, ctl, b, t1), L1 = Math.hypot(d1[0], d1[1]), n1 = [-d1[1] / L1, d1[0] / L1];
         const l0 = [p0[0] - n0[0] * w0, p0[1] - n0[1] * w0], r0 = [p0[0] + n0[0] * w0, p0[1] + n0[1] * w0];
         const l1 = [p1[0] - n1[0] * w1, p1[1] - n1[1] * w1], r1 = [p1[0] + n1[0] * w1, p1[1] + n1[1] * w1];
         const d = `M${r23(l0[0])},${r23(l0[1])} L${r23(l1[0])},${r23(l1[1])} Q${r23(p1[0])},${r23(p1[1] + 1.4 * k)} ${r23(r1[0])},${r23(r1[1])} L${r23(r0[0])},${r23(r0[1])} Q${r23(p0[0])},${r23(p0[1] + 1.8 * k)} ${r23(l0[0])},${r23(l0[1])} Z`;
-        o += `<path d="${d}" fill="${STIPE.left}" stroke="${OUT2}" stroke-width="${W}" stroke-linejoin="round"/><defs><clipPath id="${id}${i}"><path d="${d}"/></clipPath></defs><g clip-path="url(#${id}${i})"><path d="M${r23(p0[0] + n0[0] * w0 * 0.25)},${r23(p0[1] + 4)} L${r23(p1[0] + n1[0] * w1 * 0.25)},${r23(p1[1] - 2)} L${r23(p1[0] + n1[0] * 12)},${r23(p1[1] - 2)} L${r23(p0[0] + n0[0] * 12)},${r23(p0[1] + 4)} Z" fill="${STIPE.right}"/><path d="M${r23(l1[0])},${r23(l1[1] + 1.2)} Q${r23(p1[0])},${r23(p1[1] + 2.6 * k)} ${r23(r1[0])},${r23(r1[1] + 1.2)}" stroke="${STIPE.light}" stroke-width="0.9" fill="none" stroke-linecap="round"/></g>`;
+        o += `<path d="${d}" fill="${STIPE.left}" stroke="${OUT3}" stroke-width="${W}" stroke-linejoin="round"/><defs><clipPath id="${id3}${i}"><path d="${d}"/></clipPath></defs><g clip-path="url(#${id3}${i})"><path d="M${r23(p0[0] + n0[0] * w0 * 0.25)},${r23(p0[1] + 4)} L${r23(p1[0] + n1[0] * w1 * 0.25)},${r23(p1[1] - 2)} L${r23(p1[0] + n1[0] * 12)},${r23(p1[1] - 2)} L${r23(p0[0] + n0[0] * 12)},${r23(p0[1] + 4)} Z" fill="${STIPE.right}"/><path d="M${r23(l1[0])},${r23(l1[1] + 1.2)} Q${r23(p1[0])},${r23(p1[1] + 2.6 * k)} ${r23(r1[0])},${r23(r1[1] + 1.2)}" stroke="${STIPE.light}" stroke-width="0.9" fill="none" stroke-linecap="round"/></g>`;
       }
       return o;
     }
@@ -615,8 +615,8 @@ var require_arbres = __commonJS({
     var PALMES_DEVANT = [[-26, 17, 6.5], [27, 19, 6.5], [-20, -8, 6], [22, -6, 6]];
     function palmier({ vert = "doux", petit = false, cocos = false } = {}) {
       const c = PALMES[vert], k = petit ? 0.76 : 1, o = [8 * k, -62 * k], s = Math.max(k, 0.85);
-      const id = `pal${petit ? "p" : "g"}${vert[0]}${cocos ? "c" : ""}`;
-      return E(3 * k, 1.5, 22 * k, 9.5 * k, "rgba(40,55,20,0.22)", 0) + stipe(`${id}s`, k) + PALMES_FOND.map(([dx, dy, l], i) => palme(`${id}f${i}`, o, dx, dy, l, c.fond, k)).join("") + PALMES_DEVANT.map(([dx, dy, l], i) => palme(`${id}d${i}`, o, dx, dy, l, c.devant, k)).join("") + noixDeCoco(o[0] - 3.4 * k, o[1] + 6 * k, s) + noixDeCoco(o[0] + 3.6 * k, o[1] + 6.6 * k, s) + noixDeCoco(o[0] + 0.1 * k, o[1] + 9.6 * k, s) + (cocos ? noixDeCoco(-12 * k, 4.5, 0.95) + noixDeCoco(14 * k, 5.5, 0.9) : "");
+      const id3 = `pal${petit ? "p" : "g"}${vert[0]}${cocos ? "c" : ""}`;
+      return E(3 * k, 1.5, 22 * k, 9.5 * k, "rgba(40,55,20,0.22)", 0) + stipe(`${id3}s`, k) + PALMES_FOND.map(([dx, dy, l], i) => palme(`${id3}f${i}`, o, dx, dy, l, c.fond, k)).join("") + PALMES_DEVANT.map(([dx, dy, l], i) => palme(`${id3}d${i}`, o, dx, dy, l, c.devant, k)).join("") + noixDeCoco(o[0] - 3.4 * k, o[1] + 6 * k, s) + noixDeCoco(o[0] + 3.6 * k, o[1] + 6.6 * k, s) + noixDeCoco(o[0] + 0.1 * k, o[1] + 9.6 * k, s) + (cocos ? noixDeCoco(-12 * k, 4.5, 0.95) + noixDeCoco(14 * k, 5.5, 0.9) : "");
     }
     __name(palmier, "palmier");
     var PALMIERS = [];
@@ -644,20 +644,20 @@ var require_arbres = __commonJS({
         for (let i = 0; i < p.length - 1; i++) segs.push([p[i], p[i + 1], w0 * (1 - i / p.length * 0.75)]);
       });
       const seg = /* @__PURE__ */ __name(([a, b], w, col) => `<path d="M${r23(a[0] * k)},${r23(a[1] * k)} L${r23(b[0] * k)},${r23(b[1] * k)}" stroke="${col}" stroke-width="${r23(w)}" stroke-linecap="round"/>`, "seg");
-      return segs.map(([a, b, w]) => seg([a, b], w * k + W * 2, OUT2)).join("") + segs.map(([a, b, w]) => seg([a, b], w * k, c.left)).join("") + segs.map(([a, b, w]) => seg([[a[0] + w * 0.22, a[1]], [b[0] + w * 0.22, b[1]]], w * k * 0.45, c.right)).join("");
+      return segs.map(([a, b, w]) => seg([a, b], w * k + W * 2, OUT3)).join("") + segs.map(([a, b, w]) => seg([a, b], w * k, c.left)).join("") + segs.map(([a, b, w]) => seg([[a[0] + w * 0.22, a[1]], [b[0] + w * 0.22, b[1]]], w * k * 0.45, c.right)).join("");
     }
     __name(branchesMortes, "branchesMortes");
-    function troncMort(id, c, k) {
+    function troncMort(id3, c, k) {
       const d = sc("M-12,2.2 Q-7,0.8 -5.8,-5 Q-4.6,-14 -5.2,-22 Q-5.6,-30 -10.5,-41 L-6.5,-44.5 Q-2.2,-38 0,-35 Q2,-38.5 7.5,-43 L11.5,-39.5 Q5.6,-31 5,-22 Q4.4,-12 5.8,-6 Q7,0.6 12.5,2.6 Q8,4 4.8,2.4 Q2.4,4.8 -0.6,3.4 Q-3.4,4.6 -5.8,2.6 Q-9,3.6 -12,2.2 Z", k);
       const dedans = `<path d="${sc("M1.4,4 Q2.4,-12 1.8,-22 Q3.4,-32 8.5,-44.5 L16,-44.5 L16,4 Z", k)}" fill="${c.right}"/><path d="${sc("M-2.4,-6 Q-3,-12 -2.2,-17 M2.6,-9 Q3.2,-14 2.6,-19 M-3.2,-21 q0.4,-3 -0.2,-5", k)}" fill="none" stroke="${c.bark}" stroke-width="0.7" stroke-linecap="round"/><path d="${sc("M-4.4,-4 Q-3.8,-12 -4,-20", k)}" fill="none" stroke="${c.light}" stroke-width="1" stroke-linecap="round" opacity="0.8"/>` + E(-0.6 * k, -15 * k, 2.4 * k, 3 * k, c.light, 0.8) + E(-0.4 * k, -14.6 * k, 1.5 * k, 2.1 * k, "#3A2E26", 0) + E(-3.6 * k, -25 * k, 2 * k, 1 * k, "#B7C46C", 0.5) + E(-2.2 * k, -24.4 * k, 1 * k, 0.6 * k, "#B7C46C", 0.4);
-      return `<path d="${d}" fill="${c.left}" stroke="${OUT2}" stroke-width="${W}" stroke-linejoin="round"/><defs><clipPath id="${id}"><path d="${d}"/></clipPath></defs><g clip-path="url(#${id})">${dedans}</g>`;
+      return `<path d="${d}" fill="${c.left}" stroke="${OUT3}" stroke-width="${W}" stroke-linejoin="round"/><defs><clipPath id="${id3}"><path d="${d}"/></clipPath></defs><g clip-path="url(#${id3})">${dedans}</g>`;
     }
     __name(troncMort, "troncMort");
     function arbreMort({ teinte = "gris", petit = false, champignons = false } = {}) {
       const c = BOIS_MORT[teinte], k = petit ? 0.76 : 1;
-      const id = `mor${petit ? "p" : "g"}${teinte[0]}${champignons ? "c" : ""}`;
+      const id3 = `mor${petit ? "p" : "g"}${teinte[0]}${champignons ? "c" : ""}`;
       const raccord = /* @__PURE__ */ __name((a, b) => `<path d="M${r23(a[0] * k)},${r23(a[1] * k)} L${r23(b[0] * k)},${r23(b[1] * k)}" stroke="${c.left}" stroke-width="${r23(3.6 * k)}" stroke-linecap="butt"/><path d="M${r23((a[0] + 0.8) * k)},${r23(a[1] * k)} L${r23((b[0] + 0.8) * k)},${r23(b[1] * k)}" stroke="${c.right}" stroke-width="${r23(1.6 * k)}" stroke-linecap="butt"/>`, "raccord");
-      return E(2 * k, 1.5, 19 * k, 8.5 * k, "rgba(40,55,20,0.22)", 0) + branchesMortes(c, k) + troncMort(`${id}t`, c, k) + raccord([-7.6, -41.5], [-10, -45.6]) + raccord([8.6, -40.6], [11, -42.5]) + (champignons ? champignon(-9 * k, 5.4) + champignon(10.5 * k, 5.6) + champignon(14 * k, 3.4) : "");
+      return E(2 * k, 1.5, 19 * k, 8.5 * k, "rgba(40,55,20,0.22)", 0) + branchesMortes(c, k) + troncMort(`${id3}t`, c, k) + raccord([-7.6, -41.5], [-10, -45.6]) + raccord([8.6, -40.6], [11, -42.5]) + (champignons ? champignon(-9 * k, 5.4) + champignon(10.5 * k, 5.6) + champignon(14 * k, 3.4) : "");
     }
     __name(arbreMort, "arbreMort");
     var ARBRES_MORTS = [];
@@ -700,7 +700,7 @@ var require_arbres = __commonJS({
 // atelier/crafts.js
 var require_crafts = __commonJS({
   "atelier/crafts.js"(exports, module) {
-    var { OUT: OUT2, P: P2, E, L, r2: r23 } = require_troupe2();
+    var { OUT: OUT3, P: P2, E, L, r2: r23 } = require_troupe2();
     var Dk = require_deco();
     var { herbe, fleurette } = require_arbres();
     var {
@@ -717,28 +717,28 @@ var require_crafts = __commonJS({
       cylinder: cylinder2,
       disc: disc2,
       gable: gable2,
-      pyramid,
+      pyramid: pyramid2,
       post: post2,
       rail: rail2,
       flame,
       glow,
-      LEAVES,
+      LEAVES: LEAVES2,
       WOOD: WOOD2,
       WOOD_DARK: WOOD_DARK2,
       GRANITE,
       STONE: STONE2,
-      WHITE_STONE,
+      WHITE_STONE: WHITE_STONE2,
       ROOF_RED: ROOF_RED2,
       ROOF_BLUE,
       WALL: WALL2,
       SOIL,
-      WATER,
+      WATER: WATER2,
       WATER_LIGHT,
       BRASS: BRASS2,
-      IRON: IRON2
+      IRON: IRON3
     } = Dk;
     var TAU2 = Math.PI * 2;
-    var leafDot = /* @__PURE__ */ __name((x, y, r) => E(x + r * 0.2, y + r * 0.2, r, r, LEAVES.dark, 0.8) + E(x, y, r * 0.85, r * 0.85, LEAVES.mid, 0) + E(x - r * 0.3, y - r * 0.3, r * 0.4, r * 0.4, LEAVES.light, 0), "leafDot");
+    var leafDot = /* @__PURE__ */ __name((x, y, r) => E(x + r * 0.2, y + r * 0.2, r, r, LEAVES2.dark, 0.8) + E(x, y, r * 0.85, r * 0.85, LEAVES2.mid, 0) + E(x - r * 0.3, y - r * 0.3, r * 0.4, r * 0.4, LEAVES2.light, 0), "leafDot");
     var at = /* @__PURE__ */ __name((u, v, z = 0) => pt(u, v, z), "at");
     var wave2 = /* @__PURE__ */ __name((f, n, amp, ph = 0) => Math.sin(f / n * TAU2 + ph) * amp, "wave");
     var ICE = { top: "#E9F8FF", left: "#BFE7F7", right: "#8CCBE8" };
@@ -766,7 +766,7 @@ var require_crafts = __commonJS({
       return s + herbe(ax - 1, ay + 1, "#86B852", 0.7) + herbe(bx + 1.6, by + 1.4, "#94C25C", 0.6) + herbe(cx + 2, cy + 1, "#86B852", 0.55) + fleurette(bx - 3.4, by + 2.6, "#FFFFFF") + fleurette(ax + 5, ay + 3, "#F7B6C8");
     }, "draw") };
     var TERRE = { top: "#7E5233", grain: "#5E3A22" };
-    var feuille = /* @__PURE__ */ __name((x, y, a, col = "#6FB24E") => `<path d="M0,0 Q-2.4,-1.2 -3.4,-3.6 Q-0.6,-3.2 0,0 Z" fill="${col}" stroke="${OUT2}" stroke-width="0.6" stroke-linejoin="round" transform="translate(${r23(x)} ${r23(y)}) rotate(${a})"/>`, "feuille");
+    var feuille = /* @__PURE__ */ __name((x, y, a, col = "#6FB24E") => `<path d="M0,0 Q-2.4,-1.2 -3.4,-3.6 Q-0.6,-3.2 0,0 Z" fill="${col}" stroke="${OUT3}" stroke-width="0.6" stroke-linejoin="round" transform="translate(${r23(x)} ${r23(y)}) rotate(${a})"/>`, "feuille");
     var pierreBord = /* @__PURE__ */ __name((x, y) => E(x, y, 2.5, 1.35, STONE2.left, 0.7) + E(x - 0.5, y - 0.35, 1.5, 0.7, STONE2.top, 0), "pierreBord");
     function teteMassif(x, y, k) {
       const sorte = k % 3, col = ["#E8566A", "#F7B6C8", "#F2C04B", "#B48AE0", "#F08A3A"][k % 5];
@@ -823,11 +823,11 @@ var require_crafts = __commonJS({
       [[0, 5, [-0.1, 0.02, 0.1]], [5, 10, [-0.1, -0.03, 0.1]], [10, 15, [-0.1, 0.04, 0.1]]].forEach(([z0, z1, vs], r) => vs.slice(1).forEach((b, i) => {
         s += moellon(vs[i], b, z0, z1, "bout", 0.42, ["#A9A08D", "#9E9584"][(i + r) % 2]);
       }));
-      for (const [a, b] of [[-0.45, -0.15], [-0.15, 0.15], [0.15, 0.45]]) s += box2(a, -0.125, b, 0.125, 15, 18.2, WHITE_STONE, 0.9);
+      for (const [a, b] of [[-0.45, -0.15], [-0.15, 0.15], [0.15, 0.45]]) s += box2(a, -0.125, b, 0.125, 15, 18.2, WHITE_STONE2, 0.9);
       const [m1x, m1y] = at(-0.3, 0.02, 18.2), [m2x, m2y] = at(0.2, 0.06, 18.2), [px, py] = at(0.28, 0.13, 0);
       const coussin = /* @__PURE__ */ __name((x, y, n) => {
         const bosses = [[-3.2, 0.2, 1.8], [-1, -0.6, 2.2], [1.4, -0.2, 2], [3.2, 0.4, 1.5]].slice(0, n);
-        return bosses.map(([dx, dy, r]) => E(x + dx, y + dy, r + 0.7, r * 0.62 + 0.6, OUT2, 0)).join("") + bosses.map(([dx, dy, r]) => E(x + dx, y + dy, r, r * 0.62, "#86C25A", 0)).join("") + bosses.map(([dx, dy, r]) => E(x + dx - r * 0.25, y + dy - r * 0.2, r * 0.5, r * 0.28, "#B5DC86", 0)).join("");
+        return bosses.map(([dx, dy, r]) => E(x + dx, y + dy, r + 0.7, r * 0.62 + 0.6, OUT3, 0)).join("") + bosses.map(([dx, dy, r]) => E(x + dx, y + dy, r, r * 0.62, "#86C25A", 0)).join("") + bosses.map(([dx, dy, r]) => E(x + dx - r * 0.25, y + dy - r * 0.2, r * 0.5, r * 0.28, "#B5DC86", 0)).join("");
       }, "coussin");
       const brins = [[-0.36, 0.125], [-0.27, 0.125]].map(([u, v]) => {
         const [x, y] = at(u, v, 15.4);
@@ -841,8 +841,8 @@ var require_crafts = __commonJS({
       let s = shadow2(0, 0, 0.26, 0.16) + box2(-0.095, -0.095, 0.095, 0.095, 0, 3.4, STONE2) + box2(-0.066, -0.066, 0.066, 0.066, 3.4, 6.2, STONE2);
       const [mx, my] = at(-0.07, 0.09, 3.4);
       s += E(mx + 1.2, my - 0.4, 2.6, 1, "#8FCB6A", 0.6);
-      s += `<path d="M${x - 3.2},${y - 7.6} Q${x - 2.2},${y - 10} ${x - 1.7},${y - 12} L${x + 1.7},${y - 12} Q${x + 2.2},${y - 10} ${x + 3.2},${y - 7.6} Z" fill="${c.mid}" stroke="${OUT2}" stroke-width="0.9" stroke-linejoin="round"/><rect x="${x - 1.7}" y="${y - 45}" width="3.4" height="33.4" fill="${c.mid}" stroke="${OUT2}" stroke-width="0.9"/><rect x="${x + 0.4}" y="${y - 44.6}" width="1" height="32.6" fill="${c.dark}"/><rect x="${x - 1.2}" y="${y - 44.6}" width="0.8" height="32.6" fill="${c.light}"/>` + E(x, y - 29, 2.6, 1.2, c.mid, 0.8) + E(x - 0.8, y - 29.4, 1, 0.4, c.light, 0);
-      s += glow(x, y - 52, 13 + f, "255,224,138", 0.3) + `<path d="M${x - 6.2},${y - 45} L${x + 6.2},${y - 45} L${x + 5},${y - 43.4} L${x - 5},${y - 43.4} Z" fill="${c.mid}" stroke="${OUT2}" stroke-width="0.9" stroke-linejoin="round"/>` + poly3([[x - 5.2, y - 45], [x + 5.2, y - 45], [x + 5.8, y - 57.4], [x - 5.8, y - 57.4]], "#FFE27A", 1) + flame(x, y - 46.6, 8.4 + f, 2.6, f * 0.5) + `<path d="M${x},${y - 45.4} L${x},${y - 57} M${x - 5.5},${y - 51.4} L${x + 5.5},${y - 51.4}" stroke="${c.mid}" stroke-width="0.7"/><path d="M${x - 4.4},${y - 46.4} L${x - 3},${y - 55.6}" stroke="#FFFFFF" stroke-width="0.8" stroke-linecap="round" opacity="0.7"/>` + poly3([[x - 7.8, y - 57.4], [x + 7.8, y - 57.4], [x + 3, y - 62.2], [x - 3, y - 62.2]], c.mid, 1) + poly3([[x + 0.8, y - 57.4], [x + 7.8, y - 57.4], [x + 3, y - 62.2], [x + 0.6, y - 62.2]], c.dark, 0) + E(x, y - 63.6, 1.6, 1.5, c.mid, 0.8) + E(x - 0.5, y - 64, 0.5, 0.45, c.light, 0);
+      s += `<path d="M${x - 3.2},${y - 7.6} Q${x - 2.2},${y - 10} ${x - 1.7},${y - 12} L${x + 1.7},${y - 12} Q${x + 2.2},${y - 10} ${x + 3.2},${y - 7.6} Z" fill="${c.mid}" stroke="${OUT3}" stroke-width="0.9" stroke-linejoin="round"/><rect x="${x - 1.7}" y="${y - 45}" width="3.4" height="33.4" fill="${c.mid}" stroke="${OUT3}" stroke-width="0.9"/><rect x="${x + 0.4}" y="${y - 44.6}" width="1" height="32.6" fill="${c.dark}"/><rect x="${x - 1.2}" y="${y - 44.6}" width="0.8" height="32.6" fill="${c.light}"/>` + E(x, y - 29, 2.6, 1.2, c.mid, 0.8) + E(x - 0.8, y - 29.4, 1, 0.4, c.light, 0);
+      s += glow(x, y - 52, 13 + f, "255,224,138", 0.3) + `<path d="M${x - 6.2},${y - 45} L${x + 6.2},${y - 45} L${x + 5},${y - 43.4} L${x - 5},${y - 43.4} Z" fill="${c.mid}" stroke="${OUT3}" stroke-width="0.9" stroke-linejoin="round"/>` + poly3([[x - 5.2, y - 45], [x + 5.2, y - 45], [x + 5.8, y - 57.4], [x - 5.8, y - 57.4]], "#FFE27A", 1) + flame(x, y - 46.6, 8.4 + f, 2.6, f * 0.5) + `<path d="M${x},${y - 45.4} L${x},${y - 57} M${x - 5.5},${y - 51.4} L${x + 5.5},${y - 51.4}" stroke="${c.mid}" stroke-width="0.7"/><path d="M${x - 4.4},${y - 46.4} L${x - 3},${y - 55.6}" stroke="#FFFFFF" stroke-width="0.8" stroke-linecap="round" opacity="0.7"/>` + poly3([[x - 7.8, y - 57.4], [x + 7.8, y - 57.4], [x + 3, y - 62.2], [x - 3, y - 62.2]], c.mid, 1) + poly3([[x + 0.8, y - 57.4], [x + 7.8, y - 57.4], [x + 3, y - 62.2], [x + 0.6, y - 62.2]], c.dark, 0) + E(x, y - 63.6, 1.6, 1.5, c.mid, 0.8) + E(x - 0.5, y - 64, 0.5, 0.45, c.light, 0);
       return s;
     }, "draw") };
     var BOIS_BANC = { lattes: { top: "#EBBE84", left: "#CB9259", right: "#A0683B" }, pieds: { top: "#A9703F", left: "#8B5631", right: "#6A3F22" } };
@@ -858,7 +858,7 @@ var require_crafts = __commonJS({
       const accoudoir = /* @__PURE__ */ __name((u) => pied(u, 0.07, 15.6) + box2(u - 0.032, -0.1, u + 0.032, 0.09, 15.6, 17.2, c.lattes, 0.8), "accoudoir");
       s += accoudoir(-L0 + 0.03);
       const [cx, cy] = at(-0.02, 0, 10.8);
-      s += `<path d="M${r23(cx - 7)},${r23(cy - 0.4)} Q${r23(cx - 7.6)},${r23(cy - 3.8)} ${r23(cx - 3)},${r23(cy - 4.3)} L${r23(cx + 3.4)},${r23(cy - 4.5)} Q${r23(cx + 7.8)},${r23(cy - 4)} ${r23(cx + 7)},${r23(cy - 0.4)} Q${r23(cx)},${r23(cy + 2)} ${r23(cx - 7)},${r23(cy - 0.4)} Z" fill="#E8566A" stroke="${OUT2}" stroke-width="0.9" stroke-linejoin="round"/>` + E(cx - 1.2, cy - 2.9, 3.8, 1.1, "#F28A98", 0) + E(cx + 0.2, cy - 2, 0.45, 0.35, "#B23A4C", 0) + `<path d="M${r23(cx + 3.8)},${r23(cy - 1.8)} q-0.8,-0.9 -1.4,-0.1 q-0.5,0.8 1.4,1.8 q1.9,-1 1.4,-1.8 q-0.6,-0.8 -1.4,0.1 Z" fill="#FFFFFF" opacity="0.85"/>`;
+      s += `<path d="M${r23(cx - 7)},${r23(cy - 0.4)} Q${r23(cx - 7.6)},${r23(cy - 3.8)} ${r23(cx - 3)},${r23(cy - 4.3)} L${r23(cx + 3.4)},${r23(cy - 4.5)} Q${r23(cx + 7.8)},${r23(cy - 4)} ${r23(cx + 7)},${r23(cy - 0.4)} Q${r23(cx)},${r23(cy + 2)} ${r23(cx - 7)},${r23(cy - 0.4)} Z" fill="#E8566A" stroke="${OUT3}" stroke-width="0.9" stroke-linejoin="round"/>` + E(cx - 1.2, cy - 2.9, 3.8, 1.1, "#F28A98", 0) + E(cx + 0.2, cy - 2, 0.45, 0.35, "#B23A4C", 0) + `<path d="M${r23(cx + 3.8)},${r23(cy - 1.8)} q-0.8,-0.9 -1.4,-0.1 q-0.5,0.8 1.4,1.8 q1.9,-1 1.4,-1.8 q-0.6,-0.8 -1.4,0.1 Z" fill="#FFFFFF" opacity="0.85"/>`;
       return s + accoudoir(L0 - 0.03);
     }, "draw") };
     var pailleSort = /* @__PURE__ */ __name((x, y, a) => `<g transform="translate(${r23(x)} ${r23(y)}) rotate(${a})">${thick("M0,0 l-3.2,-1.4 M0,0 l-3.6,0.6 M0,0 l-2.8,2", 0.9, "#EBC46F")}</g>`, "pailleSort");
@@ -866,14 +866,14 @@ var require_crafts = __commonJS({
       const [x, y] = at(0, 0);
       const tilt = f ? 4 : -2;
       let s = shadow2(0, 0, 0.3, 0.14) + herbe(x - 5, y + 1.4, "#86B852", 0.6) + `<g transform="rotate(${tilt} ${x} ${y})">`;
-      s += `<rect x="${x - 1.7}" y="${y - 50}" width="3.4" height="50" fill="${WOOD_DARK2.left}" stroke="${OUT2}" stroke-width="0.9"/><rect x="${x + 0.3}" y="${y - 49.6}" width="1" height="49" fill="${WOOD_DARK2.right}"/>` + thick(`M${x - 17},${y - 34} L${x + 17},${y - 34}`, 2.6, WOOD_DARK2.left);
+      s += `<rect x="${x - 1.7}" y="${y - 50}" width="3.4" height="50" fill="${WOOD_DARK2.left}" stroke="${OUT3}" stroke-width="0.9"/><rect x="${x + 0.3}" y="${y - 49.6}" width="1" height="49" fill="${WOOD_DARK2.right}"/>` + thick(`M${x - 17},${y - 34} L${x + 17},${y - 34}`, 2.6, WOOD_DARK2.left);
       s += pailleSort(x - 16, y - 34, 0) + pailleSort(x + 16, y - 34, 180);
-      s += P2(`M${x - 15},${y - 37} L${x - 7},${y - 37.6} L${x - 7},${y - 31} L${x - 15},${y - 31.2} Z`, "#5C8FD0", 0.9) + P2(`M${x + 15},${y - 37} L${x + 7},${y - 37.6} L${x + 7},${y - 31} L${x + 15},${y - 31.2} Z`, "#5C8FD0", 0.9) + `<rect x="${x - 16}" y="${y - 37.4}" width="2" height="6.4" rx="0.6" fill="#3E6FA8" stroke="${OUT2}" stroke-width="0.6"/><rect x="${x + 14}" y="${y - 37.4}" width="2" height="6.4" rx="0.6" fill="#3E6FA8" stroke="${OUT2}" stroke-width="0.6"/>`;
+      s += P2(`M${x - 15},${y - 37} L${x - 7},${y - 37.6} L${x - 7},${y - 31} L${x - 15},${y - 31.2} Z`, "#5C8FD0", 0.9) + P2(`M${x + 15},${y - 37} L${x + 7},${y - 37.6} L${x + 7},${y - 31} L${x + 15},${y - 31.2} Z`, "#5C8FD0", 0.9) + `<rect x="${x - 16}" y="${y - 37.4}" width="2" height="6.4" rx="0.6" fill="#3E6FA8" stroke="${OUT3}" stroke-width="0.6"/><rect x="${x + 14}" y="${y - 37.4}" width="2" height="6.4" rx="0.6" fill="#3E6FA8" stroke="${OUT3}" stroke-width="0.6"/>`;
       const corps = `M${x - 9},${y - 38} L${x + 9},${y - 38} L${x + 8.4},${y - 19} Q${x},${y - 17} ${x - 8.4},${y - 19} Z`;
-      s += P2(corps, "#5C8FD0", 1) + `<path d="M${x - 4.4},${y - 37.6} L${x - 4.8},${y - 18.4} M${x + 3.6},${y - 37.6} L${x + 3.8},${y - 18} M${x - 8.6},${y - 31} L${x + 8.6},${y - 31} M${x - 8.4},${y - 24.6} L${x + 8.4},${y - 24.6}" stroke="#3E6FA8" stroke-width="1.2" opacity="0.7"/><rect x="${x + 1.4}" y="${y - 29}" width="5.4" height="5" fill="#E8566A" stroke="${OUT2}" stroke-width="0.7" transform="rotate(-6 ${x + 4} ${y - 26.5})"/><path d="M${x + 1.8},${y - 28.4} l0.8,0 m1,0 l0.8,0 m1,0 l0.8,0 M${x + 1.8},${y - 24.4} l0.8,0 m1,0 l0.8,0 m1,0 l0.8,0" stroke="#FFFFFF" stroke-width="0.5" transform="rotate(-6 ${x + 4} ${y - 26.5})"/>` + E(x - 1.6, y - 33.6, 0.8, 0.8, "#F6EBD6", 0.5) + E(x - 1.6, y - 27.4, 0.8, 0.8, "#F6EBD6", 0.5);
+      s += P2(corps, "#5C8FD0", 1) + `<path d="M${x - 4.4},${y - 37.6} L${x - 4.8},${y - 18.4} M${x + 3.6},${y - 37.6} L${x + 3.8},${y - 18} M${x - 8.6},${y - 31} L${x + 8.6},${y - 31} M${x - 8.4},${y - 24.6} L${x + 8.4},${y - 24.6}" stroke="#3E6FA8" stroke-width="1.2" opacity="0.7"/><rect x="${x + 1.4}" y="${y - 29}" width="5.4" height="5" fill="#E8566A" stroke="${OUT3}" stroke-width="0.7" transform="rotate(-6 ${x + 4} ${y - 26.5})"/><path d="M${x + 1.8},${y - 28.4} l0.8,0 m1,0 l0.8,0 m1,0 l0.8,0 M${x + 1.8},${y - 24.4} l0.8,0 m1,0 l0.8,0 m1,0 l0.8,0" stroke="#FFFFFF" stroke-width="0.5" transform="rotate(-6 ${x + 4} ${y - 26.5})"/>` + E(x - 1.6, y - 33.6, 0.8, 0.8, "#F6EBD6", 0.5) + E(x - 1.6, y - 27.4, 0.8, 0.8, "#F6EBD6", 0.5);
       s += pailleSort(x - 2, y - 38.4, 100) + pailleSort(x + 2, y - 38.4, 80);
-      s += E(x, y - 44, 6.6, 6.4, "#E9D2A0", 1) + [[-3, -46], [2.6, -41.4], [3.4, -47.4], [-2.2, -40.6]].map(([dx, dy]) => E(x + dx, y + dy, 0.4, 0.4, "#C9AE78", 0)).join("") + thick(`M${x - 4.4},${y - 38.8} Q${x},${y - 37.6} ${x + 4.4},${y - 38.8}`, 0.7, "#B8935A") + E(x - 2.4, y - 44.6, 1.2, 1.2, "#3A2A24", 0.5) + E(x + 2.4, y - 44.6, 1.2, 1.2, "#3A2A24", 0.5) + E(x - 2.7, y - 45, 0.35, 0.35, "#FFFFFF", 0) + E(x + 2.1, y - 45, 0.35, 0.35, "#FFFFFF", 0) + E(x - 4, y - 42.2, 1, 0.6, "#F29AA8", 0) + E(x + 4, y - 42.2, 1, 0.6, "#F29AA8", 0) + `<path d="M${x - 2.6},${y - 41.8} Q${x},${y - 40} ${x + 2.6},${y - 41.8}" stroke="${OUT2}" stroke-width="0.6" fill="none" stroke-linecap="round"/><path d="M${x - 1.6},${y - 41.6} l0,1.2 M${x},${y - 41} l0,1.2 M${x + 1.6},${y - 41.6} l0,1.2" stroke="${OUT2}" stroke-width="0.45"/>`;
-      s += E(x, y - 49.4, 11, 2.8, "#EBC46F", 1) + `<path d="M${x - 9},${y - 49.6} q4,1.4 9,0.2 M${x + 2},${y - 50} q4,1 7,-0.4" stroke="#C9A045" stroke-width="0.5" fill="none"/>` + P2(`M${x - 6},${y - 50} Q${x - 6},${y - 59} ${x},${y - 59.4} Q${x + 6},${y - 59} ${x + 6},${y - 50} Z`, "#EBC46F", 1) + `<path d="M${x - 6},${y - 51.6} Q${x},${y - 50.2} ${x + 6},${y - 51.6} L${x + 6},${y - 53.2} Q${x},${y - 51.8} ${x - 6},${y - 53.2} Z" fill="#E8566A" stroke="${OUT2}" stroke-width="0.6"/>` + E(x - 2, y - 56.4, 1.8, 1.2, "#F7DC8C", 0) + fleurette(x + 4.4, y - 52.4, "#FFFFFF");
+      s += E(x, y - 44, 6.6, 6.4, "#E9D2A0", 1) + [[-3, -46], [2.6, -41.4], [3.4, -47.4], [-2.2, -40.6]].map(([dx, dy]) => E(x + dx, y + dy, 0.4, 0.4, "#C9AE78", 0)).join("") + thick(`M${x - 4.4},${y - 38.8} Q${x},${y - 37.6} ${x + 4.4},${y - 38.8}`, 0.7, "#B8935A") + E(x - 2.4, y - 44.6, 1.2, 1.2, "#3A2A24", 0.5) + E(x + 2.4, y - 44.6, 1.2, 1.2, "#3A2A24", 0.5) + E(x - 2.7, y - 45, 0.35, 0.35, "#FFFFFF", 0) + E(x + 2.1, y - 45, 0.35, 0.35, "#FFFFFF", 0) + E(x - 4, y - 42.2, 1, 0.6, "#F29AA8", 0) + E(x + 4, y - 42.2, 1, 0.6, "#F29AA8", 0) + `<path d="M${x - 2.6},${y - 41.8} Q${x},${y - 40} ${x + 2.6},${y - 41.8}" stroke="${OUT3}" stroke-width="0.6" fill="none" stroke-linecap="round"/><path d="M${x - 1.6},${y - 41.6} l0,1.2 M${x},${y - 41} l0,1.2 M${x + 1.6},${y - 41.6} l0,1.2" stroke="${OUT3}" stroke-width="0.45"/>`;
+      s += E(x, y - 49.4, 11, 2.8, "#EBC46F", 1) + `<path d="M${x - 9},${y - 49.6} q4,1.4 9,0.2 M${x + 2},${y - 50} q4,1 7,-0.4" stroke="#C9A045" stroke-width="0.5" fill="none"/>` + P2(`M${x - 6},${y - 50} Q${x - 6},${y - 59} ${x},${y - 59.4} Q${x + 6},${y - 59} ${x + 6},${y - 50} Z`, "#EBC46F", 1) + `<path d="M${x - 6},${y - 51.6} Q${x},${y - 50.2} ${x + 6},${y - 51.6} L${x + 6},${y - 53.2} Q${x},${y - 51.8} ${x - 6},${y - 53.2} Z" fill="#E8566A" stroke="${OUT3}" stroke-width="0.6"/>` + E(x - 2, y - 56.4, 1.8, 1.2, "#F7DC8C", 0) + fleurette(x + 4.4, y - 52.4, "#FFFFFF");
       s += "</g>";
       if (f) {
         const [bx, by] = [x + 17.6, y - 37.6];
@@ -882,7 +882,7 @@ var require_crafts = __commonJS({
       return s;
     }, "draw") };
     var PLANCHES_NICHOIR = { top: "#F6E7C8", left: "#EAD2A4", right: "#C7AA7A" };
-    var mesange = /* @__PURE__ */ __name((x, y, s, corps) => `<g transform="translate(${r23(x)} ${r23(y)}) scale(${r23(s)})">` + (corps ? E(0.4, 1.8, 2.6, 2.2, "#F2D24A", 0.7) + P2("M-1.4,0.6 Q1.6,-0.4 3.2,1.8 Q1.4,3.4 -1.2,2.6 Z", "#5C9CE0", 0.6) + P2("M2.6,2 L5,3.4 L2.8,3.2 Z", "#4A80C0", 0.5) : "") + E(-1.2, -1, 2.2, 2, "#FFFFFF", 0.7) + P2("M-3.2,-1.4 Q-1.4,-3.8 1,-2 Q-0.6,-1.6 -3.2,-1.4 Z", "#5C9CE0", 0.5) + E(-1.6, -0.9, 0.45, 0.5, OUT2, 0) + E(-1.75, -1.1, 0.15, 0.15, "#FFFFFF", 0) + P2("M-3.3,-0.6 L-4.6,-0.2 L-3.3,0.2 Z", "#3A3A44", 0.4) + E(-0.4, 0.2, 0.6, 0.35, "#F7A8B8", 0) + "</g>", "mesange");
+    var mesange = /* @__PURE__ */ __name((x, y, s, corps) => `<g transform="translate(${r23(x)} ${r23(y)}) scale(${r23(s)})">` + (corps ? E(0.4, 1.8, 2.6, 2.2, "#F2D24A", 0.7) + P2("M-1.4,0.6 Q1.6,-0.4 3.2,1.8 Q1.4,3.4 -1.2,2.6 Z", "#5C9CE0", 0.6) + P2("M2.6,2 L5,3.4 L2.8,3.2 Z", "#4A80C0", 0.5) : "") + E(-1.2, -1, 2.2, 2, "#FFFFFF", 0.7) + P2("M-3.2,-1.4 Q-1.4,-3.8 1,-2 Q-0.6,-1.6 -3.2,-1.4 Z", "#5C9CE0", 0.5) + E(-1.6, -0.9, 0.45, 0.5, OUT3, 0) + E(-1.75, -1.1, 0.15, 0.15, "#FFFFFF", 0) + P2("M-3.3,-0.6 L-4.6,-0.2 L-3.3,0.2 Z", "#3A3A44", 0.4) + E(-0.4, 0.2, 0.6, 0.35, "#F7A8B8", 0) + "</g>", "mesange");
     C2.nichoir = { n: 2, draw: /* @__PURE__ */ __name((f) => {
       let s = shadow2(0, 0, 0.22, 0.14) + post2(0, 0, 0, 30, WOOD_DARK2, 0.03);
       const [jx, jy] = at(0, 0.03, 22), [kx, ky] = at(0, 0.09, 30);
@@ -898,14 +898,14 @@ var require_crafts = __commonJS({
       s += f ? mesange(hx - 3.6, hy + 1.4, 1.05, true) : mesange(hx + 0.6, hy - 0.8, 0.78, false);
       return s;
     }, "draw") };
-    var coqCuivre = /* @__PURE__ */ __name(() => trait2("M-10,0 L9,0", OUT2, 2.4) + trait2("M-10,0 L9,0", COPPER2.right, 1.1) + P2("M11.6,0 L8,-2.4 L8,2.4 Z", COPPER2.left, 0.8) + P2("M-10,0 L-13,-3 L-11.4,0 L-13,3 Z", COPPER2.left, 0.7) + trait2("M-0.6,-0.6 L-0.6,-3.4 M1.2,-0.6 L1.2,-3.4", OUT2, 0.7) + P2("M-3,-6 Q-8.6,-12 -6.4,-15.4 Q-4.2,-11.4 -1.4,-9 Z", COPPER2.right, 0.8) + P2("M-2.2,-6.6 Q-6,-14.6 -2.8,-16.6 Q-1.8,-12 0,-9.4 Z", COPPER2.left, 0.8) + E(0.4, -5.4, 4.6, 3, COPPER2.left, 0.9) + E(-0.6, -6.4, 2.6, 1.2, COPPER2.top, 0) + P2("M-1.6,-5.6 Q0.6,-3.4 3,-5.2", "none", 0.6) + E(4, -9.4, 2.2, 2.1, COPPER2.left, 0.9) + E(3.4, -10, 0.9, 0.6, COPPER2.top, 0) + P2("M2.8,-11.2 q0.4,-1.8 1.4,-0.8 q0.8,-1.6 1.5,-0.1 q0.8,-0.9 0.9,0.6 Z", "#E8483C", 0.6) + P2("M6,-9.8 L8.2,-9.2 L6,-8.6 Z", "#F2B33D", 0.5) + E(5.6, -8, 0.6, 0.8, "#E8483C", 0.4) + E(4.6, -9.8, 0.45, 0.5, OUT2, 0), "coqCuivre");
+    var coqCuivre = /* @__PURE__ */ __name(() => trait2("M-10,0 L9,0", OUT3, 2.4) + trait2("M-10,0 L9,0", COPPER2.right, 1.1) + P2("M11.6,0 L8,-2.4 L8,2.4 Z", COPPER2.left, 0.8) + P2("M-10,0 L-13,-3 L-11.4,0 L-13,3 Z", COPPER2.left, 0.7) + trait2("M-0.6,-0.6 L-0.6,-3.4 M1.2,-0.6 L1.2,-3.4", OUT3, 0.7) + P2("M-3,-6 Q-8.6,-12 -6.4,-15.4 Q-4.2,-11.4 -1.4,-9 Z", COPPER2.right, 0.8) + P2("M-2.2,-6.6 Q-6,-14.6 -2.8,-16.6 Q-1.8,-12 0,-9.4 Z", COPPER2.left, 0.8) + E(0.4, -5.4, 4.6, 3, COPPER2.left, 0.9) + E(-0.6, -6.4, 2.6, 1.2, COPPER2.top, 0) + P2("M-1.6,-5.6 Q0.6,-3.4 3,-5.2", "none", 0.6) + E(4, -9.4, 2.2, 2.1, COPPER2.left, 0.9) + E(3.4, -10, 0.9, 0.6, COPPER2.top, 0) + P2("M2.8,-11.2 q0.4,-1.8 1.4,-0.8 q0.8,-1.6 1.5,-0.1 q0.8,-0.9 0.9,0.6 Z", "#E8483C", 0.6) + P2("M6,-9.8 L8.2,-9.2 L6,-8.6 Z", "#F2B33D", 0.5) + E(5.6, -8, 0.6, 0.8, "#E8483C", 0.4) + E(4.6, -9.8, 0.45, 0.5, OUT3, 0), "coqCuivre");
     var trait2 = /* @__PURE__ */ __name((d, col, w) => `<path d="${d}" stroke="${col}" stroke-width="${w}" fill="none" stroke-linecap="round" stroke-linejoin="round"/>`, "trait2");
     C2.girouette = { n: 4, draw: /* @__PURE__ */ __name((f) => {
       const [x, y] = at(0, 0);
       let s = shadow2(0, 0, 0.22, 0.14) + box2(-0.085, -0.085, 0.085, 0.085, 0, 2.6, STONE2) + box2(-0.06, -0.06, 0.06, 0.06, 2.6, 4.6, STONE2);
-      s += `<rect x="${x - 1.3}" y="${y - 52}" width="2.6" height="46.4" fill="${IRON2.left}" stroke="${OUT2}" stroke-width="0.8"/><rect x="${x + 0.2}" y="${y - 51.6}" width="0.8" height="45.6" fill="${IRON2.right}"/><rect x="${x - 1}" y="${y - 51.6}" width="0.6" height="45.6" fill="${IRON2.top}"/>` + E(x, y - 24, 2.2, 1, IRON2.left, 0.7) + E(x, y - 47, 2.4, 2.3, BRASS2.left, 0.8) + E(x - 0.7, y - 47.7, 0.9, 0.7, BRASS2.top, 0);
+      s += `<rect x="${x - 1.3}" y="${y - 52}" width="2.6" height="46.4" fill="${IRON3.left}" stroke="${OUT3}" stroke-width="0.8"/><rect x="${x + 0.2}" y="${y - 51.6}" width="0.8" height="45.6" fill="${IRON3.right}"/><rect x="${x - 1}" y="${y - 51.6}" width="0.6" height="45.6" fill="${IRON3.top}"/>` + E(x, y - 24, 2.2, 1, IRON3.left, 0.7) + E(x, y - 47, 2.4, 2.3, BRASS2.left, 0.8) + E(x - 0.7, y - 47.7, 0.9, 0.7, BRASS2.top, 0);
       const bras = [[-11, 0], [11, 0], [-6, -4], [6, 4]];
-      s += trait2(`M${x - 11},${y - 40} L${x + 11},${y - 40} M${x - 6},${y - 44} L${x + 6},${y - 36}`, OUT2, 2.2) + trait2(`M${x - 11},${y - 40} L${x + 11},${y - 40} M${x - 6},${y - 44} L${x + 6},${y - 36}`, IRON2.left, 1) + bras.map(([dx, dy]) => E(x + dx, y - 40 + dy, 1, 1, IRON2.left, 0.6)).join("") + [["N", x - 7.4, y - 45.4], ["E", x + 12.6, y - 38.6], ["S", x + 6, y - 31.6], ["O", x - 15.6, y - 38.6]].map(([t, a, b]) => `<text x="${a}" y="${b}" font-family="sans-serif" font-size="4.4" font-weight="700" fill="${OUT2}">${t}</text>`).join("");
+      s += trait2(`M${x - 11},${y - 40} L${x + 11},${y - 40} M${x - 6},${y - 44} L${x + 6},${y - 36}`, OUT3, 2.2) + trait2(`M${x - 11},${y - 40} L${x + 11},${y - 40} M${x - 6},${y - 44} L${x + 6},${y - 36}`, IRON3.left, 1) + bras.map(([dx, dy]) => E(x + dx, y - 40 + dy, 1, 1, IRON3.left, 0.6)).join("") + [["N", x - 7.4, y - 45.4], ["E", x + 12.6, y - 38.6], ["S", x + 6, y - 31.6], ["O", x - 15.6, y - 38.6]].map(([t, a, b]) => `<text x="${a}" y="${b}" font-family="sans-serif" font-size="4.4" font-weight="700" fill="${OUT3}">${t}</text>`).join("");
       const sx = [1, 0.5, -1, -0.5][f];
       s += `<g transform="translate(${x} ${y - 52}) scale(${sx} 1)">${coqCuivre()}</g>`;
       return s;
@@ -916,18 +916,18 @@ var require_crafts = __commonJS({
         const [x0, y0] = at(Math.cos(a2) * 0.42, Math.sin(a2) * 0.42, 0.4), [, y1] = at(Math.cos(a2) * 0.42, Math.sin(a2) * 0.42, 6.6);
         s += L([x0, y0], [x0, y1], STONE2.right, 0.6);
       }
-      s += disc2(0, 0, 0.42, 7, STONE2.top, 1) + disc2(0, 0, 0.35, 7, WATER, 0.8) + disc2(-0.05, -0.05, 0.22, 7, WATER_LIGHT, 0);
+      s += disc2(0, 0, 0.42, 7, STONE2.top, 1) + disc2(0, 0, 0.35, 7, WATER2, 0.8) + disc2(-0.05, -0.05, 0.22, 7, WATER_LIGHT, 0);
       for (let i = 0; i < 2; i++) {
         const p = (f / 3 + i * 0.5) % 1;
         const [x2, y2] = at(0.02, 0.02, 7);
         s += E(x2, y2, 9 + p * 12, 4.5 + p * 6, "none", 0).replace('stroke="none"', `stroke="#E8F6FF" stroke-width="0.7" opacity="${r23(0.8 - p * 0.7)}"`);
       }
       const a = f / 3 * TAU2 + 0.8, [px, py] = at(Math.cos(a) * 0.25, Math.sin(a) * 0.25, 7), dir = Math.cos(a + Math.PI / 2) > 0 ? 1 : -1;
-      s += `<g transform="translate(${r23(px)} ${r23(py)}) scale(${dir} 1)">` + E(0, 0, 2.6, 1.3, "#F08A3A", 0.6) + P2("M-2.4,0 L-4.4,-1.4 L-4,0 L-4.4,1.4 Z", "#F2A35A", 0.5) + E(1.2, -0.3, 0.3, 0.3, OUT2, 0) + "</g>";
-      s += cylinder2(0, 0, 0.075, 7, 8.4, STONE2, 0.7) + cylinder2(0, 0, 0.06, 8.4, 21, WHITE_STONE, 0.9);
+      s += `<g transform="translate(${r23(px)} ${r23(py)}) scale(${dir} 1)">` + E(0, 0, 2.6, 1.3, "#F08A3A", 0.6) + P2("M-2.4,0 L-4.4,-1.4 L-4,0 L-4.4,1.4 Z", "#F2A35A", 0.5) + E(1.2, -0.3, 0.3, 0.3, OUT3, 0) + "</g>";
+      s += cylinder2(0, 0, 0.075, 7, 8.4, STONE2, 0.7) + cylinder2(0, 0, 0.06, 8.4, 21, WHITE_STONE2, 0.9);
       const [bx, by] = at(0, 0, 21.6), [, yn] = at(0, 0, 13);
-      s += P2(`M${r23(bx - 3.36)},${r23(yn)} Q${r23(bx - 3.6)},${r23(by + 5.2)} ${r23(bx - 6.6)},${r23(by + 4)} L${r23(bx + 6.6)},${r23(by + 4)} Q${r23(bx + 3.6)},${r23(by + 5.2)} ${r23(bx + 3.36)},${r23(yn)} A3.36 1.68 0 0 1 ${r23(bx - 3.36)},${r23(yn)} Z`, WHITE_STONE.left, 0.9) + L([bx + 1.6, yn + 1.2], [bx + 2.4, by + 5], WHITE_STONE.right, 0.6);
-      s += P2(`M${r23(bx - 12)},${r23(by)} Q${r23(bx - 9.6)},${r23(by + 6)} ${r23(bx)},${r23(by + 6.4)} Q${r23(bx + 9.6)},${r23(by + 6)} ${r23(bx + 12)},${r23(by)} Z`, WHITE_STONE.left, 0.9) + [-7.2, -2.4, 2.4, 7.2].map((dx) => L([bx + dx * 0.9, by + 0.6], [bx + dx * 0.5, by + 5.4], WHITE_STONE.right, 0.5)).join("") + E(bx, by, 12, 4.2, WHITE_STONE.top, 0.9) + E(bx, by + 0.2, 9.2, 2.9, WATER, 0.6) + E(bx - 1.6, by - 0.3, 4.4, 1.1, WATER_LIGHT, 0);
+      s += P2(`M${r23(bx - 3.36)},${r23(yn)} Q${r23(bx - 3.6)},${r23(by + 5.2)} ${r23(bx - 6.6)},${r23(by + 4)} L${r23(bx + 6.6)},${r23(by + 4)} Q${r23(bx + 3.6)},${r23(by + 5.2)} ${r23(bx + 3.36)},${r23(yn)} A3.36 1.68 0 0 1 ${r23(bx - 3.36)},${r23(yn)} Z`, WHITE_STONE2.left, 0.9) + L([bx + 1.6, yn + 1.2], [bx + 2.4, by + 5], WHITE_STONE2.right, 0.6);
+      s += P2(`M${r23(bx - 12)},${r23(by)} Q${r23(bx - 9.6)},${r23(by + 6)} ${r23(bx)},${r23(by + 6.4)} Q${r23(bx + 9.6)},${r23(by + 6)} ${r23(bx + 12)},${r23(by)} Z`, WHITE_STONE2.left, 0.9) + [-7.2, -2.4, 2.4, 7.2].map((dx) => L([bx + dx * 0.9, by + 0.6], [bx + dx * 0.5, by + 5.4], WHITE_STONE2.right, 0.5)).join("") + E(bx, by, 12, 4.2, WHITE_STONE2.top, 0.9) + E(bx, by + 0.2, 9.2, 2.9, WATER2, 0.6) + E(bx - 1.6, by - 0.3, 4.4, 1.1, WATER_LIGHT, 0);
       const [x, y] = at(0, 0, 22);
       s += thick(`M${x},${y} L${x},${r23(y - 8)}`, 1.6, WATER_LIGHT) + E(x, y - 8.6, 1.8, 1.6, "#E8F6FF", 0.6);
       for (const dx of [-9, 9]) s += `<path d="M${r23(bx + dx)},${r23(by + 1.4)} q${dx > 0 ? 1.6 : -1.6},3 ${dx > 0 ? 2.4 : -2.4},9" stroke="#E8F6FF" stroke-width="1.2" fill="none" stroke-linecap="round" opacity="0.85"/>`;
@@ -942,9 +942,9 @@ var require_crafts = __commonJS({
       let s = shadow2(0, 0, 0.3, 0.16);
       s += [[-0.13, 0.07], [0.13, 0.07], [0, -0.13]].map(([u, v]) => {
         const p = at(u, v, 0), tx = r23(x + (p[0] - x) * 0.7), side = p[0] < x ? -1 : p[0] > x ? 1 : 0.6;
-        return thick(`M${tx},${y + 2} L${r23(p[0])},${r23(p[1] - 1.6)} q${r23(side * 1.6)},1.4 ${r23(side * 0.2)},2.6 q${r23(-side * 1.2)},0 ${r23(-side * 0.6)},-1.2`, 1.4, IRON2.right);
+        return thick(`M${tx},${y + 2} L${r23(p[0])},${r23(p[1] - 1.6)} q${r23(side * 1.6)},1.4 ${r23(side * 0.2)},2.6 q${r23(-side * 1.2)},0 ${r23(-side * 0.6)},-1.2`, 1.4, IRON3.right);
       }).join("");
-      s += glow(x, y - 10, 18, "255,170,90", 0.32) + `<path d="M${x - 13},${y - 2} Q${x - 12},${y + 9} ${x},${y + 9.4} Q${x + 12},${y + 9} ${x + 13},${y - 2} Z" fill="${IRON2.left}" stroke="${OUT2}" stroke-width="1"/><path d="M${x + 1},${y + 9.3} Q${x + 11.4},${y + 8.6} ${x + 12.6},${y - 1.6} L${x + 13},${y - 2} Q${x + 6},${y + 2.6} ${x + 1},${y + 2.8} Z" fill="${IRON2.right}"/><path d="M${x - 12.4},${y + 2.4} Q${x},${y + 7} ${x + 12.4},${y + 2.4}" stroke="${IRON2.top}" stroke-width="1.6" fill="none"/>` + [-8, -3, 2, 7].map((dx) => E(x + dx, y + 4.6 + Math.abs(dx) * -0.12, 0.55, 0.55, IRON2.right, 0.4)).join("") + `<path d="M${x - 10},${y + 1} Q${x - 8},${y + 4} ${x - 4},${y + 4.6}" stroke="#FFFFFF" stroke-width="0.8" fill="none" opacity="0.35" stroke-linecap="round"/>` + E(x, y - 2, 13, 4, "#3A2620", 1);
+      s += glow(x, y - 10, 18, "255,170,90", 0.32) + `<path d="M${x - 13},${y - 2} Q${x - 12},${y + 9} ${x},${y + 9.4} Q${x + 12},${y + 9} ${x + 13},${y - 2} Z" fill="${IRON3.left}" stroke="${OUT3}" stroke-width="1"/><path d="M${x + 1},${y + 9.3} Q${x + 11.4},${y + 8.6} ${x + 12.6},${y - 1.6} L${x + 13},${y - 2} Q${x + 6},${y + 2.6} ${x + 1},${y + 2.8} Z" fill="${IRON3.right}"/><path d="M${x - 12.4},${y + 2.4} Q${x},${y + 7} ${x + 12.4},${y + 2.4}" stroke="${IRON3.top}" stroke-width="1.6" fill="none"/>` + [-8, -3, 2, 7].map((dx) => E(x + dx, y + 4.6 + Math.abs(dx) * -0.12, 0.55, 0.55, IRON3.right, 0.4)).join("") + `<path d="M${x - 10},${y + 1} Q${x - 8},${y + 4} ${x - 4},${y + 4.6}" stroke="#FFFFFF" stroke-width="0.8" fill="none" opacity="0.35" stroke-linecap="round"/>` + E(x, y - 2, 13, 4, "#3A2620", 1);
       s += [[-7, -2.2, 2.8], [-2, -3.2, 3], [3.4, -2.6, 2.8], [7.6, -1.8, 2.2], [0.6, -1, 2.4], [-4.6, -0.8, 2]].map(([dx, dy, r], i) => E(x + dx, y + dy, r, r * 0.55, "#5A3A2A", 0.6) + E(x + dx, y + dy - 0.2, r * 0.55, r * 0.25, (i + f) % 3 ? "#E8573A" : "#FFB347", 0)).join("");
       s += flame(x - 4, y - 2, 13 + f * 2, 4, f / 3) + flame(x + 4, y - 2, 11 + (2 - f), 3.6, f / 3 + 0.4) + flame(x, y - 2, 17 - f, 4.4, f / 3 + 0.2);
       for (let i = 0; i < 3; i++) {
@@ -960,7 +960,7 @@ var require_crafts = __commonJS({
         fl.push([cx - dx, cy, r, 0], [cx + dx, cy + 0.6, r * 0.95, 1]);
       }
       fl.push([x + sw, y + 1.8 + n * 2.5 - 0.6, 0.9, 1]);
-      return fl.map(([cx, cy, r]) => E(cx, cy, r + 0.75, r * 0.9 + 0.75, OUT2, 0)).join("") + fl.map(([cx, cy, r]) => E(cx, cy, r, r * 0.9, "#C9A8F0", 0)).join("") + fl.map(([cx, cy, r, d]) => d ? E(cx + r * 0.25, cy + r * 0.25, r * 0.6, r * 0.5, "#A57BD8", 0) : E(cx - r * 0.3, cy - r * 0.3, r * 0.45, r * 0.35, "#EEE2FC", 0)).join("") + leafDot(x - 2.4, y - 0.6, 2.4) + leafDot(x + 2.2, y - 1, 2.2);
+      return fl.map(([cx, cy, r]) => E(cx, cy, r + 0.75, r * 0.9 + 0.75, OUT3, 0)).join("") + fl.map(([cx, cy, r]) => E(cx, cy, r, r * 0.9, "#C9A8F0", 0)).join("") + fl.map(([cx, cy, r, d]) => d ? E(cx + r * 0.25, cy + r * 0.25, r * 0.6, r * 0.5, "#A57BD8", 0) : E(cx - r * 0.3, cy - r * 0.3, r * 0.45, r * 0.35, "#EEE2FC", 0)).join("") + leafDot(x - 2.4, y - 0.6, 2.4) + leafDot(x + 2.2, y - 1, 2.2);
     }
     __name(grappe, "grappe");
     C2.pergola = { n: 2, draw: /* @__PURE__ */ __name((f) => {
@@ -979,7 +979,7 @@ var require_crafts = __commonJS({
     var MARBRE = { light: "#FBF8F1", mid: "#ECE6D8", dark: "#CFC6B2", pli: "#B9AF98" };
     C2.statue = { n: 1, draw: /* @__PURE__ */ __name(() => {
       const [x, y] = at(0, 0, 15), c = MARBRE;
-      let s = shadow2(0, 0, 0.32, 0.16) + box2(-0.16, -0.16, 0.16, 0.16, 0, 3.4, STONE2) + box2(-0.12, -0.12, 0.12, 0.12, 3.4, 13, WHITE_STONE) + box2(-0.14, -0.14, 0.14, 0.14, 13, 15, STONE2);
+      let s = shadow2(0, 0, 0.32, 0.16) + box2(-0.16, -0.16, 0.16, 0.16, 0, 3.4, STONE2) + box2(-0.12, -0.12, 0.12, 0.12, 3.4, 13, WHITE_STONE2) + box2(-0.14, -0.14, 0.14, 0.14, 13, 15, STONE2);
       const pl = [at(-0.09, 0.12, 6), at(0.03, 0.12, 6), at(0.03, 0.12, 10.6), at(-0.09, 0.12, 10.6)];
       s += poly3(pl, "#E4DCC8", 0.6) + L(at(-0.075, 0.12, 9.2), at(0.015, 0.12, 9.2), c.pli, 0.5) + L(at(-0.075, 0.12, 7.6), at(0, 0.12, 7.6), c.pli, 0.5);
       const robe = `M${x - 7.4},${y} Q${x - 8.6},${y - 14} ${x - 4.4},${y - 25} L${x + 4.4},${y - 25} Q${x + 8.6},${y - 14} ${x + 7.4},${y} Q${x},${y + 1.6} ${x - 7.4},${y} Z`;
@@ -987,7 +987,7 @@ var require_crafts = __commonJS({
       s += P2(`M${x - 4.6},${y - 24} Q${x - 6.4},${y - 18} ${x - 2},${y - 15.6} Q${x + 0.4},${y - 15.4} ${x},${y - 17} Q${x - 3},${y - 18} ${x - 2.6},${y - 23} Z`, c.light, 0.8);
       s += thick(`M${x + 3.4},${y - 24} Q${x + 6.6},${y - 28} ${x + 7.6},${y - 33.6}`, 1.6, c.mid) + P2(`M${x + 3.4},${y - 34} L${x + 8.6},${y - 36.4} L${x + 8.6},${y - 41.4} L${x + 3.4},${y - 39} Z`, c.light, 0.8) + P2(`M${x + 8.6},${y - 36.4} L${x + 13.6},${y - 34.6} L${x + 13.6},${y - 39.6} L${x + 8.6},${y - 41.4} Z`, c.mid, 0.8) + `<path d="M${x + 4.4},${y - 37.4} l3.4,-1.6 M${x + 4.4},${y - 36} l3.4,-1.6 M${x + 9.6},${y - 39.6} l3,1 M${x + 9.6},${y - 38.2} l3,1" stroke="${c.pli}" stroke-width="0.45"/>` + E(x + 8.2, y - 35.6, 1.5, 1.2, c.light, 0.7);
       s += E(x, y - 29, 3.6, 3.8, c.light, 0.9) + P2(`M${x - 3.6},${y - 29.6} Q${x - 3.4},${y - 33.6} ${x},${y - 33.6} Q${x + 3.6},${y - 33.4} ${x + 3.6},${y - 29.4} Q${x + 1},${y - 31.6} ${x - 3.6},${y - 29.6} Z`, c.dark, 0.6) + E(x + 0.6, y - 34.6, 2, 1.6, c.mid, 0.7) + `<path d="M${x - 2},${y - 28.6} q0.7,0.6 1.4,0 M${x + 0.8},${y - 28.6} q0.7,0.6 1.4,0" stroke="${c.pli}" stroke-width="0.5" fill="none" stroke-linecap="round"/>`;
-      const [lx, ly] = at(-0.16, 0.16, 0), feuille2 = /* @__PURE__ */ __name((fx, fy, a) => `<path d="M0,0 Q-2.4,-1.2 -1.8,-3 Q-0.8,-3.8 0,-2.8 Q0.8,-3.8 1.8,-3 Q2.4,-1.2 0,0 Z" transform="translate(${r23(fx)} ${r23(fy)}) rotate(${a})" fill="#5E9E48" stroke="${OUT2}" stroke-width="0.55" stroke-linejoin="round"/>`, "feuille");
+      const [lx, ly] = at(-0.16, 0.16, 0), feuille2 = /* @__PURE__ */ __name((fx, fy, a) => `<path d="M0,0 Q-2.4,-1.2 -1.8,-3 Q-0.8,-3.8 0,-2.8 Q0.8,-3.8 1.8,-3 Q2.4,-1.2 0,0 Z" transform="translate(${r23(fx)} ${r23(fy)}) rotate(${a})" fill="#5E9E48" stroke="${OUT3}" stroke-width="0.55" stroke-linejoin="round"/>`, "feuille");
       return s + `<path d="M${r23(lx + 1)},${r23(ly)} Q${r23(lx - 1.4)},${r23(ly - 4)} ${r23(lx + 0.6)},${r23(ly - 8)} Q${r23(lx + 2.4)},${r23(ly - 11)} ${r23(lx + 0.4)},${r23(ly - 14)} M${r23(lx + 1)},${r23(ly)} Q${r23(lx + 4)},${r23(ly - 1)} ${r23(lx + 7)},${r23(ly + 1.6)}" stroke="#3E7A34" stroke-width="0.8" fill="none" stroke-linecap="round"/>` + feuille2(lx - 0.6, ly - 2.4, -40) + feuille2(lx + 1.4, ly - 6.6, 30) + feuille2(lx - 0.2, ly - 10, -30) + feuille2(lx + 1.2, ly - 13.6, 20) + feuille2(lx + 4, ly - 0.2, 70) + feuille2(lx + 6.6, ly + 1.8, 100);
     }, "draw") };
     var PEINT = { light: "#FBF7EF", mid: "#E9E1D2", dark: "#C9BDA8" };
@@ -1026,10 +1026,10 @@ var require_crafts = __commonJS({
       }
       s += bouton(-23.4, -16, ROSES[0][0]) + bouton(-16.4, -28, ROSES[1][0]) + bouton(...along(11 / 13 * Math.PI), ROSES[2][0]);
       const [px, py] = [f ? -9 : -12, f ? -14 : -26];
-      return s + `<path d="M${px},${py} q2,-1.4 3,0.4 q-1.6,1.4 -3,-0.4 Z" fill="${ROSES[1][0]}" stroke="${OUT2}" stroke-width="0.5" transform="rotate(${f ? 40 : -20} ${px} ${py})"/>`;
+      return s + `<path d="M${px},${py} q2,-1.4 3,0.4 q-1.6,1.4 -3,-0.4 Z" fill="${ROSES[1][0]}" stroke="${OUT3}" stroke-width="0.5" transform="rotate(${f ? 40 : -20} ${px} ${py})"/>`;
     }, "draw") };
     var fruit = /* @__PURE__ */ __name((x, y, r, c) => E(x, y, r, r * 0.92, c, 0.6) + E(x - r * 0.35, y - r * 0.35, r * 0.32, r * 0.22, "#FFFFFF", 0), "fruit");
-    var pomme = /* @__PURE__ */ __name((x, y) => fruit(x, y, 2.1, "#E2574C") + `<path d="M${r23(x)},${r23(y - 1.8)} l0.3,-1.2" stroke="${OUT2}" stroke-width="0.6" stroke-linecap="round"/>` + E(x + 1, y - 2.6, 0.9, 0.45, "#7EC45B", 0.4), "pomme");
+    var pomme = /* @__PURE__ */ __name((x, y) => fruit(x, y, 2.1, "#E2574C") + `<path d="M${r23(x)},${r23(y - 1.8)} l0.3,-1.2" stroke="${OUT3}" stroke-width="0.6" stroke-linecap="round"/>` + E(x + 1, y - 2.6, 0.9, 0.45, "#7EC45B", 0.4), "pomme");
     var orange = /* @__PURE__ */ __name((x, y) => fruit(x, y, 2.1, "#F2994A") + E(x + 0.2, y - 1.4, 0.35, 0.3, "#B86A2A", 0), "orange");
     var chou = /* @__PURE__ */ __name((x, y) => E(x, y, 2.5, 2.2, "#8FCB6A", 0.6) + `<path d="M${r23(x - 1.6)},${r23(y + 0.4)} q1.6,-2.6 3.2,0 M${r23(x - 0.8)},${r23(y + 1.4)} q0.8,-1.4 1.6,0" stroke="#5E9E48" stroke-width="0.55" fill="none"/>` + E(x - 0.8, y - 1, 0.8, 0.5, "#C6EBA4", 0), "chou");
     var PANIER = { top: "#E6B877", left: "#C9914E", right: "#A87238" };
@@ -1055,10 +1055,10 @@ var require_crafts = __commonJS({
         }
       }
       const p0 = at(-0.44, -0.32, 43), p1 = at(0.44, -0.32, 43), p2 = at(0.44, 0.12, 37.4), p3 = at(-0.44, 0.12, 37.4);
-      const q = /* @__PURE__ */ __name((A, B, t) => [A[0] + (B[0] - A[0]) * t, A[1] + (B[1] - A[1]) * t], "q"), pts2 = /* @__PURE__ */ __name((a) => a.map((p) => p.map(r23).join(",")).join(" "), "pts");
-      s += `<polygon points="${pts2([p0, p1, p2, p3])}" fill="#FFF4E2" stroke="${OUT2}" stroke-width="1" stroke-linejoin="round"/>`;
-      for (let i = 0; i < 8; i += 2) s += `<polygon points="${pts2([q(p0, p1, i / 8), q(p0, p1, (i + 1) / 8), q(p3, p2, (i + 1) / 8), q(p3, p2, i / 8)])}" fill="#E8566A"/>`;
-      s += `<polygon points="${pts2([p0, p1, p2, p3])}" fill="none" stroke="${OUT2}" stroke-width="1" stroke-linejoin="round"/>`;
+      const q = /* @__PURE__ */ __name((A, B, t) => [A[0] + (B[0] - A[0]) * t, A[1] + (B[1] - A[1]) * t], "q"), pts3 = /* @__PURE__ */ __name((a) => a.map((p) => p.map(r23).join(",")).join(" "), "pts");
+      s += `<polygon points="${pts3([p0, p1, p2, p3])}" fill="#FFF4E2" stroke="${OUT3}" stroke-width="1" stroke-linejoin="round"/>`;
+      for (let i = 0; i < 8; i += 2) s += `<polygon points="${pts3([q(p0, p1, i / 8), q(p0, p1, (i + 1) / 8), q(p3, p2, (i + 1) / 8), q(p3, p2, i / 8)])}" fill="#E8566A"/>`;
+      s += `<polygon points="${pts3([p0, p1, p2, p3])}" fill="none" stroke="${OUT3}" stroke-width="1" stroke-linejoin="round"/>`;
       for (let i = 0; i < 8; i++) {
         const A = q(p3, p2, i / 8), B = q(p3, p2, (i + 1) / 8), d = 4 + wave2(f, 2, 0.6, i * 1.3);
         s += P2(`M${r23(A[0])},${r23(A[1])} L${r23(B[0])},${r23(B[1])} L${r23(B[0])},${r23(B[1] + 3)} Q${r23((A[0] + B[0]) / 2)},${r23((A[1] + B[1]) / 2 + 3 + d)} ${r23(A[0])},${r23(A[1] + 3)} Z`, i % 2 ? "#FBEBD2" : "#D94A5E", 0.8);
@@ -1067,7 +1067,7 @@ var require_crafts = __commonJS({
       return s + P2(`M${r23(ax - 3.6)},${r23(ay)} L${r23(ax - 2.4)},${r23(ay - 11)} L${r23(ax + 4.6)},${r23(ay - 9.6)} L${r23(ax + 3.6)},${r23(ay + 1.2)} Z`, WOOD2.left, 0.8) + `<path d="M${r23(ax - 2.4)},${r23(ay - 1)} L${r23(ax - 1.4)},${r23(ay - 9.8)} L${r23(ax + 3.6)},${r23(ay - 8.8)} L${r23(ax + 2.8)},${r23(ay)} Z" fill="#3E4A48"/>` + E(ax, ay - 6.4, 1.2, 1.1, "none", 0).replace('stroke="none"', 'stroke="#FFFFFF" stroke-width="0.5"') + `<path d="M${r23(ax - 1)},${r23(ay - 2.6)} l1.2,0.2 m0.6,0.1 l1.4,0.2" stroke="#FFFFFF" stroke-width="0.5" stroke-linecap="round"/>`;
     }, "draw") };
     var FRISE = { top: "#FBF8F1", left: "#EDE6D8", right: "#CFC5B2" };
-    var note = /* @__PURE__ */ __name((x, y, k) => E(x, y, 1.5, 1.1, OUT2, 0) + `<path d="M${r23(x + 1.3)},${r23(y)} L${r23(x + 1.3)},${r23(y - 6)} q${r23(1.6 * k)},1 2.6,3.2" stroke="${OUT2}" stroke-width="0.8" fill="none" stroke-linecap="round"/>`, "note");
+    var note = /* @__PURE__ */ __name((x, y, k) => E(x, y, 1.5, 1.1, OUT3, 0) + `<path d="M${r23(x + 1.3)},${r23(y)} L${r23(x + 1.3)},${r23(y - 6)} q${r23(1.6 * k)},1 2.6,3.2" stroke="${OUT3}" stroke-width="0.8" fill="none" stroke-linecap="round"/>`, "note");
     C2.kiosque = { n: 2, draw: /* @__PURE__ */ __name((f) => {
       let s = shadow2(0, 0, 0.52, 0.12) + cylinder2(0, 0, 0.46, 0, 2.4, STONE2) + cylinder2(0, 0, 0.4, 2.4, 5, STONE2);
       const [cx, cy] = at(0, 0, 5);
@@ -1077,7 +1077,7 @@ var require_crafts = __commonJS({
         s += L([cx + dx, cy - h], [cx + dx, cy + h], WOOD2.left, 0.45);
       }
       const cols = Array.from({ length: 6 }, (_, i) => i / 6 * TAU2 + 0.26).map((a) => [Math.cos(a) * 0.32, Math.sin(a) * 0.32]);
-      const col = /* @__PURE__ */ __name(([u, v]) => cylinder2(u, v, 0.024, 5, 30, WHITE_STONE, 0.7), "col");
+      const col = /* @__PURE__ */ __name(([u, v]) => cylinder2(u, v, 0.024, 5, 30, WHITE_STONE2, 0.7), "col");
       const [, yr] = at(0, 0, 10.4), rx = 0.32 * 56, ry = 0.32 * 28;
       const balustre = /* @__PURE__ */ __name((av) => {
         let o = "";
@@ -1085,15 +1085,15 @@ var require_crafts = __commonJS({
           const t = i / 18 * TAU2, sy = Math.sin(t);
           if (sy >= 0 !== av) continue;
           const x = cx + rx * Math.cos(t);
-          o += L([x, cy + ry * sy], [x, yr + ry * sy], IRON2.right, 0.7);
+          o += L([x, cy + ry * sy], [x, yr + ry * sy], IRON3.right, 0.7);
         }
-        return o + `<path d="M${r23(cx - rx)},${r23(yr)} A${r23(rx)} ${r23(ry)} 0 0 ${av ? 0 : 1} ${r23(cx + rx)},${r23(yr)}" stroke="${IRON2.right}" stroke-width="1.2" fill="none"/>`;
+        return o + `<path d="M${r23(cx - rx)},${r23(yr)} A${r23(rx)} ${r23(ry)} 0 0 ${av ? 0 : 1} ${r23(cx + rx)},${r23(yr)}" stroke="${IRON3.right}" stroke-width="1.2" fill="none"/>`;
       }, "balustre");
       s += cols.filter(([u, v]) => u + v < 0).map(col).join("") + balustre(false);
       const [lx, ly] = at(0, 0, 25);
-      s += L([lx, ly - 8], [lx, ly - 1.6], IRON2.right, 0.6) + P2(`M${r23(lx - 1.8)},${r23(ly - 1.6)} L${r23(lx + 1.8)},${r23(ly - 1.6)} L${r23(lx + 1.3)},${r23(ly + 2.4)} L${r23(lx - 1.3)},${r23(ly + 2.4)} Z`, "#FFE08A", 0.6) + E(lx, ly - 1.8, 2.2, 0.8, BRASS2.left, 0.5);
+      s += L([lx, ly - 8], [lx, ly - 1.6], IRON3.right, 0.6) + P2(`M${r23(lx - 1.8)},${r23(ly - 1.6)} L${r23(lx + 1.8)},${r23(ly - 1.6)} L${r23(lx + 1.3)},${r23(ly + 2.4)} L${r23(lx - 1.3)},${r23(ly + 2.4)} Z`, "#FFE08A", 0.6) + E(lx, ly - 1.8, 2.2, 0.8, BRASS2.left, 0.5);
       const [mx, my] = at(0.06, 0.04, 5);
-      s += L([mx, my], [mx, my - 9], IRON2.right, 0.8) + L([mx - 2.4, my + 1], [mx + 2.4, my + 1], IRON2.right, 0.8) + P2(`M${r23(mx - 4)},${r23(my - 9)} L${r23(mx + 4)},${r23(my - 10.4)} L${r23(mx + 4)},${r23(my - 15)} L${r23(mx - 4)},${r23(my - 13.6)} Z`, "#FFFDF6", 0.6) + `<path d="M${r23(mx - 3)},${r23(my - 12)} l6,-1 M${r23(mx - 3)},${r23(my - 10.6)} l6,-1" stroke="#B9AF98" stroke-width="0.45"/>`;
+      s += L([mx, my], [mx, my - 9], IRON3.right, 0.8) + L([mx - 2.4, my + 1], [mx + 2.4, my + 1], IRON3.right, 0.8) + P2(`M${r23(mx - 4)},${r23(my - 9)} L${r23(mx + 4)},${r23(my - 10.4)} L${r23(mx + 4)},${r23(my - 15)} L${r23(mx - 4)},${r23(my - 13.6)} Z`, "#FFFDF6", 0.6) + `<path d="M${r23(mx - 3)},${r23(my - 12)} l6,-1 M${r23(mx - 3)},${r23(my - 10.6)} l6,-1" stroke="#B9AF98" stroke-width="0.45"/>`;
       s += balustre(true) + cols.filter(([u, v]) => u + v >= 0).map(col).join("");
       s += cylinder2(0, 0, 0.38, 30, 33.4, FRISE, 0.9);
       const [, yf] = at(0, 0, 30), fr = 0.38 * 56, fry = 0.38 * 28;
@@ -1106,15 +1106,15 @@ var require_crafts = __commonJS({
       const droite = `C${r23(tx + R * 0.3)},${r23(tb - 13)} ${r23(tx + R * 0.86)},${r23(tb - 11)} ${tx + R},${r23(tb)}`;
       s += P2(`${gauche} ${droite} A${R} ${Ry} 0 0 1 ${tx - R},${r23(tb)} Z`, ROOF_BLUE.front, 1.1) + `<path d="M${tx},${r23(tip)} ${droite} A${R} ${Ry} 0 0 1 ${r23(tx + 6)},${r23(tb + Ry - 0.4)} C${r23(tx + 5)},${r23(tb - 6)} ${r23(tx + 2)},${r23(tb - 14)} ${tx},${r23(tip)} Z" fill="${ROOF_BLUE.back}"/>` + [-0.7, -0.35, 0.4].map((k2) => `<path d="M${tx},${r23(tip)} C${r23(tx + R * k2 * 0.2)},${r23(tb - 14)} ${r23(tx + R * k2 * 0.8)},${r23(tb - 6)} ${r23(tx + R * k2)},${r23(tb + Ry * Math.sqrt(1 - k2 * k2))}" stroke="${k2 < 0 ? "#8DB6E6" : "#2F5A8C"}" stroke-width="0.7" fill="none"/>`).join("") + P2(`${gauche} ${droite} A${R} ${Ry} 0 0 1 ${tx - R},${r23(tb)} Z`, "none", 1.1);
       const k = wave2(f, 2, 1.2);
-      s += L([tx, tip], [tx, tip - 10], IRON2.right, 0.9) + E(tx, tip - 0.6, 2, 1.6, BRASS2.left, 0.7) + P2(`M${tx},${r23(tip - 10)} Q${r23(tx + 5)},${r23(tip - 12 + k)} ${r23(tx + 10)},${r23(tip - 9 - k)} L${tx},${r23(tip - 5.6)} Z`, "#E8566A", 0.7) + E(tx, tip - 10.6, 1, 1, BRASS2.top, 0.5);
+      s += L([tx, tip], [tx, tip - 10], IRON3.right, 0.9) + E(tx, tip - 0.6, 2, 1.6, BRASS2.left, 0.7) + P2(`M${tx},${r23(tip - 10)} Q${r23(tx + 5)},${r23(tip - 12 + k)} ${r23(tx + 10)},${r23(tip - 9 - k)} L${tx},${r23(tip - 5.6)} Z`, "#E8566A", 0.7) + E(tx, tip - 10.6, 1, 1, BRASS2.top, 0.5);
       return s + (f ? note(cx + 30, cy - 24, 1) : note(cx + 26, cy - 15, 1));
     }, "draw") };
     var BRONZE = { plaque: "#D2AE62", bord: "#A9843E", trait: "#7E5E2A" };
     C2.cadran = { n: 2, draw: /* @__PURE__ */ __name((f) => {
       let s = shadow2(0, 0, 0.36, 0.16) + box2(-0.17, -0.17, 0.17, 0.17, 0, 2.2, STONE2) + box2(-0.13, -0.13, 0.13, 0.13, 2.2, 4, STONE2);
       const [bx, by] = at(0, 0, 4), [, ty] = at(0, 0, 17.4), h = by - ty;
-      s += P2(`M${r23(bx - 4.6)},${r23(by - 0.4)} Q${r23(bx - 2.6)},${r23(by - h * 0.14)} ${r23(bx - 2.8)},${r23(by - h * 0.24)} Q${r23(bx - 6)},${r23(by - h * 0.46)} ${r23(bx - 2.6)},${r23(by - h * 0.74)} Q${r23(bx - 2)},${r23(by - h * 0.86)} ${r23(bx - 4.4)},${r23(ty)} L${r23(bx + 4.4)},${r23(ty)} Q${r23(bx + 2)},${r23(by - h * 0.86)} ${r23(bx + 2.6)},${r23(by - h * 0.74)} Q${r23(bx + 6)},${r23(by - h * 0.46)} ${r23(bx + 2.8)},${r23(by - h * 0.24)} Q${r23(bx + 2.6)},${r23(by - h * 0.14)} ${r23(bx + 4.6)},${r23(by - 0.4)} Q${r23(bx)},${r23(by + 2)} ${r23(bx - 4.6)},${r23(by - 0.4)} Z`, WHITE_STONE.left, 0.9) + `<path d="M${r23(bx + 1.2)},${r23(ty + 1)} Q${r23(bx + 3.4)},${r23(by - h * 0.46)} ${r23(bx + 1.6)},${r23(by + 1.2)} L${r23(bx + 4.2)},${r23(by - 0.2)} Q${r23(bx + 2.6)},${r23(by - h * 0.14)} ${r23(bx + 2.8)},${r23(by - h * 0.24)} Q${r23(bx + 5.6)},${r23(by - h * 0.46)} ${r23(bx + 2.6)},${r23(by - h * 0.74)} Q${r23(bx + 2)},${r23(by - h * 0.86)} ${r23(bx + 4)},${r23(ty + 0.6)} Z" fill="${WHITE_STONE.right}"/><path d="M${r23(bx - 3.6)},${r23(by - h * 0.46)} Q${r23(bx)},${r23(by - h * 0.4)} ${r23(bx + 3.6)},${r23(by - h * 0.46)}" stroke="${WHITE_STONE.right}" stroke-width="0.6" fill="none"/>`;
-      s += cylinder2(0, 0, 0.28, 17.4, 20, WHITE_STONE) + disc2(0, 0, 0.23, 20, BRONZE.plaque, 0.7);
+      s += P2(`M${r23(bx - 4.6)},${r23(by - 0.4)} Q${r23(bx - 2.6)},${r23(by - h * 0.14)} ${r23(bx - 2.8)},${r23(by - h * 0.24)} Q${r23(bx - 6)},${r23(by - h * 0.46)} ${r23(bx - 2.6)},${r23(by - h * 0.74)} Q${r23(bx - 2)},${r23(by - h * 0.86)} ${r23(bx - 4.4)},${r23(ty)} L${r23(bx + 4.4)},${r23(ty)} Q${r23(bx + 2)},${r23(by - h * 0.86)} ${r23(bx + 2.6)},${r23(by - h * 0.74)} Q${r23(bx + 6)},${r23(by - h * 0.46)} ${r23(bx + 2.8)},${r23(by - h * 0.24)} Q${r23(bx + 2.6)},${r23(by - h * 0.14)} ${r23(bx + 4.6)},${r23(by - 0.4)} Q${r23(bx)},${r23(by + 2)} ${r23(bx - 4.6)},${r23(by - 0.4)} Z`, WHITE_STONE2.left, 0.9) + `<path d="M${r23(bx + 1.2)},${r23(ty + 1)} Q${r23(bx + 3.4)},${r23(by - h * 0.46)} ${r23(bx + 1.6)},${r23(by + 1.2)} L${r23(bx + 4.2)},${r23(by - 0.2)} Q${r23(bx + 2.6)},${r23(by - h * 0.14)} ${r23(bx + 2.8)},${r23(by - h * 0.24)} Q${r23(bx + 5.6)},${r23(by - h * 0.46)} ${r23(bx + 2.6)},${r23(by - h * 0.74)} Q${r23(bx + 2)},${r23(by - h * 0.86)} ${r23(bx + 4)},${r23(ty + 0.6)} Z" fill="${WHITE_STONE2.right}"/><path d="M${r23(bx - 3.6)},${r23(by - h * 0.46)} Q${r23(bx)},${r23(by - h * 0.4)} ${r23(bx + 3.6)},${r23(by - h * 0.46)}" stroke="${WHITE_STONE2.right}" stroke-width="0.6" fill="none"/>`;
+      s += cylinder2(0, 0, 0.28, 17.4, 20, WHITE_STONE2) + disc2(0, 0, 0.23, 20, BRONZE.plaque, 0.7);
       const [x, y] = at(0, 0, 20), rx = 0.23 * 56, ry = 0.23 * 28;
       s += E(x, y, rx * 0.8, ry * 0.8, "none", 0).replace('stroke="none"', `stroke="${BRONZE.bord}" stroke-width="0.6"`);
       for (let i = 0; i < 12; i++) {
@@ -1135,10 +1135,10 @@ var require_crafts = __commonJS({
     }, "draw") };
     var nenuphar = /* @__PURE__ */ __name((x, y, r, a) => {
       const p = /* @__PURE__ */ __name((t) => `${r23(x + Math.cos(t) * r)},${r23(y + Math.sin(t) * r * 0.5)}`, "p");
-      return `<path d="M${r23(x)},${r23(y)} L${p(a + 0.3)} A${r23(r)} ${r23(r * 0.5)} 0 1 1 ${p(a - 0.3)} Z" fill="#7EC45B" stroke="${OUT2}" stroke-width="0.7" stroke-linejoin="round"/>` + [a + 1.6, a + 3.1, a + 4.6].map((t) => `<path d="M${r23(x)},${r23(y)} L${p(t)}" stroke="#5E9E48" stroke-width="0.45"/>`).join("") + E(x - r * 0.35, y - r * 0.18, r * 0.3, r * 0.12, "#B3E386", 0);
+      return `<path d="M${r23(x)},${r23(y)} L${p(a + 0.3)} A${r23(r)} ${r23(r * 0.5)} 0 1 1 ${p(a - 0.3)} Z" fill="#7EC45B" stroke="${OUT3}" stroke-width="0.7" stroke-linejoin="round"/>` + [a + 1.6, a + 3.1, a + 4.6].map((t) => `<path d="M${r23(x)},${r23(y)} L${p(t)}" stroke="#5E9E48" stroke-width="0.45"/>`).join("") + E(x - r * 0.35, y - r * 0.18, r * 0.3, r * 0.12, "#B3E386", 0);
     }, "nenuphar");
     var lotus = /* @__PURE__ */ __name((x, y) => [-2.4, -1.2, 0, 1.2, 2.4].map((dx, i) => P2(`M${r23(x)},${r23(y)} Q${r23(x + dx * 1.4 - 1.2)},${r23(y - 2.4 + Math.abs(dx) * 0.5)} ${r23(x + dx * 1.3)},${r23(y - 4 + Math.abs(dx) * 0.9)} Q${r23(x + dx * 1.4 + 1.2)},${r23(y - 2.4 + Math.abs(dx) * 0.5)} ${r23(x)},${r23(y)} Z`, i % 2 ? "#F7B6CE" : "#FBD6E1", 0.55)).join("") + E(x, y - 0.8, 1.2, 0.6, "#F2C94C", 0.4), "lotus");
-    var koi = /* @__PURE__ */ __name((x, y, dir, tache) => `<g transform="translate(${r23(x)} ${r23(y)}) scale(${dir} 1)">` + P2("M-2.4,0 L-4.8,-1.8 Q-4.2,0 -4.8,1.8 Z", "#F6A04A", 0.5) + E(0, 0, 3, 1.4, tache ? "#FFF4EA" : "#F08A3A", 0.6) + E(tache ? 0.4 : -0.6, -0.2, 1.2, 0.8, tache ? "#F08A3A" : "#FFF4EA", 0) + E(1.9, -0.3, 0.3, 0.3, OUT2, 0) + "</g>", "koi");
+    var koi = /* @__PURE__ */ __name((x, y, dir, tache) => `<g transform="translate(${r23(x)} ${r23(y)}) scale(${dir} 1)">` + P2("M-2.4,0 L-4.8,-1.8 Q-4.2,0 -4.8,1.8 Z", "#F6A04A", 0.5) + E(0, 0, 3, 1.4, tache ? "#FFF4EA" : "#F08A3A", 0.6) + E(tache ? 0.4 : -0.6, -0.2, 1.2, 0.8, tache ? "#F08A3A" : "#FFF4EA", 0) + E(1.9, -0.3, 0.3, 0.3, OUT3, 0) + "</g>", "koi");
     C2.bassin = { n: 2, draw: /* @__PURE__ */ __name((f) => {
       const Z = 5.6, ZE = 4, U = 0.42, V = 0.36, u0 = 0.34, v0 = 0.28;
       let s = shadow2(0, 0, 0.52, 0.1) + box2(-U, -V, U, V, 0, Z, STONE2);
@@ -1159,7 +1159,7 @@ var require_crafts = __commonJS({
       }, "X");
       const T = H(-u0, -v0), R = H(u0, -v0), B = H(u0, v0), Lf = H(-u0, v0), WT = W(-u0, -v0);
       const Pl = X(W(-u0, v0), WT, Lf, B), Pr = X(WT, W(u0, -v0), R, B);
-      s += poly3([Lf, T, WT, Pl], "#A49A86", 0.6) + poly3([T, R, Pr, WT], "#8E846F", 0.6) + poly3([Pl, WT, Pr, B], WATER, 0.6) + poly3([Pl, WT, [WT[0] + 14, WT[1] + 7], [Pl[0] + 8, Pl[1] + 4]], WATER_LIGHT, 0);
+      s += poly3([Lf, T, WT, Pl], "#A49A86", 0.6) + poly3([T, R, Pr, WT], "#8E846F", 0.6) + poly3([Pl, WT, Pr, B], WATER2, 0.6) + poly3([Pl, WT, [WT[0] + 14, WT[1] + 7], [Pl[0] + 8, Pl[1] + 4]], WATER_LIGHT, 0);
       for (const t of [0.25, 0.5, 0.75]) {
         const u = -U + 2 * U * t;
         s += jo(at(u, V, Z), at(u, v0, Z)) + jo(at(u, -V, Z), at(u, -v0, Z));
@@ -1188,10 +1188,10 @@ var require_crafts = __commonJS({
       const [kx, ky] = at(-0.36, 0.24, 3);
       s += L([kx + 0.6, ky], at(-0.18, 0.24, 3), WOOD2.right, 0.6) + L(at(-0.18, 0.24, 3), at(-0.18, 0.06, 3), "#7A4A24", 0.6);
       s += pied(-0.18, 0.12) + pied(0.18, 0.1);
-      const sec = /* @__PURE__ */ __name((x0, x1, h, c, top) => `<rect x="${x0}" y="${-h / 2}" width="${x1 - x0}" height="${h}" rx="0.8" fill="${c}" stroke="${OUT2}" stroke-width="0.8"/><rect x="${x0 + 0.6}" y="${r23(-h / 2 + 0.7)}" width="${r23(x1 - x0 - 1.2)}" height="${r23(h * 0.2)}" rx="0.4" fill="${top}"/>`, "sec");
-      const bague = /* @__PURE__ */ __name((bx, h) => `<rect x="${bx - 0.7}" y="${r23(-h / 2)}" width="1.4" height="${h}" rx="0.5" fill="${BRASS2.top}" stroke="${OUT2}" stroke-width="0.6"/>`, "bague");
+      const sec = /* @__PURE__ */ __name((x0, x1, h, c, top) => `<rect x="${x0}" y="${-h / 2}" width="${x1 - x0}" height="${h}" rx="0.8" fill="${c}" stroke="${OUT3}" stroke-width="0.8"/><rect x="${x0 + 0.6}" y="${r23(-h / 2 + 0.7)}" width="${r23(x1 - x0 - 1.2)}" height="${r23(h * 0.2)}" rx="0.4" fill="${top}"/>`, "sec");
+      const bague = /* @__PURE__ */ __name((bx, h) => `<rect x="${bx - 0.7}" y="${r23(-h / 2)}" width="1.4" height="${h}" rx="0.5" fill="${BRASS2.top}" stroke="${OUT3}" stroke-width="0.6"/>`, "bague");
       s += `<g transform="translate(${x} ${y - 2}) rotate(-17)">` + sec(-18, -14, 3, BRASS2.right, BRASS2.left) + sec(-14, -5, 4.4, BRASS2.left, BRASS2.top) + sec(-5, 6, 5.6, CUIR.mid, CUIR.light) + `<path d="M-3,-2.8 L-1,2.8 M1,-2.8 L3,2.8" stroke="${CUIR.dark}" stroke-width="0.5"/>` + sec(6, 15, 7, BRASS2.left, BRASS2.top) + sec(15, 19, 8.2, BRASS2.right, BRASS2.left) + bague(-5, 5.2) + bague(6, 7.6) + bague(15, 8.6) + E(19, 0, 1.4, 3.6, "#BFE7F7", 0.7) + E(19.2, f ? -1.6 : 1, 0.5, 0.9, "#FFFFFF", 0) + `<rect x="${f ? 10 : 7.6}" y="-3" width="2.6" height="1" rx="0.5" fill="#FFFFFF" opacity="0.9"/></g>`;
-      return s + `<path d="M${x - 3},${y + 1} L${x - 2.6},${y - 3.4} L${x + 2.6},${y - 4.4} L${x + 3},${y + 0.2} Z" fill="${BRASS2.right}" stroke="${OUT2}" stroke-width="0.7" stroke-linejoin="round"/>` + E(x, y - 2.6, 1.6, 1.6, BRASS2.top, 0.6);
+      return s + `<path d="M${x - 3},${y + 1} L${x - 2.6},${y - 3.4} L${x + 2.6},${y - 4.4} L${x + 3},${y + 0.2} Z" fill="${BRASS2.right}" stroke="${OUT3}" stroke-width="0.7" stroke-linejoin="round"/>` + E(x, y - 2.6, 1.6, 1.6, BRASS2.top, 0.6);
     }, "draw") };
     var givre = /* @__PURE__ */ __name((x, y, r) => `<path d="M${r23(x)},${r23(y - r)} L${r23(x + r * 0.25)},${r23(y - r * 0.25)} L${r23(x + r)},${r23(y)} L${r23(x + r * 0.25)},${r23(y + r * 0.25)} L${r23(x)},${r23(y + r)} L${r23(x - r * 0.25)},${r23(y + r * 0.25)} L${r23(x - r)},${r23(y)} L${r23(x - r * 0.25)},${r23(y - r * 0.25)} Z" fill="#FFFFFF"/>`, "givre");
     C2.igloo = { n: 2, draw: /* @__PURE__ */ __name((f) => {
@@ -1208,23 +1208,23 @@ var require_crafts = __commonJS({
       for (let i = 0; i < 14; i++) neige += ` Q${r23(bord[i][0])},${r23(bord[i][1])} ${mil(i)}`;
       let s = `<path d="${neige}Z" fill="#F4FBFF" stroke="#CFE3EF" stroke-width="1.2" stroke-linejoin="round"/>` + E(x + 6, y + 4, 26, 8, "#DCEEF8", 0) + shadow2(0, 0, 0.46, 0.1);
       const dome = `M${x - 30},${y} Q${x - 31},${y - 34} ${x},${y - 37} Q${x + 31},${y - 34} ${x + 30},${y} Q${x},${y + 9} ${x - 30},${y} Z`;
-      const id = `igloo-dome-${f}`;
-      s += `<defs><clipPath id="${id}"><path d="${dome}"/></clipPath></defs><path d="${dome}" fill="${ICE.right}"/><g clip-path="url(#${id})"><path d="${dome}" fill="${ICE.left}" transform="translate(-4 -2)"/><path d="${dome}" fill="${ICE.top}" transform="translate(-9 -4)"/>`;
+      const id3 = `igloo-dome-${f}`;
+      s += `<defs><clipPath id="${id3}"><path d="${dome}"/></clipPath></defs><path d="${dome}" fill="${ICE.right}"/><g clip-path="url(#${id3})"><path d="${dome}" fill="${ICE.left}" transform="translate(-4 -2)"/><path d="${dome}" fill="${ICE.top}" transform="translate(-9 -4)"/>`;
       s += [[-17, -10, 8], [-2, -18, 7], [-12, -26, 6], [6, -10, 6]].map(([dx, dy, w]) => `<rect x="${x + dx}" y="${y + dy}" width="${w}" height="5" rx="1.6" fill="#FFFFFF" opacity="0.55"/>`).join("");
       const rows = [-7, -15, -23, -30];
       for (const yy of rows) s += `<path d="M${x - 32},${y + yy + 2} Q${x},${y + yy + 7} ${x + 32},${y + yy + 2}" fill="none" stroke="#9FC9E2" stroke-width="0.8"/>`;
       [[-24, -2], [-12, -1], [12, -1], [24, -2], [-19, -10], [-6, -9], [6, -9], [19, -10], [-13, -18], [0, -17], [13, -18], [-7, -25], [7, -25]].forEach(([dx, dy]) => {
         s += `<path d="M${x + dx},${y + dy} l${r23(dx * 0.035)},-6" stroke="#9FC9E2" stroke-width="0.8"/>`;
       });
-      s += `</g><path d="${dome}" fill="none" stroke="${OUT2}" stroke-width="1.1" stroke-linejoin="round"/>`;
+      s += `</g><path d="${dome}" fill="none" stroke="${OUT3}" stroke-width="1.1" stroke-linejoin="round"/>`;
       s += givre(x - 20, y - 22, 1.8) + givre(x - 8, y - 31, 1.3) + givre(x + 4, y - 14, 1.1);
       const [vx, vy] = [x + 3, y - 36.4];
       s += E(vx, vy, 2.6, 1, "#9FC9E2", 0.6) + [[0, -4 - f * 3, 2.2], [2 + f, -9 - f * 3, 1.7], [-1 + f, -13 - f * 2.6, 1.2]].map(([dx, dy, r], i) => E(vx + dx, vy + dy, r * 1.3, r, "#FFFFFF", 0).replace('stroke="none"', `stroke="#C9DCE6" stroke-width="0.6" opacity="${r23(0.9 - i * 0.2)}"`)).join("");
-      s += `<path d="M${x - 13},${y + 5} L${x - 13},${y - 8} Q${x - 4},${y - 17} ${x + 5},${y - 8} L${x + 5},${y + 7} Q${x - 4},${y + 9} ${x - 13},${y + 5} Z" fill="${ICE.top}" stroke="${OUT2}" stroke-width="1"/><path d="M${x + 5},${y - 8} L${x + 5},${y + 7} L${x + 1},${y + 7.4} L${x + 1},${y - 9} Z" fill="${ICE.left}"/><path d="M${x - 13},${y - 1} L${x - 9},${y - 1} M${x - 12},${y - 8.6} L${x - 8.4},${y - 7.4} M${x + 0.6},${y - 7.4} L${x + 4.4},${y - 8.6} M${x - 7},${y - 12.6} l1,3 M${x - 1},${y - 12.6} l-1,3" stroke="#9FC9E2" stroke-width="0.7"/>`;
-      s += `<path d="M${x - 9},${y + 5.5} L${x - 9},${y - 6} Q${x - 4},${y - 11} ${x + 1},${y - 6} L${x + 1},${y + 6.5} Z" fill="${f ? "#FFD27A" : "#3A4A5A"}" stroke="${OUT2}" stroke-width="0.8"/>` + (f ? glow(x - 4, y - 1, 12, "255,210,120", 0.35) : "");
+      s += `<path d="M${x - 13},${y + 5} L${x - 13},${y - 8} Q${x - 4},${y - 17} ${x + 5},${y - 8} L${x + 5},${y + 7} Q${x - 4},${y + 9} ${x - 13},${y + 5} Z" fill="${ICE.top}" stroke="${OUT3}" stroke-width="1"/><path d="M${x + 5},${y - 8} L${x + 5},${y + 7} L${x + 1},${y + 7.4} L${x + 1},${y - 9} Z" fill="${ICE.left}"/><path d="M${x - 13},${y - 1} L${x - 9},${y - 1} M${x - 12},${y - 8.6} L${x - 8.4},${y - 7.4} M${x + 0.6},${y - 7.4} L${x + 4.4},${y - 8.6} M${x - 7},${y - 12.6} l1,3 M${x - 1},${y - 12.6} l-1,3" stroke="#9FC9E2" stroke-width="0.7"/>`;
+      s += `<path d="M${x - 9},${y + 5.5} L${x - 9},${y - 6} Q${x - 4},${y - 11} ${x + 1},${y - 6} L${x + 1},${y + 6.5} Z" fill="${f ? "#FFD27A" : "#3A4A5A"}" stroke="${OUT3}" stroke-width="0.8"/>` + (f ? glow(x - 4, y - 1, 12, "255,210,120", 0.35) : "");
       s += (f ? `<path d="M${x - 7.6},${y + 5} L${x - 7.6},${y - 4.6} Q${x - 4},${y - 8.6} ${x - 0.4},${y - 4.6}" stroke="#FFF1C4" stroke-width="0.8" fill="none"/>` : "") + [[-7.4, -8.4, 2], [-4.6, -9.6, 2.6], [-1.6, -8.8, 1.8]].map(([dx, dy, h]) => P2(`M${r23(x + dx - 0.8)},${r23(y + dy)} L${r23(x + dx + 0.8)},${r23(y + dy)} L${r23(x + dx)},${r23(y + dy + h)} Z`, "#E9F8FF", 0.45)).join("");
       const [hx, hy] = at(0.36, 0.16, 0);
-      return s + E(hx, hy, 5, 2.2, "#E9F8FF", 0.7) + E(hx, hy + 0.2, 3.6, 1.5, "#3E6FA8", 0) + E(hx - 1, hy - 0.2, 1.4, 0.4, "#7FB2E6", 0) + L([hx + 6, hy + 2], [hx + 3, hy - 13], WOOD2.left, 1.1) + `<path d="M${r23(hx + 3)},${r23(hy - 13)} Q${r23(hx + 0.6)},${r23(hy - 8)} ${r23(hx + 0.4)},${r23(hy)}" stroke="${OUT2}" stroke-width="0.4" fill="none"/><g transform="translate(${r23(hx - 9)} ${r23(hy + 3.4)}) rotate(-12)">` + P2("M2.4,0 L4.4,-1.6 L4,0 L4.4,1.6 Z", "#9FC9E2", 0.5) + E(0, 0, 2.8, 1.3, "#BFD7E8", 0.6) + E(-1.6, -0.3, 0.3, 0.3, OUT2, 0) + "</g>";
+      return s + E(hx, hy, 5, 2.2, "#E9F8FF", 0.7) + E(hx, hy + 0.2, 3.6, 1.5, "#3E6FA8", 0) + E(hx - 1, hy - 0.2, 1.4, 0.4, "#7FB2E6", 0) + L([hx + 6, hy + 2], [hx + 3, hy - 13], WOOD2.left, 1.1) + `<path d="M${r23(hx + 3)},${r23(hy - 13)} Q${r23(hx + 0.6)},${r23(hy - 8)} ${r23(hx + 0.4)},${r23(hy)}" stroke="${OUT3}" stroke-width="0.4" fill="none"/><g transform="translate(${r23(hx - 9)} ${r23(hy + 3.4)}) rotate(-12)">` + P2("M2.4,0 L4.4,-1.6 L4,0 L4.4,1.6 Z", "#9FC9E2", 0.5) + E(0, 0, 2.8, 1.3, "#BFD7E8", 0.6) + E(-1.6, -0.3, 0.3, 0.3, OUT3, 0) + "</g>";
     }, "draw") };
     C2.sculpture = { n: 2, draw: /* @__PURE__ */ __name((f) => {
       const [bx, by] = at(0, 0, 0), [x, y] = at(0, 0, 10);
@@ -1244,7 +1244,7 @@ var require_crafts = __commonJS({
       const bl = [[-4.4, -5, 3.2], [-1, -6.8, 3.4], [2.6, -5.8, 3.2], [-2.6, -3.2, 3], [1.4, -3, 3]].map(([a, b, r3]) => [a * k, b * k, r3 * k]);
       let o = `<g transform="translate(${r23(x)} ${r23(y)}) scale(${dir} 1)">`;
       o += [[-3.4, 0.2], [-1.4, 0.8], [1.6, 0.2], [3.4, 0.8]].map(([a, b]) => L([a * k, -2 * k], [a * k, b * k], LAINE.tete, 1.2 * k)).join("");
-      o += bl.map(([a, b, r3]) => E(a, b, r3 + 0.8, r3 * 0.92 + 0.8, OUT2, 0)).join("") + bl.map(([a, b, r3]) => E(a, b, r3, r3 * 0.92, LAINE.fond, 0)).join("") + bl.slice(3).map(([a, b, r3]) => E(a + r3 * 0.25, b + r3 * 0.35, r3 * 0.6, r3 * 0.35, LAINE.ombre, 0)).join("") + E(-2 * k, -8 * k, 1.6 * k, 0.8 * k, "#FFFFFF", 0);
+      o += bl.map(([a, b, r3]) => E(a, b, r3 + 0.8, r3 * 0.92 + 0.8, OUT3, 0)).join("") + bl.map(([a, b, r3]) => E(a, b, r3, r3 * 0.92, LAINE.fond, 0)).join("") + bl.slice(3).map(([a, b, r3]) => E(a + r3 * 0.25, b + r3 * 0.35, r3 * 0.6, r3 * 0.35, LAINE.ombre, 0)).join("") + E(-2 * k, -8 * k, 1.6 * k, 0.8 * k, "#FFFFFF", 0);
       const hx = 5.2 * k, hy = (broute ? -1.6 : -6.8) * k, ex = hx + 0.75 * k, ey = hy - 0.45 * k, r = 0.75 * k;
       o += E(hx - 2.1 * k, hy - 1 * k, 1.6 * k, 0.75 * k, LAINE.tete, 0.6) + E(hx - 2.35 * k, hy - 1 * k, 0.8 * k, 0.35 * k, "#8A7A80", 0) + E(hx, hy, 2.9 * k, 2.7 * k, LAINE.tete, 0.8) + E(hx + 1.3 * k, hy + 0.95 * k, 1.35 * k, 1 * k, "#4E4650", 0) + E(ex, ey, r * 0.86, r * 1.12, "#2A2420", 0) + E(ex + r * 0.3, ey - r * 0.44, r * 0.38, r * 0.38, "#FFFFFF", 0) + E(ex - r * 0.3, ey + r * 0.5, r * 0.17, r * 0.17, "#FFFFFF", 0) + E(hx + 0.1 * k, hy + 1.05 * k, 0.7 * k, 0.35 * k, "#F7A8B0", 0) + E(hx - 0.7 * k, hy - 2.2 * k, 1.7 * k, 1.05 * k, LAINE.fond, 0.6);
       return o + (broute ? herbe(hx + 1.7 * k, hy + 2.6 * k, "#86B852", 0.4 * k) : "") + "</g>";
@@ -1262,11 +1262,11 @@ var require_crafts = __commonJS({
         s += fleurette(fx, fy, "#FFFFFF") + fleurette(fx + 5, fy - 1.4, "#F7B6C8");
       }
       const angles = Array.from({ length: 12 }, (_, i) => i / 12 * TAU2 + 0.12), P0 = 0, P1 = 1;
-      const pts2 = angles.map((t2) => [cos(t2) * R, sin(t2) * R]), fond = /* @__PURE__ */ __name(([u, v]) => u + v < 0, "fond");
+      const pts3 = angles.map((t2) => [cos(t2) * R, sin(t2) * R]), fond = /* @__PURE__ */ __name(([u, v]) => u + v < 0, "fond");
       const piquet = /* @__PURE__ */ __name(([u, v]) => post2(u, v, 0, H, WOOD2, 0.022), "piquet");
-      const lisses = /* @__PURE__ */ __name((i, j) => rail2(pts2[i], pts2[j], 3.4, 1.2, WOOD2.left) + rail2(pts2[i], pts2[j], 7, 1.2, WOOD2.left), "lisses");
-      const travees = pts2.map((_, i) => [i, (i + 1) % 12]).filter(([i]) => i !== P0);
-      s += travees.filter(([i, j]) => fond(pts2[i]) && fond(pts2[j])).map(([i, j]) => lisses(i, j)).join("") + pts2.filter(fond).map(piquet).join("");
+      const lisses = /* @__PURE__ */ __name((i, j) => rail2(pts3[i], pts3[j], 3.4, 1.2, WOOD2.left) + rail2(pts3[i], pts3[j], 7, 1.2, WOOD2.left), "lisses");
+      const travees = pts3.map((_, i) => [i, (i + 1) % 12]).filter(([i]) => i !== P0);
+      s += travees.filter(([i, j]) => fond(pts3[i]) && fond(pts3[j])).map(([i, j]) => lisses(i, j)).join("") + pts3.filter(fond).map(piquet).join("");
       s += box2(-0.14, -0.36, 0.12, -0.26, 0, 4.4, WOOD2, 0.8);
       {
         const [rx, ry] = at(-0.01, -0.31, 4.4);
@@ -1274,8 +1274,8 @@ var require_crafts = __commonJS({
       }
       const [m1x, m1y] = at(-0.1, -0.06), [m2x, m2y] = at(0.14, 0.08), [ax, ay] = at(-0.2, 0.16);
       s += mouton(m1x, m1y, 1, 1, f === 0) + mouton(m2x, m2y, 1, -1, f === 1) + mouton(ax, ay, 0.68, 1, false);
-      s += travees.filter(([i, j]) => !(fond(pts2[i]) && fond(pts2[j]))).map(([i, j]) => lisses(i, j)).join("") + pts2.filter((p) => !fond(p)).map(piquet).join("");
-      const g0 = pts2[P1], t = angles[P1] - 0.9, g1 = [g0[0] + cos(t) * 0.24, g0[1] + sin(t) * 0.24];
+      s += travees.filter(([i, j]) => !(fond(pts3[i]) && fond(pts3[j]))).map(([i, j]) => lisses(i, j)).join("") + pts3.filter((p) => !fond(p)).map(piquet).join("");
+      const g0 = pts3[P1], t = angles[P1] - 0.9, g1 = [g0[0] + cos(t) * 0.24, g0[1] + sin(t) * 0.24];
       s += post2(g1[0], g1[1], 0.4, 7.8, WOOD2, 0.016) + rail2(g0, g1, 2.8, 1.1, WOOD2.top) + rail2(g0, g1, 6.6, 1.1, WOOD2.top) + `<path d="M${at(g0[0], g0[1], 2.8).map(r23).join(",")} L${at(g1[0], g1[1], 6.6).map(r23).join(",")}" stroke="${WOOD2.right}" stroke-width="0.9"/>`;
       return s;
     }, "draw") };
@@ -1288,7 +1288,7 @@ var require_crafts = __commonJS({
       const pile = [[0, 0, 12.4, 4.2, 0], [1.4, -7, 9.6, 3.6, 2], [-1, -12.8, 8, 3.2, 1], [1.2, -18, 6.2, 2.8, 0], [0, -22.4, 4.4, 2.2, 2]];
       for (const [dx, dy, rx, ry, k] of pile) s += galetCairn(x + dx, y + dy, rx, ry, PIERRES_CAIRN[k]);
       const mousse = [[-9.6, 0.4, 2.2], [-6.8, -0.6, 2.4], [-4.6, 1.2, 1.8], [-8, 2, 1.8]];
-      s += mousse.map(([dx, dy, r]) => E(x + dx, y + dy, r + 0.6, r * 0.8 + 0.6, OUT2, 0)).join("") + mousse.map(([dx, dy, r]) => E(x + dx, y + dy, r, r * 0.8, "#8FCB6A", 0)).join("") + E(x - 7.4, y - 1.4, 1.2, 0.6, "#B3E386", 0) + E(x - 10, y - 0.4, 0.8, 0.4, "#B3E386", 0);
+      s += mousse.map(([dx, dy, r]) => E(x + dx, y + dy, r + 0.6, r * 0.8 + 0.6, OUT3, 0)).join("") + mousse.map(([dx, dy, r]) => E(x + dx, y + dy, r, r * 0.8, "#8FCB6A", 0)).join("") + E(x - 7.4, y - 1.4, 1.2, 0.6, "#B3E386", 0) + E(x - 10, y - 0.4, 0.8, 0.4, "#B3E386", 0);
       s += fleurette(x - 15, y + 7, "#FFFFFF") + fleurette(x + 9, y + 8, "#F7B6C8");
       const rubans = [[3.6, -9.6, "#E8566A", 16], [3, -15.4, "#F2C04B", 13], [2, -20.4, "#5C8FD0", 11]];
       rubans.forEach(([dx, dy, c, len], i) => {
@@ -1300,7 +1300,7 @@ var require_crafts = __commonJS({
     }, "draw") };
     var ROSEAU = { top: "#DCC680", left: "#C2A65A", right: "#9E8440", lien: "#7A5E2A" };
     var jonc = /* @__PURE__ */ __name((x, y, k) => thick(`M${r23(x - 2 * k)},${r23(y)} q-1,-5 -3,-8 M${r23(x)},${r23(y)} q0.4,-7 1,-11 M${r23(x + 2 * k)},${r23(y)} q1.6,-4 3.8,-6.4`, 0.7, "#7EC45B") + E(x + 0.9, y - 12 * k, 0.9, 2.2 * k, "#8A5A34", 0.6), "jonc");
-    var libellule = /* @__PURE__ */ __name((x, y, dir) => `<g transform="translate(${r23(x)} ${r23(y)}) scale(${dir} 1)">` + [[-1, -1.8, -20], [-1, 1.8, 20], [1.4, -1.6, -35], [1.4, 1.6, 35]].map(([dx, dy, r]) => `<ellipse cx="${dx}" cy="${dy}" rx="3.4" ry="1.1" transform="rotate(${r} ${dx} ${dy})" fill="#EAF6FB" fill-opacity="0.85" stroke="${OUT2}" stroke-width="0.4"/>`).join("") + L([-6, 0], [2, 0], "#2F8FA0", 1.2) + E(3, 0, 1.3, 1.1, "#2F8FA0", 0.5) + E(3.4, -0.4, 0.4, 0.4, "#FFFFFF", 0) + "</g>", "libellule");
+    var libellule = /* @__PURE__ */ __name((x, y, dir) => `<g transform="translate(${r23(x)} ${r23(y)}) scale(${dir} 1)">` + [[-1, -1.8, -20], [-1, 1.8, 20], [1.4, -1.6, -35], [1.4, 1.6, 35]].map(([dx, dy, r]) => `<ellipse cx="${dx}" cy="${dy}" rx="3.4" ry="1.1" transform="rotate(${r} ${dx} ${dy})" fill="#EAF6FB" fill-opacity="0.85" stroke="${OUT3}" stroke-width="0.4"/>`).join("") + L([-6, 0], [2, 0], "#2F8FA0", 1.2) + E(3, 0, 1.3, 1.1, "#2F8FA0", 0.5) + E(3.4, -0.4, 0.4, 0.4, "#FFFFFF", 0) + "</g>", "libellule");
     C2.passerelle = { n: 2, draw: /* @__PURE__ */ __name((f) => {
       const [x, y] = at(0, 0);
       const bord = Array.from({ length: 16 }, (_, i) => {
@@ -1331,7 +1331,7 @@ var require_crafts = __commonJS({
       const corde = /* @__PURE__ */ __name((v) => [[-0.4, 0], [0, 0.4]].map(([a, b]) => {
         const p = at(a, v, 11), q = at(b, v, 11);
         const d = `M${r23(p[0])},${r23(p[1])} Q${r23((p[0] + q[0]) / 2)},${r23((p[1] + q[1]) / 2 + 4)} ${r23(q[0])},${r23(q[1])}`;
-        return `<path d="${d}" stroke="${OUT2}" stroke-width="1.8" fill="none"/><path d="${d}" stroke="#D8B878" stroke-width="0.9" fill="none"/>`;
+        return `<path d="${d}" stroke="${OUT3}" stroke-width="1.8" fill="none"/><path d="${d}" stroke="#D8B878" stroke-width="0.9" fill="none"/>`;
       }).join(""), "corde");
       s += corde(0.18) + jonc(x + 6, y + 15, 0.8);
       return s + (f ? libellule(x + 14, y - 30, -1) : libellule(x - 6, y - 26, 1));
@@ -1348,9 +1348,9 @@ var require_crafts = __commonJS({
       s += P2(`M${x - 9},${y - 21.6} Q${x - 3},${y - 29} ${x + 5},${y - 26.4} Q${x + 1},${y - 21.6} ${x - 9},${y - 21.6} Z`, c.light, 0.8) + `<path d="M${x - 5},${y - 22} q1.4,-2 3,-1 M${x - 1.4},${y - 22.4} q1.4,-2 3,-1 M${x + 2},${y - 23.4} q1,-1.6 2.4,-0.8" stroke="${c.grain}" stroke-width="0.55" fill="none"/>`;
       const [hx, hy, ang] = f ? [x + 11, y - 35, 28] : [x + 7, y - 42, -6];
       s += thick(`M${x + 4},${y - 28} Q${x + 10},${y - 31} ${x + 6},${y - 35} Q${r23((x + 6 + hx) / 2 - 2)},${r23((y - 35 + hy) / 2)} ${hx},${hy + 2}`, 2.2, c.mid);
-      s += `<g transform="rotate(${ang} ${hx} ${hy})"><path d="M${hx - 2},${hy - 1.6} q-3,-2 -6,-1.2 M${hx - 2},${hy - 0.8} q-3,-0.6 -5.4,0.6" stroke="${OUT2}" stroke-width="0.7" fill="none" stroke-linecap="round"/>` + E(hx, hy, 3.2, 2.7, c.mid, 0.9) + P2(`M${hx + 2.6},${hy - 0.8} L${hx + 12},${hy + 0.4} L${hx + 2.6},${hy + 1.2} Z`, "#E6B14C", 0.7) + E(hx + 0.6, hy - 0.6, 0.65, 0.65, OUT2, 0) + E(hx + 0.8, hy - 0.8, 0.22, 0.22, "#FFFFFF", 0) + "</g>";
+      s += `<g transform="rotate(${ang} ${hx} ${hy})"><path d="M${hx - 2},${hy - 1.6} q-3,-2 -6,-1.2 M${hx - 2},${hy - 0.8} q-3,-0.6 -5.4,0.6" stroke="${OUT3}" stroke-width="0.7" fill="none" stroke-linecap="round"/>` + E(hx, hy, 3.2, 2.7, c.mid, 0.9) + P2(`M${hx + 2.6},${hy - 0.8} L${hx + 12},${hy + 0.4} L${hx + 2.6},${hy + 1.2} Z`, "#E6B14C", 0.7) + E(hx + 0.6, hy - 0.6, 0.65, 0.65, OUT3, 0) + E(hx + 0.8, hy - 0.8, 0.22, 0.22, "#FFFFFF", 0) + "</g>";
       const [gx, gy] = [x + 13, y + 3];
-      s += nenuphar(gx, gy, 4.4, 2.4) + E(gx, gy - 2, 3, 2, "#7FBF55", 0.7) + E(gx - 1.4, gy - 3.8, 1.1, 1, "#7FBF55", 0.6) + E(gx + 1.4, gy - 3.8, 1.1, 1, "#7FBF55", 0.6) + E(gx - 1.4, gy - 4, 0.45, 0.45, OUT2, 0) + E(gx + 1.4, gy - 4, 0.45, 0.45, OUT2, 0) + `<path d="M${gx - 1.2},${gy - 1.8} q1.2,0.9 2.4,0" stroke="${OUT2}" stroke-width="0.45" fill="none"/>`;
+      s += nenuphar(gx, gy, 4.4, 2.4) + E(gx, gy - 2, 3, 2, "#7FBF55", 0.7) + E(gx - 1.4, gy - 3.8, 1.1, 1, "#7FBF55", 0.6) + E(gx + 1.4, gy - 3.8, 1.1, 1, "#7FBF55", 0.6) + E(gx - 1.4, gy - 4, 0.45, 0.45, OUT3, 0) + E(gx + 1.4, gy - 4, 0.45, 0.45, OUT3, 0) + `<path d="M${gx - 1.2},${gy - 1.8} q1.2,0.9 2.4,0" stroke="${OUT3}" stroke-width="0.45" fill="none"/>`;
       return s;
     }, "draw") };
     var TOILE = { creme: "#F6E9D0", rouge: "#D2583F", cremeO: "#DCCDB0", rougeO: "#A84030" };
@@ -1381,7 +1381,7 @@ var require_crafts = __commonJS({
         s += poly3([a1, a2, a3], TOILE.creme, 0.8) + L(q(a2, a3, 0.55), q(a1, a3, 0.55), TOILE.rouge, 0.9);
       }
       const T0 = at(-0.4, 0.26, 8), T1 = at(0.4, 0.26, 8), R0 = at(-0.32, -0.05, 26);
-      s += raye(T0, T1, R1, R0, 8, TOILE.creme, TOILE.rouge) + poly3([T0, T1, R1, R0], "none", 1) + L(R0, R1, OUT2, 1.2);
+      s += raye(T0, T1, R1, R0, 8, TOILE.creme, TOILE.rouge) + poly3([T0, T1, R1, R0], "none", 1) + L(R0, R1, OUT3, 1.2);
       const k = wave2(f, 2, 1.2);
       s += L(R1, [R1[0], R1[1] - 9], WOOD2.right, 1.1) + P2(`M${r23(R1[0])},${r23(R1[1] - 9)} Q${r23(R1[0] + 4)},${r23(R1[1] - 10 + k)} ${r23(R1[0] + 8)},${r23(R1[1] - 8 - k)} L${r23(R1[0])},${r23(R1[1] - 5)} Z`, "#5C8FD0", 0.6);
       const K0 = at(-0.26, 0.3, 0), K1 = at(0.26, 0.3, 0), K2 = at(0.26, 0.54, 0), K3 = at(-0.26, 0.54, 0);
@@ -1396,7 +1396,7 @@ var require_crafts = __commonJS({
       }
       for (let i = 0; i <= 8; i++) {
         const [mx, my] = q(T0, T1, i / 8), sw = wave2(f, 2, 0.8, i);
-        s += L([mx, my], [mx + sw, my + 2.4], OUT2, 0.5) + E(mx + sw, my + 3, 0.9, 0.9, i % 2 ? "#E8B04A" : "#5C8FD0", 0.4);
+        s += L([mx, my], [mx + sw, my + 2.4], OUT3, 0.5) + E(mx + sw, my + 3, 0.9, 0.9, i % 2 ? "#E8B04A" : "#5C8FD0", 0.4);
       }
       const [px, py] = at(-0.12, 0.42, 0);
       s += E(px, py - 2.6, 2.6, 2.2, BRASS2.left, 0.7) + P2(`M${r23(px + 2.2)},${r23(py - 3)} q2.6,-0.6 3.2,-2.6`, "none", 0.8) + E(px, py - 5, 1, 0.6, BRASS2.top, 0.5) + E(px - 0.8, py - 3.2, 0.8, 0.6, BRASS2.top, 0) + [[-6, 1], [-3.6, 2]].map(([dx, dy]) => P2(`M${r23(px + dx - 1)},${r23(py + dy - 3)} L${r23(px + dx + 1)},${r23(py + dy - 3)} L${r23(px + dx + 0.7)},${r23(py + dy)} L${r23(px + dx - 0.7)},${r23(py + dy)} Z`, "#E8F6FF", 0.5)).join("") + `<path d="M${r23(px + 5.4)},${r23(py - 6 - f)} q1.2,-1.6 0,-3.2 q-1.2,-1.6 0,-3.2" stroke="#FFFFFF" stroke-width="0.8" fill="none" opacity="0.8"/>`;
@@ -1467,11 +1467,11 @@ var require_crafts = __commonJS({
       RAYURES.forEach((c, i) => {
         s += `<path d="${bande(i / 5, (i + 1) / 5)}" fill="${c}"/>`;
       });
-      s += `<path d="${bande(0, 1)}" fill="none" stroke="${OUT2}" stroke-width="1" stroke-linejoin="round"/>`;
+      s += `<path d="${bande(0, 1)}" fill="none" stroke="${OUT3}" stroke-width="1" stroke-linejoin="round"/>`;
       s += E(mx + 3, my + 7.4, 3, 2.2, "#F29A3A", 0.8) + E(mx + 1.8, my + 6.6, 1.4, 0.9, "#F8C060", 0) + E(mx + 4.6, my + 7.4, 1.4, 1.2, "#E2574C", 0) + P2(`M${r23(mx + 4)},${r23(my + 5.4)} q2,-2 4,-1 q-2,1.6 -4,1 Z`, "#6FAE4E", 0.5);
       for (let i = 1; i < 8; i++) {
         const t = i / 8, px = (1 - t) ** 2 * a0[0] + 2 * (1 - t) * t * mx + t * t * b0[0], py = (1 - t) ** 2 * (a0[1] + 3) + 2 * (1 - t) * t * (my + 25) + t * t * (b0[1] + 3);
-        s += L([px, py], [px + sw * 0.3, py + 2.4], OUT2, 0.5) + E(px + sw * 0.3, py + 3, 0.8, 0.8, RAYURES[i % 3], 0.4);
+        s += L([px, py], [px + sw * 0.3, py + 2.4], OUT3, 0.5) + E(px + sw * 0.3, py + 3, 0.8, 0.8, RAYURES[i % 3], 0.4);
       }
       const [hx, hy] = at(-0.3, 0.3, 0);
       return s + [[-8, -6, -30], [-3, -9, -8], [3, -8, 14], [7, -5, 34]].map(([dx, dy, r]) => `<g transform="translate(${r23(hx + 1)} ${r23(hy + 1)}) rotate(${r})">${P2(`M0,0 Q-2.4,${dy * 0.5} 0,${dy} Q2.4,${dy * 0.5} 0,0 Z`, "#6FAE4E", 0.6)}</g>`).join("");
@@ -1481,18 +1481,18 @@ var require_crafts = __commonJS({
       let s = shadow2(0, 0, 0.28, 0.12) + E(x, y + 1, 12, 4.6, "#9A7048", 0.8) + E(x - 3, y, 6, 2, "#B48A5E", 0) + [[-10, 2.6, 1.6], [9, 3, 1.4], [-6, 4.4, 1.2]].map(([dx, dy, r]) => E(x + dx, y + dy, r * 1.3, r * 0.8, "#A9A69F", 0.5)).join("");
       const troncon = /* @__PURE__ */ __name((i, c) => {
         const t = y0 - h * (i + 1);
-        return `<rect x="${x - w}" y="${r23(t)}" width="${w * 2}" height="${h}" rx="3" fill="${c}" stroke="${OUT2}" stroke-width="1"/><rect x="${x + w * 0.45}" y="${r23(t + 1)}" width="${r23(w * 0.5)}" height="${h - 2}" rx="2" fill="#000000" opacity="0.14"/><rect x="${x - w + 1.4}" y="${r23(t + 1.6)}" width="1.6" height="${h - 3.2}" rx="0.8" fill="#FFFFFF" opacity="0.35"/>`;
+        return `<rect x="${x - w}" y="${r23(t)}" width="${w * 2}" height="${h}" rx="3" fill="${c}" stroke="${OUT3}" stroke-width="1"/><rect x="${x + w * 0.45}" y="${r23(t + 1)}" width="${r23(w * 0.5)}" height="${h - 2}" rx="2" fill="#000000" opacity="0.14"/><rect x="${x - w + 1.4}" y="${r23(t + 1.6)}" width="1.6" height="${h - 3.2}" rx="0.8" fill="#FFFFFF" opacity="0.35"/>`;
       }, "troncon");
-      const oeil = /* @__PURE__ */ __name((ex, ey, r, c = "#FFFFFF") => E(ex, ey, r, r * 0.9, c, 0.7) + E(ex, ey, r * 0.45, r * 0.45, OUT2, 0) + E(ex - r * 0.15, ey - r * 0.2, r * 0.15, r * 0.15, "#FFFFFF", 0), "oeil");
+      const oeil = /* @__PURE__ */ __name((ex, ey, r, c = "#FFFFFF") => E(ex, ey, r, r * 0.9, c, 0.7) + E(ex, ey, r * 0.45, r * 0.45, OUT3, 0) + E(ex - r * 0.15, ey - r * 0.2, r * 0.15, r * 0.15, "#FFFFFF", 0), "oeil");
       const t0 = y0 - h * 0.5;
       s += E(x - w, t0 - 5.4, 2.6, 2.4, "#B8402E", 0.8) + E(x + w, t0 - 5.4, 2.6, 2.4, "#B8402E", 0.8) + troncon(0, "#C8503A");
-      s += `<path d="M${x - 6},${t0 - 4.6} q2.4,-1.6 4.4,0 M${x + 1.6},${t0 - 4.6} q2.4,-1.6 4.4,0" stroke="${OUT2}" stroke-width="0.9" fill="none" stroke-linecap="round"/>` + oeil(x - 3.6, t0 - 2.2, 1.6) + oeil(x + 3.6, t0 - 2.2, 1.6) + E(x, t0 + 2.6, 4.2, 2.8, "#F2C27A", 0.8) + E(x, t0 + 1.6, 1.6, 1.1, OUT2, 0) + `<path d="M${x - 2},${t0 + 3.6} q2,1.6 4,0" stroke="${OUT2}" stroke-width="0.7" fill="none"/>`;
+      s += `<path d="M${x - 6},${t0 - 4.6} q2.4,-1.6 4.4,0 M${x + 1.6},${t0 - 4.6} q2.4,-1.6 4.4,0" stroke="${OUT3}" stroke-width="0.9" fill="none" stroke-linecap="round"/>` + oeil(x - 3.6, t0 - 2.2, 1.6) + oeil(x + 3.6, t0 - 2.2, 1.6) + E(x, t0 + 2.6, 4.2, 2.8, "#F2C27A", 0.8) + E(x, t0 + 1.6, 1.6, 1.1, OUT3, 0) + `<path d="M${x - 2},${t0 + 3.6} q2,1.6 4,0" stroke="${OUT3}" stroke-width="0.7" fill="none"/>`;
       const t1 = y0 - h * 1.5;
       s += troncon(1, "#3FA7A0") + E(x - 4, t1 - 2.4, 3.2, 3, "#F2C04B", 0.8) + E(x + 4, t1 - 2.4, 3.2, 3, "#F2C04B", 0.8) + oeil(x - 4, t1 - 2.4, 2) + oeil(x + 4, t1 - 2.4, 2) + P2(`M${x - 6},${t1 + 2.4} Q${x},${t1 + 6.6} ${x + 6},${t1 + 2.4} Q${x},${t1 + 4.4} ${x - 6},${t1 + 2.4} Z`, "#E8566A", 0.7);
       const t2 = y0 - h * 2.5;
-      s += troncon(2, "#F2C04B") + `<path d="M${x - 6.4},${t2 - 4.4} L${x - 1.4},${t2 - 2.6} M${x + 6.4},${t2 - 4.4} L${x + 1.4},${t2 - 2.6}" stroke="${OUT2}" stroke-width="1.4" stroke-linecap="round"/>` + oeil(x - 3.6, t2 - 1, 1.7) + oeil(x + 3.6, t2 - 1, 1.7) + P2(`M${x - 2.6},${t2 + 0.6} L${x + 2.6},${t2 + 0.6} Q${x + 3},${t2 + 5.4} ${x},${t2 + 7} Q${x + 0.6},${t2 + 4} ${x - 2.6},${t2 + 0.6} Z`, "#E8803A", 0.8);
+      s += troncon(2, "#F2C04B") + `<path d="M${x - 6.4},${t2 - 4.4} L${x - 1.4},${t2 - 2.6} M${x + 6.4},${t2 - 4.4} L${x + 1.4},${t2 - 2.6}" stroke="${OUT3}" stroke-width="1.4" stroke-linecap="round"/>` + oeil(x - 3.6, t2 - 1, 1.7) + oeil(x + 3.6, t2 - 1, 1.7) + P2(`M${x - 2.6},${t2 + 0.6} L${x + 2.6},${t2 + 0.6} Q${x + 3},${t2 + 5.4} ${x},${t2 + 7} Q${x + 0.6},${t2 + 4} ${x - 2.6},${t2 + 0.6} Z`, "#E8803A", 0.8);
       const ya = y0 - h * 3 + 2.6, ang = f ? -10 : 4;
-      const aile = /* @__PURE__ */ __name((k) => `<g transform="rotate(${ang * k} ${x + w * k} ${ya})">` + P2(`M${x + w * k},${ya + 4} L${x + (w + 15) * k},${ya - 8} L${x + (w + 12) * k},${ya - 3} L${x + (w + 14) * k},${ya - 1} L${x + (w + 10) * k},${ya + 2} L${x + (w + 11) * k},${ya + 4.4} Z`, "#F7EBD0", 0.9) + `<path d="M${x + (w + 2) * k},${ya + 2.4} L${x + (w + 13) * k},${ya - 6} M${x + (w + 2) * k},${ya + 3.4} L${x + (w + 11) * k},${ya - 0.4}" stroke="#E8566A" stroke-width="1.1"/>` + E(x + (w + 3) * k, ya + 1.6, 1.6, 1.4, OUT2, 0) + "</g>", "aile");
+      const aile = /* @__PURE__ */ __name((k) => `<g transform="rotate(${ang * k} ${x + w * k} ${ya})">` + P2(`M${x + w * k},${ya + 4} L${x + (w + 15) * k},${ya - 8} L${x + (w + 12) * k},${ya - 3} L${x + (w + 14) * k},${ya - 1} L${x + (w + 10) * k},${ya + 2} L${x + (w + 11) * k},${ya + 4.4} Z`, "#F7EBD0", 0.9) + `<path d="M${x + (w + 2) * k},${ya + 2.4} L${x + (w + 13) * k},${ya - 6} M${x + (w + 2) * k},${ya + 3.4} L${x + (w + 11) * k},${ya - 0.4}" stroke="#E8566A" stroke-width="1.1"/>` + E(x + (w + 3) * k, ya + 1.6, 1.6, 1.4, OUT3, 0) + "</g>", "aile");
       return s + aile(-1) + aile(1) + P2(`M${x - 5},${ya + 0.4} Q${x},${ya - 7} ${x + 5},${ya + 0.4} Z`, "#E8566A", 0.8);
     }, "draw") };
     var BASALTE = { top: "#5A5266", left: "#3A3644", right: "#26232E" };
@@ -1541,56 +1541,56 @@ var require_crafts = __commonJS({
 // atelier/landmarks.js
 var require_landmarks = __commonJS({
   "atelier/landmarks.js"(exports, module) {
-    var { OUT: OUT2, P: P2, E, L, r2: r23 } = require_troupe2();
+    var { OUT: OUT3, P: P2, E, L, r2: r23 } = require_troupe2();
     var Dk = require_deco();
     var { feuillage, herbe, fleurette, palmier, champignon } = require_arbres();
-    var { pt, poly: poly3, face: face2, shadow: shadow2, box: box2, crown, boulder: boulder2, flower, stroke, thick, cylinder: cylinder2, disc: disc2, post: post2, rail: rail2, glow, LEAVES, PINE, WOOD: WOOD2, WOOD_DARK: WOOD_DARK2, GRANITE, STONE: STONE2, WATER, WATER_LIGHT } = Dk;
+    var { pt, poly: poly3, face: face2, shadow: shadow2, box: box2, crown, boulder: boulder2, flower, stroke, thick, cylinder: cylinder2, disc: disc2, post: post2, rail: rail2, glow, LEAVES: LEAVES2, PINE: PINE2, WOOD: WOOD2, WOOD_DARK: WOOD_DARK2, GRANITE, STONE: STONE2, WATER: WATER2, WATER_LIGHT } = Dk;
     var LAND2 = [-75, -150, 150, 190];
     var TAU2 = Math.PI * 2;
     var at = /* @__PURE__ */ __name((u, v, z = 0) => pt(u, v, z), "at");
     var ICE = { top: "#E9F8FF", left: "#BFE7F7", right: "#8CCBE8" };
     var SNOW = { top: "#FFFFFF", left: "#EAF2F8", right: "#C9D8E6" };
-    var SAND = { top: "#F2D79A", left: "#E2BF78", right: "#C49A58" };
+    var SAND2 = { top: "#F2D79A", left: "#E2BF78", right: "#C49A58" };
     var puff2 = /* @__PURE__ */ __name((x, y, r, a = 0.85) => `<g opacity="${a}">${E(x, y, r, r * 0.8, "#FFFFFF", 0.7)}${E(x + r * 0.7, y - r * 0.3, r * 0.7, r * 0.6, "#FFFFFF", 0.7)}${E(x - r * 0.6, y - r * 0.2, r * 0.6, r * 0.5, "#FFFFFF", 0.7)}</g>`, "puff");
     var sparkle2 = /* @__PURE__ */ __name((x, y, s) => P2(`M${x},${r23(y - s)} L${r23(x + s * 0.25)},${r23(y - s * 0.25)} L${r23(x + s)},${y} L${r23(x + s * 0.25)},${r23(y + s * 0.25)} L${x},${r23(y + s)} L${r23(x - s * 0.25)},${r23(y + s * 0.25)} L${r23(x - s)},${y} L${r23(x - s * 0.25)},${r23(y - s * 0.25)} Z`, "#FFFFFF", 0.5), "sparkle");
-    var gull2 = /* @__PURE__ */ __name((x, y, flap) => `<g transform="translate(${r23(x)} ${r23(y)})">${E(0, 0, 3.4, 2.2, "#FFFFFF", 0.8)}${E(2.6, -1.8, 1.7, 1.7, "#FFFFFF", 0.8)}${P2("M4,-1.8 l2.2,0.6 l-2.2,0.6 Z", "#F2C94C", 0.4)}${E(2.8, -2.2, 0.35, 0.35, OUT2, 0)}${flap ? P2("M-1,-1 L-5,-6 L1,-2 Z", "#A8B4C2", 0.6) : P2("M-3,-0.4 Q0,-2 2,0 Q0,1 -3,-0.4 Z", "#A8B4C2", 0.5)}</g>`, "gull");
-    var menhir = /* @__PURE__ */ __name((u, v, h, w, lit2, lean, id) => {
+    var gull2 = /* @__PURE__ */ __name((x, y, flap) => `<g transform="translate(${r23(x)} ${r23(y)})">${E(0, 0, 3.4, 2.2, "#FFFFFF", 0.8)}${E(2.6, -1.8, 1.7, 1.7, "#FFFFFF", 0.8)}${P2("M4,-1.8 l2.2,0.6 l-2.2,0.6 Z", "#F2C94C", 0.4)}${E(2.8, -2.2, 0.35, 0.35, OUT3, 0)}${flap ? P2("M-1,-1 L-5,-6 L1,-2 Z", "#A8B4C2", 0.6) : P2("M-3,-0.4 Q0,-2 2,0 Q0,1 -3,-0.4 Z", "#A8B4C2", 0.5)}</g>`, "gull");
+    var menhir = /* @__PURE__ */ __name((u, v, h, w, lit2, lean, id3) => {
       const [x, y] = at(u, v), xy4 = /* @__PURE__ */ __name((p) => p.map(r23).join(","), "xy");
-      const pts2 = [[x - w, y], [x - w * 1.06 + lean * 0.35, y - h * 0.45], [x - w * 0.8 + lean * 0.85, y - h * 0.86], [x + lean, y - h - 2], [x + w * 0.82 + lean * 0.85, y - h * 0.82], [x + w * 1.04 + lean * 0.35, y - h * 0.42], [x + w, y]];
-      let d = `M${xy4(pts2[0])}`;
-      for (let i = 1; i < pts2.length - 1; i++) d += ` Q${xy4(pts2[i])} ${r23((pts2[i][0] + pts2[i + 1][0]) / 2)},${r23((pts2[i][1] + pts2[i + 1][1]) / 2)}`;
-      d += ` L${xy4(pts2[6])} Q${x},${r23(y + w * 0.5)} ${xy4(pts2[0])} Z`;
+      const pts3 = [[x - w, y], [x - w * 1.06 + lean * 0.35, y - h * 0.45], [x - w * 0.8 + lean * 0.85, y - h * 0.86], [x + lean, y - h - 2], [x + w * 0.82 + lean * 0.85, y - h * 0.82], [x + w * 1.04 + lean * 0.35, y - h * 0.42], [x + w, y]];
+      let d = `M${xy4(pts3[0])}`;
+      for (let i = 1; i < pts3.length - 1; i++) d += ` Q${xy4(pts3[i])} ${r23((pts3[i][0] + pts3[i + 1][0]) / 2)},${r23((pts3[i][1] + pts3[i + 1][1]) / 2)}`;
+      d += ` L${xy4(pts3[6])} Q${x},${r23(y + w * 0.5)} ${xy4(pts3[0])} Z`;
       const [gx, gy] = [r23(x - w * 0.1 + lean * 0.5), r23(y - h * 0.55)];
-      return `<defs><clipPath id="${id}"><path d="${d}"/></clipPath></defs><path d="${d}" fill="${GRANITE.left}"/><g clip-path="url(#${id})"><path d="M${r23(x + w * 0.15 + lean * 0.9)},${r23(y - h - 6)} L${r23(x + w * 1.4)},${r23(y - h - 6)} L${r23(x + w * 1.4)},${r23(y + w)} L${r23(x + w * 0.22)},${r23(y + w)} Q${r23(x + w * 0.4 + lean * 0.4)},${r23(y - h * 0.45)} ${r23(x + w * 0.15 + lean * 0.9)},${r23(y - h - 6)} Z" fill="${GRANITE.right}"/><path d="M${r23(x - w * 0.62 + lean * 0.8)},${r23(y - h * 0.8)} Q${r23(x - w * 0.9 + lean * 0.3)},${r23(y - h * 0.45)} ${r23(x - w * 0.72)},${r23(y - h * 0.12)}" stroke="${GRANITE.top}" stroke-width="1.6" fill="none" stroke-linecap="round"/>` + E(x - w * 0.4 + lean * 0.4, y - h * 0.3, 1.8, 1.1, "#C8C27A", 0) + E(x + w * 0.3 + lean * 0.7, y - h * 0.74, 1.3, 0.8, "#E0DDB0", 0) + E(x - w * 0.2 + lean * 0.8, y - h * 0.82, 0.9, 0.6, "#C8C27A", 0) + `<path d="M${r23(x + w * 0.5 + lean * 0.5)},${r23(y - h * 0.36)} l-1.2,3 l1,2.4" stroke="#6A655C" stroke-width="0.7" fill="none" stroke-linecap="round"/><path d="M${r23(x - w * 1.2)},${r23(y + 1)} Q${r23(x - w * 0.8)},${r23(y - 4.4)} ${r23(x - w * 0.35)},${r23(y - 2.2)} Q${r23(x)},${r23(y - 5)} ${r23(x + w * 0.4)},${r23(y - 2)} Q${r23(x + w * 0.8)},${r23(y - 4)} ${r23(x + w * 1.2)},${r23(y + 1)} L${r23(x + w * 1.2)},${r23(y + w)} L${r23(x - w * 1.2)},${r23(y + w)} Z" fill="#7FA35A"/><path d="M${r23(x - w * 0.8)},${r23(y - 3.2)} q${r23(w * 0.3)},-1.4 ${r23(w * 0.5)},-0.6" stroke="#A8CC78" stroke-width="1" fill="none" stroke-linecap="round"/></g><path d="${d}" fill="none" stroke="${OUT2}" stroke-width="1.1" stroke-linejoin="round"/><path d="M${gx},${gy} m-1.9,0 a1.9,1.9 0 1 1 1.9,1.9 a3,3 0 1 1 -3,-3" stroke="${lit2 ? "#6FF0D8" : "#857F74"}" stroke-width="${lit2 ? 1.3 : 0.9}" fill="none" stroke-linecap="round"/>` + (lit2 ? glow(gx, gy, 7, "120,235,215", 0.4) : "") + `<path d="M${r23(x + w * 0.9)},${r23(y + 1.5)} l-0.6,-4 M${r23(x + w * 1.1)},${r23(y + 1.5)} l0.8,-3.4 M${r23(x + w * 1.3)},${r23(y + 1.6)} l1.4,-2.4" stroke="#6E9A4A" stroke-width="0.9" stroke-linecap="round"/>`;
+      return `<defs><clipPath id="${id3}"><path d="${d}"/></clipPath></defs><path d="${d}" fill="${GRANITE.left}"/><g clip-path="url(#${id3})"><path d="M${r23(x + w * 0.15 + lean * 0.9)},${r23(y - h - 6)} L${r23(x + w * 1.4)},${r23(y - h - 6)} L${r23(x + w * 1.4)},${r23(y + w)} L${r23(x + w * 0.22)},${r23(y + w)} Q${r23(x + w * 0.4 + lean * 0.4)},${r23(y - h * 0.45)} ${r23(x + w * 0.15 + lean * 0.9)},${r23(y - h - 6)} Z" fill="${GRANITE.right}"/><path d="M${r23(x - w * 0.62 + lean * 0.8)},${r23(y - h * 0.8)} Q${r23(x - w * 0.9 + lean * 0.3)},${r23(y - h * 0.45)} ${r23(x - w * 0.72)},${r23(y - h * 0.12)}" stroke="${GRANITE.top}" stroke-width="1.6" fill="none" stroke-linecap="round"/>` + E(x - w * 0.4 + lean * 0.4, y - h * 0.3, 1.8, 1.1, "#C8C27A", 0) + E(x + w * 0.3 + lean * 0.7, y - h * 0.74, 1.3, 0.8, "#E0DDB0", 0) + E(x - w * 0.2 + lean * 0.8, y - h * 0.82, 0.9, 0.6, "#C8C27A", 0) + `<path d="M${r23(x + w * 0.5 + lean * 0.5)},${r23(y - h * 0.36)} l-1.2,3 l1,2.4" stroke="#6A655C" stroke-width="0.7" fill="none" stroke-linecap="round"/><path d="M${r23(x - w * 1.2)},${r23(y + 1)} Q${r23(x - w * 0.8)},${r23(y - 4.4)} ${r23(x - w * 0.35)},${r23(y - 2.2)} Q${r23(x)},${r23(y - 5)} ${r23(x + w * 0.4)},${r23(y - 2)} Q${r23(x + w * 0.8)},${r23(y - 4)} ${r23(x + w * 1.2)},${r23(y + 1)} L${r23(x + w * 1.2)},${r23(y + w)} L${r23(x - w * 1.2)},${r23(y + w)} Z" fill="#7FA35A"/><path d="M${r23(x - w * 0.8)},${r23(y - 3.2)} q${r23(w * 0.3)},-1.4 ${r23(w * 0.5)},-0.6" stroke="#A8CC78" stroke-width="1" fill="none" stroke-linecap="round"/></g><path d="${d}" fill="none" stroke="${OUT3}" stroke-width="1.1" stroke-linejoin="round"/><path d="M${gx},${gy} m-1.9,0 a1.9,1.9 0 1 1 1.9,1.9 a3,3 0 1 1 -3,-3" stroke="${lit2 ? "#6FF0D8" : "#857F74"}" stroke-width="${lit2 ? 1.3 : 0.9}" fill="none" stroke-linecap="round"/>` + (lit2 ? glow(gx, gy, 7, "120,235,215", 0.4) : "") + `<path d="M${r23(x + w * 0.9)},${r23(y + 1.5)} l-0.6,-4 M${r23(x + w * 1.1)},${r23(y + 1.5)} l0.8,-3.4 M${r23(x + w * 1.3)},${r23(y + 1.6)} l1.4,-2.4" stroke="#6E9A4A" stroke-width="0.9" stroke-linecap="round"/>`;
     }, "menhir");
-    var LM2 = {};
-    LM2.grotte = { n: 2, draw: /* @__PURE__ */ __name((f) => {
+    var LM3 = {};
+    LM3.grotte = { n: 2, draw: /* @__PURE__ */ __name((f) => {
       const [x, y] = at(0, 0);
       const bosses = /* @__PURE__ */ __name((cx, cy, rx, ry, n) => {
-        const pts2 = Array.from({ length: n }, (_, i) => {
+        const pts3 = Array.from({ length: n }, (_, i) => {
           const t = i / n * TAU2, r = 1 + (i % 2 ? 0.05 : -0.03);
           return [cx + Math.cos(t) * rx * r, cy + Math.sin(t) * ry * r];
         });
         const mil = /* @__PURE__ */ __name((i) => {
-          const p = pts2[i % n], q = pts2[(i + 1) % n];
+          const p = pts3[i % n], q = pts3[(i + 1) % n];
           return `${r23((p[0] + q[0]) / 2)},${r23((p[1] + q[1]) / 2)}`;
         }, "mil");
         let d = `M${mil(n - 1)}`;
-        for (let i = 0; i < n; i++) d += ` Q${r23(pts2[i][0])},${r23(pts2[i][1])} ${mil(i)}`;
+        for (let i = 0; i < n; i++) d += ` Q${r23(pts3[i][0])},${r23(pts3[i][1])} ${mil(i)}`;
         return d + " Z";
       }, "bosses");
-      const crystal = /* @__PURE__ */ __name((cx, cy, h, w, lean = 0) => {
+      const crystal2 = /* @__PURE__ */ __name((cx, cy, h, w, lean = 0) => {
         const tip = [cx + lean, cy - h], bl = [cx - w, cy], br = [cx + w, cy], fb = [cx, cy + w * 0.45];
         return poly3([bl, tip, fb], ICE.left, 0) + poly3([fb, tip, br], ICE.right, 0) + poly3([tip, [bl[0] + (tip[0] - bl[0]) * 0.7, bl[1] + (tip[1] - bl[1]) * 0.7], [fb[0] + (tip[0] - fb[0]) * 0.7, fb[1] + (tip[1] - fb[1]) * 0.7]], "#F6FDFF", 0) + L([cx - w * 0.45, cy - h * 0.12], [cx - w * 0.15 + lean * 0.6, cy - h * 0.62], "rgba(255,255,255,.9)", 0.8) + poly3([bl, tip, br, fb], "none", 0.9);
       }, "crystal");
-      const grappe = /* @__PURE__ */ __name((cx, cy, h, w) => crystal(cx - w * 1.3, cy + 1, h * 0.55, w * 0.7, -w * 0.9) + crystal(cx + w * 1.3, cy + 1.5, h * 0.62, w * 0.75, w) + crystal(cx, cy, h, w, w * 0.2) + E(cx, cy + w * 0.9, w * 2.3, w * 0.75, "#DCEAF5", 0) + P2(bosses(cx, cy + w * 0.6, w * 2.1, w * 0.7, 8), SNOW.top, 0), "grappe");
+      const grappe = /* @__PURE__ */ __name((cx, cy, h, w) => crystal2(cx - w * 1.3, cy + 1, h * 0.55, w * 0.7, -w * 0.9) + crystal2(cx + w * 1.3, cy + 1.5, h * 0.62, w * 0.75, w) + crystal2(cx, cy, h, w, w * 0.2) + E(cx, cy + w * 0.9, w * 2.3, w * 0.75, "#DCEAF5", 0) + P2(bosses(cx, cy + w * 0.6, w * 2.1, w * 0.7, 8), SNOW.top, 0), "grappe");
       let s = shadow2(0, 0, 0.74, 0.12) + P2(bosses(x, y + 8, 64, 27, 22), SNOW.top, 1.1) + E(x + 6, y + 10, 50, 13, "#DCEAF5", 0) + [[-50, 18, 2.8], [46, 22, 2.4], [-18, 30, 2]].map(([dx, dy, r]) => E(x + dx, y + dy, r, r * 0.65, "#8E9AA8", 0.7) + E(x + dx - r * 0.3, y + dy - r * 0.25, r * 0.45, r * 0.25, "#C8D2DC", 0)).join("");
       const mound = `M${x - 52},${y + 6} Q${x - 56},${y - 22} ${x - 34},${y - 38} Q${x - 26},${y - 58} ${x - 2},${y - 56} Q${x + 18},${y - 66} ${x + 34},${y - 46} Q${x + 56},${y - 34} ${x + 52},${y - 4} Q${x + 50},${y + 10} ${x + 36},${y + 12} Q${x},${y + 22} ${x - 52},${y + 6} Z`;
-      const id = `grotte-tertre-${f}`;
-      s += `<defs><clipPath id="${id}"><path d="${mound}"/></clipPath></defs><path d="${mound}" fill="${SNOW.right}"/><g clip-path="url(#${id})"><path d="${mound}" fill="${SNOW.left}" transform="translate(-6 -3)"/><path d="${mound}" fill="${SNOW.top}" transform="translate(-13 -6)"/><path d="M${x - 40},${y - 22} q10,-6 22,-4 M${x - 8},${y - 44} q10,-5 20,-2 M${x + 22},${y - 30} q9,-2 16,4 M${x - 36},${y - 4} q6,-3 11,-1" fill="none" stroke="#C9DCEB" stroke-width="1.2" stroke-linecap="round"/><path d="M${x - 30},${y - 50} q6,-4 12,-3 M${x + 8},${y - 58} q5,-3 10,-1" fill="none" stroke="#FFFFFF" stroke-width="1.6" stroke-linecap="round"/></g><path d="${mound}" fill="none" stroke="${OUT2}" stroke-width="1.2" stroke-linejoin="round"/>`;
-      s += grappe(x - 22, y - 46, 24, 5) + crystal(x - 2, y - 52, 12, 3.4, 1) + grappe(x + 30, y - 38, 18, 4.2);
+      const id3 = `grotte-tertre-${f}`;
+      s += `<defs><clipPath id="${id3}"><path d="${mound}"/></clipPath></defs><path d="${mound}" fill="${SNOW.right}"/><g clip-path="url(#${id3})"><path d="${mound}" fill="${SNOW.left}" transform="translate(-6 -3)"/><path d="${mound}" fill="${SNOW.top}" transform="translate(-13 -6)"/><path d="M${x - 40},${y - 22} q10,-6 22,-4 M${x - 8},${y - 44} q10,-5 20,-2 M${x + 22},${y - 30} q9,-2 16,4 M${x - 36},${y - 4} q6,-3 11,-1" fill="none" stroke="#C9DCEB" stroke-width="1.2" stroke-linecap="round"/><path d="M${x - 30},${y - 50} q6,-4 12,-3 M${x + 8},${y - 58} q5,-3 10,-1" fill="none" stroke="#FFFFFF" stroke-width="1.6" stroke-linecap="round"/></g><path d="${mound}" fill="none" stroke="${OUT3}" stroke-width="1.2" stroke-linejoin="round"/>`;
+      s += grappe(x - 22, y - 46, 24, 5) + crystal2(x - 2, y - 52, 12, 3.4, 1) + grappe(x + 30, y - 38, 18, 4.2);
       const mx = x + 4, my = y + 12;
-      s += `<path d="M${mx - 21},${my} Q${mx - 22},${my - 38} ${mx},${my - 40} Q${mx + 22},${my - 38} ${mx + 21},${my} Z" fill="${ICE.left}" stroke="${OUT2}" stroke-width="1.1"/><path d="M${mx + 8},${my - 39} Q${mx + 22},${my - 36} ${mx + 21},${my} L${mx + 15},${my} Q${mx + 15},${my - 26} ${mx + 6},${my - 30} Z" fill="${ICE.right}"/><path d="M${mx - 15},${my} Q${mx - 15},${my - 29} ${mx},${my - 30} Q${mx + 15},${my - 29} ${mx + 15},${my} Z" fill="#2C5677" stroke="${OUT2}" stroke-width="0.8"/><path d="M${mx - 10},${my} Q${mx - 9},${my - 20} ${mx},${my - 21} Q${mx + 9},${my - 20} ${mx + 10},${my} Z" fill="#1D4565"/><path d="M${mx - 5},${my} Q${mx - 4.6},${my - 11} ${mx},${my - 11.6} Q${mx + 4.6},${my - 11} ${mx + 5},${my} Z" fill="#132F48"/>` + [[-20, -10, -15, -9], [-17, -26, -12, -22], [0, -40, 0, -30], [17, -26, 12, -22], [20, -10, 15, -9]].map(([a1, b1, a2, b2]) => L([mx + a1, my + b1], [mx + a2, my + b2], "#7FB8D8", 0.8)).join("") + E(mx, my - 8, 7, 3.6, `rgba(130,200,255,${f ? 0.5 : 0.32})`, 0) + (f ? [[-5, -14, 1.8], [6, -8, 1.4]] : [[4, -15, 1.6], [-6, -7, 1.4]]).map(([dx, dy, r]) => P2(`M${mx + dx},${my + dy - r * 1.6} l${r},${r * 1.6} l-${r},${r * 1.6} l-${r},-${r * 1.6} Z`, "#9FDCF8", 0)).join("");
+      s += `<path d="M${mx - 21},${my} Q${mx - 22},${my - 38} ${mx},${my - 40} Q${mx + 22},${my - 38} ${mx + 21},${my} Z" fill="${ICE.left}" stroke="${OUT3}" stroke-width="1.1"/><path d="M${mx + 8},${my - 39} Q${mx + 22},${my - 36} ${mx + 21},${my} L${mx + 15},${my} Q${mx + 15},${my - 26} ${mx + 6},${my - 30} Z" fill="${ICE.right}"/><path d="M${mx - 15},${my} Q${mx - 15},${my - 29} ${mx},${my - 30} Q${mx + 15},${my - 29} ${mx + 15},${my} Z" fill="#2C5677" stroke="${OUT3}" stroke-width="0.8"/><path d="M${mx - 10},${my} Q${mx - 9},${my - 20} ${mx},${my - 21} Q${mx + 9},${my - 20} ${mx + 10},${my} Z" fill="#1D4565"/><path d="M${mx - 5},${my} Q${mx - 4.6},${my - 11} ${mx},${my - 11.6} Q${mx + 4.6},${my - 11} ${mx + 5},${my} Z" fill="#132F48"/>` + [[-20, -10, -15, -9], [-17, -26, -12, -22], [0, -40, 0, -30], [17, -26, 12, -22], [20, -10, 15, -9]].map(([a1, b1, a2, b2]) => L([mx + a1, my + b1], [mx + a2, my + b2], "#7FB8D8", 0.8)).join("") + E(mx, my - 8, 7, 3.6, `rgba(130,200,255,${f ? 0.5 : 0.32})`, 0) + (f ? [[-5, -14, 1.8], [6, -8, 1.4]] : [[4, -15, 1.6], [-6, -7, 1.4]]).map(([dx, dy, r]) => P2(`M${mx + dx},${my + dy - r * 1.6} l${r},${r * 1.6} l-${r},${r * 1.6} l-${r},-${r * 1.6} Z`, "#9FDCF8", 0)).join("");
       s += `<path d="M${mx - 15},${my} Q${mx - 20},${my + 7} ${mx - 28},${my + 11} Q${mx - 4},${my + 19} ${mx + 24},${my + 10} Q${mx + 18},${my + 5} ${mx + 15},${my} Z" fill="${ICE.top}" stroke="${ICE.right}" stroke-width="0.9"/><path d="M${mx - 16},${my + 8} l7,-1.2 M${mx + 4},${my + 12} l8,-1.4" stroke="#FFFFFF" stroke-width="1.4" stroke-linecap="round"/>`;
       const bord = /* @__PURE__ */ __name((dx) => my - 37 + dx * dx / 80, "bord");
       let lip = `M${mx - 18},${r23(bord(-18))} Q${mx - 13},${my - 47} ${mx},${my - 47.5} Q${mx + 13},${my - 47} ${mx + 18},${r23(bord(18))}`;
@@ -1607,28 +1607,28 @@ var require_landmarks = __commonJS({
       return s + (f ? sparkle2(x + 34, y - 60, 3) + sparkle2(x - 36, y - 24, 2.2) : sparkle2(x - 18, y - 74, 3) + sparkle2(x + 44, y - 20, 2.2));
     }, "draw") };
     var NEIGE_TOIT = { back: "#E3EEF6", front: "#FFFFFF", gable: "#C98A52" };
-    LM2.lac = { n: 2, draw: /* @__PURE__ */ __name((f) => {
+    LM3.lac = { n: 2, draw: /* @__PURE__ */ __name((f) => {
       const [x, y] = at(0, 0);
       const rive = /* @__PURE__ */ __name((rx, ry, n, k) => {
-        const pts2 = Array.from({ length: n }, (_, i) => {
+        const pts3 = Array.from({ length: n }, (_, i) => {
           const t = i / n * TAU2, r = 1 + (i % 2 ? 0.05 : -0.035) + (i % 5 ? 0 : 0.05) * k;
           return [x + Math.cos(t) * rx * r, y + 2 + Math.sin(t) * ry * r];
         });
         const mil = /* @__PURE__ */ __name((i) => {
-          const p = pts2[i % n], q = pts2[(i + 1) % n];
+          const p = pts3[i % n], q = pts3[(i + 1) % n];
           return `${r23((p[0] + q[0]) / 2)},${r23((p[1] + q[1]) / 2)}`;
         }, "mil");
         let d = `M${mil(n - 1)}`;
-        for (let i = 0; i < n; i++) d += ` Q${r23(pts2[i][0])},${r23(pts2[i][1])} ${mil(i)}`;
+        for (let i = 0; i < n; i++) d += ` Q${r23(pts3[i][0])},${r23(pts3[i][1])} ${mil(i)}`;
         return d + " Z";
       }, "rive");
-      let s = shadow2(0, 0, 0.74, 0.08) + `<path d="${rive(64, 29, 18, 1)}" fill="#FFFFFF" stroke="${OUT2}" stroke-width="1.1"/><path d="${rive(54, 23, 16, 0)}" fill="#CFEAF7" stroke="#9FC9E2" stroke-width="0.9"/>` + E(x + 6, y + 5, 30, 10, "#B4DDF0", 0) + E(x - 14, y - 4, 16, 4, "#E9F8FF", 0);
+      let s = shadow2(0, 0, 0.74, 0.08) + `<path d="${rive(64, 29, 18, 1)}" fill="#FFFFFF" stroke="${OUT3}" stroke-width="1.1"/><path d="${rive(54, 23, 16, 0)}" fill="#CFEAF7" stroke="#9FC9E2" stroke-width="0.9"/>` + E(x + 6, y + 5, 30, 10, "#B4DDF0", 0) + E(x - 14, y - 4, 16, 4, "#E9F8FF", 0);
       const ang = f ? 2.4 : 0.6, [fx, fy] = [x + 10 + Math.cos(ang) * 16, y + 6 + Math.sin(ang) * 6];
       s += `<g transform="translate(${r23(fx)} ${r23(fy)}) scale(${f ? -1 : 1} 1)" opacity="0.55">` + E(0, 0, 4, 1.6, "#8FA6B8", 0) + P2("M-3.4,0 L-6,-1.8 L-5.4,0 L-6,1.8 Z", "#8FA6B8", 0) + "</g>";
       s += `<path d="M${x - 30},${y + 8} l8,-3 l5,2 l7,-4 M${x + 18},${y + 14} l6,-4 l8,1 M${x + 28},${y - 6} l-5,-4 l3,-5" stroke="#9FC9E2" stroke-width="0.8" fill="none" stroke-linejoin="round"/><path d="M${x - 24},${y - 6} l10,-4 M${x - 20},${y - 3} l6,-2.4 M${x + 6},${y + 18} l9,-3.6" stroke="#FFFFFF" stroke-width="1.2" stroke-linecap="round"/>`;
       s += box2(-0.6, -0.6, -0.34, -0.36, 0, 16, WOOD2) + Dk.gable(-0.62, -0.62, -0.32, -0.34, 16, 10, NEIGE_TOIT, 0.05);
       const [dx0, dy0] = at(-0.54, -0.36, 0), [wx, wy] = at(-0.34, -0.5, 8);
-      s += `<path d="M${dx0},${dy0} l0,-10 l5,2.5 l0,10 Z" fill="#5A3A22" stroke="${OUT2}" stroke-width="0.7"/><path d="M${wx - 0.4},${wy - 2} l4,-2 l0,4 l-4,2 Z" fill="#FFD27A" stroke="${OUT2}" stroke-width="0.6"/>` + box2(-0.4, -0.58, -0.35, -0.53, 22, 30, { top: "#9A8E80", left: "#7E7266", right: "#5E554B" }, 0.7);
+      s += `<path d="M${dx0},${dy0} l0,-10 l5,2.5 l0,10 Z" fill="#5A3A22" stroke="${OUT3}" stroke-width="0.7"/><path d="M${wx - 0.4},${wy - 2} l4,-2 l0,4 l-4,2 Z" fill="#FFD27A" stroke="${OUT3}" stroke-width="0.6"/>` + box2(-0.4, -0.58, -0.35, -0.53, 22, 30, { top: "#9A8E80", left: "#7E7266", right: "#5E554B" }, 0.7);
       const [cx, cy] = at(-0.375, -0.555, 30);
       s += puff2(cx + (f ? 3 : 1), cy - 6 - f * 4, 3.4, 0.85) + puff2(cx + (f ? 7 : 4), cy - 14 - f * 3, 2.4, 0.6);
       for (const [u, v, h] of [[0.2, -0.62, 20], [0.3, -0.64, 13], [0.12, -0.66, 10]]) {
@@ -1638,7 +1638,7 @@ var require_landmarks = __commonJS({
       s += box2(0.46, -0.48, 0.6, -0.34, 0, 7, ICE, 0.9) + box2(0.48, -0.46, 0.58, -0.36, 7, 13, ICE, 0.9) + box2(-0.62, 0.2, -0.42, 0.4, 0, 10, ICE, 0.9);
       const [hx, hy] = at(0.06, 0.1);
       s += E(hx, hy, 10.4, 5, "#F4FBFF", 0.8) + E(hx, hy + 0.4, 8.4, 3.8, "#2E6A9E", 0) + E(hx - 2.4, hy - 0.6, 3, 0.8, "#5A90C0", 0);
-      s += thick(`M${hx + 22},${hy - 2} L${hx + 22.4},${hy - 9}`, 0.7, WOOD_DARK2.left) + thick(`M${hx + 26},${hy + 1} L${hx + 4},${hy - 20}`, 1, WOOD_DARK2.left) + `<path d="M${hx + 4},${hy - 20} Q${hx - 2},${hy - 12} ${hx - 1},${hy - 1 + f}" fill="none" stroke="${OUT2}" stroke-width="0.45"/>` + E(hx - 1, hy - 1 + f, 1.5, 1.3, "#E8483C", 0.6) + `<path d="M${hx - 2.4},${hy - 1.2 + f} h2.8" stroke="#FFFFFF" stroke-width="0.7"/>` + E(hx - 1, hy + 1.4, 3 + f, 1 + f * 0.4, "none", 0).replace('stroke="none"', 'stroke="#9FC9E2" stroke-width="0.5"');
+      s += thick(`M${hx + 22},${hy - 2} L${hx + 22.4},${hy - 9}`, 0.7, WOOD_DARK2.left) + thick(`M${hx + 26},${hy + 1} L${hx + 4},${hy - 20}`, 1, WOOD_DARK2.left) + `<path d="M${hx + 4},${hy - 20} Q${hx - 2},${hy - 12} ${hx - 1},${hy - 1 + f}" fill="none" stroke="${OUT3}" stroke-width="0.45"/>` + E(hx - 1, hy - 1 + f, 1.5, 1.3, "#E8483C", 0.6) + `<path d="M${hx - 2.4},${hy - 1.2 + f} h2.8" stroke="#FFFFFF" stroke-width="0.7"/>` + E(hx - 1, hy + 1.4, 3 + f, 1 + f * 0.4, "none", 0).replace('stroke="none"', 'stroke="#9FC9E2" stroke-width="0.5"');
       const [bx, by] = at(-0.16, 0.34);
       return s + P2(`M${bx - 4},${by - 7} L${bx + 4},${by - 7} L${bx + 3.2},${by} L${bx - 3.2},${by} Z`, "#8FA0B0", 0.8) + E(bx, by - 7, 4, 1.4, "#5E6E7E", 0.6) + P2(`M${bx + 0.4},${by - 7.4} L${bx + 2.6},${by - 12} L${bx + 4.4},${by - 11} Z`, "#B8C8D6", 0.6) + L([bx - 3.6, by - 3.6], [bx + 3.6, by - 3.6], "#6E7E8E", 0.6);
     }, "draw") };
@@ -1648,7 +1648,7 @@ var require_landmarks = __commonJS({
       const a = i / 6 * TAU2;
       return E(x + Math.cos(a) * 1.5, y + Math.sin(a) * 1, 1.1, 0.7, "#FFFFFF", 0.45);
     }).join("") + E(x, y, 0.8, 0.6, "#F2C94C", 0.3), "edelweiss");
-    LM2.col = { n: 2, draw: /* @__PURE__ */ __name((f) => {
+    LM3.col = { n: 2, draw: /* @__PURE__ */ __name((f) => {
       const [x, y] = at(0, 0);
       const bord = Array.from({ length: 16 }, (_, i) => {
         const t = i / 16 * TAU2, r = 1 + (i % 2 ? 0.05 : -0.04) + (i % 5 ? 0 : 0.06);
@@ -1674,7 +1674,7 @@ var require_landmarks = __commonJS({
       s += crete(-0.62, -0.5, 1.1) + crete(0.06, -0.7, 0.85);
       s += cairn(-0.5, 0.2, 0);
       const a = at(-0.5, 0.2, 18), b = at(0.45, -0.32, 18), m = [(a[0] + b[0]) / 2, (a[1] + b[1]) / 2 + 9];
-      s += `<path d="M${r23(a[0])},${r23(a[1])} Q${r23(m[0])},${r23(m[1])} ${r23(b[0])},${r23(b[1])}" fill="none" stroke="${OUT2}" stroke-width="0.7"/>`;
+      s += `<path d="M${r23(a[0])},${r23(a[1])} Q${r23(m[0])},${r23(m[1])} ${r23(b[0])},${r23(b[1])}" fill="none" stroke="${OUT3}" stroke-width="0.7"/>`;
       const cols = ["#E8566A", "#F2C04B", "#5C8FD0", "#7EC45B", "#FFFFFF", "#E8566A", "#F2C04B", "#5C8FD0"];
       cols.forEach((c, i) => {
         const t = (i + 1) / 9, qx = (1 - t) ** 2 * a[0] + 2 * (1 - t) * t * m[0] + t * t * b[0], qy = (1 - t) ** 2 * a[1] + 2 * (1 - t) * t * m[1] + t * t * b[1], sw = (f ? 1.8 : -1.2) * (i % 2 ? 1 : -0.6);
@@ -1694,16 +1694,16 @@ var require_landmarks = __commonJS({
     var menhirsDraw = /* @__PURE__ */ __name((fleuri) => (f) => {
       const [x, y] = at(0, 0);
       const bosses = /* @__PURE__ */ __name((cx, cy, rx, ry, n) => {
-        const pts2 = Array.from({ length: n }, (_, i) => {
+        const pts3 = Array.from({ length: n }, (_, i) => {
           const t = i / n * TAU2, r = 1 + (i % 2 ? 0.05 : -0.03);
           return [cx + Math.cos(t) * rx * r, cy + Math.sin(t) * ry * r];
         });
         const mil = /* @__PURE__ */ __name((i) => {
-          const p = pts2[i % n], q = pts2[(i + 1) % n];
+          const p = pts3[i % n], q = pts3[(i + 1) % n];
           return `${r23((p[0] + q[0]) / 2)},${r23((p[1] + q[1]) / 2)}`;
         }, "mil");
         let d = `M${mil(n - 1)}`;
-        for (let i = 0; i < n; i++) d += ` Q${r23(pts2[i][0])},${r23(pts2[i][1])} ${mil(i)}`;
+        for (let i = 0; i < n; i++) d += ` Q${r23(pts3[i][0])},${r23(pts3[i][1])} ${mil(i)}`;
         return d + " Z";
       }, "bosses");
       let s = shadow2(0, 0, 0.78, 0.1) + P2(bosses(x, y + 2, 62, 29, 22), fleuri ? "#A8D878" : "#9CC874", 1.1) + E(x - 4, y, 44, 19, fleuri ? "#BCE48E" : "#AED486", 0) + `<ellipse cx="${x}" cy="${y}" rx="41" ry="20.5" fill="none" stroke="#D2C394" stroke-width="6" opacity="0.6"/>` + [[-30, 10], [34, -6], [8, 19], [-20, -14], [22, 14]].map(([dx, dy]) => E(x + dx, y + dy, 1.6, 1, "#B4AD9F", 0.5)).join("");
@@ -1733,16 +1733,16 @@ var require_landmarks = __commonJS({
       }
       return s;
     }, "menhirsDraw");
-    LM2.menhirs = { n: 2, draw: menhirsDraw(false) };
-    LM2.menhirs_fleuri = { n: 2, draw: menhirsDraw(true) };
+    LM3.menhirs = { n: 2, draw: menhirsDraw(false) };
+    LM3.menhirs_fleuri = { n: 2, draw: menhirsDraw(true) };
     var FALAISE = { lit: "#D6BC96", mid: "#C2A47C", shade: "#A0835E", strate: "#B4966E", dark: "#6E5A44" };
-    LM2.arche = { n: 2, draw: /* @__PURE__ */ __name((f) => {
+    LM3.arche = { n: 2, draw: /* @__PURE__ */ __name((f) => {
       const [x, y] = at(0, 0), c = FALAISE, V = 0.14, Z = 34;
       const F = /* @__PURE__ */ __name((u, z) => at(u, V, z), "F"), B = /* @__PURE__ */ __name((u, z) => at(u, -V, z), "B"), xy4 = /* @__PURE__ */ __name((p) => p.map(r23).join(","), "xy");
-      const lisse = /* @__PURE__ */ __name((pts2) => {
-        let d = `M${xy4(pts2[0])}`;
-        for (let i = 1; i < pts2.length - 1; i++) d += ` Q${xy4(pts2[i])} ${r23((pts2[i][0] + pts2[i + 1][0]) / 2)},${r23((pts2[i][1] + pts2[i + 1][1]) / 2)}`;
-        return d + ` L${xy4(pts2[pts2.length - 1])}`;
+      const lisse = /* @__PURE__ */ __name((pts3) => {
+        let d = `M${xy4(pts3[0])}`;
+        for (let i = 1; i < pts3.length - 1; i++) d += ` Q${xy4(pts3[i])} ${r23((pts3[i][0] + pts3[i + 1][0]) / 2)},${r23((pts3[i][1] + pts3[i + 1][1]) / 2)}`;
+        return d + ` L${xy4(pts3[pts3.length - 1])}`;
       }, "lisse");
       let s = E(x, y + 6, 70, 26, "#6FB0DA", 1) + E(x - 8, y + 2, 52, 16, "#8CC6E8", 0) + E(x - 16, y, 26, 6, "#B2DCF2", 0);
       const gauche = [[-0.58, 0], [-0.62, 6], [-0.6, 14], [-0.55, 21]], crete = [[-0.58, 25], [-0.42, 31], [-0.2, 34], [0.06, 35], [0.3, 33], [0.48, 31], [0.58, 28]], droite = [[0.6, 21], [0.56, 13], [0.6, 6], [0.58, 0]];
@@ -1752,10 +1752,10 @@ var require_landmarks = __commonJS({
       for (const z of [7, 14, 21]) s += L(F(0.59, z), B(0.6, z - 1.5), c.dark, 0.8);
       const idF = `arche-face-${f}`;
       s += `<defs><clipPath id="${idF}"><path d="${face3}"/></clipPath></defs><path d="${face3}" fill="${c.lit}"/>`;
-      s += `<g clip-path="url(#${idF})">` + [[9, 15, c.mid], [22, 27, c.mid]].map(([z0, z1]) => `<path d="M${xy4(F(-0.7, z0))} Q${xy4(F(-0.3, z0 + 2))} ${xy4(F(0, z0))} T${xy4(F(0.7, z0))} L${xy4(F(0.7, z1))} Q${xy4(F(0.3, z1 - 1.6))} ${xy4(F(0, z1))} T${xy4(F(-0.7, z1))} Z" fill="#CDB28C"/>`).join("") + [7, 15, 22, 28].map((z) => `<path d="M${xy4(F(-0.7, z))} Q${xy4(F(-0.35, z + 1.6))} ${xy4(F(0, z))} T${xy4(F(0.7, z))}" stroke="${c.strate}" stroke-width="1" fill="none"/>`).join("") + `<path d="M${xy4(F(-0.7, 0))} L${xy4(F(-0.7, 4))} Q${xy4(F(-0.35, 5.4))} ${xy4(F(0, 3.6))} T${xy4(F(0.7, 4))} L${xy4(F(0.7, 0))} Z" fill="#9C8A66"/><path d="M${xy4(F(-0.5, 4.4))} l1.4,3 M${xy4(F(-0.42, 4.6))} l0.6,2.4 M${xy4(F(0.36, 3.8))} l1,2.8 M${xy4(F(0.46, 3.6))} l0.4,2.2" stroke="#6E8A4E" stroke-width="1" stroke-linecap="round"/><path d="M${xy4(F(-0.44, 26))} l1.6,5 l-1.4,4 M${xy4(F(0.4, 18))} l-1,5 l1.4,3" stroke="${c.dark}" stroke-width="0.8" fill="none" stroke-linecap="round"/></g><path d="${face3}" fill="none" stroke="${OUT2}" stroke-width="1.1" stroke-linejoin="round"/>`;
+      s += `<g clip-path="url(#${idF})">` + [[9, 15, c.mid], [22, 27, c.mid]].map(([z0, z1]) => `<path d="M${xy4(F(-0.7, z0))} Q${xy4(F(-0.3, z0 + 2))} ${xy4(F(0, z0))} T${xy4(F(0.7, z0))} L${xy4(F(0.7, z1))} Q${xy4(F(0.3, z1 - 1.6))} ${xy4(F(0, z1))} T${xy4(F(-0.7, z1))} Z" fill="#CDB28C"/>`).join("") + [7, 15, 22, 28].map((z) => `<path d="M${xy4(F(-0.7, z))} Q${xy4(F(-0.35, z + 1.6))} ${xy4(F(0, z))} T${xy4(F(0.7, z))}" stroke="${c.strate}" stroke-width="1" fill="none"/>`).join("") + `<path d="M${xy4(F(-0.7, 0))} L${xy4(F(-0.7, 4))} Q${xy4(F(-0.35, 5.4))} ${xy4(F(0, 3.6))} T${xy4(F(0.7, 4))} L${xy4(F(0.7, 0))} Z" fill="#9C8A66"/><path d="M${xy4(F(-0.5, 4.4))} l1.4,3 M${xy4(F(-0.42, 4.6))} l0.6,2.4 M${xy4(F(0.36, 3.8))} l1,2.8 M${xy4(F(0.46, 3.6))} l0.4,2.2" stroke="#6E8A4E" stroke-width="1" stroke-linecap="round"/><path d="M${xy4(F(-0.44, 26))} l1.6,5 l-1.4,4 M${xy4(F(0.4, 18))} l-1,5 l1.4,3" stroke="${c.dark}" stroke-width="0.8" fill="none" stroke-linecap="round"/></g><path d="${face3}" fill="none" stroke="${OUT3}" stroke-width="1.1" stroke-linejoin="round"/>`;
       const trouUZ = [[-0.28, 0], [-0.31, 6], [-0.28, 13], [-0.17, 20], [0.01, 24], [0.17, 21], [0.27, 15], [0.31, 7], [0.29, 0]];
-      const trou = lisse(trouUZ.map(([u, z]) => F(u, z))) + " Z", fond = lisse(trouUZ.map(([u, z]) => B(u, z))) + " Z", id = `arche-trou-${f}`;
-      s += `<defs><clipPath id="${id}"><path d="${trou}"/></clipPath></defs><path d="${trou}" fill="${c.dark}"/><g clip-path="url(#${id})"><path d="${trou}" fill="#5A4836" transform="translate(-3 -2)"/><path d="${fond}" fill="#8CC6E8"/>${E(x + 8, y - 4, 10, 2.4, "#B2DCF2", 0)}<path d="M${x - 2 + (f ? 3 : 0)},${y + 2} q6,2 12,0" stroke="#FFFFFF" stroke-width="1" fill="none"/></g><path d="${trou}" fill="none" stroke="${OUT2}" stroke-width="1.1" stroke-linejoin="round"/>`;
+      const trou = lisse(trouUZ.map(([u, z]) => F(u, z))) + " Z", fond = lisse(trouUZ.map(([u, z]) => B(u, z))) + " Z", id3 = `arche-trou-${f}`;
+      s += `<defs><clipPath id="${id3}"><path d="${trou}"/></clipPath></defs><path d="${trou}" fill="${c.dark}"/><g clip-path="url(#${id3})"><path d="${trou}" fill="#5A4836" transform="translate(-3 -2)"/><path d="${fond}" fill="#8CC6E8"/>${E(x + 8, y - 4, 10, 2.4, "#B2DCF2", 0)}<path d="M${x - 2 + (f ? 3 : 0)},${y + 2} q6,2 12,0" stroke="#FFFFFF" stroke-width="1" fill="none"/></g><path d="${trou}" fill="none" stroke="${OUT3}" stroke-width="1.1" stroke-linejoin="round"/>`;
       const T = [...crete.map(([u, z]) => at(u, V + 0.02, z)), ...crete.slice().reverse().map(([u, z]) => at(u, -V - 0.02, z - 2))];
       s += poly3(T, "#8FCB6A", 1);
       let frange = `M${xy4(T[0])}`;
@@ -1777,54 +1777,54 @@ var require_landmarks = __commonJS({
       return s + gull2(gx, gy - 4, f);
     }, "draw") };
     var SAULE = { devant: { light: "#E6F6AA", mid: "#B4D96E", dark: "#7DAE50" }, fond: { light: "#B7DA7C", mid: "#8DBE57", dark: "#5E9443" } };
-    LM2.saule = { n: 2, draw: /* @__PURE__ */ __name((f) => {
+    LM3.saule = { n: 2, draw: /* @__PURE__ */ __name((f) => {
       const [x, y] = at(0, 0), BOIS = { left: "#8E7458", right: "#6A5440", bark: "#4A3A2C", light: "#A88E70" };
       const bosses = /* @__PURE__ */ __name((cx, cy, rx, ry, n) => {
-        const pts2 = Array.from({ length: n }, (_, i) => {
+        const pts3 = Array.from({ length: n }, (_, i) => {
           const t = i / n * TAU2, r = 1 + (i % 2 ? 0.05 : -0.03);
           return [cx + Math.cos(t) * rx * r, cy + Math.sin(t) * ry * r];
         });
         const mil = /* @__PURE__ */ __name((i) => {
-          const p = pts2[i % n], q = pts2[(i + 1) % n];
+          const p = pts3[i % n], q = pts3[(i + 1) % n];
           return `${r23((p[0] + q[0]) / 2)},${r23((p[1] + q[1]) / 2)}`;
         }, "mil");
         let d2 = `M${mil(n - 1)}`;
-        for (let i = 0; i < n; i++) d2 += ` Q${r23(pts2[i][0])},${r23(pts2[i][1])} ${mil(i)}`;
+        for (let i = 0; i < n; i++) d2 += ` Q${r23(pts3[i][0])},${r23(pts3[i][1])} ${mil(i)}`;
         return d2 + " Z";
       }, "bosses");
       const meche = /* @__PURE__ */ __name((sx, sy, len, sw2, c, eau) => {
         const ex = sx + sw2, ey = sy + len, cx = sx + sw2 * 0.1 + (sx < x ? -2.2 : 2.2), cy = sy + len * 0.45, Q = /* @__PURE__ */ __name((t) => [(1 - t) ** 2 * sx + 2 * t * (1 - t) * cx + t * t * ex, (1 - t) ** 2 * sy + 2 * t * (1 - t) * cy + t * t * ey], "Q");
         const d2 = `M${r23(sx)},${r23(sy)} Q${r23(cx)},${r23(cy)} ${r23(ex)},${r23(ey)}`;
-        return `<path d="${d2}" stroke="${OUT2}" stroke-width="2.8" fill="none" stroke-linecap="round"/><path d="${d2}" stroke="${c.mid}" stroke-width="1.5" fill="none" stroke-linecap="round"/>` + [0.28, 0.46, 0.64, 0.82].map((t, k) => {
+        return `<path d="${d2}" stroke="${OUT3}" stroke-width="2.8" fill="none" stroke-linecap="round"/><path d="${d2}" stroke="${c.mid}" stroke-width="1.5" fill="none" stroke-linecap="round"/>` + [0.28, 0.46, 0.64, 0.82].map((t, k) => {
           const [px, py] = Q(t), sg = k % 2 ? 1 : -1;
           return `<path d="M${r23(px)},${r23(py)} q${sg * 1.4},0.3 ${sg * 2.2},1.8" stroke="${c.mid}" stroke-width="1.6" fill="none" stroke-linecap="round"/><path d="M${r23(px)},${r23(py)} q${sg * 1.4},0.3 ${sg * 2.2},1.8" stroke="${c.dark}" stroke-width="0.5" fill="none" stroke-linecap="round"/>`;
         }).join("") + (eau ? `<ellipse cx="${r23(ex)}" cy="${r23(ey + 1.4)}" rx="${3 + (f ? 1 : 0)}" ry="${1.2 + (f ? 0.4 : 0)}" fill="none" stroke="#E2F4FC" stroke-width="0.8"/>` : "");
       }, "meche");
       const sw = /* @__PURE__ */ __name((i, k = 1) => ((f ? 1.8 : -1.4) + (i % 3 - 1) * 0.6) * k, "sw");
-      let s = shadow2(0, 0, 0.8, 0.1) + P2(bosses(x, y + 4, 64, 28, 22), "#9CC874", 1.1) + E(x - 8, y + 2, 42, 17, "#AED486", 0) + `<path d="M${x - 2},${y + 14} Q${x + 2},${y + 2} ${x + 20},${y + 3} Q${x + 46},${y + 4} ${x + 48},${y + 13} Q${x + 44},${y + 23} ${x + 22},${y + 23} Q${x + 2},${y + 23} ${x - 2},${y + 14} Z" fill="#7FC0E2" stroke="${OUT2}" stroke-width="1"/>` + E(x + 20, y + 11, 18, 5, "#A6D8F0", 0) + `<path d="M${x + 10},${y + 16} l9,-1 M${x + 30},${y + 19} l7,-1" stroke="#FFFFFF" stroke-width="1.2" stroke-linecap="round"/>`;
+      let s = shadow2(0, 0, 0.8, 0.1) + P2(bosses(x, y + 4, 64, 28, 22), "#9CC874", 1.1) + E(x - 8, y + 2, 42, 17, "#AED486", 0) + `<path d="M${x - 2},${y + 14} Q${x + 2},${y + 2} ${x + 20},${y + 3} Q${x + 46},${y + 4} ${x + 48},${y + 13} Q${x + 44},${y + 23} ${x + 22},${y + 23} Q${x + 2},${y + 23} ${x - 2},${y + 14} Z" fill="#7FC0E2" stroke="${OUT3}" stroke-width="1"/>` + E(x + 20, y + 11, 18, 5, "#A6D8F0", 0) + `<path d="M${x + 10},${y + 16} l9,-1 M${x + 30},${y + 19} l7,-1" stroke="#FFFFFF" stroke-width="1.2" stroke-linecap="round"/>`;
       s += [-42, -35, -27, -19, -10, -2, 7, 15, 24, 32, 40].map((sx, i) => meche(x + sx, y - 58 + Math.abs(sx) * 0.08, 50 - Math.abs(sx) * 0.05 + i % 3 * 3, sw(i, 0.8) + (sx < 0 ? -1.5 : 1.5), SAULE.fond, false)).join("");
       const d = `M${x - 21},${y + 3} Q${x - 12},${y} ${x - 10},${y - 8} Q${x - 13},${y - 22} ${x - 8},${y - 34} Q${x - 10},${y - 44} ${x - 21},${y - 52} L${x - 14},${y - 57} Q${x - 6},${y - 49} ${x - 3},${y - 44} Q${x - 2},${y - 53} ${x + 2},${y - 61} L${x + 9},${y - 59} Q${x + 5},${y - 51} ${x + 5},${y - 43} Q${x + 10},${y - 49} ${x + 19},${y - 53} L${x + 23},${y - 47} Q${x + 12},${y - 40} ${x + 9},${y - 32} Q${x + 12},${y - 18} ${x + 10},${y - 8} Q${x + 12},${y} ${x + 22},${y + 4} Q${x + 15},${y + 6} ${x + 9},${y + 4} Q${x + 5},${y + 7} ${x},${y + 5} Q${x - 5},${y + 7} ${x - 9},${y + 4} Q${x - 15},${y + 6} ${x - 21},${y + 3} Z`;
       const idT = `saule-tronc-${f}`;
-      s += `<path d="${d}" fill="${BOIS.left}" stroke="${OUT2}" stroke-width="1.2" stroke-linejoin="round"/><defs><clipPath id="${idT}"><path d="${d}"/></clipPath></defs><g clip-path="url(#${idT})"><path d="M${x + 3},${y + 8} Q${x + 6},${y - 14} ${x + 5},${y - 32} Q${x + 9},${y - 44} ${x + 15},${y - 60} L${x + 30},${y - 60} L${x + 30},${y + 8} Z" fill="${BOIS.right}"/>` + E(x, y - 48, 22, 8, BOIS.right, 0) + `<path d="M${x - 6},${y - 6} Q${x - 7},${y - 14} ${x - 5},${y - 20} M${x + 4},${y - 10} Q${x + 5},${y - 18} ${x + 3},${y - 26} M${x - 7},${y - 30} q1,-4 -0.4,-8 M${x + 1},${y - 36} q-1,-3 0,-6" fill="none" stroke="${BOIS.bark}" stroke-width="0.8" stroke-linecap="round"/><path d="M${x - 8},${y - 4} Q${x - 9},${y - 16} ${x - 7.4},${y - 26}" fill="none" stroke="${BOIS.light}" stroke-width="1.2" stroke-linecap="round" opacity="0.8"/></g>` + E(x - 2, y - 20, 3.2, 4.4, BOIS.bark, 0.9) + E(x - 2, y - 19.4, 2, 3.2, "#2E2218", 0);
+      s += `<path d="${d}" fill="${BOIS.left}" stroke="${OUT3}" stroke-width="1.2" stroke-linejoin="round"/><defs><clipPath id="${idT}"><path d="${d}"/></clipPath></defs><g clip-path="url(#${idT})"><path d="M${x + 3},${y + 8} Q${x + 6},${y - 14} ${x + 5},${y - 32} Q${x + 9},${y - 44} ${x + 15},${y - 60} L${x + 30},${y - 60} L${x + 30},${y + 8} Z" fill="${BOIS.right}"/>` + E(x, y - 48, 22, 8, BOIS.right, 0) + `<path d="M${x - 6},${y - 6} Q${x - 7},${y - 14} ${x - 5},${y - 20} M${x + 4},${y - 10} Q${x + 5},${y - 18} ${x + 3},${y - 26} M${x - 7},${y - 30} q1,-4 -0.4,-8 M${x + 1},${y - 36} q-1,-3 0,-6" fill="none" stroke="${BOIS.bark}" stroke-width="0.8" stroke-linecap="round"/><path d="M${x - 8},${y - 4} Q${x - 9},${y - 16} ${x - 7.4},${y - 26}" fill="none" stroke="${BOIS.light}" stroke-width="1.2" stroke-linecap="round" opacity="0.8"/></g>` + E(x - 2, y - 20, 3.2, 4.4, BOIS.bark, 0.9) + E(x - 2, y - 19.4, 2, 3.2, "#2E2218", 0);
       s += feuillage(`saule-a-${f}`, [[-30, -72, 15], [-12, -84, 17], [10, -86, 17], [29, -74, 15], [-40, -60, 11], [40, -60, 11], [0, -74, 16]].map(([a, b, r]) => [x + a, y + b, r]), SAULE.fond, [[-18, -78], [4, -80, 0.9], [22, -76, 0.9], [-34, -64, 0.8]].map(([a, b, k]) => [x + a, y + b, k]), 1) + feuillage(`saule-b-${f}`, [[24, -64, 13], [36, -54, 9, 0], [13, -58, 10, 0]].map(([a, b, r, h]) => [x + a, y + b, r, h]), SAULE.devant, [[24, -58], [33, -52, 0.8]].map(([a, b, k]) => [x + a, y + b, k]), 1) + feuillage(`saule-c-${f}`, [[-25, -62, 13], [-37, -54, 9, 0], [-14, -56, 10, 0]].map(([a, b, r, h]) => [x + a, y + b, r, h]), SAULE.devant, [[-26, -56], [-34, -50, 0.8]].map(([a, b, k]) => [x + a, y + b, k]), 1) + feuillage(`saule-d-${f}`, [[-1, -70, 12], [-6, -60, 9, 0], [6, -61, 9, 0]].map(([a, b, r, h]) => [x + a, y + b, r, h]), SAULE.devant, [[-2, -64], [5, -68, 0.8]].map(([a, b, k]) => [x + a, y + b, k]), 1);
       s += [[-47, -54, 52], [-42, -52, 56], [-36, -51, 50], [-30, -50, 54], [-23, -50, 30], [-15, -52, 22], [-7, -55, 16], [9, -56, 18], [16, -54, 26], [23, -52, 54], [29, -50, 62], [35, -51, 58], [41, -52, 64], [47, -54, 58]].map(([sx, sy, len], i) => meche(x + sx, y + sy, len, sw(i) + (sx < 0 ? -2 : 2), SAULE.devant, sx > 20)).join("");
       s += P2(`M${x + 14},${y + 13} a5,1.9 0 1 1 1.4,1.4 L${x + 14},${y + 13} Z`, "#6FAE4E", 0.7) + P2(`M${x + 38},${y + 17} a4,1.5 0 1 1 1.2,1.2 L${x + 38},${y + 17} Z`, "#6FAE4E", 0.7) + fleurette(x + 13, y + 11.6, "#F7B6C8") + [[-2, 12], [1, 16], [48, 11]].map(([dx, dy]) => `<path d="M${x + dx},${y + dy} l-1,-10 M${x + dx + 1.4},${y + dy} l0.6,-12 M${x + dx + 2.8},${y + dy} l1.8,-9" stroke="#5E8C3A" stroke-width="1.1" stroke-linecap="round"/>` + E(x + dx + 2, y + dy - 12.4, 0.9, 2.2, "#8A5A34", 0.5)).join("") + herbe(x - 40, y + 14, "#86B852", 0.9) + herbe(x - 24, y + 22, "#94C25C", 0.75) + fleurette(x - 32, y + 18, "#FFFFFF") + fleurette(x - 46, y + 8, "#F7B6C8");
       const [lx, ly, la] = f ? [30, -26, 140] : [34, -42, 20];
-      return s + `<path d="M0,-2.6 Q1.6,0 0,2.6 Q-1.6,0 0,-2.6 Z" fill="${SAULE.devant.light}" stroke="${OUT2}" stroke-width="0.6" transform="translate(${x + lx} ${y + ly}) rotate(${la})"/>`;
+      return s + `<path d="M0,-2.6 Q1.6,0 0,2.6 Q-1.6,0 0,-2.6 Z" fill="${SAULE.devant.light}" stroke="${OUT3}" stroke-width="0.6" transform="translate(${x + lx} ${y + ly}) rotate(${la})"/>`;
     }, "draw") };
-    LM2.pilotis = { n: 2, draw: /* @__PURE__ */ __name((f) => {
+    LM3.pilotis = { n: 2, draw: /* @__PURE__ */ __name((f) => {
       const [x, y] = at(0, 0), xy4 = /* @__PURE__ */ __name((p) => p.map(r23).join(","), "xy");
       const bosses = /* @__PURE__ */ __name((cx, cy, rx, ry, n) => {
-        const pts2 = Array.from({ length: n }, (_, i) => {
+        const pts3 = Array.from({ length: n }, (_, i) => {
           const t = i / n * TAU2, r = 1 + (i % 2 ? 0.05 : -0.03);
           return [cx + Math.cos(t) * rx * r, cy + Math.sin(t) * ry * r];
         });
         const mil = /* @__PURE__ */ __name((i) => {
-          const p = pts2[i % n], q = pts2[(i + 1) % n];
+          const p = pts3[i % n], q = pts3[(i + 1) % n];
           return `${r23((p[0] + q[0]) / 2)},${r23((p[1] + q[1]) / 2)}`;
         }, "mil");
         let d = `M${mil(n - 1)}`;
-        for (let i = 0; i < n; i++) d += ` Q${r23(pts2[i][0])},${r23(pts2[i][1])} ${mil(i)}`;
+        for (let i = 0; i < n; i++) d += ` Q${r23(pts3[i][0])},${r23(pts3[i][1])} ${mil(i)}`;
         return d + " Z";
       }, "bosses");
       const CHAUME = { back: "#C99A45", front: "#E6BE6A", gable: "#8E6A44" };
@@ -1836,14 +1836,14 @@ var require_landmarks = __commonJS({
         const [px, py] = at(u, v);
         s += `<ellipse cx="${r23(px)}" cy="${r23(py + 1)}" rx="${4.4 + f * 1.2}" ry="${1.8 + f * 0.4}" fill="none" stroke="#E2F4FC" stroke-width="0.8"/>` + post2(u, v, -3, 18, WOOD_DARK2, 0.03);
       }
-      const barre = /* @__PURE__ */ __name((p, q, w, c) => `<path d="M${xy4(p)} L${xy4(q)}" stroke="${OUT2}" stroke-width="${w + 1.4}" stroke-linecap="round"/><path d="M${xy4(p)} L${xy4(q)}" stroke="${c}" stroke-width="${w}" stroke-linecap="round"/>`, "barre");
+      const barre = /* @__PURE__ */ __name((p, q, w, c) => `<path d="M${xy4(p)} L${xy4(q)}" stroke="${OUT3}" stroke-width="${w + 1.4}" stroke-linecap="round"/><path d="M${xy4(p)} L${xy4(q)}" stroke="${c}" stroke-width="${w}" stroke-linecap="round"/>`, "barre");
       s += barre(at(-0.22, 0.21, 3), at(0.22, 0.21, 16), 1.2, WOOD_DARK2.left) + barre(at(-0.22, 0.21, 16), at(0.22, 0.21, 3), 1.2, WOOD_DARK2.left);
       s += box2(-0.3, -0.26, 0.3, 0.32, 18, 21, WOOD2, 1);
       for (const u of [-0.18, -0.06, 0.06, 0.18]) s += L(at(u, -0.26, 21), at(u, 0.32, 21), WOOD2.right, 0.6);
       const [bx, by] = at(0.66, 0.14);
-      s += `<path d="M${xy4(at(0.22, 0.18, 12))} Q${r23(bx - 10)},${r23(by - 8)} ${r23(bx - 14)},${r23(by - 4)}" stroke="#D8C8A0" stroke-width="0.8" fill="none"/><ellipse cx="${r23(bx)}" cy="${r23(by + 2)}" rx="18" ry="3.4" fill="none" stroke="#E2F4FC" stroke-width="0.8"/>` + P2(`M${bx - 16},${by - 4} Q${bx - 12},${by + 4} ${bx},${by + 4} Q${bx + 12},${by + 4} ${bx + 16},${by - 4} Q${bx},${by - 1} ${bx - 16},${by - 4} Z`, WOOD2.left, 1) + P2(`M${bx - 13},${by - 3.4} Q${bx},${by - 0.6} ${bx + 13},${by - 3.4} Q${bx},${by + 1.6} ${bx - 13},${by - 3.4} Z`, WOOD2.right, 0) + L([bx - 2, by - 2.4], [bx + 2, by - 1.4], WOOD2.top, 1.6) + `<path d="M${bx - 6},${by - 2} L${bx + 14},${by - 9}" stroke="${OUT2}" stroke-width="2.4" stroke-linecap="round"/><path d="M${bx - 6},${by - 2} L${bx + 14},${by - 9}" stroke="${WOOD2.top}" stroke-width="1.2" stroke-linecap="round"/>` + E(bx + 15, by - 9.4, 2.4, 1.1, WOOD2.top, 0.8);
+      s += `<path d="M${xy4(at(0.22, 0.18, 12))} Q${r23(bx - 10)},${r23(by - 8)} ${r23(bx - 14)},${r23(by - 4)}" stroke="#D8C8A0" stroke-width="0.8" fill="none"/><ellipse cx="${r23(bx)}" cy="${r23(by + 2)}" rx="18" ry="3.4" fill="none" stroke="#E2F4FC" stroke-width="0.8"/>` + P2(`M${bx - 16},${by - 4} Q${bx - 12},${by + 4} ${bx},${by + 4} Q${bx + 12},${by + 4} ${bx + 16},${by - 4} Q${bx},${by - 1} ${bx - 16},${by - 4} Z`, WOOD2.left, 1) + P2(`M${bx - 13},${by - 3.4} Q${bx},${by - 0.6} ${bx + 13},${by - 3.4} Q${bx},${by + 1.6} ${bx - 13},${by - 3.4} Z`, WOOD2.right, 0) + L([bx - 2, by - 2.4], [bx + 2, by - 1.4], WOOD2.top, 1.6) + `<path d="M${bx - 6},${by - 2} L${bx + 14},${by - 9}" stroke="${OUT3}" stroke-width="2.4" stroke-linecap="round"/><path d="M${bx - 6},${by - 2} L${bx + 14},${by - 9}" stroke="${WOOD2.top}" stroke-width="1.2" stroke-linecap="round"/>` + E(bx + 15, by - 9.4, 2.4, 1.1, WOOD2.top, 0.8);
       const [lx, ly] = at(0, 0.33, 0);
-      s += `<path d="M${r23(lx - 3)},${r23(ly + 2)} L${r23(lx - 3)},${r23(ly - 26)} M${r23(lx + 3)},${r23(ly + 1)} L${r23(lx + 3)},${r23(ly - 27)}" stroke="${OUT2}" stroke-width="2.4" stroke-linecap="round"/><path d="M${r23(lx - 3)},${r23(ly + 2)} L${r23(lx - 3)},${r23(ly - 26)} M${r23(lx + 3)},${r23(ly + 1)} L${r23(lx + 3)},${r23(ly - 27)}" stroke="${WOOD_DARK2.left}" stroke-width="1.1" stroke-linecap="round"/>` + [4, 10, 16, 22].map((z) => L([lx - 3, ly - z], [lx + 3, ly - z - 0.6], WOOD_DARK2.left, 1.1)).join("");
+      s += `<path d="M${r23(lx - 3)},${r23(ly + 2)} L${r23(lx - 3)},${r23(ly - 26)} M${r23(lx + 3)},${r23(ly + 1)} L${r23(lx + 3)},${r23(ly - 27)}" stroke="${OUT3}" stroke-width="2.4" stroke-linecap="round"/><path d="M${r23(lx - 3)},${r23(ly + 2)} L${r23(lx - 3)},${r23(ly - 26)} M${r23(lx + 3)},${r23(ly + 1)} L${r23(lx + 3)},${r23(ly - 27)}" stroke="${WOOD_DARK2.left}" stroke-width="1.1" stroke-linecap="round"/>` + [4, 10, 16, 22].map((z) => L([lx - 3, ly - z], [lx + 3, ly - z - 0.6], WOOD_DARK2.left, 1.1)).join("");
       s += box2(-0.24, -0.2, 0.2, 0.15, 21, 37, WOOD_DARK2, 1);
       for (const u of [-0.15, -0.06, 0.03, 0.12]) s += L(at(u, 0.15, 21), at(u, 0.15, 37), WOOD_DARK2.right, 0.6);
       for (const v of [-0.11, -0.02, 0.07]) s += L(at(0.2, v, 21), at(0.2, v, 37), "#56331C", 0.6);
@@ -1855,26 +1855,26 @@ var require_landmarks = __commonJS({
       const [nx, ny] = at(-0.17, 0.32, 18);
       s += `<path d="M${r23(nx)},${r23(ny)} Q${r23(nx - 6)},${r23(ny + 6)} ${r23(nx - 4)},${r23(ny + 15)} L${r23(nx + 4)},${r23(ny + 18)} Q${r23(nx + 2)},${r23(ny + 8)} ${r23(nx + 6)},${r23(ny + 3)} Z" fill="#E8DCC0" fill-opacity="0.45" stroke="#CDBB92" stroke-width="0.8"/><path d="M${r23(nx - 3)},${r23(ny + 5)} l7,2 M${r23(nx - 4)},${r23(ny + 10)} l7,2.4 M${r23(nx - 1)},${r23(ny + 2)} l-1,13 M${r23(nx + 2.6)},${r23(ny + 3)} l-1.4,14" stroke="#D8C8A0" stroke-width="0.6"/>`;
       const [qx, qy] = at(0.2, 0.15, 35);
-      s += L([qx, qy], [qx + 5, qy - 1], WOOD_DARK2.right, 1.2) + L([qx + 5, qy - 1], [qx + 5, qy + 2], "#3D3A36", 0.7) + `<rect x="${r23(qx + 2.8)}" y="${r23(qy + 2)}" width="4.4" height="5.6" rx="1" fill="#FFD978" stroke="${OUT2}" stroke-width="0.7"/>` + E(qx + 5, qy + 1.8, 2.6, 0.9, "#3D3A36", 0) + glow(qx + 5, qy + 5, 10, "255,214,120", f ? 0.42 : 0.34);
+      s += L([qx, qy], [qx + 5, qy - 1], WOOD_DARK2.right, 1.2) + L([qx + 5, qy - 1], [qx + 5, qy + 2], "#3D3A36", 0.7) + `<rect x="${r23(qx + 2.8)}" y="${r23(qy + 2)}" width="4.4" height="5.6" rx="1" fill="#FFD978" stroke="${OUT3}" stroke-width="0.7"/>` + E(qx + 5, qy + 1.8, 2.6, 0.9, "#3D3A36", 0) + glow(qx + 5, qy + 5, 10, "255,214,120", f ? 0.42 : 0.34);
       for (let i = 0; i < 4; i++) {
         const a = (i / 4 + f / 8) * TAU2, [fx, fy] = at(Math.cos(a) * 0.5, Math.sin(a) * 0.5, 30 + i % 2 * 10);
         s += glow(fx, fy, 3, "255,236,150", 0.45) + E(fx, fy, 0.9, 0.9, "#FFF3A8", 0.3);
       }
       return s;
     }, "draw") };
-    LM2.oasis = { n: 2, draw: /* @__PURE__ */ __name((f) => {
+    LM3.oasis = { n: 2, draw: /* @__PURE__ */ __name((f) => {
       const [x, y] = at(0, 0);
       const bosses = /* @__PURE__ */ __name((cx, cy, rx, ry, n) => {
-        const pts2 = Array.from({ length: n }, (_, i) => {
+        const pts3 = Array.from({ length: n }, (_, i) => {
           const t = i / n * TAU2, r = 1 + (i % 2 ? 0.05 : -0.03);
           return [cx + Math.cos(t) * rx * r, cy + Math.sin(t) * ry * r];
         });
         const mil = /* @__PURE__ */ __name((i) => {
-          const p = pts2[i % n], q = pts2[(i + 1) % n];
+          const p = pts3[i % n], q = pts3[(i + 1) % n];
           return `${r23((p[0] + q[0]) / 2)},${r23((p[1] + q[1]) / 2)}`;
         }, "mil");
         let d = `M${mil(n - 1)}`;
-        for (let i = 0; i < n; i++) d += ` Q${r23(pts2[i][0])},${r23(pts2[i][1])} ${mil(i)}`;
+        for (let i = 0; i < n; i++) d += ` Q${r23(pts3[i][0])},${r23(pts3[i][1])} ${mil(i)}`;
         return d + " Z";
       }, "bosses");
       const GRES_ROSE = { top: "#F0D49A", left: "#D9B474", right: "#B48A50" };
@@ -1883,9 +1883,9 @@ var require_landmarks = __commonJS({
         return `<g transform="translate(${r23(px)} ${r23(py)}) rotate(${f ? 1.6 : -1.2}) scale(${k})">${palmier({ vert: "doux" }).replace(/<ellipse[^>]*rgba\(40,55,20,0\.22\)[^>]*\/>/, "").replace(/(id="|url\(#)pal/g, `$1oasis${tag}${f}pal`)}</g>`;
       }, "palme");
       const lotus = /* @__PURE__ */ __name((lx, ly, col) => P2(`M${lx},${ly} a6,2.4 0 1 1 1.8,1.6 Z`, "#6FAE4E", 0.7) + [-2.6, -1.3, 0, 1.3, 2.6].map((dx) => P2(`M${r23(lx + dx * 0.6)},${ly - 0.6} Q${r23(lx + dx - 1)},${r23(ly - 3.4 + Math.abs(dx) * 0.5)} ${r23(lx + dx * 1.1)},${r23(ly - 4.6 + Math.abs(dx) * 0.8)} Q${r23(lx + dx + 1)},${r23(ly - 3.4 + Math.abs(dx) * 0.5)} ${r23(lx + dx * 0.6 + 0.4)},${ly - 0.6} Z`, col, 0.5)).join("") + E(lx + 0.3, ly - 1.4, 1.1, 0.7, "#F2C94C", 0.4), "lotus");
-      let s = shadow2(0, 0, 0.8, 0.08) + P2(bosses(x, y + 4, 66, 29, 22), SAND.top, 1.1) + E(x + 8, y + 12, 50, 14, "#F7E2B0", 0) + [[-48, 18], [40, 22], [-10, 28]].map(([dx, dy]) => `<path d="M${x + dx},${y + dy} q4,-1.6 8,0 q4,1.6 8,0" stroke="${SAND.left}" stroke-width="0.8" fill="none" stroke-linecap="round"/>`).join("") + P2(bosses(x, y + 2, 47, 20.5, 26), "#8FC46A", 1);
+      let s = shadow2(0, 0, 0.8, 0.08) + P2(bosses(x, y + 4, 66, 29, 22), SAND2.top, 1.1) + E(x + 8, y + 12, 50, 14, "#F7E2B0", 0) + [[-48, 18], [40, 22], [-10, 28]].map(([dx, dy]) => `<path d="M${x + dx},${y + dy} q4,-1.6 8,0 q4,1.6 8,0" stroke="${SAND2.left}" stroke-width="0.8" fill="none" stroke-linecap="round"/>`).join("") + P2(bosses(x, y + 2, 47, 20.5, 26), "#8FC46A", 1);
       s += palme(-0.52, -0.42, 0.78, "a") + palme(0.46, -0.48, 0.72, "b");
-      s += P2(bosses(x, y + 2, 40, 16.5, 24), SAND.left, 0.9) + E(x, y + 2.4, 36, 14.4, WATER, 0.9) + E(x - 6, y + 1, 24, 8, WATER_LIGHT, 0) + `<path d="M${x - 26},${y + 6} l8,-1.2 M${x + 14},${y + 10} l9,-1.2" stroke="#FFFFFF" stroke-width="1.2" stroke-linecap="round"/>`;
+      s += P2(bosses(x, y + 2, 40, 16.5, 24), SAND2.left, 0.9) + E(x, y + 2.4, 36, 14.4, WATER2, 0.9) + E(x - 6, y + 1, 24, 8, WATER_LIGHT, 0) + `<path d="M${x - 26},${y + 6} l8,-1.2 M${x + 14},${y + 10} l9,-1.2" stroke="#FFFFFF" stroke-width="1.2" stroke-linecap="round"/>`;
       s += [0, 0.5].map((k) => {
         const p = (k + f * 0.25) % 1;
         return `<ellipse cx="${x}" cy="${y + 2}" rx="${r23(12 + p * 18)}" ry="${r23(5 + p * 7)}" fill="none" stroke="#E6F6FF" stroke-width="0.9" opacity="${r23(0.85 * (1 - p))}"/>`;
@@ -1893,16 +1893,16 @@ var require_landmarks = __commonJS({
       s += lotus(x - 22, y + 2, "#F7B6CE") + lotus(x + 24, y - 2, "#FFFFFF") + lotus(x - 6, y + 12, "#F7B6CE");
       s += Dk.boulder(0, 0.02, 0.13, 0.1, 11, GRES_ROSE, 4);
       const [jx, jy] = at(0, 0.02, 12), h = f ? 22 : 18;
-      s += `<path d="M${jx - 2.4},${jy} Q${jx - 1.6},${jy - h * 0.7} ${jx},${jy - h} Q${jx + 1.6},${jy - h * 0.7} ${jx + 2.4},${jy} Z" fill="#DDF3FF" stroke="${OUT2}" stroke-width="0.8"/>` + [[-13, -4, -2], [-10, -2, 0], [-15, -6, 3], [13, -3, -2], [10, -1, 0], [15, -5, 3]].map(([ex, ey, hy]) => `<path d="M${jx},${jy - h} Q${r23(jx + ex * 0.65)},${jy - h - 2 - hy} ${jx + ex},${jy + ey}" stroke="#9ED4F0" stroke-width="1.8" fill="none" stroke-linecap="round" opacity="0.8"/><path d="M${jx},${jy - h} Q${r23(jx + ex * 0.65)},${jy - h - 2 - hy} ${jx + ex},${jy + ey}" stroke="#F2FBFF" stroke-width="0.8" fill="none" stroke-linecap="round"/>`).join("") + `<path d="M${jx - 0.6},${jy - 2} L${jx - 0.3},${jy - h + 3}" stroke="#FFFFFF" stroke-width="0.8" stroke-linecap="round"/>` + (f ? [[-16, -6], [15, -9], [-8, -16], [9, -18]] : [[-17, -2], [16, -4], [-11, -12], [12, -14]]).map(([dx, dy]) => E(jx + dx, jy + dy, 1, 1.3, "#BFE6FA", 0.5)).join("") + E(jx - 12, jy - 3, 3, 1.2, "#FFFFFF", 0) + E(jx + 13, jy - 2, 3, 1.2, "#FFFFFF", 0);
+      s += `<path d="M${jx - 2.4},${jy} Q${jx - 1.6},${jy - h * 0.7} ${jx},${jy - h} Q${jx + 1.6},${jy - h * 0.7} ${jx + 2.4},${jy} Z" fill="#DDF3FF" stroke="${OUT3}" stroke-width="0.8"/>` + [[-13, -4, -2], [-10, -2, 0], [-15, -6, 3], [13, -3, -2], [10, -1, 0], [15, -5, 3]].map(([ex, ey, hy]) => `<path d="M${jx},${jy - h} Q${r23(jx + ex * 0.65)},${jy - h - 2 - hy} ${jx + ex},${jy + ey}" stroke="#9ED4F0" stroke-width="1.8" fill="none" stroke-linecap="round" opacity="0.8"/><path d="M${jx},${jy - h} Q${r23(jx + ex * 0.65)},${jy - h - 2 - hy} ${jx + ex},${jy + ey}" stroke="#F2FBFF" stroke-width="0.8" fill="none" stroke-linecap="round"/>`).join("") + `<path d="M${jx - 0.6},${jy - 2} L${jx - 0.3},${jy - h + 3}" stroke="#FFFFFF" stroke-width="0.8" stroke-linecap="round"/>` + (f ? [[-16, -6], [15, -9], [-8, -16], [9, -18]] : [[-17, -2], [16, -4], [-11, -12], [12, -14]]).map(([dx, dy]) => E(jx + dx, jy + dy, 1, 1.3, "#BFE6FA", 0.5)).join("") + E(jx - 12, jy - 3, 3, 1.2, "#FFFFFF", 0) + E(jx + 13, jy - 2, 3, 1.2, "#FFFFFF", 0);
       const [ax, ay] = at(0.75, 0.05);
       s += P2(`M${ax - 3},${ay} Q${ax - 6},${ay - 6} ${ax - 2.4},${ay - 10} L${ax - 2},${ay - 12} L${ax + 2},${ay - 12} L${ax + 2.4},${ay - 10} Q${ax + 6},${ay - 6} ${ax + 3},${ay} Q${ax},${ay + 1.4} ${ax - 3},${ay} Z`, "#C9764A", 0.9) + P2(`M${ax + 0.6},${ay - 10} Q${ax + 5},${ay - 6} ${ax + 2.4},${ay - 0.6} Q${ax + 4},${ay - 6} ${ax + 0.6},${ay - 10} Z`, "#A85C36", 0) + E(ax, ay - 12, 2.4, 0.8, "#7E4426", 0.7) + L([ax - 3.4, ay - 6], [ax + 3.4, ay - 6], "#F2D3A0", 0.8);
       s += herbe(x + 44, y + 6, "#9CC86A", 0.9) + herbe(x - 44, y + 12, "#8CBF5C", 0.8) + herbe(x + 30, y + 20, "#9CC86A", 0.7) + fleurette(x + 50, y + 10, "#F7B6C8") + fleurette(x - 38, y + 18, "#FFFFFF");
       return s + palme(-0.5, 0.34, 0.86, "c");
     }, "draw") };
     var GRES = { lit: "#EDCB8A", shade: "#C99E5C", joint: "#B98C4E", jointO: "#A27A40" };
-    LM2.pyramide = { n: 2, draw: /* @__PURE__ */ __name((f) => {
+    LM3.pyramide = { n: 2, draw: /* @__PURE__ */ __name((f) => {
       const [x, y] = at(0, 0), c = GRES;
-      let s = `<path d="M${x - 66},${y + 2} Q${x - 40},${y - 22} ${x - 8},${y - 14} Q${x + 30},${y - 26} ${x + 66},${y} Q${x},${y + 22} ${x - 66},${y + 2} Z" fill="${SAND.top}" stroke="${OUT2}" stroke-width="1.1"/><path d="M${x - 8},${y - 14} Q${x + 30},${y - 26} ${x + 66},${y} Q${x + 30},${y - 10} ${x - 8},${y - 14} Z" fill="${SAND.left}"/>`;
+      let s = `<path d="M${x - 66},${y + 2} Q${x - 40},${y - 22} ${x - 8},${y - 14} Q${x + 30},${y - 26} ${x + 66},${y} Q${x},${y + 22} ${x - 66},${y + 2} Z" fill="${SAND2.top}" stroke="${OUT3}" stroke-width="1.1"/><path d="M${x - 8},${y - 14} Q${x + 30},${y - 26} ${x + 66},${y} Q${x + 30},${y - 10} ${x - 8},${y - 14} Z" fill="${SAND2.left}"/>`;
       const tip = [x, y - 64], L0 = [x - 36, y - 4], R0 = [x + 36, y - 6], B0 = [x, y + 8];
       s += poly3([L0, tip, B0], c.lit, 1.2) + poly3([tip, R0, B0], c.shade, 1.2);
       for (let i = 1; i < 7; i++) {
@@ -1919,35 +1919,35 @@ var require_landmarks = __commonJS({
       s += `<g stroke="#8A5E2E" stroke-width="0.9" fill="none" stroke-linecap="round" stroke-linejoin="round"><circle cx="${x - 22}" cy="${y - 25}" r="2.6"/><path d="M${x - 14},${y - 17} l0,-8 q0,-2.4 2.4,-2.2 q1.6,0.3 1,2"/><path d="M${x - 8},${y - 15} l3,-6 l3,6 Z"/></g>`;
       s += poly3([[x - 7, y - 52], [x, y - 64], [x, y - 49]], "#F6C744", 1) + poly3([[x, y - 64], [x + 7, y - 52], [x, y - 49]], "#D9A12E", 1) + L([x - 3, y - 55], [x - 0.6, y - 61], "#FFF1B0", 0.9);
       s += f ? sparkle2(x - 2, y - 60, 4) + glow(x, y - 58, 10, "255,220,120", 0.3) : "";
-      s += `<path d="M${x - 66},${y + 6} Q${x - 34},${y - 18} ${x - 4},${y + 2} Q${x + 30},${y - 20} ${x + 66},${y + 4} Q${x},${y + 24} ${x - 66},${y + 6} Z" fill="${SAND.top}" stroke="${OUT2}" stroke-width="1.1"/><path d="M${x - 4},${y + 2} Q${x + 30},${y - 20} ${x + 66},${y + 4} Q${x + 30},${y - 4} ${x - 4},${y + 2} Z" fill="${SAND.left}"/>` + [[-46, 4], [-30, 8], [-12, 10], [10, 8], [32, 4]].map(([dx, dy]) => `<path d="M${x + dx},${y + dy} q4,-1.6 8,0" stroke="${SAND.right}" stroke-width="0.6" fill="none"/>`).join("") + [[-52, 8], [46, 6]].map(([dx, dy]) => `<path d="M${x + dx - 2},${y + dy} q-1,-3 -3,-4 M${x + dx},${y + dy} q0,-4 1,-5 M${x + dx + 2},${y + dy} q1,-3 3,-3.6" stroke="#B89A5A" stroke-width="0.9" fill="none" stroke-linecap="round"/>`).join("");
+      s += `<path d="M${x - 66},${y + 6} Q${x - 34},${y - 18} ${x - 4},${y + 2} Q${x + 30},${y - 20} ${x + 66},${y + 4} Q${x},${y + 24} ${x - 66},${y + 6} Z" fill="${SAND2.top}" stroke="${OUT3}" stroke-width="1.1"/><path d="M${x - 4},${y + 2} Q${x + 30},${y - 20} ${x + 66},${y + 4} Q${x + 30},${y - 4} ${x - 4},${y + 2} Z" fill="${SAND2.left}"/>` + [[-46, 4], [-30, 8], [-12, 10], [10, 8], [32, 4]].map(([dx, dy]) => `<path d="M${x + dx},${y + dy} q4,-1.6 8,0" stroke="${SAND2.right}" stroke-width="0.6" fill="none"/>`).join("") + [[-52, 8], [46, 6]].map(([dx, dy]) => `<path d="M${x + dx - 2},${y + dy} q-1,-3 -3,-4 M${x + dx},${y + dy} q0,-4 1,-5 M${x + dx + 2},${y + dy} q1,-3 3,-3.6" stroke="#B89A5A" stroke-width="0.9" fill="none" stroke-linecap="round"/>`).join("");
       return s + [0, 1, 2].map((i) => `<path d="M${x + 40 + i * 4 + f * 6},${y - 12 - i * 5} q6,-2 12,0" stroke="#FFF4D8" stroke-width="1" fill="none" stroke-linecap="round" stroke-dasharray="2 2" opacity="0.85"/>`).join("") + `<path d="M${x - 64 + f * 5},${y - 12} q7,-2 14,0" stroke="#FFF4D8" stroke-width="0.9" fill="none" stroke-linecap="round" stroke-dasharray="2 2" opacity="0.8"/>`;
     }, "draw") };
     var JUNGLE = { devant: { light: "#BCE27E", mid: "#6FB24E", dark: "#3F7F3A" }, fond: { light: "#7CBF5A", mid: "#4E9442", dark: "#2F6634" } };
-    LM2.arbre = { n: 2, draw: /* @__PURE__ */ __name((f) => {
+    LM3.arbre = { n: 2, draw: /* @__PURE__ */ __name((f) => {
       const [x, y] = at(0, 0), BOIS = { left: "#8A623F", right: "#6A4730", bark: "#4A3020", light: "#A57A52" };
       const bosses = /* @__PURE__ */ __name((cx, cy, rx, ry, n) => {
-        const pts2 = Array.from({ length: n }, (_, i) => {
+        const pts3 = Array.from({ length: n }, (_, i) => {
           const t = i / n * TAU2, r = 1 + (i % 2 ? 0.05 : -0.03);
           return [cx + Math.cos(t) * rx * r, cy + Math.sin(t) * ry * r];
         });
         const mil = /* @__PURE__ */ __name((i) => {
-          const p = pts2[i % n], q = pts2[(i + 1) % n];
+          const p = pts3[i % n], q = pts3[(i + 1) % n];
           return `${r23((p[0] + q[0]) / 2)},${r23((p[1] + q[1]) / 2)}`;
         }, "mil");
         let d2 = `M${mil(n - 1)}`;
-        for (let i = 0; i < n; i++) d2 += ` Q${r23(pts2[i][0])},${r23(pts2[i][1])} ${mil(i)}`;
+        for (let i = 0; i < n; i++) d2 += ` Q${r23(pts3[i][0])},${r23(pts3[i][1])} ${mil(i)}`;
         return d2 + " Z";
       }, "bosses");
-      const T = /* @__PURE__ */ __name((lobes, marques, c, id) => feuillage(`arbre-${id}-${f}`, lobes.map(([a, b, r, h]) => [x + a, y + b, r, h]), c, marques.map(([a, b, k]) => [x + a, y + b, k]), 1), "T");
+      const T = /* @__PURE__ */ __name((lobes, marques, c, id3) => feuillage(`arbre-${id3}-${f}`, lobes.map(([a, b, r, h]) => [x + a, y + b, r, h]), c, marques.map(([a, b, k]) => [x + a, y + b, k]), 1), "T");
       const liane = /* @__PURE__ */ __name((lx, ly, len, ph, fleur) => {
         const sw = (f ? 2.4 : -1.8) * (ph % 2 ? 1 : 0.7), ex = lx + sw * 1.4, ey = ly + len, cx = lx + sw * 0.4, cy = ly + len * 0.5, d2 = `M${lx},${ly} Q${r23(cx)},${r23(cy)} ${r23(ex)},${r23(ey)}`;
         const Q = /* @__PURE__ */ __name((t) => [(1 - t) ** 2 * lx + 2 * t * (1 - t) * cx + t * t * ex, (1 - t) ** 2 * ly + 2 * t * (1 - t) * cy + t * t * ey], "Q");
-        return `<path d="${d2}" stroke="${OUT2}" stroke-width="2.4" fill="none" stroke-linecap="round"/><path d="${d2}" stroke="#4E8A3A" stroke-width="1.1" fill="none" stroke-linecap="round"/>` + [0.3, 0.55, 0.8].map((t) => {
+        return `<path d="${d2}" stroke="${OUT3}" stroke-width="2.4" fill="none" stroke-linecap="round"/><path d="${d2}" stroke="#4E8A3A" stroke-width="1.1" fill="none" stroke-linecap="round"/>` + [0.3, 0.55, 0.8].map((t) => {
           const [px2, py2] = Q(t);
           return P2(`M${r23(px2)},${r23(py2)} q-2.6,-2.4 -5,-0.6 q2.2,2 5,0.6 Z`, JUNGLE.devant.mid, 0.6) + P2(`M${r23(px2)},${r23(py2 + 1)} q2.6,-2.4 5,-0.6 q-2.2,2 -5,0.6 Z`, JUNGLE.devant.light, 0.6);
         }).join("") + (fleur ? E(ex, ey + 1, 2, 2, "#F27A9A", 0.6) + E(ex, ey + 1, 0.8, 0.8, "#F2C94C", 0) : E(ex, ey + 1, 1.8, 1.2, JUNGLE.devant.light, 0.6));
       }, "liane");
-      const feuilles = /* @__PURE__ */ __name((fx, fy, angles, len) => angles.map((ang, i) => `<g transform="translate(${fx} ${fy}) rotate(${ang})"><path d="M0,0 Q${r23(len * 0.5)},${r23(-len * 0.38)} ${len},0 Q${r23(len * 0.5)},${r23(len * 0.3)} 0,0 Z" fill="${i % 2 ? "#7DBE58" : "#5FA244"}" stroke="${OUT2}" stroke-width="0.9" stroke-linejoin="round"/><path d="M1,0 Q${r23(len * 0.5)},${r23(-len * 0.08)} ${r23(len - 1.5)},0" stroke="#3F7F3A" stroke-width="0.7" fill="none"/></g>`).join(""), "feuilles");
+      const feuilles = /* @__PURE__ */ __name((fx, fy, angles, len) => angles.map((ang, i) => `<g transform="translate(${fx} ${fy}) rotate(${ang})"><path d="M0,0 Q${r23(len * 0.5)},${r23(-len * 0.38)} ${len},0 Q${r23(len * 0.5)},${r23(len * 0.3)} 0,0 Z" fill="${i % 2 ? "#7DBE58" : "#5FA244"}" stroke="${OUT3}" stroke-width="0.9" stroke-linejoin="round"/><path d="M1,0 Q${r23(len * 0.5)},${r23(-len * 0.08)} ${r23(len - 1.5)},0" stroke="#3F7F3A" stroke-width="0.7" fill="none"/></g>`).join(""), "feuilles");
       let s = shadow2(0, 0, 0.8, 0.12) + P2(bosses(x, y + 4, 64, 28, 22), "#78B356", 1.1) + E(x - 6, y + 2, 46, 18, "#8CC466", 0) + [[-44, 16], [38, 18], [-10, 26], [50, 6]].map(([dx, dy]) => E(x + dx, y + dy, 2.4, 1.2, "#6AA34A", 0)).join("");
       s += T([[-46, -100, 17], [46, -102, 17], [-28, -118, 21], [26, -120, 21], [0, -127, 20.5], [-60, -90, 12], [60, -92, 12]], [[-30, -112], [10, -122, 0.9], [40, -104, 0.9], [-52, -94, 0.8]], JUNGLE.fond, "a");
       s += liane(x - 30, y - 92, 34, 1, false) + liane(x + 20, y - 94, 30, 2, false);
@@ -1957,7 +1957,7 @@ var require_landmarks = __commonJS({
       }, "racine");
       s += [[-44, 1, -1, 30], [44, 3, 1, 28]].map(racine).join("");
       const d = `M${x - 17},${y - 2} Q${x - 11},${y - 48} ${x - 15},${y - 94} L${x + 15},${y - 94} Q${x + 11},${y - 48} ${x + 17},${y - 2} Q${x},${y + 4} ${x - 17},${y - 2} Z`, idT = `arbre-tronc-${f}`;
-      s += `<path d="${d}" fill="${BOIS.left}" stroke="${OUT2}" stroke-width="1.2" stroke-linejoin="round"/><defs><clipPath id="${idT}"><path d="${d}"/></clipPath></defs><g clip-path="url(#${idT})"><path d="M${x + 4},${y + 4} Q${x + 7},${y - 48} ${x + 4},${y - 96} L${x + 20},${y - 96} L${x + 20},${y + 4} Z" fill="${BOIS.right}"/>` + E(x, y - 88, 20, 8, BOIS.right, 0) + [-10, -5, 0, 9, 13].map((dx, i) => `<path d="M${x + dx},${y} Q${x + dx * 0.7 + (i % 2 ? 1.5 : -1.5)},${y - 46} ${x + dx * 0.9},${y - 92}" stroke="${BOIS.bark}" stroke-width="0.9" fill="none" stroke-linecap="round"/>`).join("") + `<path d="M${x - 12},${y - 8} Q${x - 9},${y - 46} ${x - 12},${y - 86}" stroke="${BOIS.light}" stroke-width="1.4" fill="none" stroke-linecap="round" opacity="0.8"/><path d="M${x - 18},${y - 40} q5,-5 10,-2 q4,3 0,7 q-5,3 -10,0 Z" fill="#6FA84A"/><path d="M${x - 16},${y - 41} q4,-3 7,-1.6" stroke="#9CCB6A" stroke-width="1" fill="none" stroke-linecap="round"/></g>` + E(x + 2, y - 58, 4, 5.6, BOIS.bark, 0.9) + E(x + 2, y - 57.4, 2.6, 4, "#2E1E12", 0);
+      s += `<path d="${d}" fill="${BOIS.left}" stroke="${OUT3}" stroke-width="1.2" stroke-linejoin="round"/><defs><clipPath id="${idT}"><path d="${d}"/></clipPath></defs><g clip-path="url(#${idT})"><path d="M${x + 4},${y + 4} Q${x + 7},${y - 48} ${x + 4},${y - 96} L${x + 20},${y - 96} L${x + 20},${y + 4} Z" fill="${BOIS.right}"/>` + E(x, y - 88, 20, 8, BOIS.right, 0) + [-10, -5, 0, 9, 13].map((dx, i) => `<path d="M${x + dx},${y} Q${x + dx * 0.7 + (i % 2 ? 1.5 : -1.5)},${y - 46} ${x + dx * 0.9},${y - 92}" stroke="${BOIS.bark}" stroke-width="0.9" fill="none" stroke-linecap="round"/>`).join("") + `<path d="M${x - 12},${y - 8} Q${x - 9},${y - 46} ${x - 12},${y - 86}" stroke="${BOIS.light}" stroke-width="1.4" fill="none" stroke-linecap="round" opacity="0.8"/><path d="M${x - 18},${y - 40} q5,-5 10,-2 q4,3 0,7 q-5,3 -10,0 Z" fill="#6FA84A"/><path d="M${x - 16},${y - 41} q4,-3 7,-1.6" stroke="#9CCB6A" stroke-width="1" fill="none" stroke-linecap="round"/></g>` + E(x + 2, y - 58, 4, 5.6, BOIS.bark, 0.9) + E(x + 2, y - 57.4, 2.6, 4, "#2E1E12", 0);
       s += [[-27, 11, -1, 22], [25, 11, 1, 20]].map(racine).join("");
       s += P2(`M${x - 12},${y - 82} Q${x - 30},${y - 94} ${x - 52},${y - 92} L${x - 52},${y - 86} Q${x - 30},${y - 86} ${x - 11},${y - 72} Z`, BOIS.left, 1.1) + P2(`M${x + 12},${y - 80} Q${x + 30},${y - 90} ${x + 52},${y - 88} L${x + 52},${y - 82} Q${x + 30},${y - 82} ${x + 11},${y - 70} Z`, BOIS.right, 1.1);
       s += T([[-46, -98, 14], [-58, -92, 9, 0], [-34, -94, 10, 0]], [[-46, -92], [-56, -88, 0.8]], JUNGLE.devant, "b") + T([[48, -102, 14], [60, -96, 9, 0], [36, -98, 10, 0]], [[48, -96], [58, -92, 0.8]], JUNGLE.devant, "c") + T([[-12, -114, 15], [13, -116, 15], [0, -106, 12, 0]], [[-12, -108], [12, -110, 0.9], [0, -102, 0.8]], JUNGLE.devant, "d");
@@ -1967,10 +1967,10 @@ var require_landmarks = __commonJS({
       s += feuilles(x - 44, y + 14, [-160, -125, -95, -55], 12) + feuilles(x + 44, y + 14, [-125, -85, -55, -20], 12) + champignon(x - 22, y + 14) + champignon(x - 16, y + 16) + fleurette(x + 24, y + 18, "#F27A9A") + fleurette(x + 30, y + 16, "#F2C94C") + fleurette(x - 30, y + 22, "#F27A9A") + herbe(x + 8, y + 20, "#86B852", 0.8);
       return s;
     }, "draw") };
-    LM2.cascade = { n: 2, draw: /* @__PURE__ */ __name((f) => {
+    LM3.cascade = { n: 2, draw: /* @__PURE__ */ __name((f) => {
       const [x, y] = at(0, 0), R = { lit: "#B49C7A", mid: "#9A8262", shade: "#7C6648", strate: "#8C7454", ledge: "#C8B290" };
       const BUIS = { light: "#C9EC8E", mid: "#86C35C", dark: "#4F8E40" };
-      const buisson = /* @__PURE__ */ __name((bx, by, k, id) => feuillage(`cascade-${id}-${f}`, [[bx - 5 * k, by, 5.4 * k], [bx + 5 * k, by - 0.6 * k, 5.8 * k], [bx, by - 4.4 * k, 6.2 * k]], BUIS, [[bx, by - 2 * k, 0.7]], 1), "buisson");
+      const buisson = /* @__PURE__ */ __name((bx, by, k, id3) => feuillage(`cascade-${id3}-${f}`, [[bx - 5 * k, by, 5.4 * k], [bx + 5 * k, by - 0.6 * k, 5.8 * k], [bx, by - 4.4 * k, 6.2 * k]], BUIS, [[bx, by - 2 * k, 0.7]], 1), "buisson");
       const galet2 = /* @__PURE__ */ __name((gx, gy, r) => E(gx, gy, r, r * 0.62, R.shade, 0.9) + E(gx - r * 0.15, gy - r * 0.16, r * 0.76, r * 0.42, R.mid, 0) + E(gx - r * 0.38, gy - r * 0.3, r * 0.32, r * 0.15, R.ledge, 0), "galet");
       const crete = [[-62, -94], [-48, -100], [-30, -97], [-14, -101], [14, -101], [30, -98], [46, -101], [62, -95]];
       let face3 = `M${x - 60},${y - 2} Q${x - 66},${y - 30} ${x - 61},${y - 58} Q${x - 66},${y - 78} ${x + crete[0][0]},${y + crete[0][1]}`;
@@ -1980,7 +1980,7 @@ var require_landmarks = __commonJS({
       }
       face3 += ` Q${x + 66},${y - 74} ${x + 61},${y - 52} Q${x + 66},${y - 26} ${x + 60},${y - 4} Q${x},${y + 6} ${x - 60},${y - 2} Z`;
       const idF = `cascade-face-${f}`;
-      let s = `<defs><clipPath id="${idF}"><path d="${face3}"/></clipPath></defs><path d="${face3}" fill="${R.lit}"/><g clip-path="url(#${idF})"><path d="M${x + 26},${y - 110} Q${x + 34},${y - 50} ${x + 24},${y + 10} L${x + 80},${y + 10} L${x + 80},${y - 110} Z" fill="${R.shade}"/><path d="M${x - 58},${y - 6} Q${x - 62},${y - 40} ${x - 57},${y - 86}" stroke="${R.ledge}" stroke-width="2" fill="none" stroke-linecap="round" opacity="0.8"/>` + [-86, -78, -58, -50, -30, -20].map((dy, i) => `<path d="M${x - 70},${y + dy} Q${x - 30},${y + dy + (i % 2 ? 2 : -2)} ${x},${y + dy} T${x + 70},${y + dy}" stroke="${R.strate}" stroke-width="0.9" fill="none"/>`).join("") + [-68, -40].map((dy) => `<path d="M${x - 70},${y + dy + 2} Q${x - 30},${y + dy + 5} ${x},${y + dy + 3} T${x + 70},${y + dy + 2} L${x + 70},${y + dy + 6} Q${x + 30},${y + dy + 8} ${x},${y + dy + 7} T${x - 70},${y + dy + 6} Z" fill="${R.shade}" opacity="0.7"/><path d="M${x - 70},${y + dy - 2} Q${x - 30},${y + dy + 1} ${x},${y + dy - 1} T${x + 70},${y + dy - 2} L${x + 70},${y + dy + 2} Q${x + 30},${y + dy + 4} ${x},${y + dy + 3} T${x - 70},${y + dy + 2} Z" fill="#8FC46A"/><path d="M${x - 70},${y + dy + 2} ${Array.from({ length: 28 }, (_, k) => `q2.5,${k % 2 ? 2.2 : 3.4} 5,0`).join(" ")}" stroke="#6FA84E" stroke-width="1" fill="none"/>`).join("") + `<path d="M${x - 40},${y - 14} l3,-6 l-1,-5 M${x + 40},${y - 80} l-2,6 l2,4" stroke="${R.shade}" stroke-width="0.8" fill="none" stroke-linecap="round"/></g><path d="${face3}" fill="none" stroke="${OUT2}" stroke-width="1.2" stroke-linejoin="round"/>`;
+      let s = `<defs><clipPath id="${idF}"><path d="${face3}"/></clipPath></defs><path d="${face3}" fill="${R.lit}"/><g clip-path="url(#${idF})"><path d="M${x + 26},${y - 110} Q${x + 34},${y - 50} ${x + 24},${y + 10} L${x + 80},${y + 10} L${x + 80},${y - 110} Z" fill="${R.shade}"/><path d="M${x - 58},${y - 6} Q${x - 62},${y - 40} ${x - 57},${y - 86}" stroke="${R.ledge}" stroke-width="2" fill="none" stroke-linecap="round" opacity="0.8"/>` + [-86, -78, -58, -50, -30, -20].map((dy, i) => `<path d="M${x - 70},${y + dy} Q${x - 30},${y + dy + (i % 2 ? 2 : -2)} ${x},${y + dy} T${x + 70},${y + dy}" stroke="${R.strate}" stroke-width="0.9" fill="none"/>`).join("") + [-68, -40].map((dy) => `<path d="M${x - 70},${y + dy + 2} Q${x - 30},${y + dy + 5} ${x},${y + dy + 3} T${x + 70},${y + dy + 2} L${x + 70},${y + dy + 6} Q${x + 30},${y + dy + 8} ${x},${y + dy + 7} T${x - 70},${y + dy + 6} Z" fill="${R.shade}" opacity="0.7"/><path d="M${x - 70},${y + dy - 2} Q${x - 30},${y + dy + 1} ${x},${y + dy - 1} T${x + 70},${y + dy - 2} L${x + 70},${y + dy + 2} Q${x + 30},${y + dy + 4} ${x},${y + dy + 3} T${x - 70},${y + dy + 2} Z" fill="#8FC46A"/><path d="M${x - 70},${y + dy + 2} ${Array.from({ length: 28 }, (_, k) => `q2.5,${k % 2 ? 2.2 : 3.4} 5,0`).join(" ")}" stroke="#6FA84E" stroke-width="1" fill="none"/>`).join("") + `<path d="M${x - 40},${y - 14} l3,-6 l-1,-5 M${x + 40},${y - 80} l-2,6 l2,4" stroke="${R.shade}" stroke-width="0.8" fill="none" stroke-linecap="round"/></g><path d="${face3}" fill="none" stroke="${OUT3}" stroke-width="1.2" stroke-linejoin="round"/>`;
       let herbeTop = `M${x + crete[0][0] - 2},${y + crete[0][1] + 1}`;
       for (let i = 1; i < crete.length; i++) {
         const [a0, b0] = crete[i - 1], [a1, b1] = crete[i];
@@ -1998,32 +1998,32 @@ var require_landmarks = __commonJS({
       s += `<defs><clipPath id="${idR}"><path d="${rideau}"/></clipPath></defs><path d="${rideau}" fill="#CFEAF7"/><g clip-path="url(#${idR})"><path d="M${x + 4},${y - 100} L${x + 20},${y - 100} L${x + 20},${y} L${x + 6},${y} Z" fill="#A8D8F0"/>` + Array.from({ length: 7 }, (_, j) => {
         const xx = x - 11 + j * 3.7, off = (f * 0.5 + j * 0.37) % 1 * 36;
         return [0, 36, 72].map((o) => `<path d="M${r23(xx)},${r23(y - 108 + off + o)} l${r23((xx - x) * 0.04)},20" stroke="${j % 2 ? "#FFFFFF" : "#86C6E8"}" stroke-width="1.4" stroke-linecap="round"/>`).join("");
-      }).join("") + `</g><path d="${rideau}" fill="none" stroke="${OUT2}" stroke-width="1"/>`;
+      }).join("") + `</g><path d="${rideau}" fill="none" stroke="${OUT3}" stroke-width="1"/>`;
       s += puff2(x - 2, y - 99, 4.4, 0.95) + puff2(x + 6, y - 100, 3.6, 0.9) + puff2(x - 15, y - 66, 3.4, 0.85) + puff2(x + 15, y - 64, 3.2, 0.85) + puff2(x - 16, y - 38, 3.4, 0.85) + puff2(x + 16, y - 37, 3.2, 0.85);
-      s += E(x, y + 4, 46, 13, WATER, 1.1) + E(x - 6, y + 3, 30, 7, WATER_LIGHT, 0) + `<path d="M${x - 34},${y + 8} l8,-1 M${x + 22},${y + 11} l9,-1.2" stroke="#FFFFFF" stroke-width="1.2" stroke-linecap="round"/>` + galet2(x - 44, y + 4, 5) + galet2(x - 36, y + 12, 3.6) + galet2(x + 42, y + 6, 4.6) + galet2(x + 34, y + 13, 3.2) + puff2(x - 12, y - 4, 7, 0.9) + puff2(x + 10, y - 6, 6.4, 0.85) + puff2(x, y + 1, 6, 0.95) + puff2(x - 4 + f * 4, y - 14 - f * 3, 5, 0.6) + puff2(x + 8 - f * 4, y - 20 - f * 2, 4, 0.45);
+      s += E(x, y + 4, 46, 13, WATER2, 1.1) + E(x - 6, y + 3, 30, 7, WATER_LIGHT, 0) + `<path d="M${x - 34},${y + 8} l8,-1 M${x + 22},${y + 11} l9,-1.2" stroke="#FFFFFF" stroke-width="1.2" stroke-linecap="round"/>` + galet2(x - 44, y + 4, 5) + galet2(x - 36, y + 12, 3.6) + galet2(x + 42, y + 6, 4.6) + galet2(x + 34, y + 13, 3.2) + puff2(x - 12, y - 4, 7, 0.9) + puff2(x + 10, y - 6, 6.4, 0.85) + puff2(x, y + 1, 6, 0.95) + puff2(x - 4 + f * 4, y - 14 - f * 3, 5, 0.6) + puff2(x + 8 - f * 4, y - 20 - f * 2, 4, 0.45);
       s += `<g opacity="0.6">${["#E8566A", "#F2A03C", "#F2D04B", "#7EC45B", "#5C8FD0", "#8C6FD0"].map((c, i) => {
         const r = 40 - i * 2.6;
         return `<path d="M${r23(x - r)},${y - 4} A${r23(r)},${r23(r * 0.85)} 0 0 1 ${r23(x + r)},${y - 4}" stroke="${c}" stroke-width="2.6" fill="none"/>`;
       }).join("")}</g>`;
       return s + herbe(x - 30, y + 16, "#86B852", 0.9) + herbe(x + 28, y + 17, "#94C25C", 0.8) + fleurette(x - 22, y + 18, "#FFFFFF") + fleurette(x + 36, y + 17, "#F7B6C8");
     }, "draw") };
-    LM2.geyser = { n: 2, draw: /* @__PURE__ */ __name((f) => {
-      const [x, y] = at(0, 0), K = 1.25;
+    LM3.geyser = { n: 2, draw: /* @__PURE__ */ __name((f) => {
+      const [x, y] = at(0, 0), K2 = 1.25;
       const festons = /* @__PURE__ */ __name((cx, cy, rx, ry, n) => {
-        const pts2 = Array.from({ length: n }, (_, i) => {
+        const pts3 = Array.from({ length: n }, (_, i) => {
           const t = i / n * TAU2, r = 1 + (i % 2 ? 0.04 : -0.03);
           return [cx + Math.cos(t) * rx * r, cy + Math.sin(t) * ry * r];
         });
         const mil = /* @__PURE__ */ __name((i) => {
-          const p = pts2[i % n], q = pts2[(i + 1) % n];
+          const p = pts3[i % n], q = pts3[(i + 1) % n];
           return `${r23((p[0] + q[0]) / 2)},${r23((p[1] + q[1]) / 2)}`;
         }, "mil");
         let d = `M${mil(n - 1)}`;
-        for (let i = 0; i < n; i++) d += ` Q${r23(pts2[i][0])},${r23(pts2[i][1])} ${mil(i)}`;
+        for (let i = 0; i < n; i++) d += ` Q${r23(pts3[i][0])},${r23(pts3[i][1])} ${mil(i)}`;
         return d + " Z";
       }, "festons");
       const terrasse = /* @__PURE__ */ __name((rx, ry, z, top, mur) => {
-        const cy = y - z * K, h = 4.4 * K;
+        const cy = y - z * K2, h = 4.4 * K2;
         const bas = /* @__PURE__ */ __name((i) => {
           const t = Math.PI - i / 16 * Math.PI;
           return [x + Math.cos(t) * rx, cy + Math.sin(t) * ry + h];
@@ -2039,27 +2039,27 @@ var require_landmarks = __commonJS({
       let s = shadow2(0, 0, 0.7, 0.08) + E(x, y + 4, 62, 24, "#E9E1C8", 0.8) + E(x - 6, y + 4, 44, 15, "#F2EBD6", 0);
       s += terrasse(54, 21, 0, "#FBF6EA", "#E2D6BC") + terrasse(40, 15.6, 4.4, "#FFFBF2", "#E6DCC4") + terrasse(27, 10.6, 8.8, "#FFFDF7", "#EAE1CB");
       s += [[-34, 6, 7, 2.6], [28, 8, 6, 2.2], [-20, -3, 5, 1.8], [18, -2, 4.6, 1.6], [-8, 12, 6, 2]].map(([dx, dy, rx, ry]) => E(x + dx, y + dy - (dy < 0 ? 5.5 : 0), rx, ry, "#7FCBEA", 0.6) + E(x + dx - rx * 0.3, y + dy - (dy < 0 ? 5.5 : 0) - ry * 0.3, rx * 0.4, ry * 0.3, "#C8EEFA", 0)).join("");
-      const [ex, ey] = [x, y - 13.2 * K];
+      const [ex, ey] = [x, y - 13.2 * K2];
       s += E(ex, ey, 20, 7.8, "#F2A65A", 0) + E(ex, ey, 16, 6.2, "#F2D267", 0) + E(ex, ey, 12.4, 4.8, "#9ACB6A", 0) + E(ex, ey, 9.6, 3.7, "#3E8FC8", 0.9) + E(ex, ey, 6, 2.2, "#2E6FB0", 0) + E(ex - 2.6, ey - 0.8, 2.8, 0.8, "#9AE0F8", 0);
       s += [[-56, 10, 3.4], [50, 14, 3], [12, 26, 2.6]].map(([dx, dy, r]) => E(x + dx, y + dy, r, r * 0.6, "#7E786E", 0.7) + E(x + dx - r * 0.3, y + dy - r * 0.2, r * 0.4, r * 0.2, "#A9A39A", 0)).join("");
       if (!f) return s + puff2(ex - 2, ey - 9, 5.4, 0.8) + puff2(ex + 4, ey - 19, 4.4, 0.6) + puff2(ex - 1, ey - 27, 3.4, 0.45);
-      s += `<path d="M${ex - 4.6},${ey} Q${ex - 6},${ey - 40} ${ex - 3},${ey - 74} L${ex + 3},${ey - 74} Q${ex + 6},${ey - 40} ${ex + 4.6},${ey} Z" fill="#E8F6FF" stroke="${OUT2}" stroke-width="0.9"/><path d="M${ex - 1.4},${ey - 4} Q${ex - 2.4},${ey - 36} ${ex - 1},${ey - 68}" stroke="#FFFFFF" stroke-width="1.4" fill="none" stroke-linecap="round"/><path d="M${ex + 2.6},${ey - 8} Q${ex + 3.4},${ey - 36} ${ex + 1.6},${ey - 60}" stroke="#B8DCF0" stroke-width="0.8" fill="none"/>`;
+      s += `<path d="M${ex - 4.6},${ey} Q${ex - 6},${ey - 40} ${ex - 3},${ey - 74} L${ex + 3},${ey - 74} Q${ex + 6},${ey - 40} ${ex + 4.6},${ey} Z" fill="#E8F6FF" stroke="${OUT3}" stroke-width="0.9"/><path d="M${ex - 1.4},${ey - 4} Q${ex - 2.4},${ey - 36} ${ex - 1},${ey - 68}" stroke="#FFFFFF" stroke-width="1.4" fill="none" stroke-linecap="round"/><path d="M${ex + 2.6},${ey - 8} Q${ex + 3.4},${ey - 36} ${ex + 1.6},${ey - 60}" stroke="#B8DCF0" stroke-width="0.8" fill="none"/>`;
       s += puff2(ex, ey - 78, 10, 0.92) + puff2(ex - 12, ey - 66, 6.4, 0.85) + puff2(ex + 12, ey - 68, 6.4, 0.85) + puff2(ex - 9, ey - 6, 6, 0.7) + puff2(ex + 10, ey - 4, 5, 0.6);
       return s + [[-18, -50], [20, -46], [-24, -30], [26, -26], [-14, -16], [16, -12]].map(([dx, dy]) => E(ex + dx, ey + dy, 1, 1.4, "#9AD6F0", 0.5)).join("");
     }, "draw") };
-    LM2.cratere = { n: 2, draw: /* @__PURE__ */ __name((f) => {
+    LM3.cratere = { n: 2, draw: /* @__PURE__ */ __name((f) => {
       const [x, y] = at(0, 0), B = { lit: "#77707E", mid: "#524C5C", dark: "#36313F" };
       const bosses = /* @__PURE__ */ __name((cx, cy, rx, ry, n) => {
-        const pts2 = Array.from({ length: n }, (_, i) => {
+        const pts3 = Array.from({ length: n }, (_, i) => {
           const t = i / n * TAU2, r = 1 + (i % 2 ? 0.05 : -0.03);
           return [cx + Math.cos(t) * rx * r, cy + Math.sin(t) * ry * r];
         });
         const mil = /* @__PURE__ */ __name((i) => {
-          const p = pts2[i % n], q = pts2[(i + 1) % n];
+          const p = pts3[i % n], q = pts3[(i + 1) % n];
           return `${r23((p[0] + q[0]) / 2)},${r23((p[1] + q[1]) / 2)}`;
         }, "mil");
         let d = `M${mil(n - 1)}`;
-        for (let i = 0; i < n; i++) d += ` Q${r23(pts2[i][0])},${r23(pts2[i][1])} ${mil(i)}`;
+        for (let i = 0; i < n; i++) d += ` Q${r23(pts3[i][0])},${r23(pts3[i][1])} ${mil(i)}`;
         return d + " Z";
       }, "bosses");
       const bloc = /* @__PURE__ */ __name((bx, by, r, k, chaud) => P2(bosses(bx, by, r, r * 0.72, 7 + k % 3), B.mid, 1) + E(bx - r * 0.18, by - r * 0.26, r * 0.66, r * 0.36, B.lit, 0) + E(bx - r * 0.34, by - r * 0.36, r * 0.26, r * 0.12, "#9C96A4", 0) + (chaud ? `<path d="M${r23(bx - r * 0.7)},${r23(by + r * 0.3)} Q${bx},${r23(by + r * 0.75)} ${r23(bx + r * 0.7)},${r23(by + r * 0.3)}" stroke="#F0843A" stroke-width="1.4" fill="none" stroke-linecap="round"/>` : ""), "bloc");
@@ -2081,27 +2081,27 @@ var require_landmarks = __commonJS({
       s += fumee(x - 6, y - 24 - f * 6, 8, 0.75) + fumee(x + 4, y - 40 - f * 6, 7, 0.55) + fumee(x - 2, y - 56 - f * 4, 6, 0.35);
       return s + (f ? [[-14, -22], [12, -30], [4, -16]] : [[-10, -30], [16, -20], [-2, -38]]).map(([dx, dy]) => E(x + dx, y + dy, 1, 1, "#FFB040", 0) + E(x + dx, y + dy, 0.4, 0.4, "#FFF1C0", 0)).join("");
     }, "draw") };
-    module.exports = { LM: LM2, LAND: LAND2 };
+    module.exports = { LM: LM3, LAND: LAND2 };
   }
 });
 
 // atelier/decor2.js
 var require_decor2 = __commonJS({
   "atelier/decor2.js"(exports, module) {
-    var { OUT: OUT2, P: P2, E, L, r2: r23 } = require_troupe2();
+    var { OUT: OUT3, P: P2, E, L, r2: r23 } = require_troupe2();
     var { arbre } = require_arbres();
-    var K = 1.25;
+    var K2 = 1.25;
     var W = 0.88;
     var TAU2 = Math.PI * 2;
-    var up2 = /* @__PURE__ */ __name((body) => `<g transform="scale(${K})">${body}</g>`, "up");
-    var big2 = /* @__PURE__ */ __name((f) => f.map((n) => r23(n * K)), "big");
+    var up2 = /* @__PURE__ */ __name((body) => `<g transform="scale(${K2})">${body}</g>`, "up");
+    var big2 = /* @__PURE__ */ __name((f) => f.map((n) => r23(n * K2)), "big");
     var gp = /* @__PURE__ */ __name((u, v, z = 0) => [(u - v) * 32, (u + v) * 16 - z], "gp");
-    var pg = /* @__PURE__ */ __name((pts2, fill, w = W, sc = OUT2) => `<polygon points="${pts2.map((p) => `${r23(p[0])},${r23(p[1])}`).join(" ")}" fill="${fill}"${w ? ` stroke="${sc}" stroke-width="${w}" stroke-linejoin="round"` : ""}/>`, "pg");
-    var rr = /* @__PURE__ */ __name((x, y, w, h, r, fill, sw = W, sc = OUT2, extra = "") => `<rect x="${r23(x)}" y="${r23(y)}" width="${r23(w)}" height="${r23(h)}" rx="${r23(r)}" fill="${fill}"${sw ? ` stroke="${sc}" stroke-width="${sw}" stroke-linejoin="round"` : ""}${extra}/>`, "rr");
+    var pg = /* @__PURE__ */ __name((pts3, fill, w = W, sc = OUT3) => `<polygon points="${pts3.map((p) => `${r23(p[0])},${r23(p[1])}`).join(" ")}" fill="${fill}"${w ? ` stroke="${sc}" stroke-width="${w}" stroke-linejoin="round"` : ""}/>`, "pg");
+    var rr = /* @__PURE__ */ __name((x, y, w, h, r, fill, sw = W, sc = OUT3, extra = "") => `<rect x="${r23(x)}" y="${r23(y)}" width="${r23(w)}" height="${r23(h)}" rx="${r23(r)}" fill="${fill}"${sw ? ` stroke="${sc}" stroke-width="${sw}" stroke-linejoin="round"` : ""}${extra}/>`, "rr");
     var line = /* @__PURE__ */ __name((d, w, c, extra = "") => `<path d="${d}" fill="none" stroke="${c}" stroke-width="${r23(w)}" stroke-linecap="round" stroke-linejoin="round"${extra}/>`, "line");
-    var tk = /* @__PURE__ */ __name((d, w, c) => line(d, w + 1.76, OUT2) + line(d, w, c), "tk");
+    var tk2 = /* @__PURE__ */ __name((d, w, c) => line(d, w + 1.76, OUT3) + line(d, w, c), "tk");
     var shade = /* @__PURE__ */ __name((x, y, rx, ry, a = 0.22) => E(x, y, rx, ry, `rgba(40,55,20,${a})`, 0), "shade");
-    var star2 = /* @__PURE__ */ __name((x, y, s, o = 1) => `<path d="M${r23(x)},${r23(y - s)} Q${r23(x + s * 0.18)},${r23(y - s * 0.18)} ${r23(x + s)},${r23(y)} Q${r23(x + s * 0.18)},${r23(y + s * 0.18)} ${r23(x)},${r23(y + s)} Q${r23(x - s * 0.18)},${r23(y + s * 0.18)} ${r23(x - s)},${r23(y)} Q${r23(x - s * 0.18)},${r23(y - s * 0.18)} ${r23(x)},${r23(y - s)} Z" fill="#FFFFFF" stroke="${OUT2}" stroke-width="0.4" opacity="${o}"/>`, "star");
+    var star2 = /* @__PURE__ */ __name((x, y, s, o = 1) => `<path d="M${r23(x)},${r23(y - s)} Q${r23(x + s * 0.18)},${r23(y - s * 0.18)} ${r23(x + s)},${r23(y)} Q${r23(x + s * 0.18)},${r23(y + s * 0.18)} ${r23(x)},${r23(y + s)} Q${r23(x - s * 0.18)},${r23(y + s * 0.18)} ${r23(x - s)},${r23(y)} Q${r23(x - s * 0.18)},${r23(y - s * 0.18)} ${r23(x)},${r23(y - s)} Z" fill="#FFFFFF" stroke="${OUT3}" stroke-width="0.4" opacity="${o}"/>`, "star");
     function gbox(u0, v0, u1, v1, z0, z1, c, w = W * 0.8) {
       const q = /* @__PURE__ */ __name((u, v, z) => gp(u, v, z), "q");
       return pg([q(u0, v1, z0), q(u1, v1, z0), q(u1, v1, z1), q(u0, v1, z1)], c.left, w) + pg([q(u1, v1, z0), q(u1, v0, z0), q(u1, v0, z1), q(u1, v1, z1)], c.right, w) + pg([q(u0, v0, z1), q(u1, v0, z1), q(u1, v1, z1), q(u0, v1, z1)], c.top, w);
@@ -2117,16 +2117,16 @@ var require_decor2 = __commonJS({
         frames: [[-30, -46, 60, 56], [-24, -16, 48, 26]],
         draw: /* @__PURE__ */ __name((spent, f) => {
           const neige = /* @__PURE__ */ __name((rx, ry) => {
-            const n = 14, pts2 = Array.from({ length: n }, (_, i) => {
+            const n = 14, pts3 = Array.from({ length: n }, (_, i) => {
               const t = i / n * TAU2, r = 1 + (i % 2 ? 0.06 : -0.03);
               return [Math.cos(t) * rx * r, 1 + Math.sin(t) * ry * r];
             });
             const m = /* @__PURE__ */ __name((i) => {
-              const p = pts2[i % n], q = pts2[(i + 1) % n];
+              const p = pts3[i % n], q = pts3[(i + 1) % n];
               return `${r23((p[0] + q[0]) / 2)},${r23((p[1] + q[1]) / 2)}`;
             }, "m");
             let d = `M${m(n - 1)}`;
-            for (let i = 0; i < n; i++) d += ` Q${r23(pts2[i][0])},${r23(pts2[i][1])} ${m(i)}`;
+            for (let i = 0; i < n; i++) d += ` Q${r23(pts3[i][0])},${r23(pts3[i][1])} ${m(i)}`;
             return P2(d + " Z", "#FFFFFF", W) + E(rx * 0.15, 2, rx * 0.7, ry * 0.5, "#E2EEF6", 0);
           }, "neige");
           const facette = /* @__PURE__ */ __name((x, y, h, w, lean = 0) => {
@@ -2144,32 +2144,32 @@ var require_decor2 = __commonJS({
         frames: [[-30, -26, 60, 34], [-30, -24, 60, 32]],
         draw: /* @__PURE__ */ __name((spent, f) => {
           const pre = /* @__PURE__ */ __name(() => {
-            const n = 16, rx = 25, ry = 6.4, pts2 = Array.from({ length: n }, (_, i) => {
+            const n = 16, rx = 25, ry = 6.4, pts3 = Array.from({ length: n }, (_, i) => {
               const t = i / n * TAU2, r = 1 + (i % 2 ? 0.05 : -0.03);
               return [Math.cos(t) * rx * r, 0.4 + Math.sin(t) * ry * r];
             });
             const m = /* @__PURE__ */ __name((i) => {
-              const p = pts2[i % n], q = pts2[(i + 1) % n];
+              const p = pts3[i % n], q = pts3[(i + 1) % n];
               return `${r23((p[0] + q[0]) / 2)},${r23((p[1] + q[1]) / 2)}`;
             }, "m");
             let d = `M${m(n - 1)}`;
-            for (let i = 0; i < n; i++) d += ` Q${r23(pts2[i][0])},${r23(pts2[i][1])} ${m(i)}`;
+            for (let i = 0; i < n; i++) d += ` Q${r23(pts3[i][0])},${r23(pts3[i][1])} ${m(i)}`;
             return P2(d + " Z", "#9CC874", W) + E(-3, 0.2, 18, 4, "#AED486", 0);
           }, "pre");
           const brebis = /* @__PURE__ */ __name((x, y, laineux, broute, flip = false) => {
             const s = flip ? -1 : 1, Lc = laineux ? "#F7F2E6" : "#EFDCCF", LS = laineux ? "#E2D8C4" : "#DCC4B6";
-            let o = shade(x, y + 1.4, 8.6, 2.2) + [-4.4, -1.8, 2, 4.6].map((dx, i) => line(`M${r23(x + s * dx)},${r23(y - 2.6)} L${r23(x + s * dx)},${r23(y + 1.2)}`, 1.8, OUT2) + line(`M${r23(x + s * dx)},${r23(y - 2.6)} L${r23(x + s * dx)},${r23(y + 0.8)}`, 1, i % 2 ? "#5E5660" : "#463F48")).join("");
+            let o = shade(x, y + 1.4, 8.6, 2.2) + [-4.4, -1.8, 2, 4.6].map((dx, i) => line(`M${r23(x + s * dx)},${r23(y - 2.6)} L${r23(x + s * dx)},${r23(y + 1.2)}`, 1.8, OUT3) + line(`M${r23(x + s * dx)},${r23(y - 2.6)} L${r23(x + s * dx)},${r23(y + 0.8)}`, 1, i % 2 ? "#5E5660" : "#463F48")).join("");
             o += '<g transform="translate(0 1.1)">' + E(x - s * 7.4, y - 6, 1.7, 1.6, Lc, W * 0.8);
             if (laineux) {
               const B = [[-6, -6.4, 3.1], [-3.4, -9.2, 3.3], [0.4, -9.8, 3.5], [4, -8.8, 3.2], [6.2, -6.2, 2.9], [3.4, -4.6, 3.3], [-1, -4.4, 3.5], [-5, -4.6, 2.9]];
-              o += B.map(([dx, dy, r]) => E(x + s * dx, y + dy, r + W, r + W, OUT2, 0)).join("") + B.map(([dx, dy, r]) => E(x + s * dx, y + dy, r, r, Lc, 0)).join("") + E(x + s * 0.5, y - 3.4, 6, 1.5, LS, 0) + [[-3.6, -7.2], [0.6, -7.8], [3.8, -6.6], [-1.6, -4.8], [2.6, -4.4], [-5, -5]].map(([dx, dy]) => line(`M${r23(x + s * dx - 1)},${r23(y + dy)} q1,-1.2 2,0`, 0.6, LS)).join("") + E(x - s * 1.4, y - 9.6, 2, 0.8, "#FFFFFF", 0);
+              o += B.map(([dx, dy, r]) => E(x + s * dx, y + dy, r + W, r + W, OUT3, 0)).join("") + B.map(([dx, dy, r]) => E(x + s * dx, y + dy, r, r, Lc, 0)).join("") + E(x + s * 0.5, y - 3.4, 6, 1.5, LS, 0) + [[-3.6, -7.2], [0.6, -7.8], [3.8, -6.6], [-1.6, -4.8], [2.6, -4.4], [-5, -5]].map(([dx, dy]) => line(`M${r23(x + s * dx - 1)},${r23(y + dy)} q1,-1.2 2,0`, 0.6, LS)).join("") + E(x - s * 1.4, y - 9.6, 2, 0.8, "#FFFFFF", 0);
             } else {
               o += P2(`M${r23(x - 6.8)},${r23(y - 4)} Q${r23(x - 7.2)},${r23(y - 8.6)} ${r23(x - 2)},${r23(y - 8.8)} L${r23(x + 3)},${r23(y - 9)} Q${r23(x + 7.4)},${r23(y - 8.6)} ${r23(x + 6.8)},${r23(y - 4)} Q${r23(x + 6)},${r23(y - 1.6)} ${x},${r23(y - 1.8)} Q${r23(x - 6.2)},${r23(y - 1.6)} ${r23(x - 6.8)},${r23(y - 4)} Z`, Lc, W) + [[-3.6, -6.8], [0.4, -7.4], [3.8, -6.6], [-1.6, -4.4], [2.4, -4.2]].map(([dx, dy]) => E(x + s * dx, y + dy, 0.9, 0.7, "#F8EAE0", 0)).join("") + E(x + s, y - 2.8, 5.2, 0.9, LS, 0);
             }
             const F = "#5E5660", hx = x + s * 8, hy = y - 7.6 + (broute ? 4.4 : 0), ex = hx + s * 0.6, ey = hy - 0.7;
             return o + E(hx - s * 2.6, hy - 1.4, 2.1, 1, F, 0.6) + E(hx - s * 2.9, hy - 1.4, 1.1, 0.45, "#8A7A80", 0) + E(hx, hy, 3.7, 3.4, F, W) + E(hx - s * 0.9, hy - 1.2, 1.6, 1, "#7A7280", 0) + E(hx + s * 1.6, hy + 1.2, 1.8, 1.35, "#4E4650", 0) + E(ex, ey, 0.86, 1.12, "#2A2420", 0) + E(ex + s * 0.3, ey - 0.44, 0.38, 0.38, "#FFFFFF", 0) + E(ex - s * 0.3, ey + 0.5, 0.17, 0.17, "#FFFFFF", 0) + E(hx + s * 0.1, hy + 1.3, 0.9, 0.45, "#F7A8B0", 0) + (laineux ? E(hx - s * 0.8, hy - 2.9, 2.2, 1.4, Lc, 0.6) : "") + (broute ? line(`M${r23(hx + s * 1.8)},${r23(hy + 3.9)} l${-s * 0.6},-2.6 M${r23(hx + s * 2.8)},${r23(hy + 3.9)} l${s * 0.6},-2.2`, 0.8, "#5F8F3C") : "") + "</g>";
           }, "brebis");
-          const deco = tuft(-23, 3) + tuft(19, 4.6) + tuft(-4, 5.6) + flower(-17, 4.6, 1.1, "#FFFFFF") + flower(21, 0.6, 1.1, "#F7B6C8") + flower(12, 5.6, 1, "#FFFFFF");
+          const deco = tuft3(-23, 3) + tuft3(19, 4.6) + tuft3(-4, 5.6) + flower(-17, 4.6, 1.1, "#FFFFFF") + flower(21, 0.6, 1.1, "#F7B6C8") + flower(12, 5.6, 1, "#FFFFFF");
           if (spent) return pre() + deco + [[-20, 0], [-2, 5], [16, -1], [0, -4]].map(([x, y]) => E(x, y, 1.6, 1.1, "#F7F2E6", 0.6) + E(x + 1.2, y - 0.4, 1, 0.8, "#F7F2E6", 0.5)).join("") + brebis(-11, -2, false, 1) + brebis(6, 4, false, 0);
           return pre() + deco + brebis(-11, -2, true, f ? 0 : 1) + brebis(6, 4, true, f ? 1 : 0);
         }, "draw")
@@ -2187,11 +2187,11 @@ var require_decor2 = __commonJS({
           }, "lame");
           const massette = /* @__PURE__ */ __name((x, y, h, sw2) => {
             const tx = x + sw2, ty = y - h;
-            return tk(`M${r23(x)},${r23(y)} q${r23(sw2 * 0.3)},${r23(-h * 0.5)} ${r23(sw2)},${r23(-h)}`, 1.1, "#5F8F3C") + rr(tx - 1.8, ty + 1.5, 3.6, 7.4, 1.8, "#8A5A2E", W * 0.8) + line(`M${r23(tx - 0.7)},${r23(ty + 2.8)} L${r23(tx - 0.7)},${r23(ty + 7.6)}`, 0.7, "#B88552") + line(`M${r23(tx)},${r23(ty + 1.5)} l${r23(sw2 * 0.08)},-3.4`, 0.7, "#5F8F3C");
+            return tk2(`M${r23(x)},${r23(y)} q${r23(sw2 * 0.3)},${r23(-h * 0.5)} ${r23(sw2)},${r23(-h)}`, 1.1, "#5F8F3C") + rr(tx - 1.8, ty + 1.5, 3.6, 7.4, 1.8, "#8A5A2E", W * 0.8) + line(`M${r23(tx - 0.7)},${r23(ty + 2.8)} L${r23(tx - 0.7)},${r23(ty + 7.6)}`, 0.7, "#B88552") + line(`M${r23(tx)},${r23(ty + 1.5)} l${r23(sw2 * 0.08)},-3.4`, 0.7, "#5F8F3C");
           }, "massette");
           if (spent) return mare(12, 4) + [-8, -4, 0, 4, 8].map((dx, k) => {
             const yb = k % 2 * 2, h = 5 + k % 3 * 1.6;
-            return tk(`M${dx},${yb} L${r23(dx + 0.3)},${r23(yb - h)}`, 1.2, "#5F8F3C") + pg([[dx - 0.8, yb - h + 0.6], [dx + 1.4, yb - h - 0.6], [dx + 1.4, yb - h + 0.4]], "#C8DC8A", 0);
+            return tk2(`M${dx},${yb} L${r23(dx + 0.3)},${r23(yb - h)}`, 1.2, "#5F8F3C") + pg([[dx - 0.8, yb - h + 0.6], [dx + 1.4, yb - h - 0.6], [dx + 1.4, yb - h + 0.4]], "#C8DC8A", 0);
           }).join("") + lame(-6, 2, 5, -1.4, "#7FA45A") + lame(6, 2.4, 6, 1.6, "#8FB866");
           const sw = /* @__PURE__ */ __name((k) => (f ? 1.6 : -1.4) * (0.6 + k % 3 * 0.3), "sw");
           let o = shade(0, 2, 17, 5, 0.12) + mare(14, 4.6);
@@ -2209,16 +2209,16 @@ var require_decor2 = __commonJS({
         frames: [[-30, -26, 60, 36], [-26, -10, 52, 20]],
         draw: /* @__PURE__ */ __name((spent, f) => {
           const plaque = /* @__PURE__ */ __name((rx, ry, fill, edge) => {
-            const n = 16, pts2 = Array.from({ length: n }, (_, i) => {
+            const n = 16, pts3 = Array.from({ length: n }, (_, i) => {
               const t = i / n * TAU2, r = 1 + (i % 2 ? 0.05 : -0.03);
               return [Math.cos(t) * rx * r, 0.6 + Math.sin(t) * ry * r];
             });
             const m = /* @__PURE__ */ __name((i) => {
-              const p = pts2[i % n], q = pts2[(i + 1) % n];
+              const p = pts3[i % n], q = pts3[(i + 1) % n];
               return `${r23((p[0] + q[0]) / 2)},${r23((p[1] + q[1]) / 2)}`;
             }, "m");
             let d = `M${m(n - 1)}`;
-            for (let i = 0; i < n; i++) d += ` Q${r23(pts2[i][0])},${r23(pts2[i][1])} ${m(i)}`;
+            for (let i = 0; i < n; i++) d += ` Q${r23(pts3[i][0])},${r23(pts3[i][1])} ${m(i)}`;
             return P2(d + " Z", fill, W) + E(rx * 0.12, ry * 0.25, rx * 0.8, ry * 0.55, edge, 0);
           }, "plaque");
           const alveoles = /* @__PURE__ */ __name((c) => line("M-16,-1 l5,-2 l6,1 l4,-2 l7,1 M-11,-3 l1,4 l-4,3 M-5,-2 l2,4 l6,1 l2,3 M3,-3 l1,4 l7,1 M11,2 l3,-3 M-8,4 l5,1", 0.7, c), "alveoles");
@@ -2231,9 +2231,9 @@ var require_decor2 = __commonJS({
       fruits: {
         frames: [[-24, -50, 48, 58], [-24, -50, 48, 58]],
         draw: /* @__PURE__ */ __name((spent, f) => {
-          const mangue = /* @__PURE__ */ __name((x, y, s, i) => P2(`M${r23(x)},${r23(y - 2.4 * s)} Q${r23(x + 2.5 * s)},${r23(y - 2 * s)} ${r23(x + 2.1 * s)},${r23(y + 0.9 * s)} Q${r23(x + 1.3 * s)},${r23(y + 3 * s)} ${r23(x - 0.4 * s)},${r23(y + 2.7 * s)} Q${r23(x - 2.5 * s)},${r23(y + 1.7 * s)} ${r23(x - 1.9 * s)},${r23(y - 0.6 * s)} Q${r23(x - 1.3 * s)},${r23(y - 2.6 * s)} ${r23(x)},${r23(y - 2.4 * s)} Z`, "#F6C443", 0.9) + E(x + 0.7 * s, y + 1.1 * s, 1.2 * s, 0.9 * s, i % 3 ? "#F2924A" : "#EE7A5A", 0) + E(x - 0.8 * s, y - 0.9 * s, 0.45 * s, 0.7 * s, "#FFF6D0", 0) + line(`M${r23(x)},${r23(y - 2.3 * s)} q0.3,-1.4 1,-2`, 0.9, OUT2), "mangue");
+          const mangue = /* @__PURE__ */ __name((x, y, s, i) => P2(`M${r23(x)},${r23(y - 2.4 * s)} Q${r23(x + 2.5 * s)},${r23(y - 2 * s)} ${r23(x + 2.1 * s)},${r23(y + 0.9 * s)} Q${r23(x + 1.3 * s)},${r23(y + 3 * s)} ${r23(x - 0.4 * s)},${r23(y + 2.7 * s)} Q${r23(x - 2.5 * s)},${r23(y + 1.7 * s)} ${r23(x - 1.9 * s)},${r23(y - 0.6 * s)} Q${r23(x - 1.3 * s)},${r23(y - 2.6 * s)} ${r23(x)},${r23(y - 2.4 * s)} Z`, "#F6C443", 0.9) + E(x + 0.7 * s, y + 1.1 * s, 1.2 * s, 0.9 * s, i % 3 ? "#F2924A" : "#EE7A5A", 0) + E(x - 0.8 * s, y - 0.9 * s, 0.45 * s, 0.7 * s, "#FFF6D0", 0) + line(`M${r23(x)},${r23(y - 2.3 * s)} q0.3,-1.4 1,-2`, 0.9, OUT3), "mangue");
           const fruits = spent ? "" : [[-20, -38], [-11, -45], [-25, -45], [-5, -36], [3, -51], [10, -39], [18, -35], [21, -43], [-2, -59], [12, -56]].map(([x, y], i) => mangue(x, y, 1.15, i)).join("");
-          return `<g transform="rotate(${spent ? 0 : f ? 1.2 : -1.2}) scale(${r23(0.86 / K)})">${arbre({ vert: "profond", petit: true })}${fruits}</g>`;
+          return `<g transform="rotate(${spent ? 0 : f ? 1.2 : -1.2}) scale(${r23(0.86 / K2)})">${arbre({ vert: "profond", petit: true })}${fruits}</g>`;
         }, "draw")
       },
       // Éclats d'obsidienne : une plaque de cendre aux bords bosselés et ses fentes de braise ; des lames noires à facettes au
@@ -2242,16 +2242,16 @@ var require_decor2 = __commonJS({
         frames: [[-28, -38, 56, 48], [-22, -12, 44, 20]],
         draw: /* @__PURE__ */ __name((spent, f) => {
           const cendre = /* @__PURE__ */ __name((rx, ry) => {
-            const n = 14, pts2 = Array.from({ length: n }, (_, i) => {
+            const n = 14, pts3 = Array.from({ length: n }, (_, i) => {
               const t = i / n * TAU2, r = 1 + (i % 2 ? 0.06 : -0.03);
               return [Math.cos(t) * rx * r, 1 + Math.sin(t) * ry * r];
             });
             const m = /* @__PURE__ */ __name((i) => {
-              const p = pts2[i % n], q = pts2[(i + 1) % n];
+              const p = pts3[i % n], q = pts3[(i + 1) % n];
               return `${r23((p[0] + q[0]) / 2)},${r23((p[1] + q[1]) / 2)}`;
             }, "m");
             let d = `M${m(n - 1)}`;
-            for (let i = 0; i < n; i++) d += ` Q${r23(pts2[i][0])},${r23(pts2[i][1])} ${m(i)}`;
+            for (let i = 0; i < n; i++) d += ` Q${r23(pts3[i][0])},${r23(pts3[i][1])} ${m(i)}`;
             return P2(d + " Z", "#6E6460", W) + E(rx * 0.1, 1.6, rx * 0.7, ry * 0.5, "#7C726C", 0);
           }, "cendre");
           const caillou = /* @__PURE__ */ __name((x, y, rx, ry) => E(x, y, rx, ry, "#2E2B36", W) + E(x - rx * 0.3, y - ry * 0.35, rx * 0.45, ry * 0.3, "#4A4258", 0) + E(x - rx * 0.4, y - ry * 0.45, rx * 0.15, ry * 0.12, "#B9A6E8", 0), "caillou");
@@ -2266,13 +2266,13 @@ var require_decor2 = __commonJS({
       }
     };
     var SW = { light: "#D39A5E", mid: "#B07A45", dark: "#7E5230", deep: "#5E3B22" };
-    var IRON2 = "#3B3C42";
+    var IRON3 = "#3B3C42";
     function stake(x, y0, y1, w = 3.2, sharp = false, c = SW) {
       const h = w / 2;
       return pg([[x - h, y0], [x - h, y1], ...sharp ? [[x, y1 - 2.4]] : [], [x + h, y1], [x + h, y0]], c.mid) + L([x + h * 0.4, y0 - 0.4], [x + h * 0.4, y1 + 0.8], c.dark, h * 0.6);
     }
     __name(stake, "stake");
-    var tuft = /* @__PURE__ */ __name((x, y) => tk(`M${x},${y} l-2.2,-3.6 M${x + 0.6},${y} l0.2,-4.4 M${x + 1.2},${y} l1.8,-3.2`, 0.8, "#7DBF55"), "tuft");
+    var tuft3 = /* @__PURE__ */ __name((x, y) => tk2(`M${x},${y} l-2.2,-3.6 M${x + 0.6},${y} l0.2,-4.4 M${x + 1.2},${y} l1.8,-3.2`, 0.8, "#7DBF55"), "tuft");
     function flower(x, y, r, color) {
       let o = "";
       for (let k = 0; k < 5; k++) {
@@ -2282,47 +2282,47 @@ var require_decor2 = __commonJS({
       return o + E(x, y, r * 0.48, r * 0.48, "#F6C443", 0.3);
     }
     __name(flower, "flower");
-    var leaf2 = /* @__PURE__ */ __name((x, y, a, color) => `<ellipse cx="${r23(x)}" cy="${r23(y)}" rx="2.6" ry="1.2" fill="${color}" stroke="${OUT2}" stroke-width="0.4" transform="rotate(${r23(a * 180 / Math.PI)} ${r23(x)} ${r23(y)})"/>`, "leaf");
+    var leaf3 = /* @__PURE__ */ __name((x, y, a, color) => `<ellipse cx="${r23(x)}" cy="${r23(y)}" rx="2.6" ry="1.2" fill="${color}" stroke="${OUT3}" stroke-width="0.4" transform="rotate(${r23(a * 180 / Math.PI)} ${r23(x)} ${r23(y)})"/>`, "leaf");
     function butterfly3(x, y, open, color) {
       const w = open ? 2.4 : 0.9;
       return E(x - w * 0.62, y, w, 1.9, color, 0.5) + E(x + w * 0.62, y, w, 1.9, color, 0.5) + L([x, y - 1.6], [x, y + 1.6], "#3A2A20", 0.7);
     }
     __name(butterfly3, "butterfly");
-    var framed = /* @__PURE__ */ __name((x, y, w, h, r, fill, edge, ew) => rr(x, y, w, h, r, "none", ew + 1.5, OUT2) + rr(x, y, w, h, r, fill, ew, edge), "framed");
+    var framed = /* @__PURE__ */ __name((x, y, w, h, r, fill, edge, ew) => rr(x, y, w, h, r, "none", ew + 1.5, OUT3) + rr(x, y, w, h, r, fill, ew, edge), "framed");
     var S2 = {};
-    S2.bois = { n: 1, draw: /* @__PURE__ */ __name(() => shade(0, 0.6, 19, 4) + stake(-15, 1, -33, 3.2, true) + stake(15, 1, -33, 3.2, true) + rr(-20, -29.6, 42, 17, 2, SW.deep, 0) + rr(-21, -31, 42, 17, 2, SW.light) + L([-20.4, -22.5], [20.4, -22.5], SW.dark, 0.9) + L([-19, -29.7], [19, -29.7], "rgba(255,255,255,.3)", 0.8) + L([-19, -21.4], [19, -21.4], "rgba(255,255,255,.2)", 0.7) + L([-14, -26], [-6, -26.3], "rgba(126,82,48,.35)", 0.5) + L([7, -17.4], [16, -17.1], "rgba(126,82,48,.35)", 0.5) + [[-18.6, -28.6], [18.6, -28.6], [-18.6, -16.4], [18.6, -16.4]].map(([x, y]) => E(x, y, 0.85, 0.85, "#4E3626", 0)).join("") + tuft(-18, 1) + tuft(13.5, 1.4), "draw") };
+    S2.bois = { n: 1, draw: /* @__PURE__ */ __name(() => shade(0, 0.6, 19, 4) + stake(-15, 1, -33, 3.2, true) + stake(15, 1, -33, 3.2, true) + rr(-20, -29.6, 42, 17, 2, SW.deep, 0) + rr(-21, -31, 42, 17, 2, SW.light) + L([-20.4, -22.5], [20.4, -22.5], SW.dark, 0.9) + L([-19, -29.7], [19, -29.7], "rgba(255,255,255,.3)", 0.8) + L([-19, -21.4], [19, -21.4], "rgba(255,255,255,.2)", 0.7) + L([-14, -26], [-6, -26.3], "rgba(126,82,48,.35)", 0.5) + L([7, -17.4], [16, -17.1], "rgba(126,82,48,.35)", 0.5) + [[-18.6, -28.6], [18.6, -28.6], [-18.6, -16.4], [18.6, -16.4]].map(([x, y]) => E(x, y, 0.85, 0.85, "#4E3626", 0)).join("") + tuft3(-18, 1) + tuft3(13.5, 1.4), "draw") };
     S2.ardoise = { n: 1, draw: /* @__PURE__ */ __name(() => {
       const chalk = "rgba(244,241,232,.85)";
-      return shade(0, 0.6, 21, 4) + tk("M-12,-37 L-17,1 M12,-37 L17,1", 1.8, SW.deep) + pg([[-15.5, -38], [15.5, -38], [20, -6], [-20, -6]], SW.mid) + pg([[-13.2, -35.6], [13.2, -35.6], [17.2, -8.6], [-17.2, -8.6]], "#2F3533", 0.6, "#1E2221") + L([-12.6, -34.4], [12, -34.4], "rgba(255,255,255,.08)", 1.2) + rr(-21, -7, 42, 2.6, 1, SW.dark, 0.6) + tk("M-19.5,-4.4 L-20.5,1 M19.5,-4.4 L20.5,1", 1.6, SW.mid) + line("M-10,-20.5 q2.5,-2 5,0 t5,0 t5,0 t5,0", 0.8, chalk) + `<path d="M0,-17.2 l0.9,1.9 2,.2 -1.5,1.3 .5,2 -1.9,-1 -1.9,1 .5,-2 -1.5,-1.3 2,-.2z" fill="${chalk}"/>` + E(-7, -14, 0.6, 0.6, chalk, 0) + E(7, -14, 0.6, 0.6, chalk, 0) + E(-9.5, -12, 0.5, 0.5, chalk, 0) + rr(5, -8.3, 5, 1.4, 0.6, "#F7F4EC", 0.4) + L([-14, -9.6], [-6, -9.4], "rgba(244,241,232,.25)", 0.6);
+      return shade(0, 0.6, 21, 4) + tk2("M-12,-37 L-17,1 M12,-37 L17,1", 1.8, SW.deep) + pg([[-15.5, -38], [15.5, -38], [20, -6], [-20, -6]], SW.mid) + pg([[-13.2, -35.6], [13.2, -35.6], [17.2, -8.6], [-17.2, -8.6]], "#2F3533", 0.6, "#1E2221") + L([-12.6, -34.4], [12, -34.4], "rgba(255,255,255,.08)", 1.2) + rr(-21, -7, 42, 2.6, 1, SW.dark, 0.6) + tk2("M-19.5,-4.4 L-20.5,1 M19.5,-4.4 L20.5,1", 1.6, SW.mid) + line("M-10,-20.5 q2.5,-2 5,0 t5,0 t5,0 t5,0", 0.8, chalk) + `<path d="M0,-17.2 l0.9,1.9 2,.2 -1.5,1.3 .5,2 -1.9,-1 -1.9,1 .5,-2 -1.5,-1.3 2,-.2z" fill="${chalk}"/>` + E(-7, -14, 0.6, 0.6, chalk, 0) + E(7, -14, 0.6, 0.6, chalk, 0) + E(-9.5, -12, 0.5, 0.5, chalk, 0) + rr(5, -8.3, 5, 1.4, 0.6, "#F7F4EC", 0.4) + L([-14, -9.6], [-6, -9.4], "rgba(244,241,232,.25)", 0.6);
     }, "draw") };
     var FER_PIVOT = [0, -43];
     S2.fer = { n: 4, draw: /* @__PURE__ */ __name((f) => {
       const deg = 0.06 * Math.sin(f / 4 * TAU2) * 180 / Math.PI;
-      const chain2 = /* @__PURE__ */ __name((x) => `<line x1="${x}" y1="-42.8" x2="${x}" y2="-35.2" stroke="${IRON2}" stroke-width="1.2" stroke-dasharray="1.5 0.9"/>`, "chain");
-      return shade(-20, 0.6, 6, 2.6) + shade(0, 0.6, 13, 2.8) + E(-20, 0.2, 4.2, 1.6, "#55565C", W * 0.7) + rr(-21.3, -47, 2.6, 47.5, 0.8, IRON2, W * 0.6) + L([-19.6, -46], [-19.6, 0], "rgba(255,255,255,.2)", 0.6) + E(-20, -48.6, 2.1, 2.1, IRON2, W * 0.6) + E(-20.6, -49.2, 0.7, 0.7, "rgba(255,255,255,.4)", 0) + rr(-20, -44.4, 40, 2.2, 1, IRON2, W * 0.6) + E(20.4, -43.3, 1.5, 1.5, IRON2, W * 0.6) + line("M-19.6,-33 C-12,-33.5 -8,-37 -6.5,-42.4", 1.4, IRON2) + `<circle cx="-12.4" cy="-37.6" r="2.3" fill="none" stroke="${IRON2}" stroke-width="1.1"/>` + E(-11.2, -38.2, 0.7, 0.7, IRON2, 0) + `<g transform="rotate(${r23(deg)} ${FER_PIVOT[0]} ${FER_PIVOT[1]})">` + chain2(-12) + chain2(12) + rr(-16.2, -34, 34, 16, 2.5, "#3E2716", 0) + framed(-17, -35, 34, 16, 2.5, "#5B3B24", "#D9A441", 1.3) + rr(-15.2, -33.2, 30.4, 12.4, 1.6, "none", 0.6, "rgba(255,222,150,.3)") + E(-12, -34.6, 1.1, 1.1, "#D9A441", 0.4) + E(12, -34.6, 1.1, 1.1, "#D9A441", 0.4) + "</g>";
+      const chain2 = /* @__PURE__ */ __name((x) => `<line x1="${x}" y1="-42.8" x2="${x}" y2="-35.2" stroke="${IRON3}" stroke-width="1.2" stroke-dasharray="1.5 0.9"/>`, "chain");
+      return shade(-20, 0.6, 6, 2.6) + shade(0, 0.6, 13, 2.8) + E(-20, 0.2, 4.2, 1.6, "#55565C", W * 0.7) + rr(-21.3, -47, 2.6, 47.5, 0.8, IRON3, W * 0.6) + L([-19.6, -46], [-19.6, 0], "rgba(255,255,255,.2)", 0.6) + E(-20, -48.6, 2.1, 2.1, IRON3, W * 0.6) + E(-20.6, -49.2, 0.7, 0.7, "rgba(255,255,255,.4)", 0) + rr(-20, -44.4, 40, 2.2, 1, IRON3, W * 0.6) + E(20.4, -43.3, 1.5, 1.5, IRON3, W * 0.6) + line("M-19.6,-33 C-12,-33.5 -8,-37 -6.5,-42.4", 1.4, IRON3) + `<circle cx="-12.4" cy="-37.6" r="2.3" fill="none" stroke="${IRON3}" stroke-width="1.1"/>` + E(-11.2, -38.2, 0.7, 0.7, IRON3, 0) + `<g transform="rotate(${r23(deg)} ${FER_PIVOT[0]} ${FER_PIVOT[1]})">` + chain2(-12) + chain2(12) + rr(-16.2, -34, 34, 16, 2.5, "#3E2716", 0) + framed(-17, -35, 34, 16, 2.5, "#5B3B24", "#D9A441", 1.3) + rr(-15.2, -33.2, 30.4, 12.4, 1.6, "none", 0.6, "rgba(255,222,150,.3)") + E(-12, -34.6, 1.1, 1.1, "#D9A441", 0.4) + E(12, -34.6, 1.1, 1.1, "#D9A441", 0.4) + "</g>";
     }, "draw") };
     S2.laiton = { n: 2, draw: /* @__PURE__ */ __name((f) => {
-      const stone2 = "#BDB5A8";
-      return '<defs><linearGradient id="laiton-brass" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#FBE29A"/><stop offset=".45" stop-color="#E2B04B"/><stop offset="1" stop-color="#B57F24"/></linearGradient><clipPath id="laiton-plaque"><rect x="-18" y="-28" width="36" height="16" rx="1.6"/></clipPath></defs>' + shade(0, 0.6, 25, 4.5) + rr(-23, -5, 46, 5.6, 1.4, "#A39B8E", W * 0.8) + rr(-21, -31, 42, 27, 2, stone2) + L([-21, -17.5], [-18.2, -17.5], "rgba(90,80,70,.4)", 0.6) + L([18.2, -12], [21, -12], "rgba(90,80,70,.4)", 0.6) + L([-8, -4.6], [-8, -10.6], "rgba(90,80,70,.35)", 0.6) + L([9, -4.6], [9, -10.6], "rgba(90,80,70,.35)", 0.6) + rr(-24, -34.4, 48, 4.6, 1.6, "#D3CCC0") + L([-22, -33.2], [22, -33.2], "rgba(255,255,255,.55)", 0.7) + framed(-18, -28, 36, 16, 1.6, "url(#laiton-brass)", "#8A6418", 0.9) + rr(-16.4, -26.4, 32.8, 12.8, 1, "none", 0.6, "rgba(255,248,220,.65)") + [[-16.2, -26.2], [16.2, -26.2], [-16.2, -13.8], [16.2, -13.8]].map(([x, y]) => E(x, y, 0.95, 0.95, "#FFF1C2", 0) + E(x + 0.2, y + 0.25, 0.45, 0.45, "#A9781F", 0)).join("") + E(-20, -2.4, 1.6, 1.6, "#7FA65A", 0.5) + E(-17.4, -1.6, 1.1, 1.1, "#9BC46E", 0.5) + E(19.6, -2, 1.3, 1.3, "#7FA65A", 0.5) + (f ? `<g clip-path="url(#laiton-plaque)"><polygon points="4,-28 9,-28 3,-12 -2,-12" fill="rgba(255,255,240,.6)"/><polygon points="11,-28 12.4,-28 6.4,-12 5,-12" fill="rgba(255,255,240,.45)"/></g>` : "");
+      const stone3 = "#BDB5A8";
+      return '<defs><linearGradient id="laiton-brass" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#FBE29A"/><stop offset=".45" stop-color="#E2B04B"/><stop offset="1" stop-color="#B57F24"/></linearGradient><clipPath id="laiton-plaque"><rect x="-18" y="-28" width="36" height="16" rx="1.6"/></clipPath></defs>' + shade(0, 0.6, 25, 4.5) + rr(-23, -5, 46, 5.6, 1.4, "#A39B8E", W * 0.8) + rr(-21, -31, 42, 27, 2, stone3) + L([-21, -17.5], [-18.2, -17.5], "rgba(90,80,70,.4)", 0.6) + L([18.2, -12], [21, -12], "rgba(90,80,70,.4)", 0.6) + L([-8, -4.6], [-8, -10.6], "rgba(90,80,70,.35)", 0.6) + L([9, -4.6], [9, -10.6], "rgba(90,80,70,.35)", 0.6) + rr(-24, -34.4, 48, 4.6, 1.6, "#D3CCC0") + L([-22, -33.2], [22, -33.2], "rgba(255,255,255,.55)", 0.7) + framed(-18, -28, 36, 16, 1.6, "url(#laiton-brass)", "#8A6418", 0.9) + rr(-16.4, -26.4, 32.8, 12.8, 1, "none", 0.6, "rgba(255,248,220,.65)") + [[-16.2, -26.2], [16.2, -26.2], [-16.2, -13.8], [16.2, -13.8]].map(([x, y]) => E(x, y, 0.95, 0.95, "#FFF1C2", 0) + E(x + 0.2, y + 0.25, 0.45, 0.45, "#A9781F", 0)).join("") + E(-20, -2.4, 1.6, 1.6, "#7FA65A", 0.5) + E(-17.4, -1.6, 1.1, 1.1, "#9BC46E", 0.5) + E(19.6, -2, 1.3, 1.3, "#7FA65A", 0.5) + (f ? `<g clip-path="url(#laiton-plaque)"><polygon points="4,-28 9,-28 3,-12 -2,-12" fill="rgba(255,255,240,.6)"/><polygon points="11,-28 12.4,-28 6.4,-12 5,-12" fill="rgba(255,255,240,.45)"/></g>` : "");
     }, "draw") };
     var PETALS = ["#F7A8C8", "#FFFFFF", "#FFD166", "#C9A7EB"];
     S2.fleurie = { n: 2, draw: /* @__PURE__ */ __name((f) => {
       let garland2 = "";
       for (let k = 0; k <= 12; k++) {
         const x = -24 + k * 4;
-        garland2 += leaf2(x, -30.4 - 1.8 * Math.sin(Math.PI * (x + 24) / 48) + 0.6, k % 2 ? 0.5 : -0.5, k % 2 ? "#6FAE4E" : "#8FCB6A");
+        garland2 += leaf3(x, -30.4 - 1.8 * Math.sin(Math.PI * (x + 24) / 48) + 0.6, k % 2 ? 0.5 : -0.5, k % 2 ? "#6FAE4E" : "#8FCB6A");
       }
       for (let k = 0; k <= 6; k++) {
         const x = -22 + k * 7.3;
         garland2 += flower(x, -31.4 - 1.8 * Math.sin(Math.PI * (x + 24) / 48), 1.9, PETALS[k % 4]);
       }
-      const bunch = /* @__PURE__ */ __name((x, y) => leaf2(x - 2, y - 1, -0.8, "#6FAE4E") + leaf2(x + 2.2, y - 1.2, 0.8, "#8FCB6A") + flower(x - 1.6, y - 3.6, 1.6, "#F7A8C8") + flower(x + 1.8, y - 2.8, 1.4, "#FFFFFF"), "bunch");
+      const bunch = /* @__PURE__ */ __name((x, y) => leaf3(x - 2, y - 1, -0.8, "#6FAE4E") + leaf3(x + 2.2, y - 1.2, 0.8, "#8FCB6A") + flower(x - 1.6, y - 3.6, 1.6, "#F7A8C8") + flower(x + 1.8, y - 2.8, 1.4, "#FFFFFF"), "bunch");
       const a = f ? Math.PI : 0;
       return shade(0, 0.6, 20, 4) + stake(-17, 1, -28, 3, false, { mid: "#F3EBDD", dark: "#D6CBB8" }) + stake(17, 1, -28, 3, false, { mid: "#F3EBDD", dark: "#D6CBB8" }) + rr(-20.2, -28, 42, 17, 3, "#D9C9A8", 0) + framed(-21, -29.2, 42, 17, 3, "#FFF4DC", "#7FA866", 1.2) + rr(-19, -27.2, 38, 13, 2, "none", 0.6, "rgba(127,168,102,.55)", ' stroke-dasharray="1.6 1.2"') + garland2 + bunch(-17, 1.4) + bunch(16.6, 1.6) + butterfly3(-24 + 3 * Math.cos(a), -38 + 2.2 * Math.sin(2 * a), !f, "#F59AC0") + butterfly3(22 + 2.6 * Math.cos(a + 2.2), -35.5 + 2 * Math.sin(2 * a + 1), !!f, "#9CC8F2");
     }, "draw") };
     S2.lanterne = { n: 2, draw: /* @__PURE__ */ __name((f) => {
-      const one = /* @__PURE__ */ __name((x, kk) => pg([[x - 3.6, -38.6], [x + 3.6, -38.6], [x + 2.4, -40.6], [x - 2.4, -40.6]], IRON2, 0.5) + rr(x - 3.2, -38.6, 6.4, 8.4, 1, `rgba(255,${r23(205 + 25 * kk)},${r23(120 + 30 * kk)},.95)`, 0.9, IRON2) + E(x, -33.8, 1.3 + 0.3 * kk, 2.4 + 0.7 * kk, "#FFF4C8", 0) + L([x, -38.6], [x, -30.2], "rgba(59,60,66,.6)", 0.6) + pg([[x - 3, -30.2], [x + 3, -30.2], [x + 1.4, -28.8], [x - 1.4, -28.8]], IRON2, 0.5), "one");
-      return shade(0, 0.6, 24, 4) + stake(-19, 1, -42, 3.2, false, { mid: SW.dark, dark: SW.deep }) + stake(19, 1, -42, 3.2, false, { mid: SW.dark, dark: SW.deep }) + pg([[-27, -43.6], [0, -50.4], [27, -43.6]], "#8A5536") + rr(-27, -44.6, 54, 3.6, 1.2, SW.mid, W * 0.8) + L([-25, -43.6], [25, -43.6], "rgba(255,255,255,.25)", 0.6) + rr(-16.2, -35.2, 34, 17, 2, "#1E2B4A", 0) + framed(-17, -36.4, 34, 17, 2, "#2F3F68", "#E2B546", 1.3) + star2(-14, -33.4, 1.2) + star2(13.6, -33, 1) + E(-13.4, -22.6, 0.45, 0.45, "#F4E3A8", 0) + E(14, -22.2, 0.55, 0.55, "#F4E3A8", 0) + L([-24, -41], [-24, -38.6], IRON2, 0.8) + L([24, -41], [24, -38.6], IRON2, 0.8) + one(-24, f ? 1 : 0) + one(24, f ? 0 : 1);
+      const one = /* @__PURE__ */ __name((x, kk) => pg([[x - 3.6, -38.6], [x + 3.6, -38.6], [x + 2.4, -40.6], [x - 2.4, -40.6]], IRON3, 0.5) + rr(x - 3.2, -38.6, 6.4, 8.4, 1, `rgba(255,${r23(205 + 25 * kk)},${r23(120 + 30 * kk)},.95)`, 0.9, IRON3) + E(x, -33.8, 1.3 + 0.3 * kk, 2.4 + 0.7 * kk, "#FFF4C8", 0) + L([x, -38.6], [x, -30.2], "rgba(59,60,66,.6)", 0.6) + pg([[x - 3, -30.2], [x + 3, -30.2], [x + 1.4, -28.8], [x - 1.4, -28.8]], IRON3, 0.5), "one");
+      return shade(0, 0.6, 24, 4) + stake(-19, 1, -42, 3.2, false, { mid: SW.dark, dark: SW.deep }) + stake(19, 1, -42, 3.2, false, { mid: SW.dark, dark: SW.deep }) + pg([[-27, -43.6], [0, -50.4], [27, -43.6]], "#8A5536") + rr(-27, -44.6, 54, 3.6, 1.2, SW.mid, W * 0.8) + L([-25, -43.6], [25, -43.6], "rgba(255,255,255,.25)", 0.6) + rr(-16.2, -35.2, 34, 17, 2, "#1E2B4A", 0) + framed(-17, -36.4, 34, 17, 2, "#2F3F68", "#E2B546", 1.3) + star2(-14, -33.4, 1.2) + star2(13.6, -33, 1) + E(-13.4, -22.6, 0.45, 0.45, "#F4E3A8", 0) + E(14, -22.2, 0.55, 0.55, "#F4E3A8", 0) + L([-24, -41], [-24, -38.6], IRON3, 0.8) + L([24, -41], [24, -38.6], IRON3, 0.8) + one(-24, f ? 1 : 0) + one(24, f ? 0 : 1);
     }, "draw") };
     var SIGN_TEXT2 = {
       bois: { x: 0, y: -22.5, w: 34, h: 12, size: 9.5, font: "Fraunces 800", color: "#4A2C16" },
@@ -2333,15 +2333,15 @@ var require_decor2 = __commonJS({
       lanterne: { x: 0, y: -27.9, w: 28, h: 11, size: 9, font: "Fraunces 700", color: "#F4D27A", light: [[-24, -34, 18], [24, -34, 18]] }
     };
     for (const t of Object.values(SIGN_TEXT2)) {
-      for (const k of ["x", "y", "w", "h", "size"]) t[k] = r23(t[k] * K);
+      for (const k of ["x", "y", "w", "h", "size"]) t[k] = r23(t[k] * K2);
       if (t.pivot) t.pivot = big2(t.pivot);
       if (t.light) t.light = t.light.map(big2);
     }
     var SIGN_FRAME2 = [-32, -56, 64, 62];
-    var PROP_BOX = [-40, -92, 80, 112];
-    var BUILDING_BOX = [-76, -124, 152, 168];
+    var PROP_BOX2 = [-40, -92, 80, 112];
+    var BUILDING_BOX2 = [-76, -124, 152, 168];
     var M2 = {};
-    M2.ponton = { frame: BUILDING_BOX, n: 1, draw: /* @__PURE__ */ __name(() => {
+    M2.ponton = { frame: BUILDING_BOX2, n: 1, draw: /* @__PURE__ */ __name(() => {
       const [wx, wy] = gp(0, 0.05, -1);
       let o = E(wx, wy, 36, 15, "rgba(255,255,255,.32)", 0) + E(wx - 4, wy - 1, 24, 8, "rgba(255,255,255,.22)", 0);
       for (const [u, v] of [[0.38, -0.18], [-0.38, 0.18], [0.38, 0.18], [0, 0.18]]) {
@@ -2352,9 +2352,9 @@ var require_decor2 = __commonJS({
       for (let k = -3; k <= 3; k++) o += L(gp(k * 0.12 + 0.06, -0.2, 5), gp(k * 0.12 + 0.06, 0.2, 5), "rgba(90,55,25,.5)", 0.8) + E(...gp(k * 0.12, 0.16, 5), 0.5, 0.35, "#5A3A20", 0) + E(...gp(k * 0.12, -0.16, 5), 0.5, 0.35, "#5A3A20", 0);
       o += L(gp(-0.42, 0.2, 3.5), gp(0.42, 0.2, 3.5), "rgba(90,55,25,.35)", 0.6);
       const [l0x, l0y] = gp(-0.1, 0.21, 4), [l1x, l1y] = gp(-0.1, 0.21, -9);
-      o += tk(`M${r23(l0x - 3)},${r23(l0y)} L${r23(l1x - 3)},${r23(l1y)} M${r23(l0x + 3)},${r23(l0y)} L${r23(l1x + 3)},${r23(l1y)}`, 0.9, WOOD_DARK2.left) + [3, 7, 11].map((d) => L([l0x - 3, l0y + d], [l0x + 3, l0y + d], WOOD_DARK2.left, 0.9)).join("");
+      o += tk2(`M${r23(l0x - 3)},${r23(l0y)} L${r23(l1x - 3)},${r23(l1y)} M${r23(l0x + 3)},${r23(l0y)} L${r23(l1x + 3)},${r23(l1y)}`, 0.9, WOOD_DARK2.left) + [3, 7, 11].map((d) => L([l0x - 3, l0y + d], [l0x + 3, l0y + d], WOOD_DARK2.left, 0.9)).join("");
       const [cx, cy] = gp(0.3, 0.05, 5);
-      o += gbox(0.26, 0.01, 0.34, 0.09, 5, 11, WOOD_DARK2) + E(cx, cy - 6.4, 3.2, 1.4, WOOD_DARK2.top, W * 0.7) + E(cx - 1, cy - 2.4, 4, 1.6, "none", 0).replace('fill="none" stroke="none"', `fill="none" stroke="#D9C08A" stroke-width="1.2"`) + tk(`M${r23(cx + 2)},${r23(cy - 4)} q6,2 9,8 q2,5 6,9`, 1, "#D9C08A");
+      o += gbox(0.26, 0.01, 0.34, 0.09, 5, 11, WOOD_DARK2) + E(cx, cy - 6.4, 3.2, 1.4, WOOD_DARK2.top, W * 0.7) + E(cx - 1, cy - 2.4, 4, 1.6, "none", 0).replace('fill="none" stroke="none"', `fill="none" stroke="#D9C08A" stroke-width="1.2"`) + tk2(`M${r23(cx + 2)},${r23(cy - 4)} q6,2 9,8 q2,5 6,9`, 1, "#D9C08A");
       const [bx, by] = gp(-0.28, -0.05, 5);
       return o + P2(`M${r23(bx - 3)},${r23(by - 6)} L${r23(bx + 3)},${r23(by - 6)} L${r23(bx + 2.4)},${r23(by)} L${r23(bx - 2.4)},${r23(by)} Z`, "#8A9AA8", W * 0.8) + E(bx, by - 6, 3, 1, "#5E6E7A", W * 0.6);
     }, "draw") };
@@ -2362,30 +2362,30 @@ var require_decor2 = __commonJS({
       const belly = f ? 6 : 3;
       const coque = "M-22,-6 L20,-6 Q24,-7 25,-12 Q27,-14 26,-9 Q24,4 9,6 L-12,6 Q-20,4 -22,-6 Z";
       const volute = /* @__PURE__ */ __name((x, y, r, a) => `<path d="M${r23(x - r)},${y} a${r},${r} 0 1 1 ${r23(r * 0.9)},${r23(r * 0.6)} a${r23(r * 0.5)},${r23(r * 0.5)} 0 1 1 ${r23(-r * 0.4)},${r23(-r * 0.7)}" fill="none" stroke="rgba(214,244,255,${a})" stroke-width="1.2" stroke-linecap="round"/>`, "volute");
-      return E(0, 7, 23, 5, "rgba(120,210,255,.28)", 0) + E(-4, 8.6, 15, 2.6, "rgba(191,240,255,.45)", 0) + volute(-14 + (f ? 2 : 0), 8, 2.4, 0.75) + volute(6 - (f ? 2 : 0), 8.6, 2, 0.6) + volute(16, 7 + (f ? 1 : 0), 1.7, 0.5) + star2(-20 + (f ? 3 : 0), 9.4, 1.3, 0.9) + star2(13 - (f ? 2 : 0), 10, 1.1, 0.8) + line("M-1,-45 L-20,-6.6 M-1,-45 L23,-9", 0.5, WOOD_DARK2.right) + `<defs><clipPath id="barque-coque"><path d="${coque}"/></clipPath></defs><path d="${coque}" fill="${WOOD2.left}"/><g clip-path="url(#barque-coque)"><path d="M-24,1.4 Q0,4.4 28,0 L28,10 L-24,10 Z" fill="` + WOOD2.right + '"/>' + line("M-22,-1.8 Q0,-0.4 25,-3", 0.6, WOOD2.right) + `</g><path d="${coque}" fill="none" stroke="${OUT2}" stroke-width="${W}" stroke-linejoin="round"/>` + pg([[-22, -6], [20, -6], [19, -3], [-20.6, -2.6]], WOOD2.top, W * 0.7) + `<path d="M24.6,-11 a1.6,1.6 0 1 1 1.4,1.6" fill="none" stroke="${WOOD_DARK2.right}" stroke-width="0.8"/>` + tk("M-1,-6 L-1,-47", 1.4, WOOD_DARK2.right) + P2(`M0,-44 Q${16 + belly},-30 0,-12 Z`, "#FFFDF8") + line(`M0,-36 Q${r23(7 + belly / 2)},-33 ${r23(9 + belly / 2)},-31 M0,-19 Q${r23(8 + belly / 2)},-20 ${r23(10 + belly / 2)},-21`, 0.5, "#D8D0BE") + E(5 + belly / 3, -28, 3.4, 3.4, "#5CC8F0", 0.6) + E(5 + belly / 3, -28, 1.5, 1.5, "#1E5A7A", 0) + E(4.4 + belly / 3, -28.8, 0.6, 0.6, "#FFFFFF", 0) + P2("M-2,-40 Q-12,-26 -2,-14 Z", "#F2E4C0", W * 0.8) + L([-19, -6], [-19, -16], "#3D3A36", 1.2) + pg([[-22.6, -22], [-15.4, -22], [-16.4, -23.6], [-21.6, -23.6]], "#3D3A36", 0.5) + rr(-22, -22, 6, 7, 1, "#FFE08A", 0.8, "#3D3A36") + E(-19, -18.4, 1 + f * 0.3, 1.8 + f * 0.5, "#FFF4C8", 0) + E(-19, -18.6, 5 + f, 5 + f, "rgba(255,224,138,.22)", 0);
+      return E(0, 7, 23, 5, "rgba(120,210,255,.28)", 0) + E(-4, 8.6, 15, 2.6, "rgba(191,240,255,.45)", 0) + volute(-14 + (f ? 2 : 0), 8, 2.4, 0.75) + volute(6 - (f ? 2 : 0), 8.6, 2, 0.6) + volute(16, 7 + (f ? 1 : 0), 1.7, 0.5) + star2(-20 + (f ? 3 : 0), 9.4, 1.3, 0.9) + star2(13 - (f ? 2 : 0), 10, 1.1, 0.8) + line("M-1,-45 L-20,-6.6 M-1,-45 L23,-9", 0.5, WOOD_DARK2.right) + `<defs><clipPath id="barque-coque"><path d="${coque}"/></clipPath></defs><path d="${coque}" fill="${WOOD2.left}"/><g clip-path="url(#barque-coque)"><path d="M-24,1.4 Q0,4.4 28,0 L28,10 L-24,10 Z" fill="` + WOOD2.right + '"/>' + line("M-22,-1.8 Q0,-0.4 25,-3", 0.6, WOOD2.right) + `</g><path d="${coque}" fill="none" stroke="${OUT3}" stroke-width="${W}" stroke-linejoin="round"/>` + pg([[-22, -6], [20, -6], [19, -3], [-20.6, -2.6]], WOOD2.top, W * 0.7) + `<path d="M24.6,-11 a1.6,1.6 0 1 1 1.4,1.6" fill="none" stroke="${WOOD_DARK2.right}" stroke-width="0.8"/>` + tk2("M-1,-6 L-1,-47", 1.4, WOOD_DARK2.right) + P2(`M0,-44 Q${16 + belly},-30 0,-12 Z`, "#FFFDF8") + line(`M0,-36 Q${r23(7 + belly / 2)},-33 ${r23(9 + belly / 2)},-31 M0,-19 Q${r23(8 + belly / 2)},-20 ${r23(10 + belly / 2)},-21`, 0.5, "#D8D0BE") + E(5 + belly / 3, -28, 3.4, 3.4, "#5CC8F0", 0.6) + E(5 + belly / 3, -28, 1.5, 1.5, "#1E5A7A", 0) + E(4.4 + belly / 3, -28.8, 0.6, 0.6, "#FFFFFF", 0) + P2("M-2,-40 Q-12,-26 -2,-14 Z", "#F2E4C0", W * 0.8) + L([-19, -6], [-19, -16], "#3D3A36", 1.2) + pg([[-22.6, -22], [-15.4, -22], [-16.4, -23.6], [-21.6, -23.6]], "#3D3A36", 0.5) + rr(-22, -22, 6, 7, 1, "#FFE08A", 0.8, "#3D3A36") + E(-19, -18.4, 1 + f * 0.3, 1.8 + f * 0.5, "#FFF4C8", 0) + E(-19, -18.6, 5 + f, 5 + f, "rgba(255,224,138,.22)", 0);
     }, "draw") };
     M2.bateau_visiteur = { frame: [-30, -56, 62, 64], n: 2, draw: /* @__PURE__ */ __name((f) => {
-      const flag = f ? "M3,-50.4 Q8,-51.4 13.4,-48 Q8,-46.6 3,-45.6 Z" : "M3,-50.4 Q7,-49 10,-50 L12.6,-46.8 Q8,-45.6 3,-45.6 Z";
+      const flag2 = f ? "M3,-50.4 Q8,-51.4 13.4,-48 Q8,-46.6 3,-45.6 Z" : "M3,-50.4 Q7,-49 10,-50 L12.6,-46.8 Q8,-45.6 3,-45.6 Z";
       const coque = "M-27,-7 L27,-8 Q25.4,3 13,6 L-14,6 Q-25,3.4 -27,-7 Z";
       const bob = f ? -0.5 : 0.3;
-      return E(0, 3.6, 28, 3.6, "rgba(30,70,110,.25)", 0) + line(`M-30,${f ? 4 : 3.4} q3,-1.4 6,0 M24,${f ? 3 : 3.6} q3,-1.6 6,0`, 0.9, "rgba(255,255,255,.85)") + `<g transform="translate(0 ${bob})">` + line("M2,-49 L-24,-7.6 M2,-49 L26,-8", 0.5, "#5A3A20") + `<defs><clipPath id="visiteur-coque"><path d="${coque}"/></clipPath></defs><path d="${coque}" fill="#8C5A34"/><g clip-path="url(#visiteur-coque)"><path d="M-30,1.4 Q0,4.4 30,0.4 L30,10 L-30,10 Z" fill="#6E4428"/>` + line("M-27,-2.8 Q0,-1 27,-3.8 M-25,1.2 Q0,3 25,-0.4", 0.6, "#6E4428") + `</g><path d="${coque}" fill="none" stroke="${OUT2}" stroke-width="${W}" stroke-linejoin="round"/>` + [-12, 0, 12].map((x) => E(x, -3, 1.3, 1.3, "#A8D8F0", W * 0.7) + E(x - 0.4, -3.4, 0.4, 0.4, "#FFFFFF", 0)).join("") + pg([[-27, -7], [27, -8], [25.4, -4.6], [-25.6, -3.8]], "#FBF6EA", W * 0.7) + L([-25, -4.4], [25, -5.3], "#3E6E9C", 1.3) + pg([[-19, -7], [-19, -16], [-8, -16], [-8, -7]], "#E9D3A8", W * 0.8) + pg([[-8, -7], [-8, -16], [-5.6, -17.4], [-5.6, -7.6]], "#CDB385", W * 0.8) + rr(-17.4, -14.4, 3.6, 7.2, 1.4, "#7A5236", 0.6) + E(-12, -12, 1.6, 1.6, "#7FC4E8", 0.6) + E(-12.4, -12.4, 0.5, 0.5, "#FFFFFF", 0) + pg([[-20.6, -16], [-13, -20.6], [-4.4, -17.4], [-6.4, -16]], "#C9473A", W * 0.8) + L([-13, -20.4], [-5.4, -17.2], "#E06A5A", 0.8) + rr(-17, -23.6, 2.6, 5, 0.6, "#5A4A40", 0.6) + E(-15.6 + (f ? 1 : 0), -26.4 - (f ? 1.4 : 0), 2 + f * 0.5, 1.5 + f * 0.4, "#F4F1EA", 0.5) + E(-13.6 + f * 1.6, -29 - f * 1.6, 1.4, 1.1, "#F4F1EA", 0.4) + rr(9, -12, 9.4, 5.4, 1.2, "#6B4A2E", W * 0.8) + L([9.4, -9.4], [18, -9.4], "#E2B347", 1) + L([12, -12], [12, -6.6], "#4A321E", 0.8) + L([15.6, -12], [15.6, -6.6], "#4A321E", 0.8) + tk("M2,-7 L2,-50", 1.4, "#5A3A20") + tk("M2,-43 L19,-41.6", 0.8, "#5A3A20") + P2("M3,-42.6 Q14,-30 21,-11 L3,-9 Z", "#FFFDF8", W) + `<path d="M3,-30 Q11,-27 15.6,-26 L18.2,-20 Q10,-21 3,-21 Z" fill="#6FA3D9" opacity=".6"/>` + line("M3,-36 Q10,-34 16,-32.6 M3,-15 Q12,-15.6 20,-15.6", 0.5, "#D8D0BE") + P2(flag, "#E2483A", W * 0.7) + E(2, -50.6, 1.2, 1.2, "#E2B347", 0.5) + "</g>";
+      return E(0, 3.6, 28, 3.6, "rgba(30,70,110,.25)", 0) + line(`M-30,${f ? 4 : 3.4} q3,-1.4 6,0 M24,${f ? 3 : 3.6} q3,-1.6 6,0`, 0.9, "rgba(255,255,255,.85)") + `<g transform="translate(0 ${bob})">` + line("M2,-49 L-24,-7.6 M2,-49 L26,-8", 0.5, "#5A3A20") + `<defs><clipPath id="visiteur-coque"><path d="${coque}"/></clipPath></defs><path d="${coque}" fill="#8C5A34"/><g clip-path="url(#visiteur-coque)"><path d="M-30,1.4 Q0,4.4 30,0.4 L30,10 L-30,10 Z" fill="#6E4428"/>` + line("M-27,-2.8 Q0,-1 27,-3.8 M-25,1.2 Q0,3 25,-0.4", 0.6, "#6E4428") + `</g><path d="${coque}" fill="none" stroke="${OUT3}" stroke-width="${W}" stroke-linejoin="round"/>` + [-12, 0, 12].map((x) => E(x, -3, 1.3, 1.3, "#A8D8F0", W * 0.7) + E(x - 0.4, -3.4, 0.4, 0.4, "#FFFFFF", 0)).join("") + pg([[-27, -7], [27, -8], [25.4, -4.6], [-25.6, -3.8]], "#FBF6EA", W * 0.7) + L([-25, -4.4], [25, -5.3], "#3E6E9C", 1.3) + pg([[-19, -7], [-19, -16], [-8, -16], [-8, -7]], "#E9D3A8", W * 0.8) + pg([[-8, -7], [-8, -16], [-5.6, -17.4], [-5.6, -7.6]], "#CDB385", W * 0.8) + rr(-17.4, -14.4, 3.6, 7.2, 1.4, "#7A5236", 0.6) + E(-12, -12, 1.6, 1.6, "#7FC4E8", 0.6) + E(-12.4, -12.4, 0.5, 0.5, "#FFFFFF", 0) + pg([[-20.6, -16], [-13, -20.6], [-4.4, -17.4], [-6.4, -16]], "#C9473A", W * 0.8) + L([-13, -20.4], [-5.4, -17.2], "#E06A5A", 0.8) + rr(-17, -23.6, 2.6, 5, 0.6, "#5A4A40", 0.6) + E(-15.6 + (f ? 1 : 0), -26.4 - (f ? 1.4 : 0), 2 + f * 0.5, 1.5 + f * 0.4, "#F4F1EA", 0.5) + E(-13.6 + f * 1.6, -29 - f * 1.6, 1.4, 1.1, "#F4F1EA", 0.4) + rr(9, -12, 9.4, 5.4, 1.2, "#6B4A2E", W * 0.8) + L([9.4, -9.4], [18, -9.4], "#E2B347", 1) + L([12, -12], [12, -6.6], "#4A321E", 0.8) + L([15.6, -12], [15.6, -6.6], "#4A321E", 0.8) + tk2("M2,-7 L2,-50", 1.4, "#5A3A20") + tk2("M2,-43 L19,-41.6", 0.8, "#5A3A20") + P2("M3,-42.6 Q14,-30 21,-11 L3,-9 Z", "#FFFDF8", W) + `<path d="M3,-30 Q11,-27 15.6,-26 L18.2,-20 Q10,-21 3,-21 Z" fill="#6FA3D9" opacity=".6"/>` + line("M3,-36 Q10,-34 16,-32.6 M3,-15 Q12,-15.6 20,-15.6", 0.5, "#D8D0BE") + P2(flag2, "#E2483A", W * 0.7) + E(2, -50.6, 1.2, 1.2, "#E2B347", 0.5) + "</g>";
     }, "draw") };
-    var SAILS = { blanche: ["#FFFDF8", "#F2E4C0"], rouge: ["#E2574C", "#B13A31"], bleue: ["#6FA3D9", "#4C7FB5"], rayee: ["stripes", "#E2574C"] };
-    M2.voilier = { frame: BUILDING_BOX, n: 1, variants: Object.keys(SAILS), draw: /* @__PURE__ */ __name((_, sail = "blanche") => {
+    var SAILS2 = { blanche: ["#FFFDF8", "#F2E4C0"], rouge: ["#E2574C", "#B13A31"], bleue: ["#6FA3D9", "#4C7FB5"], rayee: ["stripes", "#E2574C"] };
+    M2.voilier = { frame: BUILDING_BOX2, n: 1, variants: Object.keys(SAILS2), draw: /* @__PURE__ */ __name((_, sail = "blanche") => {
       const [x, y] = gp(0.05, 0.5, 0);
-      const s = SAILS[sail], X = /* @__PURE__ */ __name((n) => r23(x + n), "X"), Y = /* @__PURE__ */ __name((n) => r23(y + n), "Y");
+      const s = SAILS2[sail], X = /* @__PURE__ */ __name((n) => r23(x + n), "X"), Y = /* @__PURE__ */ __name((n) => r23(y + n), "Y");
       const main = s[0] === "stripes" ? "#FFFDF8" : s[0], jib = s[0] === "stripes" ? "#F2E4C0" : s[1];
       const voile = `M${X(1)},${Y(-44)} Q${X(13)},${Y(-30)} ${X(20)},${Y(-12)} L${X(1)},${Y(-10)} Z`;
       const stripes = s[0] === "stripes" ? `<defs><clipPath id="voilier-voile"><path d="${voile}"/></clipPath></defs><g clip-path="url(#voilier-voile)">${[0, 1, 2].map((k) => `<path d="M${X(-2)},${Y(-40 + k * 10)} L${X(24)},${Y(-37 + k * 10)} L${X(24)},${Y(-32 + k * 10)} L${X(-2)},${Y(-35 + k * 10)} Z" fill="${s[1]}"/>`).join("")}</g>` : "";
       const coque = `M${X(-23)},${Y(-6)} L${X(23)},${Y(-7)} Q${X(21)},${Y(4)} ${X(10)},${Y(6)} L${X(-12)},${Y(6)} Q${X(-21)},${Y(4)} ${X(-23)},${Y(-6)} Z`;
-      return E(x, y + 6, 24, 5, "rgba(30,70,110,.25)", 0) + line(`M${X(-27)},${Y(5)} q3,-1.4 6,0 M${X(21)},${Y(4.6)} q3,-1.4 6,0`, 0.9, "rgba(255,255,255,.85)") + line(`M${X(0)},${Y(-47)} L${X(-21)},${Y(-6.6)} M${X(0)},${Y(-47)} L${X(22)},${Y(-7)}`, 0.5, "#5A3A20") + `<defs><clipPath id="voilier-coque"><path d="${coque}"/></clipPath></defs><path d="${coque}" fill="${WOOD2.left}"/><g clip-path="url(#voilier-coque)"><path d="M${X(-26)},${Y(1.6)} Q${x},${Y(4.4)} ${X(26)},${Y(0.6)} L${X(26)},${Y(10)} L${X(-26)},${Y(10)} Z" fill="${WOOD2.right}"/>` + line(`M${X(-23)},${Y(-2)} Q${x},${Y(-0.4)} ${X(23)},${Y(-3)}`, 0.6, WOOD2.right) + `</g><path d="${coque}" fill="none" stroke="${OUT2}" stroke-width="${W}" stroke-linejoin="round"/>` + [-9, 3].map((n) => E(x + n, y - 2.4, 1.2, 1.2, "#A8D8F0", W * 0.7) + E(x + n - 0.4, y - 2.8, 0.4, 0.4, "#FFFFFF", 0)).join("") + pg([[x - 23, y - 6], [x + 23, y - 7], [x + 21.4, y - 4], [x - 21.6, y - 3.4]], "#FBF6EA", W * 0.7) + tk(`M${x},${Y(-6)} L${x},${Y(-48)}`, 1.4, WOOD_DARK2.right) + tk(`M${x},${Y(-41)} L${X(17)},${Y(-39.8)}`, 0.8, WOOD_DARK2.right) + P2(voile, main) + stripes + (stripes ? P2(voile, "none") : "") + line(`M${X(1)},${Y(-34)} Q${X(9)},${Y(-32)} ${X(15)},${Y(-30.6)} M${X(1)},${Y(-18)} Q${X(10)},${Y(-18.4)} ${X(18)},${Y(-18.4)}`, 0.5, "rgba(120,100,80,.35)") + P2(`M${X(-1)},${Y(-38)} Q${X(-8)},${Y(-25)} ${X(-14)},${Y(-13)} L${X(-1)},${Y(-12)} Z`, jib, W * 0.8) + P2(`M${X(0.4)},${Y(-48.4)} Q${X(6)},${Y(-49.4)} ${X(10)},${Y(-46.6)} Q${X(5.6)},${Y(-45.2)} ${X(0.4)},${Y(-44.6)} Z`, s[0] === "stripes" ? s[1] : jib, W * 0.6) + E(x, y - 48.6, 1.1, 1.1, "#E2B347", 0.5);
+      return E(x, y + 6, 24, 5, "rgba(30,70,110,.25)", 0) + line(`M${X(-27)},${Y(5)} q3,-1.4 6,0 M${X(21)},${Y(4.6)} q3,-1.4 6,0`, 0.9, "rgba(255,255,255,.85)") + line(`M${X(0)},${Y(-47)} L${X(-21)},${Y(-6.6)} M${X(0)},${Y(-47)} L${X(22)},${Y(-7)}`, 0.5, "#5A3A20") + `<defs><clipPath id="voilier-coque"><path d="${coque}"/></clipPath></defs><path d="${coque}" fill="${WOOD2.left}"/><g clip-path="url(#voilier-coque)"><path d="M${X(-26)},${Y(1.6)} Q${x},${Y(4.4)} ${X(26)},${Y(0.6)} L${X(26)},${Y(10)} L${X(-26)},${Y(10)} Z" fill="${WOOD2.right}"/>` + line(`M${X(-23)},${Y(-2)} Q${x},${Y(-0.4)} ${X(23)},${Y(-3)}`, 0.6, WOOD2.right) + `</g><path d="${coque}" fill="none" stroke="${OUT3}" stroke-width="${W}" stroke-linejoin="round"/>` + [-9, 3].map((n) => E(x + n, y - 2.4, 1.2, 1.2, "#A8D8F0", W * 0.7) + E(x + n - 0.4, y - 2.8, 0.4, 0.4, "#FFFFFF", 0)).join("") + pg([[x - 23, y - 6], [x + 23, y - 7], [x + 21.4, y - 4], [x - 21.6, y - 3.4]], "#FBF6EA", W * 0.7) + tk2(`M${x},${Y(-6)} L${x},${Y(-48)}`, 1.4, WOOD_DARK2.right) + tk2(`M${x},${Y(-41)} L${X(17)},${Y(-39.8)}`, 0.8, WOOD_DARK2.right) + P2(voile, main) + stripes + (stripes ? P2(voile, "none") : "") + line(`M${X(1)},${Y(-34)} Q${X(9)},${Y(-32)} ${X(15)},${Y(-30.6)} M${X(1)},${Y(-18)} Q${X(10)},${Y(-18.4)} ${X(18)},${Y(-18.4)}`, 0.5, "rgba(120,100,80,.35)") + P2(`M${X(-1)},${Y(-38)} Q${X(-8)},${Y(-25)} ${X(-14)},${Y(-13)} L${X(-1)},${Y(-12)} Z`, jib, W * 0.8) + P2(`M${X(0.4)},${Y(-48.4)} Q${X(6)},${Y(-49.4)} ${X(10)},${Y(-46.6)} Q${X(5.6)},${Y(-45.2)} ${X(0.4)},${Y(-44.6)} Z`, s[0] === "stripes" ? s[1] : jib, W * 0.6) + E(x, y - 48.6, 1.1, 1.1, "#E2B347", 0.5);
     }, "draw") };
     M2.bouteille = { frame: [-16, -28, 32, 32], n: 2, draw: /* @__PURE__ */ __name((f) => {
-      const a = f ? -14 : -6, id = `bouteille-verre-${f}`, rx = f ? 12.6 : 11.8;
+      const a = f ? -14 : -6, id3 = `bouteille-verre-${f}`, rx = f ? 12.6 : 11.8;
       const body = "M-9,-5 L4,-5 Q7.4,-5 8.6,-2.1 L12,-2.1 L12,2.1 L8.6,2.1 Q7.4,5 4,5 L-9,5 Q-12.4,5 -12.4,0 Q-12.4,-5 -9,-5 Z";
-      return E(0, 0.8, 14, 2.6, "rgba(30,60,80,.22)", 0) + line(`M${-rx},0 A${rx},2.4 0 0 1 ${rx},0`, 0.7, "rgba(255,255,255,.45)") + `<g transform="translate(-1.4,-2.4) rotate(${a}) scale(.84)"><defs><clipPath id="${id}"><path d="${body}"/></clipPath></defs>` + rr(-8.4, -2.8, 11, 5.6, 2.6, "#F5E8C6", 0.5) + E(2.6, 0, 1.2, 2.8, "#E6D2A4", 0.4) + line("M2.6,-1.6 q-0.8,1.6 0,3.2", 0.4, "#C9A87A") + line("M-4.4,-0.9 L1,-0.9 M-4.4,0.8 L-0.4,0.8", 0.4, "rgba(150,120,80,.6)") + line("M-6.4,-2.6 L-6.4,2.6", 1.1, "#D9534A") + E(-6.4, 3.2, 1, 1, "#B8302A", 0) + E(-6.7, 2.9, 0.35, 0.35, "rgba(255,255,255,.6)", 0) + P2(body, "rgba(96,180,132,.44)", 0) + `<g clip-path="url(#${id})"><path d="M-14,2.6 Q-4,1.4 4,3 L14,3.2 L14,8 L-14,8 Z" fill="rgba(40,110,80,.4)"/><path d="M-24,2.6 q5,-1 10,0 t10,0 t10,0 t10,0 L26,16 L-24,16 Z" fill="rgba(120,190,226,.55)" transform="rotate(${-a})"/></g>` + P2(body, "none", W / 0.84) + rr(11.6, -2.7, 1.7, 5.4, 0.7, "#8FD0AA", W * 0.7) + rr(13.1, -1.8, 3.4, 3.6, 0.9, "#C08A58", W * 0.7) + line("M14.6,-1.4 L14.6,1.4", 0.4, "rgba(90,55,30,.5)") + line("M-9,-3.6 Q-2,-4.6 4,-3.8", 1.1, "rgba(255,255,255,.75)") + line("M8.8,-1.4 L11.4,-1.4", 0.6, "rgba(255,255,255,.6)") + E(-10.6, -1.2, 0.5, 1.2, "rgba(255,255,255,.55)", 0) + "</g>" + line(`M${-rx},0 A${rx},2.4 0 0 0 ${rx},0`, 0.9, "rgba(255,255,255,.85)") + line(`M${-rx - 3},${f ? 1.4 : 2.2} q2,-1.2 4,0 M${rx - 1},${f ? 2.2 : 1.4} q2,-1.2 4,0`, 0.8, "rgba(255,255,255,.7)") + E(-rx + 2, -0.6, 0.7, 0.5, "#FFFFFF", 0) + E(rx - 2.4, -0.4, 0.6, 0.45, "#FFFFFF", 0) + (f ? star2(-2, -10.4, 2.2) : "");
+      return E(0, 0.8, 14, 2.6, "rgba(30,60,80,.22)", 0) + line(`M${-rx},0 A${rx},2.4 0 0 1 ${rx},0`, 0.7, "rgba(255,255,255,.45)") + `<g transform="translate(-1.4,-2.4) rotate(${a}) scale(.84)"><defs><clipPath id="${id3}"><path d="${body}"/></clipPath></defs>` + rr(-8.4, -2.8, 11, 5.6, 2.6, "#F5E8C6", 0.5) + E(2.6, 0, 1.2, 2.8, "#E6D2A4", 0.4) + line("M2.6,-1.6 q-0.8,1.6 0,3.2", 0.4, "#C9A87A") + line("M-4.4,-0.9 L1,-0.9 M-4.4,0.8 L-0.4,0.8", 0.4, "rgba(150,120,80,.6)") + line("M-6.4,-2.6 L-6.4,2.6", 1.1, "#D9534A") + E(-6.4, 3.2, 1, 1, "#B8302A", 0) + E(-6.7, 2.9, 0.35, 0.35, "rgba(255,255,255,.6)", 0) + P2(body, "rgba(96,180,132,.44)", 0) + `<g clip-path="url(#${id3})"><path d="M-14,2.6 Q-4,1.4 4,3 L14,3.2 L14,8 L-14,8 Z" fill="rgba(40,110,80,.4)"/><path d="M-24,2.6 q5,-1 10,0 t10,0 t10,0 t10,0 L26,16 L-24,16 Z" fill="rgba(120,190,226,.55)" transform="rotate(${-a})"/></g>` + P2(body, "none", W / 0.84) + rr(11.6, -2.7, 1.7, 5.4, 0.7, "#8FD0AA", W * 0.7) + rr(13.1, -1.8, 3.4, 3.6, 0.9, "#C08A58", W * 0.7) + line("M14.6,-1.4 L14.6,1.4", 0.4, "rgba(90,55,30,.5)") + line("M-9,-3.6 Q-2,-4.6 4,-3.8", 1.1, "rgba(255,255,255,.75)") + line("M8.8,-1.4 L11.4,-1.4", 0.6, "rgba(255,255,255,.6)") + E(-10.6, -1.2, 0.5, 1.2, "rgba(255,255,255,.55)", 0) + "</g>" + line(`M${-rx},0 A${rx},2.4 0 0 0 ${rx},0`, 0.9, "rgba(255,255,255,.85)") + line(`M${-rx - 3},${f ? 1.4 : 2.2} q2,-1.2 4,0 M${rx - 1},${f ? 2.2 : 1.4} q2,-1.2 4,0`, 0.8, "rgba(255,255,255,.7)") + E(-rx + 2, -0.6, 0.7, 0.5, "#FFFFFF", 0) + E(rx - 2.4, -0.4, 0.6, 0.45, "#FFFFFF", 0) + (f ? star2(-2, -10.4, 2.2) : "");
     }, "draw") };
-    M2.panneau_quartier = { frame: PROP_BOX, n: 1, draw: /* @__PURE__ */ __name(() => shade(0, 0, 14, 7, 0.2) + gbox(-0.03, -0.03, 0.03, 0.03, 0, 26, WOOD_DARK2) + tuft(-5, 1) + tuft(3.4, 1.6) + framed(-17, -40, 34, 17, 3, WOOD2.top, "#7A4E2C", 1.2) + L([-13, -34], [13, -34], "rgba(122,78,44,.3)", 0.8) + line("M-14,-37.4 q6,-0.8 10,0.2 M5,-26 q5,0.6 9,-0.4", 0.5, "rgba(122,78,44,.35)") + [[-14.6, -37.6], [14.6, -37.6], [-14.6, -25.4], [14.6, -25.4]].map(([x, y]) => E(x, y, 0.8, 0.8, "#5A3A20", 0) + E(x - 0.25, y - 0.25, 0.3, 0.3, "#B88A5A", 0)).join("") + line("M0,-40 L0,-42", 0.8, "#8A6A22") + line("M-2.8,-50 v-3 a2.8,2.8 0 0 1 5.6,0 v3", 2.6, OUT2) + line("M-2.8,-50 v-3 a2.8,2.8 0 0 1 5.6,0 v3", 1.2, "#8A6A22") + rr(-4.5, -50, 9, 8, 1.6, "#E9BF4E", W * 0.9) + L([-3.4, -48.6], [-3.4, -43.4], "#FFE39A", 0.8) + E(0, -46.6, 0.9, 1.1, "#5A4214", 0) + L([0, -46], [0, -44.4], "#5A4214", 0.8), "draw") };
+    M2.panneau_quartier = { frame: PROP_BOX2, n: 1, draw: /* @__PURE__ */ __name(() => shade(0, 0, 14, 7, 0.2) + gbox(-0.03, -0.03, 0.03, 0.03, 0, 26, WOOD_DARK2) + tuft3(-5, 1) + tuft3(3.4, 1.6) + framed(-17, -40, 34, 17, 3, WOOD2.top, "#7A4E2C", 1.2) + L([-13, -34], [13, -34], "rgba(122,78,44,.3)", 0.8) + line("M-14,-37.4 q6,-0.8 10,0.2 M5,-26 q5,0.6 9,-0.4", 0.5, "rgba(122,78,44,.35)") + [[-14.6, -37.6], [14.6, -37.6], [-14.6, -25.4], [14.6, -25.4]].map(([x, y]) => E(x, y, 0.8, 0.8, "#5A3A20", 0) + E(x - 0.25, y - 0.25, 0.3, 0.3, "#B88A5A", 0)).join("") + line("M0,-40 L0,-42", 0.8, "#8A6A22") + line("M-2.8,-50 v-3 a2.8,2.8 0 0 1 5.6,0 v3", 2.6, OUT3) + line("M-2.8,-50 v-3 a2.8,2.8 0 0 1 5.6,0 v3", 1.2, "#8A6A22") + rr(-4.5, -50, 9, 8, 1.6, "#E9BF4E", W * 0.9) + L([-3.4, -48.6], [-3.4, -43.4], "#FFE39A", 0.8) + E(0, -46.6, 0.9, 1.1, "#5A4214", 0) + L([0, -46], [0, -44.4], "#5A4214", 0.8), "draw") };
     var HS = 22;
     M2.pont = { frame: [-40, -46, 80, 86], n: 1, variants: ["segment", "bout_avant", "bout_arriere"], draw: /* @__PURE__ */ __name((_, kind = "segment") => {
       const z = 0.15 * HS;
@@ -2400,7 +2400,7 @@ var require_decor2 = __commonJS({
         const p = gp(u, v, z);
         return { s: rr(p[0] - 1.2, p[1] - h, 2.4, h, 0.6, "#5C3F24", 0.6), x: p[0], y: p[1] - h };
       }, "post");
-      const rope = /* @__PURE__ */ __name((a, b) => tk(`M${r23(a.x)},${r23(a.y + 1)} Q${r23((a.x + b.x) / 2)},${r23((a.y + b.y) / 2 + 4)} ${r23(b.x)},${r23(b.y + 1)}`, 0.9, "#D9C08A"), "rope");
+      const rope2 = /* @__PURE__ */ __name((a, b) => tk2(`M${r23(a.x)},${r23(a.y + 1)} Q${r23((a.x + b.x) / 2)},${r23((a.y + b.y) / 2 + 4)} ${r23(b.x)},${r23(b.y + 1)}`, 0.9, "#D9C08A"), "rope");
       const lamp = /* @__PURE__ */ __name((u) => {
         const t = post2(u, 0.27, 24);
         return t.s + E(t.x, t.y - 3, 7, 7, "rgba(255,224,138,.22)", 0) + rr(t.x - 3.4, t.y - 8, 6.8, 2, 0.6, "#3D3A36", 0.5) + rr(t.x - 2.6, t.y - 6, 5.2, 6, 0.8, "#FFE08A", 0.8, "#3D3A36") + E(t.x, t.y - 3, 1, 1.8, "#FFF4C8", 0) + L([t.x, t.y - 6], [t.x, t.y], "#3D3A36", 0.4);
@@ -2408,7 +2408,7 @@ var require_decor2 = __commonJS({
       for (const v of [-0.27, 0.27]) {
         const a = post2(-0.46, v, 12), b = post2(0.46, v, 12);
         if (v > 0 && kind === "bout_arriere") o += lamp(-0.46);
-        o += a.s + b.s + rope(a, b);
+        o += a.s + b.s + rope2(a, b);
       }
       if (kind === "bout_avant") o += lamp(0.46);
       return o;
@@ -2419,15 +2419,1377 @@ var require_decor2 = __commonJS({
     }, "draw") };
     M2.epave_bateau = { frame: [-54, -72, 108, 90], n: 1, draw: /* @__PURE__ */ __name(() => {
       const coque = "M-46,-10 L46,-10 L34,6 L-36,6 Z";
-      return `<g transform="rotate(12)"><defs><clipPath id="epave-coque"><path d="${coque}"/></clipPath></defs><path d="${coque}" fill="#7A5A3E"/><g clip-path="url(#epave-coque)"><path d="M-50,0 L50,0 L50,10 L-50,10 Z" fill="#5E4430"/>` + L([-42, -5], [40, -5], "#5A3E28", 0.8) + L([-40, 0], [38, 0], "#5A3E28", 0.6) + P2("M12,-6 L20,-7 L22,0 L16,3 L11,0 Z", "#2E2218", 0.6) + L([13, -6], [10, -9], "#7A5A3E", 1.4) + L([21, -7], [24, -10], "#7A5A3E", 1.2) + `</g><path d="${coque}" fill="none" stroke="${OUT2}" stroke-width="${W}" stroke-linejoin="round"/>` + pg([[-46, -10], [46, -10], [44, -7.4], [-44, -7.4]], "#A8825A", W * 0.7) + P2("M-6,-10 L-2,-46 L-1,-50 L1,-46 L2,-48.6 L2.6,-44 L2,-10 Z", WOOD_DARK2.left) + P2("M2,-44 L-30,-36 L-26,-34 L-29,-31 L-22,-30.6 L2,-30 Z", "#E8E2D2", W * 0.8) + line("M-4,-40 l-14,3.6 M-4,-34 l-16,2", 0.5, "#C8BFA8") + line("M-2,-42 Q-14,-26 -40,-10", 0.7, "#D9C08A") + line("M2,-30 q6,6 4,14", 0.8, "#D9C08A") + rr(-26, -18, 12, 8, 1, "#BDB5A8", W * 0.8) + rr(-10, -18, 10, 8, 1, "#A39B8E", W * 0.8) + rr(8, -16, 8, 6, 1, "#BDB5A8", W * 0.8) + L([-24, -15.6], [-16, -15.6], "#D3CCC0", 0.6) + L([-8, -15.4], [-2, -15.4], "#BDB5A8", 0.6) + "</g>";
+      return `<g transform="rotate(12)"><defs><clipPath id="epave-coque"><path d="${coque}"/></clipPath></defs><path d="${coque}" fill="#7A5A3E"/><g clip-path="url(#epave-coque)"><path d="M-50,0 L50,0 L50,10 L-50,10 Z" fill="#5E4430"/>` + L([-42, -5], [40, -5], "#5A3E28", 0.8) + L([-40, 0], [38, 0], "#5A3E28", 0.6) + P2("M12,-6 L20,-7 L22,0 L16,3 L11,0 Z", "#2E2218", 0.6) + L([13, -6], [10, -9], "#7A5A3E", 1.4) + L([21, -7], [24, -10], "#7A5A3E", 1.2) + `</g><path d="${coque}" fill="none" stroke="${OUT3}" stroke-width="${W}" stroke-linejoin="round"/>` + pg([[-46, -10], [46, -10], [44, -7.4], [-44, -7.4]], "#A8825A", W * 0.7) + P2("M-6,-10 L-2,-46 L-1,-50 L1,-46 L2,-48.6 L2.6,-44 L2,-10 Z", WOOD_DARK2.left) + P2("M2,-44 L-30,-36 L-26,-34 L-29,-31 L-22,-30.6 L2,-30 Z", "#E8E2D2", W * 0.8) + line("M-4,-40 l-14,3.6 M-4,-34 l-16,2", 0.5, "#C8BFA8") + line("M-2,-42 Q-14,-26 -40,-10", 0.7, "#D9C08A") + line("M2,-30 q6,6 4,14", 0.8, "#D9C08A") + rr(-26, -18, 12, 8, 1, "#BDB5A8", W * 0.8) + rr(-10, -18, 10, 8, 1, "#A39B8E", W * 0.8) + rr(8, -16, 8, 6, 1, "#BDB5A8", W * 0.8) + L([-24, -15.6], [-16, -15.6], "#D3CCC0", 0.6) + L([-8, -15.4], [-2, -15.4], "#BDB5A8", 0.6) + "</g>";
     }, "draw") };
     M2.epave_barque = { frame: [-40, -32, 80, 44], n: 1, draw: /* @__PURE__ */ __name(() => {
       const coque = "M-30,-8 Q0,6 30,-8 L24,2 Q0,12 -24,2 Z";
       const sac = /* @__PURE__ */ __name((x, y, c) => P2(`M${x - 4},${y + 2} Q${x - 4.6},${y - 3} ${x - 1.6},${y - 4.4} L${x - 2.2},${y - 6} L${x + 2.2},${y - 6} L${x + 1.6},${y - 4.4} Q${x + 4.6},${y - 3} ${x + 4},${y + 2} Q${x},${y + 3.4} ${x - 4},${y + 2} Z`, c, W * 0.8) + L([x - 1.8, y - 4.6], [x + 1.8, y - 4.6], "#8A6A3A", 0.8), "sac");
-      return `<g transform="rotate(-16)"><defs><clipPath id="epave-barque"><path d="${coque}"/></clipPath></defs><path d="${coque}" fill="${WOOD2.left}"/><g clip-path="url(#epave-barque)"><path d="M-32,1 Q0,10 32,-1 L32,14 L-32,14 Z" fill="${WOOD2.right}"/>` + line("M-28,-3 Q0,9 28,-3", 0.6, WOOD2.right) + P2("M6,1 L12,0 L13,5 L7,6 Z", "#2E2218", 0.5) + `</g><path d="${coque}" fill="none" stroke="${OUT2}" stroke-width="${W}" stroke-linejoin="round"/>` + sac(-10, -2, "#D9C08A") + sac(-1, 0, "#E2CC98") + P2("M8,-4 L14,-7 L16,-3 L10,0 Z", "#C9AE78", W * 0.8) + E(-8, -3.8, 2.2, 2.2, "#C9A45A", W * 0.7) + E(2, -3, 1.8, 1.8, "#8A5A2E", W * 0.7) + E(12, -6.4, 1.6, 1.6, "#E2C27A", W * 0.6) + E(16, -4.6, 1.2, 1.2, "#7FA65A", 0.5) + E(19, -2.4, 1, 1, "#C9A45A", 0.5) + E(-3, -2.6, 1.2, 1.2, "#7FA65A", 0.5) + tk("M-26,-10 L-6,2", 1, WOOD_DARK2.left) + P2("M-6,1 L-2,4 L-1,2.4 L-4,-0.6 Z", WOOD_DARK2.left, W * 0.6) + line("M-27,-5 Q0,8 27,-5", 1.4, WOOD2.top) + "</g>";
+      return `<g transform="rotate(-16)"><defs><clipPath id="epave-barque"><path d="${coque}"/></clipPath></defs><path d="${coque}" fill="${WOOD2.left}"/><g clip-path="url(#epave-barque)"><path d="M-32,1 Q0,10 32,-1 L32,14 L-32,14 Z" fill="${WOOD2.right}"/>` + line("M-28,-3 Q0,9 28,-3", 0.6, WOOD2.right) + P2("M6,1 L12,0 L13,5 L7,6 Z", "#2E2218", 0.5) + `</g><path d="${coque}" fill="none" stroke="${OUT3}" stroke-width="${W}" stroke-linejoin="round"/>` + sac(-10, -2, "#D9C08A") + sac(-1, 0, "#E2CC98") + P2("M8,-4 L14,-7 L16,-3 L10,0 Z", "#C9AE78", W * 0.8) + E(-8, -3.8, 2.2, 2.2, "#C9A45A", W * 0.7) + E(2, -3, 1.8, 1.8, "#8A5A2E", W * 0.7) + E(12, -6.4, 1.6, 1.6, "#E2C27A", W * 0.6) + E(16, -4.6, 1.2, 1.2, "#7FA65A", 0.5) + E(19, -2.4, 1, 1, "#C9A45A", 0.5) + E(-3, -2.6, 1.2, 1.2, "#7FA65A", 0.5) + tk2("M-26,-10 L-6,2", 1, WOOD_DARK2.left) + P2("M-6,1 L-2,4 L-1,2.4 L-4,-0.6 Z", WOOD_DARK2.left, W * 0.6) + line("M-27,-5 Q0,8 27,-5", 1.4, WOOD2.top) + "</g>";
     }, "draw") };
     var silhouette2 = /* @__PURE__ */ __name((body) => body.replace(/fill="(?!none)[^"]*"/g, 'fill="#070E1E"').replace(/stroke="(?!none)[^"]*"/g, 'stroke="#070E1E"'), "silhouette");
-    module.exports = { K, up: up2, big: big2, G: G2, S: S2, SIGN_TEXT: SIGN_TEXT2, SIGN_FRAME: SIGN_FRAME2, M: M2, silhouette: silhouette2 };
+    module.exports = { K: K2, up: up2, big: big2, G: G2, S: S2, SIGN_TEXT: SIGN_TEXT2, SIGN_FRAME: SIGN_FRAME2, M: M2, silhouette: silhouette2 };
+  }
+});
+
+// atelier/torche.js
+var require_torche = __commonJS({
+  "atelier/torche.js"(exports, module) {
+    var { OUT: OUT3, P: P2, E, r2: r23 } = require_troupe2();
+    var TETE = -45.4;
+    var BOIS = { corps: "#D6C3A2", ombre: "#B29C78", clair: "#EADCC0" };
+    var CORDE = "#C9A66B";
+    var TOILE = { corps: "#8A5A30", ombre: "#6A4224", brule: "#3E2A1C" };
+    var trait = /* @__PURE__ */ __name((d, color, w) => `<path d="${d}" fill="none" stroke="${color}" stroke-width="${w}" stroke-linecap="round" stroke-linejoin="round"/>`, "trait");
+    var LUMIERE = [0, 0, 43, 38, "255,186,96"];
+    var langue = /* @__PURE__ */ __name(([tip, r, base, l], k, s, fill, contour) => `<path d="M${r23(base[0] * k)},${r23(base[1] * k)} C${r23((r[0] + 3 * s) * k)},${r23(r[1] * k)} ${r23((tip[0] + 2 * s) * k)},${r23((tip[1] + 8 * s) * k)} ${r23(tip[0] * k)},${r23(tip[1] * k)} C${r23((tip[0] - 2 * s) * k)},${r23((tip[1] + 8 * s) * k)} ${r23((l[0] - 3 * s) * k)},${r23(l[1] * k)} ${r23(base[0] * k)},${r23(base[1] * k)} Z" fill="${fill}"${contour ? ` stroke="${OUT3}" stroke-width="0.8" stroke-linejoin="round"` : ""}/>`, "langue");
+    var FORMES = [[[0, -22], [7, -6], [0, 0], [-7, -6]], [[2, -24], [7, -7], [0, 0], [-6, -5]], [[-2, -21], [6, -5], [0, 0], [-7, -7]]];
+    var ETINCELLES = [[[5, -27], [-6, -18]], [[-4, -30], [7, -21]], [[3, -32], [-7, -25]]];
+    function flamme(n, s = 0.9) {
+      const f = FORMES[n % 3].map(([x, y]) => [x * s, y * s]);
+      return langue(f, 1, s, "#EE6A3A", true) + langue(f, 0.78, s, "#F7A23B") + langue(f, 0.5, s, "#FFE07A") + ETINCELLES[n % 3].map(([x, y], j) => `<circle cx="${r23(x * s)}" cy="${r23(y * s)}" r="${r23((j ? 0.8 : 1.1) * s)}" fill="#FFD27A"/>`).join("");
+    }
+    __name(flamme, "flamme");
+    var lueur = /* @__PURE__ */ __name((y, n) => [20, 14, 9].map((r, i) => `<circle cx="0" cy="${r23(y)}" r="${r23(r + [0, 0.8, -0.6][n % 3])}" fill="rgba(255,200,110,${[0.1, 0.14, 0.2][i]})"/>`).join(""), "lueur");
+    function corps(eteinte) {
+      let s = E(1, 1.2, 10, 4.6, "rgba(40,55,20,.2)", 0);
+      const poteau = "M0,0.6 Q-1.2,-14 0.2,-26 Q1,-32 0.6,-37";
+      s += trait(poteau, OUT3, 5.6) + trait(poteau, BOIS.corps, 3.4) + trait("M1.2,-1 Q0.2,-14 1.4,-26 Q2,-31 1.8,-35", BOIS.ombre, 1) + trait("M-1.2,-3 Q-2,-12 -1.2,-20", BOIS.clair, 0.8);
+      s += E(-0.6, -15.6, 1, 1.4, BOIS.ombre, 0.6);
+      s += [[-5.4, 1.4, 3, 2], [5, 1.8, 3.2, 2.2], [0.4, 3.6, 2.6, 1.7]].map(([x, y, rx, ry]) => E(x, y, rx, ry, "#B4AEA4", 0.9) + E(x - rx * 0.3, y - ry * 0.35, rx * 0.35, ry * 0.3, "rgba(255,255,255,.6)", 0)).join("");
+      s += [-33.2, -31.2, -29.2].map((y) => trait(`M-2.6,${r23(y + 0.8)} L3.4,${r23(y - 0.6)}`, OUT3, 2.4) + trait(`M-2.6,${r23(y + 0.8)} L3.4,${r23(y - 0.6)}`, CORDE, 1.1)).join("");
+      const T = `M-4.2,-36.6 Q-5.8,-41.4 -5.6,${TETE} L5.8,${TETE} Q6,-41.4 4.6,-36.6 Q0.2,-35.2 -4.2,-36.6 Z`;
+      s += P2(T, TOILE.corps, 1) + `<clipPath id="trc${eteinte ? "e" : ""}"><path d="${T}"/></clipPath><g clip-path="url(#trc${eteinte ? "e" : ""})"><rect x="1.6" y="-47" width="6" height="12" fill="${TOILE.ombre}"/>` + [-43.4, -41.2, -39].map((y) => trait(`M-6,${y} Q0,${r23(y + 1.4)} 6,${y}`, TOILE.ombre, 0.7)).join("") + `</g>`;
+      s += E(0.1, TETE, 5.7, 1.9, eteinte ? TOILE.brule : "#5E3A22", 1) + (eteinte ? E(-1.4, TETE - 0.3, 1.6, 0.6, "#6A5848", 0) : E(0.1, TETE, 4.2, 1.2, "#F28A2E", 0));
+      return s;
+    }
+    __name(corps, "corps");
+    function torche2(etat = "allumee", n = 0) {
+      if (etat === "eteinte") {
+        return corps(true) + `<g opacity=".75">${trait(`M0.4,${TETE - 1.6} Q-2.4,${TETE - 5} 0.6,${TETE - 8} Q3.4,${TETE - 11} 0.8,${TETE - 14.6}`, "#9AA0A8", 1.6)}</g><circle cx="1.6" cy="${TETE - 17}" r="1.4" fill="rgba(170,176,184,.6)"/>`;
+      }
+      return lueur(TETE - 9, n) + corps(false) + `<g transform="translate(0 ${r23(TETE + 0.6)})">${flamme(n)}</g>`;
+    }
+    __name(torche2, "torche");
+    function torcheIcone() {
+      const WO = 1.3;
+      let s = `<g transform="rotate(16 16 17)">`;
+      s += trait("M16,30 L16,14.6", OUT3, 4.6) + trait("M16,30 L16,14.6", BOIS.corps, 2.2) + trait("M16.8,29 L16.8,15.6", BOIS.ombre, 0.7);
+      s += [21, 19.4].map((y) => trait(`M13.8,${r23(y + 0.7)} L18.2,${r23(y - 0.5)}`, OUT3, 2.2) + trait(`M13.8,${r23(y + 0.7)} L18.2,${r23(y - 0.5)}`, CORDE, 1)).join("");
+      const T = "M12.6,16.6 Q11.6,13 11.8,11 L20.2,11 Q20.4,13 19.4,16.6 Q16,17.6 12.6,16.6 Z";
+      s += `<path d="${T}" fill="${TOILE.corps}" stroke="${OUT3}" stroke-width="${WO}" stroke-linejoin="round"/>` + trait("M12,13.4 Q16,14.6 20,13.4", TOILE.ombre, 0.7);
+      s += E(16, 11, 4.2, 1.4, "#F28A2E", 1);
+      s += `<g transform="translate(16 11.6) scale(0.42)">${flamme(0, 1)}</g></g>`;
+      return s + `<path d="M25.4,6.4 L25.8,7.6 L27,8 L25.8,8.4 L25.4,9.6 L25,8.4 L23.8,8 L25,7.6 Z" fill="#FFF6C8" stroke="#E8C860" stroke-width="0.5"/>`;
+    }
+    __name(torcheIcone, "torcheIcone");
+    module.exports = { torche: torche2, torcheIcone, LUMIERE, TETE };
+  }
+});
+
+// atelier/betes.js
+var require_betes = __commonJS({
+  "atelier/betes.js"(exports, module) {
+    var { OUT: OUT3, P: P2, E, L, clip, r2: r23 } = require_troupe2();
+    var K2 = 1.25;
+    var box2 = /* @__PURE__ */ __name((x, y, w, h) => [x * K2, y * K2, w * K2, h * K2], "box");
+    var BOX = { SMALL: box2(-12, -18, 24, 20), MID: box2(-16, -24, 32, 26), TALL: box2(-16, -34, 32, 36), BIG: box2(-24, -46, 48, 48) };
+    var EYE = "#2A2420";
+    var tone = /* @__PURE__ */ __name((hex, k) => "#" + [1, 3, 5].map((i) => Math.max(0, Math.min(255, Math.round(parseInt(hex.slice(i, i + 2), 16) * k))).toString(16).padStart(2, "0")).join("").toUpperCase(), "tone");
+    var heartIcon = /* @__PURE__ */ __name((x, y, s = 1.4) => P2(`M${r23(x)},${r23(y + s * 1.1)} C${r23(x - s * 1.8)},${r23(y - s * 0.1)} ${r23(x - s * 0.9)},${r23(y - s * 1.4)} ${r23(x)},${r23(y - s * 0.5)} C${r23(x + s * 0.9)},${r23(y - s * 1.4)} ${r23(x + s * 1.8)},${r23(y - s * 0.1)} ${r23(x)},${r23(y + s * 1.1)} Z`, "#F27A8A", 0.6), "heartIcon");
+    var line = /* @__PURE__ */ __name((a, b, w, color) => `<path d="M${r23(a[0])},${r23(a[1])} L${r23(b[0])},${r23(b[1])}" stroke="${color}" stroke-width="${r23(w)}" stroke-linecap="round"/>`, "line");
+    var limb = /* @__PURE__ */ __name((a, b, w, fill) => line(a, b, w + 2.2, OUT3) + line(a, b, w, fill), "limb");
+    var stroke = /* @__PURE__ */ __name((d, w, color) => `<path d="${d}" fill="none" stroke="${color}" stroke-width="${r23(w)}" stroke-linecap="round" stroke-linejoin="round"/>`, "stroke");
+    var thick = /* @__PURE__ */ __name((d, w, fill) => stroke(d, w + 2.2, OUT3) + stroke(d, w, fill), "thick");
+    function eye(x, y, r, mode) {
+      if (mode === "blink") return P2(`M${r23(x - r)},${r23(y)} Q${x},${r23(y + r * 0.9)} ${r23(x + r)},${r23(y)}`, "none", 0.8);
+      if (mode === "joy") return P2(`M${r23(x - r)},${r23(y + r * 0.4)} Q${x},${r23(y - r * 0.9)} ${r23(x + r)},${r23(y + r * 0.4)}`, "none", 0.9);
+      return E(x, y, r * 0.86, r * 1.12, EYE, 0) + E(x + r * 0.3, y - r * 0.44, r * 0.38, r * 0.38, "#FFFFFF", 0) + E(x - r * 0.3, y + r * 0.5, r * 0.17, r * 0.17, "#FFFFFF", 0);
+    }
+    __name(eye, "eye");
+    var hoof = /* @__PURE__ */ __name((x, y, rx, col) => E(x, y, rx, 0.9, col, 0.8) + E(x - rx * 0.35, y - 0.2, rx * 0.3, 0.22, "#FFFFFF", 0).replace("fill=", 'fill-opacity="0.45" fill='), "hoof");
+    var toes = /* @__PURE__ */ __name((x, y, rx) => [0.15, 0.55].map((k) => line([x + rx * k, y + 0.05], [x + rx * k, y + 0.75], 0.42, OUT3)).join(""), "toes");
+    var paw = /* @__PURE__ */ __name((x, y, rx, col) => E(x, y, rx, 0.9, col, 0.8) + toes(x, y - 0.1, rx), "paw");
+    function quad(c, pose) {
+      const walk = pose === "marche1" || pose === "marche2";
+      const rest = pose === "repos" || pose === "clignement";
+      const ph = pose === "marche2" ? -1 : 1;
+      const drop = rest ? c.restDrop ?? -c.legs.top * 0.75 : 0;
+      const bob = pose === "marche2" ? -0.4 : 0;
+      const [bx, by0, brx, bry] = c.body;
+      const by = by0 + drop + bob;
+      const [hx, hy0, hr] = c.head;
+      const hy = hy0 + drop * (c.headDrop ?? 0.8) + bob;
+      const mode = pose === "clignement" ? "blink" : pose === "joie" ? "joy" : "open";
+      const ctx = { pose, rest, walk, bx, by, hx, hy, hr, ph, mode, drop };
+      const lg = c.legs;
+      const top = lg.top + drop + bob;
+      const a = walk ? 1.6 * ph : 0;
+      let s = "";
+      s += E(bx, -0.2, brx * 0.95, 1.4, "rgba(40,55,20,.18)", 0);
+      const leg = /* @__PURE__ */ __name((x, dx, near) => {
+        if (rest) return "";
+        const foot = [x + dx, -(lg.paw ? 0.9 : 0.6)];
+        const shine = near ? line([x - lg.w * 0.2, top + 1.2], [foot[0] - lg.w * 0.2, foot[1] - 1.6], lg.w * 0.26, "rgba(255,255,255,.35)") : "";
+        return limb([x, top], foot, lg.w, near ? lg.color || c.fur : lg.colorS || c.furS) + shine + (lg.hoof ? hoof(foot[0], foot[1] + 0.2, lg.w * 0.62, lg.hoof) : lg.paw ? paw(foot[0] + 0.4, foot[1] + 0.2, lg.w * 0.7, lg.paw) : "");
+      }, "leg");
+      s += leg(lg.back + 1.4, -a, false) + leg(lg.front + 1.4, a, false);
+      s += c.parts?.back ? c.parts.back(ctx) : "";
+      s += tail(c, ctx);
+      const bd = `M${r23(bx - brx)},${r23(by)} a${brx},${bry} 0 1,0 ${2 * brx},0 a${brx},${bry} 0 1,0 ${-2 * brx},0 Z`;
+      s += P2(bd, c.fur) + clip(`q${c.id}${pose}b`, bd, `<rect x="${r23(bx - brx - 1)}" y="${r23(by - bry - 1)}" width="${r23(brx * 2 + 2)}" height="${r23(bry * 2 + 2)}" fill="${c.furS}"/><ellipse cx="${r23(bx - brx * 0.1)}" cy="${r23(by - bry * 0.16)}" rx="${r23(brx * 0.98)}" ry="${r23(bry * 0.9)}" fill="${c.fur}"/><ellipse cx="${bx}" cy="${r23(by + bry * 0.95)}" rx="${r23(brx * 0.9)}" ry="${r23(bry * 0.45)}" fill="${c.belly || c.furS}"/>` + (c.parts?.coat ? c.parts.coat(ctx) : "") + `<path d="M${r23(bx - brx * 0.6)},${r23(by - bry * 0.62)} Q${bx},${r23(by - bry * 0.95)} ${r23(bx + brx * 0.4)},${r23(by - bry * 0.7)}" fill="none" stroke="#FFFFFF" stroke-width="0.9" stroke-linecap="round" opacity="0.5"/>`) + P2(bd, "none");
+      if (rest) for (const px of [bx - brx * 0.55, bx + brx * 0.6]) {
+        s += E(px, -0.9, lg.w * 0.9, 1, lg.color || c.fur, 0.9);
+        if (lg.hoof) s += hoof(px + lg.w * 0.55, -0.7, lg.w * 0.42, lg.hoof);
+        else s += toes(px + lg.w * 0.15, -0.9, lg.w * 0.9);
+      }
+      else s += leg(lg.back, a, true) + leg(lg.front, -a, true);
+      s += c.parts?.body ? c.parts.body(ctx) : "";
+      s += headQuad(c, ctx);
+      if (pose === "joie") s += heartIcon(hx + hr * 0.2, Math.max(hy - hr * 2 - 1.4, BOX[c.size][1] + 2));
+      return s;
+    }
+    __name(quad, "quad");
+    function tail(c, { bx, by, ph, walk }) {
+      const t = c.tail || {};
+      const [, , brx] = c.body;
+      const x = bx - brx * 0.92, y = by - c.body[3] * 0.35;
+      const w = walk ? ph * 0.8 : 0;
+      switch (t.kind) {
+        case "tuft":
+          return thick(`M${x},${y} Q${r23(x - 2.4)},${r23(y + 2)} ${r23(x - 2 + w)},${r23(y + 6)}`, 0.8, c.fur) + E(x - 2 + w, y + 6.6, 1.1, 1.5, t.color || c.furS, 0.8);
+        case "puff":
+          return E(x + 0.4, y, t.r || 1.8, t.r || 1.8, t.color || c.belly || "#FFFFFF", 0.9);
+        case "curly":
+          return stroke(`M${x + 0.6},${y} q-2.2,-0.6 -2,-2.2 q0.4,-1.6 1.6,-0.8 q0.8,1 -0.6,1.8`, 2.4, OUT3) + stroke(`M${x + 0.6},${y} q-2.2,-0.6 -2,-2.2 q0.4,-1.6 1.6,-0.8 q0.8,1 -0.6,1.8`, 0.9, c.fur);
+        case "short":
+          return P2(`M${x + 0.6},${y - 0.6} L${r23(x - 2.2)},${r23(y - 3 + w * 0.5)} L${r23(x + 0.4)},${r23(y + 1)} Z`, t.color || c.fur, 0.9);
+        case "bushy": {
+          const L0 = t.len || 9, up2 = t.up ?? 0.4;
+          const tip = [x - L0, y - L0 * up2 + w];
+          const d = `M${r23(x + 1)},${r23(y - 1.4)} Q${r23(x - L0 * 0.5)},${r23(y - L0 * up2 - 3.6 + w)} ${r23(tip[0])},${r23(tip[1])} Q${r23(x - L0 * 0.4)},${r23(y + 2.6 + w * 0.5)} ${r23(x + 1)},${r23(y + 1.6)} Z`;
+          return P2(d, c.fur) + clip(`t${c.id}${ph}${walk}`, d, `<circle cx="${r23(tip[0])}" cy="${r23(tip[1])}" r="${r23(L0 * 0.32)}" fill="${t.tip || c.belly}"/>`) + P2(d, "none");
+        }
+        case "horse":
+          return thick(`M${x},${y - 1} Q${r23(x - 3)},${r23(y + 1)} ${r23(x - 2.4 + w)},${r23(y + 8)}`, 2.2, t.color) + stroke(`M${r23(x - 1)},${r23(y + 1)} Q${r23(x - 2.6)},${r23(y + 4)} ${r23(x - 2.4 + w)},${r23(y + 7)}`, 0.5, OUT3);
+        case "thin":
+          return thick(`M${x},${y} Q${r23(x - 3.6)},${r23(y - 1)} ${r23(x - 3.4 + w)},${r23(y - (t.up || 5))}`, t.w || 1.2, t.color || c.fur);
+        case "lizard":
+          return thick(`M${x + 1},${y + 0.6} Q${r23(x - 4)},${r23(y + 2)} ${r23(x - 6.2 + w)},${r23(-0.9)}`, t.w || 1.8, c.fur);
+        case "spiral":
+          return thick(`M${x + 1},${y + 0.6} Q${r23(x - 4)},${r23(y + 1)} ${r23(x - 4.6)},${r23(y + 4)} Q${r23(x - 4.4)},${r23(y + 6.4)} ${r23(x - 2.4)},${r23(y + 5.6)} Q${r23(x - 1.6)},${r23(y + 4.2)} ${r23(x - 3)},${r23(y + 4)}`, 1.4, c.fur);
+        case "otter":
+          return P2(`M${x + 1},${y - 1.2} Q${r23(x - 4)},${r23(y + 0.4)} ${r23(x - 6.4 + w)},${r23(y + 3.4)} Q${r23(x - 3.2)},${r23(y + 3)} ${r23(x + 1)},${r23(y + 1.6)} Z`, c.fur);
+        default:
+          return "";
+      }
+    }
+    __name(tail, "tail");
+    function headQuad(c, ctx) {
+      const { hx, hy, hr, mode } = ctx;
+      const e = c.ears || {};
+      const derriere = e.kind === "fox";
+      let s = "";
+      s += ear(c, e, hx, hy, hr, true, ctx.pose);
+      if (derriere) s += ear(c, e, hx, hy, hr, false, ctx.pose);
+      s += c.parts?.neck ? c.parts.neck(ctx) : "";
+      s += c.parts?.behindHead ? c.parts.behindHead(ctx) : "";
+      const hw = hr * (c.headW || 1), hd = `M${r23(hx - hw)},${r23(hy)} a${r23(hw)},${r23(hr)} 0 1,0 ${r23(2 * hw)},0 a${r23(hw)},${r23(hr)} 0 1,0 ${r23(-2 * hw)},0 Z`;
+      s += P2(hd, c.headC || c.fur) + clip(`q${c.id}${ctx.pose}h`, hd, `<rect x="${r23(hx - hw - 1)}" y="${r23(hy - hr - 1)}" width="${r23(hw * 2 + 2)}" height="${r23(hr * 2 + 2)}" fill="${c.headCS || c.furS}"/><ellipse cx="${r23(hx - hw * 0.12)}" cy="${r23(hy - hr * 0.14)}" rx="${r23(hw * 0.97)}" ry="${r23(hr * 0.92)}" fill="${c.headC || c.fur}"/>`) + P2(hd, "none");
+      s += c.parts?.face ? c.parts.face(ctx) : "";
+      if (c.snout) {
+        const [dx, dy, rx, ry, col] = c.snout;
+        s += E(hx + dx, hy + dy, rx, ry, col || c.belly, 0.9);
+      }
+      if (c.nose) {
+        const [dx, dy, r, col] = c.nose;
+        s += E(hx + dx, hy + dy, r * 1.1, r * 0.85, col || OUT3, 0.6);
+      }
+      const [edx, edy, er] = c.eye;
+      s += eye(hx + edx, hy + edy, er, mode);
+      if (c.blush !== false) s += E(hx + edx - er * 0.4, hy + edy + er * 1.6, er * 1.05, er * 0.55, "#F7A8B0", 0);
+      if (!derriere) s += ear(c, e, hx, hy, hr, false, ctx.pose);
+      s += c.parts?.head ? c.parts.head(ctx) : "";
+      return s;
+    }
+    __name(headQuad, "headQuad");
+    function oreilleRenard(e, x, y, u, a, col, dedans, id3, w = 1) {
+      const forme = /* @__PURE__ */ __name((b2, h2, d2, dy) => `M${r23(x - b2)},${r23(y + dy + d2)} C${r23(x - b2 * 1.06)},${r23(y + dy - h2 * 0.42)} ${r23(x - b2 * 0.34)},${r23(y + dy - h2 * 0.9)} ${r23(x)},${r23(y + dy - h2)} C${r23(x + b2 * 0.34)},${r23(y + dy - h2 * 0.9)} ${r23(x + b2 * 1.06)},${r23(y + dy - h2 * 0.42)} ${r23(x + b2)},${r23(y + dy + d2)} Z`, "forme");
+      const b = u * 0.52 * w, h = u * 1.08, d = forme(b, h, u * 0.5, 0);
+      const bout = e.tip ? `<rect x="${r23(x - b - 1)}" y="${r23(y - h - 1)}" width="${r23(2 * b + 2)}" height="${r23(h * 0.3 + 1)}" fill="${e.tip}"/>` : "";
+      const creux = dedans ? `<path d="${forme(b * 0.56, h * 0.7, u * 0.3, u * 0.08)}" fill="${e.inner || "#F2C6C0"}"/>` : "";
+      return `<g transform="rotate(${r23(a)} ${r23(x)} ${r23(y)})">${P2(d, col)}${bout || creux ? clip(id3, d, creux + bout) : ""}${P2(d, "none")}</g>`;
+    }
+    __name(oreilleRenard, "oreilleRenard");
+    function ear(c, e, hx, hy, hr, far, pose) {
+      const col = far ? c.headCS || c.furS : c.headC || c.fur, inner = e.inner || "#F2C6C0";
+      const o = far ? -hr * 0.5 : 0;
+      const k = e.size || 1;
+      switch (e.kind) {
+        case "pointy": {
+          const x = hx - hr * 0.2 + o, y = hy - hr * 0.75;
+          return P2(`M${r23(x - hr * 0.42 * k)},${r23(y + 0.4)} L${r23(x + hr * 0.05)},${r23(y - hr * 1.05 * k)} L${r23(x + hr * 0.5 * k)},${r23(y + 0.2)} Z`, col, 0.9) + (far ? "" : P2(`M${r23(x - hr * 0.2 * k)},${r23(y)} L${r23(x + hr * 0.05)},${r23(y - hr * 0.7 * k)} L${r23(x + hr * 0.28 * k)},${r23(y)} Z`, inner, 0));
+        }
+        // renard : derrière la tête (headQuad), celle du fond en retrait, plus petite et plus penchée
+        case "fox":
+          return far ? oreilleRenard(e, hx - hr * 0.5, hy - hr * 0.56, hr * k * 0.88, -18, col, false, `oe${c.id}${pose}f`, e.w) : oreilleRenard(e, hx - hr * 0.12, hy - hr * 0.6, hr * k, -6, col, true, `oe${c.id}${pose}n`, e.w);
+        case "round":
+          return E(hx - hr * 0.35 + o, hy - hr * 0.85, hr * 0.38 * k, hr * 0.38 * k, col, 0.9) + (far ? "" : E(hx - hr * 0.35, hy - hr * 0.85, hr * 0.2 * k, hr * 0.2 * k, inner, 0));
+        case "side": {
+          const x = hx - hr * 0.55 + o * 0.4, y = hy - hr * 0.45;
+          return `<g transform="rotate(${far ? -25 : -10} ${r23(x)} ${r23(y)})">${P2(`M${r23(x)},${r23(y)} Q${r23(x - hr * 0.9 * k)},${r23(y - hr * 0.55)} ${r23(x - hr * 1.3 * k)},${r23(y)} Q${r23(x - hr * 0.8 * k)},${r23(y + hr * 0.4)} ${r23(x)},${r23(y + hr * 0.25)} Z`, col, 0.9)}${far ? "" : E(x - hr * 0.75 * k, y, hr * 0.32 * k, hr * 0.14, inner, 0)}</g>`;
+        }
+        case "flop": {
+          const x = hx - hr * 0.1 + o * 0.6, y = hy - hr * 0.8;
+          return P2(`M${r23(x - hr * 0.4)},${r23(y + 0.6)} L${r23(x + hr * 0.1)},${r23(y - hr * 0.6 * k)} L${r23(x + hr * 0.75 * k)},${r23(y + hr * 0.25)} Z`, col, 0.9);
+        }
+        case "hang": {
+          const x = hx - hr * 0.5 + o * 0.5, y = hy - hr * 0.6;
+          return P2(`M${r23(x + hr * 0.3)},${r23(y)} Q${r23(x - hr * 0.5)},${r23(y - hr * 0.1)} ${r23(x - hr * 0.35)},${r23(y + hr * 1.1 * k)} Q${r23(x + hr * 0.1)},${r23(y + hr * 1.2 * k)} ${r23(x + hr * 0.5)},${r23(y + hr * 0.3)} Z`, far ? c.furS : e.color || c.furS, 0.9);
+        }
+        case "long": {
+          const x = hx - hr * 0.3 + o, y = hy - hr * 0.7;
+          return `<g transform="rotate(${far ? -28 : -12} ${r23(x)} ${r23(y)})">${P2(`M${r23(x - hr * 0.3)},${r23(y)} Q${r23(x - hr * 0.5)},${r23(y - hr * 2.2 * k)} ${r23(x + hr * 0.05)},${r23(y - hr * 2.3 * k)} Q${r23(x + hr * 0.5)},${r23(y - hr * 2.2 * k)} ${r23(x + hr * 0.3)},${r23(y)} Z`, col, 0.9)}${far ? "" : E(x, y - hr * 1.2 * k, hr * 0.14, hr * 0.8 * k, inner, 0)}</g>`;
+        }
+        default:
+          return "";
+      }
+    }
+    __name(ear, "ear");
+    var spots = /* @__PURE__ */ __name((list, col) => list.map(([x, y, rx, ry]) => E(x, y, rx, ry, col, 0)).join(""), "spots");
+    var horn = /* @__PURE__ */ __name((d) => thick(d, 1.1, "#F2E6C8"), "horn");
+    var Q = {};
+    Q.cow = (v) => {
+      const patch3 = v === "rousse" ? "#B8643A" : "#3E3A3A";
+      return {
+        id: "cow" + (v || ""),
+        size: "MID",
+        fur: "#FFFFFF",
+        furS: "#E2DED6",
+        belly: "#F2EEE6",
+        // chibi : grosse tête ronde, corps dodu, pattes courtes et trapues
+        body: [-2, -9.8, 9.4, 6.6],
+        head: [8.4, -14.6, 6.9],
+        headW: 1.02,
+        legs: { back: -6.6, front: 4.2, top: -6.2, w: 3, hoof: "#5A5250" },
+        snout: [4.2, 2.6, 3.6, 2.7, "#F6BDB6"],
+        nose: [5.8, 2, 0.6, "#C77A74"],
+        eye: [1.3, -1.4, 1.55],
+        ears: { kind: "side", size: 0.9 },
+        tail: { kind: "tuft", color: patch3 },
+        parts: {
+          coat: /* @__PURE__ */ __name(({ bx, by }) => spots([[bx - 4, by - 2.4, 3.6, 2.6], [bx + 4, by + 0.6, 2.8, 2.2], [bx - 7.6, by + 1.6, 1.8, 1.6]], patch3), "coat"),
+          face: /* @__PURE__ */ __name(({ hx, hy, hr }) => E(hx - hr * 0.3, hy - hr * 0.48, hr * 0.4, hr * 0.3, patch3, 0), "face"),
+          head: /* @__PURE__ */ __name(({ hx, hy, hr }) => horn(`M${r23(hx - 1.6)},${r23(hy - hr * 0.85)} Q${r23(hx - 2.2)},${r23(hy - hr - 2)} ${r23(hx - 0.6)},${r23(hy - hr - 2.6)}`), "head"),
+          body: /* @__PURE__ */ __name(({ bx, by, rest }) => rest ? "" : E(bx + 2.6, by + 6.6, 1.8, 1.1, "#F6BDB6", 0.7), "body")
+        }
+      };
+    };
+    Q.sheep = (v) => {
+      const wool = v === "noir" ? "#5A5458" : "#F8F4EC", woolS = v === "noir" ? "#443F43" : "#DCD5C8", face2 = v === "noir" ? "#2E2A2E" : "#5E5660";
+      const puffs = /* @__PURE__ */ __name((cx, cy, rx, ry) => {
+        let s = "";
+        for (let i = 0; i < 10; i++) {
+          const a = i / 10 * Math.PI * 2;
+          s += E(cx + Math.cos(a) * rx, cy + Math.sin(a) * ry, 2.6, 2.4, wool, 0.9);
+        }
+        return s + E(cx, cy, rx + 0.4, ry + 0.2, wool, 0) + E(cx - 1.6, cy - 2.6, 3, 1.4, "#FFFFFF", 0).replace("fill=", 'fill-opacity="0.4" fill=') + E(cx + 1, cy + 2.6, rx * 0.7, 1.4, woolS, 0).replace("fill=", 'fill-opacity="0.6" fill=');
+      }, "puffs");
+      return {
+        id: "sheep" + (v || ""),
+        size: "MID",
+        fur: wool,
+        furS: woolS,
+        belly: woolS,
+        headC: face2,
+        headCS: face2,
+        // chibi : grosse tête, nuage de laine dodu, pattes courtes
+        body: [-1.4, -9.4, 7.8, 5.6],
+        head: [7.8, -13.6, 5.6],
+        legs: { back: -5.2, front: 3.6, top: -5.4, w: 2.2, hoof: "#2E2A2E", color: face2, colorS: v === "noir" ? "#1E1A1E" : "#463F48" },
+        snout: [3.4, 2, 2.8, 2.1, face2],
+        nose: [5, 1.2, 0.5, "#1E1A1E"],
+        eye: [1.1, -0.9, 1.35],
+        ears: { kind: "side", size: 0.8, inner: "#8A7A80" },
+        tail: { kind: "puff", color: wool, r: 2 },
+        parts: {
+          body: /* @__PURE__ */ __name(({ bx, by }) => puffs(bx, by, 7.4, 5.4), "body"),
+          head: /* @__PURE__ */ __name(({ hx, hy, hr }) => E(hx - 1.2, hy - hr * 0.78, 2.4, 1.8, wool, 0.9) + E(hx + 0.6, hy - hr * 0.95, 1.6, 1.3, wool, 0.9), "head")
+        }
+      };
+    };
+    Q.pig = (v) => ({
+      id: "pig" + (v || ""),
+      size: "MID",
+      fur: "#F6BCBC",
+      furS: "#E39C9E",
+      belly: "#FAD2D0",
+      // chibi : tout rond, grosse tête, petites pattes
+      body: [-1.4, -8.8, 8.6, 6.4],
+      head: [7.4, -12.8, 6.4],
+      legs: { back: -5.2, front: 3.8, top: -4.4, w: 2.6, hoof: "#C77A7C" },
+      snout: [5.6, 1.4, 2.2, 2.5, "#F29EA0"],
+      eye: [1.4, -1.6, 1.4],
+      blush: true,
+      ears: { kind: "flop", size: 0.85 },
+      tail: { kind: "curly" },
+      parts: {
+        coat: /* @__PURE__ */ __name(({ bx, by }) => v === "tachete" ? spots([[bx - 3, by - 2, 2.8, 2.2], [bx + 4, by + 0.4, 2, 1.8], [bx - 6.6, by + 1.6, 1.4, 1.2]], "#8A5A5A") : "", "coat"),
+        face: /* @__PURE__ */ __name(({ hx, hy, hr }) => v === "tachete" ? E(hx - hr * 0.4, hy - hr * 0.32, hr * 0.32, hr * 0.26, "#8A5A5A", 0) : "", "face"),
+        head: /* @__PURE__ */ __name(({ hx, hy }) => E(hx + 5.1, hy + 1.6, 0.42, 0.66, "#B8686A", 0) + E(hx + 6.2, hy + 1.6, 0.42, 0.66, "#B8686A", 0), "head")
+      }
+    });
+    Q.goat = (v) => {
+      const fur = v === "brune" ? "#9A6A44" : "#F4F0E8", furS = v === "brune" ? "#7A5232" : "#D8D2C6";
+      return {
+        id: "goat" + (v || ""),
+        size: "MID",
+        fur,
+        furS,
+        belly: v === "brune" ? "#C49A72" : "#FFFFFF",
+        // chibi : grosse tête, corps court, pattes courtes
+        body: [-1.6, -10.2, 8, 5.6],
+        head: [8, -15.6, 6],
+        legs: { back: -5.8, front: 3.8, top: -6.6, w: 2.2, hoof: "#4A3C34" },
+        snout: [3.8, 2.2, 3, 2.4, v === "brune" ? "#B48660" : "#EDE6DA"],
+        nose: [5.6, 1.4, 0.55, "#4A3C34"],
+        eye: [1.1, -1.2, 1.35],
+        ears: { kind: "side", size: 0.8 },
+        tail: { kind: "short" },
+        parts: {
+          neck: /* @__PURE__ */ __name(({ hx, hy, bx, by }) => P2(`M${r23(bx + 5.4)},${r23(by - 3.6)} L${r23(hx - 2.6)},${r23(hy - 1)} L${r23(hx + 0.6)},${r23(hy + 3.4)} L${r23(bx + 8.4)},${r23(by + 1)} Z`, fur, 0.9), "neck"),
+          head: /* @__PURE__ */ __name(({ hx, hy, hr }) => thick(`M${r23(hx - 1)},${r23(hy - hr * 0.8)} Q${r23(hx - 2.6)},${r23(hy - hr - 2.6)} ${r23(hx - 4.6)},${r23(hy - hr - 1.4)}`, 1.1, "#B8A88C") + P2(`M${r23(hx + hr * 0.45)},${r23(hy + hr * 0.74)} L${r23(hx + hr * 0.27)},${r23(hy + hr * 1.36)} L${r23(hx + hr * 0.73)},${r23(hy + hr * 0.78)} Z`, furS, 0.7), "head")
+        }
+      };
+    };
+    Q.deer = () => ({
+      id: "deer",
+      size: "TALL",
+      fur: "#C98A50",
+      furS: "#A86E3A",
+      belly: "#F2DEC0",
+      // chibi : grosse tête de faon, corps rond, pattes plus courtes
+      body: [-1.6, -14.6, 8.6, 6],
+      head: [8.4, -24.4, 6],
+      legs: { back: -6.6, front: 4.4, top: -10.4, w: 2, hoof: "#4A3C34" },
+      snout: [3.8, 2.2, 3, 2.2, "#E8C9A0"],
+      nose: [5.9, 1.4, 0.6, OUT3],
+      eye: [1.1, -1.1, 1.4],
+      ears: { kind: "side", size: 1 },
+      tail: { kind: "puff", color: "#FFFFFF", r: 1.6 },
+      parts: {
+        coat: /* @__PURE__ */ __name(({ bx, by }) => spots([[bx - 4, by - 3.4, 0.8, 0.6], [bx - 1, by - 4, 0.8, 0.6], [bx + 2, by - 3.6, 0.8, 0.6], [bx - 2.6, by - 1.8, 0.7, 0.5], [bx + 0.6, by - 2, 0.7, 0.5]], "#FFF4E0"), "coat"),
+        neck: /* @__PURE__ */ __name(({ hx, hy, bx, by }) => P2(`M${r23(bx + 5)},${r23(by - 4)} L${r23(hx - 2.8)},${r23(hy - 0.4)} L${r23(hx + 0.6)},${r23(hy + 3.6)} L${r23(bx + 8.6)},${r23(by + 1)} Z`, "#C98A50", 0.9), "neck"),
+        head: /* @__PURE__ */ __name(({ hx, hy, hr }) => thick(`M${r23(hx - 1.4)},${r23(hy - hr * 0.85)} Q${r23(hx - 2.6)},${r23(hy - hr - 3)} ${r23(hx - 1.4)},${r23(hy - hr - 5.6)} M${r23(hx - 2.2)},${r23(hy - hr - 2.6)} L${r23(hx - 4.6)},${r23(hy - hr - 3.8)}`, 0.9, "#E6D2A8"), "head")
+      }
+    });
+    Q.fox = () => ({
+      id: "fox",
+      size: "MID",
+      fur: "#E8803A",
+      furS: "#C8642A",
+      belly: "#FFF4E6",
+      // chibi : grosse tête, corps court, pattes courtes, queue en panache (le renard polaire en hérite)
+      body: [-1.4, -8.2, 7.4, 4.8],
+      head: [7.2, -12.6, 5.8],
+      legs: { back: -4.8, front: 3.8, top: -4.6, w: 1.8, paw: "#3A2A24" },
+      snout: [3.8, 2, 3.1, 1.9, "#FFF4E6"],
+      nose: [6.4, 1.3, 0.62, OUT3],
+      eye: [1.2, -1.2, 1.35],
+      ears: { kind: "fox", size: 1.1, inner: "#FFF1E2", tip: "#4A3020" },
+      tail: { kind: "bushy", len: 10, up: 0.3, tip: "#FFFFFF" },
+      parts: { face: /* @__PURE__ */ __name(({ hx, hy, hr }) => E(hx + hr * 0.2917, hy + hr * 0.3333, hr * 0.5417, hr * 0.4167, "#FFF4E6", 0), "face") }
+    });
+    Q.kit = () => ({ ...Q.fox(), id: "kit", size: "SMALL", body: [-0.8, -5.6, 4.8, 3.4], head: [4.6, -9.6, 4.8], legs: { back: -3, front: 2.4, top: -3, w: 1.4, paw: "#3A2A24" }, snout: [2.6, 1.8, 2.2, 1.4, "#FFF4E6"], nose: [4.6, 1.1, 0.5, OUT3], eye: [1.1, -0.8, 1.3], tail: { kind: "bushy", len: 7, up: 0.5, tip: "#FFFFFF" } });
+    Q.snowFox = () => ({ ...Q.fox(), id: "snowFox", fur: "#F6F8FC", furS: "#C9D4E2", belly: "#FFFFFF", ears: { kind: "fox", size: 0.78, inner: "#F4D8DC" }, tail: { kind: "bushy", len: 10, up: 0.4, tip: "#DCE6F2" }, nose: [5.2, 0.9, 0.55, "#3A3A48"], parts: {} });
+    Q.fennec = () => ({ ...Q.fox(), id: "fennec", size: "SMALL", fur: "#EDCB94", furS: "#CFA870", belly: "#FFF6E6", body: [-0.8, -5.6, 4.8, 3.4], head: [4.6, -9.4, 4.6], legs: { back: -3, front: 2.4, top: -3, w: 1.2, paw: "#CFA870" }, snout: [2.6, 1.7, 2.1, 1.35, "#FFF6E6"], nose: [4.4, 1, 0.5, OUT3], eye: [1.1, -0.8, 1.3], ears: { kind: "fox", size: 1.45, w: 1.15, inner: "#F6D2C8" }, tail: { kind: "bushy", len: 7, up: 0.3, tip: "#5A4232" }, parts: {} });
+    Q.rabbit = () => ({
+      id: "rabbit",
+      size: "SMALL",
+      fur: "#D8C4AE",
+      furS: "#B8A288",
+      belly: "#FFFFFF",
+      // chibi : grosse tête ronde, corps en boule, longues oreilles un peu plus courtes
+      body: [-0.6, -5.2, 5, 4],
+      head: [4, -9.2, 4.6],
+      restDrop: 0.8,
+      legs: { back: -2.4, front: 2.4, top: -2.2, w: 1.8, paw: "#FFFFFF" },
+      snout: [2.9, 1.5, 1.8, 1.4, "#FFFFFF"],
+      nose: [4.3, 0.6, 0.45, "#E88A90"],
+      eye: [1.2, -0.9, 1.3],
+      ears: { kind: "long", size: 0.8 },
+      tail: { kind: "puff", color: "#FFFFFF", r: 1.6 }
+    });
+    Q.hedgehog = () => ({
+      id: "hedgehog",
+      size: "SMALL",
+      fur: "#E8D2B0",
+      furS: "#C8B08C",
+      belly: "#F4E6CC",
+      // chibi : la tête plus grosse et ronde devant son dôme de piquants
+      body: [-0.6, -4.4, 6, 3.6],
+      head: [4.6, -4.8, 3.4],
+      restDrop: 0.6,
+      legs: { back: -3, front: 2.4, top: -1.6, w: 1.2, paw: "#5A4232" },
+      snout: [2.6, 1, 2.1, 1.3, "#E8D2B0"],
+      nose: [4.5, 0.6, 0.55, OUT3],
+      eye: [0.7, -0.7, 1.05],
+      ears: { kind: "round", size: 0.7 },
+      tail: {},
+      parts: {
+        // dôme de piquants
+        body: /* @__PURE__ */ __name(({ bx, by }) => {
+          let d = `M${r23(bx + 3.6)},${r23(by + 2.6)}`;
+          for (let i = 0; i <= 10; i++) {
+            const a = Math.PI * (0.05 + i * 0.09);
+            const r = i % 2 ? 6.4 : 8;
+            d += ` L${r23(bx - 0.6 - Math.cos(a) * r)},${r23(by + 1.6 - Math.sin(a) * r * 0.9)}`;
+          }
+          d += ` L${r23(bx - 6.6)},${r23(by + 3.2)} Z`;
+          return P2(d, "#8A6440") + stroke(`M${r23(bx - 3)},${r23(by - 2)} L${r23(bx - 2)},${r23(by - 4)} M${r23(bx)},${r23(by - 2.4)} L${r23(bx + 0.6)},${r23(by - 4.6)}`, 0.6, "#B88A5A");
+        }, "body")
+      }
+    });
+    Q.squirrel = () => ({
+      id: "squirrel",
+      size: "SMALL",
+      fur: "#C8642E",
+      furS: "#A84E22",
+      belly: "#F6E2C8",
+      // chibi : grosse tête ronde, petit corps, queue en panache
+      body: [-0.4, -5.8, 4.2, 3.8],
+      head: [3.4, -10.4, 4.4],
+      restDrop: 0.4,
+      legs: { back: -2, front: 2.1, top: -2.4, w: 1.4, paw: "#A84E22" },
+      snout: [2.4, 1.5, 1.8, 1.3, "#F6E2C8"],
+      nose: [3.9, 0.8, 0.42, OUT3],
+      eye: [1, -0.9, 1.25],
+      ears: { kind: "pointy", size: 0.9, inner: "#F2C6C0" },
+      tail: { kind: "bushy", len: 7.6, up: 1.55, tip: "#E07E44" },
+      parts: { head: /* @__PURE__ */ __name(({ hx, hy, hr, rest }) => rest ? E(hx + hr * 0.4, hy + hr * 1.1, 1.3, 1.5, "#A8743F", 0.7) + E(hx + hr * 0.4, hy + hr * 1.1 - 1.2, 1.4, 0.7, "#7E5530", 0.6) : "", "head") }
+    });
+    Q.ibex = () => ({
+      id: "ibex",
+      size: "TALL",
+      fur: "#A8906E",
+      furS: "#86704F",
+      belly: "#E8DCC4",
+      // chibi : grosse tête sous ses grandes cornes, corps rond, pattes plus courtes
+      body: [-1.6, -14, 8.6, 6.2],
+      head: [8.4, -21.6, 5.8],
+      legs: { back: -6.6, front: 4.4, top: -9.4, w: 2, hoof: "#3E3430" },
+      snout: [3.6, 2, 3, 2.4, "#C8B496"],
+      nose: [5.6, 1.3, 0.55, OUT3],
+      eye: [1, -1, 1.35],
+      ears: { kind: "side", size: 0.7 },
+      tail: { kind: "short", color: "#5A4A3A" },
+      parts: {
+        neck: /* @__PURE__ */ __name(({ hx, hy, bx, by }) => P2(`M${r23(bx + 5.4)},${r23(by - 4)} L${r23(hx - 2.8)},${r23(hy - 0.6)} L${r23(hx + 0.6)},${r23(hy + 3.6)} L${r23(bx + 8.8)},${r23(by + 1.2)} Z`, "#A8906E", 0.9), "neck"),
+        head: /* @__PURE__ */ __name(({ hx, hy, hr }) => {
+          const d = `M${r23(hx - 0.6)},${r23(hy - hr * 0.8)} Q${r23(hx - 2)},${r23(hy - hr - 6)} ${r23(hx - 7.6)},${r23(hy - hr - 6.4)} Q${r23(hx - 11.4)},${r23(hy - hr - 5.4)} ${r23(hx - 10.6)},${r23(hy - hr - 1.6)}`;
+          return thick(d, 2, "#C8B48E") + [0.25, 0.45, 0.65].map((t) => E(hx - 2 - t * 8, hy - hr - 5.2 - Math.sin(t * Math.PI) * 1.2, 1.2, 0.35, "#8A7656", 0)).join("") + P2(`M${r23(hx + hr * 0.43)},${r23(hy + hr * 0.7)} L${r23(hx + hr * 0.17)},${r23(hy + hr * 1.39)} L${r23(hx + hr * 0.7)},${r23(hy + hr * 0.78)} Z`, "#5A4A3A", 0.7);
+        }, "head")
+      }
+    });
+    Q.pony = () => ({
+      id: "pony",
+      size: "TALL",
+      fur: "#C07A44",
+      furS: "#9E5E30",
+      belly: "#E0B08A",
+      // chibi : grosse tête, corps dodu, pattes plus courtes, crinière blonde
+      body: [-1.6, -13.4, 9, 6.6],
+      head: [8.6, -21.4, 6.4],
+      headW: 1.05,
+      legs: { back: -6.8, front: 4.6, top: -8.8, w: 2.4, hoof: "#3E3430" },
+      snout: [4.2, 2.8, 3.6, 2.8, "#E8C9A8"],
+      nose: [6.6, 2, 0.55, OUT3],
+      eye: [0.8, -1.2, 1.5],
+      ears: { kind: "pointy", size: 0.75, inner: "#E8B0A0" },
+      tail: { kind: "horse", color: "#F2D28A" },
+      parts: {
+        neck: /* @__PURE__ */ __name(({ hx, hy, bx, by }) => P2(`M${r23(bx + 5)},${r23(by - 4.4)} L${r23(hx - 3.4)},${r23(hy - 1)} L${r23(hx + 0.6)},${r23(hy + 4.2)} L${r23(bx + 9.4)},${r23(by + 1.4)} Z`, "#C07A44", 0.9), "neck"),
+        head: /* @__PURE__ */ __name(({ hx, hy, hr, bx, by }) => thick(`M${r23(hx - 1)},${r23(hy - hr * 0.9)} Q${r23(hx - 6)},${r23(hy - 2)} ${r23(bx + 4.6)},${r23(by - 5.2)}`, 2.6, "#F2D28A") + P2(`M${r23(hx - 0.4)},${r23(hy - hr * 0.95)} Q${r23(hx + 2.6)},${r23(hy - hr * 0.7)} ${r23(hx + 2)},${r23(hy - 1.4)} Q${r23(hx)},${r23(hy - 2.4)} ${r23(hx - 2)},${r23(hy - hr * 0.5)} Z`, "#F2D28A", 0.8), "head")
+      }
+    });
+    Q.camel = () => ({
+      id: "camel",
+      size: "TALL",
+      fur: "#D8AE70",
+      furS: "#B88E52",
+      belly: "#EBCB98",
+      // chibi : grosse tête au bout du long cou, corps rond, pattes plus courtes
+      body: [-1.6, -15.4, 8.8, 6],
+      head: [10.2, -24.2, 4.8],
+      headW: 1.2,
+      legs: { back: -6.8, front: 4.4, top: -11.4, w: 1.8, hoof: "#8A6A44" },
+      snout: [4.4, 1.3, 2.6, 2.1, "#E8C48E"],
+      nose: [6.4, 0.6, 0.45, OUT3],
+      eye: [0.8, -1, 1.25],
+      ears: { kind: "round", size: 0.6 },
+      tail: { kind: "tuft", color: "#8A6A44" },
+      parts: {
+        back: /* @__PURE__ */ __name(({ bx, by }) => E(bx - 0.6, by - 5.6, 5, 4.4, "#D8AE70"), "back"),
+        neck: /* @__PURE__ */ __name(({ hx, hy, bx, by }) => thick(`M${r23(bx + 6.4)},${r23(by - 1)} Q${r23(bx + 11)},${r23(by - 2)} ${r23(hx - 1.6)},${r23(hy + 1.6)}`, 3, "#D8AE70"), "neck")
+      }
+    });
+    Q.chameleon = () => ({
+      id: "chameleon",
+      size: "SMALL",
+      fur: "#7CC46A",
+      furS: "#5AA04C",
+      belly: "#C8EE9A",
+      // chibi : la tête plus grosse, le grand œil en tourelle
+      body: [-0.6, -6, 5.4, 3.2],
+      head: [5, -7, 3.6],
+      headW: 1.15,
+      restDrop: 0.4,
+      headDrop: 0.6,
+      legs: { back: -2.8, front: 2.6, top: -3.4, w: 1.1, paw: "#5AA04C" },
+      eye: [0.7, -0.5, 1.3],
+      blush: false,
+      ears: {},
+      tail: { kind: "spiral" },
+      parts: {
+        coat: /* @__PURE__ */ __name(({ bx, by }) => [-3, -0.4, 2.2].map((x) => `<path d="M${r23(bx + x)},${r23(by - 3)} L${r23(bx + x + 0.8)},${r23(by + 2)}" stroke="#F2C94C" stroke-width="0.8"/>`).join(""), "coat"),
+        behindHead: /* @__PURE__ */ __name(({ hx, hy }) => P2(`M${r23(hx - 2.6)},${r23(hy - 1.6)} L${r23(hx - 1.4)},${r23(hy - 4.4)} L${r23(hx + 1)},${r23(hy - 2.4)} Z`, "#7CC46A", 0.8), "behindHead"),
+        face: /* @__PURE__ */ __name(({ hx, hy, mode }) => E(hx + 0.7, hy - 0.5, 2.1, 2.1, "#5AA04C", 0.7) + P2(`M${r23(hx + 2.2)},${r23(hy + 1.5)} Q${r23(hx + 3.5)},${r23(hy + 1.7)} ${r23(hx + 4.2)},${r23(hy + 0.8)}`, "none", 0.5), "face")
+      }
+    });
+    Q.salamander = () => ({
+      id: "salamander",
+      size: "SMALL",
+      fur: "#E8584A",
+      furS: "#B83E34",
+      belly: "#F6A060",
+      // chibi : la tête plus grosse et ronde
+      body: [-0.6, -3.2, 5.6, 2.2],
+      head: [5, -4, 3.2],
+      headW: 1.12,
+      restDrop: 0.4,
+      headDrop: 0.5,
+      legs: { back: -3, front: 2.6, top: -1.6, w: 1, paw: "#B83E34" },
+      eye: [0.7, -0.9, 1.05],
+      ears: {},
+      tail: { kind: "lizard", w: 1.6 },
+      parts: { coat: /* @__PURE__ */ __name(({ bx, by }) => spots([[bx - 3, by - 1, 0.9, 0.7], [bx, by - 1.4, 0.8, 0.6], [bx + 2.6, by - 0.8, 0.7, 0.6]], "#F2C94C"), "coat") }
+    });
+    Q.tortoise = () => ({
+      id: "tortoise",
+      size: "SMALL",
+      fur: "#B8B07A",
+      furS: "#9A9260",
+      belly: "#D8D0A0",
+      // chibi : la tête plus grosse et ronde sous sa carapace
+      body: [-0.6, -3.4, 5.8, 2.4],
+      head: [5.8, -5, 3.1],
+      headW: 1.12,
+      restDrop: 0.4,
+      headDrop: 0.4,
+      legs: { back: -3.2, front: 2.6, top: -1.6, w: 1.6, paw: "#9A9260" },
+      eye: [0.7, -0.6, 1.08],
+      ears: {},
+      tail: { kind: "short", color: "#B8B07A" },
+      parts: {
+        // carapace bombée à écailles
+        body: /* @__PURE__ */ __name(({ bx, by }) => {
+          const d = `M${r23(bx - 6.6)},${r23(by + 1.4)} Q${r23(bx - 6)},${r23(by - 7)} ${r23(bx)},${r23(by - 7.2)} Q${r23(bx + 6)},${r23(by - 7)} ${r23(bx + 6.6)},${r23(by + 1.4)} Z`;
+          return P2(d, "#7E9A4A") + clip(`sh${Math.round(by * 10)}`, d, [[-3.4, -3.6], [0, -5], [3.4, -3.6], [-1.6, -1], [1.8, -1]].map(([x, y]) => `<path d="M${r23(bx + x - 1.6)},${r23(by + y)} l1.6,-1.2 l1.6,1.2 l0,1.6 l-1.6,1.2 l-1.6,-1.2 Z" fill="#9AB85E" stroke="${OUT3}" stroke-width="0.5"/>`).join("")) + P2(d, "none") + P2(`M${r23(bx - 6.6)},${r23(by + 1.4)} L${r23(bx + 6.6)},${r23(by + 1.4)}`, "none", 0.9);
+        }, "body")
+      }
+    });
+    Q.otter = () => ({
+      id: "otter",
+      size: "SMALL",
+      fur: "#8A5A36",
+      furS: "#6E4428",
+      belly: "#E8D2B0",
+      // chibi : grosse tête ronde au museau blanc, corps fuselé
+      body: [-0.8, -4.6, 6.2, 3.2],
+      head: [5.2, -6.8, 4],
+      restDrop: 0.6,
+      legs: { back: -3.4, front: 2.6, top: -2.4, w: 1.5, paw: "#6E4428" },
+      snout: [2.2, 1.4, 2.3, 1.6, "#E8D2B0"],
+      nose: [3.9, 0.5, 0.55, OUT3],
+      eye: [0.7, -1, 1.15],
+      ears: { kind: "round", size: 0.6, inner: "#6E4428" },
+      tail: { kind: "otter" },
+      parts: { face: /* @__PURE__ */ __name(({ hx, hy, hr }) => E(hx + hr * 0.25, hy + hr * 0.38, hr * 0.75, hr * 0.56, "#E8D2B0", 0) + L([hx + hr * 0.8, hy + hr * 0.38], [hx + hr * 1.38, hy + hr * 0.2], OUT3, 0.35) + L([hx + hr * 0.8, hy + hr * 0.5], [hx + hr * 1.38, hy + hr * 0.58], OUT3, 0.35), "face") }
+    });
+    Q.cat = () => ({
+      id: "cat",
+      size: "SMALL",
+      fur: "#E8A050",
+      furS: "#C8803A",
+      belly: "#FFF2E0",
+      // chibi : grosse tête ronde, petit corps, pattes courtes
+      body: [-0.8, -5.4, 5, 3.4],
+      head: [4.4, -9.2, 4.8],
+      restDrop: 1,
+      legs: { back: -3, front: 2.6, top: -2.8, w: 1.4, paw: "#FFF2E0" },
+      snout: [2.3, 1.6, 1.9, 1.35, "#FFF2E0"],
+      nose: [3.5, 0.8, 0.42, "#E88A90"],
+      eye: [1.1, -0.8, 1.3],
+      ears: { kind: "pointy", size: 0.95, inner: "#F2B0B0" },
+      tail: { kind: "thin", up: 7, w: 1.3 },
+      parts: {
+        coat: /* @__PURE__ */ __name(({ bx, by }) => [-3, -0.6, 1.8].map((x) => `<path d="M${r23(bx + x)},${r23(by - 3.6)} q0.6,1.6 0,3" fill="none" stroke="#C8803A" stroke-width="0.9"/>`).join(""), "coat"),
+        face: /* @__PURE__ */ __name(({ hx, hy }) => L([hx + 3.4, hy + 1.6], [hx + 5.8, hy + 1.1], OUT3, 0.35) + L([hx + 3.4, hy + 2.1], [hx + 5.8, hy + 2.5], OUT3, 0.35), "face")
+      }
+    });
+    Q.dog = () => ({
+      id: "dog",
+      size: "MID",
+      fur: "#E0B880",
+      furS: "#C49A62",
+      belly: "#FFF2DE",
+      // chibi : grosse tête, oreilles tombantes, pattes courtes
+      body: [-1.2, -7.6, 6.6, 4.6],
+      head: [6, -12, 5.6],
+      restDrop: 1.4,
+      legs: { back: -4, front: 3.4, top: -4, w: 2.1, paw: "#FFF2DE" },
+      snout: [3.4, 2, 2.8, 2.1, "#FFF2DE"],
+      nose: [5.6, 1.2, 0.68, OUT3],
+      eye: [1.1, -1.1, 1.35],
+      ears: { kind: "hang", size: 1, color: "#A8784A" },
+      tail: { kind: "thin", up: 5, w: 1.4 },
+      parts: { neck: /* @__PURE__ */ __name(({ hx, hy, hr }) => P2(`M${r23(hx - hr * 0.82)},${r23(hy + hr * 0.55)} Q${r23(hx - hr * 0.22)},${r23(hy + hr * 1.1)} ${r23(hx + hr * 0.36)},${r23(hy + hr * 0.82)}`, "none", 0).replace('stroke="none"', 'stroke="#E0483C" stroke-width="1.4" stroke-linecap="round"') + E(hx - hr * 0.1, hy + hr * 1.04, 0.7, 0.7, "#F2C94C", 0.5), "neck") }
+    });
+    Q.frog = () => ({
+      id: "frog",
+      size: "SMALL",
+      fur: "#7CC46A",
+      furS: "#5AA04C",
+      belly: "#E8F2B0",
+      // chibi : toute ronde, grosse tête, les yeux sur deux bosses
+      body: [-0.4, -3.8, 5.2, 3.8],
+      head: [2.4, -7.6, 4.4],
+      headW: 1.15,
+      restDrop: 0,
+      legs: { back: -3, front: 2.6, top: -1.6, w: 1.4, paw: "#5AA04C" },
+      eye: [1.2, -3.1, 1.3],
+      blush: true,
+      ears: {},
+      tail: {},
+      parts: {
+        behindHead: /* @__PURE__ */ __name(({ hx, hy }) => E(hx - 1.9, hy - 3.3, 2.1, 2.1, "#7CC46A") + E(hx + 1.9, hy - 3.3, 2.1, 2.1, "#7CC46A"), "behindHead"),
+        face: /* @__PURE__ */ __name(({ hx, hy }) => P2(`M${r23(hx - 1.6)},${r23(hy + 1.2)} Q${r23(hx + 1.8)},${r23(hy + 3)} ${r23(hx + 4.4)},${r23(hy + 0.5)}`, "none", 0.6), "face"),
+        head: /* @__PURE__ */ __name(({ hx, hy, mode }) => eye(hx - 1.9, hy - 3.3, 1.12, mode), "head")
+      }
+    });
+    module.exports = { BOX, K: K2, quad, Q, eye, heartIcon, limb, thick, stroke, line, hoof, paw, oreilleRenard };
+    function beakOf(b, hx, hy, hr) {
+      const x = hx + hr * 0.85, y = hy + (b.dy || 0.4), L0 = b.len || 2.4;
+      switch (b.kind) {
+        case "long":
+          return P2(`M${r23(x - 0.4)},${r23(y - 0.9)} L${r23(x + L0)},${r23(y + 0.2)} L${r23(x - 0.4)},${r23(y + 0.9)} Z`, b.color, 0.8);
+        case "big":
+          return P2(`M${r23(x - 0.8)},${r23(y - 2.4)} Q${r23(x + L0 * 0.7)},${r23(y - 2.8)} ${r23(x + L0)},${r23(y + 0.6)} Q${r23(x + L0 * 0.5)},${r23(y + 1)} ${r23(x - 0.6)},${r23(y + 1.6)} Z`, b.color, 0.9) + `<path d="M${r23(x + L0 - 1.2)},${r23(y - 0.6)} L${r23(x + L0)},${r23(y + 0.6)}" stroke="${b.tip || OUT3}" stroke-width="1.2"/><path d="M${r23(x - 0.6)},${r23(y - 0.2)} Q${r23(x + L0 * 0.5)},${r23(y - 0.6)} ${r23(x + L0 * 0.95)},${r23(y + 0.2)}" fill="none" stroke="${OUT3}" stroke-width="0.5"/>`;
+        case "puffin":
+          return P2(`M${r23(x - 0.6)},${r23(y - 2.2)} Q${r23(x + L0)},${r23(y - 1.4)} ${r23(x + L0)},${r23(y + 0.4)} Q${r23(x + L0 * 0.6)},${r23(y + 1.8)} ${r23(x - 0.6)},${r23(y + 1.8)} Z`, "#F07A3A", 0.9) + P2(`M${r23(x - 0.6)},${r23(y - 2.2)} L${r23(x + 0.6)},${r23(y - 2)} L${r23(x + 0.6)},${r23(y + 1.7)} L${r23(x - 0.6)},${r23(y + 1.8)} Z`, "#3E6FB8", 0) + `<path d="M${r23(x + 1.4)},${r23(y - 1.5)} Q${r23(x + 2.2)},${r23(y)} ${r23(x + 1.4)},${r23(y + 1.5)}" fill="none" stroke="#F2C94C" stroke-width="0.6"/>`;
+        default:
+          return P2(`M${r23(x - 0.4)},${r23(y - 0.9)} L${r23(x + L0)},${r23(y + 0.1)} L${r23(x - 0.4)},${r23(y + 1)} Z`, b.color || "#F2B33B", 0.8);
+      }
+    }
+    __name(beakOf, "beakOf");
+    function bird2(c, pose) {
+      const walk = pose === "marche1" || pose === "marche2";
+      const rest = pose === "repos" || pose === "clignement";
+      const ph = pose === "marche2" ? -1 : 1;
+      const lg = c.legs;
+      const drop = rest ? -lg.top * 0.85 : 0;
+      const bob = pose === "marche2" ? -0.4 : 0;
+      const [bx, by0, brx, bry] = c.body;
+      const by = by0 + drop + bob;
+      const [hx, hy0, hr] = c.head;
+      const hy = hy0 + drop + bob + (walk ? ph * 0.3 : 0);
+      const mode = pose === "clignement" ? "blink" : pose === "joie" ? "joy" : "open";
+      const ctx = { pose, rest, walk, bx, by, hx, hy, hr, ph, mode };
+      let s = E(bx, -0.2, brx * 0.9, 1.3, "rgba(40,55,20,.18)", 0);
+      if (!rest) for (const [i, x] of lg.xs.entries()) {
+        const dx = walk ? (i ? -ph : ph) * 1 : 0;
+        s += limb([x, by + bry * 0.7], [x + dx, -0.6], lg.w || 0.7, lg.color) + line([x + dx - 0.8, -0.4], [x + dx + 1.4, -0.4], 1.6, OUT3) + line([x + dx - 0.8, -0.4], [x + dx + 1.4, -0.4], 0.7, lg.color);
+      }
+      s += c.parts?.back ? c.parts.back(ctx) : "";
+      const t = c.tail || {};
+      const tx = bx - brx * 0.85, ty = by - bry * 0.1;
+      if (t.kind === "fan") s += P2(`M${r23(tx + 1)},${r23(ty + 1)} L${r23(tx - (t.len || 3.6))},${r23(ty - (t.up || 4.6))} Q${r23(tx - (t.len || 3.6) + 1.6)},${r23(ty - (t.up || 4.6) - 1.2)} ${r23(tx + 1.4)},${r23(ty - 1.4)} Z`, t.color || c.wing);
+      if (t.kind === "long") s += P2(`M${r23(tx + 1)},${r23(ty - 0.6)} L${r23(tx - (t.len || 4))},${r23(ty + 0.6)} L${r23(tx + 1)},${r23(ty + 1.8)} Z`, t.color || c.wing);
+      const bd = `M${r23(bx - brx)},${r23(by)} a${brx},${bry} 0 1,0 ${2 * brx},0 a${brx},${bry} 0 1,0 ${-2 * brx},0 Z`;
+      s += P2(bd, c.color) + clip(`b${c.id}${pose}`, bd, `<rect x="${r23(bx - brx - 1)}" y="${r23(by - bry - 1)}" width="${r23(brx * 2 + 2)}" height="${r23(bry * 2 + 2)}" fill="${tone(c.color, 0.86)}"/><ellipse cx="${r23(bx - brx * 0.1)}" cy="${r23(by - bry * 0.16)}" rx="${r23(brx * 0.98)}" ry="${r23(bry * 0.9)}" fill="${c.color}"/><ellipse cx="${r23(bx + brx * 0.35)}" cy="${r23(by + bry * 0.4)}" rx="${r23(brx * 0.75)}" ry="${r23(bry * 0.75)}" fill="${c.belly || c.color}"/>` + (c.parts?.coat ? c.parts.coat(ctx) : "")) + P2(bd, "none");
+      const wingUp = walk && ph < 0 ? -0.6 : 0;
+      s += P2(`M${r23(bx - brx * 0.6)},${r23(by - bry * 0.35 + wingUp)} Q${r23(bx + brx * 0.2)},${r23(by - bry * 0.75 + wingUp)} ${r23(bx + brx * 0.45)},${r23(by - bry * 0.05)} Q${r23(bx)},${r23(by + bry * 0.65)} ${r23(bx - brx * 0.95)},${r23(by + bry * 0.25)} Z`, c.wing, 0.9);
+      s += c.parts?.body ? c.parts.body(ctx) : "";
+      if (c.neck) s += thick(c.neck(ctx), c.neckW || 2.4, c.headColor || c.color);
+      s += c.parts?.behindHead ? c.parts.behindHead(ctx) : "";
+      const hcol = c.headColor || c.color, hd = `M${r23(hx - hr)},${r23(hy)} a${r23(hr)},${r23(hr)} 0 1,0 ${r23(2 * hr)},0 a${r23(hr)},${r23(hr)} 0 1,0 ${r23(-2 * hr)},0 Z`;
+      s += P2(hd, hcol) + clip(`b${c.id}${pose}h`, hd, `<rect x="${r23(hx - hr - 1)}" y="${r23(hy - hr - 1)}" width="${r23(hr * 2 + 2)}" height="${r23(hr * 2 + 2)}" fill="${tone(hcol, 0.88)}"/><ellipse cx="${r23(hx - hr * 0.12)}" cy="${r23(hy - hr * 0.14)}" rx="${r23(hr * 0.97)}" ry="${r23(hr * 0.92)}" fill="${hcol}"/>`) + P2(hd, "none");
+      s += c.parts?.face ? c.parts.face(ctx) : "";
+      s += beakOf(c.beak, hx, hy, hr);
+      const [edx, edy, er] = c.eye;
+      s += eye(hx + edx, hy + edy, er, mode);
+      if (c.blush !== false) s += E(hx + edx - er * 0.2, hy + edy + er * 1.5, er * 0.8, er * 0.4, "#F7A8B0", 0);
+      s += c.parts?.head ? c.parts.head(ctx) : "";
+      if (pose === "joie") s += heartIcon(hx, Math.max(hy - hr - 2.4, BOX[c.size][1] + 2), 1.2);
+      return s;
+    }
+    __name(bird2, "bird");
+    var B = {};
+    B.hen = (v) => {
+      const col = { blanche: "#FFFFFF", rousse: "#C8642E", noire: "#3A3A42", grise: "#B4B4B8" }[v || "rousse"];
+      const wing = { blanche: "#E6E2DA", rousse: "#A84E22", noire: "#2A2A32", grise: "#8E8E94" }[v || "rousse"];
+      return {
+        id: "hen" + (v || ""),
+        size: "SMALL",
+        color: col,
+        wing,
+        belly: v === "noire" ? "#4A4A54" : v === "rousse" ? "#E08A4E" : col,
+        // chibi : grosse tête ronde sur un corps dodu
+        body: [-0.6, -5.8, 4.8, 4.2],
+        head: [3.2, -10.6, 3.7],
+        beak: { kind: "cone", len: 1.9, color: "#F2B33B" },
+        eye: [0.9, -0.5, 0.98],
+        legs: { xs: [-1.4, 0.8], top: -2, color: "#F2B33B" },
+        tail: { kind: "fan", len: 3, up: 5, color: v === "noire" ? "#2A6A5A" : wing },
+        parts: {
+          head: /* @__PURE__ */ __name(({ hx, hy, hr }) => P2(`M${r23(hx - 1.4)},${r23(hy - hr + 0.6)} Q${r23(hx - 1.2)},${r23(hy - hr - 1.6)} ${r23(hx - 0.2)},${r23(hy - hr - 0.4)} Q${r23(hx + 0.4)},${r23(hy - hr - 2)} ${r23(hx + 1.2)},${r23(hy - hr - 0.2)} Q${r23(hx + 1.8)},${r23(hy - hr - 1.2)} ${r23(hx + 1.6)},${r23(hy - hr + 0.8)} Z`, "#E8483C", 0.7) + E(hx + hr * 0.9, hy + hr * 0.62, 0.75, 1.05, "#E8483C", 0.6), "head"),
+          coat: /* @__PURE__ */ __name(({ bx, by }) => v === "grise" ? [[-2, -1], [0.6, -2], [2, 0.6], [-1, 1.4]].map(([x, y]) => E(bx + x, by + y, 0.5, 0.5, "#FFFFFF", 0)).join("") : "", "coat")
+        }
+      };
+    };
+    B.chick = () => ({
+      id: "chick",
+      size: "SMALL",
+      color: "#FFE16A",
+      wing: "#F6C93E",
+      belly: "#FFF0A0",
+      body: [-0.3, -3.4, 3.2, 2.9],
+      head: [1.6, -6.8, 3],
+      beak: { kind: "cone", len: 1.2, color: "#F29A3B" },
+      eye: [0.75, -0.4, 0.86],
+      legs: { xs: [-0.8, 0.8], top: -1.2, color: "#F29A3B", w: 0.6 },
+      tail: {},
+      parts: { head: /* @__PURE__ */ __name(({ hx, hy, hr }) => P2(`M${r23(hx - 0.4)},${r23(hy - hr + 0.2)} Q${r23(hx - 0.6)},${r23(hy - hr - 1.4)} ${r23(hx + 0.6)},${r23(hy - hr - 0.6)}`, "none", 0.6), "head") }
+    });
+    B.heron = () => ({
+      id: "heron",
+      size: "TALL",
+      color: "#A8B4C2",
+      wing: "#7E8C9E",
+      belly: "#E8EEF4",
+      headColor: "#E8EEF4",
+      // chibi : grosse tête ronde au bout du long cou
+      body: [-1, -17, 6, 4],
+      head: [4.4, -30, 3.3],
+      beak: { kind: "long", len: 4.8, color: "#F2C94C", dy: 0.5 },
+      eye: [0.7, -0.4, 1],
+      legs: { xs: [-1.6, 0.6], top: -13, color: "#C8A85A", w: 0.8 },
+      tail: { kind: "long", len: 3.4 },
+      neck: /* @__PURE__ */ __name(({ bx, by, hx, hy }) => `M${r23(bx + 4)},${r23(by - 2)} Q${r23(bx + 9)},${r23(by - 6)} ${r23(hx - 1)},${r23(hy + 6)} Q${r23(hx - 2.4)},${r23(hy + 3)} ${r23(hx)},${r23(hy + 1)}`, "neck"),
+      neckW: 2.2,
+      parts: {
+        // la calotte noire passe sous l'œil, l'aigrette par-dessus la tête
+        face: /* @__PURE__ */ __name(({ hx, hy, hr }) => E(hx + hr * 0.05, hy - hr * 0.55, hr * 0.78, hr * 0.36, "#3A3A48", 0), "face"),
+        head: /* @__PURE__ */ __name(({ hx, hy, hr }) => thick(`M${r23(hx - hr * 0.6)},${r23(hy - hr * 0.42)} Q${r23(hx - hr * 1.7)},${r23(hy - hr * 0.6)} ${r23(hx - hr * 2.2)},${r23(hy + hr * 0.25)}`, 0.6, "#3A3A48"), "head")
+      }
+    });
+    B.puffin = () => ({
+      id: "puffin",
+      size: "SMALL",
+      color: "#2E2E38",
+      wing: "#22222A",
+      belly: "#FFFFFF",
+      // chibi : grosse tête ronde sur un petit corps
+      body: [-0.4, -5.6, 3.8, 4.4],
+      head: [1.6, -10.8, 4],
+      beak: { kind: "puffin", len: 2.6 },
+      eye: [0.75, -0.5, 0.95],
+      legs: { xs: [-1, 0.8], top: -1.8, color: "#F07A3A", w: 0.9 },
+      tail: { kind: "long", len: 2 },
+      parts: {
+        face: /* @__PURE__ */ __name(({ hx, hy, hr }) => E(hx + 0.6, hy + 0.2, hr * 0.85, hr * 0.8, "#F4F4F4", 0), "face"),
+        // Bosco est bougon : un sourcil froncé
+        head: /* @__PURE__ */ __name(({ hx, hy, hr, mode }) => mode === "open" ? `<path d="M${r23(hx - hr * 0.1)},${r23(hy - hr * 0.6)} L${r23(hx + hr * 0.58)},${r23(hy - hr * 0.4)}" stroke="${OUT3}" stroke-width="0.75" stroke-linecap="round"/>` : "", "head")
+      }
+    });
+    B.toucan = () => ({
+      id: "toucan",
+      size: "SMALL",
+      color: "#2A2A30",
+      wing: "#1E1E24",
+      belly: "#2A2A30",
+      // chibi : grosse tête ronde, son grand bec
+      body: [-1.4, -7.2, 4, 4.8],
+      head: [1.2, -11.6, 3.6],
+      beak: { kind: "big", len: 6, color: "#F6A23B", tip: "#E8483C", dy: 0.6 },
+      eye: [0.5, -0.7, 0.95],
+      blush: false,
+      legs: { xs: [-2, 0], top: -2.6, color: "#5C8FD8", w: 0.8 },
+      tail: { kind: "long", len: 3.6 },
+      parts: { face: /* @__PURE__ */ __name(({ hx, hy, hr }) => E(hx + hr * 0.21, hy + hr * 0.57, hr * 0.79, hr * 0.71, "#FFF4C8", 0) + E(hx + 0.5, hy - 0.75, 1.65, 1.55, "#7CD0E8", 0), "face") }
+    });
+    B.crow = () => ({
+      id: "crow",
+      size: "SMALL",
+      color: "#2E2E38",
+      wing: "#3E4A6A",
+      belly: "#3A3A46",
+      // chibi : grosse tête ronde sur un corps dodu
+      body: [-0.6, -6.2, 4.4, 3.8],
+      head: [3, -10.2, 3.5],
+      beak: { kind: "long", len: 3, color: "#5A5A64" },
+      eye: [0.75, -0.5, 0.95],
+      legs: { xs: [-1.4, 0.6], top: -2.4, color: "#4A4A52" },
+      tail: { kind: "long", len: 3.6 },
+      parts: { body: /* @__PURE__ */ __name(({ bx, by }) => `<path d="M${r23(bx - 2)},${r23(by - 2.4)} Q${r23(bx)},${r23(by - 3.4)} ${r23(bx + 2)},${r23(by - 2.2)}" fill="none" stroke="#6E80B0" stroke-width="0.6" opacity="0.8"/>`, "body") }
+    });
+    B.bird = () => ({
+      id: "bird",
+      size: "SMALL",
+      color: "#5C9CE0",
+      wing: "#4A84C8",
+      belly: "#FFE16A",
+      headColor: "#FFFFFF",
+      // chibi : grosse tête ronde sur un corps dodu
+      body: [-0.2, -4, 3.2, 3],
+      head: [2.3, -7.5, 3],
+      beak: { kind: "cone", len: 1.1, color: "#3A3A44" },
+      eye: [0.8, -0.25, 0.85],
+      legs: { xs: [-0.6, 0.8], top: -1.4, color: "#7E7E8A", w: 0.55 },
+      tail: { kind: "long", len: 2.6, color: "#4A84C8" },
+      parts: { head: /* @__PURE__ */ __name(({ hx, hy, hr }) => P2(`M${r23(hx - hr)},${r23(hy - 0.4)} Q${r23(hx - hr * 0.6)},${r23(hy - hr)} ${r23(hx + hr * 0.8)},${r23(hy - hr * 0.55)} Q${r23(hx)},${r23(hy - hr * 0.35)} ${r23(hx - hr)},${r23(hy - 0.4)} Z`, "#5C9CE0", 0) + `<path d="M${r23(hx - hr * 0.7)},${r23(hy + hr * 0.09)} L${r23(hx + hr * 0.52)},${r23(hy - hr * 0.17)}" stroke="#2A3A5A" stroke-width="0.5"/>`, "head") }
+    });
+    B.gull = () => ({
+      id: "gull",
+      size: "SMALL",
+      color: "#FFFFFF",
+      wing: "#A8B4C2",
+      belly: "#FFFFFF",
+      // chibi : grosse tête ronde sur un corps dodu
+      body: [-0.8, -6.2, 4.6, 3.9],
+      head: [3.2, -11, 3.5],
+      beak: { kind: "long", len: 2.6, color: "#F2C94C" },
+      eye: [0.85, -0.5, 0.95],
+      legs: { xs: [-1.6, 0.6], top: -2.6, color: "#F2B33B" },
+      tail: { kind: "long", len: 3, color: "#3A3A44" },
+      parts: { head: /* @__PURE__ */ __name(({ hx, hy, hr }) => E(hx + hr * 0.85 + 2.1, hy + 0.7, 0.4, 0.35, "#E8483C", 0), "head") }
+    });
+    module.exports.bird = bird2;
+    module.exports.B = B;
+    Object.assign(BOX, {
+      BUTTERFLY: box2(-6, -9, 12, 9),
+      FIREFLY: box2(-5, -5, 10, 10),
+      BEE: box2(-5, -7, 10, 8),
+      OWL: box2(-6, -14, 12, 15),
+      TICTAC: box2(-6, -10, 12, 11),
+      KOI: box2(-10, -4, 20, 8),
+      FISH: box2(-16, -28, 32, 32),
+      DOLPHIN: box2(-26, -22, 52, 36),
+      WHALE_BACK: box2(-50, -18, 100, 27),
+      WHALE_FLUKE: box2(-26, -30, 52, 38),
+      BOWL: box2(-6, -10, 12, 11),
+      JELLY: box2(-8, -12, 16, 16)
+    });
+    var glowDot2 = /* @__PURE__ */ __name((x, y, r, rgb, a = 0.45) => {
+      const id3 = `lueur-bete_${[x, y, r, a].map(r23).join("_")}_${rgb}`.replace(/,/g, "-").replace(/\./g, "p");
+      return `<defs><radialGradient id="${id3}"><stop offset="0" stop-color="rgb(${rgb})" stop-opacity="${r23(Math.min(0.9, a * 1.7))}"/><stop offset="1" stop-color="rgb(${rgb})" stop-opacity="0"/></radialGradient></defs><circle cx="${r23(x)}" cy="${r23(y)}" r="${r23(r)}" fill="url(#${id3})"/>`;
+    }, "glowDot");
+    var water = /* @__PURE__ */ __name((x, y, w) => `<path d="M${r23(x - w)},${r23(y)} Q${r23(x - w / 2)},${r23(y - 1.2)} ${x},${r23(y)} Q${r23(x + w / 2)},${r23(y + 1.2)} ${r23(x + w)},${r23(y)}" fill="none" stroke="#FFFFFF" stroke-width="1" stroke-linecap="round" opacity="0.85"/>`, "water");
+    var splash = /* @__PURE__ */ __name((x, y, k = 1) => [[-3, -2.6], [0, -3.6], [3, -2.4]].map(([dx, dy]) => E(x + dx * k, y + dy * k, 0.7 * k, 0.9 * k, "#BFE6FF", 0.5)).join(""), "splash");
+    function butterfly3(v, pose) {
+      const col = { jaune: ["#F6D04A", "#E8A83A", "#FFE9A8"], bleu: ["#6AB4F0", "#3E7FC1", "#D2E8FC"], lune: ["#CFF2D8", "#8ACB9E"] }[v];
+      const open = pose === "vol2" ? 0.45 : pose === "repos" ? 0.25 : 1;
+      const y = pose === "repos" ? -3.6 : -5;
+      const wing = /* @__PURE__ */ __name((m) => `<g transform="translate(0 ${y}) scale(${r23(m * open)} 1)">${P2("M0,0 Q2.6,-5.4 5.6,-3.6 Q6.6,-1 2.4,0.4 Q5.2,1.6 4,3.6 Q1.6,4.4 0,1 Z", col[0])}${E(3.4, -2.6, 0.9, 0.7, col[1], 0)}${v === "lune" ? E(3, -2.4, 0.5, 0.5, "#FFFFFF", 0) : ""}</g>`, "wing");
+      if (pose === "repos") {
+        const fl = [0, 72, 144, 216, 288].map((a) => E(Math.cos(a * Math.PI / 180) * 1.6, -1.4 + Math.sin(a * Math.PI / 180) * 0.8, 1.2, 0.8, "#F7C6D9", 0.5)).join("") + E(0, -1.4, 0.8, 0.6, "#F2C94C", 0.4);
+        return '<g transform="translate(0 -1.3)">' + limb([0, -1.2], [0, 0], 0.6, "#6CAE5A") + fl + P2("M0,-2.6 Q-1.4,-8.6 2.6,-9.6 Q4.6,-6.4 0.6,-2.4 Z", col[0], 0.7) + E(2, -7, 0.8, 0.6, col[1], 0) + (v === "lune" ? limb([-0.6, -2.4], [0.6, -4.2], 1.1, "#EDE5D2") + stroke("M1.2,-5.4 Q2,-6.6 3,-6.8", 0.35, OUT3) + stroke("M1.7,-6.1 l0.3,0.4 M2.3,-6.6 l0.2,0.45", 0.3, OUT3) + E(1, -4.9, 1.05, 0.95, "#F4EEDF", 0.7) + eye(1.35, -5, 0.38, "open") + E(1.05, -4.3, 0.3, 0.16, "#F7A8B0", 0) : limb([-0.6, -2.4], [0.6, -4.2], 1, "#4A3A30") + stroke("M1.2,-5.5 Q2,-6.8 3,-6.9", 0.35, OUT3) + E(3, -6.9, 0.3, 0.3, OUT3, 0) + E(1, -4.9, 1, 0.92, col[2], 0.7) + eye(1.35, -5, 0.38, "open") + E(1.05, -4.3, 0.3, 0.16, "#F7A8B0", 0)) + "</g>";
+      }
+      let s = wing(-1) + wing(1);
+      if (v === "lune") {
+        const feather = /* @__PURE__ */ __name((m) => stroke(`M${r23(m * 0.4)},${r23(y - 3.6)} Q${r23(m * 1.2)},${r23(y - 5.2)} ${r23(m * 2)},${r23(y - 5.6)}`, 0.4, OUT3) + [0.35, 0.65].map((k) => stroke(`M${r23(m * (0.4 + 1.6 * k))},${r23(y - 3.6 - 2 * k)} l${r23(m * 0.5)},0.3`, 0.3, OUT3)).join(""), "feather");
+        s += feather(-1) + feather(1) + E(0, y + 0.4, 1, 2.4, "#EDE5D2", 0.7) + L([-0.7, y + 0.6], [0.7, y + 0.6], "#C9BFA8", 0.35) + L([-0.6, y + 1.6], [0.6, y + 1.6], "#C9BFA8", 0.35) + E(0, y - 2.5, 1.45, 1.3, "#F4EEDF", 0.7) + eye(-0.55, y - 2.55, 0.42, pose === "joie" ? "joy" : "open") + eye(0.55, y - 2.55, 0.42, pose === "joie" ? "joy" : "open") + E(-0.95, y - 1.85, 0.32, 0.17, "#F7A8B0", 0) + E(0.95, y - 1.85, 0.32, 0.17, "#F7A8B0", 0);
+      } else {
+        const m = pose === "joie" ? "joy" : "open";
+        s += stroke(`M-0.3,${r23(y - 3.2)} Q-1,${r23(y - 4.8)} -1.8,${r23(y - 5.2)} M0.3,${r23(y - 3.2)} Q1,${r23(y - 4.8)} 1.8,${r23(y - 5.2)}`, 0.4, OUT3) + E(-1.8, y - 5.2, 0.32, 0.32, OUT3, 0) + E(1.8, y - 5.2, 0.32, 0.32, OUT3, 0) + E(0, y + 0.5, 0.8, 2.2, "#4A3A30", 0.6) + E(0, y - 2.4, 1.3, 1.15, col[2], 0.6) + E(-0.45, y - 2.95, 0.5, 0.28, "#FFFFFF", 0).replace("fill=", 'fill-opacity="0.6" fill=') + eye(-0.5, y - 2.45, 0.38, m) + eye(0.5, y - 2.45, 0.38, m) + E(-0.9, y - 1.8, 0.3, 0.16, "#F7A8B0", 0) + E(0.9, y - 1.8, 0.3, 0.16, "#F7A8B0", 0);
+      }
+      if (pose === "joie") s += heartIcon(4.6, y - 4.4, 0.9);
+      return s;
+    }
+    __name(butterfly3, "butterfly");
+    function firefly(pose) {
+      const on = pose !== "vol2";
+      let s = on ? glowDot2(-1.6, -3, 4.4, "255,236,150", 0.4) : glowDot2(-1.6, -3, 2.6, "255,236,150", 0.25);
+      s += E(-1.6, -3, 1.8, 1.4, on ? "#FFF3A0" : "#E8D880", 0.7) + E(0.6, -3.4, 1.4, 1.2, "#4A3A30", 0.7);
+      s += stroke("M1.6,-4.9 Q1.3,-5.7 0.5,-5.8 M2.6,-5 Q3,-5.7 3.9,-5.75", 0.35, OUT3);
+      s += E(2.1, -3.9, 1.35, 1.25, "#F2B48A", 0.6) + E(1.6, -4.5, 0.5, 0.3, "#FFD8BC", 0) + eye(2.55, -4, 0.52, pose === "joie" ? "joy" : "open") + E(2.3, -3.05, 0.42, 0.22, "#F7A8B0", 0);
+      s += P2("M-0.4,-4 Q-1.6,-6.6 -3.4,-5.4 Q-2,-4.4 -0.4,-3.8 Z", "#E8F2FA", 0.5).replace("fill=", 'fill-opacity="0.8" fill=');
+      if (pose === "joie") s += heartIcon(3.2, -6, 0.8);
+      return `<g transform="translate(0 1)">${s}</g>`;
+    }
+    __name(firefly, "firefly");
+    function bee3(pose, meca = false) {
+      const flap = pose === "vol2" ? 0.4 : 1;
+      const y = pose === "repos" ? -2.8 : -4.2;
+      let s = "";
+      s += `<g transform="translate(-0.4 ${y - 1.6}) scale(1 ${flap})">${P2("M0,0 Q-2.2,-3.8 0.4,-4 Q1.6,-2.4 0.6,0 Z", meca ? "#D8EEF6" : "#E8F2FA", 0.5).replace("fill=", 'fill-opacity="0.85" fill=')}</g>`;
+      s += E(0, y, 3, 2.2, meca ? "#D4A84A" : "#F6C83E");
+      s += clip(`bee${meca ? "m" : ""}${pose}`, `M-3,${y} a3,2.2 0 1,0 6,0 a3,2.2 0 1,0 -6,0 Z`, [-1.2, 0.6].map((x) => `<rect x="${x}" y="${y - 3}" width="0.9" height="6" fill="${meca ? "#8E6E2C" : "#3A2A24"}"/>`).join(""));
+      s += E(0, y, 3, 2.2, "none");
+      if (meca) {
+        s += E(2.7, y - 0.8, 1.95, 1.8, "#B8C0C8", 0.8) + E(2.1, y - 1.5, 0.7, 0.45, "#E2E8EE", 0) + eye(3.2, y - 0.95, 0.72, pose === "joie" ? "joy" : "open") + E(2.8, y + 0.35, 0.55, 0.3, "#F7A8B0", 0) + E(1.5, y - 2.1, 0.28, 0.28, "#F0D58A", 0.3);
+      } else {
+        s += stroke(`M2.3,${r23(y - 2.3)} Q2.1,${r23(y - 3.7)} 1.2,${r23(y - 4)} M3.1,${r23(y - 2.4)} Q3.5,${r23(y - 3.6)} 4.4,${r23(y - 3.8)}`, 0.35, OUT3);
+        s += E(2.7, y - 0.8, 1.9, 1.8, "#FFE07A", 0.8) + E(2.1, y - 1.55, 0.65, 0.4, "#FFF2C0", 0) + eye(3.25, y - 0.95, 0.72, pose === "joie" ? "joy" : "open") + E(2.85, y + 0.35, 0.55, 0.3, "#F7A8B0", 0);
+      }
+      if (meca) s += limb([-1, y - 2.2], [-1.6, y - 4], 0.5, "#C9A24A") + E(-2.4, y - 4.4, 1, 0.6, "#C9A24A", 0.5) + E(-0.8, y - 4.4, 1, 0.6, "#C9A24A", 0.5) + E(0.9, y + 0.6, 0.3, 0.3, "#F0D58A", 0);
+      else s += P2(`M-3.2,${r23(y + 0.4)} L-4.2,${r23(y + 0.8)} L-3.2,${r23(y + 1.2)} Z`, "#3A2A24", 0);
+      if (pose === "joie") s += meca ? heartIcon(2.6, y - 4, 0.8) : heartIcon(2.8, y - 4.9, 0.8);
+      return `<g transform="translate(0 ${pose === "repos" ? 1.2 : 1.6})">${s}</g>`;
+    }
+    __name(bee3, "bee");
+    function beeFriend(pose) {
+      const flap = pose === "vol2" ? 0.4 : pose === "repos" ? 0.55 : 1;
+      const y = pose === "repos" ? -2.8 : -4.2;
+      const glass = /* @__PURE__ */ __name((d) => P2(d, "#F6DDE6", 0.5).replace("fill=", 'fill-opacity="0.85" fill='), "glass");
+      let s = "";
+      s += `<g transform="translate(-0.6 ${y - 1.6}) scale(1 ${flap})">${glass("M0,0 Q-2.6,-4 0.2,-4.4 Q1.8,-2.6 0.6,0 Z")}${glass("M-0.6,0.2 Q-3.6,-2.2 -2.6,-3.4 Q-1,-2.8 -0.2,0 Z")}</g>`;
+      s += limb([-0.8, y - 2], [-1.4, y - 3.8], 0.5, "#C9A24A") + heartIcon(-1.6, y - 4.6, 0.75).replace("#F27A8A", "#E2C26A");
+      s += E(0, y, 2.9, 2.4, "#D98B5F");
+      s += clip(`amie${pose}`, `M-2.9,${y} a2.9,2.4 0 1,0 5.8,0 a2.9,2.4 0 1,0 -5.8,0 Z`, [-1.3, 0.4].map((x) => `<rect x="${x}" y="${y - 3}" width="0.85" height="6" fill="#A85A3A"/>`).join("") + `<ellipse cx="-0.6" cy="${y - 1.3}" rx="1.4" ry="0.6" fill="#FFFFFF" fill-opacity="0.45"/>`);
+      s += E(0, y, 2.9, 2.4, "none") + E(-2, y + 0.8, 0.28, 0.28, "#F0D58A", 0) + E(1.2, y + 1.5, 0.28, 0.28, "#F0D58A", 0);
+      s += P2(`M-2.8,${r23(y + 0.2)} L-3.9,${r23(y + 0.6)} L-2.8,${r23(y + 1)} Z`, "#C9A24A", 0.5);
+      const hx = 2.7, hy = y - 0.7;
+      s += stroke(`M${hx - 0.2},${r23(hy - 1.3)} Q${hx - 0.6},${r23(hy - 3)} ${hx - 1.6},${r23(hy - 3.2)}`, 0.35, OUT3) + stroke(`M${hx + 0.4},${r23(hy - 1.3)} Q${hx + 1},${r23(hy - 2.8)} ${hx + 1.8},${r23(hy - 2.8)}`, 0.35, OUT3);
+      s += E(hx - 1.7, hy - 3.2, 0.4, 0.4, "#E2C26A", 0.3) + [0, 72, 144, 216, 288].map((a) => E(hx + 1.8 + Math.cos(a * Math.PI / 180) * 0.55, hy - 2.8 + Math.sin(a * Math.PI / 180) * 0.55, 0.42, 0.42, "#F7C6D9", 0.25)).join("") + E(hx + 1.8, hy - 2.8, 0.25, 0.25, "#F2C94C", 0);
+      s += E(hx, hy, 1.95, 1.8, "#EBB08A", 0.8) + E(hx - 0.6, hy - 0.75, 0.7, 0.42, "#F6CFB4", 0);
+      s += eye(hx + 0.5, hy - 0.15, 0.72, pose === "joie" ? "joy" : "open") + (pose === "joie" ? "" : L([hx + 1.05, hy - 0.85], [hx + 1.5, hy - 1.25], OUT3, 0.3));
+      s += E(hx + 0.1, hy + 1, 0.6, 0.32, "#F7A8B0", 0);
+      if (pose === "joie") s += heartIcon(2.8, y - 4.6, 0.8);
+      return `<g transform="translate(0 ${pose === "repos" ? 1.2 : 1.6})">${s}</g>`;
+    }
+    __name(beeFriend, "beeFriend");
+    function owl(pose) {
+      const tilt = pose === "marche1" ? -6 : pose === "marche2" ? 6 : 0;
+      const m = pose === "clignement" || pose === "repos" ? "blink" : pose === "joie" ? "joy" : "open";
+      let s = limb([-5, -0.6], [5, -0.6], 0.9, "#7E5530");
+      s += `<g transform="rotate(${tilt} 0 -8)">`;
+      s += E(0, -7.2, 5.2, 6.4, "#A8784A") + E(0, -5.6, 3.4, 4, "#F2DEC0", 0);
+      s += [-1.6, 0, 1.6].map((x) => P2(`M${x - 0.6},-5 L${x},-4.2 L${x + 0.6},-5`, "none", 0.4)).join("") + [-1, 1].map((x) => P2(`M${x - 0.6},-3.4 L${x},-2.6 L${x + 0.6},-3.4`, "none", 0.4)).join("");
+      s += P2("M-4.4,-11 L-4.8,-14.6 L-2.4,-12 Z", "#A8784A", 0.8) + P2("M4.4,-11 L4.8,-14.6 L2.4,-12 Z", "#A8784A", 0.8);
+      s += E(-2, -9.6, 2, 2, "#FFF4E0", 0.7) + E(2, -9.6, 2, 2, "#FFF4E0", 0.7) + eye(-2, -9.6, 1.2, m) + eye(2, -9.6, 1.2, m);
+      s += P2("M-0.6,-8.4 L0.6,-8.4 L0,-6.8 Z", "#F2B33B", 0.6) + `</g>`;
+      s += E(-1.4, -0.8, 0.9, 0.5, "#F2B33B", 0.5) + E(1.4, -0.8, 0.9, 0.5, "#F2B33B", 0.5);
+      if (pose === "joie") s += heartIcon(4.6, -14, 0.9);
+      return s;
+    }
+    __name(owl, "owl");
+    function koi(v, pose) {
+      const [base, spot] = { orange: ["#F08A3A", "#FFFFFF"], blanc: ["#FFFFFF", "#E8483C"], or: ["#F2C04B", "#FFF4C8"] }[v];
+      const sw = pose === "nage2" ? -1 : 1;
+      let s = `<ellipse cx="0" cy="0" rx="11" ry="3.6" fill="#7FC4E8" fill-opacity="0.25"/>`;
+      s += P2(`M-6,0 Q${-9},${-2.8 * sw} ${-10.4},${-3 * sw} Q${-9.6},0 ${-10.4},${3 * sw} Q${-9},${2.8 * sw} -6,0 Z`.replace(/-?\d+\.?\d*e?-?\d*/g, (n) => r23(+n)), base, 0.8);
+      s += P2(`M-6.4,0 Q-4,${r23(-2.6 + sw * 0.3)} 1.6,-2.2 Q6.6,-1.4 7.4,0 Q6.6,1.4 1.6,2.2 Q-4,${r23(2.6 + sw * 0.3)} -6.4,0 Z`, base);
+      s += E(-1, -0.6, 1.6, 1, spot, 0) + E(3.6, 0.6, 1.2, 0.8, spot, 0) + eye(5.4, -1, 0.58, "open") + eye(5.4, 1, 0.58, "open");
+      s += P2("M1.6,-2.1 Q0.4,-4.6 -1.4,-4.2 Q-0.4,-3 0,-2.2 Z", base, 0.6) + P2("M1.6,2.1 Q0.4,4.6 -1.4,4.2 Q-0.4,3 0,2.2 Z", base, 0.6);
+      if (pose === "joie") s += E(9.4, -1.6, 0.7, 0.7, "#E8F6FF", 0.4) + E(11, -3.4, 0.45, 0.45, "#E8F6FF", 0.4) + heartIcon(10.6, 2.2, 0.8);
+      return s;
+    }
+    __name(koi, "koi");
+    function fish(v, n) {
+      const [col, colS, fin] = { sardine: ["#A8C4D8", "#6E8CA8", "#8AAAC4"], dorade: ["#F2C27A", "#E8906A", "#F29A8A"], volant: ["#7EAEE0", "#4A7AB8", "#BFE0FF"] }[v];
+      const y = n ? -20 : -12, rot = n ? -10 : -40;
+      let s = water(0, -0.6, 10) + (n ? "" : splash(-2, -1.4, 1.4));
+      s += `<g transform="translate(0 ${y}) rotate(${rot})">`;
+      if (v === "volant") s += P2("M0,-1 Q-2,-9 -5,-10 Q-3,-4 -2,0 Z", fin, 0.7) + P2("M0,1 Q-2,8 -4.4,8.6 Q-2.6,3.6 -2,0.6 Z", fin, 0.7);
+      s += P2("M-6,0 L-10,-3.4 L-9.2,0 L-10,3.4 Z", colS, 0.8);
+      s += E(0, 0, 6.6, v === "dorade" ? 3.8 : 2.6, col);
+      s += P2(`M-5.4,0.8 Q0,${v === "dorade" ? 3.6 : 2.4} 5.4,0.8`, "none", 0).replace('stroke="none"', `stroke="${colS}" stroke-width="1"`);
+      s += P2("M-1,-2.4 L1,-4 L2.2,-2 Z", fin, 0.6) + eye(3.8, -0.5, 1.05, "open") + E(3.4, 0.9, 0.8, 0.4, "#F7A8B0", 0);
+      s += "</g>";
+      return s;
+    }
+    __name(fish, "fish");
+    function dolphin(n) {
+      const pos = [[-8, -10, -35], [0, -16.2, 0], [8, -10, 35]][n];
+      let s = water(0, -0.6, 22) + (n !== 1 ? splash(n ? 12 : -12, -1.4, 1.6) : "");
+      s += `<g transform="translate(${pos[0]} ${pos[1]}) rotate(${pos[2]})">`;
+      s += P2("M-11,0 L-17,-4 L-15.6,0 L-17,4 Z", "#5A8AC0", 0.9);
+      s += P2("M-12,0 Q-8,-6.6 2,-6 Q10,-5.4 13,-1.6 L16.6,-0.6 Q15.6,1 13,1.2 Q8,5.2 -2,4.8 Q-9,4 -12,0 Z", "#7EAEE0");
+      s += clip(`dol${n}`, "M-12,0 Q-8,-6.6 2,-6 Q10,-5.4 13,-1.6 L16.6,-0.6 Q15.6,1 13,1.2 Q8,5.2 -2,4.8 Q-9,4 -12,0 Z", '<ellipse cx="2" cy="4.4" rx="12" ry="3" fill="#E8F2FA"/>');
+      s += P2("M-1,-5.8 L-4,-10.4 L3,-5.8 Z", "#5A8AC0", 0.9) + P2("M1,2.6 L-2,6.4 L4,3.4 Z", "#5A8AC0", 0.8);
+      s += eye(8.8, -2, 1.3, "open") + P2("M11.4,0.6 Q13,1.4 14.6,0.6", "none", 0.6) + E(8.1, 0.5, 1.1, 0.55, "#F7A8B0", 0);
+      s += "</g>";
+      return s;
+    }
+    __name(dolphin, "dolphin");
+    function whaleBack(n) {
+      let s = `<ellipse cx="0" cy="-1" rx="56" ry="4" fill="#5E8EC0" fill-opacity="0.25"/>`;
+      s += P2("M-52,0 Q-30,-11.4 0,-12.4 Q34,-11.4 54,0 Z", "#4A6E9E") + clip(`wb${n}`, "M-52,0 Q-30,-11.4 0,-12.4 Q34,-11.4 54,0 Z", '<ellipse cx="-6" cy="-10.8" rx="40" ry="3.4" fill="#6A8EBE"/>' + [-20, -6, 10].map((x) => `<ellipse cx="${x}" cy="-6.4" rx="2" ry="1.2" fill="#3A5A86"/>`).join(""));
+      s += eye(30, -5.4, 1.6, "open") + E(28.6, -2.8, 1.7, 0.8, "#F7A8B0", 0) + P2("M34,-3.6 Q38,-2.4 42,-3.6", "none", 0.7);
+      s += water(-40, -0.4, 10) + water(40, -0.4, 10);
+      const h = n ? 7.4 : 5;
+      s += [-3, 0, 3].map((dx, i) => thick(`M${16 + dx * 0.3},-11.6 Q${16 + dx},${r23(-11.6 - h * 0.6)} ${16 + dx * 2.2},${r23(-11.6 - h + i % 2)}`, 1.4, "#E8F6FF")).join("") + E(16, -11.6 - h, 3, 1.6, "#E8F6FF", 0.7);
+      return s;
+    }
+    __name(whaleBack, "whaleBack");
+    function whaleFluke(n) {
+      const y = n ? -8 : -18;
+      let s = `<ellipse cx="0" cy="-1" rx="28" ry="3.4" fill="#5E8EC0" fill-opacity="0.25"/>` + water(0, -0.6, 22);
+      s += P2(`M-3,0 Q-2,${y + 8} 0,${y + 4} Q2,${y + 8} 3,0 Z`, "#4A6E9E", 0.9);
+      s += P2(`M0,${y + 5} Q-10,${y + 5} -19,${y - 6} Q-17,${y - 7} -14,${y - 5} Q-9,${y - 2} -5,${y - 1} Q-2,${y - 1} 0,${y + 1} Q2,${y - 1} 5,${y - 1} Q9,${y - 2} 14,${y - 5} Q17,${y - 7} 19,${y - 6} Q10,${y + 5} 0,${y + 5} Z`, "#4A6E9E") + P2(`M-15,${y - 4} Q-9,${y} -3,${y + 1}`, "none", 0).replace('stroke="none"', 'stroke="#6A8EBE" stroke-width="1" stroke-linecap="round"');
+      s += [-14, -6, 6, 14].map((x, i) => E(x, y + 2 + i % 2 * 2, 0.6, 1, "#BFE6FF", 0.4)).join("") + splash(0, -1.2, 1.6);
+      return s;
+    }
+    __name(whaleFluke, "whaleFluke");
+    function bowl(v, n) {
+      let s = P2("M-4.6,-10.4 L4.6,-10.4 L4.2,-9.4 Q7.4,-6.6 6.4,-3 Q5.2,0 0,0 Q-5.2,0 -6.4,-3 Q-7.4,-6.6 -4.2,-9.4 Z", "#E6F4FA", 0.9).replace("fill=", 'fill-opacity="0.75" fill=');
+      s += P2("M-6.2,-5.6 Q0,-4.6 6.2,-5.6 Q6.4,-3.6 5.6,-2.4 Q3.8,-0.6 0,-0.6 Q-3.8,-0.6 -5.6,-2.4 Q-6.4,-3.6 -6.2,-5.6 Z", "#9ED4F0", 0).replace("fill=", 'fill-opacity="0.7" fill=');
+      if (v === "bulle") {
+        const x = n ? 1 : -1;
+        s += `<g transform="translate(${x} -3.2) scale(${n ? -1 : 1} 1)">${P2("M-1.9,0 L-3.7,-1.4 L-3.2,0 L-3.7,1.4 Z", "#F08A3A", 0.5)}${E(0, 0, 2.3, 1.8, "#F6A04A", 0.6)}${E(-0.4, -0.7, 1, 0.45, "#FFC78A", 0)}${P2("M-0.6,0.4 Q0.2,1.6 0.9,0.6 Z", "#F08A3A", 0.4)}${eye(1.05, -0.35, 0.62, "open")}${E(0.75, 0.55, 0.45, 0.22, "#F7A8B0", 0)}</g>` + E(2.6, -7 - n, 0.5, 0.5, "#FFFFFF", 0.4);
+      }
+      s += `<path d="M-4.4,-8.6 Q-5.6,-6 -4.8,-3.6" fill="none" stroke="#FFFFFF" stroke-width="0.8" stroke-linecap="round" opacity="0.9"/>`;
+      return s;
+    }
+    __name(bowl, "bowl");
+    function jelly(n) {
+      const k = n ? 1 : 0.9;
+      let s = glowDot2(0, -8, 7.6, "210,180,255", 0.45);
+      s += [-3, -1, 1, 3].map((x, i) => stroke(`M${x},-7 Q${x + (i % 2 ? 1.4 : -1.4) * (n ? 1 : -1)},-3 ${x},${n ? 0 : -1.6}`, 0.7, "#C8A8F0")).join("");
+      s += `<g transform="translate(0 -8) scale(${n ? 1 : 1.1} ${k})">${P2("M-5.4,1 Q-5.4,-6 0,-6.2 Q5.4,-6 5.4,1 Q2.8,0 0,1 Q-2.8,0 -5.4,1 Z", "#E6D4FF")}${E(-1.6, -3.4, 1.4, 0.9, "#FFFFFF", 0).replace("fill=", 'fill-opacity="0.6" fill=')}${eye(-1.8, -1.6, 0.7, "open")}${eye(1.8, -1.6, 0.7, "open")}${E(0, -0.4, 0.6, 0.35, "#F7A8B0", 0)}</g>`;
+      return s;
+    }
+    __name(jelly, "jelly");
+    Object.assign(module.exports, { butterfly: butterfly3, firefly, bee: bee3, beeFriend, owl, koi, fish, dolphin, whaleBack, whaleFluke, bowl, jelly });
+  }
+});
+
+// atelier/lot_m.js
+var require_lot_m = __commonJS({
+  "atelier/lot_m.js"(exports, module) {
+    var { OUT: OUT3, P: P2, E, L, clip, r2: r23 } = require_troupe2();
+    var Bt = require_betes();
+    var halo = /* @__PURE__ */ __name((x, y, r, rgb = "255,240,170", a = 0.5) => [1, 0.7, 0.45].map((k, i) => `<circle cx="${r23(x)}" cy="${r23(y)}" r="${r23(r * k)}" fill="rgba(${rgb},${r23(a * (0.35 + i * 0.3))})"/>`).join(""), "halo");
+    var etincelle = /* @__PURE__ */ __name((x, y, s = 1, fill = "#FFF6C8", line = "#E8C860") => `<path d="M${r23(x)},${r23(y - 1.6 * s)} L${r23(x + 0.4 * s)},${r23(y - 0.4 * s)} L${r23(x + 1.6 * s)},${r23(y)} L${r23(x + 0.4 * s)},${r23(y + 0.4 * s)} L${r23(x)},${r23(y + 1.6 * s)} L${r23(x - 0.4 * s)},${r23(y + 0.4 * s)} L${r23(x - 1.6 * s)},${r23(y)} L${r23(x - 0.4 * s)},${r23(y - 0.4 * s)} Z" fill="${fill}" stroke="${line}" stroke-width="${r23(0.35 * s)}"/>`, "etincelle");
+    var ombre = /* @__PURE__ */ __name((rx, ry, x = 0, y = 0) => `<ellipse cx="${r23(x)}" cy="${r23(y)}" rx="${r23(rx)}" ry="${r23(ry)}" fill="rgba(40,55,20,.18)"/>`, "ombre");
+    var trait = /* @__PURE__ */ __name((d, color, w) => `<path d="${d}" fill="none" stroke="${color}" stroke-width="${w}" stroke-linecap="round" stroke-linejoin="round"/>`, "trait");
+    var graine = /* @__PURE__ */ __name((s) => () => {
+      s = s * 16807 % 2147483647;
+      return s / 2147483647;
+    }, "graine");
+    var BRUME = { clair: "#E4E9F1", corps: "#CCD4E1", dessous: "#AEB8CA", trait: "rgba(59,71,99,.45)" };
+    var bouffee = /* @__PURE__ */ __name((x, y, r, a = 0.92) => `<g opacity="${a}"><circle cx="${r23(x)}" cy="${r23(y)}" r="${r23(r)}" fill="${BRUME.corps}" stroke="${BRUME.trait}" stroke-width="1.1"/><path d="M${r23(x - r * 0.86)},${r23(y + r * 0.2)} Q${r23(x)},${r23(y + r * 1.1)} ${r23(x + r * 0.86)},${r23(y + r * 0.2)} Q${r23(x)},${r23(y + r * 0.62)} ${r23(x - r * 0.86)},${r23(y + r * 0.2)} Z" fill="${BRUME.dessous}"/><circle cx="${r23(x - r * 0.32)}" cy="${r23(y - r * 0.34)}" r="${r23(r * 0.28)}" fill="${BRUME.clair}"/></g>`, "bouffee");
+    var echarpe = /* @__PURE__ */ __name((x, y, w, f, a = 0.6) => {
+      const o = [0, 1.2, -1.2][f];
+      const d = `M${r23(x - w)},${r23(y + 3)} Q${r23(x - w / 2)},${r23(y - 3 + o)} ${r23(x)},${r23(y + 1)} Q${r23(x + w / 2)},${r23(y + 5 - o)} ${r23(x + w)},${r23(y - 1)}`;
+      return `<g opacity="${a}">${trait(d, BRUME.dessous, 9)}${trait(d, BRUME.corps, 6.5)}${trait(d, BRUME.clair, 2.2)}</g>`;
+    }, "echarpe");
+    function brumeAuPied(n, f, k = 1) {
+      const a = 40 * n, b = 20 * n, rnd = graine(7 + n * 31);
+      let back = "", front = "";
+      const tour = [[-a, 0, 0, -b], [0, -b, a, 0], [a, 0, 0, b], [0, b, -a, 0]];
+      tour.forEach(([x0, y0, x1, y1], e) => {
+        const nb = 1 + n * 2;
+        for (let i = 0; i <= nb; i++) {
+          const t = (i + 0.3 + rnd() * 0.4) / (nb + 1), j = rnd();
+          const x = x0 + (x1 - x0) * t + Math.sin((f + i) * 2.1) * 1.6, y = y0 + (y1 - y0) * t;
+          const r = (e < 2 ? 5 + n * 1.6 : 6.5 + n * 2.2) * (0.75 + j * 0.6) * (0.55 + 0.45 * k);
+          const s = bouffee(x, y - r * 0.45 - Math.cos((f + i) * 1.7) * 0.8, r, (e < 2 ? 0.6 : 0.9) * k);
+          if (e < 2) back += s;
+          else front += s;
+        }
+      });
+      return { back, front };
+    }
+    __name(brumeAuPied, "brumeAuPied");
+    function embrume(n, f) {
+      const a = 40 * n, h = 34 + 40 * n;
+      const { back, front } = brumeAuPied(n, f);
+      const voile = `<path d="M${-a},0 L0,${-20 * n} L${a},0 L0,${20 * n} Z" fill="rgba(200,208,222,.35)"/>`;
+      return voile + back + echarpe(-a * 0.05, -h * 0.62, a * 0.55, f, 0.5) + echarpe(a * 0.05, -h * 0.32, a * 0.75, (f + 1) % 3, 0.6) + front;
+    }
+    __name(embrume, "embrume");
+    function guerison(n, f) {
+      const a = 40 * n, h = 34 + 40 * n, k = [0.65, 0.35, 0][f];
+      const { back, front } = brumeAuPied(n, f, k || 0.01);
+      let s = k ? back + front : "";
+      const rnd = graine(91 + n);
+      const nb = 4 + 3 * n;
+      for (let i = 0; i < nb; i++) {
+        const x = (rnd() * 2 - 1) * a * 0.8, y0 = -rnd() * h * 0.5;
+        s += etincelle(x, y0 - f * 12 - rnd() * 8, 1.6 + rnd() * 1.4);
+      }
+      return s + (f === 2 ? halo(0, -h * 0.4, a * 0.6, "255,240,170", 0.25) : "");
+    }
+    __name(guerison, "guerison");
+    function nuage(f) {
+      const dy = [0, -1.5, -0.5][f];
+      const d = `M-15,${r23(-6 + dy)} Q-17,${r23(-15 + dy)} -9,${r23(-16 + dy)} Q-7,${r23(-24 + dy)} 1,${r23(-22 + dy)} Q7,${r23(-28 + dy)} 12,${r23(-20 + dy)} Q19,${r23(-18 + dy)} 16,${r23(-9 + dy)} Q16,${r23(-4 + dy)} 9,${r23(-4 + dy)} L-10,${r23(-4 + dy)} Q-16,${r23(-3 + dy)} -15,${r23(-6 + dy)} Z`;
+      const gouttes = [[-7, 0], [1, 2], [8, -1]].map(([x, y], i) => E(x + (f === i ? 0 : 0.4), y + dy + (f + i) % 3 * 0.8, 1, 1.4, BRUME.dessous, 0.7)).join("");
+      return gouttes + P2(d, BRUME.corps, 1.2).replace(OUT3, "#4A5470") + clip(`nuage${f}`, d, `<rect x="-18" y="${r23(-11 + dy)}" width="36" height="9" fill="${BRUME.dessous}"/>`) + P2(d, "none", 1.2).replace(OUT3, "#4A5470") + L([-8, -17 + dy], [-4, -19.5 + dy], BRUME.clair, 1.6) + E(-2.5, -12 + dy, 1, 1.3, "#4A5470", 0) + E(4.5, -12.4 + dy, 1, 1.3, "#4A5470", 0) + P2(`M-0.6,${r23(-8.6 + dy)} Q1,${r23(-9.8 + dy)} 2.6,${r23(-8.6 + dy)}`, "none", 0.8).replace(OUT3, "#4A5470");
+    }
+    __name(nuage, "nuage");
+    function reparerIcone() {
+      return bouffee(12, 21, 8, 1) + `<g transform="rotate(-40 18 14)"><rect x="16.6" y="9" width="3" height="18" rx="1.2" fill="#B07A48" stroke="${OUT3}" stroke-width="1.2"/><rect x="11" y="5" width="14" height="6.4" rx="1.4" fill="#9AA4B4" stroke="${OUT3}" stroke-width="1.2"/><rect x="12.4" y="6" width="5" height="1.6" rx="0.6" fill="#D6DCE6"/></g>` + etincelle(25.5, 22, 2.2);
+    }
+    __name(reparerIcone, "reparerIcone");
+    var POULES = [["#D9773A", "#B85E2C"], ["#F6F1E6", "#D8D0C0"], ["#3A3436", "#262224"]];
+    function cage(etat, f = 0) {
+      const ouverte = etat === "ouverte";
+      const jx = ouverte ? 0 : [0, 0.8][f];
+      const w = 22, d = 11, h = 24;
+      const bois = "#B98A55", boisS = "#94693E", boisH = "#D2A672", corde = "#D8C08A";
+      const g = /* @__PURE__ */ __name((s2) => `<g transform="translate(${jx} 0)">${s2}</g>`, "g");
+      const L0 = `M${-w},0 L0,${d} L0,${d - h} L${-w},${-h} Z`, R0 = `M0,${d} L${w},0 L${w},${-h} L0,${d - h} Z`, T0 = `M${-w},${-h} L0,${d - h} L${w},${-h} L0,${-d - h} Z`;
+      let s = ombre(30, 11, 2, 2);
+      s += P2(`M${-w},${-h} L0,${-d - h} L${w},${-h} L${w},0 L0,${d} L${-w},0 Z`, "#5A4632", 0);
+      if (!ouverte) {
+        s += clip(`cg${etat}${f}`, `${L0} ${R0}`, POULES.map(([c, cs], i) => {
+          const x = -13 + i * 12, y = -8 - (i === 1 ? 3 : 0) - (f && i !== 1 ? 1.2 : 0);
+          return E(x, y + 6, 6.4, 5, cs, 0.9) + E(x + 1, y, 4, 3.8, c, 0.9) + P2(`M${x},${y - 3.6} Q${x + 1},${y - 6.4} ${x + 2.2},${y - 3.8} Q${x + 3.2},${y - 5.4} ${x + 3.8},${y - 3.2} Z`, "#D8443A", 0.7) + E(x + 2.4, y - 0.6, 0.6, 0.7, "#2A2420", 0) + P2(`M${x + 4.6},${y + 0.2} L${x + 6.4},${y + 0.9} L${x + 4.6},${y + 1.6} Z`, "#F2B640", 0.6);
+        }).join(""));
+      }
+      const barres = /* @__PURE__ */ __name((x0, y0, x1, y1, nb) => Array.from({ length: nb }, (_, i) => {
+        const t = (i + 1) / (nb + 1);
+        const x = x0 + (x1 - x0) * t, y = y0 + (y1 - y0) * t;
+        return L([x, y - 1], [x, y - h + 1], OUT3, 2.6) + L([x, y - 1], [x, y - h + 1], boisH, 1.2);
+      }).join(""), "barres");
+      const cadre = /* @__PURE__ */ __name((pts3) => P2(`M${pts3.map((p) => p.join(",")).join(" L")} Z`, "none", 1.2), "cadre");
+      s += barres(-w, 0, 0, d, 4);
+      if (!ouverte) s += barres(0, d, w, 0, 4);
+      s += [[[-w, 0], [0, d]], [[0, d], [w, 0]]].map(([a, b2]) => L([a[0], a[1] - 1.4], [b2[0], b2[1] - 1.4], OUT3, 4) + L([a[0], a[1] - 1.4], [b2[0], b2[1] - 1.4], bois, 2.4) + L([a[0], a[1] - h + 1.4], [b2[0], b2[1] - h + 1.4], OUT3, 4) + L([a[0], a[1] - h + 1.4], [b2[0], b2[1] - h + 1.4], bois, 2.4)).join("");
+      s += P2(T0, bois, 1.2) + [0.25, 0.5, 0.75].map((t) => L([-w + w * t, -h + d * t], [w * t, -h - d + d * t], boisS, 0.8)).join("") + L([-w + 3, -h], [-4, -h - d + 2], boisH, 1);
+      s += cadre([[-w, 0], [0, d], [w, 0], [w, -h], [0, -d - h], [-w, -h]]) + L([0, d], [0, d - h], OUT3, 1.2);
+      if (ouverte) {
+        s += P2(`M0,${d} L${w},0 L${w + 8},8 L8,${d + 8} Z`, boisS, 1.1) + [0.25, 0.5, 0.75].map((t) => L([w * t, d - d * t], [8 + w * t, d + 8 - d * t], OUT3, 0.8)).join("");
+        s += P2(`M8,${d - 12} q3,-3 6,0 q-3,1 -6,0 Z`, "#F6F1E6", 0.6) + P2(`M-6,${d + 6} q3,-2.6 6,0 q-3,0.8 -6,0 Z`, "#D9773A", 0.6);
+      } else {
+        s += `<rect x="${w * 0.5 - 1.6}" y="${d * 0.5 - h * 0.55}" width="3.2" height="4" rx="0.8" fill="#8E8A80" stroke="${OUT3}" stroke-width="0.8"/>`;
+      }
+      s += P2(`M-6,${-h - d + 1} q6,-7 12,0`, "none", 2.6) + trait(`M-6,${-h - d + 1} q6,-7 12,0`, corde, 1.2);
+      s = g(s);
+      const rocher = /* @__PURE__ */ __name((x, y, rx, ry) => P2(`M${x - rx},${y} Q${x - rx},${y - ry * 1.4} ${x},${y - ry * 1.5} Q${x + rx},${y - ry * 1.3} ${x + rx},${y} Q${x},${y + ry * 0.5} ${x - rx},${y} Z`, "#9A958C", 1.2) + P2(`M${x + rx * 0.2},${y - ry * 1.3} Q${x + rx * 0.9},${y - ry * 1.1} ${x + rx},${y} Q${x + rx * 0.5},${y + ry * 0.2} ${x + rx * 0.3},${y + ry * 0.1} Z`, "#7E7A72", 0) + L([x - rx * 0.6, y - ry * 0.8], [x - rx * 0.2, y - ry * 1.2], "#BDB8AE", 1.2), "rocher");
+      s = rocher(-30, 4, 13, 10) + s + rocher(26, 8, 11, 8) + rocher(-14, 14, 9, 6);
+      s += trait("M-34,-4 q-4,6 1,10 q3,3 -1,8", "#4E7A3A", 2);
+      if (!ouverte && f) s += P2("M30,-26 q3,-3 6,0 q-3,1 -6,0 Z", "#F6F1E6", 0.6) + P2("M-32,-22 q2.6,-2.6 5.2,0 q-2.6,0.8 -5.2,0 Z", "#D9773A", 0.6);
+      return s;
+    }
+    __name(cage, "cage");
+    var OEUF = "M0,0.6 C-5.2,0.6 -5.6,-6.4 -3.4,-9.4 C-1.8,-11.8 1.8,-11.8 3.4,-9.4 C5.6,-6.4 5.2,0.6 0,0.6 Z";
+    var oeufCorps = /* @__PURE__ */ __name((id3, w) => P2(OEUF, "#F8EEDA", 0) + clip(id3, OEUF, '<ellipse cx="3.6" cy="-3" rx="4.2" ry="7" fill="#E6D4B2"/><ellipse cx="0" cy="1.4" rx="6" ry="2.4" fill="#E6D4B2"/>') + P2(OEUF, "none", w) + E(-1.9, -7.4, 0.9, 1.6, "#FFFFFF", 0) + E(2.2, -4.6, 0.35, 0.35, "#CDB894", 0) + E(-0.8, -3.2, 0.3, 0.3, "#CDB894", 0), "oeufCorps");
+    var oeuf = /* @__PURE__ */ __name(() => ombre(6, 2.2, 1, 1) + oeufCorps("oeuf", 1.1), "oeuf");
+    var oeufIcone = /* @__PURE__ */ __name(() => `<g transform="translate(16 27.5) scale(2.1)">${oeufCorps("oeufi", 0.62)}</g>` + etincelle(24.5, 8.5, 2), "oeufIcone");
+    function crabe2(pose) {
+      const walk = pose === "marche1" || pose === "marche2", n = pose === "marche2" ? 1 : 0;
+      const joie = pose === "joie";
+      const C2 = "#E8734A", CS = "#C85A36", CH = "#F6A27E", V = "#F6C7A0";
+      const y = -5.4 - (walk && n ? 0.5 : 0);
+      let s = ombre(8, 1.8, 0, 0.2);
+      for (const side of [-1, 1]) for (let i = 0; i < 3; i++) {
+        const lift = walk && (i + n + (side > 0 ? 1 : 0)) % 2 ? -1.2 : 0;
+        const x0 = side * (3 + i * 1.2), x1 = side * (6.4 + i * 1.4), x2 = side * (7.6 + i * 1.5);
+        s += P2(`M${r23(x0)},${r23(y + 1)} L${r23(x1)},${r23(y - 0.6 + lift)} L${r23(x2)},${r23(0 + lift * 0.4)}`, "none", 2.4) + trait(`M${r23(x0)},${r23(y + 1)} L${r23(x1)},${r23(y - 0.6 + lift)} L${r23(x2)},${r23(0 + lift * 0.4)}`, CS, 1);
+      }
+      const pince = /* @__PURE__ */ __name((side) => {
+        const up2 = joie ? -6 : walk ? -1.2 * (n ? 1 : -1) * side * 0.5 : 0;
+        const bx = side * 8.6, by = y - 3.4 + up2;
+        return P2(`M${r23(side * 4.4)},${r23(y - 1)} Q${r23(side * 6.6)},${r23(y - 2.4 + up2 / 2)} ${r23(bx)},${r23(by + 1.4)}`, "none", 2.6) + trait(`M${r23(side * 4.4)},${r23(y - 1)} Q${r23(side * 6.6)},${r23(y - 2.4 + up2 / 2)} ${r23(bx)},${r23(by + 1.4)}`, C2, 1.2) + E(bx, by, 2.6, 2.2, C2, 1) + P2(`M${r23(bx + side * 0.6)},${r23(by - 2)} L${r23(bx + side * 2.4)},${r23(by - 3.6)} L${r23(bx + side * 1.8)},${r23(by - 0.8)} Z`, C2, 0.9) + L([bx - side * 0.8, by - 0.8], [bx - side * 0.2, by - 1.6], CH, 0.8);
+      }, "pince");
+      s += pince(-1) + pince(1);
+      const shell2 = `M-6.4,${r23(y + 1.6)} Q-7,${r23(y - 4.2)} 0,${r23(y - 4.6)} Q7,${r23(y - 4.2)} 6.4,${r23(y + 1.6)} Q0,${r23(y + 3.6)} -6.4,${r23(y + 1.6)} Z`;
+      s += P2(shell2, C2) + clip(`crabe${pose}`, shell2, `<path d="M-8,${r23(y + 0.6)} Q0,${r23(y + 2.8)} 8,${r23(y + 0.6)} L8,${r23(y + 4)} L-8,${r23(y + 4)} Z" fill="${V}"/><ellipse cx="4" cy="${r23(y - 1)}" rx="3" ry="4" fill="${CS}" opacity="0.6"/>`) + P2(shell2, "none") + L([-4.4, y - 2.6], [-2, y - 3.6], CH, 1);
+      const eyeMode = pose === "clignement" ? "blink" : joie ? "joy" : "open";
+      for (const side of [-1, 1]) {
+        const ex = side * 1.9, ey = y - 7.4;
+        s += L([side * 1.4, y - 4], [ex, ey + 1.2], OUT3, 1.6) + L([side * 1.4, y - 4], [ex, ey + 1.2], CS, 0.6) + E(ex, ey, 1.5, 1.6, "#FFFFFF", 0.8) + Bt.eye(ex + 0.1, ey + 0.1, 0.95, eyeMode);
+      }
+      s += joie ? P2(`M-1.4,${r23(y - 0.4)} Q0,${r23(y + 1)} 1.4,${r23(y - 0.4)}`, "none", 0.7) + Bt.heartIcon(0, y - 12.6, 1.3) : P2(`M-1,${r23(y)} Q0,${r23(y + 0.6)} 1,${r23(y)}`, "none", 0.6);
+      return s;
+    }
+    __name(crabe2, "crabe");
+    function fleurs(f) {
+      const tiges = [[-9, 2, -15, "#F4E9C8"], [0, -2, -20, "#FFFFFF"], [9, 3, -14, "#F8D9E0"], [-2, 7, -11, "#F4E9C8"]];
+      let s = ombre(16, 5, 0, 2);
+      s += P2("M-14,4 Q-12,-4 -9,3 Q-8,-6 -4,3 Q-2,-5 1,3 Q3,-6 6,3 Q8,-4 11,4 Q14,-2 15,5 Q0,9 -14,4 Z", "#6FA84E", 1.1) + trait("M-8,4 Q-4,-1 0,4 Q4,0 8,5", "#5A8E3E", 1);
+      const ouv = [0, 0.4, 0.75, 1][f];
+      for (const [x, y, top, col] of tiges) {
+        const hx = x + (top + 18) * 0.15, hy = y + top;
+        s += P2(`M${x},${y} Q${r23(x + 1.4)},${r23(y + top / 2)} ${r23(hx)},${r23(hy)}`, "none", 2.4) + trait(`M${x},${y} Q${r23(x + 1.4)},${r23(y + top / 2)} ${r23(hx)},${r23(hy)}`, "#5E9A42", 1.1);
+        if (!ouv) {
+          s += E(hx, hy - 1.6, 1.8, 2.8, "#8DC46A", 0.9) + trait(`M${r23(hx - 0.6)},${r23(hy - 3.8)} Q${hx},${r23(hy - 5)} ${r23(hx + 0.6)},${r23(hy - 3.8)}`, col, 1.2);
+          continue;
+        }
+        const r = 1.6 + 2.6 * ouv;
+        for (let i = 0; i < 5; i++) {
+          const a = -Math.PI / 2 + i * 2 * Math.PI / 5;
+          const px = hx + Math.cos(a) * r * 0.75, py = hy + Math.sin(a) * r * 0.55;
+          s += `<ellipse cx="${r23(px)}" cy="${r23(py)}" rx="${r23(r * 0.55)}" ry="${r23(r * 0.4 + 0.4)}" fill="${col}" stroke="${OUT3}" stroke-width="0.8" transform="rotate(${r23(a * 180 / Math.PI + 90)} ${r23(px)} ${r23(py)})"/>`;
+        }
+        s += E(hx, hy, 1.2 + ouv * 0.4, 1 + ouv * 0.3, "#F2C640", 0.7);
+      }
+      if (f === 3) s = halo(0, -10, 20, "255,232,150", 0.3) + s + etincelle(-13, -22, 1.4) + etincelle(12, -25, 1.2) + etincelle(3, -30, 1);
+      return s;
+    }
+    __name(fleurs, "fleurs");
+    function lucioles(f) {
+      const nb = 9, rnd = graine(1234);
+      const pts3 = Array.from({ length: nb }, (_, i) => ({ a: i / nb * Math.PI * 2 + rnd() * 0.5, rx: 8 + rnd() * 9, ry: 3 + rnd() * 4, h: 18 + rnd() * 14, s: 0.9 + rnd() * 0.5 }));
+      let s = `<ellipse cx="0" cy="0" rx="14" ry="5" fill="rgba(255,236,150,.18)"/>` + halo(0, -26, 22, "255,236,150", 0.22);
+      for (const p of pts3) {
+        const a = p.a + f * Math.PI / 8;
+        const x = Math.cos(a) * p.rx, y = -p.h + Math.sin(a) * p.ry;
+        const on = (Math.round(p.a * 10) + f) % 4 !== 0;
+        s += halo(x, y, on ? 5 * p.s : 3.4 * p.s, "255,236,150", on ? 0.5 : 0.3) + E(x, y, 1.3 * p.s, 1.1 * p.s, on ? "#FFF3A0" : "#E8D880", 0);
+      }
+      return s;
+    }
+    __name(lucioles, "lucioles");
+    var OR = { clair: "#FFF6C8", vif: "#F6D25A", base: "#E8B23A", ambre: "#E8A93A", trait: "#9A6A1A" };
+    function etoileD(x, y, r1, r2_, n, rot) {
+      const pts3 = [];
+      for (let i = 0; i < n * 2; i++) {
+        const a = (rot + i * 180 / n) * Math.PI / 180, r = i % 2 ? r2_ : r1;
+        pts3.push(`${r23(x + Math.cos(a) * r)},${r23(y + Math.sin(a) * r)}`);
+      }
+      return `M${pts3.join(" L")} Z`;
+    }
+    __name(etoileD, "etoileD");
+    function eclat(f) {
+      const k = [1, 1.12, 1, 0.9][f % 4], rot = f * 11.25;
+      let s = halo(0, 0, 11 * k, "255,226,130", 0.42);
+      s += P2(etoileD(0, 0, 8 * k, 2.3 * k, 4, rot - 90), OR.vif, 0.9).replace(`stroke="${OUT3}"`, `stroke="${OR.trait}"`);
+      s += P2(etoileD(0, 0, 4.8 * k, 1.6 * k, 4, rot - 45), OR.clair, 0);
+      s += E(0, 0, 1.9 * k, 1.9 * k, "#FFFFFF", 0);
+      for (let i = 0; i < 3; i++) {
+        const a = f * Math.PI / 4 + i * Math.PI * 2 / 3;
+        s += etincelle(Math.cos(a) * 9, Math.sin(a) * 5.4, 0.75);
+      }
+      return s;
+    }
+    __name(eclat, "eclat");
+    function arrivee(f) {
+      let s = "";
+      const col = /* @__PURE__ */ __name((w, a, top) => `<path d="M${-w},0 L${-w},${top + w} Q${-w},${top} 0,${top} Q${w},${top} ${w},${top + w} L${w},0 Z" fill="rgba(255,230,140,${a})"/>`, "col");
+      if (f === 0) {
+        s += halo(0, -30, 24, "255,226,130", 0.5);
+        s += P2(etoileD(0, -30, 15, 3.4, 4, -90), OR.vif, 0.9).replace(`stroke="${OUT3}"`, `stroke="${OR.trait}"`) + P2(etoileD(0, -30, 9, 2.4, 4, -45), OR.clair, 0) + E(0, -30, 3.2, 3.2, "#FFFFFF", 0);
+      }
+      if (f === 1 || f === 2) {
+        const big2 = f === 2;
+        s += `<ellipse cx="0" cy="0" rx="${big2 ? 22 : 15}" ry="${big2 ? 6.8 : 4.8}" fill="none" stroke="${OR.vif}" stroke-width="${big2 ? 1.2 : 1.8}" opacity="${big2 ? 0.55 : 0.9}"/>`;
+        s += col(big2 ? 13 : 10, big2 ? 0.32 : 0.26, -66) + col(big2 ? 7 : 5, big2 ? 0.38 : 0.3, -62);
+        s += halo(0, -30, big2 ? 20 : 16, "255,236,160", big2 ? 0.32 : 0.42);
+      }
+      if (f === 3) s += col(11, 0.14, -66) + col(5, 0.16, -60);
+      const SP = [[-9, -14], [8, -22], [-6, -36], [10, -44], [-11, -52], [4, -60], [-2, -68], [12, -64]];
+      const from = [0, 0, 2, 4, 5][f], to = [3, 5, 7, 8, 8][f];
+      SP.slice(from, to).forEach(([x, y], i) => {
+        s += etincelle(x, y - f * 2, [1.3, 1.1, 0.9][i % 3] * (f === 4 ? 0.7 : 1));
+      });
+      return s;
+    }
+    __name(arrivee, "arrivee");
+    var SCEAUX = [
+      ["mercure", "Mercure ☿ (Aster)", "M8 2.5a4 4 0 0 0 8 0M16 9.5a4 4 0 1 1-8 0a4 4 0 1 1 8 0M12 13.5v8M8.8 18h6.4"],
+      ["saturne", "Saturne ♄ (Galet)", "M9 2.5v12M5.8 5.6h6.4M9 11.5c1.6-2.8 6.6-2.6 6.6 1.6c0 2.6-3 3.6-3 6.2c0 1.2.8 2.2 2.2 2.2"],
+      ["lune", "Lune ☾ (Ondin)", "M15.5 3.2a8.8 8.8 0 1 0 0 17.6a7.2 7.2 0 1 1 0-17.6z"],
+      ["venus", "Vénus ♀ (Sylve et Mélisse)", "M17 8.5a5 5 0 1 1-10 0a5 5 0 1 1 10 0M12 13.5v8.5M8.5 18.2h7"],
+      ["mars", "Mars ♂ (Cannelle)", "M14.5 14.5a5 5 0 1 1-10 0a5 5 0 1 1 10 0M13.2 10.8L20 4M14.6 4H20v5.4"],
+      ["jupiter", "Jupiter ♃ (Rivet)", "M5.5 7c1.4-2.6 5.6-3 6.6-.4c1 2.6-2 6.4-6.4 10.4h13.6M16 11.5v10"],
+      ["soleil", "Soleil ☉ (Brume)", "M20 12a8 8 0 1 1-16 0a8 8 0 1 1 16 0M13.7 12a1.7 1.7 0 1 1-3.4 0a1.7 1.7 0 1 1 3.4 0"]
+    ];
+    function sceau(i, allume, f = 0) {
+      const d = SCEAUX[i][2], k = 0.6;
+      const sig = /* @__PURE__ */ __name((color, w, extra = "") => `<path d="${d}" transform="translate(${-12 * k} ${-12 * k}) scale(${k})" fill="none" stroke="${color}" stroke-width="${r23(w / k)}" stroke-linecap="round" stroke-linejoin="round"${extra}/>`, "sig");
+      let s = "";
+      if (allume) {
+        s += halo(0, 0, f ? 15 : 13, "255,220,120", f ? 0.48 : 0.4);
+        s += E(0, 0, 9.6, 9.6, OR.ambre) + E(-0.8, -0.9, 7.4, 7.4, OR.vif, 0) + `<circle cx="0" cy="0" r="7.8" fill="none" stroke="${OR.trait}" stroke-width="0.6"/>`;
+        s += sig("rgb(255,248,210)", 3.4, ' opacity="0.6"') + sig("#FFFBEA", 1.5);
+        s += f ? etincelle(8.6, -8.4, 1) + etincelle(-9.4, 6.4, 0.7) : etincelle(-8.2, -8.8, 0.8);
+      } else {
+        s += E(0, 0, 9.6, 9.6, "#B2A282") + E(-0.8, -0.9, 7.4, 7.4, "#C6B898", 0) + `<circle cx="0" cy="0" r="7.8" fill="none" stroke="#8E7E60" stroke-width="0.6"/>`;
+        s += sig("#7A6A4E", 1.5);
+      }
+      return s;
+    }
+    __name(sceau, "sceau");
+    module.exports = { embrume, guerison, nuage, reparerIcone, cage, oeuf, oeufIcone, crabe: crabe2, fleurs, lucioles, eclat, arrivee, SCEAUX, sceau };
+  }
+});
+
+// atelier/lot_m_liste.js
+var require_lot_m_liste = __commonJS({
+  "atelier/lot_m_liste.js"(exports, module) {
+    var M2 = require_lot_m();
+    var n3 = /* @__PURE__ */ __name((f, k = 3) => Array.from({ length: k }, (_, i) => () => f(i)), "n3");
+    var GROUPES = [];
+    for (const n of [1, 2, 3]) {
+      const a = 40 * n, h = 34 + 40 * n, base = [-a - 14, -h - 14, 2 * a + 28, h + 20 * n + 26];
+      GROUPES.push({ dir: "decor/embrume", nom: `embrume_${n}x${n}`, base, images: n3((f) => M2.embrume(n, f)) });
+      GROUPES.push({ dir: "decor/embrume", nom: `embrume_${n}x${n}_guerison`, base, images: n3((f) => M2.guerison(n, f)) });
+    }
+    GROUPES.push(
+      { dir: "decor/embrume", nom: "embrume_nuage", base: [-24, -34, 48, 40], images: n3((f) => M2.nuage(f)) },
+      { dir: "decor/embrume", nom: "reparer_icone", base: [0, 0, 32, 32], images: [() => M2.reparerIcone()] },
+      { dir: "decor/camp/poules", nom: "cage_poules_coincee", base: [-50, -50, 100, 72], images: [() => M2.cage("coincee", 0), () => M2.cage("coincee", 1)] },
+      { dir: "decor/camp/poules", nom: "cage_poules_ouverte", base: [-50, -50, 100, 72], images: [() => M2.cage("ouverte", 0)] },
+      { dir: "decor/camp/poules", nom: "oeuf", base: [-10, -14, 20, 17], images: [() => M2.oeuf()] },
+      { dir: "decor/camp/poules", nom: "oeuf_icone", base: [0, 0, 32, 32], images: [() => M2.oeufIcone()] },
+      { dir: "decor/signes", nom: "fleurs_ouverture", base: [-30, -40, 60, 50], images: n3((f) => M2.fleurs(f), 4) },
+      { dir: "decor/signes", nom: "lucioles_rassemblees", base: [-30, -52, 60, 58], images: n3((f) => M2.lucioles(f), 4) },
+      { dir: "decor/souvenir", nom: "eclat", base: [-14, -14, 28, 28], images: n3((f) => M2.eclat(f), 4) },
+      { dir: "decor/souvenir", nom: "arrivee", base: [-24, -72, 48, 76], images: n3((f) => M2.arrivee(f), 5) }
+    );
+    for (const [i, [cle]] of M2.SCEAUX.entries()) {
+      GROUPES.push({ dir: "decor/souvenir", nom: `sceau_${cle}_eteint`, base: [-15, -15, 30, 30], images: [() => M2.sceau(i, false)] });
+      GROUPES.push({ dir: "decor/souvenir", nom: `sceau_${cle}_allume`, base: [-15, -15, 30, 30], images: [0, 1].map((f) => () => M2.sceau(i, true, f)) });
+    }
+    var POSES_CRABE = ["marche1", "marche2", "repos", "clignement", "joie"];
+    var CRABE = { dir: "animaux/mer/crabe", base: [-14, -22, 28, 24], poses: POSES_CRABE, dessin: /* @__PURE__ */ __name((p) => M2.crabe(p), "dessin") };
+    module.exports = { GROUPES, CRABE };
+  }
+});
+
+// atelier/noms_betes.js
+var require_noms_betes = __commonJS({
+  "atelier/noms_betes.js"(exports, module) {
+    var hyph = /* @__PURE__ */ __name((s) => s.replace(/_/g, "-"), "hyph");
+    var SANS_SENS = /* @__PURE__ */ new Set(["hibou", "meduse", "papillon_bleu", "papillon_jaune", "papillon_lune"]);
+    function nomBete(rel) {
+      const parts = rel.split("/");
+      const base = parts.pop().replace(/\.svg$/, "");
+      const [top, a, b] = parts;
+      const out = /* @__PURE__ */ __name((dirs, name) => [...dirs, name + ".svg"].join("/"), "out");
+      if (top === "animaux") {
+        const sujet = b;
+        const rest = base.slice(sujet.length + 1);
+        if (!base.startsWith(sujet + "_")) throw new Error("bête inattendue : " + rel);
+        const S2 = hyph(sujet);
+        const m = rest.match(/^(?:(avant|dos)_)?([a-z]+?)(\d+)?$/);
+        if (!m) throw new Error("bête inattendue : " + rel);
+        const [, vue, pose, n] = m;
+        if (pose === "image" && a === "familiers") return out([top, a, S2], n ? `${S2}_${n}` : S2);
+        const v = vue || (SANS_SENS.has(sujet) || a === "familiers" && sujet.startsWith("bocal") ? "face" : "profil");
+        const p = pose === "image" ? "nage" : pose;
+        return out([top, a, S2], [S2, v, p, n].filter(Boolean).join("_"));
+      }
+      if (top === "egares") {
+        const m = base.match(/^([a-z-]+)_(avant|dos)_([a-z]+?)(\d+)?$/);
+        if (!m || m[1] !== a) throw new Error("égaré inattendu : " + rel);
+        return out([top, a], [m[1], m[2], m[3], m[4]].filter(Boolean).join("_"));
+      }
+      return null;
+    }
+    __name(nomBete, "nomBete");
+    function vitesseBete(id3, pose) {
+      const [top, a] = id3.split("/");
+      if (top === "animaux") return pose === "vol" ? 120 : pose === "nage" && /mer|familiers/.test(a) ? 420 : 260;
+      if (top === "egares") return { marche: 240, fuite: 160, bouderie: [500, 700], luciole: [300, 200, 200, 1e3], brume: [220, 220, 900] }[pose];
+      return void 0;
+    }
+    __name(vitesseBete, "vitesseBete");
+    module.exports = { nomBete, vitesseBete };
   }
 });
 
@@ -2504,13 +3866,13 @@ function disc(u, v, z, r, fill, extra = "") {
   return `<ellipse cx="${fmt(x)}" cy="${fmt(y)}" rx="${fmt(r * TW * Math.SQRT1_2)}" ry="${fmt(r * TH * Math.SQRT1_2)}" fill="${fill}"${extra}/>`;
 }
 __name(disc, "disc");
-function cylinder(u, v, z0, z1, r, colors, id, edge = EDGE) {
+function cylinder(u, v, z0, z1, r, colors, id3, edge = EDGE) {
   const [x0, y0] = P(u, v, z0);
   const [, y1] = P(u, v, z1);
   const rx = r * TW * Math.SQRT1_2;
   const ry = r * TH * Math.SQRT1_2;
   const side = `M${fmt(x0 - rx)},${fmt(y1)} L${fmt(x0 - rx)},${fmt(y0)} A${fmt(rx)},${fmt(ry)} 0 0 0 ${fmt(x0 + rx)},${fmt(y0)} L${fmt(x0 + rx)},${fmt(y1)} Z`;
-  return `<defs><linearGradient id="${id}" x1="0" x2="1"><stop offset="0" stop-color="${colors.left}"/><stop offset="1" stop-color="${colors.right}"/></linearGradient></defs><path d="${side}" fill="url(#${id})"${edge}/><ellipse cx="${fmt(x0)}" cy="${fmt(y1)}" rx="${fmt(rx)}" ry="${fmt(ry)}" fill="${colors.top}"${edge}/>`;
+  return `<defs><linearGradient id="${id3}" x1="0" x2="1"><stop offset="0" stop-color="${colors.left}"/><stop offset="1" stop-color="${colors.right}"/></linearGradient></defs><path d="${side}" fill="url(#${id3})"${edge}/><ellipse cx="${fmt(x0)}" cy="${fmt(y1)}" rx="${fmt(rx)}" ry="${fmt(ry)}" fill="${colors.top}"${edge}/>`;
 }
 __name(cylinder, "cylinder");
 function boulder(u, v, ru, rv, h, colors, seed = 0, jag = 0.25, peak = 0.6, edge = EDGE) {
@@ -2546,6 +3908,18 @@ function mixHex(a, b, k) {
   return `#${(ch(16) << 16 | ch(8) << 8 | ch(0)).toString(16).padStart(6, "0")}`;
 }
 __name(mixHex, "mixHex");
+function shadow(u, v, r, opacity = 0.22) {
+  return disc(u + 0.12, v + 0.02, 0, r, `rgba(40,55,20,${opacity})`);
+}
+__name(shadow, "shadow");
+function sprite(body, box2) {
+  const { x, y, w, h } = box2;
+  return {
+    box: box2,
+    svg: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="${x} ${y} ${w} ${h}" width="${w}" height="${h}">${body}</svg>`
+  };
+}
+__name(sprite, "sprite");
 
 // atelier/port/src/world/palette.js
 var WOOD = { top: "#E0A96C", left: "#BF8049", right: "#965C30" };
@@ -2555,7 +3929,10 @@ var WALL = { top: "#FCF4E2", left: "#F3E4C4", right: "#D8C39B" };
 var BRICK = { top: "#E08A62", left: "#C66B47", right: "#A05035" };
 var ROOF_RED = { front: "#E06E52", back: "#B9503B" };
 var THATCH = { front: "#EBC46F", back: "#C99A45" };
+var LEAVES = { light: "#B3E386", mid: "#7EC45B", dark: "#4F8F3A" };
 var GLASS = "#FFE6A3";
+var BUILDING_BOX = { x: -76, y: -124, w: 152, h: 168 };
+var PROP_BOX = { x: -40, y: -92, w: 80, h: 112 };
 function pebble(u, v, s, color = STONE) {
   const [x, y] = P(u, v, 0);
   return `<ellipse cx="${x + s * 0.12}" cy="${y + s * 0.18}" rx="${s}" ry="${s * 0.62}" fill="${color.right}"/><ellipse cx="${x}" cy="${y}" rx="${s}" ry="${s * 0.66}" fill="${color.left}"/><ellipse cx="${x - s * 0.28}" cy="${y - s * 0.22}" rx="${s * 0.5}" ry="${s * 0.3}" fill="${color.top}"/>`;
@@ -2644,12 +4021,12 @@ function garlandFrame(site, level) {
   return frameOf([g.high, ...g.poles.map((p) => p.top), ...g.poles.map((p) => p.base)], 10);
 }
 __name(garlandFrame, "garlandFrame");
-function garland(site, level, n, hang, rope = "#5A4632") {
+function garland(site, level, n, hang, rope2 = "#5A4632") {
   const g = garlandGeo(site, level);
   let out = g.poles.map((p) => pole(p.u, p.v, g.poleH)).join("") + (g.backPole ? pole(g.backPole[0], g.backPole[1], 44) : "");
   g.poles.forEach((p, side) => {
     const { d, points } = chain(g.high, p.top, 12 + half(level) * 6, n);
-    out += `<path d="${d}" fill="none" stroke="${rope}" stroke-width="0.7"/>`;
+    out += `<path d="${d}" fill="none" stroke="${rope2}" stroke-width="0.7"/>`;
     points.forEach((pt, k) => {
       out += hang(pt, k + side * n);
     });
@@ -2819,8 +4196,8 @@ var coeurLave = {
         const h = half(level);
         const [pu, pv] = [LAVA_POOL[0] * h, LAVA_POOL[1] * h];
         return CRACKS.map((crack) => {
-          const pts2 = crackPath(crack, level);
-          return `<polyline points="${pts2}" fill="none" stroke="#3A1A10" stroke-width="3" stroke-linejoin="round" stroke-linecap="round"/><polyline points="${pts2}" fill="none" stroke="#FF7A2A" stroke-width="1.5" stroke-linejoin="round" stroke-linecap="round"/><polyline points="${pts2}" fill="none" stroke="#FFD45E" stroke-width="0.6" stroke-linejoin="round" stroke-linecap="round"/>`;
+          const pts3 = crackPath(crack, level);
+          return `<polyline points="${pts3}" fill="none" stroke="#3A1A10" stroke-width="3" stroke-linejoin="round" stroke-linecap="round"/><polyline points="${pts3}" fill="none" stroke="#FF7A2A" stroke-width="1.5" stroke-linejoin="round" stroke-linecap="round"/><polyline points="${pts3}" fill="none" stroke="#FFD45E" stroke-width="0.6" stroke-linejoin="round" stroke-linecap="round"/>`;
         }).join("") + disc(pu, pv, 0, 0.27, "#3A2620") + disc(pu, pv, 0.5, 0.22, "#E2501F") + disc(pu - 0.03, pv - 0.02, 0.8, 0.14, "#FF9A3A") + disc(pu - 0.05, pv - 0.03, 1, 0.07, "#FFD45E");
       }, "draw")
     },
@@ -3044,13 +4421,13 @@ var etincelles = {
   }, "lights")
 };
 function gearPath(x, y, r, teeth, turn) {
-  const pts2 = [];
+  const pts3 = [];
   for (let i = 0; i < teeth * 2; i++) {
     const a = turn + i / (teeth * 2) * Math.PI * 2;
     const rr = i % 2 ? r : r * 1.22;
-    pts2.push([x + Math.cos(a) * rr, y + Math.sin(a) * rr * 0.92]);
+    pts3.push([x + Math.cos(a) * rr, y + Math.sin(a) * rr * 0.92]);
   }
-  return `<polygon points="${pts2.map(xy2).join(" ")}" fill="#F2C04B" stroke="#A8782A" stroke-width="0.6" stroke-linejoin="round"/>` + dot(x, y, r * 0.55, "#FFE08A") + dot(x, y, r * 0.22, "#A8782A");
+  return `<polygon points="${pts3.map(xy2).join(" ")}" fill="#F2C04B" stroke="#A8782A" stroke-width="0.6" stroke-linejoin="round"/>` + dot(x, y, r * 0.55, "#FFE08A") + dot(x, y, r * 0.22, "#A8782A");
 }
 __name(gearPath, "gearPath");
 var gears = /* @__PURE__ */ __name((T, level, f, n) => {
@@ -3162,7 +4539,7 @@ var ell2 = /* @__PURE__ */ __name((x, y, rx, ry, fill, extra = "") => `<ellipse 
 var dot2 = /* @__PURE__ */ __name((x, y, r, fill) => `<circle cx="${f22(x)}" cy="${f22(y)}" r="${f22(r)}" fill="${fill}"/>`, "dot");
 var wave = /* @__PURE__ */ __name((f, n, amp = 1, phase = 0) => Math.sin(f / n * Math.PI * 2 + phase) * amp, "wave");
 var star = /* @__PURE__ */ __name((x, y, r, fill, o = 1) => `<path d="M${f22(x)},${f22(y - r)} Q${f22(x)},${f22(y)} ${f22(x + r)},${f22(y)} Q${f22(x)},${f22(y)} ${f22(x)},${f22(y + r)} Q${f22(x)},${f22(y)} ${f22(x - r)},${f22(y)} Q${f22(x)},${f22(y)} ${f22(x)},${f22(y - r)} Z" fill="${fill}" opacity="${f22(o)}"/>`, "star");
-var gradient = /* @__PURE__ */ __name((id, from, to) => `<defs><linearGradient id="${id}" x1="0" x2="1"><stop offset="0" stop-color="${from}"/><stop offset="1" stop-color="${to}"/></linearGradient></defs>`, "gradient");
+var gradient = /* @__PURE__ */ __name((id3, from, to) => `<defs><linearGradient id="${id3}" x1="0" x2="1"><stop offset="0" stop-color="${from}"/><stop offset="1" stop-color="${to}"/></linearGradient></defs>`, "gradient");
 function tools(u, v, prefix) {
   const p = /* @__PURE__ */ __name((du = 0, dv = 0, z = 0) => P(u + du, v + dv, z), "p");
   return {
@@ -3173,7 +4550,7 @@ function tools(u, v, prefix) {
     gable: /* @__PURE__ */ __name((a, b, c, d, z, h, colors, o, edge) => gable(u + a, v + b, u + c, v + d, z, h, colors, o, edge), "gable"),
     cyl: /* @__PURE__ */ __name((du, dv, z0, z1, r, colors, name) => cylinder(u + du, v + dv, z0, z1, r, colors, `${prefix}-${name}`), "cyl"),
     disc: /* @__PURE__ */ __name((du, dv, z, r, fill, extra) => disc(u + du, v + dv, z, r, fill, extra), "disc"),
-    face: /* @__PURE__ */ __name((pts2, fill, extra) => face(pts2.map(([a, b, z]) => [u + a, v + b, z]), fill, extra), "face"),
+    face: /* @__PURE__ */ __name((pts3, fill, extra) => face(pts3.map(([a, b, z]) => [u + a, v + b, z]), fill, extra), "face"),
     shadow: /* @__PURE__ */ __name((du, dv, r, o = 0.22, z = 0) => disc(u + du + 0.1, v + dv + 0.02, z, r, `rgba(40,55,20,${o})`), "shadow"),
     pebble: /* @__PURE__ */ __name((du, dv, s, color) => pebble(u + du, v + dv, s, color), "pebble"),
     id: /* @__PURE__ */ __name((name) => `${prefix}-${name}`, "id")
@@ -3332,10 +4709,10 @@ var epouvantail = {
       const [x, y] = T.p(0, 0, 0);
       const sway = wave(f, n, 1);
       const sy = y - 27;
-      const tuft = /* @__PURE__ */ __name((cx, cy, s) => [-1, 0, 1].map((k) => ln2([cx, cy + k * 1.1], [cx + s * (3 + Math.abs(k) * 0.4), cy + k * 1.9 + sway * 0.8], STRAW.right, 0.8)).join(""), "tuft");
+      const tuft3 = /* @__PURE__ */ __name((cx, cy, s) => [-1, 0, 1].map((k) => ln2([cx, cy + k * 1.1], [cx + s * (3 + Math.abs(k) * 0.4), cy + k * 1.9 + sway * 0.8], STRAW.right, 0.8)).join(""), "tuft");
       const legTuft = /* @__PURE__ */ __name((cx) => [-1, 0, 1].map((k) => ln2([cx + k * 0.8, y - 6], [cx + k * 1.6, y - 2.8], STRAW.right, 0.8)).join(""), "legTuft");
       const crow = f >= 2 && f <= 6 ? bird(x + 9.4, sy - 0.4, { ...CROW, peck: f === 4 ? 1 : 0 }) : flying(x + (f === 7 ? 17 : f === 0 ? 20 : 14), sy - (f === 7 ? 9 : f === 0 ? 14 : 6), f !== 0);
-      return ell2(x + 1, y + 0.4, 6, 1.8, "rgba(40,55,20,.25)") + `<rect x="${f22(x - 1)}" y="${f22(y - 40)}" width="2.2" height="40" fill="${WOOD_DARK.left}"/><rect x="${f22(x + 0.2)}" y="${f22(y - 40)}" width="1" height="40" fill="${WOOD_DARK.right}"/>` + legTuft(x - 2.4) + legTuft(x + 2.4) + `<path d="M${f22(x - 4.4)},${f22(y - 16)} L${f22(x + 4.4)},${f22(y - 16)} L${f22(x + 4)},${f22(y - 6)} L${f22(x + 0.8)},${f22(y - 6)} L${f22(x)},${f22(y - 11)} L${f22(x - 0.8)},${f22(y - 6)} L${f22(x - 4)},${f22(y - 6)} Z" fill="#5C83C2" stroke="${OUT}" stroke-width="0.5"/><rect x="${f22(x + 1.3)}" y="${f22(y - 13.4)}" width="2.2" height="2.4" fill="#E2C66E" transform="rotate(8 ${f22(x + 2.4)} ${f22(y - 12.2)})"/><rect x="${f22(x - 13)}" y="${f22(sy - 0.4)}" width="26" height="4" rx="1.6" fill="#C8504A" stroke="${OUT}" stroke-width="0.5"/><path d="M${f22(x - 5)},${f22(sy)} L${f22(x + 5)},${f22(sy)} L${f22(x + 4.6)},${f22(y - 15)} L${f22(x - 4.6)},${f22(y - 15)} Z" fill="#C8504A" stroke="${OUT}" stroke-width="0.5"/>` + [-10, -7, -2.6, 0, 2.6, 7, 10].map((dx) => ln2([x + dx, sy + (Math.abs(dx) > 5 ? 0 : 0.6)], [x + dx, Math.abs(dx) > 5 ? sy + 3.4 : y - 15.4], "rgba(110,30,25,.5)", 0.6)).join("") + [sy + 1.8, sy + 6, sy + 9.4].map((ly, k) => ln2([x - (k ? 4.8 : 12.6), ly], [x + (k ? 4.8 : 12.6), ly], "rgba(255,214,120,.55)", 0.6)).join("") + ln2([x - 4.7, y - 16], [x + 4.7, y - 16], "#C9A16A", 1.1) + tuft(x - 13, sy + 1.6, -1) + tuft(x + 13, sy + 1.6, 1) + ln2([x - 2.4, sy - 0.6], [x + 2.4, sy - 0.6], "#C9A16A", 1) + ell2(x, sy - 5, 4.6, 5, "#E7C99A", ` stroke="${OUT}" stroke-width="0.5"`) + `<path d="M${f22(x - 2.8)},${f22(sy - 7)} l1.6,1.6 m0,-1.6 l-1.6,1.6 M${f22(x + 1.2)},${f22(sy - 7)} l1.6,1.6 m0,-1.6 l-1.6,1.6" stroke="#3A2A1E" stroke-width="0.7"/><path d="M${f22(x - 2.6)},${f22(sy - 3)} q2.6,1.8 5.2,0" stroke="#3A2A1E" stroke-width="0.6" fill="none" stroke-dasharray="0.9 0.6"/><g transform="rotate(${f22(-6 + sway * 3)} ${f22(x)} ${f22(sy - 9)})">` + ell2(x, sy - 8.6, 8.6, 2.2, STRAW.top, ` stroke="${STRAW.right}" stroke-width="0.6"`) + `<path d="M${f22(x - 4.4)},${f22(sy - 9)} q0.4,-5.4 4.4,-5.4 q4,0 4.4,5.4 Z" fill="${STRAW.left}" stroke="${STRAW.right}" stroke-width="0.6"/><path d="M${f22(x - 4.3)},${f22(sy - 10.6)} q4.3,1.4 8.6,0" stroke="#C8504A" stroke-width="1.3" fill="none"/></g>` + crow;
+      return ell2(x + 1, y + 0.4, 6, 1.8, "rgba(40,55,20,.25)") + `<rect x="${f22(x - 1)}" y="${f22(y - 40)}" width="2.2" height="40" fill="${WOOD_DARK.left}"/><rect x="${f22(x + 0.2)}" y="${f22(y - 40)}" width="1" height="40" fill="${WOOD_DARK.right}"/>` + legTuft(x - 2.4) + legTuft(x + 2.4) + `<path d="M${f22(x - 4.4)},${f22(y - 16)} L${f22(x + 4.4)},${f22(y - 16)} L${f22(x + 4)},${f22(y - 6)} L${f22(x + 0.8)},${f22(y - 6)} L${f22(x)},${f22(y - 11)} L${f22(x - 0.8)},${f22(y - 6)} L${f22(x - 4)},${f22(y - 6)} Z" fill="#5C83C2" stroke="${OUT}" stroke-width="0.5"/><rect x="${f22(x + 1.3)}" y="${f22(y - 13.4)}" width="2.2" height="2.4" fill="#E2C66E" transform="rotate(8 ${f22(x + 2.4)} ${f22(y - 12.2)})"/><rect x="${f22(x - 13)}" y="${f22(sy - 0.4)}" width="26" height="4" rx="1.6" fill="#C8504A" stroke="${OUT}" stroke-width="0.5"/><path d="M${f22(x - 5)},${f22(sy)} L${f22(x + 5)},${f22(sy)} L${f22(x + 4.6)},${f22(y - 15)} L${f22(x - 4.6)},${f22(y - 15)} Z" fill="#C8504A" stroke="${OUT}" stroke-width="0.5"/>` + [-10, -7, -2.6, 0, 2.6, 7, 10].map((dx) => ln2([x + dx, sy + (Math.abs(dx) > 5 ? 0 : 0.6)], [x + dx, Math.abs(dx) > 5 ? sy + 3.4 : y - 15.4], "rgba(110,30,25,.5)", 0.6)).join("") + [sy + 1.8, sy + 6, sy + 9.4].map((ly, k) => ln2([x - (k ? 4.8 : 12.6), ly], [x + (k ? 4.8 : 12.6), ly], "rgba(255,214,120,.55)", 0.6)).join("") + ln2([x - 4.7, y - 16], [x + 4.7, y - 16], "#C9A16A", 1.1) + tuft3(x - 13, sy + 1.6, -1) + tuft3(x + 13, sy + 1.6, 1) + ln2([x - 2.4, sy - 0.6], [x + 2.4, sy - 0.6], "#C9A16A", 1) + ell2(x, sy - 5, 4.6, 5, "#E7C99A", ` stroke="${OUT}" stroke-width="0.5"`) + `<path d="M${f22(x - 2.8)},${f22(sy - 7)} l1.6,1.6 m0,-1.6 l-1.6,1.6 M${f22(x + 1.2)},${f22(sy - 7)} l1.6,1.6 m0,-1.6 l-1.6,1.6" stroke="#3A2A1E" stroke-width="0.7"/><path d="M${f22(x - 2.6)},${f22(sy - 3)} q2.6,1.8 5.2,0" stroke="#3A2A1E" stroke-width="0.6" fill="none" stroke-dasharray="0.9 0.6"/><g transform="rotate(${f22(-6 + sway * 3)} ${f22(x)} ${f22(sy - 9)})">` + ell2(x, sy - 8.6, 8.6, 2.2, STRAW.top, ` stroke="${STRAW.right}" stroke-width="0.6"`) + `<path d="M${f22(x - 4.4)},${f22(sy - 9)} q0.4,-5.4 4.4,-5.4 q4,0 4.4,5.4 Z" fill="${STRAW.left}" stroke="${STRAW.right}" stroke-width="0.6"/><path d="M${f22(x - 4.3)},${f22(sy - 10.6)} q4.3,1.4 8.6,0" stroke="#C8504A" stroke-width="1.3" fill="none"/></g>` + crow;
     }, "draw")
   }]
 };
@@ -3503,7 +4880,7 @@ var golem = {
       const b = wave(f, n, 0.7);
       const glowing = 0.55 + wave(f, n, 0.45, 1);
       const sw = wave(f, n, 0.014);
-      const rune = `rgba(130,235,255,${f22(glowing)})`;
+      const rune2 = `rgba(130,235,255,${f22(glowing)})`;
       const moss = /* @__PURE__ */ __name((du, dv, z, r) => T.disc(du, dv, z, r, "#6DB64C") + T.disc(du - 8e-3, dv - 8e-3, z + 0.6, r * 0.6, "#8FCB6A"), "moss");
       const arm = /* @__PURE__ */ __name((u0, u1, s) => T.box(u0, -0.05 + s, u1, 0.05 + s, 9 + b, 25 + b, ROCK) + T.box(u0 - 0.015, -0.065 + s, u1 + 0.015, 0.065 + s, 1 + b, 10 + b, ROCK), "arm");
       const shoulder = /* @__PURE__ */ __name((du, k) => {
@@ -3512,10 +4889,10 @@ var golem = {
       }, "shoulder");
       const eye = /* @__PURE__ */ __name((du) => {
         const [ex, ey] = T.p(du, 0.07, 30 + b);
-        return ell2(ex, ey, 1.5, 1, rune) + dot2(ex, ey, 0.5, "#F2FFFF");
+        return ell2(ex, ey, 1.5, 1, rune2) + dot2(ex, ey, 0.5, "#F2FFFF");
       }, "eye");
       const ring = Array.from({ length: 16 }, (_, k) => T.p(Math.cos(k / 16 * Math.PI * 2) * 0.06, 0.09, 17 + b + Math.sin(k / 16 * Math.PI * 2) * 4.6));
-      return T.shadow(0, 0, 0.28, 0.24) + T.pebble(0.26, 0.14, 2.4) + T.pebble(-0.24, 0.18, 1.8) + arm(-0.25, -0.155, sw) + T.box(-0.11, -0.05, -0.02, 0.05, 0, 9, ROCK) + T.box(0.02, -0.05, 0.11, 0.05, 0, 9, ROCK) + T.box(-0.15, -0.09, 0.15, 0.09, 8 + b, 27 + b, ROCK) + ln2(T.p(-0.12, 0.09, 24 + b), T.p(-0.07, 0.09, 20 + b), "rgba(60,50,40,.35)", 0.6) + ln2(T.p(0.15, -0.05, 12 + b), T.p(0.15, 0.03, 17 + b), "rgba(60,50,40,.35)", 0.6) + `<polygon points="${ring.map(xy3).join(" ")}" fill="none" stroke="rgba(130,235,255,${f22(glowing * 0.35)})" stroke-width="2.4"/><polygon points="${ring.map(xy3).join(" ")}" fill="none" stroke="${rune}" stroke-width="0.9"/>` + ln2(T.p(0, 0.09, 12 + b), T.p(0, 0.09, 22 + b), rune, 0.9) + ln2(T.p(-0.04, 0.09, 14 + b), T.p(0.04, 0.09, 20 + b), rune, 0.8) + shoulder(-0.13, 0) + T.box(-0.065, -0.05, 0.065, 0.07, 26 + b, 34 + b, ROCK) + eye(-0.032) + eye(0.028) + ln2(T.p(-0.03, 0.07, 27.4 + b), T.p(0.025, 0.07, 27 + b), "rgba(60,50,40,.45)", 0.7) + shoulder(0.14, 0.4) + arm(0.155, 0.25, -sw) + moss(-0.03, 0, 34 + b, 0.05) + moss(0.17, 0, 25 + b, 0.035) + moss(-0.11, -0.04, 27 + b, 0.035) + dot2(...T.p(-0.02, 0.01, 35.4 + b), 0.9, "#F7A8C8");
+      return T.shadow(0, 0, 0.28, 0.24) + T.pebble(0.26, 0.14, 2.4) + T.pebble(-0.24, 0.18, 1.8) + arm(-0.25, -0.155, sw) + T.box(-0.11, -0.05, -0.02, 0.05, 0, 9, ROCK) + T.box(0.02, -0.05, 0.11, 0.05, 0, 9, ROCK) + T.box(-0.15, -0.09, 0.15, 0.09, 8 + b, 27 + b, ROCK) + ln2(T.p(-0.12, 0.09, 24 + b), T.p(-0.07, 0.09, 20 + b), "rgba(60,50,40,.35)", 0.6) + ln2(T.p(0.15, -0.05, 12 + b), T.p(0.15, 0.03, 17 + b), "rgba(60,50,40,.35)", 0.6) + `<polygon points="${ring.map(xy3).join(" ")}" fill="none" stroke="rgba(130,235,255,${f22(glowing * 0.35)})" stroke-width="2.4"/><polygon points="${ring.map(xy3).join(" ")}" fill="none" stroke="${rune2}" stroke-width="0.9"/>` + ln2(T.p(0, 0.09, 12 + b), T.p(0, 0.09, 22 + b), rune2, 0.9) + ln2(T.p(-0.04, 0.09, 14 + b), T.p(0.04, 0.09, 20 + b), rune2, 0.8) + shoulder(-0.13, 0) + T.box(-0.065, -0.05, 0.065, 0.07, 26 + b, 34 + b, ROCK) + eye(-0.032) + eye(0.028) + ln2(T.p(-0.03, 0.07, 27.4 + b), T.p(0.025, 0.07, 27 + b), "rgba(60,50,40,.45)", 0.7) + shoulder(0.14, 0.4) + arm(0.155, 0.25, -sw) + moss(-0.03, 0, 34 + b, 0.05) + moss(0.17, 0, 25 + b, 0.035) + moss(-0.11, -0.04, 27 + b, 0.035) + dot2(...T.p(-0.02, 0.01, 35.4 + b), 0.9, "#F7A8C8");
     }, "draw")
   }]
 };
@@ -3842,7 +5219,7 @@ var barque = {
       const rim = [T.p(0.21, 0, 4), T.p(0.09, 0.1, 4), T.p(-0.1, 0.1, 4), T.p(-0.19, 0, 4.6), T.p(-0.1, -0.1, 4), T.p(0.09, -0.1, 4)];
       const side = [T.p(0.21, 0, 4), T.p(0.09, 0.1, 4), T.p(-0.1, 0.1, 4), T.p(-0.19, 0, 4.6), T.p(-0.16, 0, 0), T.p(-0.08, 0.07, 0), T.p(0.06, 0.07, 0), T.p(0.18, 0, 0.4)];
       const phase = f / n * Math.PI * 2;
-      const oar = /* @__PURE__ */ __name((s) => {
+      const oar2 = /* @__PURE__ */ __name((s) => {
         const lock = T.p(0, 0.1 * s, 6);
         const lift = Math.sin(phase) > 0 ? 3 : 0;
         const blade = T.p(Math.cos(phase) * 0.09, 0.27 * s, lift);
@@ -3850,7 +5227,7 @@ var barque = {
       }, "oar");
       const [rx, ry] = T.p(-0.03, 0, 6);
       const lean = Math.cos(phase) * 1.2;
-      return ell2(...T.p(0.01, 0.01, 0), 15, 3.4, "rgba(30,70,110,.25)") + oar(-1) + poly2(rim, WOOD_DARK.top, ` stroke="${OUT}" stroke-width="0.7"`) + T.face([[-0.02, -0.1, 4], [0.03, -0.1, 4], [0.03, 0.1, 4], [-0.02, 0.1, 4]], WOOD.top) + `<path d="M${f22(rx - 3.2 + lean)},${f22(ry - 1)} L${f22(rx + 3.2 + lean)},${f22(ry - 1)} L${f22(rx + 2.6 + lean)},${f22(ry - 9)} L${f22(rx - 2.6 + lean)},${f22(ry - 9)} Z" fill="#5C83C2"/>` + ln2([rx - 2.4 + lean, ry - 7.4], [rx - 6 + lean * 2, ry - 3.6], "#F1C9A5", 1.2) + ln2([rx + 2.4 + lean, ry - 7.4], [rx + 6 + lean * 2, ry - 3.6], "#F1C9A5", 1.2) + dot2(rx + lean, ry - 11.2, 2.6, "#F1C9A5") + ell2(rx + lean, ry - 12.6, 5, 1.4, "#E9BF4E") + `<path d="M${f22(rx - 2.6 + lean)},${f22(ry - 12.8)} q2.6,-3.4 5.2,0 Z" fill="#E9BF4E"/>` + ln2([rx - 2.6 + lean, ry - 12.9], [rx + 2.6 + lean, ry - 12.9], "#C8504A", 0.8) + poly2(side, WOOD.left, ` stroke="${OUT}" stroke-width="0.7"`) + `<polyline points="${[T.p(0.19, 0, 2.4), T.p(0.08, 0.085, 2.2), T.p(-0.09, 0.085, 2.2), T.p(-0.18, 0, 2.6)].map(xy3).join(" ")}" fill="none" stroke="#3C2819" stroke-width="0.6"/>` + oar(1);
+      return ell2(...T.p(0.01, 0.01, 0), 15, 3.4, "rgba(30,70,110,.25)") + oar2(-1) + poly2(rim, WOOD_DARK.top, ` stroke="${OUT}" stroke-width="0.7"`) + T.face([[-0.02, -0.1, 4], [0.03, -0.1, 4], [0.03, 0.1, 4], [-0.02, 0.1, 4]], WOOD.top) + `<path d="M${f22(rx - 3.2 + lean)},${f22(ry - 1)} L${f22(rx + 3.2 + lean)},${f22(ry - 1)} L${f22(rx + 2.6 + lean)},${f22(ry - 9)} L${f22(rx - 2.6 + lean)},${f22(ry - 9)} Z" fill="#5C83C2"/>` + ln2([rx - 2.4 + lean, ry - 7.4], [rx - 6 + lean * 2, ry - 3.6], "#F1C9A5", 1.2) + ln2([rx + 2.4 + lean, ry - 7.4], [rx + 6 + lean * 2, ry - 3.6], "#F1C9A5", 1.2) + dot2(rx + lean, ry - 11.2, 2.6, "#F1C9A5") + ell2(rx + lean, ry - 12.6, 5, 1.4, "#E9BF4E") + `<path d="M${f22(rx - 2.6 + lean)},${f22(ry - 12.8)} q2.6,-3.4 5.2,0 Z" fill="#E9BF4E"/>` + ln2([rx - 2.6 + lean, ry - 12.9], [rx + 2.6 + lean, ry - 12.9], "#C8504A", 0.8) + poly2(side, WOOD.left, ` stroke="${OUT}" stroke-width="0.7"`) + `<polyline points="${[T.p(0.19, 0, 2.4), T.p(0.08, 0.085, 2.2), T.p(-0.09, 0.085, 2.2), T.p(-0.18, 0, 2.6)].map(xy3).join(" ")}" fill="none" stroke="#3C2819" stroke-width="0.6"/>` + oar2(1);
     }, "draw")
   }]
 };
@@ -4389,13 +5766,13 @@ var enclos = {
       const [sx, sy] = T.p(-0.16, -0.12, 0);
       const sheepBody = sheep(sx, sy, false, f % 4 < 2);
       const beasts = Math.sin(a) * 0.08 + 0.12 > -0.12 ? sheepBody + pigBody : pigBody + sheepBody;
-      const tuft = /* @__PURE__ */ __name((du, dv, c) => {
+      const tuft3 = /* @__PURE__ */ __name((du, dv, c) => {
         const [tx, ty] = T.p(du, dv, 0);
         return [-1.6, -0.5, 0.6, 1.6].map((o, i) => ln2([tx + o * 0.4, ty], [tx + o, ty - (3.2 + i % 2 * 1.4)], i % 2 ? "#8FB85A" : "#6F9A44", 0.7)).join("") + (c ? dot2(tx + 0.6, ty - 4.6, 0.9, c) : "");
       }, "tuft");
       const [hx, hy] = T.p(-0.3, -0.3, 0);
       const shine = f % n / n;
-      return patch(T, 0.45, "#A9B86A", "") + patch(T, 0.38, "#B79E6E", "") + [[-0.47, 0.1, "#F2C04B"], [0.1, 0.47, "#FFFFFF"], [0.47, -0.2, null], [-0.2, 0.47, "#E89AC0"]].map(([du, dv, c]) => tuft(du, dv, c)).join("") + back + T.box(-0.38, -0.36, -0.22, -0.24, 0, 6, STRAW) + [1.5, 3, 4.5].map((z) => ln2(T.p(-0.38, -0.24, z), T.p(-0.22, -0.24, z), "rgba(160,120,50,.5)", 0.5)).join("") + ln2(T.p(-0.38, -0.24, 2), T.p(-0.22, -0.24, 2), "#8A6A3A", 0.6) + ln2(T.p(-0.38, -0.24, 4.6), T.p(-0.22, -0.24, 4.6), "#8A6A3A", 0.6) + [[-6, 1], [-3, 2.4], [2, 1.6]].map(([dx, dy]) => ln2([hx + dx, hy + dy + 4], [hx + dx + 2, hy + dy + 3], "#E2C66E", 0.6)).join("") + T.disc(0.16, -0.14, 0, 0.13, MUD) + T.disc(0.12 + shine * 0.06, -0.16, 0.2, 0.05, "rgba(255,255,255,.22)") + [[0.02, -0.04], [0.3, -0.06], [0.2, 0]].map(([du, dv]) => dot2(...T.p(du, dv, 0), 0.8, MUD)).join("") + T.box(-0.3, 0.12, -0.22, 0.32, 0, 4, WOOD_DARK) + T.face([[-0.29, 0.14, 4], [-0.23, 0.14, 4], [-0.23, 0.3, 4], [-0.29, 0.3, 4]], "#4C9CC8") + beasts + front;
+      return patch(T, 0.45, "#A9B86A", "") + patch(T, 0.38, "#B79E6E", "") + [[-0.47, 0.1, "#F2C04B"], [0.1, 0.47, "#FFFFFF"], [0.47, -0.2, null], [-0.2, 0.47, "#E89AC0"]].map(([du, dv, c]) => tuft3(du, dv, c)).join("") + back + T.box(-0.38, -0.36, -0.22, -0.24, 0, 6, STRAW) + [1.5, 3, 4.5].map((z) => ln2(T.p(-0.38, -0.24, z), T.p(-0.22, -0.24, z), "rgba(160,120,50,.5)", 0.5)).join("") + ln2(T.p(-0.38, -0.24, 2), T.p(-0.22, -0.24, 2), "#8A6A3A", 0.6) + ln2(T.p(-0.38, -0.24, 4.6), T.p(-0.22, -0.24, 4.6), "#8A6A3A", 0.6) + [[-6, 1], [-3, 2.4], [2, 1.6]].map(([dx, dy]) => ln2([hx + dx, hy + dy + 4], [hx + dx + 2, hy + dy + 3], "#E2C66E", 0.6)).join("") + T.disc(0.16, -0.14, 0, 0.13, MUD) + T.disc(0.12 + shine * 0.06, -0.16, 0.2, 0.05, "rgba(255,255,255,.22)") + [[0.02, -0.04], [0.3, -0.06], [0.2, 0]].map(([du, dv]) => dot2(...T.p(du, dv, 0), 0.8, MUD)).join("") + T.box(-0.3, 0.12, -0.22, 0.32, 0, 4, WOOD_DARK) + T.face([[-0.29, 0.14, 4], [-0.23, 0.14, 4], [-0.23, 0.3, 4], [-0.29, 0.3, 4]], "#4C9CC8") + beasts + front;
     }, "draw")
   }]
 };
@@ -4415,7 +5792,7 @@ var filon = {
       const [x, y] = T.p(-0.04, -0.02, 0);
       const [cx0, cy0] = T.p(0, 0, 0);
       let out = ell2(cx0, cy0 + 1, 31, 12.6, "#C9BFAE", ` stroke="${OUT}" stroke-width="0.5"`) + ell2(cx0 - 4, cy0, 21, 7.6, "#D6CDBE") + [[-22, 5], [18, 8], [-6, 10], [24, 0], [10, -7]].map(([dx, dy], i) => ell2(cx0 + dx, cy0 + dy, 1.2 + i % 2 * 0.4, 0.8, look.rock.left, ` stroke="${OUT}" stroke-width="0.3"`)).join("");
-      const veins = [[[-12, -5], [-7, -9], [-2, -7], [2, -11]], [[-6, -2], [-1, -5], [5, -3]], [[4, -8], [9, -6]]].map((pts2) => `<polyline points="${pts2.map(([a, b]) => `${f22(x + a)},${f22(y + b)}`).join(" ")}" fill="none" stroke="${look.vein}" stroke-width="1.2" stroke-linejoin="round" stroke-linecap="round" opacity=".9"/>`).join("");
+      const veins = [[[-12, -5], [-7, -9], [-2, -7], [2, -11]], [[-6, -2], [-1, -5], [5, -3]], [[4, -8], [9, -6]]].map((pts3) => `<polyline points="${pts3.map(([a, b]) => `${f22(x + a)},${f22(y + b)}`).join(" ")}" fill="none" stroke="${look.vein}" stroke-width="1.2" stroke-linejoin="round" stroke-linecap="round" opacity=".9"/>`).join("");
       const nuggets = [[-7, -9], [3, -4], [-11, -4], [2, -11], [8, -7]].map(([a, b], k) => poly2([[x + a, y + b - 1.7], [x + a + 1.7, y + b], [x + a, y + b + 1.5], [x + a - 1.6, y + b]], k % 2 ? look.ore : look.vein, ` stroke="${OUT}" stroke-width="0.3"`)).join("");
       out += T.shadow(0.02, 0, 0.4, 0.22) + boulder(T.u - 0.04, T.v - 0.02, 0.32, 0.28, 17, look.rock, 3 + variant, 0.22, 0.78) + veins + nuggets;
       const [tx, ty] = T.p(-0.08, -0.06, 15);
@@ -4450,19 +5827,19 @@ var depot = {
     fps: 2,
     draw: /* @__PURE__ */ __name((T, f) => {
       const PALE = { top: "#ECE6D8", left: "#CFC6B2", right: "#A69C88" };
-      const block = /* @__PURE__ */ __name((du, dv, z, k) => {
+      const block2 = /* @__PURE__ */ __name((du, dv, z, k) => {
         const c = k % 2 ? PALE : STONE;
         const [mx, my] = T.p(du, dv + 0.09, z + 3.2);
         return { d: du + dv + z * 1e-3, svg: T.box(du - 0.1, dv - 0.09, du + 0.1, dv + 0.09, z, z + 6.5, c) + ln2(T.p(du - 0.1, dv + 0.09, z + 3.2), T.p(du + 0.1, dv + 0.09, z + 3.2), "rgba(120,110,95,.35)", 0.5) + ln2([mx - 3, my - 1.4], [mx - 1.6, my + 0.4], "rgba(120,110,95,.45)", 0.5) + ln2([mx + 1.4, my - 1], [mx + 2.6, my + 0.6], "rgba(120,110,95,.45)", 0.5) + ln2(T.p(du - 0.06, dv - 0.04, z + 6.5), T.p(du + 0.04, dv - 0.06, z + 6.5), "rgba(255,255,255,.6)", 0.7) };
       }, "block");
       const stack = [
-        block(-0.11, -0.1, 3, 0),
-        block(0.11, -0.1, 3, 1),
-        block(-0.11, 0.1, 3, 1),
-        block(0.11, 0.1, 3, 0),
-        block(0, -0.1, 9.5, 0),
-        block(0, 0.1, 9.5, 1),
-        block(0, 0, 16, 1)
+        block2(-0.11, -0.1, 3, 0),
+        block2(0.11, -0.1, 3, 1),
+        block2(-0.11, 0.1, 3, 1),
+        block2(0.11, 0.1, 3, 0),
+        block2(0, -0.1, 9.5, 0),
+        block2(0, 0.1, 9.5, 1),
+        block2(0, 0, 16, 1)
       ].sort((a, b) => a.d - b.d || 0).map((b) => b.svg).join("");
       const [bx, by] = T.p(0, 0, 22.5);
       const hop = f === 2 ? 1.6 : 0;
@@ -4650,11 +6027,11 @@ var citerne = {
     draw: /* @__PURE__ */ __name((T, f, n, variant) => {
       const kind = variant % 3;
       const [x, y] = T.p(0, 0, 0);
-      const tuft = /* @__PURE__ */ __name((du, dv) => {
+      const tuft3 = /* @__PURE__ */ __name((du, dv) => {
         const [tx, ty] = T.p(du, dv, 0);
         return [-1.6, -0.5, 0.6, 1.6].map((o, i) => ln2([tx + o * 0.4, ty], [tx + o, ty - (3.4 + i % 2 * 1.4)], i % 2 ? "#8FB85A" : "#6F9A44", 0.7)).join("");
       }, "tuft");
-      let out = ell2(x, y + 1, 27, 11.4, "#9CC46A", ` stroke="${OUT}" stroke-width="0.5"`) + ell2(x - 3, y, 18, 7, "#ADD27A") + ell2(...T.p(0.22, 0.3, 0), 7.4, 2.8, "rgba(90,120,60,.35)") + ell2(...T.p(0.22, 0.32, 0), 5, 1.6, "rgba(110,180,220,.5)") + tuft(-0.38, 0.1) + tuft(0.36, -0.3) + T.shadow(0, 0, 0.32, 0.2);
+      let out = ell2(x, y + 1, 27, 11.4, "#9CC46A", ` stroke="${OUT}" stroke-width="0.5"`) + ell2(x - 3, y, 18, 7, "#ADD27A") + ell2(...T.p(0.22, 0.3, 0), 7.4, 2.8, "rgba(90,120,60,.35)") + ell2(...T.p(0.22, 0.32, 0), 5, 1.6, "rgba(110,180,220,.5)") + tuft3(-0.38, 0.1) + tuft3(0.36, -0.3) + T.shadow(0, 0, 0.32, 0.2);
       let spout;
       if (kind === 0) {
         out += [[-0.14, -0.14], [0.14, -0.14], [-0.14, 0.14], [0.14, 0.14]].map(([a, b]) => post(T, a, b, 0, 12, WOOD_DARK, 0.02)).join("") + ln2(T.p(-0.14, 0.14, 1), T.p(0.14, 0.14, 11), WOOD_DARK.right, 0.9) + ln2(T.p(0.14, 0.14, 1), T.p(-0.14, 0.14, 11), WOOD_DARK.right, 0.9) + ln2(T.p(0.14, 0.14, 1), T.p(0.14, -0.14, 11), WOOD_DARK.right, 0.9) + ln2(T.p(0.14, -0.14, 1), T.p(0.14, 0.14, 11), WOOD_DARK.right, 0.9) + T.box(-0.17, -0.17, 0.17, 0.17, 12, 14, WOOD) + T.cyl(0, 0, 14, 38, 0.2, { top: "#C99560", left: WOOD.left, right: WOOD.right }, "tonneau");
@@ -4998,18 +6375,18 @@ var belvedere = {
     n: 6,
     fps: 4,
     draw: /* @__PURE__ */ __name((T, f, n) => {
-      const pts2 = Array.from({ length: 6 }, (_, k) => {
+      const pts3 = Array.from({ length: 6 }, (_, k) => {
         const a = k / 6 * TAU + TAU / 12;
         return [Math.cos(a) * 0.27, Math.sin(a) * 0.27];
       });
-      const back = pts2.filter(([a, b]) => a + b < 0);
-      const front = pts2.filter(([a, b]) => a + b >= 0);
-      const column = /* @__PURE__ */ __name(([a, b]) => T.box(a - 0.018, b - 0.018, a + 0.018, b + 0.018, 5, 32, { top: "#FFFFFF", left: "#F4F0E8", right: "#D6CFC2" }), "column");
-      const eave = pts2.map(([a, b]) => [a * 1.3, b * 1.3, 32]);
+      const back = pts3.filter(([a, b]) => a + b < 0);
+      const front = pts3.filter(([a, b]) => a + b >= 0);
+      const column2 = /* @__PURE__ */ __name(([a, b]) => T.box(a - 0.018, b - 0.018, a + 0.018, b + 0.018, 5, 32, { top: "#FFFFFF", left: "#F4F0E8", right: "#D6CFC2" }), "column");
+      const eave = pts3.map(([a, b]) => [a * 1.3, b * 1.3, 32]);
       const apex = [0, 0, 50];
       const [gx, gy] = T.p(0, 0, 0);
       let out = ell2(gx, gy + 1, 34, 14, "#9CC46A", ` stroke="${OUT}" stroke-width="0.5"`) + ell2(gx - 4, gy, 24, 9, "#ADD27A") + T.face([[0.26, 0.36, 0], [0.36, 0.26, 0], [0.52, 0.42, 0], [0.42, 0.52, 0]], "#DCD3C2", ` stroke="rgba(60,40,25,.4)" stroke-width="0.4"`) + T.shadow(0, 0, 0.42, 0.18) + T.cyl(0, 0, 0, 5, 0.36, STONE, "terrasse") + T.box(0.2, 0.2, 0.34, 0.34, 0, 2.4, STONE);
-      out += back.map(column).join("") + T.box(-0.12, -0.04, 0.12, 0.04, 5, 9, WOOD) + T.box(-0.12, -0.06, 0.12, -0.04, 9, 14, WOOD) + ln2(T.p(-0.1, -0.05, 12), T.p(0.1, -0.05, 12), "rgba(90,55,25,.4)", 0.5);
+      out += back.map(column2).join("") + T.box(-0.12, -0.04, 0.12, 0.04, 5, 9, WOOD) + T.box(-0.12, -0.06, 0.12, -0.04, 9, 14, WOOD) + ln2(T.p(-0.1, -0.05, 12), T.p(0.1, -0.05, 12), "rgba(90,55,25,.4)", 0.5);
       const rail2 = /* @__PURE__ */ __name((p, q) => {
         let o = ln2(T.p(p[0], p[1], 12), T.p(q[0], q[1], 12), "#F4F0E8", 1.6) + ln2(T.p(p[0], p[1], 12.4), T.p(q[0], q[1], 12.4), "#FFFFFF", 0.6);
         for (let s = 1; s < 5; s++) {
@@ -5018,9 +6395,9 @@ var belvedere = {
         }
         return o;
       }, "rail");
-      const fr = pts2.map((p, k) => [p, pts2[(k + 1) % 6]]).filter(([p, q]) => (p[0] + p[1] + q[0] + q[1]) / 2 >= -0.05);
-      out += fr.filter(([p, q]) => !((p[0] + q[0]) / 2 > 0.1 && (p[1] + q[1]) / 2 > 0.1)).map(([p, q]) => rail2(p, q)).join("") + front.map(column).join("");
-      const [rx, ry] = T.p(pts2[2][0], pts2[2][1], 5);
+      const fr = pts3.map((p, k) => [p, pts3[(k + 1) % 6]]).filter(([p, q]) => (p[0] + p[1] + q[0] + q[1]) / 2 >= -0.05);
+      out += fr.filter(([p, q]) => !((p[0] + q[0]) / 2 > 0.1 && (p[1] + q[1]) / 2 > 0.1)).map(([p, q]) => rail2(p, q)).join("") + front.map(column2).join("");
+      const [rx, ry] = T.p(pts3[2][0], pts3[2][1], 5);
       out += `<path d="M${f22(rx)},${f22(ry)} q2,-5 -0.6,-9 q-2,-4 1,-9 q2,-4 -0.4,-8" stroke="#4E8A3A" stroke-width="0.9" fill="none"/>` + [[0.6, -4], [-1.2, -8], [1, -12.6], [-0.6, -17], [0.8, -21]].map(([dx, dy], i) => ell2(rx + dx, ry + dy, 1.4, 0.9, "#5FA04A") + (i % 2 ? "" : dot2(rx + dx + 0.8, ry + dy - 0.6, 1, "#F07AA0"))).join("");
       out += [[-0.3, 0.16], [0.32, -0.12]].map(([u, v], i) => {
         const [px, py] = T.p(u, v, 5);
@@ -5106,7 +6483,7 @@ var hangar = {
   layers: [{
     frame: [-38, -66, 76, 84],
     draw: /* @__PURE__ */ __name((T) => {
-      const crate = /* @__PURE__ */ __name((du, dv, z, s) => T.box(du - s, dv - s, du + s, dv + s, z, z + s * 64, WOOD) + ln2(T.p(du - s, dv + s, z), T.p(du + s, dv + s, z + s * 64), WOOD.right, 0.7) + ln2(T.p(du + s, dv - s, z), T.p(du + s, dv + s, z + s * 64), WOOD.right, 0.7), "crate");
+      const crate2 = /* @__PURE__ */ __name((du, dv, z, s) => T.box(du - s, dv - s, du + s, dv + s, z, z + s * 64, WOOD) + ln2(T.p(du - s, dv + s, z), T.p(du + s, dv + s, z + s * 64), WOOD.right, 0.7) + ln2(T.p(du + s, dv - s, z), T.p(du + s, dv + s, z + s * 64), WOOD.right, 0.7), "crate");
       const [x, y] = T.p(0, 0, 0);
       let out = ell2(x, y + 1, 34, 14.4, "#B89A6E", ` stroke="${OUT}" stroke-width="0.5"`) + ell2(x - 4, y, 23, 8.6, "#C8AC80") + [[-22, 4, 0.5], [14, 9, -0.4], [24, 1, 0.3], [-6, 11, -0.6]].map(([dx, dy, a]) => ln2([x + dx, y + dy], [x + dx + 4, y + dy + a * 4], "#E2C66E", 0.7)).join("") + T.shadow(0, 0, 0.42, 0.2);
       out += T.box(-0.34, -0.28, 0.34, -0.23, 0, 26, WOOD) + planksLeft(T.u - 0.34, T.u + 0.34, T.v - 0.23, 0, 26, 4.6) + [-0.22, 0.04, 0.26].map((du) => ln2(T.p(du, -0.23, 2), T.p(du, -0.23, 24), "rgba(70,40,20,.18)", 0.6)).join("");
@@ -5139,7 +6516,7 @@ var hangar = {
       }).join("");
       const [kx, ky] = T.p(0.4, 0.16, 0);
       out += `<path d="M${f22(kx - 4)},${f22(ky)} C${f22(kx - 5)},${f22(ky - 4.6)} ${f22(kx - 3.4)},${f22(ky - 7.6)} ${f22(kx - 1.6)},${f22(ky - 8.6)} L${f22(kx + 1.8)},${f22(ky - 8.6)} C${f22(kx + 3.6)},${f22(ky - 7.6)} ${f22(kx + 5)},${f22(ky - 4.6)} ${f22(kx + 4)},${f22(ky)} Z" fill="#D8C08E" stroke="${OUT}" stroke-width="0.5"/>` + ln2([kx - 1.8, ky - 8], [kx + 1.8, ky - 8], "#8A6A3A", 0.9);
-      out += crate(0.28, 0.36, 0, 0.07) + crate(0.16, 0.38, 0, 0.06) + crate(0.26, 0.34, 9, 0.055);
+      out += crate2(0.28, 0.36, 0, 0.07) + crate2(0.16, 0.38, 0, 0.06) + crate2(0.26, 0.34, 9, 0.055);
       const [cx, cy] = T.p(0.26, 0.34, 12.6);
       out += `<path d="M${f22(cx - 4.4)},${f22(cy - 1)} q-1.6,2.2 2.4,2.6 q5,0.4 6.4,-1" stroke="${OUT}" stroke-width="2.6" fill="none" stroke-linecap="round"/><path d="M${f22(cx - 4.4)},${f22(cy - 1)} q-1.6,2.2 2.4,2.6 q5,0.4 6.4,-1" stroke="#E08A3A" stroke-width="1.6" fill="none" stroke-linecap="round"/>` + ell2(cx, cy - 2.4, 4.6, 2.6, "#F2A65A", ` stroke="${OUT}" stroke-width="0.5"`) + [-2, 0, 2].map((o) => `<path d="M${f22(cx + o - 0.6)},${f22(cy - 4.8)} q0.6,1.2 0,2.4" stroke="#D07A34" stroke-width="0.6" fill="none"/>`).join("") + `<circle cx="${f22(cx + 3.4)}" cy="${f22(cy - 3.2)}" r="2.2" fill="#F2A65A" stroke="${OUT}" stroke-width="0.5"/>` + poly2([[cx + 1.8, cy - 4.6], [cx + 2.2, cy - 6.6], [cx + 3.4, cy - 5.2]], "#F2A65A", ` stroke="${OUT}" stroke-width="0.4" stroke-linejoin="round"`) + poly2([[cx + 3.8, cy - 5.2], [cx + 5, cy - 6.6], [cx + 5.2, cy - 4.4]], "#F2A65A", ` stroke="${OUT}" stroke-width="0.4" stroke-linejoin="round"`) + `<path d="M${f22(cx + 2.4)},${f22(cy - 3.2)} q0.5,0.5 1,0 M${f22(cx + 3.9)},${f22(cy - 3)} q0.5,0.5 1,0" stroke="#3D2A1E" stroke-width="0.4" fill="none"/>` + dot2(cx + 4, cy - 2.2, 0.35, "#E58A8F") + `<text x="${f22(cx + 5)}" y="${f22(cy - 7)}" font-family="sans-serif" font-size="2.6" font-weight="700" fill="#5A6A80">z</text>`;
       return out + (() => {
@@ -5216,7 +6593,7 @@ var maison = {
         const p = (f + k * 3) % n / n;
         return puff(chx + p * 5, chy - 4 - p * 16, 1.8 + p * 3.2, 0.55 * (1 - p));
       }).join("");
-      const pane = /* @__PURE__ */ __name((pts2, fill) => T.face(pts2, fill, ` stroke="${WOOD_DARK.right}" stroke-width="0.9"`), "pane");
+      const pane = /* @__PURE__ */ __name((pts3, fill) => T.face(pts3, fill, ` stroke="${WOOD_DARK.right}" stroke-width="0.9"`), "pane");
       const [gx, gy] = T.p(0, 0, 0);
       return ell2(gx, gy + 1, 31, 12.6, "#9CC46A", ` stroke="${OUT}" stroke-width="0.5"`) + ell2(gx - 4, gy, 21, 7.6, "#ADD27A") + [[0.02, 0.32], [0.06, 0.42], [0.1, 0.52]].map(([du, dv]) => {
         const [px, py] = T.p(du, dv, 0);
@@ -5391,8 +6768,8 @@ var serre = {
       const GF = { top: "rgba(225,243,255,.3)", left: "rgba(196,228,246,.24)", right: "rgba(160,205,232,.34)" };
       const k = f / n;
       const [x, y] = T.p(0, 0, 0);
-      const leaf2 = /* @__PURE__ */ __name((lx, ly, s, a, c) => `<g transform="translate(${f22(lx)} ${f22(ly)}) rotate(${a}) scale(${s})"><path d="M0,0 Q-6,-3 -6,-9 Q-5,-14 0,-15 Q5,-14 6,-9 Q6,-3 0,0 Z" fill="${c}" stroke="${OUT}" stroke-width="0.5"/><path d="M0,0 L0,-14 M0,-5 L-4.6,-7 M0,-9 L-4.4,-11.4 M0,-5 L4.6,-7 M0,-9 L4.4,-11.4" stroke="rgba(20,60,30,.5)" stroke-width="0.6" fill="none"/></g>`, "leaf");
-      let out = ell2(x, y + 1, 32, 12.7, "#6E8A48", ` stroke="${OUT}" stroke-width="0.5"`) + ell2(x - 4, y, 22, 8, "#7E9C54") + leaf2(x - 24, y - 2, 0.9, -40, "#3E8A48") + leaf2(x - 20, y + 1, 0.7, -10, "#5FAE5A") + T.shadow(0, 0, 0.42, 0.16) + T.box(-0.3, -0.24, 0.3, 0.24, 0, 3, STONE);
+      const leaf3 = /* @__PURE__ */ __name((lx, ly, s, a, c) => `<g transform="translate(${f22(lx)} ${f22(ly)}) rotate(${a}) scale(${s})"><path d="M0,0 Q-6,-3 -6,-9 Q-5,-14 0,-15 Q5,-14 6,-9 Q6,-3 0,0 Z" fill="${c}" stroke="${OUT}" stroke-width="0.5"/><path d="M0,0 L0,-14 M0,-5 L-4.6,-7 M0,-9 L-4.4,-11.4 M0,-5 L4.6,-7 M0,-9 L4.4,-11.4" stroke="rgba(20,60,30,.5)" stroke-width="0.6" fill="none"/></g>`, "leaf");
+      let out = ell2(x, y + 1, 32, 12.7, "#6E8A48", ` stroke="${OUT}" stroke-width="0.5"`) + ell2(x - 4, y, 22, 8, "#7E9C54") + leaf3(x - 24, y - 2, 0.9, -40, "#3E8A48") + leaf3(x - 20, y + 1, 0.7, -10, "#5FAE5A") + T.shadow(0, 0, 0.42, 0.16) + T.box(-0.3, -0.24, 0.3, 0.24, 0, 3, STONE);
       const [px, py] = T.p(0, 0, 3);
       out += ln2([px - 6, py], [px - 7, py - 16], "#8A6A3A", 1.6) + [[-20, -24, "#3E8A48"], [8, -24, "#5FAE5A"], [-14, -14, "#5FAE5A"], [2, -12, "#3E8A48"]].map(([dx, dy, c], i) => `<path d="M${f22(px - 7)},${f22(py - 16)} Q${f22(px - 7 + dx * 0.4)},${f22(py - 16 + dy * 0.6)} ${f22(px - 7 + dx * 0.9)},${f22(py - 16 + dy * 0.35 + i % 2 * 2)} Q${f22(px - 7 + dx * 0.5)},${f22(py - 16 + dy * 0.2)} ${f22(px - 7)},${f22(py - 16)} Z" fill="${c}" stroke="#2E6A38" stroke-width="0.4"/>`).join("") + [-2, 10].map((dx, i) => `<path d="M${px + dx},${py} q-6,-10 -12,-12 q6,0 12,6 q0,-12 6,-18 q-2,10 0,18 q6,-8 12,-8 q-6,4 -12,14 Z" fill="${i ? "#3E8A48" : "#5FAE5A"}"/>`).join("") + [[-12, -8], [6, -16], [14, -8]].map(([dx, dy]) => ell2(px + dx, py + dy, 2.2, 2.8, "#F2B23C", ` stroke="#8A5A14" stroke-width="0.4"`)).join("") + [[-2, -6], [12, -14]].map(([dx, dy]) => [0, 72, 144, 216, 288].map((a) => ell2(px + dx + Math.cos(a * Math.PI / 180) * 1.6, py + dy + Math.sin(a * Math.PI / 180) * 1.6, 1.4, 1.4, "#E2463A")).join("") + dot2(px + dx, py + dy, 0.8, "#FFD24E")).join("");
       out += T.box(-0.3, -0.24, 0.3, 0.24, 3, 22, GF, GLASS_EDGE);
@@ -5413,7 +6790,7 @@ var serre = {
       out += ln2([ex, ey], [ex, ey - 4], DARK_IRON.right, 0.9) + dot2(ex, ey - 4.6, 1.1, "#E2B347");
       const [qx, qy] = T.p(0.16, 0, 32), bob = f % 3 === 1 ? 1 : 0;
       out += ln2([qx - 0.6, qy], [qx - 0.8, qy - 1.6], "#3D3A36", 0.6) + ln2([qx + 0.8, qy], [qx + 0.8, qy - 1.6], "#3D3A36", 0.6) + `<path d="M${f22(qx - 1.6)},${f22(qy - 2)} L${f22(qx - 4.6)},${f22(qy + 3)} L${f22(qx - 2.6)},${f22(qy + 3.4)} L${f22(qx - 0.4)},${f22(qy - 1.4)} Z" fill="#3FA0D8" stroke="${OUT}" stroke-width="0.4"/>` + ell2(qx, qy - 4, 2.6, 3.2, "#E2463A", ` stroke="${OUT}" stroke-width="0.5"`) + `<path d="M${f22(qx - 2.4)},${f22(qy - 4.6)} Q${f22(qx - 3)},${f22(qy - 1.6)} ${f22(qx - 1)},${f22(qy - 1)} Q${f22(qx)},${f22(qy - 3)} ${f22(qx - 2.4)},${f22(qy - 4.6)} Z" fill="#5FBF5A" stroke="${OUT}" stroke-width="0.4"/><circle cx="${f22(qx + 1)}" cy="${f22(qy - 7.4 + bob)}" r="2" fill="#E2463A" stroke="${OUT}" stroke-width="0.5"/>` + ell2(qx + 1.6, qy - 7.4 + bob, 1, 1.2, "#FFF3C4") + `<path d="M${f22(qx + 2.6)},${f22(qy - 8.2 + bob)} q1.8,0.2 1.4,2 q-0.6,-0.8 -1.4,-0.6 Z" fill="#3D3A36"/>` + dot2(qx + 1.7, qy - 7.8 + bob, 0.45, "#2A2024");
-      return out + leaf2(x + 22, y + 4, 0.9, 30, "#3E8A48") + leaf2(x + 26, y, 0.7, 60, "#5FAE5A");
+      return out + leaf3(x + 22, y + 4, 0.9, 30, "#3E8A48") + leaf3(x + 26, y, 0.7, 60, "#5FAE5A");
     }, "draw")
   }]
 };
@@ -5425,7 +6802,7 @@ var fonderie = {
     fps: 6,
     draw: /* @__PURE__ */ __name((T, f, n) => {
       const k = f / n, flick = Math.sin(k * TAU);
-      const ROCK2 = { top: "#6E667A", left: "#4A4555", right: "#312D39" };
+      const ROCK3 = { top: "#6E667A", left: "#4A4555", right: "#312D39" };
       const lava = /* @__PURE__ */ __name((o) => `rgba(255,${f22(118 + 52 * flick)},40,${o})`, "lava");
       const [x, y] = T.p(0, 0, 0);
       let out = ell2(x, y + 1, 31, 12.7, "#6A6070", ` stroke="${OUT}" stroke-width="0.5"`) + ell2(x - 4, y, 21, 8, "#7A7080") + [[-14, 6, 1.2], [20, 5, 1], [-2, 10, 0.9], [26, -1, 0.8]].map(([dx, dy, r]) => ell2(x + dx, y + dy, r * 1.6, r, "#544A5A")).join("");
@@ -5436,25 +6813,25 @@ var fonderie = {
       out += ell2(ox + 1, oy + 0.6, 10, 3.4, "rgba(20,15,25,.35)") + [[-6, 0, 5], [5, 0.6, 4.6], [0, -3.6, 5.4], [-2, 1.6, 4]].map(([dx, dy, r]) => poly2([[ox + dx - r, oy + dy], [ox + dx - r * 0.5, oy + dy - r * 1.1], [ox + dx + r * 0.4, oy + dy - r * 1.3], [ox + dx + r, oy + dy - r * 0.3], [ox + dx + r * 0.7, oy + dy + r * 0.3]], "#2A2733", ` stroke="${OUT}" stroke-width="0.5" stroke-linejoin="round"`) + ln2([ox + dx - r * 0.4, oy + dy - r * 0.9], [ox + dx + r * 0.2, oy + dy - r * 1.1], "rgba(190,160,255,.75)", 0.7)).join("") + star(ox + 1, oy - 9, 1.8, "#E4D6FF", f % 3 === 1 ? 1 : 0.25);
       const [cx, cy] = T.p(-0.2, -0.18, 6);
       const cb = 10, ct = 6.4, ch = 25;
-      out += poly2([[cx - cb, cy], [cx - ct, cy - ch], [cx + ct, cy - ch], [cx + cb, cy]], ROCK2.left, ` stroke="${OUT}" stroke-width="0.7" stroke-linejoin="round"`) + poly2([[cx + 1.6, cy], [cx + 1, cy - ch], [cx + ct, cy - ch], [cx + cb, cy]], ROCK2.right);
+      out += poly2([[cx - cb, cy], [cx - ct, cy - ch], [cx + ct, cy - ch], [cx + cb, cy]], ROCK3.left, ` stroke="${OUT}" stroke-width="0.7" stroke-linejoin="round"`) + poly2([[cx + 1.6, cy], [cx + 1, cy - ch], [cx + ct, cy - ch], [cx + cb, cy]], ROCK3.right);
       for (let r = 1; r < 5; r++) {
         const yy = cy - r * (ch / 5), w = cb - (cb - ct) * (r / 5);
         out += ln2([cx - w, yy], [cx + w, yy], "rgba(20,16,26,.7)", 0.6);
         const off = r % 2 ? -w * 0.3 : w * 0.25;
         out += ln2([cx + off, yy], [cx + off, yy + ch / 5], "rgba(20,16,26,.6)", 0.5);
       }
-      out += ln2([cx - cb + 1.4, cy - 1], [cx - ct + 1, cy - ch + 1], "rgba(255,255,255,.14)", 1.2) + ell2(cx, cy - ch, ct + 1.6, 2.2, ROCK2.top, ` stroke="${OUT}" stroke-width="0.6"`) + ell2(cx, cy - ch, ct - 0.6, 1.2, "#1C1820") + puff(cx + 1 + k * 3, cy - ch - 4 - k * 6, 2.6 + k * 2, 0.75 * (1 - k)) + puff(cx - 2 + (k + 0.5) % 1 * 4, cy - ch - 4 - (k + 0.5) % 1 * 6, 2.2 + (k + 0.5) % 1 * 2, 0.6 * (1 - (k + 0.5) % 1)) + [[3, 0], [-2, 2], [1, 4]].map(([dx, o]) => {
+      out += ln2([cx - cb + 1.4, cy - 1], [cx - ct + 1, cy - ch + 1], "rgba(255,255,255,.14)", 1.2) + ell2(cx, cy - ch, ct + 1.6, 2.2, ROCK3.top, ` stroke="${OUT}" stroke-width="0.6"`) + ell2(cx, cy - ch, ct - 0.6, 1.2, "#1C1820") + puff(cx + 1 + k * 3, cy - ch - 4 - k * 6, 2.6 + k * 2, 0.75 * (1 - k)) + puff(cx - 2 + (k + 0.5) % 1 * 4, cy - ch - 4 - (k + 0.5) % 1 * 6, 2.2 + (k + 0.5) % 1 * 2, 0.6 * (1 - (k + 0.5) % 1)) + [[3, 0], [-2, 2], [1, 4]].map(([dx, o]) => {
         const t = (f + o) % n / n;
         return dot2(cx + dx + t * 2, cy - ch - 2 - t * 12, 0.7, t < 0.5 ? "#FFD070" : "#FF8A3A");
       }).join("");
       const [bx, by] = T.p(-0.46, 0.14, 0);
       const open = 0.5 + 0.5 * Math.cos(k * TAU);
       const hx = bx + 8, hy = by - 6, top = by - 9 - open * 4;
-      out += ell2(bx, by + 0.4, 9, 2.4, "rgba(20,15,25,.3)") + T.box(-0.5, 0.12, -0.42, 0.2, 0, 3, ROCK2) + ln2([hx, hy], [hx + 6, hy + 0.6], DARK_IRON.right, 1.6) + poly2([[hx, hy], [bx - 8, top], [bx - 8, by - 4]], "#8A5A36", ` stroke="${OUT}" stroke-width="0.6" stroke-linejoin="round"`) + [0.35, 0.65].map((t) => ln2([hx + (bx - 8 - hx) * t, hy + (top - hy) * t], [hx + (bx - 8 - hx) * t, hy + (by - 4 - hy) * t], "rgba(60,35,20,.55)", 0.6)).join("") + ln2([hx, hy], [bx - 9, top], WOOD.right, 1.8) + ln2([hx, hy], [bx - 9, by - 4], WOOD.right, 1.8) + ln2([bx - 9, top], [bx - 12, top - 1.6], WOOD.right, 1.4);
+      out += ell2(bx, by + 0.4, 9, 2.4, "rgba(20,15,25,.3)") + T.box(-0.5, 0.12, -0.42, 0.2, 0, 3, ROCK3) + ln2([hx, hy], [hx + 6, hy + 0.6], DARK_IRON.right, 1.6) + poly2([[hx, hy], [bx - 8, top], [bx - 8, by - 4]], "#8A5A36", ` stroke="${OUT}" stroke-width="0.6" stroke-linejoin="round"`) + [0.35, 0.65].map((t) => ln2([hx + (bx - 8 - hx) * t, hy + (top - hy) * t], [hx + (bx - 8 - hx) * t, hy + (by - 4 - hy) * t], "rgba(60,35,20,.55)", 0.6)).join("") + ln2([hx, hy], [bx - 9, top], WOOD.right, 1.8) + ln2([hx, hy], [bx - 9, by - 4], WOOD.right, 1.8) + ln2([bx - 9, top], [bx - 12, top - 1.6], WOOD.right, 1.4);
       const [fx, fy] = T.p(-0.12, -0.04, 0);
-      out += T.shadow(-0.12, -0.04, 0.24, 0.25) + `<path d="M${fx - 13},${fy} L${fx - 13},${fy - 7} A13,5.6 0 0 1 ${fx + 13},${fy - 7} L${fx + 13},${fy} A13,5.6 0 0 1 ${fx - 13},${fy} Z" fill="${ROCK2.left}" stroke="${OUT}" stroke-width="0.7"/><path d="M${fx + 4},${fy + 5.3} L${fx + 4},${fy - 1.7} A13,5.6 0 0 0 ${fx + 13},${fy - 7} L${fx + 13},${fy} A13,5.6 0 0 1 ${fx + 4},${fy + 5.3} Z" fill="${ROCK2.right}"/>` + [[-9, -3.4], [-3, -1.6], [3, -2], [9, -3.6], [-6, 1.6], [6, 1.4]].map(([dx, dy]) => `<path d="M${fx + dx - 2.6},${fy + dy} q2.6,-2 5.2,0" stroke="rgba(20,16,26,.7)" stroke-width="0.6" fill="none"/>`).join("") + ell2(fx, fy - 7, 13, 5.6, ROCK2.top, ` stroke="${OUT}" stroke-width="0.7"`) + ell2(fx, fy - 7, 10, 4, "#2A1410") + ell2(fx, fy - 7.2, 8.4, 3.2, lava(1)) + [[-5, 0.6], [-1.4, -1.2], [2.6, 0.8], [5.4, -0.6], [0.4, 1.4]].map(([dx, dy], i) => dot2(fx + dx, fy - 7 + dy, 1.3, i % 2 ? "#3A1A12" : "#FFE08A")).join("") + `<path d="M${fx - 5},${fy - 7} Q${fx - 7},${fy - 15} ${fx - 1},${f22(fy - 21 - flick * 3)} Q${fx + 1},${fy - 15} ${fx + 2},${fy - 9} Q${fx + 4},${fy - 14} ${fx + 4},${f22(fy - 17 + flick * 2)} Q${fx + 8},${fy - 11} ${fx + 5},${fy - 7} Z" fill="#F59A3C" stroke="#C8521E" stroke-width="0.5"/><path d="M${fx - 2.6},${fy - 7} Q${fx - 3.6},${fy - 12} ${fx - 0.6},${f22(fy - 15 - flick * 2)} Q${fx + 1.6},${fy - 11} ${fx + 2.6},${fy - 7} Z" fill="#FFE08A"/>`;
+      out += T.shadow(-0.12, -0.04, 0.24, 0.25) + `<path d="M${fx - 13},${fy} L${fx - 13},${fy - 7} A13,5.6 0 0 1 ${fx + 13},${fy - 7} L${fx + 13},${fy} A13,5.6 0 0 1 ${fx - 13},${fy} Z" fill="${ROCK3.left}" stroke="${OUT}" stroke-width="0.7"/><path d="M${fx + 4},${fy + 5.3} L${fx + 4},${fy - 1.7} A13,5.6 0 0 0 ${fx + 13},${fy - 7} L${fx + 13},${fy} A13,5.6 0 0 1 ${fx + 4},${fy + 5.3} Z" fill="${ROCK3.right}"/>` + [[-9, -3.4], [-3, -1.6], [3, -2], [9, -3.6], [-6, 1.6], [6, 1.4]].map(([dx, dy]) => `<path d="M${fx + dx - 2.6},${fy + dy} q2.6,-2 5.2,0" stroke="rgba(20,16,26,.7)" stroke-width="0.6" fill="none"/>`).join("") + ell2(fx, fy - 7, 13, 5.6, ROCK3.top, ` stroke="${OUT}" stroke-width="0.7"`) + ell2(fx, fy - 7, 10, 4, "#2A1410") + ell2(fx, fy - 7.2, 8.4, 3.2, lava(1)) + [[-5, 0.6], [-1.4, -1.2], [2.6, 0.8], [5.4, -0.6], [0.4, 1.4]].map(([dx, dy], i) => dot2(fx + dx, fy - 7 + dy, 1.3, i % 2 ? "#3A1A12" : "#FFE08A")).join("") + `<path d="M${fx - 5},${fy - 7} Q${fx - 7},${fy - 15} ${fx - 1},${f22(fy - 21 - flick * 3)} Q${fx + 1},${fy - 15} ${fx + 2},${fy - 9} Q${fx + 4},${fy - 14} ${fx + 4},${f22(fy - 17 + flick * 2)} Q${fx + 8},${fy - 11} ${fx + 5},${fy - 7} Z" fill="#F59A3C" stroke="#C8521E" stroke-width="0.5"/><path d="M${fx - 2.6},${fy - 7} Q${fx - 3.6},${fy - 12} ${fx - 0.6},${f22(fy - 15 - flick * 2)} Q${fx + 1.6},${fy - 11} ${fx + 2.6},${fy - 7} Z" fill="#FFE08A"/>`;
       const [ax, ay] = T.p(0.3, 0.2, 7);
-      out += T.shadow(0.3, 0.2, 0.13, 0.22) + T.box(0.22, 0.12, 0.38, 0.28, 0, 7, ROCK2) + `<path d="M${ax - 7},${ay - 2} L${ax + 4},${ay - 2} Q${ax + 11},${ay - 2.4} ${ax + 12},${ay - 5} Q${ax + 7},${ay - 5.6} ${ax + 5},${ay - 6} L${ax - 7},${ay - 6} Z" fill="${DARK_IRON.left}" stroke="${OUT}" stroke-width="0.6" stroke-linejoin="round"/>` + poly2([[ax - 4, ay - 2], [ax + 2, ay - 2], [ax + 1, ay + 1], [ax - 3, ay + 1]], DARK_IRON.right, ` stroke="${OUT}" stroke-width="0.5"`) + ln2([ax - 6, ay - 5.6], [ax + 6, ay - 5.6], IRON.top, 0.8) + `<path d="M${ax - 5},${ay - 6.6} Q${ax},${ay - 8.4} ${ax + 6},${ay - 7} Q${ax},${ay - 5.8} ${ax - 5},${ay - 6.6} Z" fill="${lava(1)}" stroke="#8A3412" stroke-width="0.4"/>` + ell2(ax, ay - 7, 6, 2, lava(0.25 + 0.2 * flick));
+      out += T.shadow(0.3, 0.2, 0.13, 0.22) + T.box(0.22, 0.12, 0.38, 0.28, 0, 7, ROCK3) + `<path d="M${ax - 7},${ay - 2} L${ax + 4},${ay - 2} Q${ax + 11},${ay - 2.4} ${ax + 12},${ay - 5} Q${ax + 7},${ay - 5.6} ${ax + 5},${ay - 6} L${ax - 7},${ay - 6} Z" fill="${DARK_IRON.left}" stroke="${OUT}" stroke-width="0.6" stroke-linejoin="round"/>` + poly2([[ax - 4, ay - 2], [ax + 2, ay - 2], [ax + 1, ay + 1], [ax - 3, ay + 1]], DARK_IRON.right, ` stroke="${OUT}" stroke-width="0.5"`) + ln2([ax - 6, ay - 5.6], [ax + 6, ay - 5.6], IRON.top, 0.8) + `<path d="M${ax - 5},${ay - 6.6} Q${ax},${ay - 8.4} ${ax + 6},${ay - 7} Q${ax},${ay - 5.8} ${ax - 5},${ay - 6.6} Z" fill="${lava(1)}" stroke="#8A3412" stroke-width="0.4"/>` + ell2(ax, ay - 7, 6, 2, lava(0.25 + 0.2 * flick));
       const [mx, my] = T.p(0.42, 0.18, 0);
       out += ln2([mx - 1, my], [mx + 4, my - 9], WOOD.right, 1.4) + poly2([[mx + 1.6, my - 9.6], [mx + 6.4, my - 8], [mx + 6, my - 10.6], [mx + 2.4, my - 12]], DARK_IRON.left, ` stroke="${OUT}" stroke-width="0.5"`);
       out += bucket(T, -0.2, 0.4, 0, 6, 3.6, 4.6, { top: "#B98552", left: WOOD.left, right: WOOD.right }, "seau");
@@ -5500,8 +6877,8 @@ var ANNEX_SPRITES = {
   serre,
   fonderie
 };
-function annexLight(id) {
-  const annex = ANNEX_SPRITES[id];
+function annexLight(id3) {
+  const annex = ANNEX_SPRITES[id3];
   return annex && annex.light ? annex.light() : null;
 }
 __name(annexLight, "annexLight");
@@ -5622,44 +6999,2813 @@ var VIEW = { voilier: [-62, -70, 96, 92], ponton: [-58, -36, 116, 70] };
 function inventaire() {
   const items = [];
   const add = /* @__PURE__ */ __name((it) => items.push({ ms: 380, cell: true, meta: {}, ...it }), "add");
-  for (const [id, c] of Object.entries(C)) add({ cat: "creations", dir: "creations", base: id, label: CRAFTS[id], frame: PROP, frames: Array.from({ length: c.n }, (_, f) => c.draw(f)), ms: id === "girouette" ? 300 : 420 });
-  for (const [id, l] of Object.entries(LM)) add({ cat: "lieux", dir: "lieux", base: id, label: LIEUX[id], frame: LAND, frames: Array.from({ length: l.n }, (_, f) => l.draw(f)), ms: 520, meta: { echelle_jeu: id === "cascade" ? 1 : 1.35 } });
-  for (const [id, g] of Object.entries(G)) {
-    add({ cat: "gisements", dir: "gisements", base: `${id}_pret`, label: `${GISEMENTS[id]} — prêt`, frame: big(g.frames[0]), frames: [0, 1].map((f) => up(g.draw(false, f))), ms: 450 });
-    add({ cat: "gisements", dir: "gisements", base: `${id}_ramasse`, label: `${GISEMENTS[id]} — ramassé`, frame: big(g.frames[1]), frames: [up(g.draw(true, 0))] });
+  for (const [id3, c] of Object.entries(C)) add({ cat: "creations", dir: "creations", base: id3, label: CRAFTS[id3], frame: PROP, frames: Array.from({ length: c.n }, (_, f) => c.draw(f)), ms: id3 === "girouette" ? 300 : 420 });
+  for (const [id3, l] of Object.entries(LM)) add({ cat: "lieux", dir: "lieux", base: id3, label: LIEUX[id3], frame: LAND, frames: Array.from({ length: l.n }, (_, f) => l.draw(f)), ms: 520, meta: { echelle_jeu: id3 === "cascade" ? 1 : 1.35 } });
+  for (const [id3, g] of Object.entries(G)) {
+    add({ cat: "gisements", dir: "gisements", base: `${id3}_pret`, label: `${GISEMENTS[id3]} — prêt`, frame: big(g.frames[0]), frames: [0, 1].map((f) => up(g.draw(false, f))), ms: 450 });
+    add({ cat: "gisements", dir: "gisements", base: `${id3}_ramasse`, label: `${GISEMENTS[id3]} — ramassé`, frame: big(g.frames[1]), frames: [up(g.draw(true, 0))] });
   }
-  for (const [id, a] of Object.entries(ANNEX_SPRITES)) {
+  for (const [id3, a] of Object.entries(ANNEX_SPRITES)) {
     const l = a.layers[0];
-    const light = annexLight(id);
-    const vs = VARIANTS[id] || [null];
+    const light = annexLight(id3);
+    const vs = VARIANTS[id3] || [null];
     vs.forEach((vn, v) => {
       const n = l.n || 1;
       add({
         cat: "annexes",
-        dir: `annexes/${id}`,
-        base: vn ? `${id}_${vn}` : id,
-        label: ANNEXES[id] + (vn ? ` — ${vl(vn)}` : ""),
+        dir: `annexes/${id3}`,
+        base: vn ? `${id3}_${vn}` : id3,
+        label: ANNEXES[id3] + (vn ? ` — ${vl(vn)}` : ""),
         frame: big(l.frame),
-        frames: Array.from({ length: n }, (_, f) => up(l.draw(tools(0, 0, `${id}-${v}`), f, n, v))),
+        frames: Array.from({ length: n }, (_, f) => up(l.draw(tools(0, 0, `${id3}-${v}`), f, n, v))),
         ms: l.fps ? Math.round(1e3 / l.fps) : 0,
         meta: { variante_jeu: v, ips: l.fps || 0, ...light ? { lumiere: { u: light[0], v: light[1], z: r2(light[2] * 1.25), rayon: r2(light[3] * 1.25), couleur: light[4] || "chaude", vacille: !!light[5] } } : {} }
       });
     });
   }
-  for (const [id, s] of Object.entries(S)) add({ cat: "enseignes", dir: "enseignes", base: id, label: ENSEIGNES[id], frame: big(SIGN_FRAME), frames: Array.from({ length: s.n }, (_, f) => up(s.draw(f))), ms: id === "fer" ? 200 : id === "laiton" ? 900 : 260, cell: false, meta: { cadre_du_nom: SIGN_TEXT[id] } });
-  for (const [id, m] of Object.entries(M)) {
+  for (const [id3, s] of Object.entries(S)) add({ cat: "enseignes", dir: "enseignes", base: id3, label: ENSEIGNES[id3], frame: big(SIGN_FRAME), frames: Array.from({ length: s.n }, (_, f) => up(s.draw(f))), ms: id3 === "fer" ? 200 : id3 === "laiton" ? 900 : 260, cell: false, meta: { cadre_du_nom: SIGN_TEXT[id3] } });
+  for (const [id3, m] of Object.entries(M)) {
     for (const v of m.variants || [null]) {
       const frames = Array.from({ length: m.n }, (_, f) => up(m.draw(f, v || void 0)));
-      const base = v ? `${id}_${v}` : id;
-      const cell = /ponton|pont|panneau/.test(id);
-      add({ cat: "ilots", dir: "ilots", base, label: ILOTS[id] + (v ? ` — ${vl(v)}` : ""), frame: big(m.frame), frames, ms: id === "bouteille" ? 700 : 300, cell, view: VIEW[id] });
-      if (id === "pont") add({ cat: "ilots", dir: "ilots", base: `${base}_v`, label: `${ILOTS[id]} — ${vl(v)} (le long de v)`, frame: big(m.frame), frames: frames.map((b) => `<g transform="scale(-1 1)">${b}</g>`), cell });
+      const base = v ? `${id3}_${v}` : id3;
+      const cell = /ponton|pont|panneau/.test(id3);
+      add({ cat: "ilots", dir: "ilots", base, label: ILOTS[id3] + (v ? ` — ${vl(v)}` : ""), frame: big(m.frame), frames, ms: id3 === "bouteille" ? 700 : 300, cell, view: VIEW[id3] });
+      if (id3 === "pont") add({ cat: "ilots", dir: "ilots", base: `${base}_v`, label: `${ILOTS[id3]} — ${vl(v)} (le long de v)`, frame: big(m.frame), frames: frames.map((b) => `<g transform="scale(-1 1)">${b}</g>`), cell });
     }
-    if (/^epave/.test(id)) add({ cat: "ilots", dir: "ilots", base: `${id}_silhouette`, label: `${ILOTS[id]} (silhouette du prologue)`, frame: big(m.frame), frames: [silhouette(up(m.draw(0)))], cell: false });
+    if (/^epave/.test(id3)) add({ cat: "ilots", dir: "ilots", base: `${id3}_silhouette`, label: `${ILOTS[id3]} (silhouette du prologue)`, frame: big(m.frame), frames: [silhouette(up(m.draw(0)))], cell: false });
   }
   return items;
 }
 __name(inventaire, "inventaire");
+
+// atelier/port/src/world/sprites.js
+var f23 = /* @__PURE__ */ __name((n) => Math.round(n * 100) / 100, "f2");
+var SHELTER_FIRE = [0.5, 0.36];
+var CABIN_CHIMNEY = [0.3, -0.27];
+function flameFrames(u = 0, v = 0, s = 1, outlined = false) {
+  const [x, y] = P(u, v, 4);
+  const shapes = [
+    [[0, -22], [7, -6], [0, 0], [-7, -6]],
+    [[2, -24], [7, -7], [0, 0], [-6, -5]],
+    [[-2, -21], [6, -5], [0, 0], [-7, -7]]
+  ].map((shape) => shape.map(([dx, dy]) => [dx * s, dy * s]));
+  const tongue = /* @__PURE__ */ __name(([tip, r, base, l], k, fill, extra = "") => `<path d="M${f23(x + base[0] * k)},${f23(y + base[1] * k)} C${f23(x + (r[0] + 3 * s) * k)},${f23(y + r[1] * k)} ${f23(x + (tip[0] + 2 * s) * k)},${f23(y + (tip[1] + 8 * s) * k)} ${f23(x + tip[0] * k)},${f23(y + tip[1] * k)} C${f23(x + (tip[0] - 2 * s) * k)},${f23(y + (tip[1] + 8 * s) * k)} ${f23(x + (l[0] - 3 * s) * k)},${f23(y + l[1] * k)} ${f23(x + base[0] * k)},${f23(y + base[1] * k)} Z" fill="${fill}"${extra}/>`, "tongue");
+  if (outlined) {
+    const sparks2 = [[[5, -27], [-6, -18]], [[-4, -30], [7, -21]], [[3, -32], [-7, -25]]];
+    return shapes.map((sh, i) => sprite(
+      tongue(sh, 1, "#EE6A3A", ' stroke="#3C2819" stroke-width="0.8" stroke-linejoin="round"') + tongue(sh, 0.78, "#F7A23B") + tongue(sh, 0.5, "#FFE07A") + sparks2[i].map(([dx, dy], j) => `<circle cx="${f23(x + dx * s)}" cy="${f23(y + dy * s)}" r="${f23((j ? 0.8 : 1.1) * s)}" fill="#FFD27A"/>`).join(""),
+      { x: x - 20, y: y - 36, w: 40, h: 44 }
+    ));
+  }
+  return shapes.map(([tip, r, base, l]) => sprite(
+    `<path d="M${x + base[0]},${y + base[1]} C${x + r[0] + 3 * s},${y + r[1]} ${x + tip[0] + 2 * s},${y + tip[1] + 8 * s} ${x + tip[0]},${y + tip[1]} C${x + tip[0] - 2 * s},${y + tip[1] + 8 * s} ${x + l[0] - 3 * s},${y + l[1]} ${x + base[0]},${y + base[1]} Z" fill="#F7A23B"/><path d="M${x},${y} C${x + 4 * s},${y - 4 * s} ${x + tip[0] * 0.5 + 1 * s},${y + tip[1] * 0.5 + 4 * s} ${x + tip[0] * 0.5},${y + tip[1] * 0.55} C${x + tip[0] * 0.5 - 1 * s},${y + tip[1] * 0.5 + 4 * s} ${x - 4 * s},${y - 4 * s} ${x},${y} Z" fill="#FFE07A"/>`,
+    { x: x - 20, y: y - 36, w: 40, h: 44 }
+  ));
+}
+__name(flameFrames, "flameFrames");
+var LIGHTS = {
+  foyer: [[[0, 0, 10, 54]], [[SHELTER_FIRE[0], SHELTER_FIRE[1], 8, 40]], [[0.55, -0.07, 14, 22]]],
+  atelier: [[[0.85, -0.05, 6, 30]]]
+};
+var SMOKE = {
+  foyer: [[0, 0, 24], [SHELTER_FIRE[0], SHELTER_FIRE[1], 18], [CABIN_CHIMNEY[0], CABIN_CHIMNEY[1], 62]],
+  atelier: [[0.55, -0.05, 44]]
+};
+
+// atelier/camp.mjs
+var import_torche = __toESM(require_torche(), 1);
+var { torche } = import_torche.default;
+var K_CAMP = 1.25;
+var OUT2 = "#3C2819";
+var f24 = /* @__PURE__ */ __name((n) => Math.round(n * 100) / 100, "f2");
+var pts2 = /* @__PURE__ */ __name((list) => list.map(([x, y]) => `${f24(x)},${f24(y)}`).join(" "), "pts");
+var ln3 = /* @__PURE__ */ __name((a, b, color, w = 1) => `<line x1="${f24(a[0])}" y1="${f24(a[1])}" x2="${f24(b[0])}" y2="${f24(b[1])}" stroke="${color}" stroke-width="${f24(w)}" stroke-linecap="round"/>`, "ln");
+var tk = /* @__PURE__ */ __name((a, b, color, w) => ln3(a, b, OUT2, w + 1.44) + ln3(a, b, color, w), "tk");
+var pathTk = /* @__PURE__ */ __name((d, color, w) => `<path d="${d}" fill="none" stroke="${OUT2}" stroke-width="${f24(w + 1.44)}" stroke-linecap="round" stroke-linejoin="round"/><path d="${d}" fill="none" stroke="${color}" stroke-width="${f24(w)}" stroke-linecap="round" stroke-linejoin="round"/>`, "pathTk");
+var ell3 = /* @__PURE__ */ __name((x, y, rx, ry, fill, extra = "") => `<ellipse cx="${f24(x)}" cy="${f24(y)}" rx="${f24(rx)}" ry="${f24(ry)}" fill="${fill}"${extra}/>`, "ell");
+var iso = /* @__PURE__ */ __name((list) => list.map((p) => P(...p)), "iso");
+var uid = 0;
+var id = /* @__PURE__ */ __name((p) => `${p}${uid++}`, "id");
+var DRIFT = { top: "#DCCBAA", left: "#C2AF8C", right: "#9E8C6C" };
+var CRATE = { top: "#D2A574", left: "#B8875A", right: "#94683F" };
+var CANVAS = { light: "#EDE4CD", mid: "#D9CDB0", dark: "#B9AA88", seam: "#B3A27C" };
+var SAND = { light: "#F1E3B8", mid: "#E2CF9A", dark: "#C9B47E" };
+var ROPE = "#C9A66B";
+var IRON2 = { top: "#6E7178", left: "#55585F", right: "#3F4248" };
+function crate(u, v, s, h, z0 = 0, c = CRATE) {
+  const u0 = u - s, u1 = u + s, v0 = v - s, v1 = v + s;
+  return box(u0, v0, u1, v1, z0, z0 + h, c) + planksLeft(u0, u1, v1, z0, z0 + h, h / 3) + planksRight(u1, v0, v1, z0, z0 + h, h / 3) + ln3(P(u0 + 0.02, v1, z0 + 1), P(u1 - 0.02, v1, z0 + h - 1), "rgba(70,40,20,.45)", 0.9) + ln3(P(u1, v1 - 0.02, z0 + 1), P(u1, v0 + 0.02, z0 + h - 1), "rgba(40,20,10,.4)", 0.9);
+}
+__name(crate, "crate");
+function plank(a, b, w, t = 2, c = DRIFT, z0 = 0) {
+  const du = b[0] - a[0], dv = b[1] - a[1], l = Math.hypot(du, dv) || 1, nu = -dv / l * w / 2, nv = du / l * w / 2;
+  const q = [[a[0] + nu, a[1] + nv], [b[0] + nu, b[1] + nv], [b[0] - nu, b[1] - nv], [a[0] - nu, a[1] - nv]];
+  const front = nu + nv > 0 ? [q[0], q[1]] : [q[3], q[2]];
+  return face([[front[0][0], front[0][1], z0], [front[1][0], front[1][1], z0], [front[1][0], front[1][1], z0 + t], [front[0][0], front[0][1], z0 + t]], c.left, EDGE) + face(q.map(([x, y]) => [x, y, z0 + t]), c.top, EDGE);
+}
+__name(plank, "plank");
+var stick = /* @__PURE__ */ __name((u, v, z0, u2, v2, z1, w = 2, color = DRIFT.left) => tk(P(u, v, z0), P(u2, v2, z1), color, w), "stick");
+var rope = /* @__PURE__ */ __name((a, b, sag = 3, w = 0.8, color = ROPE) => pathTk(`M${f24(a[0])},${f24(a[1])} Q${f24((a[0] + b[0]) / 2)},${f24((a[1] + b[1]) / 2 + sag)} ${f24(b[0])},${f24(b[1])}`, color, w), "rope");
+var stone2 = /* @__PURE__ */ __name((u, v, s, c = STONE) => {
+  const [x, y] = P(u, v, 0);
+  return ell3(x + s * 0.1, y + s * 0.15, s + 0.4, s * 0.66 + 0.4, OUT2) + pebble(u, v, s, c);
+}, "stone");
+var dune = /* @__PURE__ */ __name((u, v, ru, rv, h) => {
+  const [x, y] = P(u, v, 0);
+  const rx = (ru + rv) * 22, ry = (ru + rv) * 11;
+  return ell3(x, y, rx, ry, SAND.mid) + ell3(x - rx * 0.15, y - h * 0.3 - ry * 0.12, rx * 0.72, ry * 0.62, SAND.light);
+}, "dune");
+var KELP = { lame: "#86913F", ombre: "#66702E", nerf: "#B4BE6A", flot: "#B79D4C" };
+function ruban(a, c, b, w, vagues, fond = KELP.lame) {
+  const at = /* @__PURE__ */ __name((t) => [(1 - t) ** 2 * a[0] + 2 * (1 - t) * t * c[0] + t * t * b[0], (1 - t) ** 2 * a[1] + 2 * (1 - t) * t * c[1] + t * t * b[1]], "at");
+  const N2 = 18, g = [], d = [];
+  for (let i = 0; i <= N2; i++) {
+    const t = i / N2, p = at(t), q = at(Math.min(1, t + 0.02)), r = at(Math.max(0, t - 0.02));
+    const tx = q[0] - r[0], ty = q[1] - r[1], l = Math.hypot(tx, ty) || 1, nx = -ty / l, ny = tx / l;
+    const e = w * (0.35 + 0.65 * Math.sin(Math.PI * Math.min(1, t * 0.9 + 0.1))) * (t > 0.97 ? 0.4 : 1) * (1 + 0.2 * Math.sin(t * Math.PI * vagues));
+    g.push([p[0] + nx * e, (p[1] + ny * e) * 0.6]);
+    d.push([p[0] - nx * e * 0.85, (p[1] - ny * e * 0.85) * 0.6]);
+  }
+  const contour = "M" + [...g, ...d.reverse()].map(([x, y]) => `${f24(x)},${f24(y)}`).join(" L") + " Z";
+  const nerf = "M" + Array.from({ length: 9 }, (_, i) => at(0.05 + i * 0.1)).map(([x, y]) => `${f24(x)},${f24(y * 0.6)}`).join(" L");
+  return `<path d="${contour}" fill="${fond}" stroke="${OUT2}" stroke-width="0.5" stroke-linejoin="round"/><path d="${nerf}" fill="none" stroke="${KELP.nerf}" stroke-width="0.45" stroke-linecap="round" stroke-linejoin="round"/>`;
+}
+__name(ruban, "ruban");
+var kelp = /* @__PURE__ */ __name((u, v, rot = 0) => {
+  const [x, y] = P(u, v, 0);
+  const flot = /* @__PURE__ */ __name((fx, fy) => ell3(fx, fy, 0.85, 0.55, KELP.flot, ` stroke="${OUT2}" stroke-width="0.45"`) + ell3(fx - 0.3, fy - 0.2, 0.35, 0.2, "rgba(255,245,200,.7)"), "flot");
+  return `<g transform="translate(${f24(x)} ${f24(y)}) rotate(${rot})">${ell3(0.4, 0.8, 8, 2, "rgba(70,60,30,.16)")}` + ruban([-7.5, 2], [-1, -5], [7.5, -1], 3, 6, KELP.ombre) + ruban([-6, -3.5], [0, 4.5], [7, 3.4], 2.5, 5) + flot(-3.6, -0.4) + flot(1.4, -1.6) + flot(3.8, 1.6) + `</g>`;
+}, "kelp");
+function driftFire(u = 0, v = 0, s = 1, n = 0) {
+  let o = shadow(u, v, 0.4 * s, 0.18) + disc(u, v, 0, 0.2 * s, "#4A3020") + disc(u, v, 0.4, 0.13 * s, "#C9622E");
+  const [cx, cy] = P(u, v, 0.6);
+  o += [[-2.6, -0.6], [1.8, 0.4], [0.2, 1.4], [-0.6, -1.4]].map(([dx, dy]) => ell3(cx + dx * s, cy + dy * s, 0.8 * s, 0.5 * s, "#FFB347")).join("");
+  const logs = [[[-0.34, 0.06], [0.02, -0.01]], [[0.26, -0.26], [0.01, 0]], [[0.06, 0.34], [0, 0.01]], [[-0.18, -0.3], [0, 0]]];
+  for (const [a, b] of logs) {
+    const A = P(u + a[0] * s, v + a[1] * s, 1), B = P(u + b[0] * s, v + b[1] * s, 7.5 * s);
+    o += tk(A, B, DRIFT.left, 2.6 * s) + ln3([A[0] + (B[0] - A[0]) * 0.62, A[1] + (B[1] - A[1]) * 0.62], B, "#3A2A20", 2.4 * s);
+  }
+  o += plank([u - 0.42 * s, v + 0.24 * s], [u - 0.14 * s, v + 0.36 * s], 0.09 * s, 1.8, DRIFT) + stone2(u + 0.34 * s, v + 0.18 * s, 2.6 * s);
+  const flame = flameFrames(u, v, 0.8 * s)[n % 3].svg.replace(/^<svg[^>]*>/, "").replace(/<\/svg>$/, "");
+  return o + flame;
+}
+__name(driftFire, "driftFire");
+var HULL = { white: "#ECE8DE", white2: "#E4DFD3", dark: "#BDB7AA", red: "#B8483A", redD: "#8E352B", navy: "#2E4E8C", glass: "#5E7A9E", deck: "#C49C6E", cabin: "#F4F0E6", cabinS: "#D6D0C2", roof: "#DCD6C8", funnel: "#F2C04B", funnelS: "#D4A23A", band: "#3E5A8C" };
+var SWALLOW = "M-3.2,-0.6 Q-1.6,-1.8 0,-0.2 Q1.6,-1.8 3.2,-0.6 Q1.4,-0.4 0.6,0.6 L1.4,2.4 L0,1.4 L-1.4,2.4 L-0.6,0.6 Q-1.4,-0.4 -3.2,-0.6 Z";
+var lifebuoy = /* @__PURE__ */ __name((x, y, r, flat = 0.5) => ell3(x, y, r + 1.3, r * flat + 1.3, OUT2) + `<ellipse cx="${f24(x)}" cy="${f24(y)}" rx="${f24(r)}" ry="${f24(r * flat)}" fill="none" stroke="${HULL.cabin}" stroke-width="${f24(r * 0.5)}"/><ellipse cx="${f24(x)}" cy="${f24(y)}" rx="${f24(r)}" ry="${f24(r * flat)}" fill="none" stroke="#D8483A" stroke-width="${f24(r * 0.5)}" stroke-dasharray="${f24(r * 0.79)} ${f24(r * 0.79)}"/>` + ell3(x, y, r * 0.72, r * flat * 0.72, "none", ` stroke="${OUT2}" stroke-width="0.6"`), "lifebuoy");
+function hirondelle() {
+  const Z = /* @__PURE__ */ __name((u) => 20 + (u + 1.25) * 2.4, "Z");
+  const D = /* @__PURE__ */ __name((u, v) => Z(u) - v * 10, "D");
+  const side = [[-1.25, 0.44], [-0.9, 0.48], [-0.2, 0.5], [0.5, 0.47], [1, 0.34], [1.35, 0.16], [1.58, 0]];
+  const far = side.slice(0, -1).reverse().map(([u, v]) => [u, -v]);
+  const hullAt = /* @__PURE__ */ __name((u) => {
+    for (let i = 0; i < side.length - 1; i++) {
+      const [ua, va] = side[i], [ub, vb] = side[i + 1];
+      if (u >= ua && u <= ub) return va + (vb - va) * (u - ua) / (ub - ua);
+    }
+    return 0;
+  }, "hullAt");
+  const onSide = /* @__PURE__ */ __name((u, z) => {
+    const v = hullAt(u), d = D(u, v);
+    return [u, v * (0.84 + 0.16 * Math.min(1, z / d)), z];
+  }, "onSide");
+  const band = /* @__PURE__ */ __name((ua, ub, z0, z1, fill) => face([onSide(ua, z0), onSide(ub, z0), onSide(ub, Math.min(z1, D(ub, hullAt(ub)))), onSide(ua, Math.min(z1, D(ua, hullAt(ua))))], fill), "band");
+  let o = shadow(0.15, 0.15, 1.45, 0.2);
+  o += dune(-0.3, -0.72, 0.85, 0.3, 4) + dune(0.9, -0.5, 0.5, 0.25, 3);
+  for (let i = 0; i < side.length - 1; i++) {
+    const [ua, va] = side[i], [ub, vb] = side[i + 1];
+    o += face([[ua, va * 0.84, 0], [ub, vb * 0.84, 0], [ub, vb, D(ub, vb)], [ua, va, D(ua, va)]], i % 2 ? HULL.white2 : HULL.white, EDGE);
+    o += band(ua, ub, 0, 6.5, HULL.red) + band(ua, ub, D(ua, va) - 4.2, D(ua, va) - 2.6, HULL.navy);
+  }
+  for (const [ua, va, ub, vb] of [[1, -0.34, 1.35, -0.16], [1.35, -0.16, 1.58, 0]]) {
+    o += face([[ua, va * 0.84, 0], [ub, vb * 0.84, 0], [ub, vb, D(ub, vb)], [ua, va, D(ua, va)]], HULL.dark, EDGE) + face([[ua, va * 0.84, 0], [ub, vb * 0.84, 0], [ub, vb * 0.86, 6.5], [ua, va * 0.86, 6.5]], HULL.redD);
+  }
+  o += `<polyline points="${pts2([P(1, -0.34 * 0.84, 6.5), P(1.35, -0.16 * 0.86, 6.5), P(1.58, 0, 6.5)])}" fill="none" stroke="rgba(40,25,10,.45)" stroke-width="0.7"/>`;
+  o += `<polyline points="${pts2(side.map(([u]) => P(...onSide(u, 6.5))))}" fill="none" stroke="rgba(40,25,10,.45)" stroke-width="0.7"/>`;
+  o += `<polygon points="${pts2([[-1.25, 0], [-1.25, 4], [-1.16, 6], [-1.22, 10.5], [-1.12, 13], [-1.2, 17], [-1.13, 19.6], [-1.25, 23]].map(([u, z]) => P(...onSide(u, Math.min(z, D(u, hullAt(u)))))))}" fill="#2E2218"${EDGE}/>`;
+  o += ln3(P(...onSide(-1.2, 8.6)), P(...onSide(-1.25, 8.6)), "#6E6A62", 1) + ln3(P(...onSide(-1.17, 15.4)), P(...onSide(-1.25, 15.4)), "#6E6A62", 1);
+  for (const u of [-0.98, -0.74, -0.5, 0.06, 0.3, 0.54, 0.78]) {
+    const [x, y] = P(...onSide(u, D(u, hullAt(u)) - 9.4));
+    o += ln3([x + 0.4, y + 2.6], [x + 0.9, y + 7.4], "rgba(160,90,40,.35)", 1.1) + ell3(x, y, 2.3, 2.5, "#C9A24A", ` stroke="${OUT2}" stroke-width="0.6"`) + ell3(x, y, 1.5, 1.7, HULL.glass) + ell3(x - 0.5, y - 0.6, 0.5, 0.5, "#FFFFFF", ' opacity=".8"');
+  }
+  const gash = [[-0.38, 7.5], [-0.16, 5.6], [0, 10], [-0.08, 14.6], [-0.22, 12.4], [-0.34, 15.2]];
+  o += `<polygon points="${pts2(gash.map(([u, z]) => P(...onSide(u, z))))}" fill="#2E2218"${EDGE}/>`;
+  o += ln3(P(...onSide(-0.3, 11.6)), P(...onSide(-0.12, 11.2)), "#6E6A62", 1.2);
+  for (const [u, z, dx, dy] of [[-0.16, 5.8, 2, 1.6], [0, 10, 2.2, -0.6], [-0.34, 15, -1.6, -1.8]]) {
+    const [x, y] = P(...onSide(u, z));
+    o += `<path d="M${f24(x)},${f24(y)} l${dx},${dy} l${f24(-dx * 0.4)},${f24(dy * 0.9 + 1)} Z" fill="${HULL.white2}"${EDGE}/>`;
+  }
+  {
+    const [x, y] = P(...onSide(1.02, 15));
+    o += `<g transform="translate(${f24(x)} ${f24(y)}) matrix(1.5 -0.55 0 1.5 0 0)"><path d="${SWALLOW}" fill="${HULL.navy}"/></g>`;
+  }
+  {
+    const [x, y] = P(...onSide(1.3, 19.6));
+    o += ell3(x, y, 1.9, 1.5, "#2E2218", EDGE) + tk([x, y + 1.2], [x + 0.6, y + 9], IRON2.left, 1.4) + pathTk(`M${f24(x - 2.6)},${f24(y + 8)} Q${f24(x + 0.6)},${f24(y + 11.6)} ${f24(x + 3.8)},${f24(y + 8)}`, IRON2.top, 1.2) + tk([x - 1.4, y + 3], [x + 2.6, y + 3], IRON2.left, 1);
+  }
+  const us = Array.from({ length: 15 }, (_, i) => -1.2 + i * (2.7 / 14));
+  const tOf = /* @__PURE__ */ __name((u) => Math.sin((u + 1.2) / 2.7 * Math.PI), "tOf");
+  const inner = us.map((u) => P(u, hullAt(u) * 0.96, 0.5 + 4.5 * Math.sqrt(tOf(u))));
+  const outer = us.slice().reverse().map((u, i) => P(u + 0.03, hullAt(u) + tOf(u) * (0.22 + 0.06 * Math.sin(i * 1.9)) + 0.01, 0));
+  o += `<polygon points="${pts2([...inner, ...outer])}" fill="${SAND.light}" stroke="${OUT2}" stroke-width="0.6" stroke-linejoin="round"/><polyline points="${pts2(us.slice(2, -2).map((u, i) => P(u + 0.04, hullAt(u) + 0.1 + 0.03 * Math.sin(i * 2.3), 1.6)))}" fill="none" stroke="${SAND.dark}" stroke-width="0.9" opacity="0.6"/>`;
+  o += pathTk(`M${pts2([P(...onSide(0.42, 9))])} Q${pts2([P(...onSide(0.5, 5))])} ${pts2([P(...onSide(0.46, 1.4))])}`, "#5C8A45", 1);
+  const stern = [[-1.25, -0.3], [-1.16, -0.18], [-1.27, -0.06], [-1.14, 0.08], [-1.24, 0.2], [-1.15, 0.32]];
+  const deck = [...side.slice(1), ...far.slice(0, -1), [-0.9, -0.48], ...stern, [-1.25, 0.44]].map(([u, v]) => P(u, v, D(u, v)));
+  o += `<polygon points="${pts2(deck)}" fill="${HULL.deck}"${EDGE}/>`;
+  for (const k of [-0.32, -0.16, 0, 0.16, 0.32]) {
+    const ue = 1.12 - Math.abs(k) * 1.2;
+    o += ln3(P(-1.12, k, D(-1.12, k)), P(ue, k, D(ue, k)), "rgba(90,60,30,.35)", 0.7);
+  }
+  const hole = [[-1.12, -0.22], [-0.96, -0.3], [-0.9, -0.1], [-0.98, 0.1], [-1.1, 0.06]];
+  o += `<polygon points="${pts2(hole.map(([u, v]) => P(u, v, D(u, v))))}" fill="#2E2218"${EDGE}/>`;
+  for (const [u, v, du] of [[-0.96, -0.22, 0.08], [-0.94, 0.02, 0.09]]) o += ln3(P(u, v, D(u, v)), P(u - du, v, D(u, v) + 1.4), "#B08A5A", 2) + ln3(P(u, v, D(u, v)), P(u - du, v, D(u, v) + 1.4), OUT2, 0.5);
+  const rail2 = /* @__PURE__ */ __name((list, broken = []) => {
+    let r = "";
+    const ok = /* @__PURE__ */ __name((u) => !broken.some(([a, b]) => u > a && u < b), "ok");
+    for (const [u, v] of list) if (ok(u)) r += tk(P(u, v, D(u, v)), P(u, v, D(u, v) + 5.2), HULL.cabin, 0.8);
+    let run = [];
+    const flush = /* @__PURE__ */ __name(() => {
+      if (run.length > 1) r += pathTk("M" + pts2(run.map(([u, v]) => P(u, v, D(u, v) + 5.2))).split(" ").join(" L"), HULL.cabin, 1);
+      run = [];
+    }, "flush");
+    for (const p of list) {
+      if (ok(p[0])) run.push(p);
+      else flush();
+    }
+    flush();
+    return r;
+  }, "rail");
+  const along = /* @__PURE__ */ __name((pts0, n) => Array.from({ length: n + 1 }, (_, i) => {
+    const u = pts0[0] + (pts0[1] - pts0[0]) * i / n;
+    return u;
+  }), "along");
+  o += rail2(along([-1, 1.3], 13).map((u) => [u, -hullAt(u) * 0.94]));
+  const cu0 = -0.78, cu1 = -0.08, cv0 = -0.26, cv1 = 0.2, H = 13;
+  o += face([[cu0, cv1, D(cu0, cv1)], [cu1, cv1, D(cu1, cv1)], [cu1, cv1, D(cu1, cv1) + H], [cu0, cv1, D(cu0, cv1) + H]], HULL.cabin, EDGE);
+  o += face([[cu1, cv0, D(cu1, cv0)], [cu1, cv1, D(cu1, cv1)], [cu1, cv1, D(cu1, cv1) + H], [cu1, cv0, D(cu1, cv0) + H]], HULL.cabinS, EDGE);
+  o += face([[cu0 - 0.03, cv0 - 0.03, D(cu0, cv0) + H], [cu1 + 0.04, cv0 - 0.03, D(cu1, cv0) + H], [cu1 + 0.04, cv1 + 0.04, D(cu1, cv1) + H], [cu0 - 0.03, cv1 + 0.04, D(cu0, cv1) + H]], HULL.roof, EDGE) + face([[cu0 - 0.03, cv1 + 0.04, D(cu0, cv1) + H], [cu1 + 0.04, cv1 + 0.04, D(cu1, cv1) + H], [cu1 + 0.04, cv1 + 0.04, D(cu1, cv1) + H - 1.6], [cu0 - 0.03, cv1 + 0.04, D(cu0, cv1) + H - 1.6]], HULL.navy, EDGE);
+  for (const [i, u] of [-0.72, -0.6, -0.48].entries()) {
+    const q = [[u, cv1, D(u, cv1) + 5], [u + 0.08, cv1, D(u + 0.08, cv1) + 5], [u + 0.08, cv1, D(u + 0.08, cv1) + 10], [u, cv1, D(u, cv1) + 10]];
+    o += face(q, i === 1 ? "#3E4E66" : HULL.glass, EDGE);
+    if (i === 1) o += `<polyline points="${pts2([P(u + 0.02, cv1, D(u, cv1) + 9.4), P(u + 0.05, cv1, D(u, cv1) + 7.2), P(u + 0.03, cv1, D(u, cv1) + 5.6)])}" fill="none" stroke="#DCE6F0" stroke-width="0.6"/>`;
+    else o += ln3(P(u + 0.015, cv1, D(u, cv1) + 9.2), P(u + 0.045, cv1, D(u, cv1) + 6.4), "rgba(255,255,255,.55)", 0.7);
+  }
+  o += face([[-0.18, cv1, D(-0.18, cv1)], [-0.12, cv1, D(-0.12, cv1)], [-0.12, cv1, D(-0.12, cv1) + 10.4], [-0.18, cv1, D(-0.18, cv1) + 10.4]], HULL.navy, EDGE);
+  for (const v of [-0.18, -0.04, 0.1]) o += face([[cu1, v, D(cu1, v) + 5.6], [cu1, v + 0.08, D(cu1, v + 0.08) + 5.6], [cu1, v + 0.08, D(cu1, v + 0.08) + 10.4], [cu1, v, D(cu1, v) + 10.4]], "#4E6A8E", EDGE);
+  {
+    const fu = -0.5, fv = -0.04, z0 = D(fu, fv) + H, h = 15, r = 6.2;
+    const [bx, by] = P(fu, fv, z0), [tx, ty] = P(fu, fv + 0.09, z0 + h);
+    const at = /* @__PURE__ */ __name((k) => [bx + (tx - bx) * k, by + (ty - by) * k], "at");
+    const body = /* @__PURE__ */ __name((k0, k1, fill) => {
+      const [ax, ay] = at(k0), [cx, cy] = at(k1);
+      return `<path d="M${f24(ax - r)},${f24(ay)} L${f24(cx - r)},${f24(cy)} A${r},${f24(r * 0.5)} 0 0 0 ${f24(cx + r)},${f24(cy)} L${f24(ax + r)},${f24(ay)} A${r},${f24(r * 0.5)} 0 0 1 ${f24(ax - r)},${f24(ay)} Z" fill="${fill}"/>`;
+    }, "body");
+    o += body(0, 1, HULL.funnel) + body(0.5, 0.72, HULL.band) + body(0.88, 1, "#2E2E36");
+    const [sx, sy] = at(0.61);
+    o += `<g transform="translate(${f24(sx - 1)} ${f24(sy + 1)}) scale(0.62)"><path d="${SWALLOW}" fill="#F4EEDF"/></g>`;
+    o += `<path d="M${f24(bx + r * 0.25)},${f24(by + r * 0.48)} L${f24(tx + r * 0.25)},${f24(ty + r * 0.48)} L${f24(tx + r)},${f24(ty)} L${f24(bx + r)},${f24(by)} Z" fill="rgba(60,30,10,.16)"/>`;
+    o += `<path d="M${f24(bx - r)},${f24(by)} L${f24(tx - r)},${f24(ty)} M${f24(bx + r)},${f24(by)} L${f24(tx + r)},${f24(ty)} M${f24(bx - r)},${f24(by)} A${r},${f24(r * 0.5)} 0 0 0 ${f24(bx + r)},${f24(by)}" fill="none" stroke="${OUT2}" stroke-width="0.8"/>`;
+    o += ell3(tx, ty, r, r * 0.5, "#4A3A30", EDGE) + ell3(tx, ty + 0.4, r * 0.7, r * 0.32, "#1E1814");
+  }
+  {
+    const [x, y] = P(-0.29, cv1 + 0.01, D(-0.29, cv1) + 7.4);
+    o += `<g transform="translate(${f24(x)} ${f24(y)}) rotate(-12)">${lifebuoy(0, 0, 3.4, 0.95)}</g>`;
+  }
+  const [m0x, m0y] = P(1.04, 0, D(1.04, 0)), [m1x, m1y] = P(1.04, 0.07, D(1.04, 0) + 26);
+  o += tk([m0x, m0y], [m1x, m1y], HULL.cabin, 1.6) + tk([m1x - 4, m1y + 5], [m1x + 4, m1y + 5.6], HULL.cabin, 1) + ell3(m1x, m1y - 1.2, 1.8, 2, "#FFD15A", EDGE);
+  const [fx, fy] = (() => {
+    const [x, y] = P(-0.5, 0.05, D(-0.5, -0.04) + H + 12.6);
+    return [x + 5.4, y + 1];
+  })();
+  const garland2 = /* @__PURE__ */ __name((a, b, sag, n) => {
+    let g = `<path d="M${f24(a[0])},${f24(a[1])} Q${f24((a[0] + b[0]) / 2)},${f24((a[1] + b[1]) / 2 + sag * 2)} ${f24(b[0])},${f24(b[1])}" fill="none" stroke="#3A3A40" stroke-width="0.7"/>`;
+    const cols = ["#F2584A", "#FFD15A", "#5EA8E8", "#7EC45B"];
+    for (let i = 1; i < n; i++) {
+      const t = i / n, x = (1 - t) * (1 - t) * a[0] + 2 * t * (1 - t) * (a[0] + b[0]) / 2 + t * t * b[0], y = (1 - t) * (1 - t) * a[1] + 2 * t * (1 - t) * ((a[1] + b[1]) / 2 + sag * 2) + t * t * b[1];
+      g += ell3(x, y + 1, 1.1, 1.4, i % 5 === 3 ? "#5A5450" : cols[i % 4], ` stroke="${OUT2}" stroke-width="0.4"`);
+    }
+    return g;
+  }, "garland");
+  o += garland2([m1x, m1y + 4], [fx, fy], 8, 9) + garland2([m1x, m1y + 5], P(1.3, 0.16, D(1.3, 0.16) + 5), 4, 4);
+  o += rail2(along([-1, 1.32], 13).map((u) => [u, hullAt(u)]), [[0.05, 0.5]]);
+  {
+    const a = P(0.04, hullAt(0.04), D(0.04, hullAt(0.04)) + 5.2), b = P(...onSide(0.1, D(0.1, hullAt(0.1)) - 5));
+    o += pathTk(`M${pts2([a])} Q${f24(a[0] + 3.2)},${f24(a[1] + 1)} ${pts2([b])}`, HULL.cabin, 1);
+  }
+  o += kelp(-0.35, 1.25, 8) + kelp(1.05, 0.72, -14);
+  {
+    const [x, y] = P(0.62, 1.08, 0.6);
+    o += lifebuoy(x, y, 4.6, 0.5);
+  }
+  {
+    const c = [[-0.72, 0.98], [-0.42, 0.86], [-0.34, 1.06], [-0.64, 1.18]];
+    o += face(c.map(([u, v]) => [u, v, 1.2]), "#F4F0E6", EDGE);
+    for (const k of [0.2, 0.47, 0.74]) {
+      const a = [c[0][0] + (c[1][0] - c[0][0]) * k, c[0][1] + (c[1][1] - c[0][1]) * k], b = [c[3][0] + (c[2][0] - c[3][0]) * k, c[3][1] + (c[2][1] - c[3][1]) * k], d = 0.05;
+      o += face([[a[0], a[1], 1.2], [a[0] + d * 0.9, a[1] - d * 0.4, 1.2], [b[0] + d * 0.9, b[1] - d * 0.4, 1.2], [b[0], b[1], 1.2]], "#D8483A");
+    }
+    o += stick(-0.7, 1.02, 1.2, -0.66, 1, 7.6, 1.4, WOOD.left) + stick(-0.4, 0.9, 1.2, -0.44, 0.92, 7.2, 1.4, WOOD.left) + tk(P(-0.66, 1, 7.6), P(-0.44, 0.92, 7.2), WOOD.top, 1.2);
+  }
+  {
+    const vu = 1.14, vv = 0.98;
+    o += shadow(vu, vv, 0.16, 0.16) + box(vu - 0.1, vv - 0.07, vu + 0.1, vv + 0.07, 0, 7, { top: "#B0743E", left: "#96602F", right: "#7A4C24" });
+    o += face([[vu - 0.02, vv + 0.07, 0], [vu + 0.02, vv + 0.07, 0], [vu + 0.02, vv + 0.07, 7], [vu - 0.02, vv + 0.07, 7]], "#5A3A1C") + face([[vu - 0.02, vv - 0.07, 7], [vu + 0.02, vv - 0.07, 7], [vu + 0.02, vv + 0.07, 7], [vu - 0.02, vv + 0.07, 7]], "#5A3A1C");
+    const [x1, y1] = P(vu - 0.06, vv + 0.07, 3.6), [x2, y2] = P(vu + 0.06, vv + 0.07, 4.4);
+    o += ell3(x1, y1, 1.6, 1.4, "#F2C04B", EDGE) + ell3(x2, y2, 1.4, 1.2, "#5EA8E8", EDGE);
+    const [hx, hy] = P(vu, vv, 7);
+    o += pathTk(`M${f24(hx - 2.4)},${f24(hy)} Q${f24(hx)},${f24(hy - 3)} ${f24(hx + 2.4)},${f24(hy)}`, "#5A3A1C", 0.8);
+  }
+  o += crate(-1, 0.98, 0.12, 8);
+  id("hirt");
+  return o;
+}
+__name(hirondelle, "hirondelle");
+var GRAINS = Array.from({ length: 22 }, (_, i) => {
+  const a = i * 2.39996, r = 0.34 + 0.52 * (i * 7 % 11 / 10);
+  return [0.02 + Math.cos(a) * r, 0.05 + Math.sin(a) * r, i];
+});
+function tuft(u, v, k = 1) {
+  const [x, y] = P(u, v, 0);
+  const brin = /* @__PURE__ */ __name((dx, h, c) => `<path d="M${f24(x + dx)},${f24(y)} Q${f24(x + dx * 1.6)},${f24(y - h * 0.6)} ${f24(x + dx * 2.4)},${f24(y - h)}" fill="none" stroke="${c}" stroke-width="${f24(1.1 * k)}" stroke-linecap="round"/>`, "brin");
+  return ell3(x, y + 0.3, 3 * k, 1.1 * k, "rgba(60,80,30,.25)") + brin(-1.2 * k, 4.4 * k, LEAVES.dark) + brin(1.1 * k, 4 * k, LEAVES.dark) + brin(0, 5.4 * k, LEAVES.mid) + brin(-0.5 * k, 3.4 * k, LEAVES.mid);
+}
+__name(tuft, "tuft");
+function ground(kind = "sable") {
+  let o = shadow(0, 0.05, 1.02, 0.16) + disc(0.02, 0.05, 0, 0.92, kind === "sable" ? "rgba(232,212,160,.55)" : "rgba(150,120,80,.22)");
+  if (kind === "sable") {
+    o += disc(-0.06, -0.02, 0, 0.62, "rgba(246,234,200,.35)");
+    for (const [u, v, i] of GRAINS) {
+      const [x, y] = P(u, v, 0);
+      o += ell3(x, y, i % 3 ? 0.55 : 0.8, i % 3 ? 0.3 : 0.42, i % 2 ? "rgba(170,140,90,.55)" : "rgba(255,250,235,.7)");
+    }
+    for (const [u, v] of [[-0.62, 0.38], [0.5, 0.58]]) {
+      const [x, y] = P(u, v, 0);
+      o += `<path d="M${f24(x - 6)},${f24(y)} Q${f24(x - 3)},${f24(y - 1.2)} ${f24(x)},${f24(y)} T${f24(x + 6)},${f24(y)}" fill="none" stroke="rgba(190,160,105,.55)" stroke-width="0.6" stroke-linecap="round"/>`;
+    }
+    return o;
+  }
+  o += disc(-0.06, -0.02, 0, 0.66, "rgba(196,164,112,.22)");
+  for (const [u, v, i] of GRAINS) {
+    const [x, y] = P(u, v, 0);
+    o += ell3(x, y, i % 3 ? 0.7 : 1.1, i % 3 ? 0.36 : 0.5, i % 2 ? "rgba(110,80,50,.4)" : "rgba(230,215,180,.45)");
+  }
+  o += pebble(-0.74, 0.3, 1.5) + pebble(0.66, 0.6, 1.2);
+  return o + tuft(-0.82, -0.12) + tuft(0.86, 0.02, 0.9) + tuft(-0.3, 0.86, 0.8) + tuft(0.34, 0.9);
+}
+__name(ground, "ground");
+function oar(u, v, h, lean = 0.06) {
+  const a = P(u, v, 0), b = P(u + lean, v, h);
+  const dx = b[0] - a[0], dy = b[1] - a[1], l = Math.hypot(dx, dy), ux = dx / l, uy = dy / l;
+  const c = [b[0] - ux * 2, b[1] - uy * 2], t = [b[0] + ux * 11, b[1] + uy * 11];
+  const blade = `M${f24(c[0] - 2.6)},${f24(c[1])} Q${f24(t[0] - 4)},${f24(t[1] + 4)} ${f24(t[0])},${f24(t[1])} Q${f24(t[0] + 4)},${f24(t[1] + 4)} ${f24(c[0] + 2.6)},${f24(c[1])} Z`;
+  return tk(a, b, WOOD.left, 2.2) + `<path d="${blade}" fill="${WOOD.top}"${EDGE}/>` + ln3(c, [t[0], t[1] + 2], "rgba(90,55,25,.35)", 0.7);
+}
+__name(oar, "oar");
+function barrelLying(u, v, len = 0.36, r = 7) {
+  const a = P(u - len / 2, v, r), b = P(u + len / 2, v, r);
+  const body = `M${f24(a[0])},${f24(a[1] - r)} L${f24(b[0])},${f24(b[1] - r)} A${f24(r * 0.55)},${r} 0 0 1 ${f24(b[0])},${f24(b[1] + r)} L${f24(a[0])},${f24(a[1] + r)} Z`;
+  let o = shadow(u, v, len * 0.7, 0.18) + `<path d="${body}" fill="#A8825A"${EDGE}/>`;
+  for (const k of [0.22, 0.5, 0.78]) {
+    const p = [a[0] + (b[0] - a[0]) * k, a[1] + (b[1] - a[1]) * k];
+    o += `<path d="M${f24(p[0])},${f24(p[1] - r)} A${f24(r * 0.55)},${r} 0 0 1 ${f24(p[0])},${f24(p[1] + r)}" fill="none" stroke="#5E4630" stroke-width="1"/>`;
+  }
+  return o + ell3(a[0], a[1], r * 0.55, r, "#C9A274", EDGE) + ell3(a[0], a[1], r * 0.32, r * 0.62, "#A8825A");
+}
+__name(barrelLying, "barrelLying");
+var coil = /* @__PURE__ */ __name((u, v, r = 0.13) => {
+  const [x, y] = P(u, v, 1);
+  const rx = r * 45, ry = r * 22.6;
+  return ell3(x, y + 1, rx + 0.6, ry + 0.6, OUT2) + [1, 0.72, 0.46].map((k, i) => ell3(x, y - i * 0.6, rx * k, ry * k, i % 2 ? "#B08850" : ROPE, ` stroke="${OUT2}" stroke-width="0.5"`)).join("");
+}, "coil");
+function canvasHeap(u, v, ru, rv, h, seed = 3) {
+  const [x, y] = P(u, v, 0), rx = (ru + rv) * 32, ry = (ru + rv) * 16, k = seed % 2 ? 1 : -1;
+  const d = `M${f24(x - rx)},${f24(y)} Q${f24(x - rx * 0.95)},${f24(y - h * 0.9)} ${f24(x - rx * 0.4)},${f24(y - h)} Q${f24(x - rx * 0.1)},${f24(y - h * 1.25)} ${f24(x + rx * 0.25)},${f24(y - h * 0.95)} Q${f24(x + rx * 0.7)},${f24(y - h * 1.05)} ${f24(x + rx * 0.9)},${f24(y - h * 0.4)} Q${f24(x + rx * 1.05)},${f24(y + ry * 0.2)} ${f24(x + rx * 0.6)},${f24(y + ry * 0.7)} Q${f24(x)},${f24(y + ry * 1.05)} ${f24(x - rx * 0.6)},${f24(y + ry * 0.7)} Q${f24(x - rx * 1.02)},${f24(y + ry * 0.4)} ${f24(x - rx)},${f24(y)} Z`;
+  const cid = id("heap");
+  const corner = `M${f24(x + rx * 0.5 * k)},${f24(y + ry * 0.6)} L${f24(x + rx * 1.15 * k)},${f24(y + ry * 1.2)} L${f24(x + rx * 0.2 * k)},${f24(y + ry * 0.95)} Z`;
+  return `<path d="${corner}" fill="${CANVAS.mid}"${EDGE}/><path d="${d}" fill="${CANVAS.light}"${EDGE}/><clipPath id="${cid}"><path d="${d}"/></clipPath><g clip-path="url(#${cid})"><ellipse cx="${f24(x + rx * 0.75)}" cy="${f24(y - h * 0.3)}" rx="${f24(rx * 0.6)}" ry="${f24(h * 1.2)}" fill="${CANVAS.dark}" opacity="0.55"/><ellipse cx="${f24(x - rx * 0.3)}" cy="${f24(y - h * 0.9)}" rx="${f24(rx * 0.3)}" ry="${f24(h * 0.18)}" fill="#FFFFFF" opacity="0.35"/></g><path d="M${f24(x - rx * 0.55)},${f24(y - h * 0.55)} Q${f24(x - rx * 0.2)},${f24(y - h * 0.2)} ${f24(x + rx * 0.1)},${f24(y - h * 0.5)}" fill="none" stroke="${CANVAS.dark}" stroke-width="0.8" stroke-linecap="round"/><path d="M${f24(x + rx * 0.2)},${f24(y - h * 0.15)} Q${f24(x + rx * 0.45)},${f24(y + ry * 0.2)} ${f24(x + rx * 0.7)},${f24(y - h * 0.1)}" fill="none" stroke="${CANVAS.dark}" stroke-width="0.8" stroke-linecap="round"/><path d="M${f24(x - rx * 0.8)},${f24(y - h * 0.2)} Q${f24(x - rx * 0.2)},${f24(y + ry * 0.1)} ${f24(x + rx * 0.5)},${f24(y + ry * 0.35)}" fill="none" stroke="${CANVAS.seam}" stroke-width="0.7" stroke-dasharray="1.6 1.2"/>`;
+}
+__name(canvasHeap, "canvasHeap");
+var shell = /* @__PURE__ */ __name((u, v) => {
+  const [x, y] = P(u, v, 0);
+  const eventail = `M${f24(x - 0.7)},${f24(y + 0.4)} L${f24(x - 2.6)},${f24(y - 1)} Q${f24(x - 2.8)},${f24(y - 3.2)} ${f24(x)},${f24(y - 3.6)} Q${f24(x + 2.8)},${f24(y - 3.2)} ${f24(x + 2.6)},${f24(y - 1)} L${f24(x + 0.7)},${f24(y + 0.4)} Z`;
+  return ell3(x + 0.3, y + 0.5, 2.6, 0.8, "rgba(70,60,30,.18)") + `<path d="${eventail}" fill="#F6E2D0" stroke="${OUT2}" stroke-width="0.5" stroke-linejoin="round"/>` + [-1.6, -0.55, 0.55, 1.6].map((d) => ln3([x + d * 0.3, y + 0.1], [x + d, y - 2.9 + Math.abs(d) * 0.35], "#D9A98C", 0.4)).join("") + `<path d="M${f24(x - 1.3)},${f24(y + 0.6)} L${f24(x - 0.6)},${f24(y - 0.2)} L${f24(x + 0.6)},${f24(y - 0.2)} L${f24(x + 1.3)},${f24(y + 0.6)} Z" fill="#EBC9B2" stroke="${OUT2}" stroke-width="0.45" stroke-linejoin="round"/>`;
+}, "shell");
+function sailPanel(corners, c = CANVAS, seams = 2) {
+  const q = iso(corners);
+  let o = `<polygon points="${pts2(q)}" fill="${c.light}"${EDGE}/>`;
+  for (let i = 1; i <= seams; i++) {
+    const k = i / (seams + 1);
+    const a = [q[0][0] + (q[1][0] - q[0][0]) * k, q[0][1] + (q[1][1] - q[0][1]) * k], b = [q[3][0] + (q[2][0] - q[3][0]) * k, q[3][1] + (q[2][1] - q[3][1]) * k];
+    o += `<path d="M${f24(a[0])},${f24(a[1])} L${f24(b[0])},${f24(b[1])}" stroke="${c.seam}" stroke-width="0.7" stroke-dasharray="1.6 1.2" fill="none"/>`;
+  }
+  return o;
+}
+__name(sailPanel, "sailPanel");
+var flag = /* @__PURE__ */ __name((x, y, n = 0) => `<path d="M${f24(x)},${f24(y)} Q${f24(x + 6)},${f24(y + (n ? 2 : -1))} ${f24(x + 12)},${f24(y + 1)} L${f24(x + 9)},${f24(y + 3.4)} L${f24(x + 12)},${f24(y + 6)} Q${f24(x + 6)},${f24(y + (n ? 7 : 4.4))} ${f24(x)},${f24(y + 5.6)} Z" fill="#C8463A"${EDGE}/>`, "flag");
+function asterDebris() {
+  let o = ground("sable");
+  o += oar(-0.62, -0.5, 30) + canvasHeap(-0.18, -0.42, 0.26, 0.2, 10, 5);
+  o += crate(0.36, -0.36, 0.17, 13) + crate(0.34, -0.38, 0.12, 9, 13) + crate(0.66, -0.06, 0.12, 9);
+  {
+    const a = P(0.27, -0.4, 22.6), b = P(0.42, -0.36, 22.6);
+    o += tk(a, b, "#C9A24A", 2.2) + ln3([a[0], a[1] - 0.6], [b[0], b[1] - 0.6], "#F0D58A", 0.6);
+  }
+  o += coil(-0.42, 0.22) + barrelLying(0.12, 0.34, 0.34, 6.5);
+  o += kelp(-0.7, 0.62, 12) + kelp(0.6, 0.66, -10) + shell(-0.1, 0.72) + shell(0.36, 0.74) + stone2(0.78, 0.38, 2.6);
+  return o;
+}
+__name(asterDebris, "asterDebris");
+function asterShelter() {
+  let o = ground("sable");
+  const A = [-0.56, -0.18], B = [0.5, -0.22], hA = 34, hB = 26;
+  o += sailPanel([[-0.62, -0.66, 0], [0.56, -0.7, 0], [B[0], B[1], hB], [A[0], A[1], hA]], { light: CANVAS.mid, seam: CANVAS.dark }, 2);
+  o += `<polyline points="${pts2(iso([[A[0], A[1], hA], [B[0], B[1], hB]]))}" fill="none" stroke="${OUT2}" stroke-width="2.2" stroke-linecap="round"/><polyline points="${pts2(iso([[A[0], A[1], hA], [B[0], B[1], hB]]))}" fill="none" stroke="${CANVAS.light}" stroke-width="1" stroke-linecap="round"/>`;
+  for (const u of [-0.3, 0.05, 0.36]) o += stone2(u, -0.64 - u * 0.03, 2.6);
+  o += `<polygon points="${pts2(iso([[-0.56, -0.2, 0], [0.5, -0.24, 0], [0.42, 0.02, 0], [-0.5, 0.06, 0]]))}" fill="rgba(60,40,25,.14)"/>`;
+  o += plank([-0.36, 0.02], [0.28, -0.02], 0.34, 2.4, { top: CANVAS.light, left: CANVAS.dark }) + plank([-0.3, 0.06], [0.02, 0.04], 0.26, 4, { top: "#C8463A", left: "#9A2F28" });
+  {
+    const a = P(0.12, -0.12, 3), b = P(0.24, -0.08, 3);
+    o += tk(a, b, "#C9A24A", 2) + ln3([a[0], a[1] - 0.5], [b[0], b[1] - 0.5], "#F0D58A", 0.5);
+  }
+  o += stick(A[0], A[1], 0, A[0] + 0.02, A[1], hA, 2.2, WOOD.left) + stick(B[0], B[1], 0, B[0], B[1] + 0.01, hB, 2, DRIFT.left);
+  {
+    const t = P(A[0] + 0.02, A[1], hA);
+    o += `<path d="M${f24(t[0] - 2.6)},${f24(t[1])} Q${f24(t[0] - 3)},${f24(t[1] - 9)} ${f24(t[0])},${f24(t[1] - 12)} Q${f24(t[0] + 3)},${f24(t[1] - 9)} ${f24(t[0] + 2.6)},${f24(t[1])} Z" fill="${WOOD.top}"${EDGE}/>`;
+  }
+  o += rope(P(A[0], A[1], hA - 1), P(-0.88, 0.42, 1), 3, 0.6) + rope(P(B[0], B[1], hB - 1), P(0.84, 0.36, 1), 3, 0.6);
+  o += stick(-0.88, 0.42, 0, -0.86, 0.42, 5, 1.6, WOOD_DARK.left) + stick(0.84, 0.36, 0, 0.86, 0.36, 5, 1.6, WOOD_DARK.left);
+  o += crate(0.76, -0.4, 0.13, 10) + crate(0.66, 0.06, 0.11, 8) + barrelLying(-0.04, 0.6, 0.3, 6) + coil(-0.6, 0.56) + kelp(0.4, 0.8, -10) + shell(0.18, 0.84);
+  return o;
+}
+__name(asterShelter, "asterShelter");
+function asterCabin(n = 0) {
+  let o = ground("sable");
+  const u0 = -0.6, u1 = 0.2, v0 = -0.66, v1 = 0.02, h = 20;
+  o += stick(0.56, -0.62, 0, 0.56, -0.62, 50, 2.4, WOOD_DARK.left) + stick(0.44, -0.62, 40, 0.68, -0.62, 40, 1.6, WOOD_DARK.left);
+  {
+    const t = P(0.56, -0.62, 50);
+    o += flag(t[0] + 1, t[1] - 1, n);
+  }
+  o += rope(P(0.56, -0.62, 46), P(0.9, -0.3, 1), 3, 0.6);
+  o += box(u0, v0, u1, v1, 0, h, CRATE) + planksLeft(u0, u1, v1, 0, h, 4) + planksRight(u1, v0, v1, 0, h, 4);
+  o += face([[-0.36, v1, 7], [-0.12, v1, 7], [-0.12, v1, 11], [-0.36, v1, 11]], "#9C7148", EDGE);
+  o += face([[u1, -0.5, 4], [u1, -0.3, 4], [u1, -0.3, 8], [u1, -0.5, 8]], "#A97E52", EDGE);
+  o += face([[-0.06, v1, 0], [0.12, v1, 0], [0.12, v1, 15], [-0.06, v1, 15]], "#2E2218", EDGE);
+  o += face([[-0.06, v1, 15], [0.04, v1, 15], [0.03, v1, 4], [-0.06, v1, 2]], CANVAS.light, EDGE);
+  o += face([[u1, -0.18, 11], [u1, -0.06, 11], [u1, -0.06, 16], [u1, -0.18, 16]], "#2E2218", EDGE);
+  o += gable(u0, v0, u1, v1, h, 12, { front: CANVAS.light, back: CANVAS.mid, gable: CANVAS.dark }, 0.1);
+  for (const k of [0.33, 0.66]) {
+    const u = u0 - 0.1 + (u1 - u0 + 0.2) * k;
+    o += ln3(P(u, (v0 + v1) / 2, h + 12), P(u, v1 + 0.1, h), CANVAS.seam, 0.7);
+  }
+  o += rope(P(u0 - 0.06, v1 + 0.1, h - 1), P(u0 - 0.2, v1 + 0.24, 0), 1, 0.6) + rope(P(u1 + 0.06, v1 + 0.1, h - 1), P(u1 + 0.24, v1 + 0.26, 0), 1, 0.6);
+  o += stick(-0.5, 0.06, 0, -0.44, 0.04, 26, 2, WOOD.left);
+  o += crate(0.56, 0.2, 0.12, 9) + coil(-0.62, 0.48) + cylinder(0.36, 0.52, 0, 12, 0.11, { top: "#C9A274", left: "#A8825A", right: "#7A5A3E" }, id("ast")) + kelp(0.7, 0.74, -10);
+  return o;
+}
+__name(asterCabin, "asterCabin");
+function hullWall(pts3, h0, h1) {
+  let o = "";
+  const n = pts3.length - 1;
+  for (let i = 0; i < n; i++) {
+    const [ua, va] = pts3[i], [ub, vb] = pts3[i + 1];
+    const ha = h0 + (h1 - h0) * Math.sin(i / n * Math.PI), hb = h0 + (h1 - h0) * Math.sin((i + 1) / n * Math.PI);
+    const jag = i % 2 ? -2.4 : 1.6, top = Math.min(ha, hb + jag);
+    o += face([[ua, va, 0], [ub, vb, 0], [ub, vb, hb + jag], [ua, va, ha]], i % 2 ? HULL.white2 : HULL.white, EDGE);
+    o += face([[ua, va, 0], [ub, vb, 0], [ub, vb, 4.6], [ua, va, 4.6]], HULL.red);
+    o += face([[ua, va, top - 5], [ub, vb, top - 5], [ub, vb, top - 3.6], [ua, va, top - 3.6]], HULL.navy);
+    o += ln3(P(ua, va, ha * 0.5), P(ub, vb, hb * 0.5), "rgba(40,25,10,.3)", 0.6);
+  }
+  return o;
+}
+__name(hullWall, "hullWall");
+function cannelleKitchen(n = 0) {
+  let o = ground("sable");
+  const curve = [[-0.78, -0.2], [-0.66, -0.52], [-0.4, -0.72], [-0.06, -0.8], [0.3, -0.76], [0.6, -0.58]];
+  o += stick(-0.5, -0.66, 0, -0.52, -0.66, 30, 2.4, "#7E8088") + stick(0.18, -0.8, 0, 0.18, -0.8, 27, 2.4, "#7E8088");
+  o += hullWall(curve, 10, 24);
+  {
+    const [x, y] = P(0.1, -0.785, 7.8);
+    o += ln3([x + 0.4, y + 2.6], [x + 0.9, y + 7.2], "rgba(160,90,40,.35)", 1.1) + ell3(x, y, 2.3, 2.5, "#C9A24A", ` stroke="${OUT2}" stroke-width="0.6"`) + ell3(x, y, 1.5, 1.7, HULL.glass) + ell3(x - 0.5, y - 0.6, 0.5, 0.5, "#FFFFFF", ' opacity=".8"');
+  }
+  o += [[-0.6, -0.58, 10], [0.4, -0.7, 14]].map(([u, v, z]) => {
+    const [x, y] = P(u, v, z);
+    return ell3(x, y, 1, 0.7, "#D9D2C2", ` stroke="${OUT2}" stroke-width="0.4"`);
+  }).join("");
+  {
+    const a = P(-0.5, -0.64, 26), b = P(0.18, -0.78, 23);
+    o += rope(a, b, 4, 0.5);
+    for (const t of [0.25, 0.5, 0.75]) {
+      const x = a[0] + (b[0] - a[0]) * t, y = a[1] + (b[1] - a[1]) * t + 4 * Math.sin(t * Math.PI) - 0.4;
+      o += ln3([x, y], [x, y + 2], OUT2, 0.5) + `<path d="M${f24(x)},${f24(y + 2)} q2.2,2.6 0,6 q-2.2,-3.4 0,-6 Z M${f24(x - 1.4)},${f24(y + 9.2)} L${f24(x)},${f24(y + 7.6)} L${f24(x + 1.4)},${f24(y + 9.2)} Z" fill="#9FB4C2" stroke="${OUT2}" stroke-width="0.5"/>`;
+    }
+  }
+  o += driftFire(0.04, -0.06, 0.66, n);
+  const top = P(0.04, -0.06, 40);
+  for (const [u, v] of [[-0.3, -0.26], [0.34, -0.22], [0.06, 0.28]]) o += tk(P(u, v, 0), top, DRIFT.left, 2);
+  o += ln3(top, P(0.04, -0.06, 25), OUT2, 0.9);
+  {
+    const [x, y] = P(0.04, -0.06, 19);
+    o += `<path d="M${f24(x - 6.6)},${f24(y - 5)} L${f24(x - 6)},${f24(y + 2)} Q${f24(x)},${f24(y + 5.6)} ${f24(x + 6)},${f24(y + 2)} L${f24(x + 6.6)},${f24(y - 5)} Z" fill="${IRON2.left}"${EDGE}/>` + ell3(x, y - 5, 6.6, 2.6, IRON2.top, EDGE) + ell3(x, y - 5, 5.2, 1.8, "#C9934E") + `<path d="M${f24(x - 6.4)},${f24(y - 5)} Q${f24(x)},${f24(y - 14)} ${f24(x + 6.4)},${f24(y - 5)}" fill="none" stroke="${OUT2}" stroke-width="0.8"/><path d="M${f24(x + 2.4)},${f24(y + 0.6)} l1.4,1.6 l1.2,-0.8" fill="none" stroke="${OUT2}" stroke-width="0.6"/>`;
+  }
+  o += crate(-0.5, 0.24, 0.13, 9) + crate(0.56, 0.18, 0.13, 9);
+  {
+    const a = P(0.46, 0.12, 9.6), b = P(0.66, 0.24, 9.6);
+    o += tk(a, b, "#C27C45", 1.4) + ell3(b[0] + 2.4, b[1] + 0.6, 3, 1.8, "#C27C45", EDGE) + ell3(b[0] + 2.4, b[1] + 0.4, 2, 1.1, "#8F5530");
+  }
+  o += cylinder(-0.2, 0.58, 0, 9, 0.1, { top: "#C9CED6", left: "#AEB4BC", right: "#868C94" }, id("cas")) + kelp(0.5, 0.74, -8) + shell(-0.62, 0.66);
+  return o;
+}
+__name(cannelleKitchen, "cannelleKitchen");
+function gear(u, v, r, z = 0, rot = 0) {
+  const [x, y] = P(u, v, z);
+  const ptsG = Array.from({ length: 16 }, (_, i) => {
+    const a = i * Math.PI / 8 + rot, rr = i % 2 ? r * 0.76 : r;
+    return [x + Math.cos(a) * rr * 1.4, y + Math.sin(a) * rr * 0.7];
+  });
+  return `<polygon points="${pts2(ptsG)}" fill="${IRON2.top}"${EDGE}/>` + ell3(x, y, r * 0.55, r * 0.28, IRON2.right) + ell3(x, y, r * 0.2, r * 0.1, OUT2);
+}
+__name(gear, "gear");
+function screwTin(u, v, z = 0) {
+  const [x, y] = P(u, v, z);
+  return box(u - 0.08, v - 0.06, u + 0.08, v + 0.06, z, z + 4, { top: "#C9CED6", left: "#AEB4BC", right: "#868C94" }) + [[-3, -4.6], [-1, -4.8], [1.2, -4.4], [3, -4.8]].map(([dx, dy]) => ell3(x + dx, y + dy, 0.8, 0.5, "#D9C27A", ` stroke="${OUT2}" stroke-width="0.4"`)).join("");
+}
+__name(screwTin, "screwTin");
+function brokenClock(u, v) {
+  const [x, y] = P(u, v, 0);
+  return `<path d="M${f24(x - 5)},${f24(y)} L${f24(x - 5)},${f24(y - 12)} Q${f24(x)},${f24(y - 18)} ${f24(x + 5)},${f24(y - 12)} L${f24(x + 5)},${f24(y)} Z" fill="#8A5A36"${EDGE}/>` + ell3(x, y - 10, 3.4, 3.4, "#F4EEDF", EDGE) + ln3([x, y - 10], [x + 1.6, y - 12], OUT2, 0.6) + ln3([x, y - 10], [x - 1, y - 8], OUT2, 0.6) + `<path d="M${f24(x - 2.6)},${f24(y - 12.4)} L${f24(x - 0.6)},${f24(y - 9.6)} L${f24(x + 0.8)},${f24(y - 11)} L${f24(x + 2.4)},${f24(y - 8.6)}" fill="none" stroke="${OUT2}" stroke-width="0.45"/>`;
+}
+__name(brokenClock, "brokenClock");
+function patch2(q4) {
+  const q = iso(q4), cx = q.reduce((a, p) => a + p[0], 0) / 4, cy = q.reduce((a, p) => a + p[1], 0) / 4;
+  const inset = q.map(([x, y]) => [x + (cx - x) * 0.2, y + (cy - y) * 0.2]);
+  return `<polygon points="${pts2(q)}" fill="#F4EDDA" stroke="${CANVAS.seam}" stroke-width="0.5" stroke-linejoin="round"/><polygon points="${pts2(inset)}" fill="none" stroke="${CANVAS.dark}" stroke-width="0.4" stroke-dasharray="0.9 0.7"/>`;
+}
+__name(patch2, "patch");
+function wallSaw(u, v0, v1) {
+  const at = /* @__PURE__ */ __name((k, z) => P(u, v0 + (v1 - v0) * k, z), "at");
+  const a = at(0.5, 12.6), b = at(0.78, 12.6), c = at(0.78, 9.4), d = at(0.5, 8.4), [nx, ny] = at(0.64, 13.2);
+  const dents = Array.from({ length: 6 }, (_, i) => {
+    const t = (i + 0.5) / 6, x = d[0] + (c[0] - d[0]) * t, y = d[1] + (c[1] - d[1]) * t;
+    return `M${f24(x - 0.5)},${f24(y)} L${f24(x)},${f24(y + 0.8)} L${f24(x + 0.5)},${f24(y)}`;
+  }).join(" ");
+  const h = at(0.82, 11.2);
+  return `<path d="${dents}" fill="#8E949C" stroke="${OUT2}" stroke-width="0.35"/><polygon points="${pts2([a, b, c, d])}" fill="#C9CED6"${EDGE}/>` + ln3([a[0] + 0.8, a[1] + 0.9], [b[0] - 0.6, b[1] + 0.9], "#EEF1F4", 0.5) + `<rect x="${f24(h[0] - 1.8)}" y="${f24(h[1] - 2.4)}" width="3.8" height="4.8" rx="1.1" fill="${WOOD.left}"${EDGE}/>` + ell3(h[0] + 0.3, h[1], 0.7, 1.2, WOOD_DARK.right) + ell3(nx, ny, 0.6, 0.6, IRON2.right, ` stroke="${OUT2}" stroke-width="0.35"`);
+}
+__name(wallSaw, "wallSaw");
+function hammerLying(u, v, z) {
+  const a = P(u - 0.07, v + 0.02, z), b = P(u + 0.07, v - 0.02, z);
+  return tk(a, b, "#A8743F", 1.1) + `<g transform="translate(${f24(b[0])} ${f24(b[1])}) rotate(-62)"><rect x="-2.6" y="-1.1" width="5.2" height="2.2" rx="0.5" fill="${IRON2.left}"${EDGE}/></g>`;
+}
+__name(hammerLying, "hammerLying");
+function ropeHung(u, v, z) {
+  const [x, y] = P(u, v, z);
+  return ell3(x, y + 3.2, 2.6, 3.4, "none", ` stroke="${OUT2}" stroke-width="2.3"`) + ell3(x, y + 3.2, 2.6, 3.4, "none", ` stroke="${ROPE}" stroke-width="1.1"`) + ell3(x + 0.3, y + 3.6, 1.7, 2.5, "none", ` stroke="${OUT2}" stroke-width="1.6"`) + ell3(x + 0.3, y + 3.6, 1.7, 2.5, "none", ` stroke="#B08850" stroke-width="0.7"`) + pathTk(`M${f24(x - 1)},${f24(y - 0.4)} L${f24(x + 1)},${f24(y + 0.4)}`, ROPE, 0.6);
+}
+__name(ropeHung, "ropeHung");
+function oilCan(u, v) {
+  const [x, y] = P(u, v, 0);
+  return ell3(x + 0.6, y + 0.3, 3.4, 1.4, "rgba(40,55,20,.22)") + `<path d="M${f24(x - 2.6)},${f24(y)} L${f24(x - 2.6)},${f24(y - 3.4)} Q${f24(x)},${f24(y - 5.4)} ${f24(x + 2.6)},${f24(y - 3.4)} L${f24(x + 2.6)},${f24(y)} Q${f24(x)},${f24(y + 1.2)} ${f24(x - 2.6)},${f24(y)} Z" fill="#C9A24A"${EDGE}/>` + ell3(x, y - 3.6, 2.6, 1, "#E3C46E", ` stroke="${OUT2}" stroke-width="0.5"`) + tk([x + 0.4, y - 4.6], [x + 4.6, y - 8.2], "#A8873A", 0.6) + ell3(x - 1.2, y - 2.2, 0.5, 1, "#F2DC9A") + `<path d="M${f24(x + 5)},${f24(y - 7)} q0.6,1 0,1.6 q-0.6,-0.6 0,-1.6 Z" fill="#3A3A44"/>`;
+}
+__name(oilCan, "oilCan");
+function wrenchLying(u, v) {
+  const a = P(u - 0.1, v + 0.03, 0.5), b = P(u + 0.1, v - 0.03, 0.5);
+  const dx = b[0] - a[0], dy = b[1] - a[1], l = Math.hypot(dx, dy), ux = dx / l, uy = dy / l, r = 2.3, c = [b[0] + ux * r * 0.8, b[1] + uy * r * 0.8];
+  const ang = Math.atan2(uy, ux), p1 = [c[0] + Math.cos(ang + 0.75) * r, c[1] + Math.sin(ang + 0.75) * r * 0.7], p2 = [c[0] + Math.cos(ang - 0.75) * r, c[1] + Math.sin(ang - 0.75) * r * 0.7];
+  const C2 = `M${f24(p1[0])},${f24(p1[1])} A${r},${f24(r * 0.7)} 0 1 1 ${f24(p2[0])},${f24(p2[1])}`;
+  return ell3((a[0] + b[0]) / 2, (a[1] + b[1]) / 2 + 1, 6, 1.4, "rgba(40,55,20,.2)") + tk(a, b, "#AEB4BC", 1.5) + ln3([a[0] + 1, a[1] - 0.5], [b[0] - 1.5, b[1] - 0.5], "#E4E8EC", 0.5) + pathTk(C2, "#C9CED6", 1.5);
+}
+__name(wrenchLying, "wrenchLying");
+function rivetDebris() {
+  let o = ground("sable");
+  o += stick(-0.4, -0.5, 0, -0.32, -0.52, 22, 2.2, WOOD.left) + canvasHeap(-0.1, -0.42, 0.42, 0.3, 14, 7) + canvasHeap(-0.46, -0.3, 0.2, 0.16, 7, 2);
+  o += brokenClock(0.48, -0.44) + gear(0.2, -0.02, 4.6, 0, 0.2) + gear(0.42, 0.06, 3.2, 0, 0.6) + gear(0.56, 0.24, 2.4, 0, 0.1);
+  o += screwTin(-0.28, 0.18) + [[-0.06, 0.34], [0.08, 0.4], [-0.16, 0.46]].map(([u, v]) => {
+    const [x, y] = P(u, v, 0);
+    return ell3(x, y, 2.6, 1.2, "#B8C0C8", EDGE) + ell3(x - 0.6, y - 0.4, 1, 0.4, "#E4E8EC");
+  }).join("");
+  o += kelp(-0.7, 0.5, 10) + shell(0.66, 0.6) + stone2(0.78, 0.2, 2.4);
+  return o;
+}
+__name(rivetDebris, "rivetDebris");
+function rivetShelter() {
+  let o = ground("sable");
+  const u0 = -0.7, u1 = 0.2, v0 = -0.72, v1 = -0.06;
+  o += gable(u0, v0, u1, v1, 0, 30, { front: CANVAS.light, back: CANVAS.mid, gable: "#2E2218" }, 0.06);
+  o += ell3(...P(0.12, -0.38, 0.6), 7, 2.6, "#C8463A", EDGE).replace('<ellipse cx="', '<ellipse cx="');
+  for (const k of [0.33, 0.66]) {
+    const u = u0 + (u1 - u0) * k;
+    o += ln3(P(u, (v0 + v1) / 2, 30), P(u, v1 + 0.06, 0), CANVAS.seam, 0.7);
+  }
+  o += stick(u0 - 0.14, (v0 + v1) / 2, 30, u1 + 0.16, (v0 + v1) / 2, 30, 2.2, WOOD.left);
+  {
+    const t = P(u1 + 0.16, (v0 + v1) / 2, 30);
+    o += `<path d="M${f24(t[0] - 1.2)},${f24(t[1] - 2.6)} Q${f24(t[0] + 6)},${f24(t[1] - 1.4)} ${f24(t[0] + 9)},${f24(t[1] + 2)} Q${f24(t[0] + 5)},${f24(t[1] + 3.6)} ${f24(t[0] - 1.2)},${f24(t[1] + 2.6)} Z" fill="${WOOD.top}"${EDGE}/>`;
+  }
+  o += crate(0.18, 0.28, 0.12, 12) + crate(0.66, 0.06, 0.12, 12);
+  o += face([[0.02, 0.06, 12], [0.8, -0.16, 12], [0.82, 0.08, 12], [0.04, 0.32, 12]], WOOD.top, EDGE) + face([[0.04, 0.32, 12], [0.82, 0.08, 12], [0.82, 0.08, 14], [0.04, 0.32, 14]], WOOD.left, EDGE).replace(/points="[^"]*"/, (m) => m);
+  o += gear(0.5, 0, 3, 12.5, 0.3) + screwTin(0.24, 0.12).replace(/(<polygon[^>]*>)/, "$1");
+  {
+    const a = P(0.34, 0.18, 13), b = P(0.48, 0.14, 13);
+    o += tk(a, b, "#A8743F", 1.2) + `<rect x="${f24(b[0] - 0.6)}" y="${f24(b[1] - 3)}" width="2.4" height="5" rx="0.6" fill="${IRON2.left}"${EDGE}/>`;
+  }
+  o += brokenClock(-0.6, 0.36) + kelp(0.6, 0.66, -10);
+  return o;
+}
+__name(rivetShelter, "rivetShelter");
+function rivetCabin() {
+  let o = ground("sable");
+  const u0 = -0.7, u1 = 0.4, v0 = -0.74, v1 = -0.14;
+  o += face([[u0, v0, 0], [u1, v0, 0], [u1, v0, 22], [u0, v0, 22]], WOOD_DARK.left, EDGE) + planksLeft(u0, u1, v0, 0, 22, 5);
+  o += face([[u0, v0, 0], [u0, v1, 0], [u0, v1, 30], [u0, v0, 22]], WOOD_DARK.right, EDGE);
+  o += wallSaw(u0 + 0.01, v0, v1);
+  o += brokenClock(0.2, v0 + 0.06).replace("#8A5A36", "#A87650");
+  o += box(-0.6, v0 + 0.06, 0.1, v0 + 0.26, 0, 11, WOOD) + planksLeft(-0.6, 0.1, v0 + 0.26, 0, 11, 3.6);
+  o += box(-0.2, v0 + 0.1, -0.06, v0 + 0.2, 11, 15, IRON2) + gear(-0.4, v0 + 0.16, 2.6, 11.2, 0.4) + hammerLying(0, v0 + 0.18, 11.4);
+  o += stick(u1, v1, 0, u1, v1, 30, 2.8, DRIFT.left) + stick(u0 + 0.02, v1, 0, u0 + 0.02, v1, 30, 2.8, DRIFT.left) + ropeHung(u0 + 0.02, v1 + 0.01, 19);
+  o += face([[u0 - 0.06, v1 + 0.08, 31], [u1 + 0.08, v1 + 0.08, 31], [u1 + 0.08, v1 + 0.08, 29.4], [u0 - 0.06, v1 + 0.08, 29.4]], CANVAS.dark, EDGE);
+  o += face([[u0 - 0.06, v1 + 0.08, 31], [u1 + 0.08, v1 + 0.08, 31], [u1 + 0.08, v0 - 0.04, 23], [u0 - 0.06, v0 - 0.04, 23]], CANVAS.light, EDGE);
+  for (const k of [0.25, 0.5, 0.75]) {
+    const u = u0 + (u1 - u0) * k;
+    o += ln3(P(u, v1 + 0.08, 31), P(u, v0 - 0.04, 23), CANVAS.seam, 0.7);
+  }
+  o += patch2([[-0.12, -0.24, 29.9], [0.1, -0.24, 29.9], [0.1, -0.44, 27.6], [-0.12, -0.44, 27.6]]);
+  for (const u of [u0 + 0.02, u1]) {
+    const [x, y] = P(u, v1, 29);
+    o += pathTk(`M${f24(x - 1.8)},${f24(y + 0.6)} L${f24(x + 1.8)},${f24(y - 0.4)} M${f24(x - 1.8)},${f24(y + 1.8)} L${f24(x + 1.8)},${f24(y + 0.8)}`, ROPE, 0.6);
+  }
+  o += crate(0.62, 0.12, 0.13, 10) + gear(0.62, 0.12, 2.8, 10.4, 0.2) + gear(0.1, 0.24, 3.6, 0, 0.5) + screwTin(-0.3, 0.3) + kelp(-0.66, 0.6, 10);
+  o += oilCan(0.34, 0.42) + wrenchLying(-0.08, 0.5);
+  return o;
+}
+__name(rivetCabin, "rivetCabin");
+var WATER = { deep: "#6FB8D2", mid: "#8FCDE0", light: "#CFEFF7" };
+function pool2(u, v, r, n = 0) {
+  let o = disc(u, v, 0, r + 0.06, "#7A6A54") + disc(u, v, 0.5, r, WATER.deep, EDGE) + disc(u - r * 0.15, v - r * 0.15, 0.6, r * 0.62, WATER.mid);
+  const [x, y] = P(u, v, 0.8);
+  o += ell3(x + (n ? 2 : -1), y, (n ? 6 : 4) * r * 2.4, (n ? 3 : 2) * r * 2.4, "none", ` stroke="${WATER.light}" stroke-width="0.7"`);
+  const ring = Array.from({ length: 7 }, (_, k) => {
+    const a = k / 7 * Math.PI * 2 + 0.3;
+    return [u + Math.cos(a) * (r + 0.05), v + Math.sin(a) * (r + 0.05), k];
+  }).sort((p, q) => p[0] + p[1] - q[0] - q[1]);
+  for (const [pu, pv, k] of ring) o += stone2(pu, pv, 2.6 + k % 3 * 0.6, k % 2 ? STONE : { top: "#D9DCC8", left: "#B7BCA4", right: "#8E947E" });
+  return o;
+}
+__name(pool2, "pool");
+var jarAt = /* @__PURE__ */ __name((u, v, z = 0, lying = false) => {
+  const [x, y] = P(u, v, z);
+  return lying ? `<g transform="translate(${f24(x)} ${f24(y - 2.2)}) rotate(78)">${`<rect x="-2" y="-2.8" width="4" height="5.2" rx="1.2" fill="#D6ECF2" fill-opacity="0.8" stroke="${OUT2}" stroke-width="0.7"/><rect x="-1.4" y="-3.8" width="2.8" height="1.4" rx="0.4" fill="#B07E4C" stroke="${OUT2}" stroke-width="0.6"/>`}</g>` : `<rect x="${f24(x - 2)}" y="${f24(y - 5.6)}" width="4" height="5.6" rx="1.2" fill="#D6ECF2" fill-opacity="0.8" stroke="${OUT2}" stroke-width="0.7"/><rect x="${f24(x - 1.4)}" y="${f24(y - 7)}" width="2.8" height="1.6" rx="0.4" fill="#B07E4C" stroke="${OUT2}" stroke-width="0.6"/>` + ln3([x - 1.1, y - 4.6], [x - 1.1, y - 1.4], "#FFFFFF", 0.6);
+}, "jarAt");
+var bigLeaf = /* @__PURE__ */ __name((x, y, l, rot, c = "#6FAE4E", cs = "#4F8F3A") => `<g transform="translate(${f24(x)} ${f24(y)}) rotate(${rot})"><path d="M0,${f24(-l / 2)} Q${f24(l * 0.32)},0 0,${f24(l / 2)} Q${f24(-l * 0.32)},0 0,${f24(-l / 2)} Z" fill="${c}" stroke="${OUT2}" stroke-width="0.6"/><path d="M0,${f24(-l / 2 + 1)} L0,${f24(l / 2 - 1)}" stroke="${cs}" stroke-width="0.6"/></g>`, "bigLeaf");
+var leafPile = /* @__PURE__ */ __name((u, v, r, cols = ["#9AB85A", "#7EA548", "#C9B25A"]) => {
+  const [x, y] = P(u, v, 2);
+  let o = ell3(x, y + 1, r * 30 + 1, r * 15 + 1, OUT2);
+  for (let i = 0; i < 9; i++) {
+    const a = i * 2.4;
+    o += ell3(x + Math.cos(a) * r * 18 * (i % 3 / 3 + 0.4), y + Math.sin(a) * r * 8 * (i % 3 / 3 + 0.4) - 1, r * 13, r * 7, cols[i % 3]);
+  }
+  return o;
+}, "leafPile");
+function boatHull(u, v, len, half2, h, flipped = false, c = { out: "#B07A45", side: "#8A5A32", inside: "#6E4A2C", rim: "#C99A62" }) {
+  const N2 = 9, side = Array.from({ length: N2 }, (_, i) => {
+    const t = i / (N2 - 1), uu = u - len / 2 + len * t;
+    return [uu, half2 * Math.sin(t * Math.PI) ** 0.7];
+  });
+  const near = side.map(([uu, vv]) => [uu, v + vv]), far = side.map(([uu, vv]) => [uu, v - vv]).reverse();
+  let o = shadow(u, v, len * 0.55, 0.18);
+  if (!flipped) {
+    o += `<polygon points="${pts2([...near.map(([a, b]) => P(a, b, h)), ...far.map(([a, b]) => P(a, b, h))])}" fill="${c.inside}"${EDGE}/>`;
+    o += `<polygon points="${pts2([...near.map(([a, b]) => P(a, b, h)), ...near.slice().reverse().map(([a, b]) => P(a, v + (b - v) * 0.55, 0))])}" fill="${c.side}"${EDGE}/>`;
+    o += `<polyline points="${pts2(near.map(([a, b]) => P(a, v + (b - v) * 0.8, h * 0.45)))}" fill="none" stroke="rgba(40,25,10,.35)" stroke-width="0.8"/>`;
+    o += face([[u - 0.04, v - half2 * 0.9, h - 1], [u + 0.04, v - half2 * 0.9, h - 1], [u + 0.04, v + half2 * 0.9, h - 1], [u - 0.04, v + half2 * 0.9, h - 1]], c.rim, EDGE);
+    o += `<polyline points="${pts2(near.map(([a, b]) => P(a, b, h)))}" fill="none" stroke="${OUT2}" stroke-width="2.2"/><polyline points="${pts2(near.map(([a, b]) => P(a, b, h)))}" fill="none" stroke="${c.rim}" stroke-width="1"/>`;
+  } else {
+    const top = side.map(([uu]) => [uu, v]);
+    o += `<polygon points="${pts2([...near.map(([a, b]) => P(a, b, 0)), ...top.slice().reverse().map(([a, b], i) => P(a, b, h * Math.sin((N2 - 1 - i) / (N2 - 1) * Math.PI) ** 0.5))])}" fill="${c.out}"${EDGE}/>`;
+    for (const k of [0.33, 0.66]) o += `<polyline points="${pts2(side.map(([a, vv], i) => P(a, v + vv * k, h * (1 - k * 0.6) * Math.sin(i / (N2 - 1) * Math.PI) ** 0.5)))}" fill="none" stroke="rgba(40,25,10,.4)" stroke-width="0.8"/>`;
+    o += `<polyline points="${pts2(top.map(([a, b], i) => P(a, b, h * Math.sin(i / (N2 - 1) * Math.PI) ** 0.5)))}" fill="none" stroke="${OUT2}" stroke-width="2.4"/><polyline points="${pts2(top.map(([a, b], i) => P(a, b, h * Math.sin(i / (N2 - 1) * Math.PI) ** 0.5)))}" fill="none" stroke="${c.side}" stroke-width="1.1"/>`;
+  }
+  return o;
+}
+__name(boatHull, "boatHull");
+function seedBed(u, v, s, sprouts = 3) {
+  let o = box(u - s, v - s * 0.7, u + s, v + s * 0.7, 0, 2, { top: "#946240", left: "#784C2E", right: "#5E3A22" });
+  for (let r = 0; r < 3; r++) {
+    const vv = v - s * 0.45 + r * s * 0.45;
+    o += ln3(P(u - s * 0.85, vv, 2), P(u + s * 0.85, vv, 2), "rgba(50,30,15,.45)", 0.8);
+    for (let k = 0; k < sprouts; k++) {
+      const [x, y] = P(u - s * 0.6 + k * (s * 1.2) / Math.max(1, sprouts - 1), vv, 2);
+      o += ln3([x, y], [x, y - 3], "#5F8F3C", 0.8) + ell3(x - 1.2, y - 3, 1.2, 0.7, "#7EC45B", ` stroke="${OUT2}" stroke-width="0.35"`) + ell3(x + 1.2, y - 3.4, 1.2, 0.7, "#7EC45B", ` stroke="${OUT2}" stroke-width="0.35"`);
+    }
+  }
+  return o;
+}
+__name(seedBed, "seedBed");
+var seedTin = /* @__PURE__ */ __name((u, v, z = 0) => box(u - 0.07, v - 0.05, u + 0.07, v + 0.05, z, z + 4, { top: "#9AA2AD", left: "#6E7480", right: "#545A65" }) + (() => {
+  const [x, y] = P(u, v + 0.05, z + 2);
+  return `<rect x="${f24(x - 0.8)}" y="${f24(y - 1)}" width="1.6" height="1.6" rx="0.3" fill="#F2C94C" stroke="${OUT2}" stroke-width="0.4"/>`;
+})(), "seedTin");
+var seedsSpill = /* @__PURE__ */ __name((u, v) => {
+  const [x, y] = P(u, v, 0);
+  return [[0, 0, "#C9A45A"], [3, 1, "#8A5A2E"], [-3, 1.4, "#E2C27A"], [1.4, 2.4, "#7FA65A"], [-1.6, -1, "#C9A45A"], [4.6, -0.6, "#8A5A2E"]].map(([dx, dy, c]) => ell3(x + dx, y + dy, 1.1, 0.8, c, ` stroke="${OUT2}" stroke-width="0.35"`)).join("");
+}, "seedsSpill");
+function ondinDebris(n = 0) {
+  let o = ground("terre");
+  o += boulder(-0.44, -0.5, 0.42, 0.36, 22, STONE, 4, 0.18, 0.72) + (() => {
+    const [x, y] = P(-0.4, -0.5, 21);
+    return ell3(x, y, 7, 2.6, "#8DAE6A") + ell3(x + 3, y + 1, 3, 1.2, "#A9C27A");
+  })();
+  o += leafPile(-0.18, -0.12, 0.3, ["#8DAE6A", "#7A9C58", "#A9C27A"]);
+  o += pool2(0.36, 0.08, 0.26, n);
+  o += jarAt(0, 0.36, 0, true) + stick(-0.06, -0.3, 0, -0.16, -0.38, 18, 1.4, "#A8743F") + stone2(-0.6, 0.4, 3) + stone2(0.7, 0.56, 2.4);
+  return o;
+}
+__name(ondinDebris, "ondinDebris");
+function ondinShelter(n = 0) {
+  let o = ground("terre");
+  o += boulder(-0.52, -0.58, 0.38, 0.32, 20, STONE, 4, 0.18, 0.72) + (() => {
+    const [x, y] = P(-0.48, -0.58, 19);
+    return ell3(x, y, 6, 2.4, "#8DAE6A");
+  })();
+  o += leafPile(-0.24, -0.22, 0.28, ["#8DAE6A", "#7A9C58", "#A9C27A"]);
+  o += stick(-0.56, -0.02, 0, -0.56, -0.02, 20, 1.8, "#8A6440") + stick(0.08, -0.12, 0, 0.08, -0.12, 20, 1.8, "#8A6440") + stick(-0.62, -0.02, 20, 0.14, -0.12, 20, 1.6, "#8A6440");
+  {
+    const a = P(-0.56, -0.02, 20), b = P(0.08, -0.12, 20);
+    for (let i = 0; i < 6; i++) {
+      const t = i / 5, x = a[0] + (b[0] - a[0]) * t, y = a[1] + (b[1] - a[1]) * t;
+      o += bigLeaf(x - 4, y - 7, 15, -64 + i * 3, i % 2 ? "#6FAE4E" : "#7EBA58");
+    }
+  }
+  o += pool2(0.4, 0.12, 0.24, n);
+  for (let i = 0; i < 4; i++) {
+    const u = 0.38 - i * 0.12, v = 0.38 + i * 0.1;
+    o += disc(u, v, 0, 0.06, WATER.mid) + stone2(u - 0.06, v + 0.05, 1.8) + stone2(u + 0.06, v - 0.05, 1.8);
+  }
+  o += box(0.56, -0.42, 0.78, -0.28, 0, 3, STONE) + jarAt(0.6, -0.36, 3) + jarAt(0.68, -0.33, 3) + jarAt(0.75, -0.3, 3);
+  return o;
+}
+__name(ondinShelter, "ondinShelter");
+function ondinCabin(n = 0) {
+  let o = ground("terre");
+  const cu = -0.32, cv = -0.38;
+  o += cylinder(cu, cv, 0, 18, 0.36, { top: "#BDB5A3", left: "#B4AC9A", right: "#8C8474" }, id("ond"));
+  {
+    const [x, y] = P(cu, cv, 0);
+    for (let r = 0; r < 4; r++) for (let k = 0; k < 6; k++) {
+      const a = k / 6 * Math.PI * 0.9 + 0.12 + r % 2 * 0.25;
+      const xx = x - Math.cos(a) * 16, yy = y - r * 4.4 - 2 + Math.sin(a) * 7.6;
+      o += `<path d="M${f24(xx - 2.2)},${f24(yy)} q2.2,-1.6 4.4,0" fill="none" stroke="rgba(70,60,45,.45)" stroke-width="0.7"/>`;
+    }
+  }
+  o += face([[cu - 0.08, cv + 0.36, 0], [cu + 0.1, cv + 0.34, 0], [cu + 0.1, cv + 0.34, 12], [cu - 0.08, cv + 0.36, 12]], "#2E2218", EDGE);
+  {
+    const [x, y] = P(cu, cv, 18);
+    o += `<path d="M${f24(x - 19)},${f24(y + 1)} Q${f24(x - 10)},${f24(y - 12)} ${f24(x)},${f24(y - 15)} Q${f24(x + 10)},${f24(y - 12)} ${f24(x + 19)},${f24(y + 1)} Q${f24(x)},${f24(y + 9)} ${f24(x - 19)},${f24(y + 1)} Z" fill="#7EA548"${EDGE}/>` + ell3(x - 5, y - 7, 6, 2.6, "#9DC066") + ell3(x + 8, y - 2, 4, 1.8, "#6E9440") + [[-12, -1], [-4, 3], [6, 3.4], [13, 0]].map(([dx, dy]) => ell3(x + dx, y + dy, 1.4, 0.9, "#5C8A45")).join("");
+  }
+  o += pool2(0.38, 0.14, 0.24, n);
+  o += stick(0.66, -0.2, 0, 0.66, -0.2, 26, 1.8, "#8A6440") + stick(0.66, -0.2, 26, 0.6, -0.2, 31, 1.4, "#8A6440") + stick(0.66, -0.2, 26, 0.74, -0.2, 31, 1.4, "#8A6440");
+  {
+    const a = P(0.66, -0.2, 26), b = P(0.5, 0, 12);
+    o += ln3(a, b, ROPE, 0.8) + cylinder(0.5, 0, 6, 12, 0.06, { top: "#5E4630", left: "#A8743F", right: "#7E5530" }, id("ond"));
+  }
+  o += jarAt(0.1, 0.42) + jarAt(0.18, 0.46) + stone2(-0.66, 0.36, 2.8);
+  return o;
+}
+__name(ondinCabin, "ondinCabin");
+function raft(u, v, broken = true) {
+  let o = shadow(u, v, 0.45, 0.16);
+  for (let i = 0; i < 5; i++) {
+    const vv = v - 0.2 + i * 0.1, du = broken && i === 3 ? 0.18 : 0;
+    o += plank([u - 0.36, vv], [u + 0.36 - du, vv], 0.09, 3.2, DRIFT);
+  }
+  for (const uu of [u - 0.22, u + 0.18]) o += ln3(P(uu, v - 0.24, 3.4), P(uu, v + 0.24, 3.4), ROPE, 1.2) + ln3(P(uu, v - 0.24, 3.4), P(uu, v + 0.24, 3.4), OUT2, 0.3);
+  return o;
+}
+__name(raft, "raft");
+function sylveDebris() {
+  let o = ground("terre");
+  o += raft(0.12, -0.3) + plank([0.5, 0.08], [0.72, 0.24], 0.08, 2.6, DRIFT);
+  o += stick(-0.66, 0.14, 1, -0.26, 0.36, 1, 1.8, "#A8743F") + (() => {
+    const [x, y] = P(-0.24, 0.37, 1);
+    return `<path d="M${f24(x)},${f24(y)} Q${f24(x + 6)},${f24(y - 1)} ${f24(x + 8)},${f24(y + 2)} Q${f24(x + 5)},${f24(y + 4)} ${f24(x)},${f24(y + 2)} Z" fill="${WOOD.top}"${EDGE}/>`;
+  })();
+  o += leafPile(-0.42, -0.22, 0.34) + kelp(0.6, 0.6, -6) + stone2(0.74, -0.3, 2.6);
+  {
+    const [x, y] = P(-0.36, -0.2, 7);
+    o += `<path d="M${f24(x - 5)},${f24(y + 1)} Q${f24(x - 1)},${f24(y - 1.6)} ${f24(x + 4)},${f24(y - 1)} Q${f24(x)},${f24(y + 1.4)} ${f24(x - 5)},${f24(y + 1)} Z" fill="#3E7FC1" stroke="${OUT2}" stroke-width="0.55"/>` + ln3([x - 3.6, y + 0.6], [x + 2.6, y - 0.8], "#9CC4EC", 0.4);
+  }
+  o += mushroom2(-0.74, 0, 0.85);
+  return o;
+}
+__name(sylveDebris, "sylveDebris");
+function sylveShelter() {
+  let o = ground("terre");
+  o += cylinder(-0.5, -0.56, 0, 12, 0.16, { top: "#C9A274", left: "#8A6440", right: "#6A4A30" }, id("syl"));
+  {
+    const [x, y] = P(-0.5, -0.56, 12);
+    o += ell3(x, y, 6, 3, "none", ` stroke="#8A6440" stroke-width="0.7"`) + ell3(x, y, 3, 1.5, "none", ` stroke="#8A6440" stroke-width="0.6"`);
+  }
+  o += leafPile(-0.5, -0.12, 0.26);
+  for (let i = 0; i < 4; i++) {
+    const u = -0.38 + i * 0.18;
+    o += face([[u, -0.5, 13], [u + 0.15, -0.5, 13], [u + 0.15 + 0.06, 0.06, 0], [u + 0.06, 0.06, 0]], i % 2 ? DRIFT.top : DRIFT.left, EDGE);
+  }
+  o += tk(P(-0.42, -0.36, 9.2), P(0.36, -0.32, 8.6), "#7A5634", 1.1) + tk(P(-0.36, -0.1, 4.4), P(0.42, -0.06, 3.6), "#7A5634", 1);
+  for (const [t, z, n, r0] of [[-0.5, 13, 7, 70], [-0.28, 8, 6, 82], [-0.06, 3.4, 5, 94]]) {
+    const a = P(-0.38 + (t + 0.5) * 0.1, t, z), b = P(0.36 + (t + 0.5) * 0.1, t + 0.04, z - 1);
+    for (let i = 0; i < n; i++) {
+      const k = i / (n - 1), x = a[0] + (b[0] - a[0]) * k, y = a[1] + (b[1] - a[1]) * k;
+      o += bigLeaf(x, y + 2, 11, r0 + i % 3 * 12, (i + n) % 2 ? "#6FAE4E" : "#86C06A");
+    }
+  }
+  o += mushroom2(-0.7, -0.7, 0.75) + mushroom2(-0.76, -0.6, 1);
+  {
+    const [x, y] = P(-0.46, -0.56, 12);
+    o += `<path d="M${f24(x + 1)},${f24(y)} Q${f24(x + 2.4)},${f24(y - 5)} ${f24(x + 6.4)},${f24(y - 8)} Q${f24(x + 5)},${f24(y - 3)} ${f24(x + 2)},${f24(y + 0.6)} Z" fill="#3E7FC1" stroke="${OUT2}" stroke-width="0.6"/>` + ln3([x + 2.4, y - 2], [x + 5.2, y - 6.4], "#9CC4EC", 0.4);
+  }
+  o += raft(0.48, 0.36) + kelp(-0.66, 0.5, 8);
+  return o;
+}
+__name(sylveShelter, "sylveShelter");
+function mushroom2(u, v, k = 1) {
+  const [x, y] = P(u, v, 0);
+  return ell3(x + 0.6 * k, y + 0.4 * k, 2.6 * k, 0.9 * k, "rgba(40,55,20,.22)") + `<rect x="${f24(x - 0.9 * k)}" y="${f24(y - 3.4 * k)}" width="${f24(1.8 * k)}" height="${f24(3.4 * k)}" rx="${f24(0.6 * k)}" fill="#F4ECDA" stroke="${OUT2}" stroke-width="0.5"/><path d="M${f24(x - 2.8 * k)},${f24(y - 3 * k)} Q${f24(x - 2.6 * k)},${f24(y - 6.4 * k)} ${f24(x)},${f24(y - 6.6 * k)} Q${f24(x + 2.6 * k)},${f24(y - 6.4 * k)} ${f24(x + 2.8 * k)},${f24(y - 3 * k)} Q${f24(x)},${f24(y - 2.2 * k)} ${f24(x - 2.8 * k)},${f24(y - 3 * k)} Z" fill="#D9503F" stroke="${OUT2}" stroke-width="0.55"/>` + ell3(x - 1.1 * k, y - 4.8 * k, 0.55 * k, 0.4 * k, "#FFF6EA") + ell3(x + 1.2 * k, y - 4.2 * k, 0.45 * k, 0.35 * k, "#FFF6EA") + ell3(x + 0.1 * k, y - 5.9 * k, 0.4 * k, 0.3 * k, "#FFF6EA");
+}
+__name(mushroom2, "mushroom");
+function sylveCabin() {
+  let o = ground("terre");
+  o += shadow(-0.68, 0.02, 0.3, 0.18) + box(-0.72, -0.02, -0.64, 0.06, 0, 22, WOOD_DARK);
+  {
+    const [x, y] = P(-0.68, 0.02, 0);
+    o += [[-8, -30, 10], [7, -32, 10.5], [0, -42, 12]].map(([dx, dy, r]) => `<circle cx="${f24(x + dx + r * 0.08)}" cy="${f24(y + dy + r * 0.1)}" r="${f24(r + 0.7)}" fill="${OUT2}"/>`).join("") + [[-8, -30, 10], [7, -32, 10.5], [0, -42, 12]].map(([dx, dy, r]) => `<circle cx="${f24(x + dx)}" cy="${f24(y + dy)}" r="${f24(r)}" fill="${LEAVES.mid}"/><circle cx="${f24(x + dx - r * 0.3)}" cy="${f24(y + dy - r * 0.32)}" r="${f24(r * 0.45)}" fill="${LEAVES.light}"/>`).join("");
+  }
+  const cu = -0.18, cv = -0.3;
+  o += cylinder(cu, cv, 0, 16, 0.34, { top: "#B08A5A", left: "#B08A5A", right: "#86683E" }, id("syl"));
+  {
+    const [x, y] = P(cu, cv, 0);
+    for (let k = 0; k < 9; k++) {
+      const a = k / 8 * Math.PI;
+      const xx = x - Math.cos(a) * 15.4, yy = y + Math.sin(a) * 7.7;
+      o += ln3([xx, yy], [xx, yy - 16], "#6E5230", 1);
+    }
+    for (let r = 1; r < 4; r++) o += `<path d="M${f24(x - 15.4)},${f24(y - r * 4)} A15.4,7.7 0 0 0 ${f24(x + 15.4)},${f24(y - r * 4)}" fill="none" stroke="#C9A274" stroke-width="1.1"/>`;
+  }
+  o += face([[cu - 0.06, cv + 0.34, 0], [cu + 0.12, cv + 0.32, 0], [cu + 0.12, cv + 0.32, 11], [cu - 0.06, cv + 0.34, 11]], "#2E2218", EDGE);
+  {
+    const [x, y] = P(cu, cv, 16);
+    o += `<path d="M${f24(x - 18)},${f24(y + 2)} Q${f24(x - 8)},${f24(y - 14)} ${f24(x)},${f24(y - 18)} Q${f24(x + 8)},${f24(y - 14)} ${f24(x + 18)},${f24(y + 2)} Q${f24(x)},${f24(y + 9)} ${f24(x - 18)},${f24(y + 2)} Z" fill="#5E9E4A"${EDGE}/>`;
+    for (let i = 0; i < 8; i++) o += bigLeaf(x - 13 + i * 3.7, y - 2 - Math.sin(i / 7 * Math.PI) * 9, 9, 100 + i * 6, i % 2 ? "#6FAE4E" : "#86C06A");
+  }
+  o += [0, 1, 2].map((i) => stick(0.4, 0.2 + i * 0.04, 2 + i, 0.72, 0.1 + i * 0.04, 2 + i, 1.6, "#8A6440")).join("") + ln3(P(0.56, 0.12, 3), P(0.56, 0.24, 3), ROPE, 1);
+  {
+    const [x, y] = P(cu, cv, 32);
+    o += `<path d="M${f24(x + 2)},${f24(y)} Q${f24(x + 4)},${f24(y - 6)} ${f24(x + 9)},${f24(y - 9)} Q${f24(x + 7)},${f24(y - 3)} ${f24(x + 3)},${f24(y + 1)} Z" fill="#3E7FC1" stroke="${OUT2}" stroke-width="0.6"/>`;
+  }
+  return o;
+}
+__name(sylveCabin, "sylveCabin");
+function crystal(u, v, k = 1) {
+  const [x, y] = P(u, v, 0);
+  const prisme = /* @__PURE__ */ __name((dx, h, w, c) => `<path d="M${f24(x + dx - w)},${f24(y)} L${f24(x + dx - w)},${f24(y - h * 0.7)} L${f24(x + dx)},${f24(y - h)} L${f24(x + dx + w)},${f24(y - h * 0.7)} L${f24(x + dx + w)},${f24(y)} Z" fill="${c}" stroke="${OUT2}" stroke-width="0.5" stroke-linejoin="round"/>`, "prisme");
+  return ell3(x, y - 2 * k, 5 * k, 3.4 * k, "#8FE3E8", ' opacity=".25"') + prisme(-1.6 * k, 4.4 * k, 1.1 * k, "#6CC7D2") + prisme(1.5 * k, 3.6 * k, 1 * k, "#5AB4C2") + prisme(0, 6 * k, 1.3 * k, "#9BE6EC") + ln3([x - 0.5 * k, y - 1 * k], [x - 0.5 * k, y - 4.6 * k], "#E6FBFC", 0.45);
+}
+__name(crystal, "crystal");
+function galetNook() {
+  let o = ground("terre");
+  o += boulder(-0.3, -0.5, 0.64, 0.44, 24, STONE, 7, 0.16, 0.8);
+  {
+    const a = P(-0.14, -0.2, 22), m = P(-0.08, -0.14, 11), b = P(-0.1, -0.1, 1);
+    const d = `M${f24(a[0])},${f24(a[1])} L${f24(m[0] - 2.4)},${f24(m[1])} L${f24(m[0] + 1)},${f24(m[1] + 5)} L${f24(b[0])},${f24(b[1])}`;
+    o += `<path d="${d}" fill="none" stroke="#8FE3E8" stroke-width="5" stroke-linecap="round" stroke-linejoin="round" opacity="0.28"/><path d="${d}" fill="none" stroke="#3C3A36" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="${d}" fill="none" stroke="#8FE3E8" stroke-width="0.6" stroke-linecap="round" stroke-linejoin="round"/>`;
+  }
+  {
+    const [x, y] = P(-0.34, -0.56, 24);
+    o += `<path d="M${f24(x - 9)},${f24(y + 1)} Q${f24(x - 6)},${f24(y - 3.4)} ${f24(x - 1)},${f24(y - 2.4)} Q${f24(x + 4)},${f24(y - 4)} ${f24(x + 8)},${f24(y - 0.6)} Q${f24(x + 3)},${f24(y + 2.6)} ${f24(x - 2)},${f24(y + 1.6)} Q${f24(x - 6)},${f24(y + 3)} ${f24(x - 9)},${f24(y + 1)} Z" fill="#8DB35E" stroke="${OUT2}" stroke-width="0.55"/>` + ell3(x - 3, y - 1.4, 2.6, 0.9, "#B5D486");
+  }
+  for (const [u, v, z] of [[-0.6, -0.3, 12], [-0.44, -0.18, 6], [0.06, -0.4, 16]]) {
+    const [x, y] = P(u, v, z);
+    o += ell3(x, y, 1.6, 1, "#C9C27A") + ell3(x + 1.4, y + 0.6, 0.9, 0.6, "#B8B26A");
+  }
+  o += crystal(-0.84, -0.06, 0.7) + crystal(-0.78, 0.04, 1);
+  const arc = /* @__PURE__ */ __name((k) => {
+    const a = Math.PI * 0.14 + k / 6 * Math.PI * 0.72;
+    return [-0.12 + Math.cos(a) * 0.44, -0.2 + Math.sin(a) * 0.34];
+  }, "arc");
+  const row1 = Array.from({ length: 7 }, (_, k) => arc(k)).sort((p, q) => p[0] + p[1] - q[0] - q[1]);
+  for (const [u, v] of row1) o += stone2(u, v, 4.4, STONE);
+  for (let k = 0; k < 6; k++) {
+    const [u1, v1] = arc(k), [u2, v2] = arc(k + 1);
+    const [x, y] = P((u1 + u2) / 2, (v1 + v2) / 2, 5);
+    o += ell3(x + 0.4, y + 0.6, 4.2, 2.8, OUT2) + ell3(x, y, 3.8, 2.5, k % 2 ? "#D9D3C4" : "#C3BBA9") + ell3(x - 1.2, y - 0.8, 1.6, 0.9, "#E9E4D8");
+  }
+  o += box(0.4, 0.2, 0.66, 0.4, 0, 10, { top: "#C9C4BA", left: "#A9A49A", right: "#86817A" }) + box(0.5, 0.5, 0.68, 0.64, 0, 7, STONE);
+  {
+    const a = P(0.44, 0.26, 10.6), b = P(0.62, 0.32, 10.6);
+    o += tk(a, b, "#A8743F", 1.4) + `<rect x="${f24(b[0] - 0.4)}" y="${f24(b[1] - 3.4)}" width="4.6" height="4" rx="1" fill="#A8743F"${EDGE}/>`;
+  }
+  o += stick(0.44, 0.34, 10.6, 0.52, 0.38, 10.6, 1, "#B8C0C8") + stone2(-0.66, 0.42, 3) + stone2(0.76, -0.2, 2.6);
+  return o;
+}
+__name(galetNook, "galetNook");
+function seedSack(u, v) {
+  const [x, y] = P(u, v, 0);
+  const sac = `M${f24(x - 7)},${f24(y)} Q${f24(x - 8)},${f24(y - 6)} ${f24(x - 2)},${f24(y - 7)} Q${f24(x + 3)},${f24(y - 7.4)} ${f24(x + 5)},${f24(y - 4)} L${f24(x + 7)},${f24(y - 1)} Q${f24(x + 1)},${f24(y + 2.6)} ${f24(x - 7)},${f24(y)} Z`;
+  return ell3(x + 1, y + 0.6, 9, 2.6, "rgba(40,55,20,.22)") + `<path d="${sac}" fill="#C8A86E"${EDGE}/>` + [-4, -1, 2].map((d) => `<path d="M${f24(x + d)},${f24(y - 6.4)} Q${f24(x + d - 0.6)},${f24(y - 3)} ${f24(x + d + 0.4)},${f24(y + 0.6)}" fill="none" stroke="#A88A52" stroke-width="0.45"/>`).join("") + `<path d="M${f24(x - 6.6)},${f24(y - 3.6)} Q${f24(x - 2)},${f24(y - 4.6)} ${f24(x + 3.4)},${f24(y - 2.4)}" fill="none" stroke="#A88A52" stroke-width="0.45"/><path d="M${f24(x + 4.4)},${f24(y - 4.6)} L${f24(x + 5.6)},${f24(y - 3.4)} L${f24(x + 4.6)},${f24(y - 2.8)} L${f24(x + 6.4)},${f24(y - 1.6)}" fill="none" stroke="${OUT2}" stroke-width="0.6"/>` + pathTk(`M${f24(x - 6.4)},${f24(y - 4.4)} q-1.6,-1 -2.6,0.2`, "#E2D2A8", 0.5) + [[8, -0.6, "#C9A45A"], [9.6, 0.4, "#8A5A2E"], [8.4, 1.2, "#E2C27A"], [10.8, -0.2, "#7FA65A"], [11.6, 1, "#C9A45A"]].map(([dx, dy, c]) => ell3(x + dx, y + dy, 0.9, 0.6, c, ` stroke="${OUT2}" stroke-width="0.3"`)).join("");
+}
+__name(seedSack, "seedSack");
+function sprout(u, v, k = 1) {
+  const [x, y] = P(u, v, 0);
+  return ell3(x, y + 0.2, 1.8 * k, 0.6 * k, "rgba(90,70,40,.35)") + ln3([x, y], [x, y - 3.4 * k], "#5E9E3A", 0.8) + bigLeaf(x - 1.5 * k, y - 3.8 * k, 3.2 * k, -55, "#86C06A") + bigLeaf(x + 1.5 * k, y - 3.8 * k, 3.2 * k, 55, "#6FAE4E");
+}
+__name(sprout, "sprout");
+function melisseDebris() {
+  let o = ground("terre");
+  o += boatHull(0, -0.3, 0.9, 0.24, 9) + seedsSpill(-0.16, -0.3).replace(/<ellipse/g, "<ellipse");
+  {
+    const [x, y] = P(0.02, -0.3, 9);
+    o += [[-6, 0, "#C9A45A"], [-2, 1, "#8A5A2E"], [3, -0.4, "#E2C27A"], [6, 1, "#7FA65A"]].map(([dx, dy, c]) => ell3(x + dx, y + dy, 1.6, 1.1, c, ` stroke="${OUT2}" stroke-width="0.35"`)).join("");
+  }
+  o += seedSack(-0.5, 0.06) + seedsSpill(0.2, 0.2) + seedsSpill(-0.3, 0.3) + seedTin(0.46, 0.06);
+  o += plank([-0.64, 0.4], [-0.3, 0.6], 0.07, 2, WOOD) + stone2(0.7, 0.5, 2.6);
+  o += sprout(0.06, 0.34, 1) + sprout(-0.18, 0.46, 0.8) + sprout(0.34, 0.34, 0.9);
+  return o;
+}
+__name(melisseDebris, "melisseDebris");
+function melisseShelter() {
+  let o = ground("terre");
+  o += stone2(-0.42, -0.42, 4) + stone2(0.36, -0.46, 4);
+  o += boatHull(0, -0.44, 0.96, 0.22, 12, true);
+  {
+    const [x, y] = P(-0.02, -0.24, 0);
+    o += ell3(x, y, 16, 4, "#2E2218", ' opacity=".55"') + ell3(x - 2, y, 10, 2.6, "#8DAE6A");
+  }
+  o += seedBed(0.1, 0.36, 0.26, 3) + stick(-0.2, 0.22, 0, -0.2, 0.22, 9, 1.2, "#8A6440") + stick(0.42, 0.18, 0, 0.42, 0.18, 9, 1.2, "#8A6440");
+  o += seedTin(-0.56, 0.24);
+  return o;
+}
+__name(melisseShelter, "melisseShelter");
+function melisseCabin() {
+  let o = ground("terre");
+  const u0 = -0.62, u1 = 0.1, v0 = -0.7, v1 = -0.18, h = 18;
+  o += box(u0, v0, u1, v1, 0, h, { top: "#C99A62", left: "#B07A45", right: "#8A5A32" }) + planksLeft(u0, u1, v1, 0, h, 3.6) + planksRight(u1, v0, v1, 0, h, 3.6);
+  o += face([[-0.18, v1, 0], [0, v1, 0], [0, v1, 13], [-0.18, v1, 13]], "#2E2218", EDGE);
+  o += gable(u0, v0, u1, v1, h, 13, { front: THATCH.front, back: THATCH.back, gable: "#B07A45" }, 0.1);
+  o += face([[u1, -0.62, 9], [u1, -0.3, 9], [u1 + 0.06, -0.3, 9], [u1 + 0.06, -0.62, 9]], WOOD.top, EDGE);
+  for (const [v, c] of [[-0.56, "#E2C27A"], [-0.46, "#7FA65A"], [-0.36, "#C9A45A"]]) {
+    const [x, y] = P(u1 + 0.04, v, 9);
+    o += `<rect x="${f24(x - 1.8)}" y="${f24(y - 5)}" width="3.6" height="5" rx="1" fill="${c}" stroke="${OUT2}" stroke-width="0.6"/><rect x="${f24(x - 1.3)}" y="${f24(y - 6.2)}" width="2.6" height="1.4" rx="0.4" fill="#B07E4C" stroke="${OUT2}" stroke-width="0.5"/>`;
+  }
+  o += seedBed(-0.3, 0.3, 0.24, 3) + seedBed(0.4, 0.06, 0.2, 2);
+  {
+    const [x, y] = P(0.74, -0.16, 0);
+    o += ln3([x, y], [x, y - 24], "#5F8F3C", 1.6) + ell3(x - 3, y - 10, 3, 1.4, "#7EC45B", ` stroke="${OUT2}" stroke-width="0.4"`) + Array.from({ length: 10 }, (_, k) => {
+      const a = k / 10 * Math.PI * 2;
+      return ell3(x + Math.cos(a) * 4, y - 26 + Math.sin(a) * 4, 2.2, 1.2, "#F2C94C", ` stroke="${OUT2}" stroke-width="0.4" transform="rotate(${f24(a * 180 / Math.PI)} ${f24(x + Math.cos(a) * 4)} ${f24(y - 26 + Math.sin(a) * 4)})"`);
+    }).join("") + ell3(x, y - 26, 2.8, 2.8, "#8A5A2E", EDGE);
+  }
+  o += seedTin(-0.66, 0);
+  return o;
+}
+__name(melisseCabin, "melisseCabin");
+function tent() {
+  const u0 = -0.5, u1 = 0.36, v0 = -0.4, v1 = 0.3, vm = (v0 + v1) / 2;
+  let o = ground("terre");
+  o += stick(-0.84, -0.05, 0, -0.82, -0.05, 4, 1.4, WOOD_DARK.left) + rope(P(u0 - 0.06, vm, 30), P(-0.84, -0.05, 1), 2, 0.6);
+  o += stick(u0 - 0.06, vm, 0, u0 - 0.06, vm, 30, 1.6, WOOD_DARK.left);
+  o += gable(u0, v0, u1, v1, 0, 26, { front: "#E6D3A8", back: "#CDB68A", gable: "#2E2218" }, 0.05);
+  for (const k of [0.33, 0.66]) {
+    const u = u0 + (u1 - u0) * k;
+    o += ln3(P(u, vm, 26), P(u, v1 + 0.05, 0), "#B39A6C", 0.7);
+  }
+  {
+    const [x, y] = P(u1 - 0.04, -0.02, 0);
+    o += `<rect x="${f24(x - 3.6)}" y="${f24(y - 6)}" width="7.2" height="6" rx="1.6" fill="#8C6A46"${EDGE}/>` + ln3([x - 2, y - 6], [x - 1, y - 8.6], OUT2, 0.6) + ln3([x + 2, y - 6], [x + 1, y - 8.6], OUT2, 0.6);
+  }
+  o += face([[u1 + 0.05, v0 + 0.02, 0], [u1 + 0.05, vm, 26], [u1 + 0.2, v0 - 0.02, 2]], "#D9C496", EDGE) + face([[u1 + 0.05, v1 - 0.02, 0], [u1 + 0.05, vm, 26], [u1 + 0.22, v1 + 0.04, 2]], "#E6D3A8", EDGE);
+  o += stick(u1 + 0.06, vm, 0, u1 + 0.06, vm, 30, 1.6, WOOD_DARK.left);
+  o += rope(P(u1 + 0.06, vm, 30), P(0.8, -0.05, 1), 2, 0.6) + stick(0.8, -0.05, 0, 0.82, -0.05, 4, 1.4, WOOD_DARK.left);
+  {
+    const t = P(u1 + 0.06, vm, 30);
+    o += `<path d="M${f24(t[0])},${f24(t[1])} L${f24(t[0] + 8)},${f24(t[1] + 2)} L${f24(t[0])},${f24(t[1] + 4.4)} Z" fill="#6FA3D9"${EDGE}/>`;
+  }
+  return o;
+}
+__name(tent, "tent");
+function hammock(n = 0) {
+  let o = ground("terre");
+  const a = [-0.52, -0.22], b = [0.5, 0.02], zTop = 24, zEnd = 18, sag = 9, w0 = 0.15, sway = n ? 0.05 : 0;
+  const N2 = 14;
+  const at = /* @__PURE__ */ __name((t, dv, dz = 0) => {
+    const s = Math.sin(Math.PI * t);
+    return P(a[0] + (b[0] - a[0]) * (0.16 + 0.68 * t), a[1] + (b[1] - a[1]) * (0.16 + 0.68 * t) + dv + sway * s, zEnd - sag * s + dz);
+  }, "at");
+  const wid = /* @__PURE__ */ __name((t) => w0 * Math.pow(Math.sin(Math.PI * t), 0.55), "wid");
+  const curve = /* @__PURE__ */ __name((dvf, dzf = () => 0) => Array.from({ length: N2 + 1 }, (_, i) => {
+    const t = i / N2;
+    return at(t, dvf(t), dzf(t));
+  }), "curve");
+  const far = curve((t) => -wid(t)), near = curve((t) => wid(t)), belly = curve((t) => 0, (t) => -4.2 * Math.sin(Math.PI * t));
+  const d = /* @__PURE__ */ __name((q) => q.map(([x, y], i) => `${i ? "L" : "M"}${f24(x)},${f24(y)}`).join(" "), "d");
+  o += stick(a[0], a[1], 0, a[0], a[1], zTop + 2, 2.4, WOOD.left);
+  o += rope(P(a[0], a[1], zTop), at(0, 0), 0.6, 0.7);
+  o += shadow((a[0] + b[0]) / 2, (a[1] + b[1]) / 2 + 0.12, 0.34, 0.14);
+  o += `<path d="${d(near)} ${d([...belly].reverse()).replace("M", "L")} Z" fill="${CANVAS.dark}"${EDGE}/>`;
+  o += `<path d="${d(far)} ${d([...near].reverse()).replace("M", "L")} Z" fill="${CANVAS.light}"${EDGE}/>`;
+  o += `<path d="${d(curve((t) => -wid(t) * 0.4, () => -2.4))}" fill="none" stroke="${CANVAS.mid}" stroke-width="1.6" stroke-linecap="round"/>`;
+  o += `<path d="${d(curve((t) => wid(t) * 0.82))}" fill="none" stroke="#C8463A" stroke-width="1.3" stroke-linecap="round"/>`;
+  for (const t of [0, 1]) {
+    const [x, y] = at(t, 0);
+    o += ell3(x, y, 1.6, 1.2, CANVAS.mid, EDGE);
+  }
+  o += rope(at(1, 0), P(b[0], b[1], zTop), 0.6, 0.7);
+  o += stick(b[0], b[1], 0, b[0], b[1], zTop + 2, 2.4, WOOD.left);
+  return o;
+}
+__name(hammock, "hammock");
+function clothesline(n = 0) {
+  const a = [-0.3, 0.3], b = [0.3, -0.3], w = n ? 1.6 : 0;
+  let o = shadow(0, 0, 0.42, 0.12);
+  o += stick(a[0], a[1], 0, a[0], a[1], 26, 1.8, DRIFT.left) + stick(b[0], b[1], 0, b[0], b[1], 26, 1.8, DRIFT.left);
+  const A = P(a[0], a[1], 23), B = P(b[0], b[1], 23), sag = 4;
+  o += rope(A, B, sag * 2, 0.6);
+  const at = /* @__PURE__ */ __name((t) => [A[0] + (B[0] - A[0]) * t, A[1] + (B[1] - A[1]) * t + sag * 4 * t * (1 - t)], "at");
+  {
+    const [x, y] = at(0.24);
+    o += `<path d="M${f24(x - 5)},${f24(y)} L${f24(x + 5)},${f24(y)} L${f24(x + 7 + w)},${f24(y + 3.4)} L${f24(x + 4.4 + w * 0.6)},${f24(y + 4.4)} L${f24(x + 4.2 + w)},${f24(y + 12)} L${f24(x - 4.2 + w)},${f24(y + 12)} L${f24(x - 4.4 + w * 0.6)},${f24(y + 4.4)} L${f24(x - 7 + w)},${f24(y + 3.4)} Z" fill="#F2C04B"${EDGE}/>` + ln3([x, y + 1], [x + w * 0.8, y + 11.4], "#CC9A2F", 0.6) + `<path d="M${f24(x - 1.8)},${f24(y)} L${f24(x)},${f24(y + 2.2)} L${f24(x + 1.8)},${f24(y)}" fill="none" stroke="${OUT2}" stroke-width="0.5"/>`;
+  }
+  {
+    const [x, y] = at(0.55);
+    o += `<path d="M${f24(x - 4)},${f24(y)} L${f24(x + 4)},${f24(y)} L${f24(x + 4.4 + w)},${f24(y + 12)} L${f24(x + 1 + w)},${f24(y + 12)} L${f24(x + w * 0.5)},${f24(y + 4)} L${f24(x - 1 + w)},${f24(y + 12)} L${f24(x - 4.4 + w)},${f24(y + 12)} Z" fill="#6FA3D9"${EDGE}/>` + ln3([x - 3.4 + w, y + 10.6], [x - 1.6 + w, y + 10.6], "#4F82B8", 0.6);
+  }
+  {
+    const [x, y] = at(0.8);
+    o += `<path d="M${f24(x - 3.2)},${f24(y)} L${f24(x + 3.2)},${f24(y)} L${f24(x + 3.4 + w)},${f24(y + 6.4)} L${f24(x + 1 + w)},${f24(y + 5.6)} L${f24(x - 1 + w)},${f24(y + 6.8)} L${f24(x - 3.4 + w)},${f24(y + 6.2)} Z" fill="#F4EEDF"${EDGE}/>`;
+  }
+  for (const t of [0.24, 0.55, 0.8]) for (const dx of [-2.6, 2.6]) {
+    const [x, y] = at(t);
+    o += `<rect x="${f24(x + dx - 0.7)}" y="${f24(y - 1.6)}" width="1.4" height="2.8" rx="0.4" fill="#A8743F" stroke="${OUT2}" stroke-width="0.4"/>`;
+  }
+  return o;
+}
+__name(clothesline, "clothesline");
+function rainBarrel() {
+  let o = shadow(0, 0.02, 0.22, 0.18);
+  o += stick(-0.2, -0.16, 0, -0.2, -0.16, 30, 1.5, DRIFT.left) + stick(0.16, -0.22, 0, 0.16, -0.22, 28, 1.5, DRIFT.left);
+  o += cylinder(0, 0, 0, 16, 0.15, { top: "#4E7E9C", left: "#A8825A", right: "#7A5A3E" }, id("ton"));
+  for (const z of [4, 12]) {
+    const [x, y] = P(0, 0, z);
+    o += `<path d="M${f24(x - 6.8)},${f24(y)} A6.8,3.4 0 0 0 ${f24(x + 6.8)},${f24(y)}" fill="none" stroke="#5E4630" stroke-width="1.1"/>`;
+  }
+  {
+    const [x, y] = P(0, 0, 16);
+    o += ell3(x - 1.6, y - 0.2, 2.6, 0.9, "#8FCDE0") + ell3(x + 0.6, y + 0.4, 1.4, 0.5, "none", ' stroke="#BFE6F0" stroke-width="0.5"');
+  }
+  const t1 = P(-0.2, -0.16, 28), t2 = P(0.16, -0.22, 26), l1 = P(-0.17, 0.1, 22), l2 = P(0.15, 0.04, 21.4), bec = P(0, -0.01, 19);
+  o += `<path d="M${f24(t1[0])},${f24(t1[1])} Q${f24((t1[0] + t2[0]) / 2)},${f24((t1[1] + t2[1]) / 2 + 2.4)} ${f24(t2[0])},${f24(t2[1])} L${f24(l2[0])},${f24(l2[1])} Q${f24(bec[0] + 2)},${f24(bec[1] + 1.4)} ${f24(bec[0])},${f24(bec[1] + 1.6)} Q${f24(bec[0] - 2)},${f24(bec[1] + 1.4)} ${f24(l1[0])},${f24(l1[1])} Z" fill="${CANVAS.light}"${EDGE}/>`;
+  o += `<path d="M${f24(t1[0] + 1)},${f24(t1[1] + 1.2)} Q${f24(bec[0] - 1.6)},${f24(bec[1] - 2.4)} ${f24(bec[0])},${f24(bec[1] + 1)} Q${f24(bec[0] + 1.6)},${f24(bec[1] - 2.4)} ${f24(t2[0] - 1)},${f24(t2[1] + 1.2)}" fill="none" stroke="${CANVAS.dark}" stroke-width="0.7"/>`;
+  for (const [l, r] of [[l1, P(-0.11, 0.1, 13)], [l2, P(0.12, 0.08, 13)]]) o += ln3(l, r, ROPE, 0.5) + ell3(l[0], l[1], 0.9, 0.7, ROPE, ` stroke="${OUT2}" stroke-width="0.35"`);
+  o += `<path d="M${f24(bec[0])},${f24(bec[1] + 2.6)} q-1.1,1.6 0,2.4 q1.1,-0.8 0,-2.4 Z" fill="#8FCDE0" stroke="${OUT2}" stroke-width="0.4"/>`;
+  return o;
+}
+__name(rainBarrel, "rainBarrel");
+function logLying(u0, v0, u1, v1, r, c = { bark: WOOD.left, dark: WOOD.right, end: "#E7C08A", ring: "#C99A62" }) {
+  const L = Math.hypot(u1 - u0, v1 - v0), nu = -(v1 - v0) / L, nv = (u1 - u0) / L, k = r / 32;
+  const ring = /* @__PURE__ */ __name((u, v, rr = 1) => Array.from({ length: 24 }, (_, i) => {
+    const a = i / 24 * Math.PI * 2;
+    return P(u + nu * Math.cos(a) * k * rr, v + nv * Math.cos(a) * k * rr, r + Math.sin(a) * r * rr);
+  }), "ring");
+  const all = [...ring(u0, v0), ...ring(u1, v1)].sort((p, q) => p[0] - q[0] || p[1] - q[1]);
+  const cross = /* @__PURE__ */ __name((o2, a, b) => (a[0] - o2[0]) * (b[1] - o2[1]) - (a[1] - o2[1]) * (b[0] - o2[0]), "cross");
+  const lo = [], hi = [];
+  for (const p of all) {
+    while (lo.length > 1 && cross(lo[lo.length - 2], lo[lo.length - 1], p) <= 0) lo.pop();
+    lo.push(p);
+  }
+  for (const p of [...all].reverse()) {
+    while (hi.length > 1 && cross(hi[hi.length - 2], hi[hi.length - 1], p) <= 0) hi.pop();
+    hi.push(p);
+  }
+  const hull = [...lo.slice(0, -1), ...hi.slice(0, -1)];
+  const [fu, fv] = u1 + v1 >= u0 + v0 ? [u1, v1] : [u0, v0], [bu, bv] = fu === u1 ? [u0, v0] : [u1, v1];
+  let o = `<polygon points="${pts2(hull)}" fill="${c.bark}"${EDGE}/>`;
+  for (const t of [0.3, 0.62]) {
+    const a = P(bu + (fu - bu) * t, bv + (fv - bv) * t, r * 1.7), b = P(bu + (fu - bu) * (t + 0.2), bv + (fv - bv) * (t + 0.2), r * 1.62);
+    o += ln3(a, b, c.dark, 0.7);
+  }
+  {
+    const a = P(bu + (fu - bu) * 0.1, bv + (fv - bv) * 0.1, r * 0.5), b = P(bu + (fu - bu) * 0.85, bv + (fv - bv) * 0.85, r * 0.45);
+    o += ln3(a, b, c.dark, 0.9);
+  }
+  o += `<polygon points="${pts2(ring(fu, fv))}" fill="${c.end}"${EDGE}/><polygon points="${pts2(ring(fu, fv, 0.55))}" fill="none" stroke="${c.ring}" stroke-width="0.6"/><polygon points="${pts2(ring(fu, fv, 0.2))}" fill="${c.ring}"/>`;
+  return o;
+}
+__name(logLying, "logLying");
+var logSeats = /* @__PURE__ */ __name(() => shadow(0, 0.02, 0.4, 0.18) + cylinder(-0.2, -0.08, 0, 9, 0.12, { top: "#E7C08A", left: WOOD.left, right: WOOD.right }, id("ron")) + (() => {
+  const [x, y] = P(-0.2, -0.08, 9);
+  return ell3(x, y, 3, 1.5, "none", ` stroke="#C99A62" stroke-width="0.6"`) + ell3(x, y, 0.9, 0.45, "#C99A62") + ln3([x + 1.4, y + 0.5], [x + 3.6, y + 1.4], "#B07A45", 0.5);
+})() + logLying(0, 0.12, 0.34, 0.22, 4.2), "logSeats");
+function net() {
+  const a = [-0.34, 0.22], b = [0.3, -0.24];
+  let o = shadow(0, 0.02, 0.42, 0.14);
+  o += stick(a[0], a[1], 0, a[0], a[1], 25, 1.8, DRIFT.left) + stick(b[0], b[1], 0, b[0], b[1], 25, 1.8, DRIFT.left);
+  const A = P(a[0], a[1], 22), B = P(b[0], b[1], 22), A0 = P(a[0], a[1], 4), B0 = P(b[0], b[1], 4);
+  const top = /* @__PURE__ */ __name((t) => [A[0] + (B[0] - A[0]) * t, A[1] + (B[1] - A[1]) * t + 12 * t * (1 - t)], "top");
+  const bot = /* @__PURE__ */ __name((t) => [A0[0] + (B0[0] - A0[0]) * t, A0[1] + (B0[1] - A0[1]) * t + 1.6 * Math.sin(t * 9)], "bot");
+  const N2 = 12, T = Array.from({ length: N2 + 1 }, (_, i) => i / N2);
+  const outline2 = [...T.map(top), ...[...T].reverse().map(bot)];
+  o += `<polygon points="${pts2(outline2)}" fill="rgba(176,136,80,.16)"/>`;
+  const lerp3 = /* @__PURE__ */ __name((p, q, k) => [p[0] + (q[0] - p[0]) * k, p[1] + (q[1] - p[1]) * k], "lerp");
+  for (let i = -3; i <= 9; i++) for (const dir of [1, -1]) {
+    const t0 = i / 6, t1 = t0 + dir * 0.34;
+    const seg = [];
+    for (let k = 0; k <= 10; k++) {
+      const kk = k / 10, t = t0 + (t1 - t0) * kk;
+      if (t < 0 || t > 1) continue;
+      seg.push(lerp3(top(t), bot(t), kk));
+    }
+    if (seg.length > 1) o += `<polyline points="${pts2(seg)}" fill="none" stroke="#9E7A46" stroke-width="0.55"/>`;
+  }
+  o += `<polyline points="${pts2(T.map(top))}" fill="none" stroke="${OUT2}" stroke-width="1.6"/><polyline points="${pts2(T.map(top))}" fill="none" stroke="${ROPE}" stroke-width="0.7"/>`;
+  {
+    const [x, y] = P(-0.02, 0.06, 0);
+    o += `<path d="M${f24(x - 12)},${f24(y + 1)} Q${f24(x - 8)},${f24(y - 4)} ${f24(x - 2)},${f24(y - 2.6)} Q${f24(x + 4)},${f24(y - 5)} ${f24(x + 10)},${f24(y - 1)} Q${f24(x + 6)},${f24(y + 3.4)} ${f24(x - 2)},${f24(y + 3)} Q${f24(x - 8)},${f24(y + 3.6)} ${f24(x - 12)},${f24(y + 1)} Z" fill="#B8955E"${EDGE}/>` + [[-8, 0.4, 4], [-3, -0.6, 5], [3, -1, 4], [7, 0.4, 3]].map(([dx, dy, l]) => `<path d="M${f24(x + dx - l / 2)},${f24(y + dy)} q${f24(l / 2)},-1.4 ${f24(l)},0" fill="none" stroke="#8C6A3E" stroke-width="0.5"/>`).join("") + ell3(x + 6, y + 0.6, 1.6, 1.1, "#E2A85A", EDGE);
+  }
+  for (const t of [0.16, 0.38, 0.62, 0.84]) {
+    const [x, y] = top(t);
+    o += ell3(x, y + 0.4, 2, 1.4, "#E2A85A", EDGE);
+  }
+  return o;
+}
+__name(net, "net");
+function strawBed() {
+  const u0 = -0.32, u1 = 0.3, v0 = -0.15, v1 = 0.15, h = 4.4;
+  const q = /* @__PURE__ */ __name((pA, pB, bul) => {
+    const m = [(pA[0] + pB[0]) / 2, (pA[1] + pB[1]) / 2 + bul];
+    return `Q${f24(m[0])},${f24(m[1])} ${f24(pB[0])},${f24(pB[1])}`;
+  }, "q");
+  const T = [P(u0, v0, h), P(u1, v0, h), P(u1, v1, h), P(u0, v1, h)], B = [P(u1, v0, 0), P(u1, v1, 0), P(u0, v1, 0)];
+  let o = shadow(0, 0.02, 0.4, 0.16);
+  o += `<path d="M${f24(T[3][0])},${f24(T[3][1])} ${q(T[3], T[2], 1.2)} L${f24(B[1][0])},${f24(B[1][1])} ${q(B[1], B[2], 1.6)} Z" fill="#D8BE78"${EDGE}/>`;
+  o += `<path d="M${f24(T[2][0])},${f24(T[2][1])} ${q(T[2], T[1], 1)} L${f24(B[0][0])},${f24(B[0][1])} ${q(B[0], B[1], 1.4)} Z" fill="#B99A55"${EDGE}/>`;
+  o += `<path d="M${f24(T[0][0])},${f24(T[0][1])} ${q(T[0], T[1], -1)} ${q(T[1], T[2], 0.6)} ${q(T[2], T[3], 1.2)} ${q(T[3], T[0], -0.6)} Z" fill="#E8CF8A"${EDGE}/>`;
+  for (const k of [0.3, 0.6]) {
+    const [x, y] = P(u0 + (u1 - u0) * k, 0, h + 0.4);
+    o += ell3(x, y, 0.7, 0.4, "#B99A55");
+  }
+  for (const [u, v, z, dx, dy] of [[-0.3, 0.15, 3, -2.6, 1.4], [-0.08, 0.16, 1.6, -1, 2.4], [0.16, 0.16, 2.2, 1.6, 2], [0.3, 0.02, 3, 2.6, 0.4], [0.3, -0.1, 1.4, 2.2, -0.8], [-0.33, -0.06, 4.2, -2.4, -1]]) {
+    const [x, y] = P(u, v, z);
+    o += ln3([x, y], [x + dx, y + dy], "#C9A85C", 0.6) + ln3([x + 0.6, y], [x + dx * 0.7 + 0.8, y + dy * 0.8 - 0.4], "#E8CF8A", 0.5);
+  }
+  const c0 = -0.06, c1 = 0.31, hc = h + 0.7, va = v0 - 0.015, vb = v1 + 0.015;
+  const scallop = /* @__PURE__ */ __name((pA, pB, n, dip) => {
+    let d = "";
+    for (let i = 1; i <= n; i++) {
+      const t0 = (i - 1) / n, t1 = i / n, m = [pA[0] + (pB[0] - pA[0]) * (t0 + t1) / 2, pA[1] + (pB[1] - pA[1]) * (t0 + t1) / 2 + dip];
+      const e = [pA[0] + (pB[0] - pA[0]) * t1, pA[1] + (pB[1] - pA[1]) * t1];
+      d += ` Q${f24(m[0])},${f24(m[1])} ${f24(e[0])},${f24(e[1])}`;
+    }
+    return d;
+  }, "scallop");
+  const TL = P(c0, va, hc), TR = P(c1, va, hc), BR = P(c1, vb, hc), BL = P(c0, vb, hc);
+  const hBR = P(c1 + 0.012, vb + 0.012, 1.4), hBL = P(c0, vb + 0.012, 1.8), hTR = P(c1 + 0.012, va, 2.2);
+  o += `<path d="M${f24(BR[0])},${f24(BR[1])} L${f24(TR[0])},${f24(TR[1])} L${f24(hTR[0])},${f24(hTR[1])}${scallop(hTR, hBR, 2, 1.4)} Z" fill="#62789A"${EDGE}/>`;
+  o += `<path d="M${f24(BL[0])},${f24(BL[1])} L${f24(BR[0])},${f24(BR[1])} L${f24(hBR[0])},${f24(hBR[1])}${scallop(hBR, hBL, 3, 1.6)} Z" fill="#7F96B2"${EDGE}/>`;
+  for (const k of [0.33, 0.66]) {
+    const p1 = P(c1 - (c1 - c0) * k, vb, hc - 0.4), p2 = P(c1 - (c1 - c0) * k + 0.01, vb + 0.012, 2.4);
+    o += ln3(p1, p2, "#6A82A2", 0.6);
+  }
+  o += `<path d="M${f24(TL[0])},${f24(TL[1])} Q${f24((TL[0] + TR[0]) / 2)},${f24((TL[1] + TR[1]) / 2 - 1)} ${f24(TR[0])},${f24(TR[1])} L${f24(BR[0])},${f24(BR[1])} L${f24(BL[0])},${f24(BL[1])} Q${f24((BL[0] + TL[0]) / 2 - 0.6)},${f24((BL[1] + TL[1]) / 2)} ${f24(TL[0])},${f24(TL[1])} Z" fill="#93A9C2"${EDGE}/>`;
+  for (const [ka, kb, bow] of [[0.32, 0.5, 1.2], [0.62, 0.78, -1]]) {
+    const p1 = P(c0 + (c1 - c0) * ka, va + 0.04, hc), p2 = P(c0 + (c1 - c0) * kb, vb - 0.04, hc);
+    o += `<path d="M${f24(p1[0])},${f24(p1[1])} Q${f24((p1[0] + p2[0]) / 2 + bow)},${f24((p1[1] + p2[1]) / 2)} ${f24(p2[0])},${f24(p2[1])}" fill="none" stroke="#7F96B2" stroke-width="0.7" stroke-linecap="round"/>`;
+  }
+  {
+    const f0 = P(c0, va, hc + 0.5), f1 = P(c0 + 0.08, va, hc + 0.5), f2_ = P(c0 + 0.08, vb, hc + 0.5), f3 = P(c0, vb, hc + 0.5);
+    o += `<path d="M${f24(f0[0])},${f24(f0[1])} L${f24(f1[0])},${f24(f1[1])} Q${f24((f1[0] + f2_[0]) / 2 + 0.6)},${f24((f1[1] + f2_[1]) / 2)} ${f24(f2_[0])},${f24(f2_[1])} L${f24(f3[0])},${f24(f3[1])} Z" fill="#B7C6D8"${EDGE}/><path d="M${f24(f0[0] + 1.2)},${f24(f0[1] + 0.9)} L${f24(f3[0] + 1.2)},${f24(f3[1] - 0.2)}" fill="none" stroke="#C8463A" stroke-width="0.7" stroke-dasharray="1.4 1"/>`;
+  }
+  {
+    const [x, y] = P(u0 + 0.1, 0, h + 2.6);
+    o += ell3(x, y, 6.4, 3.4, "#E6DCC3", EDGE) + `<path d="M${f24(x - 4)},${f24(y - 1.6)} Q${f24(x - 1)},${f24(y + 0.4)} ${f24(x + 3)},${f24(y - 2)}" fill="none" stroke="#C2B494" stroke-width="0.6"/>` + ell3(x + 5.4, y - 1.4, 1.4, 1, "#C2B494", EDGE);
+  }
+  return o;
+}
+__name(strawBed, "strawBed");
+var torch = /* @__PURE__ */ __name((n = 0) => `<g transform="scale(${1 / K_CAMP})">${torche("allumee", n)}</g>`, "torch");
+function sos() {
+  const toUV = /* @__PURE__ */ __name((sx, sy) => [(sx / 32 + sy / 16) / 2, (sy / 16 - sx / 32) / 2], "toUV");
+  const W = 10, H = 7.6, gap = 4.4;
+  const S2 = [[1, 0.12], [0.55, 0], [0.05, 0.16], [0.08, 0.42], [0.5, 0.52], [0.94, 0.62], [0.96, 0.88], [0.48, 1], [0, 0.88]];
+  const O = Array.from({ length: 17 }, (_, k) => {
+    const a = k / 16 * Math.PI * 2 - Math.PI / 2;
+    return [0.5 + Math.cos(a) * 0.5, 0.5 + Math.sin(a) * 0.5];
+  });
+  const sample = /* @__PURE__ */ __name((poly3, x02) => {
+    const q = poly3.map(([a, b]) => [x02 + a * W, b * H]);
+    const out = [q[0]];
+    let carry = 0;
+    for (let i = 1; i < q.length; i++) {
+      const [ax, ay] = q[i - 1], [bx, by] = q[i], L = Math.hypot(bx - ax, by - ay);
+      let d = 2.6 - carry;
+      while (d <= L) {
+        out.push([ax + (bx - ax) * d / L, ay + (by - ay) * d / L]);
+        d += 2.6;
+      }
+      carry = L - (d - 2.6);
+    }
+    return out;
+  }, "sample");
+  const x0 = -(3 * W + 2 * gap) / 2, y0 = -H / 2;
+  const dots = [...sample(S2, x0), ...sample(O, x0 + W + gap).slice(0, -1), ...sample(S2, x0 + 2 * (W + gap))].map(([x, y]) => [x, y + y0]);
+  let o = disc(0, 0, 0, 0.62, "rgba(232,212,160,.55)");
+  dots.sort((a, b) => a[1] - b[1]).forEach(([x, y], i) => {
+    const [u, v] = toUV(x, y);
+    o += stone2(u, v, 1.15 + i % 3 * 0.12);
+  });
+  return o;
+}
+__name(sos, "sos");
+var crateStack = /* @__PURE__ */ __name(() => shadow(0, 0, 0.3, 0.16) + crate(-0.06, -0.06, 0.15, 12) + crate(0.2, 0.14, 0.12, 9) + crate(-0.04, -0.08, 0.11, 8, 12) + (() => {
+  const [x, y] = P(0.2, 0.26, 4.6);
+  return `<g transform="translate(${f24(x)} ${f24(y)}) matrix(1 0.5 0 1 0 0)"><path d="M-3.2,-0.6 Q-1.6,-1.8 0,-0.2 Q1.6,-1.8 3.2,-0.6 Q1.4,-0.4 0.6,0.6 L1.4,2.4 L0,1.4 L-1.4,2.4 L-0.6,0.6 Q-1.4,-0.4 -3.2,-0.6 Z" fill="#F4EEDF" opacity=".85"/></g>`;
+})(), "crateStack");
+function workbench() {
+  const z = 11, t = 2.2, zt = z + t;
+  const u0 = -0.46, u1 = 0.46, v0 = -0.17, v1 = 0.17;
+  let o = shadow(0, 0, 0.55, 0.18);
+  o += crate(-0.27, 0, 0.13, z) + crate(0.27, 0, 0.13, z);
+  o += face([[u0, v1, z], [u1, v1, z], [u1, v1, zt], [u0, v1, zt]], HULL.cabinS, EDGE) + face([[u1, v0, z], [u1, v1, z], [u1, v1, zt], [u1, v0, zt]], HULL.dark, EDGE) + face([[u0, v0, zt], [u1, v0, zt], [u1, v1, zt], [u0, v1, zt]], HULL.cabin, EDGE);
+  for (const [a, b] of [[-0.4, -0.04], [0.04, 0.4]]) {
+    o += face([[a, -0.11, zt], [b, -0.11, zt], [b, 0.11, zt], [a, 0.11, zt]], "#EAE5D9", ' stroke="rgba(60,40,20,.4)" stroke-width="0.6" stroke-linejoin="round"') + ln3(P(a + 0.01, 0.105, zt), P(b - 0.01, 0.105, zt), "rgba(255,255,255,.9)", 0.7);
+  }
+  for (const [u, v, k] of [[-0.43, 0.13, 1], [0.12, -0.15, 0.8], [0.44, 0.06, 0.7]]) o += face([[u, v, zt], [u + 0.05 * k, v - 0.01, zt], [u + 0.04 * k, v + 0.03 * k, zt], [u - 0.01, v + 0.025 * k, zt]], HULL.deck);
+  for (const u of [-0.3, 0.3]) o += face([[u - 0.04, v0 + 0.01, zt], [u + 0.04, v0 + 0.01, zt], [u + 0.04, v0 + 0.04, zt], [u - 0.04, v0 + 0.04, zt]], "#C9A24A", EDGE);
+  {
+    const [x, y] = P(-0.02, v1, z + t / 2);
+    o += ell3(x, y, 1.6, 1.1, "#C9A24A", EDGE) + tk([x - 0.4, y + 0.6], [x - 2.2, y + 2.4], "#C9A24A", 0.9) + ell3(x - 2.6, y + 2.8, 1.5, 1.1, "#E2C26A", EDGE);
+  }
+  o += disc(0.22, 0, zt, 0.085, "#C9A24A", EDGE) + disc(0.22, 0, zt, 0.06, HULL.glass, EDGE);
+  {
+    const [x, y] = P(0.2, -0.02, zt);
+    o += ln3([x - 1.2, y - 1], [x + 0.4, y - 1.4], "rgba(255,255,255,.75)", 0.7);
+  }
+  {
+    const [x, y] = P(0.37, 0, zt);
+    o += ell3(x, y, 2.2, 1.3, "#C9A24A", EDGE) + `<polyline points="${pts2([[x - 0.8, y - 0.6], [x + 0.8, y - 0.6], [x - 0.3, y + 0.7]])}" fill="none" stroke="${OUT2}" stroke-width="0.6" stroke-linecap="round" stroke-linejoin="round"/>`;
+  }
+  o += gear(-0.3, -0.03, 2.8, zt + 0.4, 0.3);
+  {
+    const a = P(-0.2, 0.08, zt + 1), b = P(-0.06, -0.08, zt + 1);
+    o += tk(a, b, "#A8743F", 1.2) + `<rect x="${f24(b[0] - 1.4)}" y="${f24(b[1] - 3)}" width="2.8" height="5.4" rx="0.6" fill="${IRON2.left}"${EDGE}/>`;
+  }
+  o += screwTin(0.12, 0.36);
+  for (const [u, v] of [[-0.14, 0.3], [-0.04, 0.4], [0.5, 0.22]]) {
+    const [x, y] = P(u, v, 0);
+    o += ell3(x, y, 1, 0.6, "#B8C0C8", ` stroke="${OUT2}" stroke-width="0.4"`);
+  }
+  return o;
+}
+__name(workbench, "workbench");
+function soupBowl(n = 0) {
+  let o = shadow(0, 0, 0.42, 0.16);
+  const [sx, sy] = P(0, 0, 0);
+  o += ell3(sx, sy + 0.4, 19.6, 9.6, OUT2) + ell3(sx, sy, 18.8, 8.8, STONE.right) + ell3(sx - 0.4, sy - 2.2, 18.2, 8.2, STONE.top, EDGE) + ell3(sx - 6, sy - 3.6, 5, 1.6, "rgba(255,255,255,.35)");
+  {
+    const [x2, y] = P(0.26, -0.04, 3), g = id("bolg"), fl = [0, 0.6, -0.5][n % 3], h = [4.2, 4.8, 3.8][n % 3];
+    o += `<defs><radialGradient id="${g}"><stop offset="0" stop-color="#FFD98A" stop-opacity="0.55"/><stop offset="1" stop-color="#FFD98A" stop-opacity="0"/></radialGradient></defs><ellipse cx="${f24(x2)}" cy="${f24(y - 9)}" rx="14" ry="12" fill="url(#${g})"/>`;
+    o += `<rect x="${f24(x2 - 1.5)}" y="${f24(y - 6.4)}" width="3" height="6.4" rx="0.8" fill="#F4ECD6"${EDGE}/>` + ell3(x2, y - 6.4, 1.5, 0.6, "#E6DCC4", EDGE) + ln3([x2, y - 6.6], [x2, y - 7.6], OUT2, 0.5);
+    o += `<path d="M${f24(x2 - 1)},${f24(y - 7.4)} Q${f24(x2 - 1.2 + fl)},${f24(y - 7.4 - h * 0.6)} ${f24(x2 + fl)},${f24(y - 7.4 - h)} Q${f24(x2 + 1.2 + fl)},${f24(y - 7.4 - h * 0.6)} ${f24(x2 + 1)},${f24(y - 7.4)} Z" fill="#FFB347"${EDGE}/>` + ell3(x2 + fl * 0.4, y - 8.4, 0.5, 1, "#FFF3B0");
+  }
+  const [x, y0] = P(-0.02, 0.06, 3), rx = 8, ry = 4, yr = y0 - 7;
+  o += `<path d="M${f24(x - rx)},${f24(yr)} C${f24(x - rx)},${f24(yr + 5.6)} ${f24(x - rx * 0.45)},${f24(yr + 7.6)} ${f24(x)},${f24(yr + 7.6)} C${f24(x + rx * 0.45)},${f24(yr + 7.6)} ${f24(x + rx)},${f24(yr + 5.6)} ${f24(x + rx)},${f24(yr)} Z" fill="#A8743F"${EDGE}/><path d="M${f24(x + rx * 0.2)},${f24(yr + 7.4)} C${f24(x + rx * 0.6)},${f24(yr + 7)} ${f24(x + rx)},${f24(yr + 5.2)} ${f24(x + rx)},${f24(yr)} L${f24(x + rx * 0.62)},${f24(yr + 1)} Z" fill="rgba(70,40,20,.22)"/>` + ln3([x - rx * 0.7, yr + 2.6], [x - rx * 0.5, yr + 5], "rgba(255,255,255,.3)", 0.8);
+  o += ell3(x, yr, rx, ry, "#C9935A", EDGE) + ell3(x, yr + 0.5, rx * 0.8, ry * 0.7, "#E8A04A", ` stroke="${OUT2}" stroke-width="0.5"`);
+  o += `<path d="M${f24(x - 2.4)},${f24(yr + 0.6)} Q${f24(x - 0.6)},${f24(yr - 0.8)} ${f24(x + 0.8)},${f24(yr + 0.4)} Q${f24(x + 1.6)},${f24(yr + 1.4)} ${f24(x + 0.2)},${f24(yr + 1.4)}" fill="none" stroke="#FFF2D6" stroke-width="0.8" stroke-linecap="round"/>` + [[-3.6, 0.2], [2.8, -0.4], [-1, 1.6]].map(([dx, dy]) => ell3(x + dx, yr + 0.5 + dy, 0.6, 0.35, "#6E9E50")).join("");
+  o += tk([x + 2.4, yr + 0.4], [x + 9.6, yr - 5.4], "#C9935A", 1.1) + ell3(x + 2, yr + 0.6, 1.6, 0.9, "#C9935A", EDGE);
+  {
+    const [x2, y] = P(-0.12, 0.26, 3);
+    o += pathTk(`M${f24(x2 + 3)},${f24(y + 1.6)} Q${f24(x2 + 1)},${f24(y + 0.4)} ${f24(x2 - 1)},${f24(y - 1.2)}`, "#5C8A45", 0.6) + [0, 72, 144, 216, 288].map((a) => ell3(x2 - 1 + Math.cos(a * Math.PI / 180) * 1.6, y - 1.2 + Math.sin(a * Math.PI / 180) * 0.9, 1.1, 0.7, "#FFFFFF", ` stroke="${OUT2}" stroke-width="0.35"`)).join("") + ell3(x2 - 1, y - 1.2, 0.8, 0.55, "#F2C94C", ` stroke="${OUT2}" stroke-width="0.35"`);
+  }
+  for (const [i, dx] of [-3, 0.4, 3.6].entries()) {
+    const ph = (n + i) % 3 - 1, top = yr - 13 - i % 2 * 3;
+    o += `<path d="M${f24(x + dx)},${f24(yr - 1.4)} Q${f24(x + dx + 2.4 * ph)},${f24(yr - 5)} ${f24(x + dx)},${f24(yr - 8.4)} Q${f24(x + dx - 2.4 * ph)},${f24(yr - 11.4)} ${f24(x + dx + 0.6 * ph)},${f24(top)}" fill="none" stroke="#FFFFFF" stroke-width="1.3" stroke-linecap="round" opacity="${[0.75, 0.6, 0.7][i]}"/>`;
+  }
+  return o;
+}
+__name(soupBowl, "soupBowl");
+var CAMP = {
+  hirondelle: { frame: { x: -88, y: -100, w: 176, h: 150 }, n: 1, label: "Épave de l'Hirondelle", step: "T1", draw: /* @__PURE__ */ __name(() => hirondelle(), "draw") },
+  aster_debris: { frame: BUILDING_BOX, n: 1, label: "Aster · débris", step: "T2", draw: /* @__PURE__ */ __name(() => asterDebris(), "draw") },
+  aster_abri: { frame: BUILDING_BOX, n: 1, label: "Aster · abri", step: "I", draw: /* @__PURE__ */ __name(() => asterShelter(), "draw") },
+  aster_cabanon: { frame: BUILDING_BOX, n: 2, label: "Aster · cabanon", step: "II", draw: /* @__PURE__ */ __name((n) => asterCabin(n), "draw") },
+  cannelle_debris: { frame: BUILDING_BOX, n: 3, label: "Cannelle · cuisine de l'épave", step: "T3", draw: /* @__PURE__ */ __name((n) => cannelleKitchen(n), "draw") },
+  rivet_debris: { frame: BUILDING_BOX, n: 1, label: "Rivet · débris", step: "T4", draw: /* @__PURE__ */ __name(() => rivetDebris(), "draw") },
+  rivet_abri: { frame: BUILDING_BOX, n: 1, label: "Rivet · abri", step: "I", draw: /* @__PURE__ */ __name(() => rivetShelter(), "draw") },
+  rivet_cabanon: { frame: BUILDING_BOX, n: 1, label: "Rivet · cabanon", step: "II", draw: /* @__PURE__ */ __name(() => rivetCabin(), "draw") },
+  ondin_debris: { frame: BUILDING_BOX, n: 2, label: "Ondin · débris", step: "T5", draw: /* @__PURE__ */ __name((n) => ondinDebris(n), "draw") },
+  ondin_abri: { frame: BUILDING_BOX, n: 2, label: "Ondin · abri", step: "I", draw: /* @__PURE__ */ __name((n) => ondinShelter(n), "draw") },
+  ondin_cabanon: { frame: BUILDING_BOX, n: 2, label: "Ondin · cabanon", step: "II", draw: /* @__PURE__ */ __name((n) => ondinCabin(n), "draw") },
+  sylve_debris: { frame: BUILDING_BOX, n: 1, label: "Sylve · débris", step: "I", draw: /* @__PURE__ */ __name(() => sylveDebris(), "draw") },
+  sylve_abri: { frame: BUILDING_BOX, n: 1, label: "Sylve · abri", step: "I", draw: /* @__PURE__ */ __name(() => sylveShelter(), "draw") },
+  sylve_cabanon: { frame: BUILDING_BOX, n: 1, label: "Sylve · cabanon", step: "II", draw: /* @__PURE__ */ __name(() => sylveCabin(), "draw") },
+  galet_debris: { frame: BUILDING_BOX, n: 1, label: "Galet · muret de la Fissure", step: "II", draw: /* @__PURE__ */ __name(() => galetNook(), "draw") },
+  melisse_debris: { frame: BUILDING_BOX, n: 1, label: "Mélisse · débris", step: "III", draw: /* @__PURE__ */ __name(() => melisseDebris(), "draw") },
+  melisse_abri: { frame: BUILDING_BOX, n: 1, label: "Mélisse · abri", step: "III", draw: /* @__PURE__ */ __name(() => melisseShelter(), "draw") },
+  melisse_cabanon: { frame: BUILDING_BOX, n: 1, label: "Mélisse · cabanon", step: "III", draw: /* @__PURE__ */ __name(() => melisseCabin(), "draw") },
+  tente: { frame: BUILDING_BOX, n: 1, label: "Tente de voyageur", step: "IV", draw: /* @__PURE__ */ __name(() => tent(), "draw") },
+  hamac: { frame: BUILDING_BOX, n: 2, label: "Hamac", step: "IV", draw: /* @__PURE__ */ __name((n) => hammock(n), "draw") },
+  etendoir: { frame: PROP_BOX, n: 2, label: "Étendoir", step: "T3", draw: /* @__PURE__ */ __name((n) => clothesline(n), "draw") },
+  tonneau: { frame: PROP_BOX, n: 1, label: "Tonneau d'eau de pluie", step: "T5", draw: /* @__PURE__ */ __name(() => rainBarrel(), "draw") },
+  rondins: { frame: PROP_BOX, n: 1, label: "Rondins", step: "T3", draw: /* @__PURE__ */ __name(() => logSeats(), "draw") },
+  filet: { frame: PROP_BOX, n: 1, label: "Filet tendu", step: "T2", draw: /* @__PURE__ */ __name(() => net(), "draw") },
+  paillasse: { frame: PROP_BOX, n: 1, label: "Paillasse", step: "T5", draw: /* @__PURE__ */ __name(() => strawBed(), "draw") },
+  torche: { frame: PROP_BOX, n: 3, label: "Torche de bois flotté", step: "I", draw: /* @__PURE__ */ __name((n) => torch(n), "draw") },
+  sos: { frame: PROP_BOX, n: 1, label: "SOS en galets", step: "T2", draw: /* @__PURE__ */ __name(() => sos(), "draw") },
+  caisses: { frame: PROP_BOX, n: 1, label: "Pile de caisses", step: "T2", draw: /* @__PURE__ */ __name(() => crateStack(), "draw") },
+  etabli: { frame: PROP_BOX, n: 1, label: "Établi de Rivet", step: "T4", draw: /* @__PURE__ */ __name(() => workbench(), "draw") },
+  bol: { frame: PROP_BOX, n: 3, label: "Bol de soupe « pour la Dame »", step: "III", draw: /* @__PURE__ */ __name((n) => soupBowl(n), "draw") }
+};
+for (const a of Object.values(CAMP)) {
+  const dessin = a.draw;
+  a.draw = (n) => {
+    uid = 0;
+    return dessin(n);
+  };
+}
+
+// atelier/ruines.mjs
+var uid2 = 0;
+var id2 = /* @__PURE__ */ __name((p) => `r${p}${uid2++}`, "id");
+var ANC = { top: "#DDD6C6", left: "#C1B9A7", right: "#9A9281" };
+var ANC_DARK = { top: "#C9C1AF", left: "#ABA290", right: "#857D6D" };
+var ROCK2 = { top: "#A9A59B", left: "#8F8B82", right: "#6E6A62" };
+var MOSS = "#8FAE5A";
+var IVY = "#5E8F3C";
+var IVY_LIGHT = "#7FB04F";
+var GLOW = "120,235,215";
+var lerp2 = /* @__PURE__ */ __name((a, b, t) => a + (b - a) * t, "lerp");
+var GLYPHS = [
+  "M0,0 m-1.6,0 a1.6,1.6 0 1 1 1.6,1.6 a2.6,2.6 0 1 1 -2.6,-2.6",
+  "M0,3 L0,-3 M0,-0.8 L2,-2.8 M0,1.2 L-2,-0.8",
+  "M-2.4,0 Q0,-2.4 2.4,0 Q0,2.4 -2.4,0 Z M0,0 m-0.5,0 a0.5,0.5 0 1 0 1,0 a0.5,0.5 0 1 0 -1,0",
+  "M-2,-2.6 L0.6,-0.4 L-0.8,0.4 L2,2.6"
+];
+function rune(x, y, k, o = 0, s = 1, skew = 0) {
+  const d = GLYPHS[k % GLYPHS.length];
+  const m = `matrix(${s} ${f24(0.5 * skew * s)} 0 ${s} ${f24(x)} ${f24(y)})`;
+  const carved = `<path d="${d}" fill="none" stroke="rgba(70,58,44,.55)" stroke-width="${f24(1.1 / s)}" stroke-linecap="round" stroke-linejoin="round"/>`;
+  const lit2 = o > 0.02 ? `<path d="${d}" fill="none" stroke="rgba(${GLOW},${f24(o * 0.35)})" stroke-width="${f24(3 / s)}" stroke-linecap="round" stroke-linejoin="round"/><path d="${d}" fill="none" stroke="rgba(${GLOW},${f24(o)})" stroke-width="${f24(0.9 / s)}" stroke-linecap="round" stroke-linejoin="round"/>` : "";
+  return `<g transform="${m}">${carved}${lit2}</g>`;
+}
+__name(rune, "rune");
+var tuft2 = /* @__PURE__ */ __name((x, y, s = 1, c = "#7FA048") => `<path d="M${f24(x - 3 * s)},${f24(y)} Q${f24(x - 2 * s)},${f24(y - 4 * s)} ${f24(x - 3.4 * s)},${f24(y - 6 * s)} M${f24(x)},${f24(y)} Q${f24(x + 0.6 * s)},${f24(y - 5 * s)} ${f24(x - 0.4 * s)},${f24(y - 7.4 * s)} M${f24(x + 3 * s)},${f24(y)} Q${f24(x + 2.2 * s)},${f24(y - 4 * s)} ${f24(x + 3.8 * s)},${f24(y - 5.6 * s)}" fill="none" stroke="${c}" stroke-width="${f24(1.1 * s)}" stroke-linecap="round"/>`, "tuft");
+var leaf2 = /* @__PURE__ */ __name((x, y, r, rot, c = IVY) => `<g transform="translate(${f24(x)} ${f24(y)}) rotate(${rot})"><path d="M0,${f24(-r)} Q${f24(r * 0.9)},${f24(-r * 0.2)} 0,${f24(r)} Q${f24(-r * 0.9)},${f24(-r * 0.2)} 0,${f24(-r)} Z" fill="${c}" stroke="${OUT2}" stroke-width="0.4"/></g>`, "leaf");
+function ivy(a, b, n = 6, seed = 1) {
+  const pt = /* @__PURE__ */ __name((t) => [lerp2(a[0], b[0], t) + Math.sin(t * 9 + seed) * 2.2, lerp2(a[1], b[1], t)], "pt");
+  let d = `M${f24(a[0])},${f24(a[1])}`;
+  for (let i = 1; i <= 12; i++) {
+    const [x, y] = pt(i / 12);
+    d += ` L${f24(x)},${f24(y)}`;
+  }
+  let o = `<path d="${d}" fill="none" stroke="#4E6E32" stroke-width="0.8" stroke-linecap="round"/>`;
+  for (let i = 0; i < n; i++) {
+    const t = (i + 0.5) / n, [x, y] = pt(t);
+    o += leaf2(x + (i % 2 ? 2 : -2), y, 1.9, i % 2 ? 40 : -40, i % 3 ? IVY : IVY_LIGHT);
+  }
+  return o;
+}
+__name(ivy, "ivy");
+var mossPad = /* @__PURE__ */ __name((x, y, rx, ry) => ell3(x, y, rx, ry, MOSS, ` stroke="${OUT2}" stroke-width="0.4"`) + ell3(x - rx * 0.25, y - ry * 0.25, rx * 0.45, ry * 0.4, "#A9C46E"), "mossPad");
+function block(u0, v0, u1, v1, z0, z1, c = ANC, course = 6) {
+  let o = box(u0, v0, u1, v1, z0, z1, c);
+  for (let z = z0 + course, k = 0; z < z1 - 1; z += course, k++) {
+    o += ln3(P(u0, v1, z), P(u1, v1, z), "rgba(90,75,55,.35)", 0.6) + ln3(P(u1, v1, z), P(u1, v0, z), "rgba(60,50,35,.35)", 0.6);
+  }
+  for (let z = z0, k = 0; z < z1 - 2; z += course, k++) {
+    const t = k % 2 ? 0.35 : 0.7, zt = Math.min(z + course, z1);
+    o += ln3(P(lerp2(u0, u1, t), v1, z), P(lerp2(u0, u1, t), v1, zt), "rgba(90,75,55,.3)", 0.6);
+    o += ln3(P(u1, lerp2(v0, v1, 1 - t), z), P(u1, lerp2(v0, v1, 1 - t), zt), "rgba(60,50,35,.3)", 0.6);
+  }
+  return o;
+}
+__name(block, "block");
+function fallenBlock(u, v, s, h) {
+  return shadow(u, v, s * 1.3, 0.2) + block(u - s, v - s * 0.7, u + s, v + s * 0.7, 0, h, ANC_DARK, 99) + mossPad(...P(u - s * 0.2, v - s * 0.1, h), 3, 1.4);
+}
+__name(fallenBlock, "fallenBlock");
+function column(u, v, z0, z1, r, top = "flat", seed = 1) {
+  const [x0, y0] = P(u, v, z0), rx = r * 64 * Math.SQRT1_2, ry = r * 32 * Math.SQRT1_2;
+  let o = cylinder(u, v, z0, z1, r, ANC, id2("col"));
+  for (const k of [-0.7, -0.35, 0, 0.35, 0.7]) o += ln3([x0 + rx * k, y0 + ry * Math.sqrt(1 - k * k) - 1], [x0 + rx * k, y0 - (z1 - z0) + ry * Math.sqrt(1 - k * k) + (top === "broken" ? 3 : 1)], k < 0 ? "rgba(255,255,255,.28)" : "rgba(60,50,35,.28)", 0.8);
+  if (top === "broken") {
+    const yT = y0 - (z1 - z0);
+    const jag = Array.from({ length: 10 }, (_, i) => {
+      const a = Math.PI + i / 9 * Math.PI, h = Math.abs(Math.sin(i * 1.7 + seed)) * 1.2 + (i < 4 ? 1.8 : i < 6 ? 0.9 : 0);
+      return [x0 + Math.cos(a) * rx, yT + Math.sin(a) * ry - h];
+    });
+    const front = `M${f24(x0 - rx)},${f24(yT)} A${f24(rx)},${f24(ry)} 0 0 0 ${f24(x0 + rx)},${f24(yT)}`;
+    o += `<path d="${front} L${pts2([...jag].reverse()).split(" ").join(" L")} Z" fill="${ANC.top}"${EDGE}/>`;
+    o += `<path d="M${pts2(jag.slice(2, 7)).split(" ").join(" L")}" fill="none" stroke="rgba(60,50,35,.35)" stroke-width="0.6"/>`;
+  } else if (top === "cap") {
+    o += cylinder(u, v, z1, z1 + 3, r * 1.25, ANC, id2("ech"));
+    o += box(u - r * 1.25, v - r * 1.25, u + r * 1.25, v + r * 1.25, z1 + 3, z1 + 6, ANC);
+  }
+  return o;
+}
+__name(column, "column");
+var outline = /* @__PURE__ */ __name((list, closed = false) => `<path d="M${pts2(list.map((p) => P(...p))).split(" ").join(" L")}${closed ? " Z" : ""}" fill="none" stroke="${OUT2}" stroke-width="0.72" stroke-linejoin="round" stroke-linecap="round"/>`, "outline");
+var JOINT = "rgba(90,75,55,.32)";
+var JOINT_D = "rgba(55,45,32,.32)";
+function wallU(a0, seg, v0, th, hs, c = ANC, course = 6) {
+  const v1 = v0 + th, parts = [];
+  hs.forEach((h, i) => {
+    if (!h) return;
+    const a = a0 + i * seg, b = a + seg, hp = i ? hs[i - 1] : 0, hn = i < hs.length - 1 ? hs[i + 1] : 0;
+    let d = face([[a, v1, 0], [b, v1, 0], [b, v1, h], [a, v1, h]], c.left);
+    for (let z = course; z < h - 1; z += course) d += ln3(P(a, v1, z), P(b, v1, z), JOINT, 0.6);
+    for (let z = 0, k = 0; z < h - 1; z += course, k++) for (let uj = a0 + (k % 2 ? 0.06 : 0.12); uj < b - 0.01; uj += 0.13) if (uj > a + 0.01) d += ln3(P(uj, v1, z), P(uj, v1, Math.min(z + course, h)), JOINT, 0.6);
+    if (hn < h) {
+      const q = [[b, v1, hn], [b, v1, h], [b, v0, h], [b, v0, hn]];
+      d += face(q, c.right) + outline(q, true);
+      for (let z = Math.ceil(hn / course) * course; z < h - 1; z += course) if (z > hn) d += ln3(P(b, v1, z), P(b, v0, z), JOINT_D, 0.6);
+    }
+    const top = [[a, v0, h], [b, v0, h], [b, v1, h], [a, v1, h]];
+    d += face(top, c.top) + outline(top, true) + outline([[a, v1, 0], [b, v1, 0]]);
+    if (hp < h) d += outline([[a, v1, hp], [a, v1, h]]);
+    parts.push({ k: (a + b) / 2 + v0 + th / 2, d });
+  });
+  return parts;
+}
+__name(wallU, "wallU");
+function wallV(b0, seg, u0, th, hs, c = ANC, course = 6) {
+  const u1 = u0 + th, parts = [];
+  hs.forEach((h, i) => {
+    if (!h) return;
+    const a = b0 + i * seg, b = a + seg, hp = i ? hs[i - 1] : 0, hn = i < hs.length - 1 ? hs[i + 1] : 0;
+    let d = face([[u1, a, 0], [u1, b, 0], [u1, b, h], [u1, a, h]], c.right);
+    for (let z = course; z < h - 1; z += course) d += ln3(P(u1, a, z), P(u1, b, z), JOINT_D, 0.6);
+    for (let z = 0, k = 0; z < h - 1; z += course, k++) for (let vj = b0 + (k % 2 ? 0.06 : 0.12); vj < b - 0.01; vj += 0.13) if (vj > a + 0.01) d += ln3(P(u1, vj, z), P(u1, vj, Math.min(z + course, h)), JOINT_D, 0.6);
+    if (hn < h) {
+      const q = [[u0, b, hn], [u1, b, hn], [u1, b, h], [u0, b, h]];
+      d += face(q, c.left) + outline(q, true);
+      for (let z = Math.ceil(hn / course) * course; z < h - 1; z += course) if (z > hn) d += ln3(P(u0, b, z), P(u1, b, z), JOINT, 0.6);
+    }
+    const top = [[u0, a, h], [u1, a, h], [u1, b, h], [u0, b, h]];
+    d += face(top, c.top) + outline(top, true) + outline([[u1, a, 0], [u1, b, 0]]);
+    if (hp < h) d += outline([[u1, a, hp], [u1, a, h]]);
+    parts.push({ k: u0 + th / 2 + (a + b) / 2, d });
+  });
+  return parts;
+}
+__name(wallV, "wallV");
+function ruinHouse() {
+  const u0 = -0.82, v0 = -0.82, th = 0.14, seg = 0.14;
+  let o = shadow(0, 0.05, 1.02, 0.14) + disc(0.02, 0.05, 0, 0.92, "rgba(150,170,110,.28)");
+  const parts = [...wallU(u0 + th, seg, v0, th, [38, 34, 36, 27, 22, 13, 8, 4]), ...wallV(v0, seg, u0, th, [42, 36, 38, 0, 0, 34, 24, 15, 7])];
+  {
+    const a = v0 + 3 * seg, b = v0 + 5 * seg;
+    const [x, y] = P(u0 + th, (a + b) / 2, 28.4);
+    parts.push({ k: u0 + th / 2 + (a + b) / 2, d: box(u0, a, u0 + th, b, 25, 31.6, ANC_DARK) + rune(x, y, 0, 0, 0.9, -1) });
+  }
+  parts.push({ k: u0 + v0 + 4 * seg - 0.01, d: face([[u0, v0 + 3 * seg, 0.4], [u0 + th + 0.05, v0 + 3 * seg, 0.4], [u0 + th + 0.05, v0 + 5 * seg, 0.4], [u0, v0 + 5 * seg, 0.4]], ANC_DARK.top, EDGE) });
+  parts.sort((p, q) => p.k - q.k).forEach((p) => {
+    o += p.d;
+  });
+  o += mossPad(...P(u0 + th + 1.5 * seg, v0 + th / 2, 34), 2.6, 1.2) + mossPad(...P(u0 + th / 2, v0 + 1.5 * seg, 36), 2.4, 1.1) + mossPad(...P(u0 + th + 4.5 * seg, v0 + th / 2, 22), 2.2, 1);
+  o += ivy(P(u0 + th + 0.3, v0 + th, 0), P(u0 + th + 0.36, v0 + th, 30), 7, 2) + ivy(P(u0 + th, v0 + 7.5 * seg, 0), P(u0 + th, v0 + 7.2 * seg, 14), 4, 5);
+  for (const [u, v, s] of [[-0.42, -0.4, 0.13], [-0.14, -0.44, 0.12], [-0.44, -0.1, 0.12], [-0.12, -0.12, 0.13], [0.16, -0.38, 0.11], [-0.4, 0.2, 0.1], [0.14, 0.02, 0.1]]) {
+    o += face([[u - s, v - s, 0], [u + s, v - s, 0], [u + s, v + s, 0], [u - s, v + s, 0]], u + v < -0.5 ? ANC_DARK.top : ANC.top, ` stroke="rgba(90,75,55,.5)" stroke-width="0.6"`);
+  }
+  for (const [u, v] of [[-0.28, -0.26], [0.02, -0.3], [-0.3, 0.06], [0, 0.04], [0.28, -0.2]]) o += tuft2(...P(u, v, 0), 0.7);
+  {
+    const [x, y] = P(u0 + th + 0.12, v0 + th + 0.12, 0);
+    o += tk([x, y], [x + 1, y - 14], WOOD_DARK.left, 1.2) + ell3(x - 3, y - 16, 6, 5, IVY, EDGE) + ell3(x + 4, y - 18, 5.4, 4.6, IVY_LIGHT, EDGE) + ell3(x, y - 22, 5, 4.2, "#8FC060", EDGE);
+  }
+  o += fallenBlock(0.28, 0.22, 0.14, 7);
+  const front = [...wallU(u0, seg, 0.6, th, [6, 4, 7, 3, 0, 5], ANC, 99), ...wallV(v0 + th, seg, 0.6, th, [5, 7, 3, 0, 4], ANC, 99)];
+  front.sort((p, q) => p.k - q.k).forEach((p) => {
+    o += p.d;
+  });
+  for (const [u, v] of [[0.7, 0.3], [-0.2, 0.76], [0.4, 0.74]]) o += tuft2(...P(u, v, 0), 0.8);
+  return o;
+}
+__name(ruinHouse, "ruinHouse");
+function colonnade() {
+  let o = shadow(0, 0.05, 1.02, 0.14) + disc(0.02, 0.05, 0, 0.92, "rgba(150,170,110,.28)");
+  o += block(-0.86, -0.62, 0.5, 0.2, 0, 4, ANC_DARK, 99) + block(-0.78, -0.54, 0.42, 0.12, 4, 8, ANC, 99);
+  for (const u of [-0.48, -0.18, 0.12]) o += ln3(P(u, -0.54, 8), P(u, 0.12, 8), "rgba(90,75,55,.35)", 0.6);
+  for (const v of [-0.32, -0.1]) o += ln3(P(-0.78, v, 8), P(0.42, v, 8), "rgba(90,75,55,.35)", 0.6);
+  o += `<path d="M${pts2([P(0.2, -0.3, 8), P(0.26, -0.22, 8), P(0.24, -0.12, 8), P(0.32, -0.04, 8)]).split(" ").join(" L")}" fill="none" stroke="rgba(60,50,35,.5)" stroke-width="0.7"/>`;
+  {
+    const [x, y] = P(-0.2, 0.2, 2);
+    o += rune(x, y, 1, 0, 0.8, 1) + rune(x + 9, y + 4.5, 3, 0, 0.8, 1);
+  }
+  const cols = [[-0.62, -0.38, 46, "cap"], [-0.28, -0.2, 30, "broken"], [0.06, -0.02, 12, "broken"], [0.28, 0, 0, ""]];
+  for (const [u, v, h, top] of cols) {
+    o += box(u - 0.11, v - 0.11, u + 0.11, v + 0.11, 8, 11, ANC);
+    if (h) o += column(u, v, 11, 11 + h, 0.08, top, u * 10);
+  }
+  o += box(-0.92, -0.46, -0.42, -0.3, 63, 69, ANC_DARK);
+  o += face([[-0.42, -0.46, 63], [-0.42, -0.3, 63], [-0.42, -0.3, 65.4], [-0.39, -0.36, 67.2], [-0.41, -0.41, 69], [-0.42, -0.46, 69]], ANC.top, EDGE);
+  o += mossPad(...P(-0.7, -0.38, 69), 3, 1.3);
+  o += ivy(P(-0.62 + 0.06, -0.38 + 0.08, 11), P(-0.62 + 0.04, -0.38 + 0.08, 50), 7, 3);
+  o += shadow(0.3, 0.52, 0.5, 0.18);
+  o += logLying(-0.1, 0.46, 0.12, 0.5, 5.6, { bark: ANC.left, dark: "rgba(60,50,35,.3)", end: ANC.top, ring: ANC_DARK.left });
+  o += logLying(0.2, 0.52, 0.42, 0.6, 5.6, { bark: ANC.left, dark: "rgba(60,50,35,.3)", end: ANC.top, ring: ANC_DARK.left });
+  o += logLying(0.52, 0.68, 0.7, 0.76, 5.6, { bark: ANC.left, dark: "rgba(60,50,35,.3)", end: ANC.top, ring: ANC_DARK.left });
+  o += box(0.64, 0.28, 0.84, 0.48, 0, 4, ANC_DARK) + mossPad(...P(0.74, 0.38, 4), 2.6, 1.2);
+  for (const [u, v] of [[0, 0.66], [0.46, 0.4], [0.7, 0.86], [-0.5, 0.4], [0.62, 0.02]]) o += tuft2(...P(u, v, 0), 0.9);
+  return o;
+}
+__name(colonnade, "colonnade");
+function runeStone(n = 0) {
+  const o0 = n ? 0.95 : 0;
+  let o = shadow(0, 0.02, 0.34, 0.2);
+  const a = P(-0.28, 0.1, 0), b = P(0.24, 0.1, 0), c = P(0.24, -0.06, 0);
+  const H = 38, Hb = 31;
+  o += `<path d="M${f24(a[0])},${f24(a[1])} L${f24(b[0])},${f24(b[1])} L${f24(b[0] - 1)},${f24(b[1] - Hb)} Q${f24((a[0] + b[0]) / 2 + 1)},${f24((a[1] + b[1]) / 2 - H - 6)} ${f24(a[0] + 1.2)},${f24(a[1] - Hb + 2)} Z" fill="${ANC_DARK.left}"${EDGE}/>`;
+  o += `<path d="M${f24(b[0])},${f24(b[1])} L${f24(c[0])},${f24(c[1])} L${f24(c[0] - 0.8)},${f24(c[1] - Hb + 1)} Q${f24(c[0] - 2)},${f24(c[1] - Hb - 4)} ${f24(b[0] - 1)},${f24(b[1] - Hb)} Z" fill="${ANC_DARK.right}"${EDGE}/>`;
+  o += `<path d="M${f24(a[0] + 1.2)},${f24(a[1] - Hb + 2)} Q${f24((a[0] + b[0]) / 2 + 1)},${f24((a[1] + b[1]) / 2 - H - 6)} ${f24(b[0] - 1)},${f24(b[1] - Hb)} Q${f24(c[0] - 2)},${f24(c[1] - Hb - 4)} ${f24(c[0] - 4)},${f24(c[1] - Hb - 6)} Q${f24((a[0] + c[0]) / 2)},${f24((a[1] + c[1]) / 2 - H - 10)} ${f24(a[0] + 1.2)},${f24(a[1] - Hb + 2)} Z" fill="${ANC_DARK.top}"${EDGE}/>`;
+  if (n) {
+    const [x, y] = P(0, 0.08, 18);
+    o += ell3(x, y, 16, 20, `rgba(${GLOW},.16)`);
+  }
+  const at = /* @__PURE__ */ __name((t, z) => [lerp2(a[0], b[0], t), lerp2(a[1], b[1], t) - z], "at");
+  [[0.3, 25, 0], [0.62, 25.2, 2], [0.26, 16, 1], [0.56, 16.2, 3], [0.82, 16.4, 0], [0.34, 7, 2], [0.68, 7.2, 1]].forEach(([t, z, k]) => {
+    const [x, y] = at(t, z);
+    o += rune(x, y, k, o0, 0.72, 1);
+  });
+  {
+    const [x, y] = [lerp2(b[0], c[0], 0.5), lerp2(b[1], c[1], 0.5) - 18];
+    o += rune(x, y, 1, o0 * 0.8, 0.7, -1);
+  }
+  o += ell3(...at(0.8, 29), 2.2, 1.2, "rgba(200,210,150,.9)") + ell3(...at(0.14, 12), 1.6, 1, "rgba(160,190,110,.85)");
+  o += tuft2(...P(-0.18, 0.12, 0), 0.9) + tuft2(...P(0.14, 0.14, 0), 0.8) + tuft2(...P(0.2, 0, 0), 0.7);
+  if (n) for (const [dx, dy, r] of [[-8, -40, 1], [6, -46, 0.8], [10, -32, 0.7]]) o += `<circle cx="${dx}" cy="${dy}" r="${r}" fill="rgba(${GLOW},.85)"/>`;
+  return o;
+}
+__name(runeStone, "runeStone");
+var brokenColumn = /* @__PURE__ */ __name(() => shadow(0, 0, 0.24, 0.2) + block(-0.15, -0.15, 0.15, 0.15, 0, 6, ANC_DARK, 99) + (() => {
+  const [x, y] = P(0, 0.15, 3);
+  return rune(x, y, 0, 0, 0.75, 1);
+})() + column(0, 0, 6, 30, 0.09, "broken", 2) + ivy(P(-0.04, 0.08, 6), P(-0.06, 0.08, 26), 5, 4) + box(0.16, 0.12, 0.3, 0.24, 0, 4, ANC) + tuft2(...P(-0.16, 0.18, 0), 0.8) + tuft2(...P(0.2, -0.12, 0), 0.7), "brokenColumn");
+function lighthouseKey(n = 0) {
+  let o = shadow(0, 0, 0.34, 0.18);
+  o += boulder(0.02, -0.3, 0.2, 0.12, 12, ANC_DARK, 5, 0.2, 0.7);
+  const q = [[-0.2, -0.1, 0], [0.2, -0.1, 0], [0.2, -0.24, 17], [-0.2, -0.24, 17]];
+  o += face([[0.2, -0.1, 0], [0.2, -0.24, 17], [0.2, -0.27, 15.6], [0.2, -0.12, -0.6]], ANC_DARK.right, EDGE);
+  o += face(q, "#8F8676", EDGE) + face([[-0.2, -0.24, 17], [0.2, -0.24, 17], [0.2, -0.27, 15.6], [-0.2, -0.27, 15.6]], ANC.top, EDGE);
+  {
+    const [x, y] = P(0, -0.17, 8.4);
+    o += rune(x, y, 0, n ? 0.75 : 0.3, 0.95, 0);
+  }
+  o += ell3(...P(-0.12, -0.14, 4), 1.6, 0.9, "rgba(160,190,110,.85)") + ell3(...P(0.12, -0.2, 12), 1.2, 0.7, "rgba(160,190,110,.85)");
+  o += face([[-0.18, -0.1, 0], [0.18, -0.1, 0], [0.18, 0.16, 0], [-0.18, 0.16, 0]], "#6B5A42", EDGE);
+  o += face([[-0.18, -0.1, 0], [0.18, -0.1, 0], [0.18, -0.04, 0], [-0.18, -0.04, 0]], "#4E4030");
+  {
+    const [x, y] = P(0, 0.04, 0.4);
+    const k = /* @__PURE__ */ __name((st, w) => `<circle cx="-6" cy="0" r="3.2" fill="none" stroke="${st}" stroke-width="${w}"/><path d="M-2.8,0 L7.4,0 M5,0 L5,3.2 M7.4,0 L7.4,2.6" fill="none" stroke="${st}" stroke-width="${w}" stroke-linecap="round" stroke-linejoin="round"/>`, "k");
+    o += `<g transform="translate(${f24(x)} ${f24(y)}) rotate(-10)">${k(OUT2, 3)}${k("#C99A44", 1.5)}<circle cx="-6" cy="0" r="1.3" fill="#6B5A42"/><circle cx="-7.6" cy="-1.6" r="0.7" fill="#7FB0A0"/><circle cx="2" cy="-0.2" r="0.55" fill="#7FB0A0"/><path d="M-1.6,-0.6 L4,-0.6" stroke="#F0CF7A" stroke-width="0.5"/></g>`;
+    if (n) o += ell3(x, y, 11, 5, "rgba(255,230,150,.25)") + `<path d="M${f24(x + 6)},${f24(y - 9)} l1,2.6 l2.6,1 l-2.6,1 l-1,2.6 l-1,-2.6 l-2.6,-1 l2.6,-1 Z" fill="#FFF6D0" stroke="${OUT2}" stroke-width="0.3"/>`;
+  }
+  for (const [u, v] of [[-0.2, 0.18], [0.2, 0.12], [0.06, 0.2]]) {
+    const [x, y] = P(u, v, 0);
+    o += ell3(x, y, 2.4, 1.2, "#8A7454", ` stroke="${OUT2}" stroke-width="0.4"`);
+  }
+  o += tuft2(...P(-0.26, 0.2, 0), 0.8) + tuft2(...P(0.28, 0.06, 0), 0.7) + tuft2(...P(-0.3, -0.06, 0), 0.7);
+  return o;
+}
+__name(lighthouseKey, "lighthouseKey");
+function deadLighthouse(n = 0) {
+  const Z0 = 16, Z1 = 112, R0 = 18, R1 = 12.5;
+  const y = /* @__PURE__ */ __name((z) => -z, "y"), rAt = /* @__PURE__ */ __name((z) => lerp2(R0, R1, (z - Z0) / (Z1 - Z0)), "rAt");
+  let o = shadow(0, 0.05, 0.9, 0.16);
+  o += boulder(-0.52, -0.42, 0.34, 0.28, 13, ROCK2, 4, 0.3, 0.48) + boulder(0.38, -0.54, 0.28, 0.24, 11, ROCK2, 7, 0.3, 0.48);
+  o += boulder(0, 0, 0.68, 0.62, Z0 + 2, ROCK2, 2, 0.18, 0.8);
+  const g = id2("tour");
+  o += `<defs><linearGradient id="${g}" x1="0" x2="1"><stop offset="0" stop-color="${ANC.left}"/><stop offset=".55" stop-color="${mixHex(ANC.left, ANC.right, 0.5)}"/><stop offset="1" stop-color="${ANC.right}"/></linearGradient></defs>`;
+  o += `<path d="M${-R1},${y(Z1)} L${-R0},${y(Z0)} A${R0},${R0 / 2} 0 0 0 ${R0},${y(Z0)} L${R1},${y(Z1)} Z" fill="url(#${g})"${EDGE}/>`;
+  for (let z = Z0 + 8, k = 0; z < Z1 - 2; z += 8, k++) {
+    const r = rAt(z);
+    o += `<path d="M${f24(-r)},${f24(y(z))} A${f24(r)},${f24(r / 2)} 0 0 0 ${f24(r)},${f24(y(z))}" fill="none" stroke="rgba(80,65,45,.3)" stroke-width="0.7"/>`;
+    for (const th of k % 2 ? [0.22, 0.5, 0.78] : [0.36, 0.64]) {
+      const a = Math.PI * (1 - th), xx = Math.cos(a) * r, yy = y(z) + Math.sin(a) * r / 2;
+      o += ln3([xx, yy], [xx * rAt(z - 8) / r, yy + 8], "rgba(80,65,45,.26)", 0.6);
+    }
+  }
+  o += `<path d="M7,${y(96)} L9.4,${y(88)} L7.6,${y(82)} L10.6,${y(72)} L9,${y(64)} L11.6,${y(56)}" fill="none" stroke="#4A3F33" stroke-width="0.9" stroke-linejoin="round"/>`;
+  for (const [x, z] of [[-4, 52], [-2.6, 84]]) o += `<path d="M${x - 1.4},${y(z)} L${x - 1.4},${y(z + 8)} Q${x},${y(z + 10)} ${x + 1.4},${y(z + 8)} L${x + 1.4},${y(z)} Z" fill="#2E2A26"${EDGE}/>`;
+  o += `<path d="M-7,${y(Z0) + 7.6} L-7,${y(Z0 + 13)} Q-1,${y(Z0 + 20)} 5,${y(Z0 + 13)} L5,${y(Z0) + 8.8} Q-1,${y(Z0) + 10.4} -7,${y(Z0) + 7.6} Z" fill="${WOOD_DARK.right}"${EDGE}/>`;
+  o += ln3([-6.4, y(Z0 + 4)], [4.4, y(Z0 + 11)], WOOD.left, 1.6) + ln3([-6.4, y(Z0 + 11)], [4.4, y(Z0 + 4)], WOOD.left, 1.6);
+  o += `<path d="M-8.6,${y(Z0 + 19)} Q-1,${y(Z0 + 23.4)} 6.6,${y(Z0 + 19)} L6.6,${y(Z0 + 15.6)} Q-1,${y(Z0 + 20)} -8.6,${y(Z0 + 15.6)} Z" fill="${ANC_DARK.left}"${EDGE}/>`;
+  o += rune(-1, y(Z0 + 19.2), 0, n ? 0.5 : 0.25, 0.75, 0);
+  o += ivy([-15, y(Z0) + 4], [-12.6, y(56)], 9, 1);
+  for (const [x, z0, z1] of [[-8, Z1 - 2, Z1 - 22], [3, Z1 - 2, Z1 - 30], [9.6, Z1 - 2, Z1 - 16]]) o += `<path d="M${x},${y(z0)} q0.8,${(z0 - z1) * 0.4} -0.4,${z0 - z1}" fill="none" stroke="rgba(255,255,255,.8)" stroke-width="1.2" stroke-linecap="round"/>`;
+  const RG = R1 + 6, yG = y(Z1);
+  for (const k of [-0.75, -0.25, 0.25, 0.75]) {
+    const x = k * R1, yy = yG + Math.sqrt(1 - k * k) * R1 / 2;
+    o += `<path d="M${f24(x - 1.6)},${f24(yy)} L${f24(x + 1.6)},${f24(yy)} L${f24(x)},${f24(yy + 5)} Z" fill="${ANC_DARK.right}"${EDGE}/>`;
+  }
+  o += `<path d="M${-RG},${yG} L${-RG},${yG + 3} A${RG},${RG / 2} 0 0 0 ${RG},${yG + 3} L${RG},${yG} Z" fill="${ANC_DARK.left}"${EDGE}/>` + ell3(0, yG, RG, RG / 2, ANC.top, EDGE);
+  const post2 = /* @__PURE__ */ __name((a, broken) => {
+    const x = Math.cos(a) * (RG - 1.4), yy = yG + Math.sin(a) * (RG - 1.4) / 2;
+    return broken ? tk([x, yy], [x + 1.6, yy - 3.4], "#4E5A5E", 0.7) : tk([x, yy], [x, yy - 7], "#4E5A5E", 0.7);
+  }, "post");
+  for (let i = 0; i < 6; i++) o += post2(Math.PI + i / 5 * Math.PI, false);
+  o += `<path d="M${-RG + 1.4},${yG - 7} A${RG - 1.4},${(RG - 1.4) / 2} 0 0 1 ${RG - 1.4},${yG - 7}" fill="none" stroke="${OUT2}" stroke-width="1.9"/><path d="M${-RG + 1.4},${yG - 7} A${RG - 1.4},${(RG - 1.4) / 2} 0 0 1 ${RG - 1.4},${yG - 7}" fill="none" stroke="#4E5A5E" stroke-width="0.8"/>`;
+  const RL = 9.4, ZL0 = Z1, ZL1 = Z1 + 20, yL0 = y(ZL0), yL1 = y(ZL1);
+  o += box(-0.17, -0.17, 0.17, 0.17, ZL0, ZL0 + 3, ANC_DARK);
+  o += `<path d="M${-RL},${yL1} L${-RL},${yL0 - 3} A${RL},${RL / 2} 0 0 0 ${RL},${yL0 - 3} L${RL},${yL1} Z" fill="#3B4E57"${EDGE}/>`;
+  o += ell3(0, yL0 - 12, 5, 6.4, "#8E9AA0", EDGE) + ell3(0, yL0 - 12, 3.2, 4.2, "none", ' stroke="#6E7A80" stroke-width="0.6"') + ell3(0, yL0 - 12, 1.4, 2, "#6E7A80");
+  o += `<path d="M${-RL + 1},${yL1 + 2} L${-RL + 1},${yL0 - 4} L-4.4,${yL0 - 2.2} L-4.4,${yL1 + 4} Z" fill="rgba(140,170,180,.75)"/>`;
+  o += `<path d="M4.6,${yL1 + 4} L4.6,${yL0 - 2.2} L${RL - 1},${yL0 - 4} L${RL - 1},${yL1 + 2} Z" fill="rgba(110,140,150,.8)"/>`;
+  o += `<path d="M-4.4,${yL1 + 4} L4.6,${yL1 + 4} L4.6,${yL1 + 9} L2,${yL1 + 7} L0.4,${yL1 + 11} L-1.6,${yL1 + 8} L-4.4,${yL1 + 10} Z" fill="rgba(140,170,180,.75)"/>`;
+  o += ln3([-RL + 2.6, yL1 + 4], [-5.6, yL1 + 9], "rgba(255,255,255,.6)", 0.8);
+  for (const k of [-1, -0.47, 0.47, 1]) {
+    const x = k * (RL - 0.2), yy = yL0 - 3 + Math.sqrt(Math.max(0, 1 - k * k)) * RL / 2;
+    o += ln3([x, yL1], [x, yy], "#2B2420", 1.1);
+  }
+  const gd = id2("dome"), RD = RL + 1.6;
+  o += `<defs><linearGradient id="${gd}" x1="0" x2="1"><stop offset="0" stop-color="#7FAE9C"/><stop offset="1" stop-color="#4F7A6C"/></linearGradient></defs>`;
+  o += `<path d="M${-RD},${yL1} Q${-RD},${yL1 - 13} 0,${yL1 - 14} Q${RD},${yL1 - 13} ${RD},${yL1} A${RD},${RD / 2} 0 0 1 ${-RD},${yL1} Z" fill="url(#${gd})"${EDGE}/>`;
+  o += `<path d="M1.4,${yL1 - 9.6} L3.2,${yL1 - 11} L4.4,${yL1 - 9.4} L6.6,${yL1 - 9} L6.8,${yL1 - 6.4} L8.2,${yL1 - 4.4} L6.6,${yL1 - 2.6} L7,${yL1 - 0.8} L4.4,${yL1 - 1.6} L2.6,${yL1 - 0.4} L2.2,${yL1 - 3.2} L0.6,${yL1 - 5} L1.8,${yL1 - 6.8} Z" fill="#26302E"${EDGE}/><path d="M2.6,${yL1 - 10.6} Q5.2,${yL1 - 7} 5.4,${yL1 - 1.2}" fill="none" stroke="${OUT2}" stroke-width="1.7"/><path d="M2.6,${yL1 - 10.6} Q5.2,${yL1 - 7} 5.4,${yL1 - 1.2}" fill="none" stroke="#6E9C8C" stroke-width="0.7"/><path d="M0.8,${yL1 - 5.2} Q4.6,${yL1 - 5.8} 8,${yL1 - 4.6}" fill="none" stroke="${OUT2}" stroke-width="1.5"/><path d="M0.8,${yL1 - 5.2} Q4.6,${yL1 - 5.8} 8,${yL1 - 4.6}" fill="none" stroke="#6E9C8C" stroke-width="0.6"/>`;
+  o += ell3(0, yL1 + 0.2, RD, RD / 2.4, "none", ' stroke="#3E6458" stroke-width="0.8"');
+  o += tk([0, yL1 - 14], [0.4, yL1 - 19], "#4E5A5E", 0.8) + tk([0.4, yL1 - 19], [3.4, yL1 - 20.6], "#4E5A5E", 0.7);
+  for (let i = 0; i < 7; i++) {
+    const a = i / 6 * Math.PI;
+    if (i === 5) continue;
+    o += post2(a, i === 4);
+  }
+  o += `<path d="M${-RG + 1.4},${yG - 7} A${RG - 1.4},${(RG - 1.4) / 2} 0 0 0 ${f24(Math.cos(Math.PI * 0.62) * (RG - 1.4))},${f24(yG - 7 + Math.sin(Math.PI * 0.62) * (RG - 1.4) / 2)}" fill="none" stroke="${OUT2}" stroke-width="1.9"/><path d="M${-RG + 1.4},${yG - 7} A${RG - 1.4},${(RG - 1.4) / 2} 0 0 0 ${f24(Math.cos(Math.PI * 0.62) * (RG - 1.4))},${f24(yG - 7 + Math.sin(Math.PI * 0.62) * (RG - 1.4) / 2)}" fill="none" stroke="#4E5A5E" stroke-width="0.8"/>`;
+  const perched = /* @__PURE__ */ __name((x, yy, flip = 1) => `<g transform="translate(${f24(x)} ${f24(yy)}) scale(${flip} 1)"><path d="M-3.4,0 Q-3,-3 0,-3.2 Q2.6,-3.4 3.6,-1.4 L1.6,0.4 Q-1,1.2 -3.4,0 Z" fill="#FBF8F0" stroke="${OUT2}" stroke-width="0.45"/><path d="M-3.6,-0.8 Q-1,-2.2 1.4,-1 L-0.6,0.4 Z" fill="#AEB6BC" stroke="${OUT2}" stroke-width="0.35"/><circle cx="2" cy="-2.4" r="0.5" fill="${OUT2}"/><path d="M3.4,-1.8 L5,-1.4 L3.4,-1 Z" fill="#F2A23C"/><path d="M-0.4,0.6 L-0.4,2.4 M1,0.6 L1,2.4" stroke="#F2A23C" stroke-width="0.6"/></g>`, "perched");
+  o += perched(-RG + 3, yG - 9.4) + perched(-3, yG + RG / 2 - 9.6, -1);
+  o += boulder(-0.52, 0.36, 0.3, 0.24, 10, ROCK2, 9, 0.32, 0.44) + boulder(0.5, 0.26, 0.28, 0.24, 9, ROCK2, 11, 0.32, 0.44) + boulder(-0.16, 0.56, 0.2, 0.15, 6, ROCK2, 15, 0.32, 0.42) + boulder(0.14, 0.64, 0.24, 0.17, 7, ROCK2, 13, 0.32, 0.44);
+  for (const [u, v] of [[-0.24, 0.66], [0.66, 0.5], [-0.78, 0.1]]) o += tuft2(...P(u, v, 0), 0.8, "#8FA65A");
+  for (const [u, v, z] of [[-0.54, 0.34, 10], [0.48, 0.24, 9], [0.24, -0.3, 18], [-0.34, 0.12, 18], [0.14, 0.62, 7]]) {
+    const [x, yy] = P(u, v, z);
+    o += ell3(x, yy, 1.6, 0.8, "rgba(255,255,255,.85)");
+  }
+  const fly = /* @__PURE__ */ __name((x, yy, up2, s = 1) => `<path d="M${f24(x - 6 * s)},${f24(yy + (up2 ? -3 : 1.6) * s)} Q${f24(x - 3 * s)},${f24(yy + (up2 ? -3.4 : -1) * s)} ${f24(x)},${f24(yy)} Q${f24(x + 3 * s)},${f24(yy + (up2 ? -3.4 : -1) * s)} ${f24(x + 6 * s)},${f24(yy + (up2 ? -3 : 1.6) * s)}" fill="none" stroke="${OUT2}" stroke-width="${f24(1.6 * s)}" stroke-linecap="round" stroke-linejoin="round"/><path d="M${f24(x - 6 * s)},${f24(yy + (up2 ? -3 : 1.6) * s)} Q${f24(x - 3 * s)},${f24(yy + (up2 ? -3.4 : -1) * s)} ${f24(x)},${f24(yy)} Q${f24(x + 3 * s)},${f24(yy + (up2 ? -3.4 : -1) * s)} ${f24(x + 6 * s)},${f24(yy + (up2 ? -3 : 1.6) * s)}" fill="none" stroke="#FBF8F0" stroke-width="${f24(0.7 * s)}" stroke-linecap="round" stroke-linejoin="round"/>`, "fly");
+  o += n ? fly(-30, -150, false) + fly(28, -128, true, 0.8) + fly(-40, -100, true, 0.7) : fly(-26, -146, true) + fly(32, -132, false, 0.8) + fly(-42, -106, false, 0.7);
+  return o;
+}
+__name(deadLighthouse, "deadLighthouse");
+var RUINES = {
+  ruine_maison: { frame: BUILDING_BOX, n: 1, label: "Maison en ruine des Anciens", step: "III", draw: /* @__PURE__ */ __name(() => ruinHouse(), "draw") },
+  colonnade: { frame: BUILDING_BOX, n: 1, label: "Colonnade des Anciens", step: "III", draw: /* @__PURE__ */ __name(() => colonnade(), "draw") },
+  pierre_runes: { frame: PROP_BOX, n: 2, label: "Pierre à runes (jour, nuit)", step: "III", draw: /* @__PURE__ */ __name((n) => runeStone(n), "draw") },
+  colonne_brisee: { frame: PROP_BOX, n: 1, label: "Colonne brisée", step: "III", draw: /* @__PURE__ */ __name(() => brokenColumn(), "draw") },
+  cle_du_phare: { frame: PROP_BOX, n: 2, label: "La clé du phare sous sa pierre", step: "VI", draw: /* @__PURE__ */ __name((n) => lighthouseKey(n), "draw") },
+  phare_eteint: { frame: { x: -72, y: -176, w: 144, h: 208 }, n: 2, label: "Le phare éteint des Anciens", step: "VI", draw: /* @__PURE__ */ __name((n) => deadLighthouse(n), "draw") }
+};
+for (const a of Object.values(RUINES)) {
+  const dessin = a.draw;
+  a.draw = (n) => {
+    uid2 = 0;
+    return dessin(n);
+  };
+}
+
+// atelier/generateur_decor.mjs
+var import_lot_m_liste = __toESM(require_lot_m_liste(), 1);
+var import_noms_betes = __toESM(require_noms_betes(), 1);
+
+// bibliotheque/svg/decor/camp/camp.json
+var camp_default = {
+  _lisez_moi: [
+    "Décor iso du camp des naufragés, au trait de la troupe, à l'échelle du jeu × 1,25 (case de 80 × 40). Ancre (0, 0) au centre de l'emprise au sol : coins, tente, hamac et épave sur 2 × 2 cases (cadre BUILDING_BOX ; l'épave un peu plus large), objets sur une case (PROP_BOX). Quand un dessin dépasse un peu, le cadre est élargi, l'ancre ne bouge pas : prendre le cadre noté ici.",
+    "Coins des maîtres : débris (à l'arrivée), abri, cabanon ; Cannelle (la cuisine de l'épave) et Galet (le muret de la Fissure) n'ont que des débris, leur bâtiment prend vite le relais. Les maîtres quittent le look du naufragé au souvenir retrouvé (lib/personnages/naufrages/), mais leur coin reste leur toit jusqu'aux maisons.",
+    "etape : quand l'objet apparaît (codes de STEPS) ; images et ms : animation en boucle (le feu à la vitesse du jeu, 9 images/s). Les étapes sont une proposition tirée de HISTOIRE.md."
+  ],
+  etapes: {
+    T1: "tutoriel, étape 1 — la Grève, la nuit (Brume allume le feu)",
+    T2: "tutoriel, étape 2 — Aster repêche les caisses",
+    T3: "tutoriel, étape 3 — Cannelle derrière l'épave",
+    T4: "tutoriel, étape 4 — Rivet sous une voile échouée",
+    T5: "tutoriel, étape 5 — Ondin à La Source ; fin : « Le Campement »",
+    I: "acte I — veillée I, « Le Camp des naufragés » (Sylve arrive)",
+    II: "acte II — veillée II, « Le Hameau » (Galet arrive)",
+    III: "acte III — veillée III, « Le Village » (Mélisse arrive)",
+    IV: "acte IV — la première barque de voyageurs"
+  },
+  objets: {
+    hirondelle: {
+      nom: "Épave de l'Hirondelle",
+      categorie: "epave",
+      etape: "T1",
+      cadre: [
+        -110,
+        -125,
+        220,
+        187.5
+      ],
+      images: 1,
+      fichiers: [
+        "epave/hirondelle_1.svg"
+      ]
+    },
+    aster_debris: {
+      nom: "Aster · débris",
+      categorie: "coins",
+      etape: "T2",
+      cadre: [
+        -95,
+        -155,
+        190,
+        210
+      ],
+      images: 1,
+      fichiers: [
+        "coins/aster/aster_debris_1.svg"
+      ],
+      maitre: "Aster",
+      etat: "débris"
+    },
+    aster_abri: {
+      nom: "Aster · abri",
+      categorie: "coins",
+      etape: "I",
+      cadre: [
+        -95,
+        -155,
+        190,
+        210
+      ],
+      images: 1,
+      fichiers: [
+        "coins/aster/aster_abri_1.svg"
+      ],
+      maitre: "Aster",
+      etat: "abri"
+    },
+    aster_cabanon: {
+      nom: "Aster · cabanon",
+      categorie: "coins",
+      etape: "II",
+      cadre: [
+        -95,
+        -155,
+        190,
+        210
+      ],
+      images: 2,
+      ms: 500,
+      fichiers: [
+        "coins/aster/aster_cabanon_1.svg",
+        "coins/aster/aster_cabanon_2.svg"
+      ],
+      maitre: "Aster",
+      etat: "cabanon",
+      suite: "jusqu'aux maisons du Foyer (annexes) : l'intégration choisira le moment"
+    },
+    cannelle_debris: {
+      nom: "Cannelle · cuisine de l'épave",
+      categorie: "coins",
+      etape: "T3",
+      cadre: [
+        -95,
+        -155,
+        190,
+        210
+      ],
+      images: 3,
+      ms: 111,
+      fichiers: [
+        "coins/cannelle/cannelle_debris_1.svg",
+        "coins/cannelle/cannelle_debris_2.svg",
+        "coins/cannelle/cannelle_debris_3.svg"
+      ],
+      maitre: "Cannelle",
+      etat: "débris",
+      suite: "jusqu'à l'Abri (Foyer II, acte II)"
+    },
+    rivet_debris: {
+      nom: "Rivet · débris",
+      categorie: "coins",
+      etape: "T4",
+      cadre: [
+        -95,
+        -155,
+        190,
+        210
+      ],
+      images: 1,
+      fichiers: [
+        "coins/rivet/rivet_debris_1.svg"
+      ],
+      maitre: "Rivet",
+      etat: "débris"
+    },
+    rivet_abri: {
+      nom: "Rivet · abri",
+      categorie: "coins",
+      etape: "I",
+      cadre: [
+        -95,
+        -155,
+        190,
+        210
+      ],
+      images: 1,
+      fichiers: [
+        "coins/rivet/rivet_abri_1.svg"
+      ],
+      maitre: "Rivet",
+      etat: "abri"
+    },
+    rivet_cabanon: {
+      nom: "Rivet · cabanon",
+      categorie: "coins",
+      etape: "II",
+      cadre: [
+        -95,
+        -155,
+        190,
+        210
+      ],
+      images: 1,
+      fichiers: [
+        "coins/rivet/rivet_cabanon_1.svg"
+      ],
+      maitre: "Rivet",
+      etat: "cabanon",
+      suite: "jusqu'aux maisons du Foyer (annexes) : l'intégration choisira le moment"
+    },
+    ondin_debris: {
+      nom: "Ondin · débris",
+      categorie: "coins",
+      etape: "T5",
+      cadre: [
+        -95,
+        -155,
+        190,
+        210
+      ],
+      images: 2,
+      ms: 600,
+      fichiers: [
+        "coins/ondin/ondin_debris_1.svg",
+        "coins/ondin/ondin_debris_2.svg"
+      ],
+      maitre: "Ondin",
+      etat: "débris"
+    },
+    ondin_abri: {
+      nom: "Ondin · abri",
+      categorie: "coins",
+      etape: "I",
+      cadre: [
+        -95,
+        -155,
+        190,
+        210
+      ],
+      images: 2,
+      ms: 600,
+      fichiers: [
+        "coins/ondin/ondin_abri_1.svg",
+        "coins/ondin/ondin_abri_2.svg"
+      ],
+      maitre: "Ondin",
+      etat: "abri"
+    },
+    ondin_cabanon: {
+      nom: "Ondin · cabanon",
+      categorie: "coins",
+      etape: "II",
+      cadre: [
+        -95,
+        -155,
+        190,
+        210
+      ],
+      images: 2,
+      ms: 600,
+      fichiers: [
+        "coins/ondin/ondin_cabanon_1.svg",
+        "coins/ondin/ondin_cabanon_2.svg"
+      ],
+      maitre: "Ondin",
+      etat: "cabanon",
+      suite: "jusqu'aux maisons du Foyer (annexes) : l'intégration choisira le moment"
+    },
+    sylve_debris: {
+      nom: "Sylve · débris",
+      categorie: "coins",
+      etape: "I",
+      cadre: [
+        -95,
+        -155,
+        190,
+        210
+      ],
+      images: 1,
+      fichiers: [
+        "coins/sylve/sylve_debris_1.svg"
+      ],
+      maitre: "Sylve",
+      etat: "débris"
+    },
+    sylve_abri: {
+      nom: "Sylve · abri",
+      categorie: "coins",
+      etape: "I",
+      cadre: [
+        -95,
+        -155,
+        190,
+        210
+      ],
+      images: 1,
+      fichiers: [
+        "coins/sylve/sylve_abri_1.svg"
+      ],
+      maitre: "Sylve",
+      etat: "abri"
+    },
+    sylve_cabanon: {
+      nom: "Sylve · cabanon",
+      categorie: "coins",
+      etape: "II",
+      cadre: [
+        -95,
+        -155,
+        190,
+        210
+      ],
+      images: 1,
+      fichiers: [
+        "coins/sylve/sylve_cabanon_1.svg"
+      ],
+      maitre: "Sylve",
+      etat: "cabanon",
+      suite: "jusqu'aux maisons du Foyer (annexes) : l'intégration choisira le moment"
+    },
+    galet_debris: {
+      nom: "Galet · muret de la Fissure",
+      categorie: "coins",
+      etape: "II",
+      cadre: [
+        -95,
+        -155,
+        190,
+        210
+      ],
+      images: 1,
+      fichiers: [
+        "coins/galet/galet_debris_1.svg"
+      ],
+      maitre: "Galet",
+      etat: "débris",
+      suite: "jusqu'à la Carrière I (acte II)"
+    },
+    melisse_debris: {
+      nom: "Mélisse · débris",
+      categorie: "coins",
+      etape: "III",
+      cadre: [
+        -95,
+        -155,
+        190,
+        210
+      ],
+      images: 1,
+      fichiers: [
+        "coins/melisse/melisse_debris_1.svg"
+      ],
+      maitre: "Mélisse",
+      etat: "débris"
+    },
+    melisse_abri: {
+      nom: "Mélisse · abri",
+      categorie: "coins",
+      etape: "III",
+      cadre: [
+        -95,
+        -155,
+        190,
+        210
+      ],
+      images: 1,
+      fichiers: [
+        "coins/melisse/melisse_abri_1.svg"
+      ],
+      maitre: "Mélisse",
+      etat: "abri"
+    },
+    melisse_cabanon: {
+      nom: "Mélisse · cabanon",
+      categorie: "coins",
+      etape: "III",
+      cadre: [
+        -95,
+        -155,
+        190,
+        210
+      ],
+      images: 1,
+      fichiers: [
+        "coins/melisse/melisse_cabanon_1.svg"
+      ],
+      maitre: "Mélisse",
+      etat: "cabanon",
+      suite: "jusqu'aux maisons du Foyer (annexes) : l'intégration choisira le moment"
+    },
+    tente: {
+      nom: "Tente de voyageur",
+      categorie: "voyageurs",
+      etape: "IV",
+      cadre: [
+        -95,
+        -155,
+        190,
+        210
+      ],
+      images: 1,
+      fichiers: [
+        "voyageurs/tente_1.svg"
+      ]
+    },
+    hamac: {
+      nom: "Hamac",
+      categorie: "voyageurs",
+      etape: "IV",
+      cadre: [
+        -95,
+        -155,
+        190,
+        210
+      ],
+      images: 2,
+      ms: 900,
+      fichiers: [
+        "voyageurs/hamac_1.svg",
+        "voyageurs/hamac_2.svg"
+      ]
+    },
+    etendoir: {
+      nom: "Étendoir",
+      categorie: "objets",
+      etape: "T3",
+      cadre: [
+        -50,
+        -115,
+        100,
+        140
+      ],
+      images: 2,
+      ms: 600,
+      fichiers: [
+        "objets/etendoir_1.svg",
+        "objets/etendoir_2.svg"
+      ]
+    },
+    tonneau: {
+      nom: "Tonneau d'eau de pluie",
+      categorie: "objets",
+      etape: "T5",
+      cadre: [
+        -50,
+        -115,
+        100,
+        140
+      ],
+      images: 1,
+      fichiers: [
+        "objets/tonneau_1.svg"
+      ]
+    },
+    rondins: {
+      nom: "Rondins",
+      categorie: "objets",
+      etape: "T3",
+      cadre: [
+        -50,
+        -115,
+        100,
+        140
+      ],
+      images: 1,
+      fichiers: [
+        "objets/rondins_1.svg"
+      ]
+    },
+    filet: {
+      nom: "Filet tendu",
+      categorie: "objets",
+      etape: "T2",
+      cadre: [
+        -50,
+        -115,
+        100,
+        140
+      ],
+      images: 1,
+      fichiers: [
+        "objets/filet_1.svg"
+      ]
+    },
+    paillasse: {
+      nom: "Paillasse",
+      categorie: "objets",
+      etape: "T5",
+      cadre: [
+        -50,
+        -115,
+        100,
+        140
+      ],
+      images: 1,
+      fichiers: [
+        "objets/paillasse_1.svg"
+      ]
+    },
+    torche: {
+      nom: "Torche de bois flotté",
+      categorie: "objets",
+      etape: "I",
+      cadre: [
+        -50,
+        -115,
+        100,
+        140
+      ],
+      images: 3,
+      ms: 111,
+      fichiers: [
+        "objets/torche_1.svg",
+        "objets/torche_2.svg",
+        "objets/torche_3.svg"
+      ]
+    },
+    sos: {
+      nom: "SOS en galets",
+      categorie: "objets",
+      etape: "T2",
+      cadre: [
+        -50,
+        -115,
+        100,
+        140
+      ],
+      images: 1,
+      fichiers: [
+        "objets/sos_1.svg"
+      ]
+    },
+    caisses: {
+      nom: "Pile de caisses",
+      categorie: "objets",
+      etape: "T2",
+      cadre: [
+        -50,
+        -115,
+        100,
+        140
+      ],
+      images: 1,
+      fichiers: [
+        "objets/caisses_1.svg"
+      ]
+    },
+    etabli: {
+      nom: "Établi de Rivet",
+      categorie: "objets",
+      etape: "T4",
+      cadre: [
+        -50,
+        -115,
+        100,
+        140
+      ],
+      images: 1,
+      fichiers: [
+        "objets/etabli_1.svg"
+      ]
+    },
+    bol: {
+      nom: "Bol de soupe « pour la Dame »",
+      categorie: "objets",
+      etape: "III",
+      cadre: [
+        -50,
+        -115,
+        100,
+        140
+      ],
+      images: 3,
+      ms: 400,
+      fichiers: [
+        "objets/bol_1.svg",
+        "objets/bol_2.svg",
+        "objets/bol_3.svg"
+      ]
+    }
+  }
+};
+
+// bibliotheque/svg/decor/ruines/ruines.json
+var ruines_default = {
+  _lisez_moi: [
+    "Ce qui reste des Anciens, en iso au trait de la troupe, à l'échelle du jeu × 1,25 (case de 80 × 40). Ancre (0, 0) au centre de l'emprise : ruines sur 2 × 2 cases (BUILDING_BOX), petits objets sur une case (PROP_BOX), phare sur son îlot (cadre propre). Quand un dessin dépasse un peu, le cadre est élargi, l'ancre ne bouge pas : prendre le cadre noté ici.",
+    "Le Cercle de menhirs existe déjà (lib/decor/lieux/menhirs_*). Les runes reprennent sa spirale et sa lueur turquoise.",
+    "etape : quand l'objet apparaît (proposition tirée de HISTOIRE.md)."
+  ],
+  etapes: {
+    III: "acte III — Mélisse trouve les premières ruines, Galet lit leurs runes (« Nous aussi, nous étions des naufragés »)",
+    VI: "acte VI — l'Îlot aux Mouettes et le phare éteint ; la baguette d'Ondin trouve la clé du phare parmi les ruines"
+  },
+  objets: {
+    ruine_maison: {
+      nom: "Maison en ruine des Anciens",
+      etape: "III",
+      cadre: [
+        -95,
+        -155,
+        190,
+        210
+      ],
+      images: 1,
+      fichiers: [
+        "ruine_maison_1.svg"
+      ]
+    },
+    colonnade: {
+      nom: "Colonnade des Anciens",
+      etape: "III",
+      cadre: [
+        -95,
+        -155,
+        190,
+        210
+      ],
+      images: 1,
+      fichiers: [
+        "colonnade_1.svg"
+      ]
+    },
+    pierre_runes: {
+      nom: "Pierre à runes (jour, nuit)",
+      etape: "III",
+      cadre: [
+        -50,
+        -115,
+        100,
+        140
+      ],
+      images: 2,
+      ms: 1200,
+      note: "image 1 : le jour (runes gravées) ; image 2 : à la nuit tombée (elles luisent) — à alterner selon l'heure plutôt qu'en boucle",
+      fichiers: [
+        "pierre_runes_1.svg",
+        "pierre_runes_2.svg"
+      ]
+    },
+    colonne_brisee: {
+      nom: "Colonne brisée",
+      etape: "III",
+      cadre: [
+        -50,
+        -115,
+        100,
+        140
+      ],
+      images: 1,
+      fichiers: [
+        "colonne_brisee_1.svg"
+      ]
+    },
+    cle_du_phare: {
+      nom: "La clé du phare sous sa pierre",
+      etape: "VI",
+      cadre: [
+        -50,
+        -115,
+        100,
+        140
+      ],
+      images: 2,
+      ms: 600,
+      note: "« J'ai laissé la clé du phare sous une pierre » (bouteille d'Héliane) ; image 2 : la clé brille",
+      fichiers: [
+        "cle_du_phare_1.svg",
+        "cle_du_phare_2.svg"
+      ]
+    },
+    phare_eteint: {
+      nom: "Le phare éteint des Anciens",
+      etape: "VI",
+      cadre: [
+        -90,
+        -220,
+        180,
+        260
+      ],
+      images: 2,
+      ms: 700,
+      note: "éteint jusqu'à l'acte VII : le Phare de Brume (Foyer VII, lib/batiments/) prend sa place ; les mouettes volent (2 images)",
+      fichiers: [
+        "phare_eteint_1.svg",
+        "phare_eteint_2.svg"
+      ]
+    }
+  }
+};
+
+// bibliotheque/svg/decor/embrume/embrume.json
+var embrume_default = {
+  _lisez_moi: [
+    "Le bâtiment embrumé (HISTOIRE.md § 6.15) : quand un égaré l'atteint, il ne produit plus jusqu'à sa réparation. Le jeu grise le bâtiment (filtre CSS, par exemple grayscale(.8)) et pose par-dessus le calque de brume de son emprise : brume au pied, voile, deux écharpes de brume en travers. Ancre (0, 0) au centre de l'emprise, comme les bâtiments (case de 80 × 40, échelle du jeu × 1,25).",
+    "embrume_<n>x<n> : 3 images en boucle (~400 ms) ; embrume_<n>x<n>_guerison : 3 images, une fois (~180 ms, la dernière ~600 ms), à la réparation ou au passage d'Anya, puis on retire le filtre ; embrume_nuage : 3 images en boucle (~500 ms), le petit nuage grognon à poser au-dessus du bâtiment comme une bulle de production (ancre : son pied) ; reparer_icone : 32 × 32, pour le bouton « Réparer » de la fiche."
+  ],
+  calques: {
+    "1x1": {
+      nom: "Brume du bâtiment embrumé, emprise 1 × 1",
+      cadre: [
+        -54,
+        -88,
+        108,
+        120
+      ],
+      ms_par_image: 400,
+      fichiers: [
+        "embrume_1x1_1.svg",
+        "embrume_1x1_2.svg",
+        "embrume_1x1_3.svg"
+      ]
+    },
+    "1x1_guerison": {
+      nom: "Guérison du bâtiment embrumé, emprise 1 × 1",
+      cadre: [
+        -54,
+        -88,
+        108,
+        120
+      ],
+      ms_par_image: [
+        180,
+        180,
+        600
+      ],
+      fichiers: [
+        "embrume_1x1_guerison_1.svg",
+        "embrume_1x1_guerison_2.svg",
+        "embrume_1x1_guerison_3.svg"
+      ]
+    },
+    "2x2": {
+      nom: "Brume du bâtiment embrumé, emprise 2 × 2",
+      cadre: [
+        -94,
+        -128,
+        188,
+        180
+      ],
+      ms_par_image: 400,
+      fichiers: [
+        "embrume_2x2_1.svg",
+        "embrume_2x2_2.svg",
+        "embrume_2x2_3.svg"
+      ]
+    },
+    "2x2_guerison": {
+      nom: "Guérison du bâtiment embrumé, emprise 2 × 2",
+      cadre: [
+        -94,
+        -128,
+        188,
+        180
+      ],
+      ms_par_image: [
+        180,
+        180,
+        600
+      ],
+      fichiers: [
+        "embrume_2x2_guerison_1.svg",
+        "embrume_2x2_guerison_2.svg",
+        "embrume_2x2_guerison_3.svg"
+      ]
+    },
+    "3x3": {
+      nom: "Brume du bâtiment embrumé, emprise 3 × 3",
+      cadre: [
+        -134,
+        -168,
+        268,
+        240
+      ],
+      ms_par_image: 400,
+      fichiers: [
+        "embrume_3x3_1.svg",
+        "embrume_3x3_2.svg",
+        "embrume_3x3_3.svg"
+      ]
+    },
+    "3x3_guerison": {
+      nom: "Guérison du bâtiment embrumé, emprise 3 × 3",
+      cadre: [
+        -134,
+        -168,
+        268,
+        240
+      ],
+      ms_par_image: [
+        180,
+        180,
+        600
+      ],
+      fichiers: [
+        "embrume_3x3_guerison_1.svg",
+        "embrume_3x3_guerison_2.svg",
+        "embrume_3x3_guerison_3.svg"
+      ]
+    },
+    nuage: {
+      nom: "Petit nuage du bâtiment embrumé",
+      cadre: [
+        -24,
+        -34,
+        48,
+        40
+      ],
+      ms_par_image: 500,
+      fichiers: [
+        "embrume_nuage_1.svg",
+        "embrume_nuage_2.svg",
+        "embrume_nuage_3.svg"
+      ]
+    },
+    reparer: {
+      nom: "Icône « Réparer »",
+      cadre: [
+        0,
+        0,
+        32,
+        32
+      ],
+      fichiers: [
+        "reparer_icone.svg"
+      ]
+    }
+  }
+};
+
+// bibliotheque/svg/decor/camp/poules/poules.json
+var poules_default = {
+  _lisez_moi: [
+    "Étape 8 du tutoriel : la cage aux poules de la cuisine du navire, coincée sous les rochers de la Grève (2 images en boucle, ~300 ms : elle remue, les poules s'agitent) ; touchée, elle s'ouvre (cage_poules_ouverte) et les trois poules sortent (poule-rousse, poule-blanche, poule-noire des bêtes orientées).",
+    "L'œuf : posé au sol près de la poule qui l'a pondu, et son icône 32 × 32 (bulle de production, fiche de la bête). Ancre (0, 0) au centre de la case, échelle du jeu × 1,25."
+  ],
+  poules: {
+    cage_coincee: {
+      nom: "Cage aux poules du navire, coincée sous les rochers",
+      cadre: [
+        -50,
+        -50,
+        100,
+        72
+      ],
+      ms_par_image: 300,
+      fichiers: [
+        "cage_poules_coincee_1.svg",
+        "cage_poules_coincee_2.svg"
+      ]
+    },
+    cage_ouverte: {
+      nom: "Cage aux poules du navire, ouverte",
+      cadre: [
+        -50,
+        -50,
+        100,
+        72
+      ],
+      fichiers: [
+        "cage_poules_ouverte.svg"
+      ]
+    },
+    oeuf: {
+      nom: "Œuf",
+      cadre: [
+        -10,
+        -14,
+        20,
+        17.5
+      ],
+      fichiers: [
+        "oeuf.svg"
+      ]
+    },
+    oeuf_icone: {
+      nom: "Œuf (icône)",
+      cadre: [
+        0,
+        0,
+        32,
+        32
+      ],
+      fichiers: [
+        "oeuf_icone.svg"
+      ]
+    }
+  }
+};
+
+// bibliotheque/svg/decor/signes/signes.json
+var signes_default = {
+  _lisez_moi: [
+    "Les signes d'Anya qui erre (HISTOIRE.md § 6.14, § 17) : là où elle passe, les fleurs s'ouvrent (4 images, une fois : ~600, 300, 300 ms, la dernière reste) et les lucioles se rassemblent (4 images en boucle, ~220 ms). Les bêtes tournées du même côté n'ont pas de dessin : le jeu tourne les bêtes déjà là. Ancre (0, 0) au centre de la case, échelle du jeu × 1,25."
+  ],
+  signes: {
+    fleurs: {
+      nom: "Signe d'Anya : des fleurs qui s'ouvrent",
+      cadre: [
+        -30,
+        -40,
+        60,
+        50.5
+      ],
+      ms_par_image: [
+        600,
+        300,
+        300,
+        1500
+      ],
+      fichiers: [
+        "fleurs_ouverture_1.svg",
+        "fleurs_ouverture_2.svg",
+        "fleurs_ouverture_3.svg",
+        "fleurs_ouverture_4.svg"
+      ]
+    },
+    lucioles: {
+      nom: "Signe d'Anya : des lucioles rassemblées",
+      cadre: [
+        -30,
+        -52,
+        60,
+        58
+      ],
+      ms_par_image: 220,
+      fichiers: [
+        "lucioles_rassemblees_1.svg",
+        "lucioles_rassemblees_2.svg",
+        "lucioles_rassemblees_3.svg",
+        "lucioles_rassemblees_4.svg"
+      ]
+    }
+  }
+};
+
+// bibliotheque/svg/decor/souvenir/souvenir.json
+var souvenir_default = {
+  _lisez_moi: [
+    "Le souvenir retrouvé (HISTOIRE.md § 14) : un éclat doré part du Grimoire vers le naufragé ; à l'arrivée, une gerbe de lumière l'enveloppe ; son sceau s'allume au-dessus de sa tête ; il se lève, outil en main.",
+    "eclat : 4 images en boucle (~90 ms), ancre au centre de l'éclat ; le jeu le fait glisser du Grimoire jusqu'à la poitrine du naufragé.",
+    "arrivee : 5 images, une fois (~120, 160, 200, 220, 260 ms), ancre aux pieds du naufragé, posée par-dessus lui ; le jeu remplace le naufragé (pose endormi) par le maître (pose « action », l'outil en main) sous l'éclair de l'image 1.",
+    "sceaux : un par chapitre, ancre au centre ; éteint (1 image), allumé (2 images en boucle, ~500 ms), posé au-dessus de la tête du maître (centre ~8 au-dessus du haut de sa tête) ; cadre : celui de l'allumé, cadre_eteint : celui de l'éteint. Sigles de src/book/grimoire.js."
+  ],
+  souvenir: {
+    eclat: {
+      nom: "L'éclat doré du souvenir (du Grimoire au naufragé)",
+      cadre: [
+        -14,
+        -14,
+        28,
+        28
+      ],
+      ms_par_image: 90,
+      fichiers: [
+        "eclat_1.svg",
+        "eclat_2.svg",
+        "eclat_3.svg",
+        "eclat_4.svg"
+      ]
+    },
+    arrivee: {
+      nom: "La gerbe de lumière sur le naufragé",
+      cadre: [
+        -24.5,
+        -78,
+        49.5,
+        86.5
+      ],
+      ms_par_image: [
+        120,
+        160,
+        200,
+        220,
+        260
+      ],
+      fichiers: [
+        "arrivee_1.svg",
+        "arrivee_2.svg",
+        "arrivee_3.svg",
+        "arrivee_4.svg",
+        "arrivee_5.svg"
+      ]
+    },
+    sceau_mercure: {
+      nom: "Sceau de Mercure ☿ (Aster)",
+      cadre: [
+        -15.5,
+        -15.5,
+        31,
+        31
+      ],
+      cadre_eteint: [
+        -15,
+        -15,
+        30,
+        30
+      ],
+      ms_par_image: 500,
+      fichiers: {
+        eteint: [
+          "sceau_mercure_eteint.svg"
+        ],
+        allume: [
+          "sceau_mercure_allume_1.svg",
+          "sceau_mercure_allume_2.svg"
+        ]
+      }
+    },
+    sceau_saturne: {
+      nom: "Sceau de Saturne ♄ (Galet)",
+      cadre: [
+        -15.5,
+        -15.5,
+        31,
+        31
+      ],
+      cadre_eteint: [
+        -15,
+        -15,
+        30,
+        30
+      ],
+      ms_par_image: 500,
+      fichiers: {
+        eteint: [
+          "sceau_saturne_eteint.svg"
+        ],
+        allume: [
+          "sceau_saturne_allume_1.svg",
+          "sceau_saturne_allume_2.svg"
+        ]
+      }
+    },
+    sceau_lune: {
+      nom: "Sceau de Lune ☾ (Ondin)",
+      cadre: [
+        -15.5,
+        -15.5,
+        31,
+        31
+      ],
+      cadre_eteint: [
+        -15,
+        -15,
+        30,
+        30
+      ],
+      ms_par_image: 500,
+      fichiers: {
+        eteint: [
+          "sceau_lune_eteint.svg"
+        ],
+        allume: [
+          "sceau_lune_allume_1.svg",
+          "sceau_lune_allume_2.svg"
+        ]
+      }
+    },
+    sceau_venus: {
+      nom: "Sceau de Vénus ♀ (Sylve et Mélisse)",
+      cadre: [
+        -15.5,
+        -15.5,
+        31,
+        31
+      ],
+      cadre_eteint: [
+        -15,
+        -15,
+        30,
+        30
+      ],
+      ms_par_image: 500,
+      fichiers: {
+        eteint: [
+          "sceau_venus_eteint.svg"
+        ],
+        allume: [
+          "sceau_venus_allume_1.svg",
+          "sceau_venus_allume_2.svg"
+        ]
+      }
+    },
+    sceau_mars: {
+      nom: "Sceau de Mars ♂ (Cannelle)",
+      cadre: [
+        -15.5,
+        -15.5,
+        31,
+        31
+      ],
+      cadre_eteint: [
+        -15,
+        -15,
+        30,
+        30
+      ],
+      ms_par_image: 500,
+      fichiers: {
+        eteint: [
+          "sceau_mars_eteint.svg"
+        ],
+        allume: [
+          "sceau_mars_allume_1.svg",
+          "sceau_mars_allume_2.svg"
+        ]
+      }
+    },
+    sceau_jupiter: {
+      nom: "Sceau de Jupiter ♃ (Rivet)",
+      cadre: [
+        -15.5,
+        -15.5,
+        31,
+        31
+      ],
+      cadre_eteint: [
+        -15,
+        -15,
+        30,
+        30
+      ],
+      ms_par_image: 500,
+      fichiers: {
+        eteint: [
+          "sceau_jupiter_eteint.svg"
+        ],
+        allume: [
+          "sceau_jupiter_allume_1.svg",
+          "sceau_jupiter_allume_2.svg"
+        ]
+      }
+    },
+    sceau_soleil: {
+      nom: "Sceau de Soleil ☉ (Brume)",
+      cadre: [
+        -15.5,
+        -15.5,
+        31,
+        31
+      ],
+      cadre_eteint: [
+        -15,
+        -15,
+        30,
+        30
+      ],
+      ms_par_image: 500,
+      fichiers: {
+        eteint: [
+          "sceau_soleil_eteint.svg"
+        ],
+        allume: [
+          "sceau_soleil_allume_1.svg",
+          "sceau_soleil_allume_2.svg"
+        ]
+      }
+    }
+  }
+};
+
+// bibliotheque/svg/animaux/mer/crabe/crabe.json
+var crabe_default = {
+  _lisez_moi: [
+    "Le crabe de la Grève (étape 8) : de face, il marche de côté vers la droite (le miroir pour la gauche). Poses des bêtes de profil : marche1, marche2 (~260 ms), repos, clignement, joie (touché : pinces en l'air, un cœur). Ancre (0, 0) au sol sous le crabe.",
+    "Noms rangés à l'assemblage (README, catalogue.json) : <sujet>_<vue>_<pose>_<n>.svg, vues face, avant (l'ancien « trois_quarts »), dos, profil ; les chemins ci-dessous suivent ces noms."
+  ],
+  betes: {
+    crabe: {
+      nom: "Crabe de la Grève",
+      cadre: [
+        -14,
+        -22,
+        28,
+        24.5
+      ],
+      fichiers: [
+        "crabe_profil_marche_1.svg",
+        "crabe_profil_marche_2.svg",
+        "crabe_profil_repos.svg",
+        "crabe_profil_clignement.svg",
+        "crabe_profil_joie.svg"
+      ]
+    }
+  }
+};
 
 // atelier/generateur_decor.mjs
 var r22 = /* @__PURE__ */ __name((n) => Math.round(n * 100) / 100, "r2");
@@ -5684,12 +9830,70 @@ function decor(categorie, nom, n = 1) {
   return { svg: svgOf(it.frame, it.frames[n - 1]), cadre, ms_par_image: vitesse(it) };
 }
 __name(decor, "decor");
+var K = 1.25;
+var isoSvg = /* @__PURE__ */ __name((cadre, body) => `<svg xmlns="http://www.w3.org/2000/svg" width="${r22(cadre[2])}" height="${r22(cadre[3])}" viewBox="${cadre.join(" ")}"><g transform="scale(${K})">${body}</g></svg>`, "isoSvg");
+var piece = /* @__PURE__ */ __name((table, index, quoi) => (objet, n = 1) => {
+  const a = table[objet], e = index.objets[objet];
+  if (!a || !e) throw new Error(`${quoi} inconnu : ${objet} (${Object.keys(table).join(", ")})`);
+  if (!(n >= 1 && n <= a.n)) throw new Error(`${objet} : image ${n} (de 1 à ${a.n})`);
+  return { svg: isoSvg(e.cadre, a.draw(n - 1)), cadre: e.cadre, ms_par_image: a.n > 1 ? e.ms ?? null : null };
+}, "piece");
+var camp = piece(CAMP, camp_default, "objet du camp");
+var ruine = piece(RUINES, ruines_default, "ruine");
+var CAMP_ET_RUINES = { camp: camp_default.objets, ruines: ruines_default.objets };
+var meta = /* @__PURE__ */ new Map();
+var lire = /* @__PURE__ */ __name((dir, json) => {
+  const walk = /* @__PURE__ */ __name((v) => {
+    if (!v || typeof v !== "object") return;
+    if (v.cadre && v.fichiers) {
+      const f = v.fichiers, ms = v.ms_par_image ?? null;
+      if (Array.isArray(f)) f.forEach((x) => meta.set(`${dir}/${x}`, { cadre: v.cadre, ms }));
+      else for (const [etat, xs] of Object.entries(f)) xs.forEach((x) => meta.set(`${dir}/${x}`, { cadre: etat === "eteint" && v.cadre_eteint ? v.cadre_eteint : v.cadre, ms: etat === "eteint" ? null : ms }));
+    } else Object.values(v).forEach(walk);
+  }, "walk");
+  walk(json);
+}, "lire");
+lire("decor/embrume", embrume_default);
+lire("decor/camp/poules", poules_default);
+lire("decor/signes", signes_default);
+lire("decor/souvenir", souvenir_default);
+lire("animaux/mer/crabe", crabe_default);
+var plat = /* @__PURE__ */ __name((cadre, body) => `<svg xmlns="http://www.w3.org/2000/svg" width="${r22(cadre[2])}" height="${r22(cadre[3])}" viewBox="${cadre.join(" ")}">${body}</svg>`, "plat");
+var fichierElement = /* @__PURE__ */ __name((g, n) => `${g.dir}/${g.images.length > 1 ? `${g.nom}_${n}` : g.nom}.svg`, "fichierElement");
+var ELEMENTS = import_lot_m_liste.default.GROUPES.map((g) => g.nom);
+function element(nom, n = 1) {
+  const g = import_lot_m_liste.default.GROUPES.find((x) => x.nom === nom);
+  if (!g) throw new Error(`élément inconnu : ${nom} (${ELEMENTS.join(", ")})`);
+  if (!(n >= 1 && n <= g.images.length)) throw new Error(`${nom} : image ${n} (de 1 à ${g.images.length})`);
+  const m = meta.get(fichierElement(g, n));
+  return { svg: plat(m.cadre, g.images[n - 1]()), cadre: m.cadre, ms_par_image: g.images.length > 1 ? m.ms : null };
+}
+__name(element, "element");
+var fichierCrabe = /* @__PURE__ */ __name((p) => import_noms_betes.default.nomBete(`${import_lot_m_liste.default.CRABE.dir}/crabe_${p}.svg`), "fichierCrabe");
+function crabe(pose) {
+  if (!import_lot_m_liste.default.CRABE.poses.includes(pose)) throw new Error(`crabe : pose ${pose} (${import_lot_m_liste.default.CRABE.poses.join(", ")})`);
+  const m = meta.get(fichierCrabe(pose));
+  return { svg: plat(m.cadre, import_lot_m_liste.default.CRABE.dessin(pose)), cadre: m.cadre, ms_par_image: /\d$/.test(pose) ? import_noms_betes.default.vitesseBete("animaux/mer/crabe", "marche") : null };
+}
+__name(crabe, "crabe");
 function liste() {
-  return tout().flatMap((it) => it.frames.map((_, k) => ({ fichier: fichier(it, k + 1), fonction: "decor", args: [it.cat, it.base, k + 1] })));
+  return [
+    ...tout().flatMap((it) => it.frames.map((_, k) => ({ fichier: fichier(it, k + 1), fonction: "decor", args: [it.cat, it.base, k + 1] }))),
+    ...Object.entries(camp_default.objets).flatMap(([k, e]) => e.fichiers.map((f, i) => ({ fichier: `decor/camp/${f}`, fonction: "camp", args: [k, i + 1] }))),
+    ...Object.entries(ruines_default.objets).flatMap(([k, e]) => e.fichiers.map((f, i) => ({ fichier: `decor/ruines/${f}`, fonction: "ruine", args: [k, i + 1] }))),
+    ...import_lot_m_liste.default.GROUPES.flatMap((g) => g.images.map((_, i) => ({ fichier: fichierElement(g, i + 1), fonction: "element", args: [g.nom, i + 1] }))),
+    ...import_lot_m_liste.default.CRABE.poses.map((p) => ({ fichier: fichierCrabe(p), fonction: "crabe", args: [p] }))
+  ];
 }
 __name(liste, "liste");
 export {
+  CAMP_ET_RUINES,
+  ELEMENTS,
+  camp,
+  crabe,
   decor,
   decors,
-  liste
+  element,
+  liste,
+  ruine
 };
