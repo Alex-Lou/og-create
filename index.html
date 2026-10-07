@@ -30,6 +30,12 @@
       .splash__steps li { display: flex; justify-content: space-between; gap: 12px; color: #85705f; font-size: 13px; font-weight: 700; }
       .splash__steps li.is-done { color: #34241a; }
       .splash__steps li.is-done b { color: #3f8a4a; }
+      /* Le serveur tarde (is-slow), ou le jeu n'a pas pu démarrer (is-failed) : une ligne, et de quoi réessayer */
+      .splash__note, .splash__retry { display: none; }
+      .splash__note { margin: 4px 0 0; max-width: 260px; color: #85705f; font-size: 13px; font-weight: 700; }
+      .splash.is-slow:not(.is-failed) .splash__note--slow, .splash.is-failed .splash__note--failed { display: block; }
+      .splash.is-failed .splash__retry { display: inline-block; margin-top: 4px; padding: 10px 22px; border: 0; border-radius: 999px; background: #34241a; color: #fffcf5; font: 700 15px 'Nunito', ui-rounded, system-ui, sans-serif; cursor: pointer; }
+      .splash__retry:focus-visible { outline: 3px solid #5cc8f0; outline-offset: 2px; }
       @keyframes splash-float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-6px); } }
       @keyframes splash-flicker { 0%, 100% { transform: skewX(0deg) scaleY(1); } 30% { transform: skewX(-6deg) scaleY(1.05); } 60% { transform: skewX(5deg) scaleY(.97); } }
       @keyframes splash-blink { 0%, 96% { transform: scaleY(1); } 97% { transform: scaleY(.2); } }
@@ -38,6 +44,8 @@
         .splash__bar { background: rgba(251, 235, 192, .16); }
         .splash__steps li { color: rgba(251, 235, 192, .62); }
         .splash__steps li.is-done { color: #f6e6b8; }
+        .splash__note { color: rgba(251, 235, 192, .62); }
+        .splash.is-failed .splash__retry { background: #f6e6b8; color: #2c1f16; }
       }
       @media (prefers-reduced-motion: reduce) {
         .splash__wisp, .splash__flame, .splash__eyes ellipse { animation: none; }
@@ -63,7 +71,21 @@
         <li data-step="fonts"><span>L’encre sèche</span><b>…</b></li>
         <li data-step="carnet"><span>Ta partie revient</span><b>…</b></li>
       </ul>
+      <p class="splash__note splash__note--slow">Le serveur se réveille… ça peut prendre une minute.</p>
+      <p class="splash__note splash__note--failed">Le jeu n’arrive pas à démarrer (connexion ou serveur).</p>
+      <button id="splash-retry" type="button" class="splash__retry">Réessayer</button>
     </div>
+    <script>
+      // Le code du jeu n'est pas arrivé au bout de 30 s (connexion coupée, fichier introuvable) : l'écran propose de
+      // recharger la page plutôt que de rester figé (la partie qui ne revient pas : src/utils/splash.js)
+      (function () {
+        var splash = document.getElementById('splash');
+        document.getElementById('splash-retry').addEventListener('click', function () { location.reload(); });
+        setTimeout(function () {
+          if (splash.isConnected && !splash.querySelector('[data-step="code"].is-done')) splash.classList.add('is-failed');
+        }, 30000);
+      })();
+    </script>
     <div id="app"></div>
     <script type="module" src="/src/main.js"></script>
   </body>

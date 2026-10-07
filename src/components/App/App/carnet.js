@@ -27,6 +27,7 @@ export default {
   },
   methods: {
     // ----- Carnet de l'Infini (compte ou invité) : ce qu'il faut pour l'afficher, aucune recette -----
+    // Vrai si le serveur l'a rendu
     async loadPlayState() {
       // Un élément créé pendant le chargement peut manquer à la réponse : il est gardé
       const learned = new Map();
@@ -41,8 +42,10 @@ export default {
         });
         this.stateLoadedAt = Date.now();
         this.rememberCarnet();
+        return true;
       } catch (error) {
         console.error('Erreur lors du chargement du carnet:', error);
+        return false;
       } finally {
         if (this.learnedDuringLoad === learned) this.learnedDuringLoad = null;
       }
