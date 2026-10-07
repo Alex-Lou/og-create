@@ -1124,19 +1124,75 @@ const fonderie = {
     n: 6,
     fps: 6,
     draw: (T, f, n) => {
-      let out = T.shadow(0, 0, 0.42, 0.2) + T.box(-0.3, -0.24, 0.06, 0.12, 0, 12, OBSIDIAN);
-      const [fx, fy] = T.p(-0.12, -0.06, 12);
-      const k = f / n;
-      out += ell(fx, fy, 9, 4, '#3A1A12') + ell(fx, fy, 7, 3, `rgba(255,${f2(110 + 60 * Math.sin(k * TAU))},40,.95)`);
-      out += `<path d="M${fx - 4},${fy} Q${fx - 6},${fy - 10} ${fx},${fy - 16 - Math.sin(k * TAU) * 3} Q${fx + 6},${fy - 10} ${fx + 4},${fy} Z" fill="#F59A3C"/>`
-        + `<path d="M${fx - 2},${fy} Q${fx - 3},${fy - 6} ${fx},${fy - 10} Q${fx + 3},${fy - 6} ${fx + 2},${fy} Z" fill="#FFE08A"/>`;
-      // Hotte de pierre noire
-      out += T.box(-0.26, -0.22, 0.02, 0.06, 26, 30, OBSIDIAN) + post(T, -0.25, -0.2, 12, 26, OBSIDIAN, 0.02) + post(T, 0.01, 0.04, 12, 26, OBSIDIAN, 0.02);
-      // Enclume et éclats
-      const [ax, ay] = T.p(0.24, 0.2, 0);
-      out += T.box(0.18, 0.14, 0.3, 0.26, 0, 8, OBSIDIAN) + poly([[ax - 9, ay - 8], [ax + 9, ay - 9], [ax + 6, ay - 12], [ax - 6, ay - 12]], OBSIDIAN.top, EDGE);
-      return out + [[-0.36, 0.32], [-0.24, 0.38], [0.04, 0.38]].map(([du, dv], i) => { const [sx, sy] = T.p(du, dv, 0); return poly([[sx - 2, sy], [sx + 2, sy], [sx + (i - 1), sy - 7]], OBSIDIAN.left, EDGE) + ln([sx, sy - 1], [sx + (i - 1) * 0.6, sy - 5], 'rgba(185,166,232,.6)', 0.6); }).join('')
-        + (f % 3 === 0 ? dot(fx + 3, fy - 20, 0.9, '#FFC060') + dot(fx - 2, fy - 24, 0.8, '#FF9040') : '');
+      const k = f / n, flick = Math.sin(k * TAU);
+      const ROCK = { top: '#6E667A', left: '#4A4555', right: '#312D39' };
+      const lava = o => `rgba(255,${f2(118 + 52 * flick)},40,${o})`;
+      const [x, y] = T.p(0, 0, 0);
+      // le sol de basalte et ses fentes de lave
+      let out = ell(x, y + 1, 31, 13, '#6A6070', ` stroke="${OUT}" stroke-width="0.5"`) + ell(x - 4, y, 21, 8, '#7A7080')
+        + [[-14, 6, 1.2], [20, 5, 1], [-2, 10, 0.9], [26, -1, 0.8]].map(([dx, dy, r]) => ell(x + dx, y + dy, r * 1.6, r, '#544A5A')).join('');
+      for (const d of [`M${x - 26},${y + 3} l6,-2 l4,2 l5,-1`, `M${x + 8},${y + 9} l5,-3 l6,1`, `M${x + 17},${y - 5} l4,2 l6,-1.4`]) {
+        out += `<path d="${d}" stroke="${lava(0.25)}" stroke-width="2.8" fill="none" stroke-linecap="round" stroke-linejoin="round"/>`
+          + `<path d="${d}" stroke="${lava(0.95)}" stroke-width="0.9" fill="none" stroke-linecap="round" stroke-linejoin="round"/>`;
+      }
+      // le tas d'obsidienne brute, au fond à droite, ses reflets violets
+      const [ox, oy] = T.p(0.44, -0.2, 0);
+      out += ell(ox + 1, oy + 0.6, 10, 3.4, 'rgba(20,15,25,.35)')
+        + [[-6, 0, 5], [5, 0.6, 4.6], [0, -3.6, 5.4], [-2, 1.6, 4]].map(([dx, dy, r]) => poly([[ox + dx - r, oy + dy], [ox + dx - r * 0.5, oy + dy - r * 1.1], [ox + dx + r * 0.4, oy + dy - r * 1.3], [ox + dx + r, oy + dy - r * 0.3], [ox + dx + r * 0.7, oy + dy + r * 0.3]], '#2A2733', ` stroke="${OUT}" stroke-width="0.5" stroke-linejoin="round"`)
+          + ln([ox + dx - r * 0.4, oy + dy - r * 0.9], [ox + dx + r * 0.2, oy + dy - r * 1.1], 'rgba(190,160,255,.75)', 0.7)).join('')
+        + star(ox + 1, oy - 9, 1.8, '#E4D6FF', f % 3 === 1 ? 1 : 0.25);
+      // la cheminée de pierres noires, derrière le foyer, sa fumée et ses étincelles
+      const [cx, cy] = T.p(-0.2, -0.18, 6);
+      const cb = 10, ct = 6.4, ch = 25;
+      out += poly([[cx - cb, cy], [cx - ct, cy - ch], [cx + ct, cy - ch], [cx + cb, cy]], ROCK.left, ` stroke="${OUT}" stroke-width="0.7" stroke-linejoin="round"`)
+        + poly([[cx + 1.6, cy], [cx + 1, cy - ch], [cx + ct, cy - ch], [cx + cb, cy]], ROCK.right);
+      for (let r = 1; r < 5; r++) {
+        const yy = cy - r * (ch / 5), w = cb - (cb - ct) * (r / 5);
+        out += ln([cx - w, yy], [cx + w, yy], 'rgba(20,16,26,.7)', 0.6);
+        const off = r % 2 ? -w * 0.3 : w * 0.25;
+        out += ln([cx + off, yy], [cx + off, yy + ch / 5], 'rgba(20,16,26,.6)', 0.5);
+      }
+      out += ln([cx - cb + 1.4, cy - 1], [cx - ct + 1, cy - ch + 1], 'rgba(255,255,255,.14)', 1.2)
+        + ell(cx, cy - ch, ct + 1.6, 2.2, ROCK.top, ` stroke="${OUT}" stroke-width="0.6"`) + ell(cx, cy - ch, ct - 0.6, 1.2, '#1C1820')
+        + puff(cx + 1 + k * 3, cy - ch - 4 - k * 6, 2.6 + k * 2, 0.75 * (1 - k)) + puff(cx - 2 + ((k + 0.5) % 1) * 4, cy - ch - 4 - ((k + 0.5) % 1) * 6, 2.2 + ((k + 0.5) % 1) * 2, 0.6 * (1 - (k + 0.5) % 1))
+        + [[3, 0], [-2, 2], [1, 4]].map(([dx, o]) => { const t = ((f + o) % n) / n; return dot(cx + dx + t * 2, cy - ch - 2 - t * 12, 0.7, t < 0.5 ? '#FFD070' : '#FF8A3A'); }).join('');
+      // le soufflet de cuir, à gauche : il s'ouvre et se ferme, son bec dans le foyer
+      const [bx, by] = T.p(-0.46, 0.14, 0);
+      const open = 0.5 + 0.5 * Math.cos(k * TAU);
+      const hx = bx + 8, hy = by - 6, top = by - 9 - open * 4;
+      out += ell(bx, by + 0.4, 9, 2.4, 'rgba(20,15,25,.3)') + T.box(-0.5, 0.12, -0.42, 0.2, 0, 3, ROCK)
+        + ln([hx, hy], [hx + 6, hy + 0.6], DARK_IRON.right, 1.6)
+        + poly([[hx, hy], [bx - 8, top], [bx - 8, by - 4]], '#8A5A36', ` stroke="${OUT}" stroke-width="0.6" stroke-linejoin="round"`)
+        + [0.35, 0.65].map(t => ln([hx + (bx - 8 - hx) * t, hy + (top - hy) * t], [hx + (bx - 8 - hx) * t, hy + (by - 4 - hy) * t], 'rgba(60,35,20,.55)', 0.6)).join('')
+        + ln([hx, hy], [bx - 9, top], WOOD.right, 1.8) + ln([hx, hy], [bx - 9, by - 4], WOOD.right, 1.8)
+        + ln([bx - 9, top], [bx - 12, top - 1.6], WOOD.right, 1.4);
+      // le foyer rond de pierres noires, ses braises et ses flammes
+      const [fx, fy] = T.p(-0.12, -0.04, 0);
+      out += T.shadow(-0.12, -0.04, 0.24, 0.25)
+        + `<path d="M${fx - 13},${fy} L${fx - 13},${fy - 7} A13,5.6 0 0 1 ${fx + 13},${fy - 7} L${fx + 13},${fy} A13,5.6 0 0 1 ${fx - 13},${fy} Z" fill="${ROCK.left}" stroke="${OUT}" stroke-width="0.7"/>`
+        + `<path d="M${fx + 4},${fy + 5.3} L${fx + 4},${fy - 1.7} A13,5.6 0 0 0 ${fx + 13},${fy - 7} L${fx + 13},${fy} A13,5.6 0 0 1 ${fx + 4},${fy + 5.3} Z" fill="${ROCK.right}"/>`
+        + [[-9, -3.4], [-3, -1.6], [3, -2], [9, -3.6], [-6, 1.6], [6, 1.4]].map(([dx, dy]) => `<path d="M${fx + dx - 2.6},${fy + dy} q2.6,-2 5.2,0" stroke="rgba(20,16,26,.7)" stroke-width="0.6" fill="none"/>`).join('')
+        + ell(fx, fy - 7, 13, 5.6, ROCK.top, ` stroke="${OUT}" stroke-width="0.7"`)
+        + ell(fx, fy - 7, 10, 4, '#2A1410') + ell(fx, fy - 7.2, 8.4, 3.2, lava(1))
+        + [[-5, 0.6], [-1.4, -1.2], [2.6, 0.8], [5.4, -0.6], [0.4, 1.4]].map(([dx, dy], i) => dot(fx + dx, fy - 7 + dy, 1.3, i % 2 ? '#3A1A12' : '#FFE08A')).join('')
+        + `<path d="M${fx - 5},${fy - 7} Q${fx - 7},${fy - 15} ${fx - 1},${f2(fy - 21 - flick * 3)} Q${fx + 1},${fy - 15} ${fx + 2},${fy - 9} Q${fx + 4},${fy - 14} ${fx + 4},${f2(fy - 17 + flick * 2)} Q${fx + 8},${fy - 11} ${fx + 5},${fy - 7} Z" fill="#F59A3C" stroke="#C8521E" stroke-width="0.5"/>`
+        + `<path d="M${fx - 2.6},${fy - 7} Q${fx - 3.6},${fy - 12} ${fx - 0.6},${f2(fy - 15 - flick * 2)} Q${fx + 1.6},${fy - 11} ${fx + 2.6},${fy - 7} Z" fill="#FFE08A"/>`;
+      // l'enclume de fer sur son bloc de basalte, la lame qui rougit, le marteau posé contre
+      const [ax, ay] = T.p(0.3, 0.2, 7);
+      out += T.shadow(0.3, 0.2, 0.13, 0.22) + T.box(0.22, 0.12, 0.38, 0.28, 0, 7, ROCK)
+        + `<path d="M${ax - 7},${ay - 2} L${ax + 4},${ay - 2} Q${ax + 11},${ay - 2.4} ${ax + 12},${ay - 5} Q${ax + 7},${ay - 5.6} ${ax + 5},${ay - 6} L${ax - 7},${ay - 6} Z" fill="${DARK_IRON.left}" stroke="${OUT}" stroke-width="0.6" stroke-linejoin="round"/>`
+        + poly([[ax - 4, ay - 2], [ax + 2, ay - 2], [ax + 1, ay + 1], [ax - 3, ay + 1]], DARK_IRON.right, ` stroke="${OUT}" stroke-width="0.5"`)
+        + ln([ax - 6, ay - 5.6], [ax + 6, ay - 5.6], IRON.top, 0.8)
+        + `<path d="M${ax - 5},${ay - 6.6} Q${ax},${ay - 8.4} ${ax + 6},${ay - 7} Q${ax},${ay - 5.8} ${ax - 5},${ay - 6.6} Z" fill="${lava(1)}" stroke="#8A3412" stroke-width="0.4"/>`
+        + ell(ax, ay - 7, 6, 2, lava(0.25 + 0.2 * flick));
+      const [mx, my] = T.p(0.42, 0.18, 0);
+      out += ln([mx - 1, my], [mx + 4, my - 9], WOOD.right, 1.4) + poly([[mx + 1.6, my - 9.6], [mx + 6.4, my - 8], [mx + 6, my - 10.6], [mx + 2.4, my - 12]], DARK_IRON.left, ` stroke="${OUT}" stroke-width="0.5"`);
+      // le seau d'eau où l'on trempe les lames : il fume
+      out += bucket(T, -0.2, 0.4, 0, 6, 3.6, 4.6, { top: '#B98552', left: WOOD.left, right: WOOD.right }, 'seau');
+      const [sx, sy] = T.p(-0.2, 0.4, 6);
+      out += [0, 0.5].map(o => { const t = (k + o) % 1; return puff(sx - 1 + t * 3, sy - 3 - t * 9, 1.6 + t * 1.8, 0.7 * (1 - t)); }).join('');
+      // des éclats taillés, devant
+      return out + [[0.0, 0.46, 0], [0.12, 0.48, 1], [-0.42, 0.36, 2]].map(([du, dv, i]) => { const [ex, ey] = T.p(du, dv, 0); return ell(ex, ey + 0.4, 2.6, 0.8, 'rgba(20,15,25,.3)') + poly([[ex - 2, ey], [ex + 2, ey], [ex + (i - 1) * 0.8, ey - 6.4]], '#2A2733', ` stroke="${OUT}" stroke-width="0.5" stroke-linejoin="round"`) + ln([ex - 0.4, ey - 1], [ex + (i - 1) * 0.5, ey - 5], 'rgba(190,160,255,.7)', 0.6); }).join('');
     }
   }]
 };
