@@ -322,7 +322,9 @@ const depot = {
     }
   }]
 };
-// Taille de pierre : établi et maillet, un buste à moitié sorti de son bloc, poussière de taille ; lanterne la nuit
+// Taille de pierre : sur une aire de gravier semée d'éclats, l'établi, son maillet et ses ciseaux ; un buste à moitié
+// sorti de son bloc, la poussière de taille ; les blocs en attente et une chouette de pierre déjà finie ; la lanterne
+// au poteau la nuit
 const taille = {
   light: () => [-0.33, -0.3, 25, 14],
   layers: [{
@@ -330,23 +332,38 @@ const taille = {
     n: 6,
     fps: 4,
     draw: (T, f, n) => {
+      const [x, y] = T.p(0, 0, 0);
       const [bx, by] = T.p(0.18, -0.1, 9);
-      const dust = [0, 1, 2].map(k => {
-        const p = ((f + k * 2) % n) / n;
-        return puff(bx + 6 + k * 2 + p * 4, by - 10 - p * 8, 1.4 + p * 2.4, 0.55 * (1 - p));
-      }).join('');
-      return patch(T, 0.44, '#E6D8BC', '')
-        + T.shadow(0, 0, 0.34, 0.18)
-        + post(T, -0.33, -0.3, 0, 24) + ln(T.p(-0.33, -0.3, 24), T.p(-0.33, -0.22, 24), WOOD_DARK.right, 1.2)
-        + T.box(-0.37, -0.25, -0.29, -0.19, 17, 23, { top: '#5A606A', left: GLASS, right: '#E9C878' })
+      // l'aire de gravier clair et ses éclats
+      let out = ell(x, y + 1, 31, 12.6, '#E6D8BC', ` stroke="${OUT}" stroke-width="0.5"`) + ell(x - 4, y, 21, 7.6, '#EFE4CC')
+        + [[-20, 4], [14, 8], [22, 0], [-6, 10], [6, 3], [10, -3]].map(([dx, dy], i) => poly([[x + dx - 1.2, y + dy], [x + dx, y + dy - 1.2], [x + dx + 1.4, y + dy - 0.2]], i % 2 ? '#D6CEBF' : '#F2EEE6', ` stroke="${OUT}" stroke-width="0.3"`)).join('')
+        + T.shadow(0, 0, 0.34, 0.18);
+      // le poteau et sa lanterne, les blocs en attente
+      const [lx, ly] = T.p(-0.33, -0.23, 20.4);
+      out += post(T, -0.33, -0.3, 0, 24) + ln(T.p(-0.33, -0.3, 24), T.p(-0.33, -0.22, 24), WOOD_DARK.right, 1.2)
+        + ln(T.p(-0.33, -0.23, 24), [lx, ly - 1.6], '#3D3A36', 0.5)
+        + poly([[lx - 2.2, ly], [lx + 2.2, ly], [lx + 1.6, ly - 1.6], [lx - 1.6, ly - 1.6]], DARK_IRON.left, ` stroke="${OUT}" stroke-width="0.4"`)
+        + `<rect x="${f2(lx - 1.8)}" y="${f2(ly)}" width="3.6" height="4" rx="0.6" fill="#F6D27A" stroke="${OUT}" stroke-width="0.5"/>`
+        + ell(lx, ly + 2, 1, 1.2, '#FFF3C4')
+        + poly([[lx - 2.2, ly + 4], [lx + 2.2, ly + 4], [lx + 1.4, ly + 5.2], [lx - 1.4, ly + 5.2]], DARK_IRON.left, ` stroke="${OUT}" stroke-width="0.4"`)
         + T.box(-0.34, -0.36, -0.12, -0.18, 0, 7, STONE) + T.box(-0.3, -0.33, -0.18, -0.21, 7, 12, STONE)
-        // Établi, maillet et ciseau
-        + [[-0.3, 0.04], [0, 0.04], [-0.3, 0.22], [0, 0.22]].map(([a, b]) => post(T, a, b, 0, 10, WOOD_DARK, 0.018)).join('')
+        + ln(T.p(-0.34, -0.18, 3.5), T.p(-0.12, -0.18, 3.5), 'rgba(120,110,95,.4)', 0.5);
+      // la chouette de pierre finie, posée sur le bloc du haut
+      const [ox, oy] = T.p(-0.22, -0.25, 12);
+      out += `<g transform="translate(${f2(ox)} ${f2(oy)}) scale(.62) translate(${f2(-ox)} ${f2(-oy)})">` + ell(ox, oy - 4, 3.4, 4.2, '#EDE7DB', ` stroke="${OUT}" stroke-width="0.5"`)
+        + poly([[ox - 3, oy - 7], [ox - 2.2, oy - 9.6], [ox - 1, oy - 7.6]], '#EDE7DB', ` stroke="${OUT}" stroke-width="0.4" stroke-linejoin="round"`)
+        + poly([[ox + 1, oy - 7.6], [ox + 2.2, oy - 9.6], [ox + 3, oy - 7]], '#EDE7DB', ` stroke="${OUT}" stroke-width="0.4" stroke-linejoin="round"`)
+        + `<circle cx="${f2(ox - 1.2)}" cy="${f2(oy - 5.8)}" r="1.1" fill="none" stroke="#9B927F" stroke-width="0.5"/><circle cx="${f2(ox + 1.2)}" cy="${f2(oy - 5.8)}" r="1.1" fill="none" stroke="#9B927F" stroke-width="0.5"/>`
+        + poly([[ox - 0.5, oy - 5], [ox + 0.5, oy - 5], [ox, oy - 4]], '#B7AE9D') + `<path d="M${f2(ox - 2)},${f2(oy - 2.4)} q2,1.2 4,0" stroke="#B7AE9D" stroke-width="0.5" fill="none"/>` + '</g>';
+      // l'établi, son maillet, ses ciseaux rangés
+      out += [[-0.3, 0.04], [0, 0.04], [-0.3, 0.22], [0, 0.22]].map(([a, b]) => post(T, a, b, 0, 10, WOOD_DARK, 0.018)).join('')
+        + ln(T.p(-0.3, 0.22, 3), T.p(0, 0.22, 3), WOOD_DARK.right, 1)
         + T.box(-0.32, 0.02, 0.02, 0.24, 10, 12.5, WOOD)
         + ln(T.p(-0.2, 0.12, 13), T.p(-0.08, 0.16, 13), WOOD.right, 1.6) + T.box(-0.24, 0.09, -0.18, 0.15, 12.5, 16, WOOD_DARK)
-        + ln(T.p(-0.1, 0.06, 13), T.p(-0.02, 0.1, 13), IRON.right, 1)
-        // Buste sur son socle : encore pris dans le bloc en bas, épaules et tête déjà taillées
-        + T.box(0.08, -0.2, 0.28, 0, 0, 9, STONE)
+        + [-0.06, -0.02, 0.02].map((u, i) => ln(T.p(u - 0.04, 0.04 + i * 0.03, 12.8), T.p(u + 0.04, 0.08 + i * 0.03, 12.8), i % 2 ? IRON.left : IRON.right, 0.9) + dot(...T.p(u - 0.04, 0.04 + i * 0.03, 12.8), 0.7, WOOD.left)).join('');
+      // le buste sur son socle : encore pris dans le bloc en bas, épaules et tête déjà taillées
+      out += T.box(0.08, -0.2, 0.28, 0, 0, 9, STONE)
+        + [[0.1, 0, 3], [0.2, 0, 6.4], [0.28, -0.1, 4.4]].map(([u, v, z]) => { const [cx, cy] = T.p(u, v, z); return ln([cx - 1.4, cy - 1], [cx + 1, cy + 0.8], 'rgba(120,110,95,.5)', 0.5); }).join('')
         + T.box(0.11, -0.17, 0.25, -0.03, 9, 15, { top: '#EDE7DB', left: '#D6CEBF', right: '#B7AE9D' })
         + `<path d="M${f2(bx - 7)},${f2(by - 6)} C${f2(bx - 7)},${f2(by - 12)} ${f2(bx - 3)},${f2(by - 13)} ${f2(bx)},${f2(by - 13)} C${f2(bx + 3)},${f2(by - 13)} ${f2(bx + 7)},${f2(by - 12)} ${f2(bx + 7)},${f2(by - 6)} Z" fill="#F2EEE6" stroke="${OUT}" stroke-width="0.5"/>`
         + `<rect x="${f2(bx - 1.6)}" y="${f2(by - 16)}" width="3.2" height="4" fill="#E9E3D8"/>`
@@ -354,9 +371,12 @@ const taille = {
         + `<path d="M${f2(bx - 3.4)},${f2(by - 20.4)} q3.4,-5.6 6.8,0 q-1.2,-2 -3.4,-2.2 q-2.2,0.2 -3.4,2.2 Z" fill="#DCD5C8"/>`
         + `<path d="M${f2(bx + 0.6)},${f2(by - 19.6)} l1.2,2 l-1.2,0.3" stroke="#B9B0A0" stroke-width="0.5" fill="none"/>`
         + dot(bx - 1.2, by - 19.8, 0.35, '#9B927F') + dot(bx + 1.6, by - 19.8, 0.35, '#9B927F')
-        + ln([bx - 6, by - 7.4], [bx - 4, by - 9.6], 'rgba(155,146,127,.5)', 0.5) + ln([bx + 4.4, by - 9.6], [bx + 6, by - 7.6], 'rgba(155,146,127,.5)', 0.5)
-        + dust
+        + `<path d="M${f2(bx - 1.2)},${f2(by - 17.2)} q1.2,0.8 2.4,0" stroke="#B9B0A0" stroke-width="0.4" fill="none"/>`
+        + ln([bx - 6, by - 7.4], [bx - 4, by - 9.6], 'rgba(155,146,127,.5)', 0.5) + ln([bx + 4.4, by - 9.6], [bx + 6, by - 7.6], 'rgba(155,146,127,.5)', 0.5);
+      // la poussière de taille qui s'envole, les éclats au pied
+      out += [0, 1, 2].map(k => { const p = ((f + k * 2) % n) / n; return puff(bx + 6 + k * 2 + p * 4, by - 10 - p * 8, 1.4 + p * 2.4, 0.55 * (1 - p)); }).join('')
         + T.pebble(0.32, 0.18, 0.35, STONE) + T.pebble(0.2, 0.3, 0.3, STONE);
+      return out;
     }
   }]
 };
