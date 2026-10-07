@@ -3,6 +3,8 @@
 const path = require('path');
 const { unique, row, sheet, animated, write, shoot } = require('./planche');
 const { TILES, SPR, MOMENTS, WEATHERS, CLIMATES, SAISONS, ICONS, ICON_GROUPS } = require('./meteo');
+// les fichiers sortent du générateur de la météo : le jeu dessine les mêmes
+const G = require('./generateur_meteo.mjs');
 
 const LIB = path.join(__dirname, 'lib', 'meteo');
 const PNG = path.join(__dirname, 'planches');
@@ -14,7 +16,7 @@ const index = {
   _lisez_moi: 'Calques d\'écran : les tuiles se répètent sans couture (background-repeat) et leurs images bouclent ; « étirer » = à poser sur tout l\'écran (preserveAspectRatio none). Teintes des moments : en multiplication (mix-blend-mode: multiply) sur toute la scène. Soleil bas et plein soleil : en « screen ». Sol des saisons (sol/) : une case iso de 80 × 40, ancre au centre de la case, à poser sur les cases sous le reste ; les variantes a, b, c s\'alternent d\'une case à l\'autre. Couleurs et densités du jeu (sky.js, scene.js, climates.js).',
   tuiles: {}, sprites: {}, moments: {}, temps: {}, climats: {}, saisons: {}, icones: {}
 };
-const GROUP_OF_TILE = { pluie_jour: 'temps', pluie_nuit: 'temps', brume: 'temps', neige: 'climats', rafales: 'climats', brume_marais: 'climats', chaleur: 'climats', averse: 'climats', cendres: 'climats', etoiles: 'ciel', flocons: 'saisons', feuilles: 'saisons', petales: 'saisons', pollen: 'saisons' };
+const GROUP_OF_TILE = G.GROUPES_TUILES;
 const LABEL = {
   pluie_jour: 'Pluie (jour)', pluie_nuit: 'Pluie (nuit)', brume: 'Brume du matin', neige: 'Neige — les Cimes', rafales: 'Rafales — les Landes', brume_marais: 'Brume tiède — le Marais',
   chaleur: 'Ondes de chaleur — les Dunes', averse: 'Averse tropicale — la Jungle', cendres: 'Cendres et braises — le Volcan', etoiles: 'Étoiles dans la mer (nuit)',
@@ -28,7 +30,7 @@ const tileCells = [];
 for (const [id, t] of Object.entries(TILES)) {
   const g = GROUP_OF_TILE[id];
   const frames = Array.from({ length: t.n }, (_, k) => t.draw(k));
-  const files = frames.map((body, k) => put(`${g}/${id}_${k + 1}.svg`, svgOf([0, 0, t.w, t.h], body)));
+  const files = frames.map((body, k) => put(`${g}/${id}_${k + 1}.svg`, G.tuile(id, k + 1).svg));
   index.tuiles[id] = { nom: LABEL[id], fichiers: files, tuile: [t.w, t.h], ms_par_image: t.ms };
   // aperçu : tuile répétée 2 × 2 sur un fond qui rappelle le sol
   const rep = body => [[0, 0], [t.w, 0], [0, t.h], [t.w, t.h]].map(([x, y]) => `<g transform="translate(${x} ${y})">${body.replace(/id="([^"]+)"/g, `id="$1-${x}-${y}"`).replace(/url\(#([^)]+)\)/g, `url(#$1-${x}-${y})`)}</g>`).join('');
@@ -44,7 +46,7 @@ const SPR_LABEL = { arc_en_ciel: 'Arc-en-ciel', eclair: 'Éclair', flash: 'Flash
 const sprCells = { nuages: [], ciel: [], lumieres: [], sol: [] }, sprBoxes = [];
 for (const [id, s] of Object.entries(SPR)) {
   const frames = Array.from({ length: s.n }, (_, k) => s.draw(k));
-  const files = frames.map((body, k) => put(`${s.group}/${id}${s.n > 1 ? `_${k + 1}` : ''}.svg`, svgOf(s.frame, body, s.frame[2], s.frame[3], s.stretch)));
+  const files = frames.map((body, k) => put(`${s.group}/${id}${s.n > 1 ? `_${k + 1}` : ''}.svg`, G.sprite(id, k + 1).svg));
   const label = SPR_LABEL[id] || id.replace(/^nuage(\d)_(\w+)$/, (m, n, c) => `Nuage ${n} — ${{ jour: 'jour', dore: 'doré', nuit: 'nuit', pluie: 'pluie' }[c]}`);
   index.sprites[id] = { nom: label, fichiers: files, cadre: s.frame, ...(s.stretch ? { etirer: true } : { ancre: 'centre (0, 0)' }), ...(s.n > 1 ? { ms_par_image: s.ms || 300 } : {}) };
   const z = Math.min(1.6, 200 / Math.max(s.frame[2], s.frame[3]));
@@ -60,8 +62,8 @@ for (const [id, s] of Object.entries(SPR)) {
 /* ---------- Moments du jour : teinte (multiplier) et mer ---------- */
 const momentCells = [];
 for (const [id, label, when, m] of MOMENTS) {
-  const tint = put(`moments/teinte_${id}.svg`, svgOf([0, 0, 640, 360], `<rect width="640" height="360" fill="${m.tint}"/>`, 640, 360, true));
-  const sea = put(`moments/mer_${id}.svg`, svgOf([0, 0, 640, 360], `<defs><linearGradient id="m" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${m.sea[0]}"/><stop offset="1" stop-color="${m.sea[1]}"/></linearGradient></defs><rect width="640" height="360" fill="url(#m)"/>`, 640, 360, true));
+  const tint = put(`moments/teinte_${id}.svg`, G.teinte('moments', id).svg);
+  const sea = put(`moments/mer_${id}.svg`, G.mer(id).svg);
   index.moments[id] = { nom: label, quand: when, teinte: m.tint, mer: m.sea, nuit: m.night, chaleur: m.warm, fichiers: [tint, sea] };
   // aperçu : la mer, puis une île témoin teintée en multiplication
   momentCells.push([svgOf([0, 0, 160, 100], unique(`<defs><linearGradient id="m" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${m.sea[0]}"/><stop offset="1" stop-color="${m.sea[1]}"/></linearGradient></defs><rect width="160" height="100" fill="url(#m)"/>`
@@ -78,14 +80,14 @@ index.temps = Object.fromEntries(Object.entries(WEATHERS).map(([id, w]) => [id, 
 }[id] }]));
 index.temps.flash_orage = { periode_s: 9.7, chance: 0.65, courbe: 'opacité 1 → 0 en 0,12 s, rien jusqu\'à 0,22 s, puis 0,7 → 0 jusqu\'à 0,45 s (× 0,42)' };
 index.climats = Object.fromEntries(Object.entries(CLIMATES).map(([id, c]) => {
-  const f = put(`climats/teinte_${id}.svg`, svgOf([0, 0, 640, 360], `<rect width="640" height="360" fill="${c.teinte}"/>`, 640, 360, true));
+  const f = put(`climats/teinte_${id}.svg`, G.teinte('climats', id).svg);
   return [id, { nom: c.nom, teinte: c.teinte, air: `climats/${c.air}_*`, fichiers: [f] }];
 }));
 
 // Saisons : la teinte de la scène (comme les climats), l'air (calques saisons/), le sol (sprites sol/), le ciel
 const saisonCells = [];
 index.saisons = Object.fromEntries(Object.entries(SAISONS).map(([id, c]) => {
-  const f = put(`saisons/teinte_${id}.svg`, svgOf([0, 0, 640, 360], `<rect width="640" height="360" fill="${c.teinte}"/>`, 640, 360, true));
+  const f = put(`saisons/teinte_${id}.svg`, G.teinte('saisons', id).svg);
   // aperçu : l'île témoin, la teinte de la saison, son air par-dessus
   const air = c.air.map(a => TILES[a].draw(0)).join('');
   saisonCells.push([svgOf([0, 0, 256, 160], unique(`<rect width="256" height="160" fill="#7CC4E6"/><g transform="translate(48 30) scale(1)"><polygon points="80,30 140,58 80,86 20,58" fill="#9FD07A"/><polygon points="20,58 80,86 80,94 20,66" fill="#B07A45"/><polygon points="80,86 140,58 140,66 80,94" fill="#8A5A32"/><polygon points="64,40 84,50 84,66 64,56" fill="#F3E4C4"/><polygon points="84,50 96,44 96,60 84,66" fill="#D8C39B"/><polygon points="60,40 74,33 88,40 74,47" fill="#E06E52"/></g>`
@@ -96,7 +98,7 @@ index.saisons = Object.fromEntries(Object.entries(SAISONS).map(([id, c]) => {
 /* ---------- Icônes ---------- */
 const iconRows = [];
 for (const [g, ids] of Object.entries(ICON_GROUPS)) {
-  index.icones[g] = ids.map(id => put(`icones/${g}/${id}.svg`, svgOf([0, 0, 48, 48], ICONS[id]())));
+  index.icones[g] = ids.map(id => put(`icones/${g}/${id}.svg`, G.icone(g, id).svg));
   iconRows.push(row({ temps: 'Temps', moments: 'Moments', climats: 'Climats', saisons: 'Saisons' }[g], ids.map(id => [svgOf([0, 0, 48, 48], unique(ICONS[id]()), 72, 72), id.replace(/_/g, ' ')])));
 }
 write(path.join(LIB, 'meteo.json'), JSON.stringify(index, null, 1));
