@@ -1,6 +1,6 @@
 // Bâtiments à venir et niveaux supérieurs des chantiers (planche 2). Même géométrie, même lumière, même palette.
 // Emprise de 2 × 2 cases (u, v ∈ [-1, 1]), ancrage au centre de l'emprise.
-import { P, TW, face, box, gable, pyramid, disc, cylinder, shadow, sprite, EDGE } from './iso.js';
+import { P, TW, face, box, gable, pyramid, disc, cylinder, shadow, sprite, EDGE, HIVER, NEIGE } from './iso.js';
 import {
   WOOD, WOOD_DARK, STONE, WALL, BRICK, ROOF_RED, PINE, BUILDING_BOX,
   pebble, doorLeft, windowLeft, windowRight, planksLeft, planksRight, roundTree,
@@ -22,7 +22,10 @@ export function dome(u, v, z, r, colors, id) {
   const ry = rx * 0.5;
   const h = rx * 0.95;
   return `<defs><radialGradient id="${id}" cx="0.35" cy="0.3" r="0.9"><stop offset="0" stop-color="${colors.top}"/><stop offset="0.55" stop-color="${colors.left}"/><stop offset="1" stop-color="${colors.right}"/></radialGradient></defs>`
-    + `<path d="M${x - rx},${y} A${rx},${ry} 0 0 0 ${x + rx},${y} A${rx},${h} 0 0 0 ${x - rx},${y} Z" fill="url(#${id})"${EDGE}/>`;
+    + `<path d="M${x - rx},${y} A${rx},${ry} 0 0 0 ${x + rx},${y} A${rx},${h} 0 0 0 ${x - rx},${y} Z" fill="url(#${id})"${EDGE}/>`
+    // l'hiver : une calotte de neige sur le dessus (une ellipse découpée dans le dôme : on n'en voit que le bord du bas)
+    + (HIVER ? `<defs><clipPath id="${id}-neige"><path d="M${x - rx},${y} A${rx},${ry} 0 0 0 ${x + rx},${y} A${rx},${h} 0 0 0 ${x - rx},${y} Z"/></clipPath></defs>`
+      + `<g clip-path="url(#${id}-neige)"><ellipse cx="${x + 1}" cy="${y - h * 0.9}" rx="${rx * 1.02}" ry="${h * 0.62}" fill="${NEIGE.shade}"/><ellipse cx="${x}" cy="${y - h * 1.02}" rx="${rx * 1.02}" ry="${h * 0.62}" fill="${NEIGE.light}"${EDGE}/></g>` : '');
 }
 // Tonneau
 function barrel(u, v, id) {

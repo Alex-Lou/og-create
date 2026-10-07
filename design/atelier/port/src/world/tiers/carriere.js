@@ -3,7 +3,7 @@
 // wagonnet des Rails y roule), butoir au bout, lanterne à gauche, pioche et wagonnet devant.
 import { ROCKS, BUILDING_BOX, pebble, crystals, rockBox, roofTexture } from '../palette.js';
 import { UPGRADES } from '../buildings2.js';
-import { sprite } from '../iso.js';
+import { sprite, HIVER, snowPan } from '../iso.js';
 import {
   big, bigShadow, P, box, face, gable, f2, ln, dot, ell, OUT, STONE, PLASTER, WOOD, WOOD_DARK, BRICK, IRON, GOLD, DARK_STONE,
   archLeft, barrel, crate, lampPost
@@ -162,12 +162,13 @@ function cottage(u0, v0, u1, v1, z, roof, wall = PLASTER) {
 // Clocher des mineurs sur la falaise : tour carrée, abat-sons, cloche, toit pointu
 function belfry(u, v, z, roof) {
   const [bx, by] = P(u + 0.1, v + 0.1, z + 30);
+  const T = P(u, v, z + 54), sn = (p, q, g) => (HIVER ? snowPan(T, T, P(...q, z + 34), P(...p, z + 34), 0.72, g) : '');
   return box(u - 0.1, v - 0.1, u + 0.1, v + 0.1, z, z + 34, STONE)
     + face([[u - 0.05, v + 0.1, z + 24], [u + 0.05, v + 0.1, z + 24], [u + 0.05, v + 0.1, z + 32], [u - 0.05, v + 0.1, z + 32]], '#2E2620')
     + dot(bx - 4, by + 1, 2.2, GOLD.left)
-    + face([[u - 0.13, v - 0.13, z + 34], [u + 0.13, v - 0.13, z + 34], [u, v, z + 54]], roof.back)
-    + face([[u - 0.13, v + 0.13, z + 34], [u + 0.13, v + 0.13, z + 34], [u, v, z + 54]], roof.front)
-    + face([[u + 0.13, v - 0.13, z + 34], [u + 0.13, v + 0.13, z + 34], [u, v, z + 54]], roof.back);
+    + face([[u - 0.13, v - 0.13, z + 34], [u + 0.13, v - 0.13, z + 34], [u, v, z + 54]], roof.back) + sn([u - 0.13, v - 0.13], [u + 0.13, v - 0.13])
+    + face([[u - 0.13, v + 0.13, z + 34], [u + 0.13, v + 0.13, z + 34], [u, v, z + 54]], roof.front) + sn([u + 0.13, v + 0.13], [u - 0.13, v + 0.13], true)
+    + face([[u + 0.13, v - 0.13, z + 34], [u + 0.13, v + 0.13, z + 34], [u, v, z + 54]], roof.back) + sn([u + 0.13, v - 0.13], [u + 0.13, v + 0.13], true);
 }
 const MINER_ROOF = { front: '#E06E52', back: '#B9503B' };
 const MINER_ROOF_2 = { front: '#7D8AA0', back: '#5C6880' };

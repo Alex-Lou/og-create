@@ -3,7 +3,7 @@
 // (derrière), poules à l'avant, ruche au coin gauche (× 1.5 dès le palier IV).
 import { BUILDING_BOX, ROOF_RED, roundTree, roofOf, roofTextureOf, soilBed, furrow, leafPair } from '../palette.js';
 import { gardenFence } from '../sprites.js';
-import { sprite, shadow } from '../iso.js';
+import { sprite, shadow, HIVER, snowPan, snowCap } from '../iso.js';
 import {
   big, bigShadow, P, box, face, gable, cylinder, f2, ln, dot, ell, OUT, STONE, WOOD, WOOD_DARK, GOLD, PLASTER,
   shuttered, chimney, flowerBed, pavedPath
@@ -55,8 +55,11 @@ function barn(u0, v0, u1, v1, h, skin) {
     // Toit en mansarde : brisis (pente forte) puis terrasson
     + face([[u0 - 0.05, v0 - 0.05, h], [u1 + 0.05, v0 - 0.05, h], [u1 + 0.05, v0 + q * 0.4, brk], [u0 - 0.05, v0 + q * 0.4, brk]], roof.back, ` stroke="${OUT}" stroke-width="0.7"`)
     + face([[u0 - 0.05, v0 + q * 0.4, brk], [u1 + 0.05, v0 + q * 0.4, brk], [u1 + 0.05, vm, brk + 12], [u0 - 0.05, vm, brk + 12]], roof.back, ` stroke="${OUT}" stroke-width="0.7"`)
+    + (HIVER ? snowPan(P(u0 - 0.05, vm, brk + 12), P(u1 + 0.05, vm, brk + 12), P(u1 + 0.05, v0 + q * 0.4, brk), P(u0 - 0.05, v0 + q * 0.4, brk), 0.95) : '')
     + face([[u0 - 0.05, vm, brk + 12], [u1 + 0.05, vm, brk + 12], [u1 + 0.05, v1 - q * 0.4, brk], [u0 - 0.05, v1 - q * 0.4, brk]], roof.front, ` stroke="${OUT}" stroke-width="0.7"`)
+    + (HIVER ? snowPan(P(u0 - 0.05, vm, brk + 12), P(u1 + 0.05, vm, brk + 12), P(u1 + 0.05, v1 - q * 0.4, brk), P(u0 - 0.05, v1 - q * 0.4, brk), 0.95) : '')
     + face([[u0 - 0.05, v1 - q * 0.4, brk], [u1 + 0.05, v1 - q * 0.4, brk], [u1 + 0.05, v1 + 0.05, h], [u0 - 0.05, v1 + 0.05, h]], roof.front, ` stroke="${OUT}" stroke-width="0.7"`)
+    + (HIVER ? snowPan(P(u0 - 0.05, v1 - q * 0.4, brk), P(u1 + 0.05, v1 - q * 0.4, brk), P(u1 + 0.05, v1 + 0.05, h), P(u0 - 0.05, v1 + 0.05, h), 0.7, true) : '')
     + ln(P(u0 - 0.05, v1 - q * 0.4, brk), P(u1 + 0.05, v1 - q * 0.4, brk), 'rgba(255,255,255,.25)', 0.8);
 }
 // Clôture du skin le long du fond d'une grande emprise (le motif de 2 × 2 répété, décalé)
@@ -111,6 +114,7 @@ function windmill(skin) {
     + `<rect x="${f2(P(u, v + 0.18, 34)[0] - 2.5)}" y="${f2(P(u, v + 0.18, 34)[1] - 3)}" width="5" height="6" rx="2" fill="#FFE6A3" stroke="#FFFFFF" stroke-width="0.6"/>`
     + `<path d="M${f2(cx - 16)},${f2(cy + 1)} Q${f2(cx)},${f2(cy - 22)} ${f2(cx + 16)},${f2(cy + 1)} Z" fill="${roof.front}" stroke="${OUT}" stroke-width="0.8"/>`
     + `<path d="M${f2(cx)},${f2(cy - 10)} Q${f2(cx + 8)},${f2(cy - 6)} ${f2(cx + 16)},${f2(cy + 1)} L${f2(cx)},${f2(cy + 1)} Z" fill="${roof.back}"/>`
+    + (HIVER ? snowCap('wm-neige', `M${f2(cx - 16)},${f2(cy + 1)} Q${f2(cx)},${f2(cy - 22)} ${f2(cx + 16)},${f2(cy + 1)} Z`, cx, cy - 11, 15, 6) : '')
     // Blés dorés, sacs de farine, charrette
     + bed(-0.25, -1.3, 1.3, -0.15, 'wheat', 4) + bed(-1.3, 0.1, 1.3, 1.35, 'wheat', 5)
     + [[-0.35, -0.35], [-0.22, -0.3], [-0.3, -0.22]].map(([a, b], k) => `<path d="M${f2(P(a, b, 0)[0] - 4)},${f2(P(a, b, 0)[1])} q-1,-8 4,-9 q5,1 4,9 Z" fill="${k % 2 ? '#F7F1E1' : '#EFE6D0'}" stroke="rgba(120,100,70,.4)" stroke-width="0.6"/>`).join('')
@@ -156,6 +160,7 @@ function estate(skin) {
     + cylinder(0.15, -1.15, 0, 64, 0.22, { top: '#D7DDE3', left: '#C2CAD2', right: '#8E99A4' }, 'es-silo')
     + [12, 26, 40, 54].map(z => { const [x, y] = P(0.15, -1.15, z); return `<path d="M${f2(x - 14)},${f2(y)} A14,7 0 0 0 ${f2(x + 14)},${f2(y)}" fill="none" stroke="#7C8894" stroke-width="0.7"/>`; }).join('')
     + `<path d="M${f2(sx - 14)},${f2(sy)} Q${f2(sx)},${f2(sy - 20)} ${f2(sx + 14)},${f2(sy)} Z" fill="#B13A31" stroke="${OUT}" stroke-width="0.8"/>`
+    + (HIVER ? snowCap('es-neige', `M${f2(sx - 14)},${f2(sy)} Q${f2(sx)},${f2(sy - 20)} ${f2(sx + 14)},${f2(sy)} Z`, sx, sy - 10, 13, 5.5) : '')
     + barn(0.45, -1.35, 1.35, -0.55, 24, skin)
     + bed(-1.3, 0.05, -0.05, 1.35, 'veg', 4) + bed(0.15, 0.05, 1.3, 1.35, 'wheat', 4)
     + hayBale(-0.2, -0.3) + hayBale(0.05, -0.3)

@@ -86,6 +86,26 @@
  "manquants": [],
  "entrees": [
   {
+   "id": "batiments/paliers_hiver/foyer/foyer_palier1_hiver",
+   "rubrique": "batiments",
+   "titre": "Foyer — palier I, l'hiver",
+   "images": 3,
+   "fichiers": [
+    "svg/batiments/paliers_hiver/foyer/foyer_palier1_hiver_1.svg",
+    "svg/batiments/paliers_hiver/foyer/foyer_palier1_hiver_2.svg",
+    "svg/batiments/paliers_hiver/foyer/foyer_palier1_hiver_3.svg"
+   ],
+   "cadre": [
+    -95,
+    -155,
+    190,
+    210
+   ],
+   "ms_par_image": 111,
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
    "id": "batiments/paliers/foyer/foyer_palier1",
    "rubrique": "batiments",
    "titre": "Foyer — palier I",
@@ -40175,6 +40195,43 @@
    "statut": "ok"
   },
   {
+   "id": "batiments/paliers_hiver/puits/puits_palier1_hiver",
+   "rubrique": "batiments",
+   "titre": "Puits — palier I, l'hiver",
+   "images": 1,
+   "fichiers": [
+    "svg/batiments/paliers_hiver/puits/puits_palier1_hiver.svg"
+   ],
+   "cadre": [
+    -95,
+    -155,
+    190,
+    210
+   ],
+   "parcours": "tuto-3",
+   "statut": "ok"
+  },
+  {
+   "id": "batiments/paliers_hiver/puits/puits_palier2_hiver",
+   "rubrique": "batiments",
+   "titre": "Puits — palier II, l'hiver",
+   "images": 3,
+   "fichiers": [
+    "svg/batiments/paliers_hiver/puits/puits_palier2_hiver_1.svg",
+    "svg/batiments/paliers_hiver/puits/puits_palier2_hiver_2.svg",
+    "svg/batiments/paliers_hiver/puits/puits_palier2_hiver_3.svg"
+   ],
+   "cadre": [
+    -95,
+    -155,
+    190,
+    210
+   ],
+   "ms_par_image": 167,
+   "parcours": "tuto-3",
+   "statut": "ok"
+  },
+  {
    "id": "batiments/paliers/puits/puits_palier1",
    "rubrique": "batiments",
    "titre": "Puits — palier I",
@@ -47014,6 +47071,23 @@
    "statut": "ok"
   },
   {
+   "id": "batiments/paliers_hiver/bosquet/bosquet_palier1_hiver",
+   "rubrique": "batiments",
+   "titre": "Bosquet — palier I, l'hiver",
+   "images": 1,
+   "fichiers": [
+    "svg/batiments/paliers_hiver/bosquet/bosquet_palier1_hiver.svg"
+   ],
+   "cadre": [
+    -95,
+    -155,
+    190,
+    210
+   ],
+   "parcours": "acte-1",
+   "statut": "ok"
+  },
+  {
    "id": "batiments/paliers/bosquet/bosquet_palier1",
    "rubrique": "batiments",
    "titre": "Bosquet — palier I",
@@ -52206,6 +52280,43 @@
    ],
    "ms_par_image": 220,
    "parcours": "acte-1",
+   "statut": "ok"
+  },
+  {
+   "id": "batiments/paliers_hiver/carriere/carriere_palier1_hiver",
+   "rubrique": "batiments",
+   "titre": "Carrière — palier I, l'hiver",
+   "images": 1,
+   "fichiers": [
+    "svg/batiments/paliers_hiver/carriere/carriere_palier1_hiver.svg"
+   ],
+   "cadre": [
+    -95,
+    -155,
+    190,
+    210
+   ],
+   "parcours": "acte-2",
+   "statut": "ok"
+  },
+  {
+   "id": "batiments/paliers_hiver/foyer/foyer_palier2_hiver",
+   "rubrique": "batiments",
+   "titre": "Foyer — palier II, l'hiver",
+   "images": 3,
+   "fichiers": [
+    "svg/batiments/paliers_hiver/foyer/foyer_palier2_hiver_1.svg",
+    "svg/batiments/paliers_hiver/foyer/foyer_palier2_hiver_2.svg",
+    "svg/batiments/paliers_hiver/foyer/foyer_palier2_hiver_3.svg"
+   ],
+   "cadre": [
+    -95,
+    -155,
+    190,
+    210
+   ],
+   "ms_par_image": 111,
+   "parcours": "acte-2",
    "statut": "ok"
   },
   {
@@ -57854,6 +57965,40 @@
     -30,
     40,
     32.5
+   ],
+   "parcours": "acte-3",
+   "statut": "ok"
+  },
+  {
+   "id": "batiments/paliers_hiver/atelier/atelier_palier1_hiver",
+   "rubrique": "batiments",
+   "titre": "Atelier — palier I, l'hiver",
+   "images": 1,
+   "fichiers": [
+    "svg/batiments/paliers_hiver/atelier/atelier_palier1_hiver.svg"
+   ],
+   "cadre": [
+    -95,
+    -155,
+    190,
+    210
+   ],
+   "parcours": "acte-3",
+   "statut": "ok"
+  },
+  {
+   "id": "batiments/paliers_hiver/potager/potager_palier1_hiver",
+   "rubrique": "batiments",
+   "titre": "Potager — palier I, l'hiver",
+   "images": 1,
+   "fichiers": [
+    "svg/batiments/paliers_hiver/potager/potager_palier1_hiver.svg"
+   ],
+   "cadre": [
+    -95,
+    -155,
+    190,
+    210
    ],
    "parcours": "acte-3",
    "statut": "ok"
@@ -67299,6 +67444,40 @@
     13.75
    ],
    "ms_par_image": 120,
+   "parcours": "acte-4",
+   "statut": "ok"
+  },
+  {
+   "id": "batiments/paliers_hiver/ponton/ponton_palier1_hiver",
+   "rubrique": "batiments",
+   "titre": "Ponton — palier I, l'hiver",
+   "images": 1,
+   "fichiers": [
+    "svg/batiments/paliers_hiver/ponton/ponton_palier1_hiver.svg"
+   ],
+   "cadre": [
+    -95,
+    -155,
+    190,
+    210
+   ],
+   "parcours": "acte-4",
+   "statut": "ok"
+  },
+  {
+   "id": "batiments/paliers_hiver/potager/potager_palier2_hiver",
+   "rubrique": "batiments",
+   "titre": "Potager — palier II, l'hiver",
+   "images": 1,
+   "fichiers": [
+    "svg/batiments/paliers_hiver/potager/potager_palier2_hiver.svg"
+   ],
+   "cadre": [
+    -95,
+    -155,
+    190,
+    210
+   ],
    "parcours": "acte-4",
    "statut": "ok"
   },
@@ -88805,6 +88984,44 @@
    "statut": "ok"
   },
   {
+   "id": "batiments/paliers_hiver/foyer/foyer_palier3_hiver",
+   "rubrique": "batiments",
+   "titre": "Foyer — palier III, l'hiver",
+   "images": 1,
+   "fichiers": [
+    "svg/batiments/paliers_hiver/foyer/foyer_palier3_hiver.svg"
+   ],
+   "cadre": [
+    -95,
+    -155,
+    190,
+    210
+   ],
+   "parcours": "acte-5",
+   "statut": "ok"
+  },
+  {
+   "id": "batiments/paliers_hiver/foyer/foyer_palier4_hiver",
+   "rubrique": "batiments",
+   "titre": "Foyer — palier IV, l'hiver",
+   "images": 4,
+   "fichiers": [
+    "svg/batiments/paliers_hiver/foyer/foyer_palier4_hiver_1.svg",
+    "svg/batiments/paliers_hiver/foyer/foyer_palier4_hiver_2.svg",
+    "svg/batiments/paliers_hiver/foyer/foyer_palier4_hiver_3.svg",
+    "svg/batiments/paliers_hiver/foyer/foyer_palier4_hiver_4.svg"
+   ],
+   "cadre": [
+    -140,
+    -250,
+    280,
+    330
+   ],
+   "ms_par_image": 333,
+   "parcours": "acte-5",
+   "statut": "ok"
+  },
+  {
    "id": "batiments/paliers/foyer/foyer_palier3",
    "rubrique": "batiments",
    "titre": "Foyer — palier III",
@@ -89197,6 +89414,65 @@
    "statut": "ok"
   },
   {
+   "id": "batiments/paliers_hiver/carriere/carriere_palier6_hiver",
+   "rubrique": "batiments",
+   "titre": "Carrière — palier VI, l'hiver",
+   "images": 1,
+   "fichiers": [
+    "svg/batiments/paliers_hiver/carriere/carriere_palier6_hiver.svg"
+   ],
+   "cadre": [
+    -140,
+    -250,
+    280,
+    330
+   ],
+   "parcours": "acte-6",
+   "statut": "ok"
+  },
+  {
+   "id": "batiments/paliers_hiver/foyer/foyer_palier5_hiver",
+   "rubrique": "batiments",
+   "titre": "Foyer — palier V, l'hiver",
+   "images": 4,
+   "fichiers": [
+    "svg/batiments/paliers_hiver/foyer/foyer_palier5_hiver_1.svg",
+    "svg/batiments/paliers_hiver/foyer/foyer_palier5_hiver_2.svg",
+    "svg/batiments/paliers_hiver/foyer/foyer_palier5_hiver_3.svg",
+    "svg/batiments/paliers_hiver/foyer/foyer_palier5_hiver_4.svg"
+   ],
+   "cadre": [
+    -140,
+    -250,
+    280,
+    330
+   ],
+   "ms_par_image": 333,
+   "parcours": "acte-6",
+   "statut": "ok"
+  },
+  {
+   "id": "batiments/paliers_hiver/foyer/foyer_palier6_hiver",
+   "rubrique": "batiments",
+   "titre": "Foyer — palier VI, l'hiver",
+   "images": 4,
+   "fichiers": [
+    "svg/batiments/paliers_hiver/foyer/foyer_palier6_hiver_1.svg",
+    "svg/batiments/paliers_hiver/foyer/foyer_palier6_hiver_2.svg",
+    "svg/batiments/paliers_hiver/foyer/foyer_palier6_hiver_3.svg",
+    "svg/batiments/paliers_hiver/foyer/foyer_palier6_hiver_4.svg"
+   ],
+   "cadre": [
+    -140,
+    -250,
+    280,
+    330
+   ],
+   "ms_par_image": 333,
+   "parcours": "acte-6",
+   "statut": "ok"
+  },
+  {
    "id": "batiments/paliers/carriere/carriere_palier6",
    "rubrique": "batiments",
    "titre": "Carrière — palier VI",
@@ -89463,6 +89739,31 @@
    ],
    "ms_par_image": 220,
    "parcours": "acte-6",
+   "statut": "ok"
+  },
+  {
+   "id": "batiments/paliers_hiver/foyer/foyer_palier7_hiver",
+   "rubrique": "batiments",
+   "titre": "Foyer — palier VII, l'hiver",
+   "images": 8,
+   "fichiers": [
+    "svg/batiments/paliers_hiver/foyer/foyer_palier7_hiver_1.svg",
+    "svg/batiments/paliers_hiver/foyer/foyer_palier7_hiver_2.svg",
+    "svg/batiments/paliers_hiver/foyer/foyer_palier7_hiver_3.svg",
+    "svg/batiments/paliers_hiver/foyer/foyer_palier7_hiver_4.svg",
+    "svg/batiments/paliers_hiver/foyer/foyer_palier7_hiver_5.svg",
+    "svg/batiments/paliers_hiver/foyer/foyer_palier7_hiver_6.svg",
+    "svg/batiments/paliers_hiver/foyer/foyer_palier7_hiver_7.svg",
+    "svg/batiments/paliers_hiver/foyer/foyer_palier7_hiver_8.svg"
+   ],
+   "cadre": [
+    -140,
+    -250,
+    282.5,
+    330
+   ],
+   "ms_par_image": 250,
+   "parcours": "acte-7",
    "statut": "ok"
   },
   {
@@ -103238,6 +103539,643 @@
     50
    ],
    "ms_par_image": 250,
+   "parcours": "evolutions",
+   "statut": "ok"
+  },
+  {
+   "id": "batiments/paliers_hiver/atelier/atelier_palier2_hiver",
+   "rubrique": "batiments",
+   "titre": "Atelier — palier II, l'hiver",
+   "images": 1,
+   "fichiers": [
+    "svg/batiments/paliers_hiver/atelier/atelier_palier2_hiver.svg"
+   ],
+   "cadre": [
+    -95,
+    -155,
+    190,
+    210
+   ],
+   "parcours": "evolutions",
+   "statut": "ok"
+  },
+  {
+   "id": "batiments/paliers_hiver/atelier/atelier_palier3_hiver",
+   "rubrique": "batiments",
+   "titre": "Atelier — palier III, l'hiver",
+   "images": 1,
+   "fichiers": [
+    "svg/batiments/paliers_hiver/atelier/atelier_palier3_hiver.svg"
+   ],
+   "cadre": [
+    -95,
+    -155,
+    190,
+    210
+   ],
+   "parcours": "evolutions",
+   "statut": "ok"
+  },
+  {
+   "id": "batiments/paliers_hiver/atelier/atelier_palier4_hiver",
+   "rubrique": "batiments",
+   "titre": "Atelier — palier IV, l'hiver",
+   "images": 1,
+   "fichiers": [
+    "svg/batiments/paliers_hiver/atelier/atelier_palier4_hiver.svg"
+   ],
+   "cadre": [
+    -140,
+    -250,
+    280,
+    330
+   ],
+   "parcours": "evolutions",
+   "statut": "ok"
+  },
+  {
+   "id": "batiments/paliers_hiver/atelier/atelier_palier5_hiver",
+   "rubrique": "batiments",
+   "titre": "Atelier — palier V, l'hiver",
+   "images": 1,
+   "fichiers": [
+    "svg/batiments/paliers_hiver/atelier/atelier_palier5_hiver.svg"
+   ],
+   "cadre": [
+    -140,
+    -250,
+    280,
+    330
+   ],
+   "parcours": "evolutions",
+   "statut": "ok"
+  },
+  {
+   "id": "batiments/paliers_hiver/atelier/atelier_palier6_hiver",
+   "rubrique": "batiments",
+   "titre": "Atelier — palier VI, l'hiver",
+   "images": 6,
+   "fichiers": [
+    "svg/batiments/paliers_hiver/atelier/atelier_palier6_hiver_1.svg",
+    "svg/batiments/paliers_hiver/atelier/atelier_palier6_hiver_2.svg",
+    "svg/batiments/paliers_hiver/atelier/atelier_palier6_hiver_3.svg",
+    "svg/batiments/paliers_hiver/atelier/atelier_palier6_hiver_4.svg",
+    "svg/batiments/paliers_hiver/atelier/atelier_palier6_hiver_5.svg",
+    "svg/batiments/paliers_hiver/atelier/atelier_palier6_hiver_6.svg"
+   ],
+   "cadre": [
+    -140,
+    -250,
+    280,
+    330
+   ],
+   "ms_par_image": 167,
+   "parcours": "evolutions",
+   "statut": "ok"
+  },
+  {
+   "id": "batiments/paliers_hiver/atelier/atelier_palier7_hiver",
+   "rubrique": "batiments",
+   "titre": "Atelier — palier VII, l'hiver",
+   "images": 6,
+   "fichiers": [
+    "svg/batiments/paliers_hiver/atelier/atelier_palier7_hiver_1.svg",
+    "svg/batiments/paliers_hiver/atelier/atelier_palier7_hiver_2.svg",
+    "svg/batiments/paliers_hiver/atelier/atelier_palier7_hiver_3.svg",
+    "svg/batiments/paliers_hiver/atelier/atelier_palier7_hiver_4.svg",
+    "svg/batiments/paliers_hiver/atelier/atelier_palier7_hiver_5.svg",
+    "svg/batiments/paliers_hiver/atelier/atelier_palier7_hiver_6.svg"
+   ],
+   "cadre": [
+    -140,
+    -250,
+    280,
+    330
+   ],
+   "ms_par_image": 167,
+   "parcours": "evolutions",
+   "statut": "ok"
+  },
+  {
+   "id": "batiments/paliers_hiver/bosquet/bosquet_palier2_hiver",
+   "rubrique": "batiments",
+   "titre": "Bosquet — palier II, l'hiver",
+   "images": 1,
+   "fichiers": [
+    "svg/batiments/paliers_hiver/bosquet/bosquet_palier2_hiver.svg"
+   ],
+   "cadre": [
+    -95,
+    -155,
+    190,
+    210
+   ],
+   "parcours": "evolutions",
+   "statut": "ok"
+  },
+  {
+   "id": "batiments/paliers_hiver/bosquet/bosquet_palier3_hiver",
+   "rubrique": "batiments",
+   "titre": "Bosquet — palier III, l'hiver",
+   "images": 1,
+   "fichiers": [
+    "svg/batiments/paliers_hiver/bosquet/bosquet_palier3_hiver.svg"
+   ],
+   "cadre": [
+    -95,
+    -155,
+    190,
+    210
+   ],
+   "parcours": "evolutions",
+   "statut": "ok"
+  },
+  {
+   "id": "batiments/paliers_hiver/bosquet/bosquet_palier4_hiver",
+   "rubrique": "batiments",
+   "titre": "Bosquet — palier IV, l'hiver",
+   "images": 1,
+   "fichiers": [
+    "svg/batiments/paliers_hiver/bosquet/bosquet_palier4_hiver.svg"
+   ],
+   "cadre": [
+    -140,
+    -250,
+    280,
+    330
+   ],
+   "parcours": "evolutions",
+   "statut": "ok"
+  },
+  {
+   "id": "batiments/paliers_hiver/bosquet/bosquet_palier5_hiver",
+   "rubrique": "batiments",
+   "titre": "Bosquet — palier V, l'hiver",
+   "images": 6,
+   "fichiers": [
+    "svg/batiments/paliers_hiver/bosquet/bosquet_palier5_hiver_1.svg",
+    "svg/batiments/paliers_hiver/bosquet/bosquet_palier5_hiver_2.svg",
+    "svg/batiments/paliers_hiver/bosquet/bosquet_palier5_hiver_3.svg",
+    "svg/batiments/paliers_hiver/bosquet/bosquet_palier5_hiver_4.svg",
+    "svg/batiments/paliers_hiver/bosquet/bosquet_palier5_hiver_5.svg",
+    "svg/batiments/paliers_hiver/bosquet/bosquet_palier5_hiver_6.svg"
+   ],
+   "cadre": [
+    -140,
+    -250,
+    280,
+    330
+   ],
+   "ms_par_image": 83,
+   "parcours": "evolutions",
+   "statut": "ok"
+  },
+  {
+   "id": "batiments/paliers_hiver/bosquet/bosquet_palier6_hiver",
+   "rubrique": "batiments",
+   "titre": "Bosquet — palier VI, l'hiver",
+   "images": 6,
+   "fichiers": [
+    "svg/batiments/paliers_hiver/bosquet/bosquet_palier6_hiver_1.svg",
+    "svg/batiments/paliers_hiver/bosquet/bosquet_palier6_hiver_2.svg",
+    "svg/batiments/paliers_hiver/bosquet/bosquet_palier6_hiver_3.svg",
+    "svg/batiments/paliers_hiver/bosquet/bosquet_palier6_hiver_4.svg",
+    "svg/batiments/paliers_hiver/bosquet/bosquet_palier6_hiver_5.svg",
+    "svg/batiments/paliers_hiver/bosquet/bosquet_palier6_hiver_6.svg"
+   ],
+   "cadre": [
+    -140,
+    -250,
+    280,
+    330
+   ],
+   "ms_par_image": 83,
+   "parcours": "evolutions",
+   "statut": "ok"
+  },
+  {
+   "id": "batiments/paliers_hiver/bosquet/bosquet_palier7_hiver",
+   "rubrique": "batiments",
+   "titre": "Bosquet — palier VII, l'hiver",
+   "images": 6,
+   "fichiers": [
+    "svg/batiments/paliers_hiver/bosquet/bosquet_palier7_hiver_1.svg",
+    "svg/batiments/paliers_hiver/bosquet/bosquet_palier7_hiver_2.svg",
+    "svg/batiments/paliers_hiver/bosquet/bosquet_palier7_hiver_3.svg",
+    "svg/batiments/paliers_hiver/bosquet/bosquet_palier7_hiver_4.svg",
+    "svg/batiments/paliers_hiver/bosquet/bosquet_palier7_hiver_5.svg",
+    "svg/batiments/paliers_hiver/bosquet/bosquet_palier7_hiver_6.svg"
+   ],
+   "cadre": [
+    -140,
+    -250,
+    280,
+    330
+   ],
+   "ms_par_image": 200,
+   "parcours": "evolutions",
+   "statut": "ok"
+  },
+  {
+   "id": "batiments/paliers_hiver/carriere/carriere_palier2_hiver",
+   "rubrique": "batiments",
+   "titre": "Carrière — palier II, l'hiver",
+   "images": 1,
+   "fichiers": [
+    "svg/batiments/paliers_hiver/carriere/carriere_palier2_hiver.svg"
+   ],
+   "cadre": [
+    -95,
+    -155,
+    190,
+    210
+   ],
+   "parcours": "evolutions",
+   "statut": "ok"
+  },
+  {
+   "id": "batiments/paliers_hiver/carriere/carriere_palier3_hiver",
+   "rubrique": "batiments",
+   "titre": "Carrière — palier III, l'hiver",
+   "images": 1,
+   "fichiers": [
+    "svg/batiments/paliers_hiver/carriere/carriere_palier3_hiver.svg"
+   ],
+   "cadre": [
+    -95,
+    -155,
+    190,
+    210
+   ],
+   "parcours": "evolutions",
+   "statut": "ok"
+  },
+  {
+   "id": "batiments/paliers_hiver/carriere/carriere_palier4_hiver",
+   "rubrique": "batiments",
+   "titre": "Carrière — palier IV, l'hiver",
+   "images": 1,
+   "fichiers": [
+    "svg/batiments/paliers_hiver/carriere/carriere_palier4_hiver.svg"
+   ],
+   "cadre": [
+    -140,
+    -250,
+    280,
+    330
+   ],
+   "parcours": "evolutions",
+   "statut": "ok"
+  },
+  {
+   "id": "batiments/paliers_hiver/carriere/carriere_palier5_hiver",
+   "rubrique": "batiments",
+   "titre": "Carrière — palier V, l'hiver",
+   "images": 1,
+   "fichiers": [
+    "svg/batiments/paliers_hiver/carriere/carriere_palier5_hiver.svg"
+   ],
+   "cadre": [
+    -140,
+    -250,
+    280,
+    330
+   ],
+   "parcours": "evolutions",
+   "statut": "ok"
+  },
+  {
+   "id": "batiments/paliers_hiver/carriere/carriere_palier7_hiver",
+   "rubrique": "batiments",
+   "titre": "Carrière — palier VII, l'hiver",
+   "images": 1,
+   "fichiers": [
+    "svg/batiments/paliers_hiver/carriere/carriere_palier7_hiver.svg"
+   ],
+   "cadre": [
+    -140,
+    -250,
+    280,
+    330
+   ],
+   "parcours": "evolutions",
+   "statut": "ok"
+  },
+  {
+   "id": "batiments/paliers_hiver/ponton/ponton_palier2_hiver",
+   "rubrique": "batiments",
+   "titre": "Ponton — palier II, l'hiver",
+   "images": 1,
+   "fichiers": [
+    "svg/batiments/paliers_hiver/ponton/ponton_palier2_hiver.svg"
+   ],
+   "cadre": [
+    -95,
+    -155,
+    190,
+    210
+   ],
+   "parcours": "evolutions",
+   "statut": "ok"
+  },
+  {
+   "id": "batiments/paliers_hiver/ponton/ponton_palier3_hiver",
+   "rubrique": "batiments",
+   "titre": "Ponton — palier III, l'hiver",
+   "images": 1,
+   "fichiers": [
+    "svg/batiments/paliers_hiver/ponton/ponton_palier3_hiver.svg"
+   ],
+   "cadre": [
+    -95,
+    -155,
+    190,
+    210
+   ],
+   "parcours": "evolutions",
+   "statut": "ok"
+  },
+  {
+   "id": "batiments/paliers_hiver/ponton/ponton_palier4_hiver",
+   "rubrique": "batiments",
+   "titre": "Ponton — palier IV, l'hiver",
+   "images": 1,
+   "fichiers": [
+    "svg/batiments/paliers_hiver/ponton/ponton_palier4_hiver.svg"
+   ],
+   "cadre": [
+    -140,
+    -250,
+    280,
+    330
+   ],
+   "parcours": "evolutions",
+   "statut": "ok"
+  },
+  {
+   "id": "batiments/paliers_hiver/ponton/ponton_palier5_hiver",
+   "rubrique": "batiments",
+   "titre": "Ponton — palier V, l'hiver",
+   "images": 1,
+   "fichiers": [
+    "svg/batiments/paliers_hiver/ponton/ponton_palier5_hiver.svg"
+   ],
+   "cadre": [
+    -140,
+    -250,
+    280,
+    330
+   ],
+   "parcours": "evolutions",
+   "statut": "ok"
+  },
+  {
+   "id": "batiments/paliers_hiver/ponton/ponton_palier6_hiver",
+   "rubrique": "batiments",
+   "titre": "Ponton — palier VI, l'hiver",
+   "images": 1,
+   "fichiers": [
+    "svg/batiments/paliers_hiver/ponton/ponton_palier6_hiver.svg"
+   ],
+   "cadre": [
+    -140,
+    -250,
+    280,
+    330
+   ],
+   "parcours": "evolutions",
+   "statut": "ok"
+  },
+  {
+   "id": "batiments/paliers_hiver/ponton/ponton_palier7_hiver",
+   "rubrique": "batiments",
+   "titre": "Ponton — palier VII, l'hiver",
+   "images": 6,
+   "fichiers": [
+    "svg/batiments/paliers_hiver/ponton/ponton_palier7_hiver_1.svg",
+    "svg/batiments/paliers_hiver/ponton/ponton_palier7_hiver_2.svg",
+    "svg/batiments/paliers_hiver/ponton/ponton_palier7_hiver_3.svg",
+    "svg/batiments/paliers_hiver/ponton/ponton_palier7_hiver_4.svg",
+    "svg/batiments/paliers_hiver/ponton/ponton_palier7_hiver_5.svg",
+    "svg/batiments/paliers_hiver/ponton/ponton_palier7_hiver_6.svg"
+   ],
+   "cadre": [
+    -140,
+    -250,
+    280,
+    330
+   ],
+   "ms_par_image": 200,
+   "parcours": "evolutions",
+   "statut": "ok"
+  },
+  {
+   "id": "batiments/paliers_hiver/potager/potager_palier3_hiver",
+   "rubrique": "batiments",
+   "titre": "Potager — palier III, l'hiver",
+   "images": 1,
+   "fichiers": [
+    "svg/batiments/paliers_hiver/potager/potager_palier3_hiver.svg"
+   ],
+   "cadre": [
+    -95,
+    -155,
+    190,
+    210
+   ],
+   "parcours": "evolutions",
+   "statut": "ok"
+  },
+  {
+   "id": "batiments/paliers_hiver/potager/potager_palier4_hiver",
+   "rubrique": "batiments",
+   "titre": "Potager — palier IV, l'hiver",
+   "images": 1,
+   "fichiers": [
+    "svg/batiments/paliers_hiver/potager/potager_palier4_hiver.svg"
+   ],
+   "cadre": [
+    -140,
+    -250,
+    280,
+    330
+   ],
+   "parcours": "evolutions",
+   "statut": "ok"
+  },
+  {
+   "id": "batiments/paliers_hiver/potager/potager_palier5_hiver",
+   "rubrique": "batiments",
+   "titre": "Potager — palier V, l'hiver",
+   "images": 8,
+   "fichiers": [
+    "svg/batiments/paliers_hiver/potager/potager_palier5_hiver_1.svg",
+    "svg/batiments/paliers_hiver/potager/potager_palier5_hiver_2.svg",
+    "svg/batiments/paliers_hiver/potager/potager_palier5_hiver_3.svg",
+    "svg/batiments/paliers_hiver/potager/potager_palier5_hiver_4.svg",
+    "svg/batiments/paliers_hiver/potager/potager_palier5_hiver_5.svg",
+    "svg/batiments/paliers_hiver/potager/potager_palier5_hiver_6.svg",
+    "svg/batiments/paliers_hiver/potager/potager_palier5_hiver_7.svg",
+    "svg/batiments/paliers_hiver/potager/potager_palier5_hiver_8.svg"
+   ],
+   "cadre": [
+    -140,
+    -250,
+    280,
+    330
+   ],
+   "ms_par_image": 167,
+   "parcours": "evolutions",
+   "statut": "ok"
+  },
+  {
+   "id": "batiments/paliers_hiver/potager/potager_palier6_hiver",
+   "rubrique": "batiments",
+   "titre": "Potager — palier VI, l'hiver",
+   "images": 1,
+   "fichiers": [
+    "svg/batiments/paliers_hiver/potager/potager_palier6_hiver.svg"
+   ],
+   "cadre": [
+    -140,
+    -250,
+    280,
+    330
+   ],
+   "parcours": "evolutions",
+   "statut": "ok"
+  },
+  {
+   "id": "batiments/paliers_hiver/potager/potager_palier7_hiver",
+   "rubrique": "batiments",
+   "titre": "Potager — palier VII, l'hiver",
+   "images": 6,
+   "fichiers": [
+    "svg/batiments/paliers_hiver/potager/potager_palier7_hiver_1.svg",
+    "svg/batiments/paliers_hiver/potager/potager_palier7_hiver_2.svg",
+    "svg/batiments/paliers_hiver/potager/potager_palier7_hiver_3.svg",
+    "svg/batiments/paliers_hiver/potager/potager_palier7_hiver_4.svg",
+    "svg/batiments/paliers_hiver/potager/potager_palier7_hiver_5.svg",
+    "svg/batiments/paliers_hiver/potager/potager_palier7_hiver_6.svg"
+   ],
+   "cadre": [
+    -140,
+    -250,
+    280,
+    330
+   ],
+   "ms_par_image": 333,
+   "parcours": "evolutions",
+   "statut": "ok"
+  },
+  {
+   "id": "batiments/paliers_hiver/puits/puits_palier3_hiver",
+   "rubrique": "batiments",
+   "titre": "Puits — palier III, l'hiver",
+   "images": 4,
+   "fichiers": [
+    "svg/batiments/paliers_hiver/puits/puits_palier3_hiver_1.svg",
+    "svg/batiments/paliers_hiver/puits/puits_palier3_hiver_2.svg",
+    "svg/batiments/paliers_hiver/puits/puits_palier3_hiver_3.svg",
+    "svg/batiments/paliers_hiver/puits/puits_palier3_hiver_4.svg"
+   ],
+   "cadre": [
+    -95,
+    -155,
+    190,
+    210
+   ],
+   "ms_par_image": 333,
+   "parcours": "evolutions",
+   "statut": "ok"
+  },
+  {
+   "id": "batiments/paliers_hiver/puits/puits_palier4_hiver",
+   "rubrique": "batiments",
+   "titre": "Puits — palier IV, l'hiver",
+   "images": 4,
+   "fichiers": [
+    "svg/batiments/paliers_hiver/puits/puits_palier4_hiver_1.svg",
+    "svg/batiments/paliers_hiver/puits/puits_palier4_hiver_2.svg",
+    "svg/batiments/paliers_hiver/puits/puits_palier4_hiver_3.svg",
+    "svg/batiments/paliers_hiver/puits/puits_palier4_hiver_4.svg"
+   ],
+   "cadre": [
+    -140,
+    -250,
+    280,
+    330
+   ],
+   "ms_par_image": 167,
+   "parcours": "evolutions",
+   "statut": "ok"
+  },
+  {
+   "id": "batiments/paliers_hiver/puits/puits_palier5_hiver",
+   "rubrique": "batiments",
+   "titre": "Puits — palier V, l'hiver",
+   "images": 4,
+   "fichiers": [
+    "svg/batiments/paliers_hiver/puits/puits_palier5_hiver_1.svg",
+    "svg/batiments/paliers_hiver/puits/puits_palier5_hiver_2.svg",
+    "svg/batiments/paliers_hiver/puits/puits_palier5_hiver_3.svg",
+    "svg/batiments/paliers_hiver/puits/puits_palier5_hiver_4.svg"
+   ],
+   "cadre": [
+    -140,
+    -250,
+    280,
+    330
+   ],
+   "ms_par_image": 125,
+   "parcours": "evolutions",
+   "statut": "ok"
+  },
+  {
+   "id": "batiments/paliers_hiver/puits/puits_palier6_hiver",
+   "rubrique": "batiments",
+   "titre": "Puits — palier VI, l'hiver",
+   "images": 8,
+   "fichiers": [
+    "svg/batiments/paliers_hiver/puits/puits_palier6_hiver_1.svg",
+    "svg/batiments/paliers_hiver/puits/puits_palier6_hiver_2.svg",
+    "svg/batiments/paliers_hiver/puits/puits_palier6_hiver_3.svg",
+    "svg/batiments/paliers_hiver/puits/puits_palier6_hiver_4.svg",
+    "svg/batiments/paliers_hiver/puits/puits_palier6_hiver_5.svg",
+    "svg/batiments/paliers_hiver/puits/puits_palier6_hiver_6.svg",
+    "svg/batiments/paliers_hiver/puits/puits_palier6_hiver_7.svg",
+    "svg/batiments/paliers_hiver/puits/puits_palier6_hiver_8.svg"
+   ],
+   "cadre": [
+    -140,
+    -250,
+    280,
+    330
+   ],
+   "ms_par_image": 125,
+   "parcours": "evolutions",
+   "statut": "ok"
+  },
+  {
+   "id": "batiments/paliers_hiver/puits/puits_palier7_hiver",
+   "rubrique": "batiments",
+   "titre": "Puits — palier VII, l'hiver",
+   "images": 6,
+   "fichiers": [
+    "svg/batiments/paliers_hiver/puits/puits_palier7_hiver_1.svg",
+    "svg/batiments/paliers_hiver/puits/puits_palier7_hiver_2.svg",
+    "svg/batiments/paliers_hiver/puits/puits_palier7_hiver_3.svg",
+    "svg/batiments/paliers_hiver/puits/puits_palier7_hiver_4.svg",
+    "svg/batiments/paliers_hiver/puits/puits_palier7_hiver_5.svg",
+    "svg/batiments/paliers_hiver/puits/puits_palier7_hiver_6.svg"
+   ],
+   "cadre": [
+    -140,
+    -250,
+    280,
+    330
+   ],
+   "ms_par_image": 167,
    "parcours": "evolutions",
    "statut": "ok"
   },
