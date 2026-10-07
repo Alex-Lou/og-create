@@ -142,7 +142,8 @@
     </g>
 
     <!-- Veillée : la troupe assise en cercle autour du feu (ceux du fond derrière les flammes), chacun sur sa souche (la
-         pose assise de la bibliothèque ne dessine pas le siège ; son dessus est à y = 53,6 du cadre 48 × 64) -->
+         pose assise de la bibliothèque ne dessine pas le siège ; son dessus est à y = 53,6 du cadre 48 × 64). Au rite et
+         aux liens, chacun tend les mains vers le feu -->
     <g v-if="art === 'veillee' || art === 'rite' || (art === 'lien' && cast.length > 2)">
       <g v-for="m in ring.back" :key="`b${m.id}`" :transform="m.transform">
         <g :transform="m.seat" stroke="#3C2819" stroke-width="1.1" stroke-linejoin="round">
@@ -150,7 +151,7 @@
           <ellipse cx="23" cy="54" rx="8.5" ry="2.4" fill="#D6A066" />
           <ellipse cx="23" cy="54" rx="4.2" ry="1.1" fill="none" stroke="#A8743F" stroke-width=".7" />
         </g>
-        <image :href="person(m.id, 'se', 'sit')" :width="m.w" :height="m.h" />
+        <image :href="person(m.id, 'se', art === 'veillee' ? 'sit' : 'sitWarm')" :width="m.w" :height="m.h" />
       </g>
     </g>
 

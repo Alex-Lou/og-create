@@ -10,14 +10,14 @@ import DATA from '../../design/bibliotheque/svg/personnages/quotidien.json';
 import { fitTo } from './library';
 
 const FILES = import.meta.glob('/design/bibliotheque/svg/personnages/{maitres,naufrages}/**/*.svg', { query: '?raw', import: 'default' });
-const URLS = import.meta.glob('/design/bibliotheque/svg/personnages/{maitres,naufrages}/*/*_{face,avant}_{repos,travail,marche,assis}_1.svg', { query: '?url', import: 'default', eager: true });
+const URLS = import.meta.glob('/design/bibliotheque/svg/personnages/{maitres,naufrages}/*/*_{face,avant}_{repos,travail,marche,assis,assis-mains-tendues}_1.svg', { query: '?url', import: 'default', eager: true });
 const ROOT = '/design/bibliotheque/svg/personnages/';
 const SCALE = 1.25;
 
 // Le maître de chaque bâtiment
 export const MASTERS = { ponton: 'aster', foyer: 'cannelle', atelier: 'rivet', puits: 'ondin', bosquet: 'sylve', carriere: 'galet', potager: 'melisse' };
 const VIEWS = { front: 'face', se: 'avant', ne: 'dos' };
-const POSES = { walk: 'marche', idle: 'repos', work: 'travail', wave: 'salut', sit: 'assis' };
+const POSES = { walk: 'marche', idle: 'repos', work: 'travail', wave: 'salut', sit: 'assis', sitWarm: 'assis-mains-tendues' };
 // Ancres : les pieds d'un personnage debout ; le centre de l'ombre d'un dormeur couché (cadre 64 × 48)
 const FEET = [24, 62];
 const BED = [32, 26];
@@ -78,8 +78,8 @@ export function masterSprite(role, castaway, { pose = 'idle', view = 'se', frame
 }
 
 // Portrait d'un maître hors de l'île (sa fiche, les bulles du guide, les scènes) : de face ou de trois quarts avant, au
-// repos, au travail, en marche ou assis (la première image ; sans geste, au repos), en naufragé ou en maître ; l'adresse
-// du fichier, ou null
+// repos, au travail, en marche, assis ou assis les mains tendues vers le feu (la première image ; sans geste, au repos),
+// en naufragé ou en maître ; l'adresse du fichier, ou null
 export function masterPortrait(role, castaway, { view = 'front', pose = 'idle' } = {}) {
   const set = setOf(role, castaway);
   const drawn = VIEWS[view];
