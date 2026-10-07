@@ -10,8 +10,8 @@ import { RARE_SPRITES } from './rareSprites.js';
 import { itemLayers } from './shopSprites.js';
 import { sprite } from './iso.js';
 
-const FLAMES = flameFrames();
-const SHELTER_FLAMES = flameFrames(SHELTER_FIRE[0], SHELTER_FIRE[1], 0.75);
+const FLAMES = flameFrames(0, 0, 1, true);
+const SHELTER_FLAMES = flameFrames(SHELTER_FIRE[0], SHELTER_FIRE[1], 0.75, true);
 const FOUNTAIN = fountainFrames();
 // Skins du Puits qui coiffent la Fontaine d'un kiosque : son toit cache les jets d'eau
 const KIOSK_SKINS = new Set(['toit-bleu', 'toit-chaume']);

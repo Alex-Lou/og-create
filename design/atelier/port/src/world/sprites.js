@@ -14,24 +14,52 @@ const ln = (a, b, color, w = 1.2) => `<line x1="${f2(a[0])}" y1="${f2(a[1])}" x2
 const ell = (x, y, rx, ry, fill) => `<ellipse cx="${f2(x)}" cy="${f2(y)}" rx="${rx}" ry="${ry}" fill="${fill}"/>`;
 
 /* ---------- Bâtiments ---------- */
-// Cercle de pierres d'un feu de camp autour de (u, v), braises et bûches croisées (la flamme est animée à part) ; s : taille
+// Bûche couchée de (u0, v0) à (u1, v1) à la hauteur z, rayon r (px) : écorce détourée, reflet dessus, ombre dessous,
+// bout scié à cernes du côté du joueur
+function lyingLog(u0, v0, u1, v1, z, r, c = WOOD_DARK) {
+  const near = u1 + v1 >= u0 + v0;
+  const e = P(near ? u1 : u0, near ? v1 : v0, z + r), g = P(near ? u0 : u1, near ? v0 : v1, z + r);
+  const dx = e[0] - g[0], dy = e[1] - g[1], n = Math.hypot(dx, dy) || 1;
+  const ang = f2((Math.atan2(dy, dx) * 180) / Math.PI);
+  const seg = (k0, k1, oy, w, col, cap = 'butt') => `<line x1="${f2(g[0] + (dx * k0))}" y1="${f2(g[1] + dy * k0 + oy)}" x2="${f2(g[0] + dx * k1)}" y2="${f2(g[1] + dy * k1 + oy)}" stroke="${col}" stroke-width="${f2(w)}" stroke-linecap="${cap}"/>`;
+  const k = Math.min(0.45, (r * 0.9) / n);
+  return seg(0, 1, 0, 2 * r + 1.6, '#3C2819', 'round') + seg(0, 1, 0, 2 * r, c.left, 'round')
+    + seg(k, 1 - k, -r * 0.45, r * 0.55, c.top) + seg(k, 1 - k, r * 0.5, r * 0.5, c.right)
+    + `<g transform="rotate(${ang} ${f2(e[0])} ${f2(e[1])})"><ellipse cx="${f2(e[0])}" cy="${f2(e[1])}" rx="${f2(r * 0.55)}" ry="${f2(r)}" fill="#E7C08A" stroke="#3C2819" stroke-width="0.7"/>`
+    + `<ellipse cx="${f2(e[0])}" cy="${f2(e[1])}" rx="${f2(r * 0.28)}" ry="${f2(r * 0.52)}" fill="none" stroke="#B98552" stroke-width="0.6"/></g>`;
+}
+// Pierre détourée du cercle d'un feu : ombre, flanc, dessus éclairé
+function ringStone(u, v, s) {
+  const [x, y] = P(u, v, 0);
+  return `<ellipse cx="${f2(x)}" cy="${f2(y)}" rx="${f2(s)}" ry="${f2(s * 0.68)}" fill="${STONE.right}" stroke="#3C2819" stroke-width="0.7"/>`
+    + `<ellipse cx="${f2(x - s * 0.12)}" cy="${f2(y - s * 0.16)}" rx="${f2(s * 0.8)}" ry="${f2(s * 0.48)}" fill="${STONE.left}"/>`
+    + `<ellipse cx="${f2(x - s * 0.3)}" cy="${f2(y - s * 0.3)}" rx="${f2(s * 0.38)}" ry="${f2(s * 0.2)}" fill="${STONE.top}"/>`;
+}
+// Cercle de pierres d'un feu de camp autour de (u, v) : pierres de tailles variées (l'arrière, puis le lit de cendres,
+// les braises qui rougeoient, deux bûches croisées, puis l'avant), la flamme est animée à part ; s : taille
 function fireRing(u, v, s = 1) {
-  let stones = '';
-  // Pierres de l'arrière d'abord : l'ordre de peinture fait l'occlusion
   const ring = Array.from({ length: 9 }, (_, k) => {
     const a = (k / 9) * Math.PI * 2;
-    return { u: u + Math.cos(a) * 0.36 * s, v: v + Math.sin(a) * 0.36 * s };
+    return { u: u + Math.cos(a) * 0.36 * s, v: v + Math.sin(a) * 0.36 * s, r: 5.2 * s * (0.86 + 0.28 * (((k * 37) % 10) / 10)) };
   }).sort((p, q) => p.u + p.v - (q.u + q.v));
-  ring.forEach(p => { stones += pebble(p.u, p.v, 5.2 * s); });
-  const logs = box(u - 0.24 * s, v - 0.04 * s, u + 0.24 * s, v + 0.04 * s, 0, 5 * s, WOOD_DARK) + box(u - 0.04 * s, v - 0.24 * s, u + 0.04 * s, v + 0.24 * s, 0, 5 * s, WOOD);
-  const embers = disc(u, v, 0.5, 0.2 * s, '#5C3A24') + disc(u, v, 1, 0.12 * s, '#F28A3A', ' opacity=".85"');
-  return stones + embers + logs;
+  const back = ring.filter(p => p.u + p.v < u + v), front = ring.filter(p => p.u + p.v >= u + v);
+  const [x, y] = P(u, v, 0.5);
+  const coals = [[-5, 1, '#E2574C'], [4, -1, '#F28A3A'], [-1, 3, '#FFD27A'], [6, 2.5, '#E2574C'], [-6.5, -1.5, '#F28A3A']]
+    .map(([dx, dy, c]) => `<ellipse cx="${f2(x + dx * s)}" cy="${f2(y + dy * s)}" rx="${f2(1.8 * s)}" ry="${f2(1.1 * s)}" fill="${c}"/>`).join('');
+  return back.map(p => ringStone(p.u, p.v, p.r)).join('')
+    + disc(u, v, 0.5, 0.24 * s, '#4A3426') + disc(u, v, 0.5, 0.17 * s, '#6B4A33') + coals
+    + lyingLog(u - 0.24 * s, v + 0.03 * s, u + 0.2 * s, v + 0.03 * s, 0, 2.6 * s, WOOD_DARK)
+    + lyingLog(u + 0.02 * s, v - 0.24 * s, u + 0.02 * s, v + 0.2 * s, 2.4 * s, 2.4 * s, WOOD)
+    + front.map(p => ringStone(p.u, p.v, p.r)).join('');
 }
 
-// Foyer, niveau 1 : feu de camp dans un cercle de pierres, une bûche pour s'asseoir (la flamme est animée à part)
+// Foyer, niveau 1 : feu de camp dans un cercle de pierres, une bûche pour s'asseoir, une souche à cernes (la flamme
+// est animée à part)
 function campfire() {
-  const seat = shadow(0.62, -0.5, 0.3, 0.18) + box(0.42, -0.6, 0.82, -0.44, 0, 7, WOOD);
-  const stump = shadow(-0.55, 0.55, 0.2, 0.18) + cylinder(-0.55, 0.55, 0, 9, 0.14, { top: '#E7C08A', left: WOOD.left, right: WOOD.right }, 'stumpg');
+  const seat = shadow(0.62, -0.5, 0.3, 0.18) + lyingLog(0.42, -0.52, 0.82, -0.52, 0, 4, WOOD);
+  const [tx, ty] = P(-0.55, 0.55, 9);
+  const stump = shadow(-0.55, 0.55, 0.2, 0.18) + cylinder(-0.55, 0.55, 0, 9, 0.14, { top: '#E7C08A', left: WOOD.left, right: WOOD.right }, 'stumpg')
+    + `<ellipse cx="${f2(tx)}" cy="${f2(ty)}" rx="3.8" ry="1.9" fill="none" stroke="#B98552" stroke-width="0.6"/><ellipse cx="${f2(tx)}" cy="${f2(ty)}" rx="1.6" ry="0.8" fill="none" stroke="#B98552" stroke-width="0.6"/>`;
   return sprite(shadow(0, 0, 0.6, 0.16) + seat + fireRing(0, 0) + stump, BUILDING_BOX);
 }
 
@@ -71,7 +99,7 @@ function shelter(skin) {
     + ln(P(a - 0.06, vm, z + h + 1), P(b + 0.06, vm, z + h + 1), WOOD_DARK.left, 2.2)
     + poles(b)
     // Bûche pour s'asseoir
-    + shadow(-0.4, 0.42, 0.2, 0.16) + box(-0.58, 0.36, -0.24, 0.48, 0, 6, WOOD)
+    + shadow(-0.4, 0.42, 0.2, 0.16) + lyingLog(-0.58, 0.42, -0.24, 0.42, 0, 3.4, WOOD)
     + shadow(SHELTER_FIRE[0], SHELTER_FIRE[1], 0.34, 0.14) + fireRing(SHELTER_FIRE[0], SHELTER_FIRE[1], 0.62),
     BUILDING_BOX
   );
@@ -390,14 +418,25 @@ function tuftProp() {
 }
 
 /* ---------- Parties animées ---------- */
-// Flamme d'un feu de camp : 3 images ; ancrée au centre du feu, en (u, v) (le feu de camp : au centre de l'emprise), s : taille
-export function flameFrames(u = 0, v = 0, s = 1) {
+// Flamme d'un feu de camp : 3 images ; ancrée au centre du feu, en (u, v) (le feu de camp : au centre de l'emprise), s : taille.
+// outlined : flamme détourée en trois couches (rouge, orange, cœur jaune) et deux étincelles (bâtiments)
+export function flameFrames(u = 0, v = 0, s = 1, outlined = false) {
   const [x, y] = P(u, v, 4);
   const shapes = [
     [[0, -22], [7, -6], [0, 0], [-7, -6]],
     [[2, -24], [7, -7], [0, 0], [-6, -5]],
     [[-2, -21], [6, -5], [0, 0], [-7, -7]]
   ].map(shape => shape.map(([dx, dy]) => [dx * s, dy * s]));
+  const tongue = ([tip, r, base, l], k, fill, extra = '') => `<path d="M${f2(x + base[0] * k)},${f2(y + base[1] * k)} C${f2(x + (r[0] + 3 * s) * k)},${f2(y + r[1] * k)} ${f2(x + (tip[0] + 2 * s) * k)},${f2(y + (tip[1] + 8 * s) * k)} ${f2(x + tip[0] * k)},${f2(y + tip[1] * k)} C${f2(x + (tip[0] - 2 * s) * k)},${f2(y + (tip[1] + 8 * s) * k)} ${f2(x + (l[0] - 3 * s) * k)},${f2(y + l[1] * k)} ${f2(x + base[0] * k)},${f2(y + base[1] * k)} Z" fill="${fill}"${extra}/>`;
+  if (outlined) {
+    const sparks = [[[5, -27], [-6, -18]], [[-4, -30], [7, -21]], [[3, -32], [-7, -25]]];
+    return shapes.map((sh, i) => sprite(
+      tongue(sh, 1, '#EE6A3A', ' stroke="#3C2819" stroke-width="0.8" stroke-linejoin="round"')
+      + tongue(sh, 0.78, '#F7A23B') + tongue(sh, 0.5, '#FFE07A')
+      + sparks[i].map(([dx, dy], j) => `<circle cx="${f2(x + dx * s)}" cy="${f2(y + dy * s)}" r="${f2((j ? 0.8 : 1.1) * s)}" fill="#FFD27A"/>`).join(''),
+      { x: x - 20, y: y - 36, w: 40, h: 44 }
+    ));
+  }
   return shapes.map(([tip, r, base, l]) => sprite(
     `<path d="M${x + base[0]},${y + base[1]} C${x + r[0] + 3 * s},${y + r[1]} ${x + tip[0] + 2 * s},${y + tip[1] + 8 * s} ${x + tip[0]},${y + tip[1]} C${x + tip[0] - 2 * s},${y + tip[1] + 8 * s} ${x + l[0] - 3 * s},${y + l[1]} ${x + base[0]},${y + base[1]} Z" fill="#F7A23B"/>`
     + `<path d="M${x},${y} C${x + 4 * s},${y - 4 * s} ${x + tip[0] * 0.5 + 1 * s},${y + tip[1] * 0.5 + 4 * s} ${x + tip[0] * 0.5},${y + tip[1] * 0.55} C${x + tip[0] * 0.5 - 1 * s},${y + tip[1] * 0.5 + 4 * s} ${x - 4 * s},${y - 4 * s} ${x},${y} Z" fill="#FFE07A"/>`,
