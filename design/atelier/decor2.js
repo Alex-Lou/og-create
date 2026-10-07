@@ -151,7 +151,8 @@ const G = {
         + E(x + 0.7 * s, y + 1.1 * s, 1.2 * s, 0.9 * s, i % 3 ? '#F2924A' : '#EE7A5A', 0) + E(x - 0.8 * s, y - 0.9 * s, 0.45 * s, 0.7 * s, '#FFF6D0', 0)
         + line(`M${r2(x)},${r2(y - 2.3 * s)} q0.3,-1.4 1,-2`, 0.9, OUT);
       const fruits = spent ? '' : [[-20, -38], [-11, -45], [-25, -45], [-5, -36], [3, -51], [10, -39], [18, -35], [21, -43], [-2, -59], [12, -56]].map(([x, y], i) => mangue(x, y, 1.15, i)).join('');
-      return `<g transform="rotate(${spent ? 0 : f ? 1.2 : -1.2}) scale(${r2(0.87 / K)})">${arbre({ vert: 'profond', petit: true })}${fruits}</g>`;
+      // 0,86 : la couronne reste dans le cadre du jeu (à 0,87, son trait touchait le haut)
+      return `<g transform="rotate(${spent ? 0 : f ? 1.2 : -1.2}) scale(${r2(0.86 / K)})">${arbre({ vert: 'profond', petit: true })}${fruits}</g>`;
     }
   },
   // Éclats d'obsidienne : une plaque de cendre aux bords bosselés et ses fentes de braise ; des lames noires à facettes au
