@@ -3,7 +3,7 @@
 // les brins sortent du sol, ou d'une motte basse et sombre. Même cadre et même ancrage que les plantes de deco.js (le jeu
 // fait balancer le dessin depuis sa base). Variantes : avec motte, petite, vert profond, fleurie (deux fleurettes sur tige).
 const { OUT, E, r2 } = require('./troupe');
-const { VERTS, fleurette } = require('./arbres');
+const { VERTS, TEINTES, fleurette, congere } = require('./arbres');
 
 const W = 1.1;
 // Un brin : pied (x, 0) large de w, pointe arrondie en (tx, ty), courbure b
@@ -56,4 +56,25 @@ for (const motte of [false, true]) for (const petite of [false, true]) for (cons
   TOUFFES.push([fichier, libelle, { vert, motte, petite, fleurie }]);
 }
 
-module.exports = { touffe, TOUFFES };
+// ——— La touffe au fil des saisons (au printemps et en été, ce sont les touffes vertes, fleuries ou non) ———
+// automne : l'herbe blonde, sèche, quelques graines au bout des brins ; hiver : le vert froid, un peu de neige sur la
+// pointe des brins et une petite congère au pied
+const BLOND = { devant: { light: '#F6E6A8', mid: '#DDBD66', dark: '#A98A3E' }, fond: { light: '#E4CB86', mid: '#C4A052', dark: '#8E6F36' } };
+function touffeSaison({ saison = 'automne', petite = false } = {}) {
+  const hiver = saison === 'hiver', c = hiver ? TEINTES.hiver : BLOND, s = petite ? 0.7 : 1;
+  const id = `tfs${saison[0]}${petite ? 'p' : 'g'}`;
+  const S = l => l.map(([x, w, tx, ty, b]) => [x * s, w * Math.max(s, 0.8), tx * s, ty * s, b * s]);
+  let o = E(1, 1, 12.5 * s, 4.2 * s, hiver ? 'rgba(60,80,110,0.22)' : 'rgba(40,55,20,0.22)', 0);
+  o += S(FOND).map((b, i) => brin(`${id}a${i}`, b, c.fond)).join('');
+  o += S(DEVANT).map((b, i) => brin(`${id}b${i}`, b, c.devant)).join('');
+  // les pointes : de la neige (hiver) ou des épis de graines (automne)
+  o += S([...FOND, ...DEVANT]).map(([, , tx, ty]) => hiver ? E(tx + 0.2, ty + 1.1, 1.15, 0.75, '#FFFFFF', 0.5) : E(tx, ty + 0.4, 0.9, 1.4, '#C9A04E', 0.6)).join('');
+  if (hiver) o += congere(0.55 * s);
+  return o;
+}
+const TOUFFES_SAISONS = [];
+for (const saison of ['automne', 'hiver']) for (const petite of [false, true]) {
+  TOUFFES_SAISONS.push([['touffe', saison, petite && 'petite'].filter(Boolean).join('_'), `Touffe d'herbe ${saison === 'hiver' ? 'd\'hiver' : 'd\'automne'} (${petite ? 'petite' : 'grande'}, ${saison === 'hiver' ? 'neige sur les pointes, congère au pied' : 'herbe blonde, épis de graines'})`, { saison, petite }]);
+}
+
+module.exports = { touffe, TOUFFES, touffeSaison, TOUFFES_SAISONS };

@@ -112674,6 +112674,40 @@
    "statut": "ok"
   },
   {
+   "id": "plantes/arbre_hiver",
+   "rubrique": "plantes",
+   "titre": "Arbre d'hiver (grand, sous la neige, congère au pied)",
+   "images": 1,
+   "fichiers": [
+    "svg/plantes/arbre_hiver.svg"
+   ],
+   "cadre": [
+    -50,
+    -115,
+    100,
+    140
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "plantes/arbre_hiver_petit",
+   "rubrique": "plantes",
+   "titre": "Arbre d'hiver (petit, sous la neige, congère au pied)",
+   "images": 1,
+   "fichiers": [
+    "svg/plantes/arbre_hiver_petit.svg"
+   ],
+   "cadre": [
+    -50,
+    -115,
+    100,
+    140
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
    "id": "plantes/arbre_mort",
    "rubrique": "plantes",
    "titre": "Arbre mort (grand, gris)",
@@ -112799,6 +112833,40 @@
    "images": 1,
    "fichiers": [
     "svg/plantes/arbre_mort_petit_champignons.svg"
+   ],
+   "cadre": [
+    -50,
+    -115,
+    100,
+    140
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "plantes/arbre_printemps",
+   "rubrique": "plantes",
+   "titre": "Arbre de printemps (grand, vert tendre, en fleurs, pied fleuri)",
+   "images": 1,
+   "fichiers": [
+    "svg/plantes/arbre_printemps.svg"
+   ],
+   "cadre": [
+    -50,
+    -115,
+    100,
+    140
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "plantes/arbre_printemps_petit",
+   "rubrique": "plantes",
+   "titre": "Arbre de printemps (petit, vert tendre, en fleurs, pied fleuri)",
+   "images": 1,
+   "fichiers": [
+    "svg/plantes/arbre_printemps_petit.svg"
    ],
    "cadre": [
     -50,
@@ -113071,6 +113139,74 @@
    "images": 1,
    "fichiers": [
     "svg/plantes/bruyere_rose_papillon.svg"
+   ],
+   "cadre": [
+    -50,
+    -115,
+    100,
+    140
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "plantes/buisson_automne",
+   "rubrique": "plantes",
+   "titre": "Buisson d'automne (grand, roux, chargé de baies, feuilles mortes au pied)",
+   "images": 1,
+   "fichiers": [
+    "svg/plantes/buisson_automne.svg"
+   ],
+   "cadre": [
+    -50,
+    -115,
+    100,
+    140
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "plantes/buisson_automne_petit",
+   "rubrique": "plantes",
+   "titre": "Buisson d'automne (petit, roux, chargé de baies, feuilles mortes au pied)",
+   "images": 1,
+   "fichiers": [
+    "svg/plantes/buisson_automne_petit.svg"
+   ],
+   "cadre": [
+    -50,
+    -115,
+    100,
+    140
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "plantes/buisson_hiver",
+   "rubrique": "plantes",
+   "titre": "Buisson d'hiver (grand, sous la neige, congère au pied)",
+   "images": 1,
+   "fichiers": [
+    "svg/plantes/buisson_hiver.svg"
+   ],
+   "cadre": [
+    -50,
+    -115,
+    100,
+    140
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "plantes/buisson_hiver_petit",
+   "rubrique": "plantes",
+   "titre": "Buisson d'hiver (petit, sous la neige, congère au pied)",
+   "images": 1,
+   "fichiers": [
+    "svg/plantes/buisson_hiver_petit.svg"
    ],
    "cadre": [
     -50,
@@ -113898,6 +114034,108 @@
    "statut": "ok"
   },
   {
+   "id": "plantes/rocher_automne",
+   "rubrique": "plantes",
+   "titre": "Rocher d'automne (grand, feuilles mortes dessus et au pied)",
+   "images": 1,
+   "fichiers": [
+    "svg/plantes/rocher_automne.svg"
+   ],
+   "cadre": [
+    -50,
+    -115,
+    100,
+    140
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "plantes/rocher_automne_petit",
+   "rubrique": "plantes",
+   "titre": "Rocher d'automne (petit, feuilles mortes dessus et au pied)",
+   "images": 1,
+   "fichiers": [
+    "svg/plantes/rocher_automne_petit.svg"
+   ],
+   "cadre": [
+    -50,
+    -115,
+    100,
+    140
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "plantes/rocher_hiver",
+   "rubrique": "plantes",
+   "titre": "Rocher d'hiver (grand, calotte de neige, congère au pied)",
+   "images": 1,
+   "fichiers": [
+    "svg/plantes/rocher_hiver.svg"
+   ],
+   "cadre": [
+    -50,
+    -115,
+    100,
+    140
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "plantes/rocher_hiver_petit",
+   "rubrique": "plantes",
+   "titre": "Rocher d'hiver (petit, calotte de neige, congère au pied)",
+   "images": 1,
+   "fichiers": [
+    "svg/plantes/rocher_hiver_petit.svg"
+   ],
+   "cadre": [
+    -50,
+    -115,
+    100,
+    140
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "plantes/rocher_printemps",
+   "rubrique": "plantes",
+   "titre": "Rocher de printemps (grand, herbe neuve et fleurettes au pied)",
+   "images": 1,
+   "fichiers": [
+    "svg/plantes/rocher_printemps.svg"
+   ],
+   "cadre": [
+    -50,
+    -115,
+    100,
+    140
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "plantes/rocher_printemps_petit",
+   "rubrique": "plantes",
+   "titre": "Rocher de printemps (petit, herbe neuve et fleurettes au pied)",
+   "images": 1,
+   "fichiers": [
+    "svg/plantes/rocher_printemps_petit.svg"
+   ],
+   "cadre": [
+    -50,
+    -115,
+    100,
+    140
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
    "id": "plantes/rochers_moussus",
    "rubrique": "plantes",
    "titre": "Rochers moussus (grands)",
@@ -114323,12 +114561,80 @@
    "statut": "ok"
   },
   {
+   "id": "plantes/touffe_automne",
+   "rubrique": "plantes",
+   "titre": "Touffe d'herbe d'automne (grande, herbe blonde, épis de graines)",
+   "images": 1,
+   "fichiers": [
+    "svg/plantes/touffe_automne.svg"
+   ],
+   "cadre": [
+    -50,
+    -115,
+    100,
+    140
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "plantes/touffe_automne_petite",
+   "rubrique": "plantes",
+   "titre": "Touffe d'herbe d'automne (petite, herbe blonde, épis de graines)",
+   "images": 1,
+   "fichiers": [
+    "svg/plantes/touffe_automne_petite.svg"
+   ],
+   "cadre": [
+    -50,
+    -115,
+    100,
+    140
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
    "id": "plantes/touffe_fleurie",
    "rubrique": "plantes",
    "titre": "Touffe d'herbe (grande, vert doux, fleurie)",
    "images": 1,
    "fichiers": [
     "svg/plantes/touffe_fleurie.svg"
+   ],
+   "cadre": [
+    -50,
+    -115,
+    100,
+    140
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "plantes/touffe_hiver",
+   "rubrique": "plantes",
+   "titre": "Touffe d'herbe d'hiver (grande, neige sur les pointes, congère au pied)",
+   "images": 1,
+   "fichiers": [
+    "svg/plantes/touffe_hiver.svg"
+   ],
+   "cadre": [
+    -50,
+    -115,
+    100,
+    140
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "plantes/touffe_hiver_petite",
+   "rubrique": "plantes",
+   "titre": "Touffe d'herbe d'hiver (petite, neige sur les pointes, congère au pied)",
+   "images": 1,
+   "fichiers": [
+    "svg/plantes/touffe_hiver_petite.svg"
    ],
    "cadre": [
     -50,
