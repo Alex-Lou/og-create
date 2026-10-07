@@ -1,0 +1,26 @@
+# L'API de Brumelune (og-create-backend), lancée et relancée par systemd. À copier dans /etc/systemd/system/
+# (deploy/ovh/README.md). Ses réglages et secrets sont dans /etc/brumelune/api.env (modèle : api.env.example).
+[Unit]
+Description=Brumelune API (Node)
+After=network.target postgresql.service
+Wants=postgresql.service
+
+[Service]
+Type=simple
+User=brumelune
+Group=brumelune
+WorkingDirectory=/srv/brumelune/og-create-backend
+EnvironmentFile=/etc/brumelune/api.env
+ExecStart=/usr/bin/node src/server.js
+Restart=always
+RestartSec=3
+# Un VPS partagé avec une autre app : l'API ne prend jamais plus de 512 Mo
+MemoryMax=512M
+# Ne peut rien écrire sur le disque, ni gagner de droits
+NoNewPrivileges=true
+ProtectSystem=strict
+ProtectHome=true
+PrivateTmp=true
+
+[Install]
+WantedBy=multi-user.target

@@ -4,6 +4,7 @@
 :root {
   /* Dans la page */
   --z-shell: 1;       /* la coque : en-tête, onglet en cours, île */
+  --z-loading: 24;    /* l'arrivée sur l'île, sous la barre d'onglets */
   --z-tabbar: 25;
   --z-guide: 40;      /* Brume et sa bulle */
   --z-wreck: 40;      /* le naufrage (rendu dans la page) */

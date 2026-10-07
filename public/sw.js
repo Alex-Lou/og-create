@@ -2,8 +2,9 @@
 // - Pages : réseau d'abord (toujours la dernière version en ligne), copie en cache pour le hors-ligne.
 // - Fichiers du build (js, css, images, icônes) : cache d'abord ; leurs noms changent à chaque version.
 // - Le reste (API, polices externes) n'est jamais intercepté.
-// Changer de nom vide l'ancien cache (icônes et fichiers à nom fixe)
-const CACHE = 'origins-v2';
+// Changer de nom vide l'ancien cache (icônes et fichiers à nom fixe). v3 : vide aussi les pages HTML gardées par erreur
+// à la place d'un fichier du build (voir plus bas)
+const CACHE = 'origins-v3';
 const STATIC_PREFIXES = ['/js/', '/css/', '/img/', '/fonts/', '/icons/'];
 
 self.addEventListener('install', () => self.skipWaiting());
@@ -57,7 +58,10 @@ self.addEventListener('fetch', event => {
   if (STATIC_PREFIXES.some(prefix => url.pathname.startsWith(prefix))) {
     event.respondWith(
       caches.match(request).then(cached => cached || fetch(request).then(response => {
-        if (response.ok) {
+        // Un fichier disparu (le jeu mis à jour pendant qu'une page plus ancienne tournait) peut revenir sous la forme de
+        // la page de l'application (règle « tout vers index.html » du serveur) : gardé, il casserait ce fichier jusqu'au
+        // vidage du cache
+        if (response.ok && !(response.headers.get('content-type') || '').includes('text/html')) {
           const copy = response.clone();
           caches.open(CACHE).then(cache => cache.put(request, copy));
         }

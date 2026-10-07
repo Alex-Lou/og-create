@@ -12,6 +12,25 @@ const http = axios.create({
   timeout: 20000
 });
 
+// Un serveur qui dort (hébergement gratuit : jusqu'à une minute pour se réveiller) ou qui peine (serveur partagé) :
+// une lecture (GET) restée sans réponse, ou répondue 502, 503 ou 504, est refaite après 1, 2, 4, 8 puis 15 s, tant
+// que RETRY_BUDGET_MS n'est pas écoulé depuis la première demande. Une écriture (POST…) n'est jamais refaite : rien ne
+// dit que le serveur ne l'a pas déjà faite.
+const RETRY_DELAYS = [1000, 2000, 4000, 8000, 15000];
+const RETRY_BUDGET_MS = 90000;
+const UNREACHABLE = new Set([502, 503, 504]);
+const unreachable = error => (error.response ? UNREACHABLE.has(error.response.status) : error.code !== 'ERR_CANCELED');
+
+async function retried(request, error) {
+  request._since = request._since || Date.now();
+  const tries = request._tries || 0;
+  const delay = RETRY_DELAYS[Math.min(tries, RETRY_DELAYS.length - 1)];
+  if (Date.now() - request._since + delay > RETRY_BUDGET_MS) throw error;
+  request._tries = tries + 1;
+  await new Promise(resolve => setTimeout(resolve, delay));
+  return http(request);
+}
+
 // Un seul renouvellement à la fois, partagé par toutes les requêtes en 401.
 // 409 : un autre onglet vient de renouveler la session, le navigateur a déjà le nouveau cookie.
 let refreshing = null;
@@ -30,6 +49,7 @@ http.interceptors.response.use(
   response => response,
   async error => {
     const request = error.config;
+    if (request && request.method === 'get' && unreachable(error)) return retried(request, error);
     const isAuthCall = request?.url?.includes('/auth/');
     // Sans session (invité), un 401 est simplement renvoyé à l'appelant
     if (error.response?.status === 401 && request && !request._retry && !isAuthCall && getSession()) {

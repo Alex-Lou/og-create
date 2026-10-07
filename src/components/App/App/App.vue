@@ -53,6 +53,8 @@
             @quest="onIslandQuest"
             @replay-vigil="replayVigil"
             @replay-anya="replayRevelation"
+            @loading="onIslandLoading"
+            @loaded="islandLoaded"
           />
           <!-- Mode principal : le Livre ; l'Épreuve garde son inventaire -->
           <BookView
@@ -119,7 +121,12 @@
       </main>
     </div>
     <TabBar :current="currentMode" :dots="isLoggedIn ? [] : ['sceau']" @select="handleModeSelect" />
-    <BrumeGuide :stage="brumeStage" @go="handleModeSelect" />
+    <!-- L'arrivée sur l'île : seulement si sa première vue n'est pas prête tout de suite -->
+    <transition name="island-loader">
+      <IslandLoader v-if="islandCovered" :progress="islandLoad.progress" :stage="brumeStage" />
+    </transition>
+    <!-- (pendant ce chargement, Brume est sur l'écran de chargement : sa bulle attend que l'île se montre) -->
+    <BrumeGuide v-if="!islandCovered" :stage="brumeStage" @go="handleModeSelect" />
     <!-- Le tutoriel (HISTOIRE.md, § 9) : scènes, carte d'embarquement, page de garde du Grimoire, main qui montre où toucher -->
     <PrologueScene
       v-if="prologueScene"
@@ -214,6 +221,7 @@ import { defineAsyncComponent } from 'vue';
 import notificationService from '@/services/notificationService';
 import * as storage from '@/utils/storage';
 import { readCarnet } from '@/utils/carnet';
+import { splashStep, splashFailed } from '@/utils/splash';
 import { failLine } from '@/utils/failLine';
 import { ringsFor } from '@/utils/sigil';
 import { roman } from '@/utils/roman';
@@ -245,11 +253,15 @@ import PrologueScene from '../../Prologue/PrologueScene/PrologueScene.vue';
 import PrologueName from '../../Prologue/PrologueName/PrologueName.vue';
 import PrologueAvatar from '../../Prologue/PrologueAvatar/PrologueAvatar.vue';
 import TutorialHand from '../../Guide/TutorialHand/TutorialHand.vue';
+import IslandLoader from '../../World/IslandLoader/IslandLoader.vue';
 
 // L'île et tout ce qu'elle dessine (bâtiments, boutique, décor, terrain) : chargés à part, pour que le Grimoire
 // s'ouvre sans les attendre ; préchargés dès que l'application est au repos (mounted), l'île s'ouvre sans délai
 const loadWorld = () => import('../../World/WorldView/WorldView.vue');
 const WorldView = defineAsyncComponent(loadWorld);
+// L'écran d'arrivée sur l'île : montré si la première vue n'est pas prête après ce délai, jamais plus longtemps que ça
+const ISLAND_SHOW_MS = 200;
+const ISLAND_MAX_MS = 6000;
 
 export default {
   name: 'App',
@@ -279,7 +291,8 @@ export default {
     PrologueScene,
     PrologueName,
     PrologueAvatar,
-    TutorialHand
+    TutorialHand,
+    IslandLoader
   },
   data() {
     return {
@@ -303,7 +316,9 @@ export default {
       isCustomizeModalOpen: false,
       // Le Monde (île du joueur) et le Sceau (le joueur, son compte) remplacent le Livre et l'Athanor
       isWorldActive: false,
-      isSceauActive: false
+      isSceauActive: false,
+      // L'arrivée sur l'île : { progress, shown } tant que sa première vue n'est pas prête, sinon null
+      islandLoad: null
     };
   },
   async created() {
@@ -312,15 +327,24 @@ export default {
     const cached = this.isLoggedIn && readCarnet(this.currentUser?.userId);
     if (cached && cached.families && Object.keys(cached.families).length) this.applyPlayState(cached);
     // Sans compte, le serveur tient un carnet invité
-    await Promise.all([this.loadPlayState(), this.isLoggedIn ? this.loadAccount() : null]);
+    const [carnet] = await Promise.all([this.loadPlayState(), this.isLoggedIn ? this.loadAccount() : null]);
+    // La partie n'est pas revenue (serveur injoignable, même après ses nouveaux essais) : l'écran de démarrage le dit et
+    // propose de réessayer, plutôt qu'un Grimoire vide
+    if (!carnet) splashFailed();
     await this.loadAchievements();
     this.progressReady = true;
+    // La partie du joueur est revenue : l'écran de démarrage peut s'effacer (avec les polices)
+    if (carnet) splashStep('carnet');
   },
   computed: {
     currentMode() {
       if (this.isSceauActive) return 'sceau';
       if (this.isWorldActive) return 'world';
       return this.isTimerActive ? 'timer' : 'infinite';
+    },
+    // L'écran de chargement de l'île est affiché
+    islandCovered() {
+      return Boolean(this.islandLoad && this.islandLoad.shown);
     },
     // La progression (ère, fond) suit toujours l'inventaire Infini, même pendant l'Épreuve
     infiniteElements() {
@@ -391,6 +415,19 @@ export default {
     },
     isWorldActive(now) {
       if (now) this.runIsland();
+      // Arrivée sur l'île : l'écran de chargement ne se montre que si la première vue tarde (ISLAND_SHOW_MS), et jamais
+      // plus de ISLAND_MAX_MS ; il part dès que l'île dit sa vue prête (loaded), ou en la quittant
+      this.islandLoaded();
+      if (!now) return;
+      this.islandLoad = { progress: {}, shown: false };
+      this.islandShowTimer = setTimeout(() => {
+        if (this.islandLoad) this.islandLoad.shown = true;
+      }, ISLAND_SHOW_MS);
+      // (l'île cesse aussi de compter : elle se redessine de nouveau à chaque image)
+      this.islandMaxTimer = setTimeout(() => {
+        this.$refs.world?.endLoading?.();
+        this.islandLoaded();
+      }, ISLAND_MAX_MS);
     },
     // Les panneaux fixés en bas changent avec le mode : on remesure la place à leur réserver
     isTimerActive() {
@@ -417,11 +454,21 @@ export default {
     idle(() => loadWorld().catch(() => {}));
   },
   beforeUnmount() {
+    this.islandLoaded();
     this.overlays?.disconnect();
     document.removeEventListener('visibilitychange', this.handleVisibility);
     clearTimeout(this.prologueTimer);
   },
   methods: {
+    // L'île dit où en est sa première vue (draw/loading.js), puis qu'elle est prête
+    onIslandLoading(progress) {
+      if (this.islandLoad) this.islandLoad.progress = progress;
+    },
+    islandLoaded() {
+      clearTimeout(this.islandShowTimer);
+      clearTimeout(this.islandMaxTimer);
+      this.islandLoad = null;
+    },
     // Mobile : hauteur réelle du dock et de la consigne, réservée sous la liste (et pour le défilement)
     trackOverlays() {
       this.overlays?.disconnect();

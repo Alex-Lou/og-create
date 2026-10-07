@@ -16,6 +16,10 @@
 const LEVELS = [4, 2, 1, 0.5, 0.25];
 const LOADS = 6;
 const RASTER_MS = 6;
+// Pendant le chargement de l'île (countSprites), l'écran de chargement la couvre : lire et peindre vite passe avant la
+// fluidité de l'île, qu'on ne voit pas encore
+const LOADING_LOADS = 12;
+const LOADING_RASTER_MS = 40;
 // Pixels gardés (≈ 64 Mo) au-delà desquels les images qui n'ont pas servi depuis KEEP_MS partent
 const BUDGET_PX = 16e6;
 const KEEP_MS = 10000;
@@ -47,7 +51,7 @@ function textOf(entry) {
 }
 
 function pump() {
-  while (loading < LOADS && queue.length) {
+  while (loading < (counting ? LOADING_LOADS : LOADS) && queue.length) {
     const { key, entry, level } = queue.shift();
     const slot = entry.levels.get(level);
     if (cache.get(key) !== entry || !slot || slot.canvas) continue;
@@ -74,7 +78,8 @@ function pump() {
 function rasterize() {
   rasterRaf = 0;
   const start = performance.now();
-  while (rasters.length && (performance.now() - start < RASTER_MS)) {
+  const budget = counting ? LOADING_RASTER_MS : RASTER_MS;
+  while (rasters.length && (performance.now() - start < budget)) {
     const { key, entry, level, slot, img } = rasters.shift();
     // Vidé entre-temps (sortie de l'île, ou détail parti du budget) : l'image ne sert plus
     if (cache.get(key) !== entry || entry.levels.get(level) !== slot) continue;
@@ -246,6 +251,30 @@ export function setSpriteDetail(px) {
   detail = [...LEVELS].reverse().find(level => level >= px) || LEVELS[0];
   tick++;
   stamp = performance.now();
+  if (counting) counting = new Map();
+}
+
+// Le compte des dessins pendant le chargement de l'île (countSprites, App.vue : IslandLoader) : à chaque image, par
+// groupe (spriteGroup : le décor, les bâtiments, les habitants et les bêtes), les dessins demandés et ceux qui étaient
+// prêts ; spriteCount() lit celui de l'image en cours (complet à la fin de son dessin). Coupé hors chargement (rien
+// n'est compté)
+let counting = null;
+let group = '';
+export function countSprites(on) {
+  counting = on ? new Map() : null;
+}
+export function spriteGroup(name) {
+  group = name;
+}
+// { groupe: [prêts, demandés] } de l'image en cours ({} hors chargement)
+export function spriteCount() {
+  return counting ? Object.fromEntries([...counting].map(([name, c]) => [name, [c.ready.size, c.asked.size]])) : {};
+}
+function note(key, ready) {
+  let c = counting.get(group);
+  if (!c) counting.set(group, (c = { asked: new Set(), ready: new Set() }));
+  c.asked.add(key);
+  if (ready) c.ready.add(key);
 }
 
 // La dernière image dessinée de chaque sujet (drawSprite : hold)
@@ -257,6 +286,7 @@ export function drawSprite(ctx, key, make, x, y, onReady, hold) {
   let entry = imageOf(key, make, onReady);
   let img = pick(entry);
   const ready = Boolean(img);
+  if (counting) note(key, ready);
   if (hold !== undefined) {
     if (img) holds.set(hold, entry);
     else if (holds.has(hold)) {
