@@ -1,4 +1,4 @@
-// Lot G3 — le camp des naufragés en iso : l'épave de l'Hirondelle et le feu de débris, le coin de chaque maître en
+// Lot G3 — le camp des naufragés en iso : l'épave de l'Hirondelle, le coin de chaque maître en
 // trois états (débris → abri → cabanon ; Cannelle et Galet : débris seulement), les objets du camp, la tente et le
 // hamac des voyageurs. Dessins de camp.mjs (trait de la troupe), cadres du jeu × 1,25 élargis juste ce qu'il faut
 // (fitFrame). SVG dans lib/decor/camp/, index camp.json (avec l'étape de l'histoire), planche, page animée.
@@ -39,8 +39,8 @@ const UNTIL = {
   galet_debris: 'jusqu\'à la Carrière I (acte II)',
   cabanon: 'jusqu\'aux maisons du Foyer (annexes) : l\'intégration choisira le moment'
 };
-const MS = { feu_debris: 111, cannelle_debris: 111, torche: 111, aster_cabanon: 500, ondin_debris: 600, ondin_abri: 600, ondin_cabanon: 600, hamac: 900, etendoir: 600 };
-const CAT = k => (k === 'hirondelle' || k === 'feu_debris' ? 'epave' : k === 'tente' || k === 'hamac' ? 'voyageurs' : MASTERS[k.split('_')[0]] ? 'coins' : 'objets');
+const MS = { cannelle_debris: 111, torche: 111, aster_cabanon: 500, ondin_debris: 600, ondin_abri: 600, ondin_cabanon: 600, hamac: 900, etendoir: 600 };
+const CAT = k => (k === 'hirondelle' ? 'epave' : k === 'tente' || k === 'hamac' ? 'voyageurs' : MASTERS[k.split('_')[0]] ? 'coins' : 'objets');
 const dirOf = k => (CAT(k) === 'coins' ? `coins/${k.split('_')[0]}` : CAT(k));
 
 const index = {

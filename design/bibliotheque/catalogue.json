@@ -106,27 +106,6 @@
    "statut": "ok"
   },
   {
-   "id": "decor/camp/epave/feu_debris",
-   "rubrique": "decor",
-   "titre": "Feu de débris",
-   "images": 3,
-   "fichiers": [
-    "svg/decor/camp/epave/feu_debris_1.svg",
-    "svg/decor/camp/epave/feu_debris_2.svg",
-    "svg/decor/camp/epave/feu_debris_3.svg"
-   ],
-   "cadre": [
-    -50,
-    -115,
-    100,
-    140
-   ],
-   "ms_par_image": 111,
-   "parcours": "tuto-1",
-   "statut": "a-revoir",
-   "note": "Le feu de camp est le Foyer au palier I, bâti par le joueur (§ 9, étape 5) : ce feu fait double emploi."
-  },
-  {
    "id": "decor/camp/epave/hirondelle",
    "rubrique": "decor",
    "titre": "Épave de l'Hirondelle",

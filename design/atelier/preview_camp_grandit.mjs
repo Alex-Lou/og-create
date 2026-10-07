@@ -1,6 +1,7 @@
 // Lot G5 — planche « le camp grandit » : le camp des naufragés composé à chaque étape de l'histoire, avec les dessins
 // de camp.mjs posés autour du feu (l'emplacement de chaque chose est une maquette, pas une règle de pose). À chaque
 // étape : ce qui est arrivé jusque-là, le coin de chaque maître dans son dernier état, ce qui a été remplacé en moins.
+import fs from 'fs';
 import path from 'path';
 import { createRequire } from 'module';
 import { fileURLToPath } from 'url';
@@ -11,6 +12,10 @@ const require = createRequire(import.meta.url);
 const DIR = path.dirname(fileURLToPath(import.meta.url));
 const { unique, row, sheet, shoot } = require('./planche.js');
 const PNG = path.join(DIR, 'planches');
+// le feu de camp : c'est le Foyer au palier I, bâti par le joueur (HISTOIRE.md § 9, étape 5) ; son dessin vient de la
+// bibliothèque (cadre du jeu × 1,25), ramené aux pixels du jeu comme les dessins du camp
+const FOYER = fs.readFileSync(path.join(DIR, '..', 'bibliotheque', 'svg', 'batiments', 'paliers', 'foyer', 'foyer_palier1_1.svg'), 'utf8')
+  .replace(/^<svg[^>]*>/, '').replace(/<\/svg>\s*$/, '');
 
 const ORDER = ['T1', 'T2', 'T3', 'T4', 'T5', 'I', 'II', 'III', 'IV'];
 const TITLE = {
@@ -29,7 +34,7 @@ const TITLE = {
 const ring = (deg, rx, ry, k = 1) => { const x = Math.cos(deg * Math.PI / 180) * rx * k, y = Math.sin(deg * Math.PI / 180) * ry * k; return [(x / 32 + y / 16) / 2, (y / 16 - x / 32) / 2]; };
 const BIG = (deg, k) => ring(deg, 210, 110, k), SMALL = deg => ring(deg, 118, 60);
 const AT = {
-  feu_debris: [0, 0], hirondelle: BIG(212),
+  hirondelle: BIG(212),
   galet: BIG(248), cannelle: BIG(288), ondin: BIG(330), rivet: BIG(14), melisse: BIG(66), sylve: BIG(114), aster: BIG(160),
   tente: BIG(38, 1.28), hamac: BIG(90, 1.18),
   caisses: SMALL(205), sos: SMALL(250), etendoir: SMALL(296), tonneau: SMALL(336), rondins: SMALL(18), torche: SMALL(72), filet: SMALL(122), paillasse: SMALL(166), etabli: SMALL(44),
@@ -47,12 +52,12 @@ function scene(step) {
     if (idx(a.step) > k) continue;
     if (GONE[key] && idx(GONE[key]) <= k) continue;
     const who = key.split('_')[0];
-    if (AT[who] && key !== 'feu_debris') { corners[who] = key; continue; } // le dernier état arrivé l'emporte
+    if (AT[who]) { corners[who] = key; continue; } // le dernier état arrivé l'emporte
     shown.push(key);
   }
   for (const key of Object.values(corners)) shown.push(key);
   const at = key => AT[key] || AT[key.split('_')[0]];
-  const parts = shown.map(key => { const [u, v] = at(key); return { key, u, v, d: unique(CAMP[key].draw(0)) }; })
+  const parts = [{ key: 'foyer', u: 0, v: 0, d: unique(`<g transform="scale(0.8)">${FOYER}</g>`) }, ...shown.map(key => { const [u, v] = at(key); return { key, u, v, d: unique(CAMP[key].draw(0)) }; })]
     .sort((p, q) => p.u + p.v - (q.u + q.v));
   // le sol : la grève (sable), la mer en haut à gauche, l'écume
   let o = `<rect x="-310" y="-210" width="620" height="370" fill="#CFE3B4"/>`;

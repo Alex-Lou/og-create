@@ -1,5 +1,5 @@
 // Lot G3 — le camp des naufragés, en vue iso du jeu (géométrie et lumière de world/iso.js, trait de la troupe), dans
-// l'ordre de l'histoire : l'épave de l'Hirondelle et le feu de débris (T1), puis le coin de chaque naufragé à son
+// l'ordre de l'histoire : l'épave de l'Hirondelle (T1 ; le feu de camp est le Foyer I, bâti par le joueur), puis le coin de chaque naufragé à son
 // arrivée, en trois états (débris → abri de fortune → cabanon) avant le palier I de son bâtiment ; les objets du camp ;
 // la tente et le hamac des voyageurs. Dessins en pixels du jeu ; l'aperçu les agrandit × 1,25 (cadres du jeu × 1,25).
 import { P, face, box, gable, disc, cylinder, boulder, shadow, sprite, EDGE, mixHex } from './port/src/world/iso.js';
@@ -57,7 +57,7 @@ const dune = (u, v, ru, rv, h) => { const [x, y] = P(u, v, 0); const rx = (ru + 
 // Algue échouée
 const kelp = (u, v, rot = 0) => { const [x, y] = P(u, v, 0); return `<g transform="translate(${f2(x)} ${f2(y)}) rotate(${rot})">${pathTk('M-6,0 Q-3,-2.4 0,0 Q3,2.4 6,0', '#5C8A45', 1.2)}${ell(-3, -1.2, 1.4, 0.8, '#6E9E50', ` stroke="${OUT}" stroke-width="0.5"`)}</g>`; };
 
-/* ---------- le feu de débris (T1 : Brume l'allume) ---------- */
+/* ---------- le petit feu de bois flotté (sous la marmite de la cuisine de Cannelle) ---------- */
 // Bouts de bois flotté qui se rejoignent au milieu (bouts charbonneux), une planche cassée, un lit de braises ; la
 // flamme du jeu (3 images) par-dessus
 function driftFire(u = 0, v = 0, s = 1, n = 0) {
@@ -940,7 +940,6 @@ function soupBowl(n = 0) {
 }
 
 export const CAMP = {
-  feu_debris: { frame: PROP_BOX, n: 3, label: 'Feu de débris', step: 'T1', draw: n => driftFire(0, 0, 1, n) },
   hirondelle: { frame: { x: -88, y: -100, w: 176, h: 150 }, n: 1, label: 'Épave de l\'Hirondelle', step: 'T1', draw: () => hirondelle() },
   aster_debris: { frame: BUILDING_BOX, n: 1, label: 'Aster · débris', step: 'T2', draw: () => asterDebris() },
   aster_abri: { frame: BUILDING_BOX, n: 1, label: 'Aster · abri', step: 'I', draw: () => asterShelter() },
