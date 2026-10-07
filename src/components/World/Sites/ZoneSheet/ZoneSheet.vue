@@ -5,7 +5,7 @@
         <span class="world__sheet-title"><ElementGlyph glyph="ui:map" /> Terre inconnue</span>
         <button type="button" class="world__link" @click="$emit('close')">Fermer</button>
       </div>
-      <p class="world__site-effect">Une brume épaisse couvre cette terre. Une expédition révélera son relief, son climat et ce qu’elle cache. Elle emporte :</p>
+      <p class="world__site-effect">Une brume légère couvre cette terre : on devine son relief. Une expédition révélera son climat et ce qu’elle cache. Elle emporte :</p>
       <ul class="world__needs">
         <li class="world__need">
           <span class="world__need-glyph" aria-hidden="true"><ElementGlyph glyph="ui:map" /></span>
@@ -23,6 +23,9 @@
       </ul>
       <p v-if="expedition && expedition.zone === zone.id" class="world__trip-note">Ton expédition est en route : retour dans {{ tripLeft }}.</p>
       <p v-else-if="expedition" class="world__trip-note">Une expédition est déjà en route ailleurs : attends son retour.</p>
+      <p v-else-if="zone.closed" class="world__trip-note">
+        Les terres alentour s’ouvrent quand le cœur de l’île est à toi.<template v-if="coreLeft.length"> Il te manque : {{ coreLeft.join(', ') }}.</template>
+      </p>
       <p v-else-if="!zone.explorable" class="world__trip-note">Une expédition part d’un quartier à toi, vers un quartier voisin : achète d’abord un quartier qui touche celui-ci.</p>
       <div class="world__sheet-actions">
         <button type="button" class="world__btn" :disabled="!zone.explorable || busy" @click="$emit('explore')">Envoyer une expédition</button>
@@ -76,6 +79,8 @@ export default {
     // Expédition en route ({ zone, endsIn }), ou null ; le temps avant son retour, en clair
     expedition: { type: Object, default: null },
     tripLeft: { type: String, default: '' },
+    // Les quartiers du cœur de l'île pas encore à soi (noms) : les terres alentour restent fermées tant qu'il en reste
+    coreLeft: { type: Array, default: () => [] },
     busy: { type: Boolean, default: false }
   },
   emits: ['close', 'explore', 'buy'],
