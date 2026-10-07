@@ -4,9 +4,9 @@
 // Les parties animées (flamme, fumée, eau, voile) sont des sprites à part, peints image par image par l'île.
 import { P, TW, TH, face, box, gable, pyramid, disc, cylinder, shadow, foliage, sprite, boulder, EDGE } from './iso.js';
 import {
-  WOOD, WOOD_DARK, STONE, BRICK, SOIL, ROOF_RED, THATCH, LEAVES, PINE, INK, BUILDING_BOX, PROP_BOX,
+  WOOD, WOOD_DARK, STONE, BRICK, ROOF_RED, THATCH, LEAVES, PINE, INK, BUILDING_BOX, PROP_BOX,
   pebble, doorLeft, windowRight, planksLeft, planksRight, roundTree,
-  WHITE_STONE, WHITE_WOOD, ROCKS, FOLIAGE, SAILS, roofOf, roofTexture, stoneCourses, seasonDots, crystals, rockBox, stoneRing, pool, cove
+  WHITE_STONE, WHITE_WOOD, ROCKS, FOLIAGE, SAILS, roofOf, roofTexture, stoneCourses, seasonDots, crystals, rockBox, stoneRing, pool, cove, soilBed, furrow, leafPair
 } from './palette.js';
 
 const f2 = n => Math.round(n * 100) / 100;
@@ -249,7 +249,7 @@ function garden(skin) {
   let rows = '';
   for (let k = 0; k < 4; k++) {
     const v = -0.6 + k * 0.38;
-    rows += face([[-0.78, v - 0.07, 4], [0.78, v - 0.07, 4], [0.78, v + 0.07, 4], [-0.78, v + 0.07, 4]], '#6B4329');
+    rows += furrow(-0.78, 0.78, v, 0.07, 4);
   }
   let plants = '';
   for (let k = 0; k < 4; k++) {
@@ -259,11 +259,11 @@ function garden(skin) {
       const [x, y] = P(u, v, 4);
       const carrot = (j + k) % 2 === 0;
       plants += carrot
-        ? `<path d="M${x},${y} q-3,-7 -5,-9 M${x},${y} q0,-8 0,-11 M${x},${y} q3,-7 5,-9" stroke="#5DAA45" stroke-width="2" fill="none" stroke-linecap="round"/><ellipse cx="${x}" cy="${y + 0.5}" rx="2.6" ry="1.4" fill="#F08A3A"/>`
-        : `<ellipse cx="${x - 3}" cy="${y - 3}" rx="3.4" ry="2" fill="#86CB5E" transform="rotate(-30 ${x - 3} ${y - 3})"/><ellipse cx="${x + 3}" cy="${y - 3}" rx="3.4" ry="2" fill="#6DB64C" transform="rotate(30 ${x + 3} ${y - 3})"/>`;
+        ? `<path d="M${x},${y} q-3,-7 -5,-9 M${x},${y} q0,-8 0,-11 M${x},${y} q3,-7 5,-9" stroke="#3C2819" stroke-width="3.2" fill="none" stroke-linecap="round"/><path d="M${x},${y} q-3,-7 -5,-9 M${x},${y} q0,-8 0,-11 M${x},${y} q3,-7 5,-9" stroke="#5DAA45" stroke-width="2" fill="none" stroke-linecap="round"/><ellipse cx="${x}" cy="${y + 0.5}" rx="2.6" ry="1.4" fill="#F08A3A" stroke="#3C2819" stroke-width="0.5"/>`
+        : leafPair(x, y, 3.4, 2, 3);
     }
   }
-  return sprite(shadow(0, 0, 1.15, 0.14) + gardenFence(skin) + box(-0.85, -0.85, 0.85, 0.85, 0, 4, SOIL) + rows + plants, BUILDING_BOX);
+  return sprite(shadow(0, 0, 1.15, 0.14) + gardenFence(skin) + soilBed(-0.85, -0.85, 0.85, 0.85, 4) + rows + plants, BUILDING_BOX);
 }
 
 // Atelier : appentis de bois et four de briques à cheminée ronde, enclume devant
