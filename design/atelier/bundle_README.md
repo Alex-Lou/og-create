@@ -79,6 +79,7 @@ détails propres à un lot : places des objets de boutique, lumières des palier
 | `svg/egares/` | Les égarés, la nuit (`HISTOIRE.md` § 6.15) : petit fantôme, petit zombie tout mou, 7 bêtes de brume (une par climat) ; trois quarts avant et dos, marche, bouderie au toucher, fuite devant Anya, passage en luciole, retour dans la brume ; trait bleu nuit, celui de la famille de la brume (`egares.json`) | 171 |
 | `svg/coffres/` | Les coffres des 4 raretés pour la fenêtre d'ouverture (cadre 120 × 100) : fermé, ouverture en 4 images, ouvert, rayons (calque facultatif), icône 32 × 32 (`coffres.json`) | 44 |
 | `svg/batiments/` | 7 bâtiments × 7 paliers (images animées), les mêmes l'hiver (toits enneigés), chantier, 20 skins, 48 objets de la boutique (un fichier par calque), 14 pièces rares à chaque palier, outil de teintes (`batiments.json`) | 793 |
+| `svg/batiments/montage/` | Le montage d'un bâtiment, en 2 × 2 et 3 × 3 cases : six étapes en boucle (piquets, terrassement, fondations, charpente, murs, toit), le dévoilement par-dessus le bâtiment fini, l'échafaudage des évolutions en deux calques (`montage.json`) | 56 |
 | `svg/scenes/tutoriel/` | Les 27 scènes plein écran du tutoriel v6 (`HISTOIRE.md` § 9, étapes 0 à 12) : la carte d'embarquement, le naufrage, Brume, le Grimoire, le feu, la silhouette, l'arrivée de Cannelle, Rivet, Aster et Ondin, la veillée. Carré 400 × 400, un fond et parfois un devant, en boucle ; la place de l'avatar dans `scenes.json` | 105 |
 | `svg/meteo/` | Calques d'écran sans couture en boucle, nuages, arc-en-ciel, éclair, soleil bas, lumières, teintes des moments du jour ; les saisons : flocons, feuilles qui tombent, pétales, pollen, plein soleil, teintes, et le sol d'une case (neige, neige fondante, givre, flaques, eau gelée) ; 23 icônes (`meteo.json`) | 267 |
 
@@ -121,6 +122,10 @@ détails propres à un lot : places des objets de boutique, lumières des palier
   ligne ; elles se lisent sur le papier comme sur le verre sombre des boutons de l'île. Un onglet inactif ou un cœur pas
   encore gagné s'éteint en CSS (`opacity`, `filter: saturate(.4)` ou `grayscale(1)`), sans autre dessin. Les petites commandes (fermer, flèches, zoom) restent des pictos
   au trait ; l'heure et la météo ont leurs icônes dans `svg/meteo/icones/`.
+- **Le montage** (`svg/batiments/montage/`, `montage.json`) : ancre et échelle des paliers, un cadre fixe par emprise.
+  Le spectacle : les six étapes défilent (`spectacle.ms_par_etape`), puis le palier paraît et le dévoilement se joue
+  par-dessus lui, une fois. Le chantier qui dure : la dernière étape dont la `part` est atteinte. Une évolution qui dure :
+  `echafaudage_*_derriere`, le bâtiment, puis `echafaudage_*_devant`.
 - **La torche** (`svg/decor/defenses/`, `defenses.json`) : elle s'achète à la boutique et se pose sur une case, comme une
   création (ancre au centre de la case, le cadre des créations). La nuit, `torche_allumee` en boucle et sa `lumiere`
   (les valeurs de la lumière d'une création du jeu : `u`, `v`, `z`, `rayon`, `couleur`) ; le jour, `torche_eteinte`.

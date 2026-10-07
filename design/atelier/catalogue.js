@@ -171,6 +171,7 @@ function moment(id, meta) {
   if (top === 'batiments') {
     if (a === 'paliers' || a === 'paliers_hiver') { const n = +(nom.match(/palier(\d)/) || [])[1]; return (PALIERS_DU_RECIT[b] || {})[n] || 'evolutions'; }
     if (a === 'chantier') return 'tuto-3';
+    if (a === 'montage') return 'tuto-3'; // le premier chantier monté sous les yeux du joueur, étape 12c
     return 'evolutions';
   }
   if (top === 'coffres') return { commun: 'tuto-3', rare: 'tuto-3', epique: 'acte-3', legendaire: 'acte-5' }[a];

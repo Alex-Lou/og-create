@@ -40963,6 +40963,368 @@
    "statut": "ok"
   },
   {
+   "id": "batiments/montage/2x2/devoilement_2x2",
+   "rubrique": "batiments",
+   "titre": "Dévoilement du bâtiment fini, 2 × 2 cases (une fois, par-dessus le bâtiment)",
+   "images": 4,
+   "fichiers": [
+    "svg/batiments/montage/2x2/devoilement_2x2_1.svg",
+    "svg/batiments/montage/2x2/devoilement_2x2_2.svg",
+    "svg/batiments/montage/2x2/devoilement_2x2_3.svg",
+    "svg/batiments/montage/2x2/devoilement_2x2_4.svg"
+   ],
+   "cadre": [
+    -95,
+    -155,
+    190,
+    210
+   ],
+   "ms_par_image": 110,
+   "parcours": "tuto-3",
+   "statut": "ok"
+  },
+  {
+   "id": "batiments/montage/2x2/echafaudage_2x2_derriere",
+   "rubrique": "batiments",
+   "titre": "Échafaudage d'évolution, 2 × 2 cases, derrière le bâtiment",
+   "images": 3,
+   "fichiers": [
+    "svg/batiments/montage/2x2/echafaudage_2x2_derriere_1.svg",
+    "svg/batiments/montage/2x2/echafaudage_2x2_derriere_2.svg",
+    "svg/batiments/montage/2x2/echafaudage_2x2_derriere_3.svg"
+   ],
+   "cadre": [
+    -95,
+    -155,
+    190,
+    210
+   ],
+   "ms_par_image": 220,
+   "parcours": "tuto-3",
+   "statut": "ok"
+  },
+  {
+   "id": "batiments/montage/2x2/echafaudage_2x2_devant",
+   "rubrique": "batiments",
+   "titre": "Échafaudage d'évolution, 2 × 2 cases, devant le bâtiment",
+   "images": 3,
+   "fichiers": [
+    "svg/batiments/montage/2x2/echafaudage_2x2_devant_1.svg",
+    "svg/batiments/montage/2x2/echafaudage_2x2_devant_2.svg",
+    "svg/batiments/montage/2x2/echafaudage_2x2_devant_3.svg"
+   ],
+   "cadre": [
+    -95,
+    -155,
+    190,
+    210
+   ],
+   "ms_par_image": 220,
+   "parcours": "tuto-3",
+   "statut": "ok"
+  },
+  {
+   "id": "batiments/montage/2x2/montage_2x2_charpente",
+   "rubrique": "batiments",
+   "titre": "Montage 2 × 2 cases : la charpente (poteaux, sablières, écharpes, l'échelle, le seau pendu)",
+   "images": 3,
+   "fichiers": [
+    "svg/batiments/montage/2x2/montage_2x2_charpente_1.svg",
+    "svg/batiments/montage/2x2/montage_2x2_charpente_2.svg",
+    "svg/batiments/montage/2x2/montage_2x2_charpente_3.svg"
+   ],
+   "cadre": [
+    -95,
+    -155,
+    190,
+    210
+   ],
+   "ms_par_image": 220,
+   "parcours": "tuto-3",
+   "statut": "ok"
+  },
+  {
+   "id": "batiments/montage/2x2/montage_2x2_fondations",
+   "rubrique": "batiments",
+   "titre": "Montage 2 × 2 cases : les fondations (la dalle de pierre, le mortier, les pierres de taille)",
+   "images": 3,
+   "fichiers": [
+    "svg/batiments/montage/2x2/montage_2x2_fondations_1.svg",
+    "svg/batiments/montage/2x2/montage_2x2_fondations_2.svg",
+    "svg/batiments/montage/2x2/montage_2x2_fondations_3.svg"
+   ],
+   "cadre": [
+    -95,
+    -155,
+    190,
+    210
+   ],
+   "ms_par_image": 220,
+   "parcours": "tuto-3",
+   "statut": "ok"
+  },
+  {
+   "id": "batiments/montage/2x2/montage_2x2_murs",
+   "rubrique": "batiments",
+   "titre": "Montage 2 × 2 cases : les murs (colombages, porte et fenêtres, l'échafaudage)",
+   "images": 3,
+   "fichiers": [
+    "svg/batiments/montage/2x2/montage_2x2_murs_1.svg",
+    "svg/batiments/montage/2x2/montage_2x2_murs_2.svg",
+    "svg/batiments/montage/2x2/montage_2x2_murs_3.svg"
+   ],
+   "cadre": [
+    -95,
+    -155,
+    190,
+    210
+   ],
+   "ms_par_image": 220,
+   "parcours": "tuto-3",
+   "statut": "ok"
+  },
+  {
+   "id": "batiments/montage/2x2/montage_2x2_piquets",
+   "rubrique": "batiments",
+   "titre": "Montage 2 × 2 cases : le terrain marqué (piquets, guirlande, tracé à la chaux, le plan sur sa caisse)",
+   "images": 3,
+   "fichiers": [
+    "svg/batiments/montage/2x2/montage_2x2_piquets_1.svg",
+    "svg/batiments/montage/2x2/montage_2x2_piquets_2.svg",
+    "svg/batiments/montage/2x2/montage_2x2_piquets_3.svg"
+   ],
+   "cadre": [
+    -95,
+    -155,
+    190,
+    210
+   ],
+   "ms_par_image": 220,
+   "parcours": "tuto-3",
+   "statut": "ok"
+  },
+  {
+   "id": "batiments/montage/2x2/montage_2x2_terrassement",
+   "rubrique": "batiments",
+   "titre": "Montage 2 × 2 cases : la terre retournée (le tas et la pelle, la brouette)",
+   "images": 3,
+   "fichiers": [
+    "svg/batiments/montage/2x2/montage_2x2_terrassement_1.svg",
+    "svg/batiments/montage/2x2/montage_2x2_terrassement_2.svg",
+    "svg/batiments/montage/2x2/montage_2x2_terrassement_3.svg"
+   ],
+   "cadre": [
+    -95,
+    -155,
+    190,
+    210
+   ],
+   "ms_par_image": 220,
+   "parcours": "tuto-3",
+   "statut": "ok"
+  },
+  {
+   "id": "batiments/montage/2x2/montage_2x2_toit",
+   "rubrique": "batiments",
+   "titre": "Montage 2 × 2 cases : le toit (tuiles à moitié posées, le bouquet de faîte)",
+   "images": 3,
+   "fichiers": [
+    "svg/batiments/montage/2x2/montage_2x2_toit_1.svg",
+    "svg/batiments/montage/2x2/montage_2x2_toit_2.svg",
+    "svg/batiments/montage/2x2/montage_2x2_toit_3.svg"
+   ],
+   "cadre": [
+    -95,
+    -155,
+    190,
+    210
+   ],
+   "ms_par_image": 220,
+   "parcours": "tuto-3",
+   "statut": "ok"
+  },
+  {
+   "id": "batiments/montage/3x3/devoilement_3x3",
+   "rubrique": "batiments",
+   "titre": "Dévoilement du bâtiment fini, 3 × 3 cases (une fois, par-dessus le bâtiment)",
+   "images": 4,
+   "fichiers": [
+    "svg/batiments/montage/3x3/devoilement_3x3_1.svg",
+    "svg/batiments/montage/3x3/devoilement_3x3_2.svg",
+    "svg/batiments/montage/3x3/devoilement_3x3_3.svg",
+    "svg/batiments/montage/3x3/devoilement_3x3_4.svg"
+   ],
+   "cadre": [
+    -140,
+    -250,
+    280,
+    330
+   ],
+   "ms_par_image": 110,
+   "parcours": "tuto-3",
+   "statut": "ok"
+  },
+  {
+   "id": "batiments/montage/3x3/echafaudage_3x3_derriere",
+   "rubrique": "batiments",
+   "titre": "Échafaudage d'évolution, 3 × 3 cases, derrière le bâtiment",
+   "images": 3,
+   "fichiers": [
+    "svg/batiments/montage/3x3/echafaudage_3x3_derriere_1.svg",
+    "svg/batiments/montage/3x3/echafaudage_3x3_derriere_2.svg",
+    "svg/batiments/montage/3x3/echafaudage_3x3_derriere_3.svg"
+   ],
+   "cadre": [
+    -140,
+    -250,
+    280,
+    330
+   ],
+   "ms_par_image": 220,
+   "parcours": "tuto-3",
+   "statut": "ok"
+  },
+  {
+   "id": "batiments/montage/3x3/echafaudage_3x3_devant",
+   "rubrique": "batiments",
+   "titre": "Échafaudage d'évolution, 3 × 3 cases, devant le bâtiment",
+   "images": 3,
+   "fichiers": [
+    "svg/batiments/montage/3x3/echafaudage_3x3_devant_1.svg",
+    "svg/batiments/montage/3x3/echafaudage_3x3_devant_2.svg",
+    "svg/batiments/montage/3x3/echafaudage_3x3_devant_3.svg"
+   ],
+   "cadre": [
+    -140,
+    -250,
+    280,
+    330
+   ],
+   "ms_par_image": 220,
+   "parcours": "tuto-3",
+   "statut": "ok"
+  },
+  {
+   "id": "batiments/montage/3x3/montage_3x3_charpente",
+   "rubrique": "batiments",
+   "titre": "Montage 3 × 3 cases : la charpente (poteaux, sablières, écharpes, l'échelle, le seau pendu)",
+   "images": 3,
+   "fichiers": [
+    "svg/batiments/montage/3x3/montage_3x3_charpente_1.svg",
+    "svg/batiments/montage/3x3/montage_3x3_charpente_2.svg",
+    "svg/batiments/montage/3x3/montage_3x3_charpente_3.svg"
+   ],
+   "cadre": [
+    -140,
+    -250,
+    280,
+    330
+   ],
+   "ms_par_image": 220,
+   "parcours": "tuto-3",
+   "statut": "ok"
+  },
+  {
+   "id": "batiments/montage/3x3/montage_3x3_fondations",
+   "rubrique": "batiments",
+   "titre": "Montage 3 × 3 cases : les fondations (la dalle de pierre, le mortier, les pierres de taille)",
+   "images": 3,
+   "fichiers": [
+    "svg/batiments/montage/3x3/montage_3x3_fondations_1.svg",
+    "svg/batiments/montage/3x3/montage_3x3_fondations_2.svg",
+    "svg/batiments/montage/3x3/montage_3x3_fondations_3.svg"
+   ],
+   "cadre": [
+    -140,
+    -250,
+    280,
+    330
+   ],
+   "ms_par_image": 220,
+   "parcours": "tuto-3",
+   "statut": "ok"
+  },
+  {
+   "id": "batiments/montage/3x3/montage_3x3_murs",
+   "rubrique": "batiments",
+   "titre": "Montage 3 × 3 cases : les murs (colombages, porte et fenêtres, l'échafaudage)",
+   "images": 3,
+   "fichiers": [
+    "svg/batiments/montage/3x3/montage_3x3_murs_1.svg",
+    "svg/batiments/montage/3x3/montage_3x3_murs_2.svg",
+    "svg/batiments/montage/3x3/montage_3x3_murs_3.svg"
+   ],
+   "cadre": [
+    -140,
+    -250,
+    280,
+    330
+   ],
+   "ms_par_image": 220,
+   "parcours": "tuto-3",
+   "statut": "ok"
+  },
+  {
+   "id": "batiments/montage/3x3/montage_3x3_piquets",
+   "rubrique": "batiments",
+   "titre": "Montage 3 × 3 cases : le terrain marqué (piquets, guirlande, tracé à la chaux, le plan sur sa caisse)",
+   "images": 3,
+   "fichiers": [
+    "svg/batiments/montage/3x3/montage_3x3_piquets_1.svg",
+    "svg/batiments/montage/3x3/montage_3x3_piquets_2.svg",
+    "svg/batiments/montage/3x3/montage_3x3_piquets_3.svg"
+   ],
+   "cadre": [
+    -140,
+    -250,
+    280,
+    330
+   ],
+   "ms_par_image": 220,
+   "parcours": "tuto-3",
+   "statut": "ok"
+  },
+  {
+   "id": "batiments/montage/3x3/montage_3x3_terrassement",
+   "rubrique": "batiments",
+   "titre": "Montage 3 × 3 cases : la terre retournée (le tas et la pelle, la brouette)",
+   "images": 3,
+   "fichiers": [
+    "svg/batiments/montage/3x3/montage_3x3_terrassement_1.svg",
+    "svg/batiments/montage/3x3/montage_3x3_terrassement_2.svg",
+    "svg/batiments/montage/3x3/montage_3x3_terrassement_3.svg"
+   ],
+   "cadre": [
+    -140,
+    -250,
+    280,
+    330
+   ],
+   "ms_par_image": 220,
+   "parcours": "tuto-3",
+   "statut": "ok"
+  },
+  {
+   "id": "batiments/montage/3x3/montage_3x3_toit",
+   "rubrique": "batiments",
+   "titre": "Montage 3 × 3 cases : le toit (tuiles à moitié posées, le bouquet de faîte)",
+   "images": 3,
+   "fichiers": [
+    "svg/batiments/montage/3x3/montage_3x3_toit_1.svg",
+    "svg/batiments/montage/3x3/montage_3x3_toit_2.svg",
+    "svg/batiments/montage/3x3/montage_3x3_toit_3.svg"
+   ],
+   "cadre": [
+    -140,
+    -250,
+    280,
+    330
+   ],
+   "ms_par_image": 220,
+   "parcours": "tuto-3",
+   "statut": "ok"
+  },
+  {
    "id": "batiments/paliers_hiver/puits/puits_palier1_hiver",
    "rubrique": "batiments",
    "titre": "Puits — palier I, l'hiver",

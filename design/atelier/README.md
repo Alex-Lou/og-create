@@ -34,6 +34,7 @@ troupe. Relancer ces scripts redonne la bibliothèque à l'octet près : c'est v
 | `gestes.js`, `preview_quotidien.mjs` | Le quotidien au grand format (lot L4) : lanterne, parapluie, valise, dormir couché ; toutes les poses du jeu pour les maîtres, leurs naufragés, 12 visiteurs et 8 nouveaux venus tirés du générateur de l'avatar |
 | `lot_m.js`, `preview_lot_m.mjs` | La suite du lot M : le bâtiment embrumé (calque par emprise, guérison, nuage, icône « Réparer »), la cage aux poules et l'œuf, le crabe de la Grève, les signes d'Anya |
 | `scenes6.js`, `preview_scenes6.mjs` | Les scènes plein écran du tutoriel v6 (lot J2, `HISTOIRE.md` § 9) : 27 scènes des étapes 0 à 12 dans le carré 400 × 400 du jeu, un fond et parfois un devant en petites boucles, la place de l'avatar du joueur notée dans l'index (le jeu l'y pose) |
+| `montage.mjs`, `preview_montage.mjs` | Le montage d'un bâtiment par étapes (les chantiers) : piquets, terrassement, fondations, charpente, murs, toit, en 2 × 2 et 3 × 3 cases ; le dévoilement ; l'échafaudage des évolutions (derrière, devant) |
 | `torche.js`, `preview_torche.mjs` | La torche de bois flotté (objet de la boutique, posé sur une case) : allumée, éteinte, son icône, sa lumière de nuit ; le même dessin sert le camp (`camp.mjs`) et la veillée (`scenes6.js`) |
 | `interface.js`, `preview_interface.mjs` | Les icônes de l'interface (32 × 32) : la barre du bas, l'écu, les ressources, les boutons de l'île, les fiches, les trouvailles des climats ; une planche en vraie taille sur trois fonds, et en situation |
 | `egares.js`, `preview_egares.mjs` | Les égarés (lot M, la nuit) : le petit fantôme, le petit zombie tout mou, une bête de brume par climat ; marche, bouderie au toucher, fuite devant Anya, passage en luciole, retour dans la brume |
@@ -69,6 +70,7 @@ node preview_avatar.mjs              # l'avatar du joueur : exemples, planches (
 node verif_avatar.mjs                # l'avatar : 8 400 images au hasard et accessoire × coupe, rien de cassé ni hors cadre
 node preview_interface.mjs           # les icônes de l'interface
 node preview_torche.mjs              # la torche de bois flotté (objet de la boutique)
+node preview_montage.mjs             # le montage des bâtiments (les chantiers par étapes)
 for d in svg2/*/; do mkdir -p lib/personnages/maitres/$(basename $d) && cp $d*.svg lib/personnages/maitres/$(basename $d)/; done
 node build_bundle.js                 # assemble ../bibliotheque/
 node clipcheck.js lib/decor/camp     # (facultatif) vérifie qu'aucun dessin ne dépasse de son cadre

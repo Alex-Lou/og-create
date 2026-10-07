@@ -1,0 +1,345 @@
+{
+ "_lisez_moi": [
+  "Le montage d'un bâtiment, étape par étape : le terrain marqué, la terre retournée, les fondations, la charpente, les murs, le toit. Les mêmes étapes servent au petit spectacle (elles défilent quand on bâtit) et au chantier qui dure (une étape par part du temps).",
+  "Ancre (0, 0) au centre de l'emprise au sol, échelle du jeu × 1,25 (case de 80 × 40), comme les paliers : 2 × 2 cases (paliers I à III), 3 × 3 (paliers IV à VII). Toutes les images d'une emprise ont le même cadre : on passe d'une étape à l'autre sans rien déplacer.",
+  "Chaque étape : 3 images en boucle (ms_par_image) ; la guirlande et les rubans flottent, le seau se balance, la poussière vole.",
+  "spectacle : quand on bâtit, les étapes défilent dans l'ordre (ms_par_etape chacune), puis le bâtiment paraît (le dessin du palier) et le dévoilement se joue par-dessus lui, une fois (4 images).",
+  "chantier_qui_dure : part, de 0 à 1, où chaque étape commence ; à 1, le bâtiment est là, et le dévoilement se joue.",
+  "echafaudage : pour une évolution qui dure, autour du bâtiment déjà là ; derriere se dessine avant lui, devant après lui, dans son repère. De III à IV (2 × 2 vers 3 × 3), prendre celui de 3 × 3.",
+  "Les trois phases du chantier qui attend (batiments/chantier : plan pas trouvé, plan trouvé, prêt à bâtir) restent ce qu'elles sont."
+ ],
+ "spectacle": {
+  "ordre": [
+   "piquets",
+   "terrassement",
+   "fondations",
+   "charpente",
+   "murs",
+   "toit"
+  ],
+  "ms_par_etape": 450,
+  "puis": "le bâtiment, et le dévoilement par-dessus"
+ },
+ "chantier_qui_dure": {
+  "part": {
+   "piquets": 0,
+   "terrassement": 0.12,
+   "fondations": 0.28,
+   "charpente": 0.46,
+   "murs": 0.64,
+   "toit": 0.82
+  }
+ },
+ "montage": {
+  "2x2": {
+   "nom": "Montage d'un bâtiment, 2 × 2 cases",
+   "cadre": [
+    -95,
+    -155,
+    190,
+    210
+   ],
+   "etapes": {
+    "piquets": {
+     "nom": "Montage 2 × 2 cases : le terrain marqué (piquets, guirlande, tracé à la chaux, le plan sur sa caisse)",
+     "cadre": [
+      -95,
+      -155,
+      190,
+      210
+     ],
+     "ms_par_image": 220,
+     "part": 0,
+     "fichiers": [
+      "2x2/montage_2x2_piquets_1.svg",
+      "2x2/montage_2x2_piquets_2.svg",
+      "2x2/montage_2x2_piquets_3.svg"
+     ]
+    },
+    "terrassement": {
+     "nom": "Montage 2 × 2 cases : la terre retournée (le tas et la pelle, la brouette)",
+     "cadre": [
+      -95,
+      -155,
+      190,
+      210
+     ],
+     "ms_par_image": 220,
+     "part": 0.12,
+     "fichiers": [
+      "2x2/montage_2x2_terrassement_1.svg",
+      "2x2/montage_2x2_terrassement_2.svg",
+      "2x2/montage_2x2_terrassement_3.svg"
+     ]
+    },
+    "fondations": {
+     "nom": "Montage 2 × 2 cases : les fondations (la dalle de pierre, le mortier, les pierres de taille)",
+     "cadre": [
+      -95,
+      -155,
+      190,
+      210
+     ],
+     "ms_par_image": 220,
+     "part": 0.28,
+     "fichiers": [
+      "2x2/montage_2x2_fondations_1.svg",
+      "2x2/montage_2x2_fondations_2.svg",
+      "2x2/montage_2x2_fondations_3.svg"
+     ]
+    },
+    "charpente": {
+     "nom": "Montage 2 × 2 cases : la charpente (poteaux, sablières, écharpes, l'échelle, le seau pendu)",
+     "cadre": [
+      -95,
+      -155,
+      190,
+      210
+     ],
+     "ms_par_image": 220,
+     "part": 0.46,
+     "fichiers": [
+      "2x2/montage_2x2_charpente_1.svg",
+      "2x2/montage_2x2_charpente_2.svg",
+      "2x2/montage_2x2_charpente_3.svg"
+     ]
+    },
+    "murs": {
+     "nom": "Montage 2 × 2 cases : les murs (colombages, porte et fenêtres, l'échafaudage)",
+     "cadre": [
+      -95,
+      -155,
+      190,
+      210
+     ],
+     "ms_par_image": 220,
+     "part": 0.64,
+     "fichiers": [
+      "2x2/montage_2x2_murs_1.svg",
+      "2x2/montage_2x2_murs_2.svg",
+      "2x2/montage_2x2_murs_3.svg"
+     ]
+    },
+    "toit": {
+     "nom": "Montage 2 × 2 cases : le toit (tuiles à moitié posées, le bouquet de faîte)",
+     "cadre": [
+      -95,
+      -155,
+      190,
+      210
+     ],
+     "ms_par_image": 220,
+     "part": 0.82,
+     "fichiers": [
+      "2x2/montage_2x2_toit_1.svg",
+      "2x2/montage_2x2_toit_2.svg",
+      "2x2/montage_2x2_toit_3.svg"
+     ]
+    }
+   },
+   "devoilement": {
+    "nom": "Dévoilement du bâtiment fini, 2 × 2 cases (une fois, par-dessus le bâtiment)",
+    "cadre": [
+     -95,
+     -155,
+     190,
+     210
+    ],
+    "ms_par_image": 110,
+    "fichiers": [
+     "2x2/devoilement_2x2_1.svg",
+     "2x2/devoilement_2x2_2.svg",
+     "2x2/devoilement_2x2_3.svg",
+     "2x2/devoilement_2x2_4.svg"
+    ]
+   },
+   "echafaudage": {
+    "derriere": {
+     "nom": "Échafaudage d'évolution, 2 × 2 cases, derrière le bâtiment",
+     "cadre": [
+      -95,
+      -155,
+      190,
+      210
+     ],
+     "ms_par_image": 220,
+     "fichiers": [
+      "2x2/echafaudage_2x2_derriere_1.svg",
+      "2x2/echafaudage_2x2_derriere_2.svg",
+      "2x2/echafaudage_2x2_derriere_3.svg"
+     ]
+    },
+    "devant": {
+     "nom": "Échafaudage d'évolution, 2 × 2 cases, devant le bâtiment",
+     "cadre": [
+      -95,
+      -155,
+      190,
+      210
+     ],
+     "ms_par_image": 220,
+     "fichiers": [
+      "2x2/echafaudage_2x2_devant_1.svg",
+      "2x2/echafaudage_2x2_devant_2.svg",
+      "2x2/echafaudage_2x2_devant_3.svg"
+     ]
+    }
+   }
+  },
+  "3x3": {
+   "nom": "Montage d'un bâtiment, 3 × 3 cases",
+   "cadre": [
+    -140,
+    -250,
+    280,
+    330
+   ],
+   "etapes": {
+    "piquets": {
+     "nom": "Montage 3 × 3 cases : le terrain marqué (piquets, guirlande, tracé à la chaux, le plan sur sa caisse)",
+     "cadre": [
+      -140,
+      -250,
+      280,
+      330
+     ],
+     "ms_par_image": 220,
+     "part": 0,
+     "fichiers": [
+      "3x3/montage_3x3_piquets_1.svg",
+      "3x3/montage_3x3_piquets_2.svg",
+      "3x3/montage_3x3_piquets_3.svg"
+     ]
+    },
+    "terrassement": {
+     "nom": "Montage 3 × 3 cases : la terre retournée (le tas et la pelle, la brouette)",
+     "cadre": [
+      -140,
+      -250,
+      280,
+      330
+     ],
+     "ms_par_image": 220,
+     "part": 0.12,
+     "fichiers": [
+      "3x3/montage_3x3_terrassement_1.svg",
+      "3x3/montage_3x3_terrassement_2.svg",
+      "3x3/montage_3x3_terrassement_3.svg"
+     ]
+    },
+    "fondations": {
+     "nom": "Montage 3 × 3 cases : les fondations (la dalle de pierre, le mortier, les pierres de taille)",
+     "cadre": [
+      -140,
+      -250,
+      280,
+      330
+     ],
+     "ms_par_image": 220,
+     "part": 0.28,
+     "fichiers": [
+      "3x3/montage_3x3_fondations_1.svg",
+      "3x3/montage_3x3_fondations_2.svg",
+      "3x3/montage_3x3_fondations_3.svg"
+     ]
+    },
+    "charpente": {
+     "nom": "Montage 3 × 3 cases : la charpente (poteaux, sablières, écharpes, l'échelle, le seau pendu)",
+     "cadre": [
+      -140,
+      -250,
+      280,
+      330
+     ],
+     "ms_par_image": 220,
+     "part": 0.46,
+     "fichiers": [
+      "3x3/montage_3x3_charpente_1.svg",
+      "3x3/montage_3x3_charpente_2.svg",
+      "3x3/montage_3x3_charpente_3.svg"
+     ]
+    },
+    "murs": {
+     "nom": "Montage 3 × 3 cases : les murs (colombages, porte et fenêtres, l'échafaudage)",
+     "cadre": [
+      -140,
+      -250,
+      280,
+      330
+     ],
+     "ms_par_image": 220,
+     "part": 0.64,
+     "fichiers": [
+      "3x3/montage_3x3_murs_1.svg",
+      "3x3/montage_3x3_murs_2.svg",
+      "3x3/montage_3x3_murs_3.svg"
+     ]
+    },
+    "toit": {
+     "nom": "Montage 3 × 3 cases : le toit (tuiles à moitié posées, le bouquet de faîte)",
+     "cadre": [
+      -140,
+      -250,
+      280,
+      330
+     ],
+     "ms_par_image": 220,
+     "part": 0.82,
+     "fichiers": [
+      "3x3/montage_3x3_toit_1.svg",
+      "3x3/montage_3x3_toit_2.svg",
+      "3x3/montage_3x3_toit_3.svg"
+     ]
+    }
+   },
+   "devoilement": {
+    "nom": "Dévoilement du bâtiment fini, 3 × 3 cases (une fois, par-dessus le bâtiment)",
+    "cadre": [
+     -140,
+     -250,
+     280,
+     330
+    ],
+    "ms_par_image": 110,
+    "fichiers": [
+     "3x3/devoilement_3x3_1.svg",
+     "3x3/devoilement_3x3_2.svg",
+     "3x3/devoilement_3x3_3.svg",
+     "3x3/devoilement_3x3_4.svg"
+    ]
+   },
+   "echafaudage": {
+    "derriere": {
+     "nom": "Échafaudage d'évolution, 3 × 3 cases, derrière le bâtiment",
+     "cadre": [
+      -140,
+      -250,
+      280,
+      330
+     ],
+     "ms_par_image": 220,
+     "fichiers": [
+      "3x3/echafaudage_3x3_derriere_1.svg",
+      "3x3/echafaudage_3x3_derriere_2.svg",
+      "3x3/echafaudage_3x3_derriere_3.svg"
+     ]
+    },
+    "devant": {
+     "nom": "Échafaudage d'évolution, 3 × 3 cases, devant le bâtiment",
+     "cadre": [
+      -140,
+      -250,
+      280,
+      330
+     ],
+     "ms_par_image": 220,
+     "fichiers": [
+      "3x3/echafaudage_3x3_devant_1.svg",
+      "3x3/echafaudage_3x3_devant_2.svg",
+      "3x3/echafaudage_3x3_devant_3.svg"
+     ]
+    }
+   }
+  }
+ }
+}
