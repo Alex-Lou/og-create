@@ -1,0 +1,582 @@
+{
+ "_lisez_moi": [
+  "Une culture par climat, par étapes : sur une case, chaque climat a sa culture, son sol et son aménagement. Les cimes : des myrtilles sur une terrasse de pierres sèches ; les landes : du sarrasin dans la tourbe ; le marais : du riz dans sa rizière ; les dunes : des pastèques derrière la ganivelle ; la jungle : des ananas dans la terre rouge ; le volcan : des piments dans la cendre noire.",
+  "Ancre (0, 0) au centre de la case, échelle du jeu × 1,25, le cadre des cultures : toutes les étapes ont le même cadre.",
+  "Chaque étape : 3 images en boucle (ms_par_image) ; les plants bougent au vent, l'eau de la rizière miroite, la bruyère et les feuilles de la jungle remuent, la fumerolle monte.",
+  "spectacle : les étapes défilent dans l'ordre (ms_par_etape chacune), jusqu'à la culture mûre.",
+  "pousse_qui_dure : part, de 0 à 1, où chaque étape commence ; à 1, la culture est mûre."
+ ],
+ "spectacle": {
+  "ordre": [
+   "preparation",
+   "plantation",
+   "pousses",
+   "croissance",
+   "mur"
+  ],
+  "ms_par_etape": 450
+ },
+ "pousse_qui_dure": {
+  "part": {
+   "preparation": 0,
+   "plantation": 0.15,
+   "pousses": 0.35,
+   "croissance": 0.6,
+   "mur": 1
+  }
+ },
+ "climats": {
+  "cimes": {
+   "nom": "Culture du climat : les myrtilles des cimes",
+   "culture": "myrtilles",
+   "cadre": [
+    -42.5,
+    -37.5,
+    85,
+    60
+   ],
+   "etapes": {
+    "preparation": {
+     "nom": "Les myrtilles des cimes : la préparation (la terrasse de pierres sèches, la terre caillouteuse)",
+     "cadre": [
+      -42.5,
+      -37.5,
+      85,
+      60
+     ],
+     "ms_par_image": 300,
+     "part": 0,
+     "fichiers": [
+      "cimes/climat_cimes_preparation_1.svg",
+      "cimes/climat_cimes_preparation_2.svg",
+      "cimes/climat_cimes_preparation_3.svg"
+     ]
+    },
+    "plantation": {
+     "nom": "Les myrtilles des cimes : la plantation",
+     "cadre": [
+      -42.5,
+      -37.5,
+      85,
+      60
+     ],
+     "ms_par_image": 300,
+     "part": 0.15,
+     "fichiers": [
+      "cimes/climat_cimes_plantation_1.svg",
+      "cimes/climat_cimes_plantation_2.svg",
+      "cimes/climat_cimes_plantation_3.svg"
+     ]
+    },
+    "pousses": {
+     "nom": "Les myrtilles des cimes : les pousses",
+     "cadre": [
+      -42.5,
+      -37.5,
+      85,
+      60
+     ],
+     "ms_par_image": 300,
+     "part": 0.35,
+     "fichiers": [
+      "cimes/climat_cimes_pousses_1.svg",
+      "cimes/climat_cimes_pousses_2.svg",
+      "cimes/climat_cimes_pousses_3.svg"
+     ]
+    },
+    "croissance": {
+     "nom": "Les myrtilles des cimes : la croissance",
+     "cadre": [
+      -42.5,
+      -37.5,
+      85,
+      60
+     ],
+     "ms_par_image": 300,
+     "part": 0.6,
+     "fichiers": [
+      "cimes/climat_cimes_croissance_1.svg",
+      "cimes/climat_cimes_croissance_2.svg",
+      "cimes/climat_cimes_croissance_3.svg"
+     ]
+    },
+    "mur": {
+     "nom": "Les myrtilles des cimes : mûre (les baies bleues)",
+     "cadre": [
+      -42.5,
+      -37.5,
+      85,
+      60
+     ],
+     "ms_par_image": 300,
+     "part": 1,
+     "fichiers": [
+      "cimes/climat_cimes_mur_1.svg",
+      "cimes/climat_cimes_mur_2.svg",
+      "cimes/climat_cimes_mur_3.svg"
+     ]
+    }
+   }
+  },
+  "landes": {
+   "nom": "Culture du climat : le sarrasin des landes",
+   "culture": "sarrasin",
+   "cadre": [
+    -42.5,
+    -37.5,
+    85,
+    60
+   ],
+   "etapes": {
+    "preparation": {
+     "nom": "Le sarrasin des landes : la préparation (la tourbe sombre, la bruyère au bord)",
+     "cadre": [
+      -42.5,
+      -37.5,
+      85,
+      60
+     ],
+     "ms_par_image": 300,
+     "part": 0,
+     "fichiers": [
+      "landes/climat_landes_preparation_1.svg",
+      "landes/climat_landes_preparation_2.svg",
+      "landes/climat_landes_preparation_3.svg"
+     ]
+    },
+    "plantation": {
+     "nom": "Le sarrasin des landes : la plantation",
+     "cadre": [
+      -42.5,
+      -37.5,
+      85,
+      60
+     ],
+     "ms_par_image": 300,
+     "part": 0.15,
+     "fichiers": [
+      "landes/climat_landes_plantation_1.svg",
+      "landes/climat_landes_plantation_2.svg",
+      "landes/climat_landes_plantation_3.svg"
+     ]
+    },
+    "pousses": {
+     "nom": "Le sarrasin des landes : les pousses",
+     "cadre": [
+      -42.5,
+      -37.5,
+      85,
+      60
+     ],
+     "ms_par_image": 300,
+     "part": 0.35,
+     "fichiers": [
+      "landes/climat_landes_pousses_1.svg",
+      "landes/climat_landes_pousses_2.svg",
+      "landes/climat_landes_pousses_3.svg"
+     ]
+    },
+    "croissance": {
+     "nom": "Le sarrasin des landes : la croissance",
+     "cadre": [
+      -42.5,
+      -37.5,
+      85,
+      60
+     ],
+     "ms_par_image": 300,
+     "part": 0.6,
+     "fichiers": [
+      "landes/climat_landes_croissance_1.svg",
+      "landes/climat_landes_croissance_2.svg",
+      "landes/climat_landes_croissance_3.svg"
+     ]
+    },
+    "mur": {
+     "nom": "Le sarrasin des landes : mûre (les graines brunes)",
+     "cadre": [
+      -42.5,
+      -37.5,
+      85,
+      60
+     ],
+     "ms_par_image": 300,
+     "part": 1,
+     "fichiers": [
+      "landes/climat_landes_mur_1.svg",
+      "landes/climat_landes_mur_2.svg",
+      "landes/climat_landes_mur_3.svg"
+     ]
+    }
+   }
+  },
+  "marais": {
+   "nom": "Culture du climat : le riz du marais",
+   "culture": "riz",
+   "cadre": [
+    -42.5,
+    -37.5,
+    85,
+    60
+   ],
+   "etapes": {
+    "preparation": {
+     "nom": "Le riz du marais : la préparation (la rizière inondée, la diguette)",
+     "cadre": [
+      -42.5,
+      -37.5,
+      85,
+      60
+     ],
+     "ms_par_image": 300,
+     "part": 0,
+     "fichiers": [
+      "marais/climat_marais_preparation_1.svg",
+      "marais/climat_marais_preparation_2.svg",
+      "marais/climat_marais_preparation_3.svg"
+     ]
+    },
+    "plantation": {
+     "nom": "Le riz du marais : la plantation",
+     "cadre": [
+      -42.5,
+      -37.5,
+      85,
+      60
+     ],
+     "ms_par_image": 300,
+     "part": 0.15,
+     "fichiers": [
+      "marais/climat_marais_plantation_1.svg",
+      "marais/climat_marais_plantation_2.svg",
+      "marais/climat_marais_plantation_3.svg"
+     ]
+    },
+    "pousses": {
+     "nom": "Le riz du marais : les pousses",
+     "cadre": [
+      -42.5,
+      -37.5,
+      85,
+      60
+     ],
+     "ms_par_image": 300,
+     "part": 0.35,
+     "fichiers": [
+      "marais/climat_marais_pousses_1.svg",
+      "marais/climat_marais_pousses_2.svg",
+      "marais/climat_marais_pousses_3.svg"
+     ]
+    },
+    "croissance": {
+     "nom": "Le riz du marais : la croissance",
+     "cadre": [
+      -42.5,
+      -37.5,
+      85,
+      60
+     ],
+     "ms_par_image": 300,
+     "part": 0.6,
+     "fichiers": [
+      "marais/climat_marais_croissance_1.svg",
+      "marais/climat_marais_croissance_2.svg",
+      "marais/climat_marais_croissance_3.svg"
+     ]
+    },
+    "mur": {
+     "nom": "Le riz du marais : mûre (les épis dorés qui s'inclinent)",
+     "cadre": [
+      -42.5,
+      -37.5,
+      85,
+      60
+     ],
+     "ms_par_image": 300,
+     "part": 1,
+     "fichiers": [
+      "marais/climat_marais_mur_1.svg",
+      "marais/climat_marais_mur_2.svg",
+      "marais/climat_marais_mur_3.svg"
+     ]
+    }
+   }
+  },
+  "dunes": {
+   "nom": "Culture du climat : les pastèques des dunes",
+   "culture": "pasteques",
+   "cadre": [
+    -42.5,
+    -37.5,
+    85,
+    60
+   ],
+   "etapes": {
+    "preparation": {
+     "nom": "Les pastèques des dunes : la préparation (le sable, la ganivelle contre le vent)",
+     "cadre": [
+      -42.5,
+      -37.5,
+      85,
+      60
+     ],
+     "ms_par_image": 300,
+     "part": 0,
+     "fichiers": [
+      "dunes/climat_dunes_preparation_1.svg",
+      "dunes/climat_dunes_preparation_2.svg",
+      "dunes/climat_dunes_preparation_3.svg"
+     ]
+    },
+    "plantation": {
+     "nom": "Les pastèques des dunes : la plantation",
+     "cadre": [
+      -42.5,
+      -37.5,
+      85,
+      60
+     ],
+     "ms_par_image": 300,
+     "part": 0.15,
+     "fichiers": [
+      "dunes/climat_dunes_plantation_1.svg",
+      "dunes/climat_dunes_plantation_2.svg",
+      "dunes/climat_dunes_plantation_3.svg"
+     ]
+    },
+    "pousses": {
+     "nom": "Les pastèques des dunes : les pousses",
+     "cadre": [
+      -42.5,
+      -37.5,
+      85,
+      60
+     ],
+     "ms_par_image": 300,
+     "part": 0.35,
+     "fichiers": [
+      "dunes/climat_dunes_pousses_1.svg",
+      "dunes/climat_dunes_pousses_2.svg",
+      "dunes/climat_dunes_pousses_3.svg"
+     ]
+    },
+    "croissance": {
+     "nom": "Les pastèques des dunes : la croissance",
+     "cadre": [
+      -42.5,
+      -37.5,
+      85,
+      60
+     ],
+     "ms_par_image": 300,
+     "part": 0.6,
+     "fichiers": [
+      "dunes/climat_dunes_croissance_1.svg",
+      "dunes/climat_dunes_croissance_2.svg",
+      "dunes/climat_dunes_croissance_3.svg"
+     ]
+    },
+    "mur": {
+     "nom": "Les pastèques des dunes : mûre (les grosses pastèques rayées)",
+     "cadre": [
+      -42.5,
+      -37.5,
+      85,
+      60
+     ],
+     "ms_par_image": 300,
+     "part": 1,
+     "fichiers": [
+      "dunes/climat_dunes_mur_1.svg",
+      "dunes/climat_dunes_mur_2.svg",
+      "dunes/climat_dunes_mur_3.svg"
+     ]
+    }
+   }
+  },
+  "jungle": {
+   "nom": "Culture du climat : les ananas de la jungle",
+   "culture": "ananas",
+   "cadre": [
+    -42.5,
+    -37.5,
+    85,
+    60
+   ],
+   "etapes": {
+    "preparation": {
+     "nom": "Les ananas de la jungle : la préparation (la terre rouge, les grandes feuilles au bord)",
+     "cadre": [
+      -42.5,
+      -37.5,
+      85,
+      60
+     ],
+     "ms_par_image": 300,
+     "part": 0,
+     "fichiers": [
+      "jungle/climat_jungle_preparation_1.svg",
+      "jungle/climat_jungle_preparation_2.svg",
+      "jungle/climat_jungle_preparation_3.svg"
+     ]
+    },
+    "plantation": {
+     "nom": "Les ananas de la jungle : la plantation",
+     "cadre": [
+      -42.5,
+      -37.5,
+      85,
+      60
+     ],
+     "ms_par_image": 300,
+     "part": 0.15,
+     "fichiers": [
+      "jungle/climat_jungle_plantation_1.svg",
+      "jungle/climat_jungle_plantation_2.svg",
+      "jungle/climat_jungle_plantation_3.svg"
+     ]
+    },
+    "pousses": {
+     "nom": "Les ananas de la jungle : les pousses",
+     "cadre": [
+      -42.5,
+      -37.5,
+      85,
+      60
+     ],
+     "ms_par_image": 300,
+     "part": 0.35,
+     "fichiers": [
+      "jungle/climat_jungle_pousses_1.svg",
+      "jungle/climat_jungle_pousses_2.svg",
+      "jungle/climat_jungle_pousses_3.svg"
+     ]
+    },
+    "croissance": {
+     "nom": "Les ananas de la jungle : la croissance",
+     "cadre": [
+      -42.5,
+      -37.5,
+      85,
+      60
+     ],
+     "ms_par_image": 300,
+     "part": 0.6,
+     "fichiers": [
+      "jungle/climat_jungle_croissance_1.svg",
+      "jungle/climat_jungle_croissance_2.svg",
+      "jungle/climat_jungle_croissance_3.svg"
+     ]
+    },
+    "mur": {
+     "nom": "Les ananas de la jungle : mûre (les ananas dorés)",
+     "cadre": [
+      -42.5,
+      -37.5,
+      85,
+      60
+     ],
+     "ms_par_image": 300,
+     "part": 1,
+     "fichiers": [
+      "jungle/climat_jungle_mur_1.svg",
+      "jungle/climat_jungle_mur_2.svg",
+      "jungle/climat_jungle_mur_3.svg"
+     ]
+    }
+   }
+  },
+  "volcan": {
+   "nom": "Culture du climat : les piments du volcan",
+   "culture": "piments",
+   "cadre": [
+    -42.5,
+    -37.5,
+    85,
+    60
+   ],
+   "etapes": {
+    "preparation": {
+     "nom": "Les piments du volcan : la préparation (la cendre noire, les pierres de lave, une fumerolle)",
+     "cadre": [
+      -42.5,
+      -37.5,
+      85,
+      60
+     ],
+     "ms_par_image": 300,
+     "part": 0,
+     "fichiers": [
+      "volcan/climat_volcan_preparation_1.svg",
+      "volcan/climat_volcan_preparation_2.svg",
+      "volcan/climat_volcan_preparation_3.svg"
+     ]
+    },
+    "plantation": {
+     "nom": "Les piments du volcan : la plantation",
+     "cadre": [
+      -42.5,
+      -37.5,
+      85,
+      60
+     ],
+     "ms_par_image": 300,
+     "part": 0.15,
+     "fichiers": [
+      "volcan/climat_volcan_plantation_1.svg",
+      "volcan/climat_volcan_plantation_2.svg",
+      "volcan/climat_volcan_plantation_3.svg"
+     ]
+    },
+    "pousses": {
+     "nom": "Les piments du volcan : les pousses",
+     "cadre": [
+      -42.5,
+      -37.5,
+      85,
+      60
+     ],
+     "ms_par_image": 300,
+     "part": 0.35,
+     "fichiers": [
+      "volcan/climat_volcan_pousses_1.svg",
+      "volcan/climat_volcan_pousses_2.svg",
+      "volcan/climat_volcan_pousses_3.svg"
+     ]
+    },
+    "croissance": {
+     "nom": "Les piments du volcan : la croissance",
+     "cadre": [
+      -42.5,
+      -37.5,
+      85,
+      60
+     ],
+     "ms_par_image": 300,
+     "part": 0.6,
+     "fichiers": [
+      "volcan/climat_volcan_croissance_1.svg",
+      "volcan/climat_volcan_croissance_2.svg",
+      "volcan/climat_volcan_croissance_3.svg"
+     ]
+    },
+    "mur": {
+     "nom": "Les piments du volcan : mûre (les piments rouges)",
+     "cadre": [
+      -42.5,
+      -37.5,
+      85,
+      60
+     ],
+     "ms_par_image": 300,
+     "part": 1,
+     "fichiers": [
+      "volcan/climat_volcan_mur_1.svg",
+      "volcan/climat_volcan_mur_2.svg",
+      "volcan/climat_volcan_mur_3.svg"
+     ]
+    }
+   }
+  }
+ }
+}

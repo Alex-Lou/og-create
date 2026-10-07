@@ -29,14 +29,14 @@ var __toESM = (mod, isNodeMode, target) => (target = mod != null ? __create(__ge
 // personnages/troupe.js
 var require_troupe = __commonJS({
   "personnages/troupe.js"(exports, module) {
-    var OUT5 = "#3C2819";
+    var OUT6 = "#3C2819";
     var W = 1.1;
     var r22 = /* @__PURE__ */ __name((n) => Math.round(n * 100) / 100, "r2");
-    var st = /* @__PURE__ */ __name((w = W) => `stroke="${OUT5}" stroke-width="${w}" stroke-linejoin="round" stroke-linecap="round"`, "st");
+    var st = /* @__PURE__ */ __name((w = W) => `stroke="${OUT6}" stroke-width="${w}" stroke-linejoin="round" stroke-linecap="round"`, "st");
     var P2 = /* @__PURE__ */ __name((d, fill, w = W) => `<path d="${d}" fill="${fill}" ${w ? st(w) : 'stroke="none"'}/>`, "P");
     var E2 = /* @__PURE__ */ __name((cx, cy, rx, ry, fill, w = W) => `<ellipse cx="${r22(cx)}" cy="${r22(cy)}" rx="${r22(rx)}" ry="${r22(ry)}" fill="${fill}" ${w ? st(w) : 'stroke="none"'}/>`, "E");
     var L = /* @__PURE__ */ __name((a, b, color, w) => `<line x1="${r22(a[0])}" y1="${r22(a[1])}" x2="${r22(b[0])}" y2="${r22(b[1])}" stroke="${color}" stroke-width="${r22(w)}" stroke-linecap="round"/>`, "L");
-    var limb = /* @__PURE__ */ __name((a, b, w, fill) => L(a, b, OUT5, w + W * 2) + L(a, b, fill, w), "limb");
+    var limb = /* @__PURE__ */ __name((a, b, w, fill) => L(a, b, OUT6, w + W * 2) + L(a, b, fill, w), "limb");
     var clip = /* @__PURE__ */ __name((id, d, inner) => `<clipPath id="${id}"><path d="${d}"/></clipPath><g clip-path="url(#${id})">${inner}</g>`, "clip");
     var EYE_DARK = "#2A2420";
     var WHITE = "#FFFFFF";
@@ -78,7 +78,7 @@ var require_troupe = __commonJS({
     var drop = /* @__PURE__ */ __name((x, y, r, fill, w = 0.7) => P2(`M${r22(x)},${r22(y - r * 1.7)} Q${r22(x + r * 1.5)},${r22(y + r * 0.2)} ${r22(x)},${r22(y + r)} Q${r22(x - r * 1.5)},${r22(y + r * 0.2)} ${r22(x)},${r22(y - r * 1.7)} Z`, fill, w) + E2(x - r * 0.3, y - r * 0.1, r * 0.22, r * 0.35, WHITE, 0), "drop");
     var zee = /* @__PURE__ */ __name((x, y, z) => {
       const d = `M${r22(x)},${r22(y)} L${r22(x + z)},${r22(y)} L${r22(x)},${r22(y + z)} L${r22(x + z)},${r22(y + z)}`;
-      return `<path d="${d}" fill="none" stroke="${OUT5}" stroke-width="${r22(z * 0.5 + 0.8)}" stroke-linejoin="round" stroke-linecap="round"/><path d="${d}" fill="none" stroke="${WHITE}" stroke-width="${r22(z * 0.5)}" stroke-linejoin="round" stroke-linecap="round"/>`;
+      return `<path d="${d}" fill="none" stroke="${OUT6}" stroke-width="${r22(z * 0.5 + 0.8)}" stroke-linejoin="round" stroke-linecap="round"/><path d="${d}" fill="none" stroke="${WHITE}" stroke-width="${r22(z * 0.5)}" stroke-linejoin="round" stroke-linecap="round"/>`;
     }, "zee");
     function expression(g, ctx) {
       const { expr, n } = ctx;
@@ -138,7 +138,7 @@ var require_troupe = __commonJS({
       const toe = dir < 0 ? 1.4 : 0;
       const d = `M${r22(x - 2.3)},${r22(y)} L${r22(x + 2.3)},${r22(y)} Q${r22(x + 2.9)},${r22(y + 3.4)} ${r22(x + 1.4)},${r22(y + 4.3)} L${r22(x - 1.4 - toe)},${r22(y + 4.3)} Q${r22(x - 3.1 - toe)},${r22(y + 3.8)} ${r22(x - 2.3)},${r22(y)} Z`;
       let s = P2(d, c.skin) + E2(x + 1.1, y + 1.4, 0.7, 1.1, c.skinS || c.skin, 0);
-      if (dir <= 0) for (const t of dir < 0 ? [-3, -1.9] : [-1, 0.4]) s += L([x + t, y + 3.5], [x + t, y + 4.1], OUT5, 0.45);
+      if (dir <= 0) for (const t of dir < 0 ? [-3, -1.9] : [-1, 0.4]) s += L([x + t, y + 3.5], [x + t, y + 4.1], OUT6, 0.45);
       return tilt ? `<g transform="rotate(${tilt} ${r22(x - (dir < 0 ? 3 : -3))} ${r22(y + 4.5)})">${s}</g>` : s;
     }
     __name(bareFoot, "bareFoot");
@@ -152,7 +152,7 @@ var require_troupe = __commonJS({
       if (c.sleeves || c.bandage) return armOf(c, pts4, main);
       const d = "M" + pts4.map((p) => `${r22(p[0])},${r22(p[1])}`).join(" L");
       const line = /* @__PURE__ */ __name((color, w) => `<path d="${d}" fill="none" stroke="${color}" stroke-width="${r22(w)}" stroke-linecap="round" stroke-linejoin="round"/>`, "line");
-      let s = line(OUT5, c.armW + W * 2) + line(c.sleeve, c.armW);
+      let s = line(OUT6, c.armW + W * 2) + line(c.sleeve, c.armW);
       if (c.cuff) {
         const f = pts4[pts4.length - 2];
         const len = Math.hypot(b[0] - f[0], b[1] - f[1]);
@@ -177,20 +177,20 @@ var require_troupe = __commonJS({
         const k = Math.min(c.sleeveCut || 5, len * 0.62);
         cut = at(k);
         const d = path([...pts4.slice(0, -1), cut]);
-        s += stroke(d, OUT5, c.armW + W * 2) + stroke(d, c.sleeve, c.armW);
+        s += stroke(d, OUT6, c.armW + W * 2) + stroke(d, c.sleeve, c.armW);
         const fd = path([cut, b]);
-        s += stroke(fd, OUT5, fw + W * 2) + stroke(fd, c.skin, fw);
+        s += stroke(fd, OUT6, fw + W * 2) + stroke(fd, c.skin, fw);
         const h = c.armW / 2 + 0.5, P22 = /* @__PURE__ */ __name((k1, k2) => [cut[0] + nx * k1 + ux * k2, cut[1] + ny * k1 + uy * k2], "P2");
         if (c.sleeves === "torn") {
           const zig = [P22(h, -0.5), P22(h * 0.45, 1.5), P22(0, 0.4), P22(-h * 0.5, 1.6), P22(-h, -0.5)];
-          s += `<path d="${path([P22(h, -1.8), ...zig, P22(-h, -1.8)])} Z" fill="${c.sleeve}"/>` + stroke(path(zig), OUT5, 0.85);
+          s += `<path d="${path([P22(h, -1.8), ...zig, P22(-h, -1.8)])} Z" fill="${c.sleeve}"/>` + stroke(path(zig), OUT6, 0.85);
         } else {
           const r = h + 0.3, band = [P22(r, -0.7), P22(r, 0.75), P22(-r, 0.75), P22(-r, -0.7)];
-          s += `<path d="${path(band)} Z" fill="${c.cuff || c.sleeve}" stroke="${OUT5}" stroke-width="0.85" stroke-linejoin="round"/>` + L(P22(r * 0.7, -0.1), P22(-r * 0.7, -0.1), "rgba(255,255,255,.35)", 0.45);
+          s += `<path d="${path(band)} Z" fill="${c.cuff || c.sleeve}" stroke="${OUT6}" stroke-width="0.85" stroke-linejoin="round"/>` + L(P22(r * 0.7, -0.1), P22(-r * 0.7, -0.1), "rgba(255,255,255,.35)", 0.45);
         }
       } else {
         const d = path(pts4);
-        s += stroke(d, OUT5, c.armW + W * 2) + stroke(d, c.sleeve, c.armW);
+        s += stroke(d, OUT6, c.armW + W * 2) + stroke(d, c.sleeve, c.armW);
       }
       if (c.bandage) {
         const screenLeft = pts4[0][0] < 24;
@@ -203,7 +203,7 @@ var require_troupe = __commonJS({
             s += L([p[0] + nx * w * 0.48, p[1] + ny * w * 0.48], [p[0] - nx * w * 0.48 + ux * 0.5, p[1] - ny * w * 0.48 + uy * 0.5], "#C9BFA8", 0.45);
           }
           const t = at(4);
-          s += L(t, [t[0] + nx * 2.2 - ux * 0.4, t[1] + ny * 2.2 - uy * 0.4], OUT5, 1.5) + L(t, [t[0] + nx * 2.2 - ux * 0.4, t[1] + ny * 2.2 - uy * 0.4], "#F4EEDF", 0.7);
+          s += L(t, [t[0] + nx * 2.2 - ux * 0.4, t[1] + ny * 2.2 - uy * 0.4], OUT6, 1.5) + L(t, [t[0] + nx * 2.2 - ux * 0.4, t[1] + ny * 2.2 - uy * 0.4], "#F4EEDF", 0.7);
         }
       }
       return s + (main != null ? main : poing(c, b));
@@ -257,7 +257,7 @@ var require_troupe = __commonJS({
     __name(frame, "frame");
     var svg = /* @__PURE__ */ __name((body, scale = 1) => `<svg xmlns="http://www.w3.org/2000/svg" width="${48 * scale}" height="${64 * scale}" viewBox="0 0 48 64">${body}</svg>`, "svg");
     var POSES = [["face_repos", "front", "repos", 2], ["avant_marche", "se", "marche", 4], ["dos_marche", "ne", "marche", 4], ["face_salut", "front", "salut", 2]];
-    module.exports = { OUT: OUT5, W, r2: r22, st, P: P2, E: E2, L, limb, clip, eyes, expression, EXPRS, drop, zee, arm, poing, bareFoot, shoe, leg, frame, svg, POSES };
+    module.exports = { OUT: OUT6, W, r2: r22, st, P: P2, E: E2, L, limb, clip, eyes, expression, EXPRS, drop, zee, arm, poing, bareFoot, shoe, leg, frame, svg, POSES };
   }
 });
 
@@ -271,7 +271,7 @@ var require_troupe2 = __commonJS({
 // atelier/arbres.js
 var require_arbres = __commonJS({
   "atelier/arbres.js"(exports, module) {
-    var { OUT: OUT5, P: P2, E: E2, r2: r22 } = require_troupe2();
+    var { OUT: OUT6, P: P2, E: E2, r2: r22 } = require_troupe2();
     var VERTS = {
       // devant : touffes de devant (plus chaudes) ; fond : touffe du fond (plus froide et plus sombre)
       doux: { devant: { light: "#DFF3A8", mid: "#A5D466", dark: "#68A64B" }, fond: { light: "#A3D172", mid: "#77AF50", dark: "#4F8744" } },
@@ -292,7 +292,7 @@ var require_arbres = __commonJS({
     var sc = /* @__PURE__ */ __name((d, k) => d.replace(/-?\d+(\.\d+)?/g, (n) => r22(n * k)), "sc");
     function touffe2(id, lobes, c, marques, k, neige = false) {
       const L = lobes.map(([x, y, r, f]) => [x * k, y * k, r * k, f]);
-      const contour = L.map(([x, y, r]) => rond2(x, y, r + W, OUT5)).join("");
+      const contour = L.map(([x, y, r]) => rond2(x, y, r + W, OUT6)).join("");
       const zone = `<clipPath id="${id}">${L.map(([x, y, r]) => rond2(x, y, r, "#000")).join("")}</clipPath>`;
       const hauts = L.filter((l) => l[3] !== 0);
       const dedans = L.map(([x, y, r]) => rond2(x, y, r, c.dark)).join("") + L.map(([x, y, r]) => rond2(x - r * 0.2, y - r * 0.32, r * 0.86, c.mid)).join("") + hauts.map(([x, y, r]) => rond2(x - r * 0.34, y - r * 0.48, r * 0.5, c.light)).join("") + hauts.map(([x, y, r]) => rond2(x - r * 0.22, y - r * 0.3, r * 0.5, c.mid)).join("") + marques.map(([x, y, s = 1]) => {
@@ -305,13 +305,13 @@ var require_arbres = __commonJS({
     function tronc(id, k) {
       const d = sc("M-13,2.2 Q-8,0.6 -6.4,-5 Q-5,-16 -5,-26 Q-5.4,-34 -12,-44 L-5,-46 Q-1.4,-40 0,-36 Q1.6,-41 7,-47 L13,-43 Q5.6,-34 5.2,-26 Q5,-16 6.2,-6 Q7.6,0.4 13,2.6 Q8.6,4 5.2,2.4 Q2.6,5 -0.6,3.4 Q-3.6,4.8 -6,2.6 Q-9.4,3.6 -13,2.2 Z", k);
       const dedans = `<path d="${sc("M1.6,4 Q2.6,-14 2,-27 Q4,-36 9,-46 L16,-46 L16,4 Z", k)}" fill="${BOIS3.right}"/><path d="${sc("M5.2,2.4 Q8,2.8 13,2.6 L14,6 L4,6 Z", k)}" fill="${BOIS3.right}"/><ellipse cx="0" cy="${r22(-38 * k)}" rx="${r22(16 * k)}" ry="${r22(8 * k)}" fill="${BOIS3.right}"/><path d="${sc("M-2.6,-7 Q-3.2,-13 -2.4,-19 M2.8,-11 Q3.4,-16 2.8,-22 M-3.4,-21 q0.4,-3 -0.2,-5", k)}" fill="none" stroke="${BOIS3.bark}" stroke-width="0.7" stroke-linecap="round"/><path d="${sc("M-4.6,-4 Q-4,-12 -4.2,-20", k)}" fill="none" stroke="${BOIS3.light}" stroke-width="1" stroke-linecap="round" opacity="0.7"/>`;
-      return `<path d="${d}" fill="${BOIS3.left}" stroke="${OUT5}" stroke-width="${W}" stroke-linejoin="round"/><defs><clipPath id="${id}"><path d="${d}"/></clipPath></defs><g clip-path="url(#${id})">${dedans}</g>`;
+      return `<path d="${d}" fill="${BOIS3.left}" stroke="${OUT6}" stroke-width="${W}" stroke-linejoin="round"/><defs><clipPath id="${id}"><path d="${d}"/></clipPath></defs><g clip-path="url(#${id})">${dedans}</g>`;
     }
     __name(tronc, "tronc");
-    var herbe = /* @__PURE__ */ __name((x, y, col, s = 1) => `<path d="${sc("M-3,0 Q-3.2,-3 -4.6,-4.6 Q-1.6,-3.6 -0.8,-1.4 Q-0.6,-4.8 0.4,-6.2 Q1.6,-3.6 1,-1.2 Q2.2,-3.6 4.4,-4.4 Q3,-2 3,0 Q0,1.2 -3,0 Z", s)}" transform="translate(${r22(x)} ${r22(y)})" fill="${col}" stroke="${OUT5}" stroke-width="0.8" stroke-linejoin="round"/>`, "herbe");
+    var herbe = /* @__PURE__ */ __name((x, y, col, s = 1) => `<path d="${sc("M-3,0 Q-3.2,-3 -4.6,-4.6 Q-1.6,-3.6 -0.8,-1.4 Q-0.6,-4.8 0.4,-6.2 Q1.6,-3.6 1,-1.2 Q2.2,-3.6 4.4,-4.4 Q3,-2 3,0 Q0,1.2 -3,0 Z", s)}" transform="translate(${r22(x)} ${r22(y)})" fill="${col}" stroke="${OUT6}" stroke-width="0.8" stroke-linejoin="round"/>`, "herbe");
     var champignon = /* @__PURE__ */ __name((x, y) => `<g transform="translate(${r22(x)} ${r22(y)})">` + P2("M-1,0 L-0.8,-2.2 L0.8,-2.2 L1,0 Z", "#F6EBD6", 0.7) + P2("M-2.9,-2 Q-2.6,-5.2 0,-5.4 Q2.6,-5.2 2.9,-2 Q0,-1.3 -2.9,-2 Z", "#E2574C", 0.8) + E2(-1, -3.8, 0.6, 0.5, "#FFFFFF", 0) + E2(1.1, -3.1, 0.45, 0.4, "#FFFFFF", 0) + "</g>", "champignon");
     var PETALES = [0, 72, 144, 216, 288].map((a) => [Math.cos((a - 90) * Math.PI / 180) * 1.2, Math.sin((a - 90) * Math.PI / 180) * 1.2]);
-    var fleurette = /* @__PURE__ */ __name((x, y, col) => PETALES.map(([dx, dy]) => rond2(x + dx, y + dy, 1.4, OUT5)).join("") + PETALES.map(([dx, dy]) => rond2(x + dx, y + dy, 0.95, col)).join("") + rond2(x, y, 0.7, "#F2B33D"), "fleurette");
+    var fleurette = /* @__PURE__ */ __name((x, y, col) => PETALES.map(([dx, dy]) => rond2(x + dx, y + dy, 1.4, OUT6)).join("") + PETALES.map(([dx, dy]) => rond2(x + dx, y + dy, 0.95, col)).join("") + rond2(x, y, 0.7, "#F2B33D"), "fleurette");
     function pied(k) {
       return herbe(-15 * k, 3, "#86B852", 0.85) + champignon(-7.5 * k, 5.2) + herbe(10.5 * k, 5.6, "#94C25C", 0.7) + fleurette(15 * k, 4.4, "#FFFFFF") + fleurette(19 * k, 2.6, "#F7B6C8") + fleurette(18.6 * k, 6.6, "#FFFFFF");
     }
@@ -343,13 +343,13 @@ var require_arbres = __commonJS({
     for (const saison of ["printemps", "hiver"]) for (const petit of [false, true]) {
       ARBRES_SAISONS.push([["arbre", saison, petit && "petit"].filter(Boolean).join("_"), `Arbre ${saison === "hiver" ? "d'hiver" : "de printemps"} (${petit ? "petit" : "grand"}, ${saison === "hiver" ? "sous la neige, congère au pied" : "vert tendre, en fleurs, pied fleuri"})`, { saison, petit }]);
     }
-    function pomme(id, x, y, s, feuille3) {
+    function pomme(id, x, y, s, feuille4) {
       const r = 2.7 * s;
       const d = `M${r22(x)},${r22(y - r * 0.7)} Q${r22(x + r * 1.1)},${r22(y - r * 1.25)} ${r22(x + r * 1.05)},${r22(y + r * 0.05)} Q${r22(x + r * 0.9)},${r22(y + r * 1.05)} ${r22(x)},${r22(y + r * 0.95)} Q${r22(x - r * 0.9)},${r22(y + r * 1.05)} ${r22(x - r * 1.05)},${r22(y + r * 0.05)} Q${r22(x - r * 1.1)},${r22(y - r * 1.25)} ${r22(x)},${r22(y - r * 0.7)} Z`;
-      return `<path d="${d}" fill="#E2574C" stroke="${OUT5}" stroke-width="0.9" stroke-linejoin="round"/><defs><clipPath id="${id}"><path d="${d}"/></clipPath></defs><g clip-path="url(#${id})">${E2(x + r * 0.55, y + r * 0.55, r * 0.95, r * 0.8, "#B83A35", 0)}</g><ellipse cx="${r22(x - r * 0.42)}" cy="${r22(y - r * 0.2)}" rx="${r22(r * 0.3)}" ry="${r22(r * 0.38)}" fill="#FFFFFF" opacity="0.85"/><path d="M${r22(x)},${r22(y - r * 0.6)} q${r22(0.2 * s)},${r22(-1.3 * s)} ${r22(0.9 * s)},${r22(-1.8 * s)}" stroke="${OUT5}" stroke-width="${r22(0.9 * Math.max(s, 0.8))}" fill="none" stroke-linecap="round"/>` + (feuille3 ? `<path d="M${r22(x + 0.7 * s)},${r22(y - r * 0.85)} q${r22(1.6 * s)},${r22(-1.6 * s)} ${r22(3.2 * s)},${r22(-0.9 * s)} q${r22(-1.2 * s)},${r22(1.4 * s)} ${r22(-3.2 * s)},${r22(0.9 * s)} Z" fill="#8CC152" stroke="${OUT5}" stroke-width="0.7" stroke-linejoin="round"/>` : "");
+      return `<path d="${d}" fill="#E2574C" stroke="${OUT6}" stroke-width="0.9" stroke-linejoin="round"/><defs><clipPath id="${id}"><path d="${d}"/></clipPath></defs><g clip-path="url(#${id})">${E2(x + r * 0.55, y + r * 0.55, r * 0.95, r * 0.8, "#B83A35", 0)}</g><ellipse cx="${r22(x - r * 0.42)}" cy="${r22(y - r * 0.2)}" rx="${r22(r * 0.3)}" ry="${r22(r * 0.38)}" fill="#FFFFFF" opacity="0.85"/><path d="M${r22(x)},${r22(y - r * 0.6)} q${r22(0.2 * s)},${r22(-1.3 * s)} ${r22(0.9 * s)},${r22(-1.8 * s)}" stroke="${OUT6}" stroke-width="${r22(0.9 * Math.max(s, 0.8))}" fill="none" stroke-linecap="round"/>` + (feuille4 ? `<path d="M${r22(x + 0.7 * s)},${r22(y - r * 0.85)} q${r22(1.6 * s)},${r22(-1.6 * s)} ${r22(3.2 * s)},${r22(-0.9 * s)} q${r22(-1.2 * s)},${r22(1.4 * s)} ${r22(-3.2 * s)},${r22(0.9 * s)} Z" fill="#8CC152" stroke="${OUT6}" stroke-width="0.7" stroke-linejoin="round"/>` : "");
     }
     __name(pomme, "pomme");
-    var petale2 = /* @__PURE__ */ __name((x, y, a, col) => `<path d="M0,-1.9 Q1.5,0 0,1.9 Q-1.5,0 0,-1.9 Z" fill="${col}" stroke="${OUT5}" stroke-width="0.5" transform="translate(${r22(x)} ${r22(y)}) rotate(${a})"/>`, "petale");
+    var petale2 = /* @__PURE__ */ __name((x, y, a, col) => `<path d="M0,-1.9 Q1.5,0 0,1.9 Q-1.5,0 0,-1.9 Z" fill="${col}" stroke="${OUT6}" stroke-width="0.5" transform="translate(${r22(x)} ${r22(y)}) rotate(${a})"/>`, "petale");
     var POMMES = [[-26, -49, 1, true], [-15, -58, 1], [-31, -57, 0.9], [-7, -46, 1], [3, -66, 1, true], [13, -50, 1], [23, -45, 1, true], [27, -55, 0.9], [-3, -76, 0.9], [14, -73, 0.9]];
     var TOMBEES = [[12, 5, 1], [-17, 6, 0.95, true]];
     var FLEURS2 = [[-27, -52], [-17, -60], [-31, -45], [-8, -50], [2, -67], [-4, -58], [12, -52], [21, -47], [27, -57], [16, -60], [-4, -78], [12, -75], [-18, -72], [24, -68], [6, -84]];
@@ -369,7 +369,7 @@ var require_arbres = __commonJS({
       const libelle = `Pommier (${[petit ? "petit" : "grand", `vert ${vert}`, fleurs ? "en fleurs" : "en pommes", tombees && (fleurs ? "pétales tombés" : "pommes tombées")].filter(Boolean).join(", ")})`;
       POMMIERS.push([fichier, libelle, { vert, petit, fleurs, tombees }]);
     }
-    var feuilleMorte = /* @__PURE__ */ __name((x, y, a, col, s = 1) => `<g transform="translate(${r22(x)} ${r22(y)}) rotate(${a}) scale(${s})"><path d="M0,-2.8 Q2.2,-0.6 0,2.8 Q-2.2,-0.6 0,-2.8 Z" fill="${col}" stroke="${OUT5}" stroke-width="0.6" stroke-linejoin="round"/><path d="M0,-1.8 L0,2.2" stroke="${OUT5}" stroke-width="0.4" stroke-linecap="round" opacity="0.6"/></g>`, "feuilleMorte");
+    var feuilleMorte = /* @__PURE__ */ __name((x, y, a, col, s = 1) => `<g transform="translate(${r22(x)} ${r22(y)}) rotate(${a}) scale(${s})"><path d="M0,-2.8 Q2.2,-0.6 0,2.8 Q-2.2,-0.6 0,-2.8 Z" fill="${col}" stroke="${OUT6}" stroke-width="0.6" stroke-linejoin="round"/><path d="M0,-1.8 L0,2.2" stroke="${OUT6}" stroke-width="0.4" stroke-linecap="round" opacity="0.6"/></g>`, "feuilleMorte");
     var FEUILLES_SOL = [[-18, 3.5, 30, 0], [-12, 7, -50, 1], [-21, 7, 80, 2], [10, 6.5, 60, 1], [16, 3, -20, 0], [19, 7.5, 40, 2], [3, 8, -70, 0]];
     var FEUILLES_AIR = [[-31, -30, 25, 1], [30, -22, -35, 0]];
     var ROUSSES = ["#F5A04A", "#E8664A", "#F2C14E"];
@@ -393,7 +393,7 @@ var require_arbres = __commonJS({
       const d = sc("M-8,1.8 Q-4.5,0.6 -3.6,-4 Q-3,-20 -3.4,-36 Q-4,-44 -9,-52 L-5.4,-54.4 Q-1.6,-48 0,-44 Q1.4,-49 6,-55.4 L9.4,-52.4 Q4,-44 3.4,-36 Q3,-20 3.8,-5 Q5,0.6 8.5,2 Q5,3.2 2.6,2 Q0,3.6 -2.6,2.2 Q-5,3.4 -8,1.8 Z", k);
       const marques = [[-2.2, -9, 2.4], [1.4, -15, 2], [-2.4, -22, 2.2], [1.2, -28, 2.6], [-1.8, -34, 1.8], [-5.6, -46, 1.6], [4.6, -47, 1.6]];
       const dedans = `<path d="${sc("M1.2,4 Q1.8,-20 1.6,-36 Q3,-44 8,-56 L14,-56 L14,4 Z", k)}" fill="${ECORCE.right}"/><path d="${sc("M-9,4 L-9,-1.5 Q-4,-3.5 0,-3 Q4,-3.5 9,-1.5 L9,4 Z", k)}" fill="#8E877C"/><ellipse cx="0" cy="${r22(-44 * k)}" rx="${r22(12 * k)}" ry="${r22(6 * k)}" fill="${ECORCE.right}"/>` + marques.map(([x, y, w]) => `<path d="M${r22((x - w / 2) * k)},${r22(y * k)} Q${r22(x * k)},${r22((y - 0.9) * k)} ${r22((x + w / 2) * k)},${r22(y * k)} Q${r22(x * k)},${r22((y + 0.6) * k)} ${r22((x - w / 2) * k)},${r22(y * k)} Z" fill="${ECORCE.marque}"/>`).join("");
-      return `<path d="${d}" fill="${ECORCE.left}" stroke="${OUT5}" stroke-width="${W}" stroke-linejoin="round"/><defs><clipPath id="${id}"><path d="${d}"/></clipPath></defs><g clip-path="url(#${id})">${dedans}</g>`;
+      return `<path d="${d}" fill="${ECORCE.left}" stroke="${OUT6}" stroke-width="${W}" stroke-linejoin="round"/><defs><clipPath id="${id}"><path d="${d}"/></clipPath></defs><g clip-path="url(#${id})">${dedans}</g>`;
     }
     __name(troncBouleau, "troncBouleau");
     var B_FOND = [[-10, -84, 10], [6, -90, 10.5], [17, -78, 9], [-19, -72, 8.5], [1, -75, 10]];
@@ -433,27 +433,27 @@ var require_arbres = __commonJS({
       dedans += `<path d="M-1.2,${r22(top + 3)} Q${r22(-w * 0.32)},${r22(top + h * 0.6)} ${r22(-w + 3)},${r22(y - 1.2)}" stroke="${c.light}" stroke-width="1.6" fill="none" stroke-linecap="round"/>` + [[-w * 0.45, y - h * 0.35], [w * 0.15, y - h * 0.55], [-w * 0.1, y - h * 0.2], [w * 0.5, y - h * 0.25]].map(([x, yy]) => `<path d="M${r22(x - 1.8)},${r22(yy - 1.2)} L${r22(x)},${r22(yy + 0.6)} L${r22(x + 1.8)},${r22(yy - 1.2)}" stroke="${c.dark}" stroke-width="0.8" fill="none" stroke-linecap="round" stroke-linejoin="round"/>`).join("");
       if (neige) {
         const yc = yNeige, xc = w * (yc - top) / h * 1.08;
-        dedans += `<path d="M0,${r22(top - 0.4)} Q${r22(-w * 0.18)},${r22(top + h * 0.3)} ${r22(-xc - 1)},${r22(yc)} Q${r22(-xc * 0.6)},${r22(yc + 3)} ${r22(-xc * 0.3)},${r22(yc + 0.6)} Q0,${r22(yc + 3.2)} ${r22(xc * 0.3)},${r22(yc + 0.4)} Q${r22(xc * 0.65)},${r22(yc + 2.8)} ${r22(xc + 1)},${r22(yc - 0.4)} Q${r22(w * 0.18)},${r22(top + h * 0.3)} 0,${r22(top - 0.4)} Z" fill="#FFFFFF" stroke="${OUT5}" stroke-width="0.8" stroke-linejoin="round"/><path d="M${r22(w * 0.06)},${r22(top + 1.5)} Q${r22(w * 0.2)},${r22(top + h * 0.3)} ${r22(xc * 0.9)},${r22(yc)}" stroke="#D6E4EE" stroke-width="1.4" fill="none" stroke-linecap="round"/>`;
+        dedans += `<path d="M0,${r22(top - 0.4)} Q${r22(-w * 0.18)},${r22(top + h * 0.3)} ${r22(-xc - 1)},${r22(yc)} Q${r22(-xc * 0.6)},${r22(yc + 3)} ${r22(-xc * 0.3)},${r22(yc + 0.6)} Q0,${r22(yc + 3.2)} ${r22(xc * 0.3)},${r22(yc + 0.4)} Q${r22(xc * 0.65)},${r22(yc + 2.8)} ${r22(xc + 1)},${r22(yc - 0.4)} Q${r22(w * 0.18)},${r22(top + h * 0.3)} 0,${r22(top - 0.4)} Z" fill="#FFFFFF" stroke="${OUT6}" stroke-width="0.8" stroke-linejoin="round"/><path d="M${r22(w * 0.06)},${r22(top + 1.5)} Q${r22(w * 0.2)},${r22(top + h * 0.3)} ${r22(xc * 0.9)},${r22(yc)}" stroke="#D6E4EE" stroke-width="1.4" fill="none" stroke-linecap="round"/>`;
       }
-      let o = `<path d="${d}" fill="${c.mid}" stroke="${OUT5}" stroke-width="${W}" stroke-linejoin="round"/><defs><clipPath id="${id}"><path d="${d}"/></clipPath></defs><g clip-path="url(#${id})">${dedans}</g>`;
+      let o = `<path d="${d}" fill="${c.mid}" stroke="${OUT6}" stroke-width="${W}" stroke-linejoin="round"/><defs><clipPath id="${id}"><path d="${d}"/></clipPath></defs><g clip-path="url(#${id})">${dedans}</g>`;
       if (neige) {
         let f = `M${r22(-w + 1)},${r22(y - 0.2)}`;
         for (let i = 0; i < n; i++) {
           const x0 = -w + i * pas;
           f += ` Q${r22(x0 + pas / 2)},${r22(y + 3.4)} ${r22(Math.min(x0 + pas, w - 1))},${r22(y - 0.2)}`;
         }
-        o += `<path d="${f}" stroke="${OUT5}" stroke-width="2.8" fill="none" stroke-linecap="round" stroke-linejoin="round"/><path d="${f}" stroke="#FFFFFF" stroke-width="1.1" fill="none" stroke-linecap="round" stroke-linejoin="round"/>`;
+        o += `<path d="${f}" stroke="${OUT6}" stroke-width="2.8" fill="none" stroke-linecap="round" stroke-linejoin="round"/><path d="${f}" stroke="#FFFFFF" stroke-width="1.1" fill="none" stroke-linecap="round" stroke-linejoin="round"/>`;
       }
       return o;
     }
     __name(etage, "etage");
     function troncSapin(id, k) {
       const d = sc("M-7.5,1.8 Q-4,0.6 -3.4,-4 L-3,-16 L3,-16 L3.4,-4 Q4,0.6 8,2 Q4.4,3.2 2,2 Q0,3.4 -2.2,2.2 Q-4.6,3.2 -7.5,1.8 Z", k);
-      return `<path d="${d}" fill="${BOIS3.left}" stroke="${OUT5}" stroke-width="${W}" stroke-linejoin="round"/><defs><clipPath id="${id}"><path d="${d}"/></clipPath></defs><g clip-path="url(#${id})"><path d="${sc("M0.8,4 L1,-17 L9,-17 L9,4 Z", k)}" fill="${BOIS3.right}"/><path d="${sc("M-1.6,-4 L-1.4,-11", k)}" stroke="${BOIS3.bark}" stroke-width="0.7" stroke-linecap="round"/></g>`;
+      return `<path d="${d}" fill="${BOIS3.left}" stroke="${OUT6}" stroke-width="${W}" stroke-linejoin="round"/><defs><clipPath id="${id}"><path d="${d}"/></clipPath></defs><g clip-path="url(#${id})"><path d="${sc("M0.8,4 L1,-17 L9,-17 L9,4 Z", k)}" fill="${BOIS3.right}"/><path d="${sc("M-1.6,-4 L-1.4,-11", k)}" stroke="${BOIS3.bark}" stroke-width="0.7" stroke-linecap="round"/></g>`;
     }
     __name(troncSapin, "troncSapin");
-    var pommeDePin = /* @__PURE__ */ __name((x, y, a) => `<g transform="translate(${r22(x)} ${r22(y)}) rotate(${a})"><path d="M0,-2.6 Q2.2,-1 1.8,1.2 Q0,3 -1.8,1.2 Q-2.2,-1 0,-2.6 Z" fill="#A0703F" stroke="${OUT5}" stroke-width="0.7" stroke-linejoin="round"/><path d="M-1.4,-0.6 Q0,0.4 1.4,-0.6 M-1.5,1 Q0,2 1.5,1" stroke="#6E4A28" stroke-width="0.5" fill="none"/></g>`, "pommeDePin");
-    var congere = /* @__PURE__ */ __name((k) => `<path d="M${r22(-17 * k)},4 Q${r22(-14 * k)},-1 ${r22(-8 * k)},1.5 Q${r22(-5 * k)},-0.5 ${r22(-2 * k)},3 Q${r22(4 * k)},0 ${r22(8 * k)},3 Q${r22(13 * k)},0 ${r22(18 * k)},4.5 Q0,9 ${r22(-17 * k)},4 Z" fill="#FFFFFF" stroke="${OUT5}" stroke-width="0.9" stroke-linejoin="round"/><path d="M${r22(3 * k)},5.5 Q${r22(10 * k)},6.6 ${r22(15 * k)},5" stroke="#D6E4EE" stroke-width="1.2" fill="none" stroke-linecap="round"/>`, "congere");
+    var pommeDePin = /* @__PURE__ */ __name((x, y, a) => `<g transform="translate(${r22(x)} ${r22(y)}) rotate(${a})"><path d="M0,-2.6 Q2.2,-1 1.8,1.2 Q0,3 -1.8,1.2 Q-2.2,-1 0,-2.6 Z" fill="#A0703F" stroke="${OUT6}" stroke-width="0.7" stroke-linejoin="round"/><path d="M-1.4,-0.6 Q0,0.4 1.4,-0.6 M-1.5,1 Q0,2 1.5,1" stroke="#6E4A28" stroke-width="0.5" fill="none"/></g>`, "pommeDePin");
+    var congere = /* @__PURE__ */ __name((k) => `<path d="M${r22(-17 * k)},4 Q${r22(-14 * k)},-1 ${r22(-8 * k)},1.5 Q${r22(-5 * k)},-0.5 ${r22(-2 * k)},3 Q${r22(4 * k)},0 ${r22(8 * k)},3 Q${r22(13 * k)},0 ${r22(18 * k)},4.5 Q0,9 ${r22(-17 * k)},4 Z" fill="#FFFFFF" stroke="${OUT6}" stroke-width="0.9" stroke-linejoin="round"/><path d="M${r22(3 * k)},5.5 Q${r22(10 * k)},6.6 ${r22(15 * k)},5" stroke="#D6E4EE" stroke-width="1.2" fill="none" stroke-linecap="round"/>`, "congere");
     var ETAGES = [[-10, 25, 28, 5], [-27, 20.5, 27, 4], [-44, 16, 25, 4], [-60, 11, 24, 3]];
     function sapin({ vert = "doux", petit = false, neige = false, pied: pied2 = false } = {}) {
       const c = PINS[vert], k = petit ? 0.76 : 1;
@@ -491,7 +491,7 @@ var require_arbres = __commonJS({
         bas.push([p[0] - nx * w * cran, p[1] - ny * w * cran]);
       }
       const d = `M${pts4(haut.concat(bas.slice().reverse()))} Z`;
-      return `<path d="${d}" fill="${c.mid}" stroke="${OUT5}" stroke-width="${W}" stroke-linejoin="round"/><defs><clipPath id="${id}"><path d="${d}"/></clipPath></defs><g clip-path="url(#${id})"><path d="M${pts4(axe.concat(bas.slice().reverse()))} Z" fill="${c.dark}"/><path d="M${r22(o[0])},${r22(o[1] - 0.8)} Q${r22(ctl[0])},${r22(ctl[1] - 0.8)} ${r22(b[0])},${r22(b[1] - 0.8)}" stroke="${c.light}" stroke-width="1" fill="none" stroke-linecap="round"/></g>`;
+      return `<path d="${d}" fill="${c.mid}" stroke="${OUT6}" stroke-width="${W}" stroke-linejoin="round"/><defs><clipPath id="${id}"><path d="${d}"/></clipPath></defs><g clip-path="url(#${id})"><path d="M${pts4(axe.concat(bas.slice().reverse()))} Z" fill="${c.dark}"/><path d="M${r22(o[0])},${r22(o[1] - 0.8)} Q${r22(ctl[0])},${r22(ctl[1] - 0.8)} ${r22(b[0])},${r22(b[1] - 0.8)}" stroke="${c.light}" stroke-width="1" fill="none" stroke-linecap="round"/></g>`;
     }
     __name(palme, "palme");
     function stipe(id, k) {
@@ -505,7 +505,7 @@ var require_arbres = __commonJS({
         const l0 = [p0[0] - n0[0] * w0, p0[1] - n0[1] * w0], r0 = [p0[0] + n0[0] * w0, p0[1] + n0[1] * w0];
         const l1 = [p1[0] - n1[0] * w1, p1[1] - n1[1] * w1], r1 = [p1[0] + n1[0] * w1, p1[1] + n1[1] * w1];
         const d = `M${r22(l0[0])},${r22(l0[1])} L${r22(l1[0])},${r22(l1[1])} Q${r22(p1[0])},${r22(p1[1] + 1.4 * k)} ${r22(r1[0])},${r22(r1[1])} L${r22(r0[0])},${r22(r0[1])} Q${r22(p0[0])},${r22(p0[1] + 1.8 * k)} ${r22(l0[0])},${r22(l0[1])} Z`;
-        o += `<path d="${d}" fill="${STIPE.left}" stroke="${OUT5}" stroke-width="${W}" stroke-linejoin="round"/><defs><clipPath id="${id}${i}"><path d="${d}"/></clipPath></defs><g clip-path="url(#${id}${i})"><path d="M${r22(p0[0] + n0[0] * w0 * 0.25)},${r22(p0[1] + 4)} L${r22(p1[0] + n1[0] * w1 * 0.25)},${r22(p1[1] - 2)} L${r22(p1[0] + n1[0] * 12)},${r22(p1[1] - 2)} L${r22(p0[0] + n0[0] * 12)},${r22(p0[1] + 4)} Z" fill="${STIPE.right}"/><path d="M${r22(l1[0])},${r22(l1[1] + 1.2)} Q${r22(p1[0])},${r22(p1[1] + 2.6 * k)} ${r22(r1[0])},${r22(r1[1] + 1.2)}" stroke="${STIPE.light}" stroke-width="0.9" fill="none" stroke-linecap="round"/></g>`;
+        o += `<path d="${d}" fill="${STIPE.left}" stroke="${OUT6}" stroke-width="${W}" stroke-linejoin="round"/><defs><clipPath id="${id}${i}"><path d="${d}"/></clipPath></defs><g clip-path="url(#${id}${i})"><path d="M${r22(p0[0] + n0[0] * w0 * 0.25)},${r22(p0[1] + 4)} L${r22(p1[0] + n1[0] * w1 * 0.25)},${r22(p1[1] - 2)} L${r22(p1[0] + n1[0] * 12)},${r22(p1[1] - 2)} L${r22(p0[0] + n0[0] * 12)},${r22(p0[1] + 4)} Z" fill="${STIPE.right}"/><path d="M${r22(l1[0])},${r22(l1[1] + 1.2)} Q${r22(p1[0])},${r22(p1[1] + 2.6 * k)} ${r22(r1[0])},${r22(r1[1] + 1.2)}" stroke="${STIPE.light}" stroke-width="0.9" fill="none" stroke-linecap="round"/></g>`;
       }
       return o;
     }
@@ -544,13 +544,13 @@ var require_arbres = __commonJS({
         for (let i = 0; i < p.length - 1; i++) segs.push([p[i], p[i + 1], w0 * (1 - i / p.length * 0.75)]);
       });
       const seg = /* @__PURE__ */ __name(([a, b], w, col) => `<path d="M${r22(a[0] * k)},${r22(a[1] * k)} L${r22(b[0] * k)},${r22(b[1] * k)}" stroke="${col}" stroke-width="${r22(w)}" stroke-linecap="round"/>`, "seg");
-      return segs.map(([a, b, w]) => seg([a, b], w * k + W * 2, OUT5)).join("") + segs.map(([a, b, w]) => seg([a, b], w * k, c.left)).join("") + segs.map(([a, b, w]) => seg([[a[0] + w * 0.22, a[1]], [b[0] + w * 0.22, b[1]]], w * k * 0.45, c.right)).join("");
+      return segs.map(([a, b, w]) => seg([a, b], w * k + W * 2, OUT6)).join("") + segs.map(([a, b, w]) => seg([a, b], w * k, c.left)).join("") + segs.map(([a, b, w]) => seg([[a[0] + w * 0.22, a[1]], [b[0] + w * 0.22, b[1]]], w * k * 0.45, c.right)).join("");
     }
     __name(branchesMortes, "branchesMortes");
     function troncMort(id, c, k) {
       const d = sc("M-12,2.2 Q-7,0.8 -5.8,-5 Q-4.6,-14 -5.2,-22 Q-5.6,-30 -10.5,-41 L-6.5,-44.5 Q-2.2,-38 0,-35 Q2,-38.5 7.5,-43 L11.5,-39.5 Q5.6,-31 5,-22 Q4.4,-12 5.8,-6 Q7,0.6 12.5,2.6 Q8,4 4.8,2.4 Q2.4,4.8 -0.6,3.4 Q-3.4,4.6 -5.8,2.6 Q-9,3.6 -12,2.2 Z", k);
       const dedans = `<path d="${sc("M1.4,4 Q2.4,-12 1.8,-22 Q3.4,-32 8.5,-44.5 L16,-44.5 L16,4 Z", k)}" fill="${c.right}"/><path d="${sc("M-2.4,-6 Q-3,-12 -2.2,-17 M2.6,-9 Q3.2,-14 2.6,-19 M-3.2,-21 q0.4,-3 -0.2,-5", k)}" fill="none" stroke="${c.bark}" stroke-width="0.7" stroke-linecap="round"/><path d="${sc("M-4.4,-4 Q-3.8,-12 -4,-20", k)}" fill="none" stroke="${c.light}" stroke-width="1" stroke-linecap="round" opacity="0.8"/>` + E2(-0.6 * k, -15 * k, 2.4 * k, 3 * k, c.light, 0.8) + E2(-0.4 * k, -14.6 * k, 1.5 * k, 2.1 * k, "#3A2E26", 0) + E2(-3.6 * k, -25 * k, 2 * k, 1 * k, "#B7C46C", 0.5) + E2(-2.2 * k, -24.4 * k, 1 * k, 0.6 * k, "#B7C46C", 0.4);
-      return `<path d="${d}" fill="${c.left}" stroke="${OUT5}" stroke-width="${W}" stroke-linejoin="round"/><defs><clipPath id="${id}"><path d="${d}"/></clipPath></defs><g clip-path="url(#${id})">${dedans}</g>`;
+      return `<path d="${d}" fill="${c.left}" stroke="${OUT6}" stroke-width="${W}" stroke-linejoin="round"/><defs><clipPath id="${id}"><path d="${d}"/></clipPath></defs><g clip-path="url(#${id})">${dedans}</g>`;
     }
     __name(troncMort, "troncMort");
     function arbreMort({ teinte = "gris", petit = false, champignons = false } = {}) {
@@ -600,7 +600,7 @@ var require_arbres = __commonJS({
 // atelier/deco.js
 var require_deco = __commonJS({
   "atelier/deco.js"(exports, module) {
-    var { OUT: OUT5, E: E2, r2: r22 } = require_troupe2();
+    var { OUT: OUT6, E: E2, r2: r22 } = require_troupe2();
     var K2 = 1.25;
     var TW2 = 64 * K2;
     var TH2 = 32 * K2;
@@ -613,7 +613,7 @@ var require_deco = __commonJS({
     var WOOD2 = { top: "#E0A96C", left: "#BF8049", right: "#965C30" };
     var WOOD_DARK2 = { top: "#A9703F", left: "#8B5631", right: "#6A3F22" };
     var GRANITE = { top: "#CBC6BA", left: "#A6A094", right: "#7E786E" };
-    var poly2 = /* @__PURE__ */ __name((points, fill, w = 0.9) => `<polygon points="${points.map((p) => `${r22(p[0])},${r22(p[1])}`).join(" ")}" fill="${fill}" stroke="${OUT5}" stroke-width="${w}" stroke-linejoin="round"/>`, "poly");
+    var poly2 = /* @__PURE__ */ __name((points, fill, w = 0.9) => `<polygon points="${points.map((p) => `${r22(p[0])},${r22(p[1])}`).join(" ")}" fill="${fill}" stroke="${OUT6}" stroke-width="${w}" stroke-linejoin="round"/>`, "poly");
     var face2 = /* @__PURE__ */ __name((pts32, fill, w) => poly2(pts32.map((p) => pt(...p)), fill, w), "face");
     var shadow2 = /* @__PURE__ */ __name((u, v, r, a = 0.22) => {
       const [x, y] = pt(u, v);
@@ -624,7 +624,7 @@ var require_deco = __commonJS({
     }
     __name(box2, "box");
     function crown(blobs, c, id) {
-      const out = blobs.map(([x, y, r]) => `<circle cx="${r22(x)}" cy="${r22(y)}" r="${r22(r + 1.1)}" fill="${OUT5}"/>`).join("");
+      const out = blobs.map(([x, y, r]) => `<circle cx="${r22(x)}" cy="${r22(y)}" r="${r22(r + 1.1)}" fill="${OUT6}"/>`).join("");
       const base = blobs.map(([x, y, r]) => `<circle cx="${r22(x)}" cy="${r22(y)}" r="${r22(r)}" fill="${c.mid}"/>`).join("");
       const clipId = `cr${id}`;
       const clipPath = `<clipPath id="${clipId}">${blobs.map(([x, y, r]) => `<circle cx="${r22(x)}" cy="${r22(y)}" r="${r22(r)}"/>`).join("")}</clipPath>`;
@@ -639,18 +639,18 @@ var require_deco = __commonJS({
       const j = /* @__PURE__ */ __name((k) => 1 + 0.14 * Math.sin(seed * 12.9898 + k * 78.233), "j");
       const path = `M${r22(x - w)},${r22(y)} Q${r22(x - w * 1.02)},${r22(y - H * 0.7 * j(1))} ${r22(x - w * 0.45)},${r22(y - H * j(2))} Q${r22(x + w * 0.1)},${r22(y - H * 1.12 * j(3))} ${r22(x + w * 0.62)},${r22(y - H * 0.78 * j(4))} Q${r22(x + w * 1.04)},${r22(y - H * 0.42)} ${r22(x + w)},${r22(y)} Q${x},${r22(y + d)} ${r22(x - w)},${r22(y)} Z`;
       const id = `rk${seed}_${[u, v, ru, rv, h].map(r22).join("_")}`.replace(/-/g, "m").replace(/\./g, "p");
-      return `<path d="${path}" fill="${c.left}" stroke="${OUT5}" stroke-width="1.1" stroke-linejoin="round"/><defs><clipPath id="${id}"><path d="${path}"/></clipPath></defs><g clip-path="url(#${id})"><ellipse cx="${r22(x + w * 0.55)}" cy="${r22(y - H * 0.1)}" rx="${r22(w * 0.8)}" ry="${r22(H * 0.75)}" fill="${c.right}"/><ellipse cx="${r22(x - w * 0.25)}" cy="${r22(y - H * 0.95)}" rx="${r22(w * 0.7)}" ry="${r22(H * 0.38)}" fill="${c.top}"/></g><path d="M${r22(x - w * 0.6)},${r22(y - H * 0.7)} Q${r22(x - w * 0.35)},${r22(y - H * 0.98)} ${r22(x + w * 0.05)},${r22(y - H * 1.02)}" stroke="#FFFFFF" stroke-width="1" fill="none" stroke-linecap="round" opacity="0.6"/>`;
+      return `<path d="${path}" fill="${c.left}" stroke="${OUT6}" stroke-width="1.1" stroke-linejoin="round"/><defs><clipPath id="${id}"><path d="${path}"/></clipPath></defs><g clip-path="url(#${id})"><ellipse cx="${r22(x + w * 0.55)}" cy="${r22(y - H * 0.1)}" rx="${r22(w * 0.8)}" ry="${r22(H * 0.75)}" fill="${c.right}"/><ellipse cx="${r22(x - w * 0.25)}" cy="${r22(y - H * 0.95)}" rx="${r22(w * 0.7)}" ry="${r22(H * 0.38)}" fill="${c.top}"/></g><path d="M${r22(x - w * 0.6)},${r22(y - H * 0.7)} Q${r22(x - w * 0.35)},${r22(y - H * 0.98)} ${r22(x + w * 0.05)},${r22(y - H * 1.02)}" stroke="#FFFFFF" stroke-width="1" fill="none" stroke-linecap="round" opacity="0.6"/>`;
     }
     __name(boulder, "boulder");
     var flower = /* @__PURE__ */ __name((x, y, r, petal, heart = "#E8A13A") => [0, 72, 144, 216, 288].map((a) => E2(x + Math.cos(a * Math.PI / 180) * r, y + Math.sin(a * Math.PI / 180) * r, r * 0.78, r * 0.78, petal, 0.5)).join("") + E2(x, y, r * 0.55, r * 0.55, heart, 0.4), "flower");
     var stroke = /* @__PURE__ */ __name((d, w, color) => `<path d="${d}" fill="none" stroke="${color}" stroke-width="${r22(w)}" stroke-linecap="round" stroke-linejoin="round"/>`, "stroke");
-    var thick = /* @__PURE__ */ __name((d, w, color) => stroke(d, w + 2.2, OUT5) + stroke(d, w, color), "thick");
+    var thick = /* @__PURE__ */ __name((d, w, color) => stroke(d, w + 2.2, OUT6) + stroke(d, w, color), "thick");
     module.exports = { K: K2, TW: TW2, TH: TH2, PROP, BUILDING, BIG, pt, poly: poly2, face: face2, shadow: shadow2, box: box2, crown, boulder, flower, stroke, thick, LEAVES, PINE, WOOD: WOOD2, WOOD_DARK: WOOD_DARK2, GRANITE };
     function cylinder2(u, v, r, z0, z1, c, w = 1) {
       const [x, y0] = pt(u, v, z0), [, y1] = pt(u, v, z1);
       const rx = r * TW2 * 0.7, ry = r * TH2 * 0.7;
       const side = `M${r22(x - rx)},${r22(y1)} L${r22(x - rx)},${r22(y0)} A${r22(rx)} ${r22(ry)} 0 0 0 ${r22(x + rx)},${r22(y0)} L${r22(x + rx)},${r22(y1)} Z`;
-      return `<path d="${side}" fill="${c.left}" stroke="${OUT5}" stroke-width="${w}" stroke-linejoin="round"/><path d="M${r22(x + rx * 0.15)},${r22(y1 + ry)} L${r22(x + rx * 0.15)},${r22(y0 + ry)} A${r22(rx)} ${r22(ry)} 0 0 0 ${r22(x + rx)},${r22(y0)} L${r22(x + rx)},${r22(y1)} Z" fill="${c.right}"/><path d="${side}" fill="none" stroke="${OUT5}" stroke-width="${w}" stroke-linejoin="round"/>` + E2(x, y1, rx, ry, c.top, w);
+      return `<path d="${side}" fill="${c.left}" stroke="${OUT6}" stroke-width="${w}" stroke-linejoin="round"/><path d="M${r22(x + rx * 0.15)},${r22(y1 + ry)} L${r22(x + rx * 0.15)},${r22(y0 + ry)} A${r22(rx)} ${r22(ry)} 0 0 0 ${r22(x + rx)},${r22(y0)} L${r22(x + rx)},${r22(y1)} Z" fill="${c.right}"/><path d="${side}" fill="none" stroke="${OUT6}" stroke-width="${w}" stroke-linejoin="round"/>` + E2(x, y1, rx, ry, c.top, w);
     }
     __name(cylinder2, "cylinder");
     var disc2 = /* @__PURE__ */ __name((u, v, r, z, fill, w = 1) => {
@@ -670,12 +670,12 @@ var require_deco = __commonJS({
     var post = /* @__PURE__ */ __name((u, v, z0, z1, c = WOOD_DARK2, w = 0.03) => box2(u - w, v - w, u + w, v + w, z0, z1, c, 0.7), "post");
     var rail = /* @__PURE__ */ __name((a, b, z, w = 2, c = WOOD_DARK2.left) => {
       const p = pt(a[0], a[1], z), q = pt(b[0], b[1], z);
-      return `<path d="M${r22(p[0])},${r22(p[1])} L${r22(q[0])},${r22(q[1])}" stroke="${OUT5}" stroke-width="${w + 1.6}" stroke-linecap="round"/><path d="M${r22(p[0])},${r22(p[1])} L${r22(q[0])},${r22(q[1])}" stroke="${c}" stroke-width="${w}" stroke-linecap="round"/>`;
+      return `<path d="M${r22(p[0])},${r22(p[1])} L${r22(q[0])},${r22(q[1])}" stroke="${OUT6}" stroke-width="${w + 1.6}" stroke-linecap="round"/><path d="M${r22(p[0])},${r22(p[1])} L${r22(q[0])},${r22(q[1])}" stroke="${c}" stroke-width="${w}" stroke-linecap="round"/>`;
     }, "rail");
     function flame(x, y, h, w, k) {
       const sway = Math.sin(k * Math.PI * 2) * w * 0.35;
       const tip = /* @__PURE__ */ __name((s, dx) => `M${r22(x - w * s)},${r22(y)} Q${r22(x - w * s * 1.1)},${r22(y - h * s * 0.55)} ${r22(x + dx)},${r22(y - h * s)} Q${r22(x + w * s * 1.1)},${r22(y - h * s * 0.55)} ${r22(x + w * s)},${r22(y)} Z`, "tip");
-      return `<path d="${tip(1, sway)}" fill="#E8573A" stroke="${OUT5}" stroke-width="0.9" stroke-linejoin="round"/><path d="${tip(0.72, sway * 0.6)}" fill="#F59A3C"/><path d="${tip(0.42, sway * 0.3)}" fill="#FFE08A"/>`;
+      return `<path d="${tip(1, sway)}" fill="#E8573A" stroke="${OUT6}" stroke-width="0.9" stroke-linejoin="round"/><path d="${tip(0.72, sway * 0.6)}" fill="#F59A3C"/><path d="${tip(0.42, sway * 0.3)}" fill="#FFE08A"/>`;
     }
     __name(flame, "flame");
     var glow = /* @__PURE__ */ __name((x, y, r, rgb = "255,224,138", a = 0.38) => {
@@ -1018,9 +1018,9 @@ function echafaudageDroite(g, n) {
 }
 __name(echafaudageDroite, "echafaudageDroite");
 var ETAPES = ["piquets", "terrassement", "fondations", "charpente", "murs", "toit"];
-function montage(emprise, etape4, n = 0) {
-  const g = geo(emprise), { R: R2, k, u0, u1, v0, v1, F, W } = g, i = ETAPES.indexOf(etape4);
-  if (i < 0) throw new Error("étape inconnue : " + etape4);
+function montage(emprise, etape5, n = 0) {
+  const g = geo(emprise), { R: R2, k, u0, u1, v0, v1, F, W } = g, i = ETAPES.indexOf(etape5);
+  if (i < 0) throw new Error("étape inconnue : " + etape5);
   const hp = 13;
   const coin = [[-k, -k], [k, -k], [k, k], [-k, k]].map(([u, v]) => P(u, v, hp - 1.5));
   const nb = Math.round(4 * R2);
@@ -1577,31 +1577,210 @@ function etape3(plante, quoi, n) {
 }
 __name(etape3, "etape");
 
+// atelier/cultures_climat.mjs
+var OUT5 = "#3C2819";
+var f24 = /* @__PURE__ */ __name((n) => Math.round(n * 100) / 100, "f2");
+var ln5 = /* @__PURE__ */ __name((a, b, color, w = 1) => `<line x1="${f24(a[0])}" y1="${f24(a[1])}" x2="${f24(b[0])}" y2="${f24(b[1])}" stroke="${color}" stroke-width="${f24(w)}" stroke-linecap="round"/>`, "ln");
+var ell4 = /* @__PURE__ */ __name((x, y, rx, ry, fill, extra = "") => `<ellipse cx="${f24(x)}" cy="${f24(y)}" rx="${f24(rx)}" ry="${f24(ry)}" fill="${fill}"${extra}/>`, "ell");
+var dot3 = /* @__PURE__ */ __name((x, y, r, fill) => `<circle cx="${f24(x)}" cy="${f24(y)}" r="${f24(r)}" fill="${fill}"/>`, "dot");
+var chemin3 = /* @__PURE__ */ __name((d, stroke, w, fill = "none") => `<path d="${d}" stroke="${stroke}" stroke-width="${f24(w)}" fill="${fill}" stroke-linecap="round" stroke-linejoin="round"/>`, "chemin");
+var bord2 = /* @__PURE__ */ __name((w = 0.35) => ` stroke="${OUT5}" stroke-width="${w}"`, "bord");
+var wave4 = /* @__PURE__ */ __name((f, amp = 1, phase = 0) => Math.sin(f / IMAGES4 * Math.PI * 2 + phase) * amp, "wave");
+var feuille3 = /* @__PURE__ */ __name((x, y, rx, ry, fill, rot = 0) => `<ellipse cx="${f24(x)}" cy="${f24(y)}" rx="${f24(rx)}" ry="${f24(ry)}" fill="${fill}"${bord2()}${rot ? ` transform="rotate(${f24(rot)} ${f24(x)} ${f24(y)})"` : ""}/>`, "feuille");
+var fruit3 = /* @__PURE__ */ __name((x, y, r, fill, edge) => `<circle cx="${f24(x)}" cy="${f24(y)}" r="${f24(r)}" fill="${fill}" stroke="${edge}" stroke-width="0.35"/>` + dot3(x - r * 0.35, y - r * 0.35, r * 0.3, "rgba(255,255,255,.55)"), "fruit");
+var CADRE4 = [-34, -30, 68, 48];
+var CLIMATS = ["cimes", "landes", "marais", "dunes", "jungle", "volcan"];
+var CULTURE = { cimes: "myrtilles", landes: "sarrasin", marais: "riz", dunes: "pasteques", jungle: "ananas", volcan: "piments" };
+var ETAPES5 = ["preparation", "plantation", "pousses", "croissance", "mur"];
+var IMAGES4 = 3;
+var carre3 = /* @__PURE__ */ __name((r, fill, extra = EDGE) => face([[-r, -r, 0], [r, -r, 0], [r, r, 0], [-r, r, 0]], fill, extra), "carre");
+var COLS2 = [-0.28, -0.093, 0.093, 0.28];
+var ROWS2 = [-0.28, -0.093, 0.093, 0.28];
+var places = /* @__PURE__ */ __name(() => ROWS2.flatMap((dv, r) => COLS2.map((du, c) => ({ du, dv, k: r * 4 + c }))).sort((a, b) => a.du + a.dv - (b.du + b.dv)), "places");
+var caillou = /* @__PURE__ */ __name((x, y, s, fill = "#A8A49A") => ell4(x, y, 1.6 * s, 1 * s, fill, bord2(0.4)) + ell4(x - 0.4 * s, y - 0.4 * s, 0.7 * s, 0.35 * s, "rgba(255,255,255,.35)"), "caillou");
+var SOLS = {
+  // la terrasse des cimes : un muret de pierres sèches devant, une terre caillouteuse
+  cimes: {
+    sol: /* @__PURE__ */ __name(() => carre3(0.45, "#9AA48A") + carre3(0.41, "#7E6A56", "") + [[-0.3, -0.2], [0.1, -0.32], [0.28, 0.05], [-0.12, 0.22], [0.2, 0.3]].map(([u, v]) => {
+      const [x, y] = P(u, v, 0);
+      return caillou(x, y, 0.5);
+    }).join(""), "sol"),
+    devant: /* @__PURE__ */ __name(() => [-0.38, -0.25, -0.12, 0.01, 0.14, 0.27, 0.4].map((u, i) => {
+      const [x, y] = P(u, 0.45, 0);
+      return caillou(x, y + i % 2 * 0.6, 1.2, i % 2 ? "#B4B0A6" : "#9C988E");
+    }).join("") + [0.38, 0.25, 0.12, -0.01, -0.14, -0.27].map((v, i) => {
+      const [x, y] = P(0.45, v, 0);
+      return caillou(x, y + i % 2 * 0.6, 1.1, i % 2 ? "#9C988E" : "#B4B0A6");
+    }).join(""), "devant"),
+    preparer: /* @__PURE__ */ __name((f) => {
+      const [x, y] = P(-0.1, 0.1, 0);
+      return caillou(x, y, 1.4) + caillou(x + 4, y - 1, 1.1) + ln5([x + 7, y + 1], [x + 9 + wave4(f, 0.3), y - 9], WOOD.left, 1.3) + ln5([x + 5.6, y - 9.6], [x + 10.6, y - 8.2], "#8A8F98", 1.6);
+    }, "preparer")
+  },
+  // la lande : une tourbe sombre, des touffes de bruyère mauve au bord
+  landes: {
+    sol: /* @__PURE__ */ __name(() => carre3(0.45, "#8C9A6A") + carre3(0.41, "#4E3A2E", ""), "sol"),
+    devant: /* @__PURE__ */ __name((f) => [[-0.42, 0.38], [0.4, 0.42], [0.42, -0.36], [-0.1, 0.44], [0.44, 0.05]].map(([u, v], i) => {
+      const [x, y] = P(u, v, 0);
+      return [-1.4, 0, 1.4].map((o) => ln5([x + o * 0.4, y], [x + o + wave4(f, 0.4, i), y - 3.4], "#6E8A4A", 0.8) + dot3(x + o + wave4(f, 0.4, i), y - 3.4, 0.7, "#B87AB8")).join("");
+    }).join(""), "devant"),
+    preparer: /* @__PURE__ */ __name((f) => {
+      const [x, y] = P(-0.2, 0.1, 0);
+      return ell4(x, y - 1, 4.6, 2.2, "#6E7A4A", bord2(0.4)) + [-2, 0, 2].map((o) => dot3(x + o, y - 2.6, 0.8, "#B87AB8")).join("") + ln5([x + 8, y + 1], [x + 10, y - 8 + wave4(f, 0.3)], WOOD.left, 1.3) + ln5([x + 8.2, y - 7.6], [x + 12, y - 9], "#8A8F98", 1.4);
+    }, "preparer")
+  },
+  // la rizière : une diguette de terre, l'eau qui miroite entre les plants
+  marais: {
+    sol: /* @__PURE__ */ __name((f) => carre3(0.45, "#7A9A5A") + carre3(0.42, "#8A6A46", "") + carre3(0.37, "#6FA8B8", ` stroke="#4E7E8E" stroke-width="0.6"`) + [[-0.2, -0.1], [0.15, 0.2], [0.1, -0.25]].map(([u, v], i) => {
+      const [x, y] = P(u, v, 0);
+      return ln5([x - 2 + wave4(f, 0.6, i), y], [x + 2 + wave4(f, 0.6, i), y], "rgba(255,255,255,.55)", 0.6);
+    }).join(""), "sol"),
+    devant: /* @__PURE__ */ __name(() => "", "devant"),
+    preparer: /* @__PURE__ */ __name(() => {
+      const [x, y] = P(0.3, 0.38, 0);
+      return ell4(x, y - 1.6, 3, 1.6, "#C8B88A", bord2(0.4)) + ln5([x - 1, y - 3], [x + 1.2, y - 3.6], "#8A7A4A", 0.5);
+    }, "preparer")
+    // le sac de semence au bord de la diguette
+  },
+  // les dunes : le sable, la ganivelle (des lattes de châtaignier liées de fil de fer) contre le vent
+  dunes: {
+    sol: /* @__PURE__ */ __name((f) => carre3(0.45, "#E8D49A") + carre3(0.41, "#DCC488", "") + [[-0.2, -0.1], [0.2, 0.15]].map(([u, v], i) => {
+      const [x, y] = P(u, v, 0);
+      return chemin3(`M${f24(x - 4)},${f24(y)} q2,-1 4,0 q2,1 4,0`, "rgba(180,150,90,.6)", 0.5);
+    }).join(""), "sol"),
+    devant: /* @__PURE__ */ __name(() => {
+      let out = "";
+      for (let i = 0; i < 9; i++) {
+        const u = -0.44 + i * 0.11, [x, y] = P(u, 0.46, 0);
+        out += ln5([x, y], [x + 0.2, y - 6.4], OUT5, 1.6) + ln5([x, y], [x + 0.2, y - 6.4], "#B8946A", 0.8);
+      }
+      return out + ln5(P(-0.44, 0.46, 2), P(0.44, 0.46, 2), "#6E737C", 0.4) + ln5(P(-0.44, 0.46, 5), P(0.44, 0.46, 5), "#6E737C", 0.4);
+    }, "devant"),
+    preparer: /* @__PURE__ */ __name((f) => {
+      const [x, y] = P(0, -0.1, 0);
+      return [0, 1, 2].map((i) => ln5([x - 6 + i * 3, y], [x - 6 + i * 3 + 0.2, y - 6], "#B8946A", 0.9)).join("") + ln5([x - 7, y - 3], [x + 1, y - 3.4], "#6E737C", 0.4) + dot3(x + 6 + wave4(f, 1), y - 1, 0.5, "rgba(220,196,136,.9)");
+    }, "preparer")
+  },
+  // la jungle : une terre rouge, de grandes feuilles qui débordent sur le bord
+  jungle: {
+    sol: /* @__PURE__ */ __name(() => carre3(0.45, "#5E9A4A") + carre3(0.41, "#A8583A", ""), "sol"),
+    devant: /* @__PURE__ */ __name((f) => [[-0.44, 0.42, -40], [0.44, -0.4, 40], [0.42, 0.44, 0]].map(([u, v, r], i) => {
+      const [x, y] = P(u, v, 0);
+      return feuille3(x, y - 3, 2.4, 5.4, i % 2 ? "#4E8E3A" : "#3E7A2E", r + wave4(f, 4, i)) + ln5([x, y], [x + Math.sin(r * Math.PI / 180) * 4, y - 6], "#2E5E22", 0.4);
+    }).join(""), "devant"),
+    preparer: /* @__PURE__ */ __name(() => {
+      const [x, y] = P(-0.15, 0.15, 0);
+      return ell4(x, y - 1, 4, 1.8, "#7A4A2E", bord2(0.4)) + [[-2, -2], [1, -2.4], [2.6, -1.4]].map(([a, b]) => feuille3(x + a, y + b, 1.2, 2.4, "#5E8A3A", a * 20)).join("") + ln5([x + 7, y + 1], [x + 9.4, y - 9], WOOD.left, 1.3) + `<path d="M${f24(x + 8.6)},${f24(y - 9)} q3,-1 4,1 q-2,0 -4,-1 Z" fill="#A9AFB8"${bord2(0.4)}/>`;
+    }, "preparer")
+    // les tiges coupées, la machette
+  },
+  // le volcan : la cendre noire, de petites pierres de lave, une fumerolle au loin
+  volcan: {
+    sol: /* @__PURE__ */ __name(() => carre3(0.45, "#6E6A5E") + carre3(0.41, "#3A3438", "") + [[-0.3, -0.25], [0.25, -0.1], [-0.05, 0.3]].map(([u, v]) => {
+      const [x, y] = P(u, v, 0);
+      return caillou(x, y, 0.6, "#5A4A48") + dot3(x + 0.3, y - 0.2, 0.25, "#E8703A");
+    }).join(""), "sol"),
+    devant: /* @__PURE__ */ __name((f) => {
+      const [x, y] = P(0.44, -0.44, 0);
+      return [0, 1, 2].map((i) => dot3(x - 2 + wave4(f, 1, i), y - 4 - i * 2.6 - f % 3 * 0.6, 1.2 + i * 0.4, `rgba(220,214,206,${f24(0.55 - i * 0.15)})`)).join("");
+    }, "devant"),
+    preparer: /* @__PURE__ */ __name(() => {
+      const [x, y] = P(-0.1, 0.1, 0);
+      return caillou(x, y, 1.3, "#5A4A48") + caillou(x + 3.6, y - 0.8, 1, "#4A3E3E") + ln5([x + 7, y + 1], [x + 9, y - 9], WOOD.left, 1.3) + ln5([x + 7.6, y - 9.4], [x + 11, y - 8.4], "#8A8F98", 1.6);
+    }, "preparer")
+  }
+};
+var PLANTES2 = {
+  // les myrtilles : de petits buissons, des fleurs en clochettes roses, puis les baies bleues
+  myrtilles: {
+    graine: /* @__PURE__ */ __name((x, y) => ln5([x, y], [x, y - 1.6], "#7A5A3A", 0.6) + dot3(x, y - 1.8, 0.7, "#6FA84A"), "graine"),
+    pousse: /* @__PURE__ */ __name((x, y, s) => [-1, 1].map((o) => feuille3(x + o + s * 0.2, y - 1.4, 0.9, 0.6, "#6FA84A", o * 30)).join(""), "pousse"),
+    croissance: /* @__PURE__ */ __name((x, y, s, k) => [[-1.4, -1.4], [1.4, -1.6], [0, -2.8]].map(([a, b], i) => feuille3(x + a + s * 0.3, y + b, 1.3, 0.9, i % 2 ? "#5E9A3E" : "#4F8A3A", a * 15)).join("") + (k % 2 ? dot3(x + 0.8, y - 3.4, 0.55, "#F2B8C8") : ""), "croissance"),
+    mur: /* @__PURE__ */ __name((x, y, s) => [[-1.4, -1.4], [1.4, -1.6], [0, -2.8]].map(([a, b], i) => feuille3(x + a + s * 0.3, y + b, 1.3, 0.9, i % 2 ? "#6E8A3E" : "#5E7A3A", a * 15)).join("") + [[-1, -2.2], [1.2, -2.6], [0.2, -3.6], [-1.6, -1]].map(([a, b]) => fruit3(x + a + s * 0.3, y + b, 0.65, "#4A5AA8", "#2E3A70")).join(""), "mur")
+  },
+  // le sarrasin : des tiges rouges, des feuilles en cœur, des grappes de fleurs blanc rosé, puis les graines brunes
+  sarrasin: {
+    graine: /* @__PURE__ */ __name((x, y) => [-0.8, 0.6].map((o) => `<polygon points="${f24(x + o)},${f24(y - 1)} ${f24(x + o + 0.6)},${f24(y)} ${f24(x + o - 0.6)},${f24(y)}" fill="#6E4A2E"/>`).join(""), "graine"),
+    pousse: /* @__PURE__ */ __name((x, y, s) => ln5([x, y], [x + s * 0.3, y - 2], "#C85A4A", 0.6) + feuille3(x - 0.8 + s * 0.3, y - 2.2, 0.9, 0.7, "#7CBF4E", -20) + feuille3(x + 0.8 + s * 0.3, y - 2.3, 0.9, 0.7, "#6FA84A", 20), "pousse"),
+    croissance: /* @__PURE__ */ __name((x, y, s) => ln5([x, y], [x + s * 0.4, y - 5.4], "#C85A4A", 0.7) + [[-1, -2.4], [1, -3.6], [-0.8, -4.6]].map(([a, b]) => feuille3(x + a + s * 0.4, y + b, 1, 0.8, "#6FA84A", a * 25)).join("") + [[-0.4, -6], [0.5, -6.2], [0, -6.8]].map(([a, b]) => dot3(x + a + s * 0.4, y + b, 0.55, "#FBEAF0")).join(""), "croissance"),
+    mur: /* @__PURE__ */ __name((x, y, s) => ln5([x, y], [x + s * 0.4, y - 5.4], "#A8402E", 0.7) + [[-1, -2.4], [1, -3.6]].map(([a, b]) => feuille3(x + a + s * 0.4, y + b, 1, 0.8, "#8A9A4A", a * 25)).join("") + [[-0.5, -5.8], [0.5, -6], [0, -6.8], [-0.2, -6.2]].map(([a, b]) => `<polygon points="${f24(x + a + s * 0.4)},${f24(y + b - 0.6)} ${f24(x + a + s * 0.4 + 0.5)},${f24(y + b + 0.3)} ${f24(x + a + s * 0.4 - 0.5)},${f24(y + b + 0.3)}" fill="#7A5232"/>`).join(""), "mur")
+  },
+  // le riz : des touffes repiquées dans l'eau, qui montent, puis s'inclinent sous les épis dorés
+  riz: {
+    graine: /* @__PURE__ */ __name((x, y) => [-0.6, 0.6].map((o) => ln5([x + o * 0.3, y], [x + o, y - 1.6], "#8FCB6A", 0.6)).join(""), "graine"),
+    pousse: /* @__PURE__ */ __name((x, y, s) => [-0.8, 0, 0.8].map((o) => ln5([x + o * 0.3, y], [x + o + s * 0.3, y - 2.6], "#7CBF4E", 0.6)).join(""), "pousse"),
+    croissance: /* @__PURE__ */ __name((x, y, s) => [-1.2, -0.4, 0.4, 1.2].map((o, i) => ln5([x + o * 0.3, y], [x + o + s * 0.5, y - 5 - i % 2], "#5FA04A", 0.7)).join(""), "croissance"),
+    mur: /* @__PURE__ */ __name((x, y, s) => [-1.2, -0.4, 0.4, 1.2].map((o, i) => {
+      const tx = x + o + s * 0.5, ty = y - 5 - i % 2;
+      return chemin3(`M${f24(x + o * 0.3)},${f24(y)} Q${f24(tx - 0.4)},${f24(ty)} ${f24(tx + 1.4)},${f24(ty + 1.6)}`, "#B8A24A", 0.7) + ell4(tx + 1.2, ty + 1.2, 0.5, 1.1, "#E8CC6A", ` stroke="#A8823A" stroke-width="0.3" transform="rotate(30 ${f24(tx + 1.2)} ${f24(ty + 1.2)})"`);
+    }).join(""), "mur")
+  },
+  // les pastèques : des graines plates, des tiges qui rampent sur le sable, des fleurs jaunes, puis les grosses pastèques rayées
+  pasteques: {
+    espace: true,
+    graine: /* @__PURE__ */ __name((x, y) => ell4(x - 0.6, y - 0.2, 0.6, 0.4, "#2E2218") + ell4(x + 0.7, y - 0.1, 0.6, 0.4, "#2E2218"), "graine"),
+    pousse: /* @__PURE__ */ __name((x, y, s) => ln5([x, y], [x + s * 0.3, y - 1.8], "#6FA84A", 0.6) + feuille3(x - 1.1 + s * 0.3, y - 2, 1.2, 0.8, "#7CBF4E", -20) + feuille3(x + 1.1 + s * 0.3, y - 2.1, 1.2, 0.8, "#6FA84A", 20), "pousse"),
+    croissance: /* @__PURE__ */ __name((x, y, s) => chemin3(`M${f24(x - 4)},${f24(y)} q2,-1.6 4,-0.4 q2,1 4,-0.6`, "#5E9A3E", 0.7) + [[-2.6, -1.2], [0.4, -1.6], [2.8, -1.4]].map(([a, b], i) => feuille3(x + a + s * 0.3, y + b, 1.6, 1.1, i % 2 ? "#7CBF4E" : "#5E9A3E", a * 10)).join("") + dot3(x + 1.4, y - 2.8, 0.7, "#F7C83A"), "croissance"),
+    mur: /* @__PURE__ */ __name((x, y, s) => chemin3(`M${f24(x - 4)},${f24(y)} q2,-1.6 4,-0.4 q2,1 4,-0.6`, "#5E9A3E", 0.7) + [[-2.8, -1.4], [3, -1.6]].map(([a, b]) => feuille3(x + a + s * 0.3, y + b, 1.6, 1.1, "#5E9A3E", a * 10)).join("") + ell4(x, y - 1.6, 3.4, 2.2, "#3E8A3A", bord2(0.45)) + [-1.6, 0, 1.6].map((o) => chemin3(`M${f24(x + o)},${f24(y - 3.6)} q${f24(o * 0.3)},2 0,4`, "#2A5E26", 0.6)).join("") + ell4(x - 1, y - 2.6, 1, 0.5, "rgba(255,255,255,.3)"), "mur")
+  },
+  // les ananas : des rosettes de feuilles en épées, qui s'élargissent ; le fruit rouge orangé monte au milieu, puis doré
+  ananas: {
+    espace: true,
+    graine: /* @__PURE__ */ __name((x, y) => [-30, 0, 30].map((r) => feuille3(x + r / 30, y - 1.4, 0.4, 1.4, "#6E9A5A", r)).join(""), "graine"),
+    pousse: /* @__PURE__ */ __name((x, y, s) => [-50, -20, 20, 50].map((r) => feuille3(x + r / 25 + s * 0.2, y - 1.8, 0.5, 2, "#5E8A4A", r)).join(""), "pousse"),
+    croissance: /* @__PURE__ */ __name((x, y, s) => [-65, -35, -10, 10, 35, 65].map((r, i) => feuille3(x + r / 18 + s * 0.2, y - 2.4, 0.6, 3, i % 2 ? "#5E8A4A" : "#4E7A3E", r)).join("") + ell4(x, y - 3.6, 1.1, 1.4, "#C8503A", bord2(0.35)), "croissance"),
+    mur: /* @__PURE__ */ __name((x, y, s) => [-65, -35, 35, 65].map((r, i) => feuille3(x + r / 18 + s * 0.2, y - 2.4, 0.6, 3, i % 2 ? "#5E8A4A" : "#4E7A3E", r)).join("") + ell4(x, y - 4.4, 1.6, 2.2, "#E8A83A", bord2(0.4)) + [[-0.6, -4.8], [0.6, -4.2], [0, -3.6], [0, -5.4]].map(([a, b]) => ln5([x + a - 0.4, y + b - 0.4], [x + a + 0.4, y + b + 0.4], "#A8702A", 0.35)).join("") + [-30, 0, 30].map((r) => feuille3(x + r / 30, y - 7.4, 0.4, 1.6, "#5E8A4A", r)).join(""), "mur")
+  },
+  // les piments : de petits plants, des fleurs blanches, puis les piments verts et rouges qui pendent
+  piments: {
+    graine: /* @__PURE__ */ __name((x, y) => [-0.6, 0.6].map((o) => ell4(x + o, y - 0.2, 0.5, 0.35, "#F2D88A")).join(""), "graine"),
+    pousse: /* @__PURE__ */ __name((x, y, s) => ln5([x, y], [x + s * 0.3, y - 2], "#5E9A3E", 0.6) + feuille3(x - 0.9 + s * 0.3, y - 2.2, 1, 0.6, "#6FA84A", -25) + feuille3(x + 0.9 + s * 0.3, y - 2.3, 1, 0.6, "#5E9A3E", 25), "pousse"),
+    croissance: /* @__PURE__ */ __name((x, y, s, k) => ln5([x, y], [x + s * 0.4, y - 4.6], "#4E8A3A", 0.7) + [[-1.2, -2.2], [1.2, -3], [-1, -4], [1, -4.8]].map(([a, b], i) => feuille3(x + a + s * 0.4, y + b, 1.1, 0.6, i % 2 ? "#6FA84A" : "#4E8A3A", a * 25)).join("") + (k % 2 ? dot3(x + 0.6, y - 3.6, 0.5, "#FFFFFF") : ""), "croissance"),
+    mur: /* @__PURE__ */ __name((x, y, s, k) => ln5([x, y], [x + s * 0.4, y - 4.6], "#4E8A3A", 0.7) + [[-1.2, -2.2], [1.2, -3], [-1, -4], [1, -4.8]].map(([a, b], i) => feuille3(x + a + s * 0.4, y + b, 1.1, 0.6, i % 2 ? "#6FA84A" : "#4E8A3A", a * 25)).join("") + [[-0.8, -3.4, "#E2453A"], [0.9, -2.6, k % 3 ? "#E2453A" : "#7FB24A"], [0.2, -4.2, "#F08A3A"]].map(([a, b, c]) => chemin3(`M${f24(x + a + s * 0.4)},${f24(y + b)} q0.6,1.2 0.1,2.6`, "#8A2A20", 1.5) + chemin3(`M${f24(x + a + s * 0.4)},${f24(y + b)} q0.6,1.2 0.1,2.6`, c, 0.8)).join(""), "mur")
+  }
+};
+function etape4(climat, quoi, n) {
+  const sol = SOLS[climat];
+  if (!sol) throw new Error(`climat inconnu : ${climat} (${CLIMATS.join(", ")})`);
+  const k0 = ETAPES5.indexOf(quoi);
+  if (k0 < 0) throw new Error(`étape inconnue : ${quoi} (${ETAPES5.join(", ")})`);
+  const f = n % IMAGES4, p = PLANTES2[CULTURE[climat]];
+  let out = sol.sol(f);
+  if (quoi === "preparation") out += sol.preparer(f);
+  else for (const { du, dv, k } of places()) {
+    if (p.espace && k % 2 && quoi !== "plantation") continue;
+    const [x, y] = P(du, dv, 0), s = wave4(f, quoi === "pousses" ? 0.6 : 1.1, k * 0.9);
+    out += quoi === "plantation" ? p.graine(x, y, k) : quoi === "pousses" ? p.pousse(x, y, s, k) : p[quoi](x, y, s, k);
+  }
+  return out + sol.devant(f);
+}
+__name(etape4, "etape");
+
 // atelier/generateur_chantiers.mjs
 var K = 1.25;
 var svgOf = /* @__PURE__ */ __name((cadre, body) => `<svg xmlns="http://www.w3.org/2000/svg" width="${cadre[2]}" height="${cadre[3]}" viewBox="${cadre.join(" ")}"><g transform="scale(${K})">${body}</g></svg>`, "svgOf");
 var EMPRISES = { "2x2": { nom: "2 × 2 cases", cadre: [-95, -155, 190, 210] }, "3x3": { nom: "3 × 3 cases", cadre: [-140, -250, 280, 330] } };
 var PART = { piquets: 0, terrassement: 0.12, fondations: 0.28, charpente: 0.46, murs: 0.64, toit: 0.82 };
 var MS = { etape: 220, devoilement: 110, spectacle: 450 };
-var IMAGES4 = { etape: 3, devoilement: 4, echafaudage: 3 };
+var IMAGES5 = { etape: 3, devoilement: 4, echafaudage: 3 };
 var verifie = /* @__PURE__ */ __name((emprise, n, max) => {
   if (!EMPRISES[emprise]) throw new Error(`emprise inconnue : ${emprise} (2x2 ou 3x3)`);
   if (!(n >= 1 && n <= max)) throw new Error(`image ${n} : de 1 à ${max}`);
   return EMPRISES[emprise].cadre;
 }, "verifie");
-function etapeDuMontage(emprise, etape4, n = 1) {
-  const cadre = verifie(emprise, +n, IMAGES4.etape);
-  if (!ETAPES.includes(etape4)) throw new Error(`étape inconnue : ${etape4} (${ETAPES.join(", ")})`);
-  return { svg: svgOf(cadre, montage(emprise, etape4, n - 1)), cadre, ms_par_image: MS.etape };
+function etapeDuMontage(emprise, etape5, n = 1) {
+  const cadre = verifie(emprise, +n, IMAGES5.etape);
+  if (!ETAPES.includes(etape5)) throw new Error(`étape inconnue : ${etape5} (${ETAPES.join(", ")})`);
+  return { svg: svgOf(cadre, montage(emprise, etape5, n - 1)), cadre, ms_par_image: MS.etape };
 }
 __name(etapeDuMontage, "etapeDuMontage");
 function devoilementDuBatiment(emprise, n = 1) {
-  const cadre = verifie(emprise, +n, IMAGES4.devoilement);
+  const cadre = verifie(emprise, +n, IMAGES5.devoilement);
   return { svg: svgOf(cadre, devoilement(emprise, n - 1)), cadre, ms_par_image: MS.devoilement };
 }
 __name(devoilementDuBatiment, "devoilementDuBatiment");
 function echafaudageDEvolution(emprise, couche, n = 1) {
-  const cadre = verifie(emprise, +n, IMAGES4.echafaudage);
+  const cadre = verifie(emprise, +n, IMAGES5.echafaudage);
   if (couche !== "derriere" && couche !== "devant") throw new Error(`couche inconnue : ${couche} (derriere ou devant)`);
   return { svg: svgOf(cadre, echafaudage(emprise, couche, n - 1)), cadre, ms_par_image: MS.etape };
 }
@@ -1609,65 +1788,80 @@ __name(echafaudageDEvolution, "echafaudageDEvolution");
 var CULTURES2 = { cultures: CULTURES, etapes: Object.fromEntries(CULTURES.map((c) => [c, etapesDe(c)])), cadre: CADRE.map((v) => v * K), images: IMAGES };
 var PART_CULTURE = { bechage: 0, sillons: 0.15, semis: 0.3, pousses: 0.5, croissance: 0.7, mur: 1 };
 var MS_CULTURE = { etape: 280, spectacle: 450 };
-function etapeDeCulture(culture, etape4, n = 1) {
+function etapeDeCulture(culture, etape5, n = 1) {
   if (!CULTURES.includes(culture)) throw new Error(`culture inconnue : ${culture} (${CULTURES.join(", ")})`);
-  if (!etapesDe(culture).includes(etape4)) throw new Error(`étape inconnue : ${etape4} (${etapesDe(culture).join(", ")})`);
+  if (!etapesDe(culture).includes(etape5)) throw new Error(`étape inconnue : ${etape5} (${etapesDe(culture).join(", ")})`);
   if (!(+n >= 1 && +n <= IMAGES)) throw new Error(`image ${n} : de 1 à ${IMAGES}`);
-  return { svg: svgOf(CULTURES2.cadre, etape(culture, etape4, n - 1)), cadre: CULTURES2.cadre, ms_par_image: MS_CULTURE.etape };
+  return { svg: svgOf(CULTURES2.cadre, etape(culture, etape5, n - 1)), cadre: CULTURES2.cadre, ms_par_image: MS_CULTURE.etape };
 }
 __name(etapeDeCulture, "etapeDeCulture");
 var VERGER = { arbres: ARBRES, etapes: ETAPES3, cadre: CADRE2, images: IMAGES2 };
 var PART_VERGER = { trou: 0, plantation: 0.1, jeune: 0.25, floraison: 0.5, fruits_verts: 0.7, mur: 1 };
 var MS_VERGER = { etape: 300, spectacle: 450 };
-function etapeDuVerger(arbre, etape4, n = 1) {
+function etapeDuVerger(arbre, etape5, n = 1) {
   if (!ARBRES.includes(arbre)) throw new Error(`arbre inconnu : ${arbre} (${ARBRES.join(", ")})`);
-  if (!ETAPES3.includes(etape4)) throw new Error(`étape inconnue : ${etape4} (${ETAPES3.join(", ")})`);
+  if (!ETAPES3.includes(etape5)) throw new Error(`étape inconnue : ${etape5} (${ETAPES3.join(", ")})`);
   if (!(+n >= 1 && +n <= IMAGES2)) throw new Error(`image ${n} : de 1 à ${IMAGES2}`);
   const c = CADRE2;
-  return { svg: `<svg xmlns="http://www.w3.org/2000/svg" width="${c[2]}" height="${c[3]}" viewBox="${c.join(" ")}">${etape2(arbre, etape4, n - 1)}</svg>`, cadre: c, ms_par_image: MS_VERGER.etape };
+  return { svg: `<svg xmlns="http://www.w3.org/2000/svg" width="${c[2]}" height="${c[3]}" viewBox="${c.join(" ")}">${etape2(arbre, etape5, n - 1)}</svg>`, cadre: c, ms_par_image: MS_VERGER.etape };
 }
 __name(etapeDuVerger, "etapeDuVerger");
 var LUNAIRE = { plantes: PLANTES, etapes: ETAPES4, cadre: CADRE3.map((v) => v * K), images: IMAGES3 };
 var PART_LUNAIRE = { nouvelle_lune: 0, croissant: 0.25, quartier: 0.5, gibbeuse: 0.75, pleine_lune: 1 };
 var MS_LUNAIRE = { etape: 320, spectacle: 500 };
-function etapeLunaire(plante, etape4, n = 1) {
+function etapeLunaire(plante, etape5, n = 1) {
   if (!PLANTES.includes(plante)) throw new Error(`plante inconnue : ${plante} (${PLANTES.join(", ")})`);
-  if (!ETAPES4.includes(etape4)) throw new Error(`étape inconnue : ${etape4} (${ETAPES4.join(", ")})`);
+  if (!ETAPES4.includes(etape5)) throw new Error(`étape inconnue : ${etape5} (${ETAPES4.join(", ")})`);
   if (!(+n >= 1 && +n <= IMAGES3)) throw new Error(`image ${n} : de 1 à ${IMAGES3}`);
-  return { svg: svgOf(LUNAIRE.cadre, etape3(plante, etape4, n - 1)), cadre: LUNAIRE.cadre, ms_par_image: MS_LUNAIRE.etape };
+  return { svg: svgOf(LUNAIRE.cadre, etape3(plante, etape5, n - 1)), cadre: LUNAIRE.cadre, ms_par_image: MS_LUNAIRE.etape };
 }
 __name(etapeLunaire, "etapeLunaire");
+var CLIMATS2 = { climats: CLIMATS, culture: CULTURE, etapes: ETAPES5, cadre: CADRE4.map((v) => v * K), images: IMAGES4 };
+var PART_CLIMAT = { preparation: 0, plantation: 0.15, pousses: 0.35, croissance: 0.6, mur: 1 };
+var MS_CLIMAT = { etape: 300, spectacle: 450 };
+function etapeDeClimat(climat, etape5, n = 1) {
+  if (!CLIMATS.includes(climat)) throw new Error(`climat inconnu : ${climat} (${CLIMATS.join(", ")})`);
+  if (!ETAPES5.includes(etape5)) throw new Error(`étape inconnue : ${etape5} (${ETAPES5.join(", ")})`);
+  if (!(+n >= 1 && +n <= IMAGES4)) throw new Error(`image ${n} : de 1 à ${IMAGES4}`);
+  return { svg: svgOf(CLIMATS2.cadre, etape4(climat, etape5, n - 1)), cadre: CLIMATS2.cadre, ms_par_image: MS_CLIMAT.etape };
+}
+__name(etapeDeClimat, "etapeDeClimat");
 function liste() {
   const out = [];
+  for (const c of CLIMATS) for (const e of ETAPES5) for (let n = 1; n <= IMAGES4; n++) out.push({ fichier: `decor/climats/${c}/climat_${c}_${e}_${n}.svg`, fonction: "etapeDeClimat", args: [c, e, n] });
   for (const p of PLANTES) for (const e of ETAPES4) for (let n = 1; n <= IMAGES3; n++) out.push({ fichier: `decor/lunaire/${p}/lunaire_${p}_${e}_${n}.svg`, fonction: "etapeLunaire", args: [p, e, n] });
   for (const a of ARBRES) for (const e of ETAPES3) for (let n = 1; n <= IMAGES2; n++) out.push({ fichier: `decor/verger/${a}/verger_${a}_${e}_${n}.svg`, fonction: "etapeDuVerger", args: [a, e, n] });
   for (const c of CULTURES) for (const e of etapesDe(c)) for (let n = 1; n <= IMAGES; n++) out.push({ fichier: `decor/cultures/${c}/culture_${c}_${e}_${n}.svg`, fonction: "etapeDeCulture", args: [c, e, n] });
   for (const em of Object.keys(EMPRISES)) {
     const d = `batiments/montage/${em}`;
-    for (const e of ETAPES) for (let n = 1; n <= IMAGES4.etape; n++) out.push({ fichier: `${d}/montage_${em}_${e}_${n}.svg`, fonction: "etapeDuMontage", args: [em, e, n] });
-    for (let n = 1; n <= IMAGES4.devoilement; n++) out.push({ fichier: `${d}/devoilement_${em}_${n}.svg`, fonction: "devoilementDuBatiment", args: [em, n] });
-    for (const c of ["derriere", "devant"]) for (let n = 1; n <= IMAGES4.echafaudage; n++) out.push({ fichier: `${d}/echafaudage_${em}_${c}_${n}.svg`, fonction: "echafaudageDEvolution", args: [em, c, n] });
+    for (const e of ETAPES) for (let n = 1; n <= IMAGES5.etape; n++) out.push({ fichier: `${d}/montage_${em}_${e}_${n}.svg`, fonction: "etapeDuMontage", args: [em, e, n] });
+    for (let n = 1; n <= IMAGES5.devoilement; n++) out.push({ fichier: `${d}/devoilement_${em}_${n}.svg`, fonction: "devoilementDuBatiment", args: [em, n] });
+    for (const c of ["derriere", "devant"]) for (let n = 1; n <= IMAGES5.echafaudage; n++) out.push({ fichier: `${d}/echafaudage_${em}_${c}_${n}.svg`, fonction: "echafaudageDEvolution", args: [em, c, n] });
   }
   return out;
 }
 __name(liste, "liste");
 export {
+  CLIMATS2 as CLIMATS,
   CULTURES2 as CULTURES,
   EMPRISES,
   ETAPES,
-  IMAGES4 as IMAGES,
+  IMAGES5 as IMAGES,
   LUNAIRE,
   MS,
+  MS_CLIMAT,
   MS_CULTURE,
   MS_LUNAIRE,
   MS_VERGER,
   PART,
+  PART_CLIMAT,
   PART_CULTURE,
   PART_LUNAIRE,
   PART_VERGER,
   VERGER,
   devoilementDuBatiment,
   echafaudageDEvolution,
+  etapeDeClimat,
   etapeDeCulture,
   etapeDuMontage,
   etapeDuVerger,
