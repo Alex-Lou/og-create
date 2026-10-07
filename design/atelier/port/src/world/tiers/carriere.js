@@ -1,7 +1,7 @@
 // Carrière, paliers III à VII : Mine, Galerie, Puits de mine, Mine de cristal, Cité minière.
 // Places laissées libres pour la boutique : voie de la galerie le long de u ≈ −0.35 (× 1.5 dès le palier IV, le
 // wagonnet des Rails y roule), butoir au bout, lanterne à gauche, pioche et wagonnet devant.
-import { ROCKS, BUILDING_BOX, pebble, crystals } from '../palette.js';
+import { ROCKS, BUILDING_BOX, pebble, crystals, rockBox } from '../palette.js';
 import { UPGRADES } from '../buildings2.js';
 import { sprite } from '../iso.js';
 import {
@@ -70,13 +70,11 @@ function gallery(skin) {
 /* ---------- Grand carreau de mine (paliers IV à VII) : falaise, galerie, voie, minerai ---------- */
 function minesite(skin, { portalTall = 36, giant = false } = {}) {
   const rock = rockOf(skin);
-  const cliff = box(-1.45, -1.45, 1.4, -0.3, 0, 62, rock) + box(0.55, -0.3, 1.4, 0.15, 0, 30, rock);
-  const veins = `<polyline points="${[P(-1.45, -0.3, 48), P(-0.7, -0.3, 56), P(0.1, -0.3, 44), P(0.55, -0.3, 50)].map(p => p.map(f2).join(',')).join(' ')}" stroke="rgba(90,80,65,.38)" stroke-width="1.1" fill="none"/>`
-    + `<polyline points="${[P(1.4, -1.2, 40), P(1.4, -0.7, 50), P(1.4, -0.4, 36)].map(p => p.map(f2).join(',')).join(' ')}" stroke="rgba(70,60,45,.38)" stroke-width="1.1" fill="none"/>`;
+  const cliff = rockBox(-1.45, -1.45, 1.4, -0.3, 0, 62, rock) + rockBox(0.55, -0.3, 1.4, 0.15, 0, 30, rock);
   const portal = giant ? '' : archLeft(-0.53, 0.3, -0.3, 0, portalTall, WOOD_DARK.left, ` stroke="${OUT}" stroke-width="0.8"`)
     + archLeft(-0.53, 0.24, -0.295, 0, portalTall - 5, '#1F1A17')
     + box(-0.86, -0.32, -0.8, -0.26, 0, portalTall, WOOD_DARK) + box(-0.26, -0.32, -0.2, -0.26, 0, portalTall, WOOD_DARK);
-  return bigShadow(90, 42) + cliff + veins + portal
+  return bigShadow(90, 42) + cliff + portal
     + track(-0.53, -0.3, 1.18, 1.5)
     + cart(-0.53, 0.88, 1.2)
     + oreHeap(-1.05, 0.15, 1.6) + oreHeap(0.15, 0.55, 1.4)

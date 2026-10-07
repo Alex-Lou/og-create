@@ -6,7 +6,7 @@ import { P, TW, TH, face, box, gable, pyramid, disc, cylinder, shadow, foliage, 
 import {
   WOOD, WOOD_DARK, STONE, BRICK, SOIL, ROOF_RED, THATCH, LEAVES, PINE, INK, BUILDING_BOX, PROP_BOX,
   pebble, doorLeft, windowRight, planksLeft, planksRight, roundTree,
-  WHITE_STONE, WHITE_WOOD, ROCKS, FOLIAGE, SAILS, roofOf, roofTexture, stoneCourses, seasonDots, crystals
+  WHITE_STONE, WHITE_WOOD, ROCKS, FOLIAGE, SAILS, roofOf, roofTexture, stoneCourses, seasonDots, crystals, rockBox
 } from './palette.js';
 
 const f2 = n => Math.round(n * 100) / 100;
@@ -116,13 +116,12 @@ function fissure(skin) {
   const [sx, sy] = P(0.5, 0.32, 0);
   return sprite(
     shadow(0, -0.2, 1.1, 0.18)
-    + box(-0.95, -0.9, 0.6, -0.2, 0, 40, rock)
-    + box(0.3, -0.2, 0.82, 0.12, 0, 16, rock)
+    + rockBox(-0.95, -0.9, 0.6, -0.2, 0, 40, rock)
+    + rockBox(0.3, -0.2, 0.82, 0.12, 0, 16, rock)
     // La fente : sur la face avant, puis le long du dessus vers l'arrière
     + face(crack.map(([u, z]) => [u, -0.2, z]), '#1F1A17')
     + glint(-0.25, 12, '#F2C04B') + glint(-0.23, 24, skin === 'roche-cristal' ? '#B9A0F0' : '#FFE9A8')
     + `<polyline points="${[P(-0.25, -0.2, 40), P(-0.21, -0.4, 40), P(-0.27, -0.6, 40), P(-0.22, -0.9, 40)].map(q => q.map(f2).join(',')).join(' ')}" stroke="#1F1A17" stroke-width="2" fill="none" stroke-linejoin="round"/>`
-    + `<polyline points="${[P(-0.95, -0.2, 28), P(-0.6, -0.2, 32), P(-0.34, -0.2, 27)].map(q => q.map(f2).join(',')).join(' ')}" stroke="rgba(90,80,65,.4)" stroke-width="1" fill="none"/>`
     + (skin === 'roche-cristal' ? crystals(-0.6, -0.55, 40, 1.1) + crystals(0.3, -0.6, 40) + crystals(0.6, -0.05, 16, 0.8) : '')
     // Éclats tombés au pied de la fente
     + pebble(-0.3, 0.02, 3.4, rock) + pebble(-0.14, 0.1, 2.6, rock) + pebble(-0.42, 0.12, 2.2, rock) + pebble(-0.06, -0.04, 2, rock)
@@ -139,7 +138,7 @@ function fissure(skin) {
 // front de taille au wagonnet (les Rails de la boutique la prolongent)
 function quarry(skin) {
   const rockColor = ROCKS[skin] || STONE;
-  const rock = (u0, v0, u1, v1, h) => box(u0, v0, u1, v1, 0, h, rockColor);
+  const rock = (u0, v0, u1, v1, h) => rockBox(u0, v0, u1, v1, 0, h, rockColor);
   const pick = `<line x1="${P(0.55, 0.3, 0)[0]}" y1="${P(0.55, 0.3, 0)[1]}" x2="${P(0.55, 0.3, 22)[0] - 4}" y2="${P(0.55, 0.3, 22)[1]}" stroke="${WOOD.right}" stroke-width="2.4" stroke-linecap="round"/>`
     + `<path d="M${P(0.55, 0.3, 22)[0] - 13},${P(0.55, 0.3, 22)[1] + 3} Q${P(0.55, 0.3, 22)[0] - 4},${P(0.55, 0.3, 22)[1] - 5} ${P(0.55, 0.3, 22)[0] + 6},${P(0.55, 0.3, 22)[1] + 3}" stroke="#7C8A96" stroke-width="2.6" fill="none" stroke-linecap="round"/>`;
   let rails = '';
@@ -155,9 +154,7 @@ function quarry(skin) {
     + rock(0.2, -0.9, 0.85, -0.35, 28)
     + rock(-0.9, -0.2, -0.55, 0.25, 22)
     + rock(-0.1, -0.2, 0.4, 0.2, 12)
-    // Veines dans la roche
-    + `<polyline points="${[P(-0.9, -0.2, 30), P(-0.4, -0.2, 34), P(0.2, -0.2, 26)].map(p => p.join(',')).join(' ')}" stroke="rgba(90,80,65,.4)" stroke-width="1" fill="none"/>`
-    + box(0.45, -0.1, 0.75, 0.15, 0, 9, rockColor) + box(0.5, 0.18, 0.78, 0.42, 0, 7, rockColor)
+    + rockBox(0.45, -0.1, 0.75, 0.15, 0, 9, rockColor) + rockBox(0.5, 0.18, 0.78, 0.42, 0, 7, rockColor)
     + (skin === 'roche-cristal' ? crystals(-0.35, -0.55, 40, 1.1) + crystals(0.5, -0.62, 28) + crystals(-0.75, 0.05, 22, 0.8) : '')
     + rails + cart + pick,
     BUILDING_BOX

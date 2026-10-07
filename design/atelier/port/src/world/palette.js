@@ -27,6 +27,52 @@ export function pebble(u, v, s, color = STONE) {
     + `<ellipse cx="${x}" cy="${y}" rx="${s}" ry="${s * 0.66}" fill="${color.left}"/>`
     + `<ellipse cx="${x - s * 0.28}" cy="${y - s * 0.22}" rx="${s * 0.5}" ry="${s * 0.3}" fill="${color.top}"/>`;
 }
+// Bloc de roche taillée (carrière) : la boîte, un pied plus sombre, des strates ondulées sur les deux faces, l'arête du
+// dessus éclairée, des éclats, une fissure sur chaque face et de la mousse au bord du dessus pour les grands blocs.
+// Pas de hasard : tout se place selon les dimensions du bloc.
+export function rockBox(u0, v0, u1, v1, z0, z1, c) {
+  const h = z1 - z0, du = u1 - u0, dv = v1 - v0;
+  const pts2 = list => list.map(q => P(...q).map(n => rnd2(n)).join(',')).join(' ');
+  const line = (list, color, w, extra = '') => `<polyline points="${pts2(list)}" stroke="${color}" stroke-width="${w}" fill="none" stroke-linecap="round" stroke-linejoin="round"${extra}/>`;
+  const L = mixHex(c.left, INK_OUT, 0.38), R = mixHex(c.right, INK_OUT, 0.38);
+  let out = box(u0, v0, u1, v1, z0, z1, c)
+    + face([[u0, v1, z0], [u1, v1, z0], [u1, v1, z0 + 2.4], [u0, v1, z0 + 2.4]], 'rgba(40,30,20,.16)')
+    + face([[u1, v0, z0], [u1, v1, z0], [u1, v1, z0 + 2.4], [u1, v0, z0 + 2.4]], 'rgba(40,30,20,.2)');
+  const n = Math.floor(h / 14);
+  for (let i = 1; i <= n; i++) {
+    const z = z0 + (h * i) / (n + 1), w = i % 2 ? 1.4 : -1.2;
+    out += line([[u0 + du * 0.02, v1, z], [u0 + du * 0.3, v1, z + w], [u0 + du * 0.62, v1, z - w * 0.7], [u1 - du * 0.02, v1, z + w * 0.4]], L, 0.8, ' opacity=".6"')
+      + line([[u1, v0 + dv * 0.03, z - w * 0.5], [u1, v0 + dv * 0.4, z + w * 0.6], [u1, v0 + dv * 0.75, z - w * 0.3], [u1, v1 - dv * 0.02, z + w * 0.4]], R, 0.8, ' opacity=".6"');
+  }
+  const e = Math.min(0.035, du * 0.1, dv * 0.1);
+  out += line([[u0 + e, v1 - e, z1], [u1 - e, v1 - e, z1], [u1 - e, v0 + e, z1]], mixHex(c.top, '#FFFFFF', 0.55), 1.1, ' opacity=".9"');
+  if (h >= 7) {
+    [[0.18, 0.3], [0.47, 0.62], [0.81, 0.4]].forEach(([a, b]) => {
+      const [x, y] = P(u0 + du * a, v1, z0 + h * b), [x2, y2] = P(u1, v0 + dv * (1 - a), z0 + h * (1 - b * 0.8));
+      out += `<path d="M${rnd2(x - 1.2)},${rnd2(y)} l1.2,-0.8 l1,0.9 Z" fill="${L}" opacity=".55"/><path d="M${rnd2(x2 - 1)},${rnd2(y2)} l1,-0.8 l1.1,0.8 Z" fill="${R}" opacity=".55"/>`;
+    });
+  }
+  if (h >= 20 && du >= 0.3) {
+    const cu = u0 + du * 0.7;
+    out += line([[cu, v1, z1], [cu - 0.03, v1, z1 - h * 0.14], [cu + 0.015, v1, z1 - h * 0.26], [cu - 0.02, v1, z1 - h * 0.4]], INK_OUT, 0.9, ' opacity=".75"')
+      + line([[cu + 0.015, v1, z1 - h * 0.26], [cu + 0.06, v1, z1 - h * 0.32]], INK_OUT, 0.7, ' opacity=".6"');
+  }
+  if (h >= 20 && dv >= 0.3) {
+    const cv = v0 + dv * 0.35;
+    out += line([[u1, cv, z1], [u1, cv + 0.03, z1 - h * 0.12], [u1, cv - 0.01, z1 - h * 0.22], [u1, cv + 0.02, z1 - h * 0.33]], INK_OUT, 0.9, ' opacity=".7"');
+  }
+  if (h >= 20) {
+    const moss = (a, b, k) => {
+      const q = [[-0.05, 0], [0, 0.02], [0.05, 0]].map(([d, dz]) => P(k === 'L' ? a + d : u1, k === 'L' ? v1 : b + d, z1 + dz * 10));
+      const r = [2.2, 2.7, 2];
+      return q.map(([x, y], i) => disc2(x, y, r[i] + 0.7, INK_OUT)).join('') + q.map(([x, y], i) => disc2(x, y, r[i], '#6E9E45')).join('')
+        + q.map(([x, y], i) => disc2(x - 0.5, y - 0.6, r[i] * 0.7, '#8CBF5B')).join('')
+        + `<path d="M${rnd2(q[1][0] - 1)},${rnd2(q[1][1] + 2)} q1,3.4 2,0" fill="#6E9E45" stroke="${INK_OUT}" stroke-width="0.6"/>`;
+    };
+    out += (du >= 0.5 ? moss(u0 + du * 0.24, 0, 'L') : '') + (dv >= 0.5 ? moss(0, v0 + dv * 0.68, 'R') : '');
+  }
+  return out;
+}
 // Porte sur la face gauche (côté v = vf) : u de ua à ub, hauteur h
 export function doorLeft(ua, ub, vf, h, color = WOOD_DARK.right) {
   return face([[ua, vf, 0], [ub, vf, 0], [ub, vf, h], [ua, vf, h]], color, EDGE)
