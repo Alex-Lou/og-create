@@ -3895,7 +3895,9 @@ var fichierEgare = /* @__PURE__ */ __name((sujet, vue, pose) => import_noms_bete
 function profil(bete, pose) {
   const b = prendre(PROFILS, "bête inconnue", bete);
   dans(b.poses, "pose", pose);
-  return { svg: svgOf(b.cadre, b.dessin(pose)), cadre: b.cadre, ms_par_image: vitesse(fichierProfil(b, pose)) };
+  const f = fichierProfil(b, pose);
+  const ms = vitesse(f) ?? (/^\d+$/.test(pose) && b.poses.length > 1 ? import_noms_betes.default.vitesseBete(f) ?? null : null);
+  return { svg: svgOf(b.cadre, b.dessin(pose)), cadre: b.cadre, ms_par_image: ms };
 }
 __name(profil, "profil");
 function orientee(bete, vue, pose) {
