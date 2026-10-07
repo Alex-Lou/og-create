@@ -10,8 +10,8 @@ const KEY = 'oc_prologue';
 // Les trois premières pages de l'étape 1 (Vent, Pluie, Brasier) ouvrent le chapitre II
 export const FIRST_PAGES = 3;
 
-// look : l'avatar choisi sur la carte d'embarquement (game/sceneArt.js), gardé sur l'appareil en attendant le serveur
-// (H9.4)
+// look : l'avatar choisi sur la carte d'embarquement (game/sceneArt.js), gardé sur l'appareil jusqu'au compte, qui le
+// garde ensuite (App, keepAvatar)
 const blank = () => ({ started: false, skipped: false, registered: false, named: false, finished: false, name: null, look: null, seen: [] });
 
 export function loadPrologue() {
