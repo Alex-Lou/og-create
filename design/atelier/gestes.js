@@ -360,4 +360,53 @@ function porter({ view, n }) {
 // Debout : frame(avecPorter(c), vue, 'action', n)
 const avecPorter = c => ({ ...c, uid: `${c.uid}po`, pose: porter });
 
-module.exports = { lanterne, parapluie, valise, avecLanterne, avecParapluie, avecValise, couche, CADRE_PARAPLUIE, CADRE_COUCHE, ZEDS, paume, tranche, tendre, avecMainsTendues, applaudir, avecApplaudir, pecher, avecPecher, piocher, avecPiocher, cueillir, avecCueillir, porter, avecPorter };
+// Le marteau : le manche de bois de m (la main) à t (la tête), la tête d'acier en travers (côté frappe et côté pied-de-biche)
+function marteau(m, t) {
+  const len = Math.hypot(t[0] - m[0], t[1] - m[1]), ux = (t[0] - m[0]) / len, uy = (t[1] - m[1]) / len, nx = -uy, ny = ux;
+  const q = (a, b) => [t[0] + ux * a + nx * b, t[1] + uy * a + ny * b];
+  const tete = [q(-1.3, -3.2), q(1.3, -3.2), q(1.3, 2.2), q(0.4, 3.6), q(-0.4, 3.6), q(-1.3, 2.2)];
+  return L(m, t, OUT, 3.2) + L(m, t, '#C99A62', 1.4) + L(m, [m[0] + ux * 2.4, m[1] + uy * 2.4], '#7A4E2A', 1.6)
+    + P(`M${tete.map(p => `${r2(p[0])},${r2(p[1])}`).join(' L')} Z`, '#8E96A0', 0.9) + L(q(-0.7, -2.6), q(-0.7, 1.4), '#C9CFD6', 0.5);
+}
+// La planche à réparer, tenue en travers (de g à d, à la hauteur y), son fil, un clou planté à moitié en (cx)
+const planche = (g, d, y, cx) => `<rect x="${r2(g)}" y="${r2(y - 1.5)}" width="${r2(d - g)}" height="3" rx="0.6" fill="#D2A574" stroke="${OUT}" stroke-width="0.9"/>`
+  + L([g + 1, y - 0.3], [d - 1, y - 0.3], '#B8875A', 0.45) + L([g + 2, y + 0.7], [d - 3, y + 0.7], '#B8875A', 0.4)
+  + L([cx, y - 1.4], [cx, y - 3.4], OUT, 1.3) + L([cx, y - 1.4], [cx, y - 3.4], '#C9CFD6', 0.5) + E(cx, y - 3.5, 0.9, 0.35, '#8E96A0', 0.5);
+// le « tac » : trois traits clairs autour du clou frappé
+const tac = (x, y) => [[-1, -0.6], [0, -1.1], [1, -0.6]].map(([dx, dy]) => { const p = [x + dx * 1.6, y + dy * 1.6], q = [x + dx * 3, y + dy * 3]; return L(p, q, OUT, 1.4) + L(p, q, '#FFF2B0', 0.6); }).join('');
+// Réparer (le chantier, la cabane) ; 2 images : le marteau levé, puis le coup sur le clou (« tac »), en riant.
+// Une main tient la planche en travers devant soi, l'autre le marteau. Assis (assis.js), la planche est sur les genoux.
+function reparer({ view, n }) {
+  const [a, b] = this.shoulders;
+  const y = a[1] + 9.4; // la planche
+  if (view === 'front') {
+    const cx = 25.4, pl = planche(15.4, 32.6, y, cx);
+    const hp = [16.6, y + 0.2];
+    if (!n) {
+      const m = [Math.min(b[0] + 6.4, 39.6), a[1] + 1.4], t = [Math.min(b[0] + 8.6, 41.8), a[1] - 5.4]; // bornés : le marteau reste dans le cadre
+      return { expr: 'content', left: pl + arm(this, a, hp, [a[0] - 1.6, a[1] + 6.4]), right: arm(this, b, m, [b[0] + 4.6, b[1] + 5.8]) + marteau(m, t) };
+    }
+    const m = [b[0] + 1.6, y - 3.6], t = [cx + 1.4, y - 5.6];
+    return { expr: 'rire', left: pl + arm(this, a, hp, [a[0] - 1.6, a[1] + 6.4]), right: arm(this, b, m, [b[0] + 2.6, b[1] + 6.6]) + marteau(m, t), over: tac(cx, y - 3.6) };
+  }
+  if (view === 'se') {
+    const cx = a[0] - 0.4, pl = planche(a[0] - 8.4, b[0] - 1.4, y, cx);
+    const hp = [b[0] - 3, y + 0.2];
+    if (!n) {
+      const m = [Math.max(a[0] - 5, 8.4), a[1] + 1.4], t = [Math.max(a[0] - 8.4, 5.6), a[1] - 5];
+      return { expr: 'content', right: pl + arm(this, b, hp, [b[0] + 1.4, b[1] + 6.4]), left: arm(this, a, m, [a[0] - 3.6, a[1] + 5.6]) + marteau(m, t) };
+    }
+    const m = [a[0] - 3.4, y - 4], t = [cx - 1.2, y - 5.8];
+    return { expr: 'rire', right: pl + arm(this, b, hp, [b[0] + 1.4, b[1] + 6.4]), left: arm(this, a, m, [a[0] - 2.4, a[1] + 6]) + marteau(m, t), over: tac(cx, y - 3.6) };
+  }
+  // de dos : la planche est devant (cachée) ; le marteau levé passe à droite de la tête, puis frappe (le « tac » dépasse à droite)
+  if (!n) {
+    const m = [Math.min(b[0] + 6.4, 39.6), a[1] + 0.6], t = [Math.min(b[0] + 8.2, 41.4), a[1] - 6.2];
+    return { left: '', right: '', under: arm(this, a, [24 - 2, y - 1], [a[0] - 2.4, a[1] + 6]), over: arm(this, b, m, [b[0] + 4.4, b[1] + 5.6]) + marteau(m, t) };
+  }
+  return { expr: 'rire', left: '', right: '', under: arm(this, a, [24 - 2, y - 1], [a[0] - 2.4, a[1] + 6]) + arm(this, b, [24 + 3, y - 2], [b[0] + 2.4, b[1] + 6]), over: tac(b[0] + 3.6, y - 3) };
+}
+// Debout : frame(avecReparer(c), vue, 'action', n) ; assis : assis(c, vue, n, null, reparer)
+const avecReparer = c => ({ ...c, uid: `${c.uid}re`, pose: reparer });
+
+module.exports = { lanterne, parapluie, valise, avecLanterne, avecParapluie, avecValise, couche, CADRE_PARAPLUIE, CADRE_COUCHE, ZEDS, paume, tranche, tendre, avecMainsTendues, applaudir, avecApplaudir, pecher, avecPecher, piocher, avecPiocher, cueillir, avecCueillir, porter, avecPorter, reparer, avecReparer };
