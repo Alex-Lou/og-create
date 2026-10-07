@@ -250,26 +250,48 @@ const depot = {
     n: 6,
     fps: 2,
     draw: (T, f) => {
-      const block = (du, dv, z) => ({ d: du + dv + z * 0.001, svg: T.box(du - 0.1, dv - 0.09, du + 0.1, dv + 0.09, z, z + 6.5, STONE) + ln(T.p(du - 0.1, dv + 0.09, z + 3.2), T.p(du + 0.1, dv + 0.09, z + 3.2), 'rgba(120,110,95,.35)', 0.5) });
+      const PALE = { top: '#ECE6D8', left: '#CFC6B2', right: '#A69C88' };
+      // un bloc taillé : deux teintes de pierre, une ligne de lit, des traces de ciseau sur le dessus et sur la face
+      const block = (du, dv, z, k) => {
+        const c = k % 2 ? PALE : STONE;
+        const [mx, my] = T.p(du, dv + 0.09, z + 3.2);
+        return { d: du + dv + z * 0.001, svg: T.box(du - 0.1, dv - 0.09, du + 0.1, dv + 0.09, z, z + 6.5, c)
+          + ln(T.p(du - 0.1, dv + 0.09, z + 3.2), T.p(du + 0.1, dv + 0.09, z + 3.2), 'rgba(120,110,95,.35)', 0.5)
+          + ln([mx - 3, my - 1.4], [mx - 1.6, my + 0.4], 'rgba(120,110,95,.45)', 0.5) + ln([mx + 1.4, my - 1], [mx + 2.6, my + 0.6], 'rgba(120,110,95,.45)', 0.5)
+          + ln(T.p(du - 0.06, dv - 0.04, z + 6.5), T.p(du + 0.04, dv - 0.06, z + 6.5), 'rgba(255,255,255,.6)', 0.7) };
+      };
       const stack = [
-        block(-0.11, -0.1, 3), block(0.11, -0.1, 3), block(-0.11, 0.1, 3), block(0.11, 0.1, 3),
-        block(0, -0.1, 9.5), block(0, 0.1, 9.5), block(0, 0, 16)
+        block(-0.11, -0.1, 3, 0), block(0.11, -0.1, 3, 1), block(-0.11, 0.1, 3, 1), block(0.11, 0.1, 3, 0),
+        block(0, -0.1, 9.5, 0), block(0, 0.1, 9.5, 1), block(0, 0, 16, 1)
       ].sort((a, b) => a.d - b.d || 0).map(b => b.svg).join('');
       const [bx, by] = T.p(0, 0, 22.5);
       const hop = f === 2 ? 1.6 : 0;
-      return T.shadow(0, 0, 0.4, 0.2)
-        // Ardoise des comptes, derrière
+      // l'aire de gravier et ses cailloux
+      const [gx, gy] = T.p(0, 0, 0);
+      let out = ell(gx, gy + 1, 30, 14, '#D8CFBC', ` stroke="${OUT}" stroke-width="0.5"`) + ell(gx - 4, gy, 20, 8, '#E4DCCB')
+        + [[-22, 4, 1.4], [18, 8, 1.2], [-8, 10, 1], [24, -2, 1.1], [-26, -3, 0.9]].map(([dx, dy, r]) => ell(gx + dx, gy + dy, r * 1.4, r, '#A69C88', ` stroke="${OUT}" stroke-width="0.4"`)).join('')
+        + T.shadow(0, 0, 0.4, 0.2)
+        // l'ardoise des comptes, derrière, et ses bâtons
         + post(T, -0.32, -0.3, 0, 14, WOOD, 0.016) + post(T, -0.18, -0.36, 0, 14, WOOD, 0.016)
         + T.face([[-0.33, -0.31, 8], [-0.17, -0.37, 8], [-0.17, -0.37, 15], [-0.33, -0.31, 15]], '#3D4148', EDGE)
         + [9.6, 11.2, 12.8].map(z => ln(T.p(-0.31, -0.32, z), T.p(-0.22, -0.355, z), 'rgba(255,255,255,.7)', 0.4)).join('')
+        + ln(T.p(-0.3, -0.32, 9), T.p(-0.24, -0.345, 13.4), 'rgba(255,255,255,.7)', 0.4)
+        // la palette de bois et ses planches
         + T.box(-0.3, -0.26, 0.3, 0.26, 0, 3, WOOD_DARK)
         + [-0.18, 0, 0.18].map(du => ln(T.p(du, 0.26, 3), T.p(du, -0.26, 3), WOOD.top, 0.8)).join('')
         + stack
-        + bird(bx + 1, by - hop, { body: '#8B6A4A', breast: '#D8C2A0', wing: '#6E5236', peck: f === 4 ? 1 : 0 })
-        // Traîneau chargé de deux blocs, devant à droite
-        + T.box(0.26, 0.2, 0.44, 0.4, 0, 2, WOOD)
+        + bird(bx + 1, by - hop, { body: '#8B6A4A', breast: '#D8C2A0', wing: '#6E5236', peck: f === 4 ? 1 : 0 });
+      // le pic appuyé contre la palette, à gauche
+      const [px, py] = T.p(-0.32, 0.2, 0);
+      out += ln([px, py], [px + 4, py - 15], WOOD.right, 1.6) + ln([px + 0.6, py - 0.4], [px + 4.4, py - 14.6], WOOD.top, 0.6)
+        + `<path d="M${f2(px - 1.6)},${f2(py - 13)} Q${f2(px + 4)},${f2(py - 17.6)} ${f2(px + 10)},${f2(py - 14)} Q${f2(px + 4.4)},${f2(py - 15.4)} ${f2(px - 1.6)},${f2(py - 13)} Z" fill="${IRON}" stroke="${OUT}" stroke-width="0.6"/>`;
+      // le traîneau chargé de deux blocs, sanglé, devant à droite ; des éclats de taille
+      out += T.box(0.26, 0.2, 0.44, 0.4, 0, 2, WOOD)
         + ln(T.p(0.44, 0.2, 1), T.p(0.48, 0.22, 3), WOOD.right, 1.2) + ln(T.p(0.44, 0.4, 1), T.p(0.48, 0.42, 3), WOOD.right, 1.2)
-        + T.box(0.28, 0.22, 0.36, 0.3, 2, 7, STONE) + T.box(0.33, 0.3, 0.42, 0.38, 2, 6, STONE);
+        + T.box(0.28, 0.22, 0.36, 0.3, 2, 7, STONE) + T.box(0.33, 0.3, 0.42, 0.38, 2, 6, PALE)
+        + ln(T.p(0.3, 0.3, 4.4), T.p(0.42, 0.38, 4.2), '#C9A86A', 0.9) + ln(T.p(0.5, 0.3, 3), T.p(0.56, 0.24, 6), '#C9A86A', 0.7)
+        + [[0.18, 0.34], [0.08, 0.4], [0.22, 0.44]].map(([du, dv]) => { const [x, y] = T.p(du, dv, 0); return poly([[x - 1.2, y], [x, y - 1.4], [x + 1.4, y - 0.2]], PALE.left, ` stroke="${OUT}" stroke-width="0.4"`); }).join('');
+      return out;
     }
   }]
 };
@@ -953,7 +975,8 @@ const hutte = {
   }]
 };
 
-// Saline (Ponton) : des bassins carrés où l'eau s'évapore, des tas de sel blanc et un râteau
+// Saline (Ponton) : des bassins où l'eau de mer s'évapore (bleue, turquoise, rose, puis croûte de sel), un mulon de sel
+// où est plantée la pelle, le panier et le las du saunier, une mouette sur le talus ; l'eau miroite, le sel scintille
 const saline = {
   layers: [{
     frame: [-36, -40, 72, 52],
@@ -995,7 +1018,9 @@ const serre = {
   }]
 };
 
-// Forge d'obsidienne (Carrière) : une enclume de pierre noire, un foyer de braises, des éclats taillés ; le feu brûle
+// Forge d'obsidienne (Carrière) : sur un sol de basalte fendu de lave, un foyer de pierres noires sous sa cheminée, un
+// soufflet de cuir qui souffle, une enclume où rougit une lame, un tas d'obsidienne brute et un seau qui fume ; le feu
+// brûle, les fentes de lave battent, des étincelles montent
 const fonderie = {
   light: () => [-0.1, 0.05, 8, 26, '255,120,50', true],
   layers: [{
