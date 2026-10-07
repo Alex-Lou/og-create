@@ -17,8 +17,8 @@ const charger = async f => {
   if (!familles.includes(f)) throw new Error(`famille inconnue : ${f} (${familles.join(', ')})`);
   return import(pathToFileURL(path.join(DOSSIER, `${f}.mjs`)).href);
 };
-// Les nombres passés en texte redeviennent des nombres (une image, une taille)
-const arg = a => (/^-?\d+(\.\d+)?$/.test(a) ? Number(a) : a);
+// Les nombres et les booléens passés en texte redeviennent ce qu'ils sont (une image, une taille, l'hiver)
+const arg = a => (/^-?\d+(\.\d+)?$/.test(a) ? Number(a) : a === 'true' ? true : a === 'false' ? false : a);
 
 try {
   const [famille, commande, ...reste] = process.argv.slice(2);

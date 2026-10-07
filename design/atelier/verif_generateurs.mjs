@@ -1,14 +1,15 @@
 // Les modules du générateur par famille (bibliotheque/generateur/<famille>.mjs, sauf avatar.mjs : verif_generateur.mjs)
-// dessinent-ils la bibliothèque à l'octet près ? Pour chaque famille : chaque dessin de sa liste() est rendu par le
-// module publié et comparé au fichier de la bibliothèque (qui finit par un saut de ligne, que le SVG rendu n'a pas) ; les exports sont ceux de la source ; le module ne demande
-// rien à Node. Usage : node verif_generateurs.mjs (sort en erreur au moindre écart). À lancer après build_bundle.js.
+// dessinent-ils la bibliothèque à l'octet près ? Pour chaque famille : chaque dessin de sa liste(), dans un ordre
+// mélangé, est rendu par le module publié et comparé au fichier de la bibliothèque (qui finit par un saut de ligne, que
+// le SVG rendu n'a pas) ; les exports sont ceux de la source ; le module ne demande rien à Node. Usage :
+// node verif_generateurs.mjs (sort en erreur au moindre écart). À lancer après build_bundle.js.
 import fs from 'fs';
 import path from 'path';
 import { fileURLToPath, pathToFileURL } from 'url';
 
 const ici = path.dirname(fileURLToPath(import.meta.url));
 const BIB = path.join(ici, '..', 'bibliotheque');
-const FAMILLES = ['chantiers', 'betes', 'interface', 'objets', 'plantes', 'meteo', 'coffres', 'decor'];
+const FAMILLES = ['chantiers', 'betes', 'interface', 'objets', 'plantes', 'meteo', 'coffres', 'decor', 'batiments'];
 const erreurs = [];
 let n = 0;
 for (const f of FAMILLES) {
@@ -18,7 +19,10 @@ for (const f of FAMILLES) {
   const noms = M => Object.keys(M).sort().join(' ');
   if (noms(src) !== noms(mod)) erreurs.push(`${f} : exports ${noms(mod)} au lieu de ${noms(src)}`);
   if (/[^\w$]require\s*\(|typeof require/.test(fs.readFileSync(fichier, 'utf8'))) erreurs.push(`${f} : le module appelle encore require`);
+  // dans un ordre mélangé (graine fixe) : un dessin ne doit pas dépendre de ce qu'on a dessiné avant lui
   const liste = mod.liste();
+  let graine = 7; const hasard = () => (graine = (graine * 16807) % 2147483647) / 2147483647;
+  for (let i = liste.length - 1; i > 0; i--) { const j = Math.floor(hasard() * (i + 1)); [liste[i], liste[j]] = [liste[j], liste[i]]; }
   if (!liste.length) erreurs.push(`${f} : liste vide`);
   for (const { fichier: rel, fonction, args } of liste) {
     n++;
