@@ -698,27 +698,53 @@ const fumoir = {
     }
   }]
 };
-// Parc à huîtres : tables de bois sur le sable, poches d'huîtres, panier d'huîtres ouvertes ; une perle brille
+// Parc à huîtres : dans une flaque de marée sur le sable, deux tables de bois et leurs poches de filet bombées
+// d'huîtres, des algues qui pendent ; le panier d'huîtres ouvertes où brille une perle ; un crabe qui passe ; la
+// salicorne ; l'eau fait des ronds autour des pieds
 const huitres = {
   layers: [{
     frame: [-34, -34, 68, 50],
     n: 6,
     fps: 3,
-    draw: (T, f) => {
-      const table = dv => [[-0.32, dv - 0.08], [0.32, dv - 0.08], [-0.32, dv + 0.08], [0.32, dv + 0.08]].map(([a, b]) => post(T, a, b, 0, 8, WOOD_DARK, 0.015)).join('')
-        + T.box(-0.34, dv - 0.1, 0.34, dv + 0.1, 8, 9, WOOD)
-        + [-0.22, 0, 0.22].map(du => T.box(du - 0.09, dv - 0.07, du + 0.09, dv + 0.07, 9, 11, { top: '#8FA58C', left: '#6F876E', right: '#566C56' })
-          + ln(T.p(du - 0.09, dv - 0.035, 11), T.p(du + 0.09, dv - 0.035, 11), 'rgba(255,255,255,.35)', 0.4)
-          + ln(T.p(du - 0.09, dv + 0.035, 11), T.p(du + 0.09, dv + 0.035, 11), 'rgba(255,255,255,.35)', 0.4)
-          + ln(T.p(du, dv - 0.07, 11), T.p(du, dv + 0.07, 11), 'rgba(255,255,255,.35)', 0.4)).join('');
+    draw: (T, f, n) => {
+      const k = f / n;
+      const [x, y] = T.p(0, 0, 0);
+      // le sable, la flaque de marée et ses reflets
+      let out = ell(x, y + 1, 32, 13, '#EAD7A8', ` stroke="${OUT}" stroke-width="0.5"`) + ell(x - 4, y - 1, 22, 8, '#F2E2BA')
+        + `<path d="M${x - 22},${y - 1} Q${x - 18},${y - 9} ${x - 2},${y - 9} Q${x + 18},${y - 9} ${x + 22},${y - 1} Q${x + 14},${y + 7} ${x - 4},${y + 6} Q${x - 20},${y + 6} ${x - 22},${y - 1} Z" fill="#8FC8E0" stroke="#C9B58A" stroke-width="1.2"/>`
+        + ln([x - 14, y - 4 + k * 2], [x - 6, y - 4 + k * 2], 'rgba(255,255,255,.7)', 0.8) + ln([x + 6, y + 1 - k * 2], [x + 14, y + 1 - k * 2], 'rgba(255,255,255,.6)', 0.7)
+        + [[-0.2, -0.08], [0.32, 0.22]].map(([du, dv], i) => { const [sx, sy] = T.p(du, dv, 0); return ell(sx, sy, 1.6, 1, '#F7EEDC', ` stroke="${OUT}" stroke-width="0.4"`) + (i ? `<path d="M${f2(sx - 1.2)},${f2(sy)} l1.2,-1.2 l1.2,1.2" stroke="#C9A06A" stroke-width="0.4" fill="none"/>` : ''); }).join('')
+        + T.shadow(0, 0, 0.36, 0.12);
+      // une table : pieds dans l'eau et leurs ronds, plateau, poches de filet bombées, algues
+      const table = dv => {
+        let o = [[-0.32, dv - 0.08], [0.32, dv - 0.08], [-0.32, dv + 0.08], [0.32, dv + 0.08]].map(([a, b], i) => { const [rx, ry] = T.p(a, b, 0); const t = (k + i * 0.25) % 1; return `<ellipse cx="${f2(rx)}" cy="${f2(ry)}" rx="${f2(1.4 + t * 2.6)}" ry="${f2(0.7 + t * 1.3)}" fill="none" stroke="rgba(255,255,255,${f2(0.7 * (1 - t))})" stroke-width="0.5"/>` + post(T, a, b, 0, 8, WOOD_DARK, 0.015); }).join('')
+          + T.box(-0.34, dv - 0.1, 0.34, dv + 0.1, 8, 9, WOOD);
+        for (const du of [-0.22, 0, 0.22]) {
+          o += T.box(du - 0.09, dv - 0.07, du + 0.09, dv + 0.07, 9, 11.4, { top: '#8FA58C', left: '#6F876E', right: '#566C56' });
+          for (let i = 1; i < 4; i++) o += ln(T.p(du - 0.09 + i * 0.045, dv - 0.07, 11.4), T.p(du - 0.09 + i * 0.045, dv + 0.07, 11.4), 'rgba(40,60,40,.45)', 0.4) + ln(T.p(du - 0.09 + i * 0.045, dv + 0.07, 9), T.p(du - 0.09 + i * 0.045, dv + 0.07, 11.4), 'rgba(40,60,40,.45)', 0.4);
+          o += ln(T.p(du - 0.09, dv, 11.4), T.p(du + 0.09, dv, 11.4), 'rgba(40,60,40,.45)', 0.4)
+            + [[-0.05, -0.03], [0.02, 0.03], [0.05, -0.04], [-0.02, 0.01]].map(([a, b]) => { const [ox, oy] = T.p(du + a, dv + b, 11.6); return ell(ox, oy, 1.1, 0.6, '#B8BEC2', ` stroke="${OUT}" stroke-width="0.3"`); }).join('');
+        }
+        return o + [-0.3, -0.06, 0.18].map((du, i) => { const [ax, ay] = T.p(du, dv + 0.1, 8); const s = wave(f, n, 0.6, i); return `<path d="M${f2(ax)},${f2(ay)} q${f2(0.6 + s)},2.4 ${f2(s)},4.6 M${f2(ax + 2)},${f2(ay)} q${f2(-0.6 + s)},2 ${f2(0.4 + s)},3.4" stroke="#4E8A4A" stroke-width="0.9" fill="none" stroke-linecap="round"/>`; }).join('');
+      };
+      out += table(-0.18) + table(0.12);
+      // la salicorne, à gauche
+      out += [[-0.4, 0.28], [-0.3, 0.4], [-0.44, 0.14]].map(([a, b]) => { const [sx, sy] = T.p(a, b, 0); return [-1.6, 0, 1.6].map((o, i) => `<path d="M${f2(sx + o * 0.4)},${f2(sy)} l${f2(o * 0.5)},-${2.4 + i % 2} l${f2(o * 0.3)},-2" stroke="${i % 2 ? '#8FB85A' : '#6E9C5A'}" stroke-width="1.1" fill="none" stroke-linecap="round"/>`).join(''); }).join('');
+      // le panier d'huîtres ouvertes, sa perle qui brille
       const [bx, by] = T.p(0.22, 0.34, 0);
-      const shells = [[-3, -4.4], [1, -5], [3.4, -3.6], [-0.6, -3]].map(([a, b]) => ell(bx + a, by + b, 2.2, 1.3, '#9AA2A8', ` stroke="${OUT}" stroke-width="0.3"`) + ell(bx + a, by + b - 0.2, 1.4, 0.7, '#F1EEE6')).join('');
-      return patch(T, 0.45, '#EAD7A8', '') + T.shadow(0, 0, 0.36, 0.14)
-        + table(-0.18) + table(0.12)
-        + ell(bx, by - 1.6, 5.6, 2.6, '#B08850', ` stroke="#7A5A30" stroke-width="0.5"`) + ell(bx, by - 3.2, 5, 2.2, '#C9A06A')
-        + shells + dot(bx + 1, by - 5.2, 0.9, '#FFFFFF')
-        + (f % 3 === 0 ? star(bx + 1, by - 5.4, 3.2, '#FFFFFF', 0.95) : '')
-        + [[-0.36, 0.3], [-0.24, 0.4]].map(([a, b]) => { const [x, y] = T.p(a, b, 0); return `<path d="M${f2(x)},${f2(y)} q-2,-3 -0.6,-6 M${f2(x)},${f2(y)} q2,-2.4 1.4,-5" stroke="#6E9C5A" stroke-width="0.9" fill="none"/>`; }).join('');
+      out += ell(bx + 1, by + 0.4, 6.6, 2, 'rgba(40,55,20,.2)')
+        + ell(bx, by - 1.6, 5.6, 2.6, '#B08850', ` stroke="${OUT}" stroke-width="0.6"`) + ell(bx, by - 3.2, 5, 2.2, '#C9A06A')
+        + [-3, 0, 3].map(o => ln([bx + o, by - 3.6], [bx + o * 1.05, by + 0.6], 'rgba(120,85,40,.45)', 0.5)).join('')
+        + [[-3, -4.4], [1, -5], [3.4, -3.6], [-0.6, -3]].map(([a, b]) => ell(bx + a, by + b, 2.2, 1.3, '#9AA2A8', ` stroke="${OUT}" stroke-width="0.3"`) + ell(bx + a, by + b - 0.2, 1.4, 0.7, '#F1EEE6')).join('')
+        + dot(bx + 1, by - 5.2, 0.9, '#FFFFFF') + (f % 3 === 0 ? star(bx + 1, by - 5.4, 3.2, '#FFFFFF', 0.95) : '');
+      // le crabe qui passe de côté devant
+      const [cx, cy] = T.p(-0.12 + k * 0.2, 0.42 - k * 0.2, 0);
+      const st = f % 2 ? 0.6 : -0.6;
+      return out + ell(cx, cy + 0.4, 3.4, 0.9, 'rgba(40,55,20,.2)')
+        + [-1, 1].map(s => [0.8, 1.8, 2.8].map(d => ln([cx + s * d * 0.6, cy - 1], [cx + s * (d * 0.6 + 1.4), cy + 0.4 + (d === 1.8 ? st : -st) * 0.6], '#C2402E', 0.5)).join('')).join('')
+        + ell(cx, cy - 1.6, 3, 1.8, '#E2583E', ` stroke="${OUT}" stroke-width="0.5"`)
+        + [-1, 1].map(s => ln([cx + s * 2.2, cy - 2.2], [cx + s * 3.4, cy - 3.6], '#C2402E', 0.6) + ell(cx + s * 3.8, cy - 4.2, 1.2, 0.9, '#E2583E', ` stroke="${OUT}" stroke-width="0.4"`)).join('')
+        + [-0.8, 0.8].map(s => ln([cx + s, cy - 3], [cx + s, cy - 4.2], '#C2402E', 0.4) + dot(cx + s, cy - 4.4, 0.5, '#2A2024')).join('');
     }
   }]
 };
