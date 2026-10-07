@@ -116,11 +116,17 @@ const G = {
   // sel empilés qui accrochent le soleil ; ramassée, une croûte grise grattée, ses fentes et quelques grains
   sel: {
     frames: [[-30, -26, 60, 36], [-26, -10, 52, 20]],
-    draw: (spent, f) => spent
-      ? E(0, 1, 20, 8, '#E6DED4', W) + line('M-12,0 l6,2 l5,-3 l7,2 M2,4 l4,-2', 0.8, '#B8AB9A')
-      : E(0, 0.4, 22, 8.4, '#FFFFFF', W) + E(6, -1, 9, 3.5, 'rgba(244,198,208,.5)', 0) + cube(-1, -3, 3.5) + cube(12, -2, 3) + cube(-8, 1, 4) + cube(6, 3, 5)
-        + (f ? star(-8, -6, 2.4) : star(6, -9, 2.8))
+    draw: (spent, f) => {
+      const plaque = (rx, ry, fill, edge) => { const n = 16, pts = Array.from({ length: n }, (_, i) => { const t = (i / n) * TAU, r = 1 + (i % 2 ? 0.05 : -0.03); return [Math.cos(t) * rx * r, 0.6 + Math.sin(t) * ry * r]; }); const m = i => { const p = pts[i % n], q = pts[(i + 1) % n]; return `${r2((p[0] + q[0]) / 2)},${r2((p[1] + q[1]) / 2)}`; }; let d = `M${m(n - 1)}`; for (let i = 0; i < n; i++) d += ` Q${r2(pts[i][0])},${r2(pts[i][1])} ${m(i)}`; return P(d + ' Z', fill, W) + E(rx * 0.12, ry * 0.25, rx * 0.8, ry * 0.55, edge, 0); };
+      const alveoles = c => line('M-16,-1 l5,-2 l6,1 l4,-2 l7,1 M-11,-3 l1,4 l-4,3 M-5,-2 l2,4 l6,1 l2,3 M3,-3 l1,4 l7,1 M11,2 l3,-3 M-8,4 l5,1', 0.7, c);
+      if (spent) return plaque(20, 7.6, '#E2DAD0', '#D6CCC0') + alveoles('#B8AB9A') + line('M-12,-1 q4,2 8,0 M4,3 q4,-1.6 8,0', 0.9, '#C8BCAC') + [[-6, 1], [7, -1], [1, 4]].map(([x, y]) => E(x, y, 1, 0.7, '#FFFFFF', 0.4)).join('');
+      return shade(0, 2, 22, 7, 0.12) + plaque(22, 8.4, '#FFFFFF', '#F2EEE8') + E(7, 0.4, 8.6, 3, '#F4C6D0', 0.5) + E(5.6, -0.2, 4.6, 1.3, '#FBE2E8', 0) + alveoles('#DDD3C8')
+        + cube(-13, 0.6, 2.2) + cube(-2, -2.6, 2.8) + cube(11, -2, 2.4) + cube(-7, 3, 3.2) + cube(3.6, 3.4, 3.8) + cube(14, 3, 1.9) + cube(-15, 4, 1.5)
+        + (f ? star(-8, -6, 2.4) + star(14, -7, 1.6) : star(4, -8, 2.8) + star(-13, -3, 1.6));
+    }
   },
+  // Arbre à fruits : un petit manguier (l'arbre refait, en vert profond) chargé de mangues dorées, rosies au soleil, qui
+  // se balance ; cueilli, il garde ses feuilles
   fruits: {
     frames: [[-24, -50, 48, 58], [-24, -50, 48, 58]],
     draw: (spent, f) => {
