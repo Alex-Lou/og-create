@@ -3,7 +3,7 @@
 const path = require('path');
 const { unique, row, sheet, animated, write, shoot } = require('./planche');
 const { frame, svg, POSES, EXPRS } = require('./troupe');
-const { STAGES, brumeFrame, svgB } = require('./brume');
+const { STAGES, brumeFrame, brumeEyes, svgB } = require('./brume');
 const { anyaFrame, POSES_A, EXPR_OF, svgA } = require('./anya');
 const { cerfFrame, svgC } = require('./cerf');
 const passeur = require('./passeur');
@@ -14,7 +14,7 @@ const XL = { neutre: 'Neutre', content: 'Content', rire: 'Rire', surpris: 'Surpr
 const shots = [];
 const anim = [];
 
-// ——— Brume : chaque stade en 4 images (flottement), expressions sur le stade 1
+// ——— Brume : chaque stade en 4 images (flottement) ; expressions en calques (les yeux seuls), posés sur n'importe quel stade
 {
   const rows = [], boxes = [];
   for (const [key, st] of Object.entries(STAGES)) {
@@ -23,15 +23,17 @@ const anim = [];
     rows.push(row(st.label, frames.map((b, n) => [svgB(unique(b), 3), n + 1])));
     boxes.push({ label: st.label, frames: frames.map(b => svgB(unique(b), 4)), timings: [220, 220, 220, 220], w: 160, h: 192 });
   }
-  const xr = [], xb = [];
+  const xr = [], x1 = [], x7 = [], xb = [];
   for (const x of EXPRS) {
-    const frames = [0, 1].map(n => brumeFrame('s1', n, x));
-    frames.forEach((b, n) => write(path.join(LIB, 'brume', `brume_expr_${x}_${n + 1}.svg`), svgB(b)));
-    xr.push([svgB(unique(frames[0]), 3), XL[x]]);
-    xb.push({ label: XL[x], frames: frames.map(b => svgB(unique(b), 4)), timings: [600, 600], w: 160, h: 192 });
+    // le fichier : le calque seul ; la planche le montre aussi posé sur le stade 1 et sur le stade 7 (dessinés sans visage)
+    [0, 1].forEach(n => write(path.join(LIB, 'brume', `brume_expr_${x}_${n + 1}.svg`), svgB(brumeEyes(n, x))));
+    xr.push([svgB(brumeEyes(0, x), 3), XL[x]]);
+    x1.push([svgB(unique(brumeFrame('s1', 0, x, false) + brumeEyes(0, x)), 3), XL[x]]);
+    x7.push([svgB(unique(brumeFrame('s7', 0, x, false) + brumeEyes(0, x)), 3), XL[x]]);
+    xb.push({ label: XL[x], frames: [0, 1].map(n => svgB(unique(brumeFrame('s1', n, x, false) + brumeEyes(n, x)), 4)), timings: [600, 600], w: 160, h: 192 });
   }
-  rows.push(row('Expressions (yeux seuls)', xr));
-  shots.push([path.join(OUT, 'planche_brume.png'), sheet('Brume — stades et expressions', 'Repère 40 × 48, bas de la flamme en (20, 32). Flottement en 4 images ; les expressions se posent sur n\'importe quel stade.', rows), 1100]);
+  rows.push(row('Expressions · le calque (yeux seuls)', xr), row('Posées sur le stade 1', x1), row('Posées sur le stade 7', x7));
+  shots.push([path.join(OUT, 'planche_brume.png'), sheet('Brume — stades et expressions', 'Repère 40 × 48, bas de la flamme en (20, 32). Flottement en 4 images ; les expressions sont des calques (les yeux seuls) qui se posent sur n\'importe quel stade dessiné sans visage.', rows), 1100]);
   anim.push(['Brume — stades', boxes], ['Brume — expressions', xb]);
 }
 

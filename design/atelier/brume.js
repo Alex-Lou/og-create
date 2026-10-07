@@ -38,8 +38,27 @@ const heart = (x, y, s) => P(`M${r2(x)},${r2(y + s * 1.1)} C${r2(x - s * 1.8)},$
 const crown = (x, y, rot) => `<g transform="translate(${r2(x)} ${r2(y)}) rotate(${rot})">`
   + P('M-4,1.4 L-4.4,-2.2 L-2,-0.4 L0,-3 L2,-0.4 L4.4,-2.2 L4,1.4 Z', '#F6C744', 0.8) + E(0, -3, 0.7, 0.7, '#E8584A', 0.5) + E(-4.4, -2.2, 0.5, 0.5, '#FFFFFF', 0.4) + E(4.4, -2.2, 0.5, 0.5, '#FFFFFF', 0.4) + '</g>';
 
-// Une image de Brume. stage : clé de STAGES ; n : 0..3 ; expr : expression (yeux et signes seulement)
-function brumeFrame(stageKey, n, expr = 'neutre') {
+// Le visage : deux yeux bleu nuit et leurs signes (joues, larme, goutte, colère, sommeil), rien d'autre
+function faceOf(x, y, r, n, expr) {
+  const ey = y - r * 0.05;
+  const list = [[x - 3.2, ey, 1.35], [x + 3.2, ey, 1.35]];
+  const mode = { neutre: n === 3 ? 'blink' : 'open', content: 'open', rire: 'joy', surpris: 'big', triste: 'sad', fache: 'angry', gene: 'squeeze', endormi: 'blink' }[expr];
+  let face = eyes(list, mode, 1.9, NAVY).replace(/stroke="#3C2819"/g, `stroke="${NAVY}"`);
+  if (['content', 'rire', 'gene'].includes(expr)) face = E(x - 5.4, ey + 2.6, 1.4, 0.8, '#F7A8B0', 0) + E(x + 5.4, ey + 2.6, 1.4, 0.8, '#F7A8B0', 0) + face;
+  if (expr === 'gene') face += drop(x + r + 2.6, y - r * 0.9 + (n % 2) * 0.8, 1.4, '#A9DCFF');
+  if (expr === 'triste') face += drop(x - 4.2, ey + 3 + (n % 2) * 1.2, 0.9, '#A9DCFF');
+  if (expr === 'fache') {
+    const ax = x + 9.6, ay = y - r * 1.7, a = 0.5, b = n % 2 ? 2 : 1.7;
+    const d = [[-1, -1], [1, -1], [-1, 1], [1, 1]].map(([i, j]) => `M${r2(ax + i * a)},${r2(ay + j * b)} Q${r2(ax + i * a)},${r2(ay + j * a)} ${r2(ax + i * b)},${r2(ay + j * a)}`).join(' ');
+    face += `<path d="${d}" fill="none" stroke="#FFFFFF" stroke-width="2.2" stroke-linecap="round"/><path d="${d}" fill="none" stroke="#E0483C" stroke-width="1" stroke-linecap="round"/>`;
+  }
+  if (expr === 'endormi') face += n % 2 ? zee(x + 7, y - r * 2, 2) + zee(x + 10, y - r * 2.5, 2.6) : zee(x + 6.4, y - r * 1.8, 1.8) + zee(x + 9.2, y - r * 2.3, 2.4);
+  return face;
+}
+
+// Une image de Brume. stage : clé de STAGES ; n : 0..3 ; expr : expression (yeux et signes seulement) ;
+// withFace : false pour le corps seul (les yeux viennent alors d'un calque d'expression)
+function brumeFrame(stageKey, n, expr = 'neutre', withFace = true) {
   const st = STAGES[stageKey];
   const r = st.r || 9;
   const ph = (n % 4) / 4; // phase du cycle
@@ -100,20 +119,7 @@ function brumeFrame(stageKey, n, expr = 'neutre') {
     const p = (ph + i / 3) % 1;
     sparks += E(x + Math.sin((ph + i) * 4.2) * r * 0.9, y - r * (1.3 + p * 1.8), 0.9 - p * 0.5, 0.9 - p * 0.5, `rgb(${st.halo})`, 0).replace('fill=', `fill-opacity="${r2(0.95 - p * 0.7)}" fill=`);
   }
-  // yeux (bleu nuit) et signes : deux yeux, rien d'autre
-  const ey = y - r * 0.05;
-  const list = [[x - 3.2, ey, 1.35], [x + 3.2, ey, 1.35]];
-  const mode = { neutre: n === 3 ? 'blink' : 'open', content: 'open', rire: 'joy', surpris: 'big', triste: 'sad', fache: 'angry', gene: 'squeeze', endormi: 'blink' }[expr];
-  let face = eyes(list, mode, 1.9, NAVY).replace(/stroke="#3C2819"/g, `stroke="${NAVY}"`);
-  if (['content', 'rire', 'gene'].includes(expr)) face = E(x - 5.4, ey + 2.6, 1.4, 0.8, '#F7A8B0', 0) + E(x + 5.4, ey + 2.6, 1.4, 0.8, '#F7A8B0', 0) + face;
-  if (expr === 'gene') face += drop(x + r + 2.6, y - r * 0.9 + (n % 2) * 0.8, 1.4, '#A9DCFF');
-  if (expr === 'triste') face += drop(x - 4.2, ey + 3 + (n % 2) * 1.2, 0.9, '#A9DCFF');
-  if (expr === 'fache') {
-    const ax = x + 9.6, ay = y - r * 1.7, a = 0.5, b = n % 2 ? 2 : 1.7;
-    const d = [[-1, -1], [1, -1], [-1, 1], [1, 1]].map(([i, j]) => `M${r2(ax + i * a)},${r2(ay + j * b)} Q${r2(ax + i * a)},${r2(ay + j * a)} ${r2(ax + i * b)},${r2(ay + j * a)}`).join(' ');
-    face += `<path d="${d}" fill="none" stroke="#FFFFFF" stroke-width="2.2" stroke-linecap="round"/><path d="${d}" fill="none" stroke="#E0483C" stroke-width="1" stroke-linecap="round"/>`;
-  }
-  if (expr === 'endormi') face += n % 2 ? zee(x + 7, y - r * 2, 2) + zee(x + 10, y - r * 2.5, 2.6) : zee(x + 6.4, y - r * 1.8, 1.8) + zee(x + 9.2, y - r * 2.3, 2.4);
+  const face = withFace ? faceOf(x, y, r, n, expr) : '';
   // pastille « ! » : la récompense attend
   let badge = '';
   if (st.badge) {
@@ -123,5 +129,12 @@ function brumeFrame(stageKey, n, expr = 'neutre') {
   return back + body + front + sparks + face + badge;
 }
 
+// Calque d'expression : les yeux et leurs signes seuls, à la place qu'ils ont sur un stade (flamme de rayon 9, même
+// flottement que l'image n) ; il se pose sur n'importe quel stade dessiné sans visage
+function brumeEyes(n, expr = 'neutre') {
+  const bob = [0, -0.6, -1, -0.6][n % 4];
+  return faceOf(20, 32 + bob, 9, n, expr);
+}
+
 const svgB = (body, scale = 1) => `<svg xmlns="http://www.w3.org/2000/svg" width="${40 * scale}" height="${48 * scale}" viewBox="0 0 40 48">${body}</svg>`;
-module.exports = { STAGES, brumeFrame, svgB };
+module.exports = { STAGES, brumeFrame, brumeEyes, svgB };

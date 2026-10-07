@@ -6111,8 +6111,7 @@
    ],
    "ms_par_image": 600,
    "parcours": "tuto-1",
-   "statut": "a-revoir",
-   "note": "Les expressions doivent être les yeux seuls, à poser sur n'importe quel stade (aujourd'hui le corps du stade 1)."
+   "statut": "ok"
   },
   {
    "id": "vivants/brume/brume_expr_endormi",
@@ -6134,8 +6133,7 @@
    ],
    "ms_par_image": 600,
    "parcours": "tuto-1",
-   "statut": "a-revoir",
-   "note": "Les expressions doivent être les yeux seuls, à poser sur n'importe quel stade (aujourd'hui le corps du stade 1)."
+   "statut": "ok"
   },
   {
    "id": "vivants/brume/brume_expr_fache",
@@ -6180,8 +6178,7 @@
    ],
    "ms_par_image": 600,
    "parcours": "tuto-1",
-   "statut": "a-revoir",
-   "note": "Les expressions doivent être les yeux seuls, à poser sur n'importe quel stade (aujourd'hui le corps du stade 1)."
+   "statut": "ok"
   },
   {
    "id": "vivants/brume/brume_expr_neutre",
@@ -6203,8 +6200,7 @@
    ],
    "ms_par_image": 600,
    "parcours": "tuto-1",
-   "statut": "a-revoir",
-   "note": "Les expressions doivent être les yeux seuls, à poser sur n'importe quel stade (aujourd'hui le corps du stade 1)."
+   "statut": "ok"
   },
   {
    "id": "vivants/brume/brume_expr_rire",
@@ -6226,8 +6222,7 @@
    ],
    "ms_par_image": 600,
    "parcours": "tuto-1",
-   "statut": "a-revoir",
-   "note": "Les expressions doivent être les yeux seuls, à poser sur n'importe quel stade (aujourd'hui le corps du stade 1)."
+   "statut": "ok"
   },
   {
    "id": "vivants/brume/brume_expr_surpris",
@@ -6249,8 +6244,7 @@
    ],
    "ms_par_image": 600,
    "parcours": "tuto-1",
-   "statut": "a-revoir",
-   "note": "Les expressions doivent être les yeux seuls, à poser sur n'importe quel stade (aujourd'hui le corps du stade 1)."
+   "statut": "ok"
   },
   {
    "id": "vivants/brume/brume_expr_triste",
@@ -6272,8 +6266,7 @@
    ],
    "ms_par_image": 600,
    "parcours": "tuto-1",
-   "statut": "a-revoir",
-   "note": "Les expressions doivent être les yeux seuls, à poser sur n'importe quel stade (aujourd'hui le corps du stade 1)."
+   "statut": "ok"
   },
   {
    "id": "vivants/brume/brume_pret",
