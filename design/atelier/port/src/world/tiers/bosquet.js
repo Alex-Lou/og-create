@@ -2,7 +2,7 @@
 // Places laissées libres pour la boutique : billot à l'avant gauche, chevalet de sciage au coin droit, nichoir sur le
 // flanc droit, oiseaux devant lui, charrette à l'avant (× 1.5 dès le palier IV).
 import { LEAVES, PINE, FOLIAGE, BUILDING_BOX, roundTree, seasonDots, roofOf, touffe, treeTrunk, backLeaves, treeId } from '../palette.js';
-import { sprite, foliage, shadow } from '../iso.js';
+import { sprite, shadow, mixHex } from '../iso.js';
 import {
   big, bigShadow, P, box, face, gable, f2, ln, dot, ell, OUT, WOOD, WOOD_DARK, STONE, GOLD,
   chimney, boardsLeft, pavedPath
@@ -171,33 +171,71 @@ const swingingLog = f => sprite((() => {
 })(), { x: -50, y: -100, w: 70, h: 70 });
 
 /* ---------- Palier VII : Forêt enchantée ---------- */
-// Arbre-monde creusé d'une maison (porte ronde, fenêtres qui luisent), champignons géants, feuillage du skin ou bleu-mauve
+// Arbre-monde creusé d'une maison : tronc à racines détourées, porte ronde en planches et sa lanterne, deux fenêtres
+// rondes qui luisent, houppier en touffes détourées (fond plus sombre, deux grappes devant), guirlande de lucioles,
+// champignons géants ombrés ; feuillage du skin ou bleu-mauve
 const MAGIC = { light: '#D6C6FF', mid: '#A98ADB', dark: '#6E57A8' };
 function enchanted(skin) {
   const colors = FOLIAGE[skin] || MAGIC;
   const [x, y] = P(0.05, -0.25, 0);
-  const trunkW = 26;
-  const blobs = [[-34, -70, 22], [34, -72, 22], [0, -66, 24], [-22, -98, 22], [22, -100, 23], [0, -122, 20], [-44, -92, 15], [46, -94, 15]];
+  const X = dx => f2(x + dx), Y = dy => f2(y + dy);
   const mush = (u, v, s, cap) => {
     const [mx, my] = P(u, v, 0);
-    return `<rect x="${f2(mx - 2.4 * s)}" y="${f2(my - 9 * s)}" width="${f2(4.8 * s)}" height="${f2(9 * s)}" rx="${f2(1.6 * s)}" fill="#FFF4E6"/>`
-      + `<path d="M${f2(mx - 9 * s)},${f2(my - 8 * s)} Q${f2(mx)},${f2(my - 20 * s)} ${f2(mx + 9 * s)},${f2(my - 8 * s)} Z" fill="${cap}"/>`
-      + [[-4, -11], [2, -14], [5, -10]].map(([dx, dy]) => dot(mx + dx * s, my + dy * s, 1.2 * s, '#FFFFFF')).join('');
+    const M = (dx, dy) => `${f2(mx + dx * s)},${f2(my + dy * s)}`;
+    return `<ellipse cx="${f2(mx)}" cy="${f2(my)}" rx="${f2(5 * s)}" ry="${f2(1.8 * s)}" fill="rgba(40,55,20,.25)"/>`
+      + `<path d="M${M(-2.6, 0)} Q${M(-3.2, -5)} ${M(-2, -9)} L${M(2, -9)} Q${M(3.2, -5)} ${M(2.6, 0)} Q${M(0, 1)} ${M(-2.6, 0)} Z" fill="#FFF4E6" stroke="${OUT}" stroke-width="0.7"/>`
+      + `<path d="M${M(0.8, -9)} L${M(2, -9)} Q${M(3.2, -5)} ${M(2.6, 0)} Q${M(1.6, 0.5)} ${M(0.9, 0.4)} Q${M(1.8, -5)} ${M(0.8, -9)} Z" fill="#E6D3BC"/>`
+      + `<path d="M${M(-9.5, -8)} Q${M(-9, -19.5)} ${M(0, -20)} Q${M(9, -19.5)} ${M(9.5, -8)} Q${M(0, -5.4)} ${M(-9.5, -8)} Z" fill="${cap}" stroke="${OUT}" stroke-width="0.8" stroke-linejoin="round"/>`
+      + `<path d="M${M(2, -19.6)} Q${M(9, -19)} ${M(9.5, -8)} Q${M(5, -6.6)} ${M(1, -6.2)} Q${M(7, -10)} ${M(2, -19.6)} Z" fill="${mixHex(cap, '#2A1A30', 0.3)}"/>`
+      + `<path d="M${M(-8.4, -8.2)} Q${M(0, -6)} ${M(8.4, -8.2)}" stroke="${mixHex(cap, '#2A1A30', 0.45)}" stroke-width="${f2(0.7 * s)}" fill="none"/>`
+      + [[-5, -13, 1.6], [1.5, -16.5, 1.3], [5, -11.5, 1.1], [-1.5, -10.5, 0.9]].map(([dx, dy, r]) => dot(mx + dx * s, my + dy * s, r * s, '#FFFFFF')).join('')
+      + `<path d="M${M(-6.4, -12.6)} Q${M(-5, -17.4)} ${M(-1, -18.4)}" stroke="rgba(255,255,255,.6)" stroke-width="${f2(1 * s)}" fill="none" stroke-linecap="round"/>`;
   };
+  // Fenêtre ronde encadrée de bois, croisillon et appui
+  const win = (dx, dy) => `<circle cx="${X(dx)}" cy="${Y(dy)}" r="5.4" fill="#C9A16A" stroke="${OUT}" stroke-width="0.8"/>`
+    + `<circle cx="${X(dx)}" cy="${Y(dy)}" r="3.8" fill="#FFE6A3"/>`
+    + `<path d="M${X(dx - 3.8)},${Y(dy)} H${X(dx + 3.8)} M${X(dx)},${Y(dy - 3.8)} V${Y(dy + 3.8)}" stroke="#8B5631" stroke-width="0.8"/>`
+    + `<path d="M${X(dx - 2.6)},${Y(dy - 1.6)} q1,-1.4 2.4,-1.6" stroke="#FFFFFF" stroke-width="0.8" fill="none" stroke-linecap="round" opacity=".8"/>`
+    + `<rect x="${X(dx - 6)}" y="${Y(dy + 4.6)}" width="12" height="2" rx="0.8" fill="#A9703F" stroke="${OUT}" stroke-width="0.6"/>`;
+  // Racine qui plonge dans le sol, de (a) vers (b), épaisseur w
+  const root = (ax, ay, bx, by, w) => `<path d="M${X(ax)},${Y(ay - w)} Q${X((ax + bx) / 2)},${Y(ay - w * 0.5 + (by - ay) * 0.3)} ${X(bx)},${Y(by)} Q${X((ax + bx) / 2)},${Y(by + 1.4)} ${X(ax)},${Y(ay + w * 0.4)} Z" fill="#7A4A2A" stroke="${OUT}" stroke-width="0.8" stroke-linejoin="round"/>`
+    + `<path d="M${X(ax + (bx - ax) * 0.15)},${Y(ay - w * 0.7)} Q${X((ax + bx) / 2)},${Y(ay - w * 0.3 + (by - ay) * 0.3)} ${X(ax + (bx - ax) * 0.8)},${Y(by - (by - ay) * 0.25)}" stroke="#A9703F" stroke-width="1" fill="none" stroke-linecap="round" opacity=".8"/>`;
+  const trunk = `M${X(-32)},${Y(5)} Q${X(-23)},${Y(2)} ${X(-21)},${Y(-20)} L${X(-15)},${Y(-62)} Q${X(-20)},${Y(-74)} ${X(-34)},${Y(-80)} L${X(-30)},${Y(-86)} Q${X(-16)},${Y(-80)} ${X(-6)},${Y(-74)} L${X(6)},${Y(-74)} Q${X(18)},${Y(-82)} ${X(32)},${Y(-88)} L${X(35)},${Y(-82)} Q${X(22)},${Y(-74)} ${X(15)},${Y(-62)} L${X(21)},${Y(-20)} Q${X(23)},${Y(3)} ${X(33)},${Y(7)} Q${X(18)},${Y(10)} ${X(0)},${Y(8)} Q${X(-18)},${Y(9)} ${X(-32)},${Y(5)} Z`;
+  const id = 'enc' + (skin || 'base').replace(/[^a-z]/g, '');
+  const back = colors === MAGIC ? { light: MAGIC.mid, mid: mixHex(MAGIC.mid, MAGIC.dark, 0.5), dark: mixHex(MAGIC.dark, '#2A1E4A', 0.3) } : backLeaves(colors);
   return big(
     bigShadow(90, 42)
     + pine(-1.15, -1.0, 1.5, skin) + oak(1.05, -1.0, 1.4, skin)
-    // Racines et tronc évasé
-    + `<path d="M${f2(x - trunkW - 18)},${f2(y + 6)} Q${f2(x - trunkW)},${f2(y - 4)} ${f2(x - trunkW * 0.7)},${f2(y - 30)} L${f2(x - trunkW * 0.55)},${f2(y - 62)} L${f2(x + trunkW * 0.55)},${f2(y - 62)} L${f2(x + trunkW * 0.7)},${f2(y - 30)} Q${f2(x + trunkW)},${f2(y - 4)} ${f2(x + trunkW + 18)},${f2(y + 8)} Z" fill="#8B5631" stroke="${OUT}" stroke-width="0.8"/>`
-    + `<path d="M${f2(x + 2)},${f2(y)} L${f2(x + trunkW * 0.55)},${f2(y - 62)} L${f2(x + trunkW * 0.7)},${f2(y - 30)} Q${f2(x + trunkW)},${f2(y - 4)} ${f2(x + trunkW + 18)},${f2(y + 8)} Z" fill="#6A3F22"/>`
-    + [-10, -2, 7].map(dx => `<path d="M${f2(x + dx)},${f2(y - 4)} q${dx > 0 ? 3 : -3},-20 ${dx > 0 ? -2 : 2},-50" stroke="rgba(40,20,10,.35)" stroke-width="1" fill="none"/>`).join('')
-    // Porte ronde, fenêtres
-    + `<path d="M${f2(x - 8)},${f2(y - 2)} L${f2(x - 8)},${f2(y - 14)} A8,8 0 0 1 ${f2(x + 8)},${f2(y - 14)} L${f2(x + 8)},${f2(y - 2)} Z" fill="#3A2A1E" stroke="#C9A16A" stroke-width="1.2"/>` + dot(x + 4, y - 9, 1, GOLD.left)
-    + dot(x - 12, y - 38, 4, '#FFE6A3') + dot(x + 11, y - 46, 4, '#FFE6A3')
-    + blobs.map(([dx, dy, r]) => foliage(x + dx, y + dy, r, colors)).join('')
+    // Racines du fond, tronc évasé (côté droit dans l'ombre), écorce, nœud
+    + root(-22, -2, -48, 8, 6) + root(22, 0, 49, 10, 6)
+    + `<path d="${trunk}" fill="#8B5631" stroke="${OUT}" stroke-width="0.9" stroke-linejoin="round"/>`
+    + `<path d="M${X(3)},${Y(8)} L${X(6)},${Y(-74)} Q${X(18)},${Y(-82)} ${X(32)},${Y(-88)} L${X(35)},${Y(-82)} Q${X(22)},${Y(-74)} ${X(15)},${Y(-62)} L${X(21)},${Y(-20)} Q${X(23)},${Y(3)} ${X(33)},${Y(7)} Q${X(18)},${Y(10)} ${X(3)},${Y(8)} Z" fill="#6A3F22"/>`
+    + `<path d="M${X(-18.6)},${Y(-24)} L${X(-13.4)},${Y(-62)} M${X(-16.4)},${Y(-60)} Q${X(-19)},${Y(-70)} ${X(-30)},${Y(-78)}" stroke="#A9703F" stroke-width="1.6" fill="none" stroke-linecap="round" opacity=".8"/>`
+    + [[-11, -26, -9, -58], [-4, -26, -3, -66], [8, -26, 9, -60]].map(([a, b, c, d]) => `<path d="M${X(a)},${Y(b)} Q${X((a + c) / 2 + (a < 0 ? -2 : 2))},${Y((b + d) / 2)} ${X(c)},${Y(d)}" stroke="rgba(40,20,10,.4)" stroke-width="0.8" fill="none" stroke-linecap="round"/>`).join('')
+    + `<ellipse cx="${X(-6)}" cy="${Y(-55)}" rx="2.6" ry="1.8" fill="#5A341C" stroke="${OUT}" stroke-width="0.6"/>`
+    // Racines de devant
+    + root(-17, 4, -32, 13, 5) + root(16, 5, 31, 14, 5)
+    // Porte ronde en planches, encadrement, marche de pierre, lanterne
+    + `<ellipse cx="${X(0)}" cy="${Y(3)}" rx="10" ry="3" fill="${STONE.left}" stroke="${OUT}" stroke-width="0.7"/>`
+    + `<path d="M${X(-9.6)},${Y(1)} L${X(-9.6)},${Y(-14)} A9.6,9.6 0 0 1 ${X(9.6)},${Y(-14)} L${X(9.6)},${Y(1)} Z" fill="#C9A16A" stroke="${OUT}" stroke-width="0.8"/>`
+    + `<path d="M${X(-7.4)},${Y(1)} L${X(-7.4)},${Y(-14)} A7.4,7.4 0 0 1 ${X(7.4)},${Y(-14)} L${X(7.4)},${Y(1)} Z" fill="#7A4A2A"/>`
+    + `<path d="M${X(-3.7)},${Y(1)} V${Y(-20.4)} M${X(0)},${Y(1)} V${Y(-21.4)} M${X(3.7)},${Y(1)} V${Y(-20.4)} M${X(-7.4)},${Y(-8)} H${X(7.4)}" stroke="#4E2E18" stroke-width="0.7"/>`
+    + dot(x + 4.8, y - 7, 1.1, GOLD.left)
+    + `<path d="M${X(12)},${Y(-24)} h4 v3" stroke="${OUT}" stroke-width="0.8" fill="none"/>`
+    + `<rect x="${X(14)}" y="${Y(-21)}" width="4" height="5.4" rx="1" fill="#FFE6A3" stroke="${OUT}" stroke-width="0.7"/>`
+    + `<path d="M${X(13.4)},${Y(-21)} h5.2 l-1,-1.4 h-3.2 Z" fill="#3E3A3A"/>`
+    // Fenêtres (aux lumières de nuit)
+    + win(-12, -38) + win(11, -46)
+    // Houppier : fond, sommet, grappes gauche et droite
+    + touffe(id + 'f', x, y, 1, [[-22, -100, 22], [22, -102, 23], [0, -122, 20], [-46, -90, 15], [47, -92, 15], [0, -96, 22]], back)
+    + touffe(id + 's', x, y, 1, [[0, -114, 14], [-12, -106, 11], [12, -108, 11]], colors)
+    + touffe(id + 'c', x, y, 1, [[0, -88, 13], [-8, -80, 9, 0], [8, -80, 9, 0]], colors)
+    + touffe(id + 'g', x, y, 1, [[-34, -76, 18], [-50, -84, 12], [-20, -86, 14], [-26, -64, 11, 0], [-42, -68, 10, 0]], colors)
+    + touffe(id + 'd', x, y, 1, [[34, -78, 18], [51, -86, 12], [21, -88, 14], [28, -66, 11, 0], [44, -70, 10, 0]], colors)
+    // Guirlande de lucioles d'une grappe à l'autre
+    + `<path d="M${X(-30)},${Y(-70)} Q${X(-15)},${Y(-60)} ${X(0)},${Y(-66)} Q${X(15)},${Y(-60)} ${X(30)},${Y(-72)}" stroke="#5A3A22" stroke-width="0.5" fill="none" opacity=".8"/>`
+    + [[-24, -66], [-12, -63.4], [0, -66], [12, -63.6], [24, -68]].map(([dx, dy]) => `<circle cx="${X(dx)}" cy="${Y(dy + 1.6)}" r="1.8" fill="#FFF2B0" stroke="#C99A3A" stroke-width="0.5"/>`).join('')
     + mush(-0.8, 0.6, 1.3, '#E2574C') + mush(-0.45, 0.95, 0.9, '#E2574C') + mush(0.75, 0.55, 1.1, '#A98ADB') + mush(1.1, 0.25, 0.8, '#E2574C')
-    + `<path d="M${f2(x - 30)},${f2(y - 70)} q15,8 30,0 q15,-8 30,2" stroke="#FFE08A" stroke-width="0.6" fill="none"/>`
-    + [[-24, -66], [-12, -63], [0, -64], [14, -66], [28, -68]].map(([dx, dy]) => dot(x + dx, y + dy, 1.6, '#FFF2B0')).join('')
   );
 }
 // Poussière de fée qui monte en spirale (6 images)
