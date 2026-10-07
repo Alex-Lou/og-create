@@ -17,7 +17,7 @@ const A = require('../personnages/avatar.js');
 const { avatar, CHOIX, FORMES, NUANCIERS, NOMS_NUANCIERS, TEINTURES_GAINS, EMPLACEMENTS, ACCESSOIRES, DEFAUT, libelle, verifier } = A;
 const { avatarNaufrage } = require('./avatar_naufrage.js');
 const { assis } = require('./assis.js');
-const { tendre, avecMainsTendues } = require('./gestes.js');
+const { tendre, avecMainsTendues, applaudir, avecApplaudir } = require('./gestes.js');
 const { unique, row, sheet, animated, write, shoot } = require('./planche.js');
 
 const LIB = path.join(DIR, 'lib', 'personnages', 'avatar');
@@ -47,10 +47,13 @@ const POSES = [['face_repos', 'front', 'repos', 2], ['avant_marche', 'se', 'marc
   ['avant_ramasser', 'se', 'action', 2, 'ramasser'], ['face_grelotter', 'front', 'action', 2, 'grelotter'], ['face_lire', 'front', 'action', 2, 'lire'],
   ['face_assis', 'front', 'assis', 2], ['avant_assis', 'se', 'assis', 2], ['dos_assis', 'ne', 'assis', 2],
   ['face_mains-tendues', 'front', 'tendre', 2], ['avant_mains-tendues', 'se', 'tendre', 2], ['dos_mains-tendues', 'ne', 'tendre', 2],
-  ['face_assis-mains-tendues', 'front', 'assis-tendre', 2], ['avant_assis-mains-tendues', 'se', 'assis-tendre', 2], ['dos_assis-mains-tendues', 'ne', 'assis-tendre', 2]];
+  ['face_assis-mains-tendues', 'front', 'assis-tendre', 2], ['avant_assis-mains-tendues', 'se', 'assis-tendre', 2], ['dos_assis-mains-tendues', 'ne', 'assis-tendre', 2],
+  ['face_applaudir', 'front', 'applaudir', 2], ['avant_applaudir', 'se', 'applaudir', 2], ['dos_applaudir', 'ne', 'applaudir', 2],
+  ['face_assis-applaudir', 'front', 'assis-applaudir', 2], ['avant_assis-applaudir', 'se', 'assis-applaudir', 2], ['dos_assis-applaudir', 'ne', 'assis-applaudir', 2]];
 // une image d'une pose : celles du kit, assis, et les gestes de la veillée (debout ou assis)
 const dessin = (cc, view, p, n) => p === 'assis' ? assis(cc, view, n) : p === 'assis-tendre' ? assis(cc, view, n, null, tendre)
-  : p === 'tendre' ? frame(avecMainsTendues(cc), view, 'action', n) : frame(cc, view, p, n);
+  : p === 'assis-applaudir' ? assis(cc, view, n, null, applaudir) : p === 'tendre' ? frame(avecMainsTendues(cc), view, 'action', n)
+  : p === 'applaudir' ? frame(avecApplaudir(cc), view, 'action', n) : frame(cc, view, p, n);
 let count = 0;
 const options = k => Object.keys(CHOIX[k] === 'formes' ? FORMES[k] : NUANCIERS[CHOIX[k]]);
 const index = {
@@ -61,7 +64,7 @@ const index = {
     'Les nuanciers de peau, d\'yeux, de cheveux et de tissus sont libres dès la création ; la peau et les yeux ne se gagnent jamais. Se gagnent pour toujours, à la boutique (écus) ou dans les coffres : les accessoires « boutique » ou « coffre » et les teintures rares. Tout est cosmétique.',
     'Raretés : celles des coffres du jeu (commun, rare, epique, legendaire). La source d\'un accessoire : gratuit (dès la création), boutique ou coffre. garde : ce que la mer laisse au naufragé.',
     'auHasard(graine, { gratuit }) tire un avatar harmonieux (le bouton « Au hasard », et plus tard les visiteurs). verifier(choix) refuse tout choix inconnu.',
-    'Poses : repos (2), marche (4), salut (2), les gestes du tutoriel : ramasser (trois quarts avant), grelotter et lire le Grimoire (face), 2 images chacun, et assis à la veillée (face, trois quarts avant, dos ; 2 images ; le siège n\'est pas dessiné, son dessus est à y = 53,6 du cadre), et les mains tendues vers le feu, debout ou assis (mains-tendues, assis-mains-tendues ; 3 vues, 2 images). Le premier exemple a aussi les 8 expressions.',
+    'Poses : repos (2), marche (4), salut (2), les gestes du tutoriel : ramasser (trois quarts avant), grelotter et lire le Grimoire (face), 2 images chacun, et assis à la veillée (face, trois quarts avant, dos ; 2 images ; le siège n\'est pas dessiné, son dessus est à y = 53,6 du cadre), et les mains tendues vers le feu, debout ou assis (mains-tendues, assis-mains-tendues ; 3 vues, 2 images), et applaudir en riant, debout ou assis (applaudir, assis-applaudir ; 3 vues, 2 images : mains écartées, puis le claquement). Le premier exemple a aussi les 8 expressions.',
     'L\'avatar est naufragé du naufrage jusqu\'au Campement (fin du tutoriel), où Cannelle recoud ses habits.'
   ],
   choix: Object.fromEntries(Object.keys(CHOIX).map(k => [k, { dans: CHOIX[k], options: options(k) }])),
@@ -116,6 +119,7 @@ EXEMPLES.forEach((o, i) => {
     [g(c, 'se', 'action', 1, G, 'ramasser'), 'ramasser'], [g(c, 'front', 'action', 0, G, 'grelotter'), 'grelotter'], [g(c, 'front', 'action', 0, G, 'lire'), 'lire'],
     [grand(unique(assis(c, 'front', 0)), G), 'assis'], [grand(unique(`<g transform="translate(48 0) scale(-1 1)">${assis(c, 'se', 0)}</g>`), G), ''],
     [grand(unique(dessin(c, 'front', 'tendre', 0)), G), 'mains tendues'], [grand(unique(`<g transform="translate(48 0) scale(-1 1)">${dessin(c, 'se', 'assis-tendre', 0)}</g>`), G), ''],
+    [grand(unique(dessin(c, 'front', 'applaudir', 1)), G), 'applaudir'], [grand(unique(`<g transform="translate(48 0) scale(-1 1)">${dessin(c, 'se', 'assis-applaudir', 1)}</g>`), G), ''],
     [g(n, 'front', 'repos', 0, G), 'naufragé'], [g(n, 'se', 'marche', 1, G), '']
   ]));
   const walk = cc => [0, 1, 2, 3].map(f => grand(unique(frame(cc, 'se', 'marche', f)), 2.4));

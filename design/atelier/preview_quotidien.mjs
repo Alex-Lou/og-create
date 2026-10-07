@@ -39,6 +39,8 @@ function poses(c, { travail = false, lanterne = false, couche = true, valise = n
     out.push([`${VUE[v]}_assis`, v, STD, [0, 1].map(n => assis(c, v, n))]);
     out.push([`${VUE[v]}_mains-tendues`, v, STD, [0, 1].map(n => frame(G.avecMainsTendues(c), v, 'action', n))]);
     out.push([`${VUE[v]}_assis-mains-tendues`, v, STD, [0, 1].map(n => assis(c, v, n, null, G.tendre))]);
+    out.push([`${VUE[v]}_applaudir`, v, STD, [0, 1].map(n => frame(G.avecApplaudir(c), v, 'action', n))]);
+    out.push([`${VUE[v]}_assis-applaudir`, v, STD, [0, 1].map(n => assis(c, v, n, null, G.applaudir))]);
   }
   if (lanterne) {
     const l = G.avecLanterne(c), u = G.avecParapluie(c, parapluie);
@@ -54,7 +56,7 @@ function poses(c, { travail = false, lanterne = false, couche = true, valise = n
 const index = {
   _lisez_moi: [
     'Lot L4 : tout le monde au grand format (le petit format est abandonné). Mêmes vues que la troupe : face, avant (vient vers le bas à droite), dos (s\'éloigne vers le haut à droite) ; le miroir donne les deux autres directions. Pieds en (24, 62) dans le cadre 48 × 64.',
-    'Poses : marche (4 images, ~170 ms), repos (2 images : clignement), salut (2), travail (2, le geste du métier : maîtres et naufragés, sauf Galet et Sylve naufragés qui ont oublié leur don), assis (la veillée, 3 vues, 2 images : clignement ; le siège n\'est pas dessiné, son dessus est à y = 53,6 du cadre, 8,4 au-dessus du bas des pieds, la même hauteur pour tous), mains-tendues et assis-mains-tendues (les mains tendues vers le feu, debout ou assis, 3 vues, 2 images : les doigts se réchauffent ; le feu est devant le personnage), lanterne et parapluie (avant et dos, 4 images, en marchant), couche (dormir couché, 2 images ~900 ms).',
+    'Poses : marche (4 images, ~170 ms), repos (2 images : clignement), salut (2), travail (2, le geste du métier : maîtres et naufragés, sauf Galet et Sylve naufragés qui ont oublié leur don), assis (la veillée, 3 vues, 2 images : clignement ; le siège n\'est pas dessiné, son dessus est à y = 53,6 du cadre, 8,4 au-dessus du bas des pieds, la même hauteur pour tous), mains-tendues et assis-mains-tendues (les mains tendues vers le feu, debout ou assis, 3 vues, 2 images : les doigts se réchauffent ; le feu est devant le personnage), applaudir et assis-applaudir (en riant, 3 vues, 2 images : mains écartées, puis le claquement), lanterne et parapluie (avant et dos, 4 images, en marchant), couche (dormir couché, 2 images ~900 ms).',
     'Cadres à part : parapluie [0, -18, 48, 82] (la toile passe au-dessus de la tête ; pieds toujours en (24, 62)) ; couche [0, 0, 64, 48] (allongé la tête à gauche, sous une couverture).',
     'Naufragés : lanterne et parapluie seulement pour Aster et Rivet, qui restent naufragés après la première lanterne. Visiteurs et nouveaux venus : tirés du générateur de l\'avatar (choix notés ici, pour en refaire d\'autres avec design/personnages/avatar.js) ; les nouveaux venus de l\'épilogue arrivent en habits de voyage, une valise à la main, et n\'ont pas de pose endormie.'
   ],
@@ -78,7 +80,7 @@ function publier(groupe, cle, nomAffiche, dir, prefixe, liste, extra = {}, deja 
   index[groupe][cle] = { nom: nomAffiche, ...extra, fichiers };
 }
 const cellules = (liste, montrer) => liste.filter(([pose]) => montrer.includes(pose)).map(([pose, v, vb, images]) => [montre(vb, images[0], v, 1.6), pose.replace('_', ' ')]);
-const MONTRER = ['face_marche', 'avant_repos', 'dos_repos', 'avant_salut', 'dos_salut', 'face_travail', 'avant_travail', 'dos_travail', 'face_assis', 'avant_assis', 'dos_assis', 'face_mains-tendues', 'avant_mains-tendues', 'dos_mains-tendues', 'face_assis-mains-tendues', 'avant_assis-mains-tendues', 'dos_assis-mains-tendues', 'avant_lanterne', 'dos_lanterne', 'avant_parapluie', 'dos_parapluie', 'couche'];
+const MONTRER = ['face_marche', 'avant_repos', 'dos_repos', 'avant_salut', 'dos_salut', 'face_travail', 'avant_travail', 'dos_travail', 'face_assis', 'avant_assis', 'dos_assis', 'face_mains-tendues', 'avant_mains-tendues', 'dos_mains-tendues', 'face_assis-mains-tendues', 'avant_assis-mains-tendues', 'dos_assis-mains-tendues', 'face_applaudir', 'avant_applaudir', 'dos_applaudir', 'face_assis-applaudir', 'avant_assis-applaudir', 'dos_assis-applaudir', 'avant_lanterne', 'dos_lanterne', 'avant_parapluie', 'dos_parapluie', 'couche'];
 
 // ---- 1. les maîtres et leurs naufragés ----
 const COUVERTURES = {
@@ -109,7 +111,7 @@ for (let i = 1; i <= 12; i++) {
   const c = A.avatar(choix, { uid: `v${i}` });
   const l = poses(c, { lanterne: true, couverture: COUV[i % COUV.length], parapluie: PARAPLUIES[i % PARAPLUIES.length] });
   publier('visiteurs', k, `Visiteur ${i}`, `visiteurs/${k}`, k, l, { choix });
-  planches.visiteurs.push(row(`Visiteur ${i}`, cellules(l, ['face_marche', 'avant_repos', 'dos_repos', 'avant_salut', 'face_assis', 'avant_assis', 'face_mains-tendues', 'avant_assis-mains-tendues', 'avant_lanterne', 'dos_lanterne', 'avant_parapluie', 'couche'])));
+  planches.visiteurs.push(row(`Visiteur ${i}`, cellules(l, ['face_marche', 'avant_repos', 'dos_repos', 'avant_salut', 'face_assis', 'avant_assis', 'face_mains-tendues', 'avant_assis-mains-tendues', 'face_applaudir', 'avant_assis-applaudir', 'avant_lanterne', 'dos_lanterne', 'avant_parapluie', 'couche'])));
 }
 
 // ---- 3. les nouveaux venus de l'épilogue : habits de voyage, bagage sur le dos, chapeau, valise à la main ----
@@ -127,12 +129,12 @@ VOYAGE.forEach((t, j) => {
   const c = A.avatar(choix, { uid: `e${i}` });
   const l = poses(c, { couche: false, valise: VALISES[j % VALISES.length] });
   publier('epilogue', k, `Nouveau venu ${i}`, `epilogue/${k}`, k, l, { choix });
-  planches.visiteurs.push(row(`Nouveau venu ${i}`, cellules(l, ['face_marche', 'avant_marche', 'dos_marche', 'avant_repos', 'avant_salut', 'dos_salut', 'face_assis', 'avant_assis', 'face_mains-tendues', 'avant_assis-mains-tendues'])));
+  planches.visiteurs.push(row(`Nouveau venu ${i}`, cellules(l, ['face_marche', 'avant_marche', 'dos_marche', 'avant_repos', 'avant_salut', 'dos_salut', 'face_assis', 'avant_assis', 'face_mains-tendues', 'avant_assis-mains-tendues', 'face_applaudir', 'avant_assis-applaudir'])));
 });
 
 write(path.join(LIB, 'quotidien.json'), JSON.stringify(index, null, 1));
 write(path.join(DIR, 'quotidien_apercu.html'), animated('Le quotidien au grand format', 'Lot L4 : la lanterne, le parapluie, la marche de face (trois quarts avant en miroir, comme la bibliothèque le publie).', [['Les maîtres', anim]]));
-const SOUS = 'Marche de face, repos et salut dans les trois vues, travail (le geste du métier), assis à la veillée et mains tendues vers le feu, debout ou assis (trois vues), lanterne et parapluie (avant et dos), dormir couché. Trois quarts avant en miroir, comme la bibliothèque le publie.';
+const SOUS = 'Marche de face, repos et salut dans les trois vues, travail (le geste du métier), assis à la veillée, mains tendues vers le feu et applaudir, debout ou assis (trois vues), lanterne et parapluie (avant et dos), dormir couché. Trois quarts avant en miroir, comme la bibliothèque le publie.';
 await shoot([
   [path.join(PNG, 'quotidien_maitres.png'), sheet('Les maîtres au quotidien (lot L4)', SOUS, planches.maitres), 1700],
   [path.join(PNG, 'quotidien_naufrages.png'), sheet('Les naufragés au quotidien (lot L4)', SOUS + ' Lanterne et parapluie : Aster et Rivet seulement.', planches.naufrages), 1700],
