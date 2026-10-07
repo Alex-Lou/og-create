@@ -110,9 +110,12 @@ function tail(c, { bx, by, ph, walk }) {
 function headQuad(c, ctx) {
   const { hx, hy, hr, mode } = ctx;
   const e = c.ears || {};
+  // les oreilles de renard poussent derrière la tête : les deux passent avant elle, le crâne cache leur base
+  const derriere = e.kind === 'fox';
   let s = '';
   // oreille éloignée
-  s += ear(c, e, hx, hy, hr, true);
+  s += ear(c, e, hx, hy, hr, true, ctx.pose);
+  if (derriere) s += ear(c, e, hx, hy, hr, false, ctx.pose);
   s += c.parts?.neck ? c.parts.neck(ctx) : '';
   s += c.parts?.behindHead ? c.parts.behindHead(ctx) : '';
   const hw = hr * (c.headW || 1), hd = `M${r2(hx - hw)},${r2(hy)} a${r2(hw)},${r2(hr)} 0 1,0 ${r2(2 * hw)},0 a${r2(hw)},${r2(hr)} 0 1,0 ${r2(-2 * hw)},0 Z`;
@@ -124,13 +127,24 @@ function headQuad(c, ctx) {
   const [edx, edy, er] = c.eye;
   s += eye(hx + edx, hy + edy, er, mode);
   if (c.blush !== false) s += E(hx + edx - er * 0.4, hy + edy + er * 1.6, er * 1.05, er * 0.55, '#F7A8B0', 0);
-  s += ear(c, e, hx, hy, hr, false);
+  if (!derriere) s += ear(c, e, hx, hy, hr, false, ctx.pose);
   s += c.parts?.head ? c.parts.head(ctx) : '';
   return s;
 }
 
-// Oreilles ; far : celle de derrière (décalée, plus sombre)
-function ear(c, e, hx, hy, hr, far) {
+// Oreille de renard, pointe en haut, base en (x, y) tournée de a degrés ; u : sa taille, w : sa largeur. Un triangle
+// doux (côtés bombés, pointe arrondie) qui descend sous la base, caché par la tête ; dedans clair (dedans), bout
+// sombre (e.tip), découpé à la forme de l'oreille
+function oreilleRenard(e, x, y, u, a, col, dedans, id, w = 1) {
+  const forme = (b, h, d, dy) => `M${r2(x - b)},${r2(y + dy + d)} C${r2(x - b * 1.06)},${r2(y + dy - h * 0.42)} ${r2(x - b * 0.34)},${r2(y + dy - h * 0.9)} ${r2(x)},${r2(y + dy - h)} C${r2(x + b * 0.34)},${r2(y + dy - h * 0.9)} ${r2(x + b * 1.06)},${r2(y + dy - h * 0.42)} ${r2(x + b)},${r2(y + dy + d)} Z`;
+  const b = u * 0.52 * w, h = u * 1.08, d = forme(b, h, u * 0.5, 0);
+  const bout = e.tip ? `<rect x="${r2(x - b - 1)}" y="${r2(y - h - 1)}" width="${r2(2 * b + 2)}" height="${r2(h * 0.3 + 1)}" fill="${e.tip}"/>` : '';
+  const creux = dedans ? `<path d="${forme(b * 0.56, h * 0.7, u * 0.3, u * 0.08)}" fill="${e.inner || '#F2C6C0'}"/>` : '';
+  return `<g transform="rotate(${r2(a)} ${r2(x)} ${r2(y)})">${P(d, col)}${bout || creux ? clip(id, d, creux + bout) : ''}${P(d, 'none')}</g>`;
+}
+
+// Oreilles ; far : celle de derrière (décalée, plus sombre) ; pose : pour nommer les découpes
+function ear(c, e, hx, hy, hr, far, pose) {
   const col = far ? (c.headCS || c.furS) : (c.headC || c.fur), inner = e.inner || '#F2C6C0';
   const o = far ? -hr * 0.5 : 0;
   const k = e.size || 1;
@@ -140,6 +154,9 @@ function ear(c, e, hx, hy, hr, far) {
       return P(`M${r2(x - hr * 0.42 * k)},${r2(y + 0.4)} L${r2(x + hr * 0.05)},${r2(y - hr * 1.05 * k)} L${r2(x + hr * 0.5 * k)},${r2(y + 0.2)} Z`, col, 0.9)
         + (far ? '' : P(`M${r2(x - hr * 0.2 * k)},${r2(y)} L${r2(x + hr * 0.05)},${r2(y - hr * 0.7 * k)} L${r2(x + hr * 0.28 * k)},${r2(y)} Z`, inner, 0));
     }
+    // renard : derrière la tête (headQuad), celle du fond en retrait, plus petite et plus penchée
+    case 'fox': return far ? oreilleRenard(e, hx - hr * 0.5, hy - hr * 0.56, hr * k * 0.88, -18, col, false, `oe${c.id}${pose}f`, e.w)
+      : oreilleRenard(e, hx - hr * 0.12, hy - hr * 0.6, hr * k, -6, col, true, `oe${c.id}${pose}n`, e.w);
     case 'round': return E(hx - hr * 0.35 + o, hy - hr * 0.85, hr * 0.38 * k, hr * 0.38 * k, col, 0.9) + (far ? '' : E(hx - hr * 0.35, hy - hr * 0.85, hr * 0.2 * k, hr * 0.2 * k, inner, 0));
     case 'side': {
       const x = hx - hr * 0.55 + o * 0.4, y = hy - hr * 0.45;
@@ -251,14 +268,14 @@ Q.fox = () => ({
   body: [-1.4, -8.2, 7.4, 4.8], head: [7.2, -12.6, 5.8],
   legs: { back: -4.8, front: 3.8, top: -4.6, w: 1.8, paw: '#3A2A24' },
   snout: [3.8, 2, 3.1, 1.9, '#FFF4E6'], nose: [6.4, 1.3, 0.62, OUT], eye: [1.2, -1.2, 1.35],
-  ears: { kind: 'pointy', size: 1.1, inner: '#3A2A24' }, tail: { kind: 'bushy', len: 10, up: 0.3, tip: '#FFFFFF' },
+  ears: { kind: 'fox', size: 1.1, inner: '#FFF1E2', tip: '#4A3020' }, tail: { kind: 'bushy', len: 10, up: 0.3, tip: '#FFFFFF' },
   parts: { face: ({ hx, hy, hr }) => E(hx + hr * 0.2917, hy + hr * 0.3333, hr * 0.5417, hr * 0.4167, '#FFF4E6', 0) }
 });
 // Mousse, le renardeau de Sylve (familier) : chibi, grosse tête, petit corps, pattes courtes, queue en panache
 Q.kit = () => ({ ...Q.fox(), id: 'kit', size: 'SMALL', body: [-0.8, -5.6, 4.8, 3.4], head: [4.6, -9.6, 4.8], legs: { back: -3, front: 2.4, top: -3, w: 1.4, paw: '#3A2A24' }, snout: [2.6, 1.8, 2.2, 1.4, '#FFF4E6'], nose: [4.6, 1.1, 0.5, OUT], eye: [1.1, -0.8, 1.3], tail: { kind: 'bushy', len: 7, up: 0.5, tip: '#FFFFFF' } });
-Q.snowFox = () => ({ ...Q.fox(), id: 'snowFox', fur: '#F6F8FC', furS: '#C9D4E2', belly: '#FFFFFF', ears: { kind: 'round', size: 1, inner: '#C9D4E2' }, tail: { kind: 'bushy', len: 10, up: 0.4, tip: '#DCE6F2' }, nose: [5.2, 0.9, 0.55, '#3A3A48'], parts: {} });
+Q.snowFox = () => ({ ...Q.fox(), id: 'snowFox', fur: '#F6F8FC', furS: '#C9D4E2', belly: '#FFFFFF', ears: { kind: 'fox', size: 0.78, inner: '#F4D8DC' }, tail: { kind: 'bushy', len: 10, up: 0.4, tip: '#DCE6F2' }, nose: [5.2, 0.9, 0.55, '#3A3A48'], parts: {} });
 // fennec (chibi : grosse tête, ses grandes oreilles un peu moins hautes pour rester dans le cadre)
-Q.fennec = () => ({ ...Q.fox(), id: 'fennec', size: 'SMALL', fur: '#EDCB94', furS: '#CFA870', belly: '#FFF6E6', body: [-0.8, -5.6, 4.8, 3.4], head: [4.6, -9.4, 4.6], legs: { back: -3, front: 2.4, top: -3, w: 1.2, paw: '#CFA870' }, snout: [2.6, 1.7, 2.1, 1.35, '#FFF6E6'], nose: [4.4, 1, 0.5, OUT], eye: [1.1, -0.8, 1.3], ears: { kind: 'pointy', size: 1.55, inner: '#F2C6C0' }, tail: { kind: 'bushy', len: 7, up: 0.3, tip: '#5A4232' }, parts: {} });
+Q.fennec = () => ({ ...Q.fox(), id: 'fennec', size: 'SMALL', fur: '#EDCB94', furS: '#CFA870', belly: '#FFF6E6', body: [-0.8, -5.6, 4.8, 3.4], head: [4.6, -9.4, 4.6], legs: { back: -3, front: 2.4, top: -3, w: 1.2, paw: '#CFA870' }, snout: [2.6, 1.7, 2.1, 1.35, '#FFF6E6'], nose: [4.4, 1, 0.5, OUT], eye: [1.1, -0.8, 1.3], ears: { kind: 'fox', size: 1.45, w: 1.15, inner: '#F6D2C8' }, tail: { kind: 'bushy', len: 7, up: 0.3, tip: '#5A4232' }, parts: {} });
 Q.rabbit = () => ({
   id: 'rabbit', size: 'SMALL', fur: '#D8C4AE', furS: '#B8A288', belly: '#FFFFFF',
   // chibi : grosse tête ronde, corps en boule, longues oreilles un peu plus courtes
@@ -412,7 +429,7 @@ Q.frog = () => ({
   }
 });
 
-module.exports = { BOX, K, quad, Q, eye, heartIcon, limb, thick, stroke, line, hoof, paw };
+module.exports = { BOX, K, quad, Q, eye, heartIcon, limb, thick, stroke, line, hoof, paw, oreilleRenard };
 
 // ——— Oiseaux (profil, tournés vers la droite) ———
 // cfg : body [cx, cy, rx, ry], head [hx, hy, r], beak { kind, len, color }, eye [dx, dy, r], colors body, wing, belly, head,

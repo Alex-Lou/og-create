@@ -5,7 +5,7 @@
 // quarts (deux yeux, le museau qui pointe vers nous) ou de dos (la nuque, les oreilles).
 const { OUT, P, E, clip, r2 } = require('./troupe');
 const Bt = require('./betes');
-const { eye, heartIcon, limb, thick, stroke, line, hoof, paw } = Bt;
+const { eye, heartIcon, limb, thick, stroke, line, hoof, paw, oreilleRenard } = Bt;
 
 const SH = 'rgba(40,55,20,.18)';
 const DEPTH = 0.62; // tassement de la profondeur au sol (pieds avant et arrière)
@@ -13,8 +13,9 @@ const DEPTH = 0.62; // tassement de la profondeur au sol (pieds avant et arrièr
 const rot = (x, y, cx, cy, a) => { const c = Math.cos(a), s = Math.sin(a); return [cx + (x - cx) * c - (y - cy) * s, cy + (x - cx) * s + (y - cy) * c]; };
 const ellD = (cx, cy, rx, ry) => `M${r2(cx - rx)},${r2(cy)} a${r2(rx)},${r2(ry)} 0 1,0 ${r2(2 * rx)},0 a${r2(rx)},${r2(ry)} 0 1,0 ${r2(-2 * rx)},0 Z`;
 
-// ——— Oreilles de trois quarts : side = -1 (à gauche de la tête) ou 1 (à droite) ; back : vue de dos (pas d'intérieur)
-function ear3(c, e, hx, hy, hr, side, far, back) {
+// ——— Oreilles de trois quarts : side = -1 (à gauche de la tête) ou 1 (à droite) ; back : vue de dos (pas d'intérieur) ;
+// pose : pour nommer les découpes
+function ear3(c, e, hx, hy, hr, side, far, back, pose) {
   const col = far ? (c.headCS || c.furS) : (c.headC || c.fur), inner = e.inner || '#F2C6C0';
   const k = e.size || 1, sx = side;
   const g = (body) => `<g transform="translate(${r2(hx)} ${r2(hy)}) scale(${sx} 1)">${body}</g>`;
@@ -25,6 +26,8 @@ function ear3(c, e, hx, hy, hr, side, far, back) {
       return g(P(`M${r2(x - hr * 0.42 * k)},${r2(y + 0.5)} L${r2(x + hr * 0.12 * k)},${r2(y - hr * 1.0 * k)} L${r2(x + hr * 0.46 * k)},${r2(y + hr * 0.18)} Z`, col, 0.9)
         + (showIn ? P(`M${r2(x - hr * 0.2 * k)},${r2(y + 0.2)} L${r2(x + hr * 0.1 * k)},${r2(y - hr * 0.66 * k)} L${r2(x + hr * 0.26 * k)},${r2(y + hr * 0.08)} Z`, inner, 0) : ''));
     }
+    // renard : derrière la tête (headQ3), penchée vers l'extérieur ; de face, celle du fond plus étroite (vue en biais)
+    case 'fox': return g(oreilleRenard(e, hr * 0.46, -hr * 0.56, hr * k * (far ? 0.94 : 1), 18, col, !back, `oe3${c.id}${back ? 'd' : 'a'}${pose}${far ? 'f' : 'n'}`, (e.w || 1) * (far && !back ? 0.82 : 1)));
     case 'round': return g(E(hr * 0.55, -hr * 0.78, hr * 0.36 * k, hr * 0.36 * k, col, 0.9) + (showIn ? E(hr * 0.55, -hr * 0.78, hr * 0.19 * k, hr * 0.19 * k, inner, 0) : ''));
     case 'side': {
       // oreille horizontale (vache, chèvre, mouton) : elle part du côté de la tête
@@ -170,16 +173,19 @@ function tail3(c, ctx) {
 function headQ3(c, ctx) {
   const { se, hx, hy, hr, mode } = ctx;
   const e = c.ears || {};
+  // les oreilles de renard poussent derrière la tête : les deux passent avant elle, le crâne cache leur base
+  const derriere = e.kind === 'fox';
   let s = '';
   if (se) {
     // oreille droite (au fond), cou, tête, visage, oreille gauche (devant)
-    s += ear3(c, e, hx, hy, hr, 1, true, false);
+    s += ear3(c, e, hx, hy, hr, 1, true, false, ctx.pose);
+    if (derriere) s += ear3(c, e, hx, hy, hr, -1, false, false, ctx.pose);
     s += c.p3?.neck ? c.p3.neck(ctx) : neck3(c, ctx);
     s += E(hx, hy, hr * (c.headW || 1), hr, c.headC || c.fur);
     s += c.p3?.face ? c.p3.face(ctx) : '';
     // museau : les bêtes à truffe (chien, chat, renard, lapin…) ont un museau large, une truffe en triangle arrondi et
     // une bouche ; les ruminants et le cochon gardent leur mufle rond
-    const truffe = ['pointy', 'hang', 'long', 'round'].includes(e.kind);
+    const truffe = ['pointy', 'hang', 'long', 'round', 'fox'].includes(e.kind);
     const sx = hx + hr * 0.3, sy = hy + hr * 0.44;
     if (c.snout) { const [, , srx, sry, col] = c.snout; s += truffe ? E(sx, sy, srx * 0.98, sry * 0.82, col || c.belly, 0.9) : E(sx, sy - hr * 0.02, srx * 0.92, sry * 1.02, col || c.belly, 0.9); }
     if (c.nose) {
@@ -193,15 +199,16 @@ function headQ3(c, ctx) {
     const [, edy, er] = c.eye;
     s += eye(hx - hr * 0.34, hy + edy * 0.9, er, mode) + eye(hx + hr * 0.4, hy + edy * 0.9 - 0.2, er * 0.88, mode);
     if (c.blush !== false) s += E(hx - hr * 0.52, hy + edy + er * 1.6, er * 0.85, er * 0.42, '#F7A8B0', 0);
-    s += ear3(c, e, hx, hy, hr, -1, false, false);
+    if (!derriere) s += ear3(c, e, hx, hy, hr, -1, false, false, ctx.pose);
     s += c.p3?.head ? c.p3.head(ctx) : '';
   } else {
     // de dos : le cou, la nuque, les deux oreilles vues de derrière
     s += c.p3?.neck ? c.p3.neck(ctx) : neck3(c, ctx);
-    s += ear3(c, e, hx, hy, hr, 1, true, true);
+    s += ear3(c, e, hx, hy, hr, 1, true, true, ctx.pose);
+    if (derriere) s += ear3(c, e, hx, hy, hr, -1, false, true, ctx.pose);
     s += E(hx, hy, hr * (c.headW || 1), hr, c.headC || c.fur);
     s += E(hx - hr * 0.2, hy + hr * 0.35, hr * 0.7, hr * 0.45, c.headCS || c.furS, 0).replace('fill=', 'opacity="0.45" fill=');
-    s += ear3(c, e, hx, hy, hr, -1, false, true);
+    if (!derriere) s += ear3(c, e, hx, hy, hr, -1, false, true, ctx.pose);
     s += c.p3?.head ? c.p3.head(ctx) : '';
   }
   return s;
