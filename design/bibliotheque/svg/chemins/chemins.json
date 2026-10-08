@@ -1,0 +1,1622 @@
+{
+ "_lisez_moi": [
+  "Les chemins de l'île au format des cases du terrain : un losange isométrique de 64 × 32 (TW × TH de src/world/terrain.js), sans trait sur le bord pour que les cases se touchent.",
+  "Les raccords : le chemin part du centre vers le milieu des côtés où la case voisine est aussi un chemin. Masque : NE 1 (case x, y − 1), SE 2 (x + 1, y), SO 4 (x, y + 1), NO 8 (x − 1, y). raccords donne, pour chaque masque, le fichier de chaque sorte : terre, terre_b (seconde variante, à alterner pour éviter la répétition), pave (le chemin amélioré), etape_1 à etape_5 (le creusement).",
+  "Le creusement en 6 étapes, pour chaque raccord : 1 le tracé marqué, 2 l'herbe coupée, 3 les mottes soulevées, 4 la tranchée, 5 les pierres posées, 6 le chemin de terre. Les effets (mottes, poussière, cailloux, pierre posée) : suites d'images à enchaîner une fois, dans un cadre de 64 × 48 dont la case occupe le bas (décalée de 16 vers le bas).",
+  "Haute définition : chaque fichier déclare 4 fois son cadre."
+ ],
+ "hd": 4,
+ "pieces": {
+  "chemin_seul": {
+   "nom": "Le chemin de terre seul (une petite place)",
+   "cadre": [
+    0,
+    0,
+    64,
+    32
+   ],
+   "fichier": "chemin_seul.svg"
+  },
+  "chemin_ne": {
+   "nom": "Le chemin de terre vers le nord-est",
+   "cadre": [
+    0,
+    0,
+    64,
+    32
+   ],
+   "fichier": "chemin_ne.svg"
+  },
+  "chemin_se": {
+   "nom": "Le chemin de terre vers le sud-est",
+   "cadre": [
+    0,
+    0,
+    64,
+    32
+   ],
+   "fichier": "chemin_se.svg"
+  },
+  "chemin_ne-se": {
+   "nom": "Le chemin de terre vers le nord-est, le sud-est",
+   "cadre": [
+    0,
+    0,
+    64,
+    32
+   ],
+   "fichier": "chemin_ne-se.svg"
+  },
+  "chemin_so": {
+   "nom": "Le chemin de terre vers le sud-ouest",
+   "cadre": [
+    0,
+    0,
+    64,
+    32
+   ],
+   "fichier": "chemin_so.svg"
+  },
+  "chemin_ne-so": {
+   "nom": "Le chemin de terre vers le nord-est, le sud-ouest",
+   "cadre": [
+    0,
+    0,
+    64,
+    32
+   ],
+   "fichier": "chemin_ne-so.svg"
+  },
+  "chemin_se-so": {
+   "nom": "Le chemin de terre vers le sud-est, le sud-ouest",
+   "cadre": [
+    0,
+    0,
+    64,
+    32
+   ],
+   "fichier": "chemin_se-so.svg"
+  },
+  "chemin_ne-se-so": {
+   "nom": "Le chemin de terre vers le nord-est, le sud-est, le sud-ouest",
+   "cadre": [
+    0,
+    0,
+    64,
+    32
+   ],
+   "fichier": "chemin_ne-se-so.svg"
+  },
+  "chemin_no": {
+   "nom": "Le chemin de terre vers le nord-ouest",
+   "cadre": [
+    0,
+    0,
+    64,
+    32
+   ],
+   "fichier": "chemin_no.svg"
+  },
+  "chemin_ne-no": {
+   "nom": "Le chemin de terre vers le nord-est, le nord-ouest",
+   "cadre": [
+    0,
+    0,
+    64,
+    32
+   ],
+   "fichier": "chemin_ne-no.svg"
+  },
+  "chemin_se-no": {
+   "nom": "Le chemin de terre vers le sud-est, le nord-ouest",
+   "cadre": [
+    0,
+    0,
+    64,
+    32
+   ],
+   "fichier": "chemin_se-no.svg"
+  },
+  "chemin_ne-se-no": {
+   "nom": "Le chemin de terre vers le nord-est, le sud-est, le nord-ouest",
+   "cadre": [
+    0,
+    0,
+    64,
+    32
+   ],
+   "fichier": "chemin_ne-se-no.svg"
+  },
+  "chemin_so-no": {
+   "nom": "Le chemin de terre vers le sud-ouest, le nord-ouest",
+   "cadre": [
+    0,
+    0,
+    64,
+    32
+   ],
+   "fichier": "chemin_so-no.svg"
+  },
+  "chemin_ne-so-no": {
+   "nom": "Le chemin de terre vers le nord-est, le sud-ouest, le nord-ouest",
+   "cadre": [
+    0,
+    0,
+    64,
+    32
+   ],
+   "fichier": "chemin_ne-so-no.svg"
+  },
+  "chemin_se-so-no": {
+   "nom": "Le chemin de terre vers le sud-est, le sud-ouest, le nord-ouest",
+   "cadre": [
+    0,
+    0,
+    64,
+    32
+   ],
+   "fichier": "chemin_se-so-no.svg"
+  },
+  "chemin_ne-se-so-no": {
+   "nom": "Le chemin de terre vers le nord-est, le sud-est, le sud-ouest, le nord-ouest",
+   "cadre": [
+    0,
+    0,
+    64,
+    32
+   ],
+   "fichier": "chemin_ne-se-so-no.svg"
+  },
+  "chemin_seul_b": {
+   "nom": "Le chemin de terre seul (une petite place), seconde variante",
+   "cadre": [
+    0,
+    0,
+    64,
+    32
+   ],
+   "fichier": "chemin_seul_b.svg"
+  },
+  "chemin_ne_b": {
+   "nom": "Le chemin de terre vers le nord-est, seconde variante",
+   "cadre": [
+    0,
+    0,
+    64,
+    32
+   ],
+   "fichier": "chemin_ne_b.svg"
+  },
+  "chemin_se_b": {
+   "nom": "Le chemin de terre vers le sud-est, seconde variante",
+   "cadre": [
+    0,
+    0,
+    64,
+    32
+   ],
+   "fichier": "chemin_se_b.svg"
+  },
+  "chemin_ne-se_b": {
+   "nom": "Le chemin de terre vers le nord-est, le sud-est, seconde variante",
+   "cadre": [
+    0,
+    0,
+    64,
+    32
+   ],
+   "fichier": "chemin_ne-se_b.svg"
+  },
+  "chemin_so_b": {
+   "nom": "Le chemin de terre vers le sud-ouest, seconde variante",
+   "cadre": [
+    0,
+    0,
+    64,
+    32
+   ],
+   "fichier": "chemin_so_b.svg"
+  },
+  "chemin_ne-so_b": {
+   "nom": "Le chemin de terre vers le nord-est, le sud-ouest, seconde variante",
+   "cadre": [
+    0,
+    0,
+    64,
+    32
+   ],
+   "fichier": "chemin_ne-so_b.svg"
+  },
+  "chemin_se-so_b": {
+   "nom": "Le chemin de terre vers le sud-est, le sud-ouest, seconde variante",
+   "cadre": [
+    0,
+    0,
+    64,
+    32
+   ],
+   "fichier": "chemin_se-so_b.svg"
+  },
+  "chemin_ne-se-so_b": {
+   "nom": "Le chemin de terre vers le nord-est, le sud-est, le sud-ouest, seconde variante",
+   "cadre": [
+    0,
+    0,
+    64,
+    32
+   ],
+   "fichier": "chemin_ne-se-so_b.svg"
+  },
+  "chemin_no_b": {
+   "nom": "Le chemin de terre vers le nord-ouest, seconde variante",
+   "cadre": [
+    0,
+    0,
+    64,
+    32
+   ],
+   "fichier": "chemin_no_b.svg"
+  },
+  "chemin_ne-no_b": {
+   "nom": "Le chemin de terre vers le nord-est, le nord-ouest, seconde variante",
+   "cadre": [
+    0,
+    0,
+    64,
+    32
+   ],
+   "fichier": "chemin_ne-no_b.svg"
+  },
+  "chemin_se-no_b": {
+   "nom": "Le chemin de terre vers le sud-est, le nord-ouest, seconde variante",
+   "cadre": [
+    0,
+    0,
+    64,
+    32
+   ],
+   "fichier": "chemin_se-no_b.svg"
+  },
+  "chemin_ne-se-no_b": {
+   "nom": "Le chemin de terre vers le nord-est, le sud-est, le nord-ouest, seconde variante",
+   "cadre": [
+    0,
+    0,
+    64,
+    32
+   ],
+   "fichier": "chemin_ne-se-no_b.svg"
+  },
+  "chemin_so-no_b": {
+   "nom": "Le chemin de terre vers le sud-ouest, le nord-ouest, seconde variante",
+   "cadre": [
+    0,
+    0,
+    64,
+    32
+   ],
+   "fichier": "chemin_so-no_b.svg"
+  },
+  "chemin_ne-so-no_b": {
+   "nom": "Le chemin de terre vers le nord-est, le sud-ouest, le nord-ouest, seconde variante",
+   "cadre": [
+    0,
+    0,
+    64,
+    32
+   ],
+   "fichier": "chemin_ne-so-no_b.svg"
+  },
+  "chemin_se-so-no_b": {
+   "nom": "Le chemin de terre vers le sud-est, le sud-ouest, le nord-ouest, seconde variante",
+   "cadre": [
+    0,
+    0,
+    64,
+    32
+   ],
+   "fichier": "chemin_se-so-no_b.svg"
+  },
+  "chemin_ne-se-so-no_b": {
+   "nom": "Le chemin de terre vers le nord-est, le sud-est, le sud-ouest, le nord-ouest, seconde variante",
+   "cadre": [
+    0,
+    0,
+    64,
+    32
+   ],
+   "fichier": "chemin_ne-se-so-no_b.svg"
+  },
+  "pave_seul": {
+   "nom": "Le chemin pavé seul (une petite place)",
+   "cadre": [
+    0,
+    0,
+    64,
+    32
+   ],
+   "fichier": "pave_seul.svg"
+  },
+  "pave_ne": {
+   "nom": "Le chemin pavé vers le nord-est",
+   "cadre": [
+    0,
+    0,
+    64,
+    32
+   ],
+   "fichier": "pave_ne.svg"
+  },
+  "pave_se": {
+   "nom": "Le chemin pavé vers le sud-est",
+   "cadre": [
+    0,
+    0,
+    64,
+    32
+   ],
+   "fichier": "pave_se.svg"
+  },
+  "pave_ne-se": {
+   "nom": "Le chemin pavé vers le nord-est, le sud-est",
+   "cadre": [
+    0,
+    0,
+    64,
+    32
+   ],
+   "fichier": "pave_ne-se.svg"
+  },
+  "pave_so": {
+   "nom": "Le chemin pavé vers le sud-ouest",
+   "cadre": [
+    0,
+    0,
+    64,
+    32
+   ],
+   "fichier": "pave_so.svg"
+  },
+  "pave_ne-so": {
+   "nom": "Le chemin pavé vers le nord-est, le sud-ouest",
+   "cadre": [
+    0,
+    0,
+    64,
+    32
+   ],
+   "fichier": "pave_ne-so.svg"
+  },
+  "pave_se-so": {
+   "nom": "Le chemin pavé vers le sud-est, le sud-ouest",
+   "cadre": [
+    0,
+    0,
+    64,
+    32
+   ],
+   "fichier": "pave_se-so.svg"
+  },
+  "pave_ne-se-so": {
+   "nom": "Le chemin pavé vers le nord-est, le sud-est, le sud-ouest",
+   "cadre": [
+    0,
+    0,
+    64,
+    32
+   ],
+   "fichier": "pave_ne-se-so.svg"
+  },
+  "pave_no": {
+   "nom": "Le chemin pavé vers le nord-ouest",
+   "cadre": [
+    0,
+    0,
+    64,
+    32
+   ],
+   "fichier": "pave_no.svg"
+  },
+  "pave_ne-no": {
+   "nom": "Le chemin pavé vers le nord-est, le nord-ouest",
+   "cadre": [
+    0,
+    0,
+    64,
+    32
+   ],
+   "fichier": "pave_ne-no.svg"
+  },
+  "pave_se-no": {
+   "nom": "Le chemin pavé vers le sud-est, le nord-ouest",
+   "cadre": [
+    0,
+    0,
+    64,
+    32
+   ],
+   "fichier": "pave_se-no.svg"
+  },
+  "pave_ne-se-no": {
+   "nom": "Le chemin pavé vers le nord-est, le sud-est, le nord-ouest",
+   "cadre": [
+    0,
+    0,
+    64,
+    32
+   ],
+   "fichier": "pave_ne-se-no.svg"
+  },
+  "pave_so-no": {
+   "nom": "Le chemin pavé vers le sud-ouest, le nord-ouest",
+   "cadre": [
+    0,
+    0,
+    64,
+    32
+   ],
+   "fichier": "pave_so-no.svg"
+  },
+  "pave_ne-so-no": {
+   "nom": "Le chemin pavé vers le nord-est, le sud-ouest, le nord-ouest",
+   "cadre": [
+    0,
+    0,
+    64,
+    32
+   ],
+   "fichier": "pave_ne-so-no.svg"
+  },
+  "pave_se-so-no": {
+   "nom": "Le chemin pavé vers le sud-est, le sud-ouest, le nord-ouest",
+   "cadre": [
+    0,
+    0,
+    64,
+    32
+   ],
+   "fichier": "pave_se-so-no.svg"
+  },
+  "pave_ne-se-so-no": {
+   "nom": "Le chemin pavé vers le nord-est, le sud-est, le sud-ouest, le nord-ouest",
+   "cadre": [
+    0,
+    0,
+    64,
+    32
+   ],
+   "fichier": "pave_ne-se-so-no.svg"
+  },
+  "etape-1_seul": {
+   "nom": "Le creusement, étape 1 : le tracé marqué (piquets et ficelle) ; seul (une petite place)",
+   "cadre": [
+    0,
+    0,
+    64,
+    32
+   ],
+   "fichier": "etape-1_seul.svg"
+  },
+  "etape-1_ne": {
+   "nom": "Le creusement, étape 1 : le tracé marqué (piquets et ficelle) ; vers le nord-est",
+   "cadre": [
+    0,
+    0,
+    64,
+    32
+   ],
+   "fichier": "etape-1_ne.svg"
+  },
+  "etape-1_se": {
+   "nom": "Le creusement, étape 1 : le tracé marqué (piquets et ficelle) ; vers le sud-est",
+   "cadre": [
+    0,
+    0,
+    64,
+    32
+   ],
+   "fichier": "etape-1_se.svg"
+  },
+  "etape-1_ne-se": {
+   "nom": "Le creusement, étape 1 : le tracé marqué (piquets et ficelle) ; vers le nord-est, le sud-est",
+   "cadre": [
+    0,
+    0,
+    64,
+    32
+   ],
+   "fichier": "etape-1_ne-se.svg"
+  },
+  "etape-1_so": {
+   "nom": "Le creusement, étape 1 : le tracé marqué (piquets et ficelle) ; vers le sud-ouest",
+   "cadre": [
+    0,
+    0,
+    64,
+    32
+   ],
+   "fichier": "etape-1_so.svg"
+  },
+  "etape-1_ne-so": {
+   "nom": "Le creusement, étape 1 : le tracé marqué (piquets et ficelle) ; vers le nord-est, le sud-ouest",
+   "cadre": [
+    0,
+    0,
+    64,
+    32
+   ],
+   "fichier": "etape-1_ne-so.svg"
+  },
+  "etape-1_se-so": {
+   "nom": "Le creusement, étape 1 : le tracé marqué (piquets et ficelle) ; vers le sud-est, le sud-ouest",
+   "cadre": [
+    0,
+    0,
+    64,
+    32
+   ],
+   "fichier": "etape-1_se-so.svg"
+  },
+  "etape-1_ne-se-so": {
+   "nom": "Le creusement, étape 1 : le tracé marqué (piquets et ficelle) ; vers le nord-est, le sud-est, le sud-ouest",
+   "cadre": [
+    0,
+    0,
+    64,
+    32
+   ],
+   "fichier": "etape-1_ne-se-so.svg"
+  },
+  "etape-1_no": {
+   "nom": "Le creusement, étape 1 : le tracé marqué (piquets et ficelle) ; vers le nord-ouest",
+   "cadre": [
+    0,
+    0,
+    64,
+    32
+   ],
+   "fichier": "etape-1_no.svg"
+  },
+  "etape-1_ne-no": {
+   "nom": "Le creusement, étape 1 : le tracé marqué (piquets et ficelle) ; vers le nord-est, le nord-ouest",
+   "cadre": [
+    0,
+    0,
+    64,
+    32
+   ],
+   "fichier": "etape-1_ne-no.svg"
+  },
+  "etape-1_se-no": {
+   "nom": "Le creusement, étape 1 : le tracé marqué (piquets et ficelle) ; vers le sud-est, le nord-ouest",
+   "cadre": [
+    0,
+    0,
+    64,
+    32
+   ],
+   "fichier": "etape-1_se-no.svg"
+  },
+  "etape-1_ne-se-no": {
+   "nom": "Le creusement, étape 1 : le tracé marqué (piquets et ficelle) ; vers le nord-est, le sud-est, le nord-ouest",
+   "cadre": [
+    0,
+    0,
+    64,
+    32
+   ],
+   "fichier": "etape-1_ne-se-no.svg"
+  },
+  "etape-1_so-no": {
+   "nom": "Le creusement, étape 1 : le tracé marqué (piquets et ficelle) ; vers le sud-ouest, le nord-ouest",
+   "cadre": [
+    0,
+    0,
+    64,
+    32
+   ],
+   "fichier": "etape-1_so-no.svg"
+  },
+  "etape-1_ne-so-no": {
+   "nom": "Le creusement, étape 1 : le tracé marqué (piquets et ficelle) ; vers le nord-est, le sud-ouest, le nord-ouest",
+   "cadre": [
+    0,
+    0,
+    64,
+    32
+   ],
+   "fichier": "etape-1_ne-so-no.svg"
+  },
+  "etape-1_se-so-no": {
+   "nom": "Le creusement, étape 1 : le tracé marqué (piquets et ficelle) ; vers le sud-est, le sud-ouest, le nord-ouest",
+   "cadre": [
+    0,
+    0,
+    64,
+    32
+   ],
+   "fichier": "etape-1_se-so-no.svg"
+  },
+  "etape-1_ne-se-so-no": {
+   "nom": "Le creusement, étape 1 : le tracé marqué (piquets et ficelle) ; vers le nord-est, le sud-est, le sud-ouest, le nord-ouest",
+   "cadre": [
+    0,
+    0,
+    64,
+    32
+   ],
+   "fichier": "etape-1_ne-se-so-no.svg"
+  },
+  "etape-2_seul": {
+   "nom": "Le creusement, étape 2 : l'herbe coupée ras ; seul (une petite place)",
+   "cadre": [
+    0,
+    0,
+    64,
+    32
+   ],
+   "fichier": "etape-2_seul.svg"
+  },
+  "etape-2_ne": {
+   "nom": "Le creusement, étape 2 : l'herbe coupée ras ; vers le nord-est",
+   "cadre": [
+    0,
+    0,
+    64,
+    32
+   ],
+   "fichier": "etape-2_ne.svg"
+  },
+  "etape-2_se": {
+   "nom": "Le creusement, étape 2 : l'herbe coupée ras ; vers le sud-est",
+   "cadre": [
+    0,
+    0,
+    64,
+    32
+   ],
+   "fichier": "etape-2_se.svg"
+  },
+  "etape-2_ne-se": {
+   "nom": "Le creusement, étape 2 : l'herbe coupée ras ; vers le nord-est, le sud-est",
+   "cadre": [
+    0,
+    0,
+    64,
+    32
+   ],
+   "fichier": "etape-2_ne-se.svg"
+  },
+  "etape-2_so": {
+   "nom": "Le creusement, étape 2 : l'herbe coupée ras ; vers le sud-ouest",
+   "cadre": [
+    0,
+    0,
+    64,
+    32
+   ],
+   "fichier": "etape-2_so.svg"
+  },
+  "etape-2_ne-so": {
+   "nom": "Le creusement, étape 2 : l'herbe coupée ras ; vers le nord-est, le sud-ouest",
+   "cadre": [
+    0,
+    0,
+    64,
+    32
+   ],
+   "fichier": "etape-2_ne-so.svg"
+  },
+  "etape-2_se-so": {
+   "nom": "Le creusement, étape 2 : l'herbe coupée ras ; vers le sud-est, le sud-ouest",
+   "cadre": [
+    0,
+    0,
+    64,
+    32
+   ],
+   "fichier": "etape-2_se-so.svg"
+  },
+  "etape-2_ne-se-so": {
+   "nom": "Le creusement, étape 2 : l'herbe coupée ras ; vers le nord-est, le sud-est, le sud-ouest",
+   "cadre": [
+    0,
+    0,
+    64,
+    32
+   ],
+   "fichier": "etape-2_ne-se-so.svg"
+  },
+  "etape-2_no": {
+   "nom": "Le creusement, étape 2 : l'herbe coupée ras ; vers le nord-ouest",
+   "cadre": [
+    0,
+    0,
+    64,
+    32
+   ],
+   "fichier": "etape-2_no.svg"
+  },
+  "etape-2_ne-no": {
+   "nom": "Le creusement, étape 2 : l'herbe coupée ras ; vers le nord-est, le nord-ouest",
+   "cadre": [
+    0,
+    0,
+    64,
+    32
+   ],
+   "fichier": "etape-2_ne-no.svg"
+  },
+  "etape-2_se-no": {
+   "nom": "Le creusement, étape 2 : l'herbe coupée ras ; vers le sud-est, le nord-ouest",
+   "cadre": [
+    0,
+    0,
+    64,
+    32
+   ],
+   "fichier": "etape-2_se-no.svg"
+  },
+  "etape-2_ne-se-no": {
+   "nom": "Le creusement, étape 2 : l'herbe coupée ras ; vers le nord-est, le sud-est, le nord-ouest",
+   "cadre": [
+    0,
+    0,
+    64,
+    32
+   ],
+   "fichier": "etape-2_ne-se-no.svg"
+  },
+  "etape-2_so-no": {
+   "nom": "Le creusement, étape 2 : l'herbe coupée ras ; vers le sud-ouest, le nord-ouest",
+   "cadre": [
+    0,
+    0,
+    64,
+    32
+   ],
+   "fichier": "etape-2_so-no.svg"
+  },
+  "etape-2_ne-so-no": {
+   "nom": "Le creusement, étape 2 : l'herbe coupée ras ; vers le nord-est, le sud-ouest, le nord-ouest",
+   "cadre": [
+    0,
+    0,
+    64,
+    32
+   ],
+   "fichier": "etape-2_ne-so-no.svg"
+  },
+  "etape-2_se-so-no": {
+   "nom": "Le creusement, étape 2 : l'herbe coupée ras ; vers le sud-est, le sud-ouest, le nord-ouest",
+   "cadre": [
+    0,
+    0,
+    64,
+    32
+   ],
+   "fichier": "etape-2_se-so-no.svg"
+  },
+  "etape-2_ne-se-so-no": {
+   "nom": "Le creusement, étape 2 : l'herbe coupée ras ; vers le nord-est, le sud-est, le sud-ouest, le nord-ouest",
+   "cadre": [
+    0,
+    0,
+    64,
+    32
+   ],
+   "fichier": "etape-2_ne-se-so-no.svg"
+  },
+  "etape-3_seul": {
+   "nom": "Le creusement, étape 3 : les mottes soulevées ; seul (une petite place)",
+   "cadre": [
+    0,
+    0,
+    64,
+    32
+   ],
+   "fichier": "etape-3_seul.svg"
+  },
+  "etape-3_ne": {
+   "nom": "Le creusement, étape 3 : les mottes soulevées ; vers le nord-est",
+   "cadre": [
+    0,
+    0,
+    64,
+    32
+   ],
+   "fichier": "etape-3_ne.svg"
+  },
+  "etape-3_se": {
+   "nom": "Le creusement, étape 3 : les mottes soulevées ; vers le sud-est",
+   "cadre": [
+    0,
+    0,
+    64,
+    32
+   ],
+   "fichier": "etape-3_se.svg"
+  },
+  "etape-3_ne-se": {
+   "nom": "Le creusement, étape 3 : les mottes soulevées ; vers le nord-est, le sud-est",
+   "cadre": [
+    0,
+    0,
+    64,
+    32
+   ],
+   "fichier": "etape-3_ne-se.svg"
+  },
+  "etape-3_so": {
+   "nom": "Le creusement, étape 3 : les mottes soulevées ; vers le sud-ouest",
+   "cadre": [
+    0,
+    0,
+    64,
+    32
+   ],
+   "fichier": "etape-3_so.svg"
+  },
+  "etape-3_ne-so": {
+   "nom": "Le creusement, étape 3 : les mottes soulevées ; vers le nord-est, le sud-ouest",
+   "cadre": [
+    0,
+    0,
+    64,
+    32
+   ],
+   "fichier": "etape-3_ne-so.svg"
+  },
+  "etape-3_se-so": {
+   "nom": "Le creusement, étape 3 : les mottes soulevées ; vers le sud-est, le sud-ouest",
+   "cadre": [
+    0,
+    0,
+    64,
+    32
+   ],
+   "fichier": "etape-3_se-so.svg"
+  },
+  "etape-3_ne-se-so": {
+   "nom": "Le creusement, étape 3 : les mottes soulevées ; vers le nord-est, le sud-est, le sud-ouest",
+   "cadre": [
+    0,
+    0,
+    64,
+    32
+   ],
+   "fichier": "etape-3_ne-se-so.svg"
+  },
+  "etape-3_no": {
+   "nom": "Le creusement, étape 3 : les mottes soulevées ; vers le nord-ouest",
+   "cadre": [
+    0,
+    0,
+    64,
+    32
+   ],
+   "fichier": "etape-3_no.svg"
+  },
+  "etape-3_ne-no": {
+   "nom": "Le creusement, étape 3 : les mottes soulevées ; vers le nord-est, le nord-ouest",
+   "cadre": [
+    0,
+    0,
+    64,
+    32
+   ],
+   "fichier": "etape-3_ne-no.svg"
+  },
+  "etape-3_se-no": {
+   "nom": "Le creusement, étape 3 : les mottes soulevées ; vers le sud-est, le nord-ouest",
+   "cadre": [
+    0,
+    0,
+    64,
+    32
+   ],
+   "fichier": "etape-3_se-no.svg"
+  },
+  "etape-3_ne-se-no": {
+   "nom": "Le creusement, étape 3 : les mottes soulevées ; vers le nord-est, le sud-est, le nord-ouest",
+   "cadre": [
+    0,
+    0,
+    64,
+    32
+   ],
+   "fichier": "etape-3_ne-se-no.svg"
+  },
+  "etape-3_so-no": {
+   "nom": "Le creusement, étape 3 : les mottes soulevées ; vers le sud-ouest, le nord-ouest",
+   "cadre": [
+    0,
+    0,
+    64,
+    32
+   ],
+   "fichier": "etape-3_so-no.svg"
+  },
+  "etape-3_ne-so-no": {
+   "nom": "Le creusement, étape 3 : les mottes soulevées ; vers le nord-est, le sud-ouest, le nord-ouest",
+   "cadre": [
+    0,
+    0,
+    64,
+    32
+   ],
+   "fichier": "etape-3_ne-so-no.svg"
+  },
+  "etape-3_se-so-no": {
+   "nom": "Le creusement, étape 3 : les mottes soulevées ; vers le sud-est, le sud-ouest, le nord-ouest",
+   "cadre": [
+    0,
+    0,
+    64,
+    32
+   ],
+   "fichier": "etape-3_se-so-no.svg"
+  },
+  "etape-3_ne-se-so-no": {
+   "nom": "Le creusement, étape 3 : les mottes soulevées ; vers le nord-est, le sud-est, le sud-ouest, le nord-ouest",
+   "cadre": [
+    0,
+    0,
+    64,
+    32
+   ],
+   "fichier": "etape-3_ne-se-so-no.svg"
+  },
+  "etape-4_seul": {
+   "nom": "Le creusement, étape 4 : la tranchée (terre fraîche, mottes) ; seul (une petite place)",
+   "cadre": [
+    0,
+    0,
+    64,
+    32
+   ],
+   "fichier": "etape-4_seul.svg"
+  },
+  "etape-4_ne": {
+   "nom": "Le creusement, étape 4 : la tranchée (terre fraîche, mottes) ; vers le nord-est",
+   "cadre": [
+    0,
+    0,
+    64,
+    32
+   ],
+   "fichier": "etape-4_ne.svg"
+  },
+  "etape-4_se": {
+   "nom": "Le creusement, étape 4 : la tranchée (terre fraîche, mottes) ; vers le sud-est",
+   "cadre": [
+    0,
+    0,
+    64,
+    32
+   ],
+   "fichier": "etape-4_se.svg"
+  },
+  "etape-4_ne-se": {
+   "nom": "Le creusement, étape 4 : la tranchée (terre fraîche, mottes) ; vers le nord-est, le sud-est",
+   "cadre": [
+    0,
+    0,
+    64,
+    32
+   ],
+   "fichier": "etape-4_ne-se.svg"
+  },
+  "etape-4_so": {
+   "nom": "Le creusement, étape 4 : la tranchée (terre fraîche, mottes) ; vers le sud-ouest",
+   "cadre": [
+    0,
+    0,
+    64,
+    32
+   ],
+   "fichier": "etape-4_so.svg"
+  },
+  "etape-4_ne-so": {
+   "nom": "Le creusement, étape 4 : la tranchée (terre fraîche, mottes) ; vers le nord-est, le sud-ouest",
+   "cadre": [
+    0,
+    0,
+    64,
+    32
+   ],
+   "fichier": "etape-4_ne-so.svg"
+  },
+  "etape-4_se-so": {
+   "nom": "Le creusement, étape 4 : la tranchée (terre fraîche, mottes) ; vers le sud-est, le sud-ouest",
+   "cadre": [
+    0,
+    0,
+    64,
+    32
+   ],
+   "fichier": "etape-4_se-so.svg"
+  },
+  "etape-4_ne-se-so": {
+   "nom": "Le creusement, étape 4 : la tranchée (terre fraîche, mottes) ; vers le nord-est, le sud-est, le sud-ouest",
+   "cadre": [
+    0,
+    0,
+    64,
+    32
+   ],
+   "fichier": "etape-4_ne-se-so.svg"
+  },
+  "etape-4_no": {
+   "nom": "Le creusement, étape 4 : la tranchée (terre fraîche, mottes) ; vers le nord-ouest",
+   "cadre": [
+    0,
+    0,
+    64,
+    32
+   ],
+   "fichier": "etape-4_no.svg"
+  },
+  "etape-4_ne-no": {
+   "nom": "Le creusement, étape 4 : la tranchée (terre fraîche, mottes) ; vers le nord-est, le nord-ouest",
+   "cadre": [
+    0,
+    0,
+    64,
+    32
+   ],
+   "fichier": "etape-4_ne-no.svg"
+  },
+  "etape-4_se-no": {
+   "nom": "Le creusement, étape 4 : la tranchée (terre fraîche, mottes) ; vers le sud-est, le nord-ouest",
+   "cadre": [
+    0,
+    0,
+    64,
+    32
+   ],
+   "fichier": "etape-4_se-no.svg"
+  },
+  "etape-4_ne-se-no": {
+   "nom": "Le creusement, étape 4 : la tranchée (terre fraîche, mottes) ; vers le nord-est, le sud-est, le nord-ouest",
+   "cadre": [
+    0,
+    0,
+    64,
+    32
+   ],
+   "fichier": "etape-4_ne-se-no.svg"
+  },
+  "etape-4_so-no": {
+   "nom": "Le creusement, étape 4 : la tranchée (terre fraîche, mottes) ; vers le sud-ouest, le nord-ouest",
+   "cadre": [
+    0,
+    0,
+    64,
+    32
+   ],
+   "fichier": "etape-4_so-no.svg"
+  },
+  "etape-4_ne-so-no": {
+   "nom": "Le creusement, étape 4 : la tranchée (terre fraîche, mottes) ; vers le nord-est, le sud-ouest, le nord-ouest",
+   "cadre": [
+    0,
+    0,
+    64,
+    32
+   ],
+   "fichier": "etape-4_ne-so-no.svg"
+  },
+  "etape-4_se-so-no": {
+   "nom": "Le creusement, étape 4 : la tranchée (terre fraîche, mottes) ; vers le sud-est, le sud-ouest, le nord-ouest",
+   "cadre": [
+    0,
+    0,
+    64,
+    32
+   ],
+   "fichier": "etape-4_se-so-no.svg"
+  },
+  "etape-4_ne-se-so-no": {
+   "nom": "Le creusement, étape 4 : la tranchée (terre fraîche, mottes) ; vers le nord-est, le sud-est, le sud-ouest, le nord-ouest",
+   "cadre": [
+    0,
+    0,
+    64,
+    32
+   ],
+   "fichier": "etape-4_ne-se-so-no.svg"
+  },
+  "etape-5_seul": {
+   "nom": "Le creusement, étape 5 : les pierres posées (bordure, gravier) ; seul (une petite place)",
+   "cadre": [
+    0,
+    0,
+    64,
+    32
+   ],
+   "fichier": "etape-5_seul.svg"
+  },
+  "etape-5_ne": {
+   "nom": "Le creusement, étape 5 : les pierres posées (bordure, gravier) ; vers le nord-est",
+   "cadre": [
+    0,
+    0,
+    64,
+    32
+   ],
+   "fichier": "etape-5_ne.svg"
+  },
+  "etape-5_se": {
+   "nom": "Le creusement, étape 5 : les pierres posées (bordure, gravier) ; vers le sud-est",
+   "cadre": [
+    0,
+    0,
+    64,
+    32
+   ],
+   "fichier": "etape-5_se.svg"
+  },
+  "etape-5_ne-se": {
+   "nom": "Le creusement, étape 5 : les pierres posées (bordure, gravier) ; vers le nord-est, le sud-est",
+   "cadre": [
+    0,
+    0,
+    64,
+    32
+   ],
+   "fichier": "etape-5_ne-se.svg"
+  },
+  "etape-5_so": {
+   "nom": "Le creusement, étape 5 : les pierres posées (bordure, gravier) ; vers le sud-ouest",
+   "cadre": [
+    0,
+    0,
+    64,
+    32
+   ],
+   "fichier": "etape-5_so.svg"
+  },
+  "etape-5_ne-so": {
+   "nom": "Le creusement, étape 5 : les pierres posées (bordure, gravier) ; vers le nord-est, le sud-ouest",
+   "cadre": [
+    0,
+    0,
+    64,
+    32
+   ],
+   "fichier": "etape-5_ne-so.svg"
+  },
+  "etape-5_se-so": {
+   "nom": "Le creusement, étape 5 : les pierres posées (bordure, gravier) ; vers le sud-est, le sud-ouest",
+   "cadre": [
+    0,
+    0,
+    64,
+    32
+   ],
+   "fichier": "etape-5_se-so.svg"
+  },
+  "etape-5_ne-se-so": {
+   "nom": "Le creusement, étape 5 : les pierres posées (bordure, gravier) ; vers le nord-est, le sud-est, le sud-ouest",
+   "cadre": [
+    0,
+    0,
+    64,
+    32
+   ],
+   "fichier": "etape-5_ne-se-so.svg"
+  },
+  "etape-5_no": {
+   "nom": "Le creusement, étape 5 : les pierres posées (bordure, gravier) ; vers le nord-ouest",
+   "cadre": [
+    0,
+    0,
+    64,
+    32
+   ],
+   "fichier": "etape-5_no.svg"
+  },
+  "etape-5_ne-no": {
+   "nom": "Le creusement, étape 5 : les pierres posées (bordure, gravier) ; vers le nord-est, le nord-ouest",
+   "cadre": [
+    0,
+    0,
+    64,
+    32
+   ],
+   "fichier": "etape-5_ne-no.svg"
+  },
+  "etape-5_se-no": {
+   "nom": "Le creusement, étape 5 : les pierres posées (bordure, gravier) ; vers le sud-est, le nord-ouest",
+   "cadre": [
+    0,
+    0,
+    64,
+    32
+   ],
+   "fichier": "etape-5_se-no.svg"
+  },
+  "etape-5_ne-se-no": {
+   "nom": "Le creusement, étape 5 : les pierres posées (bordure, gravier) ; vers le nord-est, le sud-est, le nord-ouest",
+   "cadre": [
+    0,
+    0,
+    64,
+    32
+   ],
+   "fichier": "etape-5_ne-se-no.svg"
+  },
+  "etape-5_so-no": {
+   "nom": "Le creusement, étape 5 : les pierres posées (bordure, gravier) ; vers le sud-ouest, le nord-ouest",
+   "cadre": [
+    0,
+    0,
+    64,
+    32
+   ],
+   "fichier": "etape-5_so-no.svg"
+  },
+  "etape-5_ne-so-no": {
+   "nom": "Le creusement, étape 5 : les pierres posées (bordure, gravier) ; vers le nord-est, le sud-ouest, le nord-ouest",
+   "cadre": [
+    0,
+    0,
+    64,
+    32
+   ],
+   "fichier": "etape-5_ne-so-no.svg"
+  },
+  "etape-5_se-so-no": {
+   "nom": "Le creusement, étape 5 : les pierres posées (bordure, gravier) ; vers le sud-est, le sud-ouest, le nord-ouest",
+   "cadre": [
+    0,
+    0,
+    64,
+    32
+   ],
+   "fichier": "etape-5_se-so-no.svg"
+  },
+  "etape-5_ne-se-so-no": {
+   "nom": "Le creusement, étape 5 : les pierres posées (bordure, gravier) ; vers le nord-est, le sud-est, le sud-ouest, le nord-ouest",
+   "cadre": [
+    0,
+    0,
+    64,
+    32
+   ],
+   "fichier": "etape-5_ne-se-so-no.svg"
+  },
+  "mottes_1": {
+   "nom": "Les mottes du coup de bêche",
+   "cadre": [
+    0,
+    0,
+    64,
+    48
+   ],
+   "fichier": "mottes_1.svg"
+  },
+  "mottes_2": {
+   "nom": "Les mottes du coup de bêche",
+   "cadre": [
+    0,
+    0,
+    64,
+    48
+   ],
+   "fichier": "mottes_2.svg"
+  },
+  "mottes_3": {
+   "nom": "Les mottes du coup de bêche",
+   "cadre": [
+    0,
+    0,
+    64,
+    48
+   ],
+   "fichier": "mottes_3.svg"
+  },
+  "mottes_4": {
+   "nom": "Les mottes du coup de bêche",
+   "cadre": [
+    0,
+    0,
+    64,
+    48
+   ],
+   "fichier": "mottes_4.svg"
+  },
+  "poussiere_1": {
+   "nom": "La poussière du coup de bêche",
+   "cadre": [
+    0,
+    0,
+    64,
+    48
+   ],
+   "fichier": "poussiere_1.svg"
+  },
+  "poussiere_2": {
+   "nom": "La poussière du coup de bêche",
+   "cadre": [
+    0,
+    0,
+    64,
+    48
+   ],
+   "fichier": "poussiere_2.svg"
+  },
+  "poussiere_3": {
+   "nom": "La poussière du coup de bêche",
+   "cadre": [
+    0,
+    0,
+    64,
+    48
+   ],
+   "fichier": "poussiere_3.svg"
+  },
+  "cailloux_1": {
+   "nom": "Les cailloux du coup de bêche",
+   "cadre": [
+    0,
+    0,
+    64,
+    48
+   ],
+   "fichier": "cailloux_1.svg"
+  },
+  "cailloux_2": {
+   "nom": "Les cailloux du coup de bêche",
+   "cadre": [
+    0,
+    0,
+    64,
+    48
+   ],
+   "fichier": "cailloux_2.svg"
+  },
+  "cailloux_3": {
+   "nom": "Les cailloux du coup de bêche",
+   "cadre": [
+    0,
+    0,
+    64,
+    48
+   ],
+   "fichier": "cailloux_3.svg"
+  },
+  "pose-pierre_1": {
+   "nom": "Une pierre de bordure qu'on pose",
+   "cadre": [
+    0,
+    0,
+    64,
+    48
+   ],
+   "fichier": "pose-pierre_1.svg"
+  },
+  "pose-pierre_2": {
+   "nom": "Une pierre de bordure qu'on pose",
+   "cadre": [
+    0,
+    0,
+    64,
+    48
+   ],
+   "fichier": "pose-pierre_2.svg"
+  },
+  "pose-pierre_3": {
+   "nom": "Une pierre de bordure qu'on pose",
+   "cadre": [
+    0,
+    0,
+    64,
+    48
+   ],
+   "fichier": "pose-pierre_3.svg"
+  }
+ },
+ "raccords": {
+  "0": {
+   "terre": "chemin_seul.svg",
+   "terre_b": "chemin_seul_b.svg",
+   "pave": "pave_seul.svg",
+   "etape_1": "etape-1_seul.svg",
+   "etape_2": "etape-2_seul.svg",
+   "etape_3": "etape-3_seul.svg",
+   "etape_4": "etape-4_seul.svg",
+   "etape_5": "etape-5_seul.svg"
+  },
+  "1": {
+   "terre": "chemin_ne.svg",
+   "terre_b": "chemin_ne_b.svg",
+   "pave": "pave_ne.svg",
+   "etape_1": "etape-1_ne.svg",
+   "etape_2": "etape-2_ne.svg",
+   "etape_3": "etape-3_ne.svg",
+   "etape_4": "etape-4_ne.svg",
+   "etape_5": "etape-5_ne.svg"
+  },
+  "2": {
+   "terre": "chemin_se.svg",
+   "terre_b": "chemin_se_b.svg",
+   "pave": "pave_se.svg",
+   "etape_1": "etape-1_se.svg",
+   "etape_2": "etape-2_se.svg",
+   "etape_3": "etape-3_se.svg",
+   "etape_4": "etape-4_se.svg",
+   "etape_5": "etape-5_se.svg"
+  },
+  "3": {
+   "terre": "chemin_ne-se.svg",
+   "terre_b": "chemin_ne-se_b.svg",
+   "pave": "pave_ne-se.svg",
+   "etape_1": "etape-1_ne-se.svg",
+   "etape_2": "etape-2_ne-se.svg",
+   "etape_3": "etape-3_ne-se.svg",
+   "etape_4": "etape-4_ne-se.svg",
+   "etape_5": "etape-5_ne-se.svg"
+  },
+  "4": {
+   "terre": "chemin_so.svg",
+   "terre_b": "chemin_so_b.svg",
+   "pave": "pave_so.svg",
+   "etape_1": "etape-1_so.svg",
+   "etape_2": "etape-2_so.svg",
+   "etape_3": "etape-3_so.svg",
+   "etape_4": "etape-4_so.svg",
+   "etape_5": "etape-5_so.svg"
+  },
+  "5": {
+   "terre": "chemin_ne-so.svg",
+   "terre_b": "chemin_ne-so_b.svg",
+   "pave": "pave_ne-so.svg",
+   "etape_1": "etape-1_ne-so.svg",
+   "etape_2": "etape-2_ne-so.svg",
+   "etape_3": "etape-3_ne-so.svg",
+   "etape_4": "etape-4_ne-so.svg",
+   "etape_5": "etape-5_ne-so.svg"
+  },
+  "6": {
+   "terre": "chemin_se-so.svg",
+   "terre_b": "chemin_se-so_b.svg",
+   "pave": "pave_se-so.svg",
+   "etape_1": "etape-1_se-so.svg",
+   "etape_2": "etape-2_se-so.svg",
+   "etape_3": "etape-3_se-so.svg",
+   "etape_4": "etape-4_se-so.svg",
+   "etape_5": "etape-5_se-so.svg"
+  },
+  "7": {
+   "terre": "chemin_ne-se-so.svg",
+   "terre_b": "chemin_ne-se-so_b.svg",
+   "pave": "pave_ne-se-so.svg",
+   "etape_1": "etape-1_ne-se-so.svg",
+   "etape_2": "etape-2_ne-se-so.svg",
+   "etape_3": "etape-3_ne-se-so.svg",
+   "etape_4": "etape-4_ne-se-so.svg",
+   "etape_5": "etape-5_ne-se-so.svg"
+  },
+  "8": {
+   "terre": "chemin_no.svg",
+   "terre_b": "chemin_no_b.svg",
+   "pave": "pave_no.svg",
+   "etape_1": "etape-1_no.svg",
+   "etape_2": "etape-2_no.svg",
+   "etape_3": "etape-3_no.svg",
+   "etape_4": "etape-4_no.svg",
+   "etape_5": "etape-5_no.svg"
+  },
+  "9": {
+   "terre": "chemin_ne-no.svg",
+   "terre_b": "chemin_ne-no_b.svg",
+   "pave": "pave_ne-no.svg",
+   "etape_1": "etape-1_ne-no.svg",
+   "etape_2": "etape-2_ne-no.svg",
+   "etape_3": "etape-3_ne-no.svg",
+   "etape_4": "etape-4_ne-no.svg",
+   "etape_5": "etape-5_ne-no.svg"
+  },
+  "10": {
+   "terre": "chemin_se-no.svg",
+   "terre_b": "chemin_se-no_b.svg",
+   "pave": "pave_se-no.svg",
+   "etape_1": "etape-1_se-no.svg",
+   "etape_2": "etape-2_se-no.svg",
+   "etape_3": "etape-3_se-no.svg",
+   "etape_4": "etape-4_se-no.svg",
+   "etape_5": "etape-5_se-no.svg"
+  },
+  "11": {
+   "terre": "chemin_ne-se-no.svg",
+   "terre_b": "chemin_ne-se-no_b.svg",
+   "pave": "pave_ne-se-no.svg",
+   "etape_1": "etape-1_ne-se-no.svg",
+   "etape_2": "etape-2_ne-se-no.svg",
+   "etape_3": "etape-3_ne-se-no.svg",
+   "etape_4": "etape-4_ne-se-no.svg",
+   "etape_5": "etape-5_ne-se-no.svg"
+  },
+  "12": {
+   "terre": "chemin_so-no.svg",
+   "terre_b": "chemin_so-no_b.svg",
+   "pave": "pave_so-no.svg",
+   "etape_1": "etape-1_so-no.svg",
+   "etape_2": "etape-2_so-no.svg",
+   "etape_3": "etape-3_so-no.svg",
+   "etape_4": "etape-4_so-no.svg",
+   "etape_5": "etape-5_so-no.svg"
+  },
+  "13": {
+   "terre": "chemin_ne-so-no.svg",
+   "terre_b": "chemin_ne-so-no_b.svg",
+   "pave": "pave_ne-so-no.svg",
+   "etape_1": "etape-1_ne-so-no.svg",
+   "etape_2": "etape-2_ne-so-no.svg",
+   "etape_3": "etape-3_ne-so-no.svg",
+   "etape_4": "etape-4_ne-so-no.svg",
+   "etape_5": "etape-5_ne-so-no.svg"
+  },
+  "14": {
+   "terre": "chemin_se-so-no.svg",
+   "terre_b": "chemin_se-so-no_b.svg",
+   "pave": "pave_se-so-no.svg",
+   "etape_1": "etape-1_se-so-no.svg",
+   "etape_2": "etape-2_se-so-no.svg",
+   "etape_3": "etape-3_se-so-no.svg",
+   "etape_4": "etape-4_se-so-no.svg",
+   "etape_5": "etape-5_se-so-no.svg"
+  },
+  "15": {
+   "terre": "chemin_ne-se-so-no.svg",
+   "terre_b": "chemin_ne-se-so-no_b.svg",
+   "pave": "pave_ne-se-so-no.svg",
+   "etape_1": "etape-1_ne-se-so-no.svg",
+   "etape_2": "etape-2_ne-se-so-no.svg",
+   "etape_3": "etape-3_ne-se-so-no.svg",
+   "etape_4": "etape-4_ne-se-so-no.svg",
+   "etape_5": "etape-5_ne-se-so-no.svg"
+  }
+ },
+ "suites": {
+  "mottes": {
+   "nom": "Les mottes du coup de bêche",
+   "ms_par_image": 90,
+   "fichiers": [
+    "mottes_1.svg",
+    "mottes_2.svg",
+    "mottes_3.svg",
+    "mottes_4.svg"
+   ]
+  },
+  "poussiere": {
+   "nom": "La poussière du coup de bêche",
+   "ms_par_image": 110,
+   "fichiers": [
+    "poussiere_1.svg",
+    "poussiere_2.svg",
+    "poussiere_3.svg"
+   ]
+  },
+  "cailloux": {
+   "nom": "Les cailloux du coup de bêche",
+   "ms_par_image": 110,
+   "fichiers": [
+    "cailloux_1.svg",
+    "cailloux_2.svg",
+    "cailloux_3.svg"
+   ]
+  },
+  "pose-pierre": {
+   "nom": "Une pierre de bordure qu'on pose",
+   "ms_par_image": 90,
+   "fichiers": [
+    "pose-pierre_1.svg",
+    "pose-pierre_2.svg",
+    "pose-pierre_3.svg"
+   ]
+  }
+ }
+}
