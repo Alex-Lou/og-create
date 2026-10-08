@@ -15,5 +15,7 @@ export const isShe = beast => !beast.name.startsWith('Le ');
 const hoursOf = ms => Math.max(1, Math.round(ms / 3600000));
 // Son humeur : « Contente encore 9 h », « Content encore 2 h » ou « A faim »
 export const moodLine = beast => (beast.fed ? `${isShe(beast) ? 'Contente' : 'Content'} encore ${hoursOf(beast.left)} h` : 'A faim');
-// Ce qu'elle donne, contente
-export const givesLine = beast => `${isShe(beast) ? 'Contente, elle' : 'Content, il'} remplit sa bulle ${GIVES[beast.species] || 'de nourriture'} : ${beast.daily} vivres par jour.`;
+// Ce qu'elle donne, contente (Madame ne pond pas : « Elle juge. »)
+export const givesLine = beast => (beast.daily
+  ? `${isShe(beast) ? 'Contente, elle' : 'Content, il'} remplit sa bulle ${GIVES[beast.species] || 'de nourriture'} : ${beast.daily} vivres par jour.`
+  : `${beast.name} ne pond pas. Elle juge.`);

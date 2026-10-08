@@ -11,7 +11,7 @@ import { THANKS, askOr } from '@/world/needs';
 import { visitorLook, THANKS as VISITOR_THANKS } from '@/world/visitors';
 import { ANIMAL_SPRITES } from '@/world/animals';
 import { beastPortraitUrl } from '@/world/beastArt';
-import { burst, vibrate } from '@/utils/fx';
+import { burst, ring, vibrate } from '@/utils/fx';
 import { LABEL } from '@/game/resources';
 import { spriteUrl } from '@/world/spriteCache';
 import { PRESENTIMENTS, BREATH_LINE } from '@/game/anya';
@@ -69,6 +69,32 @@ export default {
       return v && who && who.id === `vis:${v.id}` ? v : null;
     },
     // Case de mer où s'amarre le bateau du visiteur : la plus proche du Ponton, et d'où il arrive (vers le large)
+    // Les poules de Cannelle autour de leur cage ouverte (le camp, vu du serveur) : { x, y, hens }, ou null
+    coopOf(state) {
+      const cage = (state.camp || []).find(c => c.id === 'cage' && c.art === 'cage_ouverte');
+      const hens = state.beasts ? state.beasts.list.filter(b => b.species === 'hen') : [];
+      return cage && hens.length ? { x: cage.x, y: cage.y, hens: hens.map(b => ({ id: b.id, name: b.name, ready: b.ready })) } : null;
+    },
+    // Toucher la cage coincée sous les rochers : elle s'ouvre, Paprika, Brioche et Madame sortent (étape 8 du tutoriel)
+    async openCage(at = null) {
+      if (this.busy) return;
+      this.busy = true;
+      try {
+        const { world } = await playService.beastsCage();
+        this.apply(world);
+        if (at && !this.reduced()) {
+          ring(at, 90);
+          burst(at, 22, 70);
+        }
+        vibrate([12, 40, 18]);
+        this.$emit('show-alert', 'Cannelle : « Mes filles ! Elles ont tenu le coup, mes filles ! » Brioche, Paprika et Madame sont sorties.');
+      } catch (error) {
+        this.$emit('show-alert', messageOf(error, 'La cage n’a pas pu s’ouvrir.'));
+        this.load();
+      } finally {
+        this.busy = false;
+      }
+    },
     dockOf(state, M) {
       const site = state.sites.find(s => s.id === 'ponton');
       if (!site) return null;

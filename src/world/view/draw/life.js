@@ -142,6 +142,8 @@ export default {
     const life = this.village ? this.village.at(t, phase, this.scared) : { list: [], lights: [] };
     for (const who of life.list) {
       out.push(who);
+      // (l'œuf d'une poule : un décor, on ramasse par la bulle de sa poule)
+      if (who.kind === 'egg') continue;
       const c = this.ground(who.x, who.y);
       const person = who.kind === 'villager';
       // Anya est grande (96 de haut) : on la touche au corps, pas seulement aux pieds ; un maître dessiné par la
