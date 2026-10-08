@@ -7,8 +7,9 @@
 //   sa place autour d'un arrêt (personne ne marche sur personne), et une tournée qui change chaque jour.
 // - Visiteur (lot 7d, vue du serveur) : arrivé en bateau, il flâne entre le Ponton, le Foyer et les bâtiments. Les
 //   visiteurs installés travaillent au bâtiment de leur métier et passent par leur maison.
-// - Ferme (avec les paliers du Potager) : poules de race et poussins, vache, moutons, cochon, chèvre, qui broutent
-//   autour du Potager, se couchent la nuit et ne bougent plus sous la pluie.
+// - Ferme : les poules de Cannelle (Paprika et ses poussins, Brioche, Madame), au camp autour de leur cage une fois
+//   ouverte, un œuf au sol près de celle dont la bulle attend ; avec les paliers du Potager, vache, moutons, cochon,
+//   chèvre, qui broutent autour de lui. Toutes se couchent la nuit et ne bougent plus sous la pluie.
 // - Bois : lapins le jour, cerf à l'aube et au crépuscule, renard et hérisson la nuit, écureuil dans les arbres.
 //   Touchés, ils s'enfuient. Eau : carpes koï dans l'eau douce, héron le matin.
 // - Climats : deux bêtes par climat, une de chaque dans chaque quartier à soi de ce climat, sur une case libre (ni
@@ -29,6 +30,7 @@ import { masterSprite } from './masterArt';
 import { ANIMAL_SPRITES } from './animals';
 import { beastSprite, lookOf, viewOf, stepAt } from './beastArt';
 import { bestiaryOf, FAMILIARS } from './bestiary';
+import { eggLayer } from './campArt';
 import { anyaHere } from '@/game/anya';
 
 // Les bêtes qui se tournent vers Anya : à moins de 8 cases d'elle
@@ -65,9 +67,16 @@ const WORK_LINES = {
   atelier: ['Clic… tac… Attends. Voilà !', 'Encore une vis et ça tourne. Tac !'],
   foyer: ['Ce qui mijote ne se presse pas !', 'Goûte-moi ça, ma brindille. Alors ?']
 };
+// Les poules de Cannelle (serveur : services/beasts.js) : leur robe dans la bibliothèque, ce que dit leur bulle
+const HEN_LOOKS = { 'poule-rousse': 'rousse', 'poule-blanche': 'blanche', 'poule-noire': 'noire' };
+const HEN_LINES = {
+  'poule-rousse': 'La meneuse : ses poussins la suivent partout.',
+  'poule-blanche': 'Douce comme une mie de pain, elle picore près du feu.',
+  'poule-noire': 'Madame ne pond pas. Elle juge.'
+};
 const SOUNDS = { hen: 'Cot cot !', chick: 'Piou piou !', cow: 'Meuh !', sheep: 'Bêêê !', pig: 'Groin groin !', goat: 'Mêêê !' };
 export const BEAST_NAMES = {
-  hen: ['Poule', 'Elle picore autour du Potager.'], chick: ['Poussin', 'Il suit sa mère partout.'],
+  hen: ['Poule', 'Elle picore au camp, près du feu.'], chick: ['Poussin', 'Il suit sa mère partout.'],
   cow: ['Vache', 'Elle broute près du Potager et dort couchée la nuit.'], sheep: ['Mouton', 'Il broute en troupeau près du Potager.'],
   pig: ['Cochon', 'Il fouille la terre du bout du groin.'], goat: ['Chèvre', 'Elle grimpe partout où elle peut.'],
   deer: ['Cerf', 'Il sort du bois à l’aube et au crépuscule.'], fox: ['Renard', 'Il rôde au crépuscule et la nuit.'],
@@ -185,7 +194,8 @@ function doorOf(grid, site) {
 // written : les éléments écrits dans le Grimoire (le Bestiaire et les familiers), ou null ; anya : une fois Anya
 // révélée, { visit } (son passage du jour, vu du serveur : { slot, x, y }, ou null), sinon null ; dame : le bol de soupe
 // du soir « pour la Dame »
-export function villageOf({ n, M, sites, owned, crafts = [], props, annexes = [], visitor = null, settlers = [], climates = [], avoid = [], troupe = null, written = null, anya = null, dame = false }) {
+// coop : les poules de Cannelle et leur cage ouverte ({ x, y, hens: [{ id, name, ready }] }), ou null
+export function villageOf({ n, M, sites, owned, crafts = [], props, annexes = [], visitor = null, settlers = [], climates = [], avoid = [], troupe = null, written = null, anya = null, dame = false, coop = null }) {
   const grid = gridOf({ n, M, sites, owned, crafts, props, annexes });
   const bestiary = bestiaryOf(written);
   const built = sites.filter(s => s.level > 0 && !s.locked);
@@ -330,32 +340,33 @@ export function villageOf({ n, M, sites, owned, crafts = [], props, annexes = []
     return { x: a.x + dx * k + ox, y: a.y + dy * k + oy, pose: 'walk', back: dx + dy < 0, flip: dx - dy < 0 };
   }
 
-  // Ferme : bêtes autour du Potager, selon son palier
+  // Ferme : les poules au camp, autour de leur cage ; les autres bêtes autour du Potager, selon son palier
   const potager = built.find(s => s.id === 'potager');
-  const pen = [];
-  if (potager) {
-    for (let y = potager.y - 3; y < potager.y + potager.h + 3; y++) {
-      for (let x = potager.x - 3; x < potager.x + potager.w + 3; x++) if (grid.walk(x, y) && 'gm'.includes(M.ground(x, y))) pen.push({ x, y });
-    }
-  }
+  const penAround = (x0, y0, x1, y1, grounds) => {
+    const cells = [];
+    for (let y = y0; y < y1; y++) for (let x = x0; x < x1; x++) if (grid.walk(x, y) && grounds.includes(M.ground(x, y))) cells.push({ x, y });
+    return cells;
+  };
+  const pen = potager ? penAround(potager.x - 3, potager.y - 3, potager.x + potager.w + 3, potager.y + potager.h + 3, 'gm') : [];
+  // (la Grève : du sable aussi)
+  const coopPen = coop ? penAround(coop.x - 3, coop.y - 3, coop.x + 4, coop.y + 4, 'gms') : [];
   const farm = [];
+  // seg : durée d'un tour (secondes) : marche vers une case de son pré (field), puis broute ou picore ; beast : son nom
+  // au serveur (bêtes de ferme, bible § 6.16 : on la nourrit, elle remplit sa bulle) ; egg : sa bulle attend (un œuf au sol)
+  const add = (species, variant, seg, field, beast = null, egg = false) => farm.push({ id: `farm:${species}:${farm.length}`, species, variant, k: farm.length, seg, field, beast, egg });
+  if (coopPen.length >= 3) coop.hens.forEach((hen, i) => add('hen', HEN_LOOKS[hen.id] || '', 8 + i, coopPen, hen.id, hen.ready > 0));
   if (potager && pen.length >= 3) {
-    // seg : durée d'un tour (secondes) : marche vers une case du pré, puis broute ou picore ; beast : son nom au serveur
-    // (bêtes de ferme, bible § 6.16 : on la nourrit, elle remplit sa bulle), pour celles que le palier amène
-    const add = (species, variant, seg, beast = null) => farm.push({ id: `farm:${species}:${farm.length}`, species, variant, k: farm.length, seg, beast });
-    add('hen', 'rousse', 8, 'poule-rousse');
-    add('hen', 'noire', 9, 'poule-noire');
-    if (potager.level >= 3) add('cow', '', 16, 'vache');
+    if (potager.level >= 3) add('cow', '', 16, pen, 'vache');
     if (potager.level >= 4) {
-      add('sheep', '', 13, 'mouton');
-      add('sheep', '', 14, 'brebis');
+      add('sheep', '', 13, pen, 'mouton');
+      add('sheep', '', 14, pen, 'brebis');
     }
-    if (potager.level >= 5) add('pig', '', 12, 'cochon');
-    if (potager.level >= 6) add('goat', '', 11, 'chevre');
-    // Le Bestiaire : un élément de la ferme écrit ajoute une variante aux bêtes que le palier montre déjà
-    const kinds = new Set(farm.map(a => a.species));
-    bestiary.farm.filter(([species]) => kinds.has(species)).forEach(([species, variant], i) => add(species, variant, 10 + i));
+    if (potager.level >= 5) add('pig', '', 12, pen, 'cochon');
+    if (potager.level >= 6) add('goat', '', 11, pen, 'chevre');
   }
+  // Le Bestiaire : un élément de la ferme écrit ajoute une variante aux bêtes déjà là (les poules, au camp)
+  const kinds = new Set(farm.map(a => a.species));
+  bestiary.farm.filter(([species]) => kinds.has(species)).forEach(([species, variant], i) => add(species, variant, 10 + i, species === 'hen' ? coopPen : pen));
   // Bois : lisières (herbe ou prairie au bord d'une forêt ou d'un arbre), arbres du décor, eau douce
   const edge = [];
   const water = [];
@@ -481,8 +492,13 @@ export function villageOf({ n, M, sites, owned, crafts = [], props, annexes = []
     }
     // Ferme
     for (const a of farm) {
-      const rest = pen[Math.floor(hash(a.k, 31) * pen.length)];
-      const target = i => pen[Math.floor(hash(a.k * 13 + i, 37) * pen.length)];
+      const rest = a.field[Math.floor(hash(a.k, 31) * a.field.length)];
+      const target = i => a.field[Math.floor(hash(a.k * 13 + i, 37) * a.field.length)];
+      // Son œuf, au sol à sa place de repos, tant que sa bulle attend
+      if (a.egg) {
+        const egg = eggLayer();
+        if (egg) out.push({ id: `egg:${a.beast}`, kind: 'egg', species: 'egg', x: rest.x + 0.3, y: rest.y + 0.25, z: 0, flip: false, frame: 0, sprite: [egg.key, egg.make] });
+      }
       let x = rest.x;
       let y = rest.y;
       let frame = 0;
@@ -722,6 +738,8 @@ export function villageOf({ n, M, sites, owned, crafts = [], props, annexes = []
               : WORK_LINES[r.role];
       return { title: r.look.label, text: lines[Math.floor(hash(Math.floor(Date.now() / 7000), r.k) * lines.length)] };
     }
+    const hen = coop && who.beast && coop.hens.find(h => h.id === who.beast);
+    if (hen) return { title: hen.name, text: SOUNDS.hen };
     return SOUNDS[who.species] ? { title: BEAST_NAMES[who.species][0], text: SOUNDS[who.species] } : null;
   }
   // Fiche courte (appui long)
@@ -736,6 +754,9 @@ export function villageOf({ n, M, sites, owned, crafts = [], props, annexes = []
     }
     if (who.id && who.id.startsWith('fam:')) return { ...petInfo(who, true), hint: 'Toucher : le saluer' };
     if (who.id && (who.id.startsWith('anya:') || who.id === 'dame:bol')) return storyInfo(who, true);
+    // Une poule de Cannelle : son prénom
+    const hen = coop && who.beast && coop.hens.find(h => h.id === who.beast);
+    if (hen) return { title: hen.name, text: HEN_LINES[hen.id] || BEAST_NAMES.hen[1], hint: 'Toucher : la faire réagir' };
     const [title, text] = BEAST_NAMES[who.species] || ['Une bête', ''];
     return { title, text, hint: WILD.has(who.species) ? 'Toucher : il sursaute' : 'Toucher : la faire réagir' };
   }

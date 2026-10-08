@@ -171,6 +171,8 @@ export default {
       ...this.state.sites.map(site => ({ site, depth: site.x + site.y + site.w, c: this.centerOf(site), r: TW * 0.49 * site.w, h: TW * 0.875 * site.w, below: TH * 0.525 * site.w })),
       ...this.crafted.map(craft => ({ craft, depth: craft.x + craft.y, c: this.ground(craft.x, craft.y), r: TW * 0.42, h: TW * 1.1 })),
       ...(this.state.annexes || []).map(annex => ({ annex, depth: annex.x + annex.y, c: this.ground(annex.x, annex.y), r: TW * 0.44, h: TW * 1.1 })),
+      // La cage aux poules, coincée sous les rochers du camp : on l'ouvre
+      ...(this.state.camp || []).filter(item => item.art === 'cage_coincee').map(cage => ({ cage, depth: cage.x + cage.y, c: this.ground(cage.x, cage.y), r: TW * 0.5, h: TW * 0.8 })),
       ...this.shownDeposits.map(deposit => ({ deposit, depth: deposit.x + deposit.y, c: this.ground(deposit.x, deposit.y), r: TW * 0.42 * DEPOSIT_SCALE, h: TW * 0.85 * DEPOSIT_SCALE })),
       ...this.shownLandmarks.map(landmark => ({
         landmark, depth: landmark.x + landmark.y, c: this.ground(landmark.x, landmark.y), r: TW * 0.56 * landmarkScale(landmark.id), h: -landmarkTop(landmark.id) * landmarkScale(landmark.id) + 14
@@ -287,6 +289,13 @@ export default {
     if (hit.nameSign) {
       const site = hit.nameSign;
       return { key: `name-sign:${site.id}`, action: 'La changer', info: this.tipOf(hit), ring: ring(hit.at.x, hit.at.y, hit.at.r), bounce: `name-sign:${site.id}`, run: () => this.openNameSign(site) };
+    }
+    if (hit.cage) {
+      const c = this.ground(hit.cage.x, hit.cage.y);
+      return {
+        key: 'cage', action: 'L’ouvrir', info: { title: 'La cage aux poules', text: 'Des caquets sous les rochers : les poules de Cannelle ont tenu bon !' },
+        ring: ring(c.x, c.y, TW * 0.45), run: () => this.openCage(this.canvasPoint(px, py))
+      };
     }
     if (hit.annex) {
       const { annex } = hit;
