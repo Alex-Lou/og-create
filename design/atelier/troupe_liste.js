@@ -28,6 +28,7 @@ function poses(c, { travail = false, lanterne = false, couche = true, valise = n
     out.push([`${VUE[v]}_pecher`, v, STD, [0, 1].map(n => frame(G.avecPecher(c), v, 'action', n))]);
     out.push([`${VUE[v]}_piocher`, v, STD, [0, 1].map(n => frame(G.avecPiocher(c), v, 'action', n))]);
     out.push([`${VUE[v]}_cueillir`, v, STD, [0, 1].map(n => frame(G.avecCueillir(c), v, 'action', n))]);
+    out.push([`${VUE[v]}_arroser`, v, STD, [0, 1].map(n => frame(G.avecArroser(c), v, 'action', n))]);
     out.push([`${VUE[v]}_porter`, v, STD, [0, 1].map(n => frame(G.avecPorter(c), v, 'action', n))]);
     out.push([`${VUE[v]}_reparer`, v, STD, [0, 1].map(n => frame(G.avecReparer(c), v, 'action', n))]);
     out.push([`${VUE[v]}_assis-reparer`, v, STD, [0, 1].map(n => assis(c, v, n, null, G.reparer))]);

@@ -328,6 +328,53 @@ function cueillir({ view, n }) {
 // Debout : frame(avecCueillir(c), vue, 'action', n)
 const avecCueillir = c => ({ ...c, uid: `${c.uid}cu`, pose: cueillir });
 
+// L'arrosoir de zinc vert, l'anse dans la main h : le corps, le bec long côté k, sa pomme percée, penché de a degrés
+// (bec vers le bas) ; rend le dessin et le bout du bec, d'où l'eau tombe
+function arrosoir(h, k = 1, a = 0) {
+  const c = Math.cos(a * Math.PI / 180), s = Math.sin(a * Math.PI / 180);
+  const pt = (x, y) => [h[0] + (x * c - y * s) * k, h[1] + x * s + y * c];
+  const d = ps => `M${ps.map(([x, y]) => pt(x, y).map(r2).join(',')).join(' L')} Z`;
+  const corps = d([[-4.2, 2.4], [3.6, 2.4], [3.9, 9.4], [-4.5, 9.4]]);
+  const bec = d([[3.4, 7.6], [9, 2.4], [9.5, 3.2], [3.8, 9.2]]);
+  const pomme = pt(9.7, 2.6), bout = pt(10.4, 3.4);
+  const anse = `M${pt(-3.2, 2.6).map(r2)} Q${pt(-0.4, -3.4).map(r2)} ${pt(2.4, 2.6).map(r2)}`;
+  const t = (dd, col, w) => trait(dd, col, w);
+  return {
+    svg: t(anse, OUT, 2.6) + t(anse, '#3F7A57', 1.2) + P(bec, '#4E8F6A', 0.9) + E(pomme[0], pomme[1], 1.6, 1.6, '#3F7A57', 0.8)
+      + E(pomme[0], pomme[1], 0.7, 0.7, '#9CC9A8', 0) + P(corps, '#4E8F6A')
+      + L(pt(-4.3, 5), pt(3.7, 5), '#6FB08A', 1) + L(pt(-3, 3.6), pt(-3.2, 8.4), '#A6D4B4', 0.7),
+    bout
+  };
+}
+// l'eau : des gouttes qui tombent du bec (x, y) jusqu'au sol (sol), décalées d'une demi-goutte à l'image n
+const pluie = ([x, y], sol, k, n) => [0, 1, 2].map(i => {
+  const q = (i + 0.4 + (n ? 0.5 : 0)) / 3, gx = x + k * 1.2 * q, gy = y + (sol - y) * q;
+  return gy < sol - 1 ? P(`M${r2(gx)},${r2(gy - 1.2)} Q${r2(gx + 1.1)},${r2(gy + 0.3)} ${r2(gx)},${r2(gy + 0.9)} Q${r2(gx - 1.1)},${r2(gy + 0.3)} ${r2(gx)},${r2(gy - 1.4)} Z`, '#8FD3F2', 0.4) : '';
+}).join('');
+// la pousse arrosée, au sol en (x, y) : la terre mouillée, la tige, deux feuilles qui se relèvent à l'image n
+const pousse = (x, y, n) => E(x, y, 4.4, 1.2, '#6B4A2E', 0.6) + E(x - 0.6, y - 0.2, 2.2, 0.5, '#8A6440', 0)
+  + L([x, y], [x, y - 3.6], OUT, 1.4) + L([x, y], [x, y - 3.6], '#6FB24E', 0.6)
+  + P(`M${r2(x)},${r2(y - 3.2)} q-2.4,${n ? -1.6 : -0.6} -3.4,${n ? -0.2 : 0.8} q1.8,0.8 3.4,-0.8 Z`, '#7CC25A', 0.5)
+  + P(`M${r2(x)},${r2(y - 3.4)} q2.4,${n ? -1.6 : -0.6} 3.4,${n ? -0.2 : 0.8} q-1.8,0.8 -3.4,-0.8 Z`, '#7CC25A', 0.5);
+// Arroser (les cultures) ; 2 images : l'arrosoir penché, l'eau tombe en gouttes sur une pousse ; à l'image 2 les
+// gouttes avancent et les feuilles se relèvent.
+function arroser({ view, n }) {
+  const [a, b] = this.shoulders;
+  if (view === 'front') {
+    const h = [b[0] + 3, b[1] + 7.4], ar = arrosoir(h, 1, 38), sol = 61;
+    return { expr: 'content', under: pousse(ar.bout[0] - 0.4, sol, n), right: arm(this, b, h, [b[0] + 3, b[1] + 3.4]) + ar.svg, over: pluie(ar.bout, sol - 1, 1, n) };
+  }
+  if (view === 'se') {
+    const h = [a[0] - 3, a[1] + 7.4], ar = arrosoir(h, -1, 38), sol = 61;
+    return { expr: 'content', under: pousse(ar.bout[0] + 0.4, sol, n), left: arm(this, a, h, [a[0] - 3, a[1] + 3.4]) + ar.svg, over: pluie(ar.bout, sol - 1, -1, n) };
+  }
+  // de dos : l'arrosoir tenu devant soi, un peu à droite ; le bec dépasse, la pousse est plus loin, donc plus haut
+  const h = [b[0] + 1.4, b[1] + 6.4], ar = arrosoir(h, 1, 40), sol = a[1] + 18;
+  return { left: '', right: '', under: pousse(ar.bout[0] - 0.6, sol, n) + ar.svg + pluie(ar.bout, sol - 1, 1, n) + arm(this, a, [24 + 1, a[1] + 7.6], [a[0] - 1.6, a[1] + 6]), over: arm(this, b, h, [b[0] + 3, b[1] + 4]) };
+}
+// Debout : frame(avecArroser(c), vue, 'action', n)
+const avecArroser = c => ({ ...c, uid: `${c.uid}ar`, pose: arroser });
+
 // La caisse de bois, posée sur l'épaule : son dessus (un peu de profondeur), sa face de planches, ses traverses, ses
 // clous ; (x, y) : le milieu du bas de la face, w × h
 function caisse(x, y, w = 11, h = 8.4) {
@@ -482,4 +529,4 @@ function ecrire({ view, n }) {
 // Debout : frame(avecEcrire(c), vue, 'action', n) ; assis : assis(c, vue, n, null, ecrire)
 const avecEcrire = c => ({ ...c, uid: `${c.uid}ec`, pose: ecrire });
 
-module.exports = { lanterne, parapluie, valise, avecLanterne, avecParapluie, avecValise, couche, CADRE_PARAPLUIE, CADRE_COUCHE, ZEDS, paume, tranche, tendre, avecMainsTendues, applaudir, avecApplaudir, pecher, avecPecher, piocher, avecPiocher, cueillir, avecCueillir, porter, avecPorter, reparer, avecReparer, repousser, avecRepousser, ecrire, avecEcrire };
+module.exports = { lanterne, parapluie, valise, avecLanterne, avecParapluie, avecValise, couche, CADRE_PARAPLUIE, CADRE_COUCHE, ZEDS, paume, tranche, tendre, avecMainsTendues, applaudir, avecApplaudir, pecher, avecPecher, piocher, avecPiocher, cueillir, avecCueillir, arroser, avecArroser, porter, avecPorter, reparer, avecReparer, repousser, avecRepousser, ecrire, avecEcrire };
