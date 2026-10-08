@@ -1,10 +1,10 @@
 {
  "_lisez_moi": [
-  "Les dialogues de première fois : bâtir, faire évoluer, ramasser, poser un champ, ramasser un gisement, et la curiosité (presque tout réagit sur l'île).",
+  "Les dialogues de première fois : bâtir, faire évoluer, ramasser, poser un champ, ramasser un gisement, et la curiosité (presque tout ce qui vit réagit sur l'île).",
   "Chaque moment se joue une seule fois : un maître montre, le joueur fait le geste lui-même, puis il se débrouille seul. Aucune scène plein écran : des bulles du guide, avec la tête et le prénom de celui qui parle.",
   "Format d'une bulle : celui de guide.say (src/game/guide.js) : id (unique, retenu dans oc_guide_seen), qui (le rôle du maître, voir NAMES dans src/world/faces.js, ou brume), texte. Pour l'afficher : guide.say({ id, text: texte, who: NAMES[qui], face: faceHref(qui) }) ; pour brume, ni who ni face.",
   "Les bulles d'un moment se disent dans l'ordre (la file du guide). Une bulle marquée apres se dit quand le joueur a fait le geste, pas avant.",
-  "Les réactions promises ici existent toutes dans le jeu (src/world/view/gestures.js, src/world/village.js, src/world/life.js) : la mer fait des ronds, les bêtes sautent et crient, les habitants font coucou, la baleine souffle, un gisement pas prêt dit quand il repousse, un appui long raconte chaque chose. Rien ici ne promet de planter, d'arroser ou de récolter à la main : un champ est une annexe qui produit seule.",
+  "Les réactions promises ici existent toutes dans le jeu (src/world/view/gestures.js, src/world/village.js, src/world/life.js) : la mer fait des ronds, les bêtes sautent et crient, les habitants font coucou, la baleine souffle, un gisement pas prêt dit quand il repousse, un appui long sur une bête, un habitant ou un bâtiment ouvre sa fiche. Le décor (arbres, rochers, fleurs, herbe) ne répond pas au toucher (#435) : aucune bulle ne le promet. Rien ici ne promet de planter, d'arroser ou de récolter à la main : un champ est une annexe qui produit seule.",
   "quete : la quête que le maître donne. existante = une quête du serveur qui existe déjà (og-create-backend, services/quests.js) ; proposee = une quête à ajouter, avec un type d'objectif qui existe déjà ; null = pas de quête, c'est de la curiosité."
  ],
  "moments": [
@@ -68,9 +68,9 @@
   {
    "id": "tout-reagit",
    "enseigne": "plusieurs",
-   "quand": "Des petites premières fois, chacune à son moment, sans ordre imposé : elles disent au joueur que presque tout répond, et que l'île est bien plus grande qu'il ne croit.",
+   "quand": "Des petites premières fois, chacune à son moment, sans ordre imposé : elles disent au joueur que presque tout ce qui vit répond, et que l'île est bien plus grande qu'il ne croit.",
    "bulles": [
-    { "id": "dlg-tout-reagit-brume", "qui": "brume", "quand": "la première visite libre de l'île, après le tutoriel", "texte": "Sur ton île, presque tout répond quand on le touche… les bêtes, l'eau, les gens. Et si tu gardes le doigt appuyé, chaque chose te raconte ce qu'elle est." },
+    { "id": "dlg-tout-reagit-brume", "qui": "brume", "quand": "la première visite libre de l'île, après le tutoriel", "texte": "Sur ton île, presque tout ce qui vit répond quand on le touche… les bêtes, l'eau, les gens. Garde le doigt appuyé sur l'un d'eux : il te dira qui il est." },
     { "id": "dlg-tout-reagit-sylve", "qui": "bosquet", "quand": "une bête sauvage passe près du joueur pour la première fois", "texte": "Bête. Là. Toi, touche. … Elle saute. Pas peur. Elle joue." },
     { "id": "dlg-tout-reagit-aster", "qui": "ponton", "quand": "la première fois que la mer est à l'écran près du Ponton", "texte": "Touche l'eau, matelot ! Elle répond. Et si une baleine passe au large, salue-la : elle souffle en retour." },
     { "id": "dlg-tout-reagit-cannelle", "qui": "foyer", "quand": "la première fois qu'un habitant est touché", "texte": "Ils te font coucou ? C'est qu'ils t'aiment bien. Garde le doigt sur l'un d'eux : sa fiche s'ouvre, et on peut bavarder." },

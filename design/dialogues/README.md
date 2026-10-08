@@ -4,7 +4,7 @@ Les répliques des personnages, prêtes à brancher dans les bulles du guide (`s
 
 | Fichier | Contenu |
 | --- | --- |
-| `chantiers.json` | Les premières fois : bâtir (Ondin), faire évoluer (Rivet), ramasser (Cannelle), poser un champ (Mélisse), ramasser un gisement (Galet, traduit par Brume), et la curiosité : presque tout réagit sur l'île |
+| `chantiers.json` | Les premières fois : bâtir (Ondin), faire évoluer (Rivet), ramasser (Cannelle), poser un champ (Mélisse), ramasser un gisement (Galet, traduit par Brume), et la curiosité : presque tout ce qui vit réagit sur l'île |
 
 ## Règles
 
