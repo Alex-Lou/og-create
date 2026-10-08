@@ -1,0 +1,31 @@
+.coach { position: fixed; inset: 0; z-index: var(--z-hand); pointer-events: none; }
+.coach__mask { position: absolute; inset: 0; }
+.coach__dim { fill: rgba(10, 14, 28, .58); transition: fill .25s ease; }
+.coach__dim.is-soft { fill: rgba(10, 14, 28, .22); }
+.coach__edge { fill: none; stroke: rgba(var(--oc-aim-rgb), .95); stroke-width: 3; filter: drop-shadow(0 0 8px rgba(var(--oc-aim-rgb), .7)); }
+.coach__wall { position: absolute; pointer-events: auto; touch-action: none; }
+.coach__hand { position: absolute; width: 0; height: 0; }
+.coach__ring {
+  position: absolute; left: -30px; top: -30px; width: 60px; height: 60px; border-radius: var(--r-round);
+  box-shadow: 0 0 0 3px rgba(var(--oc-aim-rgb), .9), 0 0 18px rgba(var(--oc-aim-rgb), .6);
+  animation: coach-ring 1.4s ease-out infinite;
+}
+.coach__finger { position: absolute; left: -6px; top: 6px; width: 34px; height: 42px; filter: drop-shadow(0 3px 3px rgba(0, 0, 0, .35)); animation: coach-tap 1.4s ease-in-out infinite; }
+.coach__hand.is-nudged .coach__finger { animation: coach-nudge .45s ease-out; }
+.coach__say {
+  position: absolute; left: 50%; transform: translateX(-50%); width: min(340px, calc(100vw - 32px)); box-sizing: border-box;
+  display: flex; align-items: center; gap: 10px; margin: 0; padding: 10px 14px; border-radius: var(--r-lg);
+  background: var(--vellum-50); color: var(--ink-900); box-shadow: 0 12px 30px rgba(0, 0, 0, .4);
+  font-family: var(--font-ui); font-size: 15px; line-height: 1.35;
+}
+.coach__face { flex: none; width: 44px; height: 44px; border-radius: var(--r-round); object-fit: cover; background: var(--vellum-200); }
+.coach__who { display: block; font-size: 12px; font-weight: 900; letter-spacing: .04em; text-transform: uppercase; color: var(--ink-500); }
+.coach-say-enter-active { transition: opacity .25s ease, transform .25s cubic-bezier(.2, 1.4, .4, 1); }
+.coach-say-enter-from { opacity: 0; transform: translate(-50%, 10px) scale(.96); }
+@keyframes coach-ring { 0% { transform: scale(.7); opacity: 1; } 100% { transform: scale(1.25); opacity: 0; } }
+@keyframes coach-tap { 0%, 100% { transform: translate(6px, 10px); } 45% { transform: translate(0, 0); } 55% { transform: translate(0, 0) scale(.94); } }
+@keyframes coach-nudge { 0% { transform: translate(6px, 10px) scale(1.25); } 100% { transform: translate(6px, 10px) scale(1); } }
+@media (prefers-reduced-motion: reduce) {
+  .coach__ring, .coach__finger, .coach__hand.is-nudged .coach__finger { animation: none; }
+  .coach-say-enter-active { transition: none; }
+}

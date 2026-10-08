@@ -19,7 +19,6 @@
       <p v-if="error" class="pav__error" role="alert">{{ error }}</p>
       <button type="submit" class="pav__ok">C’est moi</button>
     </form>
-    <button type="button" class="pav__skip" @click="$emit('skip')">Passer le prologue</button>
   </div>
 </template>
 
@@ -32,7 +31,7 @@ export default {
   name: 'PrologueAvatar',
   components: { SceneArt },
   // chosen : { look, name }
-  emits: ['chosen', 'skip'],
+  emits: ['chosen'],
   data() {
     return { LOOKS, NAME_MAX, k: Math.floor(Math.random() * LOOKS.length), name: '', error: '' };
   },

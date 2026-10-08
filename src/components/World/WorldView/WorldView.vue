@@ -464,6 +464,7 @@ import workshop from './workshop';
 import sites from './sites';
 import annexes from './annexes';
 import nights from './nights';
+import coach from './coach';
 import explore from './explore';
 import terrain from './terrain';
 import sky from './sky';
@@ -477,7 +478,7 @@ export default {
   // bâtiments, les annexes, l'exploration, la carte, le ciel ; le moteur du canvas (caméra, dessin, gestes) dans
   // world/view/. L'île garde ce qui les relie : le chargement, la quête, le plein écran, les observateurs, le cycle
   // de vie
-  mixins: [folk, games, chests, workshop, sites, annexes, explore, terrain, sky, nights],
+  mixins: [folk, games, chests, workshop, sites, annexes, explore, terrain, sky, nights, coach],
   components: { HarvestGame, ShopItemSheet, GModal, ChestList, ChestReveal, ChestHaul, AnnexPanel, AnnexSheet, NightSheet, PoseChoice, MiniGame, VillagerSheet, BeastSheet, VisitorSheet, RenameSheet, CraftBench, CraftPuzzle, ExplorerLog, FindsSheet, WreckScene, BrumeSheet, ZoneSheet, SiteShop, SiteSteps, SiteOverview, SiteSheet, IslandHud, IslandButtons },
   props: {
     // Glyphes des éléments du Livre (savoir-faire demandé à l'établi)

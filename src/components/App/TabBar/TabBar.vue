@@ -4,15 +4,19 @@
       v-for="tab in TABS"
       :key="tab.id"
       type="button"
-      :class="['tabbar__item', { 'is-on': current === tab.id }]"
+      :class="['tabbar__item', { 'is-on': current === tab.id, 'is-locked': locked.includes(tab.id), 'is-new': fresh.includes(tab.id) }]"
+      :data-tab="tab.id"
       :aria-current="current === tab.id ? 'page' : null"
+      :disabled="locked.includes(tab.id)"
+      :aria-label="locked.includes(tab.id) ? `${tab.label} (s’ouvre pendant le tutoriel)` : null"
       @click="$emit('select', tab.id)"
     >
       <span class="tabbar__medal" aria-hidden="true">
         <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path :d="tab.icon"></path></svg>
       </span>
       <span class="tabbar__label">{{ tab.label }}</span>
-      <span v-if="dots.includes(tab.id)" class="tabbar__dot" aria-hidden="true"></span>
+      <span v-if="dots.includes(tab.id) && !locked.includes(tab.id)" class="tabbar__dot" aria-hidden="true"></span>
+      <svg v-if="locked.includes(tab.id)" class="tabbar__lock" width="14" height="14" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 11V8a5 5 0 0 1 10 0v3M5 11h14v10H5z" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linejoin="round" /></svg>
     </button>
   </nav>
 </template>
@@ -31,11 +35,26 @@ export default {
   props: {
     current: { type: String, default: 'infinite' },
     // Onglets qui portent un point (une chose à faire là-bas)
-    dots: { type: Array, default: () => [] }
+    dots: { type: Array, default: () => [] },
+    // Onglets encore fermés (le tutoriel les ouvre un à un) : grisés, un cadenas, ils ne s'ouvrent pas
+    locked: { type: Array, default: () => [] }
   },
   emits: ['select'],
   data() {
-    return { TABS };
+    // fresh : les onglets tout juste ouverts (un éclat doré quelques secondes)
+    return { TABS, fresh: [] };
+  },
+  watch: {
+    locked(now, before) {
+      const opened = (before || []).filter(id => !now.includes(id));
+      if (!opened.length) return;
+      this.fresh = [...this.fresh, ...opened];
+      clearTimeout(this.freshTimer);
+      this.freshTimer = setTimeout(() => { this.fresh = []; }, 4000);
+    }
+  },
+  beforeUnmount() {
+    clearTimeout(this.freshTimer);
   }
 };
 </script>
