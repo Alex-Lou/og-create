@@ -41,8 +41,8 @@ export default {
   props: {
     // La scène de la bibliothèque (scenes.json : 01_greve, 02_rocher…)
     scene: { type: String, required: true },
-    // L'avatar du joueur (game/sceneArt.js, LOOKS)
-    look: { type: String, default: '' },
+    // L'avatar du joueur : l'un des exemples (game/sceneArt.js, LOOKS), ou ses choix (game/avatarKit.js)
+    look: { type: [String, Object], default: '' },
     // Le joueur n'est pas encore à l'écran : on voit par ses yeux
     alone: { type: Boolean, default: false },
     // Une autre vue ou pose que celle de la scène ({ vue, pose } : grelotter de face, quand il a peur)

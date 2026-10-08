@@ -3,8 +3,10 @@
 // l'avatar du joueur, à la place notée par la scène : ses pieds en (x, y), son cadre 48 × 64 (pieds en 24, 62)
 // agrandi « echelle » fois, sa vue, sa pose, sa tenue (naufragée ou de croisière), le miroir ; sur la carte
 // d'embarquement, il n'est visible que dans la photo (« cadre »).
-// L'avatar est l'un des exemples de la bibliothèque (svg/personnages/avatar), en attendant son générateur (H9.4).
+// L'avatar est l'un des exemples de la bibliothèque (svg/personnages/avatar), ou l'avatar composé du joueur (ses
+// choix, dessinés par le générateur : game/avatarKit.js).
 import DATA from '../../design/bibliotheque/svg/scenes/tutoriel/scenes.json';
+import { isCustom, customFrames, kitFailed } from './avatarKit';
 
 const ROOT = '/design/bibliotheque/svg/';
 const SCENE_URLS = import.meta.glob('/design/bibliotheque/svg/scenes/tutoriel/*/*.svg', { query: '?url', import: 'default', eager: true });
@@ -27,8 +29,14 @@ function framesOf(dir, pose) {
 }
 
 // Les images de l'avatar pour une scène. Les exemples n'ont pas toutes les poses : de trois quarts, le repos est
-// l'image de la marche où les pieds se rejoignent (la 2e), et le salut se fait de face
+// l'image de la marche où les pieds se rejoignent (la 2e), et le salut se fait de face. Un avatar composé : ses images
+// dessinées par le générateur ([] le temps qu'il se charge ; l'exemple par défaut s'il n'a pas pu l'être)
 export function avatarFrames(look, { vue = 'face', pose = 'repos', naufrage = true } = {}) {
+  if (isCustom(look)) {
+    const frames = customFrames(look, { vue, pose, naufrage });
+    if (frames.length || !kitFailed()) return frames;
+    look = DEFAULT_LOOK;
+  }
   const dir = `${LOOKS.includes(look) ? look : DEFAULT_LOOK}${naufrage ? '-naufrage' : ''}`;
   if (vue === 'face' || pose === 'salut') {
     const list = framesOf(dir, `face_${pose}`);
