@@ -75,7 +75,6 @@
             :openPage="bookOpenPage"
             :hold="prologueHold"
             :stage="civStage"
-            @loaded="onBookLoaded"
             @marked-opened="bookOpenMarked = false; bookOpenPage = null"
             @select="handleResourceSelection"
             @coins-updated="handleCoinsUpdated"
