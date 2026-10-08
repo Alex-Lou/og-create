@@ -1,7 +1,8 @@
 // Le générateur des scènes plein écran du tutoriel, pour le jeu et pour l'outil (generer.mjs) : build_bundle.js en fait
 // un module ESM, publié dans la bibliothèque (generateur/scenes.mjs). Chaque fonction rend { svg, cadre, ms_par_image } :
 // le SVG complet, identique à l'octet au fichier de la bibliothèque (le fichier y ajoute un saut de ligne ;
-// verif_generateurs.mjs le vérifie), son cadre (le carré 400 × 400) et la vitesse de la scène. L'avatar n'est pas
+// verif_generateurs.mjs le vérifie), son cadre (le carré 400 × 400) et la vitesse de la scène (null pour les scènes en
+// animation continue : SCENES[id].ms_par_image y est le rythme de l'avatar seul). L'avatar n'est pas
 // dessiné : le jeu pose celui du joueur entre le fond et le devant, à la place que donne SCENES[id].avatar.
 import S6 from './scenes6.js';
 
@@ -22,7 +23,8 @@ export function scene(id, calque, n = 1) {
   if (!sc) throw new Error(`scène inconnue : ${id} (${Object.keys(S6.SCENES).join(', ')})`);
   if (!SCENES[id].calques.includes(calque)) throw new Error(`calque inconnu : ${calque} (${SCENES[id].calques.join(', ')})`);
   if (!(n >= 1 && n <= sc.images)) throw new Error(`image ${n} : de 1 à ${sc.images}`);
-  return { svg: svgOf(sc[calque](n - 1)), cadre: CADRE, ms_par_image: sc.ms };
+  // une scène en animation continue (une seule image) n'a pas de vitesse d'images : elle bouge d'elle-même (SMIL)
+  return { svg: svgOf(sc[calque](n - 1)), cadre: CADRE, ms_par_image: sc.images > 1 ? sc.ms : null };
 }
 
 // Tout ce que la famille sait dessiner, avec le fichier de la bibliothèque qui lui correspond (sous svg/)

@@ -108,9 +108,11 @@ function carte(tampon = false) {
     + texte(206, 202, 'Nom', 11, '#6B5A48', '', 'start') + L([206, 222], [314, 222], '#8A7A64', 1.6)
     + texte(206, 248, 'Cabine', 11, '#6B5A48', '', 'start') + texte(300, 248, '7', 13, '#2E4E8C')
     + L([206, 256], [314, 256], '#8A7A64', 1.2);
-  if (tampon) s += `<g transform="rotate(-14 250 266)" opacity="0.88"><rect x="198" y="249" width="104" height="32" rx="6" fill="none" stroke="#C8463A" stroke-width="3.4"/>${texte(250, 272, 'EMBARQUÉ', 16, '#C8463A', 'font-weight="bold" letter-spacing="1.5"')}</g>`;
+  if (tampon) s += `<g transform="rotate(-14 250 266)" opacity="0.88">${tamponSeul()}</g>`;
   return s;
 }
+// le tampon « Embarqué », seul (sans sa rotation)
+const tamponSeul = () => `<rect x="198" y="249" width="104" height="32" rx="6" fill="none" stroke="#C8463A" stroke-width="3.4"/>${texte(250, 272, 'EMBARQUÉ', 16, '#C8463A', 'font-weight="bold" letter-spacing="1.5"')}`;
 const ETOILES = [[40, 40], [120, 70], [340, 50], [370, 120], [30, 320], [360, 340], [200, 30], [60, 200]];
 // des débris de l'Hirondelle : une planche, la chaise longue rayée retournée
 const planche = (x, y, w, r) => `<g transform="rotate(${r} ${x + w / 2} ${y})"><rect x="${x}" y="${y}" width="${w}" height="9" rx="2" fill="#8A6A48" stroke="${OUT}" stroke-width="1.8"/></g>`;
@@ -440,5 +442,14 @@ S('12_habits', {
   fond: f => veilleeFond(f) + feu(126, 320, 1.5, f) + brume(162, 186, 2.2, f, 'content') + poser(frame(T.Cannelle.base, 'se', 'repos', f, 'content') + habits([13.6, 47.4]), 284, 356, 3),
   avatar: { x: 150, y: 398, echelle: 3, vue: 'avant', pose: 'repos', naufrage: true }
 });
+
+// Les scènes sans les autres personnages (00 à 06) sont en animation continue (scenes7.js) : un seul dessin par calque,
+// qui bouge dans le SVG. Mêmes titres, étapes et places d'avatar ; ms_par_image devient le rythme de l'avatar seul.
+const RYTHME_AVATAR = { grelotter: 320, repos: 900 };
+for (const [id, a] of Object.entries(require('./scenes7')({ carte, tamponSeul, texte, planche, chaiseLongue, ruines, grimoire }))) {
+  const sc = SCENES[id];
+  SCENES[id] = { ...sc, images: 1, ms: sc.avatar ? RYTHME_AVATAR[sc.avatar.pose] : 1000, fond: a.fond, devant: a.devant };
+  if (!a.devant) delete SCENES[id].devant;
+}
 
 module.exports = { SCENES, W, CADRE_PHOTO };
