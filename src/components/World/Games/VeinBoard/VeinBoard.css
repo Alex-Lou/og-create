@@ -44,6 +44,18 @@
 .vein__block.is-reach { box-shadow: inset 0 -3px 0 rgba(0, 0, 0, .22), inset 0 2px 0 rgba(255, 255, 255, .3), 0 0 0 2px var(--island-hint); }
 .vein__block.is-open { background: var(--vein-hole); box-shadow: inset 0 3px 6px rgba(0, 0, 0, .6); cursor: default; }
 .vein__block.is-hit { animation: vein-hit .2s ease; }
+/* Les pièces de la bibliothèque : le fond qui se répète, les blocs (avec leurs fissures dessinées), le trou, les pierres
+   et leurs signes ; le coup (pioche) et l'éclatement (48 × 48 autour du bloc) */
+.vein__wall.has-art { background: var(--vein-fond) center / 48px 48px repeat, var(--vein-wall); }
+.vein__block.has-art, .vein__block.has-art.is-open { background: none; box-shadow: none; }
+.vein__block.has-art::after { display: none; }
+.vein__block.has-art.is-reach { box-shadow: 0 0 0 2px var(--island-hint); }
+.vein__block.has-fx { overflow: visible; z-index: 2; }
+.vein__art { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; }
+.vein__gem-art { position: relative; width: 78%; height: 78%; pointer-events: none; }
+.vein__sign { position: absolute; right: 0; bottom: 0; width: 42%; height: 42%; pointer-events: none; }
+.vein__fx { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; }
+.vein__fx.is-wide { inset: -25%; width: 150%; height: 150%; }
 .vein__block.is-no { animation: vein-no .3s ease; }
 .vein__block:disabled { cursor: default; }
 .vein__gem { animation: vein-pop .4s cubic-bezier(.3, 1.6, .5, 1); filter: drop-shadow(0 0 6px var(--vein-gem-glow)); }

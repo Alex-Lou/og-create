@@ -13,21 +13,27 @@
         <li v-if="!found.length" class="vein__none">Aucune pierre encore</li>
       </ul>
     </div>
-    <div class="vein__wall" :style="{ '--cols': VEIN.cols }">
+    <div :class="['vein__wall', { 'has-art': Boolean(WALL) }]" :style="{ '--cols': VEIN.cols, ...(WALL ? { '--vein-fond': `url(${WALL})` } : {}) }">
       <button
         v-for="cell in cells"
         :key="cell.i"
         type="button"
-        :class="['vein__block', `is-h${cell.hard}`, { 'is-open': cell.open, 'is-reach': cell.reach, 'is-hit': hit === cell.i, 'is-no': refused === cell.i }]"
+        :class="['vein__block', `is-h${cell.hard}`, { 'is-open': cell.open, 'is-reach': cell.reach, 'is-hit': hit === cell.i, 'is-no': refused === cell.i, 'has-art': Boolean(blockArt(cell)), 'has-fx': Boolean(fxArt && fx.i === cell.i) }]"
         :style="{ '--crack': cell.crack }"
         :disabled="!playing || ended"
         :aria-label="labelOf(cell)"
         @click="strike(cell.i)"
       >
+        <!-- Le bloc de la bibliothèque (sa dureté, ses fissures), ou le trou une fois ouvert -->
+        <img v-if="blockArt(cell)" class="vein__art" :src="blockArt(cell)" alt="" draggable="false" />
         <template v-if="cell.open">
-          <GameIcon v-if="cell.gem" :kind="cell.gem" :size="30" class="vein__gem" />
-          <span v-if="cell.glint" class="vein__glint" aria-hidden="true">{{ cell.glint > 3 ? `✦×${cell.glint}` : '✦'.repeat(cell.glint) }}</span>
+          <img v-if="cell.gem && gamePiece('filon', cell.gem)" class="vein__gem vein__gem-art" :src="gamePiece('filon', cell.gem)" alt="" draggable="false" />
+          <GameIcon v-else-if="cell.gem" :kind="cell.gem" :size="30" class="vein__gem" />
+          <img v-if="cell.glint && gamePiece('filon', `signe-${Math.min(3, cell.glint)}`)" class="vein__sign" :src="gamePiece('filon', `signe-${Math.min(3, cell.glint)}`)" alt="" draggable="false" />
+          <span v-if="cell.glint > 3 || (cell.glint && !gamePiece('filon', 'signe-1'))" class="vein__glint" aria-hidden="true">{{ cell.glint > 3 ? `✦×${cell.glint}` : '✦'.repeat(cell.glint) }}</span>
         </template>
+        <!-- Le coup : la pioche, ou le bloc qui éclate -->
+        <img v-if="fxArt && fx.i === cell.i" :key="fx.at" :class="['vein__fx', { 'is-wide': fx.wide }]" :src="fxArt" alt="" draggable="false" />
       </button>
     </div>
     <p class="vein__hint">Creuse depuis le haut, bloc par bloc. ✦ : une pierre précieuse dort tout près.</p>
@@ -38,6 +44,11 @@
 import GameIcon from '../GameIcon/GameIcon.vue';
 import { VEIN, GEMS, veinOf, reachable, glintOf } from '@/game/minigames';
 import { vibrate } from '@/utils/fx';
+import { gamePiece, gameFrame, gameSuiteMs } from '@/game/minigameArt';
+
+// Le fond de la paroi (il se répète), les blocs selon leur dureté et leurs fissures, l'éclatement d'un bloc qui se brise
+const WALL = gamePiece('filon', 'fond-surface');
+const HARD_ART = ['', 'tendre', 'dur', 'tres-dur'];
 
 const HARD_NAMES = ['', 'tendre', 'dur', 'très dur'];
 const GEM_NAMES = { quartz: 'quartz', amethyste: 'améthyste', rubis: 'rubis', diamant: 'diamant' };
@@ -54,11 +65,17 @@ export default {
   emits: ['tally', 'end'],
   data() {
     const { hard, gems } = veinOf(this.seed);
-    return { VEIN, hard, gems, left: hard.slice(), broken: hard.map(() => false), taps: [], found: [], hit: -1, refused: -1, ended: false };
+    // fx : le coup en cours ({ i, suite, wide, at }) ; now : l'instant, le temps de son animation
+    return { VEIN, WALL, hard, gems, left: hard.slice(), broken: hard.map(() => false), taps: [], found: [], hit: -1, refused: -1, ended: false, fx: null, now: 0 };
   },
   computed: {
     strokesLeft() {
       return VEIN.strokes - this.taps.length;
+    },
+    fxArt() {
+      if (!this.fx) return null;
+      const since = this.now - this.fx.at;
+      return since < gameSuiteMs('filon', this.fx.suite) ? gameFrame('filon', this.fx.suite, since) : null;
     },
     cells() {
       return this.hard.map((hard, i) => ({
@@ -75,8 +92,27 @@ export default {
   beforeUnmount() {
     clearTimeout(this.hitTimer);
     clearTimeout(this.endTimer);
+    cancelAnimationFrame(this.raf);
   },
   methods: {
+    gamePiece,
+    blockArt(cell) {
+      if (cell.open) return gamePiece('filon', 'trou');
+      const name = HARD_ART[cell.hard];
+      const crack = cell.hard === 3 ? (cell.crack >= 0.6 ? '_fissure-2' : cell.crack > 0 ? '_fissure-1' : '_neuf') : cell.hard === 2 && cell.crack > 0 ? '_fissure-1' : '_neuf';
+      return gamePiece('filon', `bloc-${name}${crack}`);
+    },
+    // Un coup joué : sa suite d'images, l'horloge tourne le temps qu'elle dure
+    play(i, suite, wide) {
+      this.fx = { i, suite, wide, at: performance.now() };
+      cancelAnimationFrame(this.raf);
+      const until = this.fx.at + gameSuiteMs('filon', suite);
+      const step = () => {
+        this.now = performance.now();
+        if (this.now < until) this.raf = requestAnimationFrame(step);
+      };
+      step();
+    },
     labelOf(cell) {
       const x = (cell.i % VEIN.cols) + 1;
       const y = Math.floor(cell.i / VEIN.cols) + 1;
@@ -99,13 +135,17 @@ export default {
       this.hit = i;
       this.hitTimer = setTimeout(() => { this.hit = -1; }, 200);
       if (this.left[i] === 0) {
+        this.play(i, `eclatement-${HARD_ART[this.hard[i]]}`, true);
         this.broken.splice(i, 1, true);
         if (this.gems[i]) {
           this.found.push(this.gems[i]);
           this.$emit('tally', { raw: this.found.reduce((s, g) => s + GEMS[g].value, 0), detail: this.found.slice() });
           vibrate(this.gems[i] === 'diamant' ? [14, 40, 20] : [10, 30, 12]);
         } else vibrate(8);
-      } else vibrate(5);
+      } else {
+        this.play(i, 'pioche', false);
+        vibrate(5);
+      }
       if (this.strokesLeft <= 0) this.endTimer = setTimeout(() => this.finish(), 650);
     },
     finish() {
