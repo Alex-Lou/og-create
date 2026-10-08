@@ -483,7 +483,7 @@ export default {
     if (hit.zone) {
       const zone = hit.zone;
       if (zone.known === false) return { title: 'Terre inconnue', text: 'Une expédition révélera ce qu’elle cache.', hint: 'Toucher deux fois : préparer l’expédition' };
-      return { title: zone.name, text: zone.owned ? 'Quartier à toi.' : zone.plan ? `À découvrir : écris « ${zone.plan} » dans le Grimoire.` : zone.open ? `Quartier à acheter : ${zone.price} écus.` : `S’ouvre avec le chapitre ${zone.chapter} du Grimoire.`, hint: 'Toucher deux fois : voir le quartier' };
+      return { title: zone.name, text: zone.owned ? 'Quartier à toi.' : zone.plan ? `À découvrir : fais naître « ${zone.plan} » dans l’Athanor.` : zone.open ? `Quartier à acheter : ${zone.price} écus.` : `S’ouvre avec le chapitre ${zone.chapter} du Grimoire.`, hint: 'Toucher deux fois : voir le quartier' };
     }
     if (hit.site) {
       const site = hit.site;

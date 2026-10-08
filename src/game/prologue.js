@@ -135,7 +135,7 @@ const LESSONS = {
   // Dans le Grimoire (le coach montre d'abord son onglet, depuis l'île) : le ruban, puis la page marquée, son énigme
   // et l'Encre. Les recettes restent au serveur : le Livre guide par ses pages, jamais par la réponse. Sur la page, rien
   // n'est bloqué (l'étagère doit rester sous le doigt)
-  'souvenir-ondin': bookSteps('Le Puits s’écrit dans le Grimoire. Suis le ruban : il mène, page après page, à ce qui manque.', 'pendant que tu aides Ondin'),
+  'souvenir-ondin': bookSteps('Le Puits naît de mélanges, page après page : suis le ruban, il te montre quoi mêler dans l’Athanor.', 'pendant que tu aides Ondin'),
   'puits-ondin': [
     { target: 'île:site:puits', text: 'Le chantier du Puits : touche-le.' },
     { target: tipOf('site:puits'), text: 'Touche « Bâtir ».' },
@@ -146,7 +146,7 @@ const LESSONS = {
 const SHORT = {
   feu: 'Il manque du bois ou des galets pour le feu : touche la Récolte, l’île en donne.',
   soupe: 'Pas assez de vivres pour sa soupe : touche la Récolte, l’île en donne.',
-  poules: 'Deux vivres pour nourrir une poule : touche la Récolte, ou ramasse des coquillages sur la Grève.',
+  poules: 'Deux vivres pour nourrir une poule : touche la Récolte, ou ramasse des coquillages sur le rivage.',
   'puits-ondin': 'Il manque de quoi bâtir le Puits : touche la Récolte, l’île en donne.'
 };
 // La quête active demande de payer (le feu, la soupe, une poule, le Puits) et le stock n'y suffit pas encore (ce qui
@@ -188,9 +188,9 @@ const CLAIM = [
 // Ce qui demande un élément du Grimoire (le plan de son bâtiment ; La Source, à découvrir) : la consigne, et pour quoi
 // l'Encre est offerte
 const PLAN_INTRO = {
-  feu: plan => `Le feu de camp demande « ${plan} » : il s’écrit dans le Grimoire. Suis le ruban.`,
-  'puits-ondin': plan => `Le Puits demande « ${plan} » : il s’écrit dans le Grimoire. Suis le ruban.`,
-  'achat-source': plan => `La Source dort sous la brume : écris « ${plan} » dans le Grimoire, et elle se lèvera. Suis le ruban.`
+  feu: plan => `Le feu de camp naît d’un mélange : fais naître « ${plan} » dans l’Athanor. Le ruban du Grimoire te montre quoi mêler.`,
+  'puits-ondin': plan => `Le Puits naît d’un mélange : fais naître « ${plan} » dans l’Athanor. Le ruban du Grimoire te montre quoi mêler.`,
+  'achat-source': plan => `La Source dort sous la brume : mêle les bons éléments dans l’Athanor pour faire naître « ${plan} », et elle se lèvera. Suis le ruban.`
 };
 const PLAN_WHY = { 'achat-source': 'pour la découvrir' };
 // La leçon du coach à une étape de l'île (la quête active : { id, done, short, plan }), ou null. plan : l'élément que
@@ -201,7 +201,7 @@ export function islandLesson(quest) {
   if (quest.done) return { id: 'claim', mode: 'world', steps: CLAIM };
   // Le bâtiment de la quête demande un élément pas encore écrit (son plan : le Brasier du feu de camp) : au Grimoire
   if (quest.plan) {
-    const intro = PLAN_INTRO[quest.id] ? PLAN_INTRO[quest.id](quest.plan) : `Ce chantier demande « ${quest.plan} » : il s’écrit dans le Grimoire. Suis le ruban.`;
+    const intro = PLAN_INTRO[quest.id] ? PLAN_INTRO[quest.id](quest.plan) : `Ce chantier naît d’un mélange : fais naître « ${quest.plan} » dans l’Athanor. Suis le ruban.`;
     return { id: `plan-${quest.id}`, mode: 'infinite', steps: bookSteps(intro, PLAN_WHY[quest.id] || 'pour ce chantier') };
   }
   if (quest.short && SHORT[quest.id]) return { id: `short-${quest.id}`, mode: 'world', steps: [{ target: '.world__play', text: SHORT[quest.id] }] };

@@ -46,11 +46,11 @@
           <span>Chapitre <strong>{{ zone.chapter }}</strong> du Grimoire</span>
           <em>{{ zone.open ? 'ouvert' : 'encore scellé' }}</em>
         </li>
-        <!-- (au tutoriel, La Source se découvre en écrivant son élément, sans écus) -->
+        <!-- (au tutoriel, La Source se découvre en faisant naître son élément dans l'Athanor, sans écus) -->
         <li v-if="zone.plan" :class="['world__need', zone.planOwned ? 'is-ok' : 'is-missing']">
           <span class="world__need-glyph" aria-hidden="true"><ElementGlyph glyph="ui:book" /></span>
-          <span>Écrire <strong>« {{ zone.plan }} »</strong> dans le Grimoire</span>
-          <em>{{ zone.planOwned ? 'écrit' : 'pas encore' }}</em>
+          <span>Faire naître <strong>« {{ zone.plan }} »</strong> dans l’Athanor</span>
+          <em>{{ zone.planOwned ? 'né' : 'pas encore' }}</em>
         </li>
         <li v-else class="world__need">
           <span class="world__need-glyph" aria-hidden="true"><ElementGlyph glyph="ui:coin" /></span>
