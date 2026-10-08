@@ -1,17 +1,18 @@
-/* Ses jetons : le papier du cadran, et la part de nuit */
-.island-clock { --clock-bg: rgba(255, 250, 240, .7); --clock-shade: rgba(255, 250, 240, .95); }
+/* Le cadre de bois (doré quand la journée défile), le cadran du jour ou de la nuit, le soleil et la lune : la
+   bibliothèque (design/bibliotheque/svg/hud, hud.json) */
 .island-clock {
-  appearance: none; display: inline-flex; align-items: center; gap: 4px; margin-left: 6px; padding: 2px 8px 2px 5px;
-  border: 0; border-radius: var(--r-pill); background: var(--clock-bg); box-shadow: inset 0 0 0 1px rgba(var(--shade-rgb), .14);
-  color: var(--ink-700); font: inherit; font-size: 12px; font-weight: 800; letter-spacing: 0; text-transform: none;
+  appearance: none; display: inline-flex; align-items: center; gap: 5px; margin-left: 6px; height: 38px; padding: 0 12px 3px 8px;
+  border: 0 solid transparent; border-image: url('/design/bibliotheque/svg/hud/horloge_jour.svg') 52 72 64 72 fill / 13px 18px 16px 18px stretch;
+  background: none; color: var(--ink-700); font: inherit; font-size: 12px; font-weight: 800; letter-spacing: 0; text-transform: none;
   vertical-align: middle; cursor: pointer; touch-action: manipulation;
 }
 .island-clock:focus-visible { outline: 2px solid var(--gold-500); outline-offset: 2px; }
-.island-clock.is-warping { background: var(--gold-200); box-shadow: inset 0 0 0 1.5px var(--gold-500); }
-.island-clock__dial { width: 27px; height: 17px; flex: none; }
-.island-clock__arc { stroke: rgba(var(--shade-rgb), .3); }
-.island-clock__horizon { stroke: rgba(var(--shade-rgb), .45); }
-.island-clock__shade { fill: var(--clock-shade); }
+.island-clock.is-warping { border-image-source: url('/design/bibliotheque/svg/hud/horloge_accelere.svg'); }
+.island-clock__dial { position: relative; flex: none; width: 40px; height: 24px; background: url('/design/bibliotheque/svg/hud/cadran_jour.svg') center / 100% 100% no-repeat; }
+.island-clock__dial.is-night { background-image: url('/design/bibliotheque/svg/hud/cadran_nuit.svg'); }
+.island-clock__body { position: absolute; width: 12px; height: 12px; background: center / 100% 100% no-repeat; }
+.island-clock__body.is-sun { background-image: url('/design/bibliotheque/svg/hud/soleil.svg'); }
+.island-clock__body.is-moon { background-image: url('/design/bibliotheque/svg/hud/lune.svg'); }
 .island-clock__time { font-variant-numeric: tabular-nums; min-width: 34px; color: var(--ink-900); }
 .island-clock__weather { width: 18px; height: 15px; flex: none; }
 .island-clock__label { color: var(--ink-500); font-weight: 700; }

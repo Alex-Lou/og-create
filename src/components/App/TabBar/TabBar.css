@@ -51,8 +51,6 @@
   border-radius: var(--r-pill);
   transition: transform var(--oc-medium) var(--oc-ease-spring), background var(--oc-fast), box-shadow var(--oc-fast), color var(--oc-fast);
 }
-.tabbar__icon { width: 26px; height: 26px; filter: drop-shadow(0 1px 0 rgba(0, 0, 0, .25)); }
-.tabbar__item.is-on .tabbar__icon { width: 32px; height: 32px; }
 .tabbar__label { font-family: var(--oc-font-body); font-weight: 800; font-size: 11px; letter-spacing: 0.03em; }
 .tabbar__item:hover { color: var(--gold-200); }
 .tabbar__item:active .tabbar__medal { transform: scale(0.92); }
