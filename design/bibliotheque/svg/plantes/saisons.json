@@ -1,0 +1,146 @@
+{
+ "_lisez_moi": [
+  "Les arbres par saison : printemps, ete, automne, hiver ; dans chaque saison, une essence et la liste de ses fichiers (grand, moyen, petit ; deux teintes). Le jeu ne pioche que dans la saison en cours : rien ne se mélange.",
+  "Trois essences nouvelles par saison (printemps : cerisier, magnolia, saule ; été : chêne, tilleul, pin parasol ; automne : érable, ginkgo, chêne roux ; hiver : bouleau nu, houx, sapin givré), plus les arbres de saison qui existaient déjà (arbre de printemps, arbre d'automne, arbre d'hiver, sapin enneigé).",
+  "Les arbres sans saison (arbre, pommier, bouleau, sapin, palmier, arbre mort) ne sont pas ici : au jeu de décider s'ils restent toute l'année.",
+  "Cadre et ancre : ceux des plantes (cadre ci-dessous, ancre au centre de la case)."
+ ],
+ "cadre": [
+  -50,
+  -115,
+  100,
+  140
+ ],
+ "printemps": {
+  "cerisier": [
+   "cerisier.svg",
+   "cerisier_blanc.svg",
+   "cerisier_moyen.svg",
+   "cerisier_moyen_blanc.svg",
+   "cerisier_petit.svg",
+   "cerisier_petit_blanc.svg"
+  ],
+  "magnolia": [
+   "magnolia.svg",
+   "magnolia_blanc.svg",
+   "magnolia_moyen.svg",
+   "magnolia_moyen_blanc.svg",
+   "magnolia_petit.svg",
+   "magnolia_petit_blanc.svg"
+  ],
+  "saule": [
+   "saule.svg",
+   "saule_dore.svg",
+   "saule_moyen.svg",
+   "saule_moyen_dore.svg",
+   "saule_petit.svg",
+   "saule_petit_dore.svg"
+  ],
+  "arbre_printemps": [
+   "arbre_printemps.svg",
+   "arbre_printemps_petit.svg"
+  ]
+ },
+ "ete": {
+  "chene": [
+   "chene.svg",
+   "chene_sombre.svg",
+   "chene_moyen.svg",
+   "chene_moyen_sombre.svg",
+   "chene_petit.svg",
+   "chene_petit_sombre.svg"
+  ],
+  "tilleul": [
+   "tilleul.svg",
+   "tilleul_bleute.svg",
+   "tilleul_moyen.svg",
+   "tilleul_moyen_bleute.svg",
+   "tilleul_petit.svg",
+   "tilleul_petit_bleute.svg"
+  ],
+  "pin_parasol": [
+   "pin_parasol.svg",
+   "pin_parasol_profond.svg",
+   "pin_parasol_moyen.svg",
+   "pin_parasol_moyen_profond.svg",
+   "pin_parasol_petit.svg",
+   "pin_parasol_petit_profond.svg"
+  ]
+ },
+ "automne": {
+  "erable": [
+   "erable.svg",
+   "erable_ecarlate.svg",
+   "erable_moyen.svg",
+   "erable_moyen_ecarlate.svg",
+   "erable_petit.svg",
+   "erable_petit_ecarlate.svg"
+  ],
+  "ginkgo": [
+   "ginkgo.svg",
+   "ginkgo_citron.svg",
+   "ginkgo_moyen.svg",
+   "ginkgo_moyen_citron.svg",
+   "ginkgo_petit.svg",
+   "ginkgo_petit_citron.svg"
+  ],
+  "chene_roux": [
+   "chene_roux.svg",
+   "chene_roux_brun.svg",
+   "chene_roux_moyen.svg",
+   "chene_roux_moyen_brun.svg",
+   "chene_roux_petit.svg",
+   "chene_roux_petit_brun.svg"
+  ],
+  "arbre_automne": [
+   "arbre_automne.svg",
+   "arbre_automne_feuilles.svg",
+   "arbre_automne_rouge.svg",
+   "arbre_automne_rouge_feuilles.svg",
+   "arbre_automne_petit.svg",
+   "arbre_automne_petit_feuilles.svg",
+   "arbre_automne_petit_rouge.svg",
+   "arbre_automne_petit_rouge_feuilles.svg"
+  ]
+ },
+ "hiver": {
+  "bouleau_nu": [
+   "bouleau_nu.svg",
+   "bouleau_nu_gris.svg",
+   "bouleau_nu_moyen.svg",
+   "bouleau_nu_moyen_gris.svg",
+   "bouleau_nu_petit.svg",
+   "bouleau_nu_petit_gris.svg"
+  ],
+  "houx": [
+   "houx.svg",
+   "houx_bleu.svg",
+   "houx_moyen.svg",
+   "houx_moyen_bleu.svg",
+   "houx_petit.svg",
+   "houx_petit_bleu.svg"
+  ],
+  "sapin_givre": [
+   "sapin_givre.svg",
+   "sapin_givre_argent.svg",
+   "sapin_givre_moyen.svg",
+   "sapin_givre_moyen_argent.svg",
+   "sapin_givre_petit.svg",
+   "sapin_givre_petit_argent.svg"
+  ],
+  "arbre_hiver": [
+   "arbre_hiver.svg",
+   "arbre_hiver_petit.svg"
+  ],
+  "sapin_neige": [
+   "sapin_neige.svg",
+   "sapin_neige_congere.svg",
+   "sapin_neige_profond.svg",
+   "sapin_neige_profond_congere.svg",
+   "sapin_neige_petit.svg",
+   "sapin_neige_petit_congere.svg",
+   "sapin_neige_petit_profond.svg",
+   "sapin_neige_petit_profond_congere.svg"
+  ]
+ }
+}

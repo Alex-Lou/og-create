@@ -692,7 +692,18 @@ var require_arbres = __commonJS({
       herbe,
       congere,
       feuilleMorte,
-      ROUSSES
+      ROUSSES,
+      // pour les arbres de saison (arbres_saisons.js) : les troncs, l'étage du sapin, le pied fleuri, le pétale, la pomme de pin
+      tronc,
+      troncBouleau,
+      troncSapin,
+      etage,
+      ETAGES,
+      pied,
+      petale,
+      pommeDePin,
+      BOIS,
+      W
     };
   }
 });

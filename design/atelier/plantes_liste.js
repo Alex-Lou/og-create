@@ -1,6 +1,7 @@
 // La liste des plantes, des rochers et des petits décors d'une case, en un seul endroit : preview_plantes.js les publie,
 // le générateur des plantes (generateur_plantes.mjs) les dessine, avec les mêmes fonctions.
 const { arbre, ARBRES, arbreSaison, ARBRES_SAISONS, pommier, POMMIERS, automne, AUTOMNES, bouleau, BOULEAUX, sapin, SAPINS, palmier, PALMIERS, arbreMort, ARBRES_MORTS } = require('./arbres');
+const { ARBRES_DE_SAISON } = require('./arbres_saisons');
 const { touffe, TOUFFES, touffeSaison, TOUFFES_SAISONS } = require('./herbes');
 const { rocher, ROCHERS, rocherSaison, ROCHERS_SAISONS, rochers, ROCHERS_TAS, aiguille, AIGUILLES, rochersMoussus, ROCHERS_MOUSSUS } = require('./rochers');
 const { coquillages, COQUILLAGES, boisFlotte, BOIS_FLOTTES } = require('./plage');
@@ -14,6 +15,9 @@ const PLANTES = [
   ...ARBRES.map(([fichier, libelle, o]) => [fichier, libelle, 'tree', () => arbre(o)]),
   // l'arbre au printemps (vert tendre, en fleurs) et en hiver (sous la neige) ; l'automne a son arbre, juste après
   ...ARBRES_SAISONS.map(([fichier, libelle, o]) => [fichier, libelle, 'tree', () => arbreSaison(o)]),
+  // les arbres de saison (arbres_saisons.js) : trois essences par saison, en trois tailles et deux teintes ; l'index
+  // plantes/saisons.json range chaque arbre dans sa saison
+  ...ARBRES_DE_SAISON.map(([fichier, libelle, , dessin]) => [fichier, libelle, 'tree', dessin]),
   ...POMMIERS.map(([fichier, libelle, o]) => [fichier, libelle, 'apple', () => pommier(o)]),
   ...AUTOMNES.map(([fichier, libelle, o]) => [fichier, libelle, 'autumn', () => automne(o)]),
   ...BOULEAUX.map(([fichier, libelle, o]) => [fichier, libelle, 'birch', () => bouleau(o)]),

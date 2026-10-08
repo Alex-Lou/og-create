@@ -19,6 +19,18 @@ for (const [file, label, id, draw] of LIST) {
   write(path.join(LIB, `${file}.svg`), plante(file).svg); // le jeu dessine le même
   cells.push([svgOf(unique(body), 1.4, true), `${label}<br><i>${id}</i>`]);
 }
+// l'index des saisons : chaque arbre dans sa saison, pour que le jeu ne pioche que dans la saison en cours
+const { SAISONS } = require('./arbres_saisons');
+write(path.join(LIB, 'saisons.json'), JSON.stringify({
+  _lisez_moi: [
+    'Les arbres par saison : printemps, ete, automne, hiver ; dans chaque saison, une essence et la liste de ses fichiers (grand, moyen, petit ; deux teintes). Le jeu ne pioche que dans la saison en cours : rien ne se mélange.',
+    'Trois essences nouvelles par saison (printemps : cerisier, magnolia, saule ; été : chêne, tilleul, pin parasol ; automne : érable, ginkgo, chêne roux ; hiver : bouleau nu, houx, sapin givré), plus les arbres de saison qui existaient déjà (arbre de printemps, arbre d\'automne, arbre d\'hiver, sapin enneigé).',
+    'Les arbres sans saison (arbre, pommier, bouleau, sapin, palmier, arbre mort) ne sont pas ici : au jeu de décider s\'ils restent toute l\'année.',
+    'Cadre et ancre : ceux des plantes (cadre ci-dessous, ancre au centre de la case).'
+  ],
+  cadre: PROP,
+  ...SAISONS
+}, null, 1));
 const rows = [];
 for (let i = 0; i < cells.length; i += 6) rows.push(row(i ? '' : 'Décors naturels', cells.slice(i, i + 6)));
 shoot([[path.join(OUT, 'plantes_rochers.png'), sheet('Plantes et rochers (vue iso)', 'Cadre d\'un décor d\'une case (PROP_BOX × 1,25), ancre au centre de la case. Le jeu fait balancer les plantes au vent. Losange de la case montré pour l\'ancrage.', rows), 1250]])
