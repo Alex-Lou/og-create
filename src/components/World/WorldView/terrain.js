@@ -9,6 +9,7 @@ import { COLONY_ZONE } from '@/world/islets';
 import { spread } from '@/world/sea';
 import { hash } from '@/world/scene';
 import { plantLook } from '@/world/plants';
+import { TALL, sightOf, replantOf } from '@/world/sight';
 import { TW, ALL_NATURE } from '@/world/view/constants';
 import { inPrologue } from '@/game/prologue';
 
@@ -50,8 +51,20 @@ export default {
       [...state.sites, ...(state.camp || [])].forEach(site => {
         for (let dy = 0; dy < site.h; dy++) for (let dx = 0; dx < site.w; dx++) taken.add((site.y + dy) * n + site.x + dx);
       });
+      // La vue dégagée (world/sight.js) : devant ce qui se tient debout, pas d'arbre ; il pousse un peu plus loin
+      const standing = [...state.sites, ...(state.camp || []), ...(state.crafts ? state.crafts.placed : []), ...(state.annexes || []), ...landmarksShown(state), ...depositsShown(state)];
+      const sight = sightOf(standing, n);
+      const chased = [];
+      const tallAt = new Set();
       const props = [];
       const add = (kind, x, y, dx = 0, dy = 0) => {
+        if (TALL.has(kind)) {
+          if (sight.has(y * n + x)) {
+            chased.push({ kind, x, y });
+            return;
+          }
+          tallAt.add(y * n + x);
+        }
         const c = this.world(x + dx, y + dy);
         // Son dessin : celui de la bibliothèque (sa variante tirée de sa place), sinon le dessin par code
         const look = plantLook(kind, x + dx, y + dy) || { key: `nature-${kind}`, make: ALL_NATURE[kind] };
@@ -87,6 +100,14 @@ export default {
             if (kind) add(kind, x, y);
           }
         }
+      }
+      // Les arbres chassés de la vue : replantés à la case libre la plus proche, sur le même sol (le palmier reste au
+      // sable, le sapin à la forêt), une case sans autre arbre, hors de toute vue ; sinon ils ne poussent pas
+      for (const tree of chased) {
+        const ground = M.ground(tree.x, tree.y);
+        const free = (x, y) => x >= 0 && y >= 0 && x < n && y < n && M.ground(x, y) === ground && !taken.has(y * n + x) && !sight.has(y * n + x) && !tallAt.has(y * n + x);
+        const spot = replantOf(tree.x, tree.y, free);
+        if (spot) add(tree.kind, spot.x, spot.y);
       }
       // Îlot aux Mouettes acheté : les nids de la colonie, sur l'herbe libre
       if (this.owns(state, COLONY_ZONE)) {

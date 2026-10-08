@@ -18,13 +18,14 @@ describe('les plantes de la bibliothèque', () => {
     for (const kind of GROWN) {
       expect(VARIANTS[kind]?.length, kind).toBeGreaterThan(0);
     }
-    expect(VARIANTS.tree[0]).toBe('arbre');
-    expect(VARIANTS.apple[0]).toBe('pommier');
+    const ete = variantsFor('ete');
+    expect(ete.tree[0]).toBe('arbre');
+    expect(ete.apple[0]).toBe('pommier');
     expect(VARIANTS.tuft[0]).toBe('touffe');
   });
 
   it('les variantes restent dans leur sorte (l\'arbre ne prend ni l\'automne ni l\'arbre mort), sans les dessins de nuit', () => {
-    expect(VARIANTS.tree.every(name => !/automne|mort/.test(name))).toBe(true);
+    expect(variantsFor('ete').tree.every(name => !/automne|mort/.test(name))).toBe(true);
     expect(VARIANTS.pine.every(name => !name.includes('neige'))).toBe(true);
     expect(VARIANTS.deadtree.every(name => name.startsWith('arbre_mort'))).toBe(true);
     expect(VARIANTS.rocks).not.toContain('rochers_moussus');
@@ -40,6 +41,16 @@ describe('les plantes de la bibliothèque', () => {
     expect(automne.autumn.some(name => /^(cerisier|chene_moyen|bouleau_nu|sapin_givre|arbre_hiver)/.test(name))).toBe(false);
     expect(automne.tree.some(name => /printemps|hiver/.test(name))).toBe(false);
     expect(automne.birch.some(name => name.startsWith('bouleau_nu'))).toBe(false);
+    // Les feuillus suivent la saison : ni vert ni fleuri en automne, rien de vert en hiver, pas de fleurs en été
+    for (const kind of ['tree', 'birch', 'bush', 'apple']) {
+      expect(automne[kind].some(name => /^(arbre|arbre_petit|arbre_profond|bouleau|bouleau_petit|buisson|buisson_petit|pommier|pommier_petit)$|fleur|printemps|hiver/.test(name)), kind).toBe(false);
+    }
+    expect(automne.tree.every(name => name.startsWith('arbre_automne'))).toBe(true);
+    expect(automne.apple).toContain('pommier_tombees');
+    expect(variantsFor('hiver').tree.every(name => name.startsWith('arbre_hiver'))).toBe(true);
+    expect(variantsFor('hiver').bush.every(name => name.startsWith('buisson_hiver'))).toBe(true);
+    expect(variantsFor('ete').apple.some(name => /fleur|tombees/.test(name))).toBe(false);
+    expect(variantsFor('printemps').apple.every(name => name.includes('fleurs'))).toBe(true);
     expect(automne.pine.some(name => name.startsWith('sapin_givre'))).toBe(false);
     expect(automne.bush).toContain('buisson_automne');
     expect(automne.bush).not.toContain('buisson_hiver');
