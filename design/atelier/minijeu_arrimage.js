@@ -1,4 +1,4 @@
-// Mini-jeux — l'Arrimage, le « Tetris » de l'île (design/conception/minijeux_grille.md, § 6) : la cale de 8 × 14 cases
+// Mini-jeux — l'Arrimage, le jeu de rangement de l'île (design/conception/minijeux_grille.md, § 6) : la cale de 8 × 14 cases
 // (case 16 × 16, cale 128 × 224), les quatre marchandises dessinées case par case, l'ombre de pose, la marque des
 // marchandises fragiles, la marée qui monte, la rangée arrimée. Le jeu compose chaque marchandise avec les cases de sa
 // sorte : la case n'a de contour que là où la pièce s'arrête (son masque dit quelles voisines sont de la même pièce).
