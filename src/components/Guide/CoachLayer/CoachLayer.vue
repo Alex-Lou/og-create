@@ -52,9 +52,10 @@ import { reducedMotion, vibrate } from '@/utils/fx';
 // Marge autour de la cible (px), hauteur de la bulle (pour la placer au-dessus ou au-dessous)
 const PAD = 8;
 const SAY_H = 96;
-// Sans cible à l'écran depuis ce temps (ms) : la bulle « Me montrer » (pas par-dessus une fenêtre ouverte)
+// Sans cible à l'écran depuis ce temps (ms) : la bulle « Me montrer » (pas par-dessus une fenêtre ouverte, la
+// révélation d'un élément dans l'Athanor ni l'ouverture d'un chapitre)
 const LOST_MS = 1200;
-const OVERLAYS = '.g-modal-backdrop, .world__sheet-backdrop, [aria-modal="true"]';
+const OVERLAYS = '.g-modal-backdrop, .world__sheet-backdrop, [aria-modal="true"], .athanor .reveal, .book-unlock';
 let count = 0;
 
 export default {
@@ -175,13 +176,15 @@ export default {
       this.lostSince = performance.now();
       this.lost = false;
     },
-    // La cible est à l'écran et rien ne la recouvre (une fiche, une scène, une bulle de Brume : le coach attend)
+    // La cible est à l'écran et rien ne la recouvre (une fiche, une scène, une bulle de Brume : le coach attend) ; son
+    // centre, ou son haut (la rangée d'éléments du Grimoire passe en partie sous le plateau de l'Athanor)
     visible(r) {
       const cx = r.x + r.w / 2;
-      const cy = r.y + r.h / 2;
-      if (r.w <= 0 || cx < 0 || cy < 0 || cx > window.innerWidth || cy > window.innerHeight) return false;
-      const top = document.elementsFromPoint(cx, cy).find(el => !this.$el || !this.$el.contains || !this.$el.contains(el));
-      return Boolean(top && r.el && (r.el === top || r.el.contains(top)));
+      return [r.y + r.h / 2, r.y + Math.min(r.h / 4, 24)].some(cy => {
+        if (r.w <= 0 || cx < 0 || cy < 0 || cx > window.innerWidth || cy > window.innerHeight) return false;
+        const top = document.elementsFromPoint(cx, cy).find(el => !this.$el || !this.$el.contains || !this.$el.contains(el));
+        return Boolean(top && r.el && (r.el === top || r.el.contains(top)));
+      });
     },
     wall(x, y, w, h) {
       return { left: `${x}px`, top: `${y}px`, width: `${Math.max(0, w)}px`, height: `${Math.max(0, h)}px` };

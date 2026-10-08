@@ -8,7 +8,7 @@ import { floatOf, BRUME_ALT, drawBrume, BRUME_REACH } from '@/world/brume';
 import { brumeArtLayer, drawBrumeArt } from '@/world/brumeArt';
 import { wreckOf, memoryOf } from '@/world/story';
 import { builtOf } from '@/world/faces';
-import { questShort } from '@/game/prologue';
+import { questShort, questPlan } from '@/game/prologue';
 import playService from '@/services/playService';
 import { messageOf } from '@/utils/errors';
 import { TW, TH } from '../constants';
@@ -72,13 +72,14 @@ export default {
     else this.questOpen = true;
   },
   // Brume (quête active, actes finis), le nom du peuple, Anya et l'avatar du joueur : le tutoriel et les veillées
-  // (App.vue) y lisent où en est le joueur. short : ce que la quête fait payer manque (game/prologue.js). hold : un coffre est ouvert, ou va s'ouvrir (une veillée ou une scène
+  // (App.vue) y lisent où en est le joueur. short : ce que la quête fait payer manque ; plan : l'élément que son bâtiment
+  // demande, pas encore écrit (game/prologue.js). hold : un coffre est ouvert, ou va s'ouvrir (une veillée ou une scène
   // l'attend) ; built : les maîtres dont le bâtiment est fondé (les autres paraissent en naufragés)
   emitQuest() {
     const state = this.state;
     if (!state) return;
     const hold = Boolean(this.holdWreck || this.reveal || this.haul || this.wreck);
-    this.$emit('quest', state.brume ? { ...state.brume, short: questShort(state.brume.quest, state, this.stockPaid), people: state.people || null, anya: state.anya || null, avatar: state.avatar || null, hold, built: builtOf(state.villagers) } : null);
+    this.$emit('quest', state.brume ? { ...state.brume, short: questShort(state.brume.quest, state, this.stockPaid), plan: questPlan(state.brume.quest, state), people: state.people || null, anya: state.anya || null, avatar: state.avatar || null, hold, built: builtOf(state.villagers) } : null);
   },
   // Naufrage à annoncer pour la quête active (déjà vus : retenus sur l'appareil)
   checkWreck() {

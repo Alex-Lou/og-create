@@ -17,7 +17,7 @@
     >
       <span class="world__coins-icon" aria-hidden="true"><ElementGlyph glyph="ui:basket" /></span>
       <span class="world__coins-text" aria-hidden="true">
-        <span class="world__coins-label">Tout ramasser</span>
+        <span class="world__coins-label"><span class="world__coins-long">Tout ramasser</span><span class="world__coins-short">Ramasser</span></span>
         <span class="world__coins-gains">
           <span v-for="g in harvestable" :key="g.id">+{{ g.n }}<ElementGlyph :glyph="g.glyph" /></span>
         </span>

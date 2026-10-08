@@ -1,7 +1,7 @@
 // Lot H4 (HISTOIRE.md, § 9 et § 16) : le tutoriel ne commence que pour un invité tout neuf, suit le jeu (pages
 // écrites, compte, nom) et s'arrête pour de bon avec « Passer » ; ses répliques tiennent en une bulle (§ 7.4).
 import { describe, it, expect } from 'vitest';
-import { prologueStep, islandStep, loadPrologue } from '@/game/prologue';
+import { prologueStep, islandStep, loadPrologue, scenesBefore, inPrologue } from '@/game/prologue';
 import { SCENES, LINES } from '@/game/prologueScenes';
 import { sceneOf } from '@/game/sceneArt';
 
@@ -77,6 +77,19 @@ describe('le tutoriel', () => {
     expect(island({ id: 'poules', done: true }, all)).toEqual({ phase: 'lines', lines: ['ponte', 'claim'] });
     // Chaque réplique nommée existe
     for (const line of ['claim', 'chaine', 'bulle', 'soupe', 'puzzle', 'or', 'souci', 'source', 'baguette', 'ruban', 'chut', 'produit', 'epaves', 'cendres', 'flambe', 'caquets', 'ponte']) expect(LINES[line], line).toBeTruthy();
+  });
+  it('repris par le compte : les scènes des étapes passées comptent comme vues, celle de l’étape en cours se joue', () => {
+    expect(inPrologue('feu')).toBe(true);
+    expect(inPrologue('lisiere')).toBe(false);
+    const before = ['naufrage', 'arrivee', 'souffle', 'sceau'];
+    expect(scenesBefore('ramasser')).toEqual(before);
+    expect(scenesBefore('soupe')).toEqual([...before, 'recolte']);
+    expect(scenesBefore('souvenir-ondin')).toEqual([...before, 'recolte', 'cannelle', 'rivet']);
+    // Après le prologue : toutes, sauf le Campement (il se joue une fois)
+    expect(scenesBefore('lisiere')).toEqual([...before, 'recolte', 'cannelle', 'rivet', 'ondin']);
+    // Un appareil qui n'a rien retenu, à l'étape de la soupe : la scène de Cannelle, pas celle d'Aster
+    const resumed = { started: true, registered: true, named: true, seen: scenesBefore('soupe') };
+    expect(islandStep({ state: state(resumed), quest: { id: 'soupe', done: false } })).toEqual({ phase: 'scene', scene: 'cannelle' });
   });
   it('chaque réplique tient en une bulle et ne cite ni un ancien prénom ni le Livre', () => {
     const texts = [...Object.values(SCENES).flat().filter(frame => frame.text || frame.caption).map(frame => frame.text || frame.caption), ...Object.values(LINES).map(line => line.text || line)];

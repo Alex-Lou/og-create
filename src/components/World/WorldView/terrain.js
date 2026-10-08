@@ -15,7 +15,8 @@ import { TW, ALL_NATURE } from '@/world/view/constants';
 const UNVEIL_MS = 1600;
 const BEACH_MIX = [['palm', 0.1], ['mossy', 0.15], ['shells', 0.2], ['driftwood', 0.23]];
 const ROCK_MIX = [['rock', 0.3], ['rocks', 0.55], ['crag', 0.72], ['mossy', 1]];
-const GRASS_MIX = [['tuft', 0.1], ['flowers', 0.16], ['bush', 0.185], ['mushrooms', 0.205], ['stump', 0.22], ['birch', 0.235], ['apple', 0.245], ['autumn', 0.255], ['log', 0.265]];
+// (ni souche ni rondin : personne n'a encore coupé d'arbre sur l'île ; leurs parts vont au buisson et à la touffe)
+const GRASS_MIX = [['tuft', 0.1], ['flowers', 0.16], ['bush', 0.185], ['mushrooms', 0.205], ['bush', 0.22], ['birch', 0.235], ['apple', 0.245], ['autumn', 0.255], ['tuft', 0.265]];
 // Forêt : deux arbres par case (sapins en hauteur) ; au bord de l'eau douce, roseaux et nénuphars
 const FOREST_LOW = ['tree', 'birch', 'pine', 'autumn'];
 const FOREST_HIGH = ['pine', 'pine', 'tree'];
@@ -74,7 +75,7 @@ export default {
             // Jungle : deux arbres par case, palmiers et feuillus
             add(roll < 0.5 ? 'palm' : 'tree', x, y, -0.2, -0.16);
             add(hash(y, x) < 0.4 ? 'palm' : 'tree', x, y, 0.18, 0.22);
-          } else if (g === 'x') { if (roll < 0.6) add(roll < 0.35 ? 'reeds' : roll < 0.48 ? 'lily' : 'stump', x, y); }
+          } else if (g === 'x') { if (roll < 0.6) add(roll < 0.35 || roll >= 0.48 ? 'reeds' : 'lily', x, y); }
           else if (g === 'l') { if (roll < 0.32) add(roll < 0.12 ? 'heather' : roll < 0.2 ? 'bush' : roll < 0.27 ? 'tuft' : 'rocks', x, y); }
           else if (g === 'n') { if (roll < 0.14) add(M.height(x, y) <= 5 && roll < 0.09 ? 'snowpine' : 'crag', x, y); }
           else if (g === 'a') { if (roll < 0.2) add(roll < 0.1 ? 'deadtree' : 'rocks', x, y); }
