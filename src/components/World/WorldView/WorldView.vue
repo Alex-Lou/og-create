@@ -771,8 +771,8 @@ export default {
         guide.tip('island');
         // Premier bâtiment au palier II : ses annexes s'ouvrent
         if (state.sites.some(s => s.level >= 2 && !s.locked)) guide.tip('annexes');
-        // Deux habitants ou plus : ils ont un prénom, on peut s'en faire des amis
-        if ((state.villagers || []).length >= 2) guide.tip('friends');
+        // Deux habitants ou plus : ils ont un prénom, on peut s'en faire des amis (après le tutoriel : une chose à la fois)
+        if ((state.villagers || []).length >= 2 && !this.thickMist()) guide.tip('friends');
         // Un habitant à qui il manque quelque chose : ses besoins et son humeur
         if ((state.villagers || []).some(v => missingOf(v).length)) guide.tip('needs');
         // Un visiteur vient d'accoster
@@ -913,8 +913,10 @@ export default {
       this.state = state;
       this.emitQuest();
       this.$nextTick(() => this.checkNights());
-      // Brume et sol d'un quartier : à soi (o), connu (k), inconnu (u) ; un changement refait ses carrés de sol
-      const mistKey = state.map.zones.map(z => `${z.id}:${z.owned ? 'o' : z.known === false ? 'u' : 'k'}`).join();
+      // Brume et sol d'un quartier : à soi (o), sous la brume épaisse du tutoriel (t), connu (k), inconnu (u) ; un
+      // changement refait ses carrés de sol
+      const thick = this.thickMist();
+      const mistKey = state.map.zones.map(z => `${z.id}:${z.owned ? 'o' : thick ? 't' : z.known === false ? 'u' : 'k'}`).join();
       if (this.mistKey !== null && mistKey !== this.mistKey) {
         const before = new Set(this.mistKey.split(',')), after = new Set(mistKey.split(','));
         const changed = [...new Set([...before, ...after].map(k => k.split(':')[0]))].filter(id => [...before].find(k => k.startsWith(`${id}:`)) !== [...after].find(k => k.startsWith(`${id}:`)));

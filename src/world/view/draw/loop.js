@@ -188,7 +188,7 @@ export default {
     for (const id of [...this.unveils.keys()]) {
       const mist = this.mistOf(this.state.map.zones.find(z => z.id === id), now);
       if (!mist) continue;
-      ctx.fillStyle = `rgba(236, 238, 242, ${(0.62 * mist).toFixed(3)})`;
+      ctx.fillStyle = `rgba(236, 238, 242, ${((this.thickMist() ? 0.9 : 0.62) * mist).toFixed(3)})`;
       for (const [x, y] of this.zoneTiles.get(id) || []) {
         const c = this.ground(x, y);
         this.diamond(ctx, c.x, c.y, TW + 1, TH + 1);
@@ -228,7 +228,7 @@ export default {
       ...[...this.critters(t), ...life.standing].filter(critter => seen(critter.x, critter.y))
         .map(critter => ({ depth: critter.depth ?? critter.x + critter.y, critter })),
       ...this.ferryItems(t),
-      ...this.state.map.zones.filter(zone => !zone.owned).map(zone => ({ zone, at: this.signPlaceOf(zone) }))
+      ...this.state.map.zones.filter(zone => !zone.owned && this.signShown(zone)).map(zone => ({ zone, at: this.signPlaceOf(zone) }))
         .filter(sign => sign.at && seen(sign.at.x, sign.at.y)).map(sign => ({ depth: sign.at.x + sign.at.y, sign }))
     ].sort((p, q) => p.depth - q.depth);
     this.signs = [];
@@ -299,6 +299,12 @@ export default {
     this.drawPick(ctx, t);
     // Arrivée sur l'île : où en est la première vue
     this.watchLoading(missing, this.terrain.seen || 0);
+  },
+  // Panneau d'un quartier pas encore à soi : sous la brume épaisse du tutoriel, seul celui que vise la quête
+  signShown(zone) {
+    if (!this.thickMist()) return true;
+    const target = this.state.brume.quest.target;
+    return Boolean(target && target.zone === zone.id);
   },
   // Mouette en vol de la bibliothèque (beastArt.flyingGull) : à peu près la taille du dessin par code, grossie de même
   // quand l'île est vue de loin ; tournée vers la gauche quand elle y va (flip). false tant que son image se lit (le

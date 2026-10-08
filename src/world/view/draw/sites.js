@@ -33,7 +33,7 @@ export default {
     const mist = this.mistOf(this.zoneAt(site.x, site.y), now);
     if (mist) {
       ctx.save();
-      ctx.globalAlpha = 1 - 0.55 * mist;
+      ctx.globalAlpha = 1 - this.mistFade(0.55) * mist;
       this.paintSite(ctx, site, t, now, repaint);
       ctx.restore();
       return;
@@ -178,7 +178,8 @@ export default {
       }
     }
   },
-  // Panneau d'un quartier à acheter : prix, ou chapitre du Livre encore fermé ; il se balance un peu
+  // Panneau d'un quartier à acheter : prix, ou chapitre du Livre encore fermé (au tutoriel, La Source : à découvrir) ;
+  // il se balance un peu
   drawSign(ctx, { zone, at }, t, repaint) {
     const c = this.ground(at.x, at.y);
     ctx.save();
@@ -192,7 +193,7 @@ export default {
     ctx.textBaseline = 'middle';
     ctx.fillStyle = '#4A3426';
     const going = this.state.expedition && this.state.expedition.zone === zone.id;
-    ctx.fillText(zone.known === false ? (going ? 'En route' : zone.explorable ? 'Explorer' : '? ? ?') : zone.open ? `${zone.price} écus` : `Chap. ${zone.chapter}`, 0, -31.5);
+    ctx.fillText(zone.known === false ? (going ? 'En route' : zone.explorable ? 'Explorer' : '? ? ?') : zone.plan ? 'Découvrir' : zone.open ? `${zone.price} écus` : `Chap. ${zone.chapter}`, 0, -31.5);
     ctx.textBaseline = 'alphabetic';
     ctx.restore();
     this.signs.push({ zone, x: c.x, y: c.y - 30, r: 20 });
@@ -263,7 +264,7 @@ export default {
     ctx.save();
     ctx.translate(c.x, c.y - hop);
     ctx.scale(scale, scale);
-    if (mist) ctx.globalAlpha = 1 - 0.5 * mist;
+    if (mist) ctx.globalAlpha = 1 - this.mistFade(0.5) * mist;
     // Le Cercle de menhirs fleurit une fois Anya révélée
     const bloom = landmark.id === 'menhirs' && Boolean(this.state.anya && this.state.anya.revealed);
     landmarkLayers(landmark.id, this.reduced() ? 0 : t, bloom).forEach((layer, i) => drawSprite(ctx, layer.key, layer.make, 0, 0, repaint, `landmark:${landmark.id}:${i}`));
@@ -307,7 +308,7 @@ export default {
     ctx.save();
     ctx.translate(c.x, c.y - hop);
     ctx.scale(scale, scale);
-    if (mist) ctx.globalAlpha = 1 - 0.5 * mist;
+    if (mist) ctx.globalAlpha = 1 - this.mistFade(0.5) * mist;
     drawSprite(ctx, layer.key, layer.make, 0, 0, repaint, key);
     ctx.restore();
   },

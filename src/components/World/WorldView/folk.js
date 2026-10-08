@@ -217,7 +217,8 @@ export default {
     // le bocal d'Ondin ; une bête écrite qui vit sur l'île (Sylve la présente, si elle est là)
     bestiaryTips(state) {
       const troupe = new Set((state.villagers || []).map(v => v.id));
-      if (troupe.size) guide.tip('savoirs');
+      // (après le tutoriel : une chose à la fois)
+      if (troupe.size && !this.thickMist()) guide.tip('savoirs');
       const written = new Set(this.elements);
       if (troupe.has('puits') && written.has('Poisson')) guide.tip('bulle');
       if (BEASTS.some(name => name !== 'Poisson' && written.has(name))) {
