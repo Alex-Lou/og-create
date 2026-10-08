@@ -9,15 +9,16 @@
 // Les autres n'ont qu'une vue (SINGLE) : l'abeille, la luciole, Tic-Tac et son amie volent de profil ; le hibou et les
 // papillons, de face (jamais retournés) ; les koï, le dauphin, la baleine et les poissons nagent de profil ; le bocal de
 // Bulle n'a que ses images.
-// Ce que la bibliothèque n'a pas (le cerf blanc d'Anya, le papillon rose du Foyer, les mouettes en vol, le bol de
-// soupe) garde son dessin par code (animals.js, nature.js, seaSprites.js).
+// La mouette en vol bat des ailes en quatre images (120 ms chacune) et plane parfois (flyingGull).
+// Ce que la bibliothèque n'a pas (le cerf blanc d'Anya, le papillon rose du Foyer, le bol de soupe) garde son dessin
+// par code (animals.js, nature.js, seaSprites.js).
 import { betes as BEASTS } from '../../design/bibliotheque/svg/animaux/orientees.json';
 import { reactive } from 'vue';
 import { librarySprite, paintedBox, cropTo, BLANK } from './library';
 
 // Chargés à la demande, un fichier à la fois (le jeu ne lit que ce qui est sur l'île)
 const FILES = {
-  ...import.meta.glob('/design/bibliotheque/svg/animaux/*/*/*_{profil,avant,dos,face}_{marche_1,marche_2,vol_1,vol_2,nage_1,nage_2,nage_3,repos,clignement,joie}.svg', { query: '?raw', import: 'default' }),
+  ...import.meta.glob('/design/bibliotheque/svg/animaux/*/*/*_{profil,avant,dos,face}_{marche_1,marche_2,vol_1,vol_2,vol_3,vol_4,plane,nage_1,nage_2,nage_3,repos,clignement,joie}.svg', { query: '?raw', import: 'default' }),
   ...import.meta.glob('/design/bibliotheque/svg/animaux/familiers/bocal-*/*.svg', { query: '?raw', import: 'default' })
 };
 const ROOT = '/design/bibliotheque/svg/animaux/';
@@ -37,7 +38,7 @@ const SUBJECTS = {
   fox: 'renard', rabbit: 'lapin', hedgehog: 'herisson', squirrel: 'ecureuil', otter: 'loutre', heron: 'heron',
   snowFox: 'renard-polaire', ibex: 'bouquetin', puffin: 'macareux', pony: 'poney', frog: 'grenouille', tortoise: 'tortue',
   fennec: 'fennec', camel: 'chameau', chameleon: 'cameleon', toucan: 'toucan', salamander: 'salamandre', crow: 'corbeau',
-  kit: 'mousse', bird: 'mesange', gull: 'mouette',
+  kit: 'mousse', bird: 'mesange', gull: 'mouette', flyingGull: 'mouette-vol',
   butterfly: { '': 'papillon-jaune', jaune: 'papillon-jaune', bleu: 'papillon-bleu', lune: 'papillon-lune' },
   firefly: 'luciole', bee: { '': 'abeille', amie: 'amie-tictac' }, owl: 'hibou', tictac: 'tictac',
   bowl: { '': 'bocal-vide', bulle: 'bocal-bulle' },
@@ -72,7 +73,8 @@ const SINGLE = {
   'baleine-queue': single('mer', 'profil', 'nage', [-32.5, -37.5, 65, 47.5]),
   'poisson-sardine': single('mer', 'profil', 'nage', FISH),
   'poisson-dorade': single('mer', 'profil', 'nage', FISH),
-  'poisson-volant': single('mer', 'profil', 'nage', FISH)
+  'poisson-volant': single('mer', 'profil', 'nage', FISH),
+  'mouette-vol': single('mer', 'profil', 'vol', [-17.5, -35, 35, 37.5])
 };
 // Le nom de la bête dans la bibliothèque, ou null
 export function subjectOf(species, variant = '') {
@@ -140,6 +142,15 @@ export function beastSprite(species, variant, { view = 'profil', pose = 'marche'
   const path = `${ROOT}${art.groupe}/${subject}/${name}.svg`;
   if (!makes.has(path)) makes.set(path, librarySprite(FILES[path], box));
   return { key: `lib-${name}`, make: makes.get(path), face: !walker && alone.view === 'face' };
+}
+
+// La mouette en vol à l'instant t (secondes) : quatre battements d'ailes (120 ms chacun), puis elle plane un moment ;
+// phase décale les mouettes entre elles. { key, make }, ou null
+const GULL_FLAP_MS = 120;
+export function flyingGull(t, phase = 0) {
+  const glide = Math.sin(t * 0.7 + phase * 2.1) > 0.55;
+  const n = (Math.floor((t * 1000) / GULL_FLAP_MS + phase * 3) % 4) + 1;
+  return beastSprite('flyingGull', '', glide ? { pose: 'plane' } : { pose: 'marche', n });
 }
 
 // Image de marche (1 ou 2) à l'instant t (secondes), à la cadence de la bibliothèque ; k décale les bêtes entre elles
