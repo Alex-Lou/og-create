@@ -38,7 +38,7 @@ if (/[^\w$]require\s*\(|typeof require/.test(fs.readFileSync(fichier, 'utf8'))) 
 // Les avatars
 const POSES = [['repos', 2], ['marche', 4], ['salut', 2]];
 const GESTES = { front: ['grelotter', 'lire'], se: ['ramasser'], ne: [] };
-const TRAVAIL = ['avecMainsTendues', 'avecApplaudir', 'avecPecher', 'avecPiocher', 'avecCueillir', 'avecArroser', 'avecBecher', 'avecSemer', 'avecRecolter', 'avecPorter', 'avecReparer', 'avecRepousser', 'avecEcrire'];
+const TRAVAIL = ['avecMainsTendues', 'avecApplaudir', 'avecPecher', 'avecPiocher', 'avecCueillir', 'avecArroser', 'avecBecher', 'avecSemer', 'avecRecolter', 'avecScier', 'avecPorter', 'avecReparer', 'avecRepousser', 'avecEcrire'];
 const EN_MARCHE = [['avecLanterne'], ['avecParapluie', '#3E78C8'], ['avecValise', '#5E3A22']];
 const ASSIS = [null, 'tendre', 'applaudir', 'reparer', 'ecrire'];
 for (let g = 1; g <= 60; g++) {

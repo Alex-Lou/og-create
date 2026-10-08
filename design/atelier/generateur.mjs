@@ -19,7 +19,7 @@ export const { frame, svg, POSES, EXPRS } = troupe;
 // Les gestes : avec…(personnage) se dessine en pose « action » ; avecLanterne, avecParapluie, avecValise en marche ;
 // couche(personnage, n) dans CADRE_COUCHE ; tendre, applaudir, reparer, ecrire se passent aussi à assis
 export const {
-  avecMainsTendues, avecApplaudir, avecPecher, avecPiocher, avecCueillir, avecArroser, avecBecher, avecSemer, avecRecolter, avecPorter, avecReparer, avecRepousser, avecEcrire,
+  avecMainsTendues, avecApplaudir, avecPecher, avecPiocher, avecCueillir, avecArroser, avecBecher, avecSemer, avecRecolter, avecScier, avecPorter, avecReparer, avecRepousser, avecEcrire,
   avecLanterne, avecParapluie, avecValise, couche, CADRE_PARAPLUIE, CADRE_COUCHE, tendre, applaudir, reparer, ecrire
 } = gestes;
 // Assis (la veillée) : assis(personnage, vue, n, expression, geste) ; SEAT, le dessus du siège

@@ -1310,6 +1310,33 @@
    "statut": "ok"
   },
   {
+   "id": "personnages/avatar/avatar-01-naufrage/avatar-01-naufrage_avant_scier",
+   "rubrique": "personnages",
+   "sujet": "avatar-01-naufrage",
+   "vue": "avant",
+   "pose": "scier",
+   "titre": "Avatar, exemple 1 (naufragé), trois quarts avant, scier",
+   "regarde": "bas-droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/avatar/avatar-01-naufrage/avatar-01-naufrage_avant_scier_1.svg",
+    "svg/personnages/avatar/avatar-01-naufrage/avatar-01-naufrage_avant_scier_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    700,
+    1100
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
    "id": "personnages/avatar/avatar-01-naufrage/avatar-01-naufrage_avant_semer",
    "rubrique": "personnages",
    "sujet": "avatar-01-naufrage",
@@ -1807,6 +1834,33 @@
    "fichiers": [
     "svg/personnages/avatar/avatar-01-naufrage/avatar-01-naufrage_dos_repousser_1.svg",
     "svg/personnages/avatar/avatar-01-naufrage/avatar-01-naufrage_dos_repousser_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    700,
+    1100
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "personnages/avatar/avatar-01-naufrage/avatar-01-naufrage_dos_scier",
+   "rubrique": "personnages",
+   "sujet": "avatar-01-naufrage",
+   "vue": "dos",
+   "pose": "scier",
+   "titre": "Avatar, exemple 1 (naufragé), trois quarts dos, scier",
+   "regarde": "haut-droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/avatar/avatar-01-naufrage/avatar-01-naufrage_dos_scier_1.svg",
+    "svg/personnages/avatar/avatar-01-naufrage/avatar-01-naufrage_dos_scier_2.svg"
    ],
    "cadre": [
     0,
@@ -2389,6 +2443,32 @@
    "statut": "ok"
   },
   {
+   "id": "personnages/avatar/avatar-01-naufrage/avatar-01-naufrage_face_scier",
+   "rubrique": "personnages",
+   "sujet": "avatar-01-naufrage",
+   "vue": "face",
+   "pose": "scier",
+   "titre": "Avatar, exemple 1 (naufragé), de face, scier",
+   "regarde": "face",
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/avatar/avatar-01-naufrage/avatar-01-naufrage_face_scier_1.svg",
+    "svg/personnages/avatar/avatar-01-naufrage/avatar-01-naufrage_face_scier_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    700,
+    1100
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
    "id": "personnages/avatar/avatar-01-naufrage/avatar-01-naufrage_face_semer",
    "rubrique": "personnages",
    "sujet": "avatar-01-naufrage",
@@ -2927,6 +3007,33 @@
    "statut": "ok"
   },
   {
+   "id": "personnages/avatar/avatar-01/avatar-01_avant_scier",
+   "rubrique": "personnages",
+   "sujet": "avatar-01",
+   "vue": "avant",
+   "pose": "scier",
+   "titre": "Avatar, exemple 1, trois quarts avant, scier",
+   "regarde": "bas-droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/avatar/avatar-01/avatar-01_avant_scier_1.svg",
+    "svg/personnages/avatar/avatar-01/avatar-01_avant_scier_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    700,
+    1100
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
    "id": "personnages/avatar/avatar-01/avatar-01_avant_semer",
    "rubrique": "personnages",
    "sujet": "avatar-01",
@@ -3424,6 +3531,33 @@
    "fichiers": [
     "svg/personnages/avatar/avatar-01/avatar-01_dos_repousser_1.svg",
     "svg/personnages/avatar/avatar-01/avatar-01_dos_repousser_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    700,
+    1100
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "personnages/avatar/avatar-01/avatar-01_dos_scier",
+   "rubrique": "personnages",
+   "sujet": "avatar-01",
+   "vue": "dos",
+   "pose": "scier",
+   "titre": "Avatar, exemple 1, trois quarts dos, scier",
+   "regarde": "haut-droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/avatar/avatar-01/avatar-01_dos_scier_1.svg",
+    "svg/personnages/avatar/avatar-01/avatar-01_dos_scier_2.svg"
    ],
    "cadre": [
     0,
@@ -4182,6 +4316,32 @@
    "statut": "ok"
   },
   {
+   "id": "personnages/avatar/avatar-01/avatar-01_face_scier",
+   "rubrique": "personnages",
+   "sujet": "avatar-01",
+   "vue": "face",
+   "pose": "scier",
+   "titre": "Avatar, exemple 1, de face, scier",
+   "regarde": "face",
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/avatar/avatar-01/avatar-01_face_scier_1.svg",
+    "svg/personnages/avatar/avatar-01/avatar-01_face_scier_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    700,
+    1100
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
    "id": "personnages/avatar/avatar-01/avatar-01_face_semer",
    "rubrique": "personnages",
    "sujet": "avatar-01",
@@ -4720,6 +4880,33 @@
    "statut": "ok"
   },
   {
+   "id": "personnages/avatar/avatar-02-naufrage/avatar-02-naufrage_avant_scier",
+   "rubrique": "personnages",
+   "sujet": "avatar-02-naufrage",
+   "vue": "avant",
+   "pose": "scier",
+   "titre": "Avatar, exemple 2 (naufragé), trois quarts avant, scier",
+   "regarde": "bas-droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/avatar/avatar-02-naufrage/avatar-02-naufrage_avant_scier_1.svg",
+    "svg/personnages/avatar/avatar-02-naufrage/avatar-02-naufrage_avant_scier_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    700,
+    1100
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
    "id": "personnages/avatar/avatar-02-naufrage/avatar-02-naufrage_avant_semer",
    "rubrique": "personnages",
    "sujet": "avatar-02-naufrage",
@@ -5217,6 +5404,33 @@
    "fichiers": [
     "svg/personnages/avatar/avatar-02-naufrage/avatar-02-naufrage_dos_repousser_1.svg",
     "svg/personnages/avatar/avatar-02-naufrage/avatar-02-naufrage_dos_repousser_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    700,
+    1100
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "personnages/avatar/avatar-02-naufrage/avatar-02-naufrage_dos_scier",
+   "rubrique": "personnages",
+   "sujet": "avatar-02-naufrage",
+   "vue": "dos",
+   "pose": "scier",
+   "titre": "Avatar, exemple 2 (naufragé), trois quarts dos, scier",
+   "regarde": "haut-droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/avatar/avatar-02-naufrage/avatar-02-naufrage_dos_scier_1.svg",
+    "svg/personnages/avatar/avatar-02-naufrage/avatar-02-naufrage_dos_scier_2.svg"
    ],
    "cadre": [
     0,
@@ -5799,6 +6013,32 @@
    "statut": "ok"
   },
   {
+   "id": "personnages/avatar/avatar-02-naufrage/avatar-02-naufrage_face_scier",
+   "rubrique": "personnages",
+   "sujet": "avatar-02-naufrage",
+   "vue": "face",
+   "pose": "scier",
+   "titre": "Avatar, exemple 2 (naufragé), de face, scier",
+   "regarde": "face",
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/avatar/avatar-02-naufrage/avatar-02-naufrage_face_scier_1.svg",
+    "svg/personnages/avatar/avatar-02-naufrage/avatar-02-naufrage_face_scier_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    700,
+    1100
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
    "id": "personnages/avatar/avatar-02-naufrage/avatar-02-naufrage_face_semer",
    "rubrique": "personnages",
    "sujet": "avatar-02-naufrage",
@@ -6337,6 +6577,33 @@
    "statut": "ok"
   },
   {
+   "id": "personnages/avatar/avatar-02/avatar-02_avant_scier",
+   "rubrique": "personnages",
+   "sujet": "avatar-02",
+   "vue": "avant",
+   "pose": "scier",
+   "titre": "Avatar, exemple 2, trois quarts avant, scier",
+   "regarde": "bas-droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/avatar/avatar-02/avatar-02_avant_scier_1.svg",
+    "svg/personnages/avatar/avatar-02/avatar-02_avant_scier_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    700,
+    1100
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
    "id": "personnages/avatar/avatar-02/avatar-02_avant_semer",
    "rubrique": "personnages",
    "sujet": "avatar-02",
@@ -6834,6 +7101,33 @@
    "fichiers": [
     "svg/personnages/avatar/avatar-02/avatar-02_dos_repousser_1.svg",
     "svg/personnages/avatar/avatar-02/avatar-02_dos_repousser_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    700,
+    1100
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "personnages/avatar/avatar-02/avatar-02_dos_scier",
+   "rubrique": "personnages",
+   "sujet": "avatar-02",
+   "vue": "dos",
+   "pose": "scier",
+   "titre": "Avatar, exemple 2, trois quarts dos, scier",
+   "regarde": "haut-droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/avatar/avatar-02/avatar-02_dos_scier_1.svg",
+    "svg/personnages/avatar/avatar-02/avatar-02_dos_scier_2.svg"
    ],
    "cadre": [
     0,
@@ -7416,6 +7710,32 @@
    "statut": "ok"
   },
   {
+   "id": "personnages/avatar/avatar-02/avatar-02_face_scier",
+   "rubrique": "personnages",
+   "sujet": "avatar-02",
+   "vue": "face",
+   "pose": "scier",
+   "titre": "Avatar, exemple 2, de face, scier",
+   "regarde": "face",
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/avatar/avatar-02/avatar-02_face_scier_1.svg",
+    "svg/personnages/avatar/avatar-02/avatar-02_face_scier_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    700,
+    1100
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
    "id": "personnages/avatar/avatar-02/avatar-02_face_semer",
    "rubrique": "personnages",
    "sujet": "avatar-02",
@@ -7954,6 +8274,33 @@
    "statut": "ok"
   },
   {
+   "id": "personnages/avatar/avatar-03-naufrage/avatar-03-naufrage_avant_scier",
+   "rubrique": "personnages",
+   "sujet": "avatar-03-naufrage",
+   "vue": "avant",
+   "pose": "scier",
+   "titre": "Avatar, exemple 3 (naufragé), trois quarts avant, scier",
+   "regarde": "bas-droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/avatar/avatar-03-naufrage/avatar-03-naufrage_avant_scier_1.svg",
+    "svg/personnages/avatar/avatar-03-naufrage/avatar-03-naufrage_avant_scier_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    700,
+    1100
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
    "id": "personnages/avatar/avatar-03-naufrage/avatar-03-naufrage_avant_semer",
    "rubrique": "personnages",
    "sujet": "avatar-03-naufrage",
@@ -8451,6 +8798,33 @@
    "fichiers": [
     "svg/personnages/avatar/avatar-03-naufrage/avatar-03-naufrage_dos_repousser_1.svg",
     "svg/personnages/avatar/avatar-03-naufrage/avatar-03-naufrage_dos_repousser_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    700,
+    1100
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "personnages/avatar/avatar-03-naufrage/avatar-03-naufrage_dos_scier",
+   "rubrique": "personnages",
+   "sujet": "avatar-03-naufrage",
+   "vue": "dos",
+   "pose": "scier",
+   "titre": "Avatar, exemple 3 (naufragé), trois quarts dos, scier",
+   "regarde": "haut-droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/avatar/avatar-03-naufrage/avatar-03-naufrage_dos_scier_1.svg",
+    "svg/personnages/avatar/avatar-03-naufrage/avatar-03-naufrage_dos_scier_2.svg"
    ],
    "cadre": [
     0,
@@ -9033,6 +9407,32 @@
    "statut": "ok"
   },
   {
+   "id": "personnages/avatar/avatar-03-naufrage/avatar-03-naufrage_face_scier",
+   "rubrique": "personnages",
+   "sujet": "avatar-03-naufrage",
+   "vue": "face",
+   "pose": "scier",
+   "titre": "Avatar, exemple 3 (naufragé), de face, scier",
+   "regarde": "face",
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/avatar/avatar-03-naufrage/avatar-03-naufrage_face_scier_1.svg",
+    "svg/personnages/avatar/avatar-03-naufrage/avatar-03-naufrage_face_scier_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    700,
+    1100
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
    "id": "personnages/avatar/avatar-03-naufrage/avatar-03-naufrage_face_semer",
    "rubrique": "personnages",
    "sujet": "avatar-03-naufrage",
@@ -9571,6 +9971,33 @@
    "statut": "ok"
   },
   {
+   "id": "personnages/avatar/avatar-03/avatar-03_avant_scier",
+   "rubrique": "personnages",
+   "sujet": "avatar-03",
+   "vue": "avant",
+   "pose": "scier",
+   "titre": "Avatar, exemple 3, trois quarts avant, scier",
+   "regarde": "bas-droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/avatar/avatar-03/avatar-03_avant_scier_1.svg",
+    "svg/personnages/avatar/avatar-03/avatar-03_avant_scier_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    700,
+    1100
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
    "id": "personnages/avatar/avatar-03/avatar-03_avant_semer",
    "rubrique": "personnages",
    "sujet": "avatar-03",
@@ -10068,6 +10495,33 @@
    "fichiers": [
     "svg/personnages/avatar/avatar-03/avatar-03_dos_repousser_1.svg",
     "svg/personnages/avatar/avatar-03/avatar-03_dos_repousser_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    700,
+    1100
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "personnages/avatar/avatar-03/avatar-03_dos_scier",
+   "rubrique": "personnages",
+   "sujet": "avatar-03",
+   "vue": "dos",
+   "pose": "scier",
+   "titre": "Avatar, exemple 3, trois quarts dos, scier",
+   "regarde": "haut-droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/avatar/avatar-03/avatar-03_dos_scier_1.svg",
+    "svg/personnages/avatar/avatar-03/avatar-03_dos_scier_2.svg"
    ],
    "cadre": [
     0,
@@ -10650,6 +11104,32 @@
    "statut": "ok"
   },
   {
+   "id": "personnages/avatar/avatar-03/avatar-03_face_scier",
+   "rubrique": "personnages",
+   "sujet": "avatar-03",
+   "vue": "face",
+   "pose": "scier",
+   "titre": "Avatar, exemple 3, de face, scier",
+   "regarde": "face",
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/avatar/avatar-03/avatar-03_face_scier_1.svg",
+    "svg/personnages/avatar/avatar-03/avatar-03_face_scier_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    700,
+    1100
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
    "id": "personnages/avatar/avatar-03/avatar-03_face_semer",
    "rubrique": "personnages",
    "sujet": "avatar-03",
@@ -11188,6 +11668,33 @@
    "statut": "ok"
   },
   {
+   "id": "personnages/avatar/avatar-04-naufrage/avatar-04-naufrage_avant_scier",
+   "rubrique": "personnages",
+   "sujet": "avatar-04-naufrage",
+   "vue": "avant",
+   "pose": "scier",
+   "titre": "Avatar, exemple 4 (naufragé), trois quarts avant, scier",
+   "regarde": "bas-droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/avatar/avatar-04-naufrage/avatar-04-naufrage_avant_scier_1.svg",
+    "svg/personnages/avatar/avatar-04-naufrage/avatar-04-naufrage_avant_scier_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    700,
+    1100
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
    "id": "personnages/avatar/avatar-04-naufrage/avatar-04-naufrage_avant_semer",
    "rubrique": "personnages",
    "sujet": "avatar-04-naufrage",
@@ -11685,6 +12192,33 @@
    "fichiers": [
     "svg/personnages/avatar/avatar-04-naufrage/avatar-04-naufrage_dos_repousser_1.svg",
     "svg/personnages/avatar/avatar-04-naufrage/avatar-04-naufrage_dos_repousser_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    700,
+    1100
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "personnages/avatar/avatar-04-naufrage/avatar-04-naufrage_dos_scier",
+   "rubrique": "personnages",
+   "sujet": "avatar-04-naufrage",
+   "vue": "dos",
+   "pose": "scier",
+   "titre": "Avatar, exemple 4 (naufragé), trois quarts dos, scier",
+   "regarde": "haut-droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/avatar/avatar-04-naufrage/avatar-04-naufrage_dos_scier_1.svg",
+    "svg/personnages/avatar/avatar-04-naufrage/avatar-04-naufrage_dos_scier_2.svg"
    ],
    "cadre": [
     0,
@@ -12267,6 +12801,32 @@
    "statut": "ok"
   },
   {
+   "id": "personnages/avatar/avatar-04-naufrage/avatar-04-naufrage_face_scier",
+   "rubrique": "personnages",
+   "sujet": "avatar-04-naufrage",
+   "vue": "face",
+   "pose": "scier",
+   "titre": "Avatar, exemple 4 (naufragé), de face, scier",
+   "regarde": "face",
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/avatar/avatar-04-naufrage/avatar-04-naufrage_face_scier_1.svg",
+    "svg/personnages/avatar/avatar-04-naufrage/avatar-04-naufrage_face_scier_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    700,
+    1100
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
    "id": "personnages/avatar/avatar-04-naufrage/avatar-04-naufrage_face_semer",
    "rubrique": "personnages",
    "sujet": "avatar-04-naufrage",
@@ -12805,6 +13365,33 @@
    "statut": "ok"
   },
   {
+   "id": "personnages/avatar/avatar-04/avatar-04_avant_scier",
+   "rubrique": "personnages",
+   "sujet": "avatar-04",
+   "vue": "avant",
+   "pose": "scier",
+   "titre": "Avatar, exemple 4, trois quarts avant, scier",
+   "regarde": "bas-droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/avatar/avatar-04/avatar-04_avant_scier_1.svg",
+    "svg/personnages/avatar/avatar-04/avatar-04_avant_scier_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    700,
+    1100
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
    "id": "personnages/avatar/avatar-04/avatar-04_avant_semer",
    "rubrique": "personnages",
    "sujet": "avatar-04",
@@ -13302,6 +13889,33 @@
    "fichiers": [
     "svg/personnages/avatar/avatar-04/avatar-04_dos_repousser_1.svg",
     "svg/personnages/avatar/avatar-04/avatar-04_dos_repousser_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    700,
+    1100
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "personnages/avatar/avatar-04/avatar-04_dos_scier",
+   "rubrique": "personnages",
+   "sujet": "avatar-04",
+   "vue": "dos",
+   "pose": "scier",
+   "titre": "Avatar, exemple 4, trois quarts dos, scier",
+   "regarde": "haut-droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/avatar/avatar-04/avatar-04_dos_scier_1.svg",
+    "svg/personnages/avatar/avatar-04/avatar-04_dos_scier_2.svg"
    ],
    "cadre": [
     0,
@@ -13884,6 +14498,32 @@
    "statut": "ok"
   },
   {
+   "id": "personnages/avatar/avatar-04/avatar-04_face_scier",
+   "rubrique": "personnages",
+   "sujet": "avatar-04",
+   "vue": "face",
+   "pose": "scier",
+   "titre": "Avatar, exemple 4, de face, scier",
+   "regarde": "face",
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/avatar/avatar-04/avatar-04_face_scier_1.svg",
+    "svg/personnages/avatar/avatar-04/avatar-04_face_scier_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    700,
+    1100
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
    "id": "personnages/avatar/avatar-04/avatar-04_face_semer",
    "rubrique": "personnages",
    "sujet": "avatar-04",
@@ -14422,6 +15062,33 @@
    "statut": "ok"
   },
   {
+   "id": "personnages/avatar/avatar-05-naufrage/avatar-05-naufrage_avant_scier",
+   "rubrique": "personnages",
+   "sujet": "avatar-05-naufrage",
+   "vue": "avant",
+   "pose": "scier",
+   "titre": "Avatar, exemple 5 (naufragé), trois quarts avant, scier",
+   "regarde": "bas-droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/avatar/avatar-05-naufrage/avatar-05-naufrage_avant_scier_1.svg",
+    "svg/personnages/avatar/avatar-05-naufrage/avatar-05-naufrage_avant_scier_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    700,
+    1100
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
    "id": "personnages/avatar/avatar-05-naufrage/avatar-05-naufrage_avant_semer",
    "rubrique": "personnages",
    "sujet": "avatar-05-naufrage",
@@ -14919,6 +15586,33 @@
    "fichiers": [
     "svg/personnages/avatar/avatar-05-naufrage/avatar-05-naufrage_dos_repousser_1.svg",
     "svg/personnages/avatar/avatar-05-naufrage/avatar-05-naufrage_dos_repousser_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    700,
+    1100
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "personnages/avatar/avatar-05-naufrage/avatar-05-naufrage_dos_scier",
+   "rubrique": "personnages",
+   "sujet": "avatar-05-naufrage",
+   "vue": "dos",
+   "pose": "scier",
+   "titre": "Avatar, exemple 5 (naufragé), trois quarts dos, scier",
+   "regarde": "haut-droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/avatar/avatar-05-naufrage/avatar-05-naufrage_dos_scier_1.svg",
+    "svg/personnages/avatar/avatar-05-naufrage/avatar-05-naufrage_dos_scier_2.svg"
    ],
    "cadre": [
     0,
@@ -15501,6 +16195,32 @@
    "statut": "ok"
   },
   {
+   "id": "personnages/avatar/avatar-05-naufrage/avatar-05-naufrage_face_scier",
+   "rubrique": "personnages",
+   "sujet": "avatar-05-naufrage",
+   "vue": "face",
+   "pose": "scier",
+   "titre": "Avatar, exemple 5 (naufragé), de face, scier",
+   "regarde": "face",
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/avatar/avatar-05-naufrage/avatar-05-naufrage_face_scier_1.svg",
+    "svg/personnages/avatar/avatar-05-naufrage/avatar-05-naufrage_face_scier_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    700,
+    1100
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
    "id": "personnages/avatar/avatar-05-naufrage/avatar-05-naufrage_face_semer",
    "rubrique": "personnages",
    "sujet": "avatar-05-naufrage",
@@ -16039,6 +16759,33 @@
    "statut": "ok"
   },
   {
+   "id": "personnages/avatar/avatar-05/avatar-05_avant_scier",
+   "rubrique": "personnages",
+   "sujet": "avatar-05",
+   "vue": "avant",
+   "pose": "scier",
+   "titre": "Avatar, exemple 5, trois quarts avant, scier",
+   "regarde": "bas-droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/avatar/avatar-05/avatar-05_avant_scier_1.svg",
+    "svg/personnages/avatar/avatar-05/avatar-05_avant_scier_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    700,
+    1100
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
    "id": "personnages/avatar/avatar-05/avatar-05_avant_semer",
    "rubrique": "personnages",
    "sujet": "avatar-05",
@@ -16536,6 +17283,33 @@
    "fichiers": [
     "svg/personnages/avatar/avatar-05/avatar-05_dos_repousser_1.svg",
     "svg/personnages/avatar/avatar-05/avatar-05_dos_repousser_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    700,
+    1100
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "personnages/avatar/avatar-05/avatar-05_dos_scier",
+   "rubrique": "personnages",
+   "sujet": "avatar-05",
+   "vue": "dos",
+   "pose": "scier",
+   "titre": "Avatar, exemple 5, trois quarts dos, scier",
+   "regarde": "haut-droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/avatar/avatar-05/avatar-05_dos_scier_1.svg",
+    "svg/personnages/avatar/avatar-05/avatar-05_dos_scier_2.svg"
    ],
    "cadre": [
     0,
@@ -17118,6 +17892,32 @@
    "statut": "ok"
   },
   {
+   "id": "personnages/avatar/avatar-05/avatar-05_face_scier",
+   "rubrique": "personnages",
+   "sujet": "avatar-05",
+   "vue": "face",
+   "pose": "scier",
+   "titre": "Avatar, exemple 5, de face, scier",
+   "regarde": "face",
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/avatar/avatar-05/avatar-05_face_scier_1.svg",
+    "svg/personnages/avatar/avatar-05/avatar-05_face_scier_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    700,
+    1100
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
    "id": "personnages/avatar/avatar-05/avatar-05_face_semer",
    "rubrique": "personnages",
    "sujet": "avatar-05",
@@ -17656,6 +18456,33 @@
    "statut": "ok"
   },
   {
+   "id": "personnages/avatar/avatar-06-naufrage/avatar-06-naufrage_avant_scier",
+   "rubrique": "personnages",
+   "sujet": "avatar-06-naufrage",
+   "vue": "avant",
+   "pose": "scier",
+   "titre": "Avatar, exemple 6 (naufragé), trois quarts avant, scier",
+   "regarde": "bas-droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/avatar/avatar-06-naufrage/avatar-06-naufrage_avant_scier_1.svg",
+    "svg/personnages/avatar/avatar-06-naufrage/avatar-06-naufrage_avant_scier_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    700,
+    1100
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
    "id": "personnages/avatar/avatar-06-naufrage/avatar-06-naufrage_avant_semer",
    "rubrique": "personnages",
    "sujet": "avatar-06-naufrage",
@@ -18153,6 +18980,33 @@
    "fichiers": [
     "svg/personnages/avatar/avatar-06-naufrage/avatar-06-naufrage_dos_repousser_1.svg",
     "svg/personnages/avatar/avatar-06-naufrage/avatar-06-naufrage_dos_repousser_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    700,
+    1100
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "personnages/avatar/avatar-06-naufrage/avatar-06-naufrage_dos_scier",
+   "rubrique": "personnages",
+   "sujet": "avatar-06-naufrage",
+   "vue": "dos",
+   "pose": "scier",
+   "titre": "Avatar, exemple 6 (naufragé), trois quarts dos, scier",
+   "regarde": "haut-droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/avatar/avatar-06-naufrage/avatar-06-naufrage_dos_scier_1.svg",
+    "svg/personnages/avatar/avatar-06-naufrage/avatar-06-naufrage_dos_scier_2.svg"
    ],
    "cadre": [
     0,
@@ -18735,6 +19589,32 @@
    "statut": "ok"
   },
   {
+   "id": "personnages/avatar/avatar-06-naufrage/avatar-06-naufrage_face_scier",
+   "rubrique": "personnages",
+   "sujet": "avatar-06-naufrage",
+   "vue": "face",
+   "pose": "scier",
+   "titre": "Avatar, exemple 6 (naufragé), de face, scier",
+   "regarde": "face",
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/avatar/avatar-06-naufrage/avatar-06-naufrage_face_scier_1.svg",
+    "svg/personnages/avatar/avatar-06-naufrage/avatar-06-naufrage_face_scier_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    700,
+    1100
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
    "id": "personnages/avatar/avatar-06-naufrage/avatar-06-naufrage_face_semer",
    "rubrique": "personnages",
    "sujet": "avatar-06-naufrage",
@@ -19273,6 +20153,33 @@
    "statut": "ok"
   },
   {
+   "id": "personnages/avatar/avatar-06/avatar-06_avant_scier",
+   "rubrique": "personnages",
+   "sujet": "avatar-06",
+   "vue": "avant",
+   "pose": "scier",
+   "titre": "Avatar, exemple 6, trois quarts avant, scier",
+   "regarde": "bas-droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/avatar/avatar-06/avatar-06_avant_scier_1.svg",
+    "svg/personnages/avatar/avatar-06/avatar-06_avant_scier_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    700,
+    1100
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
    "id": "personnages/avatar/avatar-06/avatar-06_avant_semer",
    "rubrique": "personnages",
    "sujet": "avatar-06",
@@ -19770,6 +20677,33 @@
    "fichiers": [
     "svg/personnages/avatar/avatar-06/avatar-06_dos_repousser_1.svg",
     "svg/personnages/avatar/avatar-06/avatar-06_dos_repousser_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    700,
+    1100
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "personnages/avatar/avatar-06/avatar-06_dos_scier",
+   "rubrique": "personnages",
+   "sujet": "avatar-06",
+   "vue": "dos",
+   "pose": "scier",
+   "titre": "Avatar, exemple 6, trois quarts dos, scier",
+   "regarde": "haut-droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/avatar/avatar-06/avatar-06_dos_scier_1.svg",
+    "svg/personnages/avatar/avatar-06/avatar-06_dos_scier_2.svg"
    ],
    "cadre": [
     0,
@@ -20352,6 +21286,32 @@
    "statut": "ok"
   },
   {
+   "id": "personnages/avatar/avatar-06/avatar-06_face_scier",
+   "rubrique": "personnages",
+   "sujet": "avatar-06",
+   "vue": "face",
+   "pose": "scier",
+   "titre": "Avatar, exemple 6, de face, scier",
+   "regarde": "face",
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/avatar/avatar-06/avatar-06_face_scier_1.svg",
+    "svg/personnages/avatar/avatar-06/avatar-06_face_scier_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    700,
+    1100
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
    "id": "personnages/avatar/avatar-06/avatar-06_face_semer",
    "rubrique": "personnages",
    "sujet": "avatar-06",
@@ -20890,6 +21850,33 @@
    "statut": "ok"
   },
   {
+   "id": "personnages/avatar/avatar-07-naufrage/avatar-07-naufrage_avant_scier",
+   "rubrique": "personnages",
+   "sujet": "avatar-07-naufrage",
+   "vue": "avant",
+   "pose": "scier",
+   "titre": "Avatar, exemple 7 (naufragé), trois quarts avant, scier",
+   "regarde": "bas-droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/avatar/avatar-07-naufrage/avatar-07-naufrage_avant_scier_1.svg",
+    "svg/personnages/avatar/avatar-07-naufrage/avatar-07-naufrage_avant_scier_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    700,
+    1100
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
    "id": "personnages/avatar/avatar-07-naufrage/avatar-07-naufrage_avant_semer",
    "rubrique": "personnages",
    "sujet": "avatar-07-naufrage",
@@ -21387,6 +22374,33 @@
    "fichiers": [
     "svg/personnages/avatar/avatar-07-naufrage/avatar-07-naufrage_dos_repousser_1.svg",
     "svg/personnages/avatar/avatar-07-naufrage/avatar-07-naufrage_dos_repousser_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    700,
+    1100
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "personnages/avatar/avatar-07-naufrage/avatar-07-naufrage_dos_scier",
+   "rubrique": "personnages",
+   "sujet": "avatar-07-naufrage",
+   "vue": "dos",
+   "pose": "scier",
+   "titre": "Avatar, exemple 7 (naufragé), trois quarts dos, scier",
+   "regarde": "haut-droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/avatar/avatar-07-naufrage/avatar-07-naufrage_dos_scier_1.svg",
+    "svg/personnages/avatar/avatar-07-naufrage/avatar-07-naufrage_dos_scier_2.svg"
    ],
    "cadre": [
     0,
@@ -21969,6 +22983,32 @@
    "statut": "ok"
   },
   {
+   "id": "personnages/avatar/avatar-07-naufrage/avatar-07-naufrage_face_scier",
+   "rubrique": "personnages",
+   "sujet": "avatar-07-naufrage",
+   "vue": "face",
+   "pose": "scier",
+   "titre": "Avatar, exemple 7 (naufragé), de face, scier",
+   "regarde": "face",
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/avatar/avatar-07-naufrage/avatar-07-naufrage_face_scier_1.svg",
+    "svg/personnages/avatar/avatar-07-naufrage/avatar-07-naufrage_face_scier_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    700,
+    1100
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
    "id": "personnages/avatar/avatar-07-naufrage/avatar-07-naufrage_face_semer",
    "rubrique": "personnages",
    "sujet": "avatar-07-naufrage",
@@ -22507,6 +23547,33 @@
    "statut": "ok"
   },
   {
+   "id": "personnages/avatar/avatar-07/avatar-07_avant_scier",
+   "rubrique": "personnages",
+   "sujet": "avatar-07",
+   "vue": "avant",
+   "pose": "scier",
+   "titre": "Avatar, exemple 7, trois quarts avant, scier",
+   "regarde": "bas-droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/avatar/avatar-07/avatar-07_avant_scier_1.svg",
+    "svg/personnages/avatar/avatar-07/avatar-07_avant_scier_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    700,
+    1100
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
    "id": "personnages/avatar/avatar-07/avatar-07_avant_semer",
    "rubrique": "personnages",
    "sujet": "avatar-07",
@@ -23004,6 +24071,33 @@
    "fichiers": [
     "svg/personnages/avatar/avatar-07/avatar-07_dos_repousser_1.svg",
     "svg/personnages/avatar/avatar-07/avatar-07_dos_repousser_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    700,
+    1100
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "personnages/avatar/avatar-07/avatar-07_dos_scier",
+   "rubrique": "personnages",
+   "sujet": "avatar-07",
+   "vue": "dos",
+   "pose": "scier",
+   "titre": "Avatar, exemple 7, trois quarts dos, scier",
+   "regarde": "haut-droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/avatar/avatar-07/avatar-07_dos_scier_1.svg",
+    "svg/personnages/avatar/avatar-07/avatar-07_dos_scier_2.svg"
    ],
    "cadre": [
     0,
@@ -23586,6 +24680,32 @@
    "statut": "ok"
   },
   {
+   "id": "personnages/avatar/avatar-07/avatar-07_face_scier",
+   "rubrique": "personnages",
+   "sujet": "avatar-07",
+   "vue": "face",
+   "pose": "scier",
+   "titre": "Avatar, exemple 7, de face, scier",
+   "regarde": "face",
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/avatar/avatar-07/avatar-07_face_scier_1.svg",
+    "svg/personnages/avatar/avatar-07/avatar-07_face_scier_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    700,
+    1100
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
    "id": "personnages/avatar/avatar-07/avatar-07_face_semer",
    "rubrique": "personnages",
    "sujet": "avatar-07",
@@ -24124,6 +25244,33 @@
    "statut": "ok"
   },
   {
+   "id": "personnages/avatar/avatar-08-naufrage/avatar-08-naufrage_avant_scier",
+   "rubrique": "personnages",
+   "sujet": "avatar-08-naufrage",
+   "vue": "avant",
+   "pose": "scier",
+   "titre": "Avatar, exemple 8 (naufragé), trois quarts avant, scier",
+   "regarde": "bas-droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/avatar/avatar-08-naufrage/avatar-08-naufrage_avant_scier_1.svg",
+    "svg/personnages/avatar/avatar-08-naufrage/avatar-08-naufrage_avant_scier_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    700,
+    1100
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
    "id": "personnages/avatar/avatar-08-naufrage/avatar-08-naufrage_avant_semer",
    "rubrique": "personnages",
    "sujet": "avatar-08-naufrage",
@@ -24621,6 +25768,33 @@
    "fichiers": [
     "svg/personnages/avatar/avatar-08-naufrage/avatar-08-naufrage_dos_repousser_1.svg",
     "svg/personnages/avatar/avatar-08-naufrage/avatar-08-naufrage_dos_repousser_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    700,
+    1100
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "personnages/avatar/avatar-08-naufrage/avatar-08-naufrage_dos_scier",
+   "rubrique": "personnages",
+   "sujet": "avatar-08-naufrage",
+   "vue": "dos",
+   "pose": "scier",
+   "titre": "Avatar, exemple 8 (naufragé), trois quarts dos, scier",
+   "regarde": "haut-droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/avatar/avatar-08-naufrage/avatar-08-naufrage_dos_scier_1.svg",
+    "svg/personnages/avatar/avatar-08-naufrage/avatar-08-naufrage_dos_scier_2.svg"
    ],
    "cadre": [
     0,
@@ -25203,6 +26377,32 @@
    "statut": "ok"
   },
   {
+   "id": "personnages/avatar/avatar-08-naufrage/avatar-08-naufrage_face_scier",
+   "rubrique": "personnages",
+   "sujet": "avatar-08-naufrage",
+   "vue": "face",
+   "pose": "scier",
+   "titre": "Avatar, exemple 8 (naufragé), de face, scier",
+   "regarde": "face",
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/avatar/avatar-08-naufrage/avatar-08-naufrage_face_scier_1.svg",
+    "svg/personnages/avatar/avatar-08-naufrage/avatar-08-naufrage_face_scier_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    700,
+    1100
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
    "id": "personnages/avatar/avatar-08-naufrage/avatar-08-naufrage_face_semer",
    "rubrique": "personnages",
    "sujet": "avatar-08-naufrage",
@@ -25741,6 +26941,33 @@
    "statut": "ok"
   },
   {
+   "id": "personnages/avatar/avatar-08/avatar-08_avant_scier",
+   "rubrique": "personnages",
+   "sujet": "avatar-08",
+   "vue": "avant",
+   "pose": "scier",
+   "titre": "Avatar, exemple 8, trois quarts avant, scier",
+   "regarde": "bas-droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/avatar/avatar-08/avatar-08_avant_scier_1.svg",
+    "svg/personnages/avatar/avatar-08/avatar-08_avant_scier_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    700,
+    1100
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
    "id": "personnages/avatar/avatar-08/avatar-08_avant_semer",
    "rubrique": "personnages",
    "sujet": "avatar-08",
@@ -26238,6 +27465,33 @@
    "fichiers": [
     "svg/personnages/avatar/avatar-08/avatar-08_dos_repousser_1.svg",
     "svg/personnages/avatar/avatar-08/avatar-08_dos_repousser_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    700,
+    1100
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "personnages/avatar/avatar-08/avatar-08_dos_scier",
+   "rubrique": "personnages",
+   "sujet": "avatar-08",
+   "vue": "dos",
+   "pose": "scier",
+   "titre": "Avatar, exemple 8, trois quarts dos, scier",
+   "regarde": "haut-droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/avatar/avatar-08/avatar-08_dos_scier_1.svg",
+    "svg/personnages/avatar/avatar-08/avatar-08_dos_scier_2.svg"
    ],
    "cadre": [
     0,
@@ -26820,6 +28074,32 @@
    "statut": "ok"
   },
   {
+   "id": "personnages/avatar/avatar-08/avatar-08_face_scier",
+   "rubrique": "personnages",
+   "sujet": "avatar-08",
+   "vue": "face",
+   "pose": "scier",
+   "titre": "Avatar, exemple 8, de face, scier",
+   "regarde": "face",
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/avatar/avatar-08/avatar-08_face_scier_1.svg",
+    "svg/personnages/avatar/avatar-08/avatar-08_face_scier_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    700,
+    1100
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
    "id": "personnages/avatar/avatar-08/avatar-08_face_semer",
    "rubrique": "personnages",
    "sujet": "avatar-08",
@@ -27358,6 +28638,33 @@
    "statut": "ok"
   },
   {
+   "id": "personnages/avatar/avatar-09-naufrage/avatar-09-naufrage_avant_scier",
+   "rubrique": "personnages",
+   "sujet": "avatar-09-naufrage",
+   "vue": "avant",
+   "pose": "scier",
+   "titre": "Avatar, exemple 9 (naufragé), trois quarts avant, scier",
+   "regarde": "bas-droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/avatar/avatar-09-naufrage/avatar-09-naufrage_avant_scier_1.svg",
+    "svg/personnages/avatar/avatar-09-naufrage/avatar-09-naufrage_avant_scier_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    700,
+    1100
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
    "id": "personnages/avatar/avatar-09-naufrage/avatar-09-naufrage_avant_semer",
    "rubrique": "personnages",
    "sujet": "avatar-09-naufrage",
@@ -27855,6 +29162,33 @@
    "fichiers": [
     "svg/personnages/avatar/avatar-09-naufrage/avatar-09-naufrage_dos_repousser_1.svg",
     "svg/personnages/avatar/avatar-09-naufrage/avatar-09-naufrage_dos_repousser_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    700,
+    1100
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "personnages/avatar/avatar-09-naufrage/avatar-09-naufrage_dos_scier",
+   "rubrique": "personnages",
+   "sujet": "avatar-09-naufrage",
+   "vue": "dos",
+   "pose": "scier",
+   "titre": "Avatar, exemple 9 (naufragé), trois quarts dos, scier",
+   "regarde": "haut-droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/avatar/avatar-09-naufrage/avatar-09-naufrage_dos_scier_1.svg",
+    "svg/personnages/avatar/avatar-09-naufrage/avatar-09-naufrage_dos_scier_2.svg"
    ],
    "cadre": [
     0,
@@ -28437,6 +29771,32 @@
    "statut": "ok"
   },
   {
+   "id": "personnages/avatar/avatar-09-naufrage/avatar-09-naufrage_face_scier",
+   "rubrique": "personnages",
+   "sujet": "avatar-09-naufrage",
+   "vue": "face",
+   "pose": "scier",
+   "titre": "Avatar, exemple 9 (naufragé), de face, scier",
+   "regarde": "face",
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/avatar/avatar-09-naufrage/avatar-09-naufrage_face_scier_1.svg",
+    "svg/personnages/avatar/avatar-09-naufrage/avatar-09-naufrage_face_scier_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    700,
+    1100
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
    "id": "personnages/avatar/avatar-09-naufrage/avatar-09-naufrage_face_semer",
    "rubrique": "personnages",
    "sujet": "avatar-09-naufrage",
@@ -28975,6 +30335,33 @@
    "statut": "ok"
   },
   {
+   "id": "personnages/avatar/avatar-09/avatar-09_avant_scier",
+   "rubrique": "personnages",
+   "sujet": "avatar-09",
+   "vue": "avant",
+   "pose": "scier",
+   "titre": "Avatar, exemple 9, trois quarts avant, scier",
+   "regarde": "bas-droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/avatar/avatar-09/avatar-09_avant_scier_1.svg",
+    "svg/personnages/avatar/avatar-09/avatar-09_avant_scier_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    700,
+    1100
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
    "id": "personnages/avatar/avatar-09/avatar-09_avant_semer",
    "rubrique": "personnages",
    "sujet": "avatar-09",
@@ -29472,6 +30859,33 @@
    "fichiers": [
     "svg/personnages/avatar/avatar-09/avatar-09_dos_repousser_1.svg",
     "svg/personnages/avatar/avatar-09/avatar-09_dos_repousser_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    700,
+    1100
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "personnages/avatar/avatar-09/avatar-09_dos_scier",
+   "rubrique": "personnages",
+   "sujet": "avatar-09",
+   "vue": "dos",
+   "pose": "scier",
+   "titre": "Avatar, exemple 9, trois quarts dos, scier",
+   "regarde": "haut-droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/avatar/avatar-09/avatar-09_dos_scier_1.svg",
+    "svg/personnages/avatar/avatar-09/avatar-09_dos_scier_2.svg"
    ],
    "cadre": [
     0,
@@ -30054,6 +31468,32 @@
    "statut": "ok"
   },
   {
+   "id": "personnages/avatar/avatar-09/avatar-09_face_scier",
+   "rubrique": "personnages",
+   "sujet": "avatar-09",
+   "vue": "face",
+   "pose": "scier",
+   "titre": "Avatar, exemple 9, de face, scier",
+   "regarde": "face",
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/avatar/avatar-09/avatar-09_face_scier_1.svg",
+    "svg/personnages/avatar/avatar-09/avatar-09_face_scier_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    700,
+    1100
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
    "id": "personnages/avatar/avatar-09/avatar-09_face_semer",
    "rubrique": "personnages",
    "sujet": "avatar-09",
@@ -30592,6 +32032,33 @@
    "statut": "ok"
   },
   {
+   "id": "personnages/avatar/avatar-10-naufrage/avatar-10-naufrage_avant_scier",
+   "rubrique": "personnages",
+   "sujet": "avatar-10-naufrage",
+   "vue": "avant",
+   "pose": "scier",
+   "titre": "Avatar, exemple 10 (naufragé), trois quarts avant, scier",
+   "regarde": "bas-droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/avatar/avatar-10-naufrage/avatar-10-naufrage_avant_scier_1.svg",
+    "svg/personnages/avatar/avatar-10-naufrage/avatar-10-naufrage_avant_scier_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    700,
+    1100
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
    "id": "personnages/avatar/avatar-10-naufrage/avatar-10-naufrage_avant_semer",
    "rubrique": "personnages",
    "sujet": "avatar-10-naufrage",
@@ -31089,6 +32556,33 @@
    "fichiers": [
     "svg/personnages/avatar/avatar-10-naufrage/avatar-10-naufrage_dos_repousser_1.svg",
     "svg/personnages/avatar/avatar-10-naufrage/avatar-10-naufrage_dos_repousser_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    700,
+    1100
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "personnages/avatar/avatar-10-naufrage/avatar-10-naufrage_dos_scier",
+   "rubrique": "personnages",
+   "sujet": "avatar-10-naufrage",
+   "vue": "dos",
+   "pose": "scier",
+   "titre": "Avatar, exemple 10 (naufragé), trois quarts dos, scier",
+   "regarde": "haut-droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/avatar/avatar-10-naufrage/avatar-10-naufrage_dos_scier_1.svg",
+    "svg/personnages/avatar/avatar-10-naufrage/avatar-10-naufrage_dos_scier_2.svg"
    ],
    "cadre": [
     0,
@@ -31671,6 +33165,32 @@
    "statut": "ok"
   },
   {
+   "id": "personnages/avatar/avatar-10-naufrage/avatar-10-naufrage_face_scier",
+   "rubrique": "personnages",
+   "sujet": "avatar-10-naufrage",
+   "vue": "face",
+   "pose": "scier",
+   "titre": "Avatar, exemple 10 (naufragé), de face, scier",
+   "regarde": "face",
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/avatar/avatar-10-naufrage/avatar-10-naufrage_face_scier_1.svg",
+    "svg/personnages/avatar/avatar-10-naufrage/avatar-10-naufrage_face_scier_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    700,
+    1100
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
    "id": "personnages/avatar/avatar-10-naufrage/avatar-10-naufrage_face_semer",
    "rubrique": "personnages",
    "sujet": "avatar-10-naufrage",
@@ -32209,6 +33729,33 @@
    "statut": "ok"
   },
   {
+   "id": "personnages/avatar/avatar-10/avatar-10_avant_scier",
+   "rubrique": "personnages",
+   "sujet": "avatar-10",
+   "vue": "avant",
+   "pose": "scier",
+   "titre": "Avatar, exemple 10, trois quarts avant, scier",
+   "regarde": "bas-droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/avatar/avatar-10/avatar-10_avant_scier_1.svg",
+    "svg/personnages/avatar/avatar-10/avatar-10_avant_scier_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    700,
+    1100
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
    "id": "personnages/avatar/avatar-10/avatar-10_avant_semer",
    "rubrique": "personnages",
    "sujet": "avatar-10",
@@ -32706,6 +34253,33 @@
    "fichiers": [
     "svg/personnages/avatar/avatar-10/avatar-10_dos_repousser_1.svg",
     "svg/personnages/avatar/avatar-10/avatar-10_dos_repousser_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    700,
+    1100
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "personnages/avatar/avatar-10/avatar-10_dos_scier",
+   "rubrique": "personnages",
+   "sujet": "avatar-10",
+   "vue": "dos",
+   "pose": "scier",
+   "titre": "Avatar, exemple 10, trois quarts dos, scier",
+   "regarde": "haut-droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/avatar/avatar-10/avatar-10_dos_scier_1.svg",
+    "svg/personnages/avatar/avatar-10/avatar-10_dos_scier_2.svg"
    ],
    "cadre": [
     0,
@@ -33288,6 +34862,32 @@
    "statut": "ok"
   },
   {
+   "id": "personnages/avatar/avatar-10/avatar-10_face_scier",
+   "rubrique": "personnages",
+   "sujet": "avatar-10",
+   "vue": "face",
+   "pose": "scier",
+   "titre": "Avatar, exemple 10, de face, scier",
+   "regarde": "face",
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/avatar/avatar-10/avatar-10_face_scier_1.svg",
+    "svg/personnages/avatar/avatar-10/avatar-10_face_scier_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    700,
+    1100
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
    "id": "personnages/avatar/avatar-10/avatar-10_face_semer",
    "rubrique": "personnages",
    "sujet": "avatar-10",
@@ -33826,6 +35426,33 @@
    "statut": "ok"
   },
   {
+   "id": "personnages/avatar/avatar-11-naufrage/avatar-11-naufrage_avant_scier",
+   "rubrique": "personnages",
+   "sujet": "avatar-11-naufrage",
+   "vue": "avant",
+   "pose": "scier",
+   "titre": "Avatar, exemple 11 (naufragé), trois quarts avant, scier",
+   "regarde": "bas-droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/avatar/avatar-11-naufrage/avatar-11-naufrage_avant_scier_1.svg",
+    "svg/personnages/avatar/avatar-11-naufrage/avatar-11-naufrage_avant_scier_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    700,
+    1100
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
    "id": "personnages/avatar/avatar-11-naufrage/avatar-11-naufrage_avant_semer",
    "rubrique": "personnages",
    "sujet": "avatar-11-naufrage",
@@ -34323,6 +35950,33 @@
    "fichiers": [
     "svg/personnages/avatar/avatar-11-naufrage/avatar-11-naufrage_dos_repousser_1.svg",
     "svg/personnages/avatar/avatar-11-naufrage/avatar-11-naufrage_dos_repousser_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    700,
+    1100
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "personnages/avatar/avatar-11-naufrage/avatar-11-naufrage_dos_scier",
+   "rubrique": "personnages",
+   "sujet": "avatar-11-naufrage",
+   "vue": "dos",
+   "pose": "scier",
+   "titre": "Avatar, exemple 11 (naufragé), trois quarts dos, scier",
+   "regarde": "haut-droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/avatar/avatar-11-naufrage/avatar-11-naufrage_dos_scier_1.svg",
+    "svg/personnages/avatar/avatar-11-naufrage/avatar-11-naufrage_dos_scier_2.svg"
    ],
    "cadre": [
     0,
@@ -34905,6 +36559,32 @@
    "statut": "ok"
   },
   {
+   "id": "personnages/avatar/avatar-11-naufrage/avatar-11-naufrage_face_scier",
+   "rubrique": "personnages",
+   "sujet": "avatar-11-naufrage",
+   "vue": "face",
+   "pose": "scier",
+   "titre": "Avatar, exemple 11 (naufragé), de face, scier",
+   "regarde": "face",
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/avatar/avatar-11-naufrage/avatar-11-naufrage_face_scier_1.svg",
+    "svg/personnages/avatar/avatar-11-naufrage/avatar-11-naufrage_face_scier_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    700,
+    1100
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
    "id": "personnages/avatar/avatar-11-naufrage/avatar-11-naufrage_face_semer",
    "rubrique": "personnages",
    "sujet": "avatar-11-naufrage",
@@ -35443,6 +37123,33 @@
    "statut": "ok"
   },
   {
+   "id": "personnages/avatar/avatar-11/avatar-11_avant_scier",
+   "rubrique": "personnages",
+   "sujet": "avatar-11",
+   "vue": "avant",
+   "pose": "scier",
+   "titre": "Avatar, exemple 11, trois quarts avant, scier",
+   "regarde": "bas-droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/avatar/avatar-11/avatar-11_avant_scier_1.svg",
+    "svg/personnages/avatar/avatar-11/avatar-11_avant_scier_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    700,
+    1100
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
    "id": "personnages/avatar/avatar-11/avatar-11_avant_semer",
    "rubrique": "personnages",
    "sujet": "avatar-11",
@@ -35940,6 +37647,33 @@
    "fichiers": [
     "svg/personnages/avatar/avatar-11/avatar-11_dos_repousser_1.svg",
     "svg/personnages/avatar/avatar-11/avatar-11_dos_repousser_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    700,
+    1100
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "personnages/avatar/avatar-11/avatar-11_dos_scier",
+   "rubrique": "personnages",
+   "sujet": "avatar-11",
+   "vue": "dos",
+   "pose": "scier",
+   "titre": "Avatar, exemple 11, trois quarts dos, scier",
+   "regarde": "haut-droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/avatar/avatar-11/avatar-11_dos_scier_1.svg",
+    "svg/personnages/avatar/avatar-11/avatar-11_dos_scier_2.svg"
    ],
    "cadre": [
     0,
@@ -36522,6 +38256,32 @@
    "statut": "ok"
   },
   {
+   "id": "personnages/avatar/avatar-11/avatar-11_face_scier",
+   "rubrique": "personnages",
+   "sujet": "avatar-11",
+   "vue": "face",
+   "pose": "scier",
+   "titre": "Avatar, exemple 11, de face, scier",
+   "regarde": "face",
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/avatar/avatar-11/avatar-11_face_scier_1.svg",
+    "svg/personnages/avatar/avatar-11/avatar-11_face_scier_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    700,
+    1100
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
    "id": "personnages/avatar/avatar-11/avatar-11_face_semer",
    "rubrique": "personnages",
    "sujet": "avatar-11",
@@ -37060,6 +38820,33 @@
    "statut": "ok"
   },
   {
+   "id": "personnages/avatar/avatar-12-naufrage/avatar-12-naufrage_avant_scier",
+   "rubrique": "personnages",
+   "sujet": "avatar-12-naufrage",
+   "vue": "avant",
+   "pose": "scier",
+   "titre": "Avatar, exemple 12 (naufragé), trois quarts avant, scier",
+   "regarde": "bas-droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/avatar/avatar-12-naufrage/avatar-12-naufrage_avant_scier_1.svg",
+    "svg/personnages/avatar/avatar-12-naufrage/avatar-12-naufrage_avant_scier_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    700,
+    1100
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
    "id": "personnages/avatar/avatar-12-naufrage/avatar-12-naufrage_avant_semer",
    "rubrique": "personnages",
    "sujet": "avatar-12-naufrage",
@@ -37557,6 +39344,33 @@
    "fichiers": [
     "svg/personnages/avatar/avatar-12-naufrage/avatar-12-naufrage_dos_repousser_1.svg",
     "svg/personnages/avatar/avatar-12-naufrage/avatar-12-naufrage_dos_repousser_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    700,
+    1100
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "personnages/avatar/avatar-12-naufrage/avatar-12-naufrage_dos_scier",
+   "rubrique": "personnages",
+   "sujet": "avatar-12-naufrage",
+   "vue": "dos",
+   "pose": "scier",
+   "titre": "Avatar, exemple 12 (naufragé), trois quarts dos, scier",
+   "regarde": "haut-droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/avatar/avatar-12-naufrage/avatar-12-naufrage_dos_scier_1.svg",
+    "svg/personnages/avatar/avatar-12-naufrage/avatar-12-naufrage_dos_scier_2.svg"
    ],
    "cadre": [
     0,
@@ -38139,6 +39953,32 @@
    "statut": "ok"
   },
   {
+   "id": "personnages/avatar/avatar-12-naufrage/avatar-12-naufrage_face_scier",
+   "rubrique": "personnages",
+   "sujet": "avatar-12-naufrage",
+   "vue": "face",
+   "pose": "scier",
+   "titre": "Avatar, exemple 12 (naufragé), de face, scier",
+   "regarde": "face",
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/avatar/avatar-12-naufrage/avatar-12-naufrage_face_scier_1.svg",
+    "svg/personnages/avatar/avatar-12-naufrage/avatar-12-naufrage_face_scier_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    700,
+    1100
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
    "id": "personnages/avatar/avatar-12-naufrage/avatar-12-naufrage_face_semer",
    "rubrique": "personnages",
    "sujet": "avatar-12-naufrage",
@@ -38677,6 +40517,33 @@
    "statut": "ok"
   },
   {
+   "id": "personnages/avatar/avatar-12/avatar-12_avant_scier",
+   "rubrique": "personnages",
+   "sujet": "avatar-12",
+   "vue": "avant",
+   "pose": "scier",
+   "titre": "Avatar, exemple 12, trois quarts avant, scier",
+   "regarde": "bas-droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/avatar/avatar-12/avatar-12_avant_scier_1.svg",
+    "svg/personnages/avatar/avatar-12/avatar-12_avant_scier_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    700,
+    1100
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
    "id": "personnages/avatar/avatar-12/avatar-12_avant_semer",
    "rubrique": "personnages",
    "sujet": "avatar-12",
@@ -39174,6 +41041,33 @@
    "fichiers": [
     "svg/personnages/avatar/avatar-12/avatar-12_dos_repousser_1.svg",
     "svg/personnages/avatar/avatar-12/avatar-12_dos_repousser_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    700,
+    1100
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "personnages/avatar/avatar-12/avatar-12_dos_scier",
+   "rubrique": "personnages",
+   "sujet": "avatar-12",
+   "vue": "dos",
+   "pose": "scier",
+   "titre": "Avatar, exemple 12, trois quarts dos, scier",
+   "regarde": "haut-droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/avatar/avatar-12/avatar-12_dos_scier_1.svg",
+    "svg/personnages/avatar/avatar-12/avatar-12_dos_scier_2.svg"
    ],
    "cadre": [
     0,
@@ -39752,6 +41646,32 @@
     64
    ],
    "ms_par_image": 260,
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "personnages/avatar/avatar-12/avatar-12_face_scier",
+   "rubrique": "personnages",
+   "sujet": "avatar-12",
+   "vue": "face",
+   "pose": "scier",
+   "titre": "Avatar, exemple 12, de face, scier",
+   "regarde": "face",
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/avatar/avatar-12/avatar-12_face_scier_1.svg",
+    "svg/personnages/avatar/avatar-12/avatar-12_face_scier_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    700,
+    1100
+   ],
    "parcours": "tuto-1",
    "statut": "ok"
   },
@@ -43531,6 +45451,33 @@
    "statut": "ok"
   },
   {
+   "id": "personnages/maitres/cannelle/cannelle_avant_scier",
+   "rubrique": "personnages",
+   "sujet": "cannelle",
+   "vue": "avant",
+   "pose": "scier",
+   "titre": "Cannelle, trois quarts avant, scier",
+   "regarde": "bas-droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/maitres/cannelle/cannelle_avant_scier_1.svg",
+    "svg/personnages/maitres/cannelle/cannelle_avant_scier_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    700,
+    1100
+   ],
+   "parcours": "tuto-2",
+   "statut": "ok"
+  },
+  {
    "id": "personnages/maitres/cannelle/cannelle_avant_semer",
    "rubrique": "personnages",
    "sujet": "cannelle",
@@ -44321,6 +46268,33 @@
     64
    ],
    "ms_par_image": 260,
+   "parcours": "tuto-2",
+   "statut": "ok"
+  },
+  {
+   "id": "personnages/maitres/cannelle/cannelle_dos_scier",
+   "rubrique": "personnages",
+   "sujet": "cannelle",
+   "vue": "dos",
+   "pose": "scier",
+   "titre": "Cannelle, trois quarts dos, scier",
+   "regarde": "haut-droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/maitres/cannelle/cannelle_dos_scier_1.svg",
+    "svg/personnages/maitres/cannelle/cannelle_dos_scier_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    700,
+    1100
+   ],
    "parcours": "tuto-2",
    "statut": "ok"
   },
@@ -45203,6 +47177,32 @@
    "statut": "ok"
   },
   {
+   "id": "personnages/maitres/cannelle/cannelle_face_scier",
+   "rubrique": "personnages",
+   "sujet": "cannelle",
+   "vue": "face",
+   "pose": "scier",
+   "titre": "Cannelle, de face, scier",
+   "regarde": "face",
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/maitres/cannelle/cannelle_face_scier_1.svg",
+    "svg/personnages/maitres/cannelle/cannelle_face_scier_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    700,
+    1100
+   ],
+   "parcours": "tuto-2",
+   "statut": "ok"
+  },
+  {
    "id": "personnages/maitres/cannelle/cannelle_face_semer",
    "rubrique": "personnages",
    "sujet": "cannelle",
@@ -45872,6 +47872,33 @@
    "statut": "ok"
   },
   {
+   "id": "personnages/naufrages/cannelle/cannelle-naufrage_avant_scier",
+   "rubrique": "personnages",
+   "sujet": "cannelle-naufrage",
+   "vue": "avant",
+   "pose": "scier",
+   "titre": "Cannelle naufragée, trois quarts avant, scier",
+   "regarde": "bas-droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/naufrages/cannelle/cannelle-naufrage_avant_scier_1.svg",
+    "svg/personnages/naufrages/cannelle/cannelle-naufrage_avant_scier_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    700,
+    1100
+   ],
+   "parcours": "tuto-2",
+   "statut": "ok"
+  },
+  {
    "id": "personnages/naufrages/cannelle/cannelle-naufrage_avant_semer",
    "rubrique": "personnages",
    "sujet": "cannelle-naufrage",
@@ -46500,6 +48527,33 @@
     64
    ],
    "ms_par_image": 260,
+   "parcours": "tuto-2",
+   "statut": "ok"
+  },
+  {
+   "id": "personnages/naufrages/cannelle/cannelle-naufrage_dos_scier",
+   "rubrique": "personnages",
+   "sujet": "cannelle-naufrage",
+   "vue": "dos",
+   "pose": "scier",
+   "titre": "Cannelle naufragée, trois quarts dos, scier",
+   "regarde": "haut-droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/naufrages/cannelle/cannelle-naufrage_dos_scier_1.svg",
+    "svg/personnages/naufrages/cannelle/cannelle-naufrage_dos_scier_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    700,
+    1100
+   ],
    "parcours": "tuto-2",
    "statut": "ok"
   },
@@ -47276,6 +49330,32 @@
    "statut": "ok"
   },
   {
+   "id": "personnages/naufrages/cannelle/cannelle-naufrage_face_scier",
+   "rubrique": "personnages",
+   "sujet": "cannelle-naufrage",
+   "vue": "face",
+   "pose": "scier",
+   "titre": "Cannelle naufragée, de face, scier",
+   "regarde": "face",
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/naufrages/cannelle/cannelle-naufrage_face_scier_1.svg",
+    "svg/personnages/naufrages/cannelle/cannelle-naufrage_face_scier_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    700,
+    1100
+   ],
+   "parcours": "tuto-2",
+   "statut": "ok"
+  },
+  {
    "id": "personnages/naufrages/cannelle/cannelle-naufrage_face_semer",
    "rubrique": "personnages",
    "sujet": "cannelle-naufrage",
@@ -47997,6 +50077,33 @@
    "statut": "ok"
   },
   {
+   "id": "personnages/naufrages/rivet/rivet-naufrage_avant_scier",
+   "rubrique": "personnages",
+   "sujet": "rivet-naufrage",
+   "vue": "avant",
+   "pose": "scier",
+   "titre": "Rivet naufragé, trois quarts avant, scier",
+   "regarde": "bas-droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/naufrages/rivet/rivet-naufrage_avant_scier_1.svg",
+    "svg/personnages/naufrages/rivet/rivet-naufrage_avant_scier_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    700,
+    1100
+   ],
+   "parcours": "tuto-2",
+   "statut": "ok"
+  },
+  {
    "id": "personnages/naufrages/rivet/rivet-naufrage_avant_semer",
    "rubrique": "personnages",
    "sujet": "rivet-naufrage",
@@ -48677,6 +50784,33 @@
     64
    ],
    "ms_par_image": 260,
+   "parcours": "tuto-2",
+   "statut": "ok"
+  },
+  {
+   "id": "personnages/naufrages/rivet/rivet-naufrage_dos_scier",
+   "rubrique": "personnages",
+   "sujet": "rivet-naufrage",
+   "vue": "dos",
+   "pose": "scier",
+   "titre": "Rivet naufragé, trois quarts dos, scier",
+   "regarde": "haut-droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/naufrages/rivet/rivet-naufrage_dos_scier_1.svg",
+    "svg/personnages/naufrages/rivet/rivet-naufrage_dos_scier_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    700,
+    1100
+   ],
    "parcours": "tuto-2",
    "statut": "ok"
   },
@@ -49449,6 +51583,32 @@
     64
    ],
    "ms_par_image": 260,
+   "parcours": "tuto-2",
+   "statut": "ok"
+  },
+  {
+   "id": "personnages/naufrages/rivet/rivet-naufrage_face_scier",
+   "rubrique": "personnages",
+   "sujet": "rivet-naufrage",
+   "vue": "face",
+   "pose": "scier",
+   "titre": "Rivet naufragé, de face, scier",
+   "regarde": "face",
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/naufrages/rivet/rivet-naufrage_face_scier_1.svg",
+    "svg/personnages/naufrages/rivet/rivet-naufrage_face_scier_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    700,
+    1100
+   ],
    "parcours": "tuto-2",
    "statut": "ok"
   },
@@ -51930,6 +54090,33 @@
    "statut": "ok"
   },
   {
+   "id": "personnages/maitres/ondin/ondin_avant_scier",
+   "rubrique": "personnages",
+   "sujet": "ondin",
+   "vue": "avant",
+   "pose": "scier",
+   "titre": "Ondin, trois quarts avant, scier",
+   "regarde": "bas-droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/maitres/ondin/ondin_avant_scier_1.svg",
+    "svg/personnages/maitres/ondin/ondin_avant_scier_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    700,
+    1100
+   ],
+   "parcours": "tuto-3",
+   "statut": "ok"
+  },
+  {
    "id": "personnages/maitres/ondin/ondin_avant_semer",
    "rubrique": "personnages",
    "sujet": "ondin",
@@ -52720,6 +54907,33 @@
     64
    ],
    "ms_par_image": 260,
+   "parcours": "tuto-3",
+   "statut": "ok"
+  },
+  {
+   "id": "personnages/maitres/ondin/ondin_dos_scier",
+   "rubrique": "personnages",
+   "sujet": "ondin",
+   "vue": "dos",
+   "pose": "scier",
+   "titre": "Ondin, trois quarts dos, scier",
+   "regarde": "haut-droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/maitres/ondin/ondin_dos_scier_1.svg",
+    "svg/personnages/maitres/ondin/ondin_dos_scier_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    700,
+    1100
+   ],
    "parcours": "tuto-3",
    "statut": "ok"
   },
@@ -53602,6 +55816,32 @@
    "statut": "ok"
   },
   {
+   "id": "personnages/maitres/ondin/ondin_face_scier",
+   "rubrique": "personnages",
+   "sujet": "ondin",
+   "vue": "face",
+   "pose": "scier",
+   "titre": "Ondin, de face, scier",
+   "regarde": "face",
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/maitres/ondin/ondin_face_scier_1.svg",
+    "svg/personnages/maitres/ondin/ondin_face_scier_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    700,
+    1100
+   ],
+   "parcours": "tuto-3",
+   "statut": "ok"
+  },
+  {
    "id": "personnages/maitres/ondin/ondin_face_semer",
    "rubrique": "personnages",
    "sujet": "ondin",
@@ -54350,6 +56590,33 @@
    "statut": "ok"
   },
   {
+   "id": "personnages/naufrages/aster/aster-naufrage_avant_scier",
+   "rubrique": "personnages",
+   "sujet": "aster-naufrage",
+   "vue": "avant",
+   "pose": "scier",
+   "titre": "Aster naufragée, trois quarts avant, scier",
+   "regarde": "bas-droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/naufrages/aster/aster-naufrage_avant_scier_1.svg",
+    "svg/personnages/naufrages/aster/aster-naufrage_avant_scier_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    700,
+    1100
+   ],
+   "parcours": "tuto-3",
+   "statut": "ok"
+  },
+  {
    "id": "personnages/naufrages/aster/aster-naufrage_avant_semer",
    "rubrique": "personnages",
    "sujet": "aster-naufrage",
@@ -55030,6 +57297,33 @@
     64
    ],
    "ms_par_image": 260,
+   "parcours": "tuto-3",
+   "statut": "ok"
+  },
+  {
+   "id": "personnages/naufrages/aster/aster-naufrage_dos_scier",
+   "rubrique": "personnages",
+   "sujet": "aster-naufrage",
+   "vue": "dos",
+   "pose": "scier",
+   "titre": "Aster naufragée, trois quarts dos, scier",
+   "regarde": "haut-droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/naufrages/aster/aster-naufrage_dos_scier_1.svg",
+    "svg/personnages/naufrages/aster/aster-naufrage_dos_scier_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    700,
+    1100
+   ],
    "parcours": "tuto-3",
    "statut": "ok"
   },
@@ -55780,6 +58074,32 @@
    "statut": "ok"
   },
   {
+   "id": "personnages/naufrages/aster/aster-naufrage_face_scier",
+   "rubrique": "personnages",
+   "sujet": "aster-naufrage",
+   "vue": "face",
+   "pose": "scier",
+   "titre": "Aster naufragée, de face, scier",
+   "regarde": "face",
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/naufrages/aster/aster-naufrage_face_scier_1.svg",
+    "svg/personnages/naufrages/aster/aster-naufrage_face_scier_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    700,
+    1100
+   ],
+   "parcours": "tuto-3",
+   "statut": "ok"
+  },
+  {
    "id": "personnages/naufrages/aster/aster-naufrage_face_semer",
    "rubrique": "personnages",
    "sujet": "aster-naufrage",
@@ -56449,6 +58769,33 @@
    "statut": "ok"
   },
   {
+   "id": "personnages/naufrages/ondin/ondin-naufrage_avant_scier",
+   "rubrique": "personnages",
+   "sujet": "ondin-naufrage",
+   "vue": "avant",
+   "pose": "scier",
+   "titre": "Ondin naufragé, trois quarts avant, scier",
+   "regarde": "bas-droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/naufrages/ondin/ondin-naufrage_avant_scier_1.svg",
+    "svg/personnages/naufrages/ondin/ondin-naufrage_avant_scier_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    700,
+    1100
+   ],
+   "parcours": "tuto-3",
+   "statut": "ok"
+  },
+  {
    "id": "personnages/naufrages/ondin/ondin-naufrage_avant_semer",
    "rubrique": "personnages",
    "sujet": "ondin-naufrage",
@@ -57077,6 +59424,33 @@
     64
    ],
    "ms_par_image": 260,
+   "parcours": "tuto-3",
+   "statut": "ok"
+  },
+  {
+   "id": "personnages/naufrages/ondin/ondin-naufrage_dos_scier",
+   "rubrique": "personnages",
+   "sujet": "ondin-naufrage",
+   "vue": "dos",
+   "pose": "scier",
+   "titre": "Ondin naufragé, trois quarts dos, scier",
+   "regarde": "haut-droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/naufrages/ondin/ondin-naufrage_dos_scier_1.svg",
+    "svg/personnages/naufrages/ondin/ondin-naufrage_dos_scier_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    700,
+    1100
+   ],
    "parcours": "tuto-3",
    "statut": "ok"
   },
@@ -57849,6 +60223,32 @@
     64
    ],
    "ms_par_image": 260,
+   "parcours": "tuto-3",
+   "statut": "ok"
+  },
+  {
+   "id": "personnages/naufrages/ondin/ondin-naufrage_face_scier",
+   "rubrique": "personnages",
+   "sujet": "ondin-naufrage",
+   "vue": "face",
+   "pose": "scier",
+   "titre": "Ondin naufragé, de face, scier",
+   "regarde": "face",
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/naufrages/ondin/ondin-naufrage_face_scier_1.svg",
+    "svg/personnages/naufrages/ondin/ondin-naufrage_face_scier_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    700,
+    1100
+   ],
    "parcours": "tuto-3",
    "statut": "ok"
   },
@@ -59489,6 +61889,33 @@
    "statut": "ok"
   },
   {
+   "id": "personnages/maitres/sylve/sylve_avant_scier",
+   "rubrique": "personnages",
+   "sujet": "sylve",
+   "vue": "avant",
+   "pose": "scier",
+   "titre": "Sylve, trois quarts avant, scier",
+   "regarde": "bas-droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/maitres/sylve/sylve_avant_scier_1.svg",
+    "svg/personnages/maitres/sylve/sylve_avant_scier_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    700,
+    1100
+   ],
+   "parcours": "acte-1",
+   "statut": "ok"
+  },
+  {
    "id": "personnages/maitres/sylve/sylve_avant_semer",
    "rubrique": "personnages",
    "sujet": "sylve",
@@ -60279,6 +62706,33 @@
     64
    ],
    "ms_par_image": 260,
+   "parcours": "acte-1",
+   "statut": "ok"
+  },
+  {
+   "id": "personnages/maitres/sylve/sylve_dos_scier",
+   "rubrique": "personnages",
+   "sujet": "sylve",
+   "vue": "dos",
+   "pose": "scier",
+   "titre": "Sylve, trois quarts dos, scier",
+   "regarde": "haut-droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/maitres/sylve/sylve_dos_scier_1.svg",
+    "svg/personnages/maitres/sylve/sylve_dos_scier_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    700,
+    1100
+   ],
    "parcours": "acte-1",
    "statut": "ok"
   },
@@ -61161,6 +63615,32 @@
    "statut": "ok"
   },
   {
+   "id": "personnages/maitres/sylve/sylve_face_scier",
+   "rubrique": "personnages",
+   "sujet": "sylve",
+   "vue": "face",
+   "pose": "scier",
+   "titre": "Sylve, de face, scier",
+   "regarde": "face",
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/maitres/sylve/sylve_face_scier_1.svg",
+    "svg/personnages/maitres/sylve/sylve_face_scier_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    700,
+    1100
+   ],
+   "parcours": "acte-1",
+   "statut": "ok"
+  },
+  {
    "id": "personnages/maitres/sylve/sylve_face_semer",
    "rubrique": "personnages",
    "sujet": "sylve",
@@ -61830,6 +64310,33 @@
    "statut": "ok"
   },
   {
+   "id": "personnages/naufrages/sylve/sylve-naufrage_avant_scier",
+   "rubrique": "personnages",
+   "sujet": "sylve-naufrage",
+   "vue": "avant",
+   "pose": "scier",
+   "titre": "Sylve naufragée, trois quarts avant, scier",
+   "regarde": "bas-droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/naufrages/sylve/sylve-naufrage_avant_scier_1.svg",
+    "svg/personnages/naufrages/sylve/sylve-naufrage_avant_scier_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    700,
+    1100
+   ],
+   "parcours": "acte-1",
+   "statut": "ok"
+  },
+  {
    "id": "personnages/naufrages/sylve/sylve-naufrage_avant_semer",
    "rubrique": "personnages",
    "sujet": "sylve-naufrage",
@@ -62431,6 +64938,33 @@
     64
    ],
    "ms_par_image": 260,
+   "parcours": "acte-1",
+   "statut": "ok"
+  },
+  {
+   "id": "personnages/naufrages/sylve/sylve-naufrage_dos_scier",
+   "rubrique": "personnages",
+   "sujet": "sylve-naufrage",
+   "vue": "dos",
+   "pose": "scier",
+   "titre": "Sylve naufragée, trois quarts dos, scier",
+   "regarde": "haut-droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/naufrages/sylve/sylve-naufrage_dos_scier_1.svg",
+    "svg/personnages/naufrages/sylve/sylve-naufrage_dos_scier_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    700,
+    1100
+   ],
    "parcours": "acte-1",
    "statut": "ok"
   },
@@ -63150,6 +65684,32 @@
     64
    ],
    "ms_par_image": 260,
+   "parcours": "acte-1",
+   "statut": "ok"
+  },
+  {
+   "id": "personnages/naufrages/sylve/sylve-naufrage_face_scier",
+   "rubrique": "personnages",
+   "sujet": "sylve-naufrage",
+   "vue": "face",
+   "pose": "scier",
+   "titre": "Sylve naufragée, de face, scier",
+   "regarde": "face",
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/naufrages/sylve/sylve-naufrage_face_scier_1.svg",
+    "svg/personnages/naufrages/sylve/sylve-naufrage_face_scier_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    700,
+    1100
+   ],
    "parcours": "acte-1",
    "statut": "ok"
   },
@@ -65332,6 +67892,33 @@
    "statut": "ok"
   },
   {
+   "id": "personnages/maitres/galet/galet_avant_scier",
+   "rubrique": "personnages",
+   "sujet": "galet",
+   "vue": "avant",
+   "pose": "scier",
+   "titre": "Galet, trois quarts avant, scier",
+   "regarde": "bas-droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/maitres/galet/galet_avant_scier_1.svg",
+    "svg/personnages/maitres/galet/galet_avant_scier_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    700,
+    1100
+   ],
+   "parcours": "acte-2",
+   "statut": "ok"
+  },
+  {
    "id": "personnages/maitres/galet/galet_avant_semer",
    "rubrique": "personnages",
    "sujet": "galet",
@@ -66122,6 +68709,33 @@
     64
    ],
    "ms_par_image": 260,
+   "parcours": "acte-2",
+   "statut": "ok"
+  },
+  {
+   "id": "personnages/maitres/galet/galet_dos_scier",
+   "rubrique": "personnages",
+   "sujet": "galet",
+   "vue": "dos",
+   "pose": "scier",
+   "titre": "Galet, trois quarts dos, scier",
+   "regarde": "haut-droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/maitres/galet/galet_dos_scier_1.svg",
+    "svg/personnages/maitres/galet/galet_dos_scier_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    700,
+    1100
+   ],
    "parcours": "acte-2",
    "statut": "ok"
   },
@@ -67004,6 +69618,32 @@
    "statut": "ok"
   },
   {
+   "id": "personnages/maitres/galet/galet_face_scier",
+   "rubrique": "personnages",
+   "sujet": "galet",
+   "vue": "face",
+   "pose": "scier",
+   "titre": "Galet, de face, scier",
+   "regarde": "face",
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/maitres/galet/galet_face_scier_1.svg",
+    "svg/personnages/maitres/galet/galet_face_scier_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    700,
+    1100
+   ],
+   "parcours": "acte-2",
+   "statut": "ok"
+  },
+  {
    "id": "personnages/maitres/galet/galet_face_semer",
    "rubrique": "personnages",
    "sujet": "galet",
@@ -67673,6 +70313,33 @@
    "statut": "ok"
   },
   {
+   "id": "personnages/naufrages/galet/galet-naufrage_avant_scier",
+   "rubrique": "personnages",
+   "sujet": "galet-naufrage",
+   "vue": "avant",
+   "pose": "scier",
+   "titre": "Galet naufragé, trois quarts avant, scier",
+   "regarde": "bas-droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/naufrages/galet/galet-naufrage_avant_scier_1.svg",
+    "svg/personnages/naufrages/galet/galet-naufrage_avant_scier_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    700,
+    1100
+   ],
+   "parcours": "acte-2",
+   "statut": "ok"
+  },
+  {
    "id": "personnages/naufrages/galet/galet-naufrage_avant_semer",
    "rubrique": "personnages",
    "sujet": "galet-naufrage",
@@ -68274,6 +70941,33 @@
     64
    ],
    "ms_par_image": 260,
+   "parcours": "acte-2",
+   "statut": "ok"
+  },
+  {
+   "id": "personnages/naufrages/galet/galet-naufrage_dos_scier",
+   "rubrique": "personnages",
+   "sujet": "galet-naufrage",
+   "vue": "dos",
+   "pose": "scier",
+   "titre": "Galet naufragé, trois quarts dos, scier",
+   "regarde": "haut-droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/naufrages/galet/galet-naufrage_dos_scier_1.svg",
+    "svg/personnages/naufrages/galet/galet-naufrage_dos_scier_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    700,
+    1100
+   ],
    "parcours": "acte-2",
    "statut": "ok"
   },
@@ -68993,6 +71687,32 @@
     64
    ],
    "ms_par_image": 260,
+   "parcours": "acte-2",
+   "statut": "ok"
+  },
+  {
+   "id": "personnages/naufrages/galet/galet-naufrage_face_scier",
+   "rubrique": "personnages",
+   "sujet": "galet-naufrage",
+   "vue": "face",
+   "pose": "scier",
+   "titre": "Galet naufragé, de face, scier",
+   "regarde": "face",
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/naufrages/galet/galet-naufrage_face_scier_1.svg",
+    "svg/personnages/naufrages/galet/galet-naufrage_face_scier_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    700,
+    1100
+   ],
    "parcours": "acte-2",
    "statut": "ok"
   },
@@ -72823,6 +75543,33 @@
    "statut": "ok"
   },
   {
+   "id": "personnages/maitres/melisse/melisse_avant_scier",
+   "rubrique": "personnages",
+   "sujet": "melisse",
+   "vue": "avant",
+   "pose": "scier",
+   "titre": "Mélisse, trois quarts avant, scier",
+   "regarde": "bas-droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/maitres/melisse/melisse_avant_scier_1.svg",
+    "svg/personnages/maitres/melisse/melisse_avant_scier_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    700,
+    1100
+   ],
+   "parcours": "acte-3",
+   "statut": "ok"
+  },
+  {
    "id": "personnages/maitres/melisse/melisse_avant_semer",
    "rubrique": "personnages",
    "sujet": "melisse",
@@ -73613,6 +76360,33 @@
     64
    ],
    "ms_par_image": 260,
+   "parcours": "acte-3",
+   "statut": "ok"
+  },
+  {
+   "id": "personnages/maitres/melisse/melisse_dos_scier",
+   "rubrique": "personnages",
+   "sujet": "melisse",
+   "vue": "dos",
+   "pose": "scier",
+   "titre": "Mélisse, trois quarts dos, scier",
+   "regarde": "haut-droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/maitres/melisse/melisse_dos_scier_1.svg",
+    "svg/personnages/maitres/melisse/melisse_dos_scier_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    700,
+    1100
+   ],
    "parcours": "acte-3",
    "statut": "ok"
   },
@@ -74495,6 +77269,32 @@
    "statut": "ok"
   },
   {
+   "id": "personnages/maitres/melisse/melisse_face_scier",
+   "rubrique": "personnages",
+   "sujet": "melisse",
+   "vue": "face",
+   "pose": "scier",
+   "titre": "Mélisse, de face, scier",
+   "regarde": "face",
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/maitres/melisse/melisse_face_scier_1.svg",
+    "svg/personnages/maitres/melisse/melisse_face_scier_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    700,
+    1100
+   ],
+   "parcours": "acte-3",
+   "statut": "ok"
+  },
+  {
    "id": "personnages/maitres/melisse/melisse_face_semer",
    "rubrique": "personnages",
    "sujet": "melisse",
@@ -75326,6 +78126,33 @@
    "statut": "ok"
   },
   {
+   "id": "personnages/maitres/rivet/rivet_avant_scier",
+   "rubrique": "personnages",
+   "sujet": "rivet",
+   "vue": "avant",
+   "pose": "scier",
+   "titre": "Rivet, trois quarts avant, scier",
+   "regarde": "bas-droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/maitres/rivet/rivet_avant_scier_1.svg",
+    "svg/personnages/maitres/rivet/rivet_avant_scier_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    700,
+    1100
+   ],
+   "parcours": "acte-3",
+   "statut": "ok"
+  },
+  {
    "id": "personnages/maitres/rivet/rivet_avant_semer",
    "rubrique": "personnages",
    "sujet": "rivet",
@@ -76116,6 +78943,33 @@
     64
    ],
    "ms_par_image": 260,
+   "parcours": "acte-3",
+   "statut": "ok"
+  },
+  {
+   "id": "personnages/maitres/rivet/rivet_dos_scier",
+   "rubrique": "personnages",
+   "sujet": "rivet",
+   "vue": "dos",
+   "pose": "scier",
+   "titre": "Rivet, trois quarts dos, scier",
+   "regarde": "haut-droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/maitres/rivet/rivet_dos_scier_1.svg",
+    "svg/personnages/maitres/rivet/rivet_dos_scier_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    700,
+    1100
+   ],
    "parcours": "acte-3",
    "statut": "ok"
   },
@@ -76998,6 +79852,32 @@
    "statut": "ok"
   },
   {
+   "id": "personnages/maitres/rivet/rivet_face_scier",
+   "rubrique": "personnages",
+   "sujet": "rivet",
+   "vue": "face",
+   "pose": "scier",
+   "titre": "Rivet, de face, scier",
+   "regarde": "face",
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/maitres/rivet/rivet_face_scier_1.svg",
+    "svg/personnages/maitres/rivet/rivet_face_scier_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    700,
+    1100
+   ],
+   "parcours": "acte-3",
+   "statut": "ok"
+  },
+  {
    "id": "personnages/maitres/rivet/rivet_face_semer",
    "rubrique": "personnages",
    "sujet": "rivet",
@@ -77667,6 +80547,33 @@
    "statut": "ok"
   },
   {
+   "id": "personnages/naufrages/melisse/melisse-naufrage_avant_scier",
+   "rubrique": "personnages",
+   "sujet": "melisse-naufrage",
+   "vue": "avant",
+   "pose": "scier",
+   "titre": "Mélisse naufragée, trois quarts avant, scier",
+   "regarde": "bas-droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/naufrages/melisse/melisse-naufrage_avant_scier_1.svg",
+    "svg/personnages/naufrages/melisse/melisse-naufrage_avant_scier_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    700,
+    1100
+   ],
+   "parcours": "acte-3",
+   "statut": "ok"
+  },
+  {
    "id": "personnages/naufrages/melisse/melisse-naufrage_avant_semer",
    "rubrique": "personnages",
    "sujet": "melisse-naufrage",
@@ -78295,6 +81202,33 @@
     64
    ],
    "ms_par_image": 260,
+   "parcours": "acte-3",
+   "statut": "ok"
+  },
+  {
+   "id": "personnages/naufrages/melisse/melisse-naufrage_dos_scier",
+   "rubrique": "personnages",
+   "sujet": "melisse-naufrage",
+   "vue": "dos",
+   "pose": "scier",
+   "titre": "Mélisse naufragée, trois quarts dos, scier",
+   "regarde": "haut-droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/naufrages/melisse/melisse-naufrage_dos_scier_1.svg",
+    "svg/personnages/naufrages/melisse/melisse-naufrage_dos_scier_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    700,
+    1100
+   ],
    "parcours": "acte-3",
    "statut": "ok"
   },
@@ -79067,6 +82001,32 @@
     64
    ],
    "ms_par_image": 260,
+   "parcours": "acte-3",
+   "statut": "ok"
+  },
+  {
+   "id": "personnages/naufrages/melisse/melisse-naufrage_face_scier",
+   "rubrique": "personnages",
+   "sujet": "melisse-naufrage",
+   "vue": "face",
+   "pose": "scier",
+   "titre": "Mélisse naufragée, de face, scier",
+   "regarde": "face",
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/naufrages/melisse/melisse-naufrage_face_scier_1.svg",
+    "svg/personnages/naufrages/melisse/melisse-naufrage_face_scier_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    700,
+    1100
+   ],
    "parcours": "acte-3",
    "statut": "ok"
   },
@@ -86302,6 +89262,33 @@
    "statut": "ok"
   },
   {
+   "id": "personnages/maitres/aster/aster_avant_scier",
+   "rubrique": "personnages",
+   "sujet": "aster",
+   "vue": "avant",
+   "pose": "scier",
+   "titre": "Aster, trois quarts avant, scier",
+   "regarde": "bas-droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/maitres/aster/aster_avant_scier_1.svg",
+    "svg/personnages/maitres/aster/aster_avant_scier_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    700,
+    1100
+   ],
+   "parcours": "acte-4",
+   "statut": "ok"
+  },
+  {
    "id": "personnages/maitres/aster/aster_avant_semer",
    "rubrique": "personnages",
    "sujet": "aster",
@@ -87092,6 +90079,33 @@
     64
    ],
    "ms_par_image": 260,
+   "parcours": "acte-4",
+   "statut": "ok"
+  },
+  {
+   "id": "personnages/maitres/aster/aster_dos_scier",
+   "rubrique": "personnages",
+   "sujet": "aster",
+   "vue": "dos",
+   "pose": "scier",
+   "titre": "Aster, trois quarts dos, scier",
+   "regarde": "haut-droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/maitres/aster/aster_dos_scier_1.svg",
+    "svg/personnages/maitres/aster/aster_dos_scier_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    700,
+    1100
+   ],
    "parcours": "acte-4",
    "statut": "ok"
   },
@@ -87948,6 +90962,32 @@
    "statut": "ok"
   },
   {
+   "id": "personnages/maitres/aster/aster_face_scier",
+   "rubrique": "personnages",
+   "sujet": "aster",
+   "vue": "face",
+   "pose": "scier",
+   "titre": "Aster, de face, scier",
+   "regarde": "face",
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/maitres/aster/aster_face_scier_1.svg",
+    "svg/personnages/maitres/aster/aster_face_scier_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    700,
+    1100
+   ],
+   "parcours": "acte-4",
+   "statut": "ok"
+  },
+  {
    "id": "personnages/maitres/aster/aster_face_semer",
    "rubrique": "personnages",
    "sujet": "aster",
@@ -88588,6 +91628,33 @@
    "statut": "ok"
   },
   {
+   "id": "personnages/visiteurs/visiteur-01/visiteur-01_avant_scier",
+   "rubrique": "personnages",
+   "sujet": "visiteur-01",
+   "vue": "avant",
+   "pose": "scier",
+   "titre": "Visiteur 1, trois quarts avant, scier",
+   "regarde": "bas-droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/visiteurs/visiteur-01/visiteur-01_avant_scier_1.svg",
+    "svg/personnages/visiteurs/visiteur-01/visiteur-01_avant_scier_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    700,
+    1100
+   ],
+   "parcours": "acte-4",
+   "statut": "ok"
+  },
+  {
    "id": "personnages/visiteurs/visiteur-01/visiteur-01_avant_semer",
    "rubrique": "personnages",
    "sujet": "visiteur-01",
@@ -89224,6 +92291,33 @@
    "statut": "ok"
   },
   {
+   "id": "personnages/visiteurs/visiteur-01/visiteur-01_dos_scier",
+   "rubrique": "personnages",
+   "sujet": "visiteur-01",
+   "vue": "dos",
+   "pose": "scier",
+   "titre": "Visiteur 1, trois quarts dos, scier",
+   "regarde": "haut-droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/visiteurs/visiteur-01/visiteur-01_dos_scier_1.svg",
+    "svg/personnages/visiteurs/visiteur-01/visiteur-01_dos_scier_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    700,
+    1100
+   ],
+   "parcours": "acte-4",
+   "statut": "ok"
+  },
+  {
    "id": "personnages/visiteurs/visiteur-01/visiteur-01_dos_semer",
    "rubrique": "personnages",
    "sujet": "visiteur-01",
@@ -89763,6 +92857,32 @@
     64
    ],
    "ms_par_image": 260,
+   "parcours": "acte-4",
+   "statut": "ok"
+  },
+  {
+   "id": "personnages/visiteurs/visiteur-01/visiteur-01_face_scier",
+   "rubrique": "personnages",
+   "sujet": "visiteur-01",
+   "vue": "face",
+   "pose": "scier",
+   "titre": "Visiteur 1, de face, scier",
+   "regarde": "face",
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/visiteurs/visiteur-01/visiteur-01_face_scier_1.svg",
+    "svg/personnages/visiteurs/visiteur-01/visiteur-01_face_scier_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    700,
+    1100
+   ],
    "parcours": "acte-4",
    "statut": "ok"
   },
@@ -90377,6 +93497,33 @@
     64
    ],
    "ms_par_image": 260,
+   "parcours": "acte-4",
+   "statut": "ok"
+  },
+  {
+   "id": "personnages/visiteurs/visiteur-02/visiteur-02_avant_scier",
+   "rubrique": "personnages",
+   "sujet": "visiteur-02",
+   "vue": "avant",
+   "pose": "scier",
+   "titre": "Visiteur 2, trois quarts avant, scier",
+   "regarde": "bas-droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/visiteurs/visiteur-02/visiteur-02_avant_scier_1.svg",
+    "svg/personnages/visiteurs/visiteur-02/visiteur-02_avant_scier_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    700,
+    1100
+   ],
    "parcours": "acte-4",
    "statut": "ok"
   },
@@ -91017,6 +94164,33 @@
    "statut": "ok"
   },
   {
+   "id": "personnages/visiteurs/visiteur-02/visiteur-02_dos_scier",
+   "rubrique": "personnages",
+   "sujet": "visiteur-02",
+   "vue": "dos",
+   "pose": "scier",
+   "titre": "Visiteur 2, trois quarts dos, scier",
+   "regarde": "haut-droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/visiteurs/visiteur-02/visiteur-02_dos_scier_1.svg",
+    "svg/personnages/visiteurs/visiteur-02/visiteur-02_dos_scier_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    700,
+    1100
+   ],
+   "parcours": "acte-4",
+   "statut": "ok"
+  },
+  {
    "id": "personnages/visiteurs/visiteur-02/visiteur-02_dos_semer",
    "rubrique": "personnages",
    "sujet": "visiteur-02",
@@ -91556,6 +94730,32 @@
     64
    ],
    "ms_par_image": 260,
+   "parcours": "acte-4",
+   "statut": "ok"
+  },
+  {
+   "id": "personnages/visiteurs/visiteur-02/visiteur-02_face_scier",
+   "rubrique": "personnages",
+   "sujet": "visiteur-02",
+   "vue": "face",
+   "pose": "scier",
+   "titre": "Visiteur 2, de face, scier",
+   "regarde": "face",
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/visiteurs/visiteur-02/visiteur-02_face_scier_1.svg",
+    "svg/personnages/visiteurs/visiteur-02/visiteur-02_face_scier_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    700,
+    1100
+   ],
    "parcours": "acte-4",
    "statut": "ok"
   },
@@ -92170,6 +95370,33 @@
     64
    ],
    "ms_par_image": 260,
+   "parcours": "acte-4",
+   "statut": "ok"
+  },
+  {
+   "id": "personnages/visiteurs/visiteur-03/visiteur-03_avant_scier",
+   "rubrique": "personnages",
+   "sujet": "visiteur-03",
+   "vue": "avant",
+   "pose": "scier",
+   "titre": "Visiteur 3, trois quarts avant, scier",
+   "regarde": "bas-droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/visiteurs/visiteur-03/visiteur-03_avant_scier_1.svg",
+    "svg/personnages/visiteurs/visiteur-03/visiteur-03_avant_scier_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    700,
+    1100
+   ],
    "parcours": "acte-4",
    "statut": "ok"
   },
@@ -92810,6 +96037,33 @@
    "statut": "ok"
   },
   {
+   "id": "personnages/visiteurs/visiteur-03/visiteur-03_dos_scier",
+   "rubrique": "personnages",
+   "sujet": "visiteur-03",
+   "vue": "dos",
+   "pose": "scier",
+   "titre": "Visiteur 3, trois quarts dos, scier",
+   "regarde": "haut-droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/visiteurs/visiteur-03/visiteur-03_dos_scier_1.svg",
+    "svg/personnages/visiteurs/visiteur-03/visiteur-03_dos_scier_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    700,
+    1100
+   ],
+   "parcours": "acte-4",
+   "statut": "ok"
+  },
+  {
    "id": "personnages/visiteurs/visiteur-03/visiteur-03_dos_semer",
    "rubrique": "personnages",
    "sujet": "visiteur-03",
@@ -93349,6 +96603,32 @@
     64
    ],
    "ms_par_image": 260,
+   "parcours": "acte-4",
+   "statut": "ok"
+  },
+  {
+   "id": "personnages/visiteurs/visiteur-03/visiteur-03_face_scier",
+   "rubrique": "personnages",
+   "sujet": "visiteur-03",
+   "vue": "face",
+   "pose": "scier",
+   "titre": "Visiteur 3, de face, scier",
+   "regarde": "face",
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/visiteurs/visiteur-03/visiteur-03_face_scier_1.svg",
+    "svg/personnages/visiteurs/visiteur-03/visiteur-03_face_scier_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    700,
+    1100
+   ],
    "parcours": "acte-4",
    "statut": "ok"
   },
@@ -93963,6 +97243,33 @@
     64
    ],
    "ms_par_image": 260,
+   "parcours": "acte-4",
+   "statut": "ok"
+  },
+  {
+   "id": "personnages/visiteurs/visiteur-04/visiteur-04_avant_scier",
+   "rubrique": "personnages",
+   "sujet": "visiteur-04",
+   "vue": "avant",
+   "pose": "scier",
+   "titre": "Visiteur 4, trois quarts avant, scier",
+   "regarde": "bas-droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/visiteurs/visiteur-04/visiteur-04_avant_scier_1.svg",
+    "svg/personnages/visiteurs/visiteur-04/visiteur-04_avant_scier_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    700,
+    1100
+   ],
    "parcours": "acte-4",
    "statut": "ok"
   },
@@ -94603,6 +97910,33 @@
    "statut": "ok"
   },
   {
+   "id": "personnages/visiteurs/visiteur-04/visiteur-04_dos_scier",
+   "rubrique": "personnages",
+   "sujet": "visiteur-04",
+   "vue": "dos",
+   "pose": "scier",
+   "titre": "Visiteur 4, trois quarts dos, scier",
+   "regarde": "haut-droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/visiteurs/visiteur-04/visiteur-04_dos_scier_1.svg",
+    "svg/personnages/visiteurs/visiteur-04/visiteur-04_dos_scier_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    700,
+    1100
+   ],
+   "parcours": "acte-4",
+   "statut": "ok"
+  },
+  {
    "id": "personnages/visiteurs/visiteur-04/visiteur-04_dos_semer",
    "rubrique": "personnages",
    "sujet": "visiteur-04",
@@ -95142,6 +98476,32 @@
     64
    ],
    "ms_par_image": 260,
+   "parcours": "acte-4",
+   "statut": "ok"
+  },
+  {
+   "id": "personnages/visiteurs/visiteur-04/visiteur-04_face_scier",
+   "rubrique": "personnages",
+   "sujet": "visiteur-04",
+   "vue": "face",
+   "pose": "scier",
+   "titre": "Visiteur 4, de face, scier",
+   "regarde": "face",
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/visiteurs/visiteur-04/visiteur-04_face_scier_1.svg",
+    "svg/personnages/visiteurs/visiteur-04/visiteur-04_face_scier_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    700,
+    1100
+   ],
    "parcours": "acte-4",
    "statut": "ok"
   },
@@ -95756,6 +99116,33 @@
     64
    ],
    "ms_par_image": 260,
+   "parcours": "acte-4",
+   "statut": "ok"
+  },
+  {
+   "id": "personnages/visiteurs/visiteur-05/visiteur-05_avant_scier",
+   "rubrique": "personnages",
+   "sujet": "visiteur-05",
+   "vue": "avant",
+   "pose": "scier",
+   "titre": "Visiteur 5, trois quarts avant, scier",
+   "regarde": "bas-droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/visiteurs/visiteur-05/visiteur-05_avant_scier_1.svg",
+    "svg/personnages/visiteurs/visiteur-05/visiteur-05_avant_scier_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    700,
+    1100
+   ],
    "parcours": "acte-4",
    "statut": "ok"
   },
@@ -96396,6 +99783,33 @@
    "statut": "ok"
   },
   {
+   "id": "personnages/visiteurs/visiteur-05/visiteur-05_dos_scier",
+   "rubrique": "personnages",
+   "sujet": "visiteur-05",
+   "vue": "dos",
+   "pose": "scier",
+   "titre": "Visiteur 5, trois quarts dos, scier",
+   "regarde": "haut-droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/visiteurs/visiteur-05/visiteur-05_dos_scier_1.svg",
+    "svg/personnages/visiteurs/visiteur-05/visiteur-05_dos_scier_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    700,
+    1100
+   ],
+   "parcours": "acte-4",
+   "statut": "ok"
+  },
+  {
    "id": "personnages/visiteurs/visiteur-05/visiteur-05_dos_semer",
    "rubrique": "personnages",
    "sujet": "visiteur-05",
@@ -96935,6 +100349,32 @@
     64
    ],
    "ms_par_image": 260,
+   "parcours": "acte-4",
+   "statut": "ok"
+  },
+  {
+   "id": "personnages/visiteurs/visiteur-05/visiteur-05_face_scier",
+   "rubrique": "personnages",
+   "sujet": "visiteur-05",
+   "vue": "face",
+   "pose": "scier",
+   "titre": "Visiteur 5, de face, scier",
+   "regarde": "face",
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/visiteurs/visiteur-05/visiteur-05_face_scier_1.svg",
+    "svg/personnages/visiteurs/visiteur-05/visiteur-05_face_scier_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    700,
+    1100
+   ],
    "parcours": "acte-4",
    "statut": "ok"
   },
@@ -97549,6 +100989,33 @@
     64
    ],
    "ms_par_image": 260,
+   "parcours": "acte-4",
+   "statut": "ok"
+  },
+  {
+   "id": "personnages/visiteurs/visiteur-06/visiteur-06_avant_scier",
+   "rubrique": "personnages",
+   "sujet": "visiteur-06",
+   "vue": "avant",
+   "pose": "scier",
+   "titre": "Visiteur 6, trois quarts avant, scier",
+   "regarde": "bas-droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/visiteurs/visiteur-06/visiteur-06_avant_scier_1.svg",
+    "svg/personnages/visiteurs/visiteur-06/visiteur-06_avant_scier_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    700,
+    1100
+   ],
    "parcours": "acte-4",
    "statut": "ok"
   },
@@ -98189,6 +101656,33 @@
    "statut": "ok"
   },
   {
+   "id": "personnages/visiteurs/visiteur-06/visiteur-06_dos_scier",
+   "rubrique": "personnages",
+   "sujet": "visiteur-06",
+   "vue": "dos",
+   "pose": "scier",
+   "titre": "Visiteur 6, trois quarts dos, scier",
+   "regarde": "haut-droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/visiteurs/visiteur-06/visiteur-06_dos_scier_1.svg",
+    "svg/personnages/visiteurs/visiteur-06/visiteur-06_dos_scier_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    700,
+    1100
+   ],
+   "parcours": "acte-4",
+   "statut": "ok"
+  },
+  {
    "id": "personnages/visiteurs/visiteur-06/visiteur-06_dos_semer",
    "rubrique": "personnages",
    "sujet": "visiteur-06",
@@ -98728,6 +102222,32 @@
     64
    ],
    "ms_par_image": 260,
+   "parcours": "acte-4",
+   "statut": "ok"
+  },
+  {
+   "id": "personnages/visiteurs/visiteur-06/visiteur-06_face_scier",
+   "rubrique": "personnages",
+   "sujet": "visiteur-06",
+   "vue": "face",
+   "pose": "scier",
+   "titre": "Visiteur 6, de face, scier",
+   "regarde": "face",
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/visiteurs/visiteur-06/visiteur-06_face_scier_1.svg",
+    "svg/personnages/visiteurs/visiteur-06/visiteur-06_face_scier_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    700,
+    1100
+   ],
    "parcours": "acte-4",
    "statut": "ok"
   },
@@ -99342,6 +102862,33 @@
     64
    ],
    "ms_par_image": 260,
+   "parcours": "acte-4",
+   "statut": "ok"
+  },
+  {
+   "id": "personnages/visiteurs/visiteur-07/visiteur-07_avant_scier",
+   "rubrique": "personnages",
+   "sujet": "visiteur-07",
+   "vue": "avant",
+   "pose": "scier",
+   "titre": "Visiteur 7, trois quarts avant, scier",
+   "regarde": "bas-droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/visiteurs/visiteur-07/visiteur-07_avant_scier_1.svg",
+    "svg/personnages/visiteurs/visiteur-07/visiteur-07_avant_scier_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    700,
+    1100
+   ],
    "parcours": "acte-4",
    "statut": "ok"
   },
@@ -99982,6 +103529,33 @@
    "statut": "ok"
   },
   {
+   "id": "personnages/visiteurs/visiteur-07/visiteur-07_dos_scier",
+   "rubrique": "personnages",
+   "sujet": "visiteur-07",
+   "vue": "dos",
+   "pose": "scier",
+   "titre": "Visiteur 7, trois quarts dos, scier",
+   "regarde": "haut-droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/visiteurs/visiteur-07/visiteur-07_dos_scier_1.svg",
+    "svg/personnages/visiteurs/visiteur-07/visiteur-07_dos_scier_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    700,
+    1100
+   ],
+   "parcours": "acte-4",
+   "statut": "ok"
+  },
+  {
    "id": "personnages/visiteurs/visiteur-07/visiteur-07_dos_semer",
    "rubrique": "personnages",
    "sujet": "visiteur-07",
@@ -100521,6 +104095,32 @@
     64
    ],
    "ms_par_image": 260,
+   "parcours": "acte-4",
+   "statut": "ok"
+  },
+  {
+   "id": "personnages/visiteurs/visiteur-07/visiteur-07_face_scier",
+   "rubrique": "personnages",
+   "sujet": "visiteur-07",
+   "vue": "face",
+   "pose": "scier",
+   "titre": "Visiteur 7, de face, scier",
+   "regarde": "face",
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/visiteurs/visiteur-07/visiteur-07_face_scier_1.svg",
+    "svg/personnages/visiteurs/visiteur-07/visiteur-07_face_scier_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    700,
+    1100
+   ],
    "parcours": "acte-4",
    "statut": "ok"
   },
@@ -101135,6 +104735,33 @@
     64
    ],
    "ms_par_image": 260,
+   "parcours": "acte-4",
+   "statut": "ok"
+  },
+  {
+   "id": "personnages/visiteurs/visiteur-08/visiteur-08_avant_scier",
+   "rubrique": "personnages",
+   "sujet": "visiteur-08",
+   "vue": "avant",
+   "pose": "scier",
+   "titre": "Visiteur 8, trois quarts avant, scier",
+   "regarde": "bas-droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/visiteurs/visiteur-08/visiteur-08_avant_scier_1.svg",
+    "svg/personnages/visiteurs/visiteur-08/visiteur-08_avant_scier_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    700,
+    1100
+   ],
    "parcours": "acte-4",
    "statut": "ok"
   },
@@ -101775,6 +105402,33 @@
    "statut": "ok"
   },
   {
+   "id": "personnages/visiteurs/visiteur-08/visiteur-08_dos_scier",
+   "rubrique": "personnages",
+   "sujet": "visiteur-08",
+   "vue": "dos",
+   "pose": "scier",
+   "titre": "Visiteur 8, trois quarts dos, scier",
+   "regarde": "haut-droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/visiteurs/visiteur-08/visiteur-08_dos_scier_1.svg",
+    "svg/personnages/visiteurs/visiteur-08/visiteur-08_dos_scier_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    700,
+    1100
+   ],
+   "parcours": "acte-4",
+   "statut": "ok"
+  },
+  {
    "id": "personnages/visiteurs/visiteur-08/visiteur-08_dos_semer",
    "rubrique": "personnages",
    "sujet": "visiteur-08",
@@ -102314,6 +105968,32 @@
     64
    ],
    "ms_par_image": 260,
+   "parcours": "acte-4",
+   "statut": "ok"
+  },
+  {
+   "id": "personnages/visiteurs/visiteur-08/visiteur-08_face_scier",
+   "rubrique": "personnages",
+   "sujet": "visiteur-08",
+   "vue": "face",
+   "pose": "scier",
+   "titre": "Visiteur 8, de face, scier",
+   "regarde": "face",
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/visiteurs/visiteur-08/visiteur-08_face_scier_1.svg",
+    "svg/personnages/visiteurs/visiteur-08/visiteur-08_face_scier_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    700,
+    1100
+   ],
    "parcours": "acte-4",
    "statut": "ok"
   },
@@ -102928,6 +106608,33 @@
     64
    ],
    "ms_par_image": 260,
+   "parcours": "acte-4",
+   "statut": "ok"
+  },
+  {
+   "id": "personnages/visiteurs/visiteur-09/visiteur-09_avant_scier",
+   "rubrique": "personnages",
+   "sujet": "visiteur-09",
+   "vue": "avant",
+   "pose": "scier",
+   "titre": "Visiteur 9, trois quarts avant, scier",
+   "regarde": "bas-droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/visiteurs/visiteur-09/visiteur-09_avant_scier_1.svg",
+    "svg/personnages/visiteurs/visiteur-09/visiteur-09_avant_scier_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    700,
+    1100
+   ],
    "parcours": "acte-4",
    "statut": "ok"
   },
@@ -103568,6 +107275,33 @@
    "statut": "ok"
   },
   {
+   "id": "personnages/visiteurs/visiteur-09/visiteur-09_dos_scier",
+   "rubrique": "personnages",
+   "sujet": "visiteur-09",
+   "vue": "dos",
+   "pose": "scier",
+   "titre": "Visiteur 9, trois quarts dos, scier",
+   "regarde": "haut-droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/visiteurs/visiteur-09/visiteur-09_dos_scier_1.svg",
+    "svg/personnages/visiteurs/visiteur-09/visiteur-09_dos_scier_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    700,
+    1100
+   ],
+   "parcours": "acte-4",
+   "statut": "ok"
+  },
+  {
    "id": "personnages/visiteurs/visiteur-09/visiteur-09_dos_semer",
    "rubrique": "personnages",
    "sujet": "visiteur-09",
@@ -104107,6 +107841,32 @@
     64
    ],
    "ms_par_image": 260,
+   "parcours": "acte-4",
+   "statut": "ok"
+  },
+  {
+   "id": "personnages/visiteurs/visiteur-09/visiteur-09_face_scier",
+   "rubrique": "personnages",
+   "sujet": "visiteur-09",
+   "vue": "face",
+   "pose": "scier",
+   "titre": "Visiteur 9, de face, scier",
+   "regarde": "face",
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/visiteurs/visiteur-09/visiteur-09_face_scier_1.svg",
+    "svg/personnages/visiteurs/visiteur-09/visiteur-09_face_scier_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    700,
+    1100
+   ],
    "parcours": "acte-4",
    "statut": "ok"
   },
@@ -104721,6 +108481,33 @@
     64
    ],
    "ms_par_image": 260,
+   "parcours": "acte-4",
+   "statut": "ok"
+  },
+  {
+   "id": "personnages/visiteurs/visiteur-10/visiteur-10_avant_scier",
+   "rubrique": "personnages",
+   "sujet": "visiteur-10",
+   "vue": "avant",
+   "pose": "scier",
+   "titre": "Visiteur 10, trois quarts avant, scier",
+   "regarde": "bas-droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/visiteurs/visiteur-10/visiteur-10_avant_scier_1.svg",
+    "svg/personnages/visiteurs/visiteur-10/visiteur-10_avant_scier_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    700,
+    1100
+   ],
    "parcours": "acte-4",
    "statut": "ok"
   },
@@ -105361,6 +109148,33 @@
    "statut": "ok"
   },
   {
+   "id": "personnages/visiteurs/visiteur-10/visiteur-10_dos_scier",
+   "rubrique": "personnages",
+   "sujet": "visiteur-10",
+   "vue": "dos",
+   "pose": "scier",
+   "titre": "Visiteur 10, trois quarts dos, scier",
+   "regarde": "haut-droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/visiteurs/visiteur-10/visiteur-10_dos_scier_1.svg",
+    "svg/personnages/visiteurs/visiteur-10/visiteur-10_dos_scier_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    700,
+    1100
+   ],
+   "parcours": "acte-4",
+   "statut": "ok"
+  },
+  {
    "id": "personnages/visiteurs/visiteur-10/visiteur-10_dos_semer",
    "rubrique": "personnages",
    "sujet": "visiteur-10",
@@ -105900,6 +109714,32 @@
     64
    ],
    "ms_par_image": 260,
+   "parcours": "acte-4",
+   "statut": "ok"
+  },
+  {
+   "id": "personnages/visiteurs/visiteur-10/visiteur-10_face_scier",
+   "rubrique": "personnages",
+   "sujet": "visiteur-10",
+   "vue": "face",
+   "pose": "scier",
+   "titre": "Visiteur 10, de face, scier",
+   "regarde": "face",
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/visiteurs/visiteur-10/visiteur-10_face_scier_1.svg",
+    "svg/personnages/visiteurs/visiteur-10/visiteur-10_face_scier_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    700,
+    1100
+   ],
    "parcours": "acte-4",
    "statut": "ok"
   },
@@ -106514,6 +110354,33 @@
     64
    ],
    "ms_par_image": 260,
+   "parcours": "acte-4",
+   "statut": "ok"
+  },
+  {
+   "id": "personnages/visiteurs/visiteur-11/visiteur-11_avant_scier",
+   "rubrique": "personnages",
+   "sujet": "visiteur-11",
+   "vue": "avant",
+   "pose": "scier",
+   "titre": "Visiteur 11, trois quarts avant, scier",
+   "regarde": "bas-droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/visiteurs/visiteur-11/visiteur-11_avant_scier_1.svg",
+    "svg/personnages/visiteurs/visiteur-11/visiteur-11_avant_scier_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    700,
+    1100
+   ],
    "parcours": "acte-4",
    "statut": "ok"
   },
@@ -107154,6 +111021,33 @@
    "statut": "ok"
   },
   {
+   "id": "personnages/visiteurs/visiteur-11/visiteur-11_dos_scier",
+   "rubrique": "personnages",
+   "sujet": "visiteur-11",
+   "vue": "dos",
+   "pose": "scier",
+   "titre": "Visiteur 11, trois quarts dos, scier",
+   "regarde": "haut-droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/visiteurs/visiteur-11/visiteur-11_dos_scier_1.svg",
+    "svg/personnages/visiteurs/visiteur-11/visiteur-11_dos_scier_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    700,
+    1100
+   ],
+   "parcours": "acte-4",
+   "statut": "ok"
+  },
+  {
    "id": "personnages/visiteurs/visiteur-11/visiteur-11_dos_semer",
    "rubrique": "personnages",
    "sujet": "visiteur-11",
@@ -107693,6 +111587,32 @@
     64
    ],
    "ms_par_image": 260,
+   "parcours": "acte-4",
+   "statut": "ok"
+  },
+  {
+   "id": "personnages/visiteurs/visiteur-11/visiteur-11_face_scier",
+   "rubrique": "personnages",
+   "sujet": "visiteur-11",
+   "vue": "face",
+   "pose": "scier",
+   "titre": "Visiteur 11, de face, scier",
+   "regarde": "face",
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/visiteurs/visiteur-11/visiteur-11_face_scier_1.svg",
+    "svg/personnages/visiteurs/visiteur-11/visiteur-11_face_scier_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    700,
+    1100
+   ],
    "parcours": "acte-4",
    "statut": "ok"
   },
@@ -108307,6 +112227,33 @@
     64
    ],
    "ms_par_image": 260,
+   "parcours": "acte-4",
+   "statut": "ok"
+  },
+  {
+   "id": "personnages/visiteurs/visiteur-12/visiteur-12_avant_scier",
+   "rubrique": "personnages",
+   "sujet": "visiteur-12",
+   "vue": "avant",
+   "pose": "scier",
+   "titre": "Visiteur 12, trois quarts avant, scier",
+   "regarde": "bas-droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/visiteurs/visiteur-12/visiteur-12_avant_scier_1.svg",
+    "svg/personnages/visiteurs/visiteur-12/visiteur-12_avant_scier_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    700,
+    1100
+   ],
    "parcours": "acte-4",
    "statut": "ok"
   },
@@ -108947,6 +112894,33 @@
    "statut": "ok"
   },
   {
+   "id": "personnages/visiteurs/visiteur-12/visiteur-12_dos_scier",
+   "rubrique": "personnages",
+   "sujet": "visiteur-12",
+   "vue": "dos",
+   "pose": "scier",
+   "titre": "Visiteur 12, trois quarts dos, scier",
+   "regarde": "haut-droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/visiteurs/visiteur-12/visiteur-12_dos_scier_1.svg",
+    "svg/personnages/visiteurs/visiteur-12/visiteur-12_dos_scier_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    700,
+    1100
+   ],
+   "parcours": "acte-4",
+   "statut": "ok"
+  },
+  {
    "id": "personnages/visiteurs/visiteur-12/visiteur-12_dos_semer",
    "rubrique": "personnages",
    "sujet": "visiteur-12",
@@ -109486,6 +113460,32 @@
     64
    ],
    "ms_par_image": 260,
+   "parcours": "acte-4",
+   "statut": "ok"
+  },
+  {
+   "id": "personnages/visiteurs/visiteur-12/visiteur-12_face_scier",
+   "rubrique": "personnages",
+   "sujet": "visiteur-12",
+   "vue": "face",
+   "pose": "scier",
+   "titre": "Visiteur 12, de face, scier",
+   "regarde": "face",
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/visiteurs/visiteur-12/visiteur-12_face_scier_1.svg",
+    "svg/personnages/visiteurs/visiteur-12/visiteur-12_face_scier_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    700,
+    1100
+   ],
    "parcours": "acte-4",
    "statut": "ok"
   },
@@ -112705,6 +116705,33 @@
    "statut": "ok"
   },
   {
+   "id": "personnages/epilogue/arrivant-01/arrivant-01_avant_scier",
+   "rubrique": "personnages",
+   "sujet": "arrivant-01",
+   "vue": "avant",
+   "pose": "scier",
+   "titre": "Nouveau venu 1 (épilogue), trois quarts avant, scier",
+   "regarde": "bas-droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/epilogue/arrivant-01/arrivant-01_avant_scier_1.svg",
+    "svg/personnages/epilogue/arrivant-01/arrivant-01_avant_scier_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    700,
+    1100
+   ],
+   "parcours": "epilogue",
+   "statut": "ok"
+  },
+  {
    "id": "personnages/epilogue/arrivant-01/arrivant-01_avant_semer",
    "rubrique": "personnages",
    "sujet": "arrivant-01",
@@ -113268,6 +117295,33 @@
    "statut": "ok"
   },
   {
+   "id": "personnages/epilogue/arrivant-01/arrivant-01_dos_scier",
+   "rubrique": "personnages",
+   "sujet": "arrivant-01",
+   "vue": "dos",
+   "pose": "scier",
+   "titre": "Nouveau venu 1 (épilogue), trois quarts dos, scier",
+   "regarde": "haut-droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/epilogue/arrivant-01/arrivant-01_dos_scier_1.svg",
+    "svg/personnages/epilogue/arrivant-01/arrivant-01_dos_scier_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    700,
+    1100
+   ],
+   "parcours": "epilogue",
+   "statut": "ok"
+  },
+  {
    "id": "personnages/epilogue/arrivant-01/arrivant-01_dos_semer",
    "rubrique": "personnages",
    "sujet": "arrivant-01",
@@ -113807,6 +117861,32 @@
     64
    ],
    "ms_par_image": 260,
+   "parcours": "epilogue",
+   "statut": "ok"
+  },
+  {
+   "id": "personnages/epilogue/arrivant-01/arrivant-01_face_scier",
+   "rubrique": "personnages",
+   "sujet": "arrivant-01",
+   "vue": "face",
+   "pose": "scier",
+   "titre": "Nouveau venu 1 (épilogue), de face, scier",
+   "regarde": "face",
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/epilogue/arrivant-01/arrivant-01_face_scier_1.svg",
+    "svg/personnages/epilogue/arrivant-01/arrivant-01_face_scier_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    700,
+    1100
+   ],
    "parcours": "epilogue",
    "statut": "ok"
   },
@@ -114369,6 +118449,33 @@
     64
    ],
    "ms_par_image": 260,
+   "parcours": "epilogue",
+   "statut": "ok"
+  },
+  {
+   "id": "personnages/epilogue/arrivant-02/arrivant-02_avant_scier",
+   "rubrique": "personnages",
+   "sujet": "arrivant-02",
+   "vue": "avant",
+   "pose": "scier",
+   "titre": "Nouveau venu 2 (épilogue), trois quarts avant, scier",
+   "regarde": "bas-droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/epilogue/arrivant-02/arrivant-02_avant_scier_1.svg",
+    "svg/personnages/epilogue/arrivant-02/arrivant-02_avant_scier_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    700,
+    1100
+   ],
    "parcours": "epilogue",
    "statut": "ok"
   },
@@ -114936,6 +119043,33 @@
    "statut": "ok"
   },
   {
+   "id": "personnages/epilogue/arrivant-02/arrivant-02_dos_scier",
+   "rubrique": "personnages",
+   "sujet": "arrivant-02",
+   "vue": "dos",
+   "pose": "scier",
+   "titre": "Nouveau venu 2 (épilogue), trois quarts dos, scier",
+   "regarde": "haut-droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/epilogue/arrivant-02/arrivant-02_dos_scier_1.svg",
+    "svg/personnages/epilogue/arrivant-02/arrivant-02_dos_scier_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    700,
+    1100
+   ],
+   "parcours": "epilogue",
+   "statut": "ok"
+  },
+  {
    "id": "personnages/epilogue/arrivant-02/arrivant-02_dos_semer",
    "rubrique": "personnages",
    "sujet": "arrivant-02",
@@ -115475,6 +119609,32 @@
     64
    ],
    "ms_par_image": 260,
+   "parcours": "epilogue",
+   "statut": "ok"
+  },
+  {
+   "id": "personnages/epilogue/arrivant-02/arrivant-02_face_scier",
+   "rubrique": "personnages",
+   "sujet": "arrivant-02",
+   "vue": "face",
+   "pose": "scier",
+   "titre": "Nouveau venu 2 (épilogue), de face, scier",
+   "regarde": "face",
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/epilogue/arrivant-02/arrivant-02_face_scier_1.svg",
+    "svg/personnages/epilogue/arrivant-02/arrivant-02_face_scier_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    700,
+    1100
+   ],
    "parcours": "epilogue",
    "statut": "ok"
   },
@@ -116037,6 +120197,33 @@
     64
    ],
    "ms_par_image": 260,
+   "parcours": "epilogue",
+   "statut": "ok"
+  },
+  {
+   "id": "personnages/epilogue/arrivant-03/arrivant-03_avant_scier",
+   "rubrique": "personnages",
+   "sujet": "arrivant-03",
+   "vue": "avant",
+   "pose": "scier",
+   "titre": "Nouveau venu 3 (épilogue), trois quarts avant, scier",
+   "regarde": "bas-droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/epilogue/arrivant-03/arrivant-03_avant_scier_1.svg",
+    "svg/personnages/epilogue/arrivant-03/arrivant-03_avant_scier_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    700,
+    1100
+   ],
    "parcours": "epilogue",
    "statut": "ok"
   },
@@ -116604,6 +120791,33 @@
    "statut": "ok"
   },
   {
+   "id": "personnages/epilogue/arrivant-03/arrivant-03_dos_scier",
+   "rubrique": "personnages",
+   "sujet": "arrivant-03",
+   "vue": "dos",
+   "pose": "scier",
+   "titre": "Nouveau venu 3 (épilogue), trois quarts dos, scier",
+   "regarde": "haut-droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/epilogue/arrivant-03/arrivant-03_dos_scier_1.svg",
+    "svg/personnages/epilogue/arrivant-03/arrivant-03_dos_scier_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    700,
+    1100
+   ],
+   "parcours": "epilogue",
+   "statut": "ok"
+  },
+  {
    "id": "personnages/epilogue/arrivant-03/arrivant-03_dos_semer",
    "rubrique": "personnages",
    "sujet": "arrivant-03",
@@ -117143,6 +121357,32 @@
     64
    ],
    "ms_par_image": 260,
+   "parcours": "epilogue",
+   "statut": "ok"
+  },
+  {
+   "id": "personnages/epilogue/arrivant-03/arrivant-03_face_scier",
+   "rubrique": "personnages",
+   "sujet": "arrivant-03",
+   "vue": "face",
+   "pose": "scier",
+   "titre": "Nouveau venu 3 (épilogue), de face, scier",
+   "regarde": "face",
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/epilogue/arrivant-03/arrivant-03_face_scier_1.svg",
+    "svg/personnages/epilogue/arrivant-03/arrivant-03_face_scier_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    700,
+    1100
+   ],
    "parcours": "epilogue",
    "statut": "ok"
   },
@@ -117705,6 +121945,33 @@
     64
    ],
    "ms_par_image": 260,
+   "parcours": "epilogue",
+   "statut": "ok"
+  },
+  {
+   "id": "personnages/epilogue/arrivant-04/arrivant-04_avant_scier",
+   "rubrique": "personnages",
+   "sujet": "arrivant-04",
+   "vue": "avant",
+   "pose": "scier",
+   "titre": "Nouveau venu 4 (épilogue), trois quarts avant, scier",
+   "regarde": "bas-droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/epilogue/arrivant-04/arrivant-04_avant_scier_1.svg",
+    "svg/personnages/epilogue/arrivant-04/arrivant-04_avant_scier_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    700,
+    1100
+   ],
    "parcours": "epilogue",
    "statut": "ok"
   },
@@ -118272,6 +122539,33 @@
    "statut": "ok"
   },
   {
+   "id": "personnages/epilogue/arrivant-04/arrivant-04_dos_scier",
+   "rubrique": "personnages",
+   "sujet": "arrivant-04",
+   "vue": "dos",
+   "pose": "scier",
+   "titre": "Nouveau venu 4 (épilogue), trois quarts dos, scier",
+   "regarde": "haut-droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/epilogue/arrivant-04/arrivant-04_dos_scier_1.svg",
+    "svg/personnages/epilogue/arrivant-04/arrivant-04_dos_scier_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    700,
+    1100
+   ],
+   "parcours": "epilogue",
+   "statut": "ok"
+  },
+  {
    "id": "personnages/epilogue/arrivant-04/arrivant-04_dos_semer",
    "rubrique": "personnages",
    "sujet": "arrivant-04",
@@ -118811,6 +123105,32 @@
     64
    ],
    "ms_par_image": 260,
+   "parcours": "epilogue",
+   "statut": "ok"
+  },
+  {
+   "id": "personnages/epilogue/arrivant-04/arrivant-04_face_scier",
+   "rubrique": "personnages",
+   "sujet": "arrivant-04",
+   "vue": "face",
+   "pose": "scier",
+   "titre": "Nouveau venu 4 (épilogue), de face, scier",
+   "regarde": "face",
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/epilogue/arrivant-04/arrivant-04_face_scier_1.svg",
+    "svg/personnages/epilogue/arrivant-04/arrivant-04_face_scier_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    700,
+    1100
+   ],
    "parcours": "epilogue",
    "statut": "ok"
   },
@@ -119373,6 +123693,33 @@
     64
    ],
    "ms_par_image": 260,
+   "parcours": "epilogue",
+   "statut": "ok"
+  },
+  {
+   "id": "personnages/epilogue/arrivant-05/arrivant-05_avant_scier",
+   "rubrique": "personnages",
+   "sujet": "arrivant-05",
+   "vue": "avant",
+   "pose": "scier",
+   "titre": "Nouveau venu 5 (épilogue), trois quarts avant, scier",
+   "regarde": "bas-droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/epilogue/arrivant-05/arrivant-05_avant_scier_1.svg",
+    "svg/personnages/epilogue/arrivant-05/arrivant-05_avant_scier_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    700,
+    1100
+   ],
    "parcours": "epilogue",
    "statut": "ok"
   },
@@ -119940,6 +124287,33 @@
    "statut": "ok"
   },
   {
+   "id": "personnages/epilogue/arrivant-05/arrivant-05_dos_scier",
+   "rubrique": "personnages",
+   "sujet": "arrivant-05",
+   "vue": "dos",
+   "pose": "scier",
+   "titre": "Nouveau venu 5 (épilogue), trois quarts dos, scier",
+   "regarde": "haut-droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/epilogue/arrivant-05/arrivant-05_dos_scier_1.svg",
+    "svg/personnages/epilogue/arrivant-05/arrivant-05_dos_scier_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    700,
+    1100
+   ],
+   "parcours": "epilogue",
+   "statut": "ok"
+  },
+  {
    "id": "personnages/epilogue/arrivant-05/arrivant-05_dos_semer",
    "rubrique": "personnages",
    "sujet": "arrivant-05",
@@ -120479,6 +124853,32 @@
     64
    ],
    "ms_par_image": 260,
+   "parcours": "epilogue",
+   "statut": "ok"
+  },
+  {
+   "id": "personnages/epilogue/arrivant-05/arrivant-05_face_scier",
+   "rubrique": "personnages",
+   "sujet": "arrivant-05",
+   "vue": "face",
+   "pose": "scier",
+   "titre": "Nouveau venu 5 (épilogue), de face, scier",
+   "regarde": "face",
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/epilogue/arrivant-05/arrivant-05_face_scier_1.svg",
+    "svg/personnages/epilogue/arrivant-05/arrivant-05_face_scier_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    700,
+    1100
+   ],
    "parcours": "epilogue",
    "statut": "ok"
   },
@@ -121041,6 +125441,33 @@
     64
    ],
    "ms_par_image": 260,
+   "parcours": "epilogue",
+   "statut": "ok"
+  },
+  {
+   "id": "personnages/epilogue/arrivant-06/arrivant-06_avant_scier",
+   "rubrique": "personnages",
+   "sujet": "arrivant-06",
+   "vue": "avant",
+   "pose": "scier",
+   "titre": "Nouveau venu 6 (épilogue), trois quarts avant, scier",
+   "regarde": "bas-droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/epilogue/arrivant-06/arrivant-06_avant_scier_1.svg",
+    "svg/personnages/epilogue/arrivant-06/arrivant-06_avant_scier_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    700,
+    1100
+   ],
    "parcours": "epilogue",
    "statut": "ok"
   },
@@ -121608,6 +126035,33 @@
    "statut": "ok"
   },
   {
+   "id": "personnages/epilogue/arrivant-06/arrivant-06_dos_scier",
+   "rubrique": "personnages",
+   "sujet": "arrivant-06",
+   "vue": "dos",
+   "pose": "scier",
+   "titre": "Nouveau venu 6 (épilogue), trois quarts dos, scier",
+   "regarde": "haut-droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/epilogue/arrivant-06/arrivant-06_dos_scier_1.svg",
+    "svg/personnages/epilogue/arrivant-06/arrivant-06_dos_scier_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    700,
+    1100
+   ],
+   "parcours": "epilogue",
+   "statut": "ok"
+  },
+  {
    "id": "personnages/epilogue/arrivant-06/arrivant-06_dos_semer",
    "rubrique": "personnages",
    "sujet": "arrivant-06",
@@ -122147,6 +126601,32 @@
     64
    ],
    "ms_par_image": 260,
+   "parcours": "epilogue",
+   "statut": "ok"
+  },
+  {
+   "id": "personnages/epilogue/arrivant-06/arrivant-06_face_scier",
+   "rubrique": "personnages",
+   "sujet": "arrivant-06",
+   "vue": "face",
+   "pose": "scier",
+   "titre": "Nouveau venu 6 (épilogue), de face, scier",
+   "regarde": "face",
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/epilogue/arrivant-06/arrivant-06_face_scier_1.svg",
+    "svg/personnages/epilogue/arrivant-06/arrivant-06_face_scier_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    700,
+    1100
+   ],
    "parcours": "epilogue",
    "statut": "ok"
   },
@@ -122709,6 +127189,33 @@
     64
    ],
    "ms_par_image": 260,
+   "parcours": "epilogue",
+   "statut": "ok"
+  },
+  {
+   "id": "personnages/epilogue/arrivant-07/arrivant-07_avant_scier",
+   "rubrique": "personnages",
+   "sujet": "arrivant-07",
+   "vue": "avant",
+   "pose": "scier",
+   "titre": "Nouveau venu 7 (épilogue), trois quarts avant, scier",
+   "regarde": "bas-droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/epilogue/arrivant-07/arrivant-07_avant_scier_1.svg",
+    "svg/personnages/epilogue/arrivant-07/arrivant-07_avant_scier_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    700,
+    1100
+   ],
    "parcours": "epilogue",
    "statut": "ok"
   },
@@ -123276,6 +127783,33 @@
    "statut": "ok"
   },
   {
+   "id": "personnages/epilogue/arrivant-07/arrivant-07_dos_scier",
+   "rubrique": "personnages",
+   "sujet": "arrivant-07",
+   "vue": "dos",
+   "pose": "scier",
+   "titre": "Nouveau venu 7 (épilogue), trois quarts dos, scier",
+   "regarde": "haut-droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/epilogue/arrivant-07/arrivant-07_dos_scier_1.svg",
+    "svg/personnages/epilogue/arrivant-07/arrivant-07_dos_scier_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    700,
+    1100
+   ],
+   "parcours": "epilogue",
+   "statut": "ok"
+  },
+  {
    "id": "personnages/epilogue/arrivant-07/arrivant-07_dos_semer",
    "rubrique": "personnages",
    "sujet": "arrivant-07",
@@ -123815,6 +128349,32 @@
     64
    ],
    "ms_par_image": 260,
+   "parcours": "epilogue",
+   "statut": "ok"
+  },
+  {
+   "id": "personnages/epilogue/arrivant-07/arrivant-07_face_scier",
+   "rubrique": "personnages",
+   "sujet": "arrivant-07",
+   "vue": "face",
+   "pose": "scier",
+   "titre": "Nouveau venu 7 (épilogue), de face, scier",
+   "regarde": "face",
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/epilogue/arrivant-07/arrivant-07_face_scier_1.svg",
+    "svg/personnages/epilogue/arrivant-07/arrivant-07_face_scier_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    700,
+    1100
+   ],
    "parcours": "epilogue",
    "statut": "ok"
   },
@@ -124377,6 +128937,33 @@
     64
    ],
    "ms_par_image": 260,
+   "parcours": "epilogue",
+   "statut": "ok"
+  },
+  {
+   "id": "personnages/epilogue/arrivant-08/arrivant-08_avant_scier",
+   "rubrique": "personnages",
+   "sujet": "arrivant-08",
+   "vue": "avant",
+   "pose": "scier",
+   "titre": "Nouveau venu 8 (épilogue), trois quarts avant, scier",
+   "regarde": "bas-droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/epilogue/arrivant-08/arrivant-08_avant_scier_1.svg",
+    "svg/personnages/epilogue/arrivant-08/arrivant-08_avant_scier_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    700,
+    1100
+   ],
    "parcours": "epilogue",
    "statut": "ok"
   },
@@ -124944,6 +129531,33 @@
    "statut": "ok"
   },
   {
+   "id": "personnages/epilogue/arrivant-08/arrivant-08_dos_scier",
+   "rubrique": "personnages",
+   "sujet": "arrivant-08",
+   "vue": "dos",
+   "pose": "scier",
+   "titre": "Nouveau venu 8 (épilogue), trois quarts dos, scier",
+   "regarde": "haut-droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/epilogue/arrivant-08/arrivant-08_dos_scier_1.svg",
+    "svg/personnages/epilogue/arrivant-08/arrivant-08_dos_scier_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    700,
+    1100
+   ],
+   "parcours": "epilogue",
+   "statut": "ok"
+  },
+  {
    "id": "personnages/epilogue/arrivant-08/arrivant-08_dos_semer",
    "rubrique": "personnages",
    "sujet": "arrivant-08",
@@ -125483,6 +130097,32 @@
     64
    ],
    "ms_par_image": 260,
+   "parcours": "epilogue",
+   "statut": "ok"
+  },
+  {
+   "id": "personnages/epilogue/arrivant-08/arrivant-08_face_scier",
+   "rubrique": "personnages",
+   "sujet": "arrivant-08",
+   "vue": "face",
+   "pose": "scier",
+   "titre": "Nouveau venu 8 (épilogue), de face, scier",
+   "regarde": "face",
+   "images": 2,
+   "fichiers": [
+    "svg/personnages/epilogue/arrivant-08/arrivant-08_face_scier_1.svg",
+    "svg/personnages/epilogue/arrivant-08/arrivant-08_face_scier_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    64
+   ],
+   "ms_par_image": [
+    700,
+    1100
+   ],
    "parcours": "epilogue",
    "statut": "ok"
   },
