@@ -116,7 +116,8 @@ const LESSONS = {
   'souvenir-ondin': [
     { target: '.book-view__ariane', text: 'Le Puits s’écrit dans le Grimoire. Suis le ruban : il mène, page après page, à ce qui manque.' },
     { target: '.book-view__hot[data-marked]', text: 'Voici la page qui manque : son énigme dit ce qu’il faut mêler. Touche ces éléments en bas, ils iront dans l’Athanor.', free: true },
-    { target: '.book-view__hot[data-marked] .book-view__spot[data-spot="ink"]', text: 'Son énigme dit ce qu’il faut mêler : touche ces éléments en bas. Bloqué ? L’Encre est offerte pendant que tu aides Ondin : elle révèle un ingrédient.', free: true }
+    { target: '.book-view__hot[data-marked] .book-view__spot[data-spot="ink"]', text: 'Son énigme dit ce qu’il faut mêler : touche ces éléments en bas. Bloqué ? L’Encre est offerte pendant que tu aides Ondin : elle révèle un ingrédient.', free: true },
+    { target: '.athanor__fuse:not(:disabled)', text: 'Les éléments sont dans l’Athanor : touche « Transmuer ». Si ce n’est pas le bon mélange, l’Athanor te le dit : essaie un autre élément.', free: true }
   ],
   'puits-ondin': [
     { target: 'île:site:puits', text: 'Le chantier du Puits : touche-le.' },

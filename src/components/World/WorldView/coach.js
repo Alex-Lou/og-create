@@ -4,6 +4,7 @@
 
 import { coach } from '@/game/coach';
 import { TW, DEPOSIT_SCALE } from '@/world/view/constants';
+import { BRUME_ALT, BRUME_REACH } from '@/world/brume';
 import { depositWait } from '@/world/finds';
 
 // L'ordre où le coach montre ce que la mer a rendu
@@ -25,16 +26,28 @@ export default {
   },
   mounted() {
     this.offCoach = coach.island(name => this.coachRect(name));
+    // « Me montrer » (CoachLayer) : la caméra va vers la cible, si elle existe
+    this.offFocus = coach.focusIsland(name => {
+      if (!this.coachWorld(name)) return false;
+      this.coachFocus(name);
+      return true;
+    });
   },
   beforeUnmount() {
     if (this.offCoach) this.offCoach();
+    if (this.offFocus) this.offFocus();
   },
   methods: {
     // Une cible de l'île dans le monde : { x, y, r } (centre et rayon), ou null
     coachWorld(name) {
       if (!this.state) return null;
       const [kind, id] = name.split(':');
-      if (kind === 'brume') return this.brumeHit ? { x: this.brumeHit.x, y: this.brumeHit.y, r: this.brumeHit.r } : null;
+      if (kind === 'brume') {
+        if (this.brumeHit) return { x: this.brumeHit.x, y: this.brumeHit.y, r: this.brumeHit.r };
+        // (hors de l'écran, elle n'est pas dessinée : sa place près de l'objectif de la quête)
+        const spot = this.brumeSpot && this.brumeSpot();
+        return spot ? { x: spot.x, y: spot.y - BRUME_ALT, r: BRUME_REACH } : null;
+      }
       if (kind === 'site') {
         const site = this.state.sites.find(s => s.id === id);
         if (!site) return null;
