@@ -151102,12 +151102,46 @@
    "statut": "ok"
   },
   {
+   "id": "chemins/chemin_ne_b",
+   "rubrique": "chemins",
+   "titre": "Chemin ne b",
+   "images": 1,
+   "fichiers": [
+    "svg/chemins/chemin_ne_b.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    64,
+    32
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
    "id": "chemins/chemin_ne-no",
    "rubrique": "chemins",
    "titre": "Chemin ne no",
    "images": 1,
    "fichiers": [
     "svg/chemins/chemin_ne-no.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    64,
+    32
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "chemins/chemin_ne-no_b",
+   "rubrique": "chemins",
+   "titre": "Chemin ne no b",
+   "images": 1,
+   "fichiers": [
+    "svg/chemins/chemin_ne-no_b.svg"
    ],
    "cadre": [
     0,
@@ -151136,12 +151170,46 @@
    "statut": "ok"
   },
   {
+   "id": "chemins/chemin_ne-se_b",
+   "rubrique": "chemins",
+   "titre": "Chemin ne se b",
+   "images": 1,
+   "fichiers": [
+    "svg/chemins/chemin_ne-se_b.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    64,
+    32
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
    "id": "chemins/chemin_ne-se-no",
    "rubrique": "chemins",
    "titre": "Chemin ne se no",
    "images": 1,
    "fichiers": [
     "svg/chemins/chemin_ne-se-no.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    64,
+    32
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "chemins/chemin_ne-se-no_b",
+   "rubrique": "chemins",
+   "titre": "Chemin ne se no b",
+   "images": 1,
+   "fichiers": [
+    "svg/chemins/chemin_ne-se-no_b.svg"
    ],
    "cadre": [
     0,
@@ -151170,12 +151238,46 @@
    "statut": "ok"
   },
   {
+   "id": "chemins/chemin_ne-se-so_b",
+   "rubrique": "chemins",
+   "titre": "Chemin ne se so b",
+   "images": 1,
+   "fichiers": [
+    "svg/chemins/chemin_ne-se-so_b.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    64,
+    32
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
    "id": "chemins/chemin_ne-se-so-no",
    "rubrique": "chemins",
    "titre": "Chemin ne se so no",
    "images": 1,
    "fichiers": [
     "svg/chemins/chemin_ne-se-so-no.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    64,
+    32
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "chemins/chemin_ne-se-so-no_b",
+   "rubrique": "chemins",
+   "titre": "Chemin ne se so no b",
+   "images": 1,
+   "fichiers": [
+    "svg/chemins/chemin_ne-se-so-no_b.svg"
    ],
    "cadre": [
     0,
@@ -151204,12 +151306,46 @@
    "statut": "ok"
   },
   {
+   "id": "chemins/chemin_ne-so_b",
+   "rubrique": "chemins",
+   "titre": "Chemin ne so b",
+   "images": 1,
+   "fichiers": [
+    "svg/chemins/chemin_ne-so_b.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    64,
+    32
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
    "id": "chemins/chemin_ne-so-no",
    "rubrique": "chemins",
    "titre": "Chemin ne so no",
    "images": 1,
    "fichiers": [
     "svg/chemins/chemin_ne-so-no.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    64,
+    32
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "chemins/chemin_ne-so-no_b",
+   "rubrique": "chemins",
+   "titre": "Chemin ne so no b",
+   "images": 1,
+   "fichiers": [
+    "svg/chemins/chemin_ne-so-no_b.svg"
    ],
    "cadre": [
     0,
@@ -151238,12 +151374,46 @@
    "statut": "ok"
   },
   {
+   "id": "chemins/chemin_no_b",
+   "rubrique": "chemins",
+   "titre": "Chemin no b",
+   "images": 1,
+   "fichiers": [
+    "svg/chemins/chemin_no_b.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    64,
+    32
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
    "id": "chemins/chemin_se",
    "rubrique": "chemins",
    "titre": "Chemin se",
    "images": 1,
    "fichiers": [
     "svg/chemins/chemin_se.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    64,
+    32
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "chemins/chemin_se_b",
+   "rubrique": "chemins",
+   "titre": "Chemin se b",
+   "images": 1,
+   "fichiers": [
+    "svg/chemins/chemin_se_b.svg"
    ],
    "cadre": [
     0,
@@ -151272,12 +151442,46 @@
    "statut": "ok"
   },
   {
+   "id": "chemins/chemin_se-no_b",
+   "rubrique": "chemins",
+   "titre": "Chemin se no b",
+   "images": 1,
+   "fichiers": [
+    "svg/chemins/chemin_se-no_b.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    64,
+    32
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
    "id": "chemins/chemin_se-so",
    "rubrique": "chemins",
    "titre": "Chemin se so",
    "images": 1,
    "fichiers": [
     "svg/chemins/chemin_se-so.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    64,
+    32
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "chemins/chemin_se-so_b",
+   "rubrique": "chemins",
+   "titre": "Chemin se so b",
+   "images": 1,
+   "fichiers": [
+    "svg/chemins/chemin_se-so_b.svg"
    ],
    "cadre": [
     0,
@@ -151306,12 +151510,46 @@
    "statut": "ok"
   },
   {
+   "id": "chemins/chemin_se-so-no_b",
+   "rubrique": "chemins",
+   "titre": "Chemin se so no b",
+   "images": 1,
+   "fichiers": [
+    "svg/chemins/chemin_se-so-no_b.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    64,
+    32
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
    "id": "chemins/chemin_seul",
    "rubrique": "chemins",
    "titre": "Chemin seul",
    "images": 1,
    "fichiers": [
     "svg/chemins/chemin_seul.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    64,
+    32
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "chemins/chemin_seul_b",
+   "rubrique": "chemins",
+   "titre": "Chemin seul b",
+   "images": 1,
+   "fichiers": [
+    "svg/chemins/chemin_seul_b.svg"
    ],
    "cadre": [
     0,
@@ -151340,6 +151578,23 @@
    "statut": "ok"
   },
   {
+   "id": "chemins/chemin_so_b",
+   "rubrique": "chemins",
+   "titre": "Chemin so b",
+   "images": 1,
+   "fichiers": [
+    "svg/chemins/chemin_so_b.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    64,
+    32
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
    "id": "chemins/chemin_so-no",
    "rubrique": "chemins",
    "titre": "Chemin so no",
@@ -151357,15 +151612,1372 @@
    "statut": "ok"
   },
   {
-   "id": "chemins/creuse",
+   "id": "chemins/chemin_so-no_b",
    "rubrique": "chemins",
-   "titre": "Le creusement d'un chemin droit : le tracé marqué (piquets et ficelle)",
-   "images": 4,
+   "titre": "Chemin so no b",
+   "images": 1,
    "fichiers": [
-    "svg/chemins/creuse_1.svg",
-    "svg/chemins/creuse_2.svg",
-    "svg/chemins/creuse_3.svg",
-    "svg/chemins/creuse_4.svg"
+    "svg/chemins/chemin_so-no_b.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    64,
+    32
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "chemins/etape-1_ne",
+   "rubrique": "chemins",
+   "titre": "Etape 1 ne",
+   "images": 1,
+   "fichiers": [
+    "svg/chemins/etape-1_ne.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    64,
+    32
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "chemins/etape-1_ne-no",
+   "rubrique": "chemins",
+   "titre": "Etape 1 ne no",
+   "images": 1,
+   "fichiers": [
+    "svg/chemins/etape-1_ne-no.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    64,
+    32
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "chemins/etape-1_ne-se",
+   "rubrique": "chemins",
+   "titre": "Etape 1 ne se",
+   "images": 1,
+   "fichiers": [
+    "svg/chemins/etape-1_ne-se.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    64,
+    32
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "chemins/etape-1_ne-se-no",
+   "rubrique": "chemins",
+   "titre": "Etape 1 ne se no",
+   "images": 1,
+   "fichiers": [
+    "svg/chemins/etape-1_ne-se-no.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    64,
+    32
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "chemins/etape-1_ne-se-so",
+   "rubrique": "chemins",
+   "titre": "Etape 1 ne se so",
+   "images": 1,
+   "fichiers": [
+    "svg/chemins/etape-1_ne-se-so.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    64,
+    32
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "chemins/etape-1_ne-se-so-no",
+   "rubrique": "chemins",
+   "titre": "Etape 1 ne se so no",
+   "images": 1,
+   "fichiers": [
+    "svg/chemins/etape-1_ne-se-so-no.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    64,
+    32
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "chemins/etape-1_ne-so",
+   "rubrique": "chemins",
+   "titre": "Etape 1 ne so",
+   "images": 1,
+   "fichiers": [
+    "svg/chemins/etape-1_ne-so.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    64,
+    32
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "chemins/etape-1_ne-so-no",
+   "rubrique": "chemins",
+   "titre": "Etape 1 ne so no",
+   "images": 1,
+   "fichiers": [
+    "svg/chemins/etape-1_ne-so-no.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    64,
+    32
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "chemins/etape-1_no",
+   "rubrique": "chemins",
+   "titre": "Etape 1 no",
+   "images": 1,
+   "fichiers": [
+    "svg/chemins/etape-1_no.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    64,
+    32
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "chemins/etape-1_se",
+   "rubrique": "chemins",
+   "titre": "Etape 1 se",
+   "images": 1,
+   "fichiers": [
+    "svg/chemins/etape-1_se.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    64,
+    32
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "chemins/etape-1_se-no",
+   "rubrique": "chemins",
+   "titre": "Etape 1 se no",
+   "images": 1,
+   "fichiers": [
+    "svg/chemins/etape-1_se-no.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    64,
+    32
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "chemins/etape-1_se-so",
+   "rubrique": "chemins",
+   "titre": "Etape 1 se so",
+   "images": 1,
+   "fichiers": [
+    "svg/chemins/etape-1_se-so.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    64,
+    32
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "chemins/etape-1_se-so-no",
+   "rubrique": "chemins",
+   "titre": "Etape 1 se so no",
+   "images": 1,
+   "fichiers": [
+    "svg/chemins/etape-1_se-so-no.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    64,
+    32
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "chemins/etape-1_seul",
+   "rubrique": "chemins",
+   "titre": "Etape 1 seul",
+   "images": 1,
+   "fichiers": [
+    "svg/chemins/etape-1_seul.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    64,
+    32
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "chemins/etape-1_so",
+   "rubrique": "chemins",
+   "titre": "Etape 1 so",
+   "images": 1,
+   "fichiers": [
+    "svg/chemins/etape-1_so.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    64,
+    32
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "chemins/etape-1_so-no",
+   "rubrique": "chemins",
+   "titre": "Etape 1 so no",
+   "images": 1,
+   "fichiers": [
+    "svg/chemins/etape-1_so-no.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    64,
+    32
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "chemins/etape-2_ne",
+   "rubrique": "chemins",
+   "titre": "Etape 2 ne",
+   "images": 1,
+   "fichiers": [
+    "svg/chemins/etape-2_ne.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    64,
+    32
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "chemins/etape-2_ne-no",
+   "rubrique": "chemins",
+   "titre": "Etape 2 ne no",
+   "images": 1,
+   "fichiers": [
+    "svg/chemins/etape-2_ne-no.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    64,
+    32
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "chemins/etape-2_ne-se",
+   "rubrique": "chemins",
+   "titre": "Etape 2 ne se",
+   "images": 1,
+   "fichiers": [
+    "svg/chemins/etape-2_ne-se.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    64,
+    32
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "chemins/etape-2_ne-se-no",
+   "rubrique": "chemins",
+   "titre": "Etape 2 ne se no",
+   "images": 1,
+   "fichiers": [
+    "svg/chemins/etape-2_ne-se-no.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    64,
+    32
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "chemins/etape-2_ne-se-so",
+   "rubrique": "chemins",
+   "titre": "Etape 2 ne se so",
+   "images": 1,
+   "fichiers": [
+    "svg/chemins/etape-2_ne-se-so.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    64,
+    32
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "chemins/etape-2_ne-se-so-no",
+   "rubrique": "chemins",
+   "titre": "Etape 2 ne se so no",
+   "images": 1,
+   "fichiers": [
+    "svg/chemins/etape-2_ne-se-so-no.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    64,
+    32
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "chemins/etape-2_ne-so",
+   "rubrique": "chemins",
+   "titre": "Etape 2 ne so",
+   "images": 1,
+   "fichiers": [
+    "svg/chemins/etape-2_ne-so.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    64,
+    32
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "chemins/etape-2_ne-so-no",
+   "rubrique": "chemins",
+   "titre": "Etape 2 ne so no",
+   "images": 1,
+   "fichiers": [
+    "svg/chemins/etape-2_ne-so-no.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    64,
+    32
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "chemins/etape-2_no",
+   "rubrique": "chemins",
+   "titre": "Etape 2 no",
+   "images": 1,
+   "fichiers": [
+    "svg/chemins/etape-2_no.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    64,
+    32
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "chemins/etape-2_se",
+   "rubrique": "chemins",
+   "titre": "Etape 2 se",
+   "images": 1,
+   "fichiers": [
+    "svg/chemins/etape-2_se.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    64,
+    32
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "chemins/etape-2_se-no",
+   "rubrique": "chemins",
+   "titre": "Etape 2 se no",
+   "images": 1,
+   "fichiers": [
+    "svg/chemins/etape-2_se-no.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    64,
+    32
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "chemins/etape-2_se-so",
+   "rubrique": "chemins",
+   "titre": "Etape 2 se so",
+   "images": 1,
+   "fichiers": [
+    "svg/chemins/etape-2_se-so.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    64,
+    32
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "chemins/etape-2_se-so-no",
+   "rubrique": "chemins",
+   "titre": "Etape 2 se so no",
+   "images": 1,
+   "fichiers": [
+    "svg/chemins/etape-2_se-so-no.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    64,
+    32
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "chemins/etape-2_seul",
+   "rubrique": "chemins",
+   "titre": "Etape 2 seul",
+   "images": 1,
+   "fichiers": [
+    "svg/chemins/etape-2_seul.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    64,
+    32
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "chemins/etape-2_so",
+   "rubrique": "chemins",
+   "titre": "Etape 2 so",
+   "images": 1,
+   "fichiers": [
+    "svg/chemins/etape-2_so.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    64,
+    32
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "chemins/etape-2_so-no",
+   "rubrique": "chemins",
+   "titre": "Etape 2 so no",
+   "images": 1,
+   "fichiers": [
+    "svg/chemins/etape-2_so-no.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    64,
+    32
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "chemins/etape-3_ne",
+   "rubrique": "chemins",
+   "titre": "Etape 3 ne",
+   "images": 1,
+   "fichiers": [
+    "svg/chemins/etape-3_ne.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    64,
+    32
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "chemins/etape-3_ne-no",
+   "rubrique": "chemins",
+   "titre": "Etape 3 ne no",
+   "images": 1,
+   "fichiers": [
+    "svg/chemins/etape-3_ne-no.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    64,
+    32
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "chemins/etape-3_ne-se",
+   "rubrique": "chemins",
+   "titre": "Etape 3 ne se",
+   "images": 1,
+   "fichiers": [
+    "svg/chemins/etape-3_ne-se.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    64,
+    32
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "chemins/etape-3_ne-se-no",
+   "rubrique": "chemins",
+   "titre": "Etape 3 ne se no",
+   "images": 1,
+   "fichiers": [
+    "svg/chemins/etape-3_ne-se-no.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    64,
+    32
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "chemins/etape-3_ne-se-so",
+   "rubrique": "chemins",
+   "titre": "Etape 3 ne se so",
+   "images": 1,
+   "fichiers": [
+    "svg/chemins/etape-3_ne-se-so.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    64,
+    32
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "chemins/etape-3_ne-se-so-no",
+   "rubrique": "chemins",
+   "titre": "Etape 3 ne se so no",
+   "images": 1,
+   "fichiers": [
+    "svg/chemins/etape-3_ne-se-so-no.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    64,
+    32
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "chemins/etape-3_ne-so",
+   "rubrique": "chemins",
+   "titre": "Etape 3 ne so",
+   "images": 1,
+   "fichiers": [
+    "svg/chemins/etape-3_ne-so.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    64,
+    32
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "chemins/etape-3_ne-so-no",
+   "rubrique": "chemins",
+   "titre": "Etape 3 ne so no",
+   "images": 1,
+   "fichiers": [
+    "svg/chemins/etape-3_ne-so-no.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    64,
+    32
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "chemins/etape-3_no",
+   "rubrique": "chemins",
+   "titre": "Etape 3 no",
+   "images": 1,
+   "fichiers": [
+    "svg/chemins/etape-3_no.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    64,
+    32
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "chemins/etape-3_se",
+   "rubrique": "chemins",
+   "titre": "Etape 3 se",
+   "images": 1,
+   "fichiers": [
+    "svg/chemins/etape-3_se.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    64,
+    32
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "chemins/etape-3_se-no",
+   "rubrique": "chemins",
+   "titre": "Etape 3 se no",
+   "images": 1,
+   "fichiers": [
+    "svg/chemins/etape-3_se-no.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    64,
+    32
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "chemins/etape-3_se-so",
+   "rubrique": "chemins",
+   "titre": "Etape 3 se so",
+   "images": 1,
+   "fichiers": [
+    "svg/chemins/etape-3_se-so.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    64,
+    32
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "chemins/etape-3_se-so-no",
+   "rubrique": "chemins",
+   "titre": "Etape 3 se so no",
+   "images": 1,
+   "fichiers": [
+    "svg/chemins/etape-3_se-so-no.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    64,
+    32
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "chemins/etape-3_seul",
+   "rubrique": "chemins",
+   "titre": "Etape 3 seul",
+   "images": 1,
+   "fichiers": [
+    "svg/chemins/etape-3_seul.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    64,
+    32
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "chemins/etape-3_so",
+   "rubrique": "chemins",
+   "titre": "Etape 3 so",
+   "images": 1,
+   "fichiers": [
+    "svg/chemins/etape-3_so.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    64,
+    32
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "chemins/etape-3_so-no",
+   "rubrique": "chemins",
+   "titre": "Etape 3 so no",
+   "images": 1,
+   "fichiers": [
+    "svg/chemins/etape-3_so-no.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    64,
+    32
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "chemins/etape-4_ne",
+   "rubrique": "chemins",
+   "titre": "Etape 4 ne",
+   "images": 1,
+   "fichiers": [
+    "svg/chemins/etape-4_ne.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    64,
+    32
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "chemins/etape-4_ne-no",
+   "rubrique": "chemins",
+   "titre": "Etape 4 ne no",
+   "images": 1,
+   "fichiers": [
+    "svg/chemins/etape-4_ne-no.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    64,
+    32
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "chemins/etape-4_ne-se",
+   "rubrique": "chemins",
+   "titre": "Etape 4 ne se",
+   "images": 1,
+   "fichiers": [
+    "svg/chemins/etape-4_ne-se.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    64,
+    32
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "chemins/etape-4_ne-se-no",
+   "rubrique": "chemins",
+   "titre": "Etape 4 ne se no",
+   "images": 1,
+   "fichiers": [
+    "svg/chemins/etape-4_ne-se-no.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    64,
+    32
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "chemins/etape-4_ne-se-so",
+   "rubrique": "chemins",
+   "titre": "Etape 4 ne se so",
+   "images": 1,
+   "fichiers": [
+    "svg/chemins/etape-4_ne-se-so.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    64,
+    32
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "chemins/etape-4_ne-se-so-no",
+   "rubrique": "chemins",
+   "titre": "Etape 4 ne se so no",
+   "images": 1,
+   "fichiers": [
+    "svg/chemins/etape-4_ne-se-so-no.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    64,
+    32
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "chemins/etape-4_ne-so",
+   "rubrique": "chemins",
+   "titre": "Etape 4 ne so",
+   "images": 1,
+   "fichiers": [
+    "svg/chemins/etape-4_ne-so.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    64,
+    32
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "chemins/etape-4_ne-so-no",
+   "rubrique": "chemins",
+   "titre": "Etape 4 ne so no",
+   "images": 1,
+   "fichiers": [
+    "svg/chemins/etape-4_ne-so-no.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    64,
+    32
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "chemins/etape-4_no",
+   "rubrique": "chemins",
+   "titre": "Etape 4 no",
+   "images": 1,
+   "fichiers": [
+    "svg/chemins/etape-4_no.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    64,
+    32
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "chemins/etape-4_se",
+   "rubrique": "chemins",
+   "titre": "Etape 4 se",
+   "images": 1,
+   "fichiers": [
+    "svg/chemins/etape-4_se.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    64,
+    32
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "chemins/etape-4_se-no",
+   "rubrique": "chemins",
+   "titre": "Etape 4 se no",
+   "images": 1,
+   "fichiers": [
+    "svg/chemins/etape-4_se-no.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    64,
+    32
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "chemins/etape-4_se-so",
+   "rubrique": "chemins",
+   "titre": "Etape 4 se so",
+   "images": 1,
+   "fichiers": [
+    "svg/chemins/etape-4_se-so.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    64,
+    32
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "chemins/etape-4_se-so-no",
+   "rubrique": "chemins",
+   "titre": "Etape 4 se so no",
+   "images": 1,
+   "fichiers": [
+    "svg/chemins/etape-4_se-so-no.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    64,
+    32
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "chemins/etape-4_seul",
+   "rubrique": "chemins",
+   "titre": "Etape 4 seul",
+   "images": 1,
+   "fichiers": [
+    "svg/chemins/etape-4_seul.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    64,
+    32
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "chemins/etape-4_so",
+   "rubrique": "chemins",
+   "titre": "Etape 4 so",
+   "images": 1,
+   "fichiers": [
+    "svg/chemins/etape-4_so.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    64,
+    32
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "chemins/etape-4_so-no",
+   "rubrique": "chemins",
+   "titre": "Etape 4 so no",
+   "images": 1,
+   "fichiers": [
+    "svg/chemins/etape-4_so-no.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    64,
+    32
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "chemins/etape-5_ne",
+   "rubrique": "chemins",
+   "titre": "Etape 5 ne",
+   "images": 1,
+   "fichiers": [
+    "svg/chemins/etape-5_ne.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    64,
+    32
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "chemins/etape-5_ne-no",
+   "rubrique": "chemins",
+   "titre": "Etape 5 ne no",
+   "images": 1,
+   "fichiers": [
+    "svg/chemins/etape-5_ne-no.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    64,
+    32
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "chemins/etape-5_ne-se",
+   "rubrique": "chemins",
+   "titre": "Etape 5 ne se",
+   "images": 1,
+   "fichiers": [
+    "svg/chemins/etape-5_ne-se.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    64,
+    32
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "chemins/etape-5_ne-se-no",
+   "rubrique": "chemins",
+   "titre": "Etape 5 ne se no",
+   "images": 1,
+   "fichiers": [
+    "svg/chemins/etape-5_ne-se-no.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    64,
+    32
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "chemins/etape-5_ne-se-so",
+   "rubrique": "chemins",
+   "titre": "Etape 5 ne se so",
+   "images": 1,
+   "fichiers": [
+    "svg/chemins/etape-5_ne-se-so.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    64,
+    32
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "chemins/etape-5_ne-se-so-no",
+   "rubrique": "chemins",
+   "titre": "Etape 5 ne se so no",
+   "images": 1,
+   "fichiers": [
+    "svg/chemins/etape-5_ne-se-so-no.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    64,
+    32
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "chemins/etape-5_ne-so",
+   "rubrique": "chemins",
+   "titre": "Etape 5 ne so",
+   "images": 1,
+   "fichiers": [
+    "svg/chemins/etape-5_ne-so.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    64,
+    32
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "chemins/etape-5_ne-so-no",
+   "rubrique": "chemins",
+   "titre": "Etape 5 ne so no",
+   "images": 1,
+   "fichiers": [
+    "svg/chemins/etape-5_ne-so-no.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    64,
+    32
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "chemins/etape-5_no",
+   "rubrique": "chemins",
+   "titre": "Etape 5 no",
+   "images": 1,
+   "fichiers": [
+    "svg/chemins/etape-5_no.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    64,
+    32
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "chemins/etape-5_se",
+   "rubrique": "chemins",
+   "titre": "Etape 5 se",
+   "images": 1,
+   "fichiers": [
+    "svg/chemins/etape-5_se.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    64,
+    32
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "chemins/etape-5_se-no",
+   "rubrique": "chemins",
+   "titre": "Etape 5 se no",
+   "images": 1,
+   "fichiers": [
+    "svg/chemins/etape-5_se-no.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    64,
+    32
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "chemins/etape-5_se-so",
+   "rubrique": "chemins",
+   "titre": "Etape 5 se so",
+   "images": 1,
+   "fichiers": [
+    "svg/chemins/etape-5_se-so.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    64,
+    32
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "chemins/etape-5_se-so-no",
+   "rubrique": "chemins",
+   "titre": "Etape 5 se so no",
+   "images": 1,
+   "fichiers": [
+    "svg/chemins/etape-5_se-so-no.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    64,
+    32
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "chemins/etape-5_seul",
+   "rubrique": "chemins",
+   "titre": "Etape 5 seul",
+   "images": 1,
+   "fichiers": [
+    "svg/chemins/etape-5_seul.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    64,
+    32
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "chemins/etape-5_so",
+   "rubrique": "chemins",
+   "titre": "Etape 5 so",
+   "images": 1,
+   "fichiers": [
+    "svg/chemins/etape-5_so.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    64,
+    32
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "chemins/etape-5_so-no",
+   "rubrique": "chemins",
+   "titre": "Etape 5 so no",
+   "images": 1,
+   "fichiers": [
+    "svg/chemins/etape-5_so-no.svg"
    ],
    "cadre": [
     0,
@@ -151386,6 +152998,298 @@
     "svg/chemins/mottes_2.svg",
     "svg/chemins/mottes_3.svg",
     "svg/chemins/mottes_4.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    64,
+    48
+   ],
+   "ms_par_image": 90,
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "chemins/pave_ne",
+   "rubrique": "chemins",
+   "titre": "Pave ne",
+   "images": 1,
+   "fichiers": [
+    "svg/chemins/pave_ne.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    64,
+    32
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "chemins/pave_ne-no",
+   "rubrique": "chemins",
+   "titre": "Pave ne no",
+   "images": 1,
+   "fichiers": [
+    "svg/chemins/pave_ne-no.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    64,
+    32
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "chemins/pave_ne-se",
+   "rubrique": "chemins",
+   "titre": "Pave ne se",
+   "images": 1,
+   "fichiers": [
+    "svg/chemins/pave_ne-se.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    64,
+    32
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "chemins/pave_ne-se-no",
+   "rubrique": "chemins",
+   "titre": "Pave ne se no",
+   "images": 1,
+   "fichiers": [
+    "svg/chemins/pave_ne-se-no.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    64,
+    32
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "chemins/pave_ne-se-so",
+   "rubrique": "chemins",
+   "titre": "Pave ne se so",
+   "images": 1,
+   "fichiers": [
+    "svg/chemins/pave_ne-se-so.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    64,
+    32
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "chemins/pave_ne-se-so-no",
+   "rubrique": "chemins",
+   "titre": "Pave ne se so no",
+   "images": 1,
+   "fichiers": [
+    "svg/chemins/pave_ne-se-so-no.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    64,
+    32
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "chemins/pave_ne-so",
+   "rubrique": "chemins",
+   "titre": "Pave ne so",
+   "images": 1,
+   "fichiers": [
+    "svg/chemins/pave_ne-so.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    64,
+    32
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "chemins/pave_ne-so-no",
+   "rubrique": "chemins",
+   "titre": "Pave ne so no",
+   "images": 1,
+   "fichiers": [
+    "svg/chemins/pave_ne-so-no.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    64,
+    32
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "chemins/pave_no",
+   "rubrique": "chemins",
+   "titre": "Pave no",
+   "images": 1,
+   "fichiers": [
+    "svg/chemins/pave_no.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    64,
+    32
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "chemins/pave_se",
+   "rubrique": "chemins",
+   "titre": "Pave se",
+   "images": 1,
+   "fichiers": [
+    "svg/chemins/pave_se.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    64,
+    32
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "chemins/pave_se-no",
+   "rubrique": "chemins",
+   "titre": "Pave se no",
+   "images": 1,
+   "fichiers": [
+    "svg/chemins/pave_se-no.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    64,
+    32
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "chemins/pave_se-so",
+   "rubrique": "chemins",
+   "titre": "Pave se so",
+   "images": 1,
+   "fichiers": [
+    "svg/chemins/pave_se-so.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    64,
+    32
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "chemins/pave_se-so-no",
+   "rubrique": "chemins",
+   "titre": "Pave se so no",
+   "images": 1,
+   "fichiers": [
+    "svg/chemins/pave_se-so-no.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    64,
+    32
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "chemins/pave_seul",
+   "rubrique": "chemins",
+   "titre": "Pave seul",
+   "images": 1,
+   "fichiers": [
+    "svg/chemins/pave_seul.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    64,
+    32
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "chemins/pave_so",
+   "rubrique": "chemins",
+   "titre": "Pave so",
+   "images": 1,
+   "fichiers": [
+    "svg/chemins/pave_so.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    64,
+    32
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "chemins/pave_so-no",
+   "rubrique": "chemins",
+   "titre": "Pave so no",
+   "images": 1,
+   "fichiers": [
+    "svg/chemins/pave_so-no.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    64,
+    32
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "chemins/pose-pierre",
+   "rubrique": "chemins",
+   "titre": "Une pierre de bordure qu'on pose",
+   "images": 3,
+   "fichiers": [
+    "svg/chemins/pose-pierre_1.svg",
+    "svg/chemins/pose-pierre_2.svg",
+    "svg/chemins/pose-pierre_3.svg"
    ],
    "cadre": [
     0,
