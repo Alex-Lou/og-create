@@ -82,6 +82,46 @@ function quad(c, pose) {
   return s;
 }
 
+// Les poses des animaux de compagnie (chat, chien), de profil : assis1 et assis2 (assis, la queue enroulée au sol devant,
+// son bout se lève à l'image 2), dodo1 et dodo2 (roulé en boule, la tête sur les pattes, les yeux fermés, la queue
+// autour ; il respire à l'image 2, un « z » de plus)
+function blob(c, id, cx, cy, rx, ry, coat) {
+  const d = `M${r2(cx - rx)},${r2(cy)} a${r2(rx)},${r2(ry)} 0 1,0 ${r2(2 * rx)},0 a${r2(rx)},${r2(ry)} 0 1,0 ${r2(-2 * rx)},0 Z`;
+  return P(d, c.fur) + clip(id, d, `<rect x="${r2(cx - rx - 1)}" y="${r2(cy - ry - 1)}" width="${r2(rx * 2 + 2)}" height="${r2(ry * 2 + 2)}" fill="${c.furS}"/>`
+    + `<ellipse cx="${r2(cx - rx * 0.1)}" cy="${r2(cy - ry * 0.16)}" rx="${r2(rx * 0.98)}" ry="${r2(ry * 0.9)}" fill="${c.fur}"/>`
+    + `<ellipse cx="${r2(cx)}" cy="${r2(cy + ry * 0.95)}" rx="${r2(rx * 0.9)}" ry="${r2(ry * 0.45)}" fill="${c.belly || c.furS}"/>` + (coat || '')) + P(d, 'none');
+}
+// un petit « z » de sommeil en (x, y), taille k
+const zed = (x, y, k) => `<path d="M${r2(x)},${r2(y)} h${r2(1.8 * k)} l${r2(-1.8 * k)},${r2(2 * k)} h${r2(1.8 * k)}" fill="none" stroke="#7E8CB0" stroke-width="${r2(0.55 * k + 0.2)}" stroke-linecap="round" stroke-linejoin="round"/>`;
+function petPose(c, pose) {
+  const [bx, , brx, bry] = c.body, hr = c.head[2], lg = c.legs, n = /2$/.test(pose) ? 1 : 0, t = c.tail || {};
+  const tw = t.w || 1.3;
+  let s = '';
+  if (/^assis/.test(pose)) {
+    const hx0 = bx - brx * 0.3, hy0 = -bry * 0.95, hrx = brx * 0.62, hry = bry * 0.95; // le bassin, posé au sol
+    const cx = bx + brx * 0.3, cy = -bry * 1.65, crx = brx * 0.48, cry = bry * 1.15; // le poitrail, droit
+    s += E(bx, -0.2, brx * 0.85, 1.4, 'rgba(40,55,20,.18)', 0);
+    const patte = (x, near) => limb([x, cy], [x, -0.9], lg.w, near ? c.fur : c.furS) + paw(x + 0.4, -0.7, lg.w * 0.7, lg.paw || c.belly);
+    s += patte(cx - crx * 0.05, false);
+    s += blob(c, `pp${c.id}${pose}b`, hx0, hy0, hrx, hry, c.parts?.coat ? c.parts.coat({ bx: hx0, by: hy0 + hry * 0.5 }) : '');
+    s += blob(c, `pp${c.id}${pose}c`, cx, cy, crx, cry);
+    s += thick(`M${r2(hx0 - hrx * 0.95)},${r2(-1.4)} Q${r2(hx0 - hrx * 0.5)},0.3 ${r2(hx0 + hrx * 0.75)},${r2(n ? -2.6 : -0.7)}`, tw, c.fur);
+    s += patte(cx + crx * 0.4, true) + E(hx0 + hrx * 0.55, -0.85, lg.w * 1.05, 0.9, c.fur, 0.9) + toes(hx0 + hrx * 0.62, -0.9, lg.w * 0.9);
+    s += headQuad(c, { pose, hx: cx + crx * 0.55, hy: cy - cry - hr * 0.3, hr, mode: 'open', bx: cx, by: cy });
+    return s;
+  }
+  // dodo
+  const cx = bx - brx * 0.1, ry = bry * 0.8 * (n ? 1.06 : 1), cy = -ry, rx = brx * 1.08;
+  const hx = cx + rx * 0.82, hy = -hr * 0.92;
+  s += E(cx + rx * 0.2, -0.2, rx * 1.05, 1.4, 'rgba(40,55,20,.18)', 0);
+  s += blob(c, `pp${c.id}${pose}b`, cx, cy, rx, ry, c.parts?.coat ? c.parts.coat({ bx: cx, by: cy + ry * 0.5 }) : '');
+  s += thick(`M${r2(cx - rx * 0.95)},${r2(-1.6)} Q${r2(cx - rx * 0.3)},0.4 ${r2(cx + rx * 0.5)},${r2(-0.8)}`, tw, c.fur);
+  s += E(hx + hr * 0.55, -0.8, lg.w * 1.1, 0.9, c.fur, 0.9) + toes(hx + hr * 0.62, -0.85, lg.w * 0.9);
+  s += headQuad(c, { pose, hx, hy, hr, mode: 'blink', bx: cx, by: cy });
+  s += zed(hx + hr * 0.7, hy - hr * 1.5, 0.8) + (n ? zed(hx + hr * 1.15, hy - hr * 2.2, 1.05) : '');
+  return s;
+}
+
 function tail(c, { bx, by, ph, walk }) {
   const t = c.tail || {};
   const [, , brx] = c.body;
@@ -449,7 +489,7 @@ Q.frog = () => ({
   }
 });
 
-module.exports = { BOX, K, quad, Q, eye, heartIcon, limb, thick, stroke, line, hoof, paw, oreilleRenard };
+module.exports = { BOX, K, quad, Q, eye, heartIcon, limb, thick, stroke, line, hoof, paw, oreilleRenard, petPose, blob, zed };
 
 // ——— Oiseaux (profil, tournés vers la droite) ———
 // cfg : body [cx, cy, rx, ry], head [hx, hy, r], beak { kind, len, color }, eye [dx, dy, r], colors body, wing, belly, head,

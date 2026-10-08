@@ -574,7 +574,58 @@ P3.bird = (c) => ({
     + (se ? `<path d="M${r2(hx - hr * 0.75)},${r2(hy - 0.1)} L${r2(hx - hr * 0.1)},${r2(hy - 0.35)} M${r2(hx + hr * 0.6)},${r2(hy - 0.45)} L${r2(hx + hr * 0.9)},${r2(hy - 0.4)}" stroke="#2A3A5A" stroke-width="0.5"/>` : '')
 });
 P3.gull = () => ({});
+// Les poses des animaux de compagnie de trois quarts (avant : vers le bas à droite ; dos : vers le haut à droite) :
+// assis1, assis2 (la queue enroulée au sol, son bout se lève), dodo1, dodo2 (roulé en boule, il respire, un « z » de plus)
+function petPose3(c, view, pose) {
+  const se = view === 'avant', n = /2$/.test(pose) ? 1 : 0;
+  const [, , brx, bry] = c.body, hr0 = c.head[2], lg = c.legs, tw = (c.tail || {}).w || 1.3;
+  const hr = hr0 * (se ? 1.04 : 0.98);
+  // la tête de trois quarts : le cou est caché (le cou du kit ne sert qu'aux bêtes debout)
+  const tete = (hx, hy, mode) => headQ3(c, { pose: pose + view, view, se, hx, hy, hr, mode, by: hy + hr * 0.2, rx: hx / 0.62, ry: 0, ang: 0 });
+  let s = '';
+  if (/^assis/.test(pose)) {
+    if (se) {
+      const hx0 = -brx * 0.35, hy0 = -bry * 0.95, hrx = brx * 0.6, hry = bry * 0.95; // le bassin, au fond à gauche
+      const cx = brx * 0.25, cy = -bry * 1.55, crx = brx * 0.45, cry = bry * 1.1; // le poitrail, devant à droite
+      s += E(0, 0.2, brx * 0.95, Math.max(2.2, bry * 0.7), SH, 0);
+      s += limb([cx + crx * 0.45, cy], [cx + crx * 0.45, -1.6], lg.w, c.furS) + paw(cx + crx * 0.45 + 0.3, -1.4, lg.w * 0.7, lg.paw || c.belly);
+      s += Bt.blob(c, `p3${c.id}${view}${pose}b`, hx0, hy0, hrx, hry, c.p3?.coat ? '' : '');
+      s += Bt.blob(c, `p3${c.id}${view}${pose}c`, cx, cy, crx, cry);
+      s += thick(`M${r2(hx0 - hrx * 0.9)},${r2(-1.6)} Q${r2(hx0 - hrx * 0.2)},0.9 ${r2(cx + crx * 0.2)},${r2(n ? -1.6 : 0.2)}`, tw, c.fur);
+      s += limb([cx - crx * 0.3, cy], [cx - crx * 0.3, -0.9], lg.w, c.fur) + paw(cx - crx * 0.3 + 0.3, -0.7, lg.w * 0.7, lg.paw || c.belly);
+      s += tete(cx + crx * 0.2, cy - cry - hr * 0.25, 'open');
+      return s;
+    }
+    // de dos : le bassin devant nous, le dos qui monte vers la tête ; on voit les talons des pattes arrière
+    const hx0 = -brx * 0.15, hy0 = -bry * 0.95, hrx = brx * 0.66, hry = bry * 1.0;
+    const cx = brx * 0.2, cy = -bry * 1.65, crx = brx * 0.46, cry = bry * 1.1;
+    s += E(0, 0.2, brx * 0.95, Math.max(2.2, bry * 0.7), SH, 0);
+    s += Bt.blob(c, `p3${c.id}${view}${pose}c`, cx, cy, crx, cry);
+    s += tete(cx + crx * 0.25, cy - cry - hr * 0.15, 'open');
+    s += Bt.blob(c, `p3${c.id}${view}${pose}b`, hx0, hy0, hrx, hry);
+    s += E(hx0 - hrx * 0.6, -0.8, lg.w * 1, 0.9, c.fur, 0.9) + E(hx0 + hrx * 0.5, -0.8, lg.w * 1, 0.9, c.fur, 0.9);
+    s += thick(`M${r2(hx0 + hrx * 0.1)},${r2(-1)} Q${r2(hx0 + hrx * 0.9)},0.9 ${r2(hx0 + hrx * 1.35)},${r2(n ? -3 : -1.2)}`, tw, c.fur);
+    return s;
+  }
+  // dodo : en boule ; de trois quarts avant, la tête posée devant à droite ; de dos, la tête au fond (plus haut)
+  const ry = bry * 0.82 * (n ? 1.06 : 1), rx = brx * 1.0, cy = -ry;
+  s += E(0, 0.2, rx * 1.05, Math.max(2.2, ry * 0.8), SH, 0);
+  if (se) {
+    const hx = rx * 0.55, hy = -hr * 0.85;
+    s += Bt.blob(c, `p3${c.id}${view}${pose}b`, -rx * 0.15, cy, rx, ry);
+    s += thick(`M${r2(-rx * 1.05)},${r2(-1.2)} Q${r2(-rx * 0.3)},1.4 ${r2(rx * 0.3)},0.3`, tw, c.fur);
+    s += E(hx - hr * 0.4, -0.5, lg.w * 1.05, 0.9, c.fur, 0.9) + E(hx + hr * 0.45, -0.7, lg.w * 1.05, 0.9, c.fur, 0.9);
+    s += tete(hx, hy, 'blink');
+    return s + Bt.zed(hx + hr * 0.8, hy - hr * 1.5, 0.8) + (n ? Bt.zed(hx + hr * 1.25, hy - hr * 2.2, 1.05) : '');
+  }
+  const hx = rx * 0.5, hy = cy - ry * 0.55 - hr * 0.3;
+  s += tete(hx, hy, 'blink');
+  s += Bt.blob(c, `p3${c.id}${view}${pose}b`, -rx * 0.1, cy, rx, ry);
+  s += thick(`M${r2(-rx * 0.95)},${r2(-ry * 0.7)} Q${r2(-rx * 0.6)},0.8 ${r2(rx * 0.2)},0.4`, tw, c.fur);
+  return s + Bt.zed(hx + hr * 0.8, hy - hr * 1.4, 0.8) + (n ? Bt.zed(hx + hr * 1.25, hy - hr * 2.1, 1.05) : '');
+}
+
 // la bête complète : ses pièces de trois quarts (P3), selon son espèce
 const with3 = (c) => { const k = Object.keys(P3).find(n => c.id.startsWith(n)); if (!k || c.p3) return c; const p3 = P3[k](c); return { ...c, p3 }; };
 
-module.exports = { quad3: (c, view, pose) => quad3(with3(c), view, pose), bird3: (c, view, pose) => bird3(with3(c), view, pose), ear3 };
+module.exports = { petPose3: (c, view, pose) => petPose3(with3(c), view, pose), quad3: (c, view, pose) => quad3(with3(c), view, pose), bird3: (c, view, pose) => bird3(with3(c), view, pose), ear3 };

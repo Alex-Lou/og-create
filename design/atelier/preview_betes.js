@@ -7,7 +7,7 @@ const { WALK, PROFILS: LIST } = require('./betes_liste');
 
 const LIB = path.join(__dirname, 'lib', 'animaux');
 const OUT = path.join(__dirname, 'planches');
-const POSE_FR = { marche1: 'marche 1', marche2: 'marche 2', repos: 'repos', clignement: 'clignement', joie: 'joie', vol1: 'vol 1', vol2: 'vol 2', vol3: 'vol 3', vol4: 'vol 4', envol1: 'envol 1', envol2: 'envol 2', envol3: 'envol 3', plane: 'plane', nage1: 'nage 1', nage2: 'nage 2' };
+const POSE_FR = { marche1: 'marche 1', marche2: 'marche 2', repos: 'repos', clignement: 'clignement', joie: 'joie', vol1: 'vol 1', vol2: 'vol 2', vol3: 'vol 3', vol4: 'vol 4', assis1: 'assis 1', assis2: 'assis 2', dodo1: 'dodo 1', dodo2: 'dodo 2', envol1: 'envol 1', envol2: 'envol 2', envol3: 'envol 3', plane: 'plane', nage1: 'nage 1', nage2: 'nage 2' };
 
 const GROUPS = { ferme: 'La ferme', bois: 'Les bois', eau: 'L\'eau douce', climat: 'Les bêtes des climats (lot 9e)', bestiaire: 'Le Bestiaire', familiers: 'Les familiers', mer: 'La mer' };
 

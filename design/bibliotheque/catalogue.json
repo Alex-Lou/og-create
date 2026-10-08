@@ -134814,6 +134814,30 @@
    "statut": "ok"
   },
   {
+   "id": "animaux/ferme/chat-blanc/chat-blanc_avant_assis",
+   "rubrique": "animaux",
+   "sujet": "chat-blanc",
+   "vue": "avant",
+   "pose": "assis",
+   "titre": "Chat blanc, trois quarts avant, assis",
+   "regarde": "bas-droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/animaux/ferme/chat-blanc/chat-blanc_avant_assis_1.svg",
+    "svg/animaux/ferme/chat-blanc/chat-blanc_avant_assis_2.svg"
+   ],
+   "cadre": [
+    -15,
+    -22.5,
+    30,
+    26
+   ],
+   "ms_par_image": 500,
+   "parcours": "evolutions",
+   "statut": "ok"
+  },
+  {
    "id": "animaux/ferme/chat-blanc/chat-blanc_avant_clignement",
    "rubrique": "animaux",
    "sujet": "chat-blanc",
@@ -134832,6 +134856,30 @@
     30,
     26
    ],
+   "parcours": "evolutions",
+   "statut": "ok"
+  },
+  {
+   "id": "animaux/ferme/chat-blanc/chat-blanc_avant_dodo",
+   "rubrique": "animaux",
+   "sujet": "chat-blanc",
+   "vue": "avant",
+   "pose": "dodo",
+   "titre": "Chat blanc, trois quarts avant, dodo",
+   "regarde": "bas-droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/animaux/ferme/chat-blanc/chat-blanc_avant_dodo_1.svg",
+    "svg/animaux/ferme/chat-blanc/chat-blanc_avant_dodo_2.svg"
+   ],
+   "cadre": [
+    -15,
+    -22.5,
+    30,
+    26
+   ],
+   "ms_par_image": 800,
    "parcours": "evolutions",
    "statut": "ok"
   },
@@ -134904,6 +134952,54 @@
    "statut": "ok"
   },
   {
+   "id": "animaux/ferme/chat-blanc/chat-blanc_dos_assis",
+   "rubrique": "animaux",
+   "sujet": "chat-blanc",
+   "vue": "dos",
+   "pose": "assis",
+   "titre": "Chat blanc, trois quarts dos, assis",
+   "regarde": "haut-droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/animaux/ferme/chat-blanc/chat-blanc_dos_assis_1.svg",
+    "svg/animaux/ferme/chat-blanc/chat-blanc_dos_assis_2.svg"
+   ],
+   "cadre": [
+    -15,
+    -22.5,
+    30,
+    26
+   ],
+   "ms_par_image": 500,
+   "parcours": "evolutions",
+   "statut": "ok"
+  },
+  {
+   "id": "animaux/ferme/chat-blanc/chat-blanc_dos_dodo",
+   "rubrique": "animaux",
+   "sujet": "chat-blanc",
+   "vue": "dos",
+   "pose": "dodo",
+   "titre": "Chat blanc, trois quarts dos, dodo",
+   "regarde": "haut-droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/animaux/ferme/chat-blanc/chat-blanc_dos_dodo_1.svg",
+    "svg/animaux/ferme/chat-blanc/chat-blanc_dos_dodo_2.svg"
+   ],
+   "cadre": [
+    -15,
+    -22.5,
+    30,
+    26
+   ],
+   "ms_par_image": 800,
+   "parcours": "evolutions",
+   "statut": "ok"
+  },
+  {
    "id": "animaux/ferme/chat-blanc/chat-blanc_dos_marche",
    "rubrique": "animaux",
    "sujet": "chat-blanc",
@@ -134950,6 +135046,30 @@
    "statut": "ok"
   },
   {
+   "id": "animaux/ferme/chat-blanc/chat-blanc_profil_assis",
+   "rubrique": "animaux",
+   "sujet": "chat-blanc",
+   "vue": "profil",
+   "pose": "assis",
+   "titre": "Chat blanc, de profil, assis",
+   "regarde": "droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/animaux/ferme/chat-blanc/chat-blanc_profil_assis_1.svg",
+    "svg/animaux/ferme/chat-blanc/chat-blanc_profil_assis_2.svg"
+   ],
+   "cadre": [
+    -15,
+    -22.5,
+    30,
+    25
+   ],
+   "ms_par_image": 500,
+   "parcours": "evolutions",
+   "statut": "ok"
+  },
+  {
    "id": "animaux/ferme/chat-blanc/chat-blanc_profil_clignement",
    "rubrique": "animaux",
    "sujet": "chat-blanc",
@@ -134968,6 +135088,30 @@
     30,
     25
    ],
+   "parcours": "evolutions",
+   "statut": "ok"
+  },
+  {
+   "id": "animaux/ferme/chat-blanc/chat-blanc_profil_dodo",
+   "rubrique": "animaux",
+   "sujet": "chat-blanc",
+   "vue": "profil",
+   "pose": "dodo",
+   "titre": "Chat blanc, de profil, dodo",
+   "regarde": "droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/animaux/ferme/chat-blanc/chat-blanc_profil_dodo_1.svg",
+    "svg/animaux/ferme/chat-blanc/chat-blanc_profil_dodo_2.svg"
+   ],
+   "cadre": [
+    -15,
+    -22.5,
+    30,
+    25
+   ],
+   "ms_par_image": 800,
    "parcours": "evolutions",
    "statut": "ok"
   },
@@ -135040,6 +135184,30 @@
    "statut": "ok"
   },
   {
+   "id": "animaux/ferme/chat-gris/chat-gris_avant_assis",
+   "rubrique": "animaux",
+   "sujet": "chat-gris",
+   "vue": "avant",
+   "pose": "assis",
+   "titre": "Chat gris, trois quarts avant, assis",
+   "regarde": "bas-droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/animaux/ferme/chat-gris/chat-gris_avant_assis_1.svg",
+    "svg/animaux/ferme/chat-gris/chat-gris_avant_assis_2.svg"
+   ],
+   "cadre": [
+    -15,
+    -22.5,
+    30,
+    26
+   ],
+   "ms_par_image": 500,
+   "parcours": "evolutions",
+   "statut": "ok"
+  },
+  {
    "id": "animaux/ferme/chat-gris/chat-gris_avant_clignement",
    "rubrique": "animaux",
    "sujet": "chat-gris",
@@ -135058,6 +135226,30 @@
     30,
     26
    ],
+   "parcours": "evolutions",
+   "statut": "ok"
+  },
+  {
+   "id": "animaux/ferme/chat-gris/chat-gris_avant_dodo",
+   "rubrique": "animaux",
+   "sujet": "chat-gris",
+   "vue": "avant",
+   "pose": "dodo",
+   "titre": "Chat gris, trois quarts avant, dodo",
+   "regarde": "bas-droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/animaux/ferme/chat-gris/chat-gris_avant_dodo_1.svg",
+    "svg/animaux/ferme/chat-gris/chat-gris_avant_dodo_2.svg"
+   ],
+   "cadre": [
+    -15,
+    -22.5,
+    30,
+    26
+   ],
+   "ms_par_image": 800,
    "parcours": "evolutions",
    "statut": "ok"
   },
@@ -135130,6 +135322,54 @@
    "statut": "ok"
   },
   {
+   "id": "animaux/ferme/chat-gris/chat-gris_dos_assis",
+   "rubrique": "animaux",
+   "sujet": "chat-gris",
+   "vue": "dos",
+   "pose": "assis",
+   "titre": "Chat gris, trois quarts dos, assis",
+   "regarde": "haut-droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/animaux/ferme/chat-gris/chat-gris_dos_assis_1.svg",
+    "svg/animaux/ferme/chat-gris/chat-gris_dos_assis_2.svg"
+   ],
+   "cadre": [
+    -15,
+    -22.5,
+    30,
+    26
+   ],
+   "ms_par_image": 500,
+   "parcours": "evolutions",
+   "statut": "ok"
+  },
+  {
+   "id": "animaux/ferme/chat-gris/chat-gris_dos_dodo",
+   "rubrique": "animaux",
+   "sujet": "chat-gris",
+   "vue": "dos",
+   "pose": "dodo",
+   "titre": "Chat gris, trois quarts dos, dodo",
+   "regarde": "haut-droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/animaux/ferme/chat-gris/chat-gris_dos_dodo_1.svg",
+    "svg/animaux/ferme/chat-gris/chat-gris_dos_dodo_2.svg"
+   ],
+   "cadre": [
+    -15,
+    -22.5,
+    30,
+    26
+   ],
+   "ms_par_image": 800,
+   "parcours": "evolutions",
+   "statut": "ok"
+  },
+  {
    "id": "animaux/ferme/chat-gris/chat-gris_dos_marche",
    "rubrique": "animaux",
    "sujet": "chat-gris",
@@ -135176,6 +135416,30 @@
    "statut": "ok"
   },
   {
+   "id": "animaux/ferme/chat-gris/chat-gris_profil_assis",
+   "rubrique": "animaux",
+   "sujet": "chat-gris",
+   "vue": "profil",
+   "pose": "assis",
+   "titre": "Chat gris, de profil, assis",
+   "regarde": "droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/animaux/ferme/chat-gris/chat-gris_profil_assis_1.svg",
+    "svg/animaux/ferme/chat-gris/chat-gris_profil_assis_2.svg"
+   ],
+   "cadre": [
+    -15,
+    -22.5,
+    30,
+    25
+   ],
+   "ms_par_image": 500,
+   "parcours": "evolutions",
+   "statut": "ok"
+  },
+  {
    "id": "animaux/ferme/chat-gris/chat-gris_profil_clignement",
    "rubrique": "animaux",
    "sujet": "chat-gris",
@@ -135194,6 +135458,30 @@
     30,
     25
    ],
+   "parcours": "evolutions",
+   "statut": "ok"
+  },
+  {
+   "id": "animaux/ferme/chat-gris/chat-gris_profil_dodo",
+   "rubrique": "animaux",
+   "sujet": "chat-gris",
+   "vue": "profil",
+   "pose": "dodo",
+   "titre": "Chat gris, de profil, dodo",
+   "regarde": "droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/animaux/ferme/chat-gris/chat-gris_profil_dodo_1.svg",
+    "svg/animaux/ferme/chat-gris/chat-gris_profil_dodo_2.svg"
+   ],
+   "cadre": [
+    -15,
+    -22.5,
+    30,
+    25
+   ],
+   "ms_par_image": 800,
    "parcours": "evolutions",
    "statut": "ok"
   },
@@ -135266,6 +135554,30 @@
    "statut": "ok"
   },
   {
+   "id": "animaux/ferme/chat-noir/chat-noir_avant_assis",
+   "rubrique": "animaux",
+   "sujet": "chat-noir",
+   "vue": "avant",
+   "pose": "assis",
+   "titre": "Chat noir, trois quarts avant, assis",
+   "regarde": "bas-droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/animaux/ferme/chat-noir/chat-noir_avant_assis_1.svg",
+    "svg/animaux/ferme/chat-noir/chat-noir_avant_assis_2.svg"
+   ],
+   "cadre": [
+    -15,
+    -22.5,
+    30,
+    26
+   ],
+   "ms_par_image": 500,
+   "parcours": "evolutions",
+   "statut": "ok"
+  },
+  {
    "id": "animaux/ferme/chat-noir/chat-noir_avant_clignement",
    "rubrique": "animaux",
    "sujet": "chat-noir",
@@ -135284,6 +135596,30 @@
     30,
     26
    ],
+   "parcours": "evolutions",
+   "statut": "ok"
+  },
+  {
+   "id": "animaux/ferme/chat-noir/chat-noir_avant_dodo",
+   "rubrique": "animaux",
+   "sujet": "chat-noir",
+   "vue": "avant",
+   "pose": "dodo",
+   "titre": "Chat noir, trois quarts avant, dodo",
+   "regarde": "bas-droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/animaux/ferme/chat-noir/chat-noir_avant_dodo_1.svg",
+    "svg/animaux/ferme/chat-noir/chat-noir_avant_dodo_2.svg"
+   ],
+   "cadre": [
+    -15,
+    -22.5,
+    30,
+    26
+   ],
+   "ms_par_image": 800,
    "parcours": "evolutions",
    "statut": "ok"
   },
@@ -135356,6 +135692,54 @@
    "statut": "ok"
   },
   {
+   "id": "animaux/ferme/chat-noir/chat-noir_dos_assis",
+   "rubrique": "animaux",
+   "sujet": "chat-noir",
+   "vue": "dos",
+   "pose": "assis",
+   "titre": "Chat noir, trois quarts dos, assis",
+   "regarde": "haut-droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/animaux/ferme/chat-noir/chat-noir_dos_assis_1.svg",
+    "svg/animaux/ferme/chat-noir/chat-noir_dos_assis_2.svg"
+   ],
+   "cadre": [
+    -15,
+    -22.5,
+    30,
+    26
+   ],
+   "ms_par_image": 500,
+   "parcours": "evolutions",
+   "statut": "ok"
+  },
+  {
+   "id": "animaux/ferme/chat-noir/chat-noir_dos_dodo",
+   "rubrique": "animaux",
+   "sujet": "chat-noir",
+   "vue": "dos",
+   "pose": "dodo",
+   "titre": "Chat noir, trois quarts dos, dodo",
+   "regarde": "haut-droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/animaux/ferme/chat-noir/chat-noir_dos_dodo_1.svg",
+    "svg/animaux/ferme/chat-noir/chat-noir_dos_dodo_2.svg"
+   ],
+   "cadre": [
+    -15,
+    -22.5,
+    30,
+    26
+   ],
+   "ms_par_image": 800,
+   "parcours": "evolutions",
+   "statut": "ok"
+  },
+  {
    "id": "animaux/ferme/chat-noir/chat-noir_dos_marche",
    "rubrique": "animaux",
    "sujet": "chat-noir",
@@ -135402,6 +135786,30 @@
    "statut": "ok"
   },
   {
+   "id": "animaux/ferme/chat-noir/chat-noir_profil_assis",
+   "rubrique": "animaux",
+   "sujet": "chat-noir",
+   "vue": "profil",
+   "pose": "assis",
+   "titre": "Chat noir, de profil, assis",
+   "regarde": "droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/animaux/ferme/chat-noir/chat-noir_profil_assis_1.svg",
+    "svg/animaux/ferme/chat-noir/chat-noir_profil_assis_2.svg"
+   ],
+   "cadre": [
+    -15,
+    -22.5,
+    30,
+    25
+   ],
+   "ms_par_image": 500,
+   "parcours": "evolutions",
+   "statut": "ok"
+  },
+  {
    "id": "animaux/ferme/chat-noir/chat-noir_profil_clignement",
    "rubrique": "animaux",
    "sujet": "chat-noir",
@@ -135420,6 +135828,30 @@
     30,
     25
    ],
+   "parcours": "evolutions",
+   "statut": "ok"
+  },
+  {
+   "id": "animaux/ferme/chat-noir/chat-noir_profil_dodo",
+   "rubrique": "animaux",
+   "sujet": "chat-noir",
+   "vue": "profil",
+   "pose": "dodo",
+   "titre": "Chat noir, de profil, dodo",
+   "regarde": "droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/animaux/ferme/chat-noir/chat-noir_profil_dodo_1.svg",
+    "svg/animaux/ferme/chat-noir/chat-noir_profil_dodo_2.svg"
+   ],
+   "cadre": [
+    -15,
+    -22.5,
+    30,
+    25
+   ],
+   "ms_par_image": 800,
    "parcours": "evolutions",
    "statut": "ok"
   },
@@ -135492,6 +135924,30 @@
    "statut": "ok"
   },
   {
+   "id": "animaux/ferme/chat/chat_avant_assis",
+   "rubrique": "animaux",
+   "sujet": "chat",
+   "vue": "avant",
+   "pose": "assis",
+   "titre": "Chat, trois quarts avant, assis",
+   "regarde": "bas-droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/animaux/ferme/chat/chat_avant_assis_1.svg",
+    "svg/animaux/ferme/chat/chat_avant_assis_2.svg"
+   ],
+   "cadre": [
+    -15,
+    -22.5,
+    30,
+    26
+   ],
+   "ms_par_image": 500,
+   "parcours": "evolutions",
+   "statut": "ok"
+  },
+  {
    "id": "animaux/ferme/chat/chat_avant_clignement",
    "rubrique": "animaux",
    "sujet": "chat",
@@ -135510,6 +135966,30 @@
     30,
     26
    ],
+   "parcours": "evolutions",
+   "statut": "ok"
+  },
+  {
+   "id": "animaux/ferme/chat/chat_avant_dodo",
+   "rubrique": "animaux",
+   "sujet": "chat",
+   "vue": "avant",
+   "pose": "dodo",
+   "titre": "Chat, trois quarts avant, dodo",
+   "regarde": "bas-droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/animaux/ferme/chat/chat_avant_dodo_1.svg",
+    "svg/animaux/ferme/chat/chat_avant_dodo_2.svg"
+   ],
+   "cadre": [
+    -15,
+    -22.5,
+    30,
+    26
+   ],
+   "ms_par_image": 800,
    "parcours": "evolutions",
    "statut": "ok"
   },
@@ -135582,6 +136062,54 @@
    "statut": "ok"
   },
   {
+   "id": "animaux/ferme/chat/chat_dos_assis",
+   "rubrique": "animaux",
+   "sujet": "chat",
+   "vue": "dos",
+   "pose": "assis",
+   "titre": "Chat, trois quarts dos, assis",
+   "regarde": "haut-droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/animaux/ferme/chat/chat_dos_assis_1.svg",
+    "svg/animaux/ferme/chat/chat_dos_assis_2.svg"
+   ],
+   "cadre": [
+    -15,
+    -22.5,
+    30,
+    26
+   ],
+   "ms_par_image": 500,
+   "parcours": "evolutions",
+   "statut": "ok"
+  },
+  {
+   "id": "animaux/ferme/chat/chat_dos_dodo",
+   "rubrique": "animaux",
+   "sujet": "chat",
+   "vue": "dos",
+   "pose": "dodo",
+   "titre": "Chat, trois quarts dos, dodo",
+   "regarde": "haut-droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/animaux/ferme/chat/chat_dos_dodo_1.svg",
+    "svg/animaux/ferme/chat/chat_dos_dodo_2.svg"
+   ],
+   "cadre": [
+    -15,
+    -22.5,
+    30,
+    26
+   ],
+   "ms_par_image": 800,
+   "parcours": "evolutions",
+   "statut": "ok"
+  },
+  {
    "id": "animaux/ferme/chat/chat_dos_marche",
    "rubrique": "animaux",
    "sujet": "chat",
@@ -135628,6 +136156,30 @@
    "statut": "ok"
   },
   {
+   "id": "animaux/ferme/chat/chat_profil_assis",
+   "rubrique": "animaux",
+   "sujet": "chat",
+   "vue": "profil",
+   "pose": "assis",
+   "titre": "Chat, de profil, assis",
+   "regarde": "droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/animaux/ferme/chat/chat_profil_assis_1.svg",
+    "svg/animaux/ferme/chat/chat_profil_assis_2.svg"
+   ],
+   "cadre": [
+    -15,
+    -22.5,
+    30,
+    25
+   ],
+   "ms_par_image": 500,
+   "parcours": "evolutions",
+   "statut": "ok"
+  },
+  {
    "id": "animaux/ferme/chat/chat_profil_clignement",
    "rubrique": "animaux",
    "sujet": "chat",
@@ -135646,6 +136198,30 @@
     30,
     25
    ],
+   "parcours": "evolutions",
+   "statut": "ok"
+  },
+  {
+   "id": "animaux/ferme/chat/chat_profil_dodo",
+   "rubrique": "animaux",
+   "sujet": "chat",
+   "vue": "profil",
+   "pose": "dodo",
+   "titre": "Chat, de profil, dodo",
+   "regarde": "droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/animaux/ferme/chat/chat_profil_dodo_1.svg",
+    "svg/animaux/ferme/chat/chat_profil_dodo_2.svg"
+   ],
+   "cadre": [
+    -15,
+    -22.5,
+    30,
+    25
+   ],
+   "ms_par_image": 800,
    "parcours": "evolutions",
    "statut": "ok"
   },
@@ -135718,6 +136294,30 @@
    "statut": "ok"
   },
   {
+   "id": "animaux/ferme/chien-brun/chien-brun_avant_assis",
+   "rubrique": "animaux",
+   "sujet": "chien-brun",
+   "vue": "avant",
+   "pose": "assis",
+   "titre": "Chien brun, trois quarts avant, assis",
+   "regarde": "bas-droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/animaux/ferme/chien-brun/chien-brun_avant_assis_1.svg",
+    "svg/animaux/ferme/chien-brun/chien-brun_avant_assis_2.svg"
+   ],
+   "cadre": [
+    -20,
+    -30,
+    40,
+    34.5
+   ],
+   "ms_par_image": 500,
+   "parcours": "evolutions",
+   "statut": "ok"
+  },
+  {
    "id": "animaux/ferme/chien-brun/chien-brun_avant_clignement",
    "rubrique": "animaux",
    "sujet": "chien-brun",
@@ -135736,6 +136336,30 @@
     40,
     34.5
    ],
+   "parcours": "evolutions",
+   "statut": "ok"
+  },
+  {
+   "id": "animaux/ferme/chien-brun/chien-brun_avant_dodo",
+   "rubrique": "animaux",
+   "sujet": "chien-brun",
+   "vue": "avant",
+   "pose": "dodo",
+   "titre": "Chien brun, trois quarts avant, dodo",
+   "regarde": "bas-droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/animaux/ferme/chien-brun/chien-brun_avant_dodo_1.svg",
+    "svg/animaux/ferme/chien-brun/chien-brun_avant_dodo_2.svg"
+   ],
+   "cadre": [
+    -20,
+    -30,
+    40,
+    34.5
+   ],
+   "ms_par_image": 800,
    "parcours": "evolutions",
    "statut": "ok"
   },
@@ -135808,6 +136432,54 @@
    "statut": "ok"
   },
   {
+   "id": "animaux/ferme/chien-brun/chien-brun_dos_assis",
+   "rubrique": "animaux",
+   "sujet": "chien-brun",
+   "vue": "dos",
+   "pose": "assis",
+   "titre": "Chien brun, trois quarts dos, assis",
+   "regarde": "haut-droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/animaux/ferme/chien-brun/chien-brun_dos_assis_1.svg",
+    "svg/animaux/ferme/chien-brun/chien-brun_dos_assis_2.svg"
+   ],
+   "cadre": [
+    -20,
+    -30,
+    40,
+    34.5
+   ],
+   "ms_par_image": 500,
+   "parcours": "evolutions",
+   "statut": "ok"
+  },
+  {
+   "id": "animaux/ferme/chien-brun/chien-brun_dos_dodo",
+   "rubrique": "animaux",
+   "sujet": "chien-brun",
+   "vue": "dos",
+   "pose": "dodo",
+   "titre": "Chien brun, trois quarts dos, dodo",
+   "regarde": "haut-droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/animaux/ferme/chien-brun/chien-brun_dos_dodo_1.svg",
+    "svg/animaux/ferme/chien-brun/chien-brun_dos_dodo_2.svg"
+   ],
+   "cadre": [
+    -20,
+    -30,
+    40,
+    34.5
+   ],
+   "ms_par_image": 800,
+   "parcours": "evolutions",
+   "statut": "ok"
+  },
+  {
    "id": "animaux/ferme/chien-brun/chien-brun_dos_marche",
    "rubrique": "animaux",
    "sujet": "chien-brun",
@@ -135854,6 +136526,30 @@
    "statut": "ok"
   },
   {
+   "id": "animaux/ferme/chien-brun/chien-brun_profil_assis",
+   "rubrique": "animaux",
+   "sujet": "chien-brun",
+   "vue": "profil",
+   "pose": "assis",
+   "titre": "Chien brun, de profil, assis",
+   "regarde": "droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/animaux/ferme/chien-brun/chien-brun_profil_assis_1.svg",
+    "svg/animaux/ferme/chien-brun/chien-brun_profil_assis_2.svg"
+   ],
+   "cadre": [
+    -20,
+    -30,
+    40,
+    32.5
+   ],
+   "ms_par_image": 500,
+   "parcours": "evolutions",
+   "statut": "ok"
+  },
+  {
    "id": "animaux/ferme/chien-brun/chien-brun_profil_clignement",
    "rubrique": "animaux",
    "sujet": "chien-brun",
@@ -135872,6 +136568,30 @@
     40,
     32.5
    ],
+   "parcours": "evolutions",
+   "statut": "ok"
+  },
+  {
+   "id": "animaux/ferme/chien-brun/chien-brun_profil_dodo",
+   "rubrique": "animaux",
+   "sujet": "chien-brun",
+   "vue": "profil",
+   "pose": "dodo",
+   "titre": "Chien brun, de profil, dodo",
+   "regarde": "droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/animaux/ferme/chien-brun/chien-brun_profil_dodo_1.svg",
+    "svg/animaux/ferme/chien-brun/chien-brun_profil_dodo_2.svg"
+   ],
+   "cadre": [
+    -20,
+    -30,
+    40,
+    32.5
+   ],
+   "ms_par_image": 800,
    "parcours": "evolutions",
    "statut": "ok"
   },
@@ -135944,6 +136664,30 @@
    "statut": "ok"
   },
   {
+   "id": "animaux/ferme/chien-noir/chien-noir_avant_assis",
+   "rubrique": "animaux",
+   "sujet": "chien-noir",
+   "vue": "avant",
+   "pose": "assis",
+   "titre": "Chien noir, trois quarts avant, assis",
+   "regarde": "bas-droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/animaux/ferme/chien-noir/chien-noir_avant_assis_1.svg",
+    "svg/animaux/ferme/chien-noir/chien-noir_avant_assis_2.svg"
+   ],
+   "cadre": [
+    -20,
+    -30,
+    40,
+    34.5
+   ],
+   "ms_par_image": 500,
+   "parcours": "evolutions",
+   "statut": "ok"
+  },
+  {
    "id": "animaux/ferme/chien-noir/chien-noir_avant_clignement",
    "rubrique": "animaux",
    "sujet": "chien-noir",
@@ -135962,6 +136706,30 @@
     40,
     34.5
    ],
+   "parcours": "evolutions",
+   "statut": "ok"
+  },
+  {
+   "id": "animaux/ferme/chien-noir/chien-noir_avant_dodo",
+   "rubrique": "animaux",
+   "sujet": "chien-noir",
+   "vue": "avant",
+   "pose": "dodo",
+   "titre": "Chien noir, trois quarts avant, dodo",
+   "regarde": "bas-droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/animaux/ferme/chien-noir/chien-noir_avant_dodo_1.svg",
+    "svg/animaux/ferme/chien-noir/chien-noir_avant_dodo_2.svg"
+   ],
+   "cadre": [
+    -20,
+    -30,
+    40,
+    34.5
+   ],
+   "ms_par_image": 800,
    "parcours": "evolutions",
    "statut": "ok"
   },
@@ -136034,6 +136802,54 @@
    "statut": "ok"
   },
   {
+   "id": "animaux/ferme/chien-noir/chien-noir_dos_assis",
+   "rubrique": "animaux",
+   "sujet": "chien-noir",
+   "vue": "dos",
+   "pose": "assis",
+   "titre": "Chien noir, trois quarts dos, assis",
+   "regarde": "haut-droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/animaux/ferme/chien-noir/chien-noir_dos_assis_1.svg",
+    "svg/animaux/ferme/chien-noir/chien-noir_dos_assis_2.svg"
+   ],
+   "cadre": [
+    -20,
+    -30,
+    40,
+    34.5
+   ],
+   "ms_par_image": 500,
+   "parcours": "evolutions",
+   "statut": "ok"
+  },
+  {
+   "id": "animaux/ferme/chien-noir/chien-noir_dos_dodo",
+   "rubrique": "animaux",
+   "sujet": "chien-noir",
+   "vue": "dos",
+   "pose": "dodo",
+   "titre": "Chien noir, trois quarts dos, dodo",
+   "regarde": "haut-droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/animaux/ferme/chien-noir/chien-noir_dos_dodo_1.svg",
+    "svg/animaux/ferme/chien-noir/chien-noir_dos_dodo_2.svg"
+   ],
+   "cadre": [
+    -20,
+    -30,
+    40,
+    34.5
+   ],
+   "ms_par_image": 800,
+   "parcours": "evolutions",
+   "statut": "ok"
+  },
+  {
    "id": "animaux/ferme/chien-noir/chien-noir_dos_marche",
    "rubrique": "animaux",
    "sujet": "chien-noir",
@@ -136080,6 +136896,30 @@
    "statut": "ok"
   },
   {
+   "id": "animaux/ferme/chien-noir/chien-noir_profil_assis",
+   "rubrique": "animaux",
+   "sujet": "chien-noir",
+   "vue": "profil",
+   "pose": "assis",
+   "titre": "Chien noir, de profil, assis",
+   "regarde": "droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/animaux/ferme/chien-noir/chien-noir_profil_assis_1.svg",
+    "svg/animaux/ferme/chien-noir/chien-noir_profil_assis_2.svg"
+   ],
+   "cadre": [
+    -20,
+    -30,
+    40,
+    32.5
+   ],
+   "ms_par_image": 500,
+   "parcours": "evolutions",
+   "statut": "ok"
+  },
+  {
    "id": "animaux/ferme/chien-noir/chien-noir_profil_clignement",
    "rubrique": "animaux",
    "sujet": "chien-noir",
@@ -136098,6 +136938,30 @@
     40,
     32.5
    ],
+   "parcours": "evolutions",
+   "statut": "ok"
+  },
+  {
+   "id": "animaux/ferme/chien-noir/chien-noir_profil_dodo",
+   "rubrique": "animaux",
+   "sujet": "chien-noir",
+   "vue": "profil",
+   "pose": "dodo",
+   "titre": "Chien noir, de profil, dodo",
+   "regarde": "droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/animaux/ferme/chien-noir/chien-noir_profil_dodo_1.svg",
+    "svg/animaux/ferme/chien-noir/chien-noir_profil_dodo_2.svg"
+   ],
+   "cadre": [
+    -20,
+    -30,
+    40,
+    32.5
+   ],
+   "ms_par_image": 800,
    "parcours": "evolutions",
    "statut": "ok"
   },
@@ -136170,6 +137034,30 @@
    "statut": "ok"
   },
   {
+   "id": "animaux/ferme/chien-roux/chien-roux_avant_assis",
+   "rubrique": "animaux",
+   "sujet": "chien-roux",
+   "vue": "avant",
+   "pose": "assis",
+   "titre": "Chien roux, trois quarts avant, assis",
+   "regarde": "bas-droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/animaux/ferme/chien-roux/chien-roux_avant_assis_1.svg",
+    "svg/animaux/ferme/chien-roux/chien-roux_avant_assis_2.svg"
+   ],
+   "cadre": [
+    -20,
+    -30,
+    40,
+    34.5
+   ],
+   "ms_par_image": 500,
+   "parcours": "evolutions",
+   "statut": "ok"
+  },
+  {
    "id": "animaux/ferme/chien-roux/chien-roux_avant_clignement",
    "rubrique": "animaux",
    "sujet": "chien-roux",
@@ -136188,6 +137076,30 @@
     40,
     34.5
    ],
+   "parcours": "evolutions",
+   "statut": "ok"
+  },
+  {
+   "id": "animaux/ferme/chien-roux/chien-roux_avant_dodo",
+   "rubrique": "animaux",
+   "sujet": "chien-roux",
+   "vue": "avant",
+   "pose": "dodo",
+   "titre": "Chien roux, trois quarts avant, dodo",
+   "regarde": "bas-droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/animaux/ferme/chien-roux/chien-roux_avant_dodo_1.svg",
+    "svg/animaux/ferme/chien-roux/chien-roux_avant_dodo_2.svg"
+   ],
+   "cadre": [
+    -20,
+    -30,
+    40,
+    34.5
+   ],
+   "ms_par_image": 800,
    "parcours": "evolutions",
    "statut": "ok"
   },
@@ -136260,6 +137172,54 @@
    "statut": "ok"
   },
   {
+   "id": "animaux/ferme/chien-roux/chien-roux_dos_assis",
+   "rubrique": "animaux",
+   "sujet": "chien-roux",
+   "vue": "dos",
+   "pose": "assis",
+   "titre": "Chien roux, trois quarts dos, assis",
+   "regarde": "haut-droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/animaux/ferme/chien-roux/chien-roux_dos_assis_1.svg",
+    "svg/animaux/ferme/chien-roux/chien-roux_dos_assis_2.svg"
+   ],
+   "cadre": [
+    -20,
+    -30,
+    40,
+    34.5
+   ],
+   "ms_par_image": 500,
+   "parcours": "evolutions",
+   "statut": "ok"
+  },
+  {
+   "id": "animaux/ferme/chien-roux/chien-roux_dos_dodo",
+   "rubrique": "animaux",
+   "sujet": "chien-roux",
+   "vue": "dos",
+   "pose": "dodo",
+   "titre": "Chien roux, trois quarts dos, dodo",
+   "regarde": "haut-droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/animaux/ferme/chien-roux/chien-roux_dos_dodo_1.svg",
+    "svg/animaux/ferme/chien-roux/chien-roux_dos_dodo_2.svg"
+   ],
+   "cadre": [
+    -20,
+    -30,
+    40,
+    34.5
+   ],
+   "ms_par_image": 800,
+   "parcours": "evolutions",
+   "statut": "ok"
+  },
+  {
    "id": "animaux/ferme/chien-roux/chien-roux_dos_marche",
    "rubrique": "animaux",
    "sujet": "chien-roux",
@@ -136306,6 +137266,30 @@
    "statut": "ok"
   },
   {
+   "id": "animaux/ferme/chien-roux/chien-roux_profil_assis",
+   "rubrique": "animaux",
+   "sujet": "chien-roux",
+   "vue": "profil",
+   "pose": "assis",
+   "titre": "Chien roux, de profil, assis",
+   "regarde": "droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/animaux/ferme/chien-roux/chien-roux_profil_assis_1.svg",
+    "svg/animaux/ferme/chien-roux/chien-roux_profil_assis_2.svg"
+   ],
+   "cadre": [
+    -20,
+    -30,
+    40,
+    32.5
+   ],
+   "ms_par_image": 500,
+   "parcours": "evolutions",
+   "statut": "ok"
+  },
+  {
    "id": "animaux/ferme/chien-roux/chien-roux_profil_clignement",
    "rubrique": "animaux",
    "sujet": "chien-roux",
@@ -136324,6 +137308,30 @@
     40,
     32.5
    ],
+   "parcours": "evolutions",
+   "statut": "ok"
+  },
+  {
+   "id": "animaux/ferme/chien-roux/chien-roux_profil_dodo",
+   "rubrique": "animaux",
+   "sujet": "chien-roux",
+   "vue": "profil",
+   "pose": "dodo",
+   "titre": "Chien roux, de profil, dodo",
+   "regarde": "droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/animaux/ferme/chien-roux/chien-roux_profil_dodo_1.svg",
+    "svg/animaux/ferme/chien-roux/chien-roux_profil_dodo_2.svg"
+   ],
+   "cadre": [
+    -20,
+    -30,
+    40,
+    32.5
+   ],
+   "ms_par_image": 800,
    "parcours": "evolutions",
    "statut": "ok"
   },
@@ -136396,6 +137404,30 @@
    "statut": "ok"
   },
   {
+   "id": "animaux/ferme/chien/chien_avant_assis",
+   "rubrique": "animaux",
+   "sujet": "chien",
+   "vue": "avant",
+   "pose": "assis",
+   "titre": "Chien, trois quarts avant, assis",
+   "regarde": "bas-droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/animaux/ferme/chien/chien_avant_assis_1.svg",
+    "svg/animaux/ferme/chien/chien_avant_assis_2.svg"
+   ],
+   "cadre": [
+    -20,
+    -30,
+    40,
+    34.5
+   ],
+   "ms_par_image": 500,
+   "parcours": "evolutions",
+   "statut": "ok"
+  },
+  {
    "id": "animaux/ferme/chien/chien_avant_clignement",
    "rubrique": "animaux",
    "sujet": "chien",
@@ -136414,6 +137446,30 @@
     40,
     34.5
    ],
+   "parcours": "evolutions",
+   "statut": "ok"
+  },
+  {
+   "id": "animaux/ferme/chien/chien_avant_dodo",
+   "rubrique": "animaux",
+   "sujet": "chien",
+   "vue": "avant",
+   "pose": "dodo",
+   "titre": "Chien, trois quarts avant, dodo",
+   "regarde": "bas-droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/animaux/ferme/chien/chien_avant_dodo_1.svg",
+    "svg/animaux/ferme/chien/chien_avant_dodo_2.svg"
+   ],
+   "cadre": [
+    -20,
+    -30,
+    40,
+    34.5
+   ],
+   "ms_par_image": 800,
    "parcours": "evolutions",
    "statut": "ok"
   },
@@ -136486,6 +137542,54 @@
    "statut": "ok"
   },
   {
+   "id": "animaux/ferme/chien/chien_dos_assis",
+   "rubrique": "animaux",
+   "sujet": "chien",
+   "vue": "dos",
+   "pose": "assis",
+   "titre": "Chien, trois quarts dos, assis",
+   "regarde": "haut-droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/animaux/ferme/chien/chien_dos_assis_1.svg",
+    "svg/animaux/ferme/chien/chien_dos_assis_2.svg"
+   ],
+   "cadre": [
+    -20,
+    -30,
+    40,
+    34.5
+   ],
+   "ms_par_image": 500,
+   "parcours": "evolutions",
+   "statut": "ok"
+  },
+  {
+   "id": "animaux/ferme/chien/chien_dos_dodo",
+   "rubrique": "animaux",
+   "sujet": "chien",
+   "vue": "dos",
+   "pose": "dodo",
+   "titre": "Chien, trois quarts dos, dodo",
+   "regarde": "haut-droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/animaux/ferme/chien/chien_dos_dodo_1.svg",
+    "svg/animaux/ferme/chien/chien_dos_dodo_2.svg"
+   ],
+   "cadre": [
+    -20,
+    -30,
+    40,
+    34.5
+   ],
+   "ms_par_image": 800,
+   "parcours": "evolutions",
+   "statut": "ok"
+  },
+  {
    "id": "animaux/ferme/chien/chien_dos_marche",
    "rubrique": "animaux",
    "sujet": "chien",
@@ -136532,6 +137636,30 @@
    "statut": "ok"
   },
   {
+   "id": "animaux/ferme/chien/chien_profil_assis",
+   "rubrique": "animaux",
+   "sujet": "chien",
+   "vue": "profil",
+   "pose": "assis",
+   "titre": "Chien, de profil, assis",
+   "regarde": "droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/animaux/ferme/chien/chien_profil_assis_1.svg",
+    "svg/animaux/ferme/chien/chien_profil_assis_2.svg"
+   ],
+   "cadre": [
+    -20,
+    -30,
+    40,
+    32.5
+   ],
+   "ms_par_image": 500,
+   "parcours": "evolutions",
+   "statut": "ok"
+  },
+  {
    "id": "animaux/ferme/chien/chien_profil_clignement",
    "rubrique": "animaux",
    "sujet": "chien",
@@ -136550,6 +137678,30 @@
     40,
     32.5
    ],
+   "parcours": "evolutions",
+   "statut": "ok"
+  },
+  {
+   "id": "animaux/ferme/chien/chien_profil_dodo",
+   "rubrique": "animaux",
+   "sujet": "chien",
+   "vue": "profil",
+   "pose": "dodo",
+   "titre": "Chien, de profil, dodo",
+   "regarde": "droite",
+   "miroir": true,
+   "images": 2,
+   "fichiers": [
+    "svg/animaux/ferme/chien/chien_profil_dodo_1.svg",
+    "svg/animaux/ferme/chien/chien_profil_dodo_2.svg"
+   ],
+   "cadre": [
+    -20,
+    -30,
+    40,
+    32.5
+   ],
+   "ms_par_image": 800,
    "parcours": "evolutions",
    "statut": "ok"
   },
