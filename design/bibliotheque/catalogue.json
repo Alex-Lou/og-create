@@ -155567,6 +155567,23 @@
    "statut": "ok"
   },
   {
+   "id": "minijeux/arrimage/alerte-vague",
+   "rubrique": "minijeux",
+   "titre": "L'alerte de la vague (elle bat, en boucle)",
+   "images": 1,
+   "fichiers": [
+    "svg/minijeux/arrimage/alerte-vague.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    32,
+    32
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
    "id": "minijeux/arrimage/arrime",
    "rubrique": "minijeux",
    "titre": "La rangée arrimée (par-dessus la rangée)",
@@ -155584,6 +155601,27 @@
     16
    ],
    "ms_par_image": 140,
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "minijeux/arrimage/bateau",
+   "rubrique": "minijeux",
+   "titre": "Le bilan : le bateau d'Aster, 0 rang de cargaison (il tangue, en boucle)",
+   "images": 5,
+   "fichiers": [
+    "svg/minijeux/arrimage/bateau_0.svg",
+    "svg/minijeux/arrimage/bateau_1.svg",
+    "svg/minijeux/arrimage/bateau_2.svg",
+    "svg/minijeux/arrimage/bateau_3.svg",
+    "svg/minijeux/arrimage/bateau_4.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    96,
+    72
+   ],
    "parcours": "partout",
    "statut": "ok"
   },
@@ -155776,6 +155814,40 @@
    "statut": "ok"
   },
   {
+   "id": "minijeux/arrimage/mise-de-cote",
+   "rubrique": "minijeux",
+   "titre": "La case de mise de côté (une caisse ouverte)",
+   "images": 1,
+   "fichiers": [
+    "svg/minijeux/arrimage/mise-de-cote.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    48
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "minijeux/arrimage/mise-de-cote_bloquee",
+   "rubrique": "minijeux",
+   "titre": "La case de mise de côté, déjà utilisée pour cette marchandise",
+   "images": 1,
+   "fichiers": [
+    "svg/minijeux/arrimage/mise-de-cote_bloquee.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    48
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
    "id": "minijeux/arrimage/ombre",
    "rubrique": "minijeux",
    "titre": "L'ombre de pose (une case)",
@@ -155789,6 +155861,44 @@
     16,
     16
    ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "minijeux/arrimage/suivante",
+   "rubrique": "minijeux",
+   "titre": "La case de la marchandise suivante (un hublot)",
+   "images": 1,
+   "fichiers": [
+    "svg/minijeux/arrimage/suivante.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    48
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "minijeux/arrimage/vague",
+   "rubrique": "minijeux",
+   "titre": "La vague (sur la bande de la rangée du haut)",
+   "images": 4,
+   "fichiers": [
+    "svg/minijeux/arrimage/vague_1.svg",
+    "svg/minijeux/arrimage/vague_2.svg",
+    "svg/minijeux/arrimage/vague_3.svg",
+    "svg/minijeux/arrimage/vague_4.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    128,
+    48
+   ],
+   "ms_par_image": 110,
    "parcours": "partout",
    "statut": "ok"
   },

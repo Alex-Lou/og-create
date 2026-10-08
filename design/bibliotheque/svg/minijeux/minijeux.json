@@ -7,7 +7,7 @@
   "La Pêche : le jeu dessine sur un canvas, tout ce qui bouge est en suites d'images (boucle : vrai, à répéter ; sinon une fois). Les prises nagent vers la droite (retourner l'image pour l'autre sens) ; ferrées, elles pendent tête en bas, la ligne en haut au milieu. Le couloir d'eau et le ponton se répètent en largeur.",
   "La Cueillette : le buisson a un cadre de 60 × 60 (le bouton) ; un fruit, les guêpes, la piqûre et le panier un cadre de 32 × 32, à poser au milieu du buisson. Boucles animées dans le SVG (SMIL) : le buisson, le fruit mûr, le fruit trop mûr, les guêpes. Suites d'images à enchaîner une fois : le buisson secoué, le fruit qui mûrit, qui tombe, qu'on cueille, la piqûre. Nouvelle version (design/conception/minijeux_grille.md) : la jauge de panier (96 × 22) en 4 états ; le « double » et le papillon doré (32 × 32) ; la magie du papillon, les buissons de saison, le nid (par-dessus le buisson) et le buisson perdu ont le cadre d'un buisson (60 × 60). La pie a un cadre de 52 × 40 (de −4 à 48 en x, de −4 à 36 en y) : elle arrive en boucle, se pose avec le fruit volé, puis fuit une fois (retournée, vers la gauche).",
   "La Récolte : une tuile a un cadre de 32 × 32 ; la tuile cueillie et l'éclat d'une longue chaîne ont un cadre de 48 × 48 centré sur la tuile (1,5 fois sa taille). Les sortes gardent les noms du jeu (stone, wood, water, food, fish). Boucles animées dans le SVG (SMIL) : la tuile au repos, la tuile choisie. Suites d'images à enchaîner une fois : la tuile cueillie, la tuile qui atterrit, l'éclat d'une longue chaîne. La Récolte, nouvelle version (design/conception/minijeux_grille.md) : la gerbe, la graine dorée, le rocher et le rocher fendu ont le cadre d'une tuile (32 × 32). La ronce et la ronce coupée se posent par-dessus la tuile qu'elles prennent. Le rocher qui casse et l'éclat d'une cascade : 48 × 48 centrés sur la tuile. L'onde de la gerbe : 192 × 32 sur sa ligne (tournée d'un quart pour sa colonne). Le fil doré : 32 × 32 centré sur le lien entre deux tuiles (droit : tourné d'un quart à la verticale ; en diagonale : retourné pour l'autre sens). La commande : le panneau (96 × 44) et, par-dessus, une case par ressource (30 × 44, en x = 4 + 30 × i) ; le jeu écrit le compte dans l'étiquette.",
-  "L'Arrimage : une case a un cadre de 16 × 16, la cale 128 × 224 (8 × 14 cases). Une marchandise se compose de 4 cases de sa sorte (caisse, tonneau, sac, lest) : case-<sorte>_<masque>, où le masque dit quelles voisines sont de la même pièce (haut 1, droite 2, bas 4, gauche 8) ; la case n'a de contour que là où la pièce s'arrête. Par-dessus les cases : l'ombre de pose, la marque fragile. La marée (10 crans) se pose par-dessus la cale et les marchandises. La rangée arrimée (128 × 16) se pose par-dessus la rangée ; le jeu la retire à la dernière image."
+  "L'Arrimage : une case a un cadre de 16 × 16, la cale 128 × 224 (8 × 14 cases). Une marchandise se compose de 4 cases de sa sorte (caisse, tonneau, sac, lest) : case-<sorte>_<masque>, où le masque dit quelles voisines sont de la même pièce (haut 1, droite 2, bas 4, gauche 8) ; la case n'a de contour que là où la pièce s'arrête. Par-dessus les cases : l'ombre de pose, la marque fragile. La marée (10 crans) se pose par-dessus la cale et les marchandises. La rangée arrimée (128 × 16) se pose par-dessus la rangée ; le jeu la retire à la dernière image. Compléments : la vague (128 × 48) se pose sur la bande de la rangée du haut, pendant que le jeu secoue la cale ; l'alerte (32 × 32) la précède. La suivante et la mise de côté (48 × 48) : le jeu pose la marchandise au centre, réduite de moitié. Le bilan : le bateau d'Aster (96 × 72), chargé de 0 à 4 rangs selon le résultat, avec les étoiles du Filon."
  ],
  "hd": 4,
  "jeux": {
@@ -5949,6 +5949,136 @@
       16
      ],
      "fichier": "arrimage/arrime_4.svg"
+    },
+    "vague_1": {
+     "nom": "La vague (sur la bande de la rangée du haut)",
+     "cadre": [
+      0,
+      0,
+      128,
+      48
+     ],
+     "fichier": "arrimage/vague_1.svg"
+    },
+    "vague_2": {
+     "nom": "La vague (sur la bande de la rangée du haut)",
+     "cadre": [
+      0,
+      0,
+      128,
+      48
+     ],
+     "fichier": "arrimage/vague_2.svg"
+    },
+    "vague_3": {
+     "nom": "La vague (sur la bande de la rangée du haut)",
+     "cadre": [
+      0,
+      0,
+      128,
+      48
+     ],
+     "fichier": "arrimage/vague_3.svg"
+    },
+    "vague_4": {
+     "nom": "La vague (sur la bande de la rangée du haut)",
+     "cadre": [
+      0,
+      0,
+      128,
+      48
+     ],
+     "fichier": "arrimage/vague_4.svg"
+    },
+    "alerte-vague": {
+     "nom": "L'alerte de la vague (elle bat, en boucle)",
+     "cadre": [
+      0,
+      0,
+      32,
+      32
+     ],
+     "fichier": "arrimage/alerte-vague.svg"
+    },
+    "suivante": {
+     "nom": "La case de la marchandise suivante (un hublot)",
+     "cadre": [
+      0,
+      0,
+      48,
+      48
+     ],
+     "fichier": "arrimage/suivante.svg"
+    },
+    "mise-de-cote": {
+     "nom": "La case de mise de côté (une caisse ouverte)",
+     "cadre": [
+      0,
+      0,
+      48,
+      48
+     ],
+     "fichier": "arrimage/mise-de-cote.svg"
+    },
+    "mise-de-cote_bloquee": {
+     "nom": "La case de mise de côté, déjà utilisée pour cette marchandise",
+     "cadre": [
+      0,
+      0,
+      48,
+      48
+     ],
+     "fichier": "arrimage/mise-de-cote_bloquee.svg"
+    },
+    "bateau_0": {
+     "nom": "Le bilan : le bateau d'Aster, 0 rang de cargaison (il tangue, en boucle)",
+     "cadre": [
+      0,
+      0,
+      96,
+      72
+     ],
+     "fichier": "arrimage/bateau_0.svg"
+    },
+    "bateau_1": {
+     "nom": "Le bilan : le bateau d'Aster, 1 rang de cargaison (il tangue, en boucle)",
+     "cadre": [
+      0,
+      0,
+      96,
+      72
+     ],
+     "fichier": "arrimage/bateau_1.svg"
+    },
+    "bateau_2": {
+     "nom": "Le bilan : le bateau d'Aster, 2 rangs de cargaison (il tangue, en boucle)",
+     "cadre": [
+      0,
+      0,
+      96,
+      72
+     ],
+     "fichier": "arrimage/bateau_2.svg"
+    },
+    "bateau_3": {
+     "nom": "Le bilan : le bateau d'Aster, 3 rangs de cargaison (il tangue, en boucle)",
+     "cadre": [
+      0,
+      0,
+      96,
+      72
+     ],
+     "fichier": "arrimage/bateau_3.svg"
+    },
+    "bateau_4": {
+     "nom": "Le bilan : le bateau d'Aster, 4 rangs de cargaison (il tangue, en boucle)",
+     "cadre": [
+      0,
+      0,
+      96,
+      72
+     ],
+     "fichier": "arrimage/bateau_4.svg"
     }
    },
    "suites": {
@@ -5961,6 +6091,17 @@
       "arrimage/arrime_2.svg",
       "arrimage/arrime_3.svg",
       "arrimage/arrime_4.svg"
+     ]
+    },
+    "vague": {
+     "nom": "La vague (sur la bande de la rangée du haut)",
+     "ms_par_image": 110,
+     "boucle": false,
+     "fichiers": [
+      "arrimage/vague_1.svg",
+      "arrimage/vague_2.svg",
+      "arrimage/vague_3.svg",
+      "arrimage/vague_4.svg"
      ]
     }
    }
