@@ -54,3 +54,8 @@
 }
 .world__game-btn:disabled { background: var(--vellum-300); color: var(--ink-500); cursor: default; font-size: 12px; }
 .world__civ--site { margin: 0 0 10px; font-size: 15px; }
+/* Embrumé par un égaré : il ne produit plus jusqu'à sa réparation */
+.world__blight { display: grid; grid-template-columns: auto 1fr; align-items: center; gap: 6px 10px; margin-bottom: 10px; padding: 10px 12px; border-radius: var(--r-md); background: linear-gradient(135deg, #E9ECF3, #D8DDEA); color: #3B4763; }
+.world__blight-icon { width: 32px; height: 32px; }
+.world__blight-text { font-size: 14px; line-height: 1.35; }
+.world__blight-btn { grid-column: 1 / -1; justify-self: start; display: inline-flex; align-items: center; gap: 4px; }
