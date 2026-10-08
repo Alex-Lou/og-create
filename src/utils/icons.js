@@ -113,11 +113,33 @@ export const ICONS = {
     + '<path d="M26 12l14 6M32 22l12 10" stroke="#b9a6e8" stroke-width="2.6" stroke-linecap="round"/>')
 };
 
-// Adresse d'une icône (data: URL), calculée une fois ; null si l'icône n'existe pas. Taille explicite : un canvas
-// dessinerait sinon le SVG en 300 × 150, déformé (en HTML, le CSS la ramène à la taille du texte)
+// Les icônes de l'interface dessinées par la bibliothèque (design/bibliotheque/svg/interface, interface.json) : des
+// fichiers, lus à la demande (32 × 32, au trait de la troupe). Elles remplacent les dessins ci-dessus, qui restent pour
+// le cas où un fichier manquerait. On les désigne par leur nom (« ui:coffre », « ui:zoom_plus »…) ; les noms d'avant
+// mènent à la leur (ALIASES).
+const LIBRARY = Object.fromEntries(Object.entries(import.meta.glob('/design/bibliotheque/svg/interface/*_icone.svg', { query: '?url', import: 'default', eager: true }))
+  .map(([path, url]) => [path.split('/').pop().replace(/_icone\.svg$/, ''), url]));
+const ALIASES = {
+  stone: 'pierre', wood: 'bois', water: 'eau', food: 'nourriture', fish: 'poisson', coin: 'ecu', book: 'chapitre', map: 'carte',
+  spark: 'etincelle', lock: 'verrou', unknown: 'inconnu', sprout: 'pousse', basket: 'ramasser', tools: 'outils', flower: 'fleur',
+  smile: 'humeur_joie', calm: 'humeur_calme', frown: 'humeur_bouderie'
+};
+const own = (obj, key) => Object.prototype.hasOwnProperty.call(obj, key);
+// Le fichier de la bibliothèque pour ce nom (ou son ancien nom), ou null
+export function libraryIcon(name) {
+  const key = own(ALIASES, name) ? ALIASES[name] : name;
+  return own(LIBRARY, key) ? LIBRARY[key] : null;
+}
+
+// Adresse d'une icône : son fichier dans la bibliothèque, sinon son dessin ci-dessus (data: URL), calculée une fois ;
+// null si l'icône n'existe pas. Taille explicite pour un dessin d'ici : un canvas dessinerait sinon le SVG en
+// 300 × 150, déformé (en HTML, le CSS la ramène à la taille du texte ; le Livre agrandit aussi ceux de la bibliothèque)
 const urls = new Map();
 export function iconSrc(name) {
-  if (!Object.prototype.hasOwnProperty.call(ICONS, name)) return null;
+  if (typeof name !== 'string') return null;
+  const file = libraryIcon(name);
+  if (file) return file;
+  if (!own(ICONS, name)) return null;
   if (!urls.has(name)) urls.set(name, `data:image/svg+xml;charset=utf-8,${encodeURIComponent(ICONS[name].replace('<svg', '<svg width="256" height="256"'))}`);
   return urls.get(name);
 }

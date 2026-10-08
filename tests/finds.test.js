@@ -1,7 +1,7 @@
 import { describe, it, expect } from 'vitest';
 import { DEPOSIT_SPRITES, depositLayer } from '@/world/depositSprites';
 import { FIND_GLYPH, DEPOSIT_NAMES, depositsShown, depositsReady, depositWait, waitText } from '@/world/finds';
-import { iconSrc } from '@/utils/icons';
+import { iconSrc, libraryIcon } from '@/utils/icons';
 import { NATURE2 } from '@/world/nature';
 
 // Les 6 trouvailles du serveur (services/finds.js), mêmes identifiants
@@ -11,7 +11,8 @@ describe('trouvailles de climat : dessins et icônes', () => {
   it('chaque trouvaille a son icône, son gisement prêt (animé) et ramassé', () => {
     expect(Object.keys(DEPOSIT_SPRITES).sort()).toEqual([...IDS].sort());
     for (const id of IDS) {
-      expect(iconSrc(id)).toMatch(/^data:image\/svg\+xml/);
+      expect(iconSrc(id)).toBe(libraryIcon(id));
+      expect(libraryIcon(id)).toBeTruthy();
       expect(FIND_GLYPH[id]).toBe(`ui:${id}`);
       expect(DEPOSIT_NAMES[id]).toHaveLength(2);
       const keys = new Set();

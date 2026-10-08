@@ -95,7 +95,10 @@ function drawing(src, onReady) {
   fetch(src)
     .then(response => (response.ok ? response.text() : Promise.reject(new Error(src))))
     .then(text => {
-      const sized = /<svg[^>]*\swidth=/.test(text) ? text : text.replace('<svg', '<svg width="256" height="256"');
+      // (dessiné en grand pour rester net une fois agrandi : celui qui a un viewBox perd sa petite taille)
+      const sized = text.replace(/<svg\b([^>]*)>/, (tag, attrs) => (/\sviewBox=/.test(attrs)
+        ? `<svg${attrs.replace(/\s(width|height)="[^"]*"/g, '')} width="256" height="256">`
+        : /\swidth=/.test(attrs) ? tag : `<svg${attrs} width="256" height="256">`));
       load(`data:image/svg+xml;charset=utf-8,${encodeURIComponent(sized)}`);
     })
     .catch(() => {});
