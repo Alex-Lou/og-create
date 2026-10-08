@@ -659,6 +659,24 @@ export function villageOf({ n, M, sites, owned, crafts = [], props, annexes = []
         return dayTime ? { x: c.x + Math.sin(a) * 0.3, y: c.y, frame, flip: Math.cos(a) < 0, look: along(Math.cos(a) < 0, frame) } : { ...c, frame: 'rest', flip: false };
       });
     }
+    // Le Chat et le Chien écrits : ils vivent autour de la porte du Foyer (leur pelage tiré pour l'île) ; le jour, ils
+    // vont et viennent et s'assoient un moment ; la nuit, ils dorment roulés en boule
+    if (home) {
+      [['Chat', 'cat', ['', 'noir', 'gris', 'blanc'], 0.6], ['Chien', 'dog', ['', 'brun', 'noir', 'roux'], 0.9]].forEach(([name, species, coats, reach], k) => {
+        if (!bestiary.has(name)) return;
+        const variant = coats[Math.floor(hash(k + 3, 71) * coats.length)];
+        wild(`best:${species}`, species, [home], true, c => {
+          const at = { x: c.x + 0.4 + k * 1.1, y: c.y + 0.5 + k * 0.55, variant };
+          const breath = Math.floor(t * 0.8 + k) % 2 + 1;
+          if (night) return { ...at, frame: 'rest', flip: false, look: { view: 'avant', pose: 'dodo', n: breath } };
+          if ((t + k * 7) % 20 < 8) return { ...at, frame: 0, flip: k === 1, look: { view: 'avant', pose: 'assis', n: breath } };
+          const a = (t + k * 7) * 0.3;
+          const flip = Math.cos(a) < 0;
+          const frame = Math.floor(t * 4) % 2;
+          return { ...at, x: at.x + Math.sin(a) * reach, frame, flip, look: along(flip, frame) };
+        });
+      });
+    }
     // Anya, le jour de son passage, à son moment (l'aube ou le crépuscule) : son cerf blanc, ses lucioles
     const here = anya && anya.visit && anyaHere(h, phase.rise, phase.set, anya.visit.slot) ? anya.visit : null;
     if (here) {

@@ -7,14 +7,15 @@
 export const BEASTS = ['Poisson', 'Méduse', 'Grenouille', 'Oiseau', 'Tortue', 'Papillon', 'Poule', 'Luciole', 'Abeille', 'Hibou', 'Renard',
   'Hérisson', 'Écureuil', 'Cerf', 'Vache', 'Cochon', 'Chèvre', 'Dauphin', 'Baleine', 'Mouton', 'Chat', 'Chien'];
 
-// Où vit chaque bête écrite : nouvelle sur l'île (dans l'air, les arbres, au bord de l'eau), déjà là pour tous (la
-// mer, les bois), variante de la ferme, ou pas encore dessinée (le Chat et le Chien viennent avec la boutique du Foyer)
+// Où vit chaque bête écrite : nouvelle sur l'île (dans l'air, les arbres, au bord de l'eau, autour du Foyer), déjà là
+// pour tous (la mer, les bois), variante de la ferme
 const WHERE = {
   Poisson: 'mer', Méduse: 'mer', Dauphin: 'mer', Baleine: 'mer',
   Grenouille: 'eau', Tortue: 'eau',
   Oiseau: 'air', Papillon: 'air', Luciole: 'air', Abeille: 'air', Hibou: 'air',
   Renard: 'bois', Hérisson: 'bois', Écureuil: 'bois', Cerf: 'bois',
-  Poule: 'ferme', Vache: 'ferme', Cochon: 'ferme', Chèvre: 'ferme', Mouton: 'ferme'
+  Poule: 'ferme', Vache: 'ferme', Cochon: 'ferme', Chèvre: 'ferme', Mouton: 'ferme',
+  Chat: 'foyer', Chien: 'foyer'
 };
 // La variante qu'un élément de la ferme ajoute aux bêtes que le palier du Potager montre déjà
 const FARM = { Poule: [['hen', 'blanche'], ['hen', 'grise']], Vache: [['cow', 'rousse']], Mouton: [['sheep', 'noir']], Cochon: [['pig', 'tachete']], Chèvre: [['goat', 'brune']] };
@@ -46,7 +47,7 @@ export function bestiaryOf(elements) {
 }
 
 // La Chronique : les bêtes écrites, et où elles vivent
-const PLACE = { mer: 'dans la mer', eau: 'au bord de l’eau', air: 'dans l’air et les arbres', bois: 'dans les bois', ferme: 'à la ferme du Potager' };
+const PLACE = { mer: 'dans la mer', eau: 'au bord de l’eau', air: 'dans l’air et les arbres', bois: 'dans les bois', ferme: 'à la ferme du Potager', foyer: 'autour du Foyer' };
 export const beastsOf = elements => {
   const written = new Set(elements || []);
   return BEASTS.filter(name => written.has(name)).map(name => ({ name, where: PLACE[WHERE[name]] || 'bientôt sur l’île' }));
