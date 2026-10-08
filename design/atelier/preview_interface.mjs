@@ -17,7 +17,8 @@ const svgOf = (body, px = 32) => `<svg xmlns="http://www.w3.org/2000/svg" width=
 const index = { _lisez_moi: [
   'Les icônes de l\'interface, au trait de la bibliothèque : la barre du bas (Grimoire, Île, Défis, Sceau, et le sac, les tâches et le menu de la v6, HISTOIRE.md § 9, étapes 4 et 6), l\'écu, les ressources, les boutons de l\'île ; les fiches (besoins, humeurs, amitié, verrou, inconnu, étincelle, chapitre, plan, carte, pousse) et les trouvailles des climats.',
   'Carré 32 × 32, sans marge à retirer : les afficher de 16 à 32 px (en <img>, ou en SVG en ligne). Elles se lisent sur le papier clair comme sur le verre sombre des boutons de l\'île. Pour un onglet inactif ou un cœur pas encore gagné, les éteindre en CSS (opacity, filter: saturate(.4) ou grayscale(1)) plutôt que de les redessiner.',
-  'sert : où le jeu s\'en sert. Les petites commandes (fermer, flèches, zoom, plein écran) restent des pictos au trait du jeu. L\'heure et la météo ont déjà leurs icônes : svg/meteo/icones (temps, moments).'
+  'sert : où le jeu s\'en sert. L\'heure et la météo ont déjà leurs icônes : svg/meteo/icones (temps, moments).',
+  'Les commandes (fermer, retour, flèche, valider, zoom, plein écran, réglages, son, musique) sont des pastilles rondes et colorées, leur signe blanc : la flèche va vers la droite, la tourner en CSS (rotate) pour les autres directions. Puis les actions des bâtiments (bâtir, faire évoluer, annexes, déplacer, tourner, temps), les récompenses et la boutique (étoile, cadeau, coffre, boutique, quête, succès, nouveau), le perso et les autres (profil, garde-robe, amis, visites, messages, notifications).'
 ], icones: {} };
 const cells = [];
 let k = 0;

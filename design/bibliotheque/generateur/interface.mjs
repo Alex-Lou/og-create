@@ -635,6 +635,210 @@ var require_interface = __commonJS({
       return s + P("M9,11.6 L12.6,7.6", "none", 0).replace('stroke="none"', 'stroke="#B8A6D8" stroke-width="1.4" stroke-linecap="round"') + etincelle(24.8, 9.6, 1.3);
     }
     __name(obsidienne, "obsidienne");
+    var ROND = "M3,16 A13,13 0 1 0 29,16 A13,13 0 1 0 3,16 Z";
+    var pastille = /* @__PURE__ */ __name((id, c, cS) => P(ROND, c, 0) + clip(id, ROND, `<circle cx="21" cy="21" r="13" fill="${cS}" opacity=".75"/>`) + P(ROND, "none", WO) + trait("M7.4,12.4 Q9,7.8 13.6,6.4", "rgba(255,255,255,.7)", 1.6), "pastille");
+    var signe = /* @__PURE__ */ __name((d, w = 3) => cerne(d, "#FFFFFF", w), "signe");
+    var PASTILLES = { rouge: ["#EE6A7A", "#C84458"], vert: ["#74C25E", "#4E9A3E"], bleu: ["#62AEE4", "#3F86C2"], bois: ["#D8A868", "#A87A42"], violet: ["#A48ED6", "#7A64B0"], ardoise: ["#86A2BC", "#5E7A96"] };
+    function fermer() {
+      return pastille("kfe", ...PASTILLES.rouge) + signe("M11.4,11.4 L20.6,20.6 M20.6,11.4 L11.4,20.6");
+    }
+    __name(fermer, "fermer");
+    function retour() {
+      return pastille("kre", ...PASTILLES.bois) + signe("M21.4,21.4 Q22.4,12.4 13,12.4", 2.6) + signe("M15.8,8.8 L12.2,12.4 L15.8,16", 2.6);
+    }
+    __name(retour, "retour");
+    function fleche() {
+      return pastille("kfl", ...PASTILLES.bleu) + signe("M9.6,16 L21.4,16 M16.6,10.8 L21.8,16 L16.6,21.2");
+    }
+    __name(fleche, "fleche");
+    function valider() {
+      return pastille("kva", ...PASTILLES.vert) + signe("M9.8,16.4 L14,20.6 L22.2,11.6", 3.2);
+    }
+    __name(valider, "valider");
+    function pleinEcran() {
+      return pastille("kpe", ...PASTILLES.ardoise) + signe("M9.4,13.2 L9.4,9.4 L13.2,9.4 M18.8,9.4 L22.6,9.4 L22.6,13.2 M22.6,18.8 L22.6,22.6 L18.8,22.6 M13.2,22.6 L9.4,22.6 L9.4,18.8", 2.2);
+    }
+    __name(pleinEcran, "pleinEcran");
+    function reglages() {
+      return pastille("krg", ...PASTILLES.violet) + signe("M9.4,11 L22.6,11 M9.4,16 L22.6,16 M9.4,21 L22.6,21", 1.4) + [[19, 11], [12.4, 16], [17, 21]].map(([x, y]) => rond(x, y, 2.1, OR.corps, WI) + rond(x - 0.6, y - 0.6, 0.6, OR.clair, 0)).join("");
+    }
+    __name(reglages, "reglages");
+    var loupe = /* @__PURE__ */ __name((id, plus) => cerne("M20.4,20.4 L26.8,26.8", BOIS.corps, 3.6) + L([21.4, 20.8], [25.6, 25], BOIS.clair, 0.9) + rond(13.6, 13.6, 9.2, OR.corps) + P("M7.2,13.6 A6.4,6.4 0 1 0 20,13.6 A6.4,6.4 0 1 0 7.2,13.6 Z", "#DDF1FA", WI) + clip(id, "M7.2,13.6 A6.4,6.4 0 1 0 20,13.6 A6.4,6.4 0 1 0 7.2,13.6 Z", '<circle cx="17" cy="17" r="6.4" fill="#B8DDEE"/>') + trait(plus ? "M10.4,13.6 L16.8,13.6 M13.6,10.4 L13.6,16.8" : "M10.4,13.6 L16.8,13.6", "#3E78C8", 1.8) + reflet(10.4, 9.8, 1.4, 0.8, 0.8), "loupe");
+    function zoomPlus() {
+      return loupe("kzp", true);
+    }
+    __name(zoomPlus, "zoomPlus");
+    function zoomMoins() {
+      return loupe("kzm", false);
+    }
+    __name(zoomMoins, "zoomMoins");
+    var hautParleur = /* @__PURE__ */ __name((id) => {
+      const D = "M5.4,12.4 L10.6,12.4 L17,6.6 L17,25.4 L10.6,19.6 L5.4,19.6 Q4.4,19.6 4.4,18.6 L4.4,13.4 Q4.4,12.4 5.4,12.4 Z";
+      return P(D, OR.corps, 0) + clip(id, D, `<rect x="11" y="16" width="7" height="10" fill="${OR.ombre}"/><rect x="4" y="16.4" width="7" height="4" fill="${OR.ombre}"/>`) + P(D, "none", WO) + L([10.6, 12.8], [10.6, 19.2], OUT, WI) + reflet(13.2, 10.4, 0.7, 1.4, 0.7);
+    }, "hautParleur");
+    function son() {
+      return hautParleur("kso") + cerne("M20.6,12.4 Q23,16 20.6,19.6", "#7CC4EC", 1.4) + cerne("M23.6,9.2 Q28,16 23.6,22.8", "#7CC4EC", 1.4);
+    }
+    __name(son, "son");
+    function sonCoupe() {
+      return hautParleur("ksc") + cerne("M21,12.6 L27.4,19 M27.4,12.6 L21,19", "#EE6A7A", 1.8);
+    }
+    __name(sonCoupe, "sonCoupe");
+    function musique() {
+      let s = cerne("M12.4,21.6 L12.4,10.4 M24.4,18.6 L24.4,7.4", OR.fonce, 1.4) + P("M11.4,8.4 L25.4,5 L25.4,9 L11.4,12.4 Z", OR.corps, WO);
+      s += [[9.6, 22.4], [21.6, 19.4]].map(([x, y]) => `<g transform="rotate(-22 ${x} ${y})">${E(x, y, 3.6, 2.7, OR.corps, WO)}${reflet(x - 1.2, y - 0.9, 1, 0.6, 0.8)}</g>`).join("");
+      return s + etincelle(6.4, 7.4, 1.6);
+    }
+    __name(musique, "musique");
+    function batir() {
+      let s = P(rr(3.6, 22.6, 17, 5, 1.2), BOIS.clair, WO) + L([5.4, 24.4], [18.6, 24.4], BOIS.ombre, 0.6) + rond(17.2, 25.1, 0.9, "#8E96A6", WI);
+      s += cerne("M9.4,21.6 L20,10.4", BOIS.corps, 2.8) + L([10.2, 20], [18.6, 11.2], BOIS.clair, 0.8);
+      s += `<g transform="rotate(44 21.4 9.4)">${P(rr(14.4, 5, 14, 8.8, 2.2), "#C8925A", WO)}${P(rr(16.6, 5, 2, 8.8, 0), "#8E96A6", WI)}${P(rr(24.2, 5, 2, 8.8, 0), "#8E96A6", WI)}${reflet(20.6, 6.6, 1.6, 0.6, 0.6)}</g>`;
+      return s + etincelle(26.4, 21, 1.6);
+    }
+    __name(batir, "batir");
+    function evoluer() {
+      const D = "M16,3.4 L26.6,14.2 L20.6,14.2 L20.6,26.4 Q20.6,28.4 18.6,28.4 L13.4,28.4 Q11.4,28.4 11.4,26.4 L11.4,14.2 L5.4,14.2 Z";
+      return P(D, "#7CC860", 0) + clip("kev", D, '<path d="M16,3 L27,14 L20.6,14.6 L20.6,29 L16,29 Z" fill="#58A040"/>') + P(D, "none", WO) + trait("M8.6,12.8 L15.4,6", "rgba(255,255,255,.75)", 1.4) + reflet(14, 19, 0.8, 3, 0.45) + etincelle(25.4, 22, 1.8) + etincelle(6.4, 21.4, 1.2);
+    }
+    __name(evoluer, "evoluer");
+    function annexes() {
+      let s = P(rr(6, 13.6, 15.6, 13, 1.2), "#F4DCA4", WO) + clip("kan", rr(6, 13.6, 15.6, 13, 1.2), '<rect x="17" y="13" width="5" height="14" fill="#E2C083"/>');
+      s += P("M3.4,15.2 L13.8,6 L24.2,15.2 Q23.4,16.6 22,15.8 L13.8,8.8 L5.6,15.8 Q4.2,16.6 3.4,15.2 Z", "#E06A4E", WO);
+      s += P(rr(11.6, 19, 4.6, 7.6, 2.2), BOIS.corps, WI) + rond(15, 23, 0.6, OR.corps, 0) + P(rr(8, 16.6, 3, 3, 0.6), "#BFE3F2", WI);
+      s += rond(23.6, 22.6, 6.4, "#74C25E") + clip("kap", "M17.2,22.6 A6.4,6.4 0 1 0 30,22.6 A6.4,6.4 0 1 0 17.2,22.6 Z", '<circle cx="26.6" cy="25.6" r="6.4" fill="#4E9A3E" opacity=".7"/>') + rond(23.6, 22.6, 6.4, "none");
+      return s + signe("M20.6,22.6 L26.6,22.6 M23.6,19.6 L23.6,25.6", 2);
+    }
+    __name(annexes, "annexes");
+    function deplacer() {
+      const b = "#62AEE4";
+      let s = cerne("M16,7.4 L16,24.6 M7.4,16 L24.6,16", b, 3.2);
+      s += ["M16,2.6 L21.4,8.6 L10.6,8.6 Z", "M16,29.4 L21.4,23.4 L10.6,23.4 Z", "M2.6,16 L8.6,10.6 L8.6,21.4 Z", "M29.4,16 L23.4,10.6 L23.4,21.4 Z"].map((d) => P(d, b, WO)).join("");
+      return s + rond(16, 16, 3.4, "#FFFFFF", WO) + reflet(14.6, 5.6, 1, 0.6, 0.7);
+    }
+    __name(deplacer, "deplacer");
+    function tourner() {
+      let s = P("M16,10.6 L23.4,16 L16,21.4 L8.6,16 Z", "#9CC97A", WI) + P("M16,21.4 L23.4,16 L23.4,17.6 L16,23 L8.6,17.6 L8.6,16 Z", "#7A5A3A", WI);
+      s += cerne("M27.2,18 A11.2,11.2 0 1 1 21,6.4", "#F49A4A", 2.4);
+      return s + P("M27.6,9.2 L19.8,3.2 L18.8,11.4 Z", "#F49A4A", WO) + reflet(8.4, 11.4, 1, 0.6, 0.7);
+    }
+    __name(tourner, "tourner");
+    function temps() {
+      let s = cerne("M9.4,26.6 L7.6,29 M22.6,26.6 L24.4,29", OUT, 1);
+      s += rond(8.2, 7.8, 3.6, OR.corps) + rond(23.8, 7.8, 3.6, OR.corps) + cerne("M10.8,5.4 Q16,2.4 21.2,5.4", "#9AA4B4", 1);
+      s += rond(16, 17.6, 11, "#EE6A7A") + clip("ktp", "M5,17.6 A11,11 0 1 0 27,17.6 A11,11 0 1 0 5,17.6 Z", '<circle cx="20.6" cy="22" r="11" fill="#C84458" opacity=".7"/>') + rond(16, 17.6, 11, "none");
+      s += rond(16, 17.6, 8, "#FBF3DE", WI) + [0, 1, 2, 3].map((i) => {
+        const a = i * Math.PI / 2;
+        return L([16 + 6.4 * Math.sin(a), 17.6 - 6.4 * Math.cos(a)], [16 + 7.2 * Math.sin(a), 17.6 - 7.2 * Math.cos(a)], OUT, 0.9);
+      }).join("");
+      s += trait("M16,17.6 L16,12.4 M16,17.6 L19.6,19.4", OUT, 1.3) + rond(16, 17.6, 1, OR.fonce, 0);
+      return s + trait("M8.6,13.4 Q9.8,10 13,8.6", "rgba(255,255,255,.7)", 1.4);
+    }
+    __name(temps, "temps");
+    var etoileD = /* @__PURE__ */ __name((x, y, R, r) => Array.from({ length: 10 }, (_, i) => {
+      const a = -Math.PI / 2 + i * Math.PI / 5, k = i % 2 ? r : R;
+      return `${i ? "L" : "M"}${r2(x + k * Math.cos(a))},${r2(y + k * Math.sin(a))}`;
+    }).join(" ") + " Z", "etoileD");
+    function etoileIcone() {
+      const D = etoileD(16, 17.2, 14, 6.8);
+      return P(D, OR.corps, 0) + clip("ket", D, `<path d="M16,17.2 L31,12 L31,31 L16,31 Z" fill="${OR.ombre}"/>`) + P(D, "none", WO) + P(etoileD(16, 17.2, 7, 3.4), OR.clair, 0) + reflet(11.6, 13.6, 1.2, 0.8, 0.8) + etincelle(27, 5.4, 1.4);
+    }
+    __name(etoileIcone, "etoileIcone");
+    function cadeau() {
+      let s = P(rr(6.4, 15.4, 19.2, 13, 1.4), "#F08CAA", 0) + clip("kca", rr(6.4, 15.4, 19.2, 13, 1.4), '<rect x="20" y="15" width="6" height="14" fill="#D06A8C"/>') + P(rr(6.4, 15.4, 19.2, 13, 1.4), "none", WO);
+      s += P(rr(4.6, 10.6, 22.8, 5.6, 1.4), "#F6A6C0", WO) + P(rr(14, 10.6, 4, 17.8, 0), OR.corps, WI);
+      s += P("M16,10.8 Q9.6,2.6 7.6,7 Q7,10.6 16,10.8 Z", OR.corps, WO) + P("M16,10.8 Q22.4,2.6 24.4,7 Q25,10.6 16,10.8 Z", OR.corps, WO);
+      s += rond(16, 10.6, 2, OR.ombre, WI) + reflet(10, 6.8, 0.9, 0.6, 0.8) + reflet(8.4, 18, 0.8, 1.6, 0.5);
+      return s;
+    }
+    __name(cadeau, "cadeau");
+    function coffreIcone() {
+      const corps = rr(4.6, 14.6, 22.8, 13.4, 1.6), couv = "M4.6,15.2 L4.6,11.6 Q4.6,5.4 16,5.4 Q27.4,5.4 27.4,11.6 L27.4,15.2 Z";
+      let s = P(corps, BOIS.corps, 0) + clip("kco", corps, `<rect x="21" y="14" width="7" height="15" fill="${BOIS.ombre}"/>`) + P(corps, "none", WO);
+      s += P(couv, BOIS.clair, 0) + clip("kcv", couv, `<rect x="21" y="5" width="7" height="11" fill="${BOIS.corps}"/>`) + P(couv, "none", WO);
+      s += [8.4, 21.6].map((x) => P(rr(x - 1.2, 5.8, 2.4, 22, 0.4), OR.corps, WI)).join("");
+      s += P(rr(13.4, 12.4, 5.2, 6, 1.2), OR.corps, WI) + rond(16, 14.8, 0.9, "#5A3A1C", 0) + L([16, 15.2], [16, 16.8], "#5A3A1C", 0.8);
+      return s + reflet(9.2, 8.6, 1.6, 0.7, 0.55) + etincelle(27, 4, 1.6);
+    }
+    __name(coffreIcone, "coffreIcone");
+    function boutique() {
+      let s = cerne("M7,12 L7,26 M25,12 L25,26", BOIS.corps, 1.6);
+      s += P(rr(4.4, 19.4, 23.2, 8.6, 1.2), BOIS.corps, 0) + clip("kbo", rr(4.4, 19.4, 23.2, 8.6, 1.2), `<rect x="4" y="25" width="24" height="4" fill="${BOIS.ombre}"/>`) + P(rr(4.4, 19.4, 23.2, 8.6, 1.2), "none", WO) + L([6, 21], [26, 21], BOIS.clair, 0.8);
+      s += rond(11.4, 17.4, 2.4, "#E04E3E", WI) + rond(15.6, 17.8, 2, OR.corps, WI) + rond(20.4, 17.4, 2.4, "#7CC860", WI) + reflet(10.6, 16.6, 0.6, 0.8, 0.8);
+      const A = "M3.4,6.6 Q16,4.6 28.6,6.6 L28.6,11.4 Q27.4,14 25.6,11.4 Q24.4,14 22.6,11.4 Q21.4,14 19.6,11.4 Q18.4,14 16.6,11.4 Q15.4,14 13.6,11.4 Q12.4,14 10.6,11.4 Q9.4,14 7.6,11.4 Q6.4,14 4.6,11.4 Q3.4,13 3.4,11.4 Z";
+      s += P(A, "#FFFFFF", 0) + clip("kba", A, [4, 10, 16, 22].map((x) => `<rect x="${x}" y="4" width="3" height="11" fill="#EE6A7A"/>`).join("")) + P(A, "none", WO);
+      return s;
+    }
+    __name(boutique, "boutique");
+    function quete() {
+      let s = P(rr(7, 8.6, 15, 18, 0.6), PAGE.corps, WO) + clip("kqu", rr(7, 8.6, 15, 18, 0.6), `<rect x="18" y="8" width="5" height="19" fill="${PAGE.ombre}"/>`);
+      s += P(rr(4.8, 6, 19.4, 4, 2), PAGE.ombre, WO) + P(rr(4.8, 24.6, 19.4, 4, 2), PAGE.ombre, WO);
+      s += [13.6, 17, 20.4].map((y) => L([9.4, y], [18, y], "#B9A68A", 1.1)).join("");
+      s += rond(23.4, 10.6, 6.6, OR.corps) + clip("kqp", "M16.8,10.6 A6.6,6.6 0 1 0 30,10.6 A6.6,6.6 0 1 0 16.8,10.6 Z", `<circle cx="26.4" cy="13.6" r="6.6" fill="${OR.ombre}"/>`) + rond(23.4, 10.6, 6.6, "none");
+      return s + trait("M23.4,7 L23.4,11", "#8A4A1C", 2.2) + rond(23.4, 14.2, 1.2, "#8A4A1C", 0);
+    }
+    __name(quete, "quete");
+    function succes() {
+      const C = "M9,4.6 L23,4.6 L23,10 Q23,18 16,18.6 Q9,18 9,10 Z";
+      let s = cerne("M9.2,7.6 Q4.6,7.4 5.2,11.6 Q6,15 10,14.6 M22.8,7.6 Q27.4,7.4 26.8,11.6 Q26,15 22,14.6", OR.corps, 1.4);
+      s += P(C, OR.corps, 0) + clip("ksu", C, `<path d="M18,4 L24,4 L24,19 L16,19 Q21,15 18,4 Z" fill="${OR.ombre}"/>`) + P(C, "none", WO);
+      s += P(etoileD(16, 10.8, 3.6, 1.6), OR.clair, WI) + P(rr(14.4, 18.2, 3.2, 4.4, 0.6), OR.ombre, WI);
+      s += P(rr(9.4, 22.2, 13.2, 5.6, 1.4), BOIS.corps, WO) + P(rr(12.6, 23.8, 6.8, 2.4, 0.6), OR.corps, WI);
+      return s + trait("M11.2,7 L11.4,11.4", "rgba(255,255,255,.75)", 1.2) + etincelle(26.6, 21, 1.4);
+    }
+    __name(succes, "succes");
+    function nouveau() {
+      const D = Array.from({ length: 24 }, (_, i) => {
+        const a = -Math.PI / 2 + i * Math.PI / 12, k = i % 2 ? 10.6 : 13.2;
+        return `${i ? "L" : "M"}${r2(16 + k * Math.cos(a))},${r2(16 + k * Math.sin(a))}`;
+      }).join(" ") + " Z";
+      return P(D, "#EE6A7A", 0) + clip("kno", D, '<circle cx="21" cy="21" r="13" fill="#C84458" opacity=".75"/>') + P(D, "none", WO) + signe("M16,9.6 L16,17.4", 3) + rond(16, 22.2, 1.9, "#FFFFFF", WI);
+    }
+    __name(nouveau, "nouveau");
+    var tete = /* @__PURE__ */ __name((x, y, r, peau, cheveux) => rond(x, y, r, peau, WO) + P(`M${r2(x - r)},${r2(y - 0.2)} Q${r2(x - r * 1.04)},${r2(y - r * 1.12)} ${x},${r2(y - r * 1.06)} Q${r2(x + r * 1.04)},${r2(y - r * 1.12)} ${r2(x + r)},${r2(y - 0.2)} Q${r2(x + r * 0.5)},${r2(y - r * 0.56)} ${x},${r2(y - r * 0.4)} Q${r2(x - r * 0.5)},${r2(y - r * 0.56)} ${r2(x - r)},${r2(y - 0.2)} Z`, cheveux, WI) + E(x - r * 0.36, y + r * 0.12, r * 0.13, r * 0.18, "#2A2420", 0) + E(x + r * 0.36, y + r * 0.12, r * 0.13, r * 0.18, "#2A2420", 0) + E(x - r * 0.58, y + r * 0.42, r * 0.2, r * 0.12, "rgba(240,120,110,.6)", 0) + E(x + r * 0.58, y + r * 0.42, r * 0.2, r * 0.12, "rgba(240,120,110,.6)", 0) + trait(`M${r2(x - r * 0.16)},${r2(y + r * 0.46)} Q${x},${r2(y + r * 0.6)} ${r2(x + r * 0.16)},${r2(y + r * 0.46)}`, OUT, 0.7), "tete");
+    function profil() {
+      const F = "M6.6,16 A9.4,11 0 1 0 25.4,16 A9.4,11 0 1 0 6.6,16 Z";
+      let s = E(16, 16, 12.4, 14, BOIS.corps, WO) + E(16, 16, 9.4, 11, "#BFE3F2", WI);
+      s += clip("kpr", F, `<path d="M7,30 Q7,21.4 16,21.4 Q25,21.4 25,30 Z" fill="#62AEE4" stroke="${OUT}" stroke-width="${WI}"/>` + tete(16, 15, 5.4, "#FFE0C4", "#8A5A30"));
+      s += E(16, 16, 9.4, 11, "none", WI) + trait("M6.4,9.4 Q8.6,4.6 13,3.4", BOIS.clair, 1.2);
+      return s + rond(16, 2.6, 1.6, OR.corps, WI);
+    }
+    __name(profil, "profil");
+    function gardeRobe() {
+      let s = cerne("M16,8.4 Q15.6,4.2 18.4,4.4 Q20.6,4.8 19.8,7.2", "#9AA4B4", 1.1) + cerne("M4.6,14.2 L16,8.4 L27.4,14.2", BOIS.corps, 1.6);
+      const T = "M9.6,12.4 L13.2,11 Q16,13.4 18.8,11 L22.4,12.4 L26.8,17.8 L23.4,20 L22,18.4 L22,27.6 Q22,28.4 21.2,28.4 L10.8,28.4 Q10,28.4 10,27.6 L10,18.4 L8.6,20 L5.2,17.8 Z";
+      s += P(T, "#74C25E", 0) + clip("kgr", T, '<path d="M17,29 Q22,24 22,12 L28,18 L28,29 Z" fill="#4E9A3E"/>') + P(T, "none", WO);
+      s += P("M13.2,11 Q16,15 18.8,11", "none", WI) + rond(16, 18.6, 0.7, "#FBF3DE", 0.5) + rond(16, 22, 0.7, "#FBF3DE", 0.5);
+      return s + P("M19.6,24.6 Q18.2,22.8 19.2,22 Q20,21.6 20.4,22.6 Q20.8,21.6 21.4,22 Q22.2,22.8 20.4,24.6 Z".replace(/(\d+\.?\d*),(\d+\.?\d*)/g, (m, a, b) => `${r2(a - 2.4)},${b}`), "#EE6A7A", 0.5);
+    }
+    __name(gardeRobe, "gardeRobe");
+    function amis() {
+      return tete(21.8, 19.4, 6.8, "#F2C9A4", "#3E3A3A") + tete(10.6, 18.4, 7.2, "#FFE0C4", "#C8783A") + P("M16.2,9.6 Q12.6,7.2 12.8,4.8 Q13.2,2.8 15,3 Q16,3.2 16.2,4.4 Q16.4,3.2 17.4,3 Q19.2,2.8 19.6,4.8 Q19.8,7.2 16.2,9.6 Z", "#EE6A7A", WI) + reflet(14.4, 4.6, 0.6, 0.5, 0.8);
+    }
+    __name(amis, "amis");
+    function visite() {
+      const D = "M8.4,27 L8.4,13 Q8.4,4.6 16,4.6 Q23.6,4.6 23.6,13 L23.6,27 Z";
+      let s = P(D, BOIS.corps, 0) + clip("kvi", D, `<rect x="19.6" y="4" width="5" height="24" fill="${BOIS.ombre}"/>` + [12.4, 16, 19.6].map((x) => `<path d="M${x},5 L${x},27" stroke="${BOIS.ombre}" stroke-width="0.7"/>`).join("")) + P(D, "none", WO);
+      s += rond(16, 11.4, 2.8, "#BFE3F2", WI) + L([16, 8.6], [16, 14.2], OUT, 0.6) + rond(20.4, 18.4, 1.1, OR.corps, WI);
+      s += P(rr(6, 26.4, 20, 3.2, 1.2), "#EE6A7A", WI) + P("M16,29 Q14.4,27.8 15,27.2 Q15.6,26.8 16,27.6 Q16.4,26.8 17,27.2 Q17.6,27.8 16,29 Z", "#FFFFFF", 0);
+      s += cerne("M5,26 L5,21", "#6EA448", 0.9) + cerne("M27,26 L27,21", "#6EA448", 0.9);
+      return s + [[5, 20.4, "#F6A6C0"], [27, 20.4, OR.corps]].map(([x, y, c]) => rond(x, y, 1.9, c, WI) + rond(x, y, 0.7, "#FFF4CC", 0)).join("");
+    }
+    __name(visite, "visite");
+    function messages() {
+      const D = rr(3.6, 8, 24.8, 17.4, 2);
+      let s = P(D, "#FBF3DE", 0) + clip("kme", D, `<path d="M3,26 L16,15 L29,26 Z" fill="${PAGE.ombre}"/>`) + P(D, "none", WO);
+      s += trait("M4.4,9 L16,18.4 L27.6,9", OUT, WI) + trait("M4.6,24.6 L12.6,17.2 M27.4,24.6 L19.4,17.2", "#C9B48E", 0.8);
+      return s + P("M16,22.4 Q11.8,19.6 12,17 Q12.4,15 14.2,15.2 Q15.4,15.4 16,16.6 Q16.6,15.4 17.8,15.2 Q19.6,15 20,17 Q20.2,19.6 16,22.4 Z", "#E04E3E", WI) + reflet(14, 16.6, 0.7, 0.5, 0.8);
+    }
+    __name(messages, "messages");
+    function notifications() {
+      const D = "M16,5.4 Q23.4,5.6 23.6,13.4 L23.8,19.4 L26.8,23.2 L5.2,23.2 L8.2,19.4 L8.4,13.4 Q8.6,5.6 16,5.4 Z";
+      let s = rond(16, 26, 2.6, OR.ombre) + P(D, OR.corps, 0) + clip("kno2", D, `<path d="M19,5 Q24,10 24,20 L28,24 L16,24 Z" fill="${OR.ombre}"/>`) + P(D, "none", WO);
+      s += rond(16, 4.6, 1.6, OR.corps, WI) + trait("M10.6,18 L10.8,13.2 Q11,9.6 13.6,8.4", "rgba(255,255,255,.75)", 1.4);
+      return s + rond(25, 7.4, 4, "#EE6A7A") + reflet(23.8, 6.2, 1, 0.6, 0.8);
+    }
+    __name(notifications, "notifications");
     var ICONES2 = [
       ["grimoire", "Grimoire", grimoire, "l'onglet du Grimoire"],
       ["ile", "Île", ile, "l'onglet de l'île"],
@@ -672,7 +876,41 @@ var require_interface = __commonJS({
       ["roseau", "Roseau", roseau, "la trouvaille du Marais"],
       ["sel", "Sel", sel, "la trouvaille des Dunes"],
       ["fruits", "Fruits", fruits, "la trouvaille de la Jungle"],
-      ["obsidienne", "Obsidienne", obsidienne, "la trouvaille du Volcan"]
+      ["obsidienne", "Obsidienne", obsidienne, "la trouvaille du Volcan"],
+      // les commandes
+      ["fermer", "Fermer", fermer, "fermer une fiche, une fenêtre"],
+      ["retour", "Retour", retour, "revenir en arrière"],
+      ["fleche", "Flèche", fleche, "suivant, page suivante (vers la droite ; les autres directions en la tournant en CSS)"],
+      ["valider", "Valider", valider, "confirmer, c'est fait"],
+      ["zoom_plus", "Zoom avant", zoomPlus, "rapprocher la vue"],
+      ["zoom_moins", "Zoom arrière", zoomMoins, "éloigner la vue"],
+      ["plein_ecran", "Plein écran", pleinEcran, "passer en plein écran"],
+      ["reglages", "Réglages", reglages, "les réglages"],
+      ["son", "Son", son, "le son allumé"],
+      ["son_coupe", "Son coupé", sonCoupe, "le son coupé"],
+      ["musique", "Musique", musique, "la musique"],
+      // les actions des bâtiments
+      ["batir", "Bâtir", batir, "bâtir sur un chantier"],
+      ["evoluer", "Faire évoluer", evoluer, "faire passer un bâtiment au palier suivant"],
+      ["annexes", "Annexes", annexes, "l'onglet des annexes, poser une annexe"],
+      ["deplacer", "Déplacer", deplacer, "déplacer un bâtiment, une annexe"],
+      ["tourner", "Tourner", tourner, "tourner un bâtiment, une annexe"],
+      ["temps", "Temps", temps, "le temps qu'il reste (production, évolution, expédition)"],
+      // récompenses et boutique
+      ["etoile", "Étoile", etoileIcone, "une récompense, un palier, une note"],
+      ["cadeau", "Cadeau", cadeau, "un cadeau, une récompense à ouvrir"],
+      ["coffre", "Coffre", coffreIcone, "les coffres (le bouton, la liste)"],
+      ["boutique", "Boutique", boutique, "la boutique"],
+      ["quete", "Quête", quete, "une quête à prendre ou à rendre"],
+      ["succes", "Succès", succes, "les succès"],
+      ["nouveau", "Nouveau", nouveau, "quelque chose de nouveau (pastille sur un bouton)"],
+      // le perso et les autres
+      ["profil", "Profil", profil, "le profil du joueur, son avatar"],
+      ["garde_robe", "Garde-robe", gardeRobe, "la garde-robe de l'avatar"],
+      ["amis", "Amis", amis, "les amis"],
+      ["visite", "Visites", visite, "visiter une île, les visites reçues"],
+      ["messages", "Messages", messages, "les messages"],
+      ["notifications", "Notifications", notifications, "les notifications"]
     ];
     module.exports = { ICONES: ICONES2 };
   }

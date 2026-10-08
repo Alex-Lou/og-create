@@ -2,7 +2,8 @@
  "_lisez_moi": [
   "Les icônes de l'interface, au trait de la bibliothèque : la barre du bas (Grimoire, Île, Défis, Sceau, et le sac, les tâches et le menu de la v6, HISTOIRE.md § 9, étapes 4 et 6), l'écu, les ressources, les boutons de l'île ; les fiches (besoins, humeurs, amitié, verrou, inconnu, étincelle, chapitre, plan, carte, pousse) et les trouvailles des climats.",
   "Carré 32 × 32, sans marge à retirer : les afficher de 16 à 32 px (en <img>, ou en SVG en ligne). Elles se lisent sur le papier clair comme sur le verre sombre des boutons de l'île. Pour un onglet inactif ou un cœur pas encore gagné, les éteindre en CSS (opacity, filter: saturate(.4) ou grayscale(1)) plutôt que de les redessiner.",
-  "sert : où le jeu s'en sert. Les petites commandes (fermer, flèches, zoom, plein écran) restent des pictos au trait du jeu. L'heure et la météo ont déjà leurs icônes : svg/meteo/icones (temps, moments)."
+  "sert : où le jeu s'en sert. L'heure et la météo ont déjà leurs icônes : svg/meteo/icones (temps, moments).",
+  "Les commandes (fermer, retour, flèche, valider, zoom, plein écran, réglages, son, musique) sont des pastilles rondes et colorées, leur signe blanc : la flèche va vers la droite, la tourner en CSS (rotate) pour les autres directions. Puis les actions des bâtiments (bâtir, faire évoluer, annexes, déplacer, tourner, temps), les récompenses et la boutique (étoile, cadeau, coffre, boutique, quête, succès, nouveau), le perso et les autres (profil, garde-robe, amis, visites, messages, notifications)."
  ],
  "icones": {
   "grimoire": {
@@ -484,6 +485,396 @@
    ],
    "fichiers": [
     "obsidienne_icone.svg"
+   ]
+  },
+  "fermer": {
+   "nom": "Fermer (icône)",
+   "sert": "fermer une fiche, une fenêtre",
+   "cadre": [
+    0,
+    0,
+    32,
+    32
+   ],
+   "fichiers": [
+    "fermer_icone.svg"
+   ]
+  },
+  "retour": {
+   "nom": "Retour (icône)",
+   "sert": "revenir en arrière",
+   "cadre": [
+    0,
+    0,
+    32,
+    32
+   ],
+   "fichiers": [
+    "retour_icone.svg"
+   ]
+  },
+  "fleche": {
+   "nom": "Flèche (icône)",
+   "sert": "suivant, page suivante (vers la droite ; les autres directions en la tournant en CSS)",
+   "cadre": [
+    0,
+    0,
+    32,
+    32
+   ],
+   "fichiers": [
+    "fleche_icone.svg"
+   ]
+  },
+  "valider": {
+   "nom": "Valider (icône)",
+   "sert": "confirmer, c'est fait",
+   "cadre": [
+    0,
+    0,
+    32,
+    32
+   ],
+   "fichiers": [
+    "valider_icone.svg"
+   ]
+  },
+  "zoom_plus": {
+   "nom": "Zoom avant (icône)",
+   "sert": "rapprocher la vue",
+   "cadre": [
+    0,
+    0,
+    32,
+    32
+   ],
+   "fichiers": [
+    "zoom_plus_icone.svg"
+   ]
+  },
+  "zoom_moins": {
+   "nom": "Zoom arrière (icône)",
+   "sert": "éloigner la vue",
+   "cadre": [
+    0,
+    0,
+    32,
+    32
+   ],
+   "fichiers": [
+    "zoom_moins_icone.svg"
+   ]
+  },
+  "plein_ecran": {
+   "nom": "Plein écran (icône)",
+   "sert": "passer en plein écran",
+   "cadre": [
+    0,
+    0,
+    32,
+    32
+   ],
+   "fichiers": [
+    "plein_ecran_icone.svg"
+   ]
+  },
+  "reglages": {
+   "nom": "Réglages (icône)",
+   "sert": "les réglages",
+   "cadre": [
+    0,
+    0,
+    32,
+    32
+   ],
+   "fichiers": [
+    "reglages_icone.svg"
+   ]
+  },
+  "son": {
+   "nom": "Son (icône)",
+   "sert": "le son allumé",
+   "cadre": [
+    0,
+    0,
+    32,
+    32
+   ],
+   "fichiers": [
+    "son_icone.svg"
+   ]
+  },
+  "son_coupe": {
+   "nom": "Son coupé (icône)",
+   "sert": "le son coupé",
+   "cadre": [
+    0,
+    0,
+    32,
+    32
+   ],
+   "fichiers": [
+    "son_coupe_icone.svg"
+   ]
+  },
+  "musique": {
+   "nom": "Musique (icône)",
+   "sert": "la musique",
+   "cadre": [
+    0,
+    0,
+    32,
+    32
+   ],
+   "fichiers": [
+    "musique_icone.svg"
+   ]
+  },
+  "batir": {
+   "nom": "Bâtir (icône)",
+   "sert": "bâtir sur un chantier",
+   "cadre": [
+    0,
+    0,
+    32,
+    32
+   ],
+   "fichiers": [
+    "batir_icone.svg"
+   ]
+  },
+  "evoluer": {
+   "nom": "Faire évoluer (icône)",
+   "sert": "faire passer un bâtiment au palier suivant",
+   "cadre": [
+    0,
+    0,
+    32,
+    32
+   ],
+   "fichiers": [
+    "evoluer_icone.svg"
+   ]
+  },
+  "annexes": {
+   "nom": "Annexes (icône)",
+   "sert": "l'onglet des annexes, poser une annexe",
+   "cadre": [
+    0,
+    0,
+    32,
+    32
+   ],
+   "fichiers": [
+    "annexes_icone.svg"
+   ]
+  },
+  "deplacer": {
+   "nom": "Déplacer (icône)",
+   "sert": "déplacer un bâtiment, une annexe",
+   "cadre": [
+    0,
+    0,
+    32,
+    32
+   ],
+   "fichiers": [
+    "deplacer_icone.svg"
+   ]
+  },
+  "tourner": {
+   "nom": "Tourner (icône)",
+   "sert": "tourner un bâtiment, une annexe",
+   "cadre": [
+    0,
+    0,
+    32,
+    32
+   ],
+   "fichiers": [
+    "tourner_icone.svg"
+   ]
+  },
+  "temps": {
+   "nom": "Temps (icône)",
+   "sert": "le temps qu'il reste (production, évolution, expédition)",
+   "cadre": [
+    0,
+    0,
+    32,
+    32
+   ],
+   "fichiers": [
+    "temps_icone.svg"
+   ]
+  },
+  "etoile": {
+   "nom": "Étoile (icône)",
+   "sert": "une récompense, un palier, une note",
+   "cadre": [
+    0,
+    0,
+    32,
+    32
+   ],
+   "fichiers": [
+    "etoile_icone.svg"
+   ]
+  },
+  "cadeau": {
+   "nom": "Cadeau (icône)",
+   "sert": "un cadeau, une récompense à ouvrir",
+   "cadre": [
+    0,
+    0,
+    32,
+    32
+   ],
+   "fichiers": [
+    "cadeau_icone.svg"
+   ]
+  },
+  "coffre": {
+   "nom": "Coffre (icône)",
+   "sert": "les coffres (le bouton, la liste)",
+   "cadre": [
+    0,
+    0,
+    32,
+    32
+   ],
+   "fichiers": [
+    "coffre_icone.svg"
+   ]
+  },
+  "boutique": {
+   "nom": "Boutique (icône)",
+   "sert": "la boutique",
+   "cadre": [
+    0,
+    0,
+    32,
+    32
+   ],
+   "fichiers": [
+    "boutique_icone.svg"
+   ]
+  },
+  "quete": {
+   "nom": "Quête (icône)",
+   "sert": "une quête à prendre ou à rendre",
+   "cadre": [
+    0,
+    0,
+    32,
+    32
+   ],
+   "fichiers": [
+    "quete_icone.svg"
+   ]
+  },
+  "succes": {
+   "nom": "Succès (icône)",
+   "sert": "les succès",
+   "cadre": [
+    0,
+    0,
+    32,
+    32
+   ],
+   "fichiers": [
+    "succes_icone.svg"
+   ]
+  },
+  "nouveau": {
+   "nom": "Nouveau (icône)",
+   "sert": "quelque chose de nouveau (pastille sur un bouton)",
+   "cadre": [
+    0,
+    0,
+    32,
+    32
+   ],
+   "fichiers": [
+    "nouveau_icone.svg"
+   ]
+  },
+  "profil": {
+   "nom": "Profil (icône)",
+   "sert": "le profil du joueur, son avatar",
+   "cadre": [
+    0,
+    0,
+    32,
+    32
+   ],
+   "fichiers": [
+    "profil_icone.svg"
+   ]
+  },
+  "garde_robe": {
+   "nom": "Garde-robe (icône)",
+   "sert": "la garde-robe de l'avatar",
+   "cadre": [
+    0,
+    0,
+    32,
+    32
+   ],
+   "fichiers": [
+    "garde_robe_icone.svg"
+   ]
+  },
+  "amis": {
+   "nom": "Amis (icône)",
+   "sert": "les amis",
+   "cadre": [
+    0,
+    0,
+    32,
+    32
+   ],
+   "fichiers": [
+    "amis_icone.svg"
+   ]
+  },
+  "visite": {
+   "nom": "Visites (icône)",
+   "sert": "visiter une île, les visites reçues",
+   "cadre": [
+    0,
+    0,
+    32,
+    32
+   ],
+   "fichiers": [
+    "visite_icone.svg"
+   ]
+  },
+  "messages": {
+   "nom": "Messages (icône)",
+   "sert": "les messages",
+   "cadre": [
+    0,
+    0,
+    32,
+    32
+   ],
+   "fichiers": [
+    "messages_icone.svg"
+   ]
+  },
+  "notifications": {
+   "nom": "Notifications (icône)",
+   "sert": "les notifications",
+   "cadre": [
+    0,
+    0,
+    32,
+    32
+   ],
+   "fichiers": [
+    "notifications_icone.svg"
    ]
   }
  }
