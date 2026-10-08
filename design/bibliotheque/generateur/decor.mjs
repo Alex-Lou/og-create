@@ -2115,11 +2115,11 @@ var require_decor2 = __commonJS({
       // pointe éclairée, reflet) qui scintillent ; ramassés, des moignons dans la neige
       glace: {
         frames: [[-30, -46, 60, 56], [-24, -16, 48, 26]],
-        draw: /* @__PURE__ */ __name((spent, f) => {
+        draw: /* @__PURE__ */ __name((spent, f, t = 1) => {
           const neige = /* @__PURE__ */ __name((rx, ry) => {
             const n = 14, pts3 = Array.from({ length: n }, (_, i) => {
-              const t = i / n * TAU2, r = 1 + (i % 2 ? 0.06 : -0.03);
-              return [Math.cos(t) * rx * r, 1 + Math.sin(t) * ry * r];
+              const t2 = i / n * TAU2, r = 1 + (i % 2 ? 0.06 : -0.03);
+              return [Math.cos(t2) * rx * r, 1 + Math.sin(t2) * ry * r];
             });
             const m = /* @__PURE__ */ __name((i) => {
               const p = pts3[i % n], q = pts3[(i + 1) % n];
@@ -2134,7 +2134,8 @@ var require_decor2 = __commonJS({
             return pg([bl, tip, fb], "#C9ECFA", 0) + pg([fb, tip, br], "#8CCBE8", 0) + pg([tip, [bl[0] + (tip[0] - bl[0]) * 0.72, bl[1] + (tip[1] - bl[1]) * 0.72], [fb[0] + (tip[0] - fb[0]) * 0.72, fb[1] + (tip[1] - fb[1]) * 0.72]], "#F6FDFF", 0) + L([x - w * 0.45, y - h * 0.12], [x - w * 0.15 + lean * 0.6, y - h * 0.6], "rgba(255,255,255,.9)", 0.7) + pg([bl, tip, br, fb], "none", W * 0.9);
           }, "facette");
           if (spent) return neige(14, 5) + facette(-6, 1, 5, 3.4, -1) + facette(5, 1.6, 6, 3.6, 1) + facette(0, 3.4, 4, 3);
-          return shade(0, 2, 18, 6, 0.12) + neige(19, 7) + facette(-12, 0, 13, 3.6, -3) + facette(-7, -1, 21, 4.6, -1.5) + facette(9, -1, 15, 4, 2.6) + facette(13, 1.4, 9, 3, 3) + facette(-1, 2.4, 33, 6.2, 0.6) + facette(5, 4.6, 18, 4.4, 1.6) + facette(-5, 5, 10, 3.2, -1) + E(-1, 6.4, 9, 1.8, "#FFFFFF", 0) + (f ? star2(9, -17, 2.6) + star2(-8, -22, 2.2) : star2(0, -31, 3.2) + star2(14, -8, 1.8));
+          const fa = /* @__PURE__ */ __name((x, y, h, w, lean) => facette(x, y, h * t, w * (0.5 + 0.5 * t), lean * t), "fa");
+          return shade(0, 2, 18, 6, 0.12) + neige(19, 7) + fa(-12, 0, 13, 3.6, -3) + fa(-7, -1, 21, 4.6, -1.5) + fa(9, -1, 15, 4, 2.6) + fa(13, 1.4, 9, 3, 3) + fa(-1, 2.4, 33, 6.2, 0.6) + fa(5, 4.6, 18, 4.4, 1.6) + fa(-5, 5, 10, 3.2, -1) + E(-1, 6.4, 9, 1.8, "#FFFFFF", 0) + (t < 0.6 ? "" : f ? star2(9, -17 * t, 2.6) + star2(-8, -22 * t, 2.2) : star2(0, -31 * t, 3.2) + star2(14, -8 * t, 1.8));
         }, "draw")
       },
       // Moutons à tondre : un pré aux bords bosselés, ses touffes et ses fleurettes ; deux brebis laineuses en bouclettes
@@ -2142,11 +2143,11 @@ var require_decor2 = __commonJS({
       // broutent au milieu des flocons de laine tombés
       laine: {
         frames: [[-30, -26, 60, 34], [-30, -24, 60, 32]],
-        draw: /* @__PURE__ */ __name((spent, f) => {
+        draw: /* @__PURE__ */ __name((spent, f, t = 1) => {
           const pre = /* @__PURE__ */ __name(() => {
             const n = 16, rx = 25, ry = 6.4, pts3 = Array.from({ length: n }, (_, i) => {
-              const t = i / n * TAU2, r = 1 + (i % 2 ? 0.05 : -0.03);
-              return [Math.cos(t) * rx * r, 0.4 + Math.sin(t) * ry * r];
+              const t2 = i / n * TAU2, r = 1 + (i % 2 ? 0.05 : -0.03);
+              return [Math.cos(t2) * rx * r, 0.4 + Math.sin(t2) * ry * r];
             });
             const m = /* @__PURE__ */ __name((i) => {
               const p = pts3[i % n], q = pts3[(i + 1) % n];
@@ -2156,13 +2157,13 @@ var require_decor2 = __commonJS({
             for (let i = 0; i < n; i++) d += ` Q${r23(pts3[i][0])},${r23(pts3[i][1])} ${m(i)}`;
             return P2(d + " Z", "#9CC874", W) + E(-3, 0.2, 18, 4, "#AED486", 0);
           }, "pre");
-          const brebis = /* @__PURE__ */ __name((x, y, laineux, broute, flip = false) => {
+          const brebis = /* @__PURE__ */ __name((x, y, laineux, broute, flip = false, l2 = 1) => {
             const s = flip ? -1 : 1, Lc = laineux ? "#F7F2E6" : "#EFDCCF", LS = laineux ? "#E2D8C4" : "#DCC4B6";
             let o = shade(x, y + 1.4, 8.6, 2.2) + [-4.4, -1.8, 2, 4.6].map((dx, i) => line(`M${r23(x + s * dx)},${r23(y - 2.6)} L${r23(x + s * dx)},${r23(y + 1.2)}`, 1.8, OUT3) + line(`M${r23(x + s * dx)},${r23(y - 2.6)} L${r23(x + s * dx)},${r23(y + 0.8)}`, 1, i % 2 ? "#5E5660" : "#463F48")).join("");
             o += '<g transform="translate(0 1.1)">' + E(x - s * 7.4, y - 6, 1.7, 1.6, Lc, W * 0.8);
             if (laineux) {
               const B = [[-6, -6.4, 3.1], [-3.4, -9.2, 3.3], [0.4, -9.8, 3.5], [4, -8.8, 3.2], [6.2, -6.2, 2.9], [3.4, -4.6, 3.3], [-1, -4.4, 3.5], [-5, -4.6, 2.9]];
-              o += B.map(([dx, dy, r]) => E(x + s * dx, y + dy, r + W, r + W, OUT3, 0)).join("") + B.map(([dx, dy, r]) => E(x + s * dx, y + dy, r, r, Lc, 0)).join("") + E(x + s * 0.5, y - 3.4, 6, 1.5, LS, 0) + [[-3.6, -7.2], [0.6, -7.8], [3.8, -6.6], [-1.6, -4.8], [2.6, -4.4], [-5, -5]].map(([dx, dy]) => line(`M${r23(x + s * dx - 1)},${r23(y + dy)} q1,-1.2 2,0`, 0.6, LS)).join("") + E(x - s * 1.4, y - 9.6, 2, 0.8, "#FFFFFF", 0);
+              o += B.map(([dx, dy, r]) => E(x + s * dx, y + dy, r * l2 + W, r * l2 + W, OUT3, 0)).join("") + B.map(([dx, dy, r]) => E(x + s * dx, y + dy, r * l2, r * l2, Lc, 0)).join("") + E(x + s * 0.5, y - 3.4, 6, 1.5, LS, 0) + [[-3.6, -7.2], [0.6, -7.8], [3.8, -6.6], [-1.6, -4.8], [2.6, -4.4], [-5, -5]].map(([dx, dy]) => line(`M${r23(x + s * dx - 1)},${r23(y + dy)} q1,-1.2 2,0`, 0.6, LS)).join("") + E(x - s * 1.4, y - 9.6, 2, 0.8, "#FFFFFF", 0);
             } else {
               o += P2(`M${r23(x - 6.8)},${r23(y - 4)} Q${r23(x - 7.2)},${r23(y - 8.6)} ${r23(x - 2)},${r23(y - 8.8)} L${r23(x + 3)},${r23(y - 9)} Q${r23(x + 7.4)},${r23(y - 8.6)} ${r23(x + 6.8)},${r23(y - 4)} Q${r23(x + 6)},${r23(y - 1.6)} ${x},${r23(y - 1.8)} Q${r23(x - 6.2)},${r23(y - 1.6)} ${r23(x - 6.8)},${r23(y - 4)} Z`, Lc, W) + [[-3.6, -6.8], [0.4, -7.4], [3.8, -6.6], [-1.6, -4.4], [2.4, -4.2]].map(([dx, dy]) => E(x + s * dx, y + dy, 0.9, 0.7, "#F8EAE0", 0)).join("") + E(x + s, y - 2.8, 5.2, 0.9, LS, 0);
             }
@@ -2171,7 +2172,8 @@ var require_decor2 = __commonJS({
           }, "brebis");
           const deco = tuft3(-23, 3) + tuft3(19, 4.6) + tuft3(-4, 5.6) + flower(-17, 4.6, 1.1, "#FFFFFF") + flower(21, 0.6, 1.1, "#F7B6C8") + flower(12, 5.6, 1, "#FFFFFF");
           if (spent) return pre() + deco + [[-20, 0], [-2, 5], [16, -1], [0, -4]].map(([x, y]) => E(x, y, 1.6, 1.1, "#F7F2E6", 0.6) + E(x + 1.2, y - 0.4, 1, 0.8, "#F7F2E6", 0.5)).join("") + brebis(-11, -2, false, 1) + brebis(6, 4, false, 0);
-          return pre() + deco + brebis(-11, -2, true, f ? 0 : 1) + brebis(6, 4, true, f ? 1 : 0);
+          const l = 0.6 + 0.4 * t;
+          return pre() + deco + brebis(-11, -2, true, f ? 0 : 1, false, l) + brebis(6, 4, true, f ? 1 : 0, false, l);
         }, "draw")
       },
       // Roseaux : une petite mare à la berge herbue, ses reflets et ses ronds ; une touffe de massettes cernées aux épis
@@ -2179,7 +2181,7 @@ var require_decor2 = __commonJS({
       // tiges courtes au biseau clair
       roseau: {
         frames: [[-24, -44, 48, 52], [-20, -14, 40, 22]],
-        draw: /* @__PURE__ */ __name((spent, f) => {
+        draw: /* @__PURE__ */ __name((spent, f, t = 1) => {
           const mare = /* @__PURE__ */ __name((rx, ry) => E(0, 1.4, rx + 2.4, ry + 1.6, "#86B852", W) + E(0, 1.4, rx, ry, "#7FC0E2", W) + E(-rx * 0.25, 0.8, rx * 0.55, ry * 0.45, "#A6D8F0", 0) + line(`M${r23(-rx * 0.5)},${r23(ry * 0.5)} l4,-0.5 M${r23(rx * 0.2)},${r23(ry * 0.8)} l3,-0.4`, 0.8, "#FFFFFF"), "mare");
           const lame = /* @__PURE__ */ __name((x, y, h, sw2, c) => {
             const d = `M${r23(x - 1.1)},${y} Q${r23(x + sw2 * 0.4 - 1)},${r23(y - h * 0.55)} ${r23(x + sw2)},${r23(y - h)} Q${r23(x + sw2 * 0.4 + 1.2)},${r23(y - h * 0.5)} ${r23(x + 1.1)},${y} Z`;
@@ -2194,12 +2196,13 @@ var require_decor2 = __commonJS({
             return tk2(`M${dx},${yb} L${r23(dx + 0.3)},${r23(yb - h)}`, 1.2, "#5F8F3C") + pg([[dx - 0.8, yb - h + 0.6], [dx + 1.4, yb - h - 0.6], [dx + 1.4, yb - h + 0.4]], "#C8DC8A", 0);
           }).join("") + lame(-6, 2, 5, -1.4, "#7FA45A") + lame(6, 2.4, 6, 1.6, "#8FB866");
           const sw = /* @__PURE__ */ __name((k) => (f ? 1.6 : -1.4) * (0.6 + k % 3 * 0.3), "sw");
+          const g = 0.5 + 0.5 * t;
           let o = shade(0, 2, 17, 5, 0.12) + mare(14, 4.6);
-          o += lame(-11, 1, 16, -4 + sw(0) * 0.5, "#7FA45A") + lame(9, 1.4, 18, 4 + sw(1) * 0.5, "#7FA45A");
-          [[-12, 20], [-9, 26], [-5, 32], [-1, 36], [3, 30], [7, 34], [11, 24]].forEach(([dx, h], k) => {
-            o += massette(dx, k % 2 * 2, h, sw(k));
+          o += lame(-11, 1, 16 * g, -4 + sw(0) * 0.5, "#7FA45A") + lame(9, 1.4, 18 * g, 4 + sw(1) * 0.5, "#7FA45A");
+          if (t > 0.5) [[-12, 20], [-9, 26], [-5, 32], [-1, 36], [3, 30], [7, 34], [11, 24]].forEach(([dx, h], k) => {
+            o += massette(dx, k % 2 * 2, h * t, sw(k));
           });
-          o += lame(-7, 2.4, 12, -2.4 + sw(2) * 0.4, "#8FB866") + lame(1, 3, 14, 1.4 + sw(3) * 0.4, "#8FB866") + lame(6, 2.6, 10, 2.6 + sw(4) * 0.4, "#9CC470");
+          o += lame(-7, 2.4, 12 * g, -2.4 + sw(2) * 0.4, "#8FB866") + lame(1, 3, 14 * g, 1.4 + sw(3) * 0.4, "#8FB866") + lame(6, 2.6, 10 * g, 2.6 + sw(4) * 0.4, "#9CC470");
           return o + P2("M8,4.4 a3.4,1.3 0 1 1 1,1 Z", "#6FAE4E", W * 0.7) + E(8.6, 3.6, 1.1, 0.8, "#F7B6CE", 0.5) + `<ellipse cx="-6" cy="5" rx="${2.4 + f}" ry="${0.8 + f * 0.3}" fill="none" stroke="#E2F4FC" stroke-width="0.6"/>`;
         }, "draw")
       },
@@ -2207,11 +2210,11 @@ var require_decor2 = __commonJS({
       // sel empilés qui accrochent le soleil ; ramassée, une croûte grise grattée, ses fentes et quelques grains
       sel: {
         frames: [[-30, -26, 60, 36], [-26, -10, 52, 20]],
-        draw: /* @__PURE__ */ __name((spent, f) => {
+        draw: /* @__PURE__ */ __name((spent, f, t = 1) => {
           const plaque = /* @__PURE__ */ __name((rx, ry, fill, edge) => {
             const n = 16, pts3 = Array.from({ length: n }, (_, i) => {
-              const t = i / n * TAU2, r = 1 + (i % 2 ? 0.05 : -0.03);
-              return [Math.cos(t) * rx * r, 0.6 + Math.sin(t) * ry * r];
+              const t2 = i / n * TAU2, r = 1 + (i % 2 ? 0.05 : -0.03);
+              return [Math.cos(t2) * rx * r, 0.6 + Math.sin(t2) * ry * r];
             });
             const m = /* @__PURE__ */ __name((i) => {
               const p = pts3[i % n], q = pts3[(i + 1) % n];
@@ -2223,16 +2226,17 @@ var require_decor2 = __commonJS({
           }, "plaque");
           const alveoles = /* @__PURE__ */ __name((c) => line("M-16,-1 l5,-2 l6,1 l4,-2 l7,1 M-11,-3 l1,4 l-4,3 M-5,-2 l2,4 l6,1 l2,3 M3,-3 l1,4 l7,1 M11,2 l3,-3 M-8,4 l5,1", 0.7, c), "alveoles");
           if (spent) return plaque(20, 7.6, "#E2DAD0", "#D6CCC0") + alveoles("#B8AB9A") + line("M-12,-1 q4,2 8,0 M4,3 q4,-1.6 8,0", 0.9, "#C8BCAC") + [[-6, 1], [7, -1], [1, 4]].map(([x, y]) => E(x, y, 1, 0.7, "#FFFFFF", 0.4)).join("");
-          return shade(0, 2, 22, 7, 0.12) + plaque(22, 8.4, "#FFFFFF", "#F2EEE8") + E(7, 0.4, 8.6, 3, "#F4C6D0", 0.5) + E(5.6, -0.2, 4.6, 1.3, "#FBE2E8", 0) + alveoles("#DDD3C8") + cube(-13, 0.6, 2.2) + cube(-2, -2.6, 2.8) + cube(11, -2, 2.4) + cube(-7, 3, 3.2) + cube(3.6, 3.4, 3.8) + cube(14, 3, 1.9) + cube(-15, 4, 1.5) + (f ? star2(-8, -6, 2.4) + star2(14, -7, 1.6) : star2(4, -8, 2.8) + star2(-13, -3, 1.6));
+          return shade(0, 2, 22, 7, 0.12) + plaque(22, 8.4, "#FFFFFF", "#F2EEE8") + E(7, 0.4, 8.6, 3, "#F4C6D0", 0.5) + E(5.6, -0.2, 4.6, 1.3, "#FBE2E8", 0) + alveoles("#DDD3C8") + cube(-13, 0.6, 2.2 * t) + cube(-2, -2.6, 2.8 * t) + cube(11, -2, 2.4 * t) + cube(-7, 3, 3.2 * t) + cube(3.6, 3.4, 3.8 * t) + cube(14, 3, 1.9 * t) + cube(-15, 4, 1.5 * t) + (t < 0.6 ? "" : f ? star2(-8, -6, 2.4) + star2(14, -7, 1.6) : star2(4, -8, 2.8) + star2(-13, -3, 1.6));
         }, "draw")
       },
       // Arbre à fruits : un petit manguier (l'arbre refait, en vert profond) chargé de mangues dorées, rosies au soleil, qui
       // se balance ; cueilli, il garde ses feuilles
       fruits: {
         frames: [[-24, -50, 48, 58], [-24, -50, 48, 58]],
-        draw: /* @__PURE__ */ __name((spent, f) => {
-          const mangue = /* @__PURE__ */ __name((x, y, s, i) => P2(`M${r23(x)},${r23(y - 2.4 * s)} Q${r23(x + 2.5 * s)},${r23(y - 2 * s)} ${r23(x + 2.1 * s)},${r23(y + 0.9 * s)} Q${r23(x + 1.3 * s)},${r23(y + 3 * s)} ${r23(x - 0.4 * s)},${r23(y + 2.7 * s)} Q${r23(x - 2.5 * s)},${r23(y + 1.7 * s)} ${r23(x - 1.9 * s)},${r23(y - 0.6 * s)} Q${r23(x - 1.3 * s)},${r23(y - 2.6 * s)} ${r23(x)},${r23(y - 2.4 * s)} Z`, "#F6C443", 0.9) + E(x + 0.7 * s, y + 1.1 * s, 1.2 * s, 0.9 * s, i % 3 ? "#F2924A" : "#EE7A5A", 0) + E(x - 0.8 * s, y - 0.9 * s, 0.45 * s, 0.7 * s, "#FFF6D0", 0) + line(`M${r23(x)},${r23(y - 2.3 * s)} q0.3,-1.4 1,-2`, 0.9, OUT3), "mangue");
-          const fruits = spent ? "" : [[-20, -38], [-11, -45], [-25, -45], [-5, -36], [3, -51], [10, -39], [18, -35], [21, -43], [-2, -59], [12, -56]].map(([x, y], i) => mangue(x, y, 1.15, i)).join("");
+        draw: /* @__PURE__ */ __name((spent, f, t = 1) => {
+          const peau = t < 0.5 ? "#9CCB5A" : t < 1 ? "#E2D45A" : "#F6C443", joue = t < 0.5 ? "#7FB24A" : t < 1 ? "#E8B04A" : null;
+          const mangue = /* @__PURE__ */ __name((x, y, s, i) => P2(`M${r23(x)},${r23(y - 2.4 * s)} Q${r23(x + 2.5 * s)},${r23(y - 2 * s)} ${r23(x + 2.1 * s)},${r23(y + 0.9 * s)} Q${r23(x + 1.3 * s)},${r23(y + 3 * s)} ${r23(x - 0.4 * s)},${r23(y + 2.7 * s)} Q${r23(x - 2.5 * s)},${r23(y + 1.7 * s)} ${r23(x - 1.9 * s)},${r23(y - 0.6 * s)} Q${r23(x - 1.3 * s)},${r23(y - 2.6 * s)} ${r23(x)},${r23(y - 2.4 * s)} Z`, peau, 0.9) + E(x + 0.7 * s, y + 1.1 * s, 1.2 * s, 0.9 * s, joue || (i % 3 ? "#F2924A" : "#EE7A5A"), 0) + E(x - 0.8 * s, y - 0.9 * s, 0.45 * s, 0.7 * s, "#FFF6D0", 0) + line(`M${r23(x)},${r23(y - 2.3 * s)} q0.3,-1.4 1,-2`, 0.9, OUT3), "mangue");
+          const fruits = spent ? "" : [[-20, -38], [-11, -45], [-25, -45], [-5, -36], [3, -51], [10, -39], [18, -35], [21, -43], [-2, -59], [12, -56]].map(([x, y], i) => mangue(x, y, 1.15 * (0.55 + 0.45 * t), i)).join("");
           return `<g transform="rotate(${spent ? 0 : f ? 1.2 : -1.2}) scale(${r23(0.86 / K2)})">${arbre({ vert: "profond", petit: true })}${fruits}</g>`;
         }, "draw")
       },
@@ -2240,11 +2244,11 @@ var require_decor2 = __commonJS({
       // reflet violet, qui luisent de braises au pied ; ramassés, des cailloux sombres dans la cendre
       obsidienne: {
         frames: [[-28, -38, 56, 48], [-22, -12, 44, 20]],
-        draw: /* @__PURE__ */ __name((spent, f) => {
+        draw: /* @__PURE__ */ __name((spent, f, t = 1) => {
           const cendre = /* @__PURE__ */ __name((rx, ry) => {
             const n = 14, pts3 = Array.from({ length: n }, (_, i) => {
-              const t = i / n * TAU2, r = 1 + (i % 2 ? 0.06 : -0.03);
-              return [Math.cos(t) * rx * r, 1 + Math.sin(t) * ry * r];
+              const t2 = i / n * TAU2, r = 1 + (i % 2 ? 0.06 : -0.03);
+              return [Math.cos(t2) * rx * r, 1 + Math.sin(t2) * ry * r];
             });
             const m = /* @__PURE__ */ __name((i) => {
               const p = pts3[i % n], q = pts3[(i + 1) % n];
@@ -2261,7 +2265,8 @@ var require_decor2 = __commonJS({
           }, "lame");
           const braises = line("M-12,3 l3,1.4 l3,-1 M6,4 l3,-1.2 l3,1", 1.2, "#E0602E") + line("M-12,3 l3,1.4 l3,-1 M6,4 l3,-1.2 l3,1", 0.5, "#FFC46A");
           if (spent) return cendre(14, 5) + caillou(-4, 1.4, 4.6, 3) + caillou(6, 2.4, 3.8, 2.6) + caillou(1, 4.8, 3, 2);
-          return shade(0, 2, 16, 5, 0.18) + cendre(17, 6) + braises + E(0, 2, 13, 3.6, `rgba(255,120,50,${f ? 0.3 : 0.18})`, 0) + lame(-10, 0, 13, 4, -3) + lame(-6, -1, 19, 4.6, -1.4) + lame(8, 0, 17, 4.6, 2.4) + lame(12, 2, 9, 3, 2.6) + caillou(7, 6, 4, 2.6) + lame(0, 3.4, 26, 5.8, 0.4) + lame(-4, 5, 10, 3.2, -1) + E(-5, 4, 1.4, 0.8, f ? "#FF8A4A" : "#E8573A", 0) + E(4, 6.4, 1, 0.6, f ? "#FFB04A" : "#E8573A", 0) + (f ? star2(0, -24, 2.4) + star2(-7, -17, 1.6) : star2(9, -15, 1.8));
+          const la = /* @__PURE__ */ __name((x, y, h, w, lean) => lame(x, y, h * t, w * (0.5 + 0.5 * t), lean * t), "la");
+          return shade(0, 2, 16, 5, 0.18) + cendre(17, 6) + braises + E(0, 2, 13, 3.6, `rgba(255,120,50,${f ? 0.3 : 0.18})`, 0) + la(-10, 0, 13, 4, -3) + la(-6, -1, 19, 4.6, -1.4) + la(8, 0, 17, 4.6, 2.4) + la(12, 2, 9, 3, 2.6) + caillou(7, 6, 4, 2.6) + la(0, 3.4, 26, 5.8, 0.4) + la(-4, 5, 10, 3.2, -1) + E(-5, 4, 1.4, 0.8, f ? "#FF8A4A" : "#E8573A", 0) + E(4, 6.4, 1, 0.6, f ? "#FFB04A" : "#E8573A", 0) + (t < 0.6 ? "" : f ? star2(0, -24 * t, 2.4) + star2(-7, -17 * t, 1.6) : star2(9, -15 * t, 1.8));
         }, "draw")
       }
     };
@@ -7004,6 +7009,7 @@ function inventaire() {
   for (const [id3, g] of Object.entries(G)) {
     add({ cat: "gisements", dir: "gisements", base: `${id3}_pret`, label: `${GISEMENTS[id3]} — prêt`, frame: big(g.frames[0]), frames: [0, 1].map((f) => up(g.draw(false, f))), ms: 450 });
     add({ cat: "gisements", dir: "gisements", base: `${id3}_ramasse`, label: `${GISEMENTS[id3]} — ramassé`, frame: big(g.frames[1]), frames: [up(g.draw(true, 0))] });
+    for (const [k, t] of [[1, 0.35], [2, 0.7]]) add({ cat: "gisements", dir: "gisements", base: `${id3}_repousse${k}`, label: `${GISEMENTS[id3]} — repousse (${k}/2)`, frame: big(g.frames[0]), frames: [0, 1].map((f) => up(g.draw(false, f, t))), ms: 450 });
   }
   for (const [id3, a] of Object.entries(ANNEX_SPRITES)) {
     const l = a.layers[0];
