@@ -387,6 +387,7 @@ var require_betes = __commonJS({
         s += E(hx + dx, hy + dy, r * 1.1, r * 0.85, col || OUT, 0.6);
       }
       const [edx, edy, er] = c.eye;
+      if (c.iris && mode === "open") s += E(hx + edx, hy + edy, er * 1.1, er * 1.32, c.iris, 0.5);
       s += eye(hx + edx, hy + edy, er, mode);
       if (c.blush !== false) s += E(hx + edx - er * 0.4, hy + edy + er * 1.6, er * 1.05, er * 0.55, "#F7A8B0", 0);
       if (!derriere) s += ear(c, e, hx, hy, hr, false, ctx.pose);
@@ -797,12 +798,16 @@ var require_betes = __commonJS({
       tail: { kind: "otter" },
       parts: { face: /* @__PURE__ */ __name(({ hx, hy, hr }) => E(hx + hr * 0.25, hy + hr * 0.38, hr * 0.75, hr * 0.56, "#E8D2B0", 0) + L2([hx + hr * 0.8, hy + hr * 0.38], [hx + hr * 1.38, hy + hr * 0.2], OUT, 0.35) + L2([hx + hr * 0.8, hy + hr * 0.5], [hx + hr * 1.38, hy + hr * 0.58], OUT, 0.35), "face") }
     });
-    Q.cat = () => ({
-      id: "cat",
+    var CHATS = {
+      roux: { fur: "#E8A050", furS: "#C8803A", belly: "#FFF2E0", rayures: true },
+      noir: { fur: "#45454F", furS: "#30303A", belly: "#5A5A66", rayures: false, moustache: "#D8D8E2", iris: "#E8C850" },
+      gris: { fur: "#A2A2AC", furS: "#7A7A86", belly: "#ECECF2", rayures: true },
+      blanc: { fur: "#F6F2EA", furS: "#D8D0C2", belly: "#FFFFFF", rayures: false, taches: ["#E8A050", "#45454F"] }
+    };
+    Q.cat = (v) => ({
+      id: "cat" + (v || ""),
       size: "SMALL",
-      fur: "#E8A050",
-      furS: "#C8803A",
-      belly: "#FFF2E0",
+      ...CHATS[v || "roux"],
       // chibi : grosse tête ronde, petit corps, pattes courtes
       body: [-0.8, -5.4, 5, 3.4],
       head: [4.4, -9.2, 4.8],
@@ -814,25 +819,36 @@ var require_betes = __commonJS({
       ears: { kind: "pointy", size: 0.95, inner: "#F2B0B0" },
       tail: { kind: "thin", up: 7, w: 1.3 },
       parts: {
-        coat: /* @__PURE__ */ __name(({ bx, by }) => [-3, -0.6, 1.8].map((x) => `<path d="M${r22(bx + x)},${r22(by - 3.6)} q0.6,1.6 0,3" fill="none" stroke="#C8803A" stroke-width="0.9"/>`).join(""), "coat"),
-        face: /* @__PURE__ */ __name(({ hx, hy }) => L2([hx + 3.4, hy + 1.6], [hx + 5.8, hy + 1.1], OUT, 0.35) + L2([hx + 3.4, hy + 2.1], [hx + 5.8, hy + 2.5], OUT, 0.35), "face")
+        coat: /* @__PURE__ */ __name(({ bx, by }) => {
+          const C = CHATS[v || "roux"];
+          if (C.taches) return E(bx - 1.6, by - 2.2, 2.2, 1.6, C.taches[0], 0) + E(bx + 2, by - 2.6, 1.4, 1.1, C.taches[1], 0);
+          return C.rayures ? [-3, -0.6, 1.8].map((x) => `<path d="M${r22(bx + x)},${r22(by - 3.6)} q0.6,1.6 0,3" fill="none" stroke="${C.furS}" stroke-width="0.9"/>`).join("") : "";
+        }, "coat"),
+        face: /* @__PURE__ */ __name(({ hx, hy }) => {
+          const m = CHATS[v || "roux"].moustache || OUT;
+          return L2([hx + 3.4, hy + 1.6], [hx + 5.8, hy + 1.1], m, 0.35) + L2([hx + 3.4, hy + 2.1], [hx + 5.8, hy + 2.5], m, 0.35);
+        }, "face")
       }
     });
-    Q.dog = () => ({
-      id: "dog",
+    var CHIENS = {
+      beige: { fur: "#E0B880", furS: "#C49A62", belly: "#FFF2DE", oreille: "#A8784A" },
+      noir: { fur: "#3E3E48", furS: "#2C2C34", belly: "#F4F2EE", oreille: "#26262E", museau: "#F4F2EE", iris: "#C8924A" },
+      brun: { fur: "#8E5E38", furS: "#704828", belly: "#EAD0AC", oreille: "#5A3A22" },
+      roux: { fur: "#D47C3E", furS: "#B0602C", belly: "#FFE8D2", oreille: "#9A4C22" }
+    };
+    Q.dog = (v) => ({
+      id: "dog" + (v || ""),
       size: "MID",
-      fur: "#E0B880",
-      furS: "#C49A62",
-      belly: "#FFF2DE",
+      ...(({ oreille, museau, ...r }) => r)(CHIENS[v || "beige"]),
       // chibi : grosse tête, oreilles tombantes, pattes courtes
       body: [-1.2, -7.6, 6.6, 4.6],
       head: [6, -12, 5.6],
       restDrop: 1.4,
       legs: { back: -4, front: 3.4, top: -4, w: 2.1, paw: "#FFF2DE" },
-      snout: [3.4, 2, 2.8, 2.1, "#FFF2DE"],
+      snout: [3.4, 2, 2.8, 2.1, CHIENS[v || "beige"].museau || CHIENS[v || "beige"].belly],
       nose: [5.6, 1.2, 0.68, OUT],
       eye: [1.1, -1.1, 1.35],
-      ears: { kind: "hang", size: 1, color: "#A8784A" },
+      ears: { kind: "hang", size: 1, color: CHIENS[v || "beige"].oreille },
       tail: { kind: "thin", up: 5, w: 1.4 },
       parts: { neck: /* @__PURE__ */ __name(({ hx, hy, hr }) => P(`M${r22(hx - hr * 0.82)},${r22(hy + hr * 0.55)} Q${r22(hx - hr * 0.22)},${r22(hy + hr * 1.1)} ${r22(hx + hr * 0.36)},${r22(hy + hr * 0.82)}`, "none", 0).replace('stroke="none"', 'stroke="#E0483C" stroke-width="1.4" stroke-linecap="round"') + E(hx - hr * 0.1, hy + hr * 1.04, 0.7, 0.7, "#F2C94C", 0.5), "neck") }
     });
@@ -1334,8 +1350,9 @@ var require_betes3 = __commonJS({
           return g(P(`M${r22(x - hr * 0.3)},${r22(y + 0.4)} L${r22(x + hr * 0.18)},${r22(y - hr * 0.5 * k)} L${r22(x + hr * 0.62 * k)},${r22(y + hr * 0.42)} Z`, col, 0.9));
         }
         case "hang": {
-          const x = hr * 0.84, y = -hr * 0.5;
-          return g(P(`M${r22(x - hr * 0.28)},${r22(y)} Q${r22(x + hr * 0.42)},${r22(y - hr * 0.2)} ${r22(x + hr * 0.4)},${r22(y + hr * 1.05 * k)} Q${r22(x + hr * 0.02)},${r22(y + hr * 1.18 * k)} ${r22(x - hr * 0.22)},${r22(y + hr * 0.42)} Z`, far ? c.furS : e.color || c.furS, 0.9));
+          const h = /* @__PURE__ */ __name((x, y) => `${r22(x * hr)},${r22(y * hr)}`, "h");
+          const col2 = far ? mixDark(e.color || c.furS) : e.color || c.furS;
+          return g(P(`M${h(0.5, -0.8)} Q${h(1.12, -0.92)} ${h(1.16, -0.1 + 0.2 * (k - 1))} Q${h(1.2, 0.5 * k)} ${h(0.96, 0.54 * k)} Q${h(0.76, 0.42 * k)} ${h(0.76, -0.24)} Z`, col2, 0.9) + (showIn ? `<path d="M${h(0.86, -0.5)} Q${h(1.02, -0.1)} ${h(0.98, 0.34 * k)}" fill="none" stroke="${mixDark(e.color || c.furS)}" stroke-width="0.6" stroke-linecap="round"/>` : ""));
         }
         case "long": {
           const x = hr * 0.36, y = -hr * 0.66;
@@ -1496,6 +1513,7 @@ var require_betes3 = __commonJS({
           } else s += E(hx + hr * 0.42, hy + hr * 0.28, nr * 1.2, nr * 0.9, col || OUT, 0.6);
         }
         const [, edy, er] = c.eye;
+        if (c.iris && mode === "open") s += E(hx - hr * 0.34, hy + edy * 0.9, er * 1.1, er * 1.32, c.iris, 0.5) + E(hx + hr * 0.4, hy + edy * 0.9 - 0.2, er * 0.97, er * 1.16, c.iris, 0.5);
         s += eye(hx - hr * 0.34, hy + edy * 0.9, er, mode) + eye(hx + hr * 0.4, hy + edy * 0.9 - 0.2, er * 0.88, mode);
         if (c.blush !== false) s += E(hx - hr * 0.52, hy + edy + er * 1.6, er * 0.85, er * 0.42, "#F7A8B0", 0);
         if (!derriere) s += ear3(c, e, hx, hy, hr, -1, false, false, ctx.pose);
@@ -1699,15 +1717,18 @@ var require_betes3 = __commonJS({
       };
     };
     P3.cat = (c) => ({
-      // rayures en travers du dos
-      coat: /* @__PURE__ */ __name((x) => [-0.55, -0.15, 0.25].map((u) => {
+      // rayures en travers du dos (chats tigrés) ; taches rousse et noire (blanc taché)
+      coat: /* @__PURE__ */ __name((x) => c.taches ? (() => {
+        const [a1, b1] = x.at(-0.3, -0.6), [a2, b2] = x.at(0.25, -0.7);
+        return E(a1, b1, 2, 1.4, c.taches[0], 0) + E(a2, b2, 1.3, 1, c.taches[1], 0);
+      })() : !c.rayures ? "" : [-0.55, -0.15, 0.25].map((u) => {
         const [a1, b1] = x.at(u, -0.95), [a2, b2] = x.at(u + 0.08, -0.25);
         return `<path d="M${r22(a1)},${r22(b1)} Q${r22((a1 + a2) / 2 + 0.8)},${r22((b1 + b2) / 2)} ${r22(a2)},${r22(b2)}" fill="none" stroke="${c.furS}" stroke-width="0.9"/>`;
       }).join(""), "coat"),
       // moustaches des deux côtés du museau
       head: /* @__PURE__ */ __name(({ se, hx, hy, hr }) => se ? [[-1, 0.3], [-1, 0.75], [1, 0.25], [1, 0.7]].map(([d, dy]) => {
         const x0 = hx + hr * 0.3 + d * hr * 0.42, y0 = hy + hr * 0.4 + dy * 0.4;
-        return `<path d="M${r22(x0)},${r22(y0)} L${r22(x0 + d * hr * 0.55)},${r22(y0 + (dy - 0.5) * 1.6)}" stroke="${OUT}" stroke-width="0.35"/>`;
+        return `<path d="M${r22(x0)},${r22(y0)} L${r22(x0 + d * hr * 0.55)},${r22(y0 + (dy - 0.5) * 1.6)}" stroke="${c.moustache || OUT}" stroke-width="0.35"/>`;
       }).join("") : "", "head")
     });
     P3.dog = (c) => {
@@ -2549,6 +2570,12 @@ var require_betes_liste = __commonJS({
       ["ferme", "chevre_brune", "Chèvre brune", ...q("goat", "brune")],
       ["ferme", "chat", "Chat", ...q("cat")],
       ["ferme", "chien", "Chien", ...q("dog")],
+      ["ferme", "chat_noir", "Chat noir", ...q("cat", "noir")],
+      ["ferme", "chat_gris", "Chat gris tigré", ...q("cat", "gris")],
+      ["ferme", "chat_blanc", "Chat blanc taché", ...q("cat", "blanc")],
+      ["ferme", "chien_noir", "Chien noir et blanc", ...q("dog", "noir")],
+      ["ferme", "chien_brun", "Chien brun", ...q("dog", "brun")],
+      ["ferme", "chien_roux", "Chien roux", ...q("dog", "roux")],
       ["bois", "cerf", "Cerf", ...q("deer")],
       ["bois", "renard", "Renard", ...q("fox")],
       ["bois", "lapin", "Lapin", ...q("rabbit")],
@@ -2607,6 +2634,12 @@ var require_betes_liste = __commonJS({
       ["ferme", "chevre_brune", "Chèvre brune", q3("goat", "brune")],
       ["ferme", "chat", "Chat", q3("cat")],
       ["ferme", "chien", "Chien", q3("dog")],
+      ["ferme", "chat_noir", "Chat noir", q3("cat", "noir")],
+      ["ferme", "chat_gris", "Chat gris tigré", q3("cat", "gris")],
+      ["ferme", "chat_blanc", "Chat blanc taché", q3("cat", "blanc")],
+      ["ferme", "chien_noir", "Chien noir et blanc", q3("dog", "noir")],
+      ["ferme", "chien_brun", "Chien brun", q3("dog", "brun")],
+      ["ferme", "chien_roux", "Chien roux", q3("dog", "roux")],
       ["bois", "cerf", "Cerf", q3("deer")],
       ["bois", "renard", "Renard", q3("fox")],
       ["bois", "lapin", "Lapin", q3("rabbit")],
@@ -3054,6 +3087,150 @@ var orientees_default = {
           "ferme/chien/chien_dos_marche_1.svg",
           "ferme/chien/chien_dos_marche_2.svg",
           "ferme/chien/chien_dos_repos.svg"
+        ]
+      }
+    },
+    "chat-noir": {
+      nom: "Chat noir",
+      groupe: "ferme",
+      cadre: [
+        -15,
+        -22.5,
+        30,
+        26
+      ],
+      fichiers: {
+        avant: [
+          "ferme/chat-noir/chat-noir_avant_marche_1.svg",
+          "ferme/chat-noir/chat-noir_avant_marche_2.svg",
+          "ferme/chat-noir/chat-noir_avant_repos.svg",
+          "ferme/chat-noir/chat-noir_avant_clignement.svg",
+          "ferme/chat-noir/chat-noir_avant_joie.svg"
+        ],
+        dos: [
+          "ferme/chat-noir/chat-noir_dos_marche_1.svg",
+          "ferme/chat-noir/chat-noir_dos_marche_2.svg",
+          "ferme/chat-noir/chat-noir_dos_repos.svg"
+        ]
+      }
+    },
+    "chat-gris": {
+      nom: "Chat gris tigré",
+      groupe: "ferme",
+      cadre: [
+        -15,
+        -22.5,
+        30,
+        26
+      ],
+      fichiers: {
+        avant: [
+          "ferme/chat-gris/chat-gris_avant_marche_1.svg",
+          "ferme/chat-gris/chat-gris_avant_marche_2.svg",
+          "ferme/chat-gris/chat-gris_avant_repos.svg",
+          "ferme/chat-gris/chat-gris_avant_clignement.svg",
+          "ferme/chat-gris/chat-gris_avant_joie.svg"
+        ],
+        dos: [
+          "ferme/chat-gris/chat-gris_dos_marche_1.svg",
+          "ferme/chat-gris/chat-gris_dos_marche_2.svg",
+          "ferme/chat-gris/chat-gris_dos_repos.svg"
+        ]
+      }
+    },
+    "chat-blanc": {
+      nom: "Chat blanc taché",
+      groupe: "ferme",
+      cadre: [
+        -15,
+        -22.5,
+        30,
+        26
+      ],
+      fichiers: {
+        avant: [
+          "ferme/chat-blanc/chat-blanc_avant_marche_1.svg",
+          "ferme/chat-blanc/chat-blanc_avant_marche_2.svg",
+          "ferme/chat-blanc/chat-blanc_avant_repos.svg",
+          "ferme/chat-blanc/chat-blanc_avant_clignement.svg",
+          "ferme/chat-blanc/chat-blanc_avant_joie.svg"
+        ],
+        dos: [
+          "ferme/chat-blanc/chat-blanc_dos_marche_1.svg",
+          "ferme/chat-blanc/chat-blanc_dos_marche_2.svg",
+          "ferme/chat-blanc/chat-blanc_dos_repos.svg"
+        ]
+      }
+    },
+    "chien-noir": {
+      nom: "Chien noir et blanc",
+      groupe: "ferme",
+      cadre: [
+        -20,
+        -30,
+        40,
+        34.5
+      ],
+      fichiers: {
+        avant: [
+          "ferme/chien-noir/chien-noir_avant_marche_1.svg",
+          "ferme/chien-noir/chien-noir_avant_marche_2.svg",
+          "ferme/chien-noir/chien-noir_avant_repos.svg",
+          "ferme/chien-noir/chien-noir_avant_clignement.svg",
+          "ferme/chien-noir/chien-noir_avant_joie.svg"
+        ],
+        dos: [
+          "ferme/chien-noir/chien-noir_dos_marche_1.svg",
+          "ferme/chien-noir/chien-noir_dos_marche_2.svg",
+          "ferme/chien-noir/chien-noir_dos_repos.svg"
+        ]
+      }
+    },
+    "chien-brun": {
+      nom: "Chien brun",
+      groupe: "ferme",
+      cadre: [
+        -20,
+        -30,
+        40,
+        34.5
+      ],
+      fichiers: {
+        avant: [
+          "ferme/chien-brun/chien-brun_avant_marche_1.svg",
+          "ferme/chien-brun/chien-brun_avant_marche_2.svg",
+          "ferme/chien-brun/chien-brun_avant_repos.svg",
+          "ferme/chien-brun/chien-brun_avant_clignement.svg",
+          "ferme/chien-brun/chien-brun_avant_joie.svg"
+        ],
+        dos: [
+          "ferme/chien-brun/chien-brun_dos_marche_1.svg",
+          "ferme/chien-brun/chien-brun_dos_marche_2.svg",
+          "ferme/chien-brun/chien-brun_dos_repos.svg"
+        ]
+      }
+    },
+    "chien-roux": {
+      nom: "Chien roux",
+      groupe: "ferme",
+      cadre: [
+        -20,
+        -30,
+        40,
+        34.5
+      ],
+      fichiers: {
+        avant: [
+          "ferme/chien-roux/chien-roux_avant_marche_1.svg",
+          "ferme/chien-roux/chien-roux_avant_marche_2.svg",
+          "ferme/chien-roux/chien-roux_avant_repos.svg",
+          "ferme/chien-roux/chien-roux_avant_clignement.svg",
+          "ferme/chien-roux/chien-roux_avant_joie.svg"
+        ],
+        dos: [
+          "ferme/chien-roux/chien-roux_dos_marche_1.svg",
+          "ferme/chien-roux/chien-roux_dos_marche_2.svg",
+          "ferme/chien-roux/chien-roux_dos_repos.svg"
         ]
       }
     },

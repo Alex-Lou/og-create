@@ -117,7 +117,7 @@ function moment(id, meta) {
   }
   if (top === 'animaux') {
     if (b.startsWith('poule')) return 'tuto-2';
-    if (a === 'ferme') return b === 'chat' || b === 'chien' ? 'evolutions' : 'acte-3';
+    if (a === 'ferme') return /^(chat|chien)(-|$)/.test(b) ? 'evolutions' : 'acte-3';
     if (a === 'familiers') return { tictac: 'tuto-2', 'amie-tictac': 'acte-4', 'bocal-vide': 'tuto-3', 'bocal-bulle': 'acte-1', mousse: 'acte-1' }[b] || 'partout';
     if (a === 'bois') return b === 'loutre' ? 'revelation' : 'partout';
     if (a === 'climat' || a === 'bestiaire') return 'acte-4';
