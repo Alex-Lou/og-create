@@ -153893,6 +153893,354 @@
    "statut": "ok"
   },
   {
+   "id": "minijeux/peche/bouchon-flotte",
+   "rubrique": "minijeux",
+   "titre": "Le bouchon qui flotte",
+   "images": 2,
+   "fichiers": [
+    "svg/minijeux/peche/bouchon-flotte_1.svg",
+    "svg/minijeux/peche/bouchon-flotte_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    16,
+    24
+   ],
+   "ms_par_image": 400,
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "minijeux/peche/bouchon-touche",
+   "rubrique": "minijeux",
+   "titre": "Le bouchon qui plonge (ça mord)",
+   "images": 3,
+   "fichiers": [
+    "svg/minijeux/peche/bouchon-touche_1.svg",
+    "svg/minijeux/peche/bouchon-touche_2.svg",
+    "svg/minijeux/peche/bouchon-touche_3.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    16,
+    24
+   ],
+   "ms_par_image": 120,
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "minijeux/peche/bulles",
+   "rubrique": "minijeux",
+   "titre": "Les bulles",
+   "images": 3,
+   "fichiers": [
+    "svg/minijeux/peche/bulles_1.svg",
+    "svg/minijeux/peche/bulles_2.svg",
+    "svg/minijeux/peche/bulles_3.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    12,
+    20
+   ],
+   "ms_par_image": 200,
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "minijeux/peche/couloir",
+   "rubrique": "minijeux",
+   "titre": "Le couloir d'eau (se répète en largeur)",
+   "images": 3,
+   "fichiers": [
+    "svg/minijeux/peche/couloir_1.svg",
+    "svg/minijeux/peche/couloir_2.svg",
+    "svg/minijeux/peche/couloir_3.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    64,
+    20
+   ],
+   "ms_par_image": 220,
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "minijeux/peche/eclaboussure",
+   "rubrique": "minijeux",
+   "titre": "L'éclaboussure",
+   "images": 4,
+   "fichiers": [
+    "svg/minijeux/peche/eclaboussure_1.svg",
+    "svg/minijeux/peche/eclaboussure_2.svg",
+    "svg/minijeux/peche/eclaboussure_3.svg",
+    "svg/minijeux/peche/eclaboussure_4.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    32,
+    24
+   ],
+   "ms_par_image": 90,
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "minijeux/peche/ferre-botte",
+   "rubrique": "minijeux",
+   "titre": "La vieille botte ferrée au bout de la ligne",
+   "images": 2,
+   "fichiers": [
+    "svg/minijeux/peche/ferre-botte_1.svg",
+    "svg/minijeux/peche/ferre-botte_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    24,
+    40
+   ],
+   "ms_par_image": 140,
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "minijeux/peche/ferre-dore",
+   "rubrique": "minijeux",
+   "titre": "Le doré ferré au bout de la ligne",
+   "images": 2,
+   "fichiers": [
+    "svg/minijeux/peche/ferre-dore_1.svg",
+    "svg/minijeux/peche/ferre-dore_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    24,
+    40
+   ],
+   "ms_par_image": 140,
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "minijeux/peche/ferre-gardon",
+   "rubrique": "minijeux",
+   "titre": "Le gardon ferré au bout de la ligne",
+   "images": 2,
+   "fichiers": [
+    "svg/minijeux/peche/ferre-gardon_1.svg",
+    "svg/minijeux/peche/ferre-gardon_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    24,
+    40
+   ],
+   "ms_par_image": 140,
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "minijeux/peche/ferre-truite",
+   "rubrique": "minijeux",
+   "titre": "La truite ferrée au bout de la ligne",
+   "images": 2,
+   "fichiers": [
+    "svg/minijeux/peche/ferre-truite_1.svg",
+    "svg/minijeux/peche/ferre-truite_2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    24,
+    40
+   ],
+   "ms_par_image": 140,
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "minijeux/peche/hamecon",
+   "rubrique": "minijeux",
+   "titre": "L'hameçon",
+   "images": 1,
+   "fichiers": [
+    "svg/minijeux/peche/hamecon.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    8,
+    12
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "minijeux/peche/nage-botte",
+   "rubrique": "minijeux",
+   "titre": "La vieille botte qui dérive",
+   "images": 4,
+   "fichiers": [
+    "svg/minijeux/peche/nage-botte_1.svg",
+    "svg/minijeux/peche/nage-botte_2.svg",
+    "svg/minijeux/peche/nage-botte_3.svg",
+    "svg/minijeux/peche/nage-botte_4.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    40,
+    24
+   ],
+   "ms_par_image": 160,
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "minijeux/peche/nage-dore",
+   "rubrique": "minijeux",
+   "titre": "Le doré qui nage",
+   "images": 4,
+   "fichiers": [
+    "svg/minijeux/peche/nage-dore_1.svg",
+    "svg/minijeux/peche/nage-dore_2.svg",
+    "svg/minijeux/peche/nage-dore_3.svg",
+    "svg/minijeux/peche/nage-dore_4.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    40,
+    24
+   ],
+   "ms_par_image": 120,
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "minijeux/peche/nage-gardon",
+   "rubrique": "minijeux",
+   "titre": "Le gardon qui nage",
+   "images": 4,
+   "fichiers": [
+    "svg/minijeux/peche/nage-gardon_1.svg",
+    "svg/minijeux/peche/nage-gardon_2.svg",
+    "svg/minijeux/peche/nage-gardon_3.svg",
+    "svg/minijeux/peche/nage-gardon_4.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    40,
+    24
+   ],
+   "ms_par_image": 120,
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "minijeux/peche/nage-truite",
+   "rubrique": "minijeux",
+   "titre": "La truite qui nage",
+   "images": 4,
+   "fichiers": [
+    "svg/minijeux/peche/nage-truite_1.svg",
+    "svg/minijeux/peche/nage-truite_2.svg",
+    "svg/minijeux/peche/nage-truite_3.svg",
+    "svg/minijeux/peche/nage-truite_4.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    40,
+    24
+   ],
+   "ms_par_image": 120,
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "minijeux/peche/ponton",
+   "rubrique": "minijeux",
+   "titre": "Les planches du ponton (se répètent en largeur)",
+   "images": 1,
+   "fichiers": [
+    "svg/minijeux/peche/ponton.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    64,
+    16
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "minijeux/peche/ronds",
+   "rubrique": "minijeux",
+   "titre": "Les ronds dans l'eau",
+   "images": 3,
+   "fichiers": [
+    "svg/minijeux/peche/ronds_1.svg",
+    "svg/minijeux/peche/ronds_2.svg",
+    "svg/minijeux/peche/ronds_3.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    32,
+    12
+   ],
+   "ms_par_image": 160,
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "minijeux/peche/seau_plein",
+   "rubrique": "minijeux",
+   "titre": "Le seau, plein",
+   "images": 1,
+   "fichiers": [
+    "svg/minijeux/peche/seau_plein.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    24,
+    24
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "minijeux/peche/seau_vide",
+   "rubrique": "minijeux",
+   "titre": "Le seau, vide",
+   "images": 1,
+   "fichiers": [
+    "svg/minijeux/peche/seau_vide.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    24,
+    24
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
    "id": "perso/barre_fond",
    "rubrique": "perso",
    "titre": "Barre de progression (fond)",

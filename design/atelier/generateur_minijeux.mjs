@@ -4,12 +4,16 @@
 // le vérifie). Le cadre est en unités du dessin (un bloc du Filon : 32 × 32) ; le SVG déclare HD fois plus grand.
 // preview_minijeux.mjs écrit la bibliothèque avec cette même fonction.
 import filon from './minijeu_filon.js';
+import peche from './minijeu_peche.js';
 
 export const HD = 4;
-export const JEUX = { filon: filon.PIECES };
+const MODULES = { filon, peche };
+export const JEUX = Object.fromEntries(Object.entries(MODULES).map(([k, m]) => [k, m.PIECES]));
+// pour chaque jeu : son titre, la couleur du fond de ses planches, ce qu'il faut savoir pour l'intégrer
+export const INFOS = Object.fromEntries(Object.entries(MODULES).map(([k, m]) => [k, { titre: m.TITRE, fond: m.FOND, lisez_moi: m.LISEZ_MOI }]));
 const svgOf = (c, body) => `<svg xmlns="http://www.w3.org/2000/svg" width="${c[2] * HD}" height="${c[3] * HD}" viewBox="${c.join(' ')}">${body}</svg>`;
 
-// Une pièce d'un mini-jeu : jeu (filon), id (le nom du fichier, sans .svg)
+// Une pièce d'un mini-jeu : jeu (filon, peche), id (le nom du fichier, sans .svg)
 export function minijeu(jeu, id) {
   if (!JEUX[jeu]) throw new Error(`mini-jeu inconnu : ${jeu} (${Object.keys(JEUX).join(', ')})`);
   const p = JEUX[jeu].find(x => x.id === id);
