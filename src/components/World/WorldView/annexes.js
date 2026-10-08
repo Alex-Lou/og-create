@@ -61,7 +61,7 @@ export default {
       this.clampCam();
       this.draw(performance.now());
     },
-    // « Poser » dans l'onglet Annexes : la fiche se ferme, les cases autorisées s'allument autour du bâtiment
+    // « Poser » dans l'onglet Annexes : la fiche se ferme, les cases autorisées s'allument dans le quartier du bâtiment
     startAnnex(site, annex) {
       this.site = null;
       this.annexSheet = null;

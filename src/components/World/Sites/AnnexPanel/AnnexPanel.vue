@@ -2,8 +2,8 @@
   <div class="annexes">
     <p v-if="site.level < 2" class="annexes__note">Les annexes s’ouvrent au palier II de ce bâtiment.</p>
     <p v-else class="annexes__note">
-      Pose-les toi-même autour du bâtiment, sur une case libre de son quartier, à deux cases au plus. Elles travaillent dès
-      leur pose, et se déplacent gratuitement.
+      Pose-les toi-même sur une case libre de son quartier, où tu veux. Elles travaillent dès leur pose, et se déplacent
+      gratuitement.
     </p>
     <ul class="annexes__list">
       <li v-for="annex in site.annexes" :key="annex.id" :class="['annexes__card', `is-${stateOf(annex).state}`]">
