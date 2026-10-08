@@ -32,5 +32,20 @@ export function campLayer(art, t = 0) {
 
 // Son nom (« Épave de l'Hirondelle », « Aster · abri »…), pour la bulle au toucher
 export const campName = art => (OBJETS[art] && OBJETS[art].nom) || '';
+// Ce que dit un élément du camp quand on le touche : { title, text }
+const CAMP_LINES = {
+  hirondelle: 'Ce qu’il reste de l’Hirondelle, le navire de croisière.',
+  cannelle_debris: 'La cuisine de l’épave : Cannelle y fait chauffer sa marmite.',
+  aster: 'Le coin d’Aster, en attendant son Ponton.',
+  rivet: 'Le coin de Rivet, en attendant son Atelier.',
+  tente: 'La tente des voyageurs.',
+  hamac: 'Le hamac des voyageurs, entre deux poteaux.',
+  sos: 'Un grand SOS de galets, pour qui passerait au large.',
+  caisses: 'Des caisses repêchées dans les vagues.',
+  filet: 'Un filet de pêche qui sèche au vent.',
+  rondins: 'Des rondins pour le feu.',
+  cage_ouverte: 'La cage des poules de Cannelle, grande ouverte.'
+};
+export const campInfo = art => ({ title: campName(art), text: CAMP_LINES[art] || CAMP_LINES[art.split('_')[0]] || '' });
 // L'œuf posé au sol (ancre au centre de sa case)
 export const eggLayer = () => campLayer('oeuf');

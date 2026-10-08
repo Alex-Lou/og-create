@@ -12,18 +12,13 @@ import { spriteUrl } from '@/world/spriteCache';
 import { BUILDINGS } from '@/world/sprites';
 import { artMake } from '@/world/looks';
 import { buildingThumb } from '@/world/buildingArt';
+import { campInfo } from '@/world/campArt';
 import { TW, TH, DEPOSIT_SCALE } from './constants';
 
-// Bulle d'info de l'appui long : durée d'affichage ; noms du décor naturel et des bêtes, pour elle
+// Bulle d'info de l'appui long : durée d'affichage ; noms des bêtes, pour elle
 const TIP_MS = 3600;
 // Toucher en deux temps : ce qui est choisi (contour doré, bulle et bouton) le reste ce temps, puis s'oublie
 const PICK_MS = 7000;
-const NATURE_NAMES = {
-  tree: 'Arbre', pine: 'Pin', palm: 'Palmier', bush: 'Buisson', rock: 'Rocher', rocks: 'Rochers', crag: 'Rocher escarpé', flowers: 'Fleurs',
-  tuft: 'Touffe d’herbe', birch: 'Bouleau', apple: 'Pommier', autumn: 'Arbre d’automne', stump: 'Souche', log: 'Rondin', mushrooms: 'Champignons',
-  reeds: 'Roseaux', lily: 'Nénuphars', shells: 'Coquillages', driftwood: 'Bois flotté', mossy: 'Rochers moussus', lantern: 'Lanterne', bench: 'Banc',
-  nest: 'Nid de mouettes', snowpine: 'Pin enneigé', cactus: 'Cactus', deadtree: 'Arbre mort', heather: 'Bruyère'
-};
 const ANIMALS = {
   chicken: ['Poule', 'Elle picore autour du Foyer et dort contre lui la nuit.'],
   butterfly: ['Papillon', 'Il butine les fleurs par beau temps.'],
@@ -71,7 +66,7 @@ export default {
     else if (hit && hit.animal && this.beastOf(hit.animal.who)) this.openBeast(hit.animal.who.beast);
     else if (hit && hit.animal && this.friendOf(hit.animal.who)) this.openVillager(this.friendOf(hit.animal.who).id);
     else if (hit && hit.animal && (hit.animal.kind === 'vboat' || this.guestOf(hit.animal.who))) this.openVisitor();
-    else this.showTip(gesture.start.x, gesture.start.y, this.tipOf(hit, gesture.start));
+    else this.showTip(gesture.start.x, gesture.start.y, this.tipOf(hit));
     gesture.held = true;
     vibrate(12);
     this.draw(performance.now());
@@ -171,8 +166,12 @@ export default {
       ...this.state.sites.map(site => ({ site, depth: site.x + site.y + site.w, c: this.centerOf(site), r: TW * 0.49 * site.w, h: TW * 0.875 * site.w, below: TH * 0.525 * site.w })),
       ...this.crafted.map(craft => ({ craft, depth: craft.x + craft.y, c: this.ground(craft.x, craft.y), r: TW * 0.42, h: TW * 1.1 })),
       ...(this.state.annexes || []).map(annex => ({ annex, depth: annex.x + annex.y, c: this.ground(annex.x, annex.y), r: TW * 0.44, h: TW * 1.1 })),
-      // La cage aux poules, coincée sous les rochers du camp : on l'ouvre
-      ...(this.state.camp || []).filter(item => item.art === 'cage_coincee').map(cage => ({ cage, depth: cage.x + cage.y, c: this.ground(cage.x, cage.y), r: TW * 0.5, h: TW * 0.8 })),
+      // Le camp des naufragés : la cage coincée sous les rochers s'ouvre ; le reste dit seulement ce qu'il est
+      ...(this.state.camp || []).map(item => {
+        const c = item.w > 1 ? this.centerOf(item) : this.ground(item.x, item.y);
+        const depth = item.x + item.y + (item.w > 1 ? item.w : 0);
+        return item.art === 'cage_coincee' ? { cage: item, depth, c, r: TW * 0.5, h: TW * 0.8 } : { campItem: item, depth, c, r: TW * 0.45 * item.w, h: TW * 0.85 * item.w };
+      }),
       ...this.shownDeposits.map(deposit => ({ deposit, depth: deposit.x + deposit.y, c: this.ground(deposit.x, deposit.y), r: TW * 0.42 * DEPOSIT_SCALE, h: TW * 0.85 * DEPOSIT_SCALE })),
       ...this.shownLandmarks.map(landmark => ({
         landmark, depth: landmark.x + landmark.y, c: this.ground(landmark.x, landmark.y), r: TW * 0.56 * landmarkScale(landmark.id), h: -landmarkTop(landmark.id) * landmarkScale(landmark.id) + 14
@@ -214,7 +213,7 @@ export default {
     this.dropPick();
     if (!hit) {
       // La mer : des ronds dans l'eau là où le doigt touche (en mouvement réduit, la bulle d'info)
-      if (this.reduced()) this.showTip(px, py, this.tipOf(null, { x: px, y: py }));
+      if (this.reduced()) this.showTip(px, py, this.tipOf(null));
       else {
         const w = this.toWorld(px, py);
         this.ripples.push({ ...this.cellAt(w.x, w.y), at: performance.now() / 1000 });
@@ -248,7 +247,7 @@ export default {
       const said = this.named(this.village && hit.animal.who ? this.village.say(hit.animal.who, this.phase || this.skyAt(this.skyDate())) : null, hit.animal.who, true);
       if (said) this.showTip(px, py, said);
       if (this.reduced()) {
-        if (!said) this.showTip(px, py, this.tipOf(hit, { x: px, y: py }));
+        if (!said) this.showTip(px, py, this.tipOf(hit));
       } else this.scare(hit.animal);
       return;
     } else if (hit.deposit) {
@@ -256,9 +255,9 @@ export default {
       this.scared.set(`deposit:${hit.deposit.id}`, { at: performance.now() / 1000 });
       this.showTip(px, py, this.tipOf(hit));
       vibrate(6);
-    } else {
-      // Une case libre : elle dit ce qu'on peut y faire
-      this.showTip(px, py, this.tipOf(hit, { x: px, y: py }));
+    } else if (hit.campItem) {
+      // Un élément du camp des naufragés : ce qu'il est (le reste du décor ne dit rien)
+      this.showTip(px, py, this.tipOf(hit));
     }
     this.draw(performance.now());
   },
@@ -409,7 +408,7 @@ export default {
     this.tip = null;
   },
   // Ce que dit la bulle pour ce qui est sous le doigt (null : la mer)
-  tipOf(hit, point) {
+  tipOf(hit) {
     if (!hit) return { title: 'La mer', text: 'Dauphins, baleine et méduses passent au large.', hint: 'Toucher : des ronds dans l’eau' };
     if (hit.bottle) return { title: 'Bouteille à la mer', text: 'Un mot signé « H. », et un coffre.', hint: 'Toucher deux fois : l’ouvrir' };
     if (hit.nameSign) {
@@ -468,12 +467,9 @@ export default {
       if (zone && zone.owned) return { title: landmark.name, text: 'Un lieu remarquable à découvrir.', hint: 'Toucher deux fois : le découvrir' };
       return { title: landmark.name, text: `Achète ${zone ? zone.name : 'ce quartier'} pour découvrir ce lieu.`, hint: 'Appui long : le Carnet d’explorateur' };
     }
-    // Case de l'île : son décor naturel, ou de l'herbe libre
-    const cell = hit.cell || this.tileAt(point.x, point.y);
-    const prop = cell && this.props.find(p => p.x === cell.x && p.y === cell.y);
-    return prop
-      ? { title: NATURE_NAMES[prop.kind] || 'Décor', text: 'Une création posée ici le remplace.', hint: 'Les créations s’assemblent à l’établi du Foyer' }
-      : { title: 'Case libre', text: 'De la place pour une création d’île.', hint: 'Les créations s’assemblent à l’établi du Foyer' };
+    // Le camp des naufragés : ce qu'est chaque élément ; le décor naturel et l'herbe ne disent rien
+    if (hit.campItem) return campInfo(hit.campItem.art);
+    return null;
   },
   // Point de l'écran (page) d'un point du canvas
   canvasPoint(x, y) {
