@@ -445,6 +445,7 @@ import { clearDrawings } from '@/book/painter';
 import { reducedMotion } from '@/utils/fx';
 import { clearSprites } from '@/world/spriteCache';
 import { islandOf, liveOf, TerrainCache } from '@/world/terrain';
+import { onPathsLoaded } from '@/world/pathArt';
 import { FLOATING_ZONE, isletsOf } from '@/world/islets';
 import { seaOf } from '@/world/sea';
 import { stageOf as civilizationOf } from '@/game/vigils';
@@ -826,6 +827,10 @@ export default {
         // Calques du sol ; la brume est peinte dans les carrés du sol : un quartier acheté fait refaire les siens
         const M = islandOf(state.map, state.size, state.map.zones.findIndex(z => z.id === FLOATING_ZONE));
         if (!this.terrain) this.terrain = new TerrainCache(M, (x, y) => this.veilAt(x, y), (ctx, x, y) => this.standAt(ctx, x, y));
+        // Les chemins de la bibliothèque arrivent peu à peu (pathArt.js) : leurs carrés de sol sont refaits
+        const paths = [];
+        for (let y = 0; y < state.size; y++) for (let x = 0; x < state.size; x++) if (M.ground(x, y) === 'p') paths.push([x, y]);
+        onPathsLoaded(() => { if (this.terrain && this.M === M) this.terrain.invalidate(paths); });
         this.M = M;
         this.live = liveOf(M);
         // Cases de lave : elles luisent la nuit

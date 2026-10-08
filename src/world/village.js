@@ -195,6 +195,9 @@ function doorOf(grid, site) {
 // révélée, { visit } (son passage du jour, vu du serveur : { slot, x, y }, ou null), sinon null ; dame : le bol de soupe
 // du soir « pour la Dame »
 // coop : les poules de Cannelle et leur cage ouverte ({ x, y, hens: [{ id, name, ready }] }), ou null
+// Le geste de chaque maître sur son annexe (poses de travail de la bibliothèque), un par jour : Mélisse bêche, sème,
+// arrose et récolte ; Sylve taille et scie ; Rivet scie ; Cannelle récolte et arrose ; Ondin arrose
+const CHORES = { potager: ['becher', 'semer', 'arroser', 'recolter'], bosquet: ['tailler', 'scier'], atelier: ['scier'], foyer: ['recolter', 'arroser'], puits: ['arroser'] };
 export function villageOf({ n, M, sites, owned, crafts = [], props, annexes = [], visitor = null, settlers = [], climates = [], avoid = [], troupe = null, written = null, anya = null, dame = false, coop = null }) {
   const grid = gridOf({ n, M, sites, owned, crafts, props, annexes });
   const bestiary = bestiaryOf(written);
@@ -292,7 +295,7 @@ export function villageOf({ n, M, sites, owned, crafts = [], props, annexes = []
       // Le jour : le travail d'abord, puis cinq moments tirés parmi travailler (ou son annexe), passer voir un autre
       // bâtiment, flâner, une pause au Foyer ; le travail pour finir
       const moments = [
-        i => [spotOf(r, r.field || r.work, salt(i)), roll(i, 70, 120), 'work'],
+        i => [spotOf(r, r.field || r.work, salt(i)), roll(i, 70, 120), r.field ? 'field' : 'work'],
         i => [spotOf(r, other(i), salt(i)), roll(i, 15, 35), 'idle'],
         i => [roamOf(r, salt(i)), roll(i, 10, 25), 'idle'],
         i => [spotOf(r, home, salt(i)), roll(i, 20, 40), 'idle']
@@ -475,17 +478,22 @@ export function villageOf({ n, M, sites, owned, crafts = [], props, annexes = []
       // En marche, il regarde où il va (4 images) ; au travail, de trois quarts ; au repos, de face, de côté ou au loin,
       // selon le moment ; touché, il se tourne vers le joueur et fait coucou
       const walking = p.pose === 'walk';
-      const frame = walking ? Math.floor(t * 6) % 4 : p.pose === 'work' ? Math.floor(t * 1.6 + r.k) % 2 : (t + r.k * 1.3) % 5 < 0.18 ? 1 : 0;
+      // (sur son annexe, il travaille avec le geste de son métier : CHORES, un par jour)
+      const field = p.pose === 'field';
+      const working = field || p.pose === 'work';
+      const chores = field && CHORES[r.role];
+      const chore = chores ? chores[(day + r.k) % chores.length] : null;
+      const frame = walking ? Math.floor(t * 6) % 4 : working ? Math.floor(t * 1.6 + r.k) % 2 : (t + r.k * 1.3) % 5 < 0.18 ? 1 : 0;
       const hop = tapped(r.id, 0.6);
       const glance = IDLE_VIEWS[Math.floor(hash(r.k, Math.floor(t / 9)) * IDLE_VIEWS.length)];
-      const view = hop !== null ? 'front' : walking ? (p.back ? 'ne' : 'se') : p.pose === 'work' ? 'se' : glance;
-      const opts = { pose: hop !== null ? 'wave' : p.pose, view, frame: hop !== null ? Math.floor(t * 5) % 2 : frame, lantern, umbrella };
+      const view = hop !== null ? 'front' : walking ? (p.back ? 'ne' : 'se') : working ? 'se' : glance;
+      const opts = { pose: hop !== null ? 'wave' : working ? 'work' : p.pose, view, frame: hop !== null ? Math.floor(t * 5) % 2 : frame, lantern, umbrella, chore };
       // Un maître : son dessin de la bibliothèque (jamais en miroir de face ; la lanterne luit où il la tient)
       const art = r.key.startsWith('vil-') ? masterSprite(r.role, r.castaway, opts) : null;
       const flip = hop !== null || (art && art.view === 'face') ? false : walking ? p.flip : hash(r.k, Math.floor(t / 20)) < 0.5;
       out.push({
         id: r.id, kind: 'villager', role: r.role, x: p.x, y: p.y, z: hop === null ? 0 : Math.sin(hop * Math.PI) * 6, flip, pose: opts.pose,
-        sprite: art ? [art.key, art.make] : [`${r.key}-${opts.pose}-${view}-${opts.frame}-${lantern ? 1 : 0}-${umbrella ? 1 : 0}`, () => villagerSprite(r.look, opts)]
+        sprite: art ? [art.key, art.make] : [`${r.key}-${opts.pose}-${view}-${opts.frame}-${lantern ? 1 : 0}-${umbrella ? 1 : 0}`, () => villagerSprite(r.look, { ...opts, chore: undefined })]
       });
       if (art ? art.lantern : lantern) lights.push(art ? { x: p.x, y: p.y, dx: flip ? -art.lantern[0] : art.lantern[0], dy: art.lantern[1] } : { x: p.x, y: p.y, dx: flip ? 5.8 : -5.8, dy: -3 });
       if (pet) follow(r, pet, plan, p, flip, t);
@@ -657,6 +665,24 @@ export function villageOf({ n, M, sites, owned, crafts = [], props, annexes = []
         const a = t * 0.08 + 3;
         const frame = Math.floor(t * 1.2) % 2;
         return dayTime ? { x: c.x + Math.sin(a) * 0.3, y: c.y, frame, flip: Math.cos(a) < 0, look: along(Math.cos(a) < 0, frame) } : { ...c, frame: 'rest', flip: false };
+      });
+    }
+    // Le Chat et le Chien écrits : ils vivent autour de la porte du Foyer (leur pelage tiré pour l'île) ; le jour, ils
+    // vont et viennent et s'assoient un moment ; la nuit, ils dorment roulés en boule
+    if (home) {
+      [['Chat', 'cat', ['', 'noir', 'gris', 'blanc'], 0.6], ['Chien', 'dog', ['', 'brun', 'noir', 'roux'], 0.9]].forEach(([name, species, coats, reach], k) => {
+        if (!bestiary.has(name)) return;
+        const variant = coats[Math.floor(hash(k + 3, 71) * coats.length)];
+        wild(`best:${species}`, species, [home], true, c => {
+          const at = { x: c.x + 0.4 + k * 1.1, y: c.y + 0.5 + k * 0.55, variant };
+          const breath = Math.floor(t * 0.8 + k) % 2 + 1;
+          if (night) return { ...at, frame: 'rest', flip: false, look: { view: 'avant', pose: 'dodo', n: breath } };
+          if ((t + k * 7) % 20 < 8) return { ...at, frame: 0, flip: k === 1, look: { view: 'avant', pose: 'assis', n: breath } };
+          const a = (t + k * 7) * 0.3;
+          const flip = Math.cos(a) < 0;
+          const frame = Math.floor(t * 4) % 2;
+          return { ...at, x: at.x + Math.sin(a) * reach, frame, flip, look: along(flip, frame) };
+        });
       });
     }
     // Anya, le jour de son passage, à son moment (l'aube ou le crépuscule) : son cerf blanc, ses lucioles
