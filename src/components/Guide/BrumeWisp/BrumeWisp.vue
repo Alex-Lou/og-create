@@ -1,7 +1,12 @@
 <template>
-  <!-- Brume, le feu follet guide, en SVG (fiches, Livre) : le même que sur l'île (world/brume.js), flamme qui vacille
-       et deux yeux qui clignent -->
-  <svg :class="['wisp', { 'is-ready': ready, 'is-waking': waking }]" :width="size" :height="Math.round(size * 1.25)" viewBox="-14 -26 28 35" aria-hidden="true">
+  <!-- Brume, le feu follet guide (fiches, Livre) : le dessin de son stade dans la bibliothèque, comme sur l'île
+       (world/brumeArt.js), ses quatre images en boucle -->
+  <span v-if="frames" class="wisp wisp--art" :style="boxStyle" aria-hidden="true">
+    <img v-for="(src, n) in frames" :key="n" :src="src" alt="" class="wisp__frame" :style="[artStyle, { animationDelay: delayOf(n) }]" />
+  </span>
+  <!-- Sa naissance (les yeux qui s'ouvrent), ou un stade que la bibliothèque n'a pas : le feu follet en SVG, flamme qui
+       vacille et deux yeux qui clignent -->
+  <svg v-else :class="['wisp', { 'is-ready': ready, 'is-waking': waking }]" :width="size" :height="Math.round(size * 1.25)" viewBox="-14 -26 28 35" aria-hidden="true">
     <defs>
       <radialGradient :id="`${uid}-body`" gradientUnits="userSpaceOnUse" cx="0" cy="-2.4" r="17.6" fx="0" fy="1.6">
         <stop offset="0" :stop-color="tone.core" />
@@ -27,6 +32,10 @@
 
 <script>
 import { WISP, STAGES } from '@/world/brume';
+import { brumeArtUrls, ART_R, BRUME_FRAMES, BRUME_MS } from '@/world/brumeArt';
+
+// Le feu follet en SVG : 28 de large, le centre du bas de la flamme à 14 du bord gauche et 26 du haut, rayon 8
+const SVG_W = 28, SVG_TOP = 26 / 35, SVG_R = 8;
 
 let count = 0;
 
@@ -47,9 +56,32 @@ export default {
     return { WISP, uid: `wisp-${count}` };
   },
   computed: {
+    // Les quatre images de son stade (null : le SVG)
+    frames() {
+      return this.waking ? null : brumeArtUrls({ stage: this.stage ?? 1 }, this.ready);
+    },
+    boxStyle() {
+      return { width: `${this.size}px`, height: `${Math.round(this.size * 1.25)}px` };
+    },
+    // Le dessin (40 × 48, flamme au rayon 9 centrée en 20, 32) posé comme le feu follet en SVG
+    artStyle() {
+      const k = (this.size / SVG_W) * (SVG_R / ART_R);
+      return {
+        width: `${40 * k}px`,
+        height: `${48 * k}px`,
+        left: `${this.size / 2 - 20 * k}px`,
+        top: `${Math.round(this.size * 1.25) * SVG_TOP - 32 * k}px`
+      };
+    },
     tone() {
       if (this.ready) return WISP.ready;
       return this.stage === null ? WISP.calm : STAGES[this.stage] || WISP.calm;
+    }
+  },
+  methods: {
+    // Chaque image paraît à son tour (une animation CSS, décalée)
+    delayOf(n) {
+      return `${-((BRUME_FRAMES - n) % BRUME_FRAMES) * BRUME_MS}ms`;
     }
   }
 };

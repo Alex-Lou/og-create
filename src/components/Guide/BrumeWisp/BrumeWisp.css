@@ -9,6 +9,11 @@
 @keyframes wisp-blink { 0%, 96% { transform: scaleY(1); } 97% { transform: scaleY(.2); } }
 .wisp.is-waking .wisp__eyes ellipse { animation: wisp-wake 2.4s ease-out both, wisp-blink 4s steps(1, end) 2.4s infinite; }
 @keyframes wisp-wake { 0%, 82% { transform: scaleY(0); } 100% { transform: scaleY(1); } }
+/* Le dessin de la bibliothèque : quatre images empilées, une à la fois (880 ms la boucle) */
+.wisp--art { position: relative; }
+.wisp__frame { position: absolute; max-width: none; opacity: 0; animation: wisp-frame 880ms steps(1, end) infinite; pointer-events: none; }
+@keyframes wisp-frame { 0% { opacity: 1; } 25%, 100% { opacity: 0; } }
 @media (prefers-reduced-motion: reduce) {
-  .wisp__flame, .wisp__eyes ellipse { animation: none; }
+  .wisp__flame, .wisp__eyes ellipse, .wisp__frame { animation: none; }
+  .wisp__frame:first-child { opacity: 1; }
 }

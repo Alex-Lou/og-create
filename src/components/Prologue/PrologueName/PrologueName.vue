@@ -3,7 +3,7 @@
        invité, la même page crée le compte (e-mail, mot de passe) : sa partie d'invité le suit. -->
   <div class="pn" role="dialog" aria-modal="true" aria-labelledby="pn-title">
     <form class="pn__page" @submit.prevent="submit">
-      <p class="pn__brume"><BrumeWisp :size="26" /> <span>{{ LINES.nom }}</span></p>
+      <p class="pn__brume"><BrumeWisp :size="26" :stage="0" /> <span>{{ LINES.nom }}</span></p>
       <p class="pn__ex">Ex libris</p>
       <h2 id="pn-title" class="pn__title">Codex Mundi</h2>
       <label class="pn__name">
