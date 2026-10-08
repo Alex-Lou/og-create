@@ -294,19 +294,22 @@ function frame(c, view, pose, n, expr) {
   const ctx = { view, pose, n, ph, k, sway, breath, id, walk };
   // jambes : la jambe levée passe derrière et décolle le talon ; tout suit ph en continu
   const [lx, rx] = c.legX[view];
-  const ly = c.ground + (walk ? (ph > 0 ? ph : ph * 1.4) : 0);
-  const ry = c.ground + (walk ? (ph < 0 ? -ph : -ph * 1.4) : 0);
+  // de trois quarts, la foulée se voit : les jambes avancent et reculent davantage, le talon se lève plus haut
+  const tq = view !== 'front', pas = tq ? 1.7 : 0.9, lever = tq ? 1.8 : 1.4;
+  const ly = c.ground + (walk ? (ph > 0 ? ph : ph * lever) : 0);
+  const ry = c.ground + (walk ? (ph < 0 ? -ph : -ph * lever) : 0);
   const side = view === 'se' ? -1 : 1;
-  const lxx = r2(lx + (walk ? side * ph * 0.9 : 0));
-  const rxx = r2(rx - (walk ? side * ph * 0.6 : 0));
-  const tiltL = walk && ph < 0 && view !== 'front' ? r2((view === 'se' ? 14 : -14) * -ph) : 0;
-  const tiltR = walk && ph > 0 && view !== 'front' ? r2((view === 'se' ? 14 : -14) * ph) : 0;
+  const lxx = r2(lx + (walk ? side * ph * pas : 0));
+  const rxx = r2(rx - (walk ? side * ph * pas * 0.7 : 0));
+  const tiltL = walk && ph < 0 && tq ? r2((view === 'se' ? 18 : -18) * -ph) : 0;
+  const tiltR = walk && ph > 0 && tq ? r2((view === 'se' ? 18 : -18) * ph) : 0;
   const legs = ly < ry ? [leg(cc, lxx, ly, dir, tiltL), leg(cc, rxx, ry, dir, tiltR)] : [leg(cc, rxx, ry, dir, tiltR), leg(cc, lxx, ly, dir, tiltL)];
   // bras : opposés aux jambes ; le bras éloigné passe derrière le corps (trois quarts)
   const swing = -ph;
   const [shL, shR] = c.shoulders;
-  const handL = [r2(c.hands[0][0] + swing * 0.9), r2(c.hands[0][1] + swing * 1.4)];
-  const handR = [r2(c.hands[1][0] - swing * 0.9), r2(c.hands[1][1] - swing * 1.4)];
+  const bal = tq ? 1.3 : 0.9, balY = tq ? 2 : 1.4; // les bras balancent plus de trois quarts
+  const handL = [r2(c.hands[0][0] + swing * bal), r2(c.hands[0][1] + swing * balY)];
+  const handR = [r2(c.hands[1][0] - swing * bal), r2(c.hands[1][1] - swing * balY)];
   const act = pose === 'action' || pose === 'salut' ? c.pose.call(cc, ctx) : null;
   // c.restLeft : bras gauche qui ne balance pas (il tient quelque chose contre lui)
   const armLeft = act && act.left != null ? act.left : c.restLeft ? c.restLeft(cc, ctx) : arm(cc, shL, handL);
