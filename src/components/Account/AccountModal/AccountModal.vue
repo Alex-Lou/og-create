@@ -16,9 +16,8 @@
       <!-- Qui je suis sur l'île : la photo de la carte d'embarquement et le nom du Grimoire -->
       <section class="acc__who" aria-label="Ton identité">
         <div class="acc__photo">
-          <button type="button" class="acc__arrow" aria-label="Photo précédente" @click="turn(-1)">‹</button>
-          <span class="acc__frame"><img :src="portrait" alt="" width="48" height="64" /></span>
-          <button type="button" class="acc__arrow" aria-label="Photo suivante" @click="turn(1)">›</button>
+          <span class="acc__frame"><img v-if="portrait" :src="portrait" alt="" width="48" height="64" /></span>
+          <button type="button" class="g-btn g-btn--ghost g-btn--small" :disabled="busy" @click="editing = true">Changer d’apparence</button>
         </div>
         <form class="acc__name" @submit.prevent="saveName">
           <label class="g-mono" for="acc-name">Ton nom sur l’île</label>
@@ -26,7 +25,6 @@
             <input id="acc-name" v-model="name" type="text" :maxlength="NAME_MAX" autocomplete="nickname" spellcheck="false" />
             <button type="submit" class="g-btn g-btn--small" :disabled="busy || !nameChanged">Écrire</button>
           </div>
-          <button v-if="lookChanged" type="button" class="g-btn g-btn--small acc__keep" :disabled="busy" @click="saveLook">Garder cette photo</button>
           <p v-if="profile.createdAt" class="g-italic acc__since">Échoué sur l’île le {{ dateOf(profile.createdAt) }}</p>
         </form>
       </section>
@@ -108,6 +106,10 @@
         </template>
       </ul>
     </template>
+    <!-- Changer d'apparence : l'éditeur de la carte d'embarquement, par-dessus -->
+    <Teleport to="body">
+      <PrologueAvatar v-if="editing" style="z-index: calc(var(--z-modal) + 10)" editing :start="look" :busy="busy" :error="lookError" @chosen="saveLook" @close="editing = false; lookError = ''" />
+    </Teleport>
   </GModal>
 </template>
 
@@ -115,7 +117,9 @@
 import GModal from '@/components/ui/GModal/GModal.vue';
 import accountService from '@/services/accountService';
 import playService from '@/services/playService';
+import PrologueAvatar from '@/components/Prologue/PrologueAvatar/PrologueAvatar.vue';
 import { LOOKS, DEFAULT_LOOK, avatarFrames } from '@/game/sceneArt';
+import { isCustom } from '@/game/avatarKit';
 import { NAME_MAX, cleanName } from '@/utils/names';
 import { messageOf } from '@/utils/errors';
 
@@ -126,14 +130,14 @@ const dateOf = iso => new Date(iso).toLocaleDateString('fr-FR', { day: 'numeric'
 // Une seule rubrique ouverte à la fois ; chaque réponse s'écrit sous sa rubrique
 export default {
   name: 'AccountModal',
-  components: { GModal },
-  // look : la photo choisie ; left : le compte est en pause ou en partance (l'appli se déconnecte)
+  components: { GModal, PrologueAvatar },
+  // look : l'avatar gardé (ses choix) ; left : le compte est en pause ou en partance (l'appli se déconnecte)
   emits: ['close', 'look', 'left'],
   data() {
     return {
       NAME_MAX, GRACE_DAYS,
       profile: null, error: '', open: null, busy: false, left: '',
-      name: '', look: DEFAULT_LOOK, email: '', password: '', next: '', again: '',
+      name: '', look: DEFAULT_LOOK, editing: false, lookError: '', email: '', password: '', next: '', again: '',
       said: {}
     };
   },
@@ -153,9 +157,6 @@ export default {
     },
     nameChanged() {
       return this.name.trim() !== (this.profile.name || '');
-    },
-    lookChanged() {
-      return this.look !== (this.profile.look || DEFAULT_LOOK);
     }
   },
   mounted() {
@@ -168,7 +169,7 @@ export default {
       try {
         this.profile = await accountService.profile();
         this.name = this.profile.name || '';
-        this.look = LOOKS.includes(this.profile.look) ? this.profile.look : DEFAULT_LOOK;
+        this.look = isCustom(this.profile.look) || LOOKS.includes(this.profile.look) ? this.profile.look : DEFAULT_LOOK;
       } catch (error) {
         this.error = messageOf(error, 'Ton compte n’a pas pu être lu.');
       }
@@ -176,9 +177,6 @@ export default {
     toggle(id) {
       this.open = this.open === id ? null : id;
       this.password = this.next = this.again = '';
-    },
-    turn(step) {
-      this.look = LOOKS[(LOOKS.indexOf(this.look) + step + LOOKS.length) % LOOKS.length];
     },
     // Une action : occupé pendant, sa réponse écrite sous sa rubrique ; rend le résultat, ou null si refusée
     async act(where, run, fallback) {
@@ -209,12 +207,21 @@ export default {
         this.tell('who', 'Ton nom est écrit dans le Grimoire.');
       }
     },
-    async saveLook() {
-      const look = this.look;
-      if (await this.act('who', () => playService.worldAvatar(look), 'La photo n’a pas pu être gardée.')) {
-        this.profile = { ...this.profile, look };
-        this.$emit('look', look);
-        this.tell('who', 'Nouvelle photo, même naufragé.');
+    // L'éditeur rend ses choix : le serveur les vérifie un à un, puis les garde
+    async saveLook({ look }) {
+      this.busy = true;
+      this.lookError = '';
+      try {
+        const world = await playService.worldAvatar(look);
+        this.look = world.avatar || look;
+        this.profile = { ...this.profile, look: this.look };
+        this.$emit('look', this.look);
+        this.editing = false;
+        this.tell('who', 'Nouvelle allure, même naufragé.');
+      } catch (error) {
+        this.lookError = messageOf(error, 'Ton apparence n’a pas pu être gardée.');
+      } finally {
+        this.busy = false;
       }
     },
     async saveEmail() {

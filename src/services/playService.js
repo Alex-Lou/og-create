@@ -131,9 +131,11 @@ export default {
   worldPlayer(name) {
     return http.post('/play/world/player', { name }).then(response => response.data);
   },
-  // L'avatar du joueur, choisi sur sa carte d'embarquement au tutoriel (game/sceneArt.js, LOOKS) → la vue de l'île
+  // L'avatar du joueur, composé sur sa carte d'embarquement au tutoriel : ses choix (game/avatarKit.js, vérifiés un à
+  // un par le serveur) ou l'un des exemples (game/sceneArt.js, LOOKS) → la vue de l'île
   worldAvatar(look) {
-    return http.post('/play/world/avatar', { look }).then(response => response.data);
+    const body = look && typeof look === 'object' ? { choices: look } : { look };
+    return http.post('/play/world/avatar', body).then(response => response.data);
   },
   // Enseigne d'un bâtiment (dès le palier V) : style porté, acheté au passage → { coins?, world } ; nom écrit sur les
   // enseignes de l'île → vue de l'île

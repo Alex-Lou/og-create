@@ -52,7 +52,7 @@
         </li>
       </ul>
       <div class="world__sheet-actions">
-        <button type="button" class="world__btn" :disabled="!zone.open || busy" @click="$emit('buy')">Acheter · {{ zone.price }} écus</button>
+        <button type="button" class="world__btn" data-coach="zone-buy" :disabled="!zone.open || busy" @click="$emit('buy')">Acheter · {{ zone.price }} écus</button>
       </div>
     </div>
   </div>
