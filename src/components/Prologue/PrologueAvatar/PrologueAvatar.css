@@ -10,7 +10,7 @@
   --pav-error: #ffb4a8;
   --pav-ok-bg: #f6efdc;
   --pav-ok-edge: #b99556;
-  --sa-bottom: max(292px, calc(env(safe-area-inset-bottom) + 282px));
+  --sa-bottom: max(244px, calc(env(safe-area-inset-bottom) + 234px));
   position: fixed; inset: 0; z-index: var(--z-prologue); overflow: hidden;
   background: var(--pav-night); color: var(--pav-ink);
 }
@@ -19,15 +19,20 @@
   width: min(560px, calc(100% - 32px)); padding: 14px 18px 16px; border-radius: var(--r-board);
   background: var(--pav-panel-bg); box-shadow: 0 10px 30px rgba(0, 0, 0, .45), inset 0 0 0 1px var(--pav-panel-ring);
 }
+.pav__ok:disabled { opacity: .6; cursor: default; }
 .pav__thought { margin: 0 0 10px; font-family: var(--font-fell); font-style: italic; font-size: 18px; line-height: 1.3; }
-.pav__pick { display: flex; align-items: center; gap: 8px; margin-bottom: 10px; }
-.pav__arrow, .pav__luck {
-  min-width: 44px; min-height: 44px; border: 0; border-radius: var(--r-pill); cursor: pointer; color: inherit;
-  background: rgba(var(--pav-btn-rgb), .14); box-shadow: inset 0 0 0 1px rgba(var(--pav-btn-rgb), .35);
+/* Se composer : la pensée, l'éditeur (il prend la hauteur qui reste), puis les boutons */
+.pav__maker {
+  position: absolute; inset: 0; display: flex; flex-direction: column; margin: 0 auto; width: min(560px, 100%);
+  padding: max(16px, env(safe-area-inset-top)) 16px max(16px, calc(env(safe-area-inset-bottom) + 10px));
 }
-.pav__arrow { font-family: var(--font-fell); font-size: 26px; line-height: 1; }
-.pav__luck { margin-left: auto; padding: 0 16px; font-family: var(--font-fell); font-size: 17px; }
-.pav__count { min-width: 56px; text-align: center; font-family: var(--font-ui); font-size: 13px; font-weight: 800; color: var(--pav-muted); }
+.pav__editor { flex: 1; min-height: 0; }
+.pav__actions { display: flex; gap: 10px; margin-top: 10px; }
+.pav__back {
+  flex: none; min-height: 48px; padding: 0 18px; border: 0; border-radius: var(--r-pill); cursor: pointer; color: inherit;
+  background: rgba(var(--pav-btn-rgb), .14); box-shadow: inset 0 0 0 1px rgba(var(--pav-btn-rgb), .35);
+  font-family: var(--font-fell); font-size: 18px;
+}
 .pav__name { display: block; margin-bottom: 10px; }
 .pav__label { display: block; font-family: var(--font-fell-sc); font-size: 15px; letter-spacing: .06em; color: var(--pav-muted); }
 .pav__name input {
@@ -37,9 +42,9 @@
 .pav__name input:focus { border-bottom-color: var(--pav-ink); }
 .pav__error { margin: 0 0 8px; font-family: var(--font-ui); font-size: 13px; font-weight: 800; color: var(--pav-error); }
 .pav__ok {
-  width: 100%; min-height: 48px; border: 0; border-radius: var(--r-pill); cursor: pointer;
+  flex: 1; width: 100%; min-height: 48px; border: 0; border-radius: var(--r-pill); cursor: pointer;
   background: var(--pav-ok-bg); color: var(--prologue-ink); box-shadow: 0 4px 0 var(--pav-ok-edge);
   font-family: var(--font-fell); font-size: 20px;
 }
 
-.pav__arrow:focus-visible, .pav__luck:focus-visible, .pav__ok:focus-visible { outline: 3px solid var(--oc-aim); outline-offset: 2px; }
+.pav__back:focus-visible, .pav__ok:focus-visible { outline: 3px solid var(--oc-aim); outline-offset: 2px; }

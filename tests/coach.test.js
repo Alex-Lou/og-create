@@ -41,15 +41,40 @@ describe('le coach', () => {
 });
 
 describe('les leçons de l’île', () => {
+  const first = quest => islandLesson(quest).steps[0].target;
   it('chaque quête du prologue montre son geste ; accomplie, Brume et sa récompense', () => {
-    expect(islandLesson({ id: 'recolte', done: false })).toMatchObject({ id: 'quest-recolte', target: '.world__play', mode: 'world' });
-    expect(islandLesson({ id: 'soupe', done: false }).target).toBe('île:habitant:foyer');
-    expect(islandLesson({ id: 'achat-source', done: false }).target).toBe('île:quartier:source');
-    expect(islandLesson({ id: 'puits-ondin', done: false }).target).toBe('île:site:puits');
-    expect(islandLesson({ id: 'soupe', done: true })).toMatchObject({ id: 'claim', target: 'île:brume' });
+    expect(islandLesson({ id: 'recolte', done: false })).toMatchObject({ id: 'quest-recolte', mode: 'world' });
+    expect(first({ id: 'recolte', done: false })).toBe('.world__play');
+    expect(first({ id: 'soupe', done: false })).toBe('île:habitant:foyer');
+    expect(first({ id: 'achat-source', done: false })).toBe('île:quartier:source');
+    expect(first({ id: 'puits-ondin', done: false })).toBe('île:site:puits');
+    expect(islandLesson({ id: 'soupe', done: true }).id).toBe('claim');
+    expect(first({ id: 'soupe', done: true })).toBe('île:brume');
     // Hors du prologue, rien ; une quête sans geste (les pages, au Grimoire) non plus
     expect(islandLesson({ id: 'lisiere', done: false })).toBeNull();
     expect(islandLesson({ id: 'pages', done: false })).toBeNull();
     expect(islandLesson(null)).toBeNull();
+  });
+  it('de l’île à la fiche : toucher, le bouton de la bulle, puis le bouton de la fiche', () => {
+    const steps = islandLesson({ id: 'soupe', done: false }).steps.map(st => st.target);
+    expect(steps).toHaveLength(3);
+    expect(steps[1]).toContain('[data-pick="vil:foyer"]');
+    expect(steps[1]).toContain('[data-pick="ask:foyer"]');
+    expect(steps[2]).toContain('.friend__fill');
+    expect(islandLesson({ id: 'eveil-ondin', done: false }).steps[1].target).toContain('[data-pick="vil:puits"]');
+    // La récompense : une fiche encore ouverte se referme d'abord
+    expect(islandLesson({ id: 'deco', done: true }).steps[1].target).toContain('.g-modal__close');
+  });
+  it('chaque geste d’une leçon est forcé la première fois, puis libre', () => {
+    coach.state.seen.clear();
+    coach.show(islandLesson({ id: 'soupe', done: false }));
+    const lesson = coach.state.lesson;
+    expect(lesson.target).toBe('île:habitant:foyer');
+    expect([coach.stepId(lesson, 0), coach.stepId(lesson, 2)]).toEqual(['quest-soupe', 'quest-soupe#2']);
+    expect(coach.blocks('quest-soupe#1')).toBe(true);
+    coach.done('quest-soupe#1');
+    expect(coach.blocks('quest-soupe#1')).toBe(false);
+    expect(coach.blocks('quest-soupe')).toBe(true);
+    coach.show(null);
   });
 });

@@ -41,7 +41,7 @@ export default {
     // Les maîtres dont le bâtiment est fondé (PrologueArt : les autres paraissent en naufragés aux veillées)
     built: { type: Array, default: () => [] },
     // L'avatar du joueur dans les scènes de la bibliothèque (game/sceneArt.js)
-    look: { type: String, default: '' }
+    look: { type: [String, Object], default: '' }
   },
   emits: ['done', 'skip'],
   data() {

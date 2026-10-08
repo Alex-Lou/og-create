@@ -154,6 +154,11 @@ export default {
       const big = person && who.sprite[0].startsWith('lib-');
       // head : du point touché au-dessus de la tête (et de la toile du parapluie), où se pose la bulle d'un besoin
       const head = big ? (who.sprite[0].includes('_parapluie_') ? 41 : 27) : 16;
+      // Un dormeur est couché : on le touche sur tout son corps, à ras du sol (son dessin fait 51 × 38, ancré au lit)
+      if (person && who.pose === 'sleep') {
+        hits.push({ key: who.id, kind: 'villager', who, x: c.x, y: c.y - 3, r: 24, head: 20 });
+        continue;
+      }
       hits.push({ key: who.id, kind: person ? 'villager' : who.species, who, x: c.x, y: c.y - who.z - (big ? 24 : person ? 16 : tall ? 44 : 6), r: big ? 20 : person ? 15 : tall ? 34 : 12, head });
     }
     // Les égarés de la nuit (serveur : nights) : ils marchent vers leur bâtiment, un toucher en repousse un ; changés en
