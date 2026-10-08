@@ -5,7 +5,8 @@
   "Suites d'images (suites) : à enchaîner au rythme de ms_par_image, en boucle si boucle est vrai, sinon une fois.",
   "Le Filon : un bloc de la paroi a un cadre de 32 × 32 ; les effets qui débordent du bloc (éclatement, étincelles, onde, éclats de couleur) ont un cadre de 48 × 48 centré sur le bloc (à poser 1,5 fois plus grand que le bloc). Pièces fixes : les blocs et leurs fissures, le trou. Boucles animées dans le SVG (SMIL) : l'éclat des pierres, la lueur du filon, le signe ✦. Suites d'images à enchaîner une fois, au coup : le bloc qui éclate, la pioche, les étincelles, l'onde, la pierre qui apparaît, ses éclats de couleur.",
   "La Pêche : le jeu dessine sur un canvas, tout ce qui bouge est en suites d'images (boucle : vrai, à répéter ; sinon une fois). Les prises nagent vers la droite (retourner l'image pour l'autre sens) ; ferrées, elles pendent tête en bas, la ligne en haut au milieu. Le couloir d'eau et le ponton se répètent en largeur.",
-  "La Cueillette : le buisson a un cadre de 60 × 60 (le bouton) ; un fruit, les guêpes, la piqûre et le panier un cadre de 32 × 32, à poser au milieu du buisson. Boucles animées dans le SVG (SMIL) : le buisson, le fruit mûr, le fruit trop mûr, les guêpes. Suites d'images à enchaîner une fois : le buisson secoué, le fruit qui mûrit, qui tombe, qu'on cueille, la piqûre."
+  "La Cueillette : le buisson a un cadre de 60 × 60 (le bouton) ; un fruit, les guêpes, la piqûre et le panier un cadre de 32 × 32, à poser au milieu du buisson. Boucles animées dans le SVG (SMIL) : le buisson, le fruit mûr, le fruit trop mûr, les guêpes. Suites d'images à enchaîner une fois : le buisson secoué, le fruit qui mûrit, qui tombe, qu'on cueille, la piqûre.",
+  "La Récolte : une tuile a un cadre de 32 × 32 ; la tuile cueillie et l'éclat d'une longue chaîne ont un cadre de 48 × 48 centré sur la tuile (1,5 fois sa taille). Les sortes gardent les noms du jeu (stone, wood, water, food, fish). Boucles animées dans le SVG (SMIL) : la tuile au repos, la tuile choisie. Suites d'images à enchaîner une fois : la tuile cueillie, la tuile qui atterrit, l'éclat d'une longue chaîne."
  ],
  "hd": 4,
  "jeux": {
@@ -2251,6 +2252,564 @@
       "cueillette/piqure_1.svg",
       "cueillette/piqure_2.svg",
       "cueillette/piqure_3.svg"
+     ]
+    }
+   }
+  },
+  "recolte": {
+   "titre": "La Récolte (le plateau de l'île)",
+   "pieces": {
+    "tuile-stone": {
+     "nom": "La tuile pierre au repos (elle respire, en boucle)",
+     "cadre": [
+      0,
+      0,
+      32,
+      32
+     ],
+     "fichier": "recolte/tuile-stone.svg"
+    },
+    "choisie-stone": {
+     "nom": "La tuile pierre choisie (le liseré pulse, en boucle)",
+     "cadre": [
+      0,
+      0,
+      32,
+      32
+     ],
+     "fichier": "recolte/choisie-stone.svg"
+    },
+    "cueillie-stone_1": {
+     "nom": "La tuile pierre cueillie",
+     "cadre": [
+      -8,
+      -8,
+      48,
+      48
+     ],
+     "fichier": "recolte/cueillie-stone_1.svg"
+    },
+    "cueillie-stone_2": {
+     "nom": "La tuile pierre cueillie",
+     "cadre": [
+      -8,
+      -8,
+      48,
+      48
+     ],
+     "fichier": "recolte/cueillie-stone_2.svg"
+    },
+    "cueillie-stone_3": {
+     "nom": "La tuile pierre cueillie",
+     "cadre": [
+      -8,
+      -8,
+      48,
+      48
+     ],
+     "fichier": "recolte/cueillie-stone_3.svg"
+    },
+    "cueillie-stone_4": {
+     "nom": "La tuile pierre cueillie",
+     "cadre": [
+      -8,
+      -8,
+      48,
+      48
+     ],
+     "fichier": "recolte/cueillie-stone_4.svg"
+    },
+    "atterrit-stone_1": {
+     "nom": "La tuile pierre qui atterrit",
+     "cadre": [
+      0,
+      0,
+      32,
+      32
+     ],
+     "fichier": "recolte/atterrit-stone_1.svg"
+    },
+    "atterrit-stone_2": {
+     "nom": "La tuile pierre qui atterrit",
+     "cadre": [
+      0,
+      0,
+      32,
+      32
+     ],
+     "fichier": "recolte/atterrit-stone_2.svg"
+    },
+    "tuile-wood": {
+     "nom": "La tuile bois au repos (elle respire, en boucle)",
+     "cadre": [
+      0,
+      0,
+      32,
+      32
+     ],
+     "fichier": "recolte/tuile-wood.svg"
+    },
+    "choisie-wood": {
+     "nom": "La tuile bois choisie (le liseré pulse, en boucle)",
+     "cadre": [
+      0,
+      0,
+      32,
+      32
+     ],
+     "fichier": "recolte/choisie-wood.svg"
+    },
+    "cueillie-wood_1": {
+     "nom": "La tuile bois cueillie",
+     "cadre": [
+      -8,
+      -8,
+      48,
+      48
+     ],
+     "fichier": "recolte/cueillie-wood_1.svg"
+    },
+    "cueillie-wood_2": {
+     "nom": "La tuile bois cueillie",
+     "cadre": [
+      -8,
+      -8,
+      48,
+      48
+     ],
+     "fichier": "recolte/cueillie-wood_2.svg"
+    },
+    "cueillie-wood_3": {
+     "nom": "La tuile bois cueillie",
+     "cadre": [
+      -8,
+      -8,
+      48,
+      48
+     ],
+     "fichier": "recolte/cueillie-wood_3.svg"
+    },
+    "cueillie-wood_4": {
+     "nom": "La tuile bois cueillie",
+     "cadre": [
+      -8,
+      -8,
+      48,
+      48
+     ],
+     "fichier": "recolte/cueillie-wood_4.svg"
+    },
+    "atterrit-wood_1": {
+     "nom": "La tuile bois qui atterrit",
+     "cadre": [
+      0,
+      0,
+      32,
+      32
+     ],
+     "fichier": "recolte/atterrit-wood_1.svg"
+    },
+    "atterrit-wood_2": {
+     "nom": "La tuile bois qui atterrit",
+     "cadre": [
+      0,
+      0,
+      32,
+      32
+     ],
+     "fichier": "recolte/atterrit-wood_2.svg"
+    },
+    "tuile-water": {
+     "nom": "La tuile eau au repos (elle respire, en boucle)",
+     "cadre": [
+      0,
+      0,
+      32,
+      32
+     ],
+     "fichier": "recolte/tuile-water.svg"
+    },
+    "choisie-water": {
+     "nom": "La tuile eau choisie (le liseré pulse, en boucle)",
+     "cadre": [
+      0,
+      0,
+      32,
+      32
+     ],
+     "fichier": "recolte/choisie-water.svg"
+    },
+    "cueillie-water_1": {
+     "nom": "La tuile eau cueillie",
+     "cadre": [
+      -8,
+      -8,
+      48,
+      48
+     ],
+     "fichier": "recolte/cueillie-water_1.svg"
+    },
+    "cueillie-water_2": {
+     "nom": "La tuile eau cueillie",
+     "cadre": [
+      -8,
+      -8,
+      48,
+      48
+     ],
+     "fichier": "recolte/cueillie-water_2.svg"
+    },
+    "cueillie-water_3": {
+     "nom": "La tuile eau cueillie",
+     "cadre": [
+      -8,
+      -8,
+      48,
+      48
+     ],
+     "fichier": "recolte/cueillie-water_3.svg"
+    },
+    "cueillie-water_4": {
+     "nom": "La tuile eau cueillie",
+     "cadre": [
+      -8,
+      -8,
+      48,
+      48
+     ],
+     "fichier": "recolte/cueillie-water_4.svg"
+    },
+    "atterrit-water_1": {
+     "nom": "La tuile eau qui atterrit",
+     "cadre": [
+      0,
+      0,
+      32,
+      32
+     ],
+     "fichier": "recolte/atterrit-water_1.svg"
+    },
+    "atterrit-water_2": {
+     "nom": "La tuile eau qui atterrit",
+     "cadre": [
+      0,
+      0,
+      32,
+      32
+     ],
+     "fichier": "recolte/atterrit-water_2.svg"
+    },
+    "tuile-food": {
+     "nom": "La tuile nourriture au repos (elle respire, en boucle)",
+     "cadre": [
+      0,
+      0,
+      32,
+      32
+     ],
+     "fichier": "recolte/tuile-food.svg"
+    },
+    "choisie-food": {
+     "nom": "La tuile nourriture choisie (le liseré pulse, en boucle)",
+     "cadre": [
+      0,
+      0,
+      32,
+      32
+     ],
+     "fichier": "recolte/choisie-food.svg"
+    },
+    "cueillie-food_1": {
+     "nom": "La tuile nourriture cueillie",
+     "cadre": [
+      -8,
+      -8,
+      48,
+      48
+     ],
+     "fichier": "recolte/cueillie-food_1.svg"
+    },
+    "cueillie-food_2": {
+     "nom": "La tuile nourriture cueillie",
+     "cadre": [
+      -8,
+      -8,
+      48,
+      48
+     ],
+     "fichier": "recolte/cueillie-food_2.svg"
+    },
+    "cueillie-food_3": {
+     "nom": "La tuile nourriture cueillie",
+     "cadre": [
+      -8,
+      -8,
+      48,
+      48
+     ],
+     "fichier": "recolte/cueillie-food_3.svg"
+    },
+    "cueillie-food_4": {
+     "nom": "La tuile nourriture cueillie",
+     "cadre": [
+      -8,
+      -8,
+      48,
+      48
+     ],
+     "fichier": "recolte/cueillie-food_4.svg"
+    },
+    "atterrit-food_1": {
+     "nom": "La tuile nourriture qui atterrit",
+     "cadre": [
+      0,
+      0,
+      32,
+      32
+     ],
+     "fichier": "recolte/atterrit-food_1.svg"
+    },
+    "atterrit-food_2": {
+     "nom": "La tuile nourriture qui atterrit",
+     "cadre": [
+      0,
+      0,
+      32,
+      32
+     ],
+     "fichier": "recolte/atterrit-food_2.svg"
+    },
+    "tuile-fish": {
+     "nom": "La tuile poisson au repos (elle respire, en boucle)",
+     "cadre": [
+      0,
+      0,
+      32,
+      32
+     ],
+     "fichier": "recolte/tuile-fish.svg"
+    },
+    "choisie-fish": {
+     "nom": "La tuile poisson choisie (le liseré pulse, en boucle)",
+     "cadre": [
+      0,
+      0,
+      32,
+      32
+     ],
+     "fichier": "recolte/choisie-fish.svg"
+    },
+    "cueillie-fish_1": {
+     "nom": "La tuile poisson cueillie",
+     "cadre": [
+      -8,
+      -8,
+      48,
+      48
+     ],
+     "fichier": "recolte/cueillie-fish_1.svg"
+    },
+    "cueillie-fish_2": {
+     "nom": "La tuile poisson cueillie",
+     "cadre": [
+      -8,
+      -8,
+      48,
+      48
+     ],
+     "fichier": "recolte/cueillie-fish_2.svg"
+    },
+    "cueillie-fish_3": {
+     "nom": "La tuile poisson cueillie",
+     "cadre": [
+      -8,
+      -8,
+      48,
+      48
+     ],
+     "fichier": "recolte/cueillie-fish_3.svg"
+    },
+    "cueillie-fish_4": {
+     "nom": "La tuile poisson cueillie",
+     "cadre": [
+      -8,
+      -8,
+      48,
+      48
+     ],
+     "fichier": "recolte/cueillie-fish_4.svg"
+    },
+    "atterrit-fish_1": {
+     "nom": "La tuile poisson qui atterrit",
+     "cadre": [
+      0,
+      0,
+      32,
+      32
+     ],
+     "fichier": "recolte/atterrit-fish_1.svg"
+    },
+    "atterrit-fish_2": {
+     "nom": "La tuile poisson qui atterrit",
+     "cadre": [
+      0,
+      0,
+      32,
+      32
+     ],
+     "fichier": "recolte/atterrit-fish_2.svg"
+    },
+    "chaine_1": {
+     "nom": "L'éclat d'une longue chaîne",
+     "cadre": [
+      -8,
+      -8,
+      48,
+      48
+     ],
+     "fichier": "recolte/chaine_1.svg"
+    },
+    "chaine_2": {
+     "nom": "L'éclat d'une longue chaîne",
+     "cadre": [
+      -8,
+      -8,
+      48,
+      48
+     ],
+     "fichier": "recolte/chaine_2.svg"
+    },
+    "chaine_3": {
+     "nom": "L'éclat d'une longue chaîne",
+     "cadre": [
+      -8,
+      -8,
+      48,
+      48
+     ],
+     "fichier": "recolte/chaine_3.svg"
+    },
+    "chaine_4": {
+     "nom": "L'éclat d'une longue chaîne",
+     "cadre": [
+      -8,
+      -8,
+      48,
+      48
+     ],
+     "fichier": "recolte/chaine_4.svg"
+    }
+   },
+   "suites": {
+    "cueillie-stone": {
+     "nom": "La tuile pierre cueillie",
+     "ms_par_image": 90,
+     "boucle": false,
+     "fichiers": [
+      "recolte/cueillie-stone_1.svg",
+      "recolte/cueillie-stone_2.svg",
+      "recolte/cueillie-stone_3.svg",
+      "recolte/cueillie-stone_4.svg"
+     ]
+    },
+    "atterrit-stone": {
+     "nom": "La tuile pierre qui atterrit",
+     "ms_par_image": 140,
+     "boucle": false,
+     "fichiers": [
+      "recolte/atterrit-stone_1.svg",
+      "recolte/atterrit-stone_2.svg"
+     ]
+    },
+    "cueillie-wood": {
+     "nom": "La tuile bois cueillie",
+     "ms_par_image": 90,
+     "boucle": false,
+     "fichiers": [
+      "recolte/cueillie-wood_1.svg",
+      "recolte/cueillie-wood_2.svg",
+      "recolte/cueillie-wood_3.svg",
+      "recolte/cueillie-wood_4.svg"
+     ]
+    },
+    "atterrit-wood": {
+     "nom": "La tuile bois qui atterrit",
+     "ms_par_image": 140,
+     "boucle": false,
+     "fichiers": [
+      "recolte/atterrit-wood_1.svg",
+      "recolte/atterrit-wood_2.svg"
+     ]
+    },
+    "cueillie-water": {
+     "nom": "La tuile eau cueillie",
+     "ms_par_image": 90,
+     "boucle": false,
+     "fichiers": [
+      "recolte/cueillie-water_1.svg",
+      "recolte/cueillie-water_2.svg",
+      "recolte/cueillie-water_3.svg",
+      "recolte/cueillie-water_4.svg"
+     ]
+    },
+    "atterrit-water": {
+     "nom": "La tuile eau qui atterrit",
+     "ms_par_image": 140,
+     "boucle": false,
+     "fichiers": [
+      "recolte/atterrit-water_1.svg",
+      "recolte/atterrit-water_2.svg"
+     ]
+    },
+    "cueillie-food": {
+     "nom": "La tuile nourriture cueillie",
+     "ms_par_image": 90,
+     "boucle": false,
+     "fichiers": [
+      "recolte/cueillie-food_1.svg",
+      "recolte/cueillie-food_2.svg",
+      "recolte/cueillie-food_3.svg",
+      "recolte/cueillie-food_4.svg"
+     ]
+    },
+    "atterrit-food": {
+     "nom": "La tuile nourriture qui atterrit",
+     "ms_par_image": 140,
+     "boucle": false,
+     "fichiers": [
+      "recolte/atterrit-food_1.svg",
+      "recolte/atterrit-food_2.svg"
+     ]
+    },
+    "cueillie-fish": {
+     "nom": "La tuile poisson cueillie",
+     "ms_par_image": 90,
+     "boucle": false,
+     "fichiers": [
+      "recolte/cueillie-fish_1.svg",
+      "recolte/cueillie-fish_2.svg",
+      "recolte/cueillie-fish_3.svg",
+      "recolte/cueillie-fish_4.svg"
+     ]
+    },
+    "atterrit-fish": {
+     "nom": "La tuile poisson qui atterrit",
+     "ms_par_image": 140,
+     "boucle": false,
+     "fichiers": [
+      "recolte/atterrit-fish_1.svg",
+      "recolte/atterrit-fish_2.svg"
+     ]
+    },
+    "chaine": {
+     "nom": "L'éclat d'une longue chaîne",
+     "ms_par_image": 90,
+     "boucle": false,
+     "fichiers": [
+      "recolte/chaine_1.svg",
+      "recolte/chaine_2.svg",
+      "recolte/chaine_3.svg",
+      "recolte/chaine_4.svg"
      ]
     }
    }
