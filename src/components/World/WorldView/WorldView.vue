@@ -916,6 +916,7 @@ export default {
       this.perches = this.perchesOf(state);
       this.bottleSpot = this.bottleSpotOf(state);
       // Habitants et bêtes : ils vivent dans les quartiers à soi, autour des bâtiments bâtis
+      this.arrivals = this.arrivalsOf(state);
       this.village = villageOf({
         n: state.size, M: this.M, sites: state.sites, crafts: state.crafts ? state.crafts.placed : [], props: this.props, annexes: state.annexes || [],
         owned: new Set(state.map.zones.map((z, i) => (z.owned ? i : -1)).filter(i => i >= 0)), visitor: state.visitor || null,
@@ -930,8 +931,12 @@ export default {
         // (le Cercle trouvé, une trace)
         anya: state.anya && state.anya.revealed ? { visit: state.anya.visit || null } : null,
         dame: Boolean((state.landmarks || []).some(l => l.id === 'menhirs' && l.found) || (state.anya && state.anya.traces.length)),
-        coop: this.coopOf(state)
+        coop: this.coopOf(state),
+        // Le tutoriel : chacun à sa place, pas encore de bêtes des bois ; les naufragés qui débarquent (folk.js)
+        calm: this.thickMist(state),
+        arrivals: this.arrivals
       });
+      this.showArrivals();
       // Visiteur : son bateau s'amarre près du Ponton ; un visiteur jamais vu sur cet appareil arrive sous les yeux
       this.visitorDock = state.visitor ? this.dockOf(state, this.M) : null;
       if (state.visitor && this.visitorDock && !this.reduced()) {

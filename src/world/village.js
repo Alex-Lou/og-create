@@ -195,10 +195,17 @@ function doorOf(grid, site) {
 // révélée, { visit } (son passage du jour, vu du serveur : { slot, x, y }, ou null), sinon null ; dame : le bol de soupe
 // du soir « pour la Dame »
 // coop : les poules de Cannelle et leur cage ouverte ({ x, y, hens: [{ id, name, ready }] }), ou null
+// calm : le tutoriel (choix de l'auteur, 8 oct. : le joueur doit comprendre, un personnage à la fois) : chacun reste
+// près de sa place (CALM_REACH), et ni bêtes des bois ni koï : elles arrivent à la fin du tutoriel
+// arrivals : les naufragés qui débarquent sous les yeux (Map rôle → { from: case près de l'épave, at: instant, s }) :
+// ils marchent de l'épave à leur place (ARRIVE_SPEED), s'y arrêtent ARRIVE_PAUSE, puis reprennent leur journée
 // Le geste de chaque maître sur son annexe (poses de travail de la bibliothèque), un par jour : Mélisse bêche, sème,
 // arrose et récolte ; Sylve taille et scie ; Rivet scie ; Cannelle récolte et arrose ; Ondin arrose
 const CHORES = { potager: ['becher', 'semer', 'arroser', 'recolter'], bosquet: ['tailler', 'scier'], atelier: ['scier'], foyer: ['recolter', 'arroser'], puits: ['arroser'] };
-export function villageOf({ n, M, sites, owned, crafts = [], props, annexes = [], visitor = null, settlers = [], climates = [], avoid = [], troupe = null, written = null, anya = null, dame = false, coop = null }) {
+const CALM_REACH = 2;
+const ARRIVE_SPEED = 1.5;
+const ARRIVE_PAUSE = 12;
+export function villageOf({ n, M, sites, owned, crafts = [], props, annexes = [], visitor = null, settlers = [], climates = [], avoid = [], troupe = null, written = null, anya = null, dame = false, coop = null, calm = false, arrivals = null }) {
   const grid = gridOf({ n, M, sites, owned, crafts, props, annexes });
   const bestiary = bestiaryOf(written);
   const built = sites.filter(s => s.level > 0 && !s.locked);
@@ -267,9 +274,10 @@ export function villageOf({ n, M, sites, owned, crafts = [], props, annexes = []
     const around = RING.map(([dx, dy]) => ({ x: stop.x + dx, y: stop.y + dy })).filter((c, i) => i === 0 || grid.walk(c.x, c.y));
     return around[(Math.floor(hash(stop.x * 31 + stop.y, salt) * around.length) + r.k) % around.length];
   };
-  // Une case où flâner, à quelques pas de son travail
+  // Une case où flâner, à quelques pas de son travail (pendant le tutoriel, tout près)
   const roamOf = (r, salt) => {
-    const near = grid.walkable.filter(c => Math.abs(c.x - r.work.x) + Math.abs(c.y - r.work.y) <= 6);
+    const reach = calm ? CALM_REACH : 6;
+    const near = grid.walkable.filter(c => Math.abs(c.x - r.work.x) + Math.abs(c.y - r.work.y) <= reach);
     return near.length ? near[Math.floor(hash(r.k * 29 + salt, 53) * near.length)] : r.work;
   };
   // Tournée d'un habitant pour la journée (ou la soirée) : une suite d'arrêts, chacun avec la marche pour y aller et
@@ -284,7 +292,10 @@ export function villageOf({ n, M, sites, owned, crafts = [], props, annexes = []
     const other = i => stops[Math.floor(hash(r.k * 7 + i, salt(13)) * stops.length)] || r.work;
     const near = stops.filter(s => s !== home).sort((a, b) => Math.hypot(a.x - home.x, a.y - home.y) - Math.hypot(b.x - home.x, b.y - home.y));
     let seq;
-    if (evening) {
+    if (calm && !r.guest) {
+      // Le tutoriel : chacun à sa place (son travail, quelques pas autour), le soir aussi : on sait où le trouver
+      seq = [[spotOf(r, r.work, salt(0)), roll(0, 60, 110), evening ? 'idle' : 'work'], [roamOf(r, salt(1)), roll(1, 10, 25), 'idle'], [spotOf(r, r.work, salt(2)), roll(2, 50, 90), evening ? 'idle' : 'work']];
+    } else if (evening) {
       // Le soir : chacun sa place autour du feu, un petit tour (un bâtiment proche ou quelques pas), puis le feu encore
       const stroll = hash(r.k, salt(5)) < 0.5 && near.length ? spotOf(r, near[Math.floor(hash(r.k, salt(6)) * Math.min(3, near.length))], 61) : roamOf(r, salt(7));
       seq = [[spotOf(r, home, salt(1)), roll(1, 30, 70), 'idle'], [stroll, roll(2, 10, 25), 'idle'], [spotOf(r, home, salt(2)), roll(3, 40, 90), 'idle']];
@@ -320,6 +331,20 @@ export function villageOf({ n, M, sites, owned, crafts = [], props, annexes = []
     const plan = { legs, total, speed, lane: (hash(r.k, 9) - 0.5) * 0.24, rest, offset: hash(r.k, salt(21)) * total };
     plans.set(key, plan);
     return plan;
+  };
+  // L'arrivée d'un naufragé (arrivals) : de la case près de l'épave à sa place, d'un pas pressé, puis un temps arrêté
+  const intros = new Map();
+  const introOf = (r, wreck) => {
+    if (intros.has(r.id)) return intros.get(r.id);
+    // (la case où l'on marche la plus proche de l'épave)
+    const d = c => Math.hypot(c.x - wreck.x, c.y - wreck.y);
+    const from = grid.walkable.reduce((best, c) => (!best || d(c) < d(best) ? c : best), null) || wreck;
+    const to = spotOf(r, r.work, 0);
+    const path = routeOf(from, to) || [from, to];
+    const walk = (path.length - 1) / ARRIVE_SPEED;
+    const intro = { legs: [{ path, walk, pause: ARRIVE_PAUSE, act: 'idle', start: 0 }], total: walk + ARRIVE_PAUSE, speed: ARRIVE_SPEED, lane: 0, rest: { x: 0, y: 0 }, offset: 0 };
+    intros.set(r.id, intro);
+    return intro;
   };
   // Place sur une tournée à l'instant t : case (fractionnaire), sens de marche, pose. En marche, un petit pas de côté
   // (perpendiculaire au chemin) ; à l'arrêt, sa place dans la case ; on passe de l'une à l'autre dans la première et
@@ -468,11 +493,30 @@ export function villageOf({ n, M, sites, owned, crafts = [], props, annexes = []
         if (pet) out.push(familiar(r, r.work.x + 0.34, r.work.y + 0.28, 0, false, 'rest'));
         continue;
       }
-      if (h < r.wake || h >= r.bed) continue;
-      if (rain > 0.5 && r.k % 2 === 1) continue;
       const evening = h >= phase.set + 0.4;
-      const plan = planOf(r, evening, day);
-      const p = onPlan(plan, t);
+      // Un naufragé qui débarque : rien avant son arrivée ; sa marche depuis l'épave (de jour comme de nuit) ; puis sa
+      // journée, reprise à son début (à sa place : aucun saut)
+      const arrive = arrivals && arrivals.get(r.role);
+      let plan;
+      let tt = t;
+      if (arrive) {
+        const since = t - arrive.at;
+        if (since < 0) continue;
+        const intro = introOf(r, arrive.from);
+        if (since < intro.total) {
+          plan = intro;
+          tt = since;
+        } else {
+          plan = planOf(r, evening, day);
+          tt = since - intro.total - plan.offset;
+        }
+      }
+      if (!plan || plan.legs.length > 1) {
+        if (h < r.wake || h >= r.bed) continue;
+        if (rain > 0.5 && r.k % 2 === 1) continue;
+      }
+      if (!plan) plan = planOf(r, evening, day);
+      const p = onPlan(plan, tt);
       const lantern = evening && phase.lit > 0.35;
       const umbrella = rain > 0.5;
       // En marche, il regarde où il va (4 images) ; au travail, de trois quarts ; au repos, de face, de côté ou au loin,
@@ -496,7 +540,7 @@ export function villageOf({ n, M, sites, owned, crafts = [], props, annexes = []
         sprite: art ? [art.key, art.make] : [`${r.key}-${opts.pose}-${view}-${opts.frame}-${lantern ? 1 : 0}-${umbrella ? 1 : 0}`, () => villagerSprite(r.look, { ...opts, chore: undefined })]
       });
       if (art ? art.lantern : lantern) lights.push(art ? { x: p.x, y: p.y, dx: flip ? -art.lantern[0] : art.lantern[0], dy: art.lantern[1] } : { x: p.x, y: p.y, dx: flip ? 5.8 : -5.8, dy: -3 });
-      if (pet) follow(r, pet, plan, p, flip, t);
+      if (pet) follow(r, pet, plan, p, flip, tt);
     }
     // Ferme
     for (const a of farm) {
@@ -558,7 +602,8 @@ export function villageOf({ n, M, sites, owned, crafts = [], props, annexes = []
     // bas de l'écran), de dos au retour (flip) ; ses images 0 et 1, ses pas
     const along = (flip, frame) => ({ view: flip ? 'dos' : 'avant', pose: 'marche', n: frame + 1 });
     const wild = (id, species, cells, when, place) => {
-      if (!cells.length || !when) return;
+      // (pendant le tutoriel, ni bêtes des bois ni bêtes des climats : elles arrivent à sa fin)
+      if (!cells.length || !when || (calm && (id.startsWith('wild:') || id.startsWith('clim:')))) return;
       const base = place(spot(cells, species.length * 7));
       const s = tapped(id, STARTLE);
       const b = s === null ? base : startled(base, s, ALOFT.has(species));
@@ -705,8 +750,8 @@ export function villageOf({ n, M, sites, owned, crafts = [], props, annexes = []
     }
     // Le bol de soupe « pour la Dame », posé chaque soir au bord du Foyer
     if (dame && home && (night || h >= phase.set + 0.4)) out.push(beast('dame:bol', 'soup', '', home.x + 0.45, home.y + 0.35, 0, false, Math.floor(t * 1.5) % 2));
-    // Carpes koï : trois qui tournent dans l'eau douce
-    if (water.length >= 3) {
+    // Carpes koï : trois qui tournent dans l'eau douce (après le tutoriel)
+    if (water.length >= 3 && !calm) {
       const pond = water[Math.floor(hash(day, 41) * water.length)];
       ['#F08A3A', '#FFFFFF', '#F2C04B'].forEach((color, k) => {
         const a = t * (0.35 + k * 0.08) + k * 2.1;

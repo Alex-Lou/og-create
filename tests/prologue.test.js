@@ -52,7 +52,8 @@ describe('le tutoriel', () => {
     // Pas avant le nom, ni après « Passer »
     expect(islandStep({ state: state({ ...ready, named: false }), quest: { id: 'recolte' } })).toBe(null);
     expect(islandStep({ state: state({ ...ready, skipped: true }), quest: { id: 'recolte' } })).toBe(null);
-    expect(island({ id: 'pages', done: true })).toEqual({ phase: 'scene', scene: 'recolte' });
+    // Brume seule au début : Aster ne débarque qu'à la fin du tutoriel (choix de l'auteur, 8 oct.)
+    expect(island({ id: 'pages', done: true })).toEqual({ phase: 'lines', lines: ['claim'] });
     const all = ['recolte', 'cannelle', 'rivet', 'ondin'];
     expect(island({ id: 'pages', done: true }, all)).toEqual({ phase: 'lines', lines: ['claim'] });
     expect(island({ id: 'recolte', done: false }, all)).toEqual({ phase: 'harvest' });
@@ -68,10 +69,12 @@ describe('le tutoriel', () => {
     // Puis le premier chemin, du Puits au Feu (l'île neuve n'a que son sentier)
     expect(island({ id: 'chemin', done: false }, all)).toEqual({ phase: 'lines', lines: ['glisse', 'pierres'] });
     expect(island({ id: 'chemin', done: true }, all)).toEqual({ phase: 'lines', lines: ['sentier', 'claim'] });
+    // Le premier chemin réclamé : Aster débarque (sa scène), puis Le Campement
+    expect(island({ id: 'lisiere', done: false }, ['cannelle', 'rivet', 'ondin'])).toEqual({ phase: 'scene', scene: 'recolte' });
     expect(island({ id: 'lisiere', done: false }, all)).toEqual({ phase: 'scene', scene: 'campement' });
     expect(island({ id: 'lisiere', done: false }, [...all, 'campement'])).toEqual({ phase: 'finish' });
-    // La v6 : la Grève (après l'arrivée d'Aster), le feu de camp, les poules de Cannelle ; elles restent dans le prologue
-    expect(island({ id: 'ramasser', done: false })).toEqual({ phase: 'scene', scene: 'recolte' });
+    // La v6 : la Grève (Brume seule), le feu de camp, les poules de Cannelle ; elles restent dans le prologue
+    expect(island({ id: 'ramasser', done: false })).toEqual({ phase: 'lines', lines: ['epaves'] });
     expect(island({ id: 'ramasser', done: false }, all)).toEqual({ phase: 'lines', lines: ['epaves'] });
     expect(island({ id: 'ramasser', done: true }, all)).toEqual({ phase: 'lines', lines: ['claim'] });
     expect(island({ id: 'feu', done: false }, all)).toEqual({ phase: 'lines', lines: ['cendres'] });
@@ -86,10 +89,12 @@ describe('le tutoriel', () => {
     expect(inPrologue('lisiere')).toBe(false);
     const before = ['naufrage', 'arrivee', 'souffle', 'sceau'];
     expect(scenesBefore('ramasser')).toEqual(before);
-    expect(scenesBefore('soupe')).toEqual([...before, 'recolte']);
-    expect(scenesBefore('souvenir-ondin')).toEqual([...before, 'recolte', 'cannelle', 'rivet']);
-    // Après le prologue : toutes, sauf le Campement (il se joue une fois)
-    expect(scenesBefore('lisiere')).toEqual([...before, 'recolte', 'cannelle', 'rivet', 'ondin']);
+    expect(scenesBefore('soupe')).toEqual(before);
+    expect(scenesBefore('souvenir-ondin')).toEqual([...before, 'cannelle', 'rivet']);
+    // (la scène d'Aster se joue après le premier chemin)
+    expect(scenesBefore('chemin')).toEqual([...before, 'cannelle', 'rivet', 'ondin']);
+    // Après le prologue : toutes, sauf l'arrivée d'Aster et le Campement (elles se jouent une fois, à sa fin)
+    expect(scenesBefore('lisiere')).toEqual([...before, 'cannelle', 'rivet', 'ondin']);
     // Un appareil qui n'a rien retenu, à l'étape de la soupe : la scène de Cannelle, pas celle d'Aster
     const resumed = { started: true, registered: true, named: true, seen: scenesBefore('soupe') };
     expect(islandStep({ state: state(resumed), quest: { id: 'soupe', done: false } })).toEqual({ phase: 'scene', scene: 'cannelle' });

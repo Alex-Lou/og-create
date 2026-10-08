@@ -2,6 +2,9 @@
 // Rien n'est décidé ici : la quête active et les quêtes réclamées viennent du serveur ; seuls les naufrages déjà vus
 // sont retenus sur l'appareil.
 
+// Les naufragés déjà vus débarquer sur cet appareil (WorldView/folk.js : arrivalsOf ; « Recommencer l'île » l'oublie)
+export const ARRIVED_KEY = 'oc_arrived';
+
 // Chaque manque amène un naufrage, annoncé quand la quête qui ouvre son acte devient active : l'image d'une nuit, une
 // épave au loin, et Brume. zone : où dort le naufragé
 export const WRECKS = {
