@@ -3,7 +3,7 @@
   "L'interface du joueur en bois et parchemin, comme le HUD (svg/hud/) : l'éditeur de l'avatar (estrade de l'aperçu, onglets, pastilles de choix, cadres des nuanciers, boutons « tourner » et « Au hasard », panneau), la page du Sceau (ruban du nom, tuile d'un compteur, ligne de menu, barre de progression) et la carte d'embarquement du prologue.",
   "Haute définition : chaque fichier déclare une taille 4 fois plus grande que sa taille d'affichage (taille, en pixels d'affichage), pour rester net sur un canvas. En CSS, l'afficher à sa taille d'affichage.",
   "Les cadres extensibles ont une tranche (haut, droite, bas, gauche, en pixels d'affichage) : à poser en border-image (border-width : la tranche ; découpe : tranche_fichier, la tranche × 4 ; fill stretch). Les pièces sans tranche sont entières.",
-  "zones : où le jeu pose ce qui vient de lui, en pixels d'affichage de la pièce. L'estrade : les pieds de l'avatar (pieds) ; à poser en background-size: cover, le plateau en bas au centre. La carte d'embarquement : la fenêtre de la photo (photo : x, y, largeur, hauteur) et la ligne du nom (nom : x, y, largeur, hauteur). Le cadre d'un nuancier a le centre vide : la couleur, en CSS, dessous (un rond de 22 px)."
+  "zones : où le jeu pose ce qui vient de lui, en pixels d'affichage de la pièce. L'estrade : les pieds de l'avatar (pieds) ; à poser en background-size: cover, le plateau en bas au centre. Les cartes d'embarquement (neuve, tamponnée, trempée) : le tirage de la photo (photo : x, y, largeur, hauteur, angle en degrés autour de son centre) et la ligne du nom (nom : x, y, largeur, hauteur). Le cadre d'un nuancier a le centre vide : la couleur, en CSS, dessous (un rond de 22 px)."
  ],
  "pieces": {
   "estrade": {
@@ -475,36 +475,105 @@
    ]
   },
   "carte_embarquement": {
-   "nom": "Carte d'embarquement",
-   "sert": "la carte d'embarquement du prologue : la photo dans sa fenêtre, le nom sur la première ligne",
+   "nom": "Carte d'embarquement (neuve)",
+   "sert": "la carte d'embarquement du prologue (étapes 0a, 0b) : la photo dans son tirage, le nom sur sa ligne",
    "cadre": [
     0,
     0,
-    240,
-    150
+    320,
+    210
    ],
    "taille": [
-    240,
-    150
+    320,
+    210
    ],
    "tranche": null,
    "tranche_fichier": null,
    "zones": {
     "photo": [
-     16,
-     42,
+     29,
+     80,
      58,
-     82
+     70,
+     -4
     ],
     "nom": [
-     103,
-     52,
-     73,
-     14
+     104,
+     88,
+     128,
+     13
     ]
    },
    "fichiers": [
     "carte_embarquement.svg"
+   ]
+  },
+  "carte_embarquement_tampon": {
+   "nom": "Carte d'embarquement (tamponnée « EMBARQUÉ »)",
+   "sert": "la carte tamponnée, juste avant que le vent l'emporte (étape 0c)",
+   "cadre": [
+    0,
+    0,
+    320,
+    210
+   ],
+   "taille": [
+    320,
+    210
+   ],
+   "tranche": null,
+   "tranche_fichier": null,
+   "zones": {
+    "photo": [
+     29,
+     80,
+     58,
+     70,
+     -4
+    ],
+    "nom": [
+     104,
+     88,
+     128,
+     13
+    ]
+   },
+   "fichiers": [
+    "carte_embarquement_tampon.svg"
+   ]
+  },
+  "carte_embarquement_trempee": {
+   "nom": "Carte d'embarquement (trempée par le naufrage)",
+   "sert": "la carte sortie trempée d'une poche, au réveil sur la Grève : encre coulée, coin déchiré, taches d'eau",
+   "cadre": [
+    0,
+    0,
+    320,
+    210
+   ],
+   "taille": [
+    320,
+    210
+   ],
+   "tranche": null,
+   "tranche_fichier": null,
+   "zones": {
+    "photo": [
+     29,
+     80,
+     58,
+     70,
+     -4
+    ],
+    "nom": [
+     104,
+     88,
+     128,
+     13
+    ]
+   },
+   "fichiers": [
+    "carte_embarquement_trempee.svg"
    ]
   }
  }

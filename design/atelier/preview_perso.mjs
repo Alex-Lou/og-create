@@ -20,7 +20,7 @@ const index = { _lisez_moi: [
   'L\'interface du joueur en bois et parchemin, comme le HUD (svg/hud/) : l\'éditeur de l\'avatar (estrade de l\'aperçu, onglets, pastilles de choix, cadres des nuanciers, boutons « tourner » et « Au hasard », panneau), la page du Sceau (ruban du nom, tuile d\'un compteur, ligne de menu, barre de progression) et la carte d\'embarquement du prologue.',
   `Haute définition : chaque fichier déclare une taille ${HD} fois plus grande que sa taille d'affichage (taille, en pixels d'affichage), pour rester net sur un canvas. En CSS, l'afficher à sa taille d'affichage.`,
   `Les cadres extensibles ont une tranche (haut, droite, bas, gauche, en pixels d'affichage) : à poser en border-image (border-width : la tranche ; découpe : tranche_fichier, la tranche × ${HD} ; fill stretch). Les pièces sans tranche sont entières.`,
-  'zones : où le jeu pose ce qui vient de lui, en pixels d\'affichage de la pièce. L\'estrade : les pieds de l\'avatar (pieds) ; à poser en background-size: cover, le plateau en bas au centre. La carte d\'embarquement : la fenêtre de la photo (photo : x, y, largeur, hauteur) et la ligne du nom (nom : x, y, largeur, hauteur). Le cadre d\'un nuancier a le centre vide : la couleur, en CSS, dessous (un rond de 22 px).'
+  'zones : où le jeu pose ce qui vient de lui, en pixels d\'affichage de la pièce. L\'estrade : les pieds de l\'avatar (pieds) ; à poser en background-size: cover, le plateau en bas au centre. Les cartes d\'embarquement (neuve, tamponnée, trempée) : le tirage de la photo (photo : x, y, largeur, hauteur, angle en degrés autour de son centre) et la ligne du nom (nom : x, y, largeur, hauteur). Le cadre d\'un nuancier a le centre vide : la couleur, en CSS, dessous (un rond de 22 px).'
 ], pieces: {} };
 
 const fichier = id => piece(id).svg;
@@ -66,13 +66,13 @@ const sceau = `<div style="width:330px;display:flex;flex-direction:column;gap:8p
   + [['Mon compte', 'Nom, photo, adresse'], ['Le Cabinet', 'Cadres et emblèmes'], ['Succès', '12 sceaux rompus sur 60']].map(([a, b], i) => cadre(i === 1 ? 'ligne_appuye' : 'ligne_repos', 330, 52, `<div style="width:100%;${texte}"><div>${a}</div><div style="font-weight:600;font-size:11px;opacity:.7">${b}</div></div>`, 'justify-content:flex-start')).join('')
   + `<div style="width:300px;${texte};font-size:11px">Branche I · Les flots<div style="position:relative;margin-top:3px">${cadre('barre_fond', 300, 14)}<div style="position:absolute;left:0;top:0">${cadre('barre_plein', 190, 14)}</div></div></div>`
   + '</div>';
-// La carte d'embarquement : la photo dans sa fenêtre (à mi-corps), le nom sur sa ligne
-const k = 1.6, [px, py, pw, ph] = P_('carte_embarquement')[6].photo, [nx, ny, nw, nh] = P_('carte_embarquement')[6].nom;
-const carte = `<div style="position:relative;width:${240 * k}px;height:${150 * k}px;background:url(${url('carte_embarquement')}) center/100% 100%">`
-  + (avatar ? `<div style="position:absolute;left:${px * k}px;top:${py * k}px;width:${pw * k}px;height:${ph * k}px;overflow:hidden"><img src="${avatar}" style="position:absolute;left:50%;top:6px;height:${ph * k * 1.7}px;transform:translateX(-50%)" alt=""></div>` : '')
-  + `<div style="position:absolute;left:${nx * k}px;top:${ny * k}px;width:${nw * k}px;height:${nh * k}px;font:italic 700 ${r(12 * k)}px Georgia,serif;color:#2E4A7A;line-height:${nh * k}px">Alex</div></div>`;
+// La carte d'embarquement, neuve, tamponnée, trempée : la photo dans son tirage (penché), le nom sur sa ligne
+const { photo: [px, py, pw, ph, pa], nom: [nx, ny, nw, nh] } = P_('carte_embarquement')[6];
+const carteEn = (id, k = 1.6) => `<div style="position:relative;width:${320 * k}px;height:${210 * k}px;background:url(${url(id)}) center/100% 100%">`
+  + (avatar ? `<div style="position:absolute;left:${px * k}px;top:${py * k}px;width:${pw * k}px;height:${ph * k}px;overflow:hidden;transform:rotate(${pa}deg);background:#DCE6F0"><img src="${avatar}" style="position:absolute;left:50%;top:4px;height:${r(ph * k * 1.75)}px;transform:translateX(-50%)" alt=""></div>` : '')
+  + `<div style="position:absolute;left:${nx * k}px;top:${ny * k}px;width:${nw * k}px;height:${nh * k}px;font:italic 700 ${r(10 * k)}px Georgia,serif;color:#2E4E8C;line-height:${nh * k}px">Alex</div></div>`;
 cells.push(row('En situation', [[`<div style="padding:14px;border-radius:14px;background:#9CC97A">${editeur}</div>`, 'l\'éditeur de l\'avatar'], [`<div style="padding:14px;border-radius:14px;background:#9CC97A">${sceau}</div>`, 'la page du Sceau']]));
-cells.push(row('', [[`<div style="padding:14px;border-radius:14px;background:#5E7FA8">${carte}</div>`, 'la carte d\'embarquement : la photo et le nom posés par le jeu']]));
+for (const [id, lab] of [['carte_embarquement', 'neuve'], ['carte_embarquement_tampon', 'tamponnée « EMBARQUÉ »'], ['carte_embarquement_trempee', 'trempée par le naufrage']]) cells.push(row('', [[`<div style="padding:18px;border-radius:14px;background:#3E5A86">${carteEn(id, 2.2)}</div>`, `la carte d'embarquement ${lab} : la photo et le nom posés par le jeu`]]));
 
 await shoot([[path.join(PNG, 'perso.png'), sheet('L\'interface du joueur', `Bois et parchemin, comme le HUD. Chaque pièce en grand, à sa taille, puis les cadres étirés en border-image ; les fichiers déclarent une taille × ${HD} (haute définition). Puis en situation.`, cells), 1250]]);
 console.log(`${PIECES.length} pièces de l'interface du joueur`);

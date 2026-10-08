@@ -152207,7 +152207,7 @@
   {
    "id": "perso/carte_embarquement",
    "rubrique": "perso",
-   "titre": "Carte d'embarquement",
+   "titre": "Carte d'embarquement (neuve)",
    "images": 1,
    "fichiers": [
     "svg/perso/carte_embarquement.svg"
@@ -152215,8 +152215,42 @@
    "cadre": [
     0,
     0,
-    240,
-    150
+    320,
+    210
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "perso/carte_embarquement_tampon",
+   "rubrique": "perso",
+   "titre": "Carte d'embarquement (tamponnée « EMBARQUÉ »)",
+   "images": 1,
+   "fichiers": [
+    "svg/perso/carte_embarquement_tampon.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    320,
+    210
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "perso/carte_embarquement_trempee",
+   "rubrique": "perso",
+   "titre": "Carte d'embarquement (trempée par le naufrage)",
+   "images": 1,
+   "fichiers": [
+    "svg/perso/carte_embarquement_trempee.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    320,
+    210
    ],
    "parcours": "partout",
    "statut": "ok"

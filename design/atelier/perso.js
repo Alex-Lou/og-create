@@ -1,6 +1,7 @@
 // L'interface du joueur en bois et parchemin, comme le HUD (hud.js) : l'éditeur de l'avatar (l'estrade de l'aperçu,
 // les onglets, les pastilles de choix, les nuanciers, les boutons « tourner » et « Au hasard », le panneau), la page du
-// Sceau (le ruban du nom, la tuile d'un compteur, la ligne de menu, la barre de progression) et la carte d'embarquement.
+// Sceau (le ruban du nom, la tuile d'un compteur, la ligne de menu, la barre de progression) et la carte d'embarquement
+// (carte_embarquement.js : neuve, tamponnée, trempée).
 // Mêmes règles que le HUD : cadres extensibles (9-slice, en border-image) ou pièces entières, dessinés en pixels
 // d'affichage, le fichier déclarant une taille HD fois plus grande. preview_perso.mjs les publie.
 const { OUT, P, E, clip, r2 } = require('./troupe');
@@ -103,31 +104,8 @@ const ligne = (etat) => () => { const enf = etat === 'appuye' ? 2 : 0; return pl
 const barreFond = () => P(rr(0.7, 0.7, 62.6, 12.6, 6.3), BOIS.fonce, W) + P(rr(2.6, 2.6, 58.8, 8.8, 4.4), '#4E331C', 0) + `<rect x="8" y="2.8" width="48" height="1.4" fill="#2E1E10" opacity=".6"/>`;
 const barrePlein = () => { const d = rr(0.7, 0.7, 62.6, 12.6, 6.3); return P(d, OR.corps, 0) + clip('pbp', d, `<rect x="0" y="8.6" width="64" height="6" fill="${OR.ombre}"/>` + trait('M7,3.8 L57,3.8', OR.clair, 1.6)) + P(d, 'none', 1.1); };
 
-// ——— la carte d'embarquement (240 × 150) ———
-// Une carte de parchemin, un peu tachée par la mer ; le bandeau bleu de l'Hirondelle (une hirondelle, des vaguelettes),
-// la fenêtre de la photo (cadre de bois, fond crème), trois lignes à écrire (la première pour le nom), le talon
-// détachable à droite (pointillés, encoches) et son tampon. La photo et le nom viennent du jeu (zones dans perso.json)
-const hirondelle = (x, y, s, col) => `<path d="M0,0 C-2,-1.2 -4.2,-1.2 -6,-0.2 L-12,-6.4 L-8.6,0 L-15,0.8 L-10,2 L-14.6,4.4 L-8,2.6 L-11.4,8.4 L-5,2.2 C-3,2.2 -1.2,1.2 0,0 Z" fill="${col}" transform="translate(${x} ${y}) scale(${s})"/>`;
-function carte() {
-  const C = 'M6,2 L234,2 Q238,2 238,6 L238,144 Q238,148 234,148 L6,148 Q2,148 2,144 L2,6 Q2,2 6,2 Z';
-  let s = P(C, PAPIER.corps, 0) + clip('pca', C, `<rect x="0" y="0" width="240" height="30" fill="#3E6A9E"/>`
-    + trait('M0,26 Q10,23 20,26 T40,26 T60,26 T80,26 T100,26 T120,26 T140,26 T160,26 T180,26 T200,26 T220,26 T240,26', '#8CB4E0', 1)
-    + E(196, 120, 34, 22, 'rgba(160,190,210,.25)', 0) + E(40, 136, 26, 12, 'rgba(170,140,100,.18)', 0) + E(150, 44, 18, 8, 'rgba(160,190,210,.2)', 0)
-    + `<rect x="184" y="30" width="56" height="120" fill="${PAPIER.ombre}" opacity=".55"/>`) + P(C, 'none', W);
-  s += hirondelle(30, 13, 1.1, '#FBF3DE') + trait('M40,15 L120,15', '#FBF3DE', 1.6) + trait('M40,20 L96,20', '#B8CFEA', 1.1);
-  // la fenêtre de la photo
-  s += P(rr(12, 38, 66, 90, 4), BOIS.corps, W) + P(rr(16, 42, 58, 82, 2.4), '#FFF8EA', 1) + trait('M18,44 L72,44', PAPIER.ombre, 1.6);
-  s += [[12, 38], [78, 38], [12, 128], [78, 128]].map(([x, y]) => clou(x + (x < 40 ? 4 : -4), y + (y < 80 ? 4 : -4))).join('');
-  // les lignes à écrire (la première : le nom) et leurs petits repères
-  s += [[66, 92], [88, 92], [108, 92]].map(([y, x]) => trait(`M${x},${y} L176,${y}`, '#B9A68A', 1)).join('');
-  s += [58, 80, 100].map(y => rond(88, y, 1.4, '#3E6A9E', 0) + trait(`M91.6,${y} L99,${y}`, '#9AB4D4', 1)).join('');
-  // le talon : pointillés, encoches, le tampon rouge à l'hirondelle
-  // les encoches, mordues dans le bord haut et le bord bas (découpées à la forme de la carte : rien ne dépasse)
-  s += `<path d="M184,7 L184,143" stroke="${BOIS.ombre}" stroke-width="1" stroke-dasharray="2.4 2.2"/>` + clip('pcn', C, rond(184, 2, 4.4, '#F4EEDF', 1.2) + rond(184, 148, 4.4, '#F4EEDF', 1.2));
-  s += `<g transform="rotate(-12 211 88)">${rond(211, 88, 17, 'none', 0).replace('stroke="none"', `stroke="${ROUGE.corps}" stroke-width="1.6"`)}${rond(211, 88, 13, 'none', 0).replace('stroke="none"', `stroke="${ROUGE.corps}" stroke-width="0.8" stroke-dasharray="1.6 1.4"`)}${hirondelle(219, 87, 1, ROUGE.corps)}</g>`;
-  s += trait('M194,126 L228,126 M194,132 L220,132', '#B9A68A', 1);
-  return s;
-}
+// ——— la carte d'embarquement : carte_embarquement.js (neuve, tamponnée, trempée) ———
+const CE = require('./carte_embarquement');
 
 // Les pièces : [id, nom, [largeur, hauteur], tranche (haut, droite, bas, gauche ; null : pièce entière), dessin, où le jeu s'en sert, zones]
 const PIECES = [
@@ -149,7 +127,9 @@ const PIECES = [
   ['ligne_appuye', 'Ligne de menu (appuyée)', [160, 52], [14, 26, 16, 14], ligne('appuye'), 'la ligne qu\'on touche'],
   ['barre_fond', 'Barre de progression (fond)', [64, 14], [6, 7, 6, 7], barreFond, 'la rainure d\'une barre (g-bar), les branches du sceau'],
   ['barre_plein', 'Barre de progression (remplie)', [64, 14], [6, 7, 6, 7], barrePlein, 'le remplissage d\'une barre, posé sur le fond à la largeur voulue'],
-  ['carte_embarquement', 'Carte d\'embarquement', [240, 150], null, carte, 'la carte d\'embarquement du prologue : la photo dans sa fenêtre, le nom sur la première ligne', { photo: [16, 42, 58, 82], nom: [103, 52, 73, 14] }]
+  ['carte_embarquement', 'Carte d\'embarquement (neuve)', [320, 210], null, () => CE.carte('neuve'), 'la carte d\'embarquement du prologue (étapes 0a, 0b) : la photo dans son tirage, le nom sur sa ligne', CE.ZONES],
+  ['carte_embarquement_tampon', 'Carte d\'embarquement (tamponnée « EMBARQUÉ »)', [320, 210], null, () => CE.carte('tampon'), 'la carte tamponnée, juste avant que le vent l\'emporte (étape 0c)', CE.ZONES],
+  ['carte_embarquement_trempee', 'Carte d\'embarquement (trempée par le naufrage)', [320, 210], null, () => CE.carte('trempee'), 'la carte sortie trempée d\'une poche, au réveil sur la Grève : encre coulée, coin déchiré, taches d\'eau', CE.ZONES]
 ];
 
 module.exports = { PIECES, HD };
