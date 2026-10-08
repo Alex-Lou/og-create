@@ -33,6 +33,12 @@
 .picking__bush.has-guepes .picking__fruit { animation: picking-grow .3s cubic-bezier(.3, 1.6, .5, 1), picking-buzz .18s linear infinite; }
 .picking__bush.is-late .picking__fruit { animation: picking-wobble .22s ease-in-out infinite; opacity: .8; }
 .picking__bush.is-picked .picking__leaves { animation: picking-shake .26s ease; }
+/* Les pièces de la bibliothèque : le fruit (32 × 32) au milieu du buisson (60 × 60), l'éclat de la cueillette à sa place */
+.picking__bush:has(.picking__fruit-art) { container-type: inline-size; }
+.picking__fruit-art { display: block; width: 53cqw; height: 53cqw; pointer-events: none; -webkit-user-drag: none; }
+.picking__burst { position: relative; margin-top: 6%; }
+.picking__basket { display: inline-flex; align-items: center; gap: 4px; }
+.picking__basket-art { width: 26px; height: 26px; }
 .picking__hint { margin: 0; text-align: center; font-size: 13px; font-weight: 700; color: var(--ink-500); }
 @keyframes picking-grow { from { transform: scale(.2); opacity: 0; } to { transform: none; opacity: 1; } }
 @keyframes picking-wobble { 0%, 100% { transform: rotate(-6deg); } 50% { transform: rotate(6deg) translateY(2px); } }
