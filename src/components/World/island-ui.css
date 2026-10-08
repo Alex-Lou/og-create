@@ -2,8 +2,9 @@
    composants de components/World : chargées une fois, en global, par WorldView. Le style propre à un seul composant
    vit à côté de lui. */
 /* La barre du haut flotte sur l'île : seuls ses boutons et pastilles prennent le doigt */
+/* (sa colonne garde la largeur de l'écran : un contenu trop large passe à la ligne au lieu de pousser tout à droite) */
 .world__top {
-  position: absolute; z-index: 4; top: 0; left: 0; right: 0; display: grid; gap: 6px;
+  position: absolute; z-index: 4; top: 0; left: 0; right: 0; display: grid; grid-template-columns: minmax(0, 1fr); gap: 6px;
   padding: calc(env(safe-area-inset-top) + 8px) 10px 12px;
   background: var(--island-top-veil);
   pointer-events: none;

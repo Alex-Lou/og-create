@@ -583,7 +583,8 @@ export default {
       const { count, max, nextIn } = this.state.charges;
       if (count >= max || nextIn === null) return `${count}/${max} parties`;
       const minutes = Math.max(1, Math.ceil((nextIn - (this.clock - this.loadedAt)) / 60000));
-      return `${count}/${max} · +1 dans ${minutes} min`;
+      // (espaces insécables : sur deux lignes, la coupure tombe après « · »)
+      return `${count}/${max} · +1\u00a0dans\u00a0${minutes}\u00a0min`;
     },
     canvasLabel() {
       if (!this.state) return 'Ton île';
