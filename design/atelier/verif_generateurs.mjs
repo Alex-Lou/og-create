@@ -12,7 +12,7 @@ const BIB = path.join(ici, '..', 'bibliotheque');
 // La vitesse de chaque fichier, d'après le catalogue (la règle de catalogue.js, ou l'index du lot)
 const VITESSE = new Map();
 for (const e of JSON.parse(fs.readFileSync(path.join(BIB, 'catalogue.json'), 'utf8')).entrees) for (const x of e.fichiers) VITESSE.set(x.replace(/^svg\//, ''), e.ms_par_image ?? null);
-const FAMILLES = ['chantiers', 'betes', 'interface', 'hud', 'perso', 'portraits', 'objets', 'plantes', 'meteo', 'coffres', 'decor', 'batiments', 'vivants', 'scenes', 'personnages', 'exemples'];
+const FAMILLES = ['chantiers', 'betes', 'interface', 'hud', 'perso', 'portraits', 'minijeux', 'objets', 'plantes', 'meteo', 'coffres', 'decor', 'batiments', 'vivants', 'scenes', 'personnages', 'exemples'];
 const erreurs = [];
 let n = 0;
 for (const f of FAMILLES) {

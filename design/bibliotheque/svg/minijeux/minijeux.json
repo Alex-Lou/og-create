@@ -1,0 +1,883 @@
+{
+ "_lisez_moi": [
+  "Les pièces des mini-jeux des bâtiments. Le Filon : un bloc de la paroi a un cadre de 32 × 32 ; les effets qui débordent du bloc (éclatement, étincelles, onde, éclats de couleur) ont un cadre de 48 × 48 centré sur le bloc (à poser 1,5 fois plus grand que le bloc, 8 unités de marge de chaque côté).",
+  "Haute définition : chaque fichier déclare 4 fois son cadre. En CSS, l'afficher à la taille du bloc dans la paroi (les effets à 1,5 fois cette taille).",
+  "Pièces fixes : les blocs (tendre, dur, très dur) et leurs fissures, le trou. Boucles animées dans le SVG (SMIL, elles tournent seules dans un <img>) : l'éclat des pierres, la lueur du filon, le signe ✦ (1 à 3). Suites d'images (suites) à enchaîner une fois, au rythme de ms_par_image : le bloc qui éclate, la pioche, les étincelles, l'onde, la pierre qui apparaît, ses éclats de couleur."
+ ],
+ "hd": 4,
+ "jeux": {
+  "filon": {
+   "titre": "Le Filon (la Carrière)",
+   "pieces": {
+    "bloc-tendre_neuf": {
+     "nom": "Bloc tendre (1 coup)",
+     "cadre": [
+      0,
+      0,
+      32,
+      32
+     ],
+     "fichier": "filon/bloc-tendre_neuf.svg"
+    },
+    "bloc-dur_neuf": {
+     "nom": "Bloc dur (2 coups)",
+     "cadre": [
+      0,
+      0,
+      32,
+      32
+     ],
+     "fichier": "filon/bloc-dur_neuf.svg"
+    },
+    "bloc-dur_fissure-1": {
+     "nom": "Bloc dur (2 coups), après 1 coup",
+     "cadre": [
+      0,
+      0,
+      32,
+      32
+     ],
+     "fichier": "filon/bloc-dur_fissure-1.svg"
+    },
+    "bloc-tres-dur_neuf": {
+     "nom": "Bloc très dur (3 coups)",
+     "cadre": [
+      0,
+      0,
+      32,
+      32
+     ],
+     "fichier": "filon/bloc-tres-dur_neuf.svg"
+    },
+    "bloc-tres-dur_fissure-1": {
+     "nom": "Bloc très dur (3 coups), après 1 coup",
+     "cadre": [
+      0,
+      0,
+      32,
+      32
+     ],
+     "fichier": "filon/bloc-tres-dur_fissure-1.svg"
+    },
+    "bloc-tres-dur_fissure-2": {
+     "nom": "Bloc très dur (3 coups), après 2 coups",
+     "cadre": [
+      0,
+      0,
+      32,
+      32
+     ],
+     "fichier": "filon/bloc-tres-dur_fissure-2.svg"
+    },
+    "trou": {
+     "nom": "Le trou d'un bloc cassé",
+     "cadre": [
+      0,
+      0,
+      32,
+      32
+     ],
+     "fichier": "filon/trou.svg"
+    },
+    "eclatement-tendre_1": {
+     "nom": "Le bloc tendre qui éclate",
+     "cadre": [
+      -8,
+      -8,
+      48,
+      48
+     ],
+     "fichier": "filon/eclatement-tendre_1.svg"
+    },
+    "eclatement-tendre_2": {
+     "nom": "Le bloc tendre qui éclate",
+     "cadre": [
+      -8,
+      -8,
+      48,
+      48
+     ],
+     "fichier": "filon/eclatement-tendre_2.svg"
+    },
+    "eclatement-tendre_3": {
+     "nom": "Le bloc tendre qui éclate",
+     "cadre": [
+      -8,
+      -8,
+      48,
+      48
+     ],
+     "fichier": "filon/eclatement-tendre_3.svg"
+    },
+    "eclatement-tendre_4": {
+     "nom": "Le bloc tendre qui éclate",
+     "cadre": [
+      -8,
+      -8,
+      48,
+      48
+     ],
+     "fichier": "filon/eclatement-tendre_4.svg"
+    },
+    "eclatement-dur_1": {
+     "nom": "Le bloc dur qui éclate",
+     "cadre": [
+      -8,
+      -8,
+      48,
+      48
+     ],
+     "fichier": "filon/eclatement-dur_1.svg"
+    },
+    "eclatement-dur_2": {
+     "nom": "Le bloc dur qui éclate",
+     "cadre": [
+      -8,
+      -8,
+      48,
+      48
+     ],
+     "fichier": "filon/eclatement-dur_2.svg"
+    },
+    "eclatement-dur_3": {
+     "nom": "Le bloc dur qui éclate",
+     "cadre": [
+      -8,
+      -8,
+      48,
+      48
+     ],
+     "fichier": "filon/eclatement-dur_3.svg"
+    },
+    "eclatement-dur_4": {
+     "nom": "Le bloc dur qui éclate",
+     "cadre": [
+      -8,
+      -8,
+      48,
+      48
+     ],
+     "fichier": "filon/eclatement-dur_4.svg"
+    },
+    "eclatement-tres-dur_1": {
+     "nom": "Le bloc très dur qui éclate",
+     "cadre": [
+      -8,
+      -8,
+      48,
+      48
+     ],
+     "fichier": "filon/eclatement-tres-dur_1.svg"
+    },
+    "eclatement-tres-dur_2": {
+     "nom": "Le bloc très dur qui éclate",
+     "cadre": [
+      -8,
+      -8,
+      48,
+      48
+     ],
+     "fichier": "filon/eclatement-tres-dur_2.svg"
+    },
+    "eclatement-tres-dur_3": {
+     "nom": "Le bloc très dur qui éclate",
+     "cadre": [
+      -8,
+      -8,
+      48,
+      48
+     ],
+     "fichier": "filon/eclatement-tres-dur_3.svg"
+    },
+    "eclatement-tres-dur_4": {
+     "nom": "Le bloc très dur qui éclate",
+     "cadre": [
+      -8,
+      -8,
+      48,
+      48
+     ],
+     "fichier": "filon/eclatement-tres-dur_4.svg"
+    },
+    "pioche_1": {
+     "nom": "La pioche (levée, l'élan, le coup)",
+     "cadre": [
+      0,
+      0,
+      32,
+      32
+     ],
+     "fichier": "filon/pioche_1.svg"
+    },
+    "pioche_2": {
+     "nom": "La pioche (levée, l'élan, le coup)",
+     "cadre": [
+      0,
+      0,
+      32,
+      32
+     ],
+     "fichier": "filon/pioche_2.svg"
+    },
+    "pioche_3": {
+     "nom": "La pioche (levée, l'élan, le coup)",
+     "cadre": [
+      0,
+      0,
+      32,
+      32
+     ],
+     "fichier": "filon/pioche_3.svg"
+    },
+    "etincelles-dur_1": {
+     "nom": "Les étincelles d'un bloc dur",
+     "cadre": [
+      -8,
+      -8,
+      48,
+      48
+     ],
+     "fichier": "filon/etincelles-dur_1.svg"
+    },
+    "etincelles-dur_2": {
+     "nom": "Les étincelles d'un bloc dur",
+     "cadre": [
+      -8,
+      -8,
+      48,
+      48
+     ],
+     "fichier": "filon/etincelles-dur_2.svg"
+    },
+    "etincelles-dur_3": {
+     "nom": "Les étincelles d'un bloc dur",
+     "cadre": [
+      -8,
+      -8,
+      48,
+      48
+     ],
+     "fichier": "filon/etincelles-dur_3.svg"
+    },
+    "etincelles-tres-dur_1": {
+     "nom": "Les étincelles d'un bloc très dur",
+     "cadre": [
+      -8,
+      -8,
+      48,
+      48
+     ],
+     "fichier": "filon/etincelles-tres-dur_1.svg"
+    },
+    "etincelles-tres-dur_2": {
+     "nom": "Les étincelles d'un bloc très dur",
+     "cadre": [
+      -8,
+      -8,
+      48,
+      48
+     ],
+     "fichier": "filon/etincelles-tres-dur_2.svg"
+    },
+    "etincelles-tres-dur_3": {
+     "nom": "Les étincelles d'un bloc très dur",
+     "cadre": [
+      -8,
+      -8,
+      48,
+      48
+     ],
+     "fichier": "filon/etincelles-tres-dur_3.svg"
+    },
+    "onde_1": {
+     "nom": "L'onde du bloc cassé",
+     "cadre": [
+      -8,
+      -8,
+      48,
+      48
+     ],
+     "fichier": "filon/onde_1.svg"
+    },
+    "onde_2": {
+     "nom": "L'onde du bloc cassé",
+     "cadre": [
+      -8,
+      -8,
+      48,
+      48
+     ],
+     "fichier": "filon/onde_2.svg"
+    },
+    "onde_3": {
+     "nom": "L'onde du bloc cassé",
+     "cadre": [
+      -8,
+      -8,
+      48,
+      48
+     ],
+     "fichier": "filon/onde_3.svg"
+    },
+    "quartz": {
+     "nom": "Quartz (son éclat passe, en boucle)",
+     "cadre": [
+      0,
+      0,
+      32,
+      32
+     ],
+     "fichier": "filon/quartz.svg"
+    },
+    "apparition-quartz_1": {
+     "nom": "Le quartz qui apparaît",
+     "cadre": [
+      0,
+      0,
+      32,
+      32
+     ],
+     "fichier": "filon/apparition-quartz_1.svg"
+    },
+    "apparition-quartz_2": {
+     "nom": "Le quartz qui apparaît",
+     "cadre": [
+      0,
+      0,
+      32,
+      32
+     ],
+     "fichier": "filon/apparition-quartz_2.svg"
+    },
+    "apparition-quartz_3": {
+     "nom": "Le quartz qui apparaît",
+     "cadre": [
+      0,
+      0,
+      32,
+      32
+     ],
+     "fichier": "filon/apparition-quartz_3.svg"
+    },
+    "apparition-quartz_4": {
+     "nom": "Le quartz qui apparaît",
+     "cadre": [
+      0,
+      0,
+      32,
+      32
+     ],
+     "fichier": "filon/apparition-quartz_4.svg"
+    },
+    "eclats-quartz_1": {
+     "nom": "Les éclats de couleur du quartz",
+     "cadre": [
+      -8,
+      -8,
+      48,
+      48
+     ],
+     "fichier": "filon/eclats-quartz_1.svg"
+    },
+    "eclats-quartz_2": {
+     "nom": "Les éclats de couleur du quartz",
+     "cadre": [
+      -8,
+      -8,
+      48,
+      48
+     ],
+     "fichier": "filon/eclats-quartz_2.svg"
+    },
+    "eclats-quartz_3": {
+     "nom": "Les éclats de couleur du quartz",
+     "cadre": [
+      -8,
+      -8,
+      48,
+      48
+     ],
+     "fichier": "filon/eclats-quartz_3.svg"
+    },
+    "eclats-quartz_4": {
+     "nom": "Les éclats de couleur du quartz",
+     "cadre": [
+      -8,
+      -8,
+      48,
+      48
+     ],
+     "fichier": "filon/eclats-quartz_4.svg"
+    },
+    "amethyste": {
+     "nom": "Améthyste (son éclat passe, en boucle)",
+     "cadre": [
+      0,
+      0,
+      32,
+      32
+     ],
+     "fichier": "filon/amethyste.svg"
+    },
+    "apparition-amethyste_1": {
+     "nom": "L'améthyste qui apparaît",
+     "cadre": [
+      0,
+      0,
+      32,
+      32
+     ],
+     "fichier": "filon/apparition-amethyste_1.svg"
+    },
+    "apparition-amethyste_2": {
+     "nom": "L'améthyste qui apparaît",
+     "cadre": [
+      0,
+      0,
+      32,
+      32
+     ],
+     "fichier": "filon/apparition-amethyste_2.svg"
+    },
+    "apparition-amethyste_3": {
+     "nom": "L'améthyste qui apparaît",
+     "cadre": [
+      0,
+      0,
+      32,
+      32
+     ],
+     "fichier": "filon/apparition-amethyste_3.svg"
+    },
+    "apparition-amethyste_4": {
+     "nom": "L'améthyste qui apparaît",
+     "cadre": [
+      0,
+      0,
+      32,
+      32
+     ],
+     "fichier": "filon/apparition-amethyste_4.svg"
+    },
+    "eclats-amethyste_1": {
+     "nom": "Les éclats de couleur de l'améthyste",
+     "cadre": [
+      -8,
+      -8,
+      48,
+      48
+     ],
+     "fichier": "filon/eclats-amethyste_1.svg"
+    },
+    "eclats-amethyste_2": {
+     "nom": "Les éclats de couleur de l'améthyste",
+     "cadre": [
+      -8,
+      -8,
+      48,
+      48
+     ],
+     "fichier": "filon/eclats-amethyste_2.svg"
+    },
+    "eclats-amethyste_3": {
+     "nom": "Les éclats de couleur de l'améthyste",
+     "cadre": [
+      -8,
+      -8,
+      48,
+      48
+     ],
+     "fichier": "filon/eclats-amethyste_3.svg"
+    },
+    "eclats-amethyste_4": {
+     "nom": "Les éclats de couleur de l'améthyste",
+     "cadre": [
+      -8,
+      -8,
+      48,
+      48
+     ],
+     "fichier": "filon/eclats-amethyste_4.svg"
+    },
+    "rubis": {
+     "nom": "Rubis (son éclat passe, en boucle)",
+     "cadre": [
+      0,
+      0,
+      32,
+      32
+     ],
+     "fichier": "filon/rubis.svg"
+    },
+    "apparition-rubis_1": {
+     "nom": "Le rubis qui apparaît",
+     "cadre": [
+      0,
+      0,
+      32,
+      32
+     ],
+     "fichier": "filon/apparition-rubis_1.svg"
+    },
+    "apparition-rubis_2": {
+     "nom": "Le rubis qui apparaît",
+     "cadre": [
+      0,
+      0,
+      32,
+      32
+     ],
+     "fichier": "filon/apparition-rubis_2.svg"
+    },
+    "apparition-rubis_3": {
+     "nom": "Le rubis qui apparaît",
+     "cadre": [
+      0,
+      0,
+      32,
+      32
+     ],
+     "fichier": "filon/apparition-rubis_3.svg"
+    },
+    "apparition-rubis_4": {
+     "nom": "Le rubis qui apparaît",
+     "cadre": [
+      0,
+      0,
+      32,
+      32
+     ],
+     "fichier": "filon/apparition-rubis_4.svg"
+    },
+    "eclats-rubis_1": {
+     "nom": "Les éclats de couleur du rubis",
+     "cadre": [
+      -8,
+      -8,
+      48,
+      48
+     ],
+     "fichier": "filon/eclats-rubis_1.svg"
+    },
+    "eclats-rubis_2": {
+     "nom": "Les éclats de couleur du rubis",
+     "cadre": [
+      -8,
+      -8,
+      48,
+      48
+     ],
+     "fichier": "filon/eclats-rubis_2.svg"
+    },
+    "eclats-rubis_3": {
+     "nom": "Les éclats de couleur du rubis",
+     "cadre": [
+      -8,
+      -8,
+      48,
+      48
+     ],
+     "fichier": "filon/eclats-rubis_3.svg"
+    },
+    "eclats-rubis_4": {
+     "nom": "Les éclats de couleur du rubis",
+     "cadre": [
+      -8,
+      -8,
+      48,
+      48
+     ],
+     "fichier": "filon/eclats-rubis_4.svg"
+    },
+    "diamant": {
+     "nom": "Diamant (son éclat passe, en boucle)",
+     "cadre": [
+      0,
+      0,
+      32,
+      32
+     ],
+     "fichier": "filon/diamant.svg"
+    },
+    "apparition-diamant_1": {
+     "nom": "Le diamant qui apparaît",
+     "cadre": [
+      0,
+      0,
+      32,
+      32
+     ],
+     "fichier": "filon/apparition-diamant_1.svg"
+    },
+    "apparition-diamant_2": {
+     "nom": "Le diamant qui apparaît",
+     "cadre": [
+      0,
+      0,
+      32,
+      32
+     ],
+     "fichier": "filon/apparition-diamant_2.svg"
+    },
+    "apparition-diamant_3": {
+     "nom": "Le diamant qui apparaît",
+     "cadre": [
+      0,
+      0,
+      32,
+      32
+     ],
+     "fichier": "filon/apparition-diamant_3.svg"
+    },
+    "apparition-diamant_4": {
+     "nom": "Le diamant qui apparaît",
+     "cadre": [
+      0,
+      0,
+      32,
+      32
+     ],
+     "fichier": "filon/apparition-diamant_4.svg"
+    },
+    "eclats-diamant_1": {
+     "nom": "Les éclats de couleur du diamant",
+     "cadre": [
+      -8,
+      -8,
+      48,
+      48
+     ],
+     "fichier": "filon/eclats-diamant_1.svg"
+    },
+    "eclats-diamant_2": {
+     "nom": "Les éclats de couleur du diamant",
+     "cadre": [
+      -8,
+      -8,
+      48,
+      48
+     ],
+     "fichier": "filon/eclats-diamant_2.svg"
+    },
+    "eclats-diamant_3": {
+     "nom": "Les éclats de couleur du diamant",
+     "cadre": [
+      -8,
+      -8,
+      48,
+      48
+     ],
+     "fichier": "filon/eclats-diamant_3.svg"
+    },
+    "eclats-diamant_4": {
+     "nom": "Les éclats de couleur du diamant",
+     "cadre": [
+      -8,
+      -8,
+      48,
+      48
+     ],
+     "fichier": "filon/eclats-diamant_4.svg"
+    },
+    "lueur_allumee": {
+     "nom": "La lueur du filon, suivi (en boucle)",
+     "cadre": [
+      0,
+      0,
+      32,
+      32
+     ],
+     "fichier": "filon/lueur_allumee.svg"
+    },
+    "lueur_eteinte": {
+     "nom": "La lueur du filon, perdu",
+     "cadre": [
+      0,
+      0,
+      32,
+      32
+     ],
+     "fichier": "filon/lueur_eteinte.svg"
+    },
+    "signe-1": {
+     "nom": "Le signe ✦ : 1 pierre tout près (en boucle)",
+     "cadre": [
+      0,
+      0,
+      32,
+      32
+     ],
+     "fichier": "filon/signe-1.svg"
+    },
+    "signe-2": {
+     "nom": "Le signe ✦ : 2 pierres tout près (en boucle)",
+     "cadre": [
+      0,
+      0,
+      32,
+      32
+     ],
+     "fichier": "filon/signe-2.svg"
+    },
+    "signe-3": {
+     "nom": "Le signe ✦ : 3 pierres tout près (en boucle)",
+     "cadre": [
+      0,
+      0,
+      32,
+      32
+     ],
+     "fichier": "filon/signe-3.svg"
+    }
+   },
+   "suites": {
+    "eclatement-tendre": {
+     "nom": "Le bloc tendre qui éclate",
+     "ms_par_image": 70,
+     "fichiers": [
+      "filon/eclatement-tendre_1.svg",
+      "filon/eclatement-tendre_2.svg",
+      "filon/eclatement-tendre_3.svg",
+      "filon/eclatement-tendre_4.svg"
+     ]
+    },
+    "eclatement-dur": {
+     "nom": "Le bloc dur qui éclate",
+     "ms_par_image": 70,
+     "fichiers": [
+      "filon/eclatement-dur_1.svg",
+      "filon/eclatement-dur_2.svg",
+      "filon/eclatement-dur_3.svg",
+      "filon/eclatement-dur_4.svg"
+     ]
+    },
+    "eclatement-tres-dur": {
+     "nom": "Le bloc très dur qui éclate",
+     "ms_par_image": 70,
+     "fichiers": [
+      "filon/eclatement-tres-dur_1.svg",
+      "filon/eclatement-tres-dur_2.svg",
+      "filon/eclatement-tres-dur_3.svg",
+      "filon/eclatement-tres-dur_4.svg"
+     ]
+    },
+    "pioche": {
+     "nom": "La pioche (levée, l'élan, le coup)",
+     "ms_par_image": 90,
+     "fichiers": [
+      "filon/pioche_1.svg",
+      "filon/pioche_2.svg",
+      "filon/pioche_3.svg"
+     ]
+    },
+    "etincelles-dur": {
+     "nom": "Les étincelles d'un bloc dur",
+     "ms_par_image": 70,
+     "fichiers": [
+      "filon/etincelles-dur_1.svg",
+      "filon/etincelles-dur_2.svg",
+      "filon/etincelles-dur_3.svg"
+     ]
+    },
+    "etincelles-tres-dur": {
+     "nom": "Les étincelles d'un bloc très dur",
+     "ms_par_image": 70,
+     "fichiers": [
+      "filon/etincelles-tres-dur_1.svg",
+      "filon/etincelles-tres-dur_2.svg",
+      "filon/etincelles-tres-dur_3.svg"
+     ]
+    },
+    "onde": {
+     "nom": "L'onde du bloc cassé",
+     "ms_par_image": 80,
+     "fichiers": [
+      "filon/onde_1.svg",
+      "filon/onde_2.svg",
+      "filon/onde_3.svg"
+     ]
+    },
+    "apparition-quartz": {
+     "nom": "Le quartz qui apparaît",
+     "ms_par_image": 110,
+     "fichiers": [
+      "filon/apparition-quartz_1.svg",
+      "filon/apparition-quartz_2.svg",
+      "filon/apparition-quartz_3.svg",
+      "filon/apparition-quartz_4.svg"
+     ]
+    },
+    "eclats-quartz": {
+     "nom": "Les éclats de couleur du quartz",
+     "ms_par_image": 70,
+     "fichiers": [
+      "filon/eclats-quartz_1.svg",
+      "filon/eclats-quartz_2.svg",
+      "filon/eclats-quartz_3.svg",
+      "filon/eclats-quartz_4.svg"
+     ]
+    },
+    "apparition-amethyste": {
+     "nom": "L'améthyste qui apparaît",
+     "ms_par_image": 110,
+     "fichiers": [
+      "filon/apparition-amethyste_1.svg",
+      "filon/apparition-amethyste_2.svg",
+      "filon/apparition-amethyste_3.svg",
+      "filon/apparition-amethyste_4.svg"
+     ]
+    },
+    "eclats-amethyste": {
+     "nom": "Les éclats de couleur de l'améthyste",
+     "ms_par_image": 70,
+     "fichiers": [
+      "filon/eclats-amethyste_1.svg",
+      "filon/eclats-amethyste_2.svg",
+      "filon/eclats-amethyste_3.svg",
+      "filon/eclats-amethyste_4.svg"
+     ]
+    },
+    "apparition-rubis": {
+     "nom": "Le rubis qui apparaît",
+     "ms_par_image": 110,
+     "fichiers": [
+      "filon/apparition-rubis_1.svg",
+      "filon/apparition-rubis_2.svg",
+      "filon/apparition-rubis_3.svg",
+      "filon/apparition-rubis_4.svg"
+     ]
+    },
+    "eclats-rubis": {
+     "nom": "Les éclats de couleur du rubis",
+     "ms_par_image": 70,
+     "fichiers": [
+      "filon/eclats-rubis_1.svg",
+      "filon/eclats-rubis_2.svg",
+      "filon/eclats-rubis_3.svg",
+      "filon/eclats-rubis_4.svg"
+     ]
+    },
+    "apparition-diamant": {
+     "nom": "Le diamant qui apparaît",
+     "ms_par_image": 110,
+     "fichiers": [
+      "filon/apparition-diamant_1.svg",
+      "filon/apparition-diamant_2.svg",
+      "filon/apparition-diamant_3.svg",
+      "filon/apparition-diamant_4.svg"
+     ]
+    },
+    "eclats-diamant": {
+     "nom": "Les éclats de couleur du diamant",
+     "ms_par_image": 70,
+     "fichiers": [
+      "filon/eclats-diamant_1.svg",
+      "filon/eclats-diamant_2.svg",
+      "filon/eclats-diamant_3.svg",
+      "filon/eclats-diamant_4.svg"
+     ]
+    }
+   }
+  }
+ }
+}

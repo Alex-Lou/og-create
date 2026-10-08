@@ -153310,6 +153310,589 @@
    "statut": "ok"
   },
   {
+   "id": "minijeux/filon/amethyste",
+   "rubrique": "minijeux",
+   "titre": "Améthyste (son éclat passe, en boucle)",
+   "images": 1,
+   "fichiers": [
+    "svg/minijeux/filon/amethyste.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    32,
+    32
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "minijeux/filon/apparition-amethyste",
+   "rubrique": "minijeux",
+   "titre": "L'améthyste qui apparaît",
+   "images": 4,
+   "fichiers": [
+    "svg/minijeux/filon/apparition-amethyste_1.svg",
+    "svg/minijeux/filon/apparition-amethyste_2.svg",
+    "svg/minijeux/filon/apparition-amethyste_3.svg",
+    "svg/minijeux/filon/apparition-amethyste_4.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    32,
+    32
+   ],
+   "ms_par_image": 110,
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "minijeux/filon/apparition-diamant",
+   "rubrique": "minijeux",
+   "titre": "Le diamant qui apparaît",
+   "images": 4,
+   "fichiers": [
+    "svg/minijeux/filon/apparition-diamant_1.svg",
+    "svg/minijeux/filon/apparition-diamant_2.svg",
+    "svg/minijeux/filon/apparition-diamant_3.svg",
+    "svg/minijeux/filon/apparition-diamant_4.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    32,
+    32
+   ],
+   "ms_par_image": 110,
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "minijeux/filon/apparition-quartz",
+   "rubrique": "minijeux",
+   "titre": "Le quartz qui apparaît",
+   "images": 4,
+   "fichiers": [
+    "svg/minijeux/filon/apparition-quartz_1.svg",
+    "svg/minijeux/filon/apparition-quartz_2.svg",
+    "svg/minijeux/filon/apparition-quartz_3.svg",
+    "svg/minijeux/filon/apparition-quartz_4.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    32,
+    32
+   ],
+   "ms_par_image": 110,
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "minijeux/filon/apparition-rubis",
+   "rubrique": "minijeux",
+   "titre": "Le rubis qui apparaît",
+   "images": 4,
+   "fichiers": [
+    "svg/minijeux/filon/apparition-rubis_1.svg",
+    "svg/minijeux/filon/apparition-rubis_2.svg",
+    "svg/minijeux/filon/apparition-rubis_3.svg",
+    "svg/minijeux/filon/apparition-rubis_4.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    32,
+    32
+   ],
+   "ms_par_image": 110,
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "minijeux/filon/bloc-dur_fissure-1",
+   "rubrique": "minijeux",
+   "titre": "Bloc dur (2 coups), après 1 coup",
+   "images": 1,
+   "fichiers": [
+    "svg/minijeux/filon/bloc-dur_fissure-1.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    32,
+    32
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "minijeux/filon/bloc-dur_neuf",
+   "rubrique": "minijeux",
+   "titre": "Bloc dur (2 coups)",
+   "images": 1,
+   "fichiers": [
+    "svg/minijeux/filon/bloc-dur_neuf.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    32,
+    32
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "minijeux/filon/bloc-tendre_neuf",
+   "rubrique": "minijeux",
+   "titre": "Bloc tendre (1 coup)",
+   "images": 1,
+   "fichiers": [
+    "svg/minijeux/filon/bloc-tendre_neuf.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    32,
+    32
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "minijeux/filon/bloc-tres-dur_fissure-1",
+   "rubrique": "minijeux",
+   "titre": "Bloc très dur (3 coups), après 1 coup",
+   "images": 1,
+   "fichiers": [
+    "svg/minijeux/filon/bloc-tres-dur_fissure-1.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    32,
+    32
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "minijeux/filon/bloc-tres-dur_fissure-2",
+   "rubrique": "minijeux",
+   "titre": "Bloc très dur (3 coups), après 2 coups",
+   "images": 1,
+   "fichiers": [
+    "svg/minijeux/filon/bloc-tres-dur_fissure-2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    32,
+    32
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "minijeux/filon/bloc-tres-dur_neuf",
+   "rubrique": "minijeux",
+   "titre": "Bloc très dur (3 coups)",
+   "images": 1,
+   "fichiers": [
+    "svg/minijeux/filon/bloc-tres-dur_neuf.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    32,
+    32
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "minijeux/filon/diamant",
+   "rubrique": "minijeux",
+   "titre": "Diamant (son éclat passe, en boucle)",
+   "images": 1,
+   "fichiers": [
+    "svg/minijeux/filon/diamant.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    32,
+    32
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "minijeux/filon/eclatement-dur",
+   "rubrique": "minijeux",
+   "titre": "Le bloc dur qui éclate",
+   "images": 4,
+   "fichiers": [
+    "svg/minijeux/filon/eclatement-dur_1.svg",
+    "svg/minijeux/filon/eclatement-dur_2.svg",
+    "svg/minijeux/filon/eclatement-dur_3.svg",
+    "svg/minijeux/filon/eclatement-dur_4.svg"
+   ],
+   "cadre": [
+    -8,
+    -8,
+    48,
+    48
+   ],
+   "ms_par_image": 70,
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "minijeux/filon/eclatement-tendre",
+   "rubrique": "minijeux",
+   "titre": "Le bloc tendre qui éclate",
+   "images": 4,
+   "fichiers": [
+    "svg/minijeux/filon/eclatement-tendre_1.svg",
+    "svg/minijeux/filon/eclatement-tendre_2.svg",
+    "svg/minijeux/filon/eclatement-tendre_3.svg",
+    "svg/minijeux/filon/eclatement-tendre_4.svg"
+   ],
+   "cadre": [
+    -8,
+    -8,
+    48,
+    48
+   ],
+   "ms_par_image": 70,
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "minijeux/filon/eclatement-tres-dur",
+   "rubrique": "minijeux",
+   "titre": "Le bloc très dur qui éclate",
+   "images": 4,
+   "fichiers": [
+    "svg/minijeux/filon/eclatement-tres-dur_1.svg",
+    "svg/minijeux/filon/eclatement-tres-dur_2.svg",
+    "svg/minijeux/filon/eclatement-tres-dur_3.svg",
+    "svg/minijeux/filon/eclatement-tres-dur_4.svg"
+   ],
+   "cadre": [
+    -8,
+    -8,
+    48,
+    48
+   ],
+   "ms_par_image": 70,
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "minijeux/filon/eclats-amethyste",
+   "rubrique": "minijeux",
+   "titre": "Les éclats de couleur de l'améthyste",
+   "images": 4,
+   "fichiers": [
+    "svg/minijeux/filon/eclats-amethyste_1.svg",
+    "svg/minijeux/filon/eclats-amethyste_2.svg",
+    "svg/minijeux/filon/eclats-amethyste_3.svg",
+    "svg/minijeux/filon/eclats-amethyste_4.svg"
+   ],
+   "cadre": [
+    -8,
+    -8,
+    48,
+    48
+   ],
+   "ms_par_image": 70,
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "minijeux/filon/eclats-diamant",
+   "rubrique": "minijeux",
+   "titre": "Les éclats de couleur du diamant",
+   "images": 4,
+   "fichiers": [
+    "svg/minijeux/filon/eclats-diamant_1.svg",
+    "svg/minijeux/filon/eclats-diamant_2.svg",
+    "svg/minijeux/filon/eclats-diamant_3.svg",
+    "svg/minijeux/filon/eclats-diamant_4.svg"
+   ],
+   "cadre": [
+    -8,
+    -8,
+    48,
+    48
+   ],
+   "ms_par_image": 70,
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "minijeux/filon/eclats-quartz",
+   "rubrique": "minijeux",
+   "titre": "Les éclats de couleur du quartz",
+   "images": 4,
+   "fichiers": [
+    "svg/minijeux/filon/eclats-quartz_1.svg",
+    "svg/minijeux/filon/eclats-quartz_2.svg",
+    "svg/minijeux/filon/eclats-quartz_3.svg",
+    "svg/minijeux/filon/eclats-quartz_4.svg"
+   ],
+   "cadre": [
+    -8,
+    -8,
+    48,
+    48
+   ],
+   "ms_par_image": 70,
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "minijeux/filon/eclats-rubis",
+   "rubrique": "minijeux",
+   "titre": "Les éclats de couleur du rubis",
+   "images": 4,
+   "fichiers": [
+    "svg/minijeux/filon/eclats-rubis_1.svg",
+    "svg/minijeux/filon/eclats-rubis_2.svg",
+    "svg/minijeux/filon/eclats-rubis_3.svg",
+    "svg/minijeux/filon/eclats-rubis_4.svg"
+   ],
+   "cadre": [
+    -8,
+    -8,
+    48,
+    48
+   ],
+   "ms_par_image": 70,
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "minijeux/filon/etincelles-dur",
+   "rubrique": "minijeux",
+   "titre": "Les étincelles d'un bloc dur",
+   "images": 3,
+   "fichiers": [
+    "svg/minijeux/filon/etincelles-dur_1.svg",
+    "svg/minijeux/filon/etincelles-dur_2.svg",
+    "svg/minijeux/filon/etincelles-dur_3.svg"
+   ],
+   "cadre": [
+    -8,
+    -8,
+    48,
+    48
+   ],
+   "ms_par_image": 70,
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "minijeux/filon/etincelles-tres-dur",
+   "rubrique": "minijeux",
+   "titre": "Les étincelles d'un bloc très dur",
+   "images": 3,
+   "fichiers": [
+    "svg/minijeux/filon/etincelles-tres-dur_1.svg",
+    "svg/minijeux/filon/etincelles-tres-dur_2.svg",
+    "svg/minijeux/filon/etincelles-tres-dur_3.svg"
+   ],
+   "cadre": [
+    -8,
+    -8,
+    48,
+    48
+   ],
+   "ms_par_image": 70,
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "minijeux/filon/lueur_allumee",
+   "rubrique": "minijeux",
+   "titre": "La lueur du filon, suivi (en boucle)",
+   "images": 1,
+   "fichiers": [
+    "svg/minijeux/filon/lueur_allumee.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    32,
+    32
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "minijeux/filon/lueur_eteinte",
+   "rubrique": "minijeux",
+   "titre": "La lueur du filon, perdu",
+   "images": 1,
+   "fichiers": [
+    "svg/minijeux/filon/lueur_eteinte.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    32,
+    32
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "minijeux/filon/onde",
+   "rubrique": "minijeux",
+   "titre": "L'onde du bloc cassé",
+   "images": 3,
+   "fichiers": [
+    "svg/minijeux/filon/onde_1.svg",
+    "svg/minijeux/filon/onde_2.svg",
+    "svg/minijeux/filon/onde_3.svg"
+   ],
+   "cadre": [
+    -8,
+    -8,
+    48,
+    48
+   ],
+   "ms_par_image": 80,
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "minijeux/filon/pioche",
+   "rubrique": "minijeux",
+   "titre": "La pioche (levée, l'élan, le coup)",
+   "images": 3,
+   "fichiers": [
+    "svg/minijeux/filon/pioche_1.svg",
+    "svg/minijeux/filon/pioche_2.svg",
+    "svg/minijeux/filon/pioche_3.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    32,
+    32
+   ],
+   "ms_par_image": 90,
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "minijeux/filon/quartz",
+   "rubrique": "minijeux",
+   "titre": "Quartz (son éclat passe, en boucle)",
+   "images": 1,
+   "fichiers": [
+    "svg/minijeux/filon/quartz.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    32,
+    32
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "minijeux/filon/rubis",
+   "rubrique": "minijeux",
+   "titre": "Rubis (son éclat passe, en boucle)",
+   "images": 1,
+   "fichiers": [
+    "svg/minijeux/filon/rubis.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    32,
+    32
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "minijeux/filon/signe-1",
+   "rubrique": "minijeux",
+   "titre": "Le signe ✦ : 1 pierre tout près (en boucle)",
+   "images": 1,
+   "fichiers": [
+    "svg/minijeux/filon/signe-1.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    32,
+    32
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "minijeux/filon/signe-2",
+   "rubrique": "minijeux",
+   "titre": "Le signe ✦ : 2 pierres tout près (en boucle)",
+   "images": 1,
+   "fichiers": [
+    "svg/minijeux/filon/signe-2.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    32,
+    32
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "minijeux/filon/signe-3",
+   "rubrique": "minijeux",
+   "titre": "Le signe ✦ : 3 pierres tout près (en boucle)",
+   "images": 1,
+   "fichiers": [
+    "svg/minijeux/filon/signe-3.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    32,
+    32
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "minijeux/filon/trou",
+   "rubrique": "minijeux",
+   "titre": "Le trou d'un bloc cassé",
+   "images": 1,
+   "fichiers": [
+    "svg/minijeux/filon/trou.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    32,
+    32
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
    "id": "perso/barre_fond",
    "rubrique": "perso",
    "titre": "Barre de progression (fond)",
