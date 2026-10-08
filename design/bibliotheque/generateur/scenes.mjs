@@ -3419,6 +3419,39 @@ var require_gestes = __commonJS({
     }
     __name(scier, "scier");
     var avecScier = /* @__PURE__ */ __name((c) => ({ ...c, uid: `${c.uid}sc`, pose: scier }), "avecScier");
+    function secateur(h, c, ouvert) {
+      const len = Math.hypot(c[0] - h[0], c[1] - h[1]), ux = (c[0] - h[0]) / len, uy = (c[1] - h[1]) / len, nx = -uy, ny = ux;
+      const pt = /* @__PURE__ */ __name((a, b) => [h[0] + ux * a + nx * b, h[1] + uy * a + ny * b], "pt");
+      const e = ouvert ? 1.6 : 0.3, axe = pt(1.6, 0);
+      const lame = /* @__PURE__ */ __name((s) => P(`M${axe.map(r22)} L${pt(5.4, s * e * 1.4).map(r22)} L${pt(5, s * (e * 1.4 + 0.9)).map(r22)} Z`, "#B8C0C9", 0.7), "lame");
+      const poignee = /* @__PURE__ */ __name((s) => L(pt(-2.6, s * 1), axe, OUT, 2.4) + L(pt(-2.6, s * 1), axe, "#D9443A", 1.1), "poignee");
+      return poignee(1) + poignee(-1) + lame(1) + lame(-1) + E(axe[0], axe[1], 0.6, 0.6, "#6E747E", 0.5);
+    }
+    __name(secateur, "secateur");
+    function buisson(x, y, k, n) {
+      const cy = y - 5, b0 = [x - k * 1, cy - 3.6], b1 = [x - k * 2.6, cy - 11];
+      const feuille = /* @__PURE__ */ __name((fx, fy) => E(fx, fy, 1.1, 0.7, "#7CC25A", 0.4), "feuille");
+      const ronds = [[-3.2, 1, 3], [3.2, 1, 3], [0, -1.6, 3.6], [-1.8, 2.4, 2.8], [1.8, 2.4, 2.8]];
+      const touffu = ronds.map(([dx, dy, r]) => E(x + dx, cy + dy, r + 0.5, r + 0.5, OUT, 0)).join("") + ronds.map(([dx, dy, r]) => E(x + dx, cy + dy, r, r, "#4E9A4A", 0)).join("") + [[-2.8, -0.4], [1.2, -3], [3, 1.4], [-1.2, 2.4], [0.4, 0]].map(([dx, dy]) => feuille(x + dx, cy + dy)).join("");
+      const tige = /* @__PURE__ */ __name((p0, p1) => L(p0, p1, OUT, 1.6) + L(p0, p1, "#7A5434", 0.8), "tige");
+      if (!n) return E(x, y, 6.4, 1.3, "rgba(40,55,20,.22)", 0) + tige(b0, b1) + feuille(b1[0] - k * 0.8, b1[1] + 1.6) + feuille(b1[0] + k * 0.9, b1[1] + 3.4) + touffu;
+      const t0 = [x + k * 1.4, cy - 4.4], t1 = [x + k * 4.6, cy - 1.4];
+      return E(x, y, 6.4, 1.3, "rgba(40,55,20,.22)", 0) + tige(b0, [x - k * 1.5, cy - 6]) + touffu + tige(t0, t1) + feuille(t1[0] + k * 0.4, t1[1] - 1.2) + feuille(t0[0] + k * 1.6, t0[1] + 0.4);
+    }
+    __name(buisson, "buisson");
+    function tailler({ view, n }) {
+      const [a, b] = this.shoulders;
+      if (view === "front" || view === "se") {
+        const s = view === "front" ? 1 : -1, p = s > 0 ? b : a;
+        const x = /* @__PURE__ */ __name((dx) => p[0] + s * dx, "x"), sol2 = 61, bx2 = x(7.2), cy2 = sol2 - 5;
+        const h2 = [x(1.8), cy2 - 9.4], c2 = [bx2 - s * 1.8, cy2 - 8];
+        return { expr: n ? "rire" : "content", under: buisson(bx2, sol2, s, n), [s > 0 ? "right" : "left"]: arm(this, p, h2, [x(3.4), p[1] + 5]) + secateur(h2, c2, !n) };
+      }
+      const sol = a[1] + 18, bx = b[0] + 5.2, cy = sol - 5, h = [b[0] + 0.8, cy - 9.4], c = [bx - 1.8, cy - 8];
+      return { expr: n ? "rire" : void 0, right: "", under: buisson(bx, sol, 1, n), over: secateur(h, c, !n) + arm(this, b, h, [b[0] + 3, b[1] + 4]) };
+    }
+    __name(tailler, "tailler");
+    var avecTailler = /* @__PURE__ */ __name((c) => ({ ...c, uid: `${c.uid}ta`, pose: tailler }), "avecTailler");
     function caisse(x, y, w = 11, h = 8.4) {
       const g = x - w / 2, d = x + w / 2, t = y - h, p = 2.2;
       const face = `M${r22(g)},${r22(y)} L${r22(d)},${r22(y)} L${r22(d)},${r22(t)} L${r22(g)},${r22(t)} Z`;
@@ -3539,7 +3572,7 @@ var require_gestes = __commonJS({
     }
     __name(ecrire, "ecrire");
     var avecEcrire = /* @__PURE__ */ __name((c) => ({ ...c, uid: `${c.uid}ec`, pose: ecrire }), "avecEcrire");
-    module.exports = { lanterne, parapluie, valise, avecLanterne, avecParapluie, avecValise, couche, CADRE_PARAPLUIE, CADRE_COUCHE, ZEDS, paume, tranche, tendre, avecMainsTendues, applaudir, avecApplaudir, pecher, avecPecher, piocher, avecPiocher, cueillir, avecCueillir, arroser, avecArroser, becher, avecBecher, semer, avecSemer, recolter, avecRecolter, scier, avecScier, porter, avecPorter, reparer, avecReparer, repousser, avecRepousser, ecrire, avecEcrire };
+    module.exports = { lanterne, parapluie, valise, avecLanterne, avecParapluie, avecValise, couche, CADRE_PARAPLUIE, CADRE_COUCHE, ZEDS, paume, tranche, tendre, avecMainsTendues, applaudir, avecApplaudir, pecher, avecPecher, piocher, avecPiocher, cueillir, avecCueillir, arroser, avecArroser, becher, avecBecher, semer, avecSemer, recolter, avecRecolter, scier, avecScier, tailler, avecTailler, porter, avecPorter, reparer, avecReparer, repousser, avecRepousser, ecrire, avecEcrire };
   }
 });
 
