@@ -2,6 +2,7 @@
  "_lisez_moi": [
   "Les icônes de l'interface, au trait de la bibliothèque : la barre du bas (Grimoire, Île, Défis, Sceau, et le sac, les tâches et le menu de la v6, HISTOIRE.md § 9, étapes 4 et 6), l'écu, les ressources, les boutons de l'île ; les fiches (besoins, humeurs, amitié, verrou, inconnu, étincelle, chapitre, plan, carte, pousse) et les trouvailles des climats.",
   "Carré 32 × 32, sans marge à retirer : les afficher de 16 à 32 px (en <img>, ou en SVG en ligne). Elles se lisent sur le papier clair comme sur le verre sombre des boutons de l'île. Pour un onglet inactif ou un cœur pas encore gagné, les éteindre en CSS (opacity, filter: saturate(.4) ou grayscale(1)) plutôt que de les redessiner.",
+  "Haute définition : hd/<id>_icone.svg (icones_hd), le même dessin déclaré en 128 × 128 (le viewBox reste 0 0 32 32) : pour un canvas (le Livre), qui le dessine net à toute taille ; en CSS, les fichiers de 32 suffisent.",
   "sert : où le jeu s'en sert. L'heure et la météo ont déjà leurs icônes : svg/meteo/icones (temps, moments).",
   "Les commandes (fermer, retour, flèche, valider, zoom, plein écran, réglages, son, musique) sont des pastilles rondes et colorées, leur signe blanc : la flèche va vers la droite, la tourner en CSS (rotate) pour les autres directions. Puis les actions des bâtiments (bâtir, faire évoluer, annexes, déplacer, tourner, temps), les récompenses et la boutique (étoile, cadeau, coffre, boutique, quête, succès, nouveau), le perso et les autres (profil, garde-robe, amis, visites, messages, notifications)."
  ],
@@ -875,6 +876,879 @@
    ],
    "fichiers": [
     "notifications_icone.svg"
+   ]
+  }
+ },
+ "icones_hd": {
+  "grimoire": {
+   "nom": "Grimoire (icône HD)",
+   "sert": "l'onglet du Grimoire",
+   "cadre": [
+    0,
+    0,
+    32,
+    32
+   ],
+   "fichiers": [
+    "hd/grimoire_icone.svg"
+   ]
+  },
+  "ile": {
+   "nom": "Île (icône HD)",
+   "sert": "l'onglet de l'île",
+   "cadre": [
+    0,
+    0,
+    32,
+    32
+   ],
+   "fichiers": [
+    "hd/ile_icone.svg"
+   ]
+  },
+  "defis": {
+   "nom": "Défis (icône HD)",
+   "sert": "l'onglet des Défis",
+   "cadre": [
+    0,
+    0,
+    32,
+    32
+   ],
+   "fichiers": [
+    "hd/defis_icone.svg"
+   ]
+  },
+  "sceau": {
+   "nom": "Sceau (icône HD)",
+   "sert": "l'onglet du Sceau (le compte, les succès)",
+   "cadre": [
+    0,
+    0,
+    32,
+    32
+   ],
+   "fichiers": [
+    "hd/sceau_icone.svg"
+   ]
+  },
+  "sac": {
+   "nom": "Sac (icône HD)",
+   "sert": "le sac de la v6 (étape 4) : ce que le joueur a ramassé",
+   "cadre": [
+    0,
+    0,
+    32,
+    32
+   ],
+   "fichiers": [
+    "hd/sac_icone.svg"
+   ]
+  },
+  "taches": {
+   "nom": "Tâches (icône HD)",
+   "sert": "les tâches de Brume (v6, étape 6)",
+   "cadre": [
+    0,
+    0,
+    32,
+    32
+   ],
+   "fichiers": [
+    "hd/taches_icone.svg"
+   ]
+  },
+  "menu": {
+   "nom": "Menu (icône HD)",
+   "sert": "le menu de la v6 (étape 6) : l'avatar, les réglages",
+   "cadre": [
+    0,
+    0,
+    32,
+    32
+   ],
+   "fichiers": [
+    "hd/menu_icone.svg"
+   ]
+  },
+  "ecu": {
+   "nom": "Écu (icône HD)",
+   "sert": "le compteur d'écus, les prix, les gains",
+   "cadre": [
+    0,
+    0,
+    32,
+    32
+   ],
+   "fichiers": [
+    "hd/ecu_icone.svg"
+   ]
+  },
+  "pierre": {
+   "nom": "Pierre (icône HD)",
+   "sert": "la ressource pierre (stock, Récolte, prix)",
+   "cadre": [
+    0,
+    0,
+    32,
+    32
+   ],
+   "fichiers": [
+    "hd/pierre_icone.svg"
+   ]
+  },
+  "bois": {
+   "nom": "Bois (icône HD)",
+   "sert": "la ressource bois",
+   "cadre": [
+    0,
+    0,
+    32,
+    32
+   ],
+   "fichiers": [
+    "hd/bois_icone.svg"
+   ]
+  },
+  "eau": {
+   "nom": "Eau (icône HD)",
+   "sert": "la ressource eau",
+   "cadre": [
+    0,
+    0,
+    32,
+    32
+   ],
+   "fichiers": [
+    "hd/eau_icone.svg"
+   ]
+  },
+  "nourriture": {
+   "nom": "Nourriture (icône HD)",
+   "sert": "la ressource nourriture, le besoin « manger »",
+   "cadre": [
+    0,
+    0,
+    32,
+    32
+   ],
+   "fichiers": [
+    "hd/nourriture_icone.svg"
+   ]
+  },
+  "poisson": {
+   "nom": "Poisson (icône HD)",
+   "sert": "le poisson (ce que produit le Ponton)",
+   "cadre": [
+    0,
+    0,
+    32,
+    32
+   ],
+   "fichiers": [
+    "hd/poisson_icone.svg"
+   ]
+  },
+  "recolte": {
+   "nom": "Récolte (icône HD)",
+   "sert": "le bouton de la Récolte",
+   "cadre": [
+    0,
+    0,
+    32,
+    32
+   ],
+   "fichiers": [
+    "hd/recolte_icone.svg"
+   ]
+  },
+  "ramasser": {
+   "nom": "Tout ramasser (icône HD)",
+   "sert": "le bouton « Tout ramasser »",
+   "cadre": [
+    0,
+    0,
+    32,
+    32
+   ],
+   "fichiers": [
+    "hd/ramasser_icone.svg"
+   ]
+  },
+  "carnet": {
+   "nom": "Carnet d'explorateur (icône HD)",
+   "sert": "le bouton du carnet d'explorateur",
+   "cadre": [
+    0,
+    0,
+    32,
+    32
+   ],
+   "fichiers": [
+    "hd/carnet_icone.svg"
+   ]
+  },
+  "trouvailles": {
+   "nom": "Trouvailles (icône HD)",
+   "sert": "le bouton des trouvailles des climats",
+   "cadre": [
+    0,
+    0,
+    32,
+    32
+   ],
+   "fichiers": [
+    "hd/trouvailles_icone.svg"
+   ]
+  },
+  "expedition": {
+   "nom": "Expédition (icône HD)",
+   "sert": "une expédition en cours",
+   "cadre": [
+    0,
+    0,
+    32,
+    32
+   ],
+   "fichiers": [
+    "hd/expedition_icone.svg"
+   ]
+  },
+  "outils": {
+   "nom": "Outils (icône HD)",
+   "sert": "le besoin « travailler » (fiche d'un camarade, bulle de besoin)",
+   "cadre": [
+    0,
+    0,
+    32,
+    32
+   ],
+   "fichiers": [
+    "hd/outils_icone.svg"
+   ]
+  },
+  "fleur": {
+   "nom": "Fleur (icône HD)",
+   "sert": "le besoin « se distraire »",
+   "cadre": [
+    0,
+    0,
+    32,
+    32
+   ],
+   "fichiers": [
+    "hd/fleur_icone.svg"
+   ]
+  },
+  "humeur_joie": {
+   "nom": "Humeur : joie (icône HD)",
+   "sert": "l'humeur d'un camarade : content",
+   "cadre": [
+    0,
+    0,
+    32,
+    32
+   ],
+   "fichiers": [
+    "hd/humeur_joie_icone.svg"
+   ]
+  },
+  "humeur_calme": {
+   "nom": "Humeur : calme (icône HD)",
+   "sert": "l'humeur d'un camarade : tranquille",
+   "cadre": [
+    0,
+    0,
+    32,
+    32
+   ],
+   "fichiers": [
+    "hd/humeur_calme_icone.svg"
+   ]
+  },
+  "humeur_bouderie": {
+   "nom": "Humeur : bouderie (icône HD)",
+   "sert": "l'humeur d'un camarade : il lui manque quelque chose",
+   "cadre": [
+    0,
+    0,
+    32,
+    32
+   ],
+   "fichiers": [
+    "hd/humeur_bouderie_icone.svg"
+   ]
+  },
+  "coeur": {
+   "nom": "Cœur (icône HD)",
+   "sert": "l'amitié d'un camarade (cœurs de la fiche, récompenses)",
+   "cadre": [
+    0,
+    0,
+    32,
+    32
+   ],
+   "fichiers": [
+    "hd/coeur_icone.svg"
+   ]
+  },
+  "verrou": {
+   "nom": "Verrou (icône HD)",
+   "sert": "ce qui est scellé : un chapitre, un rang de l'établi",
+   "cadre": [
+    0,
+    0,
+    32,
+    32
+   ],
+   "fichiers": [
+    "hd/verrou_icone.svg"
+   ]
+  },
+  "inconnu": {
+   "nom": "Inconnu (icône HD)",
+   "sert": "un élément pas encore trouvé",
+   "cadre": [
+    0,
+    0,
+    32,
+    32
+   ],
+   "fichiers": [
+    "hd/inconnu_icone.svg"
+   ]
+  },
+  "etincelle": {
+   "nom": "Étincelle (icône HD)",
+   "sert": "une quête, une chose à faire, le dessin par défaut",
+   "cadre": [
+    0,
+    0,
+    32,
+    32
+   ],
+   "fichiers": [
+    "hd/etincelle_icone.svg"
+   ]
+  },
+  "chapitre": {
+   "nom": "Chapitre (icône HD)",
+   "sert": "le chapitre du Grimoire qu'il faut avoir ouvert",
+   "cadre": [
+    0,
+    0,
+    32,
+    32
+   ],
+   "fichiers": [
+    "hd/chapitre_icone.svg"
+   ]
+  },
+  "plan": {
+   "nom": "Plan (icône HD)",
+   "sert": "le plan d'un bâtiment (au-dessus d'un chantier, étapes d'un bâtiment)",
+   "cadre": [
+    0,
+    0,
+    32,
+    32
+   ],
+   "fichiers": [
+    "hd/plan_icone.svg"
+   ]
+  },
+  "carte": {
+   "nom": "Carte (icône HD)",
+   "sert": "un quartier, une expédition",
+   "cadre": [
+    0,
+    0,
+    32,
+    32
+   ],
+   "fichiers": [
+    "hd/carte_icone.svg"
+   ]
+  },
+  "pousse": {
+   "nom": "Pousse (icône HD)",
+   "sert": "le filtre « fertiles » du Grimoire",
+   "cadre": [
+    0,
+    0,
+    32,
+    32
+   ],
+   "fichiers": [
+    "hd/pousse_icone.svg"
+   ]
+  },
+  "glace": {
+   "nom": "Glace (icône HD)",
+   "sert": "la trouvaille des Cimes",
+   "cadre": [
+    0,
+    0,
+    32,
+    32
+   ],
+   "fichiers": [
+    "hd/glace_icone.svg"
+   ]
+  },
+  "laine": {
+   "nom": "Laine (icône HD)",
+   "sert": "la trouvaille des Landes",
+   "cadre": [
+    0,
+    0,
+    32,
+    32
+   ],
+   "fichiers": [
+    "hd/laine_icone.svg"
+   ]
+  },
+  "roseau": {
+   "nom": "Roseau (icône HD)",
+   "sert": "la trouvaille du Marais",
+   "cadre": [
+    0,
+    0,
+    32,
+    32
+   ],
+   "fichiers": [
+    "hd/roseau_icone.svg"
+   ]
+  },
+  "sel": {
+   "nom": "Sel (icône HD)",
+   "sert": "la trouvaille des Dunes",
+   "cadre": [
+    0,
+    0,
+    32,
+    32
+   ],
+   "fichiers": [
+    "hd/sel_icone.svg"
+   ]
+  },
+  "fruits": {
+   "nom": "Fruits (icône HD)",
+   "sert": "la trouvaille de la Jungle",
+   "cadre": [
+    0,
+    0,
+    32,
+    32
+   ],
+   "fichiers": [
+    "hd/fruits_icone.svg"
+   ]
+  },
+  "obsidienne": {
+   "nom": "Obsidienne (icône HD)",
+   "sert": "la trouvaille du Volcan",
+   "cadre": [
+    0,
+    0,
+    32,
+    32
+   ],
+   "fichiers": [
+    "hd/obsidienne_icone.svg"
+   ]
+  },
+  "fermer": {
+   "nom": "Fermer (icône HD)",
+   "sert": "fermer une fiche, une fenêtre",
+   "cadre": [
+    0,
+    0,
+    32,
+    32
+   ],
+   "fichiers": [
+    "hd/fermer_icone.svg"
+   ]
+  },
+  "retour": {
+   "nom": "Retour (icône HD)",
+   "sert": "revenir en arrière",
+   "cadre": [
+    0,
+    0,
+    32,
+    32
+   ],
+   "fichiers": [
+    "hd/retour_icone.svg"
+   ]
+  },
+  "fleche": {
+   "nom": "Flèche (icône HD)",
+   "sert": "suivant, page suivante (vers la droite ; les autres directions en la tournant en CSS)",
+   "cadre": [
+    0,
+    0,
+    32,
+    32
+   ],
+   "fichiers": [
+    "hd/fleche_icone.svg"
+   ]
+  },
+  "valider": {
+   "nom": "Valider (icône HD)",
+   "sert": "confirmer, c'est fait",
+   "cadre": [
+    0,
+    0,
+    32,
+    32
+   ],
+   "fichiers": [
+    "hd/valider_icone.svg"
+   ]
+  },
+  "zoom_plus": {
+   "nom": "Zoom avant (icône HD)",
+   "sert": "rapprocher la vue",
+   "cadre": [
+    0,
+    0,
+    32,
+    32
+   ],
+   "fichiers": [
+    "hd/zoom_plus_icone.svg"
+   ]
+  },
+  "zoom_moins": {
+   "nom": "Zoom arrière (icône HD)",
+   "sert": "éloigner la vue",
+   "cadre": [
+    0,
+    0,
+    32,
+    32
+   ],
+   "fichiers": [
+    "hd/zoom_moins_icone.svg"
+   ]
+  },
+  "plein_ecran": {
+   "nom": "Plein écran (icône HD)",
+   "sert": "passer en plein écran",
+   "cadre": [
+    0,
+    0,
+    32,
+    32
+   ],
+   "fichiers": [
+    "hd/plein_ecran_icone.svg"
+   ]
+  },
+  "reglages": {
+   "nom": "Réglages (icône HD)",
+   "sert": "les réglages",
+   "cadre": [
+    0,
+    0,
+    32,
+    32
+   ],
+   "fichiers": [
+    "hd/reglages_icone.svg"
+   ]
+  },
+  "son": {
+   "nom": "Son (icône HD)",
+   "sert": "le son allumé",
+   "cadre": [
+    0,
+    0,
+    32,
+    32
+   ],
+   "fichiers": [
+    "hd/son_icone.svg"
+   ]
+  },
+  "son_coupe": {
+   "nom": "Son coupé (icône HD)",
+   "sert": "le son coupé",
+   "cadre": [
+    0,
+    0,
+    32,
+    32
+   ],
+   "fichiers": [
+    "hd/son_coupe_icone.svg"
+   ]
+  },
+  "musique": {
+   "nom": "Musique (icône HD)",
+   "sert": "la musique",
+   "cadre": [
+    0,
+    0,
+    32,
+    32
+   ],
+   "fichiers": [
+    "hd/musique_icone.svg"
+   ]
+  },
+  "batir": {
+   "nom": "Bâtir (icône HD)",
+   "sert": "bâtir sur un chantier",
+   "cadre": [
+    0,
+    0,
+    32,
+    32
+   ],
+   "fichiers": [
+    "hd/batir_icone.svg"
+   ]
+  },
+  "evoluer": {
+   "nom": "Faire évoluer (icône HD)",
+   "sert": "faire passer un bâtiment au palier suivant",
+   "cadre": [
+    0,
+    0,
+    32,
+    32
+   ],
+   "fichiers": [
+    "hd/evoluer_icone.svg"
+   ]
+  },
+  "annexes": {
+   "nom": "Annexes (icône HD)",
+   "sert": "l'onglet des annexes, poser une annexe",
+   "cadre": [
+    0,
+    0,
+    32,
+    32
+   ],
+   "fichiers": [
+    "hd/annexes_icone.svg"
+   ]
+  },
+  "deplacer": {
+   "nom": "Déplacer (icône HD)",
+   "sert": "déplacer un bâtiment, une annexe",
+   "cadre": [
+    0,
+    0,
+    32,
+    32
+   ],
+   "fichiers": [
+    "hd/deplacer_icone.svg"
+   ]
+  },
+  "tourner": {
+   "nom": "Tourner (icône HD)",
+   "sert": "tourner un bâtiment, une annexe",
+   "cadre": [
+    0,
+    0,
+    32,
+    32
+   ],
+   "fichiers": [
+    "hd/tourner_icone.svg"
+   ]
+  },
+  "temps": {
+   "nom": "Temps (icône HD)",
+   "sert": "le temps qu'il reste (production, évolution, expédition)",
+   "cadre": [
+    0,
+    0,
+    32,
+    32
+   ],
+   "fichiers": [
+    "hd/temps_icone.svg"
+   ]
+  },
+  "etoile": {
+   "nom": "Étoile (icône HD)",
+   "sert": "une récompense, un palier, une note",
+   "cadre": [
+    0,
+    0,
+    32,
+    32
+   ],
+   "fichiers": [
+    "hd/etoile_icone.svg"
+   ]
+  },
+  "cadeau": {
+   "nom": "Cadeau (icône HD)",
+   "sert": "un cadeau, une récompense à ouvrir",
+   "cadre": [
+    0,
+    0,
+    32,
+    32
+   ],
+   "fichiers": [
+    "hd/cadeau_icone.svg"
+   ]
+  },
+  "coffre": {
+   "nom": "Coffre (icône HD)",
+   "sert": "les coffres (le bouton, la liste)",
+   "cadre": [
+    0,
+    0,
+    32,
+    32
+   ],
+   "fichiers": [
+    "hd/coffre_icone.svg"
+   ]
+  },
+  "boutique": {
+   "nom": "Boutique (icône HD)",
+   "sert": "la boutique",
+   "cadre": [
+    0,
+    0,
+    32,
+    32
+   ],
+   "fichiers": [
+    "hd/boutique_icone.svg"
+   ]
+  },
+  "quete": {
+   "nom": "Quête (icône HD)",
+   "sert": "une quête à prendre ou à rendre",
+   "cadre": [
+    0,
+    0,
+    32,
+    32
+   ],
+   "fichiers": [
+    "hd/quete_icone.svg"
+   ]
+  },
+  "succes": {
+   "nom": "Succès (icône HD)",
+   "sert": "les succès",
+   "cadre": [
+    0,
+    0,
+    32,
+    32
+   ],
+   "fichiers": [
+    "hd/succes_icone.svg"
+   ]
+  },
+  "nouveau": {
+   "nom": "Nouveau (icône HD)",
+   "sert": "quelque chose de nouveau (pastille sur un bouton)",
+   "cadre": [
+    0,
+    0,
+    32,
+    32
+   ],
+   "fichiers": [
+    "hd/nouveau_icone.svg"
+   ]
+  },
+  "profil": {
+   "nom": "Profil (icône HD)",
+   "sert": "le profil du joueur, son avatar",
+   "cadre": [
+    0,
+    0,
+    32,
+    32
+   ],
+   "fichiers": [
+    "hd/profil_icone.svg"
+   ]
+  },
+  "garde_robe": {
+   "nom": "Garde-robe (icône HD)",
+   "sert": "la garde-robe de l'avatar",
+   "cadre": [
+    0,
+    0,
+    32,
+    32
+   ],
+   "fichiers": [
+    "hd/garde_robe_icone.svg"
+   ]
+  },
+  "amis": {
+   "nom": "Amis (icône HD)",
+   "sert": "les amis",
+   "cadre": [
+    0,
+    0,
+    32,
+    32
+   ],
+   "fichiers": [
+    "hd/amis_icone.svg"
+   ]
+  },
+  "visite": {
+   "nom": "Visites (icône HD)",
+   "sert": "visiter une île, les visites reçues",
+   "cadre": [
+    0,
+    0,
+    32,
+    32
+   ],
+   "fichiers": [
+    "hd/visite_icone.svg"
+   ]
+  },
+  "messages": {
+   "nom": "Messages (icône HD)",
+   "sert": "les messages",
+   "cadre": [
+    0,
+    0,
+    32,
+    32
+   ],
+   "fichiers": [
+    "hd/messages_icone.svg"
+   ]
+  },
+  "notifications": {
+   "nom": "Notifications (icône HD)",
+   "sert": "les notifications",
+   "cadre": [
+    0,
+    0,
+    32,
+    32
+   ],
+   "fichiers": [
+    "hd/notifications_icone.svg"
    ]
   }
  }
