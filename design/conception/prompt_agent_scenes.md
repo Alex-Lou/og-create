@@ -1,6 +1,7 @@
 # Prompt : l'agent qui dessine les scènes du tutoriel
 
-À coller tel quel au début de la session de l'agent.
+Le chantier des scènes, à part. Pour tout le design du jeu, le prompt général est `prompt_agent_design.md` : il
+renvoie ici pour les scènes. À coller tel quel au début d'une session consacrée aux scènes.
 
 ---
 
