@@ -34,7 +34,7 @@ describe('les maîtres de la bibliothèque', () => {
 
   it('chaque pose du jeu prend les images de la bibliothèque, dans la bonne vue', () => {
     expect(name(masterSprite('ponton', false, { pose: 'walk', view: 'se', frame: 2 }))).toBe('aster_avant_marche_3');
-    expect(name(masterSprite('ponton', false, { pose: 'walk', view: 'ne', frame: 5 }))).toBe('aster_dos_marche_2');
+    expect(name(masterSprite('ponton', false, { pose: 'walk', view: 'ne', frame: 5 }))).toBe('aster_dos_marche_6'); // la marche compte 8 images
     expect(name(masterSprite('ponton', false, { pose: 'idle', view: 'front', frame: 1 }))).toBe('aster_face_repos_2');
     expect(name(masterSprite('atelier', false, { pose: 'work', view: 'se' }))).toBe('rivet_avant_travail_1');
     expect(name(masterSprite('foyer', false, { pose: 'wave', view: 'front', frame: 1 }))).toBe('cannelle_face_salut_2');
