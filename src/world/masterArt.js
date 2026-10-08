@@ -12,7 +12,7 @@ import { fitTo } from './library';
 // Seules les poses que l'île montre sont référencées (la bibliothèque en a bien d'autres : veillée, métiers,
 // expressions) : la liste de tous les fichiers alourdissait de plusieurs centaines de Ko le code chargé au démarrage
 const FILES = import.meta.glob([
-  '/design/bibliotheque/svg/personnages/{maitres,naufrages}/*/*_{face,avant,dos}_{marche,repos,travail,salut,assis,lanterne,parapluie}_[0-9].svg',
+  '/design/bibliotheque/svg/personnages/{maitres,naufrages}/*/*_{face,avant,dos}_{marche,repos,travail,salut,assis,lanterne,parapluie,arroser,becher,semer,recolter,scier,tailler}_[0-9].svg',
   '/design/bibliotheque/svg/personnages/{maitres,naufrages}/*/*_couche_[0-9].svg'
 ], { query: '?raw', import: 'default' });
 const URLS = import.meta.glob('/design/bibliotheque/svg/personnages/{maitres,naufrages}/*/*_{face,avant}_{repos,travail,marche,assis}_1.svg', { query: '?url', import: 'default', eager: true });
@@ -46,7 +46,8 @@ function boxOf(svgViewBox, [ax, ay]) {
 // Le dessin d'un maître pour l'île, selon sa pose (mêmes options que villagerSprite) : { key, make, view, lantern } ;
 // view : la vue dessinée ; lantern : où luit la flamme [dx, dy] (unités du jeu, sans miroir), ou null. null si la
 // bibliothèque n'a pas ce maître
-export function masterSprite(role, castaway, { pose = 'idle', view = 'se', frame = 0, lantern = false, umbrella = false } = {}) {
+// chore : au travail sur son annexe, le geste de son métier (arroser, becher, semer, recolter, scier, tailler), s'il l'a
+export function masterSprite(role, castaway, { pose = 'idle', view = 'se', frame = 0, lantern = false, umbrella = false, chore = null } = {}) {
   const set = setOf(role, castaway);
   if (!set) return null;
   const files = set.fichiers;
@@ -64,7 +65,7 @@ export function masterSprite(role, castaway, { pose = 'idle', view = 'se', frame
       held = carry;
     } else {
       // Sans le geste dans la bibliothèque (Galet et Sylve naufragés ont oublié leur don), il attend, au repos
-      list = files[`${drawn}_${POSES[pose]}`] || (files[`${drawn}_repos`] && [files[`${drawn}_repos`][0]]);
+      list = (pose === 'work' && chore && files[`${drawn}_${chore}`]) || files[`${drawn}_${POSES[pose]}`] || (files[`${drawn}_repos`] && [files[`${drawn}_repos`][0]]);
     }
   }
   if (!list) return null;
