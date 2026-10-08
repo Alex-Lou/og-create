@@ -18,6 +18,20 @@
   background: var(--vellum-50); color: var(--ink-900); box-shadow: 0 12px 30px rgba(0, 0, 0, .4);
   font-family: var(--font-ui); font-size: 15px; line-height: 1.35;
 }
+/* Sans cible à l'écran : la consigne en bas, au-dessus des onglets, et « Me montrer » */
+.coach__lost {
+  position: absolute; left: 50%; bottom: calc(var(--oc-tabbar-h, 64px) + 14px + env(safe-area-inset-bottom)); transform: translateX(-50%);
+  width: min(360px, calc(100vw - 32px)); box-sizing: border-box; display: flex; align-items: center; gap: 10px; margin: 0;
+  padding: 10px 10px 10px 14px; border-radius: var(--r-lg); pointer-events: auto;
+  background: var(--vellum-50); color: var(--ink-900); box-shadow: 0 0 0 2px rgba(var(--oc-aim-rgb), .8), 0 12px 30px rgba(0, 0, 0, .4);
+  font-family: var(--font-ui); font-size: 15px; line-height: 1.35;
+}
+.coach__lost .coach__text { flex: 1; }
+.coach__show {
+  flex: none; min-height: 40px; padding: 0 14px; border: 0; border-radius: var(--r-pill); cursor: pointer;
+  background: var(--ink-900); color: var(--vellum-50); font-family: var(--font-ui); font-size: 14px; font-weight: 900;
+}
+.coach__show:focus-visible { outline: 3px solid var(--oc-aim); outline-offset: 2px; }
 .coach__face { flex: none; width: 44px; height: 44px; border-radius: var(--r-round); object-fit: cover; background: var(--vellum-200); }
 .coach__who { display: block; font-size: 12px; font-weight: 900; letter-spacing: .04em; text-transform: uppercase; color: var(--ink-500); }
 .coach-say-enter-active { transition: opacity .25s ease, transform .25s cubic-bezier(.2, 1.4, .4, 1); }

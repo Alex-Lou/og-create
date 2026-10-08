@@ -5,8 +5,20 @@
   max-width: 640px;
   margin: 0 auto;
 }
+/* En bois et parchemin (design/bibliotheque/svg/perso, perso.json) : les blocs sur le panneau, le nom sur son ruban,
+   les compteurs en tuiles, les lignes de menu, les barres ; cadres extensibles en border-image (tranche × 4) */
+.sceau__hero.g-panel, .sceau__branches.g-panel {
+  border: 0 solid transparent; border-radius: 0; background: none; box-shadow: none;
+  border-image: url('/design/bibliotheque/svg/perso/panneau.svg') 64 64 76 64 fill / 16px 16px 19px 16px stretch;
+}
 .sceau__hero { display: flex; flex-direction: column; align-items: center; gap: 6px; padding: 24px 20px 20px; text-align: center; }
-.sceau__name { margin-top: 10px; overflow-wrap: anywhere; }
+/* Le nom sur le ruban rouge (ses pans de 30 px de chaque côté) */
+.sceau__name {
+  max-width: 100%; margin-top: 10px; padding: 5px 38px 9px; overflow-wrap: anywhere;
+  border: 0 solid transparent;
+  border-image: url('/design/bibliotheque/svg/perso/ruban.svg') 32 120 48 120 fill / 8px 30px 12px 30px stretch;
+  color: var(--vellum-50); text-shadow: 0 1px 0 rgba(60, 10, 10, .45);
+}
 .sceau__era { margin: 0; font-size: 17px; }
 .sceau__hint { margin: 6px 0 0; font-size: 14px; color: var(--oc-text-faint); }
 
@@ -16,11 +28,10 @@
   flex-direction: column;
   align-items: center;
   gap: 4px;
-  padding: 12px 6px;
-  border-radius: var(--r-md);
+  padding: 12px 6px 14px;
   text-align: center;
-  background: var(--vellum-50);
-  box-shadow: inset 0 0 0 1px var(--oc-line), var(--edge-paper), var(--shadow-1);
+  border: 0 solid transparent;
+  border-image: url('/design/bibliotheque/svg/perso/tuile_compteur.svg') 52 56 64 56 fill / 13px 14px 16px 14px stretch;
 }
 .sceau__stat strong { font-family: var(--oc-font-display); font-weight: 700; font-size: 22px; line-height: 1.1; color: var(--ink-900); font-variant-numeric: tabular-nums; }
 .sceau__stat small { font-family: var(--oc-font-body); font-weight: 800; font-size: 12px; color: var(--ink-500); }
@@ -35,31 +46,17 @@
   align-items: flex-start;
   gap: 2px;
   min-height: 60px;
-  padding: 10px 44px 10px 18px;
-  border: 0;
-  border-radius: var(--r-md);
+  padding: 10px 44px 12px 18px;
   cursor: pointer;
   text-align: left;
   position: relative;
   color: var(--ink-900);
-  background: var(--vellum-50);
-  box-shadow: inset 0 0 0 1px var(--oc-line), var(--edge-paper), var(--shadow-1);
-  transition: transform var(--oc-fast) var(--oc-ease-out);
+  background: none;
+  /* (la ligne de bois porte son chevron, à droite) */
+  border: 0 solid transparent;
+  border-image: url('/design/bibliotheque/svg/perso/ligne_repos.svg') 56 104 64 56 fill / 14px 26px 16px 14px stretch;
 }
-/* Chevron de la rangée */
-.sceau__row::after {
-  content: '';
-  position: absolute;
-  right: 20px;
-  top: 50%;
-  width: 9px;
-  height: 9px;
-  margin-top: -5px;
-  border-top: 2px solid var(--ink-300);
-  border-right: 2px solid var(--ink-300);
-  transform: rotate(45deg);
-}
-.sceau__row:active { transform: translateY(2px); }
+.sceau__row:active { border-image-source: url('/design/bibliotheque/svg/perso/ligne_appuye.svg'); }
 .sceau__row-title { font-family: var(--oc-font-display); font-weight: 700; font-size: 18px; }
 .sceau__row-note { font-weight: 700; font-size: 13px; color: var(--ink-500); }
 .sceau__logout {
@@ -82,3 +79,15 @@
 .sceau__num { font-family: var(--oc-font-display); font-weight: 700; font-size: 14px; color: var(--oc-gold); }
 .sceau__fam { display: flex; flex-direction: column; gap: 6px; font-weight: 700; font-size: 14px; }
 .sceau__share { white-space: nowrap; text-align: right; font-weight: 800; font-size: 13px; font-variant-numeric: tabular-nums; color: var(--ink-500); }
+
+/* Les barres des branches : la rainure de bois, le remplissage doré posé dessus à la largeur voulue */
+.sceau .g-bar {
+  height: 14px; border-radius: 0; overflow: visible; background: none;
+  border: 0 solid transparent;
+  border-image: url('/design/bibliotheque/svg/perso/barre_fond.svg') 24 28 24 28 fill / 6px 7px 6px 7px stretch;
+}
+.sceau .g-bar > span {
+  min-width: 14px; border-radius: 0; background: none;
+  border: 0 solid transparent;
+  border-image: url('/design/bibliotheque/svg/perso/barre_plein.svg') 24 28 24 28 fill / 6px 7px 6px 7px stretch;
+}

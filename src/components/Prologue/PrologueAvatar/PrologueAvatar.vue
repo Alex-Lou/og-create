@@ -16,7 +16,8 @@
       </div>
     </template>
     <template v-else>
-      <SceneArt scene="00_carte" :look="choices" :name="shownName" />
+      <!-- La carte trempée, sortie de la poche : la photo à mi-corps, le nom qui s'écrit au fil de la frappe -->
+      <div class="pav__card"><BoardingCard :look="choices" :name="shownName" kind="trempee" class="pav__boarding" /></div>
       <form class="pav__panel" @submit.prevent="submit">
         <p id="pav-title" class="pav__thought">(La photo a bu la mer. C’était moi, ça ? … Oui. Et mon nom…)</p>
         <label class="pav__name">
@@ -34,7 +35,7 @@
 </template>
 
 <script>
-import SceneArt from '../SceneArt/SceneArt.vue';
+import BoardingCard from '../BoardingCard/BoardingCard.vue';
 import AvatarMaker from '../AvatarMaker/AvatarMaker.vue';
 import { LOOKS } from '@/game/sceneArt';
 import { freeChoicesOf } from '@/game/avatarKit';
@@ -42,7 +43,7 @@ import { NAME_MAX, cleanName } from '@/utils/names';
 
 export default {
   name: 'PrologueAvatar',
-  components: { SceneArt, AvatarMaker },
+  components: { BoardingCard, AvatarMaker },
   props: {
     // L'avatar de départ (des choix, ou l'un des exemples) ; sans lui, l'un des exemples au hasard
     start: { type: [String, Object], default: null },
