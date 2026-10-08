@@ -156315,6 +156315,329 @@
    "statut": "ok"
   },
   {
+   "id": "minijeux/filon/album",
+   "rubrique": "minijeux",
+   "titre": "La page de l'album des trouvailles (six cases)",
+   "images": 1,
+   "fichiers": [
+    "svg/minijeux/filon/album.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    112,
+    80
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "minijeux/filon/album-ammonite",
+   "rubrique": "minijeux",
+   "titre": "Une case de l'album : ammonite (fossile)",
+   "images": 1,
+   "fichiers": [
+    "svg/minijeux/filon/album-ammonite.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    32,
+    32
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "minijeux/filon/album-ammonite_nouvelle",
+   "rubrique": "minijeux",
+   "titre": "Une case de l'album : ammonite (fossile), nouvelle",
+   "images": 1,
+   "fichiers": [
+    "svg/minijeux/filon/album-ammonite_nouvelle.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    32,
+    32
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "minijeux/filon/album-ammonite_vide",
+   "rubrique": "minijeux",
+   "titre": "Une case de l'album : ammonite (fossile), à trouver",
+   "images": 1,
+   "fichiers": [
+    "svg/minijeux/filon/album-ammonite_vide.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    32,
+    32
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "minijeux/filon/album-arete",
+   "rubrique": "minijeux",
+   "titre": "Une case de l'album : arête de poisson (fossile)",
+   "images": 1,
+   "fichiers": [
+    "svg/minijeux/filon/album-arete.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    32,
+    32
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "minijeux/filon/album-arete_nouvelle",
+   "rubrique": "minijeux",
+   "titre": "Une case de l'album : arête de poisson (fossile), nouvelle",
+   "images": 1,
+   "fichiers": [
+    "svg/minijeux/filon/album-arete_nouvelle.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    32,
+    32
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "minijeux/filon/album-arete_vide",
+   "rubrique": "minijeux",
+   "titre": "Une case de l'album : arête de poisson (fossile), à trouver",
+   "images": 1,
+   "fichiers": [
+    "svg/minijeux/filon/album-arete_vide.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    32,
+    32
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "minijeux/filon/album-cle",
+   "rubrique": "minijeux",
+   "titre": "Une case de l'album : clé des Anciens",
+   "images": 1,
+   "fichiers": [
+    "svg/minijeux/filon/album-cle.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    32,
+    32
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "minijeux/filon/album-cle_nouvelle",
+   "rubrique": "minijeux",
+   "titre": "Une case de l'album : clé des Anciens, nouvelle",
+   "images": 1,
+   "fichiers": [
+    "svg/minijeux/filon/album-cle_nouvelle.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    32,
+    32
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "minijeux/filon/album-cle_vide",
+   "rubrique": "minijeux",
+   "titre": "Une case de l'album : clé des Anciens, à trouver",
+   "images": 1,
+   "fichiers": [
+    "svg/minijeux/filon/album-cle_vide.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    32,
+    32
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "minijeux/filon/album-coquillage",
+   "rubrique": "minijeux",
+   "titre": "Une case de l'album : coquillage ancien",
+   "images": 1,
+   "fichiers": [
+    "svg/minijeux/filon/album-coquillage.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    32,
+    32
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "minijeux/filon/album-coquillage_nouvelle",
+   "rubrique": "minijeux",
+   "titre": "Une case de l'album : coquillage ancien, nouvelle",
+   "images": 1,
+   "fichiers": [
+    "svg/minijeux/filon/album-coquillage_nouvelle.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    32,
+    32
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "minijeux/filon/album-coquillage_vide",
+   "rubrique": "minijeux",
+   "titre": "Une case de l'album : coquillage ancien, à trouver",
+   "images": 1,
+   "fichiers": [
+    "svg/minijeux/filon/album-coquillage_vide.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    32,
+    32
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "minijeux/filon/album-piece",
+   "rubrique": "minijeux",
+   "titre": "Une case de l'album : pièce des Anciens",
+   "images": 1,
+   "fichiers": [
+    "svg/minijeux/filon/album-piece.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    32,
+    32
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "minijeux/filon/album-piece_nouvelle",
+   "rubrique": "minijeux",
+   "titre": "Une case de l'album : pièce des Anciens, nouvelle",
+   "images": 1,
+   "fichiers": [
+    "svg/minijeux/filon/album-piece_nouvelle.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    32,
+    32
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "minijeux/filon/album-piece_vide",
+   "rubrique": "minijeux",
+   "titre": "Une case de l'album : pièce des Anciens, à trouver",
+   "images": 1,
+   "fichiers": [
+    "svg/minijeux/filon/album-piece_vide.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    32,
+    32
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "minijeux/filon/album-rune",
+   "rubrique": "minijeux",
+   "titre": "Une case de l'album : pierre runique (des Anciens)",
+   "images": 1,
+   "fichiers": [
+    "svg/minijeux/filon/album-rune.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    32,
+    32
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "minijeux/filon/album-rune_nouvelle",
+   "rubrique": "minijeux",
+   "titre": "Une case de l'album : pierre runique (des Anciens), nouvelle",
+   "images": 1,
+   "fichiers": [
+    "svg/minijeux/filon/album-rune_nouvelle.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    32,
+    32
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "minijeux/filon/album-rune_vide",
+   "rubrique": "minijeux",
+   "titre": "Une case de l'album : pierre runique (des Anciens), à trouver",
+   "images": 1,
+   "fichiers": [
+    "svg/minijeux/filon/album-rune_vide.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    32,
+    32
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
    "id": "minijeux/filon/amethyste",
    "rubrique": "minijeux",
    "titre": "Améthyste (son éclat passe, en boucle)",
@@ -156678,6 +157001,40 @@
    "statut": "ok"
   },
   {
+   "id": "minijeux/filon/boue",
+   "rubrique": "minijeux",
+   "titre": "La boue (2 coups)",
+   "images": 1,
+   "fichiers": [
+    "svg/minijeux/filon/boue.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    32,
+    32
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "minijeux/filon/boue_fissure-1",
+   "rubrique": "minijeux",
+   "titre": "La boue, après 1 coup",
+   "images": 1,
+   "fichiers": [
+    "svg/minijeux/filon/boue_fissure-1.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    32,
+    32
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
    "id": "minijeux/filon/cle",
    "rubrique": "minijeux",
    "titre": "Clé des Anciens (son éclat passe, en boucle)",
@@ -156803,6 +157160,27 @@
     32,
     32
    ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "minijeux/filon/eboulement",
+   "rubrique": "minijeux",
+   "titre": "Un bloc de la colonne qui s'éboule",
+   "images": 4,
+   "fichiers": [
+    "svg/minijeux/filon/eboulement_1.svg",
+    "svg/minijeux/filon/eboulement_2.svg",
+    "svg/minijeux/filon/eboulement_3.svg",
+    "svg/minijeux/filon/eboulement_4.svg"
+   ],
+   "cadre": [
+    -8,
+    -8,
+    48,
+    48
+   ],
+   "ms_par_image": 90,
    "parcours": "partout",
    "statut": "ok"
   },
@@ -157082,6 +157460,99 @@
    "statut": "ok"
   },
   {
+   "id": "minijeux/filon/halo",
+   "rubrique": "minijeux",
+   "titre": "Le halo de la lanterne sur un bloc voisin du filon (1 seconde)",
+   "images": 4,
+   "fichiers": [
+    "svg/minijeux/filon/halo_1.svg",
+    "svg/minijeux/filon/halo_2.svg",
+    "svg/minijeux/filon/halo_3.svg",
+    "svg/minijeux/filon/halo_4.svg"
+   ],
+   "cadre": [
+    -8,
+    -8,
+    48,
+    48
+   ],
+   "ms_par_image": 250,
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "minijeux/filon/humide",
+   "rubrique": "minijeux",
+   "titre": "Le bloc humide (par-dessus le bloc ; une goutte tombe, en boucle)",
+   "images": 1,
+   "fichiers": [
+    "svg/minijeux/filon/humide.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    32,
+    32
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "minijeux/filon/inondation",
+   "rubrique": "minijeux",
+   "titre": "La poche d'eau qui crève",
+   "images": 4,
+   "fichiers": [
+    "svg/minijeux/filon/inondation_1.svg",
+    "svg/minijeux/filon/inondation_2.svg",
+    "svg/minijeux/filon/inondation_3.svg",
+    "svg/minijeux/filon/inondation_4.svg"
+   ],
+   "cadre": [
+    -8,
+    -8,
+    48,
+    48
+   ],
+   "ms_par_image": 80,
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "minijeux/filon/lanterne",
+   "rubrique": "minijeux",
+   "titre": "La lanterne allumée (la flamme danse, en boucle)",
+   "images": 1,
+   "fichiers": [
+    "svg/minijeux/filon/lanterne.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    32,
+    32
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "minijeux/filon/lanterne_eteinte",
+   "rubrique": "minijeux",
+   "titre": "La lanterne éteinte (une charge utilisée)",
+   "images": 1,
+   "fichiers": [
+    "svg/minijeux/filon/lanterne_eteinte.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    32,
+    32
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
    "id": "minijeux/filon/lueur_allumee",
    "rubrique": "minijeux",
    "titre": "La lueur du filon, suivi (en boucle)",
@@ -157116,6 +157587,69 @@
    "statut": "ok"
   },
   {
+   "id": "minijeux/filon/monte-dur",
+   "rubrique": "minijeux",
+   "titre": "Un bloc dur qui monte (la rangée qui apparaît en bas)",
+   "images": 4,
+   "fichiers": [
+    "svg/minijeux/filon/monte-dur_1.svg",
+    "svg/minijeux/filon/monte-dur_2.svg",
+    "svg/minijeux/filon/monte-dur_3.svg",
+    "svg/minijeux/filon/monte-dur_4.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    32,
+    32
+   ],
+   "ms_par_image": 70,
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "minijeux/filon/monte-tendre",
+   "rubrique": "minijeux",
+   "titre": "Un bloc tendre qui monte (la rangée qui apparaît en bas)",
+   "images": 4,
+   "fichiers": [
+    "svg/minijeux/filon/monte-tendre_1.svg",
+    "svg/minijeux/filon/monte-tendre_2.svg",
+    "svg/minijeux/filon/monte-tendre_3.svg",
+    "svg/minijeux/filon/monte-tendre_4.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    32,
+    32
+   ],
+   "ms_par_image": 70,
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "minijeux/filon/monte-tres-dur",
+   "rubrique": "minijeux",
+   "titre": "Un bloc très dur qui monte (la rangée qui apparaît en bas)",
+   "images": 4,
+   "fichiers": [
+    "svg/minijeux/filon/monte-tres-dur_1.svg",
+    "svg/minijeux/filon/monte-tres-dur_2.svg",
+    "svg/minijeux/filon/monte-tres-dur_3.svg",
+    "svg/minijeux/filon/monte-tres-dur_4.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    32,
+    32
+   ],
+   "ms_par_image": 70,
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
    "id": "minijeux/filon/onde",
    "rubrique": "minijeux",
    "titre": "L'onde du bloc cassé",
@@ -157132,6 +157666,255 @@
     48
    ],
    "ms_par_image": 80,
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "minijeux/filon/outil-bois",
+   "rubrique": "minijeux",
+   "titre": "Le médaillon de la pioche de bois",
+   "images": 1,
+   "fichiers": [
+    "svg/minijeux/filon/outil-bois.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    32,
+    32
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "minijeux/filon/outil-bois_choisi",
+   "rubrique": "minijeux",
+   "titre": "Le médaillon de la pioche de bois, choisi",
+   "images": 1,
+   "fichiers": [
+    "svg/minijeux/filon/outil-bois_choisi.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    32,
+    32
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "minijeux/filon/outil-change-bois",
+   "rubrique": "minijeux",
+   "titre": "On prend la pioche de bois",
+   "images": 4,
+   "fichiers": [
+    "svg/minijeux/filon/outil-change-bois_1.svg",
+    "svg/minijeux/filon/outil-change-bois_2.svg",
+    "svg/minijeux/filon/outil-change-bois_3.svg",
+    "svg/minijeux/filon/outil-change-bois_4.svg"
+   ],
+   "cadre": [
+    -8,
+    -8,
+    48,
+    48
+   ],
+   "ms_par_image": 80,
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "minijeux/filon/outil-change-fer",
+   "rubrique": "minijeux",
+   "titre": "On prend la pioche de fer",
+   "images": 4,
+   "fichiers": [
+    "svg/minijeux/filon/outil-change-fer_1.svg",
+    "svg/minijeux/filon/outil-change-fer_2.svg",
+    "svg/minijeux/filon/outil-change-fer_3.svg",
+    "svg/minijeux/filon/outil-change-fer_4.svg"
+   ],
+   "cadre": [
+    -8,
+    -8,
+    48,
+    48
+   ],
+   "ms_par_image": 80,
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "minijeux/filon/outil-change-or",
+   "rubrique": "minijeux",
+   "titre": "On prend la pioche d'or",
+   "images": 4,
+   "fichiers": [
+    "svg/minijeux/filon/outil-change-or_1.svg",
+    "svg/minijeux/filon/outil-change-or_2.svg",
+    "svg/minijeux/filon/outil-change-or_3.svg",
+    "svg/minijeux/filon/outil-change-or_4.svg"
+   ],
+   "cadre": [
+    -8,
+    -8,
+    48,
+    48
+   ],
+   "ms_par_image": 80,
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "minijeux/filon/outil-fer",
+   "rubrique": "minijeux",
+   "titre": "Le médaillon de la pioche de fer",
+   "images": 1,
+   "fichiers": [
+    "svg/minijeux/filon/outil-fer.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    32,
+    32
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "minijeux/filon/outil-fer_choisi",
+   "rubrique": "minijeux",
+   "titre": "Le médaillon de la pioche de fer, choisi",
+   "images": 1,
+   "fichiers": [
+    "svg/minijeux/filon/outil-fer_choisi.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    32,
+    32
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "minijeux/filon/outil-or",
+   "rubrique": "minijeux",
+   "titre": "Le médaillon de la pioche d'or",
+   "images": 1,
+   "fichiers": [
+    "svg/minijeux/filon/outil-or.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    32,
+    32
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "minijeux/filon/outil-or_choisi",
+   "rubrique": "minijeux",
+   "titre": "Le médaillon de la pioche d'or, choisi",
+   "images": 1,
+   "fichiers": [
+    "svg/minijeux/filon/outil-or_choisi.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    32,
+    32
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "minijeux/filon/perdue-amethyste",
+   "rubrique": "minijeux",
+   "titre": "La pierre perdue dans l'éboulement (améthyste)",
+   "images": 4,
+   "fichiers": [
+    "svg/minijeux/filon/perdue-amethyste_1.svg",
+    "svg/minijeux/filon/perdue-amethyste_2.svg",
+    "svg/minijeux/filon/perdue-amethyste_3.svg",
+    "svg/minijeux/filon/perdue-amethyste_4.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    32,
+    32
+   ],
+   "ms_par_image": 110,
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "minijeux/filon/perdue-diamant",
+   "rubrique": "minijeux",
+   "titre": "La pierre perdue dans l'éboulement (diamant)",
+   "images": 4,
+   "fichiers": [
+    "svg/minijeux/filon/perdue-diamant_1.svg",
+    "svg/minijeux/filon/perdue-diamant_2.svg",
+    "svg/minijeux/filon/perdue-diamant_3.svg",
+    "svg/minijeux/filon/perdue-diamant_4.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    32,
+    32
+   ],
+   "ms_par_image": 110,
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "minijeux/filon/perdue-quartz",
+   "rubrique": "minijeux",
+   "titre": "La pierre perdue dans l'éboulement (quartz)",
+   "images": 4,
+   "fichiers": [
+    "svg/minijeux/filon/perdue-quartz_1.svg",
+    "svg/minijeux/filon/perdue-quartz_2.svg",
+    "svg/minijeux/filon/perdue-quartz_3.svg",
+    "svg/minijeux/filon/perdue-quartz_4.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    32,
+    32
+   ],
+   "ms_par_image": 110,
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "minijeux/filon/perdue-rubis",
+   "rubrique": "minijeux",
+   "titre": "La pierre perdue dans l'éboulement (rubis)",
+   "images": 4,
+   "fichiers": [
+    "svg/minijeux/filon/perdue-rubis_1.svg",
+    "svg/minijeux/filon/perdue-rubis_2.svg",
+    "svg/minijeux/filon/perdue-rubis_3.svg",
+    "svg/minijeux/filon/perdue-rubis_4.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    32,
+    32
+   ],
+   "ms_par_image": 110,
    "parcours": "partout",
    "statut": "ok"
   },
