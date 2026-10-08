@@ -5,9 +5,12 @@
 import { RARITIES, closed, opening, open, glow, icon } from './coffres.mjs';
 
 const CADRE = [0, 0, 120, 100]; // la fenêtre d'ouverture du jeu
-const svgOf = (cadre, body) => `<svg xmlns="http://www.w3.org/2000/svg" width="${cadre[2]}" height="${cadre[3]}" viewBox="${cadre.join(' ')}">${body}</svg>`;
-// Les états d'un coffre et leurs images : fermé (un reflet passe), l'ouverture (une fois), ouvert (en boucle), les rayons
-// (calque facultatif, derrière le coffre ouvert)
+// Haute définition : le fichier déclare une taille HD fois plus grande que son cadre (net sur un canvas) ; à afficher à
+// la taille du cadre
+export const HD = 4;
+const svgOf = (cadre, body) => `<svg xmlns="http://www.w3.org/2000/svg" width="${cadre[2] * HD}" height="${cadre[3] * HD}" viewBox="${cadre.join(' ')}">${body}</svg>`;
+// Les états d'un coffre et leurs images : fermé (un reflet passe, animé dans le SVG), l'ouverture (une fois), ouvert (les
+// scintillements, animés dans le SVG), les rayons (calque facultatif, derrière le coffre ouvert)
 const ETATS = { ferme: [2, closed], ouverture: [4, opening], ouvert: [2, open], rayons: [2, glow] };
 export const COFFRES = Object.fromEntries(Object.entries(RARITIES).map(([k, r]) => [k, { nom: r.label, couleur: r.glow }]));
 export const IMAGES = Object.fromEntries(Object.entries(ETATS).map(([e, [n]]) => [e, n]));
