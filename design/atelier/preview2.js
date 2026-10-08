@@ -3,7 +3,7 @@
 const fs = require('fs');
 const path = require('path');
 const { chromium } = require('/opt/node-tools/node_modules/playwright');
-const { frame, svg, POSES, EXPRS } = require('./troupe');
+const { frame, svg, POSES, EXPRS, IMAGES } = require('./troupe');
 
 const CAST = [require('./aster2'), require('./cannelle'), require('./rivet'), require('./ondin'), require('./sylve'), require('./galet'), require('./melisse')];
 const LABEL = { face_repos: 'Face · repos', avant_marche: 'Trois quarts avant · marche', dos_marche: 'Trois quarts dos · marche', face_salut: 'Face · salut',
@@ -40,7 +40,7 @@ const exprs = {};
 for (const c of CAST) {
   const dir = path.join(__dirname, 'svg2', slug(c.name));
   exprs[c.name] = EXPRS.map(x => {
-    const front = [0, 1].map(n => frame(c, 'front', 'repos', n, x));
+    const front = [...Array(IMAGES.repos).keys()].map(n => frame(c, 'front', 'repos', n, x));
     front.forEach((b, n) => fs.writeFileSync(path.join(dir, `${slug(c.name)}_expr_${x}_${n + 1}.svg`), svg(b) + '\n'));
     return { x, front, se: frame(c, 'se', 'repos', 0, x) };
   });
@@ -58,7 +58,7 @@ const sheets = CAST.map(c => {
 });
 
 // page animée
-const T = { repos: [900, 160], salut: [260, 260], marche: [170, 170, 170, 170], action: [700, 1100], expr: [800, 800] };
+const T = { repos: [700, 600, 700, 160], salut: [160], marche: [85], action: [700, 1100], expr: [700, 600, 700, 160] };
 let boxes = '';
 const timings = [];
 for (const c of CAST) {

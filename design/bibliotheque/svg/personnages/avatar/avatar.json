@@ -1454,23 +1454,35 @@
    "fichiers": {
     "avatar-01_face_repos": [
      "avatar-01/avatar-01_face_repos_1.svg",
-     "avatar-01/avatar-01_face_repos_2.svg"
+     "avatar-01/avatar-01_face_repos_2.svg",
+     "avatar-01/avatar-01_face_repos_3.svg",
+     "avatar-01/avatar-01_face_repos_4.svg"
     ],
     "avatar-01_avant_marche": [
      "avatar-01/avatar-01_avant_marche_1.svg",
      "avatar-01/avatar-01_avant_marche_2.svg",
      "avatar-01/avatar-01_avant_marche_3.svg",
-     "avatar-01/avatar-01_avant_marche_4.svg"
+     "avatar-01/avatar-01_avant_marche_4.svg",
+     "avatar-01/avatar-01_avant_marche_5.svg",
+     "avatar-01/avatar-01_avant_marche_6.svg",
+     "avatar-01/avatar-01_avant_marche_7.svg",
+     "avatar-01/avatar-01_avant_marche_8.svg"
     ],
     "avatar-01_dos_marche": [
      "avatar-01/avatar-01_dos_marche_1.svg",
      "avatar-01/avatar-01_dos_marche_2.svg",
      "avatar-01/avatar-01_dos_marche_3.svg",
-     "avatar-01/avatar-01_dos_marche_4.svg"
+     "avatar-01/avatar-01_dos_marche_4.svg",
+     "avatar-01/avatar-01_dos_marche_5.svg",
+     "avatar-01/avatar-01_dos_marche_6.svg",
+     "avatar-01/avatar-01_dos_marche_7.svg",
+     "avatar-01/avatar-01_dos_marche_8.svg"
     ],
     "avatar-01_face_salut": [
      "avatar-01/avatar-01_face_salut_1.svg",
-     "avatar-01/avatar-01_face_salut_2.svg"
+     "avatar-01/avatar-01_face_salut_2.svg",
+     "avatar-01/avatar-01_face_salut_3.svg",
+     "avatar-01/avatar-01_face_salut_4.svg"
     ],
     "avatar-01_avant_ramasser": [
      "avatar-01/avatar-01_avant_ramasser_1.svg",
@@ -1726,55 +1738,83 @@
     ],
     "avatar-01_expr_neutre": [
      "avatar-01/avatar-01_expr_neutre_1.svg",
-     "avatar-01/avatar-01_expr_neutre_2.svg"
+     "avatar-01/avatar-01_expr_neutre_2.svg",
+     "avatar-01/avatar-01_expr_neutre_3.svg",
+     "avatar-01/avatar-01_expr_neutre_4.svg"
     ],
     "avatar-01_expr_content": [
      "avatar-01/avatar-01_expr_content_1.svg",
-     "avatar-01/avatar-01_expr_content_2.svg"
+     "avatar-01/avatar-01_expr_content_2.svg",
+     "avatar-01/avatar-01_expr_content_3.svg",
+     "avatar-01/avatar-01_expr_content_4.svg"
     ],
     "avatar-01_expr_rire": [
      "avatar-01/avatar-01_expr_rire_1.svg",
-     "avatar-01/avatar-01_expr_rire_2.svg"
+     "avatar-01/avatar-01_expr_rire_2.svg",
+     "avatar-01/avatar-01_expr_rire_3.svg",
+     "avatar-01/avatar-01_expr_rire_4.svg"
     ],
     "avatar-01_expr_surpris": [
      "avatar-01/avatar-01_expr_surpris_1.svg",
-     "avatar-01/avatar-01_expr_surpris_2.svg"
+     "avatar-01/avatar-01_expr_surpris_2.svg",
+     "avatar-01/avatar-01_expr_surpris_3.svg",
+     "avatar-01/avatar-01_expr_surpris_4.svg"
     ],
     "avatar-01_expr_triste": [
      "avatar-01/avatar-01_expr_triste_1.svg",
-     "avatar-01/avatar-01_expr_triste_2.svg"
+     "avatar-01/avatar-01_expr_triste_2.svg",
+     "avatar-01/avatar-01_expr_triste_3.svg",
+     "avatar-01/avatar-01_expr_triste_4.svg"
     ],
     "avatar-01_expr_fache": [
      "avatar-01/avatar-01_expr_fache_1.svg",
-     "avatar-01/avatar-01_expr_fache_2.svg"
+     "avatar-01/avatar-01_expr_fache_2.svg",
+     "avatar-01/avatar-01_expr_fache_3.svg",
+     "avatar-01/avatar-01_expr_fache_4.svg"
     ],
     "avatar-01_expr_gene": [
      "avatar-01/avatar-01_expr_gene_1.svg",
-     "avatar-01/avatar-01_expr_gene_2.svg"
+     "avatar-01/avatar-01_expr_gene_2.svg",
+     "avatar-01/avatar-01_expr_gene_3.svg",
+     "avatar-01/avatar-01_expr_gene_4.svg"
     ],
     "avatar-01_expr_endormi": [
      "avatar-01/avatar-01_expr_endormi_1.svg",
-     "avatar-01/avatar-01_expr_endormi_2.svg"
+     "avatar-01/avatar-01_expr_endormi_2.svg",
+     "avatar-01/avatar-01_expr_endormi_3.svg",
+     "avatar-01/avatar-01_expr_endormi_4.svg"
     ],
     "avatar-01-naufrage_face_repos": [
      "avatar-01-naufrage/avatar-01-naufrage_face_repos_1.svg",
-     "avatar-01-naufrage/avatar-01-naufrage_face_repos_2.svg"
+     "avatar-01-naufrage/avatar-01-naufrage_face_repos_2.svg",
+     "avatar-01-naufrage/avatar-01-naufrage_face_repos_3.svg",
+     "avatar-01-naufrage/avatar-01-naufrage_face_repos_4.svg"
     ],
     "avatar-01-naufrage_avant_marche": [
      "avatar-01-naufrage/avatar-01-naufrage_avant_marche_1.svg",
      "avatar-01-naufrage/avatar-01-naufrage_avant_marche_2.svg",
      "avatar-01-naufrage/avatar-01-naufrage_avant_marche_3.svg",
-     "avatar-01-naufrage/avatar-01-naufrage_avant_marche_4.svg"
+     "avatar-01-naufrage/avatar-01-naufrage_avant_marche_4.svg",
+     "avatar-01-naufrage/avatar-01-naufrage_avant_marche_5.svg",
+     "avatar-01-naufrage/avatar-01-naufrage_avant_marche_6.svg",
+     "avatar-01-naufrage/avatar-01-naufrage_avant_marche_7.svg",
+     "avatar-01-naufrage/avatar-01-naufrage_avant_marche_8.svg"
     ],
     "avatar-01-naufrage_dos_marche": [
      "avatar-01-naufrage/avatar-01-naufrage_dos_marche_1.svg",
      "avatar-01-naufrage/avatar-01-naufrage_dos_marche_2.svg",
      "avatar-01-naufrage/avatar-01-naufrage_dos_marche_3.svg",
-     "avatar-01-naufrage/avatar-01-naufrage_dos_marche_4.svg"
+     "avatar-01-naufrage/avatar-01-naufrage_dos_marche_4.svg",
+     "avatar-01-naufrage/avatar-01-naufrage_dos_marche_5.svg",
+     "avatar-01-naufrage/avatar-01-naufrage_dos_marche_6.svg",
+     "avatar-01-naufrage/avatar-01-naufrage_dos_marche_7.svg",
+     "avatar-01-naufrage/avatar-01-naufrage_dos_marche_8.svg"
     ],
     "avatar-01-naufrage_face_salut": [
      "avatar-01-naufrage/avatar-01-naufrage_face_salut_1.svg",
-     "avatar-01-naufrage/avatar-01-naufrage_face_salut_2.svg"
+     "avatar-01-naufrage/avatar-01-naufrage_face_salut_2.svg",
+     "avatar-01-naufrage/avatar-01-naufrage_face_salut_3.svg",
+     "avatar-01-naufrage/avatar-01-naufrage_face_salut_4.svg"
     ],
     "avatar-01-naufrage_avant_ramasser": [
      "avatar-01-naufrage/avatar-01-naufrage_avant_ramasser_1.svg",
@@ -2073,23 +2113,35 @@
    "fichiers": {
     "avatar-02_face_repos": [
      "avatar-02/avatar-02_face_repos_1.svg",
-     "avatar-02/avatar-02_face_repos_2.svg"
+     "avatar-02/avatar-02_face_repos_2.svg",
+     "avatar-02/avatar-02_face_repos_3.svg",
+     "avatar-02/avatar-02_face_repos_4.svg"
     ],
     "avatar-02_avant_marche": [
      "avatar-02/avatar-02_avant_marche_1.svg",
      "avatar-02/avatar-02_avant_marche_2.svg",
      "avatar-02/avatar-02_avant_marche_3.svg",
-     "avatar-02/avatar-02_avant_marche_4.svg"
+     "avatar-02/avatar-02_avant_marche_4.svg",
+     "avatar-02/avatar-02_avant_marche_5.svg",
+     "avatar-02/avatar-02_avant_marche_6.svg",
+     "avatar-02/avatar-02_avant_marche_7.svg",
+     "avatar-02/avatar-02_avant_marche_8.svg"
     ],
     "avatar-02_dos_marche": [
      "avatar-02/avatar-02_dos_marche_1.svg",
      "avatar-02/avatar-02_dos_marche_2.svg",
      "avatar-02/avatar-02_dos_marche_3.svg",
-     "avatar-02/avatar-02_dos_marche_4.svg"
+     "avatar-02/avatar-02_dos_marche_4.svg",
+     "avatar-02/avatar-02_dos_marche_5.svg",
+     "avatar-02/avatar-02_dos_marche_6.svg",
+     "avatar-02/avatar-02_dos_marche_7.svg",
+     "avatar-02/avatar-02_dos_marche_8.svg"
     ],
     "avatar-02_face_salut": [
      "avatar-02/avatar-02_face_salut_1.svg",
-     "avatar-02/avatar-02_face_salut_2.svg"
+     "avatar-02/avatar-02_face_salut_2.svg",
+     "avatar-02/avatar-02_face_salut_3.svg",
+     "avatar-02/avatar-02_face_salut_4.svg"
     ],
     "avatar-02_avant_ramasser": [
      "avatar-02/avatar-02_avant_ramasser_1.svg",
@@ -2345,23 +2397,35 @@
     ],
     "avatar-02-naufrage_face_repos": [
      "avatar-02-naufrage/avatar-02-naufrage_face_repos_1.svg",
-     "avatar-02-naufrage/avatar-02-naufrage_face_repos_2.svg"
+     "avatar-02-naufrage/avatar-02-naufrage_face_repos_2.svg",
+     "avatar-02-naufrage/avatar-02-naufrage_face_repos_3.svg",
+     "avatar-02-naufrage/avatar-02-naufrage_face_repos_4.svg"
     ],
     "avatar-02-naufrage_avant_marche": [
      "avatar-02-naufrage/avatar-02-naufrage_avant_marche_1.svg",
      "avatar-02-naufrage/avatar-02-naufrage_avant_marche_2.svg",
      "avatar-02-naufrage/avatar-02-naufrage_avant_marche_3.svg",
-     "avatar-02-naufrage/avatar-02-naufrage_avant_marche_4.svg"
+     "avatar-02-naufrage/avatar-02-naufrage_avant_marche_4.svg",
+     "avatar-02-naufrage/avatar-02-naufrage_avant_marche_5.svg",
+     "avatar-02-naufrage/avatar-02-naufrage_avant_marche_6.svg",
+     "avatar-02-naufrage/avatar-02-naufrage_avant_marche_7.svg",
+     "avatar-02-naufrage/avatar-02-naufrage_avant_marche_8.svg"
     ],
     "avatar-02-naufrage_dos_marche": [
      "avatar-02-naufrage/avatar-02-naufrage_dos_marche_1.svg",
      "avatar-02-naufrage/avatar-02-naufrage_dos_marche_2.svg",
      "avatar-02-naufrage/avatar-02-naufrage_dos_marche_3.svg",
-     "avatar-02-naufrage/avatar-02-naufrage_dos_marche_4.svg"
+     "avatar-02-naufrage/avatar-02-naufrage_dos_marche_4.svg",
+     "avatar-02-naufrage/avatar-02-naufrage_dos_marche_5.svg",
+     "avatar-02-naufrage/avatar-02-naufrage_dos_marche_6.svg",
+     "avatar-02-naufrage/avatar-02-naufrage_dos_marche_7.svg",
+     "avatar-02-naufrage/avatar-02-naufrage_dos_marche_8.svg"
     ],
     "avatar-02-naufrage_face_salut": [
      "avatar-02-naufrage/avatar-02-naufrage_face_salut_1.svg",
-     "avatar-02-naufrage/avatar-02-naufrage_face_salut_2.svg"
+     "avatar-02-naufrage/avatar-02-naufrage_face_salut_2.svg",
+     "avatar-02-naufrage/avatar-02-naufrage_face_salut_3.svg",
+     "avatar-02-naufrage/avatar-02-naufrage_face_salut_4.svg"
     ],
     "avatar-02-naufrage_avant_ramasser": [
      "avatar-02-naufrage/avatar-02-naufrage_avant_ramasser_1.svg",
@@ -2660,23 +2724,35 @@
    "fichiers": {
     "avatar-03_face_repos": [
      "avatar-03/avatar-03_face_repos_1.svg",
-     "avatar-03/avatar-03_face_repos_2.svg"
+     "avatar-03/avatar-03_face_repos_2.svg",
+     "avatar-03/avatar-03_face_repos_3.svg",
+     "avatar-03/avatar-03_face_repos_4.svg"
     ],
     "avatar-03_avant_marche": [
      "avatar-03/avatar-03_avant_marche_1.svg",
      "avatar-03/avatar-03_avant_marche_2.svg",
      "avatar-03/avatar-03_avant_marche_3.svg",
-     "avatar-03/avatar-03_avant_marche_4.svg"
+     "avatar-03/avatar-03_avant_marche_4.svg",
+     "avatar-03/avatar-03_avant_marche_5.svg",
+     "avatar-03/avatar-03_avant_marche_6.svg",
+     "avatar-03/avatar-03_avant_marche_7.svg",
+     "avatar-03/avatar-03_avant_marche_8.svg"
     ],
     "avatar-03_dos_marche": [
      "avatar-03/avatar-03_dos_marche_1.svg",
      "avatar-03/avatar-03_dos_marche_2.svg",
      "avatar-03/avatar-03_dos_marche_3.svg",
-     "avatar-03/avatar-03_dos_marche_4.svg"
+     "avatar-03/avatar-03_dos_marche_4.svg",
+     "avatar-03/avatar-03_dos_marche_5.svg",
+     "avatar-03/avatar-03_dos_marche_6.svg",
+     "avatar-03/avatar-03_dos_marche_7.svg",
+     "avatar-03/avatar-03_dos_marche_8.svg"
     ],
     "avatar-03_face_salut": [
      "avatar-03/avatar-03_face_salut_1.svg",
-     "avatar-03/avatar-03_face_salut_2.svg"
+     "avatar-03/avatar-03_face_salut_2.svg",
+     "avatar-03/avatar-03_face_salut_3.svg",
+     "avatar-03/avatar-03_face_salut_4.svg"
     ],
     "avatar-03_avant_ramasser": [
      "avatar-03/avatar-03_avant_ramasser_1.svg",
@@ -2932,23 +3008,35 @@
     ],
     "avatar-03-naufrage_face_repos": [
      "avatar-03-naufrage/avatar-03-naufrage_face_repos_1.svg",
-     "avatar-03-naufrage/avatar-03-naufrage_face_repos_2.svg"
+     "avatar-03-naufrage/avatar-03-naufrage_face_repos_2.svg",
+     "avatar-03-naufrage/avatar-03-naufrage_face_repos_3.svg",
+     "avatar-03-naufrage/avatar-03-naufrage_face_repos_4.svg"
     ],
     "avatar-03-naufrage_avant_marche": [
      "avatar-03-naufrage/avatar-03-naufrage_avant_marche_1.svg",
      "avatar-03-naufrage/avatar-03-naufrage_avant_marche_2.svg",
      "avatar-03-naufrage/avatar-03-naufrage_avant_marche_3.svg",
-     "avatar-03-naufrage/avatar-03-naufrage_avant_marche_4.svg"
+     "avatar-03-naufrage/avatar-03-naufrage_avant_marche_4.svg",
+     "avatar-03-naufrage/avatar-03-naufrage_avant_marche_5.svg",
+     "avatar-03-naufrage/avatar-03-naufrage_avant_marche_6.svg",
+     "avatar-03-naufrage/avatar-03-naufrage_avant_marche_7.svg",
+     "avatar-03-naufrage/avatar-03-naufrage_avant_marche_8.svg"
     ],
     "avatar-03-naufrage_dos_marche": [
      "avatar-03-naufrage/avatar-03-naufrage_dos_marche_1.svg",
      "avatar-03-naufrage/avatar-03-naufrage_dos_marche_2.svg",
      "avatar-03-naufrage/avatar-03-naufrage_dos_marche_3.svg",
-     "avatar-03-naufrage/avatar-03-naufrage_dos_marche_4.svg"
+     "avatar-03-naufrage/avatar-03-naufrage_dos_marche_4.svg",
+     "avatar-03-naufrage/avatar-03-naufrage_dos_marche_5.svg",
+     "avatar-03-naufrage/avatar-03-naufrage_dos_marche_6.svg",
+     "avatar-03-naufrage/avatar-03-naufrage_dos_marche_7.svg",
+     "avatar-03-naufrage/avatar-03-naufrage_dos_marche_8.svg"
     ],
     "avatar-03-naufrage_face_salut": [
      "avatar-03-naufrage/avatar-03-naufrage_face_salut_1.svg",
-     "avatar-03-naufrage/avatar-03-naufrage_face_salut_2.svg"
+     "avatar-03-naufrage/avatar-03-naufrage_face_salut_2.svg",
+     "avatar-03-naufrage/avatar-03-naufrage_face_salut_3.svg",
+     "avatar-03-naufrage/avatar-03-naufrage_face_salut_4.svg"
     ],
     "avatar-03-naufrage_avant_ramasser": [
      "avatar-03-naufrage/avatar-03-naufrage_avant_ramasser_1.svg",
@@ -3247,23 +3335,35 @@
    "fichiers": {
     "avatar-04_face_repos": [
      "avatar-04/avatar-04_face_repos_1.svg",
-     "avatar-04/avatar-04_face_repos_2.svg"
+     "avatar-04/avatar-04_face_repos_2.svg",
+     "avatar-04/avatar-04_face_repos_3.svg",
+     "avatar-04/avatar-04_face_repos_4.svg"
     ],
     "avatar-04_avant_marche": [
      "avatar-04/avatar-04_avant_marche_1.svg",
      "avatar-04/avatar-04_avant_marche_2.svg",
      "avatar-04/avatar-04_avant_marche_3.svg",
-     "avatar-04/avatar-04_avant_marche_4.svg"
+     "avatar-04/avatar-04_avant_marche_4.svg",
+     "avatar-04/avatar-04_avant_marche_5.svg",
+     "avatar-04/avatar-04_avant_marche_6.svg",
+     "avatar-04/avatar-04_avant_marche_7.svg",
+     "avatar-04/avatar-04_avant_marche_8.svg"
     ],
     "avatar-04_dos_marche": [
      "avatar-04/avatar-04_dos_marche_1.svg",
      "avatar-04/avatar-04_dos_marche_2.svg",
      "avatar-04/avatar-04_dos_marche_3.svg",
-     "avatar-04/avatar-04_dos_marche_4.svg"
+     "avatar-04/avatar-04_dos_marche_4.svg",
+     "avatar-04/avatar-04_dos_marche_5.svg",
+     "avatar-04/avatar-04_dos_marche_6.svg",
+     "avatar-04/avatar-04_dos_marche_7.svg",
+     "avatar-04/avatar-04_dos_marche_8.svg"
     ],
     "avatar-04_face_salut": [
      "avatar-04/avatar-04_face_salut_1.svg",
-     "avatar-04/avatar-04_face_salut_2.svg"
+     "avatar-04/avatar-04_face_salut_2.svg",
+     "avatar-04/avatar-04_face_salut_3.svg",
+     "avatar-04/avatar-04_face_salut_4.svg"
     ],
     "avatar-04_avant_ramasser": [
      "avatar-04/avatar-04_avant_ramasser_1.svg",
@@ -3519,23 +3619,35 @@
     ],
     "avatar-04-naufrage_face_repos": [
      "avatar-04-naufrage/avatar-04-naufrage_face_repos_1.svg",
-     "avatar-04-naufrage/avatar-04-naufrage_face_repos_2.svg"
+     "avatar-04-naufrage/avatar-04-naufrage_face_repos_2.svg",
+     "avatar-04-naufrage/avatar-04-naufrage_face_repos_3.svg",
+     "avatar-04-naufrage/avatar-04-naufrage_face_repos_4.svg"
     ],
     "avatar-04-naufrage_avant_marche": [
      "avatar-04-naufrage/avatar-04-naufrage_avant_marche_1.svg",
      "avatar-04-naufrage/avatar-04-naufrage_avant_marche_2.svg",
      "avatar-04-naufrage/avatar-04-naufrage_avant_marche_3.svg",
-     "avatar-04-naufrage/avatar-04-naufrage_avant_marche_4.svg"
+     "avatar-04-naufrage/avatar-04-naufrage_avant_marche_4.svg",
+     "avatar-04-naufrage/avatar-04-naufrage_avant_marche_5.svg",
+     "avatar-04-naufrage/avatar-04-naufrage_avant_marche_6.svg",
+     "avatar-04-naufrage/avatar-04-naufrage_avant_marche_7.svg",
+     "avatar-04-naufrage/avatar-04-naufrage_avant_marche_8.svg"
     ],
     "avatar-04-naufrage_dos_marche": [
      "avatar-04-naufrage/avatar-04-naufrage_dos_marche_1.svg",
      "avatar-04-naufrage/avatar-04-naufrage_dos_marche_2.svg",
      "avatar-04-naufrage/avatar-04-naufrage_dos_marche_3.svg",
-     "avatar-04-naufrage/avatar-04-naufrage_dos_marche_4.svg"
+     "avatar-04-naufrage/avatar-04-naufrage_dos_marche_4.svg",
+     "avatar-04-naufrage/avatar-04-naufrage_dos_marche_5.svg",
+     "avatar-04-naufrage/avatar-04-naufrage_dos_marche_6.svg",
+     "avatar-04-naufrage/avatar-04-naufrage_dos_marche_7.svg",
+     "avatar-04-naufrage/avatar-04-naufrage_dos_marche_8.svg"
     ],
     "avatar-04-naufrage_face_salut": [
      "avatar-04-naufrage/avatar-04-naufrage_face_salut_1.svg",
-     "avatar-04-naufrage/avatar-04-naufrage_face_salut_2.svg"
+     "avatar-04-naufrage/avatar-04-naufrage_face_salut_2.svg",
+     "avatar-04-naufrage/avatar-04-naufrage_face_salut_3.svg",
+     "avatar-04-naufrage/avatar-04-naufrage_face_salut_4.svg"
     ],
     "avatar-04-naufrage_avant_ramasser": [
      "avatar-04-naufrage/avatar-04-naufrage_avant_ramasser_1.svg",
@@ -3834,23 +3946,35 @@
    "fichiers": {
     "avatar-05_face_repos": [
      "avatar-05/avatar-05_face_repos_1.svg",
-     "avatar-05/avatar-05_face_repos_2.svg"
+     "avatar-05/avatar-05_face_repos_2.svg",
+     "avatar-05/avatar-05_face_repos_3.svg",
+     "avatar-05/avatar-05_face_repos_4.svg"
     ],
     "avatar-05_avant_marche": [
      "avatar-05/avatar-05_avant_marche_1.svg",
      "avatar-05/avatar-05_avant_marche_2.svg",
      "avatar-05/avatar-05_avant_marche_3.svg",
-     "avatar-05/avatar-05_avant_marche_4.svg"
+     "avatar-05/avatar-05_avant_marche_4.svg",
+     "avatar-05/avatar-05_avant_marche_5.svg",
+     "avatar-05/avatar-05_avant_marche_6.svg",
+     "avatar-05/avatar-05_avant_marche_7.svg",
+     "avatar-05/avatar-05_avant_marche_8.svg"
     ],
     "avatar-05_dos_marche": [
      "avatar-05/avatar-05_dos_marche_1.svg",
      "avatar-05/avatar-05_dos_marche_2.svg",
      "avatar-05/avatar-05_dos_marche_3.svg",
-     "avatar-05/avatar-05_dos_marche_4.svg"
+     "avatar-05/avatar-05_dos_marche_4.svg",
+     "avatar-05/avatar-05_dos_marche_5.svg",
+     "avatar-05/avatar-05_dos_marche_6.svg",
+     "avatar-05/avatar-05_dos_marche_7.svg",
+     "avatar-05/avatar-05_dos_marche_8.svg"
     ],
     "avatar-05_face_salut": [
      "avatar-05/avatar-05_face_salut_1.svg",
-     "avatar-05/avatar-05_face_salut_2.svg"
+     "avatar-05/avatar-05_face_salut_2.svg",
+     "avatar-05/avatar-05_face_salut_3.svg",
+     "avatar-05/avatar-05_face_salut_4.svg"
     ],
     "avatar-05_avant_ramasser": [
      "avatar-05/avatar-05_avant_ramasser_1.svg",
@@ -4106,23 +4230,35 @@
     ],
     "avatar-05-naufrage_face_repos": [
      "avatar-05-naufrage/avatar-05-naufrage_face_repos_1.svg",
-     "avatar-05-naufrage/avatar-05-naufrage_face_repos_2.svg"
+     "avatar-05-naufrage/avatar-05-naufrage_face_repos_2.svg",
+     "avatar-05-naufrage/avatar-05-naufrage_face_repos_3.svg",
+     "avatar-05-naufrage/avatar-05-naufrage_face_repos_4.svg"
     ],
     "avatar-05-naufrage_avant_marche": [
      "avatar-05-naufrage/avatar-05-naufrage_avant_marche_1.svg",
      "avatar-05-naufrage/avatar-05-naufrage_avant_marche_2.svg",
      "avatar-05-naufrage/avatar-05-naufrage_avant_marche_3.svg",
-     "avatar-05-naufrage/avatar-05-naufrage_avant_marche_4.svg"
+     "avatar-05-naufrage/avatar-05-naufrage_avant_marche_4.svg",
+     "avatar-05-naufrage/avatar-05-naufrage_avant_marche_5.svg",
+     "avatar-05-naufrage/avatar-05-naufrage_avant_marche_6.svg",
+     "avatar-05-naufrage/avatar-05-naufrage_avant_marche_7.svg",
+     "avatar-05-naufrage/avatar-05-naufrage_avant_marche_8.svg"
     ],
     "avatar-05-naufrage_dos_marche": [
      "avatar-05-naufrage/avatar-05-naufrage_dos_marche_1.svg",
      "avatar-05-naufrage/avatar-05-naufrage_dos_marche_2.svg",
      "avatar-05-naufrage/avatar-05-naufrage_dos_marche_3.svg",
-     "avatar-05-naufrage/avatar-05-naufrage_dos_marche_4.svg"
+     "avatar-05-naufrage/avatar-05-naufrage_dos_marche_4.svg",
+     "avatar-05-naufrage/avatar-05-naufrage_dos_marche_5.svg",
+     "avatar-05-naufrage/avatar-05-naufrage_dos_marche_6.svg",
+     "avatar-05-naufrage/avatar-05-naufrage_dos_marche_7.svg",
+     "avatar-05-naufrage/avatar-05-naufrage_dos_marche_8.svg"
     ],
     "avatar-05-naufrage_face_salut": [
      "avatar-05-naufrage/avatar-05-naufrage_face_salut_1.svg",
-     "avatar-05-naufrage/avatar-05-naufrage_face_salut_2.svg"
+     "avatar-05-naufrage/avatar-05-naufrage_face_salut_2.svg",
+     "avatar-05-naufrage/avatar-05-naufrage_face_salut_3.svg",
+     "avatar-05-naufrage/avatar-05-naufrage_face_salut_4.svg"
     ],
     "avatar-05-naufrage_avant_ramasser": [
      "avatar-05-naufrage/avatar-05-naufrage_avant_ramasser_1.svg",
@@ -4421,23 +4557,35 @@
    "fichiers": {
     "avatar-06_face_repos": [
      "avatar-06/avatar-06_face_repos_1.svg",
-     "avatar-06/avatar-06_face_repos_2.svg"
+     "avatar-06/avatar-06_face_repos_2.svg",
+     "avatar-06/avatar-06_face_repos_3.svg",
+     "avatar-06/avatar-06_face_repos_4.svg"
     ],
     "avatar-06_avant_marche": [
      "avatar-06/avatar-06_avant_marche_1.svg",
      "avatar-06/avatar-06_avant_marche_2.svg",
      "avatar-06/avatar-06_avant_marche_3.svg",
-     "avatar-06/avatar-06_avant_marche_4.svg"
+     "avatar-06/avatar-06_avant_marche_4.svg",
+     "avatar-06/avatar-06_avant_marche_5.svg",
+     "avatar-06/avatar-06_avant_marche_6.svg",
+     "avatar-06/avatar-06_avant_marche_7.svg",
+     "avatar-06/avatar-06_avant_marche_8.svg"
     ],
     "avatar-06_dos_marche": [
      "avatar-06/avatar-06_dos_marche_1.svg",
      "avatar-06/avatar-06_dos_marche_2.svg",
      "avatar-06/avatar-06_dos_marche_3.svg",
-     "avatar-06/avatar-06_dos_marche_4.svg"
+     "avatar-06/avatar-06_dos_marche_4.svg",
+     "avatar-06/avatar-06_dos_marche_5.svg",
+     "avatar-06/avatar-06_dos_marche_6.svg",
+     "avatar-06/avatar-06_dos_marche_7.svg",
+     "avatar-06/avatar-06_dos_marche_8.svg"
     ],
     "avatar-06_face_salut": [
      "avatar-06/avatar-06_face_salut_1.svg",
-     "avatar-06/avatar-06_face_salut_2.svg"
+     "avatar-06/avatar-06_face_salut_2.svg",
+     "avatar-06/avatar-06_face_salut_3.svg",
+     "avatar-06/avatar-06_face_salut_4.svg"
     ],
     "avatar-06_avant_ramasser": [
      "avatar-06/avatar-06_avant_ramasser_1.svg",
@@ -4693,23 +4841,35 @@
     ],
     "avatar-06-naufrage_face_repos": [
      "avatar-06-naufrage/avatar-06-naufrage_face_repos_1.svg",
-     "avatar-06-naufrage/avatar-06-naufrage_face_repos_2.svg"
+     "avatar-06-naufrage/avatar-06-naufrage_face_repos_2.svg",
+     "avatar-06-naufrage/avatar-06-naufrage_face_repos_3.svg",
+     "avatar-06-naufrage/avatar-06-naufrage_face_repos_4.svg"
     ],
     "avatar-06-naufrage_avant_marche": [
      "avatar-06-naufrage/avatar-06-naufrage_avant_marche_1.svg",
      "avatar-06-naufrage/avatar-06-naufrage_avant_marche_2.svg",
      "avatar-06-naufrage/avatar-06-naufrage_avant_marche_3.svg",
-     "avatar-06-naufrage/avatar-06-naufrage_avant_marche_4.svg"
+     "avatar-06-naufrage/avatar-06-naufrage_avant_marche_4.svg",
+     "avatar-06-naufrage/avatar-06-naufrage_avant_marche_5.svg",
+     "avatar-06-naufrage/avatar-06-naufrage_avant_marche_6.svg",
+     "avatar-06-naufrage/avatar-06-naufrage_avant_marche_7.svg",
+     "avatar-06-naufrage/avatar-06-naufrage_avant_marche_8.svg"
     ],
     "avatar-06-naufrage_dos_marche": [
      "avatar-06-naufrage/avatar-06-naufrage_dos_marche_1.svg",
      "avatar-06-naufrage/avatar-06-naufrage_dos_marche_2.svg",
      "avatar-06-naufrage/avatar-06-naufrage_dos_marche_3.svg",
-     "avatar-06-naufrage/avatar-06-naufrage_dos_marche_4.svg"
+     "avatar-06-naufrage/avatar-06-naufrage_dos_marche_4.svg",
+     "avatar-06-naufrage/avatar-06-naufrage_dos_marche_5.svg",
+     "avatar-06-naufrage/avatar-06-naufrage_dos_marche_6.svg",
+     "avatar-06-naufrage/avatar-06-naufrage_dos_marche_7.svg",
+     "avatar-06-naufrage/avatar-06-naufrage_dos_marche_8.svg"
     ],
     "avatar-06-naufrage_face_salut": [
      "avatar-06-naufrage/avatar-06-naufrage_face_salut_1.svg",
-     "avatar-06-naufrage/avatar-06-naufrage_face_salut_2.svg"
+     "avatar-06-naufrage/avatar-06-naufrage_face_salut_2.svg",
+     "avatar-06-naufrage/avatar-06-naufrage_face_salut_3.svg",
+     "avatar-06-naufrage/avatar-06-naufrage_face_salut_4.svg"
     ],
     "avatar-06-naufrage_avant_ramasser": [
      "avatar-06-naufrage/avatar-06-naufrage_avant_ramasser_1.svg",
@@ -5008,23 +5168,35 @@
    "fichiers": {
     "avatar-07_face_repos": [
      "avatar-07/avatar-07_face_repos_1.svg",
-     "avatar-07/avatar-07_face_repos_2.svg"
+     "avatar-07/avatar-07_face_repos_2.svg",
+     "avatar-07/avatar-07_face_repos_3.svg",
+     "avatar-07/avatar-07_face_repos_4.svg"
     ],
     "avatar-07_avant_marche": [
      "avatar-07/avatar-07_avant_marche_1.svg",
      "avatar-07/avatar-07_avant_marche_2.svg",
      "avatar-07/avatar-07_avant_marche_3.svg",
-     "avatar-07/avatar-07_avant_marche_4.svg"
+     "avatar-07/avatar-07_avant_marche_4.svg",
+     "avatar-07/avatar-07_avant_marche_5.svg",
+     "avatar-07/avatar-07_avant_marche_6.svg",
+     "avatar-07/avatar-07_avant_marche_7.svg",
+     "avatar-07/avatar-07_avant_marche_8.svg"
     ],
     "avatar-07_dos_marche": [
      "avatar-07/avatar-07_dos_marche_1.svg",
      "avatar-07/avatar-07_dos_marche_2.svg",
      "avatar-07/avatar-07_dos_marche_3.svg",
-     "avatar-07/avatar-07_dos_marche_4.svg"
+     "avatar-07/avatar-07_dos_marche_4.svg",
+     "avatar-07/avatar-07_dos_marche_5.svg",
+     "avatar-07/avatar-07_dos_marche_6.svg",
+     "avatar-07/avatar-07_dos_marche_7.svg",
+     "avatar-07/avatar-07_dos_marche_8.svg"
     ],
     "avatar-07_face_salut": [
      "avatar-07/avatar-07_face_salut_1.svg",
-     "avatar-07/avatar-07_face_salut_2.svg"
+     "avatar-07/avatar-07_face_salut_2.svg",
+     "avatar-07/avatar-07_face_salut_3.svg",
+     "avatar-07/avatar-07_face_salut_4.svg"
     ],
     "avatar-07_avant_ramasser": [
      "avatar-07/avatar-07_avant_ramasser_1.svg",
@@ -5280,23 +5452,35 @@
     ],
     "avatar-07-naufrage_face_repos": [
      "avatar-07-naufrage/avatar-07-naufrage_face_repos_1.svg",
-     "avatar-07-naufrage/avatar-07-naufrage_face_repos_2.svg"
+     "avatar-07-naufrage/avatar-07-naufrage_face_repos_2.svg",
+     "avatar-07-naufrage/avatar-07-naufrage_face_repos_3.svg",
+     "avatar-07-naufrage/avatar-07-naufrage_face_repos_4.svg"
     ],
     "avatar-07-naufrage_avant_marche": [
      "avatar-07-naufrage/avatar-07-naufrage_avant_marche_1.svg",
      "avatar-07-naufrage/avatar-07-naufrage_avant_marche_2.svg",
      "avatar-07-naufrage/avatar-07-naufrage_avant_marche_3.svg",
-     "avatar-07-naufrage/avatar-07-naufrage_avant_marche_4.svg"
+     "avatar-07-naufrage/avatar-07-naufrage_avant_marche_4.svg",
+     "avatar-07-naufrage/avatar-07-naufrage_avant_marche_5.svg",
+     "avatar-07-naufrage/avatar-07-naufrage_avant_marche_6.svg",
+     "avatar-07-naufrage/avatar-07-naufrage_avant_marche_7.svg",
+     "avatar-07-naufrage/avatar-07-naufrage_avant_marche_8.svg"
     ],
     "avatar-07-naufrage_dos_marche": [
      "avatar-07-naufrage/avatar-07-naufrage_dos_marche_1.svg",
      "avatar-07-naufrage/avatar-07-naufrage_dos_marche_2.svg",
      "avatar-07-naufrage/avatar-07-naufrage_dos_marche_3.svg",
-     "avatar-07-naufrage/avatar-07-naufrage_dos_marche_4.svg"
+     "avatar-07-naufrage/avatar-07-naufrage_dos_marche_4.svg",
+     "avatar-07-naufrage/avatar-07-naufrage_dos_marche_5.svg",
+     "avatar-07-naufrage/avatar-07-naufrage_dos_marche_6.svg",
+     "avatar-07-naufrage/avatar-07-naufrage_dos_marche_7.svg",
+     "avatar-07-naufrage/avatar-07-naufrage_dos_marche_8.svg"
     ],
     "avatar-07-naufrage_face_salut": [
      "avatar-07-naufrage/avatar-07-naufrage_face_salut_1.svg",
-     "avatar-07-naufrage/avatar-07-naufrage_face_salut_2.svg"
+     "avatar-07-naufrage/avatar-07-naufrage_face_salut_2.svg",
+     "avatar-07-naufrage/avatar-07-naufrage_face_salut_3.svg",
+     "avatar-07-naufrage/avatar-07-naufrage_face_salut_4.svg"
     ],
     "avatar-07-naufrage_avant_ramasser": [
      "avatar-07-naufrage/avatar-07-naufrage_avant_ramasser_1.svg",
@@ -5597,23 +5781,35 @@
    "fichiers": {
     "avatar-08_face_repos": [
      "avatar-08/avatar-08_face_repos_1.svg",
-     "avatar-08/avatar-08_face_repos_2.svg"
+     "avatar-08/avatar-08_face_repos_2.svg",
+     "avatar-08/avatar-08_face_repos_3.svg",
+     "avatar-08/avatar-08_face_repos_4.svg"
     ],
     "avatar-08_avant_marche": [
      "avatar-08/avatar-08_avant_marche_1.svg",
      "avatar-08/avatar-08_avant_marche_2.svg",
      "avatar-08/avatar-08_avant_marche_3.svg",
-     "avatar-08/avatar-08_avant_marche_4.svg"
+     "avatar-08/avatar-08_avant_marche_4.svg",
+     "avatar-08/avatar-08_avant_marche_5.svg",
+     "avatar-08/avatar-08_avant_marche_6.svg",
+     "avatar-08/avatar-08_avant_marche_7.svg",
+     "avatar-08/avatar-08_avant_marche_8.svg"
     ],
     "avatar-08_dos_marche": [
      "avatar-08/avatar-08_dos_marche_1.svg",
      "avatar-08/avatar-08_dos_marche_2.svg",
      "avatar-08/avatar-08_dos_marche_3.svg",
-     "avatar-08/avatar-08_dos_marche_4.svg"
+     "avatar-08/avatar-08_dos_marche_4.svg",
+     "avatar-08/avatar-08_dos_marche_5.svg",
+     "avatar-08/avatar-08_dos_marche_6.svg",
+     "avatar-08/avatar-08_dos_marche_7.svg",
+     "avatar-08/avatar-08_dos_marche_8.svg"
     ],
     "avatar-08_face_salut": [
      "avatar-08/avatar-08_face_salut_1.svg",
-     "avatar-08/avatar-08_face_salut_2.svg"
+     "avatar-08/avatar-08_face_salut_2.svg",
+     "avatar-08/avatar-08_face_salut_3.svg",
+     "avatar-08/avatar-08_face_salut_4.svg"
     ],
     "avatar-08_avant_ramasser": [
      "avatar-08/avatar-08_avant_ramasser_1.svg",
@@ -5869,23 +6065,35 @@
     ],
     "avatar-08-naufrage_face_repos": [
      "avatar-08-naufrage/avatar-08-naufrage_face_repos_1.svg",
-     "avatar-08-naufrage/avatar-08-naufrage_face_repos_2.svg"
+     "avatar-08-naufrage/avatar-08-naufrage_face_repos_2.svg",
+     "avatar-08-naufrage/avatar-08-naufrage_face_repos_3.svg",
+     "avatar-08-naufrage/avatar-08-naufrage_face_repos_4.svg"
     ],
     "avatar-08-naufrage_avant_marche": [
      "avatar-08-naufrage/avatar-08-naufrage_avant_marche_1.svg",
      "avatar-08-naufrage/avatar-08-naufrage_avant_marche_2.svg",
      "avatar-08-naufrage/avatar-08-naufrage_avant_marche_3.svg",
-     "avatar-08-naufrage/avatar-08-naufrage_avant_marche_4.svg"
+     "avatar-08-naufrage/avatar-08-naufrage_avant_marche_4.svg",
+     "avatar-08-naufrage/avatar-08-naufrage_avant_marche_5.svg",
+     "avatar-08-naufrage/avatar-08-naufrage_avant_marche_6.svg",
+     "avatar-08-naufrage/avatar-08-naufrage_avant_marche_7.svg",
+     "avatar-08-naufrage/avatar-08-naufrage_avant_marche_8.svg"
     ],
     "avatar-08-naufrage_dos_marche": [
      "avatar-08-naufrage/avatar-08-naufrage_dos_marche_1.svg",
      "avatar-08-naufrage/avatar-08-naufrage_dos_marche_2.svg",
      "avatar-08-naufrage/avatar-08-naufrage_dos_marche_3.svg",
-     "avatar-08-naufrage/avatar-08-naufrage_dos_marche_4.svg"
+     "avatar-08-naufrage/avatar-08-naufrage_dos_marche_4.svg",
+     "avatar-08-naufrage/avatar-08-naufrage_dos_marche_5.svg",
+     "avatar-08-naufrage/avatar-08-naufrage_dos_marche_6.svg",
+     "avatar-08-naufrage/avatar-08-naufrage_dos_marche_7.svg",
+     "avatar-08-naufrage/avatar-08-naufrage_dos_marche_8.svg"
     ],
     "avatar-08-naufrage_face_salut": [
      "avatar-08-naufrage/avatar-08-naufrage_face_salut_1.svg",
-     "avatar-08-naufrage/avatar-08-naufrage_face_salut_2.svg"
+     "avatar-08-naufrage/avatar-08-naufrage_face_salut_2.svg",
+     "avatar-08-naufrage/avatar-08-naufrage_face_salut_3.svg",
+     "avatar-08-naufrage/avatar-08-naufrage_face_salut_4.svg"
     ],
     "avatar-08-naufrage_avant_ramasser": [
      "avatar-08-naufrage/avatar-08-naufrage_avant_ramasser_1.svg",
@@ -6184,23 +6392,35 @@
    "fichiers": {
     "avatar-09_face_repos": [
      "avatar-09/avatar-09_face_repos_1.svg",
-     "avatar-09/avatar-09_face_repos_2.svg"
+     "avatar-09/avatar-09_face_repos_2.svg",
+     "avatar-09/avatar-09_face_repos_3.svg",
+     "avatar-09/avatar-09_face_repos_4.svg"
     ],
     "avatar-09_avant_marche": [
      "avatar-09/avatar-09_avant_marche_1.svg",
      "avatar-09/avatar-09_avant_marche_2.svg",
      "avatar-09/avatar-09_avant_marche_3.svg",
-     "avatar-09/avatar-09_avant_marche_4.svg"
+     "avatar-09/avatar-09_avant_marche_4.svg",
+     "avatar-09/avatar-09_avant_marche_5.svg",
+     "avatar-09/avatar-09_avant_marche_6.svg",
+     "avatar-09/avatar-09_avant_marche_7.svg",
+     "avatar-09/avatar-09_avant_marche_8.svg"
     ],
     "avatar-09_dos_marche": [
      "avatar-09/avatar-09_dos_marche_1.svg",
      "avatar-09/avatar-09_dos_marche_2.svg",
      "avatar-09/avatar-09_dos_marche_3.svg",
-     "avatar-09/avatar-09_dos_marche_4.svg"
+     "avatar-09/avatar-09_dos_marche_4.svg",
+     "avatar-09/avatar-09_dos_marche_5.svg",
+     "avatar-09/avatar-09_dos_marche_6.svg",
+     "avatar-09/avatar-09_dos_marche_7.svg",
+     "avatar-09/avatar-09_dos_marche_8.svg"
     ],
     "avatar-09_face_salut": [
      "avatar-09/avatar-09_face_salut_1.svg",
-     "avatar-09/avatar-09_face_salut_2.svg"
+     "avatar-09/avatar-09_face_salut_2.svg",
+     "avatar-09/avatar-09_face_salut_3.svg",
+     "avatar-09/avatar-09_face_salut_4.svg"
     ],
     "avatar-09_avant_ramasser": [
      "avatar-09/avatar-09_avant_ramasser_1.svg",
@@ -6456,23 +6676,35 @@
     ],
     "avatar-09-naufrage_face_repos": [
      "avatar-09-naufrage/avatar-09-naufrage_face_repos_1.svg",
-     "avatar-09-naufrage/avatar-09-naufrage_face_repos_2.svg"
+     "avatar-09-naufrage/avatar-09-naufrage_face_repos_2.svg",
+     "avatar-09-naufrage/avatar-09-naufrage_face_repos_3.svg",
+     "avatar-09-naufrage/avatar-09-naufrage_face_repos_4.svg"
     ],
     "avatar-09-naufrage_avant_marche": [
      "avatar-09-naufrage/avatar-09-naufrage_avant_marche_1.svg",
      "avatar-09-naufrage/avatar-09-naufrage_avant_marche_2.svg",
      "avatar-09-naufrage/avatar-09-naufrage_avant_marche_3.svg",
-     "avatar-09-naufrage/avatar-09-naufrage_avant_marche_4.svg"
+     "avatar-09-naufrage/avatar-09-naufrage_avant_marche_4.svg",
+     "avatar-09-naufrage/avatar-09-naufrage_avant_marche_5.svg",
+     "avatar-09-naufrage/avatar-09-naufrage_avant_marche_6.svg",
+     "avatar-09-naufrage/avatar-09-naufrage_avant_marche_7.svg",
+     "avatar-09-naufrage/avatar-09-naufrage_avant_marche_8.svg"
     ],
     "avatar-09-naufrage_dos_marche": [
      "avatar-09-naufrage/avatar-09-naufrage_dos_marche_1.svg",
      "avatar-09-naufrage/avatar-09-naufrage_dos_marche_2.svg",
      "avatar-09-naufrage/avatar-09-naufrage_dos_marche_3.svg",
-     "avatar-09-naufrage/avatar-09-naufrage_dos_marche_4.svg"
+     "avatar-09-naufrage/avatar-09-naufrage_dos_marche_4.svg",
+     "avatar-09-naufrage/avatar-09-naufrage_dos_marche_5.svg",
+     "avatar-09-naufrage/avatar-09-naufrage_dos_marche_6.svg",
+     "avatar-09-naufrage/avatar-09-naufrage_dos_marche_7.svg",
+     "avatar-09-naufrage/avatar-09-naufrage_dos_marche_8.svg"
     ],
     "avatar-09-naufrage_face_salut": [
      "avatar-09-naufrage/avatar-09-naufrage_face_salut_1.svg",
-     "avatar-09-naufrage/avatar-09-naufrage_face_salut_2.svg"
+     "avatar-09-naufrage/avatar-09-naufrage_face_salut_2.svg",
+     "avatar-09-naufrage/avatar-09-naufrage_face_salut_3.svg",
+     "avatar-09-naufrage/avatar-09-naufrage_face_salut_4.svg"
     ],
     "avatar-09-naufrage_avant_ramasser": [
      "avatar-09-naufrage/avatar-09-naufrage_avant_ramasser_1.svg",
@@ -6771,23 +7003,35 @@
    "fichiers": {
     "avatar-10_face_repos": [
      "avatar-10/avatar-10_face_repos_1.svg",
-     "avatar-10/avatar-10_face_repos_2.svg"
+     "avatar-10/avatar-10_face_repos_2.svg",
+     "avatar-10/avatar-10_face_repos_3.svg",
+     "avatar-10/avatar-10_face_repos_4.svg"
     ],
     "avatar-10_avant_marche": [
      "avatar-10/avatar-10_avant_marche_1.svg",
      "avatar-10/avatar-10_avant_marche_2.svg",
      "avatar-10/avatar-10_avant_marche_3.svg",
-     "avatar-10/avatar-10_avant_marche_4.svg"
+     "avatar-10/avatar-10_avant_marche_4.svg",
+     "avatar-10/avatar-10_avant_marche_5.svg",
+     "avatar-10/avatar-10_avant_marche_6.svg",
+     "avatar-10/avatar-10_avant_marche_7.svg",
+     "avatar-10/avatar-10_avant_marche_8.svg"
     ],
     "avatar-10_dos_marche": [
      "avatar-10/avatar-10_dos_marche_1.svg",
      "avatar-10/avatar-10_dos_marche_2.svg",
      "avatar-10/avatar-10_dos_marche_3.svg",
-     "avatar-10/avatar-10_dos_marche_4.svg"
+     "avatar-10/avatar-10_dos_marche_4.svg",
+     "avatar-10/avatar-10_dos_marche_5.svg",
+     "avatar-10/avatar-10_dos_marche_6.svg",
+     "avatar-10/avatar-10_dos_marche_7.svg",
+     "avatar-10/avatar-10_dos_marche_8.svg"
     ],
     "avatar-10_face_salut": [
      "avatar-10/avatar-10_face_salut_1.svg",
-     "avatar-10/avatar-10_face_salut_2.svg"
+     "avatar-10/avatar-10_face_salut_2.svg",
+     "avatar-10/avatar-10_face_salut_3.svg",
+     "avatar-10/avatar-10_face_salut_4.svg"
     ],
     "avatar-10_avant_ramasser": [
      "avatar-10/avatar-10_avant_ramasser_1.svg",
@@ -7043,23 +7287,35 @@
     ],
     "avatar-10-naufrage_face_repos": [
      "avatar-10-naufrage/avatar-10-naufrage_face_repos_1.svg",
-     "avatar-10-naufrage/avatar-10-naufrage_face_repos_2.svg"
+     "avatar-10-naufrage/avatar-10-naufrage_face_repos_2.svg",
+     "avatar-10-naufrage/avatar-10-naufrage_face_repos_3.svg",
+     "avatar-10-naufrage/avatar-10-naufrage_face_repos_4.svg"
     ],
     "avatar-10-naufrage_avant_marche": [
      "avatar-10-naufrage/avatar-10-naufrage_avant_marche_1.svg",
      "avatar-10-naufrage/avatar-10-naufrage_avant_marche_2.svg",
      "avatar-10-naufrage/avatar-10-naufrage_avant_marche_3.svg",
-     "avatar-10-naufrage/avatar-10-naufrage_avant_marche_4.svg"
+     "avatar-10-naufrage/avatar-10-naufrage_avant_marche_4.svg",
+     "avatar-10-naufrage/avatar-10-naufrage_avant_marche_5.svg",
+     "avatar-10-naufrage/avatar-10-naufrage_avant_marche_6.svg",
+     "avatar-10-naufrage/avatar-10-naufrage_avant_marche_7.svg",
+     "avatar-10-naufrage/avatar-10-naufrage_avant_marche_8.svg"
     ],
     "avatar-10-naufrage_dos_marche": [
      "avatar-10-naufrage/avatar-10-naufrage_dos_marche_1.svg",
      "avatar-10-naufrage/avatar-10-naufrage_dos_marche_2.svg",
      "avatar-10-naufrage/avatar-10-naufrage_dos_marche_3.svg",
-     "avatar-10-naufrage/avatar-10-naufrage_dos_marche_4.svg"
+     "avatar-10-naufrage/avatar-10-naufrage_dos_marche_4.svg",
+     "avatar-10-naufrage/avatar-10-naufrage_dos_marche_5.svg",
+     "avatar-10-naufrage/avatar-10-naufrage_dos_marche_6.svg",
+     "avatar-10-naufrage/avatar-10-naufrage_dos_marche_7.svg",
+     "avatar-10-naufrage/avatar-10-naufrage_dos_marche_8.svg"
     ],
     "avatar-10-naufrage_face_salut": [
      "avatar-10-naufrage/avatar-10-naufrage_face_salut_1.svg",
-     "avatar-10-naufrage/avatar-10-naufrage_face_salut_2.svg"
+     "avatar-10-naufrage/avatar-10-naufrage_face_salut_2.svg",
+     "avatar-10-naufrage/avatar-10-naufrage_face_salut_3.svg",
+     "avatar-10-naufrage/avatar-10-naufrage_face_salut_4.svg"
     ],
     "avatar-10-naufrage_avant_ramasser": [
      "avatar-10-naufrage/avatar-10-naufrage_avant_ramasser_1.svg",
@@ -7358,23 +7614,35 @@
    "fichiers": {
     "avatar-11_face_repos": [
      "avatar-11/avatar-11_face_repos_1.svg",
-     "avatar-11/avatar-11_face_repos_2.svg"
+     "avatar-11/avatar-11_face_repos_2.svg",
+     "avatar-11/avatar-11_face_repos_3.svg",
+     "avatar-11/avatar-11_face_repos_4.svg"
     ],
     "avatar-11_avant_marche": [
      "avatar-11/avatar-11_avant_marche_1.svg",
      "avatar-11/avatar-11_avant_marche_2.svg",
      "avatar-11/avatar-11_avant_marche_3.svg",
-     "avatar-11/avatar-11_avant_marche_4.svg"
+     "avatar-11/avatar-11_avant_marche_4.svg",
+     "avatar-11/avatar-11_avant_marche_5.svg",
+     "avatar-11/avatar-11_avant_marche_6.svg",
+     "avatar-11/avatar-11_avant_marche_7.svg",
+     "avatar-11/avatar-11_avant_marche_8.svg"
     ],
     "avatar-11_dos_marche": [
      "avatar-11/avatar-11_dos_marche_1.svg",
      "avatar-11/avatar-11_dos_marche_2.svg",
      "avatar-11/avatar-11_dos_marche_3.svg",
-     "avatar-11/avatar-11_dos_marche_4.svg"
+     "avatar-11/avatar-11_dos_marche_4.svg",
+     "avatar-11/avatar-11_dos_marche_5.svg",
+     "avatar-11/avatar-11_dos_marche_6.svg",
+     "avatar-11/avatar-11_dos_marche_7.svg",
+     "avatar-11/avatar-11_dos_marche_8.svg"
     ],
     "avatar-11_face_salut": [
      "avatar-11/avatar-11_face_salut_1.svg",
-     "avatar-11/avatar-11_face_salut_2.svg"
+     "avatar-11/avatar-11_face_salut_2.svg",
+     "avatar-11/avatar-11_face_salut_3.svg",
+     "avatar-11/avatar-11_face_salut_4.svg"
     ],
     "avatar-11_avant_ramasser": [
      "avatar-11/avatar-11_avant_ramasser_1.svg",
@@ -7630,23 +7898,35 @@
     ],
     "avatar-11-naufrage_face_repos": [
      "avatar-11-naufrage/avatar-11-naufrage_face_repos_1.svg",
-     "avatar-11-naufrage/avatar-11-naufrage_face_repos_2.svg"
+     "avatar-11-naufrage/avatar-11-naufrage_face_repos_2.svg",
+     "avatar-11-naufrage/avatar-11-naufrage_face_repos_3.svg",
+     "avatar-11-naufrage/avatar-11-naufrage_face_repos_4.svg"
     ],
     "avatar-11-naufrage_avant_marche": [
      "avatar-11-naufrage/avatar-11-naufrage_avant_marche_1.svg",
      "avatar-11-naufrage/avatar-11-naufrage_avant_marche_2.svg",
      "avatar-11-naufrage/avatar-11-naufrage_avant_marche_3.svg",
-     "avatar-11-naufrage/avatar-11-naufrage_avant_marche_4.svg"
+     "avatar-11-naufrage/avatar-11-naufrage_avant_marche_4.svg",
+     "avatar-11-naufrage/avatar-11-naufrage_avant_marche_5.svg",
+     "avatar-11-naufrage/avatar-11-naufrage_avant_marche_6.svg",
+     "avatar-11-naufrage/avatar-11-naufrage_avant_marche_7.svg",
+     "avatar-11-naufrage/avatar-11-naufrage_avant_marche_8.svg"
     ],
     "avatar-11-naufrage_dos_marche": [
      "avatar-11-naufrage/avatar-11-naufrage_dos_marche_1.svg",
      "avatar-11-naufrage/avatar-11-naufrage_dos_marche_2.svg",
      "avatar-11-naufrage/avatar-11-naufrage_dos_marche_3.svg",
-     "avatar-11-naufrage/avatar-11-naufrage_dos_marche_4.svg"
+     "avatar-11-naufrage/avatar-11-naufrage_dos_marche_4.svg",
+     "avatar-11-naufrage/avatar-11-naufrage_dos_marche_5.svg",
+     "avatar-11-naufrage/avatar-11-naufrage_dos_marche_6.svg",
+     "avatar-11-naufrage/avatar-11-naufrage_dos_marche_7.svg",
+     "avatar-11-naufrage/avatar-11-naufrage_dos_marche_8.svg"
     ],
     "avatar-11-naufrage_face_salut": [
      "avatar-11-naufrage/avatar-11-naufrage_face_salut_1.svg",
-     "avatar-11-naufrage/avatar-11-naufrage_face_salut_2.svg"
+     "avatar-11-naufrage/avatar-11-naufrage_face_salut_2.svg",
+     "avatar-11-naufrage/avatar-11-naufrage_face_salut_3.svg",
+     "avatar-11-naufrage/avatar-11-naufrage_face_salut_4.svg"
     ],
     "avatar-11-naufrage_avant_ramasser": [
      "avatar-11-naufrage/avatar-11-naufrage_avant_ramasser_1.svg",
@@ -7945,23 +8225,35 @@
    "fichiers": {
     "avatar-12_face_repos": [
      "avatar-12/avatar-12_face_repos_1.svg",
-     "avatar-12/avatar-12_face_repos_2.svg"
+     "avatar-12/avatar-12_face_repos_2.svg",
+     "avatar-12/avatar-12_face_repos_3.svg",
+     "avatar-12/avatar-12_face_repos_4.svg"
     ],
     "avatar-12_avant_marche": [
      "avatar-12/avatar-12_avant_marche_1.svg",
      "avatar-12/avatar-12_avant_marche_2.svg",
      "avatar-12/avatar-12_avant_marche_3.svg",
-     "avatar-12/avatar-12_avant_marche_4.svg"
+     "avatar-12/avatar-12_avant_marche_4.svg",
+     "avatar-12/avatar-12_avant_marche_5.svg",
+     "avatar-12/avatar-12_avant_marche_6.svg",
+     "avatar-12/avatar-12_avant_marche_7.svg",
+     "avatar-12/avatar-12_avant_marche_8.svg"
     ],
     "avatar-12_dos_marche": [
      "avatar-12/avatar-12_dos_marche_1.svg",
      "avatar-12/avatar-12_dos_marche_2.svg",
      "avatar-12/avatar-12_dos_marche_3.svg",
-     "avatar-12/avatar-12_dos_marche_4.svg"
+     "avatar-12/avatar-12_dos_marche_4.svg",
+     "avatar-12/avatar-12_dos_marche_5.svg",
+     "avatar-12/avatar-12_dos_marche_6.svg",
+     "avatar-12/avatar-12_dos_marche_7.svg",
+     "avatar-12/avatar-12_dos_marche_8.svg"
     ],
     "avatar-12_face_salut": [
      "avatar-12/avatar-12_face_salut_1.svg",
-     "avatar-12/avatar-12_face_salut_2.svg"
+     "avatar-12/avatar-12_face_salut_2.svg",
+     "avatar-12/avatar-12_face_salut_3.svg",
+     "avatar-12/avatar-12_face_salut_4.svg"
     ],
     "avatar-12_avant_ramasser": [
      "avatar-12/avatar-12_avant_ramasser_1.svg",
@@ -8217,23 +8509,35 @@
     ],
     "avatar-12-naufrage_face_repos": [
      "avatar-12-naufrage/avatar-12-naufrage_face_repos_1.svg",
-     "avatar-12-naufrage/avatar-12-naufrage_face_repos_2.svg"
+     "avatar-12-naufrage/avatar-12-naufrage_face_repos_2.svg",
+     "avatar-12-naufrage/avatar-12-naufrage_face_repos_3.svg",
+     "avatar-12-naufrage/avatar-12-naufrage_face_repos_4.svg"
     ],
     "avatar-12-naufrage_avant_marche": [
      "avatar-12-naufrage/avatar-12-naufrage_avant_marche_1.svg",
      "avatar-12-naufrage/avatar-12-naufrage_avant_marche_2.svg",
      "avatar-12-naufrage/avatar-12-naufrage_avant_marche_3.svg",
-     "avatar-12-naufrage/avatar-12-naufrage_avant_marche_4.svg"
+     "avatar-12-naufrage/avatar-12-naufrage_avant_marche_4.svg",
+     "avatar-12-naufrage/avatar-12-naufrage_avant_marche_5.svg",
+     "avatar-12-naufrage/avatar-12-naufrage_avant_marche_6.svg",
+     "avatar-12-naufrage/avatar-12-naufrage_avant_marche_7.svg",
+     "avatar-12-naufrage/avatar-12-naufrage_avant_marche_8.svg"
     ],
     "avatar-12-naufrage_dos_marche": [
      "avatar-12-naufrage/avatar-12-naufrage_dos_marche_1.svg",
      "avatar-12-naufrage/avatar-12-naufrage_dos_marche_2.svg",
      "avatar-12-naufrage/avatar-12-naufrage_dos_marche_3.svg",
-     "avatar-12-naufrage/avatar-12-naufrage_dos_marche_4.svg"
+     "avatar-12-naufrage/avatar-12-naufrage_dos_marche_4.svg",
+     "avatar-12-naufrage/avatar-12-naufrage_dos_marche_5.svg",
+     "avatar-12-naufrage/avatar-12-naufrage_dos_marche_6.svg",
+     "avatar-12-naufrage/avatar-12-naufrage_dos_marche_7.svg",
+     "avatar-12-naufrage/avatar-12-naufrage_dos_marche_8.svg"
     ],
     "avatar-12-naufrage_face_salut": [
      "avatar-12-naufrage/avatar-12-naufrage_face_salut_1.svg",
-     "avatar-12-naufrage/avatar-12-naufrage_face_salut_2.svg"
+     "avatar-12-naufrage/avatar-12-naufrage_face_salut_2.svg",
+     "avatar-12-naufrage/avatar-12-naufrage_face_salut_3.svg",
+     "avatar-12-naufrage/avatar-12-naufrage_face_salut_4.svg"
     ],
     "avatar-12-naufrage_avant_ramasser": [
      "avatar-12-naufrage/avatar-12-naufrage_avant_ramasser_1.svg",

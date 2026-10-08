@@ -2,7 +2,7 @@
 // preview_naufrages.js et le générateur des personnages, generateur_personnages.mjs) : les poses du quotidien, les
 // couvertures, les humeurs en marche des maîtres, les visiteurs et les nouveaux venus de l'épilogue, tirés du générateur
 // de l'avatar.
-const { frame } = require('./troupe');
+const { frame, IMAGES } = require('./troupe');
 const A = require('../personnages/avatar.js');
 const G = require('./gestes.js');
 const { assis } = require('./assis.js');
@@ -16,9 +16,9 @@ function poses(c, { travail = false, lanterne = false, couche = true, valise = n
   const out = [];
   const tenir = valise ? G.avecValise(c, valise) : c;
   for (const v of ['front', 'se', 'ne']) {
-    out.push([`${VUE[v]}_marche`, v, STD, [0, 1, 2, 3].map(n => frame(tenir, v, 'marche', n))]);
-    out.push([`${VUE[v]}_repos`, v, STD, [0, 1].map(n => frame(tenir, v, 'repos', n))]);
-    out.push([`${VUE[v]}_salut`, v, STD, [0, 1].map(n => frame(c, v, 'salut', n))]);
+    out.push([`${VUE[v]}_marche`, v, STD, [...Array(IMAGES.marche).keys()].map(n => frame(tenir, v, 'marche', n))]);
+    out.push([`${VUE[v]}_repos`, v, STD, [...Array(IMAGES.repos).keys()].map(n => frame(tenir, v, 'repos', n))]);
+    out.push([`${VUE[v]}_salut`, v, STD, [...Array(IMAGES.salut).keys()].map(n => frame(c, v, 'salut', n))]);
     if (travail) out.push([`${VUE[v]}_travail`, v, STD, [0, 1].map(n => frame(c, v, 'action', n))]);
     out.push([`${VUE[v]}_assis`, v, STD, [0, 1].map(n => assis(c, v, n))]);
     out.push([`${VUE[v]}_mains-tendues`, v, STD, [0, 1].map(n => frame(G.avecMainsTendues(c), v, 'action', n))]);
@@ -44,8 +44,8 @@ function poses(c, { travail = false, lanterne = false, couche = true, valise = n
   if (lanterne) {
     const l = G.avecLanterne(c), u = G.avecParapluie(c, parapluie);
     for (const v of ['se', 'ne']) {
-      out.push([`${VUE[v]}_lanterne`, v, STD, [0, 1, 2, 3].map(n => frame(l, v, 'marche', n))]);
-      out.push([`${VUE[v]}_parapluie`, v, G.CADRE_PARAPLUIE, [0, 1, 2, 3].map(n => frame(u, v, 'marche', n))]);
+      out.push([`${VUE[v]}_lanterne`, v, STD, [...Array(IMAGES.marche).keys()].map(n => frame(l, v, 'marche', n))]);
+      out.push([`${VUE[v]}_parapluie`, v, G.CADRE_PARAPLUIE, [...Array(IMAGES.marche).keys()].map(n => frame(u, v, 'marche', n))]);
     }
   }
   if (couche) out.push(['couche', 'front', G.CADRE_COUCHE, [0, 1].map(n => G.couche(c, n, couverture))]);

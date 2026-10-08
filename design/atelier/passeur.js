@@ -41,7 +41,7 @@ const CAPE = 'M15,33 Q24,29.6 33,33 L37.6,58.6 Q24,62 10.4,58.6 Z';
 const ROBE = 'M16.4,33.2 Q24,30.6 31.6,33.2 L34,58 Q24,60.6 14,58 Z';
 
 const passeur = {
-  name: 'Le Passeur', uid: 'pa',
+  name: 'Le Passeur', uid: 'pa', teintes: [C.feather, C.shadow],
   skin: C.skin, skinS: C.skinS, sleeve: C.feather, cuff: C.featherS, armW: 4,
   leg: '#3A3F4A', legS: '#2A2E37', legW: 4.6, hip: 50, ground: 56.6,
   shoe: '#2E3138', shoeS: '#1E2026', shoeH: '#4A4E56',

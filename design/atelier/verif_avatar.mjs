@@ -11,7 +11,7 @@ const { frame } = require('./troupe.js');
 const A = require('../personnages/avatar.js');
 const { avatarNaufrage } = require('./avatar_naufrage.js');
 
-const VUES = [['front', 'repos', 0], ['front', 'repos', 1], ['se', 'marche', 0], ['se', 'marche', 1], ['ne', 'marche', 2], ['front', 'salut', 0],
+const VUES = [['front', 'repos', 0], ['front', 'repos', 2], ['front', 'repos', 3], ['se', 'marche', 0], ['se', 'marche', 2], ['se', 'marche', 5], ['ne', 'marche', 2], ['ne', 'marche', 6], ['front', 'salut', 0], ['front', 'salut', 2],
   ['se', 'action', 1, 'ramasser'], ['front', 'action', 0, 'grelotter'], ['front', 'action', 1, 'lire'], ['front', 'repos', 1, null, 'endormi']];
 const svg = body => `<svg xmlns="http://www.w3.org/2000/svg" width="96" height="128" viewBox="0 0 48 64">${body}</svg>`;
 const cas = [];

@@ -1,7 +1,7 @@
 // Mélisse, la jardinière des lunes : 35 ans, grand chapeau de paille orné de fleurs séchées, châle couleur nuit brodé
 // de lunes, longue tresse, sabots, mains terreuses, boîte à graines en fer serrée contre elle ; calme absolu.
 // Action : elle ouvre sa boîte à deux mains ; image 2 : des graines lumineuses s'en envolent comme de petites lunes.
-const { OUT, P, E, L, clip, expression, arm, r2 } = require('./troupe');
+const { OUT, P, E, L, clip, expression, arm, r2, lerp } = require('./troupe');
 
 const C = {
   skin: '#C68A62', skinS: '#A9704C', hand: '#8E6A4E',
@@ -33,7 +33,7 @@ const SHAWL = 'M15.2,32.6 Q24,29.6 32.8,32.6 L34.2,40.8 L30.4,38.6 Q24,41.6 17.6
 const SHAWL_BACK = 'M15.2,32.6 Q24,29.6 32.8,32.6 L33.6,36.2 L24,47.4 L14.4,36.2 Z';
 
 const melisse = {
-  name: 'Mélisse', uid: 'me',
+  name: 'Mélisse', uid: 'me', teintes: [C.hair, C.straw, C.shawl, C.dress, C.lavender],
   skin: C.skin, skinS: C.skinS, hand: C.hand, sleeve: C.dress, cuff: null, armW: 3.8,
   leg: '#5A4A44', legS: '#463A35', legW: 4.4, hip: 50, ground: 56.8,
   shoe: '#A8743F', shoeS: '#7E5530', shoeH: '#C9965E',
@@ -120,9 +120,9 @@ const melisse = {
     return s;
   },
 
-  pose({ pose, n }) {
+  pose({ pose, n, k }) {
     if (pose === 'salut') {
-      return { open: true, right: arm(this, [32, 34.4], n === 0 ? [37.4, 25.8] : [38.8, 27.8]) };
+      return { open: true, right: arm(this, [32, 34.4], lerp([37.4, 25.8], [38.8, 27.8], k)) };
     }
     // action : la boîte tenue à deux mains ; image 2 : couvercle ouvert, les graines s'envolent en lueurs
     const seeds = n ? [[22.4, 37.2, 0.7], [25.6, 35.6, 0.8], [23.8, 33.6, 0.6], [20.6, 34.4, 0.55], [27.6, 33, 0.5]]

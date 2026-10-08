@@ -131,6 +131,9 @@ function castaway(c, spec) {
     ...c, ...(spec.flags || {}),
     name: c.name, uid: c.uid + 'n',
     skinS: c.skinS || spec.skinS,
+    // la lumière (troupe.lumiere) cherche les couleurs principales : les délavées, comme dans le dessin
+    ...Object.fromEntries(['top', 'bas', 'base', 'coat', 'hair', 'buzz', 'hand'].filter(k => typeof c[k] === 'string').map(k => [k, map[c[k].toUpperCase()] || c[k]])),
+    teintes: (c.teintes || []).map(x => map[x.toUpperCase()] || x),
     sleeve: F(c.sleeve), cuff: c.cuff ? F(c.cuff) : c.cuff,
     sleeves: spec.sleeves, sleeveCut: spec.sleeveCut, bandage: spec.bandage, bareSide: spec.bareSide,
     shoe: c.shoe && F(c.shoe), shoeS: c.shoeS && F(c.shoeS), shoeH: c.shoeH && F(c.shoeH),

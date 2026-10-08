@@ -40,7 +40,7 @@ function dessin(numero, naufrage, pose, n) {
   const m = /^expr_([a-z]+)$/.exec(pose);
   if (m && e.expressions && !naufrage) {
     if (!T.EXPRS.includes(m[1])) throw new Error(`expression inconnue : ${m[1]} (${T.EXPRS.join(', ')})`);
-    images = 2; laPose = 'expr';
+    images = T.IMAGES.repos; laPose = 'expr';
     if (!(n >= 1 && n <= images)) throw new Error(`image ${n} : de 1 à ${images}`);
     body = T.frame(c, 'front', 'repos', n - 1, m[1]);
   } else {
@@ -75,7 +75,7 @@ export function liste() {
   for (const [k, e] of Object.entries(KITS)) for (const naufrage of [false, true]) {
     const cle = `${X.nom(k - 1)}${naufrage ? '-naufrage' : ''}`, fonction = naufrage ? 'exempleNaufrage' : 'exemple';
     for (const [pose, , , images] of X.POSES) for (let n = 1; n <= images; n++) out.push({ fichier: `personnages/avatar/${cle}/${cle}_${pose}_${n}.svg`, fonction, args: [+k, pose, n] });
-    if (e.expressions && !naufrage) for (const x of T.EXPRS) for (let n = 1; n <= 2; n++) out.push({ fichier: `personnages/avatar/${cle}/${cle}_expr_${x}_${n}.svg`, fonction, args: [+k, `expr_${x}`, n] });
+    if (e.expressions && !naufrage) for (const x of T.EXPRS) for (let n = 1; n <= T.IMAGES.repos; n++) out.push({ fichier: `personnages/avatar/${cle}/${cle}_expr_${x}_${n}.svg`, fonction, args: [+k, `expr_${x}`, n] });
   }
   for (const id of ICONES) out.push({ fichier: `personnages/objets/${id}_icone.svg`, fonction: 'objetIcone', args: [id] });
   return out;

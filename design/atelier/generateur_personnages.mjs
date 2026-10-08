@@ -17,7 +17,7 @@ const r2 = n => Math.round(n * 100) / 100;
 const svgOf = (vb, body) => `<svg xmlns="http://www.w3.org/2000/svg" width="${r2(vb[2])}" height="${r2(vb[3])}" viewBox="${vb.join(' ')}">${body}</svg>`;
 const CURL = [0, 0, 64, 48];
 const VUES = new Set(['face', 'avant', 'dos', 'profil']);
-const n4 = [0, 1, 2, 3], n2 = [0, 1];
+const n2 = [0, 1], nR = [...Array(T.IMAGES.repos).keys()], nM = [...Array(T.IMAGES.marche).keys()];
 
 // Les poses d'un maître ou de son naufragé : [nom, cadre, images]
 function posesMaitre(base, c, naufrage) {
@@ -28,15 +28,15 @@ function posesMaitre(base, c, naufrage) {
     ? { travail: don, lanterne: avecLanterne, couverture: Q.VOILE, parapluie: '#8E8A80' }
     : { travail: true, lanterne: true, couverture: Q.COUVERTURES[s] }).map(([pose, , vb, images]) => [pose, vb, images]);
   if (don) out.push([base.action[0], Q.STD, n2.map(n => T.frame(c, base.action[1], 'action', n))]);
-  for (const x of T.EXPRS) out.push([`expr_${x}`, Q.STD, n2.map(n => T.frame(c, 'front', 'repos', n, x))]);
+  for (const x of T.EXPRS) out.push([`expr_${x}`, Q.STD, nR.map(n => T.frame(c, 'front', 'repos', n, x))]);
   out.push(['dort', D.isCurled(c) ? CURL : Q.STD, n2.map(n => D.sleepFrame(c, n))]);
-  for (const x of Q.MOODS[base.name]) out.push([`avant_marche_${x}`, Q.STD, n4.map(n => T.frame(c, 'se', 'marche', n, x))]);
+  for (const x of Q.MOODS[base.name]) out.push([`avant_marche_${x}`, Q.STD, nM.map(n => T.frame(c, 'se', 'marche', n, x))]);
   if (!naufrage) {
     for (const [saison, habiller] of [['hiver', Tn.enHiver], ['pluie', Tn.sousLaPluie]]) {
       const h = habiller(base);
       for (const v of ['front', 'se', 'ne']) {
-        out.push([`${Q.VUE[v]}_repos_${saison}`, Q.STD, n2.map(n => T.frame(h, v, 'repos', n))]);
-        out.push([`${Q.VUE[v]}_marche_${saison}`, Q.STD, n4.map(n => T.frame(h, v, 'marche', n))]);
+        out.push([`${Q.VUE[v]}_repos_${saison}`, Q.STD, nR.map(n => T.frame(h, v, 'repos', n))]);
+        out.push([`${Q.VUE[v]}_marche_${saison}`, Q.STD, nM.map(n => T.frame(h, v, 'marche', n))]);
       }
     }
   }

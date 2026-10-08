@@ -1,11 +1,11 @@
 # La troupe des Naufragés : sprites SVG des PNJ
 
-Kit de dessin des PNJ, dans l'esprit des PNJ de Pokémon et de Stardew Valley, généré par code comme le reste du jeu.
+Kit de dessin des PNJ, de petits personnages chibi au trait net, généré par code comme le reste du jeu.
 Les personnages et leurs fiches sont dans `HISTOIRE.md` (§ 8).
 
 - Repère 48 × 64, pieds en bas au centre (24, 62).
 - Vues : face, trois quarts avant, trois quarts dos ; le miroir horizontal donne les deux autres directions.
-- Poses : repos (2 images, clignement), marche (4), salut (2), action propre au personnage (2).
+- Poses : repos (4 images : il respire, un clignement), marche (8 : un cycle continu), salut (4 : la main va et vient), action propre au personnage (2).
 - Expressions : neutre (visage par défaut, selon le caractère), content, rire, surpris, triste, fâché, gêné, endormi.
   Chacune se combine avec n'importe quelle pose (de dos, le visage ne se voit pas).
 

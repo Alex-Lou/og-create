@@ -1,7 +1,7 @@
 // Sylve, la gardienne des bois : 17 ans, cape de feuilles cousues, cheveux sauvages pleins de brindilles et d'une plume
 // de geai, pieds nus, deux traits verts peints sur chaque joue ; farouche.
 // Action : elle chante à une graine posée dans ses mains en coupe ; image 2 : une pousse jaillit.
-const { OUT, P, E, L, clip, expression, arm, bareFoot, r2 } = require('./troupe');
+const { OUT, P, E, L, clip, expression, arm, bareFoot, r2, lerp } = require('./troupe');
 
 const C = {
   skin: '#E8B88E', skinS: '#CC9A70',
@@ -39,7 +39,7 @@ function cape(uid, over) {
 }
 
 const sylve = {
-  name: 'Sylve', uid: 'sy',
+  name: 'Sylve', uid: 'sy', teintes: [C.hair, C.tunic, C.leaf, C.feather],
   skin: C.skin, skinS: C.skinS, sleeve: C.skin, cuff: C.vine, armW: 3.6,
   leg: C.skin, legS: C.skinS, legW: 4.4, hip: 47.6, ground: 56.6, foot: bareFoot,
   legX: { front: [20.6, 27.4], se: [20.2, 27.4], ne: [21, 27.8] },
@@ -108,9 +108,9 @@ const sylve = {
     return s;
   },
 
-  pose({ pose, n }) {
+  pose({ pose, n, k }) {
     if (pose === 'salut') {
-      return { open: true, right: arm(this, [31.8, 34], n === 0 ? [37.2, 25.4] : [38.6, 27.4]) };
+      return { open: true, right: arm(this, [31.8, 34], lerp([37.2, 25.4], [38.6, 27.4], k)) };
     }
     // action : mains en coupe, elle chante les yeux fermés ; image 2 : la graine germe, elle rit
     const left = arm(this, [16.2, 34], [22.2, 43.4], [12.6, 40.6]);

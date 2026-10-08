@@ -6,7 +6,7 @@
 // avatar_accessoires.js. Ici : le corps (taille, corpulence), la tête (visage, yeux, cils, bouche, coupes, mèches), les
 // habits (hauts, bas), et l'ordre des couches.
 // Poses : repos, marche, salut, et trois gestes du tutoriel : ramasser (trois quarts avant), grelotter et lire (face).
-const { OUT, P, E, L, limb, clip, expression, arm, shoe, r2 } = require('./troupe');
+const { OUT, P, E, L, limb, clip, expression, arm, shoe, r2, lerp } = require('./troupe');
 const choix = require('./avatar_choix');
 const { verifier, couleur, couleursAccessoire, tone, mix, hsl, clarte } = choix;
 const { couche, PORTE, capucheRabattue, reperes } = require('./avatar_accessoires');
@@ -323,7 +323,7 @@ function head(c0, ctx) {
   const o = c.o, H = c.hair, S = c.hairS, HI = c0.hairH;
   const coupe = o.coupe, couvert = c0.couvert;
   const avecMeches = o.meches === 'meches' && coupe !== 'rasee';
-  let s = defs + hairBack(c, view);
+  let s = defs + (ctx.sway ? `<g transform="translate(${r2(-ctx.sway * 1.2)} 0)">${hairBack(c, view)}</g>` : hairBack(c, view));
   // --- de dos : l'arrière de la tête ---
   if (view === 'ne') {
     // ombre de la masse : plus sombre vers la nuque et à droite ; la zone claire descend avec les cheveux longs
@@ -502,7 +502,7 @@ function body(c, ctx) {
   const T = torso(k, hem);
   const top = robeE ? c.bas : c.top, topS = robeE ? c.basS : c.topS, topH = robeE ? c.basH : c.topH;
   const o = se ? 21.6 : 24; // le milieu du devant
-  const sway = walk ? [0.5, 0, -0.5, 0][n] : 0;
+  const sway = ctx.sway || 0;
   let s = '';
   // 1. ce qui passe sous le haut : la jupe, le bas de la robe, le fond du short
   if (bas === 'jupe') s += skirt(c, view, sway, 43.6, c.skirtHem);
@@ -616,10 +616,10 @@ function book(x, y) {
 }
 
 // Les gestes suivent la taille (dy) et la largeur des épaules (e : écart à la corpulence moyenne)
-function pose({ pose, n }) {
+function pose({ pose, n, k }) {
   const dy = this.dy, e = this.k.sw - 8.5;
   const [shL, shR] = this.shoulders;
-  if (pose === 'salut') return { open: true, right: arm(this, shR, n === 0 ? [37.4 + e * 0.64, 25.4 + dy] : [38.8 + e * 0.64, 27.4 + dy]) };
+  if (pose === 'salut') return { open: true, right: arm(this, shR, lerp([37.4 + e * 0.64, 25.4 + dy], [38.8 + e * 0.64, 27.4 + dy], k)) };
   if (this.geste === 'grelotter') {
     // bras croisés, les mains sur les bras ; il tremble (un demi-pixel d'une image à l'autre)
     const d = n ? 0.5 : -0.5;
@@ -676,7 +676,7 @@ function avatar(choixAvatar = {}, opts = {}) {
     bas, basS: tone(bas, 0.78), basH: tone(bas, 1.25),
     sleeve: robe ? bas : base, armW: k.arm,
     cuff: robe ? '#FFFDF6' : { pull: tone(top, 0.82), sweat: tone(top, 0.82), veste: tone(top, 0.82), chemise: '#FFFDF6', mariniere: top }[o.haut] || null,
-    sleeves: robe || o.haut === 'tshirt' || mar ? 'roll' : undefined, sleeveCut: mar ? 4.4 : 6.4,
+    sleeves: robe || o.haut === 'tshirt' || mar ? 'court' : undefined,
     leg: nues ? skin : bas, legS: nues ? tone(skin, 0.88) : tone(bas, 0.78), legW: nues ? k.legW - 0.9 : k.legW,
     hip: r2(44.5 + dy), ground: 56.5,
     skirtHem: r2(44.5 + legLen * 0.6), robeHem: r2(44.5 + legLen * 0.66), shortLen: r2(legLen * 0.64), coatHem: r2(44.5 + legLen * 0.45),
@@ -684,7 +684,7 @@ function avatar(choixAvatar = {}, opts = {}) {
     legX: { front: [20.5 - sp, 27.5 + sp], se: [20 - sp, 27.6 + sp], ne: [21 - sp, 28 + sp] },
     shoulders: [[24 - (k.sw - 0.5), 34 + dy], [24 + (k.sw - 0.5), 34 + dy]],
     hands: [[24 - (k.hw - 0.4 + k.b * 0.6), 45.2 + dy], [24 + (k.hw - 0.4 + k.b * 0.6), 45.2 + dy]],
-    backItems: up((cc, ctx) => (ctx.view === 'ne' ? nuque(cc) : '') + hairBehindBody(cc, ctx.view) + couche(cc, 'derriere', ctx), dy),
+    backItems: up((cc, ctx) => (ctx.view === 'ne' ? nuque(cc) : '') + (ctx.sway ? `<g transform="translate(${r2(-ctx.sway * 1.6)} 0)">${hairBehindBody(cc, ctx.view)}</g>` : hairBehindBody(cc, ctx.view)) + couche(cc, 'derriere', ctx), dy),
     overArms: up((cc, ctx) => couche(cc, 'surBras', ctx), dy),
     body: up(body, dy), neck: up(neck, dy), head: up(head, dy), pose
   };

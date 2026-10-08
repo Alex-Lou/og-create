@@ -1,6 +1,6 @@
 // Aster, la navigatrice : ciré jaune, foulard rouge, cheveux roux au vent, queue de cheval à
 // ruban, taches de rousseur, longue-vue en laiton. Action : elle regarde dans sa longue-vue (trois quarts avant).
-const { P, E, L, clip, expression, arm, r2 } = require('./troupe');
+const { P, E, L, clip, expression, arm, r2, lerp } = require('./troupe');
 const { capucheRabattue, reperes } = require('./avatar_accessoires');
 // la capuche de son ciré relevée sous la pluie (tenues.js : la coiffe marquée capuche) : elle range la queue de cheval
 const relevee = c => !!(c.coiffe && c.coiffe.capuche);
@@ -41,7 +41,7 @@ const twinkle = (x, y, r) => P(`M${x},${r2(y - r)} Q${r2(x + r * 0.2)},${r2(y - 
 const COAT = 'M15.5,32.5 Q24,29.8 32.5,32.5 L35,47.5 Q24,51 13,47.5 Z';
 
 const aster = {
-  name: 'Aster', uid: 'as',
+  name: 'Aster', uid: 'as', teintes: [C.hair, C.coat, C.scarf, C.brass],
   skin: C.skin, sleeve: C.coat, cuff: null, armW: 3.9,
   leg: '#2F5684', legS: '#22416A', legW: 5.4, hip: 44.5, ground: 56.5,
   shoe: '#5E3A22', shoeS: '#43281A', shoeH: '#80583A',
@@ -136,9 +136,9 @@ const aster = {
     return s;
   },
 
-  pose({ pose, n }) {
+  pose({ pose, n, k }) {
     if (pose === 'salut') {
-      return { open: true, right: arm(this, [32, 34], n === 0 ? [37.4, 25.4] : [38.8, 27.4]) };
+      return { open: true, right: arm(this, [32, 34], lerp([37.4, 25.4], [38.8, 27.4], k)) };
     }
     // action : longue-vue collée à l'œil proche, pointée vers le large, l'autre œil fermé ;
     // image 1 : repliée, image 2 : déployée, un éclat au loin ;

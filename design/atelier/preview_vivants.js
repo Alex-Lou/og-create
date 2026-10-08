@@ -2,7 +2,7 @@
 // (planches/), page animée (vivants_apercu.html).
 const path = require('path');
 const { unique, row, sheet, animated, write, shoot } = require('./planche');
-const { frame, svg, POSES, EXPRS } = require('./troupe');
+const { frame, svg, POSES, EXPRS, IMAGES } = require('./troupe');
 const { STAGES, brumeFrame, brumeEyes, svgB } = require('./brume');
 const { anyaFrame, POSES_A, EXPR_OF, svgA, SAISONS_A } = require('./anya');
 const { cerfFrame, svgC } = require('./cerf');
@@ -102,12 +102,12 @@ const anim = [];
     const frames = [...Array(count).keys()].map(n => frame(passeur, view, pose, n));
     frames.forEach((b, n) => write(path.join(LIB, 'passeur', `passeur_${name}_${n + 1}.svg`), svg(b)));
     rows.push(row(LABEL[name], frames.map((b, n) => [svg(unique(b), 4), n + 1])));
-    const t = pose === 'marche' ? [200, 200, 200, 200] : pose === 'repos' ? [900, 160] : [700, 900];
+    const t = pose === 'marche' ? [100] : pose === 'repos' ? [700, 600, 700, 160] : pose === 'salut' ? [190] : [700, 900];
     boxes.push({ label: LABEL[name], frames: frames.map(b => svg(unique(b), 4)), timings: t, w: 240, h: 320 });
   }
   const xr = [];
   for (const x of EXPRS) {
-    const frames = [0, 1].map(n => frame(passeur, 'front', 'repos', n, x));
+    const frames = [...Array(IMAGES.repos).keys()].map(n => frame(passeur, 'front', 'repos', n, x));
     frames.forEach((b, n) => write(path.join(LIB, 'passeur', `passeur_expr_${x}_${n + 1}.svg`), svg(b)));
     xr.push([svg(unique(frames[0]), 3), XL[x]]);
   }

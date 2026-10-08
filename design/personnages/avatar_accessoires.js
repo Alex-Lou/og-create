@@ -350,7 +350,7 @@ function ombrelle(c, ctx, [col], h) {
 // ---- par-dessus : le manteau d'hiver, le ciré ; le châle, la pèlerine, l'étole ----
 // Le pan (d'un seul tenant) : des épaules, un peu plus large que le buste, jusqu'au-dessus du genou (l'ourlet) ; il
 // s'évase et suit la marche d'un rien, comme la jupe
-const balance = ctx => (ctx.walk ? [0.5, 0, -0.5, 0][ctx.n] : 0);
+const balance = ctx => ctx.sway || 0;
 function pan(c, ctx) {
   const { sw, hw, b, cou: y, hanche, ourlet: H } = reperes(c), w = balance(ctx);
   const mx = (sw + hw) / 2 + b + 0.6;

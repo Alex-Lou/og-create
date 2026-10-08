@@ -10,7 +10,7 @@ import { fileURLToPath } from 'url';
 
 const require = createRequire(import.meta.url);
 const DIR = path.dirname(fileURLToPath(import.meta.url));
-const { frame } = require('./troupe');
+const { frame, IMAGES } = require('./troupe');
 const { unique, row, sheet, animated, write, shoot } = require('./planche.js');
 const { CAST } = require('./naufrages');
 const A = require('../personnages/avatar.js');
@@ -65,7 +65,7 @@ for (const { base, nau } of CAST) {
   const ln = poses(nau, { travail: !nau.sansDon, lanterne: avec, couverture: VOILE, parapluie: '#8E8A80' });
   publier('naufrages', s, `${base.name} naufragé${['aster', 'cannelle', 'sylve', 'melisse'].includes(s) ? 'e' : ''}`, `naufrages/${s}`, `${s}_naufrage`, ln, {}, DEJA);
   planches.naufrages.push(row(`${base.name} (naufragé)`, cellules(ln, MONTRER)));
-  const box = (lab, l, mirror) => { const [, v, vb, images] = l; return { label: lab, frames: images.map(b => montre(vb, b, v, 2)), timings: [170], w: r2(vb[2] * 2), h: r2(vb[3] * 2), mirror }; };
+  const box = (lab, l, mirror) => { const [, v, vb, images] = l; return { label: lab, frames: images.map(b => montre(vb, b, v, 2)), timings: [85], w: r2(vb[2] * 2), h: r2(vb[3] * 2), mirror }; };
   anim.push(box(`${base.name} — lanterne`, lm.find(([p]) => p === 'avant_lanterne')), box(`${base.name} — parapluie`, lm.find(([p]) => p === 'avant_parapluie')), box(`${base.name} — de face`, lm.find(([p]) => p === 'face_marche')));
 }
 
@@ -74,7 +74,7 @@ const TENUES = [['hiver', enHiver, 'en hiver'], ['pluie', sousLaPluie, 'sous la 
 const planchesTenues = { hiver: [], pluie: [] };
 for (const [saison, habiller, dit] of TENUES) for (const { base } of CAST) {
   const s = slug(base.name), c = habiller(base);
-  const liste = ['front', 'se', 'ne'].flatMap(v => [[`${VUE[v]}_repos`, v, STD, [0, 1].map(n => frame(c, v, 'repos', n))], [`${VUE[v]}_marche`, v, STD, [0, 1, 2, 3].map(n => frame(c, v, 'marche', n))]]);
+  const liste = ['front', 'se', 'ne'].flatMap(v => [[`${VUE[v]}_repos`, v, STD, [...Array(IMAGES.repos).keys()].map(n => frame(c, v, 'repos', n))], [`${VUE[v]}_marche`, v, STD, [...Array(IMAGES.marche).keys()].map(n => frame(c, v, 'marche', n))]]);
   const fichiers = {};
   for (const [pose, , vb, images] of liste) {
     fichiers[pose] = images.map((b, i) => { const rel = `maitres/${s}/${s}_${pose}_${saison}_${i + 1}.svg`; write(path.join(LIB, rel), svgOf(vb, b)); count++; return rel; });
@@ -82,7 +82,7 @@ for (const [saison, habiller, dit] of TENUES) for (const { base } of CAST) {
   index.tenues[saison][s] = { nom: `${base.name} ${dit}`, fichiers };
   planchesTenues[saison].push(row(base.name, [[montre(STD, frame(base, 'front', 'repos', 0), 'front', 1.6), 'l\'été'], ...liste.map(([pose, v, vb, images]) => [montre(vb, images[0], v, 1.6), pose.replace('_', ' ')])]));
   const [, v, vb, images] = liste.find(([pose]) => pose === 'avant_marche');
-  anim.push({ label: `${base.name} — ${dit}`, frames: images.map(b => montre(vb, b, v, 2)), timings: [170], w: r2(vb[2] * 2), h: r2(vb[3] * 2) });
+  anim.push({ label: `${base.name} — ${dit}`, frames: images.map(b => montre(vb, b, v, 2)), timings: [85], w: r2(vb[2] * 2), h: r2(vb[3] * 2) });
 }
 
 // ---- 2. les visiteurs et 3. les nouveaux venus de l'épilogue (générateur de l'avatar ; leurs choix : troupe_liste.js) ----

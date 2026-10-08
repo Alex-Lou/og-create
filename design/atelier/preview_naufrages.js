@@ -3,7 +3,7 @@
 // planches PNG, page animée. (Les rencontres du tutoriel sont les scènes plein écran du lot J2 : scenes6.js.)
 const fs = require('fs');
 const path = require('path');
-const { frame, svg, POSES, EXPRS } = require('./troupe');
+const { frame, svg, POSES, EXPRS, IMAGES } = require('./troupe');
 const { CAST } = require('./naufrages');
 const { sleepFrame, isCurled } = require('./dormeurs');
 const { unique, row, sheet, animated, write, shoot } = require('./planche');
@@ -47,7 +47,7 @@ for (const { base, nau } of CAST) {
   const poses = [...POSES, ...(nau.sansDon ? [] : [[base.action[0], base.action[1], 'action', 2]])]; // Galet et Sylve : don oublié
   const shown = {};
   for (const [name, view, pose, k] of poses) shown[name] = put(`naufrage_${name}`, Array.from({ length: k }, (_, n) => frame(nau, view, pose, n)), b => SV.std(b));
-  const exprs = EXPRS.map(x => put(`naufrage_expr_${x}`, [0, 1].map(n => frame(nau, 'front', 'repos', n, x)), b => SV.std(b)));
+  const exprs = EXPRS.map(x => put(`naufrage_expr_${x}`, [...Array(IMAGES.repos).keys()].map(n => frame(nau, 'front', 'repos', n, x)), b => SV.std(b)));
   // endormi : naufragé ici, maître dans son dossier
   const sleepN = put('naufrage_dort', [0, 1].map(n => sleepFrame(nau, n)), b => sleepSvg(nau)(b));
   const sleepM = [0, 1].map(n => sleepFrame(base, n));
@@ -55,11 +55,11 @@ for (const { base, nau } of CAST) {
   // expressions en marche, maître et naufragé
   const moods = {};
   for (const x of MOODS[base.name]) {
-    moods[x] = put(`naufrage_avant_marche_${x}`, [0, 1, 2, 3].map(n => frame(nau, 'se', 'marche', n, x)), b => SV.std(b));
-    files[`maitre_avant_marche_${x}`] = [0, 1, 2, 3].map(n => { const f = `${s}_avant_marche_${x}_${n + 1}.svg`; write(path.join(LIB, 'maitres', s, f), SV.std(frame(base, 'se', 'marche', n, x))); count++; return `maitres/${s}/${f}`; });
+    moods[x] = put(`naufrage_avant_marche_${x}`, [...Array(IMAGES.marche).keys()].map(n => frame(nau, 'se', 'marche', n, x)), b => SV.std(b));
+    files[`maitre_avant_marche_${x}`] = [...Array(IMAGES.marche).keys()].map(n => { const f = `${s}_avant_marche_${x}_${n + 1}.svg`; write(path.join(LIB, 'maitres', s, f), SV.std(frame(base, 'se', 'marche', n, x))); count++; return `maitres/${s}/${f}`; });
   }
   cells.moods.push(row(base.name, MOODS[base.name].flatMap(x => [[SV.std(unique(frame(base, 'se', 'marche', 1, x)), 2.2), `${x} · maître`], [SV.std(unique(moods[x][1]), 2.2), `${x} · naufragé`]])));
-  for (const x of MOODS[base.name]) anim[2][1].push({ label: `${base.name} — ${x}`, frames: moods[x].map(b => SV.std(unique(b), 3)), timings: [170], w: 144, h: 192 });
+  for (const x of MOODS[base.name]) anim[2][1].push({ label: `${base.name} — ${x}`, frames: moods[x].map(b => SV.std(unique(b), 3)), timings: [85], w: 144, h: 192 });
   index.naufrages[s] = { nom: base.name, arrivee: STEP[base.name], fichiers: files, dort_du_maitre: mFiles };
 
   // planches
@@ -73,8 +73,8 @@ for (const { base, nau } of CAST) {
 
   // page animée
   const walk = shown.avant_marche;
-  anim[0][1].push({ label: base.name, frames: walk.map(b => SV.std(unique(b), 4)), timings: [170], w: 192, h: 256 });
-  anim[0][1].push({ label: `${base.name} (miroir)`, frames: walk.map(b => SV.std(unique(b), 4)), timings: [170], w: 192, h: 256, mirror: true });
+  anim[0][1].push({ label: base.name, frames: walk.map(b => SV.std(unique(b), 4)), timings: [85], w: 192, h: 256 });
+  anim[0][1].push({ label: `${base.name} (miroir)`, frames: walk.map(b => SV.std(unique(b), 4)), timings: [85], w: 192, h: 256, mirror: true });
   const curl = isCurled(nau);
   anim[1][1].push({ label: `${base.name} endormi${base.name === 'Aster' || base.name === 'Cannelle' || base.name === 'Mélisse' || base.name === 'Sylve' ? 'e' : ''}`, frames: sleepN.map(b => sleepSvg(nau)(unique(b), 4)), timings: [900], w: curl ? 256 : 192, h: curl ? 192 : 256 });
 }

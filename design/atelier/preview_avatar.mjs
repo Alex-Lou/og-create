@@ -12,7 +12,7 @@ import { fileURLToPath } from 'url';
 
 const require = createRequire(import.meta.url);
 const DIR = path.dirname(fileURLToPath(import.meta.url));
-const { frame, EXPRS } = require('./troupe.js');
+const { frame, EXPRS, IMAGES } = require('./troupe.js');
 const A = require('../personnages/avatar.js');
 const { avatar, CHOIX, FORMES, NUANCIERS, NOMS_NUANCIERS, TEINTURES_GAINS, EMPLACEMENTS, ACCESSOIRES, DEFAUT, libelle, verifier } = A;
 const { avatarNaufrage } = require('./avatar_naufrage.js');
@@ -65,7 +65,7 @@ function grandFormat(c, dir, key, withExpr) {
     });
   }
   if (withExpr) for (const x of EXPRS) {
-    files[`${key}_expr_${x}`] = [0, 1].map(n => {
+    files[`${key}_expr_${x}`] = [...Array(IMAGES.repos).keys()].map(n => {
       const rel = `${dir}/${key}_expr_${x}_${n + 1}.svg`;
       write(path.join(LIB, rel), grand(frame(c, 'front', 'repos', n, x)));
       count++;
@@ -101,9 +101,9 @@ EXEMPLES.forEach((o, i) => {
     [grand(unique(`<g transform="translate(48 0) scale(-1 1)">${dessin(c, 'se', 'pecher', 0)}</g>`), G), 'pêcher'], [grand(unique(dessin(c, 'front', 'piocher', 1)), G), 'piocher'], [grand(unique(dessin(c, 'front', 'cueillir', 0)), G), 'cueillir'], [grand(unique(dessin(c, 'front', 'arroser', 1)), G), 'arroser'], [grand(unique(dessin(c, 'front', 'becher', 1)), G), 'bêcher'], [grand(unique(dessin(c, 'front', 'semer', 1)), G), 'semer'], [grand(unique(dessin(c, 'front', 'recolter', 1)), G), 'récolter'], [grand(unique(dessin(c, 'front', 'scier', 1)), G), 'scier'], [grand(unique(dessin(c, 'front', 'tailler', 1)), G), 'tailler'], [grand(unique(dessin(c, 'ne', 'porter', 0)), G), 'porter'], [grand(unique(dessin(c, 'front', 'reparer', 1)), G), 'réparer'], [grand(unique(`<g transform="translate(48 0) scale(-1 1)">${dessin(c, 'se', 'repousser', 1)}</g>`), G), 'repousser'], [grand(unique(dessin(c, 'front', 'ecrire', 1)), G), 'écrire'],
     ...(saison ? [] : [[g(n, 'front', 'repos', 0, G), 'naufragé'], [g(n, 'se', 'marche', 1, G), '']])
   ]));
-  const walk = cc => [0, 1, 2, 3].map(f => grand(unique(frame(cc, 'se', 'marche', f)), 2.4));
-  anim[0][1].push({ label: `Exemple ${i + 1}`, frames: walk(c), timings: [170], w: 115, h: 154, mirror: true });
-  if (!saison) anim[1][1].push({ label: `Exemple ${i + 1}`, frames: walk(n), timings: [170], w: 115, h: 154, mirror: true });
+  const walk = cc => [...Array(IMAGES.marche).keys()].map(f => grand(unique(frame(cc, 'se', 'marche', f)), 2.4));
+  anim[0][1].push({ label: `Exemple ${i + 1}`, frames: walk(c), timings: [85], w: 115, h: 154, mirror: true });
+  if (!saison) anim[1][1].push({ label: `Exemple ${i + 1}`, frames: walk(n), timings: [85], w: 115, h: 154, mirror: true });
 });
 
 // Planche des choix : chaque rangée change un seul choix, à partir des réglages par défaut ; le visage en gros plan
