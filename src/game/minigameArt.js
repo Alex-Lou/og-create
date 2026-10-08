@@ -26,3 +26,9 @@ export function gameSuiteMs(game, suite) {
   const s = DATA.jeux[game] && DATA.jeux[game].suites && DATA.jeux[game].suites[suite];
   return s ? s.ms_par_image * s.fichiers.length : 0;
 }
+
+// Toutes les adresses d'un jeu (pour les précharger dans un canvas)
+export function gameUrls(game) {
+  const prefix = `${ROOT}${game}/`;
+  return Object.keys(URLS).filter(k => k.startsWith(prefix)).map(k => URLS[k]);
+}
