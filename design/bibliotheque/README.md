@@ -80,6 +80,7 @@ détails propres à un lot : places des objets de boutique, lumières des palier
 | `svg/coffres/` | Les coffres des 4 raretés pour la fenêtre d'ouverture (cadre 120 × 100) : fermé, ouverture en 4 images, ouvert, rayons (calque facultatif), icône 32 × 32 (`coffres.json`) | 44 |
 | `svg/batiments/` | 7 bâtiments × 7 paliers (images animées), les mêmes l'hiver (toits enneigés), chantier, 20 skins, 48 objets de la boutique (un fichier par calque), 14 pièces rares à chaque palier, outil de teintes (`batiments.json`) | 793 |
 | `svg/batiments/montage/` | Le montage d'un bâtiment, en 2 × 2 et 3 × 3 cases : six étapes en boucle (piquets, terrassement, fondations, charpente, murs, toit), le dévoilement par-dessus le bâtiment fini, l'échafaudage des évolutions en deux calques (`montage.json`) | 56 |
+| `svg/batiments/reserves/` | Les réserves des 7 bâtiments (les récoltes), sur une case à côté d'eux : vide, à moitié, pleine (2 images, elle brille) (`reserves.json`) | 28 |
 | `svg/decor/cultures/` | Les cultures par étapes, une case : le bêchage, les sillons, le semis, les pousses et la croissance, 3 images en boucle chacune ; puis le champ mûr de l'annexe (blé, carottes, citrouilles) ou l'étape mûre (laitues, choux, tomates, haricots, fraises, pommes de terre) (`cultures.json`) | 153 |
 | `svg/decor/verger/` | Le verger par étapes, un arbre sur une case (pommier, poirier, cerisier, prunier, abricotier) : le trou, la plantation, le jeune arbre, la floraison, les fruits verts, les fruits mûrs, 3 images en boucle chacune (`verger.json`) | 90 |
 | `svg/decor/lunaire/` | Le jardin lunaire de Mélisse, un carré rond sur une case (la mélisse, la lunaire, la fleur de lune, l'herbe des Anciens) : une étape par phase de la lune, de la nouvelle lune à la pleine lune, 3 images en boucle chacune (`lunaire.json`) | 60 |
@@ -129,7 +130,8 @@ détails propres à un lot : places des objets de boutique, lumières des palier
   `etapeDeCulture('citrouilles', 'croissance', 2)`), `CULTURES`, `PART_CULTURE` ; le verger : `etapeDuVerger(arbre, etape, n)`
   (ex. `etapeDuVerger('cerisier', 'floraison', 1)`), `VERGER`, `PART_VERGER` ; le jardin lunaire :
   `etapeLunaire(plante, etape, n)` (ex. `etapeLunaire('fleur_de_lune', 'pleine_lune', 2)`), `LUNAIRE`, `PART_LUNAIRE` ; les cultures des
-  climats : `etapeDeClimat(climat, etape, n)` (ex. `etapeDeClimat('marais', 'mur', 1)`), `CLIMATS`, `PART_CLIMAT`. `liste()` donne tout ce que la famille dessine, avec son fichier. Vérifiés à
+  climats : `etapeDeClimat(climat, etape, n)` (ex. `etapeDeClimat('marais', 'mur', 1)`), `CLIMATS`, `PART_CLIMAT` ; les réserves :
+  `reserveDuBatiment(batiment, etat, n)` (ex. `reserveDuBatiment('bosquet', 'plein', 2)`), `RESERVES`. `liste()` donne tout ce que la famille dessine, avec son fichier. Vérifiés à
   l'octet près (`design/atelier/verif_generateurs.mjs`). En ligne de commande, depuis `design/atelier/` :
   Les bêtes : `profil(bete, pose)`, `orientee(bete, vue, pose)` (vue `avant` ou `dos`), `egare(sujet, vue, pose)`, les noms
   et poses dans `BETES` (ex. `profil('renard', 'marche1')`, `egare('fantome', 'avant', 'luciole2')`).
@@ -187,6 +189,9 @@ détails propres à un lot : places des objets de boutique, lumières des palier
   les parts du temps (`pousse_qui_dure`), comme les cultures.
 - **Une culture par climat** (`svg/decor/climats/`, `climats.json`) : le cadre des cultures ; la culture de chaque climat
   dans `culture`. Le spectacle et la culture qui pousse comme les cultures ; à 1, la culture mûre.
+- **Les réserves des bâtiments** (`svg/batiments/reserves/`, `reserves.json`) : le cadre des cultures, sur la case voisine
+  du bâtiment. `vide` quand rien n'attend, `moitie` quand un peu attend, `plein` quand beaucoup attend ; ramasser la remet
+  à `vide`.
 - **La torche** (`svg/decor/defenses/`, `defenses.json`) : elle s'achète à la boutique et se pose sur une case, comme une
   création (ancre au centre de la case, le cadre des créations). La nuit, `torche_allumee` en boucle et sa `lumiere`
   (les valeurs de la lumière d'une création du jeu : `u`, `v`, `z`, `rayon`, `couleur`) ; le jour, `torche_eteinte`.

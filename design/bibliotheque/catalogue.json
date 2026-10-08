@@ -111823,6 +111823,377 @@
    "statut": "ok"
   },
   {
+   "id": "batiments/reserves/atelier/reserve_atelier_moitie",
+   "rubrique": "batiments",
+   "titre": "Réserve à moitié : la caisse de rouages et de pièces de laiton (Rivet)",
+   "images": 1,
+   "fichiers": [
+    "svg/batiments/reserves/atelier/reserve_atelier_moitie.svg"
+   ],
+   "cadre": [
+    -42.5,
+    -37.5,
+    85,
+    60
+   ],
+   "parcours": "evolutions",
+   "statut": "ok"
+  },
+  {
+   "id": "batiments/reserves/atelier/reserve_atelier_plein",
+   "rubrique": "batiments",
+   "titre": "Réserve pleine (elle brille) : la caisse de rouages et de pièces de laiton (Rivet)",
+   "images": 2,
+   "fichiers": [
+    "svg/batiments/reserves/atelier/reserve_atelier_plein_1.svg",
+    "svg/batiments/reserves/atelier/reserve_atelier_plein_2.svg"
+   ],
+   "cadre": [
+    -42.5,
+    -37.5,
+    85,
+    60
+   ],
+   "ms_par_image": 500,
+   "parcours": "evolutions",
+   "statut": "ok"
+  },
+  {
+   "id": "batiments/reserves/atelier/reserve_atelier_vide",
+   "rubrique": "batiments",
+   "titre": "Réserve vide : la caisse de rouages et de pièces de laiton (Rivet)",
+   "images": 1,
+   "fichiers": [
+    "svg/batiments/reserves/atelier/reserve_atelier_vide.svg"
+   ],
+   "cadre": [
+    -42.5,
+    -37.5,
+    85,
+    60
+   ],
+   "parcours": "evolutions",
+   "statut": "ok"
+  },
+  {
+   "id": "batiments/reserves/bosquet/reserve_bosquet_moitie",
+   "rubrique": "batiments",
+   "titre": "Réserve à moitié : la pile de bûches (Sylve)",
+   "images": 1,
+   "fichiers": [
+    "svg/batiments/reserves/bosquet/reserve_bosquet_moitie.svg"
+   ],
+   "cadre": [
+    -42.5,
+    -37.5,
+    85,
+    60
+   ],
+   "parcours": "evolutions",
+   "statut": "ok"
+  },
+  {
+   "id": "batiments/reserves/bosquet/reserve_bosquet_plein",
+   "rubrique": "batiments",
+   "titre": "Réserve pleine (elle brille) : la pile de bûches (Sylve)",
+   "images": 2,
+   "fichiers": [
+    "svg/batiments/reserves/bosquet/reserve_bosquet_plein_1.svg",
+    "svg/batiments/reserves/bosquet/reserve_bosquet_plein_2.svg"
+   ],
+   "cadre": [
+    -42.5,
+    -37.5,
+    85,
+    60
+   ],
+   "ms_par_image": 500,
+   "parcours": "evolutions",
+   "statut": "ok"
+  },
+  {
+   "id": "batiments/reserves/bosquet/reserve_bosquet_vide",
+   "rubrique": "batiments",
+   "titre": "Réserve vide : la pile de bûches (Sylve)",
+   "images": 1,
+   "fichiers": [
+    "svg/batiments/reserves/bosquet/reserve_bosquet_vide.svg"
+   ],
+   "cadre": [
+    -42.5,
+    -37.5,
+    85,
+    60
+   ],
+   "parcours": "evolutions",
+   "statut": "ok"
+  },
+  {
+   "id": "batiments/reserves/carriere/reserve_carriere_moitie",
+   "rubrique": "batiments",
+   "titre": "Réserve à moitié : le tas de pierres taillées sur sa palette (Galet)",
+   "images": 1,
+   "fichiers": [
+    "svg/batiments/reserves/carriere/reserve_carriere_moitie.svg"
+   ],
+   "cadre": [
+    -42.5,
+    -37.5,
+    85,
+    60
+   ],
+   "parcours": "evolutions",
+   "statut": "ok"
+  },
+  {
+   "id": "batiments/reserves/carriere/reserve_carriere_plein",
+   "rubrique": "batiments",
+   "titre": "Réserve pleine (elle brille) : le tas de pierres taillées sur sa palette (Galet)",
+   "images": 2,
+   "fichiers": [
+    "svg/batiments/reserves/carriere/reserve_carriere_plein_1.svg",
+    "svg/batiments/reserves/carriere/reserve_carriere_plein_2.svg"
+   ],
+   "cadre": [
+    -42.5,
+    -37.5,
+    85,
+    60
+   ],
+   "ms_par_image": 500,
+   "parcours": "evolutions",
+   "statut": "ok"
+  },
+  {
+   "id": "batiments/reserves/carriere/reserve_carriere_vide",
+   "rubrique": "batiments",
+   "titre": "Réserve vide : le tas de pierres taillées sur sa palette (Galet)",
+   "images": 1,
+   "fichiers": [
+    "svg/batiments/reserves/carriere/reserve_carriere_vide.svg"
+   ],
+   "cadre": [
+    -42.5,
+    -37.5,
+    85,
+    60
+   ],
+   "parcours": "evolutions",
+   "statut": "ok"
+  },
+  {
+   "id": "batiments/reserves/foyer/reserve_foyer_moitie",
+   "rubrique": "batiments",
+   "titre": "Réserve à moitié : la marmite sur son trépied et le panier de miches (Cannelle)",
+   "images": 1,
+   "fichiers": [
+    "svg/batiments/reserves/foyer/reserve_foyer_moitie.svg"
+   ],
+   "cadre": [
+    -42.5,
+    -37.5,
+    85,
+    60
+   ],
+   "parcours": "evolutions",
+   "statut": "ok"
+  },
+  {
+   "id": "batiments/reserves/foyer/reserve_foyer_plein",
+   "rubrique": "batiments",
+   "titre": "Réserve pleine (elle brille) : la marmite sur son trépied et le panier de miches (Cannelle)",
+   "images": 2,
+   "fichiers": [
+    "svg/batiments/reserves/foyer/reserve_foyer_plein_1.svg",
+    "svg/batiments/reserves/foyer/reserve_foyer_plein_2.svg"
+   ],
+   "cadre": [
+    -42.5,
+    -37.5,
+    85,
+    60
+   ],
+   "ms_par_image": 500,
+   "parcours": "evolutions",
+   "statut": "ok"
+  },
+  {
+   "id": "batiments/reserves/foyer/reserve_foyer_vide",
+   "rubrique": "batiments",
+   "titre": "Réserve vide : la marmite sur son trépied et le panier de miches (Cannelle)",
+   "images": 1,
+   "fichiers": [
+    "svg/batiments/reserves/foyer/reserve_foyer_vide.svg"
+   ],
+   "cadre": [
+    -42.5,
+    -37.5,
+    85,
+    60
+   ],
+   "parcours": "evolutions",
+   "statut": "ok"
+  },
+  {
+   "id": "batiments/reserves/ponton/reserve_ponton_moitie",
+   "rubrique": "batiments",
+   "titre": "Réserve à moitié : la caisse de poissons (Aster)",
+   "images": 1,
+   "fichiers": [
+    "svg/batiments/reserves/ponton/reserve_ponton_moitie.svg"
+   ],
+   "cadre": [
+    -42.5,
+    -37.5,
+    85,
+    60
+   ],
+   "parcours": "evolutions",
+   "statut": "ok"
+  },
+  {
+   "id": "batiments/reserves/ponton/reserve_ponton_plein",
+   "rubrique": "batiments",
+   "titre": "Réserve pleine (elle brille) : la caisse de poissons (Aster)",
+   "images": 2,
+   "fichiers": [
+    "svg/batiments/reserves/ponton/reserve_ponton_plein_1.svg",
+    "svg/batiments/reserves/ponton/reserve_ponton_plein_2.svg"
+   ],
+   "cadre": [
+    -42.5,
+    -37.5,
+    85,
+    60
+   ],
+   "ms_par_image": 500,
+   "parcours": "evolutions",
+   "statut": "ok"
+  },
+  {
+   "id": "batiments/reserves/ponton/reserve_ponton_vide",
+   "rubrique": "batiments",
+   "titre": "Réserve vide : la caisse de poissons (Aster)",
+   "images": 1,
+   "fichiers": [
+    "svg/batiments/reserves/ponton/reserve_ponton_vide.svg"
+   ],
+   "cadre": [
+    -42.5,
+    -37.5,
+    85,
+    60
+   ],
+   "parcours": "evolutions",
+   "statut": "ok"
+  },
+  {
+   "id": "batiments/reserves/potager/reserve_potager_moitie",
+   "rubrique": "batiments",
+   "titre": "Réserve à moitié : les paniers de légumes (Mélisse)",
+   "images": 1,
+   "fichiers": [
+    "svg/batiments/reserves/potager/reserve_potager_moitie.svg"
+   ],
+   "cadre": [
+    -42.5,
+    -37.5,
+    85,
+    60
+   ],
+   "parcours": "evolutions",
+   "statut": "ok"
+  },
+  {
+   "id": "batiments/reserves/potager/reserve_potager_plein",
+   "rubrique": "batiments",
+   "titre": "Réserve pleine (elle brille) : les paniers de légumes (Mélisse)",
+   "images": 2,
+   "fichiers": [
+    "svg/batiments/reserves/potager/reserve_potager_plein_1.svg",
+    "svg/batiments/reserves/potager/reserve_potager_plein_2.svg"
+   ],
+   "cadre": [
+    -42.5,
+    -37.5,
+    85,
+    60
+   ],
+   "ms_par_image": 500,
+   "parcours": "evolutions",
+   "statut": "ok"
+  },
+  {
+   "id": "batiments/reserves/potager/reserve_potager_vide",
+   "rubrique": "batiments",
+   "titre": "Réserve vide : les paniers de légumes (Mélisse)",
+   "images": 1,
+   "fichiers": [
+    "svg/batiments/reserves/potager/reserve_potager_vide.svg"
+   ],
+   "cadre": [
+    -42.5,
+    -37.5,
+    85,
+    60
+   ],
+   "parcours": "evolutions",
+   "statut": "ok"
+  },
+  {
+   "id": "batiments/reserves/puits/reserve_puits_moitie",
+   "rubrique": "batiments",
+   "titre": "Réserve à moitié : les seaux d'eau (Ondin)",
+   "images": 1,
+   "fichiers": [
+    "svg/batiments/reserves/puits/reserve_puits_moitie.svg"
+   ],
+   "cadre": [
+    -42.5,
+    -37.5,
+    85,
+    60
+   ],
+   "parcours": "evolutions",
+   "statut": "ok"
+  },
+  {
+   "id": "batiments/reserves/puits/reserve_puits_plein",
+   "rubrique": "batiments",
+   "titre": "Réserve pleine (elle brille) : les seaux d'eau (Ondin)",
+   "images": 2,
+   "fichiers": [
+    "svg/batiments/reserves/puits/reserve_puits_plein_1.svg",
+    "svg/batiments/reserves/puits/reserve_puits_plein_2.svg"
+   ],
+   "cadre": [
+    -42.5,
+    -37.5,
+    85,
+    60
+   ],
+   "ms_par_image": 500,
+   "parcours": "evolutions",
+   "statut": "ok"
+  },
+  {
+   "id": "batiments/reserves/puits/reserve_puits_vide",
+   "rubrique": "batiments",
+   "titre": "Réserve vide : les seaux d'eau (Ondin)",
+   "images": 1,
+   "fichiers": [
+    "svg/batiments/reserves/puits/reserve_puits_vide.svg"
+   ],
+   "cadre": [
+    -42.5,
+    -37.5,
+    85,
+    60
+   ],
+   "parcours": "evolutions",
+   "statut": "ok"
+  },
+  {
    "id": "batiments/skins/atelier/enseigne-doree/atelier_enseigne-doree_palier1",
    "rubrique": "batiments",
    "titre": "Atelier — enseigne dorée, palier I",

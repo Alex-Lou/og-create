@@ -1,0 +1,352 @@
+{
+ "_lisez_moi": [
+  "Les réserves des bâtiments (les récoltes) : ce que chaque bâtiment a produit, posé sur une case à côté de lui, vide, à moitié ou plein. Le jeu montre l'état selon ce qui attend d'être ramassé (rien, un peu, beaucoup), et rend la réserve vide quand le joueur ramasse.",
+  "Ancre (0, 0) au centre de la case, échelle du jeu × 1,25, le cadre des cultures. Vide et à moitié : une image ; pleine : 2 images (ms_par_image), elle brille.",
+  "D'après le métier de chaque maître : le foyer (nourriture), le ponton (poissons), l'atelier (rouages), le puits (eau), le bosquet (bois), la carrière (pierre), le potager (légumes)."
+ ],
+ "reserves": {
+  "foyer": {
+   "nom": "Réserve du bâtiment : la marmite sur son trépied et le panier de miches (Cannelle)",
+   "cadre": [
+    -42.5,
+    -37.5,
+    85,
+    60
+   ],
+   "etats": {
+    "vide": {
+     "nom": "Réserve vide : la marmite sur son trépied et le panier de miches (Cannelle)",
+     "cadre": [
+      -42.5,
+      -37.5,
+      85,
+      60
+     ],
+     "fichiers": [
+      "foyer/reserve_foyer_vide.svg"
+     ]
+    },
+    "moitie": {
+     "nom": "Réserve à moitié : la marmite sur son trépied et le panier de miches (Cannelle)",
+     "cadre": [
+      -42.5,
+      -37.5,
+      85,
+      60
+     ],
+     "fichiers": [
+      "foyer/reserve_foyer_moitie.svg"
+     ]
+    },
+    "plein": {
+     "nom": "Réserve pleine (elle brille) : la marmite sur son trépied et le panier de miches (Cannelle)",
+     "cadre": [
+      -42.5,
+      -37.5,
+      85,
+      60
+     ],
+     "ms_par_image": 500,
+     "fichiers": [
+      "foyer/reserve_foyer_plein_1.svg",
+      "foyer/reserve_foyer_plein_2.svg"
+     ]
+    }
+   }
+  },
+  "ponton": {
+   "nom": "Réserve du bâtiment : la caisse de poissons (Aster)",
+   "cadre": [
+    -42.5,
+    -37.5,
+    85,
+    60
+   ],
+   "etats": {
+    "vide": {
+     "nom": "Réserve vide : la caisse de poissons (Aster)",
+     "cadre": [
+      -42.5,
+      -37.5,
+      85,
+      60
+     ],
+     "fichiers": [
+      "ponton/reserve_ponton_vide.svg"
+     ]
+    },
+    "moitie": {
+     "nom": "Réserve à moitié : la caisse de poissons (Aster)",
+     "cadre": [
+      -42.5,
+      -37.5,
+      85,
+      60
+     ],
+     "fichiers": [
+      "ponton/reserve_ponton_moitie.svg"
+     ]
+    },
+    "plein": {
+     "nom": "Réserve pleine (elle brille) : la caisse de poissons (Aster)",
+     "cadre": [
+      -42.5,
+      -37.5,
+      85,
+      60
+     ],
+     "ms_par_image": 500,
+     "fichiers": [
+      "ponton/reserve_ponton_plein_1.svg",
+      "ponton/reserve_ponton_plein_2.svg"
+     ]
+    }
+   }
+  },
+  "atelier": {
+   "nom": "Réserve du bâtiment : la caisse de rouages et de pièces de laiton (Rivet)",
+   "cadre": [
+    -42.5,
+    -37.5,
+    85,
+    60
+   ],
+   "etats": {
+    "vide": {
+     "nom": "Réserve vide : la caisse de rouages et de pièces de laiton (Rivet)",
+     "cadre": [
+      -42.5,
+      -37.5,
+      85,
+      60
+     ],
+     "fichiers": [
+      "atelier/reserve_atelier_vide.svg"
+     ]
+    },
+    "moitie": {
+     "nom": "Réserve à moitié : la caisse de rouages et de pièces de laiton (Rivet)",
+     "cadre": [
+      -42.5,
+      -37.5,
+      85,
+      60
+     ],
+     "fichiers": [
+      "atelier/reserve_atelier_moitie.svg"
+     ]
+    },
+    "plein": {
+     "nom": "Réserve pleine (elle brille) : la caisse de rouages et de pièces de laiton (Rivet)",
+     "cadre": [
+      -42.5,
+      -37.5,
+      85,
+      60
+     ],
+     "ms_par_image": 500,
+     "fichiers": [
+      "atelier/reserve_atelier_plein_1.svg",
+      "atelier/reserve_atelier_plein_2.svg"
+     ]
+    }
+   }
+  },
+  "puits": {
+   "nom": "Réserve du bâtiment : les seaux d'eau (Ondin)",
+   "cadre": [
+    -42.5,
+    -37.5,
+    85,
+    60
+   ],
+   "etats": {
+    "vide": {
+     "nom": "Réserve vide : les seaux d'eau (Ondin)",
+     "cadre": [
+      -42.5,
+      -37.5,
+      85,
+      60
+     ],
+     "fichiers": [
+      "puits/reserve_puits_vide.svg"
+     ]
+    },
+    "moitie": {
+     "nom": "Réserve à moitié : les seaux d'eau (Ondin)",
+     "cadre": [
+      -42.5,
+      -37.5,
+      85,
+      60
+     ],
+     "fichiers": [
+      "puits/reserve_puits_moitie.svg"
+     ]
+    },
+    "plein": {
+     "nom": "Réserve pleine (elle brille) : les seaux d'eau (Ondin)",
+     "cadre": [
+      -42.5,
+      -37.5,
+      85,
+      60
+     ],
+     "ms_par_image": 500,
+     "fichiers": [
+      "puits/reserve_puits_plein_1.svg",
+      "puits/reserve_puits_plein_2.svg"
+     ]
+    }
+   }
+  },
+  "bosquet": {
+   "nom": "Réserve du bâtiment : la pile de bûches (Sylve)",
+   "cadre": [
+    -42.5,
+    -37.5,
+    85,
+    60
+   ],
+   "etats": {
+    "vide": {
+     "nom": "Réserve vide : la pile de bûches (Sylve)",
+     "cadre": [
+      -42.5,
+      -37.5,
+      85,
+      60
+     ],
+     "fichiers": [
+      "bosquet/reserve_bosquet_vide.svg"
+     ]
+    },
+    "moitie": {
+     "nom": "Réserve à moitié : la pile de bûches (Sylve)",
+     "cadre": [
+      -42.5,
+      -37.5,
+      85,
+      60
+     ],
+     "fichiers": [
+      "bosquet/reserve_bosquet_moitie.svg"
+     ]
+    },
+    "plein": {
+     "nom": "Réserve pleine (elle brille) : la pile de bûches (Sylve)",
+     "cadre": [
+      -42.5,
+      -37.5,
+      85,
+      60
+     ],
+     "ms_par_image": 500,
+     "fichiers": [
+      "bosquet/reserve_bosquet_plein_1.svg",
+      "bosquet/reserve_bosquet_plein_2.svg"
+     ]
+    }
+   }
+  },
+  "carriere": {
+   "nom": "Réserve du bâtiment : le tas de pierres taillées sur sa palette (Galet)",
+   "cadre": [
+    -42.5,
+    -37.5,
+    85,
+    60
+   ],
+   "etats": {
+    "vide": {
+     "nom": "Réserve vide : le tas de pierres taillées sur sa palette (Galet)",
+     "cadre": [
+      -42.5,
+      -37.5,
+      85,
+      60
+     ],
+     "fichiers": [
+      "carriere/reserve_carriere_vide.svg"
+     ]
+    },
+    "moitie": {
+     "nom": "Réserve à moitié : le tas de pierres taillées sur sa palette (Galet)",
+     "cadre": [
+      -42.5,
+      -37.5,
+      85,
+      60
+     ],
+     "fichiers": [
+      "carriere/reserve_carriere_moitie.svg"
+     ]
+    },
+    "plein": {
+     "nom": "Réserve pleine (elle brille) : le tas de pierres taillées sur sa palette (Galet)",
+     "cadre": [
+      -42.5,
+      -37.5,
+      85,
+      60
+     ],
+     "ms_par_image": 500,
+     "fichiers": [
+      "carriere/reserve_carriere_plein_1.svg",
+      "carriere/reserve_carriere_plein_2.svg"
+     ]
+    }
+   }
+  },
+  "potager": {
+   "nom": "Réserve du bâtiment : les paniers de légumes (Mélisse)",
+   "cadre": [
+    -42.5,
+    -37.5,
+    85,
+    60
+   ],
+   "etats": {
+    "vide": {
+     "nom": "Réserve vide : les paniers de légumes (Mélisse)",
+     "cadre": [
+      -42.5,
+      -37.5,
+      85,
+      60
+     ],
+     "fichiers": [
+      "potager/reserve_potager_vide.svg"
+     ]
+    },
+    "moitie": {
+     "nom": "Réserve à moitié : les paniers de légumes (Mélisse)",
+     "cadre": [
+      -42.5,
+      -37.5,
+      85,
+      60
+     ],
+     "fichiers": [
+      "potager/reserve_potager_moitie.svg"
+     ]
+    },
+    "plein": {
+     "nom": "Réserve pleine (elle brille) : les paniers de légumes (Mélisse)",
+     "cadre": [
+      -42.5,
+      -37.5,
+      85,
+      60
+     ],
+     "ms_par_image": 500,
+     "fichiers": [
+      "potager/reserve_potager_plein_1.svg",
+      "potager/reserve_potager_plein_2.svg"
+     ]
+    }
+   }
+  }
+ }
+}
