@@ -4,7 +4,7 @@
 // les gestes.
 const { frame } = require('./troupe.js');
 const { assis } = require('./assis.js');
-const { tendre, avecMainsTendues, applaudir, avecApplaudir, avecPecher, avecPiocher, avecCueillir, avecPorter, reparer, avecReparer, avecRepousser, ecrire, avecEcrire } = require('./gestes.js');
+const { tendre, avecMainsTendues, applaudir, avecApplaudir, avecPecher, avecPiocher, avecCueillir, avecArroser, avecPorter, reparer, avecReparer, avecRepousser, ecrire, avecEcrire } = require('./gestes.js');
 
 const ac = (place, id, couleurs) => ({ [place]: couleurs ? { id, couleurs } : { id } });
 
@@ -42,6 +42,7 @@ const POSES = [['face_repos', 'front', 'repos', 2], ['avant_marche', 'se', 'marc
   ['face_pecher', 'front', 'pecher', 2], ['avant_pecher', 'se', 'pecher', 2], ['dos_pecher', 'ne', 'pecher', 2],
   ['face_piocher', 'front', 'piocher', 2], ['avant_piocher', 'se', 'piocher', 2], ['dos_piocher', 'ne', 'piocher', 2],
   ['face_cueillir', 'front', 'cueillir', 2], ['avant_cueillir', 'se', 'cueillir', 2], ['dos_cueillir', 'ne', 'cueillir', 2],
+  ['face_arroser', 'front', 'arroser', 2], ['avant_arroser', 'se', 'arroser', 2], ['dos_arroser', 'ne', 'arroser', 2],
   ['face_porter', 'front', 'porter', 2], ['avant_porter', 'se', 'porter', 2], ['dos_porter', 'ne', 'porter', 2],
   ['face_reparer', 'front', 'reparer', 2], ['avant_reparer', 'se', 'reparer', 2], ['dos_reparer', 'ne', 'reparer', 2],
   ['face_assis-reparer', 'front', 'assis-reparer', 2], ['avant_assis-reparer', 'se', 'assis-reparer', 2], ['dos_assis-reparer', 'ne', 'assis-reparer', 2],
@@ -51,7 +52,7 @@ const POSES = [['face_repos', 'front', 'repos', 2], ['avant_marche', 'se', 'marc
 // une image d'une pose : celles du kit, assis, et les gestes de la veillée (debout ou assis)
 const dessin = (cc, view, p, n) => p === 'assis' ? assis(cc, view, n) : p === 'assis-tendre' ? assis(cc, view, n, null, tendre)
   : p === 'assis-applaudir' ? assis(cc, view, n, null, applaudir) : p === 'tendre' ? frame(avecMainsTendues(cc), view, 'action', n)
-  : p === 'applaudir' ? frame(avecApplaudir(cc), view, 'action', n) : p === 'pecher' ? frame(avecPecher(cc), view, 'action', n) : p === 'piocher' ? frame(avecPiocher(cc), view, 'action', n) : p === 'cueillir' ? frame(avecCueillir(cc), view, 'action', n) : p === 'porter' ? frame(avecPorter(cc), view, 'action', n) : p === 'reparer' ? frame(avecReparer(cc), view, 'action', n) : p === 'repousser' ? frame(avecRepousser(cc), view, 'action', n) : p === 'ecrire' ? frame(avecEcrire(cc), view, 'action', n)
+  : p === 'applaudir' ? frame(avecApplaudir(cc), view, 'action', n) : p === 'pecher' ? frame(avecPecher(cc), view, 'action', n) : p === 'piocher' ? frame(avecPiocher(cc), view, 'action', n) : p === 'cueillir' ? frame(avecCueillir(cc), view, 'action', n) : p === 'arroser' ? frame(avecArroser(cc), view, 'action', n) : p === 'porter' ? frame(avecPorter(cc), view, 'action', n) : p === 'reparer' ? frame(avecReparer(cc), view, 'action', n) : p === 'repousser' ? frame(avecRepousser(cc), view, 'action', n) : p === 'ecrire' ? frame(avecEcrire(cc), view, 'action', n)
   : p === 'assis-reparer' ? assis(cc, view, n, null, reparer) : p === 'assis-ecrire' ? assis(cc, view, n, null, ecrire) : frame(cc, view, p, n);
 
 module.exports = { ac, EXEMPLES, nom, POSES, dessin };
