@@ -244,10 +244,10 @@ export const DEPOSIT_SPRITES = { glace, laine, roseau, sel, fruits, obsidienne }
 // (la bibliothèque n'a pas encore leurs dessins)
 export const PICKUP_SPRITES = { bois, coquillage, galet };
 
-// Calque d'un gisement prêt à peindre à l'instant t (secondes) : clé d'image et dessin. Le dessin de la bibliothèque
-// d'abord (decorArt.js), sinon celui-ci
-export function depositLayer(find, ready, t = 0) {
-  const art = depositArtLayer(find, ready, t);
+// Calque d'un gisement prêt à peindre à l'instant t (secondes ; wait : ms avant qu'il repousse) : clé d'image et
+// dessin. Le dessin de la bibliothèque d'abord (decorArt.js), sinon celui-ci
+export function depositLayer(find, ready, t = 0, wait = undefined) {
+  const art = depositArtLayer(find, ready, t, wait);
   if (art) return art;
   const kind = DEPOSIT_SPRITES[find] || PICKUP_SPRITES[find];
   if (!kind) return null;

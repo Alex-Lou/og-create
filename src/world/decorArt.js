@@ -48,11 +48,16 @@ export function annexArtLayer(id, variant = 0, t = 0) {
   return entry ? layerOf(entry.name, entry.art, t) : null;
 }
 
-// Le calque d'un gisement, prêt (animé) ou ramassé, à l'instant t (secondes), ou null si la bibliothèque ne l'a pas
-export function depositArtLayer(find, ready, t = 0) {
-  const name = `${find}_${ready ? 'pret' : 'ramasse'}`;
-  const art = DECOR.gisements[name];
-  return art ? layerOf(name, art, t) : null;
+// Un gisement ramassé repousse en 6 h (serveur : finds.REGROW_MS) : ramassé, puis à moitié repoussé (repousse1),
+// puis presque (repousse2), chacun un tiers du temps
+const REGROW_MS = 6 * 3600 * 1000;
+const stageOf = wait => (wait > (REGROW_MS * 2) / 3 ? 'ramasse' : wait > REGROW_MS / 3 ? 'repousse1' : 'repousse2');
+// Le calque d'un gisement, prêt (animé), ou ramassé et qui repousse (wait : ms avant qu'il soit prêt), à l'instant t
+// (secondes), ou null si la bibliothèque ne l'a pas
+export function depositArtLayer(find, ready, t = 0, wait = REGROW_MS) {
+  const names = ready ? [`${find}_pret`] : [`${find}_${stageOf(wait)}`, `${find}_ramasse`];
+  const name = names.find(n => DECOR.gisements[n]);
+  return name ? layerOf(name, DECOR.gisements[name], t) : null;
 }
 
 // Le dessin d'une enseigne (decor.json, enseignes : la planche, la plaque ou le panneau, sans le nom) à l'instant t
