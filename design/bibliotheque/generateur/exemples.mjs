@@ -2553,6 +2553,40 @@ var require_gestes = __commonJS({
     }
     __name(recolter, "recolter");
     var avecRecolter = /* @__PURE__ */ __name((c) => ({ ...c, uid: `${c.uid}rc`, pose: recolter }), "avecRecolter");
+    function scie(h, c) {
+      const len = Math.hypot(c[0] - h[0], c[1] - h[1]), ux = (c[0] - h[0]) / len, uy = (c[1] - h[1]) / len, nx = -uy, ny = ux;
+      const k = nx * (c[0] > h[0] ? 1 : -1) < 0 || ny < 0 ? -1 : 1;
+      const pt = /* @__PURE__ */ __name((a, b) => [h[0] + ux * a + nx * b * k, h[1] + uy * a + ny * b * k], "pt");
+      const L2 = len + 2.4, lame = [pt(1.4, -1.6), pt(L2, -0.8), pt(L2, 0.8), pt(1.4, 1.4)];
+      const dents = Array.from({ length: 6 }, (_, i) => {
+        const q = 2.4 + i * (L2 - 3) / 6;
+        return `${pt(q, 1.2).map(r2)} ${pt(q + 0.6, 1.9).map(r2)}`;
+      }).join(" L");
+      return P(`M${lame.map((p) => p.map(r2).join(",")).join(" L")} Z`, "#B8C0C9", 0.9) + P(`M${pt(2.4, 1.2).map(r2)} L${dents} L${pt(L2, 0.8).map(r2)} Z`, "#8E96A0", 0.5) + L(pt(2.6, -0.6), pt(L2 - 1, -0.3), "#E2E8EE", 0.6) + E(h[0], h[1], 2.1, 2.1, "#B07A45", 0.9) + E(h[0] - ux * 0.3, h[1] - uy * 0.3, 0.8, 0.8, "#5E3F26", 0);
+    }
+    __name(scie, "scie");
+    function chevalet(x, y, c, n) {
+      const top = y - 8, pied = /* @__PURE__ */ __name((dx) => L([x + dx - 3, y], [x + dx + 3, top + 2], OUT, 2.2) + L([x + dx - 3, y], [x + dx + 3, top + 2], "#9A6A3E", 1) + L([x + dx + 3, y], [x + dx - 3, top + 2], OUT, 2.2) + L([x + dx + 3, y], [x + dx - 3, top + 2], "#9A6A3E", 1), "pied");
+      const buche = `<rect x="${r2(x - 5.4)}" y="${r2(top - 1.6)}" width="10.8" height="3.6" rx="1.6" fill="#B07A45" stroke="${OUT}" stroke-width="0.9"/>` + E(x + 5.2, top + 0.2, 1.2, 1.7, "#E2B878", 0.8) + E(x + 5.2, top + 0.2, 0.5, 0.8, "#C99A62", 0) + L([x - 4, top - 0.4], [x + 2, top - 0.4], "#C99A62", 0.5);
+      const entaille = L([c, top - 1.6], [c, top - 1.6 + (n ? 2.4 : 1.2)], "#5E3F26", 0.8);
+      const sciure = E(c, y - 0.2, 2.4, 0.6, "#E8CFA0", 0.4) + (n ? [[0.6, 3], [-0.4, 5], [0.8, 6.6]] : [[0.2, 4]]).map(([dx, dy]) => E(c + dx, top + dy, 0.5, 0.4, "#E8CFA0", 0)).join("");
+      return E(x, y, 6, 1.2, "rgba(40,55,20,.22)", 0) + pied(-1.6) + buche + entaille + sciure;
+    }
+    __name(chevalet, "chevalet");
+    function scier({ view, n }) {
+      const [a, b] = this.shoulders;
+      if (view === "front" || view === "se") {
+        const s = view === "front" ? 1 : -1, [p, q] = s > 0 ? [b, a] : [a, b];
+        const x = /* @__PURE__ */ __name((dx) => p[0] + s * dx, "x"), sol2 = 61, top2 = sol2 - 8, c2 = x(6.4);
+        const h2 = n ? [x(3.2), top2 - 4.2] : [x(-0.4), top2 - 8.6];
+        const tient = arm(this, q, [x(1.6) - s * 3.6, top2 - 2.2], [q[0] + s * 0.6, q[1] + 8]);
+        return { expr: "content", under: chevalet(x(7.4), sol2, c2, n), [s > 0 ? "left" : "right"]: tient, [s > 0 ? "right" : "left"]: scie(h2, [c2, top2 - 1.4]) + arm(this, p, h2, [x(n ? 2.4 : 1.6), p[1] + 6]) };
+      }
+      const sol = a[1] + 18, top = sol - 8, c = b[0] + 5.4, h = n ? [b[0] + 2.6, top - 3.4] : [b[0] - 0.4, top - 7];
+      return { right: "", under: chevalet(b[0] + 6, sol, c, n), over: scie(h, [c, top - 1.4]) + arm(this, b, h, [b[0] + 3, b[1] + 4]) };
+    }
+    __name(scier, "scier");
+    var avecScier = /* @__PURE__ */ __name((c) => ({ ...c, uid: `${c.uid}sc`, pose: scier }), "avecScier");
     function caisse(x, y, w = 11, h = 8.4) {
       const g = x - w / 2, d = x + w / 2, t = y - h, p = 2.2;
       const face = `M${r2(g)},${r2(y)} L${r2(d)},${r2(y)} L${r2(d)},${r2(t)} L${r2(g)},${r2(t)} Z`;
@@ -2673,7 +2707,7 @@ var require_gestes = __commonJS({
     }
     __name(ecrire, "ecrire");
     var avecEcrire = /* @__PURE__ */ __name((c) => ({ ...c, uid: `${c.uid}ec`, pose: ecrire }), "avecEcrire");
-    module.exports = { lanterne, parapluie, valise, avecLanterne, avecParapluie, avecValise, couche, CADRE_PARAPLUIE, CADRE_COUCHE, ZEDS, paume, tranche, tendre, avecMainsTendues, applaudir, avecApplaudir, pecher, avecPecher, piocher, avecPiocher, cueillir, avecCueillir, arroser, avecArroser, becher, avecBecher, semer, avecSemer, recolter, avecRecolter, porter, avecPorter, reparer, avecReparer, repousser, avecRepousser, ecrire, avecEcrire };
+    module.exports = { lanterne, parapluie, valise, avecLanterne, avecParapluie, avecValise, couche, CADRE_PARAPLUIE, CADRE_COUCHE, ZEDS, paume, tranche, tendre, avecMainsTendues, applaudir, avecApplaudir, pecher, avecPecher, piocher, avecPiocher, cueillir, avecCueillir, arroser, avecArroser, becher, avecBecher, semer, avecSemer, recolter, avecRecolter, scier, avecScier, porter, avecPorter, reparer, avecReparer, repousser, avecRepousser, ecrire, avecEcrire };
   }
 });
 
@@ -2682,7 +2716,7 @@ var require_avatar_exemples = __commonJS({
   "atelier/avatar_exemples.js"(exports, module) {
     var { frame } = require_troupe2();
     var { assis } = require_assis();
-    var { tendre, avecMainsTendues, applaudir, avecApplaudir, avecPecher, avecPiocher, avecCueillir, avecArroser, avecBecher, avecSemer, avecRecolter, avecPorter, reparer, avecReparer, avecRepousser, ecrire, avecEcrire } = require_gestes();
+    var { tendre, avecMainsTendues, applaudir, avecApplaudir, avecPecher, avecPiocher, avecCueillir, avecArroser, avecBecher, avecSemer, avecRecolter, avecScier, avecPorter, reparer, avecReparer, avecRepousser, ecrire, avecEcrire } = require_gestes();
     var ac = /* @__PURE__ */ __name((place, id, couleurs) => ({ [place]: couleurs ? { id, couleurs } : { id } }), "ac");
     var EXEMPLES2 = [
       {},
@@ -2767,6 +2801,9 @@ var require_avatar_exemples = __commonJS({
       ["face_recolter", "front", "recolter", 2],
       ["avant_recolter", "se", "recolter", 2],
       ["dos_recolter", "ne", "recolter", 2],
+      ["face_scier", "front", "scier", 2],
+      ["avant_scier", "se", "scier", 2],
+      ["dos_scier", "ne", "scier", 2],
       ["face_porter", "front", "porter", 2],
       ["avant_porter", "se", "porter", 2],
       ["dos_porter", "ne", "porter", 2],
@@ -2786,7 +2823,7 @@ var require_avatar_exemples = __commonJS({
       ["avant_assis-ecrire", "se", "assis-ecrire", 2],
       ["dos_assis-ecrire", "ne", "assis-ecrire", 2]
     ];
-    var dessin2 = /* @__PURE__ */ __name((cc, view, p, n) => p === "assis" ? assis(cc, view, n) : p === "assis-tendre" ? assis(cc, view, n, null, tendre) : p === "assis-applaudir" ? assis(cc, view, n, null, applaudir) : p === "tendre" ? frame(avecMainsTendues(cc), view, "action", n) : p === "applaudir" ? frame(avecApplaudir(cc), view, "action", n) : p === "pecher" ? frame(avecPecher(cc), view, "action", n) : p === "piocher" ? frame(avecPiocher(cc), view, "action", n) : p === "cueillir" ? frame(avecCueillir(cc), view, "action", n) : p === "arroser" ? frame(avecArroser(cc), view, "action", n) : p === "becher" ? frame(avecBecher(cc), view, "action", n) : p === "semer" ? frame(avecSemer(cc), view, "action", n) : p === "recolter" ? frame(avecRecolter(cc), view, "action", n) : p === "porter" ? frame(avecPorter(cc), view, "action", n) : p === "reparer" ? frame(avecReparer(cc), view, "action", n) : p === "repousser" ? frame(avecRepousser(cc), view, "action", n) : p === "ecrire" ? frame(avecEcrire(cc), view, "action", n) : p === "assis-reparer" ? assis(cc, view, n, null, reparer) : p === "assis-ecrire" ? assis(cc, view, n, null, ecrire) : frame(cc, view, p, n), "dessin");
+    var dessin2 = /* @__PURE__ */ __name((cc, view, p, n) => p === "assis" ? assis(cc, view, n) : p === "assis-tendre" ? assis(cc, view, n, null, tendre) : p === "assis-applaudir" ? assis(cc, view, n, null, applaudir) : p === "tendre" ? frame(avecMainsTendues(cc), view, "action", n) : p === "applaudir" ? frame(avecApplaudir(cc), view, "action", n) : p === "pecher" ? frame(avecPecher(cc), view, "action", n) : p === "piocher" ? frame(avecPiocher(cc), view, "action", n) : p === "cueillir" ? frame(avecCueillir(cc), view, "action", n) : p === "arroser" ? frame(avecArroser(cc), view, "action", n) : p === "becher" ? frame(avecBecher(cc), view, "action", n) : p === "semer" ? frame(avecSemer(cc), view, "action", n) : p === "recolter" ? frame(avecRecolter(cc), view, "action", n) : p === "scier" ? frame(avecScier(cc), view, "action", n) : p === "porter" ? frame(avecPorter(cc), view, "action", n) : p === "reparer" ? frame(avecReparer(cc), view, "action", n) : p === "repousser" ? frame(avecRepousser(cc), view, "action", n) : p === "ecrire" ? frame(avecEcrire(cc), view, "action", n) : p === "assis-reparer" ? assis(cc, view, n, null, reparer) : p === "assis-ecrire" ? assis(cc, view, n, null, ecrire) : frame(cc, view, p, n), "dessin");
     module.exports = { ac, EXEMPLES: EXEMPLES2, nom, POSES: POSES2, dessin: dessin2 };
   }
 });
