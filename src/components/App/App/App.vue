@@ -474,6 +474,7 @@ export default {
     this.overlays?.disconnect();
     document.removeEventListener('visibilitychange', this.handleVisibility);
     clearTimeout(this.prologueTimer);
+    clearTimeout(this.breathTimer);
   },
   methods: {
     // L'île dit où en est sa première vue (draw/loading.js), puis qu'elle est prête

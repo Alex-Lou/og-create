@@ -28,6 +28,10 @@ const TAB_CALLS = {
   infinite: 'La suite se mélange dans l’Athanor du Grimoire : touche « Grimoire ».'
 };
 
+// Le tutoriel souffle (choix de l'auteur, 8 oct.) : après une récompense réclamée, après une quête accomplie (ms)
+const BREATH_MS = 4000;
+const DONE_MS = 1500;
+
 // Veillées déjà vues sur cet appareil (game/vigils.js)
 const VIGILS_KEY = 'oc_vigils';
 // Les traces d'Anya déjà montrées sur cet appareil (bible, § 6.14)
@@ -127,7 +131,7 @@ export default {
     // La leçon d'un autre onglet : le coach montre cet onglet (jamais de force : on peut regarder ailleurs)
     coachLesson() {
       const lesson = coach.state.lesson;
-      if (!lesson || this.prologueScene || this.prologueAvatar || this.prologueName || this.skipAsk || guide.current) return null;
+      if (!lesson || this.prologueScene || this.prologueAvatar || this.prologueName || this.skipAsk || guide.current || guide.state.resting) return null;
       if (lesson.mode === this.currentMode) return lesson;
       if (!TAB_CALLS[lesson.mode] || this.lockedTabs.includes(lesson.mode)) return null;
       return { id: `${lesson.id}@onglet`, mode: this.currentMode, steps: [{ target: `.tabbar__item[data-tab="${lesson.mode}"]`, text: TAB_CALLS[lesson.mode], free: true }] };
@@ -225,6 +229,13 @@ export default {
     // Étapes 2 (sur l'île) à 5 : la quête active de Brume
     onIslandQuest(brume) {
       const quest = brume && brume.quest;
+      // Laisser respirer (choix de l'auteur, 8 oct.) : une récompense réclamée, la quête suivante attend BREATH_MS (le
+      // temps de la fête : rien ne s'affiche) ; une quête accomplie, DONE_MS (le temps de voir ce qu'on a fait)
+      const before = this.islandQuest;
+      if (quest && before && before.id && this.prologueRunning) {
+        if (quest.id !== before.id) this.breathe(BREATH_MS);
+        else if (quest.done && !before.done) this.breathe(DONE_MS);
+      }
       this.islandQuest = quest ? { id: quest.id, done: Boolean(quest.done), short: Boolean(brume.short), plan: brume.plan || null } : { id: null, done: true };
       if (brume && brume.tutorial !== undefined) this.accountTutorial = { tutorial: Boolean(brume.tutorial), skipped: Boolean(brume.skipped) };
       this.islandHold = Boolean(brume && brume.hold);
@@ -257,7 +268,18 @@ export default {
       if (this.actsKnown && earlyWisp(this.islandActs, this.discoveredElements)) guide.say(EARLY_WISP);
       if (this.actsKnown && this.discoveredElements.includes('Vie') && !(this.anya && this.anya.awake)) PRESENTIMENTS.vie.forEach(line => guide.say(line));
     },
+    // Le tutoriel souffle ms : ni geste ni réplique d'étape, puis il reprend
+    breathe(ms) {
+      clearTimeout(this.breathTimer);
+      coach.show(null);
+      this.breathTimer = setTimeout(() => {
+        this.breathTimer = 0;
+        this.runIsland();
+      }, ms);
+    },
     runIsland() {
+      // (le tutoriel souffle : il reprendra de lui-même)
+      if (this.breathTimer) return;
       // Hors de l'île : le geste de l'étape quand même (au Grimoire, la page à écrire ; sinon, l'onglet « Île »)
       if (!this.isWorldActive) {
         if (!this.prologueReplay && !this.prologueScene) this.coachOffIsland();

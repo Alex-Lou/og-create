@@ -33,10 +33,12 @@
 /* Mode chemin : le compte au-dessus, la gomme, annuler et tracer dessous */
 .world__banner--road { display: flex; flex-direction: column; align-items: center; gap: 6px; }
 .world__road-row { display: flex; align-items: center; gap: 10px; }
-.world__road-row .world__link { margin-left: 0; min-height: 32px; }
+.world__road-row .world__link { margin-left: 0; min-height: 40px; }
+.world__road-undo { min-width: 40px; font-size: 20px; text-decoration: none; }
+.world__road-undo:disabled { opacity: .4; cursor: default; }
 .world__road-row .world__link.is-on { padding: 2px 10px; border-radius: var(--r-pill); background: rgba(255, 255, 255, .16); text-decoration: none; }
 .world__road-go {
-  min-height: 36px; padding: 4px 18px; border: 0; border-radius: var(--r-pill);
+  min-height: 40px; padding: 4px 20px; border: 0; border-radius: var(--r-pill);
   background: var(--oc-gold-bright); color: var(--world-tip-btn-ink); font: inherit; font-size: 14px; font-weight: 900; cursor: pointer;
 }
 .world__road-go:disabled { opacity: .5; cursor: default; }

@@ -1,6 +1,6 @@
 // Le tracé des chemins (game/roads.js) : mêmes règles que le serveur (world/paths.js) pour l'aperçu
 import { describe, it, expect } from 'vitest';
-import { stepCells, roadBlock, roadCost, bigOf, joined } from '@/game/roads';
+import { stepCells, roadBlock, roadCost, bigOf, joined, routeTo, pathGround } from '@/game/roads';
 
 describe('le tracé des chemins', () => {
   it('les cases se suivent sous le doigt, côte à côte, sans trou', () => {
@@ -38,5 +38,26 @@ describe('le tracé des chemins', () => {
     expect(joined(ground, puits, feu)).toBe(true);
     paths.delete('4,1');
     expect(joined(ground, puits, feu)).toBe(false);
+  });
+
+  it('les cases conseillées : le moins de cases nouvelles, en passant par les chemins déjà là, en contournant ce qui est pris', () => {
+    // Une colonne prise en x = 2 (sauf en y = 3) : le chemin la contourne par le bas
+    const free = (x, y) => x >= 0 && y >= 0 && x < 5 && y < 5 && !(x === 2 && y !== 3);
+    const cost = (x, y) => (free(x, y) ? 1 : Infinity);
+    const route = routeTo([{ x: 0, y: 0 }], (x, y) => x === 4 && y === 0, cost);
+    expect(route[0]).toEqual({ x: 0, y: 0 });
+    expect(route[route.length - 1]).toEqual({ x: 4, y: 0 });
+    expect(route.some(c => c.x === 2 && c.y === 3)).toBe(true);
+    expect(route.length).toBe(11);
+    // Chaque case touche la suivante, côte à côte
+    expect(route.every((c, i) => !i || Math.abs(c.x - route[i - 1].x) + Math.abs(c.y - route[i - 1].y) === 1)).toBe(true);
+    // Un sentier déjà là (y = 4) : plus long, mais moins de cases à tracer, il est pris
+    const sentier = (x, y) => (y === 4 && x >= 0 && x < 5 ? 0 : cost(x, y));
+    const via = routeTo([{ x: 0, y: 0 }], (x, y) => x === 4 && y === 0, sentier);
+    expect(via.filter(c => sentier(c.x, c.y) === 1).length).toBeLessThan(route.length);
+    // Un but hors d'atteinte : rien ; une aide bornée
+    expect(routeTo([{ x: 0, y: 0 }], x => x === 9, cost)).toBe(null);
+    expect(routeTo([{ x: 0, y: 0 }], () => false, () => 1, 50)).toBe(null);
+    expect([pathGround('p'), pathGround('k'), pathGround('g')]).toEqual([true, true, false]);
   });
 });

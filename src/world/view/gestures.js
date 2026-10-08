@@ -14,6 +14,7 @@ import { artMake } from '@/world/looks';
 import { buildingThumb } from '@/world/buildingArt';
 import { campInfo } from '@/world/campArt';
 import { coach } from '@/game/coach';
+import { ROAD_HOLD_MS } from '@/components/World/WorldView/roads';
 import { TW, TH, DEPOSIT_SCALE } from './constants';
 
 // Bulle d'info de l'appui long : durée d'affichage ; noms des bêtes, pour elle
@@ -44,22 +45,22 @@ export default {
   onDown(event) {
     if (!this.state) return;
     this.hideTip();
+    // (un doigt posé arrête la caméra qui glisse : l'île est à lui)
+    this.stopGlide();
     this.$refs.canvas.setPointerCapture(event.pointerId);
     this.pointers.set(event.pointerId, this.point(event));
     clearTimeout(this.holdTimer);
     if (this.pointers.size === 1 && this.roadMode) {
-      // Mode chemin : un doigt trace (roads.js) ; ce qu'il a fait en se posant s'annule si un second doigt le rejoint
-      const mode = this.roadMode;
-      const before = { lay: mode.lay.slice(), erase: mode.erase.slice() };
-      const at = this.point(event);
-      this.gesture = { start: at, moved: 0, at: performance.now(), road: this.roadDown(at.x, at.y), before };
-      this.draw(performance.now());
+      // Mode chemin (roads.js) : glisser déplace l'île, toucher pose une case, l'appui long trace d'un trait
+      const gesture = { start: this.point(event), moved: 0, at: performance.now() };
+      this.gesture = gesture;
+      this.holdTimer = setTimeout(() => this.roadHold(gesture), ROAD_HOLD_MS);
     } else if (this.pointers.size === 1) {
       this.gesture = { start: this.point(event), moved: 0, at: performance.now() };
       this.holdTimer = setTimeout(() => this.onHold(), HOLD_MS);
     } else {
-      const was = this.gesture;
-      if (was && was.road && was.moved <= TAP_SLOP && this.roadMode) Object.assign(this.roadMode, was.before);
+      // Un second doigt : pincer (un trait en cours s'arrête là, ce qu'il a tracé reste)
+      this.roadEnd();
       this.gesture = { pinch: this.pinchOf(), moved: Infinity };
     }
   },
@@ -117,7 +118,10 @@ export default {
     }
     this.gesture.moved = Math.max(this.gesture.moved, Math.hypot(p.x - this.gesture.start.x, p.y - this.gesture.start.y));
     if (this.gesture.road) {
-      if (this.roadMode) this.roadMove(this.gesture.road, p.x, p.y);
+      if (this.roadMode) {
+        this.roadMove(this.gesture.road, p.x, p.y);
+        this.roadEdge(p);
+      }
       return;
     }
     if (this.gesture.moved > TAP_SLOP) {
@@ -133,11 +137,13 @@ export default {
   },
   onCancel(event) {
     clearTimeout(this.holdTimer);
+    this.roadEnd();
     this.pointers.delete(event.pointerId);
     if (!this.pointers.size) this.gesture = null;
   },
   onUp(event) {
     clearTimeout(this.holdTimer);
+    this.roadEnd();
     const gesture = this.gesture;
     const p = this.point(event);
     this.pointers.delete(event.pointerId);
@@ -218,8 +224,11 @@ export default {
     return this.lockedAt(tile.x, tile.y) ? { zone: this.zoneAt(tile.x, tile.y) } : { cell: tile };
   },
   tap(px, py) {
-    // Mode chemin : le doigt trace, il ne touche rien d'autre (roads.js)
-    if (this.roadMode) return;
+    // Mode chemin : un toucher pose ou retire une case, il ne touche rien d'autre (roads.js)
+    if (this.roadMode) {
+      this.roadTap(px, py);
+      return;
+    }
     // Pose ou déplacement d'une annexe ou d'une création : seule compte la case, dorée ou non
     if (this.annexPlacing) {
       this.tapAnnexSpot(px, py);

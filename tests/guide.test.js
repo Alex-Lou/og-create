@@ -1,4 +1,4 @@
-import { describe, expect, it } from 'vitest';
+import { describe, expect, it, vi } from 'vitest';
 import { guide } from '../src/game/guide';
 import { TIPS, questTip } from '../src/game/guideTips';
 import { CHAPTER_IDS } from '../src/book/grimoire';
@@ -43,5 +43,22 @@ describe('le guide', () => {
     expect(guide.state.born).toBe(false);
     guide.markBorn();
     expect(guide.state.born).toBe(true);
+  });
+  it('au plus deux répliques à la suite : la troisième attend un souffle', () => {
+    vi.useFakeTimers();
+    try {
+      ['a', 'b', 'c'].forEach(id => guide.say({ id: `souffle-${id}`, text: id }));
+      guide.dismiss();
+      expect(guide.current.id).toBe('souffle-b');
+      guide.dismiss();
+      expect(guide.current).toBe(null);
+      expect(guide.state.resting).toBe(true);
+      vi.advanceTimersByTime(2600);
+      expect(guide.current.id).toBe('souffle-c');
+      guide.dismiss();
+      expect(guide.state.resting).toBe(false);
+    } finally {
+      vi.useRealTimers();
+    }
   });
 });

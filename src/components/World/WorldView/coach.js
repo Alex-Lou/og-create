@@ -6,6 +6,7 @@ import { coach } from '@/game/coach';
 import { TW, DEPOSIT_SCALE } from '@/world/view/constants';
 import { BRUME_ALT, BRUME_REACH } from '@/world/brume';
 import { depositWait } from '@/world/finds';
+import { ROAD_SCALE } from './roads';
 
 // L'ordre où le coach montre ce que la mer a rendu
 const GREVE_ORDER = ['bois', 'galet', 'coquillage'];
@@ -49,9 +50,9 @@ export default {
         const spot = this.brumeSpot && this.brumeSpot();
         return spot ? { x: spot.x, y: spot.y - BRUME_ALT, r: BRUME_REACH } : null;
       }
-      // Le premier chemin : la case où poser le doigt, contre le Puits (seulement le tracé ouvert)
+      // Le premier chemin : la prochaine case à toucher, du Puits vers le sentier (seulement le tracé ouvert)
       if (kind === 'chemin') {
-        const start = this.roadMode && this.roadStart;
+        const start = this.roadMode && this.roadHint;
         if (!start) return null;
         const g = this.ground(start.x, start.y);
         return { x: g.x, y: g.y, r: TW * 0.42 };
@@ -121,11 +122,8 @@ export default {
         if (tries < 10 && this.coachTarget === name) this.focusTimer = setTimeout(() => this.coachFocus(name, tries + 1), 300);
         return;
       }
-      this.cam.x = at.x;
-      this.cam.y = at.y + 20;
-      this.cam.s = Math.max(this.cam.s, 1.1);
-      this.clampCam();
-      this.draw(performance.now());
+      // (la caméra glisse jusque-là, sans sauter ; dans le tracé, à la taille du doigt)
+      this.glideTo({ x: at.x, y: at.y + 20, s: Math.max(this.cam.s, this.roadMode ? ROAD_SCALE : 1.1) });
     }
   }
 };
