@@ -458,12 +458,97 @@
    "statut": "ok"
   },
   {
+   "id": "interface/amis_icone",
+   "rubrique": "interface",
+   "titre": "Amis (icône)",
+   "images": 1,
+   "fichiers": [
+    "svg/interface/amis_icone.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    32,
+    32
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "interface/annexes_icone",
+   "rubrique": "interface",
+   "titre": "Annexes (icône)",
+   "images": 1,
+   "fichiers": [
+    "svg/interface/annexes_icone.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    32,
+    32
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "interface/batir_icone",
+   "rubrique": "interface",
+   "titre": "Bâtir (icône)",
+   "images": 1,
+   "fichiers": [
+    "svg/interface/batir_icone.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    32,
+    32
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
    "id": "interface/bois_icone",
    "rubrique": "interface",
    "titre": "Bois (icône)",
    "images": 1,
    "fichiers": [
     "svg/interface/bois_icone.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    32,
+    32
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "interface/boutique_icone",
+   "rubrique": "interface",
+   "titre": "Boutique (icône)",
+   "images": 1,
+   "fichiers": [
+    "svg/interface/boutique_icone.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    32,
+    32
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "interface/cadeau_icone",
+   "rubrique": "interface",
+   "titre": "Cadeau (icône)",
+   "images": 1,
+   "fichiers": [
+    "svg/interface/cadeau_icone.svg"
    ],
    "cadre": [
     0,
@@ -492,12 +577,46 @@
    "statut": "ok"
   },
   {
+   "id": "interface/coffre_icone",
+   "rubrique": "interface",
+   "titre": "Coffre (icône)",
+   "images": 1,
+   "fichiers": [
+    "svg/interface/coffre_icone.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    32,
+    32
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
    "id": "interface/defis_icone",
    "rubrique": "interface",
    "titre": "Défis (icône)",
    "images": 1,
    "fichiers": [
     "svg/interface/defis_icone.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    32,
+    32
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "interface/deplacer_icone",
+   "rubrique": "interface",
+   "titre": "Déplacer (icône)",
+   "images": 1,
+   "fichiers": [
+    "svg/interface/deplacer_icone.svg"
    ],
    "cadre": [
     0,
@@ -549,6 +668,91 @@
    "images": 1,
    "fichiers": [
     "svg/interface/etincelle_icone.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    32,
+    32
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "interface/etoile_icone",
+   "rubrique": "interface",
+   "titre": "Étoile (icône)",
+   "images": 1,
+   "fichiers": [
+    "svg/interface/etoile_icone.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    32,
+    32
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "interface/evoluer_icone",
+   "rubrique": "interface",
+   "titre": "Faire évoluer (icône)",
+   "images": 1,
+   "fichiers": [
+    "svg/interface/evoluer_icone.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    32,
+    32
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "interface/fermer_icone",
+   "rubrique": "interface",
+   "titre": "Fermer (icône)",
+   "images": 1,
+   "fichiers": [
+    "svg/interface/fermer_icone.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    32,
+    32
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "interface/fleche_icone",
+   "rubrique": "interface",
+   "titre": "Flèche (icône)",
+   "images": 1,
+   "fichiers": [
+    "svg/interface/fleche_icone.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    32,
+    32
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "interface/garde_robe_icone",
+   "rubrique": "interface",
+   "titre": "Garde-robe (icône)",
+   "images": 1,
+   "fichiers": [
+    "svg/interface/garde_robe_icone.svg"
    ],
    "cadre": [
     0,
@@ -628,6 +832,57 @@
    "statut": "ok"
   },
   {
+   "id": "interface/messages_icone",
+   "rubrique": "interface",
+   "titre": "Messages (icône)",
+   "images": 1,
+   "fichiers": [
+    "svg/interface/messages_icone.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    32,
+    32
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "interface/musique_icone",
+   "rubrique": "interface",
+   "titre": "Musique (icône)",
+   "images": 1,
+   "fichiers": [
+    "svg/interface/musique_icone.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    32,
+    32
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "interface/notifications_icone",
+   "rubrique": "interface",
+   "titre": "Notifications (icône)",
+   "images": 1,
+   "fichiers": [
+    "svg/interface/notifications_icone.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    32,
+    32
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
    "id": "interface/nourriture_icone",
    "rubrique": "interface",
    "titre": "Nourriture (icône)",
@@ -645,12 +900,46 @@
    "statut": "ok"
   },
   {
+   "id": "interface/nouveau_icone",
+   "rubrique": "interface",
+   "titre": "Nouveau (icône)",
+   "images": 1,
+   "fichiers": [
+    "svg/interface/nouveau_icone.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    32,
+    32
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
    "id": "interface/pierre_icone",
    "rubrique": "interface",
    "titre": "Pierre (icône)",
    "images": 1,
    "fichiers": [
     "svg/interface/pierre_icone.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    32,
+    32
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "interface/plein_ecran_icone",
+   "rubrique": "interface",
+   "titre": "Plein écran (icône)",
+   "images": 1,
+   "fichiers": [
+    "svg/interface/plein_ecran_icone.svg"
    ],
    "cadre": [
     0,
@@ -696,6 +985,40 @@
    "statut": "ok"
   },
   {
+   "id": "interface/profil_icone",
+   "rubrique": "interface",
+   "titre": "Profil (icône)",
+   "images": 1,
+   "fichiers": [
+    "svg/interface/profil_icone.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    32,
+    32
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "interface/quete_icone",
+   "rubrique": "interface",
+   "titre": "Quête (icône)",
+   "images": 1,
+   "fichiers": [
+    "svg/interface/quete_icone.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    32,
+    32
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
    "id": "interface/ramasser_icone",
    "rubrique": "interface",
    "titre": "Tout ramasser (icône)",
@@ -719,6 +1042,40 @@
    "images": 1,
    "fichiers": [
     "svg/interface/recolte_icone.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    32,
+    32
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "interface/reglages_icone",
+   "rubrique": "interface",
+   "titre": "Réglages (icône)",
+   "images": 1,
+   "fichiers": [
+    "svg/interface/reglages_icone.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    32,
+    32
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "interface/retour_icone",
+   "rubrique": "interface",
+   "titre": "Retour (icône)",
+   "images": 1,
+   "fichiers": [
+    "svg/interface/retour_icone.svg"
    ],
    "cadre": [
     0,
@@ -764,6 +1121,57 @@
    "statut": "ok"
   },
   {
+   "id": "interface/son_coupe_icone",
+   "rubrique": "interface",
+   "titre": "Son coupé (icône)",
+   "images": 1,
+   "fichiers": [
+    "svg/interface/son_coupe_icone.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    32,
+    32
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "interface/son_icone",
+   "rubrique": "interface",
+   "titre": "Son (icône)",
+   "images": 1,
+   "fichiers": [
+    "svg/interface/son_icone.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    32,
+    32
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "interface/succes_icone",
+   "rubrique": "interface",
+   "titre": "Succès (icône)",
+   "images": 1,
+   "fichiers": [
+    "svg/interface/succes_icone.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    32,
+    32
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
    "id": "interface/taches_icone",
    "rubrique": "interface",
    "titre": "Tâches (icône)",
@@ -781,12 +1189,114 @@
    "statut": "ok"
   },
   {
+   "id": "interface/temps_icone",
+   "rubrique": "interface",
+   "titre": "Temps (icône)",
+   "images": 1,
+   "fichiers": [
+    "svg/interface/temps_icone.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    32,
+    32
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "interface/tourner_icone",
+   "rubrique": "interface",
+   "titre": "Tourner (icône)",
+   "images": 1,
+   "fichiers": [
+    "svg/interface/tourner_icone.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    32,
+    32
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "interface/valider_icone",
+   "rubrique": "interface",
+   "titre": "Valider (icône)",
+   "images": 1,
+   "fichiers": [
+    "svg/interface/valider_icone.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    32,
+    32
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
    "id": "interface/verrou_icone",
    "rubrique": "interface",
    "titre": "Verrou (icône)",
    "images": 1,
    "fichiers": [
     "svg/interface/verrou_icone.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    32,
+    32
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "interface/visite_icone",
+   "rubrique": "interface",
+   "titre": "Visites (icône)",
+   "images": 1,
+   "fichiers": [
+    "svg/interface/visite_icone.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    32,
+    32
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "interface/zoom_moins_icone",
+   "rubrique": "interface",
+   "titre": "Zoom arrière (icône)",
+   "images": 1,
+   "fichiers": [
+    "svg/interface/zoom_moins_icone.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    32,
+    32
+   ],
+   "parcours": "tuto-1",
+   "statut": "ok"
+  },
+  {
+   "id": "interface/zoom_plus_icone",
+   "rubrique": "interface",
+   "titre": "Zoom avant (icône)",
+   "images": 1,
+   "fichiers": [
+    "svg/interface/zoom_plus_icone.svg"
    ],
    "cadre": [
     0,
