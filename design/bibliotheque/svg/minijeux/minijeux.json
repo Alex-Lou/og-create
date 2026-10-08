@@ -6,7 +6,7 @@
   "Le Filon : un bloc de la paroi a un cadre de 32 × 32 ; les effets qui débordent du bloc (éclatement, étincelles, onde, éclats de couleur) ont un cadre de 48 × 48 centré sur le bloc (à poser 1,5 fois plus grand que le bloc). Pièces fixes : les blocs et leurs fissures, le trou. Boucles animées dans le SVG (SMIL) : l'éclat des pierres, la lueur du filon, le signe ✦. Suites d'images à enchaîner une fois, au coup : le bloc qui éclate, la pioche, les étincelles, l'onde, la pierre qui apparaît, ses éclats de couleur. Améliorations : le fond de la paroi selon la profondeur (48 × 48, se répète) et sa crête (48 × 14, se répète en largeur) ; les pioches de bois et d'or et leur coup (48 × 48) ; six trouvailles (fossiles, objets des Anciens) et leur apparition ; l'écran de bilan (le coffret 64 × 48 de 0 à 4 pierres, les étoiles).",
   "La Pêche : le jeu dessine sur un canvas, tout ce qui bouge est en suites d'images (boucle : vrai, à répéter ; sinon une fois). Les prises nagent vers la droite (retourner l'image pour l'autre sens) ; ferrées, elles pendent tête en bas, la ligne en haut au milieu. Le couloir d'eau et le ponton se répètent en largeur.",
   "La Cueillette : le buisson a un cadre de 60 × 60 (le bouton) ; un fruit, les guêpes, la piqûre et le panier un cadre de 32 × 32, à poser au milieu du buisson. Boucles animées dans le SVG (SMIL) : le buisson, le fruit mûr, le fruit trop mûr, les guêpes. Suites d'images à enchaîner une fois : le buisson secoué, le fruit qui mûrit, qui tombe, qu'on cueille, la piqûre.",
-  "La Récolte : une tuile a un cadre de 32 × 32 ; la tuile cueillie et l'éclat d'une longue chaîne ont un cadre de 48 × 48 centré sur la tuile (1,5 fois sa taille). Les sortes gardent les noms du jeu (stone, wood, water, food, fish). Boucles animées dans le SVG (SMIL) : la tuile au repos, la tuile choisie. Suites d'images à enchaîner une fois : la tuile cueillie, la tuile qui atterrit, l'éclat d'une longue chaîne."
+  "La Récolte : une tuile a un cadre de 32 × 32 ; la tuile cueillie et l'éclat d'une longue chaîne ont un cadre de 48 × 48 centré sur la tuile (1,5 fois sa taille). Les sortes gardent les noms du jeu (stone, wood, water, food, fish). Boucles animées dans le SVG (SMIL) : la tuile au repos, la tuile choisie. Suites d'images à enchaîner une fois : la tuile cueillie, la tuile qui atterrit, l'éclat d'une longue chaîne. La Récolte, nouvelle version (design/conception/minijeux_grille.md) : la gerbe, la graine dorée, le rocher et le rocher fendu ont le cadre d'une tuile (32 × 32). La ronce et la ronce coupée se posent par-dessus la tuile qu'elles prennent. Le rocher qui casse et l'éclat d'une cascade : 48 × 48 centrés sur la tuile. L'onde de la gerbe : 192 × 32 sur sa ligne (tournée d'un quart pour sa colonne). Le fil doré : 32 × 32 centré sur le lien entre deux tuiles (droit : tourné d'un quart à la verticale ; en diagonale : retourné pour l'autre sens). La commande : le panneau (96 × 44) et, par-dessus, une case par ressource (30 × 44, en x = 4 + 30 × i) ; le jeu écrit le compte dans l'étiquette."
  ],
  "hd": 4,
  "jeux": {
@@ -3364,6 +3364,346 @@
       48
      ],
      "fichier": "recolte/chaine_4.svg"
+    },
+    "gerbe": {
+     "nom": "La gerbe (chaîne de 6 ; ses épis ondulent, en boucle)",
+     "cadre": [
+      0,
+      0,
+      32,
+      32
+     ],
+     "fichier": "recolte/gerbe.svg"
+    },
+    "graine": {
+     "nom": "La graine dorée (chaîne de 9 ; elle luit, en boucle)",
+     "cadre": [
+      0,
+      0,
+      32,
+      32
+     ],
+     "fichier": "recolte/graine.svg"
+    },
+    "rocher": {
+     "nom": "Le rocher",
+     "cadre": [
+      0,
+      0,
+      32,
+      32
+     ],
+     "fichier": "recolte/rocher.svg"
+    },
+    "rocher_fendu": {
+     "nom": "Le rocher fendu",
+     "cadre": [
+      0,
+      0,
+      32,
+      32
+     ],
+     "fichier": "recolte/rocher_fendu.svg"
+    },
+    "rocher-casse_1": {
+     "nom": "Le rocher qui casse",
+     "cadre": [
+      -8,
+      -8,
+      48,
+      48
+     ],
+     "fichier": "recolte/rocher-casse_1.svg"
+    },
+    "rocher-casse_2": {
+     "nom": "Le rocher qui casse",
+     "cadre": [
+      -8,
+      -8,
+      48,
+      48
+     ],
+     "fichier": "recolte/rocher-casse_2.svg"
+    },
+    "rocher-casse_3": {
+     "nom": "Le rocher qui casse",
+     "cadre": [
+      -8,
+      -8,
+      48,
+      48
+     ],
+     "fichier": "recolte/rocher-casse_3.svg"
+    },
+    "ronce_1": {
+     "nom": "La ronce qui pousse (par-dessus la tuile ; la dernière image reste)",
+     "cadre": [
+      0,
+      0,
+      32,
+      32
+     ],
+     "fichier": "recolte/ronce_1.svg"
+    },
+    "ronce_2": {
+     "nom": "La ronce qui pousse (par-dessus la tuile ; la dernière image reste)",
+     "cadre": [
+      0,
+      0,
+      32,
+      32
+     ],
+     "fichier": "recolte/ronce_2.svg"
+    },
+    "ronce_3": {
+     "nom": "La ronce qui pousse (par-dessus la tuile ; la dernière image reste)",
+     "cadre": [
+      0,
+      0,
+      32,
+      32
+     ],
+     "fichier": "recolte/ronce_3.svg"
+    },
+    "ronce-coupee_1": {
+     "nom": "La ronce coupée",
+     "cadre": [
+      0,
+      0,
+      32,
+      32
+     ],
+     "fichier": "recolte/ronce-coupee_1.svg"
+    },
+    "ronce-coupee_2": {
+     "nom": "La ronce coupée",
+     "cadre": [
+      0,
+      0,
+      32,
+      32
+     ],
+     "fichier": "recolte/ronce-coupee_2.svg"
+    },
+    "ronce-coupee_3": {
+     "nom": "La ronce coupée",
+     "cadre": [
+      0,
+      0,
+      32,
+      32
+     ],
+     "fichier": "recolte/ronce-coupee_3.svg"
+    },
+    "onde_1": {
+     "nom": "L'onde de la gerbe sur sa ligne",
+     "cadre": [
+      0,
+      0,
+      192,
+      32
+     ],
+     "fichier": "recolte/onde_1.svg"
+    },
+    "onde_2": {
+     "nom": "L'onde de la gerbe sur sa ligne",
+     "cadre": [
+      0,
+      0,
+      192,
+      32
+     ],
+     "fichier": "recolte/onde_2.svg"
+    },
+    "onde_3": {
+     "nom": "L'onde de la gerbe sur sa ligne",
+     "cadre": [
+      0,
+      0,
+      192,
+      32
+     ],
+     "fichier": "recolte/onde_3.svg"
+    },
+    "onde_4": {
+     "nom": "L'onde de la gerbe sur sa ligne",
+     "cadre": [
+      0,
+      0,
+      192,
+      32
+     ],
+     "fichier": "recolte/onde_4.svg"
+    },
+    "cascade_1": {
+     "nom": "L'éclat d'une cascade",
+     "cadre": [
+      -8,
+      -8,
+      48,
+      48
+     ],
+     "fichier": "recolte/cascade_1.svg"
+    },
+    "cascade_2": {
+     "nom": "L'éclat d'une cascade",
+     "cadre": [
+      -8,
+      -8,
+      48,
+      48
+     ],
+     "fichier": "recolte/cascade_2.svg"
+    },
+    "cascade_3": {
+     "nom": "L'éclat d'une cascade",
+     "cadre": [
+      -8,
+      -8,
+      48,
+      48
+     ],
+     "fichier": "recolte/cascade_3.svg"
+    },
+    "cascade_4": {
+     "nom": "L'éclat d'une cascade",
+     "cadre": [
+      -8,
+      -8,
+      48,
+      48
+     ],
+     "fichier": "recolte/cascade_4.svg"
+    },
+    "fil": {
+     "nom": "Le fil doré de la chaîne, droit (il brille, en boucle)",
+     "cadre": [
+      0,
+      0,
+      32,
+      32
+     ],
+     "fichier": "recolte/fil.svg"
+    },
+    "fil_diagonale": {
+     "nom": "Le fil doré de la chaîne, en diagonale (il brille, en boucle)",
+     "cadre": [
+      0,
+      0,
+      32,
+      32
+     ],
+     "fichier": "recolte/fil_diagonale.svg"
+    },
+    "commande": {
+     "nom": "Le panneau de la commande (trois cases)",
+     "cadre": [
+      0,
+      0,
+      96,
+      44
+     ],
+     "fichier": "recolte/commande.svg"
+    },
+    "commande-stone": {
+     "nom": "Une case de la commande : pierre",
+     "cadre": [
+      0,
+      0,
+      30,
+      44
+     ],
+     "fichier": "recolte/commande-stone.svg"
+    },
+    "commande-stone_faite": {
+     "nom": "Une case de la commande : pierre, faite",
+     "cadre": [
+      0,
+      0,
+      30,
+      44
+     ],
+     "fichier": "recolte/commande-stone_faite.svg"
+    },
+    "commande-wood": {
+     "nom": "Une case de la commande : bois",
+     "cadre": [
+      0,
+      0,
+      30,
+      44
+     ],
+     "fichier": "recolte/commande-wood.svg"
+    },
+    "commande-wood_faite": {
+     "nom": "Une case de la commande : bois, faite",
+     "cadre": [
+      0,
+      0,
+      30,
+      44
+     ],
+     "fichier": "recolte/commande-wood_faite.svg"
+    },
+    "commande-water": {
+     "nom": "Une case de la commande : eau",
+     "cadre": [
+      0,
+      0,
+      30,
+      44
+     ],
+     "fichier": "recolte/commande-water.svg"
+    },
+    "commande-water_faite": {
+     "nom": "Une case de la commande : eau, faite",
+     "cadre": [
+      0,
+      0,
+      30,
+      44
+     ],
+     "fichier": "recolte/commande-water_faite.svg"
+    },
+    "commande-food": {
+     "nom": "Une case de la commande : nourriture",
+     "cadre": [
+      0,
+      0,
+      30,
+      44
+     ],
+     "fichier": "recolte/commande-food.svg"
+    },
+    "commande-food_faite": {
+     "nom": "Une case de la commande : nourriture, faite",
+     "cadre": [
+      0,
+      0,
+      30,
+      44
+     ],
+     "fichier": "recolte/commande-food_faite.svg"
+    },
+    "commande-fish": {
+     "nom": "Une case de la commande : poisson",
+     "cadre": [
+      0,
+      0,
+      30,
+      44
+     ],
+     "fichier": "recolte/commande-fish.svg"
+    },
+    "commande-fish_faite": {
+     "nom": "Une case de la commande : poisson, faite",
+     "cadre": [
+      0,
+      0,
+      30,
+      44
+     ],
+     "fichier": "recolte/commande-fish_faite.svg"
     }
    },
    "suites": {
@@ -3476,6 +3816,58 @@
       "recolte/chaine_2.svg",
       "recolte/chaine_3.svg",
       "recolte/chaine_4.svg"
+     ]
+    },
+    "rocher-casse": {
+     "nom": "Le rocher qui casse",
+     "ms_par_image": 110,
+     "boucle": false,
+     "fichiers": [
+      "recolte/rocher-casse_1.svg",
+      "recolte/rocher-casse_2.svg",
+      "recolte/rocher-casse_3.svg"
+     ]
+    },
+    "ronce": {
+     "nom": "La ronce qui pousse (par-dessus la tuile ; la dernière image reste)",
+     "ms_par_image": 300,
+     "boucle": false,
+     "fichiers": [
+      "recolte/ronce_1.svg",
+      "recolte/ronce_2.svg",
+      "recolte/ronce_3.svg"
+     ]
+    },
+    "ronce-coupee": {
+     "nom": "La ronce coupée",
+     "ms_par_image": 110,
+     "boucle": false,
+     "fichiers": [
+      "recolte/ronce-coupee_1.svg",
+      "recolte/ronce-coupee_2.svg",
+      "recolte/ronce-coupee_3.svg"
+     ]
+    },
+    "onde": {
+     "nom": "L'onde de la gerbe sur sa ligne",
+     "ms_par_image": 90,
+     "boucle": false,
+     "fichiers": [
+      "recolte/onde_1.svg",
+      "recolte/onde_2.svg",
+      "recolte/onde_3.svg",
+      "recolte/onde_4.svg"
+     ]
+    },
+    "cascade": {
+     "nom": "L'éclat d'une cascade",
+     "ms_par_image": 110,
+     "boucle": false,
+     "fichiers": [
+      "recolte/cascade_1.svg",
+      "recolte/cascade_2.svg",
+      "recolte/cascade_3.svg",
+      "recolte/cascade_4.svg"
      ]
     }
    }
