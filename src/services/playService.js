@@ -57,6 +57,10 @@ export default {
   world() {
     return http.get('/play/world').then(response => response.data);
   },
+  // Chemins : tracer et effacer des cases ([[x, y]]) : { laid, erased, world }
+  worldPaths(lay, erase = []) {
+    return http.post('/play/world/paths', { lay, erase }).then(response => response.data);
+  },
   // Créations d'île : assemblage (début → { run: { id, craft, shape, pieces, turned } } ; fin → { made, craft, world }),
   // pose, déplacement, rangement dans la réserve → { coins?, world } (coins : le solde, quand la production a d'abord
   // été encaissée parce que l'humeur d'un habitant en change)

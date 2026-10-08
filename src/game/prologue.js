@@ -60,8 +60,9 @@ export function prologueStep({ state, loggedIn, elements }) {
 }
 
 // Les quêtes du prologue (serveur : services/quests.js), dans l'ordre : la v6 y a mis ramasser sur la Grève, bâtir le
-// feu de camp et nourrir les poules
-const PROLOGUE = ['pages', 'ramasser', 'recolte', 'feu', 'soupe', 'poules', 'deco', 'achat-source', 'eveil-ondin', 'souvenir-ondin', 'puits-ondin'];
+// feu de camp et nourrir les poules ; puis le premier chemin, du Puits au Feu (8 oct. : l'île neuve n'a que son
+// sentier ; au serveur, la première quête de l'acte I)
+const PROLOGUE = ['pages', 'ramasser', 'recolte', 'feu', 'soupe', 'poules', 'deco', 'achat-source', 'eveil-ondin', 'souvenir-ondin', 'puits-ondin', 'chemin'];
 export const inPrologue = id => PROLOGUE.includes(id);
 // La quête où chaque scène de l'île se joue, et les scènes d'avant l'île (vues avant le compte)
 const SCENE_AT = { recolte: 'ramasser', cannelle: 'soupe', rivet: 'deco', ondin: 'souvenir-ondin' };
@@ -140,6 +141,13 @@ const LESSONS = {
     { target: 'île:site:puits', text: 'Le chantier du Puits : touche-le.' },
     { target: tipOf('site:puits'), text: 'Touche « Bâtir ».' },
     { target: BUILD, text: 'Tout est réuni : bâtis le Puits.' }
+  ],
+  // Le premier chemin : le bouton des chemins, le doigt qui glisse du Puits au sentier du Feu (rien n'est bloqué : le
+  // doigt doit pouvoir glisser), puis « Tracer » quand le tracé les relie (roads.js : data-linked)
+  chemin: [
+    { target: '[data-coach="road"]', text: 'Touche ce bouton : il ouvre le tracé des chemins.' },
+    { target: 'île:chemin', text: 'Pose le doigt ici, contre le Puits, et glisse jusqu’au sentier du Feu. Deux doigts font bouger l’île.', free: true },
+    { target: '[data-coach="road-go"][data-linked]:not(:disabled)', text: 'Le Puits rejoint le Feu : touche « Tracer ». Les premières pierres sont offertes.' }
   ]
 };
 // Ce qui se paie manque (quest.short : questShort) : la Récolte d'abord, qui en donne
@@ -241,5 +249,7 @@ export function islandStep({ state, quest }) {
     return { phase: 'lines', lines: quest.done ? lines : ['baguette', 'ruban'] };
   }
   if (quest.id === 'puits-ondin') return { phase: 'lines', lines: quest.done ? ['chut', 'produit', ...lines] : [] };
+  // Ondin glisse dans l'herbe mouillée avec ses seaux : le premier chemin
+  if (quest.id === 'chemin') return { phase: 'lines', lines: quest.done ? ['sentier', ...lines] : ['glisse', 'pierres'] };
   return { phase: 'lines', lines };
 }

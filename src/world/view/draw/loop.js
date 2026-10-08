@@ -158,6 +158,8 @@ export default {
         ctx.stroke();
       }
     }
+    // Le tracé d'un chemin (aperçu), les cases qui se creusent (roads.js)
+    this.drawRoads(ctx, t, s);
     if (this.craftMenu) {
       const c = this.ground(this.craftMenu.x, this.craftMenu.y);
       this.diamond(ctx, c.x, c.y, TW, TH);

@@ -6,7 +6,8 @@
 // chemins est repeint dès qu'elle l'est (onPathsLoaded)
 import DATA from '../../design/bibliotheque/svg/chemins/chemins.json';
 
-const FILES = import.meta.glob('/design/bibliotheque/svg/chemins/chemin_*.svg', { query: '?raw', import: 'default' });
+// (les raccords, le creusement et ses effets : lus à la demande)
+const FILES = import.meta.glob('/design/bibliotheque/svg/chemins/*.svg', { query: '?raw', import: 'default' });
 const ROOT = '/design/bibliotheque/svg/chemins/';
 // L'herbe des dessins (un dégradé), remplacée par celle de la case
 const GRASS = /#8CC868|#6EAE50/gi;
@@ -23,6 +24,16 @@ const loaded = () => {
 
 // Le dessin d'un masque (alt : la seconde variante de terre)
 export const pathFile = (mask, alt = false) => DATA.raccords[mask] && DATA.raccords[mask][alt ? 'terre_b' : 'terre'];
+// Le creusement d'un masque, étape 1 à 5 (la 6e est le chemin de terre)
+export const digFile = (stage, mask) => DATA.raccords[mask] && DATA.raccords[mask][`etape_${stage}`];
+// L'image d'un effet (mottes, poussière, cailloux, pose-pierre) ms après son début, ou null (fini, ou pas encore lue).
+// Cadre de 64 × 48, la case en bas (décalée de 16 vers le bas)
+export function effectImage(name, ms) {
+  const s = DATA.suites[name];
+  if (!s) return null;
+  const k = Math.floor(ms / s.ms_par_image);
+  return k >= 0 && k < s.fichiers.length ? pathImage(s.fichiers[k], '') : null;
+}
 
 function textOf(file) {
   if (!texts.has(file)) {
@@ -43,7 +54,7 @@ export function pathImage(file, grass) {
     if (!text) return null;
     img = new Image();
     img.onload = loaded;
-    img.src = `data:image/svg+xml;charset=utf-8,${encodeURIComponent(text.replace(GRASS, grass))}`;
+    img.src = `data:image/svg+xml;charset=utf-8,${encodeURIComponent(grass ? text.replace(GRASS, grass) : text)}`;
     images.set(key, img);
   }
   return img.complete && img.naturalWidth ? img : null;

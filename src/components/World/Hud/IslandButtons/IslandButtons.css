@@ -40,4 +40,6 @@
 }
 .world__zoom button:active { background-image: url('/design/bibliotheque/svg/hud/bouton_zoom_appuye.svg'); }
 .world__zoom button img { width: 26px; height: 26px; }
+/* Le mode chemin ouvert : le bouton reste enfoncé */
+.world__zoom button.is-on { background-image: url('/design/bibliotheque/svg/hud/bouton_zoom_appuye.svg'); }
 @keyframes world-chest-call { 0%, 80%, 100% { transform: none; } 86% { transform: rotate(-8deg); } 92% { transform: rotate(8deg); } }

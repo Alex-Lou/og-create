@@ -47,10 +47,21 @@ export default {
     this.$refs.canvas.setPointerCapture(event.pointerId);
     this.pointers.set(event.pointerId, this.point(event));
     clearTimeout(this.holdTimer);
-    if (this.pointers.size === 1) {
+    if (this.pointers.size === 1 && this.roadMode) {
+      // Mode chemin : un doigt trace (roads.js) ; ce qu'il a fait en se posant s'annule si un second doigt le rejoint
+      const mode = this.roadMode;
+      const before = { lay: mode.lay.slice(), erase: mode.erase.slice() };
+      const at = this.point(event);
+      this.gesture = { start: at, moved: 0, at: performance.now(), road: this.roadDown(at.x, at.y), before };
+      this.draw(performance.now());
+    } else if (this.pointers.size === 1) {
       this.gesture = { start: this.point(event), moved: 0, at: performance.now() };
       this.holdTimer = setTimeout(() => this.onHold(), HOLD_MS);
-    } else this.gesture = { pinch: this.pinchOf(), moved: Infinity };
+    } else {
+      const was = this.gesture;
+      if (was && was.road && was.moved <= TAP_SLOP && this.roadMode) Object.assign(this.roadMode, was.before);
+      this.gesture = { pinch: this.pinchOf(), moved: Infinity };
+    }
   },
   // Appui long sans bouger : une autre réaction que le toucher. La fiche de Brume, le menu d'une création, la fiche
   // d'un article posé ; partout ailleurs, une bulle dit ce que c'est et ce que fait un toucher
@@ -105,6 +116,10 @@ export default {
       return;
     }
     this.gesture.moved = Math.max(this.gesture.moved, Math.hypot(p.x - this.gesture.start.x, p.y - this.gesture.start.y));
+    if (this.gesture.road) {
+      if (this.roadMode) this.roadMove(this.gesture.road, p.x, p.y);
+      return;
+    }
     if (this.gesture.moved > TAP_SLOP) {
       clearTimeout(this.holdTimer);
       this.dropPick();
@@ -133,7 +148,7 @@ export default {
       return;
     }
     this.gesture = null;
-    if (!gesture || gesture.held || gesture.moved > TAP_SLOP || this.busy) return;
+    if (!gesture || gesture.held || gesture.road || gesture.moved > TAP_SLOP || this.busy) return;
     this.tap(p.x, p.y);
   },
   onWheel(event) {
@@ -203,6 +218,8 @@ export default {
     return this.lockedAt(tile.x, tile.y) ? { zone: this.zoneAt(tile.x, tile.y) } : { cell: tile };
   },
   tap(px, py) {
+    // Mode chemin : le doigt trace, il ne touche rien d'autre (roads.js)
+    if (this.roadMode) return;
     // Pose ou déplacement d'une annexe ou d'une création : seule compte la case, dorée ou non
     if (this.annexPlacing) {
       this.tapAnnexSpot(px, py);

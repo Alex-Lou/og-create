@@ -48,6 +48,13 @@ export default {
         const spot = this.brumeSpot && this.brumeSpot();
         return spot ? { x: spot.x, y: spot.y - BRUME_ALT, r: BRUME_REACH } : null;
       }
+      // Le premier chemin : la case où poser le doigt, contre le Puits (seulement le tracé ouvert)
+      if (kind === 'chemin') {
+        const start = this.roadMode && this.roadStart;
+        if (!start) return null;
+        const g = this.ground(start.x, start.y);
+        return { x: g.x, y: g.y, r: TW * 0.42 };
+      }
       if (kind === 'site') {
         const site = this.state.sites.find(s => s.id === id);
         if (!site) return null;
