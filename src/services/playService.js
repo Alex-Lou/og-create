@@ -99,6 +99,10 @@ export default {
   worldDeposit(id) {
     return http.post('/play/world/deposit', { id }).then(response => response.data);
   },
+  // « Passer le tutoriel », retenu sur le compte : { skipped }
+  prologueSkip() {
+    return http.post('/play/world/prologue/skip', {}).then(response => response.data);
+  },
   // Ce que la mer a rendu sur la Grève : { kind, gives, world }
   worldPickup(id) {
     return http.post('/play/world/pickup', { id }).then(response => response.data);

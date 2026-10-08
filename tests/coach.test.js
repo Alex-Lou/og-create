@@ -2,7 +2,7 @@
 // chaque étape de l'île (game/prologue.js : islandLesson)
 import { describe, it, expect, beforeEach } from 'vitest';
 import { coach } from '@/game/coach';
-import { islandLesson, questShort } from '@/game/prologue';
+import { islandLesson, questShort, questPlan } from '@/game/prologue';
 
 describe('le coach', () => {
   beforeEach(() => {
@@ -75,6 +75,21 @@ describe('les leçons de l’île', () => {
     expect(hens[3]).toContain('[data-pick="ask:beast:poule-rousse"]');
     // (sans vivres, le bouton est grisé : le coach ne le montre pas, la fiche dit où en trouver)
     expect(hens[4]).toBe('.beast__feed:not(:disabled)');
+  });
+  it('le bâtiment de la quête demande un élément pas encore écrit : la main mène au Grimoire, par le ruban', () => {
+    const lesson = islandLesson({ id: 'feu', done: false, plan: 'Brasier' });
+    expect([lesson.id, lesson.mode]).toEqual(['plan-feu', 'infinite']);
+    expect(lesson.steps[0]).toMatchObject({ target: '.book-view__ariane' });
+    expect(lesson.steps[0].text).toContain('« Brasier »');
+    expect(lesson.steps.map(st => st.target)).toContain('.athanor__fuse:not(:disabled)');
+    // Écrit (plan : null) : la leçon de l'île revient
+    expect(islandLesson({ id: 'feu', done: false, plan: null }).id).toBe('quest-feu');
+    // Le plan se lit sur le chantier : seulement s'il n'est pas encore écrit, au palier 0
+    const site = (planOwned, level = 0) => ({ sites: [{ id: 'foyer', level, next: { plan: 'Brasier', planOwned } }] });
+    expect(questPlan({ id: 'feu', done: false }, site(false))).toBe('Brasier');
+    expect(questPlan({ id: 'feu', done: false }, site(true))).toBeNull();
+    expect(questPlan({ id: 'feu', done: false }, site(false, 1))).toBeNull();
+    expect(questPlan({ id: 'soupe', done: false }, site(false))).toBeNull();
   });
   it('ce que la quête fait payer manque : la main mène d’abord à la Récolte', () => {
     for (const id of ['feu', 'soupe', 'poules', 'puits-ondin']) {

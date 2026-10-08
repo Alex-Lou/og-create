@@ -62,12 +62,34 @@ export function prologueStep({ state, loggedIn, elements }) {
 // Les quêtes du prologue (serveur : services/quests.js), dans l'ordre : la v6 y a mis ramasser sur la Grève, bâtir le
 // feu de camp et nourrir les poules
 const PROLOGUE = ['pages', 'ramasser', 'recolte', 'feu', 'soupe', 'poules', 'deco', 'achat-source', 'eveil-ondin', 'souvenir-ondin', 'puits-ondin'];
+export const inPrologue = id => PROLOGUE.includes(id);
+// La quête où chaque scène de l'île se joue, et les scènes d'avant l'île (vues avant le compte)
+const SCENE_AT = { recolte: 'ramasser', cannelle: 'soupe', rivet: 'deco', ondin: 'souvenir-ondin' };
+const BEFORE_ISLAND = ['naufrage', 'arrivee', 'souffle', 'sceau'];
+// Le tutoriel repris par le compte, sur un appareil qui n'en a rien retenu (game : App, story.js) : les scènes des
+// étapes déjà passées comptent comme vues (on ne les rejoue pas), celle de l'étape en cours se joue
+export function scenesBefore(questId) {
+  const at = PROLOGUE.indexOf(questId);
+  if (at < 0) return [...BEFORE_ISLAND, ...Object.keys(SCENE_AT)];
+  return [...BEFORE_ISLAND, ...Object.keys(SCENE_AT).filter(scene => PROLOGUE.indexOf(SCENE_AT[scene]) < at)];
+}
 
 // Le geste que le coach montre pour chaque quête du prologue (game/coach.js) : les étapes, dans l'ordre (sur l'île, la
 // cible ; un toucher ouvre une petite bulle et son bouton entre dans la fiche ; dans la fiche, le bon bouton). Le coach
 // montre la plus avancée qui est à l'écran : le joueur n'est jamais lâché, même s'il referme une bulle en route.
 // target : un sélecteur, ou « île:… » sur le canvas de l'île ; text : ce que dit la bulle du coach
 const tipOf = (...keys) => keys.map(key => `.world__tip-btn[data-pick="${key}"]`).join(', ');
+// Les gestes du Grimoire vers un élément à écrire (la quête d'Ondin, le plan d'un bâtiment) : le ruban, l'Encre offerte
+// de la page marquée, les éléments à poser, « Transmuer ». intro : ce que dit le ruban ; why : pendant quoi l'Encre est
+// offerte (serveur : quests.GUIDED_INK)
+function bookSteps(intro, why) {
+  return [
+    { target: '.book-view__ariane', text: intro },
+    { target: '.book-view:has(.book-view__hot[data-marked]) .book-view__shelf', text: 'Voici la page qui manque : son énigme dit ce qu’il faut mêler. Touche ici les bons éléments, ils iront dans l’Athanor.', free: true },
+    { target: '.book-view__hot[data-marked] .book-view__spot[data-spot="ink"]', text: `Son énigme dit ce qu’il faut mêler : touche ces éléments en bas. Bloqué ? L’Encre est offerte ${why} : elle révèle un ingrédient.`, free: true },
+    { target: '.athanor__fuse:not(:disabled)', text: 'Les éléments sont dans l’Athanor : touche « Transmuer ». Si ce n’est pas le bon mélange, l’Athanor te le dit : essaie un autre élément.', free: true }
+  ];
+}
 // Dans la fiche d'un chantier : le bouton pour bâtir, seulement actif (le coach ne montre jamais un bouton grisé : s'il
 // manque de quoi payer, la leçon mène d'abord à la Récolte, SHORT)
 const BUILD = '[data-coach="site-build"]:not(:disabled)';
@@ -113,12 +135,7 @@ const LESSONS = {
   // Dans le Grimoire (le coach montre d'abord son onglet, depuis l'île) : le ruban, puis la page marquée, son énigme
   // et l'Encre. Les recettes restent au serveur : le Livre guide par ses pages, jamais par la réponse. Sur la page, rien
   // n'est bloqué (l'étagère doit rester sous le doigt)
-  'souvenir-ondin': [
-    { target: '.book-view__ariane', text: 'Le Puits s’écrit dans le Grimoire. Suis le ruban : il mène, page après page, à ce qui manque.' },
-    { target: '.book-view:has(.book-view__hot[data-marked]) .book-view__shelf', text: 'Voici la page qui manque : son énigme dit ce qu’il faut mêler. Touche ici les bons éléments, ils iront dans l’Athanor.', free: true },
-    { target: '.book-view__hot[data-marked] .book-view__spot[data-spot="ink"]', text: 'Son énigme dit ce qu’il faut mêler : touche ces éléments en bas. Bloqué ? L’Encre est offerte pendant que tu aides Ondin : elle révèle un ingrédient.', free: true },
-    { target: '.athanor__fuse:not(:disabled)', text: 'Les éléments sont dans l’Athanor : touche « Transmuer ». Si ce n’est pas le bon mélange, l’Athanor te le dit : essaie un autre élément.', free: true }
-  ],
+  'souvenir-ondin': bookSteps('Le Puits s’écrit dans le Grimoire. Suis le ruban : il mène, page après page, à ce qui manque.', 'pendant que tu aides Ondin'),
   'puits-ondin': [
     { target: 'île:site:puits', text: 'Le chantier du Puits : touche-le.' },
     { target: tipOf('site:puits'), text: 'Touche « Bâtir ».' },
@@ -148,6 +165,14 @@ export function questShort(quest, state, stock) {
   return Boolean(site && site.next && !site.level && lacks(site.next.cost));
 }
 
+// Le plan (un élément du Grimoire) que demande le bâtiment de la quête et qui n'est pas encore écrit, ou null.
+// state : la vue de l'île
+export function questPlan(quest, state) {
+  if (!quest || quest.done || !state || !PLAN_INTRO[quest.id]) return null;
+  const site = (state.sites || []).find(s => s.id === (quest.id === 'feu' ? 'foyer' : 'puits'));
+  return site && !site.level && site.next && site.next.plan && !site.next.planOwned ? site.next.plan : null;
+}
+
 // Les leçons qui se jouent dans le Grimoire (les autres, sur l'île)
 const BOOK_LESSONS = new Set(['souvenir-ondin']);
 // La récompense : Brume, sur l'île ; si une fiche est encore ouverte, d'abord la refermer
@@ -155,11 +180,16 @@ const CLAIM = [
   { target: 'île:brume', text: 'Touche Brume : ta récompense t’attend.' },
   { target: '.g-modal__close, .world__sheet-backdrop .world__link', text: 'Referme cette fiche : Brume t’attend avec ta récompense.' }
 ];
-// La leçon du coach à une étape de l'île (la quête active : { id, done, short }), ou null : la récompense à réclamer auprès de
+// Ce qui demande un élément du Grimoire (le plan de son bâtiment), pour la consigne
+const PLAN_INTRO = { feu: 'Le feu de camp', 'puits-ondin': 'Le Puits' };
+// La leçon du coach à une étape de l'île (la quête active : { id, done, short, plan }), ou null. plan : l'élément que
+// le bâtiment de la quête demande et qui n'est pas encore écrit : la récompense à réclamer auprès de
 // Brume, sinon les gestes de la quête
 export function islandLesson(quest) {
   if (!quest || (!quest.done && !LESSONS[quest.id])) return null;
   if (quest.done) return { id: 'claim', mode: 'world', steps: CLAIM };
+  // Le bâtiment de la quête demande un élément pas encore écrit (son plan : le Brasier du feu de camp) : au Grimoire
+  if (quest.plan) return { id: `plan-${quest.id}`, mode: 'infinite', steps: bookSteps(`${PLAN_INTRO[quest.id] || 'Ce chantier'} demande « ${quest.plan} » : il s’écrit dans le Grimoire. Suis le ruban.`, 'pour ce chantier') };
   if (quest.short && SHORT[quest.id]) return { id: `short-${quest.id}`, mode: 'world', steps: [{ target: '.world__play', text: SHORT[quest.id] }] };
   return { id: `quest-${quest.id}`, mode: BOOK_LESSONS.has(quest.id) ? 'infinite' : 'world', steps: LESSONS[quest.id] };
 }
