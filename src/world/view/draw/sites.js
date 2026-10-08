@@ -21,6 +21,7 @@ import { craftLayers } from '@/world/craftSprites';
 import { depositWait } from '@/world/finds';
 import { depositLayer } from '@/world/depositSprites';
 import { campLayer } from '@/world/campArt';
+import { blightLayer, cloudLayer } from '@/world/nightArt';
 import { TW, TH, DEPOSIT_SCALE, NAME_SIGN_ALONG, NAME_SIGN_INSET, NAME_SIGN_SCALE } from '../constants';
 
 // Construction ou amélioration : le chantier tremble dans la poussière, puis le bâtiment s'élève (ms)
@@ -37,7 +38,32 @@ export default {
       ctx.restore();
       return;
     }
+    // Embrumé par un égaré (nuits) : grisé, sous son voile de brume, le petit nuage grognon au-dessus
+    if (site.level && this.blightOf(site)) {
+      ctx.save();
+      ctx.filter = 'grayscale(0.8)';
+      this.paintSite(ctx, site, t, now, repaint);
+      ctx.restore();
+      this.drawBlight(ctx, site, t, null, repaint);
+      return;
+    }
     this.paintSite(ctx, site, t, now, repaint);
+    // Tout juste réparé : la brume se dissipe (une fois)
+    const healed = this.heals.get(site.id);
+    if (healed !== undefined && !this.drawBlight(ctx, site, t, now - healed, repaint)) this.heals.delete(site.id);
+  },
+  // La brume d'un bâtiment embrumé, au centre de son emprise, et le nuage grognon au-dessus ; heal : ms depuis sa
+  // réparation (sa guérison), sinon null. false : rien à dessiner (guérison finie)
+  drawBlight(ctx, site, t, heal, repaint) {
+    const c = this.centerOf(site);
+    const t0 = this.reduced() ? 0 : t;
+    const mist = blightLayer(site.w, t0, heal);
+    if (!mist) return false;
+    drawSprite(ctx, mist.key, mist.make, c.x, c.y, repaint, `blight:${site.id}`);
+    if (heal !== null) return true;
+    const cloud = cloudLayer(t0);
+    if (cloud) drawSprite(ctx, cloud.key, cloud.make, c.x, c.y - TW * 0.6 * site.w + Math.sin(t0 * 1.8) * 2, repaint, `blight-cloud:${site.id}`);
+    return true;
   },
   paintSite(ctx, site, t, now, repaint) {
     const c = this.centerOf(site);

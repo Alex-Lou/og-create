@@ -1,5 +1,13 @@
 <template>
   <div class="world__panel">
+    <!-- Embrumé par un égaré (HISTOIRE.md § 6.15) : il ne produit plus jusqu'à sa réparation -->
+    <div v-if="blight" class="world__blight" role="status">
+      <img v-if="repairArt" :src="repairArt" alt="" class="world__blight-icon" />
+      <span class="world__blight-text"><strong>Embrumé</strong> : un égaré l’a atteint cette nuit, il ne produit plus.</span>
+      <button type="button" class="g-btn world__blight-btn" :disabled="busy" @click="$emit('repair')">
+        Réparer · <ElementGlyph :glyph="GLYPH[blight.repair.resource]" />{{ blight.repair.amount }}
+      </button>
+    </div>
     <p v-if="site.effect" class="world__site-effect">{{ site.effect }}</p>
     <p v-else class="world__site-effect">{{ site.levels[0].effect }}</p>
     <div v-if="site.produce && site.level" class="world__prod">
@@ -104,6 +112,7 @@ import { annexYield } from '@/world/annexes';
 import { spriteUrl } from '@/world/spriteCache';
 import { craftThumb } from '@/world/craftSprites';
 import { creationThumb } from '@/world/creations';
+import { repairIcon } from '@/world/nightArt';
 
 // Mini-jeux : l'icône de chaque jeu dans la fiche de son bâtiment
 const GAME_ICONS = { peche: 'dore', filon: 'diamant', cueillette: 'fraise' };
@@ -137,11 +146,13 @@ export default {
     // Établi (vue du serveur : catalogue, créations posées), ou null ; mini-jeux de l'île
     crafts: { type: Object, default: null },
     games: { type: Array, default: () => [] },
+    // Embrumé (nuits) : { site, since, repair: { resource, amount } }, ou null
+    blight: { type: Object, default: null },
     busy: { type: Boolean, default: false }
   },
-  emits: ['collect', 'villager', 'visitor', 'fill-all', 'bench', 'game', 'evolution'],
+  emits: ['collect', 'villager', 'visitor', 'fill-all', 'bench', 'game', 'evolution', 'repair'],
   data() {
-    return { GLYPH, GAME_ICONS, NEED_GLYPH, MOOD_GLYPH };
+    return { GLYPH, GAME_ICONS, NEED_GLYPH, MOOD_GLYPH, repairArt: repairIcon() };
   },
   computed: {
     // Réserve de production : pleine (elle attend le ramassage), ou pleine dans tant de temps

@@ -198,6 +198,12 @@ export default {
     }
     const hit = this.hitAt(px, py);
     this.craftMenu = null;
+    // Un égaré, la nuit : un toucher le repousse aussitôt (il boude et retourne dans la brume)
+    if (hit && hit.animal && hit.animal.stray) {
+      this.dropPick();
+      this.repelStray(hit.animal.stray, this.canvasPoint(px, py));
+      return;
+    }
     // Toucher en deux temps : ce qui ouvre une fiche ou agit sur le serveur se choisit d'abord (contour doré, bulle et
     // bouton) ; un second toucher dessus, ou le bouton, l'ouvre. Ce qui ne fait que réagir réagit tout de suite.
     const pick = hit ? this.pickOf(hit, px, py) : null;
