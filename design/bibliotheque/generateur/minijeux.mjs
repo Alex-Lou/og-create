@@ -795,95 +795,129 @@ var require_minijeu_cueillette_saisons = __commonJS({
     var st = /* @__PURE__ */ __name((w) => ` stroke="${OUT}" stroke-width="${w}" stroke-linejoin="round" stroke-linecap="round"`, "st");
     var P = /* @__PURE__ */ __name((d, fill, w = 1) => `<path d="${d}" fill="${fill}"${w ? st(w) : ""}/>`, "P");
     var E = /* @__PURE__ */ __name((x, y, rx, ry, fill, w = 0) => `<ellipse cx="${f(x)}" cy="${f(y)}" rx="${f(rx)}" ry="${f(ry)}" fill="${fill}"${w ? st(w) : ""}/>`, "E");
+    var L = /* @__PURE__ */ __name((d, c, w, extra = "") => `<path d="${d}" fill="none" stroke="${c}" stroke-width="${w}" stroke-linecap="round" stroke-linejoin="round"${extra}/>`, "L");
+    var lin = /* @__PURE__ */ __name((id, stops, x2 = 0, y2 = 1) => `<linearGradient id="${id}" x1="0" y1="0" x2="${x2}" y2="${y2}">${stops.map(([o, c]) => `<stop offset="${o}" stop-color="${c}"/>`).join("")}</linearGradient>`, "lin");
+    var rad = /* @__PURE__ */ __name((id, stops, cx = 0.4, cy = 0.35, r = 0.75) => `<radialGradient id="${id}" cx="${cx}" cy="${cy}" r="${r}">${stops.map(([o, c]) => `<stop offset="${o}" stop-color="${c}"/>`).join("")}</radialGradient>`, "rad");
     var etoile = /* @__PURE__ */ __name((x, y, r, fill = "#FFFBE8") => `<path d="M${f(x)},${f(y - r)} Q${f(x + r * 0.16)},${f(y - r * 0.16)} ${f(x + r)},${f(y)} Q${f(x + r * 0.16)},${f(y + r * 0.16)} ${f(x)},${f(y + r)} Q${f(x - r * 0.16)},${f(y + r * 0.16)} ${f(x - r)},${f(y)} Q${f(x - r * 0.16)},${f(y - r * 0.16)} ${f(x)},${f(y - r)} Z" fill="${fill}"/>`, "etoile");
+    var brille = /* @__PURE__ */ __name((x, y, r, dur, begin) => `<g opacity="0" transform="translate(${f(x)} ${f(y)})">${etoile(0, 0, r)}<animate attributeName="opacity" values="0;1;0;0" keyTimes="0;0.15;0.3;1" dur="${dur}s" begin="${begin}s" repeatCount="indefinite"/></g>`, "brille");
     function jauge(n, anim = true) {
-      let s = P("M4,4 L92,4 Q95,4 95,7 L95,15 Q95,18 92,18 L4,18 Q1,18 1,15 L1,7 Q1,4 4,4 Z", "#C8925A", 1.1);
-      for (let x = 6; x < 92; x += 5) s += `<path d="M${x},5 L${x + 2},17" stroke="#9A6A3A" stroke-width="0.6" opacity=".6"/>`;
+      const p = `jg${n}`, plein = n === 3;
+      let s = `<defs>${lin(p + "o", [[0, "#E8BC84"], [0.5, "#C8925A"], [1, "#8A5A32"]])}${lin(p + "r", [[0, "#FFC4D0"], [0.5, "#F27A94"], [1, "#C84A68"]])}${lin(p + "g", [[0, "#FFF2B8"], [0.5, "#FFD24A"], [1, "#D89A1E"]])}${lin(p + "v", [[0, "#4A3020"], [1, "#6A4628"]])}</defs>`;
+      s += P("M5,3 L91,3 Q95,3 95,7 L95,15 Q95,19 91,19 L5,19 Q1,19 1,15 L1,7 Q1,3 5,3 Z", `url(#${p}o)`, 1.2);
+      for (let x = 4; x < 94; x += 4) s += L(`M${x},4.4 L${x + 2},8 L${x},11.6 M${x},11 L${x + 2},14.6 L${x},18`, "#9A6A3A", 0.6, ' opacity=".55"');
+      s += L("M5,4.6 L91,4.6", "#F6D8A8", 1, ' opacity=".8"');
       for (let i = 0; i < 3; i++) {
-        const x = 5 + i * 29.4, plein = i < n;
-        s += P(`M${x + 2},7 L${f(x + 26)},7 Q${f(x + 27.4)},7 ${f(x + 27.4)},8.4 L${f(x + 27.4)},13.6 Q${f(x + 27.4)},15 ${f(x + 26)},15 L${x + 2},15 Q${x + 0.6},15 ${x + 0.6},13.6 L${x + 0.6},8.4 Q${x + 0.6},7 ${x + 2},7 Z`, plein ? n === 3 ? "#FFD24A" : "#F2A0B0" : "#7A5232", 0.7);
-        if (plein) s += `<path d="M${x + 3},8.6 L${f(x + 14)},8.6" stroke="${WHITE}" stroke-width="1" stroke-linecap="round" opacity=".6"/>`;
+        const x = 5 + i * 29.4, w = 26.4;
+        const d = `M${x + 3},6.4 L${f(x + w - 3)},6.4 Q${f(x + w)},6.4 ${f(x + w)},9.4 L${f(x + w)},12.6 Q${f(x + w)},15.6 ${f(x + w - 3)},15.6 L${x + 3},15.6 Q${x},15.6 ${x},12.6 L${x},9.4 Q${x},6.4 ${x + 3},6.4 Z`;
+        s += P(d, `url(#${p}v)`, 0.8);
+        if (i < n) s += P(d, `url(#${p}${plein ? "g" : "r"})`, 0.8) + L(`M${x + 3},8.2 L${f(x + w * 0.55)},8.2`, WHITE, 1.2, ' opacity=".75"') + E(x + w - 4, 12.6, 1.2, 0.9, WHITE).replace("/>", ' opacity=".5"/>');
+        else s += L(`M${x + 3},8.2 L${f(x + w * 0.4)},8.2`, WHITE, 0.8, ' opacity=".15"');
       }
-      if (n === 3) s += `<rect x="1" y="4" width="94" height="14" rx="3" fill="none" stroke="#FFF2B8" stroke-width="2">${anim ? '<animate attributeName="stroke-opacity" values="1;.2;1" dur="0.6s" repeatCount="indefinite"/>' : ""}</rect>` + etoile(92, 4, 3) + etoile(4, 18, 2.2);
+      if (plein) s += `<rect x="0.4" y="2.4" width="95.2" height="17.2" rx="4.4" fill="none" stroke="#FFF2B8" stroke-width="1.8">${anim ? '<animate attributeName="stroke-opacity" values="1;.15;1" dur="0.6s" repeatCount="indefinite"/>' : ""}</rect>` + (anim ? brille(92, 3.4, 3, 1.2, 0) + brille(4, 18.6, 2.4, 1.2, 0.6) + brille(48, 3, 2, 1.2, 0.3) : etoile(92, 3.4, 3) + etoile(4, 18.6, 2.4));
       return s;
     }
     __name(jauge, "jauge");
+    function panierMini(x, y, s) {
+      return `<g transform="translate(${x} ${y}) scale(${s})">${L("M-5,-2 Q0,-9 5,-2", "#8A5A32", 1.4)}${E(-2.4, -3.4, 2, 1.8, "#E8404A", 0.5)}${E(1.6, -3.6, 1.8, 1.6, "#4A62B8", 0.5)}${E(0, -4.8, 1.4, 1.3, "#8A5AA8", 0.4)}${P("M-6.4,-2 L6.4,-2 L5,5 Q0,6.4 -5,5 Z", "url(#dbP)", 0.8)}${L("M-5.6,1 Q0,2 5.6,1", "#8A5A32", 0.5)}${L("M-6.4,-2 L6.4,-2", "#F6D8A8", 1)}</g>`;
+    }
+    __name(panierMini, "panierMini");
     function double(anim = true) {
-      let s = "";
+      const defs = `<defs>${rad("dbR", [[0, "#FFF2B8"], [0.6, "#FFD24A"], [1, "#D89A1E"]])}${lin("dbP", [[0, "#E8BC84"], [1, "#A8784A"]])}${lin("dbB", [[0, "#F27A94"], [1, "#C84A68"]])}</defs>`;
+      const rubans = P("M11,22 L7,31 L10.4,29.4 L12,32 L15,23 Z", "url(#dbB)", 0.8) + P("M21,22 L25,31 L21.6,29.4 L20,32 L17,23 Z", "url(#dbB)", 0.8);
+      let r = "";
       for (let i = 0; i < 12; i++) {
         const a = i * Math.PI / 6;
-        s += E(16 + Math.cos(a) * 11, 16 + Math.sin(a) * 11, 3.4, 3.4, i % 2 ? "#FFD24A" : "#F2B83A", 0.7);
+        r += E(16 + Math.cos(a) * 10.4, 14 + Math.sin(a) * 10.4, 3.4, 3.4, i % 2 ? "#FFD24A" : "#F2B83A", 0.7);
       }
-      s += E(16, 16, 11, 11, "#FFE07A", 1);
-      s += `<g transform="translate(4.8 10.6) scale(0.36)">${CU.panier(2)}</g><g transform="translate(15.7 10.6) scale(0.36)">${CU.panier(2)}</g>`;
-      return `<g>${anim ? '<animateTransform attributeName="transform" type="scale" values="1;1.08;1" dur="0.5s" repeatCount="indefinite" additive="sum"/>' : ""}${s}</g>`.replace("<g>", '<g transform-origin="16 16">') + etoile(27, 5, 2.4) + etoile(5, 27, 1.8);
+      r += E(16, 14, 10.2, 10.2, "url(#dbR)", 1) + E(16, 14, 8, 8, "none").replace('fill="none"', 'fill="none" stroke="#D89A1E" stroke-width="0.6" stroke-dasharray="1 1"');
+      r += panierMini(12.4, 15.4, 0.62) + panierMini(19.6, 15.4, 0.62) + L("M9.6,8 Q12,5.6 15,5.2", WHITE, 1.1, ' opacity=".8"');
+      const bat = anim ? '<animateTransform attributeName="transform" type="scale" values="1;1.08;1" dur="0.5s" repeatCount="indefinite"/>' : "";
+      return defs + `<g transform="translate(16 15.4) scale(0.86) translate(-16 -15.4)">${rubans}<g transform-origin="16 14">${bat}${r}</g></g>` + etoile(27.6, 4, 2.4) + etoile(4.4, 25, 1.8);
     }
     __name(double, "double");
     function papillon(anim = true, ouvert = 1) {
-      const aile = /* @__PURE__ */ __name((sx) => `<g transform="scale(${sx} 1)">${P("M0,-1 Q6,-12 12,-8 Q14,-3 6,1 Z", "#FFD24A", 0.8)}${P("M0,1 Q8,2 9,8 Q6,11 1,4 Z", "#F2A83A", 0.8)}${E(7, -6, 1.6, 1.4, "#FFF6C8")}${E(5, 5, 1, 0.9, "#FFF6C8")}</g>`, "aile");
-      const ailes = anim ? `<g><animateTransform attributeName="transform" type="scale" values="1 1;0.25 1;1 1" dur="0.36s" repeatCount="indefinite"/>${aile(1)}${aile(-1)}</g>` : `<g transform="scale(${ouvert} 1)">${aile(1)}${aile(-1)}</g>`;
-      return `<g transform="translate(16 17)">${ailes}${P("M-1.2,-5 Q0,-6.4 1.2,-5 L1,6 Q0,7.4 -1,6 Z", "#5A3A24", 0.6)}<path d="M-0.6,-5.4 Q-2.4,-9 -4,-9.6 M0.6,-5.4 Q2.4,-9 4,-9.6" fill="none" stroke="${OUT}" stroke-width="0.6" stroke-linecap="round"/>${E(-4, -9.6, 0.7, 0.7, OUT)}${E(4, -9.6, 0.7, 0.7, OUT)}</g>` + etoile(27, 7, 1.8) + etoile(6, 26, 1.4);
+      const d = `<defs>${lin("ppH", [[0, "#FFF2B8"], [0.5, "#FFD24A"], [1, "#E89A2A"]], 1, 1)}${lin("ppB", [[0, "#FFE07A"], [1, "#E8843A"]], 1, 1)}${lin("ppC", [[0, "#7A4A2A"], [1, "#3C2819"]])}</defs>`;
+      const aile = /* @__PURE__ */ __name((sx) => `<g transform="scale(${sx} 1)">${P("M0.6,-1 Q4,-13 12.4,-10.6 Q15.6,-8 13,-3.4 Q10,0.4 0.6,0.6 Z", "url(#ppH)", 0.9)}${P("M0.6,1 Q9,1.6 10.4,6.4 Q10.6,10.4 6.6,10 Q2.6,9 0.6,2.6 Z", "url(#ppB)", 0.9)}${L("M1.4,-0.6 Q6,-4 10,-8.6 M1.4,0 Q7,-2 12,-4", "#D8902A", 0.5, ' opacity=".8"')}${L("M1.4,1.6 Q5,4 8,8", "#C8742A", 0.5, ' opacity=".8"')}${E(9.4, -7.4, 1.8, 1.5, "#FFFBE8", 0.4)}${E(6.6, 6, 1.2, 1, "#FFFBE8", 0.3)}${E(12, -4.6, 0.8, 0.7, "#E8604A")}${L("M3.4,-8 Q6,-11 9.6,-11", WHITE, 0.9, ' opacity=".8"')}</g>`, "aile");
+      const ailes = anim ? `<g><animateTransform attributeName="transform" type="scale" values="1 1;0.2 1;1 1" dur="0.36s" repeatCount="indefinite"/>${aile(1)}${aile(-1)}</g>` : `<g transform="scale(${ouvert} 1)">${aile(1)}${aile(-1)}</g>`;
+      const corps = P("M-1.4,-5.4 Q0,-7.2 1.4,-5.4 L1.3,6.4 Q0,8.4 -1.3,6.4 Z", "url(#ppC)", 0.6) + L("M-1.2,-1 L1.2,-1 M-1.2,1.6 L1.2,1.6 M-1.1,4 L1.1,4", "#E8C890", 0.4) + E(0, -6.6, 1.8, 1.7, "#5A3A24", 0.6) + E(-0.6, -7, 0.5, 0.5, WHITE) + L("M-0.6,-8 Q-2.4,-11.6 -4.6,-12", OUT, 0.6) + L("M0.6,-8 Q2.4,-11.6 4.6,-12", OUT, 0.6) + E(-4.6, -12, 0.9, 0.9, "#FFD24A", 0.4) + E(4.6, -12, 0.9, 0.9, "#FFD24A", 0.4);
+      return d + `<circle cx="16" cy="17" r="13" fill="#FFF2B8" opacity=".25"/><g transform="translate(16 17.4)">${ailes}${corps}</g>` + (anim ? brille(27, 6, 2, 1.6, 0) + brille(5, 27, 1.6, 1.6, 0.8) : etoile(27, 6, 2) + etoile(5, 27, 1.6));
     }
     __name(papillon, "papillon");
     function magie(k) {
-      const t = (k + 1) / 4;
-      let s = `<circle cx="30" cy="34" r="${f(8 + t * 16)}" fill="none" stroke="#FFE07A" stroke-width="${f(2.6 * (1 - t * 0.6))}" opacity="${f(1 - t * 0.6)}"/>`;
+      const t = (k + 1) / 4, p = `mg${k}`;
+      let s = `<defs>${rad(p, [[0, "#FFF6C8"], [0.7, "#FFE07A"], [1, "#FFD24A"]], 0.5, 0.5, 0.5)}</defs>`;
+      s += `<circle cx="30" cy="34" r="${f(8 + t * 16)}" fill="url(#${p})" opacity="${f(0.35 * (1 - t))}"/>`;
+      s += `<circle cx="30" cy="34" r="${f(8 + t * 16)}" fill="none" stroke="#FFD24A" stroke-width="${f(3 * (1 - t * 0.6))}" opacity="${f(1 - t * 0.55)}"/><circle cx="30" cy="34" r="${f(8 + t * 16)}" fill="none" stroke="#FFFBE8" stroke-width="${f(1.2 * (1 - t * 0.6))}" opacity="${f(1 - t * 0.55)}"/>`;
       for (let i = 0; i < 10; i++) {
-        const a = i * Math.PI / 5 + k * 0.2, d = 6 + t * 17;
-        s += etoile(30 + Math.cos(a) * d, 34 + Math.sin(a) * d * 0.8, f(2.8 * (1 - t * 0.4)), i % 2 ? "#FFE07A" : "#FFFBE8");
+        const a = i * Math.PI / 5 + k * 0.25, d = 6 + t * 17, x = 30 + Math.cos(a) * d, y = 34 + Math.sin(a) * d * 0.8;
+        s += i % 3 === 2 ? `<g transform="translate(${f(x)} ${f(y)}) rotate(${f(i * 40 + k * 30)})">${P("M0,-2.4 Q1.8,0 0,2.4 Q-1.8,0 0,-2.4 Z", "#FFC4D0", 0.4)}</g>` : etoile(x, y, f(3 * (1 - t * 0.4)), i % 2 ? "#FFE07A" : "#FFFBE8");
       }
       return s;
     }
     __name(magie, "magie");
-    function pie(pose, ailes = 0, fruitK = null, effraye = false) {
-      let s = "";
-      s += P("M8,18 L-1,14 L0,17.4 L-1,21 Z", "#2A2A3A", 0.8) + `<path d="M0,16.6 L7,18" stroke="#5A7AC8" stroke-width="0.8"/>`;
-      s += P("M6,18 Q8,10 18,9.6 Q28,10 30,16 Q29,24 18,25 Q9,25 6,18 Z", "#2A2A3A", 1);
-      s += P("M14,20 Q18,15.6 26,17 Q27,22 18,24 Q14,23.6 14,20 Z", WHITE, 0);
-      s += P("M26,8 Q31,4 36,7.6 Q38,12 34,15 Q29,16 26.4,13 Z", "#2A2A3A", 1);
-      s += E(32.6, 9.6, 1.8, 2, WHITE) + E(33, 9.8, 1.1, 1.3, OUT) + E(33.4, 9.2, 0.45, 0.45, WHITE);
-      s += effraye ? `<path d="M30.6,6.4 L33.6,7.2" stroke="${OUT}" stroke-width="0.7" stroke-linecap="round"/>` : "";
-      s += P("M36,10 L42,11.4 L36,13 Z", "#3A3A3A", 0.8);
-      if (fruitK) s += `<g transform="translate(37 7) scale(0.32)">${CU.fruit(fruitK)}</g>`;
-      if (pose) s += `<path d="M16,25 L15,29 M20,25 L21,29 M13.4,29 L16.6,29 M19.4,29 L22.6,29" stroke="${OUT}" stroke-width="0.9" stroke-linecap="round"/>`;
-      const aile = [
-        P("M12,14 Q20,10.4 26,14 Q22,20 12,18 Z", "#3A3A50", 0.8) + `<path d="M15,16 L24,15" stroke="#5A7AC8" stroke-width="0.8"/>`,
-        P("M14,13 Q16,0 26,-0.4 Q25,8 22,13 Z", "#3A3A50", 0.8) + P("M16,10 Q19,4 24,2", "none", 0).replace('fill="none"', 'fill="none" stroke="#5A7AC8" stroke-width="0.8"') + P("M17,4 Q19,0.6 22,0.4 L21,3 Z", WHITE, 0),
-        P("M13,16 Q16,28 24,30 Q25,22 22,16 Z", "#3A3A50", 0.8) + `<path d="M16,20 L21,27" stroke="#5A7AC8" stroke-width="0.8"/>`
-      ][ailes];
-      s += aile;
+    var SAISONS = {
+      printemps: { touffes: ["#7CC25A", "#8ED06A", "#A0DC7A"], clair: "#C8F0A0", ombre: "#4E9A38", feuille: "#B0E888", fleur: ["#FFD0E0", "#F48AAA"] },
+      ete: { touffes: ["#3E8A2E", "#4E9A38", "#5AAA44"], clair: "#8ED06A", ombre: "#2A6A20", feuille: "#7EC25A", fleur: ["#FFFFFF", "#E8E0F0"] },
+      automne: { touffes: ["#C8642A", "#D8843A", "#E8A04A"], clair: "#F8D07A", ombre: "#8A3A1A", feuille: "#F2B84A", fleur: null }
+    };
+    var TOUFFES = [[18, 36, 13], [42, 36, 13], [30, 25, 15], [23, 40, 12], [38, 41, 11]];
+    function buissonSaison(k) {
+      const c = SAISONS[k], p = `bs${k}`;
+      let s = `<defs>${c.touffes.map((col, i) => rad(`${p}${i}`, [[0, c.clair], [0.55, col], [1, c.ombre]], 0.38, 0.3, 0.8)).join("")}</defs>`;
+      s += E(30, 53, 22, 4.6, "rgba(40,60,20,.25)");
+      for (const [x, y, r] of TOUFFES) s += `<circle cx="${x}" cy="${y}" r="${r}" fill="${c.ombre}"${st(1.2)}/>`;
+      TOUFFES.forEach(([x, y, r], i) => {
+        s += `<circle cx="${x}" cy="${y}" r="${f(r - 0.6)}" fill="url(#${p}${i % 3})"/>` + L(`M${f(x - r * 0.55)},${f(y - r * 0.35)} q${f(r * 0.3)},${f(-r * 0.35)} ${f(r * 0.65)},${f(-r * 0.3)}`, WHITE, 1.1, ' opacity=".4"');
+      });
+      for (const [x, y, r] of [[12, 28, -40], [48, 29, 40], [30, 10.4, 0], [8, 42, -70], [52, 43, 70]]) s += `<g transform="translate(${x} ${y}) rotate(${r})">${P("M0,3.4 Q-3,-1 0,-5 Q3,-1 0,3.4 Z", c.feuille, 0.8)}${L("M0,2.6 L0,-4", c.ombre, 0.5)}</g>`;
+      if (k === "printemps") for (const [x, y, r] of [[14, 30, 1.6], [24, 21, 1.8], [37, 19, 1.6], [46, 31, 1.7], [26, 40, 1.8], [40, 44, 1.5], [17, 44, 1.5], [31, 31, 1.9]]) s += [0, 1, 2, 3, 4].map((i) => {
+        const a = i * Math.PI * 0.4 - Math.PI / 2;
+        return E(x + Math.cos(a) * r, y + Math.sin(a) * r, r * 0.85, r * 0.85, c.fleur[i % 2 ? 1 : 0], 0.3);
+      }).join("") + E(x, y, r * 0.5, r * 0.5, "#FFD24A", 0.3);
+      if (k === "ete") s += [[16, 30], [44, 34], [33, 45], [26, 22]].map(([x, y]) => [0, 1, 2, 3, 4].map((i) => {
+        const t = i * Math.PI * 0.4;
+        return E(x + Math.cos(t) * 1.2, y + Math.sin(t) * 1.2, 0.95, 0.95, c.fleur[0], 0.25);
+      }).join("") + E(x, y, 0.6, 0.6, "#F2C04B")).join("") + [[20, 24], [40, 26]].map(([x, y]) => E(x, y, 3.4, 1.6, WHITE).replace("/>", ' opacity=".18"/>')).join("");
+      if (k === "automne") s += [[6, 52, 30, "#E8843A"], [52, 54, -20, "#D8642A"], [48, 9, 60, "#F2B84A"], [10, 14, -30, "#E8843A"]].map(([x, y, r, col]) => `<g transform="translate(${x} ${y}) rotate(${r})">${P("M0,3 Q-2.8,-1 0,-4.6 Q2.8,-1 0,3 Z", col, 0.6)}${L("M0,2.4 L0,-3.6", "#8A3A1A", 0.4)}</g>`).join("") + [[22, 26], [38, 36], [28, 44]].map(([x, y]) => E(x, y, 1.4, 1.4, "#C8402A", 0.4) + E(x - 0.4, y - 0.4, 0.4, 0.4, WHITE)).join("");
       return s;
+    }
+    __name(buissonSaison, "buissonSaison");
+    function pie(pose, ailes = 0, fruitK = null, effraye = false) {
+      const p = `pi${pose}${ailes}${fruitK || ""}${effraye ? "e" : ""}`;
+      let s = `<defs>${lin(p + "n", [[0, "#3A3E5A"], [1, "#14141E"]])}${lin(p + "q", [[0, "#3A7AC8"], [0.5, "#2A9A8A"], [1, "#1E2E4A"]], 1, 0)}${rad(p + "v", [[0, "#FFFFFF"], [1, "#D8E0EC"]], 0.4, 0.3, 0.8)}${lin(p + "a", [[0, "#4A5A8A"], [0.5, "#2A3A6A"], [1, "#18203A"]])}</defs>`;
+      s += P("M10,20 Q2,17 -3,13.4 Q-3.6,15.6 -2,17 Q1,20 8,22.6 Z", `url(#${p}q)`, 0.9) + L("M-1.4,15 Q3,18 8,20.6", "#8AD8E8", 0.6, ' opacity=".7"');
+      s += P("M7,20 Q7,10.4 18,9.6 Q28,9.4 30.6,16.4 Q31,25 19,26.4 Q8.6,26.6 7,20 Z", `url(#${p}n)`, 1.1);
+      s += P("M13.6,21 Q17,15.4 27,16.6 Q29,23 19,25.2 Q14,25 13.6,21 Z", `url(#${p}v)`, 0);
+      s += P("M25.6,9.6 Q27,3.6 33,4 Q38.6,5 38.4,10.6 Q37.4,15.6 32,16 Q27,15.6 25.6,9.6 Z", `url(#${p}n)`, 1);
+      s += effraye ? L("M31.6,8.6 Q33.6,7.2 35.4,8.6", WHITE, 1.4) + L("M31.6,8.6 Q33.6,7.2 35.4,8.6", OUT, 0.6) + L("M30.8,6 L35,5.2", OUT, 0.7) : E(33.6, 9, 2, 2.2, WHITE, 0.4) + E(34, 9.2, 1.3, 1.5, OUT) + E(34.5, 8.5, 0.5, 0.5, WHITE);
+      s += P("M37.6,9 L43.4,10.6 L37.6,12.6 Z", "#4A4A50", 0.8) + L("M38,10.6 L42,10.6", "#7A7A84", 0.5);
+      s += L("M28,6.6 Q30,4.4 33,4.4", "#8A9AD8", 0.9, ' opacity=".7"');
+      if (fruitK) s += `<g transform="translate(36.2 6.2) scale(0.34)">${CU.fruit(fruitK)}</g>`;
+      if (pose) s += L("M16,26 L15,30.6 M21,26 L22,30.6", "#4A4A50", 1.1) + L("M13,30.8 L17,30.8 M20,30.8 L24.4,30.8", "#4A4A50", 0.9);
+      const aile = [
+        P("M12,15 Q20,10.6 27,14.6 Q23,21.4 12,19.4 Z", `url(#${p}a)`, 0.8) + P("M14.6,15.6 Q19,14 22,15.4 Q18,17.6 14.6,15.6 Z", WHITE, 0) + L("M16,18.4 L25,16.4", "#6A9AE8", 0.6),
+        P("M14,13.6 Q14,-0.6 26.6,-2.4 Q26.6,7 22.6,13.6 Z", `url(#${p}a)`, 0.8) + P("M17,6 Q20,1.6 24.4,0.4 L23.4,4 Q20,5 17,6 Z", WHITE, 0) + L("M16.4,10.6 Q19,6 24,4.6", "#6A9AE8", 0.6),
+        P("M13,17 Q15,30 25,32 Q26.4,23 22.6,17 Z", `url(#${p}a)`, 0.8) + P("M15.4,20 Q17,25 20.4,27 L21.6,23 Q18.6,22 15.4,20 Z", WHITE, 0) + L("M16,22 L22,29", "#6A9AE8", 0.6)
+      ][ailes];
+      return s + aile;
     }
     __name(pie, "pie");
     function plumes(k) {
       const t = (k + 1) / 3;
-      return [[-1, -1], [1, -0.6], [-0.4, 1], [0.8, 0.8]].map(([dx, dy], i) => `<g transform="translate(${f(18 + dx * t * 14)} ${f(16 + dy * t * 10 + t * 3)}) rotate(${f(i * 80 + t * 90)})" opacity="${f(1 - t * 0.6)}">${P("M0,-3 Q1.6,0 0,3 Q-1.6,0 0,-3 Z", i % 2 ? WHITE : "#2A2A3A", 0.5)}</g>`).join("");
+      return [[-1, -1], [1, -0.6], [-0.4, 1], [0.8, 0.8]].map(([dx, dy], i) => `<g transform="translate(${f(18 + dx * t * 14)} ${f(16 + dy * t * 10 + t * 3)}) rotate(${f(i * 80 + t * 90)})" opacity="${f(1 - t * 0.6)}">${P("M0,-3.4 Q1.8,0 0,3.4 Q-1.8,0 0,-3.4 Z", i % 2 ? WHITE : "#2A2E44", 0.5)}${L("M0,-3 L0,3", i % 2 ? "#C8D0DC" : "#6A7AA8", 0.4)}</g>`).join("");
     }
     __name(plumes, "plumes");
+    function nidPapier(p) {
+      return `<defs>${rad(p, [[0, "#F2E2C0"], [0.6, "#D8C49A"], [1, "#A88A60"]], 0.4, 0.3, 0.8)}</defs>` + L("M16,3 L16,7", "#6A4A2A", 1.4) + P("M9.6,10 Q16,5.4 22.4,10 Q25.6,16 22.4,22.4 Q16,26.6 9.6,22.4 Q6.4,16 9.6,10 Z", `url(#${p})`, 1) + L("M8.6,13.6 Q16,11 23.4,13.6 M7.8,17.4 Q16,15 24.2,17.4 M8.6,21 Q16,19 23.4,21", "#A88A60", 0.7) + L("M10.4,11.4 Q13,9 16,8.6", WHITE, 1, ' opacity=".6"') + E(16, 19.4, 2, 2.2, "#3A2A1A", 0.6) + E(15.6, 19, 0.6, 0.6, "#6A5A40");
+    }
+    __name(nidPapier, "nidPapier");
     function nidTaille(n, fige = false) {
       const sc = [0.7, 1, 1.35][n];
-      const g = `<g transform="translate(30 22) scale(${sc}) translate(-16 -16)">${CU.guepes(fige)}</g>`;
-      return g;
+      const guepes = CU.guepes(fige).replace(/^<path d="M10,10 Q16,6 22,10[^]*?<path d="M16,6\.6 L16,3"[^>]*\/>/, "");
+      return `<g transform="translate(30 22) scale(${sc}) translate(-16 -16)">${nidPapier(`nd${n}${fige ? "f" : ""}`)}${guepes}</g>`;
     }
     __name(nidTaille, "nidTaille");
-    var perdu = /* @__PURE__ */ __name(() => `<g opacity=".55">${CU.buisson(0, true).replace(/#4E8F3A|#5FA548|#68B04F/g, "#7A8A6A").replace(/#7EC25A/g, "#9AA888")}</g>`, "perdu");
-    var SAISONS = {
-      printemps: { couleurs: ["#6AB04A", "#7EC25A", "#8ED06A", "#A8E07A"], fleur: "#FFB8D0" },
-      ete: { couleurs: ["#3E7F2A", "#4E9538", "#5AA544", "#6EB850"], fleur: "#FFF8F0" },
-      automne: { couleurs: ["#B8602A", "#D07A34", "#E09A44", "#E8B860"], fleur: null }
-    };
-    function buissonSaison(k) {
-      const c = SAISONS[k];
-      let s = CU.buisson(0, !c.fleur).replace(/#4E8F3A/g, c.couleurs[0]).replace(/#5FA548/g, c.couleurs[1]).replace(/#68B04F/g, c.couleurs[2]).replace(/#7EC25A/g, c.couleurs[3]);
-      if (k === "printemps") s += [[12, 30], [22, 22], [36, 18], [46, 30], [26, 40], [40, 44], [16, 44], [30, 30]].map(([x, y]) => [0, 1, 2, 3, 4].map((i) => {
-        const t = i * Math.PI * 0.4;
-        return E(x + Math.cos(t) * 1.6, y + Math.sin(t) * 1.6, 1.3, 1.3, c.fleur, 0.3);
-      }).join("") + E(x, y, 0.8, 0.8, "#F2C04B")).join("");
-      if (k === "ete") s += [[20, 24], [40, 26]].map(([x, y]) => E(x, y, 3, 1.6, WHITE).replace("/>", ' opacity=".18"/>')).join("");
-      if (k === "automne") s += [[8, 50, 30], [50, 52, -20], [44, 8, 60]].map(([x, y, r]) => `<g transform="translate(${x} ${y}) rotate(${r})">${P("M0,3 Q-2.6,-1 0,-4.4 Q2.6,-1 0,3 Z", "#E8843A", 0.6)}</g>`).join("");
-      return s;
-    }
-    __name(buissonSaison, "buissonSaison");
+    var perdu = /* @__PURE__ */ __name(() => `<g opacity=".6">${buissonSaison("ete").replace(/url\(#bsete(\d)\)/g, "#8A9A7A").replace(/#2A6A20/g, "#6A7A5E").replace(/#7EC25A/g, "#A8B49A").replace(/<defs>.*?<\/defs>/, "")}</g>` + [[10, 50, 40], [50, 52, -30], [44, 46, 80]].map(([x, y, r]) => `<g transform="translate(${x} ${y}) rotate(${r})" opacity=".7">${P("M0,3 Q-2.8,-1 0,-4.6 Q2.8,-1 0,3 Z", "#A8A890", 0.6)}${L("M0,2.4 L0,-3.6", "#6A6A5A", 0.4)}</g>`).join(""), "perdu");
     var PIECES = [];
     var piece = /* @__PURE__ */ __name((id, nom, cadre, dessin, suite = null, ms = null, boucle = false) => PIECES.push({ id, nom, cadre, dessin, suite, ms, boucle }), "piece");
     var B = [0, 0, 60, 60];
