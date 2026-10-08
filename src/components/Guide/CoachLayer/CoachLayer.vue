@@ -3,8 +3,15 @@
        pourquoi. Geste forcé (block) : le reste de l'écran ne répond pas, seule la cible se touche ; sinon rien n'est
        bloqué. Rien ne se montre tant que la cible est absente ou recouverte (une fiche, une scène, une bulle).
        Une leçon en plusieurs gestes (toucher Cannelle, « Sa fiche », puis le bouton de sa fiche) : le coach montre le
-       plus avancé qui est à l'écran, par-dessus la fiche s'il est dedans ; chaque geste est forcé la première fois -->
-  <div v-if="hole" :class="['coach', { 'is-block': blocked }]" :style="high ? { zIndex: 'calc(var(--z-modal) + 5)' } : null" aria-live="polite">
+       plus avancé qui est à l'écran, par-dessus la fiche s'il est dedans ; chaque geste est forcé la première fois.
+       Aucune cible à l'écran (hors de la caméra, une autre page, une fiche par-dessus) : le joueur n'est jamais lâché,
+       une bulle dit quoi faire, avec « Me montrer » (la caméra ou la page va vers la cible) -->
+  <div :class="['coach', { 'is-block': blocked && hole }]" :style="high ? { zIndex: 'calc(var(--z-modal) + 5)' } : null" aria-live="polite">
+    <p v-if="!hole && lost" class="coach__lost" role="status">
+      <span class="coach__text">{{ lostStep.text }}</span>
+      <button v-if="lostCanShow" type="button" class="coach__show" @click="show">Me montrer</button>
+    </p>
+    <template v-if="hole">
     <svg class="coach__mask" :width="view.w" :height="view.h" aria-hidden="true">
       <defs>
         <mask :id="maskId">
@@ -34,6 +41,7 @@
         <span class="coach__text"><strong v-if="lesson.who" class="coach__who">{{ lesson.who }}</strong>{{ step.text }}</span>
       </p>
     </transition>
+    </template>
   </div>
 </template>
 
@@ -44,6 +52,9 @@ import { reducedMotion, vibrate } from '@/utils/fx';
 // Marge autour de la cible (px), hauteur de la bulle (pour la placer au-dessus ou au-dessous)
 const PAD = 8;
 const SAY_H = 96;
+// Sans cible à l'écran depuis ce temps (ms) : la bulle « Me montrer » (pas par-dessus une fenêtre ouverte)
+const LOST_MS = 1200;
+const OVERLAYS = '.g-modal-backdrop, .world__sheet-backdrop, [aria-modal="true"]';
 let count = 0;
 
 export default {
@@ -54,7 +65,7 @@ export default {
   },
   data() {
     count += 1;
-    return { hole: null, view: { w: 0, h: 0 }, nudged: false, maskId: `coach-mask-${count}`, at: 0, high: false };
+    return { hole: null, view: { w: 0, h: 0 }, nudged: false, maskId: `coach-mask-${count}`, at: 0, high: false, lostSince: 0, lost: false, lostAt: 0, lostCanShow: false };
   },
   computed: {
     // Le geste montré (lesson.steps[at]) et son identifiant ; forcé tant qu'il n'a jamais été fait
@@ -67,6 +78,10 @@ export default {
     // (un geste « libre » ne bloque jamais : sur une page du Grimoire, l'étagère doit rester sous le doigt)
     blocked() {
       return !this.step.free && coach.blocks(this.stepId);
+    },
+    // Sans cible à l'écran : le geste le plus avancé qui existe quelque part (sinon le premier), et sa consigne
+    lostStep() {
+      return this.lesson.steps[this.lostAt] || this.lesson.steps[0];
     },
     radius() {
       return Math.min(18, this.hole ? Math.min(this.hole.w, this.hole.h) / 2 : 0);
@@ -82,6 +97,9 @@ export default {
     'lesson.id'() {
       this.hole = null;
       this.at = 0;
+      this.lostSince = 0;
+      this.lost = false;
+      this.revealed = null;
     }
   },
   mounted() {
@@ -104,7 +122,8 @@ export default {
       }
       if (r && at !== this.at) this.hole = null;
       if (r) this.at = at;
-      // Dans une fiche ou une fenêtre : le coach passe par-dessus
+      this.track(Boolean(r));
+      // Dans une fiche ou une fenêtre : le coach passe par-dessus (sa bulle « Me montrer » aussi)
       this.high = Boolean(r && r.el && r.el.closest && r.el.closest('.g-modal-backdrop, .world__sheet-backdrop'));
       const next = r ? { x: r.x - PAD, y: r.y - PAD, w: r.w + 2 * PAD, h: r.h + 2 * PAD } : null;
       // (la découpe glisse vers sa cible, sauf en mouvement réduit)
@@ -125,6 +144,37 @@ export default {
     clearTimeout(this.nudgeTimer);
   },
   methods: {
+    // Rien à montrer depuis un instant : la bulle « Me montrer », avec la consigne du geste le plus avancé dont la cible
+    // existe (hors de l'écran ou recouverte) ; la première fois pour ce geste, la caméra ou la page y va d'elle-même
+    track(found) {
+      if (found) {
+        this.lostSince = 0;
+        this.lost = false;
+        return;
+      }
+      const now = performance.now();
+      if (!this.lostSince) this.lostSince = now;
+      // (une fenêtre ouverte : une Récolte, une fiche sans rapport… la bulle attend qu'elle se ferme)
+      this.lost = false;
+      if (now - this.lostSince < LOST_MS || document.querySelector(OVERLAYS)) return;
+      const { steps } = this.lesson;
+      let at = steps.length - 1;
+      while (at > 0 && !coach.rectOf(steps[at].target)) at--;
+      this.lostAt = at;
+      this.lostCanShow = Boolean(coach.rectOf(steps[at].target)) || steps[at].target.startsWith('île:');
+      this.lost = true;
+      const key = `${this.lesson.id}#${at}`;
+      if (this.revealed !== key) {
+        this.revealed = key;
+        coach.reveal(steps[at].target);
+      }
+    },
+    // « Me montrer » : la caméra de l'île, ou la page, va vers la cible
+    show() {
+      coach.reveal(this.lostStep.target);
+      this.lostSince = performance.now();
+      this.lost = false;
+    },
     // La cible est à l'écran et rien ne la recouvre (une fiche, une scène, une bulle de Brume : le coach attend)
     visible(r) {
       const cx = r.x + r.w / 2;

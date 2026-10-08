@@ -17,8 +17,10 @@ const state = reactive({
   seen: new Set(storage.load(SEEN_KEY, []))
 });
 
-// Les cibles dessinées sur un canvas (l'île) : un nom → { x, y, w, h } à l'écran, ou null (hors de vue)
+// Les cibles dessinées sur un canvas (l'île) : un nom → { x, y, w, h } à l'écran, ou null (hors de vue) ; et la caméra
+// de l'île, qui amène une cible à l'écran (nom → vrai si la cible existe)
 let islandAnchor = null;
+let islandFocus = null;
 
 export const coach = {
   state,
@@ -50,6 +52,23 @@ export const coach = {
       storage.save(SEEN_KEY, [...state.seen]);
     }
     if (state.lesson && state.lesson.id === id) state.lesson = { ...state.lesson, block: false };
+  },
+  // L'île publie sa caméra (WorldView) : fn(nom) l'amène vers la cible, vrai si elle existe
+  focusIsland(fn) {
+    islandFocus = fn;
+    return () => {
+      if (islandFocus === fn) islandFocus = null;
+    };
+  },
+  // Amener une cible à l'écran (« Me montrer ») : la caméra de l'île vers elle, ou la page qui défile jusqu'à elle ;
+  // vrai si la cible existe
+  reveal(target) {
+    if (!target) return false;
+    if (target.startsWith('île:')) return Boolean(islandFocus && islandFocus(target.slice(4)));
+    const el = typeof document === 'undefined' ? null : document.querySelector(target);
+    if (!el) return false;
+    if (el.scrollIntoView) el.scrollIntoView({ block: 'center', behavior: 'smooth' });
+    return true;
   },
   // L'île publie où sont ses cibles (WorldView) ; fn(nom) → rectangle à l'écran, ou null
   island(fn) {

@@ -8,6 +8,9 @@ import { shownPatches, PATCHES } from './patchwork';
 import { CHAPTER_STYLE, BOOK_TITLE, tintOfFamily } from './chapters';
 import { SIGILS, ORNAMENTS, GOLD } from './grimoire';
 
+// Le pendu (deviner le nom lettre par lettre) : en réserve, il reviendra en joker payant
+const HANGMAN = false;
+
 // Les pages des chapitres suivent leurs couleurs (book/chapters.js)
 export { CHAPTER_STYLE };
 
@@ -706,7 +709,8 @@ function paintReach(ctx, u, model, i, assets) {
   header(ctx, u, chapter, style, 0);
   if (page.marked) bookmark(ctx, u);
   const spot = vignette(ctx, u, style, 'reach');
-  const hm = page.hangman || null;
+  // (le pendu reviendra plus tard, en joker payant : en attendant, ni la page, ni ses traits, ni un bouton ne l'ouvrent)
+  const hm = HANGMAN && page.hangman ? page.hangman : null;
   // Le grand « ? » tant qu'aucune pièce de l'illustration n'est gagnée
   if (!hm || !hm.emoji) bigQuestion(ctx, u, alpha(style.ink, 0.45));
   patchwork(ctx, u, page, style.ink, assets.onReady);

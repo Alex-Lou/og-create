@@ -1,5 +1,5 @@
 /* Ses jetons (l'encre et le bleu du prologue : tokens/prologue.css) : la nuit, le panneau (fond, liseré), la pensée,
-   les boutons, l'erreur ; la place que le panneau laisse à la carte (--sa-bottom de SceneArt) */
+   les boutons, l'erreur ; la place que le panneau laisse à la carte (--sa-bottom) */
 .pav {
   --pav-night: #05080f;
   --pav-panel-bg: rgba(20, 30, 48, .9);
@@ -14,6 +14,13 @@
   position: fixed; inset: 0; z-index: var(--z-prologue); overflow: hidden;
   background: var(--pav-night); color: var(--pav-ink);
 }
+/* La carte d'embarquement, au-dessus du panneau du nom : aussi grande que la place le permet, un peu penchée */
+.pav__card {
+  position: absolute; left: 0; right: 0; top: max(16px, env(safe-area-inset-top)); bottom: var(--sa-bottom);
+  display: grid; place-items: center; padding: 0 16px;
+  background: radial-gradient(60% 45% at 50% 50%, rgba(120, 150, 200, .16), transparent 70%);
+}
+.pav__boarding { width: min(100%, 460px, calc((100vh - var(--sa-bottom) - 40px) * 320 / 210)); transform: rotate(-2deg); }
 .pav__panel {
   position: absolute; left: 50%; bottom: max(20px, calc(env(safe-area-inset-bottom) + 12px)); transform: translateX(-50%);
   width: min(560px, calc(100% - 32px)); padding: 14px 18px 16px; border-radius: var(--r-board);

@@ -4,7 +4,6 @@
        Seul ce qui est libre se choisit ici (ce qui se gagne viendra de la boutique et des coffres) -->
   <div class="avm">
     <div class="avm__stage" @pointerdown="grab" @pointerup="release" @pointercancel="dragX = null">
-      <span class="avm__glow" aria-hidden="true"></span>
       <img v-if="figure" class="avm__figure" :src="figure" alt="Ton personnage, en pied" draggable="false" />
       <span v-else class="avm__wait g-italic">La photo se compose…</span>
       <button type="button" class="avm__turn avm__turn--left" aria-label="Tourner vers la gauche" @click.stop="turn(-1)">↺</button>
