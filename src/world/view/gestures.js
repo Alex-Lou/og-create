@@ -13,6 +13,7 @@ import { BUILDINGS } from '@/world/sprites';
 import { artMake } from '@/world/looks';
 import { buildingThumb } from '@/world/buildingArt';
 import { campInfo } from '@/world/campArt';
+import { coach } from '@/game/coach';
 import { TW, TH, DEPOSIT_SCALE } from './constants';
 
 // Bulle d'info de l'appui long : durée d'affichage ; noms des bêtes, pour elle
@@ -384,7 +385,8 @@ export default {
   choose(pick, px, py) {
     if (pick.bounce) this.scared.set(pick.bounce, { at: performance.now() / 1000 });
     this.picked = pick;
-    this.showTip(px, py, { ...pick.info, hint: null, action: pick.action }, PICK_MS);
+    // (pendant une leçon du tutoriel, la bulle attend le joueur : le coach montre son bouton)
+    this.showTip(px, py, { ...pick.info, hint: null, action: pick.action, pick: pick.key }, coach.state.lesson ? 0 : PICK_MS);
     vibrate(6);
   },
   // Second toucher, ou le bouton de la bulle : ce qui est choisi s'ouvre
@@ -431,6 +433,7 @@ export default {
     clearTimeout(this.tipTimer);
     const below = py < 110;
     this.tip = { ...info, x: Math.max(96, Math.min(this.geo.width - 96, px)), y: below ? py + 18 : py - 16, below };
+    if (!ms) return;
     this.tipTimer = setTimeout(() => {
       this.tip = null;
       this.picked = null;

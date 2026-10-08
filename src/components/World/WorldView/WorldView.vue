@@ -79,7 +79,7 @@
             <strong class="world__tip-title">{{ tip.title }}</strong>
             <span v-if="tip.text" class="world__tip-text">{{ tip.text }}</span>
             <span v-if="tip.hint" class="world__tip-hint">{{ tip.hint }}</span>
-            <button v-if="tip.action" type="button" class="world__tip-btn" @click="runPick">{{ tip.action }}</button>
+            <button v-if="tip.action" type="button" class="world__tip-btn" :data-pick="tip.pick" @click="runPick">{{ tip.action }}</button>
           </div>
         </transition>
 

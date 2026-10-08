@@ -9,8 +9,10 @@ import * as storage from '@/utils/storage';
 const SEEN_KEY = 'oc_coach_seen';
 
 const state = reactive({
-  // La leçon montrée : { id, target, mode, text?, who?, face?, place? }, ou null. target : un sélecteur CSS, ou
-  // « île:<nom> » (une cible sur le canvas de l'île : brume, site:<id>, habitant:<id>, quartier:<id>)
+  // La leçon montrée : { id, target, mode, text?, who?, face?, steps }, ou null. target : un sélecteur CSS, ou
+  // « île:<nom> » (une cible sur le canvas de l'île : brume, site:<id>, habitant:<id>, quartier:<id>).
+  // steps : les gestes de la leçon, dans l'ordre ([{ target, text }] : toucher Cannelle, puis « Sa fiche » dans sa
+  // bulle, puis le bouton de sa fiche) ; le coach montre le plus avancé qui est à l'écran (CoachLayer)
   lesson: null,
   seen: new Set(storage.load(SEEN_KEY, []))
 });
@@ -26,13 +28,22 @@ export const coach = {
       state.lesson = null;
       return;
     }
-    const same = state.lesson && state.lesson.id === lesson.id && state.lesson.target === lesson.target;
-    if (!same) state.lesson = { ...lesson, block: !state.seen.has(lesson.id) };
+    const steps = lesson.steps || [{ target: lesson.target, text: lesson.text }];
+    const same = state.lesson && state.lesson.id === lesson.id && state.lesson.steps.map(st => st.target).join('|') === steps.map(st => st.target).join('|');
+    if (!same) state.lesson = { ...lesson, target: steps[0].target, text: steps[0].text, steps, block: !state.seen.has(lesson.id) };
+  },
+  // L'identifiant d'un geste de la leçon (le premier porte celui de la leçon), retenu une fois fait
+  stepId(lesson, k) {
+    return k ? `${lesson.id}#${k}` : lesson.id;
+  },
+  // Ce geste n'a jamais été fait : il est forcé
+  blocks(id) {
+    return !state.seen.has(id);
   },
   clear(id) {
     if (!id || (state.lesson && state.lesson.id === id)) state.lesson = null;
   },
-  // Le geste a été fait : la leçon ne bloquera plus jamais
+  // Le geste a été fait : il ne bloquera plus jamais
   done(id) {
     if (!state.seen.has(id)) {
       state.seen.add(id);

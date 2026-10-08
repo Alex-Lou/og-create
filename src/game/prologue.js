@@ -62,23 +62,50 @@ export function prologueStep({ state, loggedIn, elements }) {
 // Les quêtes du prologue (T1 à T8, serveur : services/quests.js), dans l'ordre
 const PROLOGUE = ['pages', 'recolte', 'soupe', 'deco', 'achat-source', 'eveil-ondin', 'souvenir-ondin', 'puits-ondin'];
 
-// Le geste que le coach montre pour chaque quête du prologue (game/coach.js) : la cible (un sélecteur, ou « île:… »
-// sur le canvas de l'île), l'onglet où elle est, ce que dit la bulle
+// Le geste que le coach montre pour chaque quête du prologue (game/coach.js) : les étapes, dans l'ordre (sur l'île, la
+// cible ; un toucher ouvre une petite bulle et son bouton entre dans la fiche ; dans la fiche, le bon bouton). Le coach
+// montre la plus avancée qui est à l'écran : le joueur n'est jamais lâché, même s'il referme une bulle en route.
+// target : un sélecteur, ou « île:… » sur le canvas de l'île ; text : ce que dit la bulle du coach
+const tipOf = (...keys) => keys.map(key => `.world__tip-btn[data-pick="${key}"]`).join(', ');
 const LESSONS = {
-  recolte: { target: '.world__play', text: 'Touche la Récolte : l’île t’y donne de quoi bâtir.' },
-  soupe: { target: 'île:habitant:foyer', text: 'Cannelle a faim : touche-la pour lui servir une soupe.' },
-  deco: { target: 'île:site:foyer', text: 'L’établi est au Foyer : touche-le pour assembler ta première création.' },
-  'achat-source': { target: 'île:quartier:source', text: 'La Source est juste là : touche son panneau.' },
-  'eveil-ondin': { target: 'île:habitant:puits', text: 'Ondin dort contre son rocher : touche-le.' },
-  'souvenir-ondin': { target: '.tabbar__item[data-tab="infinite"]', text: 'Le Puits s’écrit dans le Grimoire : ouvre-le.' },
-  'puits-ondin': { target: 'île:site:puits', text: 'Le chantier du Puits : touche-le pour le bâtir.' }
+  recolte: [{ target: '.world__play', text: 'Touche la Récolte : l’île t’y donne de quoi bâtir.' }],
+  soupe: [
+    { target: 'île:habitant:foyer', text: 'Cannelle a faim : touche-la.' },
+    { target: tipOf('vil:foyer', 'ask:foyer'), text: 'Une bulle s’ouvre : touche « Sa fiche » pour entrer dans sa fiche.' },
+    { target: '.friend__need.is-missing .friend__fill', text: 'Sa fiche dit ce qui lui manque : touche ce bouton pour lui donner à manger.' }
+  ],
+  deco: [
+    { target: 'île:site:foyer', text: 'L’établi est au Foyer : touche-le.' },
+    { target: tipOf('site:foyer'), text: 'Touche « Sa fiche » pour entrer au Foyer.' },
+    { target: '[aria-label="Ouvrir l’établi"]', text: 'L’établi de Rivet : ouvre-le pour assembler ta première création.' }
+  ],
+  'achat-source': [
+    { target: 'île:quartier:source', text: 'La Source est juste là : touche son panneau.' },
+    { target: tipOf('zone:source'), text: 'Touche « Voir le quartier ».' },
+    { target: '[data-coach="zone-buy"]', text: 'Tes écus suffisent : achète La Source.' }
+  ],
+  'eveil-ondin': [
+    { target: 'île:habitant:puits', text: 'Ondin dort contre son rocher : touche-le.' },
+    { target: tipOf('vil:puits'), text: 'Touche « Le réveiller » : parle-lui doucement.' }
+  ],
+  'souvenir-ondin': [{ target: '.tabbar__item[data-tab="infinite"]', text: 'Le Puits s’écrit dans le Grimoire : ouvre-le.' }],
+  'puits-ondin': [
+    { target: 'île:site:puits', text: 'Le chantier du Puits : touche-le.' },
+    { target: tipOf('site:puits'), text: 'Touche « Bâtir ».' },
+    { target: '[data-coach="site-build"]', text: 'Tout est réuni : bâtis le Puits.' }
+  ]
 };
+// La récompense : Brume, sur l'île ; si une fiche est encore ouverte, d'abord la refermer
+const CLAIM = [
+  { target: 'île:brume', text: 'Touche Brume : ta récompense t’attend.' },
+  { target: '.g-modal__close, .world__sheet-backdrop .world__link', text: 'Referme cette fiche : Brume t’attend avec ta récompense.' }
+];
 // La leçon du coach à une étape de l'île (la quête active : { id, done }), ou null : la récompense à réclamer auprès de
-// Brume, sinon le geste de la quête
+// Brume, sinon les gestes de la quête
 export function islandLesson(quest) {
   if (!quest || (!quest.done && !LESSONS[quest.id])) return null;
-  if (quest.done) return { id: 'claim', target: 'île:brume', mode: 'world', text: 'Touche Brume : ta récompense t’attend.' };
-  return { id: `quest-${quest.id}`, mode: 'world', ...LESSONS[quest.id] };
+  if (quest.done) return { id: 'claim', mode: 'world', steps: CLAIM };
+  return { id: `quest-${quest.id}`, mode: 'world', steps: LESSONS[quest.id] };
 }
 
 // Étapes 2 (sur l'île) à 5 : la quête active de Brume ({ id, done }, vue de l'île) dit où l'on en est. Rend une scène,
