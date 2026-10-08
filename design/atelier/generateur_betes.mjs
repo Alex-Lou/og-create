@@ -25,14 +25,16 @@ const PROFILS = Object.fromEntries(L.PROFILS.map(([groupe, dossier, nom, taille,
   return [hyph(dossier), { nom, groupe, dossier, cadre: [x, y, w, h], poses, dessin }];
 }));
 // Les bêtes orientées : nom rangé -> { nom, groupe, dossier, cadre, fiche, oiseau }
-const ORIENTEES = Object.fromEntries(L.ORIENTEES.map(([groupe, dossier, nom, { c, bird }]) => [hyph(dossier), { nom, groupe, dossier, cadre: orientees.betes[hyph(dossier)].cadre, fiche: c, oiseau: bird }]));
+const ORIENTEES = Object.fromEntries(L.ORIENTEES.map(([groupe, dossier, nom, { c, bird, pet }]) => [hyph(dossier), { nom, groupe, dossier, cadre: orientees.betes[hyph(dossier)].cadre, fiche: c, oiseau: bird, compagnie: !!pet }]));
+// les poses d'une bête orientée : la marche, plus assis et dodo pour les animaux de compagnie
+const posesOrientee = (b, vue) => [...(vue === 'avant' ? L.AVANT : L.DOS), ...(b.compagnie ? L.PET : [])];
 // Les égarés : sujet -> { nom, cadre, dessin }
 const EGARES = Object.fromEntries(L.EGARES.map(([sujet, nom, dessin]) => [sujet, { nom, cadre: egares.egares[sujet].cadre, dessin }]));
 
 // Ce qu'on peut demander : les bêtes de chaque sorte, leurs poses, leurs vues
 export const BETES = {
   profil: Object.fromEntries(Object.entries(PROFILS).map(([k, b]) => [k, { nom: b.nom, groupe: b.groupe, cadre: b.cadre, poses: b.poses }])),
-  orientees: Object.fromEntries(Object.entries(ORIENTEES).map(([k, b]) => [k, { nom: b.nom, groupe: b.groupe, cadre: b.cadre, poses: { avant: L.AVANT, dos: L.DOS } }])),
+  orientees: Object.fromEntries(Object.entries(ORIENTEES).map(([k, b]) => [k, { nom: b.nom, groupe: b.groupe, cadre: b.cadre, poses: { avant: posesOrientee(b, 'avant'), dos: posesOrientee(b, 'dos') } }])),
   egares: Object.fromEntries(Object.entries(EGARES).map(([k, b]) => [k, { nom: b.nom, cadre: b.cadre, poses: G.POSES }]))
 };
 
@@ -55,8 +57,8 @@ export function profil(bete, pose) {
 export function orientee(bete, vue, pose) {
   const b = prendre(ORIENTEES, 'bête inconnue', bete);
   dans(['avant', 'dos'], 'vue', vue);
-  dans(vue === 'avant' ? L.AVANT : L.DOS, 'pose', pose);
-  return { svg: svgOf(b.cadre, (b.oiseau ? B3.bird3 : B3.quad3)(b.fiche, vue, pose)), cadre: b.cadre, ms_par_image: vitesse(fichierOrientee(b, vue, pose)) };
+  dans(posesOrientee(b, vue), 'pose', pose);
+  return { svg: svgOf(b.cadre, (L.PET.includes(pose) ? B3.petPose3 : b.oiseau ? B3.bird3 : B3.quad3)(b.fiche, vue, pose)), cadre: b.cadre, ms_par_image: vitesse(fichierOrientee(b, vue, pose)) };
 }
 // Un égaré : vue 'avant' ou 'dos', pose de G.POSES
 export function egare(sujet, vue, pose) {
@@ -70,7 +72,7 @@ export function egare(sujet, vue, pose) {
 export function liste() {
   const out = [];
   for (const [k, b] of Object.entries(PROFILS)) for (const p of b.poses) out.push({ fichier: fichierProfil(b, p), fonction: 'profil', args: [k, p] });
-  for (const [k, b] of Object.entries(ORIENTEES)) for (const [v, poses] of [['avant', L.AVANT], ['dos', L.DOS]]) for (const p of poses) out.push({ fichier: fichierOrientee(b, v, p), fonction: 'orientee', args: [k, v, p] });
+  for (const [k, b] of Object.entries(ORIENTEES)) for (const v of ['avant', 'dos']) for (const p of posesOrientee(b, v)) out.push({ fichier: fichierOrientee(b, v, p), fonction: 'orientee', args: [k, v, p] });
   for (const k of Object.keys(EGARES)) for (const [v, poses] of Object.entries(G.POSES)) for (const p of poses) out.push({ fichier: fichierEgare(k, v, p), fonction: 'egare', args: [k, v, p] });
   return out;
 }

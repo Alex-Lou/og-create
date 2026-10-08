@@ -12,21 +12,22 @@ const require = createRequire(import.meta.url);
 const DIR = path.dirname(fileURLToPath(import.meta.url));
 const { unique, row, sheet, animated, write, shoot } = require('./planche.js');
 const Bt = require('./betes.js');
-const { quad3, bird3 } = require('./betes3.js');
-const { AVANT, DOS, ORIENTEES: LIST } = require('./betes_liste.js');
+const { quad3, bird3, petPose3 } = require('./betes3.js');
+const { AVANT, DOS, PET, ORIENTEES: LIST } = require('./betes_liste.js');
 const LIB = path.join(DIR, 'lib', 'animaux');
 const PNG = path.join(DIR, 'planches');
 const r2 = n => Math.round(n * 100) / 100;
 const svgOf = (frame, body, s = 1) => `<svg xmlns="http://www.w3.org/2000/svg" width="${r2(frame[2] * s)}" height="${r2(frame[3] * s)}" viewBox="${frame.join(' ')}">${body}</svg>`;
 
-const POSE_FR = { marche1: 'marche1', marche2: 'marche2', repos: 'repos', clignement: 'clignement', joie: 'joie' };
+const POSE_FR = { marche1: 'marche1', marche2: 'marche2', repos: 'repos', clignement: 'clignement', joie: 'joie', assis1: 'assis1', assis2: 'assis2', dodo1: 'dodo1', dodo2: 'dodo2' };
 const GROUPS = { ferme: 'La ferme', bois: 'Les bois', eau: 'L\'eau douce', climat: 'Les bêtes des climats', bestiaire: 'Le Bestiaire', familiers: 'Les familiers', mer: 'La mer' };
 
 const index = {
   _lisez_moi: [
     'Les bêtes qui marchent, dans les directions de la troupe : avant = trois quarts avant (la bête vient vers le bas à droite), dos = trois quarts dos (elle s\'éloigne vers le haut à droite) ; le miroir horizontal donne le bas à gauche et le haut à gauche. Le profil (lot B) reste pour aller tout droit à gauche ou à droite.',
     'Ancre (0, 0) au sol sous le milieu de la bête, comme le profil. Le cadre est celui du profil, élargi juste ce qu\'il faut (les pieds avant descendent un peu sous l\'ancre, la tête avance) : prendre le cadre noté ici.',
-    'Images : avant marche1, marche2, repos, clignement, joie (cœur) ; dos marche1, marche2, repos (on ne voit pas le visage). Marche à 260 ms par image, comme le profil.'
+    'Images : avant marche1, marche2, repos, clignement, joie (cœur) ; dos marche1, marche2, repos (on ne voit pas le visage). Marche à 260 ms par image, comme le profil.',
+    'Les chats et les chiens ont aussi assis1, assis2 (la queue enroulée au sol, son bout se lève ; 500 ms) et dodo1, dodo2 (roulés en boule, ils respirent, un « z » de plus ; 800 ms), dans les deux vues.'
   ],
   betes: {}
 };
@@ -34,7 +35,7 @@ const cells = Object.fromEntries(Object.keys(GROUPS).map(g => [g, []]));
 const anim = Object.fromEntries(Object.keys(GROUPS).map(g => [g, []]));
 let count = 0;
 
-for (const [g, dir, label, { c, bird }] of LIST) {
+for (const [g, dir, label, { c, bird, pet }] of LIST) {
   const draw = (view, p) => (bird ? bird3(c, view, p) : quad3(c, view, p));
   const av = AVANT.map(p => draw('avant', p)), ds = DOS.map(p => draw('dos', p));
   const base = Bt.BOX[c.size];
@@ -42,6 +43,8 @@ for (const [g, dir, label, { c, bird }] of LIST) {
   const files = { avant: [], dos: [] };
   av.forEach((body, i) => { const rel = `${g}/${dir}/${dir}_avant_${POSE_FR[AVANT[i]]}.svg`; write(path.join(LIB, rel), svgOf(frame, body)); files.avant.push(rel); count++; });
   ds.forEach((body, i) => { const rel = `${g}/${dir}/${dir}_dos_${POSE_FR[DOS[i]]}.svg`; write(path.join(LIB, rel), svgOf(frame, body)); files.dos.push(rel); count++; });
+  // les animaux de compagnie : assis et dodo, dans le cadre de la marche (les SVG déjà publiés ne bougent pas)
+  if (pet) for (const v of ['avant', 'dos']) for (const p of PET) { const rel = `${g}/${dir}/${dir}_${v}_${POSE_FR[p]}.svg`; write(path.join(LIB, rel), svgOf(frame, petPose3(c, v, p))); files[v].push(rel); count++; }
   index.betes[dir] = { nom: label, groupe: g, cadre: frame, fichiers: files };
   const s = Math.min(4.2, 120 / Math.max(frame[2], frame[3]));
   const prof = bird ? Bt.bird(c, 'marche1') : Bt.quad(c, 'marche1');

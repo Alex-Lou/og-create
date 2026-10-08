@@ -3,6 +3,7 @@
   "Les bêtes qui marchent, dans les directions de la troupe : avant = trois quarts avant (la bête vient vers le bas à droite), dos = trois quarts dos (elle s'éloigne vers le haut à droite) ; le miroir horizontal donne le bas à gauche et le haut à gauche. Le profil (lot B) reste pour aller tout droit à gauche ou à droite.",
   "Ancre (0, 0) au sol sous le milieu de la bête, comme le profil. Le cadre est celui du profil, élargi juste ce qu'il faut (les pieds avant descendent un peu sous l'ancre, la tête avance) : prendre le cadre noté ici.",
   "Images : avant marche1, marche2, repos, clignement, joie (cœur) ; dos marche1, marche2, repos (on ne voit pas le visage). Marche à 260 ms par image, comme le profil.",
+  "Les chats et les chiens ont aussi assis1, assis2 (la queue enroulée au sol, son bout se lève ; 500 ms) et dodo1, dodo2 (roulés en boule, ils respirent, un « z » de plus ; 800 ms), dans les deux vues.",
   "Noms rangés à l'assemblage (README, catalogue.json) : <sujet>_<vue>_<pose>_<n>.svg, vues face, avant (l'ancien « trois_quarts »), dos, profil ; les chemins ci-dessous suivent ces noms."
  ],
  "betes": {
@@ -333,12 +334,20 @@
      "ferme/chat/chat_avant_marche_2.svg",
      "ferme/chat/chat_avant_repos.svg",
      "ferme/chat/chat_avant_clignement.svg",
-     "ferme/chat/chat_avant_joie.svg"
+     "ferme/chat/chat_avant_joie.svg",
+     "ferme/chat/chat_avant_assis_1.svg",
+     "ferme/chat/chat_avant_assis_2.svg",
+     "ferme/chat/chat_avant_dodo_1.svg",
+     "ferme/chat/chat_avant_dodo_2.svg"
     ],
     "dos": [
      "ferme/chat/chat_dos_marche_1.svg",
      "ferme/chat/chat_dos_marche_2.svg",
-     "ferme/chat/chat_dos_repos.svg"
+     "ferme/chat/chat_dos_repos.svg",
+     "ferme/chat/chat_dos_assis_1.svg",
+     "ferme/chat/chat_dos_assis_2.svg",
+     "ferme/chat/chat_dos_dodo_1.svg",
+     "ferme/chat/chat_dos_dodo_2.svg"
     ]
    }
   },
@@ -357,12 +366,20 @@
      "ferme/chien/chien_avant_marche_2.svg",
      "ferme/chien/chien_avant_repos.svg",
      "ferme/chien/chien_avant_clignement.svg",
-     "ferme/chien/chien_avant_joie.svg"
+     "ferme/chien/chien_avant_joie.svg",
+     "ferme/chien/chien_avant_assis_1.svg",
+     "ferme/chien/chien_avant_assis_2.svg",
+     "ferme/chien/chien_avant_dodo_1.svg",
+     "ferme/chien/chien_avant_dodo_2.svg"
     ],
     "dos": [
      "ferme/chien/chien_dos_marche_1.svg",
      "ferme/chien/chien_dos_marche_2.svg",
-     "ferme/chien/chien_dos_repos.svg"
+     "ferme/chien/chien_dos_repos.svg",
+     "ferme/chien/chien_dos_assis_1.svg",
+     "ferme/chien/chien_dos_assis_2.svg",
+     "ferme/chien/chien_dos_dodo_1.svg",
+     "ferme/chien/chien_dos_dodo_2.svg"
     ]
    }
   },
@@ -381,12 +398,20 @@
      "ferme/chat-noir/chat-noir_avant_marche_2.svg",
      "ferme/chat-noir/chat-noir_avant_repos.svg",
      "ferme/chat-noir/chat-noir_avant_clignement.svg",
-     "ferme/chat-noir/chat-noir_avant_joie.svg"
+     "ferme/chat-noir/chat-noir_avant_joie.svg",
+     "ferme/chat-noir/chat-noir_avant_assis_1.svg",
+     "ferme/chat-noir/chat-noir_avant_assis_2.svg",
+     "ferme/chat-noir/chat-noir_avant_dodo_1.svg",
+     "ferme/chat-noir/chat-noir_avant_dodo_2.svg"
     ],
     "dos": [
      "ferme/chat-noir/chat-noir_dos_marche_1.svg",
      "ferme/chat-noir/chat-noir_dos_marche_2.svg",
-     "ferme/chat-noir/chat-noir_dos_repos.svg"
+     "ferme/chat-noir/chat-noir_dos_repos.svg",
+     "ferme/chat-noir/chat-noir_dos_assis_1.svg",
+     "ferme/chat-noir/chat-noir_dos_assis_2.svg",
+     "ferme/chat-noir/chat-noir_dos_dodo_1.svg",
+     "ferme/chat-noir/chat-noir_dos_dodo_2.svg"
     ]
    }
   },
@@ -405,12 +430,20 @@
      "ferme/chat-gris/chat-gris_avant_marche_2.svg",
      "ferme/chat-gris/chat-gris_avant_repos.svg",
      "ferme/chat-gris/chat-gris_avant_clignement.svg",
-     "ferme/chat-gris/chat-gris_avant_joie.svg"
+     "ferme/chat-gris/chat-gris_avant_joie.svg",
+     "ferme/chat-gris/chat-gris_avant_assis_1.svg",
+     "ferme/chat-gris/chat-gris_avant_assis_2.svg",
+     "ferme/chat-gris/chat-gris_avant_dodo_1.svg",
+     "ferme/chat-gris/chat-gris_avant_dodo_2.svg"
     ],
     "dos": [
      "ferme/chat-gris/chat-gris_dos_marche_1.svg",
      "ferme/chat-gris/chat-gris_dos_marche_2.svg",
-     "ferme/chat-gris/chat-gris_dos_repos.svg"
+     "ferme/chat-gris/chat-gris_dos_repos.svg",
+     "ferme/chat-gris/chat-gris_dos_assis_1.svg",
+     "ferme/chat-gris/chat-gris_dos_assis_2.svg",
+     "ferme/chat-gris/chat-gris_dos_dodo_1.svg",
+     "ferme/chat-gris/chat-gris_dos_dodo_2.svg"
     ]
    }
   },
@@ -429,12 +462,20 @@
      "ferme/chat-blanc/chat-blanc_avant_marche_2.svg",
      "ferme/chat-blanc/chat-blanc_avant_repos.svg",
      "ferme/chat-blanc/chat-blanc_avant_clignement.svg",
-     "ferme/chat-blanc/chat-blanc_avant_joie.svg"
+     "ferme/chat-blanc/chat-blanc_avant_joie.svg",
+     "ferme/chat-blanc/chat-blanc_avant_assis_1.svg",
+     "ferme/chat-blanc/chat-blanc_avant_assis_2.svg",
+     "ferme/chat-blanc/chat-blanc_avant_dodo_1.svg",
+     "ferme/chat-blanc/chat-blanc_avant_dodo_2.svg"
     ],
     "dos": [
      "ferme/chat-blanc/chat-blanc_dos_marche_1.svg",
      "ferme/chat-blanc/chat-blanc_dos_marche_2.svg",
-     "ferme/chat-blanc/chat-blanc_dos_repos.svg"
+     "ferme/chat-blanc/chat-blanc_dos_repos.svg",
+     "ferme/chat-blanc/chat-blanc_dos_assis_1.svg",
+     "ferme/chat-blanc/chat-blanc_dos_assis_2.svg",
+     "ferme/chat-blanc/chat-blanc_dos_dodo_1.svg",
+     "ferme/chat-blanc/chat-blanc_dos_dodo_2.svg"
     ]
    }
   },
@@ -453,12 +494,20 @@
      "ferme/chien-noir/chien-noir_avant_marche_2.svg",
      "ferme/chien-noir/chien-noir_avant_repos.svg",
      "ferme/chien-noir/chien-noir_avant_clignement.svg",
-     "ferme/chien-noir/chien-noir_avant_joie.svg"
+     "ferme/chien-noir/chien-noir_avant_joie.svg",
+     "ferme/chien-noir/chien-noir_avant_assis_1.svg",
+     "ferme/chien-noir/chien-noir_avant_assis_2.svg",
+     "ferme/chien-noir/chien-noir_avant_dodo_1.svg",
+     "ferme/chien-noir/chien-noir_avant_dodo_2.svg"
     ],
     "dos": [
      "ferme/chien-noir/chien-noir_dos_marche_1.svg",
      "ferme/chien-noir/chien-noir_dos_marche_2.svg",
-     "ferme/chien-noir/chien-noir_dos_repos.svg"
+     "ferme/chien-noir/chien-noir_dos_repos.svg",
+     "ferme/chien-noir/chien-noir_dos_assis_1.svg",
+     "ferme/chien-noir/chien-noir_dos_assis_2.svg",
+     "ferme/chien-noir/chien-noir_dos_dodo_1.svg",
+     "ferme/chien-noir/chien-noir_dos_dodo_2.svg"
     ]
    }
   },
@@ -477,12 +526,20 @@
      "ferme/chien-brun/chien-brun_avant_marche_2.svg",
      "ferme/chien-brun/chien-brun_avant_repos.svg",
      "ferme/chien-brun/chien-brun_avant_clignement.svg",
-     "ferme/chien-brun/chien-brun_avant_joie.svg"
+     "ferme/chien-brun/chien-brun_avant_joie.svg",
+     "ferme/chien-brun/chien-brun_avant_assis_1.svg",
+     "ferme/chien-brun/chien-brun_avant_assis_2.svg",
+     "ferme/chien-brun/chien-brun_avant_dodo_1.svg",
+     "ferme/chien-brun/chien-brun_avant_dodo_2.svg"
     ],
     "dos": [
      "ferme/chien-brun/chien-brun_dos_marche_1.svg",
      "ferme/chien-brun/chien-brun_dos_marche_2.svg",
-     "ferme/chien-brun/chien-brun_dos_repos.svg"
+     "ferme/chien-brun/chien-brun_dos_repos.svg",
+     "ferme/chien-brun/chien-brun_dos_assis_1.svg",
+     "ferme/chien-brun/chien-brun_dos_assis_2.svg",
+     "ferme/chien-brun/chien-brun_dos_dodo_1.svg",
+     "ferme/chien-brun/chien-brun_dos_dodo_2.svg"
     ]
    }
   },
@@ -501,12 +558,20 @@
      "ferme/chien-roux/chien-roux_avant_marche_2.svg",
      "ferme/chien-roux/chien-roux_avant_repos.svg",
      "ferme/chien-roux/chien-roux_avant_clignement.svg",
-     "ferme/chien-roux/chien-roux_avant_joie.svg"
+     "ferme/chien-roux/chien-roux_avant_joie.svg",
+     "ferme/chien-roux/chien-roux_avant_assis_1.svg",
+     "ferme/chien-roux/chien-roux_avant_assis_2.svg",
+     "ferme/chien-roux/chien-roux_avant_dodo_1.svg",
+     "ferme/chien-roux/chien-roux_avant_dodo_2.svg"
     ],
     "dos": [
      "ferme/chien-roux/chien-roux_dos_marche_1.svg",
      "ferme/chien-roux/chien-roux_dos_marche_2.svg",
-     "ferme/chien-roux/chien-roux_dos_repos.svg"
+     "ferme/chien-roux/chien-roux_dos_repos.svg",
+     "ferme/chien-roux/chien-roux_dos_assis_1.svg",
+     "ferme/chien-roux/chien-roux_dos_assis_2.svg",
+     "ferme/chien-roux/chien-roux_dos_dodo_1.svg",
+     "ferme/chien-roux/chien-roux_dos_dodo_2.svg"
     ]
    }
   },

@@ -331,6 +331,40 @@ var require_betes = __commonJS({
       return s;
     }
     __name(quad, "quad");
+    function blob(c, id, cx, cy, rx, ry, coat) {
+      const d = `M${r22(cx - rx)},${r22(cy)} a${r22(rx)},${r22(ry)} 0 1,0 ${r22(2 * rx)},0 a${r22(rx)},${r22(ry)} 0 1,0 ${r22(-2 * rx)},0 Z`;
+      return P(d, c.fur) + clip(id, d, `<rect x="${r22(cx - rx - 1)}" y="${r22(cy - ry - 1)}" width="${r22(rx * 2 + 2)}" height="${r22(ry * 2 + 2)}" fill="${c.furS}"/><ellipse cx="${r22(cx - rx * 0.1)}" cy="${r22(cy - ry * 0.16)}" rx="${r22(rx * 0.98)}" ry="${r22(ry * 0.9)}" fill="${c.fur}"/><ellipse cx="${r22(cx)}" cy="${r22(cy + ry * 0.95)}" rx="${r22(rx * 0.9)}" ry="${r22(ry * 0.45)}" fill="${c.belly || c.furS}"/>` + (coat || "")) + P(d, "none");
+    }
+    __name(blob, "blob");
+    var zed = /* @__PURE__ */ __name((x, y, k) => `<path d="M${r22(x)},${r22(y)} h${r22(1.8 * k)} l${r22(-1.8 * k)},${r22(2 * k)} h${r22(1.8 * k)}" fill="none" stroke="#7E8CB0" stroke-width="${r22(0.55 * k + 0.2)}" stroke-linecap="round" stroke-linejoin="round"/>`, "zed");
+    function petPose(c, pose) {
+      const [bx, , brx, bry] = c.body, hr = c.head[2], lg = c.legs, n = /2$/.test(pose) ? 1 : 0, t = c.tail || {};
+      const tw = t.w || 1.3;
+      let s = "";
+      if (/^assis/.test(pose)) {
+        const hx0 = bx - brx * 0.3, hy0 = -bry * 0.95, hrx = brx * 0.62, hry = bry * 0.95;
+        const cx2 = bx + brx * 0.3, cy2 = -bry * 1.65, crx = brx * 0.48, cry = bry * 1.15;
+        s += E(bx, -0.2, brx * 0.85, 1.4, "rgba(40,55,20,.18)", 0);
+        const patte = /* @__PURE__ */ __name((x, near) => limb([x, cy2], [x, -0.9], lg.w, near ? c.fur : c.furS) + paw(x + 0.4, -0.7, lg.w * 0.7, lg.paw || c.belly), "patte");
+        s += patte(cx2 - crx * 0.05, false);
+        s += blob(c, `pp${c.id}${pose}b`, hx0, hy0, hrx, hry, c.parts?.coat ? c.parts.coat({ bx: hx0, by: hy0 + hry * 0.5 }) : "");
+        s += blob(c, `pp${c.id}${pose}c`, cx2, cy2, crx, cry);
+        s += thick(`M${r22(hx0 - hrx * 0.95)},${r22(-1.4)} Q${r22(hx0 - hrx * 0.5)},0.3 ${r22(hx0 + hrx * 0.75)},${r22(n ? -2.6 : -0.7)}`, tw, c.fur);
+        s += patte(cx2 + crx * 0.4, true) + E(hx0 + hrx * 0.55, -0.85, lg.w * 1.05, 0.9, c.fur, 0.9) + toes(hx0 + hrx * 0.62, -0.9, lg.w * 0.9);
+        s += headQuad(c, { pose, hx: cx2 + crx * 0.55, hy: cy2 - cry - hr * 0.3, hr, mode: "open", bx: cx2, by: cy2 });
+        return s;
+      }
+      const cx = bx - brx * 0.1, ry = bry * 0.8 * (n ? 1.06 : 1), cy = -ry, rx = brx * 1.08;
+      const hx = cx + rx * 0.82, hy = -hr * 0.92;
+      s += E(cx + rx * 0.2, -0.2, rx * 1.05, 1.4, "rgba(40,55,20,.18)", 0);
+      s += blob(c, `pp${c.id}${pose}b`, cx, cy, rx, ry, c.parts?.coat ? c.parts.coat({ bx: cx, by: cy + ry * 0.5 }) : "");
+      s += thick(`M${r22(cx - rx * 0.95)},${r22(-1.6)} Q${r22(cx - rx * 0.3)},0.4 ${r22(cx + rx * 0.5)},${r22(-0.8)}`, tw, c.fur);
+      s += E(hx + hr * 0.55, -0.8, lg.w * 1.1, 0.9, c.fur, 0.9) + toes(hx + hr * 0.62, -0.85, lg.w * 0.9);
+      s += headQuad(c, { pose, hx, hy, hr, mode: "blink", bx: cx, by: cy });
+      s += zed(hx + hr * 0.7, hy - hr * 1.5, 0.8) + (n ? zed(hx + hr * 1.15, hy - hr * 2.2, 1.05) : "");
+      return s;
+    }
+    __name(petPose, "petPose");
     function tail(c, { bx, by, ph, walk }) {
       const t = c.tail || {};
       const [, , brx] = c.body;
@@ -874,7 +908,7 @@ var require_betes = __commonJS({
         head: /* @__PURE__ */ __name(({ hx, hy, mode }) => eye(hx - 1.9, hy - 3.3, 1.12, mode), "head")
       }
     });
-    module.exports = { BOX, K, quad, Q, eye, heartIcon, limb, thick, stroke, line, hoof, paw, oreilleRenard };
+    module.exports = { BOX, K, quad, Q, eye, heartIcon, limb, thick, stroke, line, hoof, paw, oreilleRenard, petPose, blob, zed };
     function beakOf(b, hx, hy, hr) {
       const x = hx + hr * 0.85, y = hy + (b.dy || 0.4), L0 = b.len || 2.4;
       switch (b.kind) {
@@ -1916,13 +1950,59 @@ var require_betes3 = __commonJS({
       head: /* @__PURE__ */ __name(({ se, hx, hy, hr }) => P(`M${r22(hx - hr)},${r22(hy - 0.3)} Q${r22(hx - hr * 0.6)},${r22(hy - hr * 1.02)} ${r22(hx + hr * 0.75)},${r22(hy - hr * 0.6)} Q${r22(hx)},${r22(hy - hr * 0.36)} ${r22(hx - hr)},${r22(hy - 0.3)} Z`, "#5C9CE0", 0) + (se ? `<path d="M${r22(hx - hr * 0.75)},${r22(hy - 0.1)} L${r22(hx - hr * 0.1)},${r22(hy - 0.35)} M${r22(hx + hr * 0.6)},${r22(hy - 0.45)} L${r22(hx + hr * 0.9)},${r22(hy - 0.4)}" stroke="#2A3A5A" stroke-width="0.5"/>` : ""), "head")
     });
     P3.gull = () => ({});
+    function petPose3(c, view, pose) {
+      const se = view === "avant", n = /2$/.test(pose) ? 1 : 0;
+      const [, , brx, bry] = c.body, hr0 = c.head[2], lg = c.legs, tw = (c.tail || {}).w || 1.3;
+      const hr = hr0 * (se ? 1.04 : 0.98);
+      const tete = /* @__PURE__ */ __name((hx2, hy2, mode) => headQ3(c, { pose: pose + view, view, se, hx: hx2, hy: hy2, hr, mode, by: hy2 + hr * 0.2, rx: hx2 / 0.62, ry: 0, ang: 0 }), "tete");
+      let s = "";
+      if (/^assis/.test(pose)) {
+        if (se) {
+          const hx02 = -brx * 0.35, hy02 = -bry * 0.95, hrx2 = brx * 0.6, hry2 = bry * 0.95;
+          const cx2 = brx * 0.25, cy3 = -bry * 1.55, crx2 = brx * 0.45, cry2 = bry * 1.1;
+          s += E(0, 0.2, brx * 0.95, Math.max(2.2, bry * 0.7), SH, 0);
+          s += limb([cx2 + crx2 * 0.45, cy3], [cx2 + crx2 * 0.45, -1.6], lg.w, c.furS) + paw(cx2 + crx2 * 0.45 + 0.3, -1.4, lg.w * 0.7, lg.paw || c.belly);
+          s += Bt2.blob(c, `p3${c.id}${view}${pose}b`, hx02, hy02, hrx2, hry2, c.p3?.coat ? "" : "");
+          s += Bt2.blob(c, `p3${c.id}${view}${pose}c`, cx2, cy3, crx2, cry2);
+          s += thick(`M${r22(hx02 - hrx2 * 0.9)},${r22(-1.6)} Q${r22(hx02 - hrx2 * 0.2)},0.9 ${r22(cx2 + crx2 * 0.2)},${r22(n ? -1.6 : 0.2)}`, tw, c.fur);
+          s += limb([cx2 - crx2 * 0.3, cy3], [cx2 - crx2 * 0.3, -0.9], lg.w, c.fur) + paw(cx2 - crx2 * 0.3 + 0.3, -0.7, lg.w * 0.7, lg.paw || c.belly);
+          s += tete(cx2 + crx2 * 0.2, cy3 - cry2 - hr * 0.25, "open");
+          return s;
+        }
+        const hx0 = -brx * 0.15, hy0 = -bry * 0.95, hrx = brx * 0.66, hry = bry * 1;
+        const cx = brx * 0.2, cy2 = -bry * 1.65, crx = brx * 0.46, cry = bry * 1.1;
+        s += E(0, 0.2, brx * 0.95, Math.max(2.2, bry * 0.7), SH, 0);
+        s += Bt2.blob(c, `p3${c.id}${view}${pose}c`, cx, cy2, crx, cry);
+        s += tete(cx + crx * 0.25, cy2 - cry - hr * 0.15, "open");
+        s += Bt2.blob(c, `p3${c.id}${view}${pose}b`, hx0, hy0, hrx, hry);
+        s += E(hx0 - hrx * 0.6, -0.8, lg.w * 1, 0.9, c.fur, 0.9) + E(hx0 + hrx * 0.5, -0.8, lg.w * 1, 0.9, c.fur, 0.9);
+        s += thick(`M${r22(hx0 + hrx * 0.1)},${r22(-1)} Q${r22(hx0 + hrx * 0.9)},0.9 ${r22(hx0 + hrx * 1.35)},${r22(n ? -3 : -1.2)}`, tw, c.fur);
+        return s;
+      }
+      const ry = bry * 0.82 * (n ? 1.06 : 1), rx = brx * 1, cy = -ry;
+      s += E(0, 0.2, rx * 1.05, Math.max(2.2, ry * 0.8), SH, 0);
+      if (se) {
+        const hx2 = rx * 0.55, hy2 = -hr * 0.85;
+        s += Bt2.blob(c, `p3${c.id}${view}${pose}b`, -rx * 0.15, cy, rx, ry);
+        s += thick(`M${r22(-rx * 1.05)},${r22(-1.2)} Q${r22(-rx * 0.3)},1.4 ${r22(rx * 0.3)},0.3`, tw, c.fur);
+        s += E(hx2 - hr * 0.4, -0.5, lg.w * 1.05, 0.9, c.fur, 0.9) + E(hx2 + hr * 0.45, -0.7, lg.w * 1.05, 0.9, c.fur, 0.9);
+        s += tete(hx2, hy2, "blink");
+        return s + Bt2.zed(hx2 + hr * 0.8, hy2 - hr * 1.5, 0.8) + (n ? Bt2.zed(hx2 + hr * 1.25, hy2 - hr * 2.2, 1.05) : "");
+      }
+      const hx = rx * 0.5, hy = cy - ry * 0.55 - hr * 0.3;
+      s += tete(hx, hy, "blink");
+      s += Bt2.blob(c, `p3${c.id}${view}${pose}b`, -rx * 0.1, cy, rx, ry);
+      s += thick(`M${r22(-rx * 0.95)},${r22(-ry * 0.7)} Q${r22(-rx * 0.6)},0.8 ${r22(rx * 0.2)},0.4`, tw, c.fur);
+      return s + Bt2.zed(hx + hr * 0.8, hy - hr * 1.4, 0.8) + (n ? Bt2.zed(hx + hr * 1.25, hy - hr * 2.1, 1.05) : "");
+    }
+    __name(petPose3, "petPose3");
     var with3 = /* @__PURE__ */ __name((c) => {
       const k = Object.keys(P3).find((n) => c.id.startsWith(n));
       if (!k || c.p3) return c;
       const p3 = P3[k](c);
       return { ...c, p3 };
     }, "with3");
-    module.exports = { quad3: /* @__PURE__ */ __name((c, view, pose) => quad3(with3(c), view, pose), "quad3"), bird3: /* @__PURE__ */ __name((c, view, pose) => bird3(with3(c), view, pose), "bird3"), ear3 };
+    module.exports = { petPose3: /* @__PURE__ */ __name((c, view, pose) => petPose3(with3(c), view, pose), "petPose3"), quad3: /* @__PURE__ */ __name((c, view, pose) => quad3(with3(c), view, pose), "quad3"), bird3: /* @__PURE__ */ __name((c, view, pose) => bird3(with3(c), view, pose), "bird3"), ear3 };
   }
 });
 
@@ -2554,6 +2634,11 @@ var require_betes_liste = __commonJS({
       const c = Bt2.B[id](v);
       return [c.size, WALK, (p) => Bt2.bird(c, p)];
     }, "b");
+    var PET = ["assis1", "assis2", "dodo1", "dodo2"];
+    var pet = /* @__PURE__ */ __name((id, v) => {
+      const c = Bt2.Q[id](v);
+      return [c.size, [...WALK, ...PET], (p) => PET.includes(p) ? Bt2.petPose(c, p) : Bt2.quad(c, p)];
+    }, "pet");
     var PROFILS2 = [
       ["ferme", "poule_rousse", "Poule rousse", ...b("hen", "rousse")],
       ["ferme", "poule_blanche", "Poule blanche", ...b("hen", "blanche")],
@@ -2568,14 +2653,14 @@ var require_betes_liste = __commonJS({
       ["ferme", "cochon_tachete", "Cochon tacheté", ...q("pig", "tachete")],
       ["ferme", "chevre", "Chèvre", ...q("goat")],
       ["ferme", "chevre_brune", "Chèvre brune", ...q("goat", "brune")],
-      ["ferme", "chat", "Chat", ...q("cat")],
-      ["ferme", "chien", "Chien", ...q("dog")],
-      ["ferme", "chat_noir", "Chat noir", ...q("cat", "noir")],
-      ["ferme", "chat_gris", "Chat gris tigré", ...q("cat", "gris")],
-      ["ferme", "chat_blanc", "Chat blanc taché", ...q("cat", "blanc")],
-      ["ferme", "chien_noir", "Chien noir et blanc", ...q("dog", "noir")],
-      ["ferme", "chien_brun", "Chien brun", ...q("dog", "brun")],
-      ["ferme", "chien_roux", "Chien roux", ...q("dog", "roux")],
+      ["ferme", "chat", "Chat", ...pet("cat")],
+      ["ferme", "chien", "Chien", ...pet("dog")],
+      ["ferme", "chat_noir", "Chat noir", ...pet("cat", "noir")],
+      ["ferme", "chat_gris", "Chat gris tigré", ...pet("cat", "gris")],
+      ["ferme", "chat_blanc", "Chat blanc taché", ...pet("cat", "blanc")],
+      ["ferme", "chien_noir", "Chien noir et blanc", ...pet("dog", "noir")],
+      ["ferme", "chien_brun", "Chien brun", ...pet("dog", "brun")],
+      ["ferme", "chien_roux", "Chien roux", ...pet("dog", "roux")],
       ["bois", "cerf", "Cerf", ...q("deer")],
       ["bois", "renard", "Renard", ...q("fox")],
       ["bois", "lapin", "Lapin", ...q("rabbit")],
@@ -2618,6 +2703,7 @@ var require_betes_liste = __commonJS({
     var DOS = ["marche1", "marche2", "repos"];
     var q3 = /* @__PURE__ */ __name((id, v) => ({ c: Bt2.Q[id](v), bird: false }), "q3");
     var b3 = /* @__PURE__ */ __name((id, v) => ({ c: Bt2.B[id](v), bird: true }), "b3");
+    var pet3 = /* @__PURE__ */ __name((id, v) => ({ c: Bt2.Q[id](v), bird: false, pet: true }), "pet3");
     var ORIENTEES2 = [
       ["ferme", "poule_rousse", "Poule rousse", b3("hen", "rousse")],
       ["ferme", "poule_blanche", "Poule blanche", b3("hen", "blanche")],
@@ -2632,14 +2718,14 @@ var require_betes_liste = __commonJS({
       ["ferme", "cochon_tachete", "Cochon tacheté", q3("pig", "tachete")],
       ["ferme", "chevre", "Chèvre", q3("goat")],
       ["ferme", "chevre_brune", "Chèvre brune", q3("goat", "brune")],
-      ["ferme", "chat", "Chat", q3("cat")],
-      ["ferme", "chien", "Chien", q3("dog")],
-      ["ferme", "chat_noir", "Chat noir", q3("cat", "noir")],
-      ["ferme", "chat_gris", "Chat gris tigré", q3("cat", "gris")],
-      ["ferme", "chat_blanc", "Chat blanc taché", q3("cat", "blanc")],
-      ["ferme", "chien_noir", "Chien noir et blanc", q3("dog", "noir")],
-      ["ferme", "chien_brun", "Chien brun", q3("dog", "brun")],
-      ["ferme", "chien_roux", "Chien roux", q3("dog", "roux")],
+      ["ferme", "chat", "Chat", pet3("cat")],
+      ["ferme", "chien", "Chien", pet3("dog")],
+      ["ferme", "chat_noir", "Chat noir", pet3("cat", "noir")],
+      ["ferme", "chat_gris", "Chat gris tigré", pet3("cat", "gris")],
+      ["ferme", "chat_blanc", "Chat blanc taché", pet3("cat", "blanc")],
+      ["ferme", "chien_noir", "Chien noir et blanc", pet3("dog", "noir")],
+      ["ferme", "chien_brun", "Chien brun", pet3("dog", "brun")],
+      ["ferme", "chien_roux", "Chien roux", pet3("dog", "roux")],
       ["bois", "cerf", "Cerf", q3("deer")],
       ["bois", "renard", "Renard", q3("fox")],
       ["bois", "lapin", "Lapin", q3("rabbit")],
@@ -2668,7 +2754,7 @@ var require_betes_liste = __commonJS({
       ["zombie", "Petit zombie tout mou", (v, p) => G2.zombie(v, p)],
       ...Object.entries(G2.BETES).map(([climat, b2]) => [`${b2.nom.split(" (")[0].toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g, "").replace(/ /g, "-")}`, b2.nom, (v, p) => G2.bete(climat, v, p), climat])
     ];
-    module.exports = { WALK, FLY, PROFILS: PROFILS2, AVANT, DOS, ORIENTEES: ORIENTEES2, EGARES: EGARES2 };
+    module.exports = { WALK, FLY, PET, PROFILS: PROFILS2, AVANT, DOS, ORIENTEES: ORIENTEES2, EGARES: EGARES2 };
   }
 });
 
@@ -2705,7 +2791,7 @@ var require_noms_betes = __commonJS({
     __name(nomBete, "nomBete");
     function vitesseBete(id, pose) {
       const [top, a] = id.split("/");
-      if (top === "animaux") return pose === "vol" ? 120 : pose === "nage" && /mer|familiers/.test(a) ? 420 : 260;
+      if (top === "animaux") return pose === "vol" ? 120 : pose === "assis" ? 500 : pose === "dodo" ? 800 : pose === "nage" && /mer|familiers/.test(a) ? 420 : 260;
       if (top === "egares") return { marche: 240, fuite: 160, bouderie: [500, 700], luciole: [300, 200, 200, 1e3], brume: [220, 220, 900] }[pose];
       return void 0;
     }
@@ -2727,6 +2813,7 @@ var orientees_default = {
     "Les bêtes qui marchent, dans les directions de la troupe : avant = trois quarts avant (la bête vient vers le bas à droite), dos = trois quarts dos (elle s'éloigne vers le haut à droite) ; le miroir horizontal donne le bas à gauche et le haut à gauche. Le profil (lot B) reste pour aller tout droit à gauche ou à droite.",
     "Ancre (0, 0) au sol sous le milieu de la bête, comme le profil. Le cadre est celui du profil, élargi juste ce qu'il faut (les pieds avant descendent un peu sous l'ancre, la tête avance) : prendre le cadre noté ici.",
     "Images : avant marche1, marche2, repos, clignement, joie (cœur) ; dos marche1, marche2, repos (on ne voit pas le visage). Marche à 260 ms par image, comme le profil.",
+    "Les chats et les chiens ont aussi assis1, assis2 (la queue enroulée au sol, son bout se lève ; 500 ms) et dodo1, dodo2 (roulés en boule, ils respirent, un « z » de plus ; 800 ms), dans les deux vues.",
     "Noms rangés à l'assemblage (README, catalogue.json) : <sujet>_<vue>_<pose>_<n>.svg, vues face, avant (l'ancien « trois_quarts »), dos, profil ; les chemins ci-dessous suivent ces noms."
   ],
   betes: {
@@ -3057,12 +3144,20 @@ var orientees_default = {
           "ferme/chat/chat_avant_marche_2.svg",
           "ferme/chat/chat_avant_repos.svg",
           "ferme/chat/chat_avant_clignement.svg",
-          "ferme/chat/chat_avant_joie.svg"
+          "ferme/chat/chat_avant_joie.svg",
+          "ferme/chat/chat_avant_assis_1.svg",
+          "ferme/chat/chat_avant_assis_2.svg",
+          "ferme/chat/chat_avant_dodo_1.svg",
+          "ferme/chat/chat_avant_dodo_2.svg"
         ],
         dos: [
           "ferme/chat/chat_dos_marche_1.svg",
           "ferme/chat/chat_dos_marche_2.svg",
-          "ferme/chat/chat_dos_repos.svg"
+          "ferme/chat/chat_dos_repos.svg",
+          "ferme/chat/chat_dos_assis_1.svg",
+          "ferme/chat/chat_dos_assis_2.svg",
+          "ferme/chat/chat_dos_dodo_1.svg",
+          "ferme/chat/chat_dos_dodo_2.svg"
         ]
       }
     },
@@ -3081,12 +3176,20 @@ var orientees_default = {
           "ferme/chien/chien_avant_marche_2.svg",
           "ferme/chien/chien_avant_repos.svg",
           "ferme/chien/chien_avant_clignement.svg",
-          "ferme/chien/chien_avant_joie.svg"
+          "ferme/chien/chien_avant_joie.svg",
+          "ferme/chien/chien_avant_assis_1.svg",
+          "ferme/chien/chien_avant_assis_2.svg",
+          "ferme/chien/chien_avant_dodo_1.svg",
+          "ferme/chien/chien_avant_dodo_2.svg"
         ],
         dos: [
           "ferme/chien/chien_dos_marche_1.svg",
           "ferme/chien/chien_dos_marche_2.svg",
-          "ferme/chien/chien_dos_repos.svg"
+          "ferme/chien/chien_dos_repos.svg",
+          "ferme/chien/chien_dos_assis_1.svg",
+          "ferme/chien/chien_dos_assis_2.svg",
+          "ferme/chien/chien_dos_dodo_1.svg",
+          "ferme/chien/chien_dos_dodo_2.svg"
         ]
       }
     },
@@ -3105,12 +3208,20 @@ var orientees_default = {
           "ferme/chat-noir/chat-noir_avant_marche_2.svg",
           "ferme/chat-noir/chat-noir_avant_repos.svg",
           "ferme/chat-noir/chat-noir_avant_clignement.svg",
-          "ferme/chat-noir/chat-noir_avant_joie.svg"
+          "ferme/chat-noir/chat-noir_avant_joie.svg",
+          "ferme/chat-noir/chat-noir_avant_assis_1.svg",
+          "ferme/chat-noir/chat-noir_avant_assis_2.svg",
+          "ferme/chat-noir/chat-noir_avant_dodo_1.svg",
+          "ferme/chat-noir/chat-noir_avant_dodo_2.svg"
         ],
         dos: [
           "ferme/chat-noir/chat-noir_dos_marche_1.svg",
           "ferme/chat-noir/chat-noir_dos_marche_2.svg",
-          "ferme/chat-noir/chat-noir_dos_repos.svg"
+          "ferme/chat-noir/chat-noir_dos_repos.svg",
+          "ferme/chat-noir/chat-noir_dos_assis_1.svg",
+          "ferme/chat-noir/chat-noir_dos_assis_2.svg",
+          "ferme/chat-noir/chat-noir_dos_dodo_1.svg",
+          "ferme/chat-noir/chat-noir_dos_dodo_2.svg"
         ]
       }
     },
@@ -3129,12 +3240,20 @@ var orientees_default = {
           "ferme/chat-gris/chat-gris_avant_marche_2.svg",
           "ferme/chat-gris/chat-gris_avant_repos.svg",
           "ferme/chat-gris/chat-gris_avant_clignement.svg",
-          "ferme/chat-gris/chat-gris_avant_joie.svg"
+          "ferme/chat-gris/chat-gris_avant_joie.svg",
+          "ferme/chat-gris/chat-gris_avant_assis_1.svg",
+          "ferme/chat-gris/chat-gris_avant_assis_2.svg",
+          "ferme/chat-gris/chat-gris_avant_dodo_1.svg",
+          "ferme/chat-gris/chat-gris_avant_dodo_2.svg"
         ],
         dos: [
           "ferme/chat-gris/chat-gris_dos_marche_1.svg",
           "ferme/chat-gris/chat-gris_dos_marche_2.svg",
-          "ferme/chat-gris/chat-gris_dos_repos.svg"
+          "ferme/chat-gris/chat-gris_dos_repos.svg",
+          "ferme/chat-gris/chat-gris_dos_assis_1.svg",
+          "ferme/chat-gris/chat-gris_dos_assis_2.svg",
+          "ferme/chat-gris/chat-gris_dos_dodo_1.svg",
+          "ferme/chat-gris/chat-gris_dos_dodo_2.svg"
         ]
       }
     },
@@ -3153,12 +3272,20 @@ var orientees_default = {
           "ferme/chat-blanc/chat-blanc_avant_marche_2.svg",
           "ferme/chat-blanc/chat-blanc_avant_repos.svg",
           "ferme/chat-blanc/chat-blanc_avant_clignement.svg",
-          "ferme/chat-blanc/chat-blanc_avant_joie.svg"
+          "ferme/chat-blanc/chat-blanc_avant_joie.svg",
+          "ferme/chat-blanc/chat-blanc_avant_assis_1.svg",
+          "ferme/chat-blanc/chat-blanc_avant_assis_2.svg",
+          "ferme/chat-blanc/chat-blanc_avant_dodo_1.svg",
+          "ferme/chat-blanc/chat-blanc_avant_dodo_2.svg"
         ],
         dos: [
           "ferme/chat-blanc/chat-blanc_dos_marche_1.svg",
           "ferme/chat-blanc/chat-blanc_dos_marche_2.svg",
-          "ferme/chat-blanc/chat-blanc_dos_repos.svg"
+          "ferme/chat-blanc/chat-blanc_dos_repos.svg",
+          "ferme/chat-blanc/chat-blanc_dos_assis_1.svg",
+          "ferme/chat-blanc/chat-blanc_dos_assis_2.svg",
+          "ferme/chat-blanc/chat-blanc_dos_dodo_1.svg",
+          "ferme/chat-blanc/chat-blanc_dos_dodo_2.svg"
         ]
       }
     },
@@ -3177,12 +3304,20 @@ var orientees_default = {
           "ferme/chien-noir/chien-noir_avant_marche_2.svg",
           "ferme/chien-noir/chien-noir_avant_repos.svg",
           "ferme/chien-noir/chien-noir_avant_clignement.svg",
-          "ferme/chien-noir/chien-noir_avant_joie.svg"
+          "ferme/chien-noir/chien-noir_avant_joie.svg",
+          "ferme/chien-noir/chien-noir_avant_assis_1.svg",
+          "ferme/chien-noir/chien-noir_avant_assis_2.svg",
+          "ferme/chien-noir/chien-noir_avant_dodo_1.svg",
+          "ferme/chien-noir/chien-noir_avant_dodo_2.svg"
         ],
         dos: [
           "ferme/chien-noir/chien-noir_dos_marche_1.svg",
           "ferme/chien-noir/chien-noir_dos_marche_2.svg",
-          "ferme/chien-noir/chien-noir_dos_repos.svg"
+          "ferme/chien-noir/chien-noir_dos_repos.svg",
+          "ferme/chien-noir/chien-noir_dos_assis_1.svg",
+          "ferme/chien-noir/chien-noir_dos_assis_2.svg",
+          "ferme/chien-noir/chien-noir_dos_dodo_1.svg",
+          "ferme/chien-noir/chien-noir_dos_dodo_2.svg"
         ]
       }
     },
@@ -3201,12 +3336,20 @@ var orientees_default = {
           "ferme/chien-brun/chien-brun_avant_marche_2.svg",
           "ferme/chien-brun/chien-brun_avant_repos.svg",
           "ferme/chien-brun/chien-brun_avant_clignement.svg",
-          "ferme/chien-brun/chien-brun_avant_joie.svg"
+          "ferme/chien-brun/chien-brun_avant_joie.svg",
+          "ferme/chien-brun/chien-brun_avant_assis_1.svg",
+          "ferme/chien-brun/chien-brun_avant_assis_2.svg",
+          "ferme/chien-brun/chien-brun_avant_dodo_1.svg",
+          "ferme/chien-brun/chien-brun_avant_dodo_2.svg"
         ],
         dos: [
           "ferme/chien-brun/chien-brun_dos_marche_1.svg",
           "ferme/chien-brun/chien-brun_dos_marche_2.svg",
-          "ferme/chien-brun/chien-brun_dos_repos.svg"
+          "ferme/chien-brun/chien-brun_dos_repos.svg",
+          "ferme/chien-brun/chien-brun_dos_assis_1.svg",
+          "ferme/chien-brun/chien-brun_dos_assis_2.svg",
+          "ferme/chien-brun/chien-brun_dos_dodo_1.svg",
+          "ferme/chien-brun/chien-brun_dos_dodo_2.svg"
         ]
       }
     },
@@ -3225,12 +3368,20 @@ var orientees_default = {
           "ferme/chien-roux/chien-roux_avant_marche_2.svg",
           "ferme/chien-roux/chien-roux_avant_repos.svg",
           "ferme/chien-roux/chien-roux_avant_clignement.svg",
-          "ferme/chien-roux/chien-roux_avant_joie.svg"
+          "ferme/chien-roux/chien-roux_avant_joie.svg",
+          "ferme/chien-roux/chien-roux_avant_assis_1.svg",
+          "ferme/chien-roux/chien-roux_avant_assis_2.svg",
+          "ferme/chien-roux/chien-roux_avant_dodo_1.svg",
+          "ferme/chien-roux/chien-roux_avant_dodo_2.svg"
         ],
         dos: [
           "ferme/chien-roux/chien-roux_dos_marche_1.svg",
           "ferme/chien-roux/chien-roux_dos_marche_2.svg",
-          "ferme/chien-roux/chien-roux_dos_repos.svg"
+          "ferme/chien-roux/chien-roux_dos_repos.svg",
+          "ferme/chien-roux/chien-roux_dos_assis_1.svg",
+          "ferme/chien-roux/chien-roux_dos_assis_2.svg",
+          "ferme/chien-roux/chien-roux_dos_dodo_1.svg",
+          "ferme/chien-roux/chien-roux_dos_dodo_2.svg"
         ]
       }
     },
@@ -4104,11 +4255,12 @@ var PROFILS = Object.fromEntries(import_betes_liste.default.PROFILS.map(([groupe
   const [x, y, w, h] = import_betes.default.BOX[taille];
   return [hyph(dossier), { nom, groupe, dossier, cadre: [x, y, w, h], poses, dessin }];
 }));
-var ORIENTEES = Object.fromEntries(import_betes_liste.default.ORIENTEES.map(([groupe, dossier, nom, { c, bird }]) => [hyph(dossier), { nom, groupe, dossier, cadre: orientees_default.betes[hyph(dossier)].cadre, fiche: c, oiseau: bird }]));
+var ORIENTEES = Object.fromEntries(import_betes_liste.default.ORIENTEES.map(([groupe, dossier, nom, { c, bird, pet }]) => [hyph(dossier), { nom, groupe, dossier, cadre: orientees_default.betes[hyph(dossier)].cadre, fiche: c, oiseau: bird, compagnie: !!pet }]));
+var posesOrientee = /* @__PURE__ */ __name((b, vue) => [...vue === "avant" ? import_betes_liste.default.AVANT : import_betes_liste.default.DOS, ...b.compagnie ? import_betes_liste.default.PET : []], "posesOrientee");
 var EGARES = Object.fromEntries(import_betes_liste.default.EGARES.map(([sujet, nom, dessin]) => [sujet, { nom, cadre: egares_default.egares[sujet].cadre, dessin }]));
 var BETES = {
   profil: Object.fromEntries(Object.entries(PROFILS).map(([k, b]) => [k, { nom: b.nom, groupe: b.groupe, cadre: b.cadre, poses: b.poses }])),
-  orientees: Object.fromEntries(Object.entries(ORIENTEES).map(([k, b]) => [k, { nom: b.nom, groupe: b.groupe, cadre: b.cadre, poses: { avant: import_betes_liste.default.AVANT, dos: import_betes_liste.default.DOS } }])),
+  orientees: Object.fromEntries(Object.entries(ORIENTEES).map(([k, b]) => [k, { nom: b.nom, groupe: b.groupe, cadre: b.cadre, poses: { avant: posesOrientee(b, "avant"), dos: posesOrientee(b, "dos") } }])),
   egares: Object.fromEntries(Object.entries(EGARES).map(([k, b]) => [k, { nom: b.nom, cadre: b.cadre, poses: import_egares.default.POSES }]))
 };
 var prendre = /* @__PURE__ */ __name((table, quoi, nom) => {
@@ -4133,8 +4285,8 @@ __name(profil, "profil");
 function orientee(bete, vue, pose) {
   const b = prendre(ORIENTEES, "bête inconnue", bete);
   dans(["avant", "dos"], "vue", vue);
-  dans(vue === "avant" ? import_betes_liste.default.AVANT : import_betes_liste.default.DOS, "pose", pose);
-  return { svg: svgOf(b.cadre, (b.oiseau ? import_betes3.default.bird3 : import_betes3.default.quad3)(b.fiche, vue, pose)), cadre: b.cadre, ms_par_image: vitesse(fichierOrientee(b, vue, pose)) };
+  dans(posesOrientee(b, vue), "pose", pose);
+  return { svg: svgOf(b.cadre, (import_betes_liste.default.PET.includes(pose) ? import_betes3.default.petPose3 : b.oiseau ? import_betes3.default.bird3 : import_betes3.default.quad3)(b.fiche, vue, pose)), cadre: b.cadre, ms_par_image: vitesse(fichierOrientee(b, vue, pose)) };
 }
 __name(orientee, "orientee");
 function egare(sujet, vue, pose) {
@@ -4147,7 +4299,7 @@ __name(egare, "egare");
 function liste() {
   const out = [];
   for (const [k, b] of Object.entries(PROFILS)) for (const p of b.poses) out.push({ fichier: fichierProfil(b, p), fonction: "profil", args: [k, p] });
-  for (const [k, b] of Object.entries(ORIENTEES)) for (const [v, poses] of [["avant", import_betes_liste.default.AVANT], ["dos", import_betes_liste.default.DOS]]) for (const p of poses) out.push({ fichier: fichierOrientee(b, v, p), fonction: "orientee", args: [k, v, p] });
+  for (const [k, b] of Object.entries(ORIENTEES)) for (const v of ["avant", "dos"]) for (const p of posesOrientee(b, v)) out.push({ fichier: fichierOrientee(b, v, p), fonction: "orientee", args: [k, v, p] });
   for (const k of Object.keys(EGARES)) for (const [v, poses] of Object.entries(import_egares.default.POSES)) for (const p of poses) out.push({ fichier: fichierEgare(k, v, p), fonction: "egare", args: [k, v, p] });
   return out;
 }

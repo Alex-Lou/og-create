@@ -11,6 +11,9 @@ const FLY = ['vol1', 'vol2', 'repos', 'joie'];
 // [groupe, fichier, libellé, cadre, poses, dessin(pose)]
 const q = (id, v) => { const c = Bt.Q[id](v); return [c.size, WALK, p => Bt.quad(c, p)]; };
 const b = (id, v) => { const c = Bt.B[id](v); return [c.size, WALK, p => Bt.bird(c, p)]; };
+// les animaux de compagnie (chat, chien) : la marche, plus assis et dodo
+const PET = ['assis1', 'assis2', 'dodo1', 'dodo2'];
+const pet = (id, v) => { const c = Bt.Q[id](v); return [c.size, [...WALK, ...PET], p => (PET.includes(p) ? Bt.petPose(c, p) : Bt.quad(c, p))]; };
 const PROFILS = [
   ['ferme', 'poule_rousse', 'Poule rousse', ...b('hen', 'rousse')], ['ferme', 'poule_blanche', 'Poule blanche', ...b('hen', 'blanche')],
   ['ferme', 'poule_noire', 'Poule noire', ...b('hen', 'noire')], ['ferme', 'poule_grise', 'Poule grise', ...b('hen', 'grise')],
@@ -19,9 +22,9 @@ const PROFILS = [
   ['ferme', 'mouton', 'Mouton', ...q('sheep')], ['ferme', 'mouton_noir', 'Mouton noir', ...q('sheep', 'noir')],
   ['ferme', 'cochon', 'Cochon', ...q('pig')], ['ferme', 'cochon_tachete', 'Cochon tacheté', ...q('pig', 'tachete')],
   ['ferme', 'chevre', 'Chèvre', ...q('goat')], ['ferme', 'chevre_brune', 'Chèvre brune', ...q('goat', 'brune')],
-  ['ferme', 'chat', 'Chat', ...q('cat')], ['ferme', 'chien', 'Chien', ...q('dog')],
-  ['ferme', 'chat_noir', 'Chat noir', ...q('cat', 'noir')], ['ferme', 'chat_gris', 'Chat gris tigré', ...q('cat', 'gris')], ['ferme', 'chat_blanc', 'Chat blanc taché', ...q('cat', 'blanc')],
-  ['ferme', 'chien_noir', 'Chien noir et blanc', ...q('dog', 'noir')], ['ferme', 'chien_brun', 'Chien brun', ...q('dog', 'brun')], ['ferme', 'chien_roux', 'Chien roux', ...q('dog', 'roux')],
+  ['ferme', 'chat', 'Chat', ...pet('cat')], ['ferme', 'chien', 'Chien', ...pet('dog')],
+  ['ferme', 'chat_noir', 'Chat noir', ...pet('cat', 'noir')], ['ferme', 'chat_gris', 'Chat gris tigré', ...pet('cat', 'gris')], ['ferme', 'chat_blanc', 'Chat blanc taché', ...pet('cat', 'blanc')],
+  ['ferme', 'chien_noir', 'Chien noir et blanc', ...pet('dog', 'noir')], ['ferme', 'chien_brun', 'Chien brun', ...pet('dog', 'brun')], ['ferme', 'chien_roux', 'Chien roux', ...pet('dog', 'roux')],
   ['bois', 'cerf', 'Cerf', ...q('deer')], ['bois', 'renard', 'Renard', ...q('fox')], ['bois', 'lapin', 'Lapin', ...q('rabbit')],
   ['bois', 'herisson', 'Hérisson', ...q('hedgehog')], ['bois', 'ecureuil', 'Écureuil', ...q('squirrel')], ['bois', 'loutre', 'Loutre', ...q('otter')],
   ['eau', 'heron', 'Héron', ...b('heron')],
@@ -56,6 +59,7 @@ const AVANT = ['marche1', 'marche2', 'repos', 'clignement', 'joie'];
 const DOS = ['marche1', 'marche2', 'repos'];
 const q3 = (id, v) => ({ c: Bt.Q[id](v), bird: false });
 const b3 = (id, v) => ({ c: Bt.B[id](v), bird: true });
+const pet3 = (id, v) => ({ c: Bt.Q[id](v), bird: false, pet: true });
 // [groupe, dossier, libellé, bête] : les marcheurs du lot B
 const ORIENTEES = [
   ['ferme', 'poule_rousse', 'Poule rousse', b3('hen', 'rousse')], ['ferme', 'poule_blanche', 'Poule blanche', b3('hen', 'blanche')],
@@ -65,9 +69,9 @@ const ORIENTEES = [
   ['ferme', 'mouton', 'Mouton', q3('sheep')], ['ferme', 'mouton_noir', 'Mouton noir', q3('sheep', 'noir')],
   ['ferme', 'cochon', 'Cochon', q3('pig')], ['ferme', 'cochon_tachete', 'Cochon tacheté', q3('pig', 'tachete')],
   ['ferme', 'chevre', 'Chèvre', q3('goat')], ['ferme', 'chevre_brune', 'Chèvre brune', q3('goat', 'brune')],
-  ['ferme', 'chat', 'Chat', q3('cat')], ['ferme', 'chien', 'Chien', q3('dog')],
-  ['ferme', 'chat_noir', 'Chat noir', q3('cat', 'noir')], ['ferme', 'chat_gris', 'Chat gris tigré', q3('cat', 'gris')], ['ferme', 'chat_blanc', 'Chat blanc taché', q3('cat', 'blanc')],
-  ['ferme', 'chien_noir', 'Chien noir et blanc', q3('dog', 'noir')], ['ferme', 'chien_brun', 'Chien brun', q3('dog', 'brun')], ['ferme', 'chien_roux', 'Chien roux', q3('dog', 'roux')],
+  ['ferme', 'chat', 'Chat', pet3('cat')], ['ferme', 'chien', 'Chien', pet3('dog')],
+  ['ferme', 'chat_noir', 'Chat noir', pet3('cat', 'noir')], ['ferme', 'chat_gris', 'Chat gris tigré', pet3('cat', 'gris')], ['ferme', 'chat_blanc', 'Chat blanc taché', pet3('cat', 'blanc')],
+  ['ferme', 'chien_noir', 'Chien noir et blanc', pet3('dog', 'noir')], ['ferme', 'chien_brun', 'Chien brun', pet3('dog', 'brun')], ['ferme', 'chien_roux', 'Chien roux', pet3('dog', 'roux')],
   ['bois', 'cerf', 'Cerf', q3('deer')], ['bois', 'renard', 'Renard', q3('fox')], ['bois', 'lapin', 'Lapin', q3('rabbit')],
   ['bois', 'herisson', 'Hérisson', q3('hedgehog')], ['bois', 'ecureuil', 'Écureuil', q3('squirrel')], ['bois', 'loutre', 'Loutre', q3('otter')],
   ['eau', 'heron', 'Héron', b3('heron')],
@@ -90,4 +94,4 @@ const EGARES = [
   ...Object.entries(G.BETES).map(([climat, b]) => [`${b.nom.split(' (')[0].toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '').replace(/ /g, '-')}`, b.nom, (v, p) => G.bete(climat, v, p), climat])
 ];
 
-module.exports = { WALK, FLY, PROFILS, AVANT, DOS, ORIENTEES, EGARES };
+module.exports = { WALK, FLY, PET, PROFILS, AVANT, DOS, ORIENTEES, EGARES };
