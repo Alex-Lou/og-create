@@ -989,7 +989,7 @@ Tu voyageais sur *l'Hirondelle*, et tu te réveilles seul sur la Grève. Ton ava
 
 Le tutoriel n'est plus un tunnel qui présente toute l'île. Chaque compagnon possède une séquence courte, motivée par un besoin immédiat, puis le joueur retrouve de l'air et du jeu libre avant la suivante. Une séquence ne présente que les commandes dont elle a besoin ; les autres onglets restent visibles mais grisés.
 
-La seule séquence arrêtée en détail dans cette révision est celle de **Brume**. Elle doit être entièrement comprise et terminée avant l'arrivée d'Aster.
+La seule séquence arrêtée en détail dans cette révision est celle de **Brume**. Elle doit être entièrement comprise et terminée avant l'arrivée d'Aster. Du réveil au sommeil, le joueur reste sur **la Grève** : le haut de plage, les six trouvailles et l'emplacement du feu constituent tout son monde jouable pour cette première nuit. Le reste de l'île peut se deviner sous la brume, mais rien ne l'invite à le parcourir.
 
 | Temps | Situation | Action apprise | Interface accessible | Condition de sortie |
 |---|---|---|---|---|
@@ -997,11 +997,11 @@ La seule séquence arrêtée en détail dans cette révision est celle de **Brum
 | Rencontre | une lueur mène à Brume ; elle confie le Grimoire | avancer dans une scène courte, sans faux choix | scène uniquement | Grimoire touché |
 | Première page | la brume bouche le rivage | **Air + Air = Vent** | Grimoire seul ; Île, Sceau et Défis grisés | Vent écrit, puis souffle vu |
 | Premier camp | le Vent ouvre le rivage | ramasser les **six** trouvailles et lire les réserves | Grimoire + Île ; Sceau et Défis grisés | six trouvailles ramassées et récompense réclamée |
-| Feu | la nuit approche | suivre le ruban vers **Brasier**, puis bâtir le Feu de camp avec 4 bois et 2 galets | Grimoire + Île | Foyer I bâti et récompense réclamée |
+| Feu | le froid gagne pendant la même nuit | suivre le ruban vers **Brasier**, puis bâtir le Feu de camp sur la Grève avec 4 bois et 2 galets | Grimoire + Grève | Foyer I bâti et récompense réclamée |
 | Première nuit | le feu tient ; Brume veille | comprendre que l'île continue et reconnaître la fin d'une séquence | scène du feu | nuit vue ; silhouette aperçue |
 | Matin | Aster rejoint le feu | débuter **sa** séquence par la Récolte | l'Île reste ouverte ; le Sceau peut s'ouvrir après sa rencontre | arrivée d'Aster vue |
 
-Règles de rythme : une seule notion neuve par battement ; une action réelle entre deux explications ; aucune mécanique future annoncée en détail ; aucune arrivée de Cannelle, Rivet ou Ondin avant que la première Récolte d'Aster soit terminée. La progression recherchée est : observation → besoin → geste guidé → conséquence visible → courte respiration → étape suivante.
+Règles de rythme : une seule notion neuve par battement ; une action réelle entre deux explications ; aucune mécanique future annoncée en détail ; aucun changement de lieu avant le matin ; aucune arrivée de Cannelle, Rivet ou Ondin avant que la première Récolte d'Aster soit terminée. La progression recherchée est : observation → besoin → geste guidé → conséquence visible → courte respiration → étape suivante.
 
 La création du compte reste, pour cette première correction technique, entre le Vent et l'accès à l'île : les routes du Monde exigent actuellement un compte. La déplacer après la nuit nécessiterait une persistance complète de l'île invitée ; ce chantier est distinct et ne doit pas être simulé par du texte.
 

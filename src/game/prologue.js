@@ -96,7 +96,7 @@ const LESSONS = {
   ],
   recolte: [{ target: '.world__play', text: 'Touche la Récolte : l’île t’y donne de quoi bâtir.' }],
   feu: [
-    { target: 'île:site:foyer', text: 'Le chantier du feu de camp, au camp : touche-le.' },
+    { target: 'île:site:foyer', text: 'Le chantier du feu de camp est ici, sur la Grève : touche-le.' },
     { target: tipOf('site:foyer'), text: 'Touche « Bâtir ».' },
     { target: BUILD, text: 'Quatre bois flottés, deux galets : bâtis le feu de camp.' }
   ],

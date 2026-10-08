@@ -80,6 +80,9 @@ describe('le tutoriel', () => {
     expect(island({ id: 'poules', done: true }, all)).toEqual({ phase: 'lines', lines: ['ponte', 'claim'] });
     // Chaque réplique nommée existe
     for (const line of ['claim', 'chaine', 'bulle', 'soupe', 'puzzle', 'or', 'souci', 'source', 'baguette', 'ruban', 'chut', 'produit', 'epaves', 'cendres', 'flambe', 'caquets', 'ponte']) expect(LINES[line], line).toBeTruthy();
+    // La séquence de Brume ne simule aucun lever du jour : le joueur campe sur la Grève jusqu'au matin d'Aster.
+    expect([LINES.greve, LINES.epaves, LINES.cendres, ...SCENES.nuit.map(frame => frame.text || '')].join(' ')).toContain('Grève');
+    expect([LINES.greve, LINES.cendres].join(' ')).not.toMatch(/jour se lève|nuit approche/i);
   });
   it('repris par le compte : les scènes des étapes passées comptent comme vues, celle de l’étape en cours se joue', () => {
     expect(inPrologue('feu')).toBe(true);

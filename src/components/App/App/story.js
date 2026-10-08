@@ -18,7 +18,7 @@ import { DEFAULT_LOOK } from '@/game/sceneArt';
 
 // Un onglet s'ouvre pendant le tutoriel : Brume le dit (la barre fait briller l'onglet)
 const TAB_OPENED = {
-  world: 'Le vent a chassé la brume du rivage : Brumelune s’ouvre. Touche « Île », en bas.',
+  world: 'Le vent a chassé la brume de la Grève. Touche « Île », en bas : pour cette nuit, on reste près du rivage.',
   sceau: 'Ton nom est au Grimoire : ton sceau t’attend, avec ton compte et tes succès. Touche « Sceau » quand tu veux.',
   timer: 'Les Défis s’ouvrent : des énigmes contre le sablier, pour gagner des écus. Touche « Défis » quand tu veux.'
 };

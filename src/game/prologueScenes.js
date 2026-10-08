@@ -42,7 +42,7 @@ export const SCENES = {
   // Le feu est réellement bâti avant cette scène : elle ferme la première journée, puis annonce quelqu'un au matin.
   nuit: [
     { scene: '05_feu', still: true, who: 'Brume', text: 'Moi, je ne brûle rien. Je n’ai jamais rien réchauffé. … Je souffle quand même ?' },
-    { scene: '05_feu', thought: true, text: 'Le feu tient. Pour cette nuit, ça suffira.' },
+    { scene: '05_feu', thought: true, text: 'Le feu tient. Pour cette nuit, la Grève suffira.' },
     { scene: '05_feu', who: 'Brume', text: 'Dors. Je surveille la brume.' },
     { scene: '06_silhouette', who: 'Brume', text: 'Tu as vu ? Là-bas, sur les rochers. Quelqu’un.' }
   ],
@@ -94,13 +94,13 @@ const BOOK_FACE = `data:image/svg+xml;charset=utf-8,${encodeURIComponent('<svg x
 export const LINES = {
   vent: { name: 'Le Grimoire', face: BOOK_FACE, text: '« Mêle l’Air à l’Air, et nomme ce qui naît. »' },
   nom: 'Signe. Le livre se souviendra de toi, même si tu pars. … Tu ne pars pas, hein ?',
-  greve: 'Le jour se lève sur Brumelune… La mer a rendu des choses, au rivage. Viens voir !',
+  greve: 'La brume a reculé sur la Grève. La mer a rendu des choses, un peu plus loin. Viens voir !',
   // Sur l'île
   claim: 'Je brille ! Touche-moi : ce que tu as fait mérite quelque chose.',
   // Brume reste seule avec le joueur jusqu'à la première nuit.
   epaves: 'La mer a rendu six choses : du bois flotté, des coquillages, des galets. Ramasse tout : ce sera notre premier camp.',
   chaine: 'Une longue chaîne… et l’île t’en donne plus. Elle aime ça, je crois.',
-  cendres: 'La nuit approche. Avec le Brasier du Grimoire, le bois et les galets, on peut bâtir un feu qui tiendra.',
+  cendres: 'La nuit n’en finit pas. Avec le Brasier du Grimoire, le bois et les galets, on peut bâtir un feu qui tiendra.',
   flambe: 'Il flambe… Il chauffe ? Je crois que je le sens. Un peu.',
   bulle: { who: 'foyer', mood: 'malicieux', text: 'Des coquillages crus ? Ma brindille, on n’est pas des sauvages. Donne : je te fais une soupe.' },
   soupe: { who: 'foyer', mood: 'content', text: 'Une soupe… Une cuillère pour le corps, une pour l’âme.' },
