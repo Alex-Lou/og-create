@@ -80,7 +80,13 @@ var require_troupe = __commonJS({
       const d = `M${r22(x)},${r22(y)} L${r22(x + z)},${r22(y)} L${r22(x)},${r22(y + z)} L${r22(x + z)},${r22(y + z)}`;
       return `<path d="${d}" fill="none" stroke="${OUT2}" stroke-width="${r22(z * 0.5 + 0.8)}" stroke-linejoin="round" stroke-linecap="round"/><path d="${d}" fill="none" stroke="${WHITE}" stroke-width="${r22(z * 0.5)}" stroke-linejoin="round" stroke-linecap="round"/>`;
     }, "zee");
+    var visage = null;
+    var visageVide = /* @__PURE__ */ __name(() => visage, "visageVide");
     function expression(g, ctx) {
+      if (ctx.expr === "vide") {
+        visage = g;
+        return "";
+      }
       const { expr, n } = ctx;
       const [mx, my] = g.mouth;
       const w = g.mw;
@@ -257,7 +263,7 @@ var require_troupe = __commonJS({
     __name(frame, "frame");
     var svg = /* @__PURE__ */ __name((body, scale = 1) => `<svg xmlns="http://www.w3.org/2000/svg" width="${48 * scale}" height="${64 * scale}" viewBox="0 0 48 64">${body}</svg>`, "svg");
     var POSES = [["face_repos", "front", "repos", 2], ["avant_marche", "se", "marche", 4], ["dos_marche", "ne", "marche", 4], ["face_salut", "front", "salut", 2]];
-    module.exports = { OUT: OUT2, W, r2: r22, st, P: P2, E, L, limb, clip, eyes, expression, EXPRS, drop, zee, arm, poing, bareFoot, shoe, leg, frame, svg, POSES };
+    module.exports = { OUT: OUT2, W, r2: r22, st, P: P2, E, L, limb, clip, eyes, expression, visageVide, EXPRS, drop, zee, arm, poing, bareFoot, shoe, leg, frame, svg, POSES };
   }
 });
 

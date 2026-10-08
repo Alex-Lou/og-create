@@ -70,7 +70,11 @@ const zee = (x, y, z) => {
 //   eyes [[x, y, rx], …], ry, brow (couleur), browY, browW, mouth [x, y], mw (demi-largeur du sourire), neutral(mx, my)
 //   (bouche au repos, propre au caractère), restEyes (yeux au repos, « open » par défaut), mouthC, tongue,
 //   cheeks [[x, rx], …], cheekY, temple, anger, zz (où poser les signes)
+// L'expression « vide » (portraits.js) ne dessine rien : elle garde la géométrie du visage, que le portrait redessine
+let visage = null;
+const visageVide = () => visage;
 function expression(g, ctx) {
+  if (ctx.expr === 'vide') { visage = g; return ''; }
   const { expr, n } = ctx;
   const [mx, my] = g.mouth;
   const w = g.mw;
@@ -262,4 +266,4 @@ function frame(c, view, pose, n, expr) {
 const svg = (body, scale = 1) => `<svg xmlns="http://www.w3.org/2000/svg" width="${48 * scale}" height="${64 * scale}" viewBox="0 0 48 64">${body}</svg>`;
 const POSES = [['face_repos', 'front', 'repos', 2], ['avant_marche', 'se', 'marche', 4], ['dos_marche', 'ne', 'marche', 4], ['face_salut', 'front', 'salut', 2]];
 
-module.exports = { OUT, W, r2, st, P, E, L, limb, clip, eyes, expression, EXPRS, drop, zee, arm, poing, bareFoot, shoe, leg, frame, svg, POSES };
+module.exports = { OUT, W, r2, st, P, E, L, limb, clip, eyes, expression, visageVide, EXPRS, drop, zee, arm, poing, bareFoot, shoe, leg, frame, svg, POSES };
