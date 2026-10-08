@@ -151065,6 +151065,359 @@
    "statut": "ok"
   },
   {
+   "id": "chemins/cailloux",
+   "rubrique": "chemins",
+   "titre": "Les cailloux du coup de bêche",
+   "images": 3,
+   "fichiers": [
+    "svg/chemins/cailloux_1.svg",
+    "svg/chemins/cailloux_2.svg",
+    "svg/chemins/cailloux_3.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    64,
+    48
+   ],
+   "ms_par_image": 110,
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "chemins/chemin_ne",
+   "rubrique": "chemins",
+   "titre": "Chemin ne",
+   "images": 1,
+   "fichiers": [
+    "svg/chemins/chemin_ne.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    64,
+    32
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "chemins/chemin_ne-no",
+   "rubrique": "chemins",
+   "titre": "Chemin ne no",
+   "images": 1,
+   "fichiers": [
+    "svg/chemins/chemin_ne-no.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    64,
+    32
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "chemins/chemin_ne-se",
+   "rubrique": "chemins",
+   "titre": "Chemin ne se",
+   "images": 1,
+   "fichiers": [
+    "svg/chemins/chemin_ne-se.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    64,
+    32
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "chemins/chemin_ne-se-no",
+   "rubrique": "chemins",
+   "titre": "Chemin ne se no",
+   "images": 1,
+   "fichiers": [
+    "svg/chemins/chemin_ne-se-no.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    64,
+    32
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "chemins/chemin_ne-se-so",
+   "rubrique": "chemins",
+   "titre": "Chemin ne se so",
+   "images": 1,
+   "fichiers": [
+    "svg/chemins/chemin_ne-se-so.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    64,
+    32
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "chemins/chemin_ne-se-so-no",
+   "rubrique": "chemins",
+   "titre": "Chemin ne se so no",
+   "images": 1,
+   "fichiers": [
+    "svg/chemins/chemin_ne-se-so-no.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    64,
+    32
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "chemins/chemin_ne-so",
+   "rubrique": "chemins",
+   "titre": "Chemin ne so",
+   "images": 1,
+   "fichiers": [
+    "svg/chemins/chemin_ne-so.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    64,
+    32
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "chemins/chemin_ne-so-no",
+   "rubrique": "chemins",
+   "titre": "Chemin ne so no",
+   "images": 1,
+   "fichiers": [
+    "svg/chemins/chemin_ne-so-no.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    64,
+    32
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "chemins/chemin_no",
+   "rubrique": "chemins",
+   "titre": "Chemin no",
+   "images": 1,
+   "fichiers": [
+    "svg/chemins/chemin_no.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    64,
+    32
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "chemins/chemin_se",
+   "rubrique": "chemins",
+   "titre": "Chemin se",
+   "images": 1,
+   "fichiers": [
+    "svg/chemins/chemin_se.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    64,
+    32
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "chemins/chemin_se-no",
+   "rubrique": "chemins",
+   "titre": "Chemin se no",
+   "images": 1,
+   "fichiers": [
+    "svg/chemins/chemin_se-no.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    64,
+    32
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "chemins/chemin_se-so",
+   "rubrique": "chemins",
+   "titre": "Chemin se so",
+   "images": 1,
+   "fichiers": [
+    "svg/chemins/chemin_se-so.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    64,
+    32
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "chemins/chemin_se-so-no",
+   "rubrique": "chemins",
+   "titre": "Chemin se so no",
+   "images": 1,
+   "fichiers": [
+    "svg/chemins/chemin_se-so-no.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    64,
+    32
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "chemins/chemin_seul",
+   "rubrique": "chemins",
+   "titre": "Chemin seul",
+   "images": 1,
+   "fichiers": [
+    "svg/chemins/chemin_seul.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    64,
+    32
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "chemins/chemin_so",
+   "rubrique": "chemins",
+   "titre": "Chemin so",
+   "images": 1,
+   "fichiers": [
+    "svg/chemins/chemin_so.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    64,
+    32
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "chemins/chemin_so-no",
+   "rubrique": "chemins",
+   "titre": "Chemin so no",
+   "images": 1,
+   "fichiers": [
+    "svg/chemins/chemin_so-no.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    64,
+    32
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "chemins/creuse",
+   "rubrique": "chemins",
+   "titre": "Le creusement d'un chemin droit : le tracé marqué (piquets et ficelle)",
+   "images": 4,
+   "fichiers": [
+    "svg/chemins/creuse_1.svg",
+    "svg/chemins/creuse_2.svg",
+    "svg/chemins/creuse_3.svg",
+    "svg/chemins/creuse_4.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    64,
+    32
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "chemins/mottes",
+   "rubrique": "chemins",
+   "titre": "Les mottes du coup de bêche",
+   "images": 4,
+   "fichiers": [
+    "svg/chemins/mottes_1.svg",
+    "svg/chemins/mottes_2.svg",
+    "svg/chemins/mottes_3.svg",
+    "svg/chemins/mottes_4.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    64,
+    48
+   ],
+   "ms_par_image": 90,
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "chemins/poussiere",
+   "rubrique": "chemins",
+   "titre": "La poussière du coup de bêche",
+   "images": 3,
+   "fichiers": [
+    "svg/chemins/poussiere_1.svg",
+    "svg/chemins/poussiere_2.svg",
+    "svg/chemins/poussiere_3.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    64,
+    48
+   ],
+   "ms_par_image": 110,
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
    "id": "hud/barre_onglets",
    "rubrique": "hud",
    "titre": "Barre d'onglets",

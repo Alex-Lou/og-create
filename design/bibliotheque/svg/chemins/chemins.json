@@ -1,0 +1,369 @@
+{
+ "_lisez_moi": [
+  "Les chemins de l'île au format des cases du terrain : un losange isométrique de 64 × 32 (TW × TH de src/world/terrain.js), sans trait sur le bord pour que les cases se touchent.",
+  "Les 16 raccords : le chemin part du centre vers le milieu des côtés où la case voisine est aussi un chemin. Masque : NE 1 (case x, y − 1), SE 2 (x + 1, y), SO 4 (x, y + 1), NO 8 (x − 1, y) ; raccords donne le fichier de chaque masque.",
+  "Le creusement : 4 étapes (creuse_1 à creuse_4) que le jeu montre au fil du travail ; la dernière est le chemin tassé, droit (NE–SO). Les effets du coup de bêche (mottes, poussière, cailloux) : suites d'images à enchaîner une fois, dans un cadre de 64 × 48 dont la case occupe le bas (décalée de 16 vers le bas).",
+  "Haute définition : chaque fichier déclare 4 fois son cadre."
+ ],
+ "hd": 4,
+ "pieces": {
+  "chemin_seul": {
+   "nom": "Le chemin seul (une petite place)",
+   "cadre": [
+    0,
+    0,
+    64,
+    32
+   ],
+   "fichier": "chemin_seul.svg"
+  },
+  "chemin_ne": {
+   "nom": "Le chemin vers le nord-est",
+   "cadre": [
+    0,
+    0,
+    64,
+    32
+   ],
+   "fichier": "chemin_ne.svg"
+  },
+  "chemin_se": {
+   "nom": "Le chemin vers le sud-est",
+   "cadre": [
+    0,
+    0,
+    64,
+    32
+   ],
+   "fichier": "chemin_se.svg"
+  },
+  "chemin_ne-se": {
+   "nom": "Le chemin vers le nord-est, le sud-est",
+   "cadre": [
+    0,
+    0,
+    64,
+    32
+   ],
+   "fichier": "chemin_ne-se.svg"
+  },
+  "chemin_so": {
+   "nom": "Le chemin vers le sud-ouest",
+   "cadre": [
+    0,
+    0,
+    64,
+    32
+   ],
+   "fichier": "chemin_so.svg"
+  },
+  "chemin_ne-so": {
+   "nom": "Le chemin vers le nord-est, le sud-ouest",
+   "cadre": [
+    0,
+    0,
+    64,
+    32
+   ],
+   "fichier": "chemin_ne-so.svg"
+  },
+  "chemin_se-so": {
+   "nom": "Le chemin vers le sud-est, le sud-ouest",
+   "cadre": [
+    0,
+    0,
+    64,
+    32
+   ],
+   "fichier": "chemin_se-so.svg"
+  },
+  "chemin_ne-se-so": {
+   "nom": "Le chemin vers le nord-est, le sud-est, le sud-ouest",
+   "cadre": [
+    0,
+    0,
+    64,
+    32
+   ],
+   "fichier": "chemin_ne-se-so.svg"
+  },
+  "chemin_no": {
+   "nom": "Le chemin vers le nord-ouest",
+   "cadre": [
+    0,
+    0,
+    64,
+    32
+   ],
+   "fichier": "chemin_no.svg"
+  },
+  "chemin_ne-no": {
+   "nom": "Le chemin vers le nord-est, le nord-ouest",
+   "cadre": [
+    0,
+    0,
+    64,
+    32
+   ],
+   "fichier": "chemin_ne-no.svg"
+  },
+  "chemin_se-no": {
+   "nom": "Le chemin vers le sud-est, le nord-ouest",
+   "cadre": [
+    0,
+    0,
+    64,
+    32
+   ],
+   "fichier": "chemin_se-no.svg"
+  },
+  "chemin_ne-se-no": {
+   "nom": "Le chemin vers le nord-est, le sud-est, le nord-ouest",
+   "cadre": [
+    0,
+    0,
+    64,
+    32
+   ],
+   "fichier": "chemin_ne-se-no.svg"
+  },
+  "chemin_so-no": {
+   "nom": "Le chemin vers le sud-ouest, le nord-ouest",
+   "cadre": [
+    0,
+    0,
+    64,
+    32
+   ],
+   "fichier": "chemin_so-no.svg"
+  },
+  "chemin_ne-so-no": {
+   "nom": "Le chemin vers le nord-est, le sud-ouest, le nord-ouest",
+   "cadre": [
+    0,
+    0,
+    64,
+    32
+   ],
+   "fichier": "chemin_ne-so-no.svg"
+  },
+  "chemin_se-so-no": {
+   "nom": "Le chemin vers le sud-est, le sud-ouest, le nord-ouest",
+   "cadre": [
+    0,
+    0,
+    64,
+    32
+   ],
+   "fichier": "chemin_se-so-no.svg"
+  },
+  "chemin_ne-se-so-no": {
+   "nom": "Le chemin vers le nord-est, le sud-est, le sud-ouest, le nord-ouest",
+   "cadre": [
+    0,
+    0,
+    64,
+    32
+   ],
+   "fichier": "chemin_ne-se-so-no.svg"
+  },
+  "creuse_1": {
+   "nom": "Le creusement d'un chemin droit : le tracé marqué (piquets et ficelle)",
+   "cadre": [
+    0,
+    0,
+    64,
+    32
+   ],
+   "fichier": "creuse_1.svg"
+  },
+  "creuse_2": {
+   "nom": "Le creusement d'un chemin droit : l'herbe arrachée",
+   "cadre": [
+    0,
+    0,
+    64,
+    32
+   ],
+   "fichier": "creuse_2.svg"
+  },
+  "creuse_3": {
+   "nom": "Le creusement d'un chemin droit : la tranchée (terre fraîche, mottes)",
+   "cadre": [
+    0,
+    0,
+    64,
+    32
+   ],
+   "fichier": "creuse_3.svg"
+  },
+  "creuse_4": {
+   "nom": "Le creusement d'un chemin droit : le chemin tassé",
+   "cadre": [
+    0,
+    0,
+    64,
+    32
+   ],
+   "fichier": "creuse_4.svg"
+  },
+  "mottes_1": {
+   "nom": "Les mottes du coup de bêche",
+   "cadre": [
+    0,
+    0,
+    64,
+    48
+   ],
+   "fichier": "mottes_1.svg"
+  },
+  "mottes_2": {
+   "nom": "Les mottes du coup de bêche",
+   "cadre": [
+    0,
+    0,
+    64,
+    48
+   ],
+   "fichier": "mottes_2.svg"
+  },
+  "mottes_3": {
+   "nom": "Les mottes du coup de bêche",
+   "cadre": [
+    0,
+    0,
+    64,
+    48
+   ],
+   "fichier": "mottes_3.svg"
+  },
+  "mottes_4": {
+   "nom": "Les mottes du coup de bêche",
+   "cadre": [
+    0,
+    0,
+    64,
+    48
+   ],
+   "fichier": "mottes_4.svg"
+  },
+  "poussiere_1": {
+   "nom": "La poussière du coup de bêche",
+   "cadre": [
+    0,
+    0,
+    64,
+    48
+   ],
+   "fichier": "poussiere_1.svg"
+  },
+  "poussiere_2": {
+   "nom": "La poussière du coup de bêche",
+   "cadre": [
+    0,
+    0,
+    64,
+    48
+   ],
+   "fichier": "poussiere_2.svg"
+  },
+  "poussiere_3": {
+   "nom": "La poussière du coup de bêche",
+   "cadre": [
+    0,
+    0,
+    64,
+    48
+   ],
+   "fichier": "poussiere_3.svg"
+  },
+  "cailloux_1": {
+   "nom": "Les cailloux du coup de bêche",
+   "cadre": [
+    0,
+    0,
+    64,
+    48
+   ],
+   "fichier": "cailloux_1.svg"
+  },
+  "cailloux_2": {
+   "nom": "Les cailloux du coup de bêche",
+   "cadre": [
+    0,
+    0,
+    64,
+    48
+   ],
+   "fichier": "cailloux_2.svg"
+  },
+  "cailloux_3": {
+   "nom": "Les cailloux du coup de bêche",
+   "cadre": [
+    0,
+    0,
+    64,
+    48
+   ],
+   "fichier": "cailloux_3.svg"
+  }
+ },
+ "raccords": {
+  "0": "chemin_seul.svg",
+  "1": "chemin_ne.svg",
+  "2": "chemin_se.svg",
+  "3": "chemin_ne-se.svg",
+  "4": "chemin_so.svg",
+  "5": "chemin_ne-so.svg",
+  "6": "chemin_se-so.svg",
+  "7": "chemin_ne-se-so.svg",
+  "8": "chemin_no.svg",
+  "9": "chemin_ne-no.svg",
+  "10": "chemin_se-no.svg",
+  "11": "chemin_ne-se-no.svg",
+  "12": "chemin_so-no.svg",
+  "13": "chemin_ne-so-no.svg",
+  "14": "chemin_se-so-no.svg",
+  "15": "chemin_ne-se-so-no.svg"
+ },
+ "suites": {
+  "creuse": {
+   "nom": "Le creusement d'un chemin droit : le tracé marqué (piquets et ficelle)",
+   "ms_par_image": null,
+   "fichiers": [
+    "creuse_1.svg",
+    "creuse_2.svg",
+    "creuse_3.svg",
+    "creuse_4.svg"
+   ]
+  },
+  "mottes": {
+   "nom": "Les mottes du coup de bêche",
+   "ms_par_image": 90,
+   "fichiers": [
+    "mottes_1.svg",
+    "mottes_2.svg",
+    "mottes_3.svg",
+    "mottes_4.svg"
+   ]
+  },
+  "poussiere": {
+   "nom": "La poussière du coup de bêche",
+   "ms_par_image": 110,
+   "fichiers": [
+    "poussiere_1.svg",
+    "poussiere_2.svg",
+    "poussiere_3.svg"
+   ]
+  },
+  "cailloux": {
+   "nom": "Les cailloux du coup de bêche",
+   "ms_par_image": 110,
+   "fichiers": [
+    "cailloux_1.svg",
+    "cailloux_2.svg",
+    "cailloux_3.svg"
+   ]
+  }
+ }
+}
