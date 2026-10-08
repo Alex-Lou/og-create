@@ -22,3 +22,6 @@ pnpm-debug.log*
 *.njsproj
 *.sln
 *.sw?
+
+# Captures des bancs locaux (outils/banc)
+outils/banc/shots/

@@ -4,8 +4,8 @@
 // reste sur sa première image), qui parle (null : personne ; thought : une pensée du joueur, qui ne parle jamais), le texte, un geste suggéré
 // (hint), des choix qui font tous avancer (choices), et une image qui avance seule (auto, en ms).
 // L'ordre : seul sur la Grève, on se relève, on se découvre (la carte d'embarquement : l'avatar et le nom, entre
-// « naufrage » et « arrivee »), Brume, le Grimoire ; puis la troupe dans l'ordre des quêtes du serveur : Aster,
-// Cannelle, Rivet, Ondin.
+// « naufrage » et « arrivee »), Brume, le Grimoire ; puis la troupe dans l'ordre des quêtes du serveur, un personnage
+// à la fois : Cannelle, Rivet, Ondin, et Aster à la fin du tutoriel (choix de l'auteur, 8 oct.).
 // Le joueur grelotte, de face (de peur ou de froid)
 const SHIVER = { vue: 'face', pose: 'grelotter' };
 
@@ -54,11 +54,12 @@ export const SCENES = {
     { scene: '05_feu', who: 'Brume', text: 'On le verra de loin, ton feu.' },
     { scene: '06_silhouette', who: 'Brume', text: 'Tu as vu ? Là-bas, sur les rochers. Quelqu’un.' }
   ],
-  // Le matin, sur l'île : Aster tire une caisse des vagues ; la première Récolte
+  // Aster débarque à la fin du tutoriel (après le premier chemin) : elle tire une caisse des vagues ; son arc, le
+  // Ponton (l'identifiant « recolte » reste : des appareils l'ont déjà vue)
   recolte: [
     { scene: '10_aster', who: 'Aster', text: 'Ho, toi ! Tu étais sur l’Hirondelle ? Alors tire, elle pèse un âne mort !' },
     { scene: '10_aster', who: 'Aster', text: 'Aster, navigatrice. Officier de quart, pour être exacte. J’ai nagé vers ton feu toute la nuit.' },
-    { scene: '10_aster', who: 'Aster', text: 'La mer rend ce qu’elle a pris. Ramasse ce qui se ressemble, vite, avant la marée !' }
+    { scene: '10_aster', who: 'Aster', text: 'La mer rend ce qu’elle a pris. Un ponton, une ligne, et je te montre ce qu’elle garde encore !' }
   ],
   // Cannelle a regardé le feu toute la nuit ; son souvenir revient devant lui (son petit-neveu, elle en parle plus
   // tard, sur l'île : LINES.souci)
@@ -103,12 +104,13 @@ export const LINES = {
   pluie: 'Cette page a perdu son nom. Il ne reste qu’une devinette… Tu la lis, toi ?',
   seul: 'Encore une. Je ne dis rien : je regarde.',
   nom: 'Signe. Le livre se souviendra de toi, même si tu pars. … Tu ne pars pas, hein ?',
-  greve: 'Le jour se lève sur Brumelune… Quelqu’un se débat dans les vagues, au rivage !',
+  greve: 'Le jour se lève sur Brumelune… La mer a rendu des choses, au rivage. Viens voir !',
   // Sur l'île
   claim: 'Je brille ! Touche-moi : ce que tu as fait mérite quelque chose.',
-  epaves: { who: 'ponton', mood: 'malicieux', text: 'Ce que la mer rend, on le garde ! Du bois flotté, des coquillages, des galets : ramasse, matelot.' },
-  chaine: { who: 'ponton', mood: 'rire', text: 'Longue chaîne, mer généreuse. Par tous les alizés !' },
-  cendres: { who: 'ponton', mood: 'determine', text: 'Ton feu de cette nuit n’est plus que cendres. Un vrai feu de camp, et on nous verra du large !' },
+  // (Brume seule au début du tutoriel : Aster débarque à sa fin)
+  epaves: 'La mer a rendu des choses, cette nuit : du bois flotté, des coquillages, des galets. Ramasse-les : on en fera quelque chose.',
+  chaine: 'Une longue chaîne… et l’île t’en donne plus. Elle aime ça, je crois.',
+  cendres: 'Ton feu de cette nuit n’est plus que cendres. Un vrai feu de camp, et on le verra du large.',
   flambe: 'Il flambe… Il chauffe ? Je crois que je le sens. Un peu.',
   bulle: { who: 'foyer', mood: 'malicieux', text: 'Des coquillages crus ? Ma brindille, on n’est pas des sauvages. Donne : je te fais une soupe.' },
   soupe: { who: 'foyer', mood: 'content', text: 'Une soupe… Une cuillère pour le corps, une pour l’âme.' },
@@ -117,7 +119,7 @@ export const LINES = {
   puzzle: { who: 'atelier', mood: 'determine', text: 'Chaque pièce a sa place. Tourne, essaie. Clic !' },
   or: { who: 'atelier', mood: 'pensif', text: 'Le vent veut éteindre le feu. Pose-la là où l’île brille d’or : elle le protégera.' },
   souci: { who: 'foyer', mood: 'triste', text: 'Mon Ondin… Mon petit-neveu. Il était à côté de moi sur le pont, quand la vague… Il sait nager, hein ?' },
-  source: { who: 'ponton', mood: 'malicieux', text: 'De l’eau douce ? Cap au nord-ouest : ça brille, dans la brume. Et ça ronfle. Une source qui ronfle !' },
+  source: { who: 'foyer', mood: 'surpris', text: 'De l’eau douce, il nous faudrait… Là-bas, au nord-ouest, ça brille dans la brume. Et ça ronfle ! Une source qui ronfle ?' },
   baguette: { who: 'puits', mood: 'triste', text: 'Avant, ma baguette tirait vers l’eau. Là, plus rien. Comme si on avait éteint la lumière, dedans.' },
   ruban: 'La mer lui a pris son savoir. Le livre, lui, s’en souvient.',
   chut: { who: 'puits', mood: 'emerveille', text: 'Chut… l’eau arrive.' },

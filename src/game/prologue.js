@@ -65,13 +65,16 @@ export function prologueStep({ state, loggedIn, elements }) {
 const PROLOGUE = ['pages', 'ramasser', 'recolte', 'feu', 'soupe', 'poules', 'deco', 'achat-source', 'eveil-ondin', 'souvenir-ondin', 'puits-ondin', 'chemin'];
 export const inPrologue = id => PROLOGUE.includes(id);
 // La quête où chaque scène de l'île se joue, et les scènes d'avant l'île (vues avant le compte)
-const SCENE_AT = { recolte: 'ramasser', cannelle: 'soupe', rivet: 'deco', ondin: 'souvenir-ondin' };
+// (Aster débarque à la fin du tutoriel, choix de l'auteur, 8 oct. : sa scène « recolte » se joue après le premier
+// chemin, un personnage à la fois : Brume seule, puis Cannelle, Rivet, Ondin, et Aster)
+const SCENE_AT = { cannelle: 'soupe', rivet: 'deco', ondin: 'souvenir-ondin', recolte: 'chemin' };
 const BEFORE_ISLAND = ['naufrage', 'arrivee', 'souffle', 'sceau'];
 // Le tutoriel repris par le compte, sur un appareil qui n'en a rien retenu (game : App, story.js) : les scènes des
 // étapes déjà passées comptent comme vues (on ne les rejoue pas), celle de l'étape en cours se joue
+// (la scène d'Aster se joue juste après le prologue, comme le Campement : jamais comptée comme vue d'avance)
 export function scenesBefore(questId) {
   const at = PROLOGUE.indexOf(questId);
-  if (at < 0) return [...BEFORE_ISLAND, ...Object.keys(SCENE_AT)];
+  if (at < 0) return [...BEFORE_ISLAND, ...Object.keys(SCENE_AT).filter(scene => SCENE_AT[scene] !== 'chemin')];
   return [...BEFORE_ISLAND, ...Object.keys(SCENE_AT).filter(scene => PROLOGUE.indexOf(SCENE_AT[scene]) < at)];
 }
 
@@ -220,13 +223,17 @@ export function islandStep({ state, quest }) {
   if (state.skipped || state.finished || !state.registered || !state.named || !quest) return null;
   const seen = new Set(state.seen);
   const at = PROLOGUE.indexOf(quest.id);
-  // Le Puits réclamé : l'étape « Le Campement », puis le tutoriel est fini
-  if (at < 0) return seen.has('campement') ? { phase: 'finish' } : { phase: 'scene', scene: 'campement' };
+  // Le premier chemin réclamé : Aster débarque (sa scène du matin ouvre son arc, le Ponton), puis l'étape « Le
+  // Campement », puis le tutoriel est fini
+  if (at < 0) {
+    if (!seen.has('recolte')) return { phase: 'scene', scene: 'recolte' };
+    return seen.has('campement') ? { phase: 'finish' } : { phase: 'scene', scene: 'campement' };
+  }
   const lines = [];
   // Une quête accomplie se réclame auprès de Brume (dit une fois)
   if (quest.done) lines.push('claim');
-  if (!seen.has('recolte')) return { phase: 'scene', scene: 'recolte' };
-  // (v6) Ce que la mer a rendu, sur la Grève ; la Récolte ; puis le vrai feu de camp, qui attire Cannelle
+  // (v6) Ce que la mer a rendu, sur la Grève ; la Récolte ; puis le vrai feu de camp, qui attire Cannelle (Brume
+  // seule jusque-là)
   if (quest.id === 'ramasser') return { phase: 'lines', lines: quest.done ? lines : ['epaves'] };
   if (quest.id === 'recolte') return quest.done ? { phase: 'lines', lines: ['chaine', ...lines] } : { phase: 'harvest' };
   if (quest.id === 'feu') return { phase: 'lines', lines: quest.done ? ['flambe', ...lines] : ['cendres'] };
