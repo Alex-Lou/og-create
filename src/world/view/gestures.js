@@ -370,6 +370,8 @@ export default {
       return { key: `deposit:${deposit.id}`, action: 'Ramasser', info: this.tipOf(hit), ring: ring(c.x, c.y, TW * 0.4 * DEPOSIT_SCALE), bounce: `deposit:${deposit.id}`, run: () => this.gatherDeposit(deposit, px, py) };
     }
     const zoneOf = zone => {
+      // (sous la brume épaisse du tutoriel, rien ne se montre d'un quartier que la quête ne vise pas)
+      if (!this.signShown(zone)) return null;
       const w = hit.at || this.toWorld(px, py);
       return { key: `zone:${zone.id}`, action: zone.known === false ? 'Préparer l’expédition' : 'Voir le quartier', info: this.tipOf({ zone }), ring: hit.at ? ring(w.x, w.y, w.r) : null, run: () => { this.zone = zone; } };
     };
@@ -481,7 +483,7 @@ export default {
     if (hit.zone) {
       const zone = hit.zone;
       if (zone.known === false) return { title: 'Terre inconnue', text: 'Une expédition révélera ce qu’elle cache.', hint: 'Toucher deux fois : préparer l’expédition' };
-      return { title: zone.name, text: zone.owned ? 'Quartier à toi.' : zone.open ? `Quartier à acheter : ${zone.price} écus.` : `S’ouvre avec le chapitre ${zone.chapter} du Grimoire.`, hint: 'Toucher deux fois : voir le quartier' };
+      return { title: zone.name, text: zone.owned ? 'Quartier à toi.' : zone.plan ? `À découvrir : fais naître « ${zone.plan} » dans l’Athanor.` : zone.open ? `Quartier à acheter : ${zone.price} écus.` : `S’ouvre avec le chapitre ${zone.chapter} du Grimoire.`, hint: 'Toucher deux fois : voir le quartier' };
     }
     if (hit.site) {
       const site = hit.site;

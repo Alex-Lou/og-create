@@ -17,7 +17,7 @@ import { DEFAULT_LOOK } from '@/game/sceneArt';
 
 // Un onglet s'ouvre pendant le tutoriel : Brume le dit (la barre fait briller l'onglet)
 const TAB_OPENED = {
-  world: 'Le vent a chassé la brume de la Grève : l’île s’ouvre. Touche « Île », en bas.',
+  world: 'Le vent a chassé la brume du rivage : Brumelune s’ouvre. Touche « Île », en bas.',
   sceau: 'Ton nom est au Grimoire : ton sceau t’attend, avec ton compte et tes succès. Touche « Sceau » quand tu veux.',
   timer: 'Les Défis s’ouvrent : des énigmes contre le sablier, pour gagner des écus. Touche « Défis » quand tu veux.'
 };
@@ -25,7 +25,7 @@ const TAB_OPENED = {
 // Ce que dit le coach quand la suite est sur un autre onglet
 const TAB_CALLS = {
   world: 'La suite t’attend sur l’île : touche « Île ».',
-  infinite: 'La suite s’écrit dans le Grimoire : touche « Grimoire ».'
+  infinite: 'La suite se mélange dans l’Athanor du Grimoire : touche « Grimoire ».'
 };
 
 // Veillées déjà vues sur cet appareil (game/vigils.js)
@@ -219,7 +219,7 @@ export default {
         if (!step.account && this.prologue.name) this.namePlayer(this.prologue.name);
         else this.prologueName = { account: step.account };
       } else if (phase === 'greve') {
-        guide.say({ id: 'prologue-greve', text: PROLOGUE_LINES.greve, action: { label: 'Courir sur la Grève', mode: 'world' } });
+        guide.say({ id: 'prologue-greve', text: PROLOGUE_LINES.greve, action: { label: 'Courir au rivage', mode: 'world' } });
       }
     },
     // Étapes 2 (sur l'île) à 5 : la quête active de Brume
@@ -323,7 +323,8 @@ export default {
     checkPlanWritten() {
       const quest = this.islandQuest;
       if (!quest || !quest.plan || !this.discoveredElements.includes(quest.plan) || !this.prologueRunning) return;
-      guide.say({ id: `prologue-plan-${quest.plan}`, text: `« ${quest.plan} » est écrit ! Retourne sur l’île : le chantier peut se bâtir.` });
+      const then = quest.id === 'achat-source' ? 'la brume de La Source peut se lever' : 'le chantier peut se bâtir';
+      guide.say({ id: `prologue-plan-${quest.plan}`, text: `Tu as fait naître « ${quest.plan} » dans l’Athanor ! Retourne sur l’île : ${then}.` });
       if (coach.state.lesson) coach.show(islandLesson(this.lessonQuest(quest)));
     },
     // Une réplique du tutoriel : de Brume, ou d'un membre de la troupe (son portrait dans la bulle)
@@ -408,6 +409,12 @@ export default {
       this.prologueName = null;
       coach.show(null);
       this.savePrologue({ skipped: true });
+    },
+    // L'île est recommencée (Mon compte) : l'appareil oublie « Passer » et la fin du tutoriel, puis le jeu repart de
+    // la vue du serveur (Brume reprend à la première étape)
+    islandRestarted() {
+      this.savePrologue({ skipped: false, finished: false });
+      window.location.reload();
     },
     replayPrologue() {
       this.prologueReplay = ['arrivee', 'souffle', 'sceau', 'recolte', 'cannelle', 'rivet', 'ondin', 'campement'];

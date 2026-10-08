@@ -10,6 +10,7 @@ import { spread } from '@/world/sea';
 import { hash } from '@/world/scene';
 import { plantLook } from '@/world/plants';
 import { TW, ALL_NATURE } from '@/world/view/constants';
+import { inPrologue } from '@/game/prologue';
 
 // Achat d'un quartier : la brume se dissipe (ms)
 const UNVEIL_MS = 1600;
@@ -105,10 +106,21 @@ export default {
     zoneAt(x, y) {
       return this.M && this.state ? this.state.map.zones[this.M.zone(x, y)] || null : null;
     },
+    // La brume épaisse du tutoriel (choix de l'auteur : l'île se découvre peu à peu) : tant que le compte suit le
+    // prologue, ce qui n'est pas à soi disparaît presque sous la brume, et seul le panneau de la quête se montre
+    thickMist() {
+      const brume = this.state && this.state.brume;
+      return Boolean(brume && brume.tutorial && !brume.skipped && brume.quest && inPrologue(brume.quest.id));
+    },
+    // Ce que la brume efface d'un objet debout d'un quartier pas encore à soi (base : sous la brume légère)
+    mistFade(base) {
+      return this.thickMist() ? 0.9 : base;
+    },
     // Voile de brume d'une case (quartier à acheter), peint dans les carrés du sol
     veilAt(x, y) {
       const zone = this.state && this.state.map.zones[this.M.zone(x, y)];
-      return zone && !zone.owned ? (zone.known === false ? 0.35 : 0.62) : 0;
+      if (!zone || zone.owned) return 0;
+      return this.thickMist() ? 0.9 : zone.known === false ? 0.35 : 0.62;
     },
     // Hauteur (unités du monde) du sol d'une case : ce qui s'y tient debout est remonté d'autant
     liftAt(x, y) {

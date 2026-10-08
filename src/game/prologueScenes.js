@@ -30,6 +30,8 @@ export const SCENES = {
     { scene: '02_yeux', who: 'Brume', text: 'Brume. C’est ainsi qu’ils m’appelaient, ceux d’avant.' },
     { scene: '02_yeux', who: 'Brume', text: 'Je crois que c’est mon nom. Personne ne l’a dit depuis longtemps.' },
     { scene: '02_village', who: 'Brume', text: 'Là, il y avait un village. Des rires, le soir. De la soupe.' },
+    // (le nom de l'île revient avec celui de Brume : choix de l'auteur)
+    { scene: '02_village', who: 'Brume', text: 'Brumelune. C’était le nom de cette île… Je l’avais oublié, lui aussi. Il revient, avec toi.' },
     { scene: '02_village', who: 'Brume', text: 'Puis ils ont cessé d’écrire, et la brume a tout pris.' },
     { scene: '02_epave', who: 'Brume', text: 'Ton bateau… Pardon. La brume est épaisse, ces temps-ci.' },
     { scene: '02_proche', who: 'Brume', text: 'Reste près de moi. Je ne suis pas bien chaude, mais je brille.' },
@@ -101,7 +103,7 @@ export const LINES = {
   pluie: 'Cette page a perdu son nom. Il ne reste qu’une devinette… Tu la lis, toi ?',
   seul: 'Encore une. Je ne dis rien : je regarde.',
   nom: 'Signe. Le livre se souviendra de toi, même si tu pars. … Tu ne pars pas, hein ?',
-  greve: 'Le jour se lève… Quelqu’un se débat dans les vagues, sur la Grève !',
+  greve: 'Le jour se lève sur Brumelune… Quelqu’un se débat dans les vagues, au rivage !',
   // Sur l'île
   claim: 'Je brille ! Touche-moi : ce que tu as fait mérite quelque chose.',
   epaves: { who: 'ponton', text: 'Ce que la mer rend, on le garde ! Du bois flotté, des coquillages, des galets : ramasse, matelot.' },

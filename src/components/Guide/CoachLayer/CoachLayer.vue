@@ -53,9 +53,9 @@ import { reducedMotion, vibrate } from '@/utils/fx';
 const PAD = 8;
 const SAY_H = 96;
 // Sans cible à l'écran depuis ce temps (ms) : la bulle « Me montrer » (pas par-dessus une fenêtre ouverte, la
-// révélation d'un élément dans l'Athanor ni l'ouverture d'un chapitre)
+// révélation d'un élément dans l'Athanor, l'ouverture d'un chapitre ni l'île qui se prépare)
 const LOST_MS = 1200;
-const OVERLAYS = '.g-modal-backdrop, .world__sheet-backdrop, [aria-modal="true"], .athanor .reveal, .book-unlock';
+const OVERLAYS = '.g-modal-backdrop, .world__sheet-backdrop, [aria-modal="true"], .athanor .reveal, .book-unlock, .island-loader';
 let count = 0;
 
 export default {

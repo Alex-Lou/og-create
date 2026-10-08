@@ -193,7 +193,7 @@
       @close="resetToken = null"
       @login="resetToken = null; showSeuil = true"
     />
-    <AccountModal v-if="showAccount" @close="showAccount = false" @look="islandAvatar = $event" @left="handleLogout" />
+    <AccountModal v-if="showAccount" @close="showAccount = false" @look="islandAvatar = $event" @left="handleLogout" @restarted="islandRestarted" />
     <ContactModal v-if="showContact" @close="showContact = false" />
     <CodexModal v-if="showCodex" :achievements="achievements" @close="showCodex = false" />
     <SeuilModal v-if="showSeuil" @close="showSeuil = false" />
