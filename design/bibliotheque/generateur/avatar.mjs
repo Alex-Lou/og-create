@@ -2166,6 +2166,39 @@ var require_gestes = __commonJS({
     }
     __name(arroser, "arroser");
     var avecArroser2 = /* @__PURE__ */ __name((c) => ({ ...c, uid: `${c.uid}ar`, pose: arroser }), "avecArroser");
+    function beche(t, l, motte = false) {
+      const len = Math.hypot(l[0] - t[0], l[1] - t[1]), ux = (l[0] - t[0]) / len, uy = (l[1] - t[1]) / len, nx = -uy, ny = ux;
+      const pt = /* @__PURE__ */ __name((a, b) => [l[0] - ux * a + nx * b, l[1] - uy * a + ny * b], "pt");
+      const haut = pt(7, 0);
+      const lame = [pt(7, -2.8), pt(7, 2.8), pt(0.8, 2.6), pt(0, 1.2), pt(0, -1.2), pt(0.8, -2.6)];
+      const d = `M${lame.map((p) => p.map(r2).join(",")).join(" L")} Z`;
+      const mt = motte ? (() => {
+        const [mx, my] = pt(4, 0);
+        return E(mx - nx * 0.4, my - 1.6, 3, 1.9, "#7A5434", 0.8) + E(mx - 0.8, my - 2.2, 1, 0.6, "#9A7048", 0);
+      })() : "";
+      return L([t[0] - nx * 2.4, t[1] - ny * 2.4], [t[0] + nx * 2.4, t[1] + ny * 2.4], OUT, 3) + L([t[0] - nx * 2.4, t[1] - ny * 2.4], [t[0] + nx * 2.4, t[1] + ny * 2.4], "#B07A45", 1.3) + L(t, haut, OUT, 3.2) + L(t, haut, "#B07A45", 1.5) + L(t, surLigne(t, haut, len * 0.5), "#C99A62", 0.5) + P(d, "#A9B1BB", 1) + L(pt(6, -1.6), pt(1.4, -1.6), "#E2E8EE", 0.7) + mt;
+    }
+    __name(beche, "beche");
+    var terre = /* @__PURE__ */ __name((x, y) => E(x, y, 5, 1.4, "rgba(40,55,20,.22)", 0) + P(`M${r2(x - 4.6)},${r2(y + 0.4)} Q${r2(x - 3.4)},${r2(y - 2.6)} ${r2(x)},${r2(y - 2.4)} Q${r2(x + 3.6)},${r2(y - 2.4)} ${r2(x + 4.6)},${r2(y + 0.4)} Z`, "#7A5434", 0.8) + E(x - 2.2, y - 1.4, 1.1, 0.7, "#9A7048", 0) + E(x + 2, y - 1, 0.9, 0.6, "#5E3F26", 0) + E(x + 5.6, y - 0.2, 0.9, 0.7, "#7A5434", 0.5), "terre");
+    function becher({ view, n }) {
+      const [a, b] = this.shoulders;
+      if (view === "front" || view === "se") {
+        const s = view === "front" ? 1 : -1, [p, q] = s > 0 ? [b, a] : [a, b];
+        const x = /* @__PURE__ */ __name((dx) => p[0] + s * dx, "x"), sol2 = 61;
+        const [t2, l2] = n ? [[x(2), a[1] + 6], [x(10), sol2 - 6.4]] : [[x(5.4), a[1] + 1], [x(6.6), sol2 + 1.4]];
+        const haut = [t2[0], t2[1] + 0.6], bas = surLigne(t2, l2, n ? 6.4 : 9.4);
+        const outil = beche(t2, l2, !!n) + (n ? "" : terre(x(6.6), sol2));
+        const main = arm(this, p, haut, [x(n ? 2.4 : 4.4), p[1] + 3.4]), autre = arm(this, q, bas, [q[0] + s * 2.4, q[1] + 7.6]);
+        const sous = n ? terre(x(7.4), sol2) : "";
+        const [cote, loin] = s > 0 ? ["right", "left"] : ["left", "right"];
+        return { expr: n ? "rire" : "content", under: sous, [cote]: outil + main, [loin]: autre };
+      }
+      const sol = a[1] + 18;
+      const [t, l] = n ? [[b[0] + 1, a[1] + 4], [b[0] + 8, sol - 5]] : [[b[0] + 3.6, a[1] - 1], [b[0] + 4.8, sol + 1.4]];
+      return { expr: n ? "rire" : void 0, left: "", right: "", under: (n ? terre(b[0] + 5, sol) : "") + beche(t, l, !!n) + (n ? "" : terre(b[0] + 4.8, sol)) + arm(this, a, surLigne(t, l, 8), [a[0] - 1.6, a[1] + 6]), over: arm(this, b, [t[0], t[1] + 0.6], [b[0] + 3, b[1] + 3]) };
+    }
+    __name(becher, "becher");
+    var avecBecher2 = /* @__PURE__ */ __name((c) => ({ ...c, uid: `${c.uid}be`, pose: becher }), "avecBecher");
     function caisse(x, y, w = 11, h = 8.4) {
       const g = x - w / 2, d = x + w / 2, t = y - h, p = 2.2;
       const face = `M${r2(g)},${r2(y)} L${r2(d)},${r2(y)} L${r2(d)},${r2(t)} L${r2(g)},${r2(t)} Z`;
@@ -2286,7 +2319,7 @@ var require_gestes = __commonJS({
     }
     __name(ecrire2, "ecrire");
     var avecEcrire2 = /* @__PURE__ */ __name((c) => ({ ...c, uid: `${c.uid}ec`, pose: ecrire2 }), "avecEcrire");
-    module.exports = { lanterne, parapluie, valise, avecLanterne: avecLanterne2, avecParapluie: avecParapluie2, avecValise: avecValise2, couche: couche2, CADRE_PARAPLUIE: CADRE_PARAPLUIE2, CADRE_COUCHE: CADRE_COUCHE2, ZEDS, paume, tranche, tendre: tendre2, avecMainsTendues: avecMainsTendues2, applaudir: applaudir2, avecApplaudir: avecApplaudir2, pecher, avecPecher: avecPecher2, piocher, avecPiocher: avecPiocher2, cueillir, avecCueillir: avecCueillir2, arroser, avecArroser: avecArroser2, porter, avecPorter: avecPorter2, reparer: reparer2, avecReparer: avecReparer2, repousser, avecRepousser: avecRepousser2, ecrire: ecrire2, avecEcrire: avecEcrire2 };
+    module.exports = { lanterne, parapluie, valise, avecLanterne: avecLanterne2, avecParapluie: avecParapluie2, avecValise: avecValise2, couche: couche2, CADRE_PARAPLUIE: CADRE_PARAPLUIE2, CADRE_COUCHE: CADRE_COUCHE2, ZEDS, paume, tranche, tendre: tendre2, avecMainsTendues: avecMainsTendues2, applaudir: applaudir2, avecApplaudir: avecApplaudir2, pecher, avecPecher: avecPecher2, piocher, avecPiocher: avecPiocher2, cueillir, avecCueillir: avecCueillir2, arroser, avecArroser: avecArroser2, becher, avecBecher: avecBecher2, porter, avecPorter: avecPorter2, reparer: reparer2, avecReparer: avecReparer2, repousser, avecRepousser: avecRepousser2, ecrire: ecrire2, avecEcrire: avecEcrire2 };
   }
 });
 
@@ -2630,6 +2663,7 @@ var {
   avecPiocher,
   avecCueillir,
   avecArroser,
+  avecBecher,
   avecPorter,
   avecReparer,
   avecRepousser,
@@ -2670,6 +2704,7 @@ export {
   avatarNaufrage,
   avecApplaudir,
   avecArroser,
+  avecBecher,
   avecCueillir,
   avecEcrire,
   avecLanterne,

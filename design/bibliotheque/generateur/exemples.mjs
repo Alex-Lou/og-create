@@ -2471,6 +2471,39 @@ var require_gestes = __commonJS({
     }
     __name(arroser, "arroser");
     var avecArroser = /* @__PURE__ */ __name((c) => ({ ...c, uid: `${c.uid}ar`, pose: arroser }), "avecArroser");
+    function beche(t, l, motte = false) {
+      const len = Math.hypot(l[0] - t[0], l[1] - t[1]), ux = (l[0] - t[0]) / len, uy = (l[1] - t[1]) / len, nx = -uy, ny = ux;
+      const pt = /* @__PURE__ */ __name((a, b) => [l[0] - ux * a + nx * b, l[1] - uy * a + ny * b], "pt");
+      const haut = pt(7, 0);
+      const lame = [pt(7, -2.8), pt(7, 2.8), pt(0.8, 2.6), pt(0, 1.2), pt(0, -1.2), pt(0.8, -2.6)];
+      const d = `M${lame.map((p) => p.map(r2).join(",")).join(" L")} Z`;
+      const mt = motte ? (() => {
+        const [mx, my] = pt(4, 0);
+        return E(mx - nx * 0.4, my - 1.6, 3, 1.9, "#7A5434", 0.8) + E(mx - 0.8, my - 2.2, 1, 0.6, "#9A7048", 0);
+      })() : "";
+      return L([t[0] - nx * 2.4, t[1] - ny * 2.4], [t[0] + nx * 2.4, t[1] + ny * 2.4], OUT, 3) + L([t[0] - nx * 2.4, t[1] - ny * 2.4], [t[0] + nx * 2.4, t[1] + ny * 2.4], "#B07A45", 1.3) + L(t, haut, OUT, 3.2) + L(t, haut, "#B07A45", 1.5) + L(t, surLigne(t, haut, len * 0.5), "#C99A62", 0.5) + P(d, "#A9B1BB", 1) + L(pt(6, -1.6), pt(1.4, -1.6), "#E2E8EE", 0.7) + mt;
+    }
+    __name(beche, "beche");
+    var terre = /* @__PURE__ */ __name((x, y) => E(x, y, 5, 1.4, "rgba(40,55,20,.22)", 0) + P(`M${r2(x - 4.6)},${r2(y + 0.4)} Q${r2(x - 3.4)},${r2(y - 2.6)} ${r2(x)},${r2(y - 2.4)} Q${r2(x + 3.6)},${r2(y - 2.4)} ${r2(x + 4.6)},${r2(y + 0.4)} Z`, "#7A5434", 0.8) + E(x - 2.2, y - 1.4, 1.1, 0.7, "#9A7048", 0) + E(x + 2, y - 1, 0.9, 0.6, "#5E3F26", 0) + E(x + 5.6, y - 0.2, 0.9, 0.7, "#7A5434", 0.5), "terre");
+    function becher({ view, n }) {
+      const [a, b] = this.shoulders;
+      if (view === "front" || view === "se") {
+        const s = view === "front" ? 1 : -1, [p, q] = s > 0 ? [b, a] : [a, b];
+        const x = /* @__PURE__ */ __name((dx) => p[0] + s * dx, "x"), sol2 = 61;
+        const [t2, l2] = n ? [[x(2), a[1] + 6], [x(10), sol2 - 6.4]] : [[x(5.4), a[1] + 1], [x(6.6), sol2 + 1.4]];
+        const haut = [t2[0], t2[1] + 0.6], bas = surLigne(t2, l2, n ? 6.4 : 9.4);
+        const outil = beche(t2, l2, !!n) + (n ? "" : terre(x(6.6), sol2));
+        const main = arm(this, p, haut, [x(n ? 2.4 : 4.4), p[1] + 3.4]), autre = arm(this, q, bas, [q[0] + s * 2.4, q[1] + 7.6]);
+        const sous = n ? terre(x(7.4), sol2) : "";
+        const [cote, loin] = s > 0 ? ["right", "left"] : ["left", "right"];
+        return { expr: n ? "rire" : "content", under: sous, [cote]: outil + main, [loin]: autre };
+      }
+      const sol = a[1] + 18;
+      const [t, l] = n ? [[b[0] + 1, a[1] + 4], [b[0] + 8, sol - 5]] : [[b[0] + 3.6, a[1] - 1], [b[0] + 4.8, sol + 1.4]];
+      return { expr: n ? "rire" : void 0, left: "", right: "", under: (n ? terre(b[0] + 5, sol) : "") + beche(t, l, !!n) + (n ? "" : terre(b[0] + 4.8, sol)) + arm(this, a, surLigne(t, l, 8), [a[0] - 1.6, a[1] + 6]), over: arm(this, b, [t[0], t[1] + 0.6], [b[0] + 3, b[1] + 3]) };
+    }
+    __name(becher, "becher");
+    var avecBecher = /* @__PURE__ */ __name((c) => ({ ...c, uid: `${c.uid}be`, pose: becher }), "avecBecher");
     function caisse(x, y, w = 11, h = 8.4) {
       const g = x - w / 2, d = x + w / 2, t = y - h, p = 2.2;
       const face = `M${r2(g)},${r2(y)} L${r2(d)},${r2(y)} L${r2(d)},${r2(t)} L${r2(g)},${r2(t)} Z`;
@@ -2591,7 +2624,7 @@ var require_gestes = __commonJS({
     }
     __name(ecrire, "ecrire");
     var avecEcrire = /* @__PURE__ */ __name((c) => ({ ...c, uid: `${c.uid}ec`, pose: ecrire }), "avecEcrire");
-    module.exports = { lanterne, parapluie, valise, avecLanterne, avecParapluie, avecValise, couche, CADRE_PARAPLUIE, CADRE_COUCHE, ZEDS, paume, tranche, tendre, avecMainsTendues, applaudir, avecApplaudir, pecher, avecPecher, piocher, avecPiocher, cueillir, avecCueillir, arroser, avecArroser, porter, avecPorter, reparer, avecReparer, repousser, avecRepousser, ecrire, avecEcrire };
+    module.exports = { lanterne, parapluie, valise, avecLanterne, avecParapluie, avecValise, couche, CADRE_PARAPLUIE, CADRE_COUCHE, ZEDS, paume, tranche, tendre, avecMainsTendues, applaudir, avecApplaudir, pecher, avecPecher, piocher, avecPiocher, cueillir, avecCueillir, arroser, avecArroser, becher, avecBecher, porter, avecPorter, reparer, avecReparer, repousser, avecRepousser, ecrire, avecEcrire };
   }
 });
 
@@ -2600,7 +2633,7 @@ var require_avatar_exemples = __commonJS({
   "atelier/avatar_exemples.js"(exports, module) {
     var { frame } = require_troupe2();
     var { assis } = require_assis();
-    var { tendre, avecMainsTendues, applaudir, avecApplaudir, avecPecher, avecPiocher, avecCueillir, avecArroser, avecPorter, reparer, avecReparer, avecRepousser, ecrire, avecEcrire } = require_gestes();
+    var { tendre, avecMainsTendues, applaudir, avecApplaudir, avecPecher, avecPiocher, avecCueillir, avecArroser, avecBecher, avecPorter, reparer, avecReparer, avecRepousser, ecrire, avecEcrire } = require_gestes();
     var ac = /* @__PURE__ */ __name((place, id, couleurs) => ({ [place]: couleurs ? { id, couleurs } : { id } }), "ac");
     var EXEMPLES2 = [
       {},
@@ -2676,6 +2709,9 @@ var require_avatar_exemples = __commonJS({
       ["face_arroser", "front", "arroser", 2],
       ["avant_arroser", "se", "arroser", 2],
       ["dos_arroser", "ne", "arroser", 2],
+      ["face_becher", "front", "becher", 2],
+      ["avant_becher", "se", "becher", 2],
+      ["dos_becher", "ne", "becher", 2],
       ["face_porter", "front", "porter", 2],
       ["avant_porter", "se", "porter", 2],
       ["dos_porter", "ne", "porter", 2],
@@ -2695,7 +2731,7 @@ var require_avatar_exemples = __commonJS({
       ["avant_assis-ecrire", "se", "assis-ecrire", 2],
       ["dos_assis-ecrire", "ne", "assis-ecrire", 2]
     ];
-    var dessin2 = /* @__PURE__ */ __name((cc, view, p, n) => p === "assis" ? assis(cc, view, n) : p === "assis-tendre" ? assis(cc, view, n, null, tendre) : p === "assis-applaudir" ? assis(cc, view, n, null, applaudir) : p === "tendre" ? frame(avecMainsTendues(cc), view, "action", n) : p === "applaudir" ? frame(avecApplaudir(cc), view, "action", n) : p === "pecher" ? frame(avecPecher(cc), view, "action", n) : p === "piocher" ? frame(avecPiocher(cc), view, "action", n) : p === "cueillir" ? frame(avecCueillir(cc), view, "action", n) : p === "arroser" ? frame(avecArroser(cc), view, "action", n) : p === "porter" ? frame(avecPorter(cc), view, "action", n) : p === "reparer" ? frame(avecReparer(cc), view, "action", n) : p === "repousser" ? frame(avecRepousser(cc), view, "action", n) : p === "ecrire" ? frame(avecEcrire(cc), view, "action", n) : p === "assis-reparer" ? assis(cc, view, n, null, reparer) : p === "assis-ecrire" ? assis(cc, view, n, null, ecrire) : frame(cc, view, p, n), "dessin");
+    var dessin2 = /* @__PURE__ */ __name((cc, view, p, n) => p === "assis" ? assis(cc, view, n) : p === "assis-tendre" ? assis(cc, view, n, null, tendre) : p === "assis-applaudir" ? assis(cc, view, n, null, applaudir) : p === "tendre" ? frame(avecMainsTendues(cc), view, "action", n) : p === "applaudir" ? frame(avecApplaudir(cc), view, "action", n) : p === "pecher" ? frame(avecPecher(cc), view, "action", n) : p === "piocher" ? frame(avecPiocher(cc), view, "action", n) : p === "cueillir" ? frame(avecCueillir(cc), view, "action", n) : p === "arroser" ? frame(avecArroser(cc), view, "action", n) : p === "becher" ? frame(avecBecher(cc), view, "action", n) : p === "porter" ? frame(avecPorter(cc), view, "action", n) : p === "reparer" ? frame(avecReparer(cc), view, "action", n) : p === "repousser" ? frame(avecRepousser(cc), view, "action", n) : p === "ecrire" ? frame(avecEcrire(cc), view, "action", n) : p === "assis-reparer" ? assis(cc, view, n, null, reparer) : p === "assis-ecrire" ? assis(cc, view, n, null, ecrire) : frame(cc, view, p, n), "dessin");
     module.exports = { ac, EXEMPLES: EXEMPLES2, nom, POSES: POSES2, dessin: dessin2 };
   }
 });
