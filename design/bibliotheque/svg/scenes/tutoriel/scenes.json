@@ -802,6 +802,37 @@
     }
    }
   },
+  "12_chantier": {
+   "nom": "Scène 12c : Le chantier, puis le Puits agrandi",
+   "etape": "12c",
+   "cadre": [
+    0,
+    0,
+    400,
+    400
+   ],
+   "images": 4,
+   "ms_par_image": 900,
+   "avatar": {
+    "x": 70,
+    "y": 394,
+    "echelle": 3,
+    "vue": "avant",
+    "pose": "repos",
+    "naufrage": true
+   },
+   "calques": {
+    "fond": {
+     "nom": "Scène 12c : Le chantier, puis le Puits agrandi (fond)",
+     "fichiers": [
+      "12_chantier/12_chantier_fond_1.svg",
+      "12_chantier/12_chantier_fond_2.svg",
+      "12_chantier/12_chantier_fond_3.svg",
+      "12_chantier/12_chantier_fond_4.svg"
+     ]
+    }
+   }
+  },
   "12_veillee": {
    "nom": "Scène 12k : La première veillée : cinq visages et Brume",
    "etape": "12k",
