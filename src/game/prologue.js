@@ -68,10 +68,9 @@ const PROLOGUE = ['pages', 'ramasser', 'recolte', 'feu', 'soupe', 'poules', 'dec
 // montre la plus avancée qui est à l'écran : le joueur n'est jamais lâché, même s'il referme une bulle en route.
 // target : un sélecteur, ou « île:… » sur le canvas de l'île ; text : ce que dit la bulle du coach
 const tipOf = (...keys) => keys.map(key => `.world__tip-btn[data-pick="${key}"]`).join(', ');
-// Dans la fiche d'un chantier : le bouton pour bâtir, s'il est actif ; sinon (il manque des ressources) « Jouer une
-// Récolte », pour que le coach ne montre jamais un bouton grisé
+// Dans la fiche d'un chantier : le bouton pour bâtir, seulement actif (le coach ne montre jamais un bouton grisé : s'il
+// manque de quoi payer, la leçon mène d'abord à la Récolte, SHORT)
 const BUILD = '[data-coach="site-build"]:not(:disabled)';
-const SHORT = '.world__step.is-next .world__btn--quiet';
 const LESSONS = {
   ramasser: [
     { target: 'île:trouvaille', text: 'La mer a rendu du bois flotté, des coquillages, des galets : touche-en un.' },
@@ -81,13 +80,12 @@ const LESSONS = {
   feu: [
     { target: 'île:site:foyer', text: 'Le chantier du feu de camp, au camp : touche-le.' },
     { target: tipOf('site:foyer'), text: 'Touche « Bâtir ».' },
-    { target: SHORT, text: 'Il manque du bois ou des galets : une Récolte en donne, et la mer en rapporte sur la Grève.' },
     { target: BUILD, text: 'Quatre bois flottés, deux galets : bâtis le feu de camp.' }
   ],
   soupe: [
     { target: 'île:habitant:foyer', text: 'Cannelle a faim : touche-la.' },
     { target: tipOf('vil:foyer', 'ask:foyer'), text: 'Une bulle s’ouvre : touche « Sa fiche » pour entrer dans sa fiche.' },
-    { target: '.friend__need.is-missing .friend__fill', text: 'Sa fiche dit ce qui lui manque : touche ce bouton pour lui donner à manger.' }
+    { target: '.friend__need.is-missing .friend__fill:not(:disabled)', text: 'Sa fiche dit ce qui lui manque : touche ce bouton pour lui donner à manger.' }
   ],
   // La cage, ses poules affamées, la fiche de l'une d'elles ; nourrir (2 vivres : seulement s'il y en a, sinon la fiche
   // dit où en trouver)
@@ -123,10 +121,32 @@ const LESSONS = {
   'puits-ondin': [
     { target: 'île:site:puits', text: 'Le chantier du Puits : touche-le.' },
     { target: tipOf('site:puits'), text: 'Touche « Bâtir ».' },
-    { target: SHORT, text: 'Il manque encore de quoi bâtir : une Récolte en donne.' },
     { target: BUILD, text: 'Tout est réuni : bâtis le Puits.' }
   ]
 };
+// Ce qui se paie manque (quest.short : questShort) : la Récolte d'abord, qui en donne
+const SHORT = {
+  feu: 'Il manque du bois ou des galets pour le feu : touche la Récolte, l’île en donne.',
+  soupe: 'Pas assez de vivres pour sa soupe : touche la Récolte, l’île en donne.',
+  poules: 'Deux vivres pour nourrir une poule : touche la Récolte, ou ramasse des coquillages sur la Grève.',
+  'puits-ondin': 'Il manque de quoi bâtir le Puits : touche la Récolte, l’île en donne.'
+};
+// La quête active demande de payer (le feu, la soupe, une poule, le Puits) et le stock n'y suffit pas encore (ce qui
+// attend dans les bâtiments compte : stock, celui que montrent les fiches). state : la vue de l'île
+export function questShort(quest, state, stock) {
+  if (!quest || quest.done || !state || !SHORT[quest.id]) return false;
+  const lacks = cost => Object.entries(cost || {}).some(([r, n]) => (stock[r] || 0) < n);
+  if (quest.id === 'soupe') {
+    const cannelle = (state.villagers || []).find(v => v.id === 'foyer');
+    const need = cannelle && (cannelle.needs || []).find(n => n.id === 'manger');
+    return Boolean(need && need.refill && lacks(need.cost));
+  }
+  // (la cage s'ouvre sans rien payer : seul le repas compte)
+  if (quest.id === 'poules') return !(state.camp || []).some(c => c.art === 'cage_coincee') && Boolean(state.beasts && lacks(state.beasts.cost));
+  const site = (state.sites || []).find(s => s.id === (quest.id === 'feu' ? 'foyer' : 'puits'));
+  return Boolean(site && site.next && !site.level && lacks(site.next.cost));
+}
+
 // Les leçons qui se jouent dans le Grimoire (les autres, sur l'île)
 const BOOK_LESSONS = new Set(['souvenir-ondin']);
 // La récompense : Brume, sur l'île ; si une fiche est encore ouverte, d'abord la refermer
@@ -134,11 +154,12 @@ const CLAIM = [
   { target: 'île:brume', text: 'Touche Brume : ta récompense t’attend.' },
   { target: '.g-modal__close, .world__sheet-backdrop .world__link', text: 'Referme cette fiche : Brume t’attend avec ta récompense.' }
 ];
-// La leçon du coach à une étape de l'île (la quête active : { id, done }), ou null : la récompense à réclamer auprès de
+// La leçon du coach à une étape de l'île (la quête active : { id, done, short }), ou null : la récompense à réclamer auprès de
 // Brume, sinon les gestes de la quête
 export function islandLesson(quest) {
   if (!quest || (!quest.done && !LESSONS[quest.id])) return null;
   if (quest.done) return { id: 'claim', mode: 'world', steps: CLAIM };
+  if (quest.short && SHORT[quest.id]) return { id: `short-${quest.id}`, mode: 'world', steps: [{ target: '.world__play', text: SHORT[quest.id] }] };
   return { id: `quest-${quest.id}`, mode: BOOK_LESSONS.has(quest.id) ? 'infinite' : 'world', steps: LESSONS[quest.id] };
 }
 

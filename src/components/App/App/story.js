@@ -173,7 +173,7 @@ export default {
     // Étapes 2 (sur l'île) à 5 : la quête active de Brume
     onIslandQuest(brume) {
       const quest = brume && brume.quest;
-      this.islandQuest = quest ? { id: quest.id, done: Boolean(quest.done) } : { id: null, done: true };
+      this.islandQuest = quest ? { id: quest.id, done: Boolean(quest.done), short: Boolean(brume.short) } : { id: null, done: true };
       this.islandHold = Boolean(brume && brume.hold);
       if (brume) {
         this.islandActs = brume.acts || [];
