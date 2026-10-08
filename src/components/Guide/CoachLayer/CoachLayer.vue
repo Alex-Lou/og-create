@@ -111,7 +111,8 @@ export default {
     };
     window.addEventListener('pointerdown', this.onDown, true);
     const follow = () => {
-      this.view = { w: window.innerWidth, h: window.innerHeight };
+      // (seulement quand elle change : un nouvel objet à chaque image redessinait le calque à chaque image)
+      if (this.view.w !== window.innerWidth || this.view.h !== window.innerHeight) this.view = { w: window.innerWidth, h: window.innerHeight };
       // Le geste le plus avancé dont la cible est à l'écran, rien ne la recouvrant
       const { steps } = this.lesson;
       let r = null;

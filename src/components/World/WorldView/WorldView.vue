@@ -764,10 +764,15 @@ export default {
     clearInterval(this.tick);
     cancelAnimationFrame(this.raf);
     cancelAnimationFrame(this.moreRaf);
-    this.raf = this.moreRaf = 0;
+    // (et les dessins demandés pour l'image suivante : rien ne se dessine plus sur une île quittée)
+    cancelAnimationFrame(this.soonRaf);
+    cancelAnimationFrame(this.repaintRaf);
+    this.raf = this.moreRaf = this.soonRaf = this.repaintRaf = 0;
     // Sortie de l'île : la vue est gardée pour le retour, la mémoire libérée (sol en carrés, images, décor)
     if (this.cam) memory.view = { cam: { ...this.cam }, site: this.site ? this.site.id : null, siteTab: this.siteTab };
     if (this.terrain) this.terrain.clear();
+    // (le rappel des chemins tenait l'île quittée en mémoire)
+    onPathsLoaded(null);
     this.terrain = null;
     this.props = [];
     this.live = null;

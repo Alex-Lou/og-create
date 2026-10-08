@@ -48,6 +48,16 @@ export default {
     }
     this.syncLoop();
   },
+  // Le doigt bouge (glisser, pincer, zoomer, tracer) : un seul dessin à l'image suivante, quel que soit le nombre
+  // d'événements du doigt d'ici là (un écran tactile en envoie plusieurs par image : chacun redessinait toute l'île)
+  drawSoon() {
+    if (this.soonRaf) return;
+    this.soonRaf = requestAnimationFrame(now => {
+      this.soonRaf = 0;
+      this.lastFrame = now;
+      this.draw(now);
+    });
+  },
   // Un dessin vient d'arriver : l'île sera redessinée à l'image suivante, une seule fois pour tous ceux qui arrivent
   // ensemble, et seulement si la boucle ne tourne pas déjà (mouvement réduit). Un redessin complet par dessin lu, tout
   // de suite, faisait des centaines de dessins de l'île pendant son chargement

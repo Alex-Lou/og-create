@@ -56,7 +56,9 @@ export default {
   name: 'FishingBoard',
   props: {
     seed: { type: Number, required: true },
-    playing: { type: Boolean, default: false }
+    playing: { type: Boolean, default: false },
+    // la durée (ms) de la partie (les premières sont courtes : game/minigames.js, SHORT), sinon celle d'une partie normale
+    limit: { type: Number, default: null }
   },
   emits: ['tally', 'end'],
   data() {
@@ -72,7 +74,7 @@ export default {
   },
   created() {
     // Non réactifs : la partie, ce qui a été pris, les lancers, les effets en cours
-    this.fish = fishingOf(this.seed);
+    this.fish = fishingOf(this.seed, this.span);
     this.caught = new Set();
     this.taps = [];
     this.catches = [];
@@ -98,13 +100,20 @@ export default {
     cancelAnimationFrame(this.raf);
     if (this.observer) this.observer.disconnect();
   },
+  computed: {
+    // La durée (ou les coups) de cette partie
+    span() {
+      return this.limit || FISHING.duration;
+    }
+  },
   methods: {
     elapsed() {
-      return this.started ? Math.min(FISHING.duration, Math.round(performance.now() - this.started)) : 0;
+      return this.started ? Math.min(this.span, Math.round(performance.now() - this.started)) : 0;
     },
     resize() {
       const { width, height } = this.$refs.wrap.getBoundingClientRect();
-      const dpr = window.devicePixelRatio || 1;
+      // (au plus ×2 : un écran ×3 peindrait plus du double de pixels pour rien)
+      const dpr = Math.min(window.devicePixelRatio || 1, 2);
       this.W = width;
       this.H = height;
       this.$refs.canvas.width = Math.round(width * dpr);
@@ -114,7 +123,7 @@ export default {
     loop() {
       const t = this.elapsed();
       this.draw(t);
-      if (t >= FISHING.duration) {
+      if (t >= this.span) {
         this.finish();
         return;
       }
@@ -378,7 +387,7 @@ export default {
         ctx.fillText(String(this.catches.length), bx, by + 2);
       }
       // Temps restant
-      const left = Math.ceil((FISHING.duration - t) / 1000);
+      const left = Math.ceil((this.span - t) / 1000);
       ctx.textAlign = 'left';
       ctx.fillStyle = '#3A2414';
       ctx.font = `900 ${Math.round(h * 0.26)}px Nunito, system-ui, sans-serif`;
@@ -386,7 +395,7 @@ export default {
       ctx.fillStyle = 'rgba(58,36,20,.25)';
       ctx.fillRect(0, 0, W, 5);
       ctx.fillStyle = left <= 5 ? '#E2574A' : '#F2C04B';
-      ctx.fillRect(0, 0, W * (1 - t / FISHING.duration), 5);
+      ctx.fillRect(0, 0, W * (1 - t / this.span), 5);
     },
     // La ligne : elle part du bout de la canne, le bouchon se pose, plonge, puis revient
     line(ctx, t, W, H) {

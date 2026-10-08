@@ -6,6 +6,8 @@
 //   Ère 5  vie                 : les gros atomes deviennent des cellules à membrane
 // Moteur canvas 2D sans dépendance ; le composant Vue ne fait que le piloter.
 
+// Une image du fond toutes les FRAME_MS au plus (30 par seconde)
+const FRAME_MS = 32;
 const TAU = Math.PI * 2;
 const LINK_DISTANCE = 90;
 // Sur le vélin, chaque famille s'écrit à l'encre : sa couleur assombrie, posée en « multiply »
@@ -57,20 +59,26 @@ export default class LivingBackground {
     this.last = 0;
     const step = (time) => {
       if (!this.running) return;
+      // (30 images par seconde suffisent à un fond qui flotte : moitié moins de calcul qu'à chaque image de l'écran)
+      if (this.last && time - this.last < FRAME_MS) {
+        this.frame = requestAnimationFrame(step);
+        return;
+      }
       const dt = this.last ? Math.min(2, (time - this.last) / 16.67) : 1;
       this.last = time;
       this.step(dt, time);
       // Mouvement réduit : environ une image par seconde
-      if (this.reduced) this.frame = setTimeout(() => requestAnimationFrame(step), 900);
+      if (this.reduced) this.timer = setTimeout(() => { this.frame = requestAnimationFrame(step); }, 900);
       else this.frame = requestAnimationFrame(step);
     };
     this.frame = requestAnimationFrame(step);
   }
 
+  // (l'image demandée et la minuterie du mouvement réduit, chacune la sienne)
   stop() {
     this.running = false;
     cancelAnimationFrame(this.frame);
-    clearTimeout(this.frame);
+    clearTimeout(this.timer);
   }
 
   resize() {

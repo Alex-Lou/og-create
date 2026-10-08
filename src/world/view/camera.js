@@ -92,7 +92,7 @@ export default {
     this.cam.x += before.x - after.x;
     this.cam.y += before.y - after.y;
     this.clampCam();
-    this.draw(performance.now());
+    this.drawSoon();
   },
   zoomBy(factor) {
     if (this.geo) this.zoomAt(this.geo.width / 2, this.geo.height / 2, factor);

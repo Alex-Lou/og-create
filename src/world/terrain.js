@@ -525,6 +525,10 @@ export function drawCell(ctx, M, x, y, veil = 0) {
 // une seule image basse résolution (la vue d'ensemble), qui sert aussi en attendant un carré pas encore prêt.
 // veilOf(x, y) : voile de brume d'une case (0 si son quartier est à soi) ; standOf(ctx, x, y) : peint le décor fixe
 // d'une case, vrai si tout était prêt (les carrés cuits avant que tous les dessins soient chargés seront refaits)
+// Un carré pas encore prêt (une image du décor manque) : refait STALE_TRIES fois au plus, à STALE_GAP_MS d'écart
+const STALE_TRIES = 8;
+const STALE_GAP_MS = 300;
+
 export class TerrainCache {
   constructor(M, veilOf, standOf = null) {
     this.M = M;
@@ -539,7 +543,11 @@ export class TerrainCache {
 
   // Le décor fixe a changé : les carrés où il est cuit et la vue d'ensemble seront refaits
   restand() {
-    for (const tile of this.tiles.values()) if (tile.bake) tile.stale = true;
+    for (const tile of this.tiles.values()) {
+      if (!tile.bake) continue;
+      tile.stale = true;
+      tile.tries = 0;
+    }
     if (this.overview) { this.overview.stale = true; this.overview.retries = 0; }
   }
 
@@ -626,9 +634,15 @@ export class TerrainCache {
         const key = `${tag}:${tx},${ty}`;
         seen.add(key);
         let tile = this.tiles.get(key);
-        if ((!tile || tile.stale) && (all || !rendered || performance.now() - start < budget)) {
+        // (un carré pas encore prêt est refait quelques fois, espacées : une image du décor qui ne vient pas ne le fait
+        // pas refaire à chaque image, sans fin)
+        const retry = tile && tile.stale && (tile.tries || 0) < STALE_TRIES && start - (tile.at || 0) > STALE_GAP_MS;
+        if ((!tile || retry) && (all || !rendered || performance.now() - start < budget)) {
+          const tries = tile ? (tile.tries || 0) + 1 : 0;
           if (tile && tile.canvas) tile.canvas.width = tile.canvas.height = 0;
           tile = this.render(tx, ty, res, bake);
+          tile.tries = tries;
+          tile.at = start;
           rendered++;
         }
         if (tile) {
@@ -694,7 +708,10 @@ export class TerrainCache {
     const r = cellsBox(this.M, cells);
     for (const tile of this.tiles.values()) {
       const t = tile.r;
-      if (t.x < r.x + r.w && t.x + t.w > r.x && t.y < r.y + r.h && t.y + t.h > r.y) tile.stale = true;
+      if (t.x < r.x + r.w && t.x + t.w > r.x && t.y < r.y + r.h && t.y + t.h > r.y) {
+        tile.stale = true;
+        tile.tries = 0;
+      }
     }
     if (this.overview) {
       const { ctx } = this.overview;

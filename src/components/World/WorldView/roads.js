@@ -113,7 +113,7 @@ export default {
     cancelRoad() {
       this.roadMode = null;
       this.roadRefused = null;
-      this.draw(performance.now());
+      this.drawSoon();
     },
     toggleEraser() {
       if (!this.roadMode) return;

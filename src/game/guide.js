@@ -46,6 +46,12 @@ export const guide = {
     state.seen.add(id);
     storage.save(SEEN_KEY, [...state.seen]);
   },
+  // Tout oublier (« Recommencer l'île » : le tutoriel se rejoue en entier) : ce qui a été dit, la file
+  forget() {
+    state.queue = [];
+    state.seen = new Set();
+    storage.save(SEEN_KEY, []);
+  },
   // Brume est né (sa naissance ne se rejoue pas)
   markBorn() {
     state.born = true;

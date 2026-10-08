@@ -412,8 +412,13 @@ export default {
     },
     // L'île est recommencée (Mon compte) : l'appareil oublie « Passer » et la fin du tutoriel, puis le jeu repart de
     // la vue du serveur (Brume reprend à la première étape)
+    // L'île est recommencée : un vrai départ sur cet appareil aussi. Les scènes de l'île, les répliques de Brume et de la
+    // troupe, les gestes du coach se rejouent (le naufrage et la page de garde, d'avant l'île, restent vus)
     islandRestarted() {
-      this.savePrologue({ skipped: false, finished: false });
+      const before = ['naufrage', 'arrivee', 'souffle', 'sceau'];
+      this.savePrologue({ skipped: false, finished: false, seen: this.prologue.seen.filter(scene => before.includes(scene)) });
+      guide.forget();
+      coach.forget();
       window.location.reload();
     },
     replayPrologue() {

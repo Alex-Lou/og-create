@@ -112,7 +112,7 @@ export default {
       this.cam.y -= (next.my - last.my) / this.cam.s;
       this.clampCam();
       this.gesture.pinch = next;
-      this.draw(performance.now());
+      this.drawSoon();
       return;
     }
     this.gesture.moved = Math.max(this.gesture.moved, Math.hypot(p.x - this.gesture.start.x, p.y - this.gesture.start.y));
@@ -128,7 +128,7 @@ export default {
       this.cam.x -= (p.x - prev.x) / this.cam.s;
       this.cam.y -= (p.y - prev.y) / this.cam.s;
       this.clampCam();
-      this.draw(performance.now());
+      this.drawSoon();
     }
   },
   onCancel(event) {
@@ -235,6 +235,12 @@ export default {
     if (hit && hit.animal && hit.animal.stray) {
       this.dropPick();
       this.repelStray(hit.animal.stray, this.canvasPoint(px, py));
+      return;
+    }
+    // La bulle d'un besoin (faim, soif… ; la faim d'une poule) : un toucher le comble (folk.js, tapNeed)
+    if (hit && hit.asking && !hit.asking.visitor) {
+      this.dropPick();
+      this.tapNeed(hit.asking, px, py);
       return;
     }
     // Toucher en deux temps : ce qui ouvre une fiche ou agit sur le serveur se choisit d'abord (contour doré, bulle et

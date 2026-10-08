@@ -34,6 +34,7 @@ export default {
     });
   },
   beforeUnmount() {
+    clearTimeout(this.focusTimer);
     if (this.offCoach) this.offCoach();
     if (this.offFocus) this.offFocus();
   },
@@ -91,6 +92,11 @@ export default {
         return { x: c.x, y: c.y - TW * 0.3, r: TW * 0.45 };
       }
       // La bulle de faim d'une bête
+      // La bulle d'un besoin d'un habitant (la toucher le comble)
+      if (kind === 'besoin') {
+        const bubble = (this.needBubbles || []).find(b => b.id === id && !b.visitor && !b.beast);
+        return bubble ? { x: bubble.x, y: bubble.y, r: Math.max(16, bubble.r) } : null;
+      }
       if (kind === 'faim') {
         const bubble = (this.needBubbles || []).find(b => b.beast && !b.ready);
         return bubble ? { x: bubble.x, y: bubble.y, r: Math.max(16, bubble.r) } : null;
@@ -111,7 +117,8 @@ export default {
     coachFocus(name, tries = 0) {
       const at = this.coachWorld(name);
       if (!at) {
-        if (tries < 10 && this.coachTarget === name) setTimeout(() => this.coachFocus(name, tries + 1), 300);
+        clearTimeout(this.focusTimer);
+        if (tries < 10 && this.coachTarget === name) this.focusTimer = setTimeout(() => this.coachFocus(name, tries + 1), 300);
         return;
       }
       this.cam.x = at.x;
