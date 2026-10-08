@@ -1,0 +1,2 @@
+.night-sheet { display: grid; justify-items: center; gap: 10px; text-align: center; font-family: var(--font-ui); }
+.night-sheet__line { margin: 0; max-width: 310px; color: var(--ink-900); font-size: 15px; line-height: 1.45; font-style: italic; }

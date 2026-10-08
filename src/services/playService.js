@@ -208,6 +208,17 @@ export default {
   beastFeed(beast) {
     return http.post('/play/world/beast/feed', { beast }).then(response => response.data);
   },
+  // Les nuits de créatures : Brume les présente → { world } ; repousser un égaré d'un toucher → { id, world } ; réparer
+  // le bâtiment embrumé → { site, cost, coins?, world }
+  nightsStart() {
+    return http.post('/play/world/nights/start', {}).then(response => response.data);
+  },
+  nightsRepel(id) {
+    return http.post('/play/world/nights/repel', { id }).then(response => response.data);
+  },
+  worldRepair(site) {
+    return http.post('/play/world/repair', { site }).then(response => response.data);
+  },
   // Ouvrir la cage des poules, au camp → { hens, world }
   beastsCage() {
     return http.post('/play/world/beasts/cage', {}).then(response => response.data);

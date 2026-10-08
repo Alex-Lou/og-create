@@ -150,7 +150,9 @@
             :visitor-art="state.visitor ? visitorPortrait(state.visitor) : ''"
             :crafts="state.crafts || null"
             :games="state.games || []"
+            :blight="blightOf(site)"
             :busy="busy"
+            @repair="repairSite(site)"
             @collect="collect"
             @villager="openVillager"
             @visitor="openVisitor"
@@ -273,6 +275,8 @@
     />
 
     <!-- Fiche d'une annexe posée (appui long) : la déplacer, ou ouvrir son bâtiment -->
+    <!-- Brume et les nuits : leur présentation, le bilan du matin -->
+    <NightSheet v-if="nightSheet" :mode="nightSheet.mode" :lines="nightSheet.lines || []" :stage="brumeState.stage" @close="closeNightSheet" />
     <AnnexSheet v-if="sheetAnnex" v-bind="sheetAnnex" :busy="busy" @close="annexSheet = null" @move="moveFromSheet" @site="siteFromSheet" @pose="poseFromSheet" />
 
     <!-- Premier achat d'une sorte d'article : son mode d'emploi, et de quoi aller le voir sur l'île -->
@@ -408,6 +412,7 @@ import ChestReveal from '../Chests/ChestReveal/ChestReveal.vue';
 import ChestHaul from '../Chests/ChestHaul/ChestHaul.vue';
 import AnnexPanel from '../Sites/AnnexPanel/AnnexPanel.vue';
 import AnnexSheet from '../Sites/AnnexSheet/AnnexSheet.vue';
+import NightSheet from '../Explore/NightSheet/NightSheet.vue';
 import PoseChoice from '../Sites/PoseChoice/PoseChoice.vue';
 import MiniGame from '../Games/MiniGame/MiniGame.vue';
 import VillagerSheet from '../Folk/VillagerSheet/VillagerSheet.vue';
@@ -458,6 +463,7 @@ import chests from './chests';
 import workshop from './workshop';
 import sites from './sites';
 import annexes from './annexes';
+import nights from './nights';
 import explore from './explore';
 import terrain from './terrain';
 import sky from './sky';
@@ -471,8 +477,8 @@ export default {
   // bâtiments, les annexes, l'exploration, la carte, le ciel ; le moteur du canvas (caméra, dessin, gestes) dans
   // world/view/. L'île garde ce qui les relie : le chargement, la quête, le plein écran, les observateurs, le cycle
   // de vie
-  mixins: [folk, games, chests, workshop, sites, annexes, explore, terrain, sky],
-  components: { HarvestGame, ShopItemSheet, GModal, ChestList, ChestReveal, ChestHaul, AnnexPanel, AnnexSheet, PoseChoice, MiniGame, VillagerSheet, BeastSheet, VisitorSheet, RenameSheet, CraftBench, CraftPuzzle, ExplorerLog, FindsSheet, WreckScene, BrumeSheet, ZoneSheet, SiteShop, SiteSteps, SiteOverview, SiteSheet, IslandHud, IslandButtons },
+  mixins: [folk, games, chests, workshop, sites, annexes, explore, terrain, sky, nights],
+  components: { HarvestGame, ShopItemSheet, GModal, ChestList, ChestReveal, ChestHaul, AnnexPanel, AnnexSheet, NightSheet, PoseChoice, MiniGame, VillagerSheet, BeastSheet, VisitorSheet, RenameSheet, CraftBench, CraftPuzzle, ExplorerLog, FindsSheet, WreckScene, BrumeSheet, ZoneSheet, SiteShop, SiteSteps, SiteOverview, SiteSheet, IslandHud, IslandButtons },
   props: {
     // Glyphes des éléments du Livre (savoir-faire demandé à l'établi)
     elementEmojis: { type: Object, required: true },
@@ -904,6 +910,7 @@ export default {
       }
       this.state = state;
       this.emitQuest();
+      this.$nextTick(() => this.checkNights());
       // Brume et sol d'un quartier : à soi (o), connu (k), inconnu (u) ; un changement refait ses carrés de sol
       const mistKey = state.map.zones.map(z => `${z.id}:${z.owned ? 'o' : z.known === false ? 'u' : 'k'}`).join();
       if (this.mistKey !== null && mistKey !== this.mistKey) {

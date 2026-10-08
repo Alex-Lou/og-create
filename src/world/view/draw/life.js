@@ -15,6 +15,8 @@ import { FISH_SPECIES, SEA_SPRITES } from '@/world/seaSprites';
 import { BOTTLE } from '@/world/chest';
 import { ISLET_SPRITES } from '@/world/isletSprites';
 import { visitorBoat } from '@/world/visitors';
+import { strayAt, nightNow } from '@/world/strays';
+import { strayLayer, strayKind } from '@/world/nightArt';
 import { SEA_KINDS } from '../constants';
 
 // Arrivée du bateau d'un visiteur (secondes) et distance d'où il vient (cases)
@@ -154,7 +156,28 @@ export default {
       const head = big ? (who.sprite[0].includes('_parapluie_') ? 41 : 27) : 16;
       hits.push({ key: who.id, kind: person ? 'villager' : who.species, who, x: c.x, y: c.y - who.z - (big ? 24 : person ? 16 : tall ? 44 : 6), r: big ? 20 : person ? 15 : tall ? 34 : 12, head });
     }
-    this.villageLights = life.lights;
+    // Les égarés de la nuit (serveur : nights) : ils marchent vers leur bâtiment, un toucher en repousse un ; changés en
+    // lucioles, ils luisent sur place jusqu'au matin
+    const glows = [];
+    const nights = this.state.nights;
+    const now = Date.now();
+    if (nightNow(nights, now)) {
+      for (const c of nights.creatures || []) {
+        const s = strayAt(c, now, this.repelled.has(c.id) ? this.repelled.get(c.id) : null);
+        if (!s) continue;
+        if (s.glow) {
+          glows.push({ x: s.x, y: s.y, dx: Math.sin(t * 1.3 + s.x) * 4, dy: -12 + Math.sin(t * 2.1 + s.y) * 3, r: 8, color: '210,255,160' });
+          continue;
+        }
+        const zone = this.state.map.zones[this.M.zone(c.path[0].x, c.path[0].y)];
+        const layer = strayLayer(strayKind(c.id, zone && zone.climate), s.view, s.pose, s.n);
+        if (!layer) continue;
+        out.push({ id: `stray:${c.id}`, kind: 'stray', x: s.x, y: s.y, z: 0, flip: s.flip, frame: 0, sprite: [layer.key, layer.make] });
+        const g = this.ground(s.x, s.y);
+        if (s.pose === 'marche') hits.push({ key: `stray:${c.id}`, kind: 'stray', stray: c, x: g.x, y: g.y - 10, r: 16 });
+      }
+    }
+    this.villageLights = glows.length ? [...life.lights, ...glows] : life.lights;
     this.landHits = hits;
     return out;
   },
