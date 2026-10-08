@@ -1,4 +1,4 @@
-# Les jeux à grille : refonte, et un nouveau jeu « type Tetris »
+# Les jeux à grille : refonte, et un nouveau jeu de rangement
 
 Document de conception (règles, niveaux, difficulté, visuel). Le visuel est fait côté design (`design/`, famille `minijeux`). Les règles sont à coder par l'agent logistique dans `src/game/` **et** dans le moteur du serveur.
 
@@ -68,33 +68,50 @@ Aujourd'hui, les fruits mûrissent un instant. Un buisson vide fait perdre un in
 
 **Ce qu'il faut dessiner :** la jauge de panier et son « double », le papillon doré, la pie (arrivée, vol, fuite), le nid à trois tailles, les buissons de saison (fleuris, d'été, d'automne).
 
-## 6. Nouveau : l'Arrimage (le vrai « Tetris » de l'île)
+## 6. Nouveau : l'Arrimage, le jeu de rangement de l'île
 
-**L'idée.** Le bateau d'Aster charge sa cale avant de partir. Les marchandises de l'île arrivent par le haut : caisses, tonneaux, sacs, filets, en formes de 4 cases (les 7 formes classiques). On les arrime au fond de la cale. Une rangée pleine est **arrimée** : elle part en ressources dans les réserves de l'île.
+**L'idée.** Le bateau d'Aster charge sa cale avant de partir. Sur le quai, des marchandises de l'île attendent : sacs, tonneaux, caisses, planches, filets, coffres. Le joueur les range dans la cale, une par une, en gardant le bateau droit. Une rangée pleine est **sanglée** : elle est arrimée pour le voyage, et sa cargaison part en ressources dans les réserves de l'île.
 
-**Le plateau.** Une cale de 8 colonnes sur 14 rangées, au format téléphone. On voit la marchandise suivante, et une case de « mise de côté » permet d'en garder une.
+**Le plateau.** Une cale de 8 colonnes sur 14 rangées, au format téléphone. Au-dessus, le **quai** montre 3 marchandises qui attendent. Le **manifeste du jour** (la liste de tout ce qu'il faut charger) se voit à l'avance.
 
-**Les gestes.** On glisse à gauche ou à droite pour déplacer, on touche pour tourner, et on glisse vers le bas pour poser d'un coup.
+**Les gestes.** On choisit une marchandise sur le quai, on la glisse à gauche ou à droite, on la tourne en la touchant, puis on la lâche : elle descend jusqu'à se poser. **Tout se joue au tour par tour** : rien ne tombe tout seul, et il n'y a pas de chronomètre de chute.
+
+**Les marchandises.** Elles ont de 2 à 6 cases, et chacune a la forme de ce qu'elle est :
+
+| Marchandise | Cases | Forme | Poids |
+| --- | --- | --- | --- |
+| Sac | 2 | deux cases côte à côte | 1 |
+| Tonneau couché | 3 | trois en ligne | 2 |
+| Caisse | 4 | un carré de 2 × 2 | 1 |
+| Filet | 4 | un L | 1 |
+| Planches | 5 | cinq en ligne | 1 |
+| Coffre long | 6 | 2 × 3 | 1 |
+| Lest (pierre) | 2 à 4 | selon le niveau | 3 |
 
 **Les règles :**
 
-- **L'ordre des formes** vient de la graine, par « sacs » de 7 : chaque forme sort une fois par sac, sans série injuste.
-- **Une rangée arrimée** donne la ressource majoritaire de ses cases (bois des caisses, nourriture des sacs, eau des tonneaux, pierre du lest). Arrimer 2, 3 ou 4 rangées d'un coup multiplie le gain par 1,5, 2 ou 3.
-- **La marée** : toutes les 10 rangées arrimées, la marée monte et la vitesse augmente d'un cran (10 crans).
-- **La partie s'arrête** quand une marchandise ne peut plus entrer, ou au bout de 2 minutes.
-- **Saison 2** : des **marchandises fragiles** (verre, œufs) doivent être arrimées sans rien poser dessus pendant 3 rangées. **Saison 3** : une **vague** secoue la cale une fois par partie et décale la rangée du haut.
+- **Le manifeste** vient de la graine : la liste du jour, dans un ordre connu à l'avance. Le quai en montre toujours 3, et le joueur choisit laquelle poser.
+- **Une rangée pleine est sanglée** : elle se fige, compte pour la cargaison, et ne disparaît pas. Le plancher de travail remonte d'une rangée : la cale se remplit vraiment. Le niveau gagne quand on a sanglé le nombre de rangées demandé.
+- **L'équilibre** : le bateau gîte si un côté de la cale est plus lourd que l'autre (somme des poids, colonnes 1 à 4 contre 5 à 8). Une jauge de gîte le montre. Au-delà d'un seuil, la marchandise posée glisse d'une case vers le côté bas.
+- **La marée compte les tours** : le bateau part au bout de N marchandises posées (selon le niveau). À la fin, les cases restées vides sous la ligne d'eau ne comptent pas.
+- **Le gain** : chaque rangée sanglée donne la ressource majoritaire de ses cases (bois des caisses, des planches et des coffres, nourriture des sacs et des filets, eau des tonneaux, pierre du lest). Un bonus si le bateau part droit (gîte nulle), et un autre si tout le manifeste est chargé.
+- **Saison 2** : des **marchandises fragiles** (verre, œufs) : rien ne doit être posé dessus avant qu'elles soient sanglées. **Saison 3** : une **vague** frappe une fois par partie et décale la rangée du haut ; une alerte la précède.
 
-**Le serveur.** Le jeu envoie la liste des gestes avec leur instant, et le serveur rejoue avec un pas fixe (60 pas par seconde). C'est le seul jeu temps réel sous la gravité : ce point est **à valider** avec l'agent logistique avant de coder. Une variante sans chute automatique (tour par tour) reste possible si le rejeu au pas fixe pose problème.
+**Le serveur.** Le jeu envoie la liste des coups (la marchandise choisie, sa colonne, sa rotation), et le serveur rejoue la partie coup par coup. Il n'y a pas de temps réel : le rejeu au pas fixe n'est plus nécessaire.
 
-**Ce qu'il faut dessiner :**
+**Ce qui distingue l'Arrimage des jeux de blocs connus**, et doit le rester : pas de chute continue ni de vitesse qui monte, des marchandises de tailles variées tirées d'un manifeste visible, des rangées qui se figent au lieu de disparaître, l'équilibre du bateau, et la marée qui compte les tours. Le nom d'un jeu de blocs existant ne doit jamais être utilisé, ni dans le jeu, ni dans le code, ni dans les textes.
 
-- la cale en bois (bordage, membrures, une lanterne qui balance) ;
-- les 7 formes en 4 sortes de marchandise (caisse, tonneau, sac, lest), chacune avec un dessin par case qui se raccorde à ses voisines ;
-- l'ombre de pose ;
-- la rangée arrimée (les cordes qui se serrent, puis les marchandises qui filent vers les réserves) ;
-- la marée qui monte, la vague ;
-- la marchandise fragile et la case de mise de côté ;
-- l'écran de bilan.
+**Ce qu'il faut dessiner** (✓ : déjà dans la bibliothèque) :
+
+- la cale en bois, sa lanterne qui balance ✓ ;
+- les cases des marchandises, qui se raccordent à leurs voisines de la même pièce ✓ (caisse, tonneau, sac, lest) ; les nouvelles sortes : planches, filet, coffre long ;
+- le quai à 3 places et le manifeste ;
+- l'aperçu de pose sous la marchandise tenue ✓ (l'ombre) ;
+- la rangée sanglée (les sangles qui se serrent, la rangée qui se fige) ;
+- la jauge de gîte et le bateau qui penche ;
+- la marée ✓, la vague et son alerte ✓ ;
+- la marque fragile ✓ ;
+- l'écran de bilan : le bateau d'Aster chargé ✓, l'écrin et les étoiles ✓.
 
 ## 7. L'ordre de travail proposé
 
@@ -102,12 +119,12 @@ Aujourd'hui, les fruits mûrissent un instant. Un buisson vide fait perdre un in
    - Récolte : gerbe, graine, rocher, ronce, commande ;
    - Filon : lanterne, eau, boue, éboulement, album ;
    - Cueillette : jauge, papillon, pie, nid, saisons ;
-   - Arrimage : cale, formes, rangée arrimée, marée.
+   - Arrimage : cale, marchandises, quai, rangée sanglée, gîte, marée.
 2. **Côté logistique**, pour chaque jeu, dans le moteur du jeu et dans celui du serveur, et avec leurs tests :
    - la saison 1 ;
    - puis la saison 2 ;
    - puis la saison 3.
-3. **Pour l'Arrimage**, valider d'abord le rejeu au pas fixe côté serveur.
+3. **Pour l'Arrimage**, le jeu se joue au tour par tour : le serveur rejoue la liste des coups, sans pas fixe.
 
 ## 8. Décisions
 
