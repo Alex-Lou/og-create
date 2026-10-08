@@ -4,11 +4,14 @@ import path from 'path';
 import { createRequire } from 'module';
 import { fileURLToPath } from 'url';
 import { RARITIES, closed, opening, open, glow, icon } from './coffres.mjs';
-import { coffre, coffreIcone } from './generateur_coffres.mjs';
+import { coffre, coffreIcone, HD } from './generateur_coffres.mjs';
 
 const require = createRequire(import.meta.url);
 const DIR = path.dirname(fileURLToPath(import.meta.url));
-const { unique, row, sheet, animated, write, shoot } = require('./planche.js');
+const { row, sheet, animated, write, shoot } = require('./planche.js');
+// des noms uniques par dessin, dans la planche (les écus du trésor sont réutilisés par href : on les renomme aussi)
+let nu = 0;
+const unique = b => { const t = `_${nu++}`; return b.replace(/id="([^"]+)"/g, `id="$1${t}"`).replace(/url\(#([^)]+)\)/g, `url(#$1${t})`).replace(/href="#([^"]+)"/g, `href="#$1${t}"`); };
 const LIB = path.join(DIR, 'lib', 'coffres');
 const PNG = path.join(DIR, 'planches');
 const svgOf = (vb, w, h, body, s = 1) => `<svg xmlns="http://www.w3.org/2000/svg" width="${w * s}" height="${h * s}" viewBox="${vb}">${body}</svg>`;
@@ -16,8 +19,10 @@ const big = (b, s = 1) => svgOf('0 0 120 100', 120, 100, b, s), small = (b, s = 
 
 const index = {
   _lisez_moi: [
-    'Les coffres de la fenêtre d\'ouverture (ChestReveal) : cadre 120 × 100, comme le dessin du jeu ; un coffre par rareté (couleurs de world/chest.js).',
-    'fermé : 2 images (un reflet passe, ~1200 ms) ; ouverture : 4 images à enchaîner une fois (il tremble à gauche, à droite, s\'entrouvre, s\'ouvre grand ; ~140 ms puis ~220 ms) ; ouvert : 2 images en boucle (~700 ms) ; rayons : calque facultatif à poser derrière le coffre ouvert (le jeu a déjà les siens en CSS) ; icône : 32 × 32, fermé, pour les listes.'
+    'Les coffres de la fenêtre d\'ouverture (ChestReveal) : cadre 120 × 100, comme le dessin du jeu ; un coffre par rareté (couleurs de world/chest.js). La serrure, les pierres et les bijoux du trésor changent avec la rareté.',
+    `Haute définition : chaque fichier déclare une taille ${HD} fois plus grande que son cadre (480 × 400, l'icône 128 × 128), pour rester net sur un canvas. L'afficher à la taille du cadre (120 × 100, l'icône 32 × 32).`,
+    'Les scintillements sont animés dans le SVG (SMIL, 12 phases de 100 ms en boucle) : ils tournent seuls dans un <img> ou un background CSS. Sur un canvas (drawImage), on voit une phase fixe.',
+    'fermé : 2 images, la même animation (un reflet passe sur la serrure, sa pierre brille ; fixes, deux moments) ; ouverture : 4 images fixes à enchaîner une fois (il tremble à gauche, à droite, s\'entrouvre, s\'ouvre grand ; ~140 ms puis ~220 ms) ; ouvert : 2 images, la même animation (éclats sur les pierres, grains de lumière qui montent, étincelles, lueur qui respire) ; le jeu peut les alterner comme avant ; rayons : calque facultatif à poser derrière le coffre ouvert (le jeu a déjà les siens en CSS) ; icône : 32 × 32, fermé, pour les listes.'
   ],
   coffres: {}
 };
@@ -42,6 +47,6 @@ for (const [key, r] of Object.entries(RARITIES)) {
   anim.push({ label: `${r.label} : fermé, ouverture, ouvert`, frames: seq.map(b => big(unique(b), 2)), timings: t, w: 240, h: 200 });
 }
 write(path.join(LIB, 'coffres.json'), JSON.stringify(index, null, 1));
-write(path.join(DIR, 'coffres_apercu.html'), animated('Les coffres', 'Lot I : fermé, l\'ouverture enchaînée, puis ouvert.', [['Les coffres', anim]]));
-await shoot([[path.join(PNG, 'coffres.png'), sheet('Les coffres', 'Cadre 120 × 100 de la fenêtre d\'ouverture du jeu. Fermé, ouverture (4 images), ouvert, rayons (calque facultatif), icône 32 × 32.', cells), 1500]]);
+write(path.join(DIR, 'coffres_apercu.html'), animated('Les coffres', 'Fermé, l\'ouverture enchaînée, puis ouvert ; les scintillements tournent dans chaque SVG.', [['Les coffres', anim]]));
+await shoot([[path.join(PNG, 'coffres.png'), sheet('Les coffres', `Cadre 120 × 100 de la fenêtre d'ouverture du jeu (fichiers déclarés × ${HD}). Fermé, ouverture (4 images), ouvert (scintillements animés dans le SVG), rayons (calque facultatif), icône 32 × 32.`, cells), 1500]]);
 console.log('ok', count, 'SVG');

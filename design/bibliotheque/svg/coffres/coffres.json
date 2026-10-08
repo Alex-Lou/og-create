@@ -1,7 +1,9 @@
 {
  "_lisez_moi": [
-  "Les coffres de la fenêtre d'ouverture (ChestReveal) : cadre 120 × 100, comme le dessin du jeu ; un coffre par rareté (couleurs de world/chest.js).",
-  "fermé : 2 images (un reflet passe, ~1200 ms) ; ouverture : 4 images à enchaîner une fois (il tremble à gauche, à droite, s'entrouvre, s'ouvre grand ; ~140 ms puis ~220 ms) ; ouvert : 2 images en boucle (~700 ms) ; rayons : calque facultatif à poser derrière le coffre ouvert (le jeu a déjà les siens en CSS) ; icône : 32 × 32, fermé, pour les listes."
+  "Les coffres de la fenêtre d'ouverture (ChestReveal) : cadre 120 × 100, comme le dessin du jeu ; un coffre par rareté (couleurs de world/chest.js). La serrure, les pierres et les bijoux du trésor changent avec la rareté.",
+  "Haute définition : chaque fichier déclare une taille 4 fois plus grande que son cadre (480 × 400, l'icône 128 × 128), pour rester net sur un canvas. L'afficher à la taille du cadre (120 × 100, l'icône 32 × 32).",
+  "Les scintillements sont animés dans le SVG (SMIL, 12 phases de 100 ms en boucle) : ils tournent seuls dans un <img> ou un background CSS. Sur un canvas (drawImage), on voit une phase fixe.",
+  "fermé : 2 images, la même animation (un reflet passe sur la serrure, sa pierre brille ; fixes, deux moments) ; ouverture : 4 images fixes à enchaîner une fois (il tremble à gauche, à droite, s'entrouvre, s'ouvre grand ; ~140 ms puis ~220 ms) ; ouvert : 2 images, la même animation (éclats sur les pierres, grains de lumière qui montent, étincelles, lueur qui respire) ; le jeu peut les alterner comme avant ; rayons : calque facultatif à poser derrière le coffre ouvert (le jeu a déjà les siens en CSS) ; icône : 32 × 32, fermé, pour les listes."
  ],
  "coffres": {
   "commun": {
