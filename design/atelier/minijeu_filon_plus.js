@@ -11,6 +11,9 @@ const E = (x, y, rx, ry, fill, w = 0) => `<ellipse cx="${f(x)}" cy="${f(y)}" rx=
 const rnd = s => { let x = s; return () => (x = (x * 16807) % 2147483647) / 2147483647; };
 const etoile = (x, y, r, fill = '#FFFBE8') => `<path d="M${f(x)},${f(y - r)} Q${f(x + r * 0.16)},${f(y - r * 0.16)} ${f(x + r)},${f(y)} Q${f(x + r * 0.16)},${f(y + r * 0.16)} ${f(x)},${f(y + r)} Q${f(x - r * 0.16)},${f(y + r * 0.16)} ${f(x - r)},${f(y)} Q${f(x - r * 0.16)},${f(y - r * 0.16)} ${f(x)},${f(y - r)} Z" fill="${fill}"/>`;
 const brille = (x, y, r, dur, begin) => `<g opacity="0" transform="translate(${x} ${y})">${etoile(0, 0, r)}<animate attributeName="opacity" values="0;1;0;0" keyTimes="0;0.15;0.3;1" dur="${dur}s" begin="${begin}s" repeatCount="indefinite"/></g>`;
+const L = (d, c, w, extra = '') => `<path d="${d}" fill="none" stroke="${c}" stroke-width="${w}" stroke-linecap="round" stroke-linejoin="round"${extra}/>`;
+const lin = (id, stops, x2 = 0, y2 = 1) => `<linearGradient id="${id}" x1="0" y1="0" x2="${x2}" y2="${y2}">${stops.map(([o, c]) => `<stop offset="${o}" stop-color="${c}"/>`).join('')}</linearGradient>`;
+const rad = (id, stops, cx = 0.4, cy = 0.35, r = 0.75) => `<radialGradient id="${id}" cx="${cx}" cy="${cy}" r="${r}">${stops.map(([o, c]) => `<stop offset="${o}" stop-color="${c}"/>`).join('')}</radialGradient>`;
 
 // ——— la paroi : un fond de 48 × 48 qui se répète, selon la profondeur ———
 const COUCHES = {
@@ -100,18 +103,42 @@ function apparait(k, i) {
 }
 
 // ——— l'écran de bilan : le coffret (64 × 48) qui se remplit, les étoiles (32 × 32) ———
+// le coffret du bilan : un écrin ouvert, couvercle capitonné de velours, quatre alvéoles bordées d'or sur un plateau de
+// velours ; les pierres y sont nichées (le bord de l'alvéole passe devant elles)
+const ALV = [11.6, 25.2, 38.8, 52.4]; // les centres des quatre alvéoles
 function coffret(n, anim = true) {
-  let s = `<defs><linearGradient id="cfv" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#8A3A4A"/><stop offset="1" stop-color="#5A2030"/></linearGradient></defs>`;
-  // le couvercle ouvert derrière, doublé de velours
-  s += P('M6,22 L10,4 Q32,0 54,4 L58,22 Z', '#9A6440', 1.1) + P('M10,20 L13,7 Q32,4 51,7 L54,20 Z', 'url(#cfv)', 0.8) + `<path d="M13,7 Q32,4 51,7" fill="none" stroke="#F2C94C" stroke-width="0.8"/>`;
-  // la caisse, ses quatre alvéoles
-  s += P('M3,22 L61,22 L59,44 Q32,46.6 5,44 Z', '#B07A4A', 1.1) + `<path d="M4,28 L60,28" stroke="#8A5A32" stroke-width="0.7"/>` + P('M3,22 L61,22 L61,25 L3,25 Z', '#F2C94C', 0.8);
+  const p = `cf${n}`;
+  let s = `<defs>${lin(p + 'b', [[0, '#D89A60'], [0.5, '#B07A4A'], [1, '#7E5230']])}${lin(p + 'c', [[0, '#9A6440'], [1, '#6A3E22']])}${rad(p + 'v', [[0, '#B85068'], [0.6, '#8A3A4A'], [1, '#5A2030']], 0.5, 0.3, 0.8)}${lin(p + 'o', [[0, '#FFF2B8'], [0.5, '#F2C94C'], [1, '#B8862A']])}${rad(p + 'a', [[0, '#3A0E1A'], [0.7, '#5A2030'], [1, '#8A3A4A']], 0.5, 0.35, 0.7)}</defs>`;
+  // l'ombre au sol
+  s += E(32, 45.6, 29, 2.2, 'rgba(60,40,20,.22)');
+  // le couvercle ouvert, derrière : le bois, puis la doublure de velours capitonnée, son galon d'or
+  s += P('M5,22 L9,4.4 Q32,0.4 55,4.4 L59,22 Z', `url(#${p}c)`, 1.1);
+  s += P('M9.4,21 L12.4,7.6 Q32,4.4 51.6,7.6 L54.6,21 Z', `url(#${p}v)`, 0.8) + L('M12.4,7.6 Q32,4.4 51.6,7.6', `url(#${p}o)`, 1.1);
+  // le capiton : un quadrillage en losanges, piqué d'un bouton à chaque croisement
+  s += `<defs><clipPath id="${p}q"><path d="M9.4,21 L12.4,7.6 Q32,4.4 51.6,7.6 L54.6,21 Z"/></clipPath></defs><g clip-path="url(#${p}q)">`;
+  for (let k = -4; k <= 8; k++) s += L(`M${f(k * 7)},24 L${f(k * 7 + 16)},2 M${f(k * 7 + 16)},24 L${f(k * 7)},2`, '#5A2030', 0.45, ' opacity=".55"');
+  for (let r = 0; r < 3; r++) for (let c = 0; c < 9; c++) { const x = 4 + c * 7 + (r % 2) * 3.5, y = 23.2 - r * 7.3 - 2.6; s += E(x, y, 0.75, 0.7, '#E890A8', 0.3); }
+  s += '</g>' + L('M12.4,7.6 Q32,4.4 51.6,7.6', `url(#${p}o)`, 1.1);
+  s += L('M10,6.4 Q32,1.8 54,6.4', '#C8925A', 0.8, ' opacity=".8"');
+  // le plateau de velours, vu un peu d'en haut, et ses quatre alvéoles bordées d'or
+  s += P('M3,20.6 L61,20.6 L59.4,30.4 L4.6,30.4 Z', `url(#${p}v)`, 1);
+  for (const x of ALV) s += E(x, 26.2, 6, 3.3, `url(#${p}o)`, 0.6) + E(x, 26.4, 4.9, 2.5, `url(#${p}a)`);
+  // les pierres, nichées : on voit leur haut au-dessus du bord de l'alvéole ; le bord avant d'or passe devant
   const gem = ['quartz', 'amethyste', 'rubis', 'diamant'];
-  for (let i = 0; i < 4; i++) {
-    const x = 10 + i * 12;
-    s += E(x + 1, 34, 5, 4.4, '#5A2030', 0.8) + E(x + 1, 33.4, 4.2, 3.6, '#7A2A3A');
-    if (i < n) s += `<g transform="translate(${x + 1} 32) scale(0.36) translate(-16 -18)">${FI.gemme(gem[i], `cfg${i}${n}`)}</g>` + (anim ? brille(x + 4, 28, 1.6, 2.2, i * 0.5) : '');
+  for (let i = 0; i < n; i++) {
+    const x = ALV[i];
+    s += `<defs><clipPath id="${p}k${i}"><path d="M${x - 7},-2 L${x + 7},-2 L${x + 7},26.6 Q${x},29.8 ${x - 7},26.6 Z"/></clipPath></defs>`;
+    s += `<g clip-path="url(#${p}k${i})"><g transform="translate(${x} 27.6) scale(0.5) translate(-16 -27)">${FI.gemme(gem[i], `${p}g${i}`)}</g></g>`;
+    s += E(x, 27.8, 5.2, 1.2, 'rgba(40,10,20,.35)');
+    s += `<path d="M${x - 6},26.2 Q${x},30.4 ${x + 6},26.2" fill="none" stroke="${OUT}" stroke-width="0.6"/><path d="M${x - 5.5},26.5 Q${x},29.8 ${x + 5.5},26.5" fill="none" stroke="#FFE8A0" stroke-width="1"/>`;
+    s += anim ? brille(x + 4, 15.6 - (i % 2) * 2, 2, 2.2, i * 0.5) : etoile(x + 4, 15.6 - (i % 2) * 2, 2);
   }
+  // la caisse : la face bombée en bois veiné, le rebord d'or, les coins ferrés, l'écusson au centre
+  s += P('M3,30 L61,30 L59.6,42.6 Q32,45.6 4.4,42.6 Z', `url(#${p}b)`, 1.1);
+  s += L('M6,35 q3,-0.8 6,0 t6,0 t6,0 M38,37.6 q3,-0.8 6,0 t6,0 t6,0 M8,40.6 q3,-0.6 6,0 t6,0', '#8A5A32', 0.5, ' opacity=".7"');
+  s += P('M2.6,29 L61.4,29 L61.2,32 L2.8,32 Z', `url(#${p}o)`, 0.8) + L('M4,29.9 L60,29.9', '#FFFBE0', 0.6, ' opacity=".8"');
+  for (const [x, sx] of [[4.4, 1], [59.6, -1]]) s += `<g transform="translate(${x} 42.4) scale(${sx} 1)">${P('M0,0 L0,-5 Q0.6,-1 5,0.6 Q2,1.8 0,0 Z', `url(#${p}o)`, 0.6)}${E(1, -1, 0.5, 0.5, '#FFFBE0')}</g>`;
+  s += `<g transform="translate(32 37.4)">${P('M-5.6,-4 L5.6,-4 L5.6,1 Q5.6,4.4 0,6.4 Q-5.6,4.4 -5.6,1 Z', `url(#${p}o)`, 0.8)}${P('M0,-2.4 L2.4,0.6 L0,3.6 L-2.4,0.6 Z', '#E8506A', 0.5)}${E(-0.7, -0.4, 0.6, 0.4, WHITE)}</g>`;
   return s;
 }
 // une étoile du bilan : vide, ou gagnée (elle claque en 3 images)
