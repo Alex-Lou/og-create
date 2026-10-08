@@ -121,5 +121,8 @@ export const LINES = {
   baguette: { who: 'puits', mood: 'triste', text: 'Avant, ma baguette tirait vers l’eau. Là, plus rien. Comme si on avait éteint la lumière, dedans.' },
   ruban: 'La mer lui a pris son savoir. Le livre, lui, s’en souvient.',
   chut: { who: 'puits', mood: 'emerveille', text: 'Chut… l’eau arrive.' },
-  produit: { who: 'foyer', mood: 'emu', text: 'Ça, mon caneton, c’est de l’eau.' }
+  produit: { who: 'foyer', mood: 'emu', text: 'Ça, mon caneton, c’est de l’eau.' },
+  glisse: { who: 'puits', mood: 'triste', text: 'L’eau, je la porte jusqu’au feu… mais l’herbe mouillée, ça glisse ! Mes seaux se renversent. Il me faudrait un chemin.' },
+  pierres: 'L’île n’a qu’un sentier. Les autres, c’est toi qui les traces : du Puits jusqu’au Feu, pour commencer.',
+  sentier: { who: 'puits', mood: 'content', text: 'Un vrai chemin ! Mes seaux arrivent pleins. Les autres, tu les traceras où tu veux.' }
 };
