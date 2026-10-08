@@ -1,5 +1,5 @@
 // L'île : les créations d'île. L'établi, l'assemblage, la pose sur les cases dorées, le menu d'une création posée
-// (déplacer, ranger). Mixin de WorldView.vue : ses données et méthodes s'ajoutent à celles de l'île, qui les lit dans
+// (déplacer, pivoter, ranger). Mixin de WorldView.vue : ses données et méthodes s'ajoutent à celles de l'île, qui les lit dans
 // son gabarit.
 
 import { messageOf } from '@/utils/errors';
@@ -7,6 +7,7 @@ import playService from '@/services/playService';
 import { burst, ring, vibrate, center } from '@/utils/fx';
 import { TW } from '@/world/view/constants';
 import { moveSpots } from '@/world/crafts';
+import { POSE_MENU_H } from './annexes';
 
 export default {
   data() {
@@ -14,7 +15,7 @@ export default {
       menuPos: { x: 0, y: 0 },
       // Créations d'île : établi ouvert ; assemblage en cours ({ id, craft, shape, pieces, turned }), son envoi, son refus,
       // sa réussite ; pose ou déplacement en cours ({ craft, from: { x, y } | null }) et case dorée choisie ({ x, y, px,
-      // py }) ; menu d'une création posée ({ x, y, craft })
+      // py }), posée en miroir ou non (craftFlip) ; menu d'une création posée ({ x, y, craft })
       benchOpen: false,
       craftRun: null,
       craftStarting: false,
@@ -23,6 +24,7 @@ export default {
       craftMade: false,
       craftPlacing: null,
       craftConfirm: null,
+      craftFlip: false,
       craftMenu: null
     };
   },
@@ -44,13 +46,20 @@ export default {
       const name = this.placingCraft ? this.placingCraft.name : '';
       return this.craftPlacing && this.craftPlacing.from ? `Touche une case dorée pour y déplacer : ${name}.` : `Touche une case dorée pour poser : ${name}.`;
     },
+    // Le menu de pose se tient au-dessus de l'aperçu (sans le cacher), sans sortir de la vue par le haut
     craftConfirmStyle() {
       const c = this.craftConfirm;
       if (!c || !this.geo) return {};
-      return { left: `${Math.max(110, Math.min(this.geo.width - 110, c.px))}px`, top: `${Math.max(56, c.py - 24)}px` };
+      return { left: `${Math.max(110, Math.min(this.geo.width - 110, c.px))}px`, top: `${Math.max(POSE_MENU_H, c.py - TW * this.cam.s * 1.15)}px` };
     },
     menuStyle() {
       return { left: `${this.menuPos.x}px`, top: `${this.menuPos.y}px` };
+    },
+    // La création en attente de confirmation, dessinée en transparence sur sa case dorée
+    craftGhost() {
+      const c = this.craftConfirm;
+      if (!c || !this.placingCraft || (this.craftPlacing && this.craftPlacing.from)) return null;
+      return { x: c.x, y: c.y, craft: this.placingCraft.id, flip: this.craftFlip, ghost: true };
     }
   },
   methods: {
@@ -111,6 +120,7 @@ export default {
       this.craftMenu = null;
       this.craftConfirm = null;
       this.craftPlacing = { craft: craftId, from };
+      this.craftFlip = false;
       if (!this.craftSpots.length) {
         this.craftPlacing = null;
         // Une création qui en garde une autre à portée le dit (règle « près de »)
@@ -165,7 +175,7 @@ export default {
       const key = `craft:${target.x},${target.y}`;
       try {
         this.pops.set(key, performance.now());
-        const { coins, world } = await playService.craftPlace(craft.id, target.x, target.y);
+        const { coins, world } = await playService.craftPlace(craft.id, target.x, target.y, this.craftFlip);
         this.craftPlacing = null;
         this.craftConfirm = null;
         this.apply(world);
@@ -208,7 +218,29 @@ export default {
         this.busy = false;
       }
     },
-    // Menu d'une création posée (appui long) : déplacer, ranger
+    // Pose en attente de confirmation : pivoter (l'aperçu sur la case suit)
+    turnPlacingCraft() {
+      this.craftFlip = !this.craftFlip;
+      vibrate(6);
+      this.draw(performance.now());
+    },
+    // Menu d'une création posée : pivoter, gratuitement (le menu reste ouvert pour pivoter encore)
+    async turnFromMenu() {
+      if (!this.craftMenu || this.busy) return;
+      const { x, y } = this.craftMenu;
+      this.busy = true;
+      try {
+        const { coins, world } = await playService.craftTurn(x, y, !this.placedAt({ x, y }).flip);
+        this.apply(world);
+        if (coins !== undefined) this.$emit('coins-updated', coins);
+        vibrate(8);
+      } catch (error) {
+        this.$emit('show-alert', messageOf(error, 'La création n’a pas pu pivoter.'));
+      } finally {
+        this.busy = false;
+      }
+    },
+    // Menu d'une création posée (appui long) : déplacer, pivoter, ranger
     openCraftMenu(craft) {
       const c = this.ground(craft.x, craft.y);
       const sp = this.toScreen(c.x, c.y);

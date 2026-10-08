@@ -312,7 +312,8 @@ export default {
       ctx.restore();
     }
   },
-  // Création d'île posée : elle surgit à la pose, sautille au toucher, s'efface à demi pendant qu'on la déplace
+  // Création d'île posée : elle surgit à la pose, sautille au toucher, s'efface à demi pendant qu'on la déplace ; en
+  // miroir si elle est pivotée ; l'aperçu d'une pose (ghost) en transparence
   drawCraft(ctx, craft, t, now, repaint) {
     const c = this.ground(craft.x, craft.y);
     const key = `craft:${craft.x},${craft.y}`;
@@ -330,7 +331,8 @@ export default {
     ctx.save();
     ctx.translate(c.x, c.y - hop);
     if (scale !== 1) ctx.scale(scale, scale);
-    if (from && from.x === craft.x && from.y === craft.y) ctx.globalAlpha = 0.45;
+    if (craft.flip) ctx.scale(-1, 1);
+    if ((from && from.x === craft.x && from.y === craft.y) || craft.ghost) ctx.globalAlpha = craft.ghost ? 0.7 : 0.45;
     craftLayers(craft.craft, t).forEach((layer, i) => drawSprite(ctx, layer.key, layer.make, 0, 0, repaint, `craft:${craft.x},${craft.y}:${i}`));
     ctx.restore();
   },
@@ -343,7 +345,8 @@ export default {
     drawSprite(ctx, layer.key, layer.make, c.x, c.y, repaint, `camp:${item.id}`);
   },
 
-  // Annexe posée sur sa case : elle surgit à la pose, sautille au toucher, s'efface à demi pendant qu'on la déplace
+  // Annexe posée sur sa case : elle surgit à la pose, sautille au toucher, s'efface à demi pendant qu'on la déplace ; en
+  // miroir si elle est pivotée, dans sa couleur ; l'aperçu d'une pose (ghost) en transparence
   drawAnnex(ctx, annex, t, now, repaint) {
     const c = this.ground(annex.x, annex.y);
     const key = `annex:${annex.x},${annex.y}`;
@@ -361,8 +364,10 @@ export default {
     ctx.save();
     ctx.translate(c.x, c.y - hop);
     if (scale !== 1) ctx.scale(scale, scale);
-    if (from && from.x === annex.x && from.y === annex.y) ctx.globalAlpha = 0.45;
-    annexLayers(annex.annex, this.annexVariants.get(`${annex.x},${annex.y}`) || 0, t).forEach((layer, i) => drawSprite(ctx, layer.key, layer.make, 0, 0, repaint, `${key}:${i}`));
+    if (annex.flip) ctx.scale(-1, 1);
+    if ((from && from.x === annex.x && from.y === annex.y) || annex.ghost) ctx.globalAlpha = annex.ghost ? 0.7 : 0.45;
+    const variant = annex.ghost ? annex.look : this.annexVariants.get(`${annex.x},${annex.y}`) || 0;
+    annexLayers(annex.annex, variant, t).forEach((layer, i) => drawSprite(ctx, layer.key, layer.make, 0, 0, repaint, `${key}:${i}`));
     ctx.restore();
   }
 };

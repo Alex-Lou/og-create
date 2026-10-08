@@ -66,8 +66,12 @@ export default {
   craftFinish(run, layout) {
     return http.post('/play/world/craft/finish', { run, layout }).then(response => response.data);
   },
-  craftPlace(craft, x, y) {
-    return http.post('/play/world/craft/place', { craft, x, y }).then(response => response.data);
+  craftPlace(craft, x, y, flip = false) {
+    return http.post('/play/world/craft/place', { craft, x, y, flip }).then(response => response.data);
+  },
+  // Création posée pivotée (miroir) : { coins?, world }
+  craftTurn(x, y, flip) {
+    return http.post('/play/world/craft/turn', { x, y, flip }).then(response => response.data);
   },
   craftMove(x, y, toX, toY) {
     return http.post('/play/world/craft/move', { x, y, toX, toY }).then(response => response.data);
@@ -104,8 +108,12 @@ export default {
     return http.post('/play/world/item/undo', { item }).then(response => response.data);
   },
   // Annexe d'un bâtiment : pose de l'exemplaire suivant sur une case libre autour de lui → { built, coins, world }
-  worldAnnex(annex, x, y) {
-    return http.post('/play/world/annex', { annex, x, y }).then(response => response.data);
+  worldAnnex(annex, x, y, pose = {}) {
+    return http.post('/play/world/annex', { annex, x, y, ...pose }).then(response => response.data);
+  },
+  // Annexe posée pivotée ou recolorée (pose : { flip?, look? }) : vue de l'île
+  worldAnnexPose(x, y, pose) {
+    return http.post('/play/world/annex/pose', { x, y, ...pose }).then(response => response.data);
   },
   // Déplacement gratuit d'une annexe vers une autre case autorisée : vue de l'île
   worldAnnexMove(x, y, toX, toY) {

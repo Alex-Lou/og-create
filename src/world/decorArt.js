@@ -22,6 +22,9 @@ for (const [name, art] of Object.entries(DECOR.annexes)) {
   const id = name.split('_')[0];
   (ANNEXES[id] = ANNEXES[id] || [])[art.variante_jeu || 0] = { name, art };
 }
+// Les noms des couleurs dessinées d'une annexe, dans l'ordre du jeu (« blé », « toit rouge »… : ce qui suit le tiret
+// de son nom dans la bibliothèque)
+export const annexLookNames = id => (ANNEXES[id] || []).map(e => (e ? e.art.nom.split('— ')[1] || e.art.nom : ''));
 // L'entrée d'une annexe pour une variante du jeu (elles tournent : la 4e d'un champ refait du blé), ou null
 function annexEntry(id, variant) {
   const list = ANNEXES[id];
