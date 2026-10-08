@@ -323,7 +323,8 @@ export default {
     checkPlanWritten() {
       const quest = this.islandQuest;
       if (!quest || !quest.plan || !this.discoveredElements.includes(quest.plan) || !this.prologueRunning) return;
-      guide.say({ id: `prologue-plan-${quest.plan}`, text: `« ${quest.plan} » est écrit ! Retourne sur l’île : le chantier peut se bâtir.` });
+      const then = quest.id === 'achat-source' ? 'la brume de La Source peut se lever' : 'le chantier peut se bâtir';
+      guide.say({ id: `prologue-plan-${quest.plan}`, text: `« ${quest.plan} » est écrit ! Retourne sur l’île : ${then}.` });
       if (coach.state.lesson) coach.show(islandLesson(this.lessonQuest(quest)));
     },
     // Une réplique du tutoriel : de Brume, ou d'un membre de la troupe (son portrait dans la bulle)
@@ -408,6 +409,12 @@ export default {
       this.prologueName = null;
       coach.show(null);
       this.savePrologue({ skipped: true });
+    },
+    // L'île est recommencée (Mon compte) : l'appareil oublie « Passer » et la fin du tutoriel, puis le jeu repart de
+    // la vue du serveur (Brume reprend à la première étape)
+    islandRestarted() {
+      this.savePrologue({ skipped: false, finished: false });
+      window.location.reload();
     },
     replayPrologue() {
       this.prologueReplay = ['arrivee', 'souffle', 'sceau', 'recolte', 'cannelle', 'rivet', 'ondin', 'campement'];

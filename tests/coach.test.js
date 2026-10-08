@@ -91,6 +91,18 @@ describe('les leçons de l’île', () => {
     expect(questPlan({ id: 'feu', done: false }, site(false, 1))).toBeNull();
     expect(questPlan({ id: 'soupe', done: false }, site(false))).toBeNull();
   });
+  it('au tutoriel, La Source se découvre en écrivant la Source : le Grimoire d’abord, puis le panneau', () => {
+    const map = (zone) => ({ map: { zones: [{ id: 'source', owned: false, plan: 'Source', planOwned: false, ...zone }] } });
+    expect(questPlan({ id: 'achat-source', done: false }, map())).toBe('Source');
+    expect(questPlan({ id: 'achat-source', done: false }, map({ planOwned: true }))).toBeNull();
+    // (un compte d'avant la bible l'achète : pas de plan)
+    expect(questPlan({ id: 'achat-source', done: false }, map({ plan: undefined }))).toBeNull();
+    const lesson = islandLesson({ id: 'achat-source', done: false, plan: 'Source' });
+    expect([lesson.id, lesson.mode]).toEqual(['plan-achat-source', 'infinite']);
+    expect(lesson.steps[0].text).toContain('« Source »');
+    expect(lesson.steps[2].text).toContain('pour la découvrir');
+    expect(islandLesson({ id: 'achat-source', done: false, plan: null }).steps[0].target).toBe('île:quartier:source');
+  });
   it('ce que la quête fait payer manque : la main mène d’abord à la Récolte', () => {
     for (const id of ['feu', 'soupe', 'poules', 'puits-ondin']) {
       expect(islandLesson({ id, done: false, short: true })).toMatchObject({ id: `short-${id}`, steps: [{ target: '.world__play' }] });

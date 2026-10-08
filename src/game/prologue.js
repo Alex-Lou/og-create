@@ -126,7 +126,7 @@ const LESSONS = {
   'achat-source': [
     { target: 'île:quartier:source', text: 'La Source est juste là : touche son panneau.' },
     { target: tipOf('zone:source'), text: 'Touche « Voir le quartier ».' },
-    { target: '[data-coach="zone-buy"]', text: 'Tes écus suffisent : achète La Source.' }
+    { target: '[data-coach="zone-buy"]', text: 'Touche ce bouton : La Source s’ouvre.' }
   ],
   'eveil-ondin': [
     { target: 'île:habitant:puits', text: 'Ondin dort contre son rocher : touche-le.' },
@@ -169,6 +169,11 @@ export function questShort(quest, state, stock) {
 // state : la vue de l'île
 export function questPlan(quest, state) {
   if (!quest || quest.done || !state || !PLAN_INTRO[quest.id]) return null;
+  // (au tutoriel, La Source se découvre en écrivant son élément)
+  if (quest.id === 'achat-source') {
+    const zone = ((state.map && state.map.zones) || []).find(z => z.id === 'source');
+    return zone && !zone.owned && zone.plan && !zone.planOwned ? zone.plan : null;
+  }
   const site = (state.sites || []).find(s => s.id === (quest.id === 'feu' ? 'foyer' : 'puits'));
   return site && !site.level && site.next && site.next.plan && !site.next.planOwned ? site.next.plan : null;
 }
@@ -180,8 +185,14 @@ const CLAIM = [
   { target: 'île:brume', text: 'Touche Brume : ta récompense t’attend.' },
   { target: '.g-modal__close, .world__sheet-backdrop .world__link', text: 'Referme cette fiche : Brume t’attend avec ta récompense.' }
 ];
-// Ce qui demande un élément du Grimoire (le plan de son bâtiment), pour la consigne
-const PLAN_INTRO = { feu: 'Le feu de camp', 'puits-ondin': 'Le Puits' };
+// Ce qui demande un élément du Grimoire (le plan de son bâtiment ; La Source, à découvrir) : la consigne, et pour quoi
+// l'Encre est offerte
+const PLAN_INTRO = {
+  feu: plan => `Le feu de camp demande « ${plan} » : il s’écrit dans le Grimoire. Suis le ruban.`,
+  'puits-ondin': plan => `Le Puits demande « ${plan} » : il s’écrit dans le Grimoire. Suis le ruban.`,
+  'achat-source': plan => `La Source dort sous la brume : écris « ${plan} » dans le Grimoire, et elle se lèvera. Suis le ruban.`
+};
+const PLAN_WHY = { 'achat-source': 'pour la découvrir' };
 // La leçon du coach à une étape de l'île (la quête active : { id, done, short, plan }), ou null. plan : l'élément que
 // le bâtiment de la quête demande et qui n'est pas encore écrit : la récompense à réclamer auprès de
 // Brume, sinon les gestes de la quête
@@ -189,7 +200,10 @@ export function islandLesson(quest) {
   if (!quest || (!quest.done && !LESSONS[quest.id])) return null;
   if (quest.done) return { id: 'claim', mode: 'world', steps: CLAIM };
   // Le bâtiment de la quête demande un élément pas encore écrit (son plan : le Brasier du feu de camp) : au Grimoire
-  if (quest.plan) return { id: `plan-${quest.id}`, mode: 'infinite', steps: bookSteps(`${PLAN_INTRO[quest.id] || 'Ce chantier'} demande « ${quest.plan} » : il s’écrit dans le Grimoire. Suis le ruban.`, 'pour ce chantier') };
+  if (quest.plan) {
+    const intro = PLAN_INTRO[quest.id] ? PLAN_INTRO[quest.id](quest.plan) : `Ce chantier demande « ${quest.plan} » : il s’écrit dans le Grimoire. Suis le ruban.`;
+    return { id: `plan-${quest.id}`, mode: 'infinite', steps: bookSteps(intro, PLAN_WHY[quest.id] || 'pour ce chantier') };
+  }
   if (quest.short && SHORT[quest.id]) return { id: `short-${quest.id}`, mode: 'world', steps: [{ target: '.world__play', text: SHORT[quest.id] }] };
   return { id: `quest-${quest.id}`, mode: BOOK_LESSONS.has(quest.id) ? 'infinite' : 'world', steps: LESSONS[quest.id] };
 }

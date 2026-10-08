@@ -46,13 +46,21 @@
           <span>Chapitre <strong>{{ zone.chapter }}</strong> du Grimoire</span>
           <em>{{ zone.open ? 'ouvert' : 'encore scellé' }}</em>
         </li>
-        <li class="world__need">
+        <!-- (au tutoriel, La Source se découvre en écrivant son élément, sans écus) -->
+        <li v-if="zone.plan" :class="['world__need', zone.planOwned ? 'is-ok' : 'is-missing']">
+          <span class="world__need-glyph" aria-hidden="true"><ElementGlyph glyph="ui:book" /></span>
+          <span>Écrire <strong>« {{ zone.plan }} »</strong> dans le Grimoire</span>
+          <em>{{ zone.planOwned ? 'écrit' : 'pas encore' }}</em>
+        </li>
+        <li v-else class="world__need">
           <span class="world__need-glyph" aria-hidden="true"><ElementGlyph glyph="ui:coin" /></span>
           <span><strong>{{ zone.price }}</strong> écus</span>
         </li>
       </ul>
       <div class="world__sheet-actions">
-        <button type="button" class="world__btn" data-coach="zone-buy" :disabled="!zone.open || busy" @click="$emit('buy')">Acheter · {{ zone.price }} écus</button>
+        <button type="button" class="world__btn" data-coach="zone-buy" :disabled="!zone.open || (zone.plan && !zone.planOwned) || busy" @click="$emit('buy')">
+          {{ zone.plan ? 'Lever la brume' : `Acheter · ${zone.price} écus` }}
+        </button>
       </div>
     </div>
   </div>
@@ -63,7 +71,7 @@ import ElementGlyph from '@/components/ui/ElementGlyph/ElementGlyph.vue';
 import { GLYPH } from '@/game/resources';
 import { WORDS } from '@/world/needs';
 import { CLIMATE_NAMES, CLIMATE_TEXT } from '@/world/climates';
-// Fiche d'un quartier : à acheter (prix en écus, chapitre du Grimoire), ou terre inconnue à explorer (ce qu'emporte
+// Fiche d'un quartier : à acheter (prix en écus, chapitre du Grimoire ; au tutoriel, La Source : son élément à écrire), ou terre inconnue à explorer (ce qu'emporte
 // l'expédition). Achat et départ restent à l'île, qui les reçoit en événements. Ses styles sont ceux de l'île
 // (WorldView, classes world__)
 export default {
