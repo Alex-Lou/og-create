@@ -412,9 +412,9 @@ S('12_chantier', {
 });
 // Étape 12k — la nuit, autour du feu : l'avatar (habits recousus), Cannelle, Rivet, Aster, Ondin ; Brume au-dessus ;
 // les poules endormies, la torche, des lucioles au bord de la brume
-const veilleeFond = f => ciel('vc', { ciel: '#0F1630', cielBas: '#2A3758' }, 250) + mer(170, 215, f) + nappe(205, 0.16, f) + sable(215)
+const veilleeFond = (f, [tx, ty] = [352, 330]) => ciel('vc', { ciel: '#0F1630', cielBas: '#2A3758' }, 250) + mer(170, 215, f) + nappe(205, 0.16, f) + sable(215)
   + lucioles([[40, 190], [80, 176], [350, 186], [372, 200], [20, 210]], f)
-  + `<g transform="translate(352 330) scale(1.6)">${torche('allumee', f % 3)}</g>`; // la torche de la boutique (torche.js)
+  + `<g transform="translate(${tx} ${ty}) scale(1.6)">${torche('allumee', f % 3)}</g>`; // la torche de la boutique (torche.js), en (tx, ty)
 // une poule endormie, la tête rentrée dans les plumes (m : −1 regarde à gauche)
 const pouleEndormie = (x, y, s, [c, cs], m = 1) => `<g transform="translate(${x} ${y}) scale(${r2(s * m)} ${s})">`
   + E(0, 1, 11, 3, 'rgba(0,0,0,.18)', 0) + P('M-9,-2 Q-14,-8 -12,-12 Q-8,-9 -6,-6 Z', cs, 1) + E(0, -5, 9.6, 7, c, 1.2) + P('M-5,-6 Q0,-9 5,-5', 'none', 0.9)
@@ -424,7 +424,8 @@ S('12_veillee', {
   titre: 'La première veillée : cinq visages et Brume', etapes: ['12k'], images: 4, ms: 180,
   // en cercle autour du feu : Rivet et Aster derrière (de face), Cannelle et Ondin à droite, tournés vers le feu ;
   // Brume au-dessus ; l'avatar au premier plan à gauche, de dos
-  fond: f => veilleeFond(f) + pouleEndormie(40, 262, 1.2, ['#C8743A', '#A85A2A']) + pouleEndormie(66, 256, 1.1, ['#F4EEDF', '#D8CFBE'], -1)
+  // la torche à gauche, derrière les poules : à droite, Cannelle la cachait
+  fond: f => veilleeFond(f, [56, 250]) + pouleEndormie(40, 262, 1.2, ['#C8743A', '#A85A2A']) + pouleEndormie(66, 256, 1.1, ['#F4EEDF', '#D8CFBE'], -1)
     + poser(frame(T.Rivet.base, 'front', 'repos', f % 2), 140, 282, 2.3) + poser(frame(T.Aster.base, 'front', 'repos', (f + 1) % 2), 262, 282, 2.3)
     + feu(200, 318, 1.7, f) + brume(200, 150, 2.6, f)
     + poser(frame(T.Cannelle.base, 'se', 'repos', f % 2), 338, 330, 2.5) + poser(frame(T.Ondin.base, 'se', 'repos', (f + 1) % 2), 282, 372, 2.6),
