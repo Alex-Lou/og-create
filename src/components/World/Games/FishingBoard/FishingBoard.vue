@@ -20,6 +20,7 @@
 <script>
 import { FISHING, FISH, fishingOf, fishX, catchAt } from '@/game/minigames';
 import { vibrate } from '@/utils/fx';
+import { gamePiece, gameFrame, gameUrls } from '@/game/minigameArt';
 
 const TAU = Math.PI * 2;
 const LANES = [0, 1, 2];
@@ -33,6 +34,21 @@ const JUMP_MS = 650;
 // Ombres des poissons sous l'eau, et leur couleur une fois sortis
 const SHADOW = { gardon: 'rgba(24,48,66,.5)', truite: 'rgba(36,60,38,.52)', dore: 'rgba(246,196,70,.82)', botte: 'rgba(58,40,28,.55)' };
 const SKIN = { gardon: ['#8FA9B8', '#3E5A6A'], truite: ['#A7B87A', '#4E5E33'], dore: ['#F2C04B', '#9A6A14'], botte: ['#6A4A34', '#3A2618'] };
+// Les pièces de la bibliothèque (design/bibliotheque/svg/minijeux/peche) : une image chargée, ou null (le dessin par
+// code la remplace en attendant)
+const IMAGES = new Map();
+function art(url) {
+  if (!url) return null;
+  let img = IMAGES.get(url);
+  if (!img) {
+    img = new Image();
+    img.src = url;
+    IMAGES.set(url, img);
+  }
+  return img.complete && img.naturalWidth ? img : null;
+}
+const piece = (name) => art(gamePiece('peche', name));
+const frame = (suite, ms) => art(gameFrame('peche', suite, ms));
 
 // Pêche : les poissons de la partie viennent de la graine du serveur ; les lancers [t, couloir] lui sont renvoyés à la
 // fin (end) et il les rejoue. Le canvas dessine le ponton, l'eau, les ombres qui passent, la ligne et les prises.
@@ -67,6 +83,7 @@ export default {
     this.started = 0;
     this.ended = false;
     this.raf = 0;
+    for (const url of gameUrls('peche')) art(url);
   },
   mounted() {
     this.resize();
@@ -151,6 +168,16 @@ export default {
       this.labels(ctx, t, W, H);
     },
     water(ctx, t, W, H) {
+      // Le couloir d'eau de la bibliothèque, répété en largeur dans chaque bande ; sinon le dégradé
+      const lane = frame('couloir', t);
+      if (lane) {
+        for (const [top, bottom] of BANDS) {
+          const h = (bottom - top) * H;
+          const w = (h * lane.naturalWidth) / lane.naturalHeight;
+          for (let x = 0; x < W; x += w) ctx.drawImage(lane, x, top * H, w, h);
+        }
+        return;
+      }
       const g = ctx.createLinearGradient(0, DECK * H, 0, H);
       g.addColorStop(0, '#8ACDE6');
       g.addColorStop(0.45, '#5FAED6');
@@ -216,6 +243,30 @@ export default {
         if (x < -0.2 || x > 1.2) continue;
         const s = W * 0.066 * LANE_SCALE[f.lane] * (f.kind === 'truite' ? 1.15 : f.kind === 'botte' ? 0.8 : 1);
         const y = LANE_Y[f.lane] * H + Math.sin(t / 300 + f.id) * 2;
+        const swim = frame(`nage-${f.kind}`, t + f.id * 70);
+        if (swim) {
+          // (le poisson dessiné regarde vers la droite ; le doré luit)
+          const w = s * 2.6;
+          const h = (w * swim.naturalHeight) / swim.naturalWidth;
+          ctx.save();
+          ctx.translate(x * W, y);
+          ctx.scale(f.dir, 1);
+          if (f.kind === 'dore') {
+            ctx.shadowColor = 'rgba(255,220,120,.95)';
+            ctx.shadowBlur = 14;
+          }
+          ctx.globalAlpha = 0.9;
+          ctx.drawImage(swim, -w / 2, -h / 2, w, h);
+          ctx.restore();
+          const bubbles = f.kind !== 'botte' && frame('bulles', t + f.id * 130);
+          if (bubbles) {
+            const bw = s * 0.5;
+            ctx.globalAlpha = 0.8;
+            ctx.drawImage(bubbles, x * W + f.dir * s * 1.1 - bw / 2, y - h / 2 - bw * 1.6, bw, bw * 1.67);
+            ctx.globalAlpha = 1;
+          }
+          continue;
+        }
         ctx.save();
         ctx.translate(x * W, y);
         ctx.scale(f.dir * s, s);
@@ -253,56 +304,79 @@ export default {
     // Le ponton : planches, seau des prises, temps restant
     deck(ctx, t, W, H) {
       const h = DECK * H;
-      ctx.fillStyle = '#B98552';
-      ctx.fillRect(0, 0, W, h);
-      ctx.strokeStyle = 'rgba(90,58,30,.55)';
-      ctx.lineWidth = 1.2;
-      for (let k = 1; k < 4; k++) {
-        ctx.beginPath();
-        ctx.moveTo(0, (h * k) / 4);
-        ctx.lineTo(W, (h * k) / 4);
-        ctx.stroke();
+      const boards = piece('ponton');
+      if (boards) {
+        // Les planches de la bibliothèque, répétées en largeur
+        ctx.fillStyle = '#B98552';
+        ctx.fillRect(0, 0, W, h);
+        const w = (h * boards.naturalWidth) / boards.naturalHeight;
+        for (let x = 0; x < W; x += w) ctx.drawImage(boards, x, 0, w, h);
+      } else {
+        ctx.fillStyle = '#B98552';
+        ctx.fillRect(0, 0, W, h);
+        ctx.strokeStyle = 'rgba(90,58,30,.55)';
+        ctx.lineWidth = 1.2;
+        for (let k = 1; k < 4; k++) {
+          ctx.beginPath();
+          ctx.moveTo(0, (h * k) / 4);
+          ctx.lineTo(W, (h * k) / 4);
+          ctx.stroke();
+        }
+        ctx.fillStyle = 'rgba(255,255,255,.12)';
+        for (let k = 0; k < 4; k++) ctx.fillRect(0, (h * k) / 4 + 1, W, 2);
+        ctx.fillStyle = '#7A5230';
+        ctx.fillRect(0, h - 5, W, 5);
       }
-      ctx.fillStyle = 'rgba(255,255,255,.12)';
-      for (let k = 0; k < 4; k++) ctx.fillRect(0, (h * k) / 4 + 1, W, 2);
-      ctx.fillStyle = '#7A5230';
-      ctx.fillRect(0, h - 5, W, 5);
       ctx.fillStyle = 'rgba(30,60,90,.25)';
       ctx.fillRect(0, h, W, 6);
-      // Seau
+      // Seau : vide, puis plein dès la première prise ; le compte des prises par-dessus
       const bx = W * 0.86;
       const by = h * 0.58;
-      ctx.fillStyle = '#7C8C99';
-      ctx.strokeStyle = '#3E4A54';
-      ctx.lineWidth = 1.5;
-      ctx.beginPath();
-      ctx.moveTo(bx - 16, by - 12);
-      ctx.lineTo(bx + 16, by - 12);
-      ctx.lineTo(bx + 12, by + 14);
-      ctx.lineTo(bx - 12, by + 14);
-      ctx.closePath();
-      ctx.fill();
-      ctx.stroke();
-      ctx.beginPath();
-      ctx.ellipse(bx, by - 12, 16, 4.5, 0, 0, TAU);
-      ctx.fillStyle = '#4E5C68';
-      ctx.fill();
-      ctx.stroke();
       const shown = this.catches.filter(k => k !== 'botte').length;
-      for (let k = 0; k < Math.min(shown, 4); k++) {
-        ctx.fillStyle = SKIN[this.catches.filter(c => c !== 'botte')[k]][0];
+      const pail = piece(shown ? 'seau_plein' : 'seau_vide');
+      if (pail) {
+        const size = h * 0.92;
+        ctx.drawImage(pail, bx - size / 2, by - size * 0.62, size, size);
+        ctx.font = `900 ${Math.round(h * 0.2)}px Nunito, system-ui, sans-serif`;
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        ctx.lineWidth = 3;
+        ctx.strokeStyle = 'rgba(58,36,20,.85)';
+        ctx.strokeText(String(this.catches.length), bx, by + size * 0.12);
+        ctx.fillStyle = '#FFF6E6';
+        ctx.fillText(String(this.catches.length), bx, by + size * 0.12);
+      } else {
+        ctx.fillStyle = '#7C8C99';
+        ctx.strokeStyle = '#3E4A54';
+        ctx.lineWidth = 1.5;
         ctx.beginPath();
-        ctx.moveTo(bx - 8 + k * 5, by - 13);
-        ctx.lineTo(bx - 11 + k * 5, by - 22);
-        ctx.lineTo(bx - 5 + k * 5, by - 22);
+        ctx.moveTo(bx - 16, by - 12);
+        ctx.lineTo(bx + 16, by - 12);
+        ctx.lineTo(bx + 12, by + 14);
+        ctx.lineTo(bx - 12, by + 14);
         ctx.closePath();
         ctx.fill();
+        ctx.stroke();
+        ctx.beginPath();
+        ctx.ellipse(bx, by - 12, 16, 4.5, 0, 0, TAU);
+        ctx.fillStyle = '#4E5C68';
+        ctx.fill();
+        ctx.stroke();
+        for (let k = 0; k < Math.min(shown, 4); k++) {
+          ctx.fillStyle = SKIN[this.catches.filter(c => c !== 'botte')[k]][0];
+          ctx.beginPath();
+          ctx.moveTo(bx - 8 + k * 5, by - 13);
+          ctx.lineTo(bx - 11 + k * 5, by - 22);
+          ctx.lineTo(bx - 5 + k * 5, by - 22);
+          ctx.closePath();
+          ctx.fill();
+        }
+        ctx.fillStyle = '#FFF6E6';
+        ctx.font = `900 ${Math.round(h * 0.2)}px Nunito, system-ui, sans-serif`;
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        ctx.fillText(String(this.catches.length), bx, by + 2);
       }
-      ctx.fillStyle = '#FFF6E6';
-      ctx.font = `900 ${Math.round(h * 0.2)}px Nunito, system-ui, sans-serif`;
-      ctx.textAlign = 'center';
-      ctx.textBaseline = 'middle';
-      ctx.fillText(String(this.catches.length), bx, by + 2);
       // Temps restant
       const left = Math.ceil((FISHING.duration - t) / 1000);
       ctx.textAlign = 'left';
@@ -340,11 +414,19 @@ export default {
           float = [target[0], target[1] + plunge];
           // Ronds dans l'eau là où le bouchon s'est posé
           const k = (p - 0.25) / 0.45;
-          ctx.strokeStyle = `rgba(255,255,255,${0.6 * (1 - k)})`;
-          ctx.lineWidth = 1.4;
-          ctx.beginPath();
-          ctx.ellipse(target[0], target[1] + 4, 8 + k * 26, (8 + k * 26) * 0.35, 0, 0, TAU);
-          ctx.stroke();
+          const rings = frame('ronds', t - cast.at - FISHING.busy * 0.25);
+          if (rings) {
+            const rw = W * 0.16 * LANE_SCALE[cast.lane];
+            ctx.globalAlpha = 1 - k * 0.6;
+            ctx.drawImage(rings, target[0] - rw / 2, target[1] + 4 - (rw * 0.375) / 2, rw, rw * 0.375);
+            ctx.globalAlpha = 1;
+          } else {
+            ctx.strokeStyle = `rgba(255,255,255,${0.6 * (1 - k)})`;
+            ctx.lineWidth = 1.4;
+            ctx.beginPath();
+            ctx.ellipse(target[0], target[1] + 4, 8 + k * 26, (8 + k * 26) * 0.35, 0, 0, TAU);
+            ctx.stroke();
+          }
         } else {
           const k = (p - 0.7) / 0.3;
           float = [target[0] + (tip[0] - target[0]) * k, target[1] + (tip[1] - target[1]) * k];
@@ -357,6 +439,18 @@ export default {
         ctx.moveTo(tip[0], tip[1]);
         ctx.quadraticCurveTo((tip[0] + float[0]) / 2, Math.max(tip[1], float[1]) + 10, float[0], float[1]);
         ctx.stroke();
+        // Le bouchon de la bibliothèque : il flotte, plonge quand ça mord ; la ligne qui revient vide montre l'hameçon
+        const p = (t - cast.at) / FISHING.busy;
+        const bite = cast.fish && p >= 0.25 && p < 0.7;
+        const bob = bite ? frame('bouchon-touche', t - cast.at - FISHING.busy * 0.25) : frame('bouchon-flotte', t);
+        if (bob) {
+          const bw = W * 0.05;
+          const bh = bw * 1.5;
+          ctx.drawImage(bob, float[0] - bw / 2, float[1] - bh * 0.72, bw, bh);
+          const hook = p >= 0.7 && !cast.fish && piece('hamecon');
+          if (hook) ctx.drawImage(hook, float[0] - bw * 0.25, float[1] + bh * 0.08, bw * 0.5, bw * 0.75);
+          return;
+        }
         ctx.fillStyle = '#E2453A';
         ctx.beginPath();
         ctx.arc(float[0], float[1] - 3, 4.2, Math.PI, 0);
@@ -377,6 +471,24 @@ export default {
         const x = from[0] + (bucket[0] - from[0]) * k;
         const y = from[1] + (bucket[1] - from[1]) * k - Math.sin(k * Math.PI) * H * 0.18;
         const s = W * 0.05 * (1 - 0.35 * k);
+        // L'éclaboussure là où la prise sort de l'eau
+        const splash = frame('eclaboussure', t - j.at);
+        if (splash && t - j.at < 360) {
+          const sw = W * 0.14 * LANE_SCALE[j.lane];
+          ctx.drawImage(splash, from[0] - sw / 2, from[1] - sw * 0.6, sw, sw * 0.75);
+        }
+        // La prise ferrée de la bibliothèque, au bout de la ligne, qui se balance jusqu'au seau
+        const hooked = frame(`ferre-${j.kind}`, t - j.at);
+        if (hooked) {
+          const fh = s * 3.4;
+          const fw = (fh * hooked.naturalWidth) / hooked.naturalHeight;
+          ctx.save();
+          ctx.translate(x, y);
+          ctx.rotate(Math.sin(k * Math.PI * 2) * 0.25);
+          ctx.drawImage(hooked, -fw / 2, -fh * 0.3, fw, fh);
+          ctx.restore();
+          continue;
+        }
         ctx.save();
         ctx.translate(x, y);
         ctx.rotate(-0.9 + k * 1.8);
@@ -388,7 +500,7 @@ export default {
         ctx.fill();
         ctx.stroke();
         ctx.restore();
-        if (k < 0.3) {
+        if (k < 0.3 && !splash) {
           ctx.fillStyle = `rgba(255,255,255,${0.8 * (1 - k / 0.3)})`;
           for (let d = 0; d < 6; d++) {
             const a = (d / 6) * Math.PI + Math.PI;

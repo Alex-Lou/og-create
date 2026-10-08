@@ -18,7 +18,7 @@ import { librarySprite, paintedBox, cropTo, BLANK } from './library';
 
 // Chargés à la demande, un fichier à la fois (le jeu ne lit que ce qui est sur l'île)
 const FILES = {
-  ...import.meta.glob('/design/bibliotheque/svg/animaux/*/*/*_{profil,avant,dos,face}_{marche_1,marche_2,vol_1,vol_2,vol_3,vol_4,plane,nage_1,nage_2,nage_3,repos,clignement,joie}.svg', { query: '?raw', import: 'default' }),
+  ...import.meta.glob('/design/bibliotheque/svg/animaux/*/*/*_{profil,avant,dos,face}_{marche_1,marche_2,assis_1,assis_2,dodo_1,dodo_2,vol_1,vol_2,vol_3,vol_4,plane,nage_1,nage_2,nage_3,repos,clignement,joie}.svg', { query: '?raw', import: 'default' }),
   ...import.meta.glob('/design/bibliotheque/svg/animaux/familiers/bocal-*/*.svg', { query: '?raw', import: 'default' })
 };
 const ROOT = '/design/bibliotheque/svg/animaux/';
@@ -39,6 +39,8 @@ const SUBJECTS = {
   snowFox: 'renard-polaire', ibex: 'bouquetin', puffin: 'macareux', pony: 'poney', frog: 'grenouille', tortoise: 'tortue',
   fennec: 'fennec', camel: 'chameau', chameleon: 'cameleon', toucan: 'toucan', salamander: 'salamandre', crow: 'corbeau',
   kit: 'mousse', bird: 'mesange', gull: 'mouette', flyingGull: 'mouette-vol',
+  cat: { '': 'chat', noir: 'chat-noir', gris: 'chat-gris', blanc: 'chat-blanc' },
+  dog: { '': 'chien', brun: 'chien-brun', noir: 'chien-noir', roux: 'chien-roux' },
   butterfly: { '': 'papillon-jaune', jaune: 'papillon-jaune', bleu: 'papillon-bleu', lune: 'papillon-lune' },
   firefly: 'luciole', bee: { '': 'abeille', amie: 'amie-tictac' }, owl: 'hibou', tictac: 'tictac',
   bowl: { '': 'bocal-vide', bulle: 'bocal-bulle' },
@@ -130,7 +132,7 @@ export function beastSprite(species, variant, { view = 'profil', pose = 'marche'
   if (walker) {
     // (de dos, le visage ne se voit pas : elle dort ou se réjouit de trois quarts avant)
     const drawn = view === 'dos' && (pose === 'clignement' || pose === 'joie') ? 'avant' : view;
-    names = [`${subject}_${drawn}_${pose === 'marche' ? `marche_${n}` : pose}`];
+    names = [`${subject}_${drawn}_${['marche', 'assis', 'dodo'].includes(pose) ? `${pose}_${n}` : pose}`];
     box = boxOf(walker, drawn);
   } else {
     names = singleNames(subject, alone, pose, n);

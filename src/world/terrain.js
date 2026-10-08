@@ -5,6 +5,8 @@
 // carrés visibles sont dessinés, les nouveaux préparés dans un budget de temps par image.
 // L'eau douce (reflets, cascades) est animée par-dessus, case par case visible ; la mer vit dans sea.js.
 
+import { pathFile, pathImage } from './pathArt';
+
 export const TW = 64;
 export const TH = TW / 2;
 // Hauteur d'un palier de relief, et niveau de la mer (en paliers, sous la terre la plus basse)
@@ -293,6 +295,52 @@ export const lampGlowOf = lamp => { const p = worldOf(lamp.x, lamp.y, lamp.z); r
 // Liseré en haut des faces des sols des climats : [gauche, droite]
 const LIPS = { n: ['#F4F7FA', '#E3EAF1'], v: ['#DDEFF7', '#CFE5F0'], l: ['#8E6F86', '#7E6277'] };
 
+// Les dessins de chemin d'une case de chemin (pathArt.js) : [{ file, dx, dy }] (décalage depuis son centre, unités du
+// monde) et clip (les peindre dans son losange seulement). Un chemin d'une case : son raccord vers ses voisines. Les
+// parties plus larges : un seul chemin, au milieu, posé sur les coins que quatre cases de chemin se partagent (même
+// hauteur) ; une case large où arrive un chemin d'une case trace aussi le bout qui les relie. Les gués (k) comptent
+// comme chemin pour les raccords
+const MASK_DIRS = [[0, -1, 1], [1, 0, 2], [0, 1, 4], [-1, 0, 8]];
+export function pathDraws(M, x, y) {
+  const isPath = (a, b) => 'pk'.includes(M.ground(a, b));
+  const top = M.surface(x, y);
+  const corner = (a, b) => [[a, b], [a + 1, b], [a, b + 1], [a + 1, b + 1]].every(([u, v]) => M.ground(u, v) === 'p' && M.surface(u, v) === top);
+  const wideAt = (a, b) => corner(a, b) || corner(a - 1, b) || corner(a, b - 1) || corner(a - 1, b - 1);
+  const maskOf = is => MASK_DIRS.reduce((m, [dx, dy, bit]) => (is(dx, dy) ? m | bit : m), 0);
+  const alt = (a, b) => rnd(a, b, 40) < 0.5;
+  if (!wideAt(x, y)) return { clip: false, draws: [{ file: pathFile(maskOf((dx, dy) => isPath(x + dx, y + dy)), alt(x, y)), dx: 0, dy: 0 }] };
+  const draws = [];
+  // Les coins de cette case où passe le chemin du milieu : centre du coin (x + i − ½, y + j − ½)
+  for (const [i, j] of [[0, 0], [1, 0], [0, 1], [1, 1]]) {
+    const a = x + i - 1, b = y + j - 1;
+    if (!corner(a, b)) continue;
+    const mask = maskOf((dx, dy) => corner(a + dx, b + dy));
+    draws.push({ file: pathFile(mask, alt(a, b)), dx: ((i - j) * TW) / 2, dy: ((i + j - 1) * TH) / 2 });
+  }
+  // Un chemin d'une case qui arrive ici : le bout jusqu'au chemin du milieu (vers la voisine large d'à côté)
+  const narrow = MASK_DIRS.filter(([dx, dy]) => isPath(x + dx, y + dy) && !wideAt(x + dx, y + dy));
+  if (narrow.length) {
+    const across = MASK_DIRS.filter(([dx, dy]) => narrow.some(n => n[0] !== dx && n[1] !== dy) && wideAt(x + dx, y + dy)).slice(0, 1);
+    const mask = [...narrow, ...across].reduce((m, [, , bit]) => m | bit, 0);
+    draws.push({ file: pathFile(mask, alt(x, y)), dx: 0, dy: 0 });
+  }
+  return { clip: true, draws };
+}
+// Peint les chemins d'une case dans son herbe (grass) ; faux si une image n'est pas encore prête (rien n'est peint)
+function paintPath(ctx, M, x, y, c, grass) {
+  const { clip, draws } = pathDraws(M, x, y);
+  const imgs = draws.map(d => pathImage(d.file, grass));
+  if (imgs.some(img => !img)) return false;
+  ctx.save();
+  if (clip) {
+    diamond(ctx, c.x, c.y);
+    ctx.clip();
+  }
+  draws.forEach((d, i) => ctx.drawImage(imgs[i], c.x + d.dx - TW / 2, c.y + d.dy - TH / 2, TW, TH));
+  ctx.restore();
+  return true;
+}
+
 // Une case : faces avant puis dessus, détails du sol, voile de brume (quartier à acheter)
 export function drawCell(ctx, M, x, y, veil = 0) {
   const g = M.ground(x, y);
@@ -320,14 +368,24 @@ export function drawCell(ctx, M, x, y, veil = 0) {
   else if (zl < top) face(ctx, c.x - TW / 2, c.y, c.x, c.y + TH / 2, (top - zl) * HS, kindOf(x, y + 1), 0, grassy);
   if (hangR) outlineR = hangingFace(ctx, M, c.x, c.y + TH / 2, c.x + TW / 2, c.y, [x + 0.5, y + 0.5], [x + 0.5, y - 0.5], 1, grassy, x * 61 + y);
   else if (zr < top) face(ctx, c.x, c.y + TH / 2, c.x + TW / 2, c.y, (top - zr) * HS, kindOf(x + 1, y), 1, grassy);
+  // (un chemin : celui de la bibliothèque dans l'herbe de la case, sinon, le temps qu'il se lise, l'ancien chemin)
+  const grass = g === 'p' ? topColor('g', h, odd) : null;
   diamond(ctx, c.x, c.y);
-  ctx.fillStyle = topColor(g, h, odd);
+  ctx.fillStyle = grass || topColor(g, h, odd);
   ctx.fill();
+  const drawn = grass && paintPath(ctx, M, x, y, c, grass);
+  if (grass && !drawn) {
+    diamond(ctx, c.x, c.y);
+    ctx.fillStyle = topColor(g, h, odd);
+    ctx.fill();
+  }
+  diamond(ctx, c.x, c.y);
   ctx.strokeStyle = 'rgba(255, 255, 255, .12)';
   ctx.lineWidth = 0.8;
   ctx.stroke();
   // Détails : cailloux du chemin, fleurs de la prairie, ondulations du sable, brins d'herbe, fissures de la roche
-  if (g === 'p' || g === 'k') {
+  // (le chemin de la bibliothèque a déjà ses cailloux)
+  if ((g === 'p' || g === 'k') && !drawn) {
     ctx.fillStyle = 'rgba(120, 90, 50, .28)';
     for (let k = 0; k < 4; k++) ctx.fillRect(c.x - 14 + rnd(x, y, k) * 28, c.y - 5 + rnd(x, y, k + 9) * 10, 2, 2);
   } else if (g === 'm') {
