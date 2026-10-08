@@ -51,9 +51,15 @@ export default {
       [...state.sites, ...(state.camp || [])].forEach(site => {
         for (let dy = 0; dy < site.h; dy++) for (let dx = 0; dx < site.w; dx++) taken.add((site.y + dy) * n + site.x + dx);
       });
-      // La vue dégagée (world/sight.js) : devant ce qui se tient debout, pas d'arbre ; il pousse un peu plus loin
-      const standing = [...state.sites, ...(state.camp || []), ...(state.crafts ? state.crafts.placed : []), ...(state.annexes || []), ...landmarksShown(state), ...depositsShown(state)];
-      const sight = sightOf(standing, n);
+      // La vue dégagée (world/sight.js) : là où un arbre cacherait ce qui se tient debout, il n'en pousse pas ; il pousse
+      // un peu plus loin
+      // (la hauteur de leur dessin au-dessus du centre de l'emprise : celle de leur zone de toucher, gestures.js)
+      const standing = [
+        ...state.sites.map(s => ({ x: s.x, y: s.y, w: s.w, h: s.h, tall: TW * 0.875 * s.w })),
+        ...(state.camp || []).map(c => ({ x: c.x, y: c.y, w: c.w, h: c.h, tall: TW * 0.85 * (c.w || 1) })),
+        ...[...(state.crafts ? state.crafts.placed : []), ...(state.annexes || []), ...landmarksShown(state), ...depositsShown(state)].map(o => ({ x: o.x, y: o.y, tall: TW * 1.1 }))
+      ];
+      const sight = sightOf(standing, n, (x, y) => this.liftAt(x, y));
       const chased = [];
       const tallAt = new Set();
       const props = [];
@@ -129,8 +135,8 @@ export default {
     },
     // La brume épaisse du tutoriel (choix de l'auteur : l'île se découvre peu à peu) : tant que le compte suit le
     // prologue, ce qui n'est pas à soi disparaît presque sous la brume, et seul le panneau de la quête se montre
-    thickMist() {
-      const brume = this.state && this.state.brume;
+    thickMist(state = this.state) {
+      const brume = state && state.brume;
       return Boolean(brume && brume.tutorial && !brume.skipped && brume.quest && inPrologue(brume.quest.id));
     },
     // Ce que la brume efface d'un objet debout d'un quartier pas encore à soi (base : sous la brume légère)

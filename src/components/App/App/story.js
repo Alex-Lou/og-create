@@ -8,6 +8,7 @@ import { guide } from '@/game/guide';
 import { loadPrologue, savePrologue, prologueStep, islandStep, islandLesson, inPrologue, scenesBefore } from '@/game/prologue';
 
 import { coach } from '@/game/coach';
+import { ARRIVED_KEY } from '@/world/story';
 import { bubbleFace, NAMES } from '@/world/faces';
 import { vigilFrames, vigilDue, stageOf as civilizationOf } from '@/game/vigils';
 import { brumeLook, earlyWisp, EARLY_WISP } from '@/game/opus';
@@ -441,10 +442,12 @@ export default {
       this.savePrologue({ skipped: false, finished: false, seen: this.prologue.seen.filter(scene => before.includes(scene)) });
       guide.forget();
       coach.forget();
+      // (les naufragés débarqueront de nouveau : WorldView/folk.js)
+      storage.save(ARRIVED_KEY, []);
       window.location.reload();
     },
     replayPrologue() {
-      this.prologueReplay = ['arrivee', 'souffle', 'sceau', 'recolte', 'cannelle', 'rivet', 'ondin', 'campement'];
+      this.prologueReplay = ['arrivee', 'souffle', 'sceau', 'cannelle', 'rivet', 'ondin', 'recolte', 'campement'];
       this.prologueScene = 'naufrage';
     },
     // Page de garde : l'inscription recharge la page ; le nom attend sur l'appareil, puis part au serveur

@@ -21,6 +21,13 @@ import { momentsDue, momentLines } from '@/game/firstTimes';
 import { masterPortrait } from '@/world/masterArt';
 import { guide } from '@/game/guide';
 import { TIPS } from '@/game/guideTips';
+import * as storage from '@/utils/storage';
+import { TW } from '@/world/view/constants';
+import { ARRIVED_KEY } from '@/world/story';
+
+// Le premier débarque un instant après la vue (le temps de souffler), le suivant un peu après (s)
+const ARRIVE_DELAY = 0.8;
+const ARRIVE_GAP = 6;
 
 export default {
   data() {
@@ -52,7 +59,52 @@ export default {
       return this.beastId && this.state && this.state.beasts ? this.state.beasts.list.find(b => b.id === this.beastId) || null : null;
     }
   },
+  beforeUnmount() {
+    clearTimeout(this.arrivalTimer);
+  },
   methods: {
+    // Les naufragés qui débarquent (choix de l'auteur, 8 oct. : un personnage à la fois, qu'on voit arriver) : ceux de
+    // la troupe que cet appareil n'a jamais vus arrivent à pied depuis l'épave (village.js, arrivals) ; un dormeur
+    // trouvé à sa place ne débarque pas. Le premier passage sur un appareil (rien de retenu) ne rejoue rien. Rend la
+    // Map rôle → { from, at } pour villageOf, et la liste des nouveaux dans arrivalNews
+    arrivalsOf(state) {
+      this.arrivalNews = [];
+      const troupe = (state.villagers || []).filter(v => v.seed === undefined);
+      const known = storage.load(ARRIVED_KEY, null);
+      if (!Array.isArray(known)) {
+        storage.save(ARRIVED_KEY, troupe.map(v => v.id));
+        return this.arrivals || null;
+      }
+      const fresh = troupe.filter(v => !known.includes(v.id));
+      if (!fresh.length) return this.arrivals || null;
+      storage.save(ARRIVED_KEY, [...known, ...fresh.map(v => v.id)]);
+      const wreck = (state.camp || []).find(c => c.art === 'hirondelle');
+      const walking = fresh.filter(v => !v.asleep);
+      if (!wreck || !walking.length || this.reduced()) return this.arrivals || null;
+      const arrivals = new Map(this.arrivals || []);
+      const now = performance.now() / 1000;
+      walking.forEach((v, i) => arrivals.set(v.id, { from: { x: wreck.x + (wreck.w || 1), y: wreck.y + (wreck.h || 1) }, at: now + ARRIVE_DELAY + i * ARRIVE_GAP }));
+      this.arrivalNews = walking.map((v, i) => ({ id: v.id, name: v.name, delay: ARRIVE_DELAY + i * ARRIVE_GAP }));
+      return arrivals;
+    },
+    // Chaque naufragé qui débarque : la caméra glisse vers sa place, une bulle dit qui arrive (après villageOf)
+    showArrivals() {
+      const news = this.arrivalNews || [];
+      clearTimeout(this.arrivalTimer);
+      const next = k => {
+        const v = news[k];
+        if (!v || !this.village) return;
+        const r = this.village.residents.find(res => res.role === v.id);
+        if (r && this.geo) {
+          const g = this.ground(r.work.x, r.work.y);
+          this.glideTo({ x: g.x, y: g.y, s: Math.max(this.cam.s, 1.1) });
+          const camp = r.camp || r.role === 'foyer';
+          this.$nextTick(() => this.showTip(this.geo.width / 2, this.geo.height / 2 - TW, { title: v.name, text: camp ? 'débarque et rejoint le camp.' : 'débarque sur l’île.' }));
+        }
+        if (news[k + 1]) this.arrivalTimer = setTimeout(() => next(k + 1), (news[k + 1].delay - v.delay) * 1000);
+      };
+      if (news.length) this.arrivalTimer = setTimeout(() => next(0), news[0].delay * 1000);
+    },
     // Habitants : celui qu'on touche (who : { kind: 'villager', id: 'vil:<bâtiment>' }) dans la vue du serveur
     friendOf(who) {
       if (!who || who.kind !== 'villager' || !this.state) return null;
