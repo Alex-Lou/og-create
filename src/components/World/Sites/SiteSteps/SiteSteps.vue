@@ -28,6 +28,7 @@
         </ul>
         <div v-if="stepState(site, i) === 'next'" class="world__sheet-actions">
           <button type="button" class="world__btn" data-coach="site-build" :disabled="!canBuild(site) || busy" @click="$emit('build')">
+            <ElementGlyph :glyph="site.level ? 'ui:evoluer' : 'ui:batir'" />
             {{ site.level ? `Faire évoluer : ${step.name}` : `Bâtir : ${step.name}` }}
           </button>
           <button v-if="!affordable(site) && charges" type="button" class="world__btn world__btn--quiet" :disabled="busy" @click="$emit('harvest')">
