@@ -2529,6 +2529,30 @@ var require_gestes = __commonJS({
     }
     __name(semer, "semer");
     var avecSemer = /* @__PURE__ */ __name((c) => ({ ...c, uid: `${c.uid}se`, pose: semer }), "avecSemer");
+    function faucille(h, k = 1, a = 0) {
+      const c = Math.cos(a * Math.PI / 180), s = Math.sin(a * Math.PI / 180);
+      const pt = /* @__PURE__ */ __name((x, y) => [h[0] + (x * c - y * s) * k, h[1] + x * s + y * c].map(r2).join(","), "pt");
+      const lame = `M${pt(0, -2.4)} Q${pt(1.4, -9.4)} ${pt(7.6, -7.8)} Q${pt(9.4, -7)} ${pt(9.2, -5.6)} Q${pt(6.6, -7)} ${pt(3.6, -6)} Q${pt(1.6, -5)} ${pt(1.2, -2.2)} Z`;
+      const manche = `M${pt(0, 3)} L${pt(0, -2.6)}`;
+      return trait(manche, OUT, 3) + trait(manche, "#B07A45", 1.5) + P(lame, "#A9B1BB", 0.9) + trait(`M${pt(1.2, -4.6)} Q${pt(2.4, -7.4)} ${pt(6, -7.4)}`, "#E2E8EE", 0.6);
+    }
+    __name(faucille, "faucille");
+    var epi = /* @__PURE__ */ __name((x, y, dx, hy) => L([x, y], [x + dx, y - hy], OUT, 1.2) + L([x, y], [x + dx, y - hy], "#D9B04A", 0.5) + E(x + dx * 1.08, y - hy - 1.2, 0.85, 1.7, "#E8C66A", 0.5), "epi");
+    var touffe = /* @__PURE__ */ __name((x, y, n) => E(x, y, 4.6, 1.2, "rgba(40,55,20,.22)", 0) + (n ? [-2.4, -0.8, 0.8, 2.4].map((d) => L([x + d, y], [x + d * 1.1, y - 1.6], "#B89A40", 0.7)).join("") + [[-1.6, -6, 30], [1.8, -7.6, -40], [3.4, -5, 70]].map(([dx, dy, r]) => L([x + dx - 0.8, y + dy], [x + dx + 0.8, y + dy], "#D9B04A", 0.6).replace("/>", ` transform="rotate(${r} ${r2(x + dx)} ${r2(y + dy)})"/>`)).join("") : [[-2.4, -0.8, 8], [-0.8, -0.2, 9.2], [0.8, 0.3, 8.6], [2.4, 0.9, 7.6]].map(([d, dx, hy]) => epi(x + d, y, dx, hy)).join("")), "touffe");
+    function recolter({ view, n }) {
+      const [a, b] = this.shoulders;
+      if (view === "front" || view === "se") {
+        const s = view === "front" ? 1 : -1, p = s > 0 ? b : a;
+        const x = /* @__PURE__ */ __name((dx) => p[0] + s * dx, "x"), sol2 = 61;
+        const h2 = n ? [x(2.6), sol2 - 7.4] : [x(5.4), p[1] + 3.4];
+        const outil = faucille(h2, s, n ? 60 : -20) + arm(this, p, h2, n ? [x(2.4), p[1] + 7] : [x(4.6), p[1] + 6]);
+        return { expr: n ? "rire" : "content", under: touffe(x(7), sol2, n), [s > 0 ? "right" : "left"]: outil };
+      }
+      const sol = a[1] + 18, h = n ? [b[0] + 2, sol - 6] : [b[0] + 5, b[1] + 1];
+      return { expr: n ? "rire" : void 0, right: "", under: touffe(b[0] + 6, sol, n), over: faucille(h, 1, n ? 60 : -20) + arm(this, b, h, [b[0] + 3.6, b[1] + 4]) };
+    }
+    __name(recolter, "recolter");
+    var avecRecolter = /* @__PURE__ */ __name((c) => ({ ...c, uid: `${c.uid}rc`, pose: recolter }), "avecRecolter");
     function caisse(x, y, w = 11, h = 8.4) {
       const g = x - w / 2, d = x + w / 2, t = y - h, p = 2.2;
       const face = `M${r2(g)},${r2(y)} L${r2(d)},${r2(y)} L${r2(d)},${r2(t)} L${r2(g)},${r2(t)} Z`;
@@ -2649,7 +2673,7 @@ var require_gestes = __commonJS({
     }
     __name(ecrire, "ecrire");
     var avecEcrire = /* @__PURE__ */ __name((c) => ({ ...c, uid: `${c.uid}ec`, pose: ecrire }), "avecEcrire");
-    module.exports = { lanterne, parapluie, valise, avecLanterne, avecParapluie, avecValise, couche, CADRE_PARAPLUIE, CADRE_COUCHE, ZEDS, paume, tranche, tendre, avecMainsTendues, applaudir, avecApplaudir, pecher, avecPecher, piocher, avecPiocher, cueillir, avecCueillir, arroser, avecArroser, becher, avecBecher, semer, avecSemer, porter, avecPorter, reparer, avecReparer, repousser, avecRepousser, ecrire, avecEcrire };
+    module.exports = { lanterne, parapluie, valise, avecLanterne, avecParapluie, avecValise, couche, CADRE_PARAPLUIE, CADRE_COUCHE, ZEDS, paume, tranche, tendre, avecMainsTendues, applaudir, avecApplaudir, pecher, avecPecher, piocher, avecPiocher, cueillir, avecCueillir, arroser, avecArroser, becher, avecBecher, semer, avecSemer, recolter, avecRecolter, porter, avecPorter, reparer, avecReparer, repousser, avecRepousser, ecrire, avecEcrire };
   }
 });
 
@@ -2658,7 +2682,7 @@ var require_avatar_exemples = __commonJS({
   "atelier/avatar_exemples.js"(exports, module) {
     var { frame } = require_troupe2();
     var { assis } = require_assis();
-    var { tendre, avecMainsTendues, applaudir, avecApplaudir, avecPecher, avecPiocher, avecCueillir, avecArroser, avecBecher, avecSemer, avecPorter, reparer, avecReparer, avecRepousser, ecrire, avecEcrire } = require_gestes();
+    var { tendre, avecMainsTendues, applaudir, avecApplaudir, avecPecher, avecPiocher, avecCueillir, avecArroser, avecBecher, avecSemer, avecRecolter, avecPorter, reparer, avecReparer, avecRepousser, ecrire, avecEcrire } = require_gestes();
     var ac = /* @__PURE__ */ __name((place, id, couleurs) => ({ [place]: couleurs ? { id, couleurs } : { id } }), "ac");
     var EXEMPLES2 = [
       {},
@@ -2740,6 +2764,9 @@ var require_avatar_exemples = __commonJS({
       ["face_semer", "front", "semer", 2],
       ["avant_semer", "se", "semer", 2],
       ["dos_semer", "ne", "semer", 2],
+      ["face_recolter", "front", "recolter", 2],
+      ["avant_recolter", "se", "recolter", 2],
+      ["dos_recolter", "ne", "recolter", 2],
       ["face_porter", "front", "porter", 2],
       ["avant_porter", "se", "porter", 2],
       ["dos_porter", "ne", "porter", 2],
@@ -2759,7 +2786,7 @@ var require_avatar_exemples = __commonJS({
       ["avant_assis-ecrire", "se", "assis-ecrire", 2],
       ["dos_assis-ecrire", "ne", "assis-ecrire", 2]
     ];
-    var dessin2 = /* @__PURE__ */ __name((cc, view, p, n) => p === "assis" ? assis(cc, view, n) : p === "assis-tendre" ? assis(cc, view, n, null, tendre) : p === "assis-applaudir" ? assis(cc, view, n, null, applaudir) : p === "tendre" ? frame(avecMainsTendues(cc), view, "action", n) : p === "applaudir" ? frame(avecApplaudir(cc), view, "action", n) : p === "pecher" ? frame(avecPecher(cc), view, "action", n) : p === "piocher" ? frame(avecPiocher(cc), view, "action", n) : p === "cueillir" ? frame(avecCueillir(cc), view, "action", n) : p === "arroser" ? frame(avecArroser(cc), view, "action", n) : p === "becher" ? frame(avecBecher(cc), view, "action", n) : p === "semer" ? frame(avecSemer(cc), view, "action", n) : p === "porter" ? frame(avecPorter(cc), view, "action", n) : p === "reparer" ? frame(avecReparer(cc), view, "action", n) : p === "repousser" ? frame(avecRepousser(cc), view, "action", n) : p === "ecrire" ? frame(avecEcrire(cc), view, "action", n) : p === "assis-reparer" ? assis(cc, view, n, null, reparer) : p === "assis-ecrire" ? assis(cc, view, n, null, ecrire) : frame(cc, view, p, n), "dessin");
+    var dessin2 = /* @__PURE__ */ __name((cc, view, p, n) => p === "assis" ? assis(cc, view, n) : p === "assis-tendre" ? assis(cc, view, n, null, tendre) : p === "assis-applaudir" ? assis(cc, view, n, null, applaudir) : p === "tendre" ? frame(avecMainsTendues(cc), view, "action", n) : p === "applaudir" ? frame(avecApplaudir(cc), view, "action", n) : p === "pecher" ? frame(avecPecher(cc), view, "action", n) : p === "piocher" ? frame(avecPiocher(cc), view, "action", n) : p === "cueillir" ? frame(avecCueillir(cc), view, "action", n) : p === "arroser" ? frame(avecArroser(cc), view, "action", n) : p === "becher" ? frame(avecBecher(cc), view, "action", n) : p === "semer" ? frame(avecSemer(cc), view, "action", n) : p === "recolter" ? frame(avecRecolter(cc), view, "action", n) : p === "porter" ? frame(avecPorter(cc), view, "action", n) : p === "reparer" ? frame(avecReparer(cc), view, "action", n) : p === "repousser" ? frame(avecRepousser(cc), view, "action", n) : p === "ecrire" ? frame(avecEcrire(cc), view, "action", n) : p === "assis-reparer" ? assis(cc, view, n, null, reparer) : p === "assis-ecrire" ? assis(cc, view, n, null, ecrire) : frame(cc, view, p, n), "dessin");
     module.exports = { ac, EXEMPLES: EXEMPLES2, nom, POSES: POSES2, dessin: dessin2 };
   }
 });

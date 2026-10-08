@@ -449,6 +449,41 @@ function semer({ view, n }) {
 // Debout : frame(avecSemer(c), vue, 'action', n)
 const avecSemer = c => ({ ...c, uid: `${c.uid}se`, pose: semer });
 
+// La faucille, le manche dans la main h : le manche de bois, la lame en croissant côté k, tournée de a degrés
+function faucille(h, k = 1, a = 0) {
+  const c = Math.cos(a * Math.PI / 180), s = Math.sin(a * Math.PI / 180);
+  const pt = (x, y) => [h[0] + (x * c - y * s) * k, h[1] + x * s + y * c].map(r2).join(',');
+  const lame = `M${pt(0, -2.4)} Q${pt(1.4, -9.4)} ${pt(7.6, -7.8)} Q${pt(9.4, -7)} ${pt(9.2, -5.6)} Q${pt(6.6, -7)} ${pt(3.6, -6)} Q${pt(1.6, -5)} ${pt(1.2, -2.2)} Z`;
+  const manche = `M${pt(0, 3)} L${pt(0, -2.6)}`;
+  return trait(manche, OUT, 3) + trait(manche, '#B07A45', 1.5) + P(lame, '#A9B1BB', 0.9)
+    + trait(`M${pt(1.2, -4.6)} Q${pt(2.4, -7.4)} ${pt(6, -7.4)}`, '#E2E8EE', 0.6);
+}
+// un épi de blé doré de (x, y) (le pied) à (x + dx, y - hy) : la tige, l'épi
+const epi = (x, y, dx, hy) => L([x, y], [x + dx, y - hy], OUT, 1.2) + L([x, y], [x + dx, y - hy], '#D9B04A', 0.5)
+  + E(x + dx * 1.08, y - hy - 1.2, 0.85, 1.7, '#E8C66A', 0.5);
+// le blé sur pied, une touffe au sol en (x, y) ; coupée à n (les tiges plus courtes, des brins qui volent)
+const touffe = (x, y, n) => E(x, y, 4.6, 1.2, 'rgba(40,55,20,.22)', 0)
+  + (n ? [-2.4, -0.8, 0.8, 2.4].map(d => L([x + d, y], [x + d * 1.1, y - 1.6], '#B89A40', 0.7)).join('')
+      + [[-1.6, -6, 30], [1.8, -7.6, -40], [3.4, -5, 70]].map(([dx, dy, r]) => L([x + dx - 0.8, y + dy], [x + dx + 0.8, y + dy], '#D9B04A', 0.6).replace('/>', ` transform="rotate(${r} ${r2(x + dx)} ${r2(y + dy)})"/>`)).join('')
+    : [[-2.4, -0.8, 8], [-0.8, -0.2, 9.2], [0.8, 0.3, 8.6], [2.4, 0.9, 7.6]].map(([d, dx, hy]) => epi(x + d, y, dx, hy)).join(''));
+// Récolter (les cultures, à la faucille) ; 2 images : la faucille levée au-dessus du blé sur pied, l'autre bras au
+// repos, puis le coup au pied des tiges (la touffe coupée, des brins qui volent), en riant.
+function recolter({ view, n }) {
+  const [a, b] = this.shoulders;
+  if (view === 'front' || view === 'se') {
+    const s = view === 'front' ? 1 : -1, p = s > 0 ? b : a; // p : l'épaule de la main qui tient la faucille
+    const x = dx => p[0] + s * dx, sol = 61;
+    const h = n ? [x(2.6), sol - 7.4] : [x(5.4), p[1] + 3.4];
+    const outil = faucille(h, s, n ? 60 : -20) + arm(this, p, h, n ? [x(2.4), p[1] + 7] : [x(4.6), p[1] + 6]);
+    return { expr: n ? 'rire' : 'content', under: touffe(x(7), sol, n), [s > 0 ? 'right' : 'left']: outil };
+  }
+  // de dos : le blé est devant, un peu à droite (plus loin, donc plus haut) ; la faucille dans la main droite
+  const sol = a[1] + 18, h = n ? [b[0] + 2, sol - 6] : [b[0] + 5, b[1] + 1];
+  return { expr: n ? 'rire' : undefined, right: '', under: touffe(b[0] + 6, sol, n), over: faucille(h, 1, n ? 60 : -20) + arm(this, b, h, [b[0] + 3.6, b[1] + 4]) };
+}
+// Debout : frame(avecRecolter(c), vue, 'action', n)
+const avecRecolter = c => ({ ...c, uid: `${c.uid}rc`, pose: recolter });
+
 // La caisse de bois, posée sur l'épaule : son dessus (un peu de profondeur), sa face de planches, ses traverses, ses
 // clous ; (x, y) : le milieu du bas de la face, w × h
 function caisse(x, y, w = 11, h = 8.4) {
@@ -603,4 +638,4 @@ function ecrire({ view, n }) {
 // Debout : frame(avecEcrire(c), vue, 'action', n) ; assis : assis(c, vue, n, null, ecrire)
 const avecEcrire = c => ({ ...c, uid: `${c.uid}ec`, pose: ecrire });
 
-module.exports = { lanterne, parapluie, valise, avecLanterne, avecParapluie, avecValise, couche, CADRE_PARAPLUIE, CADRE_COUCHE, ZEDS, paume, tranche, tendre, avecMainsTendues, applaudir, avecApplaudir, pecher, avecPecher, piocher, avecPiocher, cueillir, avecCueillir, arroser, avecArroser, becher, avecBecher, semer, avecSemer, porter, avecPorter, reparer, avecReparer, repousser, avecRepousser, ecrire, avecEcrire };
+module.exports = { lanterne, parapluie, valise, avecLanterne, avecParapluie, avecValise, couche, CADRE_PARAPLUIE, CADRE_COUCHE, ZEDS, paume, tranche, tendre, avecMainsTendues, applaudir, avecApplaudir, pecher, avecPecher, piocher, avecPiocher, cueillir, avecCueillir, arroser, avecArroser, becher, avecBecher, semer, avecSemer, recolter, avecRecolter, porter, avecPorter, reparer, avecReparer, repousser, avecRepousser, ecrire, avecEcrire };

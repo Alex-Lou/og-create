@@ -2224,6 +2224,30 @@ var require_gestes = __commonJS({
     }
     __name(semer, "semer");
     var avecSemer2 = /* @__PURE__ */ __name((c) => ({ ...c, uid: `${c.uid}se`, pose: semer }), "avecSemer");
+    function faucille(h, k = 1, a = 0) {
+      const c = Math.cos(a * Math.PI / 180), s = Math.sin(a * Math.PI / 180);
+      const pt = /* @__PURE__ */ __name((x, y) => [h[0] + (x * c - y * s) * k, h[1] + x * s + y * c].map(r2).join(","), "pt");
+      const lame = `M${pt(0, -2.4)} Q${pt(1.4, -9.4)} ${pt(7.6, -7.8)} Q${pt(9.4, -7)} ${pt(9.2, -5.6)} Q${pt(6.6, -7)} ${pt(3.6, -6)} Q${pt(1.6, -5)} ${pt(1.2, -2.2)} Z`;
+      const manche = `M${pt(0, 3)} L${pt(0, -2.6)}`;
+      return trait(manche, OUT, 3) + trait(manche, "#B07A45", 1.5) + P(lame, "#A9B1BB", 0.9) + trait(`M${pt(1.2, -4.6)} Q${pt(2.4, -7.4)} ${pt(6, -7.4)}`, "#E2E8EE", 0.6);
+    }
+    __name(faucille, "faucille");
+    var epi = /* @__PURE__ */ __name((x, y, dx, hy) => L([x, y], [x + dx, y - hy], OUT, 1.2) + L([x, y], [x + dx, y - hy], "#D9B04A", 0.5) + E(x + dx * 1.08, y - hy - 1.2, 0.85, 1.7, "#E8C66A", 0.5), "epi");
+    var touffe = /* @__PURE__ */ __name((x, y, n) => E(x, y, 4.6, 1.2, "rgba(40,55,20,.22)", 0) + (n ? [-2.4, -0.8, 0.8, 2.4].map((d) => L([x + d, y], [x + d * 1.1, y - 1.6], "#B89A40", 0.7)).join("") + [[-1.6, -6, 30], [1.8, -7.6, -40], [3.4, -5, 70]].map(([dx, dy, r]) => L([x + dx - 0.8, y + dy], [x + dx + 0.8, y + dy], "#D9B04A", 0.6).replace("/>", ` transform="rotate(${r} ${r2(x + dx)} ${r2(y + dy)})"/>`)).join("") : [[-2.4, -0.8, 8], [-0.8, -0.2, 9.2], [0.8, 0.3, 8.6], [2.4, 0.9, 7.6]].map(([d, dx, hy]) => epi(x + d, y, dx, hy)).join("")), "touffe");
+    function recolter({ view, n }) {
+      const [a, b] = this.shoulders;
+      if (view === "front" || view === "se") {
+        const s = view === "front" ? 1 : -1, p = s > 0 ? b : a;
+        const x = /* @__PURE__ */ __name((dx) => p[0] + s * dx, "x"), sol2 = 61;
+        const h2 = n ? [x(2.6), sol2 - 7.4] : [x(5.4), p[1] + 3.4];
+        const outil = faucille(h2, s, n ? 60 : -20) + arm(this, p, h2, n ? [x(2.4), p[1] + 7] : [x(4.6), p[1] + 6]);
+        return { expr: n ? "rire" : "content", under: touffe(x(7), sol2, n), [s > 0 ? "right" : "left"]: outil };
+      }
+      const sol = a[1] + 18, h = n ? [b[0] + 2, sol - 6] : [b[0] + 5, b[1] + 1];
+      return { expr: n ? "rire" : void 0, right: "", under: touffe(b[0] + 6, sol, n), over: faucille(h, 1, n ? 60 : -20) + arm(this, b, h, [b[0] + 3.6, b[1] + 4]) };
+    }
+    __name(recolter, "recolter");
+    var avecRecolter2 = /* @__PURE__ */ __name((c) => ({ ...c, uid: `${c.uid}rc`, pose: recolter }), "avecRecolter");
     function caisse(x, y, w = 11, h = 8.4) {
       const g = x - w / 2, d = x + w / 2, t = y - h, p = 2.2;
       const face = `M${r2(g)},${r2(y)} L${r2(d)},${r2(y)} L${r2(d)},${r2(t)} L${r2(g)},${r2(t)} Z`;
@@ -2344,7 +2368,7 @@ var require_gestes = __commonJS({
     }
     __name(ecrire2, "ecrire");
     var avecEcrire2 = /* @__PURE__ */ __name((c) => ({ ...c, uid: `${c.uid}ec`, pose: ecrire2 }), "avecEcrire");
-    module.exports = { lanterne, parapluie, valise, avecLanterne: avecLanterne2, avecParapluie: avecParapluie2, avecValise: avecValise2, couche: couche2, CADRE_PARAPLUIE: CADRE_PARAPLUIE2, CADRE_COUCHE: CADRE_COUCHE2, ZEDS, paume, tranche, tendre: tendre2, avecMainsTendues: avecMainsTendues2, applaudir: applaudir2, avecApplaudir: avecApplaudir2, pecher, avecPecher: avecPecher2, piocher, avecPiocher: avecPiocher2, cueillir, avecCueillir: avecCueillir2, arroser, avecArroser: avecArroser2, becher, avecBecher: avecBecher2, semer, avecSemer: avecSemer2, porter, avecPorter: avecPorter2, reparer: reparer2, avecReparer: avecReparer2, repousser, avecRepousser: avecRepousser2, ecrire: ecrire2, avecEcrire: avecEcrire2 };
+    module.exports = { lanterne, parapluie, valise, avecLanterne: avecLanterne2, avecParapluie: avecParapluie2, avecValise: avecValise2, couche: couche2, CADRE_PARAPLUIE: CADRE_PARAPLUIE2, CADRE_COUCHE: CADRE_COUCHE2, ZEDS, paume, tranche, tendre: tendre2, avecMainsTendues: avecMainsTendues2, applaudir: applaudir2, avecApplaudir: avecApplaudir2, pecher, avecPecher: avecPecher2, piocher, avecPiocher: avecPiocher2, cueillir, avecCueillir: avecCueillir2, arroser, avecArroser: avecArroser2, becher, avecBecher: avecBecher2, semer, avecSemer: avecSemer2, recolter, avecRecolter: avecRecolter2, porter, avecPorter: avecPorter2, reparer: reparer2, avecReparer: avecReparer2, repousser, avecRepousser: avecRepousser2, ecrire: ecrire2, avecEcrire: avecEcrire2 };
   }
 });
 
@@ -2690,6 +2714,7 @@ var {
   avecArroser,
   avecBecher,
   avecSemer,
+  avecRecolter,
   avecPorter,
   avecReparer,
   avecRepousser,
@@ -2739,6 +2764,7 @@ export {
   avecPecher,
   avecPiocher,
   avecPorter,
+  avecRecolter,
   avecReparer,
   avecRepousser,
   avecSemer,
