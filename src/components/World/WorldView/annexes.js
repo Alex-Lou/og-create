@@ -3,16 +3,22 @@
 
 import { messageOf } from '@/utils/errors';
 import playService from '@/services/playService';
-import { annexReady } from '@/world/annexes';
+import { annexReady, ranksOf } from '@/world/annexes';
 import { burst, ring, vibrate, center } from '@/utils/fx';
+import { TW } from '@/world/view/constants';
+
+// Hauteur du menu de pose (nom, couleurs, boutons), pour qu'il tienne dans la vue
+export const POSE_MENU_H = 150;
 
 export default {
   data() {
     return {
       // Annexe en cours de pose ou de déplacement : { siteId, annexId, from: { x, y } | null } ; case dorée choisie, en
-      // attente de confirmation : { x, y, px, py } ; fiche d'une annexe posée ouverte : { x, y }
+      // attente de confirmation : { x, y, px, py } ; sa pose choisie (miroir, couleur) : { flip, look } ; fiche d'une
+      // annexe posée ouverte : { x, y }
       annexPlacing: null,
       annexConfirm: null,
+      annexPose: { flip: false, look: 0 },
       annexSheet: null
     };
   },
@@ -28,19 +34,29 @@ export default {
       const name = this.placingAnnex ? this.placingAnnex.name : '';
       return this.annexPlacing && this.annexPlacing.from ? `Touche une case dorée pour y déplacer : ${name}.` : `Touche une case dorée pour poser : ${name}.`;
     },
+    // Le menu de pose se tient au-dessus de l'aperçu (sans le cacher), sans sortir de la vue par le haut
     annexConfirmStyle() {
       const c = this.annexConfirm;
       if (!c || !this.geo) return {};
-      return { left: `${Math.max(110, Math.min(this.geo.width - 110, c.px))}px`, top: `${Math.max(56, c.py - 24)}px` };
+      return { left: `${Math.max(160, Math.min(this.geo.width - 160, c.px))}px`, top: `${Math.max(POSE_MENU_H, c.py - TW * this.cam.s * 1.15)}px` };
     },
-    // Fiche d'une annexe posée : sa carte du catalogue, son bâtiment, son n° d'exemplaire
+    // Fiche d'une annexe posée : sa carte du catalogue, son bâtiment, son n° d'exemplaire, sa pose (couleur dessinée,
+    // miroir)
     sheetAnnex() {
       if (!this.annexSheet || !this.state) return null;
       const { x, y } = this.annexSheet;
-      const row = (this.state.annexes || []).find(a => a.x === x && a.y === y);
+      const rows = this.state.annexes || [];
+      const row = rows.find(a => a.x === x && a.y === y);
       const site = row && this.state.sites.find(s => s.id === row.site);
       const annex = site && site.annexes.find(a => a.id === row.annex);
-      return annex ? { annex, site, variant: this.annexVariants.get(`${x},${y}`) || 0 } : null;
+      if (!annex) return null;
+      return { annex, site, rank: ranksOf(rows).get(`${x},${y}`) || 0, look: (this.annexVariants.get(`${x},${y}`) || 0) % (annex.looks || 1), flip: Boolean(row.flip) };
+    },
+    // L'annexe en attente de confirmation, dessinée en transparence sur sa case dorée avec la pose choisie
+    annexGhost() {
+      const c = this.annexConfirm;
+      if (!c || !this.placingAnnex || (this.annexPlacing && this.annexPlacing.from)) return null;
+      return { x: c.x, y: c.y, annex: this.placingAnnex.id, flip: this.annexPose.flip, look: this.annexPose.look, ghost: true };
     }
   },
   methods: {
@@ -67,6 +83,8 @@ export default {
       this.annexSheet = null;
       this.annexConfirm = null;
       this.annexPlacing = { siteId: site.id, annexId: annex.id, from: null };
+      // Pose par défaut : la couleur de son rang (comme avant le choix), sans miroir
+      this.annexPose = { flip: false, look: annex.built % (annex.looks || 1) };
       vibrate(8);
       this.$nextTick(() => this.focusOn(site));
     },
@@ -97,7 +115,8 @@ export default {
       if (!target || !annex || this.busy) return;
       this.busy = true;
       try {
-        const { built, coins, world } = await playService.worldAnnex(annex.id, target.x, target.y);
+        const { flip, look } = this.annexPose;
+        const { built, coins, world } = await playService.worldAnnex(annex.id, target.x, target.y, annex.looks > 1 ? { flip, look } : { flip });
         this.annexPlacing = null;
         this.annexConfirm = null;
         this.pops.set(`annex:${target.x},${target.y}`, performance.now());
@@ -135,6 +154,31 @@ export default {
         this.pops.delete(key);
         this.$emit('show-alert', messageOf(error, 'L’annexe n’a pas pu être déplacée.'));
         this.load();
+      } finally {
+        this.busy = false;
+      }
+    },
+    // Pose en attente de confirmation : pivoter, choisir la couleur (l'aperçu sur la case suit)
+    turnPlacingAnnex() {
+      this.annexPose = { ...this.annexPose, flip: !this.annexPose.flip };
+      vibrate(6);
+      this.draw(performance.now());
+    },
+    lookPlacingAnnex(look) {
+      this.annexPose = { ...this.annexPose, look };
+      vibrate(6);
+      this.draw(performance.now());
+    },
+    // Fiche d'une annexe : pivoter ou changer sa couleur, gratuitement (pose : { flip } ou { look })
+    async poseFromSheet(pose) {
+      if (!this.annexSheet || this.busy) return;
+      const { x, y } = this.annexSheet;
+      this.busy = true;
+      try {
+        this.apply(await playService.worldAnnexPose(x, y, pose));
+        vibrate(8);
+      } catch (error) {
+        this.$emit('show-alert', messageOf(error, 'L’annexe n’a pas pu changer.'));
       } finally {
         this.busy = false;
       }

@@ -83,25 +83,33 @@
           </div>
         </transition>
 
-        <!-- Appui long sur une création d'île : la déplacer ou la ranger dans la réserve de l'établi -->
+        <!-- Appui long sur une création d'île : la déplacer, la pivoter ou la ranger dans la réserve de l'établi -->
         <div v-if="craftMenu && !craftPlacing" class="world__menu" :style="menuStyle" role="dialog" :aria-label="craftName(craftMenu.craft)">
           <span class="world__menu-name">{{ craftName(craftMenu.craft) }}</span>
           <button type="button" class="world__menu-btn" @click="moveFromMenu">Déplacer</button>
+          <button type="button" class="world__menu-btn world__menu-btn--quiet" :disabled="busy" @click="turnFromMenu">Pivoter</button>
           <button type="button" class="world__menu-btn world__menu-btn--quiet" :disabled="busy" @click="storeFromMenu">Ranger</button>
         </div>
 
-        <!-- Pose d'une création : la case dorée choisie ; poser ici ou choisir une autre case -->
-        <div v-if="craftConfirm && placingCraft" class="world__menu" :style="craftConfirmStyle" role="dialog" :aria-label="`Poser ${placingCraft.name}`">
+        <!-- Pose d'une création : la case dorée choisie (aperçu dessus) ; pivoter, poser ici ou choisir une autre case -->
+        <div v-if="craftConfirm && placingCraft" class="world__menu world__menu--pose" :style="craftConfirmStyle" role="dialog" :aria-label="`Poser ${placingCraft.name}`">
           <span class="world__menu-name">{{ placingCraft.name }}</span>
-          <button type="button" class="world__menu-btn" :disabled="busy" @click="confirmCraft">Poser ici</button>
-          <button type="button" class="world__menu-btn world__menu-btn--quiet" @click="craftConfirm = null">Autre case</button>
+          <PoseChoice :flip="craftFlip" @turn="turnPlacingCraft" />
+          <span class="world__menu-row">
+            <button type="button" class="world__menu-btn" :disabled="busy" @click="confirmCraft">Poser ici</button>
+            <button type="button" class="world__menu-btn world__menu-btn--quiet" @click="craftConfirm = null">Autre case</button>
+          </span>
         </div>
 
-        <!-- Pose d'une annexe : la case dorée choisie, son prix ; poser ici ou choisir une autre case -->
-        <div v-if="annexConfirm && placingAnnex && placingAnnex.next" class="world__menu" :style="annexConfirmStyle" role="dialog" :aria-label="`Poser ${placingAnnex.name}`">
+        <!-- Pose d'une annexe : la case dorée choisie (aperçu dessus), son prix ; sa couleur et son sens, poser ici ou
+             choisir une autre case -->
+        <div v-if="annexConfirm && placingAnnex && placingAnnex.next" class="world__menu world__menu--pose" :style="annexConfirmStyle" role="dialog" :aria-label="`Poser ${placingAnnex.name}`">
           <span class="world__menu-name">{{ placingAnnex.name }} · {{ placingAnnex.next.coins }}<span class="world__coin world__coin--small" aria-hidden="true"></span></span>
-          <button type="button" class="world__menu-btn" :disabled="busy" @click="confirmAnnex">Poser ici</button>
-          <button type="button" class="world__menu-btn world__menu-btn--quiet" @click="annexConfirm = null">Autre case</button>
+          <PoseChoice :id="placingAnnex.id" :looks="placingAnnex.looks || 1" :look="annexPose.look" :flip="annexPose.flip" @look="lookPlacingAnnex" @turn="turnPlacingAnnex" />
+          <span class="world__menu-row">
+            <button type="button" class="world__menu-btn" :disabled="busy" @click="confirmAnnex">Poser ici</button>
+            <button type="button" class="world__menu-btn world__menu-btn--quiet" @click="annexConfirm = null">Autre case</button>
+          </span>
         </div>
       </div>
 
@@ -265,7 +273,7 @@
     />
 
     <!-- Fiche d'une annexe posée (appui long) : la déplacer, ou ouvrir son bâtiment -->
-    <AnnexSheet v-if="sheetAnnex" v-bind="sheetAnnex" :busy="busy" @close="annexSheet = null" @move="moveFromSheet" @site="siteFromSheet" />
+    <AnnexSheet v-if="sheetAnnex" v-bind="sheetAnnex" :busy="busy" @close="annexSheet = null" @move="moveFromSheet" @site="siteFromSheet" @pose="poseFromSheet" />
 
     <!-- Premier achat d'une sorte d'article : son mode d'emploi, et de quoi aller le voir sur l'île -->
     <GModal v-if="guideItem" eyebrow="Mode d’emploi" :title="guideItem.name" :width="400" @close="closeGuide">
@@ -400,6 +408,7 @@ import ChestReveal from '../Chests/ChestReveal/ChestReveal.vue';
 import ChestHaul from '../Chests/ChestHaul/ChestHaul.vue';
 import AnnexPanel from '../Sites/AnnexPanel/AnnexPanel.vue';
 import AnnexSheet from '../Sites/AnnexSheet/AnnexSheet.vue';
+import PoseChoice from '../Sites/PoseChoice/PoseChoice.vue';
 import MiniGame from '../Games/MiniGame/MiniGame.vue';
 import VillagerSheet from '../Folk/VillagerSheet/VillagerSheet.vue';
 import BeastSheet from '../Folk/BeastSheet/BeastSheet.vue';
@@ -463,7 +472,7 @@ export default {
   // world/view/. L'île garde ce qui les relie : le chargement, la quête, le plein écran, les observateurs, le cycle
   // de vie
   mixins: [folk, games, chests, workshop, sites, annexes, explore, terrain, sky],
-  components: { HarvestGame, ShopItemSheet, GModal, ChestList, ChestReveal, ChestHaul, AnnexPanel, AnnexSheet, MiniGame, VillagerSheet, BeastSheet, VisitorSheet, RenameSheet, CraftBench, CraftPuzzle, ExplorerLog, FindsSheet, WreckScene, BrumeSheet, ZoneSheet, SiteShop, SiteSteps, SiteOverview, SiteSheet, IslandHud, IslandButtons },
+  components: { HarvestGame, ShopItemSheet, GModal, ChestList, ChestReveal, ChestHaul, AnnexPanel, AnnexSheet, PoseChoice, MiniGame, VillagerSheet, BeastSheet, VisitorSheet, RenameSheet, CraftBench, CraftPuzzle, ExplorerLog, FindsSheet, WreckScene, BrumeSheet, ZoneSheet, SiteShop, SiteSteps, SiteOverview, SiteSheet, IslandHud, IslandButtons },
   props: {
     // Glyphes des éléments du Livre (savoir-faire demandé à l'établi)
     elementEmojis: { type: Object, required: true },

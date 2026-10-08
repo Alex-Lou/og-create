@@ -20,9 +20,9 @@ export function annexState(annex, site, stock, coins) {
 // Une annexe de ce bâtiment peut se poser tout de suite (pastille de l'onglet)
 export const annexReady = (site, stock, coins) => (site.annexes || []).some(a => annexState(a, site, stock, coins).state === 'ready');
 
-// Variante de chaque annexe posée : son rang parmi celles du même nom, dans l'ordre de pose (le serveur les range
-// ainsi). Clé « x,y » → n° (0, 1, 2)
-export function variantsOf(annexes) {
+// Rang de chaque annexe posée parmi celles du même nom, dans l'ordre de pose (le serveur les range ainsi). Clé « x,y »
+// → n° d'exemplaire (0, 1, 2…)
+export function ranksOf(annexes) {
   const count = {};
   const out = new Map();
   for (const a of annexes) {
@@ -30,6 +30,15 @@ export function variantsOf(annexes) {
     count[a.annex] = (count[a.annex] || 0) + 1;
   }
   return out;
+}
+// Variante dessinée de chaque annexe posée : la couleur choisie (look), sinon son rang, comme avant le choix des
+// couleurs. Clé « x,y » → n°
+export function variantsOf(annexes) {
+  const ranks = ranksOf(annexes);
+  return new Map(annexes.map(a => {
+    const key = `${a.x},${a.y}`;
+    return [key, Number.isInteger(a.look) ? a.look : ranks.get(key)];
+  }));
 }
 
 // Ce que rapportent les annexes posées d'un bâtiment, par heure, avant les bonus de la boutique : { count, rate, earn }

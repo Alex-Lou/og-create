@@ -94,7 +94,9 @@ export default {
       if (!light) continue;
       const [u, v, z, r, color, fire] = light;
       const c = this.ground(annex.x, annex.y);
-      const [lx, ly] = P(u, v, z);
+      const [px, ly] = P(u, v, z);
+      // (une annexe pivotée porte sa lumière en miroir)
+      const lx = annex.flip ? -px : px;
       const flicker = fire ? 0.85 + 0.15 * Math.sin(t * 13 + annex.x) * Math.sin(t * 7.3) : 0.95 + 0.05 * Math.sin(t * 2 + annex.y);
       glow(ctx, c.x + lx, c.y + ly, r, (fire ? Math.max(0.3, lit) : litFor(annex.x * 13 + annex.y)) * flicker, color);
     }
@@ -121,7 +123,8 @@ export default {
       if (!light) continue;
       const [u, v, z, r, color, fire] = light;
       const c = this.ground(craft.x, craft.y);
-      const [lx, ly] = P(u, v, z);
+      const [px, ly] = P(u, v, z);
+      const lx = craft.flip ? -px : px;
       const flicker = fire ? 0.85 + 0.15 * Math.sin(t * 13 + craft.x) * Math.sin(t * 7.3) : 0.95 + 0.05 * Math.sin(t * 2 + craft.y);
       glow(ctx, c.x + lx, c.y + ly, r, (fire ? Math.max(0.3, lit) : litFor(craft.x * 11 + craft.y)) * flicker, color);
     }
