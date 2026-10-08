@@ -68,7 +68,7 @@ function nuancier(etat) {
 
 // Les boutons « tourner » (44 × 44) : ronds, cerclés de bois, une flèche qui tourne vers la gauche ou la droite
 function tourner(droite) {
-  let s = rond(22, 23.4, 20.2, BOIS.ombre, W) + rond(22, 22, 20, BOIS.corps, 0) + rond(22, 22, 15.4, PAPIER.corps, 1) + trait('M9,14 Q12,8.6 18,7.4', BOIS.clair, 1.3);
+  let s = rond(22, 22.6, 20, BOIS.ombre, W) + rond(22, 21.6, 19.6, BOIS.corps, 0) + rond(22, 22, 15.4, PAPIER.corps, 1) + trait('M9,14 Q12,8.6 18,7.4', BOIS.clair, 1.3);
   const fleche = trait('M28.6,27.4 A8.4,8.4 0 1 1 29.4,17', OUT, 4.2) + trait('M28.6,27.4 A8.4,8.4 0 1 1 29.4,17', BOIS.corps, 2) + P('M25.4,15.4 L31.6,12.2 L31.8,19.2 Z', BOIS.corps, 1);
   return s + (droite ? `<g transform="translate(44 0) scale(-1 1)">${fleche}</g>` : fleche);
 }
@@ -122,7 +122,8 @@ function carte() {
   s += [[66, 92], [88, 92], [108, 92]].map(([y, x]) => trait(`M${x},${y} L176,${y}`, '#B9A68A', 1)).join('');
   s += [58, 80, 100].map(y => rond(88, y, 1.4, '#3E6A9E', 0) + trait(`M91.6,${y} L99,${y}`, '#9AB4D4', 1)).join('');
   // le talon : pointillés, encoches, le tampon rouge à l'hirondelle
-  s += `<path d="M184,34 L184,146" stroke="${BOIS.ombre}" stroke-width="1" stroke-dasharray="2.4 2.2"/>` + rond(184, 30, 4, '#F4EEDF', 1) + rond(184, 150, 4, '#F4EEDF', 1);
+  // les encoches, mordues dans le bord haut et le bord bas (découpées à la forme de la carte : rien ne dépasse)
+  s += `<path d="M184,7 L184,143" stroke="${BOIS.ombre}" stroke-width="1" stroke-dasharray="2.4 2.2"/>` + clip('pcn', C, rond(184, 2, 4.4, '#F4EEDF', 1.2) + rond(184, 148, 4.4, '#F4EEDF', 1.2));
   s += `<g transform="rotate(-12 211 88)">${rond(211, 88, 17, 'none', 0).replace('stroke="none"', `stroke="${ROUGE.corps}" stroke-width="1.6"`)}${rond(211, 88, 13, 'none', 0).replace('stroke="none"', `stroke="${ROUGE.corps}" stroke-width="0.8" stroke-dasharray="1.6 1.4"`)}${hirondelle(219, 87, 1, ROUGE.corps)}</g>`;
   s += trait('M194,126 L228,126 M194,132 L220,132', '#B9A68A', 1);
   return s;
