@@ -2,7 +2,7 @@
 // nom du peuple, le naufrage et le souvenir retrouvé). Méthodes de WorldView.vue (this : le composant), réunies par
 // draw.js.
 
-import { ring, burst, vibrate } from '@/utils/fx';
+import { ring, burst, vibrate, fly } from '@/utils/fx';
 import { landmarksShown } from '@/world/landmarks';
 import { floatOf, BRUME_ALT, drawBrume, BRUME_REACH } from '@/world/brume';
 import { brumeArtLayer, drawBrumeArt } from '@/world/brumeArt';
@@ -76,7 +76,7 @@ export default {
   emitQuest() {
     const state = this.state;
     if (!state) return;
-    const hold = Boolean(this.holdWreck || this.reveal || this.haul);
+    const hold = Boolean(this.holdWreck || this.reveal || this.haul || this.wreck);
     this.$emit('quest', state.brume ? { ...state.brume, people: state.people || null, anya: state.anya || null, avatar: state.avatar || null, hold, built: builtOf(state.villagers) } : null);
   },
   // Naufrage à annoncer pour la quête active (déjà vus : retenus sur l'appareil)
@@ -92,6 +92,8 @@ export default {
   closeWreck() {
     const zone = this.wreck && this.state && this.state.map.zones.find(z => z.id === this.wreck.zone);
     this.wreck = null;
+    // (les scènes et le tutoriel attendaient que l'annonce se referme)
+    this.emitQuest();
     if (zone && zone.anchor) this.lookAtCell(zone.anchor.x, zone.anchor.y);
   },
   // Le souvenir retrouvé (bible, § 6.2 et § 14) : la caméra va vers le naufragé ; un éclat doré, sa réplique
@@ -171,6 +173,9 @@ export default {
         const at = this.canvasPoint(sp.x, sp.y);
         ring(at, 90);
         burst(at, 24, 80);
+        // Les écus volent de Brume jusqu'à la bourse, l'un après l'autre
+        const purse = document.querySelector('.world__purse');
+        if (purse) [0, 90, 180, 270, 360].forEach(ms => setTimeout(() => fly('ui:coin', { left: at.x - 10, top: at.y - 10, width: 20, height: 20 }, purse), ms));
       }
       vibrate([12, 30, 16]);
       this.$emit('show-alert', `Brume : +${gained} écus\u00a0!`);

@@ -1,0 +1,73 @@
+// L'île et le coach du tutoriel (game/coach.js) : elle dit où sont ses cibles à l'écran (Brume, un bâtiment, un
+// habitant, le panneau d'un quartier) et amène la caméra vers celle de la leçon. Mixin de WorldView.vue.
+
+import { coach } from '@/game/coach';
+import { TW } from '@/world/view/constants';
+
+export default {
+  computed: {
+    // La cible de la leçon sur l'île (« site:puits »…), ou null
+    coachTarget() {
+      const lesson = coach.state.lesson;
+      return lesson && lesson.target && lesson.target.startsWith('île:') ? lesson.target.slice(4) : null;
+    }
+  },
+  watch: {
+    // Une nouvelle cible : la caméra va vers elle (une fois par leçon)
+    coachTarget(name) {
+      if (name) this.$nextTick(() => this.coachFocus(name));
+    }
+  },
+  mounted() {
+    this.offCoach = coach.island(name => this.coachRect(name));
+  },
+  beforeUnmount() {
+    if (this.offCoach) this.offCoach();
+  },
+  methods: {
+    // Une cible de l'île dans le monde : { x, y, r } (centre et rayon), ou null
+    coachWorld(name) {
+      if (!this.state) return null;
+      const [kind, id] = name.split(':');
+      if (kind === 'brume') return this.brumeHit ? { x: this.brumeHit.x, y: this.brumeHit.y, r: this.brumeHit.r } : null;
+      if (kind === 'site') {
+        const site = this.state.sites.find(s => s.id === id);
+        if (!site) return null;
+        const c = this.centerOf(site);
+        return { x: c.x, y: c.y - TW * 0.35 * site.w, r: TW * 0.45 * site.w };
+      }
+      if (kind === 'habitant') {
+        const hit = (this.landHits || []).find(h => h.key === `vil:${id}`);
+        return hit ? { x: hit.x, y: hit.y - 6, r: Math.max(18, hit.r) } : null;
+      }
+      if (kind === 'quartier') {
+        const sign = (this.signs || []).find(sg => sg.zone && sg.zone.id === id);
+        return sign ? { x: sign.x, y: sign.y, r: sign.r + 6 } : null;
+      }
+      return null;
+    },
+    // Son rectangle à l'écran (page) : { x, y, w, h }, ou null
+    coachRect(name) {
+      const at = this.coachWorld(name);
+      const canvas = this.$refs.canvas;
+      if (!at || !canvas || !this.geo) return null;
+      const box = canvas.getBoundingClientRect();
+      const p = this.toScreen(at.x, at.y);
+      const r = Math.max(22, at.r * this.cam.s);
+      return { x: box.left + p.x - r, y: box.top + p.y - r, w: 2 * r, h: 2 * r };
+    },
+    // La caméra va vers la cible, assez près pour la toucher (une cible pas encore dessinée : quelques essais)
+    coachFocus(name, tries = 0) {
+      const at = this.coachWorld(name);
+      if (!at) {
+        if (tries < 10 && this.coachTarget === name) setTimeout(() => this.coachFocus(name, tries + 1), 300);
+        return;
+      }
+      this.cam.x = at.x;
+      this.cam.y = at.y + 20;
+      this.cam.s = Math.max(this.cam.s, 1.1);
+      this.clampCam();
+      this.draw(performance.now());
+    }
+  }
+};
