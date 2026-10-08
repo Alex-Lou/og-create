@@ -153849,6 +153849,23 @@
    "statut": "ok"
   },
   {
+   "id": "minijeux/filon/ammonite",
+   "rubrique": "minijeux",
+   "titre": "Ammonite (fossile) (son éclat passe, en boucle)",
+   "images": 1,
+   "fichiers": [
+    "svg/minijeux/filon/ammonite.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    32,
+    32
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
    "id": "minijeux/filon/apparition-amethyste",
    "rubrique": "minijeux",
    "titre": "L'améthyste qui apparaît",
@@ -153870,6 +153887,90 @@
    "statut": "ok"
   },
   {
+   "id": "minijeux/filon/apparition-ammonite",
+   "rubrique": "minijeux",
+   "titre": "Ammonite qui apparaît",
+   "images": 4,
+   "fichiers": [
+    "svg/minijeux/filon/apparition-ammonite_1.svg",
+    "svg/minijeux/filon/apparition-ammonite_2.svg",
+    "svg/minijeux/filon/apparition-ammonite_3.svg",
+    "svg/minijeux/filon/apparition-ammonite_4.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    32,
+    32
+   ],
+   "ms_par_image": 110,
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "minijeux/filon/apparition-arete",
+   "rubrique": "minijeux",
+   "titre": "Arête de poisson qui apparaît",
+   "images": 4,
+   "fichiers": [
+    "svg/minijeux/filon/apparition-arete_1.svg",
+    "svg/minijeux/filon/apparition-arete_2.svg",
+    "svg/minijeux/filon/apparition-arete_3.svg",
+    "svg/minijeux/filon/apparition-arete_4.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    32,
+    32
+   ],
+   "ms_par_image": 110,
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "minijeux/filon/apparition-cle",
+   "rubrique": "minijeux",
+   "titre": "Clé des Anciens qui apparaît",
+   "images": 4,
+   "fichiers": [
+    "svg/minijeux/filon/apparition-cle_1.svg",
+    "svg/minijeux/filon/apparition-cle_2.svg",
+    "svg/minijeux/filon/apparition-cle_3.svg",
+    "svg/minijeux/filon/apparition-cle_4.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    32,
+    32
+   ],
+   "ms_par_image": 110,
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "minijeux/filon/apparition-coquillage",
+   "rubrique": "minijeux",
+   "titre": "Coquillage ancien qui apparaît",
+   "images": 4,
+   "fichiers": [
+    "svg/minijeux/filon/apparition-coquillage_1.svg",
+    "svg/minijeux/filon/apparition-coquillage_2.svg",
+    "svg/minijeux/filon/apparition-coquillage_3.svg",
+    "svg/minijeux/filon/apparition-coquillage_4.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    32,
+    32
+   ],
+   "ms_par_image": 110,
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
    "id": "minijeux/filon/apparition-diamant",
    "rubrique": "minijeux",
    "titre": "Le diamant qui apparaît",
@@ -153879,6 +153980,27 @@
     "svg/minijeux/filon/apparition-diamant_2.svg",
     "svg/minijeux/filon/apparition-diamant_3.svg",
     "svg/minijeux/filon/apparition-diamant_4.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    32,
+    32
+   ],
+   "ms_par_image": 110,
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "minijeux/filon/apparition-piece",
+   "rubrique": "minijeux",
+   "titre": "Pièce des Anciens qui apparaît",
+   "images": 4,
+   "fichiers": [
+    "svg/minijeux/filon/apparition-piece_1.svg",
+    "svg/minijeux/filon/apparition-piece_2.svg",
+    "svg/minijeux/filon/apparition-piece_3.svg",
+    "svg/minijeux/filon/apparition-piece_4.svg"
    ],
    "cadre": [
     0,
@@ -153929,6 +154051,44 @@
     32
    ],
    "ms_par_image": 110,
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "minijeux/filon/apparition-rune",
+   "rubrique": "minijeux",
+   "titre": "Pierre runique qui apparaît",
+   "images": 4,
+   "fichiers": [
+    "svg/minijeux/filon/apparition-rune_1.svg",
+    "svg/minijeux/filon/apparition-rune_2.svg",
+    "svg/minijeux/filon/apparition-rune_3.svg",
+    "svg/minijeux/filon/apparition-rune_4.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    32,
+    32
+   ],
+   "ms_par_image": 110,
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "minijeux/filon/arete",
+   "rubrique": "minijeux",
+   "titre": "Arête de poisson (fossile) (son éclat passe, en boucle)",
+   "images": 1,
+   "fichiers": [
+    "svg/minijeux/filon/arete.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    32,
+    32
+   ],
    "parcours": "partout",
    "statut": "ok"
   },
@@ -154030,6 +154190,118 @@
     0,
     32,
     32
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "minijeux/filon/cle",
+   "rubrique": "minijeux",
+   "titre": "Clé des Anciens (son éclat passe, en boucle)",
+   "images": 1,
+   "fichiers": [
+    "svg/minijeux/filon/cle.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    32,
+    32
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "minijeux/filon/coffret",
+   "rubrique": "minijeux",
+   "titre": "Le coffret du bilan, 0 pierre",
+   "images": 5,
+   "fichiers": [
+    "svg/minijeux/filon/coffret_0.svg",
+    "svg/minijeux/filon/coffret_1.svg",
+    "svg/minijeux/filon/coffret_2.svg",
+    "svg/minijeux/filon/coffret_3.svg",
+    "svg/minijeux/filon/coffret_4.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    64,
+    48
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "minijeux/filon/coquillage",
+   "rubrique": "minijeux",
+   "titre": "Coquillage ancien (son éclat passe, en boucle)",
+   "images": 1,
+   "fichiers": [
+    "svg/minijeux/filon/coquillage.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    32,
+    32
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "minijeux/filon/coup-bois",
+   "rubrique": "minijeux",
+   "titre": "Le coup de la pioche de bois (copeaux)",
+   "images": 3,
+   "fichiers": [
+    "svg/minijeux/filon/coup-bois_1.svg",
+    "svg/minijeux/filon/coup-bois_2.svg",
+    "svg/minijeux/filon/coup-bois_3.svg"
+   ],
+   "cadre": [
+    -8,
+    -8,
+    48,
+    48
+   ],
+   "ms_par_image": 70,
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "minijeux/filon/coup-or",
+   "rubrique": "minijeux",
+   "titre": "Le coup de la pioche d'or (pluie d'étoiles)",
+   "images": 3,
+   "fichiers": [
+    "svg/minijeux/filon/coup-or_1.svg",
+    "svg/minijeux/filon/coup-or_2.svg",
+    "svg/minijeux/filon/coup-or_3.svg"
+   ],
+   "cadre": [
+    -8,
+    -8,
+    48,
+    48
+   ],
+   "ms_par_image": 70,
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "minijeux/filon/crete",
+   "rubrique": "minijeux",
+   "titre": "La crête en haut de la paroi (se répète en largeur)",
+   "images": 1,
+   "fichiers": [
+    "svg/minijeux/filon/crete.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    14
    ],
    "parcours": "partout",
    "statut": "ok"
@@ -154239,6 +154511,94 @@
    "statut": "ok"
   },
   {
+   "id": "minijeux/filon/etoile_vide",
+   "rubrique": "minijeux",
+   "titre": "Une étoile du bilan, vide",
+   "images": 1,
+   "fichiers": [
+    "svg/minijeux/filon/etoile_vide.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    32,
+    32
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "minijeux/filon/etoile-gagnee",
+   "rubrique": "minijeux",
+   "titre": "Une étoile du bilan gagnée (elle claque)",
+   "images": 3,
+   "fichiers": [
+    "svg/minijeux/filon/etoile-gagnee_1.svg",
+    "svg/minijeux/filon/etoile-gagnee_2.svg",
+    "svg/minijeux/filon/etoile-gagnee_3.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    32,
+    32
+   ],
+   "ms_par_image": 140,
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "minijeux/filon/fond-milieu",
+   "rubrique": "minijeux",
+   "titre": "Le fond de la paroi, au milieu : roche à strates (se répète)",
+   "images": 1,
+   "fichiers": [
+    "svg/minijeux/filon/fond-milieu.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    48
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "minijeux/filon/fond-profond",
+   "rubrique": "minijeux",
+   "titre": "Le fond de la paroi, tout au fond : roche sombre et cristaux (se répète ; les cristaux luisent)",
+   "images": 1,
+   "fichiers": [
+    "svg/minijeux/filon/fond-profond.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    48
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "minijeux/filon/fond-surface",
+   "rubrique": "minijeux",
+   "titre": "Le fond de la paroi, en surface : terre et racines (se répète)",
+   "images": 1,
+   "fichiers": [
+    "svg/minijeux/filon/fond-surface.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    48,
+    48
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
    "id": "minijeux/filon/lueur_allumee",
    "rubrique": "minijeux",
    "titre": "La lueur du filon, suivi (en boucle)",
@@ -154293,6 +154653,23 @@
    "statut": "ok"
   },
   {
+   "id": "minijeux/filon/piece",
+   "rubrique": "minijeux",
+   "titre": "Pièce des Anciens (son éclat passe, en boucle)",
+   "images": 1,
+   "fichiers": [
+    "svg/minijeux/filon/piece.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    32,
+    32
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
    "id": "minijeux/filon/pioche",
    "rubrique": "minijeux",
    "titre": "La pioche (levée, l'élan, le coup)",
@@ -154301,6 +154678,46 @@
     "svg/minijeux/filon/pioche_1.svg",
     "svg/minijeux/filon/pioche_2.svg",
     "svg/minijeux/filon/pioche_3.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    32,
+    32
+   ],
+   "ms_par_image": 90,
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "minijeux/filon/pioche-bois",
+   "rubrique": "minijeux",
+   "titre": "La pioche de bois (levée, l'élan, le coup)",
+   "images": 3,
+   "fichiers": [
+    "svg/minijeux/filon/pioche-bois_1.svg",
+    "svg/minijeux/filon/pioche-bois_2.svg",
+    "svg/minijeux/filon/pioche-bois_3.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    32,
+    32
+   ],
+   "ms_par_image": 90,
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "minijeux/filon/pioche-or",
+   "rubrique": "minijeux",
+   "titre": "La pioche d'or (levée, l'élan, le coup)",
+   "images": 3,
+   "fichiers": [
+    "svg/minijeux/filon/pioche-or_1.svg",
+    "svg/minijeux/filon/pioche-or_2.svg",
+    "svg/minijeux/filon/pioche-or_3.svg"
    ],
    "cadre": [
     0,
@@ -154336,6 +154753,23 @@
    "images": 1,
    "fichiers": [
     "svg/minijeux/filon/rubis.svg"
+   ],
+   "cadre": [
+    0,
+    0,
+    32,
+    32
+   ],
+   "parcours": "partout",
+   "statut": "ok"
+  },
+  {
+   "id": "minijeux/filon/rune",
+   "rubrique": "minijeux",
+   "titre": "Pierre runique (des Anciens) (son éclat passe, en boucle)",
+   "images": 1,
+   "fichiers": [
+    "svg/minijeux/filon/rune.svg"
    ],
    "cadre": [
     0,

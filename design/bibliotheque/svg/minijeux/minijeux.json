@@ -3,7 +3,7 @@
   "Les pièces des mini-jeux des bâtiments, un dossier par jeu. Le cadre de chaque pièce est dans pieces (en unités du dessin).",
   "Haute définition : chaque fichier déclare 4 fois son cadre ; l'afficher à la taille voulue par le jeu.",
   "Suites d'images (suites) : à enchaîner au rythme de ms_par_image, en boucle si boucle est vrai, sinon une fois.",
-  "Le Filon : un bloc de la paroi a un cadre de 32 × 32 ; les effets qui débordent du bloc (éclatement, étincelles, onde, éclats de couleur) ont un cadre de 48 × 48 centré sur le bloc (à poser 1,5 fois plus grand que le bloc). Pièces fixes : les blocs et leurs fissures, le trou. Boucles animées dans le SVG (SMIL) : l'éclat des pierres, la lueur du filon, le signe ✦. Suites d'images à enchaîner une fois, au coup : le bloc qui éclate, la pioche, les étincelles, l'onde, la pierre qui apparaît, ses éclats de couleur.",
+  "Le Filon : un bloc de la paroi a un cadre de 32 × 32 ; les effets qui débordent du bloc (éclatement, étincelles, onde, éclats de couleur) ont un cadre de 48 × 48 centré sur le bloc (à poser 1,5 fois plus grand que le bloc). Pièces fixes : les blocs et leurs fissures, le trou. Boucles animées dans le SVG (SMIL) : l'éclat des pierres, la lueur du filon, le signe ✦. Suites d'images à enchaîner une fois, au coup : le bloc qui éclate, la pioche, les étincelles, l'onde, la pierre qui apparaît, ses éclats de couleur. Améliorations : le fond de la paroi selon la profondeur (48 × 48, se répète) et sa crête (48 × 14, se répète en largeur) ; les pioches de bois et d'or et leur coup (48 × 48) ; six trouvailles (fossiles, objets des Anciens) et leur apparition ; l'écran de bilan (le coffret 64 × 48 de 0 à 4 pierres, les étoiles).",
   "La Pêche : le jeu dessine sur un canvas, tout ce qui bouge est en suites d'images (boucle : vrai, à répéter ; sinon une fois). Les prises nagent vers la droite (retourner l'image pour l'autre sens) ; ferrées, elles pendent tête en bas, la ligne en haut au milieu. Le couloir d'eau et le ponton se répètent en largeur.",
   "La Cueillette : le buisson a un cadre de 60 × 60 (le bouton) ; un fruit, les guêpes, la piqûre et le panier un cadre de 32 × 32, à poser au milieu du buisson. Boucles animées dans le SVG (SMIL) : le buisson, le fruit mûr, le fruit trop mûr, les guêpes. Suites d'images à enchaîner une fois : le buisson secoué, le fruit qui mûrit, qui tombe, qu'on cueille, la piqûre.",
   "La Récolte : une tuile a un cadre de 32 × 32 ; la tuile cueillie et l'éclat d'une longue chaîne ont un cadre de 48 × 48 centré sur la tuile (1,5 fois sa taille). Les sortes gardent les noms du jeu (stone, wood, water, food, fish). Boucles animées dans le SVG (SMIL) : la tuile au repos, la tuile choisie. Suites d'images à enchaîner une fois : la tuile cueillie, la tuile qui atterrit, l'éclat d'une longue chaîne."
@@ -732,6 +732,556 @@
       32
      ],
      "fichier": "filon/signe-3.svg"
+    },
+    "fond-surface": {
+     "nom": "Le fond de la paroi, en surface : terre et racines (se répète)",
+     "cadre": [
+      0,
+      0,
+      48,
+      48
+     ],
+     "fichier": "filon/fond-surface.svg"
+    },
+    "fond-milieu": {
+     "nom": "Le fond de la paroi, au milieu : roche à strates (se répète)",
+     "cadre": [
+      0,
+      0,
+      48,
+      48
+     ],
+     "fichier": "filon/fond-milieu.svg"
+    },
+    "fond-profond": {
+     "nom": "Le fond de la paroi, tout au fond : roche sombre et cristaux (se répète ; les cristaux luisent)",
+     "cadre": [
+      0,
+      0,
+      48,
+      48
+     ],
+     "fichier": "filon/fond-profond.svg"
+    },
+    "crete": {
+     "nom": "La crête en haut de la paroi (se répète en largeur)",
+     "cadre": [
+      0,
+      0,
+      48,
+      14
+     ],
+     "fichier": "filon/crete.svg"
+    },
+    "pioche-bois_1": {
+     "nom": "La pioche de bois (levée, l'élan, le coup)",
+     "cadre": [
+      0,
+      0,
+      32,
+      32
+     ],
+     "fichier": "filon/pioche-bois_1.svg"
+    },
+    "pioche-bois_2": {
+     "nom": "La pioche de bois (levée, l'élan, le coup)",
+     "cadre": [
+      0,
+      0,
+      32,
+      32
+     ],
+     "fichier": "filon/pioche-bois_2.svg"
+    },
+    "pioche-bois_3": {
+     "nom": "La pioche de bois (levée, l'élan, le coup)",
+     "cadre": [
+      0,
+      0,
+      32,
+      32
+     ],
+     "fichier": "filon/pioche-bois_3.svg"
+    },
+    "coup-bois_1": {
+     "nom": "Le coup de la pioche de bois (copeaux)",
+     "cadre": [
+      -8,
+      -8,
+      48,
+      48
+     ],
+     "fichier": "filon/coup-bois_1.svg"
+    },
+    "coup-bois_2": {
+     "nom": "Le coup de la pioche de bois (copeaux)",
+     "cadre": [
+      -8,
+      -8,
+      48,
+      48
+     ],
+     "fichier": "filon/coup-bois_2.svg"
+    },
+    "coup-bois_3": {
+     "nom": "Le coup de la pioche de bois (copeaux)",
+     "cadre": [
+      -8,
+      -8,
+      48,
+      48
+     ],
+     "fichier": "filon/coup-bois_3.svg"
+    },
+    "pioche-or_1": {
+     "nom": "La pioche d'or (levée, l'élan, le coup)",
+     "cadre": [
+      0,
+      0,
+      32,
+      32
+     ],
+     "fichier": "filon/pioche-or_1.svg"
+    },
+    "pioche-or_2": {
+     "nom": "La pioche d'or (levée, l'élan, le coup)",
+     "cadre": [
+      0,
+      0,
+      32,
+      32
+     ],
+     "fichier": "filon/pioche-or_2.svg"
+    },
+    "pioche-or_3": {
+     "nom": "La pioche d'or (levée, l'élan, le coup)",
+     "cadre": [
+      0,
+      0,
+      32,
+      32
+     ],
+     "fichier": "filon/pioche-or_3.svg"
+    },
+    "coup-or_1": {
+     "nom": "Le coup de la pioche d'or (pluie d'étoiles)",
+     "cadre": [
+      -8,
+      -8,
+      48,
+      48
+     ],
+     "fichier": "filon/coup-or_1.svg"
+    },
+    "coup-or_2": {
+     "nom": "Le coup de la pioche d'or (pluie d'étoiles)",
+     "cadre": [
+      -8,
+      -8,
+      48,
+      48
+     ],
+     "fichier": "filon/coup-or_2.svg"
+    },
+    "coup-or_3": {
+     "nom": "Le coup de la pioche d'or (pluie d'étoiles)",
+     "cadre": [
+      -8,
+      -8,
+      48,
+      48
+     ],
+     "fichier": "filon/coup-or_3.svg"
+    },
+    "ammonite": {
+     "nom": "Ammonite (fossile) (son éclat passe, en boucle)",
+     "cadre": [
+      0,
+      0,
+      32,
+      32
+     ],
+     "fichier": "filon/ammonite.svg"
+    },
+    "apparition-ammonite_1": {
+     "nom": "Ammonite qui apparaît",
+     "cadre": [
+      0,
+      0,
+      32,
+      32
+     ],
+     "fichier": "filon/apparition-ammonite_1.svg"
+    },
+    "apparition-ammonite_2": {
+     "nom": "Ammonite qui apparaît",
+     "cadre": [
+      0,
+      0,
+      32,
+      32
+     ],
+     "fichier": "filon/apparition-ammonite_2.svg"
+    },
+    "apparition-ammonite_3": {
+     "nom": "Ammonite qui apparaît",
+     "cadre": [
+      0,
+      0,
+      32,
+      32
+     ],
+     "fichier": "filon/apparition-ammonite_3.svg"
+    },
+    "apparition-ammonite_4": {
+     "nom": "Ammonite qui apparaît",
+     "cadre": [
+      0,
+      0,
+      32,
+      32
+     ],
+     "fichier": "filon/apparition-ammonite_4.svg"
+    },
+    "arete": {
+     "nom": "Arête de poisson (fossile) (son éclat passe, en boucle)",
+     "cadre": [
+      0,
+      0,
+      32,
+      32
+     ],
+     "fichier": "filon/arete.svg"
+    },
+    "apparition-arete_1": {
+     "nom": "Arête de poisson qui apparaît",
+     "cadre": [
+      0,
+      0,
+      32,
+      32
+     ],
+     "fichier": "filon/apparition-arete_1.svg"
+    },
+    "apparition-arete_2": {
+     "nom": "Arête de poisson qui apparaît",
+     "cadre": [
+      0,
+      0,
+      32,
+      32
+     ],
+     "fichier": "filon/apparition-arete_2.svg"
+    },
+    "apparition-arete_3": {
+     "nom": "Arête de poisson qui apparaît",
+     "cadre": [
+      0,
+      0,
+      32,
+      32
+     ],
+     "fichier": "filon/apparition-arete_3.svg"
+    },
+    "apparition-arete_4": {
+     "nom": "Arête de poisson qui apparaît",
+     "cadre": [
+      0,
+      0,
+      32,
+      32
+     ],
+     "fichier": "filon/apparition-arete_4.svg"
+    },
+    "coquillage": {
+     "nom": "Coquillage ancien (son éclat passe, en boucle)",
+     "cadre": [
+      0,
+      0,
+      32,
+      32
+     ],
+     "fichier": "filon/coquillage.svg"
+    },
+    "apparition-coquillage_1": {
+     "nom": "Coquillage ancien qui apparaît",
+     "cadre": [
+      0,
+      0,
+      32,
+      32
+     ],
+     "fichier": "filon/apparition-coquillage_1.svg"
+    },
+    "apparition-coquillage_2": {
+     "nom": "Coquillage ancien qui apparaît",
+     "cadre": [
+      0,
+      0,
+      32,
+      32
+     ],
+     "fichier": "filon/apparition-coquillage_2.svg"
+    },
+    "apparition-coquillage_3": {
+     "nom": "Coquillage ancien qui apparaît",
+     "cadre": [
+      0,
+      0,
+      32,
+      32
+     ],
+     "fichier": "filon/apparition-coquillage_3.svg"
+    },
+    "apparition-coquillage_4": {
+     "nom": "Coquillage ancien qui apparaît",
+     "cadre": [
+      0,
+      0,
+      32,
+      32
+     ],
+     "fichier": "filon/apparition-coquillage_4.svg"
+    },
+    "rune": {
+     "nom": "Pierre runique (des Anciens) (son éclat passe, en boucle)",
+     "cadre": [
+      0,
+      0,
+      32,
+      32
+     ],
+     "fichier": "filon/rune.svg"
+    },
+    "apparition-rune_1": {
+     "nom": "Pierre runique qui apparaît",
+     "cadre": [
+      0,
+      0,
+      32,
+      32
+     ],
+     "fichier": "filon/apparition-rune_1.svg"
+    },
+    "apparition-rune_2": {
+     "nom": "Pierre runique qui apparaît",
+     "cadre": [
+      0,
+      0,
+      32,
+      32
+     ],
+     "fichier": "filon/apparition-rune_2.svg"
+    },
+    "apparition-rune_3": {
+     "nom": "Pierre runique qui apparaît",
+     "cadre": [
+      0,
+      0,
+      32,
+      32
+     ],
+     "fichier": "filon/apparition-rune_3.svg"
+    },
+    "apparition-rune_4": {
+     "nom": "Pierre runique qui apparaît",
+     "cadre": [
+      0,
+      0,
+      32,
+      32
+     ],
+     "fichier": "filon/apparition-rune_4.svg"
+    },
+    "cle": {
+     "nom": "Clé des Anciens (son éclat passe, en boucle)",
+     "cadre": [
+      0,
+      0,
+      32,
+      32
+     ],
+     "fichier": "filon/cle.svg"
+    },
+    "apparition-cle_1": {
+     "nom": "Clé des Anciens qui apparaît",
+     "cadre": [
+      0,
+      0,
+      32,
+      32
+     ],
+     "fichier": "filon/apparition-cle_1.svg"
+    },
+    "apparition-cle_2": {
+     "nom": "Clé des Anciens qui apparaît",
+     "cadre": [
+      0,
+      0,
+      32,
+      32
+     ],
+     "fichier": "filon/apparition-cle_2.svg"
+    },
+    "apparition-cle_3": {
+     "nom": "Clé des Anciens qui apparaît",
+     "cadre": [
+      0,
+      0,
+      32,
+      32
+     ],
+     "fichier": "filon/apparition-cle_3.svg"
+    },
+    "apparition-cle_4": {
+     "nom": "Clé des Anciens qui apparaît",
+     "cadre": [
+      0,
+      0,
+      32,
+      32
+     ],
+     "fichier": "filon/apparition-cle_4.svg"
+    },
+    "piece": {
+     "nom": "Pièce des Anciens (son éclat passe, en boucle)",
+     "cadre": [
+      0,
+      0,
+      32,
+      32
+     ],
+     "fichier": "filon/piece.svg"
+    },
+    "apparition-piece_1": {
+     "nom": "Pièce des Anciens qui apparaît",
+     "cadre": [
+      0,
+      0,
+      32,
+      32
+     ],
+     "fichier": "filon/apparition-piece_1.svg"
+    },
+    "apparition-piece_2": {
+     "nom": "Pièce des Anciens qui apparaît",
+     "cadre": [
+      0,
+      0,
+      32,
+      32
+     ],
+     "fichier": "filon/apparition-piece_2.svg"
+    },
+    "apparition-piece_3": {
+     "nom": "Pièce des Anciens qui apparaît",
+     "cadre": [
+      0,
+      0,
+      32,
+      32
+     ],
+     "fichier": "filon/apparition-piece_3.svg"
+    },
+    "apparition-piece_4": {
+     "nom": "Pièce des Anciens qui apparaît",
+     "cadre": [
+      0,
+      0,
+      32,
+      32
+     ],
+     "fichier": "filon/apparition-piece_4.svg"
+    },
+    "coffret_0": {
+     "nom": "Le coffret du bilan, 0 pierre",
+     "cadre": [
+      0,
+      0,
+      64,
+      48
+     ],
+     "fichier": "filon/coffret_0.svg"
+    },
+    "coffret_1": {
+     "nom": "Le coffret du bilan, 1 pierre (elles brillent, en boucle)",
+     "cadre": [
+      0,
+      0,
+      64,
+      48
+     ],
+     "fichier": "filon/coffret_1.svg"
+    },
+    "coffret_2": {
+     "nom": "Le coffret du bilan, 2 pierres (elles brillent, en boucle)",
+     "cadre": [
+      0,
+      0,
+      64,
+      48
+     ],
+     "fichier": "filon/coffret_2.svg"
+    },
+    "coffret_3": {
+     "nom": "Le coffret du bilan, 3 pierres (elles brillent, en boucle)",
+     "cadre": [
+      0,
+      0,
+      64,
+      48
+     ],
+     "fichier": "filon/coffret_3.svg"
+    },
+    "coffret_4": {
+     "nom": "Le coffret du bilan, 4 pierres (elles brillent, en boucle)",
+     "cadre": [
+      0,
+      0,
+      64,
+      48
+     ],
+     "fichier": "filon/coffret_4.svg"
+    },
+    "etoile_vide": {
+     "nom": "Une étoile du bilan, vide",
+     "cadre": [
+      0,
+      0,
+      32,
+      32
+     ],
+     "fichier": "filon/etoile_vide.svg"
+    },
+    "etoile-gagnee_1": {
+     "nom": "Une étoile du bilan gagnée (elle claque)",
+     "cadre": [
+      0,
+      0,
+      32,
+      32
+     ],
+     "fichier": "filon/etoile-gagnee_1.svg"
+    },
+    "etoile-gagnee_2": {
+     "nom": "Une étoile du bilan gagnée (elle claque)",
+     "cadre": [
+      0,
+      0,
+      32,
+      32
+     ],
+     "fichier": "filon/etoile-gagnee_2.svg"
+    },
+    "etoile-gagnee_3": {
+     "nom": "Une étoile du bilan gagnée (elle claque)",
+     "cadre": [
+      0,
+      0,
+      32,
+      32
+     ],
+     "fichier": "filon/etoile-gagnee_3.svg"
     }
    },
    "suites": {
@@ -894,6 +1444,122 @@
       "filon/eclats-diamant_2.svg",
       "filon/eclats-diamant_3.svg",
       "filon/eclats-diamant_4.svg"
+     ]
+    },
+    "pioche-bois": {
+     "nom": "La pioche de bois (levée, l'élan, le coup)",
+     "ms_par_image": 90,
+     "boucle": false,
+     "fichiers": [
+      "filon/pioche-bois_1.svg",
+      "filon/pioche-bois_2.svg",
+      "filon/pioche-bois_3.svg"
+     ]
+    },
+    "coup-bois": {
+     "nom": "Le coup de la pioche de bois (copeaux)",
+     "ms_par_image": 70,
+     "boucle": false,
+     "fichiers": [
+      "filon/coup-bois_1.svg",
+      "filon/coup-bois_2.svg",
+      "filon/coup-bois_3.svg"
+     ]
+    },
+    "pioche-or": {
+     "nom": "La pioche d'or (levée, l'élan, le coup)",
+     "ms_par_image": 90,
+     "boucle": false,
+     "fichiers": [
+      "filon/pioche-or_1.svg",
+      "filon/pioche-or_2.svg",
+      "filon/pioche-or_3.svg"
+     ]
+    },
+    "coup-or": {
+     "nom": "Le coup de la pioche d'or (pluie d'étoiles)",
+     "ms_par_image": 70,
+     "boucle": false,
+     "fichiers": [
+      "filon/coup-or_1.svg",
+      "filon/coup-or_2.svg",
+      "filon/coup-or_3.svg"
+     ]
+    },
+    "apparition-ammonite": {
+     "nom": "Ammonite qui apparaît",
+     "ms_par_image": 110,
+     "boucle": false,
+     "fichiers": [
+      "filon/apparition-ammonite_1.svg",
+      "filon/apparition-ammonite_2.svg",
+      "filon/apparition-ammonite_3.svg",
+      "filon/apparition-ammonite_4.svg"
+     ]
+    },
+    "apparition-arete": {
+     "nom": "Arête de poisson qui apparaît",
+     "ms_par_image": 110,
+     "boucle": false,
+     "fichiers": [
+      "filon/apparition-arete_1.svg",
+      "filon/apparition-arete_2.svg",
+      "filon/apparition-arete_3.svg",
+      "filon/apparition-arete_4.svg"
+     ]
+    },
+    "apparition-coquillage": {
+     "nom": "Coquillage ancien qui apparaît",
+     "ms_par_image": 110,
+     "boucle": false,
+     "fichiers": [
+      "filon/apparition-coquillage_1.svg",
+      "filon/apparition-coquillage_2.svg",
+      "filon/apparition-coquillage_3.svg",
+      "filon/apparition-coquillage_4.svg"
+     ]
+    },
+    "apparition-rune": {
+     "nom": "Pierre runique qui apparaît",
+     "ms_par_image": 110,
+     "boucle": false,
+     "fichiers": [
+      "filon/apparition-rune_1.svg",
+      "filon/apparition-rune_2.svg",
+      "filon/apparition-rune_3.svg",
+      "filon/apparition-rune_4.svg"
+     ]
+    },
+    "apparition-cle": {
+     "nom": "Clé des Anciens qui apparaît",
+     "ms_par_image": 110,
+     "boucle": false,
+     "fichiers": [
+      "filon/apparition-cle_1.svg",
+      "filon/apparition-cle_2.svg",
+      "filon/apparition-cle_3.svg",
+      "filon/apparition-cle_4.svg"
+     ]
+    },
+    "apparition-piece": {
+     "nom": "Pièce des Anciens qui apparaît",
+     "ms_par_image": 110,
+     "boucle": false,
+     "fichiers": [
+      "filon/apparition-piece_1.svg",
+      "filon/apparition-piece_2.svg",
+      "filon/apparition-piece_3.svg",
+      "filon/apparition-piece_4.svg"
+     ]
+    },
+    "etoile-gagnee": {
+     "nom": "Une étoile du bilan gagnée (elle claque)",
+     "ms_par_image": 140,
+     "boucle": false,
+     "fichiers": [
+      "filon/etoile-gagnee_1.svg",
+      "filon/etoile-gagnee_2.svg",
+      "filon/etoile-gagnee_3.svg"
      ]
     }
    }

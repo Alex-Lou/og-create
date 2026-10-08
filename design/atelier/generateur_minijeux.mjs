@@ -4,13 +4,15 @@
 // le vérifie). Le cadre est en unités du dessin (un bloc du Filon : 32 × 32) ; le SVG déclare HD fois plus grand.
 // preview_minijeux.mjs écrit la bibliothèque avec cette même fonction.
 import filon from './minijeu_filon.js';
+import filonPlus from './minijeu_filon_plus.js';
 import peche from './minijeu_peche.js';
 import cueillette from './minijeu_cueillette.js';
 import recolte from './minijeu_recolte.js';
 
 export const HD = 4;
 const MODULES = { filon, peche, cueillette, recolte };
-export const JEUX = Object.fromEntries(Object.entries(MODULES).map(([k, m]) => [k, m.PIECES]));
+// le Filon a deux modules : ses pièces d'origine, puis ses améliorations (paroi, pioches, trouvailles, bilan)
+export const JEUX = Object.fromEntries(Object.entries(MODULES).map(([k, m]) => [k, k === 'filon' ? [...m.PIECES, ...filonPlus.PIECES] : m.PIECES]));
 // pour chaque jeu : son titre, la couleur du fond de ses planches, ce qu'il faut savoir pour l'intégrer
 export const INFOS = Object.fromEntries(Object.entries(MODULES).map(([k, m]) => [k, { titre: m.TITRE, fond: m.FOND, lisez_moi: m.LISEZ_MOI }]));
 const svgOf = (c, body) => `<svg xmlns="http://www.w3.org/2000/svg" width="${c[2] * HD}" height="${c[3] * HD}" viewBox="${c.join(' ')}">${body}</svg>`;
