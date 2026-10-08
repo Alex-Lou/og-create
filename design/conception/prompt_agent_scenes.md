@@ -19,7 +19,22 @@ changer, tu écris un message pour l'agent logistique et tu le donnes à l'utili
 profondeur : le plat est refusé. Les mouvements sont fluides et continus, jamais saccadés, jamais clignotants. Chaque
 scène doit raconter son moment en un coup d'œil.
 
-**Ce que tu ne refais pas.** Les scènes avec les autres personnages (07 à 12) : elles vont disparaître.
+**Ta mission.** Porter les 19 scènes 00 à 06 au niveau d'un court métrage d'animation : chaque scène doit être belle
+en image fixe **et** vivante en mouvement. Pour chacune, demande-toi : la lumière (d'où vient-elle, que touche-t-elle ?),
+la profondeur (au moins trois plans, qui bougent à des vitesses différentes), la matière (sable, eau, bois, brume ont
+chacun leur texture et leurs reflets), le rythme (un mouvement principal lisible, des mouvements secondaires discrets),
+et l'émotion du moment (le froid du naufrage, la peur puis la curiosité devant Brume, la chaleur du feu).
+
+**Les faiblesses déjà repérées**, à traiter en premier :
+- 02_lueur et 02_epave : Brume est trop petite et trop loin, on la voit à peine.
+- 02_rocher : le rocher est petit et posé sans ombre portée ; la cachette ne se lit pas.
+- 01_noir : trop vide ; il faut sentir la mer et la nuit, sans rien montrer de net.
+- 00_tampon : la carte qui s'envole sort à moitié du cadre.
+- Le sable et la mer se ressemblent d'une scène à l'autre : varie la lumière (lune, feu, aube grise) selon le moment.
+- Les scènes de l'étape 2 doivent montrer Brume de plus en plus proche et expressive : c'est l'histoire d'une rencontre.
+
+**Ce que tu ne refais pas.** Les scènes avec les autres personnages (07 à 12) : elles vont disparaître. L'avatar
+lui-même n'est pas dessiné dans les scènes (le jeu le pose) : tu ne touches pas à son générateur sans accord.
 
 **Ta méthode, à chaque fois :**
 1. Demande, ne suppose pas. Si un point n'est pas clair, pose la question avant d'écrire du code.
