@@ -66,10 +66,11 @@
           L’île ne répond pas.
           <button type="button" class="world__btn world__btn--small" @click="load">Réessayer</button>
         </p>
-        <!-- Mode chemin : ce que fait le doigt et le compte ; la gomme, annuler, tracer -->
+        <!-- Mode chemin : ce que fait le doigt et le compte ; retirer la dernière case, la gomme, annuler, tracer -->
         <div v-else-if="roadMode" class="world__banner world__banner--road" role="status">
           <span class="world__road-text">{{ roadBanner }}</span>
           <span class="world__road-row">
+            <button type="button" class="world__link world__road-undo" aria-label="Retirer la dernière case" :disabled="!(roadMode.eraser ? roadMode.erase : roadMode.lay).length" @click="undoRoad">↶</button>
             <button type="button" :class="['world__link', { 'is-on': roadMode.eraser }]" :aria-pressed="roadMode.eraser" @click="toggleEraser">Gomme</button>
             <button type="button" class="world__link" @click="cancelRoad">Annuler</button>
             <button type="button" class="world__road-go" data-coach="road-go" :data-linked="roadLinked ? '' : null" :disabled="!roadReady || busy" @click="confirmRoad">{{ roadMode.eraser ? 'Effacer' : 'Tracer' }}</button>
@@ -764,10 +765,18 @@ export default {
     clearInterval(this.tick);
     cancelAnimationFrame(this.raf);
     cancelAnimationFrame(this.moreRaf);
-    this.raf = this.moreRaf = 0;
+    // (et les dessins demandés pour l'image suivante : rien ne se dessine plus sur une île quittée)
+    cancelAnimationFrame(this.soonRaf);
+    cancelAnimationFrame(this.repaintRaf);
+    // (la caméra qui glisse, le bord qui fait défiler pendant un tracé)
+    cancelAnimationFrame(this.glideRaf);
+    cancelAnimationFrame(this.edgeRaf);
+    this.raf = this.moreRaf = this.soonRaf = this.repaintRaf = this.glideRaf = this.edgeRaf = 0;
     // Sortie de l'île : la vue est gardée pour le retour, la mémoire libérée (sol en carrés, images, décor)
     if (this.cam) memory.view = { cam: { ...this.cam }, site: this.site ? this.site.id : null, siteTab: this.siteTab };
     if (this.terrain) this.terrain.clear();
+    // (le rappel des chemins tenait l'île quittée en mémoire)
+    onPathsLoaded(null);
     this.terrain = null;
     this.props = [];
     this.live = null;

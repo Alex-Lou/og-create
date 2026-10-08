@@ -24,6 +24,7 @@
         </ul>
         <!-- Les jeux à grille : le niveau de la partie et son objectif (design/conception/minijeux_grille.md) -->
         <LevelPicker v-if="grid" v-model="chosen" :game="game.id" :stages="stages" />
+        <p class="mini__regen">Tes deux premières parties sont courtes, pour apprendre en douceur.</p>
         <p class="mini__regen">Une partie revient toutes les {{ regenHours }} h, {{ game.max }} au plus.</p>
         <ul class="mini__facts">
           <li>
@@ -40,7 +41,7 @@
 
       <!-- La partie (compte à rebours d'abord pour les jeux chronométrés) -->
       <div v-else-if="phase === 'count' || phase === 'play'" class="mini__stage">
-        <component :is="BOARDS[game.id]" ref="board" :seed="run.seed" :playing="phase === 'play'" @tally="onTally" @end="onEnd" />
+        <component :is="BOARDS[game.id]" ref="board" :seed="run.seed" :limit="run.limit || null" :playing="phase === 'play'" @tally="onTally" @end="onEnd" />
         <div v-if="phase === 'count'" class="mini__count" aria-live="assertive"><span :key="count">{{ count || 'Partez !' }}</span></div>
       </div>
 

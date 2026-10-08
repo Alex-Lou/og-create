@@ -105,19 +105,16 @@ const LESSONS = {
     { target: tipOf('site:foyer'), text: 'Touche « Bâtir ».' },
     { target: BUILD, text: 'Quatre bois flottés, deux galets : bâtis le feu de camp.' }
   ],
+  // (toucher la bulle d'un besoin le comble : WorldView/folk.js, tapNeed)
   soupe: [
-    { target: 'île:habitant:foyer', text: 'Cannelle a faim : touche-la.' },
-    { target: tipOf('vil:foyer', 'ask:foyer'), text: 'Une bulle s’ouvre : touche « Sa fiche » pour entrer dans sa fiche.' },
-    { target: '.friend__need.is-missing .friend__fill:not(:disabled)', text: 'Sa fiche dit ce qui lui manque : touche ce bouton pour lui donner à manger.' }
+    { target: 'île:besoin:foyer', text: 'Cannelle a faim : touche la bulle au-dessus d’elle, tu lui donnes à manger.' }
   ],
   // La cage, ses poules affamées, la fiche de l'une d'elles ; nourrir (2 vivres : seulement s'il y en a, sinon la fiche
   // dit où en trouver)
   poules: [
     { target: 'île:cage', text: 'Des caquets, sous les rochers : touche la cage.' },
     { target: tipOf('cage'), text: 'Touche « L’ouvrir ».' },
-    { target: 'île:faim', text: 'Elles ont faim : touche la bulle d’une poule.' },
-    { target: tipOf('ask:beast:poule-rousse', 'ask:beast:poule-blanche', 'ask:beast:poule-noire', 'beast:poule-rousse', 'beast:poule-blanche', 'beast:poule-noire'), text: 'Touche « Sa fiche ».' },
-    { target: '.beast__feed:not(:disabled)', text: 'Nourris-la : deux vivres, et elle pondra.' }
+    { target: 'île:faim', text: 'Elles ont faim : touche la bulle d’une poule pour la nourrir (deux vivres). Nourrie, elle pondra.' }
   ],
   deco: [
     { target: 'île:site:foyer', text: 'L’établi est au Foyer : touche-le.' },
@@ -142,11 +139,12 @@ const LESSONS = {
     { target: tipOf('site:puits'), text: 'Touche « Bâtir ».' },
     { target: BUILD, text: 'Tout est réuni : bâtis le Puits.' }
   ],
-  // Le premier chemin : le bouton des chemins, le doigt qui glisse du Puits au sentier du Feu (rien n'est bloqué : le
-  // doigt doit pouvoir glisser), puis « Tracer » quand le tracé les relie (roads.js : data-linked)
+  // Le premier chemin : le bouton des chemins, les cases à toucher une à une du Puits au sentier du Feu (la main suit
+  // les pointillés ; rien n'est bloqué : l'île doit pouvoir bouger), puis « Tracer » quand le tracé les relie
+  // (roads.js : roadGuide, data-linked)
   chemin: [
-    { target: '[data-coach="road"]', text: 'Touche ce bouton : il ouvre le tracé des chemins.' },
-    { target: 'île:chemin', text: 'Pose le doigt ici, contre le Puits, et glisse jusqu’au sentier du Feu. Deux doigts font bouger l’île.', free: true },
+    { target: '[data-coach="road"]:not(.is-on)', text: 'Touche ce bouton : il ouvre le tracé des chemins.' },
+    { target: 'île:chemin', text: 'Touche les cases en pointillés, une à une, du Puits jusqu’au sentier. Glisse pour bouger l’île ; un appui long puis glisse trace tout un trait.', free: true },
     { target: '[data-coach="road-go"][data-linked]:not(:disabled)', text: 'Le Puits rejoint le Feu : touche « Tracer ». Les premières pierres sont offertes.' }
   ]
 };

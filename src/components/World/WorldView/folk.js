@@ -7,7 +7,7 @@ import playService from '@/services/playService';
 import { villagerSprite, ROLES } from '@/world/villagers';
 import { talkLine, giftLine } from '@/world/friends';
 import { heardPages, keepSavoir, savoirLine, artOf as savoirOf } from '@/game/savoirs';
-import { THANKS, askOr } from '@/world/needs';
+import { THANKS, askOr, affordable } from '@/world/needs';
 import { visitorLook, THANKS as VISITOR_THANKS } from '@/world/visitors';
 import { ANIMAL_SPRITES } from '@/world/animals';
 import { beastPortraitUrl } from '@/world/beastArt';
@@ -348,6 +348,44 @@ export default {
         if (coins !== undefined) this.$emit('coins-updated', coins);
         this.villagerSaid = THANKS[need] || '';
         vibrate(10);
+      } catch (error) {
+        this.$emit('show-alert', messageOf(error, 'Ce besoin n’a pas pu être comblé.'));
+      } finally {
+        this.busy = false;
+      }
+    },
+    // Toucher la bulle d'un besoin (la faim, la soif… d'un habitant ; la faim d'une poule) : il est comblé tout de suite
+    // si la réserve suffit (ce qui attend dans les bâtiments compte) ; sinon une bulle dit ce qui manque et mène à la
+    // Récolte. Un besoin sans prix (se distraire) ouvre la fiche. Sans bulle, toucher l'habitant ouvre sa fiche
+    async tapNeed(asking, px, py) {
+      if (this.busy || !this.state) return;
+      const friend = asking.beast ? null : (this.state.villagers || []).find(v => v.id === asking.id);
+      const need = friend ? (friend.needs || []).find(n => n.id === asking.need) : null;
+      if (friend && (!need || !need.cost)) {
+        this.openVillager(friend.id);
+        return;
+      }
+      const cost = asking.beast ? (this.state.beasts && this.state.beasts.cost) || {} : need.cost;
+      if (!affordable({ cost }, this.stockPaid)) {
+        const lacking = Object.entries(cost).filter(([r, n]) => (this.stockPaid[r] || 0) < n)
+          .map(([r, n]) => `${n} ${LABEL[r].toLowerCase()} (tu en as ${this.stockPaid[r] || 0})`).join(', ');
+        this.choose({
+          key: `manque:${asking.beast || asking.id}`, action: 'Jouer une Récolte',
+          info: { title: 'Il te manque de quoi', text: `Il faut ${lacking}. La Récolte en donne ; la mer en rend aussi sur le rivage, et les poules nourries pondent.` },
+          ring: { x: asking.x, y: asking.y, rx: asking.r + 3, ry: (asking.r + 3) * 0.55 },
+          run: () => this.startHarvest()
+        }, px, py);
+        return;
+      }
+      this.busy = true;
+      try {
+        const { coins, world } = asking.beast ? await playService.beastFeed(asking.beast) : await playService.villagerNeed(friend.id, need.id);
+        this.apply(world);
+        if (coins !== undefined) this.$emit('coins-updated', coins);
+        const sp = this.toScreen(asking.x, asking.y);
+        burst(this.canvasPoint(sp.x, sp.y), 12, 50);
+        vibrate(10);
+        if (friend && THANKS[need.id]) this.showTip(px, py, { title: friend.name, text: THANKS[need.id] });
       } catch (error) {
         this.$emit('show-alert', messageOf(error, 'Ce besoin n’a pas pu être comblé.'));
       } finally {
