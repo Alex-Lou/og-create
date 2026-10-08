@@ -446,7 +446,7 @@ S('12_habits', {
 // Les scènes sans les autres personnages (00 à 06) sont en animation continue (scenes7.js) : un seul dessin par calque,
 // qui bouge dans le SVG. Mêmes titres, étapes et places d'avatar ; ms_par_image devient le rythme de l'avatar seul.
 const RYTHME_AVATAR = { grelotter: 320, repos: 900 };
-for (const [id, a] of Object.entries(require('./scenes7')({ carte, tamponSeul, texte, planche, chaiseLongue, ruines, grimoire }))) {
+for (const [id, a] of Object.entries(require('./scenes7')({ carte, tamponSeul, texte, planche, chaiseLongue, ruines, grimoire, avatarDe: id => SCENES[id].avatar }))) {
   const sc = SCENES[id];
   SCENES[id] = { ...sc, images: 1, ms: sc.avatar ? RYTHME_AVATAR[sc.avatar.pose] : 1000, fond: a.fond, devant: a.devant };
   if (!a.devant) delete SCENES[id].devant;

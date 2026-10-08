@@ -115,6 +115,90 @@ function rocher(id, x, y, w, h, c = NUIT.roche) {
 // la grève de nuit : ciel, étoiles, mer, brume, sable (la base des scènes de l'étape 2)
 const greve = (id, horizon = 250, seed = 3) => ciel(id + 'c', NUIT.ciel, horizon) + etoiles(26, horizon - 70, seed) + mer(id + 'm', horizon - 54, horizon, NUIT.mer) + nappe(horizon - 40, 0.2, 14) + sable(id + 's', horizon);
 
+// ═══ les outils repris (le niveau du court métrage) ═══
+// ——— un voile sombre aux bords du cadre : la profondeur d'une nuit ———
+const vignette = (id, a = 0.45, rgb = '2,4,10') => `<defs>${rad(id, [[0, `rgb(${rgb})`, 0], [0.55, `rgb(${rgb})`, 0], [1, `rgb(${rgb})`, a]], 0.5, 0.5, 0.74)}</defs><rect x="0" y="0" width="${W}" height="${W}" fill="url(#${id})"/>`;
+// ——— une tache de lumière au sol (ce qu'une source éclaire sur le sable ou sur l'eau), qui respire ———
+const tache = (id, x, y, rx, ry, rgb, a, dur = 3) => `<defs>${rad(id, [[0, `rgb(${rgb})`, a], [0.5, `rgb(${rgb})`, a * 0.4], [1, `rgb(${rgb})`, 0]])}</defs><ellipse cx="${f(x)}" cy="${f(y)}" rx="${f(rx)}" ry="${f(ry)}" fill="url(#${id})">${palpite('opacity', '0.82;1;0.82', dur)}</ellipse>`;
+// ——— l'ombre douce sous les pieds de l'avatar (le jeu pose l'avatar ; la scène lui donne son contact au sol) ———
+const ombreAvatar = (id, a, k = 0.34) => a ? `<defs>${rad(id, [[0, '#000000', k], [0.65, '#000000', k * 0.45], [1, '#000000', 0]])}</defs><ellipse cx="${a.x}" cy="${f(a.y - 1)}" rx="${f(16 * a.echelle)}" ry="${f(4.4 * a.echelle)}" fill="url(#${id})"/>` : '';
+// ——— une lueur voilée dans le ciel : la lune derrière les nuages, sans disque net ———
+const lueurVoilee = (id, x, y, r, a = 0.2, rgb = '200,214,240', dur = 9) => `<defs>${rad(id, [[0, `rgb(${rgb})`, a], [0.3, `rgb(${rgb})`, a * 0.45], [0.65, `rgb(${rgb})`, a * 0.12], [1, `rgb(${rgb})`, 0]])}</defs><circle cx="${x}" cy="${y}" r="${r}" fill="url(#${id})">${palpite('opacity', '0.75;1;0.75', dur)}</circle>`;
+// ——— la brume à bords doux : cinq nappes à dégradé radial, qui dérivent ensemble et respirent chacune à son rythme ———
+function nappeDouce(id, y, a, dur, dx = 30, k = 1, rgb = '220,230,242', seed = 1) {
+  const g = rnd(seed);
+  let s = `<defs>${rad(id, [[0, `rgb(${rgb})`, a], [0.45, `rgb(${rgb})`, a * 0.6], [1, `rgb(${rgb})`, 0]])}</defs><g>${vaVient('translate', `${-dx} 0`, `${dx} 0`, dur)}`;
+  for (const [x, dy, rx] of [[-30, 0, 240], [150, 10, 270], [330, -6, 230], [60, -16, 180], [260, 16, 200]]) s += `<ellipse cx="${x}" cy="${f(y + dy)}" rx="${rx}" ry="${f(36 * k)}" fill="url(#${id})">${palpite('opacity', '0.75;1;0.75', f(5 + g() * 4), g() * 4)}</ellipse>`;
+  return s + '</g>';
+}
+// ——— la houle : un dégradé horizon-rivage, une ligne d'horizon claire, cinq rangées de vagues pleines (crête claire,
+// creux qui s'efface) qui défilent chacune à sa vitesse ; lum : la source dont la mer renvoie des éclats ———
+function houle(id, y0, y1, c, { vitesse = 1, lum = null } = {}) {
+  const h = y1 - y0;
+  let s = `<defs>${lin(id, [[0, c.haut], [1, c.bas]])}${lin(id + 'v', [[0, c.ecume, 0.85], [0.4, c.vague, 0.5], [1, c.vague, 0]])}</defs><rect x="0" y="${y0}" width="${W}" height="${h}" fill="url(#${id})"/>`
+    + `<rect x="0" y="${y0}" width="${W}" height="1.4" fill="${c.ecume}" opacity=".3"/>`;
+  for (let i = 0; i < 5; i++) {
+    const y = f(y0 + h * (0.14 + i * 0.19)), per = 70 + i * 16, a = f(1.6 + i * 1.3), d = (7.5 - i * 0.8) / vitesse, n = Math.ceil(W / per) + 3;
+    let dp = `M${-per},${y}`;
+    for (let k = 0; k < n; k++) dp += ` q${f(per / 4)},-${a} ${f(per / 2)},0 q${f(per / 4)},${f(a * 0.45)} ${f(per / 2)},0`;
+    dp += ` L${W + per * 2},${f(y + 6 + i * 2.2)} L${-per},${f(y + 6 + i * 2.2)} Z`;
+    s += `<g>${defile('0 0', `${-per} 0`, d, i * 0.9)}<path d="${dp}" fill="url(#${id}v)" opacity="${f(0.3 + i * 0.1)}"/></g>`;
+  }
+  if (lum) s += scintille(lum.x, y0 + 4, 6, lum.rgb || '246,238,214', lum.a || 0.5);
+  return s;
+}
+// des éclats qui scintillent sur l'eau, sous une source de lumière (de plus en plus larges vers nous)
+const scintille = (x, y0, n, rgb, a) => [...Array(n).keys()].map(i => `<rect x="${f(x - 10 - i * 4)}" y="${f(y0 + i * 9)}" width="${20 + i * 8}" height="1.8" rx="0.9" fill="rgb(${rgb})" opacity="${a}">${palpite('opacity', `${f(a * 0.25)};${f(a)};${f(a * 0.25)}`, 1.4 + i * 0.35, i * 0.45)}</rect>`).join('');
+// ——— le sable repris : une grève en dégradé (sombre vers nous), la bande humide qui reflète le ciel et suit l'écume,
+// l'écume en deux traits et des bulles, des rides de sable, des galets en volume avec leur ombre, du grain ———
+function greveSable(id, y, c = NUIT.sable, seed = 5) {
+  const bord = `M0,${y} Q${W * 0.3},${y - 14} ${W * 0.55},${y - 6} Q${W * 0.8},${y + 2} ${W},${y - 10}`;
+  let s = `<defs>${lin(id, [[0, c.haut], [0.4, c.mi || c.haut], [1, c.bas]])}${lin(id + 'h', [[0, c.ecume, 0.38], [1, c.ecume, 0]])}${rad(id + 'g', [[0, c.galetH], [1, c.galet]], 0.35, 0.3, 0.78)}</defs>`
+    + P(`${bord} L${W},${W} L0,${W} Z`, `url(#${id})`, 2);
+  // la bande humide et l'écume vont et viennent ensemble
+  s += `<g>${vaVient('translate', '0 -3', '0 5', 4.6)}` + P(`${bord} L${W},${y + 26} Q${W * 0.8},${y + 34} ${W * 0.55},${y + 26} Q${W * 0.3},${y + 18} 0,${y + 28} Z`, `url(#${id}h)`, 0)
+    + trait(`M-10,${y + 3} Q${W * 0.3},${y - 11} ${W * 0.55},${y - 3} Q${W * 0.8},${y + 5} ${W + 10},${y - 7}`, c.ecume, 3, 'opacity=".42"') + trait(`M-10,${y + 1} Q${W * 0.3},${y - 13} ${W * 0.55},${y - 5} Q${W * 0.8},${y + 3} ${W + 10},${y - 9}`, '#FFFFFF', 1.1, 'opacity=".55"');
+  const g = rnd(seed);
+  for (let i = 0; i < 12; i++) { const t = g(), bx = f(t * W), by = f((1 - t) ** 2 * y + 2 * t * (1 - t) * (y - 10) + t * t * (y - 6) + 1 + g() * 5); s += `<circle cx="${bx}" cy="${by}" r="${f(0.8 + g() * 1.2)}" fill="#FFFFFF" opacity=".5">${palpite('opacity', '0.2;0.6;0.2', f(2 + g() * 2), g() * 3)}</circle>`; }
+  s += '</g>';
+  // les rides du sable, les galets, le grain
+  for (let i = 0; i < 7; i++) { const x = f(g() * W), yy = f(y + 34 + g() * (W - y - 50)), l = f(30 + g() * 50); s += trait(`M${x},${yy} q${f(l / 2)},-${f(2 + g() * 2)} ${l},0`, c.bas, 1.2, 'opacity=".45"') + trait(`M${x},${f(yy + 1.4)} q${f(l / 2)},-${f(2 + g() * 2)} ${l},0`, c.haut, 0.8, 'opacity=".35"'); }
+  for (let i = 0; i < 14; i++) { const x = f(g() * W), yy = f(y + 22 + g() * (W - y - 32)), r = f(2 + g() * 6); s += E(x + r * 0.35, yy + r * 0.3, r * 1.05, r * 0.5, 'rgba(0,0,0,.28)', 0) + E(x, yy, r, r * 0.62, `url(#${id}g)`, 1.1) + E(x - r * 0.3, yy - r * 0.28, r * 0.3, r * 0.15, '#FFFFFF', 0).replace('/>', ' opacity=".35"/>'); }
+  for (let i = 0; i < 40; i++) s += `<circle cx="${f(g() * W)}" cy="${f(y + 10 + g() * (W - y))}" r="${f(0.5 + g() * 0.5)}" fill="${c.grain}" opacity="${f(0.5 + g() * 0.5)}"/>`;
+  return s;
+}
+// ——— Brume reprise : sa lueur dans l'air et au sol (sol : la hauteur de ses pieds au sable, null si on ne voit pas le
+// sol), et ses mouvements : elle flotte, se balance, sa flamme se penche, et elle tremble un peu (stade 0) ———
+function brume2(id, x, y, s, expr = 'neutre', { dur = 2.6, lueur = 0.45, sol = null } = {}) {
+  let o = halo(id + 'H', x, y - 14 * s, 30 * s, '210,230,248', lueur, dur);
+  if (sol !== null) o += tache(id + 'T', x, y + sol, 34 * s, 8 * s, '200,225,245', 0.36, dur * 1.3);
+  o += `<g transform="translate(${f(x)} ${f(y)})"><g>${vaVient('translate', '0 0', `0 ${f(-3.2 * s)}`, dur)}${vaVient('rotate', '-3', '3', dur * 1.6)}<g>${vaVient('skewX', '-2.5', '2.5', dur * 0.9, dur * 0.3)}<g>${vaVient('translate', '0 0', `${f(0.45 * s)} 0`, 0.5)}${brumeCorps(s, expr)}</g></g></g></g>`;
+  return o;
+}
+// ——— le rocher repris : une silhouette irrégulière (deux bosses, une encoche), son ombre portée sur le sable, le volume
+// en trois dégradés (la masse, le plan clair en haut à gauche, l'ombre propre à droite et le contact au sol), des
+// fissures, du lichen, des éclats ; lum : une source derrière lui (ombre vers nous, arête éclairée) ———
+function rocher2(id, x, y, w, h, c = NUIT.roche, lum = null) {
+  const X = k => f(x + w * k), Y = k => f(y - h * k);
+  const crete = `Q${X(0.2)},${Y(1.02)} ${X(0.36)},${Y(0.98)} Q${X(0.46)},${Y(0.88)} ${X(0.54)},${Y(0.93)} Q${X(0.7)},${Y(1.06)} ${X(0.84)},${Y(0.76)}`;
+  const d = `M${x},${y} Q${X(-0.05)},${Y(0.55)} ${X(0.1)},${Y(0.78)} ${crete} Q${X(1.03)},${Y(0.46)} ${X(1)},${y} Z`;
+  let s = `<defs>${rad(id + 'o', [[0, '#000000', 0.45], [0.55, '#000000', 0.22], [1, '#000000', 0]])}${lin(id, [[0, c[0]], [0.5, c[1]], [1, c[2]]], 0.8, 1)}${lin(id + 'f', [[0, '#8E96AA', 0.8], [0.45, '#8E96AA', 0.2], [1, '#8E96AA', 0]], 1, 1)}${lin(id + 'd', [[0.5, '#000000', 0], [1, '#000000', 0.38]], 1, 0)}${lin(id + 'b', [[0.55, '#000000', 0], [1, '#000000', 0.42]])}</defs>`;
+  // l'ombre portée : vers nous et vers la gauche si la lumière est derrière lui, sinon vers la droite (lumière en haut à gauche)
+  s += lum ? `<ellipse cx="${X(0.3)}" cy="${f(y + 7)}" rx="${f(w * 0.7)}" ry="${f(h * 0.18)}" fill="url(#${id}o)">${palpite('opacity', '0.8;1;0.8', 3.2)}</ellipse>`
+    : `<ellipse cx="${X(0.66)}" cy="${f(y + 5)}" rx="${f(w * 0.62)}" ry="${f(h * 0.14)}" fill="url(#${id}o)"/>`;
+  // le sable amassé au pied, la masse, le plan clair, l'ombre propre, le contact au sol
+  s += E(x + w * 0.5, y + 1, w * 0.56, 5, NUIT.sable.haut, 0).replace('/>', ' opacity=".5"/>') + P(d, `url(#${id})`, 2.4) + P(d, `url(#${id}f)`, 0) + P(d, `url(#${id}d)`, 0) + P(d, `url(#${id}b)`, 0);
+  // les fissures, le lichen, les éclats
+  s += trait(`M${X(0.4)},${Y(0.9)} q${f(w * 0.03)},${f(h * 0.12)} ${f(w * 0.1)},${f(h * 0.2)} q${f(w * 0.03)},${f(h * 0.1)} -${f(w * 0.01)},${f(h * 0.22)}`, c[2], 1.4, 'opacity=".85"')
+    + trait(`M${X(0.62)},${Y(0.5)} q${f(w * 0.06)},${f(h * 0.08)} ${f(w * 0.05)},${f(h * 0.24)}`, c[2], 1.2, 'opacity=".7"') + trait(`M${X(0.14)},${Y(0.34)} q${f(w * 0.08)},-5 ${f(w * 0.2)},-1`, c[2], 1.2, 'opacity=".7"')
+    + trait(`M${X(0.41)},${Y(0.9)} q${f(w * 0.03)},${f(h * 0.12)} ${f(w * 0.1)},${f(h * 0.2)}`, '#8E96AA', 0.8, 'opacity=".45"')
+    + [[0.2, 0.32, 7, 4], [0.5, 0.22, 5, 3], [0.74, 0.5, 6, 3.5], [0.1, 0.14, 4, 2.4], [0.6, 0.76, 4, 2.4]].map(([kx, ky, rx, ry]) => E(x + w * kx, y - h * ky, rx, ry, '#7E8A7A', 0).replace('/>', ' opacity=".5"/>') + E(x + w * kx - rx * 0.3, y - h * ky - ry * 0.3, rx * 0.5, ry * 0.5, '#98A48E', 0).replace('/>', ' opacity=".5"/>')).join('')
+    + [[0.3, 0.7], [0.56, 0.6], [0.8, 0.4]].map(([kx, ky]) => P(`M${X(kx)},${Y(ky)} l4,-3 l4,2 l-3,3 Z`, c[0], 0).replace('/>', ' opacity=".55"/>')).join('');
+  // l'arête éclairée par la source qui est derrière lui
+  if (lum) s += trait(`M${X(0.1)},${Y(0.78)} ${crete}`, `rgb(${lum.rgb || '205,228,245'})`, 2.6, `opacity=".5"`).replace('/>', `>${palpite('opacity', '0.3;0.75;0.3', lum.dur || 3)}</path>`);
+  return s;
+}
+
 module.exports = function scenesAnimees(H) {
   const S = {};
   // ===== 0a-0b — la carte d'embarquement (elle reste immobile : l'avatar s'y compose dans la photo) =====
@@ -182,12 +266,26 @@ module.exports = function scenesAnimees(H) {
       return s + pluie(50, 0.35, 17);
     }
   };
-  // ===== 1b — le noir ; la mer, très loin =====
+  // ===== 1b — le noir ; la mer, très loin : une nuit sans rien de net, la houle qui respire, une lune voilée =====
   S['01_noir'] = {
-    fond: () => `<rect x="0" y="0" width="400" height="400" fill="#05080F"/>`
-      + `<g>${defile('0 0', '70 0', 7)}${trait('M-80,300 q35,-3 70,0 t70,0 t70,0 t70,0 t70,0 t70,0 t70,0', 'rgb(120,150,190)', 2, 'opacity=".32"')}</g>`
-      + `<g>${defile('60 0', '0 0', 9)}${trait('M-60,312 q30,-2 60,0 t60,0 t60,0 t60,0 t60,0 t60,0 t60,0 t60,0', 'rgb(120,150,190)', 1.6, 'opacity=".18"')}</g>`
-      + `<g opacity="0">${palpite('opacity', '0;0.3;0', 5)}<ellipse cx="200" cy="304" rx="120" ry="10" fill="rgb(120,150,190)"/></g>`
+    fond: () => {
+      let s = `<defs>${lin('noC', [[0, '#02040A'], [0.7, '#060B18'], [1, '#0B1424']])}${rad('noL', [[0, 'rgb(110,130,170)', 0.2], [0.4, 'rgb(110,130,170)', 0.07], [1, 'rgb(110,130,170)', 0]])}${rad('noH', [[0, 'rgb(70,95,140)', 0.3], [0.5, 'rgb(70,95,140)', 0.12], [1, 'rgb(70,95,140)', 0]])}${lin('noV', [[0, '#8FB0D8', 0.55], [0.5, '#4A6A98', 0.25], [1, '#4A6A98', 0]])}</defs><rect x="0" y="0" width="400" height="400" fill="url(#noC)"/>`;
+      // la lune, derrière les nuages, qu'on devine à peine ; l'horizon, une bande un peu moins noire
+      s += `<circle cx="318" cy="74" r="110" fill="url(#noL)">${palpite('opacity', '0.6;1;0.6', 11)}</circle><ellipse cx="200" cy="288" rx="300" ry="52" fill="url(#noH)">${palpite('opacity', '0.7;1;0.7', 7)}</ellipse>`;
+      // la houle : quatre rangées lentes, de plus en plus larges vers nous, qui dérivent chacune à son pas
+      for (let i = 0; i < 4; i++) {
+        const y = [284, 298, 316, 342][i], per = 110 + i * 30, a = 3 + i * 2.5, n = Math.ceil(W / per) + 3;
+        let dp = `M${-per},${y}`;
+        for (let k = 0; k < n; k++) dp += ` q${f(per / 4)},-${a} ${f(per / 2)},0 q${f(per / 4)},${f(a * 0.5)} ${f(per / 2)},0`;
+        dp += ` L${W + per * 2},${y + 10 + i * 4} L${-per},${y + 10 + i * 4} Z`;
+        s += `<g>${vaVient('translate', '0 -2', `0 ${2 + i}`, 5 + i * 1.3, i * 1.1)}<g>${defile('0 0', `${i % 2 ? per : -per} 0`, 14 + i * 3, i * 2.3)}<path d="${dp}" fill="url(#noV)" opacity="${f(0.12 + i * 0.06)}"/></g></g>`;
+      }
+      // des écumes qui naissent et s'éteignent lentement, et le reflet voilé de la lune, en traits qui vont et viennent
+      const g = rnd(23);
+      for (let i = 0; i < 9; i++) { const x = f(g() * W), y = f(286 + g() * 60), l = f(10 + g() * 26), d = f(4 + g() * 4); s += `<rect x="${x}" y="${y}" width="${l}" height="1.6" rx="0.8" fill="#9FB8D8" opacity="0">${palpite('opacity', '0;0.3;0', d, g() * d)}</rect>`; }
+      s += `<g opacity=".5">${scintille(318, 290, 5, '150,170,205', 0.3)}</g>`;
+      return s + vignette('noG', 0.6);
+    }
   };
   // ===== 1c — la Grève, la nuit, dans la brume ; des débris, la chaise longue retournée =====
   S['01_greve'] = {
@@ -209,11 +307,15 @@ module.exports = function scenesAnimees(H) {
     }
   };
   // ===== 2a — une lueur erre dans la brume, s'arrête, repart =====
+  // la lueur va d'un point à l'autre, s'arrête, repart : trois étapes et deux pauses
+  const ERRE = `<animateMotion dur="11s" repeatCount="indefinite" calcMode="spline" keyPoints="0;0.34;0.34;0.68;0.68;1" keyTimes="0;0.27;0.4;0.66;0.78;1" keySplines="0.45 0 0.55 1;0 0 1 1;0.45 0 0.55 1;0 0 1 1;0.45 0 0.55 1" path="M0,0 C-20,-6 -48,-10 -62,-20 C-44,-38 -4,-44 22,-36 C34,-22 18,-6 0,0"/>`;
   S['02_lueur'] = {
-    fond: () => greve('lu', 240, 61) + halo('luH', 300, 186, 44)
-      + `<g><animateMotion dur="9s" repeatCount="indefinite" calcMode="spline" keyPoints="0;0.25;0.5;0.75;1" keyTimes="0;0.25;0.5;0.75;1" keySplines="0.45 0 0.55 1;0.45 0 0.55 1;0.45 0 0.55 1;0.45 0 0.55 1" path="M0,0 C-20,-10 -44,-20 -38,-16 C-30,-28 -10,-30 -8,-28 C10,-24 28,-12 30,-10 C20,0 6,4 0,0"/>${halo('luB', 300, 182, 40, '200,225,240', 0.5)}${brume('luR', 300, 196, 1.2)}</g>`
-      + nappe(232, 0.2, 13, 30, 1.3),
-    devant: () => nappe(370, 0.14, 18, 34, 1.4)
+    fond: () => ciel('luC', NUIT.ciel, 240) + etoiles(26, 170, 61) + lueurVoilee('luL', 66, 56, 96, 0.16) + houle('luM', 186, 240, NUIT.mer, { vitesse: 0.8 })
+      + nappeDouce('luN1', 226, 0.36, 16, 20, 0.8, '220,230,242', 3) + greveSable('luS', 240, NUIT.sable, 61) + ombreAvatar('luO', H.avatarDe('02_lueur'))
+      + nappeDouce('luN2', 300, 0.26, 13, 30, 1.1, '220,230,242', 4)
+      // Brume, à 1,8, erre sur la ligne du rivage : sa lueur touche la brume et le sable mouillé sous elle
+      + `<g transform="translate(298 232)"><g>${ERRE}${halo('luG', 0, -10, 90, '200,225,245', 0.2, 3.4)}${brume2('luB', 0, 0, 1.8, 'neutre', { dur: 2.4, lueur: 0.5, sol: 28 })}</g></g>`,
+    devant: () => nappeDouce('luD', 372, 0.2, 18, 34, 1.4, '220,230,242', 5)
   };
   // ===== 2b — elle approche d'un coup : une flamme, deux grands yeux =====
   S['02_approche'] = {
@@ -221,8 +323,16 @@ module.exports = function scenesAnimees(H) {
     devant: () => nappe(384, 0.14, 15, 30, 1.4)
   };
   // ===== 2c — Brume se cache derrière un rocher et passe la tête =====
+  // elle passe la tête (les yeux dépassent l'arête), reste un instant, replonge : sa lueur reste visible au-dessus
+  const PEEK = `<animateTransform attributeName="transform" type="translate" values="0 44;0 0;0 0;0 44;0 44" keyTimes="0;0.2;0.58;0.78;1" calcMode="spline" keySplines="0.45 0 0.55 1;0 0 1 1;0.45 0 0.55 1;0 0 1 1" dur="5.6s" repeatCount="indefinite"/>`;
   S['02_rocher'] = {
-    fond: () => greve('ro', 250, 81) + `<g>${vaVient('translate', '0 14', '0 -6', 3.2)}${halo('roH', 290, 186, 60)}${brume('roB', 290, 200, 2.4, 'gene', 3.2, 0.3)}</g>` + rocher('roR', 216, 300, 160, 86)
+    fond: () => ciel('roC', NUIT.ciel, 250) + etoiles(26, 180, 81) + lueurVoilee('roL', 60, 60, 96, 0.14) + houle('roM', 196, 250, NUIT.mer, { vitesse: 0.9 })
+      + nappeDouce('roN1', 236, 0.34, 15, 20, 0.8, '220,230,242', 6) + greveSable('roS', 250, NUIT.sable, 81) + ombreAvatar('roO', H.avatarDe('02_rocher'))
+      // la lueur de Brume, derrière le rocher, éclaire le sable à sa droite et la brume ; puis le rocher, et son ombre vers nous
+      + tache('roT', 346, 318, 80, 16, '200,225,245', 0.3, 3.6)
+      + `<g transform="translate(298 184)"><g>${PEEK}${halo('roG', 0, -6, 80, '200,225,245', 0.22, 3.2)}${brume2('roB', 0, 0, 2.6, 'gene', { dur: 3.2, lueur: 0.3 })}</g></g>`
+      + rocher2('roR', 204, 310, 186, 100, NUIT.roche, { rgb: '205,228,245', dur: 3.2 })
+      + nappeDouce('roN2', 318, 0.2, 14, 26, 1, '220,230,242', 7)
   };
   // ===== 2d — elle tourne autour de l'avatar, bien trop près (derrière lui, puis devant) =====
   const TOUR_DUR = 6;
