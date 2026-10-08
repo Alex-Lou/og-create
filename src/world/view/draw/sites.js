@@ -20,6 +20,7 @@ import { landmarkScale, landmarkLayers, landmarkTop } from '@/world/landmarkSpri
 import { craftLayers } from '@/world/craftSprites';
 import { depositWait } from '@/world/finds';
 import { depositLayer } from '@/world/depositSprites';
+import { campLayer } from '@/world/campArt';
 import { TW, TH, DEPOSIT_SCALE, NAME_SIGN_ALONG, NAME_SIGN_INSET, NAME_SIGN_SCALE } from '../constants';
 
 // Construction ou amélioration : le chantier tremble dans la poussière, puis le bâtiment s'élève (ms)
@@ -332,6 +333,14 @@ export default {
     if (from && from.x === craft.x && from.y === craft.y) ctx.globalAlpha = 0.45;
     craftLayers(craft.craft, t).forEach((layer, i) => drawSprite(ctx, layer.key, layer.make, 0, 0, repaint, `craft:${craft.x},${craft.y}:${i}`));
     ctx.restore();
+  },
+
+  // Un élément du camp des naufragés (épave, coin d'un maître, tente, objet), ancré au centre de son emprise au sol
+  drawCamp(ctx, item, t, repaint) {
+    const layer = campLayer(item.art, this.reduced() ? 0 : t);
+    if (!layer) return;
+    const c = item.w > 1 ? this.centerOf(item) : this.ground(item.x, item.y);
+    drawSprite(ctx, layer.key, layer.make, c.x, c.y, repaint, `camp:${item.id}`);
   },
 
   // Annexe posée sur sa case : elle surgit à la pose, sautille au toucher, s'efface à demi pendant qu'on la déplace

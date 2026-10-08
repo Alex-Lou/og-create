@@ -214,6 +214,8 @@ export default {
       ...this.state.sites.map(site => ({ depth: site.x + site.y + site.w, site })),
       ...this.crafted.filter(craft => seen(craft.x, craft.y)).map(craft => ({ depth: craft.x + craft.y, craft })),
       ...(this.state.annexes || []).filter(annex => seen(annex.x, annex.y)).map(annex => ({ depth: annex.x + annex.y, annex })),
+      // Le camp des naufragés : un élément de 2 × 2 cases se range comme un bâtiment, un objet comme une annexe
+      ...(this.state.camp || []).filter(item => seen(item.x, item.y)).map(item => ({ depth: item.x + item.y + (item.w > 1 ? item.w : 0), camp: item })),
       ...this.shownLandmarks.filter(landmark => seen(landmark.x, landmark.y)).map(landmark => ({ depth: landmark.x + landmark.y, landmark })),
       ...this.shownDeposits.filter(deposit => seen(deposit.x, deposit.y)).map(deposit => ({ depth: deposit.x + deposit.y, deposit })),
       ...this.state.sites.filter(site => site.sign && !site.locked).map(site => ({ site, at: this.nameSignAt(site) }))
@@ -237,6 +239,9 @@ export default {
       } else if (item.annex) {
         this.drawAnnex(ctx, item.annex, t, now, repaint);
         if (!far) this.occlude(ctx, item.annex.x, item.annex.y, baked);
+      } else if (item.camp) {
+        this.drawCamp(ctx, item.camp, t, repaint);
+        if (!far) this.occlude(ctx, item.camp.x + item.camp.w - 1, item.camp.y + item.camp.h - 1, baked);
       } else if (item.landmark) {
         this.drawLandmark(ctx, item.landmark, t, now, repaint);
         if (!far) this.occlude(ctx, item.landmark.x, item.landmark.y, baked);
