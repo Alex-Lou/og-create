@@ -53,17 +53,28 @@
           :trip-left="state.expedition ? tripLeft : ''"
           :explore="Boolean(explorableZone)"
           :immersive="immersive"
+          :road="roadMode !== null"
           @chests="chestsOpen = true"
           @log="openLog()"
           @finds="findsOpen = true"
           @trip="showExpedition"
           @zoom="zoomBy"
           @immersive="toggleImmersive"
+          @road="roadMode ? cancelRoad() : startRoad()"
         />
         <p v-if="loadError" class="world__error" role="alert">
           L’île ne répond pas.
           <button type="button" class="world__btn world__btn--small" @click="load">Réessayer</button>
         </p>
+        <!-- Mode chemin : ce que fait le doigt et le compte ; la gomme, annuler, tracer -->
+        <div v-else-if="roadMode" class="world__banner world__banner--road" role="status">
+          <span class="world__road-text">{{ roadBanner }}</span>
+          <span class="world__road-row">
+            <button type="button" :class="['world__link', { 'is-on': roadMode.eraser }]" :aria-pressed="roadMode.eraser" @click="toggleEraser">Gomme</button>
+            <button type="button" class="world__link" @click="cancelRoad">Annuler</button>
+            <button type="button" class="world__road-go" data-coach="road-go" :data-linked="roadLinked ? '' : null" :disabled="!roadReady || busy" @click="confirmRoad">{{ roadMode.eraser ? 'Effacer' : 'Tracer' }}</button>
+          </span>
+        </div>
         <p v-else-if="craftPlacing && placingCraft" class="world__banner" role="status">
           {{ craftBanner }}
           <button type="button" class="world__link" @click="cancelCraft">Annuler</button>
@@ -469,6 +480,7 @@ import coach from './coach';
 import explore from './explore';
 import terrain from './terrain';
 import sky from './sky';
+import roads from './roads';
 
 // Le Monde : l'île du joueur en isométrique (Canvas 2D), avec une caméra qu'on fait glisser et zoomer.
 // L'état vient du serveur (chantiers, réserves, parties, créations d'île) ; le dessin, la caméra et la boucle
@@ -479,7 +491,7 @@ export default {
   // bâtiments, les annexes, l'exploration, la carte, le ciel ; le moteur du canvas (caméra, dessin, gestes) dans
   // world/view/. L'île garde ce qui les relie : le chargement, la quête, le plein écran, les observateurs, le cycle
   // de vie
-  mixins: [folk, games, chests, workshop, sites, annexes, explore, terrain, sky, nights, coach],
+  mixins: [folk, games, chests, workshop, sites, annexes, explore, terrain, sky, nights, coach, roads],
   components: { HarvestGame, ShopItemSheet, GModal, ChestList, ChestReveal, ChestHaul, AnnexPanel, AnnexSheet, NightSheet, PoseChoice, MiniGame, VillagerSheet, BeastSheet, VisitorSheet, RenameSheet, CraftBench, CraftPuzzle, ExplorerLog, FindsSheet, WreckScene, BrumeSheet, ZoneSheet, SiteShop, SiteSteps, SiteOverview, SiteSheet, IslandHud, IslandButtons },
   props: {
     // Glyphes des éléments du Livre (savoir-faire demandé à l'établi)
@@ -827,6 +839,21 @@ export default {
         // Calques du sol ; la brume est peinte dans les carrés du sol : un quartier acheté fait refaire les siens
         const M = islandOf(state.map, state.size, state.map.zones.findIndex(z => z.id === FLOATING_ZONE));
         if (!this.terrain) this.terrain = new TerrainCache(M, (x, y) => this.veilAt(x, y), (ctx, x, y) => this.standAt(ctx, x, y));
+        else if (this.M) {
+          // Le sol a changé (un chemin tracé, un quartier dévoilé) : les carrés des cases changées et de leurs voisines
+          // (les raccords des chemins) sont refaits
+          const old = this.M;
+          const changed = [];
+          for (let y = 0; y < state.size; y++) {
+            for (let x = 0; x < state.size; x++) {
+              if (old.ground(x, y) === M.ground(x, y)) continue;
+              for (let dy = -1; dy <= 1; dy++) for (let dx = -1; dx <= 1; dx++) changed.push([x + dx, y + dy]);
+            }
+          }
+          this.terrain.M = M;
+          // (une boîte par grappe de cases : un chemin ici et un quartier là-bas ne refont pas toute l'île entre eux)
+          for (let i = 0; i < changed.length; i += 9) this.terrain.invalidate(changed.slice(i, i + 9));
+        }
         // Les chemins de la bibliothèque arrivent peu à peu (pathArt.js) : leurs carrés de sol sont refaits
         const paths = [];
         for (let y = 0; y < state.size; y++) for (let x = 0; x < state.size; x++) if (M.ground(x, y) === 'p') paths.push([x, y]);

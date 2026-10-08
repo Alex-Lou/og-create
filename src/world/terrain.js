@@ -326,6 +326,10 @@ export function pathDraws(M, x, y) {
   }
   return { clip: true, draws };
 }
+// Le raccord d'une case de chemin vers ses voisines (masque : NE 1, SE 2, SO 4, NO 8), et l'herbe où il est peint
+// (le creusement d'un chemin qu'on vient de tracer : roads.js)
+export const pathMask = (M, x, y) => MASK_DIRS.reduce((m, [dx, dy, bit]) => ('pk'.includes(M.ground(x + dx, y + dy)) ? m | bit : m), 0);
+export const pathGrass = (M, x, y) => topColor('g', M.height(x, y), (x + y) % 2);
 // Peint les chemins d'une case dans son herbe (grass) ; faux si une image n'est pas encore prête (rien n'est peint)
 function paintPath(ctx, M, x, y, c, grass) {
   const { clip, draws } = pathDraws(M, x, y);

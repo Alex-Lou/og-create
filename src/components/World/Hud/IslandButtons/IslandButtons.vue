@@ -50,11 +50,17 @@
     <button type="button" :aria-label="immersive ? 'Quitter le plein écran' : 'Plein écran'" :aria-pressed="immersive" @click="$emit('immersive')">
       <img :src="immersive ? ICON.fermer : ICON.plein_ecran" alt="" width="30" height="30" draggable="false" />
     </button>
+    <!-- Tracer un chemin (l'île neuve n'a que son sentier) : le mode chemin ; un second toucher le quitte -->
+    <button type="button" data-coach="road" :class="{ 'is-on': road }" :aria-label="road ? 'Quitter le tracé des chemins' : 'Tracer un chemin'" :aria-pressed="road" @click="$emit('road')">
+      <img :src="ROAD_ICON" alt="" width="30" height="30" draggable="false" />
+    </button>
   </div>
 </template>
 
 <script>
 import { libraryIcon } from '@/utils/icons';
+// (pas encore d'icône « chemin » dans le kit : une case de chemin de la bibliothèque)
+import ROAD_ICON from '/design/bibliotheque/svg/chemins/chemin_ne-so.svg?url';
 
 // Boutons posés sur l'île : coffres, carnet d'explorateur, trouvailles (avec leurs pastilles), expédition en route,
 // zoom et plein écran. Ce qu'ils ouvrent reste à l'île, qui les reçoit en événements. Ses styles sont ceux de l'île
@@ -77,11 +83,13 @@ export default {
     tripLeft: { type: String, default: '' },
     // Une expédition peut partir (une terre inconnue touche un quartier à soi) : la boussole y mène
     explore: { type: Boolean, default: false },
-    immersive: { type: Boolean, default: false }
+    immersive: { type: Boolean, default: false },
+    // Le mode chemin est ouvert
+    road: { type: Boolean, default: false }
   },
-  emits: ['chests', 'log', 'finds', 'trip', 'zoom', 'immersive'],
+  emits: ['chests', 'log', 'finds', 'trip', 'zoom', 'immersive', 'road'],
   data() {
-    return { ICON };
+    return { ICON, ROAD_ICON };
   }
 };
 </script>
