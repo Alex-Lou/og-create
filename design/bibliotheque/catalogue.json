@@ -71663,6 +71663,44 @@
    "statut": "ok"
   },
   {
+   "id": "decor/gisements/fruits_repousse1",
+   "rubrique": "decor",
+   "titre": "Arbre à fruits — repousse (1/2)",
+   "images": 2,
+   "fichiers": [
+    "svg/decor/gisements/fruits_repousse1_1.svg",
+    "svg/decor/gisements/fruits_repousse1_2.svg"
+   ],
+   "cadre": [
+    -30,
+    -62.5,
+    60,
+    72.5
+   ],
+   "ms_par_image": 450,
+   "parcours": "acte-4",
+   "statut": "ok"
+  },
+  {
+   "id": "decor/gisements/fruits_repousse2",
+   "rubrique": "decor",
+   "titre": "Arbre à fruits — repousse (2/2)",
+   "images": 2,
+   "fichiers": [
+    "svg/decor/gisements/fruits_repousse2_1.svg",
+    "svg/decor/gisements/fruits_repousse2_2.svg"
+   ],
+   "cadre": [
+    -30,
+    -62.5,
+    60,
+    72.5
+   ],
+   "ms_par_image": 450,
+   "parcours": "acte-4",
+   "statut": "ok"
+  },
+  {
    "id": "decor/gisements/glace_pret",
    "rubrique": "decor",
    "titre": "Cristaux de glace — prêt",
@@ -71695,6 +71733,44 @@
     60,
     32.5
    ],
+   "parcours": "acte-4",
+   "statut": "ok"
+  },
+  {
+   "id": "decor/gisements/glace_repousse1",
+   "rubrique": "decor",
+   "titre": "Cristaux de glace — repousse (1/2)",
+   "images": 2,
+   "fichiers": [
+    "svg/decor/gisements/glace_repousse1_1.svg",
+    "svg/decor/gisements/glace_repousse1_2.svg"
+   ],
+   "cadre": [
+    -37.5,
+    -57.5,
+    75,
+    70
+   ],
+   "ms_par_image": 450,
+   "parcours": "acte-4",
+   "statut": "ok"
+  },
+  {
+   "id": "decor/gisements/glace_repousse2",
+   "rubrique": "decor",
+   "titre": "Cristaux de glace — repousse (2/2)",
+   "images": 2,
+   "fichiers": [
+    "svg/decor/gisements/glace_repousse2_1.svg",
+    "svg/decor/gisements/glace_repousse2_2.svg"
+   ],
+   "cadre": [
+    -37.5,
+    -57.5,
+    75,
+    70
+   ],
+   "ms_par_image": 450,
    "parcours": "acte-4",
    "statut": "ok"
   },
@@ -71735,6 +71811,44 @@
    "statut": "ok"
   },
   {
+   "id": "decor/gisements/laine_repousse1",
+   "rubrique": "decor",
+   "titre": "Moutons à tondre — repousse (1/2)",
+   "images": 2,
+   "fichiers": [
+    "svg/decor/gisements/laine_repousse1_1.svg",
+    "svg/decor/gisements/laine_repousse1_2.svg"
+   ],
+   "cadre": [
+    -37.5,
+    -32.5,
+    75,
+    42.5
+   ],
+   "ms_par_image": 450,
+   "parcours": "acte-4",
+   "statut": "ok"
+  },
+  {
+   "id": "decor/gisements/laine_repousse2",
+   "rubrique": "decor",
+   "titre": "Moutons à tondre — repousse (2/2)",
+   "images": 2,
+   "fichiers": [
+    "svg/decor/gisements/laine_repousse2_1.svg",
+    "svg/decor/gisements/laine_repousse2_2.svg"
+   ],
+   "cadre": [
+    -37.5,
+    -32.5,
+    75,
+    42.5
+   ],
+   "ms_par_image": 450,
+   "parcours": "acte-4",
+   "statut": "ok"
+  },
+  {
    "id": "decor/gisements/obsidienne_pret",
    "rubrique": "decor",
    "titre": "Éclats d'obsidienne — prêt",
@@ -71767,6 +71881,44 @@
     55,
     25
    ],
+   "parcours": "acte-4",
+   "statut": "ok"
+  },
+  {
+   "id": "decor/gisements/obsidienne_repousse1",
+   "rubrique": "decor",
+   "titre": "Éclats d'obsidienne — repousse (1/2)",
+   "images": 2,
+   "fichiers": [
+    "svg/decor/gisements/obsidienne_repousse1_1.svg",
+    "svg/decor/gisements/obsidienne_repousse1_2.svg"
+   ],
+   "cadre": [
+    -35,
+    -47.5,
+    70,
+    60
+   ],
+   "ms_par_image": 450,
+   "parcours": "acte-4",
+   "statut": "ok"
+  },
+  {
+   "id": "decor/gisements/obsidienne_repousse2",
+   "rubrique": "decor",
+   "titre": "Éclats d'obsidienne — repousse (2/2)",
+   "images": 2,
+   "fichiers": [
+    "svg/decor/gisements/obsidienne_repousse2_1.svg",
+    "svg/decor/gisements/obsidienne_repousse2_2.svg"
+   ],
+   "cadre": [
+    -35,
+    -47.5,
+    70,
+    60
+   ],
+   "ms_par_image": 450,
    "parcours": "acte-4",
    "statut": "ok"
   },
@@ -71807,6 +71959,44 @@
    "statut": "ok"
   },
   {
+   "id": "decor/gisements/roseau_repousse1",
+   "rubrique": "decor",
+   "titre": "Roseaux — repousse (1/2)",
+   "images": 2,
+   "fichiers": [
+    "svg/decor/gisements/roseau_repousse1_1.svg",
+    "svg/decor/gisements/roseau_repousse1_2.svg"
+   ],
+   "cadre": [
+    -30,
+    -55,
+    60,
+    65
+   ],
+   "ms_par_image": 450,
+   "parcours": "acte-4",
+   "statut": "ok"
+  },
+  {
+   "id": "decor/gisements/roseau_repousse2",
+   "rubrique": "decor",
+   "titre": "Roseaux — repousse (2/2)",
+   "images": 2,
+   "fichiers": [
+    "svg/decor/gisements/roseau_repousse2_1.svg",
+    "svg/decor/gisements/roseau_repousse2_2.svg"
+   ],
+   "cadre": [
+    -30,
+    -55,
+    60,
+    65
+   ],
+   "ms_par_image": 450,
+   "parcours": "acte-4",
+   "statut": "ok"
+  },
+  {
    "id": "decor/gisements/sel_pret",
    "rubrique": "decor",
    "titre": "Croûte de sel — prêt",
@@ -71839,6 +72029,44 @@
     65,
     25
    ],
+   "parcours": "acte-4",
+   "statut": "ok"
+  },
+  {
+   "id": "decor/gisements/sel_repousse1",
+   "rubrique": "decor",
+   "titre": "Croûte de sel — repousse (1/2)",
+   "images": 2,
+   "fichiers": [
+    "svg/decor/gisements/sel_repousse1_1.svg",
+    "svg/decor/gisements/sel_repousse1_2.svg"
+   ],
+   "cadre": [
+    -37.5,
+    -32.5,
+    75,
+    45
+   ],
+   "ms_par_image": 450,
+   "parcours": "acte-4",
+   "statut": "ok"
+  },
+  {
+   "id": "decor/gisements/sel_repousse2",
+   "rubrique": "decor",
+   "titre": "Croûte de sel — repousse (2/2)",
+   "images": 2,
+   "fichiers": [
+    "svg/decor/gisements/sel_repousse2_1.svg",
+    "svg/decor/gisements/sel_repousse2_2.svg"
+   ],
+   "cadre": [
+    -37.5,
+    -32.5,
+    75,
+    45
+   ],
+   "ms_par_image": 450,
    "parcours": "acte-4",
    "statut": "ok"
   },

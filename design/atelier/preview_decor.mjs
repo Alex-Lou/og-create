@@ -44,7 +44,7 @@ const TITLES = { creations: 'Créations d\'île', lieux: 'Lieux remarquables', g
 const SUBS = {
   creations: 'Une case, ancre au centre (losange montré), cadre PROP_BOX × 1,25.',
   lieux: 'Une case, ancre au centre ; un lieu déborde comme un monument. Le jeu les affiche × 1,35 (la cascade × 1).',
-  gisements: 'Prêt (2 images) ou ramassé (il repousse). Cadres du jeu × 1,25, ancre au centre de la case.',
+  gisements: 'Prêt (2 images), ramassé, puis deux étapes de repousse (2 images chacune) jusqu\'à prêt. Cadres du jeu × 1,25, ancre au centre de la case.',
   annexes: 'Dessins du jeu au trait de la troupe, toutes leurs images (page animée) ; ici la première image de chaque variante. Cadres du jeu × 1,25.',
   enseignes: 'Le nom n\'est pas dessiné : le jeu l\'écrit dans le cadre pointillé (decor.json). Ancre au pied de l\'enseigne.',
   ilots: 'Ponton et voilier dans le cadre d\'un bâtiment, bateaux ancrés à la ligne de flottaison et tournés vers la droite (miroir pour la gauche). Pont : une case, dans les deux sens.'

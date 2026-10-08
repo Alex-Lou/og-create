@@ -59,6 +59,8 @@ export function inventaire() {
   for (const [id, g] of Object.entries(G)) {
     add({ cat: 'gisements', dir: 'gisements', base: `${id}_pret`, label: `${GISEMENTS[id]} — prêt`, frame: big(g.frames[0]), frames: [0, 1].map(f => up(g.draw(false, f))), ms: 450 });
     add({ cat: 'gisements', dir: 'gisements', base: `${id}_ramasse`, label: `${GISEMENTS[id]} — ramassé`, frame: big(g.frames[1]), frames: [up(g.draw(true, 0))] });
+    // la repousse, entre ramassé et prêt : deux étapes, dans le cadre du gisement prêt
+    for (const [k, t] of [[1, 0.35], [2, 0.7]]) add({ cat: 'gisements', dir: 'gisements', base: `${id}_repousse${k}`, label: `${GISEMENTS[id]} — repousse (${k}/2)`, frame: big(g.frames[0]), frames: [0, 1].map(f => up(g.draw(false, f, t))), ms: 450 });
   }
   for (const [id, a] of Object.entries(ANNEX_SPRITES)) {
     const l = a.layers[0];

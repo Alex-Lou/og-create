@@ -658,6 +658,34 @@
     32.5
    ]
   },
+  "glace_repousse1": {
+   "nom": "Cristaux de glace — repousse (1/2)",
+   "fichiers": [
+    "gisements/glace_repousse1_1.svg",
+    "gisements/glace_repousse1_2.svg"
+   ],
+   "cadre": [
+    -37.5,
+    -57.5,
+    75,
+    70
+   ],
+   "ms_par_image": 450
+  },
+  "glace_repousse2": {
+   "nom": "Cristaux de glace — repousse (2/2)",
+   "fichiers": [
+    "gisements/glace_repousse2_1.svg",
+    "gisements/glace_repousse2_2.svg"
+   ],
+   "cadre": [
+    -37.5,
+    -57.5,
+    75,
+    70
+   ],
+   "ms_par_image": 450
+  },
   "laine_pret": {
    "nom": "Moutons à tondre — prêt",
    "fichiers": [
@@ -683,6 +711,34 @@
     75,
     40
    ]
+  },
+  "laine_repousse1": {
+   "nom": "Moutons à tondre — repousse (1/2)",
+   "fichiers": [
+    "gisements/laine_repousse1_1.svg",
+    "gisements/laine_repousse1_2.svg"
+   ],
+   "cadre": [
+    -37.5,
+    -32.5,
+    75,
+    42.5
+   ],
+   "ms_par_image": 450
+  },
+  "laine_repousse2": {
+   "nom": "Moutons à tondre — repousse (2/2)",
+   "fichiers": [
+    "gisements/laine_repousse2_1.svg",
+    "gisements/laine_repousse2_2.svg"
+   ],
+   "cadre": [
+    -37.5,
+    -32.5,
+    75,
+    42.5
+   ],
+   "ms_par_image": 450
   },
   "roseau_pret": {
    "nom": "Roseaux — prêt",
@@ -710,6 +766,34 @@
     27.5
    ]
   },
+  "roseau_repousse1": {
+   "nom": "Roseaux — repousse (1/2)",
+   "fichiers": [
+    "gisements/roseau_repousse1_1.svg",
+    "gisements/roseau_repousse1_2.svg"
+   ],
+   "cadre": [
+    -30,
+    -55,
+    60,
+    65
+   ],
+   "ms_par_image": 450
+  },
+  "roseau_repousse2": {
+   "nom": "Roseaux — repousse (2/2)",
+   "fichiers": [
+    "gisements/roseau_repousse2_1.svg",
+    "gisements/roseau_repousse2_2.svg"
+   ],
+   "cadre": [
+    -30,
+    -55,
+    60,
+    65
+   ],
+   "ms_par_image": 450
+  },
   "sel_pret": {
    "nom": "Croûte de sel — prêt",
    "fichiers": [
@@ -735,6 +819,34 @@
     65,
     25
    ]
+  },
+  "sel_repousse1": {
+   "nom": "Croûte de sel — repousse (1/2)",
+   "fichiers": [
+    "gisements/sel_repousse1_1.svg",
+    "gisements/sel_repousse1_2.svg"
+   ],
+   "cadre": [
+    -37.5,
+    -32.5,
+    75,
+    45
+   ],
+   "ms_par_image": 450
+  },
+  "sel_repousse2": {
+   "nom": "Croûte de sel — repousse (2/2)",
+   "fichiers": [
+    "gisements/sel_repousse2_1.svg",
+    "gisements/sel_repousse2_2.svg"
+   ],
+   "cadre": [
+    -37.5,
+    -32.5,
+    75,
+    45
+   ],
+   "ms_par_image": 450
   },
   "fruits_pret": {
    "nom": "Arbre à fruits — prêt",
@@ -762,6 +874,34 @@
     72.5
    ]
   },
+  "fruits_repousse1": {
+   "nom": "Arbre à fruits — repousse (1/2)",
+   "fichiers": [
+    "gisements/fruits_repousse1_1.svg",
+    "gisements/fruits_repousse1_2.svg"
+   ],
+   "cadre": [
+    -30,
+    -62.5,
+    60,
+    72.5
+   ],
+   "ms_par_image": 450
+  },
+  "fruits_repousse2": {
+   "nom": "Arbre à fruits — repousse (2/2)",
+   "fichiers": [
+    "gisements/fruits_repousse2_1.svg",
+    "gisements/fruits_repousse2_2.svg"
+   ],
+   "cadre": [
+    -30,
+    -62.5,
+    60,
+    72.5
+   ],
+   "ms_par_image": 450
+  },
   "obsidienne_pret": {
    "nom": "Éclats d'obsidienne — prêt",
    "fichiers": [
@@ -787,6 +927,34 @@
     55,
     25
    ]
+  },
+  "obsidienne_repousse1": {
+   "nom": "Éclats d'obsidienne — repousse (1/2)",
+   "fichiers": [
+    "gisements/obsidienne_repousse1_1.svg",
+    "gisements/obsidienne_repousse1_2.svg"
+   ],
+   "cadre": [
+    -35,
+    -47.5,
+    70,
+    60
+   ],
+   "ms_par_image": 450
+  },
+  "obsidienne_repousse2": {
+   "nom": "Éclats d'obsidienne — repousse (2/2)",
+   "fichiers": [
+    "gisements/obsidienne_repousse2_1.svg",
+    "gisements/obsidienne_repousse2_2.svg"
+   ],
+   "cadre": [
+    -35,
+    -47.5,
+    70,
+    60
+   ],
+   "ms_par_image": 450
   }
  },
  "annexes": {
