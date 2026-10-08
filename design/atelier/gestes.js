@@ -414,6 +414,41 @@ function becher({ view, n }) {
 // Debout : frame(avecBecher(c), vue, 'action', n)
 const avecBecher = c => ({ ...c, uid: `${c.uid}be`, pose: becher });
 
+// Le sac de graines en toile, tenu contre la hanche par la main h : le sac, son col roulé, des graines qui dépassent
+const sacGraines = ([x, y]) => P(`M${r2(x - 3.4)},${r2(y)} Q${r2(x - 4.4)},${r2(y + 6)} ${r2(x)},${r2(y + 6.6)} Q${r2(x + 4.4)},${r2(y + 6)} ${r2(x + 3.4)},${r2(y)} Z`, '#D8C49A')
+  + E(x, y, 3.4, 1.1, '#6E5434', 0.8) + [[-1.4, -0.3], [0.2, -0.6], [1.6, -0.2]].map(([dx, dy]) => E(x + dx, y + dy, 0.6, 0.4, '#E8C66A', 0)).join('')
+  + `<path d="M${r2(x - 3.4)},${r2(y)} Q${r2(x)},${r2(y + 1.4)} ${r2(x + 3.4)},${r2(y)}" fill="none" stroke="${OUT}" stroke-width="2" stroke-linecap="round"/>`
+  + `<path d="M${r2(x - 3.4)},${r2(y)} Q${r2(x)},${r2(y + 1.4)} ${r2(x + 3.4)},${r2(y)}" fill="none" stroke="#EDE0BE" stroke-width="0.8" stroke-linecap="round"/>`
+  + L([x - 1.6, y + 3], [x - 1.2, y + 5.4], '#B8A274', 0.5);
+// les graines lancées : de petits grains dorés en éventail depuis la main (x, y), côté k, qui retombent vers la terre
+const graines = (x, y, k) => [[2, 1.6], [3.6, 3.4], [2.6, 5.4], [5, 5.8], [4.2, 8], [6.2, 8.6]].map(([dx, dy], i) => {
+  const gx = x + k * dx * 0.75, gy = y + dy * 1.5;
+  return E(gx, gy, 0.75, 0.55, '#E8C66A', 0.45).replace('/>', ` transform="rotate(${(i * 37) % 90 - 45} ${r2(gx)} ${r2(gy)})"/>`);
+}).join('');
+// Semer (les cultures) ; 2 images : la main plonge dans le sac de graines tenu à la hanche, puis s'ouvre d'un grand
+// geste, les graines s'envolent en éventail vers la terre.
+function semer({ view, n }) {
+  const [a, b] = this.shoulders;
+  if (view === 'front' || view === 'se') {
+    const s = view === 'front' ? 1 : -1, [p, q] = s > 0 ? [b, a] : [a, b]; // p : la main qui sème ; q : celle du sac
+    const hs = [q[0] - s * 1.6, q[1] + 10], sac = arm(this, q, hs, [q[0] - s * 2.6, q[1] + 5.4]) + sacGraines([hs[0] + s * 1.4, hs[1] + 0.6]);
+    if (!n) {
+      const h = [hs[0] + s * 1.8, hs[1] - 0.6];
+      return { expr: 'content', [s > 0 ? 'left' : 'right']: sac, [s > 0 ? 'right' : 'left']: arm(this, p, h, [p[0] + s * 0.4, p[1] + 8]) };
+    }
+    const h = [p[0] + s * 6.4, p[1] + 5];
+    return { expr: 'content', [s > 0 ? 'left' : 'right']: sac, [s > 0 ? 'right' : 'left']: arm(this, p, h, [p[0] + s * 4.6, p[1] + 4]), over: graines(h[0], h[1] + 1, s) };
+  }
+  // de dos : le sac à la hanche gauche, la main droite lance les graines devant soi, vers la droite
+  const hs = [a[0] - 1.4, a[1] + 10];
+  const sac = arm(this, a, hs, [a[0] - 2.4, a[1] + 5.4]) + sacGraines([hs[0] - 1, hs[1] + 0.6]);
+  if (!n) return { left: sac, right: '', under: arm(this, b, [24 + 2, b[1] + 9], [b[0] - 0.6, b[1] + 7]) };
+  const h = [b[0] + 6, b[1] + 4];
+  return { left: sac, right: arm(this, b, h, [b[0] + 4.4, b[1] + 3.4]), over: graines(h[0], h[1] + 1, 1) };
+}
+// Debout : frame(avecSemer(c), vue, 'action', n)
+const avecSemer = c => ({ ...c, uid: `${c.uid}se`, pose: semer });
+
 // La caisse de bois, posée sur l'épaule : son dessus (un peu de profondeur), sa face de planches, ses traverses, ses
 // clous ; (x, y) : le milieu du bas de la face, w × h
 function caisse(x, y, w = 11, h = 8.4) {
@@ -568,4 +603,4 @@ function ecrire({ view, n }) {
 // Debout : frame(avecEcrire(c), vue, 'action', n) ; assis : assis(c, vue, n, null, ecrire)
 const avecEcrire = c => ({ ...c, uid: `${c.uid}ec`, pose: ecrire });
 
-module.exports = { lanterne, parapluie, valise, avecLanterne, avecParapluie, avecValise, couche, CADRE_PARAPLUIE, CADRE_COUCHE, ZEDS, paume, tranche, tendre, avecMainsTendues, applaudir, avecApplaudir, pecher, avecPecher, piocher, avecPiocher, cueillir, avecCueillir, arroser, avecArroser, becher, avecBecher, porter, avecPorter, reparer, avecReparer, repousser, avecRepousser, ecrire, avecEcrire };
+module.exports = { lanterne, parapluie, valise, avecLanterne, avecParapluie, avecValise, couche, CADRE_PARAPLUIE, CADRE_COUCHE, ZEDS, paume, tranche, tendre, avecMainsTendues, applaudir, avecApplaudir, pecher, avecPecher, piocher, avecPiocher, cueillir, avecCueillir, arroser, avecArroser, becher, avecBecher, semer, avecSemer, porter, avecPorter, reparer, avecReparer, repousser, avecRepousser, ecrire, avecEcrire };
